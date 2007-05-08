@@ -1,4 +1,4 @@
-mainchatwindow.o mainchatwindow.o: mainchatwindow.cpp mainchatwindow.h \
+connectframe.o connectframe.o: connectframe.cpp connectframe.h \
   /usr/include/wx-2.6/wx/wx.h /usr/include/wx-2.6/wx/defs.h \
   /usr/include/wx-2.6/wx/platform.h \
   /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
@@ -231,9 +231,9 @@ mainchatwindow.o mainchatwindow.o: mainchatwindow.cpp mainchatwindow.h \
   /usr/include/wx-2.6/wx/timer.h /usr/include/wx-2.6/wx/dcclient.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/settings.h \
   /usr/include/wx-2.6/wx/listbase.h /usr/include/wx-2.6/wx/datetime.h \
-  /usr/include/wx-2.6/wx/valtext.h chatwindow.h
+  /usr/include/wx-2.6/wx/valtext.h
 
-mainchatwindow.h:
+connectframe.h:
 
 /usr/include/wx-2.6/wx/wx.h:
 
@@ -980,5 +980,3 @@ mainchatwindow.h:
 /usr/include/wx-2.6/wx/datetime.h:
 
 /usr/include/wx-2.6/wx/valtext.h:
-
-chatwindow.h:

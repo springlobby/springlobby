@@ -1,7 +1,7 @@
-protocol.o protocol.o: protocol.cpp /usr/include/assert.h \
+server.o server.o: server.cpp /usr/include/assert.h \
   /usr/include/features.h /usr/include/sys/cdefs.h \
   /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
-  /usr/include/gnu/stubs-32.h protocol.h \
+  /usr/include/gnu/stubs-32.h server.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/string \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/c++config.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/os_defines.h \
@@ -95,7 +95,7 @@ protocol.o protocol.o: protocol.cpp /usr/include/assert.h \
 
 /usr/include/gnu/stubs-32.h:
 
-protocol.h:
+server.h:
 
 /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/string:
 
