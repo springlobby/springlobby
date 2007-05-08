@@ -16,48 +16,48 @@
 
 
 //
-// Class: Protocol
+// Class: Server
 //
 // Created on: Fri Apr 27 16:23:28 2007
 //
 
 #include <assert.h>
-#include "protocol.h"
+#include "server.h"
 #include "socket.h"
 
-Protocol::Protocol()
+Server::Server()
 {
-  _sock = NULL;
-  _ui = NULL;
-  _keepalive = 15;
+  m_sock = NULL;
+  m_ui = NULL;
+  m_keepalive = 15;
 }
 
 
-Protocol::~Protocol()
+Server::~Server()
 {
 }
 
-void Protocol::set_socket( Socket* sock )
+void Server::set_socket( Socket* sock )
 {
   assert( !is_connected() ); // Should disconnect first.
-  _sock = sock;
+  m_sock = sock;
 }
 
-Socket* Protocol::get_socket( )
+Socket* Server::get_socket( )
 {
-  return _sock;
-}
-
-
-void Protocol::set_uicontrol( Uicontrol* ui )
-{
-  _ui = ui;
+  return m_sock;
 }
 
 
-Uicontrol* Protocol::get_uicontrol( )
+void Server::set_uicontrol( ServerEvents* ui )
 {
-  return _ui;
+  m_ui = ui;
+}
+
+
+ServerEvents* Server::get_uicontrol( )
+{
+  return m_ui;
 }
 
 

@@ -16,62 +16,62 @@
 
 
 //
-// Class: ConsoleControl
-// Created on: Sat Apr 28 06:44:53 2007
+// Class: Uicontrol
+// Created on: Fri Apr 27 16:29:51 2007
 //
 
-#ifndef _CONSOLECONTROL_H_
-#define _CONSOLECONTROL_H_
+#ifndef _UICONTROL_H_
+#define _UICONTROL_H_
 
-#include "uicontrol.h"
+#include "socket.h"
+#include "server.h"
+#include "chatlist.h"
 
-class ConsoleControl : public Uicontrol
+typedef int Protocolerror;
+
+class ServerEvents
 {
   public:
-    ConsoleControl();
-    virtual ~ConsoleControl();
+    ServerEvents();
+    virtual ~ServerEvents();
   
-  // ConsoleControl interface
+  // Uicontrol interface
   
     virtual void on_connected( string server_ver, bool supported );
     virtual void on_disconnected();
-  
+      
     virtual void on_login();
     virtual void on_login_info_complete();
     virtual void on_logout();
-  
+      
     virtual void on_unknown_command( string command, string params );
     virtual void on_socket_error( const Sockerror error );
     virtual void on_protocol_error( const Protocolerror error );
     virtual void on_motd( string msg );
     virtual void on_pong( int ping_time );
-  
+      
     virtual void on_new_user( string nick, string contry, int cpu );
     virtual void on_user_status( string nick, Clientstatus status );
     virtual void on_user_quit( string nick );
-  
+      
     virtual void on_battle_opened( int id, bool replay, int nat, string nick, 
                                    string host, int port, int maxplayers, 
                                    bool haspass, int rank, int hash, string map, 
                                    string title, string mod );
+
     virtual void on_user_joined_battle( int battleid, string nick );
     virtual void on_user_left_battle( int battleid, string nick );
     virtual void on_battleinfo_updated( int battleid, int spectators, bool locked, int maphash, string map );
     virtual void on_battle_closed( int battleid );
-  
-  
-    static string status2string( Clientstatus stat );
-    
-    virtual void set_protocol( Protocol* proto ) { _proto = proto; }
-    virtual Protocol* get_protocol( ) { return _proto; }
+      
+    void SetChatList( ChatList* cl ) { m_cl = cl; }
+    ChatList* GetChatList() { assert( m_cl != NULL ); return m_cl; }
     
   protected:
-    // ConsoleControl variables
-    
-    Protocol* _proto;
-    
+  // Uicontrol variables
+    ChatList* m_cl;
 };
 
 
-#endif  //_CONSOLECONTROL_H_
+#endif  //_UICONTROL_H_
 

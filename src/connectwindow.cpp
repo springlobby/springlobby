@@ -16,24 +16,23 @@
 
 
 //
-// Class: Uicontrol
+// Class: ConnectWindow
 //
-// Created by:  <>
-// Created on: Fri Apr 27 16:29:51 2007
+// Created on: Mon May  7 18:29:36 2007
 //
 
-#include "/home/tc/Projects/consolelobby/src/uicontrol.h"
+#include "connectwindow.h"
 
 
-Uicontrol::Uicontrol()
+ConnectWindow::ConnectWindow() : wxFrame()
 {
-	// TODO: put constructor code here
+  // TODO: put constructor code here
 }
 
 
-Uicontrol::~Uicontrol()
+ConnectWindow::~ConnectWindow()
 {
-	// TODO: put destructor code here
+  // TODO: put destructor code here
 }
 
 

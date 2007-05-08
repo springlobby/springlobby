@@ -16,27 +16,46 @@
 
 
 //
-// Class: ChatWindow
+// Class: ChatPanel
 // Created on: Wed May  2 21:07:18 2007
 //
 
-#ifndef _CHATWINDOW_H_
-#define _CHATWINDOW_H_
+/*! @file
+ * @brief Implements the ChatPanel class.
+ */
+
+#ifndef _CHATPANEL_H_
+#define _CHATPANEL_H_
 
 #include <wx/wx.h>
+#include <string>
 
-class ChatWindow : public wxPanel
+using namespace std;
+
+/*! @brief wxPanel that contains a chat.
+ *
+ * This panel contains a chat with a multiline TextCtrl for the messages, a 
+ * signle line TextCtrl for messages to send, a send button and a nick list.
+ * 
+ * The nick list is optional and can be removed by setting show_nick_list in the
+ * constructor to false.
+ */
+class ChatPanel : public wxPanel
 {
   public:
-    ChatWindow( wxWindow* parent, bool show_nick_list );
-    virtual ~ChatWindow();
+    ChatPanel( wxWindow* parent, bool show_nick_list );
+    virtual ~ChatPanel();
   
-    // ChatWindow interface
+    // ChatPanel interface
   
-    // TODO: add member function declarations...
-  
+    void Said( wxString who, wxString message ) { m_chatlog_text->WriteText( who + _(": ")+ message ); }
+    
+    void SetChannelName( const string chan_name ) { m_chan_name = chan_name; }
+    string GetChannelName() { return m_chan_name; }
+    bool IsServerPanel() { return (m_chan_name == "$server"); }
+    
   protected:
-    // ChatWindow variables
+    // ChatPanel variables
   
     bool m_show_nick_list;
   
@@ -50,8 +69,11 @@ class ChatWindow : public wxPanel
   
     wxButton* m_say_button;
   
+    string m_chan_name;
+    bool m_server_chat;
+  
 };
 
 
-#endif  //_CHATWINDOW_H_
+#endif  //_CHATPANEL_H_
 

@@ -16,25 +16,32 @@
 
 
 //
-// Class: ChatWindow
+// Class: ChatPanel
 //
 // Created on: Wed May  2 21:07:18 2007
 //
 
-#include "chatwindow.h"
+#include "chatpanel.h"
 
-
-ChatWindow::ChatWindow( wxWindow* parent, bool show_nick_list ) 
+/*! @brief ChatPanel constructor.
+ * @param bool show_nick_list
+ */
+ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) 
 : wxPanel( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr )
 {
   m_show_nick_list = show_nick_list;
- 
-  SetBackgroundColour( *wxBLUE );
+  m_chan_name = "";
+
+  //SetBackgroundColour( *wxBLUE );
   
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_chat_sizer = new wxBoxSizer( wxVERTICAL );
   m_say_sizer = new wxBoxSizer( wxHORIZONTAL );
-  m_nick_sizer = new wxBoxSizer( wxVERTICAL );
+  
+  if ( m_show_nick_list )
+    m_nick_sizer = new wxBoxSizer( wxVERTICAL );
+  else
+    m_nick_sizer = NULL;
   
   m_chatlog_text = new wxTextCtrl( this, -1, _(""), wxDefaultPosition, wxDefaultSize, 
                              wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
@@ -49,16 +56,17 @@ ChatWindow::ChatWindow( wxWindow* parent, bool show_nick_list )
   m_chat_sizer->Add( m_say_sizer );
   
   m_main_sizer->Add( m_chat_sizer, 1, wxEXPAND );
-  m_main_sizer->Add( m_nick_sizer );
+  if ( m_show_nick_list )
+    m_main_sizer->Add( m_nick_sizer );
   
   
   SetSizer( m_main_sizer );
 }
 
 
-ChatWindow::~ChatWindow()
+ChatPanel::~ChatPanel()
 {
-  // TODO: put destructor code here
+
 }
 
 

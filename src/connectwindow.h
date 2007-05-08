@@ -16,42 +16,32 @@
 
 
 //
-// Class: MainWindow
-// Created on: Tue May  1 11:55:40 2007
+// Class: ConnectFrame
+// Created on: Mon May  7 18:29:36 2007
 //
 
-#ifndef _MAINWINDOW_H_
-#define _MAINWINDOW_H_
+#ifndef _CONNECTWINDOW_H_
+#define _CONNECTWINDOW_H_
 
 #include <wx/wx.h>
-#include <wx/listbook.h>
 
-#include "mainchatpanel.h"
-
-#include "images/chat_icon.xpm"
-
-class MainWindow : public wxFrame
+class ConnectWindow : public wxFrame
 {
   public:
-    MainWindow();
-    virtual ~MainWindow();
+    ConnectWindow();
+    virtual ~ConnectWindow();
   
-    // MainWindow interface
+    // ConnectWindow interface
   
-    // TODO: add member function declarations...
+    
   
   protected:
-    // MainWindow variables
+    // ConnectWindow variables
   
-    wxBoxSizer* m_main_sizer;
-    wxListbook* m_func_tabs;
-    wxNotebookPage* m_chat_page;
+    
   
-    MainChatPanel* m_chat_tab;
-  
-    wxImageList* m_func_tab_images;
 };
 
 
-#endif  //_MAINWINDOW_H_
+#endif  //_CONNECTWINDOW_H_
 

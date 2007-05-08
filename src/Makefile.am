@@ -13,23 +13,42 @@ AM_CFLAGS =\
 	 -g \
 	 $(WX_CPPFLAGS)
 
-bin_PROGRAMS = springlobby
+bin_PROGRAMS = springlobby \
+	test 
+
+test_SOURCES = \
+	chatlist.cpp\
+	chatlist.h                    \
+	test.cpp                    
+
+test_LDADD = \
+	$(PACKAGE_LIBS) \
+	$(WX_LIBS) 
 
 springlobby_SOURCES = \
 	main.cpp     \
 	base64.cpp     \
-	consolecontrol.cpp     \
 	md5.c     \
-	protocol.cpp     \
 	socket.cpp     \
-	tasprotocol.cpp     \
-	uicontrol.cpp     \
 	mainwindow.cpp     \
 	mainwindow.h     \
-	mainchatwindow.cpp     \
-	mainchatwindow.h     \
-	chatwindow.cpp     \
-	chatwindow.h 
+	serverevents.cpp     \
+	base64.h     \
+	md5.h     \
+	serverevents.h     \
+	socket.h     \
+	chatlist.cpp     \
+	chatlist.h     \
+	chatpanel.cpp     \
+	chatpanel.h     \
+	connectwindow.cpp     \
+	connectwindow.h     \
+	mainchatpanel.cpp     \
+	mainchatpanel.h     \
+	server.cpp     \
+	server.h     \
+	tasserver.cpp     \
+	tasserver.h 
 
 springlobby_LDFLAGS = 
 

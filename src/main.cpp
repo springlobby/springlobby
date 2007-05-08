@@ -21,25 +21,40 @@
     Boston, MA  02110-1301, USA.
  */
 
+/*! @file main.cpp
+ * @brief Initializes and starts the wxWidgets gui.
+ */
+
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
+#include <iostream>
 #include <wx/wx.h>
 #include "mainwindow.h"
+#include "chatlist.h"
 
-class MyApp : public wxApp
+
+/*! @brief Spring lobby wxApp
+ *
+ * This class required by wxWidgets.
+*/
+class SpringLobbyApp : public wxApp
 {
   public:
     virtual bool OnInit();
 };
 
-IMPLEMENT_APP(MyApp)
 
-bool MyApp::OnInit()
+IMPLEMENT_APP(SpringLobbyApp)
+
+
+/*! @brief Initializes the application. */
+bool SpringLobbyApp::OnInit()
 {
   MainWindow *mw = new MainWindow();
-
+  
   mw->Show(TRUE);
+  
   return TRUE;
 }

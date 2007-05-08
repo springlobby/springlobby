@@ -16,17 +16,17 @@
 
 
 //
-// Class: TASProtocol
+// Class: TASServer
 // Created on: Fri Apr 27 19:25:15 2007
 //
 
-#ifndef _TASPROTOCOL_H_
-#define _TASPROTOCOL_H_
+#ifndef _TASSERVER_H_
+#define _TASSERVER_H_
 
 #include <string>
 #include <time.h>
 #include <list>
-#include "protocol.h"
+#include "server.h"
 
 using namespace std;
 
@@ -55,15 +55,15 @@ union UTASClientstatus {
   TASClientstatus tasdata;
 };
 
-class TASProtocol : public Protocol
+class TASServer : public Server
 {
   public:
-    TASProtocol();
-    virtual ~TASProtocol();
+    TASServer();
+    virtual ~TASServer();
   
-  // TASProtocol interface
+  // TASServer interface
   
-    // Overloaded functions from Protocol
+    // Overloaded functions from Server
     virtual void connect( string addr, const int port );
     virtual void disconnect();
     virtual bool is_connected();
@@ -82,7 +82,7 @@ class TASProtocol : public Protocol
     virtual void say_channel( string channel, string msg );
     virtual void say_private( string nick, string msg );
   
-    // TASProtocol specific functions
+    // TASServer specific functions
     void execute_command( string in );
     void execute_command( string cmd, string params, int replyid = -1 );
   
@@ -94,23 +94,22 @@ class TASProtocol : public Protocol
     void handle_pinglist();
     
     // Static utility functions
-    static int str2int( string s );
     static Clientstatus conv_tasclientstatus( TASClientstatus );
     static bool version_support_replyid( int version );
   
   protected:
-    // TASProtocol variables
+    // TASServer variables
   
-    int _ser_ver;
+    int m_ser_ver;
   
-    bool _connected;
-    bool _online;
-    string _buffer;
-    time_t _last_ping;
-    int _ping_id;
-    list<TASPingListItem> _pinglist; 
+    bool m_connected;
+    bool m_online;
+    string m_buffer;
+    time_t m_last_ping;
+    int m_ping_id;
+    list<TASPingListItem> m_pinglist; 
 };
 
 
-#endif  //_TASPROTOCOL_H_
+#endif  //_TASSERVER_H_
 

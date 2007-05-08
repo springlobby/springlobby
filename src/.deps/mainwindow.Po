@@ -232,7 +232,7 @@ mainwindow.o mainwindow.o: mainwindow.cpp mainwindow.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/settings.h \
   /usr/include/wx-2.6/wx/listbase.h /usr/include/wx-2.6/wx/datetime.h \
   /usr/include/wx-2.6/wx/valtext.h /usr/include/wx-2.6/wx/listbook.h \
-  mainchatwindow.h chatwindow.h images/chat_icon.xpm
+  mainchatpanel.h chatpanel.h images/chat_icon.xpm
 
 mainwindow.h:
 
@@ -984,8 +984,8 @@ mainwindow.h:
 
 /usr/include/wx-2.6/wx/listbook.h:
 
-mainchatwindow.h:
+mainchatpanel.h:
 
-chatwindow.h:
+chatpanel.h:
 
 images/chat_icon.xpm:

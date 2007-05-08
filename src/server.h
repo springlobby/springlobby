@@ -16,21 +16,20 @@
 
 
 //
-// Class: Protocol
+// Class: Server
 // Created on: Fri Apr 27 16:23:28 2007
 //
 
-#ifndef _PROTOCOL_H_
-#define _PROTOCOL_H_
+#ifndef _SERVER_H_
+#define _SERVER_H_
 
 #include <string>
-#include "protocol.h"
 
 #define PING_TIMEOUT 30
 
 using namespace std;
 
-class Uicontrol;
+class ServerEvents;
 class Socket;
 
 struct Clientstatus {
@@ -42,7 +41,7 @@ struct Clientstatus {
 };
 
 
-typedef int Protocolerror;
+typedef int Servererror;
 
 #define PE_NONE 0
 
@@ -51,18 +50,18 @@ typedef int Protocolerror;
 #define RANK_3 300
 #define RANK_4 400
 
-class Protocol
+class Server
 {
   public:
-    Protocol();
-    virtual ~Protocol();
+    Server();
+    virtual ~Server();
   
-    // Protocol interface
+    // Server interface
   
     virtual void set_socket( Socket* sock );
     virtual Socket* get_socket( );
-    virtual void set_uicontrol( Uicontrol* ui );
-    virtual Uicontrol* get_uicontrol( );
+    virtual void set_uicontrol( ServerEvents* ui );
+    virtual ServerEvents* get_uicontrol( );
   
     virtual void connect( string addr, const int port ) = 0;
     virtual void disconnect() = 0;
@@ -80,19 +79,19 @@ class Protocol
     virtual void say_channel( string channel, string msg ) = 0;
     virtual void say_private( string nick, string msg ) = 0;
   
-    virtual void set_keepalive_interval( int seconds ) { _keepalive = seconds; }
-    virtual int get_keepalive_interval() { return _keepalive; }
+    virtual void set_keepalive_interval( int seconds ) { m_keepalive = seconds; }
+    virtual int get_keepalive_interval() { return m_keepalive; }
   
     virtual void ping() = 0;
   protected:
-    // Protocol variables
+    // Server variables
   
-    Socket* _sock;
-    Uicontrol* _ui;
-    int _keepalive;
+    Socket* m_sock;
+    ServerEvents* m_ui;
+    int m_keepalive;
 
 };
 
 
-#endif	//_PROTOCOL_H_
+#endif  //_SERVER_H_
 

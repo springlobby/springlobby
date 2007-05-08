@@ -16,39 +16,37 @@
 
 
 //
-// Class: MainChatWindow
-//
+// Class: MainChatPanel
 // Created on: Tue May  1 13:32:49 2007
 //
 
-#include "mainchatwindow.h"
+#ifndef _MAINCHATPANEL_H_
+#define _MAINCHATPANEL_H_
 
+#include <wx/wx.h>
 
-MainChatWindow::MainChatWindow( wxWindow* parent ) 
-: wxPanel( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr )
+#include "chatpanel.h"
+
+class MainChatPanel : public wxPanel
 {
-  //SetBackgroundColour( *wxRED );
-  m_main_sizer = new wxBoxSizer( wxVERTICAL );
+  public:
+    MainChatPanel( wxWindow* parent );
+    virtual ~MainChatPanel();
   
-  m_chat_tabs = new wxNotebook( this, -1, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
+    // MainChatWindow interface
   
-  m_server_chat = new ChatWindow( m_chat_tabs, false );
-//  m_main_chat = new ChatWindow( m_chat_tabs, true );
+    ChatPanel* ServerChat() { return m_server_chat; }
   
-  m_chat_tabs->AddPage( m_server_chat, _T("Server"), true, -1 );
-//  m_chat_tabs->AddPage( m_main_chat, _T("Main"), false, -1 );
+  protected:
+    // MainChatWindow variables
   
-  m_main_sizer->Add( m_chat_tabs, 1, wxEXPAND, 0 );
+    wxNotebook* m_chat_tabs;
+    wxBoxSizer* m_main_sizer;
+    ChatPanel* m_server_chat;
+    ChatPanel* m_main_chat;
   
-  SetSizer( m_main_sizer );
-  Layout();
-//  m_main_sizer->SetSizeHints( this );
-}
+};
 
 
-MainChatWindow::~MainChatWindow()
-{
-
-}
-
+#endif  //_MAINCHATWINDOW_H_
 

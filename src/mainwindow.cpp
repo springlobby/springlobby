@@ -35,7 +35,7 @@ MainWindow::MainWindow() : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
   
   m_func_tabs->AssignImageList( m_func_tab_images );
   
-  m_chat_tab = new MainChatWindow( m_func_tabs );
+  m_chat_tab = new MainChatPanel( m_func_tabs );
   m_func_tabs->AddPage( m_chat_tab, _(""), true, 0 );
   //m_func_tabs->AddPage( m_chat_tab, _(""), false, 0 );
   

@@ -16,67 +16,66 @@
 
 
 //
-// Class: TASProtocol
+// Class: TASServer
 //
-// Created by:  <>
 // Created on: Fri Apr 27 19:25:15 2007
 //
 
 #include <iostream>
 #include <assert.h>
 #include <stdio.h>
-#include "tasprotocol.h"
+#include "tasserver.h"
 #include "md5.h"
 #include "base64.h"
 #include "socket.h"
-#include "uicontrol.h"
+#include "serverevents.h"
 
-TASProtocol::TASProtocol() : Protocol()
+TASServer::TASServer() : Server()
 {
-  _connected = false;
-  _online = false;
-  _buffer = "";
-  _last_ping = 0;
-  _ping_id = 1000;
-  _ser_ver = SER_VER_UNKNOWN;
+  m_connected = false;
+  m_online = false;
+  m_buffer = "";
+  m_last_ping = 0;
+  m_ping_id = 1000;
+  m_ser_ver = SER_VER_UNKNOWN;
 }
 
 
-TASProtocol::~TASProtocol()
+TASServer::~TASServer()
 {
 
 }
 
-void TASProtocol::connect( string addr, const int port )
+void TASServer::connect( string addr, const int port )
 {
-  assert( _sock != NULL );
-  if ( !_sock->connect( addr, port ) ) {
+  assert( m_sock != NULL );
+  if ( !m_sock->connect( addr, port ) ) {
     // TODO: Handle errors
   }
   if ( is_connected() ) {
-    _last_ping = time( NULL );
-    _connected = true;
+    m_last_ping = time( NULL );
+    m_connected = true;
   }
-  _online = false;
+  m_online = false;
   
 }
 
-void TASProtocol::disconnect()
+void TASServer::disconnect()
 {
-  assert( _sock != NULL );
-  if ( !_sock->disconnect() ) {
+  assert( m_sock != NULL );
+  if ( !m_sock->disconnect() ) {
     // TODO: Handle errors
   }
-  _connected = false;
+  m_connected = false;
 }
 
-bool TASProtocol::is_connected()
+bool TASServer::is_connected()
 {
-  if ( _sock == NULL ) return false;
-  return (_sock->state() == SS_OPEN);
+  if ( m_sock == NULL ) return false;
+  return (m_sock->state() == SS_OPEN);
 }
   
-void TASProtocol::login( string username, string password )
+void TASServer::login( string username, string password )
 {
   unsigned char output[16];
   unsigned char* input = new unsigned char[ password.length() ];
@@ -92,43 +91,43 @@ void TASProtocol::login( string username, string password )
   data += " ";
   data += password;
   data += " 2100 * TKALCL 0.001\n";
-  _sock->send( data );
+  m_sock->send( data );
   
   delete input;
 }
 
-void TASProtocol::logout()
+void TASServer::logout()
 {
   disconnect();
 }
 
-bool TASProtocol::is_online()
+bool TASServer::is_online()
 {
-  if ( !_connected ) return false;
-  return _online;
+  if ( !m_connected ) return false;
+  return m_online;
 }
 
-void TASProtocol::update()
+void TASServer::update()
 {
-  assert( _sock != NULL ); // TODO: This should be handled and generate an error in released code.
+  assert( m_sock != NULL ); // TODO: This should be handled and generate an error in released code.
   string data = ".";
   
-  if ( !_connected ) { // We are not formally connected yet, but might be.
+  if ( !m_connected ) { // We are not formally connected yet, but might be.
     if ( is_connected() ) {
-      _last_ping = time( NULL );
-      _connected = true;
+      m_last_ping = time( NULL );
+      m_connected = true;
     }
     return;
   } else { // We are connected allready.
     if ( !is_connected() ) {
-      _connected = false;
-      _online = false;
-      _ui->on_disconnected();
+      m_connected = false;
+      m_online = false;
+      m_ui->on_disconnected();
       return;
     }
 
     time_t now = time( NULL );
-    if ( _last_ping + _keepalive < now ) { // Is it time for a keepalive PING?
+    if ( m_last_ping + m_keepalive < now ) { // Is it time for a keepalive PING?
       ping();
     }
     handle_pinglist();
@@ -137,18 +136,18 @@ void TASProtocol::update()
   while ( !data.empty() ) { // Go on until recive stops providing data.
     
     data = "";
-    if ( _sock->recive( data ) ) {
-      _buffer += data;
-      if ( _buffer.find( "\n", 0 ) != string::npos ) {
-        execute_command( _buffer );
-        _buffer = "";
+    if ( m_sock->recive( data ) ) {
+      m_buffer += data;
+      if ( m_buffer.find( "\n", 0 ) != string::npos ) {
+        execute_command( m_buffer );
+        m_buffer = "";
       }
     }
     
   }
 }
 
-void TASProtocol::execute_command( string in )
+void TASServer::execute_command( string in )
 {
   string cmd;
   int pos;
@@ -159,7 +158,7 @@ void TASProtocol::execute_command( string in )
   //cout << "Debug: " << in << endl;
   if ( in[0] == '#' ) {
     cmd = in.substr( 1, in.find( " ", 0 ) );
-    replyid = str2int( cmd );
+    replyid = atoi( cmd.c_str() );
     in = in.substr( pos + 1 );
   }
     
@@ -182,7 +181,7 @@ void TASProtocol::execute_command( string in )
   execute_command( cmd, in );
 }
 
-void TASProtocol::execute_command( string cmd, string params, int replyid )
+void TASServer::execute_command( string cmd, string params, int replyid )
 {
   int pos, cpu, status, id, nat, port, maxplayers, rank, hash, specs;
   bool replay, haspass;
@@ -193,30 +192,30 @@ void TASProtocol::execute_command( string cmd, string params, int replyid )
   if ( cmd == "TASServer") {
     mod = get_word_param( params );
     if ( mod == "0.32" )
-      _ser_ver = SER_VER_0_32;
+      m_ser_ver = SER_VER_0_32;
     else if ( mod == "0.33" )
-      _ser_ver = SER_VER_0_32;
+      m_ser_ver = SER_VER_0_32;
     else if ( mod == "0.34" )
-      _ser_ver = SER_VER_0_34;
+      m_ser_ver = SER_VER_0_34;
     else
-      _ser_ver = SER_VER_BAD;
-    _ui->on_connected( mod, (_ser_ver > 0) );
+      m_ser_ver = SER_VER_BAD;
+    m_ui->on_connected( mod, (m_ser_ver > 0) );
     
   } else if ( cmd == "ACCEPTED" ) {
-    _online = true;
-    _ui->on_login( );
+    m_online = true;
+    m_ui->on_login( );
   } else if ( cmd == "MOTD" ) {
-    _ui->on_motd( params );
+    m_ui->on_motd( params );
   } else if ( cmd == "ADDUSER" ) {
     nick = get_word_param( params );
     contry = get_word_param( params );
     cpu = get_int_param( params );
-    _ui->on_new_user( nick, contry, cpu );
+    m_ui->on_new_user( nick, contry, cpu );
   } else if ( cmd == "CLIENTSTATUS" ) {
     nick = get_word_param( params );
     tasstatus.byte = get_int_param( params );
     cstatus = conv_tasclientstatus( tasstatus.tasdata );
-    _ui->on_user_status( nick, cstatus );
+    m_ui->on_user_status( nick, cstatus );
   } else if ( cmd == "BATTLEOPENED" ) {
     id = get_int_param( params );
     replay = get_int_param( params );
@@ -232,31 +231,31 @@ void TASProtocol::execute_command( string cmd, string params, int replyid )
     title = get_sentence_param( params );
     mod = get_sentence_param( params );
     
-    _ui->on_battle_opened( id, replay, nat, nick, host, port, maxplayers, haspass, (rank + 1)*100, hash, map, title, mod );
+    m_ui->on_battle_opened( id, replay, nat, nick, host, port, maxplayers, haspass, (rank + 1)*100, hash, map, title, mod );
     
   } else if ( cmd == "JOINEDBATTLE" ) {
     id = get_int_param( params );
     nick = get_word_param( params );
-    _ui->on_user_joined_battle( id, nick );
+    m_ui->on_user_joined_battle( id, nick );
   } else if ( cmd == "UPDATEBATTLEINFO" ) {
     id = get_int_param( params );
     specs = get_int_param( params );
     haspass = get_int_param( params );
     hash = get_int_param( params );
     map = get_sentence_param( params );
-    _ui->on_battleinfo_updated( id, specs, haspass, hash, map );
+    m_ui->on_battleinfo_updated( id, specs, haspass, hash, map );
   } else if ( cmd == "LOGININFOEND" ) {
-    _ui->on_login_info_complete();
+    m_ui->on_login_info_complete();
   } else if ( cmd == "REMOVEUSER" ) {
     nick = get_word_param( params );
-    _ui->on_user_quit( nick );
+    m_ui->on_user_quit( nick );
   } else if ( cmd == "BATTLECLOSED" ) {
     id = get_int_param( params );
-    _ui->on_battle_closed( id );
+    m_ui->on_battle_closed( id );
   } else if ( cmd == "LEFTBATTLE" ) {
     id = get_int_param( params );
     nick = get_word_param( params );
-    _ui->on_user_left_battle( id, nick );
+    m_ui->on_user_left_battle( id, nick );
   } else if ( cmd == "PONG" ) {
     handle_pong( replyid );
   } else {
@@ -265,7 +264,7 @@ void TASProtocol::execute_command( string cmd, string params, int replyid )
   
 }
 
-string TASProtocol::get_word_param( string& params )
+string TASServer::get_word_param( string& params )
 {
   int pos;
   string param;
@@ -282,7 +281,7 @@ string TASProtocol::get_word_param( string& params )
   }
 }
 
-string TASProtocol::get_sentence_param( string& params )
+string TASServer::get_sentence_param( string& params )
 {
   int pos;
   string param;
@@ -299,7 +298,7 @@ string TASProtocol::get_sentence_param( string& params )
   }
 }
 
-int TASProtocol::get_int_param( string& params )
+int TASServer::get_int_param( string& params )
 {
   int pos;
   string param;
@@ -308,46 +307,46 @@ int TASProtocol::get_int_param( string& params )
   if ( pos == string::npos ) {
     param = params;
     params = "";
-    return str2int( param );
+    return atoi( param.c_str() );
   } else {
     param = params.substr( 0, pos );
     params = params.substr( pos + 1 );
-    return str2int( param );
+    return atoi( param.c_str() );
   }
 }
 
-void TASProtocol::ping()
+void TASServer::ping()
 {
   string cmd = "";
 
-  _ping_id++;
+  m_ping_id++;
 //  cout << ">>> PING #" << _ping_id << endl;
-  if ( version_support_replyid( _ser_ver ) ) {
+  if ( version_support_replyid( m_ser_ver ) ) {
     cmd += "#";
-    cmd += _ping_id;
+    cmd += m_ping_id;
     cmd += " PING\n";
   } else {
     cmd += "PING ";
-    cmd += _ping_id;
+    cmd += m_ping_id;
     cmd += "\n";
   }
   
-  _sock->send( cmd );
+  m_sock->send( cmd );
   
   TASPingListItem pli;
-  pli.id = _ping_id;
+  pli.id = m_ping_id;
   pli.t = time( NULL );
-  _pinglist.push_back ( pli );
-  _last_ping = time( NULL );
+  m_pinglist.push_back ( pli );
+  m_last_ping = time( NULL );
 }
 
-void TASProtocol::handle_pong( int replyid )
+void TASServer::handle_pong( int replyid )
 {
   list<TASPingListItem>::iterator it;
   
 //  cout << ">>> PONG #" << replyid << endl;
   bool found = false;
-  for ( it = _pinglist.begin(); it != _pinglist.end(); it++ ) {
+  for ( it = m_pinglist.begin(); it != m_pinglist.end(); it++ ) {
     if (it->id == replyid ) {
       found = true;
       break;
@@ -355,28 +354,28 @@ void TASProtocol::handle_pong( int replyid )
   }
   
   if ( found ) {
-    _ui->on_pong( (time( NULL ) - it->t) );
-    _pinglist.erase( it );
+    m_ui->on_pong( (time( NULL ) - it->t) );
+    m_pinglist.erase( it );
   } else {
-    if ( !_pinglist.empty() ) {
-      _ui->on_pong( (time( NULL ) - _pinglist.begin()->t) );
-      _pinglist.pop_front();
+    if ( !m_pinglist.empty() ) {
+      m_ui->on_pong( (time( NULL ) - m_pinglist.begin()->t) );
+      m_pinglist.pop_front();
     } else {
-      _ui->on_pong( -1 );
+      m_ui->on_pong( -1 );
     }
   }
 }
 
-void TASProtocol::handle_pinglist()
+void TASServer::handle_pinglist()
 {
   list<TASPingListItem>::iterator it;
   int now = time( NULL );
-  while ( !_pinglist.empty() ) {
-    if ( _pinglist.begin()->t + PING_TIMEOUT < now ) {
+  while ( !m_pinglist.empty() ) {
+    if ( m_pinglist.begin()->t + PING_TIMEOUT < now ) {
       // TODO: Fix Ping time!
       //cout << "!!! Ping Timeout, took more than " << PING_TIMEOUT << "s" << endl;
       //_ui->on_pong( PING_TIMEOUT );
-      _pinglist.pop_front();
+      m_pinglist.pop_front();
     } else {
       break;
     }
@@ -384,49 +383,49 @@ void TASProtocol::handle_pinglist()
 }
 
 
-void TASProtocol::join_channel( string channel, string key )
+void TASServer::join_channel( string channel, string key )
 {
   //JOIN channame [key]
   assert( is_online() );
-  assert( _sock != NULL );
+  assert( m_sock != NULL );
   
   string cmd = "JOIN " + channel;
   if ( key != "" )
     cmd += " " + key;
   cmd += "\n";
   
-  _sock->send( cmd );
+  m_sock->send( cmd );
 }
 
 
-void TASProtocol::part_channel( string channel )
+void TASServer::part_channel( string channel )
 {
   //LEAVE channame
   assert( is_online() );
-  assert( _sock != NULL );
+  assert( m_sock != NULL );
   
-  _sock->send( "LEAVE " + channel + "\n" );
+  m_sock->send( "LEAVE " + channel + "\n" );
   
 }
  
 
-void TASProtocol::say_channel( string channel, string msg )
+void TASServer::say_channel( string channel, string msg )
 {
   //SAY channame {message}
   assert( is_online() );
-  assert( _sock != NULL );
+  assert( m_sock != NULL );
   
-  _sock->send( "SAY " + channel + " " + msg + "\n" );
+  m_sock->send( "SAY " + channel + " " + msg + "\n" );
 }
 
 
-void TASProtocol::say_private( string nick, string msg )
+void TASServer::say_private( string nick, string msg )
 {
   //SAYPRIVATE username {message}
   assert( is_online() );
-  assert( _sock != NULL );
+  assert( m_sock != NULL );
   
-  _sock->send( "SAYPRIVARE " + nick + " " + msg + "\n" );
+  m_sock->send( "SAYPRIVARE " + nick + " " + msg + "\n" );
 }
 
 
@@ -435,15 +434,7 @@ void TASProtocol::say_private( string nick, string msg )
 // Utility functions
 //////////////////////
 
-int TASProtocol::str2int( string s )
-{
-  assert( !s.empty() );
-  int i;
-  sscanf ( s.c_str(),"%i", &i );
-  return i;
-}
-
-Clientstatus TASProtocol::conv_tasclientstatus( TASClientstatus tas )
+Clientstatus TASServer::conv_tasclientstatus( TASClientstatus tas )
 {
   Clientstatus stat;
   stat.in_game = tas.in_game;
@@ -454,7 +445,7 @@ Clientstatus TASProtocol::conv_tasclientstatus( TASClientstatus tas )
   return stat;
 }
 
-bool TASProtocol::version_support_replyid( int version )
+bool TASServer::version_support_replyid( int version )
 {
   if ( version == SER_VER_0_32 )
     return false;
