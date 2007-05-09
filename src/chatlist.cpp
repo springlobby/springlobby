@@ -38,7 +38,7 @@ ChatList::~ChatList()
 ChatPanel* ChatList::GetChannelPanel( string chan_name )
 {
   if ( m_channels.count( chan_name ) > 0 ) {
-    chatwin_iter_t found = m_channels.find( chan_name );
+    chatpanel_iter_t found = m_channels.find( chan_name );
     return (*found).second;
   } else {
     return NULL;
@@ -58,7 +58,7 @@ void ChatList::RemoveChannelPanel( string chan_name )
 ChatPanel* ChatList::GetPrivChatPanel( string nick_name )
 {
   if ( m_priv_chats.count( nick_name ) > 0 ) {
-    chatwin_iter_t found = m_priv_chats.find( nick_name );
+    chatpanel_iter_t found = m_priv_chats.find( nick_name );
     return (*found).second;
   } else {
     return NULL;
