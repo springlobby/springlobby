@@ -16,18 +16,18 @@
 
 
 //
-// Class: MainChatPanel
+// Class: MainChatTab
 //
 // Created on: Tue May  1 13:32:49 2007
 //
 
-#include "mainchatpanel.h"
+#include "mainchattab.h"
 
 
-MainChatPanel::MainChatPanel( wxWindow* parent ) 
+MainChatTab::MainChatTab( wxWindow* parent ) 
 : wxPanel( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr )
 {
-  //SetBackgroundColour( *wxRED );
+
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   
   m_chat_tabs = new wxNotebook( this, -1, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
@@ -46,7 +46,7 @@ MainChatPanel::MainChatPanel( wxWindow* parent )
 }
 
 
-MainChatPanel::~MainChatPanel()
+MainChatTab::~MainChatTab()
 {
   
 }

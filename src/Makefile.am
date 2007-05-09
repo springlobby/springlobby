@@ -43,12 +43,12 @@ springlobby_SOURCES = \
 	chatpanel.h     \
 	connectwindow.cpp     \
 	connectwindow.h     \
-	mainchatpanel.cpp     \
-	mainchatpanel.h     \
 	server.cpp     \
 	server.h     \
 	tasserver.cpp     \
-	tasserver.h 
+	tasserver.h     \
+	mainchattab.cpp     \
+	mainchattab.h 
 
 springlobby_LDFLAGS = 
 

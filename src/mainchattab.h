@@ -16,22 +16,22 @@
 
 
 //
-// Class: MainChatPanel
+// Class: MainChatTab
 // Created on: Tue May  1 13:32:49 2007
 //
 
-#ifndef _MAINCHATPANEL_H_
-#define _MAINCHATPANEL_H_
+#ifndef _MAINCHATTAB_H_
+#define _MAINCHATTAB_H_
 
 #include <wx/wx.h>
 
 #include "chatpanel.h"
 
-class MainChatPanel : public wxPanel
+class MainChatTab : public wxPanel
 {
   public:
-    MainChatPanel( wxWindow* parent );
-    virtual ~MainChatPanel();
+    MainChatTab( wxWindow* parent );
+    virtual ~MainChatTab();
   
     // MainChatWindow interface
   
@@ -48,5 +48,5 @@ class MainChatPanel : public wxPanel
 };
 
 
-#endif  //_MAINCHATWINDOW_H_
+#endif  //_MAINCHATTAB_H_
 
