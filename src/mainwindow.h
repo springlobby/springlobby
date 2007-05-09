@@ -26,7 +26,7 @@
 #include <wx/wx.h>
 #include <wx/listbook.h>
 
-#include "mainchatpanel.h"
+#include "mainchattab.h"
 
 #include "images/chat_icon.xpm"
 
@@ -47,7 +47,7 @@ class MainWindow : public wxFrame
     wxListbook* m_func_tabs;
     wxNotebookPage* m_chat_page;
   
-    MainChatPanel* m_chat_tab;
+    MainChatTab* m_chat_tab;
   
     wxImageList* m_func_tab_images;
 };

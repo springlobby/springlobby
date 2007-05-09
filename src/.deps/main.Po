@@ -233,7 +233,7 @@ main.o main.o: main.cpp ../config.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/settings.h \
   /usr/include/wx-2.6/wx/listbase.h /usr/include/wx-2.6/wx/datetime.h \
   /usr/include/wx-2.6/wx/valtext.h mainwindow.h \
-  /usr/include/wx-2.6/wx/listbook.h mainchatpanel.h chatpanel.h \
+  /usr/include/wx-2.6/wx/listbook.h mainchattab.h chatpanel.h \
   images/chat_icon.xpm chatlist.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h \
@@ -992,7 +992,7 @@ mainwindow.h:
 
 /usr/include/wx-2.6/wx/listbook.h:
 
-mainchatpanel.h:
+mainchattab.h:
 
 chatpanel.h:
 

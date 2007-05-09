@@ -52,7 +52,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am_springlobby_OBJECTS = main.$(OBJEXT) base64.$(OBJEXT) md5.$(OBJEXT) \
 	socket.$(OBJEXT) mainwindow.$(OBJEXT) serverevents.$(OBJEXT) \
 	chatlist.$(OBJEXT) chatpanel.$(OBJEXT) connectwindow.$(OBJEXT) \
-	mainchatpanel.$(OBJEXT) server.$(OBJEXT) tasserver.$(OBJEXT)
+	server.$(OBJEXT) tasserver.$(OBJEXT) mainchattab.$(OBJEXT)
 springlobby_OBJECTS = $(am_springlobby_OBJECTS)
 am__DEPENDENCIES_1 =
 springlobby_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
@@ -244,12 +244,12 @@ springlobby_SOURCES = \
 	chatpanel.h     \
 	connectwindow.cpp     \
 	connectwindow.h     \
-	mainchatpanel.cpp     \
-	mainchatpanel.h     \
 	server.cpp     \
 	server.h     \
 	tasserver.cpp     \
-	tasserver.h 
+	tasserver.h     \
+	mainchattab.cpp     \
+	mainchattab.h 
 
 springlobby_LDFLAGS = 
 springlobby_LDADD = \
@@ -335,7 +335,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chatpanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/connectwindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mainchatpanel.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mainchattab.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mainwindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/server.Po@am__quote@
