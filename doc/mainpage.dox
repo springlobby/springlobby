@@ -26,3 +26,8 @@ The source can be checked out from the svnserver at tc.serveftp.net using the co
 Assuming you have wxWidgets installed building the source should be as easy as running the commands "./configure" and then "make".
 
 */
+
+/*!
+ @namespace std
+ @brief The standard std namespace.
+*/

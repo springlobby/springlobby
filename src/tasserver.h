@@ -36,7 +36,7 @@ using namespace std;
 #define SER_VER_0_33 -2
 #define SER_VER_0_34 -3
 
-
+//! @brief Struct used internally by the TASServer class to get client status information.
 struct TASClientstatus {
   unsigned int in_game   : 1;
   unsigned int away      : 1;
@@ -45,16 +45,19 @@ struct TASClientstatus {
   unsigned int bot       : 1;
 };
 
+//! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
 struct TASPingListItem {
   int id;
   time_t t;
 };
 
+//! @brief Union used internally by the TASServer class to get client status information.
 union UTASClientstatus {
   unsigned char byte;
   TASClientstatus tasdata;
 };
 
+//! @brief TASServer protocol implementation.
 class TASServer : public Server
 {
   public:

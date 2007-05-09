@@ -32,6 +32,7 @@ using namespace std;
 class ServerEvents;
 class Socket;
 
+//! @brief Struct used to store a client's status.
 struct Clientstatus {
   bool in_game;
   bool away;
@@ -50,6 +51,7 @@ typedef int Servererror;
 #define RANK_3 300
 #define RANK_4 400
 
+//! @brief Abstract baseclass that is used to implement a server protocol.
 class Server
 {
   public:

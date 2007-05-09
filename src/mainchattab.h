@@ -27,6 +27,8 @@
 
 #include "chatpanel.h"
 
+
+//! @brief The main chat tab.
 class MainChatTab : public wxPanel
 {
   public:

@@ -40,6 +40,7 @@ typedef int Sockerror;
 #define SE_RESOLVE_HOST_FAILED 2
 #define SE_CONNECT_TO_HOST_FAILED 3
 
+//! @brief Class that implements a TCP client socket.
 class Socket
 {
   public:

@@ -29,6 +29,7 @@
 
 typedef int Protocolerror;
 
+//! @brief Class that implements server event behaviour.
 class ServerEvents
 {
   public:

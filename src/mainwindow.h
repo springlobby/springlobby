@@ -30,6 +30,7 @@
 
 #include "images/chat_icon.xpm"
 
+//! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
 {
   public:
@@ -37,8 +38,6 @@ class MainWindow : public wxFrame
     virtual ~MainWindow();
   
     // MainWindow interface
-  
-    // TODO: add member function declarations...
   
   protected:
     // MainWindow variables

@@ -29,7 +29,8 @@
 
 using namespace std;
 
-struct ltstr
+//! @brief Used internally by ChatList in its std::map<> lists.
+struct ChatListMapCompare
 {
   bool operator()(const string s1, const string s2) const
   {
@@ -37,9 +38,14 @@ struct ltstr
   }
 };
 
-typedef map<string, ChatPanel*, ltstr>::iterator chatwin_iter_t;
-typedef map<string, ChatPanel*, ltstr> chatwin_map_t;
+//! @brief std::map<> list that stores ChatPanel pointers.
+typedef map<string, ChatPanel*, ChatListMapCompare> chatpanel_map_t;
+//! @brief chatpanel_map_t iterator.
+typedef map<string, ChatPanel*, ChatListMapCompare>::iterator chatpanel_iter_t;
 
+
+//! @brief List of ChatPanel pointers that can be looked up by the chat name.
+//! @see ChatPanel ServerEvents
 class ChatList
 {
   public:
@@ -68,8 +74,8 @@ class ChatList
   
     ChatPanel* m_serv;
     
-    chatwin_map_t m_channels;
-    chatwin_map_t m_priv_chats;
+    chatpanel_map_t m_channels;
+    chatpanel_map_t m_priv_chats;
   
 };
 

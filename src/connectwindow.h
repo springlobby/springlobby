@@ -25,6 +25,7 @@
 
 #include <wx/wx.h>
 
+//! @brief wxFrame with a connection dialog used to specify username, password, and server. It can also register a new acount.
 class ConnectWindow : public wxFrame
 {
   public:
