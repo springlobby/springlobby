@@ -1,4 +1,31 @@
 
-/*! @mainpage SpringLobby Source Documentation
- * 
+/*!
+ @mainpage SpringLobby Source Documentation
+
+ @section intro Introduction
+
+ This is the source documentation for the SpringLobby client. The SpringLobby is
+ an opensource lobby client for the TA Spring project.
+ 
+ The sourcecode is composed into several more or less independent modules. The 
+ modules will be described in detail in the \ref modules "modules" page.
+
+ The wxWidgets toolkit is used as UI for the client since it is easy to use 
+ and is also easy to port to other platforms. 
+
+ @section design_goals Desing Goals
+
+ The client will be designed to match the following design goals:
+
+ - Have a very easy to learn and use userinterface.
+ - Support all platforms supported by TA Spring.
+ - Have all the popular features seen in other clients.
+ - Have a clean, well designed, and well documented sourcecode.
+
+ @section build Building The Source
+
+ Assuming you have wxWidgets installed building the source should be as easy 
+ as to run the commands "./configure" and then "make".
+
  */
+
