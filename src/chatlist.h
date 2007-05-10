@@ -41,7 +41,7 @@ struct ChatListMapCompare
 //! @brief std::map<> list that stores ChatPanel pointers.
 typedef map<string, ChatPanel*, ChatListMapCompare> chatpanel_map_t;
 //! @brief chatpanel_map_t iterator.
-typedef map<string, ChatPanel*, ChatListMapCompare>::iterator chatpanel_iter_t;
+typedef chatpanel_map_t::iterator chatpanel_iter_t;
 
 
 //! @brief List of ChatPanel pointers that can be looked up by the chat name.

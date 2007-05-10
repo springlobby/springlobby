@@ -21,11 +21,13 @@
 #include <wx/wx.h>
 
 #include "chatlist.h"
+#include "settings.h"
 
-int main()
+void test_chatlist()
 {
-  cout << "Testing ChatList..." << endl;
+  cout << "* Testing ChatList... ";
   ChatList* chatlist = new ChatList();
+  assert( chatlist != NULL );
   
   void* chatptr = (void*)chatlist->GetChannelPanel( string("does not exist") );
   assert( chatptr == NULL ); // List should be empty.
@@ -71,7 +73,43 @@ int main()
   
   delete chatlist;
   
-  cout << "All tests done!" << endl;
+  cout << "Sucessful." << endl;
+  
+}
+
+void test_settings()
+{
+  cout << "* Testing Settings... ";
+  
+  Settings* sett = new Settings();
+  assert( sett != NULL );
+  string tmp_def_srvr = sett->GetDefaultServer(); // Save value before playing with it.
+  
+  
+  sett->SetDefaultServer( "test" );
+  assert( sett->GetDefaultServer() == string("test") ); // Should have been set.
+  sett->SetDefaultServer( "test2" );
+  assert( sett->GetDefaultServer() == string("test2") ); // Should have been set.
+
+  delete sett;
+  sett = new Settings();
+
+  assert( sett->GetDefaultServer() == string("test2") ); // Should still have same value.
+  
+  
+  sett->SetDefaultServer( tmp_def_srvr ); // Restore old value.
+  
+  delete sett;
+  
+  cout << "Sucessful." << endl;
+}
+
+int main()
+{
+  cout << "* Starting tests." << endl;
+  test_chatlist();
+  test_settings();
+  cout << "* All tests successfull!" << endl;
   
   return 0;
 }

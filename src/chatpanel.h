@@ -32,6 +32,8 @@
 
 using namespace std;
 
+#define SERVER_CHAT_NAME "$server"
+
 /*! @brief wxPanel that contains a chat.
  *
  * This panel contains a chat with a multiline TextCtrl for the messages, a 
@@ -48,29 +50,28 @@ class ChatPanel : public wxPanel
   
     // ChatPanel interface
   
-    void Said( wxString who, wxString message ) { m_chatlog_text->WriteText( who + _(": ")+ message ); }
+    void Said( wxString who, wxString message );
     
-    void SetChannelName( const string chan_name ) { m_chan_name = chan_name; }
-    string GetChannelName() { return m_chan_name; }
-    bool IsServerPanel() { return (m_chan_name == "$server"); }
+    void SetChannelName( const string chan_name );
+    string GetChannelName();
+    bool IsServerPanel();
     
   protected:
     // ChatPanel variables
   
-    bool m_show_nick_list;
+    bool m_show_nick_list;      //!< If the nicklist should be shown or not.
   
-    wxBoxSizer* m_main_sizer;
-    wxBoxSizer* m_chat_sizer;
-    wxBoxSizer* m_say_sizer;
-    wxBoxSizer* m_nick_sizer;
+    wxBoxSizer* m_main_sizer;   //!< Main sizer containing all other sizers.
+    wxBoxSizer* m_chat_sizer;   //!< Sizer containing the chat messages, and send input and button.
+    wxBoxSizer* m_say_sizer;    //!< Sizer containing send input and button.
+    wxBoxSizer* m_nick_sizer;   //!< Sizer containing the nicklist.
   
-    wxTextCtrl* m_chatlog_text;
-    wxTextCtrl* m_say_text;
+    wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
+    wxTextCtrl* m_say_text;     //!< The say textcontrol.
   
-    wxButton* m_say_button;
+    wxButton* m_say_button;     //!< The say button.
   
-    string m_chan_name;
-    bool m_server_chat;
+    string m_chan_name;         //!< Name of the chat/channel.
   
 };
 

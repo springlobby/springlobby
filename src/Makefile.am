@@ -19,7 +19,9 @@ bin_PROGRAMS = springlobby \
 test_SOURCES = \
 	chatlist.cpp\
 	chatlist.h                    \
-	test.cpp                    
+	test.cpp                    \
+	settings.cpp                    \
+	settings.h 
 
 test_LDADD = \
 	$(PACKAGE_LIBS) \
@@ -48,7 +50,9 @@ springlobby_SOURCES = \
 	tasserver.cpp     \
 	tasserver.h     \
 	mainchattab.cpp     \
-	mainchattab.h 
+	mainchattab.h     \
+	settings.cpp     \
+	settings.h 
 
 springlobby_LDFLAGS = 
 

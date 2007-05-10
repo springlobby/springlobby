@@ -129,7 +129,8 @@ EXCLUDE                = ./src/base64.cpp \
                          ./src/base64.h \
                          ./src/md5.c \
                          ./src/md5.h \
-                         ./src/base64.h
+                         ./src/base64.h \
+                         ./src/test.cpp
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = */.svn/*
 EXAMPLE_PATH           = ./doc/examples/
