@@ -30,8 +30,7 @@
 //! @param show_nick_list set to true if the nick list should be created.
 //! @todo Fix nick list
 //! @todo Enlarge the say input.
-ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) 
-: wxPanel( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr )
+ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent, -1 )
 {
   // Setting default values
   m_show_nick_list = show_nick_list;
@@ -58,7 +57,7 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list )
   m_say_sizer->Add( m_say_button );
   
   m_chat_sizer->Add( m_chatlog_text, 1, wxEXPAND );
-  m_chat_sizer->Add( m_say_sizer );
+  m_chat_sizer->Add( m_say_sizer, 0, wxEXPAND );
   
   m_main_sizer->Add( m_chat_sizer, 1, wxEXPAND );
   if ( m_show_nick_list )

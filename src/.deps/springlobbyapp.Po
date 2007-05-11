@@ -1,4 +1,4 @@
-connectwindow.o connectwindow.o: connectwindow.cpp connectwindow.h \
+springlobbyapp.o springlobbyapp.o: springlobbyapp.cpp springlobbyapp.h \
   /usr/include/wx-2.6/wx/wx.h /usr/include/wx-2.6/wx/defs.h \
   /usr/include/wx-2.6/wx/platform.h \
   /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
@@ -231,10 +231,20 @@ connectwindow.o connectwindow.o: connectwindow.cpp connectwindow.h \
   /usr/include/wx-2.6/wx/timer.h /usr/include/wx-2.6/wx/dcclient.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/settings.h \
   /usr/include/wx-2.6/wx/listbase.h /usr/include/wx-2.6/wx/datetime.h \
-  /usr/include/wx-2.6/wx/valtext.h /usr/include/wx-2.6/wx/checkbox.h \
+  /usr/include/wx-2.6/wx/valtext.h settings.h \
+  /usr/include/wx-2.6/wx/config.h /usr/include/wx-2.6/wx/confbase.h \
+  /usr/include/wx-2.6/wx/fileconf.h /usr/include/wx-2.6/wx/textfile.h \
+  /usr/include/wx-2.6/wx/textbuf.h /usr/include/wx-2.6/wx/file.h \
+  mainwindow.h /usr/include/wx-2.6/wx/listbook.h mainchattab.h \
+  chatpanel.h images/chat_icon.xpm chatlist.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h \
+  connectwindow.h /usr/include/wx-2.6/wx/checkbox.h \
   /usr/include/wx-2.6/wx/statline.h /usr/include/wx-2.6/wx/gtk/statline.h
 
-connectwindow.h:
+springlobbyapp.h:
 
 /usr/include/wx-2.6/wx/wx.h:
 
@@ -981,6 +991,42 @@ connectwindow.h:
 /usr/include/wx-2.6/wx/datetime.h:
 
 /usr/include/wx-2.6/wx/valtext.h:
+
+settings.h:
+
+/usr/include/wx-2.6/wx/config.h:
+
+/usr/include/wx-2.6/wx/confbase.h:
+
+/usr/include/wx-2.6/wx/fileconf.h:
+
+/usr/include/wx-2.6/wx/textfile.h:
+
+/usr/include/wx-2.6/wx/textbuf.h:
+
+/usr/include/wx-2.6/wx/file.h:
+
+mainwindow.h:
+
+/usr/include/wx-2.6/wx/listbook.h:
+
+mainchattab.h:
+
+chatpanel.h:
+
+images/chat_icon.xpm:
+
+chatlist.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h:
+
+connectwindow.h:
 
 /usr/include/wx-2.6/wx/checkbox.h:
 

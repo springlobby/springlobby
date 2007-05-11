@@ -33,28 +33,6 @@
 #include <wx/wx.h>
 #include "mainwindow.h"
 #include "chatlist.h"
+#include "connectwindow.h"
 
 
-/*! @brief Spring lobby wxApp
- *
- * This class required by wxWidgets.
-*/
-class SpringLobbyApp : public wxApp
-{
-  public:
-    virtual bool OnInit();
-};
-
-
-IMPLEMENT_APP(SpringLobbyApp)
-
-
-/*! @brief Initializes the application. */
-bool SpringLobbyApp::OnInit()
-{
-  MainWindow *mw = new MainWindow();
-  
-  mw->Show(TRUE);
-  
-  return TRUE;
-}

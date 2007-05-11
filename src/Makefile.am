@@ -28,7 +28,6 @@ test_LDADD = \
 	$(WX_LIBS) 
 
 springlobby_SOURCES = \
-	main.cpp     \
 	base64.cpp     \
 	md5.c     \
 	socket.cpp     \
@@ -52,7 +51,9 @@ springlobby_SOURCES = \
 	mainchattab.cpp     \
 	mainchattab.h     \
 	settings.cpp     \
-	settings.h 
+	settings.h     \
+	springlobbyapp.cpp     \
+	springlobbyapp.h 
 
 springlobby_LDFLAGS = 
 
