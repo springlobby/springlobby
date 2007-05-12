@@ -25,6 +25,7 @@
 
 #include <wx/wx.h>
 #include "settings.h"
+#include "server.h"
 
 class MainWindow;
 class ConnectWindow;
@@ -41,10 +42,16 @@ class SpringLobbyApp : public wxApp
   
     Settings& Sett();
   
+    Server* Serv();
+    void SetServ( Server* serv );
+  
     void OpenMainWindow();
     void OpenConnectWindow();
   
     void Quit();
+    void DefaultConnect();
+    void Connect( const string servername, const string username, const string password );
+    void Disconnect();
   
   protected:
     // SpringLobbyApp variables
@@ -52,6 +59,7 @@ class SpringLobbyApp : public wxApp
     Settings m_settings;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
+    Server* m_serv;
   
 };
 

@@ -38,13 +38,20 @@ Settings::~Settings()
 }
 
 
+//! @brief Checks if the server name/alias exists in the settings
+bool Settings::ServerExists( const string server_name )
+{
+  return m_config->Exists( _("/Server/")+WX_STRING(server_name) );
+}
+
+
 //! @brief Get the name/alias of the default server.
 //!
 //! @note Normally this will be the previously selected server. But at first run it will be a server that is set as the default.
 string Settings::GetDefaultServer()
 {
 //  return string( (char*)m_config->Read(_("/Servers/Default"), _(DEFSETT_DEFAULT_SERVER) ).c_str() );
-  return STL_STRING( m_config->Read(_("/Servers/Default"), _(DEFSETT_DEFAULT_SERVER) ) );
+  return STL_STRING( m_config->Read( _("/Servers/Default"), _(DEFSETT_DEFAULT_SERVER) ) );
 }
 
 

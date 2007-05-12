@@ -30,13 +30,15 @@ IMPLEMENT_APP(SpringLobbyApp)
 
 
 //! @brief Initializes the application.
+//!
+//! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
   m_main_win = NULL;
   m_con_win = NULL;
 
   OpenMainWindow();
-  OpenConnectWindow();
+  DefaultConnect();
 
   return true;
 }
@@ -55,6 +57,29 @@ Settings& SpringLobbyApp::Sett()
   return m_settings;
 }
 
+
+//! @brief Returns the currently used instance of Server
+//!
+//! @note May be NULL
+//! @return The currently used instance of Server
+Server* SpringLobbyApp::Serv()
+{
+  return m_serv;
+}
+
+
+//! @brief Set the currently used instance of Server
+//!
+//! @param serv The new Server instance to use
+void SpringLobbyApp::SetServ( Server* serv )
+{
+  m_serv = serv;
+}
+
+
+//! @brief Shows the main window on screen
+//!
+//! @note It will create the MainWindow if not allready created
 void SpringLobbyApp::OpenMainWindow()
 {
   if ( m_main_win == NULL )
@@ -62,6 +87,10 @@ void SpringLobbyApp::OpenMainWindow()
   m_main_win->Show(true);
 }
 
+
+//! @brief Show the connect window on screen
+//!
+//! @note It will create the ConnectWindow if not allready created
 void SpringLobbyApp::OpenConnectWindow()
 {
   if ( m_con_win == NULL )
@@ -70,8 +99,44 @@ void SpringLobbyApp::OpenConnectWindow()
   m_con_win->Show(true);
 }
 
+
+//! @brief Quits the entire application
 void SpringLobbyApp::Quit()
 {
   assert( m_main_win != NULL );
   m_main_win->Close();
 }
+
+
+//! @brief Connects to default server or opens the ConnectWindow
+//!
+//! @todo Fix Auto Connect
+void SpringLobbyApp::DefaultConnect()
+{
+}
+
+
+//! @brief Connects to server
+//!
+//! @param servername Name/alias of the server to connect to as named in the settings
+//! @param username The username login with
+//! @param password The password login with
+void SpringLobbyApp::Connect( const string servername, const string username, const string password )
+{
+  if ( !m_settings.ServerExists( servername ) ) {
+    assert( false );
+    return;
+  }
+  
+  
+  
+}
+
+
+//! @brief Disconnect from Server currently connected to
+//!
+//! @todo Implement
+void SpringLobbyApp::Disconnect()
+{
+}
+

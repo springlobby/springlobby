@@ -46,6 +46,8 @@ class Settings
     string GetDefaultServer();
     void   SetDefaultServer( const string server_name );
   
+    bool   ServerExists( const string server_name );
+  
     string GetServerHost( const string server_name );
     void   SetServerHost( const string server_name, const string value );
     

@@ -234,7 +234,7 @@ springlobbyapp.o springlobbyapp.o: springlobbyapp.cpp springlobbyapp.h \
   /usr/include/wx-2.6/wx/valtext.h settings.h \
   /usr/include/wx-2.6/wx/config.h /usr/include/wx-2.6/wx/confbase.h \
   /usr/include/wx-2.6/wx/fileconf.h /usr/include/wx-2.6/wx/textfile.h \
-  /usr/include/wx-2.6/wx/textbuf.h /usr/include/wx-2.6/wx/file.h \
+  /usr/include/wx-2.6/wx/textbuf.h /usr/include/wx-2.6/wx/file.h server.h \
   mainwindow.h /usr/include/wx-2.6/wx/listbook.h mainchattab.h \
   chatpanel.h images/chat_icon.xpm chatlist.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map \
@@ -1005,6 +1005,8 @@ settings.h:
 /usr/include/wx-2.6/wx/textbuf.h:
 
 /usr/include/wx-2.6/wx/file.h:
+
+server.h:
 
 mainwindow.h:
 
