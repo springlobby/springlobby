@@ -51,6 +51,7 @@ class ChatPanel : public wxPanel
     // ChatPanel interface
   
     void Said( wxString who, wxString message );
+    void Motd( wxString message );
     
     void SetChannelName( const string chan_name );
     string GetChannelName();

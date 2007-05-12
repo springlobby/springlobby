@@ -60,4 +60,14 @@ ServerEvents* Server::get_uicontrol( )
   return m_ui;
 }
 
+void Server::set_username( const string username )
+{
+  m_user = username;
+}
+
+
+void Server::set_password( const string password )
+{
+  m_pass = password;
+}
 

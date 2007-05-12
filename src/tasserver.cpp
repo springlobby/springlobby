@@ -49,9 +49,7 @@ TASServer::~TASServer()
 void TASServer::connect( string addr, const int port )
 {
   assert( m_sock != NULL );
-  if ( !m_sock->connect( addr, port ) ) {
-    // TODO: Handle errors
-  }
+  m_sock->Connect( addr, port );
   if ( is_connected() ) {
     m_last_ping = time( NULL );
     m_connected = true;
@@ -63,20 +61,19 @@ void TASServer::connect( string addr, const int port )
 void TASServer::disconnect()
 {
   assert( m_sock != NULL );
-  if ( !m_sock->disconnect() ) {
-    // TODO: Handle errors
-  }
+  m_sock->Disconnect();
   m_connected = false;
 }
 
 bool TASServer::is_connected()
 {
   if ( m_sock == NULL ) return false;
-  return (m_sock->state() == SS_OPEN);
+  return (m_sock->State() == SS_OPEN);
 }
   
-void TASServer::login( string username, string password )
+void TASServer::login()
 {
+  string password = m_pass;
   unsigned char output[16];
   unsigned char* input = new unsigned char[ password.length() ];
   for ( int i = 0; i < password.length(); i++ )
@@ -87,11 +84,11 @@ void TASServer::login( string username, string password )
   //cout << password.c_str() << endl;
   
   string data = "LOGIN ";
-  data += username;
+  data += m_user;
   data += " ";
   data += password;
   data += " 2100 * TKALCL 0.001\n";
-  m_sock->send( data );
+  m_sock->Send( data );
   
   delete input;
 }
@@ -136,7 +133,7 @@ void TASServer::update()
   while ( !data.empty() ) { // Go on until recive stops providing data.
     
     data = "";
-    if ( m_sock->recive( data ) ) {
+    if ( m_sock->Recive( data ) ) {
       m_buffer += data;
       if ( m_buffer.find( "\n", 0 ) != string::npos ) {
         execute_command( m_buffer );
@@ -331,7 +328,7 @@ void TASServer::ping()
     cmd += "\n";
   }
   
-  m_sock->send( cmd );
+  m_sock->Send( cmd );
   
   TASPingListItem pli;
   pli.id = m_ping_id;
@@ -394,7 +391,7 @@ void TASServer::join_channel( string channel, string key )
     cmd += " " + key;
   cmd += "\n";
   
-  m_sock->send( cmd );
+  m_sock->Send( cmd );
 }
 
 
@@ -404,7 +401,7 @@ void TASServer::part_channel( string channel )
   assert( is_online() );
   assert( m_sock != NULL );
   
-  m_sock->send( "LEAVE " + channel + "\n" );
+  m_sock->Send( "LEAVE " + channel + "\n" );
   
 }
  
@@ -415,7 +412,7 @@ void TASServer::say_channel( string channel, string msg )
   assert( is_online() );
   assert( m_sock != NULL );
   
-  m_sock->send( "SAY " + channel + " " + msg + "\n" );
+  m_sock->Send( "SAY " + channel + " " + msg + "\n" );
 }
 
 
@@ -425,7 +422,7 @@ void TASServer::say_private( string nick, string msg )
   assert( is_online() );
   assert( m_sock != NULL );
   
-  m_sock->send( "SAYPRIVARE " + nick + " " + msg + "\n" );
+  m_sock->Send( "SAYPRIVARE " + nick + " " + msg + "\n" );
 }
 
 

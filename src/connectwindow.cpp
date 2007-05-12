@@ -22,6 +22,8 @@
 //
 
 #include "connectwindow.h"
+#include "springlobbyapp.h"
+#include "settings.h"
 
 
 // Define events.
@@ -38,20 +40,26 @@ END_EVENT_TABLE()
 ConnectWindow::ConnectWindow( wxWindow* parent ) 
 : wxFrame( parent, -1, _T("Connect to lobby server"), wxDefaultPosition, wxSize(280, 300) )
 {
+  wxString server;
+  wxString username;
+  wxString password;
+  
+  server = WX_STRING( app().GetDefaultServer() );
+  
   // Create all UI elements.
   m_tabs =         new wxNotebook( this  , -1 );
   m_login_tab =    new wxPanel   ( m_tabs, -1 );
   m_register_tab = new wxPanel   ( m_tabs, -1 );
   
   m_server_lbl =   new wxStaticText( m_login_tab, -1, _T("Server") );
-  m_server_combo = new wxComboBox  ( m_login_tab, -1, _("") );
+  m_server_combo = new wxComboBox  ( m_login_tab, -1, server );
   
   m_ser_acc_line = new wxStaticLine( m_login_tab );
   
   m_nick_lbl =    new wxStaticText( m_login_tab, -1, _T("Nickname") );
-  m_nick_text =   new wxTextCtrl  ( m_login_tab, -1, _("") );
+  m_nick_text =   new wxTextCtrl  ( m_login_tab, -1, username );
   m_pass_lbl =    new wxStaticText( m_login_tab, -1, _T("Password") );
-  m_pass_text =   new wxTextCtrl  ( m_login_tab, -1, _(""), wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
+  m_pass_text =   new wxTextCtrl  ( m_login_tab, -1, password, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
   m_rpass_check = new wxCheckBox  ( m_login_tab, -1, _("Remember\npassword") );
   
   m_acc_note_line = new wxStaticLine( m_login_tab );
@@ -118,6 +126,7 @@ ConnectWindow::~ConnectWindow()
 void ConnectWindow::OnOk(wxCommandEvent& event)
 {
   Close();
+  app().Connect( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_pass_text->GetValue()), STL_STRING(m_nick_text->GetValue()) );
 }
 
 void ConnectWindow::OnCancel(wxCommandEvent& event)

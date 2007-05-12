@@ -22,7 +22,7 @@
 //
 
 #include "serverevents.h"
-
+#include "springlobbyapp.h"
 
 ServerEvents::ServerEvents()
 {
@@ -38,7 +38,8 @@ ServerEvents::~ServerEvents()
 
 void ServerEvents::on_connected( string server_ver, bool supported )
 {
-  
+  assert( app().Serv() != NULL );
+  app().Serv()->login();
 }
 
 void ServerEvents::on_disconnected()
@@ -71,6 +72,8 @@ void ServerEvents::on_protocol_error( const Protocolerror error )
 
 void ServerEvents::on_motd( string msg )
 {
+  assert( app().GetServerPanel() != NULL );
+  app().GetServerPanel()->Motd( WX_STRING(msg) );
 }
 
 void ServerEvents::on_pong( int ping_time )

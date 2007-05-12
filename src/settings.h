@@ -32,7 +32,10 @@ using namespace std;
 #define STL_STRING(v) string( (char*)v.c_str() )
 #define WX_STRING(v) wxString( (wxChar*)v.c_str() )
 
-#define DEFSETT_DEFAULT_SERVER "test"
+#define DEFSETT_DEFAULT_SERVER "TA Spring Server"
+#define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"
+#define DEFSETT_DEFAULT_SERVER_PORT 8200
+#define DEFSETT_SAVE_PASSWORD false
 
 //! @brief Class used to store and restore application settings.
 class Settings
@@ -42,6 +45,8 @@ class Settings
     virtual ~Settings();
   
     // Settings interface
+  
+    void SetDefaultSettings();
   
     string GetDefaultServer();
     void   SetDefaultServer( const string server_name );

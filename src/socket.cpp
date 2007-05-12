@@ -24,25 +24,58 @@
 #include "socket.h"
 
 
+//! @brief Constructor
 Socket::Socket()
 {
-	//_proto = NULL;
+  //_proto = NULL;
 }
 
 
+//! @brief Destructor
 Socket::~Socket()
 {
-	
-}
-/*
-void set_protocol( Protocol* proto )
-{
-  assert( (state() != SS_CONNECTING) && (state() != SS_CONNECTED) ); // That could possibly fuck up things.
-  _proto = proto;
+  
 }
 
-Protocol* get_protocol( )
+
+//! @brief Connect to remote host
+void Socket::Connect( const string addr, const int port )
 {
-  return proto;
+
 }
-*/
+
+
+//! @brief Disconnect from current connection
+void Socket::Disconnect( )
+{
+
+}
+
+
+//! @brief Send data over connection
+bool Socket::Send( string data )
+{
+  return false;
+}
+
+
+//! @brief Recive data from connection
+bool Socket::Recive( string& data )
+{
+  return false;
+}
+
+
+//! @brief Get curent socket state
+Sockstate Socket::State( )
+{
+  
+}
+
+
+//! @brief Get socket error code
+Sockerror Socket::Error( )
+{
+  
+}
+

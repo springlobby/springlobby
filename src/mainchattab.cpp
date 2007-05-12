@@ -22,6 +22,7 @@
 //
 
 #include "mainchattab.h"
+#include "springlobbyapp.h"
 
 
 MainChatTab::MainChatTab( wxWindow* parent ) 
@@ -33,10 +34,8 @@ MainChatTab::MainChatTab( wxWindow* parent )
   m_chat_tabs = new wxNotebook( this, -1, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
   
   m_server_chat = new ChatPanel( m_chat_tabs, false );
-  m_main_chat = new ChatPanel( m_chat_tabs, true );
-  
   m_chat_tabs->AddPage( m_server_chat, _T("Server"), true, -1 );
-  m_chat_tabs->AddPage( m_main_chat, _T("Main"), false, -1 );
+  app().SetServerPanel( m_server_chat );
   
   m_main_sizer->Add( m_chat_tabs, 1, wxEXPAND, 0 );
   

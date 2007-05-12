@@ -26,21 +26,22 @@
 #include <wx/wx.h>
 #include "settings.h"
 #include "server.h"
+#include "tasserver.h"
+#include "serverevents.h"
+#include "chatlist.h"
 
 class MainWindow;
 class ConnectWindow;
-  
+
+ 
 //! @brief Spring lobby wxApp, this class connects all the other classes
-class SpringLobbyApp : public wxApp
+class SpringLobbyApp : public wxApp, public Settings, public ServerEvents, public ChatList
 {
   public:
-    
     // SpringLobbyApp interface
     
     virtual bool OnInit();
     virtual bool OnQuit();
-  
-    Settings& Sett();
   
     Server* Serv();
     void SetServ( Server* serv );
@@ -56,13 +57,14 @@ class SpringLobbyApp : public wxApp
   protected:
     // SpringLobbyApp variables
     
-    Settings m_settings;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
     Server* m_serv;
   
 };
 
+
+SpringLobbyApp& app();
 
 
 DECLARE_APP(SpringLobbyApp)

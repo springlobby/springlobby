@@ -28,6 +28,11 @@
 
 IMPLEMENT_APP(SpringLobbyApp)
 
+SpringLobbyApp& app()
+{
+  return (SpringLobbyApp&)wxGetApp();
+}
+
 
 //! @brief Initializes the application.
 //!
@@ -36,7 +41,8 @@ bool SpringLobbyApp::OnInit()
 {
   m_main_win = NULL;
   m_con_win = NULL;
-
+  m_serv = NULL;
+  
   OpenMainWindow();
   DefaultConnect();
 
@@ -48,13 +54,6 @@ bool SpringLobbyApp::OnInit()
 bool SpringLobbyApp::OnQuit()
 {
   return true;
-}
-
-
-//! @brief Returns a reference to the current Settings object
-Settings& SpringLobbyApp::Sett()
-{
-  return m_settings;
 }
 
 
@@ -113,6 +112,7 @@ void SpringLobbyApp::Quit()
 //! @todo Fix Auto Connect
 void SpringLobbyApp::DefaultConnect()
 {
+  OpenConnectWindow();
 }
 
 
@@ -121,15 +121,42 @@ void SpringLobbyApp::DefaultConnect()
 //! @param servername Name/alias of the server to connect to as named in the settings
 //! @param username The username login with
 //! @param password The password login with
+//! @see ServerEvents::on_connected
 void SpringLobbyApp::Connect( const string servername, const string username, const string password )
 {
-  if ( !m_settings.ServerExists( servername ) ) {
+  string host;
+  int port;
+  Socket* sock;
+  
+  if ( !ServerExists( servername ) ) {
     assert( false );
     return;
   }
   
+  if ( m_serv != NULL ) {
+    // Delete old Server object
+    m_serv->disconnect();
+    sock =  m_serv->get_socket();
+    m_serv->set_socket( NULL );
+    delete sock;
+    delete m_serv;
+  }
   
+  // Create new Server object
+  m_serv = new TASServer();
+  sock = new Socket();
+  m_serv->set_socket( sock );
+  m_serv->set_uicontrol( this );
   
+  m_serv->set_username( username );
+  m_serv->set_password( password );
+  
+  host = GetServerHost( servername );
+  port = GetServerPort( servername );
+  
+  // Connect
+  m_serv->connect( host, port );
+
 }
 
 

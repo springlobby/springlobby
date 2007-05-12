@@ -49,25 +49,20 @@ class Socket
   
     // Socket interface
   
-    virtual bool connect( string addr, int port ) = 0;
-    virtual bool disconnect( ) = 0;
+    virtual void Connect( const string addr, const int port );
+    virtual void Disconnect( );
   
-    virtual bool send( string data ) = 0;
-    virtual bool recive( string& data ) = 0;
+    virtual bool Send( string data );
+    virtual bool Recive( string& data );
   
-    virtual Sockstate state( ) = 0;
-    virtual Sockerror error( ) = 0;
-  
-/*  virtual void set_protocol( Protocol* proto );
-  virtual Protocol* get_protocol( );*/
+    virtual Sockstate State( );
+    virtual Sockerror Error( );
   
   protected:
   // Socket variables
   
-    //Protocol* _proto;
-  
 };
 
 
-#endif	//_SOCKET_H_
+#endif  //_SOCKET_H_
 

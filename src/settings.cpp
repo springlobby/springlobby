@@ -28,6 +28,8 @@
 Settings::Settings()
 {
   m_config = new wxConfig( _("SpringLobby") );
+  if ( !m_config->Exists( _("/General") ) )
+    SetDefaultSettings();
 }
 
 
@@ -35,6 +37,18 @@ Settings::Settings()
 Settings::~Settings()
 {
   delete m_config;
+}
+
+
+//! @brief Restores default settings
+void Settings::SetDefaultSettings()
+{
+  wxString defserver;
+  defserver = _(DEFSETT_DEFAULT_SERVER);
+  m_config->Write( _("/Servers/Default"), defserver );
+  m_config->Write( _("/Server/")+defserver+_("/host"), _(DEFSETT_DEFAULT_SERVER_HOST) );
+  m_config->Write( _("/Server/")+defserver+_("/port"), DEFSETT_DEFAULT_SERVER_PORT );
+  //! @todo Save all default settings
 }
 
 
@@ -71,6 +85,7 @@ void   Settings::SetDefaultServer( const string server_name )
 //! @todo Implement
 string Settings::GetServerHost( const string server_name )
 {
+  return STL_STRING( m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/host"), _(DEFSETT_DEFAULT_SERVER_HOST) ) );
 }
 
 
@@ -90,6 +105,7 @@ void   Settings::SetServerHost( const string server_name, const string value )
 //! @todo Implement
 int    Settings::GetServerPort( const string server_name )
 {
+  return m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/port"), DEFSETT_DEFAULT_SERVER_PORT );
 }
 
 

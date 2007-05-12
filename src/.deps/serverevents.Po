@@ -237,7 +237,14 @@ serverevents.o serverevents.o: serverevents.cpp serverevents.h socket.h \
   /usr/include/wx-2.6/wx/timer.h /usr/include/wx-2.6/wx/dcclient.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/settings.h \
   /usr/include/wx-2.6/wx/listbase.h /usr/include/wx-2.6/wx/datetime.h \
-  /usr/include/wx-2.6/wx/valtext.h
+  /usr/include/wx-2.6/wx/valtext.h springlobbyapp.h settings.h \
+  /usr/include/wx-2.6/wx/config.h /usr/include/wx-2.6/wx/confbase.h \
+  /usr/include/wx-2.6/wx/fileconf.h /usr/include/wx-2.6/wx/textfile.h \
+  /usr/include/wx-2.6/wx/textbuf.h /usr/include/wx-2.6/wx/file.h \
+  tasserver.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/list \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_list.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc
 
 serverevents.h:
 
@@ -1002,3 +1009,27 @@ chatpanel.h:
 /usr/include/wx-2.6/wx/datetime.h:
 
 /usr/include/wx-2.6/wx/valtext.h:
+
+springlobbyapp.h:
+
+settings.h:
+
+/usr/include/wx-2.6/wx/config.h:
+
+/usr/include/wx-2.6/wx/confbase.h:
+
+/usr/include/wx-2.6/wx/fileconf.h:
+
+/usr/include/wx-2.6/wx/textfile.h:
+
+/usr/include/wx-2.6/wx/textbuf.h:
+
+/usr/include/wx-2.6/wx/file.h:
+
+tasserver.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/list:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_list.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc:

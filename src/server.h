@@ -69,7 +69,7 @@ class Server
     virtual void disconnect() = 0;
     virtual bool is_connected() = 0;
   
-    virtual void login( string username, string password ) = 0;
+    virtual void login() = 0;
     virtual void logout() = 0;
     virtual bool is_online() = 0;
   
@@ -84,6 +84,9 @@ class Server
     virtual void set_keepalive_interval( int seconds ) { m_keepalive = seconds; }
     virtual int get_keepalive_interval() { return m_keepalive; }
   
+    virtual void set_username( const string username );
+    virtual void set_password( const string password );
+    
     virtual void ping() = 0;
   protected:
     // Server variables
@@ -91,6 +94,8 @@ class Server
     Socket* m_sock;
     ServerEvents* m_ui;
     int m_keepalive;
+    string m_user;
+    string m_pass;
 
 };
 

@@ -71,7 +71,7 @@ class TASServer : public Server
     virtual void disconnect();
     virtual bool is_connected();
   
-    virtual void login( string username, string password );
+    virtual void login();
     virtual void logout();
     virtual bool is_online();
   
