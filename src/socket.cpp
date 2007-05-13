@@ -110,7 +110,7 @@ bool Socket::Send( string data )
   if ( data.length() <= 0) return true;
   data[data.length()-1] = '\0';
   cout << "Socket::Send( \"" << data.c_str() << "\" )" << endl;
-  data[data.length()-1] = '\n';  
+  data[data.length()] = '\n';  
   m_sock->Write( (void*)data.c_str(), data.length() );
   return !m_sock->Error();
 }
@@ -134,6 +134,7 @@ bool Socket::Recive( string& data )
       readbytes++;
     }
   } while ( (readnum > 0) && (buff[0] != '\n') );
+  
   
   cout << "** Socket::Recive(): recived: \"" << data.c_str() << "\"" << endl;  
   return (readbytes > 0);

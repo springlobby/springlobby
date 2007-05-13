@@ -96,13 +96,12 @@ void TASServer::login()
   
   md5_csum( input, password.length(), &output[0] );
   password = base64_encode( &output[0] , 16 );
-  //cout << password.c_str() << endl;
   
   string data = "LOGIN ";
   data += m_user;
   data += " ";
   data += password;
-  data += " 2100 * TKALCL 0.001\n";
+  data += " 2100 * SpringLobby 0.1\n";
   m_sock->Send( data );
   
   delete input;
