@@ -27,7 +27,7 @@
 //! @brief Constructor
 Socket::Socket()
 {
-  //_proto = NULL;
+  
 }
 
 

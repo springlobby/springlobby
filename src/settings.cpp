@@ -28,7 +28,7 @@
 Settings::Settings()
 {
   m_config = new wxConfig( _("SpringLobby") );
-  if ( !m_config->Exists( _("/General") ) )
+  if ( !m_config->Exists( _("/Servers") ) )
     SetDefaultSettings();
 }
 
@@ -36,6 +36,7 @@ Settings::Settings()
 //! @brief Destructor
 Settings::~Settings()
 {
+  m_config->Flush();
   delete m_config;
 }
 
@@ -64,7 +65,6 @@ bool Settings::ServerExists( const string server_name )
 //! @note Normally this will be the previously selected server. But at first run it will be a server that is set as the default.
 string Settings::GetDefaultServer()
 {
-//  return string( (char*)m_config->Read(_("/Servers/Default"), _(DEFSETT_DEFAULT_SERVER) ).c_str() );
   return STL_STRING( m_config->Read( _("/Servers/Default"), _(DEFSETT_DEFAULT_SERVER) ) );
 }
 

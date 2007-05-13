@@ -29,8 +29,8 @@
 
 using namespace std;
 
-#define STL_STRING(v) string( (char*)v.c_str() )
-#define WX_STRING(v) wxString( (wxChar*)v.c_str() )
+#define STL_STRING(v) string((const char*)v.mb_str(wxConvUTF8))
+#define WX_STRING(v) wxString(v.c_str(),wxConvUTF8)
 
 #define DEFSETT_DEFAULT_SERVER "TA Spring Server"
 #define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"

@@ -79,12 +79,11 @@ void test_chatlist()
 
 void test_settings()
 {
-  cout << "* Testing Settings... ";
+  cout << "* Testing Settings... " << endl;
   
   Settings* sett = new Settings();
   assert( sett != NULL );
   string tmp_def_srvr = sett->GetDefaultServer(); // Save value before playing with it.
-  
   
   sett->SetDefaultServer( "test" );
   assert( sett->GetDefaultServer() == string("test") ); // Should have been set.
@@ -93,12 +92,12 @@ void test_settings()
 
   delete sett;
   sett = new Settings();
-
-  assert( sett->GetDefaultServer() == string("test2") ); // Should still have same value.
   
+  assert( sett->GetDefaultServer() == string("test2") ); // Should still have same value.
+  assert( WX_STRING(sett->GetDefaultServer()) == WX_STRING(string("test2")) ); // Should still have same value.
   
   sett->SetDefaultServer( tmp_def_srvr ); // Restore old value.
-  
+
   delete sett;
   
   cout << "Sucessful." << endl;
