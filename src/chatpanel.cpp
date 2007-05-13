@@ -82,7 +82,7 @@ ChatPanel::~ChatPanel()
 //! @todo Fix nicer format of chat messages.
 void ChatPanel::Said( wxString who, wxString message )
 {
-  m_chatlog_text->WriteText( who + _(": ")+ message );
+  m_chatlog_text->WriteText( who + _(": ")+ message + _("\n") );
 }
 
 
@@ -91,7 +91,7 @@ void ChatPanel::Said( wxString who, wxString message )
 //! @param The MOTD message to output
 void ChatPanel::Motd( wxString message )
 {
-  m_chatlog_text->WriteText( _("motd ")+ message );
+  m_chatlog_text->WriteText( _("motd ")+ message + _("\n") );
 }
 
 

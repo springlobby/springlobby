@@ -88,6 +88,11 @@ class Server
     virtual void set_password( const string password );
     
     virtual void ping() = 0;
+    /*
+    virtual void on_connected( Socket* sock ) = 0;
+    virtual void on_disconnected( Socket* sock ) = 0;
+    virtual void on_data_recived( Socket* sock ) = 0;
+    */
   protected:
     // Server variables
   

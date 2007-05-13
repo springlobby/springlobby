@@ -239,7 +239,15 @@ springlobbyapp.o springlobbyapp.o: springlobbyapp.cpp springlobbyapp.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/list \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_list.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc \
-  serverevents.h socket.h chatlist.h \
+  serverevents.h socket.h /usr/include/wx-2.6/wx/socket.h \
+  /usr/include/wx-2.6/wx/sckaddr.h /usr/include/wx-2.6/wx/gsocket.h \
+  /usr/include/wx-2.6/wx/unix/gsockunx.h \
+  /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
+  /usr/include/wx-2.6/wx/gsocket.h /usr/include/sys/socket.h \
+  /usr/include/sys/uio.h /usr/include/bits/socket.h \
+  /usr/include/bits/sockaddr.h /usr/include/asm/socket.h \
+  /usr/include/asm/sockios.h /usr/include/sys/un.h \
+  /usr/include/wx-2.6/wx/event.h chatlist.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h \
@@ -1024,6 +1032,34 @@ tasserver.h:
 serverevents.h:
 
 socket.h:
+
+/usr/include/wx-2.6/wx/socket.h:
+
+/usr/include/wx-2.6/wx/sckaddr.h:
+
+/usr/include/wx-2.6/wx/gsocket.h:
+
+/usr/include/wx-2.6/wx/unix/gsockunx.h:
+
+/usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h:
+
+/usr/include/wx-2.6/wx/gsocket.h:
+
+/usr/include/sys/socket.h:
+
+/usr/include/sys/uio.h:
+
+/usr/include/bits/socket.h:
+
+/usr/include/bits/sockaddr.h:
+
+/usr/include/asm/socket.h:
+
+/usr/include/asm/sockios.h:
+
+/usr/include/sys/un.h:
+
+/usr/include/wx-2.6/wx/event.h:
 
 chatlist.h:
 

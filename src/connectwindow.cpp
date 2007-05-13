@@ -126,7 +126,7 @@ ConnectWindow::~ConnectWindow()
 void ConnectWindow::OnOk(wxCommandEvent& event)
 {
   Close();
-  app().Connect( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_pass_text->GetValue()), STL_STRING(m_nick_text->GetValue()) );
+  app().Connect( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_nick_text->GetValue()), STL_STRING(m_pass_text->GetValue()) );
 }
 
 void ConnectWindow::OnCancel(wxCommandEvent& event)

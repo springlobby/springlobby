@@ -81,12 +81,7 @@ serverevents.o serverevents.o: serverevents.cpp serverevents.h socket.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_heap.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tempbuf.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/basic_string.tcc \
-  server.h chatlist.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h \
-  chatpanel.h /usr/include/wx-2.6/wx/wx.h /usr/include/wx-2.6/wx/defs.h \
+  /usr/include/wx-2.6/wx/wx.h /usr/include/wx-2.6/wx/defs.h \
   /usr/include/wx-2.6/wx/platform.h \
   /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
   /usr/include/wx-2.6/wx/chkconf.h /usr/include/wx-2.6/wx/chkconf.h \
@@ -237,11 +232,23 @@ serverevents.o serverevents.o: serverevents.cpp serverevents.h socket.h \
   /usr/include/wx-2.6/wx/timer.h /usr/include/wx-2.6/wx/dcclient.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/settings.h \
   /usr/include/wx-2.6/wx/listbase.h /usr/include/wx-2.6/wx/datetime.h \
-  /usr/include/wx-2.6/wx/valtext.h springlobbyapp.h settings.h \
-  /usr/include/wx-2.6/wx/config.h /usr/include/wx-2.6/wx/confbase.h \
-  /usr/include/wx-2.6/wx/fileconf.h /usr/include/wx-2.6/wx/textfile.h \
-  /usr/include/wx-2.6/wx/textbuf.h /usr/include/wx-2.6/wx/file.h \
-  tasserver.h \
+  /usr/include/wx-2.6/wx/valtext.h /usr/include/wx-2.6/wx/socket.h \
+  /usr/include/wx-2.6/wx/sckaddr.h /usr/include/wx-2.6/wx/gsocket.h \
+  /usr/include/wx-2.6/wx/unix/gsockunx.h \
+  /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
+  /usr/include/wx-2.6/wx/gsocket.h /usr/include/sys/socket.h \
+  /usr/include/sys/uio.h /usr/include/bits/socket.h \
+  /usr/include/bits/sockaddr.h /usr/include/asm/socket.h \
+  /usr/include/asm/sockios.h /usr/include/sys/un.h \
+  /usr/include/wx-2.6/wx/event.h server.h chatlist.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h \
+  chatpanel.h springlobbyapp.h settings.h /usr/include/wx-2.6/wx/config.h \
+  /usr/include/wx-2.6/wx/confbase.h /usr/include/wx-2.6/wx/fileconf.h \
+  /usr/include/wx-2.6/wx/textfile.h /usr/include/wx-2.6/wx/textbuf.h \
+  /usr/include/wx-2.6/wx/file.h tasserver.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/list \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_list.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc
@@ -469,20 +476,6 @@ socket.h:
 /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tempbuf.h:
 
 /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/basic_string.tcc:
-
-server.h:
-
-chatlist.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h:
-
-chatpanel.h:
 
 /usr/include/wx-2.6/wx/wx.h:
 
@@ -1009,6 +1002,48 @@ chatpanel.h:
 /usr/include/wx-2.6/wx/datetime.h:
 
 /usr/include/wx-2.6/wx/valtext.h:
+
+/usr/include/wx-2.6/wx/socket.h:
+
+/usr/include/wx-2.6/wx/sckaddr.h:
+
+/usr/include/wx-2.6/wx/gsocket.h:
+
+/usr/include/wx-2.6/wx/unix/gsockunx.h:
+
+/usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h:
+
+/usr/include/wx-2.6/wx/gsocket.h:
+
+/usr/include/sys/socket.h:
+
+/usr/include/sys/uio.h:
+
+/usr/include/bits/socket.h:
+
+/usr/include/bits/sockaddr.h:
+
+/usr/include/asm/socket.h:
+
+/usr/include/asm/sockios.h:
+
+/usr/include/sys/un.h:
+
+/usr/include/wx-2.6/wx/event.h:
+
+server.h:
+
+chatlist.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h:
+
+chatpanel.h:
 
 springlobbyapp.h:
 

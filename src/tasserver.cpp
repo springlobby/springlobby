@@ -46,6 +46,20 @@ TASServer::~TASServer()
 
 }
 
+
+void TASServer::set_socket( Socket* sock )
+{
+  Server::set_socket( sock );
+  if ( sock == NULL ) return;
+    
+  sock->set_connected_callback( on_connected );
+  sock->set_disconnected_callback( on_disconnected );
+  sock->set_data_recived_callback( on_data_recived );
+  
+  sock->set_userdata( (void*)this );
+  
+}
+
 void TASServer::connect( string addr, const int port )
 {
   assert( m_sock != NULL );
@@ -73,6 +87,7 @@ bool TASServer::is_connected()
   
 void TASServer::login()
 {
+  cout << "** TASServer::login()" << endl;
   string password = m_pass;
   unsigned char output[16];
   unsigned char* input = new unsigned char[ password.length() ];
@@ -95,6 +110,7 @@ void TASServer::login()
 
 void TASServer::logout()
 {
+  cout << "** TASServer::logout()" << endl;
   disconnect();
 }
 
@@ -143,6 +159,26 @@ void TASServer::update()
     
   }
 }
+
+
+void TASServer::_recive_and_execute()
+{
+  string data;
+  
+  do {
+    
+    data = "";
+    if ( m_sock->Recive( data ) ) {
+      m_buffer += data;
+      if ( m_buffer.find( "\n", 0 ) != string::npos ) {
+        execute_command( m_buffer );
+        m_buffer = "";
+      }
+    }
+    
+  } while ( !data.empty() ); // Go on until recive stops providing data.
+}
+
 
 void TASServer::execute_command( string in )
 {
@@ -228,7 +264,8 @@ void TASServer::execute_command( string cmd, string params, int replyid )
     title = get_sentence_param( params );
     mod = get_sentence_param( params );
     
-    m_ui->on_battle_opened( id, replay, nat, nick, host, port, maxplayers, haspass, (rank + 1)*100, hash, map, title, mod );
+    m_ui->on_battle_opened( id, replay, nat, nick, host, port, maxplayers, 
+                            haspass, (rank + 1)*100, hash, map, title, mod );
     
   } else if ( cmd == "JOINEDBATTLE" ) {
     id = get_int_param( params );
@@ -425,6 +462,33 @@ void TASServer::say_private( string nick, string msg )
   m_sock->Send( "SAYPRIVARE " + nick + " " + msg + "\n" );
 }
 
+
+
+void TASServer::on_connected( Socket* sock )
+{
+  TASServer* serv = (TASServer*)sock->get_userdata();
+  serv->m_last_ping = time( NULL );
+  serv->m_connected = true;
+  serv->m_online = false;
+  cout << "** TASServer::on_connected(): on_connected event." << endl;
+}
+
+
+void TASServer::on_disconnected( Socket* sock )
+{
+  TASServer* serv = (TASServer*)sock->get_userdata();
+  serv->m_connected = false;
+  serv->m_online = false;
+  cout << "** TASServer::on_disconnected(): on_disconnected event." << endl;
+}
+
+
+void TASServer::on_data_recived( Socket* sock )
+{
+  TASServer* serv = (TASServer*)sock->get_userdata();
+  cout << "** TASServer::on_data_recived(): on_data_recived event." << endl;
+  serv->_recive_and_execute();
+}
 
 
 ////////////////////////

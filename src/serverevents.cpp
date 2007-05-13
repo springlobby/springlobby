@@ -38,16 +38,19 @@ ServerEvents::~ServerEvents()
 
 void ServerEvents::on_connected( string server_ver, bool supported )
 {
+  cout << "** ServerEvents::on_connected(): Server: " << server_ver.c_str() << endl;
   assert( app().Serv() != NULL );
   app().Serv()->login();
 }
 
 void ServerEvents::on_disconnected()
 {
+  cout << "** ServerEvents::on_disconnected()" << endl;
 }
       
 void ServerEvents::on_login()
 {
+  cout << "** ServerEvents::on_login()" << endl;
 }
 
 void ServerEvents::on_login_info_complete()

@@ -67,6 +67,7 @@ class TASServer : public Server
   // TASServer interface
   
     // Overloaded functions from Server
+    virtual void set_socket( Socket* sock );
     virtual void connect( string addr, const int port );
     virtual void disconnect();
     virtual bool is_connected();
@@ -84,7 +85,7 @@ class TASServer : public Server
   
     virtual void say_channel( string channel, string msg );
     virtual void say_private( string nick, string msg );
-  
+   
     // TASServer specific functions
     void execute_command( string in );
     void execute_command( string cmd, string params, int replyid = -1 );
@@ -99,7 +100,11 @@ class TASServer : public Server
     // Static utility functions
     static Clientstatus conv_tasclientstatus( TASClientstatus );
     static bool version_support_replyid( int version );
-  
+    
+    static void on_connected( Socket* sock );
+    static void on_disconnected( Socket* sock );
+    static void on_data_recived( Socket* sock );
+    
   protected:
     // TASServer variables
   
@@ -110,7 +115,9 @@ class TASServer : public Server
     string m_buffer;
     time_t m_last_ping;
     int m_ping_id;
-    list<TASPingListItem> m_pinglist; 
+    list<TASPingListItem> m_pinglist;
+  
+    void _recive_and_execute();
 };
 
 
