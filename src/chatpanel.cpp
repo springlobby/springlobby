@@ -82,7 +82,7 @@ ChatPanel::~ChatPanel()
 //! @todo Fix nicer format of chat messages.
 void ChatPanel::Said( wxString who, wxString message )
 {
-  m_chatlog_text->WriteText( who + _(": ")+ message + _("\n") );
+  m_chatlog_text->AppendText( who + _(": ")+ message + _("\n") );
 }
 
 
@@ -91,9 +91,25 @@ void ChatPanel::Said( wxString who, wxString message )
 //! @param message The MOTD message to output
 void ChatPanel::Motd( wxString message )
 {
-  m_chatlog_text->WriteText( _("* motd ")+ message + _("\n") );
+  m_chatlog_text->AppendText( _(" * motd     ")+ message + _("\n") );
 }
 
+
+void ChatPanel::Joined( wxString who )
+{
+  m_chatlog_text->AppendText( _(" * ")+ who + _T(" joined the channel.\n") );
+}
+
+
+void ChatPanel::Parted( wxString who, wxString message )
+{
+  m_chatlog_text->AppendText( _(" * ")+ who + _T(" left the channel ( ") + message + _(" ).\n") );
+}
+
+void ChatPanel::SetTopic( wxString who, wxString message )
+{
+  m_chatlog_text->AppendText( _(" * Channel topic: ")+ message + _T("\n * Set by ") + who + _(".\n") );  
+}
 
 //! @brief Set name of the chat/channel.
 //!

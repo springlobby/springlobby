@@ -116,6 +116,14 @@ ConnectWindow::ConnectWindow( wxWindow* parent )
   
   // Set sizer.
   SetSizer( m_main_sizer );
+  
+  if ( !username.empty() ) {
+    m_pass_text->SetFocus();
+  } else {
+    m_nick_text->SetFocus();
+  }
+  
+  m_ok_btn->SetDefault();
 }
 
 //! @brief Destructor

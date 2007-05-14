@@ -89,7 +89,11 @@ class SpringLobbyApp : public wxApp, public Settings, public ServerEvents, publi
     virtual void on_user_left_battle( int battleid, string nick );
     virtual void on_battleinfo_updated( int battleid, int spectators, bool locked, int maphash, string map );
     virtual void on_battle_closed( int battleid );
-  
+    virtual void on_join_channel_result( bool success, string channel, string reason );
+    virtual void on_channel_said( string channel, string who, string message );
+    virtual void on_channel_join( string channel, string who );
+    virtual void on_channel_part( string channel, string who, string message );
+    virtual void on_channel_topic( string channel, string who, string message );
   protected:
     // SpringLobbyApp variables
     

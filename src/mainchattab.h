@@ -38,7 +38,7 @@ class MainChatTab : public wxPanel
     // MainChatWindow interface
   
     ChatPanel* ServerChat() { return m_server_chat; }
-  
+    ChatPanel* AddChatPannel( wxString name, bool nick_list );
   protected:
     // MainChatWindow variables
   

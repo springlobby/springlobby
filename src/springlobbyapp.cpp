@@ -232,6 +232,8 @@ void SpringLobbyApp::on_login()
 
 void SpringLobbyApp::on_login_info_complete()
 {
+  assert( m_serv != NULL );
+  m_serv->JoinChannel( "main", "" );
 }
 
 void SpringLobbyApp::on_logout()
@@ -295,4 +297,49 @@ void SpringLobbyApp::on_battle_closed( int battleid )
 {
 }
 
+void SpringLobbyApp::on_join_channel_result( bool success, string channel, string reason )
+{
+  cout << "** SpringLobbyApp::on_join_channel_result()" << endl;
+  if ( success ) {
+    MainWin().OpenChannelChat( WX_STRING(channel) );
+  } else {
+    wxString s;
+    s << _T("Could not join channel ") << WX_STRING(channel) << _T(" because: ") << WX_STRING(reason);
+    wxMessageDialog msg( NULL, s, _T("Join channel failed"), wxOK);
+    msg.ShowModal();
+  }
+}
 
+void SpringLobbyApp::on_channel_said( string channel, string who, string message )
+{
+  ChatPanel* chat = GetChannelPanel( channel );
+  if ( chat != NULL ) {
+    chat->Said( WX_STRING(who), WX_STRING(message) );
+  }
+}
+
+void SpringLobbyApp::on_channel_join( string channel, string who )
+{
+  ChatPanel* chat = GetChannelPanel( channel );
+  if ( chat != NULL ) {
+    chat->Joined( WX_STRING(who) );
+  }
+}
+
+
+void SpringLobbyApp::on_channel_part( string channel, string who, string message )
+{
+  ChatPanel* chat = GetChannelPanel( channel );
+  if ( chat != NULL ) {
+    chat->Parted( WX_STRING(who), WX_STRING(message) );
+  }
+}
+
+
+void SpringLobbyApp::on_channel_topic( string channel, string who, string message )
+{
+  ChatPanel* chat = GetChannelPanel( channel );
+  if ( chat != NULL ) {
+    chat->SetTopic( WX_STRING(who), WX_STRING(message) );
+  }
+}

@@ -53,6 +53,10 @@ class ChatPanel : public wxPanel
     void Said( wxString who, wxString message );
     void Motd( wxString message );
     
+    void Joined( wxString who );
+    void Parted( wxString who, wxString message );
+    void SetTopic( wxString who, wxString message );
+  
     void SetChannelName( const string chan_name );
     string GetChannelName();
     bool IsServerPanel();

@@ -62,8 +62,13 @@ MainWindow::~MainWindow()
 //! @brief Open a new chat tab with a channel chat
 //!
 //! @param channel The channel name
-void MainWindow::OpenChannelChat( wxString channel, wxString password )
+void MainWindow::OpenChannelChat( wxString channel )
 {
+  if ( !app().ChannelExists( STL_STRING(channel) ) ) {
+    assert( m_chat_tab != NULL );
+    ChatPanel* chat = m_chat_tab->AddChatPannel( channel, true );
+    app().SetChannelPanel( STL_STRING(channel), chat );
+  }
 }
 
 

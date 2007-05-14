@@ -207,7 +207,7 @@ void TASServer::ExecuteCommand( string cmd, string params, int replyid )
 {
   int pos, cpu, status, id, nat, port, maxplayers, rank, hash, specs;
   bool replay, haspass;
-  string nick, contry, host, map, title, mod;
+  string nick, contry, host, map, title, mod, channel, error, msg;
   Clientstatus cstatus;
   UTASClientstatus tasstatus;
   
@@ -281,6 +281,35 @@ void TASServer::ExecuteCommand( string cmd, string params, int replyid )
     m_ui->on_user_left_battle( id, nick );
   } else if ( cmd == "PONG" ) {
     HandlePong( replyid );
+  } else if ( cmd == "JOIN" ) {
+    channel = GetWordParam( params );
+    m_ui->on_join_channel_result( true, channel, "" );
+  } else if ( cmd == "JOIN" ) {
+    channel = GetWordParam( params );
+    error = GetSentenceParam( params );
+    m_ui->on_join_channel_result( false, channel, error );
+    
+  } else if ( cmd == "SAID" ) {
+    channel = GetWordParam( params );
+    nick = GetWordParam( params );
+    msg = GetSentenceParam( params );
+    m_ui->on_channel_said( channel, nick, msg );
+  } else if ( cmd == "JOINED" ) {
+    channel = GetWordParam( params );
+    nick = GetWordParam( params );
+    m_ui->on_channel_join( channel, nick );
+  } else if ( cmd == "LEFT" ) {
+    channel = GetWordParam( params );
+    nick = GetWordParam( params );
+    msg = GetSentenceParam( params );
+    m_ui->on_channel_part( channel, nick, msg );
+  } else if ( cmd == "CHANNELTOPIC" ) {
+    channel = GetWordParam( params );
+    nick = GetWordParam( params );
+    msg = GetSentenceParam( params );
+    m_ui->on_channel_topic( channel, nick, msg );
+    
+    //CLIENTS params: main ChanServ []Cookiebot hawkki Pullapitko scf84 replay trepan 10gb_bot_24h Contex[1944] NowakPL Springie
   } else {
     cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << endl;
   }
@@ -340,7 +369,7 @@ int TASServer::GetIntParam( string& params )
 
 void TASServer::Ping()
 {
-  cout << "** TASServer::ping()" << endl;
+  //cout << "** TASServer::ping()" << endl;
   string cmd = "";
 
   m_ping_id++;
@@ -476,7 +505,7 @@ void TASServer::OnDisconnected( Socket* sock )
 void TASServer::OnDataRecived( Socket* sock )
 {
   TASServer* serv = (TASServer*)sock->GetUserdata();
-  cout << "** TASServer::on_data_recived(): on_data_recived event." << endl;
+  //cout << "** TASServer::on_data_recived(): on_data_recived event." << endl;
   serv->_ReciveAndExecute();
 }
 

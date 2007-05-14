@@ -54,7 +54,7 @@ class ServerEvents
     virtual void on_new_user( string nick, string contry, int cpu ) = 0;
     virtual void on_user_status( string nick, Clientstatus status ) = 0;
     virtual void on_user_quit( string nick ) = 0;
-      
+    
     virtual void on_battle_opened( int id, bool replay, int nat, string nick, 
                                    string host, int port, int maxplayers, 
                                    bool haspass, int rank, int hash, string map, 
@@ -65,6 +65,11 @@ class ServerEvents
     virtual void on_battleinfo_updated( int battleid, int spectators, bool locked, int maphash, string map ) = 0;
     virtual void on_battle_closed( int battleid ) = 0;
     
+    virtual void on_join_channel_result( bool success, string channel, string reason ) = 0;
+    virtual void on_channel_said( string channel, string who, string message ) = 0;
+    virtual void on_channel_join( string channel, string who ) = 0;
+    virtual void on_channel_part( string channel, string who, string message ) = 0;
+    virtual void on_channel_topic( string channel, string who, string message ) = 0;
   protected:
   // Uicontrol variables
     
