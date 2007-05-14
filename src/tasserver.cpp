@@ -47,24 +47,24 @@ TASServer::~TASServer()
 }
 
 
-void TASServer::set_socket( Socket* sock )
+void TASServer::SetSocket( Socket* sock )
 {
-  Server::set_socket( sock );
+  Server::SetSocket( sock );
   if ( sock == NULL ) return;
     
-  sock->set_connected_callback( on_connected );
-  sock->set_disconnected_callback( on_disconnected );
-  sock->set_data_recived_callback( on_data_recived );
+  sock->SetConnectedCallback( OnConnected );
+  sock->SetDisconnectedCallback( OnDisconnected );
+  sock->SetDataRecivedCallback( OnDataRecived );
   
-  sock->set_userdata( (void*)this );
+  sock->SetUserdata( (void*)this );
   
 }
 
-void TASServer::connect( string addr, const int port )
+void TASServer::Connect( string addr, const int port )
 {
   assert( m_sock != NULL );
   m_sock->Connect( addr, port );
-  if ( is_connected() ) {
+  if ( IsConnected() ) {
     m_last_ping = time( NULL );
     m_connected = true;
   }
@@ -72,20 +72,20 @@ void TASServer::connect( string addr, const int port )
   
 }
 
-void TASServer::disconnect()
+void TASServer::Disconnect()
 {
   assert( m_sock != NULL );
   m_sock->Disconnect();
   m_connected = false;
 }
 
-bool TASServer::is_connected()
+bool TASServer::IsConnected()
 {
   if ( m_sock == NULL ) return false;
   return (m_sock->State() == SS_OPEN);
 }
   
-void TASServer::login()
+void TASServer::Login()
 {
   cout << "** TASServer::login()" << endl;
   string password = m_pass;
@@ -107,31 +107,31 @@ void TASServer::login()
   delete input;
 }
 
-void TASServer::logout()
+void TASServer::Logout()
 {
   cout << "** TASServer::logout()" << endl;
-  disconnect();
+  Disconnect();
 }
 
-bool TASServer::is_online()
+bool TASServer::IsOnline()
 {
   if ( !m_connected ) return false;
   return m_online;
 }
 
-void TASServer::update()
+void TASServer::Update()
 {
   //cout << "** TASServer::update()" << endl;
   assert( m_sock != NULL ); // TODO: This should be handled and generate an error in released code.
   
   if ( !m_connected ) { // We are not formally connected yet, but might be.
-    if ( is_connected() ) {
+    if ( IsConnected() ) {
       m_last_ping = time( NULL );
       m_connected = true;
     }
     return;
   } else { // We are connected allready.
-    if ( !is_connected() ) {
+    if ( !IsConnected() ) {
       m_connected = false;
       m_online = false;
       m_ui->on_disconnected();
@@ -140,17 +140,17 @@ void TASServer::update()
 
     time_t now = time( NULL );
     if ( m_last_ping + m_keepalive < now ) { // Is it time for a keepalive PING?
-      ping();
+      Ping();
     }
-    handle_pinglist();
+    HandlePinglist();
   }
   
-  _recive_and_execute();
+  _ReciveAndExecute();
   
 }
 
 
-void TASServer::_recive_and_execute()
+void TASServer::_ReciveAndExecute()
 {
   string data;
   
@@ -160,7 +160,7 @@ void TASServer::_recive_and_execute()
     if ( m_sock->Recive( data ) ) {
       m_buffer += data;
       if ( m_buffer.find( "\n", 0 ) != string::npos ) {
-        execute_command( m_buffer );
+        ExecuteCommand( m_buffer );
         m_buffer = "";
       }
     }
@@ -169,7 +169,7 @@ void TASServer::_recive_and_execute()
 }
 
 
-void TASServer::execute_command( string in )
+void TASServer::ExecuteCommand( string in )
 {
   string cmd;
   int pos;
@@ -200,10 +200,10 @@ void TASServer::execute_command( string in )
     in = in.substr( pos + 1 );
   }
   
-  execute_command( cmd, in );
+  ExecuteCommand( cmd, in );
 }
 
-void TASServer::execute_command( string cmd, string params, int replyid )
+void TASServer::ExecuteCommand( string cmd, string params, int replyid )
 {
   int pos, cpu, status, id, nat, port, maxplayers, rank, hash, specs;
   bool replay, haspass;
@@ -212,7 +212,7 @@ void TASServer::execute_command( string cmd, string params, int replyid )
   UTASClientstatus tasstatus;
   
   if ( cmd == "TASServer") {
-    mod = get_word_param( params );
+    mod = GetWordParam( params );
     if ( mod == "0.32" )
       m_ser_ver = SER_VER_0_32;
     else if ( mod == "0.33" )
@@ -229,65 +229,65 @@ void TASServer::execute_command( string cmd, string params, int replyid )
   } else if ( cmd == "MOTD" ) {
     m_ui->on_motd( params );
   } else if ( cmd == "ADDUSER" ) {
-    nick = get_word_param( params );
-    contry = get_word_param( params );
-    cpu = get_int_param( params );
+    nick = GetWordParam( params );
+    contry = GetWordParam( params );
+    cpu = GetIntParam( params );
     m_ui->on_new_user( nick, contry, cpu );
   } else if ( cmd == "CLIENTSTATUS" ) {
-    nick = get_word_param( params );
-    tasstatus.byte = get_int_param( params );
-    cstatus = conv_tasclientstatus( tasstatus.tasdata );
+    nick = GetWordParam( params );
+    tasstatus.byte = GetIntParam( params );
+    cstatus = ConvTasclientstatus( tasstatus.tasdata );
     m_ui->on_user_status( nick, cstatus );
   } else if ( cmd == "BATTLEOPENED" ) {
-    id = get_int_param( params );
-    replay = get_int_param( params );
-    nat = get_int_param( params );
-    nick = get_word_param( params );
-    host = get_word_param( params );
-    port = get_int_param( params );
-    maxplayers = get_int_param( params );
-    haspass = get_int_param( params );
-    rank = get_int_param( params );
-    hash = get_int_param( params );
-    map = get_sentence_param( params );
-    title = get_sentence_param( params );
-    mod = get_sentence_param( params );
+    id = GetIntParam( params );
+    replay = GetIntParam( params );
+    nat = GetIntParam( params );
+    nick = GetWordParam( params );
+    host = GetWordParam( params );
+    port = GetIntParam( params );
+    maxplayers = GetIntParam( params );
+    haspass = GetIntParam( params );
+    rank = GetIntParam( params );
+    hash = GetIntParam( params );
+    map = GetSentenceParam( params );
+    title = GetSentenceParam( params );
+    mod = GetSentenceParam( params );
     
     m_ui->on_battle_opened( id, replay, nat, nick, host, port, maxplayers, 
                             haspass, (rank + 1)*100, hash, map, title, mod );
     
   } else if ( cmd == "JOINEDBATTLE" ) {
-    id = get_int_param( params );
-    nick = get_word_param( params );
+    id = GetIntParam( params );
+    nick = GetWordParam( params );
     m_ui->on_user_joined_battle( id, nick );
   } else if ( cmd == "UPDATEBATTLEINFO" ) {
-    id = get_int_param( params );
-    specs = get_int_param( params );
-    haspass = get_int_param( params );
-    hash = get_int_param( params );
-    map = get_sentence_param( params );
+    id = GetIntParam( params );
+    specs = GetIntParam( params );
+    haspass = GetIntParam( params );
+    hash = GetIntParam( params );
+    map = GetSentenceParam( params );
     m_ui->on_battleinfo_updated( id, specs, haspass, hash, map );
   } else if ( cmd == "LOGININFOEND" ) {
     m_ui->on_login_info_complete();
   } else if ( cmd == "REMOVEUSER" ) {
-    nick = get_word_param( params );
+    nick = GetWordParam( params );
     m_ui->on_user_quit( nick );
   } else if ( cmd == "BATTLECLOSED" ) {
-    id = get_int_param( params );
+    id = GetIntParam( params );
     m_ui->on_battle_closed( id );
   } else if ( cmd == "LEFTBATTLE" ) {
-    id = get_int_param( params );
-    nick = get_word_param( params );
+    id = GetIntParam( params );
+    nick = GetWordParam( params );
     m_ui->on_user_left_battle( id, nick );
   } else if ( cmd == "PONG" ) {
-    handle_pong( replyid );
+    HandlePong( replyid );
   } else {
     cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << endl;
   }
   
 }
 
-string TASServer::get_word_param( string& params )
+string TASServer::GetWordParam( string& params )
 {
   int pos;
   string param;
@@ -304,7 +304,7 @@ string TASServer::get_word_param( string& params )
   }
 }
 
-string TASServer::get_sentence_param( string& params )
+string TASServer::GetSentenceParam( string& params )
 {
   int pos;
   string param;
@@ -321,7 +321,7 @@ string TASServer::get_sentence_param( string& params )
   }
 }
 
-int TASServer::get_int_param( string& params )
+int TASServer::GetIntParam( string& params )
 {
   int pos;
   string param;
@@ -338,14 +338,14 @@ int TASServer::get_int_param( string& params )
   }
 }
 
-void TASServer::ping()
+void TASServer::Ping()
 {
   cout << "** TASServer::ping()" << endl;
   string cmd = "";
 
   m_ping_id++;
 //  cout << ">>> PING #" << _ping_id << endl;
-  if ( version_support_replyid( m_ser_ver ) ) {
+  if ( VersionSupportReplyid( m_ser_ver ) ) {
     cmd += "#";
     cmd += m_ping_id;
     cmd += " PING\n";
@@ -364,7 +364,7 @@ void TASServer::ping()
   m_last_ping = time( NULL );
 }
 
-void TASServer::handle_pong( int replyid )
+void TASServer::HandlePong( int replyid )
 {
   list<TASPingListItem>::iterator it;
   
@@ -390,7 +390,7 @@ void TASServer::handle_pong( int replyid )
   }
 }
 
-void TASServer::handle_pinglist()
+void TASServer::HandlePinglist()
 {
   list<TASPingListItem>::iterator it;
   int now = time( NULL );
@@ -407,10 +407,10 @@ void TASServer::handle_pinglist()
 }
 
 
-void TASServer::join_channel( string channel, string key )
+void TASServer::JoinChannel( string channel, string key )
 {
   //JOIN channame [key]
-  assert( is_online() );
+  assert( IsOnline() );
   assert( m_sock != NULL );
   
   string cmd = "JOIN " + channel;
@@ -422,10 +422,10 @@ void TASServer::join_channel( string channel, string key )
 }
 
 
-void TASServer::part_channel( string channel )
+void TASServer::PartChannel( string channel )
 {
   //LEAVE channame
-  assert( is_online() );
+  assert( IsOnline() );
   assert( m_sock != NULL );
   
   m_sock->Send( "LEAVE " + channel + "\n" );
@@ -433,20 +433,20 @@ void TASServer::part_channel( string channel )
 }
  
 
-void TASServer::say_channel( string channel, string msg )
+void TASServer::SayChannel( string channel, string msg )
 {
   //SAY channame {message}
-  assert( is_online() );
+  assert( IsOnline() );
   assert( m_sock != NULL );
   
   m_sock->Send( "SAY " + channel + " " + msg + "\n" );
 }
 
 
-void TASServer::say_private( string nick, string msg )
+void TASServer::SayPrivate( string nick, string msg )
 {
   //SAYPRIVATE username {message}
-  assert( is_online() );
+  assert( IsOnline() );
   assert( m_sock != NULL );
   
   m_sock->Send( "SAYPRIVARE " + nick + " " + msg + "\n" );
@@ -454,9 +454,9 @@ void TASServer::say_private( string nick, string msg )
 
 
 
-void TASServer::on_connected( Socket* sock )
+void TASServer::OnConnected( Socket* sock )
 {
-  TASServer* serv = (TASServer*)sock->get_userdata();
+  TASServer* serv = (TASServer*)sock->GetUserdata();
   serv->m_last_ping = time( NULL );
   serv->m_connected = true;
   serv->m_online = false;
@@ -464,20 +464,20 @@ void TASServer::on_connected( Socket* sock )
 }
 
 
-void TASServer::on_disconnected( Socket* sock )
+void TASServer::OnDisconnected( Socket* sock )
 {
-  TASServer* serv = (TASServer*)sock->get_userdata();
+  TASServer* serv = (TASServer*)sock->GetUserdata();
   serv->m_connected = false;
   serv->m_online = false;
   cout << "** TASServer::on_disconnected(): on_disconnected event." << endl;
 }
 
 
-void TASServer::on_data_recived( Socket* sock )
+void TASServer::OnDataRecived( Socket* sock )
 {
-  TASServer* serv = (TASServer*)sock->get_userdata();
+  TASServer* serv = (TASServer*)sock->GetUserdata();
   cout << "** TASServer::on_data_recived(): on_data_recived event." << endl;
-  serv->_recive_and_execute();
+  serv->_ReciveAndExecute();
 }
 
 
@@ -485,7 +485,7 @@ void TASServer::on_data_recived( Socket* sock )
 // Utility functions
 //////////////////////
 
-Clientstatus TASServer::conv_tasclientstatus( TASClientstatus tas )
+Clientstatus TASServer::ConvTasclientstatus( TASClientstatus tas )
 {
   Clientstatus stat;
   stat.in_game = tas.in_game;
@@ -496,7 +496,7 @@ Clientstatus TASServer::conv_tasclientstatus( TASClientstatus tas )
   return stat;
 }
 
-bool TASServer::version_support_replyid( int version )
+bool TASServer::VersionSupportReplyid( int version )
 {
   if ( version == SER_VER_0_32 )
     return false;

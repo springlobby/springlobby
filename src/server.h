@@ -60,34 +60,34 @@ class Server
   
     // Server interface
   
-    virtual void set_socket( Socket* sock );
-    virtual Socket* get_socket( );
-    virtual void set_uicontrol( ServerEvents* ui );
-    virtual ServerEvents* get_uicontrol( );
+    virtual void SetSocket( Socket* sock );
+    virtual Socket* GetSocket( );
+    virtual void SetServerEvents( ServerEvents* ui );
+    virtual ServerEvents* GetServerEvents( );
   
-    virtual void connect( string addr, const int port ) = 0;
-    virtual void disconnect() = 0;
-    virtual bool is_connected() = 0;
+    virtual void Connect( string addr, const int port ) = 0;
+    virtual void Disconnect() = 0;
+    virtual bool IsConnected() = 0;
   
-    virtual void login() = 0;
-    virtual void logout() = 0;
-    virtual bool is_online() = 0;
+    virtual void Login() = 0;
+    virtual void Logout() = 0;
+    virtual bool IsOnline() = 0;
   
-    virtual void update() = 0;
+    virtual void Update() = 0;
   
-    virtual void join_channel( string channel, string key ) = 0;
-    virtual void part_channel( string channel ) = 0;
+    virtual void JoinChannel( string channel, string key ) = 0;
+    virtual void PartChannel( string channel ) = 0;
   
-    virtual void say_channel( string channel, string msg ) = 0;
-    virtual void say_private( string nick, string msg ) = 0;
+    virtual void SayChannel( string channel, string msg ) = 0;
+    virtual void SayPrivate( string nick, string msg ) = 0;
   
-    virtual void set_keepalive_interval( int seconds ) { m_keepalive = seconds; }
-    virtual int get_keepalive_interval() { return m_keepalive; }
+    virtual void SetKeepaliveInterval( int seconds ) { m_keepalive = seconds; }
+    virtual int GetKeepaliveInterval() { return m_keepalive; }
   
-    virtual void set_username( const string username );
-    virtual void set_password( const string password );
+    virtual void SetUsername( const string username );
+    virtual void SetPassword( const string password );
     
-    virtual void ping() = 0;
+    virtual void Ping() = 0;
     /*
     virtual void on_connected( Socket* sock ) = 0;
     virtual void on_disconnected( Socket* sock ) = 0;

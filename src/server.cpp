@@ -37,36 +37,36 @@ Server::~Server()
 {
 }
 
-void Server::set_socket( Socket* sock )
+void Server::SetSocket( Socket* sock )
 {
-  assert( !is_connected() ); // Should disconnect first.
+  assert( !IsConnected() ); // Should disconnect first.
   m_sock = sock;
 }
 
-Socket* Server::get_socket( )
+Socket* Server::GetSocket( )
 {
   return m_sock;
 }
 
 
-void Server::set_uicontrol( ServerEvents* ui )
+void Server::SetServerEvents( ServerEvents* ui )
 {
   m_ui = ui;
 }
 
 
-ServerEvents* Server::get_uicontrol( )
+ServerEvents* Server::GetServerEvents( )
 {
   return m_ui;
 }
 
-void Server::set_username( const string username )
+void Server::SetUsername( const string username )
 {
   m_user = username;
 }
 
 
-void Server::set_password( const string password )
+void Server::SetPassword( const string password )
 {
   m_pass = password;
 }

@@ -91,6 +91,15 @@ Server* SpringLobbyApp::Serv()
 }
 
 
+//! @brief Returns a reference to currently used MainWindow instance
+//!
+//! @note This returns an invalid reference during OnExit()!
+MainWindow& SpringLobbyApp::MainWin()
+{
+  return *m_main_win;
+}
+
+
 //! @brief Set the currently used instance of Server
 //!
 //! @param serv The new Server instance to use
@@ -163,9 +172,9 @@ void SpringLobbyApp::Connect( const string servername, const string username, co
   
   if ( m_serv != NULL ) {
     // Delete old Server object
-    m_serv->disconnect();
-    sock =  m_serv->get_socket();
-    m_serv->set_socket( NULL );
+    m_serv->Disconnect();
+    sock =  m_serv->GetSocket();
+    m_serv->SetSocket( NULL );
     delete sock;
     delete m_serv;
   }
@@ -173,17 +182,17 @@ void SpringLobbyApp::Connect( const string servername, const string username, co
   // Create new Server object
   m_serv = new TASServer();
   sock = new Socket();
-  m_serv->set_socket( sock );
-  m_serv->set_uicontrol( this );
+  m_serv->SetSocket( sock );
+  m_serv->SetServerEvents( this );
   
-  m_serv->set_username( username );
-  m_serv->set_password( password );
+  m_serv->SetUsername( username );
+  m_serv->SetPassword( password );
   
   host = GetServerHost( servername );
   port = GetServerPort( servername );
   
   // Connect
-  m_serv->connect( host, port );
+  m_serv->Connect( host, port );
 
 }
 
@@ -199,18 +208,16 @@ void SpringLobbyApp::Disconnect()
 void SpringLobbyApp::OnTimer( wxTimerEvent& event )
 {
   if ( m_serv != NULL ) {
-    m_serv->update();
+    m_serv->Update();
   }
 }
-
-
 
 
 void SpringLobbyApp::on_connected( string server_ver, bool supported )
 {
   cout << "** ServerEvents::on_connected(): Server: " << server_ver.c_str() << endl;
   assert( app().Serv() != NULL );
-  app().Serv()->login();
+  app().Serv()->Login();
 }
 
 void SpringLobbyApp::on_disconnected()

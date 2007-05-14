@@ -81,17 +81,17 @@ class Socket
     virtual Sockstate State( );
     virtual Sockerror Error( );
   
-    virtual void set_userdata( void* data );
-    virtual void* get_userdata();
+    virtual void SetUserdata( void* data );
+    virtual void* GetUserdata();
   
-    virtual void set_connected_callback( socket_callback callback );
-    virtual socket_callback get_connected_callback();
+    virtual void SetConnectedCallback( socket_callback callback );
+    virtual socket_callback GetConnectedCallback();
 
-    virtual void set_disconnected_callback( socket_callback callback );
-    virtual socket_callback get_disconnected_callback();
+    virtual void SetDisconnectedCallback( socket_callback callback );
+    virtual socket_callback GetDisconnectedCallback();
 
-    virtual void set_data_recived_callback( socket_callback callback );
-    virtual socket_callback get_data_recived_callback();
+    virtual void SetDataRecivedCallback( socket_callback callback );
+    virtual socket_callback GetDataRecivedCallback();
 
   protected:
   // Socket variables

@@ -38,7 +38,8 @@ class MainWindow : public wxFrame
     virtual ~MainWindow();
   
     // MainWindow interface
-  
+    void OpenChannelChat( wxString channel, wxString password );
+    void OpenPrivateChat( wxString nick );
   protected:
     // MainWindow variables
   

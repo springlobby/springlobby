@@ -59,3 +59,18 @@ MainWindow::~MainWindow()
 }
 
 
+//! @brief Open a new chat tab with a channel chat
+//!
+//! @param channel The channel name
+void MainWindow::OpenChannelChat( wxString channel, wxString password )
+{
+}
+
+
+//! @brief Open a new chat tab with a private chat
+//!
+//! @param nick The user to whom the chatwindow should be opened to
+void MainWindow::OpenPrivateChat( wxString nick )
+{
+}
+

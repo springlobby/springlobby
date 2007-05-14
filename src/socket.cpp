@@ -39,15 +39,15 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
   assert( sock != NULL );
   
   if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
-    callback = sock->get_data_recived_callback();
+    callback = sock->GetDataRecivedCallback();
     assert( callback != NULL );
     callback( sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_LOST ) {
-    callback = sock->get_disconnected_callback();
+    callback = sock->GetDisconnectedCallback();
     assert( callback != NULL );
     callback( sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
-    callback = sock->get_connected_callback();
+    callback = sock->GetConnectedCallback();
     assert( callback != NULL );
     callback( sock );
   } else {
@@ -166,49 +166,49 @@ Sockerror Socket::Error( )
 }
 
 
-void Socket::set_userdata( void* data )
+void Socket::SetUserdata( void* data )
 {
   m_udata = data;
 }
 
 
-void* Socket::get_userdata()
+void* Socket::GetUserdata()
 {
   return m_udata;
 }
 
 
-void Socket::set_connected_callback( socket_callback callback )
+void Socket::SetConnectedCallback( socket_callback callback )
 {
   m_on_con = callback;
 }
 
 
-socket_callback Socket::get_connected_callback()
+socket_callback Socket::GetConnectedCallback()
 {
   return m_on_con;
 }
 
 
-void Socket::set_disconnected_callback( socket_callback callback )
+void Socket::SetDisconnectedCallback( socket_callback callback )
 {
   m_on_discon = callback;
 }
 
 
-socket_callback Socket::get_disconnected_callback()
+socket_callback Socket::GetDisconnectedCallback()
 {
   return m_on_discon;
 }
 
 
-void Socket::set_data_recived_callback( socket_callback callback )
+void Socket::SetDataRecivedCallback( socket_callback callback )
 {
   m_on_data = callback;
 }
 
 
-socket_callback Socket::get_data_recived_callback()
+socket_callback Socket::GetDataRecivedCallback()
 {
   return m_on_data;
 }

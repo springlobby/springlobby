@@ -67,43 +67,43 @@ class TASServer : public Server
   // TASServer interface
   
     // Overloaded functions from Server
-    virtual void set_socket( Socket* sock );
-    virtual void connect( string addr, const int port );
-    virtual void disconnect();
-    virtual bool is_connected();
+    virtual void SetSocket( Socket* sock );
+    virtual void Connect( string addr, const int port );
+    virtual void Disconnect();
+    virtual bool IsConnected();
   
-    virtual void login();
-    virtual void logout();
-    virtual bool is_online();
+    virtual void Login();
+    virtual void Logout();
+    virtual bool IsOnline();
   
-    virtual void update();
+    virtual void Update();
   
-    virtual void ping();
+    virtual void Ping();
 
-    virtual void join_channel( string channel, string key );
-    virtual void part_channel( string channel );
+    virtual void JoinChannel( string channel, string key );
+    virtual void PartChannel( string channel );
   
-    virtual void say_channel( string channel, string msg );
-    virtual void say_private( string nick, string msg );
+    virtual void SayChannel( string channel, string msg );
+    virtual void SayPrivate( string nick, string msg );
    
     // TASServer specific functions
-    void execute_command( string in );
-    void execute_command( string cmd, string params, int replyid = -1 );
+    void ExecuteCommand( string in );
+    void ExecuteCommand( string cmd, string params, int replyid = -1 );
   
-    string get_word_param( string& params );
-    string get_sentence_param( string& params );
-    int get_int_param( string& params );
+    string GetWordParam( string& params );
+    string GetSentenceParam( string& params );
+    int GetIntParam( string& params );
 
-    void handle_pong( int replyid );
-    void handle_pinglist();
+    void HandlePong( int replyid );
+    void HandlePinglist();
     
     // Static utility functions
-    static Clientstatus conv_tasclientstatus( TASClientstatus );
-    static bool version_support_replyid( int version );
+    static Clientstatus ConvTasclientstatus( TASClientstatus );
+    static bool VersionSupportReplyid( int version );
     
-    static void on_connected( Socket* sock );
-    static void on_disconnected( Socket* sock );
-    static void on_data_recived( Socket* sock );
+    static void OnConnected( Socket* sock );
+    static void OnDisconnected( Socket* sock );
+    static void OnDataRecived( Socket* sock );
     
   protected:
     // TASServer variables
@@ -117,7 +117,7 @@ class TASServer : public Server
     int m_ping_id;
     list<TASPingListItem> m_pinglist;
   
-    void _recive_and_execute();
+    void _ReciveAndExecute();
 };
 
 

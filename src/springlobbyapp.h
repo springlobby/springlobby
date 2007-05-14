@@ -51,6 +51,8 @@ class SpringLobbyApp : public wxApp, public Settings, public ServerEvents, publi
     Server* Serv();
     void SetServ( Server* serv );
   
+    MainWindow& MainWin();
+  
     void OpenMainWindow();
     void OpenConnectWindow();
   
