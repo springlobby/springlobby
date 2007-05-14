@@ -88,7 +88,7 @@ void ChatPanel::Said( wxString who, wxString message )
 
 //! @brief Output motd sent by server
 //!
-//! @param The MOTD message to output
+//! @param message The MOTD message to output
 void ChatPanel::Motd( wxString message )
 {
   m_chatlog_text->WriteText( _("motd ")+ message + _("\n") );

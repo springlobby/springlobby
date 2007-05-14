@@ -231,11 +231,8 @@ mainchattab.o mainchattab.o: mainchattab.cpp mainchattab.h \
   /usr/include/wx-2.6/wx/timer.h /usr/include/wx-2.6/wx/dcclient.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/settings.h \
   /usr/include/wx-2.6/wx/listbase.h /usr/include/wx-2.6/wx/datetime.h \
-  /usr/include/wx-2.6/wx/valtext.h chatpanel.h springlobbyapp.h \
-  settings.h /usr/include/wx-2.6/wx/config.h \
-  /usr/include/wx-2.6/wx/confbase.h /usr/include/wx-2.6/wx/fileconf.h \
-  /usr/include/wx-2.6/wx/textfile.h /usr/include/wx-2.6/wx/textbuf.h \
-  /usr/include/wx-2.6/wx/file.h server.h tasserver.h \
+  /usr/include/wx-2.6/wx/valtext.h chatpanel.h springlobbyapp.h server.h \
+  tasserver.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/list \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_list.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc \
@@ -251,7 +248,11 @@ mainchattab.o mainchattab.o: mainchattab.cpp mainchattab.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h \
+  settings.h /usr/include/wx-2.6/wx/config.h \
+  /usr/include/wx-2.6/wx/confbase.h /usr/include/wx-2.6/wx/fileconf.h \
+  /usr/include/wx-2.6/wx/textfile.h /usr/include/wx-2.6/wx/textbuf.h \
+  /usr/include/wx-2.6/wx/file.h
 
 mainchattab.h:
 
@@ -1005,20 +1006,6 @@ chatpanel.h:
 
 springlobbyapp.h:
 
-settings.h:
-
-/usr/include/wx-2.6/wx/config.h:
-
-/usr/include/wx-2.6/wx/confbase.h:
-
-/usr/include/wx-2.6/wx/fileconf.h:
-
-/usr/include/wx-2.6/wx/textfile.h:
-
-/usr/include/wx-2.6/wx/textbuf.h:
-
-/usr/include/wx-2.6/wx/file.h:
-
 server.h:
 
 tasserver.h:
@@ -1070,3 +1057,17 @@ chatlist.h:
 /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h:
 
 /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h:
+
+settings.h:
+
+/usr/include/wx-2.6/wx/config.h:
+
+/usr/include/wx-2.6/wx/confbase.h:
+
+/usr/include/wx-2.6/wx/fileconf.h:
+
+/usr/include/wx-2.6/wx/textfile.h:
+
+/usr/include/wx-2.6/wx/textbuf.h:
+
+/usr/include/wx-2.6/wx/file.h:

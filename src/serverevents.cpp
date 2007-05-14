@@ -26,7 +26,7 @@
 
 ServerEvents::ServerEvents()
 {
-  m_cl = NULL;
+
 }
 
 
@@ -34,88 +34,4 @@ ServerEvents::~ServerEvents()
 {
 
 }
-
-
-void ServerEvents::on_connected( string server_ver, bool supported )
-{
-  cout << "** ServerEvents::on_connected(): Server: " << server_ver.c_str() << endl;
-  assert( app().Serv() != NULL );
-  app().Serv()->login();
-}
-
-void ServerEvents::on_disconnected()
-{
-  cout << "** ServerEvents::on_disconnected()" << endl;
-}
-      
-void ServerEvents::on_login()
-{
-  cout << "** ServerEvents::on_login()" << endl;
-}
-
-void ServerEvents::on_login_info_complete()
-{
-}
-
-void ServerEvents::on_logout()
-{
-}
-      
-void ServerEvents::on_unknown_command( string command, string params )
-{
-}
-
-void ServerEvents::on_socket_error( const Sockerror error )
-{
-}
-
-void ServerEvents::on_protocol_error( const Protocolerror error )
-{
-}
-
-void ServerEvents::on_motd( string msg )
-{
-  assert( app().GetServerPanel() != NULL );
-  app().GetServerPanel()->Motd( WX_STRING(msg) );
-}
-
-void ServerEvents::on_pong( int ping_time )
-{
-}
-      
-void ServerEvents::on_new_user( string nick, string contry, int cpu )
-{
-}
-
-void ServerEvents::on_user_status( string nick, Clientstatus status )
-{
-}
-
-void ServerEvents::on_user_quit( string nick )
-{
-}
-      
-void ServerEvents::on_battle_opened( int id, bool replay, int nat, string nick, 
-                       string host, int port, int maxplayers, 
-                       bool haspass, int rank, int hash, string map, 
-                       string title, string mod )
-{
-}
-
-void ServerEvents::on_user_joined_battle( int battleid, string nick )
-{
-}
-
-void ServerEvents::on_user_left_battle( int battleid, string nick )
-{
-}
-
-void ServerEvents::on_battleinfo_updated( int battleid, int spectators, bool locked, int maphash, string map )
-{
-}
-
-void ServerEvents::on_battle_closed( int battleid )
-{
-}
-
 

@@ -38,39 +38,36 @@ class ServerEvents
   
   // Uicontrol interface
   
-    virtual void on_connected( string server_ver, bool supported );
-    virtual void on_disconnected();
+    virtual void on_connected( string server_ver, bool supported ) = 0;
+    virtual void on_disconnected() = 0;
       
-    virtual void on_login();
-    virtual void on_login_info_complete();
-    virtual void on_logout();
+    virtual void on_login() = 0;
+    virtual void on_login_info_complete() = 0;
+    virtual void on_logout() = 0;
       
-    virtual void on_unknown_command( string command, string params );
-    virtual void on_socket_error( const Sockerror error );
-    virtual void on_protocol_error( const Protocolerror error );
-    virtual void on_motd( string msg );
-    virtual void on_pong( int ping_time );
+    virtual void on_unknown_command( string command, string params ) = 0;
+    virtual void on_socket_error( const Sockerror error ) = 0;
+    virtual void on_protocol_error( const Protocolerror error ) = 0;
+    virtual void on_motd( string msg ) = 0;
+    virtual void on_pong( int ping_time ) = 0;
       
-    virtual void on_new_user( string nick, string contry, int cpu );
-    virtual void on_user_status( string nick, Clientstatus status );
-    virtual void on_user_quit( string nick );
+    virtual void on_new_user( string nick, string contry, int cpu ) = 0;
+    virtual void on_user_status( string nick, Clientstatus status ) = 0;
+    virtual void on_user_quit( string nick ) = 0;
       
     virtual void on_battle_opened( int id, bool replay, int nat, string nick, 
                                    string host, int port, int maxplayers, 
                                    bool haspass, int rank, int hash, string map, 
-                                   string title, string mod );
+                                   string title, string mod ) = 0;
 
-    virtual void on_user_joined_battle( int battleid, string nick );
-    virtual void on_user_left_battle( int battleid, string nick );
-    virtual void on_battleinfo_updated( int battleid, int spectators, bool locked, int maphash, string map );
-    virtual void on_battle_closed( int battleid );
-      
-    void SetChatList( ChatList* cl ) { m_cl = cl; }
-    ChatList* GetChatList() { assert( m_cl != NULL ); return m_cl; }
+    virtual void on_user_joined_battle( int battleid, string nick ) = 0;
+    virtual void on_user_left_battle( int battleid, string nick ) = 0;
+    virtual void on_battleinfo_updated( int battleid, int spectators, bool locked, int maphash, string map ) = 0;
+    virtual void on_battle_closed( int battleid ) = 0;
     
   protected:
   // Uicontrol variables
-    ChatList* m_cl;
+    
 };
 
 

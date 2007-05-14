@@ -24,11 +24,14 @@
 #define _SPRINGLOBBYAPP_H_
 
 #include <wx/wx.h>
-#include "settings.h"
 #include "server.h"
 #include "tasserver.h"
 #include "serverevents.h"
 #include "chatlist.h"
+#include "settings.h"
+
+#define TIMER_ID 101
+#define TIMER_INTERVAL 100
 
 class MainWindow;
 class ConnectWindow;
@@ -39,9 +42,11 @@ class SpringLobbyApp : public wxApp, public Settings, public ServerEvents, publi
 {
   public:
     // SpringLobbyApp interface
+    SpringLobbyApp();
+    virtual ~SpringLobbyApp();
     
     virtual bool OnInit();
-    virtual bool OnQuit();
+    virtual int OnExit();
   
     Server* Serv();
     void SetServ( Server* serv );
@@ -54,13 +59,48 @@ class SpringLobbyApp : public wxApp, public Settings, public ServerEvents, publi
     void Connect( const string servername, const string username, const string password );
     void Disconnect();
   
+    void OnTimer( wxTimerEvent& event );
+  
+    virtual void on_connected( string server_ver, bool supported );
+    virtual void on_disconnected();
+      
+    virtual void on_login();
+    virtual void on_login_info_complete();
+    virtual void on_logout();
+      
+    virtual void on_unknown_command( string command, string params );
+    virtual void on_socket_error( const Sockerror error );
+    virtual void on_protocol_error( const Protocolerror error );
+    virtual void on_motd( string msg );
+    virtual void on_pong( int ping_time );
+      
+    virtual void on_new_user( string nick, string contry, int cpu );
+    virtual void on_user_status( string nick, Clientstatus status );
+    virtual void on_user_quit( string nick );
+      
+    virtual void on_battle_opened( int id, bool replay, int nat, string nick, 
+                                   string host, int port, int maxplayers, 
+                                   bool haspass, int rank, int hash, string map, 
+                                   string title, string mod );
+
+    virtual void on_user_joined_battle( int battleid, string nick );
+    virtual void on_user_left_battle( int battleid, string nick );
+    virtual void on_battleinfo_updated( int battleid, int spectators, bool locked, int maphash, string map );
+    virtual void on_battle_closed( int battleid );
+  
   protected:
     // SpringLobbyApp variables
     
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
+  
     Server* m_serv;
   
+    wxTimer* m_timer;
+  
+    ChatList m_cl;
+  
+    DECLARE_EVENT_TABLE()
 };
 
 

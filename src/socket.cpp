@@ -69,6 +69,8 @@ Socket::Socket()
   
   m_sock = new wxSocketClient();
   m_events = new SocketEvents;
+  m_sock->SetFlags( wxSOCKET_NOWAIT );
+  
   m_sock->SetEventHandler(*m_events, SOCKET_ID);
   m_sock->SetClientData( (void*)this );
   m_sock->SetNotify( wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG );
@@ -108,9 +110,6 @@ void Socket::Disconnect( )
 bool Socket::Send( string data )
 {
   if ( data.length() <= 0) return true;
-  data[data.length()-1] = '\0';
-  cout << "Socket::Send( \"" << data.c_str() << "\" )" << endl;
-  data[data.length()] = '\n';  
   m_sock->Write( (void*)data.c_str(), data.length() );
   return !m_sock->Error();
 }
@@ -135,9 +134,12 @@ bool Socket::Recive( string& data )
     }
   } while ( (readnum > 0) && (buff[0] != '\n') );
   
-  
-  cout << "** Socket::Recive(): recived: \"" << data.c_str() << "\"" << endl;  
-  return (readbytes > 0);
+  if ( readbytes > 0 ) {
+    //cout << "** Socket::Recive(): recived: \"" << data.c_str() << "\"" << endl;  
+    return true;
+  } else {
+    return false;
+  }
 }
 
 

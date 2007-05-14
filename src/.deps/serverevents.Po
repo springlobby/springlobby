@@ -245,13 +245,14 @@ serverevents.o serverevents.o: serverevents.cpp serverevents.h socket.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h \
-  chatpanel.h springlobbyapp.h settings.h /usr/include/wx-2.6/wx/config.h \
-  /usr/include/wx-2.6/wx/confbase.h /usr/include/wx-2.6/wx/fileconf.h \
-  /usr/include/wx-2.6/wx/textfile.h /usr/include/wx-2.6/wx/textbuf.h \
-  /usr/include/wx-2.6/wx/file.h tasserver.h \
+  chatpanel.h springlobbyapp.h tasserver.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/list \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_list.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc \
+  settings.h /usr/include/wx-2.6/wx/config.h \
+  /usr/include/wx-2.6/wx/confbase.h /usr/include/wx-2.6/wx/fileconf.h \
+  /usr/include/wx-2.6/wx/textfile.h /usr/include/wx-2.6/wx/textbuf.h \
+  /usr/include/wx-2.6/wx/file.h
 
 serverevents.h:
 
@@ -1047,6 +1048,14 @@ chatpanel.h:
 
 springlobbyapp.h:
 
+tasserver.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/list:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_list.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc:
+
 settings.h:
 
 /usr/include/wx-2.6/wx/config.h:
@@ -1060,11 +1069,3 @@ settings.h:
 /usr/include/wx-2.6/wx/textbuf.h:
 
 /usr/include/wx-2.6/wx/file.h:
-
-tasserver.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/list:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_list.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc:

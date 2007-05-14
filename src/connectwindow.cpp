@@ -45,6 +45,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent )
   wxString password;
   
   server = WX_STRING( app().GetDefaultServer() );
+  username = WX_STRING( app().GetServerAccountNick( app().GetDefaultServer() ) );
   
   // Create all UI elements.
   m_tabs =         new wxNotebook( this  , -1 );
@@ -126,6 +127,8 @@ ConnectWindow::~ConnectWindow()
 void ConnectWindow::OnOk(wxCommandEvent& event)
 {
   Close();
+  app().SetDefaultServer( STL_STRING(m_server_combo->GetValue()) );
+  app().SetServerAccountNick( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_nick_text->GetValue()) );
   app().Connect( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_nick_text->GetValue()), STL_STRING(m_pass_text->GetValue()) );
 }
 

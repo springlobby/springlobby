@@ -27,6 +27,7 @@
 //! @brief Constructor
 Settings::Settings()
 {
+  cout << "** Settings::Settings()" << endl;
   m_config = new wxConfig( _("SpringLobby") );
   if ( !m_config->Exists( _("/Servers") ) )
     SetDefaultSettings();
@@ -36,8 +37,16 @@ Settings::Settings()
 //! @brief Destructor
 Settings::~Settings()
 {
+  cout << "** Settings::~Settings()" << endl;
   m_config->Flush();
   delete m_config;
+}
+
+
+//! @brief Saves the settings to file
+void Settings::SaveSettings()
+{
+  m_config->Flush();
 }
 
 
@@ -82,7 +91,6 @@ void   Settings::SetDefaultServer( const string server_name )
 //! @brief Get hostname of a server.
 //! 
 //! @param server_name the server name/alias
-//! @todo Implement
 string Settings::GetServerHost( const string server_name )
 {
   return STL_STRING( m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/host"), _(DEFSETT_DEFAULT_SERVER_HOST) ) );
@@ -93,16 +101,15 @@ string Settings::GetServerHost( const string server_name )
 //! 
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
-//! @todo Implement
 void   Settings::SetServerHost( const string server_name, const string value )
 {
+  m_config->Write( _("/Server/")+WX_STRING(server_name)+_("/host"), WX_STRING(value) );
 }
 
 
 //! @brief Get port number of a server.
 //! 
 //! @param server_name the server name/alias
-//! @todo Implement
 int    Settings::GetServerPort( const string server_name )
 {
   return m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/port"), DEFSETT_DEFAULT_SERVER_PORT );
@@ -113,9 +120,9 @@ int    Settings::GetServerPort( const string server_name )
 //! 
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
-//! @todo Implement
 void   Settings::SetServerPort( const string server_name, const int value )
 {
+  m_config->Write( _("/Server/")+WX_STRING(server_name)+_("/port"), value );
 }
 
 
@@ -141,9 +148,9 @@ void   Settings::SetServerName( const string server_name, const string value )
 //! @brief Get nickname of the default account for a server.
 //! 
 //! @param server_name the server name/alias
-//! @todo Implement
 string Settings::GetServerAccountNick( const string server_name )
 {
+  return STL_STRING( m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/nick"), _("") ) );
 }
 
 
@@ -151,9 +158,9 @@ string Settings::GetServerAccountNick( const string server_name )
 //! 
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
-//! @todo Implement
 void   Settings::SetServerAccountNick( const string server_name, const string value )
 {
+  m_config->Write( _("/Server/")+WX_STRING(server_name)+_("/nick"), WX_STRING(value) );
 }
 
 
@@ -193,4 +200,62 @@ bool   Settings::GetServerAccountSavePass( const string server_name )
 void   Settings::SetServerAccountSavePass( const string server_name, const bool value )
 {
 }
+
+
+//! @brief Get width of MainWindow.
+int    Settings::GetMainWindowWidth()
+{
+  return m_config->Read( _("/Mainwin/width"), DEFSETT_MW_WIDTH );
+}
+
+
+//! @brief Set width position of MainWindow
+void   Settings::SetMainWindowWidth( const int value )
+{
+  m_config->Write( _("/Mainwin/width"), value );
+}
+
+
+//! @brief Get height of MainWindow.
+int    Settings::GetMainWindowHeight()
+{
+  return m_config->Read( _("/Mainwin/height"), DEFSETT_MW_HEIGHT );
+}
+
+
+//! @brief Set height position of MainWindow
+void   Settings::SetMainWindowHeight( const int value )
+{
+  m_config->Write( _("/Mainwin/height"), value );
+}
+
+
+//! @brief Get top position of MainWindow.
+int    Settings::GetMainWindowTop()
+{
+  return m_config->Read( _("/Mainwin/top"), DEFSETT_MW_TOP );
+}
+
+
+//! @brief Set top position of MainWindow
+void   Settings::SetMainWindowTop( const int value )
+{
+  m_config->Write( _("/Mainwin/top"), value );
+}
+
+
+//! @brief Get left position of MainWindow.
+int    Settings::GetMainWindowLeft()
+{
+  return m_config->Read( _("/Mainwin/left"), DEFSETT_MW_LEFT );
+}
+
+
+//! @brief Set left position of MainWindow
+void   Settings::SetMainWindowLeft( const int value )
+{
+  m_config->Write( _("/Mainwin/left"), value );
+}
+
+
 

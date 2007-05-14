@@ -26,7 +26,16 @@
 #include "chatlist.h"
 #include "connectwindow.h"
 
+
 IMPLEMENT_APP(SpringLobbyApp)
+
+BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
+
+    EVT_TIMER(TIMER_ID, SpringLobbyApp::OnTimer)
+
+END_EVENT_TABLE()
+
+
 
 SpringLobbyApp& app()
 {
@@ -34,26 +43,41 @@ SpringLobbyApp& app()
 }
 
 
+SpringLobbyApp::SpringLobbyApp()
+{
+  m_timer = new wxTimer(this, TIMER_ID);
+  m_main_win = NULL;
+  m_con_win = NULL;
+  m_serv = NULL;
+}
+
+SpringLobbyApp::~SpringLobbyApp()
+{
+  
+}
+
 //! @brief Initializes the application.
 //!
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
-  m_main_win = NULL;
-  m_con_win = NULL;
-  m_serv = NULL;
+  cout << "** SpringLobbyApp::OnInit()" << endl;
   
   OpenMainWindow();
   DefaultConnect();
 
+  m_timer->Start( TIMER_INTERVAL );
+  
   return true;
 }
 
 
 //! @brief Finalizes the application
-bool SpringLobbyApp::OnQuit()
+int SpringLobbyApp::OnExit()
 {
-  return true;
+  cout << "** SpringLobbyApp::OnExit()" << endl;
+
+  return 0;
 }
 
 
@@ -81,8 +105,10 @@ void SpringLobbyApp::SetServ( Server* serv )
 //! @note It will create the MainWindow if not allready created
 void SpringLobbyApp::OpenMainWindow()
 {
-  if ( m_main_win == NULL )
+  if ( m_main_win == NULL ) {
     m_main_win = new MainWindow();
+  }
+  
   m_main_win->Show(true);
 }
 
@@ -103,6 +129,8 @@ void SpringLobbyApp::OpenConnectWindow()
 void SpringLobbyApp::Quit()
 {
   assert( m_main_win != NULL );
+  
+  
   m_main_win->Close();
 }
 
@@ -166,4 +194,98 @@ void SpringLobbyApp::Connect( const string servername, const string username, co
 void SpringLobbyApp::Disconnect()
 {
 }
+
+
+void SpringLobbyApp::OnTimer( wxTimerEvent& event )
+{
+  if ( m_serv != NULL ) {
+    m_serv->update();
+  }
+}
+
+
+
+
+void SpringLobbyApp::on_connected( string server_ver, bool supported )
+{
+  cout << "** ServerEvents::on_connected(): Server: " << server_ver.c_str() << endl;
+  assert( app().Serv() != NULL );
+  app().Serv()->login();
+}
+
+void SpringLobbyApp::on_disconnected()
+{
+  cout << "** ServerEvents::on_disconnected()" << endl;
+}
+      
+void SpringLobbyApp::on_login()
+{
+  cout << "** ServerEvents::on_login()" << endl;
+}
+
+void SpringLobbyApp::on_login_info_complete()
+{
+}
+
+void SpringLobbyApp::on_logout()
+{
+}
+      
+void SpringLobbyApp::on_unknown_command( string command, string params )
+{
+}
+
+void SpringLobbyApp::on_socket_error( const Sockerror error )
+{
+}
+
+void SpringLobbyApp::on_protocol_error( const Protocolerror error )
+{
+}
+
+void SpringLobbyApp::on_motd( string msg )
+{
+  assert( app().GetServerPanel() != NULL );
+  app().GetServerPanel()->Motd( WX_STRING(msg) );
+}
+
+void SpringLobbyApp::on_pong( int ping_time )
+{
+}
+      
+void SpringLobbyApp::on_new_user( string nick, string contry, int cpu )
+{
+}
+
+void SpringLobbyApp::on_user_status( string nick, Clientstatus status )
+{
+}
+
+void SpringLobbyApp::on_user_quit( string nick )
+{
+}
+      
+void SpringLobbyApp::on_battle_opened( int id, bool replay, int nat, string nick, 
+                       string host, int port, int maxplayers, 
+                       bool haspass, int rank, int hash, string map, 
+                       string title, string mod )
+{
+}
+
+void SpringLobbyApp::on_user_joined_battle( int battleid, string nick )
+{
+}
+
+void SpringLobbyApp::on_user_left_battle( int battleid, string nick )
+{
+}
+
+void SpringLobbyApp::on_battleinfo_updated( int battleid, int spectators, bool locked, int maphash, string map )
+{
+}
+
+void SpringLobbyApp::on_battle_closed( int battleid )
+{
+}
+
 

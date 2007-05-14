@@ -22,7 +22,7 @@
 //
 
 #include "mainwindow.h"
-
+#include "springlobbyapp.h"
 
 MainWindow::MainWindow() : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
                                wxPoint(50, 50), wxSize(450, 340))
@@ -42,12 +42,20 @@ MainWindow::MainWindow() : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND, 0 );
   
   SetSizer( m_main_sizer );
+  
+  SetSize( app().GetMainWindowLeft(), app().GetMainWindowTop(), app().GetMainWindowWidth(), app().GetMainWindowHeight() );
 }
 
 
 MainWindow::~MainWindow()
 {
-  // TODO: put destructor code here
+  int x, y, w, h;
+  GetSize( &w, &h );
+  app().SetMainWindowHeight( h );
+  app().SetMainWindowWidth( w );
+  GetPosition( &x, &y );
+  app().SetMainWindowTop( y );
+  app().SetMainWindowLeft( x );
 }
 
 

@@ -36,6 +36,10 @@ using namespace std;
 #define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"
 #define DEFSETT_DEFAULT_SERVER_PORT 8200
 #define DEFSETT_SAVE_PASSWORD false
+#define DEFSETT_MW_WIDTH 600
+#define DEFSETT_MW_HEIGHT 500
+#define DEFSETT_MW_TOP 50
+#define DEFSETT_MW_LEFT 50
 
 //! @brief Class used to store and restore application settings.
 class Settings
@@ -47,6 +51,7 @@ class Settings
     // Settings interface
   
     void SetDefaultSettings();
+    void SaveSettings();
   
     string GetDefaultServer();
     void   SetDefaultServer( const string server_name );
@@ -71,6 +76,17 @@ class Settings
     bool   GetServerAccountSavePass( const string server_name );
     void   SetServerAccountSavePass( const string server_name, const bool value );
     
+    int    GetMainWindowWidth();
+    void   SetMainWindowWidth( const int value );
+
+    int    GetMainWindowHeight();
+    void   SetMainWindowHeight( const int value );
+
+    int    GetMainWindowTop();
+    void   SetMainWindowTop( const int value );
+
+    int    GetMainWindowLeft();
+    void   SetMainWindowLeft( const int value );
 
 /*  
     bool   GetServer( const string server_name );

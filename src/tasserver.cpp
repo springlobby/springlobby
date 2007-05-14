@@ -121,8 +121,8 @@ bool TASServer::is_online()
 
 void TASServer::update()
 {
+  //cout << "** TASServer::update()" << endl;
   assert( m_sock != NULL ); // TODO: This should be handled and generate an error in released code.
-  string data = ".";
   
   if ( !m_connected ) { // We are not formally connected yet, but might be.
     if ( is_connected() ) {
@@ -145,18 +145,8 @@ void TASServer::update()
     handle_pinglist();
   }
   
-  while ( !data.empty() ) { // Go on until recive stops providing data.
-    
-    data = "";
-    if ( m_sock->Recive( data ) ) {
-      m_buffer += data;
-      if ( m_buffer.find( "\n", 0 ) != string::npos ) {
-        execute_command( m_buffer );
-        m_buffer = "";
-      }
-    }
-    
-  }
+  _recive_and_execute();
+  
 }
 
 
@@ -193,7 +183,7 @@ void TASServer::execute_command( string in )
     replyid = atoi( cmd.c_str() );
     in = in.substr( pos + 1 );
   }
-    
+  
   pos = in.find( "\n", 0 );
   if ( pos != string::npos ) {
     assert( pos < in.length() ); // We might be throwing away a second command following this one.
@@ -350,6 +340,7 @@ int TASServer::get_int_param( string& params )
 
 void TASServer::ping()
 {
+  cout << "** TASServer::ping()" << endl;
   string cmd = "";
 
   m_ping_id++;
