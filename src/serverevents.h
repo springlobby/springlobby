@@ -70,6 +70,7 @@ class ServerEvents
     virtual void on_channel_join( string channel, string who ) = 0;
     virtual void on_channel_part( string channel, string who, string message ) = 0;
     virtual void on_channel_topic( string channel, string who, string message, int when ) = 0;
+    virtual void on_channel_action( string channel, string who, string action ) = 0;
   protected:
   // Uicontrol variables
     

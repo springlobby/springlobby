@@ -309,10 +309,16 @@ void TASServer::ExecuteCommand( string cmd, string params, int replyid )
     pos = GetIntParam( params );
     msg = GetSentenceParam( params );
     m_ui->on_channel_topic( channel, nick, msg, pos/1000 );
-    
+  } else if ( cmd == "SAIDEX" ) {
+    channel = GetWordParam( params );
+    nick = GetWordParam( params );
+    msg = GetSentenceParam( params );
+    m_ui->on_channel_action( channel, nick, msg );
+  } else if ( cmd == "CLIENTS" ) {
     //CLIENTS params: main ChanServ []Cookiebot hawkki Pullapitko scf84 replay trepan 10gb_bot_24h Contex[1944] NowakPL Springie
   } else {
     cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << endl;
+    m_ui->on_unknown_command( cmd, params );
   }
   
 }

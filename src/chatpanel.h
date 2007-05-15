@@ -51,8 +51,11 @@ class ChatPanel : public wxPanel
     // ChatPanel interface
   
     void Said( wxString who, wxString message );
+    void DidAction( wxString who, wxString action );
     void Motd( wxString message );
-    
+  
+    void UnknownCommand( wxString command, wxString params );
+  
     void Joined( wxString who );
     void Parted( wxString who, wxString message );
     void SetTopic( wxString who, wxString message );

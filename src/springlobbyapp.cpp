@@ -242,6 +242,8 @@ void SpringLobbyApp::on_logout()
       
 void SpringLobbyApp::on_unknown_command( string command, string params )
 {
+  assert( GetServerPanel() != NULL );
+  GetServerPanel()->UnknownCommand( WX_STRING(command), WX_STRING(params) );
 }
 
 void SpringLobbyApp::on_socket_error( const Sockerror error )
@@ -343,3 +345,13 @@ void SpringLobbyApp::on_channel_topic( string channel, string who, string messag
     chat->SetTopic( WX_STRING(who), WX_STRING(message) );
   }
 }
+
+
+void SpringLobbyApp::on_channel_action( string channel, string who, string action )
+{
+  ChatPanel* chat = GetChannelPanel( channel );
+  if ( chat != NULL ) {
+    chat->DidAction( WX_STRING(who), WX_STRING(action) );
+  }
+}
+

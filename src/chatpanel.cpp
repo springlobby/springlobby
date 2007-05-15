@@ -100,12 +100,24 @@ void ChatPanel::Said( wxString who, wxString message )
 }
 
 
+void ChatPanel::DidAction( wxString who, wxString action )
+{
+  m_chatlog_text->AppendText( _(" * ") + who + _(" ") + action + _(".\n") );
+}
+
+
 //! @brief Output motd sent by server
 //!
 //! @param message The MOTD message to output
 void ChatPanel::Motd( wxString message )
 {
-  m_chatlog_text->AppendText( _(" * motd     ")+ message + _("\n") );
+  m_chatlog_text->AppendText( _(" ** motd   ")+ message + _("\n") );
+}
+
+
+void ChatPanel::UnknownCommand( wxString command, wxString params )
+{
+  m_chatlog_text->AppendText( _T(" ! Unknown command: \"") + command + _T("\" parameters: \"") + params + _("\".\n") );
 }
 
 
