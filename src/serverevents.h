@@ -52,7 +52,7 @@ class ServerEvents
     virtual void on_pong( int ping_time ) = 0;
       
     virtual void on_new_user( string nick, string contry, int cpu ) = 0;
-    virtual void on_user_status( string nick, Clientstatus status ) = 0;
+    virtual void on_user_status( string nick, UserStatus status ) = 0;
     virtual void on_user_quit( string nick ) = 0;
     
     virtual void on_battle_opened( int id, bool replay, int nat, string nick, 

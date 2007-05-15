@@ -27,7 +27,13 @@
 #ifndef _CHATPANEL_H_
 #define _CHATPANEL_H_
 
-#include <wx/wx.h>
+//#include <wx/wx.h>
+#include <wx/splitter.h>
+#include <wx/panel.h>
+#include <wx/sizer.h>
+#include <wx/textctrl.h>
+#include <wx/listctrl.h>
+#include <wx/combobox.h>
 #include <string>
 
 using namespace std;
@@ -77,8 +83,15 @@ class ChatPanel : public wxPanel
     wxBoxSizer* m_say_sizer;    //!< Sizer containing send input and button.
     wxBoxSizer* m_nick_sizer;   //!< Sizer containing the nicklist.
   
+    wxSplitterWindow* m_splitter; //!< The splitter.
+    wxPanel* m_chat_panel;      //!< Panel containing the chat. Only used when nicklist is visible.
+    wxPanel* m_nick_panel;      //!< Panel containing the nicklist.
+  
     wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
     wxTextCtrl* m_say_text;     //!< The say textcontrol.
+  
+    wxListCtrl* m_nicklist;     //!< The nicklist.
+    wxComboBox* m_nick_filter;  //!< The filter combo.
   
     wxButton* m_say_button;     //!< The say button.
   

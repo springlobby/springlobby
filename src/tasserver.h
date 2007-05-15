@@ -98,7 +98,7 @@ class TASServer : public Server
     void HandlePinglist();
     
     // Static utility functions
-    static Clientstatus ConvTasclientstatus( TASClientstatus );
+    static UserStatus ConvTasclientstatus( TASClientstatus );
     static bool VersionSupportReplyid( int version );
     
     static void OnConnected( Socket* sock );

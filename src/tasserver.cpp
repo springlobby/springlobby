@@ -208,7 +208,7 @@ void TASServer::ExecuteCommand( string cmd, string params, int replyid )
   int pos, cpu, status, id, nat, port, maxplayers, rank, hash, specs;
   bool replay, haspass;
   string nick, contry, host, map, title, mod, channel, error, msg;
-  Clientstatus cstatus;
+  UserStatus cstatus;
   UTASClientstatus tasstatus;
   
   if ( cmd == "TASServer") {
@@ -316,6 +316,7 @@ void TASServer::ExecuteCommand( string cmd, string params, int replyid )
     m_ui->on_channel_action( channel, nick, msg );
   } else if ( cmd == "CLIENTS" ) {
     //CLIENTS params: main ChanServ []Cookiebot hawkki Pullapitko scf84 replay trepan 10gb_bot_24h Contex[1944] NowakPL Springie
+    // !! Command: "CHANNELMESSAGE" params: "main <ChanServ> has muted <smoth>".
   } else {
     cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << endl;
     m_ui->on_unknown_command( cmd, params );
@@ -521,9 +522,9 @@ void TASServer::OnDataRecived( Socket* sock )
 // Utility functions
 //////////////////////
 
-Clientstatus TASServer::ConvTasclientstatus( TASClientstatus tas )
+UserStatus TASServer::ConvTasclientstatus( TASClientstatus tas )
 {
-  Clientstatus stat;
+  UserStatus stat;
   stat.in_game = tas.in_game;
   stat.away = tas.away;
   stat.rank = (tas.rank + 1) * 100;

@@ -53,7 +53,8 @@ am_springlobby_OBJECTS = base64.$(OBJEXT) md5.$(OBJEXT) \
 	socket.$(OBJEXT) mainwindow.$(OBJEXT) serverevents.$(OBJEXT) \
 	chatlist.$(OBJEXT) chatpanel.$(OBJEXT) connectwindow.$(OBJEXT) \
 	server.$(OBJEXT) tasserver.$(OBJEXT) mainchattab.$(OBJEXT) \
-	settings.$(OBJEXT) springlobbyapp.$(OBJEXT)
+	settings.$(OBJEXT) springlobbyapp.$(OBJEXT) user.$(OBJEXT) \
+	userlist.$(OBJEXT)
 springlobby_OBJECTS = $(am_springlobby_OBJECTS)
 am__DEPENDENCIES_1 =
 springlobby_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
@@ -255,7 +256,11 @@ springlobby_SOURCES = \
 	settings.cpp     \
 	settings.h     \
 	springlobbyapp.cpp     \
-	springlobbyapp.h 
+	springlobbyapp.h     \
+	user.cpp     \
+	user.h     \
+	userlist.cpp     \
+	userlist.h 
 
 springlobby_LDFLAGS = 
 springlobby_LDADD = \
@@ -350,6 +355,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/springlobbyapp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tasserver.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/user.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/userlist.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \

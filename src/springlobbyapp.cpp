@@ -21,6 +21,7 @@
 // Created on: Fri May 11 19:19:23 2007
 //
 
+#include <wx/msgdlg.h>
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "chatlist.h"
@@ -268,7 +269,7 @@ void SpringLobbyApp::on_new_user( string nick, string contry, int cpu )
 {
 }
 
-void SpringLobbyApp::on_user_status( string nick, Clientstatus status )
+void SpringLobbyApp::on_user_status( string nick, UserStatus status )
 {
 }
 

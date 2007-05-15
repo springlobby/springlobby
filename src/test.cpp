@@ -18,7 +18,7 @@
 
 #include <iostream>
 #include <assert.h>
-#include <wx/wx.h>
+//#include <wx/wx.h>
 
 #include "chatlist.h"
 #include "settings.h"

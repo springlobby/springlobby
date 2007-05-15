@@ -23,7 +23,10 @@
 #ifndef _SPRINGLOBBYAPP_H_
 #define _SPRINGLOBBYAPP_H_
 
-#include <wx/wx.h>
+//#include <wx/wx.h>
+#include <wx/app.h>
+#include <wx/menu.h>
+
 #include "server.h"
 #include "tasserver.h"
 #include "serverevents.h"
@@ -77,7 +80,7 @@ class SpringLobbyApp : public wxApp, public Settings, public ServerEvents, publi
     virtual void on_pong( int ping_time );
       
     virtual void on_new_user( string nick, string contry, int cpu );
-    virtual void on_user_status( string nick, Clientstatus status );
+    virtual void on_user_status( string nick, UserStatus status );
     virtual void on_user_quit( string nick );
       
     virtual void on_battle_opened( int id, bool replay, int nat, string nick, 

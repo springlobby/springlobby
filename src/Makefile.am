@@ -53,7 +53,11 @@ springlobby_SOURCES = \
 	settings.cpp     \
 	settings.h     \
 	springlobbyapp.cpp     \
-	springlobbyapp.h 
+	springlobbyapp.h     \
+	user.cpp     \
+	user.h     \
+	userlist.cpp     \
+	userlist.h 
 
 springlobby_LDFLAGS = 
 

@@ -23,7 +23,16 @@
 #ifndef _CONNECTWINDOW_H_
 #define _CONNECTWINDOW_H_
 
-#include <wx/wx.h>
+//#include <wx/wx.h>
+#include <wx/intl.h>
+#include <wx/frame.h>
+#include <wx/panel.h>
+#include <wx/combobox.h>
+#include <wx/sizer.h>
+#include <wx/button.h>
+#include <wx/textctrl.h>
+#include <wx/stattext.h>
+#include <wx/notebook.h>
 #include <wx/checkbox.h>
 #include <wx/statline.h>
 

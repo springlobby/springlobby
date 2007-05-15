@@ -24,7 +24,7 @@
 #define _SOCKET_H_
 
 #include <string>
-#include <wx/wx.h>
+//#include <wx/wx.h>
 #include <wx/socket.h>
 #include <wx/event.h>
 

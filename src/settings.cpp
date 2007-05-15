@@ -22,6 +22,8 @@
 //
 
 #include "settings.h"
+#include <wx/intl.h>
+#include <iostream>
 
 
 //! @brief Constructor

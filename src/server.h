@@ -24,6 +24,7 @@
 #define _SERVER_H_
 
 #include <string>
+#include "user.h"
 
 #define PING_TIMEOUT 30
 
@@ -32,24 +33,11 @@ using namespace std;
 class ServerEvents;
 class Socket;
 
-//! @brief Struct used to store a client's status.
-struct Clientstatus {
-  bool in_game;
-  bool away;
-  int rank;
-  bool moderator;
-  bool bot;
-};
-
 
 typedef int Servererror;
 
 #define PE_NONE 0
 
-#define RANK_1 100
-#define RANK_2 200
-#define RANK_3 300
-#define RANK_4 400
 
 //! @brief Abstract baseclass that is used to implement a server protocol.
 class Server

@@ -23,7 +23,7 @@
 #ifndef _MAINWINDOW_H_
 #define _MAINWINDOW_H_
 
-#include <wx/wx.h>
+//#include <wx/wx.h>
 #include <wx/listbook.h>
 
 #include "mainchattab.h"

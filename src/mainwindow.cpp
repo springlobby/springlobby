@@ -21,6 +21,9 @@
 // Created on: Tue May  1 11:55:40 2007
 //
 
+#include <wx/frame.h>
+#include <wx/intl.h>
+
 #include "mainwindow.h"
 #include "springlobbyapp.h"
 

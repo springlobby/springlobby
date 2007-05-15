@@ -16,39 +16,20 @@
 
 
 //
-// Class: MainChatTab
-// Created on: Tue May  1 13:32:49 2007
+// Class: UserList
 //
-
-#ifndef _MAINCHATTAB_H_
-#define _MAINCHATTAB_H_
-
-//#include <wx/wx.h>
-
-#include "chatpanel.h"
+#include "userlist.h"
 
 
-//! @brief The main chat tab.
-class MainChatTab : public wxPanel
+UserList::UserList()
 {
-  public:
-    MainChatTab( wxWindow* parent );
-    virtual ~MainChatTab();
-  
-    // MainChatWindow interface
-  
-    ChatPanel* ServerChat() { return m_server_chat; }
-    ChatPanel* AddChatPannel( wxString name, bool nick_list );
-  protected:
-    // MainChatWindow variables
-  
-    wxNotebook* m_chat_tabs;
-    wxBoxSizer* m_main_sizer;
-    ChatPanel* m_server_chat;
-    ChatPanel* m_main_chat;
-  
-};
+
+}
 
 
-#endif  //_MAINCHATTAB_H_
+UserList::~UserList()
+{
+
+}
+
 

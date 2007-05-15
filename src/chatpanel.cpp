@@ -21,6 +21,8 @@
 // Created on: Wed May  2 21:07:18 2007
 //
 
+#include <wx/intl.h>
+#include <wx/datetime.h>
 #include "chatpanel.h"
 #include "springlobbyapp.h"
 
@@ -48,17 +50,41 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_chat_sizer = new wxBoxSizer( wxVERTICAL );
   m_say_sizer = new wxBoxSizer( wxHORIZONTAL );
-  if ( m_show_nick_list )
+  
+  if ( m_show_nick_list ) {
+    
+    m_splitter = new wxSplitterWindow( this , -1, wxDefaultPosition, wxDefaultSize, wxSP_3D );
+    m_nick_panel = new wxPanel( m_splitter, -1 );
+    m_chat_panel = new wxPanel( m_splitter, -1 );
+    
     m_nick_sizer = new wxBoxSizer( wxVERTICAL );
-  else
+    
+    m_nicklist = new wxListCtrl( m_nick_panel, -1, wxDefaultPosition, wxDefaultSize, 
+                                wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER | wxLC_SINGLE_SEL );
+    
+    m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY );
+    
+    m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
+    m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND );
+    
+    m_nick_panel->SetSizer( m_nick_sizer );
+    
+  } else {
+    
+    m_chat_panel = this;
     m_nick_sizer = NULL;
+    m_nicklist = NULL;
+    m_nick_filter = NULL;
+    m_splitter = NULL;
+    
+  }
   
   // Creating ui elements
-  m_chatlog_text = new wxTextCtrl( this, -1, _(""), wxDefaultPosition, wxDefaultSize, 
+  m_chatlog_text = new wxTextCtrl( m_chat_panel, -1, _(""), wxDefaultPosition, wxDefaultSize, 
                              wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 
-  m_say_text = new wxTextCtrl( this, CHAT_TEXT, _(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
-  m_say_button = new wxButton( this, CHAT_SEND, _T("Send") );
+  m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+  m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _T("Send") );
   
   // Adding elements to sizers
   m_say_sizer->Add( m_say_text, 1, wxEXPAND );
@@ -67,12 +93,25 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
   m_chat_sizer->Add( m_chatlog_text, 1, wxEXPAND );
   m_chat_sizer->Add( m_say_sizer, 0, wxEXPAND );
   
-  m_main_sizer->Add( m_chat_sizer, 1, wxEXPAND );
-  if ( m_show_nick_list )
-    m_main_sizer->Add( m_nick_sizer );
+  if ( m_show_nick_list ) {
+    m_chat_panel->SetSizer( m_chat_sizer );
+    
+    m_splitter->SplitVertically( m_chat_panel, m_nick_panel, 100 );
+    
+    m_main_sizer->Add( m_splitter, 1, wxEXPAND );
+    
+  } else {
+    m_main_sizer->Add( m_chat_sizer, 4, wxEXPAND );
+  }
   
   // Assign sizer to panel
   SetSizer( m_main_sizer );
+  
+  
+  if ( m_show_nick_list ) {
+    wxSize s = m_splitter->GetSize();
+    m_splitter->SetSashPosition( s.GetWidth() - 180, true );
+  }
 }
 
 
