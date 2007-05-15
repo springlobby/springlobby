@@ -22,6 +22,14 @@
 //
 
 #include "chatpanel.h"
+#include "springlobbyapp.h"
+
+BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
+
+  EVT_TEXT_ENTER ( CHAT_TEXT, ChatPanel::OnSay )
+  EVT_BUTTON     ( CHAT_SEND, ChatPanel::OnSay )
+
+END_EVENT_TABLE()
 
 
 //! @brief ChatPanel constructor.
@@ -49,8 +57,8 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
   m_chatlog_text = new wxTextCtrl( this, -1, _(""), wxDefaultPosition, wxDefaultSize, 
                              wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 
-  m_say_text = new wxTextCtrl( this, -1, _(""), wxDefaultPosition, wxDefaultSize );
-  m_say_button = new wxButton( this, -1, _T("Send") );
+  m_say_text = new wxTextCtrl( this, CHAT_TEXT, _(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+  m_say_button = new wxButton( this, CHAT_SEND, _T("Send") );
   
   // Adding elements to sizers
   m_say_sizer->Add( m_say_text, 1, wxEXPAND );
@@ -74,6 +82,12 @@ ChatPanel::~ChatPanel()
 
 }
 
+
+void ChatPanel::OnSay( wxCommandEvent& event )
+{
+  Say( m_say_text->GetValue() );
+  m_say_text->SetValue( _("") );
+}
 
 //! @brief Output a message said in the channel.
 //!
@@ -138,3 +152,10 @@ bool ChatPanel::IsServerPanel()
   return (m_chan_name == string(SERVER_CHAT_NAME));
 }
 
+
+void ChatPanel::Say( wxString message )
+{
+  Server* serv = app().Serv();
+  assert( serv != NULL );
+  serv->SayChannel( m_chan_name, STL_STRING(message) );
+}

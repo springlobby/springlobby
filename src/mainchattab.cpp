@@ -54,6 +54,7 @@ MainChatTab::~MainChatTab()
 ChatPanel* MainChatTab::AddChatPannel( wxString name, bool nick_list )
 {
   ChatPanel* chat = new ChatPanel( m_chat_tabs, nick_list );
+  chat->SetChannelName( STL_STRING(name) );
   m_chat_tabs->AddPage( chat, name, true, -1 );
   return chat;
 }

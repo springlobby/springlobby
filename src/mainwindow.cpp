@@ -27,6 +27,27 @@
 MainWindow::MainWindow() : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
                                wxPoint(50, 50), wxSize(450, 340))
 {
+  
+  wxMenu *menuFile = new wxMenu;
+  menuFile->Append(MENU_CONNECT, _T("&Connect..."));
+  menuFile->Append(MENU_DISCONNECT, _T("&Disconnect"));
+  menuFile->AppendSeparator();
+  menuFile->Append(MENU_QUIT, _T("&Quit"));
+  
+  wxMenu *menuEdit = new wxMenu;
+  
+  wxMenu *menuTools = new wxMenu;
+  
+  wxMenu *menuHelp = new wxMenu;
+  menuHelp->Append(MENU_ABOUT, _T("&About"));
+  
+  wxMenuBar *menubar = new wxMenuBar;
+  menubar->Append(menuFile, _T("&File"));
+  menubar->Append(menuEdit, _T("&Edit"));
+  menubar->Append(menuTools, _T("&Tools"));
+  menubar->Append(menuHelp, _T("&Help"));
+  SetMenuBar(menubar);
+  
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_func_tabs = new wxListbook( this, -1, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
   

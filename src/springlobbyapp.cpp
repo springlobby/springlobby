@@ -336,7 +336,7 @@ void SpringLobbyApp::on_channel_part( string channel, string who, string message
 }
 
 
-void SpringLobbyApp::on_channel_topic( string channel, string who, string message )
+void SpringLobbyApp::on_channel_topic( string channel, string who, string message, int when )
 {
   ChatPanel* chat = GetChannelPanel( channel );
   if ( chat != NULL ) {

@@ -93,7 +93,7 @@ class SpringLobbyApp : public wxApp, public Settings, public ServerEvents, publi
     virtual void on_channel_said( string channel, string who, string message );
     virtual void on_channel_join( string channel, string who );
     virtual void on_channel_part( string channel, string who, string message );
-    virtual void on_channel_topic( string channel, string who, string message );
+    virtual void on_channel_topic( string channel, string who, string message, int when );
   protected:
     // SpringLobbyApp variables
     

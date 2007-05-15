@@ -61,6 +61,9 @@ class ChatPanel : public wxPanel
     string GetChannelName();
     bool IsServerPanel();
     
+    void Say( wxString message );
+  
+    void OnSay( wxCommandEvent& event );
   protected:
     // ChatPanel variables
   
@@ -78,8 +81,15 @@ class ChatPanel : public wxPanel
   
     string m_chan_name;         //!< Name of the chat/channel.
   
+    DECLARE_EVENT_TABLE()
 };
 
+
+enum
+{
+    CHAT_SEND = wxID_HIGHEST,
+    CHAT_TEXT,
+};
 
 #endif  //_CHATPANEL_H_
 

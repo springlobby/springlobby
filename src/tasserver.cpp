@@ -306,8 +306,9 @@ void TASServer::ExecuteCommand( string cmd, string params, int replyid )
   } else if ( cmd == "CHANNELTOPIC" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
+    pos = GetIntParam( params );
     msg = GetSentenceParam( params );
-    m_ui->on_channel_topic( channel, nick, msg );
+    m_ui->on_channel_topic( channel, nick, msg, pos/1000 );
     
     //CLIENTS params: main ChanServ []Cookiebot hawkki Pullapitko scf84 replay trepan 10gb_bot_24h Contex[1944] NowakPL Springie
   } else {

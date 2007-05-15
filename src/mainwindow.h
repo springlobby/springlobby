@@ -53,5 +53,16 @@ class MainWindow : public wxFrame
 };
 
 
+// wxWidget IDs
+enum
+{
+    MENU_ABOUT = wxID_ABOUT,
+    MENU_QUIT = wxID_EXIT,
+
+    MENU_CONNECT = wxID_HIGHEST,
+    MENU_DISCONNECT
+    
+};
+
 #endif  //_MAINWINDOW_H_
 
