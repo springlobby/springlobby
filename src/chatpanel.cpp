@@ -96,13 +96,17 @@ void ChatPanel::OnSay( wxCommandEvent& event )
 //! @todo Fix nicer format of chat messages.
 void ChatPanel::Said( wxString who, wxString message )
 {
-  m_chatlog_text->AppendText( who + _(": ")+ message + _("\n") );
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
+  LogTime();
+  m_chatlog_text->AppendText( _(" ") + who + _(": ")+ message + _("\n") );
 }
 
 
 void ChatPanel::DidAction( wxString who, wxString action )
 {
-  m_chatlog_text->AppendText( _(" * ") + who + _(" ") + action + _(".\n") );
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
+  LogTime();
+  m_chatlog_text->AppendText( _(" ") + who + _(" ") + action + _(".\n") );
 }
 
 
@@ -111,30 +115,35 @@ void ChatPanel::DidAction( wxString who, wxString action )
 //! @param message The MOTD message to output
 void ChatPanel::Motd( wxString message )
 {
-  m_chatlog_text->AppendText( _(" ** motd   ")+ message + _("\n") );
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLUE));
+  m_chatlog_text->AppendText( _(" ** motd ** ")+ message + _("\n") );
 }
 
 
 void ChatPanel::UnknownCommand( wxString command, wxString params )
 {
-  m_chatlog_text->AppendText( _T(" ! Unknown command: \"") + command + _T("\" parameters: \"") + params + _("\".\n") );
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxRED));
+  m_chatlog_text->AppendText( _T(" !! Command: \"") + command + _T("\" params: \"") + params + _("\".\n") );
 }
 
 
 void ChatPanel::Joined( wxString who )
 {
-  m_chatlog_text->AppendText( _(" * ")+ who + _T(" joined the channel.\n") );
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxGREEN));
+  m_chatlog_text->AppendText( _(" ** ")+ who + _T(" joined the channel.\n") );
 }
 
 
 void ChatPanel::Parted( wxString who, wxString message )
 {
-  m_chatlog_text->AppendText( _(" * ")+ who + _T(" left the channel ( ") + message + _(" ).\n") );
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxRED));
+  m_chatlog_text->AppendText( _(" ** ")+ who + _T(" left the channel ( ") + message + _(" ).\n") );
 }
 
 void ChatPanel::SetTopic( wxString who, wxString message )
 {
-  m_chatlog_text->AppendText( _(" * Channel topic: ")+ message + _T("\n * Set by ") + who + _(".\n") );  
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLUE));
+  m_chatlog_text->AppendText( _(" ** Channel topic: ")+ message + _T("\n * Set by ") + who + _(".\n") );  
 }
 
 //! @brief Set name of the chat/channel.
@@ -171,3 +180,11 @@ void ChatPanel::Say( wxString message )
   assert( serv != NULL );
   serv->SayChannel( m_chan_name, STL_STRING(message) );
 }
+
+void ChatPanel::LogTime()
+{
+  wxDateTime now = wxDateTime::Now();
+  m_chatlog_text->AppendText( _("[") + now.Format( _("%H:%M") ) + _("]") );
+
+}
+

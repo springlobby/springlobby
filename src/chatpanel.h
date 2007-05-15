@@ -84,6 +84,8 @@ class ChatPanel : public wxPanel
   
     string m_chan_name;         //!< Name of the chat/channel.
   
+    void LogTime();
+  
     DECLARE_EVENT_TABLE()
 };
 
