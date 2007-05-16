@@ -23,7 +23,7 @@
 #ifndef _MAINWINDOW_H_
 #define _MAINWINDOW_H_
 
-//#include <wx/wx.h>
+
 #include <wx/listbook.h>
 
 #include "mainchattab.h"
@@ -40,6 +40,8 @@ class MainWindow : public wxFrame
     // MainWindow interface
     void OpenChannelChat( wxString channel );
     void OpenPrivateChat( wxString nick );
+  
+    void OnMenuJoin( wxCommandEvent& event );
   protected:
     // MainWindow variables
   
@@ -50,6 +52,8 @@ class MainWindow : public wxFrame
     MainChatTab* m_chat_tab;
   
     wxImageList* m_func_tab_images;
+  
+    DECLARE_EVENT_TABLE()
 };
 
 
@@ -60,7 +64,8 @@ enum
     MENU_QUIT = wxID_EXIT,
 
     MENU_CONNECT = wxID_HIGHEST,
-    MENU_DISCONNECT
+    MENU_DISCONNECT,
+    MENU_JOIN
     
 };
 

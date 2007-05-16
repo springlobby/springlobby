@@ -126,18 +126,12 @@ mainwindow.o mainwindow.o: mainwindow.cpp /usr/include/wx-2.6/wx/frame.h \
   /usr/include/wx-2.6/wx/gtk/window.h /usr/include/wx-2.6/wx/iconbndl.h \
   /usr/include/wx-2.6/wx/gtk/toplevel.h \
   /usr/include/wx-2.6/wx/gtk/frame.h /usr/include/wx-2.6/wx/intl.h \
-  mainwindow.h /usr/include/wx-2.6/wx/listbook.h \
-  /usr/include/wx-2.6/wx/bookctrl.h /usr/include/wx-2.6/wx/control.h \
-  /usr/include/wx-2.6/wx/gtk/control.h /usr/include/wx-2.6/wx/window.h \
-  /usr/include/wx-2.6/wx/notebook.h /usr/include/wx-2.6/wx/gtk/notebook.h \
-  mainchattab.h chatpanel.h /usr/include/wx-2.6/wx/splitter.h \
-  /usr/include/wx-2.6/wx/generic/splitter.h \
-  /usr/include/wx-2.6/wx/window.h /usr/include/wx-2.6/wx/containr.h \
-  /usr/include/wx-2.6/wx/panel.h /usr/include/wx-2.6/wx/generic/panelg.h \
-  /usr/include/wx-2.6/wx/sizer.h /usr/include/wx-2.6/wx/button.h \
-  /usr/include/wx-2.6/wx/gtk/button.h /usr/include/wx-2.6/wx/control.h \
+  /usr/include/wx-2.6/wx/textdlg.h \
+  /usr/include/wx-2.6/wx/generic/textdlgg.h \
   /usr/include/wx-2.6/wx/dialog.h /usr/include/wx-2.6/wx/containr.h \
-  /usr/include/wx-2.6/wx/gtk/dialog.h /usr/include/wx-2.6/wx/textctrl.h \
+  /usr/include/wx-2.6/wx/gtk/dialog.h /usr/include/wx-2.6/wx/valtext.h \
+  /usr/include/wx-2.6/wx/textctrl.h /usr/include/wx-2.6/wx/control.h \
+  /usr/include/wx-2.6/wx/gtk/control.h /usr/include/wx-2.6/wx/window.h \
   /usr/include/wx-2.6/wx/ioswrap.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/iostream \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/ostream \
@@ -163,8 +157,18 @@ mainwindow.o mainwindow.o: mainwindow.cpp /usr/include/wx-2.6/wx/frame.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/typeinfo \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/istream \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/istream.tcc \
-  /usr/include/wx-2.6/wx/gtk/textctrl.h /usr/include/wx-2.6/wx/listctrl.h \
-  /usr/include/wx-2.6/wx/listbase.h \
+  /usr/include/wx-2.6/wx/gtk/textctrl.h /usr/include/wx-2.6/wx/numdlg.h \
+  /usr/include/wx-2.6/wx/generic/numdlgg.h mainwindow.h \
+  /usr/include/wx-2.6/wx/listbook.h /usr/include/wx-2.6/wx/bookctrl.h \
+  /usr/include/wx-2.6/wx/notebook.h /usr/include/wx-2.6/wx/gtk/notebook.h \
+  mainchattab.h chatpanel.h /usr/include/wx-2.6/wx/splitter.h \
+  /usr/include/wx-2.6/wx/generic/splitter.h \
+  /usr/include/wx-2.6/wx/window.h /usr/include/wx-2.6/wx/containr.h \
+  /usr/include/wx-2.6/wx/panel.h /usr/include/wx-2.6/wx/generic/panelg.h \
+  /usr/include/wx-2.6/wx/sizer.h /usr/include/wx-2.6/wx/button.h \
+  /usr/include/wx-2.6/wx/gtk/button.h /usr/include/wx-2.6/wx/control.h \
+  /usr/include/wx-2.6/wx/dialog.h /usr/include/wx-2.6/wx/textctrl.h \
+  /usr/include/wx-2.6/wx/listctrl.h /usr/include/wx-2.6/wx/listbase.h \
   /usr/include/wx-2.6/wx/generic/listctrl.h \
   /usr/include/wx-2.6/wx/generic/imaglist.h /usr/include/wx-2.6/wx/list.h \
   /usr/include/wx-2.6/wx/icon.h /usr/include/wx-2.6/wx/iconloc.h \
@@ -611,45 +615,9 @@ mainwindow.o mainwindow.o: mainwindow.cpp /usr/include/wx-2.6/wx/frame.h \
 
 /usr/include/wx-2.6/wx/intl.h:
 
-mainwindow.h:
+/usr/include/wx-2.6/wx/textdlg.h:
 
-/usr/include/wx-2.6/wx/listbook.h:
-
-/usr/include/wx-2.6/wx/bookctrl.h:
-
-/usr/include/wx-2.6/wx/control.h:
-
-/usr/include/wx-2.6/wx/gtk/control.h:
-
-/usr/include/wx-2.6/wx/window.h:
-
-/usr/include/wx-2.6/wx/notebook.h:
-
-/usr/include/wx-2.6/wx/gtk/notebook.h:
-
-mainchattab.h:
-
-chatpanel.h:
-
-/usr/include/wx-2.6/wx/splitter.h:
-
-/usr/include/wx-2.6/wx/generic/splitter.h:
-
-/usr/include/wx-2.6/wx/window.h:
-
-/usr/include/wx-2.6/wx/containr.h:
-
-/usr/include/wx-2.6/wx/panel.h:
-
-/usr/include/wx-2.6/wx/generic/panelg.h:
-
-/usr/include/wx-2.6/wx/sizer.h:
-
-/usr/include/wx-2.6/wx/button.h:
-
-/usr/include/wx-2.6/wx/gtk/button.h:
-
-/usr/include/wx-2.6/wx/control.h:
+/usr/include/wx-2.6/wx/generic/textdlgg.h:
 
 /usr/include/wx-2.6/wx/dialog.h:
 
@@ -657,7 +625,15 @@ chatpanel.h:
 
 /usr/include/wx-2.6/wx/gtk/dialog.h:
 
+/usr/include/wx-2.6/wx/valtext.h:
+
 /usr/include/wx-2.6/wx/textctrl.h:
+
+/usr/include/wx-2.6/wx/control.h:
+
+/usr/include/wx-2.6/wx/gtk/control.h:
+
+/usr/include/wx-2.6/wx/window.h:
 
 /usr/include/wx-2.6/wx/ioswrap.h:
 
@@ -710,6 +686,48 @@ chatpanel.h:
 /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/istream.tcc:
 
 /usr/include/wx-2.6/wx/gtk/textctrl.h:
+
+/usr/include/wx-2.6/wx/numdlg.h:
+
+/usr/include/wx-2.6/wx/generic/numdlgg.h:
+
+mainwindow.h:
+
+/usr/include/wx-2.6/wx/listbook.h:
+
+/usr/include/wx-2.6/wx/bookctrl.h:
+
+/usr/include/wx-2.6/wx/notebook.h:
+
+/usr/include/wx-2.6/wx/gtk/notebook.h:
+
+mainchattab.h:
+
+chatpanel.h:
+
+/usr/include/wx-2.6/wx/splitter.h:
+
+/usr/include/wx-2.6/wx/generic/splitter.h:
+
+/usr/include/wx-2.6/wx/window.h:
+
+/usr/include/wx-2.6/wx/containr.h:
+
+/usr/include/wx-2.6/wx/panel.h:
+
+/usr/include/wx-2.6/wx/generic/panelg.h:
+
+/usr/include/wx-2.6/wx/sizer.h:
+
+/usr/include/wx-2.6/wx/button.h:
+
+/usr/include/wx-2.6/wx/gtk/button.h:
+
+/usr/include/wx-2.6/wx/control.h:
+
+/usr/include/wx-2.6/wx/dialog.h:
+
+/usr/include/wx-2.6/wx/textctrl.h:
 
 /usr/include/wx-2.6/wx/listctrl.h:
 

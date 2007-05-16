@@ -215,6 +215,7 @@ bool ChatPanel::IsServerPanel()
 
 void ChatPanel::Say( wxString message )
 {
+  cout << "** ChatPanel::Say()" << endl;
   Server* serv = app().Serv();
   assert( serv != NULL );
   serv->SayChannel( m_chan_name, STL_STRING(message) );

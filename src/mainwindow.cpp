@@ -23,9 +23,17 @@
 
 #include <wx/frame.h>
 #include <wx/intl.h>
+#include <wx/textdlg.h>
 
 #include "mainwindow.h"
 #include "springlobbyapp.h"
+
+BEGIN_EVENT_TABLE(MainWindow, wxFrame)
+
+  EVT_MENU( MENU_JOIN, MainWindow::OnMenuJoin )
+
+END_EVENT_TABLE()
+
 
 MainWindow::MainWindow() : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
                                wxPoint(50, 50), wxSize(450, 340))
@@ -40,6 +48,7 @@ MainWindow::MainWindow() : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
   wxMenu *menuEdit = new wxMenu;
   
   wxMenu *menuTools = new wxMenu;
+  menuTools->Append(MENU_JOIN, _T("&Join channel..."));
   
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _T("&About"));
@@ -86,11 +95,14 @@ MainWindow::~MainWindow()
 //! @brief Open a new chat tab with a channel chat
 //!
 //! @param channel The channel name
+//! @note This does NOT join the chatt.
+//! @see Server::JoinChannel
 void MainWindow::OpenChannelChat( wxString channel )
 {
   if ( !app().ChannelExists( STL_STRING(channel) ) ) {
     assert( m_chat_tab != NULL );
     ChatPanel* chat = m_chat_tab->AddChatPannel( channel, true );
+    chat->SetChannelName( STL_STRING(channel) );
     app().SetChannelPanel( STL_STRING(channel), chat );
   }
 }
@@ -103,3 +115,13 @@ void MainWindow::OpenPrivateChat( wxString nick )
 {
 }
 
+
+void MainWindow::OnMenuJoin( wxCommandEvent& event )
+{
+  if ( app().Serv() == NULL ) return;
+  wxTextEntryDialog name_dlg( NULL, _("Name of channel to join"), _("Join channel..."), _(""), wxOK | wxCANCEL | wxCENTRE );
+  if (name_dlg.ShowModal() == wxID_OK) {
+    OpenChannelChat( name_dlg.GetValue() );
+    app().Serv()->JoinChannel( STL_STRING(name_dlg.GetValue()), "" );
+  }
+}
