@@ -71,6 +71,7 @@ class ChatPanel : public wxPanel
     bool IsServerPanel();
     
     void Say( wxString message );
+    void Part();
   
     void OnSay( wxCommandEvent& event );
   protected:

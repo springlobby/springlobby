@@ -96,7 +96,7 @@ MainWindow::~MainWindow()
 //!
 //! @param channel The channel name
 //! @note This does NOT join the chatt.
-//! @see Server::JoinChannel
+//! @sa Server::JoinChannel OpenPrivateChat
 void MainWindow::OpenChannelChat( wxString channel )
 {
   if ( !app().ChannelExists( STL_STRING(channel) ) ) {

@@ -221,6 +221,15 @@ void ChatPanel::Say( wxString message )
   serv->SayChannel( m_chan_name, STL_STRING(message) );
 }
 
+void ChatPanel::Part()
+{
+  cout << "** ChatPanel::Part()" << endl;
+  Server* serv = app().Serv();
+  assert( serv != NULL );
+  app().RemoveChannelPanel( m_chan_name );
+  serv->PartChannel( m_chan_name );
+}
+
 void ChatPanel::LogTime()
 {
   wxDateTime now = wxDateTime::Now();

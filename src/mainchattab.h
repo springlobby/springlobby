@@ -39,16 +39,27 @@ class MainChatTab : public wxPanel
   
     ChatPanel* ServerChat() { return m_server_chat; }
     ChatPanel* AddChatPannel( wxString name, bool nick_list );
+    
+    void OnTabsChanged( wxNotebookEvent& event );
+    
+    
   protected:
     // MainChatWindow variables
-  
+    wxWindow* m_close_window;
     wxNotebook* m_chat_tabs;
     wxBoxSizer* m_main_sizer;
+    wxImageList* m_imagelist;
     ChatPanel* m_server_chat;
     ChatPanel* m_main_chat;
+    int m_newtab_sel;
   
+    DECLARE_EVENT_TABLE()
 };
 
+enum
+{
+    CHAT_TABS = wxID_HIGHEST
+};
 
 #endif  //_MAINCHATTAB_H_
 

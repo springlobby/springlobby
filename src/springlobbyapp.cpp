@@ -234,7 +234,7 @@ void SpringLobbyApp::on_login()
 void SpringLobbyApp::on_login_info_complete()
 {
   assert( m_serv != NULL );
-  m_serv->JoinChannel( "main", "" );
+  m_serv->JoinChannel( "test", "" );
 }
 
 void SpringLobbyApp::on_logout()
