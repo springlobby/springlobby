@@ -16,20 +16,20 @@
 
 
 //
-// Class: UserList
-#ifndef _USERLIST_H_
-#define _USERLIST_H_
+// Class: ChannelList
+#ifndef _CHANNELLIST_H_
+#define _CHANNELLIST_H_
 
 #include <map>
 #include <string>
 #include <assert.h>
-#include "user.h"
+#include "channel.h"
 
 using namespace std;
 
 
-//! @brief Used internally by UserList in its std::map<> lists.
-struct UserListMapCompare
+//! @brief Used internally by ChannelList in its std::map<> lists.
+struct ChannelListMapCompare
 {
   bool operator()(const string s1, const string s2) const
   {
@@ -38,35 +38,35 @@ struct UserListMapCompare
 };
 
 
-//! @brief std::map<> list that stores User pointers.
-typedef map<string, User*, UserListMapCompare> user_map_t;
-//! @brief user_map_t iterator.
-typedef user_map_t::iterator user_iter_t;
+//! @brief std::map<> list that stores Channel pointers.
+typedef map<string, Channel*, ChannelListMapCompare> channel_map_t;
+//! @brief channel_map_t iterator.
+typedef channel_map_t::iterator channel_iter_t;
 
 
-class UserList
+class ChannelList
 {
   public:
-    UserList();
-    virtual ~UserList();
+    ChannelList();
+    virtual ~ChannelList();
   
-    // UserList interface
+    // ChannelList interface
   
-    virtual void AddUser( User* user );
-    virtual void RemoveUser( const string nick );
+    virtual void AddChannel( Channel* channel );
+    virtual void RemoveChannel( const string name );
   
-    virtual User* GetUser( const string nick );
-    virtual bool UserExists( const string nick );
+    virtual Channel* GetChannel( const string name );
+    virtual bool ChannelExists( const string name );
   
-    virtual int GetNumUsers();
+    virtual int GetNumChannels();
   
   protected:
-    // UserList variables
+    // ChannelList variables
   
-    user_map_t m_users;
+    channel_map_t m_chans;
   
 };
 
 
-#endif  //_USERLIST_H_
+#endif  //_CHANNELLIST_H_
 

@@ -14,55 +14,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#ifndef _UTILS_H_
+#define _UTILS_H_
 
-//
-// Class: UserList
-//
-#include "userlist.h"
+//! Converts a wxString to an stl string
+#define STL_STRING(v) string((const char*)v.mb_str(wxConvUTF8))
 
-
-UserList::UserList()
-{
-}
+//! Converts an stl string to a wxString
+#define WX_STRING(v) wxString(v.c_str(),wxConvUTF8)
 
 
-UserList::~UserList()
-{
-}
-
-
-void UserList::AddUser( User* user )
-{
-  assert( user != NULL );
-  m_users[user->GetNick()] = user;
-}
-
-
-void UserList::RemoveUser( const string nick )
-{
-  m_users.erase( nick );
-}
-
- 
-User* UserList::GetUser( const string nick )
-{
-  if ( m_users.count( nick ) > 0 ) {
-    user_iter_t found = m_users.find( nick );
-    return (*found).second;
-  } else {
-    return NULL;
-  }
-}
-
-
-bool UserList::UserExists( const string nick )
-{
-  return (m_users.count( nick ) > 0);
-}
-
-
-int UserList::GetNumUsers()
-{
-  return m_users.size();
-}
+#endif  //_UTILS_H_
 

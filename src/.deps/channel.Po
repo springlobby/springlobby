@@ -1,4 +1,4 @@
-userlist.o userlist.o: userlist.cpp userlist.h \
+channel.o channel.o: channel.cpp channel.h userlist.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_algobase.h \
@@ -86,6 +86,8 @@ userlist.o userlist.o: userlist.cpp userlist.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tempbuf.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/basic_string.tcc \
   /usr/include/assert.h user.h
+
+channel.h:
 
 userlist.h:
 

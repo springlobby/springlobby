@@ -1,41 +1,55 @@
-serverevents.o serverevents.o: serverevents.cpp serverevents.h socket.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/string \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/c++config.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/os_defines.h \
-  /usr/include/features.h /usr/include/sys/cdefs.h \
+serverevents.o serverevents.o: serverevents.cpp serverevents.h \
+  /usr/include/wx-2.6/wx/msgdlg.h /usr/include/wx-2.6/wx/defs.h \
+  /usr/include/wx-2.6/wx/platform.h \
+  /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
+  /usr/include/wx-2.6/wx/chkconf.h /usr/include/wx-2.6/wx/chkconf.h \
+  /usr/include/wx-2.6/wx/features.h /usr/include/wx-2.6/wx/version.h \
+  /usr/include/wx-2.6/wx/dlimpexp.h /usr/include/wx-2.6/wx/debug.h \
+  /usr/include/assert.h /usr/include/features.h /usr/include/sys/cdefs.h \
   /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
   /usr/include/gnu/stubs-32.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/cpu_defines.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stringfwd.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/char_traits.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/cstring \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/cstddef \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/include/stddef.h \
-  /usr/include/string.h /usr/include/xlocale.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_algobase.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/climits \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/include/limits.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/include/syslimits.h \
   /usr/include/limits.h /usr/include/bits/posix1_lim.h \
   /usr/include/bits/local_lim.h /usr/include/linux/limits.h \
   /usr/include/bits/posix2_lim.h /usr/include/bits/xopen_lim.h \
-  /usr/include/bits/stdio_lim.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/cstdlib \
-  /usr/include/stdlib.h /usr/include/bits/waitflags.h \
-  /usr/include/bits/waitstatus.h /usr/include/endian.h \
-  /usr/include/bits/endian.h /usr/include/sys/types.h \
+  /usr/include/bits/stdio_lim.h /usr/include/wx-2.6/wx/wxchar.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/include/stdarg.h \
+  /usr/include/wchar.h /usr/include/stdio.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/include/stddef.h \
+  /usr/include/bits/wchar.h /usr/include/xlocale.h /usr/include/wctype.h \
   /usr/include/bits/types.h /usr/include/bits/typesizes.h \
-  /usr/include/time.h /usr/include/sys/select.h \
-  /usr/include/bits/select.h /usr/include/bits/sigset.h \
-  /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+  /usr/include/endian.h /usr/include/bits/endian.h /usr/include/libio.h \
+  /usr/include/_G_config.h /usr/include/gconv.h \
+  /usr/include/bits/sys_errlist.h /usr/include/bits/stdio.h \
+  /usr/include/time.h /usr/include/bits/time.h /usr/include/string.h \
+  /usr/include/wx-2.6/wx/gtk/msgdlg.h \
+  /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
+  /usr/include/wx-2.6/wx/dialog.h /usr/include/wx-2.6/wx/containr.h \
+  /usr/include/wx-2.6/wx/toplevel.h /usr/include/wx-2.6/wx/window.h \
+  /usr/include/wx-2.6/wx/event.h /usr/include/wx-2.6/wx/object.h \
+  /usr/include/wx-2.6/wx/memory.h /usr/include/wx-2.6/wx/string.h \
+  /usr/include/stdlib.h /usr/include/bits/waitflags.h \
+  /usr/include/bits/waitstatus.h /usr/include/sys/types.h \
+  /usr/include/sys/select.h /usr/include/bits/select.h \
+  /usr/include/bits/sigset.h /usr/include/sys/sysmacros.h \
   /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
+  /usr/include/wx-2.6/wx/buffer.h /usr/include/wx-2.6/wx/strconv.h \
+  /usr/include/wx-2.6/wx/fontenc.h /usr/include/wx-2.6/wx/beforestd.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/string \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/c++config.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/os_defines.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/cpu_defines.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stringfwd.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/char_traits.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/cstring \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/cstddef \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_algobase.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/climits \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/cstdlib \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/iosfwd \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/c++locale.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/cstdio \
-  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
-  /usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/include/stdarg.h \
-  /usr/include/bits/sys_errlist.h /usr/include/bits/stdio.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/clocale \
   /usr/include/locale.h /usr/include/bits/locale.h \
   /usr/include/langinfo.h /usr/include/nl_types.h /usr/include/iconv.h \
@@ -81,27 +95,16 @@ serverevents.o serverevents.o: serverevents.cpp serverevents.h socket.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_heap.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tempbuf.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/basic_string.tcc \
-  /usr/include/wx-2.6/wx/socket.h /usr/include/wx-2.6/wx/defs.h \
-  /usr/include/wx-2.6/wx/platform.h \
-  /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
-  /usr/include/wx-2.6/wx/chkconf.h /usr/include/wx-2.6/wx/chkconf.h \
-  /usr/include/wx-2.6/wx/features.h /usr/include/wx-2.6/wx/version.h \
-  /usr/include/wx-2.6/wx/dlimpexp.h /usr/include/wx-2.6/wx/debug.h \
-  /usr/include/assert.h /usr/include/wx-2.6/wx/wxchar.h \
-  /usr/include/wctype.h /usr/include/wx-2.6/wx/event.h \
-  /usr/include/wx-2.6/wx/object.h /usr/include/wx-2.6/wx/memory.h \
-  /usr/include/wx-2.6/wx/string.h /usr/include/wx-2.6/wx/buffer.h \
-  /usr/include/wx-2.6/wx/strconv.h /usr/include/wx-2.6/wx/fontenc.h \
-  /usr/include/wx-2.6/wx/beforestd.h /usr/include/wx-2.6/wx/afterstd.h \
-  /usr/include/wx-2.6/wx/arrstr.h /usr/include/wx-2.6/wx/iosfwrap.h \
-  /usr/include/wx-2.6/wx/msgout.h /usr/include/wx-2.6/wx/clntdata.h \
-  /usr/include/wx-2.6/wx/hashmap.h /usr/include/wx-2.6/wx/vector.h \
-  /usr/include/wx-2.6/wx/gdicmn.h /usr/include/wx-2.6/wx/list.h \
-  /usr/include/wx-2.6/wx/cursor.h /usr/include/wx-2.6/wx/gtk/cursor.h \
-  /usr/include/wx-2.6/wx/defs.h /usr/include/wx-2.6/wx/object.h \
-  /usr/include/wx-2.6/wx/gdicmn.h /usr/include/wx-2.6/wx/image.h \
-  /usr/include/wx-2.6/wx/stream.h /usr/include/wx-2.6/wx/filefn.h \
-  /usr/include/sys/stat.h /usr/include/bits/stat.h /usr/include/dirent.h \
+  /usr/include/wx-2.6/wx/afterstd.h /usr/include/wx-2.6/wx/arrstr.h \
+  /usr/include/wx-2.6/wx/iosfwrap.h /usr/include/wx-2.6/wx/msgout.h \
+  /usr/include/wx-2.6/wx/clntdata.h /usr/include/wx-2.6/wx/hashmap.h \
+  /usr/include/wx-2.6/wx/vector.h /usr/include/wx-2.6/wx/gdicmn.h \
+  /usr/include/wx-2.6/wx/list.h /usr/include/wx-2.6/wx/cursor.h \
+  /usr/include/wx-2.6/wx/gtk/cursor.h /usr/include/wx-2.6/wx/defs.h \
+  /usr/include/wx-2.6/wx/object.h /usr/include/wx-2.6/wx/gdicmn.h \
+  /usr/include/wx-2.6/wx/image.h /usr/include/wx-2.6/wx/stream.h \
+  /usr/include/wx-2.6/wx/filefn.h /usr/include/sys/stat.h \
+  /usr/include/bits/stat.h /usr/include/dirent.h \
   /usr/include/bits/dirent.h /usr/include/fcntl.h \
   /usr/include/bits/fcntl.h /usr/include/bits/uio.h \
   /usr/include/wx-2.6/wx/imagbmp.h /usr/include/wx-2.6/wx/image.h \
@@ -111,8 +114,23 @@ serverevents.o serverevents.o: serverevents.cpp serverevents.h socket.h \
   /usr/include/wx-2.6/wx/imagxpm.h /usr/include/wx-2.6/wx/imagiff.h \
   /usr/include/wx-2.6/wx/utils.h /usr/include/wx-2.6/wx/longlong.h \
   /usr/include/wx-2.6/wx/thread.h /usr/include/wx-2.6/wx/dynarray.h \
-  /usr/include/wx-2.6/wx/sckaddr.h /usr/include/wx-2.6/wx/gsocket.h \
-  /usr/include/wx-2.6/wx/unix/gsockunx.h \
+  /usr/include/wx-2.6/wx/font.h /usr/include/wx-2.6/wx/gdiobj.h \
+  /usr/include/wx-2.6/wx/gtk/gdiobj.h /usr/include/wx-2.6/wx/gtk/font.h \
+  /usr/include/wx-2.6/wx/hash.h /usr/include/wx-2.6/wx/colour.h \
+  /usr/include/wx-2.6/wx/gtk/colour.h /usr/include/wx-2.6/wx/string.h \
+  /usr/include/wx-2.6/wx/gdiobj.h /usr/include/wx-2.6/wx/palette.h \
+  /usr/include/wx-2.6/wx/generic/paletteg.h /usr/include/wx-2.6/wx/defs.h \
+  /usr/include/wx-2.6/wx/object.h /usr/include/wx-2.6/wx/gdiobj.h \
+  /usr/include/wx-2.6/wx/gdicmn.h /usr/include/wx-2.6/wx/region.h \
+  /usr/include/wx-2.6/wx/gtk/region.h /usr/include/wx-2.6/wx/list.h \
+  /usr/include/wx-2.6/wx/validate.h /usr/include/wx-2.6/wx/palette.h \
+  /usr/include/wx-2.6/wx/accel.h /usr/include/wx-2.6/wx/gtk/accel.h \
+  /usr/include/wx-2.6/wx/generic/accel.h \
+  /usr/include/wx-2.6/wx/gtk/window.h /usr/include/wx-2.6/wx/iconbndl.h \
+  /usr/include/wx-2.6/wx/gtk/toplevel.h \
+  /usr/include/wx-2.6/wx/gtk/dialog.h socket.h \
+  /usr/include/wx-2.6/wx/socket.h /usr/include/wx-2.6/wx/sckaddr.h \
+  /usr/include/wx-2.6/wx/gsocket.h /usr/include/wx-2.6/wx/unix/gsockunx.h \
   /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
   /usr/include/wx-2.6/wx/gsocket.h /usr/include/sys/socket.h \
   /usr/include/sys/uio.h /usr/include/bits/socket.h \
@@ -125,29 +143,13 @@ serverevents.o serverevents.o: serverevents.cpp serverevents.h socket.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h \
   chatpanel.h /usr/include/wx-2.6/wx/splitter.h \
   /usr/include/wx-2.6/wx/generic/splitter.h \
-  /usr/include/wx-2.6/wx/window.h /usr/include/wx-2.6/wx/font.h \
-  /usr/include/wx-2.6/wx/gdiobj.h /usr/include/wx-2.6/wx/gtk/gdiobj.h \
-  /usr/include/wx-2.6/wx/gtk/font.h /usr/include/wx-2.6/wx/hash.h \
-  /usr/include/wx-2.6/wx/colour.h /usr/include/wx-2.6/wx/gtk/colour.h \
-  /usr/include/wx-2.6/wx/string.h /usr/include/wx-2.6/wx/gdiobj.h \
-  /usr/include/wx-2.6/wx/palette.h \
-  /usr/include/wx-2.6/wx/generic/paletteg.h /usr/include/wx-2.6/wx/defs.h \
-  /usr/include/wx-2.6/wx/object.h /usr/include/wx-2.6/wx/gdiobj.h \
-  /usr/include/wx-2.6/wx/gdicmn.h /usr/include/wx-2.6/wx/region.h \
-  /usr/include/wx-2.6/wx/gtk/region.h /usr/include/wx-2.6/wx/list.h \
-  /usr/include/wx-2.6/wx/validate.h /usr/include/wx-2.6/wx/palette.h \
-  /usr/include/wx-2.6/wx/accel.h /usr/include/wx-2.6/wx/gtk/accel.h \
-  /usr/include/wx-2.6/wx/generic/accel.h \
-  /usr/include/wx-2.6/wx/gtk/window.h /usr/include/wx-2.6/wx/containr.h \
+  /usr/include/wx-2.6/wx/window.h /usr/include/wx-2.6/wx/containr.h \
   /usr/include/wx-2.6/wx/panel.h /usr/include/wx-2.6/wx/generic/panelg.h \
   /usr/include/wx-2.6/wx/sizer.h /usr/include/wx-2.6/wx/button.h \
-  /usr/include/wx-2.6/wx/control.h /usr/include/wx-2.6/wx/window.h \
-  /usr/include/wx-2.6/wx/gtk/control.h /usr/include/wx-2.6/wx/window.h \
-  /usr/include/wx-2.6/wx/gtk/button.h /usr/include/wx-2.6/wx/control.h \
-  /usr/include/wx-2.6/wx/frame.h /usr/include/wx-2.6/wx/toplevel.h \
-  /usr/include/wx-2.6/wx/iconbndl.h /usr/include/wx-2.6/wx/gtk/toplevel.h \
+  /usr/include/wx-2.6/wx/control.h /usr/include/wx-2.6/wx/gtk/control.h \
+  /usr/include/wx-2.6/wx/window.h /usr/include/wx-2.6/wx/gtk/button.h \
+  /usr/include/wx-2.6/wx/control.h /usr/include/wx-2.6/wx/frame.h \
   /usr/include/wx-2.6/wx/gtk/frame.h /usr/include/wx-2.6/wx/dialog.h \
-  /usr/include/wx-2.6/wx/containr.h /usr/include/wx-2.6/wx/gtk/dialog.h \
   /usr/include/wx-2.6/wx/bookctrl.h /usr/include/wx-2.6/wx/notebook.h \
   /usr/include/wx-2.6/wx/gtk/notebook.h /usr/include/wx-2.6/wx/textctrl.h \
   /usr/include/wx-2.6/wx/ioswrap.h \
@@ -196,31 +198,35 @@ serverevents.o serverevents.o: serverevents.cpp serverevents.h socket.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/gtk/scrolwin.h \
   /usr/include/wx-2.6/wx/settings.h /usr/include/wx-2.6/wx/listbase.h \
   /usr/include/wx-2.6/wx/combobox.h /usr/include/wx-2.6/wx/ctrlsub.h \
-  /usr/include/wx-2.6/wx/gtk/combobox.h springlobbyapp.h \
-  /usr/include/wx-2.6/wx/app.h /usr/include/wx-2.6/wx/vidmode.h \
-  /usr/include/wx-2.6/wx/build.h /usr/include/wx-2.6/wx/init.h \
-  /usr/include/wx-2.6/wx/gtk/app.h /usr/include/wx-2.6/wx/frame.h \
-  /usr/include/wx-2.6/wx/icon.h /usr/include/wx-2.6/wx/strconv.h \
+  /usr/include/wx-2.6/wx/gtk/combobox.h system.h \
+  /usr/include/wx-2.6/wx/intl.h mainwindow.h \
   /usr/include/wx-2.6/wx/menu.h /usr/include/wx-2.6/wx/menuitem.h \
   /usr/include/wx-2.6/wx/gtk/menuitem.h /usr/include/wx-2.6/wx/gtk/menu.h \
-  tasserver.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/list \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_list.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc \
-  settings.h /usr/include/wx-2.6/wx/config.h \
-  /usr/include/wx-2.6/wx/confbase.h /usr/include/wx-2.6/wx/fileconf.h \
-  /usr/include/wx-2.6/wx/textfile.h /usr/include/wx-2.6/wx/textbuf.h \
-  /usr/include/wx-2.6/wx/file.h
+  /usr/include/wx-2.6/wx/listbook.h mainchattab.h images/chat_icon.xpm
 
 serverevents.h:
 
-socket.h:
+/usr/include/wx-2.6/wx/msgdlg.h:
 
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/string:
+/usr/include/wx-2.6/wx/defs.h:
 
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/c++config.h:
+/usr/include/wx-2.6/wx/platform.h:
 
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/os_defines.h:
+/usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h:
+
+/usr/include/wx-2.6/wx/chkconf.h:
+
+/usr/include/wx-2.6/wx/chkconf.h:
+
+/usr/include/wx-2.6/wx/features.h:
+
+/usr/include/wx-2.6/wx/version.h:
+
+/usr/include/wx-2.6/wx/dlimpexp.h:
+
+/usr/include/wx-2.6/wx/debug.h:
+
+/usr/include/assert.h:
 
 /usr/include/features.h:
 
@@ -231,26 +237,6 @@ socket.h:
 /usr/include/gnu/stubs.h:
 
 /usr/include/gnu/stubs-32.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/cpu_defines.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stringfwd.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/char_traits.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/cstring:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/cstddef:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/include/stddef.h:
-
-/usr/include/string.h:
-
-/usr/include/xlocale.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_algobase.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/climits:
 
 /usr/lib/gcc/i386-redhat-linux/4.1.1/include/limits.h:
 
@@ -270,7 +256,65 @@ socket.h:
 
 /usr/include/bits/stdio_lim.h:
 
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/cstdlib:
+/usr/include/wx-2.6/wx/wxchar.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/include/stdarg.h:
+
+/usr/include/wchar.h:
+
+/usr/include/stdio.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/include/stddef.h:
+
+/usr/include/bits/wchar.h:
+
+/usr/include/xlocale.h:
+
+/usr/include/wctype.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/endian.h:
+
+/usr/include/bits/endian.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/gconv.h:
+
+/usr/include/bits/sys_errlist.h:
+
+/usr/include/bits/stdio.h:
+
+/usr/include/time.h:
+
+/usr/include/bits/time.h:
+
+/usr/include/string.h:
+
+/usr/include/wx-2.6/wx/gtk/msgdlg.h:
+
+/usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h:
+
+/usr/include/wx-2.6/wx/dialog.h:
+
+/usr/include/wx-2.6/wx/containr.h:
+
+/usr/include/wx-2.6/wx/toplevel.h:
+
+/usr/include/wx-2.6/wx/window.h:
+
+/usr/include/wx-2.6/wx/event.h:
+
+/usr/include/wx-2.6/wx/object.h:
+
+/usr/include/wx-2.6/wx/memory.h:
+
+/usr/include/wx-2.6/wx/string.h:
 
 /usr/include/stdlib.h:
 
@@ -278,17 +322,7 @@ socket.h:
 
 /usr/include/bits/waitstatus.h:
 
-/usr/include/endian.h:
-
-/usr/include/bits/endian.h:
-
 /usr/include/sys/types.h:
-
-/usr/include/bits/types.h:
-
-/usr/include/bits/typesizes.h:
-
-/usr/include/time.h:
 
 /usr/include/sys/select.h:
 
@@ -296,37 +330,47 @@ socket.h:
 
 /usr/include/bits/sigset.h:
 
-/usr/include/bits/time.h:
-
 /usr/include/sys/sysmacros.h:
 
 /usr/include/bits/pthreadtypes.h:
 
 /usr/include/alloca.h:
 
+/usr/include/wx-2.6/wx/buffer.h:
+
+/usr/include/wx-2.6/wx/strconv.h:
+
+/usr/include/wx-2.6/wx/fontenc.h:
+
+/usr/include/wx-2.6/wx/beforestd.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/string:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/c++config.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/os_defines.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/cpu_defines.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stringfwd.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/char_traits.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/cstring:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/cstddef:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_algobase.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/climits:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/cstdlib:
+
 /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/iosfwd:
 
 /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/c++locale.h:
 
 /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/cstdio:
-
-/usr/include/stdio.h:
-
-/usr/include/libio.h:
-
-/usr/include/_G_config.h:
-
-/usr/include/wchar.h:
-
-/usr/include/bits/wchar.h:
-
-/usr/include/gconv.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/include/stdarg.h:
-
-/usr/include/bits/sys_errlist.h:
-
-/usr/include/bits/stdio.h:
 
 /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/clocale:
 
@@ -436,48 +480,6 @@ socket.h:
 
 /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/basic_string.tcc:
 
-/usr/include/wx-2.6/wx/socket.h:
-
-/usr/include/wx-2.6/wx/defs.h:
-
-/usr/include/wx-2.6/wx/platform.h:
-
-/usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h:
-
-/usr/include/wx-2.6/wx/chkconf.h:
-
-/usr/include/wx-2.6/wx/chkconf.h:
-
-/usr/include/wx-2.6/wx/features.h:
-
-/usr/include/wx-2.6/wx/version.h:
-
-/usr/include/wx-2.6/wx/dlimpexp.h:
-
-/usr/include/wx-2.6/wx/debug.h:
-
-/usr/include/assert.h:
-
-/usr/include/wx-2.6/wx/wxchar.h:
-
-/usr/include/wctype.h:
-
-/usr/include/wx-2.6/wx/event.h:
-
-/usr/include/wx-2.6/wx/object.h:
-
-/usr/include/wx-2.6/wx/memory.h:
-
-/usr/include/wx-2.6/wx/string.h:
-
-/usr/include/wx-2.6/wx/buffer.h:
-
-/usr/include/wx-2.6/wx/strconv.h:
-
-/usr/include/wx-2.6/wx/fontenc.h:
-
-/usr/include/wx-2.6/wx/beforestd.h:
-
 /usr/include/wx-2.6/wx/afterstd.h:
 
 /usr/include/wx-2.6/wx/arrstr.h:
@@ -554,54 +556,6 @@ socket.h:
 
 /usr/include/wx-2.6/wx/dynarray.h:
 
-/usr/include/wx-2.6/wx/sckaddr.h:
-
-/usr/include/wx-2.6/wx/gsocket.h:
-
-/usr/include/wx-2.6/wx/unix/gsockunx.h:
-
-/usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h:
-
-/usr/include/wx-2.6/wx/gsocket.h:
-
-/usr/include/sys/socket.h:
-
-/usr/include/sys/uio.h:
-
-/usr/include/bits/socket.h:
-
-/usr/include/bits/sockaddr.h:
-
-/usr/include/asm/socket.h:
-
-/usr/include/asm/sockios.h:
-
-/usr/include/sys/un.h:
-
-/usr/include/wx-2.6/wx/event.h:
-
-server.h:
-
-user.h:
-
-chatlist.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h:
-
-chatpanel.h:
-
-/usr/include/wx-2.6/wx/splitter.h:
-
-/usr/include/wx-2.6/wx/generic/splitter.h:
-
-/usr/include/wx-2.6/wx/window.h:
-
 /usr/include/wx-2.6/wx/font.h:
 
 /usr/include/wx-2.6/wx/gdiobj.h:
@@ -650,6 +604,64 @@ chatpanel.h:
 
 /usr/include/wx-2.6/wx/gtk/window.h:
 
+/usr/include/wx-2.6/wx/iconbndl.h:
+
+/usr/include/wx-2.6/wx/gtk/toplevel.h:
+
+/usr/include/wx-2.6/wx/gtk/dialog.h:
+
+socket.h:
+
+/usr/include/wx-2.6/wx/socket.h:
+
+/usr/include/wx-2.6/wx/sckaddr.h:
+
+/usr/include/wx-2.6/wx/gsocket.h:
+
+/usr/include/wx-2.6/wx/unix/gsockunx.h:
+
+/usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h:
+
+/usr/include/wx-2.6/wx/gsocket.h:
+
+/usr/include/sys/socket.h:
+
+/usr/include/sys/uio.h:
+
+/usr/include/bits/socket.h:
+
+/usr/include/bits/sockaddr.h:
+
+/usr/include/asm/socket.h:
+
+/usr/include/asm/sockios.h:
+
+/usr/include/sys/un.h:
+
+/usr/include/wx-2.6/wx/event.h:
+
+server.h:
+
+user.h:
+
+chatlist.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h:
+
+chatpanel.h:
+
+/usr/include/wx-2.6/wx/splitter.h:
+
+/usr/include/wx-2.6/wx/generic/splitter.h:
+
+/usr/include/wx-2.6/wx/window.h:
+
 /usr/include/wx-2.6/wx/containr.h:
 
 /usr/include/wx-2.6/wx/panel.h:
@@ -662,8 +674,6 @@ chatpanel.h:
 
 /usr/include/wx-2.6/wx/control.h:
 
-/usr/include/wx-2.6/wx/window.h:
-
 /usr/include/wx-2.6/wx/gtk/control.h:
 
 /usr/include/wx-2.6/wx/window.h:
@@ -674,19 +684,9 @@ chatpanel.h:
 
 /usr/include/wx-2.6/wx/frame.h:
 
-/usr/include/wx-2.6/wx/toplevel.h:
-
-/usr/include/wx-2.6/wx/iconbndl.h:
-
-/usr/include/wx-2.6/wx/gtk/toplevel.h:
-
 /usr/include/wx-2.6/wx/gtk/frame.h:
 
 /usr/include/wx-2.6/wx/dialog.h:
-
-/usr/include/wx-2.6/wx/containr.h:
-
-/usr/include/wx-2.6/wx/gtk/dialog.h:
 
 /usr/include/wx-2.6/wx/bookctrl.h:
 
@@ -828,23 +828,11 @@ chatpanel.h:
 
 /usr/include/wx-2.6/wx/gtk/combobox.h:
 
-springlobbyapp.h:
+system.h:
 
-/usr/include/wx-2.6/wx/app.h:
+/usr/include/wx-2.6/wx/intl.h:
 
-/usr/include/wx-2.6/wx/vidmode.h:
-
-/usr/include/wx-2.6/wx/build.h:
-
-/usr/include/wx-2.6/wx/init.h:
-
-/usr/include/wx-2.6/wx/gtk/app.h:
-
-/usr/include/wx-2.6/wx/frame.h:
-
-/usr/include/wx-2.6/wx/icon.h:
-
-/usr/include/wx-2.6/wx/strconv.h:
+mainwindow.h:
 
 /usr/include/wx-2.6/wx/menu.h:
 
@@ -854,24 +842,8 @@ springlobbyapp.h:
 
 /usr/include/wx-2.6/wx/gtk/menu.h:
 
-tasserver.h:
+/usr/include/wx-2.6/wx/listbook.h:
 
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/list:
+mainchattab.h:
 
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_list.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc:
-
-settings.h:
-
-/usr/include/wx-2.6/wx/config.h:
-
-/usr/include/wx-2.6/wx/confbase.h:
-
-/usr/include/wx-2.6/wx/fileconf.h:
-
-/usr/include/wx-2.6/wx/textfile.h:
-
-/usr/include/wx-2.6/wx/textbuf.h:
-
-/usr/include/wx-2.6/wx/file.h:
+images/chat_icon.xpm:

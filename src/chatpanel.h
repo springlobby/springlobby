@@ -27,7 +27,6 @@
 #ifndef _CHATPANEL_H_
 #define _CHATPANEL_H_
 
-//#include <wx/wx.h>
 #include <wx/splitter.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>

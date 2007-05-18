@@ -16,53 +16,38 @@
 
 
 //
-// Class: UserList
-//
-#include "userlist.h"
+// Class: System
+#ifndef _SYSTEM_H_
+#define _SYSTEM_H_
+
+#include <wx/intl.h>
+#include "server.h"
+#include "socket.h"
+#include "chatlist.h"
 
 
-UserList::UserList()
+class System : public ChatList
 {
-}
+  public:
+    System();
+    virtual ~System();
+  
+    // System interface
+  
+    void Connect( const string servername, const string username, const string password );
+    void Disconnect();
+  
+    Server* serv();
+    void SetServer( Server* serv );
+  
+  protected:
+    // System variables
+  
+    Server* m_serv;
+  
+};
 
+System& sys();
 
-UserList::~UserList()
-{
-}
-
-
-void UserList::AddUser( User* user )
-{
-  assert( user != NULL );
-  m_users[user->GetNick()] = user;
-}
-
-
-void UserList::RemoveUser( const string nick )
-{
-  m_users.erase( nick );
-}
-
- 
-User* UserList::GetUser( const string nick )
-{
-  if ( m_users.count( nick ) > 0 ) {
-    user_iter_t found = m_users.find( nick );
-    return (*found).second;
-  } else {
-    return NULL;
-  }
-}
-
-
-bool UserList::UserExists( const string nick )
-{
-  return (m_users.count( nick ) > 0);
-}
-
-
-int UserList::GetNumUsers()
-{
-  return m_users.size();
-}
+#endif  //_SYSTEM_H_
 

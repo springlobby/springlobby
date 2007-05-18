@@ -159,6 +159,9 @@ mainwindow.o mainwindow.o: mainwindow.cpp /usr/include/wx-2.6/wx/frame.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/istream.tcc \
   /usr/include/wx-2.6/wx/gtk/textctrl.h /usr/include/wx-2.6/wx/numdlg.h \
   /usr/include/wx-2.6/wx/generic/numdlgg.h mainwindow.h \
+  /usr/include/wx-2.6/wx/menu.h /usr/include/wx-2.6/wx/menuitem.h \
+  /usr/include/wx-2.6/wx/gtk/menuitem.h /usr/include/wx-2.6/wx/bitmap.h \
+  /usr/include/wx-2.6/wx/gtk/bitmap.h /usr/include/wx-2.6/wx/gtk/menu.h \
   /usr/include/wx-2.6/wx/listbook.h /usr/include/wx-2.6/wx/bookctrl.h \
   /usr/include/wx-2.6/wx/notebook.h /usr/include/wx-2.6/wx/gtk/notebook.h \
   mainchattab.h chatpanel.h /usr/include/wx-2.6/wx/splitter.h \
@@ -172,8 +175,7 @@ mainwindow.o mainwindow.o: mainwindow.cpp /usr/include/wx-2.6/wx/frame.h \
   /usr/include/wx-2.6/wx/generic/listctrl.h \
   /usr/include/wx-2.6/wx/generic/imaglist.h /usr/include/wx-2.6/wx/list.h \
   /usr/include/wx-2.6/wx/icon.h /usr/include/wx-2.6/wx/iconloc.h \
-  /usr/include/wx-2.6/wx/gtk/icon.h /usr/include/wx-2.6/wx/bitmap.h \
-  /usr/include/wx-2.6/wx/gtk/bitmap.h /usr/include/wx-2.6/wx/control.h \
+  /usr/include/wx-2.6/wx/gtk/icon.h /usr/include/wx-2.6/wx/control.h \
   /usr/include/wx-2.6/wx/timer.h /usr/include/wx-2.6/wx/stopwatch.h \
   /usr/include/wx-2.6/wx/gtk/timer.h /usr/include/wx-2.6/wx/dcclient.h \
   /usr/include/wx-2.6/wx/gtk/dcclient.h /usr/include/wx-2.6/wx/dc.h \
@@ -188,18 +190,8 @@ mainwindow.o mainwindow.o: mainwindow.cpp /usr/include/wx-2.6/wx/frame.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/gtk/scrolwin.h \
   /usr/include/wx-2.6/wx/settings.h /usr/include/wx-2.6/wx/listbase.h \
   /usr/include/wx-2.6/wx/combobox.h /usr/include/wx-2.6/wx/ctrlsub.h \
-  /usr/include/wx-2.6/wx/gtk/combobox.h images/chat_icon.xpm \
-  springlobbyapp.h /usr/include/wx-2.6/wx/app.h \
-  /usr/include/wx-2.6/wx/vidmode.h /usr/include/wx-2.6/wx/build.h \
-  /usr/include/wx-2.6/wx/init.h /usr/include/wx-2.6/wx/gtk/app.h \
-  /usr/include/wx-2.6/wx/icon.h /usr/include/wx-2.6/wx/strconv.h \
-  /usr/include/wx-2.6/wx/menu.h /usr/include/wx-2.6/wx/menuitem.h \
-  /usr/include/wx-2.6/wx/gtk/menuitem.h /usr/include/wx-2.6/wx/gtk/menu.h \
-  server.h user.h tasserver.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/list \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_list.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc \
-  serverevents.h socket.h /usr/include/wx-2.6/wx/socket.h \
+  /usr/include/wx-2.6/wx/gtk/combobox.h images/chat_icon.xpm system.h \
+  server.h user.h socket.h /usr/include/wx-2.6/wx/socket.h \
   /usr/include/wx-2.6/wx/sckaddr.h /usr/include/wx-2.6/wx/gsocket.h \
   /usr/include/wx-2.6/wx/unix/gsockunx.h \
   /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
@@ -215,7 +207,14 @@ mainwindow.o mainwindow.o: mainwindow.cpp /usr/include/wx-2.6/wx/frame.h \
   settings.h /usr/include/wx-2.6/wx/config.h \
   /usr/include/wx-2.6/wx/confbase.h /usr/include/wx-2.6/wx/fileconf.h \
   /usr/include/wx-2.6/wx/textfile.h /usr/include/wx-2.6/wx/textbuf.h \
-  /usr/include/wx-2.6/wx/file.h
+  /usr/include/wx-2.6/wx/file.h utils.h ui.h \
+  /usr/include/wx-2.6/wx/msgdlg.h /usr/include/wx-2.6/wx/gtk/msgdlg.h \
+  /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
+  /usr/include/wx-2.6/wx/dialog.h connectwindow.h \
+  /usr/include/wx-2.6/wx/button.h /usr/include/wx-2.6/wx/stattext.h \
+  /usr/include/wx-2.6/wx/gtk/stattext.h /usr/include/wx-2.6/wx/notebook.h \
+  /usr/include/wx-2.6/wx/checkbox.h /usr/include/wx-2.6/wx/gtk/checkbox.h \
+  /usr/include/wx-2.6/wx/statline.h /usr/include/wx-2.6/wx/gtk/statline.h
 
 /usr/include/wx-2.6/wx/frame.h:
 
@@ -693,6 +692,18 @@ mainwindow.o mainwindow.o: mainwindow.cpp /usr/include/wx-2.6/wx/frame.h \
 
 mainwindow.h:
 
+/usr/include/wx-2.6/wx/menu.h:
+
+/usr/include/wx-2.6/wx/menuitem.h:
+
+/usr/include/wx-2.6/wx/gtk/menuitem.h:
+
+/usr/include/wx-2.6/wx/bitmap.h:
+
+/usr/include/wx-2.6/wx/gtk/bitmap.h:
+
+/usr/include/wx-2.6/wx/gtk/menu.h:
+
 /usr/include/wx-2.6/wx/listbook.h:
 
 /usr/include/wx-2.6/wx/bookctrl.h:
@@ -744,10 +755,6 @@ chatpanel.h:
 /usr/include/wx-2.6/wx/iconloc.h:
 
 /usr/include/wx-2.6/wx/gtk/icon.h:
-
-/usr/include/wx-2.6/wx/bitmap.h:
-
-/usr/include/wx-2.6/wx/gtk/bitmap.h:
 
 /usr/include/wx-2.6/wx/control.h:
 
@@ -811,43 +818,11 @@ chatpanel.h:
 
 images/chat_icon.xpm:
 
-springlobbyapp.h:
-
-/usr/include/wx-2.6/wx/app.h:
-
-/usr/include/wx-2.6/wx/vidmode.h:
-
-/usr/include/wx-2.6/wx/build.h:
-
-/usr/include/wx-2.6/wx/init.h:
-
-/usr/include/wx-2.6/wx/gtk/app.h:
-
-/usr/include/wx-2.6/wx/icon.h:
-
-/usr/include/wx-2.6/wx/strconv.h:
-
-/usr/include/wx-2.6/wx/menu.h:
-
-/usr/include/wx-2.6/wx/menuitem.h:
-
-/usr/include/wx-2.6/wx/gtk/menuitem.h:
-
-/usr/include/wx-2.6/wx/gtk/menu.h:
+system.h:
 
 server.h:
 
 user.h:
-
-tasserver.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/list:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_list.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc:
-
-serverevents.h:
 
 socket.h:
 
@@ -902,3 +877,33 @@ settings.h:
 /usr/include/wx-2.6/wx/textbuf.h:
 
 /usr/include/wx-2.6/wx/file.h:
+
+utils.h:
+
+ui.h:
+
+/usr/include/wx-2.6/wx/msgdlg.h:
+
+/usr/include/wx-2.6/wx/gtk/msgdlg.h:
+
+/usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h:
+
+/usr/include/wx-2.6/wx/dialog.h:
+
+connectwindow.h:
+
+/usr/include/wx-2.6/wx/button.h:
+
+/usr/include/wx-2.6/wx/stattext.h:
+
+/usr/include/wx-2.6/wx/gtk/stattext.h:
+
+/usr/include/wx-2.6/wx/notebook.h:
+
+/usr/include/wx-2.6/wx/checkbox.h:
+
+/usr/include/wx-2.6/wx/gtk/checkbox.h:
+
+/usr/include/wx-2.6/wx/statline.h:
+
+/usr/include/wx-2.6/wx/gtk/statline.h:

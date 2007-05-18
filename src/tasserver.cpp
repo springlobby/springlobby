@@ -134,7 +134,7 @@ void TASServer::Update()
     if ( !IsConnected() ) {
       m_connected = false;
       m_online = false;
-      m_ui->on_disconnected();
+      m_ui->OnDisconnected();
       return;
     }
 
@@ -221,23 +221,23 @@ void TASServer::ExecuteCommand( string cmd, string params, int replyid )
       m_ser_ver = SER_VER_0_34;
     else
       m_ser_ver = SER_VER_BAD;
-    m_ui->on_connected( mod, (m_ser_ver > 0) );
+    m_ui->OnConnected( mod, (m_ser_ver > 0) );
     
   } else if ( cmd == "ACCEPTED" ) {
     m_online = true;
-    m_ui->on_login( );
+    m_ui->OnLogin( );
   } else if ( cmd == "MOTD" ) {
-    m_ui->on_motd( params );
+    m_ui->OnMotd( params );
   } else if ( cmd == "ADDUSER" ) {
     nick = GetWordParam( params );
     contry = GetWordParam( params );
     cpu = GetIntParam( params );
-    m_ui->on_new_user( nick, contry, cpu );
+    m_ui->OnNewUser( nick, contry, cpu );
   } else if ( cmd == "CLIENTSTATUS" ) {
     nick = GetWordParam( params );
     tasstatus.byte = GetIntParam( params );
     cstatus = ConvTasclientstatus( tasstatus.tasdata );
-    m_ui->on_user_status( nick, cstatus );
+    m_ui->OnUserStatus( nick, cstatus );
   } else if ( cmd == "BATTLEOPENED" ) {
     id = GetIntParam( params );
     replay = GetIntParam( params );
@@ -253,73 +253,73 @@ void TASServer::ExecuteCommand( string cmd, string params, int replyid )
     title = GetSentenceParam( params );
     mod = GetSentenceParam( params );
     
-    m_ui->on_battle_opened( id, replay, nat, nick, host, port, maxplayers, 
+    m_ui->OnBattleOpened( id, replay, nat, nick, host, port, maxplayers, 
                             haspass, (rank + 1)*100, hash, map, title, mod );
     
   } else if ( cmd == "JOINEDBATTLE" ) {
     id = GetIntParam( params );
     nick = GetWordParam( params );
-    m_ui->on_user_joined_battle( id, nick );
+    m_ui->OnUserJoinedBattle( id, nick );
   } else if ( cmd == "UPDATEBATTLEINFO" ) {
     id = GetIntParam( params );
     specs = GetIntParam( params );
     haspass = GetIntParam( params );
     hash = GetIntParam( params );
     map = GetSentenceParam( params );
-    m_ui->on_battleinfo_updated( id, specs, haspass, hash, map );
+    m_ui->OnBattleInfoUpdated( id, specs, haspass, hash, map );
   } else if ( cmd == "LOGININFOEND" ) {
-    m_ui->on_login_info_complete();
+    m_ui->OnLoginInfoComplete();
   } else if ( cmd == "REMOVEUSER" ) {
     nick = GetWordParam( params );
-    m_ui->on_user_quit( nick );
+    m_ui->OnUserQuit( nick );
   } else if ( cmd == "BATTLECLOSED" ) {
     id = GetIntParam( params );
-    m_ui->on_battle_closed( id );
+    m_ui->OnBattleClosed( id );
   } else if ( cmd == "LEFTBATTLE" ) {
     id = GetIntParam( params );
     nick = GetWordParam( params );
-    m_ui->on_user_left_battle( id, nick );
+    m_ui->OnUserLeftBattle( id, nick );
   } else if ( cmd == "PONG" ) {
     HandlePong( replyid );
   } else if ( cmd == "JOIN" ) {
     channel = GetWordParam( params );
-    m_ui->on_join_channel_result( true, channel, "" );
+    m_ui->OnJoinChannelResult( true, channel, "" );
   } else if ( cmd == "JOIN" ) {
     channel = GetWordParam( params );
     error = GetSentenceParam( params );
-    m_ui->on_join_channel_result( false, channel, error );
+    m_ui->OnJoinChannelResult( false, channel, error );
     
   } else if ( cmd == "SAID" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
     msg = GetSentenceParam( params );
-    m_ui->on_channel_said( channel, nick, msg );
+    m_ui->OnChannelSaid( channel, nick, msg );
   } else if ( cmd == "JOINED" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
-    m_ui->on_channel_join( channel, nick );
+    m_ui->OnChannelJoin( channel, nick );
   } else if ( cmd == "LEFT" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
     msg = GetSentenceParam( params );
-    m_ui->on_channel_part( channel, nick, msg );
+    m_ui->OnChannelPart( channel, nick, msg );
   } else if ( cmd == "CHANNELTOPIC" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
     pos = GetIntParam( params );
     msg = GetSentenceParam( params );
-    m_ui->on_channel_topic( channel, nick, msg, pos/1000 );
+    m_ui->OnChannelTopic( channel, nick, msg, pos/1000 );
   } else if ( cmd == "SAIDEX" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
     msg = GetSentenceParam( params );
-    m_ui->on_channel_action( channel, nick, msg );
+    m_ui->OnChannelAction( channel, nick, msg );
   } else if ( cmd == "CLIENTS" ) {
     //CLIENTS params: main ChanServ []Cookiebot hawkki Pullapitko scf84 replay trepan 10gb_bot_24h Contex[1944] NowakPL Springie
     // !! Command: "CHANNELMESSAGE" params: "main <ChanServ> has muted <smoth>".
   } else {
     cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << endl;
-    m_ui->on_unknown_command( cmd, params );
+    m_ui->OnUnknownCommand( cmd, params );
   }
   
 }
@@ -415,14 +415,14 @@ void TASServer::HandlePong( int replyid )
   }
   
   if ( found ) {
-    m_ui->on_pong( (time( NULL ) - it->t) );
+    m_ui->OnPong( (time( NULL ) - it->t) );
     m_pinglist.erase( it );
   } else {
     if ( !m_pinglist.empty() ) {
-      m_ui->on_pong( (time( NULL ) - m_pinglist.begin()->t) );
+      m_ui->OnPong( (time( NULL ) - m_pinglist.begin()->t) );
       m_pinglist.pop_front();
     } else {
-      m_ui->on_pong( -1 );
+      m_ui->OnPong( -1 );
     }
   }
 }
@@ -433,9 +433,6 @@ void TASServer::HandlePinglist()
   int now = time( NULL );
   while ( !m_pinglist.empty() ) {
     if ( m_pinglist.begin()->t + PING_TIMEOUT < now ) {
-      // TODO: Fix Ping time!
-      //cout << "!!! Ping Timeout, took more than " << PING_TIMEOUT << "s" << endl;
-      //_ui->on_pong( PING_TIMEOUT );
       m_pinglist.pop_front();
     } else {
       break;
@@ -447,6 +444,7 @@ void TASServer::HandlePinglist()
 void TASServer::JoinChannel( string channel, string key )
 {
   //JOIN channame [key]
+  cout << "** TASServer::JoinChannel()" << endl;
   assert( IsOnline() );
   assert( m_sock != NULL );
   
@@ -462,6 +460,7 @@ void TASServer::JoinChannel( string channel, string key )
 void TASServer::PartChannel( string channel )
 {
   //LEAVE channame
+  cout << "** TASServer::PartChannel()" << endl;
   assert( IsOnline() );
   assert( m_sock != NULL );
   
@@ -473,6 +472,7 @@ void TASServer::PartChannel( string channel )
 void TASServer::SayChannel( string channel, string msg )
 {
   //SAY channame {message}
+  cout << "** TASServer::SayChannel()" << endl;
   assert( IsOnline() );
   assert( m_sock != NULL );
   
@@ -483,6 +483,7 @@ void TASServer::SayChannel( string channel, string msg )
 void TASServer::SayPrivate( string nick, string msg )
 {
   //SAYPRIVATE username {message}
+  cout << "** TASServer::SayPrivate()" << endl;
   assert( IsOnline() );
   assert( m_sock != NULL );
   
@@ -497,7 +498,7 @@ void TASServer::OnConnected( Socket* sock )
   serv->m_last_ping = time( NULL );
   serv->m_connected = true;
   serv->m_online = false;
-  cout << "** TASServer::on_connected(): on_connected event." << endl;
+  cout << "** TASServer::OnConnected()" << endl;
 }
 
 
@@ -506,14 +507,13 @@ void TASServer::OnDisconnected( Socket* sock )
   TASServer* serv = (TASServer*)sock->GetUserdata();
   serv->m_connected = false;
   serv->m_online = false;
-  cout << "** TASServer::on_disconnected(): on_disconnected event." << endl;
+  cout << "** TASServer::OnDisconnected()" << endl;
 }
 
 
 void TASServer::OnDataRecived( Socket* sock )
 {
   TASServer* serv = (TASServer*)sock->GetUserdata();
-  //cout << "** TASServer::on_data_recived(): on_data_recived event." << endl;
   serv->_ReciveAndExecute();
 }
 

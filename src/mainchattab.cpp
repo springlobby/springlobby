@@ -23,7 +23,9 @@
 
 #include <wx/intl.h>
 #include "mainchattab.h"
-#include "springlobbyapp.h"
+#include "system.h"
+#include "utils.h"
+#include "mainwindow.h"
 
 #include "images/close.xpm"
 
@@ -39,6 +41,8 @@ MainChatTab::MainChatTab( wxWindow* parent )
 {
 
   m_newtab_sel = -1;
+  m_server_chat = NULL;
+  
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   
   m_chat_tabs = new wxNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
@@ -49,7 +53,7 @@ MainChatTab::MainChatTab( wxWindow* parent )
   m_chat_tabs->AssignImageList( m_imagelist );
 
   m_server_chat = new ChatPanel( m_chat_tabs, false );
-  app().SetServerPanel( m_server_chat );
+  sys().SetServerPanel( m_server_chat );
 
   m_chat_tabs->AddPage( m_server_chat, _T("Server"), true, -1 );
   
@@ -96,7 +100,7 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
   if ( newsel >= m_chat_tabs->GetPageCount() - 1 ) { // We are going to remove page
     cout << "  -- Closepage." << endl;
     ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
-    if ( (delpage != app().GetServerPanel()) && ( delpage != NULL ) ) {
+    if ( (delpage != &servwin()) && ( delpage != NULL ) ) {
       cout << "  -- Remove last." << endl;
       delpage->Part();
       m_chat_tabs->DeletePage( oldsel );

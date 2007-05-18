@@ -24,7 +24,8 @@
 #include <wx/intl.h>
 #include <wx/datetime.h>
 #include "chatpanel.h"
-#include "springlobbyapp.h"
+#include "system.h"
+#include "utils.h"
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 
@@ -154,8 +155,11 @@ void ChatPanel::DidAction( wxString who, wxString action )
 //! @param message The MOTD message to output
 void ChatPanel::Motd( wxString message )
 {
+  cout << "++ ChatPanel::Motd()" << endl;
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLUE));
   m_chatlog_text->AppendText( _(" ** motd ** ")+ message + _("\n") );
+  cout << "-- ChatPanel::Motd()" << endl;
+
 }
 
 
@@ -216,7 +220,7 @@ bool ChatPanel::IsServerPanel()
 void ChatPanel::Say( wxString message )
 {
   cout << "** ChatPanel::Say()" << endl;
-  Server* serv = app().Serv();
+  Server* serv = sys().serv();
   assert( serv != NULL );
   serv->SayChannel( m_chan_name, STL_STRING(message) );
 }
@@ -224,9 +228,9 @@ void ChatPanel::Say( wxString message )
 void ChatPanel::Part()
 {
   cout << "** ChatPanel::Part()" << endl;
-  Server* serv = app().Serv();
+  Server* serv = sys().serv();
   assert( serv != NULL );
-  app().RemoveChannelPanel( m_chan_name );
+  sys().RemoveChannelPanel( m_chan_name );
   serv->PartChannel( m_chan_name );
 }
 

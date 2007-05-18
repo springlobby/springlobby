@@ -192,7 +192,7 @@ test.o test.o: test.cpp ../config.h \
   /usr/include/wx-2.6/wx/gtk/combobox.h settings.h \
   /usr/include/wx-2.6/wx/config.h /usr/include/wx-2.6/wx/confbase.h \
   /usr/include/wx-2.6/wx/fileconf.h /usr/include/wx-2.6/wx/textfile.h \
-  /usr/include/wx-2.6/wx/textbuf.h /usr/include/wx-2.6/wx/file.h
+  /usr/include/wx-2.6/wx/textbuf.h /usr/include/wx-2.6/wx/file.h utils.h
 
 ../config.h:
 
@@ -789,3 +789,5 @@ settings.h:
 /usr/include/wx-2.6/wx/textbuf.h:
 
 /usr/include/wx-2.6/wx/file.h:
+
+utils.h:

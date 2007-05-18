@@ -26,11 +26,15 @@
 #include <wx/textdlg.h>
 
 #include "mainwindow.h"
-#include "springlobbyapp.h"
+#include "system.h"
+#include "settings.h"
+#include "ui.h"
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
   EVT_MENU( MENU_JOIN, MainWindow::OnMenuJoin )
+  EVT_MENU( MENU_CONNECT, MainWindow::OnMenuConnect )
+  EVT_MENU( MENU_DISCONNECT, MainWindow::OnMenuDisconnect )
 
 END_EVENT_TABLE()
 
@@ -76,7 +80,7 @@ MainWindow::MainWindow() : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
   
   SetSizer( m_main_sizer );
   
-  SetSize( app().GetMainWindowLeft(), app().GetMainWindowTop(), app().GetMainWindowWidth(), app().GetMainWindowHeight() );
+  SetSize( sett().GetMainWindowLeft(), sett().GetMainWindowTop(), sett().GetMainWindowWidth(), sett().GetMainWindowHeight() );
 }
 
 
@@ -84,11 +88,30 @@ MainWindow::~MainWindow()
 {
   int x, y, w, h;
   GetSize( &w, &h );
-  app().SetMainWindowHeight( h );
-  app().SetMainWindowWidth( w );
+  sett().SetMainWindowHeight( h );
+  sett().SetMainWindowWidth( w );
   GetPosition( &x, &y );
-  app().SetMainWindowTop( y );
-  app().SetMainWindowLeft( x );
+  sett().SetMainWindowTop( y );
+  sett().SetMainWindowLeft( x );
+}
+
+
+MainWindow& mw()
+{
+  return ui().mw();
+}
+
+ChatPanel& servwin()
+{
+  return *sys().GetServerPanel();
+  //ui().mw().GetChatTab().ServerChat();
+}
+
+
+MainChatTab& MainWindow::GetChatTab()
+{
+  assert( m_chat_tab != NULL );
+  return *m_chat_tab;
 }
 
 
@@ -99,11 +122,11 @@ MainWindow::~MainWindow()
 //! @sa Server::JoinChannel OpenPrivateChat
 void MainWindow::OpenChannelChat( wxString channel )
 {
-  if ( !app().ChannelExists( STL_STRING(channel) ) ) {
+  if ( !sys().ChannelExists( STL_STRING(channel) ) ) {
     assert( m_chat_tab != NULL );
     ChatPanel* chat = m_chat_tab->AddChatPannel( channel, true );
     chat->SetChannelName( STL_STRING(channel) );
-    app().SetChannelPanel( STL_STRING(channel), chat );
+    sys().SetChannelPanel( STL_STRING(channel), chat );
   }
 }
 
@@ -116,12 +139,33 @@ void MainWindow::OpenPrivateChat( wxString nick )
 }
 
 
+//! @brief Close all chat tabs, both private and channel
+//!
+//! @todo Implement
+void MainWindow::CloseAllChats()
+{
+}
+
+
+//! @brief Called when join channel menuitem is clicked
 void MainWindow::OnMenuJoin( wxCommandEvent& event )
 {
-  if ( app().Serv() == NULL ) return;
+  if ( sys().serv() == NULL ) return;
   wxTextEntryDialog name_dlg( NULL, _("Name of channel to join"), _("Join channel..."), _(""), wxOK | wxCANCEL | wxCENTRE );
   if (name_dlg.ShowModal() == wxID_OK) {
     OpenChannelChat( name_dlg.GetValue() );
-    app().Serv()->JoinChannel( STL_STRING(name_dlg.GetValue()), "" );
+    sys().serv()->JoinChannel( STL_STRING(name_dlg.GetValue()), "" );
   }
 }
+
+
+void MainWindow::OnMenuConnect( wxCommandEvent& event )
+{
+  ui().ShowConnectWindow();
+}
+
+void MainWindow::OnMenuDisconnect( wxCommandEvent& event )
+{
+  sys().Disconnect();
+}
+

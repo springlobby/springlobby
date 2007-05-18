@@ -21,12 +21,9 @@
 // Created on: Fri May 11 19:19:23 2007
 //
 
-#include <wx/msgdlg.h>
 #include "springlobbyapp.h"
-#include "mainwindow.h"
-#include "chatlist.h"
-#include "connectwindow.h"
-
+#include "system.h"
+#include "ui.h"
 
 IMPLEMENT_APP(SpringLobbyApp)
 
@@ -37,19 +34,12 @@ BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
 END_EVENT_TABLE()
 
 
-
-SpringLobbyApp& app()
-{
-  return (SpringLobbyApp&)wxGetApp();
-}
-
-
 SpringLobbyApp::SpringLobbyApp()
 {
   m_timer = new wxTimer(this, TIMER_ID);
-  m_main_win = NULL;
-  m_con_win = NULL;
-  m_serv = NULL;
+//  m_main_win = NULL;
+//  m_con_win = NULL;
+//  m_serv = NULL;
 }
 
 SpringLobbyApp::~SpringLobbyApp()
@@ -64,8 +54,8 @@ bool SpringLobbyApp::OnInit()
 {
   cout << "** SpringLobbyApp::OnInit()" << endl;
   
-  OpenMainWindow();
-  DefaultConnect();
+  ui().ShowMainWindow();
+  ui().Connect();
 
   m_timer->Start( TIMER_INTERVAL );
   
@@ -81,7 +71,58 @@ int SpringLobbyApp::OnExit()
   return 0;
 }
 
+/*
 
+//! @brief Returns true is string is a say command
+//!
+//! @see ExcuteSayCommand
+bool SpringLobbyApp::IsSayCommand( const string& message )
+{
+  if ( message.empty() ) return false;
+  return (message[0] == '/');
+}
+
+
+//! @brief Executes a say command
+//!
+void SpringLobbyApp::ExcuteSayCommand( const string& message, const string& channel )
+{
+  string params = message;
+  if ( params.empty() ) return;
+  if ( params[0] == '/' )
+    params = params.replace( 0, 1, "" );
+  string command = _GetSayWordParam( params );
+  
+  transform(command.begin(), command.end(), command.begin(), (int(*)(int)) toupper);
+  if ( command == "ME" ) {
+    cout << "SpringLobbyApp::ExcuteSayCommand(): ME" << endl;
+  } else {
+    cout << "SpringLobbyApp::ExcuteSayCommand(): Cmd: " << command.c_str() << " params: " << params.c_str() << endl;
+  }
+}
+
+
+string SpringLobbyApp::_GetSayWordParam( string& message )
+{
+  string command;
+  int loc = message.find( " ", 0 );
+
+  if( loc != string::npos ) {
+    command = message.substr( 0, loc );
+    message = message.replace( 0, loc, "" );
+  } else {
+    command = message;
+    message = "";
+  }
+  return command;
+}
+
+
+string SpringLobbyApp::_GetSaySentenceParam( string& message )
+{
+}
+*/
+/*
 //! @brief Returns the currently used instance of Server
 //!
 //! @note May be NULL
@@ -90,8 +131,8 @@ Server* SpringLobbyApp::Serv()
 {
   return m_serv;
 }
-
-
+*/
+/*
 //! @brief Returns a reference to currently used MainWindow instance
 //!
 //! @note This returns an invalid reference during OnExit()!
@@ -99,8 +140,8 @@ MainWindow& SpringLobbyApp::MainWin()
 {
   return *m_main_win;
 }
-
-
+*/
+/*
 //! @brief Set the currently used instance of Server
 //!
 //! @param serv The new Server instance to use
@@ -108,8 +149,8 @@ void SpringLobbyApp::SetServ( Server* serv )
 {
   m_serv = serv;
 }
-
-
+*/
+/*
 //! @brief Shows the main window on screen
 //!
 //! @note It will create the MainWindow if not allready created
@@ -166,6 +207,11 @@ void SpringLobbyApp::Connect( const string servername, const string username, co
   int port;
   Socket* sock;
   
+  if ( m_con_win != NULL ) {
+    m_con_win->Close();
+    m_con_win = NULL;
+  }
+  
   if ( !ServerExists( servername ) ) {
     assert( false );
     return;
@@ -173,11 +219,19 @@ void SpringLobbyApp::Connect( const string servername, const string username, co
   
   if ( m_serv != NULL ) {
     // Delete old Server object
-    m_serv->Disconnect();
-    sock =  m_serv->GetSocket();
-    m_serv->SetSocket( NULL );
-    delete sock;
-    delete m_serv;
+    wxMessageDialog discon_dlg(NULL, _T("You are allready connected to a\nserver. Do you want to disconnect?"),
+                               _T("Allready connected"), wxOK | wxCANCEL );
+    
+    if ( discon_dlg.ShowModal() == wxID_OK ) {
+      m_serv->Disconnect();
+      sock =  m_serv->GetSocket();
+      m_serv->SetSocket( NULL );
+      delete sock;
+      delete m_serv;
+    } else {
+      return;
+    }
+    
   }
   
   // Create new Server object
@@ -205,20 +259,20 @@ void SpringLobbyApp::Disconnect()
 {
 }
 
-
+*/
 void SpringLobbyApp::OnTimer( wxTimerEvent& event )
 {
-  if ( m_serv != NULL ) {
-    m_serv->Update();
+  if ( sys().serv() != NULL ) {
+    sys().serv()->Update();
   }
 }
 
-
+/*
 void SpringLobbyApp::on_connected( string server_ver, bool supported )
 {
   cout << "** ServerEvents::on_connected(): Server: " << server_ver.c_str() << endl;
-  assert( app().Serv() != NULL );
-  app().Serv()->Login();
+  assert( sys().serv() != NULL );
+  sys().serv()->Login();
 }
 
 void SpringLobbyApp::on_disconnected()
@@ -233,8 +287,8 @@ void SpringLobbyApp::on_login()
 
 void SpringLobbyApp::on_login_info_complete()
 {
-  assert( m_serv != NULL );
-  m_serv->JoinChannel( "test", "" );
+  assert( sys().serv() != NULL );
+  sys().serv()->JoinChannel( "test", "" );
 }
 
 void SpringLobbyApp::on_logout()
@@ -355,4 +409,4 @@ void SpringLobbyApp::on_channel_action( string channel, string who, string actio
     chat->DidAction( WX_STRING(who), WX_STRING(action) );
   }
 }
-
+*/

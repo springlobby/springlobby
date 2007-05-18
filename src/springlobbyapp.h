@@ -23,50 +23,49 @@
 #ifndef _SPRINGLOBBYAPP_H_
 #define _SPRINGLOBBYAPP_H_
 
-//#include <wx/wx.h>
 #include <wx/app.h>
-#include <wx/menu.h>
-
-#include "server.h"
-#include "tasserver.h"
-#include "serverevents.h"
-#include "chatlist.h"
-#include "settings.h"
+#include <wx/timer.h>
 
 #define TIMER_ID 101
 #define TIMER_INTERVAL 100
 
-class MainWindow;
-class ConnectWindow;
-
  
-//! @brief Spring lobby wxApp, this class connects all the other classes
-class SpringLobbyApp : public wxApp, public Settings, public ServerEvents, public ChatList
+//! @brief Spring lobby wxApp
+class SpringLobbyApp : public wxApp
 {
   public:
     // SpringLobbyApp interface
     SpringLobbyApp();
     virtual ~SpringLobbyApp();
-    
     virtual bool OnInit();
     virtual int OnExit();
+    
+    // Object access functions
+//    Server* Serv();
+//    void SetServ( Server* serv );
   
-    Server* Serv();
-    void SetServ( Server* serv );
+    //MainWindow& MainWin();
+    
+    // System Functions
+    //void Quit();
   
-    MainWindow& MainWin();
+    //void OpenMainWindow();
+    //void OpenConnectWindow();
+    
+    //void DefaultConnect();
+    //void Connect( const string servername, const string username, const string password );
+    //void Disconnect();
   
-    void OpenMainWindow();
-    void OpenConnectWindow();
+    // Chat Functions
   
-    void Quit();
-    void DefaultConnect();
-    void Connect( const string servername, const string username, const string password );
-    void Disconnect();
-  
+    //static bool IsSayCommand( const string& message );
+    //void ExcuteSayCommand( const string& message, const string& channel );
+
+    // System Events
     void OnTimer( wxTimerEvent& event );
   
-    virtual void on_connected( string server_ver, bool supported );
+    // Server Events
+/*    virtual void on_connected( string server_ver, bool supported );
     virtual void on_disconnected();
       
     virtual void on_login();
@@ -97,24 +96,24 @@ class SpringLobbyApp : public wxApp, public Settings, public ServerEvents, publi
     virtual void on_channel_join( string channel, string who );
     virtual void on_channel_part( string channel, string who, string message );
     virtual void on_channel_topic( string channel, string who, string message, int when );
-    virtual void on_channel_action( string channel, string who, string action );
+    virtual void on_channel_action( string channel, string who, string action );*/
   protected:
     // SpringLobbyApp variables
     
-    MainWindow* m_main_win;
-    ConnectWindow* m_con_win;
+    //MainWindow* m_main_win;
+    //ConnectWindow* m_con_win;
   
-    Server* m_serv;
+    //Server* m_serv;
   
     wxTimer* m_timer;
   
-    ChatList m_cl;
+    //ChatList m_cl;
+  
+    //static string _GetSayWordParam( string& message );
+    //static string _GetSaySentenceParam( string& message );
   
     DECLARE_EVENT_TABLE()
 };
-
-
-SpringLobbyApp& app();
 
 
 DECLARE_APP(SpringLobbyApp)

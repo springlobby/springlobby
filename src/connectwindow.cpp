@@ -22,8 +22,8 @@
 //
 
 #include "connectwindow.h"
-#include "springlobbyapp.h"
 #include "settings.h"
+#include "system.h"
 
 
 // Define events.
@@ -38,14 +38,15 @@ END_EVENT_TABLE()
 //!
 //! @param parent Parent window
 ConnectWindow::ConnectWindow( wxWindow* parent ) 
-: wxFrame( parent, -1, _T("Connect to lobby server"), wxDefaultPosition, wxSize(280, 300) )
+: wxFrame( parent, -1, _T("Connect to lobby server"), wxDefaultPosition, wxSize(300, 300), 
+           wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN )
 {
   wxString server;
   wxString username;
   wxString password;
   
-  server = WX_STRING( app().GetDefaultServer() );
-  username = WX_STRING( app().GetServerAccountNick( app().GetDefaultServer() ) );
+  server = WX_STRING( sett().GetDefaultServer() );
+  username = WX_STRING( sett().GetServerAccountNick( sett().GetDefaultServer() ) );
   
   // Create all UI elements.
   m_tabs =         new wxNotebook( this  , -1 );
@@ -65,7 +66,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent )
   
   m_acc_note_line = new wxStaticLine( m_login_tab );
 
-  m_note_lbl = new wxStaticText( m_login_tab, -1, _T("Note: If you do not have an accound\nyou can register one for free under the\n\"Register\" tab.") );
+  m_note_lbl = new wxStaticText( m_login_tab, -1, _T("Note: If you do not have an accound you\n can register one for free under the\n\"Register\" tab.") );
 
   m_ok_btn =     new wxButton( this, wxID_OK,     _T("Ok") );
   m_cancel_btn = new wxButton( this, wxID_CANCEL, _T("Cancel") );
@@ -128,6 +129,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent )
   m_main_sizer->SetSizeHints( this );
 }
 
+
 //! @brief Destructor
 ConnectWindow::~ConnectWindow()
 {
@@ -136,14 +138,14 @@ ConnectWindow::~ConnectWindow()
 
 void ConnectWindow::OnOk(wxCommandEvent& event)
 {
-  Close();
-  app().SetDefaultServer( STL_STRING(m_server_combo->GetValue()) );
-  app().SetServerAccountNick( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_nick_text->GetValue()) );
-  app().Connect( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_nick_text->GetValue()), STL_STRING(m_pass_text->GetValue()) );
+  Hide();
+  sett().SetDefaultServer( STL_STRING(m_server_combo->GetValue()) );
+  sett().SetServerAccountNick( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_nick_text->GetValue()) );
+  sys().Connect( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_nick_text->GetValue()), STL_STRING(m_pass_text->GetValue()) );
 }
 
 void ConnectWindow::OnCancel(wxCommandEvent& event)
 {
-  Close();
+  Hide();
 }
 

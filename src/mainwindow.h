@@ -24,6 +24,7 @@
 #define _MAINWINDOW_H_
 
 
+#include <wx/menu.h>
 #include <wx/listbook.h>
 
 #include "mainchattab.h"
@@ -41,7 +42,14 @@ class MainWindow : public wxFrame
     void OpenChannelChat( wxString channel );
     void OpenPrivateChat( wxString nick );
   
+    void CloseAllChats();
+  
     void OnMenuJoin( wxCommandEvent& event );
+    void OnMenuConnect( wxCommandEvent& event );
+    void OnMenuDisconnect( wxCommandEvent& event );
+    
+    MainChatTab& GetChatTab();
+  
   protected:
     // MainWindow variables
   
@@ -56,6 +64,10 @@ class MainWindow : public wxFrame
     DECLARE_EVENT_TABLE()
 };
 
+
+MainWindow& mw();
+
+ChatPanel& servwin();
 
 // wxWidget IDs
 enum

@@ -41,6 +41,7 @@ struct UserStatus {
 };
 
 
+//! Class containing all the information about a user
 class User
 {
   public:

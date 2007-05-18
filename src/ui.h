@@ -16,53 +16,40 @@
 
 
 //
-// Class: UserList
-//
-#include "userlist.h"
+// Class: Ui
+#ifndef _UI_H_
+#define _UI_H_
 
+#include <wx/msgdlg.h>
+#include "mainwindow.h"
+#include "connectwindow.h"
 
-UserList::UserList()
+class Ui
 {
-}
+  public:
+    Ui();
+    virtual ~Ui();
+  
+    // Ui interface
+  
+    void ShowMainWindow();
+    void ShowConnectWindow();
+    void Connect();
+  
+    void Quit();
+  
+    bool Ask( wxString heading, wxString question );
+  
+    MainWindow& mw();
+  protected:
+    // Ui variables
+  
+    MainWindow* m_main_win;
+    ConnectWindow* m_con_win;
+};
+
+Ui& ui();
 
 
-UserList::~UserList()
-{
-}
-
-
-void UserList::AddUser( User* user )
-{
-  assert( user != NULL );
-  m_users[user->GetNick()] = user;
-}
-
-
-void UserList::RemoveUser( const string nick )
-{
-  m_users.erase( nick );
-}
-
- 
-User* UserList::GetUser( const string nick )
-{
-  if ( m_users.count( nick ) > 0 ) {
-    user_iter_t found = m_users.find( nick );
-    return (*found).second;
-  } else {
-    return NULL;
-  }
-}
-
-
-bool UserList::UserExists( const string nick )
-{
-  return (m_users.count( nick ) > 0);
-}
-
-
-int UserList::GetNumUsers()
-{
-  return m_users.size();
-}
+#endif  //_UI_H_
 

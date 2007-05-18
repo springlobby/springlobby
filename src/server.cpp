@@ -39,7 +39,7 @@ Server::~Server()
 
 void Server::SetSocket( Socket* sock )
 {
-  assert( !IsConnected() ); // Should disconnect first.
+  assert( (!IsConnected()) || (sock == NULL) ); // Should disconnect first.
   m_sock = sock;
 }
 

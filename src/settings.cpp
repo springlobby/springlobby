@@ -45,6 +45,13 @@ Settings::~Settings()
 }
 
 
+Settings& sett()
+{
+  static Settings m_sett;
+  return m_sett;
+}
+
+
 //! @brief Saves the settings to file
 void Settings::SaveSettings()
 {

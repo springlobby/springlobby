@@ -1,6 +1,6 @@
-springlobbyapp.o springlobbyapp.o: springlobbyapp.cpp \
-  /usr/include/wx-2.6/wx/msgdlg.h /usr/include/wx-2.6/wx/defs.h \
-  /usr/include/wx-2.6/wx/platform.h \
+springlobbyapp.o springlobbyapp.o: springlobbyapp.cpp springlobbyapp.h \
+  /usr/include/wx-2.6/wx/app.h /usr/include/wx-2.6/wx/event.h \
+  /usr/include/wx-2.6/wx/defs.h /usr/include/wx-2.6/wx/platform.h \
   /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
   /usr/include/wx-2.6/wx/chkconf.h /usr/include/wx-2.6/wx/chkconf.h \
   /usr/include/wx-2.6/wx/features.h /usr/include/wx-2.6/wx/version.h \
@@ -23,19 +23,15 @@ springlobbyapp.o springlobbyapp.o: springlobbyapp.cpp \
   /usr/include/_G_config.h /usr/include/gconv.h \
   /usr/include/bits/sys_errlist.h /usr/include/bits/stdio.h \
   /usr/include/time.h /usr/include/bits/time.h /usr/include/string.h \
-  /usr/include/wx-2.6/wx/gtk/msgdlg.h \
-  /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
-  /usr/include/wx-2.6/wx/dialog.h /usr/include/wx-2.6/wx/containr.h \
-  /usr/include/wx-2.6/wx/toplevel.h /usr/include/wx-2.6/wx/window.h \
-  /usr/include/wx-2.6/wx/event.h /usr/include/wx-2.6/wx/object.h \
-  /usr/include/wx-2.6/wx/memory.h /usr/include/wx-2.6/wx/string.h \
-  /usr/include/stdlib.h /usr/include/bits/waitflags.h \
-  /usr/include/bits/waitstatus.h /usr/include/sys/types.h \
-  /usr/include/sys/select.h /usr/include/bits/select.h \
-  /usr/include/bits/sigset.h /usr/include/sys/sysmacros.h \
-  /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
-  /usr/include/wx-2.6/wx/buffer.h /usr/include/wx-2.6/wx/strconv.h \
-  /usr/include/wx-2.6/wx/fontenc.h /usr/include/wx-2.6/wx/beforestd.h \
+  /usr/include/wx-2.6/wx/object.h /usr/include/wx-2.6/wx/memory.h \
+  /usr/include/wx-2.6/wx/string.h /usr/include/stdlib.h \
+  /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
+  /usr/include/sys/types.h /usr/include/sys/select.h \
+  /usr/include/bits/select.h /usr/include/bits/sigset.h \
+  /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
+  /usr/include/alloca.h /usr/include/wx-2.6/wx/buffer.h \
+  /usr/include/wx-2.6/wx/strconv.h /usr/include/wx-2.6/wx/fontenc.h \
+  /usr/include/wx-2.6/wx/beforestd.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/string \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/c++config.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/i386-redhat-linux/bits/os_defines.h \
@@ -114,11 +110,12 @@ springlobbyapp.o springlobbyapp.o: springlobbyapp.cpp \
   /usr/include/wx-2.6/wx/imagxpm.h /usr/include/wx-2.6/wx/imagiff.h \
   /usr/include/wx-2.6/wx/utils.h /usr/include/wx-2.6/wx/longlong.h \
   /usr/include/wx-2.6/wx/thread.h /usr/include/wx-2.6/wx/dynarray.h \
-  /usr/include/wx-2.6/wx/font.h /usr/include/wx-2.6/wx/gdiobj.h \
-  /usr/include/wx-2.6/wx/gtk/gdiobj.h /usr/include/wx-2.6/wx/gtk/font.h \
-  /usr/include/wx-2.6/wx/hash.h /usr/include/wx-2.6/wx/colour.h \
-  /usr/include/wx-2.6/wx/gtk/colour.h /usr/include/wx-2.6/wx/string.h \
-  /usr/include/wx-2.6/wx/gdiobj.h /usr/include/wx-2.6/wx/palette.h \
+  /usr/include/wx-2.6/wx/window.h /usr/include/wx-2.6/wx/font.h \
+  /usr/include/wx-2.6/wx/gdiobj.h /usr/include/wx-2.6/wx/gtk/gdiobj.h \
+  /usr/include/wx-2.6/wx/gtk/font.h /usr/include/wx-2.6/wx/hash.h \
+  /usr/include/wx-2.6/wx/colour.h /usr/include/wx-2.6/wx/gtk/colour.h \
+  /usr/include/wx-2.6/wx/string.h /usr/include/wx-2.6/wx/gdiobj.h \
+  /usr/include/wx-2.6/wx/palette.h \
   /usr/include/wx-2.6/wx/generic/paletteg.h /usr/include/wx-2.6/wx/defs.h \
   /usr/include/wx-2.6/wx/object.h /usr/include/wx-2.6/wx/gdiobj.h \
   /usr/include/wx-2.6/wx/gdicmn.h /usr/include/wx-2.6/wx/region.h \
@@ -126,24 +123,19 @@ springlobbyapp.o springlobbyapp.o: springlobbyapp.cpp \
   /usr/include/wx-2.6/wx/validate.h /usr/include/wx-2.6/wx/palette.h \
   /usr/include/wx-2.6/wx/accel.h /usr/include/wx-2.6/wx/gtk/accel.h \
   /usr/include/wx-2.6/wx/generic/accel.h \
-  /usr/include/wx-2.6/wx/gtk/window.h /usr/include/wx-2.6/wx/iconbndl.h \
-  /usr/include/wx-2.6/wx/gtk/toplevel.h \
-  /usr/include/wx-2.6/wx/gtk/dialog.h springlobbyapp.h \
-  /usr/include/wx-2.6/wx/app.h /usr/include/wx-2.6/wx/vidmode.h \
+  /usr/include/wx-2.6/wx/gtk/window.h /usr/include/wx-2.6/wx/vidmode.h \
   /usr/include/wx-2.6/wx/build.h /usr/include/wx-2.6/wx/init.h \
   /usr/include/wx-2.6/wx/gtk/app.h /usr/include/wx-2.6/wx/frame.h \
+  /usr/include/wx-2.6/wx/toplevel.h /usr/include/wx-2.6/wx/iconbndl.h \
+  /usr/include/wx-2.6/wx/gtk/toplevel.h \
   /usr/include/wx-2.6/wx/gtk/frame.h /usr/include/wx-2.6/wx/icon.h \
   /usr/include/wx-2.6/wx/iconloc.h /usr/include/wx-2.6/wx/gtk/icon.h \
   /usr/include/wx-2.6/wx/bitmap.h /usr/include/wx-2.6/wx/gtk/bitmap.h \
-  /usr/include/wx-2.6/wx/strconv.h /usr/include/wx-2.6/wx/menu.h \
-  /usr/include/wx-2.6/wx/menuitem.h /usr/include/wx-2.6/wx/gtk/menuitem.h \
-  /usr/include/wx-2.6/wx/gtk/menu.h server.h user.h tasserver.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/list \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_list.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc \
-  serverevents.h socket.h /usr/include/wx-2.6/wx/socket.h \
-  /usr/include/wx-2.6/wx/sckaddr.h /usr/include/wx-2.6/wx/gsocket.h \
-  /usr/include/wx-2.6/wx/unix/gsockunx.h \
+  /usr/include/wx-2.6/wx/strconv.h /usr/include/wx-2.6/wx/timer.h \
+  /usr/include/wx-2.6/wx/stopwatch.h /usr/include/wx-2.6/wx/gtk/timer.h \
+  system.h /usr/include/wx-2.6/wx/intl.h server.h user.h socket.h \
+  /usr/include/wx-2.6/wx/socket.h /usr/include/wx-2.6/wx/sckaddr.h \
+  /usr/include/wx-2.6/wx/gsocket.h /usr/include/wx-2.6/wx/unix/gsockunx.h \
   /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
   /usr/include/wx-2.6/wx/gsocket.h /usr/include/sys/socket.h \
   /usr/include/sys/uio.h /usr/include/bits/socket.h \
@@ -162,7 +154,8 @@ springlobbyapp.o springlobbyapp.o: springlobbyapp.cpp \
   /usr/include/wx-2.6/wx/control.h /usr/include/wx-2.6/wx/gtk/control.h \
   /usr/include/wx-2.6/wx/window.h /usr/include/wx-2.6/wx/gtk/button.h \
   /usr/include/wx-2.6/wx/control.h /usr/include/wx-2.6/wx/frame.h \
-  /usr/include/wx-2.6/wx/dialog.h /usr/include/wx-2.6/wx/bookctrl.h \
+  /usr/include/wx-2.6/wx/dialog.h /usr/include/wx-2.6/wx/containr.h \
+  /usr/include/wx-2.6/wx/gtk/dialog.h /usr/include/wx-2.6/wx/bookctrl.h \
   /usr/include/wx-2.6/wx/notebook.h /usr/include/wx-2.6/wx/gtk/notebook.h \
   /usr/include/wx-2.6/wx/textctrl.h /usr/include/wx-2.6/wx/ioswrap.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/iostream \
@@ -194,33 +187,37 @@ springlobbyapp.o springlobbyapp.o: springlobbyapp.cpp \
   /usr/include/wx-2.6/wx/generic/listctrl.h \
   /usr/include/wx-2.6/wx/generic/imaglist.h /usr/include/wx-2.6/wx/list.h \
   /usr/include/wx-2.6/wx/icon.h /usr/include/wx-2.6/wx/control.h \
-  /usr/include/wx-2.6/wx/timer.h /usr/include/wx-2.6/wx/stopwatch.h \
-  /usr/include/wx-2.6/wx/gtk/timer.h /usr/include/wx-2.6/wx/dcclient.h \
-  /usr/include/wx-2.6/wx/gtk/dcclient.h /usr/include/wx-2.6/wx/dc.h \
-  /usr/include/wx-2.6/wx/bitmap.h /usr/include/wx-2.6/wx/brush.h \
-  /usr/include/wx-2.6/wx/gtk/brush.h /usr/include/wx-2.6/wx/pen.h \
-  /usr/include/wx-2.6/wx/gtk/pen.h /usr/include/wx-2.6/wx/math.h \
-  /usr/include/math.h /usr/include/bits/huge_val.h \
-  /usr/include/bits/huge_valf.h /usr/include/bits/huge_vall.h \
-  /usr/include/bits/inf.h /usr/include/bits/nan.h \
-  /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
-  /usr/include/bits/mathinline.h /usr/include/wx-2.6/wx/gtk/dc.h \
-  /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/gtk/scrolwin.h \
-  /usr/include/wx-2.6/wx/settings.h /usr/include/wx-2.6/wx/listbase.h \
-  /usr/include/wx-2.6/wx/combobox.h /usr/include/wx-2.6/wx/ctrlsub.h \
-  /usr/include/wx-2.6/wx/gtk/combobox.h settings.h \
-  /usr/include/wx-2.6/wx/config.h /usr/include/wx-2.6/wx/confbase.h \
-  /usr/include/wx-2.6/wx/fileconf.h /usr/include/wx-2.6/wx/textfile.h \
-  /usr/include/wx-2.6/wx/textbuf.h /usr/include/wx-2.6/wx/file.h \
-  mainwindow.h /usr/include/wx-2.6/wx/listbook.h mainchattab.h \
-  images/chat_icon.xpm connectwindow.h /usr/include/wx-2.6/wx/intl.h \
-  /usr/include/wx-2.6/wx/frame.h /usr/include/wx-2.6/wx/button.h \
-  /usr/include/wx-2.6/wx/stattext.h /usr/include/wx-2.6/wx/gtk/stattext.h \
-  /usr/include/wx-2.6/wx/notebook.h /usr/include/wx-2.6/wx/checkbox.h \
-  /usr/include/wx-2.6/wx/gtk/checkbox.h /usr/include/wx-2.6/wx/statline.h \
-  /usr/include/wx-2.6/wx/gtk/statline.h
+  /usr/include/wx-2.6/wx/dcclient.h /usr/include/wx-2.6/wx/gtk/dcclient.h \
+  /usr/include/wx-2.6/wx/dc.h /usr/include/wx-2.6/wx/bitmap.h \
+  /usr/include/wx-2.6/wx/brush.h /usr/include/wx-2.6/wx/gtk/brush.h \
+  /usr/include/wx-2.6/wx/pen.h /usr/include/wx-2.6/wx/gtk/pen.h \
+  /usr/include/wx-2.6/wx/math.h /usr/include/math.h \
+  /usr/include/bits/huge_val.h /usr/include/bits/huge_valf.h \
+  /usr/include/bits/huge_vall.h /usr/include/bits/inf.h \
+  /usr/include/bits/nan.h /usr/include/bits/mathdef.h \
+  /usr/include/bits/mathcalls.h /usr/include/bits/mathinline.h \
+  /usr/include/wx-2.6/wx/gtk/dc.h /usr/include/wx-2.6/wx/scrolwin.h \
+  /usr/include/wx-2.6/wx/gtk/scrolwin.h /usr/include/wx-2.6/wx/settings.h \
+  /usr/include/wx-2.6/wx/listbase.h /usr/include/wx-2.6/wx/combobox.h \
+  /usr/include/wx-2.6/wx/ctrlsub.h /usr/include/wx-2.6/wx/gtk/combobox.h \
+  ui.h /usr/include/wx-2.6/wx/msgdlg.h \
+  /usr/include/wx-2.6/wx/gtk/msgdlg.h \
+  /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
+  /usr/include/wx-2.6/wx/dialog.h mainwindow.h \
+  /usr/include/wx-2.6/wx/menu.h /usr/include/wx-2.6/wx/menuitem.h \
+  /usr/include/wx-2.6/wx/gtk/menuitem.h /usr/include/wx-2.6/wx/gtk/menu.h \
+  /usr/include/wx-2.6/wx/listbook.h mainchattab.h images/chat_icon.xpm \
+  connectwindow.h /usr/include/wx-2.6/wx/frame.h \
+  /usr/include/wx-2.6/wx/button.h /usr/include/wx-2.6/wx/stattext.h \
+  /usr/include/wx-2.6/wx/gtk/stattext.h /usr/include/wx-2.6/wx/notebook.h \
+  /usr/include/wx-2.6/wx/checkbox.h /usr/include/wx-2.6/wx/gtk/checkbox.h \
+  /usr/include/wx-2.6/wx/statline.h /usr/include/wx-2.6/wx/gtk/statline.h
 
-/usr/include/wx-2.6/wx/msgdlg.h:
+springlobbyapp.h:
+
+/usr/include/wx-2.6/wx/app.h:
+
+/usr/include/wx-2.6/wx/event.h:
 
 /usr/include/wx-2.6/wx/defs.h:
 
@@ -309,20 +306,6 @@ springlobbyapp.o springlobbyapp.o: springlobbyapp.cpp \
 /usr/include/bits/time.h:
 
 /usr/include/string.h:
-
-/usr/include/wx-2.6/wx/gtk/msgdlg.h:
-
-/usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h:
-
-/usr/include/wx-2.6/wx/dialog.h:
-
-/usr/include/wx-2.6/wx/containr.h:
-
-/usr/include/wx-2.6/wx/toplevel.h:
-
-/usr/include/wx-2.6/wx/window.h:
-
-/usr/include/wx-2.6/wx/event.h:
 
 /usr/include/wx-2.6/wx/object.h:
 
@@ -570,6 +553,8 @@ springlobbyapp.o springlobbyapp.o: springlobbyapp.cpp \
 
 /usr/include/wx-2.6/wx/dynarray.h:
 
+/usr/include/wx-2.6/wx/window.h:
+
 /usr/include/wx-2.6/wx/font.h:
 
 /usr/include/wx-2.6/wx/gdiobj.h:
@@ -618,16 +603,6 @@ springlobbyapp.o springlobbyapp.o: springlobbyapp.cpp \
 
 /usr/include/wx-2.6/wx/gtk/window.h:
 
-/usr/include/wx-2.6/wx/iconbndl.h:
-
-/usr/include/wx-2.6/wx/gtk/toplevel.h:
-
-/usr/include/wx-2.6/wx/gtk/dialog.h:
-
-springlobbyapp.h:
-
-/usr/include/wx-2.6/wx/app.h:
-
 /usr/include/wx-2.6/wx/vidmode.h:
 
 /usr/include/wx-2.6/wx/build.h:
@@ -637,6 +612,12 @@ springlobbyapp.h:
 /usr/include/wx-2.6/wx/gtk/app.h:
 
 /usr/include/wx-2.6/wx/frame.h:
+
+/usr/include/wx-2.6/wx/toplevel.h:
+
+/usr/include/wx-2.6/wx/iconbndl.h:
+
+/usr/include/wx-2.6/wx/gtk/toplevel.h:
 
 /usr/include/wx-2.6/wx/gtk/frame.h:
 
@@ -652,27 +633,19 @@ springlobbyapp.h:
 
 /usr/include/wx-2.6/wx/strconv.h:
 
-/usr/include/wx-2.6/wx/menu.h:
+/usr/include/wx-2.6/wx/timer.h:
 
-/usr/include/wx-2.6/wx/menuitem.h:
+/usr/include/wx-2.6/wx/stopwatch.h:
 
-/usr/include/wx-2.6/wx/gtk/menuitem.h:
+/usr/include/wx-2.6/wx/gtk/timer.h:
 
-/usr/include/wx-2.6/wx/gtk/menu.h:
+system.h:
+
+/usr/include/wx-2.6/wx/intl.h:
 
 server.h:
 
 user.h:
-
-tasserver.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/list:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_list.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/list.tcc:
-
-serverevents.h:
 
 socket.h:
 
@@ -745,6 +718,10 @@ chatpanel.h:
 /usr/include/wx-2.6/wx/frame.h:
 
 /usr/include/wx-2.6/wx/dialog.h:
+
+/usr/include/wx-2.6/wx/containr.h:
+
+/usr/include/wx-2.6/wx/gtk/dialog.h:
 
 /usr/include/wx-2.6/wx/bookctrl.h:
 
@@ -820,12 +797,6 @@ chatpanel.h:
 
 /usr/include/wx-2.6/wx/control.h:
 
-/usr/include/wx-2.6/wx/timer.h:
-
-/usr/include/wx-2.6/wx/stopwatch.h:
-
-/usr/include/wx-2.6/wx/gtk/timer.h:
-
 /usr/include/wx-2.6/wx/dcclient.h:
 
 /usr/include/wx-2.6/wx/gtk/dcclient.h:
@@ -878,21 +849,25 @@ chatpanel.h:
 
 /usr/include/wx-2.6/wx/gtk/combobox.h:
 
-settings.h:
+ui.h:
 
-/usr/include/wx-2.6/wx/config.h:
+/usr/include/wx-2.6/wx/msgdlg.h:
 
-/usr/include/wx-2.6/wx/confbase.h:
+/usr/include/wx-2.6/wx/gtk/msgdlg.h:
 
-/usr/include/wx-2.6/wx/fileconf.h:
+/usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h:
 
-/usr/include/wx-2.6/wx/textfile.h:
-
-/usr/include/wx-2.6/wx/textbuf.h:
-
-/usr/include/wx-2.6/wx/file.h:
+/usr/include/wx-2.6/wx/dialog.h:
 
 mainwindow.h:
+
+/usr/include/wx-2.6/wx/menu.h:
+
+/usr/include/wx-2.6/wx/menuitem.h:
+
+/usr/include/wx-2.6/wx/gtk/menuitem.h:
+
+/usr/include/wx-2.6/wx/gtk/menu.h:
 
 /usr/include/wx-2.6/wx/listbook.h:
 
@@ -901,8 +876,6 @@ mainchattab.h:
 images/chat_icon.xpm:
 
 connectwindow.h:
-
-/usr/include/wx-2.6/wx/intl.h:
 
 /usr/include/wx-2.6/wx/frame.h:
 

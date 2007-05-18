@@ -26,11 +26,10 @@
 //#include <wx/wx.h>
 #include <wx/config.h>
 #include <string>
+#include "utils.h"
 
 using namespace std;
 
-#define STL_STRING(v) string((const char*)v.mb_str(wxConvUTF8))
-#define WX_STRING(v) wxString(v.c_str(),wxConvUTF8)
 
 #define DEFSETT_DEFAULT_SERVER "TA Spring Server"
 #define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"
@@ -107,6 +106,8 @@ class Settings
     
 };
 
+
+Settings& sett();
 
 #endif  //_SETTINGS_H_
 

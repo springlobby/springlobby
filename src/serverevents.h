@@ -23,6 +23,7 @@
 #ifndef _UICONTROL_H_
 #define _UICONTROL_H_
 
+#include <wx/msgdlg.h>
 #include "socket.h"
 #include "server.h"
 #include "chatlist.h"
@@ -38,44 +39,45 @@ class ServerEvents
   
   // Uicontrol interface
   
-    virtual void on_connected( string server_ver, bool supported ) = 0;
-    virtual void on_disconnected() = 0;
+    virtual void OnConnected( string server_ver, bool supported );
+    virtual void OnDisconnected();
       
-    virtual void on_login() = 0;
-    virtual void on_login_info_complete() = 0;
-    virtual void on_logout() = 0;
+    virtual void OnLogin();
+    virtual void OnLoginInfoComplete();
+    virtual void OnLogout();
       
-    virtual void on_unknown_command( string command, string params ) = 0;
-    virtual void on_socket_error( const Sockerror error ) = 0;
-    virtual void on_protocol_error( const Protocolerror error ) = 0;
-    virtual void on_motd( string msg ) = 0;
-    virtual void on_pong( int ping_time ) = 0;
+    virtual void OnUnknownCommand( string command, string params );
+    virtual void OnSocketError( const Sockerror error );
+    virtual void OnProtocolError( const Protocolerror error );
+    virtual void OnMotd( string msg );
+    virtual void OnPong( int ping_time );
       
-    virtual void on_new_user( string nick, string contry, int cpu ) = 0;
-    virtual void on_user_status( string nick, UserStatus status ) = 0;
-    virtual void on_user_quit( string nick ) = 0;
+    virtual void OnNewUser( string nick, string contry, int cpu );
+    virtual void OnUserStatus( string nick, UserStatus status );
+    virtual void OnUserQuit( string nick );
     
-    virtual void on_battle_opened( int id, bool replay, int nat, string nick, 
+    virtual void OnBattleOpened( int id, bool replay, int nat, string nick, 
                                    string host, int port, int maxplayers, 
                                    bool haspass, int rank, int hash, string map, 
-                                   string title, string mod ) = 0;
+                                   string title, string mod );
 
-    virtual void on_user_joined_battle( int battleid, string nick ) = 0;
-    virtual void on_user_left_battle( int battleid, string nick ) = 0;
-    virtual void on_battleinfo_updated( int battleid, int spectators, bool locked, int maphash, string map ) = 0;
-    virtual void on_battle_closed( int battleid ) = 0;
+    virtual void OnUserJoinedBattle( int battleid, string nick );
+    virtual void OnUserLeftBattle( int battleid, string nick );
+    virtual void OnBattleInfoUpdated( int battleid, int spectators, bool locked, int maphash, string map );
+    virtual void OnBattleClosed( int battleid );
     
-    virtual void on_join_channel_result( bool success, string channel, string reason ) = 0;
-    virtual void on_channel_said( string channel, string who, string message ) = 0;
-    virtual void on_channel_join( string channel, string who ) = 0;
-    virtual void on_channel_part( string channel, string who, string message ) = 0;
-    virtual void on_channel_topic( string channel, string who, string message, int when ) = 0;
-    virtual void on_channel_action( string channel, string who, string action ) = 0;
+    virtual void OnJoinChannelResult( bool success, string channel, string reason );
+    virtual void OnChannelSaid( string channel, string who, string message );
+    virtual void OnChannelJoin( string channel, string who );
+    virtual void OnChannelPart( string channel, string who, string message );
+    virtual void OnChannelTopic( string channel, string who, string message, int when );
+    virtual void OnChannelAction( string channel, string who, string action );
   protected:
   // Uicontrol variables
     
 };
 
+ServerEvents& se();
 
 #endif  //_UICONTROL_H_
 

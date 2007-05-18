@@ -147,19 +147,16 @@ tasserver.o tasserver.o: tasserver.cpp \
   /usr/include/sys/uio.h /usr/include/bits/socket.h \
   /usr/include/bits/sockaddr.h /usr/include/asm/socket.h \
   /usr/include/asm/sockios.h /usr/include/sys/un.h \
-  /usr/include/wx-2.6/wx/event.h serverevents.h chatlist.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h \
-  chatpanel.h /usr/include/wx-2.6/wx/splitter.h \
-  /usr/include/wx-2.6/wx/generic/splitter.h \
-  /usr/include/wx-2.6/wx/window.h /usr/include/wx-2.6/wx/font.h \
-  /usr/include/wx-2.6/wx/gdiobj.h /usr/include/wx-2.6/wx/gtk/gdiobj.h \
-  /usr/include/wx-2.6/wx/gtk/font.h /usr/include/wx-2.6/wx/hash.h \
-  /usr/include/wx-2.6/wx/colour.h /usr/include/wx-2.6/wx/gtk/colour.h \
-  /usr/include/wx-2.6/wx/string.h /usr/include/wx-2.6/wx/gdiobj.h \
-  /usr/include/wx-2.6/wx/palette.h \
+  /usr/include/wx-2.6/wx/event.h serverevents.h \
+  /usr/include/wx-2.6/wx/msgdlg.h /usr/include/wx-2.6/wx/gtk/msgdlg.h \
+  /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
+  /usr/include/wx-2.6/wx/dialog.h /usr/include/wx-2.6/wx/containr.h \
+  /usr/include/wx-2.6/wx/toplevel.h /usr/include/wx-2.6/wx/window.h \
+  /usr/include/wx-2.6/wx/font.h /usr/include/wx-2.6/wx/gdiobj.h \
+  /usr/include/wx-2.6/wx/gtk/gdiobj.h /usr/include/wx-2.6/wx/gtk/font.h \
+  /usr/include/wx-2.6/wx/hash.h /usr/include/wx-2.6/wx/colour.h \
+  /usr/include/wx-2.6/wx/gtk/colour.h /usr/include/wx-2.6/wx/string.h \
+  /usr/include/wx-2.6/wx/gdiobj.h /usr/include/wx-2.6/wx/palette.h \
   /usr/include/wx-2.6/wx/generic/paletteg.h /usr/include/wx-2.6/wx/defs.h \
   /usr/include/wx-2.6/wx/object.h /usr/include/wx-2.6/wx/gdiobj.h \
   /usr/include/wx-2.6/wx/gdicmn.h /usr/include/wx-2.6/wx/region.h \
@@ -167,16 +164,22 @@ tasserver.o tasserver.o: tasserver.cpp \
   /usr/include/wx-2.6/wx/validate.h /usr/include/wx-2.6/wx/palette.h \
   /usr/include/wx-2.6/wx/accel.h /usr/include/wx-2.6/wx/gtk/accel.h \
   /usr/include/wx-2.6/wx/generic/accel.h \
-  /usr/include/wx-2.6/wx/gtk/window.h /usr/include/wx-2.6/wx/containr.h \
+  /usr/include/wx-2.6/wx/gtk/window.h /usr/include/wx-2.6/wx/iconbndl.h \
+  /usr/include/wx-2.6/wx/gtk/toplevel.h \
+  /usr/include/wx-2.6/wx/gtk/dialog.h chatlist.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h \
+  chatpanel.h /usr/include/wx-2.6/wx/splitter.h \
+  /usr/include/wx-2.6/wx/generic/splitter.h \
+  /usr/include/wx-2.6/wx/window.h /usr/include/wx-2.6/wx/containr.h \
   /usr/include/wx-2.6/wx/panel.h /usr/include/wx-2.6/wx/generic/panelg.h \
   /usr/include/wx-2.6/wx/sizer.h /usr/include/wx-2.6/wx/button.h \
-  /usr/include/wx-2.6/wx/control.h /usr/include/wx-2.6/wx/window.h \
-  /usr/include/wx-2.6/wx/gtk/control.h /usr/include/wx-2.6/wx/window.h \
-  /usr/include/wx-2.6/wx/gtk/button.h /usr/include/wx-2.6/wx/control.h \
-  /usr/include/wx-2.6/wx/frame.h /usr/include/wx-2.6/wx/toplevel.h \
-  /usr/include/wx-2.6/wx/iconbndl.h /usr/include/wx-2.6/wx/gtk/toplevel.h \
+  /usr/include/wx-2.6/wx/control.h /usr/include/wx-2.6/wx/gtk/control.h \
+  /usr/include/wx-2.6/wx/window.h /usr/include/wx-2.6/wx/gtk/button.h \
+  /usr/include/wx-2.6/wx/control.h /usr/include/wx-2.6/wx/frame.h \
   /usr/include/wx-2.6/wx/gtk/frame.h /usr/include/wx-2.6/wx/dialog.h \
-  /usr/include/wx-2.6/wx/containr.h /usr/include/wx-2.6/wx/gtk/dialog.h \
   /usr/include/wx-2.6/wx/bookctrl.h /usr/include/wx-2.6/wx/notebook.h \
   /usr/include/wx-2.6/wx/gtk/notebook.h /usr/include/wx-2.6/wx/textctrl.h \
   /usr/include/wx-2.6/wx/ioswrap.h /usr/include/wx-2.6/wx/gtk/textctrl.h \
@@ -634,21 +637,17 @@ socket.h:
 
 serverevents.h:
 
-chatlist.h:
+/usr/include/wx-2.6/wx/msgdlg.h:
 
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map:
+/usr/include/wx-2.6/wx/gtk/msgdlg.h:
 
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h:
+/usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h:
 
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h:
+/usr/include/wx-2.6/wx/dialog.h:
 
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h:
+/usr/include/wx-2.6/wx/containr.h:
 
-chatpanel.h:
-
-/usr/include/wx-2.6/wx/splitter.h:
-
-/usr/include/wx-2.6/wx/generic/splitter.h:
+/usr/include/wx-2.6/wx/toplevel.h:
 
 /usr/include/wx-2.6/wx/window.h:
 
@@ -700,6 +699,30 @@ chatpanel.h:
 
 /usr/include/wx-2.6/wx/gtk/window.h:
 
+/usr/include/wx-2.6/wx/iconbndl.h:
+
+/usr/include/wx-2.6/wx/gtk/toplevel.h:
+
+/usr/include/wx-2.6/wx/gtk/dialog.h:
+
+chatlist.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h:
+
+chatpanel.h:
+
+/usr/include/wx-2.6/wx/splitter.h:
+
+/usr/include/wx-2.6/wx/generic/splitter.h:
+
+/usr/include/wx-2.6/wx/window.h:
+
 /usr/include/wx-2.6/wx/containr.h:
 
 /usr/include/wx-2.6/wx/panel.h:
@@ -712,8 +735,6 @@ chatpanel.h:
 
 /usr/include/wx-2.6/wx/control.h:
 
-/usr/include/wx-2.6/wx/window.h:
-
 /usr/include/wx-2.6/wx/gtk/control.h:
 
 /usr/include/wx-2.6/wx/window.h:
@@ -724,19 +745,9 @@ chatpanel.h:
 
 /usr/include/wx-2.6/wx/frame.h:
 
-/usr/include/wx-2.6/wx/toplevel.h:
-
-/usr/include/wx-2.6/wx/iconbndl.h:
-
-/usr/include/wx-2.6/wx/gtk/toplevel.h:
-
 /usr/include/wx-2.6/wx/gtk/frame.h:
 
 /usr/include/wx-2.6/wx/dialog.h:
-
-/usr/include/wx-2.6/wx/containr.h:
-
-/usr/include/wx-2.6/wx/gtk/dialog.h:
 
 /usr/include/wx-2.6/wx/bookctrl.h:
 

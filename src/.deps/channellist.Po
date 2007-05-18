@@ -1,4 +1,5 @@
-userlist.o userlist.o: userlist.cpp userlist.h \
+channellist.o channellist.o: channellist.cpp \
+  /home/tc/Projects/springlobby/trunk/src/channellist.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_algobase.h \
@@ -85,9 +86,11 @@ userlist.o userlist.o: userlist.cpp userlist.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_heap.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tempbuf.h \
   /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/basic_string.tcc \
-  /usr/include/assert.h user.h
+  /usr/include/assert.h /home/tc/Projects/springlobby/trunk/src/channel.h \
+  /home/tc/Projects/springlobby/trunk/src/userlist.h \
+  /home/tc/Projects/springlobby/trunk/src/user.h
 
-userlist.h:
+/home/tc/Projects/springlobby/trunk/src/channellist.h:
 
 /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map:
 
@@ -319,4 +322,8 @@ userlist.h:
 
 /usr/include/assert.h:
 
-user.h:
+/home/tc/Projects/springlobby/trunk/src/channel.h:
+
+/home/tc/Projects/springlobby/trunk/src/userlist.h:
+
+/home/tc/Projects/springlobby/trunk/src/user.h:

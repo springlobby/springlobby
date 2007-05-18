@@ -29,8 +29,6 @@ EVT_SOCKET(SOCKET_ID, SocketEvents::OnSocketEvent)
 
 END_EVENT_TABLE()
 
-
-
 void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 {
   Socket* sock = (Socket*)event.GetClientData();
@@ -83,6 +81,7 @@ Socket::~Socket()
 {
   m_sock->Destroy();
 }
+
 
 
 //! @brief Connect to remote host

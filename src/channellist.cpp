@@ -16,38 +16,39 @@
 
 
 //
-// Class: UserList
+// Class: ChannelList
 //
-#include "userlist.h"
+#include "/home/tc/Projects/springlobby/trunk/src/channellist.h"
 
 
-UserList::UserList()
+ChannelList::ChannelList()
 {
+  
 }
 
 
-UserList::~UserList()
+ChannelList::~ChannelList()
 {
+  
+}
+
+void ChannelList::AddChannel( Channel* channel )
+{
+  assert( channel != NULL );
+  m_chans[channel->GetName()] = channel;
 }
 
 
-void UserList::AddUser( User* user )
+void ChannelList::RemoveChannel( const string name )
 {
-  assert( user != NULL );
-  m_users[user->GetNick()] = user;
+  m_chans.erase( name );
 }
 
-
-void UserList::RemoveUser( const string nick )
+  
+Channel* ChannelList::GetChannel( const string name )
 {
-  m_users.erase( nick );
-}
-
- 
-User* UserList::GetUser( const string nick )
-{
-  if ( m_users.count( nick ) > 0 ) {
-    user_iter_t found = m_users.find( nick );
+  if ( m_chans.count( name ) > 0 ) {
+    channel_iter_t found = m_chans.find( name );
     return (*found).second;
   } else {
     return NULL;
@@ -55,14 +56,14 @@ User* UserList::GetUser( const string nick )
 }
 
 
-bool UserList::UserExists( const string nick )
+bool ChannelList::ChannelExists( const string name )
 {
-  return (m_users.count( nick ) > 0);
+  return (m_chans.count( name ) > 0);
 }
 
-
-int UserList::GetNumUsers()
+  
+int ChannelList::GetNumChannels()
 {
-  return m_users.size();
+  return m_chans.size();
 }
 

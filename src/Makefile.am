@@ -57,7 +57,16 @@ springlobby_SOURCES = \
 	user.cpp     \
 	user.h     \
 	userlist.cpp     \
-	userlist.h 
+	userlist.h     \
+	channel.cpp     \
+	channel.h     \
+	channellist.cpp     \
+	channellist.h     \
+	ui.cpp     \
+	ui.h     \
+	system.cpp     \
+	system.h     \
+	utils.h 
 
 springlobby_LDFLAGS = 
 
