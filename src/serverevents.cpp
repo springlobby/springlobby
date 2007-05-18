@@ -157,7 +157,7 @@ void ServerEvents::OnUserLeftBattle( int battleid, string nick )
 {
   cout << "** ServerEvents::OnUserLeftBattle()" << endl;
 }
-
+ 
 void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, int maphash, string map )
 {
   //cout << "** ServerEvents::OnBattleInfoUpdated()" << endl;
