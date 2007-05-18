@@ -21,7 +21,7 @@ test_SOURCES = \
 	chatlist.h                    \
 	test.cpp                    \
 	settings.cpp                    \
-	settings.h 
+	settings.h                    
 
 test_LDADD = \
 	$(PACKAGE_LIBS) \

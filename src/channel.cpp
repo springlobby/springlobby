@@ -78,10 +78,11 @@ void Channel::Leave()
 {
 }
 
-
+ 
   
 void Channel::Joined( User& who )
 {
+  cout << "** Channel::Joined(): " << GetNumUsers() << endl;
   assert( GetUser( who.GetNick() ) == NULL );
   AddUser( &who );
   ui().OnUserJoinedChannel( *this, who );
@@ -178,11 +179,13 @@ channel_whocmd_callback Channel::GetOnJoinedCallback()
 
 void Channel::AddUser( User* user )
 {
+  UserList::AddUser( user );
 }
 
 
 void Channel::RemoveUser( const string nick )
 {
+  UserList::RemoveUser( nick );
 }
 
 

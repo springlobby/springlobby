@@ -315,6 +315,11 @@ void TASServer::ExecuteCommand( string cmd, string params, int replyid )
     msg = GetSentenceParam( params );
     m_ui->OnChannelAction( channel, nick, msg );
   } else if ( cmd == "CLIENTS" ) {
+    channel = GetWordParam( params );
+    while ( (nick = GetWordParam( params )) != "" ) {
+      m_ui->OnChannelJoin( channel, nick );
+    }
+    
     //CLIENTS params: main ChanServ []Cookiebot hawkki Pullapitko scf84 replay trepan 10gb_bot_24h Contex[1944] NowakPL Springie
     // !! Command: "CHANNELMESSAGE" params: "main <ChanServ> has muted <smoth>".
   } else {

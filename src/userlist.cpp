@@ -19,7 +19,9 @@
 // Class: UserList
 //
 #include "userlist.h"
+#include <iostream>
 
+using namespace std;
 
 UserList::UserList()
 {
@@ -33,6 +35,7 @@ UserList::~UserList()
 
 void UserList::AddUser( User* user )
 {
+  cout << "** UserList::AddUser()" << endl;
   assert( user != NULL );
   m_users[user->GetNick()] = user;
 }

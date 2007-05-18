@@ -18,10 +18,10 @@
 
 #include <iostream>
 #include <assert.h>
-//#include <wx/wx.h>
 
 #include "chatlist.h"
 #include "settings.h"
+
 
 void test_chatlist()
 {
@@ -102,6 +102,7 @@ void test_settings()
   
   cout << "Sucessful." << endl;
 }
+
 
 int main()
 {
