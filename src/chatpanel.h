@@ -35,6 +35,8 @@
 #include <wx/combobox.h>
 #include <string>
 
+#include "channel.h"
+
 using namespace std;
 
 #define SERVER_CHAT_NAME "$server"
@@ -65,8 +67,9 @@ class ChatPanel : public wxPanel
     void Parted( wxString who, wxString message );
     void SetTopic( wxString who, wxString message );
   
-    void SetChannelName( const string chan_name );
-    string GetChannelName();
+    void SetChannel( Channel* channel );
+    Channel* GetChannel();
+  
     bool IsServerPanel();
     
     void Say( wxString message );
@@ -95,7 +98,7 @@ class ChatPanel : public wxPanel
   
     wxButton* m_say_button;     //!< The say button.
   
-    string m_chan_name;         //!< Name of the chat/channel.
+    Channel* m_channel;         //!< Channel object.
   
     void LogTime();
   

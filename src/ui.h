@@ -24,6 +24,13 @@
 #include "mainwindow.h"
 #include "connectwindow.h"
 
+
+struct UiChannelData {
+  ChatPanel* panel;
+};
+
+
+//! @brief UI main class
 class Ui
 {
   public:
@@ -41,6 +48,22 @@ class Ui
     bool Ask( wxString heading, wxString question );
   
     MainWindow& mw();
+  
+    void OnConnected( string server_name, string server_ver, bool supported );
+  
+    void OnJoinedChannelSuccessful( Channel& chan );
+    void OnUserJoinedChannel( Channel& chan, User& user );
+    void OnUserLeftChannel( Channel& chan, User& user, const string& reason );
+    
+    void OnChannelTopic( Channel& channel , User& user, const string& topic );
+    void OnChannelSaid( Channel& channel , User& user, const string& message );
+    void OnChannelDidAction( Channel& channel , User& user, const string& action );
+    void OnLeaveChannel( Channel& channel );
+  
+    void OnUserOnline( User& user );
+    void OnUserOffline( User& user );
+    void OnUserStatusChanged( User& user );
+
   protected:
     // Ui variables
   

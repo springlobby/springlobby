@@ -26,6 +26,7 @@
 #include "chatpanel.h"
 #include "system.h"
 #include "utils.h"
+#include "ui.h"
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 
@@ -45,7 +46,7 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
 {
   // Setting default values
   m_show_nick_list = show_nick_list;
-  m_chan_name = "";
+  m_channel = NULL;
   
   // Creating sizers
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -189,22 +190,34 @@ void ChatPanel::SetTopic( wxString who, wxString message )
   m_chatlog_text->AppendText( _(" ** Channel topic: ")+ message + _T("\n * Set by ") + who + _(".\n") );  
 }
 
-//! @brief Set name of the chat/channel.
+//! @brief Set the Channel object
 //!
-//! @param chan_name the name of the channel.
-//! @note The name is used as a reference when talking to the Server class.
-void ChatPanel::SetChannelName( const string chan_name )
+//! @param channel the Channel object.
+void ChatPanel::SetChannel( Channel* channel )
 {
-  m_chan_name = chan_name;
+  UiChannelData* ud;
+  if ( m_channel != NULL ) {
+    ud = (UiChannelData*)m_channel->GetUserData();
+    assert( ud != NULL );
+    ud->panel = NULL;
+  }
+  
+  m_channel = channel;
+  
+  if ( m_channel != NULL ) {
+    ud = (UiChannelData*)m_channel->GetUserData();
+    assert( ud != NULL );
+    ud->panel = this;
+  }
 }
 
 
-//! @brief Get name of the chat/channel.
+//! @brief Get Channel object
 //!
 //! @return Name of the chat/channel.
-string ChatPanel::GetChannelName()
+Channel* ChatPanel::GetChannel()
 {
-  return m_chan_name;
+  return m_channel;
 }
 
 
@@ -213,25 +226,24 @@ string ChatPanel::GetChannelName()
 //! @return true if ChatPanel controls a server output window else false.
 bool ChatPanel::IsServerPanel()
 {
-  return (m_chan_name == string(SERVER_CHAT_NAME));
+  return false;
 }
 
 
 void ChatPanel::Say( wxString message )
 {
   cout << "** ChatPanel::Say()" << endl;
+  assert( m_channel != NULL );
   Server* serv = sys().serv();
   assert( serv != NULL );
-  serv->SayChannel( m_chan_name, STL_STRING(message) );
+  serv->SayChannel( m_channel->GetName(), STL_STRING(message) );
 }
 
 void ChatPanel::Part()
 {
   cout << "** ChatPanel::Part()" << endl;
-  Server* serv = sys().serv();
-  assert( serv != NULL );
-  sys().RemoveChannelPanel( m_chan_name );
-  serv->PartChannel( m_chan_name );
+  assert( m_channel != NULL );
+  m_channel->Leave();
 }
 
 void ChatPanel::LogTime()

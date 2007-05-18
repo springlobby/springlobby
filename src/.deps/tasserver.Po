@@ -203,7 +203,7 @@ tasserver.o tasserver.o: tasserver.cpp \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/gtk/scrolwin.h \
   /usr/include/wx-2.6/wx/settings.h /usr/include/wx-2.6/wx/listbase.h \
   /usr/include/wx-2.6/wx/combobox.h /usr/include/wx-2.6/wx/ctrlsub.h \
-  /usr/include/wx-2.6/wx/gtk/combobox.h
+  /usr/include/wx-2.6/wx/gtk/combobox.h channel.h userlist.h
 
 /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/iostream:
 
@@ -840,3 +840,7 @@ chatpanel.h:
 /usr/include/wx-2.6/wx/ctrlsub.h:
 
 /usr/include/wx-2.6/wx/gtk/combobox.h:
+
+channel.h:
+
+userlist.h:

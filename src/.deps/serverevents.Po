@@ -198,11 +198,16 @@ serverevents.o serverevents.o: serverevents.cpp serverevents.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/gtk/scrolwin.h \
   /usr/include/wx-2.6/wx/settings.h /usr/include/wx-2.6/wx/listbase.h \
   /usr/include/wx-2.6/wx/combobox.h /usr/include/wx-2.6/wx/ctrlsub.h \
-  /usr/include/wx-2.6/wx/gtk/combobox.h system.h \
-  /usr/include/wx-2.6/wx/intl.h mainwindow.h \
+  /usr/include/wx-2.6/wx/gtk/combobox.h channel.h userlist.h system.h \
+  /usr/include/wx-2.6/wx/intl.h channellist.h mainwindow.h \
   /usr/include/wx-2.6/wx/menu.h /usr/include/wx-2.6/wx/menuitem.h \
   /usr/include/wx-2.6/wx/gtk/menuitem.h /usr/include/wx-2.6/wx/gtk/menu.h \
-  /usr/include/wx-2.6/wx/listbook.h mainchattab.h images/chat_icon.xpm
+  /usr/include/wx-2.6/wx/listbook.h mainchattab.h images/chat_icon.xpm \
+  ui.h connectwindow.h /usr/include/wx-2.6/wx/frame.h \
+  /usr/include/wx-2.6/wx/button.h /usr/include/wx-2.6/wx/stattext.h \
+  /usr/include/wx-2.6/wx/gtk/stattext.h /usr/include/wx-2.6/wx/notebook.h \
+  /usr/include/wx-2.6/wx/checkbox.h /usr/include/wx-2.6/wx/gtk/checkbox.h \
+  /usr/include/wx-2.6/wx/statline.h /usr/include/wx-2.6/wx/gtk/statline.h
 
 serverevents.h:
 
@@ -828,9 +833,15 @@ chatpanel.h:
 
 /usr/include/wx-2.6/wx/gtk/combobox.h:
 
+channel.h:
+
+userlist.h:
+
 system.h:
 
 /usr/include/wx-2.6/wx/intl.h:
+
+channellist.h:
 
 mainwindow.h:
 
@@ -847,3 +858,25 @@ mainwindow.h:
 mainchattab.h:
 
 images/chat_icon.xpm:
+
+ui.h:
+
+connectwindow.h:
+
+/usr/include/wx-2.6/wx/frame.h:
+
+/usr/include/wx-2.6/wx/button.h:
+
+/usr/include/wx-2.6/wx/stattext.h:
+
+/usr/include/wx-2.6/wx/gtk/stattext.h:
+
+/usr/include/wx-2.6/wx/notebook.h:
+
+/usr/include/wx-2.6/wx/checkbox.h:
+
+/usr/include/wx-2.6/wx/gtk/checkbox.h:
+
+/usr/include/wx-2.6/wx/statline.h:
+
+/usr/include/wx-2.6/wx/gtk/statline.h:

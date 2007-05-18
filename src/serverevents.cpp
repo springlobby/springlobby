@@ -24,6 +24,7 @@
 #include "serverevents.h"
 #include "system.h"
 #include "mainwindow.h"
+#include "ui.h"
 
 ServerEvents::ServerEvents()
 {
@@ -44,10 +45,11 @@ ServerEvents& se()
 
 
 
-void ServerEvents::OnConnected( string server_ver, bool supported )
+void ServerEvents::OnConnected( string server_name, string server_ver, bool supported )
 {
   cout << "** ServerEvents::OnConnected(): Server: " << server_ver.c_str() << endl;
   assert( sys().serv() != NULL );
+  ui().OnConnected( server_name, server_ver, supported );
   sys().serv()->Login();
 }
 
@@ -55,7 +57,7 @@ void ServerEvents::OnDisconnected()
 {
   cout << "** ServerEvents::OnDisconnected()" << endl;
 }
-      
+
 void ServerEvents::OnLogin()
 {
   cout << "** ServerEvents::OnLogin()" << endl;
@@ -97,22 +99,45 @@ void ServerEvents::OnMotd( string msg )
 
 void ServerEvents::OnPong( int ping_time )
 {
-  cout << "** ServerEvents::OnPong()" << endl;
+  //cout << "** ServerEvents::OnPong()" << endl;
 }
       
-void ServerEvents::OnNewUser( string nick, string contry, int cpu )
+void ServerEvents::OnNewUser( string nick, string country, int cpu )
 {
-  cout << "** ServerEvents::OnNewUser()" << endl;
+  //cout << "** ServerEvents::OnNewUser()" << endl;
+  User* user = sys().GetUser( nick );
+  if ( user == NULL ) {
+    UserStatus stat;
+    user = new User( nick, country, cpu, stat );
+    sys().AddUser( user );
+  } else {
+    user->SetCountry( country );
+    user->SetCpu( cpu );
+  }
+  ui().OnUserOnline( *user );
 }
 
 void ServerEvents::OnUserStatus( string nick, UserStatus status )
 {
-  cout << "** ServerEvents::OnUserStatus()" << endl;
+  //cout << "** ServerEvents::OnUserStatus()" << endl;
+  User* user = sys().GetUser( nick );
+  assert( user != NULL );
+  
+  user->SetStatus( status );
+  
+  ui().OnUserStatusChanged( *user );
 }
 
 void ServerEvents::OnUserQuit( string nick )
 {
   cout << "** ServerEvents::OnUserQuit()" << endl;
+  User* user = sys().GetUser( nick );
+  assert( user != NULL );
+  
+  ui().OnUserOffline( *user );
+  sys().RemoveUser( nick );
+  
+  delete user;
 }
       
 void ServerEvents::OnBattleOpened( int id, bool replay, int nat, string nick, 
@@ -135,7 +160,7 @@ void ServerEvents::OnUserLeftBattle( int battleid, string nick )
 
 void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, int maphash, string map )
 {
-  cout << "** ServerEvents::OnBattleInfoUpdated()" << endl;
+  //cout << "** ServerEvents::OnBattleInfoUpdated()" << endl;
 }
 
 void ServerEvents::OnBattleClosed( int battleid )
@@ -147,7 +172,12 @@ void ServerEvents::OnJoinChannelResult( bool success, string channel, string rea
 {
   cout << "** ServerEvents::OnJoinChannelResult()" << endl;
   if ( success ) {
-    mw().OpenChannelChat( WX_STRING(channel) );
+    Channel* chan = new Channel();
+    chan->SetName( channel );
+    sys().AddChannel( chan );
+    
+    ui().OnJoinedChannelSuccessful( *chan );
+    //mw().OpenChannelChat( WX_STRING(channel) );
   } else {
     wxString s;
     s << _T("Could not join channel ") << WX_STRING(channel) << _T(" because: ") << WX_STRING(reason);
@@ -158,45 +188,55 @@ void ServerEvents::OnJoinChannelResult( bool success, string channel, string rea
 
 void ServerEvents::OnChannelSaid( string channel, string who, string message )
 {
-  ChatPanel* chat = sys().GetChannelPanel( channel );
-  if ( chat != NULL ) {
-    chat->Said( WX_STRING(who), WX_STRING(message) );
-  }
+  Channel* chan = sys().GetChannel( channel );
+  User* user = sys().GetUser( who );
+  assert( chan != NULL );
+  assert( user != NULL );
+  
+  chan->Said( *user, message );
 }
 
 void ServerEvents::OnChannelJoin( string channel, string who )
 {
-  ChatPanel* chat = sys().GetChannelPanel( channel );
-  if ( chat != NULL ) {
-    chat->Joined( WX_STRING(who) );
-  }
+  Channel* chan = sys().GetChannel( channel );
+  User* user = sys().GetUser( who );
+  assert( chan != NULL );
+  assert( user != NULL );
+  
+  chan->Joined( *user );
 }
 
 
 void ServerEvents::OnChannelPart( string channel, string who, string message )
 {
-  ChatPanel* chat = sys().GetChannelPanel( channel );
-  if ( chat != NULL ) {
-    chat->Parted( WX_STRING(who), WX_STRING(message) );
-  }
+  Channel* chan = sys().GetChannel( channel );
+  User* user = sys().GetUser( who );
+  assert( chan != NULL );
+  assert( user != NULL );
+  
+  chan->Left( *user, message );
 }
 
 
 void ServerEvents::OnChannelTopic( string channel, string who, string message, int when )
 {
-  ChatPanel* chat = sys().GetChannelPanel( channel );
-  if ( chat != NULL ) {
-    chat->SetTopic( WX_STRING(who), WX_STRING(message) );
-  }
+  Channel* chan = sys().GetChannel( channel );
+  User* user = sys().GetUser( who );
+  assert( chan != NULL );
+  assert( user != NULL );
+  
+  chan->SetTopic( message, *user );
 }
 
 
 void ServerEvents::OnChannelAction( string channel, string who, string action )
 {
-  ChatPanel* chat = sys().GetChannelPanel( channel );
-  if ( chat != NULL ) {
-    chat->DidAction( WX_STRING(who), WX_STRING(action) );
-  }
+  Channel* chan = sys().GetChannel( channel );
+  User* user = sys().GetUser( who );
+  assert( chan != NULL );
+  assert( user != NULL );
+  
+  chan->DidAction( *user, action );
 }
 
 

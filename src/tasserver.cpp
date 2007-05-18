@@ -221,7 +221,7 @@ void TASServer::ExecuteCommand( string cmd, string params, int replyid )
       m_ser_ver = SER_VER_0_34;
     else
       m_ser_ver = SER_VER_BAD;
-    m_ui->OnConnected( mod, (m_ser_ver > 0) );
+    m_ui->OnConnected( "TASServer", mod, (m_ser_ver > 0) );
     
   } else if ( cmd == "ACCEPTED" ) {
     m_online = true;

@@ -189,10 +189,11 @@ test.o test.o: test.cpp ../config.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/gtk/scrolwin.h \
   /usr/include/wx-2.6/wx/settings.h /usr/include/wx-2.6/wx/listbase.h \
   /usr/include/wx-2.6/wx/combobox.h /usr/include/wx-2.6/wx/ctrlsub.h \
-  /usr/include/wx-2.6/wx/gtk/combobox.h settings.h \
-  /usr/include/wx-2.6/wx/config.h /usr/include/wx-2.6/wx/confbase.h \
-  /usr/include/wx-2.6/wx/fileconf.h /usr/include/wx-2.6/wx/textfile.h \
-  /usr/include/wx-2.6/wx/textbuf.h /usr/include/wx-2.6/wx/file.h utils.h
+  /usr/include/wx-2.6/wx/gtk/combobox.h channel.h userlist.h user.h \
+  settings.h /usr/include/wx-2.6/wx/config.h \
+  /usr/include/wx-2.6/wx/confbase.h /usr/include/wx-2.6/wx/fileconf.h \
+  /usr/include/wx-2.6/wx/textfile.h /usr/include/wx-2.6/wx/textbuf.h \
+  /usr/include/wx-2.6/wx/file.h utils.h
 
 ../config.h:
 
@@ -775,6 +776,12 @@ chatpanel.h:
 /usr/include/wx-2.6/wx/ctrlsub.h:
 
 /usr/include/wx-2.6/wx/gtk/combobox.h:
+
+channel.h:
+
+userlist.h:
+
+user.h:
 
 settings.h:
 

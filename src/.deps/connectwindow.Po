@@ -203,7 +203,8 @@ connectwindow.o connectwindow.o: connectwindow.cpp connectwindow.h \
   /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
   /usr/include/bits/mathinline.h /usr/include/wx-2.6/wx/gtk/dc.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/gtk/scrolwin.h \
-  /usr/include/wx-2.6/wx/settings.h /usr/include/wx-2.6/wx/listbase.h
+  /usr/include/wx-2.6/wx/settings.h /usr/include/wx-2.6/wx/listbase.h \
+  channel.h userlist.h channellist.h
 
 connectwindow.h:
 
@@ -858,3 +859,9 @@ chatpanel.h:
 /usr/include/wx-2.6/wx/settings.h:
 
 /usr/include/wx-2.6/wx/listbase.h:
+
+channel.h:
+
+userlist.h:
+
+channellist.h:

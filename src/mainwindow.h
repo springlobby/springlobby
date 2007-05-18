@@ -39,7 +39,7 @@ class MainWindow : public wxFrame
     virtual ~MainWindow();
   
     // MainWindow interface
-    void OpenChannelChat( wxString channel );
+    void OpenChannelChat( Channel& channel );
     void OpenPrivateChat( wxString nick );
   
     void CloseAllChats();

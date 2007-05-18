@@ -188,13 +188,18 @@ ui.o ui.o: ui.cpp ui.h /usr/include/wx-2.6/wx/msgdlg.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/gtk/scrolwin.h \
   /usr/include/wx-2.6/wx/settings.h /usr/include/wx-2.6/wx/listbase.h \
   /usr/include/wx-2.6/wx/combobox.h /usr/include/wx-2.6/wx/ctrlsub.h \
-  /usr/include/wx-2.6/wx/gtk/combobox.h images/chat_icon.xpm \
-  connectwindow.h /usr/include/wx-2.6/wx/intl.h \
-  /usr/include/wx-2.6/wx/frame.h /usr/include/wx-2.6/wx/button.h \
-  /usr/include/wx-2.6/wx/stattext.h /usr/include/wx-2.6/wx/gtk/stattext.h \
-  /usr/include/wx-2.6/wx/notebook.h /usr/include/wx-2.6/wx/checkbox.h \
-  /usr/include/wx-2.6/wx/gtk/checkbox.h /usr/include/wx-2.6/wx/statline.h \
-  /usr/include/wx-2.6/wx/gtk/statline.h
+  /usr/include/wx-2.6/wx/gtk/combobox.h channel.h userlist.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h \
+  user.h images/chat_icon.xpm connectwindow.h \
+  /usr/include/wx-2.6/wx/intl.h /usr/include/wx-2.6/wx/frame.h \
+  /usr/include/wx-2.6/wx/button.h /usr/include/wx-2.6/wx/stattext.h \
+  /usr/include/wx-2.6/wx/gtk/stattext.h /usr/include/wx-2.6/wx/notebook.h \
+  /usr/include/wx-2.6/wx/checkbox.h /usr/include/wx-2.6/wx/gtk/checkbox.h \
+  /usr/include/wx-2.6/wx/statline.h /usr/include/wx-2.6/wx/gtk/statline.h \
+  utils.h
 
 ui.h:
 
@@ -790,6 +795,20 @@ chatpanel.h:
 
 /usr/include/wx-2.6/wx/gtk/combobox.h:
 
+channel.h:
+
+userlist.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h:
+
+user.h:
+
 images/chat_icon.xpm:
 
 connectwindow.h:
@@ -813,3 +832,5 @@ connectwindow.h:
 /usr/include/wx-2.6/wx/statline.h:
 
 /usr/include/wx-2.6/wx/gtk/statline.h:
+
+utils.h:

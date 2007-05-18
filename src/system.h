@@ -24,9 +24,10 @@
 #include "server.h"
 #include "socket.h"
 #include "chatlist.h"
+#include "channellist.h"
 
 
-class System : public ChatList
+class System : public ChannelList, public UserList
 {
   public:
     System();

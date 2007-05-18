@@ -195,8 +195,9 @@ system.o system.o: system.cpp system.h /usr/include/wx-2.6/wx/intl.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/gtk/scrolwin.h \
   /usr/include/wx-2.6/wx/settings.h /usr/include/wx-2.6/wx/listbase.h \
   /usr/include/wx-2.6/wx/combobox.h /usr/include/wx-2.6/wx/ctrlsub.h \
-  /usr/include/wx-2.6/wx/gtk/combobox.h ui.h \
-  /usr/include/wx-2.6/wx/msgdlg.h /usr/include/wx-2.6/wx/gtk/msgdlg.h \
+  /usr/include/wx-2.6/wx/gtk/combobox.h channel.h userlist.h \
+  channellist.h ui.h /usr/include/wx-2.6/wx/msgdlg.h \
+  /usr/include/wx-2.6/wx/gtk/msgdlg.h \
   /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
   /usr/include/wx-2.6/wx/dialog.h mainwindow.h \
   /usr/include/wx-2.6/wx/menu.h /usr/include/wx-2.6/wx/menuitem.h \
@@ -833,6 +834,12 @@ chatpanel.h:
 /usr/include/wx-2.6/wx/ctrlsub.h:
 
 /usr/include/wx-2.6/wx/gtk/combobox.h:
+
+channel.h:
+
+userlist.h:
+
+channellist.h:
 
 ui.h:
 

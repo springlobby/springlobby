@@ -19,7 +19,7 @@
 // Class: Ui
 //
 #include "ui.h"
-
+#include "utils.h"
 
 Ui::Ui()
 {
@@ -88,3 +88,126 @@ bool Ui::Ask( wxString heading, wxString question )
   wxMessageDialog ask_dlg(NULL, question, heading, wxOK | wxCANCEL );
   return ( ask_dlg.ShowModal() == wxID_OK );
 }
+
+
+//! @brief Called when connected to a server
+//!
+//! @todo Display in servertab
+void Ui::OnConnected( string server_name, string server_ver, bool supported )
+{
+  
+}
+
+
+//! @brief Called when client has joined a channel
+//!
+//! @todo Check if a pannel allready exists for this channel
+void Ui::OnJoinedChannelSuccessful( Channel& chan )
+{
+  cout << "** Ui::OnJoinedChannelSuccessful()" << endl;
+  UiChannelData* chandata = new UiChannelData();
+  chandata->panel = NULL;
+  
+  chan.SetUserData( (void*)chandata );
+  mw().OpenChannelChat( chan );
+}
+
+
+//! @brief Called when something is said in a channel
+void Ui::OnChannelSaid( Channel& channel, User& user, const string& message )
+{
+  cout << "** Ui::OnChannelSaid()" << endl;
+  UiChannelData* ud = (UiChannelData*)channel.GetUserData();
+  assert( ud != NULL );
+  if ( ud->panel == NULL ) {
+    cout << "   !! ud->panel NULL" << endl;
+    return;
+  }
+  ud->panel->Said( WX_STRING(user.GetNick()), WX_STRING( message ) );
+}
+
+
+void Ui::OnChannelDidAction( Channel& channel , User& user, const string& action )
+{
+  cout << "** Ui::OnChannelDidAction()" << endl;
+  UiChannelData* ud = (UiChannelData*)channel.GetUserData();
+  assert( ud != NULL );
+  if ( ud->panel == NULL ) {
+    cout << "   !! ud->panel NULL" << endl;
+    return;
+  }
+  ud->panel->DidAction( WX_STRING(user.GetNick()), WX_STRING( action ) );  
+}
+
+
+//! @brief Called when client is leaving a channel
+//!
+//! @todo Tell ChatPanel the channel is no longer joined
+void Ui::OnLeaveChannel( Channel& channel )
+{
+  assert( channel.GetUserData() != NULL );
+  assert( ((UiChannelData*)channel.GetUserData())->panel != NULL );
+  
+  ((UiChannelData*)channel.GetUserData())->panel->SetChannel( NULL );
+  
+  delete (UiChannelData*)channel.GetUserData();
+  channel.SetUserData( NULL );
+  
+}
+
+
+void Ui::OnUserJoinedChannel( Channel& chan, User& user )
+{
+  cout << "** Ui::OnUserJoinedChannel()" << endl;
+  UiChannelData* ud = (UiChannelData*)chan.GetUserData();
+  assert( ud != NULL );
+  if ( ud->panel == NULL ) {
+    cout << "   !! ud->panel NULL" << endl;
+    return;
+  }
+  ud->panel->Joined( WX_STRING(user.GetNick()) );  
+}
+
+
+void Ui::OnUserLeftChannel( Channel& chan, User& user, const string& reason )
+{
+  cout << "** Ui::OnUserLeftChannel()" << endl;
+  UiChannelData* ud = (UiChannelData*)chan.GetUserData();
+  assert( ud != NULL );
+  if ( ud->panel == NULL ) {
+    cout << "   !! ud->panel NULL" << endl;
+    return;
+  }
+  ud->panel->Parted( WX_STRING(user.GetNick()), WX_STRING(reason) );  
+}
+
+
+void Ui::OnChannelTopic( Channel& channel , User& user, const string& topic )
+{
+  cout << "** Ui::OnChannelTopic()" << endl;
+  UiChannelData* ud = (UiChannelData*)channel.GetUserData();
+  assert( ud != NULL );
+  if ( ud->panel == NULL ) {
+    cout << "   !! ud->panel NULL" << endl;
+    return;
+  }
+  ud->panel->SetTopic( WX_STRING(user.GetNick()), WX_STRING(topic) );   
+}
+
+
+
+
+void Ui::OnUserOnline( User& user )
+{
+}
+
+
+void Ui::OnUserOffline( User& user )
+{
+}
+
+
+void Ui::OnUserStatusChanged( User& user )
+{
+}
+

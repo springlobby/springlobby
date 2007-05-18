@@ -53,7 +53,7 @@ MainChatTab::MainChatTab( wxWindow* parent )
   m_chat_tabs->AssignImageList( m_imagelist );
 
   m_server_chat = new ChatPanel( m_chat_tabs, false );
-  sys().SetServerPanel( m_server_chat );
+//  sys().SetServerPanel( m_server_chat );
 
   m_chat_tabs->AddPage( m_server_chat, _T("Server"), true, -1 );
   
@@ -73,11 +73,11 @@ MainChatTab::~MainChatTab()
 }
 
 
-ChatPanel* MainChatTab::AddChatPannel( wxString name, bool nick_list )
+ChatPanel* MainChatTab::AddChatPannel( Channel& channel, bool nick_list )
 {
   ChatPanel* chat = new ChatPanel( m_chat_tabs, nick_list );
-  chat->SetChannelName( STL_STRING(name) );
-  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, -1 );
+  chat->SetChannel( &channel );
+  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(channel.GetName()), true, -1 );
   return chat;
 }
 

@@ -39,7 +39,7 @@ class ServerEvents
   
   // Uicontrol interface
   
-    virtual void OnConnected( string server_ver, bool supported );
+    virtual void OnConnected( string server_name, string server_ver, bool supported );
     virtual void OnDisconnected();
       
     virtual void OnLogin();
@@ -52,7 +52,7 @@ class ServerEvents
     virtual void OnMotd( string msg );
     virtual void OnPong( int ping_time );
       
-    virtual void OnNewUser( string nick, string contry, int cpu );
+    virtual void OnNewUser( string nick, string conutry, int cpu );
     virtual void OnUserStatus( string nick, UserStatus status );
     virtual void OnUserQuit( string nick );
     

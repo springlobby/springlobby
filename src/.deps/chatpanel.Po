@@ -183,20 +183,31 @@ chatpanel.o chatpanel.o: chatpanel.cpp /usr/include/wx-2.6/wx/intl.h \
   /usr/include/wx-2.6/wx/scrolwin.h /usr/include/wx-2.6/wx/gtk/scrolwin.h \
   /usr/include/wx-2.6/wx/settings.h /usr/include/wx-2.6/wx/listbase.h \
   /usr/include/wx-2.6/wx/combobox.h /usr/include/wx-2.6/wx/ctrlsub.h \
-  /usr/include/wx-2.6/wx/gtk/combobox.h system.h server.h user.h socket.h \
-  /usr/include/wx-2.6/wx/socket.h /usr/include/wx-2.6/wx/sckaddr.h \
-  /usr/include/wx-2.6/wx/gsocket.h /usr/include/wx-2.6/wx/unix/gsockunx.h \
+  /usr/include/wx-2.6/wx/gtk/combobox.h channel.h userlist.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h \
+  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h \
+  user.h system.h server.h socket.h /usr/include/wx-2.6/wx/socket.h \
+  /usr/include/wx-2.6/wx/sckaddr.h /usr/include/wx-2.6/wx/gsocket.h \
+  /usr/include/wx-2.6/wx/unix/gsockunx.h \
   /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
   /usr/include/wx-2.6/wx/gsocket.h /usr/include/sys/socket.h \
   /usr/include/sys/uio.h /usr/include/bits/socket.h \
   /usr/include/bits/sockaddr.h /usr/include/asm/socket.h \
   /usr/include/asm/sockios.h /usr/include/sys/un.h \
-  /usr/include/wx-2.6/wx/event.h chatlist.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h \
-  /usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h \
-  utils.h
+  /usr/include/wx-2.6/wx/event.h chatlist.h channellist.h utils.h ui.h \
+  /usr/include/wx-2.6/wx/msgdlg.h /usr/include/wx-2.6/wx/gtk/msgdlg.h \
+  /usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h \
+  /usr/include/wx-2.6/wx/dialog.h mainwindow.h \
+  /usr/include/wx-2.6/wx/menu.h /usr/include/wx-2.6/wx/menuitem.h \
+  /usr/include/wx-2.6/wx/gtk/menuitem.h /usr/include/wx-2.6/wx/gtk/menu.h \
+  /usr/include/wx-2.6/wx/listbook.h mainchattab.h images/chat_icon.xpm \
+  connectwindow.h /usr/include/wx-2.6/wx/frame.h \
+  /usr/include/wx-2.6/wx/button.h /usr/include/wx-2.6/wx/stattext.h \
+  /usr/include/wx-2.6/wx/gtk/stattext.h /usr/include/wx-2.6/wx/notebook.h \
+  /usr/include/wx-2.6/wx/checkbox.h /usr/include/wx-2.6/wx/gtk/checkbox.h \
+  /usr/include/wx-2.6/wx/statline.h /usr/include/wx-2.6/wx/gtk/statline.h
 
 /usr/include/wx-2.6/wx/intl.h:
 
@@ -772,11 +783,23 @@ chatpanel.h:
 
 /usr/include/wx-2.6/wx/gtk/combobox.h:
 
+channel.h:
+
+userlist.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h:
+
+/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h:
+
+user.h:
+
 system.h:
 
 server.h:
-
-user.h:
 
 socket.h:
 
@@ -810,12 +833,52 @@ socket.h:
 
 chatlist.h:
 
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/map:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_tree.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_map.h:
-
-/usr/lib/gcc/i386-redhat-linux/4.1.1/../../../../include/c++/4.1.1/bits/stl_multimap.h:
+channellist.h:
 
 utils.h:
+
+ui.h:
+
+/usr/include/wx-2.6/wx/msgdlg.h:
+
+/usr/include/wx-2.6/wx/gtk/msgdlg.h:
+
+/usr/lib/wx/include/gtk2-unicode-release-2.6/wx/setup.h:
+
+/usr/include/wx-2.6/wx/dialog.h:
+
+mainwindow.h:
+
+/usr/include/wx-2.6/wx/menu.h:
+
+/usr/include/wx-2.6/wx/menuitem.h:
+
+/usr/include/wx-2.6/wx/gtk/menuitem.h:
+
+/usr/include/wx-2.6/wx/gtk/menu.h:
+
+/usr/include/wx-2.6/wx/listbook.h:
+
+mainchattab.h:
+
+images/chat_icon.xpm:
+
+connectwindow.h:
+
+/usr/include/wx-2.6/wx/frame.h:
+
+/usr/include/wx-2.6/wx/button.h:
+
+/usr/include/wx-2.6/wx/stattext.h:
+
+/usr/include/wx-2.6/wx/gtk/stattext.h:
+
+/usr/include/wx-2.6/wx/notebook.h:
+
+/usr/include/wx-2.6/wx/checkbox.h:
+
+/usr/include/wx-2.6/wx/gtk/checkbox.h:
+
+/usr/include/wx-2.6/wx/statline.h:
+
+/usr/include/wx-2.6/wx/gtk/statline.h:

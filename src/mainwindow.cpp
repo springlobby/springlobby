@@ -96,18 +96,21 @@ MainWindow::~MainWindow()
 }
 
 
+//! @brief Get reference to the MainWindow
 MainWindow& mw()
 {
   return ui().mw();
 }
 
+
+//! @brief Get the ChatPanel dedicated to server output and input
 ChatPanel& servwin()
 {
-  return *sys().GetServerPanel();
-  //ui().mw().GetChatTab().ServerChat();
+  return ui().mw().GetChatTab().ServerChat();
 }
 
 
+//! @brief Returns the curent MainChatTab object
 MainChatTab& MainWindow::GetChatTab()
 {
   assert( m_chat_tab != NULL );
@@ -120,14 +123,11 @@ MainChatTab& MainWindow::GetChatTab()
 //! @param channel The channel name
 //! @note This does NOT join the chatt.
 //! @sa Server::JoinChannel OpenPrivateChat
-void MainWindow::OpenChannelChat( wxString channel )
+void MainWindow::OpenChannelChat( Channel& channel )
 {
-  if ( !sys().ChannelExists( STL_STRING(channel) ) ) {
-    assert( m_chat_tab != NULL );
-    ChatPanel* chat = m_chat_tab->AddChatPannel( channel, true );
-    chat->SetChannelName( STL_STRING(channel) );
-    sys().SetChannelPanel( STL_STRING(channel), chat );
-  }
+  assert( m_chat_tab != NULL );
+  ChatPanel* chat = m_chat_tab->AddChatPannel( channel, true );
+  chat->SetChannel( &channel );
 }
 
 
@@ -153,7 +153,7 @@ void MainWindow::OnMenuJoin( wxCommandEvent& event )
   if ( sys().serv() == NULL ) return;
   wxTextEntryDialog name_dlg( NULL, _("Name of channel to join"), _("Join channel..."), _(""), wxOK | wxCANCEL | wxCENTRE );
   if (name_dlg.ShowModal() == wxID_OK) {
-    OpenChannelChat( name_dlg.GetValue() );
+    //OpenChannelChat( name_dlg.GetValue() );
     sys().serv()->JoinChannel( STL_STRING(name_dlg.GetValue()), "" );
   }
 }

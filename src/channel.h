@@ -48,43 +48,23 @@ class Channel : public UserList
     void DoAction( const string& action );
     void Leave();
 
-    void Said( const string& who, const string& message );
     void Said( User& who, const string& message );
  
-    void DidAction( const string& who, const string& action );
     void DidAction( User& who, const string& action );
   
-    void Left( const string& who );
-    void Left( User& who );
+    void Left( User& who, const string& reason );
+    void Joined( User& who );
   
-    void Joined( const string& who );
+    void SetTopic( const string& topic, User& who );
+    string GetTopic();
+    string GetTopicSetBy();
   
-  
-    // Callbacks
-    void SetOnSaidCallback( channel_msg_callback callback );
-    channel_msg_callback GetOnSaidCallback();
-
-    void SetOnDidActionCallback( channel_msg_callback callback );
-    channel_msg_callback GetOnDidActionCallback();
-
-    void SetOnLeaveCallback( channel_cmd_callback callback );
-    channel_cmd_callback GetOnLeaveCallback();
-
-    void SetOnLeftCallback( channel_whocmd_callback callback );
-    channel_whocmd_callback GetOnLeftCallback();
-
-    void SetOnJoinedCallback( channel_whocmd_callback callback );
-    channel_whocmd_callback GetOnJoinedCallback();
-
   protected:
     
     // Channel variables
-    channel_msg_callback m_said_cb;
-    channel_msg_callback m_action_cb;
-    channel_cmd_callback m_leave_cb;
-    channel_whocmd_callback m_left_cb;
-    channel_whocmd_callback m_joined_cb;
   
+    string m_topic;
+    string m_topic_nick;
     string m_name;
     void* m_userdata;
   

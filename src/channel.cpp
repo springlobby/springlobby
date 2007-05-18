@@ -19,11 +19,11 @@
 // Class: Channel
 //
 #include "channel.h"
-
+#include "ui.h"
 
 Channel::Channel()
 {
-  
+
 }
 
 
@@ -45,23 +45,13 @@ string Channel::GetName()
 }
 
 
-void Channel::Said( const string& who, const string& message )
-{
-}
-
-
 void Channel::Said( User& who, const string& message )
 {
+  ui().OnChannelSaid( *this , who, message );
 }
 
 
 void Channel::Say( const string& message )
-{
-}
-
-
-  
-void Channel::DidAction( const string& who, const string& action )
 {
 }
 
@@ -76,14 +66,11 @@ void Channel::DoAction( const string& action )
 }
 
 
-  
-void Channel::Left( const string& who )
+void Channel::Left( User& who, const string& reason )
 {
-}
-
-
-void Channel::Left( User& who )
-{
+  assert( GetUser( who.GetNick() ) != NULL );
+  RemoveUser( who.GetNick() );
+  ui().OnUserLeftChannel( *this, who, reason );
 }
 
 
@@ -93,23 +80,47 @@ void Channel::Leave()
 
 
   
-void Channel::Joined( const string& who )
+void Channel::Joined( User& who )
 {
+  assert( GetUser( who.GetNick() ) == NULL );
+  AddUser( &who );
+  ui().OnUserJoinedChannel( *this, who );
 }
 
 
-  
 void Channel::SetUserData( void* userdata )
 {
+  m_userdata = userdata;
 }
 
 
 void* Channel::GetUserData()
 {
+  return m_userdata;
 }
 
 
+void Channel::SetTopic( const string& topic, User& who )
+{
+  m_topic = topic;
+  m_topic_nick = who.GetNick();
+  
+  ui().OnChannelTopic( *this, who, topic );
+}
 
+string Channel::GetTopicSetBy()
+{
+  return m_topic_nick;
+}
+
+
+string Channel::GetTopic()
+{
+  return m_topic;
+}
+
+
+/*
 void Channel::SetOnSaidCallback( channel_msg_callback callback )
 {
 }
@@ -163,7 +174,7 @@ channel_whocmd_callback Channel::GetOnJoinedCallback()
 {
 }
 
-
+*/
 
 void Channel::AddUser( User* user )
 {
