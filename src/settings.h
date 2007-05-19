@@ -25,10 +25,9 @@
 
 //#include <wx/wx.h>
 #include <wx/config.h>
+#include <wx/intl.h>
 #include <string>
 #include "utils.h"
-
-using namespace std;
 
 
 #define DEFSETT_DEFAULT_SERVER "TA Spring Server"
@@ -44,36 +43,40 @@ using namespace std;
 class Settings
 {
   public:
-    Settings();
-    virtual ~Settings();
+    Settings() {
+      m_config = new wxConfig( _("SpringLobby") );
+      if ( !m_config->Exists( _("/Servers") ) )
+        SetDefaultSettings();
+    }
+    ~Settings() { delete m_config; }
   
     // Settings interface
   
     void SetDefaultSettings();
     void SaveSettings();
   
-    string GetDefaultServer();
-    void   SetDefaultServer( const string server_name );
+    std::string GetDefaultServer();
+    void   SetDefaultServer( const std::string& server_name );
   
-    bool   ServerExists( const string server_name );
+    bool   ServerExists( const std::string& server_name );
   
-    string GetServerHost( const string server_name );
-    void   SetServerHost( const string server_name, const string value );
+    std::string GetServerHost( const std::string& server_name );
+    void   SetServerHost( const std::string& server_name, const std::string& value );
     
-    int    GetServerPort( const string server_name );
-    void   SetServerPort( const string server_name, const int value );
+    int    GetServerPort( const std::string& server_name );
+    void   SetServerPort( const std::string& server_name, const int value );
     
-    string GetServerName( const string server_name );
-    void   SetServerName( const string server_name, const string value );
+    std::string GetServerName( const std::string& server_name );
+    void   SetServerName( const std::string& server_name, const std::string& value );
     
-    string GetServerAccountNick( const string server_name );
-    void   SetServerAccountNick( const string server_name, const string value );
+    std::string GetServerAccountNick( const std::string& server_name );
+    void   SetServerAccountNick( const std::string& server_name, const std::string& value );
     
-    string GetServerAccountPass( const string server_name );
-    void   SetServerAccountPass( const string server_name, const string value );
+    std::string GetServerAccountPass( const std::string& server_name );
+    void   SetServerAccountPass( const std::string& server_name, const std::string& value );
     
-    bool   GetServerAccountSavePass( const string server_name );
-    void   SetServerAccountSavePass( const string server_name, const bool value );
+    bool   GetServerAccountSavePass( const std::string& server_name );
+    void   SetServerAccountSavePass( const std::string& server_name, const bool value );
     
     int    GetMainWindowWidth();
     void   SetMainWindowWidth( const int value );

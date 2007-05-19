@@ -1,48 +1,10 @@
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
-
 //
 // Class: Settings
-//
-// Created on: Thu May 10 23:28:05 2007
 //
 
 #include "settings.h"
 #include <wx/intl.h>
 #include <iostream>
-
-
-//! @brief Constructor
-Settings::Settings()
-{
-  cout << "** Settings::Settings()" << endl;
-  m_config = new wxConfig( _("SpringLobby") );
-  if ( !m_config->Exists( _("/Servers") ) )
-    SetDefaultSettings();
-}
-
-
-//! @brief Destructor
-Settings::~Settings()
-{
-  cout << "** Settings::~Settings()" << endl;
-  m_config->Flush();
-  delete m_config;
-}
 
 
 Settings& sett()
@@ -72,7 +34,7 @@ void Settings::SetDefaultSettings()
 
 
 //! @brief Checks if the server name/alias exists in the settings
-bool Settings::ServerExists( const string server_name )
+bool Settings::ServerExists( const std::string& server_name )
 {
   return m_config->Exists( _("/Server/")+WX_STRING(server_name) );
 }
@@ -81,7 +43,7 @@ bool Settings::ServerExists( const string server_name )
 //! @brief Get the name/alias of the default server.
 //!
 //! @note Normally this will be the previously selected server. But at first run it will be a server that is set as the default.
-string Settings::GetDefaultServer()
+std::string Settings::GetDefaultServer()
 {
   return STL_STRING( m_config->Read( _("/Servers/Default"), _(DEFSETT_DEFAULT_SERVER) ) );
 }
@@ -91,7 +53,7 @@ string Settings::GetDefaultServer()
 //! 
 //! @param server_name the server name/alias
 //! @see GetDefaultServer()
-void   Settings::SetDefaultServer( const string server_name )
+void   Settings::SetDefaultServer( const std::string& server_name )
 {
   m_config->Write( _("/Servers/Default"), WX_STRING( server_name ) );
 }
@@ -100,7 +62,7 @@ void   Settings::SetDefaultServer( const string server_name )
 //! @brief Get hostname of a server.
 //! 
 //! @param server_name the server name/alias
-string Settings::GetServerHost( const string server_name )
+std::string Settings::GetServerHost( const std::string& server_name )
 {
   return STL_STRING( m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/host"), _(DEFSETT_DEFAULT_SERVER_HOST) ) );
 }
@@ -110,7 +72,7 @@ string Settings::GetServerHost( const string server_name )
 //! 
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
-void   Settings::SetServerHost( const string server_name, const string value )
+void   Settings::SetServerHost( const std::string& server_name, const std::string& value )
 {
   m_config->Write( _("/Server/")+WX_STRING(server_name)+_("/host"), WX_STRING(value) );
 }
@@ -119,7 +81,7 @@ void   Settings::SetServerHost( const string server_name, const string value )
 //! @brief Get port number of a server.
 //! 
 //! @param server_name the server name/alias
-int    Settings::GetServerPort( const string server_name )
+int    Settings::GetServerPort( const std::string& server_name )
 {
   return m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/port"), DEFSETT_DEFAULT_SERVER_PORT );
 }
@@ -129,7 +91,7 @@ int    Settings::GetServerPort( const string server_name )
 //! 
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
-void   Settings::SetServerPort( const string server_name, const int value )
+void   Settings::SetServerPort( const std::string& server_name, const int value )
 {
   m_config->Write( _("/Server/")+WX_STRING(server_name)+_("/port"), value );
 }
@@ -139,7 +101,7 @@ void   Settings::SetServerPort( const string server_name, const int value )
 //! 
 //! @param server_name the server name/alias
 //! @todo Implement
-string Settings::GetServerName( const string server_name )
+std::string Settings::GetServerName( const std::string& server_name )
 {
 }
 
@@ -149,7 +111,7 @@ string Settings::GetServerName( const string server_name )
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
 //! @todo Implement
-void   Settings::SetServerName( const string server_name, const string value )
+void   Settings::SetServerName( const std::string& server_name, const std::string& value )
 {
 }
 
@@ -157,7 +119,7 @@ void   Settings::SetServerName( const string server_name, const string value )
 //! @brief Get nickname of the default account for a server.
 //! 
 //! @param server_name the server name/alias
-string Settings::GetServerAccountNick( const string server_name )
+std::string Settings::GetServerAccountNick( const std::string& server_name )
 {
   return STL_STRING( m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/nick"), _("") ) );
 }
@@ -167,7 +129,7 @@ string Settings::GetServerAccountNick( const string server_name )
 //! 
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
-void   Settings::SetServerAccountNick( const string server_name, const string value )
+void   Settings::SetServerAccountNick( const std::string& server_name, const std::string& value )
 {
   m_config->Write( _("/Server/")+WX_STRING(server_name)+_("/nick"), WX_STRING(value) );
 }
@@ -177,7 +139,7 @@ void   Settings::SetServerAccountNick( const string server_name, const string va
 //! 
 //! @param server_name the server name/alias
 //! @todo Implement
-string Settings::GetServerAccountPass( const string server_name )
+std::string Settings::GetServerAccountPass( const std::string& server_name )
 {
 }
 
@@ -187,7 +149,7 @@ string Settings::GetServerAccountPass( const string server_name )
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
 //! @todo Implement
-void   Settings::SetServerAccountPass( const string server_name, const string value )
+void   Settings::SetServerAccountPass( const std::string& server_name, const std::string& value )
 {
 }
 
@@ -196,7 +158,7 @@ void   Settings::SetServerAccountPass( const string server_name, const string va
 //! 
 //! @param server_name the server name/alias
 //! @todo Implement
-bool   Settings::GetServerAccountSavePass( const string server_name )
+bool   Settings::GetServerAccountSavePass( const std::string& server_name )
 {
 }
 
@@ -206,7 +168,7 @@ bool   Settings::GetServerAccountSavePass( const string server_name )
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
 //! @todo Implement
-void   Settings::SetServerAccountSavePass( const string server_name, const bool value )
+void   Settings::SetServerAccountSavePass( const std::string& server_name, const bool value )
 {
 }
 

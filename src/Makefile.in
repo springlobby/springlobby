@@ -36,7 +36,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = springlobby$(EXEEXT) test$(EXEEXT)
+bin_PROGRAMS = springlobby$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -52,16 +52,13 @@ PROGRAMS = $(bin_PROGRAMS)
 am_springlobby_OBJECTS = base64.$(OBJEXT) md5.$(OBJEXT) \
 	socket.$(OBJEXT) mainwindow.$(OBJEXT) serverevents.$(OBJEXT) \
 	chatpanel.$(OBJEXT) connectwindow.$(OBJEXT) server.$(OBJEXT) \
-	tasserver.$(OBJEXT) mainchattab.$(OBJEXT) settings.$(OBJEXT) \
+	tasserver.$(OBJEXT) mainchattab.$(OBJEXT) \
 	springlobbyapp.$(OBJEXT) user.$(OBJEXT) channel.$(OBJEXT) \
-	channellist.$(OBJEXT) ui.$(OBJEXT) system.$(OBJEXT) \
-	nicklistctrl.$(OBJEXT)
+	ui.$(OBJEXT) system.$(OBJEXT) nicklistctrl.$(OBJEXT) \
+	settings.$(OBJEXT)
 springlobby_OBJECTS = $(am_springlobby_OBJECTS)
 am__DEPENDENCIES_1 =
 springlobby_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
-am_test_OBJECTS = chatlist.$(OBJEXT) test.$(OBJEXT) settings.$(OBJEXT)
-test_OBJECTS = $(am_test_OBJECTS)
-test_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -81,8 +78,8 @@ LTCXXCOMPILE = $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) \
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --tag=CXX --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(springlobby_SOURCES) $(test_SOURCES)
-DIST_SOURCES = $(springlobby_SOURCES) $(test_SOURCES)
+SOURCES = $(springlobby_SOURCES)
+DIST_SOURCES = $(springlobby_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -220,17 +217,6 @@ AM_CFLAGS = \
 	 -g \
 	 $(WX_CPPFLAGS)
 
-test_SOURCES = \
-	chatlist.cpp\
-	chatlist.h                    \
-	test.cpp                    \
-	settings.cpp                    \
-	settings.h                    
-
-test_LDADD = \
-	$(PACKAGE_LIBS) \
-	$(WX_LIBS) 
-
 springlobby_SOURCES = \
 	base64.cpp     \
 	md5.c     \
@@ -252,7 +238,6 @@ springlobby_SOURCES = \
 	tasserver.h     \
 	mainchattab.cpp     \
 	mainchattab.h     \
-	settings.cpp     \
 	settings.h     \
 	springlobbyapp.cpp     \
 	springlobbyapp.h     \
@@ -261,7 +246,6 @@ springlobby_SOURCES = \
 	userlist.h     \
 	channel.cpp     \
 	channel.h     \
-	channellist.cpp     \
 	channellist.h     \
 	ui.cpp     \
 	ui.h     \
@@ -269,7 +253,8 @@ springlobby_SOURCES = \
 	system.h     \
 	utils.h     \
 	nicklistctrl.cpp     \
-	nicklistctrl.h 
+	nicklistctrl.h     \
+	settings.cpp 
 
 springlobby_LDFLAGS = 
 springlobby_LDADD = \
@@ -340,9 +325,6 @@ clean-binPROGRAMS:
 springlobby$(EXEEXT): $(springlobby_OBJECTS) $(springlobby_DEPENDENCIES) 
 	@rm -f springlobby$(EXEEXT)
 	$(CXXLINK) $(springlobby_LDFLAGS) $(springlobby_OBJECTS) $(springlobby_LDADD) $(LIBS)
-test$(EXEEXT): $(test_OBJECTS) $(test_DEPENDENCIES) 
-	@rm -f test$(EXEEXT)
-	$(CXXLINK) $(test_LDFLAGS) $(test_OBJECTS) $(test_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -352,8 +334,6 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/base64.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/channel.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/channellist.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chatlist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chatpanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/connectwindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mainchattab.Po@am__quote@
@@ -367,7 +347,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/springlobbyapp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/system.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tasserver.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/user.Po@am__quote@
 

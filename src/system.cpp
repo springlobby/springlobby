@@ -8,17 +8,6 @@
 #include "tasserver.h"
 #include "serverevents.h"
 
-System::System()
-{
-  
-}
-
-
-System::~System()
-{
-  
-}
-
 
 System& sys()
 {

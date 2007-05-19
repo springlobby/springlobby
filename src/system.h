@@ -15,8 +15,8 @@
 class System : public ChannelList, public UserList
 {
   public:
-    System();
-    virtual ~System();
+    System() {}
+    ~System() {}
   
     // System interface
   

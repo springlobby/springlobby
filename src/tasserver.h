@@ -10,7 +10,6 @@
 #include <list>
 #include "server.h"
 
-using namespace std;
 
 #define SER_VER_BAD -1
 #define SER_VER_UNKNOWN 0
@@ -50,7 +49,7 @@ class TASServer : public Server
   
     // Overloaded functions from Server
     void SetSocket( Socket* sock );
-    void Connect( const string& addr, const int port );
+    void Connect( const std::string& addr, const int port );
     void Disconnect();
     bool IsConnected();
   
@@ -62,19 +61,19 @@ class TASServer : public Server
   
     void Ping();
 
-    void JoinChannel( const string& channel, const string& key );
-    void PartChannel( const string& channel );
+    void JoinChannel( const std::string& channel, const std::string& key );
+    void PartChannel( const std::string& channel );
   
-    void SayChannel( const string& channel, const string& msg );
-    void SayPrivate( const string& nick, const string& msg );
+    void SayChannel( const std::string& channel, const std::string& msg );
+    void SayPrivate( const std::string& nick, const std::string& msg );
    
     // TASServer specific functions
-    void ExecuteCommand( string in );
-    void ExecuteCommand( string cmd, string params, int replyid = -1 );
+    void ExecuteCommand( std::string in );
+    void ExecuteCommand( std::string cmd, std::string params, int replyid = -1 );
   
-    string GetWordParam( string& params );
-    string GetSentenceParam( string& params );
-    int GetIntParam( string& params );
+    std::string GetWordParam( std::string& params );
+    std::string GetSentenceParam( std::string& params );
+    int GetIntParam( std::string& params );
 
     void HandlePong( int replyid );
     void HandlePinglist();
@@ -94,10 +93,10 @@ class TASServer : public Server
   
     bool m_connected;
     bool m_online;
-    string m_buffer;
+    std::string m_buffer;
     time_t m_last_ping;
     int m_ping_id;
-    list<TASPingListItem> m_pinglist;
+    std::list<TASPingListItem> m_pinglist;
   
     void _ReciveAndExecute();
 };

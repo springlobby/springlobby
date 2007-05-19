@@ -13,19 +13,7 @@ AM_CFLAGS =\
 	 -g \
 	 $(WX_CPPFLAGS)
 
-bin_PROGRAMS = springlobby \
-	test 
-
-test_SOURCES = \
-	chatlist.cpp\
-	chatlist.h                    \
-	test.cpp                    \
-	settings.cpp                    \
-	settings.h                    
-
-test_LDADD = \
-	$(PACKAGE_LIBS) \
-	$(WX_LIBS) 
+bin_PROGRAMS = springlobby 
 
 springlobby_SOURCES = \
 	base64.cpp     \
@@ -48,7 +36,6 @@ springlobby_SOURCES = \
 	tasserver.h     \
 	mainchattab.cpp     \
 	mainchattab.h     \
-	settings.cpp     \
 	settings.h     \
 	springlobbyapp.cpp     \
 	springlobbyapp.h     \
@@ -64,7 +51,8 @@ springlobby_SOURCES = \
 	system.h     \
 	utils.h     \
 	nicklistctrl.cpp     \
-	nicklistctrl.h 
+	nicklistctrl.h     \
+	settings.cpp 
 
 springlobby_LDFLAGS = 
 

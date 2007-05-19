@@ -134,7 +134,7 @@ void TASServer::_ReciveAndExecute()
 }
 
 
-void TASServer::ExecuteCommand( string in )
+void TASServer::ExecuteCommand( std::string in )
 {
   string cmd;
   int pos;
@@ -168,7 +168,7 @@ void TASServer::ExecuteCommand( string in )
   ExecuteCommand( cmd, in );
 }
 
-void TASServer::ExecuteCommand( string cmd, string params, int replyid )
+void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid )
 {
   int pos, cpu, status, id, nat, port, maxplayers, rank, hash, specs;
   bool replay, haspass;
@@ -294,7 +294,7 @@ void TASServer::ExecuteCommand( string cmd, string params, int replyid )
   
 }
 
-string TASServer::GetWordParam( string& params )
+string TASServer::GetWordParam( std::string& params )
 {
   int pos;
   string param;
