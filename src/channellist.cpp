@@ -1,23 +1,11 @@
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
-
 //
 // Class: ChannelList
 //
+<<<<<<< .mine
+=======
+#include "channellist.h"
+>>>>>>> .r55
+
 #include "channellist.h"
 
 
@@ -39,13 +27,13 @@ void ChannelList::AddChannel( Channel* channel )
 }
 
 
-void ChannelList::RemoveChannel( const string name )
+void ChannelList::RemoveChannel( const std::string& name )
 {
   m_chans.erase( name );
 }
 
   
-Channel* ChannelList::GetChannel( const string name )
+Channel* ChannelList::GetChannel( const std::string& name )
 {
   if ( m_chans.count( name ) > 0 ) {
     channel_iter_t found = m_chans.find( name );
@@ -56,7 +44,7 @@ Channel* ChannelList::GetChannel( const string name )
 }
 
 
-bool ChannelList::ChannelExists( const string name )
+bool ChannelList::ChannelExists( const std::string& name )
 {
   return (m_chans.count( name ) > 0);
 }

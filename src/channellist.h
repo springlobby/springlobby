@@ -1,22 +1,7 @@
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
-
 //
 // Class: ChannelList
+//
+
 #ifndef _CHANNELLIST_H_
 #define _CHANNELLIST_H_
 
@@ -25,10 +10,26 @@
 #include <assert.h>
 #include "channel.h"
 
-using namespace std;
 
+<<<<<<< .mine
+//! @brief Used internally by ChannelList in its std::map<> lists.
+struct ChannelListMapCompare
+{
+  bool operator()(const std::string& s1, const std::string& s2) const
+  {
+    return s1.compare(s2) < 0;
+  }
+};
+
+
+=======
+>>>>>>> .r55
 //! @brief std::map<> list that stores Channel pointers.
+<<<<<<< .mine
+typedef std::map<std::string, Channel*, ChannelListMapCompare> channel_map_t;
+=======
 typedef map<string, Channel*> channel_map_t;
+>>>>>>> .r55
 //! @brief channel_map_t iterator.
 typedef channel_map_t::iterator channel_iter_t;
 
@@ -37,17 +38,17 @@ class ChannelList
 {
   public:
     ChannelList();
-    virtual ~ChannelList();
+    ~ChannelList();
   
     // ChannelList interface
   
-    virtual void AddChannel( Channel* channel );
-    virtual void RemoveChannel( const string name );
+    void AddChannel( Channel* channel );
+    void RemoveChannel( const std::string& name );
   
-    virtual Channel* GetChannel( const string name );
-    virtual bool ChannelExists( const string name );
+    Channel* GetChannel( const std::string& name );
+    bool ChannelExists( const std::string& name );
   
-    virtual int GetNumChannels();
+    int GetNumChannels();
   
   protected:
     // ChannelList variables
