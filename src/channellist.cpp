@@ -18,7 +18,7 @@
 //
 // Class: ChannelList
 //
-#include "/home/tc/Projects/springlobby/trunk/src/channellist.h"
+#include "channellist.h"
 
 
 ChannelList::ChannelList()

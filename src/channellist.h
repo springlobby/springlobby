@@ -27,19 +27,8 @@
 
 using namespace std;
 
-
-//! @brief Used internally by ChannelList in its std::map<> lists.
-struct ChannelListMapCompare
-{
-  bool operator()(const string s1, const string s2) const
-  {
-    return s1.compare(s2) < 0;
-  }
-};
-
-
 //! @brief std::map<> list that stores Channel pointers.
-typedef map<string, Channel*, ChannelListMapCompare> channel_map_t;
+typedef map<string, Channel*> channel_map_t;
 //! @brief channel_map_t iterator.
 typedef channel_map_t::iterator channel_iter_t;
 
