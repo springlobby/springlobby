@@ -8,7 +8,7 @@
 #include <wx/msgdlg.h>
 #include "socket.h"
 #include "server.h"
-#include "chatlist.h"
+
 
 typedef int Protocolerror;
 

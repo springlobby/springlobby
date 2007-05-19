@@ -8,7 +8,6 @@
 #include <wx/intl.h>
 #include "server.h"
 #include "socket.h"
-#include "chatlist.h"
 #include "channellist.h"
 
 
