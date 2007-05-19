@@ -36,6 +36,7 @@
 #include <string>
 
 #include "channel.h"
+#include "nicklistctrl.h"
 
 using namespace std;
 
@@ -93,7 +94,7 @@ class ChatPanel : public wxPanel
     wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
     wxTextCtrl* m_say_text;     //!< The say textcontrol.
   
-    wxListCtrl* m_nicklist;     //!< The nicklist.
+    NickListCtrl* m_nicklist;   //!< The nicklist.
     wxComboBox* m_nick_filter;  //!< The filter combo.
   
     wxButton* m_say_button;     //!< The say button.

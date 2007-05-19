@@ -16,55 +16,36 @@
 
 
 //
-// Class: UserList
-//
+// Class: NickListCtrl
+#ifndef _NICKLISTCTRL_H_
+#define _NICKLISTCTRL_H_
+
+#include <wx/listctrl.h>
+#include <wx/intl.h>
 #include "userlist.h"
-#include <iostream>
 
-using namespace std;
-
-UserList::UserList()
+class NickListCtrl : public wxListCtrl
 {
-}
+  public:
+    NickListCtrl( wxWindow* parent );
+    virtual ~NickListCtrl();
+  
+    // NickListCtrl interface
+  
+    virtual wxString OnGetItemText(long item, long column) const;
+    virtual int OnGetItemColumnImage(long item, long column) const;
+    virtual wxListItemAttr* OnGetItemAttr(long item) const;
+  
+    void SetUserList( UserList* users );
+    UserList* GetUserList();
+  
+  protected:
+    // NickListCtrl variables
+  
+    UserList* m_users;
+  
+};
 
 
-UserList::~UserList()
-{
-}
-
-
-void UserList::AddUser( User* user )
-{
-  assert( user != NULL );
-  m_users[user->GetNick()] = user;
-}
-
-
-void UserList::RemoveUser( const string nick )
-{
-  m_users.erase( nick );
-}
-
- 
-User* UserList::GetUser( const string nick )
-{
-  if ( m_users.count( nick ) > 0 ) {
-    user_iter_t found = m_users.find( nick );
-    return (*found).second;
-  } else {
-    return NULL;
-  }
-}
-
-
-bool UserList::UserExists( const string nick )
-{
-  return (m_users.count( nick ) > 0);
-}
-
-
-int UserList::GetNumUsers()
-{
-  return m_users.size();
-}
+#endif  //_NICKLISTCTRL_H_
 

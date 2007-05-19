@@ -55,7 +55,7 @@ am_springlobby_OBJECTS = base64.$(OBJEXT) md5.$(OBJEXT) \
 	server.$(OBJEXT) tasserver.$(OBJEXT) mainchattab.$(OBJEXT) \
 	settings.$(OBJEXT) springlobbyapp.$(OBJEXT) user.$(OBJEXT) \
 	userlist.$(OBJEXT) channel.$(OBJEXT) channellist.$(OBJEXT) \
-	ui.$(OBJEXT) system.$(OBJEXT)
+	ui.$(OBJEXT) system.$(OBJEXT) nicklistctrl.$(OBJEXT)
 springlobby_OBJECTS = $(am_springlobby_OBJECTS)
 am__DEPENDENCIES_1 =
 springlobby_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
@@ -225,7 +225,7 @@ test_SOURCES = \
 	chatlist.h                    \
 	test.cpp                    \
 	settings.cpp                    \
-	settings.h 
+	settings.h                    
 
 test_LDADD = \
 	$(PACKAGE_LIBS) \
@@ -270,7 +270,9 @@ springlobby_SOURCES = \
 	ui.h     \
 	system.cpp     \
 	system.h     \
-	utils.h 
+	utils.h     \
+	nicklistctrl.cpp     \
+	nicklistctrl.h 
 
 springlobby_LDFLAGS = 
 springlobby_LDADD = \
@@ -360,6 +362,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mainchattab.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mainwindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nicklistctrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/server.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/serverevents.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/settings.Po@am__quote@

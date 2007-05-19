@@ -16,55 +16,54 @@
 
 
 //
-// Class: UserList
+// Class: NickListCtrl
 //
-#include "userlist.h"
-#include <iostream>
+#include "nicklistctrl.h"
 
-using namespace std;
 
-UserList::UserList()
+NickListCtrl::NickListCtrl( wxWindow* parent )
+: wxListCtrl( parent, -1, wxDefaultPosition, wxDefaultSize, 
+             wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER | wxLC_SINGLE_SEL )
 {
+  wxListItem col;
+  col.SetText( _("Test") );
+  InsertColumn( 0, col );
+  SetColumnWidth( 0, wxLIST_AUTOSIZE );
 }
 
 
-UserList::~UserList()
+NickListCtrl::~NickListCtrl()
 {
+  
 }
 
 
-void UserList::AddUser( User* user )
+wxString NickListCtrl::OnGetItemText(long item, long column) const
 {
-  assert( user != NULL );
-  m_users[user->GetNick()] = user;
+  return _("test");
 }
 
 
-void UserList::RemoveUser( const string nick )
+int NickListCtrl::OnGetItemColumnImage(long item, long column) const
 {
-  m_users.erase( nick );
-}
-
- 
-User* UserList::GetUser( const string nick )
-{
-  if ( m_users.count( nick ) > 0 ) {
-    user_iter_t found = m_users.find( nick );
-    return (*found).second;
-  } else {
-    return NULL;
-  }
+  return -1;
 }
 
 
-bool UserList::UserExists( const string nick )
+wxListItemAttr* NickListCtrl::OnGetItemAttr(long item) const
 {
-  return (m_users.count( nick ) > 0);
+  return NULL;
 }
 
 
-int UserList::GetNumUsers()
+void NickListCtrl::SetUserList( UserList* users )
 {
-  return m_users.size();
+  m_users = users;
+}
+
+
+UserList* NickListCtrl::GetUserList()
+{
+  return m_users;
 }
 

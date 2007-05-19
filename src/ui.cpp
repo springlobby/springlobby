@@ -158,7 +158,7 @@ void Ui::OnLeaveChannel( Channel& channel )
 
 void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 {
-  cout << "** Ui::OnUserJoinedChannel()" << endl;
+  //cout << "** Ui::OnUserJoinedChannel()" << endl;
   UiChannelData* ud = (UiChannelData*)chan.GetUserData();
   assert( ud != NULL );
   if ( ud->panel == NULL ) {

@@ -61,8 +61,8 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
     
     m_nick_sizer = new wxBoxSizer( wxVERTICAL );
     
-    m_nicklist = new wxListCtrl( m_nick_panel, -1, wxDefaultPosition, wxDefaultSize, 
-                                wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER | wxLC_SINGLE_SEL );
+    m_nicklist = new NickListCtrl( m_nick_panel );
+    m_nicklist->SetItemCount( 10 );
     
     m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY );
     

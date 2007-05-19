@@ -23,13 +23,16 @@
 
 Channel::Channel()
 {
-
+  m_topic = "";
+  m_topic_nick = "";
+  m_name = "";
+  m_userdata = NULL;
 }
 
 
 Channel::~Channel()
 {
-    // TODO: put destructor code here
+
 }
 
 
@@ -82,7 +85,6 @@ void Channel::Leave()
   
 void Channel::Joined( User& who )
 {
-  cout << "** Channel::Joined(): " << GetNumUsers() << endl;
   assert( GetUser( who.GetNick() ) == NULL );
   AddUser( &who );
   ui().OnUserJoinedChannel( *this, who );
@@ -120,62 +122,6 @@ string Channel::GetTopic()
   return m_topic;
 }
 
-
-/*
-void Channel::SetOnSaidCallback( channel_msg_callback callback )
-{
-}
-
-
-channel_msg_callback Channel::GetOnSaidCallback()
-{
-}
-
-
-
-void Channel::SetOnDidActionCallback( channel_msg_callback callback )
-{
-}
-
-
-channel_msg_callback Channel::GetOnDidActionCallback()
-{
-}
-
-
-
-void Channel::SetOnLeaveCallback( channel_cmd_callback callback )
-{
-}
-
-
-channel_cmd_callback Channel::GetOnLeaveCallback()
-{
-}
-
-
-
-void Channel::SetOnLeftCallback( channel_whocmd_callback callback )
-{
-}
-
-
-channel_whocmd_callback Channel::GetOnLeftCallback()
-{
-}
-
-
-
-void Channel::SetOnJoinedCallback( channel_whocmd_callback callback )
-{
-}
-
-
-channel_whocmd_callback Channel::GetOnJoinedCallback()
-{
-}
-
-*/
 
 void Channel::AddUser( User* user )
 {
