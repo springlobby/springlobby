@@ -57,7 +57,6 @@ springlobby_SOURCES = \
 	userlist.h     \
 	channel.cpp     \
 	channel.h     \
-	channellist.cpp     \
 	channellist.h     \
 	ui.cpp     \
 	ui.h     \
