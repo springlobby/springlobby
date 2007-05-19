@@ -1,10 +1,6 @@
 //
 // Class: ChannelList
 //
-<<<<<<< .mine
-=======
-#include "channellist.h"
->>>>>>> .r55
 
 #include "channellist.h"
 

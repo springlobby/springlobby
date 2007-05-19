@@ -11,7 +11,6 @@
 #include "channel.h"
 
 
-<<<<<<< .mine
 //! @brief Used internally by ChannelList in its std::map<> lists.
 struct ChannelListMapCompare
 {
@@ -22,14 +21,8 @@ struct ChannelListMapCompare
 };
 
 
-=======
->>>>>>> .r55
 //! @brief std::map<> list that stores Channel pointers.
-<<<<<<< .mine
 typedef std::map<std::string, Channel*, ChannelListMapCompare> channel_map_t;
-=======
-typedef map<string, Channel*> channel_map_t;
->>>>>>> .r55
 //! @brief channel_map_t iterator.
 typedef channel_map_t::iterator channel_iter_t;
 

@@ -48,6 +48,7 @@ void Ui::Connect()
   ShowConnectWindow();
 }
 
+
 //! @brief Quits the entire application
 void Ui::Quit()
 {
@@ -55,6 +56,11 @@ void Ui::Quit()
   m_main_win->Close();
 }
 
+
+//! @brief Display a dialog asking a question with OK and Canel buttons
+//!
+//! @return true if OK button was pressed
+//! @note this does not return until the user pressed any of the buttons or closed the dialog.
 bool Ui::Ask( const wxString& heading, const wxString& question )
 {
   wxMessageDialog ask_dlg(NULL, question, heading, wxOK | wxCANCEL );
