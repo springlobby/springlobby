@@ -1,37 +1,9 @@
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
-
 //
 // Class: Ui
 //
+
 #include "ui.h"
 #include "utils.h"
-
-Ui::Ui()
-{
-  cout << "** Ui::Ui()" << endl;
-  m_main_win = new MainWindow();
-}
-
-
-Ui::~Ui()
-{
-  cout << "** Ui::~Ui()" << endl;
-}
 
 
 Ui& ui()
@@ -83,7 +55,7 @@ void Ui::Quit()
   m_main_win->Close();
 }
 
-bool Ui::Ask( wxString heading, wxString question )
+bool Ui::Ask( const wxString& heading, const wxString& question )
 {
   wxMessageDialog ask_dlg(NULL, question, heading, wxOK | wxCANCEL );
   return ( ask_dlg.ShowModal() == wxID_OK );
@@ -93,7 +65,7 @@ bool Ui::Ask( wxString heading, wxString question )
 //! @brief Called when connected to a server
 //!
 //! @todo Display in servertab
-void Ui::OnConnected( string server_name, string server_ver, bool supported )
+void Ui::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported )
 {
   
 }
@@ -104,7 +76,7 @@ void Ui::OnConnected( string server_name, string server_ver, bool supported )
 //! @todo Check if a pannel allready exists for this channel
 void Ui::OnJoinedChannelSuccessful( Channel& chan )
 {
-  cout << "** Ui::OnJoinedChannelSuccessful()" << endl;
+  std::cout << "** Ui::OnJoinedChannelSuccessful()" << std::endl;
   UiChannelData* chandata = new UiChannelData();
   chandata->panel = NULL;
   
@@ -114,26 +86,26 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
 
 
 //! @brief Called when something is said in a channel
-void Ui::OnChannelSaid( Channel& channel, User& user, const string& message )
+void Ui::OnChannelSaid( Channel& channel, User& user, const std::string& message )
 {
-  cout << "** Ui::OnChannelSaid()" << endl;
+  std::cout << "** Ui::OnChannelSaid()" << std::endl;
   UiChannelData* ud = (UiChannelData*)channel.GetUserData();
   assert( ud != NULL );
   if ( ud->panel == NULL ) {
-    cout << "   !! ud->panel NULL" << endl;
+    std::cout << "   !! ud->panel NULL" << std::endl;
     return;
   }
   ud->panel->Said( WX_STRING(user.GetNick()), WX_STRING( message ) );
 }
 
 
-void Ui::OnChannelDidAction( Channel& channel , User& user, const string& action )
+void Ui::OnChannelDidAction( Channel& channel , User& user, const std::string& action )
 {
-  cout << "** Ui::OnChannelDidAction()" << endl;
+  std::cout << "** Ui::OnChannelDidAction()" << std::endl;
   UiChannelData* ud = (UiChannelData*)channel.GetUserData();
   assert( ud != NULL );
   if ( ud->panel == NULL ) {
-    cout << "   !! ud->panel NULL" << endl;
+    std::cout << "   !! ud->panel NULL" << std::endl;
     return;
   }
   ud->panel->DidAction( WX_STRING(user.GetNick()), WX_STRING( action ) );  
@@ -158,37 +130,37 @@ void Ui::OnLeaveChannel( Channel& channel )
 
 void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 {
-  //cout << "** Ui::OnUserJoinedChannel()" << endl;
+  //std::cout << "** Ui::OnUserJoinedChannel()" << std::endl;
   UiChannelData* ud = (UiChannelData*)chan.GetUserData();
   assert( ud != NULL );
   if ( ud->panel == NULL ) {
-    cout << "   !! ud->panel NULL" << endl;
+    std::cout << "   !! ud->panel NULL" << std::endl;
     return;
   }
   ud->panel->Joined( WX_STRING(user.GetNick()) );  
 }
 
 
-void Ui::OnUserLeftChannel( Channel& chan, User& user, const string& reason )
+void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason )
 {
-  cout << "** Ui::OnUserLeftChannel()" << endl;
+  std::cout << "** Ui::OnUserLeftChannel()" << std::endl;
   UiChannelData* ud = (UiChannelData*)chan.GetUserData();
   assert( ud != NULL );
   if ( ud->panel == NULL ) {
-    cout << "   !! ud->panel NULL" << endl;
+    std::cout << "   !! ud->panel NULL" << std::endl;
     return;
   }
   ud->panel->Parted( WX_STRING(user.GetNick()), WX_STRING(reason) );  
 }
 
 
-void Ui::OnChannelTopic( Channel& channel , User& user, const string& topic )
+void Ui::OnChannelTopic( Channel& channel , User& user, const std::string& topic )
 {
-  cout << "** Ui::OnChannelTopic()" << endl;
+  std::cout << "** Ui::OnChannelTopic()" << std::endl;
   UiChannelData* ud = (UiChannelData*)channel.GetUserData();
   assert( ud != NULL );
   if ( ud->panel == NULL ) {
-    cout << "   !! ud->panel NULL" << endl;
+    std::cout << "   !! ud->panel NULL" << std::endl;
     return;
   }
   ud->panel->SetTopic( WX_STRING(user.GetNick()), WX_STRING(topic) );   

@@ -1,23 +1,5 @@
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
-
 //
-// Class: Uicontrol
-// Created on: Fri Apr 27 16:29:51 2007
+// Class: ServerEvents
 //
 
 #ifndef _UICONTROL_H_
@@ -35,43 +17,43 @@ class ServerEvents
 {
   public:
     ServerEvents();
-    virtual ~ServerEvents();
+    ~ServerEvents();
   
   // Uicontrol interface
   
-    virtual void OnConnected( string server_name, string server_ver, bool supported );
-    virtual void OnDisconnected();
+    void OnConnected( string server_name, string server_ver, bool supported );
+    void OnDisconnected();
       
-    virtual void OnLogin();
-    virtual void OnLoginInfoComplete();
-    virtual void OnLogout();
+    void OnLogin();
+    void OnLoginInfoComplete();
+    void OnLogout();
       
-    virtual void OnUnknownCommand( string command, string params );
-    virtual void OnSocketError( const Sockerror error );
-    virtual void OnProtocolError( const Protocolerror error );
-    virtual void OnMotd( string msg );
-    virtual void OnPong( int ping_time );
+    void OnUnknownCommand( string command, string params );
+    void OnSocketError( const Sockerror error );
+    void OnProtocolError( const Protocolerror error );
+    void OnMotd( string msg );
+    void OnPong( int ping_time );
       
-    virtual void OnNewUser( string nick, string conutry, int cpu );
-    virtual void OnUserStatus( string nick, UserStatus status );
-    virtual void OnUserQuit( string nick );
+    void OnNewUser( string nick, string conutry, int cpu );
+    void OnUserStatus( string nick, UserStatus status );
+    void OnUserQuit( string nick );
     
-    virtual void OnBattleOpened( int id, bool replay, int nat, string nick, 
+    void OnBattleOpened( int id, bool replay, int nat, string nick, 
                                    string host, int port, int maxplayers, 
                                    bool haspass, int rank, int hash, string map, 
                                    string title, string mod );
 
-    virtual void OnUserJoinedBattle( int battleid, string nick );
-    virtual void OnUserLeftBattle( int battleid, string nick );
-    virtual void OnBattleInfoUpdated( int battleid, int spectators, bool locked, int maphash, string map );
-    virtual void OnBattleClosed( int battleid );
+    void OnUserJoinedBattle( int battleid, string nick );
+    void OnUserLeftBattle( int battleid, string nick );
+    void OnBattleInfoUpdated( int battleid, int spectators, bool locked, int maphash, string map );
+    void OnBattleClosed( int battleid );
     
-    virtual void OnJoinChannelResult( bool success, string channel, string reason );
-    virtual void OnChannelSaid( string channel, string who, string message );
-    virtual void OnChannelJoin( string channel, string who );
-    virtual void OnChannelPart( string channel, string who, string message );
-    virtual void OnChannelTopic( string channel, string who, string message, int when );
-    virtual void OnChannelAction( string channel, string who, string action );
+    void OnJoinChannelResult( bool success, string channel, string reason );
+    void OnChannelSaid( string channel, string who, string message );
+    void OnChannelJoin( string channel, string who );
+    void OnChannelPart( string channel, string who, string message );
+    void OnChannelTopic( string channel, string who, string message, int when );
+    void OnChannelAction( string channel, string who, string action );
   protected:
   // Uicontrol variables
     

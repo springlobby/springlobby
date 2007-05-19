@@ -38,8 +38,6 @@ springlobby_SOURCES = \
 	md5.h     \
 	serverevents.h     \
 	socket.h     \
-	chatlist.cpp     \
-	chatlist.h     \
 	chatpanel.cpp     \
 	chatpanel.h     \
 	connectwindow.cpp     \
@@ -56,7 +54,6 @@ springlobby_SOURCES = \
 	springlobbyapp.h     \
 	user.cpp     \
 	user.h     \
-	userlist.cpp     \
 	userlist.h     \
 	channel.cpp     \
 	channel.h     \

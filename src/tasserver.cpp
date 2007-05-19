@@ -1,24 +1,5 @@
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
-
 //
 // Class: TASServer
-//
-// Created on: Fri Apr 27 19:25:15 2007
 //
 
 #include <iostream>
@@ -29,22 +10,6 @@
 #include "base64.h"
 #include "socket.h"
 #include "serverevents.h"
-
-TASServer::TASServer() : Server()
-{
-  m_connected = false;
-  m_online = false;
-  m_buffer = "";
-  m_last_ping = 0;
-  m_ping_id = 1000;
-  m_ser_ver = SER_VER_UNKNOWN;
-}
-
-
-TASServer::~TASServer()
-{
-
-}
 
 
 void TASServer::SetSocket( Socket* sock )
@@ -60,7 +25,7 @@ void TASServer::SetSocket( Socket* sock )
   
 }
 
-void TASServer::Connect( string addr, const int port )
+void TASServer::Connect( const string& addr, const int port )
 {
   assert( m_sock != NULL );
   m_sock->Connect( addr, port );
@@ -446,7 +411,7 @@ void TASServer::HandlePinglist()
 }
 
 
-void TASServer::JoinChannel( string channel, string key )
+void TASServer::JoinChannel( const string& channel, const string& key )
 {
   //JOIN channame [key]
   cout << "** TASServer::JoinChannel()" << endl;
@@ -462,7 +427,7 @@ void TASServer::JoinChannel( string channel, string key )
 }
 
 
-void TASServer::PartChannel( string channel )
+void TASServer::PartChannel( const string& channel )
 {
   //LEAVE channame
   cout << "** TASServer::PartChannel()" << endl;
@@ -474,7 +439,7 @@ void TASServer::PartChannel( string channel )
 }
  
 
-void TASServer::SayChannel( string channel, string msg )
+void TASServer::SayChannel( const string& channel, const string& msg )
 {
   //SAY channame {message}
   cout << "** TASServer::SayChannel()" << endl;
@@ -485,7 +450,7 @@ void TASServer::SayChannel( string channel, string msg )
 }
 
 
-void TASServer::SayPrivate( string nick, string msg )
+void TASServer::SayPrivate( const string& nick, const string& msg )
 {
   //SAYPRIVATE username {message}
   cout << "** TASServer::SayPrivate()" << endl;

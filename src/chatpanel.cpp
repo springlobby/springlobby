@@ -135,7 +135,7 @@ void ChatPanel::OnSay( wxCommandEvent& event )
 //! @param who nick of the person who said something.
 //! @param message the message to be outputted.
 //! @todo Fix nicer format of chat messages.
-void ChatPanel::Said( wxString who, wxString message )
+void ChatPanel::Said( const wxString& who, const wxString& message )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
   LogTime();
@@ -143,7 +143,7 @@ void ChatPanel::Said( wxString who, wxString message )
 }
 
 
-void ChatPanel::DidAction( wxString who, wxString action )
+void ChatPanel::DidAction( const wxString& who, const wxString& action )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
   LogTime();
@@ -154,7 +154,7 @@ void ChatPanel::DidAction( wxString who, wxString action )
 //! @brief Output motd sent by server
 //!
 //! @param message The MOTD message to output
-void ChatPanel::Motd( wxString message )
+void ChatPanel::Motd( const wxString& message )
 {
   cout << "++ ChatPanel::Motd()" << endl;
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLUE));
@@ -164,27 +164,27 @@ void ChatPanel::Motd( wxString message )
 }
 
 
-void ChatPanel::UnknownCommand( wxString command, wxString params )
+void ChatPanel::UnknownCommand( const wxString& command, const wxString& params )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxRED));
   m_chatlog_text->AppendText( _T(" !! Command: \"") + command + _T("\" params: \"") + params + _("\".\n") );
 }
 
 
-void ChatPanel::Joined( wxString who )
+void ChatPanel::Joined( const wxString& who )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxGREEN));
   m_chatlog_text->AppendText( _(" ** ")+ who + _T(" joined the channel.\n") );
 }
 
 
-void ChatPanel::Parted( wxString who, wxString message )
+void ChatPanel::Parted( const wxString& who, const wxString& message )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxRED));
   m_chatlog_text->AppendText( _(" ** ")+ who + _T(" left the channel ( ") + message + _(" ).\n") );
 }
 
-void ChatPanel::SetTopic( wxString who, wxString message )
+void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLUE));
   m_chatlog_text->AppendText( _(" ** Channel topic: ")+ message + _T("\n * Set by ") + who + _(".\n") );  
@@ -211,15 +211,15 @@ void ChatPanel::SetChannel( Channel* channel )
   }
 }
 
-
+/*
 //! @brief Get Channel object
 //!
 //! @return Name of the chat/channel.
 Channel* ChatPanel::GetChannel()
 {
-  return m_channel;
+  
 }
-
+*/
 
 //! @brief Check if ChatPanel controls a server output window.
 //!
@@ -230,7 +230,7 @@ bool ChatPanel::IsServerPanel()
 }
 
 
-void ChatPanel::Say( wxString message )
+void ChatPanel::Say( const wxString& message )
 {
   cout << "** ChatPanel::Say()" << endl;
   assert( m_channel != NULL );

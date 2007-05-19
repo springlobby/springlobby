@@ -1,23 +1,5 @@
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
-
 //
 // Class: Server
-// Created on: Fri Apr 27 16:23:28 2007
 //
 
 #ifndef _SERVER_H_
@@ -28,13 +10,11 @@
 
 #define PING_TIMEOUT 30
 
-using namespace std;
-
 class ServerEvents;
 class Socket;
 
 
-typedef int Servererror;
+typedef int ServerError;
 
 #define PE_NONE 0
 
@@ -43,17 +23,17 @@ typedef int Servererror;
 class Server
 {
   public:
-    Server();
-    virtual ~Server();
+    Server(): m_sock(NULL), m_ui(NULL), m_keepalive(15) { }
+    ~Server() {}
   
     // Server interface
   
-    virtual void SetSocket( Socket* sock );
-    virtual Socket* GetSocket( );
-    virtual void SetServerEvents( ServerEvents* ui );
-    virtual ServerEvents* GetServerEvents( );
+    virtual void SetSocket( Socket* sock ) { assert( (!IsConnected()) || (sock == NULL) ); m_sock = sock; }
+    virtual Socket* GetSocket( ) { return m_sock; }
+    virtual void SetServerEvents( ServerEvents* ui ) { m_ui = ui; }
+    virtual ServerEvents* GetServerEvents( ) { return m_ui; }
   
-    virtual void Connect( string addr, const int port ) = 0;
+    virtual void Connect( const std::string& addr, const int port ) = 0;
     virtual void Disconnect() = 0;
     virtual bool IsConnected() = 0;
   
@@ -63,32 +43,28 @@ class Server
   
     virtual void Update() = 0;
   
-    virtual void JoinChannel( string channel, string key ) = 0;
-    virtual void PartChannel( string channel ) = 0;
+    virtual void JoinChannel( const std::string& channel, const std::string& key ) = 0;
+    virtual void PartChannel( const std::string& channel ) = 0;
   
-    virtual void SayChannel( string channel, string msg ) = 0;
-    virtual void SayPrivate( string nick, string msg ) = 0;
+    virtual void SayChannel( const std::string& channel, const std::string& msg ) = 0;
+    virtual void SayPrivate( const std::string& nick, const std::string& msg ) = 0;
   
     virtual void SetKeepaliveInterval( int seconds ) { m_keepalive = seconds; }
     virtual int GetKeepaliveInterval() { return m_keepalive; }
   
-    virtual void SetUsername( const string username );
-    virtual void SetPassword( const string password );
+    virtual void SetUsername( const std::string& username ) { m_user = username; }
+    virtual void SetPassword( const std::string& password ) { m_pass = password; }
     
     virtual void Ping() = 0;
-    /*
-    virtual void on_connected( Socket* sock ) = 0;
-    virtual void on_disconnected( Socket* sock ) = 0;
-    virtual void on_data_recived( Socket* sock ) = 0;
-    */
+
   protected:
     // Server variables
   
     Socket* m_sock;
     ServerEvents* m_ui;
     int m_keepalive;
-    string m_user;
-    string m_pass;
+    std::string m_user;
+    std::string m_pass;
 
 };
 

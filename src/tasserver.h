@@ -1,23 +1,5 @@
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
-
 //
 // Class: TASServer
-// Created on: Fri Apr 27 19:25:15 2007
 //
 
 #ifndef _TASSERVER_H_
@@ -61,30 +43,30 @@ union UTASClientstatus {
 class TASServer : public Server
 {
   public:
-    TASServer();
-    virtual ~TASServer();
+    TASServer(): m_connected(false), m_online(false), m_buffer(""), m_last_ping(0), m_ping_id(1000), m_ser_ver(SER_VER_UNKNOWN) {}
+    ~TASServer() {}
   
   // TASServer interface
   
     // Overloaded functions from Server
-    virtual void SetSocket( Socket* sock );
-    virtual void Connect( string addr, const int port );
-    virtual void Disconnect();
-    virtual bool IsConnected();
+    void SetSocket( Socket* sock );
+    void Connect( const string& addr, const int port );
+    void Disconnect();
+    bool IsConnected();
   
-    virtual void Login();
-    virtual void Logout();
-    virtual bool IsOnline();
+    void Login();
+    void Logout();
+    bool IsOnline();
   
-    virtual void Update();
+    void Update();
   
-    virtual void Ping();
+    void Ping();
 
-    virtual void JoinChannel( string channel, string key );
-    virtual void PartChannel( string channel );
+    void JoinChannel( const string& channel, const string& key );
+    void PartChannel( const string& channel );
   
-    virtual void SayChannel( string channel, string msg );
-    virtual void SayPrivate( string nick, string msg );
+    void SayChannel( const string& channel, const string& msg );
+    void SayPrivate( const string& nick, const string& msg );
    
     // TASServer specific functions
     void ExecuteCommand( string in );

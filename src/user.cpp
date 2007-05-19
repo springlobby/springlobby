@@ -1,26 +1,11 @@
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
-
 //
 // Class: User
 //
+
 #include "user.h"
 
-User::User( const string& nick, const string& country, const int& cpu, const UserStatus& status )
+
+User::User( const std::string& nick, const std::string& country, const int& cpu, const UserStatus& status )
 {
   m_nick = nick;
   m_country = country;
@@ -48,22 +33,22 @@ User::~User()
 }
 
 
-string User::GetNick() const
+std::string User::GetNick() const
 {
   return m_nick;
 }
 
-void User::SetNick( const string& nick )
+void User::SetNick( const std::string& nick )
 {
   m_nick = nick;
 }
   
-string User::GetCountry() const
+std::string User::GetCountry() const
 {
   return m_country;
 }
 
-void User::SetCountry( const string& country )
+void User::SetCountry( const std::string& country )
 {
   m_country = country;
 }

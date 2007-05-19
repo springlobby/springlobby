@@ -18,7 +18,7 @@
 //
 // Class: UserList
 //
-#include "userlist.h"
+/*#include "userlist.h"
 #include <iostream>
 
 using namespace std;
@@ -67,4 +67,4 @@ int UserList::GetNumUsers()
 {
   return m_users.size();
 }
-
+*/

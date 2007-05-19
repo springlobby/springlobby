@@ -38,9 +38,9 @@
 #include "channel.h"
 #include "nicklistctrl.h"
 
-using namespace std;
 
 #define SERVER_CHAT_NAME "$server"
+
 
 /*! @brief wxPanel that contains a chat.
  *
@@ -54,26 +54,26 @@ class ChatPanel : public wxPanel
 {
   public:
     ChatPanel( wxWindow* parent, bool show_nick_list );
-    virtual ~ChatPanel();
+    ~ChatPanel();
   
     // ChatPanel interface
   
-    void Said( wxString who, wxString message );
-    void DidAction( wxString who, wxString action );
-    void Motd( wxString message );
+    void Said( const wxString& who, const wxString& message );
+    void DidAction( const wxString& who, const wxString& action );
+    void Motd( const wxString& message );
   
-    void UnknownCommand( wxString command, wxString params );
+    void UnknownCommand( const wxString& command, const wxString& params );
   
-    void Joined( wxString who );
-    void Parted( wxString who, wxString message );
-    void SetTopic( wxString who, wxString message );
+    void Joined( const wxString& who );
+    void Parted( const wxString& who, const wxString& message );
+    void SetTopic( const wxString& who, const wxString& message );
   
     void SetChannel( Channel* channel );
-    Channel* GetChannel();
+    Channel* GetChannel() { return m_channel; }
   
     bool IsServerPanel();
     
-    void Say( wxString message );
+    void Say( const wxString& message );
     void Part();
   
     void OnSay( wxCommandEvent& event );
