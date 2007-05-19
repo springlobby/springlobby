@@ -26,9 +26,9 @@ ServerEvents& se()
 
 
 
-void ServerEvents::OnConnected( string server_name, string server_ver, bool supported )
+void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported )
 {
-  cout << "** ServerEvents::OnConnected(): Server: " << server_ver.c_str() << endl;
+  std::cout << "** ServerEvents::OnConnected(): Server: " << server_ver.c_str() << std::endl;
   assert( sys().serv() != NULL );
   ui().OnConnected( server_name, server_ver, supported );
   sys().serv()->Login();
@@ -36,45 +36,45 @@ void ServerEvents::OnConnected( string server_name, string server_ver, bool supp
 
 void ServerEvents::OnDisconnected()
 {
-  cout << "** ServerEvents::OnDisconnected()" << endl;
+  std::cout << "** ServerEvents::OnDisconnected()" << std::endl;
 }
 
 void ServerEvents::OnLogin()
 {
-  cout << "** ServerEvents::OnLogin()" << endl;
+  std::cout << "** ServerEvents::OnLogin()" << std::endl;
 }
 
 void ServerEvents::OnLoginInfoComplete()
 {
-  cout << "** ServerEvents::OnLoginInfoComplete()" << endl;
+  std::cout << "** ServerEvents::OnLoginInfoComplete()" << std::endl;
   assert( sys().serv() != NULL );
   sys().serv()->JoinChannel( "test", "" );
 }
 
 void ServerEvents::OnLogout()
 {
-  cout << "** ServerEvents::OnLogout()" << endl;
+  std::cout << "** ServerEvents::OnLogout()" << std::endl;
 }
       
-void ServerEvents::OnUnknownCommand( string command, string params )
+void ServerEvents::OnUnknownCommand( const std::string& command, const std::string& params )
 {
-  cout << "** ServerEvents::OnUnknownCommand()" << endl;
+  std::cout << "** ServerEvents::OnUnknownCommand()" << std::endl;
   servwin().UnknownCommand( WX_STRING(command), WX_STRING(params) );
 }
 
 void ServerEvents::OnSocketError( const Sockerror error )
 {
-  cout << "** ServerEvents::OnSocketError()" << endl;
+  std::cout << "** ServerEvents::OnSocketError()" << std::endl;
 }
 
 void ServerEvents::OnProtocolError( const Protocolerror error )
 {
-  cout << "** ServerEvents::OnProtocolError()" << endl;
+  std::cout << "** ServerEvents::OnProtocolError()" << std::endl;
 }
 
-void ServerEvents::OnMotd( string msg )
+void ServerEvents::OnMotd( const std::string& msg )
 {
-  cout << "** ServerEvents::OnMotd()" << endl;
+  std::cout << "** ServerEvents::OnMotd()" << std::endl;
   servwin().Motd( WX_STRING(msg) );
 }
 
@@ -83,7 +83,7 @@ void ServerEvents::OnPong( int ping_time )
   //cout << "** ServerEvents::OnPong()" << endl;
 }
       
-void ServerEvents::OnNewUser( string nick, string country, int cpu )
+void ServerEvents::OnNewUser( const std::string& nick, const std::string& country, int cpu )
 {
   //cout << "** ServerEvents::OnNewUser()" << endl;
   User* user = sys().GetUser( nick );
@@ -98,7 +98,7 @@ void ServerEvents::OnNewUser( string nick, string country, int cpu )
   ui().OnUserOnline( *user );
 }
 
-void ServerEvents::OnUserStatus( string nick, UserStatus status )
+void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
 {
   //cout << "** ServerEvents::OnUserStatus()" << endl;
   User* user = sys().GetUser( nick );
@@ -109,9 +109,9 @@ void ServerEvents::OnUserStatus( string nick, UserStatus status )
   ui().OnUserStatusChanged( *user );
 }
 
-void ServerEvents::OnUserQuit( string nick )
+void ServerEvents::OnUserQuit( const std::string& nick )
 {
-  cout << "** ServerEvents::OnUserQuit()" << endl;
+  std::cout << "** ServerEvents::OnUserQuit()" << std::endl;
   User* user = sys().GetUser( nick );
   assert( user != NULL );
   
@@ -121,37 +121,37 @@ void ServerEvents::OnUserQuit( string nick )
   delete user;
 }
       
-void ServerEvents::OnBattleOpened( int id, bool replay, int nat, string nick, 
-                       string host, int port, int maxplayers, 
-                       bool haspass, int rank, int hash, string map, 
-                       string title, string mod )
+void ServerEvents::OnBattleOpened( int id, bool replay, int nat, const std::string& nick, 
+                       const std::string& host, int port, int maxplayers, 
+                       bool haspass, int rank, int hash, const std::string& map, 
+                       const std::string& title, const std::string& mod )
 {
-  cout << "** ServerEvents::OnBattleOpened()" << endl;
+  std::cout << "** ServerEvents::OnBattleOpened()" << std::endl;
 }
 
-void ServerEvents::OnUserJoinedBattle( int battleid, string nick )
+void ServerEvents::OnUserJoinedBattle( int battleid, const std::string& nick )
 {
-  cout << "** ServerEvents::OnUserJoinedBattle()" << endl;
+  std::cout << "** ServerEvents::OnUserJoinedBattle()" << std::endl;
 }
 
-void ServerEvents::OnUserLeftBattle( int battleid, string nick )
+void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
 {
-  cout << "** ServerEvents::OnUserLeftBattle()" << endl;
+  std::cout << "** ServerEvents::OnUserLeftBattle()" << std::endl;
 }
  
-void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, int maphash, string map )
+void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, int maphash, const std::string& map )
 {
   //cout << "** ServerEvents::OnBattleInfoUpdated()" << endl;
 }
 
 void ServerEvents::OnBattleClosed( int battleid )
 {
-  cout << "** ServerEvents::OnBattleClosed()" << endl;
+  std::cout << "** ServerEvents::OnBattleClosed()" << std::endl;
 }
 
-void ServerEvents::OnJoinChannelResult( bool success, string channel, string reason )
+void ServerEvents::OnJoinChannelResult( bool success, const std::string& channel, const std::string& reason )
 {
-  cout << "** ServerEvents::OnJoinChannelResult()" << endl;
+  std::cout << "** ServerEvents::OnJoinChannelResult()" << std::endl;
   if ( success ) {
     Channel* chan = new Channel();
     chan->SetName( channel );
@@ -167,7 +167,7 @@ void ServerEvents::OnJoinChannelResult( bool success, string channel, string rea
   }
 }
 
-void ServerEvents::OnChannelSaid( string channel, string who, string message )
+void ServerEvents::OnChannelSaid( const std::string& channel, const std::string& who, const std::string& message )
 {
   Channel* chan = sys().GetChannel( channel );
   User* user = sys().GetUser( who );
@@ -177,7 +177,7 @@ void ServerEvents::OnChannelSaid( string channel, string who, string message )
   chan->Said( *user, message );
 }
 
-void ServerEvents::OnChannelJoin( string channel, string who )
+void ServerEvents::OnChannelJoin( const std::string& channel, const std::string& who )
 {
   Channel* chan = sys().GetChannel( channel );
   User* user = sys().GetUser( who );
@@ -188,7 +188,7 @@ void ServerEvents::OnChannelJoin( string channel, string who )
 }
 
 
-void ServerEvents::OnChannelPart( string channel, string who, string message )
+void ServerEvents::OnChannelPart( const std::string& channel, const std::string& who, const std::string& message )
 {
   Channel* chan = sys().GetChannel( channel );
   User* user = sys().GetUser( who );
@@ -199,7 +199,7 @@ void ServerEvents::OnChannelPart( string channel, string who, string message )
 }
 
 
-void ServerEvents::OnChannelTopic( string channel, string who, string message, int when )
+void ServerEvents::OnChannelTopic( const std::string& channel, const std::string& who, const std::string& message, int when )
 {
   Channel* chan = sys().GetChannel( channel );
   User* user = sys().GetUser( who );
@@ -210,7 +210,7 @@ void ServerEvents::OnChannelTopic( string channel, string who, string message, i
 }
 
 
-void ServerEvents::OnChannelAction( string channel, string who, string action )
+void ServerEvents::OnChannelAction( const std::string& channel, const std::string& who, const std::string& action )
 {
   Channel* chan = sys().GetChannel( channel );
   User* user = sys().GetUser( who );

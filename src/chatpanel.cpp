@@ -156,11 +156,9 @@ void ChatPanel::DidAction( const wxString& who, const wxString& action )
 //! @param message The MOTD message to output
 void ChatPanel::Motd( const wxString& message )
 {
-  cout << "++ ChatPanel::Motd()" << endl;
+  std::cout << "** ChatPanel::Motd()" << std::endl;
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLUE));
   m_chatlog_text->AppendText( _(" ** motd ** ")+ message + _("\n") );
-  cout << "-- ChatPanel::Motd()" << endl;
-
 }
 
 
@@ -232,7 +230,7 @@ bool ChatPanel::IsServerPanel()
 
 void ChatPanel::Say( const wxString& message )
 {
-  cout << "** ChatPanel::Say()" << endl;
+  std::cout << "** ChatPanel::Say()" << std::endl;
   assert( m_channel != NULL );
   Server* serv = sys().serv();
   assert( serv != NULL );
@@ -241,7 +239,7 @@ void ChatPanel::Say( const wxString& message )
 
 void ChatPanel::Part()
 {
-  cout << "** ChatPanel::Part()" << endl;
+  std::cout << "** ChatPanel::Part()" << std::endl;
   assert( m_channel != NULL );
   m_channel->Leave();
 }

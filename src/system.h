@@ -14,16 +14,16 @@
 class System : public ChannelList, public UserList
 {
   public:
-    System() {}
+    System(): m_serv(NULL) { }
     ~System() {}
   
     // System interface
   
-    void Connect( const string servername, const string username, const string password );
+    void Connect( const std::string& servername, const std::string& username, const std::string& password );
     void Disconnect();
   
-    Server* serv();
-    void SetServer( Server* serv );
+    Server* serv() { return m_serv; }
+    void SetServer( Server* serv ) { m_serv = serv; }
   
   protected:
     // System variables

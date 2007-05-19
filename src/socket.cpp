@@ -1,24 +1,5 @@
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
-
 //
 // Class: Socket
-//
-// Created on: Fri Apr 27 16:26:26 2007
 //
 
 #include "socket.h"
@@ -28,6 +9,7 @@ BEGIN_EVENT_TABLE(SocketEvents, wxEvtHandler)
 EVT_SOCKET(SOCKET_ID, SocketEvents::OnSocketEvent)
 
 END_EVENT_TABLE()
+
 
 void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 {
@@ -85,7 +67,7 @@ Socket::~Socket()
 
 
 //! @brief Connect to remote host
-void Socket::Connect( const string addr, const int port )
+void Socket::Connect( const std::string& addr, const int port )
 {
   wxIPV4address wxaddr;
   m_connecting = true;
@@ -106,7 +88,7 @@ void Socket::Disconnect( )
 
 
 //! @brief Send data over connection
-bool Socket::Send( string data )
+bool Socket::Send( const std::string& data )
 {
   if ( data.length() <= 0) return true;
   m_sock->Write( (void*)data.c_str(), data.length() );
@@ -115,7 +97,7 @@ bool Socket::Send( string data )
 
 
 //! @brief Recive data from connection
-bool Socket::Recive( string& data )
+bool Socket::Recive( std::string& data )
 {
   char buff[2];
   int readnum;

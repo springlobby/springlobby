@@ -20,7 +20,7 @@ END_EVENT_TABLE()
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
-  cout << "** SpringLobbyApp::OnInit()" << endl;
+  std::cout << "** SpringLobbyApp::OnInit()" << std::endl;
   
   ui().ShowMainWindow();
   ui().Connect();
@@ -34,7 +34,7 @@ bool SpringLobbyApp::OnInit()
 //! @brief Finalizes the application
 int SpringLobbyApp::OnExit()
 {
-  cout << "** SpringLobbyApp::OnExit()" << endl;
+  std::cout << "** SpringLobbyApp::OnExit()" << std::endl;
 
   return 0;
 }

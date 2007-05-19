@@ -83,7 +83,7 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel, bool nick_list )
 
 void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
 {
-  cout << "** MainChatTab::OnTabsChanged()" << endl;
+  std::cout << "** MainChatTab::OnTabsChanged()" << std::endl;
 
   int oldsel = event.GetOldSelection();
   if ( oldsel < 0 ) return;
@@ -92,21 +92,21 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
     
   wxWindow* newpage = m_chat_tabs->GetPage( newsel );
   if ( newpage == NULL ) { // Not sure what to do here
-    cout << "  !! Newpage NULL." << endl;
+    std::cout << "  !! Newpage NULL." << std::endl;
     return;
   }
   
-  cout << "  -- newsel: " << newsel << " tot: " << m_chat_tabs->GetPageCount() << endl;
+  std::cout << "  -- newsel: " << newsel << " tot: " << m_chat_tabs->GetPageCount() << std::endl;
   if ( newsel >= m_chat_tabs->GetPageCount() - 1 ) { // We are going to remove page
-    cout << "  -- Closepage." << endl;
+    std::cout << "  -- Closepage." << std::endl;
     ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
     if ( (delpage != &servwin()) && ( delpage != NULL ) ) {
-      cout << "  -- Remove last." << endl;
+      std::cout << "  -- Remove last." << std::endl;
       delpage->Part();
       m_chat_tabs->DeletePage( oldsel );
       m_chat_tabs->SetSelection( 0 );
     } else {
-      cout << "  -- Select first." << endl;
+      std::cout << "  -- Select first." << std::endl;
       m_chat_tabs->SetSelection( 0 );
     }
     

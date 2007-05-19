@@ -1,20 +1,3 @@
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
-
 //
 // Class: Socket
 // Created on: Fri Apr 27 16:26:26 2007
@@ -24,11 +7,9 @@
 #define _SOCKET_H_
 
 #include <string>
-//#include <wx/wx.h>
 #include <wx/socket.h>
 #include <wx/event.h>
 
-using namespace std;
 
 typedef int Sockstate;
 
@@ -68,30 +49,30 @@ class Socket
   public:
     
     Socket();
-    virtual ~Socket();
+    ~Socket();
   
     // Socket interface
   
-    virtual void Connect( const string addr, const int port );
-    virtual void Disconnect( );
+    void Connect( const std::string& addr, const int port );
+    void Disconnect( );
   
-    virtual bool Send( string data );
-    virtual bool Recive( string& data );
+    bool Send( const std::string& data );
+    bool Recive( std::string& data );
   
-    virtual Sockstate State( );
-    virtual Sockerror Error( );
+    Sockstate State( );
+    Sockerror Error( );
   
-    virtual void SetUserdata( void* data );
-    virtual void* GetUserdata();
+    void SetUserdata( void* data );
+    void* GetUserdata();
   
-    virtual void SetConnectedCallback( socket_callback callback );
-    virtual socket_callback GetConnectedCallback();
+    void SetConnectedCallback( socket_callback callback );
+    socket_callback GetConnectedCallback();
 
-    virtual void SetDisconnectedCallback( socket_callback callback );
-    virtual socket_callback GetDisconnectedCallback();
+    void SetDisconnectedCallback( socket_callback callback );
+    socket_callback GetDisconnectedCallback();
 
-    virtual void SetDataRecivedCallback( socket_callback callback );
-    virtual socket_callback GetDataRecivedCallback();
+    void SetDataRecivedCallback( socket_callback callback );
+    socket_callback GetDataRecivedCallback();
 
   protected:
   // Socket variables

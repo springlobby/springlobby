@@ -15,7 +15,7 @@ System& sys()
   return m_sys;
 }
 
-
+/*
 //! @brief Returns the currently used Server as a pointer
 //!
 //! @note May be NULL
@@ -33,7 +33,7 @@ void System::SetServer( Server* serv )
 {
   m_serv = serv;
 }
-
+*/
 
 //! @brief Connects to server
 //!
@@ -41,9 +41,9 @@ void System::SetServer( Server* serv )
 //! @param username The username login with
 //! @param password The password login with
 //! @see ServerEvents::on_connected
-void System::Connect( const string servername, const string username, const string password )
+void System::Connect( const std::string& servername, const std::string& username, const std::string& password )
 {
-  string host;
+  std::string host;
   int port;
   Socket* sock;
   
@@ -90,6 +90,7 @@ void System::Connect( const string servername, const string username, const stri
 //! @todo Implement
 void System::Disconnect()
 {
+  
 }
 
 

@@ -25,7 +25,7 @@ void TASServer::SetSocket( Socket* sock )
   
 }
 
-void TASServer::Connect( const string& addr, const int port )
+void TASServer::Connect( const std::string& addr, const int port )
 {
   assert( m_sock != NULL );
   m_sock->Connect( addr, port );
@@ -52,8 +52,8 @@ bool TASServer::IsConnected()
   
 void TASServer::Login()
 {
-  cout << "** TASServer::login()" << endl;
-  string password = m_pass;
+  std::cout << "** TASServer::login()" << std::endl;
+  std::string password = m_pass;
   unsigned char output[16];
   unsigned char* input = new unsigned char[ password.length() ];
   for ( int i = 0; i < password.length(); i++ )
@@ -62,7 +62,7 @@ void TASServer::Login()
   md5_csum( input, password.length(), &output[0] );
   password = base64_encode( &output[0] , 16 );
   
-  string data = "LOGIN ";
+  std::string data = "LOGIN ";
   data += m_user;
   data += " ";
   data += password;
@@ -74,7 +74,7 @@ void TASServer::Login()
 
 void TASServer::Logout()
 {
-  cout << "** TASServer::logout()" << endl;
+  std::cout << "** TASServer::logout()" << std::endl;
   Disconnect();
 }
 
@@ -117,14 +117,14 @@ void TASServer::Update()
 
 void TASServer::_ReciveAndExecute()
 {
-  string data;
+  std::string data;
   
   do {
     
     data = "";
     if ( m_sock->Recive( data ) ) {
       m_buffer += data;
-      if ( m_buffer.find( "\n", 0 ) != string::npos ) {
+      if ( m_buffer.find( "\n", 0 ) != std::string::npos ) {
         ExecuteCommand( m_buffer );
         m_buffer = "";
       }
@@ -136,7 +136,7 @@ void TASServer::_ReciveAndExecute()
 
 void TASServer::ExecuteCommand( std::string in )
 {
-  string cmd;
+  std::string cmd;
   int pos;
   int replyid = -1;
   
@@ -150,13 +150,13 @@ void TASServer::ExecuteCommand( std::string in )
   }
   
   pos = in.find( "\n", 0 );
-  if ( pos != string::npos ) {
+  if ( pos != std::string::npos ) {
     assert( pos < in.length() ); // We might be throwing away a second command following this one.
     in.replace( pos, in.length() - pos, "" );
   }
     
   pos = in.find( " ", 0 );
-  if ( pos == string::npos ) {
+  if ( pos == std::string::npos ) {
     // Must be command without parameters.
     cmd = in;
     in = "";
@@ -172,7 +172,7 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
 {
   int pos, cpu, status, id, nat, port, maxplayers, rank, hash, specs;
   bool replay, haspass;
-  string nick, contry, host, map, title, mod, channel, error, msg;
+  std::string nick, contry, host, map, title, mod, channel, error, msg;
   UserStatus cstatus;
   UTASClientstatus tasstatus;
   
@@ -288,19 +288,19 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     //CLIENTS params: main ChanServ []Cookiebot hawkki Pullapitko scf84 replay trepan 10gb_bot_24h Contex[1944] NowakPL Springie
     // !! Command: "CHANNELMESSAGE" params: "main <ChanServ> has muted <smoth>".
   } else {
-    cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << endl;
+    std::cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << std::endl;
     m_ui->OnUnknownCommand( cmd, params );
   }
   
 }
 
-string TASServer::GetWordParam( std::string& params )
+std::string TASServer::GetWordParam( std::string& params )
 {
   int pos;
-  string param;
+  std::string param;
   
   pos = params.find( " ", 0 );
-  if ( pos == string::npos ) {
+  if ( pos == std::string::npos ) {
     param = params;
     params = "";
     return param;
@@ -311,13 +311,13 @@ string TASServer::GetWordParam( std::string& params )
   }
 }
 
-string TASServer::GetSentenceParam( string& params )
+std::string TASServer::GetSentenceParam( std::string& params )
 {
   int pos;
-  string param;
+  std::string param;
   
   pos = params.find( "\t", 0 );
-  if ( pos == string::npos ) {
+  if ( pos == std::string::npos ) {
     param = params;
     params = "";
     return param;
@@ -328,13 +328,13 @@ string TASServer::GetSentenceParam( string& params )
   }
 }
 
-int TASServer::GetIntParam( string& params )
+int TASServer::GetIntParam( std::string& params )
 {
   int pos;
-  string param;
+  std::string param;
   
   pos = params.find( " ", 0 );
-  if ( pos == string::npos ) {
+  if ( pos == std::string::npos ) {
     param = params;
     params = "";
     return atoi( param.c_str() );
@@ -348,7 +348,7 @@ int TASServer::GetIntParam( string& params )
 void TASServer::Ping()
 {
   //cout << "** TASServer::ping()" << endl;
-  string cmd = "";
+  std::string cmd = "";
 
   m_ping_id++;
 //  cout << ">>> PING #" << _ping_id << endl;
@@ -373,7 +373,7 @@ void TASServer::Ping()
 
 void TASServer::HandlePong( int replyid )
 {
-  list<TASPingListItem>::iterator it;
+  std::list<TASPingListItem>::iterator it;
   
 //  cout << ">>> PONG #" << replyid << endl;
   bool found = false;
@@ -399,7 +399,7 @@ void TASServer::HandlePong( int replyid )
 
 void TASServer::HandlePinglist()
 {
-  list<TASPingListItem>::iterator it;
+  std::list<TASPingListItem>::iterator it;
   int now = time( NULL );
   while ( !m_pinglist.empty() ) {
     if ( m_pinglist.begin()->t + PING_TIMEOUT < now ) {
@@ -411,14 +411,14 @@ void TASServer::HandlePinglist()
 }
 
 
-void TASServer::JoinChannel( const string& channel, const string& key )
+void TASServer::JoinChannel( const std::string& channel, const std::string& key )
 {
   //JOIN channame [key]
-  cout << "** TASServer::JoinChannel()" << endl;
+  std::cout << "** TASServer::JoinChannel()" << std::endl;
   assert( IsOnline() );
   assert( m_sock != NULL );
   
-  string cmd = "JOIN " + channel;
+  std::string cmd = "JOIN " + channel;
   if ( key != "" )
     cmd += " " + key;
   cmd += "\n";
@@ -427,10 +427,10 @@ void TASServer::JoinChannel( const string& channel, const string& key )
 }
 
 
-void TASServer::PartChannel( const string& channel )
+void TASServer::PartChannel( const std::string& channel )
 {
   //LEAVE channame
-  cout << "** TASServer::PartChannel()" << endl;
+  std::cout << "** TASServer::PartChannel()" << std::endl;
   assert( IsOnline() );
   assert( m_sock != NULL );
   
@@ -439,10 +439,10 @@ void TASServer::PartChannel( const string& channel )
 }
  
 
-void TASServer::SayChannel( const string& channel, const string& msg )
+void TASServer::SayChannel( const std::string& channel, const std::string& msg )
 {
   //SAY channame {message}
-  cout << "** TASServer::SayChannel()" << endl;
+  std::cout << "** TASServer::SayChannel()" << std::endl;
   assert( IsOnline() );
   assert( m_sock != NULL );
   
@@ -450,10 +450,10 @@ void TASServer::SayChannel( const string& channel, const string& msg )
 }
 
 
-void TASServer::SayPrivate( const string& nick, const string& msg )
+void TASServer::SayPrivate( const std::string& nick, const std::string& msg )
 {
   //SAYPRIVATE username {message}
-  cout << "** TASServer::SayPrivate()" << endl;
+  std::cout << "** TASServer::SayPrivate()" << std::endl;
   assert( IsOnline() );
   assert( m_sock != NULL );
   
@@ -464,20 +464,20 @@ void TASServer::SayPrivate( const string& nick, const string& msg )
 
 void TASServer::OnConnected( Socket* sock )
 {
+  std::cout << "** TASServer::OnConnected()" << std::endl;
   TASServer* serv = (TASServer*)sock->GetUserdata();
   serv->m_last_ping = time( NULL );
   serv->m_connected = true;
   serv->m_online = false;
-  cout << "** TASServer::OnConnected()" << endl;
 }
 
 
 void TASServer::OnDisconnected( Socket* sock )
 {
+  std::cout << "** TASServer::OnDisconnected()" << std::endl;
   TASServer* serv = (TASServer*)sock->GetUserdata();
   serv->m_connected = false;
   serv->m_online = false;
-  cout << "** TASServer::OnDisconnected()" << endl;
 }
 
 
