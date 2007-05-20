@@ -7,12 +7,12 @@
 
 NickListCtrl::NickListCtrl( wxWindow* parent )
 : wxListCtrl( parent, -1, wxDefaultPosition, wxDefaultSize, 
-             wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER | wxLC_SINGLE_SEL )
+             wxVSCROLL | wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER | wxLC_SINGLE_SEL )
 {
   wxListItem col;
-  col.SetText( _("Test") );
+  col.SetText( _("Nick") );
   InsertColumn( 0, col );
-  SetColumnWidth( 0, wxLIST_AUTOSIZE );
+  SetColumnWidth( 0, 160 );
 }
 
 
@@ -21,6 +21,11 @@ NickListCtrl::~NickListCtrl()
   
 }
 
+void NickListCtrl::UpdateSize()
+{
+  assert( m_users != NULL );
+  SetItemCount( m_users->GetNumUsers() );
+}
 
 wxString NickListCtrl::OnGetItemText(long item, long column) const
 {

@@ -30,9 +30,9 @@
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 
-  EVT_TEXT_ENTER ( CHAT_TEXT, ChatPanel::OnSay )
-  EVT_BUTTON     ( CHAT_SEND, ChatPanel::OnSay )
-
+  EVT_TEXT_ENTER ( CHAT_TEXT, ChatPanel::OnSay   )
+  EVT_BUTTON     ( CHAT_SEND, ChatPanel::OnSay   )
+  EVT_SIZE       (            ChatPanel::OnResize)
 END_EVENT_TABLE()
 
 
@@ -122,6 +122,16 @@ ChatPanel::~ChatPanel()
 
 }
 
+void ChatPanel::OnResize( wxSizeEvent& event )
+{
+  SetSize( event.GetSize() );
+  Layout();
+  if ( m_show_nick_list ) {
+    wxSize s = m_splitter->GetSize();
+    m_splitter->SetSashPosition( s.GetWidth() - 180, true );
+  }
+}
+
 
 void ChatPanel::OnSay( wxCommandEvent& event )
 {
@@ -133,7 +143,7 @@ void ChatPanel::OnSay( wxCommandEvent& event )
 //!
 //! @param who nick of the person who said something.
 //! @param message the message to be outputted.
-//! @todo Fix nicer format of chat messages.
+//! @todo Fix nicer format of chat messages and highlight messages to self
 void ChatPanel::Said( const wxString& who, const wxString& message )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
@@ -170,19 +180,17 @@ void ChatPanel::UnknownCommand( const wxString& command, const wxString& params 
 
 void ChatPanel::Joined( const wxString& who )
 {
-  assert( m_channel != NULL );
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxGREEN));
   m_chatlog_text->AppendText( _(" ** ")+ who + _T(" joined the channel.\n") );
-  m_nicklist->SetItemCount( m_channel->GetNumUsers() );
+  m_nicklist->UpdateSize();
 }
 
 
 void ChatPanel::Parted( const wxString& who, const wxString& message )
 {
-  assert( m_channel != NULL );
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxRED));
   m_chatlog_text->AppendText( _(" ** ")+ who + _T(" left the channel ( ") + message + _(" ).\n") );
-  m_nicklist->SetItemCount( m_channel->GetNumUsers() );
+  m_nicklist->UpdateSize();
 }
 
 void ChatPanel::SetTopic( const wxString& who, const wxString& message )

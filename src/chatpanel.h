@@ -77,6 +77,7 @@ class ChatPanel : public wxPanel
     void Part();
   
     void OnSay( wxCommandEvent& event );
+    void OnResize( wxSizeEvent& event );
   protected:
     // ChatPanel variables
   

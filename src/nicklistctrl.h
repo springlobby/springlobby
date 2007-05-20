@@ -25,6 +25,8 @@ class NickListCtrl : public wxListCtrl
     void SetUserList( UserList* users ) { m_users = users; }
     UserList* GetUserList() { return m_users; }
   
+    void UpdateSize();
+    
   protected:
     // NickListCtrl variables
   
