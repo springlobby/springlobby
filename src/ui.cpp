@@ -160,7 +160,7 @@ void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason
 }
 
 
-void Ui::OnChannelTopic( Channel& channel , User& user, const std::string& topic )
+void Ui::OnChannelTopic( Channel& channel , const std::string user, const std::string& topic )
 {
   std::cout << "** Ui::OnChannelTopic()" << std::endl;
   UiChannelData* ud = (UiChannelData*)channel.GetUserData();
@@ -169,7 +169,7 @@ void Ui::OnChannelTopic( Channel& channel , User& user, const std::string& topic
     std::cout << "   !! ud->panel NULL" << std::endl;
     return;
   }
-  ud->panel->SetTopic( WX_STRING(user.GetNick()), WX_STRING(topic) );   
+  ud->panel->SetTopic( WX_STRING(user), WX_STRING(topic) );   
 }
 
 

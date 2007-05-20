@@ -87,10 +87,10 @@ void* Channel::GetUserData()
 }
 
 
-void Channel::SetTopic( const std::string& topic, User& who )
+void Channel::SetTopic( const std::string& topic, const std::string& who )
 {
   m_topic = topic;
-  m_topic_nick = who.GetNick();
+  m_topic_nick = who;
   
   ui().OnChannelTopic( *this, who, topic );
 }

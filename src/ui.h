@@ -40,7 +40,7 @@ class Ui
     void OnUserJoinedChannel( Channel& chan, User& user );
     void OnUserLeftChannel( Channel& chan, User& user, const std::string& reason );
     
-    void OnChannelTopic( Channel& channel , User& user, const std::string& topic );
+    void OnChannelTopic( Channel& channel , const std::string user, const std::string& topic );
     void OnChannelSaid( Channel& channel , User& user, const std::string& message );
     void OnChannelDidAction( Channel& channel , User& user, const std::string& action );
     void OnLeaveChannel( Channel& channel );

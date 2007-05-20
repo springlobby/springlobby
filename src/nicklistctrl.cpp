@@ -3,7 +3,7 @@
 //
 
 #include "nicklistctrl.h"
-
+#include "utils.h"
 
 NickListCtrl::NickListCtrl( wxWindow* parent )
 : wxListCtrl( parent, -1, wxDefaultPosition, wxDefaultSize, 
@@ -24,7 +24,9 @@ NickListCtrl::~NickListCtrl()
 
 wxString NickListCtrl::OnGetItemText(long item, long column) const
 {
-  return _("test");
+  if ( m_users == NULL ) return _("Error: no list");
+  if ( item >= m_users->GetNumUsers() ) return _("Error: index >= max");
+  return WX_STRING( m_users->GetUser( item )->GetNick() );
 }
 
 

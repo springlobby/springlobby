@@ -62,7 +62,6 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
     m_nick_sizer = new wxBoxSizer( wxVERTICAL );
     
     m_nicklist = new NickListCtrl( m_nick_panel );
-    m_nicklist->SetItemCount( 10 );
     
     m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY );
     
@@ -171,15 +170,19 @@ void ChatPanel::UnknownCommand( const wxString& command, const wxString& params 
 
 void ChatPanel::Joined( const wxString& who )
 {
+  assert( m_channel != NULL );
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxGREEN));
   m_chatlog_text->AppendText( _(" ** ")+ who + _T(" joined the channel.\n") );
+  m_nicklist->SetItemCount( m_channel->GetNumUsers() );
 }
 
 
 void ChatPanel::Parted( const wxString& who, const wxString& message )
 {
+  assert( m_channel != NULL );
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxRED));
   m_chatlog_text->AppendText( _(" ** ")+ who + _T(" left the channel ( ") + message + _(" ).\n") );
+  m_nicklist->SetItemCount( m_channel->GetNumUsers() );
 }
 
 void ChatPanel::SetTopic( const wxString& who, const wxString& message )
@@ -207,6 +210,9 @@ void ChatPanel::SetChannel( Channel* channel )
     assert( ud != NULL );
     ud->panel = this;
   }
+  m_nicklist->SetUserList( (UserList*)channel );
+  m_nicklist->SetItemCount( channel->GetNumUsers() );
+
 }
 
 /*

@@ -202,11 +202,11 @@ void ServerEvents::OnChannelPart( const std::string& channel, const std::string&
 void ServerEvents::OnChannelTopic( const std::string& channel, const std::string& who, const std::string& message, int when )
 {
   Channel* chan = sys().GetChannel( channel );
-  User* user = sys().GetUser( who );
+//  User* user = sys().GetUser( who );
   assert( chan != NULL );
-  assert( user != NULL );
+//  assert( user != NULL );
   
-  chan->SetTopic( message, *user );
+  chan->SetTopic( message, who );
 }
 
 
