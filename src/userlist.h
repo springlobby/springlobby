@@ -37,4 +37,6 @@ class UserList
 };
 
 
+UserList& users();
+
 #endif  //_USERLIST_H_
