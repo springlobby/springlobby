@@ -48,7 +48,7 @@ void ServerEvents::OnLoginInfoComplete()
 {
   std::cout << "** ServerEvents::OnLoginInfoComplete()" << std::endl;
   assert( sys().serv() != NULL );
-  sys().serv()->JoinChannel( "test", "" );
+  sys().serv()->JoinChannel( "springlobby", "" );
 }
 
 void ServerEvents::OnLogout()
