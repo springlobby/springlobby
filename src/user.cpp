@@ -11,6 +11,7 @@ User::User( const std::string& nick, const std::string& country, const int& cpu,
   m_country = country;
   m_cpu = cpu;
   m_status = status;
+  m_data = NULL;
 }
 
 User::User()
@@ -24,6 +25,8 @@ User::User()
   m_status.rank = RANK_1;
   m_status.moderator = false;
   m_status.bot = false;
+
+  m_data = NULL;
 }
 
 
@@ -38,39 +41,55 @@ std::string User::GetNick() const
   return m_nick;
 }
 
+
 void User::SetNick( const std::string& nick )
 {
   m_nick = nick;
 }
   
+
 std::string User::GetCountry() const
 {
   return m_country;
 }
+
 
 void User::SetCountry( const std::string& country )
 {
   m_country = country;
 }
 
-  
+
 int User::GetCpu() const
 {
   return m_cpu;
 }
 
+
 void User::SetCpu( const int& cpu )
 {
   m_cpu = cpu;
 }
-  
+
+
 UserStatus User::GetStatus() const
 {
   return m_status;
 }
 
+
 void User::SetStatus( const UserStatus& status )
 {
   m_status = status;
+}
+
+
+void Said( const std::string& message )
+{
+}
+
+
+void Say( const std::string& message )
+{
 }
 

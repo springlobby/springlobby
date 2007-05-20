@@ -28,6 +28,9 @@
 #include "mainwindow.h"
 
 #include "images/close.xpm"
+#include "images/server.xpm"
+#include "images/channel.xpm"
+#include "images/user.xpm"
 
 BEGIN_EVENT_TABLE(MainChatTab, wxPanel)
 
@@ -49,13 +52,14 @@ MainChatTab::MainChatTab( wxWindow* parent )
 
   m_imagelist = new wxImageList( 12, 12 );
   m_imagelist->Add( wxBITMAP(close) );
+  m_imagelist->Add( wxBITMAP(server) );
+  m_imagelist->Add( wxBITMAP(channel) );
+  m_imagelist->Add( wxBITMAP(user) );
   
   m_chat_tabs->AssignImageList( m_imagelist );
 
   m_server_chat = new ChatPanel( m_chat_tabs, false );
-//  sys().SetServerPanel( m_server_chat );
-
-  m_chat_tabs->AddPage( m_server_chat, _T("Server"), true, -1 );
+  m_chat_tabs->AddPage( m_server_chat, _T("Server"), true, 1 );
   
   m_close_window = new wxWindow( m_chat_tabs, -1 );
   m_chat_tabs->AddPage( m_close_window, _(""), false, 0 );
@@ -77,7 +81,7 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel, bool nick_list )
 {
   ChatPanel* chat = new ChatPanel( m_chat_tabs, nick_list );
   chat->SetChannel( &channel );
-  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(channel.GetName()), true, -1 );
+  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(channel.GetName()), true, 2 );
   return chat;
 }
 

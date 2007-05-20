@@ -4,6 +4,7 @@
 
 #include "channel.h"
 #include "ui.h"
+#include "system.h"
 
 Channel::Channel()
 {
@@ -63,6 +64,8 @@ void Channel::Left( User& who, const std::string& reason )
 
 void Channel::Leave()
 {
+  assert( sys().serv() != NULL );
+  sys().serv()->PartChannel( m_name );
 }
 
  

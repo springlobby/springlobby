@@ -202,9 +202,7 @@ void ServerEvents::OnChannelPart( const std::string& channel, const std::string&
 void ServerEvents::OnChannelTopic( const std::string& channel, const std::string& who, const std::string& message, int when )
 {
   Channel* chan = sys().GetChannel( channel );
-//  User* user = sys().GetUser( who );
   assert( chan != NULL );
-//  assert( user != NULL );
   
   chan->SetTopic( message, who );
 }
@@ -221,3 +219,11 @@ void ServerEvents::OnChannelAction( const std::string& channel, const std::strin
 }
 
 
+//! @todo fix
+void OnPrivateMessage( const std::string& user, const std::string& message )
+{
+  User* who = sys().GetUser( user );
+  assert( who != NULL );
+  if ( who->GetUserData() != NULL ) {
+  }
+}

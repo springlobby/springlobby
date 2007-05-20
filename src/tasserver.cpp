@@ -284,8 +284,7 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     while ( (nick = GetWordParam( params )) != "" ) {
       m_ui->OnChannelJoin( channel, nick );
     }
-    
-    //CLIENTS params: main ChanServ []Cookiebot hawkki Pullapitko scf84 replay trepan 10gb_bot_24h Contex[1944] NowakPL Springie
+    //"SAIDPRIVATE" params: "CAutohost TEST2W ---> http://spring.unknown-files.net/file/2273" 
     // !! Command: "CHANNELMESSAGE" params: "main <ChanServ> has muted <smoth>".
   } else {
     std::cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << std::endl;

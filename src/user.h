@@ -46,6 +46,12 @@ class User
     UserStatus GetStatus() const;
     void SetStatus( const UserStatus& status );
   
+    void SetUserData( void* userdata ) { m_data = userdata; }
+    void* GetUserData() { return m_data; }
+  
+    void Said( const std::string& message );
+    void Say( const std::string& message );
+  
   protected:
     // User variables
   
@@ -53,6 +59,7 @@ class User
     std::string m_country;
     int m_cpu;
     UserStatus m_status;
+    void* m_data;
   
 };
 
