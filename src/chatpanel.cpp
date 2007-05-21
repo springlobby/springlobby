@@ -67,7 +67,7 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
     m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY );
     
     m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
-    m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND );
+    m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
     
     m_nick_panel->SetSizer( m_nick_sizer );
     
@@ -85,25 +85,25 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
   m_chatlog_text = new wxTextCtrl( m_chat_panel, -1, _(""), wxDefaultPosition, wxDefaultSize, 
                              wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 
-  m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
-  m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _T("Send") );
+  m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _(""), wxDefaultPosition, wxSize(100,26), wxTE_PROCESS_ENTER );
+  m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _T("Send"), wxDefaultPosition, wxSize(80,26) );
   
   // Adding elements to sizers
   m_say_sizer->Add( m_say_text, 1, wxEXPAND );
   m_say_sizer->Add( m_say_button );
   
   m_chat_sizer->Add( m_chatlog_text, 1, wxEXPAND );
-  m_chat_sizer->Add( m_say_sizer, 0, wxEXPAND );
+  m_chat_sizer->Add( m_say_sizer, 0, wxEXPAND | wxTOP, 2 );
   
   if ( m_show_nick_list ) {
     m_chat_panel->SetSizer( m_chat_sizer );
     
     m_splitter->SplitVertically( m_chat_panel, m_nick_panel, 100 );
     
-    m_main_sizer->Add( m_splitter, 1, wxEXPAND );
+    m_main_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
     
   } else {
-    m_main_sizer->Add( m_chat_sizer, 4, wxEXPAND );
+    m_main_sizer->Add( m_chat_sizer, 4, wxEXPAND | wxALL, 2 );
   }
   
   // Assign sizer to panel

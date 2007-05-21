@@ -7,7 +7,7 @@
 
 NickListCtrl::NickListCtrl( wxWindow* parent )
 : wxListCtrl( parent, -1, wxDefaultPosition, wxDefaultSize, 
-             wxVSCROLL | wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER | wxLC_SINGLE_SEL )
+             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER | wxLC_SINGLE_SEL )
 {
   wxListItem col;
   col.SetText( _("Nick") );
