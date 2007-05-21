@@ -33,7 +33,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent )
 
 NickListCtrl::~NickListCtrl()
 {
-  wxImageList* m_imagelist;
+  delete m_imagelist;
 }
 
 void NickListCtrl::UpdateSize()
