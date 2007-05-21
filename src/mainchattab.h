@@ -6,7 +6,7 @@
 #define _MAINCHATTAB_H_
 
 #include "chatpanel.h"
-
+#include <wx/notebook.h>
 
 //! @brief The main chat tab.
 class MainChatTab : public wxPanel
@@ -14,16 +14,16 @@ class MainChatTab : public wxPanel
   public:
     MainChatTab( wxWindow* parent );
     ~MainChatTab();
-  
+
     // MainChatWindow interface
-  
+
     ChatPanel& ServerChat() { assert( m_server_chat != NULL ); return *m_server_chat; }
-    
+
     ChatPanel* AddChatPannel( Channel& channel, bool nick_list );
-    
+
     void OnTabsChanged( wxNotebookEvent& event );
-    
-    
+
+
   protected:
     // MainChatWindow variables
     wxWindow* m_close_window;
@@ -33,7 +33,7 @@ class MainChatTab : public wxPanel
     ChatPanel* m_server_chat;
     ChatPanel* m_main_chat;
     int m_newtab_sel;
-  
+
     DECLARE_EVENT_TABLE()
 };
 

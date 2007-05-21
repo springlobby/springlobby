@@ -2,6 +2,7 @@
 // Class: NickListCtrl
 //
 
+#include <wx/imaglist.h>
 #include "nicklistctrl.h"
 #include "utils.h"
 
@@ -9,7 +10,7 @@
 #include "images/admin.xpm"
 
 NickListCtrl::NickListCtrl( wxWindow* parent )
-: wxListCtrl( parent, -1, wxDefaultPosition, wxDefaultSize, 
+: wxListCtrl( parent, -1, wxDefaultPosition, wxDefaultSize,
              wxSUNKEN_BORDER | wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER | wxLC_SINGLE_SEL )
 {
   wxListItem col;
@@ -19,11 +20,11 @@ NickListCtrl::NickListCtrl( wxWindow* parent )
   InsertColumn( 0, col );
   SetColumnWidth( 0, 16 );
   SetColumnWidth( 1, 144 );
-  
+
   m_imagelist = new wxImageList( 16, 16 );
   m_imagelist->Add( wxBITMAP(admin) );
   m_imagelist->Add( wxBITMAP(bot) );
-  
+
   SetImageList( m_imagelist, wxIMAGE_LIST_NORMAL );
   SetImageList( m_imagelist, wxIMAGE_LIST_SMALL );
   SetImageList( m_imagelist, wxIMAGE_LIST_STATE );
@@ -48,7 +49,7 @@ wxString NickListCtrl::OnGetItemText(long item, long column) const
   if ( column == 0 ) {
     return _("");
   }
-  
+
   if ( m_users == NULL ) return _("Error: no list");
   if ( item >= m_users->GetNumUsers() ) return _("Error: index >= max");
 
@@ -74,7 +75,7 @@ int NickListCtrl::OnGetItemColumnImage(long item, long column) const
 int NickListCtrl::OnGetItemImage(long item) const
 {
   std::cout << "** NickListCtrl::OnGetItemImage()" << std::endl;
-  
+
   if ( m_users == NULL ) return -1;
   if ( item >= m_users->GetNumUsers() ) return -1;
   if (m_users->GetUser( item ).GetStatus().bot ) return 1;

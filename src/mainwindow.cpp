@@ -5,7 +5,7 @@
 #include <wx/frame.h>
 #include <wx/intl.h>
 #include <wx/textdlg.h>
-
+#include <wx/imaglist.h>
 #include "mainwindow.h"
 #include "system.h"
 #include "settings.h"
@@ -24,44 +24,44 @@ END_EVENT_TABLE()
 MainWindow::MainWindow() : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
                                wxPoint(50, 50), wxSize(450, 340))
 {
-  
+
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(MENU_CONNECT, _T("&Connect..."));
   menuFile->Append(MENU_DISCONNECT, _T("&Disconnect"));
   menuFile->AppendSeparator();
   menuFile->Append(MENU_QUIT, _T("&Quit"));
-  
+
   wxMenu *menuEdit = new wxMenu;
-  
+
   wxMenu *menuTools = new wxMenu;
   menuTools->Append(MENU_JOIN, _T("&Join channel..."));
-  
+
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _T("&About"));
-  
+
   wxMenuBar *menubar = new wxMenuBar;
   menubar->Append(menuFile, _T("&File"));
   menubar->Append(menuEdit, _T("&Edit"));
   menubar->Append(menuTools, _T("&Tools"));
   menubar->Append(menuHelp, _T("&Help"));
   SetMenuBar(menubar);
-  
+
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_func_tabs = new wxListbook( this, -1, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
-  
+
   m_func_tab_images = new wxImageList( 64, 64 );
   m_func_tab_images->Add( wxBITMAP(chat_icon) );
-  
+
   m_func_tabs->AssignImageList( m_func_tab_images );
-  
+
   m_chat_tab = new MainChatTab( m_func_tabs );
   m_func_tabs->AddPage( m_chat_tab, _(""), true, 0 );
   //m_func_tabs->AddPage( m_chat_tab, _(""), false, 0 );
-  
+
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
-  
+
   SetSizer( m_main_sizer );
-  
+
   SetSize( sett().GetMainWindowLeft(), sett().GetMainWindowTop(), sett().GetMainWindowWidth(), sett().GetMainWindowHeight() );
 }
 
