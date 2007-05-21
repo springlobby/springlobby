@@ -69,7 +69,7 @@ void TASServer::Login()
   data += " 2100 * SpringLobby 0.1\n";
   m_sock->Send( data );
   
-  delete input;
+  delete[] input;
 }
 
 void TASServer::Logout()
