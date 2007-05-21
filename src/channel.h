@@ -53,7 +53,7 @@ class Channel : public UserList
     std::string m_name;
     void* m_userdata;
   
-    void AddUser( User* user );
+    void AddUser( User& user );
     void RemoveUser( const std::string& nick );
   
 };

@@ -5,12 +5,11 @@
 #include "user.h"
 
 
-User::User( const std::string& nick, const std::string& country, const int& cpu, const UserStatus& status )
+User::User( const std::string& nick, const std::string& country, const int& cpu)
 {
   m_nick = nick;
   m_country = country;
   m_cpu = cpu;
-  m_status = status;
   m_data = NULL;
 }
 

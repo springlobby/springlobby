@@ -56,7 +56,6 @@ void Channel::DoAction( const std::string& action )
 
 void Channel::Left( User& who, const std::string& reason )
 {
-  assert( GetUser( who.GetNick() ) != NULL );
   RemoveUser( who.GetNick() );
   ui().OnUserLeftChannel( *this, who, reason );
 }
@@ -72,8 +71,7 @@ void Channel::Leave()
   
 void Channel::Joined( User& who )
 {
-  assert( GetUser( who.GetNick() ) == NULL );
-  AddUser( &who );
+  AddUser( who );
   ui().OnUserJoinedChannel( *this, who );
 }
 
@@ -110,7 +108,7 @@ std::string Channel::GetTopic()
 }
 
 
-void Channel::AddUser( User* user )
+void Channel::AddUser( User& user )
 {
   UserList::AddUser( user );
 }

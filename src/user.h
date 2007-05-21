@@ -29,7 +29,7 @@ class User
 {
   public:
     User();
-    User( const std::string& nick, const std::string& country, const int& cpu, const UserStatus& status );
+    User( const std::string& nick, const std::string& country, const int& cpu);
     virtual ~User();
   
     // User interface

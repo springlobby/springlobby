@@ -31,7 +31,7 @@ wxString NickListCtrl::OnGetItemText(long item, long column) const
 {
   if ( m_users == NULL ) return _("Error: no list");
   if ( item >= m_users->GetNumUsers() ) return _("Error: index >= max");
-  return WX_STRING( m_users->GetUser( item )->GetNick() );
+  return WX_STRING( m_users->GetUser( item ).GetNick() );
 }
 
 

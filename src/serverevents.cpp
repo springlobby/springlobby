@@ -85,40 +85,25 @@ void ServerEvents::OnPong( int ping_time )
       
 void ServerEvents::OnNewUser( const std::string& nick, const std::string& country, int cpu )
 {
-  //cout << "** ServerEvents::OnNewUser()" << endl;
-  User* user = sys().GetUser( nick );
-  if ( user == NULL ) {
-    UserStatus stat;
-    user = new User( nick, country, cpu, stat );
-    sys().AddUser( user );
-  } else {
-    user->SetCountry( country );
-    user->SetCpu( cpu );
-  }
-  ui().OnUserOnline( *user );
+  if ( sys().UserExists( nick ) ) throw std::runtime_error("New user from server, but already exists!");
+  User user( nick, country, cpu );
+  sys().AddUser( user );
+  ui().OnUserOnline( user );
 }
 
 void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
 {
   //cout << "** ServerEvents::OnUserStatus()" << endl;
-  User* user = sys().GetUser( nick );
-  assert( user != NULL );
-  
-  user->SetStatus( status );
-  
-  ui().OnUserStatusChanged( *user );
+  User& user = sys().GetUser( nick );
+  user.SetStatus( status );
+  ui().OnUserStatusChanged( user );
 }
 
 void ServerEvents::OnUserQuit( const std::string& nick )
 {
   std::cout << "** ServerEvents::OnUserQuit()" << std::endl;
-  User* user = sys().GetUser( nick );
-  assert( user != NULL );
-  
-  ui().OnUserOffline( *user );
+  ui().OnUserOffline(sys().GetUser( nick ));
   sys().RemoveUser( nick );
-  
-  delete user;
 }
       
 void ServerEvents::OnBattleOpened( int id, bool replay, int nat, const std::string& nick, 
@@ -153,11 +138,10 @@ void ServerEvents::OnJoinChannelResult( bool success, const std::string& channel
 {
   std::cout << "** ServerEvents::OnJoinChannelResult()" << std::endl;
   if ( success ) {
-    Channel* chan = new Channel();
-    chan->SetName( channel );
+    Channel chan;
+    chan.SetName( channel );
     sys().AddChannel( chan );
-    
-    ui().OnJoinedChannelSuccessful( *chan );
+    ui().OnJoinedChannelSuccessful( chan );
     //mw().OpenChannelChat( WX_STRING(channel) );
   } else {
     wxString s;
@@ -169,61 +153,37 @@ void ServerEvents::OnJoinChannelResult( bool success, const std::string& channel
 
 void ServerEvents::OnChannelSaid( const std::string& channel, const std::string& who, const std::string& message )
 {
-  Channel* chan = sys().GetChannel( channel );
-  User* user = sys().GetUser( who );
-  assert( chan != NULL );
-  assert( user != NULL );
-  
-  chan->Said( *user, message );
+  sys().GetChannel( channel ).Said( sys().GetUser( who ), message );
 }
 
 void ServerEvents::OnChannelJoin( const std::string& channel, const std::string& who )
 {
-  Channel* chan = sys().GetChannel( channel );
-  User* user = sys().GetUser( who );
-  assert( chan != NULL );
-  assert( user != NULL );
-  
-  chan->Joined( *user );
+  sys().GetChannel( channel ).Joined( sys().GetUser( who ) );
 }
 
 
 void ServerEvents::OnChannelPart( const std::string& channel, const std::string& who, const std::string& message )
 {
-  Channel* chan = sys().GetChannel( channel );
-  User* user = sys().GetUser( who );
-  assert( chan != NULL );
-  assert( user != NULL );
-  
-  chan->Left( *user, message );
+  sys().GetChannel( channel ).Left( sys().GetUser( who ), message );
 }
 
 
 void ServerEvents::OnChannelTopic( const std::string& channel, const std::string& who, const std::string& message, int when )
 {
-  Channel* chan = sys().GetChannel( channel );
-  assert( chan != NULL );
-  
-  chan->SetTopic( message, who );
+  sys().GetChannel( channel ).SetTopic( message, who );
 }
 
 
 void ServerEvents::OnChannelAction( const std::string& channel, const std::string& who, const std::string& action )
 {
-  Channel* chan = sys().GetChannel( channel );
-  User* user = sys().GetUser( who );
-  assert( chan != NULL );
-  assert( user != NULL );
-  
-  chan->DidAction( *user, action );
+  sys().GetChannel( channel ).DidAction( sys().GetUser( who ), action );
 }
 
 
 //! @todo fix
 void OnPrivateMessage( const std::string& user, const std::string& message )
 {
-  User* who = sys().GetUser( user );
-  assert( who != NULL );
-  if ( who->GetUserData() != NULL ) {
+  User& who = sys().GetUser( user );
+  if ( who.GetUserData() != NULL ) {
   }
 }
