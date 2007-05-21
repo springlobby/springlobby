@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <map>
 #include <vector>
+#include <algorithm>
 
 //! @brief std::map<> list that stores User pointers.
 typedef std::map<std::string, User> user_map_t;

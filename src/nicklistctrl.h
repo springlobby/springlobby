@@ -7,6 +7,7 @@
 
 #include <wx/listctrl.h>
 #include <wx/intl.h>
+#include <iostream>
 #include "userlist.h"
 
 
@@ -21,7 +22,7 @@ class NickListCtrl : public wxListCtrl
     virtual wxString OnGetItemText(long item, long column) const;
     virtual int OnGetItemColumnImage(long item, long column) const;
     virtual wxListItemAttr* OnGetItemAttr(long item) const;
-  
+    virtual int OnGetItemImage(long item) const;
     void SetUserList( UserList* users ) { m_users = users; }
     UserList* GetUserList() { return m_users; }
   
@@ -31,6 +32,7 @@ class NickListCtrl : public wxListCtrl
     // NickListCtrl variables
   
     UserList* m_users;
+    wxImageList* m_imagelist;
   
 };
 

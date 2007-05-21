@@ -58,7 +58,7 @@ MainWindow::MainWindow() : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
   m_func_tabs->AddPage( m_chat_tab, _(""), true, 0 );
   //m_func_tabs->AddPage( m_chat_tab, _(""), false, 0 );
   
-  m_main_sizer->Add( m_func_tabs, 1, wxEXPAND, 0 );
+  m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
   
   SetSizer( m_main_sizer );
   
