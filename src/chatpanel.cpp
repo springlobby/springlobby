@@ -174,16 +174,18 @@ void ChatPanel::Motd( const wxString& message )
 
 void ChatPanel::UnknownCommand( const wxString& command, const wxString& params )
 {
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxRED));
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
   LogTime();
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxRED));
   m_chatlog_text->AppendText( _T(" !! Command: \"") + command + _T("\" params: \"") + params + _("\".\n") );
 }
 
 
 void ChatPanel::Joined( const wxString& who )
 {
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxGREEN));
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
   LogTime();
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxGREEN));
   m_chatlog_text->AppendText( _(" ** ")+ who + _T(" joined the channel.\n") );
   m_nicklist->UpdateSize();
 }
@@ -191,8 +193,9 @@ void ChatPanel::Joined( const wxString& who )
 
 void ChatPanel::Parted( const wxString& who, const wxString& message )
 {
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxRED));
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
   LogTime();
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxRED));
   m_chatlog_text->AppendText( _(" ** ")+ who + _T(" left the channel ( ") + message + _(" ).\n") );
   m_nicklist->UpdateSize();
 }
