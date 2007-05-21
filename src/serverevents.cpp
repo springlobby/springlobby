@@ -141,7 +141,7 @@ void ServerEvents::OnJoinChannelResult( bool success, const std::string& channel
     Channel chan;
     chan.SetName( channel );
     sys().AddChannel( chan );
-    ui().OnJoinedChannelSuccessful( chan );
+    ui().OnJoinedChannelSuccessful( sys().GetChannel( channel ) );
     //mw().OpenChannelChat( WX_STRING(channel) );
   } else {
     wxString s;
