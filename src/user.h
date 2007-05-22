@@ -21,6 +21,7 @@ struct UserStatus {
   int rank;
   bool moderator;
   bool bot;
+  UserStatus(): in_game(), away(), rank(), moderator(), bot() {}
 };
 
 
