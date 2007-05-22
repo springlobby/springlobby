@@ -52,8 +52,7 @@ springlobby_SOURCES = \
 	utils.h     \
 	nicklistctrl.cpp     \
 	nicklistctrl.h     \
-	settings.cpp     \
-	userlist.cpp 
+	settings.cpp
 
 springlobby_LDFLAGS = 
 

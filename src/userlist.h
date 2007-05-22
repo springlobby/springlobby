@@ -6,11 +6,10 @@
 #define _USERLIST_H_
 
 #include "user.h"
-#include <stdexcept>
-#include <map>
-#include <vector>
 #include <algorithm>
 #include <iterator>
+#include <map>
+#include <stdexcept>
 
 //! @brief std::map<> list that stores User pointers.
 typedef std::map<std::string, User> user_map_t;
@@ -56,10 +55,11 @@ class UserList
 
     int GetNumUsers() { return m_users.size(); }
  
-  protected:
+  private:
     user_map_t m_users;
-    user_iter_t m_seek;
-    int m_seekpos;
+    // The following are used as internal cache to speed up random access:
+    mutable user_iter_t m_seek;
+    mutable int m_seekpos;
 };
 
 #endif  //_USERLIST_H_

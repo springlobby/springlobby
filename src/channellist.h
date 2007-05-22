@@ -38,7 +38,7 @@ class ChannelList
   
     int GetNumChannels() { return m_chans.size(); }
   
-  protected:
+  private:
     // ChannelList variables
   
     channel_map_t m_chans;
