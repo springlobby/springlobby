@@ -10,6 +10,7 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <iterator>
 
 //! @brief std::map<> list that stores User pointers.
 typedef std::map<std::string, User> user_map_t;
@@ -21,12 +22,16 @@ class UserList
 {
   public:
     
+    UserList(): m_seek(m_users.end()), m_seekpos(-1) {}
+    
     void AddUser( User const& user ) {
       m_users[user.GetNick()] = user;
+      m_seekpos = -1;
     }
     
     void RemoveUser( std::string const& nick ) {
       m_users.erase(nick);
+      m_seekpos = -1;
     }
  
     User& GetUser( std::string const& nick ) {
@@ -36,8 +41,13 @@ class UserList
     }
 
     User const& GetUser( int index ) {
-        //! @todo fixme
-        return m_users.begin()->second;
+      if (m_seekpos < 0) {
+        m_seek = m_users.begin();
+        m_seekpos = 0;
+      }
+      std::advance( m_seek, index - m_seekpos );
+      m_seekpos = index;
+      return m_seek->second;
     }
     
     bool UserExists( std::string const& nick ) {
@@ -48,6 +58,8 @@ class UserList
  
   protected:
     user_map_t m_users;
+    user_iter_t m_seek;
+    int m_seekpos;
 };
 
 #endif  //_USERLIST_H_
