@@ -47,7 +47,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent )
   
   m_acc_note_line = new wxStaticLine( m_login_tab );
 
-  m_note_lbl = new wxStaticText( m_login_tab, -1, _T("Note: If you do not have an accound you\n can register one for free under the\n\"Register\" tab.") );
+  m_note_lbl = new wxStaticText( m_login_tab, -1, _T("Note: If you do not have an account, you\n can register one for free under the\n\"Register\" tab.") );
 
   m_ok_btn =     new wxButton( this, wxID_OK,     _T("Ok") );
   m_cancel_btn = new wxButton( this, wxID_CANCEL, _T("Cancel") );
