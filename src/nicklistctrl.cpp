@@ -8,6 +8,10 @@
 
 #include "images/bot.xpm"
 #include "images/admin.xpm"
+#include "images/admin_ingame.xpm"
+#include "images/admin_away.xpm"
+#include "images/away.xpm"
+#include "images/ingame.xpm"
 
 NickListCtrl::NickListCtrl( wxWindow* parent )
 : wxListCtrl( parent, -1, wxDefaultPosition, wxDefaultSize,
@@ -23,7 +27,11 @@ NickListCtrl::NickListCtrl( wxWindow* parent )
 
   m_imagelist = new wxImageList( 16, 16 );
   m_imagelist->Add( wxBITMAP(admin) );
+  m_imagelist->Add( wxBITMAP(admin_away) );
+  m_imagelist->Add( wxBITMAP(admin_ingame) );
   m_imagelist->Add( wxBITMAP(bot) );
+  m_imagelist->Add( wxBITMAP(away) );
+  m_imagelist->Add( wxBITMAP(ingame) );
 
   SetImageList( m_imagelist, wxIMAGE_LIST_NORMAL );
   SetImageList( m_imagelist, wxIMAGE_LIST_SMALL );
@@ -76,17 +84,30 @@ int NickListCtrl::OnGetItemImage(long item) const
 {
   std::cout << "** NickListCtrl::OnGetItemImage()" << std::endl;
 
-  if ( m_users == NULL ) return -1;
-  if ( item >= m_users->GetNumUsers() ) return -1;
-  if (m_users->GetUser( item ).GetStatus().bot ) return 1;
-  else if (m_users->GetUser( item ).GetStatus().moderator ) return 0;
+  if ( m_users == NULL ) return ICON_NOSTATE;
+  if ( item >= m_users->GetNumUsers() ) return ICON_NOSTATE;
 
-  return -1;
+  return GetStateIcon( m_users->GetUser( item ).GetStatus() );
 }
 
 wxListItemAttr* NickListCtrl::OnGetItemAttr(long item) const
 {
   return NULL;
+}
+
+int NickListCtrl::GetStateIcon( const UserStatus& us ) const
+{
+  if ( us.bot ) return ICON_BOT;
+  if (us.moderator ) {
+    if ( us.in_game ) return ICON_ADMIN_INGAME;
+    if ( us.away ) return ICON_ADMIN_AWAY;
+    return ICON_ADMIN;
+  }
+  
+  if ( us.in_game ) return ICON_INGAME;
+  if ( us.away ) return ICON_AWAY;
+  
+  return ICON_NOSTATE;
 }
 
 
