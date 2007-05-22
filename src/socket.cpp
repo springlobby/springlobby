@@ -80,13 +80,6 @@ void Socket::Connect( const std::string& addr, const int port )
 }
 
 
-//! @brief Disconnect from current connection
-void Socket::Disconnect( )
-{
-  m_connecting = false;
-}
-
-
 //! @brief Send data over connection
 bool Socket::Send( const std::string& data )
 {
@@ -141,55 +134,10 @@ Sockstate Socket::State( )
 
 
 //! @brief Get socket error code
+//!
+//! @todo Implement
 Sockerror Socket::Error( )
 {
   
 }
 
-
-void Socket::SetUserdata( void* data )
-{
-  m_udata = data;
-}
-
-
-void* Socket::GetUserdata()
-{
-  return m_udata;
-}
-
-
-void Socket::SetConnectedCallback( socket_callback callback )
-{
-  m_on_con = callback;
-}
-
-
-socket_callback Socket::GetConnectedCallback()
-{
-  return m_on_con;
-}
-
-
-void Socket::SetDisconnectedCallback( socket_callback callback )
-{
-  m_on_discon = callback;
-}
-
-
-socket_callback Socket::GetDisconnectedCallback()
-{
-  return m_on_discon;
-}
-
-
-void Socket::SetDataRecivedCallback( socket_callback callback )
-{
-  m_on_data = callback;
-}
-
-
-socket_callback Socket::GetDataRecivedCallback()
-{
-  return m_on_data;
-}

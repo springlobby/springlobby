@@ -54,7 +54,7 @@ class Socket
     // Socket interface
   
     void Connect( const std::string& addr, const int port );
-    void Disconnect( );
+    void Disconnect( ) { m_sock->Destroy(); }
   
     bool Send( const std::string& data );
     bool Recive( std::string& data );
@@ -62,17 +62,17 @@ class Socket
     Sockstate State( );
     Sockerror Error( );
   
-    void SetUserdata( void* data );
-    void* GetUserdata();
+    void SetUserdata( void* data ) { m_udata = data; }
+    void* GetUserdata() { return m_udata; }
   
-    void SetConnectedCallback( socket_callback callback );
-    socket_callback GetConnectedCallback();
+    void SetConnectedCallback( socket_callback callback ) { m_on_con = callback; }
+    socket_callback GetConnectedCallback() { return m_on_con; }
 
-    void SetDisconnectedCallback( socket_callback callback );
-    socket_callback GetDisconnectedCallback();
+    void SetDisconnectedCallback( socket_callback callback ) { m_on_discon = callback; }
+    socket_callback GetDisconnectedCallback() { return m_on_discon; }
 
-    void SetDataRecivedCallback( socket_callback callback );
-    socket_callback GetDataRecivedCallback();
+    void SetDataRecivedCallback( socket_callback callback ) { m_on_data = callback; }
+    socket_callback GetDataRecivedCallback() { return m_on_data; }
 
   protected:
   // Socket variables

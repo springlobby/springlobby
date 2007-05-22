@@ -43,6 +43,7 @@ class TASServer : public Server
 {
   public:
     TASServer(): m_connected(false), m_online(false), m_buffer(""), m_last_ping(0), m_ping_id(1000), m_ser_ver(SER_VER_UNKNOWN) {}
+      
     ~TASServer() {}
   
   // TASServer interface
@@ -55,7 +56,10 @@ class TASServer : public Server
   
     void Login();
     void Logout();
-    bool IsOnline();
+    bool IsOnline() {
+      if ( !m_connected ) return false;
+      return m_online;
+    }
   
     void Update();
   

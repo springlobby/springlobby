@@ -21,7 +21,7 @@ struct UserStatus {
   int rank;
   bool moderator;
   bool bot;
-  UserStatus(): in_game(), away(), rank(), moderator(), bot() {}
+  UserStatus(): in_game(false), away(false), rank(RANK_1), moderator(false), bot(false) {}
 };
 
 
@@ -29,23 +29,25 @@ struct UserStatus {
 class User
 {
   public:
-    User();
-    User( const std::string& nick, const std::string& country, const int& cpu);
-    virtual ~User();
+    User(): m_cpu(0), m_data(NULL) {}
+    User( const std::string& nick, const std::string& country, const int& cpu) :
+      m_nick(nick), m_country(country), m_cpu(cpu), m_data(NULL) {}
+        
+    virtual ~User() {}
   
     // User interface
   
-    std::string GetNick() const;
-    void SetNick( const std::string& nick );
+    std::string GetNick() const { return m_nick; }
+    void SetNick( const std::string& nick ) { m_nick = nick; }
   
-    std::string GetCountry() const;
-    void SetCountry( const std::string& country );
+    std::string GetCountry() const { return m_country; }
+    void SetCountry( const std::string& country ) { m_country = country; }
   
-    int GetCpu() const;
-    void SetCpu( const int& cpu );
+    int GetCpu() const { return m_cpu; }
+    void SetCpu( const int& cpu ) { m_cpu = cpu; }
   
-    UserStatus GetStatus() const;
-    void SetStatus( const UserStatus& status );
+    UserStatus GetStatus() const { return m_status; }
+    void SetStatus( const UserStatus& status ) { m_status = status; }
   
     void SetUserData( void* userdata ) { m_data = userdata; }
     void* GetUserData() { return m_data; }

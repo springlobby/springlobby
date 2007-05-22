@@ -78,11 +78,6 @@ void TASServer::Logout()
   Disconnect();
 }
 
-bool TASServer::IsOnline()
-{
-  if ( !m_connected ) return false;
-  return m_online;
-}
 
 void TASServer::Update()
 {
