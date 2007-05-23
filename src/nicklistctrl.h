@@ -11,13 +11,15 @@
 #include "userlist.h"
 
 
-#define ICON_ADMIN 0;
-#define ICON_ADMIN_AWAY 1;
-#define ICON_ADMIN_INGAME 2;
-#define ICON_BOT 3;
-#define ICON_NOSTATE -1;
-#define ICON_AWAY 4;
-#define ICON_INGAME 5;
+#define ICON_ADMIN 0
+#define ICON_ADMIN_AWAY 1
+#define ICON_ADMIN_INGAME 2
+#define ICON_BOT 3
+#define ICON_NOSTATE -1
+#define ICON_AWAY 4
+#define ICON_INGAME 5
+#define ICON_UP 6
+#define ICON_DOWN 7
 
 class NickListCtrl : public wxListCtrl
 {

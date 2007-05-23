@@ -12,17 +12,21 @@
 #include "images/admin_away.xpm"
 #include "images/away.xpm"
 #include "images/ingame.xpm"
+#include "images/up.xpm"
+#include "images/down.xpm"
 
 NickListCtrl::NickListCtrl( wxWindow* parent )
 : wxListCtrl( parent, -1, wxDefaultPosition, wxDefaultSize,
-             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER | wxLC_SINGLE_SEL )
+             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_VIRTUAL | /*wxLC_NO_HEADER |*/ wxLC_SINGLE_SEL )
 {
   wxListItem col;
   col.SetText( _("") );
+  col.SetImage( -1 );
   InsertColumn( 0, col );
-  col.SetText( _("Nick") );
-  InsertColumn( 0, col );
-  SetColumnWidth( 0, 16 );
+  col.SetText( _("Nickname") );
+  col.SetImage( ICON_DOWN );
+  InsertColumn( 1, col );
+  SetColumnWidth( 0, 20 );
   SetColumnWidth( 1, 144 );
 
   m_imagelist = new wxImageList( 16, 16 );
@@ -32,6 +36,8 @@ NickListCtrl::NickListCtrl( wxWindow* parent )
   m_imagelist->Add( wxBITMAP(bot) );
   m_imagelist->Add( wxBITMAP(away) );
   m_imagelist->Add( wxBITMAP(ingame) );
+  m_imagelist->Add( wxBITMAP(up) );
+  m_imagelist->Add( wxBITMAP(down) );
 
   SetImageList( m_imagelist, wxIMAGE_LIST_NORMAL );
   SetImageList( m_imagelist, wxIMAGE_LIST_SMALL );
