@@ -10,6 +10,7 @@
 #include "system.h"
 #include "settings.h"
 #include "ui.h"
+#include "images/bot.xpm"
 
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -24,7 +25,7 @@ END_EVENT_TABLE()
 MainWindow::MainWindow() : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
                                wxPoint(50, 50), wxSize(450, 340))
 {
-
+  SetIcon( wxICON(bot) );
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(MENU_CONNECT, _T("&Connect..."));
   menuFile->Append(MENU_DISCONNECT, _T("&Disconnect"));
