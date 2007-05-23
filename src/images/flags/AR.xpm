@@ -1,5 +1,5 @@
 /* XPM */
-static char *AR_png[] = {
+static char *AR_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 82 1",
 "  c #2BB74C8A5D0F",

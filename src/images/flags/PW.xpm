@@ -1,5 +1,5 @@
 /* XPM */
-static char *PW_png[] = {
+static char *PW_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 87 1",
 "  c #0D4E521E7FFF",

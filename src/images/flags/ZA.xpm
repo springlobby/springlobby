@@ -1,5 +1,5 @@
 /* XPM */
-static char *ZA_png[] = {
+static char *ZA_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 140 2",
 "   c #033C0447010A",

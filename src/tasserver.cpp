@@ -492,6 +492,7 @@ UserStatus TASServer::ConvTasclientstatus( TASClientstatus tas )
   stat.in_game = tas.in_game;
   stat.away = tas.away;
   stat.rank = (tas.rank + 1) * 100;
+  if ( stat.rank > RANK_4 ) stat.rank = RANK_4;
   stat.moderator = tas.moderator;
   stat.bot = tas.bot;
   return stat;

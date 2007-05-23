@@ -112,7 +112,7 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
   
   if ( m_show_nick_list ) {
     wxSize s = m_splitter->GetSize();
-    m_splitter->SetSashPosition( s.GetWidth() - 180, true );
+    m_splitter->SetSashPosition( s.GetWidth() - 210, true );
   }
 }
 
@@ -129,7 +129,7 @@ void ChatPanel::OnResize( wxSizeEvent& event )
   Layout();
   if ( m_show_nick_list ) {
     wxSize s = m_splitter->GetSize();
-    m_splitter->SetSashPosition( s.GetWidth() - 180, true );
+    m_splitter->SetSashPosition( s.GetWidth() - 210, true );
   }
 }
 
@@ -181,23 +181,25 @@ void ChatPanel::UnknownCommand( const wxString& command, const wxString& params 
 }
 
 
-void ChatPanel::Joined( const wxString& who )
+void ChatPanel::Joined( User& who )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
   LogTime();
   m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 80, 0)));
-  m_chatlog_text->AppendText( _(" ** ")+ who + _T(" joined the channel.\n") );
-  m_nicklist->UpdateSize();
+  m_chatlog_text->AppendText( _(" ** ")+ WX_STRING(who.GetNick()) + _T(" joined the channel.\n") );
+  m_nicklist->AddUser( who );
+  //m_nicklist->UpdateSize();
 }
 
 
-void ChatPanel::Parted( const wxString& who, const wxString& message )
+void ChatPanel::Parted( User& who, const wxString& message )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
   LogTime();
   m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 80, 0)));
-  m_chatlog_text->AppendText( _(" ** ")+ who + _T(" left the channel ( ") + message + _(" ).\n") );
-  m_nicklist->UpdateSize();
+  m_chatlog_text->AppendText( _(" ** ")+ WX_STRING(who.GetNick()) + _T(" left the channel ( ") + message + _(" ).\n") );
+  m_nicklist->RemoveUser( who );
+//  m_nicklist->UpdateSize();
 }
 
 void ChatPanel::SetTopic( const wxString& who, const wxString& message )
@@ -225,8 +227,8 @@ void ChatPanel::SetChannel( Channel* channel )
     assert( ud != NULL );
     ud->panel = this;
   }
-  m_nicklist->SetUserList( (UserList*)channel );
-  m_nicklist->SetItemCount( channel->GetNumUsers() );
+  //m_nicklist->SetUserList( (UserList*)channel );
+  //m_nicklist->SetItemCount( channel->GetNumUsers() );
 
 }
 

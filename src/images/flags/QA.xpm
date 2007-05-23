@@ -1,5 +1,5 @@
 /* XPM */
-static char *QA_png[] = {
+static char *QA_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 66 1",
 "  c #2FC71CAF1F82",

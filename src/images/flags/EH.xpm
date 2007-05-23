@@ -1,5 +1,5 @@
 /* XPM */
-static char *EH_png[] = {
+static char *EH_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 105 2",
 "   c #009400940094",

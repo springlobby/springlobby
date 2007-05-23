@@ -1,5 +1,5 @@
 /* XPM */
-static char *CS_png[] = {
+static char *CS_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 63 1",
 "  c #241617C15455",

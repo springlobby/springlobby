@@ -1,5 +1,5 @@
 /* XPM */
-static char *KI_png[] = {
+static char *KI_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 137 2",
 "   c #4D194FF859A4",

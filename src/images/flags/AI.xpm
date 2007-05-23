@@ -1,5 +1,5 @@
 /* XPM */
-static char *AI_png[] = {
+static char *AI_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 115 2",
 "   c #0D4F0D4F3B2F",

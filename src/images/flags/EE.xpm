@@ -1,5 +1,5 @@
 /* XPM */
-static char *EE_png[] = {
+static char *EE_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 61 1",
 "  c black",

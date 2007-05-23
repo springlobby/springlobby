@@ -1,5 +1,5 @@
 /* XPM */
-static char *NA_png[] = {
+static char *NA_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 148 2",
 "   c #369A564C25D9",

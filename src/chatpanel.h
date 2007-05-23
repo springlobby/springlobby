@@ -47,8 +47,8 @@ class ChatPanel : public wxPanel
   
     void UnknownCommand( const wxString& command, const wxString& params );
   
-    void Joined( const wxString& who );
-    void Parted( const wxString& who, const wxString& message );
+    void Joined( User& who );
+    void Parted( User& who, const wxString& message );
     void SetTopic( const wxString& who, const wxString& message );
   
     void SetChannel( Channel* channel );

@@ -1,5 +1,5 @@
 /* XPM */
-static char *IR_png[] = {
+static char *IR_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 77 1",
 "  c #18E4739B18E4",

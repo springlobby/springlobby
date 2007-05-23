@@ -1,5 +1,5 @@
 /* XPM */
-static char *VA_png[] = {
+static char *VA_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 107 2",
 "   c #67C35EC24C97",

@@ -143,7 +143,7 @@ void Ui::OnUserJoinedChannel( Channel& chan, User& user )
     std::cout << "   !! ud->panel NULL" << std::endl;
     return;
   }
-  ud->panel->Joined( WX_STRING(user.GetNick()) );  
+  ud->panel->Joined( user );  
 }
 
 
@@ -156,7 +156,7 @@ void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason
     std::cout << "   !! ud->panel NULL" << std::endl;
     return;
   }
-  ud->panel->Parted( WX_STRING(user.GetNick()), WX_STRING(reason) );  
+  ud->panel->Parted( user, WX_STRING(reason) );  
 }
 
 

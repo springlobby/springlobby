@@ -1,5 +1,5 @@
 /* XPM */
-static char *SZ_png[] = {
+static char *SZ_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 118 2",
 "   c #1DAE2C5A498B",

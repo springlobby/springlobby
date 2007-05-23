@@ -1,5 +1,5 @@
 /* XPM */
-static char *NG_png[] = {
+static char *NG_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 80 1",
 "  c #1F824DA81F82",

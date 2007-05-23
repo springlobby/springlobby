@@ -8,10 +8,11 @@
 #include <string>
 
 
-#define RANK_1 100
-#define RANK_2 200
-#define RANK_3 300
-#define RANK_4 400
+#define RANK_0 100
+#define RANK_1 200
+#define RANK_2 300
+#define RANK_3 400
+#define RANK_4 500
 
 
 //! @brief Struct used to store a client's status.

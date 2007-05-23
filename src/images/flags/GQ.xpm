@@ -1,5 +1,5 @@
 /* XPM */
-static char *GQ_png[] = {
+static char *GQ_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 104 2",
 "   c #18F06E5F18E2",

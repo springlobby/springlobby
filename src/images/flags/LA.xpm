@@ -1,5 +1,5 @@
 /* XPM */
-static char *LA_png[] = {
+static char *LA_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 105 2",
 "   c #1BDF481A7360",

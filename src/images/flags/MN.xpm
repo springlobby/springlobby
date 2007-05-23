@@ -1,5 +1,5 @@
 /* XPM */
-static char *MN_png[] = {
+static char *MN_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 126 2",
 "   c #2B5B1D183990",

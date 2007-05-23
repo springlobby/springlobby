@@ -1,5 +1,5 @@
 /* XPM */
-static char *IE_png[] = {
+static char *IE_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 89 1",
 "  c #1C8D5F0C1C8D",

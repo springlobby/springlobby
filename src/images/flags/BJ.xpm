@@ -1,5 +1,5 @@
 /* XPM */
-static char *BJ_png[] = {
+static char *BJ_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 101 2",
 "   c #1B645FCB1CAD",

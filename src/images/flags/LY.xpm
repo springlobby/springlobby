@@ -1,5 +1,5 @@
 /* XPM */
-static char *LY_png[] = {
+static char *LY_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 44 1",
 "  c #1F824DA81F82",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *SJ_png[] = {
+static char *SJ_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 130 2",
 "   c #2F5542295FAB",

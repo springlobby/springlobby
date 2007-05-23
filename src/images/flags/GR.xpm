@@ -1,5 +1,5 @@
 /* XPM */
-static char *GR_png[] = {
+static char *GR_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 94 2",
 "   c #519D55B45EE8",

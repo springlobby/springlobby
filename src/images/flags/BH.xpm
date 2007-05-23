@@ -1,5 +1,5 @@
 /* XPM */
-static char *BH_png[] = {
+static char *BH_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 69 1",
 "  c #57D414E914E9",

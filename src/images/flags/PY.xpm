@@ -1,5 +1,5 @@
 /* XPM */
-static char *PY_png[] = {
+static char *PY_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 86 1",
 "  c #1F8B27BB4044",

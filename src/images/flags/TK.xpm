@@ -1,5 +1,5 @@
 /* XPM */
-static char *TK_png[] = {
+static char *TK_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 144 2",
 "   c #1B03295B45A1",

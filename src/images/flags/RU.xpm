@@ -1,5 +1,5 @@
 /* XPM */
-static char *RU_png[] = {
+static char *RU_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 52 1",
 "  c #10292FE260DE",

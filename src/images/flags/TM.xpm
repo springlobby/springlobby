@@ -1,5 +1,5 @@
 /* XPM */
-static char *TM_png[] = {
+static char *TM_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 109 2",
 "   c #1CE55B0F1A97",

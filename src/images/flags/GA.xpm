@@ -1,5 +1,5 @@
 /* XPM */
-static char *GA_png[] = {
+static char *GA_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 69 1",
 "  c #22263A635297",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *DJ_png[] = {
+static char *DJ_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 94 2",
 "   c #48055DED403F",

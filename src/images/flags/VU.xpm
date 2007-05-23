@@ -1,5 +1,5 @@
 /* XPM */
-static char *VU_png[] = {
+static char *VU_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 108 2",
 "   c #08DE0AD500F1",

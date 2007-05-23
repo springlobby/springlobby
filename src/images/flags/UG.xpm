@@ -1,5 +1,5 @@
 /* XPM */
-static char *UG_png[] = {
+static char *UG_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 109 2",
 "   c #189816AC017A",

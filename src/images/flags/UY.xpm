@@ -1,5 +1,5 @@
 /* XPM */
-static char *UY_png[] = {
+static char *UY_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 147 2",
 "   c #2E303B3164CF",

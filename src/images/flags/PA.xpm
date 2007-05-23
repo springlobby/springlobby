@@ -1,5 +1,5 @@
 /* XPM */
-static char *PA_png[] = {
+static char *PA_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 134 2",
 "   c #13042B5052A8",

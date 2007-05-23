@@ -1,5 +1,5 @@
 /* XPM */
-static char *GE_png[] = {
+static char *GE_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 74 1",
 "  c #4AD81F8227AF",

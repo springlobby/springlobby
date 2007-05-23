@@ -1,5 +1,5 @@
 /* XPM */
-static char *SD_png[] = {
+static char *SD_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 83 1",
 "  c #058A058A0CF5",

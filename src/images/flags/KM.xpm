@@ -1,5 +1,5 @@
 /* XPM */
-static char *KM_png[] = {
+static char *KM_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 104 2",
 "   c #0CC3125D7A26",
