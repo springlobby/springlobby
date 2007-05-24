@@ -14,6 +14,10 @@ struct UiChannelData {
   ChatPanel* panel;
 };
 
+struct UiUserData {
+  ChatPanel* panel;  
+};
+
 
 //! @brief UI main class
 class Ui
@@ -48,6 +52,7 @@ class Ui
     void OnUserOnline( User& user );
     void OnUserOffline( User& user );
     void OnUserStatusChanged( User& user );
+    void OnUserSaid( User& user, const std::string message );
 
   protected:
     // Ui variables

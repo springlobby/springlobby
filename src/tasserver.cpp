@@ -264,6 +264,7 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     msg = GetSentenceParam( params );
     m_ui->OnChannelPart( channel, nick, msg );
   } else if ( cmd == "CHANNELTOPIC" ) {
+    std::cout << "** TOPIC " << params << std::endl;
     channel = GetWordParam( params );
     nick = GetWordParam( params );
     pos = GetIntParam( params );
@@ -279,6 +280,10 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     while ( (nick = GetWordParam( params )) != "" ) {
       m_ui->OnChannelJoin( channel, nick );
     }
+  } else if ( cmd == "SAIDPRIVATE" ) {
+    nick = GetWordParam( params );
+    msg = GetSentenceParam( params );
+    
     //"SAIDPRIVATE" params: "CAutohost TEST2W ---> http://spring.unknown-files.net/file/2273" 
     // !! Command: "CHANNELMESSAGE" params: "main <ChanServ> has muted <smoth>".
   } else {

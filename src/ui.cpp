@@ -136,7 +136,7 @@ void Ui::OnLeaveChannel( Channel& channel )
 
 void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 {
-  //std::cout << "** Ui::OnUserJoinedChannel()" << std::endl;
+  std::cout << "** Ui::OnUserJoinedChannel()" << std::endl;
   UiChannelData* ud = (UiChannelData*)chan.GetUserData();
   assert( ud != NULL );
   if ( ud->panel == NULL ) {
@@ -177,11 +177,19 @@ void Ui::OnChannelTopic( Channel& channel , const std::string user, const std::s
 
 void Ui::OnUserOnline( User& user )
 {
+/*  UiUserData* data = new UiUserData();
+  data->panel = NULL;
+  
+  user.SetUserData( (void*)data );*/
 }
 
 
 void Ui::OnUserOffline( User& user )
 {
+/*  UiUserData* data = (UiUserData*)user.GetUserData();
+  if ( data == NULL) return;
+    
+  delete data;*/
 }
 
 
