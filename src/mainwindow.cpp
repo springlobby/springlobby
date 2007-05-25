@@ -12,6 +12,8 @@
 #include "ui.h"
 #include "images/bot.xpm"
 
+#include "images/chat_icon.xpm"
+#include "images/join_icon.xpm"
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
@@ -52,11 +54,13 @@ MainWindow::MainWindow() : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
 
   m_func_tab_images = new wxImageList( 64, 64 );
   m_func_tab_images->Add( wxBITMAP(chat_icon) );
+  m_func_tab_images->Add( wxBITMAP(join_icon) );
 
   m_func_tabs->AssignImageList( m_func_tab_images );
 
   m_chat_tab = new MainChatTab( m_func_tabs );
   m_func_tabs->AddPage( m_chat_tab, _(""), true, 0 );
+  m_func_tabs->AddPage( new wxWindow( m_func_tabs, -1 ), _(""), false, 1 );
   //m_func_tabs->AddPage( m_chat_tab, _(""), false, 0 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
@@ -64,6 +68,7 @@ MainWindow::MainWindow() : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
   SetSizer( m_main_sizer );
 
   SetSize( sett().GetMainWindowLeft(), sett().GetMainWindowTop(), sett().GetMainWindowWidth(), sett().GetMainWindowHeight() );
+  Layout();
 }
 
 

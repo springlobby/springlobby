@@ -12,7 +12,6 @@
 
 #include "mainchattab.h"
 
-#include "images/chat_icon.xpm"
 
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
