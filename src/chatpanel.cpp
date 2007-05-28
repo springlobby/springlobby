@@ -49,6 +49,30 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
   m_show_nick_list = show_nick_list;
   m_channel = NULL;
   
+  _CreateControls();
+  
+}
+
+ChatPanel( wxWindow* parent, Channel& chan )
+: m_channel(chan),m_server(NULL),m_user(NULL),m_type(CPT_Channel),m_show_nick_list(true)
+{
+  _CreateControls();
+}
+
+ChatPanel( wxWindow* parent, User& user )
+: m_channel(chan),m_server(NULL),m_user(NULL),m_type(CPT_Channel),m_show_nick_list(true)
+{
+  _CreateControls();
+}
+
+ChatPanel( wxWindow* parent, Server& serv )
+: m_channel(NULL),m_server(serv),m_user(NULL),m_type(CPT_Channel),m_show_nick_list(true)
+{
+  _CreateControls();
+}
+
+void ChatPanel::_CreateControls()
+{
   // Creating sizers
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_chat_sizer = new wxBoxSizer( wxVERTICAL );

@@ -18,11 +18,19 @@
 #include <wx/combobox.h>
 #include <string>
 
+#include "server.h"
+#include "user.h"
 #include "channel.h"
 #include "nicklistctrl.h"
 
 
 #define SERVER_CHAT_NAME "$server"
+
+enum ChatPanelType {
+  CPT_Channel,
+  CPT_Server,
+  CPT_User
+};
 
 
 /*! @brief wxPanel that contains a chat.
@@ -36,7 +44,10 @@
 class ChatPanel : public wxPanel
 {
   public:
-    ChatPanel( wxWindow* parent, bool show_nick_list );
+    //ChatPanel( wxWindow* parent, bool show_nick_list );
+    ChatPanel( wxWindow* parent, Channel& chan );
+    ChatPanel( wxWindow* parent, User& user );
+    ChatPanel( wxWindow* parent, Server& serv );
     ~ChatPanel();
   
     // ChatPanel interface
@@ -83,9 +94,14 @@ class ChatPanel : public wxPanel
   
     wxButton* m_say_button;     //!< The say button.
   
-    Channel* m_channel;         //!< Channel object.
-  
+    Channel& m_channel;         //!< Channel object.
+    Server& m_channel;          //!< Server object.
+    User& m_channel;            //!< User object.
+
+    ChatPanelType m_type;       //!< Channel object.
+
     void LogTime();
+    void _CreateControls();
   
     DECLARE_EVENT_TABLE()
 };
