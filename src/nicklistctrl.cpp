@@ -76,8 +76,10 @@ NickListCtrl::NickListCtrl( wxWindow* parent )
 NickListCtrl::~NickListCtrl()
 {
   _imagelist_users--;
-  if ( _imagelist_users == 0 )
+  if ( _imagelist_users == 0 ) {
     delete _imagelist;
+    _imagelist = NULL;
+  }
 }
 
 void NickListCtrl::AddUser( User& user )
