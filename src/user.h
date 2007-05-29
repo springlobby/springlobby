@@ -7,7 +7,6 @@
 
 #include <string>
 
-
 #define RANK_0 100
 #define RANK_1 200
 #define RANK_2 300
@@ -25,14 +24,25 @@ struct UserStatus {
   UserStatus(): in_game(false), away(false), rank(RANK_1), moderator(false), bot(false) {}
 };
 
+class ChatPanel;
+
+struct UiUserData {
+  UiUserData(): panel(NULL) {}
+  ChatPanel* panel;
+};
+
 
 //! Class containing all the information about a user
 class User
 {
   public:
-    User(): m_cpu(0), m_data(NULL) {}
+    
+    UiUserData uidata;
+    
+    User(): m_cpu(0) {}
+    User( const std::string& nick ) : m_cpu(0), m_nick(nick) {}
     User( const std::string& nick, const std::string& country, const int& cpu) :
-      m_nick(nick), m_country(country), m_cpu(cpu), m_data(NULL) {}
+      m_nick(nick), m_country(country), m_cpu(cpu) {}
         
     virtual ~User() {}
   
@@ -50,8 +60,8 @@ class User
     UserStatus GetStatus() const { return m_status; }
     void SetStatus( const UserStatus& status ) { m_status = status; }
   
-    void SetUserData( void* userdata ) { m_data = userdata; }
-    void* GetUserData() { return m_data; }
+/*    void SetUserData( void* userdata ) { m_data = userdata; }
+    void* GetUserData() { return m_data; }*/
   
     void Said( const std::string& message );
     void Say( const std::string& message );
@@ -63,7 +73,7 @@ class User
     std::string m_country;
     int m_cpu;
     UserStatus m_status;
-    void* m_data;
+    //void* m_data;
   
 };
 

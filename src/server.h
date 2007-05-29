@@ -6,32 +6,44 @@
 #define _SERVER_H_
 
 #include <string>
-#include "user.h"
+#include "channellist.h"
+#include "userlist.h"
 
 #define PING_TIMEOUT 30
 
 class ServerEvents;
 class Socket;
+class Channel;
+class Ui;
 
 
 typedef int ServerError;
 
 #define PE_NONE 0
 
+struct UiServerData {
+  UiServerData(): panel(NULL) {}
+  ChatPanel* panel;
+};
+
 
 //! @brief Abstract baseclass that is used to implement a server protocol.
 class Server
 {
   public:
-    Server(): m_sock(NULL), m_ui(NULL), m_keepalive(15) { }
+    friend class ServerEvents;
+
+      
+    UiServerData uidata;
+
+    
+    Server( Ui& ui): m_sock(NULL), m_ui(ui), m_keepalive(15) { }
     ~Server() {}
   
     // Server interface
   
     virtual void SetSocket( Socket* sock ) { assert( (!IsConnected()) || (sock == NULL) ); m_sock = sock; }
     virtual Socket* GetSocket( ) { return m_sock; }
-    virtual void SetServerEvents( ServerEvents* ui ) { m_ui = ui; }
-    virtual ServerEvents* GetServerEvents( ) { return m_ui; }
   
     virtual void Connect( const std::string& addr, const int port ) = 0;
     virtual void Disconnect() = 0;
@@ -57,15 +69,34 @@ class Server
     
     virtual void Ping() = 0;
 
+    virtual void OnConnected( Socket* sock ) = 0;
+    virtual void OnDisconnected( Socket* sock ) = 0;
+    virtual void OnDataRecived( Socket* sock ) = 0;
+    
+    User& GetUser( const std::string& nickname );
+    bool UserExists( const std::string& nickname );
+
+    Channel& GetChannel( const std::string& name );
+    bool ChannelExists( const std::string& name );
+    
   protected:
     // Server variables
   
     Socket* m_sock;
-    ServerEvents* m_ui;
+    Ui& m_ui;
     int m_keepalive;
     std::string m_user;
     std::string m_pass;
 
+    ChannelList m_channels;
+    UserList m_users;
+  
+    User& _AddUser( const std::string& user );
+    void _RemoveUser( const std::string& nickname );
+  
+    Channel& _AddChannel( const std::string& chan );
+    void _RemoveChannel( const std::string& name );    
+  
 };
 
 

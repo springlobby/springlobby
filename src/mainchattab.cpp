@@ -40,11 +40,11 @@ MainChatTab::MainChatTab( wxWindow* parent )
 
   m_chat_tabs->AssignImageList( m_imagelist );
 
-  m_server_chat = new ChatPanel( m_chat_tabs, false );
-  m_chat_tabs->AddPage( m_server_chat, _T("Server"), true, 1 );
+//  m_server_chat = new ChatPanel( m_chat_tabs, serv );
+//  m_chat_tabs->AddPage( m_server_chat, _T("Server"), true, 1 );
 
   m_close_window = new wxWindow( m_chat_tabs, -1 );
-  m_chat_tabs->AddPage( m_close_window, _(""), false, 0 );
+m_chat_tabs->AddPage( m_close_window, _(""), false, 0 );
 
   m_main_sizer->Add( m_chat_tabs, 1, wxEXPAND );
 
@@ -59,11 +59,17 @@ MainChatTab::~MainChatTab()
 }
 
 
-ChatPanel* MainChatTab::AddChatPannel( Channel& channel, bool nick_list )
+ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
 {
-  ChatPanel* chat = new ChatPanel( m_chat_tabs, nick_list );
-  chat->SetChannel( &channel );
+  ChatPanel* chat = new ChatPanel( m_chat_tabs, channel );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(channel.GetName()), true, 2 );
+  return chat;
+}
+
+ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
+{
+  ChatPanel* chat = new ChatPanel( m_chat_tabs, server );
+  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, 1 );
   return chat;
 }
 
@@ -86,7 +92,9 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
   if ( newsel >= m_chat_tabs->GetPageCount() - 1 ) { // We are going to remove page
     std::cout << "  -- Closepage." << std::endl;
     ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
-    if ( (delpage != &servwin()) && ( delpage != NULL ) ) {
+    ASSERT_LOGIC( delpage != NULL , "MainChatTab::OnTabsChanged(): delpage NULL" );
+    
+    if ( !delpage->IsServerPanel() ) {
       std::cout << "  -- Remove last." << std::endl;
       delpage->Part();
       m_chat_tabs->DeletePage( oldsel );

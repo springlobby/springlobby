@@ -5,7 +5,7 @@
 #include "connectwindow.h"
 #include "settings.h"
 #include "system.h"
-
+#include "ui.h"
 
 // Define events.
 BEGIN_EVENT_TABLE(ConnectWindow, wxFrame)
@@ -18,9 +18,9 @@ END_EVENT_TABLE()
 //! @brief Constructor
 //!
 //! @param parent Parent window
-ConnectWindow::ConnectWindow( wxWindow* parent ) 
+ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui ) 
 : wxFrame( parent, -1, _T("Connect to lobby server"), wxDefaultPosition, wxSize(300, 300), 
-           wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN )
+           wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN ), m_ui(ui)
 {
   wxString server;
   wxString username;
@@ -122,7 +122,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
   Hide();
   sett().SetDefaultServer( STL_STRING(m_server_combo->GetValue()) );
   sett().SetServerAccountNick( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_nick_text->GetValue()) );
-  sys().Connect( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_nick_text->GetValue()), STL_STRING(m_pass_text->GetValue()) );
+  m_ui.DoConnect( m_server_combo->GetValue(), m_nick_text->GetValue(), m_pass_text->GetValue() );
 }
 
 void ConnectWindow::OnCancel(wxCommandEvent& event)

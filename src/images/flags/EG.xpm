@@ -1,5 +1,5 @@
 /* XPM */
-static char *EG[] = {
+static char *EG_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 127 2",
 "   c black",

@@ -18,9 +18,6 @@
 #include <wx/combobox.h>
 #include <string>
 
-#include "server.h"
-#include "user.h"
-#include "channel.h"
 #include "nicklistctrl.h"
 
 
@@ -32,6 +29,8 @@ enum ChatPanelType {
   CPT_User
 };
 
+class Channel;
+class Server;
 
 /*! @brief wxPanel that contains a chat.
  *
@@ -62,10 +61,9 @@ class ChatPanel : public wxPanel
     void Parted( User& who, const wxString& message );
     void SetTopic( const wxString& who, const wxString& message );
   
-    void SetChannel( Channel* channel );
-    Channel* GetChannel() { return m_channel; }
+    Channel& GetChannel() { return *m_channel; }
   
-    bool IsServerPanel();
+    bool IsServerPanel() { return (m_type == CPT_Server); }
     
     void Say( const wxString& message );
     void Part();
@@ -75,6 +73,8 @@ class ChatPanel : public wxPanel
   protected:
     // ChatPanel variables
   
+    void _SetChannel( Channel* channel );
+    
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.
   
     wxBoxSizer* m_main_sizer;   //!< Main sizer containing all other sizers.
@@ -94,14 +94,14 @@ class ChatPanel : public wxPanel
   
     wxButton* m_say_button;     //!< The say button.
   
-    Channel& m_channel;         //!< Channel object.
-    Server& m_channel;          //!< Server object.
-    User& m_channel;            //!< User object.
+    Channel* m_channel;         //!< Channel object.
+    Server* m_server;          //!< Server object.
+    User* m_user;            //!< User object.
 
     ChatPanelType m_type;       //!< Channel object.
 
     void LogTime();
-    void _CreateControls();
+    void _CreateControls( );
   
     DECLARE_EVENT_TABLE()
 };

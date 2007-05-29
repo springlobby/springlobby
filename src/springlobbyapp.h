@@ -7,6 +7,7 @@
 
 #include <wx/app.h>
 #include <wx/timer.h>
+#include "ui.h"
 
 #define TIMER_ID 101
 #define TIMER_INTERVAL 100
@@ -30,6 +31,7 @@ class SpringLobbyApp : public wxApp
   
     wxTimer* m_timer;
 
+    Ui* m_ui;
   
     DECLARE_EVENT_TABLE()
 };

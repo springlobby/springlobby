@@ -9,7 +9,8 @@
 #include <time.h>
 #include <list>
 #include "server.h"
-
+#include "ui.h"
+#include "serverevents.h"
 
 #define SER_VER_BAD -1
 #define SER_VER_UNKNOWN 0
@@ -42,9 +43,9 @@ union UTASClientstatus {
 class TASServer : public Server
 {
   public:
-    TASServer(): m_connected(false), m_online(false), m_buffer(""), m_last_ping(0), m_ping_id(1000), m_ser_ver(SER_VER_UNKNOWN) {}
+    TASServer( Ui& ui ): Server(ui), m_ui(ui), m_connected(false), m_online(false), m_buffer(""), m_last_ping(0), m_ping_id(1000), m_ser_ver(SER_VER_UNKNOWN) { m_se = new ServerEvents( *this, ui); }
       
-    ~TASServer() {}
+    ~TASServer() { delete m_se; }
   
   // TASServer interface
   
@@ -86,13 +87,15 @@ class TASServer : public Server
     static UserStatus ConvTasclientstatus( TASClientstatus );
     static bool VersionSupportReplyid( int version );
     
-    static void OnConnected( Socket* sock );
-    static void OnDisconnected( Socket* sock );
-    static void OnDataRecived( Socket* sock );
+    void OnConnected( Socket* sock );
+    void OnDisconnected( Socket* sock );
+    void OnDataRecived( Socket* sock );
     
   protected:
     // TASServer variables
   
+    Ui& m_ui;
+    ServerEvents* m_se;
     int m_ser_ver;
   
     bool m_connected;

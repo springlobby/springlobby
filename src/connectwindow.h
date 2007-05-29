@@ -17,12 +17,13 @@
 #include <wx/checkbox.h>
 #include <wx/statline.h>
 
-
+class Ui;
+  
 //! @brief wxFrame with a connection dialog used to specify username, password, and server. It can also register a new acount.
 class ConnectWindow : public wxFrame
 {
   public:
-    ConnectWindow( wxWindow* parent );
+    ConnectWindow( wxWindow* parent, Ui& ui );
     ~ConnectWindow();
   
     // ConnectWindow interface
@@ -62,6 +63,8 @@ class ConnectWindow : public wxFrame
     wxBoxSizer* m_pass_sizer;       //!< Sizer connecting password label and input
     wxBoxSizer* m_rpass_sizer;      //!< Sizer spacing the remember password setting
     wxBoxSizer* m_buttons_sizer;    //!< Sizer connecting the ok and cancel buttons
+    
+    Ui& m_ui;
     
     DECLARE_EVENT_TABLE()
 };

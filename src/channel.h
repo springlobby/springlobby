@@ -7,17 +7,31 @@
 
 #include "userlist.h"
 
+
 class Channel;
+class Server;
+class Ui;
 
 typedef void(*channel_msg_callback)(Channel&,User&,const std::string&);
 typedef void(*channel_cmd_callback)(Channel&);
 typedef void(*channel_whocmd_callback)(Channel&,User&);
 
+struct UiChannelData {
+  UiChannelData(): panel(NULL) {}
+
+  ChatPanel* panel;
+};
+
+
 class Channel : public UserList
 {
   public:
-    Channel();
-    virtual ~Channel();
+    
+    UiChannelData uidata;
+    
+    //Channel(): m_serv(NULL),m_userdata(NULL) {}
+    Channel( Server& serv, Ui& ui ): m_serv(serv),m_ui(ui) {}
+    virtual ~Channel() {}
   
     // Channel interface
   
@@ -25,8 +39,8 @@ class Channel : public UserList
     void SetName( const std::string& name );
     std::string GetName();
   
-    void SetUserData( void* userdata );
-    void* GetUserData();
+    /*void SetUserData( void* userdata );
+    void* GetUserData();*/
 
     // Channel Functions
     void Say( const std::string& message );
@@ -51,6 +65,10 @@ class Channel : public UserList
     std::string m_topic;
     std::string m_topic_nick;
     std::string m_name;
+   
+    Server& m_serv;
+    Ui& m_ui;
+  
     void* m_userdata;
   
     void AddUser( User& user );

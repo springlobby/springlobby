@@ -1,5 +1,5 @@
 /* XPM */
-static char *FO[] = {
+static char *FO_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 106 2",
 "   c black",

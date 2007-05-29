@@ -17,7 +17,7 @@ do
 #`echo $img | sed s/.xpm/""/`\"
 done
 echo
-echo "int GetFlagIndex( const std::string& flag ) const;"
+echo "int GetFlagIndex( const std::string& flag );"
 echo
 echo "static char* flag_str[] = {"
 echo "  "

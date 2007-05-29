@@ -7,31 +7,12 @@
 #include "mainwindow.h"
 #include "ui.h"
 
-ServerEvents::ServerEvents()
-{
-
-}
-
-
-ServerEvents::~ServerEvents()
-{
-
-}
-
-ServerEvents& se()
-{
-  static ServerEvents m_se;
-  return m_se;
-}
-
-
 
 void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported )
 {
   std::cout << "** ServerEvents::OnConnected(): Server: " << server_ver.c_str() << std::endl;
-  assert( sys().serv() != NULL );
-  ui().OnConnected( server_name, server_ver, supported );
-  sys().serv()->Login();
+  m_ui.OnConnected( m_serv, server_name, server_ver, supported );
+  m_serv.Login();
 }
 
 void ServerEvents::OnDisconnected()
@@ -47,8 +28,7 @@ void ServerEvents::OnLogin()
 void ServerEvents::OnLoginInfoComplete()
 {
   std::cout << "** ServerEvents::OnLoginInfoComplete()" << std::endl;
-  assert( sys().serv() != NULL );
-  sys().serv()->JoinChannel( "springlobby", "" );
+  m_serv.JoinChannel( "springlobby", "" );
 }
 
 void ServerEvents::OnLogout()
@@ -59,7 +39,7 @@ void ServerEvents::OnLogout()
 void ServerEvents::OnUnknownCommand( const std::string& command, const std::string& params )
 {
   std::cout << "** ServerEvents::OnUnknownCommand()" << std::endl;
-  servwin().UnknownCommand( WX_STRING(command), WX_STRING(params) );
+  m_ui.OnUnknownCommand( m_serv, command, params );
 }
 
 void ServerEvents::OnSocketError( const Sockerror error )
@@ -75,35 +55,39 @@ void ServerEvents::OnProtocolError( const Protocolerror error )
 void ServerEvents::OnMotd( const std::string& msg )
 {
   std::cout << "** ServerEvents::OnMotd()" << std::endl;
-  servwin().Motd( WX_STRING(msg) );
+  m_ui.OnMotd( m_serv, msg );
 }
 
 void ServerEvents::OnPong( int ping_time )
 {
-  //cout << "** ServerEvents::OnPong()" << endl;
+  //std::cout << "** ServerEvents::OnPong()" << std::endl;
 }
       
 void ServerEvents::OnNewUser( const std::string& nick, const std::string& country, int cpu )
 {
-  if ( sys().UserExists( nick ) ) throw std::runtime_error("New user from server, but already exists!");
-  User user( nick, country, cpu );
-  sys().AddUser( user );
-  ui().OnUserOnline( user );
+  std::cout << "** OnNewUser::OnUserStatus()" << std::endl;
+  if ( m_serv.UserExists( nick ) ) throw std::runtime_error("New user from server, but already exists!");
+  User& user = m_serv._AddUser( nick );
+  user.SetCountry( country );
+  user.SetCpu( cpu );
+  m_ui.OnUserOnline( user );
 }
 
 void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
 {
-  //cout << "** ServerEvents::OnUserStatus()" << endl;
-  User& user = sys().GetUser( nick );
+  std::cout << "** ServerEvents::OnUserStatus()" << std::endl;
+  User& user = m_serv.GetUser( nick );
   user.SetStatus( status );
-  ui().OnUserStatusChanged( user );
+  m_ui.OnUserStatusChanged( user );
 }
 
 void ServerEvents::OnUserQuit( const std::string& nick )
 {
   std::cout << "** ServerEvents::OnUserQuit()" << std::endl;
-  ui().OnUserOffline(sys().GetUser( nick ));
-  sys().RemoveUser( nick );
+  m_ui.OnUserOffline( m_serv.GetUser( nick ) );
+  std::cout << "** ServerEvents::OnUserQuit()" << std::endl;
+  m_serv._RemoveUser( nick );
+  std::cout << "** ServerEvents::OnUserQuit()" << std::endl;
 }
       
 void ServerEvents::OnBattleOpened( int id, bool replay, int nat, const std::string& nick, 
@@ -126,7 +110,7 @@ void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
  
 void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, int maphash, const std::string& map )
 {
-  //cout << "** ServerEvents::OnBattleInfoUpdated()" << endl;
+  std::cout << "** ServerEvents::OnBattleInfoUpdated()" << std::endl;
 }
 
 void ServerEvents::OnBattleClosed( int battleid )
@@ -138,52 +122,52 @@ void ServerEvents::OnJoinChannelResult( bool success, const std::string& channel
 {
   std::cout << "** ServerEvents::OnJoinChannelResult()" << std::endl;
   if ( success ) {
-    Channel chan;
-    chan.SetName( channel );
-    sys().AddChannel( chan );
-    ui().OnJoinedChannelSuccessful( sys().GetChannel( channel ) );
-    //mw().OpenChannelChat( WX_STRING(channel) );
+
+    Channel& chan = m_serv._AddChannel( channel );
+    m_ui.OnJoinedChannelSuccessful( chan );
+  
   } else {
-    wxString s;
-    s << _T("Could not join channel ") << WX_STRING(channel) << _T(" because: ") << WX_STRING(reason);
-    wxMessageDialog msg( NULL, s, _T("Join channel failed"), wxOK);
-    msg.ShowModal();
+    m_ui.ShowMessage( _T("Join channel failed"), _T("Could not join channel ") + WX_STRING(channel) + _T(" because: ") + WX_STRING(reason) );
   }
 }
 
 void ServerEvents::OnChannelSaid( const std::string& channel, const std::string& who, const std::string& message )
 {
-  sys().GetChannel( channel ).Said( sys().GetUser( who ), message );
+  std::cout << "** ServerEvents::OnChannelSaid()" << std::endl;
+  m_serv.GetChannel( channel ).Said( m_serv.GetUser( who ), message );
 }
 
 void ServerEvents::OnChannelJoin( const std::string& channel, const std::string& who )
 {
-  sys().GetChannel( channel ).Joined( sys().GetUser( who ) );
+  std::cout << "** ServerEvents::OnChannelJoin()" << std::endl;
+  m_serv.GetChannel( channel ).Joined( m_serv.GetUser( who ) );
 }
 
 
 void ServerEvents::OnChannelPart( const std::string& channel, const std::string& who, const std::string& message )
 {
-  sys().GetChannel( channel ).Left( sys().GetUser( who ), message );
+  m_serv.GetChannel( channel ).Left( m_serv.GetUser( who ), message );
 }
 
 
 void ServerEvents::OnChannelTopic( const std::string& channel, const std::string& who, const std::string& message, int when )
 {
-  sys().GetChannel( channel ).SetTopic( message, who );
+  std::cout << "** ServerEvents::OnChannelTopic()" << std::endl;
+  m_serv.GetChannel( channel ).SetTopic( message, who );
 }
 
 
 void ServerEvents::OnChannelAction( const std::string& channel, const std::string& who, const std::string& action )
 {
-  sys().GetChannel( channel ).DidAction( sys().GetUser( who ), action );
+  m_serv.GetChannel( channel ).DidAction( m_serv.GetUser( who ), action );
 }
 
-
+/*
 //! @todo fix
-void OnPrivateMessage( const std::string& user, const std::string& message )
+void ServerEvents::OnPrivateMessage( const std::string& user, const std::string& message )
 {
   User& who = sys().GetUser( user );
   if ( who.GetUserData() != NULL ) {
   }
 }
+*/

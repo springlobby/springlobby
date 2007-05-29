@@ -19,7 +19,8 @@ class MainChatTab : public wxPanel
 
     ChatPanel& ServerChat() { assert( m_server_chat != NULL ); return *m_server_chat; }
 
-    ChatPanel* AddChatPannel( Channel& channel, bool nick_list );
+    ChatPanel* AddChatPannel( Channel& channel );
+    ChatPanel* AddChatPannel( Server& server, const wxString& name );
 
     void OnTabsChanged( wxNotebookEvent& event );
 

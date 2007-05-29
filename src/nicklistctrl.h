@@ -27,6 +27,10 @@
 #define ICON_RANK4 12
 #define ICON_FLAGS_BASE 13
 
+class User;
+class UserList;
+struct UserStatus;
+
 class NickListCtrl : public wxListCtrl
 {
   public:

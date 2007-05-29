@@ -1,5 +1,5 @@
 /* XPM */
-static char *AW[] = {
+static char *AW_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 171 2",
 "   c black",

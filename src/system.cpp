@@ -8,12 +8,12 @@
 #include "tasserver.h"
 #include "serverevents.h"
 
-
+/*
 System& sys()
 {
   static System m_sys;
   return m_sys;
-}
+}*/
 
 /*
 //! @brief Returns the currently used Server as a pointer
@@ -35,6 +35,7 @@ void System::SetServer( Server* serv )
 }
 */
 
+/*
 //! @brief Connects to server
 //!
 //! @param servername Name/alias of the server to connect to as named in the settings
@@ -94,4 +95,4 @@ void System::Disconnect()
 }
 
 
-
+*/

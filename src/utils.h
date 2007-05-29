@@ -8,6 +8,7 @@
 //! Converts an stl string to a wxString
 #define WX_STRING(v) wxString(v.c_str(),wxConvUTF8)
 
+#define ASSERT_LOGIC(cond,msg) if(!(cond))throw std::logic_error(msg)
 
 #endif  //_UTILS_H_
 

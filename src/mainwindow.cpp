@@ -24,8 +24,8 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 END_EVENT_TABLE()
 
 
-MainWindow::MainWindow() : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
-                               wxPoint(50, 50), wxSize(450, 340))
+MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
+                               wxPoint(50, 50), wxSize(450, 340)), m_ui(ui)
 {
   SetIcon( wxICON(bot) );
   wxMenu *menuFile = new wxMenu;
@@ -58,10 +58,10 @@ MainWindow::MainWindow() : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
 
   m_func_tabs->AssignImageList( m_func_tab_images );
 
+  //! @todo fix
   m_chat_tab = new MainChatTab( m_func_tabs );
   m_func_tabs->AddPage( m_chat_tab, _(""), true, 0 );
   m_func_tabs->AddPage( new wxWindow( m_func_tabs, -1 ), _(""), false, 1 );
-  //m_func_tabs->AddPage( m_chat_tab, _(""), false, 0 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -83,20 +83,13 @@ MainWindow::~MainWindow()
   sett().SetMainWindowLeft( x );
 }
 
-
-//! @brief Get reference to the MainWindow
-MainWindow& mw()
-{
-  return ui().mw();
-}
-
-
+/*
 //! @brief Get the ChatPanel dedicated to server output and input
 ChatPanel& servwin()
 {
-  return ui().mw().GetChatTab().ServerChat();
+  return m_ui.mw().GetChatTab().ServerChat();
 }
-
+*/
 
 //! @brief Returns the curent MainChatTab object
 MainChatTab& MainWindow::GetChatTab()
@@ -114,8 +107,8 @@ MainChatTab& MainWindow::GetChatTab()
 void MainWindow::OpenChannelChat( Channel& channel )
 {
   assert( m_chat_tab != NULL );
-  ChatPanel* chat = m_chat_tab->AddChatPannel( channel, true );
-  chat->SetChannel( &channel );
+  ChatPanel* chat = m_chat_tab->AddChatPannel( channel );
+  //chat->SetChannel( &channel );
 }
 
 
@@ -138,22 +131,24 @@ void MainWindow::CloseAllChats()
 //! @brief Called when join channel menuitem is clicked
 void MainWindow::OnMenuJoin( wxCommandEvent& event )
 {
-  if ( sys().serv() == NULL ) return;
-  wxTextEntryDialog name_dlg( NULL, _("Name of channel to join"), _("Join channel..."), _(""), wxOK | wxCANCEL | wxCENTRE );
-  if (name_dlg.ShowModal() == wxID_OK) {
-    //OpenChannelChat( name_dlg.GetValue() );
-    sys().serv()->JoinChannel( STL_STRING(name_dlg.GetValue()), "" );
+  
+  if ( !m_ui.IsConnected() ) return;
+  wxString answer;
+  if ( Ui::AskText( _T("Join channel..."), _T("Name of channel to join"), answer ) ) {
+    m_ui.JoinChannel( answer, _("") );
   }
+  
 }
 
 
 void MainWindow::OnMenuConnect( wxCommandEvent& event )
 {
-  ui().ShowConnectWindow();
+  m_ui.ShowConnectWindow();
 }
 
 void MainWindow::OnMenuDisconnect( wxCommandEvent& event )
 {
-  sys().Disconnect();
+  
+  m_ui.Disconnect();
 }
 

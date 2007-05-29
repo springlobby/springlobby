@@ -1,5 +1,5 @@
 /* XPM */
-static char *DZ[] = {
+static char *DZ_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 138 2",
 "   c black",

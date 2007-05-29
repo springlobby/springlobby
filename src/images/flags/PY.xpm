@@ -1,5 +1,5 @@
 /* XPM */
-static char *PY[] = {
+static char *PY_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 148 2",
 "   c black",

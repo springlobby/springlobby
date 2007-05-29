@@ -22,8 +22,10 @@ bool SpringLobbyApp::OnInit()
 {
   std::cout << "** SpringLobbyApp::OnInit()" << std::endl;
   
-  ui().ShowMainWindow();
-  ui().Connect();
+  m_ui = new Ui();
+  
+  m_ui->ShowMainWindow();
+  m_ui->Connect();
 
   m_timer->Start( TIMER_INTERVAL );
   
@@ -35,7 +37,10 @@ bool SpringLobbyApp::OnInit()
 int SpringLobbyApp::OnExit()
 {
   std::cout << "** SpringLobbyApp::OnExit()" << std::endl;
-
+  
+  m_timer->Stop();
+  delete m_ui;
+  
   return 0;
 }
 
@@ -43,8 +48,6 @@ int SpringLobbyApp::OnExit()
 //! @brief Is called every 1/10 seconds to update statuses
 void SpringLobbyApp::OnTimer( wxTimerEvent& event )
 {
-  if ( sys().serv() != NULL ) {
-    sys().serv()->Update();
-  }
+  m_ui->OnUpdate();
 }
 

@@ -36,7 +36,7 @@ BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 
 END_EVENT_TABLE()
 
-
+/*
 //! @brief ChatPanel constructor.
 //!
 //! @param parent the parent wxWindow.
@@ -52,27 +52,34 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
   _CreateControls();
   
 }
+*/
 
-ChatPanel( wxWindow* parent, Channel& chan )
-: m_channel(chan),m_server(NULL),m_user(NULL),m_type(CPT_Channel),m_show_nick_list(true)
+ChatPanel::ChatPanel( wxWindow* parent, Channel& chan )
+: wxPanel( parent, -1),m_channel(&chan),m_server(NULL),m_user(NULL),m_type(CPT_Channel),m_show_nick_list(true)
 {
-  _CreateControls();
+  std::cout << "** ChatPanel::ChatPanel( wxWindow* parent, Channel& chan )" << std::endl;
+  _CreateControls( );
+  _SetChannel( &chan );
 }
 
-ChatPanel( wxWindow* parent, User& user )
-: m_channel(chan),m_server(NULL),m_user(NULL),m_type(CPT_Channel),m_show_nick_list(true)
+ChatPanel::ChatPanel( wxWindow* parent, User& user )
+: wxPanel( parent, -1),m_channel(NULL),m_server(NULL),m_user(&user),m_type(CPT_User),m_show_nick_list(false)
 {
-  _CreateControls();
+  _CreateControls( );
 }
 
-ChatPanel( wxWindow* parent, Server& serv )
-: m_channel(NULL),m_server(serv),m_user(NULL),m_type(CPT_Channel),m_show_nick_list(true)
+ChatPanel::ChatPanel( wxWindow* parent, Server& serv )
+: wxPanel( parent, -1),m_channel(NULL),m_server(&serv),m_user(NULL),m_type(CPT_Server),m_show_nick_list(false)
 {
-  _CreateControls();
+  std::cout << "** ChatPanel::ChatPanel( wxWindow* parent, Server& serv )" << std::endl;
+  _CreateControls( );
+  std::cout << "** ChatPanel::ChatPanel( wxWindow* parent, Server& serv )" << std::endl;
 }
 
-void ChatPanel::_CreateControls()
+void ChatPanel::_CreateControls( )
 {
+  std::cout << "** ChatPanel::_CreateControls()" << std::endl;
+
   // Creating sizers
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_chat_sizer = new wxBoxSizer( wxVERTICAL );
@@ -80,7 +87,7 @@ void ChatPanel::_CreateControls()
   
   if ( m_show_nick_list ) {
     
-    m_splitter = new wxSplitterWindow( this , -1, wxDefaultPosition, wxDefaultSize, wxSP_3D );
+    m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxDefaultSize, wxSP_3D );
     m_nick_panel = new wxPanel( m_splitter, -1 );
     m_chat_panel = new wxPanel( m_splitter, -1 );
     
@@ -232,29 +239,28 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
   m_chatlog_text->AppendText( _(" ** Channel topic: ")+ message + _T("\n * Set by ") + who + _(".\n") );  
 }
 
+
 //! @brief Set the Channel object
 //!
 //! @param channel the Channel object.
-void ChatPanel::SetChannel( Channel* channel )
+void ChatPanel::_SetChannel( Channel* channel )
 {
-  UiChannelData* ud;
   if ( m_channel != NULL ) {
-    ud = (UiChannelData*)m_channel->GetUserData();
-    assert( ud != NULL );
-    ud->panel = NULL;
+    m_channel->uidata.panel = NULL;
   }
   
   m_channel = channel;
   
   if ( m_channel != NULL ) {
-    ud = (UiChannelData*)m_channel->GetUserData();
-    assert( ud != NULL );
-    ud->panel = this;
+    m_channel->uidata.panel = this;
   }
   //m_nicklist->SetUserList( (UserList*)channel );
   //m_nicklist->SetItemCount( channel->GetNumUsers() );
 
 }
+
+
+
 
 /*
 //! @brief Get Channel object
@@ -266,22 +272,14 @@ Channel* ChatPanel::GetChannel()
 }
 */
 
-//! @brief Check if ChatPanel controls a server output window.
-//!
-//! @return true if ChatPanel controls a server output window else false.
-bool ChatPanel::IsServerPanel()
-{
-  return false;
-}
-
 
 void ChatPanel::Say( const wxString& message )
 {
   std::cout << "** ChatPanel::Say()" << std::endl;
-  assert( m_channel != NULL );
-  Server* serv = sys().serv();
-  assert( serv != NULL );
-  serv->SayChannel( m_channel->GetName(), STL_STRING(message) );
+  if ( m_type == CPT_Channel ) {
+    assert( m_channel != NULL );
+    m_channel->Say( STL_STRING(message) );
+  }
 }
 
 void ChatPanel::Part()
@@ -289,9 +287,7 @@ void ChatPanel::Part()
   std::cout << "** ChatPanel::Part()" << std::endl;
   assert( m_channel != NULL );
   m_channel->Leave();
-  UiChannelData* cd = (UiChannelData*)m_channel->GetUserData();
-  assert( cd != NULL );
-  cd->panel = NULL;
+  m_channel->uidata.panel = NULL;
 }
 
 void ChatPanel::LogTime()

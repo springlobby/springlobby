@@ -1,5 +1,5 @@
 /* XPM */
-static char *NU[] = {
+static char *NU_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 150 2",
 "   c black",

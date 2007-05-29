@@ -10,6 +10,8 @@
 #include <wx/socket.h>
 #include <wx/event.h>
 
+#include "server.h"
+
 
 typedef int Sockstate;
 
@@ -33,9 +35,10 @@ typedef int Sockerror;
 class SocketEvents: public wxEvtHandler
 {
   public:
+    SocketEvents( Server& serv ): m_serv(serv) {}
     void OnSocketEvent(wxSocketEvent& event);
   protected:
-  
+    Server& m_serv;
   DECLARE_EVENT_TABLE()
 };
 
@@ -48,7 +51,7 @@ class Socket
 {
   public:
     
-    Socket();
+    Socket( Server& serv );
     ~Socket();
   
     // Socket interface
@@ -62,7 +65,7 @@ class Socket
     Sockstate State( );
     Sockerror Error( );
   
-    void SetUserdata( void* data ) { m_udata = data; }
+/*    void SetUserdata( void* data ) { m_udata = data; }
     void* GetUserdata() { return m_udata; }
   
     void SetConnectedCallback( socket_callback callback ) { m_on_con = callback; }
@@ -73,16 +76,17 @@ class Socket
 
     void SetDataRecivedCallback( socket_callback callback ) { m_on_data = callback; }
     socket_callback GetDataRecivedCallback() { return m_on_data; }
-
+*/
   protected:
   // Socket variables
     wxSocketClient* m_sock;
     SocketEvents* m_events;
-    socket_callback m_on_con;
+/*    socket_callback m_on_con;
     socket_callback m_on_discon;
-    socket_callback m_on_data;
+    socket_callback m_on_data;*/
     bool m_connecting;
-    void* m_udata;
+    //void* m_udata;
+    Server& m_serv;
 };
 
 

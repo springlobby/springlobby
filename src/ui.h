@@ -6,24 +6,20 @@
 #define _UI_H_
 
 #include <wx/msgdlg.h>
+#include <wx/textdlg.h>
 #include "mainwindow.h"
 #include "connectwindow.h"
+#include "utils.h"
+#include "server.h"
 
-
-struct UiChannelData {
-  ChatPanel* panel;
-};
-
-struct UiUserData {
-  ChatPanel* panel;  
-};
+class TASServer;
 
 
 //! @brief UI main class
 class Ui
 {
   public:
-    Ui() { m_main_win = new MainWindow(); }
+    Ui(): m_serv(NULL), m_con_win(NULL) { m_main_win = new MainWindow( *this ); }
     virtual ~Ui() { m_main_win->Destroy(); }
   
     // Ui interface
@@ -31,14 +27,29 @@ class Ui
     void ShowMainWindow();
     void ShowConnectWindow();
     void Connect();
-  
+    void Disconnect() {}
+    void DoConnect( const wxString& servername, const wxString& username, const wxString& password );
+    
+    bool IsConnected() const {
+      if ( m_serv != NULL ) return m_serv->IsConnected();
+      return false;
+    }
+    
+    void JoinChannel( const wxString& name, const wxString& password ) {
+      if ( m_serv != NULL ) m_serv->JoinChannel( STL_STRING(name), STL_STRING(password) );
+    }
+    
     void Quit();
   
-    bool Ask( const wxString& heading, const wxString& question );
-  
+    static bool Ask( const wxString& heading, const wxString& question );
+    static bool AskText( const wxString& heading, const wxString& question, wxString& answer );
+    static void ShowMessage( const wxString& heading, const wxString& message );
+    
     MainWindow& mw();
   
-    void OnConnected( const std::string& server_name, const std::string& server_ver, bool supported );
+    void OnUpdate();
+    
+    void OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported );
   
     void OnJoinedChannelSuccessful( Channel& chan );
     void OnUserJoinedChannel( Channel& chan, User& user );
@@ -54,14 +65,16 @@ class Ui
     void OnUserStatusChanged( User& user );
     void OnUserSaid( User& user, const std::string message );
 
+    void OnUnknownCommand( Server& server, const std::string& command, const std::string& params );
+    void OnMotd( Server& server, const std::string& message );
+  
   protected:
     // Ui variables
   
+    Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
 };
-
-Ui& ui();
 
 
 #endif  //_UI_H_

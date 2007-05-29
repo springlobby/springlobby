@@ -5,21 +5,7 @@
 #include "channel.h"
 #include "ui.h"
 #include "system.h"
-
-Channel::Channel()
-{
-  m_topic = "";
-  m_topic_nick = "";
-  m_name = "";
-  m_userdata = NULL;
-}
-
-
-Channel::~Channel()
-{
-
-}
-
+#include "server.h"
 
 void Channel::SetName( const std::string& name )
 {
@@ -35,12 +21,14 @@ std::string Channel::GetName()
 
 void Channel::Said( User& who, const std::string& message )
 {
-  ui().OnChannelSaid( *this , who, message );
+  m_ui.OnChannelSaid( *this , who, message );
 }
 
 
 void Channel::Say( const std::string& message )
 {
+  std::cout << "** Channel::Say()" << std::endl;
+  m_serv.SayChannel( m_name, message );
 }
 
 
@@ -57,34 +45,22 @@ void Channel::DoAction( const std::string& action )
 void Channel::Left( User& who, const std::string& reason )
 {
   RemoveUser( who.GetNick() );
-  ui().OnUserLeftChannel( *this, who, reason );
+  m_ui.OnUserLeftChannel( *this, who, reason );
 }
 
 
 void Channel::Leave()
 {
-  assert( sys().serv() != NULL );
-  sys().serv()->PartChannel( m_name );
+  m_serv.PartChannel( m_name );
 }
 
  
   
 void Channel::Joined( User& who )
 {
+  std::cout << "** Channel::Joined()" << std::endl;
   AddUser( who );
-  ui().OnUserJoinedChannel( *this, who );
-}
-
-
-void Channel::SetUserData( void* userdata )
-{
-  m_userdata = userdata;
-}
-
-
-void* Channel::GetUserData()
-{
-  return m_userdata;
+  m_ui.OnUserJoinedChannel( *this, who );
 }
 
 
@@ -93,7 +69,7 @@ void Channel::SetTopic( const std::string& topic, const std::string& who )
   m_topic = topic;
   m_topic_nick = who;
   
-  ui().OnChannelTopic( *this, who, topic );
+  m_ui.OnChannelTopic( *this, who, topic );
 }
 
 std::string Channel::GetTopicSetBy()

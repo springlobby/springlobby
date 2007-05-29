@@ -12,12 +12,13 @@
 
 #include "mainchattab.h"
 
+class Ui;
 
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
 {
   public:
-    MainWindow();
+    MainWindow( Ui& ui );
     virtual ~MainWindow();
 
     // MainWindow interface
@@ -34,7 +35,9 @@ class MainWindow : public wxFrame
 
   protected:
     // MainWindow variables
-
+  
+    Ui& m_ui;
+    
     wxBoxSizer* m_main_sizer;
     wxListbook* m_func_tabs;
     wxNotebookPage* m_chat_page;
@@ -47,9 +50,7 @@ class MainWindow : public wxFrame
 };
 
 
-MainWindow& mw();
-
-ChatPanel& servwin();
+//ChatPanel& servwin();
 
 // wxWidget IDs
 enum

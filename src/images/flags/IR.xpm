@@ -1,5 +1,5 @@
 /* XPM */
-static char *IR[] = {
+static char *IR_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 149 2",
 "   c black",

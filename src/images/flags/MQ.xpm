@@ -1,5 +1,5 @@
 /* XPM */
-static char *MQ[] = {
+static char *MQ_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 151 2",
 "   c black",

@@ -5,10 +5,9 @@
 #ifndef _UICONTROL_H_
 #define _UICONTROL_H_
 
-#include <wx/msgdlg.h>
 #include "socket.h"
 #include "server.h"
-
+#include "ui.h"
 
 typedef int Protocolerror;
 
@@ -16,8 +15,8 @@ typedef int Protocolerror;
 class ServerEvents
 {
   public:
-    ServerEvents();
-    ~ServerEvents();
+    ServerEvents( Server& serv, Ui& ui ) : m_serv(serv),m_ui(ui) {}
+    ~ServerEvents() {}
   
   // Uicontrol interface
   
@@ -58,7 +57,8 @@ class ServerEvents
     void OnPrivateMessage( const std::string& user, const std::string& message );
     
   protected:
-    
+    Server& m_serv;
+    Ui& m_ui;
 };
 
 ServerEvents& se();

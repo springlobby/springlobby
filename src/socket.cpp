@@ -19,17 +19,20 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
   assert( sock != NULL );
   
   if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
-    callback = sock->GetDataRecivedCallback();
+/*    callback = sock->GetDataRecivedCallback();
     assert( callback != NULL );
-    callback( sock );
+    callback( sock );*/
+    m_serv.OnDataRecived( sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_LOST ) {
-    callback = sock->GetDisconnectedCallback();
+/*    callback = sock->GetDisconnectedCallback();
     assert( callback != NULL );
-    callback( sock );
+    callback( sock );*/
+    m_serv.OnDisconnected( sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
-    callback = sock->GetConnectedCallback();
+    m_serv.OnConnected( sock );
+/*    callback = sock->GetConnectedCallback();
     assert( callback != NULL );
-    callback( sock );
+    callback( sock );*/
   } else {
     assert(false);
   }
@@ -37,18 +40,18 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 
 
 //! @brief Constructor
-Socket::Socket()
+Socket::Socket( Server& serv ) : m_serv(serv)
 {
   m_connecting = false;
   
-  m_on_con = NULL;
+/*  m_on_con = NULL;
   m_on_discon = NULL;
   m_on_data = NULL;
   
-  m_udata = NULL;
+  m_udata = NULL;*/
   
   m_sock = new wxSocketClient();
-  m_events = new SocketEvents;
+  m_events = new SocketEvents( serv );
   m_sock->SetFlags( wxSOCKET_NOWAIT );
   
   m_sock->SetEventHandler(*m_events, SOCKET_ID);

@@ -3,14 +3,10 @@
 //
 
 #include "ui.h"
-#include "utils.h"
+#include "tasserver.h"
+#include "settings.h"
+#include "server.h"
 
-
-Ui& ui()
-{
-  static Ui m_ui;
-  return m_ui;
-}
 
 MainWindow& Ui::mw()
 {
@@ -33,7 +29,7 @@ void Ui::ShowConnectWindow()
 {
   if ( m_con_win == NULL ) {
     assert( m_main_win != NULL );
-    m_con_win = new ConnectWindow( m_main_win );
+    m_con_win = new ConnectWindow( m_main_win, *this );
   }
   m_con_win->CenterOnParent();
   m_con_win->Show(true);
@@ -43,9 +39,55 @@ void Ui::ShowConnectWindow()
 //! @brief Connects to default server or opens the ConnectWindow
 //!
 //! @todo Fix Auto Connect
+//! @see DoConnect
 void Ui::Connect()
 {
   ShowConnectWindow();
+}
+
+
+//! @brief Opens the accutial connection to a server.
+void Ui::DoConnect( const wxString& servername, const wxString& username, const wxString& password )
+{
+  std::string host;
+  int port;
+  Socket* sock;
+  
+  if ( !sett().ServerExists( STL_STRING(servername) ) ) {
+    assert( false );
+    return;
+  }
+  
+  if ( m_serv != NULL ) {
+    // Delete old Server object
+    
+    if ( Ask( _T("Allready connected"), _T("You are allready connected to a\nserver. Do you want to disconnect?") ) ) {
+      m_serv->Disconnect();
+      sock =  m_serv->GetSocket();
+      m_serv->SetSocket( NULL );
+      delete sock;
+      delete m_serv;
+    } else {
+      return;
+    }
+    
+  }
+  
+  // Create new Server object
+  m_serv = new TASServer( *this );
+  sock = new Socket( *m_serv );
+  m_serv->SetSocket( sock );
+  //m_serv->SetServerEvents( &se() );
+  
+  m_serv->SetUsername( STL_STRING(username) );
+  m_serv->SetPassword( STL_STRING(password) );
+  
+  host = sett().GetServerHost( STL_STRING(servername) );
+  port = sett().GetServerPort( STL_STRING(servername) );
+  
+  // Connect
+  m_serv->Connect( host, port );
+
 }
 
 
@@ -68,12 +110,38 @@ bool Ui::Ask( const wxString& heading, const wxString& question )
 }
 
 
+bool Ui::AskText( const wxString& heading, const wxString& question, wxString& answer )
+{
+  wxTextEntryDialog name_dlg( NULL, question, heading, _(""), wxOK | wxCANCEL | wxCENTRE );
+  int res = name_dlg.ShowModal();
+  answer = name_dlg.GetValue();
+  std::cout << "** Ui::AskText(): a: " << answer.c_str() << std::endl;
+  return ( res == wxID_OK);
+}
+
+
+void Ui::ShowMessage( const wxString& heading, const wxString& message )
+{
+  wxMessageDialog msg( NULL, heading, message, wxOK);
+  msg.ShowModal();
+}
+
+
+void Ui::OnUpdate()
+{
+  if ( m_serv != NULL ) {
+    m_serv->Update();
+  }
+}
+
+
 //! @brief Called when connected to a server
 //!
 //! @todo Display in servertab
-void Ui::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported )
+void Ui::OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported )
 {
-  
+  std::cout << "** Ui::OnConnected()" << std::endl;
+  server.uidata.panel = m_main_win->GetChatTab().AddChatPannel( server, WX_STRING(server_name) );
 }
 
 
@@ -83,11 +151,9 @@ void Ui::OnConnected( const std::string& server_name, const std::string& server_
 void Ui::OnJoinedChannelSuccessful( Channel& chan )
 {
   std::cout << "** Ui::OnJoinedChannelSuccessful()" << std::endl;
-  UiChannelData* chandata = new UiChannelData();
-  chandata->panel = NULL;
-  
-  chan.SetUserData( (void*)chandata );
-  mw().OpenChannelChat( chan );
+
+  chan.uidata.panel = NULL;
+  m_main_win->OpenChannelChat( chan );
 }
 
 
@@ -95,26 +161,22 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
 void Ui::OnChannelSaid( Channel& channel, User& user, const std::string& message )
 {
   std::cout << "** Ui::OnChannelSaid()" << std::endl;
-  UiChannelData* ud = (UiChannelData*)channel.GetUserData();
-  assert( ud != NULL );
-  if ( ud->panel == NULL ) {
+  if ( channel.uidata.panel == NULL ) {
     std::cout << "   !! ud->panel NULL" << std::endl;
     return;
   }
-  ud->panel->Said( WX_STRING(user.GetNick()), WX_STRING( message ) );
+  channel.uidata.panel->Said( WX_STRING(user.GetNick()), WX_STRING( message ) );
 }
 
 
 void Ui::OnChannelDidAction( Channel& channel , User& user, const std::string& action )
 {
   std::cout << "** Ui::OnChannelDidAction()" << std::endl;
-  UiChannelData* ud = (UiChannelData*)channel.GetUserData();
-  assert( ud != NULL );
-  if ( ud->panel == NULL ) {
+  if ( channel.uidata.panel == NULL ) {
     std::cout << "   !! ud->panel NULL" << std::endl;
     return;
   }
-  ud->panel->DidAction( WX_STRING(user.GetNick()), WX_STRING( action ) );  
+  channel.uidata.panel->DidAction( WX_STRING(user.GetNick()), WX_STRING( action ) );  
 }
 
 
@@ -123,53 +185,40 @@ void Ui::OnChannelDidAction( Channel& channel , User& user, const std::string& a
 //! @todo Tell ChatPanel the channel is no longer joined
 void Ui::OnLeaveChannel( Channel& channel )
 {
-  assert( channel.GetUserData() != NULL );
-  assert( ((UiChannelData*)channel.GetUserData())->panel != NULL );
-  
-  ((UiChannelData*)channel.GetUserData())->panel->SetChannel( NULL );
-  
-  delete (UiChannelData*)channel.GetUserData();
-  channel.SetUserData( NULL );
-  
+
 }
 
 
 void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 {
   std::cout << "** Ui::OnUserJoinedChannel()" << std::endl;
-  UiChannelData* ud = (UiChannelData*)chan.GetUserData();
-  assert( ud != NULL );
-  if ( ud->panel == NULL ) {
+  if ( chan.uidata.panel == NULL ) {
     std::cout << "   !! ud->panel NULL" << std::endl;
     return;
   }
-  ud->panel->Joined( user );  
+  chan.uidata.panel->Joined( user );  
 }
 
 
 void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason )
 {
   std::cout << "** Ui::OnUserLeftChannel()" << std::endl;
-  UiChannelData* ud = (UiChannelData*)chan.GetUserData();
-  assert( ud != NULL );
-  if ( ud->panel == NULL ) {
+  if ( chan.uidata.panel == NULL ) {
     std::cout << "   !! ud->panel NULL" << std::endl;
     return;
   }
-  ud->panel->Parted( user, WX_STRING(reason) );  
+  chan.uidata.panel->Parted( user, WX_STRING(reason) );  
 }
 
 
 void Ui::OnChannelTopic( Channel& channel , const std::string user, const std::string& topic )
 {
   std::cout << "** Ui::OnChannelTopic()" << std::endl;
-  UiChannelData* ud = (UiChannelData*)channel.GetUserData();
-  assert( ud != NULL );
-  if ( ud->panel == NULL ) {
+  if ( channel.uidata.panel == NULL ) {
     std::cout << "   !! ud->panel NULL" << std::endl;
     return;
   }
-  ud->panel->SetTopic( WX_STRING(user), WX_STRING(topic) );   
+  channel.uidata.panel->SetTopic( WX_STRING(user), WX_STRING(topic) );   
 }
 
 
@@ -195,5 +244,17 @@ void Ui::OnUserOffline( User& user )
 
 void Ui::OnUserStatusChanged( User& user )
 {
+}
+
+
+void Ui::OnUnknownCommand( Server& server, const std::string& command, const std::string& params )
+{
+  if ( server.uidata.panel != NULL ) server.uidata.panel->UnknownCommand( WX_STRING(command), WX_STRING(params) );
+}
+
+
+void Ui::OnMotd( Server& server, const std::string& message )
+{
+  if ( server.uidata.panel != NULL ) server.uidata.panel->Motd( WX_STRING(message) );  
 }
 

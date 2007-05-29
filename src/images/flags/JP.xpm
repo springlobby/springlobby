@@ -1,5 +1,5 @@
 /* XPM */
-static char *JP[] = {
+static char *JP_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 82 1",
 "  c black",

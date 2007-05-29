@@ -1,5 +1,5 @@
 /* XPM */
-static char *VN[] = {
+static char *VN_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 128 2",
 "   c black",

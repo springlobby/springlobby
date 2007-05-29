@@ -1,5 +1,5 @@
 /* XPM */
-static char *AU[] = {
+static char *AU_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 168 2",
 "   c black",
