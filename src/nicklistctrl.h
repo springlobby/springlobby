@@ -25,7 +25,8 @@
 #define ICON_RANK2 10
 #define ICON_RANK3 11
 #define ICON_RANK4 12
-#define ICON_FLAGS_BASE 13
+#define ICON_UNK_FLAG 13
+#define ICON_FLAGS_BASE 14
 
 class User;
 class UserList;

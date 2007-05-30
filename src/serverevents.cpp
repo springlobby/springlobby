@@ -65,7 +65,7 @@ void ServerEvents::OnPong( int ping_time )
       
 void ServerEvents::OnNewUser( const std::string& nick, const std::string& country, int cpu )
 {
-  std::cout << "** OnNewUser::OnUserStatus()" << std::endl;
+  //std::cout << "** OnNewUser::OnUserStatus()" << std::endl;
   if ( m_serv.UserExists( nick ) ) throw std::runtime_error("New user from server, but already exists!");
   User& user = m_serv._AddUser( nick );
   user.SetCountry( country );
@@ -139,7 +139,7 @@ void ServerEvents::OnChannelSaid( const std::string& channel, const std::string&
 
 void ServerEvents::OnChannelJoin( const std::string& channel, const std::string& who )
 {
-  std::cout << "** ServerEvents::OnChannelJoin()" << std::endl;
+  //std::cout << "** ServerEvents::OnChannelJoin()" << std::endl;
   m_serv.GetChannel( channel ).Joined( m_serv.GetUser( who ) );
 }
 

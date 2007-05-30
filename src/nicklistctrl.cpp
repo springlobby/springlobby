@@ -20,6 +20,7 @@
 #include "images/rank2.xpm"
 #include "images/rank3.xpm"
 #include "images/rank4.xpm"
+#include "images/unknown_flag.xpm"
 
 #include "flagimages.h"
 
@@ -62,6 +63,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent )
     _imagelist->Add( wxBITMAP(rank2) );
     _imagelist->Add( wxBITMAP(rank3) );
     _imagelist->Add( wxBITMAP(rank4) );
+    _imagelist->Add( wxBITMAP(unknown_flag) );
 
     ADD_FLAGS_IMAGES(_imagelist)
   }

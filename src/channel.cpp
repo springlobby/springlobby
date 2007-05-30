@@ -58,7 +58,7 @@ void Channel::Leave()
   
 void Channel::Joined( User& who )
 {
-  std::cout << "** Channel::Joined()" << std::endl;
+  //std::cout << "** Channel::Joined()" << std::endl;
   AddUser( who );
   m_ui.OnUserJoinedChannel( *this, who );
 }

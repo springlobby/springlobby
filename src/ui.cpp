@@ -191,7 +191,7 @@ void Ui::OnLeaveChannel( Channel& channel )
 
 void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 {
-  std::cout << "** Ui::OnUserJoinedChannel()" << std::endl;
+  //std::cout << "** Ui::OnUserJoinedChannel()" << std::endl;
   if ( chan.uidata.panel == NULL ) {
     std::cout << "   !! ud->panel NULL" << std::endl;
     return;
@@ -202,7 +202,7 @@ void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 
 void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason )
 {
-  std::cout << "** Ui::OnUserLeftChannel()" << std::endl;
+  //std::cout << "** Ui::OnUserLeftChannel()" << std::endl;
   if ( chan.uidata.panel == NULL ) {
     std::cout << "   !! ud->panel NULL" << std::endl;
     return;
