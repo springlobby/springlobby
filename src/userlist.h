@@ -12,7 +12,7 @@
 #include <stdexcept>
 
 //! @brief std::map<> list that stores User pointers.
-typedef std::map<std::string, User> user_map_t;
+typedef std::map<std::string, User*> user_map_t;
 //! @brief user_map_t iterator.
 typedef user_map_t::iterator user_iter_t;
 
@@ -23,8 +23,8 @@ class UserList
     
     UserList(): m_seek(m_users.end()), m_seekpos(-1) {}
     
-    void AddUser( User const& user ) {
-      m_users[user.GetNick()] = user;
+    void AddUser( User& user ) {
+      m_users[user.GetNick()] = &user;
       m_seekpos = -1;
     }
     
@@ -36,7 +36,7 @@ class UserList
     User& GetUser( std::string const& nick ) {
       user_iter_t u = m_users.find(nick);
       if (u == m_users.end()) throw std::logic_error("UserList::GetUser(\"" + nick + "\"): no such user");
-      return u->second;
+      return *u->second;
     }
 
     User const& GetUser( int index ) {
@@ -46,7 +46,7 @@ class UserList
       }
       std::advance( m_seek, index - m_seekpos );
       m_seekpos = index;
-      return m_seek->second;
+      return *m_seek->second;
     }
     
     bool UserExists( std::string const& nick ) {
