@@ -5,9 +5,9 @@
 #include <wx/intl.h>
 #include <wx/imaglist.h>
 #include "mainchattab.h"
-#include "system.h"
 #include "utils.h"
 #include "mainwindow.h"
+#include "channel.h"
 
 #include "images/close.xpm"
 #include "images/server.xpm"

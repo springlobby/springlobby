@@ -4,7 +4,6 @@
 
 #include "connectwindow.h"
 #include "settings.h"
-#include "system.h"
 #include "ui.h"
 
 // Define events.

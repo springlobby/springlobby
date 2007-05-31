@@ -3,7 +3,6 @@
 //
 
 #include "springlobbyapp.h"
-#include "system.h"
 #include "ui.h"
 
 IMPLEMENT_APP(SpringLobbyApp)

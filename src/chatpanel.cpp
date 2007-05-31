@@ -24,7 +24,6 @@
 #include <wx/intl.h>
 #include <wx/datetime.h>
 #include "chatpanel.h"
-#include "system.h"
 #include "utils.h"
 #include "ui.h"
 

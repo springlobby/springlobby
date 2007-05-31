@@ -4,7 +4,6 @@
 
 #include "channel.h"
 #include "ui.h"
-#include "system.h"
 #include "server.h"
 
 void Channel::SetName( const std::string& name )

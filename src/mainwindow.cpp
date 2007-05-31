@@ -7,7 +7,6 @@
 #include <wx/textdlg.h>
 #include <wx/imaglist.h>
 #include "mainwindow.h"
-#include "system.h"
 #include "settings.h"
 #include "ui.h"
 #include "images/bot.xpm"
