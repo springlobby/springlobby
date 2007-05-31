@@ -47,8 +47,6 @@ springlobby_SOURCES = \
 	channellist.h     \
 	ui.cpp     \
 	ui.h     \
-	system.cpp     \
-	system.h     \
 	utils.h     \
 	nicklistctrl.cpp     \
 	nicklistctrl.h     \

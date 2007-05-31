@@ -61,7 +61,6 @@ class ServerEvents
     Ui& m_ui;
 };
 
-ServerEvents& se();
 
 #endif  //_UICONTROL_H_
 

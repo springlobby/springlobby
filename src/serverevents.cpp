@@ -75,7 +75,7 @@ void ServerEvents::OnNewUser( const std::string& nick, const std::string& countr
 
 void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
 {
-  std::cout << "** ServerEvents::OnUserStatus()" << std::endl;
+  //std::cout << "** ServerEvents::OnUserStatus()" << std::endl;
   User& user = m_serv.GetUser( nick );
   user.SetStatus( status );
   m_ui.OnUserStatusChanged( user );
@@ -85,9 +85,7 @@ void ServerEvents::OnUserQuit( const std::string& nick )
 {
   std::cout << "** ServerEvents::OnUserQuit()" << std::endl;
   m_ui.OnUserOffline( m_serv.GetUser( nick ) );
-  std::cout << "** ServerEvents::OnUserQuit()" << std::endl;
   m_serv._RemoveUser( nick );
-  std::cout << "** ServerEvents::OnUserQuit()" << std::endl;
 }
       
 void ServerEvents::OnBattleOpened( int id, bool replay, int nat, const std::string& nick, 
@@ -95,27 +93,27 @@ void ServerEvents::OnBattleOpened( int id, bool replay, int nat, const std::stri
                        bool haspass, int rank, int hash, const std::string& map, 
                        const std::string& title, const std::string& mod )
 {
-  std::cout << "** ServerEvents::OnBattleOpened()" << std::endl;
+  //std::cout << "** ServerEvents::OnBattleOpened()" << std::endl;
 }
 
 void ServerEvents::OnUserJoinedBattle( int battleid, const std::string& nick )
 {
-  std::cout << "** ServerEvents::OnUserJoinedBattle()" << std::endl;
+  //std::cout << "** ServerEvents::OnUserJoinedBattle()" << std::endl;
 }
 
 void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
 {
-  std::cout << "** ServerEvents::OnUserLeftBattle()" << std::endl;
+  //std::cout << "** ServerEvents::OnUserLeftBattle()" << std::endl;
 }
  
 void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, int maphash, const std::string& map )
 {
-  std::cout << "** ServerEvents::OnBattleInfoUpdated()" << std::endl;
+  //std::cout << "** ServerEvents::OnBattleInfoUpdated()" << std::endl;
 }
 
 void ServerEvents::OnBattleClosed( int battleid )
 {
-  std::cout << "** ServerEvents::OnBattleClosed()" << std::endl;
+  //std::cout << "** ServerEvents::OnBattleClosed()" << std::endl;
 }
 
 void ServerEvents::OnJoinChannelResult( bool success, const std::string& channel, const std::string& reason )
@@ -133,7 +131,7 @@ void ServerEvents::OnJoinChannelResult( bool success, const std::string& channel
 
 void ServerEvents::OnChannelSaid( const std::string& channel, const std::string& who, const std::string& message )
 {
-  std::cout << "** ServerEvents::OnChannelSaid()" << std::endl;
+  //std::cout << "** ServerEvents::OnChannelSaid()" << std::endl;
   m_serv.GetChannel( channel ).Said( m_serv.GetUser( who ), message );
 }
 
