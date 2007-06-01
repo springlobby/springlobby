@@ -5,8 +5,32 @@
 #include "battlelistctrl.h"
 #include "utils.h"
 
+#include "images/open_game.xpm"
+#include "images/open_pw_game.xpm"
+#include "images/closed_game.xpm"
+#include "images/closed_pw_game.xpm"
+#include "images/started_game.xpm"
+
+static wxImageList* _imagelist = NULL;
+static int _imagelist_users = 0;
+
 BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, -1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL)
 {
+  
+  if ( _imagelist == NULL ) {
+    _imagelist = new wxImageList( 16, 16 );
+    _imagelist->Add( wxBITMAP(open_game) );
+    _imagelist->Add( wxBITMAP(open_pw_game) );
+    _imagelist->Add( wxBITMAP(closed_game) );
+    _imagelist->Add( wxBITMAP(closed_pw_game) );
+    _imagelist->Add( wxBITMAP(started_game) );
+  }
+  _imagelist_users++;
+  
+  SetImageList( _imagelist, wxIMAGE_LIST_NORMAL );
+  SetImageList( _imagelist, wxIMAGE_LIST_SMALL );
+  SetImageList( _imagelist, wxIMAGE_LIST_STATE );
+  
   wxListItem col;
   
   col.SetText( _("s") );
@@ -43,18 +67,22 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, -1, wxDe
 
   SetColumnWidth( 0, 20 );
   SetColumnWidth( 1, 170 );
-  SetColumnWidth( 2, 100 );
-  SetColumnWidth( 3, 100 );
+  SetColumnWidth( 2, 140 );
+  SetColumnWidth( 3, 180 );
   SetColumnWidth( 4, 100 );
-  SetColumnWidth( 5, 20 );
-  SetColumnWidth( 6, 20 );
-  SetColumnWidth( 7, 20 );
+  SetColumnWidth( 5, 26 );
+  SetColumnWidth( 6, 26 );
+  SetColumnWidth( 7, 26 );
 }
 
 
 BattleListCtrl::~BattleListCtrl()
 {
-  
+  _imagelist_users--;
+  if ( _imagelist_users == 0 ) {
+    delete _imagelist;
+    _imagelist = NULL;
+  }
 }
 
 
@@ -66,9 +94,9 @@ void BattleListCtrl::AddBattle( Battle& battle )
   SetItem( index, 2, WX_STRING(battle.opts().mapname) );
   SetItem( index, 3, WX_STRING(battle.opts().modname) );
   SetItem( index, 4, WX_STRING(battle.opts().founder) );
-  SetItem( index, 5, _("0") );
-  SetItem( index, 6, _("1") );
-  SetItem( index, 7, _("10") );
+  SetItem( index, 5, wxString::Format(_("%d"), battle.opts().spectators) );
+  SetItem( index, 6, _("?") );
+  SetItem( index, 7, wxString::Format(_("%d"), battle.opts().maxplayers) );
 
   SetItemData(index, (long)&battle );
   //SortItems( NickListSortCallback, 0 );
@@ -89,6 +117,15 @@ bool BattleListCtrl::BattleExists( Battle& battle )
   
 int BattleListCtrl::GetStatusIcon( Battle& battle )
 {
-  return -1;
+  if ( !battle.opts().locked ) {
+    if ( !battle.opts().ispassworded ) return ICON_OPEN_GAME;
+    else return ICON_OPEN_PW_GAME;
+  } else {
+    if ( !battle.opts().ispassworded ) return ICON_CLOSED_GAME;
+    else return ICON_CLOSED_PW_GAME;
+  }
+//ICON_STARTED_GAME
+  
+  return ICON_GAME_UNKNOWN;
 }
 
