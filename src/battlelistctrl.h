@@ -9,13 +9,6 @@
 #include <wx/intl.h>
 #include "battle.h"
 
-#define ICON_GAME_UNKNOWN -1
-#define ICON_OPEN_GAME 0
-#define ICON_OPEN_PW_GAME 1
-#define ICON_CLOSED_GAME 2
-#define ICON_CLOSED_PW_GAME 3
-#define ICON_STARTED_GAME 4
-
 
 class BattleListCtrl : public wxListCtrl
 {
@@ -33,7 +26,7 @@ class BattleListCtrl : public wxListCtrl
   
     int GetBattleIndex( Battle& battle );
   
-    static int GetStatusIcon( Battle& battle );
+    
     static wxString RefineMapname( wxString mapname );
     static wxString RefineModname( wxString modname );
   

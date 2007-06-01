@@ -6,7 +6,9 @@
 #include <cctype>
 #include "nicklistctrl.h"
 #include "utils.h"
+#include "iconimagelist.h"
 
+/*
 #include "images/bot.xpm"
 #include "images/admin.xpm"
 #include "images/admin_ingame.xpm"
@@ -25,7 +27,7 @@
 #include "flagimages.h"
 
 static wxImageList* _imagelist = NULL;
-static int _imagelist_users = 0;
+static int _imagelist_users = 0;*/
 
 NickListCtrl::NickListCtrl( wxWindow* parent )
 : wxListCtrl( parent, -1, wxDefaultPosition, wxDefaultSize,
@@ -47,7 +49,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent )
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );
   SetColumnWidth( 3, 128 );
-
+/*
   if ( _imagelist == NULL ) {
     _imagelist = new wxImageList( 16, 16 );
     _imagelist->Add( wxBITMAP(admin) );
@@ -67,29 +69,30 @@ NickListCtrl::NickListCtrl( wxWindow* parent )
 
     ADD_FLAGS_IMAGES(_imagelist)
   }
-  _imagelist_users++;
-  SetImageList( _imagelist, wxIMAGE_LIST_NORMAL );
-  SetImageList( _imagelist, wxIMAGE_LIST_SMALL );
-  SetImageList( _imagelist, wxIMAGE_LIST_STATE );
+  _imagelist_users++;*/
+  SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
+  SetImageList( &icons(), wxIMAGE_LIST_SMALL );
+  SetImageList( &icons(), wxIMAGE_LIST_STATE );
 
 }
 
 
 NickListCtrl::~NickListCtrl()
 {
+  /*
   _imagelist_users--;
   if ( _imagelist_users == 0 ) {
     delete _imagelist;
     _imagelist = NULL;
-  }
+  }*/
 }
 
 void NickListCtrl::AddUser( User& user )
 {
-  int index = InsertItem(0, GetStateIcon( user.GetStatus() ) );
+  int index = InsertItem(0, IconImageList::GetUserStateIcon( user.GetStatus() ) );
   assert( index != -1 );
-  SetItemColumnImage( index, 1, ICON_FLAGS_BASE + GetFlagIndex( user.GetCountry() ) );
-  SetItemColumnImage( index, 2, ICON_RANK0 + GetRankIcon( user.GetStatus() ) );
+  SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( user.GetCountry() ) );
+  SetItemColumnImage( index, 2, IconImageList::GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 3, WX_STRING(user.GetNick()) );
   SetItemData(index, (long)&user );
   SortItems( NickListSortCallback, 0 );
@@ -116,7 +119,7 @@ void NickListCtrl::RemoveUser( const User& user )
     
   }
 }
-
+/*
 void NickListCtrl::UpdateSize()
 {
   assert( m_users != NULL );
@@ -168,30 +171,7 @@ wxListItemAttr* NickListCtrl::OnGetItemAttr(long item) const
   return NULL;
 }
 
-int NickListCtrl::GetStateIcon( const UserStatus& us ) const
-{
-  if ( us.bot ) return ICON_BOT;
-  if (us.moderator ) {
-    if ( us.in_game ) return ICON_ADMIN_INGAME;
-    if ( us.away ) return ICON_ADMIN_AWAY;
-    return ICON_ADMIN;
-  }
-  
-  if ( us.in_game ) return ICON_INGAME;
-  if ( us.away ) return ICON_AWAY;
-  
-  return ICON_NOSTATE;
-}
-
-int NickListCtrl::GetRankIcon( const UserStatus& us ) const
-{
-  if ( us.rank <= RANK_0 ) return 0;
-  if ( us.rank <= RANK_1 ) return 1;
-  if ( us.rank <= RANK_2 ) return 2;
-  if ( us.rank <= RANK_3 ) return 3;
-  return 4;
-}
-
+*/
 struct upper {
  int operator()(int c)
  {

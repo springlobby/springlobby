@@ -4,19 +4,15 @@
 
 #include "battlelistctrl.h"
 #include "utils.h"
+#include "iconimagelist.h"
 
-#include "images/open_game.xpm"
-#include "images/open_pw_game.xpm"
-#include "images/closed_game.xpm"
-#include "images/closed_pw_game.xpm"
-#include "images/started_game.xpm"
-
+/*
 static wxImageList* _imagelist = NULL;
-static int _imagelist_users = 0;
+static int _imagelist_users = 0;*/
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, -1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL)
 {
-  
+  /*
   if ( _imagelist == NULL ) {
     _imagelist = new wxImageList( 16, 16 );
     _imagelist->Add( wxBITMAP(open_game) );
@@ -25,11 +21,11 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, -1, wxDe
     _imagelist->Add( wxBITMAP(closed_pw_game) );
     _imagelist->Add( wxBITMAP(started_game) );
   }
-  _imagelist_users++;
+  _imagelist_users++;*/
   
-  SetImageList( _imagelist, wxIMAGE_LIST_NORMAL );
-  SetImageList( _imagelist, wxIMAGE_LIST_SMALL );
-  SetImageList( _imagelist, wxIMAGE_LIST_STATE );
+  SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
+  SetImageList( &icons(), wxIMAGE_LIST_SMALL );
+  SetImageList( &icons(), wxIMAGE_LIST_STATE );
   
   wxListItem col;
   
@@ -37,58 +33,69 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, -1, wxDe
   col.SetImage( -1 );
   InsertColumn( 0, col );
 
-  col.SetText( _T("Description") );
+  col.SetText( _("c") );
   col.SetImage( -1 );
   InsertColumn( 1, col );
+
+  col.SetText( _("r") );
+  col.SetImage( -1 );
+  InsertColumn( 2, col );
+  
+  col.SetText( _T("Description") );
+  col.SetImage( -1 );
+  InsertColumn( 3, col );
   
   col.SetText( _T("Map") );
   col.SetImage( -1 );
-  InsertColumn( 2, col );
+  InsertColumn( 4, col );
 
   col.SetText( _T("Mod") );
   col.SetImage( -1 );
-  InsertColumn( 3, col );
+  InsertColumn( 5, col );
 
   col.SetText( _T("Host") );
   col.SetImage( -1 );
-  InsertColumn( 4, col );
+  InsertColumn( 6, col );
 
   col.SetText( _T("s") );
   col.SetImage( -1 );
-  InsertColumn( 5, col );
+  InsertColumn( 7, col );
 
   col.SetText( _T("p") );
   col.SetImage( -1 );
-  InsertColumn( 6, col );
+  InsertColumn( 8, col );
 
   col.SetText( _T("m") );
   col.SetImage( -1 );
-  InsertColumn( 7, col );
+  InsertColumn( 9, col );
 
   SetColumnWidth( 0, 20 );
-  SetColumnWidth( 1, 170 );
-  SetColumnWidth( 2, 140 );
-  SetColumnWidth( 3, 180 );
-  SetColumnWidth( 4, 100 );
-  SetColumnWidth( 5, 26 );
-  SetColumnWidth( 6, 26 );
+  SetColumnWidth( 1, 20 );
+  SetColumnWidth( 2, 20 );
+  SetColumnWidth( 3, 170 );
+  SetColumnWidth( 4, 140 );
+  SetColumnWidth( 5, 140 );
+  SetColumnWidth( 6, 120 );
   SetColumnWidth( 7, 26 );
+  SetColumnWidth( 8, 26 );
+  SetColumnWidth( 9, 26 );
 }
 
 
 BattleListCtrl::~BattleListCtrl()
 {
+  /*
   _imagelist_users--;
   if ( _imagelist_users == 0 ) {
     delete _imagelist;
     _imagelist = NULL;
-  }
+  }*/
 }
 
 
 void BattleListCtrl::AddBattle( Battle& battle )
 {
-  int index = InsertItem( 0, GetStatusIcon( battle ) );
+  int index = InsertItem( 0, IconImageList::GetBattleStatusIcon( battle ) );
   assert( index != -1 );
   SetItemData(index, (long)&battle );
 
@@ -128,14 +135,25 @@ void BattleListCtrl::UpdateBattle( const int& index )
     
   Battle& battle = *((Battle*)item.GetData());
   
-  SetItemImage( index, GetStatusIcon( battle ) );
-  SetItem( index, 1, WX_STRING(battle.opts().description) );
-  SetItem( index, 2, RefineMapname( WX_STRING(battle.opts().mapname) ) );
-  SetItem( index, 3, RefineModname( WX_STRING(battle.opts().modname) ) );
-  SetItem( index, 4, WX_STRING(battle.opts().founder) );
-  SetItem( index, 5, wxString::Format(_("%d"), battle.opts().spectators) );
-  SetItem( index, 6, wxString::Format(_("%d"), battle.GetNumUsers() - battle.opts().spectators ) );
-  SetItem( index, 7, wxString::Format(_("%d"), battle.opts().maxplayers) );
+  SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
+  SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.opts().rankneeded, false ) );
+  SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
+  
+  SetItem( index, 3, WX_STRING(battle.opts().description) );
+  
+  SetItem( index, 4, RefineMapname( WX_STRING(battle.opts().mapname) ) );
+  
+  SetItem( index, 5, RefineModname( WX_STRING(battle.opts().modname) ) );
+  
+  SetItem( index, 6, WX_STRING(battle.opts().founder) );
+  //SetItemColumnImage( index, 6, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
+  
+  SetItem( index, 7, wxString::Format(_("%d"), battle.opts().spectators) );
+  
+  SetItem( index, 8, wxString::Format(_("%d"), battle.GetNumUsers() - battle.opts().spectators ) );
+  
+  SetItem( index, 9, wxString::Format(_("%d"), battle.opts().maxplayers) );
+  
 }
 
 
@@ -156,20 +174,6 @@ int BattleListCtrl::GetBattleIndex( Battle& battle )
 }
 
 
-int BattleListCtrl::GetStatusIcon( Battle& battle )
-{
-  if ( !battle.opts().islocked ) {
-    if ( !battle.opts().ispassworded ) return ICON_OPEN_GAME;
-    else return ICON_OPEN_PW_GAME;
-  } else {
-    if ( !battle.opts().ispassworded ) return ICON_CLOSED_GAME;
-    else return ICON_CLOSED_PW_GAME;
-  }
-//ICON_STARTED_GAME
-  
-  return ICON_GAME_UNKNOWN;
-}
-
 
 wxString BattleListCtrl::RefineMapname( wxString mapname )
 {
@@ -185,10 +189,15 @@ wxString BattleListCtrl::RefineModname( wxString modname )
   modname.Replace(_("Absolute Annihilation"), _("AA") );
   modname.Replace(_("Complete Annihilation"), _("CA") );
   modname.Replace(_("Balanced Annihilation"), _("BA") );
+  modname.Replace(_("Expand and Exterminate"), _("EAE") );
   modname.Replace(_("War Evolution"), _("WarEv") );
   modname.Replace(_("TinyComm"), _("TC") );
   modname.Replace(_("BETA"), _("b") );
+  modname.Replace(_("Public Alpha"), _("pa") );
   modname.Replace(_("Public Beta"), _("pb") );
+  modname.Replace(_("Public"), _("p") );
+  modname.Replace(_("Alpha"), _("a") );
+  modname.Replace(_("Beta"), _("b") );
   return modname;
 }
 
