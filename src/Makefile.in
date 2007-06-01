@@ -57,7 +57,7 @@ am_springlobby_OBJECTS = base64.$(OBJEXT) md5.$(OBJEXT) \
 	ui.$(OBJEXT) nicklistctrl.$(OBJEXT) settings.$(OBJEXT) \
 	flagimages.$(OBJEXT) mainjoinbattletab.$(OBJEXT) \
 	battlelistctrl.$(OBJEXT) battle.$(OBJEXT) \
-	iconimagelist.$(OBJEXT)
+	iconimagelist.$(OBJEXT) batlelisttab.$(OBJEXT)
 springlobby_OBJECTS = $(am_springlobby_OBJECTS)
 am__DEPENDENCIES_1 =
 springlobby_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
@@ -265,7 +265,9 @@ springlobby_SOURCES = \
 	battle.h     \
 	battlelist.h     \
 	iconimagelist.cpp     \
-	iconimagelist.h 
+	iconimagelist.h     \
+	batlelisttab.cpp     \
+	batlelisttab.h 
 
 springlobby_LDFLAGS = 
 springlobby_LDADD = \
@@ -344,6 +346,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/base64.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/batlelisttab.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/battle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/battlelistctrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/channel.Po@am__quote@

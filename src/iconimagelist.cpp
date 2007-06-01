@@ -111,6 +111,7 @@ int IconImageList::GetFlagIcon( const std::string& flagname )
 
 int IconImageList::GetBattleStatusIcon( Battle& battle )
 {
+  if ( battle.GetFounder().GetStatus().in_game ) return ICON_STARTED_GAME;
   if ( !battle.opts().islocked ) {
     if ( !battle.opts().ispassworded ) return ICON_OPEN_GAME;
     else return ICON_OPEN_PW_GAME;
@@ -118,7 +119,6 @@ int IconImageList::GetBattleStatusIcon( Battle& battle )
     if ( !battle.opts().ispassworded ) return ICON_CLOSED_GAME;
     else return ICON_CLOSED_PW_GAME;
   }
-//ICON_STARTED_GAME
   
   return ICON_GAME_UNKNOWN;
 }

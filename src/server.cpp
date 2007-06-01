@@ -58,7 +58,6 @@ User& Server::_AddUser( const std::string& user )
 
 void Server::_RemoveUser( const std::string& nickname )
 {
-  std::cout << "** Server::_RemoveUser()" << std::endl;
   User* u = &m_users.GetUser( nickname );
   m_users.RemoveUser( nickname );
   if ( u == NULL ) throw std::logic_error("Server::_RemoveUser(\"" + nickname + "\"): GetUser returned NULL pointer");

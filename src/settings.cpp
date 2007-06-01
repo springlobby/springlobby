@@ -141,6 +141,7 @@ void   Settings::SetServerAccountNick( const std::string& server_name, const std
 //! @todo Implement
 std::string Settings::GetServerAccountPass( const std::string& server_name )
 {
+  return STL_STRING( m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/pass"), _("") ) );
 }
 
 
@@ -151,6 +152,7 @@ std::string Settings::GetServerAccountPass( const std::string& server_name )
 //! @todo Implement
 void   Settings::SetServerAccountPass( const std::string& server_name, const std::string& value )
 {
+  m_config->Write( _("/Server/")+WX_STRING(server_name)+_("/pass"), WX_STRING(value) );
 }
 
 
@@ -160,6 +162,7 @@ void   Settings::SetServerAccountPass( const std::string& server_name, const std
 //! @todo Implement
 bool   Settings::GetServerAccountSavePass( const std::string& server_name )
 {
+  return m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/savepass"), (long int)false );  
 }
 
 
@@ -170,6 +173,7 @@ bool   Settings::GetServerAccountSavePass( const std::string& server_name )
 //! @todo Implement
 void   Settings::SetServerAccountSavePass( const std::string& server_name, const bool value )
 {
+  m_config->Write( _("/Server/")+WX_STRING(server_name)+_("/savepass"), (long int)value );
 }
 
 

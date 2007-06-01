@@ -39,7 +39,7 @@ class UserList
       return *u->second;
     }
 
-    User const& GetUser( int index ) {
+    User& GetUser( int index ) {
       if (m_seekpos < 0) {
         m_seek = m_users.begin();
         m_seekpos = 0;

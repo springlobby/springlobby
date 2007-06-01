@@ -77,7 +77,7 @@ class Settings
     
     bool   GetServerAccountSavePass( const std::string& server_name );
     void   SetServerAccountSavePass( const std::string& server_name, const bool value );
-    
+  
     int    GetMainWindowWidth();
     void   SetMainWindowWidth( const int value );
 

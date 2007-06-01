@@ -50,10 +50,25 @@ bool TASServer::IsConnected()
   return (m_sock->State() == SS_OPEN);
 }
   
-void TASServer::Login()
+
+bool TASServer::IsPasswordHash( const std::string& pass )
 {
-  std::cout << "** TASServer::login()" << std::endl;
-  std::string password = m_pass;
+  std::cout << "** TASServer::IsPasswordHash(): " << pass.c_str() << "  " << pass.length() << std::endl;
+  if ( pass.length() != 24 ) return false;
+  std::cout << "** TASServer::IsPasswordHash(): " << pass.c_str() << "  " << pass.length() << std::endl;
+  if ( pass[22] != '=' ) return false;
+  std::cout << "** TASServer::IsPasswordHash(): " << pass.c_str() << "  " << pass.length() << std::endl;
+  if ( pass[23] != '=' ) return false;
+  std::cout << "** TASServer::IsPasswordHash(): " << pass.c_str() << "  " << pass.length() << std::endl;
+  return true;
+}
+
+
+std::string TASServer::GetPasswordHash( const std::string& pass )
+{
+  if ( IsPasswordHash(pass) ) return pass;
+    
+  std::string password = pass;
   unsigned char output[16];
   unsigned char* input = new unsigned char[ password.length() ];
   for ( int i = 0; i < password.length(); i++ )
@@ -62,14 +77,23 @@ void TASServer::Login()
   md5_csum( input, password.length(), &output[0] );
   password = base64_encode( &output[0] , 16 );
   
+  delete[] input;
+  
+  return password;
+}
+
+
+void TASServer::Login()
+{
+  std::cout << "** TASServer::login()" << std::endl;
+
   std::string data = "LOGIN ";
   data += m_user;
   data += " ";
-  data += password;
+  data += GetPasswordHash( m_pass );
   data += " 2100 * SpringLobby 0.1\n";
   m_sock->Send( data );
   
-  delete[] input;
 }
 
 void TASServer::Logout()

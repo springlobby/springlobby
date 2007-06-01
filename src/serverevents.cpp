@@ -85,7 +85,7 @@ void ServerEvents::OnNewUser( const std::string& nick, const std::string& countr
 
 void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
 {
-  std::cout << "** ServerEvents::OnUserStatus()" << std::endl;
+  //std::cout << "** ServerEvents::OnUserStatus()" << std::endl;
   User& user = m_serv.GetUser( nick );
   user.SetStatus( status );
   m_ui.OnUserStatusChanged( user );
@@ -149,7 +149,7 @@ void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
   
   m_ui.OnUserLeftBattle( battle, user );
 
-  battle.RemoveUser( user.GetNick() );
+  battle.RemoveUser( user );
 }
 
 

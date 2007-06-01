@@ -69,6 +69,8 @@ class Server
   
     virtual void SetUsername( const std::string& username ) { m_user = username; }
     virtual void SetPassword( const std::string& password ) { m_pass = password; }
+    virtual bool IsPasswordHash( const std::string& pass ) = 0;
+    virtual std::string GetPasswordHash( const std::string& pass ) = 0;
     
     virtual void Ping() = 0;
 
@@ -93,6 +95,7 @@ class Server
     int m_keepalive;
     std::string m_user;
     std::string m_pass;
+    bool m_pass_hash;
 
     ChannelList m_channels;
     UserList m_users;

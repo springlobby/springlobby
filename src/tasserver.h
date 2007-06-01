@@ -91,6 +91,9 @@ class TASServer : public Server
     void OnDisconnected( Socket* sock );
     void OnDataRecived( Socket* sock );
     
+    bool IsPasswordHash( const std::string& pass );
+    std::string GetPasswordHash( const std::string& pass );
+    
   protected:
     // TASServer variables
   

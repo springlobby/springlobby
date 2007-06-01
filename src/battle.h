@@ -92,7 +92,9 @@ class Battle : public UserList
 {
   public:
     Battle( Server& serv, Ui& ui, const int& id ) : UserList(),m_serv(serv),m_ui(ui) { m_opts.battleid = id; }
-    ~Battle() {}
+    ~Battle() {
+      for (int i = 0; i < GetNumUsers(); i++ ) GetUser(i).SetBattle( NULL );
+    }
   
     const BattleOptions& opts() { return m_opts; }
   
@@ -126,6 +128,18 @@ class Battle : public UserList
     void SetModname( const std::string& mod ) { m_opts.modname = mod; }
     
     User& GetFounder() { return GetUser( m_opts.founder ); }
+    
+    void AddUser( User& user ) {
+      user.SetBattle( this );
+      UserList::AddUser( user );
+    }
+    
+    void RemoveUser( User& user ) {
+      user.SetBattle( NULL );
+      UserList::RemoveUser( user.GetNick() );
+    }
+    
+    void Update();
   /*
     DISABLEUNITS unitname1 unitname2
     ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}
@@ -137,6 +151,8 @@ class Battle : public UserList
     BattleOptions m_opts;
     Server& m_serv;
     Ui& m_ui;
+  
+    void RemoveUser( std::string const& user ) {}
 };
 
 

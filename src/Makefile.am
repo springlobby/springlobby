@@ -61,7 +61,9 @@ springlobby_SOURCES = \
 	battle.h     \
 	battlelist.h     \
 	iconimagelist.cpp     \
-	iconimagelist.h 
+	iconimagelist.h     \
+	batlelisttab.cpp     \
+	batlelisttab.h 
 
 springlobby_LDFLAGS = 
 

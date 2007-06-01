@@ -25,6 +25,7 @@ struct UserStatus {
 };
 
 class ChatPanel;
+class Battle;
 
 struct UiUserData {
   UiUserData(): panel(NULL) {}
@@ -39,10 +40,10 @@ class User
     
     UiUserData uidata;
     
-    User(): m_cpu(0) {}
-    User( const std::string& nick ) : m_cpu(0), m_nick(nick) {}
+    User(): m_cpu(0), m_battle(NULL) {}
+    User( const std::string& nick ) : m_cpu(0), m_nick(nick), m_battle(NULL) {}
     User( const std::string& nick, const std::string& country, const int& cpu) :
-      m_nick(nick), m_country(country), m_cpu(cpu) {}
+      m_nick(nick), m_country(country), m_cpu(cpu), m_battle(NULL) {}
         
     virtual ~User() {}
   
@@ -58,7 +59,7 @@ class User
     void SetCpu( const int& cpu ) { m_cpu = cpu; }
   
     UserStatus GetStatus() const { return m_status; }
-    void SetStatus( const UserStatus& status ) { m_status = status; }
+    void SetStatus( const UserStatus& status );
   
 /*    void SetUserData( void* userdata ) { m_data = userdata; }
     void* GetUserData() { return m_data; }*/
@@ -66,6 +67,9 @@ class User
     void Said( const std::string& message );
     void Say( const std::string& message );
   
+    Battle* GetBattle();
+    void SetBattle( Battle* battle );
+    
   protected:
     // User variables
   
@@ -73,6 +77,7 @@ class User
     std::string m_country;
     int m_cpu;
     UserStatus m_status;
+    Battle* m_battle;
     //void* m_data;
   
 };

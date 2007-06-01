@@ -24,10 +24,12 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   wxString server;
   wxString username;
   wxString password;
+  bool savepass;
   
   server = WX_STRING( sett().GetDefaultServer() );
   username = WX_STRING( sett().GetServerAccountNick( sett().GetDefaultServer() ) );
-  
+  password = WX_STRING( sett().GetServerAccountPass( sett().GetDefaultServer() ) );
+  savepass = sett().GetServerAccountSavePass( sett().GetDefaultServer() );
   // Create all UI elements.
   m_tabs =         new wxNotebook( this  , -1 );
   m_login_tab =    new wxPanel   ( m_tabs, -1 );
@@ -43,6 +45,8 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_pass_lbl =    new wxStaticText( m_login_tab, -1, _T("Password") );
   m_pass_text =   new wxTextCtrl  ( m_login_tab, -1, password, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
   m_rpass_check = new wxCheckBox  ( m_login_tab, -1, _("Remember\npassword") );
+  
+  m_rpass_check->SetValue( savepass );
   
   m_acc_note_line = new wxStaticLine( m_login_tab );
 
@@ -121,6 +125,9 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
   Hide();
   sett().SetDefaultServer( STL_STRING(m_server_combo->GetValue()) );
   sett().SetServerAccountNick( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_nick_text->GetValue()) );
+  sett().SetServerAccountSavePass( STL_STRING(m_server_combo->GetValue()), m_rpass_check->GetValue() );
+  sett().SaveSettings();
+  
   m_ui.DoConnect( m_server_combo->GetValue(), m_nick_text->GetValue(), m_pass_text->GetValue() );
 }
 

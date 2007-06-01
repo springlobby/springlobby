@@ -82,6 +82,14 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
   m_serv->SetUsername( STL_STRING(username) );
   m_serv->SetPassword( STL_STRING(password) );
   
+  if ( sett().GetServerAccountSavePass( STL_STRING(servername) ) ) {
+    if ( m_serv->IsPasswordHash(STL_STRING(password)) ) sett().SetServerAccountPass( STL_STRING(servername), STL_STRING(password) );
+    else sett().SetServerAccountPass( STL_STRING(servername), m_serv->GetPasswordHash( STL_STRING(password) ) );
+  } else {
+    sett().SetServerAccountPass( STL_STRING(servername), "" );    
+  }
+  sett().SaveSettings();
+  
   host = sett().GetServerHost( STL_STRING(servername) );
   port = sett().GetServerPort( STL_STRING(servername) );
   
