@@ -273,7 +273,19 @@ void Ui::OnBattleOpened( Battle& battle )
 }
 
 
+void Ui::OnBattleClosed( Battle& battle )
+{
+  m_main_win->GetJoinTab().RemoveBattle( battle );
+}
+
+
 void Ui::OnUserJoinedBattle( Battle& battle, User& user )
+{
+  m_main_win->GetJoinTab().UpdateBattle( battle );
+}
+
+
+void Ui::OnUserLeftBattle( Battle& battle, User& user )
 {
   m_main_win->GetJoinTab().UpdateBattle( battle );
 }

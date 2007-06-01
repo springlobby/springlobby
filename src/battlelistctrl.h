@@ -34,6 +34,8 @@ class BattleListCtrl : public wxListCtrl
     int GetBattleIndex( Battle& battle );
   
     static int GetStatusIcon( Battle& battle );
+    static wxString RefineMapname( wxString mapname );
+    static wxString RefineModname( wxString modname );
   
   protected:
     // BattleListCtrl variables

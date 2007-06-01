@@ -14,15 +14,18 @@ void ServerEvents::OnConnected( const std::string& server_name, const std::strin
   m_serv.Login();
 }
 
+
 void ServerEvents::OnDisconnected()
 {
-  std::cout << "** ServerEvents::OnDisconnected()" << std::endl;
+  //std::cout << "** ServerEvents::OnDisconnected()" << std::endl;
 }
+
 
 void ServerEvents::OnLogin()
 {
-  std::cout << "** ServerEvents::OnLogin()" << std::endl;
+  //std::cout << "** ServerEvents::OnLogin()" << std::endl;
 }
+
 
 void ServerEvents::OnLoginInfoComplete()
 {
@@ -30,26 +33,31 @@ void ServerEvents::OnLoginInfoComplete()
   m_serv.JoinChannel( "springlobby", "" );
 }
 
+
 void ServerEvents::OnLogout()
 {
-  std::cout << "** ServerEvents::OnLogout()" << std::endl;
+  //std::cout << "** ServerEvents::OnLogout()" << std::endl;
 }
-      
+
+
 void ServerEvents::OnUnknownCommand( const std::string& command, const std::string& params )
 {
   std::cout << "** ServerEvents::OnUnknownCommand()" << std::endl;
   m_ui.OnUnknownCommand( m_serv, command, params );
 }
 
+
 void ServerEvents::OnSocketError( const Sockerror error )
 {
-  std::cout << "** ServerEvents::OnSocketError()" << std::endl;
+  //std::cout << "** ServerEvents::OnSocketError()" << std::endl;
 }
+
 
 void ServerEvents::OnProtocolError( const Protocolerror error )
 {
-  std::cout << "** ServerEvents::OnProtocolError()" << std::endl;
+  //std::cout << "** ServerEvents::OnProtocolError()" << std::endl;
 }
+
 
 void ServerEvents::OnMotd( const std::string& msg )
 {
@@ -57,14 +65,16 @@ void ServerEvents::OnMotd( const std::string& msg )
   m_ui.OnMotd( m_serv, msg );
 }
 
+
 void ServerEvents::OnPong( int ping_time )
 {
   //std::cout << "** ServerEvents::OnPong()" << std::endl;
 }
-      
+
+
 void ServerEvents::OnNewUser( const std::string& nick, const std::string& country, int cpu )
 {
-  //std::cout << "** OnNewUser::OnUserStatus()" << std::endl;
+  std::cout << "** OnNewUser::OnUserStatus()" << std::endl;
   if ( m_serv.UserExists( nick ) ) throw std::runtime_error("New user from server, but already exists!");
   User& user = m_serv._AddUser( nick );
   user.SetCountry( country );
@@ -72,13 +82,15 @@ void ServerEvents::OnNewUser( const std::string& nick, const std::string& countr
   m_ui.OnUserOnline( user );
 }
 
+
 void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
 {
-  //std::cout << "** ServerEvents::OnUserStatus()" << std::endl;
+  std::cout << "** ServerEvents::OnUserStatus()" << std::endl;
   User& user = m_serv.GetUser( nick );
   user.SetStatus( status );
   m_ui.OnUserStatusChanged( user );
 }
+
 
 void ServerEvents::OnUserQuit( const std::string& nick )
 {
@@ -86,7 +98,8 @@ void ServerEvents::OnUserQuit( const std::string& nick )
   m_ui.OnUserOffline( m_serv.GetUser( nick ) );
   m_serv._RemoveUser( nick );
 }
-      
+
+
 void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::string& nick, 
                        const std::string& host, int port, int maxplayers, 
                        bool haspass, int rank, int maphash, const std::string& map, 
@@ -116,9 +129,10 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::
   m_ui.OnBattleOpened( battle ); 
 }
 
+
 void ServerEvents::OnUserJoinedBattle( int battleid, const std::string& nick )
 {
-  //std::cout << "** ServerEvents::OnUserJoinedBattle()" << std::endl;
+  std::cout << "** ServerEvents::OnUserJoinedBattle()" << std::endl;
   Battle& battle = m_serv.GetBattle( battleid );
   User& user = m_serv.GetUser( nick );
   
@@ -126,11 +140,19 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const std::string& nick )
   m_ui.OnUserJoinedBattle( battle, user );
 }
 
+
 void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
 {
-  //std::cout << "** ServerEvents::OnUserLeftBattle()" << std::endl;
+  std::cout << "** ServerEvents::OnUserLeftBattle()" << std::endl;
+  Battle& battle = m_serv.GetBattle( battleid );
+  User& user = m_serv.GetUser( nick );
+  
+  m_ui.OnUserLeftBattle( battle, user );
+
+  battle.RemoveUser( user.GetNick() );
 }
- 
+
+
 void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, int maphash, const std::string& map )
 {
   std::cout << "** ServerEvents::OnBattleInfoUpdated( )" << std::endl;
@@ -145,10 +167,17 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   m_ui.OnBattleInfoUpdated( battle );
 }
 
+
 void ServerEvents::OnBattleClosed( int battleid )
 {
-  //std::cout << "** ServerEvents::OnBattleClosed()" << std::endl;
+  std::cout << "** ServerEvents::OnBattleClosed()" << std::endl;
+  Battle& battle = m_serv.GetBattle( battleid );
+  
+  m_ui.OnBattleClosed( battle );
+  
+  m_serv._RemoveBattle( battleid );
 }
+
 
 void ServerEvents::OnJoinChannelResult( bool success, const std::string& channel, const std::string& reason )
 {
@@ -163,21 +192,24 @@ void ServerEvents::OnJoinChannelResult( bool success, const std::string& channel
   }
 }
 
+
 void ServerEvents::OnChannelSaid( const std::string& channel, const std::string& who, const std::string& message )
 {
-  //std::cout << "** ServerEvents::OnChannelSaid()" << std::endl;
+  std::cout << "** ServerEvents::OnChannelSaid()" << std::endl;
   m_serv.GetChannel( channel ).Said( m_serv.GetUser( who ), message );
 }
 
+
 void ServerEvents::OnChannelJoin( const std::string& channel, const std::string& who )
 {
-  //std::cout << "** ServerEvents::OnChannelJoin()" << std::endl;
+  std::cout << "** ServerEvents::OnChannelJoin()" << std::endl;
   m_serv.GetChannel( channel ).Joined( m_serv.GetUser( who ) );
 }
 
 
 void ServerEvents::OnChannelPart( const std::string& channel, const std::string& who, const std::string& message )
 {
+  std::cout << "** ServerEvents::OnChannelPart()" << std::endl;
   m_serv.GetChannel( channel ).Left( m_serv.GetUser( who ), message );
 }
 
@@ -191,6 +223,7 @@ void ServerEvents::OnChannelTopic( const std::string& channel, const std::string
 
 void ServerEvents::OnChannelAction( const std::string& channel, const std::string& who, const std::string& action )
 {
+  std::cout << "** ServerEvents::OnChannelAction()" << std::endl;
   m_serv.GetChannel( channel ).DidAction( m_serv.GetUser( who ), action );
 }
 

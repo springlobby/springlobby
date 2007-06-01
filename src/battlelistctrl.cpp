@@ -100,7 +100,8 @@ void BattleListCtrl::AddBattle( Battle& battle )
 
 void BattleListCtrl::RemoveBattle( Battle& battle )
 {
-
+  int index = GetBattleIndex( battle );
+  DeleteItem( index );
 }
 
 
@@ -129,11 +130,11 @@ void BattleListCtrl::UpdateBattle( const int& index )
   
   SetItemImage( index, GetStatusIcon( battle ) );
   SetItem( index, 1, WX_STRING(battle.opts().description) );
-  SetItem( index, 2, WX_STRING(battle.opts().mapname) );
-  SetItem( index, 3, WX_STRING(battle.opts().modname) );
+  SetItem( index, 2, RefineMapname( WX_STRING(battle.opts().mapname) ) );
+  SetItem( index, 3, RefineModname( WX_STRING(battle.opts().modname) ) );
   SetItem( index, 4, WX_STRING(battle.opts().founder) );
   SetItem( index, 5, wxString::Format(_("%d"), battle.opts().spectators) );
-  SetItem( index, 6, wxString::Format(_("%d"), battle.GetNumUsers() ) );
+  SetItem( index, 6, wxString::Format(_("%d"), battle.GetNumUsers() - battle.opts().spectators ) );
   SetItem( index, 7, wxString::Format(_("%d"), battle.opts().maxplayers) );
 }
 
@@ -167,5 +168,27 @@ int BattleListCtrl::GetStatusIcon( Battle& battle )
 //ICON_STARTED_GAME
   
   return ICON_GAME_UNKNOWN;
+}
+
+
+wxString BattleListCtrl::RefineMapname( wxString mapname )
+{
+  mapname = mapname.SubString(0, mapname.Find( '.', true ) - 1 );
+  mapname.Replace(_("_"), _(" ") );
+  mapname.Replace(_("-"), _(" ") );
+  return mapname;
+}
+
+
+wxString BattleListCtrl::RefineModname( wxString modname )
+{
+  modname.Replace(_("Absolute Annihilation"), _("AA") );
+  modname.Replace(_("Complete Annihilation"), _("CA") );
+  modname.Replace(_("Balanced Annihilation"), _("BA") );
+  modname.Replace(_("War Evolution"), _("WarEv") );
+  modname.Replace(_("TinyComm"), _("TC") );
+  modname.Replace(_("BETA"), _("b") );
+  modname.Replace(_("Public Beta"), _("pb") );
+  return modname;
 }
 
