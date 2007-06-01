@@ -65,6 +65,7 @@ ChatPanel::ChatPanel( wxWindow* parent, User& user )
 : wxPanel( parent, -1),m_channel(NULL),m_server(NULL),m_user(&user),m_type(CPT_User),m_show_nick_list(false)
 {
   _CreateControls( );
+  user.uidata.panel = this;
 }
 
 ChatPanel::ChatPanel( wxWindow* parent, Server& serv )
@@ -72,7 +73,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Server& serv )
 {
   std::cout << "** ChatPanel::ChatPanel( wxWindow* parent, Server& serv )" << std::endl;
   _CreateControls( );
-  std::cout << "** ChatPanel::ChatPanel( wxWindow* parent, Server& serv )" << std::endl;
+  serv.uidata.panel = this;
 }
 
 void ChatPanel::_CreateControls( )

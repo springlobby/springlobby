@@ -21,6 +21,7 @@ class MainChatTab : public wxPanel
 
     ChatPanel* AddChatPannel( Channel& channel );
     ChatPanel* AddChatPannel( Server& server, const wxString& name );
+    ChatPanel* AddChatPannel( User& user );
 
     void OnTabsChanged( wxNotebookEvent& event );
 

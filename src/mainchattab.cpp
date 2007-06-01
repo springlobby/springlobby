@@ -12,7 +12,7 @@
 #include "images/close.xpm"
 #include "images/server.xpm"
 #include "images/channel.xpm"
-#include "images/user.xpm"
+#include "images/userchat.xpm"
 
 BEGIN_EVENT_TABLE(MainChatTab, wxPanel)
 
@@ -36,7 +36,7 @@ MainChatTab::MainChatTab( wxWindow* parent )
   m_imagelist->Add( wxBITMAP(close) );
   m_imagelist->Add( wxBITMAP(server) );
   m_imagelist->Add( wxBITMAP(channel) );
-  m_imagelist->Add( wxBITMAP(user) );
+  m_imagelist->Add( wxBITMAP(userchat) );
 
   m_chat_tabs->AssignImageList( m_imagelist );
 
@@ -72,6 +72,14 @@ ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, 1 );
   return chat;
 }
+
+ChatPanel* MainChatTab::AddChatPannel( User& user )
+{
+  ChatPanel* chat = new ChatPanel( m_chat_tabs, user );
+  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(user.GetNick()), true, 3 );
+  return chat;
+}
+
 
 void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
 {

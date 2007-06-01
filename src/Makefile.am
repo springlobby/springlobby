@@ -52,7 +52,14 @@ springlobby_SOURCES = \
 	nicklistctrl.h     \
 	settings.cpp     \
 	flagimages.h     \
-	flagimages.cpp 
+	flagimages.cpp     \
+	mainjoinbattletab.cpp     \
+	mainjoinbattletab.h     \
+	battlelistctrl.cpp     \
+	battlelistctrl.h     \
+	battle.cpp     \
+	battle.h     \
+	battlelist.h 
 
 springlobby_LDFLAGS = 
 

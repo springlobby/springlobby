@@ -34,6 +34,19 @@ bool Server::ChannelExists( const std::string& name )
 }
 
 
+Battle& Server::GetBattle( const int& battleid )
+{
+  return m_battles.GetBattle( battleid );
+}
+
+
+bool Server::BattleExists( const int& battleid )
+{
+  return m_battles.BattleExists( battleid );
+}
+
+
+
 User& Server::_AddUser( const std::string& user )
 {
   if ( m_users.UserExists( user ) ) return m_users.GetUser( user );
@@ -71,4 +84,23 @@ void Server::_RemoveChannel( const std::string& name )
   if ( c == NULL ) throw std::logic_error("Server::_RemoveChannel(\"" + name + "\"): GetChannel returned NULL pointer");
   delete c;
 }
+
+Battle& Server::_AddBattle( const int& id )
+{
+  if ( m_battles.BattleExists( id ) ) return m_battles.GetBattle( id );
+  Battle* b = new Battle( *this, m_ui, id );
+
+  m_battles.AddBattle( *b );
+  return *b;
+}
+
+
+void Server::_RemoveBattle( const int& id )
+{
+  Battle* b = &m_battles.GetBattle( id );
+  m_battles.RemoveBattle( id );
+  if ( b == NULL ) throw std::logic_error("Server::_RemoveBattle(): GetBattle returned NULL pointer");
+  delete b;
+}
+
 

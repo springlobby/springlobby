@@ -168,6 +168,7 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
   int pos, cpu, status, id, nat, port, maxplayers, rank, hash, specs;
   bool replay, haspass;
   std::string nick, contry, host, map, title, mod, channel, error, msg;
+  NatType ntype;
   UserStatus cstatus;
   UTASClientstatus tasstatus;
   
@@ -213,7 +214,9 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     title = GetSentenceParam( params );
     mod = GetSentenceParam( params );
     
-    m_se->OnBattleOpened( id, replay, nat, nick, host, port, maxplayers, 
+    //! @todo Fix nat settings
+    
+    m_se->OnBattleOpened( id, replay, NAT_None, nick, host, port, maxplayers, 
                             haspass, (rank + 1)*100, hash, map, title, mod );
     
   } else if ( cmd == "JOINEDBATTLE" ) {
@@ -283,7 +286,7 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
   } else if ( cmd == "SAIDPRIVATE" ) {
     nick = GetWordParam( params );
     msg = GetSentenceParam( params );
-    
+    m_se->OnPrivateMessage( nick, msg );
     //"SAIDPRIVATE" params: "CAutohost TEST2W ---> http://spring.unknown-files.net/file/2273" 
     // !! Command: "CHANNELMESSAGE" params: "main <ChanServ> has muted <smoth>".
   } else {

@@ -11,9 +11,11 @@
 #include <wx/frame.h>
 
 #include "mainchattab.h"
+#include "mainjoinbattletab.h"
 
 class Ui;
 
+  
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
 {
@@ -23,7 +25,7 @@ class MainWindow : public wxFrame
 
     // MainWindow interface
     void OpenChannelChat( Channel& channel );
-    void OpenPrivateChat( wxString nick );
+    void OpenPrivateChat( User& user );
 
     void CloseAllChats();
 
@@ -32,6 +34,7 @@ class MainWindow : public wxFrame
     void OnMenuDisconnect( wxCommandEvent& event );
 
     MainChatTab& GetChatTab();
+    MainJoinBattleTab& GetJoinTab() { assert( m_join_tab != NULL ); return *m_join_tab; }
 
   protected:
     // MainWindow variables
@@ -43,6 +46,7 @@ class MainWindow : public wxFrame
     wxNotebookPage* m_chat_page;
 
     MainChatTab* m_chat_tab;
+    MainJoinBattleTab* m_join_tab;
 
     wxImageList* m_func_tab_images;
 

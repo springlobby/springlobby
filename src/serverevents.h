@@ -37,9 +37,9 @@ class ServerEvents
     void OnUserStatus( const std::string& nick, UserStatus status );
     void OnUserQuit( const std::string& nick );
     
-    void OnBattleOpened( int id, bool replay, int nat, const std::string& nick, 
+    void OnBattleOpened( int id, bool replay, NatType nat, const std::string& nick, 
                          const std::string& host, int port, int maxplayers, 
-                         bool haspass, int rank, int hash, const std::string& map, 
+                         bool haspass, int rank, int maphash, const std::string& map, 
                          const std::string& title, const std::string& mod );
 
     void OnUserJoinedBattle( int battleid, const std::string& nick );

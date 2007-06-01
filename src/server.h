@@ -8,6 +8,7 @@
 #include <string>
 #include "channellist.h"
 #include "userlist.h"
+#include "battlelist.h"
 
 #define PING_TIMEOUT 30
 
@@ -15,6 +16,7 @@ class ServerEvents;
 class Socket;
 class Channel;
 class Ui;
+class Battle;
 
 
 typedef int ServerError;
@@ -25,6 +27,7 @@ struct UiServerData {
   UiServerData(): panel(NULL) {}
   ChatPanel* panel;
 };
+
 
 
 //! @brief Abstract baseclass that is used to implement a server protocol.
@@ -78,7 +81,10 @@ class Server
 
     Channel& GetChannel( const std::string& name );
     bool ChannelExists( const std::string& name );
-    
+
+    Battle& GetBattle( const int& battleid );
+    bool BattleExists( const int& battleid );
+
   protected:
     // Server variables
   
@@ -90,13 +96,17 @@ class Server
 
     ChannelList m_channels;
     UserList m_users;
+    BattleList m_battles;
   
     User& _AddUser( const std::string& user );
     void _RemoveUser( const std::string& nickname );
   
     Channel& _AddChannel( const std::string& chan );
     void _RemoveChannel( const std::string& name );    
-  
+
+    Battle& _AddBattle( const int& id );
+    void _RemoveBattle( const int& id );    
+
 };
 
 

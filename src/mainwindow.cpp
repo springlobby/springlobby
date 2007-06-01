@@ -59,8 +59,10 @@ MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby
 
   //! @todo fix
   m_chat_tab = new MainChatTab( m_func_tabs );
+  m_join_tab = new MainJoinBattleTab( m_func_tabs );
+  
   m_func_tabs->AddPage( m_chat_tab, _(""), true, 0 );
-  m_func_tabs->AddPage( new wxWindow( m_func_tabs, -1 ), _(""), false, 1 );
+  m_func_tabs->AddPage( m_join_tab, _(""), false, 1 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -114,8 +116,10 @@ void MainWindow::OpenChannelChat( Channel& channel )
 //! @brief Open a new chat tab with a private chat
 //!
 //! @param nick The user to whom the chatwindow should be opened to
-void MainWindow::OpenPrivateChat( wxString nick )
+void MainWindow::OpenPrivateChat( User& user )
 {
+  assert( m_chat_tab != NULL );
+  ChatPanel* chat = m_chat_tab->AddChatPannel( user );
 }
 
 

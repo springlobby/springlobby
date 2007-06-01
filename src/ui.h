@@ -68,6 +68,8 @@ class Ui
     void OnUnknownCommand( Server& server, const std::string& command, const std::string& params );
     void OnMotd( Server& server, const std::string& message );
   
+    void OnBattleOpened( Battle& battle );
+    
   protected:
     // Ui variables
   

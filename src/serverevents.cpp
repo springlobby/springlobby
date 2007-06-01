@@ -87,12 +87,30 @@ void ServerEvents::OnUserQuit( const std::string& nick )
   m_serv._RemoveUser( nick );
 }
       
-void ServerEvents::OnBattleOpened( int id, bool replay, int nat, const std::string& nick, 
+void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::string& nick, 
                        const std::string& host, int port, int maxplayers, 
-                       bool haspass, int rank, int hash, const std::string& map, 
+                       bool haspass, int rank, int maphash, const std::string& map, 
                        const std::string& title, const std::string& mod )
 {
-  //std::cout << "** ServerEvents::OnBattleOpened()" << std::endl;
+  std::cout << "** ServerEvents::OnBattleOpened()" << std::endl;
+  
+  if ( m_serv.BattleExists( id ) ) throw std::runtime_error("New battle from server, but already exists!");
+  Battle& battle = m_serv._AddBattle( id );
+  
+  battle.SetIsReplay( replay );
+  battle.SetNatType( nat );
+  battle.SetFounder( nick );
+  battle.SetIp( host );
+  battle.SetPort( port );
+  battle.SetMaxPlayers( maxplayers );
+  battle.SetIsPassworded( haspass );
+  battle.SetRankNeeded( rank );
+  battle.SetMapHash( maphash );
+  battle.SetMapname( map );
+  battle.SetDescription( title );
+  battle.SetModname( mod );
+  
+  m_ui.OnBattleOpened( battle ); 
 }
 
 void ServerEvents::OnUserJoinedBattle( int battleid, const std::string& nick )
@@ -159,12 +177,11 @@ void ServerEvents::OnChannelAction( const std::string& channel, const std::strin
   m_serv.GetChannel( channel ).DidAction( m_serv.GetUser( who ), action );
 }
 
-/*
-//! @todo fix
+
 void ServerEvents::OnPrivateMessage( const std::string& user, const std::string& message )
 {
-  User& who = sys().GetUser( user );
-  if ( who.GetUserData() != NULL ) {
-  }
+  std::cout << "** ServerEvents::OnPrivateMessage()" << std::endl;  
+  User& who = m_serv.GetUser( user );
+  m_ui.OnUserSaid( who, message );
 }
-*/
+

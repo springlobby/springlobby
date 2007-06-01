@@ -55,7 +55,8 @@ am_springlobby_OBJECTS = base64.$(OBJEXT) md5.$(OBJEXT) \
 	tasserver.$(OBJEXT) mainchattab.$(OBJEXT) \
 	springlobbyapp.$(OBJEXT) user.$(OBJEXT) channel.$(OBJEXT) \
 	ui.$(OBJEXT) nicklistctrl.$(OBJEXT) settings.$(OBJEXT) \
-	flagimages.$(OBJEXT)
+	flagimages.$(OBJEXT) mainjoinbattletab.$(OBJEXT) \
+	battlelistctrl.$(OBJEXT) battle.$(OBJEXT)
 springlobby_OBJECTS = $(am_springlobby_OBJECTS)
 am__DEPENDENCIES_1 =
 springlobby_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
@@ -254,7 +255,14 @@ springlobby_SOURCES = \
 	nicklistctrl.h     \
 	settings.cpp     \
 	flagimages.h     \
-	flagimages.cpp 
+	flagimages.cpp     \
+	mainjoinbattletab.cpp     \
+	mainjoinbattletab.h     \
+	battlelistctrl.cpp     \
+	battlelistctrl.h     \
+	battle.cpp     \
+	battle.h     \
+	battlelist.h 
 
 springlobby_LDFLAGS = 
 springlobby_LDADD = \
@@ -333,11 +341,14 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/base64.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/battle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/battlelistctrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/channel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chatpanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/connectwindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flagimages.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mainchattab.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mainjoinbattletab.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mainwindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nicklistctrl.Po@am__quote@
