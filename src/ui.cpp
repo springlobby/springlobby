@@ -266,8 +266,21 @@ void Ui::OnUserSaid( User& user, const std::string message )
   user.uidata.panel->Said( WX_STRING(user.GetNick()), WX_STRING(message) );
 }
 
+
 void Ui::OnBattleOpened( Battle& battle )
 {
   m_main_win->GetJoinTab().AddBattle( battle );
+}
+
+
+void Ui::OnUserJoinedBattle( Battle& battle, User& user )
+{
+  m_main_win->GetJoinTab().UpdateBattle( battle );
+}
+
+
+void Ui::OnBattleInfoUpdated( Battle& battle )
+{
+  m_main_win->GetJoinTab().UpdateBattle( battle );
 }
 

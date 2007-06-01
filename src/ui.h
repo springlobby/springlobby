@@ -69,6 +69,8 @@ class Ui
     void OnMotd( Server& server, const std::string& message );
   
     void OnBattleOpened( Battle& battle );
+    void OnUserJoinedBattle( Battle& battle, User& user );
+    void OnBattleInfoUpdated( Battle& battle );
     
   protected:
     // Ui variables

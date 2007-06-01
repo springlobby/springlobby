@@ -47,7 +47,7 @@ void MainJoinBattleTab::RemoveBattle( Battle& battle )
 
 void MainJoinBattleTab::UpdateBattle( Battle& battle )
 {
-  //! @todo fix
+  m_battle_list->UpdateBattle( battle );
 }
 
 

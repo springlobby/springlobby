@@ -90,15 +90,10 @@ void BattleListCtrl::AddBattle( Battle& battle )
 {
   int index = InsertItem( 0, GetStatusIcon( battle ) );
   assert( index != -1 );
-  SetItem( index, 1, WX_STRING(battle.opts().description) );
-  SetItem( index, 2, WX_STRING(battle.opts().mapname) );
-  SetItem( index, 3, WX_STRING(battle.opts().modname) );
-  SetItem( index, 4, WX_STRING(battle.opts().founder) );
-  SetItem( index, 5, wxString::Format(_("%d"), battle.opts().spectators) );
-  SetItem( index, 6, _("?") );
-  SetItem( index, 7, wxString::Format(_("%d"), battle.opts().maxplayers) );
-
   SetItemData(index, (long)&battle );
+
+  UpdateBattle( index );
+
   //SortItems( NickListSortCallback, 0 );
 }
 
@@ -114,10 +109,55 @@ bool BattleListCtrl::BattleExists( Battle& battle )
   return false;
 }
 
+
+void BattleListCtrl::UpdateBattle( Battle& battle )
+{
+  UpdateBattle( GetBattleIndex( battle ) );
+}
+
+
+void BattleListCtrl::UpdateBattle( const int& index )
+{
+  assert( index != -1 );
   
+  wxListItem item;
+  item.SetId( index );
+   
+  if (!GetItem( item )) assert(false);
+    
+  Battle& battle = *((Battle*)item.GetData());
+  
+  SetItemImage( index, GetStatusIcon( battle ) );
+  SetItem( index, 1, WX_STRING(battle.opts().description) );
+  SetItem( index, 2, WX_STRING(battle.opts().mapname) );
+  SetItem( index, 3, WX_STRING(battle.opts().modname) );
+  SetItem( index, 4, WX_STRING(battle.opts().founder) );
+  SetItem( index, 5, wxString::Format(_("%d"), battle.opts().spectators) );
+  SetItem( index, 6, wxString::Format(_("%d"), battle.GetNumUsers() ) );
+  SetItem( index, 7, wxString::Format(_("%d"), battle.opts().maxplayers) );
+}
+
+
+int BattleListCtrl::GetBattleIndex( Battle& battle )
+{
+  bool found = true;
+  wxListItem item;
+  int index = -1;
+  while ( true ) {
+    index++;
+    item.SetId( index );
+    found = GetItem( item );
+    
+    if (!found) assert(false);
+    if ( item.GetData() == (long)&battle ) return index;
+    if ( index > 1000000 ) assert( false ); // Just in case :)
+  }
+}
+
+
 int BattleListCtrl::GetStatusIcon( Battle& battle )
 {
-  if ( !battle.opts().locked ) {
+  if ( !battle.opts().islocked ) {
     if ( !battle.opts().ispassworded ) return ICON_OPEN_GAME;
     else return ICON_OPEN_PW_GAME;
   } else {

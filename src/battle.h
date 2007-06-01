@@ -48,14 +48,14 @@ typedef int SyncHash;
 struct BattleOptions
 {
   BattleOptions() :
-    battleid(-1),locked(false),isreplay(false),ispassworded(false),rankneeded(0),
+    battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),
     nattype(NAT_None),port(DEFAULT_SERVER_PORT),maxplayers(0),spectators(0),
     startmetal(1000),startenergy(1000),maxunits(500),starttype(ST_Fixed),
     comends(true),limitdgun(false),dimmms(false),ghostedbuildings(true),maphash(0),
     hashcode(0) {}
 
   int battleid;
-  bool locked;
+  bool islocked;
   bool isreplay;
   bool ispassworded;
   int rankneeded;
@@ -97,26 +97,35 @@ class Battle : public UserList
     const BattleOptions& opts() { return m_opts; }
   
     void SetIsReplay( const bool& isreplay ) { m_opts.isreplay = isreplay; }
+    void SetIsLocked( const bool& islocked ) { m_opts.islocked = islocked; }
     void SetIsPassworded( const bool& ispassworded ) { m_opts.ispassworded = ispassworded; }
+    
     void SetNatType( const NatType nattype ) { m_opts.nattype = nattype; }
     void SetPort( const int& port) { m_opts.port = port; }
+    void SetFounder( const std::string& nick ) { m_opts.founder = nick; }
+    void SetIp( const std::string& ip ) { m_opts.ip = ip; }
+    
     void SetMaxPlayers( const int& maxplayers ) { m_opts.maxplayers = maxplayers; }
+    void SetSpectators( const int& spectators ) { m_opts.spectators = spectators; }
+    
     void SetStartMetal( const int& smetal ) { m_opts.startmetal = smetal; }
     void SetStartEnergy( const int& senergy ) { m_opts.startenergy = senergy; }
     void SetMaxUnits( const int& maxunits ) { m_opts.maxunits = maxunits; }
     void SetStartType( const StartType& starttype ) { m_opts.starttype = starttype; }
+    
     void SetComEndsGame( const bool& comends ) { m_opts.comends = comends; }
     void SetLimitDGun( const bool& limdgun ) { m_opts.limitdgun = limdgun; }
     void SetDimMMs( const bool& dimmm ) { m_opts.dimmms = dimmm; }
     void SetGhostedBuildings( const bool& gbuilds ) { m_opts.ghostedbuildings = gbuilds; }
+    
     void SetRankNeeded( const int& rankneeded ) { m_opts.rankneeded = rankneeded; }
-    void SetFounder( const std::string& nick ) { m_opts.founder = nick; }
-    void SetIp( const std::string& ip ) { m_opts.ip = ip; }
+        
     void SetMapHash( const SyncHash& maphash ) { m_opts.maphash = maphash; }
     void SetMapname( const std::string& map ) { m_opts.mapname = map; }
     void SetDescription( const std::string& desc ) { m_opts.description = desc; }
     void SetModname( const std::string& mod ) { m_opts.modname = mod; }
     
+    User& GetFounder() { return GetUser( m_opts.founder ); }
   /*
     DISABLEUNITS unitname1 unitname2
     ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}

@@ -27,7 +27,11 @@ class BattleListCtrl : public wxListCtrl
   
     void AddBattle( Battle& battle );
     void RemoveBattle( Battle& battle );
+    void UpdateBattle( Battle& battle );
+    void UpdateBattle( const int& index );
     bool BattleExists( Battle& battle );
+  
+    int GetBattleIndex( Battle& battle );
   
     static int GetStatusIcon( Battle& battle );
   

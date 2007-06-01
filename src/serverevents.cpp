@@ -97,6 +97,9 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::
   if ( m_serv.BattleExists( id ) ) throw std::runtime_error("New battle from server, but already exists!");
   Battle& battle = m_serv._AddBattle( id );
   
+  User& user = m_serv.GetUser( nick );
+  battle.AddUser( user );
+  
   battle.SetIsReplay( replay );
   battle.SetNatType( nat );
   battle.SetFounder( nick );
@@ -116,6 +119,11 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::
 void ServerEvents::OnUserJoinedBattle( int battleid, const std::string& nick )
 {
   //std::cout << "** ServerEvents::OnUserJoinedBattle()" << std::endl;
+  Battle& battle = m_serv.GetBattle( battleid );
+  User& user = m_serv.GetUser( nick );
+  
+  battle.AddUser( user );
+  m_ui.OnUserJoinedBattle( battle, user );
 }
 
 void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
@@ -125,7 +133,16 @@ void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
  
 void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, int maphash, const std::string& map )
 {
-  //std::cout << "** ServerEvents::OnBattleInfoUpdated()" << std::endl;
+  std::cout << "** ServerEvents::OnBattleInfoUpdated( )" << std::endl;
+  Battle& battle = m_serv.GetBattle( battleid );
+  
+  battle.SetSpectators( spectators );
+  battle.SetIsLocked( locked );
+    
+  battle.SetMapHash( maphash );
+  battle.SetMapname( map );
+  
+  m_ui.OnBattleInfoUpdated( battle );
 }
 
 void ServerEvents::OnBattleClosed( int battleid )
