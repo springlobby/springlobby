@@ -103,6 +103,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 void Ui::Quit()
 {
   assert( m_main_win != NULL );
+  sett().SaveSettings();
   m_main_win->Close();
 }
 

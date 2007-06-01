@@ -19,6 +19,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_JOIN, MainWindow::OnMenuJoin )
   EVT_MENU( MENU_CONNECT, MainWindow::OnMenuConnect )
   EVT_MENU( MENU_DISCONNECT, MainWindow::OnMenuDisconnect )
+  EVT_MENU( MENU_QUIT, MainWindow::OnMenuQuit )
 
 END_EVENT_TABLE()
 
@@ -149,9 +150,16 @@ void MainWindow::OnMenuConnect( wxCommandEvent& event )
   m_ui.ShowConnectWindow();
 }
 
+
 void MainWindow::OnMenuDisconnect( wxCommandEvent& event )
 {
-  
   m_ui.Disconnect();
 }
+
+
+void MainWindow::OnMenuQuit( wxCommandEvent& event )
+{
+  m_ui.Quit();
+}
+
 

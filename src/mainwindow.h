@@ -32,6 +32,7 @@ class MainWindow : public wxFrame
     void OnMenuJoin( wxCommandEvent& event );
     void OnMenuConnect( wxCommandEvent& event );
     void OnMenuDisconnect( wxCommandEvent& event );
+    void OnMenuQuit( wxCommandEvent& event );
 
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab() { assert( m_join_tab != NULL ); return *m_join_tab; }
