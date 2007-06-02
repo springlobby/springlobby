@@ -9,7 +9,7 @@
 #include <wx/button.h>
 #include <wx/stattext.h>
 #include <wx/sizer.h>
-#include "batlelisttab.h"
+#include "battlelisttab.h"
 
 
 class MainJoinBattleTab : public wxPanel

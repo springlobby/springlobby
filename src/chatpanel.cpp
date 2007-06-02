@@ -116,8 +116,8 @@ void ChatPanel::_CreateControls( )
   m_chatlog_text = new wxTextCtrl( m_chat_panel, -1, _(""), wxDefaultPosition, wxDefaultSize, 
                              wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 
-  m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _(""), wxDefaultPosition, wxSize(100,26), wxTE_PROCESS_ENTER );
-  m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _T("Send"), wxDefaultPosition, wxSize(80,26) );
+  m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _(""), wxDefaultPosition, wxSize(100,28), wxTE_PROCESS_ENTER );
+  m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _T("Send"), wxDefaultPosition, wxSize(80,28) );
   
   // Adding elements to sizers
   m_say_sizer->Add( m_say_text, 1, wxEXPAND );
