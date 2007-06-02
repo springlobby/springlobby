@@ -83,6 +83,7 @@ MainWindow::~MainWindow()
   GetPosition( &x, &y );
   sett().SetMainWindowTop( y );
   sett().SetMainWindowLeft( x );
+  sett().SaveSettings();
 }
 
 /*

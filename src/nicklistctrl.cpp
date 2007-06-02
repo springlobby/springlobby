@@ -8,26 +8,6 @@
 #include "utils.h"
 #include "iconimagelist.h"
 
-/*
-#include "images/bot.xpm"
-#include "images/admin.xpm"
-#include "images/admin_ingame.xpm"
-#include "images/admin_away.xpm"
-#include "images/away.xpm"
-#include "images/ingame.xpm"
-#include "images/up.xpm"
-#include "images/down.xpm"
-#include "images/rank0.xpm"
-#include "images/rank1.xpm"
-#include "images/rank2.xpm"
-#include "images/rank3.xpm"
-#include "images/rank4.xpm"
-#include "images/unknown_flag.xpm"
-
-#include "flagimages.h"
-
-static wxImageList* _imagelist = NULL;
-static int _imagelist_users = 0;*/
 
 NickListCtrl::NickListCtrl( wxWindow* parent )
 : wxListCtrl( parent, -1, wxDefaultPosition, wxDefaultSize,
@@ -49,27 +29,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent )
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );
   SetColumnWidth( 3, 128 );
-/*
-  if ( _imagelist == NULL ) {
-    _imagelist = new wxImageList( 16, 16 );
-    _imagelist->Add( wxBITMAP(admin) );
-    _imagelist->Add( wxBITMAP(admin_away) );
-    _imagelist->Add( wxBITMAP(admin_ingame) );
-    _imagelist->Add( wxBITMAP(bot) );
-    _imagelist->Add( wxBITMAP(away) );
-    _imagelist->Add( wxBITMAP(ingame) );
-    _imagelist->Add( wxBITMAP(up) );
-    _imagelist->Add( wxBITMAP(down) );
-    _imagelist->Add( wxBITMAP(rank0) );
-    _imagelist->Add( wxBITMAP(rank1) );
-    _imagelist->Add( wxBITMAP(rank2) );
-    _imagelist->Add( wxBITMAP(rank3) );
-    _imagelist->Add( wxBITMAP(rank4) );
-    _imagelist->Add( wxBITMAP(unknown_flag) );
 
-    ADD_FLAGS_IMAGES(_imagelist)
-  }
-  _imagelist_users++;*/
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
   SetImageList( &icons(), wxIMAGE_LIST_STATE );
@@ -79,12 +39,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent )
 
 NickListCtrl::~NickListCtrl()
 {
-  /*
-  _imagelist_users--;
-  if ( _imagelist_users == 0 ) {
-    delete _imagelist;
-    _imagelist = NULL;
-  }*/
+
 }
 
 void NickListCtrl::AddUser( User& user )
@@ -119,6 +74,18 @@ void NickListCtrl::RemoveUser( const User& user )
     
   }
 }
+
+
+void NickListCtrl::UserUpdated( User& user )
+{
+}
+
+
+void NickListCtrl::UserUpdated( const int& index )
+{
+}
+
+
 /*
 void NickListCtrl::UpdateSize()
 {

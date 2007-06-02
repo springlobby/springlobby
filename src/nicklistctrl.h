@@ -21,19 +21,12 @@ class NickListCtrl : public wxListCtrl
     NickListCtrl( wxWindow* parent );
     ~NickListCtrl();
   
-    // NickListCtrl interface
-  
-    //virtual wxString OnGetItemText(long item, long column) const;
-    //virtual int OnGetItemColumnImage(long item, long column) const;
-    //virtual wxListItemAttr* OnGetItemAttr(long item) const;
-    //virtual int OnGetItemImage(long item) const;
-    //void SetUserList( UserList* users ) { m_users = users; }
-    //UserList* GetUserList() { return m_users; }
-  
     void AddUser( User& user );
     void RemoveUser( const User& user );
       
-    //void UpdateSize();
+    void UserUpdated( User& user );
+    void UserUpdated( const int& index );
+
     
   protected:
     // NickListCtrl variables

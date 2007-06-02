@@ -28,6 +28,18 @@ Channel& Server::GetChannel( const std::string& name )
 }
 
 
+int Server::GetNumChannels()
+{
+  return m_channels.GetNumChannels();
+}
+
+
+Channel& Server::GetChannel( const int& index )
+{
+  m_channels.GetChannel( index );
+}
+
+
 bool Server::ChannelExists( const std::string& name )
 {
   return m_channels.ChannelExists( name );

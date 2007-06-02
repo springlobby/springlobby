@@ -44,7 +44,7 @@ MainChatTab::MainChatTab( wxWindow* parent )
 //  m_chat_tabs->AddPage( m_server_chat, _T("Server"), true, 1 );
 
   m_close_window = new wxWindow( m_chat_tabs, -1 );
-m_chat_tabs->AddPage( m_close_window, _(""), false, 0 );
+  m_chat_tabs->AddPage( m_close_window, _(""), false, 0 );
 
   m_main_sizer->Add( m_chat_tabs, 1, wxEXPAND );
 

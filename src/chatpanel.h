@@ -60,6 +60,7 @@ class ChatPanel : public wxPanel
     void Joined( User& who );
     void Parted( User& who, const wxString& message );
     void SetTopic( const wxString& who, const wxString& message );
+    void UserStatusUpdated( User& who );
   
     Channel& GetChannel() { return *m_channel; }
   

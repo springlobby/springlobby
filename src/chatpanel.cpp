@@ -233,10 +233,20 @@ void ChatPanel::Parted( User& who, const wxString& message )
 //  m_nicklist->UpdateSize();
 }
 
+
 void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 0, 80)));
   m_chatlog_text->AppendText( _(" ** Channel topic: ")+ message + _T("\n * Set by ") + who + _(".\n") );  
+}
+
+
+void ChatPanel::UserStatusUpdated( User& who )
+{
+  if ( m_show_nick_list ) {
+    assert( m_nicklist != NULL );
+    m_nicklist->UserUpdated( who );
+  }
 }
 
 

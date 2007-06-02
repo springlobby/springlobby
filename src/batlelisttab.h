@@ -6,21 +6,32 @@
 #define _BATTLELISTTAB_H_
 
 #include <wx/panel.h>
+#include <wx/combobox.h>
+#include <wx/button.h>
+#include <wx/stattext.h>
+#include <wx/sizer.h>
+#include "battlelistctrl.h"
 
 class BattleListTab : public wxPanel
 {
-  public:
-    BattleListTab();
+    public:
+      
+    BattleListTab( wxWindow* parent );
      ~BattleListTab();
   
-    // BattleListTab interface
-  
-    
+    void AddBattle( Battle& battle );
+    void RemoveBattle( Battle& battle );
+    void UpdateBattle( Battle& battle );
   
   protected:
-    // BattleListTab variables
   
-    
+    BattleListCtrl* m_battle_list;
+    wxStaticText* m_filter_text;
+    wxComboBox* m_filter_combo;
+    wxButton* m_join_button;
+  
+    wxBoxSizer* m_main_sizer;
+    wxBoxSizer* m_tools_sizer;
   
 };
 

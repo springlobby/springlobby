@@ -23,8 +23,16 @@ class ChannelList
   public:
     // ChannelList interface
   
-    void AddChannel( Channel& channel ) { m_chans[channel.GetName()] = &channel; }
-    void RemoveChannel( const std::string& name ) { m_chans.erase( name ); }
+    ChannelList(): m_seek(m_chans.end()), m_seekpos(-1) {}
+      
+    void AddChannel( Channel& channel ) { 
+      m_chans[channel.GetName()] = &channel;
+      m_seekpos = -1;
+    }
+    void RemoveChannel( const std::string& name ) {
+      m_chans.erase( name );
+      m_seekpos = -1;
+    }
   
     Channel& GetChannel( const std::string& name ) {
       channel_iter_t u = m_chans.find(name);
@@ -32,6 +40,16 @@ class ChannelList
       return *u->second;
     }
       
+    Channel& GetChannel( int index ) {
+      if (m_seekpos < 0) {
+        m_seek = m_chans.begin();
+        m_seekpos = 0;
+      }
+      std::advance( m_seek, index - m_seekpos );
+      m_seekpos = index;
+      return *m_seek->second;
+    }
+    
     bool ChannelExists( const std::string& name ) {
       return m_chans.find( name ) != m_chans.end();
     }
@@ -40,8 +58,11 @@ class ChannelList
   
   private:
     // ChannelList variables
-  
     channel_map_t m_chans;
+  
+    // The following are used as internal cache to speed up random access:
+    mutable channel_iter_t m_seek;
+    mutable int m_seekpos;
   
 };
 

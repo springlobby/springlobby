@@ -253,6 +253,12 @@ void Ui::OnUserOffline( User& user )
 
 void Ui::OnUserStatusChanged( User& user )
 {
+  for ( int i = 0; i < m_serv->GetNumChannels(); i++ ) {
+    Channel& chan = m_serv->GetChannel( i );
+    if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != NULL ) ) {
+      chan.uidata.panel->UserStatusUpdated( user );
+    }
+  }
 }
 
 
@@ -278,30 +284,30 @@ void Ui::OnUserSaid( User& user, const std::string message )
 
 void Ui::OnBattleOpened( Battle& battle )
 {
-  m_main_win->GetJoinTab().AddBattle( battle );
+  m_main_win->GetJoinTab().GetBattleListTab().AddBattle( battle );
 }
 
 
 void Ui::OnBattleClosed( Battle& battle )
 {
-  m_main_win->GetJoinTab().RemoveBattle( battle );
+  m_main_win->GetJoinTab().GetBattleListTab().RemoveBattle( battle );
 }
 
 
 void Ui::OnUserJoinedBattle( Battle& battle, User& user )
 {
-  m_main_win->GetJoinTab().UpdateBattle( battle );
+  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
 }
 
 
 void Ui::OnUserLeftBattle( Battle& battle, User& user )
 {
-  m_main_win->GetJoinTab().UpdateBattle( battle );
+  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
 }
 
 
 void Ui::OnBattleInfoUpdated( Battle& battle )
 {
-  m_main_win->GetJoinTab().UpdateBattle( battle );
+  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
 }
 

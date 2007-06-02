@@ -82,6 +82,8 @@ class Server
     bool UserExists( const std::string& nickname );
 
     Channel& GetChannel( const std::string& name );
+    int GetNumChannels();
+    Channel& GetChannel( const int& index );
     bool ChannelExists( const std::string& name );
 
     Battle& GetBattle( const int& battleid );
