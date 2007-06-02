@@ -5,23 +5,20 @@
 #include "battlelistctrl.h"
 #include "utils.h"
 #include "iconimagelist.h"
+#include "battle.h"
 
-/*
-static wxImageList* _imagelist = NULL;
-static int _imagelist_users = 0;*/
 
-BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, -1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL)
+BEGIN_EVENT_TABLE(BattleListCtrl, wxListCtrl)
+
+  EVT_LIST_ITEM_SELECTED   ( BLIST_LIST, BattleListCtrl::OnSelected )
+  EVT_LIST_ITEM_DESELECTED ( BLIST_LIST, BattleListCtrl::OnDeselected )
+  EVT_LIST_DELETE_ITEM     ( BLIST_LIST, BattleListCtrl::OnDeselected )
+
+END_EVENT_TABLE()
+
+
+BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL), m_selected(-1)
 {
-  /*
-  if ( _imagelist == NULL ) {
-    _imagelist = new wxImageList( 16, 16 );
-    _imagelist->Add( wxBITMAP(open_game) );
-    _imagelist->Add( wxBITMAP(open_pw_game) );
-    _imagelist->Add( wxBITMAP(closed_game) );
-    _imagelist->Add( wxBITMAP(closed_pw_game) );
-    _imagelist->Add( wxBITMAP(started_game) );
-  }
-  _imagelist_users++;*/
   
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
@@ -84,12 +81,7 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, -1, wxDe
 
 BattleListCtrl::~BattleListCtrl()
 {
-  /*
-  _imagelist_users--;
-  if ( _imagelist_users == 0 ) {
-    delete _imagelist;
-    _imagelist = NULL;
-  }*/
+
 }
 
 
@@ -100,8 +92,6 @@ void BattleListCtrl::AddBattle( Battle& battle )
   SetItemData(index, (long)&battle );
 
   UpdateBattle( index );
-
-  //SortItems( NickListSortCallback, 0 );
 }
 
 
@@ -146,7 +136,6 @@ void BattleListCtrl::UpdateBattle( const int& index )
   SetItem( index, 5, RefineModname( WX_STRING(battle.opts().modname) ) );
   
   SetItem( index, 6, WX_STRING(battle.opts().founder) );
-  //SetItemColumnImage( index, 6, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
   
   SetItem( index, 7, wxString::Format(_("%d"), battle.opts().spectators) );
   
@@ -199,5 +188,24 @@ wxString BattleListCtrl::RefineModname( wxString modname )
   modname.Replace(_("Alpha"), _("a") );
   modname.Replace(_("Beta"), _("b") );
   return modname;
+}
+
+
+void BattleListCtrl::OnSelected( wxListEvent& event )
+{
+  m_selected = event.GetIndex();
+}
+
+
+void BattleListCtrl::OnDeselected( wxListEvent& event )
+{
+  if ( m_selected == event.GetIndex() )
+    m_selected = -1;
+}
+
+
+int BattleListCtrl::GetSelectedIndex()
+{
+  return m_selected;
 }
 

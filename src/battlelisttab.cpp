@@ -3,14 +3,21 @@
 //
 
 #include "battlelisttab.h"
+#include "ui.h"
+
+BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
+
+  EVT_BUTTON ( CHAT_SEND, BattleListTab::OnJoin )
+
+END_EVENT_TABLE()
 
 
-BattleListTab::BattleListTab( wxWindow* parent ) : wxPanel( parent, -1 )
+BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
 {
   m_battle_list = new BattleListCtrl( this );
   m_filter_text = new wxStaticText( this, -1, _T("Filter ") );
   m_filter_combo = new wxComboBox( this, -1, _T("Show all") );
-  m_join_button = new wxButton( this, -1, _T("Join"), wxDefaultPosition, wxSize(80,28) );
+  m_join_button = new wxButton( this, BATTLE_JOIN, _T("Join"), wxDefaultPosition, wxSize(80,28) );
   
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   m_tools_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -51,4 +58,14 @@ void BattleListTab::UpdateBattle( Battle& battle )
   m_battle_list->UpdateBattle( battle );
 }
 
+
+void BattleListTab::OnJoin( wxCommandEvent& event )
+{
+  assert( m_battle_list != NULL );
+  if ( m_battle_list->GetSelectedIndex() < 0 ) return;
+    
+  Battle& battle = *((Battle*)m_battle_list->GetItemData( m_battle_list->GetSelectedIndex() ));
+  
+  m_ui.mw().GetJoinTab().JoinBattle( battle );
+}
 

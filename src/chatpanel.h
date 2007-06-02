@@ -26,12 +26,15 @@
 enum ChatPanelType {
   CPT_Channel,
   CPT_Server,
-  CPT_User
+  CPT_User,
+  CPT_Battle
 };
 
 class Channel;
 class Server;
+class Battle;
 
+  
 /*! @brief wxPanel that contains a chat.
  *
  * This panel contains a chat with a multiline TextCtrl for the messages, a 
@@ -47,6 +50,7 @@ class ChatPanel : public wxPanel
     ChatPanel( wxWindow* parent, Channel& chan );
     ChatPanel( wxWindow* parent, User& user );
     ChatPanel( wxWindow* parent, Server& serv );
+    ChatPanel( wxWindow* parent, Battle& battle );
     ~ChatPanel();
   
     // ChatPanel interface
@@ -96,8 +100,9 @@ class ChatPanel : public wxPanel
     wxButton* m_say_button;     //!< The say button.
   
     Channel* m_channel;         //!< Channel object.
-    Server* m_server;          //!< Server object.
-    User* m_user;            //!< User object.
+    Server* m_server;           //!< Server object.
+    User* m_user;               //!< User object.
+    Battle* m_battle;           //!< User object.
 
     ChatPanelType m_type;       //!< Channel object.
 

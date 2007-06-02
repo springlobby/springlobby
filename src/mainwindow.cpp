@@ -60,7 +60,7 @@ MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby
 
   //! @todo fix
   m_chat_tab = new MainChatTab( m_func_tabs );
-  m_join_tab = new MainJoinBattleTab( m_func_tabs );
+  m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   
   m_func_tabs->AddPage( m_chat_tab, _(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _(""), false, 1 );

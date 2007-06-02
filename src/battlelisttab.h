@@ -12,17 +12,21 @@
 #include <wx/sizer.h>
 #include "battlelistctrl.h"
 
+class Ui;
+  
+
 class BattleListTab : public wxPanel
 {
     public:
       
-    BattleListTab( wxWindow* parent );
+    BattleListTab( wxWindow* parent, Ui& ui );
      ~BattleListTab();
   
     void AddBattle( Battle& battle );
     void RemoveBattle( Battle& battle );
     void UpdateBattle( Battle& battle );
   
+    void OnJoin( wxCommandEvent& event );
   protected:
   
     BattleListCtrl* m_battle_list;
@@ -33,8 +37,15 @@ class BattleListTab : public wxPanel
     wxBoxSizer* m_main_sizer;
     wxBoxSizer* m_tools_sizer;
   
+    Ui& m_ui;
+  
+    DECLARE_EVENT_TABLE()
 };
 
+enum
+{
+    BATTLE_JOIN = wxID_HIGHEST
+};
 
 #endif  //_BATTLELISTTAB_H_
 

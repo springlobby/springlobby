@@ -7,8 +7,8 @@
 
 #include <wx/listctrl.h>
 #include <wx/intl.h>
-#include "battle.h"
 
+class Battle;
 
 class BattleListCtrl : public wxListCtrl
 {
@@ -25,14 +25,25 @@ class BattleListCtrl : public wxListCtrl
     bool BattleExists( Battle& battle );
   
     int GetBattleIndex( Battle& battle );
-  
     
     static wxString RefineMapname( wxString mapname );
     static wxString RefineModname( wxString modname );
   
+    int GetSelectedIndex();
+  
+    void OnSelected( wxListEvent& event );
+    void OnDeselected( wxListEvent& event );
   protected:
     // BattleListCtrl variables
+    
+    int m_selected;
   
+    DECLARE_EVENT_TABLE()
+};
+
+enum
+{
+    BLIST_LIST = wxID_HIGHEST
 };
 
 

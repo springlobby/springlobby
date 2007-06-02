@@ -11,18 +11,22 @@
 #include <wx/sizer.h>
 #include <wx/imaglist.h>
 #include "battlelisttab.h"
+#include "battleroomtab.h"
 
 
 class MainJoinBattleTab : public wxPanel
 {
   public:
-    MainJoinBattleTab( wxWindow* parent );
+    MainJoinBattleTab( wxWindow* parent, Ui& ui );
      ~MainJoinBattleTab();
   
     // MainJoinBattleTab interface
   
     BattleListTab& GetBattleListTab();
-  
+   
+    void JoinBattle( Battle& battle );
+    void LeaveCurrentBattle();
+    
   protected:
     // MainJoinBattleTab variables
   
@@ -32,6 +36,10 @@ class MainJoinBattleTab : public wxPanel
   
     wxNotebook* m_tabs;
     BattleListTab* m_list_tab;
+  
+    BattleRoomTab* m_battle_tab;
+  
+    Ui& m_ui;
 };
 
 enum
