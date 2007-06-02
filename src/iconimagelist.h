@@ -47,7 +47,7 @@ class IconImageList : public wxImageList
     // IconImageList interface
   
     static int GetUserStateIcon( const UserStatus& us );
-    static int GetRankIcon( const int& rank, const bool& showlowest = false );
+    static int GetRankIcon( const int& rank, const bool& showlowest = true );
     static int GetFlagIcon( const std::string& flagname );
     static int GetBattleStatusIcon( Battle& battle );
   

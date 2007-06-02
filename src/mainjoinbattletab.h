@@ -9,6 +9,7 @@
 #include <wx/button.h>
 #include <wx/stattext.h>
 #include <wx/sizer.h>
+#include <wx/imaglist.h>
 #include "battlelisttab.h"
 
 
@@ -27,6 +28,8 @@ class MainJoinBattleTab : public wxPanel
   
     wxBoxSizer* m_main_sizer;
     
+    wxImageList* m_imagelist;
+  
     wxNotebook* m_tabs;
     BattleListTab* m_list_tab;
 };
