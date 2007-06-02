@@ -2,7 +2,7 @@
 // Class: BattleListTab
 //
 
-#include "batlelisttab.h"
+#include "battlelisttab.h"
 
 
 BattleListTab::BattleListTab( wxWindow* parent ) : wxPanel( parent, -1 )
