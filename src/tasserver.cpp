@@ -67,19 +67,9 @@ bool TASServer::IsPasswordHash( const std::string& pass )
 std::string TASServer::GetPasswordHash( const std::string& pass )
 {
   if ( IsPasswordHash(pass) ) return pass;
-    
-  std::string password = pass;
-  unsigned char output[16];
-  unsigned char* input = new unsigned char[ password.length() ];
-  for ( int i = 0; i < password.length(); i++ )
-    input[i] = password[i];
-  
-  md5_csum( input, password.length(), &output[0] );
-  password = base64_encode( &output[0] , 16 );
-  
-  delete[] input;
-  
-  return password;
+  unsigned char tmp[16];
+  md5_csum( reinterpret_cast<unsigned char*>(const_cast<char*>(pass.c_str())), pass.size(), tmp );
+  return base64_encode( tmp, 16 );
 }
 
 
