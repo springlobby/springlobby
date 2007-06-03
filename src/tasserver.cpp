@@ -53,7 +53,7 @@ bool TASServer::IsConnected()
 
 bool TASServer::IsPasswordHash( const std::string& pass )
 {
-  return pass.length() == 24 && pass[22] == '=' && pass[23] != '=';
+  return pass.length() == 24 && pass[22] == '=' && pass[23] == '=';
 }
 
 
