@@ -138,6 +138,7 @@ void ServerEvents::OnJoinedBattle( int battleid, int metal, int energy, int unit
   
 }
 
+
 void ServerEvents::OnUserJoinedBattle( int battleid, const std::string& nick )
 {
   std::cout << "** ServerEvents::OnUserJoinedBattle()" << std::endl;
