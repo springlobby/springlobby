@@ -27,6 +27,7 @@ class BattleListTab : public wxPanel
     void UpdateBattle( Battle& battle );
   
     void OnJoin( wxCommandEvent& event );
+    void OnListJoin( wxListEvent& event );
   protected:
   
     BattleListCtrl* m_battle_list;

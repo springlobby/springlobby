@@ -7,7 +7,8 @@
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 
-  EVT_BUTTON ( CHAT_SEND, BattleListTab::OnJoin )
+  EVT_BUTTON              ( CHAT_SEND, BattleListTab::OnJoin     )
+  EVT_LIST_ITEM_ACTIVATED ( CHAT_SEND, BattleListTab::OnListJoin )
 
 END_EVENT_TABLE()
 
@@ -69,3 +70,13 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
   m_ui.mw().GetJoinTab().JoinBattle( battle );
 }
 
+
+void BattleListTab::OnListJoin( wxListEvent& event )
+{
+  assert( m_battle_list != NULL );
+  if ( event.GetIndex() < 0 ) return;
+    
+  Battle& battle = *((Battle*)m_battle_list->GetItemData( event.GetIndex() ));
+  
+  m_ui.mw().GetJoinTab().JoinBattle( battle );
+}
