@@ -61,15 +61,13 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
   if ( m_serv != NULL ) {
     // Delete old Server object
     
-    if ( Ask( _T("Allready connected"), _T("You are allready connected to a\nserver. Do you want to disconnect?") ) ) {
+    //if ( Ask( _T("Already connected"), _T("You are already connected to a\nserver. Do you want to disconnect?") ) ) {
       m_serv->Disconnect();
       sock =  m_serv->GetSocket();
       m_serv->SetSocket( NULL );
-      delete sock;
-      delete m_serv;
-    } else {
-      return;
-    }
+      delete sock; sock = NULL;
+      delete m_serv; m_serv = NULL;
+    //}
     
   }
   
