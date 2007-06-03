@@ -7,8 +7,9 @@
 
 #include <wx/listctrl.h>
 #include <wx/intl.h>
+#include "iconimagelist.h"
+#include "battle.h"
 
-class Battle;
 
 class BattleListCtrl : public wxListCtrl
 {

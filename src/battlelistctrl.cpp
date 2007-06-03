@@ -4,8 +4,7 @@
 
 #include "battlelistctrl.h"
 #include "utils.h"
-#include "iconimagelist.h"
-#include "battle.h"
+
 
 
 BEGIN_EVENT_TABLE(BattleListCtrl, wxListCtrl)

@@ -36,7 +36,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle ) : wxPanel( pare
   m_players_sizer = new wxBoxSizer( wxVERTICAL );
   m_player_sett_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_info_sizer = new wxBoxSizer( wxVERTICAL );
-  m_top_sizer = new wxBoxSizer( wxVERTICAL );
+  m_top_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -56,7 +56,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle ) : wxPanel( pare
   
   m_player_panel->SetSizer( m_players_sizer );
   
-  m_splitter->SplitHorizontally( m_player_panel, m_chat );
+  m_splitter->SplitHorizontally( m_player_panel, m_chat, 180 );
   
   m_info_sizer->Add( m_map_lbl, 0, wxEXPAND );
   

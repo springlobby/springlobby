@@ -6,6 +6,7 @@
 #define _BATTLEROOMLISTCTRL_H_
 
 #include <wx/listctrl.h>
+#include <wx/intl.h>
 
 class BattleroomListCtrl : public wxListCtrl
 {

@@ -23,7 +23,6 @@ springlobby_SOURCES = \
 	mainwindow.h     \
 	serverevents.cpp     \
 	base64.h     \
-	md5.h     \
 	serverevents.h     \
 	socket.h     \
 	chatpanel.cpp     \
