@@ -1,9 +1,7 @@
 
 SUBDIRS = flags
 
-bin_PROGRAMS = springlobby 
-
-springlobby_SOURCES = \
+EXTRA_DIST = \
 	admin.xpm \
 	admin_away.xpm \
 	away.xpm \
