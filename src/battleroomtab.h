@@ -34,6 +34,13 @@ class BattleRoomTab : public wxPanel
   
     Battle& m_battle;
   
+    wxBoxSizer* m_players_sizer;
+    wxBoxSizer* m_player_sett_sizer;
+    wxBoxSizer* m_info_sizer;
+    wxBoxSizer* m_top_sizer;
+    wxBoxSizer* m_buttons_sizer;
+    wxBoxSizer* m_main_sizer;
+  
     wxComboBox* m_team_sel;
     wxComboBox* m_ally_sel;
     wxComboBox* m_color_sel;
@@ -44,6 +51,8 @@ class BattleRoomTab : public wxPanel
     wxStaticText* m_color_lbl;
     wxStaticText* m_side_lbl;
     wxStaticText* m_map_lbl;
+  
+    wxPanel* m_player_panel;
   
     BattleroomListCtrl* m_players;
     ChatPanel* m_chat;
