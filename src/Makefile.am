@@ -18,6 +18,7 @@ AM_CFLAGS =\
 bin_PROGRAMS = springlobby 
 
 springlobby_SOURCES = \
+	boost/md5.hpp \
 	boost/md5.cpp \
 	base64.cpp     \
 	socket.cpp     \
