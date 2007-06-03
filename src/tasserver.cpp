@@ -2,11 +2,11 @@
 // Class: TASServer
 //
 
+#include <boost/md5.hpp>
 #include <iostream>
 #include <assert.h>
 #include <stdio.h>
 #include "tasserver.h"
-#include "md5.h"
 #include "base64.h"
 #include "socket.h"
 #include "serverevents.h"
@@ -53,23 +53,14 @@ bool TASServer::IsConnected()
 
 bool TASServer::IsPasswordHash( const std::string& pass )
 {
-  std::cout << "** TASServer::IsPasswordHash(): " << pass.c_str() << "  " << pass.length() << std::endl;
-  if ( pass.length() != 24 ) return false;
-  std::cout << "** TASServer::IsPasswordHash(): " << pass.c_str() << "  " << pass.length() << std::endl;
-  if ( pass[22] != '=' ) return false;
-  std::cout << "** TASServer::IsPasswordHash(): " << pass.c_str() << "  " << pass.length() << std::endl;
-  if ( pass[23] != '=' ) return false;
-  std::cout << "** TASServer::IsPasswordHash(): " << pass.c_str() << "  " << pass.length() << std::endl;
-  return true;
+  return pass.length() == 24 && pass[22] == '=' && pass[23] != '=';
 }
 
 
 std::string TASServer::GetPasswordHash( const std::string& pass )
 {
   if ( IsPasswordHash(pass) ) return pass;
-  unsigned char tmp[16];
-  md5_csum( reinterpret_cast<unsigned char*>(const_cast<char*>(pass.c_str())), pass.size(), tmp );
-  return base64_encode( tmp, 16 );
+  return base64_encode(boost::md5(pass.c_str()).digest().value(), 16);
 }
 
 
