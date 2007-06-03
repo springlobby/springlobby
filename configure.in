@@ -64,5 +64,7 @@ AC_SUBST(PACKAGE_LIBS)
 AC_OUTPUT([
 Makefile
 src/Makefile
+src/images/Makefile
+src/images/flags/Makefile
 po/Makefile.in
 ])

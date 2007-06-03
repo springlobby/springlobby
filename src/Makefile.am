@@ -2,6 +2,8 @@
 
 ## Created by Anjuta
 
+SUBDIRS = images
+
 INCLUDES = \
 	$(WX_CXXFLAGS) \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
