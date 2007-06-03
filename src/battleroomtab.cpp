@@ -4,6 +4,12 @@
 
 #include "battleroomtab.h"
 
+BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
+
+  EVT_BUTTON ( BROOM_LEAVE, BattleRoomTab::OnLeave )
+
+END_EVENT_TABLE()
+
 
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle ) : wxPanel( parent, -1 ), m_battle(battle) 
 {
@@ -85,4 +91,8 @@ BattleRoomTab::~BattleRoomTab()
   
 }
 
+void BattleRoomTab::OnLeave( wxCommandEvent& event )
+{
+  m_battle.Leave();
+}
 

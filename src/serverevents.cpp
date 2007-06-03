@@ -130,6 +130,14 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::
 }
 
 
+void ServerEvents::OnJoinedBattle( int battleid, int metal, int energy, int units, StartType 
+                    start, bool comm, bool dgun, bool dim, bool ghost, int hash )
+{
+  std::cout << "** ServerEvents::OnJoinedBattle()" << std::endl;
+  Battle& battle = m_serv.GetBattle( battleid );
+  
+}
+
 void ServerEvents::OnUserJoinedBattle( int battleid, const std::string& nick )
 {
   std::cout << "** ServerEvents::OnUserJoinedBattle()" << std::endl;

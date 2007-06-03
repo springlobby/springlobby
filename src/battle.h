@@ -140,6 +140,10 @@ class Battle : public UserList
     }
     
     void Update();
+    
+    void Join( const std::string& password = "" );
+    void Leave();
+    
   /*
     DISABLEUNITS unitname1 unitname2
     ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}

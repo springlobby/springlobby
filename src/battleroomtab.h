@@ -27,7 +27,7 @@ class BattleRoomTab : public wxPanel
   
     // BattleRoomTab interface
   
-    
+    void OnLeave( wxCommandEvent& event );
   
   protected:
     // BattleRoomTab variables
@@ -64,8 +64,14 @@ class BattleRoomTab : public wxPanel
     wxButton* m_start_btn;
   
     wxCheckBox* m_ready_chk;
+  
+    DECLARE_EVENT_TABLE()
 };
 
+enum
+{
+    BROOM_LEAVE = wxID_HIGHEST
+};
 
 #endif  //_BATTLEROOMTAB_H_
 

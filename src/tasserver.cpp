@@ -2,14 +2,10 @@
 // Class: TASServer
 //
 
-#include <boost/md5.hpp>
 #include <iostream>
 #include <assert.h>
 #include <stdio.h>
 #include "tasserver.h"
-#include "base64.h"
-#include "socket.h"
-#include "serverevents.h"
 
 
 void TASServer::SetSocket( Socket* sock )
@@ -170,8 +166,8 @@ void TASServer::ExecuteCommand( std::string in )
 
 void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid )
 {
-  int pos, cpu, status, id, nat, port, maxplayers, rank, hash, specs;
-  bool replay, haspass;
+  int pos, cpu, status, id, nat, port, maxplayers, rank, hash, specs, metal, energy, units, start;
+  bool replay, haspass, dgun, ghost, dim, comm;
   std::string nick, contry, host, map, title, mod, channel, error, msg;
   NatType ntype;
   UserStatus cstatus;
@@ -292,13 +288,34 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     nick = GetWordParam( params );
     msg = GetSentenceParam( params );
     m_se->OnPrivateMessage( nick, msg );
-    //"SAIDPRIVATE" params: "CAutohost TEST2W ---> http://spring.unknown-files.net/file/2273" 
-    // !! Command: "CHANNELMESSAGE" params: "main <ChanServ> has muted <smoth>".
+  } else if ( cmd == "JOINBATTLE" ) {
+    // JOINBATTLE battleid? startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings hashcode
+    // JOINBATTLE 65096 1000 1000 500 2 0 0 0 1 -613726550
+    id = GetIntParam( params );
+    metal = GetIntParam( params );
+    energy = GetIntParam( params );
+    units = GetIntParam( params );
+    start = GetIntParam( params );
+    comm = (bool)GetIntParam( params );
+    dgun = (bool)GetIntParam( params );
+    dim = (bool)GetIntParam( params );
+    ghost = (bool)GetIntParam( params );
+    hash = GetIntParam( params );
+    m_se->OnJoinedBattle( id, metal, energy, units, IntToStartType(start), comm, dgun, dim, ghost, hash );
   } else {
     std::cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << std::endl;
     m_se->OnUnknownCommand( cmd, params );
   }
-  
+  /*
+[20:31] !! Command: "JOINBATTLE" params: "65096 1000 1000 500 2 0 0 0 1 -613726550".
+[20:31] !! Command: "CLIENTBATTLESTATUS" params: "Lucypher 4195396 16734810".
+[20:31] !! Command: "CLIENTBATTLESTATUS" params: "Drew11 20972544 200".
+[20:31] !! Command: "REQUESTBATTLESTATUS" params: "".
+[20:31] !! Command: "ADDSTARTRECT" params: "0 128 3 200 104".
+[20:31] !! Command: "ADDSTARTRECT" params: "1 0 104 77 200".
+[20:32] !! Command: "CLIENTBATTLESTATUS" params: "JabluchoPL 4195464 16734810".
+[20:32] !! Command: "SAIDBATTLE" params: "JabluchoPL hi".
+  */
 }
 
 std::string TASServer::GetWordParam( std::string& params )
@@ -378,6 +395,7 @@ void TASServer::Ping()
   m_last_ping = time( NULL );
 }
 
+
 void TASServer::HandlePong( int replyid )
 {
   std::list<TASPingListItem>::iterator it;
@@ -403,6 +421,7 @@ void TASServer::HandlePong( int replyid )
     }
   }
 }
+
 
 void TASServer::HandlePinglist()
 {
@@ -467,6 +486,25 @@ void TASServer::SayPrivate( const std::string& nick, const std::string& msg )
   m_sock->Send( "SAYPRIVARE " + nick + " " + msg + "\n" );
 }
 
+
+void TASServer::JoinBattle( const int& battleid, const std::string& password )
+{
+  //JOINBATTLE BATTLE_ID [parameter]
+  std::cout << "** TASServer::JoinBattle()" << std::endl;
+  assert( IsOnline() );
+  assert( m_sock != NULL );
+  m_sock->Send( "JOINBATTLE " + i2s( battleid ) + " " + password + "\n" );
+}
+
+
+void TASServer::LeaveBattle( const int& battleid )
+{
+  //LEAVEBATTLE
+  std::cout << "** TASServer::LeaveBattle()" << std::endl;
+  assert( IsOnline() );
+  assert( m_sock != NULL );
+  m_sock->Send( "LEAVEBATTLE\n" );
+}
 
 
 void TASServer::OnConnected( Socket* sock )

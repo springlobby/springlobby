@@ -6,6 +6,7 @@
 #include "user.h"
 #include "battle.h"
 
+
 void User::Said( const std::string& message )
 {
 }

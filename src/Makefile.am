@@ -66,7 +66,8 @@ springlobby_SOURCES = \
 	battleroomtab.cpp     \
 	battleroomtab.h     \
 	battleroomlistctrl.cpp     \
-	battleroomlistctrl.h 
+	battleroomlistctrl.h     \
+	utils.cpp 
 
 springlobby_LDFLAGS = 
 

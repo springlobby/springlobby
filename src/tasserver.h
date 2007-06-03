@@ -11,6 +11,9 @@
 #include "server.h"
 #include "ui.h"
 #include "serverevents.h"
+#include "base64.h"
+#include "socket.h"
+#include <boost/md5.hpp>
 
 #define SER_VER_BAD -1
 #define SER_VER_UNKNOWN 0
@@ -72,6 +75,9 @@ class TASServer : public Server
     void SayChannel( const std::string& channel, const std::string& msg );
     void SayPrivate( const std::string& nick, const std::string& msg );
    
+    void JoinBattle( const int& battleid, const std::string& password = "" );
+    void LeaveBattle( const int& battleid );
+    
     // TASServer specific functions
     void ExecuteCommand( std::string in );
     void ExecuteCommand( std::string cmd, std::string params, int replyid = -1 );
@@ -86,7 +92,14 @@ class TASServer : public Server
     // Static utility functions
     static UserStatus ConvTasclientstatus( TASClientstatus );
     static bool VersionSupportReplyid( int version );
-    
+    static StartType IntToStartType( int start ) {
+      switch ( start ) {
+        case 0: return ST_Fixed;
+        case 1: return ST_Random;
+        case 2: return ST_Choose;
+        default: assert(false);
+      };
+    }
     void OnConnected( Socket* sock );
     void OnDisconnected( Socket* sock );
     void OnDataRecived( Socket* sock );
