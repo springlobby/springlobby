@@ -19,8 +19,14 @@ class TASServer;
 class Ui
 {
   public:
+    
+    friend class MainWindow;
+    
     Ui(): m_serv(NULL), m_con_win(NULL) { m_main_win = new MainWindow( *this ); }
-    virtual ~Ui() { m_main_win->Destroy(); }
+    virtual ~Ui() {
+      if ( m_main_win != NULL ) delete m_main_win;
+      if ( m_serv != NULL ) delete m_serv;
+    }
   
     // Ui interface
   

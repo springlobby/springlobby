@@ -84,6 +84,7 @@ MainWindow::~MainWindow()
   sett().SetMainWindowTop( y );
   sett().SetMainWindowLeft( x );
   sett().SaveSettings();
+  m_ui.m_main_win = NULL;
 }
 
 /*
