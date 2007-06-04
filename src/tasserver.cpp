@@ -307,6 +307,7 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     m_se->OnUnknownCommand( cmd, params );
   }
   /*
+[14:12] !! Command: "JOINBATTLEFAILED" params: "Password required".
 [20:31] !! Command: "JOINBATTLE" params: "65096 1000 1000 500 2 0 0 0 1 -613726550".
 [20:31] !! Command: "CLIENTBATTLESTATUS" params: "Lucypher 4195396 16734810".
 [20:31] !! Command: "CLIENTBATTLESTATUS" params: "Drew11 20972544 200".

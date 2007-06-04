@@ -122,3 +122,20 @@ int IconImageList::GetBattleStatusIcon( Battle& battle )
   
   return ICON_GAME_UNKNOWN;
 }
+
+
+int IconImageList::GetColorIcon( const int& num )
+{
+  return -1;
+}
+
+int IconImageList::GetSideIcon( const int& sidenum )
+{
+  return -1;
+}
+
+int IconImageList::GetReadyIcon( const bool& ready )
+{
+  if ( ready ) return ICON_READY;
+  return ICON_NREADY;
+}

@@ -60,11 +60,10 @@ PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 libglade-2.0    ])
 AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(PACKAGE_LIBS)
 
-
-AC_OUTPUT([
-Makefile
+AC_CONFIG_FILES([Makefile
 src/Makefile
 src/images/Makefile
 src/images/flags/Makefile
-po/Makefile.in
-])
+po/Makefile.in])
+
+AC_OUTPUT

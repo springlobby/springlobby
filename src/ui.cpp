@@ -309,3 +309,8 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
   m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
 }
 
+void Ui::OnJoinedBattle( Battle& battle )
+{
+  mw().GetJoinTab().JoinBattle( battle );
+}
+

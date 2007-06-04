@@ -18,47 +18,52 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent ) : wxListCtrl(parent, 
   col.SetImage( -1 );
   InsertColumn( 0, col );
 
-  col.SetText( _("r") );
+  col.SetText( _("s") );
   col.SetImage( -1 );
   InsertColumn( 1, col );
-
-  col.SetText( _("s") );
+  
+  col.SetText( _("c") );
   col.SetImage( -1 );
   InsertColumn( 2, col );
 
-  col.SetText( _("c") );
+  col.SetText( _("f") );
   col.SetImage( -1 );
   InsertColumn( 3, col );
   
-  col.SetText( _T("Nickname") );
+  col.SetText( _("r") );
   col.SetImage( -1 );
   InsertColumn( 4, col );
   
-  col.SetText( _T("t") );
+  col.SetText( _T("Nickname") );
   col.SetImage( -1 );
   InsertColumn( 5, col );
-
-  col.SetText( _T("a") );
+  
+  col.SetText( _T("t") );
   col.SetImage( -1 );
   InsertColumn( 6, col );
 
-  col.SetText( _T("cpu") );
+  col.SetText( _T("a") );
   col.SetImage( -1 );
   InsertColumn( 7, col );
 
-  col.SetText( _T("Handicap") );
+  col.SetText( _T("cpu") );
   col.SetImage( -1 );
   InsertColumn( 8, col );
+
+  col.SetText( _T("Handicap") );
+  col.SetImage( -1 );
+  InsertColumn( 9, col );
 
   SetColumnWidth( 0, 20 );
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );
   SetColumnWidth( 3, 20 );
-  SetColumnWidth( 4, 160 );
-  SetColumnWidth( 5, 26 );
+  SetColumnWidth( 4, 20 );
+  SetColumnWidth( 5, 170 );
   SetColumnWidth( 6, 26 );
-  SetColumnWidth( 7, 60 );
-  SetColumnWidth( 8, 40 );
+  SetColumnWidth( 7, 26 );
+  SetColumnWidth( 8, 80 );
+  SetColumnWidth( 9, 60 );
 }
 
 
@@ -67,4 +72,65 @@ BattleroomListCtrl::~BattleroomListCtrl()
   
 }
 
+
+void BattleroomListCtrl::AddUser( User& user )
+{
+  int index = InsertItem( 0, ICON_NREADY );
+  assert( index != -1 );
+  SetItemData(index, (long)&user );
+
+  UpdateUser( index );
+}
+
+
+void BattleroomListCtrl::RemoveUser( User& user )
+{
+}
+
+
+void BattleroomListCtrl::UpdateUser( User& user )
+{
+  UpdateUser( GetUserIndex( user ) );
+}
+
+
+void BattleroomListCtrl::UpdateUser( const int& index )
+{
+  assert( index != -1 );
+  
+  wxListItem item;
+  item.SetId( index );
+   
+  if (!GetItem( item )) assert(false);
+    
+  User& user = *((User*)item.GetData());
+  
+  SetItemImage( index, IconImageList::GetReadyIcon( user.GetBattleStatus().ready ) );
+  SetItemColumnImage( index, 1, IconImageList::GetSideIcon( user.GetBattleStatus().side ) );
+  SetItemColumnImage( index, 2, IconImageList::GetColorIcon( user.GetBattleStatus().color_index ) );
+  SetItemColumnImage( index, 3, IconImageList::GetFlagIcon( user.GetCountry() ) );
+  SetItemColumnImage( index, 4, IconImageList::GetRankIcon( user.GetStatus().rank ) );
+  SetItem( index, 5, WX_STRING( user.GetNick() ) );
+  SetItem( index, 6, wxString::Format( _("%d"), user.GetBattleStatus().team ) );
+  SetItem( index, 7, wxString::Format( _("%d"), user.GetBattleStatus().ally ) );
+  SetItem( index, 8, wxString::Format( _("%.2f GHz"), user.GetCpu() / 1000.0 ) );
+  SetItem( index, 9, wxString::Format( _("%d%%"), user.GetBattleStatus().handicap ) );
+}
+
+
+int BattleroomListCtrl::GetUserIndex( User& user )
+{
+  bool found = true;
+  wxListItem item;
+  int index = -1;
+  while ( true ) {
+    index++;
+    item.SetId( index );
+    found = GetItem( item );
+    
+    if (!found) assert(false);
+    if ( item.GetData() == (long)&user ) return index;
+    if ( index > 1000000 ) assert( false ); // Just in case :)
+  }
+}
 

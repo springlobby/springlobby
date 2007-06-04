@@ -68,7 +68,6 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
   Battle& battle = *((Battle*)m_battle_list->GetItemData( m_battle_list->GetSelectedIndex() ));
   
   battle.Join();
-  //m_ui.mw().GetJoinTab().JoinBattle( battle );
 }
 
 
@@ -79,5 +78,5 @@ void BattleListTab::OnListJoin( wxListEvent& event )
     
   Battle& battle = *((Battle*)m_battle_list->GetItemData( event.GetIndex() ));
   
-  m_ui.mw().GetJoinTab().JoinBattle( battle );
+  battle.Join();
 }

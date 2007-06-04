@@ -7,6 +7,8 @@
 
 #include <wx/listctrl.h>
 #include <wx/intl.h>
+#include "user.h"
+#include "utils.h"
 
 class BattleroomListCtrl : public wxListCtrl
 {
@@ -16,8 +18,13 @@ class BattleroomListCtrl : public wxListCtrl
   
     // BattleroomListCtrl interface
   
-  
-  
+    void AddUser( User& user );
+    void RemoveUser( User& user );
+    void UpdateUser( const int& index );
+    void UpdateUser( User& user );
+    
+    int GetUserIndex( User& user );
+    
   protected:
     // BattleroomListCtrl variables
   

@@ -127,19 +127,12 @@ void BattleListCtrl::UpdateBattle( const int& index )
   SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
   SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.opts().rankneeded, false ) );
   SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
-  
   SetItem( index, 3, WX_STRING(battle.opts().description) );
-  
   SetItem( index, 4, RefineMapname( WX_STRING(battle.opts().mapname) ) );
-  
   SetItem( index, 5, RefineModname( WX_STRING(battle.opts().modname) ) );
-  
   SetItem( index, 6, WX_STRING(battle.opts().founder) );
-  
   SetItem( index, 7, wxString::Format(_("%d"), battle.opts().spectators) );
-  
   SetItem( index, 8, wxString::Format(_("%d"), battle.GetNumUsers() - battle.opts().spectators ) );
-  
   SetItem( index, 9, wxString::Format(_("%d"), battle.opts().maxplayers) );
   
 }

@@ -80,6 +80,8 @@ class Ui
     void OnUserLeftBattle( Battle& battle, User& user );
     void OnBattleInfoUpdated( Battle& battle );
     
+    void OnJoinedBattle( Battle& battle );
+
   protected:
     // Ui variables
   

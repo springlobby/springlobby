@@ -135,7 +135,7 @@ void ServerEvents::OnJoinedBattle( int battleid, int metal, int energy, int unit
 {
   std::cout << "** ServerEvents::OnJoinedBattle()" << std::endl;
   Battle& battle = m_serv.GetBattle( battleid );
-  
+  m_ui.OnJoinedBattle( battle );
 }
 
 

@@ -40,3 +40,9 @@ void User::SetStatus( const UserStatus& status )
   }
 
 }
+
+void User::SetBattleStatus( const UserBattleStatus& status )
+{
+  m_bstatus = status;
+}
+

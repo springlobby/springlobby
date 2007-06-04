@@ -32,6 +32,9 @@
 #define ICON_CLOSED_PW_GAME 16
 #define ICON_STARTED_GAME 17
 
+#define ICON_READY 13
+#define ICON_NREADY 15
+
 #define ICON_UNK_FLAG 18
 #define ICON_FLAGS_BASE 19
 
@@ -50,7 +53,11 @@ class IconImageList : public wxImageList
     static int GetRankIcon( const int& rank, const bool& showlowest = true );
     static int GetFlagIcon( const std::string& flagname );
     static int GetBattleStatusIcon( Battle& battle );
-  
+    
+    static int GetColorIcon( const int& num );
+    static int GetSideIcon( const int& sidenum );
+    static int GetReadyIcon( const bool& ready );
+    
   protected:
     // IconImageList variables
   
