@@ -56,7 +56,7 @@ class ServerEvents
     void OnChannelPart( const std::string& channel, const std::string& who, const std::string& message );
     void OnChannelTopic( const std::string& channel, const std::string& who, const std::string& message, int when );
     void OnChannelAction( const std::string& channel, const std::string& who, const std::string& action );
-    
+    void OnChannelList( const std::string& channel, const int& numusers );
     void OnPrivateMessage( const std::string& user, const std::string& message );
     
   protected:

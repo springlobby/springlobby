@@ -67,6 +67,8 @@ class Server
     virtual void JoinBattle( const int& battleid, const std::string& password = "" ) = 0;
     virtual void LeaveBattle( const int& battleid ) = 0;
     
+    virtual void RequestChannels() = 0;
+    
     virtual void SetKeepaliveInterval( int seconds ) { m_keepalive = seconds; }
     virtual int GetKeepaliveInterval() { return m_keepalive; }
   

@@ -229,6 +229,10 @@ void Ui::OnChannelTopic( Channel& channel , const std::string user, const std::s
 }
 
 
+void Ui::OnChannelList( const std::string& channel, const int& numusers )
+{
+  std::cout << "** Ui::OnChannelList( " << channel.c_str() << ", " << numusers << " )" << std::endl;
+}
 
 
 void Ui::OnUserOnline( User& user )

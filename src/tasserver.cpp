@@ -86,6 +86,12 @@ void TASServer::Logout()
 }
 
 
+void TASServer::RequestChannels()
+{
+  m_sock->Send( "CHANNELS\n" );
+}
+
+
 void TASServer::Update()
 {
   //cout << "** TASServer::update()" << endl;
@@ -317,6 +323,11 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     bstatus.color_g = color.color.green;
     bstatus.color_b = color.color.blue;
     m_se->OnClientBattleStatus( m_battle_id, nick, bstatus );
+  } else if ( cmd == "CHANNEL" ) {
+    channel = GetWordParam( params );
+    units = GetIntParam( params );
+    m_se->OnChannelList( channel, units );
+    //CHANNEL channame usercount
   } else {
     std::cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << std::endl;
     m_se->OnUnknownCommand( cmd, params );

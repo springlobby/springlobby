@@ -31,6 +31,7 @@ void ServerEvents::OnLoginInfoComplete()
 {
   std::cout << "** ServerEvents::OnLoginInfoComplete()" << std::endl;
   m_serv.JoinChannel( "springlobby", "" );
+  m_serv.RequestChannels();
 }
 
 
@@ -255,3 +256,7 @@ void ServerEvents::OnPrivateMessage( const std::string& user, const std::string&
   m_ui.OnUserSaid( who, message );
 }
 
+void ServerEvents::OnChannelList( const std::string& channel, const int& numusers )
+{
+  m_ui.OnChannelList( channel, numusers );
+}

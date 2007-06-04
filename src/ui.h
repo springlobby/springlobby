@@ -65,7 +65,7 @@ class Ui
     void OnChannelSaid( Channel& channel , User& user, const std::string& message );
     void OnChannelDidAction( Channel& channel , User& user, const std::string& action );
     void OnLeaveChannel( Channel& channel );
-  
+    void OnChannelList( const std::string& channel, const int& numusers );
     void OnUserOnline( User& user );
     void OnUserOffline( User& user );
     void OnUserStatusChanged( User& user );
