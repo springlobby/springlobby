@@ -314,3 +314,8 @@ void Ui::OnJoinedBattle( Battle& battle )
   mw().GetJoinTab().JoinBattle( battle );
 }
 
+void Ui::OnUserBattleStatus( Battle& battle, User& user )
+{
+  mw().GetJoinTab().BattleUserUpdated( user );
+}
+

@@ -81,6 +81,7 @@ class Server
     virtual void OnDisconnected( Socket* sock ) = 0;
     virtual void OnDataRecived( Socket* sock ) = 0;
     
+    virtual User& GetMe() = 0;
     User& GetUser( const std::string& nickname );
     bool UserExists( const std::string& nickname );
 

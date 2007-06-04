@@ -26,7 +26,8 @@ class BattleRoomTab : public wxPanel
      ~BattleRoomTab();
   
     // BattleRoomTab interface
-  
+   BattleroomListCtrl& GetPlayersListCtrl() { assert( m_players != NULL); return *m_players; }
+         
     void OnLeave( wxCommandEvent& event );
   
   protected:

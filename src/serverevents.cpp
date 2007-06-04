@@ -135,7 +135,18 @@ void ServerEvents::OnJoinedBattle( int battleid, int metal, int energy, int unit
 {
   std::cout << "** ServerEvents::OnJoinedBattle()" << std::endl;
   Battle& battle = m_serv.GetBattle( battleid );
+  battle.AddUser( m_serv.GetMe() );
   m_ui.OnJoinedBattle( battle );
+}
+
+
+void ServerEvents::OnClientBattleStatus( int battleid, const std::string& nick, UserBattleStatus status )
+{
+  Battle& battle = m_serv.GetBattle( battleid );
+  User& user = m_serv.GetUser( nick );
+  status.color_index = user.GetBattleStatus().color_index;
+  user.SetBattleStatus( status );
+  m_ui.OnUserBattleStatus( battle, user );
 }
 
 

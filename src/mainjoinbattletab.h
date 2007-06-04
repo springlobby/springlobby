@@ -27,6 +27,8 @@ class MainJoinBattleTab : public wxPanel
     void JoinBattle( Battle& battle );
     void LeaveCurrentBattle();
     
+    void BattleUserUpdated( User& user );
+    
   protected:
     // MainJoinBattleTab variables
   

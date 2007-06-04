@@ -8,6 +8,7 @@
 #include "socket.h"
 #include "server.h"
 #include "ui.h"
+//#include "user.h"
 
 typedef int Protocolerror;
 
@@ -47,6 +48,7 @@ class ServerEvents
     void OnBattleInfoUpdated( int battleid, int spectators, bool locked, int maphash, const std::string& map );
     void OnBattleClosed( int battleid );
     void OnJoinedBattle( int battleid, int metal, int energy, int units, StartType start, bool comm, bool dgun, bool dim, bool ghost, int hash );
+    void OnClientBattleStatus( int battleid, const std::string& nick, UserBattleStatus status );
     
     void OnJoinChannelResult( bool success, const std::string& channel, const std::string& reason );
     void OnChannelSaid( const std::string& channel, const std::string& who, const std::string& message );

@@ -31,9 +31,12 @@ struct UserBattleStatus {
   int color_index;
   int handicap;
   int side;
+  int sync;
+  bool spectator;
   bool ready;
   UserBattleStatus(): team(0),ally(0),color_r(0), color_g(0),color_b(0),color_index(-1),handicap(0),side(0),ready(false) {}
 };
+
 
 class ChatPanel;
 class Battle;

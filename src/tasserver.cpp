@@ -60,6 +60,12 @@ std::string TASServer::GetPasswordHash( const std::string& pass )
 }
 
 
+User& TASServer::GetMe()
+{
+  return GetUser( m_user );
+}
+
+
 void TASServer::Login()
 {
   std::cout << "** TASServer::login()" << std::endl;
@@ -172,6 +178,9 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
   NatType ntype;
   UserStatus cstatus;
   UTASClientstatus tasstatus;
+  UTASBattlestatus tasbstatus;
+  UserBattleStatus bstatus;
+  UTASColor color;
   
   if ( cmd == "TASServer") {
     mod = GetWordParam( params );
@@ -214,12 +223,9 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     map = GetSentenceParam( params );
     title = GetSentenceParam( params );
     mod = GetSentenceParam( params );
-    
     //! @todo Fix nat settings
-    
     m_se->OnBattleOpened( id, replay, NAT_None, nick, host, port, maxplayers, 
                             haspass, (rank + 1)*100, hash, map, title, mod );
-    
   } else if ( cmd == "JOINEDBATTLE" ) {
     id = GetIntParam( params );
     nick = GetWordParam( params );
@@ -252,7 +258,6 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     channel = GetWordParam( params );
     error = GetSentenceParam( params );
     m_se->OnJoinChannelResult( false, channel, error );
-    
   } else if ( cmd == "SAID" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
@@ -301,7 +306,17 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     dim = (bool)GetIntParam( params );
     ghost = (bool)GetIntParam( params );
     hash = GetIntParam( params );
+    m_battle_id = id;
     m_se->OnJoinedBattle( id, metal, energy, units, IntToStartType(start), comm, dgun, dim, ghost, hash );
+  } else if ( cmd == "CLIENTBATTLESTATUS" ) {
+    nick = GetWordParam( params );
+    tasbstatus.data = GetIntParam( params );
+    bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
+    color.data = GetIntParam( params );
+    bstatus.color_r = color.color.red;
+    bstatus.color_g = color.color.green;
+    bstatus.color_b = color.color.blue;
+    m_se->OnClientBattleStatus( m_battle_id, nick, bstatus );
   } else {
     std::cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << std::endl;
     m_se->OnUnknownCommand( cmd, params );
@@ -547,6 +562,19 @@ UserStatus TASServer::ConvTasclientstatus( TASClientstatus tas )
   if ( stat.rank > RANK_4 ) stat.rank = RANK_4;
   stat.moderator = tas.moderator;
   stat.bot = tas.bot;
+  return stat;
+}
+
+UserBattleStatus TASServer::ConvTasbattlestatus( TASBattlestatus tas )
+{
+  UserBattleStatus stat;
+  stat.ally = tas.ally;
+  stat.handicap = tas.handicap;
+  stat.ready = tas.ready;
+  stat.side = tas.side;
+  stat.spectator = tas.spectator;
+  stat.sync = tas.sync;
+  stat.team = tas.team;
   return stat;
 }
 

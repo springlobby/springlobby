@@ -30,11 +30,6 @@ struct TASClientstatus {
   unsigned int bot       : 1;
 };
 
-//! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
-struct TASPingListItem {
-  int id;
-  time_t t;
-};
 
 //! @brief Union used internally by the TASServer class to get client status information.
 union UTASClientstatus {
@@ -42,11 +37,61 @@ union UTASClientstatus {
   TASClientstatus tasdata;
 };
 
+
+//! @brief Struct used internally by the TASServer class to get battle status information.
+struct TASBattlestatus {
+  unsigned int : 1;
+  unsigned int ready : 1;
+  unsigned int team : 4;
+  unsigned int ally : 4;
+  unsigned int spectator : 1;
+  unsigned int handicap: 7;
+  unsigned int : 4;
+  unsigned int sync : 2;
+  unsigned int side : 4;
+  unsigned int : 4;
+};
+
+
+//! @brief Union used internally by the TASServer class to get battle status information.
+union UTASBattlestatus {
+  int data;
+  TASBattlestatus tasdata;
+};
+
+
+struct TASColor {
+  unsigned int zero: 8;
+  unsigned int blue : 8;
+  unsigned int green : 8;
+  unsigned int red : 8;
+};
+
+
+union UTASColor {
+  int data;
+  TASColor color;
+};
+
+
+/*
+
+myteamcolor:  Should be 32-bit signed integer in decimal form (e.g. 255 and not FF) where each color channel should occupy 1 byte (e.g. in hexdecimal: $00BBGGRR, B = blue, G = green, R = red). Example: 255 stands for $000000FF. 
+
+*/
+
+//! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
+struct TASPingListItem {
+  int id;
+  time_t t;
+};
+
+
 //! @brief TASServer protocol implementation.
 class TASServer : public Server
 {
   public:
-    TASServer( Ui& ui ): Server(ui), m_ui(ui), m_connected(false), m_online(false), m_buffer(""), m_last_ping(0), m_ping_id(1000), m_ser_ver(SER_VER_UNKNOWN) { m_se = new ServerEvents( *this, ui); }
+    TASServer( Ui& ui ): Server(ui), m_ui(ui), m_connected(false), m_online(false), m_buffer(""), m_last_ping(0), m_ping_id(1000), m_ser_ver(SER_VER_UNKNOWN),m_battle_id(-1) { m_se = new ServerEvents( *this, ui); }
       
     ~TASServer() { delete m_se; }
   
@@ -69,6 +114,8 @@ class TASServer : public Server
   
     void Ping();
 
+    User& GetMe();
+    
     void JoinChannel( const std::string& channel, const std::string& key );
     void PartChannel( const std::string& channel );
   
@@ -91,6 +138,7 @@ class TASServer : public Server
     
     // Static utility functions
     static UserStatus ConvTasclientstatus( TASClientstatus );
+    static UserBattleStatus ConvTasbattlestatus( TASBattlestatus );
     static bool VersionSupportReplyid( int version );
     static StartType IntToStartType( int start ) {
       switch ( start ) {
@@ -121,6 +169,8 @@ class TASServer : public Server
     int m_ping_id;
     std::list<TASPingListItem> m_pinglist;
   
+    int m_battle_id;
+    
     void _ReciveAndExecute();
 };
 
