@@ -286,25 +286,38 @@ void Ui::OnUserSaid( User& user, const std::string message )
 
 void Ui::OnBattleOpened( Battle& battle )
 {
-  m_main_win->GetJoinTab().GetBattleListTab().AddBattle( battle );
+  mw().GetJoinTab().GetBattleListTab().AddBattle( battle );
 }
 
 
 void Ui::OnBattleClosed( Battle& battle )
 {
-  m_main_win->GetJoinTab().GetBattleListTab().RemoveBattle( battle );
+  mw().GetJoinTab().GetBattleListTab().RemoveBattle( battle );
+  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+  if ( br != NULL ) {
+    if ( &br->GetBattle() == &battle ) mw().GetJoinTab().LeaveCurrentBattle();
+  }
 }
 
 
 void Ui::OnUserJoinedBattle( Battle& battle, User& user )
 {
-  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  
+  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+  if ( br != NULL ) {
+    if ( &br->GetBattle() == &battle ) br->OnUserJoined( user );
+  }
 }
 
 
 void Ui::OnUserLeftBattle( Battle& battle, User& user )
 {
-  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+  if ( br != NULL ) {
+    if ( &br->GetBattle() == &battle ) br->OnUserLeft( user );
+  }
 }
 
 

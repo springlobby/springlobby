@@ -85,6 +85,7 @@ void BattleroomListCtrl::AddUser( User& user )
 
 void BattleroomListCtrl::RemoveUser( User& user )
 {
+  DeleteItem( GetUserIndex( user ) );
 }
 
 

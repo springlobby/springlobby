@@ -96,8 +96,22 @@ BattleRoomTab::~BattleRoomTab()
   
 }
 
+
 void BattleRoomTab::OnLeave( wxCommandEvent& event )
 {
   m_battle.Leave();
 }
+
+
+void BattleRoomTab::OnUserJoined( User& user )
+{
+  m_players->AddUser( user );
+}
+
+
+void BattleRoomTab::OnUserLeft( User& user )
+{
+  m_players->RemoveUser( user );
+}
+
 

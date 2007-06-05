@@ -53,6 +53,7 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
 
 void MainJoinBattleTab::LeaveCurrentBattle()
 {
+  
 }
 
 
