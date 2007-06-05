@@ -140,18 +140,10 @@ void BattleListCtrl::UpdateBattle( const int& index )
 
 int BattleListCtrl::GetBattleIndex( Battle& battle )
 {
-  bool found = true;
-  wxListItem item;
-  int index = -1;
-  while ( true ) {
-    index++;
-    item.SetId( index );
-    found = GetItem( item );
-    
-    if (!found) assert(false);
-    if ( item.GetData() == (long)&battle ) return index;
-    if ( index > 1000000 ) assert( false ); // Just in case :)
+  for (int i = 0; i < GetItemCount() ; i++ ) {
+    if ( (long)&battle == GetItemData( i ) ) return i;
   }
+  std::cout << "!! BattleListCtrl::GetBattleIndex( ): didn't find the battle." << std::endl;
 }
 
 

@@ -55,24 +55,13 @@ void NickListCtrl::AddUser( User& user )
 
 void NickListCtrl::RemoveUser( const User& user )
 {
-  bool found = true;
-  wxListItem item;
-  int index = -1;
-  while ( true ) {
-    index++;
-    item.SetId( index );
-    found = GetItem( item );
-    if (!found) return;
-      
-    item.SetColumn( 3 );
-    if ( item.GetText() == WX_STRING(user.GetNick() ) ) {
-      DeleteItem( index );
+  for (int i = 0; i < GetItemCount() ; i++ ) {
+    if ( &user == (User*)GetItemData( i ) ) {
+      DeleteItem( i );
       return;
     }
-    
-    if ( index > 1000000 ) assert( false ); // Just in case :)
-    
   }
+  std::cout << "!! NickListCtrl::RemoveUser( ): didn't fild the user to remove." << std::endl;
 }
 
 

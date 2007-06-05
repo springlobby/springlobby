@@ -120,17 +120,9 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 
 int BattleroomListCtrl::GetUserIndex( User& user )
 {
-  bool found = true;
-  wxListItem item;
-  int index = -1;
-  while ( true ) {
-    index++;
-    item.SetId( index );
-    found = GetItem( item );
-    
-    if (!found) assert(false);
-    if ( item.GetData() == (long)&user ) return index;
-    if ( index > 1000000 ) assert( false ); // Just in case :)
+  for (int i = 0; i < GetItemCount() ; i++ ) {
+    if ( (long)&user == GetItemData( i ) ) return i;
   }
+  std::cout << "!! BattleroomListCtrl::GetUserIndex( ): didn't find the battle." << std::endl;
 }
 

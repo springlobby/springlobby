@@ -33,7 +33,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle ) : wxPanel( pare
 
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
-  m_leave_btn = new wxButton( this, -1, _T("Leave"), wxDefaultPosition, wxSize(80,28) );
+  m_leave_btn = new wxButton( this, BROOM_LEAVE, _T("Leave"), wxDefaultPosition, wxSize(80,28) );
   m_start_btn = new wxButton( this, -1, _T("Start"), wxDefaultPosition, wxSize(80,28) );
 
   m_ready_chk = new wxCheckBox( this, -1, _T("Im ready"), wxDefaultPosition, wxSize(80,28) );
