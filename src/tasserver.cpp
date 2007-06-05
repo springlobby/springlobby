@@ -183,8 +183,8 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
   std::string nick, contry, host, map, title, mod, channel, error, msg;
   NatType ntype;
   UserStatus cstatus;
-  UTASClientstatus tasstatus;
-  UTASBattlestatus tasbstatus;
+  UTASClientStatus tasstatus;
+  UTASBattleStatus tasbstatus;
   UserBattleStatus bstatus;
   UTASColor color;
   
@@ -300,8 +300,6 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     msg = GetSentenceParam( params );
     m_se->OnPrivateMessage( nick, msg );
   } else if ( cmd == "JOINBATTLE" ) {
-    // JOINBATTLE battleid? startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings hashcode
-    // JOINBATTLE 65096 1000 1000 500 2 0 0 0 1 -613726550
     id = GetIntParam( params );
     metal = GetIntParam( params );
     energy = GetIntParam( params );
@@ -327,7 +325,8 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     channel = GetWordParam( params );
     units = GetIntParam( params );
     m_se->OnChannelList( channel, units );
-    //CHANNEL channame usercount
+  } else if ( cmd == "REQUESTBATTLESTATUS" ) {
+    m_se->OnRequestBattleStatus( m_battle_id );
   } else {
     std::cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << std::endl;
     m_se->OnUnknownCommand( cmd, params );
@@ -534,6 +533,25 @@ void TASServer::LeaveBattle( const int& battleid )
 }
 
 
+void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
+{
+  std::cout << "** TASServer::SendMyBattleStatus()" << std::endl;
+  assert( IsOnline() );
+  assert( m_sock != NULL );
+  GetMe().SetBattleStatus( bs );
+  
+  UTASBattleStatus tasbs;
+  tasbs.tasdata = ConvTasbattlestatus( bs );
+  UTASColor tascl;
+  tascl.color.red = bs.color_r;
+  tascl.color.green = bs.color_g;
+  tascl.color.blue = bs.color_b;
+  tascl.color.zero = 0;
+  //MYBATTLESTATUS battlestatus myteamcolor
+  m_sock->Send( "MYBATTLESTATUS " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + "\n" );
+}
+
+
 void TASServer::OnConnected( Socket* sock )
 {
   std::cout << "** TASServer::OnConnected()" << std::endl;
@@ -576,7 +594,7 @@ UserStatus TASServer::ConvTasclientstatus( TASClientstatus tas )
   return stat;
 }
 
-UserBattleStatus TASServer::ConvTasbattlestatus( TASBattlestatus tas )
+UserBattleStatus TASServer::ConvTasbattlestatus( TASBattleStatus tas )
 {
   UserBattleStatus stat;
   stat.ally = tas.ally;
@@ -588,6 +606,21 @@ UserBattleStatus TASServer::ConvTasbattlestatus( TASBattlestatus tas )
   stat.team = tas.team;
   return stat;
 }
+
+
+TASBattleStatus TASServer::ConvTasbattlestatus( UserBattleStatus bs)
+{
+  TASBattleStatus stat;
+  stat.ally = bs.ally;
+  stat.handicap = bs.handicap;
+  stat.ready = bs.ready;
+  stat.side = bs.side;
+  stat.spectator = bs.spectator;
+  stat.sync = bs.sync;
+  stat.team = bs.team;
+  return stat;
+}
+
 
 bool TASServer::VersionSupportReplyid( int version )
 {

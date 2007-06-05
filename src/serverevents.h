@@ -59,6 +59,7 @@ class ServerEvents
     void OnChannelList( const std::string& channel, const int& numusers );
     void OnPrivateMessage( const std::string& user, const std::string& message );
     
+    void OnRequestBattleStatus( int battleid );
   protected:
     Server& m_serv;
     Ui& m_ui;

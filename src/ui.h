@@ -82,6 +82,7 @@ class Ui
     
     void OnJoinedBattle( Battle& battle );
     void OnUserBattleStatus( Battle& battle, User& user );
+    void OnRequestBattleStatus( Battle& battle );
     
   protected:
     // Ui variables

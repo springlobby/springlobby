@@ -260,3 +260,12 @@ void ServerEvents::OnChannelList( const std::string& channel, const int& numuser
 {
   m_ui.OnChannelList( channel, numusers );
 }
+
+
+void ServerEvents::OnRequestBattleStatus( int battleid )
+{
+  Battle& battle = m_serv.GetBattle( battleid );
+  m_ui.OnRequestBattleStatus( battle );
+}
+
+

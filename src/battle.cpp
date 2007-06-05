@@ -22,3 +22,27 @@ void Battle::Leave()
   m_serv.LeaveBattle( m_opts.battleid );
 }
 
+
+void Battle::OnRequestBattleStatus()
+{
+  int lowest = 1;
+  bool changed = true;
+  while ( changed ) {
+    changed = false;
+    for ( int i = 0; i < GetNumUsers(); i++ ) {
+      if ( GetUser( i ).GetBattleStatus().team == lowest ) {
+        lowest++;
+        changed = true;
+      }
+    }
+  }
+  
+  UserBattleStatus bs = m_serv.GetMe().GetBattleStatus();
+  bs.team = lowest;
+  bs.ally = lowest;
+  m_serv.GetMe().SetBattleStatus( bs );
+  
+  m_serv.SendMyBattleStatus( bs );
+  
+}
+

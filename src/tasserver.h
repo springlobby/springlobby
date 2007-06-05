@@ -32,14 +32,14 @@ struct TASClientstatus {
 
 
 //! @brief Union used internally by the TASServer class to get client status information.
-union UTASClientstatus {
+union UTASClientStatus {
   unsigned char byte;
   TASClientstatus tasdata;
 };
 
 
 //! @brief Struct used internally by the TASServer class to get battle status information.
-struct TASBattlestatus {
+struct TASBattleStatus {
   unsigned int : 1;
   unsigned int ready : 1;
   unsigned int team : 4;
@@ -54,9 +54,9 @@ struct TASBattlestatus {
 
 
 //! @brief Union used internally by the TASServer class to get battle status information.
-union UTASBattlestatus {
+union UTASBattleStatus {
   int data;
-  TASBattlestatus tasdata;
+  TASBattleStatus tasdata;
 };
 
 
@@ -124,7 +124,8 @@ class TASServer : public Server
    
     void JoinBattle( const int& battleid, const std::string& password = "" );
     void LeaveBattle( const int& battleid );
-    
+    void SendMyBattleStatus( UserBattleStatus& bs );
+        
     void RequestChannels();
     // TASServer specific functions
     void ExecuteCommand( std::string in );
@@ -139,7 +140,9 @@ class TASServer : public Server
     
     // Static utility functions
     static UserStatus ConvTasclientstatus( TASClientstatus );
-    static UserBattleStatus ConvTasbattlestatus( TASBattlestatus );
+    static UserBattleStatus ConvTasbattlestatus( TASBattleStatus );
+    static TASBattleStatus ConvTasbattlestatus( UserBattleStatus );
+    
     static bool VersionSupportReplyid( int version );
     static StartType IntToStartType( int start ) {
       switch ( start ) {

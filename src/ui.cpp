@@ -336,3 +336,13 @@ void Ui::OnUserBattleStatus( Battle& battle, User& user )
   mw().GetJoinTab().BattleUserUpdated( user );
 }
 
+void Ui::OnRequestBattleStatus( Battle& battle )
+{
+  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+  if ( br != NULL ) {
+    if ( &br->GetBattle() == &battle ) {
+      br->GetBattle().OnRequestBattleStatus();
+    }
+  }
+}
+
