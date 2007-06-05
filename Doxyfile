@@ -132,7 +132,8 @@ EXCLUDE                = ./src/base64.cpp \
                          ./src/base64.h \
                          ./src/test.cpp
 EXCLUDE_SYMLINKS       = NO
-EXCLUDE_PATTERNS       = */.svn/*
+EXCLUDE_PATTERNS       = */.svn/* \
+                         ./doc/html/*
 EXAMPLE_PATH           = ./doc/examples/
 EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO
