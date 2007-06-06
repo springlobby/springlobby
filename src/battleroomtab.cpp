@@ -17,8 +17,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle ) : wxPanel( pare
   m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
 
   m_player_panel = new wxPanel( m_splitter , -1 );
-  m_team_sel = new wxComboBox( m_player_panel, -1, _T("1") );
-  m_ally_sel = new wxComboBox( m_player_panel, -1, _T("1") );
+  m_team_sel = new wxComboBox( m_player_panel, -1, _T("1"), wxDefaultPosition, wxDefaultSize, 16, team_choices );
+  m_ally_sel = new wxComboBox( m_player_panel, -1, _T("1"), wxDefaultPosition, wxDefaultSize, 16, team_choices );
   m_color_sel = new wxComboBox( m_player_panel, -1, _T("White") );
   m_side_sel = new wxComboBox( m_player_panel, -1, _T("Arm") );
 
