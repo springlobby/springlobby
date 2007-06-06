@@ -10,6 +10,8 @@
 #include <wx/stattext.h>
 #include <wx/sizer.h>
 #include <wx/imaglist.h>
+#include <wx/notebook.h>
+#include <wx/listbook.h>
 #include "battlelisttab.h"
 #include "battleroomtab.h"
 

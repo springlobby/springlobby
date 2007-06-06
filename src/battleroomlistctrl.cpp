@@ -112,8 +112,8 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   SetItemColumnImage( index, 3, IconImageList::GetFlagIcon( user.GetCountry() ) );
   SetItemColumnImage( index, 4, IconImageList::GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 5, WX_STRING( user.GetNick() ) );
-  SetItem( index, 6, wxString::Format( _("%d"), user.GetBattleStatus().team ) );
-  SetItem( index, 7, wxString::Format( _("%d"), user.GetBattleStatus().ally ) );
+  SetItem( index, 6, wxString::Format( _("%d"), user.GetBattleStatus().team + 1 ) );
+  SetItem( index, 7, wxString::Format( _("%d"), user.GetBattleStatus().ally + 1 ) );
   SetItem( index, 8, wxString::Format( _("%.1f GHz"), user.GetCpu() / 1000.0 ) );
   SetItem( index, 9, wxString::Format( _("%d%%"), user.GetBattleStatus().handicap ) );
 }
