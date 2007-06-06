@@ -84,6 +84,9 @@ class Ui
     void OnUserBattleStatus( Battle& battle, User& user );
     void OnRequestBattleStatus( Battle& battle );
     
+    void OnSaidBattle( Battle& battle, const std::string& nick, const std::string& msg );
+    void OnBattleAction( Battle& battle, const std::string& nick, const std::string& msg );
+    
   protected:
     // Ui variables
   

@@ -144,6 +144,8 @@ class Battle : public UserList
     void Join( const std::string& password = "" );
     void Leave();
     
+    void Say( const std::string& msg );
+    
     void OnRequestBattleStatus();
   /*
     DISABLEUNITS unitname1 unitname2

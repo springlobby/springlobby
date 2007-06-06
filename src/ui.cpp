@@ -316,7 +316,10 @@ void Ui::OnUserLeftBattle( Battle& battle, User& user )
   mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != NULL ) {
-    if ( &br->GetBattle() == &battle ) br->OnUserLeft( user );
+    if ( &br->GetBattle() == &battle ) {
+      br->OnUserLeft( user );
+      if ( &user == &m_serv->GetMe() ) mw().GetJoinTab().LeaveCurrentBattle();
+    }
   }
 }
 
@@ -345,4 +348,23 @@ void Ui::OnRequestBattleStatus( Battle& battle )
     }
   }
 }
+
+
+void Ui::OnSaidBattle( Battle& battle, const std::string& nick, const std::string& msg )
+{
+  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+  if ( br != NULL ) {
+    br->GetChatPanel().Said( WX_STRING(nick), WX_STRING(msg) );
+  }
+}
+
+
+void Ui::OnBattleAction( Battle& battle, const std::string& nick, const std::string& msg )
+{
+  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+  if ( br != NULL ) {
+    br->GetChatPanel().DidAction( WX_STRING(nick), WX_STRING(msg) );
+  }
+}
+
 

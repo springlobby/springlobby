@@ -64,6 +64,8 @@ class Server
     virtual void SayChannel( const std::string& channel, const std::string& msg ) = 0;
     virtual void SayPrivate( const std::string& nick, const std::string& msg ) = 0;
   
+    virtual void SayBattle( int battleid, const std::string& msg ) = 0;
+    
     virtual void JoinBattle( const int& battleid, const std::string& password = "" ) = 0;
     virtual void LeaveBattle( const int& battleid ) = 0;
     

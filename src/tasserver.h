@@ -122,6 +122,8 @@ class TASServer : public Server
     void SayChannel( const std::string& channel, const std::string& msg );
     void SayPrivate( const std::string& nick, const std::string& msg );
    
+    void SayBattle( int battleid, const std::string& msg );
+    
     void JoinBattle( const int& battleid, const std::string& password = "" );
     void LeaveBattle( const int& battleid );
     void SendMyBattleStatus( UserBattleStatus& bs );

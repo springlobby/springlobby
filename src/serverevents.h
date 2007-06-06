@@ -60,6 +60,8 @@ class ServerEvents
     void OnPrivateMessage( const std::string& user, const std::string& message );
     
     void OnRequestBattleStatus( int battleid );
+    void OnSaidBattle( int battleid, const std::string& nick, const std::string& msg );
+    void OnBattleAction( int battleid, const std::string& nick, const std::string& msg );
   protected:
     Server& m_serv;
     Ui& m_ui;

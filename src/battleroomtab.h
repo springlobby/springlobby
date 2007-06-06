@@ -29,6 +29,7 @@ class BattleRoomTab : public wxPanel
    BattleroomListCtrl& GetPlayersListCtrl() { assert( m_players != NULL); return *m_players; }
    
    Battle& GetBattle() { return m_battle; }
+   ChatPanel& GetChatPanel() { return *m_chat; }
    
    void OnLeave( wxCommandEvent& event );
    void OnUserJoined( User& user );

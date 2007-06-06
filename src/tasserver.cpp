@@ -327,6 +327,14 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     m_se->OnChannelList( channel, units );
   } else if ( cmd == "REQUESTBATTLESTATUS" ) {
     m_se->OnRequestBattleStatus( m_battle_id );
+  } else if ( cmd == "SAIDBATTLE" ) {
+    nick = GetWordParam( params );
+    msg = GetSentenceParam( params );
+    m_se->OnSaidBattle( m_battle_id, nick, msg );
+  } else if ( cmd == "SAIDBATTLEEX" ) {
+    nick = GetWordParam( params );
+    msg = GetSentenceParam( params );
+    m_se->OnBattleAction( m_battle_id, nick, msg );
   } else {
     std::cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << std::endl;
     m_se->OnUnknownCommand( cmd, params );
@@ -510,6 +518,15 @@ void TASServer::SayPrivate( const std::string& nick, const std::string& msg )
   assert( m_sock != NULL );
   
   m_sock->Send( "SAYPRIVARE " + nick + " " + msg + "\n" );
+}
+
+
+void TASServer::SayBattle( int battleid, const std::string& msg )
+{
+  std::cout << "** TASServer::SayBatle()" << std::endl;
+  assert( IsOnline() );
+  assert( m_sock != NULL );
+  m_sock->Send( "SAYBATTLE " + msg + "\n" );
 }
 
 

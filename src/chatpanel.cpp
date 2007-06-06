@@ -77,7 +77,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Server& serv )
 }
 
 ChatPanel::ChatPanel( wxWindow* parent, Battle& battle )
-: wxPanel( parent, -1),m_channel(NULL),m_server(NULL),m_user(NULL),m_battle(&battle),m_type(CPT_Server),m_show_nick_list(false)
+: wxPanel( parent, -1),m_channel(NULL),m_server(NULL),m_user(NULL),m_battle(&battle),m_type(CPT_Battle),m_show_nick_list(false)
 {
   std::cout << "** ChatPanel::ChatPanel( wxWindow* parent, Battle& battle )" << std::endl;
   _CreateControls( );
@@ -297,6 +297,9 @@ void ChatPanel::Say( const wxString& message )
   if ( m_type == CPT_Channel ) {
     assert( m_channel != NULL );
     m_channel->Say( STL_STRING(message) );
+  } else if ( m_type == CPT_Battle ) {
+    assert( m_battle != NULL );
+    m_battle->Say( STL_STRING(message) );
   }
 }
 

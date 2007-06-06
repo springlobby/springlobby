@@ -269,3 +269,17 @@ void ServerEvents::OnRequestBattleStatus( int battleid )
 }
 
 
+void ServerEvents::OnSaidBattle( int battleid, const std::string& nick, const std::string& msg )
+{
+  Battle& battle = m_serv.GetBattle( battleid );
+  m_ui.OnSaidBattle( battle, nick, msg );
+}
+
+void ServerEvents::OnBattleAction( int battleid, const std::string& nick, const std::string& msg )
+{
+  Battle& battle = m_serv.GetBattle( battleid );
+  m_ui.OnBattleAction( battle, nick, msg );
+}
+
+
+

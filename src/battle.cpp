@@ -46,3 +46,9 @@ void Battle::OnRequestBattleStatus()
   
 }
 
+
+void Battle::Say( const std::string& msg )
+{
+  m_serv.SayBattle( opts().battleid, msg );
+}
+
