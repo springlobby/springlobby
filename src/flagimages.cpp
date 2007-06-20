@@ -20,7 +20,7 @@ void AddFlagImages( wxImageList& imgs )
 {
   int i = 0;
   while ( flag_xpm[i] != NULL ) {
-    imgs.Add( wxBitmap( flag_xpm[i]) );
+    imgs.Add( wxBitmap( const_cast<const char**>(flag_xpm[i])) );
     i++;
   }
 }
