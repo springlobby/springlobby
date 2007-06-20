@@ -88,7 +88,7 @@ void BattleListCtrl::AddBattle( Battle& battle )
 {
   int index = InsertItem( 0, IconImageList::GetBattleStatusIcon( battle ) );
   assert( index != -1 );
-  SetItemData(index, (long)&battle );
+  SetItemData(index, (wxUIntPtr)&battle );
 
   UpdateBattle( index );
 }
@@ -122,7 +122,7 @@ void BattleListCtrl::UpdateBattle( const int& index )
    
   if (!GetItem( item )) assert(false);
     
-  Battle& battle = *((Battle*)item.GetData());
+  Battle& battle = *((Battle*)GetItemData( index ));
   
   SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
   SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.opts().rankneeded, false ) );
