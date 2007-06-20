@@ -1,20 +1,3 @@
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
-
 //
 // Class: ChatPanel
 //
@@ -26,6 +9,7 @@
 #include "chatpanel.h"
 #include "utils.h"
 #include "ui.h"
+
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 
@@ -47,9 +31,9 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
   // Setting default values
   m_show_nick_list = show_nick_list;
   m_channel = NULL;
-  
+
   _CreateControls();
-  
+
 }
 */
 
@@ -92,63 +76,63 @@ void ChatPanel::_CreateControls( )
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_chat_sizer = new wxBoxSizer( wxVERTICAL );
   m_say_sizer = new wxBoxSizer( wxHORIZONTAL );
-  
+
   if ( m_show_nick_list ) {
-    
+
     m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxDefaultSize, wxSP_3D );
     m_nick_panel = new wxPanel( m_splitter, -1 );
     m_chat_panel = new wxPanel( m_splitter, -1 );
-    
+
     m_nick_sizer = new wxBoxSizer( wxVERTICAL );
-    
+
     m_nicklist = new NickListCtrl( m_nick_panel );
-    
+
     m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,28), 0, NULL, wxCB_READONLY );
-    
+
     m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
     m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
-    
+
     m_nick_panel->SetSizer( m_nick_sizer );
-    
+
   } else {
-    
+
     m_chat_panel = this;
     m_nick_sizer = NULL;
     m_nicklist = NULL;
     m_nick_filter = NULL;
     m_splitter = NULL;
-    
+
   }
-  
+
   // Creating ui elements
-  m_chatlog_text = new wxTextCtrl( m_chat_panel, -1, _(""), wxDefaultPosition, wxDefaultSize, 
+  m_chatlog_text = new wxTextCtrl( m_chat_panel, -1, _(""), wxDefaultPosition, wxDefaultSize,
                              wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 
   m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _(""), wxDefaultPosition, wxSize(100,28), wxTE_PROCESS_ENTER );
   m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _T("Send"), wxDefaultPosition, wxSize(80,28) );
-  
+
   // Adding elements to sizers
   m_say_sizer->Add( m_say_text, 1, wxEXPAND );
   m_say_sizer->Add( m_say_button );
-  
+
   m_chat_sizer->Add( m_chatlog_text, 1, wxEXPAND );
   m_chat_sizer->Add( m_say_sizer, 0, wxEXPAND | wxTOP, 2 );
-  
+
   if ( m_show_nick_list ) {
     m_chat_panel->SetSizer( m_chat_sizer );
-    
+
     m_splitter->SplitVertically( m_chat_panel, m_nick_panel, 100 );
-    
+
     m_main_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
-    
+
   } else {
     m_main_sizer->Add( m_chat_sizer, 4, wxEXPAND | wxALL, 2 );
   }
-  
+
   // Assign sizer to panel
   SetSizer( m_main_sizer );
-  
-  
+
+
   if ( m_show_nick_list ) {
     wxSize s = m_splitter->GetSize();
     m_splitter->SetSashPosition( s.GetWidth() - 210, true );
@@ -245,7 +229,7 @@ void ChatPanel::Parted( User& who, const wxString& message )
 void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 0, 80)));
-  m_chatlog_text->AppendText( _(" ** Channel topic: ")+ message + _T("\n * Set by ") + who + _(".\n") );  
+  m_chatlog_text->AppendText( _(" ** Channel topic: ")+ message + _T("\n * Set by ") + who + _(".\n") );
 }
 
 
@@ -266,9 +250,9 @@ void ChatPanel::_SetChannel( Channel* channel )
   if ( m_channel != NULL ) {
     m_channel->uidata.panel = NULL;
   }
-  
+
   m_channel = channel;
-  
+
   if ( m_channel != NULL ) {
     m_channel->uidata.panel = this;
   }
@@ -286,7 +270,7 @@ void ChatPanel::_SetChannel( Channel* channel )
 //! @return Name of the chat/channel.
 Channel* ChatPanel::GetChannel()
 {
-  
+
 }
 */
 

@@ -34,36 +34,30 @@
 IconImageList::IconImageList() : wxImageList(16,16)
 {
   
-  Add( wxBITMAP(admin) );
-  Add( wxBITMAP(admin_away) );
-  Add( wxBITMAP(admin_ingame) );
-  Add( wxBITMAP(bot) );
-  Add( wxBITMAP(away) );
-  Add( wxBITMAP(ingame) );
-  Add( wxBITMAP(up) );
-  Add( wxBITMAP(down) );
-  Add( wxBITMAP(rank0) );
-  Add( wxBITMAP(rank1) );
-  Add( wxBITMAP(rank2) );
-  Add( wxBITMAP(rank3) );
-  Add( wxBITMAP(rank4) );
+  Add( wxBitmap(admin_xpm) );
+  Add( wxBitmap(admin_away_xpm) );
+  Add( wxBitmap(admin_ingame_xpm) );
+  Add( wxBitmap(bot_xpm) );
+  Add( wxBitmap(away_xpm) );
+  Add( wxBitmap(ingame_xpm) );
+  Add( wxBitmap(up_xpm) );
+  Add( wxBitmap(down_xpm) );
+  Add( wxBitmap(rank0_xpm) );
+  Add( wxBitmap(rank1_xpm) );
+  Add( wxBitmap(rank2_xpm) );
+  Add( wxBitmap(rank3_xpm) );
+  Add( wxBitmap(rank4_xpm) );
   
-  Add( wxBITMAP(open_game) );
-  Add( wxBITMAP(open_pw_game) );
-  Add( wxBITMAP(closed_game) );
-  Add( wxBITMAP(closed_pw_game) );
-  Add( wxBITMAP(started_game) );
+  Add( wxBitmap(open_game_xpm) );
+  Add( wxBitmap(open_pw_game_xpm) );
+  Add( wxBitmap(closed_game_xpm) );
+  Add( wxBitmap(closed_pw_game_xpm) );
+  Add( wxBitmap(started_game_xpm) );
   
-  Add( wxBITMAP(unknown_flag) );
+  Add( wxBitmap(unknown_flag_xpm) );
 
-  ADD_FLAGS_IMAGES(this)
+  AddFlagImages( *this );
 
-}
-
-
-IconImageList::~IconImageList()
-{
-  
 }
 
 
@@ -111,7 +105,7 @@ int IconImageList::GetFlagIcon( const std::string& flagname )
 
 int IconImageList::GetBattleStatusIcon( Battle& battle )
 {
-  if ( battle.GetFounder().GetStatus().in_game ) return ICON_STARTED_GAME;
+  //if ( battle.GetFounder().GetStatus().in_game ) return ICON_STARTED_GAME;
   if ( !battle.opts().islocked ) {
     if ( !battle.opts().ispassworded ) return ICON_OPEN_GAME;
     else return ICON_OPEN_PW_GAME;

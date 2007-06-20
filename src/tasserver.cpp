@@ -142,46 +142,48 @@ void TASServer::_ReciveAndExecute()
 }
 
 
-void TASServer::ExecuteCommand( std::string in )
+void TASServer::ExecuteCommand( const std::string& in )
 {
   std::string cmd;
-  int pos;
+  std::string params = in;
+  int pos = 0;
   int replyid = -1;
   
   if ( in.empty() ) return;
   
   //cout << "Debug: " << in << endl;
-  if ( in[0] == '#' ) {
-    cmd = in.substr( 1, in.find( " ", 0 ) );
+  if ( params[0] == '#' ) {
+    cmd = params.substr( 1, params.find( " ", 0 ) );
     replyid = atoi( cmd.c_str() );
-    in = in.substr( pos + 1 );
+    params = params.substr( pos + 1 );
   }
   
-  pos = in.find( "\n", 0 );
+  pos = (int)params.find( "\n", 0 );
   if ( pos != std::string::npos ) {
-    assert( pos < in.length() ); // We might be throwing away a second command following this one.
-    in.replace( pos, in.length() - pos, "" );
+    assert( pos < (int)params.length() ); // We might be throwing away a second command following this one.
+    params.replace( pos, params.length() - pos, "" );
   }
     
-  pos = in.find( " ", 0 );
+  pos = (int)params.find( " ", 0 );
   if ( pos == std::string::npos ) {
     // Must be command without parameters.
-    cmd = in;
-    in = "";
+    cmd = params;
+    params = "";
   } else {
-    cmd = in.substr( 0, pos );
-    in = in.substr( pos + 1 );
+    cmd = params.substr( 0, pos );
+    params = params.substr( pos + 1 );
   }
   
-  ExecuteCommand( cmd, in );
+  ExecuteCommand( cmd, params );
 }
 
-void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid )
+void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
-  int pos, cpu, status, id, nat, port, maxplayers, rank, hash, specs, metal, energy, units, start;
+  std::string params = inparams;
+  int pos, cpu, id, nat, port, maxplayers, rank, hash, specs, metal, energy, units, start;
   bool replay, haspass, dgun, ghost, dim, comm;
   std::string nick, contry, host, map, title, mod, channel, error, msg;
-  NatType ntype;
+  //NatType ntype;
   UserStatus cstatus;
   UTASClientStatus tasstatus;
   UTASBattleStatus tasbstatus;
@@ -217,13 +219,13 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     m_se->OnUserStatus( nick, cstatus );
   } else if ( cmd == "BATTLEOPENED" ) {
     id = GetIntParam( params );
-    replay = GetIntParam( params );
+    replay = (bool)GetIntParam( params );
     nat = GetIntParam( params );
     nick = GetWordParam( params );
     host = GetWordParam( params );
     port = GetIntParam( params );
     maxplayers = GetIntParam( params );
-    haspass = GetIntParam( params );
+    haspass = (bool)GetIntParam( params );
     rank = GetIntParam( params );
     hash = GetIntParam( params );
     map = GetSentenceParam( params );
@@ -235,14 +237,14 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
   } else if ( cmd == "JOINEDBATTLE" ) {
     id = GetIntParam( params );
     nick = GetWordParam( params );
-    m_se->OnUserJoinedBattle( id, nick );
+    //m_se->OnUserJoinedBattle( id, nick );
   } else if ( cmd == "UPDATEBATTLEINFO" ) {
     id = GetIntParam( params );
     specs = GetIntParam( params );
-    haspass = GetIntParam( params );
+    haspass = (bool)GetIntParam( params );
     hash = GetIntParam( params );
     map = GetSentenceParam( params );
-    m_se->OnBattleInfoUpdated( id, specs, haspass, hash, map );
+    //m_se->OnBattleInfoUpdated( id, specs, haspass, hash, map );
   } else if ( cmd == "LOGININFOEND" ) {
     m_se->OnLoginInfoComplete();
   } else if ( cmd == "REMOVEUSER" ) {
@@ -263,7 +265,7 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
   } else if ( cmd == "JOIN" ) {
     channel = GetWordParam( params );
     error = GetSentenceParam( params );
-    m_se->OnJoinChannelResult( false, channel, error );
+    //m_se->OnJoinChannelResult( false, channel, error );
   } else if ( cmd == "SAID" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
@@ -279,7 +281,6 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     msg = GetSentenceParam( params );
     m_se->OnChannelPart( channel, nick, msg );
   } else if ( cmd == "CHANNELTOPIC" ) {
-    std::cout << "** TOPIC " << params << std::endl;
     channel = GetWordParam( params );
     nick = GetWordParam( params );
     pos = GetIntParam( params );
@@ -311,7 +312,7 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     ghost = (bool)GetIntParam( params );
     hash = GetIntParam( params );
     m_battle_id = id;
-    m_se->OnJoinedBattle( id, metal, energy, units, IntToStartType(start), comm, dgun, dim, ghost, hash );
+    //m_se->OnJoinedBattle( id, metal, energy, units, IntToStartType(start), comm, dgun, dim, ghost, hash );
   } else if ( cmd == "CLIENTBATTLESTATUS" ) {
     nick = GetWordParam( params );
     tasbstatus.data = GetIntParam( params );
@@ -320,24 +321,24 @@ void TASServer::ExecuteCommand( std::string cmd, std::string params, int replyid
     bstatus.color_r = color.color.red;
     bstatus.color_g = color.color.green;
     bstatus.color_b = color.color.blue;
-    m_se->OnClientBattleStatus( m_battle_id, nick, bstatus );
+    //m_se->OnClientBattleStatus( m_battle_id, nick, bstatus );
   } else if ( cmd == "CHANNEL" ) {
     channel = GetWordParam( params );
     units = GetIntParam( params );
     m_se->OnChannelList( channel, units );
   } else if ( cmd == "REQUESTBATTLESTATUS" ) {
-    m_se->OnRequestBattleStatus( m_battle_id );
+    //m_se->OnRequestBattleStatus( m_battle_id );
   } else if ( cmd == "SAIDBATTLE" ) {
     nick = GetWordParam( params );
     msg = GetSentenceParam( params );
-    m_se->OnSaidBattle( m_battle_id, nick, msg );
+    //m_se->OnSaidBattle( m_battle_id, nick, msg );
   } else if ( cmd == "SAIDBATTLEEX" ) {
     nick = GetWordParam( params );
     msg = GetSentenceParam( params );
-    m_se->OnBattleAction( m_battle_id, nick, msg );
+    //m_se->OnBattleAction( m_battle_id, nick, msg );
   } else {
     std::cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << std::endl;
-    m_se->OnUnknownCommand( cmd, params );
+    //m_se->OnUnknownCommand( cmd, params );
   }
   /*
 [14:12] !! Command: "JOINBATTLEFAILED" params: "Password required".
@@ -357,7 +358,7 @@ std::string TASServer::GetWordParam( std::string& params )
   int pos;
   std::string param;
   
-  pos = params.find( " ", 0 );
+  pos = (int)params.find( " ", 0 );
   if ( pos == std::string::npos ) {
     param = params;
     params = "";
@@ -374,7 +375,7 @@ std::string TASServer::GetSentenceParam( std::string& params )
   int pos;
   std::string param;
   
-  pos = params.find( "\t", 0 );
+  pos = (int)params.find( "\t", 0 );
   if ( pos == std::string::npos ) {
     param = params;
     params = "";
@@ -391,7 +392,7 @@ int TASServer::GetIntParam( std::string& params )
   int pos;
   std::string param;
   
-  pos = params.find( " ", 0 );
+  pos = (int)params.find( " ", 0 );
   if ( pos == std::string::npos ) {
     param = params;
     params = "";

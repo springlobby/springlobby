@@ -53,7 +53,7 @@ class UserList
       return m_users.find(nick) != m_users.end();
     }
 
-    int GetNumUsers() { return m_users.size(); }
+    int GetNumUsers() { return (int)m_users.size(); }
  
   private:
     user_map_t m_users;

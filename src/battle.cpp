@@ -6,7 +6,8 @@
 #include "ui.h"
 
 
-void Battle::Update() {
+void Battle::Update()
+{
   m_ui.OnBattleInfoUpdated( *this );
 }
 
@@ -36,14 +37,14 @@ void Battle::OnRequestBattleStatus()
       }
     }
   }
-  
+
   UserBattleStatus bs = m_serv.GetMe().GetBattleStatus();
   bs.team = lowest;
   bs.ally = lowest;
   m_serv.GetMe().SetBattleStatus( bs );
-  
+
   m_serv.SendMyBattleStatus( bs );
-  
+
 }
 
 

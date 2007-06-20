@@ -6,6 +6,7 @@
 #define _ICONIMAGELIST_H_
 
 #include <wx/imaglist.h>
+#include <wx/bitmap.h>
 
 #define ICON_ADMIN 0
 #define ICON_ADMIN_AWAY 1
@@ -38,14 +39,15 @@
 #define ICON_UNK_FLAG 18
 #define ICON_FLAGS_BASE 19
 
+#include <string>
+#include <wx/imaglist.h>
 class Battle;
-class UserStatus;
+struct UserStatus;
 
 class IconImageList : public wxImageList
 {
   public:
     IconImageList();
-     ~IconImageList();
   
     // IconImageList interface
   

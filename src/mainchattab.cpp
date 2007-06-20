@@ -33,10 +33,10 @@ MainChatTab::MainChatTab( wxWindow* parent )
   m_chat_tabs = new wxNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
 
   m_imagelist = new wxImageList( 12, 12 );
-  m_imagelist->Add( wxBITMAP(close) );
-  m_imagelist->Add( wxBITMAP(server) );
-  m_imagelist->Add( wxBITMAP(channel) );
-  m_imagelist->Add( wxBITMAP(userchat) );
+  m_imagelist->Add( wxBitmap(close_xpm) );
+  m_imagelist->Add( wxBitmap(server_xpm) );
+  m_imagelist->Add( wxBitmap(channel_xpm) );
+  m_imagelist->Add( wxBitmap(userchat_xpm) );
 
   m_chat_tabs->AssignImageList( m_imagelist );
 
@@ -97,7 +97,7 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
   }
 
   std::cout << "  -- newsel: " << newsel << " tot: " << m_chat_tabs->GetPageCount() << std::endl;
-  if ( newsel >= m_chat_tabs->GetPageCount() - 1 ) { // We are going to remove page
+  if ( newsel >= (int)m_chat_tabs->GetPageCount() - 1 ) { // We are going to remove page
     std::cout << "  -- Closepage." << std::endl;
     ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
     ASSERT_LOGIC( delpage != NULL , "MainChatTab::OnTabsChanged(): delpage NULL" );

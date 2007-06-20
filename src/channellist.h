@@ -54,7 +54,7 @@ class ChannelList
       return m_chans.find( name ) != m_chans.end();
     }
   
-    int GetNumChannels() { return m_chans.size(); }
+    int GetNumChannels() { return (int)m_chans.size(); }
   
   private:
     // ChannelList variables

@@ -2,6 +2,7 @@
 // Class: MainJoinBattleTab
 //
 
+#include <wx/icon.h>
 #include "mainjoinbattletab.h"
 
 #include "images/battle_list.xpm"
@@ -15,10 +16,10 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( pare
   m_tabs = new wxNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
   
   m_imagelist = new wxImageList( 12, 12 );
-  m_imagelist->Add( wxBITMAP(battle_list) );
-  m_imagelist->Add( wxBITMAP(battle) );
-  m_imagelist->Add( wxBITMAP(battle_map) );
-  m_imagelist->Add( wxBITMAP(battle_settings) );
+  m_imagelist->Add( wxIcon(battle_list_xpm) );
+  m_imagelist->Add( wxIcon(battle_xpm) );
+  m_imagelist->Add( wxIcon(battle_map_xpm) );
+  m_imagelist->Add( wxIcon(battle_settings_xpm) );
   
   m_tabs->AssignImageList( m_imagelist );
   

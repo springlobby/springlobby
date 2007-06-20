@@ -42,7 +42,7 @@ class BattleList
       return m_battles.find(id) != m_battles.end();
     }
 
-    int GetNumBattles() { return m_battles.size(); }
+    int GetNumBattles() { return (int)m_battles.size(); }
  
   private:
     battle_map_t m_battles;

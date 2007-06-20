@@ -112,7 +112,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::
   Battle& battle = m_serv._AddBattle( id );
   
   User& user = m_serv.GetUser( nick );
-  battle.AddUser( user );
+  //battle.AddUser( user );
   
   battle.SetIsReplay( replay );
   battle.SetNatType( nat );

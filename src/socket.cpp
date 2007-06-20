@@ -141,6 +141,6 @@ Sockstate Socket::State( )
 //! @todo Implement
 Sockerror Socket::Error( )
 {
-  
+  return -1;
 }
 

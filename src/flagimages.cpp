@@ -15,3 +15,13 @@ int GetFlagIndex( const std::string& flag )
   std::cout << "!! GetFlagIndex( " << flag.c_str() << " ): Not Found!" << std::endl;  
   return FLAG_NONE;
 }
+
+void AddFlagImages( wxImageList& imgs )
+{
+  int i = 0;
+  while ( flag_xpm[i] != NULL ) {
+    imgs.Add( wxBitmap( flag_xpm[i]) );
+    i++;
+  }
+}
+

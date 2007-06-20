@@ -36,7 +36,7 @@ int Server::GetNumChannels()
 
 Channel& Server::GetChannel( const int& index )
 {
-  m_channels.GetChannel( index );
+  return m_channels.GetChannel( index );
 }
 
 

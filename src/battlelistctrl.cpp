@@ -126,7 +126,7 @@ void BattleListCtrl::UpdateBattle( const int& index )
   
   SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
   SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.opts().rankneeded, false ) );
-  SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
+  //SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
   SetItem( index, 3, WX_STRING(battle.opts().description) );
   SetItem( index, 4, RefineMapname( WX_STRING(battle.opts().mapname) ) );
   SetItem( index, 5, RefineModname( WX_STRING(battle.opts().modname) ) );
@@ -144,6 +144,7 @@ int BattleListCtrl::GetBattleIndex( Battle& battle )
     if ( (long)&battle == GetItemData( i ) ) return i;
   }
   std::cout << "!! BattleListCtrl::GetBattleIndex( ): didn't find the battle." << std::endl;
+  return -1;
 }
 
 

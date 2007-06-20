@@ -6,6 +6,7 @@
 #include <wx/intl.h>
 #include <wx/textdlg.h>
 #include <wx/imaglist.h>
+#include <wx/icon.h>
 #include "mainwindow.h"
 #include "settings.h"
 #include "ui.h"
@@ -27,7 +28,7 @@ END_EVENT_TABLE()
 MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
                                wxPoint(50, 50), wxSize(450, 340)), m_ui(ui)
 {
-  SetIcon( wxICON(bot) );
+  SetIcon( wxIcon(bot_xpm) );
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(MENU_CONNECT, _T("&Connect..."));
   menuFile->Append(MENU_DISCONNECT, _T("&Disconnect"));
@@ -53,15 +54,15 @@ MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby
   m_func_tabs = new wxListbook( this, -1, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
 
   m_func_tab_images = new wxImageList( 64, 64 );
-  m_func_tab_images->Add( wxBITMAP(chat_icon) );
-  m_func_tab_images->Add( wxBITMAP(join_icon) );
+  m_func_tab_images->Add( wxIcon(chat_icon_xpm) );
+  m_func_tab_images->Add( wxIcon(join_icon_xpm) );
 
   m_func_tabs->AssignImageList( m_func_tab_images );
 
   //! @todo fix
   m_chat_tab = new MainChatTab( m_func_tabs );
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
-  
+
   m_func_tabs->AddPage( m_chat_tab, _(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _(""), false, 1 );
 
@@ -137,13 +138,13 @@ void MainWindow::CloseAllChats()
 //! @brief Called when join channel menuitem is clicked
 void MainWindow::OnMenuJoin( wxCommandEvent& event )
 {
-  
+
   if ( !m_ui.IsConnected() ) return;
   wxString answer;
   if ( Ui::AskText( _T("Join channel..."), _T("Name of channel to join"), answer ) ) {
     m_ui.JoinChannel( answer, _("") );
   }
-  
+
 }
 
 

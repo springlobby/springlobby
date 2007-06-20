@@ -31,21 +31,69 @@
 			<Add option="-DWXUSINGDLL"/>
 			<Add option="-DUSE_PCH"/>
 			<Add directory="$(WX_DIR)\include"/>
-			<Add directory="$(WX_DIR)\lib\gcc_dll$(WX_CFG)\msw"/>
 			<Add directory="$(WX_DIR)\contrib\include"/>
+			<Add directory=".\src"/>
+			<Add directory="$(WX_DIR)\lib\gcc_lib$(WX_CFG)"/>
 		</Compiler>
 		<ResourceCompiler>
 			<Add directory="$(WX_DIR)\include"/>
 		</ResourceCompiler>
 		<Linker>
 			<Add library="wxmsw28"/>
-			<Add directory="$(WX_DIR)\lib\gcc_dll$(WX_CFG)"/>
+			<Add directory="$(WX_DIR)\lib\gcc_lib$(WX_CFG)"/>
+			<Add directory="$(WX_DIR)\lib\gcc_lib"/>
 		</Linker>
 		<Unit filename="src\base64.cpp">
 			<Option compilerVar="CPP"/>
 			<Option target="default"/>
 		</Unit>
 		<Unit filename="src\base64.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="default"/>
+		</Unit>
+		<Unit filename="src\battle.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="default"/>
+		</Unit>
+		<Unit filename="src\battle.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="default"/>
+		</Unit>
+		<Unit filename="src\battlelist.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="default"/>
+		</Unit>
+		<Unit filename="src\battlelistctrl.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="default"/>
+		</Unit>
+		<Unit filename="src\battlelistctrl.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="default"/>
+		</Unit>
+		<Unit filename="src\battlelisttab.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="default"/>
+		</Unit>
+		<Unit filename="src\battlelisttab.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="default"/>
+		</Unit>
+		<Unit filename="src\boost\md5.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="default"/>
+		</Unit>
+		<Unit filename="src\boost\md5.hpp">
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>
@@ -102,16 +150,6 @@
 			<Option target="default"/>
 		</Unit>
 		<Unit filename="src\mainwindow.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\md5.c">
-			<Option compilerVar="CC"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\md5.h">
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>
@@ -177,16 +215,6 @@
 			<Option link="0"/>
 			<Option target="default"/>
 		</Unit>
-		<Unit filename="src\system.cpp">
-			<Option compilerVar="CPP"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\system.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
 		<Unit filename="src\tasserver.cpp">
 			<Option compilerVar="CPP"/>
 			<Option target="default"/>
@@ -215,10 +243,6 @@
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="src\userlist.cpp">
-			<Option compilerVar="CPP"/>
 			<Option target="default"/>
 		</Unit>
 		<Unit filename="src\userlist.h">
