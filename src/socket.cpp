@@ -112,7 +112,6 @@ bool Socket::Recive( std::string& data )
   } while ( (readnum > 0) && (buff[0] != '\n') );
   
   if ( readbytes > 0 ) {
-    //cout << "** Socket::Recive(): recived: \"" << data.c_str() << "\"" << endl;  
     return true;
   } else {
     return false;

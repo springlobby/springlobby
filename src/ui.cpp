@@ -122,7 +122,7 @@ bool Ui::AskText( const wxString& heading, const wxString& question, wxString& a
   wxTextEntryDialog name_dlg( NULL, question, heading, _(""), wxOK | wxCANCEL | wxCENTRE );
   int res = name_dlg.ShowModal();
   answer = name_dlg.GetValue();
-  std::cout << "** Ui::AskText(): a: " << answer.c_str() << std::endl;
+  
   return ( res == wxID_OK);
 }
 
@@ -147,7 +147,7 @@ void Ui::OnUpdate()
 //! @todo Display in servertab
 void Ui::OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported )
 {
-  std::cout << "** Ui::OnConnected()" << std::endl;
+  debug_func( "" );
   server.uidata.panel = m_main_win->GetChatTab().AddChatPannel( server, WX_STRING(server_name) );
 }
 
@@ -157,7 +157,7 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 //! @todo Check if a pannel allready exists for this channel
 void Ui::OnJoinedChannelSuccessful( Channel& chan )
 {
-  std::cout << "** Ui::OnJoinedChannelSuccessful()" << std::endl;
+  debug_func( "" );
 
   chan.uidata.panel = NULL;
   m_main_win->OpenChannelChat( chan );
@@ -167,9 +167,9 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
 //! @brief Called when something is said in a channel
 void Ui::OnChannelSaid( Channel& channel, User& user, const std::string& message )
 {
-  std::cout << "** Ui::OnChannelSaid()" << std::endl;
+  debug_func( "" );
   if ( channel.uidata.panel == NULL ) {
-    std::cout << "   !! ud->panel NULL" << std::endl;
+    debug_error( "ud->panel NULL" );
     return;
   }
   channel.uidata.panel->Said( WX_STRING(user.GetNick()), WX_STRING( message ) );
@@ -178,9 +178,9 @@ void Ui::OnChannelSaid( Channel& channel, User& user, const std::string& message
 
 void Ui::OnChannelDidAction( Channel& channel , User& user, const std::string& action )
 {
-  std::cout << "** Ui::OnChannelDidAction()" << std::endl;
+  debug_func( "" );
   if ( channel.uidata.panel == NULL ) {
-    std::cout << "   !! ud->panel NULL" << std::endl;
+    debug_error( "ud->panel NULL" );
     return;
   }
   channel.uidata.panel->DidAction( WX_STRING(user.GetNick()), WX_STRING( action ) );  
@@ -198,9 +198,9 @@ void Ui::OnLeaveChannel( Channel& channel )
 
 void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 {
-  //std::cout << "** Ui::OnUserJoinedChannel()" << std::endl;
+  //debug_func( "" );
   if ( chan.uidata.panel == NULL ) {
-    std::cout << "   !! ud->panel NULL" << std::endl;
+    debug_error( "ud->panel NULL" );
     return;
   }
   chan.uidata.panel->Joined( user );  
@@ -209,9 +209,9 @@ void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 
 void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason )
 {
-  //std::cout << "** Ui::OnUserLeftChannel()" << std::endl;
+  //debug_func( "" );
   if ( chan.uidata.panel == NULL ) {
-    std::cout << "   !! ud->panel NULL" << std::endl;
+    debug_error( "ud->panel NULL" );
     return;
   }
   chan.uidata.panel->Parted( user, WX_STRING(reason) );  
@@ -220,9 +220,9 @@ void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason
 
 void Ui::OnChannelTopic( Channel& channel , const std::string user, const std::string& topic )
 {
-  std::cout << "** Ui::OnChannelTopic()" << std::endl;
+  debug_func( "" );
   if ( channel.uidata.panel == NULL ) {
-    std::cout << "   !! ud->panel NULL" << std::endl;
+    debug_error( "ud->panel NULL" );
     return;
   }
   channel.uidata.panel->SetTopic( WX_STRING(user), WX_STRING(topic) );   
@@ -231,7 +231,7 @@ void Ui::OnChannelTopic( Channel& channel , const std::string user, const std::s
 
 void Ui::OnChannelList( const std::string& channel, const int& numusers )
 {
-  std::cout << "** Ui::OnChannelList( " << channel.c_str() << ", " << numusers << " )" << std::endl;
+  
 }
 
 

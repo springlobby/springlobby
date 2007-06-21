@@ -61,7 +61,7 @@ void NickListCtrl::RemoveUser( const User& user )
       return;
     }
   }
-  std::cout << "!! NickListCtrl::RemoveUser( ): didn't fild the user to remove." << std::endl;
+  debug_error( "Didn't fild the user to remove." );
 }
 
 
@@ -99,7 +99,7 @@ wxString NickListCtrl::OnGetItemText(long item, long column) const
 
 int NickListCtrl::OnGetItemColumnImage(long item, long column) const
 {
-  std::cout << "** NickListCtrl::OnGetItemColumnImage()" << std::endl;
+  debug_func( "" );
 
   if ( column == 0 ) {
     if ( m_users == NULL ) return -1;
@@ -113,7 +113,7 @@ int NickListCtrl::OnGetItemColumnImage(long item, long column) const
 
 int NickListCtrl::OnGetItemImage(long item) const
 {
-  std::cout << "** NickListCtrl::OnGetItemImage()" << std::endl;
+  debug_func( "" );
 
   if ( m_users == NULL ) return ICON_NOSTATE;
   if ( item >= m_users->GetNumUsers() ) return ICON_NOSTATE;

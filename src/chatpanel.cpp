@@ -40,7 +40,7 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
 ChatPanel::ChatPanel( wxWindow* parent, Channel& chan )
 : wxPanel( parent, -1),m_show_nick_list(true),m_channel(&chan),m_server(NULL),m_user(NULL),m_battle(NULL),m_type(CPT_Channel)
 {
-  std::cout << "** ChatPanel::ChatPanel( wxWindow* parent, Channel& chan )" << std::endl;
+  debug_func( "wxWindow* parent, Channel& chan" );
   _CreateControls( );
   _SetChannel( &chan );
 }
@@ -55,7 +55,7 @@ ChatPanel::ChatPanel( wxWindow* parent, User& user )
 ChatPanel::ChatPanel( wxWindow* parent, Server& serv )
 : wxPanel( parent, -1),m_show_nick_list(false),m_channel(NULL),m_server(&serv),m_user(NULL),m_battle(NULL),m_type(CPT_Server)
 {
-  std::cout << "** ChatPanel::ChatPanel( wxWindow* parent, Server& serv )" << std::endl;
+  debug_func( "wxWindow* parent, Server& serv" );
   _CreateControls( );
   serv.uidata.panel = this;
 }
@@ -63,14 +63,14 @@ ChatPanel::ChatPanel( wxWindow* parent, Server& serv )
 ChatPanel::ChatPanel( wxWindow* parent, Battle& battle )
 : wxPanel( parent, -1),m_show_nick_list(false),m_channel(NULL),m_server(NULL),m_user(NULL),m_battle(&battle),m_type(CPT_Battle)
 {
-  std::cout << "** ChatPanel::ChatPanel( wxWindow* parent, Battle& battle )" << std::endl;
+  debug_func( "wxWindow* parent, Battle& battle" );
   _CreateControls( );
   //serv.uidata.panel = this;
 };
 
 void ChatPanel::_CreateControls( )
 {
-  std::cout << "** ChatPanel::_CreateControls()" << std::endl;
+  debug_func( "" );
 
   // Creating sizers
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -189,7 +189,7 @@ void ChatPanel::DidAction( const wxString& who, const wxString& action )
 //! @param message The MOTD message to output
 void ChatPanel::Motd( const wxString& message )
 {
-  std::cout << "** ChatPanel::Motd()" << std::endl;
+  debug_func( "" );
   m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 80, 128)));
   m_chatlog_text->AppendText( _(" ** motd ** ")+ message + _("\n") );
 }
@@ -277,7 +277,7 @@ Channel* ChatPanel::GetChannel()
 
 void ChatPanel::Say( const wxString& message )
 {
-  std::cout << "** ChatPanel::Say()" << std::endl;
+  debug_func( "" );
   if ( m_type == CPT_Channel ) {
     assert( m_channel != NULL );
     m_channel->Say( STL_STRING(message) );
@@ -289,7 +289,7 @@ void ChatPanel::Say( const wxString& message )
 
 void ChatPanel::Part()
 {
-  std::cout << "** ChatPanel::Part()" << std::endl;
+  debug_func( "" );
   assert( m_channel != NULL );
   m_channel->Leave();
   m_channel->uidata.panel = NULL;

@@ -3,6 +3,8 @@
 #include <iostream>
 #include "flagimages.h"
 
+#include "utils.h"
+
 int GetFlagIndex( const std::string& flag )
 {
   int i = 0;
@@ -12,7 +14,7 @@ int GetFlagIndex( const std::string& flag )
     }
     i++;
   }
-  std::cout << "!! GetFlagIndex( " << flag.c_str() << " ): Not Found!" << std::endl;  
+  debug_error( flag + " flag not found!" );  
   return FLAG_NONE;
 }
 

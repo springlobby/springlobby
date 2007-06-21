@@ -68,7 +68,7 @@ User& TASServer::GetMe()
 
 void TASServer::Login()
 {
-  std::cout << "** TASServer::login()" << std::endl;
+  debug_func( "" );
 
   std::string data = "LOGIN ";
   data += m_user;
@@ -81,7 +81,7 @@ void TASServer::Login()
 
 void TASServer::Logout()
 {
-  std::cout << "** TASServer::logout()" << std::endl;
+  debug_func( "" );
   Disconnect();
 }
 
@@ -94,7 +94,7 @@ void TASServer::RequestChannels()
 
 void TASServer::Update()
 {
-  //cout << "** TASServer::update()" << endl;
+  //debug_func( "" );
   assert( m_sock != NULL ); // TODO: This should be handled and generate an error in released code.
   
   if ( !m_connected ) { // We are not formally connected yet, but might be.
@@ -151,7 +151,6 @@ void TASServer::ExecuteCommand( const std::string& in )
   
   if ( in.empty() ) return;
   
-  //cout << "Debug: " << in << endl;
   if ( params[0] == '#' ) {
     cmd = params.substr( 1, params.find( " ", 0 ) );
     replyid = atoi( cmd.c_str() );
@@ -337,7 +336,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     msg = GetSentenceParam( params );
     //m_se->OnBattleAction( m_battle_id, nick, msg );
   } else {
-    std::cout << "??? Cmd: " << cmd.c_str() << " params: " << params.c_str() << std::endl;
+    debug_msg( "??? Cmd: " + cmd + " params: " + params );
     //m_se->OnUnknownCommand( cmd, params );
   }
   /*
@@ -406,11 +405,10 @@ int TASServer::GetIntParam( std::string& params )
 
 void TASServer::Ping()
 {
-  //cout << "** TASServer::ping()" << endl;
+  //debug_func( "" );
   std::string cmd = "";
 
   m_ping_id++;
-//  cout << ">>> PING #" << _ping_id << endl;
   if ( VersionSupportReplyid( m_ser_ver ) ) {
     cmd += "#";
     cmd += m_ping_id;
@@ -435,7 +433,6 @@ void TASServer::HandlePong( int replyid )
 {
   std::list<TASPingListItem>::iterator it;
   
-//  cout << ">>> PONG #" << replyid << endl;
   bool found = false;
   for ( it = m_pinglist.begin(); it != m_pinglist.end(); it++ ) {
     if (it->id == replyid ) {
@@ -475,7 +472,7 @@ void TASServer::HandlePinglist()
 void TASServer::JoinChannel( const std::string& channel, const std::string& key )
 {
   //JOIN channame [key]
-  std::cout << "** TASServer::JoinChannel(" << channel.c_str() << ")" << std::endl;
+  debug_func( channel );
   assert( IsOnline() );
   assert( m_sock != NULL );
   
@@ -491,7 +488,7 @@ void TASServer::JoinChannel( const std::string& channel, const std::string& key 
 void TASServer::PartChannel( const std::string& channel )
 {
   //LEAVE channame
-  std::cout << "** TASServer::PartChannel()" << std::endl;
+  debug_func( "channel" );
   assert( IsOnline() );
   assert( m_sock != NULL );
   
@@ -503,7 +500,7 @@ void TASServer::PartChannel( const std::string& channel )
 void TASServer::SayChannel( const std::string& channel, const std::string& msg )
 {
   //SAY channame {message}
-  std::cout << "** TASServer::SayChannel()" << std::endl;
+  debug_func( "" );
   assert( IsOnline() );
   assert( m_sock != NULL );
   
@@ -514,7 +511,7 @@ void TASServer::SayChannel( const std::string& channel, const std::string& msg )
 void TASServer::SayPrivate( const std::string& nick, const std::string& msg )
 {
   //SAYPRIVATE username {message}
-  std::cout << "** TASServer::SayPrivate()" << std::endl;
+  debug_func( "" );
   assert( IsOnline() );
   assert( m_sock != NULL );
   
@@ -524,7 +521,7 @@ void TASServer::SayPrivate( const std::string& nick, const std::string& msg )
 
 void TASServer::SayBattle( int battleid, const std::string& msg )
 {
-  std::cout << "** TASServer::SayBatle()" << std::endl;
+  debug_func( "" );
   assert( IsOnline() );
   assert( m_sock != NULL );
   m_sock->Send( "SAYBATTLE " + msg + "\n" );
@@ -534,7 +531,7 @@ void TASServer::SayBattle( int battleid, const std::string& msg )
 void TASServer::JoinBattle( const int& battleid, const std::string& password )
 {
   //JOINBATTLE BATTLE_ID [parameter]
-  std::cout << "** TASServer::JoinBattle()" << std::endl;
+  debug_func( "" );
   assert( IsOnline() );
   assert( m_sock != NULL );
   m_sock->Send( "JOINBATTLE " + i2s( battleid ) + " " + password + "\n" );
@@ -544,7 +541,7 @@ void TASServer::JoinBattle( const int& battleid, const std::string& password )
 void TASServer::LeaveBattle( const int& battleid )
 {
   //LEAVEBATTLE
-  std::cout << "** TASServer::LeaveBattle()" << std::endl;
+  debug_func( "" );
   assert( IsOnline() );
   assert( m_sock != NULL );
   m_sock->Send( "LEAVEBATTLE\n" );
@@ -553,7 +550,7 @@ void TASServer::LeaveBattle( const int& battleid )
 
 void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 {
-  std::cout << "** TASServer::SendMyBattleStatus()" << std::endl;
+  debug_func( "" );
   assert( IsOnline() );
   assert( m_sock != NULL );
   GetMe().SetBattleStatus( bs );
@@ -572,7 +569,7 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 
 void TASServer::OnConnected( Socket* sock )
 {
-  std::cout << "** TASServer::OnConnected()" << std::endl;
+  debug_func( "" );
   //TASServer* serv = (TASServer*)sock->GetUserdata();
   m_last_ping = time( NULL );
   m_connected = true;
@@ -582,7 +579,7 @@ void TASServer::OnConnected( Socket* sock )
 
 void TASServer::OnDisconnected( Socket* sock )
 {
-  std::cout << "** TASServer::OnDisconnected()" << std::endl;
+  debug_func( "" );
   //TASServer* serv = (TASServer*)sock->GetUserdata();
   m_connected = false;
   m_online = false;

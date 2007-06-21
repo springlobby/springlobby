@@ -143,7 +143,7 @@ int BattleListCtrl::GetBattleIndex( Battle& battle )
   for (int i = 0; i < GetItemCount() ; i++ ) {
     if ( (unsigned long)&battle == GetItemData( i ) ) return i;
   }
-  std::cout << "!! BattleListCtrl::GetBattleIndex( ): didn't find the battle." << std::endl;
+  debug_error( "didn't find the battle." );
   return -1;
 }
 

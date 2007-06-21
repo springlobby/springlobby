@@ -124,9 +124,8 @@ int BattleroomListCtrl::GetUserIndex( User& user )
   for (int i = 0; i < GetItemCount() ; i++ ) {
     if ( (unsigned long)&user == GetItemData( i ) ) return i;
   }
-  std::cout << "!! BattleroomListCtrl::GetUserIndex( ): didn't find the battle." << std::endl;
-	assert(!"don't know what to return");
-	return 0;
+  debug_error( "didn't find the battle." );
+	return -1;
 }
 
 

@@ -15,46 +15,15 @@ std::string i2s( int x )
   return o.str();
 }
 
-void debug_msg( std::string msg )
+void debug_output( const std::string& prefix, const std::string& func, const std::string& params, const std::string& msg )
 {
+  std::string tmpmsg = msg;
+  if ( msg != "" ) tmpmsg = std::string(": ") + msg;
 #ifdef __WXMSW__
-  std::string tmp = " -- ";
-  tmp += msg;
+  std::string tmp = prefix;
+  tmp += " " + func + "( " + params + " )" + tmpmsg + "\n";
   OutputDebugString( tmp.c_str() );
 #else
-  std::cout << " -- " << msg.c_str() << std::endl;
-#endif
-}
-
-void debug_func( const std::string& func, const std::string& params = "" )
-{
-#ifdef __WXMSW__
-  std::string tmp = " -- ";
-  tmp += func;
-  OutputDebugString( tmp.c_str() );
-#else
-  std::cout << " -- " << msg.c_str() << std::endl;
-#endif
-}
-
-void debug_warning( std::string msg )
-{
-#ifdef __WXMSW__
-  std::string tmp = " ww ";
-  tmp += msg;
-  OutputDebugString( tmp.c_str() );
-#else
-  std::cout << " ww " << msg.c_str() << std::endl;
-#endif
-}
-
-void debug_error( std::string msg )
-{
-#ifdef __WXMSW__
-  std::string tmp = " !! ";
-  tmp += msg;
-  OutputDebugString( tmp.c_str() );
-#else
-  std::cout << " !! " << msg.c_str() << std::endl;
+  std::cout << prefix.c_str() << " " << func.c_str() << "( " << params.c_str() << " ): "<< tmpmsg.c_str() << std::endl;
 #endif
 }

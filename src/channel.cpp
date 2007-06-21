@@ -26,7 +26,7 @@ void Channel::Said( User& who, const std::string& message )
 
 void Channel::Say( const std::string& message )
 {
-  std::cout << "** Channel::Say()" << std::endl;
+  debug_func( "" );
   m_serv.SayChannel( m_name, message );
 }
 
@@ -57,7 +57,6 @@ void Channel::Leave()
   
 void Channel::Joined( User& who )
 {
-  //std::cout << "** Channel::Joined()" << std::endl;
   AddUser( who );
   m_ui.OnUserJoinedChannel( *this, who );
 }

@@ -19,8 +19,8 @@ END_EVENT_TABLE()
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
-  std::cout << "** SpringLobbyApp::OnInit()" << std::endl;
-  
+  debug_func( "" );
+
   m_ui = new Ui();
   
   m_ui->ShowMainWindow();
@@ -35,7 +35,7 @@ bool SpringLobbyApp::OnInit()
 //! @brief Finalizes the application
 int SpringLobbyApp::OnExit()
 {
-  std::cout << "** SpringLobbyApp::OnExit()" << std::endl;
+  debug_func( "" );
   
   m_timer->Stop();
   delete m_ui;
