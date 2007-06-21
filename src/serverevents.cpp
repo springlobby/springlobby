@@ -136,7 +136,7 @@ void ServerEvents::OnJoinedBattle( int battleid, int metal, int energy, int unit
 {
   debug_func( "" );
   Battle& battle = m_serv.GetBattle( battleid );
-  battle.AddUser( m_serv.GetMe() );
+  //battle.AddUser( m_serv.GetMe() );
   m_ui.OnJoinedBattle( battle );
 }
 

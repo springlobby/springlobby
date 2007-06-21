@@ -73,8 +73,8 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, BLIST_LI
   SetColumnWidth( 2, 20 );
   SetColumnWidth( 3, 170 );
   SetColumnWidth( 4, 140 );
-  SetColumnWidth( 5, 140 );
-  SetColumnWidth( 6, 120 );
+  SetColumnWidth( 5, 130 );
+  SetColumnWidth( 6, 110 );
   SetColumnWidth( 7, 26 );
   SetColumnWidth( 8, 26 );
   SetColumnWidth( 9, 26 );

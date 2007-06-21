@@ -2,9 +2,11 @@
 // Class: ConnectWindow
 //
 
+#include <wx/settings.h>
 #include "connectwindow.h"
 #include "settings.h"
 #include "ui.h"
+
 
 // Define events.
 BEGIN_EVENT_TABLE(ConnectWindow, wxFrame)
@@ -44,7 +46,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_nick_text =   new wxTextCtrl  ( m_login_tab, -1, username );
   m_pass_lbl =    new wxStaticText( m_login_tab, -1, _T("Password") );
   m_pass_text =   new wxTextCtrl  ( m_login_tab, -1, password, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
-  m_rpass_check = new wxCheckBox  ( m_login_tab, -1, _("Remember\npassword") );
+  m_rpass_check = new wxCheckBox  ( m_login_tab, -1, _("Remember password") );
   
   m_rpass_check->SetValue( savepass );
   
@@ -111,6 +113,9 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_ok_btn->SetDefault();
   Layout();
   m_main_sizer->SetSizeHints( this );
+#ifdef __WXMSW__
+  SetBackgroundColour( wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW) );
+#endif
 }
 
 

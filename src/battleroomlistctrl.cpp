@@ -77,7 +77,7 @@ void BattleroomListCtrl::AddUser( User& user )
 {
   int index = InsertItem( 0, ICON_NREADY );
   assert( index != -1 );
-  SetItemData(index, (long)&user );
+  SetItemData(index, (wxUIntPtr)&user );
 
   UpdateUser( index );
 }
@@ -104,7 +104,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
    
   if (!GetItem( item )) assert(false);
     
-  User& user = *((User*)item.GetData());
+  User& user = *((User*)GetItemData( index ));
   
   SetItemImage( index, IconImageList::GetReadyIcon( user.GetBattleStatus().ready ) );
   SetItemColumnImage( index, 1, IconImageList::GetSideIcon( user.GetBattleStatus().side ) );
