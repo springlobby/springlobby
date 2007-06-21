@@ -64,8 +64,11 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, BLIST_LI
   col.SetText( _T("m") );
   col.SetImage( -1 );
   InsertColumn( 9, col );
-
+#ifdef __WXMSW__
+  SetColumnWidth( 0, 45 );
+#else
   SetColumnWidth( 0, 20 );
+#endif
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );
   SetColumnWidth( 3, 170 );
@@ -126,7 +129,7 @@ void BattleListCtrl::UpdateBattle( const int& index )
   
   SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
   SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.opts().rankneeded, false ) );
-  //SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
+  SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
   SetItem( index, 3, WX_STRING(battle.opts().description) );
   SetItem( index, 4, RefineMapname( WX_STRING(battle.opts().mapname) ) );
   SetItem( index, 5, RefineModname( WX_STRING(battle.opts().modname) ) );

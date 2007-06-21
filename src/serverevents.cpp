@@ -112,7 +112,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::
   Battle& battle = m_serv._AddBattle( id );
   
   User& user = m_serv.GetUser( nick );
-  //battle.AddUser( user );
+  battle.AddUser( user );
   
   battle.SetIsReplay( replay );
   battle.SetNatType( nat );
@@ -136,7 +136,7 @@ void ServerEvents::OnJoinedBattle( int battleid, int metal, int energy, int unit
 {
   debug_func( "" );
   Battle& battle = m_serv.GetBattle( battleid );
-  //battle.AddUser( m_serv.GetMe() );
+  battle.AddUser( m_serv.GetMe() );
   m_ui.OnJoinedBattle( battle );
 }
 

@@ -236,14 +236,14 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   } else if ( cmd == "JOINEDBATTLE" ) {
     id = GetIntParam( params );
     nick = GetWordParam( params );
-    //m_se->OnUserJoinedBattle( id, nick );
+    m_se->OnUserJoinedBattle( id, nick );
   } else if ( cmd == "UPDATEBATTLEINFO" ) {
     id = GetIntParam( params );
     specs = GetIntParam( params );
     haspass = (bool)GetIntParam( params );
     hash = GetIntParam( params );
     map = GetSentenceParam( params );
-    //m_se->OnBattleInfoUpdated( id, specs, haspass, hash, map );
+    m_se->OnBattleInfoUpdated( id, specs, haspass, hash, map );
   } else if ( cmd == "LOGININFOEND" ) {
     m_se->OnLoginInfoComplete();
   } else if ( cmd == "REMOVEUSER" ) {
@@ -264,7 +264,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   } else if ( cmd == "JOIN" ) {
     channel = GetWordParam( params );
     error = GetSentenceParam( params );
-    //m_se->OnJoinChannelResult( false, channel, error );
+    m_se->OnJoinChannelResult( false, channel, error );
   } else if ( cmd == "SAID" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
@@ -311,7 +311,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     ghost = (bool)GetIntParam( params );
     hash = GetIntParam( params );
     m_battle_id = id;
-    //m_se->OnJoinedBattle( id, metal, energy, units, IntToStartType(start), comm, dgun, dim, ghost, hash );
+    m_se->OnJoinedBattle( id, metal, energy, units, IntToStartType(start), comm, dgun, dim, ghost, hash );
   } else if ( cmd == "CLIENTBATTLESTATUS" ) {
     nick = GetWordParam( params );
     tasbstatus.data = GetIntParam( params );
@@ -320,24 +320,24 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     bstatus.color_r = color.color.red;
     bstatus.color_g = color.color.green;
     bstatus.color_b = color.color.blue;
-    //m_se->OnClientBattleStatus( m_battle_id, nick, bstatus );
+    m_se->OnClientBattleStatus( m_battle_id, nick, bstatus );
   } else if ( cmd == "CHANNEL" ) {
     channel = GetWordParam( params );
     units = GetIntParam( params );
     m_se->OnChannelList( channel, units );
   } else if ( cmd == "REQUESTBATTLESTATUS" ) {
-    //m_se->OnRequestBattleStatus( m_battle_id );
+    m_se->OnRequestBattleStatus( m_battle_id );
   } else if ( cmd == "SAIDBATTLE" ) {
     nick = GetWordParam( params );
     msg = GetSentenceParam( params );
-    //m_se->OnSaidBattle( m_battle_id, nick, msg );
+    m_se->OnSaidBattle( m_battle_id, nick, msg );
   } else if ( cmd == "SAIDBATTLEEX" ) {
     nick = GetWordParam( params );
     msg = GetSentenceParam( params );
-    //m_se->OnBattleAction( m_battle_id, nick, msg );
+    m_se->OnBattleAction( m_battle_id, nick, msg );
   } else {
     debug( "??? Cmd: " + cmd + " params: " + params );
-    //m_se->OnUnknownCommand( cmd, params );
+    m_se->OnUnknownCommand( cmd, params );
   }
   /*
 [14:12] !! Command: "JOINBATTLEFAILED" params: "Password required".
