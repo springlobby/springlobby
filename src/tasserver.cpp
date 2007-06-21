@@ -336,7 +336,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     msg = GetSentenceParam( params );
     //m_se->OnBattleAction( m_battle_id, nick, msg );
   } else {
-    debug_msg( "??? Cmd: " + cmd + " params: " + params );
+    debug( "??? Cmd: " + cmd + " params: " + params );
     //m_se->OnUnknownCommand( cmd, params );
   }
   /*
