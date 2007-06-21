@@ -10,7 +10,7 @@
 #include "images/battle_map.xpm"
 #include "images/battle_settings.xpm"
 
-MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui),m_battle_tab(NULL)
+MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_battle_tab(NULL),m_ui(ui)
 {
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   m_tabs = new wxNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
@@ -67,5 +67,6 @@ void MainJoinBattleTab::BattleUserUpdated( User& user )
   assert( m_battle_tab != NULL );
   m_battle_tab->GetPlayersListCtrl().UpdateUser( user );
 }
+
 
 

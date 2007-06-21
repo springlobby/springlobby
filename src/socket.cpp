@@ -14,7 +14,7 @@ END_EVENT_TABLE()
 void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 {
   Socket* sock = (Socket*)event.GetClientData();
-  socket_callback callback;
+  //socket_callback callback;
   
   assert( sock != NULL );
   

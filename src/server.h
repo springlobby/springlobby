@@ -41,7 +41,7 @@ class Server
 
     
     Server( Ui& ui): m_sock(NULL), m_ui(ui), m_keepalive(15) { }
-    ~Server() {}
+    virtual ~Server() {}
   
     // Server interface
   
@@ -126,4 +126,5 @@ class Server
 
 
 #endif  //_SERVER_H_
+
 

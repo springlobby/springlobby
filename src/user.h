@@ -55,7 +55,7 @@ class User
     UiUserData uidata;
     
     User(): m_cpu(0), m_battle(NULL) {}
-    User( const std::string& nick ) : m_cpu(0), m_nick(nick), m_battle(NULL) {}
+    User( const std::string& nick ) : m_nick(nick), m_cpu(0), m_battle(NULL) {}
     User( const std::string& nick, const std::string& country, const int& cpu) :
       m_nick(nick), m_country(country), m_cpu(cpu), m_battle(NULL) {}
         
@@ -102,4 +102,5 @@ class User
 
 
 #endif	//_USER_H_
+
 

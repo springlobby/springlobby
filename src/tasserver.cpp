@@ -146,7 +146,7 @@ void TASServer::ExecuteCommand( const std::string& in )
 {
   std::string cmd;
   std::string params = in;
-  int pos = 0;
+	std::string::size_type pos = 0;
   int replyid = -1;
   
   if ( in.empty() ) return;
@@ -158,13 +158,13 @@ void TASServer::ExecuteCommand( const std::string& in )
     params = params.substr( pos + 1 );
   }
   
-  pos = (int)params.find( "\n", 0 );
+  pos = params.find( "\n", 0 );
   if ( pos != std::string::npos ) {
-    assert( pos < (int)params.length() ); // We might be throwing away a second command following this one.
+    assert( pos < params.length() ); // We might be throwing away a second command following this one.
     params.replace( pos, params.length() - pos, "" );
   }
     
-  pos = (int)params.find( " ", 0 );
+  pos = params.find( " ", 0 );
   if ( pos == std::string::npos ) {
     // Must be command without parameters.
     cmd = params;
@@ -355,10 +355,10 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
 
 std::string TASServer::GetWordParam( std::string& params )
 {
-  int pos;
+	std::string::size_type pos;
   std::string param;
   
-  pos = (int)params.find( " ", 0 );
+  pos = params.find( " ", 0 );
   if ( pos == std::string::npos ) {
     param = params;
     params = "";
@@ -372,10 +372,10 @@ std::string TASServer::GetWordParam( std::string& params )
 
 std::string TASServer::GetSentenceParam( std::string& params )
 {
-  int pos;
+	std::string::size_type pos;
   std::string param;
   
-  pos = (int)params.find( "\t", 0 );
+  pos = params.find( "\t", 0 );
   if ( pos == std::string::npos ) {
     param = params;
     params = "";
@@ -389,10 +389,10 @@ std::string TASServer::GetSentenceParam( std::string& params )
 
 int TASServer::GetIntParam( std::string& params )
 {
-  int pos;
+	std::string::size_type pos;
   std::string param;
   
-  pos = (int)params.find( " ", 0 );
+  pos = params.find( " ", 0 );
   if ( pos == std::string::npos ) {
     param = params;
     params = "";

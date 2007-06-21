@@ -122,8 +122,11 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 int BattleroomListCtrl::GetUserIndex( User& user )
 {
   for (int i = 0; i < GetItemCount() ; i++ ) {
-    if ( (long)&user == GetItemData( i ) ) return i;
+    if ( (unsigned long)&user == GetItemData( i ) ) return i;
   }
   std::cout << "!! BattleroomListCtrl::GetUserIndex( ): didn't find the battle." << std::endl;
+	assert(!"don't know what to return");
+	return 0;
 }
+
 

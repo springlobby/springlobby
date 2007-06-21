@@ -141,7 +141,7 @@ void BattleListCtrl::UpdateBattle( const int& index )
 int BattleListCtrl::GetBattleIndex( Battle& battle )
 {
   for (int i = 0; i < GetItemCount() ; i++ ) {
-    if ( (long)&battle == GetItemData( i ) ) return i;
+    if ( (unsigned long)&battle == GetItemData( i ) ) return i;
   }
   std::cout << "!! BattleListCtrl::GetBattleIndex( ): didn't find the battle." << std::endl;
   return -1;
@@ -193,4 +193,5 @@ int BattleListCtrl::GetSelectedIndex()
 {
   return m_selected;
 }
+
 

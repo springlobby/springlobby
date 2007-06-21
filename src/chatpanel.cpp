@@ -38,7 +38,7 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
 */
 
 ChatPanel::ChatPanel( wxWindow* parent, Channel& chan )
-: wxPanel( parent, -1),m_channel(&chan),m_server(NULL),m_user(NULL),m_battle(NULL),m_type(CPT_Channel),m_show_nick_list(true)
+: wxPanel( parent, -1),m_show_nick_list(true),m_channel(&chan),m_server(NULL),m_user(NULL),m_battle(NULL),m_type(CPT_Channel)
 {
   std::cout << "** ChatPanel::ChatPanel( wxWindow* parent, Channel& chan )" << std::endl;
   _CreateControls( );
@@ -46,14 +46,14 @@ ChatPanel::ChatPanel( wxWindow* parent, Channel& chan )
 }
 
 ChatPanel::ChatPanel( wxWindow* parent, User& user )
-: wxPanel( parent, -1),m_channel(NULL),m_server(NULL),m_user(&user),m_battle(NULL),m_type(CPT_User),m_show_nick_list(false)
+: wxPanel( parent, -1),m_show_nick_list(false),m_channel(NULL),m_server(NULL),m_user(&user),m_battle(NULL),m_type(CPT_User)
 {
   _CreateControls( );
   user.uidata.panel = this;
 }
 
 ChatPanel::ChatPanel( wxWindow* parent, Server& serv )
-: wxPanel( parent, -1),m_channel(NULL),m_server(&serv),m_user(NULL),m_battle(NULL),m_type(CPT_Server),m_show_nick_list(false)
+: wxPanel( parent, -1),m_show_nick_list(false),m_channel(NULL),m_server(&serv),m_user(NULL),m_battle(NULL),m_type(CPT_Server)
 {
   std::cout << "** ChatPanel::ChatPanel( wxWindow* parent, Server& serv )" << std::endl;
   _CreateControls( );
@@ -61,7 +61,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Server& serv )
 }
 
 ChatPanel::ChatPanel( wxWindow* parent, Battle& battle )
-: wxPanel( parent, -1),m_channel(NULL),m_server(NULL),m_user(NULL),m_battle(&battle),m_type(CPT_Battle),m_show_nick_list(false)
+: wxPanel( parent, -1),m_show_nick_list(false),m_channel(NULL),m_server(NULL),m_user(NULL),m_battle(&battle),m_type(CPT_Battle)
 {
   std::cout << "** ChatPanel::ChatPanel( wxWindow* parent, Battle& battle )" << std::endl;
   _CreateControls( );
@@ -301,4 +301,5 @@ void ChatPanel::LogTime()
   m_chatlog_text->AppendText( _("[") + now.Format( _("%H:%M") ) + _("]") );
 
 }
+
 
