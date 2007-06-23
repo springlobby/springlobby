@@ -25,7 +25,11 @@ NickListCtrl::NickListCtrl( wxWindow* parent )
   col.SetText( _("Nickname") );
   col.SetImage( ICON_DOWN );
   InsertColumn( 3, col );
+#ifdef __WXMSW__
+  SetColumnWidth( 0, 45 );
+#else
   SetColumnWidth( 0, 20 );
+#endif
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );
   SetColumnWidth( 3, 128 );

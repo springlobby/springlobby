@@ -13,7 +13,7 @@
 #define WX_STRING(v) wxString(v.c_str(),wxConvUTF8)
 
 #define ASSERT_LOGIC(cond,msg) if(!(cond))throw std::logic_error(msg)
-
+#define ASSERT_RUNTIME(cond,msg) if(!(cond))throw std::runtime_error(msg)
 
 std::string i2s( int x );
 

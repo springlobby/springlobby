@@ -12,6 +12,7 @@
 
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
+#include "unitsync.h"
 
 class Ui;
 
@@ -33,6 +34,7 @@ class MainWindow : public wxFrame
     void OnMenuConnect( wxCommandEvent& event );
     void OnMenuDisconnect( wxCommandEvent& event );
     void OnMenuQuit( wxCommandEvent& event );
+    void OnMenuTest( wxCommandEvent& event );
 
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab() { assert( m_join_tab != NULL ); return *m_join_tab; }
@@ -65,7 +67,8 @@ enum
 
     MENU_CONNECT = wxID_HIGHEST,
     MENU_DISCONNECT,
-    MENU_JOIN
+    MENU_JOIN,
+    MENU_TEST
 
 };
 

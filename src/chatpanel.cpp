@@ -135,7 +135,7 @@ void ChatPanel::_CreateControls( )
 
   if ( m_show_nick_list ) {
     wxSize s = m_splitter->GetSize();
-    m_splitter->SetSashPosition( s.GetWidth() - 210, true );
+    m_splitter->SetSashPosition( s.GetWidth() - 238, true );
   }
 }
 
@@ -152,7 +152,7 @@ void ChatPanel::OnResize( wxSizeEvent& event )
   Layout();
   if ( m_show_nick_list ) {
     wxSize s = m_splitter->GetSize();
-    m_splitter->SetSashPosition( s.GetWidth() - 210, true );
+    m_splitter->SetSashPosition( s.GetWidth() - 238, true );
   }
 }
 

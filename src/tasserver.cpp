@@ -325,6 +325,8 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     channel = GetWordParam( params );
     units = GetIntParam( params );
     m_se->OnChannelList( channel, units );
+  } else if ( cmd == "ENDOFCHANNELS" ) {
+    //Cmd: ENDOFCHANNELS params: 
   } else if ( cmd == "REQUESTBATTLESTATUS" ) {
     m_se->OnRequestBattleStatus( m_battle_id );
   } else if ( cmd == "SAIDBATTLE" ) {
