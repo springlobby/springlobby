@@ -234,4 +234,71 @@ void   Settings::SetMainWindowLeft( const int value )
 }
 
 
+std::string Settings::GetSpringDir()
+{
+  return m_config->Read( _("/Spring/dir"), DEFSETT_SPRING_DIR );
+}
+
+
+void   Settings::SetSpringDir( const std::string& spring_dir )
+{
+  m_config->Write( _("/Spring/dir"), spring_dir );
+}
+
+
+bool   Settings::GetUnitsyncUseDefLoc()
+{
+  return m_config->Read( _("/Spring/use_unitsync_def_loc"), true );
+}
+
+
+void   Settings::SetUnitsyncUseDefLoc( const bool usedefloc )
+{
+  m_config->Write( _("/Spring/use_unitsync_def_loc"), usedefloc );
+}
+
+
+
+std::string Settings::GetUnitsyncLoc()
+{
+  return m_config->Read( _("/Spring/unitsync_loc"), _("") );
+}
+
+
+
+void   Settings::SetUnitsyncLoc( const std::string& loc )
+{
+  m_config->Write( _("/Spring/unitsync_loc"), loc );
+}
+
+
+
+bool   Settings::GetSpringUseDefLoc()
+{
+  return m_config->Read( _("/Spring/use_spring_def_loc"), true );
+}
+
+
+
+void   Settings::SetSpringUseDefLoc( const bool usedefloc )
+{
+  m_config->Write( _("/Spring/use_spring_def_loc"), usedefloc );
+}
+
+
+
+std::string Settings::GetSpringLoc()
+{
+  return m_config->Read( _("/Spring/exec_loc"), _("") );
+}
+
+
+
+void   Settings::SetSpringLoc( const std::string& loc )
+{
+  m_config->Write( _("/Spring/exec_loc"), loc );
+}
+
+
+
 

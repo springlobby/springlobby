@@ -38,6 +38,7 @@
 #define DEFSETT_MW_HEIGHT 500
 #define DEFSETT_MW_TOP 50
 #define DEFSETT_MW_LEFT 50
+#define DEFSETT_SPRING_DIR ""
 
 //! @brief Class used to store and restore application settings.
 class Settings
@@ -90,18 +91,19 @@ class Settings
     int    GetMainWindowLeft();
     void   SetMainWindowLeft( const int value );
 
-/*  
-    bool   GetServer( const string server_name );
-    void   SetServer( const string server_name, const bool value );
-    
-    int    GetServer( const string server_name );
-    void   SetServer( const string server_name, const int value );
-    
-    string GetServer( const string server_name );
-    void   SetServer( const string server_name, const string value );
-    
-*/
-  
+    std::string GetSpringDir();
+    void   SetSpringDir( const std::string& pring_dir );
+
+    bool   GetUnitsyncUseDefLoc();
+    void   SetUnitsyncUseDefLoc( const bool usedefloc );
+    std::string GetUnitsyncLoc();
+    void   SetUnitsyncLoc( const std::string& loc );
+
+    bool   GetSpringUseDefLoc();
+    void   SetSpringUseDefLoc( const bool usedefloc );
+    std::string GetSpringLoc();
+    void   SetSpringLoc( const std::string& loc );
+
   protected:
     // Settings variables
     

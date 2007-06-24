@@ -4,12 +4,20 @@
 
 #include <string>
 
+#include "settings.h"
+
 #ifdef WIN32
+
 #include <windows.h>
 typedef HINSTANCE lib_handle_t;
+static char* dllname = "\\unitsync.dll";
+
 #else
+
 #include <dlfcn.h>
 typedef void* lib_handle_t;
+static char* dllname = "/libunitsync.so";
+
 #endif
 
 #include "utils.h"
@@ -28,7 +36,7 @@ struct UnitsyncMap
 };
 
 typedef int (__stdcall *InitPtr)(bool, int);
-
+typedef int (__stdcall *GetMapCountPtr)();
 
 class Unitsync
 {
@@ -55,6 +63,7 @@ private:
   lib_handle_t m_libhandle;
 
   InitPtr m_init_ptr;
+  GetMapCountPtr m_get_map_count_ptr;
 
   void* _GetLibFuncPtr( const std::string& name );
 };

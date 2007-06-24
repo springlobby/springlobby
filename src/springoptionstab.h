@@ -12,6 +12,9 @@
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/radiobut.h>
+#include <wx/dirdlg.h>
+
+#include "settings.h"
 
 class Ui;
   
@@ -24,6 +27,8 @@ class SpringOptionsTab : public wxPanel
      ~SpringOptionsTab();
   
     void OnBrowseDir( wxCommandEvent& event );
+    void OnApply( wxCommandEvent& event );
+    void OnRestore( wxCommandEvent& event );
 
   protected:
   

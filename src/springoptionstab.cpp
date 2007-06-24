@@ -19,20 +19,20 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent
   m_exec_loc_text = new wxStaticText( this, -1, _T("Location") );
   m_sync_loc_text = new wxStaticText( this, -1, _T("Location") );
 
-  m_dir_browse_btn = new wxButton( this, -1, _T("Browse") );
-  wxButton* m_dir_find_btn = new wxButton( this, -1, _T("Find") );
-  wxButton* m_exec_browse_btn = new wxButton( this, -1, _T("Browse") );
-  wxButton* m_exec_find_btn = new wxButton( this, -1, _T("Find") );
-  wxButton* m_sync_browse_btn = new wxButton( this, -1, _T("Browse") );
-  wxButton* m_sync_find_btn = new wxButton( this, -1, _T("Find") );
-  wxButton* m_auto_btn = new wxButton( this, -1, _T("Auto Configure") );
+  m_dir_browse_btn = new wxButton( this, SPRING_DIRBROWSE, _T("Browse") );
+  m_dir_find_btn = new wxButton( this, -1, _T("Find") );
+  m_exec_browse_btn = new wxButton( this, -1, _T("Browse") );
+  m_exec_find_btn = new wxButton( this, -1, _T("Find") );
+  m_sync_browse_btn = new wxButton( this, -1, _T("Browse") );
+  m_sync_find_btn = new wxButton( this, -1, _T("Find") );
+  m_auto_btn = new wxButton( this, -1, _T("Auto Configure") );
     
-  m_exec_def_radio = new wxRadioButton( this, -1, _T("Default location"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
-  m_exec_spec_radio = new wxRadioButton( this, -1, _T("Specify") );
-  m_sync_def_radio = new wxRadioButton( this, -1, _T("Default location"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
-  m_sync_spec_radio = new wxRadioButton( this, -1, _T("Specify") );
+  m_exec_def_radio = new wxRadioButton( this, -1, _T("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+  m_exec_spec_radio = new wxRadioButton( this, -1, _T("Specify:") );
+  m_sync_def_radio = new wxRadioButton( this, -1, _T("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
+  m_sync_spec_radio = new wxRadioButton( this, -1, _T("Specify:") );
 
-  m_dir_edit = new wxTextCtrl( this, -1, _("") );
+  m_dir_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringDir()) );
   m_exec_edit = new wxTextCtrl( this, -1, _("") );
   m_sync_edit = new wxTextCtrl( this, -1, _("") );
 
@@ -95,5 +95,22 @@ SpringOptionsTab::~SpringOptionsTab()
 
 void SpringOptionsTab::OnBrowseDir( wxCommandEvent& event )
 {
+  wxDirDialog dirpic( this, _T("Choose a directory"), sett().GetSpringDir(), wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST );
+  if ( dirpic.ShowModal() == wxID_OK ) {
+    sett().SetSpringDir( STL_STRING(dirpic.GetPath()) );
+    m_dir_edit->SetValue( dirpic.GetPath() );
+  }
+}
+
+
+void SpringOptionsTab::OnApply( wxCommandEvent& event )
+{
 
 }
+
+
+void SpringOptionsTab::OnRestore( wxCommandEvent& event )
+{
+
+}
+
