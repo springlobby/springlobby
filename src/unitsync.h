@@ -27,8 +27,8 @@ struct UnitsyncMap
   int hash;
 };
 
+typedef int (__stdcall *InitPtr)(bool, int);
 
-typedef int (*InitPtr)(bool, int);
 
 class Unitsync
 {

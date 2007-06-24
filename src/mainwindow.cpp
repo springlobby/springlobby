@@ -14,6 +14,7 @@
 
 #include "images/chat_icon.xpm"
 #include "images/join_icon.xpm"
+#include "images/options_icon.xpm"
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
@@ -59,13 +60,16 @@ MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby
   m_func_tab_images = new wxImageList( 64, 64 );
   m_func_tab_images->Add( wxIcon(chat_icon_xpm) );
   m_func_tab_images->Add( wxIcon(join_icon_xpm) );
+  m_func_tab_images->Add( wxIcon(options_icon_xpm) );
 
   m_func_tabs->AssignImageList( m_func_tab_images );
   m_chat_tab = new MainChatTab( m_func_tabs );
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
+  m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
 
   m_func_tabs->AddPage( m_chat_tab, _(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _(""), false, 1 );
+  m_func_tabs->AddPage( m_opts_tab, _(""), false, 2 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 

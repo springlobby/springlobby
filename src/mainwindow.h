@@ -12,6 +12,7 @@
 
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
+#include "mainoptionstab.h"
 #include "unitsync.h"
 
 class Ui;
@@ -50,6 +51,7 @@ class MainWindow : public wxFrame
 
     MainChatTab* m_chat_tab;
     MainJoinBattleTab* m_join_tab;
+    MainOptionsTab* m_opts_tab;
 
     wxImageList* m_func_tab_images;
 

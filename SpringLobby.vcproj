@@ -238,6 +238,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\mainoptionstab.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\mainwindow.h"
 				>
 			</File>
@@ -267,6 +271,10 @@
 			</File>
 			<File
 				RelativePath=".\src\springlobbyapp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\springoptionstab.h"
 				>
 			</File>
 			<File
@@ -358,6 +366,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\mainoptionstab.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\mainwindow.cpp"
 				>
 			</File>
@@ -387,6 +399,10 @@
 			</File>
 			<File
 				RelativePath=".\src\springlobbyapp.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\springoptionstab.cpp"
 				>
 			</File>
 			<File

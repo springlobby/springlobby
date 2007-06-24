@@ -23,7 +23,7 @@ void* Unitsync::_GetLibFuncPtr( const std::string& name )
 bool Unitsync::LoadUnitsyncLib()
 {
   if ( m_loaded ) return true;
-
+  //system( "cd C:\\Program Files\\Spring" );
   // Load the library.
 #ifdef WIN32
   m_libhandle = LoadLibrary("unitsync.dll");
@@ -32,7 +32,7 @@ bool Unitsync::LoadUnitsyncLib()
     return false;
   }
 #else
-  m_libhandle = dlopen("libunitsync.so", RTLD_LOCAL | RTLD_LAZY);
+  m_libhandle = dlopen( "libunitsync.so", RTLD_LOCAL | RTLD_LAZY );
   if (m_libhandle == NULL) {
     debug_error( "Couldn't load libunitsync.so" );
     return false;
@@ -44,7 +44,7 @@ bool Unitsync::LoadUnitsyncLib()
   // Load all function from library.
   try {
     m_init_ptr = (InitPtr)_GetLibFuncPtr("Init");
-    m_init_ptr( true, 1 );
+    (m_init_ptr)( true, 1 );
   }
   catch ( std::runtime_error& e ) {
     debug_error( e.what() );
