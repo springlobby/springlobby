@@ -84,3 +84,11 @@ bool Unitsync::IsLoaded() const
 {
   return m_loaded;
 }
+
+
+int Unitsync::GetNumMaps() const
+{
+  assert( m_loaded );
+  return m_get_map_count_ptr();
+}
+

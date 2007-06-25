@@ -23,34 +23,41 @@ static char* dllname = "/libunitsync.so";
 #include "utils.h"
 
 
-struct UnitsyncMod
+
+class UnitsyncMod
 {
   std::string name;
   int hash;
 };
 
-struct UnitsyncMap
+
+class UnitsyncMap
 {
   std::string name;
   int hash;
 };
 
+#ifdef WIN32
 typedef int (__stdcall *InitPtr)(bool, int);
 typedef int (__stdcall *GetMapCountPtr)();
+#else
+typedef int (*InitPtr)(bool, int);
+typedef int (*GetMapCountPtr)();
+#endif
 
 class Unitsync
 {
 public:
-  Unitsync(): m_loaded(false) {}
+  Unitsync(): m_loaded(false) { LoadUnitsyncLib(); }
   ~Unitsync() { FreeUnitsyncLib(); }
 
-  int GetNumMods() const {}
-  bool ModExists( const std::string& modname ) const {}
-  UnitsyncMod GetMod( const std::string& modname ) const {}
+  int GetNumMods() const;
+  bool ModExists( const std::string& modname ) const;
+  UnitsyncMod GetMod( const std::string& modname ) const;
 
-  int GetNumMaps() const {}
-  bool MapExists( const std::string& mapname ) const {}
-  UnitsyncMap GetMap( const std::string& mapname ) const {}
+  int GetNumMaps() const;
+  bool MapExists( const std::string& mapname ) const;
+  UnitsyncMap GetMap( const std::string& mapname ) const;
 
   bool LoadUnitsyncLib();
   void FreeUnitsyncLib();
