@@ -79,8 +79,4 @@ springlobby_LDADD = \
 	$(WX_LIBS)
 
 AM_CXXFLAGS = -Wall -Wno-strict-aliasing
-AM_CXXFLAGS = -Wall -Wno-strict-aliasing
-AM_CXXFLAGS = -Wall -Wno-strict-aliasing
-
-
 
