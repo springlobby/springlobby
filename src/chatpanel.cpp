@@ -290,9 +290,11 @@ void ChatPanel::Say( const wxString& message )
 void ChatPanel::Part()
 {
   debug_func( "" );
-  assert( m_channel != NULL );
-  m_channel->Leave();
-  m_channel->uidata.panel = NULL;
+  if ( m_type == CPT_Channel ) {
+    assert( m_channel != NULL );
+    m_channel->Leave();
+    m_channel->uidata.panel = NULL;
+  }
 }
 
 void ChatPanel::LogTime()
