@@ -236,7 +236,7 @@ void   Settings::SetMainWindowLeft( const int value )
 
 std::string Settings::GetSpringDir()
 {
-  return m_config->Read( _("/Spring/dir"), DEFSETT_SPRING_DIR );
+  return STL_STRING(m_config->Read( _("/Spring/dir"), _(DEFSETT_SPRING_DIR) ));
 }
 
 
@@ -261,7 +261,7 @@ void   Settings::SetUnitsyncUseDefLoc( const bool usedefloc )
 
 std::string Settings::GetUnitsyncLoc()
 {
-  return m_config->Read( _("/Spring/unitsync_loc"), _("") );
+  return STL_STRING(m_config->Read( _("/Spring/unitsync_loc"), _("") ));
 }
 
 
@@ -289,7 +289,7 @@ void   Settings::SetSpringUseDefLoc( const bool usedefloc )
 
 std::string Settings::GetSpringLoc()
 {
-  return m_config->Read( _("/Spring/exec_loc"), _("") );
+  return STL_STRING(m_config->Read( _("/Spring/exec_loc"), _("") ));
 }
 
 
