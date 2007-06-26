@@ -95,7 +95,7 @@ SpringOptionsTab::~SpringOptionsTab()
 
 void SpringOptionsTab::OnBrowseDir( wxCommandEvent& event )
 {
-  wxDirDialog dirpic( this, _T("Choose a directory"), sett().GetSpringDir(), wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST );
+  wxDirDialog dirpic( this, _T("Choose a directory"), sett().GetSpringDir(), wxDD_DEFAULT_STYLE );
   if ( dirpic.ShowModal() == wxID_OK ) {
     sett().SetSpringDir( STL_STRING(dirpic.GetPath()) );
     m_dir_edit->SetValue( dirpic.GetPath() );
