@@ -70,7 +70,13 @@ springlobby_SOURCES = \
 	battleroomtab.h     \
 	battleroomlistctrl.cpp     \
 	battleroomlistctrl.h     \
-	utils.cpp 
+	utils.cpp \
+	unitsync.h \
+	unitsync.cpp \
+	mainoptionstab.h \
+	mainoptionstab.cpp \
+	springoptionstab.h \
+	springoptionstab.cpp
 
 springlobby_LDFLAGS = 
 
