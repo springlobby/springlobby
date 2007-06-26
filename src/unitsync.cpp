@@ -4,6 +4,7 @@
 
 #include "unitsync.h"
 #include <assert.h>
+#include <stdexcept>
 
 
 void* Unitsync::_GetLibFuncPtr( const std::string& name )
