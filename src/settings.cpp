@@ -242,7 +242,7 @@ std::string Settings::GetSpringDir()
 
 void   Settings::SetSpringDir( const std::string& spring_dir )
 {
-  m_config->Write( _("/Spring/dir"), spring_dir );
+  m_config->Write( _("/Spring/dir"), WX_STRING(spring_dir) );
 }
 
 
@@ -268,7 +268,7 @@ std::string Settings::GetUnitsyncLoc()
 
 void   Settings::SetUnitsyncLoc( const std::string& loc )
 {
-  m_config->Write( _("/Spring/unitsync_loc"), loc );
+  m_config->Write( _("/Spring/unitsync_loc"), WX_STRING(loc) );
 }
 
 
@@ -296,7 +296,7 @@ std::string Settings::GetSpringLoc()
 
 void   Settings::SetSpringLoc( const std::string& loc )
 {
-  m_config->Write( _("/Spring/exec_loc"), loc );
+  m_config->Write( _("/Spring/exec_loc"), WX_STRING(loc) );
 }
 
 
