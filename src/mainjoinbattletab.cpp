@@ -49,14 +49,15 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
   //if ( m_battle_tab != NULL ) delete m_battle_tab;
   LeaveCurrentBattle();
   m_battle_tab = new BattleRoomTab( m_tabs, battle );
-  m_tabs->AddPage( m_battle_tab, _T("Battleroom"), true, 1 );
+  m_tabs->InsertPage( 1, m_battle_tab, _T("Battleroom"), true, 1 );
 }
 
 
 void MainJoinBattleTab::LeaveCurrentBattle()
 {
   if ( m_battle_tab != NULL ) {
-    delete m_battle_tab;
+    //delete m_battle_tab;
+    m_tabs->DeletePage( 1 );
     m_battle_tab = NULL;
   }
 }
@@ -67,6 +68,4 @@ void MainJoinBattleTab::BattleUserUpdated( User& user )
   assert( m_battle_tab != NULL );
   m_battle_tab->GetPlayersListCtrl().UpdateUser( user );
 }
-
-
 

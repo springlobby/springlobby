@@ -45,6 +45,7 @@ class MainJoinBattleTab : public wxPanel
     BattleRoomTab* m_battle_tab;
   
     Ui& m_ui;
+
 };
 
 enum
