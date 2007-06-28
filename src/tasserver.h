@@ -15,6 +15,7 @@
 #include "socket.h"
 #include <boost/md5.hpp>
 
+
 #define SER_VER_BAD -1
 #define SER_VER_UNKNOWN 0
 #define SER_VER_0_32 1

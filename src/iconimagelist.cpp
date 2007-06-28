@@ -27,6 +27,8 @@
 #include "images/closed_pw_game.xpm"
 #include "images/started_game.xpm"
 
+#include "images/nexists.xpm"
+
 #include "images/unknown_flag.xpm"
 
 #include "flagimages.h"
@@ -54,6 +56,8 @@ IconImageList::IconImageList() : wxImageList(16,16)
   Add( wxBitmap(closed_pw_game_xpm) );
   Add( wxBitmap(started_game_xpm) );
   
+  Add( wxBitmap(nexists_xpm) );
+
   Add( wxBitmap(unknown_flag_xpm) );
 
   AddFlagImages( *this );

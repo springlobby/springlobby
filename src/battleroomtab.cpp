@@ -28,7 +28,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle ) : wxPanel( pare
   m_side_lbl = new wxStaticText( m_player_panel, -1, _T("Side") );
   m_map_lbl = new wxStaticText( this, -1, _("$Mapname") );
 
-  m_players = new BattleroomListCtrl( m_splitter );
+  m_players = new BattleroomListCtrl( m_player_panel );
   m_chat = new ChatPanel( m_splitter, battle );
 
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );

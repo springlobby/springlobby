@@ -7,6 +7,13 @@
 #include <stdexcept>
 
 
+Unitsync& sync()
+{
+  static Unitsync m_sync;
+  return m_sync;
+}
+
+
 void* Unitsync::_GetLibFuncPtr( const std::string& name )
 {
   assert( m_loaded );
@@ -87,9 +94,44 @@ bool Unitsync::IsLoaded() const
 }
 
 
+
+
+int Unitsync::GetNumMods() const
+{
+  return 0;
+}
+
+
+bool Unitsync::ModExists( const std::string& modname ) const
+{
+  return false;
+}
+
+
+UnitsyncMod Unitsync::GetMod( const std::string& modname )
+{
+  UnitsyncMod m;
+  return m;
+}
+
+
 int Unitsync::GetNumMaps() const
 {
   assert( m_loaded );
   return m_get_map_count_ptr();
 }
+
+
+bool Unitsync::MapExists( const std::string& mapname ) const
+{
+  return false;
+}
+
+
+UnitsyncMap Unitsync::GetMap( const std::string& mapname )
+{
+  UnitsyncMap m;
+  return m;
+}
+
 

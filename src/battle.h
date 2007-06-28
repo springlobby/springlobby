@@ -40,9 +40,7 @@ enum StartType {
 };
 
 
-typedef int SyncHash;
 #define DEFAULT_SERVER_PORT 8034
-
 
 
 struct BattleOptions
@@ -51,8 +49,8 @@ struct BattleOptions
     battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),
     nattype(NAT_None),port(DEFAULT_SERVER_PORT),maxplayers(0),spectators(0),
     startmetal(1000),startenergy(1000),maxunits(500),starttype(ST_Fixed),
-    comends(true),limitdgun(false),dimmms(false),ghostedbuildings(true),maphash(0),
-    hashcode(0) {}
+    comends(true),limitdgun(false),dimmms(false),ghostedbuildings(true),maphash(""),
+    hashcode("") {}
 
   int battleid;
   bool islocked;
@@ -78,8 +76,8 @@ struct BattleOptions
   bool dimmms;
   bool ghostedbuildings;
   
-  SyncHash maphash;
-  SyncHash hashcode;
+  std::string maphash;
+  std::string hashcode;
 
   std::string description;
   std::string mapname;
@@ -122,7 +120,7 @@ class Battle : public UserList
     
     void SetRankNeeded( const int& rankneeded ) { m_opts.rankneeded = rankneeded; }
         
-    void SetMapHash( const SyncHash& maphash ) { m_opts.maphash = maphash; }
+    void SetMapHash( const std::string& maphash ) { m_opts.maphash = maphash; }
     void SetMapname( const std::string& map ) { m_opts.mapname = map; }
     void SetDescription( const std::string& desc ) { m_opts.description = desc; }
     void SetModname( const std::string& mod ) { m_opts.modname = mod; }
@@ -146,6 +144,9 @@ class Battle : public UserList
     
     void Say( const std::string& msg );
     
+    bool IsMapAvailable();
+    bool IsModAvailable();
+
     void OnRequestBattleStatus();
   /*
     DISABLEUNITS unitname1 unitname2

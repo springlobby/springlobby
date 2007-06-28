@@ -103,7 +103,7 @@ void ServerEvents::OnUserQuit( const std::string& nick )
 
 void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::string& nick, 
                        const std::string& host, int port, int maxplayers, 
-                       bool haspass, int rank, int maphash, const std::string& map, 
+                       bool haspass, int rank, std::string maphash, const std::string& map, 
                        const std::string& title, const std::string& mod )
 {
   debug_func( "" );
@@ -132,7 +132,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::
 
 
 void ServerEvents::OnJoinedBattle( int battleid, int metal, int energy, int units, StartType 
-                    start, bool comm, bool dgun, bool dim, bool ghost, int hash )
+                    start, bool comm, bool dgun, bool dim, bool ghost, std::string hash )
 {
   debug_func( "" );
   Battle& battle = m_serv.GetBattle( battleid );
@@ -174,7 +174,7 @@ void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
 }
 
 
-void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, int maphash, const std::string& map )
+void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, std::string maphash, const std::string& map )
 {
   debug_func( "" );
   Battle& battle = m_serv.GetBattle( battleid );

@@ -26,6 +26,9 @@
 #define ICON_RANK3 11
 #define ICON_RANK4 12
 
+#define ICON_READY 13
+#define ICON_NREADY 15
+
 #define ICON_GAME_UNKNOWN -1
 #define ICON_OPEN_GAME 13
 #define ICON_OPEN_PW_GAME 14
@@ -33,11 +36,10 @@
 #define ICON_CLOSED_PW_GAME 16
 #define ICON_STARTED_GAME 17
 
-#define ICON_READY 13
-#define ICON_NREADY 15
+#define ICON_NEXISTS 18
 
-#define ICON_UNK_FLAG 18
-#define ICON_FLAGS_BASE 19
+#define ICON_UNK_FLAG 19
+#define ICON_FLAGS_BASE 20
 
 #include <string>
 #include <wx/imaglist.h>

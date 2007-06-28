@@ -4,6 +4,7 @@
 
 #include "battle.h"
 #include "ui.h"
+#include "unitsync.h"
 
 
 void Battle::Update()
@@ -53,3 +54,20 @@ void Battle::Say( const std::string& msg )
   m_serv.SayBattle( opts().battleid, msg );
 }
 
+
+bool Battle::IsMapAvailable()
+{
+  if ( !sync().MapExists( m_opts.mapname ) ) return false;
+
+  UnitsyncMap map = sync().GetMap( m_opts.mapname );
+  return ( map.hash == m_opts.maphash );
+}
+
+
+bool Battle::IsModAvailable()
+{
+  if ( !sync().ModExists( m_opts.modname ) ) return false;
+
+  UnitsyncMod mod = sync().GetMod( m_opts.modname );
+  return ( mod.hash == m_opts.hashcode );
+}

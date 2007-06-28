@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include "tasserver.h"
+#include "unitsync.h"
 
 
 void TASServer::SetSocket( Socket* sock )
@@ -179,8 +180,9 @@ void TASServer::ExecuteCommand( const std::string& in )
 void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
   std::string params = inparams;
-  int pos, cpu, id, nat, port, maxplayers, rank, hash, specs, metal, energy, units, start;
+  int pos, cpu, id, nat, port, maxplayers, rank, specs, metal, energy, units, start;
   bool replay, haspass, dgun, ghost, dim, comm;
+  std::string hash;
   std::string nick, contry, host, map, title, mod, channel, error, msg;
   //NatType ntype;
   UserStatus cstatus;
@@ -226,7 +228,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     maxplayers = GetIntParam( params );
     haspass = (bool)GetIntParam( params );
     rank = GetIntParam( params );
-    hash = GetIntParam( params );
+    hash = GetWordParam( params );
     map = GetSentenceParam( params );
     title = GetSentenceParam( params );
     mod = GetSentenceParam( params );
@@ -241,7 +243,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     id = GetIntParam( params );
     specs = GetIntParam( params );
     haspass = (bool)GetIntParam( params );
-    hash = GetIntParam( params );
+    hash = GetWordParam( params );
     map = GetSentenceParam( params );
     m_se->OnBattleInfoUpdated( id, specs, haspass, hash, map );
   } else if ( cmd == "LOGININFOEND" ) {
@@ -309,7 +311,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     dgun = (bool)GetIntParam( params );
     dim = (bool)GetIntParam( params );
     ghost = (bool)GetIntParam( params );
-    hash = GetIntParam( params );
+    hash = GetWordParam( params );
     m_battle_id = id;
     m_se->OnJoinedBattle( id, metal, energy, units, IntToStartType(start), comm, dgun, dim, ghost, hash );
   } else if ( cmd == "CLIENTBATTLESTATUS" ) {

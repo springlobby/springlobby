@@ -40,14 +40,14 @@ class ServerEvents
     
     void OnBattleOpened( int id, bool replay, NatType nat, const std::string& nick, 
                          const std::string& host, int port, int maxplayers, 
-                         bool haspass, int rank, int maphash, const std::string& map, 
+                         bool haspass, int rank, std::string maphash, const std::string& map, 
                          const std::string& title, const std::string& mod );
 
     void OnUserJoinedBattle( int battleid, const std::string& nick );
     void OnUserLeftBattle( int battleid, const std::string& nick );
-    void OnBattleInfoUpdated( int battleid, int spectators, bool locked, int maphash, const std::string& map );
+    void OnBattleInfoUpdated( int battleid, int spectators, bool locked, std::string maphash, const std::string& map );
     void OnBattleClosed( int battleid );
-    void OnJoinedBattle( int battleid, int metal, int energy, int units, StartType start, bool comm, bool dgun, bool dim, bool ghost, int hash );
+    void OnJoinedBattle( int battleid, int metal, int energy, int units, StartType start, bool comm, bool dgun, bool dim, bool ghost, std::string hash );
     void OnClientBattleStatus( int battleid, const std::string& nick, UserBattleStatus status );
     
     void OnJoinChannelResult( bool success, const std::string& channel, const std::string& reason );
