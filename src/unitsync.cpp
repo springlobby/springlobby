@@ -7,7 +7,7 @@
 #include <stdexcept>
 
 
-Unitsync& sync()
+Unitsync& usync()
 {
   static Unitsync m_sync;
   return m_sync;

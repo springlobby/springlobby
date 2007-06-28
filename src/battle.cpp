@@ -57,17 +57,17 @@ void Battle::Say( const std::string& msg )
 
 bool Battle::IsMapAvailable()
 {
-  if ( !sync().MapExists( m_opts.mapname ) ) return false;
+  if ( !usync().MapExists( m_opts.mapname ) ) return false;
 
-  UnitsyncMap map = sync().GetMap( m_opts.mapname );
+  UnitsyncMap map = usync().GetMap( m_opts.mapname );
   return ( map.hash == m_opts.maphash );
 }
 
 
 bool Battle::IsModAvailable()
 {
-  if ( !sync().ModExists( m_opts.modname ) ) return false;
+  if ( !usync().ModExists( m_opts.modname ) ) return false;
 
-  UnitsyncMod mod = sync().GetMod( m_opts.modname );
+  UnitsyncMod mod = usync().GetMod( m_opts.modname );
   return ( mod.hash == m_opts.hashcode );
 }

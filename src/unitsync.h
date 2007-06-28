@@ -80,6 +80,6 @@ private:
 };
 
 
-Unitsync& sync();
+Unitsync& usync();
 
 #endif  //_UNITSYNC_H_
