@@ -28,6 +28,7 @@
 #include "images/started_game.xpm"
 
 #include "images/nexists.xpm"
+#include "images/exists.xpm"
 
 #include "images/unknown_flag.xpm"
 
@@ -57,6 +58,7 @@ IconImageList::IconImageList() : wxImageList(16,16)
   Add( wxBitmap(started_game_xpm) );
   
   Add( wxBitmap(nexists_xpm) );
+  Add( wxBitmap(exists_xpm) );
 
   Add( wxBitmap(unknown_flag_xpm) );
 

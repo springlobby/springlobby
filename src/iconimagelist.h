@@ -37,9 +37,10 @@
 #define ICON_STARTED_GAME 17
 
 #define ICON_NEXISTS 18
+#define ICON_EXISTS 19
 
-#define ICON_UNK_FLAG 19
-#define ICON_FLAGS_BASE 20
+#define ICON_UNK_FLAG 20
+#define ICON_FLAGS_BASE 21
 
 #include <string>
 #include <wx/imaglist.h>
