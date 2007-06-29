@@ -74,6 +74,11 @@ bool Unitsync::LoadUnitsyncLib()
     m_get_map_name = (GetMapNamePtr)_GetLibFuncPtr("GetMapName");
     m_get_map_info_ex = (GetMapInfoExPtr)_GetLibFuncPtr("GetMapInfoEx");
 
+    m_get_mod_checksum = (GetPrimaryModChecksumPtr)_GetLibFuncPtr("GetPrimaryModChecksum");
+    m_get_mod_index = (GetPrimaryModIndexPtr)_GetLibFuncPtr("GetPrimaryModIndex");
+    m_get_mod_name = (GetPrimaryModNamePtr)_GetLibFuncPtr("GetPrimaryModName");
+    m_get_mod_count = (GetPrimaryModCountPtr)_GetLibFuncPtr("GetPrimaryModCount");
+
     m_init( true, 1 );
   }
   catch ( std::runtime_error& e ) {
@@ -112,14 +117,27 @@ bool Unitsync::IsLoaded()
 int Unitsync::GetNumMods()
 {
   if ( !m_loaded ) return 0;
-  return 0;
+  return m_get_mod_count();
+}
+
+
+int Unitsync::GetModIndex( const std::string& name )
+{
+  if ( !m_loaded ) return -1;
+  int mc = m_get_mod_count();
+  for ( int i = 0; i < mc; i++ ) {
+    std::string cmp = m_get_mod_name( i );
+    if ( name == cmp )
+      return i;
+  }
+  return -1;
 }
 
 
 bool Unitsync::ModExists( const std::string& modname )
 {
   if ( !m_loaded ) return false;
-  return false;
+  return GetModIndex( modname ) >= 0;
 }
 
 
@@ -127,6 +145,13 @@ UnitsyncMod Unitsync::GetMod( const std::string& modname )
 {
   UnitsyncMod m;
   if ( !m_loaded ) return m;
+
+  int i = GetModIndex( modname );
+  ASSERT_LOGIC( i >= 0, "Mod does not exist" );
+
+  m.name = m_get_mod_name( i );
+  m.hash = i2s(m_get_mod_checksum( i ));
+
   return m;
 }
 
@@ -153,8 +178,8 @@ UnitsyncMap Unitsync::GetMap( const std::string& mapname )
   int i = GetMapIndex( mapname );
   ASSERT_LOGIC( i >= 0, "Map does not exist" );
   //m_get_map_info_ex( mapname.c_str(), &m.info, 0 );
-  m.name = mapname;
-  m.hash = i2s( m_get_map_checksum( i ) );
+  m.name = m_get_map_name( i );
+  m.hash = i2s(m_get_map_checksum( i ));
   return m;
 }
 

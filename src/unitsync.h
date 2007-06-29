@@ -71,10 +71,6 @@ int __stdcall GetUnitCount()
 const char* __stdcall GetSpringVersion()
 const char* __stdcall GetSideName(int side)
 int __stdcall GetSideCount()
-unsigned int __stdcall GetPrimaryModChecksum(int index)
-int __stdcall GetPrimaryModIndex(const char* name)
-const char* __stdcall GetPrimaryModName(int index)
-int __stdcall GetPrimaryModCount()
 void* __stdcall GetMinimap(const char* filename, int miplevel)
 
 */
@@ -87,10 +83,16 @@ void* __stdcall GetMinimap(const char* filename, int miplevel)
 
 typedef int (USYNC_CALL_CONV *InitPtr)(bool, int);
 typedef void (USYNC_CALL_CONV *UnInitPtr)();
+
 typedef int (USYNC_CALL_CONV *GetMapCountPtr)();
 typedef unsigned int (USYNC_CALL_CONV *GetMapChecksumPtr)(int);
 typedef const char* (USYNC_CALL_CONV *GetMapNamePtr)(int);
 typedef int (USYNC_CALL_CONV *GetMapInfoExPtr)(const char*, MapInfo*, int);
+
+typedef unsigned int (USYNC_CALL_CONV *GetPrimaryModChecksumPtr)(int);
+typedef int (USYNC_CALL_CONV *GetPrimaryModIndexPtr)(const char*);
+typedef const char* (USYNC_CALL_CONV *GetPrimaryModNamePtr)(int);
+typedef int (USYNC_CALL_CONV *GetPrimaryModCountPtr)();
 
 class Unitsync
 {
@@ -101,6 +103,7 @@ public:
   int GetNumMods();
   bool ModExists( const std::string& modname );
   UnitsyncMod GetMod( const std::string& modname );
+  int GetModIndex( const std::string& name );
 
   int GetNumMaps();
   bool MapExists( const std::string& mapname );
@@ -123,6 +126,11 @@ private:
   GetMapChecksumPtr m_get_map_checksum;
   GetMapNamePtr m_get_map_name;
   GetMapInfoExPtr m_get_map_info_ex;
+
+  GetPrimaryModChecksumPtr m_get_mod_checksum;
+  GetPrimaryModIndexPtr m_get_mod_index;
+  GetPrimaryModNamePtr m_get_mod_name;
+  GetPrimaryModCountPtr m_get_mod_count;
 
   void* _GetLibFuncPtr( const std::string& name );
 };

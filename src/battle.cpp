@@ -69,5 +69,6 @@ bool Battle::IsModAvailable()
   if ( !usync().ModExists( m_opts.modname ) ) return false;
 
   UnitsyncMod mod = usync().GetMod( m_opts.modname );
-  return ( mod.hash == m_opts.hashcode );
+  return true;
+  //return ( mod.hash == m_opts.hashcode );
 }
