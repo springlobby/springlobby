@@ -6,6 +6,7 @@
 #define _UNITSYNC_H_
 
 #include <string>
+#include <wx/filefn.h>
 #include "settings.h"
 #include "utils.h"
 
@@ -32,22 +33,70 @@ struct UnitsyncMod
 };
 
 
+struct StartPos
+{
+	int x;
+	int z;
+};
+
+
+struct MapInfo
+{
+	char* description;
+	int tidalStrength;
+	int gravity;
+	float maxMetal;
+	int extractorRadius;
+	int minWind;
+	int maxWind;
+
+	// 0.61b1+
+	int width;
+	int height;
+	int posCount;
+	StartPos positions[16];		// I'd rather not allocate memory, this should be enough
+
+	// VERSION>=1
+	char *author; // max 200 chars
+};
+
+
 struct UnitsyncMap
 {
   UnitsyncMap(): name(""),hash("NULL") {}
   std::string name;
   std::string hash;
+  MapInfo info;
 };
 
 
+/*
+
+const char * __stdcall GetUnitName(int unit)
+int __stdcall GetUnitCount()
+const char* __stdcall GetSpringVersion()
+const char* __stdcall GetSideName(int side)
+int __stdcall GetSideCount()
+unsigned int __stdcall GetPrimaryModChecksum(int index)
+int __stdcall GetPrimaryModIndex(const char* name)
+const char* __stdcall GetPrimaryModName(int index)
+int __stdcall GetPrimaryModCount()
+void* __stdcall GetMinimap(const char* filename, int miplevel)
+
+*/
+
 #ifdef WIN32
-typedef int (__stdcall *InitPtr)(bool, int);
-typedef int (__stdcall *GetMapCountPtr)();
+#define USYNC_CALL_CONV __stdcall
 #else
-typedef int (*InitPtr)(bool, int);
-typedef int (*GetMapCountPtr)();
+#define USYNC_CALL_CONV
 #endif
 
+typedef int (USYNC_CALL_CONV *InitPtr)(bool, int);
+typedef void (USYNC_CALL_CONV *UnInitPtr)();
+typedef int (USYNC_CALL_CONV *GetMapCountPtr)();
+typedef unsigned int (USYNC_CALL_CONV *GetMapChecksumPtr)(int);
+typedef const char* (USYNC_CALL_CONV *GetMapNamePtr)(int);
+typedef int (USYNC_CALL_CONV *GetMapInfoExPtr)(const char*, MapInfo*, int);
 
 class Unitsync
 {
@@ -55,26 +104,31 @@ public:
   Unitsync(): m_loaded(false) { LoadUnitsyncLib(); }
   ~Unitsync() { FreeUnitsyncLib(); }
 
-  int GetNumMods() const;
-  bool ModExists( const std::string& modname ) const;
+  int GetNumMods();
+  bool ModExists( const std::string& modname );
   UnitsyncMod GetMod( const std::string& modname );
 
-  int GetNumMaps() const;
-  bool MapExists( const std::string& mapname ) const;
+  int GetNumMaps();
+  bool MapExists( const std::string& mapname );
   UnitsyncMap GetMap( const std::string& mapname );
+  int GetMapIndex( const std::string& name );
 
   bool LoadUnitsyncLib();
   void FreeUnitsyncLib();
 
-  bool IsLoaded() const;
+  bool IsLoaded();
 private:
 
   bool m_loaded;
 
   lib_handle_t m_libhandle;
 
-  InitPtr m_init_ptr;
-  GetMapCountPtr m_get_map_count_ptr;
+  InitPtr m_init;
+  UnInitPtr m_uninit;
+  GetMapCountPtr m_get_map_count;
+  GetMapChecksumPtr m_get_map_checksum;
+  GetMapNamePtr m_get_map_name;
+  GetMapInfoExPtr m_get_map_info_ex;
 
   void* _GetLibFuncPtr( const std::string& name );
 };

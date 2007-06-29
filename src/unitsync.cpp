@@ -31,9 +31,10 @@ void* Unitsync::_GetLibFuncPtr( const std::string& name )
 bool Unitsync::LoadUnitsyncLib()
 {
   if ( m_loaded ) return true;
-  //system( "cd C:\\Program Files\\Spring" );
-  // Load the library.
+  
+  wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
 
+  // Load the library.
   std::string loc;
   if ( sett().GetUnitsyncUseDefLoc() ) loc = sett().GetSpringDir() + dllname;
   else loc = sett().GetUnitsyncLoc();
@@ -60,9 +61,15 @@ bool Unitsync::LoadUnitsyncLib()
 
   // Load all function from library.
   try {
-    m_init_ptr = (InitPtr)_GetLibFuncPtr("Init");
-    m_get_map_count_ptr = (GetMapCountPtr)_GetLibFuncPtr("GetMapCount");
-    m_init_ptr( true, 1 );
+    m_init = (InitPtr)_GetLibFuncPtr("Init");
+    m_uninit = (UnInitPtr)_GetLibFuncPtr("UnInit");
+
+    m_get_map_count = (GetMapCountPtr)_GetLibFuncPtr("GetMapCount");
+    m_get_map_checksum = (GetMapChecksumPtr)_GetLibFuncPtr("GetMapChecksum");
+    m_get_map_name = (GetMapNamePtr)_GetLibFuncPtr("GetMapName");
+    m_get_map_info_ex = (GetMapInfoExPtr)_GetLibFuncPtr("GetMapInfoEx");
+
+    m_init( true, 1 );
   }
   catch ( std::runtime_error& e ) {
     debug_error( e.what() );
@@ -77,6 +84,7 @@ bool Unitsync::LoadUnitsyncLib()
 void Unitsync::FreeUnitsyncLib()
 {
   if ( !m_loaded ) return;
+  m_uninit();
 
 #ifdef WIN32
   FreeLibrary(m_libhandle);
@@ -88,7 +96,7 @@ void Unitsync::FreeUnitsyncLib()
 }
 
 
-bool Unitsync::IsLoaded() const
+bool Unitsync::IsLoaded()
 {
   return m_loaded;
 }
@@ -96,14 +104,16 @@ bool Unitsync::IsLoaded() const
 
 
 
-int Unitsync::GetNumMods() const
+int Unitsync::GetNumMods()
 {
+  if ( !m_loaded ) return 0;
   return 0;
 }
 
 
-bool Unitsync::ModExists( const std::string& modname ) const
+bool Unitsync::ModExists( const std::string& modname )
 {
+  if ( !m_loaded ) return false;
   return false;
 }
 
@@ -111,27 +121,48 @@ bool Unitsync::ModExists( const std::string& modname ) const
 UnitsyncMod Unitsync::GetMod( const std::string& modname )
 {
   UnitsyncMod m;
+  if ( !m_loaded ) return m;
   return m;
 }
 
 
-int Unitsync::GetNumMaps() const
+int Unitsync::GetNumMaps()
 {
-  assert( m_loaded );
-  return m_get_map_count_ptr();
+  if ( !m_loaded ) return 0;
+  return m_get_map_count();
 }
 
 
-bool Unitsync::MapExists( const std::string& mapname ) const
+bool Unitsync::MapExists( const std::string& mapname )
 {
-  return false;
+  if ( !m_loaded ) return false;
+  return GetMapIndex( mapname ) >= 0;
 }
 
 
 UnitsyncMap Unitsync::GetMap( const std::string& mapname )
 {
   UnitsyncMap m;
+  if ( !m_loaded ) return m;
+
+  int i = GetMapIndex( mapname );
+  ASSERT_LOGIC( i >= 0, "Map does not exist" );
+  //m_get_map_info_ex( mapname.c_str(), &m.info, 0 );
+  m.name = mapname;
+  m.hash = i2s( m_get_map_checksum( i ) );
   return m;
 }
 
+
+int Unitsync::GetMapIndex( const std::string& name )
+{
+  if ( !m_loaded ) return -1;
+  int mc = m_get_map_count();
+  for ( int i = 0; i < mc; i++ ) {
+    std::string cmp = m_get_map_name( i );
+    if ( name == cmp )
+      return i;
+  }
+  return -1;
+}
 

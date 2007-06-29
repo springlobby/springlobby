@@ -26,6 +26,7 @@
 //#include <wx/wx.h>
 #include <wx/config.h>
 #include <wx/intl.h>
+#include <wx/filefn.h>
 #include <string>
 #include "utils.h"
 
@@ -38,7 +39,7 @@
 #define DEFSETT_MW_HEIGHT 500
 #define DEFSETT_MW_TOP 50
 #define DEFSETT_MW_LEFT 50
-#define DEFSETT_SPRING_DIR ""
+#define DEFSETT_SPRING_DIR wxGetCwd().c_str()
 
 //! @brief Class used to store and restore application settings.
 class Settings
