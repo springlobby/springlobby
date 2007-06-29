@@ -21,6 +21,12 @@ void Settings::SaveSettings()
 }
 
 
+bool Settings::IsFirstRun()
+{
+  return m_config->Read( _("/General/firstrun"), true );
+}
+
+
 //! @brief Restores default settings
 void Settings::SetDefaultSettings()
 {

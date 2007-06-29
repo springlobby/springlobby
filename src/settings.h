@@ -50,13 +50,15 @@ class Settings
       if ( !m_config->Exists( _("/Servers") ) )
         SetDefaultSettings();
     }
-    ~Settings() { delete m_config; }
+    ~Settings() { m_config->Write( _("/General/firstrun"), false ); delete m_config; }
   
     // Settings interface
   
     void SetDefaultSettings();
     void SaveSettings();
   
+    bool IsFirstRun();
+
     std::string GetDefaultServer();
     void   SetDefaultServer( const std::string& server_name );
   

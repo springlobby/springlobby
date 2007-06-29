@@ -23,6 +23,8 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_DISCONNECT, MainWindow::OnMenuDisconnect )
   EVT_MENU( MENU_QUIT, MainWindow::OnMenuQuit )
   EVT_MENU( MENU_TEST, MainWindow::OnMenuTest )
+  EVT_MENU( MENU_TRAC, MainWindow::OnReportBug )
+  EVT_MENU( MENU_DOC, MainWindow::OnShowDocs )
 
 END_EVENT_TABLE()
 
@@ -46,6 +48,8 @@ MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby
 
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _T("&About"));
+  menuHelp->Append(MENU_TRAC, _T("&Report a bug..."));
+  menuHelp->Append(MENU_DOC, _T("&Documentation"));
 
   wxMenuBar *menubar = new wxMenuBar;
   menubar->Append(menuFile, _T("&File"));
@@ -139,6 +143,13 @@ void MainWindow::CloseAllChats()
 }
 
 
+//! @brief Displays the lobby configuration.
+void MainWindow::ShowConfigure()
+{
+  m_func_tabs->SetSelection( 2 );
+}
+
+
 //! @brief Called when join channel menuitem is clicked
 void MainWindow::OnMenuJoin( wxCommandEvent& event )
 {
@@ -177,4 +188,15 @@ void MainWindow::OnMenuTest( wxCommandEvent& event )
   delete sync;
 }
 
+
+void MainWindow::OnReportBug( wxCommandEvent& event )
+{
+  wxLaunchDefaultBrowser( _("http://tc.serveftp.net/trac/newticket") );
+}
+
+
+void MainWindow::OnShowDocs( wxCommandEvent& event )
+{
+  wxLaunchDefaultBrowser( _("http://tc.serveftp.net/trac") );
+}
 

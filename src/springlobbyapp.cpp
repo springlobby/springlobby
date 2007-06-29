@@ -24,7 +24,14 @@ bool SpringLobbyApp::OnInit()
   m_ui = new Ui();
   
   m_ui->ShowMainWindow();
-  m_ui->Connect();
+
+  if ( sett().IsFirstRun() ) {
+    wxMessageBox(_T("Hi " + wxGetUserName() + ",\nLooks like this is the first time you use SpringLobby. I have guessed a configuration that I think will work for you but you should review it, expecially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _T("Welcome"),
+      wxOK | wxICON_INFORMATION, &m_ui->mw() );
+    m_ui->mw().ShowConfigure();
+  } else {
+    m_ui->Connect();
+  }
 
   m_timer->Start( TIMER_INTERVAL );
   

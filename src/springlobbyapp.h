@@ -7,6 +7,7 @@
 
 #include <wx/app.h>
 #include <wx/timer.h>
+#include <wx/utils.h>
 #include "ui.h"
 
 #define TIMER_ID 101

@@ -9,6 +9,7 @@
 #include <wx/menu.h>
 #include <wx/listbook.h>
 #include <wx/frame.h>
+#include <wx/utils.h>
 
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
@@ -17,7 +18,7 @@
 
 class Ui;
 
-  
+
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
 {
@@ -31,11 +32,15 @@ class MainWindow : public wxFrame
 
     void CloseAllChats();
 
+    void ShowConfigure();
+
     void OnMenuJoin( wxCommandEvent& event );
     void OnMenuConnect( wxCommandEvent& event );
     void OnMenuDisconnect( wxCommandEvent& event );
     void OnMenuQuit( wxCommandEvent& event );
     void OnMenuTest( wxCommandEvent& event );
+    void OnReportBug( wxCommandEvent& event );
+    void OnShowDocs( wxCommandEvent& event );
 
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab() { assert( m_join_tab != NULL ); return *m_join_tab; }
@@ -70,7 +75,9 @@ enum
     MENU_CONNECT = wxID_HIGHEST,
     MENU_DISCONNECT,
     MENU_JOIN,
-    MENU_TEST
+    MENU_TEST,
+    MENU_TRAC,
+    MENU_DOC
 
 };
 
