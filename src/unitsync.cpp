@@ -6,6 +6,11 @@
 #include <assert.h>
 #include <stdexcept>
 
+#ifdef WIN32
+static char* dllname = "\\unitsync.dll";
+#else
+static char* dllname = "/libunitsync.so";
+#endif
 
 Unitsync& usync()
 {

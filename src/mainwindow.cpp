@@ -117,8 +117,7 @@ MainChatTab& MainWindow::GetChatTab()
 void MainWindow::OpenChannelChat( Channel& channel )
 {
   assert( m_chat_tab != NULL );
-  ChatPanel* chat = m_chat_tab->AddChatPannel( channel );
-  //chat->SetChannel( &channel );
+  m_chat_tab->AddChatPannel( channel );
 }
 
 
@@ -128,7 +127,7 @@ void MainWindow::OpenChannelChat( Channel& channel )
 void MainWindow::OpenPrivateChat( User& user )
 {
   assert( m_chat_tab != NULL );
-  ChatPanel* chat = m_chat_tab->AddChatPannel( user );
+  m_chat_tab->AddChatPannel( user );
 }
 
 

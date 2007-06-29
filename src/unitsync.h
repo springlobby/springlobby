@@ -11,17 +11,11 @@
 #include "utils.h"
 
 #ifdef WIN32
-
 #include <windows.h>
 typedef HINSTANCE lib_handle_t;
-static char* dllname = "\\unitsync.dll";
-
 #else
-
 #include <dlfcn.h>
 typedef void* lib_handle_t;
-static char* dllname = "/libunitsync.so";
-
 #endif
 
 
