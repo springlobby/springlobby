@@ -39,7 +39,7 @@
 #define DEFSETT_MW_HEIGHT 500
 #define DEFSETT_MW_TOP 50
 #define DEFSETT_MW_LEFT 50
-#define DEFSETT_SPRING_DIR wxGetCwd().c_str()
+#define DEFSETT_SPRING_DIR wxGetCwd()
 
 //! @brief Class used to store and restore application settings.
 class Settings

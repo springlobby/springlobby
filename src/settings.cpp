@@ -236,7 +236,7 @@ void   Settings::SetMainWindowLeft( const int value )
 
 std::string Settings::GetSpringDir()
 {
-  return STL_STRING(m_config->Read( _("/Spring/dir"), _(DEFSETT_SPRING_DIR) ));
+  return STL_STRING(m_config->Read( _("/Spring/dir"), DEFSETT_SPRING_DIR ));
 }
 
 
