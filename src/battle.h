@@ -125,6 +125,8 @@ class Battle : public UserList
     void SetDescription( const std::string& desc ) { m_opts.description = desc; }
     void SetModname( const std::string& mod ) { m_opts.modname = mod; }
     
+    void SetImReady( bool ready );
+    
     User& GetFounder() { return GetUser( m_opts.founder ); }
     
     void AddUser( User& user ) {
@@ -148,6 +150,9 @@ class Battle : public UserList
     bool IsModAvailable();
 
     void OnRequestBattleStatus();
+    void SendMyBattleStatus();
+    
+    bool IsSynced();
   /*
     DISABLEUNITS unitname1 unitname2
     ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}

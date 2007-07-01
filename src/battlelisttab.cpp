@@ -18,7 +18,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 )
   m_battle_list = new BattleListCtrl( this );
   m_filter_text = new wxStaticText( this, -1, _T("Filter ") );
   m_filter_combo = new wxComboBox( this, -1, _T("Show all") );
-  m_join_button = new wxButton( this, BATTLE_JOIN, _T("Join"), wxDefaultPosition, wxSize(80,22) );
+  m_join_button = new wxButton( this, BATTLE_JOIN, _T("Join"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
   
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   m_tools_sizer = new wxBoxSizer( wxHORIZONTAL );

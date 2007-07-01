@@ -126,7 +126,6 @@ bool Unitsync::IsLoaded()
 
 
 
-
 int Unitsync::GetNumMods()
 {
   if ( !m_loaded ) return 0;
@@ -180,6 +179,17 @@ bool Unitsync::MapExists( const std::string& mapname )
 {
   if ( !m_loaded ) return false;
   return GetMapIndex( mapname ) >= 0;
+}
+
+
+bool Unitsync::MapExists( const std::string& mapname, const std::string hash )
+{
+  if ( !m_loaded ) return false;
+  int i = GetMapIndex( mapname );
+  if ( i >= 0 ) {
+    return ( i2s(m_get_map_checksum( i )) == hash );
+  }
+  return false;
 }
 
 

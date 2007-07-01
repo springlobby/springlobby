@@ -36,11 +36,17 @@
 #define ICON_CLOSED_PW_GAME 16
 #define ICON_STARTED_GAME 17
 
-#define ICON_NEXISTS 18
-#define ICON_EXISTS 19
+#define ICON_READY_UNSYNC 18
+#define ICON_NREADY_UNSYNC 19
+#define ICON_READY_QSYNC 20
+#define ICON_NREADY_QSYNC 21
 
-#define ICON_UNK_FLAG 20
-#define ICON_FLAGS_BASE 21
+#define ICON_NEXISTS 22
+#define ICON_EXISTS 23
+
+
+#define ICON_UNK_FLAG 24
+#define ICON_FLAGS_BASE 25
 
 #include <string>
 #include <wx/imaglist.h>
@@ -61,7 +67,7 @@ class IconImageList : public wxImageList
     
     static int GetColorIcon( const int& num );
     static int GetSideIcon( const int& sidenum );
-    static int GetReadyIcon( const bool& ready );
+    static int GetReadyIcon( const bool& ready, const int& sync = 1 );
     
   protected:
     // IconImageList variables

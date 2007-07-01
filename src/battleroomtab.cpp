@@ -7,6 +7,7 @@
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
   EVT_BUTTON ( BROOM_LEAVE, BattleRoomTab::OnLeave )
+  EVT_CHECKBOX( BROOM_IMREADY, BattleRoomTab::OnImReady )
 
 END_EVENT_TABLE()
 
@@ -36,7 +37,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle ) : wxPanel( pare
   m_leave_btn = new wxButton( this, BROOM_LEAVE, _T("Leave"), wxDefaultPosition, wxSize(80,28) );
   m_start_btn = new wxButton( this, -1, _T("Start"), wxDefaultPosition, wxSize(80,28) );
 
-  m_ready_chk = new wxCheckBox( this, -1, _T("Im ready"), wxDefaultPosition, wxSize(80,28) );
+  m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _T("Im ready"), wxDefaultPosition, wxSize(80,28) );
   
   // Create Sizers
   m_players_sizer = new wxBoxSizer( wxVERTICAL );
@@ -100,6 +101,12 @@ BattleRoomTab::~BattleRoomTab()
 void BattleRoomTab::OnLeave( wxCommandEvent& event )
 {
   m_battle.Leave();
+}
+
+
+void BattleRoomTab::OnImReady( wxCommandEvent& event )
+{
+  m_battle.SetImReady( m_ready_chk->GetValue() );
 }
 
 

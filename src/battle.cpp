@@ -42,10 +42,37 @@ void Battle::OnRequestBattleStatus()
   UserBattleStatus bs = m_serv.GetMe().GetBattleStatus();
   bs.team = lowest;
   bs.ally = lowest;
+  if ( IsSynced() ) bs.sync = SYNC_SYNCED;
+  else bs.sync = SYNC_UNSYNCED;
+  
   m_serv.GetMe().SetBattleStatus( bs );
 
-  m_serv.SendMyBattleStatus( bs );
+  SendMyBattleStatus();
 
+}
+
+
+void Battle::SendMyBattleStatus()
+{
+  UserBattleStatus bs = m_serv.GetMe().GetBattleStatus();
+  m_serv.SendMyBattleStatus( bs );
+}
+
+
+void Battle::SetImReady( bool ready )
+{
+  UserBattleStatus bs = m_serv.GetMe().GetBattleStatus();
+  
+  bs.ready = ready;
+  
+  m_serv.GetMe().SetBattleStatus( bs );
+  SendMyBattleStatus();
+}
+
+
+bool Battle::IsSynced()
+{
+  return ( usync().MapExists( m_opts.mapname, m_opts.maphash ) && usync().ModExists( m_opts.modname ) );
 }
 
 

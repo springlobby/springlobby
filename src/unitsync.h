@@ -109,6 +109,7 @@ public:
 
   int GetNumMaps();
   bool MapExists( const std::string& mapname );
+  bool MapExists( const std::string& mapname, const std::string hash );
   UnitsyncMap GetMap( const std::string& mapname );
   int GetMapIndex( const std::string& name );
 

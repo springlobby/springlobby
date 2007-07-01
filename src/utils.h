@@ -25,4 +25,12 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #define debug_warn( msg ) debug_output( "ww", __FUNCTION__, "", msg )
 #define debug_error( msg ) debug_output( "!!", __FUNCTION__, "", msg )
 
+
+#ifdef __WXMSW__
+#define CONTROL_HEIGHT 22
+#else
+#define CONTROL_HEIGHT 28
+#endif
+
+
 #endif  //_UTILS_H_

@@ -35,6 +35,8 @@ class BattleRoomTab : public wxPanel
    ChatPanel& GetChatPanel() { return *m_chat; }
    
    void OnLeave( wxCommandEvent& event );
+   void OnImReady( wxCommandEvent& event );
+   
    void OnUserJoined( User& user );
    void OnUserLeft( User& user );
    
@@ -79,7 +81,8 @@ class BattleRoomTab : public wxPanel
 
 enum
 {
-    BROOM_LEAVE = wxID_HIGHEST
+    BROOM_LEAVE = wxID_HIGHEST,
+    BROOM_IMREADY
 };
 
 #endif  //_BATTLEROOMTAB_H_

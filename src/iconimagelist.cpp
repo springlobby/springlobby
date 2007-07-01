@@ -30,6 +30,11 @@
 #include "images/nexists.xpm"
 #include "images/exists.xpm"
 
+#include "images/ready_unsync.xpm"
+#include "images/ready_q.xpm"
+#include "images/nready_unsync.xpm"
+#include "images/nready_q.xpm"
+
 #include "images/unknown_flag.xpm"
 
 #include "flagimages.h"
@@ -57,6 +62,11 @@ IconImageList::IconImageList() : wxImageList(16,16)
   Add( wxBitmap(closed_pw_game_xpm) );
   Add( wxBitmap(started_game_xpm) );
   
+  Add( wxBitmap(ready_unsync_xpm) );
+  Add( wxBitmap(ready_q_xpm) );
+  Add( wxBitmap(nready_unsync_xpm) );
+  Add( wxBitmap(nready_q_xpm) );
+
   Add( wxBitmap(nexists_xpm) );
   Add( wxBitmap(exists_xpm) );
 
@@ -134,8 +144,15 @@ int IconImageList::GetSideIcon( const int& sidenum )
   return -1;
 }
 
-int IconImageList::GetReadyIcon( const bool& ready )
+int IconImageList::GetReadyIcon( const bool& ready, const int& sync )
 {
-  if ( ready ) return ICON_READY;
-  return ICON_NREADY;
+  if ( ready ) {
+    if ( sync == SYNC_SYNCED ) return ICON_READY;
+    else if ( sync == SYNC_UNSYNCED ) return ICON_READY_UNSYNC;
+    else return ICON_READY_QSYNC;
+  } else {
+    if ( sync == SYNC_SYNCED ) return ICON_NREADY;
+    else if ( sync == SYNC_UNSYNCED ) return ICON_NREADY_UNSYNC;
+    else return ICON_NREADY_QSYNC;
+  }
 }

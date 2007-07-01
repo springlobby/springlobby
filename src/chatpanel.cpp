@@ -87,7 +87,7 @@ void ChatPanel::_CreateControls( )
 
     m_nicklist = new NickListCtrl( m_nick_panel );
 
-    m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,22), 0, NULL, wxCB_READONLY );
+    m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, NULL, wxCB_READONLY );
 
     m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
     m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
@@ -108,8 +108,8 @@ void ChatPanel::_CreateControls( )
   m_chatlog_text = new wxTextCtrl( m_chat_panel, -1, _(""), wxDefaultPosition, wxDefaultSize,
                              wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 
-  m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _(""), wxDefaultPosition, wxSize(100,22), wxTE_PROCESS_ENTER );
-  m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _T("Send"), wxDefaultPosition, wxSize(80,22) );
+  m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _(""), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), wxTE_PROCESS_ENTER );
+  m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _T("Send"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
   // Adding elements to sizers
   m_say_sizer->Add( m_say_text, 1, wxEXPAND );

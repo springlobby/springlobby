@@ -13,6 +13,10 @@
 #define RANK_3 400
 #define RANK_4 500
 
+#define SYNC_UNKNOWN 0
+#define SYNC_SYNCED 1
+#define SYNC_UNSYNCED 2
+
 
 //! @brief Struct used to store a client's status.
 struct UserStatus {
@@ -34,7 +38,7 @@ struct UserBattleStatus {
   int sync;
   bool spectator;
   bool ready;
-  UserBattleStatus(): team(0),ally(0),color_r(0), color_g(0),color_b(0),color_index(-1),handicap(0),side(0),ready(false) {}
+  UserBattleStatus(): team(0),ally(0),color_r(0), color_g(0),color_b(0),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),ready(false) {}
 };
 
 
