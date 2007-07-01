@@ -7,6 +7,8 @@
 
 #include <string>
 #include <wx/filefn.h>
+#include <wx/msgdlg.h>
+
 #include "settings.h"
 #include "utils.h"
 

@@ -24,13 +24,13 @@ class MainOptionsTab : public wxPanel
 {
   public:
     MainOptionsTab( wxWindow* parent, Ui& ui );
-     ~MainOptionsTab();
+    ~MainOptionsTab();
   
     // MainOptionsTab interface
-    /*
-    void BattleUserUpdated( User& user );
-    BattleRoomTab* GetBattleRoomTab() { return m_battle_tab; }
-    */
+    
+    void OnApply( wxCommandEvent& event );
+    void OnRestore( wxCommandEvent& event );
+    
   protected:
     // MainJoinBattleTab variables
   
@@ -43,17 +43,19 @@ class MainOptionsTab : public wxPanel
     SpringOptionsTab* m_spring_opts;
 
     wxButton* m_restore_btn;
-    wxButton* m_defaults_btn;
     wxButton* m_apply_btn;
 
     wxBoxSizer* m_button_sizer;
 
     Ui& m_ui;
+    
+    DECLARE_EVENT_TABLE()
+    
 };
 
 enum
 {
-    OPTIONS_TABS = wxID_HIGHEST
+    OPTIONS_TABS = wxID_HIGHEST,
 };
 
 #endif  //_MAINOPTIONSTAB_H_

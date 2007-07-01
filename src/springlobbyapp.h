@@ -9,6 +9,8 @@
 #include <wx/timer.h>
 #include <wx/utils.h>
 #include "ui.h"
+#include "unitsync.h"
+
 
 #define TIMER_ID 101
 #define TIMER_INTERVAL 100

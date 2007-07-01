@@ -3,7 +3,7 @@
 //
 
 #include "springlobbyapp.h"
-#include "ui.h"
+
 
 IMPLEMENT_APP(SpringLobbyApp)
 
@@ -30,9 +30,11 @@ bool SpringLobbyApp::OnInit()
       wxOK | wxICON_INFORMATION, &m_ui->mw() );
     m_ui->mw().ShowConfigure();
   } else {
-    m_ui->Connect();
+    usync().LoadUnitsyncLib();
+    if ( usync().IsLoaded() ) m_ui->Connect();
+    else m_ui->mw().ShowConfigure();
   }
-
+  
   m_timer->Start( TIMER_INTERVAL );
   
   return true;

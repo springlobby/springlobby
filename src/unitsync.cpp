@@ -9,7 +9,7 @@
 #ifdef WIN32
 static char* dllname = "\\unitsync.dll";
 #else
-static char* dllname = "/libunitsync.so";
+static char* dllname = "/unitsync.so";
 #endif
 
 Unitsync& usync()
@@ -44,6 +44,7 @@ bool Unitsync::LoadUnitsyncLib()
   if ( sett().GetUnitsyncUseDefLoc() ) loc = sett().GetSpringDir() + dllname;
   else loc = sett().GetUnitsyncLoc();
 
+  debug( "Loading from: " + loc );
 #ifdef WIN32
 
   m_libhandle = LoadLibrary( loc.c_str() );
@@ -54,9 +55,21 @@ bool Unitsync::LoadUnitsyncLib()
 
 #else
 
-  m_libhandle = dlopen( loc.c_str(), RTLD_LOCAL | RTLD_LAZY );
+  try {
+    m_libhandle = dlopen( loc.c_str(), RTLD_LOCAL | RTLD_LAZY );
+  } catch(...) {
+    m_libhandle = NULL;
+  }
+  
   if (m_libhandle == NULL) {
     debug_error( "Couldn't load the unitsync library" );
+    std::string dlerr = dlerror();
+    debug_error( dlerr );
+    
+    wxMessageDialog msg( NULL, _T("The unitsync library failed to load from the location \"") + WX_STRING(loc) + _T("\".\nIt failed with the error message \"") + WX_STRING(dlerr)+ _T("\".\n\nYou might want to look at the Spring Options again. If you need any help setting unitsync up you will find it under the Help main menu."), _T("Error loading unitsync"), wxOK | wxICON_ERROR );
+    
+    msg.ShowModal();
+    
     return false;
   }
 

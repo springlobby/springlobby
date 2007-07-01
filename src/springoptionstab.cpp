@@ -8,6 +8,8 @@
 BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
 
   EVT_BUTTON ( SPRING_DIRBROWSE, SpringOptionsTab::OnBrowseDir )
+  EVT_BUTTON ( SPRING_EXECBROWSE, SpringOptionsTab::OnBrowseExec )
+  EVT_BUTTON ( SPRING_SYNCBROWSE, SpringOptionsTab::OnBrowseSync )
 
 END_EVENT_TABLE()
 
@@ -21,9 +23,9 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent
 
   m_dir_browse_btn = new wxButton( this, SPRING_DIRBROWSE, _T("Browse") );
   m_dir_find_btn = new wxButton( this, -1, _T("Find") );
-  m_exec_browse_btn = new wxButton( this, -1, _T("Browse") );
+  m_exec_browse_btn = new wxButton( this, SPRING_EXECBROWSE, _T("Browse") );
   m_exec_find_btn = new wxButton( this, -1, _T("Find") );
-  m_sync_browse_btn = new wxButton( this, -1, _T("Browse") );
+  m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _T("Browse") );
   m_sync_find_btn = new wxButton( this, -1, _T("Find") );
   m_auto_btn = new wxButton( this, -1, _T("Auto Configure") );
     
@@ -32,9 +34,14 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent
   m_sync_def_radio = new wxRadioButton( this, -1, _T("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
   m_sync_spec_radio = new wxRadioButton( this, -1, _T("Specify:") );
 
+  if ( sett().GetSpringUseDefLoc() ) m_exec_def_radio->SetValue( true );
+  else m_exec_spec_radio->SetValue( true );
+  if ( sett().GetUnitsyncUseDefLoc() ) m_sync_def_radio->SetValue( true );
+  else m_sync_spec_radio->SetValue( true );
+  
   m_dir_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringDir()) );
-  m_exec_edit = new wxTextCtrl( this, -1, _("") );
-  m_sync_edit = new wxTextCtrl( this, -1, _("") );
+  m_exec_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringLoc()) );
+  m_sync_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetUnitsyncLoc()) );
 
   m_exec_box = new wxStaticBox( this, -1, _T("Spring executable") );
   m_sync_box = new wxStaticBox( this, -1, _T("Unitsync library") );
@@ -84,6 +91,8 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent
   
   SetSizer( m_main_sizer );
   Layout();
+  
+  DoRestore();
 }
 
 
@@ -96,21 +105,52 @@ SpringOptionsTab::~SpringOptionsTab()
 void SpringOptionsTab::OnBrowseDir( wxCommandEvent& event )
 {
   wxDirDialog dirpic( this, _T("Choose a directory"), WX_STRING(sett().GetSpringDir()), wxDD_DEFAULT_STYLE );
-  if ( dirpic.ShowModal() == wxID_OK ) {
-    sett().SetSpringDir( STL_STRING(dirpic.GetPath()) );
-    m_dir_edit->SetValue( dirpic.GetPath() );
-  }
+  if ( dirpic.ShowModal() == wxID_OK ) m_dir_edit->SetValue( dirpic.GetPath() );
+}
+
+
+void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
+{
+  wxFileDialog pic( this, _T("Choose a Spring executable"), WX_STRING(sett().GetSpringDir()), wxString(_("spring"))+wxString(_(EXEEXT)), CHOOSE_EXE );
+  if ( pic.ShowModal() == wxID_OK ) m_exec_edit->SetValue( pic.GetPath() );
+}
+
+
+
+void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
+{
+  wxFileDialog pic( this, _T("Choose a unitsync library"), WX_STRING(sett().GetSpringDir()), wxString(_("unitsync"))+wxString(_(DLLEXT)), CHOOSE_DLL );
+  if ( pic.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pic.GetPath() );
 }
 
 
 void SpringOptionsTab::OnApply( wxCommandEvent& event )
 {
+  sett().SetSpringDir( STL_STRING(m_dir_edit->GetValue()) );
+  sett().SetUnitsyncLoc( STL_STRING( m_sync_edit->GetValue() ) );
+  sett().SetSpringLoc( STL_STRING( m_exec_edit->GetValue() ) );
+  sett().SetSpringUseDefLoc( m_exec_def_radio->GetValue() );
+  sett().SetUnitsyncUseDefLoc( m_sync_def_radio->GetValue() );
 
+  usync().FreeUnitsyncLib();
+  usync().LoadUnitsyncLib();
+}
+
+
+void SpringOptionsTab::DoRestore()
+{
+  m_dir_edit->SetValue( WX_STRING(sett().GetSpringDir()) );
+  m_sync_edit->SetValue( WX_STRING(sett().GetUnitsyncLoc()) );
+  m_exec_edit->SetValue( WX_STRING(sett().GetSpringLoc()) );
+  m_exec_def_radio->SetValue( sett().GetSpringUseDefLoc() );
+  m_sync_def_radio->SetValue( sett().GetUnitsyncUseDefLoc() );
+  m_exec_spec_radio->SetValue( !sett().GetSpringUseDefLoc() );
+  m_sync_spec_radio->SetValue( !sett().GetUnitsyncUseDefLoc() );
 }
 
 
 void SpringOptionsTab::OnRestore( wxCommandEvent& event )
 {
-
+  DoRestore();
 }
 

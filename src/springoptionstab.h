@@ -13,11 +13,23 @@
 #include <wx/statbox.h>
 #include <wx/radiobut.h>
 #include <wx/dirdlg.h>
+#include <wx/filedlg.h>
 
 #include "settings.h"
 
 class Ui;
   
+#ifdef WIN32
+#define DLLEXT ".dll"
+#define EXEEXT ".exe"
+#define CHOOSE_EXE _T("Executables (*.exe)|*.exe|Any File (*.*)|*.*")
+#define CHOOSE_DLL _T("Library (*.dll)|*.dll|Any File (*.*)|*.*")
+#else
+#define DLLEXT ".so"
+#define EXEEXT ""
+#define CHOOSE_EXE _T("Any file (*.*)|*.*")
+#define CHOOSE_DLL _T("Library (*.so)|*.so|Any File (*.*)|*.*")
+#endif
 
 class SpringOptionsTab : public wxPanel
 {
@@ -27,9 +39,14 @@ class SpringOptionsTab : public wxPanel
      ~SpringOptionsTab();
   
     void OnBrowseDir( wxCommandEvent& event );
+    void OnBrowseExec( wxCommandEvent& event );
+    void OnBrowseSync( wxCommandEvent& event );
+    
     void OnApply( wxCommandEvent& event );
     void OnRestore( wxCommandEvent& event );
 
+    void DoRestore();
+    
   protected:
   
     wxStaticText* m_dir_text;
@@ -73,7 +90,9 @@ class SpringOptionsTab : public wxPanel
 
 enum
 {
-    SPRING_DIRBROWSE = wxID_HIGHEST
+    SPRING_DIRBROWSE = wxID_HIGHEST,
+    SPRING_EXECBROWSE,
+    SPRING_SYNCBROWSE
 };
 
 #endif  //_SPRINGOPTIONSTAB_H_
