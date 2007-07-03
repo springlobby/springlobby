@@ -30,7 +30,7 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #define SPRING_BIN "spring.exe"
 #else
 #define PATH_SEP "/"
-#defne SPRING_BIN "spring"
+#define SPRING_BIN "spring"
 #endif
 
 #ifdef __WXMSW__
