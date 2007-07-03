@@ -76,7 +76,9 @@ springlobby_SOURCES = \
 	mainoptionstab.h \
 	mainoptionstab.cpp \
 	springoptionstab.h \
-	springoptionstab.cpp
+	springoptionstab.cpp \
+	spring.h \
+	spring.cpp
 
 springlobby_LDFLAGS = 
 
