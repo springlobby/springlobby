@@ -18,7 +18,7 @@ bool Spring::Run( Battle& battle )
   
   try {
 
-    if ( !wxFile::Access( "script.txt", wxFile::write ) ) {
+    if ( !wxFile::Access( (wxChar*)"script.txt", wxFile::write ) ) {
       debug_error( "Access denied to script.txt." );
     }
 
@@ -27,7 +27,7 @@ bool Spring::Run( Battle& battle )
     f.Close();
 
   } catch (...) {
-    debug_error( "Couldn't write script.txt" ); //!@todo Some message to user.
+    debug_error( (wxChar*)"Couldn't write script.txt" ); //!@todo Some message to user.
     return false;
   }
 
