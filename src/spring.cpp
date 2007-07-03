@@ -22,12 +22,12 @@ bool Spring::Run( Battle& battle )
       debug_error( "Access denied to script.txt." );
     }
 
-    wxFile f( "script.txt", wxFile::write );
+    wxFile f( (wxChar*)"script.txt", wxFile::write );
     f.Write( GetScriptTxt(battle) );
     f.Close();
 
   } catch (...) {
-    debug_error( (wxChar*)"Couldn't write script.txt" ); //!@todo Some message to user.
+    debug_error( "Couldn't write script.txt" ); //!@todo Some message to user.
     return false;
   }
 
