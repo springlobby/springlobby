@@ -11,6 +11,7 @@
 #include "connectwindow.h"
 #include "utils.h"
 #include "server.h"
+#include "spring.h"
 
 class TASServer;
 
@@ -22,10 +23,11 @@ class Ui
     
     friend class MainWindow;
     
-    Ui(): m_serv(NULL), m_con_win(NULL) { m_main_win = new MainWindow( *this ); }
-    virtual ~Ui() {
+    Ui(): m_serv(NULL), m_con_win(NULL) { m_main_win = new MainWindow( *this ); m_spring = new Spring(*this); }
+    ~Ui() {
       if ( m_main_win != NULL ) delete m_main_win;
       if ( m_serv != NULL ) delete m_serv;
+      delete m_spring;
     }
   
     // Ui interface
@@ -79,7 +81,8 @@ class Ui
     void OnUserJoinedBattle( Battle& battle, User& user );
     void OnUserLeftBattle( Battle& battle, User& user );
     void OnBattleInfoUpdated( Battle& battle );
-    
+    void OnBattleStarted( Battle& battle );
+
     void OnJoinedBattle( Battle& battle );
     void OnUserBattleStatus( Battle& battle, User& user );
     void OnRequestBattleStatus( Battle& battle );
@@ -87,9 +90,13 @@ class Ui
     void OnSaidBattle( Battle& battle, const std::string& nick, const std::string& msg );
     void OnBattleAction( Battle& battle, const std::string& nick, const std::string& msg );
     
+    void OnSpringTerminated( bool success );
+
   protected:
     // Ui variables
   
+    Spring* m_spring;
+
     Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;

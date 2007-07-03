@@ -5,6 +5,7 @@
 #ifndef _BATTLE_H_
 #define _BATTLE_H_
 
+#include <wx/string.h>
 #include "userlist.h"
 
 
@@ -129,6 +130,12 @@ class Battle : public UserList
     
     User& GetFounder() { return GetUser( m_opts.founder ); }
     
+    bool IsFounderMe();
+
+    int GetMyPlayerNum();
+    int GetNumTeams();
+    int GetNumAllyTeams();
+
     void AddUser( User& user ) {
       user.SetBattle( this );
       UserList::AddUser( user );
@@ -153,6 +160,8 @@ class Battle : public UserList
     void SendMyBattleStatus();
     
     bool IsSynced();
+
+    
   /*
     DISABLEUNITS unitname1 unitname2
     ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}

@@ -14,6 +14,7 @@
 
 #ifdef WIN32
 #include <windows.h>
+#include <wx/msw/winundef.h>
 typedef HINSTANCE lib_handle_t;
 #else
 #include <dlfcn.h>

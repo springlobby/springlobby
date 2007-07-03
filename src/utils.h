@@ -25,6 +25,13 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #define debug_warn( msg ) debug_output( "ww", __FUNCTION__, "", msg )
 #define debug_error( msg ) debug_output( "!!", __FUNCTION__, "", msg )
 
+#ifdef WIN32
+#define PATH_SEP "\\"
+#define SPRING_BIN "spring.exe"
+#else
+#define PATH_SEP "/"
+#defne SPRING_BIN "spring"
+#endif
 
 #ifdef __WXMSW__
 #define CONTROL_HEIGHT 22

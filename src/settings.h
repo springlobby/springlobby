@@ -106,6 +106,7 @@ class Settings
     void   SetSpringUseDefLoc( const bool usedefloc );
     std::string GetSpringLoc();
     void   SetSpringLoc( const std::string& loc );
+    std::string GetSpringUsedLoc();
 
   protected:
     // Settings variables

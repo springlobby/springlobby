@@ -88,8 +88,16 @@ void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
 {
   //debug_func( "" );
   User& user = m_serv.GetUser( nick );
+  UserStatus us = user.GetStatus();
+
   user.SetStatus( status );
   m_ui.OnUserStatusChanged( user );
+
+  if ( !us.in_game && status.in_game && user.GetBattle() != NULL ) {
+    Battle& battle = *user.GetBattle();
+    if ( &battle.GetFounder() == &user ) 
+      m_ui.OnBattleStarted( battle );
+  }
 }
 
 

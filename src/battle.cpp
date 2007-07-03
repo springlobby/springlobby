@@ -99,3 +99,31 @@ bool Battle::IsModAvailable()
   return true;
   //return ( mod.hash == m_opts.hashcode );
 }
+
+
+bool Battle::IsFounderMe()
+{
+  return (m_opts.founder == m_serv.GetMe().GetNick());
+}
+
+int Battle::GetMyPlayerNum()
+{ 
+  for (int i = 0; i < GetNumUsers(); i++) {
+    if ( &GetUser(i) == &m_serv.GetMe() ) return i;
+  }
+  ASSERT_LOGIC(false, "You are not in this game.");
+  return -1;
+}
+
+
+int Battle::GetNumTeams()
+{
+  return 0;
+}
+
+
+int Battle::GetNumAllyTeams()
+{
+  return 0;
+}
+

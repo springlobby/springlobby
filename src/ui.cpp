@@ -6,6 +6,7 @@
 #include "tasserver.h"
 #include "settings.h"
 #include "server.h"
+#include "spring.h"
 
 
 MainWindow& Ui::mw()
@@ -329,15 +330,18 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
   m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
 }
 
+
 void Ui::OnJoinedBattle( Battle& battle )
 {
   mw().GetJoinTab().JoinBattle( battle );
 }
 
+
 void Ui::OnUserBattleStatus( Battle& battle, User& user )
 {
   mw().GetJoinTab().BattleUserUpdated( user );
 }
+
 
 void Ui::OnRequestBattleStatus( Battle& battle )
 {
@@ -345,6 +349,17 @@ void Ui::OnRequestBattleStatus( Battle& battle )
   if ( br != NULL ) {
     if ( &br->GetBattle() == &battle ) {
       br->GetBattle().OnRequestBattleStatus();
+    }
+  }
+}
+
+
+void Ui::OnBattleStarted( Battle& battle )
+{
+  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+  if ( br != NULL ) {
+    if ( &br->GetBattle() == &battle ) {
+      m_spring->Run( battle );
     }
   }
 }
@@ -368,3 +383,7 @@ void Ui::OnBattleAction( Battle& battle, const std::string& nick, const std::str
 }
 
 
+void Ui::OnSpringTerminated( bool success )
+{
+
+}
