@@ -62,10 +62,10 @@ union UTASBattleStatus {
 
 
 struct TASColor {
-  unsigned int zero: 8;
-  unsigned int blue : 8;
-  unsigned int green : 8;
   unsigned int red : 8;
+  unsigned int green : 8;
+  unsigned int blue : 8;
+  unsigned int zero: 8;
 };
 
 

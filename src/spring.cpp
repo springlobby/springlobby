@@ -14,7 +14,10 @@ void SpringProcess::OnTerminate( int pid, int status )
 
 bool Spring::Run( Battle& battle )
 {
-  if ( m_running ) return false;
+  if ( m_running ) {
+    debug_error( "Spring allready running!" );
+    return false;
+  }
   
   try {
 
@@ -42,6 +45,7 @@ bool Spring::Run( Battle& battle )
 
 void Spring::OnTerminated()
 {
+  m_running = false;
   m_ui.OnSpringTerminated( true );
 }
 
@@ -50,7 +54,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
 {
   wxString s;
   
-  int NumTeams=0, NumAllys=0,LastOrder=-1,Lowest=-1;
+  int NumTeams=0, NumAllys=0, LastOrder=-1,Lowest=-1;
   int PlayerOrder[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int TeamConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int TeamRevConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
@@ -74,24 +78,18 @@ wxString Spring::GetScriptTxt( Battle& battle )
     if ( bs.spectator ) continue;
 
     // Transform team numbers.
-    if ( TeamConv[bs.team] == -1 ) {
-      TeamConv[bs.team] = NumTeams;
-      NumTeams++;
-    }
+    if ( TeamConv[bs.team] == -1 ) TeamConv[bs.team] = NumTeams++;
 
     // Transform ally numbers.
-    if ( AllyConv[bs.ally] == -1 ) {
-      AllyConv[bs.ally] = NumAllys;
-      NumAllys++;
-    }
+    if ( AllyConv[bs.ally] == -1 ) AllyConv[bs.ally] = NumAllys++;
 
   }  
 
   BattleOptions bo = battle.opts();
 
   // Start generating the script.
-  s  = wxString::Format( _("[GAME]\n") );
-  s += wxString::Format( _("{\n") );
+  s  = wxString::Format( _("[GAME]\n{\n") );
+
   s += wxString::Format( _("\tMapname=%s;\n"), bo.mapname.c_str() );
   s += wxString::Format( _("\tStartMetal=%d;\n"), bo.startmetal );
   s += wxString::Format( _("\tStartEnergy=%d;\n"), bo.startenergy );
@@ -117,14 +115,17 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s += wxString::Format( _("\t[PLAYER%d]\n"), i );
     s += wxString::Format( _("\t{\n") );
     s += wxString::Format( _("\t\tname=%s;\n"), battle.GetUser( i ).GetNick().c_str() );
-    s += wxString::Format( _("\t\tSpectator=%;\n"), battle.GetUser( i ).GetBattleStatus().spectator?1:0 );
+    s += wxString::Format( _("\t\tSpectator=%d;\n"), battle.GetUser( i ).GetBattleStatus().spectator?1:0 );
     if ( !battle.GetUser( i ).GetBattleStatus().spectator ) {
       s += wxString::Format( _("\t\tteam=%d;\n"), TeamConv[battle.GetUser( i ).GetBattleStatus().team] );
     }
-    s += wxString::Format( _("\t}\n\n") );
+    s += wxString::Format( _("\t}\n") );
   }
+
+  s += _("\n");
+
   for ( int i = 0; i < NumTeams; i++ ) {
-    s += wxString::Format( _("\t[TEAM%d]\n"), i );
+    s += wxString::Format( _("\t[TEAM%d]\n\t{\n"), i );
 
     // Find Team Leader.
     int TeamLeader = -1;
@@ -148,11 +149,11 @@ wxString Spring::GetScriptTxt( Battle& battle )
            usync().GetSideName( battle.opts().modname, battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().side ).c_str()
          );
     s += wxString::Format( _("\t\tHandicap=%d;\n"), battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().handicap );
-    s +=  _("\t}\n\n");
+    s +=  _("\t}\n");
   }
 
   for ( int i = 0; i < NumAllys; i++ ) {
-    s +=   _("\t[ALLYTEAM") + WX_STRING(i2s( i )) + _("]\n");
+    s += wxString::Format( _("\t[ALLYTEAM%d]\n\t{\n"), i );
 
     int NumInAlly = -1;
     // Find out how many players in ally;
@@ -162,7 +163,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
     s += wxString::Format( _("\t\tNumAllies=%d;\n"), NumInAlly );
 
-    s +=  _("\t}\n\n");
+    s +=  _("\t}\n");
   }
 
   s += _("\tNumRestrictions=0;\n");
