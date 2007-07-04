@@ -18,11 +18,11 @@ bool Spring::Run( Battle& battle )
   
   try {
 
-    if ( !wxFile::Access( wxString("script_springlobby.txt"), wxFile::write ) ) {
+    if ( !wxFile::Access( wxString(_("script_springlobby.txt")), wxFile::write ) ) {
       debug_error( "Access denied to script_springlobby.txt." );
     }
 
-    wxFile f( wxString("script_springlobby.txt"), wxFile::write );
+    wxFile f( wxString(_("script_springlobby.txt")), wxFile::write );
     f.Write( GetScriptTxt(battle) );
     f.Close();
 
