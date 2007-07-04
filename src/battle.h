@@ -90,7 +90,7 @@ struct BattleOptions
 class Battle : public UserList
 {
   public:
-    Battle( Server& serv, Ui& ui, const int& id ) : UserList(),m_order(0),m_serv(serv),m_ui(ui) { m_opts.battleid = id; }
+    Battle( Server& serv, Ui& ui, const int& id ) : UserList(),m_serv(serv),m_ui(ui),m_order(0) { m_opts.battleid = id; }
     ~Battle() {
       for (int i = 0; i < GetNumUsers(); i++ ) GetUser(i).SetBattle( NULL );
     }

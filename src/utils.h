@@ -35,7 +35,7 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #define ENDL "\n"
 #endif
 
-#define EL wxString(ENDL)
+#define EL wxString(_(ENDL))
 
 #ifdef __WXMSW__
 #define CONTROL_HEIGHT 22
