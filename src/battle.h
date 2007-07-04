@@ -90,7 +90,7 @@ struct BattleOptions
 class Battle : public UserList
 {
   public:
-    Battle( Server& serv, Ui& ui, const int& id ) : UserList(),m_serv(serv),m_ui(ui) { m_opts.battleid = id; }
+    Battle( Server& serv, Ui& ui, const int& id ) : UserList(),m_order(0),m_serv(serv),m_ui(ui) { m_opts.battleid = id; }
     ~Battle() {
       for (int i = 0; i < GetNumUsers(); i++ ) GetUser(i).SetBattle( NULL );
     }
@@ -139,6 +139,9 @@ class Battle : public UserList
     void AddUser( User& user ) {
       user.SetBattle( this );
       UserList::AddUser( user );
+      UserBattleStatus bs = user.GetBattleStatus();
+      bs.order = m_order++;
+      user.SetBattleStatus( bs, true );
     }
     
     void RemoveUser( User& user ) {
@@ -173,6 +176,8 @@ class Battle : public UserList
     BattleOptions m_opts;
     Server& m_serv;
     Ui& m_ui;
+
+    int m_order;
   
     void RemoveUser( std::string const& user ) {}
 };

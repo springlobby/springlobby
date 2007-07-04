@@ -96,7 +96,7 @@ typedef unsigned int (USYNC_CALL_CONV *GetPrimaryModChecksumPtr)(int);
 typedef int (USYNC_CALL_CONV *GetPrimaryModIndexPtr)(const char*);
 typedef const char* (USYNC_CALL_CONV *GetPrimaryModNamePtr)(int);
 typedef int (USYNC_CALL_CONV *GetPrimaryModCountPtr)();
-
+typedef const char* (USYNC_CALL_CONV *GetPrimaryModArchivePtr)(int);
 class Unitsync
 {
 public:
@@ -107,6 +107,7 @@ public:
   bool ModExists( const std::string& modname );
   UnitsyncMod GetMod( const std::string& modname );
   int GetModIndex( const std::string& name );
+  std::string GetModArchive( int index );
 
   int GetNumMaps();
   bool MapExists( const std::string& mapname );
@@ -135,7 +136,7 @@ private:
   GetPrimaryModIndexPtr m_get_mod_index;
   GetPrimaryModNamePtr m_get_mod_name;
   GetPrimaryModCountPtr m_get_mod_count;
-
+  GetPrimaryModArchivePtr m_get_mod_archive;
   void* _GetLibFuncPtr( const std::string& name );
 };
 

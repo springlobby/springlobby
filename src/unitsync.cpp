@@ -91,6 +91,7 @@ bool Unitsync::LoadUnitsyncLib()
     m_get_mod_index = (GetPrimaryModIndexPtr)_GetLibFuncPtr("GetPrimaryModIndex");
     m_get_mod_name = (GetPrimaryModNamePtr)_GetLibFuncPtr("GetPrimaryModName");
     m_get_mod_count = (GetPrimaryModCountPtr)_GetLibFuncPtr("GetPrimaryModCount");
+    m_get_mod_archive = (GetPrimaryModArchivePtr)_GetLibFuncPtr("GetPrimaryModArchive");
 
     m_init( true, 1 );
   }
@@ -217,5 +218,11 @@ int Unitsync::GetMapIndex( const std::string& name )
       return i;
   }
   return -1;
+}
+
+std::string Unitsync::GetModArchive( int index )
+{
+  if ( !m_loaded ) return "unknown";
+  return m_get_mod_archive( index );
 }
 

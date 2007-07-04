@@ -41,8 +41,10 @@ void User::SetStatus( const UserStatus& status )
 
 }
 
-void User::SetBattleStatus( const UserBattleStatus& status )
+void User::SetBattleStatus( const UserBattleStatus& status, bool setorder )
 {
+  int order = m_bstatus.order;
   m_bstatus = status;
+  if ( !setorder ) m_bstatus.order = order;
 }
 

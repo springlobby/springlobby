@@ -45,7 +45,7 @@ struct TASBattleStatus {
   unsigned int ready : 1;
   unsigned int team : 4;
   unsigned int ally : 4;
-  unsigned int spectator : 1;
+  unsigned int player : 1;
   unsigned int handicap: 7;
   unsigned int : 4;
   unsigned int sync : 2;

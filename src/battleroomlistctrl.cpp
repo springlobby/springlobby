@@ -54,7 +54,11 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent ) : wxListCtrl(parent, 
   col.SetImage( -1 );
   InsertColumn( 9, col );
 
+#ifdef __WXMSW__
+  SetColumnWidth( 0, 45 );
+#else
   SetColumnWidth( 0, 20 );
+#endif
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );
   SetColumnWidth( 3, 20 );
@@ -106,16 +110,22 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     
   User& user = *((User*)GetItemData( index ));
   
-  SetItemImage( index, IconImageList::GetReadyIcon( user.GetBattleStatus().ready ) );
+  SetItemImage( index, (user.GetBattleStatus().spectator)?ICON_SPECTATOR:IconImageList::GetReadyIcon( user.GetBattleStatus().ready ) );
   SetItemColumnImage( index, 1, IconImageList::GetSideIcon( user.GetBattleStatus().side ) );
   SetItemColumnImage( index, 2, IconImageList::GetColorIcon( user.GetBattleStatus().color_index ) );
   SetItemColumnImage( index, 3, IconImageList::GetFlagIcon( user.GetCountry() ) );
   SetItemColumnImage( index, 4, IconImageList::GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 5, WX_STRING( user.GetNick() ) );
-  SetItem( index, 6, wxString::Format( _("%d"), user.GetBattleStatus().team + 1 ) );
-  SetItem( index, 7, wxString::Format( _("%d"), user.GetBattleStatus().ally + 1 ) );
+  if ( !user.GetBattleStatus().spectator ) {
+    SetItem( index, 6, wxString::Format( _("%d"), user.GetBattleStatus().team + 1 ) );
+    SetItem( index, 7, wxString::Format( _("%d"), user.GetBattleStatus().ally + 1 ) );
+    SetItem( index, 9, wxString::Format( _("%d%%"), user.GetBattleStatus().handicap ) );
+  } else {
+    SetItem( index, 6, _("") );
+    SetItem( index, 7, _("") );
+    SetItem( index, 9, _("") );
+  }
   SetItem( index, 8, wxString::Format( _("%.1f GHz"), user.GetCpu() / 1000.0 ) );
-  SetItem( index, 9, wxString::Format( _("%d%%"), user.GetBattleStatus().handicap ) );
 }
 
 

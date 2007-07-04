@@ -29,6 +29,7 @@ struct UserStatus {
 };
 
 struct UserBattleStatus {
+  int order;
   int team;
   int ally;
   int color_r, color_g, color_b;
@@ -38,7 +39,7 @@ struct UserBattleStatus {
   int sync;
   bool spectator;
   bool ready;
-  UserBattleStatus(): team(0),ally(0),color_r(0), color_g(0),color_b(0),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),ready(false) {}
+  UserBattleStatus(): order(-1),team(0),ally(0),color_r(0), color_g(0),color_b(0),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),ready(false) {}
 };
 
 
@@ -80,7 +81,7 @@ class User
     void SetStatus( const UserStatus& status );
   
     UserBattleStatus GetBattleStatus() const { return m_bstatus; }
-    void SetBattleStatus( const UserBattleStatus& status );
+    void SetBattleStatus( const UserBattleStatus& status, bool setorder = false );
 
 /*    void SetUserData( void* userdata ) { m_data = userdata; }
     void* GetUserData() { return m_data; }*/

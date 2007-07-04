@@ -12,6 +12,7 @@
 
 #include "battle.h"
 #include "settings.h"
+#include "utils.h"
 
 
 class Ui;

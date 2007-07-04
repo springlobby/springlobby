@@ -139,12 +139,15 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::
 }
 
 
-void ServerEvents::OnJoinedBattle( int battleid, int metal, int energy, int units, StartType 
-                    start, bool comm, bool dgun, bool dim, bool ghost, std::string hash )
+void ServerEvents::OnJoinedBattle( int battleid )
 {
   debug_func( "" );
   Battle& battle = m_serv.GetBattle( battleid );
-  //battle.AddUser( m_serv.GetMe() );
+
+  UserBattleStatus bs = m_serv.GetMe().GetBattleStatus();
+  bs.spectator = false;
+  m_serv.GetMe().SetBattleStatus( bs );
+
   m_ui.OnJoinedBattle( battle );
 }
 
@@ -179,6 +182,25 @@ void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
   m_ui.OnUserLeftBattle( battle, user );
 
   battle.RemoveUser( user );
+}
+
+
+void ServerEvents::OnBattleInfoUpdated( int battleid, int metal, int energy, int units, StartType 
+                    start, bool comm, bool dgun, bool dim, bool ghost, std::string hash )
+{
+  debug_func( "" );
+  Battle& battle = m_serv.GetBattle( battleid );
+
+  battle.SetStartMetal( metal );
+  battle.SetStartEnergy( energy );
+  battle.SetMaxUnits( units );
+  battle.SetStartType( start );
+  battle.SetComEndsGame( comm );
+  battle.SetLimitDGun( dgun );
+  battle.SetDimMMs( dim );
+  battle.SetGhostedBuildings( ghost );
+//  battle.SetH( hash );
+  m_ui.OnBattleInfoUpdated( battle );
 }
 
 

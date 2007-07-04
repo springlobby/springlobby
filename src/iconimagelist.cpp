@@ -35,6 +35,8 @@
 #include "images/nready_unsync.xpm"
 #include "images/nready_q.xpm"
 
+#include "images/spectator.xpm"
+
 #include "images/unknown_flag.xpm"
 
 #include "flagimages.h"
@@ -69,6 +71,8 @@ IconImageList::IconImageList() : wxImageList(16,16)
 
   Add( wxBitmap(nexists_xpm) );
   Add( wxBitmap(exists_xpm) );
+
+  Add( wxBitmap(spectator_xpm) );
 
   Add( wxBitmap(unknown_flag_xpm) );
 

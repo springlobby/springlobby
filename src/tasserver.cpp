@@ -313,7 +313,20 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     ghost = (bool)GetIntParam( params );
     hash = GetWordParam( params );
     m_battle_id = id;
-    m_se->OnJoinedBattle( id, metal, energy, units, IntToStartType(start), comm, dgun, dim, ghost, hash );
+    m_se->OnJoinedBattle( id );
+    m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), comm, dim, dgun, ghost, hash );
+  } else if ( cmd == "UPDATEBATTLEDETAILS" ) {
+    metal = GetIntParam( params );
+    energy = GetIntParam( params );
+    units = GetIntParam( params );
+    start = GetIntParam( params );
+    comm = (bool)GetIntParam( params );
+    dgun = (bool)GetIntParam( params );
+    dim = (bool)GetIntParam( params );
+    ghost = (bool)GetIntParam( params );
+    hash = GetWordParam( params );
+    m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), comm, dim, dgun, ghost, hash );
+    //UPDATEBATTLEDETAILS startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings
   } else if ( cmd == "CLIENTBATTLESTATUS" ) {
     nick = GetWordParam( params );
     tasbstatus.data = GetIntParam( params );
@@ -618,9 +631,9 @@ UserBattleStatus TASServer::ConvTasbattlestatus( TASBattleStatus tas )
   UserBattleStatus stat;
   stat.ally = tas.ally;
   stat.handicap = tas.handicap;
-  stat.ready = tas.ready;
+  stat.ready = (tas.ready==1)?true:false;
   stat.side = tas.side;
-  stat.spectator = tas.spectator;
+  stat.spectator = (tas.player == 0)?true:false;
   stat.sync = tas.sync;
   stat.team = tas.team;
   return stat;
@@ -632,9 +645,9 @@ TASBattleStatus TASServer::ConvTasbattlestatus( UserBattleStatus bs)
   TASBattleStatus stat;
   stat.ally = bs.ally;
   stat.handicap = bs.handicap;
-  stat.ready = bs.ready;
+  stat.ready = bs.ready?1:0;
   stat.side = bs.side;
-  stat.spectator = bs.spectator;
+  stat.player = bs.spectator?0:1;
   stat.sync = bs.sync;
   stat.team = bs.team;
   return stat;

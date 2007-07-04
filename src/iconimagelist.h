@@ -44,9 +44,10 @@
 #define ICON_NEXISTS 22
 #define ICON_EXISTS 23
 
+#define ICON_SPECTATOR 24
 
-#define ICON_UNK_FLAG 24
-#define ICON_FLAGS_BASE 25
+#define ICON_UNK_FLAG 25
+#define ICON_FLAGS_BASE 26
 
 #include <string>
 #include <wx/imaglist.h>
