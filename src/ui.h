@@ -58,7 +58,8 @@ class Ui
     void OnUpdate();
     
     void OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported );
-  
+    void OnDisconnected( Server& server );
+
     void OnJoinedChannelSuccessful( Channel& chan );
     void OnUserJoinedChannel( Channel& chan, User& user );
     void OnUserLeftChannel( Channel& chan, User& user, const std::string& reason );

@@ -17,7 +17,8 @@ void ServerEvents::OnConnected( const std::string& server_name, const std::strin
 
 void ServerEvents::OnDisconnected()
 {
-  //debug_func( "" );
+  debug_func( "" );
+  m_ui.OnDisconnected( m_serv );
 }
 
 

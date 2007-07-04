@@ -195,6 +195,14 @@ void ChatPanel::Motd( const wxString& message )
 }
 
 
+void ChatPanel::StatusMessage( const wxString& message )
+{
+  debug_func( "" );
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 80, 128)));
+  m_chatlog_text->AppendText( _(" ** Server ** ")+ message + _("\n") );
+}
+
+
 void ChatPanel::UnknownCommand( const wxString& command, const wxString& params )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));

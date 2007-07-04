@@ -72,8 +72,6 @@ struct UnitsyncMap
 const char * __stdcall GetUnitName(int unit)
 int __stdcall GetUnitCount()
 const char* __stdcall GetSpringVersion()
-const char* __stdcall GetSideName(int side)
-int __stdcall GetSideCount()
 void* __stdcall GetMinimap(const char* filename, int miplevel)
 
 */
@@ -97,6 +95,12 @@ typedef int (USYNC_CALL_CONV *GetPrimaryModIndexPtr)(const char*);
 typedef const char* (USYNC_CALL_CONV *GetPrimaryModNamePtr)(int);
 typedef int (USYNC_CALL_CONV *GetPrimaryModCountPtr)();
 typedef const char* (USYNC_CALL_CONV *GetPrimaryModArchivePtr)(int);
+
+typedef int (USYNC_CALL_CONV *GetSideCountPtr)();
+typedef const char* (USYNC_CALL_CONV *GetSideNamePtr)(int);
+
+typedef void (USYNC_CALL_CONV *AddAllArchivesPtr)(const char*);
+
 class Unitsync
 {
 public:
@@ -114,6 +118,8 @@ public:
   bool MapExists( const std::string& mapname, const std::string hash );
   UnitsyncMap GetMap( const std::string& mapname );
   int GetMapIndex( const std::string& name );
+
+  std::string GetSideName( const std::string& modname, int index );
 
   bool LoadUnitsyncLib();
   void FreeUnitsyncLib();
@@ -137,6 +143,12 @@ private:
   GetPrimaryModNamePtr m_get_mod_name;
   GetPrimaryModCountPtr m_get_mod_count;
   GetPrimaryModArchivePtr m_get_mod_archive;
+
+  GetSideCountPtr m_get_side_count;
+  GetSideNamePtr m_get_side_name;
+
+  AddAllArchivesPtr m_add_all_archives;
+
   void* _GetLibFuncPtr( const std::string& name );
 };
 

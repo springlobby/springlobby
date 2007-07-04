@@ -28,14 +28,12 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #ifdef WIN32
 #define PATH_SEP "\\"
 #define SPRING_BIN "spring.exe"
-#define ENDL "\r\n"
+#define DOS_TXT true
 #else
 #define PATH_SEP "/"
 #define SPRING_BIN "spring"
-#define ENDL "\n"
+#define DOS_TXT false
 #endif
-
-#define EL wxString(_(ENDL))
 
 #ifdef __WXMSW__
 #define CONTROL_HEIGHT 22

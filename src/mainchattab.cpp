@@ -68,8 +68,22 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
 
 ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
 {
-  ChatPanel* chat = new ChatPanel( m_chat_tabs, server );
+  ChatPanel* chat;
+
+  for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+    if ( m_chat_tabs->GetPageText(i) == name ) {
+      ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+      if ( tmp->GetServer() == NULL ) {
+        m_chat_tabs->SetSelection( i );
+        tmp->SetServer( &server );
+        return tmp;
+      }
+    }
+  }
+
+  chat = new ChatPanel( m_chat_tabs, server );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, 1 );
+
   return chat;
 }
 

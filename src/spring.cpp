@@ -51,11 +51,15 @@ wxString Spring::GetScriptTxt( Battle& battle )
   wxString s;
   
   int NumTeams=0, NumAllys=0,LastOrder=-1,Lowest=-1;
+  int PlayerOrder[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int TeamConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+  int TeamRevConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int AllyConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+  int AllyRevConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
   for ( int i = 0; i < battle.GetNumUsers(); i++ ) {
     Lowest = -1;
+    // Find next player in the order they were sent from the server.
     for ( int gl = 0; gl < battle.GetNumUsers(); gl++ ) {
       if ( battle.GetUser(gl).GetBattleStatus().order <= LastOrder ) continue;
       if ( Lowest == -1 ) Lowest = gl;
@@ -63,14 +67,19 @@ wxString Spring::GetScriptTxt( Battle& battle )
     }
     LastOrder = battle.GetUser(Lowest).GetBattleStatus().order;
     User& u = battle.GetUser( Lowest );
+
+    PlayerOrder[i] = Lowest;
+
     UserBattleStatus bs = u.GetBattleStatus();
     if ( bs.spectator ) continue;
 
+    // Transform team numbers.
     if ( TeamConv[bs.team] == -1 ) {
       TeamConv[bs.team] = NumTeams;
       NumTeams++;
     }
 
+    // Transform ally numbers.
     if ( AllyConv[bs.ally] == -1 ) {
       AllyConv[bs.ally] = NumAllys;
       NumAllys++;
@@ -79,38 +88,91 @@ wxString Spring::GetScriptTxt( Battle& battle )
   }  
 
   BattleOptions bo = battle.opts();
-  s  = _("[GAME]") + EL;
-  s += _("{") + EL;
-  s +=   _("\tMapname=") + WX_STRING(bo.mapname) + _(";") + EL;
-  s +=   _("\tStartMetal=") + WX_STRING(i2s( bo.startmetal )) + _(";") + EL;
-  s +=   _("\tStartEnergy=") + WX_STRING(i2s( bo.startenergy )) + _(";") + EL;
-  s +=   _("\tMaxUnits=") + WX_STRING(i2s( bo.maxunits )) + _(";") + EL;
-  s +=   _("\tStartPosType=") + WX_STRING(i2s( bo.starttype )) + _(";") + EL;
-  s +=   _("\tGameMode=0;") + EL;
-  s +=   _("\tGameType=") + WX_STRING( usync().GetModArchive(usync().GetModIndex(bo.modname)) ) + _(";") + EL;
-  s +=   _("\tLimitDGun=") + WX_STRING(i2s( bo.limitdgun?1:0 )) + _(";") + EL;
-  s +=   _("\tDiminishingMMs=") + WX_STRING(i2s( bo.dimmms?1:0 )) + _(";") + EL;
-  s +=   _("\tGhostedBuildings=") + WX_STRING(i2s( bo.ghostedbuildings?1:0 )) + _(";") + EL + EL;
 
-  if ( battle.IsFounderMe() ) s += _("\tHostIP=localhost;") + EL;
-  else s +=   _("\tHostIP=") + WX_STRING( bo.ip ) + _(";") + EL;
-  s +=   _("\tHostPort=") + WX_STRING(i2s( bo.port )) + _(";") + EL + EL;
+  // Start generating the script.
+  s  = wxString::Format( _("[GAME]\n") );
+  s += wxString::Format( _("{\n") );
+  s += wxString::Format( _("\tMapname=%s;\n"), bo.mapname.c_str() );
+  s += wxString::Format( _("\tStartMetal=%d;\n"), bo.startmetal );
+  s += wxString::Format( _("\tStartEnergy=%d;\n"), bo.startenergy );
+  s += wxString::Format( _("\tMaxUnits=%d;\n"), bo.maxunits );
+  s += wxString::Format( _("\tStartPosType=%d;\n"), bo.starttype );
+  s += wxString::Format( _("\tGameMode=0;\n") );
+  s += wxString::Format( _("\tGameType=%s;\n"), usync().GetModArchive(usync().GetModIndex(bo.modname)).c_str() );
+  s += wxString::Format( _("\tLimitDGun=%d;\n"), bo.limitdgun?1:0 );
+  s += wxString::Format( _("\tDiminishingMMs=%d;\n"), bo.dimmms?1:0 );
+  s += wxString::Format( _("\tGhostedBuildings=%d;\n\n"), bo.ghostedbuildings?1:0 );
 
-  s +=   _("\tMyPlayerNum=") + WX_STRING(i2s( battle.GetMyPlayerNum() )) + _(";") + EL + EL;
+  if ( battle.IsFounderMe() ) s += wxString::Format( _("\tHostIP=localhost;\n") );
+  else s += wxString::Format( _("\tHostIP=%s;\n"), bo.ip.c_str() );
+  s += wxString::Format( _("\tHostPort=%d;\n\n"), bo.port );
 
-  s +=   _("\tNumPlayers=") + WX_STRING(i2s( battle.GetNumUsers() )) + _(";") + EL;
-  s +=   _("\tNumTeams=") + WX_STRING(i2s( NumTeams )) + _(";") + EL;
-  s +=   _("\tNumAllyTeams=") + WX_STRING(i2s( NumAllys )) + _(";") + EL + EL;
+  s += wxString::Format( _("\tMyPlayerNum=%d;\n\n"), battle.GetMyPlayerNum() );
+
+  s += wxString::Format( _("\tNumPlayers=%d;\n"), battle.GetNumUsers() );
+  s += wxString::Format( _("\tNumTeams=%d;\n"), NumTeams );
+  s += wxString::Format( _("\tNumAllyTeams=%d;\n\n"), NumAllys );
   
   for ( int i = 0; i < battle.GetNumUsers(); i++ ) {
-    s +=   _("\t[PLAYER") + WX_STRING(i2s( i )) + _("]") + EL;
-    s +=   _("\t{") + EL;
-    s +=     _("\t\tname=") + WX_STRING( battle.GetUser( i ).GetNick() ) + _(";") + EL;
-    s +=     _("\t\tSpectator=") + WX_STRING(i2s( battle.GetUser( i ).GetBattleStatus().spectator?1:0 )) + _(";") + EL;
+    s += wxString::Format( _("\t[PLAYER%d]\n"), i );
+    s += wxString::Format( _("\t{\n") );
+    s += wxString::Format( _("\t\tname=%s;\n"), battle.GetUser( i ).GetNick().c_str() );
+    s += wxString::Format( _("\t\tSpectator=%;\n"), battle.GetUser( i ).GetBattleStatus().spectator?1:0 );
     if ( !battle.GetUser( i ).GetBattleStatus().spectator ) {
-      s +=     _("\t\tteam=") + WX_STRING(i2s( TeamConv[battle.GetUser( i ).GetBattleStatus().team] )) + _(";") + EL;
+      s += wxString::Format( _("\t\tteam=%d;\n"), TeamConv[battle.GetUser( i ).GetBattleStatus().team] );
     }
-    s +=  _("\t}") + EL + EL;
+    s += wxString::Format( _("\t}\n\n") );
+  }
+  for ( int i = 0; i < NumTeams; i++ ) {
+    s += wxString::Format( _("\t[TEAM%d]\n"), i );
+
+    // Find Team Leader.
+    int TeamLeader = -1;
+    for( int tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {
+      // First Player That Is In The Team Is Leader.
+      if ( TeamConv[battle.GetUser( PlayerOrder[tlf] ).GetBattleStatus().team] == i ) {
+        TeamLeader = tlf;
+        break;
+      }
+    }
+
+    s += wxString::Format( _("\t\tTeamLeader=%d;\n") ,TeamLeader );
+    s += wxString::Format( _("\t\tAllyTeam=%d;\n"), AllyConv[battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().ally] );
+    s += wxString::Format( _("\t\tRGBColor=%.5f %.5f %.5f;\n"),
+           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().color_r/255.0),
+           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().color_g/255.0),
+           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().color_b/255.0)
+         );
+    debug( i2s(battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().side) );
+    s += wxString::Format( _("\t\tSide=%s;\n"), 
+           usync().GetSideName( battle.opts().modname, battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().side ).c_str()
+         );
+    s += wxString::Format( _("\t\tHandicap=%d;\n"), battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().handicap );
+    s +=  _("\t}\n\n");
+  }
+
+  for ( int i = 0; i < NumAllys; i++ ) {
+    s +=   _("\t[ALLYTEAM") + WX_STRING(i2s( i )) + _("]\n");
+
+    int NumInAlly = -1;
+    // Find out how many players in ally;
+    for( int an = 0; an < battle.GetNumUsers(); an++ ) {
+      if ( TeamConv[battle.GetUser( PlayerOrder[an] ).GetBattleStatus().team] == i ) NumInAlly++;
+    }
+
+    s += wxString::Format( _("\t\tNumAllies=%d;\n"), NumInAlly );
+
+    s +=  _("\t}\n\n");
+  }
+
+  s += _("\tNumRestrictions=0;\n");
+  s += _("\t[RESTRICT]\n");
+  s += _("\t{\n");
+  s += _("\t}\n");
+  s += _("}\n");
+
+  if ( DOS_TXT ) {
+    s.Replace( _("\n"), _("\r\n"), true );
   }
 
   return s;

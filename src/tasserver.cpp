@@ -597,9 +597,9 @@ void TASServer::OnConnected( Socket* sock )
 void TASServer::OnDisconnected( Socket* sock )
 {
   debug_func( "" );
-  //TASServer* serv = (TASServer*)sock->GetUserdata();
   m_connected = false;
   m_online = false;
+  m_se->OnDisconnected();
 }
 
 

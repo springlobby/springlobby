@@ -19,6 +19,7 @@
 #include <string>
 
 #include "nicklistctrl.h"
+#include "utils.h"
 
 
 #define SERVER_CHAT_NAME "$server"
@@ -58,7 +59,8 @@ class ChatPanel : public wxPanel
     void Said( const wxString& who, const wxString& message );
     void DidAction( const wxString& who, const wxString& action );
     void Motd( const wxString& message );
-  
+    void StatusMessage( const wxString& message );
+
     void UnknownCommand( const wxString& command, const wxString& params );
   
     void Joined( User& who );
@@ -67,6 +69,8 @@ class ChatPanel : public wxPanel
     void UserStatusUpdated( User& who );
   
     Channel& GetChannel() { return *m_channel; }
+    Server* GetServer() { return m_server; }
+    void SetServer( Server* serv ) { ASSERT_LOGIC(m_type == CPT_Server, "Not of type server" ); m_server = serv;  }
   
     bool IsServerPanel() { return (m_type == CPT_Server); }
     

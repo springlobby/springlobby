@@ -92,6 +92,9 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
   host = sett().GetServerHost( STL_STRING(servername) );
   port = sett().GetServerPort( STL_STRING(servername) );
   
+  m_serv->uidata.panel = m_main_win->GetChatTab().AddChatPannel( *m_serv, servername );
+  m_serv->uidata.panel->StatusMessage( _("Connecting to server ") + servername + _("...") );
+
   // Connect
   m_serv->Connect( host, port );
 
@@ -149,7 +152,17 @@ void Ui::OnUpdate()
 void Ui::OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported )
 {
   debug_func( "" );
-  server.uidata.panel = m_main_win->GetChatTab().AddChatPannel( server, WX_STRING(server_name) );
+  server.uidata.panel->StatusMessage( _("Connected to ") + WX_STRING(server_name) + _(".") );
+  //server.uidata.panel = m_main_win->GetChatTab().AddChatPannel( server, WX_STRING(server_name) );
+}
+
+
+void Ui::OnDisconnected( Server& server )
+{
+  debug_func( "" );
+  server.uidata.panel->StatusMessage( _("Disconnected from server.") );
+  server.uidata.panel->SetServer( NULL );
+  server.uidata.panel = NULL;
 }
 
 

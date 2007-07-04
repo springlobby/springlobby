@@ -93,6 +93,11 @@ bool Unitsync::LoadUnitsyncLib()
     m_get_mod_count = (GetPrimaryModCountPtr)_GetLibFuncPtr("GetPrimaryModCount");
     m_get_mod_archive = (GetPrimaryModArchivePtr)_GetLibFuncPtr("GetPrimaryModArchive");
 
+    m_get_side_count = (GetSideCountPtr)_GetLibFuncPtr("GetSideCount");
+    m_get_side_name = (GetSideNamePtr)_GetLibFuncPtr("GetSideName");
+
+    m_add_all_archives = (AddAllArchivesPtr)_GetLibFuncPtr("AddAllArchives");
+
     m_init( true, 1 );
   }
   catch ( std::runtime_error& e ) {
@@ -225,4 +230,13 @@ std::string Unitsync::GetModArchive( int index )
   if ( !m_loaded ) return "unknown";
   return m_get_mod_archive( index );
 }
+
+std::string Unitsync::GetSideName( const std::string& modname, int index )
+{
+  if ( !m_loaded ) return "unknown";
+  m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
+  ASSERT_LOGIC( m_get_side_count() > index, "Side index too high." );
+  return m_get_side_name( index );
+}
+
 
