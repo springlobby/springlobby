@@ -10,6 +10,8 @@
 #include <wx/button.h>
 #include <wx/stattext.h>
 #include <wx/sizer.h>
+#include <wx/textdlg.h>
+
 #include "battlelistctrl.h"
 
 class Ui;
