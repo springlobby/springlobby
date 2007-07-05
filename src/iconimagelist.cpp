@@ -37,6 +37,8 @@
 
 #include "images/spectator.xpm"
 
+#include "images/colourbox.xpm"
+
 #include "images/unknown_flag.xpm"
 
 #include "flagimages.h"
@@ -74,6 +76,12 @@ IconImageList::IconImageList() : wxImageList(16,16)
 
   Add( wxBitmap(spectator_xpm) );
 
+  for ( int i = 0; i < NUM_COLOUR_ICONS; i++ ) Add( wxBitmap(colourbox_xpm) );
+
+  SetColourIcon( 0, wxColour( 255,   0,   0 ) );
+  SetColourIcon( 1, wxColour(   0, 255,   0 ) );
+  SetColourIcon( 2, wxColour(   0,   0, 255 ) );
+
   Add( wxBitmap(unknown_flag_xpm) );
 
   AddFlagImages( *this );
@@ -81,7 +89,7 @@ IconImageList::IconImageList() : wxImageList(16,16)
 }
 
 
-wxImageList& icons()
+IconImageList& icons()
 {
   static IconImageList m_icons;
   return m_icons;
@@ -138,10 +146,30 @@ int IconImageList::GetBattleStatusIcon( Battle& battle )
 }
 
 
-int IconImageList::GetColorIcon( const int& num )
+int IconImageList::GetColourIcon( const int& num )
 {
-  return -1;
+  ASSERT_LOGIC( num < NUM_COLOUR_ICONS, "Colour index too high" ); 
+  return ICON_COLOURS_START + num;
 }
+
+
+void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
+{
+  int index = GetColourIcon( num );
+  wxImage img( colourbox_xpm );
+
+  img.Replace( 200, 200, 200, colour.Red(), colour.Green(), colour.Blue() );
+
+  int r,g,b;
+  r = colour.Red()+60; g = colour.Green()+60; b = colour.Blue()+60;
+  img.Replace( 255, 255, 255, r>255?255:r, g>255?255:g, b>255?255:b );
+
+  /*r = colour.Red()-60; g = colour.Green()-60; b = colour.Blue()-60;
+  img.Replace( 200, 200, 200, r<0?0:r, g<0?0:g, b<0?0:b );*/
+
+  Replace( index, wxBitmap( img ) );
+}
+
 
 int IconImageList::GetSideIcon( const int& sidenum )
 {

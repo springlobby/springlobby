@@ -110,9 +110,11 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     
   User& user = *((User*)GetItemData( index ));
   
+  icons().SetColourIcon( user.GetBattleStatus().team, wxColour( user.GetBattleStatus().color_r, user.GetBattleStatus().color_g, user.GetBattleStatus().color_b ) );
+
   SetItemImage( index, (user.GetBattleStatus().spectator)?ICON_SPECTATOR:IconImageList::GetReadyIcon( user.GetBattleStatus().ready ) );
   SetItemColumnImage( index, 1, IconImageList::GetSideIcon( user.GetBattleStatus().side ) );
-  SetItemColumnImage( index, 2, IconImageList::GetColorIcon( user.GetBattleStatus().color_index ) );
+  SetItemColumnImage( index, 2, IconImageList::GetColourIcon( user.GetBattleStatus().team ) );
   SetItemColumnImage( index, 3, IconImageList::GetFlagIcon( user.GetCountry() ) );
   SetItemColumnImage( index, 4, IconImageList::GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 5, WX_STRING( user.GetNick() ) );
