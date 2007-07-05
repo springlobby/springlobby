@@ -8,6 +8,7 @@
 #include <wx/imaglist.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
+#include <wx/colour.h>
 
 #include "utils.h"
 
