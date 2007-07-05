@@ -145,7 +145,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
   if ( (cmd.BeforeFirst(' ').Lower() == _("/join")) || (cmd.BeforeFirst(' ').Lower() == _("/j")) ) {
     wxString channel = cmd.AfterFirst(' ');
     wxString pass = channel.AfterFirst(' ');
-    if ( !pass.IsEmpty() ) channel = cmd.BeforeFirst(' ');
+    if ( !pass.IsEmpty() ) channel = channel.BeforeFirst(' ');
     if ( channel.StartsWith(_("#")) ) channel.Remove( 0, 1 );
 
     m_serv->JoinChannel( STL_STRING(channel), STL_STRING(pass) );
