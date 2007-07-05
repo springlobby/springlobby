@@ -48,7 +48,7 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
 {
   //if ( m_battle_tab != NULL ) delete m_battle_tab;
   LeaveCurrentBattle();
-  m_battle_tab = new BattleRoomTab( m_tabs, battle );
+  m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
   m_tabs->InsertPage( 1, m_battle_tab, _T("Battleroom"), true, 1 );
 }
 

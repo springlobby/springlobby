@@ -21,8 +21,8 @@ BEGIN_EVENT_TABLE(MainChatTab, wxPanel)
 END_EVENT_TABLE()
 
 
-MainChatTab::MainChatTab( wxWindow* parent )
-: wxPanel( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr )
+MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
+: wxPanel( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr ),m_ui(ui)
 {
 
   m_newtab_sel = -1;
@@ -61,7 +61,7 @@ MainChatTab::~MainChatTab()
 
 ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
 {
-  ChatPanel* chat = new ChatPanel( m_chat_tabs, channel );
+  ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, channel );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(channel.GetName()), true, 2 );
   return chat;
 }
@@ -81,7 +81,7 @@ ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
     }
   }
 
-  chat = new ChatPanel( m_chat_tabs, server );
+  chat = new ChatPanel( m_chat_tabs, m_ui, server );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, 1 );
 
   return chat;
@@ -89,7 +89,7 @@ ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
 
 ChatPanel* MainChatTab::AddChatPannel( User& user )
 {
-  ChatPanel* chat = new ChatPanel( m_chat_tabs, user );
+  ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, user );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(user.GetNick()), true, 3 );
   return chat;
 }

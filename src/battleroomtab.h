@@ -14,10 +14,12 @@
 #include <wx/button.h>
 #include <wx/statline.h>
 #include <wx/checkbox.h>
+
 #include "battle.h"
 #include "battleroomlistctrl.h"
 #include "chatpanel.h"
 
+class Ui;
 
 const wxString team_choices[] = { _("1"), _("2"), _("3"), _("4"), _("5"), _("6"), _("7"), _("8"), _("9"), _("10"), _("11"), _("12"), _("13"), _("14"), _("15"), _("16") };
 
@@ -25,7 +27,7 @@ const wxString team_choices[] = { _("1"), _("2"), _("3"), _("4"), _("5"), _("6")
 class BattleRoomTab : public wxPanel
 {
   public:
-    BattleRoomTab( wxWindow* parent, Battle& battle );
+    BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle );
      ~BattleRoomTab();
   
     // BattleRoomTab interface
@@ -43,6 +45,7 @@ class BattleRoomTab : public wxPanel
   protected:
     // BattleRoomTab variables
   
+    Ui& m_ui;
     Battle& m_battle;
   
     wxBoxSizer* m_players_sizer;

@@ -8,11 +8,14 @@
 #include "chatpanel.h"
 #include <wx/notebook.h>
 
+class Ui;
+
+
 //! @brief The main chat tab.
 class MainChatTab : public wxPanel
 {
   public:
-    MainChatTab( wxWindow* parent );
+    MainChatTab( wxWindow* parent, Ui& ui );
     ~MainChatTab();
 
     // MainChatWindow interface
@@ -28,6 +31,9 @@ class MainChatTab : public wxPanel
 
   protected:
     // MainChatWindow variables
+
+    Ui& m_ui;
+
     wxWindow* m_close_window;
     wxNotebook* m_chat_tabs;
     wxBoxSizer* m_main_sizer;

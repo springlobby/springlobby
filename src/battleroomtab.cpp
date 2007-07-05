@@ -3,6 +3,7 @@
 //
 
 #include "battleroomtab.h"
+#include "ui.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -12,7 +13,7 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 END_EVENT_TABLE()
 
 
-BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle ) : wxPanel( parent, -1 ), m_battle(battle) 
+BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPanel( parent, -1 ),m_ui(ui), m_battle(battle) 
 {
   // Create all widgets
   m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
@@ -30,7 +31,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle ) : wxPanel( pare
   m_map_lbl = new wxStaticText( this, -1, _("$Mapname") );
 
   m_players = new BattleroomListCtrl( m_player_panel );
-  m_chat = new ChatPanel( m_splitter, battle );
+  m_chat = new ChatPanel( m_splitter, m_ui, battle );
 
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 

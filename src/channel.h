@@ -58,6 +58,9 @@ class Channel : public UserList
     std::string GetTopic();
     std::string GetTopicSetBy();
   
+
+    bool ExecuteSayCommand( const std::string& cmd ) { return false; }
+
   protected:
     
     // Channel variables

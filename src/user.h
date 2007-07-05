@@ -92,6 +92,8 @@ class User
     Battle* GetBattle();
     void SetBattle( Battle* battle );
     
+    bool ExecuteSayCommand( const std::string& cmd ) { return false; }
+
   protected:
     // User variables
   

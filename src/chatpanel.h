@@ -22,8 +22,6 @@
 #include "utils.h"
 
 
-#define SERVER_CHAT_NAME "$server"
-
 enum ChatPanelType {
   CPT_Channel,
   CPT_Server,
@@ -34,6 +32,7 @@ enum ChatPanelType {
 class Channel;
 class Server;
 class Battle;
+class Ui;
 
   
 /*! @brief wxPanel that contains a chat.
@@ -48,10 +47,10 @@ class ChatPanel : public wxPanel
 {
   public:
     //ChatPanel( wxWindow* parent, bool show_nick_list );
-    ChatPanel( wxWindow* parent, Channel& chan );
-    ChatPanel( wxWindow* parent, User& user );
-    ChatPanel( wxWindow* parent, Server& serv );
-    ChatPanel( wxWindow* parent, Battle& battle );
+    ChatPanel( wxWindow* parent, Ui& ui, Channel& chan );
+    ChatPanel( wxWindow* parent, Ui& ui,  User& user );
+    ChatPanel( wxWindow* parent, Ui& ui,  Server& serv );
+    ChatPanel( wxWindow* parent, Ui& ui,  Battle& battle );
     ~ChatPanel();
   
     // ChatPanel interface
@@ -103,6 +102,7 @@ class ChatPanel : public wxPanel
   
     wxButton* m_say_button;     //!< The say button.
   
+    Ui& m_ui;
     Channel* m_channel;         //!< Channel object.
     Server* m_server;           //!< Server object.
     User* m_user;               //!< User object.

@@ -32,6 +32,8 @@ class Ui
   
     // Ui interface
   
+    bool ExecuteSayCommand( const wxString& cmd );
+
     void ShowMainWindow();
     void ShowConnectWindow();
     void Connect();

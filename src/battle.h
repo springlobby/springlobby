@@ -164,6 +164,7 @@ class Battle : public UserList
     
     bool IsSynced();
 
+    bool ExecuteSayCommand( const std::string& cmd ) { return false; }
     
   /*
     DISABLEUNITS unitname1 unitname2

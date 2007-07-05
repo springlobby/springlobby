@@ -67,7 +67,7 @@ MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby
   m_func_tab_images->Add( wxIcon(options_icon_xpm) );
 
   m_func_tabs->AssignImageList( m_func_tab_images );
-  m_chat_tab = new MainChatTab( m_func_tabs );
+  m_chat_tab = new MainChatTab( m_func_tabs, m_ui );
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
 

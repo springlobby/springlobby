@@ -138,6 +138,31 @@ void Ui::ShowMessage( const wxString& heading, const wxString& message )
 }
 
 
+bool Ui::ExecuteSayCommand( const wxString& cmd )
+{
+
+  if ( !IsConnected() ) return false;
+  if ( (cmd.BeforeFirst(' ').Lower() == _("/join")) || (cmd.BeforeFirst(' ').Lower() == _("/j")) ) {
+    wxString channel = cmd.AfterFirst(' ');
+    wxString pass = channel.AfterFirst(' ');
+    if ( !pass.IsEmpty() ) channel = cmd.BeforeFirst(' ');
+    if ( channel.StartsWith(_("#")) ) channel.Remove( 0, 1 );
+
+    m_serv->JoinChannel( STL_STRING(channel), STL_STRING(pass) );
+    return true;
+  }
+  return false;
+}
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// EVENTS
+////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void Ui::OnUpdate()
 {
   if ( m_serv != NULL ) {
