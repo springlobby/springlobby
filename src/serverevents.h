@@ -58,7 +58,7 @@ class ServerEvents
     void OnChannelTopic( const std::string& channel, const std::string& who, const std::string& message, int when );
     void OnChannelAction( const std::string& channel, const std::string& who, const std::string& action );
     void OnChannelList( const std::string& channel, const int& numusers );
-    void OnPrivateMessage( const std::string& user, const std::string& message );
+    void OnPrivateMessage( const std::string& user, const std::string& message, bool fromme = false );
     
     void OnRequestBattleStatus( int battleid );
     void OnSaidBattle( int battleid, const std::string& nick, const std::string& msg );

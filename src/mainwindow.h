@@ -35,6 +35,7 @@ class MainWindow : public wxFrame
     void ShowConfigure();
 
     void OnMenuJoin( wxCommandEvent& event );
+    void OnMenuChat( wxCommandEvent& event );
     void OnMenuConnect( wxCommandEvent& event );
     void OnMenuDisconnect( wxCommandEvent& event );
     void OnMenuQuit( wxCommandEvent& event );
@@ -77,7 +78,8 @@ enum
     MENU_JOIN,
     MENU_TEST,
     MENU_TRAC,
-    MENU_DOC
+    MENU_DOC,
+    MENU_CHAT
 
 };
 

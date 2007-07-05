@@ -5,6 +5,7 @@
 #include <iostream>
 #include "user.h"
 #include "battle.h"
+#include "server.h"
 
 
 void User::Said( const std::string& message )
@@ -14,6 +15,7 @@ void User::Said( const std::string& message )
 
 void User::Say( const std::string& message )
 {
+  m_serv.SayPrivate( m_nick, message );
 }
 
 

@@ -280,11 +280,12 @@ void ServerEvents::OnChannelAction( const std::string& channel, const std::strin
 }
 
 
-void ServerEvents::OnPrivateMessage( const std::string& user, const std::string& message )
+void ServerEvents::OnPrivateMessage( const std::string& user, const std::string& message, bool fromme )
 {
   debug_func( "" ); 
   User& who = m_serv.GetUser( user );
-  m_ui.OnUserSaid( who, message );
+  m_ui.OnUserSaid( who, message, fromme );
+
 }
 
 void ServerEvents::OnChannelList( const std::string& channel, const int& numusers )

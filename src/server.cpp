@@ -62,7 +62,7 @@ bool Server::BattleExists( const int& battleid )
 User& Server::_AddUser( const std::string& user )
 {
   if ( m_users.UserExists( user ) ) return m_users.GetUser( user );
-  User* u = new User( user );
+  User* u = new User( user, *this );
   m_users.AddUser( *u );
   return *u;
 }

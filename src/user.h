@@ -7,6 +7,9 @@
 
 #include <string>
 
+class Server;
+
+
 #define RANK_0 100
 #define RANK_1 200
 #define RANK_2 300
@@ -59,10 +62,10 @@ class User
     
     UiUserData uidata;
     
-    User(): m_cpu(0), m_battle(NULL) {}
-    User( const std::string& nick ) : m_nick(nick), m_cpu(0), m_battle(NULL) {}
-    User( const std::string& nick, const std::string& country, const int& cpu) :
-      m_nick(nick), m_country(country), m_cpu(cpu), m_battle(NULL) {}
+    User( Server& serv ): m_serv(serv),m_cpu(0), m_battle(NULL) {}
+    User( const std::string& nick, Server& serv ) : m_serv(serv),m_nick(nick), m_cpu(0), m_battle(NULL) {}
+    User( const std::string& nick, const std::string& country, const int& cpu, Server& serv) :
+      m_serv(serv),m_nick(nick), m_country(country), m_cpu(cpu), m_battle(NULL) {}
         
     virtual ~User() {}
   
@@ -97,6 +100,7 @@ class User
   protected:
     // User variables
   
+    Server& m_serv;
     std::string m_nick;
     std::string m_country;
     int m_cpu;

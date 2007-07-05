@@ -19,6 +19,7 @@
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
   EVT_MENU( MENU_JOIN, MainWindow::OnMenuJoin )
+  EVT_MENU( MENU_CHAT, MainWindow::OnMenuChat )
   EVT_MENU( MENU_CONNECT, MainWindow::OnMenuConnect )
   EVT_MENU( MENU_DISCONNECT, MainWindow::OnMenuDisconnect )
   EVT_MENU( MENU_QUIT, MainWindow::OnMenuQuit )
@@ -43,6 +44,7 @@ MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby
 
   wxMenu *menuTools = new wxMenu;
   menuTools->Append(MENU_JOIN, _T("&Join channel..."));
+  menuTools->Append(MENU_CHAT, _T("Open &chat..."));
   menuTools->AppendSeparator();
   menuTools->Append(MENU_TEST, _T("&Test unitsync"));
 
@@ -158,6 +160,20 @@ void MainWindow::OnMenuJoin( wxCommandEvent& event )
   wxString answer;
   if ( Ui::AskText( _T("Join channel..."), _T("Name of channel to join"), answer ) ) {
     m_ui.JoinChannel( answer, _("") );
+  }
+
+}
+
+
+void MainWindow::OnMenuChat( wxCommandEvent& event )
+{
+
+  if ( !m_ui.IsConnected() ) return;
+  wxString answer;
+  if ( Ui::AskText( _T("Open Private Chat..."), _T("Name of user"), answer ) ) {
+    if (m_ui.GetServer().UserExists( STL_STRING(answer) ) ) {
+      OpenPrivateChat( m_ui.GetServer().GetUser( STL_STRING(answer) ) );
+    }
   }
 
 }

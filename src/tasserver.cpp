@@ -297,10 +297,14 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     while ( (nick = GetWordParam( params )) != "" ) {
       m_se->OnChannelJoin( channel, nick );
     }
+  } else if ( cmd == "SAYPRIVATE" ) {
+    nick = GetWordParam( params );
+    msg = GetSentenceParam( params );
+    m_se->OnPrivateMessage( nick, msg, true );
   } else if ( cmd == "SAIDPRIVATE" ) {
     nick = GetWordParam( params );
     msg = GetSentenceParam( params );
-    m_se->OnPrivateMessage( nick, msg );
+    m_se->OnPrivateMessage( nick, msg, false );
   } else if ( cmd == "JOINBATTLE" ) {
     id = GetIntParam( params );
     metal = GetIntParam( params );
@@ -532,7 +536,7 @@ void TASServer::SayPrivate( const std::string& nick, const std::string& msg )
   assert( IsOnline() );
   assert( m_sock != NULL );
   
-  m_sock->Send( "SAYPRIVARE " + nick + " " + msg + "\n" );
+  m_sock->Send( "SAYPRIVATE " + nick + " " + msg + "\n" );
 }
 
 

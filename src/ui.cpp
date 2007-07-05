@@ -314,12 +314,13 @@ void Ui::OnMotd( Server& server, const std::string& message )
   if ( server.uidata.panel != NULL ) server.uidata.panel->Motd( WX_STRING(message) );  
 }
 
-void Ui::OnUserSaid( User& user, const std::string message )
+void Ui::OnUserSaid( User& user, const std::string message, bool fromme )
 {
   if ( user.uidata.panel == NULL ) {
     m_main_win->OpenPrivateChat( user );
   }
-  user.uidata.panel->Said( WX_STRING(user.GetNick()), WX_STRING(message) );
+  if ( fromme ) user.uidata.panel->Said( WX_STRING(m_serv->GetMe().GetNick()), WX_STRING(message) );
+  else user.uidata.panel->Said( WX_STRING(user.GetNick()), WX_STRING(message) );
 }
 
 

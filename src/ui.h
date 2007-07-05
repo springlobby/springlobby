@@ -32,6 +32,8 @@ class Ui
   
     // Ui interface
   
+    Server& GetServer() { ASSERT_LOGIC( m_serv != NULL, "m_serv NULL!" ); return *m_serv; }
+
     bool ExecuteSayCommand( const wxString& cmd );
 
     void ShowMainWindow();
@@ -74,7 +76,7 @@ class Ui
     void OnUserOnline( User& user );
     void OnUserOffline( User& user );
     void OnUserStatusChanged( User& user );
-    void OnUserSaid( User& user, const std::string message );
+    void OnUserSaid( User& user, const std::string message, bool me = false );
 
     void OnUnknownCommand( Server& server, const std::string& command, const std::string& params );
     void OnMotd( Server& server, const std::string& message );
