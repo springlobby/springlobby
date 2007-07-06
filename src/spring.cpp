@@ -57,9 +57,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   int NumTeams=0, NumAllys=0, LastOrder=-1,Lowest=-1;
   int PlayerOrder[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int TeamConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-  int TeamRevConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int AllyConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-  int AllyRevConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
   for ( int i = 0; i < battle.GetNumUsers(); i++ ) {
     Lowest = -1;
@@ -114,10 +112,10 @@ wxString Spring::GetScriptTxt( Battle& battle )
   for ( int i = 0; i < battle.GetNumUsers(); i++ ) {
     s += wxString::Format( _("\t[PLAYER%d]\n"), i );
     s += wxString::Format( _("\t{\n") );
-    s += wxString::Format( _("\t\tname=%s;\n"), battle.GetUser( i ).GetNick().c_str() );
-    s += wxString::Format( _("\t\tSpectator=%d;\n"), battle.GetUser( i ).GetBattleStatus().spectator?1:0 );
+    s += wxString::Format( _("\t\tname=%s;\n"), battle.GetUser( PlayerOrder[i] ).GetNick().c_str() );
+    s += wxString::Format( _("\t\tSpectator=%d;\n"), battle.GetUser( PlayerOrder[i] ).GetBattleStatus().spectator?1:0 );
     if ( !battle.GetUser( i ).GetBattleStatus().spectator ) {
-      s += wxString::Format( _("\t\tteam=%d;\n"), TeamConv[battle.GetUser( i ).GetBattleStatus().team] );
+      s += wxString::Format( _("\t\tteam=%d;\n"), TeamConv[battle.GetUser( PlayerOrder[i] ).GetBattleStatus().team] );
     }
     s += wxString::Format( _("\t}\n") );
   }

@@ -12,6 +12,9 @@ BEGIN_EVENT_TABLE(BattleListCtrl, wxListCtrl)
   EVT_LIST_ITEM_SELECTED   ( BLIST_LIST, BattleListCtrl::OnSelected )
   EVT_LIST_ITEM_DESELECTED ( BLIST_LIST, BattleListCtrl::OnDeselected )
   EVT_LIST_DELETE_ITEM     ( BLIST_LIST, BattleListCtrl::OnDeselected )
+  EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
+  EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
+  EVT_MENU                 ( BLIST_DLMOD, BattleListCtrl::OnDLMod )
 
 END_EVENT_TABLE()
 
@@ -78,6 +81,10 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, BLIST_LI
   SetColumnWidth( 7, 26 );
   SetColumnWidth( 8, 26 );
   SetColumnWidth( 9, 26 );
+
+  m_popup = new wxMenu( _("") );
+  m_popup->Append( BLIST_DLMAP, _T("Download &map") );
+  m_popup->Append( BLIST_DLMOD, _T("Download m&od") );
 }
 
 
@@ -197,4 +204,29 @@ int BattleListCtrl::GetSelectedIndex()
   return m_selected;
 }
 
+
+void BattleListCtrl::OnListRightClick( wxListEvent& event )
+{
+  PopupMenu( m_popup );
+}
+
+
+void BattleListCtrl::OnDLMap( wxCommandEvent& event )
+{
+  if ( m_selected >= 0 ) {
+    Battle& battle = *((Battle*)GetItemData( m_selected ));
+    wxString url = _("http://spring.unknown-files.net/page/search/1/13/") + RefineMapname( WX_STRING(battle.opts().mapname) ) + _("/");
+    wxLaunchDefaultBrowser( url );
+  }
+}
+
+
+void BattleListCtrl::OnDLMod( wxCommandEvent& event )
+{
+  if ( m_selected >= 0 ) {
+    Battle& battle = *((Battle*)GetItemData( m_selected ));
+    wxString url = _("http://spring.unknown-files.net/page/search/1/14/") + WX_STRING(battle.opts().modname) + _("/");
+    wxLaunchDefaultBrowser( url );
+  }
+}
 
