@@ -225,8 +225,11 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
     Battle& battle = *((Battle*)GetItemData( m_selected ));
     wxString map = WX_STRING(battle.opts().mapname);
     map = map.SubString(0, map.Find( '.', true ) - 1 );
+    map.Replace(_(" "), _("%20") );
     wxString url = _("http://spring.unknown-files.net/page/search/1/13/") + map + _("/");
-    wxLaunchDefaultBrowser( url );
+    if ( !wxLaunchDefaultBrowser( url ) ) {
+      wxMessageBox( _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+    }
   }
 }
 
@@ -235,7 +238,9 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
 {
   if ( m_selected >= 0 ) {
     Battle& battle = *((Battle*)GetItemData( m_selected ));
-    wxString url = _("http://spring.unknown-files.net/page/search/1/14/") + WX_STRING(battle.opts().modname) + _("/");
+    wxString mod = WX_STRING(battle.opts().modname);
+    mod.Replace(_(" "), _("%20") );
+    wxString url = _("http://spring.unknown-files.net/page/search/1/14/") + mod + _("/");
     wxLaunchDefaultBrowser( url );
   }
 }

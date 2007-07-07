@@ -9,6 +9,7 @@
 #include <wx/intl.h>
 #include <wx/menu.h>
 #include <wx/utils.h>
+#include <wx/msgdlg.h>
 
 #include "iconimagelist.h"
 #include "battle.h"
