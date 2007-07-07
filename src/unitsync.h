@@ -119,6 +119,7 @@ public:
   UnitsyncMap GetMap( const std::string& mapname );
   int GetMapIndex( const std::string& name );
 
+  int GetSideCount( const std::string& modname );
   std::string GetSideName( const std::string& modname, int index );
 
   bool LoadUnitsyncLib();

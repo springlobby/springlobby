@@ -22,6 +22,17 @@
 class Ui;
 
 const wxString team_choices[] = { _("1"), _("2"), _("3"), _("4"), _("5"), _("6"), _("7"), _("8"), _("9"), _("10"), _("11"), _("12"), _("13"), _("14"), _("15"), _("16") };
+const wxString colour_choices[] = { 
+  _("black"), _("dark gray"), _("dark blue"), _("bright blue"), _("dark green"),
+  _("bright green"), _("dark cyan"), _("bright cyan"), _("dark red"), _("bright red"),
+  _("dark magenta"), _("bright magenta"), _("dark yellow"), _("bright yellow"),
+  _("light gray"), _("white") 
+};
+
+const int colour_values[][3] = { {0,0,0}, {128, 128, 128}, {0, 0, 128}, {0, 0, 255},
+  {0, 128, 0}, {0, 255, 0}, {0, 128, 128}, {0, 255, 255}, {128, 0, 0}, {255, 0, 0},
+  {128, 0, 128}, {255, 0, 255}, {128, 128, 0}, {255, 255, 0}, {192, 192, 192}, {255, 255, 255}
+};
 
 
 class BattleRoomTab : public wxPanel
@@ -40,6 +51,8 @@ class BattleRoomTab : public wxPanel
    void OnImReady( wxCommandEvent& event );
    void OnTeamSel( wxCommandEvent& event );
    void OnAllySel( wxCommandEvent& event );
+   void OnColourSel( wxCommandEvent& event );
+   void OnSideSel( wxCommandEvent& event );
    
    void OnUserJoined( User& user );
    void OnUserLeft( User& user );
@@ -89,7 +102,9 @@ enum
     BROOM_LEAVE = wxID_HIGHEST,
     BROOM_IMREADY,
     BROOM_TEAMSEL,
-    BROOM_ALLYSEL
+    BROOM_ALLYSEL,
+    BROOM_COLOURSEL,
+    BROOM_SIDESEL
 };
 
 #endif  //_BATTLEROOMTAB_H_

@@ -225,11 +225,21 @@ int Unitsync::GetMapIndex( const std::string& name )
   return -1;
 }
 
+
 std::string Unitsync::GetModArchive( int index )
 {
   if ( !m_loaded ) return "unknown";
   return m_get_mod_archive( index );
 }
+
+
+int Unitsync::GetSideCount( const std::string& modname )
+{
+  if ( !m_loaded ) return 0;
+  m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
+  return m_get_side_count();
+}
+
 
 std::string Unitsync::GetSideName( const std::string& modname, int index )
 {

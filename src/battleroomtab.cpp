@@ -11,6 +11,8 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
   EVT_CHECKBOX( BROOM_IMREADY, BattleRoomTab::OnImReady )
   EVT_COMBOBOX( BROOM_TEAMSEL, BattleRoomTab::OnTeamSel )
   EVT_COMBOBOX( BROOM_ALLYSEL, BattleRoomTab::OnAllySel )
+  EVT_COMBOBOX( BROOM_COLOURSEL, BattleRoomTab::OnColourSel )
+  EVT_COMBOBOX( BROOM_SIDESEL, BattleRoomTab::OnSideSel )
 
 END_EVENT_TABLE()
 
@@ -23,8 +25,12 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_player_panel = new wxPanel( m_splitter , -1 );
   m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxDefaultSize, 16, team_choices );
   m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxDefaultSize, 16, team_choices );
-  m_color_sel = new wxComboBox( m_player_panel, -1, _T("White") );
-  m_side_sel = new wxComboBox( m_player_panel, -1, _T("Arm") );
+  m_color_sel = new wxComboBox( m_player_panel, BROOM_COLOURSEL, _T("black"), wxDefaultPosition, wxDefaultSize, 16, colour_choices );
+  m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL );
+
+  for ( int i = 0; i < usync().GetSideCount( battle.opts().modname ); i++ ) {
+    m_side_sel->Append( WX_STRING(usync().GetSideName( battle.opts().modname, i )) );
+  }
 
   m_team_lbl = new wxStaticText( m_player_panel, -1, _T("Team") );
   m_ally_lbl = new wxStaticText( m_player_panel, -1, _T("Ally") );
@@ -40,7 +46,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_leave_btn = new wxButton( this, BROOM_LEAVE, _T("Leave"), wxDefaultPosition, wxSize(80,28) );
   m_start_btn = new wxButton( this, -1, _T("Start"), wxDefaultPosition, wxSize(80,28) );
 
-  m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _T("Im ready"), wxDefaultPosition, wxSize(80,28) );
+  m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _T("I'm ready"), wxDefaultPosition, wxSize(80,28) );
   
   // Create Sizers
   m_players_sizer = new wxBoxSizer( wxVERTICAL );
@@ -130,6 +136,29 @@ void BattleRoomTab::OnAllySel( wxCommandEvent& event )
   UserBattleStatus bs = u.GetBattleStatus();
   m_ally_sel->GetValue().ToULong( (unsigned long*)&bs.ally );
   bs.ally--;
+  u.SetBattleStatus( bs );
+  m_battle.SendMyBattleStatus();
+}
+
+
+void BattleRoomTab::OnColourSel( wxCommandEvent& event )
+{
+  User& u = m_battle.GetMe();
+  UserBattleStatus bs = u.GetBattleStatus();
+  int i = m_color_sel->GetSelection();
+  bs.color_r = colour_values[i][0];
+  bs.color_g = colour_values[i][1];
+  bs.color_b = colour_values[i][2];
+  u.SetBattleStatus( bs );
+  m_battle.SendMyBattleStatus();
+}
+
+
+void BattleRoomTab::OnSideSel( wxCommandEvent& event )
+{
+  User& u = m_battle.GetMe();
+  UserBattleStatus bs = u.GetBattleStatus();
+  bs.side = m_color_sel->GetSelection();
   u.SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
 }
