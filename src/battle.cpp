@@ -101,6 +101,13 @@ bool Battle::IsModAvailable()
 }
 
 
+User& Battle::GetMe()
+{
+  return m_serv.GetMe();
+}
+
+
+
 bool Battle::IsFounderMe()
 {
   return (m_opts.founder == m_serv.GetMe().GetNick());

@@ -39,7 +39,7 @@ class MainWindow : public wxFrame
     void OnMenuConnect( wxCommandEvent& event );
     void OnMenuDisconnect( wxCommandEvent& event );
     void OnMenuQuit( wxCommandEvent& event );
-    void OnMenuTest( wxCommandEvent& event );
+    void OnUnitsyncReload( wxCommandEvent& event );
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
 
@@ -76,7 +76,7 @@ enum
     MENU_CONNECT = wxID_HIGHEST,
     MENU_DISCONNECT,
     MENU_JOIN,
-    MENU_TEST,
+    MENU_USYNC,
     MENU_TRAC,
     MENU_DOC,
     MENU_CHAT

@@ -129,7 +129,7 @@ class Battle : public UserList
     void SetImReady( bool ready );
     
     User& GetFounder() { return GetUser( m_opts.founder ); }
-    
+    User& GetMe();
     bool IsFounderMe();
 
     int GetMyPlayerNum();

@@ -23,7 +23,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_CONNECT, MainWindow::OnMenuConnect )
   EVT_MENU( MENU_DISCONNECT, MainWindow::OnMenuDisconnect )
   EVT_MENU( MENU_QUIT, MainWindow::OnMenuQuit )
-  EVT_MENU( MENU_TEST, MainWindow::OnMenuTest )
+  EVT_MENU( MENU_USYNC, MainWindow::OnUnitsyncReload )
   EVT_MENU( MENU_TRAC, MainWindow::OnReportBug )
   EVT_MENU( MENU_DOC, MainWindow::OnShowDocs )
 
@@ -46,7 +46,7 @@ MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby
   menuTools->Append(MENU_JOIN, _T("&Join channel..."));
   menuTools->Append(MENU_CHAT, _T("Open &chat..."));
   menuTools->AppendSeparator();
-  menuTools->Append(MENU_TEST, _T("&Test unitsync"));
+  menuTools->Append(MENU_USYNC, _T("&Reload unitsync"));
 
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _T("&About"));
@@ -196,12 +196,11 @@ void MainWindow::OnMenuQuit( wxCommandEvent& event )
   m_ui.Quit();
 }
 
-void MainWindow::OnMenuTest( wxCommandEvent& event )
+void MainWindow::OnUnitsyncReload( wxCommandEvent& event )
 {
-  Unitsync* sync = new Unitsync();
-  sync->LoadUnitsyncLib();
-  sync->FreeUnitsyncLib();
-  delete sync;
+  usync().FreeUnitsyncLib();
+  usync().LoadUnitsyncLib();
+  m_join_tab->GetBattleListTab().UpdateList();
 }
 
 

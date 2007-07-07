@@ -94,6 +94,14 @@ BattleListCtrl::~BattleListCtrl()
 }
 
 
+void BattleListCtrl::UpdateList()
+{
+  for ( int i = 0; i < GetItemCount(); i++ ) {
+    UpdateBattle( i );
+  }
+}
+
+
 void BattleListCtrl::AddBattle( Battle& battle )
 {
   int index = InsertItem( 0, IconImageList::GetBattleStatusIcon( battle ) );
@@ -215,7 +223,9 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 {
   if ( m_selected >= 0 ) {
     Battle& battle = *((Battle*)GetItemData( m_selected ));
-    wxString url = _("http://spring.unknown-files.net/page/search/1/13/") + RefineMapname( WX_STRING(battle.opts().mapname) ) + _("/");
+    wxString map = WX_STRING(battle.opts().mapname);
+    map = map.SubString(0, map.Find( '.', true ) - 1 );
+    wxString url = _("http://spring.unknown-files.net/page/search/1/13/") + map + _("/");
     wxLaunchDefaultBrowser( url );
   }
 }

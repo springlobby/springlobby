@@ -9,6 +9,8 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
   EVT_BUTTON ( BROOM_LEAVE, BattleRoomTab::OnLeave )
   EVT_CHECKBOX( BROOM_IMREADY, BattleRoomTab::OnImReady )
+  EVT_COMBOBOX( BROOM_TEAMSEL, BattleRoomTab::OnTeamSel )
+  EVT_COMBOBOX( BROOM_ALLYSEL, BattleRoomTab::OnAllySel )
 
 END_EVENT_TABLE()
 
@@ -19,8 +21,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
 
   m_player_panel = new wxPanel( m_splitter , -1 );
-  m_team_sel = new wxComboBox( m_player_panel, -1, _T("1"), wxDefaultPosition, wxDefaultSize, 16, team_choices );
-  m_ally_sel = new wxComboBox( m_player_panel, -1, _T("1"), wxDefaultPosition, wxDefaultSize, 16, team_choices );
+  m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxDefaultSize, 16, team_choices );
+  m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxDefaultSize, 16, team_choices );
   m_color_sel = new wxComboBox( m_player_panel, -1, _T("White") );
   m_side_sel = new wxComboBox( m_player_panel, -1, _T("Arm") );
 
@@ -108,6 +110,28 @@ void BattleRoomTab::OnLeave( wxCommandEvent& event )
 void BattleRoomTab::OnImReady( wxCommandEvent& event )
 {
   m_battle.SetImReady( m_ready_chk->GetValue() );
+}
+
+
+void BattleRoomTab::OnTeamSel( wxCommandEvent& event )
+{
+  User& u = m_battle.GetMe();
+  UserBattleStatus bs = u.GetBattleStatus();
+  m_team_sel->GetValue().ToULong( (unsigned long*)&bs.team );
+  bs.team--;
+  u.SetBattleStatus( bs );
+  m_battle.SendMyBattleStatus();
+}
+
+
+void BattleRoomTab::OnAllySel( wxCommandEvent& event )
+{
+  User& u = m_battle.GetMe();
+  UserBattleStatus bs = u.GetBattleStatus();
+  m_ally_sel->GetValue().ToULong( (unsigned long*)&bs.ally );
+  bs.ally--;
+  u.SetBattleStatus( bs );
+  m_battle.SendMyBattleStatus();
 }
 
 

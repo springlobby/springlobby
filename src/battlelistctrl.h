@@ -28,6 +28,8 @@ class BattleListCtrl : public wxListCtrl
     void UpdateBattle( const int& index );
     bool BattleExists( Battle& battle );
   
+    void UpdateList();
+    
     int GetBattleIndex( Battle& battle );
     
     static wxString RefineMapname( wxString mapname );

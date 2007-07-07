@@ -28,6 +28,8 @@ class BattleListTab : public wxPanel
     void RemoveBattle( Battle& battle );
     void UpdateBattle( Battle& battle );
   
+    void UpdateList() { m_battle_list->UpdateList(); }
+    
     void OnJoin( wxCommandEvent& event );
     void OnListJoin( wxListEvent& event );
   protected:

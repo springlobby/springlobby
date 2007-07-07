@@ -77,6 +77,12 @@ BattleroomListCtrl::~BattleroomListCtrl()
 }
 
 
+void BattleroomListCtrl::UpdateList()
+{
+  
+}
+
+
 void BattleroomListCtrl::AddUser( User& user )
 {
   int index = InsertItem( 0, ICON_NREADY );

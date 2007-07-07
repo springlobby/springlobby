@@ -38,6 +38,8 @@ class BattleRoomTab : public wxPanel
    
    void OnLeave( wxCommandEvent& event );
    void OnImReady( wxCommandEvent& event );
+   void OnTeamSel( wxCommandEvent& event );
+   void OnAllySel( wxCommandEvent& event );
    
    void OnUserJoined( User& user );
    void OnUserLeft( User& user );
@@ -85,7 +87,9 @@ class BattleRoomTab : public wxPanel
 enum
 {
     BROOM_LEAVE = wxID_HIGHEST,
-    BROOM_IMREADY
+    BROOM_IMREADY,
+    BROOM_TEAMSEL,
+    BROOM_ALLYSEL
 };
 
 #endif  //_BATTLEROOMTAB_H_

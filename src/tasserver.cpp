@@ -201,7 +201,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
       m_ser_ver = SER_VER_0_34;
     else
       m_ser_ver = SER_VER_BAD;
-    m_se->OnConnected( "TASServer", mod, (m_ser_ver > 0) );
+    m_se->OnConnected( "TAS Server", mod, (m_ser_ver > 0) );
     
   } else if ( cmd == "ACCEPTED" ) {
     m_online = true;

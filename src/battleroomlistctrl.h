@@ -23,6 +23,8 @@ class BattleroomListCtrl : public wxListCtrl
     void UpdateUser( const int& index );
     void UpdateUser( User& user );
     
+    void UpdateList();
+    
     int GetUserIndex( User& user );
     
   protected:
