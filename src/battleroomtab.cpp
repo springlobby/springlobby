@@ -107,6 +107,19 @@ BattleRoomTab::~BattleRoomTab()
 }
 
 
+void BattleRoomTab::UpdateUser( User& user )
+{
+  m_players->UpdateUser( user );
+  if ( &user != &m_battle.GetMe() ) return;
+
+  UserBattleStatus bs = user.GetBattleStatus();
+  m_team_sel->SetSelection( bs.team );
+  m_ally_sel->SetSelection( bs.ally );
+  m_side_sel->SetSelection( bs.side );
+
+}
+
+
 void BattleRoomTab::OnLeave( wxCommandEvent& event )
 {
   m_battle.Leave();

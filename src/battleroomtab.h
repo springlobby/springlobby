@@ -26,12 +26,12 @@ const wxString colour_choices[] = {
   _("black"), _("dark gray"), _("dark blue"), _("bright blue"), _("dark green"),
   _("bright green"), _("dark cyan"), _("bright cyan"), _("dark red"), _("bright red"),
   _("dark magenta"), _("bright magenta"), _("dark yellow"), _("bright yellow"),
-  _("light gray"), _("white") 
+  _("light gray"), _("inky blue") 
 };
 
 const int colour_values[][3] = { {0,0,0}, {128, 128, 128}, {0, 0, 128}, {0, 0, 255},
   {0, 128, 0}, {0, 255, 0}, {0, 128, 128}, {0, 255, 255}, {128, 0, 0}, {255, 0, 0},
-  {128, 0, 128}, {255, 0, 255}, {128, 128, 0}, {255, 255, 0}, {192, 192, 192}, {255, 255, 255}
+  {128, 0, 128}, {255, 0, 255}, {128, 128, 0}, {255, 255, 0}, {192, 192, 192}, {0, 220, 250}
 };
 
 
@@ -44,6 +44,8 @@ class BattleRoomTab : public wxPanel
     // BattleRoomTab interface
    BattleroomListCtrl& GetPlayersListCtrl() { assert( m_players != NULL); return *m_players; }
    
+   void UpdateUser( User& user );
+
    Battle& GetBattle() { return m_battle; }
    ChatPanel& GetChatPanel() { return *m_chat; }
    

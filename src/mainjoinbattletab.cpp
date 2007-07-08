@@ -66,6 +66,6 @@ void MainJoinBattleTab::LeaveCurrentBattle()
 void MainJoinBattleTab::BattleUserUpdated( User& user )
 {
   assert( m_battle_tab != NULL );
-  m_battle_tab->GetPlayersListCtrl().UpdateUser( user );
+  m_battle_tab->UpdateUser( user );
 }
 
