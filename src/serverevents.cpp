@@ -314,4 +314,19 @@ void ServerEvents::OnBattleAction( int battleid, const std::string& nick, const 
 }
 
 
+void ServerEvents::OnBattleStartRectAdd( int battleid, int allyno, int left, int top, int right, int bottom )
+{
+  Battle& battle = m_serv.GetBattle( battleid );
+  battle.AddStartRect( allyno, left, top, right, bottom );
+  m_ui.OnBattleStartRectsUpdated( battle );
+}
+
+
+void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
+{
+  Battle& battle = m_serv.GetBattle( battleid );
+  battle.RemoveStartRect( allyno );
+  m_ui.OnBattleStartRectsUpdated( battle );
+}
+
 

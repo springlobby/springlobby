@@ -50,6 +50,8 @@ class ServerEvents
     void OnBattleClosed( int battleid );
     void OnJoinedBattle( int battleid );
     void OnClientBattleStatus( int battleid, const std::string& nick, UserBattleStatus status );
+    void OnBattleStartRectAdd( int battleid, int allyno, int left, int top, int right, int bottom );
+    void OnBattleStartRectRemove( int battleid, int allyno );
     
     void OnJoinChannelResult( bool success, const std::string& channel, const std::string& reason );
     void OnChannelSaid( const std::string& channel, const std::string& who, const std::string& message );

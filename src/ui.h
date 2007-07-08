@@ -87,6 +87,8 @@ class Ui
     void OnUserLeftBattle( Battle& battle, User& user );
     void OnBattleInfoUpdated( Battle& battle );
     void OnBattleStarted( Battle& battle );
+    void OnBattleStartRectsUpdated( Battle& battle );
+
 
     void OnJoinedBattle( Battle& battle );
     void OnUserBattleStatus( Battle& battle, User& user );

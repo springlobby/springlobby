@@ -180,7 +180,8 @@ void TASServer::ExecuteCommand( const std::string& in )
 void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
   std::string params = inparams;
-  int pos, cpu, id, nat, port, maxplayers, rank, specs, metal, energy, units, start;
+  int pos, cpu, id, nat, port, maxplayers, rank, specs, metal, energy, units, start,
+      top, left, right, bottom, ally;
   bool replay, haspass, dgun, ghost, dim, comm;
   std::string hash;
   std::string nick, contry, host, map, title, mod, channel, error, msg;
@@ -340,6 +341,18 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     bstatus.color_g = color.color.green;
     bstatus.color_b = color.color.blue;
     m_se->OnClientBattleStatus( m_battle_id, nick, bstatus );
+  } else if ( cmd == "ADDSTARTRECT" ) {
+    //ADDSTARTRECT allyno left top right bottom
+    ally = GetIntParam( params );
+    left = GetIntParam( params );
+    top = GetIntParam( params );
+    right = GetIntParam( params );
+    bottom = GetIntParam( params );;
+    m_se->OnBattleStartRectAdd( m_battle_id, ally, left, top, right, bottom );
+  } else if ( cmd == "REMOVESTARTRECT" ) {
+    //REMOVESTARTRECT allyno
+    ally = GetIntParam( params );
+    m_se->OnBattleStartRectRemove( m_battle_id, ally );
   } else if ( cmd == "CHANNEL" ) {
     channel = GetWordParam( params );
     units = GetIntParam( params );

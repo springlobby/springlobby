@@ -6,8 +6,9 @@
 #define _BATTLE_H_
 
 #include <wx/string.h>
+#include <vector>
 #include "userlist.h"
-
+#include "utils.h"
 
 class Ui;
 class Server;
@@ -87,12 +88,23 @@ struct BattleOptions
 };
 
 
+struct BattleStartRect
+{
+  int ally;
+  int top;
+  int left;
+  int right;
+  int bottom;
+};
+
+
 class Battle : public UserList
 {
   public:
-    Battle( Server& serv, Ui& ui, const int& id ) : UserList(),m_serv(serv),m_ui(ui),m_order(0) { m_opts.battleid = id; }
+    Battle( Server& serv, Ui& ui, const int& id ) : UserList(),m_serv(serv),m_ui(ui),m_order(0), m_rects(16, NULL) { m_opts.battleid = id; }
     ~Battle() {
       for (int i = 0; i < GetNumUsers(); i++ ) GetUser(i).SetBattle( NULL );
+      ClearStartRects();
     }
   
     const BattleOptions& opts() { return m_opts; }
@@ -133,8 +145,6 @@ class Battle : public UserList
     bool IsFounderMe();
 
     int GetMyPlayerNum();
-    int GetNumTeams();
-    int GetNumAllyTeams();
 
     void AddUser( User& user ) {
       user.SetBattle( this );
@@ -166,6 +176,11 @@ class Battle : public UserList
 
     bool ExecuteSayCommand( const std::string& cmd ) { return false; }
     
+    void AddStartRect( int allyno, int left, int top, int right, int bottom );
+    void RemoveStartRect( int allyno );
+    BattleStartRect* GetStartRect( int allyno ) { ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), "Allyno out of bounds." ); return m_rects[allyno]; }
+    void ClearStartRects();
+
   /*
     DISABLEUNITS unitname1 unitname2
     ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}
@@ -179,6 +194,8 @@ class Battle : public UserList
     Ui& m_ui;
 
     int m_order;
+    
+    std::vector<BattleStartRect*> m_rects;
   
     void RemoveUser( std::string const& user ) {}
 };

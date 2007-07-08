@@ -123,14 +123,30 @@ int Battle::GetMyPlayerNum()
 }
 
 
-int Battle::GetNumTeams()
+void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom )
 {
-  return 0;
+  ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), "Allyno out of bounds." );
+  BattleStartRect* sr;
+  if ( m_rects[allyno] == NULL ) sr = new BattleStartRect();
+  else sr = m_rects[allyno];
+  sr->ally = allyno;
+  sr->left = left;
+  sr->top = top;
+  sr->right = right;
+  sr->bottom = bottom;
+  m_rects[allyno] = sr;
 }
 
 
-int Battle::GetNumAllyTeams()
+void Battle::RemoveStartRect( int allyno )
 {
-  return 0;
+  BattleStartRect* sr = m_rects[allyno];
+  if ( sr == NULL ) return;
+  m_rects[allyno] = NULL;
+  delete sr;
 }
 
+void Battle::ClearStartRects()
+{
+  for ( int i = 0; i < 16; i++ ) RemoveStartRect( i );
+}

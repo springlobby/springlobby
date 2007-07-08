@@ -426,3 +426,13 @@ void Ui::OnSpringTerminated( bool success )
 {
 
 }
+
+
+void Ui::OnBattleStartRectsUpdated( Battle& battle )
+{
+  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+  if ( br != NULL ) {
+    br->GetChatPanel().StatusMessage( _("Start rects updated.") );
+  }
+}
+

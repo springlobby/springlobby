@@ -153,13 +153,28 @@ wxString Spring::GetScriptTxt( Battle& battle )
   for ( int i = 0; i < NumAllys; i++ ) {
     s += wxString::Format( _("\t[ALLYTEAM%d]\n\t{\n"), i );
 
-    int NumInAlly = -1;
-    // Find out how many players in ally;
+    int NumInAlly = 0;
+    /*// Find out how many players in ally;
     for( int an = 0; an < battle.GetNumUsers(); an++ ) {
       if ( TeamConv[battle.GetUser( PlayerOrder[an] ).GetBattleStatus().team] == i ) NumInAlly++;
-    }
-
+    }*/
     s += wxString::Format( _("\t\tNumAllies=%d;\n"), NumInAlly );
+    /*	[ALLYTEAM0]
+	{
+		NumAllies=0;
+		StartRectLeft=0.145;
+		StartRectTop=0.315;
+		StartRectRight=0.505;
+		StartRectBottom=0.645;
+	}*/
+
+    if ( battle.GetStartRect(AllyConv[i]) != NULL ) {
+      BattleStartRect* sr = (BattleStartRect*)battle.GetStartRect(AllyConv[i]);
+      s += wxString::Format( _("\t\tStartRectLeft=%.3f;\n"), sr->left / 200.0 );
+      s += wxString::Format( _("\t\tStartRectTop=%.3f;\n"), sr->top / 200.0 );
+      s += wxString::Format( _("\t\tStartRectRight=%.3f;\n"), sr->right / 200.0 );
+      s += wxString::Format( _("\t\tStartRectBottom=%.3f;\n"), sr->bottom / 200.0 );
+    }
 
     s +=  _("\t}\n");
   }
