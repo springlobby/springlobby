@@ -114,7 +114,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s += wxString::Format( _("\t{\n") );
     s += wxString::Format( _("\t\tname=%s;\n"), battle.GetUser( PlayerOrder[i] ).GetNick().c_str() );
     s += wxString::Format( _("\t\tSpectator=%d;\n"), battle.GetUser( PlayerOrder[i] ).GetBattleStatus().spectator?1:0 );
-    if ( !battle.GetUser( i ).GetBattleStatus().spectator ) {
+    if ( !battle.GetUser( PlayerOrder[i] ).GetBattleStatus().spectator ) {
       s += wxString::Format( _("\t\tteam=%d;\n"), TeamConv[battle.GetUser( PlayerOrder[i] ).GetBattleStatus().team] );
     }
     s += wxString::Format( _("\t}\n") );
@@ -154,19 +154,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s += wxString::Format( _("\t[ALLYTEAM%d]\n\t{\n"), i );
 
     int NumInAlly = 0;
-    /*// Find out how many players in ally;
-    for( int an = 0; an < battle.GetNumUsers(); an++ ) {
-      if ( TeamConv[battle.GetUser( PlayerOrder[an] ).GetBattleStatus().team] == i ) NumInAlly++;
-    }*/
     s += wxString::Format( _("\t\tNumAllies=%d;\n"), NumInAlly );
-    /*	[ALLYTEAM0]
-	{
-		NumAllies=0;
-		StartRectLeft=0.145;
-		StartRectTop=0.315;
-		StartRectRight=0.505;
-		StartRectBottom=0.645;
-	}*/
 
     if ( battle.GetStartRect(AllyConv[i]) != NULL ) {
       BattleStartRect* sr = (BattleStartRect*)battle.GetStartRect(AllyConv[i]);
@@ -191,86 +179,3 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
   return s;
 }
-
-/*
-                    s += "\t\tname="+u.getPlayername ()+";\n";
-                    s += "\t\tSpectator="+BooltoInt (u.isSpec ())+";\n";
-                    if (!u.isSpec ()) {
-                        s += "\t\tteam="+td.GetTeamNo (Misc.getTeamNoFromBattleStatus (u.getBattlestatus ()))+";\n";
-                    }
-                    s += "\t}\n";
-                }
-                
-                // TEAMS
-                s += "\n";
-                //////
-                TreeMap<Integer,TeamEntry> orderedTeams = td.getTeamList ();
-                for (int i=0;i<td.getTeamCount ();i++) {
-                    s += "\t[TEAM"+i+"]\n";
-                    s += "\t{\n";
-                    
-                    
-                    int currentKey = orderedTeams.firstKey ();
-                    TeamEntry te = orderedTeams.remove (currentKey);
-                    
-                    
-                    s += "\t\tTeamLeader="+te.getTeamLeader ()+";\n";
-                    s += "\t\tAllyTeam="+te.getAllyNo ()+";\n";
-                    
-                    Color col = te.getTeamColor ();
-                    String redCol = ""+(col.getRed ()/255d);
-                    String greenCol = ""+(col.getGreen ()/255d);
-                    String blueCol = ""+(col.getBlue ()/255d);
-                    
-                    if (redCol.length () > 7) redCol = redCol.substring (0,7);
-                    if (greenCol.length () > 7) greenCol = greenCol.substring (0,7);
-                    if (blueCol.length () > 7) blueCol = blueCol.substring (0,7);
-                    
-                    redCol += getMissingZeros (redCol.length ());
-                    greenCol += getMissingZeros (greenCol.length ());
-                    blueCol += getMissingZeros (blueCol.length ());
-                    
-                    s += "\t\tRGBColor="+redCol+" "+greenCol+" "+blueCol+";\n";
-                    s += "\t\tSide="+JSync.GetSideName (te.getSide ())+";\n";//JUnitSync.GetSideName (te.getSide ()) 
-                    s += "\t\tHandicap="+te.getHandicap ()+";\n";
-                    
-                    s += "\t}\n";
-                    
-                }
-                
-                // ALLYS
-                
-                TreeMap<Integer,AllyEntry> orderedAllys = ad.getAllyList ();
-                for (int i=0;i<ad.getAllyCount ();i++) {
-                    s += "\t[ALLYTEAM"+i+"]\n";
-                    s += "\t{\n";
-                    
-                    int currentKey = orderedAllys.firstKey ();
-                    AllyEntry te = orderedAllys.remove (currentKey);
-                    
-                    s += "\t\tNumAllies="+0+";\n";
-                    RectEntry re = RectHandler.getRectForAlly (ad.untransform (i));
-                    if (re != null) {
-                        String[] data = re.getRectDataStr ();
-                        
-                        s += "\t\tStartRectLeft="+data[0]+";\n";
-                        s += "\t\tStartRectTop="+data[1]+";\n";
-                        s += "\t\tStartRectRight="+data[2]+";\n";
-                        s += "\t\tStartRectBottom="+data[3]+";\n";
-                    }
-                    s += "\t}\n";
-                    
-                }
-                
-               
-                s += "\n";
-                s += "\tNumRestrictions=0;\n";
-                s += "}";
-            }catch(Exception e){
-            }
-        }else{
-            s="n/a";
-        }
-        return s;
-    }
-*/
