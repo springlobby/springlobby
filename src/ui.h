@@ -89,6 +89,9 @@ class Ui
     void OnBattleStarted( Battle& battle );
     void OnBattleStartRectsUpdated( Battle& battle );
 
+    void OnBattleDisableUnit( Battle& battle, const std::string& unitname );
+    void OnBattleEnableUnit( Battle& battle, const std::string& unitname );
+    void OnBattleEnableAllUnits( Battle& battle );
 
     void OnJoinedBattle( Battle& battle );
     void OnUserBattleStatus( Battle& battle, User& user );

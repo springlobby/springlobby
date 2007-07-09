@@ -231,6 +231,30 @@ void ServerEvents::OnBattleClosed( int battleid )
 }
 
 
+void ServerEvents::OnBattleDisableUnit( int battleid, const std::string& unitname )
+{
+  Battle& battle = m_serv.GetBattle( battleid );
+  battle.DisableUnit( unitname );
+  m_ui.OnBattleDisableUnit( battle, unitname );
+}
+
+
+void ServerEvents::OnBattleEnableUnit( int battleid, const std::string& unitname )
+{
+  Battle& battle = m_serv.GetBattle( battleid );
+  battle.EnableUnit( unitname );
+  m_ui.OnBattleEnableUnit( battle, unitname );
+}
+
+
+void ServerEvents::OnBattleEnableAllUnits( int battleid )
+{
+  Battle& battle = m_serv.GetBattle( battleid );
+  battle.EnableAllUnits();
+  m_ui.OnBattleEnableAllUnits( battle );
+}
+
+
 void ServerEvents::OnJoinChannelResult( bool success, const std::string& channel, const std::string& reason )
 {
   debug_func( "" );

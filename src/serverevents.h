@@ -53,6 +53,10 @@ class ServerEvents
     void OnBattleStartRectAdd( int battleid, int allyno, int left, int top, int right, int bottom );
     void OnBattleStartRectRemove( int battleid, int allyno );
     
+    void OnBattleDisableUnit( int battleid, const std::string& unitname );
+    void OnBattleEnableUnit( int battleid, const std::string& unitname );
+    void OnBattleEnableAllUnits( int battleid );
+
     void OnJoinChannelResult( bool success, const std::string& channel, const std::string& reason );
     void OnChannelSaid( const std::string& channel, const std::string& who, const std::string& message );
     void OnChannelJoin( const std::string& channel, const std::string& who );

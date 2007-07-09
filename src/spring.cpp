@@ -50,6 +50,24 @@ void Spring::OnTerminated()
 }
 
 
+std::string GetWord( std::string& params )
+{
+	std::string::size_type pos;
+  std::string param;
+  
+  pos = params.find( " ", 0 );
+  if ( pos == std::string::npos ) {
+    param = params;
+    params = "";
+    return param;
+  } else {
+    param = params.substr( 0, pos );
+    params = params.substr( pos + 1 );
+    return param;
+  }
+}
+
+
 wxString Spring::GetScriptTxt( Battle& battle )
 {
   wxString s;
@@ -156,7 +174,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     int NumInAlly = 0;
     s += wxString::Format( _("\t\tNumAllies=%d;\n"), NumInAlly );
 
-    if ( battle.GetStartRect(AllyConv[i]) != NULL ) {
+    if ( (battle.GetStartRect(AllyConv[i]) != NULL) && (bo.starttype == ST_Choose) ) {
       BattleStartRect* sr = (BattleStartRect*)battle.GetStartRect(AllyConv[i]);
       s += wxString::Format( _("\t\tStartRectLeft=%.3f;\n"), sr->left / 200.0 );
       s += wxString::Format( _("\t\tStartRectTop=%.3f;\n"), sr->top / 200.0 );
@@ -167,9 +185,19 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s +=  _("\t}\n");
   }
 
-  s += _("\tNumRestrictions=0;\n");
+  s += wxString::Format( _("\tNumRestrictions=%d;\n"), battle.GetNumDisabledUnits() );
   s += _("\t[RESTRICT]\n");
   s += _("\t{\n");
+
+  std::string units = battle.DisabledUnits();
+  std::string unit;
+  int i = 0;
+  while ( (unit = GetWord( units )) != "" ) {
+    s += wxString::Format( _("\t\tUnit%d=%s;\n"), i, unit.c_str() );
+    s += wxString::Format( _("\t\tLimit%d=0;\n"), i );
+    i++;
+  }
+
   s += _("\t}\n");
   s += _("}\n");
 

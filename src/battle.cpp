@@ -150,3 +150,36 @@ void Battle::ClearStartRects()
 {
   for ( int i = 0; i < 16; i++ ) RemoveStartRect( i );
 }
+
+
+void Battle::DisableUnit( const std::string& unitname )
+{
+  int i = m_units.find( unitname, 0 );
+  if ( i != std::string::npos ) return;
+  m_units += unitname;
+  m_units += " ";
+  m_units_num++;
+}
+
+
+void Battle::EnableUnit( const std::string& unitname )
+{
+  int i = m_units.find( unitname, 0 );
+  if ( i == std::string::npos ) return;
+  m_units.replace( i, unitname.length()+1, "" );
+  m_units_num--;
+}
+
+
+void Battle::EnableAllUnits()
+{
+  m_units = "";
+  m_units_num = 0;
+}
+
+
+std::string Battle::DisabledUnits()
+{
+  return m_units;
+}
+

@@ -69,8 +69,7 @@ struct UnitsyncMap
 
 /*
 
-const char * __stdcall GetUnitName(int unit)
-int __stdcall GetUnitCount()
+
 const char* __stdcall GetSpringVersion()
 void* __stdcall GetMinimap(const char* filename, int miplevel)
 
@@ -101,6 +100,11 @@ typedef const char* (USYNC_CALL_CONV *GetSideNamePtr)(int);
 
 typedef void (USYNC_CALL_CONV *AddAllArchivesPtr)(const char*);
 
+typedef const char * (USYNC_CALL_CONV *GetFullUnitNamePtr)(int);
+typedef const char * (USYNC_CALL_CONV *GetUnitNamePtr)(int);
+typedef int (USYNC_CALL_CONV *GetUnitCountPtr)();
+typedef int (USYNC_CALL_CONV *ProcessUnitsNoChecksumPtr)();
+
 class Unitsync
 {
 public:
@@ -126,6 +130,11 @@ public:
   void FreeUnitsyncLib();
 
   bool IsLoaded();
+
+  int GetNumUnits( const std::string& modname );
+  int GetUnitIndex( const std::string& modname, const std::string& name );
+  std::string GetFullUnitName( const std::string& modname, int index );
+
 private:
 
   bool m_loaded;
@@ -149,6 +158,11 @@ private:
   GetSideNamePtr m_get_side_name;
 
   AddAllArchivesPtr m_add_all_archives;
+
+  GetUnitCountPtr m_get_unit_count;
+  GetUnitNamePtr m_get_unit_name;
+  GetFullUnitNamePtr m_get_unit_full_name;
+  ProcessUnitsNoChecksumPtr m_proc_units_nocheck;
 
   void* _GetLibFuncPtr( const std::string& name );
 };

@@ -353,6 +353,21 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     //REMOVESTARTRECT allyno
     ally = GetIntParam( params );
     m_se->OnBattleStartRectRemove( m_battle_id, ally );
+
+  } else if ( cmd == "ENABLEALLUNITS" ) {
+    //"ENABLEALLUNITS" params: "".
+    m_se->OnBattleEnableAllUnits( m_battle_id );
+  } else if ( cmd == "ENABLEUNITS" ) {
+    //ENABLEUNITS unitname1 unitname2
+    while ( (nick = GetWordParam( params )) != "" ) {
+      m_se->OnBattleEnableUnit( m_battle_id, nick );
+    }
+  } else if ( cmd == "DISABLEUNITS" ) {
+    //"DISABLEUNITS" params: "arm_advanced_radar_tower arm_advanced_sonar_station arm_advanced_torpedo_launcher arm_dragons_teeth arm_energy_storage arm_eraser arm_fark arm_fart_mine arm_fibber arm_geothermal_powerplant arm_guardian"
+    while ( (nick = GetWordParam( params )) != "" ) {
+      m_se->OnBattleDisableUnit( m_battle_id, nick );
+    }
+
   } else if ( cmd == "CHANNEL" ) {
     channel = GetWordParam( params );
     units = GetIntParam( params );

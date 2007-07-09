@@ -101,7 +101,7 @@ struct BattleStartRect
 class Battle : public UserList
 {
   public:
-    Battle( Server& serv, Ui& ui, const int& id ) : UserList(),m_serv(serv),m_ui(ui),m_order(0), m_rects(16, (BattleStartRect*)NULL) { m_opts.battleid = id; }
+    Battle( Server& serv, Ui& ui, const int& id ) : UserList(),m_serv(serv),m_ui(ui),m_order(0), m_rects(16, (BattleStartRect*)NULL),m_units_num(0) { m_opts.battleid = id; }
     ~Battle() {
       for (int i = 0; i < GetNumUsers(); i++ ) GetUser(i).SetBattle( NULL );
       ClearStartRects();
@@ -181,10 +181,15 @@ class Battle : public UserList
     BattleStartRect* GetStartRect( int allyno ) { ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), "Allyno out of bounds." ); return m_rects[allyno]; }
     void ClearStartRects();
 
+    void DisableUnit( const std::string& unitname );
+    void EnableUnit( const std::string& unitname );
+    void EnableAllUnits();
+    std::string DisabledUnits();
+    int GetNumDisabledUnits() { return m_units_num; }
+
   /*
     DISABLEUNITS unitname1 unitname2
     ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}
-    ADDSTARTRECT allyno left top right bottom
   */
   protected:
     // Battle variables
@@ -196,6 +201,8 @@ class Battle : public UserList
     int m_order;
     
     std::vector<BattleStartRect*> m_rects;
+    std::string m_units;
+    int m_units_num;
   
     void RemoveUser( std::string const& user ) {}
 };

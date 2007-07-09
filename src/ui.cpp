@@ -436,3 +436,32 @@ void Ui::OnBattleStartRectsUpdated( Battle& battle )
   }
 }
 
+
+void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
+{
+  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+  if ( br != NULL ) {
+    //std::string fullname = usync().GetFullUnitName( battle.opts().modname, usync().GetUnitIndex( battle.opts().modname, unitname ) );
+    br->GetChatPanel().StatusMessage( WX_STRING( unitname ) + _(" disabled.") );
+  }
+}
+
+
+void Ui::OnBattleEnableUnit( Battle& battle, const std::string& unitname )
+{
+  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+  if ( br != NULL ) {
+    br->GetChatPanel().StatusMessage( WX_STRING(unitname) + _(" disabled.") );
+  }
+}
+
+
+void Ui::OnBattleEnableAllUnits( Battle& battle )
+{
+  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+  if ( br != NULL ) {
+    br->GetChatPanel().StatusMessage( _("All units enabled.") );
+  }
+
+}
+

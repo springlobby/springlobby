@@ -98,6 +98,11 @@ bool Unitsync::LoadUnitsyncLib()
 
     m_add_all_archives = (AddAllArchivesPtr)_GetLibFuncPtr("AddAllArchives");
 
+    m_get_unit_count = (GetUnitCountPtr)_GetLibFuncPtr("GetUnitCount");
+    m_get_unit_name = (GetUnitNamePtr)_GetLibFuncPtr("GetUnitName");
+    m_get_unit_full_name = (GetFullUnitNamePtr)_GetLibFuncPtr("GetFullUnitName");
+    m_proc_units_nocheck = (ProcessUnitsNoChecksumPtr)_GetLibFuncPtr("ProcessUnitsNoChecksum");
+
     m_init( true, 1 );
   }
   catch ( std::runtime_error& e ) {
@@ -249,4 +254,33 @@ std::string Unitsync::GetSideName( const std::string& modname, int index )
   return m_get_side_name( index );
 }
 
+
+int Unitsync::GetNumUnits( const std::string& modname )
+{
+  if ( !m_loaded ) return 0;
+  m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
+  m_proc_units_nocheck();
+  return m_get_unit_count();
+}
+
+
+int Unitsync::GetUnitIndex( const std::string& modname, const std::string& name )
+{
+  if ( !m_loaded ) return -1;
+  m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
+  m_proc_units_nocheck();
+  for ( int i = 0; i < m_get_unit_count(); i++ ) {
+    if ( m_get_unit_name( i ) == name ) return i;
+  }
+  return -1;
+}
+
+
+std::string Unitsync::GetFullUnitName( const std::string& modname, int index )
+{
+  if ( (!m_loaded) || (index < 0) ) return "unknown";
+  m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
+  m_proc_units_nocheck();
+  return m_get_unit_full_name( index );
+}
 
