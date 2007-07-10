@@ -2,17 +2,6 @@
 
 #SUBDIRS = po
 
-springlobbydocdir = ${prefix}/doc/springlobby
-springlobbydoc_DATA = \
-	README\
-	COPYING\
-	AUTHORS\
-	ChangeLog\
-	INSTALL\
-	NEWS
-
-EXTRA_DIST = $(springlobbydoc_DATA)
-
 # Copy all the spec files. Of cource, only one is actually used.
 dist-hook:
 	for specfile in *.spec; do \
@@ -24,17 +13,28 @@ dist-hook:
 DEFS += \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
 	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
-	-DPACKAGE_DATA_DIR=\""$(datadir)"\" $(PACKAGE_CFLAGS)
+	-DPACKAGE_DATA_DIR=\""$(datadir)"\"
 
-AM_CFLAGS =\
-	 -Wall \
-	 -g \
-	 $(WX_CPPFLAGS)
+AM_CPPFLAGS = \
+	$(WX_CPPFLAGS)
+
+AM_CFLAGS = \
+	-Wall \
+	-g \
+	$(PACKAGE_CFLAGS)
 
 AM_CXXFLAGS = \
 	-Wall \
 	-Wno-strict-aliasing \
 	$(WX_CXXFLAGS)
+
+dist_doc_DATA = \
+	AUTHORS \
+	ChangeLog \
+	COPYING \
+	INSTALL \
+	NEWS \
+	README
 
 bin_PROGRAMS = springlobby
 
