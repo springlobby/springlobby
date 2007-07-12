@@ -1,32 +1,14 @@
 ## Process this file with automake to produce Makefile.in
 
-#SUBDIRS = po
-
-# Copy all the spec files. Of cource, only one is actually used.
-dist-hook:
-	for specfile in *.spec; do \
-		if test -f $$specfile; then \
-			cp -p $$specfile $(distdir); \
-		fi \
-	done
-
-DEFS += \
-	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
-	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
-	-DPACKAGE_DATA_DIR=\""$(datadir)"\"
+ACLOCAL_AMFLAGS = \
+	-I m4
 
 AM_CPPFLAGS = \
 	$(WX_CPPFLAGS)
 
-AM_CFLAGS = \
-	-Wall \
-	-g \
-	$(PACKAGE_CFLAGS)
-
 AM_CXXFLAGS = \
 	-Wall \
-	-Wno-strict-aliasing \
-	$(WX_CXXFLAGS)
+	-Wno-strict-aliasing
 
 dist_doc_DATA = \
 	AUTHORS \
@@ -41,7 +23,6 @@ bin_PROGRAMS = springlobby
 springlobby_LDFLAGS =
 
 springlobby_LDADD = \
-	$(PACKAGE_LIBS) \
 	$(WX_LIBS)
 
 springlobby_SOURCES = \
