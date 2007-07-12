@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
-ACLOCAL_AMFLAGS = \
-	-I m4
+# the following line may NOT be split, b/c of autoreconf
+ACLOCAL_AMFLAGS = -I m4
 
 AM_CPPFLAGS = \
 	$(WX_CPPFLAGS)
