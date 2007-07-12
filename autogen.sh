@@ -6,6 +6,10 @@ test -z "$srcdir" && srcdir=.
 
 DIE=0
 
+if [ -d $srcdir/m4 ]; then
+       ACLOCAL_FLAGS="-I m4 $ACLOCAL_FLAGS"
+fi
+
 if [ -n "$GNOME2_DIR" ]; then
 	ACLOCAL_FLAGS="-I $GNOME2_DIR/share/aclocal $ACLOCAL_FLAGS"
 	LD_LIBRARY_PATH="$GNOME2_DIR/lib:$LD_LIBRARY_PATH"
