@@ -106,19 +106,20 @@ wxString Spring::GetScriptTxt( Battle& battle )
   // Start generating the script.
   s  = wxString::Format( _("[GAME]\n{\n") );
 
-  s += wxString::Format( _("\tMapname=%s;\n"), bo.mapname.c_str() );
+  //s += wxString::Format( _("\tMapname=%s;\n"), bo.mapname.c_str() );
+  s += ("\tMapname=" + bo.mapname + ";\n");
   s += wxString::Format( _("\tStartMetal=%d;\n"), bo.startmetal );
   s += wxString::Format( _("\tStartEnergy=%d;\n"), bo.startenergy );
   s += wxString::Format( _("\tMaxUnits=%d;\n"), bo.maxunits );
   s += wxString::Format( _("\tStartPosType=%d;\n"), bo.starttype );
   s += wxString::Format( _("\tGameMode=0;\n") );
-  s += wxString::Format( _("\tGameType=%s;\n"), usync().GetModArchive(usync().GetModIndex(bo.modname)).c_str() );
+  s += ("\tGameType=" + usync().GetModArchive(usync().GetModIndex(bo.modname)) + ";\n");
   s += wxString::Format( _("\tLimitDGun=%d;\n"), bo.limitdgun?1:0 );
   s += wxString::Format( _("\tDiminishingMMs=%d;\n"), bo.dimmms?1:0 );
   s += wxString::Format( _("\tGhostedBuildings=%d;\n\n"), bo.ghostedbuildings?1:0 );
 
   if ( battle.IsFounderMe() ) s += wxString::Format( _("\tHostIP=localhost;\n") );
-  else s += wxString::Format( _("\tHostIP=%s;\n"), bo.ip.c_str() );
+  else s += ("\tHostIP=" + bo.ip + ";\n");
   s += wxString::Format( _("\tHostPort=%d;\n\n"), bo.port );
 
   s += wxString::Format( _("\tMyPlayerNum=%d;\n\n"), battle.GetMyPlayerNum() );
@@ -130,7 +131,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   for ( int i = 0; i < battle.GetNumUsers(); i++ ) {
     s += wxString::Format( _("\t[PLAYER%d]\n"), i );
     s += wxString::Format( _("\t{\n") );
-    s += wxString::Format( _("\t\tname=%s;\n"), battle.GetUser( PlayerOrder[i] ).GetNick().c_str() );
+    s += ("\t\tname=" + battle.GetUser( PlayerOrder[i] ).GetNick() + ";\n");
     s += wxString::Format( _("\t\tSpectator=%d;\n"), battle.GetUser( PlayerOrder[i] ).GetBattleStatus().spectator?1:0 );
     if ( !battle.GetUser( PlayerOrder[i] ).GetBattleStatus().spectator ) {
       s += wxString::Format( _("\t\tteam=%d;\n"), TeamConv[battle.GetUser( PlayerOrder[i] ).GetBattleStatus().team] );
@@ -161,9 +162,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
            (double)(battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().color_b/255.0)
          );
     debug( i2s(battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().side) );
-    s += wxString::Format( _("\t\tSide=%s;\n"), 
-           usync().GetSideName( battle.opts().modname, battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().side ).c_str()
-         );
+    s += ("\t\tSide=" + usync().GetSideName( battle.opts().modname, battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().side ) + ";\n");
     s += wxString::Format( _("\t\tHandicap=%d;\n"), battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().handicap );
     s +=  _("\t}\n");
   }
@@ -193,7 +192,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   std::string unit;
   int i = 0;
   while ( (unit = GetWord( units )) != "" ) {
-    s += wxString::Format( _("\t\tUnit%d=%s;\n"), i, unit.c_str() );
+    s += ("\t\tUnit" + i2s(i) + "=" + unit + ";\n");
     s += wxString::Format( _("\t\tLimit%d=0;\n"), i );
     i++;
   }
