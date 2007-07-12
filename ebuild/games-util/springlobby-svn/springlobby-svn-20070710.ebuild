@@ -32,6 +32,7 @@ pkg_nofetch() {
 pkg_setup() {
 	if !(built_with_use x11-libs/wxGTK X); then
 		eerror "Please run \"echo \"x11-libs/wxGTK X\" >> /etc/portage/package.use\" and re-emerge x11-libs/wxGTK."
+	fi
 }
 
 src_compile() {
