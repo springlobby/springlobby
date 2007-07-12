@@ -111,7 +111,7 @@ void SpringOptionsTab::OnBrowseDir( wxCommandEvent& event )
 
 void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
 {
-  wxFileDialog pic( this, _("Choose a Spring executable"), WX_STRING(sett().GetSpringDir()), wxString(_T("spring"))+wxString(_T(EXEEXT)), CHOOSE_EXE );
+  wxFileDialog pic( this, _("Choose a Spring executable"), WX_STRING(sett().GetSpringDir()), wxString(_T("spring"))+wxString(EXEEXT), CHOOSE_EXE );
   if ( pic.ShowModal() == wxID_OK ) m_exec_edit->SetValue( pic.GetPath() );
 }
 
@@ -119,7 +119,7 @@ void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
 
 void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
 {
-  wxFileDialog pic( this, _("Choose a unitsync library"), WX_STRING(sett().GetSpringDir()), wxString(_T("unitsync"))+wxString(_T(DLLEXT)), CHOOSE_DLL );
+  wxFileDialog pic( this, _("Choose a unitsync library"), WX_STRING(sett().GetSpringDir()), wxString(_T("unitsync"))+wxString(DLLEXT), CHOOSE_DLL );
   if ( pic.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pic.GetPath() );
 }
 

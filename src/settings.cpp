@@ -31,9 +31,9 @@ bool Settings::IsFirstRun()
 void Settings::SetDefaultSettings()
 {
   wxString defserver;
-  defserver = _T(DEFSETT_DEFAULT_SERVER);
+  defserver = DEFSETT_DEFAULT_SERVER;
   m_config->Write( _T("/Servers/Default"), defserver );
-  m_config->Write( _T("/Server/")+defserver+_T("/host"), _T(DEFSETT_DEFAULT_SERVER_HOST) );
+  m_config->Write( _T("/Server/")+defserver+_T("/host"), DEFSETT_DEFAULT_SERVER_HOST );
   m_config->Write( _T("/Server/")+defserver+_T("/port"), DEFSETT_DEFAULT_SERVER_PORT );
   //! @todo Save all default settings
 }
@@ -51,7 +51,7 @@ bool Settings::ServerExists( const std::string& server_name )
 //! @note Normally this will be the previously selected server. But at first run it will be a server that is set as the default.
 std::string Settings::GetDefaultServer()
 {
-  return STL_STRING( m_config->Read( _T("/Servers/Default"), _T(DEFSETT_DEFAULT_SERVER) ) );
+  return STL_STRING( m_config->Read( _T("/Servers/Default"), DEFSETT_DEFAULT_SERVER ) );
 }
 
 
@@ -70,7 +70,7 @@ void   Settings::SetDefaultServer( const std::string& server_name )
 //! @param server_name the server name/alias
 std::string Settings::GetServerHost( const std::string& server_name )
 {
-  return STL_STRING( m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/host"), _T(DEFSETT_DEFAULT_SERVER_HOST) ) );
+  return STL_STRING( m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/host"), DEFSETT_DEFAULT_SERVER_HOST ) );
 }
 
 

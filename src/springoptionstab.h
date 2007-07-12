@@ -20,13 +20,13 @@
 class Ui;
   
 #ifdef WIN32
-#define DLLEXT ".dll"
-#define EXEEXT ".exe"
+#define DLLEXT _T(".dll")
+#define EXEEXT _T(".exe")
 #define CHOOSE_EXE _("Executables (*.exe)|*.exe|Any File (*.*)|*.*")
 #define CHOOSE_DLL _("Library (*.dll)|*.dll|Any File (*.*)|*.*")
 #else
-#define DLLEXT ".so"
-#define EXEEXT ""
+#define DLLEXT _T(".so")
+#define EXEEXT _T("")
 #define CHOOSE_EXE _("Any file (*.*)|*.*")
 #define CHOOSE_DLL _("Library (*.so)|*.so|Any File (*.*)|*.*")
 #endif
