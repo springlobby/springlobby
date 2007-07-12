@@ -21,12 +21,12 @@
 
 class Ui;
 
-const wxString team_choices[] = { _("1"), _("2"), _("3"), _("4"), _("5"), _("6"), _("7"), _("8"), _("9"), _("10"), _("11"), _("12"), _("13"), _("14"), _("15"), _("16") };
+const wxString team_choices[] = { _T("1"), _T("2"), _T("3"), _T("4"), _T("5"), _T("6"), _T("7"), _T("8"), _T("9"), _T("10"), _T("11"), _T("12"), _T("13"), _T("14"), _T("15"), _T("16") };
 const wxString colour_choices[] = { 
-  _("black"), _("dark gray"), _("dark blue"), _("bright blue"), _("dark green"),
-  _("bright green"), _("dark cyan"), _("bright cyan"), _("dark red"), _("bright red"),
-  _("dark magenta"), _("bright magenta"), _("dark yellow"), _("bright yellow"),
-  _("light gray"), _("inky blue") 
+  _T("black"), _T("dark gray"), _T("dark blue"), _T("bright blue"), _T("dark green"),
+  _T("bright green"), _T("dark cyan"), _T("bright cyan"), _T("dark red"), _T("bright red"),
+  _T("dark magenta"), _T("bright magenta"), _T("dark yellow"), _T("bright yellow"),
+  _T("light gray"), _T("inky blue") 
 };
 
 const int colour_values[][3] = { {0,0,0}, {128, 128, 128}, {0, 0, 128}, {0, 0, 255},

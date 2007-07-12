@@ -30,34 +30,34 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 END_EVENT_TABLE()
 
 
-MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby"),
+MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _("Spring Lobby"),
                                wxPoint(50, 50), wxSize(450, 340)), m_ui(ui)
 {
   SetIcon( wxIcon(bot_xpm) );
   wxMenu *menuFile = new wxMenu;
-  menuFile->Append(MENU_CONNECT, _T("&Connect..."));
-  menuFile->Append(MENU_DISCONNECT, _T("&Disconnect"));
+  menuFile->Append(MENU_CONNECT, _("&Connect..."));
+  menuFile->Append(MENU_DISCONNECT, _("&Disconnect"));
   menuFile->AppendSeparator();
-  menuFile->Append(MENU_QUIT, _T("&Quit"));
+  menuFile->Append(MENU_QUIT, _("&Quit"));
 
   wxMenu *menuEdit = new wxMenu;
 
   wxMenu *menuTools = new wxMenu;
-  menuTools->Append(MENU_JOIN, _T("&Join channel..."));
-  menuTools->Append(MENU_CHAT, _T("Open &chat..."));
+  menuTools->Append(MENU_JOIN, _("&Join channel..."));
+  menuTools->Append(MENU_CHAT, _("Open &chat..."));
   menuTools->AppendSeparator();
-  menuTools->Append(MENU_USYNC, _T("&Reload unitsync"));
+  menuTools->Append(MENU_USYNC, _("&Reload unitsync"));
 
   wxMenu *menuHelp = new wxMenu;
-  menuHelp->Append(MENU_ABOUT, _T("&About"));
-  menuHelp->Append(MENU_TRAC, _T("&Report a bug..."));
-  menuHelp->Append(MENU_DOC, _T("&Documentation"));
+  menuHelp->Append(MENU_ABOUT, _("&About"));
+  menuHelp->Append(MENU_TRAC, _("&Report a bug..."));
+  menuHelp->Append(MENU_DOC, _("&Documentation"));
 
   wxMenuBar *menubar = new wxMenuBar;
-  menubar->Append(menuFile, _T("&File"));
-  menubar->Append(menuEdit, _T("&Edit"));
-  menubar->Append(menuTools, _T("&Tools"));
-  menubar->Append(menuHelp, _T("&Help"));
+  menubar->Append(menuFile, _("&File"));
+  menubar->Append(menuEdit, _("&Edit"));
+  menubar->Append(menuTools, _("&Tools"));
+  menubar->Append(menuHelp, _("&Help"));
   SetMenuBar(menubar);
 
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -73,9 +73,9 @@ MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _T("Spring Lobby
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
 
-  m_func_tabs->AddPage( m_chat_tab, _(""), true, 0 );
-  m_func_tabs->AddPage( m_join_tab, _(""), false, 1 );
-  m_func_tabs->AddPage( m_opts_tab, _(""), false, 2 );
+  m_func_tabs->AddPage( m_chat_tab, _T(""), true, 0 );
+  m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
+  m_func_tabs->AddPage( m_opts_tab, _T(""), false, 2 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -158,8 +158,8 @@ void MainWindow::OnMenuJoin( wxCommandEvent& event )
 
   if ( !m_ui.IsConnected() ) return;
   wxString answer;
-  if ( Ui::AskText( _T("Join channel..."), _T("Name of channel to join"), answer ) ) {
-    m_ui.JoinChannel( answer, _("") );
+  if ( Ui::AskText( _("Join channel..."), _("Name of channel to join"), answer ) ) {
+    m_ui.JoinChannel( answer, _T("") );
   }
 
 }
@@ -170,7 +170,7 @@ void MainWindow::OnMenuChat( wxCommandEvent& event )
 
   if ( !m_ui.IsConnected() ) return;
   wxString answer;
-  if ( Ui::AskText( _T("Open Private Chat..."), _T("Name of user"), answer ) ) {
+  if ( Ui::AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
     if (m_ui.GetServer().UserExists( STL_STRING(answer) ) ) {
       OpenPrivateChat( m_ui.GetServer().GetUser( STL_STRING(answer) ) );
     }
@@ -206,12 +206,12 @@ void MainWindow::OnUnitsyncReload( wxCommandEvent& event )
 
 void MainWindow::OnReportBug( wxCommandEvent& event )
 {
-  wxLaunchDefaultBrowser( _("http://tc.serveftp.net/trac/newticket") );
+  wxLaunchDefaultBrowser( _T("http://tc.serveftp.net/trac/newticket") );
 }
 
 
 void MainWindow::OnShowDocs( wxCommandEvent& event )
 {
-  wxLaunchDefaultBrowser( _("http://tc.serveftp.net/trac") );
+  wxLaunchDefaultBrowser( _T("http://tc.serveftp.net/trac") );
 }
 

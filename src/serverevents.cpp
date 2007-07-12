@@ -264,7 +264,7 @@ void ServerEvents::OnJoinChannelResult( bool success, const std::string& channel
     m_ui.OnJoinedChannelSuccessful( chan );
   
   } else {
-    m_ui.ShowMessage( _T("Join channel failed"), _T("Could not join channel ") + WX_STRING(channel) + _T(" because: ") + WX_STRING(reason) );
+    m_ui.ShowMessage( _("Join channel failed"), _("Could not join channel ") + WX_STRING(channel) + _(" because: ") + WX_STRING(reason) );
   }
 }
 

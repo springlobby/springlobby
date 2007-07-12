@@ -23,7 +23,7 @@ void Settings::SaveSettings()
 
 bool Settings::IsFirstRun()
 {
-  return m_config->Read( _("/General/firstrun"), true );
+  return m_config->Read( _T("/General/firstrun"), true );
 }
 
 
@@ -31,10 +31,10 @@ bool Settings::IsFirstRun()
 void Settings::SetDefaultSettings()
 {
   wxString defserver;
-  defserver = _(DEFSETT_DEFAULT_SERVER);
-  m_config->Write( _("/Servers/Default"), defserver );
-  m_config->Write( _("/Server/")+defserver+_("/host"), _(DEFSETT_DEFAULT_SERVER_HOST) );
-  m_config->Write( _("/Server/")+defserver+_("/port"), DEFSETT_DEFAULT_SERVER_PORT );
+  defserver = _T(DEFSETT_DEFAULT_SERVER);
+  m_config->Write( _T("/Servers/Default"), defserver );
+  m_config->Write( _T("/Server/")+defserver+_T("/host"), _T(DEFSETT_DEFAULT_SERVER_HOST) );
+  m_config->Write( _T("/Server/")+defserver+_T("/port"), DEFSETT_DEFAULT_SERVER_PORT );
   //! @todo Save all default settings
 }
 
@@ -42,7 +42,7 @@ void Settings::SetDefaultSettings()
 //! @brief Checks if the server name/alias exists in the settings
 bool Settings::ServerExists( const std::string& server_name )
 {
-  return m_config->Exists( _("/Server/")+WX_STRING(server_name) );
+  return m_config->Exists( _T("/Server/")+WX_STRING(server_name) );
 }
 
 
@@ -51,7 +51,7 @@ bool Settings::ServerExists( const std::string& server_name )
 //! @note Normally this will be the previously selected server. But at first run it will be a server that is set as the default.
 std::string Settings::GetDefaultServer()
 {
-  return STL_STRING( m_config->Read( _("/Servers/Default"), _(DEFSETT_DEFAULT_SERVER) ) );
+  return STL_STRING( m_config->Read( _T("/Servers/Default"), _T(DEFSETT_DEFAULT_SERVER) ) );
 }
 
 
@@ -61,7 +61,7 @@ std::string Settings::GetDefaultServer()
 //! @see GetDefaultServer()
 void   Settings::SetDefaultServer( const std::string& server_name )
 {
-  m_config->Write( _("/Servers/Default"), WX_STRING( server_name ) );
+  m_config->Write( _T("/Servers/Default"), WX_STRING( server_name ) );
 }
 
 
@@ -70,7 +70,7 @@ void   Settings::SetDefaultServer( const std::string& server_name )
 //! @param server_name the server name/alias
 std::string Settings::GetServerHost( const std::string& server_name )
 {
-  return STL_STRING( m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/host"), _(DEFSETT_DEFAULT_SERVER_HOST) ) );
+  return STL_STRING( m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/host"), _T(DEFSETT_DEFAULT_SERVER_HOST) ) );
 }
 
 
@@ -80,7 +80,7 @@ std::string Settings::GetServerHost( const std::string& server_name )
 //! @param value the vaule to be set
 void   Settings::SetServerHost( const std::string& server_name, const std::string& value )
 {
-  m_config->Write( _("/Server/")+WX_STRING(server_name)+_("/host"), WX_STRING(value) );
+  m_config->Write( _T("/Server/")+WX_STRING(server_name)+_T("/host"), WX_STRING(value) );
 }
 
 
@@ -89,7 +89,7 @@ void   Settings::SetServerHost( const std::string& server_name, const std::strin
 //! @param server_name the server name/alias
 int    Settings::GetServerPort( const std::string& server_name )
 {
-  return m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/port"), DEFSETT_DEFAULT_SERVER_PORT );
+  return m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/port"), DEFSETT_DEFAULT_SERVER_PORT );
 }
 
 
@@ -99,7 +99,7 @@ int    Settings::GetServerPort( const std::string& server_name )
 //! @param value the vaule to be set
 void   Settings::SetServerPort( const std::string& server_name, const int value )
 {
-  m_config->Write( _("/Server/")+WX_STRING(server_name)+_("/port"), value );
+  m_config->Write( _T("/Server/")+WX_STRING(server_name)+_T("/port"), value );
 }
 
 
@@ -128,7 +128,7 @@ void   Settings::SetServerName( const std::string& server_name, const std::strin
 //! @param server_name the server name/alias
 std::string Settings::GetServerAccountNick( const std::string& server_name )
 {
-  return STL_STRING( m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/nick"), _("") ) );
+  return STL_STRING( m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/nick"), _T("") ) );
 }
 
 
@@ -138,7 +138,7 @@ std::string Settings::GetServerAccountNick( const std::string& server_name )
 //! @param value the vaule to be set
 void   Settings::SetServerAccountNick( const std::string& server_name, const std::string& value )
 {
-  m_config->Write( _("/Server/")+WX_STRING(server_name)+_("/nick"), WX_STRING(value) );
+  m_config->Write( _T("/Server/")+WX_STRING(server_name)+_T("/nick"), WX_STRING(value) );
 }
 
 
@@ -148,7 +148,7 @@ void   Settings::SetServerAccountNick( const std::string& server_name, const std
 //! @todo Implement
 std::string Settings::GetServerAccountPass( const std::string& server_name )
 {
-  return STL_STRING( m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/pass"), _("") ) );
+  return STL_STRING( m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/pass"), _T("") ) );
 }
 
 
@@ -159,7 +159,7 @@ std::string Settings::GetServerAccountPass( const std::string& server_name )
 //! @todo Implement
 void   Settings::SetServerAccountPass( const std::string& server_name, const std::string& value )
 {
-  m_config->Write( _("/Server/")+WX_STRING(server_name)+_("/pass"), WX_STRING(value) );
+  m_config->Write( _T("/Server/")+WX_STRING(server_name)+_T("/pass"), WX_STRING(value) );
 }
 
 
@@ -169,7 +169,7 @@ void   Settings::SetServerAccountPass( const std::string& server_name, const std
 //! @todo Implement
 bool   Settings::GetServerAccountSavePass( const std::string& server_name )
 {
-  return m_config->Read( _("/Server/")+WX_STRING(server_name)+_("/savepass"), (long int)false );  
+  return m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/savepass"), (long int)false );  
 }
 
 
@@ -180,129 +180,129 @@ bool   Settings::GetServerAccountSavePass( const std::string& server_name )
 //! @todo Implement
 void   Settings::SetServerAccountSavePass( const std::string& server_name, const bool value )
 {
-  m_config->Write( _("/Server/")+WX_STRING(server_name)+_("/savepass"), (long int)value );
+  m_config->Write( _T("/Server/")+WX_STRING(server_name)+_T("/savepass"), (long int)value );
 }
 
 
 //! @brief Get width of MainWindow.
 int    Settings::GetMainWindowWidth()
 {
-  return m_config->Read( _("/Mainwin/width"), DEFSETT_MW_WIDTH );
+  return m_config->Read( _T("/Mainwin/width"), DEFSETT_MW_WIDTH );
 }
 
 
 //! @brief Set width position of MainWindow
 void   Settings::SetMainWindowWidth( const int value )
 {
-  m_config->Write( _("/Mainwin/width"), value );
+  m_config->Write( _T("/Mainwin/width"), value );
 }
 
 
 //! @brief Get height of MainWindow.
 int    Settings::GetMainWindowHeight()
 {
-  return m_config->Read( _("/Mainwin/height"), DEFSETT_MW_HEIGHT );
+  return m_config->Read( _T("/Mainwin/height"), DEFSETT_MW_HEIGHT );
 }
 
 
 //! @brief Set height position of MainWindow
 void   Settings::SetMainWindowHeight( const int value )
 {
-  m_config->Write( _("/Mainwin/height"), value );
+  m_config->Write( _T("/Mainwin/height"), value );
 }
 
 
 //! @brief Get top position of MainWindow.
 int    Settings::GetMainWindowTop()
 {
-  return m_config->Read( _("/Mainwin/top"), DEFSETT_MW_TOP );
+  return m_config->Read( _T("/Mainwin/top"), DEFSETT_MW_TOP );
 }
 
 
 //! @brief Set top position of MainWindow
 void   Settings::SetMainWindowTop( const int value )
 {
-  m_config->Write( _("/Mainwin/top"), value );
+  m_config->Write( _T("/Mainwin/top"), value );
 }
 
 
 //! @brief Get left position of MainWindow.
 int    Settings::GetMainWindowLeft()
 {
-  return m_config->Read( _("/Mainwin/left"), DEFSETT_MW_LEFT );
+  return m_config->Read( _T("/Mainwin/left"), DEFSETT_MW_LEFT );
 }
 
 
 //! @brief Set left position of MainWindow
 void   Settings::SetMainWindowLeft( const int value )
 {
-  m_config->Write( _("/Mainwin/left"), value );
+  m_config->Write( _T("/Mainwin/left"), value );
 }
 
 
 std::string Settings::GetSpringDir()
 {
-  return STL_STRING(m_config->Read( _("/Spring/dir"), DEFSETT_SPRING_DIR ));
+  return STL_STRING(m_config->Read( _T("/Spring/dir"), DEFSETT_SPRING_DIR ));
 }
 
 
 void   Settings::SetSpringDir( const std::string& spring_dir )
 {
-  m_config->Write( _("/Spring/dir"), WX_STRING(spring_dir) );
+  m_config->Write( _T("/Spring/dir"), WX_STRING(spring_dir) );
 }
 
 
 bool   Settings::GetUnitsyncUseDefLoc()
 {
-  return m_config->Read( _("/Spring/use_unitsync_def_loc"), true );
+  return m_config->Read( _T("/Spring/use_unitsync_def_loc"), true );
 }
 
 
 void   Settings::SetUnitsyncUseDefLoc( const bool usedefloc )
 {
-  m_config->Write( _("/Spring/use_unitsync_def_loc"), usedefloc );
+  m_config->Write( _T("/Spring/use_unitsync_def_loc"), usedefloc );
 }
 
 
 
 std::string Settings::GetUnitsyncLoc()
 {
-  return STL_STRING(m_config->Read( _("/Spring/unitsync_loc"), _("") ));
+  return STL_STRING(m_config->Read( _T("/Spring/unitsync_loc"), _T("") ));
 }
 
 
 
 void   Settings::SetUnitsyncLoc( const std::string& loc )
 {
-  m_config->Write( _("/Spring/unitsync_loc"), WX_STRING(loc) );
+  m_config->Write( _T("/Spring/unitsync_loc"), WX_STRING(loc) );
 }
 
 
 
 bool   Settings::GetSpringUseDefLoc()
 {
-  return m_config->Read( _("/Spring/use_spring_def_loc"), true );
+  return m_config->Read( _T("/Spring/use_spring_def_loc"), true );
 }
 
 
 
 void   Settings::SetSpringUseDefLoc( const bool usedefloc )
 {
-  m_config->Write( _("/Spring/use_spring_def_loc"), usedefloc );
+  m_config->Write( _T("/Spring/use_spring_def_loc"), usedefloc );
 }
 
 
 
 std::string Settings::GetSpringLoc()
 {
-  return STL_STRING(m_config->Read( _("/Spring/exec_loc"), _("") ));
+  return STL_STRING(m_config->Read( _T("/Spring/exec_loc"), _T("") ));
 }
 
 
 
 void   Settings::SetSpringLoc( const std::string& loc )
 {
-  m_config->Write( _("/Spring/exec_loc"), WX_STRING(loc) );
+  m_config->Write( _T("/Spring/exec_loc"), WX_STRING(loc) );
 }
 
 

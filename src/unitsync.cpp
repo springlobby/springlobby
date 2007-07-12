@@ -66,7 +66,7 @@ bool Unitsync::LoadUnitsyncLib()
     std::string dlerr = dlerror();
     debug_error( dlerr );
     
-    wxMessageDialog msg( NULL, _T("The unitsync library failed to load from the location \"") + WX_STRING(loc) + _T("\".\nIt failed with the error message \"") + WX_STRING(dlerr)+ _T("\".\n\nYou might want to look at the Spring Options again. If you need any help setting unitsync up you will find it under the Help main menu."), _T("Error loading unitsync"), wxOK | wxICON_ERROR );
+    wxMessageDialog msg( NULL, _("The unitsync library failed to load from the location \"") + WX_STRING(loc) + _("\".\nIt failed with the error message \"") + WX_STRING(dlerr)+ _("\".\n\nYou might want to look at the Spring Options again. If you need any help setting unitsync up you will find it under the Help main menu."), _("Error loading unitsync"), wxOK | wxICON_ERROR );
     
     msg.ShowModal();
     

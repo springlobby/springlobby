@@ -20,7 +20,7 @@ END_EVENT_TABLE()
 //!
 //! @param parent Parent window
 ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui ) 
-: wxFrame( parent, -1, _T("Connect to lobby server"), wxDefaultPosition, wxSize(300, 300), 
+: wxFrame( parent, -1, _("Connect to lobby server"), wxDefaultPosition, wxSize(300, 300), 
            wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN ), m_ui(ui)
 {
   wxString server;
@@ -37,29 +37,29 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_login_tab =    new wxPanel   ( m_tabs, -1 );
   m_register_tab = new wxPanel   ( m_tabs, -1 );
   
-  m_server_lbl =   new wxStaticText( m_login_tab, -1, _T("Server") );
+  m_server_lbl =   new wxStaticText( m_login_tab, -1, _("Server") );
   m_server_combo = new wxComboBox  ( m_login_tab, -1, server );
   
   m_ser_acc_line = new wxStaticLine( m_login_tab );
   
-  m_nick_lbl =    new wxStaticText( m_login_tab, -1, _T("Nickname") );
+  m_nick_lbl =    new wxStaticText( m_login_tab, -1, _("Nickname") );
   m_nick_text =   new wxTextCtrl  ( m_login_tab, -1, username );
-  m_pass_lbl =    new wxStaticText( m_login_tab, -1, _T("Password") );
+  m_pass_lbl =    new wxStaticText( m_login_tab, -1, _("Password") );
   m_pass_text =   new wxTextCtrl  ( m_login_tab, -1, password, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
-  m_rpass_check = new wxCheckBox  ( m_login_tab, -1, _("Remember password") );
+  m_rpass_check = new wxCheckBox  ( m_login_tab, -1, _T("Remember password") );
   
   m_rpass_check->SetValue( savepass );
   
   m_acc_note_line = new wxStaticLine( m_login_tab );
 
-  m_note_lbl = new wxStaticText( m_login_tab, -1, _T("Note: If you do not have an account, you\n can register one for free under the\n\"Register\" tab.") );
+  m_note_lbl = new wxStaticText( m_login_tab, -1, _("Note: If you do not have an account, you\n can register one for free under the\n\"Register\" tab.") );
 
-  m_ok_btn =     new wxButton( this, wxID_OK,     _T("Ok") );
-  m_cancel_btn = new wxButton( this, wxID_CANCEL, _T("Cancel") );
+  m_ok_btn =     new wxButton( this, wxID_OK,     _("Ok") );
+  m_cancel_btn = new wxButton( this, wxID_CANCEL, _("Cancel") );
   
   // Add tabs to tab control.
-  m_tabs->AddPage( m_login_tab, _T("Login"), true );
-  m_tabs->AddPage( m_register_tab, _T("Register"), false );
+  m_tabs->AddPage( m_login_tab, _("Login"), true );
+  m_tabs->AddPage( m_register_tab, _("Register"), false );
 
   // Create sizers.
   m_main_sizer = new wxBoxSizer( wxVERTICAL );

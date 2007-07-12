@@ -24,7 +24,7 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( pare
   m_tabs->AssignImageList( m_imagelist );
   
   m_list_tab = new BattleListTab( m_tabs, m_ui );
-  m_tabs->AddPage( m_list_tab, _T("Battle list"), true, 0 );
+  m_tabs->AddPage( m_list_tab, _("Battle list"), true, 0 );
 
   m_main_sizer->Add( m_tabs, 1, wxEXPAND );
 
@@ -49,7 +49,7 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
   //if ( m_battle_tab != NULL ) delete m_battle_tab;
   LeaveCurrentBattle();
   m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
-  m_tabs->InsertPage( 1, m_battle_tab, _T("Battleroom"), true, 1 );
+  m_tabs->InsertPage( 1, m_battle_tab, _("Battleroom"), true, 1 );
 }
 
 

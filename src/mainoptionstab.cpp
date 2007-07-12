@@ -26,10 +26,10 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   m_tabs->AssignImageList( m_imagelist );
   
   m_spring_opts = new SpringOptionsTab( m_tabs, m_ui );
-  m_tabs->AddPage( m_spring_opts, _T("Spring"), true, 0 );
+  m_tabs->AddPage( m_spring_opts, _("Spring"), true, 0 );
 
-  m_restore_btn = new wxButton( this, wxID_REVERT, _T("Restore") );
-  m_apply_btn = new wxButton( this, wxID_APPLY, _T("Apply") );
+  m_restore_btn = new wxButton( this, wxID_REVERT, _("Restore") );
+  m_apply_btn = new wxButton( this, wxID_APPLY, _("Apply") );
 
   m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_button_sizer->Add( m_restore_btn, 0, wxALL, 2 );

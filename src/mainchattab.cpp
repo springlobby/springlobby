@@ -41,10 +41,10 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
   m_chat_tabs->AssignImageList( m_imagelist );
 
 //  m_server_chat = new ChatPanel( m_chat_tabs, serv );
-//  m_chat_tabs->AddPage( m_server_chat, _T("Server"), true, 1 );
+//  m_chat_tabs->AddPage( m_server_chat, _("Server"), true, 1 );
 
   m_close_window = new wxWindow( m_chat_tabs, -1 );
-  m_chat_tabs->AddPage( m_close_window, _(""), false, 0 );
+  m_chat_tabs->AddPage( m_close_window, _T(""), false, 0 );
 
   m_main_sizer->Add( m_chat_tabs, 1, wxEXPAND );
 

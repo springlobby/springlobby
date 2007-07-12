@@ -17,22 +17,22 @@ END_EVENT_TABLE()
 SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
 {
 
-  m_dir_text = new wxStaticText( this, -1, _T("Spring directory") );
-  m_exec_loc_text = new wxStaticText( this, -1, _T("Location") );
-  m_sync_loc_text = new wxStaticText( this, -1, _T("Location") );
+  m_dir_text = new wxStaticText( this, -1, _("Spring directory") );
+  m_exec_loc_text = new wxStaticText( this, -1, _("Location") );
+  m_sync_loc_text = new wxStaticText( this, -1, _("Location") );
 
-  m_dir_browse_btn = new wxButton( this, SPRING_DIRBROWSE, _T("Browse") );
-  m_dir_find_btn = new wxButton( this, -1, _T("Find") );
-  m_exec_browse_btn = new wxButton( this, SPRING_EXECBROWSE, _T("Browse") );
-  m_exec_find_btn = new wxButton( this, -1, _T("Find") );
-  m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _T("Browse") );
-  m_sync_find_btn = new wxButton( this, -1, _T("Find") );
-  m_auto_btn = new wxButton( this, -1, _T("Auto Configure") );
+  m_dir_browse_btn = new wxButton( this, SPRING_DIRBROWSE, _("Browse") );
+  m_dir_find_btn = new wxButton( this, -1, _("Find") );
+  m_exec_browse_btn = new wxButton( this, SPRING_EXECBROWSE, _("Browse") );
+  m_exec_find_btn = new wxButton( this, -1, _("Find") );
+  m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _("Browse") );
+  m_sync_find_btn = new wxButton( this, -1, _("Find") );
+  m_auto_btn = new wxButton( this, -1, _("Auto Configure") );
     
-  m_exec_def_radio = new wxRadioButton( this, -1, _T("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
-  m_exec_spec_radio = new wxRadioButton( this, -1, _T("Specify:") );
-  m_sync_def_radio = new wxRadioButton( this, -1, _T("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
-  m_sync_spec_radio = new wxRadioButton( this, -1, _T("Specify:") );
+  m_exec_def_radio = new wxRadioButton( this, -1, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+  m_exec_spec_radio = new wxRadioButton( this, -1, _("Specify:") );
+  m_sync_def_radio = new wxRadioButton( this, -1, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
+  m_sync_spec_radio = new wxRadioButton( this, -1, _("Specify:") );
 
   if ( sett().GetSpringUseDefLoc() ) m_exec_def_radio->SetValue( true );
   else m_exec_spec_radio->SetValue( true );
@@ -43,8 +43,8 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent
   m_exec_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringLoc()) );
   m_sync_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetUnitsyncLoc()) );
 
-  m_exec_box = new wxStaticBox( this, -1, _T("Spring executable") );
-  m_sync_box = new wxStaticBox( this, -1, _T("Unitsync library") );
+  m_exec_box = new wxStaticBox( this, -1, _("Spring executable") );
+  m_sync_box = new wxStaticBox( this, -1, _("Unitsync library") );
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   m_dir_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -104,14 +104,14 @@ SpringOptionsTab::~SpringOptionsTab()
 
 void SpringOptionsTab::OnBrowseDir( wxCommandEvent& event )
 {
-  wxDirDialog dirpic( this, _T("Choose a directory"), WX_STRING(sett().GetSpringDir()), wxDD_DEFAULT_STYLE );
+  wxDirDialog dirpic( this, _("Choose a directory"), WX_STRING(sett().GetSpringDir()), wxDD_DEFAULT_STYLE );
   if ( dirpic.ShowModal() == wxID_OK ) m_dir_edit->SetValue( dirpic.GetPath() );
 }
 
 
 void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
 {
-  wxFileDialog pic( this, _T("Choose a Spring executable"), WX_STRING(sett().GetSpringDir()), wxString(_("spring"))+wxString(_(EXEEXT)), CHOOSE_EXE );
+  wxFileDialog pic( this, _("Choose a Spring executable"), WX_STRING(sett().GetSpringDir()), wxString(_T("spring"))+wxString(_T(EXEEXT)), CHOOSE_EXE );
   if ( pic.ShowModal() == wxID_OK ) m_exec_edit->SetValue( pic.GetPath() );
 }
 
@@ -119,7 +119,7 @@ void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
 
 void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
 {
-  wxFileDialog pic( this, _T("Choose a unitsync library"), WX_STRING(sett().GetSpringDir()), wxString(_("unitsync"))+wxString(_(DLLEXT)), CHOOSE_DLL );
+  wxFileDialog pic( this, _("Choose a unitsync library"), WX_STRING(sett().GetSpringDir()), wxString(_T("unitsync"))+wxString(_T(DLLEXT)), CHOOSE_DLL );
   if ( pic.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pic.GetPath() );
 }
 

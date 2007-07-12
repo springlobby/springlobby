@@ -22,13 +22,13 @@ class Ui;
 #ifdef WIN32
 #define DLLEXT ".dll"
 #define EXEEXT ".exe"
-#define CHOOSE_EXE _T("Executables (*.exe)|*.exe|Any File (*.*)|*.*")
-#define CHOOSE_DLL _T("Library (*.dll)|*.dll|Any File (*.*)|*.*")
+#define CHOOSE_EXE _("Executables (*.exe)|*.exe|Any File (*.*)|*.*")
+#define CHOOSE_DLL _("Library (*.dll)|*.dll|Any File (*.*)|*.*")
 #else
 #define DLLEXT ".so"
 #define EXEEXT ""
-#define CHOOSE_EXE _T("Any file (*.*)|*.*")
-#define CHOOSE_DLL _T("Library (*.so)|*.so|Any File (*.*)|*.*")
+#define CHOOSE_EXE _("Any file (*.*)|*.*")
+#define CHOOSE_DLL _("Library (*.so)|*.so|Any File (*.*)|*.*")
 #endif
 
 class SpringOptionsTab : public wxPanel

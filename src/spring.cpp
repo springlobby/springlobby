@@ -21,11 +21,11 @@ bool Spring::Run( Battle& battle )
   
   try {
 
-    if ( !wxFile::Access( wxString(_("script_springlobby.txt")), wxFile::write ) ) {
+    if ( !wxFile::Access( wxString(_T("script_springlobby.txt")), wxFile::write ) ) {
       debug_error( "Access denied to script_springlobby.txt." );
     }
 
-    wxFile f( wxString(_("script_springlobby.txt")), wxFile::write );
+    wxFile f( wxString(_T("script_springlobby.txt")), wxFile::write );
     f.Write( GetScriptTxt(battle) );
     f.Close();
 
@@ -35,7 +35,7 @@ bool Spring::Run( Battle& battle )
   }
 
   if ( m_process == NULL ) m_process = new SpringProcess( *this );
-  if ( wxExecute( WX_STRING(sett().GetSpringUsedLoc()) + _(" script_springlobby.txt"), wxEXEC_ASYNC, m_process ) == 0 ) {
+  if ( wxExecute( WX_STRING(sett().GetSpringUsedLoc()) + _T(" script_springlobby.txt"), wxEXEC_ASYNC, m_process ) == 0 ) {
     return false;
   }
   m_running = true;
@@ -104,45 +104,45 @@ wxString Spring::GetScriptTxt( Battle& battle )
   BattleOptions bo = battle.opts();
 
   // Start generating the script.
-  s  = wxString::Format( _("[GAME]\n{\n") );
+  s  = wxString::Format( _T("[GAME]\n{\n") );
 
-  //s += wxString::Format( _("\tMapname=%s;\n"), bo.mapname.c_str() );
+  //s += wxString::Format( _T("\tMapname=%s;\n"), bo.mapname.c_str() );
   s += WX_STRING(("\tMapname=" + bo.mapname + ";\n"));
-  s += wxString::Format( _("\tStartMetal=%d;\n"), bo.startmetal );
-  s += wxString::Format( _("\tStartEnergy=%d;\n"), bo.startenergy );
-  s += wxString::Format( _("\tMaxUnits=%d;\n"), bo.maxunits );
-  s += wxString::Format( _("\tStartPosType=%d;\n"), bo.starttype );
-  s += wxString::Format( _("\tGameMode=0;\n") );
+  s += wxString::Format( _T("\tStartMetal=%d;\n"), bo.startmetal );
+  s += wxString::Format( _T("\tStartEnergy=%d;\n"), bo.startenergy );
+  s += wxString::Format( _T("\tMaxUnits=%d;\n"), bo.maxunits );
+  s += wxString::Format( _T("\tStartPosType=%d;\n"), bo.starttype );
+  s += wxString::Format( _T("\tGameMode=0;\n") );
   s += WX_STRING(("\tGameType=" + usync().GetModArchive(usync().GetModIndex(bo.modname)) + ";\n"));
-  s += wxString::Format( _("\tLimitDGun=%d;\n"), bo.limitdgun?1:0 );
-  s += wxString::Format( _("\tDiminishingMMs=%d;\n"), bo.dimmms?1:0 );
-  s += wxString::Format( _("\tGhostedBuildings=%d;\n\n"), bo.ghostedbuildings?1:0 );
+  s += wxString::Format( _T("\tLimitDGun=%d;\n"), bo.limitdgun?1:0 );
+  s += wxString::Format( _T("\tDiminishingMMs=%d;\n"), bo.dimmms?1:0 );
+  s += wxString::Format( _T("\tGhostedBuildings=%d;\n\n"), bo.ghostedbuildings?1:0 );
 
-  if ( battle.IsFounderMe() ) s += wxString::Format( _("\tHostIP=localhost;\n") );
+  if ( battle.IsFounderMe() ) s += wxString::Format( _T("\tHostIP=localhost;\n") );
   else s += WX_STRING(("\tHostIP=" + bo.ip + ";\n"));
-  s += wxString::Format( _("\tHostPort=%d;\n\n"), bo.port );
+  s += wxString::Format( _T("\tHostPort=%d;\n\n"), bo.port );
 
-  s += wxString::Format( _("\tMyPlayerNum=%d;\n\n"), battle.GetMyPlayerNum() );
+  s += wxString::Format( _T("\tMyPlayerNum=%d;\n\n"), battle.GetMyPlayerNum() );
 
-  s += wxString::Format( _("\tNumPlayers=%d;\n"), battle.GetNumUsers() );
-  s += wxString::Format( _("\tNumTeams=%d;\n"), NumTeams );
-  s += wxString::Format( _("\tNumAllyTeams=%d;\n\n"), NumAllys );
+  s += wxString::Format( _T("\tNumPlayers=%d;\n"), battle.GetNumUsers() );
+  s += wxString::Format( _T("\tNumTeams=%d;\n"), NumTeams );
+  s += wxString::Format( _T("\tNumAllyTeams=%d;\n\n"), NumAllys );
   
   for ( int i = 0; i < battle.GetNumUsers(); i++ ) {
-    s += wxString::Format( _("\t[PLAYER%d]\n"), i );
-    s += wxString::Format( _("\t{\n") );
+    s += wxString::Format( _T("\t[PLAYER%d]\n"), i );
+    s += wxString::Format( _T("\t{\n") );
     s += WX_STRING(("\t\tname=" + battle.GetUser( PlayerOrder[i] ).GetNick() + ";\n"));
-    s += wxString::Format( _("\t\tSpectator=%d;\n"), battle.GetUser( PlayerOrder[i] ).GetBattleStatus().spectator?1:0 );
+    s += wxString::Format( _T("\t\tSpectator=%d;\n"), battle.GetUser( PlayerOrder[i] ).GetBattleStatus().spectator?1:0 );
     if ( !battle.GetUser( PlayerOrder[i] ).GetBattleStatus().spectator ) {
-      s += wxString::Format( _("\t\tteam=%d;\n"), TeamConv[battle.GetUser( PlayerOrder[i] ).GetBattleStatus().team] );
+      s += wxString::Format( _T("\t\tteam=%d;\n"), TeamConv[battle.GetUser( PlayerOrder[i] ).GetBattleStatus().team] );
     }
-    s += wxString::Format( _("\t}\n") );
+    s += wxString::Format( _T("\t}\n") );
   }
 
-  s += _("\n");
+  s += _T("\n");
 
   for ( int i = 0; i < NumTeams; i++ ) {
-    s += wxString::Format( _("\t[TEAM%d]\n\t{\n"), i );
+    s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i );
 
     // Find Team Leader.
     int TeamLeader = -1;
@@ -154,54 +154,54 @@ wxString Spring::GetScriptTxt( Battle& battle )
       }
     }
 
-    s += wxString::Format( _("\t\tTeamLeader=%d;\n") ,TeamLeader );
-    s += wxString::Format( _("\t\tAllyTeam=%d;\n"), AllyConv[battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().ally] );
-    s += wxString::Format( _("\t\tRGBColor=%.5f %.5f %.5f;\n"),
+    s += wxString::Format( _T("\t\tTeamLeader=%d;\n") ,TeamLeader );
+    s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().ally] );
+    s += wxString::Format( _T("\t\tRGBColor=%.5f %.5f %.5f;\n"),
            (double)(battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().color_r/255.0),
            (double)(battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().color_g/255.0),
            (double)(battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().color_b/255.0)
          );
     debug( i2s(battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().side) );
     s += WX_STRING(("\t\tSide=" + usync().GetSideName( battle.opts().modname, battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().side ) + ";\n"));
-    s += wxString::Format( _("\t\tHandicap=%d;\n"), battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().handicap );
-    s +=  _("\t}\n");
+    s += wxString::Format( _T("\t\tHandicap=%d;\n"), battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().handicap );
+    s +=  _T("\t}\n");
   }
 
   for ( int i = 0; i < NumAllys; i++ ) {
-    s += wxString::Format( _("\t[ALLYTEAM%d]\n\t{\n"), i );
+    s += wxString::Format( _T("\t[ALLYTEAM%d]\n\t{\n"), i );
 
     int NumInAlly = 0;
-    s += wxString::Format( _("\t\tNumAllies=%d;\n"), NumInAlly );
+    s += wxString::Format( _T("\t\tNumAllies=%d;\n"), NumInAlly );
 
     if ( (battle.GetStartRect(AllyConv[i]) != NULL) && (bo.starttype == ST_Choose) ) {
       BattleStartRect* sr = (BattleStartRect*)battle.GetStartRect(AllyConv[i]);
-      s += wxString::Format( _("\t\tStartRectLeft=%.3f;\n"), sr->left / 200.0 );
-      s += wxString::Format( _("\t\tStartRectTop=%.3f;\n"), sr->top / 200.0 );
-      s += wxString::Format( _("\t\tStartRectRight=%.3f;\n"), sr->right / 200.0 );
-      s += wxString::Format( _("\t\tStartRectBottom=%.3f;\n"), sr->bottom / 200.0 );
+      s += wxString::Format( _T("\t\tStartRectLeft=%.3f;\n"), sr->left / 200.0 );
+      s += wxString::Format( _T("\t\tStartRectTop=%.3f;\n"), sr->top / 200.0 );
+      s += wxString::Format( _T("\t\tStartRectRight=%.3f;\n"), sr->right / 200.0 );
+      s += wxString::Format( _T("\t\tStartRectBottom=%.3f;\n"), sr->bottom / 200.0 );
     }
 
-    s +=  _("\t}\n");
+    s +=  _T("\t}\n");
   }
 
-  s += wxString::Format( _("\tNumRestrictions=%d;\n"), battle.GetNumDisabledUnits() );
-  s += _("\t[RESTRICT]\n");
-  s += _("\t{\n");
+  s += wxString::Format( _T("\tNumRestrictions=%d;\n"), battle.GetNumDisabledUnits() );
+  s += _T("\t[RESTRICT]\n");
+  s += _T("\t{\n");
 
   std::string units = battle.DisabledUnits();
   std::string unit;
   int i = 0;
   while ( (unit = GetWord( units )) != "" ) {
     s += WX_STRING(("\t\tUnit" + i2s(i) + "=" + unit + ";\n"));
-    s += wxString::Format( _("\t\tLimit%d=0;\n"), i );
+    s += wxString::Format( _T("\t\tLimit%d=0;\n"), i );
     i++;
   }
 
-  s += _("\t}\n");
-  s += _("}\n");
+  s += _T("\t}\n");
+  s += _T("}\n");
 
   if ( DOS_TXT ) {
-    s.Replace( _("\n"), _("\r\n"), true );
+    s.Replace( _T("\n"), _T("\r\n"), true );
   }
 
   return s;

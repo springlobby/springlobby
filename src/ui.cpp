@@ -62,7 +62,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
   if ( m_serv != NULL ) {
     // Delete old Server object
     
-    //if ( Ask( _T("Already connected"), _T("You are already connected to a\nserver. Do you want to disconnect?") ) ) {
+    //if ( Ask( _("Already connected"), _("You are already connected to a\nserver. Do you want to disconnect?") ) ) {
       m_serv->Disconnect();
       sock =  m_serv->GetSocket();
       m_serv->SetSocket( NULL );
@@ -93,7 +93,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
   port = sett().GetServerPort( STL_STRING(servername) );
   
   m_serv->uidata.panel = m_main_win->GetChatTab().AddChatPannel( *m_serv, servername );
-  m_serv->uidata.panel->StatusMessage( _("Connecting to server ") + servername + _("...") );
+  m_serv->uidata.panel->StatusMessage( _T("Connecting to server ") + servername + _T("...") );
 
   // Connect
   m_serv->Connect( host, port );
@@ -123,7 +123,7 @@ bool Ui::Ask( const wxString& heading, const wxString& question )
 
 bool Ui::AskText( const wxString& heading, const wxString& question, wxString& answer )
 {
-  wxTextEntryDialog name_dlg( NULL, question, heading, _(""), wxOK | wxCANCEL | wxCENTRE );
+  wxTextEntryDialog name_dlg( NULL, question, heading, _T(""), wxOK | wxCANCEL | wxCENTRE );
   int res = name_dlg.ShowModal();
   answer = name_dlg.GetValue();
   
@@ -142,11 +142,11 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
 {
 
   if ( !IsConnected() ) return false;
-  if ( (cmd.BeforeFirst(' ').Lower() == _("/join")) || (cmd.BeforeFirst(' ').Lower() == _("/j")) ) {
+  if ( (cmd.BeforeFirst(' ').Lower() == _T("/join")) || (cmd.BeforeFirst(' ').Lower() == _T("/j")) ) {
     wxString channel = cmd.AfterFirst(' ');
     wxString pass = channel.AfterFirst(' ');
     if ( !pass.IsEmpty() ) channel = channel.BeforeFirst(' ');
-    if ( channel.StartsWith(_("#")) ) channel.Remove( 0, 1 );
+    if ( channel.StartsWith(_T("#")) ) channel.Remove( 0, 1 );
 
     m_serv->JoinChannel( STL_STRING(channel), STL_STRING(pass) );
     return true;
@@ -177,7 +177,7 @@ void Ui::OnUpdate()
 void Ui::OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported )
 {
   debug_func( "" );
-  server.uidata.panel->StatusMessage( _("Connected to ") + WX_STRING(server_name) + _(".") );
+  server.uidata.panel->StatusMessage( _T("Connected to ") + WX_STRING(server_name) + _T(".") );
   //server.uidata.panel = m_main_win->GetChatTab().AddChatPannel( server, WX_STRING(server_name) );
 }
 
@@ -185,7 +185,7 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 void Ui::OnDisconnected( Server& server )
 {
   debug_func( "" );
-  server.uidata.panel->StatusMessage( _("Disconnected from server.") );
+  server.uidata.panel->StatusMessage( _T("Disconnected from server.") );
   server.uidata.panel->SetServer( NULL );
   server.uidata.panel = NULL;
 }
@@ -432,7 +432,7 @@ void Ui::OnBattleStartRectsUpdated( Battle& battle )
 {
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != NULL ) {
-    br->GetChatPanel().StatusMessage( _("Start rects updated.") );
+    br->GetChatPanel().StatusMessage( _T("Start rects updated.") );
   }
 }
 
@@ -442,7 +442,7 @@ void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != NULL ) {
     //std::string fullname = usync().GetFullUnitName( battle.opts().modname, usync().GetUnitIndex( battle.opts().modname, unitname ) );
-    br->GetChatPanel().StatusMessage( WX_STRING( unitname ) + _(" disabled.") );
+    br->GetChatPanel().StatusMessage( WX_STRING( unitname ) + _T(" disabled.") );
   }
 }
 
@@ -451,7 +451,7 @@ void Ui::OnBattleEnableUnit( Battle& battle, const std::string& unitname )
 {
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != NULL ) {
-    br->GetChatPanel().StatusMessage( WX_STRING(unitname) + _(" disabled.") );
+    br->GetChatPanel().StatusMessage( WX_STRING(unitname) + _T(" disabled.") );
   }
 }
 
@@ -460,7 +460,7 @@ void Ui::OnBattleEnableAllUnits( Battle& battle )
 {
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != NULL ) {
-    br->GetChatPanel().StatusMessage( _("All units enabled.") );
+    br->GetChatPanel().StatusMessage( _T("All units enabled.") );
   }
 
 }

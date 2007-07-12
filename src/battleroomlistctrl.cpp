@@ -14,43 +14,43 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent ) : wxListCtrl(parent, 
   
   wxListItem col;
   
-  col.SetText( _("r") );
+  col.SetText( _T("r") );
   col.SetImage( -1 );
   InsertColumn( 0, col );
 
-  col.SetText( _("s") );
+  col.SetText( _T("s") );
   col.SetImage( -1 );
   InsertColumn( 1, col );
   
-  col.SetText( _("c") );
+  col.SetText( _T("c") );
   col.SetImage( -1 );
   InsertColumn( 2, col );
 
-  col.SetText( _("f") );
+  col.SetText( _T("f") );
   col.SetImage( -1 );
   InsertColumn( 3, col );
   
-  col.SetText( _("r") );
+  col.SetText( _T("r") );
   col.SetImage( -1 );
   InsertColumn( 4, col );
   
-  col.SetText( _T("Nickname") );
+  col.SetText( _("Nickname") );
   col.SetImage( -1 );
   InsertColumn( 5, col );
   
-  col.SetText( _T("t") );
+  col.SetText( _("t") );
   col.SetImage( -1 );
   InsertColumn( 6, col );
 
-  col.SetText( _T("a") );
+  col.SetText( _("a") );
   col.SetImage( -1 );
   InsertColumn( 7, col );
 
-  col.SetText( _T("cpu") );
+  col.SetText( _("cpu") );
   col.SetImage( -1 );
   InsertColumn( 8, col );
 
-  col.SetText( _T("Handicap") );
+  col.SetText( _("Handicap") );
   col.SetImage( -1 );
   InsertColumn( 9, col );
 
@@ -125,15 +125,15 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   SetItemColumnImage( index, 4, IconImageList::GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 5, WX_STRING( user.GetNick() ) );
   if ( !user.GetBattleStatus().spectator ) {
-    SetItem( index, 6, wxString::Format( _("%d"), user.GetBattleStatus().team + 1 ) );
-    SetItem( index, 7, wxString::Format( _("%d"), user.GetBattleStatus().ally + 1 ) );
-    SetItem( index, 9, wxString::Format( _("%d%%"), user.GetBattleStatus().handicap ) );
+    SetItem( index, 6, wxString::Format( _T("%d"), user.GetBattleStatus().team + 1 ) );
+    SetItem( index, 7, wxString::Format( _T("%d"), user.GetBattleStatus().ally + 1 ) );
+    SetItem( index, 9, wxString::Format( _T("%d%%"), user.GetBattleStatus().handicap ) );
   } else {
-    SetItem( index, 6, _("") );
-    SetItem( index, 7, _("") );
-    SetItem( index, 9, _("") );
+    SetItem( index, 6, _T("") );
+    SetItem( index, 7, _T("") );
+    SetItem( index, 9, _T("") );
   }
-  SetItem( index, 8, wxString::Format( _("%.1f GHz"), user.GetCpu() / 1000.0 ) );
+  SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
 }
 
 

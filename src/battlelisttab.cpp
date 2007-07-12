@@ -16,9 +16,9 @@ END_EVENT_TABLE()
 BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
 {
   m_battle_list = new BattleListCtrl( this );
-  m_filter_text = new wxStaticText( this, -1, _T("Filter ") );
-  m_filter_combo = new wxComboBox( this, -1, _T("Show all") );
-  m_join_button = new wxButton( this, BATTLE_JOIN, _T("Join"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
+  m_filter_text = new wxStaticText( this, -1, _("Filter ") );
+  m_filter_combo = new wxComboBox( this, -1, _("Show all") );
+  m_join_button = new wxButton( this, BATTLE_JOIN, _("Join"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
   
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   m_tools_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -68,7 +68,7 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
   Battle& battle = *((Battle*)m_battle_list->GetItemData( m_battle_list->GetSelectedIndex() ));
   
   if ( battle.opts().ispassworded ) {
-    wxPasswordEntryDialog pw( this, _T("Battle password"), _T("Enter password") );
+    wxPasswordEntryDialog pw( this, _("Battle password"), _("Enter password") );
     if ( pw.ShowModal() == wxID_OK ) battle.Join( STL_STRING(pw.GetValue()) );
   } else {
     battle.Join();
@@ -84,7 +84,7 @@ void BattleListTab::OnListJoin( wxListEvent& event )
   Battle& battle = *((Battle*)m_battle_list->GetItemData( event.GetIndex() ));
   
   if ( battle.opts().ispassworded ) {
-    wxPasswordEntryDialog pw( this, _T("Battle password"), _T("Enter password") );
+    wxPasswordEntryDialog pw( this, _("Battle password"), _("Enter password") );
     if ( pw.ShowModal() == wxID_OK ) battle.Join( STL_STRING(pw.GetValue()) );
   } else {
     battle.Join();

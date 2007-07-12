@@ -23,30 +23,30 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
 
   m_player_panel = new wxPanel( m_splitter , -1 );
-  m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxDefaultSize, 16, team_choices );
-  m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxDefaultSize, 16, team_choices );
-  m_color_sel = new wxComboBox( m_player_panel, BROOM_COLOURSEL, _T("black"), wxDefaultPosition, wxDefaultSize, 16, colour_choices );
+  m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _("1"), wxDefaultPosition, wxDefaultSize, 16, team_choices );
+  m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _("1"), wxDefaultPosition, wxDefaultSize, 16, team_choices );
+  m_color_sel = new wxComboBox( m_player_panel, BROOM_COLOURSEL, _("black"), wxDefaultPosition, wxDefaultSize, 16, colour_choices );
   m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL );
 
   for ( int i = 0; i < usync().GetSideCount( battle.opts().modname ); i++ ) {
     m_side_sel->Append( WX_STRING(usync().GetSideName( battle.opts().modname, i )) );
   }
 
-  m_team_lbl = new wxStaticText( m_player_panel, -1, _T("Team") );
-  m_ally_lbl = new wxStaticText( m_player_panel, -1, _T("Ally") );
-  m_color_lbl = new wxStaticText( m_player_panel, -1, _T("Color") );
-  m_side_lbl = new wxStaticText( m_player_panel, -1, _T("Side") );
-  m_map_lbl = new wxStaticText( this, -1, _("$Mapname") );
+  m_team_lbl = new wxStaticText( m_player_panel, -1, _("Team") );
+  m_ally_lbl = new wxStaticText( m_player_panel, -1, _("Ally") );
+  m_color_lbl = new wxStaticText( m_player_panel, -1, _("Color") );
+  m_side_lbl = new wxStaticText( m_player_panel, -1, _("Side") );
+  m_map_lbl = new wxStaticText( this, -1, _T("$Mapname") );
 
   m_players = new BattleroomListCtrl( m_player_panel );
   m_chat = new ChatPanel( m_splitter, m_ui, battle );
 
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
-  m_leave_btn = new wxButton( this, BROOM_LEAVE, _T("Leave"), wxDefaultPosition, wxSize(80,28) );
-  m_start_btn = new wxButton( this, -1, _T("Start"), wxDefaultPosition, wxSize(80,28) );
+  m_leave_btn = new wxButton( this, BROOM_LEAVE, _("Leave"), wxDefaultPosition, wxSize(80,28) );
+  m_start_btn = new wxButton( this, -1, _("Start"), wxDefaultPosition, wxSize(80,28) );
 
-  m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _T("I'm ready"), wxDefaultPosition, wxSize(80,28) );
+  m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(80,28) );
   
   // Create Sizers
   m_players_sizer = new wxBoxSizer( wxVERTICAL );

@@ -46,11 +46,11 @@ class Settings
 {
   public:
     Settings() {
-      m_config = new wxConfig( _("SpringLobby") );
-      if ( !m_config->Exists( _("/Servers") ) )
+      m_config = new wxConfig( _T("SpringLobby") );
+      if ( !m_config->Exists( _T("/Servers") ) )
         SetDefaultSettings();
     }
-    ~Settings() { m_config->Write( _("/General/firstrun"), false ); delete m_config; }
+    ~Settings() { m_config->Write( _T("/General/firstrun"), false ); delete m_config; }
   
     // Settings interface
   

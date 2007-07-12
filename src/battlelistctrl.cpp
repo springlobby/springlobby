@@ -28,43 +28,43 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, BLIST_LI
   
   wxListItem col;
   
-  col.SetText( _("s") );
+  col.SetText( _T("s") );
   col.SetImage( -1 );
   InsertColumn( 0, col );
 
-  col.SetText( _("c") );
+  col.SetText( _T("c") );
   col.SetImage( -1 );
   InsertColumn( 1, col );
 
-  col.SetText( _("r") );
+  col.SetText( _T("r") );
   col.SetImage( -1 );
   InsertColumn( 2, col );
   
-  col.SetText( _T("Description") );
+  col.SetText( _("Description") );
   col.SetImage( -1 );
   InsertColumn( 3, col );
   
-  col.SetText( _T("Map") );
+  col.SetText( _("Map") );
   col.SetImage( -1 );
   InsertColumn( 4, col );
 
-  col.SetText( _T("Mod") );
+  col.SetText( _("Mod") );
   col.SetImage( -1 );
   InsertColumn( 5, col );
 
-  col.SetText( _T("Host") );
+  col.SetText( _("Host") );
   col.SetImage( -1 );
   InsertColumn( 6, col );
 
-  col.SetText( _T("s") );
+  col.SetText( _("s") );
   col.SetImage( -1 );
   InsertColumn( 7, col );
 
-  col.SetText( _T("p") );
+  col.SetText( _("p") );
   col.SetImage( -1 );
   InsertColumn( 8, col );
 
-  col.SetText( _T("m") );
+  col.SetText( _("m") );
   col.SetImage( -1 );
   InsertColumn( 9, col );
 #ifdef __WXMSW__
@@ -82,9 +82,9 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, BLIST_LI
   SetColumnWidth( 8, 26 );
   SetColumnWidth( 9, 26 );
 
-  m_popup = new wxMenu( _("") );
-  m_popup->Append( BLIST_DLMAP, _T("Download &map") );
-  m_popup->Append( BLIST_DLMOD, _T("Download m&od") );
+  m_popup = new wxMenu( _T("") );
+  m_popup->Append( BLIST_DLMAP, _("Download &map") );
+  m_popup->Append( BLIST_DLMOD, _("Download m&od") );
 }
 
 
@@ -149,9 +149,9 @@ void BattleListCtrl::UpdateBattle( const int& index )
   SetItem( index, 4, RefineMapname( WX_STRING(battle.opts().mapname) ), battle.IsMapAvailable()?ICON_EXISTS:ICON_NEXISTS );
   SetItem( index, 5, RefineModname( WX_STRING(battle.opts().modname) ), battle.IsModAvailable()?ICON_EXISTS:ICON_NEXISTS );
   SetItem( index, 6, WX_STRING(battle.opts().founder) );
-  SetItem( index, 7, wxString::Format(_("%d"), battle.opts().spectators) );
-  SetItem( index, 8, wxString::Format(_("%d"), battle.GetNumUsers() - battle.opts().spectators ) );
-  SetItem( index, 9, wxString::Format(_("%d"), battle.opts().maxplayers) );
+  SetItem( index, 7, wxString::Format(_T("%d"), battle.opts().spectators) );
+  SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.opts().spectators ) );
+  SetItem( index, 9, wxString::Format(_T("%d"), battle.opts().maxplayers) );
   
 }
 
@@ -170,26 +170,26 @@ int BattleListCtrl::GetBattleIndex( Battle& battle )
 wxString BattleListCtrl::RefineMapname( wxString mapname )
 {
   mapname = mapname.SubString(0, mapname.Find( '.', true ) - 1 );
-  mapname.Replace(_("_"), _(" ") );
-  mapname.Replace(_("-"), _(" ") );
+  mapname.Replace(_T("_"), _T(" ") );
+  mapname.Replace(_T("-"), _T(" ") );
   return mapname;
 }
 
 
 wxString BattleListCtrl::RefineModname( wxString modname )
 {
-  modname.Replace(_("Absolute Annihilation"), _("AA") );
-  modname.Replace(_("Complete Annihilation"), _("CA") );
-  modname.Replace(_("Balanced Annihilation"), _("BA") );
-  modname.Replace(_("Expand and Exterminate"), _("EAE") );
-  modname.Replace(_("War Evolution"), _("WarEv") );
-  modname.Replace(_("TinyComm"), _("TC") );
-  modname.Replace(_("BETA"), _("b") );
-  modname.Replace(_("Public Alpha"), _("pa") );
-  modname.Replace(_("Public Beta"), _("pb") );
-  modname.Replace(_("Public"), _("p") );
-  modname.Replace(_("Alpha"), _("a") );
-  modname.Replace(_("Beta"), _("b") );
+  modname.Replace(_T("Absolute Annihilation"), _T("AA") );
+  modname.Replace(_T("Complete Annihilation"), _T("CA") );
+  modname.Replace(_T("Balanced Annihilation"), _T("BA") );
+  modname.Replace(_T("Expand and Exterminate"), _T("EAE") );
+  modname.Replace(_T("War Evolution"), _T("WarEv") );
+  modname.Replace(_T("TinyComm"), _T("TC") );
+  modname.Replace(_T("BETA"), _T("b") );
+  modname.Replace(_T("Public Alpha"), _T("pa") );
+  modname.Replace(_T("Public Beta"), _T("pb") );
+  modname.Replace(_T("Public"), _T("p") );
+  modname.Replace(_T("Alpha"), _T("a") );
+  modname.Replace(_T("Beta"), _T("b") );
   return modname;
 }
 
@@ -225,10 +225,10 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
     Battle& battle = *((Battle*)GetItemData( m_selected ));
     wxString map = WX_STRING(battle.opts().mapname);
     map = map.SubString(0, map.Find( '.', true ) - 1 );
-    map.Replace(_(" "), _("%20") );
-    wxString url = _("http://spring.unknown-files.net/page/search/1/13/") + map + _("/");
+    map.Replace(_T(" "), _T("%20") );
+    wxString url = _T("http://spring.unknown-files.net/page/search/1/13/") + map + _T("/");
     if ( !wxLaunchDefaultBrowser( url ) ) {
-      wxMessageBox( _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+      wxMessageBox( _T("Couldn't launch browser. URL is: ") + url, _T("Couldn't launch browser.")  );
     }
   }
 }
@@ -239,8 +239,8 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
   if ( m_selected >= 0 ) {
     Battle& battle = *((Battle*)GetItemData( m_selected ));
     wxString mod = WX_STRING(battle.opts().modname);
-    mod.Replace(_(" "), _("%20") );
-    wxString url = _("http://spring.unknown-files.net/page/search/1/14/") + mod + _("/");
+    mod.Replace(_T(" "), _T("%20") );
+    wxString url = _T("http://spring.unknown-files.net/page/search/1/14/") + mod + _T("/");
     wxLaunchDefaultBrowser( url );
   }
 }

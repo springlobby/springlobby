@@ -87,7 +87,7 @@ void ChatPanel::_CreateControls( )
 
     m_nicklist = new NickListCtrl( m_nick_panel );
 
-    m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, NULL, wxCB_READONLY );
+    m_nick_filter = new wxComboBox( m_nick_panel, -1, _T("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, NULL, wxCB_READONLY );
 
     m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
     m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
@@ -105,11 +105,11 @@ void ChatPanel::_CreateControls( )
   }
 
   // Creating ui elements
-  m_chatlog_text = new wxTextCtrl( m_chat_panel, -1, _(""), wxDefaultPosition, wxDefaultSize,
+  m_chatlog_text = new wxTextCtrl( m_chat_panel, -1, _T(""), wxDefaultPosition, wxDefaultSize,
                              wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 
-  m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _(""), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), wxTE_PROCESS_ENTER );
-  m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _T("Send"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
+  m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T(""), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), wxTE_PROCESS_ENTER );
+  m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _("Send"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
   // Adding elements to sizers
   m_say_sizer->Add( m_say_text, 1, wxEXPAND );
@@ -160,7 +160,7 @@ void ChatPanel::OnResize( wxSizeEvent& event )
 void ChatPanel::OnSay( wxCommandEvent& event )
 {
   Say( m_say_text->GetValue() );
-  m_say_text->SetValue( _("") );
+  m_say_text->SetValue( _T("") );
 }
 
 //! @brief Output a message said in the channel.
@@ -172,7 +172,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
   LogTime();
-  m_chatlog_text->AppendText( _(" ") + who + _(": ")+ message + _("\n") );
+  m_chatlog_text->AppendText( _T(" ") + who + _T(": ")+ message + _T("\n") );
 }
 
 
@@ -180,7 +180,7 @@ void ChatPanel::DidAction( const wxString& who, const wxString& action )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
   LogTime();
-  m_chatlog_text->AppendText( _(" ") + who + _(" ") + action + _(".\n") );
+  m_chatlog_text->AppendText( _T(" ") + who + _T(" ") + action + _T(".\n") );
 }
 
 
@@ -191,7 +191,7 @@ void ChatPanel::Motd( const wxString& message )
 {
   debug_func( "" );
   m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 80, 128)));
-  m_chatlog_text->AppendText( _(" ** motd ** ")+ message + _("\n") );
+  m_chatlog_text->AppendText( _T(" ** motd ** ")+ message + _T("\n") );
 }
 
 
@@ -199,7 +199,7 @@ void ChatPanel::StatusMessage( const wxString& message )
 {
   debug_func( "" );
   m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 80, 128)));
-  m_chatlog_text->AppendText( _(" ** Server ** ")+ message + _("\n") );
+  m_chatlog_text->AppendText( _T(" ** Server ** ")+ message + _T("\n") );
 }
 
 
@@ -208,7 +208,7 @@ void ChatPanel::UnknownCommand( const wxString& command, const wxString& params 
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
   LogTime();
   m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(128, 0, 0)));
-  m_chatlog_text->AppendText( _T(" !! Command: \"") + command + _T("\" params: \"") + params + _("\".\n") );
+  m_chatlog_text->AppendText( _(" !! Command: \"") + command + _("\" params: \"") + params + _T("\".\n") );
 }
 
 
@@ -217,7 +217,7 @@ void ChatPanel::Joined( User& who )
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
   LogTime();
   m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 80, 0)));
-  m_chatlog_text->AppendText( _(" ** ")+ WX_STRING(who.GetNick()) + _T(" joined the channel.\n") );
+  m_chatlog_text->AppendText( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" joined the channel.\n") );
   m_nicklist->AddUser( who );
   //m_nicklist->UpdateSize();
 }
@@ -228,7 +228,7 @@ void ChatPanel::Parted( User& who, const wxString& message )
   m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
   LogTime();
   m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 80, 0)));
-  m_chatlog_text->AppendText( _(" ** ")+ WX_STRING(who.GetNick()) + _T(" left the channel ( ") + message + _(" ).\n") );
+  m_chatlog_text->AppendText( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" ).\n") );
   m_nicklist->RemoveUser( who );
 //  m_nicklist->UpdateSize();
 }
@@ -237,7 +237,7 @@ void ChatPanel::Parted( User& who, const wxString& message )
 void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 {
   m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 0, 80)));
-  m_chatlog_text->AppendText( _(" ** Channel topic: ")+ message + _T("\n * Set by ") + who + _(".\n") );
+  m_chatlog_text->AppendText( _T(" ** Channel topic: ")+ message + _("\n * Set by ") + who + _T(".\n") );
 }
 
 
@@ -294,7 +294,7 @@ void ChatPanel::Say( const wxString& message )
   if ( m_type == CPT_Channel ) {
 
     assert( m_channel != NULL );
-    if ( message.StartsWith( _("/") ) ) {
+    if ( message.StartsWith( _T("/") ) ) {
       if ( m_channel->ExecuteSayCommand( STL_STRING(message) ) ) return;
     }
     m_channel->Say( STL_STRING(message) );
@@ -302,7 +302,7 @@ void ChatPanel::Say( const wxString& message )
   } else if ( m_type == CPT_Battle ) {
 
     assert( m_battle != NULL );
-    if ( message.StartsWith(_("/")) ) {
+    if ( message.StartsWith(_T("/")) ) {
       if ( m_battle->ExecuteSayCommand( STL_STRING(message) ) ) return;
     }
     m_battle->Say( STL_STRING(message) );
@@ -310,7 +310,7 @@ void ChatPanel::Say( const wxString& message )
   } else if ( m_type == CPT_User ) {
 
     assert( m_user != NULL );
-    if ( message.StartsWith(_("/")) ) {
+    if ( message.StartsWith(_T("/")) ) {
       if ( m_user->ExecuteSayCommand( STL_STRING(message) ) ) return;
     }
     m_user->Say( STL_STRING(message) );
@@ -331,7 +331,7 @@ void ChatPanel::Part()
 void ChatPanel::LogTime()
 {
   wxDateTime now = wxDateTime::Now();
-  m_chatlog_text->AppendText( _("[") + now.Format( _("%H:%M") ) + _("]") );
+  m_chatlog_text->AppendText( _T("[") + now.Format( _T("%H:%M") ) + _T("]") );
 
 }
 

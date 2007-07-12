@@ -14,15 +14,15 @@ NickListCtrl::NickListCtrl( wxWindow* parent )
              wxSUNKEN_BORDER | wxLC_REPORT | /*wxLC_VIRTUAL | wxLC_NO_HEADER |*/ wxLC_SINGLE_SEL )
 {
   wxListItem col;
-  col.SetText( _("") );
+  col.SetText( _T("") );
   col.SetImage( -1 );
   InsertColumn( 0, col );
-  col.SetText( _("") );
+  col.SetText( _T("") );
   col.SetImage( -1 );
   InsertColumn( 1, col );
   col.SetImage( -1 );
   InsertColumn( 2, col );
-  col.SetText( _("Nickname") );
+  col.SetText( _T("Nickname") );
   col.SetImage( ICON_DOWN );
   InsertColumn( 3, col );
 #ifdef __WXMSW__
@@ -90,11 +90,11 @@ void NickListCtrl::UpdateSize()
 wxString NickListCtrl::OnGetItemText(long item, long column) const
 {
   if ( column == 0 ) {
-    return _("");
+    return _T("");
   }
 
-  if ( m_users == NULL ) return _("Error: no list");
-  if ( item >= m_users->GetNumUsers() ) return _("Error: index >= max");
+  if ( m_users == NULL ) return _T("Error: no list");
+  if ( item >= m_users->GetNumUsers() ) return _T("Error: index >= max");
 
   return WX_STRING( m_users->GetUser( item ).GetNick() );
 
