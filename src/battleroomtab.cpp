@@ -171,7 +171,7 @@ void BattleRoomTab::OnSideSel( wxCommandEvent& event )
 {
   User& u = m_battle.GetMe();
   UserBattleStatus bs = u.GetBattleStatus();
-  bs.side = m_color_sel->GetSelection();
+  bs.side = m_side_sel->GetSelection();
   u.SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
 }
