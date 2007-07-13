@@ -4,6 +4,8 @@
 
 #include "battleroomlistctrl.h"
 #include "iconimagelist.h"
+#include "unitsync.h"
+#include "battle.h"
 
 BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent ) : wxListCtrl(parent, -1, 
   wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL )
@@ -119,7 +121,13 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   icons().SetColourIcon( user.GetBattleStatus().team, wxColour( user.GetBattleStatus().color_r, user.GetBattleStatus().color_g, user.GetBattleStatus().color_b ) );
 
   SetItemImage( index, (user.GetBattleStatus().spectator)?ICON_SPECTATOR:IconImageList::GetReadyIcon( user.GetBattleStatus().ready ) );
-  SetItemColumnImage( index, 1, IconImageList::GetSideIcon( user.GetBattleStatus().side ) );
+  try {
+    int sideimg = IconImageList::GetSideIcon( usync().GetSideName( user.GetBattle()->opts().modname, user.GetBattleStatus().side ) );
+    if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
+    else SetItem( index, 1, WX_STRING(usync().GetSideName( user.GetBattle()->opts().modname, user.GetBattleStatus().side )) );
+  } catch ( ... ) {
+    SetItem( index, 1, wxString::Format( _T("s%d"), user.GetBattleStatus().side + 1 ) );
+  }
   SetItemColumnImage( index, 2, IconImageList::GetColourIcon( user.GetBattleStatus().team ) );
   SetItemColumnImage( index, 3, IconImageList::GetFlagIcon( user.GetCountry() ) );
   SetItemColumnImage( index, 4, IconImageList::GetRankIcon( user.GetStatus().rank ) );

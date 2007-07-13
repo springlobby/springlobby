@@ -37,6 +37,9 @@
 
 #include "images/spectator.xpm"
 
+#include "images/arm.xpm"
+#include "images/core.xpm"
+
 #include "images/colourbox.xpm"
 
 #include "images/unknown_flag.xpm"
@@ -75,6 +78,9 @@ IconImageList::IconImageList() : wxImageList(16,16)
   Add( wxBitmap(exists_xpm) );
 
   Add( wxBitmap(spectator_xpm) );
+
+  Add( wxBitmap(arm_xpm) );
+  Add( wxBitmap(core_xpm) );
 
   for ( int i = 0; i < NUM_COLOUR_ICONS; i++ ) Add( wxBitmap(colourbox_xpm) );
 
@@ -171,8 +177,12 @@ void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 }
 
 
-int IconImageList::GetSideIcon( const int& sidenum )
+int IconImageList::GetSideIcon( const std::string& side )
 {
+  wxString sn = WX_STRING( side );
+  sn = sn.Lower();
+  if ( sn  == _T("arm") ) return ICON_ARM;
+  else if (  sn == _T("core") ) return ICON_CORE;
   return -1;
 }
 

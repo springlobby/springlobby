@@ -9,6 +9,7 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/colour.h>
+#include <wx/string.h>
 
 #include "utils.h"
 
@@ -50,7 +51,10 @@
 
 #define ICON_SPECTATOR 24
 
-#define ICON_COLOURS_START 25
+#define ICON_ARM 25
+#define ICON_CORE 26
+
+#define ICON_COLOURS_START 27
 #define NUM_COLOUR_ICONS 16
 
 #define ICON_UNK_FLAG ICON_COLOURS_START+NUM_COLOUR_ICONS
@@ -75,7 +79,7 @@ class IconImageList : public wxImageList
     
     static int GetColourIcon( const int& num );
     void SetColourIcon( const int& num, const wxColour& colour );
-    static int GetSideIcon( const int& sidenum );
+    static int GetSideIcon( const std::string& side );
     static int GetReadyIcon( const bool& ready, const int& sync = 1 );
     
   protected:
