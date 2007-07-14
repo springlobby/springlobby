@@ -76,6 +76,12 @@ bool Battle::IsSynced()
 }
 
 
+bool Battle::HasMod()
+{
+  return usync().ModExists( m_opts.modname );
+}
+
+
 void Battle::Say( const std::string& msg )
 {
   m_serv.SayBattle( opts().battleid, msg );

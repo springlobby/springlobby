@@ -76,6 +76,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   int PlayerOrder[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int TeamConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int AllyConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+  int AllyRevConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
   for ( int i = 0; i < battle.GetNumUsers(); i++ ) {
     Lowest = -1;
@@ -97,7 +98,11 @@ wxString Spring::GetScriptTxt( Battle& battle )
     if ( TeamConv[bs.team] == -1 ) TeamConv[bs.team] = NumTeams++;
 
     // Transform ally numbers.
-    if ( AllyConv[bs.ally] == -1 ) AllyConv[bs.ally] = NumAllys++;
+    if ( AllyConv[bs.ally] == -1 ) {
+      AllyConv[bs.ally] = NumAllys;
+      AllyRevConv[NumAllys] = bs.ally;
+      NumAllys++;
+    }
 
   }  
 
@@ -173,8 +178,8 @@ wxString Spring::GetScriptTxt( Battle& battle )
     int NumInAlly = 0;
     s += wxString::Format( _T("\t\tNumAllies=%d;\n"), NumInAlly );
 
-    if ( (battle.GetStartRect(AllyConv[i]) != NULL) && (bo.starttype == ST_Choose) ) {
-      BattleStartRect* sr = (BattleStartRect*)battle.GetStartRect(AllyConv[i]);
+   if ( (battle.GetStartRect(AllyRevConv[i]) != NULL) && (bo.starttype == ST_Choose) ) {
+      BattleStartRect* sr = (BattleStartRect*)battle.GetStartRect(AllyRevConv[i]);
       s += wxString::Format( _T("\t\tStartRectLeft=%.3f;\n"), sr->left / 200.0 );
       s += wxString::Format( _T("\t\tStartRectTop=%.3f;\n"), sr->top / 200.0 );
       s += wxString::Format( _T("\t\tStartRectRight=%.3f;\n"), sr->right / 200.0 );

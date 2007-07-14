@@ -173,6 +173,7 @@ class Battle : public UserList
     void SendMyBattleStatus();
     
     bool IsSynced();
+    bool HasMod();
 
     bool ExecuteSayCommand( const std::string& cmd ) { return false; }
     

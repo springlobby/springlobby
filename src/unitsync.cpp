@@ -147,11 +147,9 @@ int Unitsync::GetNumMods()
 int Unitsync::GetModIndex( const std::string& name )
 {
   if ( !m_loaded ) return -1;
-  int mc = m_get_mod_count();
-  for ( int i = 0; i < mc; i++ ) {
+  for ( int i = 0; i < m_get_mod_count(); i++ ) {
     std::string cmp = m_get_mod_name( i );
-    if ( name == cmp )
-      return i;
+    if ( name == cmp ) return i;
   }
   return -1;
 }
@@ -233,14 +231,15 @@ int Unitsync::GetMapIndex( const std::string& name )
 
 std::string Unitsync::GetModArchive( int index )
 {
-  if ( !m_loaded ) return "unknown";
+  if ( (!m_loaded) || (index < 0) ) return "unknown";
+  ASSERT_LOGIC( index < m_get_mod_count(), "Bad index" );
   return m_get_mod_archive( index );
 }
 
 
 int Unitsync::GetSideCount( const std::string& modname )
 {
-  if ( !m_loaded ) return 0;
+  if ( (!m_loaded) || (!ModExists(modname)) ) return 0;
   m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
   return m_get_side_count();
 }
@@ -248,7 +247,7 @@ int Unitsync::GetSideCount( const std::string& modname )
 
 std::string Unitsync::GetSideName( const std::string& modname, int index )
 {
-  if ( !m_loaded ) return "unknown";
+  if ( (!m_loaded) || (index < 0) || (!ModExists(modname)) ) return "unknown";
   m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
   ASSERT_LOGIC( m_get_side_count() > index, "Side index too high." );
   return m_get_side_name( index );

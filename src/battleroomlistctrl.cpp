@@ -128,8 +128,13 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   } catch ( ... ) {
     SetItem( index, 1, wxString::Format( _T("s%d"), user.GetBattleStatus().side + 1 ) );
   }
-  SetItemColumnImage( index, 2, IconImageList::GetColourIcon( user.GetBattleStatus().team ) );
-  SetItemColumnImage( index, 3, IconImageList::GetFlagIcon( user.GetCountry() ) );
+  if ( !user.GetBattleStatus().spectator ) {
+    SetItemColumnImage( index, 2, IconImageList::GetColourIcon( user.GetBattleStatus().team ) );
+    SetItemColumnImage( index, 3, IconImageList::GetFlagIcon( user.GetCountry() ) );
+  } else {
+    SetItemColumnImage( index, 2, -1 );
+    SetItemColumnImage( index, 3, -1 );
+  }
   SetItemColumnImage( index, 4, IconImageList::GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 5, WX_STRING( user.GetNick() ) );
   if ( !user.GetBattleStatus().spectator ) {

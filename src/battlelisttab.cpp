@@ -83,6 +83,16 @@ void BattleListTab::OnListJoin( wxListEvent& event )
     
   Battle& battle = *((Battle*)m_battle_list->GetItemData( event.GetIndex() ));
   
+  if ( !battle.HasMod() ) {
+    if (wxMessageBox( _("You need to download the mod before you can join this game. Do you want me to take you to the download page?"), _("Mod not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+      wxString mod = WX_STRING(battle.opts().modname);
+      mod.Replace(_T(" "), _T("%20") );
+      wxString url = _T("http://spring.unknown-files.net/page/search/2/14/") + mod + _T("/");
+      wxLaunchDefaultBrowser( url );
+    }
+    return;
+  }
+
   if ( battle.opts().ispassworded ) {
     wxPasswordEntryDialog pw( this, _("Battle password"), _("Enter password") );
     if ( pw.ShowModal() == wxID_OK ) battle.Join( STL_STRING(pw.GetValue()) );
