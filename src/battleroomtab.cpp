@@ -9,6 +9,7 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
   EVT_BUTTON ( BROOM_LEAVE, BattleRoomTab::OnLeave )
   EVT_CHECKBOX( BROOM_IMREADY, BattleRoomTab::OnImReady )
+  EVT_CHECKBOX( BROOM_SPEC, BattleRoomTab::OnImSpec )
   EVT_COMBOBOX( BROOM_TEAMSEL, BattleRoomTab::OnTeamSel )
   EVT_COMBOBOX( BROOM_ALLYSEL, BattleRoomTab::OnAllySel )
   EVT_COMBOBOX( BROOM_COLOURSEL, BattleRoomTab::OnColourSel )
@@ -47,6 +48,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_start_btn = new wxButton( this, -1, _("Start"), wxDefaultPosition, wxSize(80,28) );
 
   m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(80,28) );
+  m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(80,28) );
   
   // Create Sizers
   m_players_sizer = new wxBoxSizer( wxVERTICAL );
@@ -66,6 +68,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_player_sett_sizer->Add( m_color_sel, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_side_lbl, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_side_sel, 0, wxEXPAND | wxALL, 2 );
+  m_player_sett_sizer->Add( m_spec_chk, 0, wxEXPAND | wxALL, 2 );
   
   m_players_sizer->Add( m_players, 1, wxEXPAND );
   m_players_sizer->Add( m_player_sett_sizer, 0, wxEXPAND );
@@ -116,7 +119,7 @@ void BattleRoomTab::UpdateUser( User& user )
   m_team_sel->SetSelection( bs.team );
   m_ally_sel->SetSelection( bs.ally );
   m_side_sel->SetSelection( bs.side );
-
+  m_spec_chk->SetValue( bs.spectator );
 }
 
 
@@ -129,6 +132,15 @@ void BattleRoomTab::OnLeave( wxCommandEvent& event )
 void BattleRoomTab::OnImReady( wxCommandEvent& event )
 {
   m_battle.SetImReady( m_ready_chk->GetValue() );
+}
+
+
+void BattleRoomTab::OnImSpec( wxCommandEvent& event )
+{
+  UserBattleStatus bs = m_battle.GetMe().GetBattleStatus();
+  bs.spectator = m_spec_chk->GetValue();
+  m_battle.GetMe().SetBattleStatus( bs );
+  m_battle.SendMyBattleStatus();
 }
 
 

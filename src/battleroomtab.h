@@ -51,6 +51,7 @@ class BattleRoomTab : public wxPanel
    
    void OnLeave( wxCommandEvent& event );
    void OnImReady( wxCommandEvent& event );
+   void OnImSpec( wxCommandEvent& event );
    void OnTeamSel( wxCommandEvent& event );
    void OnAllySel( wxCommandEvent& event );
    void OnColourSel( wxCommandEvent& event );
@@ -95,6 +96,7 @@ class BattleRoomTab : public wxPanel
     wxButton* m_start_btn;
   
     wxCheckBox* m_ready_chk;
+    wxCheckBox* m_spec_chk;
   
     DECLARE_EVENT_TABLE()
 };
@@ -103,6 +105,7 @@ enum
 {
     BROOM_LEAVE = wxID_HIGHEST,
     BROOM_IMREADY,
+    BROOM_SPEC,
     BROOM_TEAMSEL,
     BROOM_ALLYSEL,
     BROOM_COLOURSEL,
