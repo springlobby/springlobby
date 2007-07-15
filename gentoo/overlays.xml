@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<layman>
+  <overlay
+      type = "svn"
+      src  = "https://tc.serveftp.net/repos/springlobby/trunk/gentoo/overlay/"
+      name = "springlobby">
+    <link>
+      http://tc.serveftp.net/trac
+    </link>
+    <description>
+      SpringLobby ebuilds.
+    </description>
+  </overlay>
+</layman>
