@@ -39,7 +39,7 @@ class Ui
     void ShowMainWindow();
     void ShowConnectWindow();
     void Connect();
-    void Disconnect() {}
+    void Disconnect();
     void DoConnect( const wxString& servername, const wxString& username, const wxString& password );
     
     bool IsConnected() const {

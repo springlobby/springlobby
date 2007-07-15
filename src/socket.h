@@ -57,7 +57,7 @@ class Socket
     // Socket interface
   
     void Connect( const std::string& addr, const int port );
-    void Disconnect( ) { m_sock->Destroy(); }
+    void Disconnect( ) { m_serv.OnDisconnected( this ); m_sock->Destroy(); }
   
     bool Send( const std::string& data );
     bool Recive( std::string& data );

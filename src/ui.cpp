@@ -47,6 +47,18 @@ void Ui::Connect()
 }
 
 
+void Ui::Disconnect()
+{
+  if ( m_serv != NULL ) {
+    m_serv->Disconnect();
+    Socket* sock =  m_serv->GetSocket();
+    m_serv->SetSocket( NULL );
+    delete sock; sock = NULL;
+    delete m_serv; m_serv = NULL;  
+  }
+}
+
+
 //! @brief Opens the accutial connection to a server.
 void Ui::DoConnect( const wxString& servername, const wxString& username, const wxString& password )
 {
@@ -59,18 +71,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
     return;
   }
   
-  if ( m_serv != NULL ) {
-    // Delete old Server object
-    
-    //if ( Ask( _("Already connected"), _("You are already connected to a\nserver. Do you want to disconnect?") ) ) {
-      m_serv->Disconnect();
-      sock =  m_serv->GetSocket();
-      m_serv->SetSocket( NULL );
-      delete sock; sock = NULL;
-      delete m_serv; m_serv = NULL;
-    //}
-    
-  }
+  Disconnect();
   
   // Create new Server object
   m_serv = new TASServer( *this );
