@@ -10,5 +10,8 @@
     <description>
       SpringLobby ebuilds.
     </description>
+    <contact>
+      FIXME_our__contact_address
+    </contact>
   </overlay>
 </layman>
