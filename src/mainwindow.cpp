@@ -10,7 +10,7 @@
 #include "mainwindow.h"
 #include "settings.h"
 #include "ui.h"
-#include "images/bot.xpm"
+#include "images/springlobby.xpm"
 
 #include "images/chat_icon.xpm"
 #include "images/join_icon.xpm"
@@ -33,7 +33,7 @@ END_EVENT_TABLE()
 MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _("Spring Lobby"),
                                wxPoint(50, 50), wxSize(450, 340)), m_ui(ui)
 {
-  SetIcon( wxIcon(bot_xpm) );
+  SetIcon( wxIcon(springlobby_xpm) );
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(MENU_CONNECT, _("&Connect..."));
   menuFile->Append(MENU_DISCONNECT, _("&Disconnect"));

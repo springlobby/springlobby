@@ -3,9 +3,11 @@
 //
 
 #include <wx/settings.h>
+#include <wx/icon.h>
 #include "connectwindow.h"
 #include "settings.h"
 #include "ui.h"
+#include "images/connect.xpm"
 
 
 // Define events.
@@ -27,7 +29,9 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   wxString username;
   wxString password;
   bool savepass;
-  
+ 
+  SetIcon( wxIcon(connect_xpm) );
+
   server = WX_STRING( sett().GetDefaultServer() );
   username = WX_STRING( sett().GetServerAccountNick( sett().GetDefaultServer() ) );
   password = WX_STRING( sett().GetServerAccountPass( sett().GetDefaultServer() ) );

@@ -145,7 +145,7 @@ void ServerEvents::OnJoinedBattle( int battleid )
   debug_func( "" );
   Battle& battle = m_serv.GetBattle( battleid );
 
-  UserBattleStatus bs = m_serv.GetMe().GetBattleStatus();
+  UserBattleStatus bs;
   bs.spectator = false;
   m_serv.GetMe().SetBattleStatus( bs );
 

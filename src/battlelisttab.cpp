@@ -87,7 +87,7 @@ void BattleListTab::OnListJoin( wxListEvent& event )
     if (wxMessageBox( _("You need to download the mod before you can join this game. Do you want me to take you to the download page?"), _("Mod not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString mod = WX_STRING(battle.opts().modname);
       mod.Replace(_T(" "), _T("%20") );
-      wxString url = _T("http://spring.unknown-files.net/page/search/2/14/") + mod + _T("/");
+      wxString url = _T("http://spring.unknown-files.net/page/search/1/14/") + mod + _T("/");
       wxLaunchDefaultBrowser( url );
     }
     return;

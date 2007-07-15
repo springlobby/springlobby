@@ -138,7 +138,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s += wxString::Format( _T("\t{\n") );
     s += WX_STRING(("\t\tname=" + battle.GetUser( PlayerOrder[i] ).GetNick() + ";\n"));
     s += wxString::Format( _T("\t\tSpectator=%d;\n"), battle.GetUser( PlayerOrder[i] ).GetBattleStatus().spectator?1:0 );
-    if ( !battle.GetUser( PlayerOrder[i] ).GetBattleStatus().spectator ) {
+    if ( !(battle.GetUser( PlayerOrder[i] ).GetBattleStatus().spectator) ) {
       s += wxString::Format( _T("\t\tteam=%d;\n"), TeamConv[battle.GetUser( PlayerOrder[i] ).GetBattleStatus().team] );
     }
     s += wxString::Format( _T("\t}\n") );
