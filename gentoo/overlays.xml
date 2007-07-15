@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <layman>
   <overlay
+      contact = "FIXME_our_contact_address"
       type = "svn"
       src  = "https://tc.serveftp.net/repos/springlobby/trunk/gentoo/overlay/"
       name = "springlobby">
@@ -10,8 +11,5 @@
     <description>
       SpringLobby ebuilds.
     </description>
-    <contact>
-      FIXME_our__contact_address
-    </contact>
   </overlay>
 </layman>
