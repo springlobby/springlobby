@@ -1,0 +1,26 @@
+Index: rts/System/Platform/Linux/UnixFileSystemHandler.cpp
+===================================================================
+--- rts/System/Platform/Linux/UnixFileSystemHandler.cpp	(revision 3975)
++++ rts/System/Platform/Linux/UnixFileSystemHandler.cpp	(working copy)
+@@ -167,7 +167,7 @@
+ 	if (!cfg.empty())
+ 		AddDirs(SubstEnvVars(cfg));
+ 
+-	FILE* f = ::fopen("/etc/spring/datadir", "r");
++	FILE* f = ::fopen("/etc/spring-svn/datadir", "r");
+ 	if (f) {
+ 		char buf[1024];
+ 		while (fgets(buf, sizeof(buf), f)) {
+Index: rts/System/Platform/Linux/DotfileHandler.h
+===================================================================
+--- rts/System/Platform/Linux/DotfileHandler.h	(revision 3975)
++++ rts/System/Platform/Linux/DotfileHandler.h	(working copy)
+@@ -25,7 +25,7 @@
+  *
+  * Defines the name of the configuration file to use
+  */
+-#define DOTCONFIGFILE ".springrc"
++#define DOTCONFIGFILE ".springrc-svn"
+ 
+ /**
+  * @brief dotconfig path

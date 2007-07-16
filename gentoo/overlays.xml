@@ -12,4 +12,16 @@
       SpringLobby ebuilds.
     </description>
   </overlay>
+  <overlay
+    contact = "FIXME_our_contact_address"
+    type = "svn"
+    src = "https://tc.serveftp.net/repos/springlobby/trunk/gentoo/spring-overlay"
+    name = "spring-unofficial">
+  </overlay>
+  <link>
+    http://springrts.com
+  </link>
+  <description>
+    High quality unofficial ebuilds for spring.
+  </description>
 </layman>
