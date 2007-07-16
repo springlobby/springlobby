@@ -9,6 +9,7 @@
 #include "channellist.h"
 #include "userlist.h"
 #include "battlelist.h"
+#include "user.h"
 
 #define PING_TIMEOUT 30
 

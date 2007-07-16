@@ -5,50 +5,30 @@
 #ifndef _BATTLELIST_H_
 #define _BATTLELIST_H_
 
-#include <algorithm>
-#include <iterator>
 #include <map>
-#include <stdexcept>
-#include "battle.h"
 
+class Battle;
 
-//! @brief std::map<> list that stores Battle pointers.
-typedef std::map<int, Battle*> battle_map_t;
-//! @brief battle_map_t iterator.
+typedef int battle_id_t;
+
+//! @brief provides mapping from battle id number to battle object
+typedef std::map<battle_id_t, Battle*> battle_map_t;
+//! @brief iterator for battle map
 typedef battle_map_t::iterator battle_iter_t;
-
 
 class BattleList
 {
   public:
-    
-    BattleList() {}
-    
-    void AddBattle( Battle& battle ) {
-      m_battles[battle.opts().battleid] = &battle;
-    }
-    
-    void RemoveBattle( int const& id ) {
-      m_battles.erase(id);
-    }
- 
-    Battle& GetBattle( int const& id ) {
-      battle_iter_t b = m_battles.find(id);
-      if (b == m_battles.end()) throw std::logic_error("BattleList::GetBattle(): no such battle");
-      return *b->second;
-    }
+    BattleList();
+    void AddBattle( Battle& battle );
+    void RemoveBattle( battle_id_t const& id );
+    Battle& GetBattle( battle_id_t const& id );
+    bool BattleExists( battle_id_t const& id );
+    battle_map_t::size_type GetNumBattles();
 
-    bool BattleExists( int const& id ) {
-      return m_battles.find(id) != m_battles.end();
-    }
-
-    int GetNumBattles() { return (int)m_battles.size(); }
- 
   private:
     battle_map_t m_battles;
-
 };
-
 
 #endif  //_BATTLELIST_H_
 

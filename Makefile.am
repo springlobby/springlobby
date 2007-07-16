@@ -32,6 +32,7 @@ springlobby_SOURCES = \
 	src/battle.h \
 	src/battlelistctrl.cpp \
 	src/battlelistctrl.h \
+	src/battlelist.cpp \
 	src/battlelist.h \
 	src/battlelisttab.cpp \
 	src/battlelisttab.h \
@@ -84,8 +85,8 @@ springlobby_SOURCES = \
 	src/unitsync.h \
 	src/user.cpp \
 	src/user.h \
-	src/userlist.h \
 	src/userlist.cpp \
+	src/userlist.h \
 	src/utils.cpp \
 	src/utils.h \
 	src/images/admin_away.xpm \
