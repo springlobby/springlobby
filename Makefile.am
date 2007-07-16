@@ -44,6 +44,7 @@ springlobby_SOURCES = \
 	src/boost/md5.hpp \
 	src/channel.cpp \
 	src/channel.h \
+	src/channellist.cpp \
 	src/channellist.h \
 	src/chatpanel.cpp \
 	src/chatpanel.h \

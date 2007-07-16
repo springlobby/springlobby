@@ -7,65 +7,32 @@
 
 #include <map>
 #include <string>
-#include <assert.h>
-#include "channel.h"
 
+class Channel;
 
-//! @brief std::map<> list that stores Channel pointers.
+//! @brief mapping from channel name to channel object
 typedef std::map<std::string, Channel*> channel_map_t;
-//! @brief channel_map_t iterator.
+//! @brief iterator for channel map
 typedef channel_map_t::iterator channel_iter_t;
-
 
 //! @brief List of Channel objects
 class ChannelList
 {
   public:
-    // ChannelList interface
-  
-    ChannelList(): m_seek(m_chans.end()), m_seekpos(-1) {}
-      
-    void AddChannel( Channel& channel ) { 
-      m_chans[channel.GetName()] = &channel;
-      m_seekpos = -1;
-    }
-    void RemoveChannel( const std::string& name ) {
-      m_chans.erase( name );
-      m_seekpos = -1;
-    }
-  
-    Channel& GetChannel( const std::string& name ) {
-      channel_iter_t u = m_chans.find(name);
-      if (u == m_chans.end()) throw std::logic_error("ChannelList::GetChannel(\"" + name + "\"): no such channel");
-      return *u->second;
-    }
-      
-    Channel& GetChannel( int index ) {
-      if (m_seekpos < 0) {
-        m_seek = m_chans.begin();
-        m_seekpos = 0;
-      }
-      std::advance( m_seek, index - m_seekpos );
-      m_seekpos = index;
-      return *m_seek->second;
-    }
-    
-    bool ChannelExists( const std::string& name ) {
-      return m_chans.find( name ) != m_chans.end();
-    }
-  
-    int GetNumChannels() { return (int)m_chans.size(); }
-  
+    ChannelList();
+    void AddChannel( Channel& channel );
+    void RemoveChannel( const std::string& name );
+    Channel& GetChannel( const std::string& name );
+    Channel& GetChannel( channel_map_t::size_type index );
+    bool ChannelExists( const std::string& name );
+    channel_map_t::size_type GetNumChannels();
+
   private:
-    // ChannelList variables
     channel_map_t m_chans;
-  
     // The following are used as internal cache to speed up random access:
     mutable channel_iter_t m_seek;
-    mutable int m_seekpos;
-  
+    mutable channel_map_t::size_type m_seekpos;
 };
-
 
 #endif  //_CHANNELLIST_H_
 

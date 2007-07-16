@@ -9,9 +9,9 @@
 
 class Battle;
 
-typedef int battle_id_t;
+typedef unsigned int battle_id_t;
 
-//! @brief provides mapping from battle id number to battle object
+//! @brief mapping from battle id number to battle object
 typedef std::map<battle_id_t, Battle*> battle_map_t;
 //! @brief iterator for battle map
 typedef battle_map_t::iterator battle_iter_t;

@@ -8,6 +8,7 @@
 #include "server.h"
 #include "socket.h"
 #include "battle.h"
+#include "channel.h"
 
 
 User& Server::GetUser( const std::string& nickname )

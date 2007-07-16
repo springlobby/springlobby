@@ -5,6 +5,7 @@
 #include "serverevents.h"
 #include "mainwindow.h"
 #include "ui.h"
+#include "channel.h"
 
 
 void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported )

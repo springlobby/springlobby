@@ -6,6 +6,7 @@
 
 #include <wx/intl.h>
 #include <wx/datetime.h>
+#include "channel.h"
 #include "chatpanel.h"
 #include "utils.h"
 #include "ui.h"

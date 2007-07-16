@@ -7,6 +7,7 @@
 #include "settings.h"
 #include "server.h"
 #include "spring.h"
+#include "channel.h"
 
 
 MainWindow& Ui::mw()
