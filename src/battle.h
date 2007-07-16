@@ -7,7 +7,9 @@
 
 #include <wx/string.h>
 #include <vector>
+#include <stdexcept>
 #include "userlist.h"
+#include "user.h"
 #include "utils.h"
 
 class Ui;
@@ -103,7 +105,7 @@ class Battle : public UserList
   public:
     Battle( Server& serv, Ui& ui, const int& id ) : UserList(),m_serv(serv),m_ui(ui),m_order(0), m_rects(16, (BattleStartRect*)NULL),m_units_num(0) { m_opts.battleid = id; }
     ~Battle() {
-      for (int i = 0; i < GetNumUsers(); i++ ) GetUser(i).SetBattle( NULL );
+      for (user_map_t::size_type i = 0; i < GetNumUsers(); i++ ) GetUser(i).SetBattle( NULL );
       ClearStartRects();
     }
   

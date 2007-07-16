@@ -78,10 +78,10 @@ wxString Spring::GetScriptTxt( Battle& battle )
   int AllyConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int AllyRevConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
-  for ( int i = 0; i < battle.GetNumUsers(); i++ ) {
+  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     Lowest = -1;
     // Find next player in the order they were sent from the server.
-    for ( int gl = 0; gl < battle.GetNumUsers(); gl++ ) {
+    for ( user_map_t::size_type gl = 0; gl < battle.GetNumUsers(); gl++ ) {
       if ( battle.GetUser(gl).GetBattleStatus().order <= LastOrder ) continue;
       if ( Lowest == -1 ) Lowest = gl;
       else if ( battle.GetUser(gl).GetBattleStatus().order < battle.GetUser(Lowest).GetBattleStatus().order ) Lowest = gl;
@@ -133,7 +133,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += wxString::Format( _T("\tNumTeams=%d;\n"), NumTeams );
   s += wxString::Format( _T("\tNumAllyTeams=%d;\n\n"), NumAllys );
   
-  for ( int i = 0; i < battle.GetNumUsers(); i++ ) {
+  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     s += wxString::Format( _T("\t[PLAYER%d]\n"), i );
     s += wxString::Format( _T("\t{\n") );
     s += WX_STRING(("\t\tname=" + battle.GetUser( PlayerOrder[i] ).GetNick() + ";\n"));
@@ -151,7 +151,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
     // Find Team Leader.
     int TeamLeader = -1;
-    for( int tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {
+    for( user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {
       // First Player That Is In The Team Is Leader.
       if ( TeamConv[battle.GetUser( PlayerOrder[tlf] ).GetBattleStatus().team] == i ) {
         TeamLeader = tlf;

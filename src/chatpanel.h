@@ -17,6 +17,7 @@
 #include <wx/listctrl.h>
 #include <wx/combobox.h>
 #include <string>
+#include <stdexcept>
 
 #include "nicklistctrl.h"
 #include "utils.h"

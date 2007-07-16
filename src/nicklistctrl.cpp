@@ -7,6 +7,7 @@
 #include "nicklistctrl.h"
 #include "utils.h"
 #include "iconimagelist.h"
+#include "user.h"
 
 
 NickListCtrl::NickListCtrl( wxWindow* parent )

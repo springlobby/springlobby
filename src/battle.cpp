@@ -31,7 +31,7 @@ void Battle::OnRequestBattleStatus()
   bool changed = true;
   while ( changed ) {
     changed = false;
-    for ( int i = 0; i < GetNumUsers(); i++ ) {
+    for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ ) {
       if ( GetUser( i ).GetBattleStatus().team == lowest ) {
         lowest++;
         changed = true;
@@ -121,7 +121,7 @@ bool Battle::IsFounderMe()
 
 int Battle::GetMyPlayerNum()
 { 
-  for (int i = 0; i < GetNumUsers(); i++) {
+  for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
     if ( &GetUser(i) == &m_serv.GetMe() ) return i;
   }
   ASSERT_LOGIC(false, "You are not in this game.");

@@ -85,6 +85,7 @@ springlobby_SOURCES = \
 	src/user.cpp \
 	src/user.h \
 	src/userlist.h \
+	src/userlist.cpp \
 	src/utils.cpp \
 	src/utils.h \
 	src/images/admin_away.xpm \

@@ -97,7 +97,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_splitter->SetMinimumPaneSize( 100 );
   m_splitter->SetSashPosition( 200 );
   
-  for ( int i = 0; i < battle.GetNumUsers(); i++ ) {
+  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     m_players->AddUser( battle.GetUser( i ) );
   }
   

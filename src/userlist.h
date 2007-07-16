@@ -5,56 +5,27 @@
 #ifndef _USERLIST_H_
 #define _USERLIST_H_
 
-#include "user.h"
-#include <algorithm>
-#include <iterator>
 #include <map>
-#include <stdexcept>
+#include <string>
 
-//! @brief std::map<> list that stores User pointers.
+class User;
+
+//! @brief provides mapping from nick to user object
 typedef std::map<std::string, User*> user_map_t;
-//! @brief user_map_t iterator.
+//! @brief iterator for user map
 typedef user_map_t::iterator user_iter_t;
-
 
 class UserList
 {
   public:
-    
-    UserList(): m_seek(m_users.end()), m_seekpos(-1) {}
-    
-    void AddUser( User& user ) {
-      m_users[user.GetNick()] = &user;
-      m_seekpos = -1;
-    }
-    
-    void RemoveUser( std::string const& nick ) {
-      m_users.erase(nick);
-      m_seekpos = -1;
-    }
- 
-    User& GetUser( std::string const& nick ) {
-      user_iter_t u = m_users.find(nick);
-      if (u == m_users.end()) throw std::logic_error("UserList::GetUser(\"" + nick + "\"): no such user");
-      return *u->second;
-    }
+    UserList();
+    void AddUser( User& user );
+    void RemoveUser( std::string const& nick );
+    User& GetUser( std::string const& nick );
+    User& GetUser( user_map_t::size_type index );
+    bool UserExists( std::string const& nick );
+    user_map_t::size_type GetNumUsers();
 
-    User& GetUser( int index ) {
-      if (m_seekpos < 0) {
-        m_seek = m_users.begin();
-        m_seekpos = 0;
-      }
-      std::advance( m_seek, index - m_seekpos );
-      m_seekpos = index;
-      return *m_seek->second;
-    }
-    
-    bool UserExists( std::string const& nick ) {
-      return m_users.find(nick) != m_users.end();
-    }
-
-    int GetNumUsers() { return (int)m_users.size(); }
- 
   private:
     user_map_t m_users;
     // The following are used as internal cache to speed up random access:

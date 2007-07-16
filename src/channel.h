@@ -6,6 +6,7 @@
 #define _CHANNEL_H_
 
 #include "userlist.h"
+#include "chatpanel.h"
 
 
 class Channel;
