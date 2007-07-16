@@ -10,6 +10,8 @@
 #include <wx/listbook.h>
 #include <wx/frame.h>
 #include <wx/utils.h>
+#include <wx/image.h>
+#include <wx/dcmemory.h>
 
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
@@ -43,8 +45,11 @@ class MainWindow : public wxFrame
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
 
+    void OnTabsChanged( wxListbookEvent& event );
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab() { assert( m_join_tab != NULL ); return *m_join_tab; }
+
+    void MakeImages();
 
   protected:
     // MainWindow variables
@@ -58,6 +63,11 @@ class MainWindow : public wxFrame
     MainChatTab* m_chat_tab;
     MainJoinBattleTab* m_join_tab;
     MainOptionsTab* m_opts_tab;
+
+    wxBitmap* m_chat_icon;
+    wxBitmap* m_battle_icon;
+    wxBitmap* m_options_icon;
+    wxBitmap* m_select_image;
 
     wxImageList* m_func_tab_images;
 
@@ -79,7 +89,8 @@ enum
     MENU_USYNC,
     MENU_TRAC,
     MENU_DOC,
-    MENU_CHAT
+    MENU_CHAT,
+    MAIN_TABS
 
 };
 

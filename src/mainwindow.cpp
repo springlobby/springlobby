@@ -15,6 +15,8 @@
 #include "images/chat_icon.xpm"
 #include "images/join_icon.xpm"
 #include "images/options_icon.xpm"
+#include "images/select_icon.xpm"
+
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
@@ -26,6 +28,8 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_USYNC, MainWindow::OnUnitsyncReload )
   EVT_MENU( MENU_TRAC, MainWindow::OnReportBug )
   EVT_MENU( MENU_DOC, MainWindow::OnShowDocs )
+
+  EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
 
 END_EVENT_TABLE()
 
@@ -61,12 +65,15 @@ MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _("Spring Lobby"
   SetMenuBar(menubar);
 
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
-  m_func_tabs = new wxListbook( this, -1, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
+  m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
+
+  m_chat_icon = new wxBitmap( chat_icon_xpm );
+  m_battle_icon = new wxBitmap( join_icon_xpm );
+  m_options_icon = new wxBitmap( options_icon_xpm );
+  m_select_image = new wxBitmap( select_icon_xpm );
 
   m_func_tab_images = new wxImageList( 64, 64 );
-  m_func_tab_images->Add( wxIcon(chat_icon_xpm) );
-  m_func_tab_images->Add( wxIcon(join_icon_xpm) );
-  m_func_tab_images->Add( wxIcon(options_icon_xpm) );
+  MakeImages();
 
   m_func_tabs->AssignImageList( m_func_tab_images );
   m_chat_tab = new MainChatTab( m_func_tabs, m_ui );
@@ -98,6 +105,46 @@ MainWindow::~MainWindow()
   sett().SaveSettings();
   m_ui.m_main_win = NULL;
 }
+
+
+void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
+{
+  wxMemoryDC dc;
+  dc.SelectObject( canvas );
+  dc.DrawBitmap( object, x, y, true );
+}
+
+
+void MainWindow::MakeImages()
+{
+  m_func_tab_images->RemoveAll();
+
+  if ( m_func_tabs->GetSelection() == 0 ) {
+    wxBitmap img( *m_select_image );
+    DrawBmpOnBmp( img, *m_chat_icon, 0, 0 );
+    m_func_tab_images->Add( img );
+  } else {
+    m_func_tab_images->Add( *m_chat_icon );
+  }
+
+  if ( m_func_tabs->GetSelection() == 1 ) {
+    wxBitmap img( *m_select_image );
+    DrawBmpOnBmp( img, *m_battle_icon, 0, 0 );
+    m_func_tab_images->Add( img );
+  } else {
+    m_func_tab_images->Add( *m_battle_icon );
+  }
+
+  if ( m_func_tabs->GetSelection() == 2 ) {
+    wxBitmap img( *m_select_image );
+    DrawBmpOnBmp( img, *m_options_icon, 0, 0 );
+    m_func_tab_images->Add( img );
+  } else {
+    m_func_tab_images->Add( *m_options_icon );
+  }
+
+}
+
 
 /*
 //! @brief Get the ChatPanel dedicated to server output and input
@@ -213,5 +260,11 @@ void MainWindow::OnReportBug( wxCommandEvent& event )
 void MainWindow::OnShowDocs( wxCommandEvent& event )
 {
   wxLaunchDefaultBrowser( _T("http://tc.serveftp.net/trac") );
+}
+
+
+void MainWindow::OnTabsChanged( wxListbookEvent& event )
+{
+  MakeImages();
 }
 

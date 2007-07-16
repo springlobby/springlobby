@@ -323,6 +323,14 @@
 						AdditionalIncludeDirectories="&quot;C:\wxWidgets-2.8.4\include&quot;"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						AdditionalIncludeDirectories="&quot;C:\wxWidgets-2.8.4\include&quot;"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
