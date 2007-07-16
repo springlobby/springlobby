@@ -90,6 +90,7 @@ springlobby_SOURCES = \
 	src/images/admin_away.xpm \
 	src/images/admin_ingame.xpm \
 	src/images/admin.xpm \
+	src/images/arm.xpm \
 	src/images/away.xpm \
 	src/images/battle_list.xpm \
 	src/images/battle_map.xpm \
@@ -102,6 +103,8 @@ springlobby_SOURCES = \
 	src/images/closed_pw_game.xpm \
 	src/images/close.xpm \
 	src/images/colourbox.xpm \
+	src/images/connect.xpm \
+	src/images/core.xpm \
 	src/images/down.xpm \
 	src/images/exists.xpm \
 	src/images/ingame.xpm \
@@ -119,9 +122,11 @@ springlobby_SOURCES = \
 	src/images/rank4.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
+	src/images/select_icon.xpm \
 	src/images/server.xpm \
 	src/images/spectator.xpm \
 	src/images/spring.xpm \
+	src/images/springlobby.xpm \
 	src/images/started_game.xpm \
 	src/images/unknown_flag.xpm \
 	src/images/up.xpm \
