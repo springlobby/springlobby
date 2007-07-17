@@ -3,6 +3,8 @@
 //
 
 #include <wx/icon.h>
+#include <wx/intl.h>
+
 #include "mainjoinbattletab.h"
 
 #include "images/battle_list.xpm"

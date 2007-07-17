@@ -2,6 +2,8 @@
 // Class: ServerEvents
 //
 
+#include <wx/intl.h>
+
 #include "serverevents.h"
 #include "mainwindow.h"
 #include "ui.h"

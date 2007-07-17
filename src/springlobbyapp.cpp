@@ -2,10 +2,12 @@
 // Class: SpringLobbyApp
 //
 
+#include <wx/intl.h>
+#include <wx/msgdlg.h>
+
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
-#include <wx/msgdlg.h>
 
 
 IMPLEMENT_APP(SpringLobbyApp)
