@@ -299,6 +299,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\userlist.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\userlist.h"
 				>
 			</File>
@@ -347,6 +351,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\battlelist.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\battlelistctrl.cpp"
 				>
 			</File>
@@ -364,6 +372,10 @@
 			</File>
 			<File
 				RelativePath=".\src\channel.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\channellist.cpp"
 				>
 			</File>
 			<File
