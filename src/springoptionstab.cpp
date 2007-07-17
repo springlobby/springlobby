@@ -7,6 +7,7 @@
 #include "springoptionstab.h"
 #include "ui.h"
 #include "unitsync.h"
+#include "utils.h"
 
 BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
 

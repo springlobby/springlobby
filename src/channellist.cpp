@@ -32,7 +32,7 @@ Channel& ChannelList::GetChannel( const std::string& name )
 
 Channel& ChannelList::GetChannel( channel_map_t::size_type index )
 {
-  if (m_seekpos == SEEK_INVALID) {
+  if (m_seekpos == SEEK_INVALID || m_seekpos > index) {
     m_seek = m_chans.begin();
     m_seekpos = 0;
   }

@@ -6,12 +6,8 @@
 #define _UNITSYNC_H_
 
 #include <string>
-#include <wx/filefn.h>
-#include <wx/msgdlg.h>
 
-#include "settings.h"
-#include "utils.h"
-
+// FIXME wxDynamicLibrary instead?
 #ifdef WIN32
 #include <windows.h>
 #include <wx/msw/winundef.h>

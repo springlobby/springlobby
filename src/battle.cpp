@@ -9,6 +9,7 @@
 #include "unitsync.h"
 #include "server.h"
 #include "user.h"
+#include "utils.h"
 
 
 Battle::Battle( Server& serv, Ui& ui, int id ) :

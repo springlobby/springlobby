@@ -8,6 +8,7 @@
 #include "tasserver.h"
 #include "unitsync.h"
 #include "user.h"
+#include "utils.h"
 
 
 void TASServer::SetSocket( Socket* sock )

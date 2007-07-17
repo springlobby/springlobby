@@ -3,10 +3,13 @@
 //
 
 #include <wx/intl.h>
-
-#include "unitsync.h"
+#include <wx/msgdlg.h>
 #include <assert.h>
 #include <stdexcept>
+
+#include "unitsync.h"
+#include "utils.h"
+#include "settings.h"
 
 #ifdef WIN32
 static char* dllname = "\\unitsync.dll";
