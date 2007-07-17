@@ -1,8 +1,4 @@
-
-#include <string>
-#include <iostream>
 #include "flagimages.h"
-
 #include "utils.h"
 
 int GetFlagIndex( const std::string& flag )
