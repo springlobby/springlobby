@@ -10,6 +10,9 @@
 #include "user.h"
 #include "utils.h"
 
+TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(SER_VER_UNKNOWN), m_connected(false), m_online(false), m_buffer(""), m_last_ping(0), m_ping_id(1000),m_battle_id(-1) { m_se = new ServerEvents( *this, ui); }
+
+TASServer::~TASServer() { delete m_se; }
 
 void TASServer::SetSocket( Socket* sock )
 {
