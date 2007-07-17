@@ -16,6 +16,7 @@
 #include "connectwindow.h"
 #include "mainwindow.h"
 #include "user.h"
+#include "chatpanel.h"
 
 
 Ui::Ui() :

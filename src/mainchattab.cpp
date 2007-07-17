@@ -10,6 +10,7 @@
 #include "mainwindow.h"
 #include "channel.h"
 #include "user.h"
+#include "chatpanel.h"
 
 #include "images/close.xpm"
 #include "images/server.xpm"
@@ -60,6 +61,11 @@ MainChatTab::~MainChatTab()
 
 }
 
+ChatPanel& MainChatTab::ServerChat()
+{
+  assert( m_server_chat != NULL );
+  return *m_server_chat;
+}
 
 ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
 {
