@@ -3,6 +3,7 @@
 //
 
 #include <wx/msgdlg.h>
+#include <wx/textdlg.h>
 
 #include "ui.h"
 #include "tasserver.h"
