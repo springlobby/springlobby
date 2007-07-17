@@ -92,8 +92,6 @@ class Ui
     void OnMainWindowDestruct() { m_main_win = 0; }
 
   protected:
-    // Ui variables
-
     Spring* m_spring;
 
     Server* m_serv;
