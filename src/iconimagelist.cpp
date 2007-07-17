@@ -4,9 +4,12 @@
 
 #include <stdexcept>
 
+#include <wx/image.h>
+
 #include "iconimagelist.h"
 #include "user.h"
 #include "battle.h"
+#include "utils.h"
 
 
 #include "images/bot.xpm"

@@ -6,12 +6,7 @@
 #define _ICONIMAGELIST_H_
 
 #include <wx/imaglist.h>
-#include <wx/bitmap.h>
-#include <wx/image.h>
 #include <wx/colour.h>
-#include <wx/string.h>
-
-#include "utils.h"
 
 #define ICON_ADMIN 0
 #define ICON_ADMIN_AWAY 1
@@ -60,17 +55,13 @@
 #define ICON_UNK_FLAG ICON_COLOURS_START+NUM_COLOUR_ICONS
 #define ICON_FLAGS_BASE ICON_UNK_FLAG+1
 
-#include <string>
-#include <wx/imaglist.h>
 class Battle;
-struct UserStatus;
+class UserStatus;
 
 class IconImageList : public wxImageList
 {
   public:
     IconImageList();
-
-    // IconImageList interface
 
     static int GetUserStateIcon( const UserStatus& us );
     static int GetRankIcon( const int& rank, const bool& showlowest = true );
@@ -83,8 +74,6 @@ class IconImageList : public wxImageList
     static int GetReadyIcon( const bool& ready, const int& sync = 1 );
 
   protected:
-    // IconImageList variables
-
 };
 
 IconImageList& icons();

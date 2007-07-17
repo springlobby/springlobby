@@ -10,10 +10,6 @@
 
 #include "server.h"
 
-//#include <time.h>
-//#include "ui.h"
-//
-
 //! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
 struct TASPingListItem {
   int id;
