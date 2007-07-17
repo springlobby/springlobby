@@ -4,11 +4,16 @@
 
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
+#include <wx/timer.h>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
 #include "utils.h"
+#include "ui.h"
+
+#define TIMER_ID 101
+#define TIMER_INTERVAL 100
 
 
 IMPLEMENT_APP(SpringLobbyApp)
@@ -19,6 +24,15 @@ BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
 
 END_EVENT_TABLE()
 
+SpringLobbyApp::SpringLobbyApp()
+{
+  m_timer = new wxTimer(this, TIMER_ID);
+}
+
+SpringLobbyApp::~SpringLobbyApp()
+{
+  delete m_timer;
+}
 
 //! @brief Initializes the application.
 //!
