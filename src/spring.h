@@ -30,7 +30,7 @@ class Spring
   public:
     Spring( Ui& ui): m_ui(ui),m_process(NULL),m_running(false) {} 
     ~Spring() { if ( m_process != NULL ) delete m_process; }
-  
+
     bool IsRunning() { return m_process != NULL; }
     bool Run( Battle& battle );
 
