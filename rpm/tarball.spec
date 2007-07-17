@@ -8,6 +8,35 @@
 # Please submit bugfixes or comments via http://tc.serveftp.net/trac/newticket
 #
 # norootforbuild
+
+#are we not using suse buildservice?
+%if ! 0%{?fedora_version}
+%if ! 0%{?suse_version}
+%if ! 0%{?mandriva_version}
+%define noredhat 0
+#manual check the distro
+%if [ -f /etc/mandrake-release ]
+	%define mandriva_version   %(cat /etc/mandrake-release|cut -f4 -d" ")
+	%define noredhat 1
+%endif
+%if [ -f /etc/fedora-release ]
+	%define fedora_version      %(cat /etc/fedora-release | cut -f4 -d" ")
+	%define noredhat 1
+%endif
+%if [ -f /etc/redhat-release ]
+	%if {noredhat}
+		%define redhat_version      %(rpm -qf --queryformat %{VERSION} /etc/redhat-release|tr -d '.')
+	%endif
+%endif
+%if [ -f /etc/SuSE-release ]
+	%define suse_version	%(grep VERSION /etc/SuSE-release|cut -f3 -d" ")
+%endif
+
+%endif
+%endif
+%endif
+
+
  
 Name:           SpringLobby
 Version:        1
@@ -22,25 +51,23 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
  
 #define the minimum version number requied for packages
 %define req_wxgtk 2.6.0
-%define req_automake 1.8
-%define req_autoconf 2.59
  
 #dependencies check for mandrake-mandriva
 %if 0%{?suse_version}
 Requires: libwxgtk2.6 >= %{req_wxgtk}
-BuildRequires: gcc-c++ , make, automake1.8 >= %{req_automake}, autoconf2.5 >= %{req_autoconf}, libwxgtk2.6-devel >= %{req_wxgtk} 
+BuildRequires: gcc-c++ , make, libwxgtk2.6-devel >= %{req_wxgtk} 
 %endif
  
 #dependencies check for SuSe
 %if 0%{?suse_version}
 Requires: libwxgtk >= %{req_wxgtk}
-BuildRequires: gcc-c++ , make, automake >= %{req_automake}, autoconf >= %{req_autoconf}, libwxgtk-devel >= %{req_wxgtk} 
+BuildRequires: gcc-c++ , make, libwxgtk-devel >= %{req_wxgtk} 
 %endif
  
 #dependencies check for Fedora
 %if 0%{?fedora_version}
 Requires: libwxgtk >= %{req_wxgtk}
-BuildRequires: gcc-c++ , make, automake >= %{req_automake}, autoconf >= %{req_autoconf}, libwxgtk-devel >= %{req_wxgtk} 
+BuildRequires: gcc-c++ , make, libwxgtk-devel >= %{req_wxgtk} 
 %endif
  
  
@@ -54,7 +81,6 @@ Have all the popular features seen in other clients.
 Have a clean, well designed, and well documented source code.
  
 %build
-autoreconf 
 ./configure -prefix=/usr
 make
  
@@ -62,5 +88,9 @@ make
 make install
  
 %changelog
+* Tue Jul 17 2007 - Brain Damage
+- Removed useless deps when building from tarball package
+- Added script to auto-detect build envronment when not using SuSe's buildservice
+
 * Sat Jul 14 2007 - Brain Damage
 - Initial Version
