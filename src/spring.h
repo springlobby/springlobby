@@ -7,6 +7,7 @@
 
 #include <wx/string.h>
 #include <wx/process.h>
+#include <wx/file.h>
 
 
 class Battle;

@@ -52,20 +52,20 @@ void Battle::OnRequestBattleStatus()
   while ( changed ) {
     changed = false;
     for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ ) {
-      if ( GetUser( i ).GetBattleStatus().team == lowest ) {
+      if ( GetUser( i ).BattleStatus().team == lowest ) {
         lowest++;
         changed = true;
       }
     }
   }
 
-  UserBattleStatus bs = m_serv.GetMe().GetBattleStatus();
+  UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.team = lowest;
   bs.ally = lowest;
   if ( IsSynced() ) bs.sync = SYNC_SYNCED;
   else bs.sync = SYNC_UNSYNCED;
   
-  m_serv.GetMe().SetBattleStatus( bs );
+  //m_serv.GetMe().SetBattleStatus( bs );
 
   SendMyBattleStatus();
 
@@ -74,18 +74,18 @@ void Battle::OnRequestBattleStatus()
 
 void Battle::SendMyBattleStatus()
 {
-  UserBattleStatus bs = m_serv.GetMe().GetBattleStatus();
+  UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   m_serv.SendMyBattleStatus( bs );
 }
 
 
 void Battle::SetImReady( bool ready )
 {
-  UserBattleStatus bs = m_serv.GetMe().GetBattleStatus();
+  UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   
   bs.ready = ready;
   
-  m_serv.GetMe().SetBattleStatus( bs );
+  //m_serv.GetMe().SetBattleStatus( bs );
   SendMyBattleStatus();
 }
 
@@ -151,7 +151,7 @@ int Battle::GetMyPlayerNum()
 void Battle::AddUser( User& user ) {
   user.SetBattle( this );
   UserList::AddUser( user );
-  UserBattleStatus bs = user.GetBattleStatus();
+  UserBattleStatus bs;// = user.BattleStatus();
   bs.order = m_order++;
   user.SetBattleStatus( bs, true );
 }

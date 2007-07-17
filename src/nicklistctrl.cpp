@@ -158,13 +158,10 @@ int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData)
   if ( user2->GetStatus().bot )
     u2 += 100;
   
-  std::string nick1 = user1->GetNick();
-  std::transform( nick1.begin(), nick1.end(), nick1.begin(), upper() );
+  wxString nick1 = WX_STRING(user1->GetNick());
+  wxString nick2 = WX_STRING(user2->GetNick());
 
-  std::string nick2 = user2->GetNick();
-  std::transform( nick2.begin(), nick2.end(), nick2.begin(), upper() );
-
-  int cmp = nick1.compare( nick2 );
+  int cmp = nick1.CmpNoCase( nick2 );
   if ( cmp < 0 ) u1 += 10;
   else if ( cmp > 0 ) u2 += 10;
   

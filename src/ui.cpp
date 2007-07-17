@@ -22,8 +22,8 @@ Ui::Ui() :
 }
 
 Ui::~Ui() {
+  Disconnect();
   if ( m_main_win != NULL ) delete m_main_win;
-  if ( m_serv != NULL ) delete m_serv;
   delete m_spring;
 }
 
@@ -75,7 +75,7 @@ void Ui::Disconnect()
 {
   if ( m_serv != NULL ) {
     m_serv->Disconnect();
-    Socket* sock =  m_serv->GetSocket();
+    Socket* sock = m_serv->GetSocket();
     m_serv->SetSocket( NULL );
     delete sock; sock = NULL;
     delete m_serv; m_serv = NULL;  
@@ -223,6 +223,7 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 void Ui::OnDisconnected( Server& server )
 {
   debug_func( "" );
+  if ( m_main_win == NULL ) return;
   server.uidata.panel->StatusMessage( _T("Disconnected from server.") );
   server.uidata.panel->SetServer( NULL );
   server.uidata.panel = NULL;

@@ -202,7 +202,7 @@ void ChatPanel::Motd( const wxString& message )
 void ChatPanel::StatusMessage( const wxString& message )
 {
   debug_func( "" );
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 80, 128)));
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(255, 150, 80)));
   m_chatlog_text->AppendText( _T(" ** Server ** ")+ message + _T("\n") );
 }
 

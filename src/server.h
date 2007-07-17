@@ -19,7 +19,7 @@ class Channel;
 class Ui;
 class Battle;
 class User;
-class UserBattleStatus;
+struct UserBattleStatus;
 class ChatPanel;
 
 

@@ -83,7 +83,7 @@ class User
     UserStatus GetStatus() const { return m_status; }
     void SetStatus( const UserStatus& status );
   
-    UserBattleStatus GetBattleStatus() const { return m_bstatus; }
+    UserBattleStatus& BattleStatus() { return m_bstatus; }
     void SetBattleStatus( const UserBattleStatus& status, bool setorder = false );
 
 /*    void SetUserData( void* userdata ) { m_data = userdata; }

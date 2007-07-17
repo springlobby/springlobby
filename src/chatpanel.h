@@ -16,6 +16,7 @@
 #include <wx/textctrl.h>
 #include <wx/listctrl.h>
 #include <wx/combobox.h>
+#include <wx/button.h>
 #include <string>
 #include <stdexcept>
 

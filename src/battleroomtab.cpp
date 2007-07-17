@@ -116,7 +116,7 @@ void BattleRoomTab::UpdateUser( User& user )
   m_players->UpdateUser( user );
   if ( &user != &m_battle.GetMe() ) return;
 
-  UserBattleStatus bs = user.GetBattleStatus();
+  UserBattleStatus& bs = user.BattleStatus();
   m_team_sel->SetSelection( bs.team );
   m_ally_sel->SetSelection( bs.ally );
   m_side_sel->SetSelection( bs.side );
@@ -138,9 +138,9 @@ void BattleRoomTab::OnImReady( wxCommandEvent& event )
 
 void BattleRoomTab::OnImSpec( wxCommandEvent& event )
 {
-  UserBattleStatus bs = m_battle.GetMe().GetBattleStatus();
+  UserBattleStatus& bs = m_battle.GetMe().BattleStatus();
   bs.spectator = m_spec_chk->GetValue();
-  m_battle.GetMe().SetBattleStatus( bs );
+  //m_battle.GetMe().SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
 }
 
@@ -148,10 +148,10 @@ void BattleRoomTab::OnImSpec( wxCommandEvent& event )
 void BattleRoomTab::OnTeamSel( wxCommandEvent& event )
 {
   User& u = m_battle.GetMe();
-  UserBattleStatus bs = u.GetBattleStatus();
+  UserBattleStatus& bs = u.BattleStatus();
   m_team_sel->GetValue().ToULong( (unsigned long*)&bs.team );
   bs.team--;
-  u.SetBattleStatus( bs );
+  //u.SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
 }
 
@@ -159,10 +159,10 @@ void BattleRoomTab::OnTeamSel( wxCommandEvent& event )
 void BattleRoomTab::OnAllySel( wxCommandEvent& event )
 {
   User& u = m_battle.GetMe();
-  UserBattleStatus bs = u.GetBattleStatus();
+  UserBattleStatus& bs = u.BattleStatus();
   m_ally_sel->GetValue().ToULong( (unsigned long*)&bs.ally );
   bs.ally--;
-  u.SetBattleStatus( bs );
+  //u.SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
 }
 
@@ -170,12 +170,12 @@ void BattleRoomTab::OnAllySel( wxCommandEvent& event )
 void BattleRoomTab::OnColourSel( wxCommandEvent& event )
 {
   User& u = m_battle.GetMe();
-  UserBattleStatus bs = u.GetBattleStatus();
+  UserBattleStatus& bs = u.BattleStatus();
   int i = m_color_sel->GetSelection();
   bs.color_r = colour_values[i][0];
   bs.color_g = colour_values[i][1];
   bs.color_b = colour_values[i][2];
-  u.SetBattleStatus( bs );
+  //u.SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
 }
 
@@ -183,9 +183,9 @@ void BattleRoomTab::OnColourSel( wxCommandEvent& event )
 void BattleRoomTab::OnSideSel( wxCommandEvent& event )
 {
   User& u = m_battle.GetMe();
-  UserBattleStatus bs = u.GetBattleStatus();
+  UserBattleStatus& bs = u.BattleStatus();
   bs.side = m_side_sel->GetSelection();
-  u.SetBattleStatus( bs );
+  //u.SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
 }
 

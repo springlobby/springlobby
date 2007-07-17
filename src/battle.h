@@ -110,7 +110,7 @@ class Battle : public UserList
     void SetIsPassworded( const bool& ispassworded ) { m_opts.ispassworded = ispassworded; }
     
     void SetNatType( const NatType nattype ) { m_opts.nattype = nattype; }
-    void SetPort( const int& port) { m_opts.port = port; }
+    void SetHostPort( int port) { m_opts.port = port; }
     void SetFounder( const std::string& nick ) { m_opts.founder = nick; }
     void SetIp( const std::string& ip ) { m_opts.ip = ip; }
     

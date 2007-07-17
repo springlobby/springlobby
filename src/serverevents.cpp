@@ -128,7 +128,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::
   battle.SetNatType( nat );
   battle.SetFounder( nick );
   battle.SetIp( host );
-  battle.SetPort( port );
+  battle.SetHostPort( port );
   battle.SetMaxPlayers( maxplayers );
   battle.SetIsPassworded( haspass );
   battle.SetRankNeeded( rank );
@@ -146,9 +146,9 @@ void ServerEvents::OnJoinedBattle( int battleid )
   debug_func( "" );
   Battle& battle = m_serv.GetBattle( battleid );
 
-  UserBattleStatus bs;
+  UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.spectator = false;
-  m_serv.GetMe().SetBattleStatus( bs );
+  //m_serv.GetMe().SetBattleStatus( bs );
 
   m_ui.OnJoinedBattle( battle );
 }
@@ -158,7 +158,7 @@ void ServerEvents::OnClientBattleStatus( int battleid, const std::string& nick, 
 {
   Battle& battle = m_serv.GetBattle( battleid );
   User& user = m_serv.GetUser( nick );
-  status.color_index = user.GetBattleStatus().color_index;
+  status.color_index = user.BattleStatus().color_index;
   user.SetBattleStatus( status );
   m_ui.OnUserBattleStatus( battle, user );
 }

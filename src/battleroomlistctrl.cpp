@@ -118,23 +118,23 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     
   User& user = *((User*)GetItemData( index ));
   
-  icons().SetColourIcon( user.GetBattleStatus().team, wxColour( user.GetBattleStatus().color_r, user.GetBattleStatus().color_g, user.GetBattleStatus().color_b ) );
+  icons().SetColourIcon( user.BattleStatus().team, wxColour( user.BattleStatus().color_r, user.BattleStatus().color_g, user.BattleStatus().color_b ) );
 
-  SetItemImage( index, (user.GetBattleStatus().spectator)?ICON_SPECTATOR:IconImageList::GetReadyIcon( user.GetBattleStatus().ready ) );
+  SetItemImage( index, (user.BattleStatus().spectator)?ICON_SPECTATOR:IconImageList::GetReadyIcon( user.BattleStatus().ready ) );
 
   SetItemColumnImage( index, 1, -1 );
 
-  if ( !user.GetBattleStatus().spectator ) {
+  if ( !user.BattleStatus().spectator ) {
 
     try {
-      int sideimg = IconImageList::GetSideIcon( usync().GetSideName( user.GetBattle()->opts().modname, user.GetBattleStatus().side ) );
+      int sideimg = IconImageList::GetSideIcon( usync().GetSideName( user.GetBattle()->opts().modname, user.BattleStatus().side ) );
       if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
-      else SetItem( index, 1, WX_STRING(usync().GetSideName( user.GetBattle()->opts().modname, user.GetBattleStatus().side )) );
+      else SetItem( index, 1, WX_STRING(usync().GetSideName( user.GetBattle()->opts().modname, user.BattleStatus().side )) );
     } catch ( ... ) {
-      SetItem( index, 1, wxString::Format( _T("s%d"), user.GetBattleStatus().side + 1 ) );
+      SetItem( index, 1, wxString::Format( _T("s%d"), user.BattleStatus().side + 1 ) );
     }
 
-    SetItemColumnImage( index, 2, IconImageList::GetColourIcon( user.GetBattleStatus().team ) );
+    SetItemColumnImage( index, 2, IconImageList::GetColourIcon( user.BattleStatus().team ) );
 
   } else {
     SetItemColumnImage( index, 2, -1 );
@@ -143,10 +143,10 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   SetItemColumnImage( index, 3, IconImageList::GetFlagIcon( user.GetCountry() ) );
   SetItemColumnImage( index, 4, IconImageList::GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 5, WX_STRING( user.GetNick() ) );
-  if ( !user.GetBattleStatus().spectator ) {
-    SetItem( index, 6, wxString::Format( _T("%d"), user.GetBattleStatus().team + 1 ) );
-    SetItem( index, 7, wxString::Format( _T("%d"), user.GetBattleStatus().ally + 1 ) );
-    SetItem( index, 9, wxString::Format( _T("%d%%"), user.GetBattleStatus().handicap ) );
+  if ( !user.BattleStatus().spectator ) {
+    SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
+    SetItem( index, 7, wxString::Format( _T("%d"), user.BattleStatus().ally + 1 ) );
+    SetItem( index, 9, wxString::Format( _T("%d%%"), user.BattleStatus().handicap ) );
   } else {
     SetItem( index, 6, _T("") );
     SetItem( index, 7, _T("") );

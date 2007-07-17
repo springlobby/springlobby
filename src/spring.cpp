@@ -88,16 +88,16 @@ wxString Spring::GetScriptTxt( Battle& battle )
     Lowest = -1;
     // Find next player in the order they were sent from the server.
     for ( user_map_t::size_type gl = 0; gl < battle.GetNumUsers(); gl++ ) {
-      if ( battle.GetUser(gl).GetBattleStatus().order <= LastOrder ) continue;
+      if ( battle.GetUser(gl).BattleStatus().order <= LastOrder ) continue;
       if ( Lowest == -1 ) Lowest = gl;
-      else if ( battle.GetUser(gl).GetBattleStatus().order < battle.GetUser(Lowest).GetBattleStatus().order ) Lowest = gl;
+      else if ( battle.GetUser(gl).BattleStatus().order < battle.GetUser(Lowest).BattleStatus().order ) Lowest = gl;
     }
-    LastOrder = battle.GetUser(Lowest).GetBattleStatus().order;
+    LastOrder = battle.GetUser(Lowest).BattleStatus().order;
     User& u = battle.GetUser( Lowest );
 
     PlayerOrder[i] = Lowest;
 
-    UserBattleStatus bs = u.GetBattleStatus();
+    UserBattleStatus bs = u.BattleStatus();
     if ( bs.spectator ) continue;
 
     // Transform team numbers.
@@ -143,9 +143,9 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s += wxString::Format( _T("\t[PLAYER%d]\n"), i );
     s += wxString::Format( _T("\t{\n") );
     s += WX_STRING(("\t\tname=" + battle.GetUser( PlayerOrder[i] ).GetNick() + ";\n"));
-    s += wxString::Format( _T("\t\tSpectator=%d;\n"), battle.GetUser( PlayerOrder[i] ).GetBattleStatus().spectator?1:0 );
-    if ( !(battle.GetUser( PlayerOrder[i] ).GetBattleStatus().spectator) ) {
-      s += wxString::Format( _T("\t\tteam=%d;\n"), TeamConv[battle.GetUser( PlayerOrder[i] ).GetBattleStatus().team] );
+    s += wxString::Format( _T("\t\tSpectator=%d;\n"), battle.GetUser( PlayerOrder[i] ).BattleStatus().spectator?1:0 );
+    if ( !(battle.GetUser( PlayerOrder[i] ).BattleStatus().spectator) ) {
+      s += wxString::Format( _T("\t\tteam=%d;\n"), TeamConv[battle.GetUser( PlayerOrder[i] ).BattleStatus().team] );
     }
     s += wxString::Format( _T("\t}\n") );
   }
@@ -159,22 +159,22 @@ wxString Spring::GetScriptTxt( Battle& battle )
     int TeamLeader = -1;
     for( user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {
       // First Player That Is In The Team Is Leader.
-      if ( TeamConv[battle.GetUser( PlayerOrder[tlf] ).GetBattleStatus().team] == i ) {
+      if ( TeamConv[battle.GetUser( PlayerOrder[tlf] ).BattleStatus().team] == i ) {
         TeamLeader = tlf;
         break;
       }
     }
 
     s += wxString::Format( _T("\t\tTeamLeader=%d;\n") ,TeamLeader );
-    s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().ally] );
+    s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().ally] );
     s += wxString::Format( _T("\t\tRGBColor=%.5f %.5f %.5f;\n"),
-           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().color_r/255.0),
-           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().color_g/255.0),
-           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().color_b/255.0)
+           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().color_r/255.0),
+           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().color_g/255.0),
+           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().color_b/255.0)
          );
-    debug( i2s(battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().side) );
-    s += WX_STRING(("\t\tSide=" + usync().GetSideName( battle.opts().modname, battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().side ) + ";\n"));
-    s += wxString::Format( _T("\t\tHandicap=%d;\n"), battle.GetUser( PlayerOrder[TeamLeader] ).GetBattleStatus().handicap );
+    debug( i2s(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side) );
+    s += WX_STRING(("\t\tSide=" + usync().GetSideName( battle.opts().modname, battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side ) + ";\n"));
+    s += wxString::Format( _T("\t\tHandicap=%d;\n"), battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().handicap );
     s +=  _T("\t}\n");
   }
 

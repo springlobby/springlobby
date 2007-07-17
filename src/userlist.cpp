@@ -31,7 +31,7 @@ User& UserList::GetUser( std::string const& nick )
 
 User& UserList::GetUser( user_map_t::size_type index )
 {
-  if (m_seekpos == SEEKPOS_INVALID) {
+  if ((m_seekpos == SEEKPOS_INVALID) || (m_seekpos > index)) {
     m_seek = m_users.begin();
     m_seekpos = 0;
   }
