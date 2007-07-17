@@ -5,18 +5,17 @@
 #ifndef _CONNECTWINDOW_H_
 #define _CONNECTWINDOW_H_
 
-#include <wx/intl.h>
 #include <wx/frame.h>
-#include <wx/panel.h>
-#include <wx/combobox.h>
-#include <wx/sizer.h>
-#include <wx/button.h>
-#include <wx/textctrl.h>
-#include <wx/stattext.h>
-#include <wx/notebook.h>
-#include <wx/checkbox.h>
-#include <wx/statline.h>
 
+class wxPanel;
+class wxComboBox;
+class wxBoxSizer;
+class wxButton;
+class wxTextCtrl;
+class wxStaticText;
+class wxNotebook;
+class wxCheckBox;
+class wxStaticLine;
 class Ui;
   
 //! @brief wxFrame with a connection dialog used to specify username, password, and server. It can also register a new acount.

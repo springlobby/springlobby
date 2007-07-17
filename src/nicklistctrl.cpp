@@ -9,6 +9,7 @@
 #include "iconimagelist.h"
 #include "user.h"
 
+int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData);
 
 NickListCtrl::NickListCtrl( wxWindow* parent )
 : wxListCtrl( parent, -1, wxDefaultPosition, wxDefaultSize,
