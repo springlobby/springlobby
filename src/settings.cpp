@@ -6,6 +6,7 @@
 #include <wx/intl.h>
 #include <iostream>
 #include "utils.h"
+#include <wx/config.h>
 
 
 Settings& sett()
@@ -14,6 +15,18 @@ Settings& sett()
   return m_sett;
 }
 
+Settings::Settings()
+{
+  m_config = new wxConfig( _T("SpringLobby") );
+  if ( !m_config->Exists( _T("/Servers") ) )
+    SetDefaultSettings();
+}
+
+Settings::~Settings()
+{
+  m_config->Write( _T("/General/firstrun"), false );
+  delete m_config;
+}
 
 //! @brief Saves the settings to file
 void Settings::SaveSettings()

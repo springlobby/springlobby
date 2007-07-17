@@ -23,9 +23,18 @@
 #ifndef _SETTINGS_H_
 #define _SETTINGS_H_
 
-#include <wx/config.h>
 #include <string>
 
+// FIXME why can't wxWidgets use a baseclass instead of this monstrosity
+// I shouldn't copy it here either
+#if defined(__WXMSW__) && wxUSE_CONFIG_NATIVE
+    #define wxConfig  wxRegConfig
+#else // either we're under Unix or wish to use files even under Windows
+  #define wxConfig  wxFileConfig
+#endif
+
+class wxRegConfig;
+class wxFileConfig;
 
 #define DEFSETT_DEFAULT_SERVER _T("TAS Server")
 #define DEFSETT_DEFAULT_SERVER_HOST _T("taspringmaster.clan-sy.com")
@@ -41,14 +50,8 @@
 class Settings
 {
   public:
-    Settings() {
-      m_config = new wxConfig( _T("SpringLobby") );
-      if ( !m_config->Exists( _T("/Servers") ) )
-        SetDefaultSettings();
-    }
-    ~Settings() { m_config->Write( _T("/General/firstrun"), false ); delete m_config; }
-  
-    // Settings interface
+    Settings();
+    ~Settings();
   
     void SetDefaultSettings();
     void SaveSettings();
@@ -105,7 +108,6 @@ class Settings
     std::string GetSpringUsedLoc();
 
   protected:
-    // Settings variables
     
     wxConfig* m_config; //!< wxConfig object to store and restore  all settings in.
     
