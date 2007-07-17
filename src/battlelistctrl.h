@@ -6,38 +6,34 @@
 #define _BATTLELISTCTRL_H_
 
 #include <wx/listctrl.h>
-#include <wx/intl.h>
-#include <wx/menu.h>
-#include <wx/utils.h>
-#include <wx/msgdlg.h>
+#include <wx/string.h>
 
-#include "iconimagelist.h"
-#include "battle.h"
-
+class wxMenu;
+class Battle;
+class wxListEvent;
+class wxCommandEvent;
 
 class BattleListCtrl : public wxListCtrl
 {
   public:
     BattleListCtrl( wxWindow* parent );
     ~BattleListCtrl();
-  
-    // BattleListCtrl interface
-  
+
     void AddBattle( Battle& battle );
     void RemoveBattle( Battle& battle );
     void UpdateBattle( Battle& battle );
     void UpdateBattle( const int& index );
     bool BattleExists( Battle& battle );
-  
+
     void UpdateList();
-    
+
     int GetBattleIndex( Battle& battle );
-    
+
     static wxString RefineMapname( wxString mapname );
     static wxString RefineModname( wxString modname );
-  
+
     int GetSelectedIndex();
-  
+
     void OnSelected( wxListEvent& event );
     void OnDeselected( wxListEvent& event );
     void OnListRightClick( wxListEvent& event );
@@ -45,11 +41,10 @@ class BattleListCtrl : public wxListCtrl
     void OnDLMod( wxCommandEvent& event );
 
   protected:
-    // BattleListCtrl variables
-    
+
     int m_selected;
     wxMenu* m_popup;
-  
+
     DECLARE_EVENT_TABLE()
 };
 

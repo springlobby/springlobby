@@ -11,6 +11,7 @@
 #include "utils.h"
 #include "connectwindow.h"
 #include "mainwindow.h"
+#include <wx/msgdlg.h>
 
 
 Ui::Ui() :

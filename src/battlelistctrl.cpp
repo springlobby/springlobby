@@ -5,7 +5,11 @@
 #include "battlelistctrl.h"
 #include "utils.h"
 #include "user.h"
-
+#include "iconimagelist.h"
+#include "battle.h"
+#include <wx/intl.h>
+#include <wx/menu.h>
+#include <wx/msgdlg.h>
 
 
 BEGIN_EVENT_TABLE(BattleListCtrl, wxListCtrl)

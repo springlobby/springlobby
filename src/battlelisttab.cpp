@@ -3,8 +3,11 @@
 //
 
 #include "battlelisttab.h"
+#include "battle.h"
 #include "ui.h"
 #include "chatpanel.h"
+#include <wx/intl.h>
+#include <wx/msgdlg.h>
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 

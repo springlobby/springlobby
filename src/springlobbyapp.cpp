@@ -5,6 +5,7 @@
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
+#include <wx/msgdlg.h>
 
 
 IMPLEMENT_APP(SpringLobbyApp)
