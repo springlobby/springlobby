@@ -2,7 +2,11 @@
 // Class: Socket
 //
 
+#include <wx/socket.h>
+
 #include "socket.h"
+#include "server.h"
+#include "utils.h"
 
 BEGIN_EVENT_TABLE(SocketEvents, wxEvtHandler)
 
@@ -82,6 +86,11 @@ void Socket::Connect( const std::string& addr, const int port )
   
 }
 
+void Socket::Disconnect( )
+{
+  m_serv.OnDisconnected( this );
+  m_sock->Destroy();
+}
 
 //! @brief Send data over connection
 bool Socket::Send( const std::string& data )

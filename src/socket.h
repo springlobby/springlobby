@@ -7,10 +7,13 @@
 #define _SOCKET_H_
 
 #include <string>
-#include <wx/socket.h>
+
 #include <wx/event.h>
 
-#include "server.h"
+class Server;
+class Socket;
+class wxSocketEvent;
+class wxSocketClient;
 
 
 typedef int Sockstate;
@@ -28,10 +31,6 @@ typedef int Sockerror;
 
 #define SOCKET_ID 100
 
-#ifndef WX_STRING
-#define WX_STRING(v) wxString(v.c_str(),wxConvUTF8)
-#endif
-
 class SocketEvents: public wxEvtHandler
 {
   public:
@@ -41,8 +40,6 @@ class SocketEvents: public wxEvtHandler
     Server& m_serv;
   DECLARE_EVENT_TABLE()
 };
-
-class Socket;
 
 typedef void (*socket_callback)(Socket*);
 
@@ -57,7 +54,7 @@ class Socket
     // Socket interface
   
     void Connect( const std::string& addr, const int port );
-    void Disconnect( ) { m_serv.OnDisconnected( this ); m_sock->Destroy(); }
+    void Disconnect( );
   
     bool Send( const std::string& data );
     bool Recive( std::string& data );
