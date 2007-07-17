@@ -78,6 +78,8 @@ springlobby_SOURCES = \
 	src/springlobbyapp.h \
 	src/springoptionstab.cpp \
 	src/springoptionstab.h \
+	src/springprocess.cpp \
+	src/springprocess.h \
 	src/tasserver.cpp \
 	src/tasserver.h \
 	src/ui.cpp \

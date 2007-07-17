@@ -2,7 +2,10 @@
 // Class: Spring
 //
 
+#include <wx/file.h>
+
 #include "spring.h"
+#include "springprocess.h"
 #include "ui.h"
 #include "utils.h"
 #include "settings.h"
@@ -11,12 +14,22 @@
 #include "user.h"
 #include "unitsync.h"
 
+Spring::Spring( Ui& ui) :
+  m_ui(ui),
+  m_process(0),
+  m_running(false)
+{ }
 
-void SpringProcess::OnTerminate( int pid, int status )
+Spring::~Spring()
 {
-  m_sp.OnTerminated();
+  if ( m_process != 0 )
+    delete m_process;
 }
 
+bool Spring::IsRunning()
+{
+  return m_process != 0;
+}
 
 bool Spring::Run( Battle& battle )
 {
