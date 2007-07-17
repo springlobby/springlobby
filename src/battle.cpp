@@ -2,6 +2,8 @@
 // Class: Battle
 //
 
+#include <stdexcept>
+
 #include "battle.h"
 #include "ui.h"
 #include "unitsync.h"

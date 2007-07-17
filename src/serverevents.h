@@ -9,6 +9,7 @@
 #include "battle.h"
 
 class Ui;
+class UserStatus;
 
 // FIXME this is defined elsewhere, should use a different kind of type so we could use forward decl
 typedef int Sockerror;

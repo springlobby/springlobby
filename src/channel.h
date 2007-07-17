@@ -7,13 +7,10 @@
 
 #include "userlist.h"
 
-// FIXME we should not need to depend on this here
-#include "chatpanel.h"
-
-
 class Channel;
 class Server;
 class Ui;
+class ChatPanel;
 
 typedef void(*channel_msg_callback)(Channel&,User&,const std::string&);
 typedef void(*channel_cmd_callback)(Channel&);

@@ -27,7 +27,7 @@
 */
 
 #include <cstring>  // memset, memcpy, memcmp
-#include <iostream>  // std::istream
+#include <istream>  // std::istream
 
 namespace boost
 {

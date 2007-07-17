@@ -11,9 +11,6 @@
 #include "userlist.h"
 #include "battlelist.h"
 
-// FIXME we should not need to depend on this here
-#include "chatpanel.h"
-
 #define PING_TIMEOUT 30
 
 class ServerEvents;
@@ -23,6 +20,7 @@ class Ui;
 class Battle;
 class User;
 class UserBattleStatus;
+class ChatPanel;
 
 
 typedef int ServerError;

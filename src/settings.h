@@ -23,7 +23,6 @@
 #ifndef _SETTINGS_H_
 #define _SETTINGS_H_
 
-//#include <wx/wx.h>
 #include <wx/config.h>
 #include <wx/intl.h>
 #include <wx/filefn.h>
