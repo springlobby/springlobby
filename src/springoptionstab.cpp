@@ -2,12 +2,20 @@
 // Class: SpringOptionsTab
 //
 
+#include <wx/filedlg.h>
+#include <wx/dirdlg.h>
+#include <wx/sizer.h>
+#include <wx/statbox.h>
 #include <wx/intl.h>
+#include <wx/textctrl.h>
+#include <wx/radiobut.h>
+#include <wx/stattext.h>
 
 #include "springoptionstab.h"
 #include "ui.h"
 #include "unitsync.h"
 #include "utils.h"
+#include "settings.h"
 
 BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
 

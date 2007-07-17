@@ -4,6 +4,7 @@
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
+#include "settings.h"
 
 
 IMPLEMENT_APP(SpringLobbyApp)

@@ -6,19 +6,14 @@
 #define _SPRINGOPTIONSTAB_H_
 
 #include <wx/panel.h>
-#include <wx/combobox.h>
-#include <wx/button.h>
-#include <wx/stattext.h>
-#include <wx/sizer.h>
-#include <wx/statbox.h>
-#include <wx/radiobut.h>
-#include <wx/dirdlg.h>
-#include <wx/filedlg.h>
 
-#include "settings.h"
-
+class wxStaticBoxSizer;
+class wxStaticBox;
+class wxStaticText;
+class wxRadioButton;
+class wxButton;
 class Ui;
-  
+
 #ifdef WIN32
 #define DLLEXT _T(".dll")
 #define EXEEXT _T(".exe")
@@ -33,22 +28,21 @@ class Ui;
 
 class SpringOptionsTab : public wxPanel
 {
-    public:
-      
+  public:
     SpringOptionsTab( wxWindow* parent, Ui& ui );
      ~SpringOptionsTab();
-  
+
     void OnBrowseDir( wxCommandEvent& event );
     void OnBrowseExec( wxCommandEvent& event );
     void OnBrowseSync( wxCommandEvent& event );
-    
+
     void OnApply( wxCommandEvent& event );
     void OnRestore( wxCommandEvent& event );
 
     void DoRestore();
-    
+
   protected:
-  
+
     wxStaticText* m_dir_text;
     wxStaticText* m_exec_loc_text;
     wxStaticText* m_sync_loc_text;
@@ -60,7 +54,7 @@ class SpringOptionsTab : public wxPanel
     wxButton* m_sync_browse_btn;
     wxButton* m_sync_find_btn;
     wxButton* m_auto_btn;
-    
+
     wxRadioButton* m_exec_def_radio;
     wxRadioButton* m_exec_spec_radio;
     wxRadioButton* m_sync_def_radio;
@@ -84,7 +78,7 @@ class SpringOptionsTab : public wxPanel
     wxBoxSizer* m_sync_loc_sizer;
 
     Ui& m_ui;
-  
+
     DECLARE_EVENT_TABLE()
 };
 
