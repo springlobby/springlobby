@@ -2,11 +2,16 @@
 // File: utils.h
 //
 
+#include <sstream>
+
 #include "utils.h"
 
 #ifdef __WXMSW__
-#  include <windows.h>
+#include <windows.h>
 #include <wx/msw/winundef.h>
+#else
+#include <iostream>
+#include <ostream>
 #endif
 
 std::string i2s( int x )
