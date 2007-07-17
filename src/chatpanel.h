@@ -10,19 +10,22 @@
 #ifndef _CHATPANEL_H_
 #define _CHATPANEL_H_
 
-#include <wx/splitter.h>
 #include <wx/panel.h>
-#include <wx/sizer.h>
-#include <wx/textctrl.h>
-#include <wx/listctrl.h>
-#include <wx/combobox.h>
-#include <wx/button.h>
-#include <string>
-#include <stdexcept>
+#include <wx/string.h>
 
-#include "nicklistctrl.h"
-#include "utils.h"
-
+class wxCommandEvent;
+class wxSizeEvent;
+class wxBoxSizer;
+class wxSplitterWindow;
+class wxTextCtrl;
+class wxComboBox;
+class wxButton;
+class NickListCtrl;
+class Channel;
+class User;
+class Server;
+class Battle;
+class Ui;
 
 enum ChatPanelType {
   CPT_Channel,
@@ -30,12 +33,6 @@ enum ChatPanelType {
   CPT_User,
   CPT_Battle
 };
-
-class Channel;
-class Server;
-class Battle;
-class Ui;
-
 
 /*! @brief wxPanel that contains a chat.
  *
@@ -50,12 +47,10 @@ class ChatPanel : public wxPanel
   public:
     //ChatPanel( wxWindow* parent, bool show_nick_list );
     ChatPanel( wxWindow* parent, Ui& ui, Channel& chan );
-    ChatPanel( wxWindow* parent, Ui& ui,  User& user );
-    ChatPanel( wxWindow* parent, Ui& ui,  Server& serv );
-    ChatPanel( wxWindow* parent, Ui& ui,  Battle& battle );
+    ChatPanel( wxWindow* parent, Ui& ui, User& user );
+    ChatPanel( wxWindow* parent, Ui& ui, Server& serv );
+    ChatPanel( wxWindow* parent, Ui& ui, Battle& battle );
     ~ChatPanel();
-
-    // ChatPanel interface
 
     void Said( const wxString& who, const wxString& message );
     void DidAction( const wxString& who, const wxString& action );
@@ -69,20 +64,19 @@ class ChatPanel : public wxPanel
     void SetTopic( const wxString& who, const wxString& message );
     void UserStatusUpdated( User& who );
 
-    Channel& GetChannel() { return *m_channel; }
-    Server* GetServer() { return m_server; }
-    void SetServer( Server* serv ) { ASSERT_LOGIC(m_type == CPT_Server, "Not of type server" ); m_server = serv;  }
+    Channel& GetChannel();
+    Server* GetServer();
+    void SetServer( Server* serv );
 
-    bool IsServerPanel() { return (m_type == CPT_Server); }
+    bool IsServerPanel();
 
     void Say( const wxString& message );
     void Part();
 
     void OnSay( wxCommandEvent& event );
     void OnResize( wxSizeEvent& event );
-  protected:
-    // ChatPanel variables
 
+  protected:
     void _SetChannel( Channel* channel );
 
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.

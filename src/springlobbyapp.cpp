@@ -8,6 +8,7 @@
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
+#include "utils.h"
 
 
 IMPLEMENT_APP(SpringLobbyApp)

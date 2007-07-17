@@ -2,6 +2,7 @@
 // Class: MainChatTab
 //
 
+#include <stdexcept>
 #include <wx/intl.h>
 #include <wx/imaglist.h>
 #include "mainchattab.h"

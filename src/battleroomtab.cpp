@@ -8,6 +8,8 @@
 #include <wx/stattext.h>
 #include <wx/statline.h>
 #include <wx/checkbox.h>
+#include <wx/button.h>
+#include <wx/sizer.h>
 
 #include "battleroomtab.h"
 #include "ui.h"

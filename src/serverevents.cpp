@@ -3,12 +3,14 @@
 //
 
 #include <wx/intl.h>
+#include <stdexcept>
 
 #include "serverevents.h"
 #include "mainwindow.h"
 #include "ui.h"
 #include "channel.h"
 #include "user.h"
+#include "utils.h"
 
 
 void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported )

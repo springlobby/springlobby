@@ -4,6 +4,7 @@
 
 #include <wx/msgdlg.h>
 #include <wx/textdlg.h>
+#include <stdexcept>
 
 #include "ui.h"
 #include "tasserver.h"

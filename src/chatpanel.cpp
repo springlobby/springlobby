@@ -4,8 +4,14 @@
 // Created on: Wed May  2 21:07:18 2007
 //
 
+#include <stdexcept>
 #include <wx/intl.h>
 #include <wx/datetime.h>
+#include <wx/textctrl.h>
+#include <wx/sizer.h>
+#include <wx/splitter.h>
+#include <wx/combobox.h>
+
 #include "channel.h"
 #include "chatpanel.h"
 #include "utils.h"
@@ -13,6 +19,7 @@
 #include "server.h"
 #include "user.h"
 #include "battle.h"
+#include "nicklistctrl.h"
 
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
@@ -253,6 +260,26 @@ void ChatPanel::UserStatusUpdated( User& who )
   }
 }
 
+Channel& ChatPanel::GetChannel()
+{
+  return *m_channel;
+}
+
+Server* ChatPanel::GetServer()
+{
+  return m_server;
+}
+
+void ChatPanel::SetServer( Server* serv )
+{
+  ASSERT_LOGIC(m_type == CPT_Server, "Not of type server" );
+  m_server = serv; 
+}
+
+bool ChatPanel::IsServerPanel()
+{
+  return (m_type == CPT_Server);
+}
 
 //! @brief Set the Channel object
 //!

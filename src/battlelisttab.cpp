@@ -7,10 +7,15 @@
 #include "battle.h"
 #include "ui.h"
 #include "chatpanel.h"
+#include "utils.h"
+
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
 #include <wx/stattext.h>
 #include <wx/textdlg.h>
+#include <wx/combobox.h>
+#include <wx/button.h>
+#include <wx/sizer.h>
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 

@@ -11,8 +11,9 @@
 #include "settings.h"
 #include "ui.h"
 #include "server.h"
-#include "images/springlobby.xpm"
+#include "utils.h"
 
+#include "images/springlobby.xpm"
 #include "images/chat_icon.xpm"
 #include "images/join_icon.xpm"
 #include "images/options_icon.xpm"
