@@ -34,7 +34,7 @@ void User::SetStatus( const UserStatus& status )
 {
   m_status = status;
   // If user is host of a game, then his in_game status tells if the game is on!
-  if ( m_battle != NULL ) {
+  if ( m_battle != 0 ) {
     User& user = m_battle->GetFounder();
     if ( user.GetNick() == m_nick ) {
       m_battle->Update();

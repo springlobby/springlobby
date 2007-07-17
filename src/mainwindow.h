@@ -47,7 +47,7 @@ class MainWindow : public wxFrame
 
     void OnTabsChanged( wxListbookEvent& event );
     MainChatTab& GetChatTab();
-    MainJoinBattleTab& GetJoinTab() { assert( m_join_tab != NULL ); return *m_join_tab; }
+    MainJoinBattleTab& GetJoinTab() { assert( m_join_tab != 0 ); return *m_join_tab; }
 
     void MakeImages();
 

@@ -28,7 +28,7 @@ typedef int ServerError;
 #define PE_NONE 0
 
 struct UiServerData {
-  UiServerData(): panel(NULL) {}
+  UiServerData(): panel(0) {}
   ChatPanel* panel;
 };
 
@@ -44,7 +44,7 @@ class Server
     UiServerData uidata;
 
 
-    Server( Ui& ui): m_sock(NULL), m_ui(ui), m_keepalive(15) { }
+    Server( Ui& ui): m_sock(0), m_ui(ui), m_keepalive(15) { }
     virtual ~Server() {}
 
     // Server interface

@@ -53,7 +53,7 @@ bool Spring::Run( Battle& battle )
     return false;
   }
 
-  if ( m_process == NULL ) m_process = new SpringProcess( *this );
+  if ( m_process == 0 ) m_process = new SpringProcess( *this );
   if ( wxExecute( WX_STRING(sett().GetSpringUsedLoc()) + _T(" script_springlobby.txt"), wxEXEC_ASYNC, m_process ) == 0 ) {
     return false;
   }
@@ -197,7 +197,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     int NumInAlly = 0;
     s += wxString::Format( _T("\t\tNumAllies=%d;\n"), NumInAlly );
 
-   if ( (battle.GetStartRect(AllyRevConv[i]) != NULL) && (bo.starttype == ST_Choose) ) {
+   if ( (battle.GetStartRect(AllyRevConv[i]) != 0) && (bo.starttype == ST_Choose) ) {
       BattleStartRect* sr = (BattleStartRect*)battle.GetStartRect(AllyRevConv[i]);
       s += wxString::Format( _T("\t\tStartRectLeft=%.3f;\n"), sr->left / 200.0 );
       s += wxString::Format( _T("\t\tStartRectTop=%.3f;\n"), sr->top / 200.0 );

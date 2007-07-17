@@ -17,7 +17,7 @@ int GetFlagIndex( const std::string& flag )
 void AddFlagImages( wxImageList& imgs )
 {
   int i = 0;
-  while ( flag_xpm[i] != NULL ) {
+  while ( flag_xpm[i] != 0 ) {
     imgs.Add( wxBitmap( const_cast<const char**>(flag_xpm[i])) );
     i++;
   }

@@ -50,7 +50,7 @@ class ChatPanel;
 class Battle;
 
 struct UiUserData {
-  UiUserData(): panel(NULL) {}
+  UiUserData(): panel(0) {}
   ChatPanel* panel;
 };
 
@@ -62,10 +62,10 @@ class User
 
     UiUserData uidata;
 
-    User( Server& serv ): m_serv(serv),m_cpu(0), m_battle(NULL) {}
-    User( const std::string& nick, Server& serv ) : m_serv(serv),m_nick(nick), m_cpu(0), m_battle(NULL) {}
+    User( Server& serv ): m_serv(serv),m_cpu(0), m_battle(0) {}
+    User( const std::string& nick, Server& serv ) : m_serv(serv),m_nick(nick), m_cpu(0), m_battle(0) {}
     User( const std::string& nick, const std::string& country, const int& cpu, Server& serv) :
-      m_serv(serv),m_nick(nick), m_country(country), m_cpu(cpu), m_battle(NULL) {}
+      m_serv(serv),m_nick(nick), m_country(country), m_cpu(cpu), m_battle(0) {}
 
     virtual ~User() {}
 

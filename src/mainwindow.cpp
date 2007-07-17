@@ -39,7 +39,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 END_EVENT_TABLE()
 
 
-MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)NULL, -1, _("Spring Lobby"),
+MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)0, -1, _("Spring Lobby"),
                                wxPoint(50, 50), wxSize(450, 340)), m_ui(ui)
 {
   SetIcon( wxIcon(springlobby_xpm) );
@@ -162,7 +162,7 @@ ChatPanel& servwin()
 //! @brief Returns the curent MainChatTab object
 MainChatTab& MainWindow::GetChatTab()
 {
-  assert( m_chat_tab != NULL );
+  assert( m_chat_tab != 0 );
   return *m_chat_tab;
 }
 
@@ -174,7 +174,7 @@ MainChatTab& MainWindow::GetChatTab()
 //! @sa Server::JoinChannel OpenPrivateChat
 void MainWindow::OpenChannelChat( Channel& channel )
 {
-  assert( m_chat_tab != NULL );
+  assert( m_chat_tab != 0 );
   m_chat_tab->AddChatPannel( channel );
 }
 
@@ -184,7 +184,7 @@ void MainWindow::OpenChannelChat( Channel& channel )
 //! @param nick The user to whom the chatwindow should be opened to
 void MainWindow::OpenPrivateChat( User& user )
 {
-  assert( m_chat_tab != NULL );
+  assert( m_chat_tab != 0 );
   m_chat_tab->AddChatPannel( user );
 }
 

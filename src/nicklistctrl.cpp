@@ -84,7 +84,7 @@ void NickListCtrl::UserUpdated( const int& index )
 /*
 void NickListCtrl::UpdateSize()
 {
-  assert( m_users != NULL );
+  assert( m_users != 0 );
   //SetItemCount( m_users->GetNumUsers() );
   //RefreshItems( 0, GetItemCount() );
 }
@@ -95,7 +95,7 @@ wxString NickListCtrl::OnGetItemText(long item, long column) const
     return _T("");
   }
 
-  if ( m_users == NULL ) return _T("Error: no list");
+  if ( m_users == 0 ) return _T("Error: no list");
   if ( item >= m_users->GetNumUsers() ) return _T("Error: index >= max");
 
   return WX_STRING( m_users->GetUser( item ).GetNick() );
@@ -108,7 +108,7 @@ int NickListCtrl::OnGetItemColumnImage(long item, long column) const
   debug_func( "" );
 
   if ( column == 0 ) {
-    if ( m_users == NULL ) return -1;
+    if ( m_users == 0 ) return -1;
     if ( item >= m_users->GetNumUsers() ) return -1;
     if (m_users->GetUser( item ).GetStatus().bot ) return 1;
     else if (m_users->GetUser( item ).GetStatus().moderator ) return 0;
@@ -121,7 +121,7 @@ int NickListCtrl::OnGetItemImage(long item) const
 {
   debug_func( "" );
 
-  if ( m_users == NULL ) return ICON_NOSTATE;
+  if ( m_users == 0 ) return ICON_NOSTATE;
   if ( item >= m_users->GetNumUsers() ) return ICON_NOSTATE;
 
   return GetStateIcon( m_users->GetUser( item ).GetStatus() );
@@ -130,7 +130,7 @@ int NickListCtrl::OnGetItemImage(long item) const
 
 wxListItemAttr* NickListCtrl::OnGetItemAttr(long item) const
 {
-  return NULL;
+  return 0;
 }
 
 */
@@ -145,8 +145,8 @@ int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData)
 {
   User* user1 = (User*)item1;
   User* user2 = (User*)item2;
-  assert( user1 != NULL );
-  assert( user2 != NULL );
+  assert( user1 != 0 );
+  assert( user2 != 0 );
 
   int u1 = 0, u2 = 0;
 

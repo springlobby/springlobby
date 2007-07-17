@@ -166,7 +166,7 @@ void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom 
 {
   ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), "Allyno out of bounds." );
   BattleStartRect* sr;
-  if ( m_rects[allyno] == NULL ) sr = new BattleStartRect();
+  if ( m_rects[allyno] == 0 ) sr = new BattleStartRect();
   else sr = m_rects[allyno];
   sr->ally = allyno;
   sr->left = left;
@@ -180,8 +180,8 @@ void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom 
 void Battle::RemoveStartRect( int allyno )
 {
   BattleStartRect* sr = m_rects[allyno];
-  if ( sr == NULL ) return;
-  m_rects[allyno] = NULL;
+  if ( sr == 0 ) return;
+  m_rects[allyno] = 0;
   delete sr;
 }
 

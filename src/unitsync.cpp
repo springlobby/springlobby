@@ -27,13 +27,13 @@ Unitsync& usync()
 void* Unitsync::_GetLibFuncPtr( const std::string& name )
 {
   assert( m_loaded );
-  void* ptr = NULL;
+  void* ptr = 0;
 #ifdef WIN32
   ptr = (void*)GetProcAddress( m_libhandle, name.c_str() );
 #else
   ptr = dlsym( m_libhandle, name.c_str() );
 #endif
-  ASSERT_RUNTIME( ptr != NULL, "Couldn't load " + name + " from unitsync library" );
+  ASSERT_RUNTIME( ptr != 0, "Couldn't load " + name + " from unitsync library" );
   return ptr;
 }
 
@@ -53,7 +53,7 @@ bool Unitsync::LoadUnitsyncLib()
 #ifdef WIN32
 
   m_libhandle = LoadLibrary( loc.c_str() );
-  if (m_libhandle == NULL) {
+  if (m_libhandle == 0) {
     debug_error( "Couldn't load the unitsync library" );
     return false;
   }
@@ -63,15 +63,15 @@ bool Unitsync::LoadUnitsyncLib()
   try {
     m_libhandle = dlopen( loc.c_str(), RTLD_LOCAL | RTLD_LAZY );
   } catch(...) {
-    m_libhandle = NULL;
+    m_libhandle = 0;
   }
 
-  if (m_libhandle == NULL) {
+  if (m_libhandle == 0) {
     debug_error( "Couldn't load the unitsync library" );
     std::string dlerr = dlerror();
     debug_error( dlerr );
 
-    wxMessageDialog msg( NULL, _("The unitsync library failed to load from the location \"") + WX_STRING(loc) + _("\".\nIt failed with the error message \"") + WX_STRING(dlerr)+ _("\".\n\nYou might want to look at the Spring Options again. If you need any help setting unitsync up you will find it under the Help main menu."), _("Error loading unitsync"), wxOK | wxICON_ERROR );
+    wxMessageDialog msg( 0, _("The unitsync library failed to load from the location \"") + WX_STRING(loc) + _("\".\nIt failed with the error message \"") + WX_STRING(dlerr)+ _("\".\n\nYou might want to look at the Spring Options again. If you need any help setting unitsync up you will find it under the Help main menu."), _("Error loading unitsync"), wxOK | wxICON_ERROR );
 
     msg.ShowModal();
 

@@ -100,7 +100,7 @@ void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
   user.SetStatus( status );
   m_ui.OnUserStatusChanged( user );
 
-  if ( !us.in_game && status.in_game && user.GetBattle() != NULL ) {
+  if ( !us.in_game && status.in_game && user.GetBattle() != 0 ) {
     Battle& battle = *user.GetBattle();
     if ( &battle.GetFounder() == &user )
       m_ui.OnBattleStarted( battle );

@@ -31,26 +31,26 @@ Ui::Ui() :
 
 Ui::~Ui() {
   Disconnect();
-  if ( m_main_win != NULL ) delete m_main_win;
+  if ( m_main_win != 0 ) delete m_main_win;
   delete m_spring;
 }
 
 Server& Ui::GetServer()
 {
-  ASSERT_LOGIC( m_serv != NULL, "m_serv NULL!" );
+  ASSERT_LOGIC( m_serv != 0, "m_serv NULL!" );
   return *m_serv;
 }
 
 MainWindow& Ui::mw()
 {
-  assert( m_main_win != NULL );
+  assert( m_main_win != 0 );
   return *m_main_win;
 }
 
 //! @brief Shows the main window on screen
 void Ui::ShowMainWindow()
 {
-  assert( m_main_win != NULL );
+  assert( m_main_win != 0 );
   m_main_win->Show(true);
 }
 
@@ -60,8 +60,8 @@ void Ui::ShowMainWindow()
 //! @note It will create the ConnectWindow if not allready created
 void Ui::ShowConnectWindow()
 {
-  if ( m_con_win == NULL ) {
-    assert( m_main_win != NULL );
+  if ( m_con_win == 0 ) {
+    assert( m_main_win != 0 );
     m_con_win = new ConnectWindow( m_main_win, *this );
   }
   m_con_win->CenterOnParent();
@@ -81,12 +81,12 @@ void Ui::Connect()
 
 void Ui::Disconnect()
 {
-  if ( m_serv != NULL ) {
+  if ( m_serv != 0 ) {
     m_serv->Disconnect();
     Socket* sock = m_serv->GetSocket();
-    m_serv->SetSocket( NULL );
-    delete sock; sock = NULL;
-    delete m_serv; m_serv = NULL;
+    m_serv->SetSocket( 0 );
+    delete sock; sock = 0;
+    delete m_serv; m_serv = 0;
   }
 }
 
@@ -135,14 +135,14 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 
 bool Ui::IsConnected() const
 {
-  if ( m_serv != NULL )
+  if ( m_serv != 0 )
     return m_serv->IsConnected();
   return false;
 }
 
 void Ui::JoinChannel( const wxString& name, const wxString& password )
 {
-  if ( m_serv != NULL )
+  if ( m_serv != 0 )
     m_serv->JoinChannel( STL_STRING(name), STL_STRING(password) );
 }
 
@@ -150,7 +150,7 @@ void Ui::JoinChannel( const wxString& name, const wxString& password )
 //! @brief Quits the entire application
 void Ui::Quit()
 {
-  assert( m_main_win != NULL );
+  assert( m_main_win != 0 );
   sett().SaveSettings();
   m_main_win->Close();
 }
@@ -162,14 +162,14 @@ void Ui::Quit()
 //! @note this does not return until the user pressed any of the buttons or closed the dialog.
 bool Ui::Ask( const wxString& heading, const wxString& question )
 {
-  wxMessageDialog ask_dlg(NULL, question, heading, wxOK | wxCANCEL );
+  wxMessageDialog ask_dlg(0, question, heading, wxOK | wxCANCEL );
   return ( ask_dlg.ShowModal() == wxID_OK );
 }
 
 
 bool Ui::AskText( const wxString& heading, const wxString& question, wxString& answer )
 {
-  wxTextEntryDialog name_dlg( NULL, question, heading, _T(""), wxOK | wxCANCEL | wxCENTRE );
+  wxTextEntryDialog name_dlg( 0, question, heading, _T(""), wxOK | wxCANCEL | wxCENTRE );
   int res = name_dlg.ShowModal();
   answer = name_dlg.GetValue();
 
@@ -179,7 +179,7 @@ bool Ui::AskText( const wxString& heading, const wxString& question, wxString& a
 
 void Ui::ShowMessage( const wxString& heading, const wxString& message )
 {
-  wxMessageDialog msg( NULL, heading, message, wxOK);
+  wxMessageDialog msg( 0, heading, message, wxOK);
   msg.ShowModal();
 }
 
@@ -211,7 +211,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
 
 void Ui::OnUpdate()
 {
-  if ( m_serv != NULL ) {
+  if ( m_serv != 0 ) {
     m_serv->Update();
   }
 }
@@ -231,10 +231,10 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 void Ui::OnDisconnected( Server& server )
 {
   debug_func( "" );
-  if ( m_main_win == NULL ) return;
+  if ( m_main_win == 0 ) return;
   server.uidata.panel->StatusMessage( _T("Disconnected from server.") );
-  server.uidata.panel->SetServer( NULL );
-  server.uidata.panel = NULL;
+  server.uidata.panel->SetServer( 0 );
+  server.uidata.panel = 0;
 }
 
 
@@ -245,7 +245,7 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
 {
   debug_func( "" );
 
-  chan.uidata.panel = NULL;
+  chan.uidata.panel = 0;
   m_main_win->OpenChannelChat( chan );
 }
 
@@ -254,7 +254,7 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
 void Ui::OnChannelSaid( Channel& channel, User& user, const std::string& message )
 {
   debug_func( "" );
-  if ( channel.uidata.panel == NULL ) {
+  if ( channel.uidata.panel == 0 ) {
     debug_error( "ud->panel NULL" );
     return;
   }
@@ -265,7 +265,7 @@ void Ui::OnChannelSaid( Channel& channel, User& user, const std::string& message
 void Ui::OnChannelDidAction( Channel& channel , User& user, const std::string& action )
 {
   debug_func( "" );
-  if ( channel.uidata.panel == NULL ) {
+  if ( channel.uidata.panel == 0 ) {
     debug_error( "ud->panel NULL" );
     return;
   }
@@ -285,7 +285,7 @@ void Ui::OnLeaveChannel( Channel& channel )
 void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 {
   //debug_func( "" );
-  if ( chan.uidata.panel == NULL ) {
+  if ( chan.uidata.panel == 0 ) {
     debug_error( "ud->panel NULL" );
     return;
   }
@@ -296,7 +296,7 @@ void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason )
 {
   //debug_func( "" );
-  if ( chan.uidata.panel == NULL ) {
+  if ( chan.uidata.panel == 0 ) {
     debug_error( "ud->panel NULL" );
     return;
   }
@@ -307,7 +307,7 @@ void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason
 void Ui::OnChannelTopic( Channel& channel , const std::string user, const std::string& topic )
 {
   debug_func( "" );
-  if ( channel.uidata.panel == NULL ) {
+  if ( channel.uidata.panel == 0 ) {
     debug_error( "ud->panel NULL" );
     return;
   }
@@ -324,7 +324,7 @@ void Ui::OnChannelList( const std::string& channel, const int& numusers )
 void Ui::OnUserOnline( User& user )
 {
 /*  UiUserData* data = new UiUserData();
-  data->panel = NULL;
+  data->panel = 0;
 
   user.SetUserData( (void*)data );*/
 }
@@ -333,7 +333,7 @@ void Ui::OnUserOnline( User& user )
 void Ui::OnUserOffline( User& user )
 {
 /*  UiUserData* data = (UiUserData*)user.GetUserData();
-  if ( data == NULL) return;
+  if ( data == 0) return;
 
   delete data;*/
 }
@@ -343,7 +343,7 @@ void Ui::OnUserStatusChanged( User& user )
 {
   for ( int i = 0; i < m_serv->GetNumChannels(); i++ ) {
     Channel& chan = m_serv->GetChannel( i );
-    if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != NULL ) ) {
+    if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) ) {
       chan.uidata.panel->UserStatusUpdated( user );
     }
   }
@@ -352,18 +352,18 @@ void Ui::OnUserStatusChanged( User& user )
 
 void Ui::OnUnknownCommand( Server& server, const std::string& command, const std::string& params )
 {
-  if ( server.uidata.panel != NULL ) server.uidata.panel->UnknownCommand( WX_STRING(command), WX_STRING(params) );
+  if ( server.uidata.panel != 0 ) server.uidata.panel->UnknownCommand( WX_STRING(command), WX_STRING(params) );
 }
 
 
 void Ui::OnMotd( Server& server, const std::string& message )
 {
-  if ( server.uidata.panel != NULL ) server.uidata.panel->Motd( WX_STRING(message) );
+  if ( server.uidata.panel != 0 ) server.uidata.panel->Motd( WX_STRING(message) );
 }
 
 void Ui::OnUserSaid( User& user, const std::string message, bool fromme )
 {
-  if ( user.uidata.panel == NULL ) {
+  if ( user.uidata.panel == 0 ) {
     m_main_win->OpenPrivateChat( user );
   }
   if ( fromme ) user.uidata.panel->Said( WX_STRING(m_serv->GetMe().GetNick()), WX_STRING(message) );
@@ -381,7 +381,7 @@ void Ui::OnBattleClosed( Battle& battle )
 {
   mw().GetJoinTab().GetBattleListTab().RemoveBattle( battle );
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != NULL ) {
+  if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) mw().GetJoinTab().LeaveCurrentBattle();
   }
 }
@@ -392,7 +392,7 @@ void Ui::OnUserJoinedBattle( Battle& battle, User& user )
   mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
 
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != NULL ) {
+  if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) br->OnUserJoined( user );
   }
 }
@@ -402,7 +402,7 @@ void Ui::OnUserLeftBattle( Battle& battle, User& user )
 {
   mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != NULL ) {
+  if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) {
       br->OnUserLeft( user );
       if ( &user == &m_serv->GetMe() ) mw().GetJoinTab().LeaveCurrentBattle();
@@ -432,7 +432,7 @@ void Ui::OnUserBattleStatus( Battle& battle, User& user )
 void Ui::OnRequestBattleStatus( Battle& battle )
 {
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != NULL ) {
+  if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) {
       br->GetBattle().OnRequestBattleStatus();
     }
@@ -443,7 +443,7 @@ void Ui::OnRequestBattleStatus( Battle& battle )
 void Ui::OnBattleStarted( Battle& battle )
 {
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != NULL ) {
+  if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) {
       m_spring->Run( battle );
     }
@@ -454,7 +454,7 @@ void Ui::OnBattleStarted( Battle& battle )
 void Ui::OnSaidBattle( Battle& battle, const std::string& nick, const std::string& msg )
 {
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != NULL ) {
+  if ( br != 0 ) {
     br->GetChatPanel().Said( WX_STRING(nick), WX_STRING(msg) );
   }
 }
@@ -463,7 +463,7 @@ void Ui::OnSaidBattle( Battle& battle, const std::string& nick, const std::strin
 void Ui::OnBattleAction( Battle& battle, const std::string& nick, const std::string& msg )
 {
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != NULL ) {
+  if ( br != 0 ) {
     br->GetChatPanel().DidAction( WX_STRING(nick), WX_STRING(msg) );
   }
 }
@@ -478,7 +478,7 @@ void Ui::OnSpringTerminated( bool success )
 void Ui::OnBattleStartRectsUpdated( Battle& battle )
 {
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != NULL ) {
+  if ( br != 0 ) {
     br->GetChatPanel().StatusMessage( _T("Start rects updated.") );
   }
 }
@@ -487,7 +487,7 @@ void Ui::OnBattleStartRectsUpdated( Battle& battle )
 void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
 {
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != NULL ) {
+  if ( br != 0 ) {
     //std::string fullname = usync().GetFullUnitName( battle.opts().modname, usync().GetUnitIndex( battle.opts().modname, unitname ) );
     br->GetChatPanel().StatusMessage( WX_STRING( unitname ) + _T(" disabled.") );
   }
@@ -497,7 +497,7 @@ void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
 void Ui::OnBattleEnableUnit( Battle& battle, const std::string& unitname )
 {
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != NULL ) {
+  if ( br != 0 ) {
     br->GetChatPanel().StatusMessage( WX_STRING(unitname) + _T(" disabled.") );
   }
 }
@@ -506,7 +506,7 @@ void Ui::OnBattleEnableUnit( Battle& battle, const std::string& unitname )
 void Ui::OnBattleEnableAllUnits( Battle& battle )
 {
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != NULL ) {
+  if ( br != 0 ) {
     br->GetChatPanel().StatusMessage( _T("All units enabled.") );
   }
 

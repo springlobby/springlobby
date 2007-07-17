@@ -17,7 +17,7 @@ typedef void(*channel_cmd_callback)(Channel&);
 typedef void(*channel_whocmd_callback)(Channel&,User&);
 
 struct UiChannelData {
-  UiChannelData(): panel(NULL) {}
+  UiChannelData(): panel(0) {}
 
   ChatPanel* panel;
 };
@@ -29,7 +29,7 @@ class Channel : public UserList
 
     UiChannelData uidata;
 
-    //Channel(): m_serv(NULL),m_userdata(NULL) {}
+    //Channel(): m_serv(0),m_userdata(0) {}
     Channel( Server& serv, Ui& ui ): m_serv(serv),m_ui(ui) {}
     virtual ~Channel() {}
 

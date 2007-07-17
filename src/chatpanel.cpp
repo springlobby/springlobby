@@ -41,7 +41,7 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
 {
   // Setting default values
   m_show_nick_list = show_nick_list;
-  m_channel = NULL;
+  m_channel = 0;
 
   _CreateControls();
 
@@ -49,7 +49,7 @@ ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent,
 */
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui,  Channel& chan )
-: wxPanel( parent, -1),m_show_nick_list(true),m_ui(ui),m_channel(&chan),m_server(NULL),m_user(NULL),m_battle(NULL),m_type(CPT_Channel)
+: wxPanel( parent, -1),m_show_nick_list(true),m_ui(ui),m_channel(&chan),m_server(0),m_user(0),m_battle(0),m_type(CPT_Channel)
 {
   debug_func( "wxWindow* parent, Channel& chan" );
   _CreateControls( );
@@ -57,14 +57,14 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui,  Channel& chan )
 }
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui,  User& user )
-: wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(NULL),m_server(NULL),m_user(&user),m_battle(NULL),m_type(CPT_User)
+: wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(0),m_server(0),m_user(&user),m_battle(0),m_type(CPT_User)
 {
   _CreateControls( );
   user.uidata.panel = this;
 }
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui,  Server& serv )
-: wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(NULL),m_server(&serv),m_user(NULL),m_battle(NULL),m_type(CPT_Server)
+: wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(0),m_server(&serv),m_user(0),m_battle(0),m_type(CPT_Server)
 {
   debug_func( "wxWindow* parent, Server& serv" );
   _CreateControls( );
@@ -72,7 +72,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui,  Server& serv )
 }
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui,  Battle& battle )
-: wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(NULL),m_server(NULL),m_user(NULL),m_battle(&battle),m_type(CPT_Battle)
+: wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(0),m_server(0),m_user(0),m_battle(&battle),m_type(CPT_Battle)
 {
   debug_func( "wxWindow* parent, Battle& battle" );
   _CreateControls( );
@@ -98,7 +98,7 @@ void ChatPanel::_CreateControls( )
 
     m_nicklist = new NickListCtrl( m_nick_panel );
 
-    m_nick_filter = new wxComboBox( m_nick_panel, -1, _T("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, NULL, wxCB_READONLY );
+    m_nick_filter = new wxComboBox( m_nick_panel, -1, _T("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
 
     m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
     m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
@@ -108,10 +108,10 @@ void ChatPanel::_CreateControls( )
   } else {
 
     m_chat_panel = this;
-    m_nick_sizer = NULL;
-    m_nicklist = NULL;
-    m_nick_filter = NULL;
-    m_splitter = NULL;
+    m_nick_sizer = 0;
+    m_nicklist = 0;
+    m_nick_filter = 0;
+    m_splitter = 0;
 
   }
 
@@ -255,7 +255,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 void ChatPanel::UserStatusUpdated( User& who )
 {
   if ( m_show_nick_list ) {
-    assert( m_nicklist != NULL );
+    assert( m_nicklist != 0 );
     m_nicklist->UserUpdated( who );
   }
 }
@@ -286,13 +286,13 @@ bool ChatPanel::IsServerPanel()
 //! @param channel the Channel object.
 void ChatPanel::_SetChannel( Channel* channel )
 {
-  if ( m_channel != NULL ) {
-    m_channel->uidata.panel = NULL;
+  if ( m_channel != 0 ) {
+    m_channel->uidata.panel = 0;
   }
 
   m_channel = channel;
 
-  if ( m_channel != NULL ) {
+  if ( m_channel != 0 ) {
     m_channel->uidata.panel = this;
   }
   //m_nicklist->SetUserList( (UserList*)channel );
@@ -324,7 +324,7 @@ void ChatPanel::Say( const wxString& message )
 
   if ( m_type == CPT_Channel ) {
 
-    assert( m_channel != NULL );
+    assert( m_channel != 0 );
     if ( message.StartsWith( _T("/") ) ) {
       if ( m_channel->ExecuteSayCommand( STL_STRING(message) ) ) return;
     }
@@ -332,7 +332,7 @@ void ChatPanel::Say( const wxString& message )
 
   } else if ( m_type == CPT_Battle ) {
 
-    assert( m_battle != NULL );
+    assert( m_battle != 0 );
     if ( message.StartsWith(_T("/")) ) {
       if ( m_battle->ExecuteSayCommand( STL_STRING(message) ) ) return;
     }
@@ -340,7 +340,7 @@ void ChatPanel::Say( const wxString& message )
 
   } else if ( m_type == CPT_User ) {
 
-    assert( m_user != NULL );
+    assert( m_user != 0 );
     if ( message.StartsWith(_T("/")) ) {
       if ( m_user->ExecuteSayCommand( STL_STRING(message) ) ) return;
     }
@@ -353,9 +353,9 @@ void ChatPanel::Part()
 {
   debug_func( "" );
   if ( m_type == CPT_Channel ) {
-    assert( m_channel != NULL );
+    assert( m_channel != 0 );
     m_channel->Leave();
-    m_channel->uidata.panel = NULL;
+    m_channel->uidata.panel = 0;
   }
 }
 

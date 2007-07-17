@@ -14,7 +14,7 @@
 
 void Server::SetSocket( Socket* sock )
 {
-  assert( (!IsConnected()) || (sock == NULL) ); m_sock = sock;
+  assert( (!IsConnected()) || (sock == 0) ); m_sock = sock;
 }
 
 User& Server::GetUser( const std::string& nickname )
@@ -79,7 +79,7 @@ void Server::_RemoveUser( const std::string& nickname )
 {
   User* u = &m_users.GetUser( nickname );
   m_users.RemoveUser( nickname );
-  if ( u == NULL ) throw std::logic_error("Server::_RemoveUser(\"" + nickname + "\"): GetUser returned NULL pointer");
+  if ( u == 0 ) throw std::logic_error("Server::_RemoveUser(\"" + nickname + "\"): GetUser returned NULL pointer");
   //delete u; //! @todo Fix memleak
 }
 
@@ -99,7 +99,7 @@ void Server::_RemoveChannel( const std::string& name )
 {
   Channel* c = &m_channels.GetChannel( name );
   m_channels.RemoveChannel( name );
-  if ( c == NULL ) throw std::logic_error("Server::_RemoveChannel(\"" + name + "\"): GetChannel returned NULL pointer");
+  if ( c == 0 ) throw std::logic_error("Server::_RemoveChannel(\"" + name + "\"): GetChannel returned NULL pointer");
   delete c;
 }
 
@@ -117,7 +117,7 @@ void Server::_RemoveBattle( const int& id )
 {
   Battle* b = &m_battles.GetBattle( id );
   m_battles.RemoveBattle( id );
-  if ( b == NULL ) throw std::logic_error("Server::_RemoveBattle(): GetBattle returned NULL pointer");
+  if ( b == 0 ) throw std::logic_error("Server::_RemoveBattle(): GetBattle returned NULL pointer");
   delete b;
 }
 
