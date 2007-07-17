@@ -26,12 +26,12 @@ END_EVENT_TABLE()
 MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
 {
   m_tabs = new wxNotebook( this, OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
-  
+
   m_imagelist = new wxImageList( 12, 12 );
   m_imagelist->Add( wxIcon(spring_xpm) );
-  
+
   m_tabs->AssignImageList( m_imagelist );
-  
+
   m_spring_opts = new SpringOptionsTab( m_tabs, m_ui );
   m_tabs->AddPage( m_spring_opts, _("Spring"), true, 0 );
 
@@ -54,7 +54,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
 MainOptionsTab::~MainOptionsTab()
 {
-  
+
 }
 
 

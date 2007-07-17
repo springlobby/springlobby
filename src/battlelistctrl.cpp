@@ -26,13 +26,13 @@ END_EVENT_TABLE()
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL), m_selected(-1)
 {
-  
+
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
   SetImageList( &icons(), wxIMAGE_LIST_STATE );
-  
+
   wxListItem col;
-  
+
   col.SetText( _T("s") );
   col.SetImage( -1 );
   InsertColumn( 0, col );
@@ -44,11 +44,11 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, BLIST_LI
   col.SetText( _T("r") );
   col.SetImage( -1 );
   InsertColumn( 2, col );
-  
+
   col.SetText( _("Description") );
   col.SetImage( -1 );
   InsertColumn( 3, col );
-  
+
   col.SetText( _("Map") );
   col.SetImage( -1 );
   InsertColumn( 4, col );
@@ -139,14 +139,14 @@ void BattleListCtrl::UpdateBattle( Battle& battle )
 void BattleListCtrl::UpdateBattle( const int& index )
 {
   assert( index != -1 );
-  
+
   wxListItem item;
   item.SetId( index );
-   
+
   if (!GetItem( item )) assert(false);
-    
+
   Battle& battle = *((Battle*)GetItemData( index ));
-  
+
   SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
   SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.opts().rankneeded, false ) );
   SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
@@ -157,7 +157,7 @@ void BattleListCtrl::UpdateBattle( const int& index )
   SetItem( index, 7, wxString::Format(_T("%d"), battle.opts().spectators) );
   SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.opts().spectators ) );
   SetItem( index, 9, wxString::Format(_T("%d"), battle.opts().maxplayers) );
-  
+
 }
 
 

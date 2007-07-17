@@ -114,7 +114,7 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
   if ( newsel >= (int)m_chat_tabs->GetPageCount() - 1 ) { // We are going to remove page
     ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
     ASSERT_LOGIC( delpage != NULL , "MainChatTab::OnTabsChanged(): delpage NULL" );
-    
+
     if ( !delpage->IsServerPanel() ) {
       delpage->Part();
       m_chat_tabs->DeletePage( oldsel );

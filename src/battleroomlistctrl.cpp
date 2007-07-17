@@ -10,15 +10,15 @@
 #include "battle.h"
 #include "user.h"
 
-BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent ) : wxListCtrl(parent, -1, 
+BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent ) : wxListCtrl(parent, -1,
   wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL )
 {
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
   SetImageList( &icons(), wxIMAGE_LIST_STATE );
-  
+
   wxListItem col;
-  
+
   col.SetText( _T("r") );
   col.SetImage( -1 );
   InsertColumn( 0, col );
@@ -26,7 +26,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent ) : wxListCtrl(parent, 
   col.SetText( _T("s") );
   col.SetImage( -1 );
   InsertColumn( 1, col );
-  
+
   col.SetText( _T("c") );
   col.SetImage( -1 );
   InsertColumn( 2, col );
@@ -34,15 +34,15 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent ) : wxListCtrl(parent, 
   col.SetText( _T("f") );
   col.SetImage( -1 );
   InsertColumn( 3, col );
-  
+
   col.SetText( _T("r") );
   col.SetImage( -1 );
   InsertColumn( 4, col );
-  
+
   col.SetText( _("Nickname") );
   col.SetImage( -1 );
   InsertColumn( 5, col );
-  
+
   col.SetText( _("t") );
   col.SetImage( -1 );
   InsertColumn( 6, col );
@@ -78,13 +78,13 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent ) : wxListCtrl(parent, 
 
 BattleroomListCtrl::~BattleroomListCtrl()
 {
-  
+
 }
 
 
 void BattleroomListCtrl::UpdateList()
 {
-  
+
 }
 
 
@@ -113,14 +113,14 @@ void BattleroomListCtrl::UpdateUser( User& user )
 void BattleroomListCtrl::UpdateUser( const int& index )
 {
   assert( index != -1 );
-  
+
   wxListItem item;
   item.SetId( index );
-   
+
   if (!GetItem( item )) assert(false);
-    
+
   User& user = *((User*)GetItemData( index ));
-  
+
   icons().SetColourIcon( user.BattleStatus().team, wxColour( user.BattleStatus().color_r, user.BattleStatus().color_g, user.BattleStatus().color_b ) );
 
   SetItemImage( index, (user.BattleStatus().spectator)?ICON_SPECTATOR:IconImageList::GetReadyIcon( user.BattleStatus().ready ) );

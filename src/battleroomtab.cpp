@@ -20,7 +20,7 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 END_EVENT_TABLE()
 
 
-BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPanel( parent, -1 ),m_ui(ui), m_battle(battle) 
+BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPanel( parent, -1 ),m_ui(ui), m_battle(battle)
 {
   // Create all widgets
   m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
@@ -51,7 +51,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(80,28) );
   m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(80,28) );
-  
+
   // Create Sizers
   m_players_sizer = new wxBoxSizer( wxVERTICAL );
   m_player_sett_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -61,7 +61,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   // Put widgets in place
-  
+
   m_player_sett_sizer->Add( m_team_lbl, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_team_sel, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_ally_lbl, 0, wxEXPAND | wxALL, 2 );
@@ -71,19 +71,19 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_player_sett_sizer->Add( m_side_lbl, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_side_sel, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_spec_chk, 0, wxEXPAND | wxALL, 2 );
-  
+
   m_players_sizer->Add( m_players, 1, wxEXPAND );
   m_players_sizer->Add( m_player_sett_sizer, 0, wxEXPAND );
-  
+
   m_player_panel->SetSizer( m_players_sizer );
 
   m_splitter->SplitHorizontally( m_player_panel, m_chat, 50 );
-    
+
   m_info_sizer->Add( m_map_lbl, 0, wxEXPAND | wxALL, 2 );
-  
+
   m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
   m_top_sizer->Add( m_info_sizer, 0, wxEXPAND | wxALL, 2 );
-  
+
   m_buttons_sizer->Add( m_leave_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->AddStretchSpacer();
   m_buttons_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
@@ -92,23 +92,23 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_main_sizer->Add( m_top_sizer, 1, wxEXPAND );
   m_main_sizer->Add( m_command_line, 0, wxEXPAND );
   m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
-  
+
   SetSizer( m_main_sizer );
   Layout();
-  
+
   m_splitter->SetMinimumPaneSize( 100 );
   m_splitter->SetSashPosition( 200 );
-  
+
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     m_players->AddUser( battle.GetUser( i ) );
   }
-  
+
 }
 
 
 BattleRoomTab::~BattleRoomTab()
 {
-  
+
 }
 
 

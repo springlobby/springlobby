@@ -50,7 +50,7 @@
 
 IconImageList::IconImageList() : wxImageList(16,16)
 {
-  
+
   Add( wxBitmap(admin_xpm) );
   Add( wxBitmap(admin_away_xpm) );
   Add( wxBitmap(admin_ingame_xpm) );
@@ -64,13 +64,13 @@ IconImageList::IconImageList() : wxImageList(16,16)
   Add( wxBitmap(rank2_xpm) );
   Add( wxBitmap(rank3_xpm) );
   Add( wxBitmap(rank4_xpm) );
-  
+
   Add( wxBitmap(open_game_xpm) );
   Add( wxBitmap(open_pw_game_xpm) );
   Add( wxBitmap(closed_game_xpm) );
   Add( wxBitmap(closed_pw_game_xpm) );
   Add( wxBitmap(started_game_xpm) );
-  
+
   Add( wxBitmap(ready_unsync_xpm) );
   Add( wxBitmap(ready_q_xpm) );
   Add( wxBitmap(nready_unsync_xpm) );
@@ -112,10 +112,10 @@ int IconImageList::GetUserStateIcon( const UserStatus& us )
     if ( us.away ) return ICON_ADMIN_AWAY;
     return ICON_ADMIN;
   }
-  
+
   if ( us.in_game ) return ICON_INGAME;
   if ( us.away ) return ICON_AWAY;
-  
+
   return ICON_NOSTATE;
 }
 
@@ -156,7 +156,7 @@ int IconImageList::GetBattleStatusIcon( Battle& battle )
 
 int IconImageList::GetColourIcon( const int& num )
 {
-  ASSERT_LOGIC( num < NUM_COLOUR_ICONS, "Colour index too high" ); 
+  ASSERT_LOGIC( num < NUM_COLOUR_ICONS, "Colour index too high" );
   return ICON_COLOURS_START + num;
 }
 

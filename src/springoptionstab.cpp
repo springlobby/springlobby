@@ -40,7 +40,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent
   m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _("Browse") );
   m_sync_find_btn = new wxButton( this, -1, _("Find") );
   m_auto_btn = new wxButton( this, -1, _("Auto Configure") );
-    
+
   m_exec_def_radio = new wxRadioButton( this, -1, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
   m_exec_spec_radio = new wxRadioButton( this, -1, _("Specify:") );
   m_sync_def_radio = new wxRadioButton( this, -1, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
@@ -50,7 +50,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent
   else m_exec_spec_radio->SetValue( true );
   if ( sett().GetUnitsyncUseDefLoc() ) m_sync_def_radio->SetValue( true );
   else m_sync_spec_radio->SetValue( true );
-  
+
   m_dir_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringDir()) );
   m_exec_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringLoc()) );
   m_sync_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetUnitsyncLoc()) );
@@ -91,26 +91,26 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent
   m_sync_box_sizer->Add( m_sync_def_radio, 0, wxALL, 2 );
   m_sync_box_sizer->Add( m_sync_spec_radio, 0, wxALL, 2 );
   m_sync_box_sizer->Add( m_sync_loc_sizer, 0, wxEXPAND | wxALL, 2 );
-  
+
   m_aconf_sizer->AddStretchSpacer();
   m_aconf_sizer->Add( m_auto_btn );
-  
+
   m_main_sizer->Add( m_dir_sizer, 0, wxEXPAND | wxALL, 2 );
   m_main_sizer->Add( m_exec_box_sizer, 0, wxEXPAND | wxALL, 2 );
   m_main_sizer->Add( m_sync_box_sizer, 0, wxEXPAND | wxALL, 2 );
   m_main_sizer->Add( m_aconf_sizer, 0, wxEXPAND | wxALL, 2 );
   m_main_sizer->AddStretchSpacer();
-  
+
   SetSizer( m_main_sizer );
   Layout();
-  
+
   DoRestore();
 }
 
 
 SpringOptionsTab::~SpringOptionsTab()
 {
-  
+
 }
 
 

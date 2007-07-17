@@ -22,29 +22,29 @@ class ServerEvents
   public:
     ServerEvents( Server& serv, Ui& ui ) : m_serv(serv),m_ui(ui) {}
     ~ServerEvents() {}
-  
+
   // Uicontrol interface
-  
+
     void OnConnected( const std::string& server_name, const std::string& server_ver, bool supported );
     void OnDisconnected();
-      
+
     void OnLogin();
     void OnLoginInfoComplete();
     void OnLogout();
-      
+
     void OnUnknownCommand( const std::string& command, const std::string& params );
     void OnSocketError( const Sockerror& error );
     void OnProtocolError( const Protocolerror error );
     void OnMotd( const std::string& msg );
     void OnPong( int ping_time );
-      
+
     void OnNewUser( const std::string& nick, const std::string& conutry, int cpu );
     void OnUserStatus( const std::string& nick, UserStatus status );
     void OnUserQuit( const std::string& nick );
-    
-    void OnBattleOpened( int id, bool replay, NatType nat, const std::string& nick, 
-                         const std::string& host, int port, int maxplayers, 
-                         bool haspass, int rank, std::string maphash, const std::string& map, 
+
+    void OnBattleOpened( int id, bool replay, NatType nat, const std::string& nick,
+                         const std::string& host, int port, int maxplayers,
+                         bool haspass, int rank, std::string maphash, const std::string& map,
                          const std::string& title, const std::string& mod );
 
     void OnUserJoinedBattle( int battleid, const std::string& nick );
@@ -56,7 +56,7 @@ class ServerEvents
     void OnClientBattleStatus( int battleid, const std::string& nick, UserBattleStatus status );
     void OnBattleStartRectAdd( int battleid, int allyno, int left, int top, int right, int bottom );
     void OnBattleStartRectRemove( int battleid, int allyno );
-    
+
     void OnBattleDisableUnit( int battleid, const std::string& unitname );
     void OnBattleEnableUnit( int battleid, const std::string& unitname );
     void OnBattleEnableAllUnits( int battleid );
@@ -69,7 +69,7 @@ class ServerEvents
     void OnChannelAction( const std::string& channel, const std::string& who, const std::string& action );
     void OnChannelList( const std::string& channel, const int& numusers );
     void OnPrivateMessage( const std::string& user, const std::string& message, bool fromme = false );
-    
+
     void OnRequestBattleStatus( int battleid );
     void OnSaidBattle( int battleid, const std::string& nick, const std::string& msg );
     void OnBattleAction( int battleid, const std::string& nick, const std::string& msg );

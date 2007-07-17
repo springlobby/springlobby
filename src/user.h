@@ -59,47 +59,47 @@ struct UiUserData {
 class User
 {
   public:
-    
+
     UiUserData uidata;
-    
+
     User( Server& serv ): m_serv(serv),m_cpu(0), m_battle(NULL) {}
     User( const std::string& nick, Server& serv ) : m_serv(serv),m_nick(nick), m_cpu(0), m_battle(NULL) {}
     User( const std::string& nick, const std::string& country, const int& cpu, Server& serv) :
       m_serv(serv),m_nick(nick), m_country(country), m_cpu(cpu), m_battle(NULL) {}
-        
+
     virtual ~User() {}
-  
+
     // User interface
-  
+
     std::string GetNick() const { return m_nick; }
     void SetNick( const std::string& nick ) { m_nick = nick; }
-  
+
     std::string GetCountry() const { return m_country; }
     void SetCountry( const std::string& country ) { m_country = country; }
-  
+
     int GetCpu() const { return m_cpu; }
     void SetCpu( const int& cpu ) { m_cpu = cpu; }
-  
+
     UserStatus GetStatus() const { return m_status; }
     void SetStatus( const UserStatus& status );
-  
+
     UserBattleStatus& BattleStatus() { return m_bstatus; }
     void SetBattleStatus( const UserBattleStatus& status, bool setorder = false );
 
 /*    void SetUserData( void* userdata ) { m_data = userdata; }
     void* GetUserData() { return m_data; }*/
-  
+
     void Said( const std::string& message );
     void Say( const std::string& message );
-  
+
     Battle* GetBattle();
     void SetBattle( Battle* battle );
-    
+
     bool ExecuteSayCommand( const std::string& cmd ) { return false; }
 
   protected:
     // User variables
-  
+
     Server& m_serv;
     std::string m_nick;
     std::string m_country;
@@ -108,7 +108,7 @@ class User
     UserBattleStatus m_bstatus;
     Battle* m_battle;
     //void* m_data;
-  
+
 };
 
 

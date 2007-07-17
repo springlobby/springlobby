@@ -147,9 +147,9 @@ int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData)
   User* user2 = (User*)item2;
   assert( user1 != NULL );
   assert( user2 != NULL );
-  
+
   int u1 = 0, u2 = 0;
-  
+
   if ( user1->GetStatus().moderator )
     u1 += 1000;
   if ( user2->GetStatus().moderator )
@@ -158,14 +158,14 @@ int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData)
     u1 += 100;
   if ( user2->GetStatus().bot )
     u2 += 100;
-  
+
   wxString nick1 = WX_STRING(user1->GetNick());
   wxString nick2 = WX_STRING(user2->GetNick());
 
   int cmp = nick1.CmpNoCase( nick2 );
   if ( cmp < 0 ) u1 += 10;
   else if ( cmp > 0 ) u2 += 10;
-  
+
   if ( u1 > u2 ) return -1;
   if ( u1 < u2 ) return 1;
   return 0;

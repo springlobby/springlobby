@@ -14,15 +14,15 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( pare
 {
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   m_tabs = new wxNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
-  
+
   m_imagelist = new wxImageList( 12, 12 );
   m_imagelist->Add( wxIcon(battle_list_xpm) );
   m_imagelist->Add( wxIcon(battle_xpm) );
   m_imagelist->Add( wxIcon(battle_map_xpm) );
   m_imagelist->Add( wxIcon(battle_settings_xpm) );
-  
+
   m_tabs->AssignImageList( m_imagelist );
-  
+
   m_list_tab = new BattleListTab( m_tabs, m_ui );
   m_tabs->AddPage( m_list_tab, _("Battle list"), true, 0 );
 
@@ -35,7 +35,7 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( pare
 
 MainJoinBattleTab::~MainJoinBattleTab()
 {
-  
+
 }
 
 BattleListTab& MainJoinBattleTab::GetBattleListTab()

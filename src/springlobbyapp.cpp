@@ -25,7 +25,7 @@ bool SpringLobbyApp::OnInit()
   debug_func( "" );
 
   m_ui = new Ui();
-  
+
   m_ui->ShowMainWindow();
 
   if ( sett().IsFirstRun() ) {
@@ -37,9 +37,9 @@ bool SpringLobbyApp::OnInit()
     if ( usync().IsLoaded() ) m_ui->Connect();
     else m_ui->mw().ShowConfigure();
   }
-  
+
   m_timer->Start( TIMER_INTERVAL );
-  
+
   return true;
 }
 
@@ -48,10 +48,10 @@ bool SpringLobbyApp::OnInit()
 int SpringLobbyApp::OnExit()
 {
   debug_func( "" );
-  
+
   m_timer->Stop();
   delete m_ui;
-  
+
   return 0;
 }
 

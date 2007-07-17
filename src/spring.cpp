@@ -37,7 +37,7 @@ bool Spring::Run( Battle& battle )
     debug_error( "Spring allready running!" );
     return false;
   }
-  
+
   try {
 
     if ( !wxFile::Access( wxString(_T("script_springlobby.txt")), wxFile::write ) ) {
@@ -73,7 +73,7 @@ std::string GetWord( std::string& params )
 {
   std::string::size_type pos;
   std::string param;
-  
+
   pos = params.find( " ", 0 );
   if ( pos == std::string::npos ) {
     param = params;
@@ -90,7 +90,7 @@ std::string GetWord( std::string& params )
 wxString Spring::GetScriptTxt( Battle& battle )
 {
   wxString s;
-  
+
   int NumTeams=0, NumAllys=0, LastOrder=-1,Lowest=-1;
   int PlayerOrder[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int TeamConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
@@ -123,7 +123,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
       NumAllys++;
     }
 
-  }  
+  }
 
   BattleOptions bo = battle.opts();
 
@@ -151,7 +151,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += wxString::Format( _T("\tNumPlayers=%d;\n"), battle.GetNumUsers() );
   s += wxString::Format( _T("\tNumTeams=%d;\n"), NumTeams );
   s += wxString::Format( _T("\tNumAllyTeams=%d;\n\n"), NumAllys );
-  
+
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     s += wxString::Format( _T("\t[PLAYER%d]\n"), i );
     s += wxString::Format( _T("\t{\n") );

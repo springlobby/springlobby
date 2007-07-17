@@ -82,7 +82,7 @@ void Ui::Disconnect()
     Socket* sock = m_serv->GetSocket();
     m_serv->SetSocket( NULL );
     delete sock; sock = NULL;
-    delete m_serv; m_serv = NULL;  
+    delete m_serv; m_serv = NULL;
   }
 }
 
@@ -93,34 +93,34 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
   std::string host;
   int port;
   Socket* sock;
-  
+
   if ( !sett().ServerExists( STL_STRING(servername) ) ) {
     assert( false );
     return;
   }
-  
+
   Disconnect();
-  
+
   // Create new Server object
   m_serv = new TASServer( *this );
   sock = new Socket( *m_serv );
   m_serv->SetSocket( sock );
   //m_serv->SetServerEvents( &se() );
-  
+
   m_serv->SetUsername( STL_STRING(username) );
   m_serv->SetPassword( STL_STRING(password) );
-  
+
   if ( sett().GetServerAccountSavePass( STL_STRING(servername) ) ) {
     if ( m_serv->IsPasswordHash(STL_STRING(password)) ) sett().SetServerAccountPass( STL_STRING(servername), STL_STRING(password) );
     else sett().SetServerAccountPass( STL_STRING(servername), m_serv->GetPasswordHash( STL_STRING(password) ) );
   } else {
-    sett().SetServerAccountPass( STL_STRING(servername), "" );    
+    sett().SetServerAccountPass( STL_STRING(servername), "" );
   }
   sett().SaveSettings();
-  
+
   host = sett().GetServerHost( STL_STRING(servername) );
   port = sett().GetServerPort( STL_STRING(servername) );
-  
+
   m_serv->uidata.panel = m_main_win->GetChatTab().AddChatPannel( *m_serv, servername );
   m_serv->uidata.panel->StatusMessage( _T("Connecting to server ") + servername + _T("...") );
 
@@ -168,7 +168,7 @@ bool Ui::AskText( const wxString& heading, const wxString& question, wxString& a
   wxTextEntryDialog name_dlg( NULL, question, heading, _T(""), wxOK | wxCANCEL | wxCENTRE );
   int res = name_dlg.ShowModal();
   answer = name_dlg.GetValue();
-  
+
   return ( res == wxID_OK);
 }
 
@@ -265,7 +265,7 @@ void Ui::OnChannelDidAction( Channel& channel , User& user, const std::string& a
     debug_error( "ud->panel NULL" );
     return;
   }
-  channel.uidata.panel->DidAction( WX_STRING(user.GetNick()), WX_STRING( action ) );  
+  channel.uidata.panel->DidAction( WX_STRING(user.GetNick()), WX_STRING( action ) );
 }
 
 
@@ -285,7 +285,7 @@ void Ui::OnUserJoinedChannel( Channel& chan, User& user )
     debug_error( "ud->panel NULL" );
     return;
   }
-  chan.uidata.panel->Joined( user );  
+  chan.uidata.panel->Joined( user );
 }
 
 
@@ -296,7 +296,7 @@ void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason
     debug_error( "ud->panel NULL" );
     return;
   }
-  chan.uidata.panel->Parted( user, WX_STRING(reason) );  
+  chan.uidata.panel->Parted( user, WX_STRING(reason) );
 }
 
 
@@ -307,13 +307,13 @@ void Ui::OnChannelTopic( Channel& channel , const std::string user, const std::s
     debug_error( "ud->panel NULL" );
     return;
   }
-  channel.uidata.panel->SetTopic( WX_STRING(user), WX_STRING(topic) );   
+  channel.uidata.panel->SetTopic( WX_STRING(user), WX_STRING(topic) );
 }
 
 
 void Ui::OnChannelList( const std::string& channel, const int& numusers )
 {
-  
+
 }
 
 
@@ -321,7 +321,7 @@ void Ui::OnUserOnline( User& user )
 {
 /*  UiUserData* data = new UiUserData();
   data->panel = NULL;
-  
+
   user.SetUserData( (void*)data );*/
 }
 
@@ -330,7 +330,7 @@ void Ui::OnUserOffline( User& user )
 {
 /*  UiUserData* data = (UiUserData*)user.GetUserData();
   if ( data == NULL) return;
-    
+
   delete data;*/
 }
 
@@ -354,7 +354,7 @@ void Ui::OnUnknownCommand( Server& server, const std::string& command, const std
 
 void Ui::OnMotd( Server& server, const std::string& message )
 {
-  if ( server.uidata.panel != NULL ) server.uidata.panel->Motd( WX_STRING(message) );  
+  if ( server.uidata.panel != NULL ) server.uidata.panel->Motd( WX_STRING(message) );
 }
 
 void Ui::OnUserSaid( User& user, const std::string message, bool fromme )
@@ -386,7 +386,7 @@ void Ui::OnBattleClosed( Battle& battle )
 void Ui::OnUserJoinedBattle( Battle& battle, User& user )
 {
   mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
-  
+
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != NULL ) {
     if ( &br->GetBattle() == &battle ) br->OnUserJoined( user );

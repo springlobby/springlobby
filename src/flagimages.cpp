@@ -5,12 +5,12 @@ int GetFlagIndex( const std::string& flag )
 {
   int i = 0;
   while ( strcmp(flag_str[i], "") != 0 ) {
-    if ( flag == flag_str[i] ) { 
+    if ( flag == flag_str[i] ) {
       return i;
     }
     i++;
   }
-  debug_error( flag + " flag not found!" );  
+  debug_error( flag + " flag not found!" );
   return FLAG_NONE;
 }
 

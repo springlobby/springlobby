@@ -47,24 +47,24 @@ typedef void (*socket_callback)(Socket*);
 class Socket
 {
   public:
-    
+
     Socket( Server& serv );
     ~Socket();
-  
+
     // Socket interface
-  
+
     void Connect( const std::string& addr, const int port );
     void Disconnect( );
-  
+
     bool Send( const std::string& data );
     bool Recive( std::string& data );
-  
+
     Sockstate State( );
     Sockerror Error( );
-  
+
 /*    void SetUserdata( void* data ) { m_udata = data; }
     void* GetUserdata() { return m_udata; }
-  
+
     void SetConnectedCallback( socket_callback callback ) { m_on_con = callback; }
     socket_callback GetConnectedCallback() { return m_on_con; }
 

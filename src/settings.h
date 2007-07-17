@@ -52,35 +52,35 @@ class Settings
   public:
     Settings();
     ~Settings();
-  
+
     void SetDefaultSettings();
     void SaveSettings();
-  
+
     bool IsFirstRun();
 
     std::string GetDefaultServer();
     void   SetDefaultServer( const std::string& server_name );
-  
+
     bool   ServerExists( const std::string& server_name );
-  
+
     std::string GetServerHost( const std::string& server_name );
     void   SetServerHost( const std::string& server_name, const std::string& value );
-    
+
     int    GetServerPort( const std::string& server_name );
     void   SetServerPort( const std::string& server_name, const int value );
-    
+
     std::string GetServerName( const std::string& server_name );
     void   SetServerName( const std::string& server_name, const std::string& value );
-    
+
     std::string GetServerAccountNick( const std::string& server_name );
     void   SetServerAccountNick( const std::string& server_name, const std::string& value );
-    
+
     std::string GetServerAccountPass( const std::string& server_name );
     void   SetServerAccountPass( const std::string& server_name, const std::string& value );
-    
+
     bool   GetServerAccountSavePass( const std::string& server_name );
     void   SetServerAccountSavePass( const std::string& server_name, const bool value );
-  
+
     int    GetMainWindowWidth();
     void   SetMainWindowWidth( const int value );
 
@@ -108,9 +108,9 @@ class Settings
     std::string GetSpringUsedLoc();
 
   protected:
-    
+
     wxConfig* m_config; //!< wxConfig object to store and restore  all settings in.
-    
+
 };
 
 

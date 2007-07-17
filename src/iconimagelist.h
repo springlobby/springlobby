@@ -69,19 +69,19 @@ class IconImageList : public wxImageList
 {
   public:
     IconImageList();
-  
+
     // IconImageList interface
-  
+
     static int GetUserStateIcon( const UserStatus& us );
     static int GetRankIcon( const int& rank, const bool& showlowest = true );
     static int GetFlagIcon( const std::string& flagname );
     static int GetBattleStatusIcon( Battle& battle );
-    
+
     static int GetColourIcon( const int& num );
     void SetColourIcon( const int& num, const wxColour& colour );
     static int GetSideIcon( const std::string& side );
     static int GetReadyIcon( const bool& ready, const int& sync = 1 );
-    
+
   protected:
     // IconImageList variables
 

@@ -15,7 +15,7 @@
 #define TIMER_ID 101
 #define TIMER_INTERVAL 100
 
- 
+
 //! @brief Spring lobby wxApp
 class SpringLobbyApp : public wxApp
 {
@@ -23,19 +23,19 @@ class SpringLobbyApp : public wxApp
     // SpringLobbyApp interface
     SpringLobbyApp() { m_timer = new wxTimer(this, TIMER_ID); }
     ~SpringLobbyApp() { delete m_timer; }
-    
+
     virtual bool OnInit();
     virtual int OnExit();
-    
+
     // System Events
     void OnTimer( wxTimerEvent& event );
-  
+
   protected:
-  
+
     wxTimer* m_timer;
 
     Ui* m_ui;
-  
+
     DECLARE_EVENT_TABLE()
 };
 

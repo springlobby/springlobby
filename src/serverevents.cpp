@@ -98,7 +98,7 @@ void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
 
   if ( !us.in_game && status.in_game && user.GetBattle() != NULL ) {
     Battle& battle = *user.GetBattle();
-    if ( &battle.GetFounder() == &user ) 
+    if ( &battle.GetFounder() == &user )
       m_ui.OnBattleStarted( battle );
   }
 }
@@ -112,19 +112,19 @@ void ServerEvents::OnUserQuit( const std::string& nick )
 }
 
 
-void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::string& nick, 
-                       const std::string& host, int port, int maxplayers, 
-                       bool haspass, int rank, std::string maphash, const std::string& map, 
+void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::string& nick,
+                       const std::string& host, int port, int maxplayers,
+                       bool haspass, int rank, std::string maphash, const std::string& map,
                        const std::string& title, const std::string& mod )
 {
   debug_func( "" );
-  
+
   if ( m_serv.BattleExists( id ) ) throw std::runtime_error("New battle from server, but already exists!");
   Battle& battle = m_serv._AddBattle( id );
-  
+
   User& user = m_serv.GetUser( nick );
   battle.AddUser( user );
-  
+
   battle.SetIsReplay( replay );
   battle.SetNatType( nat );
   battle.SetFounder( nick );
@@ -137,8 +137,8 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::
   battle.SetMapname( map );
   battle.SetDescription( title );
   battle.SetModname( mod );
-  
-  m_ui.OnBattleOpened( battle ); 
+
+  m_ui.OnBattleOpened( battle );
 }
 
 
@@ -170,7 +170,7 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const std::string& nick )
   debug_func( "" );
   Battle& battle = m_serv.GetBattle( battleid );
   User& user = m_serv.GetUser( nick );
-  
+
   battle.AddUser( user );
   m_ui.OnUserJoinedBattle( battle, user );
 }
@@ -181,14 +181,14 @@ void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
   debug_func( "" );
   Battle& battle = m_serv.GetBattle( battleid );
   User& user = m_serv.GetUser( nick );
-  
+
   m_ui.OnUserLeftBattle( battle, user );
 
   battle.RemoveUser( user );
 }
 
 
-void ServerEvents::OnBattleInfoUpdated( int battleid, int metal, int energy, int units, StartType 
+void ServerEvents::OnBattleInfoUpdated( int battleid, int metal, int energy, int units, StartType
                     start, bool comm, bool dgun, bool dim, bool ghost, std::string hash )
 {
   debug_func( "" );
@@ -211,13 +211,13 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
 {
   debug_func( "" );
   Battle& battle = m_serv.GetBattle( battleid );
-  
+
   battle.SetSpectators( spectators );
   battle.SetIsLocked( locked );
-    
+
   battle.SetMapHash( maphash );
   battle.SetMapname( map );
-  
+
   m_ui.OnBattleInfoUpdated( battle );
 }
 
@@ -226,9 +226,9 @@ void ServerEvents::OnBattleClosed( int battleid )
 {
   debug_func( "" );
   Battle& battle = m_serv.GetBattle( battleid );
-  
+
   m_ui.OnBattleClosed( battle );
-  
+
   m_serv._RemoveBattle( battleid );
 }
 
@@ -264,7 +264,7 @@ void ServerEvents::OnJoinChannelResult( bool success, const std::string& channel
 
     Channel& chan = m_serv._AddChannel( channel );
     m_ui.OnJoinedChannelSuccessful( chan );
-  
+
   } else {
     m_ui.ShowMessage( _("Join channel failed"), _("Could not join channel ") + WX_STRING(channel) + _(" because: ") + WX_STRING(reason) );
   }
@@ -308,7 +308,7 @@ void ServerEvents::OnChannelAction( const std::string& channel, const std::strin
 
 void ServerEvents::OnPrivateMessage( const std::string& user, const std::string& message, bool fromme )
 {
-  debug_func( "" ); 
+  debug_func( "" );
   User& who = m_serv.GetUser( user );
   m_ui.OnUserSaid( who, message, fromme );
 

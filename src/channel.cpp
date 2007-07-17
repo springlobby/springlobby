@@ -55,8 +55,8 @@ void Channel::Leave()
   m_serv.PartChannel( m_name );
 }
 
- 
-  
+
+
 void Channel::Joined( User& who )
 {
   AddUser( who );
@@ -68,7 +68,7 @@ void Channel::SetTopic( const std::string& topic, const std::string& who )
 {
   m_topic = topic;
   m_topic_nick = who;
-  
+
   m_ui.OnChannelTopic( *this, who, topic );
 }
 

@@ -43,18 +43,18 @@ class Ui
     static bool Ask( const wxString& heading, const wxString& question );
     static bool AskText( const wxString& heading, const wxString& question, wxString& answer );
     static void ShowMessage( const wxString& heading, const wxString& message );
-    
+
     MainWindow& mw();
-  
+
     void OnUpdate();
-    
+
     void OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported );
     void OnDisconnected( Server& server );
 
     void OnJoinedChannelSuccessful( Channel& chan );
     void OnUserJoinedChannel( Channel& chan, User& user );
     void OnUserLeftChannel( Channel& chan, User& user, const std::string& reason );
-    
+
     void OnChannelTopic( Channel& channel , const std::string user, const std::string& topic );
     void OnChannelSaid( Channel& channel , User& user, const std::string& message );
     void OnChannelDidAction( Channel& channel , User& user, const std::string& action );
@@ -67,7 +67,7 @@ class Ui
 
     void OnUnknownCommand( Server& server, const std::string& command, const std::string& params );
     void OnMotd( Server& server, const std::string& message );
-  
+
     void OnBattleOpened( Battle& battle );
     void OnBattleClosed( Battle& battle );
     void OnUserJoinedBattle( Battle& battle, User& user );
@@ -83,17 +83,17 @@ class Ui
     void OnJoinedBattle( Battle& battle );
     void OnUserBattleStatus( Battle& battle, User& user );
     void OnRequestBattleStatus( Battle& battle );
-    
+
     void OnSaidBattle( Battle& battle, const std::string& nick, const std::string& msg );
     void OnBattleAction( Battle& battle, const std::string& nick, const std::string& msg );
-    
+
     void OnSpringTerminated( bool success );
 
     void OnMainWindowDestruct() { m_main_win = 0; }
 
   protected:
     // Ui variables
-  
+
     Spring* m_spring;
 
     Server* m_serv;

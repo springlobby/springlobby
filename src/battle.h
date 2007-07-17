@@ -59,11 +59,11 @@ struct BattleOptions
   bool ispassworded;
   int rankneeded;
   std::string founder;
-  
+
   NatType nattype;
   int port;
   std::string ip;
-  
+
   int maxplayers;
   int spectators;
 
@@ -76,14 +76,14 @@ struct BattleOptions
   bool limitdgun;
   bool dimmms;
   bool ghostedbuildings;
-  
+
   std::string maphash;
   std::string hashcode;
 
   std::string description;
   std::string mapname;
   std::string modname;
-  
+
 };
 
 
@@ -104,38 +104,38 @@ class Battle : public UserList
     ~Battle();
 
     const BattleOptions& opts() { return m_opts; }
-  
+
     void SetIsReplay( const bool& isreplay ) { m_opts.isreplay = isreplay; }
     void SetIsLocked( const bool& islocked ) { m_opts.islocked = islocked; }
     void SetIsPassworded( const bool& ispassworded ) { m_opts.ispassworded = ispassworded; }
-    
+
     void SetNatType( const NatType nattype ) { m_opts.nattype = nattype; }
     void SetHostPort( int port) { m_opts.port = port; }
     void SetFounder( const std::string& nick ) { m_opts.founder = nick; }
     void SetIp( const std::string& ip ) { m_opts.ip = ip; }
-    
+
     void SetMaxPlayers( const int& maxplayers ) { m_opts.maxplayers = maxplayers; }
     void SetSpectators( const int& spectators ) { m_opts.spectators = spectators; }
-    
+
     void SetStartMetal( const int& smetal ) { m_opts.startmetal = smetal; }
     void SetStartEnergy( const int& senergy ) { m_opts.startenergy = senergy; }
     void SetMaxUnits( const int& maxunits ) { m_opts.maxunits = maxunits; }
     void SetStartType( const StartType& starttype ) { m_opts.starttype = starttype; }
-    
+
     void SetComEndsGame( const bool& comends ) { m_opts.comends = comends; }
     void SetLimitDGun( const bool& limdgun ) { m_opts.limitdgun = limdgun; }
     void SetDimMMs( const bool& dimmm ) { m_opts.dimmms = dimmm; }
     void SetGhostedBuildings( const bool& gbuilds ) { m_opts.ghostedbuildings = gbuilds; }
-    
+
     void SetRankNeeded( const int& rankneeded ) { m_opts.rankneeded = rankneeded; }
-        
+
     void SetMapHash( const std::string& maphash ) { m_opts.maphash = maphash; }
     void SetMapname( const std::string& map ) { m_opts.mapname = map; }
     void SetDescription( const std::string& desc ) { m_opts.description = desc; }
     void SetModname( const std::string& mod ) { m_opts.modname = mod; }
-    
+
     void SetImReady( bool ready );
-    
+
     User& GetFounder() { return GetUser( m_opts.founder ); }
     User& GetMe();
     bool IsFounderMe();
@@ -146,23 +146,23 @@ class Battle : public UserList
     void RemoveUser( User& user );
 
     void Update();
-    
+
     void Join( const std::string& password = "" );
     void Leave();
-    
+
     void Say( const std::string& msg );
-    
+
     bool IsMapAvailable();
     bool IsModAvailable();
 
     void OnRequestBattleStatus();
     void SendMyBattleStatus();
-    
+
     bool IsSynced();
     bool HasMod();
 
     bool ExecuteSayCommand( const std::string& cmd ) { return false; }
-    
+
     void AddStartRect( int allyno, int left, int top, int right, int bottom );
     void RemoveStartRect( int allyno );
     BattleStartRect* GetStartRect( int allyno );
@@ -186,11 +186,11 @@ class Battle : public UserList
     Ui& m_ui;
 
     int m_order;
-    
+
     std::vector<BattleStartRect*> m_rects;
     std::string m_units;
     int m_units_num;
-  
+
     void RemoveUser( std::string const& user ) {}
 };
 

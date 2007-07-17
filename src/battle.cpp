@@ -65,7 +65,7 @@ void Battle::OnRequestBattleStatus()
   bs.ally = lowest;
   if ( IsSynced() ) bs.sync = SYNC_SYNCED;
   else bs.sync = SYNC_UNSYNCED;
-  
+
   //m_serv.GetMe().SetBattleStatus( bs );
 
   SendMyBattleStatus();
@@ -83,9 +83,9 @@ void Battle::SendMyBattleStatus()
 void Battle::SetImReady( bool ready )
 {
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
-  
+
   bs.ready = ready;
-  
+
   //m_serv.GetMe().SetBattleStatus( bs );
   SendMyBattleStatus();
 }
@@ -141,7 +141,7 @@ bool Battle::IsFounderMe()
 }
 
 int Battle::GetMyPlayerNum()
-{ 
+{
   for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
     if ( &GetUser(i) == &m_serv.GetMe() ) return i;
   }

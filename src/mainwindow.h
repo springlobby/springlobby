@@ -53,9 +53,9 @@ class MainWindow : public wxFrame
 
   protected:
     // MainWindow variables
-  
+
     Ui& m_ui;
-    
+
     wxBoxSizer* m_main_sizer;
     wxListbook* m_func_tabs;
     wxNotebookPage* m_chat_page;

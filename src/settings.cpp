@@ -69,7 +69,7 @@ std::string Settings::GetDefaultServer()
 
 
 //! @brief Set the name/alias of the default server.
-//! 
+//!
 //! @param server_name the server name/alias
 //! @see GetDefaultServer()
 void   Settings::SetDefaultServer( const std::string& server_name )
@@ -79,7 +79,7 @@ void   Settings::SetDefaultServer( const std::string& server_name )
 
 
 //! @brief Get hostname of a server.
-//! 
+//!
 //! @param server_name the server name/alias
 std::string Settings::GetServerHost( const std::string& server_name )
 {
@@ -88,7 +88,7 @@ std::string Settings::GetServerHost( const std::string& server_name )
 
 
 //! @brief Set hostname of a server.
-//! 
+//!
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
 void   Settings::SetServerHost( const std::string& server_name, const std::string& value )
@@ -98,7 +98,7 @@ void   Settings::SetServerHost( const std::string& server_name, const std::strin
 
 
 //! @brief Get port number of a server.
-//! 
+//!
 //! @param server_name the server name/alias
 int    Settings::GetServerPort( const std::string& server_name )
 {
@@ -107,7 +107,7 @@ int    Settings::GetServerPort( const std::string& server_name )
 
 
 //! @brief Set port number of a server.
-//! 
+//!
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
 void   Settings::SetServerPort( const std::string& server_name, const int value )
@@ -117,7 +117,7 @@ void   Settings::SetServerPort( const std::string& server_name, const int value 
 
 
 //! @brief Get name/alias of a server.
-//! 
+//!
 //! @param server_name the server name/alias
 //! @todo Implement
 std::string Settings::GetServerName( const std::string& server_name )
@@ -127,7 +127,7 @@ std::string Settings::GetServerName( const std::string& server_name )
 
 
 //! @brief Set name/alias of a server.
-//! 
+//!
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
 //! @todo Implement
@@ -137,7 +137,7 @@ void   Settings::SetServerName( const std::string& server_name, const std::strin
 
 
 //! @brief Get nickname of the default account for a server.
-//! 
+//!
 //! @param server_name the server name/alias
 std::string Settings::GetServerAccountNick( const std::string& server_name )
 {
@@ -146,7 +146,7 @@ std::string Settings::GetServerAccountNick( const std::string& server_name )
 
 
 //! @brief Set nickname of the default account for a server.
-//! 
+//!
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
 void   Settings::SetServerAccountNick( const std::string& server_name, const std::string& value )
@@ -156,7 +156,7 @@ void   Settings::SetServerAccountNick( const std::string& server_name, const std
 
 
 //! @brief Get password of the default account for a server.
-//! 
+//!
 //! @param server_name the server name/alias
 //! @todo Implement
 std::string Settings::GetServerAccountPass( const std::string& server_name )
@@ -166,7 +166,7 @@ std::string Settings::GetServerAccountPass( const std::string& server_name )
 
 
 //! @brief Set password of the default account for a server.
-//! 
+//!
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
 //! @todo Implement
@@ -177,17 +177,17 @@ void   Settings::SetServerAccountPass( const std::string& server_name, const std
 
 
 //! @brief Get if the password should be saved for a default server account.
-//! 
+//!
 //! @param server_name the server name/alias
 //! @todo Implement
 bool   Settings::GetServerAccountSavePass( const std::string& server_name )
 {
-  return m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/savepass"), (long int)false );  
+  return m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/savepass"), (long int)false );
 }
 
 
 //! @brief Set if the password should be saved for a default server account.
-//! 
+//!
 //! @param server_name the server name/alias
 //! @param value the vaule to be set
 //! @todo Implement

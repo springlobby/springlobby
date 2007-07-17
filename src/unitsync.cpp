@@ -41,7 +41,7 @@ void* Unitsync::_GetLibFuncPtr( const std::string& name )
 bool Unitsync::LoadUnitsyncLib()
 {
   if ( m_loaded ) return true;
-  
+
   wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
 
   // Load the library.
@@ -65,16 +65,16 @@ bool Unitsync::LoadUnitsyncLib()
   } catch(...) {
     m_libhandle = NULL;
   }
-  
+
   if (m_libhandle == NULL) {
     debug_error( "Couldn't load the unitsync library" );
     std::string dlerr = dlerror();
     debug_error( dlerr );
-    
+
     wxMessageDialog msg( NULL, _("The unitsync library failed to load from the location \"") + WX_STRING(loc) + _("\".\nIt failed with the error message \"") + WX_STRING(dlerr)+ _("\".\n\nYou might want to look at the Spring Options again. If you need any help setting unitsync up you will find it under the Help main menu."), _("Error loading unitsync"), wxOK | wxICON_ERROR );
-    
+
     msg.ShowModal();
-    
+
     return false;
   }
 
@@ -130,7 +130,7 @@ void Unitsync::FreeUnitsyncLib()
 #else
   dlclose(m_libhandle);
 #endif
-  
+
   m_loaded = false;
 }
 

@@ -21,29 +21,29 @@ class MainJoinBattleTab : public wxPanel
   public:
     MainJoinBattleTab( wxWindow* parent, Ui& ui );
      ~MainJoinBattleTab();
-  
+
     // MainJoinBattleTab interface
-  
+
     BattleListTab& GetBattleListTab();
-   
+
     void JoinBattle( Battle& battle );
     void LeaveCurrentBattle();
-    
+
     void BattleUserUpdated( User& user );
     BattleRoomTab* GetBattleRoomTab() { return m_battle_tab; }
-    
+
   protected:
     // MainJoinBattleTab variables
-  
+
     wxBoxSizer* m_main_sizer;
-    
+
     wxImageList* m_imagelist;
-  
+
     wxNotebook* m_tabs;
     BattleListTab* m_list_tab;
-  
+
     BattleRoomTab* m_battle_tab;
-  
+
     Ui& m_ui;
 
 };
