@@ -32,29 +32,29 @@ struct UnitsyncMod
 
 struct StartPos
 {
-	int x;
-	int z;
+  int x;
+  int z;
 };
 
 
 struct MapInfo
 {
-	char* description;
-	int tidalStrength;
-	int gravity;
-	float maxMetal;
-	int extractorRadius;
-	int minWind;
-	int maxWind;
+  char* description;
+  int tidalStrength;
+  int gravity;
+  float maxMetal;
+  int extractorRadius;
+  int minWind;
+  int maxWind;
 
-	// 0.61b1+
-	int width;
-	int height;
-	int posCount;
-	StartPos positions[16];		// I'd rather not allocate memory, this should be enough
+  // 0.61b1+
+  int width;
+  int height;
+  int posCount;
+  StartPos positions[16];  // I'd rather not allocate memory, this should be enough
 
-	// VERSION>=1
-	char *author; // max 200 chars
+  // VERSION>=1
+  char *author; // max 200 chars
 };
 
 

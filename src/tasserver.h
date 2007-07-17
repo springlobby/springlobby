@@ -154,7 +154,7 @@ class TASServer : public Server
         case 2: return ST_Choose;
         default: assert(false);
       };
-	  return ST_Fixed;
+      return ST_Fixed;
     }
     void OnConnected( Socket* sock );
     void OnDisconnected( Socket* sock );

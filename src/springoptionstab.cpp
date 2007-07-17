@@ -2,6 +2,8 @@
 // Class: SpringOptionsTab
 //
 
+#include <wx/intl.h>
+
 #include "springoptionstab.h"
 #include "ui.h"
 #include "unitsync.h"

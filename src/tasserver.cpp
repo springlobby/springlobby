@@ -148,7 +148,7 @@ void TASServer::ExecuteCommand( const std::string& in )
 {
   std::string cmd;
   std::string params = in;
-	std::string::size_type pos = 0;
+  std::string::size_type pos = 0;
   int replyid = -1;
   
   if ( in.empty() ) return;
@@ -404,7 +404,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
 
 std::string TASServer::GetWordParam( std::string& params )
 {
-	std::string::size_type pos;
+  std::string::size_type pos;
   std::string param;
   
   pos = params.find( " ", 0 );
@@ -421,7 +421,7 @@ std::string TASServer::GetWordParam( std::string& params )
 
 std::string TASServer::GetSentenceParam( std::string& params )
 {
-	std::string::size_type pos;
+  std::string::size_type pos;
   std::string param;
   
   pos = params.find( "\t", 0 );
@@ -438,7 +438,7 @@ std::string TASServer::GetSentenceParam( std::string& params )
 
 int TASServer::GetIntParam( std::string& params )
 {
-	std::string::size_type pos;
+  std::string::size_type pos;
   std::string param;
   
   pos = params.find( " ", 0 );

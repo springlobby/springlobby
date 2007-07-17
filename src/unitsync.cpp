@@ -2,6 +2,8 @@
 // Class: Unitsync
 //
 
+#include <wx/intl.h>
+
 #include "unitsync.h"
 #include <assert.h>
 #include <stdexcept>

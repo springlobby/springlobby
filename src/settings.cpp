@@ -5,6 +5,7 @@
 #include "settings.h"
 #include <wx/intl.h>
 #include <iostream>
+#include "utils.h"
 
 
 Settings& sett()
@@ -109,7 +110,7 @@ void   Settings::SetServerPort( const std::string& server_name, const int value 
 //! @todo Implement
 std::string Settings::GetServerName( const std::string& server_name )
 {
-	return "";
+  return "";
 }
 
 

@@ -8,6 +8,7 @@
 #include "settings.h"
 #include "ui.h"
 #include "images/connect.xpm"
+#include "utils.h"
 
 
 // Define events.

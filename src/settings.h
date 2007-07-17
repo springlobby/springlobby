@@ -24,10 +24,7 @@
 #define _SETTINGS_H_
 
 #include <wx/config.h>
-#include <wx/intl.h>
-#include <wx/filefn.h>
 #include <string>
-#include "utils.h"
 
 
 #define DEFSETT_DEFAULT_SERVER _T("TAS Server")

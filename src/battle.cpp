@@ -198,7 +198,7 @@ void Battle::ClearStartRects()
 
 void Battle::DisableUnit( const std::string& unitname )
 {
-	std::string::size_type i = m_units.find( unitname, 0 );
+  std::string::size_type i = m_units.find( unitname, 0 );
   if ( i != std::string::npos ) return;
   m_units += unitname;
   m_units += " ";
@@ -208,7 +208,7 @@ void Battle::DisableUnit( const std::string& unitname )
 
 void Battle::EnableUnit( const std::string& unitname )
 {
-	std::string::size_type i = m_units.find( unitname, 0 );
+  std::string::size_type i = m_units.find( unitname, 0 );
   if ( i == std::string::npos ) return;
   m_units.replace( i, unitname.length()+1, "" );
   m_units_num--;

@@ -5,6 +5,7 @@
 #include <wx/icon.h>
 #include "mainoptionstab.h"
 #include "ui.h"
+#include <wx/intl.h>
 
 #include "images/spring.xpm"
 

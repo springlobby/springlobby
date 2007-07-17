@@ -58,7 +58,7 @@ void Spring::OnTerminated()
 
 std::string GetWord( std::string& params )
 {
-	std::string::size_type pos;
+  std::string::size_type pos;
   std::string param;
   
   pos = params.find( " ", 0 );

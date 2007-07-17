@@ -162,7 +162,7 @@ int BattleroomListCtrl::GetUserIndex( User& user )
     if ( (unsigned long)&user == GetItemData( i ) ) return i;
   }
   debug_error( "didn't find the battle." );
-	return -1;
+  return -1;
 }
 
 
