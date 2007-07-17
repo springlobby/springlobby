@@ -8,6 +8,9 @@
 #include <wx/imaglist.h>
 #include <wx/icon.h>
 #include <wx/sizer.h>
+#include <wx/listbook.h>
+#include <wx/menu.h>
+#include <wx/dcmemory.h>
 
 #include "mainwindow.h"
 #include "settings.h"
@@ -15,6 +18,10 @@
 #include "server.h"
 #include "utils.h"
 #include "battlelisttab.h"
+#include "mainchattab.h"
+#include "mainjoinbattletab.h"
+#include "mainoptionstab.h"
+#include "unitsync.h"
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.xpm"
@@ -166,6 +173,11 @@ MainChatTab& MainWindow::GetChatTab()
   return *m_chat_tab;
 }
 
+MainJoinBattleTab& MainWindow::GetJoinTab()
+{
+  assert( m_join_tab != 0 );
+  return *m_join_tab;
+}
 
 //! @brief Open a new chat tab with a channel chat
 //!

@@ -21,6 +21,8 @@
 #include "battleroomtab.h"
 #include "socket.h"
 #include "battle.h"
+#include "mainchattab.h"
+#include "mainjoinbattletab.h"
 
 
 Ui::Ui() :

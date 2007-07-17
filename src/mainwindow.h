@@ -5,21 +5,23 @@
 #ifndef _MAINWINDOW_H_
 #define _MAINWINDOW_H_
 
-
-#include <wx/menu.h>
-#include <wx/listbook.h>
 #include <wx/frame.h>
-#include <wx/utils.h>
-#include <wx/image.h>
-#include <wx/dcmemory.h>
-
-#include "mainchattab.h"
-#include "mainjoinbattletab.h"
-#include "mainoptionstab.h"
-#include "unitsync.h"
 
 class Ui;
+class Channel;
+class User;
+class wxCommandEvent;
+class wxListbookEvent;
+class MainChatTab;
+class MainJoinBattleTab;
+class wxBoxSizer;
+class wxListbook;
+class MainOptionsTab;
+class wxBitmap;
+class wxImageList;
 
+// FIXME shouldn't copy this here
+typedef wxWindow wxNotebookPage;
 
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
@@ -47,7 +49,7 @@ class MainWindow : public wxFrame
 
     void OnTabsChanged( wxListbookEvent& event );
     MainChatTab& GetChatTab();
-    MainJoinBattleTab& GetJoinTab() { assert( m_join_tab != 0 ); return *m_join_tab; }
+    MainJoinBattleTab& GetJoinTab();
 
     void MakeImages();
 
