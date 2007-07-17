@@ -2,13 +2,16 @@
 // Class: ServerEvents
 //
 
-#ifndef _UICONTROL_H_
-#define _UICONTROL_H_
+#ifndef _SERVEREVENTS_H_
+#define _SERVEREVENTS_H_
 
-#include "socket.h"
 #include "server.h"
-#include "ui.h"
-//#include "user.h"
+#include "battle.h"
+
+class Ui;
+
+// FIXME this is defined elsewhere, should use a different kind of type so we could use forward decl
+typedef int Sockerror;
 
 typedef int Protocolerror;
 
@@ -29,7 +32,7 @@ class ServerEvents
     void OnLogout();
       
     void OnUnknownCommand( const std::string& command, const std::string& params );
-    void OnSocketError( const Sockerror error );
+    void OnSocketError( const Sockerror& error );
     void OnProtocolError( const Protocolerror error );
     void OnMotd( const std::string& msg );
     void OnPong( int ping_time );
@@ -75,5 +78,5 @@ class ServerEvents
 };
 
 
-#endif  //_UICONTROL_H_
+#endif  //_SERVEREVENTS_H_
 

@@ -8,7 +8,30 @@
 #include "server.h"
 #include "spring.h"
 #include "channel.h"
+#include "utils.h"
+#include "connectwindow.h"
+#include "mainwindow.h"
 
+
+Ui::Ui() :
+  m_serv(0),
+  m_con_win(0)
+{
+  m_main_win = new MainWindow( *this );
+  m_spring = new Spring(*this);
+}
+
+Ui::~Ui() {
+  if ( m_main_win != NULL ) delete m_main_win;
+  if ( m_serv != NULL ) delete m_serv;
+  delete m_spring;
+}
+
+Server& Ui::GetServer()
+{
+  ASSERT_LOGIC( m_serv != NULL, "m_serv NULL!" );
+  return *m_serv;
+}
 
 MainWindow& Ui::mw()
 {
@@ -100,6 +123,19 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
   // Connect
   m_serv->Connect( host, port );
 
+}
+
+bool Ui::IsConnected() const
+{
+  if ( m_serv != NULL )
+    return m_serv->IsConnected();
+  return false;
+}
+
+void Ui::JoinChannel( const wxString& name, const wxString& password )
+{
+  if ( m_serv != NULL )
+    m_serv->JoinChannel( STL_STRING(name), STL_STRING(password) );
 }
 
 

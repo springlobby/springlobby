@@ -6,6 +6,8 @@
 #define _CHANNEL_H_
 
 #include "userlist.h"
+
+// FIXME we should not need to depend on this here
 #include "chatpanel.h"
 
 

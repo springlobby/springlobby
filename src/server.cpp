@@ -9,7 +9,13 @@
 #include "socket.h"
 #include "battle.h"
 #include "channel.h"
+#include "user.h"
 
+
+void Server::SetSocket( Socket* sock )
+{
+  assert( (!IsConnected()) || (sock == NULL) ); m_sock = sock;
+}
 
 User& Server::GetUser( const std::string& nickname )
 {

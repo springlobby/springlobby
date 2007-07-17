@@ -5,12 +5,9 @@
 #ifndef _BATTLE_H_
 #define _BATTLE_H_
 
-#include <wx/string.h>
 #include <vector>
-#include <stdexcept>
+
 #include "userlist.h"
-#include "user.h"
-#include "utils.h"
 
 class Ui;
 class Server;
@@ -103,12 +100,9 @@ struct BattleStartRect
 class Battle : public UserList
 {
   public:
-    Battle( Server& serv, Ui& ui, const int& id ) : UserList(),m_serv(serv),m_ui(ui),m_order(0), m_rects(16, (BattleStartRect*)NULL),m_units_num(0) { m_opts.battleid = id; }
-    ~Battle() {
-      for (user_map_t::size_type i = 0; i < GetNumUsers(); i++ ) GetUser(i).SetBattle( NULL );
-      ClearStartRects();
-    }
-  
+    Battle( Server& serv, Ui& ui, int id );
+    ~Battle();
+
     const BattleOptions& opts() { return m_opts; }
   
     void SetIsReplay( const bool& isreplay ) { m_opts.isreplay = isreplay; }
@@ -148,19 +142,9 @@ class Battle : public UserList
 
     int GetMyPlayerNum();
 
-    void AddUser( User& user ) {
-      user.SetBattle( this );
-      UserList::AddUser( user );
-      UserBattleStatus bs = user.GetBattleStatus();
-      bs.order = m_order++;
-      user.SetBattleStatus( bs, true );
-    }
-    
-    void RemoveUser( User& user ) {
-      user.SetBattle( NULL );
-      UserList::RemoveUser( user.GetNick() );
-    }
-    
+    void AddUser( User& user );
+    void RemoveUser( User& user );
+
     void Update();
     
     void Join( const std::string& password = "" );
@@ -181,7 +165,7 @@ class Battle : public UserList
     
     void AddStartRect( int allyno, int left, int top, int right, int bottom );
     void RemoveStartRect( int allyno );
-    BattleStartRect* GetStartRect( int allyno ) { ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), "Allyno out of bounds." ); return m_rects[allyno]; }
+    BattleStartRect* GetStartRect( int allyno );
     void ClearStartRects();
 
     void DisableUnit( const std::string& unitname );

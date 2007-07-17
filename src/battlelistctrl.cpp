@@ -4,6 +4,7 @@
 
 #include "battlelistctrl.h"
 #include "utils.h"
+#include "user.h"
 
 
 

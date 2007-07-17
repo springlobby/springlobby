@@ -2,8 +2,14 @@
 // Class: Spring
 //
 
-
+#include "spring.h"
 #include "ui.h"
+#include "utils.h"
+#include "settings.h"
+#include "userlist.h"
+#include "battle.h"
+#include "user.h"
+#include "unitsync.h"
 
 
 void SpringProcess::OnTerminate( int pid, int status )

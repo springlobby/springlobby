@@ -5,34 +5,27 @@
 #ifndef _UI_H_
 #define _UI_H_
 
-#include <wx/msgdlg.h>
-#include <wx/textdlg.h>
-#include "mainwindow.h"
-#include "connectwindow.h"
-#include "utils.h"
-#include "server.h"
-#include "spring.h"
+#include <string>
 
+class Server;
 class TASServer;
-
+class ConnectWindow;
+class Spring;
+class MainWindow;
+class wxString;
+class Channel;
+class User;
+class Battle;
 
 //! @brief UI main class
 class Ui
 {
   public:
-    
-    friend class MainWindow;
-    
-    Ui(): m_serv(NULL), m_con_win(NULL) { m_main_win = new MainWindow( *this ); m_spring = new Spring(*this); }
-    ~Ui() {
-      if ( m_main_win != NULL ) delete m_main_win;
-      if ( m_serv != NULL ) delete m_serv;
-      delete m_spring;
-    }
-  
-    // Ui interface
-  
-    Server& GetServer() { ASSERT_LOGIC( m_serv != NULL, "m_serv NULL!" ); return *m_serv; }
+
+    Ui();
+    ~Ui();
+
+    Server& GetServer();
 
     bool ExecuteSayCommand( const wxString& cmd );
 
@@ -41,18 +34,12 @@ class Ui
     void Connect();
     void Disconnect();
     void DoConnect( const wxString& servername, const wxString& username, const wxString& password );
-    
-    bool IsConnected() const {
-      if ( m_serv != NULL ) return m_serv->IsConnected();
-      return false;
-    }
-    
-    void JoinChannel( const wxString& name, const wxString& password ) {
-      if ( m_serv != NULL ) m_serv->JoinChannel( STL_STRING(name), STL_STRING(password) );
-    }
-    
+
+    bool IsConnected() const;
+    void JoinChannel( const wxString& name, const wxString& password );
+
     void Quit();
-  
+
     static bool Ask( const wxString& heading, const wxString& question );
     static bool AskText( const wxString& heading, const wxString& question, wxString& answer );
     static void ShowMessage( const wxString& heading, const wxString& message );
@@ -101,6 +88,8 @@ class Ui
     void OnBattleAction( Battle& battle, const std::string& nick, const std::string& msg );
     
     void OnSpringTerminated( bool success );
+
+    void OnMainWindowDestruct() { m_main_win = 0; }
 
   protected:
     // Ui variables

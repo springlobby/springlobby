@@ -2,6 +2,8 @@
 // Class: IconImageList
 //
 
+#include <stdexcept>
+
 #include "iconimagelist.h"
 #include "user.h"
 #include "battle.h"

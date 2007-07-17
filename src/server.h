@@ -6,10 +6,13 @@
 #define _SERVER_H_
 
 #include <string>
+
 #include "channellist.h"
 #include "userlist.h"
 #include "battlelist.h"
-#include "user.h"
+
+// FIXME we should not need to depend on this here
+#include "chatpanel.h"
 
 #define PING_TIMEOUT 30
 
@@ -18,6 +21,8 @@ class Socket;
 class Channel;
 class Ui;
 class Battle;
+class User;
+class UserBattleStatus;
 
 
 typedef int ServerError;
@@ -46,7 +51,7 @@ class Server
   
     // Server interface
   
-    virtual void SetSocket( Socket* sock ) { assert( (!IsConnected()) || (sock == NULL) ); m_sock = sock; }
+    virtual void SetSocket( Socket* sock );
     virtual Socket* GetSocket( ) { return m_sock; }
   
     virtual void Connect( const std::string& addr, const int port ) = 0;

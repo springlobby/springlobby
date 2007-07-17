@@ -3,6 +3,7 @@
 //
 
 #include "springlobbyapp.h"
+#include "mainwindow.h"
 
 
 IMPLEMENT_APP(SpringLobbyApp)

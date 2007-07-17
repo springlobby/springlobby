@@ -7,14 +7,9 @@
 
 #include <wx/string.h>
 #include <wx/process.h>
-#include <wx/utils.h>
-#include <wx/file.h>
-
-#include "battle.h"
-#include "settings.h"
-#include "utils.h"
 
 
+class Battle;
 class Ui;
 class Spring;
 

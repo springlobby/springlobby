@@ -10,6 +10,7 @@
 #include "mainwindow.h"
 #include "settings.h"
 #include "ui.h"
+#include "server.h"
 #include "images/springlobby.xpm"
 
 #include "images/chat_icon.xpm"
@@ -103,7 +104,7 @@ MainWindow::~MainWindow()
   sett().SetMainWindowTop( y );
   sett().SetMainWindowLeft( x );
   sett().SaveSettings();
-  m_ui.m_main_win = NULL;
+  m_ui.OnMainWindowDestruct();
 }
 
 

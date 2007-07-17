@@ -10,6 +10,9 @@
 #include "chatpanel.h"
 #include "utils.h"
 #include "ui.h"
+#include "server.h"
+#include "user.h"
+#include "battle.h"
 
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)

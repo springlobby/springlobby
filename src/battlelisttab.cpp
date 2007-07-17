@@ -4,6 +4,7 @@
 
 #include "battlelisttab.h"
 #include "ui.h"
+#include "chatpanel.h"
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 

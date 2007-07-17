@@ -5,7 +5,25 @@
 #include "battle.h"
 #include "ui.h"
 #include "unitsync.h"
+#include "server.h"
+#include "user.h"
 
+
+Battle::Battle( Server& serv, Ui& ui, int id ) :
+  m_serv(serv),
+  m_ui(ui),
+  m_order(0),
+  m_rects(16, static_cast<BattleStartRect*>(0)),
+  m_units_num(0)
+{
+  m_opts.battleid = id;
+}
+
+Battle::~Battle() {
+  for (user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
+    GetUser(i).SetBattle( 0 );
+  ClearStartRects();
+}
 
 void Battle::Update()
 {
@@ -128,6 +146,18 @@ int Battle::GetMyPlayerNum()
   return -1;
 }
 
+void Battle::AddUser( User& user ) {
+  user.SetBattle( this );
+  UserList::AddUser( user );
+  UserBattleStatus bs = user.GetBattleStatus();
+  bs.order = m_order++;
+  user.SetBattleStatus( bs, true );
+}
+
+void Battle::RemoveUser( User& user ) {
+  user.SetBattle( 0 );
+  UserList::RemoveUser( user.GetNick() );
+}
 
 void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom )
 {
@@ -150,6 +180,12 @@ void Battle::RemoveStartRect( int allyno )
   if ( sr == NULL ) return;
   m_rects[allyno] = NULL;
   delete sr;
+}
+
+BattleStartRect* Battle::GetStartRect( int allyno )
+{
+  ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), "Allyno out of bounds." );
+  return m_rects[allyno];
 }
 
 void Battle::ClearStartRects()

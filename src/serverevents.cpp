@@ -50,7 +50,7 @@ void ServerEvents::OnUnknownCommand( const std::string& command, const std::stri
 }
 
 
-void ServerEvents::OnSocketError( const Sockerror error )
+void ServerEvents::OnSocketError( const Sockerror& error )
 {
   //debug_func( "" );
 }
