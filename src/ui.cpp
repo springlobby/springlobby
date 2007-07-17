@@ -2,6 +2,8 @@
 // Class: Ui
 //
 
+#include <wx/msgdlg.h>
+
 #include "ui.h"
 #include "tasserver.h"
 #include "settings.h"
@@ -11,7 +13,7 @@
 #include "utils.h"
 #include "connectwindow.h"
 #include "mainwindow.h"
-#include <wx/msgdlg.h>
+#include "user.h"
 
 
 Ui::Ui() :

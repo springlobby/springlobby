@@ -8,6 +8,7 @@
 #include "utils.h"
 #include "mainwindow.h"
 #include "channel.h"
+#include "user.h"
 
 #include "images/close.xpm"
 #include "images/server.xpm"

@@ -5,6 +5,7 @@
 #include "battleroomtab.h"
 #include "ui.h"
 #include "unitsync.h"
+#include "user.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 

@@ -3,9 +3,15 @@
 //
 
 #include <wx/icon.h>
+#include <wx/intl.h>
+#include <wx/notebook.h>
+#include <wx/imaglist.h>
+#include <wx/button.h>
+#include <wx/sizer.h>
+
 #include "mainoptionstab.h"
 #include "ui.h"
-#include <wx/intl.h>
+#include "springoptionstab.h"
 
 #include "images/spring.xpm"
 

@@ -12,6 +12,8 @@ class wxStaticBox;
 class wxStaticText;
 class wxRadioButton;
 class wxButton;
+class wxTextCtrl;
+class wxBoxSizer;
 class Ui;
 
 #ifdef WIN32

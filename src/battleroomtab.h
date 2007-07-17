@@ -5,6 +5,7 @@
 #ifndef _BATTLEROOMTAB_H_
 #define _BATTLEROOMTAB_H_
 
+#include <wx/intl.h>
 #include <wx/panel.h>
 #include <wx/splitter.h>
 #include <wx/sizer.h>
