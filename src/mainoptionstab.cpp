@@ -8,6 +8,7 @@
 #include <wx/imaglist.h>
 #include <wx/button.h>
 #include <wx/sizer.h>
+#include <wx/listbook.h>
 
 #include "mainoptionstab.h"
 #include "ui.h"

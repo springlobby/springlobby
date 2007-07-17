@@ -7,6 +7,7 @@
 #include <wx/notebook.h>
 #include <wx/imaglist.h>
 #include <wx/sizer.h>
+#include <wx/listbook.h>
 
 #include "mainjoinbattletab.h"
 #include "battlelisttab.h"

@@ -11,6 +11,7 @@
 #include <wx/sizer.h>
 #include <wx/splitter.h>
 #include <wx/combobox.h>
+#include <wx/button.h>
 
 #include "channel.h"
 #include "chatpanel.h"

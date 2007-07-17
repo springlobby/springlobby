@@ -6,6 +6,8 @@
 #include <wx/intl.h>
 #include <wx/imaglist.h>
 #include <wx/sizer.h>
+#include <wx/notebook.h>
+#include <wx/listbook.h>
 
 #include "mainchattab.h"
 #include "utils.h"

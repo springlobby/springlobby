@@ -10,6 +10,7 @@
 #include <wx/textctrl.h>
 #include <wx/radiobut.h>
 #include <wx/stattext.h>
+#include <wx/button.h>
 
 #include "springoptionstab.h"
 #include "ui.h"
