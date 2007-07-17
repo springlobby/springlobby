@@ -4,8 +4,13 @@
 
 #include <wx/icon.h>
 #include <wx/intl.h>
+#include <wx/notebook.h>
+#include <wx/imaglist.h>
+#include <wx/sizer.h>
 
 #include "mainjoinbattletab.h"
+#include "battlelisttab.h"
+#include "battleroomtab.h"
 
 #include "images/battle_list.xpm"
 #include "images/battle.xpm"

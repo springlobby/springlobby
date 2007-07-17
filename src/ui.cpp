@@ -17,6 +17,8 @@
 #include "mainwindow.h"
 #include "user.h"
 #include "chatpanel.h"
+#include "battlelisttab.h"
+#include "battleroomtab.h"
 
 
 Ui::Ui() :

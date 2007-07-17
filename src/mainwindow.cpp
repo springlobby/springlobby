@@ -7,11 +7,14 @@
 #include <wx/textdlg.h>
 #include <wx/imaglist.h>
 #include <wx/icon.h>
+#include <wx/sizer.h>
+
 #include "mainwindow.h"
 #include "settings.h"
 #include "ui.h"
 #include "server.h"
 #include "utils.h"
+#include "battlelisttab.h"
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.xpm"

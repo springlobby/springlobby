@@ -5,24 +5,22 @@
 #ifndef _MAINJOINBATTLETAB_H_
 #define _MAINJOINBATTLETAB_H_
 
-#include <wx/combobox.h>
-#include <wx/button.h>
-#include <wx/stattext.h>
-#include <wx/sizer.h>
-#include <wx/imaglist.h>
-#include <wx/notebook.h>
-#include <wx/listbook.h>
-#include "battlelisttab.h"
-#include "battleroomtab.h"
+#include <wx/panel.h>
 
+class Ui;
+class BattleListTab;
+class Battle;
+class User;
+class BattleRoomTab;
+class wxBoxSizer;
+class wxImageList;
+class wxNotebook;
 
 class MainJoinBattleTab : public wxPanel
 {
   public:
     MainJoinBattleTab( wxWindow* parent, Ui& ui );
      ~MainJoinBattleTab();
-
-    // MainJoinBattleTab interface
 
     BattleListTab& GetBattleListTab();
 
@@ -33,8 +31,6 @@ class MainJoinBattleTab : public wxPanel
     BattleRoomTab* GetBattleRoomTab() { return m_battle_tab; }
 
   protected:
-    // MainJoinBattleTab variables
-
     wxBoxSizer* m_main_sizer;
 
     wxImageList* m_imagelist;
@@ -45,7 +41,6 @@ class MainJoinBattleTab : public wxPanel
     BattleRoomTab* m_battle_tab;
 
     Ui& m_ui;
-
 };
 
 enum

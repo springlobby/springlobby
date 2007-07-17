@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <wx/intl.h>
 #include <wx/imaglist.h>
+#include <wx/sizer.h>
+
 #include "mainchattab.h"
 #include "utils.h"
 #include "mainwindow.h"
