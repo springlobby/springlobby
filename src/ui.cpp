@@ -19,6 +19,8 @@
 #include "chatpanel.h"
 #include "battlelisttab.h"
 #include "battleroomtab.h"
+#include "socket.h"
+#include "battle.h"
 
 
 Ui::Ui() :

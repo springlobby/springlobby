@@ -5,10 +5,88 @@
 #include <iostream>
 #include <assert.h>
 #include <stdio.h>
+
+#include "base64.h"
+#include "boost/md5.hpp"
 #include "tasserver.h"
 #include "unitsync.h"
 #include "user.h"
 #include "utils.h"
+#include "battle.h"
+#include "serverevents.h"
+#include "socket.h"
+
+#define SER_VER_BAD -1
+#define SER_VER_UNKNOWN 0
+#define SER_VER_0_32 1
+#define SER_VER_0_33 -2
+#define SER_VER_0_34 -3
+
+//! @brief Struct used internally by the TASServer class to get client status information.
+struct TASClientstatus {
+  unsigned int in_game   : 1;
+  unsigned int away      : 1;
+  unsigned int rank      : 3;
+  unsigned int moderator : 1;
+  unsigned int bot       : 1;
+};
+
+
+//! @brief Union used internally by the TASServer class to get client status information.
+union UTASClientStatus {
+  unsigned char byte;
+  TASClientstatus tasdata;
+};
+
+
+//! @brief Struct used internally by the TASServer class to get battle status information.
+struct TASBattleStatus {
+  unsigned int : 1;
+  unsigned int ready : 1;
+  unsigned int team : 4;
+  unsigned int ally : 4;
+  unsigned int player : 1;
+  unsigned int handicap: 7;
+  unsigned int : 4;
+  unsigned int sync : 2;
+  unsigned int side : 4;
+  unsigned int : 4;
+};
+
+
+//! @brief Union used internally by the TASServer class to get battle status information.
+union UTASBattleStatus {
+  int data;
+  TASBattleStatus tasdata;
+};
+
+
+struct TASColor {
+  unsigned int red : 8;
+  unsigned int green : 8;
+  unsigned int blue : 8;
+  unsigned int zero: 8;
+};
+
+
+union UTASColor {
+  int data;
+  TASColor color;
+};
+
+
+/*
+
+myteamcolor:  Should be 32-bit signed integer in decimal form (e.g. 255 and not FF) where each color channel should occupy 1 byte (e.g. in hexdecimal: $00BBGGRR, B = blue, G = green, R = red). Example: 255 stands for $000000FF.
+
+*/
+
+UserStatus ConvTasclientstatus( TASClientstatus );
+UserBattleStatus ConvTasbattlestatus( TASBattleStatus );
+TASBattleStatus ConvTasbattlestatus( UserBattleStatus );
+bool VersionSupportReplyid( int version );
+StartType IntToStartType( int start );
+
 
 TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(SER_VER_UNKNOWN), m_connected(false), m_online(false), m_buffer(""), m_last_ping(0), m_ping_id(1000),m_battle_id(-1) { m_se = new ServerEvents( *this, ui); }
 
@@ -89,6 +167,11 @@ void TASServer::Logout()
 {
   debug_func( "" );
   Disconnect();
+}
+
+bool TASServer::IsOnline() {
+  if ( !m_connected ) return false;
+  return m_online;
 }
 
 
@@ -651,7 +734,7 @@ void TASServer::OnDataRecived( Socket* sock )
 // Utility functions
 //////////////////////
 
-UserStatus TASServer::ConvTasclientstatus( TASClientstatus tas )
+UserStatus ConvTasclientstatus( TASClientstatus tas )
 {
   UserStatus stat;
   stat.in_game = tas.in_game;
@@ -663,7 +746,7 @@ UserStatus TASServer::ConvTasclientstatus( TASClientstatus tas )
   return stat;
 }
 
-UserBattleStatus TASServer::ConvTasbattlestatus( TASBattleStatus tas )
+UserBattleStatus ConvTasbattlestatus( TASBattleStatus tas )
 {
   UserBattleStatus stat;
   stat.ally = tas.ally;
@@ -677,7 +760,7 @@ UserBattleStatus TASServer::ConvTasbattlestatus( TASBattleStatus tas )
 }
 
 
-TASBattleStatus TASServer::ConvTasbattlestatus( UserBattleStatus bs)
+TASBattleStatus ConvTasbattlestatus( UserBattleStatus bs)
 {
   TASBattleStatus stat;
   stat.ally = bs.ally;
@@ -691,10 +774,22 @@ TASBattleStatus TASServer::ConvTasbattlestatus( UserBattleStatus bs)
 }
 
 
-bool TASServer::VersionSupportReplyid( int version )
+bool VersionSupportReplyid( int version )
 {
   if ( version == SER_VER_0_32 )
     return false;
   else
     return true;
 }
+
+StartType IntToStartType( int start )
+{
+  switch ( start ) {
+    case 0: return ST_Fixed;
+    case 1: return ST_Random;
+    case 2: return ST_Choose;
+    default: assert(false);
+  };
+  return ST_Fixed;
+}
+
