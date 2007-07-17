@@ -11,6 +11,8 @@
 #include "channel.h"
 #include "user.h"
 #include "utils.h"
+#include "server.h"
+#include "battle.h"
 
 
 void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported )

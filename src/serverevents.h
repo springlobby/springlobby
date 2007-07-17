@@ -5,11 +5,12 @@
 #ifndef _SERVEREVENTS_H_
 #define _SERVEREVENTS_H_
 
-#include "server.h"
 #include "battle.h"
 
 class Ui;
 class UserStatus;
+class UserBattleStatus;
+class Server;
 
 // FIXME this is defined elsewhere, should use a different kind of type so we could use forward decl
 typedef int Sockerror;
