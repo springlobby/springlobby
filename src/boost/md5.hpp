@@ -26,8 +26,7 @@
     and/or software.
 */
 
-#include <cstring>  // memset, memcpy, memcmp
-#include <istream>  // std::istream
+#include <iosfwd>  // std::istream
 
 namespace boost
 {
@@ -100,23 +99,9 @@ public:
             reset(a.the_value);
         }
 
-        void reset()  // Resets to a zero digest.
-        {
-            memset(the_value, 0, sizeof(value_type));
+        void reset();  // Resets to a zero digest.
 
-            delete[] the_hex_str_value;
-
-            the_hex_str_value = 0;
-        }
-
-        void reset(const value_type& a_value)
-        {
-            memcpy(the_value, a_value, sizeof(value_type));
-
-            delete[] the_hex_str_value;
-
-            the_hex_str_value = 0;
-        }
+        void reset(const value_type& a_value);
 
         void reset(const hex_str_value_type& a_hex_str_value);
 
@@ -156,10 +141,7 @@ private:
     bool the_is_dirty;  // Whether the last cached digest is valid.
 };
 
-inline bool operator==(const md5::digest_type& a, const md5::digest_type& b)
-{
-    return (memcmp(a.value(), b.value(), 16) == 0);
-}
+bool operator==(const md5::digest_type& a, const md5::digest_type& b);
 
 inline bool operator!=(const md5::digest_type& a, const md5::digest_type& b)
 {

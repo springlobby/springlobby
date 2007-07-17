@@ -26,6 +26,8 @@
 #include "md5.hpp"
 #include <cstdio>  // sprintf, sscanf
 #include <cassert>
+#include <istream>
+#include <cstring>  // memset, memcpy, memcmp
 
 namespace boost
 {
@@ -243,6 +245,24 @@ const md5::digest_type& md5::digest()
     return the_digest;
 }
 
+void md5::digest_type::reset()  // Resets to a zero digest.
+{
+    memset(the_value, 0, sizeof(value_type));
+
+    delete[] the_hex_str_value;
+
+    the_hex_str_value = 0;
+}
+
+void md5::digest_type::reset(const value_type& a_value)
+{
+    memcpy(the_value, a_value, sizeof(value_type));
+
+    delete[] the_hex_str_value;
+
+    the_hex_str_value = 0;
+}
+
 void md5::digest_type::reset(const hex_str_value_type& a_hex_str_value)
 {
     delete[] the_hex_str_value;
@@ -433,6 +453,11 @@ void md5::process_block(const uint8_t (*a_block)[64])
 
     // Zeroize sensitive information.
     secure_memset(reinterpret_cast<uint8_t*>(x), 0, sizeof(x));
+}
+
+bool operator==(const md5::digest_type& a, const md5::digest_type& b)
+{
+    return (memcmp(a.value(), b.value(), 16) == 0);
 }
 
 }
