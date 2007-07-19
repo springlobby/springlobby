@@ -24,14 +24,14 @@
 #define _SETTINGS_H_
 
 #include <string>
-
+#include <wx/config.h>
 // FIXME why can't wxWidgets use a baseclass instead of this monstrosity
 // I shouldn't copy it here either
-#if defined(__WXMSW__) && wxUSE_CONFIG_NATIVE
-    #define wxConfig  wxRegConfig
-#else // either we're under Unix or wish to use files even under Windows
-  #define wxConfig  wxFileConfig
-#endif
+//#if defined(__WXMSW__) && wxUSE_CONFIG_NATIVE
+//    #define wxConfig  wxRegConfig
+//#else // either we're under Unix or wish to use files even under Windows
+//  #define wxConfig  wxFileConfig
+//#endif
 
 class wxRegConfig;
 class wxFileConfig;

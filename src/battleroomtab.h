@@ -20,6 +20,7 @@ class wxSplitterWindow;
 class wxStaticLine;
 class wxButton;
 class wxCheckBox;
+class MapCtrl;
 
 class BattleRoomTab : public wxPanel
 {
@@ -66,6 +67,8 @@ class BattleRoomTab : public wxPanel
     wxStaticText* m_color_lbl;
     wxStaticText* m_side_lbl;
     wxStaticText* m_map_lbl;
+
+    MapCtrl * m_minimap;
 
     wxPanel* m_player_panel;
 

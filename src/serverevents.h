@@ -8,8 +8,8 @@
 #include "battle.h"
 
 class Ui;
-class UserStatus;
-class UserBattleStatus;
+struct UserStatus;
+struct UserBattleStatus;
 class Server;
 
 // FIXME this is defined elsewhere, should use a different kind of type so we could use forward decl

@@ -19,7 +19,7 @@ struct TASPingListItem {
 class Ui;
 class Socket;
 class User;
-class UserBattleStatus;
+struct UserBattleStatus;
 class ServerEvents;
 
 //! @brief TASServer protocol implementation.

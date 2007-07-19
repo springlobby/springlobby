@@ -29,9 +29,6 @@ class BattleListCtrl : public wxListCtrl
 
     int GetBattleIndex( Battle& battle );
 
-    static wxString RefineMapname( wxString mapname );
-    static wxString RefineModname( wxString modname );
-
     int GetSelectedIndex();
 
     void OnSelected( wxListEvent& event );

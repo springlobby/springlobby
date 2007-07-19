@@ -4,6 +4,7 @@
 
 #include "settings.h"
 #include <wx/intl.h>
+#include <wx/filefn.h>
 #include "utils.h"
 #include <wx/config.h>
 

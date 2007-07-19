@@ -19,6 +19,8 @@
 #include "utils.h"
 #include "battleroomlistctrl.h"
 #include "chatpanel.h"
+#include "mapctrl.h"
+#include "uiutils.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -66,7 +68,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_ally_lbl = new wxStaticText( m_player_panel, -1, _("Ally") );
   m_color_lbl = new wxStaticText( m_player_panel, -1, _("Color") );
   m_side_lbl = new wxStaticText( m_player_panel, -1, _("Side") );
-  m_map_lbl = new wxStaticText( this, -1, _T("$Mapname") );
+  m_map_lbl = new wxStaticText( this, -1, RefineMapname( WX_STRING(battle.opts().mapname) ) );
+
+  m_minimap = new MapCtrl( this, 101, m_battle, true );
 
   m_players = new BattleroomListCtrl( m_player_panel );
   m_chat = new ChatPanel( m_splitter, m_ui, battle );
@@ -107,6 +111,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_splitter->SplitHorizontally( m_player_panel, m_chat, 50 );
 
   m_info_sizer->Add( m_map_lbl, 0, wxEXPAND | wxALL, 2 );
+  m_info_sizer->Add( m_minimap, 0, wxEXPAND | wxALL, 2 );
 
   m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
   m_top_sizer->Add( m_info_sizer, 0, wxEXPAND | wxALL, 2 );

@@ -247,6 +247,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\mapctrl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\boost\md5.hpp"
 				>
 			</File>
@@ -283,11 +287,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\springprocess.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\tasserver.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\ui.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\uiutils.h"
 				>
 			</File>
 			<File
@@ -411,6 +423,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\mapctrl.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\boost\md5.cpp"
 				>
 			</File>
@@ -447,11 +463,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\springprocess.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\tasserver.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\ui.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\uiutils.cpp"
 				>
 			</File>
 			<File

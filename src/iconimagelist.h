@@ -56,7 +56,7 @@
 #define ICON_FLAGS_BASE ICON_UNK_FLAG+1
 
 class Battle;
-class UserStatus;
+struct UserStatus;
 
 class IconImageList : public wxImageList
 {
