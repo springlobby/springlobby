@@ -62,6 +62,8 @@ springlobby_SOURCES = \
 	src/mainoptionstab.h \
 	src/mainwindow.cpp \
 	src/mainwindow.h \
+	src/mapctrl.cpp \
+	src/mapctrl.h \
 	src/nicklistctrl.cpp \
 	src/nicklistctrl.h \
 	src/server.cpp \
@@ -84,6 +86,8 @@ springlobby_SOURCES = \
 	src/tasserver.h \
 	src/ui.cpp \
 	src/ui.h \
+	src/uiutils.cpp \
+	src/uiutils.h \
 	src/unitsync.cpp \
 	src/unitsync.h \
 	src/user.cpp \

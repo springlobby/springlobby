@@ -6,6 +6,7 @@
 #include <wx/panel.h>
 #include <wx/dcclient.h>
 #include <wx/bitmap.h>
+#include <wx/intl.h>
 
 #include "mapctrl.h"
 #include "battle.h"
