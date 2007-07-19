@@ -2,7 +2,7 @@
 // Class: Server
 //
 
-#include <assert.h>
+#include <cassert>
 #include <iostream>
 #include <stdexcept>
 #include "server.h"

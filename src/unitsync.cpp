@@ -4,7 +4,7 @@
 
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
-#include <assert.h>
+#include <cassert>
 #include <stdexcept>
 
 #include "unitsync.h"

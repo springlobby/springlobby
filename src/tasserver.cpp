@@ -3,8 +3,7 @@
 //
 
 #include <iostream>
-#include <assert.h>
-#include <stdio.h>
+#include <cassert>
 
 #include "base64.h"
 #include "boost/md5.hpp"
