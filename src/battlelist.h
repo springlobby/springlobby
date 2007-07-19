@@ -1,9 +1,5 @@
-//
-// Class: BattleList
-//
-
-#ifndef _BATTLELIST_H_
-#define _BATTLELIST_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_BATTLELIST_H
+#define SPRINGLOBBY_HEADERGUARD_BATTLELIST_H
 
 #include <map>
 
@@ -30,5 +26,4 @@ class BattleList
     battle_map_t m_battles;
 };
 
-#endif  //_BATTLELIST_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_BATTLELIST_H

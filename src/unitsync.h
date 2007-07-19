@@ -1,9 +1,5 @@
-//
-// Class: Unitsync
-//
-
-#ifndef _UNITSYNC_H_
-#define _UNITSYNC_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_UNITSYNC_H
+#define SPRINGLOBBY_HEADERGUARD_UNITSYNC_H
 
 #include <string>
 
@@ -17,7 +13,6 @@ typedef HINSTANCE lib_handle_t;
 typedef void* lib_handle_t;
 #endif
 
-
 struct UnitsyncMod
 {
   UnitsyncMod(): name(""),hash("NULL") {}
@@ -25,13 +20,11 @@ struct UnitsyncMod
   std::string hash;
 };
 
-
 struct StartPos
 {
   int x;
   int z;
 };
-
 
 struct MapInfo
 {
@@ -53,7 +46,6 @@ struct MapInfo
   char *author; // max 200 chars
 };
 
-
 struct UnitsyncMap
 {
   UnitsyncMap(): name(""),hash("NULL") {}
@@ -62,13 +54,9 @@ struct UnitsyncMap
   MapInfo info;
 };
 
-
 /*
-
-
 const char* __stdcall GetSpringVersion()
 void* __stdcall GetMinimap(const char* filename, int miplevel)
-
 */
 
 #ifdef WIN32
@@ -163,7 +151,6 @@ private:
   void* _GetLibFuncPtr( const std::string& name );
 };
 
-
 Unitsync& usync();
 
-#endif  //_UNITSYNC_H_
+#endif // SPRINGLOBBY_HEADERGUARD_UNITSYNC_H

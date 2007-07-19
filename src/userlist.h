@@ -1,9 +1,5 @@
-//
-// Class: UserList
-//
-
-#ifndef _USERLIST_H_
-#define _USERLIST_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_USERLIST_H
+#define SPRINGLOBBY_HEADERGUARD_USERLIST_H
 
 #include <map>
 #include <string>
@@ -33,4 +29,4 @@ class UserList
     mutable user_map_t::size_type m_seekpos;
 };
 
-#endif  //_USERLIST_H_
+#endif // SPRINGLOBBY_HEADERGUARD_USERLIST_H

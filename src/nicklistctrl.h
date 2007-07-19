@@ -1,9 +1,5 @@
-//
-// Class: NickListCtrl
-//
-
-#ifndef _NICKLISTCTRL_H_
-#define _NICKLISTCTRL_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
+#define SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
 
 #include <wx/listctrl.h>
 
@@ -26,5 +22,4 @@ class NickListCtrl : public wxListCtrl
     UserList* m_users;
 };
 
-#endif  //_NICKLISTCTRL_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H

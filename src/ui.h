@@ -1,9 +1,5 @@
-//
-// Class: Ui
-//
-
-#ifndef _UI_H_
-#define _UI_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_UI_H
+#define SPRINGLOBBY_HEADERGUARD_UI_H
 
 #include <string>
 
@@ -99,6 +95,4 @@ class Ui
     ConnectWindow* m_con_win;
 };
 
-
-#endif  //_UI_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_UI_H

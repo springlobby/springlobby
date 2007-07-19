@@ -1,9 +1,5 @@
-//
-// Class: SpringLobbyApp
-//
-
-#ifndef _SPRINGLOBBYAPP_H_
-#define _SPRINGLOBBYAPP_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_SPRINGLOBBYAPP_H
+#define SPRINGLOBBY_HEADERGUARD_SPRINGLOBBYAPP_H
 
 #include <wx/app.h>
 
@@ -32,8 +28,6 @@ class SpringLobbyApp : public wxApp
     DECLARE_EVENT_TABLE()
 };
 
-
 DECLARE_APP(SpringLobbyApp)
 
-#endif  //_SPRINGLOBBYAPP_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_SPRINGLOBBYAPP_H

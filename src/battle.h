@@ -1,9 +1,5 @@
-//
-// Class: Battle
-//
-
-#ifndef _BATTLE_H_
-#define _BATTLE_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_BATTLE_H
+#define SPRINGLOBBY_HEADERGUARD_BATTLE_H
 
 #include <vector>
 
@@ -194,6 +190,4 @@ class Battle : public UserList
     void RemoveUser( std::string const& user ) {}
 };
 
-
-#endif  //_BATTLE_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_BATTLE_H

@@ -1,14 +1,5 @@
-//
-// Class: ChatPanel
-// Created on: Wed May  2 21:07:18 2007
-//
-
-/*! @file
- * @brief Implements the ChatPanel class.
- */
-
-#ifndef _CHATPANEL_H_
-#define _CHATPANEL_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
+#define SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 
 #include <wx/panel.h>
 #include <wx/string.h>
@@ -112,12 +103,10 @@ class ChatPanel : public wxPanel
     DECLARE_EVENT_TABLE()
 };
 
-
 enum
 {
     CHAT_SEND = wxID_HIGHEST,
     CHAT_TEXT,
 };
 
-#endif  //_CHATPANEL_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H

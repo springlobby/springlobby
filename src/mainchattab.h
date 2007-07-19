@@ -1,9 +1,5 @@
-//
-// Class: MainChatTab
-//
-
-#ifndef _MAINCHATTAB_H_
-#define _MAINCHATTAB_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_MAINCHATTAB_H
+#define SPRINGLOBBY_HEADERGUARD_MAINCHATTAB_H
 
 #include <wx/panel.h>
 #include <wx/string.h>
@@ -17,7 +13,6 @@ class wxNotebookEvent;
 class wxNotebook;
 class wxBoxSizer;
 class wxImageList;
-
 
 //! @brief The main chat tab.
 class MainChatTab : public wxPanel
@@ -54,5 +49,4 @@ enum
     CHAT_TABS = wxID_HIGHEST
 };
 
-#endif  //_MAINCHATTAB_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_MAINCHATTAB_H

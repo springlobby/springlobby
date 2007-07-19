@@ -1,10 +1,9 @@
-#ifndef _UIUTILS_H_
-#define _UIUTILS_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_UIUTILS_H
+#define SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 
 #include <wx/string.h>
 
 wxString RefineMapname( wxString mapname );
 wxString RefineModname( wxString modname );
 
-
-#endif //_UIUTILS_H_
+#endif // SPRINGLOBBY_HEADERGUARD_UIUTILS_H

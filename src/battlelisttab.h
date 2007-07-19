@@ -1,9 +1,5 @@
-//
-// Class: BattleListTab
-//
-
-#ifndef _BATTLELISTTAB_H_
-#define _BATTLELISTTAB_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H
+#define SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H
 
 #include <wx/panel.h>
 
@@ -51,5 +47,4 @@ enum
     BATTLE_JOIN = wxID_HIGHEST
 };
 
-#endif  //_BATTLELISTTAB_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H

@@ -1,14 +1,9 @@
-//
-// Class: User
-//
-
-#ifndef _USER_H_
-#define _USER_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_USER_H
+#define SPRINGLOBBY_HEADERGUARD_USER_H
 
 #include <string>
 
 class Server;
-
 
 #define RANK_0 100
 #define RANK_1 200
@@ -19,7 +14,6 @@ class Server;
 #define SYNC_UNKNOWN 0
 #define SYNC_SYNCED 1
 #define SYNC_UNSYNCED 2
-
 
 //! @brief Struct used to store a client's status.
 struct UserStatus {
@@ -45,7 +39,6 @@ struct UserBattleStatus {
   UserBattleStatus(): order(-1),team(0),ally(0),color_r(0), color_g(0),color_b(0),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),ready(false) {}
 };
 
-
 class ChatPanel;
 class Battle;
 
@@ -53,7 +46,6 @@ struct UiUserData {
   UiUserData(): panel(0) {}
   ChatPanel* panel;
 };
-
 
 //! Class containing all the information about a user
 class User
@@ -108,10 +100,6 @@ class User
     UserBattleStatus m_bstatus;
     Battle* m_battle;
     //void* m_data;
-
 };
 
-
-#endif //_USER_H_
-
-
+#endif // SPRINGLOBBY_HEADERGUARD_USER_H

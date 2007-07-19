@@ -1,9 +1,5 @@
-//
-// Class: Server
-//
-
-#ifndef _SERVER_H_
-#define _SERVER_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_SERVER_H
+#define SPRINGLOBBY_HEADERGUARD_SERVER_H
 
 #include <string>
 
@@ -22,7 +18,6 @@ class User;
 struct UserBattleStatus;
 class ChatPanel;
 
-
 typedef int ServerError;
 
 #define PE_NONE 0
@@ -31,8 +26,6 @@ struct UiServerData {
   UiServerData(): panel(0) {}
   ChatPanel* panel;
 };
-
-
 
 //! @brief Abstract baseclass that is used to implement a server protocol.
 class Server
@@ -104,8 +97,6 @@ class Server
     bool BattleExists( const int& battleid );
 
   protected:
-    // Server variables
-
     Socket* m_sock;
     Ui& m_ui;
     int m_keepalive;
@@ -125,10 +116,6 @@ class Server
 
     Battle& _AddBattle( const int& id );
     void _RemoveBattle( const int& id );
-
 };
 
-
-#endif  //_SERVER_H_
-
-
+#endif // SPRINGLOBBY_HEADERGUARD_SERVER_H

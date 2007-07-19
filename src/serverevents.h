@@ -1,9 +1,5 @@
-//
-// Class: ServerEvents
-//
-
-#ifndef _SERVEREVENTS_H_
-#define _SERVEREVENTS_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
+#define SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
 
 #include "battle.h"
 
@@ -79,6 +75,4 @@ class ServerEvents
     Ui& m_ui;
 };
 
-
-#endif  //_SERVEREVENTS_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H

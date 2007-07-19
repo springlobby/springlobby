@@ -1,9 +1,5 @@
-//
-// flagimages.h
-//
-
-#ifndef _FLAGIMAGES_H_
-#define _FLAGIMAGES_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_FLAGIMAGES_H
+#define SPRINGLOBBY_HEADERGUARD_FLAGIMAGES_H
 
 #include <string>
 
@@ -16,5 +12,4 @@ enum {
   FLAG_NONE = -1
 };
 
-#endif // _FLAGIMAGES_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_FLAGIMAGES_H

@@ -1,10 +1,5 @@
-//
-// Class: Socket
-// Created on: Fri Apr 27 16:26:26 2007
-//
-
-#ifndef _SOCKET_H_
-#define _SOCKET_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_SOCKET_H
+#define SPRINGLOBBY_HEADERGUARD_SOCKET_H
 
 #include <string>
 
@@ -14,7 +9,6 @@ class Server;
 class Socket;
 class wxSocketEvent;
 class wxSocketClient;
-
 
 typedef int Sockstate;
 
@@ -86,6 +80,4 @@ class Socket
     Server& m_serv;
 };
 
-
-#endif  //_SOCKET_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_SOCKET_H

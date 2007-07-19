@@ -1,9 +1,5 @@
-//
-// Class: ConnectFrame
-//
-
-#ifndef _CONNECTWINDOW_H_
-#define _CONNECTWINDOW_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H
+#define SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H
 
 #include <wx/frame.h>
 
@@ -68,6 +64,4 @@ class ConnectWindow : public wxFrame
     DECLARE_EVENT_TABLE()
 };
 
-
-#endif  //_CONNECTWINDOW_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H

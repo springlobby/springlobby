@@ -1,9 +1,5 @@
-//
-// Class: TASServer
-//
-
-#ifndef _TASSERVER_H_
-#define _TASSERVER_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_TASSERVER_H
+#define SPRINGLOBBY_HEADERGUARD_TASSERVER_H
 
 #include <string>
 #include <list>
@@ -93,5 +89,4 @@ class TASServer : public Server
     void _ReciveAndExecute();
 };
 
-#endif  //_TASSERVER_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H

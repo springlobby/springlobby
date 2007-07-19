@@ -1,9 +1,5 @@
-//
-// Class: BattleroomListCtrl
-//
-
-#ifndef _BATTLEROOMLISTCTRL_H_
-#define _BATTLEROOMLISTCTRL_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H
+#define SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H
 
 #include <wx/listctrl.h>
 
@@ -25,6 +21,4 @@ class BattleroomListCtrl : public wxListCtrl
 
 };
 
-
-#endif  //_BATTLEROOMLISTCTRL_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H

@@ -1,9 +1,5 @@
-//
-// Class: MapCtrl
-//
-
-#ifndef _MAPCTRL_H_
-#define _MAPCTRL_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_MAPCTRL_H
+#define SPRINGLOBBY_HEADERGUARD_MAPCTRL_H
 
 #include <wx/string.h>
 
@@ -30,4 +26,4 @@ class MapCtrl : public wxPanel
   DECLARE_EVENT_TABLE();
 };
 
-#endif // _MAPCTRL_H_
+#endif // SPRINGLOBBY_HEADERGUARD_MAPCTRL_H

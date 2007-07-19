@@ -1,9 +1,5 @@
-//
-// Class: MainWindow
-//
-
-#ifndef _MAINWINDOW_H_
-#define _MAINWINDOW_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H
+#define SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H
 
 #include <wx/frame.h>
 
@@ -76,7 +72,6 @@ class MainWindow : public wxFrame
     DECLARE_EVENT_TABLE()
 };
 
-
 //ChatPanel& servwin();
 
 // wxWidget IDs
@@ -96,5 +91,4 @@ enum
 
 };
 
-#endif  //_MAINWINDOW_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H

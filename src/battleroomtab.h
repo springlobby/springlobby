@@ -1,9 +1,5 @@
-//
-// Class: BattleRoomTab
-//
-
-#ifndef _BATTLEROOMTAB_H_
-#define _BATTLEROOMTAB_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
+#define SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
 
 #include <wx/panel.h>
 
@@ -98,5 +94,4 @@ enum
     BROOM_SIDESEL
 };
 
-#endif  //_BATTLEROOMTAB_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H

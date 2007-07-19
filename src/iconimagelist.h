@@ -1,9 +1,5 @@
-//
-// Class: IconImageList
-//
-
-#ifndef _ICONIMAGELIST_H_
-#define _ICONIMAGELIST_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_ICONIMAGELIST_H
+#define SPRINGLOBBY_HEADERGUARD_ICONIMAGELIST_H
 
 #include <wx/imaglist.h>
 #include <wx/colour.h>
@@ -78,5 +74,4 @@ class IconImageList : public wxImageList
 
 IconImageList& icons();
 
-#endif  //_ICONIMAGELIST_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_ICONIMAGELIST_H

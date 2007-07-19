@@ -1,9 +1,5 @@
-//
-// Class: Channel
-//
-
-#ifndef _CHANNEL_H_
-#define _CHANNEL_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_CHANNEL_H
+#define SPRINGLOBBY_HEADERGUARD_CHANNEL_H
 
 #include "userlist.h"
 
@@ -21,7 +17,6 @@ struct UiChannelData {
 
   ChatPanel* panel;
 };
-
 
 class Channel : public UserList
 {
@@ -72,6 +67,4 @@ class Channel : public UserList
     void RemoveUser( const std::string& nick );
 };
 
-
-#endif  //_CHANNEL_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_CHANNEL_H

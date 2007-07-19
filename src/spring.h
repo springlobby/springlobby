@@ -1,9 +1,5 @@
-//
-// Class: Spring
-//
-
-#ifndef _SPRING_H_
-#define _SPRING_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_SPRING_H
+#define SPRINGLOBBY_HEADERGUARD_SPRING_H
 
 #include <wx/string.h>
 
@@ -29,5 +25,4 @@ class Spring
     bool m_running;
 };
 
-#endif  //_SPRING_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_SPRING_H

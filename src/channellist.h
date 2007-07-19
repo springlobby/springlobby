@@ -1,9 +1,5 @@
-//
-// Class: ChannelList
-//
-
-#ifndef _CHANNELLIST_H_
-#define _CHANNELLIST_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_CHANNELLIST_H
+#define SPRINGLOBBY_HEADERGUARD_CHANNELLIST_H
 
 #include <map>
 #include <string>
@@ -34,5 +30,5 @@ class ChannelList
     mutable channel_map_t::size_type m_seekpos;
 };
 
-#endif  //_CHANNELLIST_H_
+#endif // SPRINGLOBBY_HEADERGUARD_CHANNELLIST_H
 

@@ -1,9 +1,5 @@
-//
-// Class: SpringProcess
-//
-
-#ifndef _SPRINGPROCESS_H_
-#define _SPRINGPROCESS_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_SPRINGPROCESS_H
+#define SPRINGLOBBY_HEADERGUARD_SPRINGPROCESS_H
 
 #include <wx/process.h>
 
@@ -20,5 +16,4 @@ class SpringProcess: public wxProcess
     Spring& m_sp;
 };
 
-#endif  // _SPRINGPROCESS_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_SPRINGPROCESS_H

@@ -1,9 +1,5 @@
-//
-// Class: BattleListCtrl
-//
-
-#ifndef _BATTLELISTCTRL_H_
-#define _BATTLELISTCTRL_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_BATTLELISTCTRL_H
+#define SPRINGLOBBY_HEADERGUARD_BATTLELISTCTRL_H
 
 #include <wx/listctrl.h>
 #include <wx/string.h>
@@ -52,6 +48,4 @@ enum
     BLIST_DLMAP
 };
 
-
-#endif  //_BATTLELISTCTRL_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_BATTLELISTCTRL_H

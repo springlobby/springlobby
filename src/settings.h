@@ -14,27 +14,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
-//
-// Class: Settings
-// Created on: Thu May 10 23:28:05 2007
-//
-
-#ifndef _SETTINGS_H_
-#define _SETTINGS_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_SETTINGS_H
+#define SPRINGLOBBY_HEADERGUARD_SETTINGS_H
 
 #include <string>
 #include <wx/config.h>
-// FIXME why can't wxWidgets use a baseclass instead of this monstrosity
-// I shouldn't copy it here either
-//#if defined(__WXMSW__) && wxUSE_CONFIG_NATIVE
-//    #define wxConfig  wxRegConfig
-//#else // either we're under Unix or wish to use files even under Windows
-//  #define wxConfig  wxFileConfig
-//#endif
-
-class wxRegConfig;
-class wxFileConfig;
 
 #define DEFSETT_DEFAULT_SERVER _T("TAS Server")
 #define DEFSETT_DEFAULT_SERVER_HOST _T("taspringmaster.clan-sy.com")
@@ -108,13 +92,9 @@ class Settings
     std::string GetSpringUsedLoc();
 
   protected:
-
     wxConfig* m_config; //!< wxConfig object to store and restore  all settings in.
-
 };
-
 
 Settings& sett();
 
-#endif  //_SETTINGS_H_
-
+#endif // SPRINGLOBBY_HEADERGUARD_SETTINGS_H

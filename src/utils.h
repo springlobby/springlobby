@@ -1,5 +1,5 @@
-#ifndef _UTILS_H_
-#define _UTILS_H_
+#ifndef SPRINGLOBBY_HEADERGUARD_UTILS_H
+#define SPRINGLOBBY_HEADERGUARD_UTILS_H
 
 #include <string>
 
@@ -13,7 +13,6 @@
 #define ASSERT_RUNTIME(cond,msg) if(!(cond))throw std::runtime_error(msg)
 
 std::string i2s( int x );
-
 
 void debug_output( const std::string& prefix, const std::string& func, const std::string& params, const std::string& msg );
 
@@ -38,5 +37,4 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #define CONTROL_HEIGHT 28
 #endif
 
-
-#endif  //_UTILS_H_
+#endif // SPRINGLOBBY_HEADERGUARD_UTILS_H
