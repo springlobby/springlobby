@@ -1,3 +1,4 @@
+// this header file is automatically generated with a script
 #include "images/flags/AD.xpm"
 #include "images/flags/AE.xpm"
 #include "images/flags/AF.xpm"
@@ -484,7 +485,7 @@ const char* flag_str[] = {
 "ZA",
 "ZM",
 "ZW",
-""
+0
 };
 
 const char* const* flag_xpm[] = {

@@ -50,6 +50,7 @@ springlobby_SOURCES = \
 	src/chatpanel.h \
 	src/connectwindow.cpp \
 	src/connectwindow.h \
+	src/flagimagedata.h \
 	src/flagimages.cpp \
 	src/flagimages.h \
 	src/iconimagelist.cpp \

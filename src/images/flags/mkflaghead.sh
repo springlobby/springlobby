@@ -2,6 +2,8 @@
 
 # This script autogenerates a flagimagedata.cpp file
 
+echo '// this header file is automatically generated with a script'
+
 for img in *.xpm ; do
   echo '#include "images/flags/'${img}'"'
 done
@@ -13,7 +15,7 @@ for img in *.xpm ; do
   echo '"'${img%%.xpm}'",'
 done
 
-echo '""'
+echo '0'
 echo '};'
 echo
 echo 'const char* const* flag_xpm[] = {'

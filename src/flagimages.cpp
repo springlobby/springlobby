@@ -1,14 +1,15 @@
 #include "flagimages.h"
+#include "flagimagedata.h"
 #include "utils.h"
+
+#include <wx/imaglist.h>
 
 int GetFlagIndex( const std::string& flag )
 {
-  int i = 0;
-  while ( strcmp(flag_str[i], "") != 0 ) {
+  for (int i = 0; flag_str[i]; ++i) {
     if ( flag == flag_str[i] ) {
       return i;
     }
-    i++;
   }
   debug_error( flag + " flag not found!" );
   return FLAG_NONE;
@@ -16,10 +17,8 @@ int GetFlagIndex( const std::string& flag )
 
 void AddFlagImages( wxImageList& imgs )
 {
-  int i = 0;
-  while ( flag_xpm[i] != 0 ) {
+  for (int i = 0; flag_xpm[i]; ++i) {
     imgs.Add( wxBitmap( const_cast<const char**>(flag_xpm[i])) );
-    i++;
   }
 }
 
