@@ -8,7 +8,7 @@
 #include "base64.h"
 #include "boost/md5.hpp"
 #include "tasserver.h"
-#include "unitsync.h"
+#include "iunitsync.h"
 #include "user.h"
 #include "utils.h"
 #include "battle.h"

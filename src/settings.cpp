@@ -266,27 +266,27 @@ void   Settings::SetSpringDir( const std::string& spring_dir )
 }
 
 
-bool   Settings::GetUnitsyncUseDefLoc()
+bool   Settings::GetUnitSyncUseDefLoc()
 {
   return m_config->Read( _T("/Spring/use_unitsync_def_loc"), true );
 }
 
 
-void   Settings::SetUnitsyncUseDefLoc( const bool usedefloc )
+void   Settings::SetUnitSyncUseDefLoc( const bool usedefloc )
 {
   m_config->Write( _T("/Spring/use_unitsync_def_loc"), usedefloc );
 }
 
 
 
-std::string Settings::GetUnitsyncLoc()
+std::string Settings::GetUnitSyncLoc()
 {
   return STL_STRING(m_config->Read( _T("/Spring/unitsync_loc"), _T("") ));
 }
 
 
 
-void   Settings::SetUnitsyncLoc( const std::string& loc )
+void   Settings::SetUnitSyncLoc( const std::string& loc )
 {
   m_config->Write( _T("/Spring/unitsync_loc"), WX_STRING(loc) );
 }

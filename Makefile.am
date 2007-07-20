@@ -55,6 +55,7 @@ springlobby_SOURCES = \
 	src/flagimages.h \
 	src/iconimagelist.cpp \
 	src/iconimagelist.h \
+	src/iunitsync.h \
 	src/mainchattab.cpp \
 	src/mainchattab.h \
 	src/mainjoinbattletab.cpp \
@@ -83,14 +84,14 @@ springlobby_SOURCES = \
 	src/springoptionstab.h \
 	src/springprocess.cpp \
 	src/springprocess.h \
+	src/springunitsync.cpp \
+	src/springunitsync.h \
 	src/tasserver.cpp \
 	src/tasserver.h \
 	src/ui.cpp \
 	src/ui.h \
 	src/uiutils.cpp \
 	src/uiutils.h \
-	src/unitsync.cpp \
-	src/unitsync.h \
 	src/user.cpp \
 	src/user.h \
 	src/userlist.cpp \

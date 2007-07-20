@@ -1,44 +1,31 @@
-//
-// Class: Unitsync
-//
-
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
 #include <cassert>
 #include <stdexcept>
 
-#include "unitsync.h"
+#include "springunitsync.h"
+
 #include "utils.h"
 #include "settings.h"
 
-#ifdef WIN32
-static char* dllname = "\\unitsync.dll";
-#else
-static char* dllname = "/unitsync.so";
-#endif
-
-Unitsync& usync()
+IUnitSync* usync()
 {
-  static Unitsync m_sync;
+  static SpringUnitSync* m_sync = 0;
+  if (!m_sync)
+    m_sync = new SpringUnitSync;
   return m_sync;
 }
 
-
-void* Unitsync::_GetLibFuncPtr( const std::string& name )
+void* SpringUnitSync::_GetLibFuncPtr( const std::string& name )
 {
   assert( m_loaded );
   void* ptr = 0;
-#ifdef WIN32
-  ptr = (void*)GetProcAddress( m_libhandle, name.c_str() );
-#else
-  ptr = dlsym( m_libhandle, name.c_str() );
-#endif
+  ptr = MY_GET_PROC_ADDR( m_libhandle, name.c_str() );
   ASSERT_RUNTIME( ptr != 0, "Couldn't load " + name + " from unitsync library" );
   return ptr;
 }
 
-
-bool Unitsync::LoadUnitsyncLib()
+bool SpringUnitSync::LoadUnitSyncLib()
 {
   if ( m_loaded ) return true;
 
@@ -46,29 +33,20 @@ bool Unitsync::LoadUnitsyncLib()
 
   // Load the library.
   std::string loc;
-  if ( sett().GetUnitsyncUseDefLoc() ) loc = sett().GetSpringDir() + dllname;
-  else loc = sett().GetUnitsyncLoc();
+  if ( sett().GetUnitSyncUseDefLoc() ) loc = sett().GetSpringDir() + dllname;
+  else loc = sett().GetUnitSyncLoc();
 
   debug( "Loading from: " + loc );
-#ifdef WIN32
-
-  m_libhandle = LoadLibrary( loc.c_str() );
-  if (m_libhandle == 0) {
-    debug_error( "Couldn't load the unitsync library" );
-    return false;
-  }
-
-#else
 
   try {
-    m_libhandle = dlopen( loc.c_str(), RTLD_LOCAL | RTLD_LAZY );
+    m_libhandle = MY_LOAD_LIBRARY( loc.c_str() );
   } catch(...) {
     m_libhandle = 0;
   }
 
   if (m_libhandle == 0) {
     debug_error( "Couldn't load the unitsync library" );
-    std::string dlerr = dlerror();
+    std::string dlerr = MY_DLERROR();
     debug_error( dlerr );
 
     wxMessageDialog msg( 0, _("The unitsync library failed to load from the location \"") + WX_STRING(loc) + _("\".\nIt failed with the error message \"") + WX_STRING(dlerr)+ _("\".\n\nYou might want to look at the Spring Options again. If you need any help setting unitsync up you will find it under the Help main menu."), _("Error loading unitsync"), wxOK | wxICON_ERROR );
@@ -77,8 +55,6 @@ bool Unitsync::LoadUnitsyncLib()
 
     return false;
   }
-
-#endif
 
   m_loaded = true;
 
@@ -112,44 +88,35 @@ bool Unitsync::LoadUnitsyncLib()
   }
   catch ( std::runtime_error& e ) {
     debug_error( e.what() );
-    FreeUnitsyncLib();
+    FreeUnitSyncLib();
     return false;
   }
 
   return true;
 }
 
-
-void Unitsync::FreeUnitsyncLib()
+void SpringUnitSync::FreeUnitSyncLib()
 {
   if ( !m_loaded ) return;
   m_uninit();
 
-#ifdef WIN32
-  FreeLibrary(m_libhandle);
-#else
-  dlclose(m_libhandle);
-#endif
+  MY_FREELIBRARY(m_libhandle);
 
   m_loaded = false;
 }
 
-
-bool Unitsync::IsLoaded()
+bool SpringUnitSync::IsLoaded()
 {
   return m_loaded;
 }
 
-
-
-int Unitsync::GetNumMods()
+int SpringUnitSync::GetNumMods()
 {
   if ( !m_loaded ) return 0;
   return m_get_mod_count();
 }
 
-
-int Unitsync::GetModIndex( const std::string& name )
+int SpringUnitSync::GetModIndex( const std::string& name )
 {
   if ( !m_loaded ) return -1;
   for ( int i = 0; i < m_get_mod_count(); i++ ) {
@@ -159,17 +126,15 @@ int Unitsync::GetModIndex( const std::string& name )
   return -1;
 }
 
-
-bool Unitsync::ModExists( const std::string& modname )
+bool SpringUnitSync::ModExists( const std::string& modname )
 {
   if ( !m_loaded ) return false;
   return GetModIndex( modname ) >= 0;
 }
 
-
-UnitsyncMod Unitsync::GetMod( const std::string& modname )
+UnitSyncMod SpringUnitSync::GetMod( const std::string& modname )
 {
-  UnitsyncMod m;
+  UnitSyncMod m;
   if ( !m_loaded ) return m;
 
   int i = GetModIndex( modname );
@@ -181,22 +146,19 @@ UnitsyncMod Unitsync::GetMod( const std::string& modname )
   return m;
 }
 
-
-int Unitsync::GetNumMaps()
+int SpringUnitSync::GetNumMaps()
 {
   if ( !m_loaded ) return 0;
   return m_get_map_count();
 }
 
-
-bool Unitsync::MapExists( const std::string& mapname )
+bool SpringUnitSync::MapExists( const std::string& mapname )
 {
   if ( !m_loaded ) return false;
   return GetMapIndex( mapname ) >= 0;
 }
 
-
-bool Unitsync::MapExists( const std::string& mapname, const std::string hash )
+bool SpringUnitSync::MapExists( const std::string& mapname, const std::string hash )
 {
   if ( !m_loaded ) return false;
   int i = GetMapIndex( mapname );
@@ -206,10 +168,9 @@ bool Unitsync::MapExists( const std::string& mapname, const std::string hash )
   return false;
 }
 
-
-UnitsyncMap Unitsync::GetMap( const std::string& mapname )
+UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname )
 {
-  UnitsyncMap m;
+  UnitSyncMap m;
   if ( !m_loaded ) return m;
 
   int i = GetMapIndex( mapname );
@@ -220,8 +181,7 @@ UnitsyncMap Unitsync::GetMap( const std::string& mapname )
   return m;
 }
 
-
-int Unitsync::GetMapIndex( const std::string& name )
+int SpringUnitSync::GetMapIndex( const std::string& name )
 {
   if ( !m_loaded ) return -1;
   int mc = m_get_map_count();
@@ -233,24 +193,21 @@ int Unitsync::GetMapIndex( const std::string& name )
   return -1;
 }
 
-
-std::string Unitsync::GetModArchive( int index )
+std::string SpringUnitSync::GetModArchive( int index )
 {
   if ( (!m_loaded) || (index < 0) ) return "unknown";
   ASSERT_LOGIC( index < m_get_mod_count(), "Bad index" );
   return m_get_mod_archive( index );
 }
 
-
-int Unitsync::GetSideCount( const std::string& modname )
+int SpringUnitSync::GetSideCount( const std::string& modname )
 {
   if ( (!m_loaded) || (!ModExists(modname)) ) return 0;
   m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
   return m_get_side_count();
 }
 
-
-std::string Unitsync::GetSideName( const std::string& modname, int index )
+std::string SpringUnitSync::GetSideName( const std::string& modname, int index )
 {
   if ( (!m_loaded) || (index < 0) || (!ModExists(modname)) ) return "unknown";
   m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
@@ -258,8 +215,7 @@ std::string Unitsync::GetSideName( const std::string& modname, int index )
   return m_get_side_name( index );
 }
 
-
-int Unitsync::GetNumUnits( const std::string& modname )
+int SpringUnitSync::GetNumUnits( const std::string& modname )
 {
   if ( !m_loaded ) return 0;
   m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
@@ -267,8 +223,7 @@ int Unitsync::GetNumUnits( const std::string& modname )
   return m_get_unit_count();
 }
 
-
-int Unitsync::GetUnitIndex( const std::string& modname, const std::string& name )
+int SpringUnitSync::GetUnitIndex( const std::string& modname, const std::string& name )
 {
   if ( !m_loaded ) return -1;
   m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
@@ -279,8 +234,7 @@ int Unitsync::GetUnitIndex( const std::string& modname, const std::string& name 
   return -1;
 }
 
-
-std::string Unitsync::GetFullUnitName( const std::string& modname, int index )
+std::string SpringUnitSync::GetFullUnitName( const std::string& modname, int index )
 {
   if ( (!m_loaded) || (index < 0) ) return "unknown";
   m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );

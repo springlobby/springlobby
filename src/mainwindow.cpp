@@ -21,7 +21,7 @@
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
 #include "mainoptionstab.h"
-#include "unitsync.h"
+#include "iunitsync.h"
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.xpm"
@@ -37,7 +37,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_CONNECT, MainWindow::OnMenuConnect )
   EVT_MENU( MENU_DISCONNECT, MainWindow::OnMenuDisconnect )
   EVT_MENU( MENU_QUIT, MainWindow::OnMenuQuit )
-  EVT_MENU( MENU_USYNC, MainWindow::OnUnitsyncReload )
+  EVT_MENU( MENU_USYNC, MainWindow::OnUnitSyncReload )
   EVT_MENU( MENU_TRAC, MainWindow::OnReportBug )
   EVT_MENU( MENU_DOC, MainWindow::OnShowDocs )
 
@@ -260,10 +260,10 @@ void MainWindow::OnMenuQuit( wxCommandEvent& event )
   m_ui.Quit();
 }
 
-void MainWindow::OnUnitsyncReload( wxCommandEvent& event )
+void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 {
-  usync().FreeUnitsyncLib();
-  usync().LoadUnitsyncLib();
+  usync()->FreeUnitSyncLib();
+  usync()->LoadUnitSyncLib();
   m_join_tab->GetBattleListTab().UpdateList();
 }
 

@@ -11,7 +11,7 @@
 #include "settings.h"
 #include "utils.h"
 #include "ui.h"
-#include "unitsync.h"
+#include "iunitsync.h"
 
 #define TIMER_ID 101
 #define TIMER_INTERVAL 100
@@ -51,8 +51,8 @@ bool SpringLobbyApp::OnInit()
       wxOK | wxICON_INFORMATION, &m_ui->mw() );
     m_ui->mw().ShowConfigure();
   } else {
-    usync().LoadUnitsyncLib();
-    if ( usync().IsLoaded() ) m_ui->Connect();
+    usync()->LoadUnitSyncLib();
+    if ( usync()->IsLoaded() ) m_ui->Connect();
     else m_ui->mw().ShowConfigure();
   }
 

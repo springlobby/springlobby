@@ -39,7 +39,7 @@ class MainWindow : public wxFrame
     void OnMenuConnect( wxCommandEvent& event );
     void OnMenuDisconnect( wxCommandEvent& event );
     void OnMenuQuit( wxCommandEvent& event );
-    void OnUnitsyncReload( wxCommandEvent& event );
+    void OnUnitSyncReload( wxCommandEvent& event );
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
 

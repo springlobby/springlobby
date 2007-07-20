@@ -14,7 +14,7 @@
 
 #include "springoptionstab.h"
 #include "ui.h"
-#include "unitsync.h"
+#include "iunitsync.h"
 #include "utils.h"
 #include "settings.h"
 
@@ -49,15 +49,15 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent
 
   if ( sett().GetSpringUseDefLoc() ) m_exec_def_radio->SetValue( true );
   else m_exec_spec_radio->SetValue( true );
-  if ( sett().GetUnitsyncUseDefLoc() ) m_sync_def_radio->SetValue( true );
+  if ( sett().GetUnitSyncUseDefLoc() ) m_sync_def_radio->SetValue( true );
   else m_sync_spec_radio->SetValue( true );
 
   m_dir_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringDir()) );
   m_exec_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringLoc()) );
-  m_sync_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetUnitsyncLoc()) );
+  m_sync_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetUnitSyncLoc()) );
 
   m_exec_box = new wxStaticBox( this, -1, _("Spring executable") );
-  m_sync_box = new wxStaticBox( this, -1, _("Unitsync library") );
+  m_sync_box = new wxStaticBox( this, -1, _("UnitSync library") );
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   m_dir_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -140,25 +140,25 @@ void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
 void SpringOptionsTab::OnApply( wxCommandEvent& event )
 {
   sett().SetSpringDir( STL_STRING(m_dir_edit->GetValue()) );
-  sett().SetUnitsyncLoc( STL_STRING( m_sync_edit->GetValue() ) );
+  sett().SetUnitSyncLoc( STL_STRING( m_sync_edit->GetValue() ) );
   sett().SetSpringLoc( STL_STRING( m_exec_edit->GetValue() ) );
   sett().SetSpringUseDefLoc( m_exec_def_radio->GetValue() );
-  sett().SetUnitsyncUseDefLoc( m_sync_def_radio->GetValue() );
+  sett().SetUnitSyncUseDefLoc( m_sync_def_radio->GetValue() );
 
-  usync().FreeUnitsyncLib();
-  usync().LoadUnitsyncLib();
+  usync()->FreeUnitSyncLib();
+  usync()->LoadUnitSyncLib();
 }
 
 
 void SpringOptionsTab::DoRestore()
 {
   m_dir_edit->SetValue( WX_STRING(sett().GetSpringDir()) );
-  m_sync_edit->SetValue( WX_STRING(sett().GetUnitsyncLoc()) );
+  m_sync_edit->SetValue( WX_STRING(sett().GetUnitSyncLoc()) );
   m_exec_edit->SetValue( WX_STRING(sett().GetSpringLoc()) );
   m_exec_def_radio->SetValue( sett().GetSpringUseDefLoc() );
-  m_sync_def_radio->SetValue( sett().GetUnitsyncUseDefLoc() );
+  m_sync_def_radio->SetValue( sett().GetUnitSyncUseDefLoc() );
   m_exec_spec_radio->SetValue( !sett().GetSpringUseDefLoc() );
-  m_sync_spec_radio->SetValue( !sett().GetUnitsyncUseDefLoc() );
+  m_sync_spec_radio->SetValue( !sett().GetUnitSyncUseDefLoc() );
 }
 
 

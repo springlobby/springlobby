@@ -6,7 +6,7 @@
 
 #include "battle.h"
 #include "ui.h"
-#include "unitsync.h"
+#include "iunitsync.h"
 #include "server.h"
 #include "user.h"
 #include "utils.h"
@@ -93,13 +93,13 @@ void Battle::SetImReady( bool ready )
 
 bool Battle::IsSynced()
 {
-  return ( usync().MapExists( m_opts.mapname, m_opts.maphash ) && usync().ModExists( m_opts.modname ) );
+  return ( usync()->MapExists( m_opts.mapname, m_opts.maphash ) && usync()->ModExists( m_opts.modname ) );
 }
 
 
 bool Battle::HasMod()
 {
-  return usync().ModExists( m_opts.modname );
+  return usync()->ModExists( m_opts.modname );
 }
 
 
@@ -111,18 +111,18 @@ void Battle::Say( const std::string& msg )
 
 bool Battle::IsMapAvailable()
 {
-  if ( !usync().MapExists( m_opts.mapname ) ) return false;
+  if ( !usync()->MapExists( m_opts.mapname ) ) return false;
 
-  UnitsyncMap map = usync().GetMap( m_opts.mapname );
+  UnitSyncMap map = usync()->GetMap( m_opts.mapname );
   return ( map.hash == m_opts.maphash );
 }
 
 
 bool Battle::IsModAvailable()
 {
-  if ( !usync().ModExists( m_opts.modname ) ) return false;
+  if ( !usync()->ModExists( m_opts.modname ) ) return false;
 
-  UnitsyncMod mod = usync().GetMod( m_opts.modname );
+  UnitSyncMod mod = usync()->GetMod( m_opts.modname );
   return true;
   //return ( mod.hash == m_opts.hashcode );
 }

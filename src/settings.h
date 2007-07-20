@@ -80,10 +80,10 @@ class Settings
     std::string GetSpringDir();
     void   SetSpringDir( const std::string& pring_dir );
 
-    bool   GetUnitsyncUseDefLoc();
-    void   SetUnitsyncUseDefLoc( const bool usedefloc );
-    std::string GetUnitsyncLoc();
-    void   SetUnitsyncLoc( const std::string& loc );
+    bool   GetUnitSyncUseDefLoc();
+    void   SetUnitSyncUseDefLoc( const bool usedefloc );
+    std::string GetUnitSyncLoc();
+    void   SetUnitSyncLoc( const std::string& loc );
 
     bool   GetSpringUseDefLoc();
     void   SetSpringUseDefLoc( const bool usedefloc );

@@ -492,7 +492,7 @@ void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
 {
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
-    //std::string fullname = usync().GetFullUnitName( battle.opts().modname, usync().GetUnitIndex( battle.opts().modname, unitname ) );
+    //std::string fullname = usync()->GetFullUnitName( battle.opts().modname, usync()->GetUnitIndex( battle.opts().modname, unitname ) );
     br->GetChatPanel().StatusMessage( WX_STRING( unitname ) + _T(" disabled.") );
   }
 }
