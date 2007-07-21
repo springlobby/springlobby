@@ -68,7 +68,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent
   m_sync_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
 
   m_dir_sizer->Add( m_dir_text, 0, wxALL, 2 );
-  m_dir_sizer->Add( m_dir_edit, 1 );
+  m_dir_sizer->Add( m_dir_edit, 1, wxEXPAND );
   m_dir_sizer->Add( m_dir_browse_btn );
   m_dir_sizer->Add( m_dir_find_btn );
 
