@@ -2,7 +2,6 @@
 // Class: User
 //
 
-#include <iostream>
 #include "user.h"
 #include "battle.h"
 #include "server.h"

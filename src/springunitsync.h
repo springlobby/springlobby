@@ -3,6 +3,7 @@
 
 #include "iunitsync.h"
 
+// FIXME this definitely cannot be used when compiling for windows on mingw under linux
 // FIXME wxDynamicLibrary instead?
 #ifdef WIN32
   #include <windows.h>

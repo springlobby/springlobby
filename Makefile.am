@@ -1,6 +1,4 @@
-## Process this file with automake to produce Makefile.in
-
-# the following line may NOT be split, b/c of autoreconf
+## the following line may NOT be split, b/c of autoreconf 2.61 and older
 ACLOCAL_AMFLAGS = -I m4
 
 AM_CPPFLAGS = \
@@ -19,8 +17,6 @@ dist_doc_DATA = \
 	README
 
 bin_PROGRAMS = springlobby
-
-springlobby_LDFLAGS =
 
 springlobby_LDADD = \
 	$(WX_LIBS)

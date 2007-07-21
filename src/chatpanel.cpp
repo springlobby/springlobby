@@ -274,7 +274,7 @@ Server* ChatPanel::GetServer()
 void ChatPanel::SetServer( Server* serv )
 {
   ASSERT_LOGIC(m_type == CPT_Server, "Not of type server" );
-  m_server = serv; 
+  m_server = serv;
 }
 
 bool ChatPanel::IsServerPanel()

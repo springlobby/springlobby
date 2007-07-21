@@ -36,7 +36,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 
   int width, height;
   GetClientSize( &width, &height );
- 
+
   if ( m_image == NULL ) {
     dc.DrawText( _("Minimap n/a"), 0, 0 );
   } else {

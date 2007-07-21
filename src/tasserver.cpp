@@ -2,7 +2,6 @@
 // Class: TASServer
 //
 
-#include <iostream>
 #include <cassert>
 
 #include "base64.h"

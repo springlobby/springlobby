@@ -3,7 +3,6 @@
 //
 
 #include <cassert>
-#include <iostream>
 #include <stdexcept>
 #include "server.h"
 #include "socket.h"

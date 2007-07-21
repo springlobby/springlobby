@@ -1,14 +1,11 @@
-dnl Process this file with autoconf to produce a configure script.
-
 AC_PREREQ([2.59c])
-AC_INIT([springlobby], [0.1], [FIXME_our_bugs_email_address])
+AC_INIT([SpringLobby], [0.1], [FIXME_our_bugs_email_address])
 AM_INIT_AUTOMAKE([-Wall -Werror])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/springlobbyapp.cpp])
 
-#AC_LANG([C++])
+AC_LANG([C++])
 
-#AC_PROG_CPP
 AC_PROG_CXX
 
 AM_OPTIONS_WXCONFIG
