@@ -70,7 +70,7 @@ src_install () {
 # FIXME move ${GAMES_BINDIR}/spring to ${GAMES_BINDIR}/spring-svn to coexist with release
 
 	newicon "${FILESDIR}/spring.png" ${PN}.png
-	make_desktop_entry spring "Spring RTS - svn" ${PN}.png
+	make_desktop_entry ${PN} "Spring RTS - svn" ${PN}.png
 
 	insinto /etc/${PN}
 	echo '$HOME'"/.${PN}" > ${WORKDIR}/datadir
