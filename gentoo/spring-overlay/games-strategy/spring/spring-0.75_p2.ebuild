@@ -40,7 +40,7 @@ PROVIDE="virtual/game_spring"
 
 my_depend_with_use () {
 	if ! built_with_use $* ; then
-		eerror "Please run \'echo \"$*\" >> /etc/portage/package.use\' and re-emerge \'$1\'."
+		eerror "Please run 'echo \"$*\" >> /etc/portage/package.use' and re-emerge '$1'."
 		MY_DEPEND_WITH_USE=false
 	fi
 }
