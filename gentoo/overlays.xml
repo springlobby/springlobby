@@ -3,7 +3,7 @@
   <overlay
       contact = "FIXME_our_contact_address"
       type = "svn"
-      src  = "https://tc.serveftp.net/repos/springlobby/trunk/gentoo/overlay"
+      src  = "http://tc.serveftp.net/svn/springlobby/trunk/gentoo/overlay"
       name = "springlobby">
     <link>
       http://tc.serveftp.net/trac
@@ -15,7 +15,7 @@
   <overlay
     contact = "FIXME_our_contact_address"
     type = "svn"
-    src = "https://tc.serveftp.net/repos/springlobby/trunk/gentoo/spring-overlay"
+    src = "http://tc.serveftp.net/svn/springlobby/trunk/gentoo/spring-overlay"
     name = "spring-unofficial">
   </overlay>
   <link>
