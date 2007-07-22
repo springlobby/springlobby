@@ -67,6 +67,7 @@ src_compile () {
 
 src_install () {
 	scons install || die "install failed"
+# FIXME move ${GAMES_BINDIR}/spring to ${GAMES_BINDIR}/spring-svn to coexist with release
 
 	newicon "${FILESDIR}/spring.png" ${PN}.png
 	make_desktop_entry spring "Spring RTS - svn" ${PN}.png
