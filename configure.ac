@@ -10,19 +10,20 @@ AC_PROG_CXX
 
 AM_OPTIONS_WXCONFIG
 
-reqwx=2.6.0
-AM_PATH_WXCONFIG([$reqwx], [wxWin=1])
-if test "$wxWin" != 1; then
-   AC_MSG_ERROR([
+AM_PATH_WXCONFIG([2.6.0], [],
+   [AC_MSG_ERROR([
            wxWidgets must be installed on your system
            but wx-config script couldn't be found.
 
            Please check that wx-config is in path, the directory
            where wxWidgets libraries are installed (returned by
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
-           equivalent variable and wxWidgets version is $reqwx or above.
-   ])
-fi
+           equivalent variable and wxWidgets version is 2.6.0 or above.
+   ])])
+
+AM_PATH_WXCONFIG([2.8.0],
+  [AC_DEFINE([HAVE_WX28], [1], [Define to 1 if wxWidgets is at least version 2.8.0])],
+  [AC_MSG_NOTICE([But it does not matter, we can use ${WX_VERSION} just fine!])])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
