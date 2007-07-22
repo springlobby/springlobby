@@ -54,11 +54,11 @@ pkg_setup () {
 src_compile () {
 	scons configure \
 		$(use debug && echo debug=1) \
-		prefix="/" \
+		prefix="/usr" \
 		installprefix="${D}" \
-		datadir="${GAMES_DATADIR}/${PN}" \
-		bindir="${GAMES_BINDIR}" \
-		libdir="${games_get_libdir}/${PN}" \
+		datadir="${GAMES_DATADIR##/usr/}/${PN}" \
+		bindir="${GAMES_BINDIR##/usr/}" \
+		libdir="${games_get_libdir##/usr/}/${PN}" \
 		strip=0 \
 		|| die "configuration failed"
 	scons || die "build failed"
