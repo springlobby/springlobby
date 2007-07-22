@@ -44,7 +44,9 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
   if ( m_image == NULL ) {
     dc.DrawText( _("Minimap n/a"), 0, 0 );
   } else {
-    dc.DrawBitmap( *m_image, 0, 0, false );
+    dc.DrawBitmap( *m_image, 1, 1, false );
+    dc.SetBrush( wxBrush( *wxRED, wxTRANSPARENT ) );
+    dc.DrawRectangle( 0, 0, width, height );
   }
 }
 
@@ -55,7 +57,7 @@ void MapCtrl::LoadMinimap()
   try {
     int w, h;
     GetClientSize( &w, &h );
-    wxImage img = usync()->GetMinimap( m_battle.opts().mapname, w );
+    wxImage img = usync()->GetMinimap( m_battle.opts().mapname, w-2 );
     m_image = new wxBitmap( img );
   } catch (...) {}
 }

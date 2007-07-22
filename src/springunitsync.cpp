@@ -11,9 +11,9 @@
 
 
 struct UnitSyncColour {
-  unsigned int r : 5;
-  unsigned int g : 6;
   unsigned int b : 5;
+  unsigned int g : 6;
+  unsigned int r : 5;
 };
 
 
@@ -254,12 +254,14 @@ std::string SpringUnitSync::GetFullUnitName( const std::string& modname, int ind
 
 wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int size )
 {
-  wxImage ret( 1024, 1024 );
-  UnitSyncColour* colours = (UnitSyncColour*)m_get_minimap( mapname.c_str(), 10 );
+  int mipsize = 1024;
+  wxImage ret( mipsize/2, mipsize );
+  UnitSyncColour* colours = (UnitSyncColour*)m_get_minimap( mapname.c_str(), 0 );
   ASSERT_RUNTIME( colours != NULL, "GetMinimap failed" );
-  for ( int y = 0; y < 1024; y++ ) {
-    for ( int x = 0; x < 1024; x++ ) {
-      ret.SetRGB( x, y, (colours[y*1024+x].r/31.0)*255.0, (colours[y*1024+x].g/63.0)*255.0, (colours[y*1024+x].b/31.0)*255.0 );
+  for ( int y = 0; y < mipsize; y++ ) {
+    for ( int x = 0; x < mipsize/2; x++ ) {
+      int pos = y*(mipsize/2)+x;
+      ret.SetRGB( x, y, (colours[pos].r/31.0)*255.0, (colours[pos].g/63.0)*255.0, (colours[pos].b/31.0)*255.0 );
     }
   }
   ret.Rescale( size, size );
