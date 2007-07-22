@@ -5,6 +5,8 @@
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
 #include <wx/timer.h>
+#include <wx/stdpaths.h>
+#include <wx/filefn.h>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -42,6 +44,8 @@ bool SpringLobbyApp::OnInit()
 {
   debug_func( "" );
 
+  InitDirs();
+
   m_ui = new Ui();
 
   m_ui->ShowMainWindow();
@@ -78,5 +82,14 @@ int SpringLobbyApp::OnExit()
 void SpringLobbyApp::OnTimer( wxTimerEvent& event )
 {
   m_ui->OnUpdate();
+}
+
+
+void SpringLobbyApp::InitDirs()
+{
+  wxString path = wxStandardPaths::Get().GetUserDataDir();
+  if ( !wxPathExists( path ) ) wxMkdir( path );
+  path += _T(PATH_SEP); path += _T("cache"); path += _T(PATH_SEP);
+  if ( !wxPathExists( path ) ) wxMkdir( path );
 }
 

@@ -1,6 +1,9 @@
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
 #include <wx/image.h>
+#include <wx/string.h>
+#include <wx/stdpaths.h>
+#include <wx/filefn.h>
 #include <cassert>
 #include <stdexcept>
 
@@ -251,20 +254,52 @@ std::string SpringUnitSync::GetFullUnitName( const std::string& modname, int ind
   return m_get_unit_full_name( index );
 }
 
+wxString SpringUnitSync::GetCachedMinimapFileName( const std::string& mapname, int size )
+{
+  wxString path = wxStandardPaths::Get().GetUserDataDir() + _T(PATH_SEP) + _T("cache") + _T(PATH_SEP);
+  wxString fname = WX_STRING( mapname );
+  fname.Replace( _T("."), _T("_") );
+  fname.Replace( _T(" "), _T("_") );
+  fname += wxString::Format( _T("_%dx%d.bmp"), size, size );
+  return path + fname;
+}
+
+wxImage SpringUnitSync::GetCachedMinimap( const std::string& mapname, int size )
+{
+  wxString fname = GetCachedMinimapFileName( mapname, size );
+
+  ASSERT_RUNTIME( wxFileExists( fname ), "File cached image does not exist" );
+
+  wxImage img( fname, wxBITMAP_TYPE_BMP );
+  ASSERT_RUNTIME( img.Ok(), "Failed to load chache image" );
+  return img;
+}
+
 
 wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int size )
 {
-  int mipsize = 1024;
-  wxImage ret( mipsize/2, mipsize );
+  int mipheight = 1024;
+  int mipwidth = 512;
+
+  try {
+    return GetCachedMinimap( mapname, size );
+  } catch(...) {}
+
+  wxImage ret( mipwidth, mipheight );
   UnitSyncColour* colours = (UnitSyncColour*)m_get_minimap( mapname.c_str(), 0 );
   ASSERT_RUNTIME( colours != NULL, "GetMinimap failed" );
-  for ( int y = 0; y < mipsize; y++ ) {
-    for ( int x = 0; x < mipsize/2; x++ ) {
-      int pos = y*(mipsize/2)+x;
+  for ( int y = 0; y < mipheight; y++ ) {
+    for ( int x = 0; x < mipwidth; x++ ) {
+      int pos = y*(mipwidth)+x;
       ret.SetRGB( x, y, (colours[pos].r/31.0)*255.0, (colours[pos].g/63.0)*255.0, (colours[pos].b/31.0)*255.0 );
     }
   }
   ret.Rescale( size, size );
+
+  wxString fname = GetCachedMinimapFileName( mapname, size );
+
+  ret.SaveFile( fname, wxBITMAP_TYPE_BMP );
+
   return ret;
 }
 
