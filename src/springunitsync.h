@@ -26,9 +26,10 @@
   static char* dllname = "/unitsync.so";
 #endif
 
+class wxImage;
+
 /*
 const char* __stdcall GetSpringVersion()
-void* __stdcall GetMinimap(const char* filename, int miplevel)
 */
 
 typedef int (USYNC_CALL_CONV *InitPtr)(bool, int);
@@ -38,6 +39,7 @@ typedef int (USYNC_CALL_CONV *GetMapCountPtr)();
 typedef unsigned int (USYNC_CALL_CONV *GetMapChecksumPtr)(int);
 typedef const char* (USYNC_CALL_CONV *GetMapNamePtr)(int);
 typedef int (USYNC_CALL_CONV *GetMapInfoExPtr)(const char*, MapInfo*, int);
+typedef void* (USYNC_CALL_CONV *GetMinimapPtr)(const char*, int);
 
 typedef unsigned int (USYNC_CALL_CONV *GetPrimaryModChecksumPtr)(int);
 typedef int (USYNC_CALL_CONV *GetPrimaryModIndexPtr)(const char*);
@@ -54,6 +56,7 @@ typedef const char * (USYNC_CALL_CONV *GetFullUnitNamePtr)(int);
 typedef const char * (USYNC_CALL_CONV *GetUnitNamePtr)(int);
 typedef int (USYNC_CALL_CONV *GetUnitCountPtr)();
 typedef int (USYNC_CALL_CONV *ProcessUnitsNoChecksumPtr)();
+
 
 class SpringUnitSync : public IUnitSync
 {
@@ -85,6 +88,8 @@ class SpringUnitSync : public IUnitSync
     int GetUnitIndex( const std::string& modname, const std::string& name );
     std::string GetFullUnitName( const std::string& modname, int index );
 
+    wxImage GetMinimap( const std::string& mapname, int size );
+
   private:
     bool m_loaded;
 
@@ -92,10 +97,12 @@ class SpringUnitSync : public IUnitSync
 
     InitPtr m_init;
     UnInitPtr m_uninit;
+
     GetMapCountPtr m_get_map_count;
     GetMapChecksumPtr m_get_map_checksum;
     GetMapNamePtr m_get_map_name;
     GetMapInfoExPtr m_get_map_info_ex;
+    GetMinimapPtr m_get_minimap;
 
     GetPrimaryModChecksumPtr m_get_mod_checksum;
     GetPrimaryModIndexPtr m_get_mod_index;

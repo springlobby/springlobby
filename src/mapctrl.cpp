@@ -6,10 +6,14 @@
 #include <wx/panel.h>
 #include <wx/dcclient.h>
 #include <wx/bitmap.h>
+#include <wx/image.h>
 #include <wx/intl.h>
 
 #include "mapctrl.h"
 #include "battle.h"
+#include "springunitsync.h"
+
+#include "images/select_icon.xpm"
 
 
 BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
@@ -20,13 +24,13 @@ END_EVENT_TABLE()
 MapCtrl::MapCtrl( wxWindow* parent, int size, Battle& battle, bool readonly ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size) ), m_image(NULL), m_battle(battle)
 {
-  LoadImage();
+  LoadMinimap();
 }
 
 
 MapCtrl::~MapCtrl()
 {
-  FreeImage();
+  FreeMinimap();
 }
 
 
@@ -45,13 +49,22 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 }
 
 
-void MapCtrl::LoadImage()
+void MapCtrl::LoadMinimap()
 {
-
+  if ( m_image != NULL ) return;
+  try {
+    int w, h;
+    GetClientSize( &w, &h );
+    wxImage img = usync()->GetMinimap( m_battle.opts().mapname, w );
+    m_image = new wxBitmap( img );
+  } catch (...) {}
 }
 
 
-void MapCtrl::FreeImage()
+void MapCtrl::FreeMinimap()
 {
-
+  if ( m_image != NULL ) {
+    delete m_image;
+    m_image = NULL;
+  }
 }

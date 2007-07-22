@@ -1,5 +1,6 @@
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
+#include <wx/image.h>
 #include <cassert>
 #include <stdexcept>
 
@@ -7,6 +8,14 @@
 
 #include "utils.h"
 #include "settings.h"
+
+
+struct UnitSyncColour {
+  unsigned int r : 5;
+  unsigned int g : 6;
+  unsigned int b : 5;
+};
+
 
 IUnitSync* usync()
 {
@@ -67,7 +76,7 @@ bool SpringUnitSync::LoadUnitSyncLib()
     m_get_map_checksum = (GetMapChecksumPtr)_GetLibFuncPtr("GetMapChecksum");
     m_get_map_name = (GetMapNamePtr)_GetLibFuncPtr("GetMapName");
     m_get_map_info_ex = (GetMapInfoExPtr)_GetLibFuncPtr("GetMapInfoEx");
-
+    m_get_minimap = (GetMinimapPtr)_GetLibFuncPtr("GetMinimap");
     m_get_mod_checksum = (GetPrimaryModChecksumPtr)_GetLibFuncPtr("GetPrimaryModChecksum");
     m_get_mod_index = (GetPrimaryModIndexPtr)_GetLibFuncPtr("GetPrimaryModIndex");
     m_get_mod_name = (GetPrimaryModNamePtr)_GetLibFuncPtr("GetPrimaryModName");
@@ -240,5 +249,20 @@ std::string SpringUnitSync::GetFullUnitName( const std::string& modname, int ind
   m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
   m_proc_units_nocheck();
   return m_get_unit_full_name( index );
+}
+
+
+wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int size )
+{
+  wxImage ret( 1024, 1024 );
+  UnitSyncColour* colours = (UnitSyncColour*)m_get_minimap( mapname.c_str(), 10 );
+  ASSERT_RUNTIME( colours != NULL, "GetMinimap failed" );
+  for ( int y = 0; y < 1024; y++ ) {
+    for ( int x = 0; x < 1024; x++ ) {
+      ret.SetRGB( x, y, (colours[y*1024+x].r/31.0)*255.0, (colours[y*1024+x].g/63.0)*255.0, (colours[y*1024+x].b/31.0)*255.0 );
+    }
+  }
+  ret.Rescale( size, size );
+  return ret;
 }
 

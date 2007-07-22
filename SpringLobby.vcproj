@@ -231,6 +231,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\iunitsync.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\mainchattab.h"
 				>
 			</File>
@@ -291,6 +295,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\springunitsync.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\tasserver.h"
 				>
 			</File>
@@ -300,10 +308,6 @@
 			</File>
 			<File
 				RelativePath=".\src\uiutils.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\unitsync.h"
 				>
 			</File>
 			<File
@@ -467,6 +471,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\springunitsync.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\tasserver.cpp"
 				>
 			</File>
@@ -476,10 +484,6 @@
 			</File>
 			<File
 				RelativePath=".\src\uiutils.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\unitsync.cpp"
 				>
 			</File>
 			<File

@@ -20,8 +20,8 @@ class MapCtrl : public wxPanel
     wxBitmap* m_image;
     Battle& m_battle;
 
-    void LoadImage();
-    void FreeImage();
+    void LoadMinimap();
+    void FreeMinimap();
 
   DECLARE_EVENT_TABLE();
 };
