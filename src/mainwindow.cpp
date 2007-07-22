@@ -124,6 +124,7 @@ void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
   wxMemoryDC dc;
   dc.SelectObject( canvas );
   dc.DrawBitmap( object, x, y, true );
+  dc.SelectObject( wxNullBitmap );
 }
 
 
