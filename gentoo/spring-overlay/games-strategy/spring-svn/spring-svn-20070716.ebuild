@@ -4,11 +4,9 @@
 
 inherit subversion games eutils toolchain-funcs
 
-MY_P=spring_${PV}
-S=${WORKDIR}/${MY_P}
 DESCRIPTION="a 3D multiplayer real time strategy game engine"
 HOMEPAGE="http://springrts.com"
-ESVN_REPO_URI="https://taspring.clan-sy.com/svn/spring/tags/${MY_P}"
+ESVN_REPO_URI="https://taspring.clan-sy.com/svn/spring/trunk"
 ESVN_PATCHES="spring-svn_coexist_with_release.patch"
 
 LICENSE="GPL-2"
@@ -54,7 +52,7 @@ pkg_setup () {
 src_compile () {
 	ewarn "This ebuild installs directly from a development repository."
 	ewarn "The code might not even compile some times."
-	einfo "If anything is weird, please file a bug report at project website."
+	einfo "If anything is weird, please file a bug report at ${HOMEPAGE}."
 	scons configure \
 		$(use debug && echo debug=1) \
 		prefix="/" \
@@ -71,7 +69,7 @@ src_install () {
 	scons install || die "install failed"
 
 	newicon "${FILESDIR}/spring.png" ${PN}.png
-	make_desktop_entry spring "Spring RTS" ${PN}.png
+	make_desktop_entry spring "Spring RTS - svn" ${PN}.png
 
 	insinto /etc/${PN}
 	echo '$HOME'"/.${PN}" > ${WORKDIR}/datadir

@@ -9,7 +9,7 @@ S=${WORKDIR}/${MY_P}
 DESCRIPTION="a 3D multiplayer real time strategy game engine"
 HOMEPAGE="http://springrts.com"
 SRC_URI="http://download.berlios.de/taspring-linux/${MY_P}_src.tar.bz2
-http://download2.berlios.de/taspring-linux/${MY_P}_src.tar.bz2
+http://download2.berlios.de/taspring-linux/${MY_P}_src.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
