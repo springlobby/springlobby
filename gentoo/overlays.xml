@@ -13,15 +13,15 @@
     </description>
   </overlay>
   <overlay
-    contact = "FIXME_our_contact_address"
-    type = "svn"
-    src = "http://tc.serveftp.net/svn/springlobby/trunk/gentoo/spring-overlay"
-    name = "spring-unofficial">
+      contact = "FIXME_our_contact_address"
+      type = "svn"
+      src = "http://tc.serveftp.net/svn/springlobby/trunk/gentoo/spring-overlay"
+      name = "spring-unofficial">
+    <link>
+      http://springrts.com
+    </link>
+    <description>
+      High quality unofficial ebuilds for spring.
+    </description>
   </overlay>
-  <link>
-    http://springrts.com
-  </link>
-  <description>
-    High quality unofficial ebuilds for spring.
-  </description>
 </layman>
