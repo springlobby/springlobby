@@ -38,6 +38,9 @@ pkg_setup() {
 }
 
 src_compile() {
+	ewarn "This ebuild installs directly from a development repository."
+	ewarn "The code might not even compile some times."
+	einfo "If anything is weird, please file a bug report at ${HOMEPAGE}."
 	econf || die "econf failed"
 	emake || die "emake failed"
 }
