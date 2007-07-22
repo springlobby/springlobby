@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit subversion games eutils toolchain-funcs
+inherit subversion games eutils
 
 DESCRIPTION="a 3D multiplayer real time strategy game engine"
 HOMEPAGE="http://springrts.com"

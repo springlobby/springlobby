@@ -2,13 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit games eutils toolchain-funcs
+inherit games eutils
 
 MY_P=${PN}_${PV/_p/b}
 S=${WORKDIR}/${MY_P}
 DESCRIPTION="a 3D multiplayer real time strategy game engine"
 HOMEPAGE="http://springrts.com"
-SRC_URI="http://spring.clan-sy.com/dl/${MY_P}_src.zip"
+SRC_URI="http://spring.clan-sy.com/dl/${MY_P}_src.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
