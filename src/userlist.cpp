@@ -4,8 +4,7 @@
 #include "userlist.h"
 #include "user.h"
 
-// FIXME make this the max value for the type it is used for
-#define SEEKPOS_INVALID (-1)
+const user_map_t::size_type SEEKPOS_INVALID = -1;
 
 UserList::UserList(): m_seek(m_users.end()), m_seekpos(SEEKPOS_INVALID)
 { }

@@ -323,7 +323,8 @@ wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int size )
   for ( int y = 0; y < height; y++ ) {
     for ( int x = 0; x < width; x++ ) {
       int pos = y*(width)+x;
-      ret.SetRGB( x, y, (colours[pos].r/31.0)*255.0, (colours[pos].g/63.0)*255.0, (colours[pos].b/31.0)*255.0 );
+      typedef unsigned char uchar;
+      ret.SetRGB( x, y, uchar((colours[pos].r/31.0)*255.0), uchar((colours[pos].g/63.0)*255.0), uchar((colours[pos].b/31.0)*255.0) );
     }
   }
 

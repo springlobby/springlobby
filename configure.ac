@@ -10,20 +10,23 @@ AC_PROG_CXX
 
 AM_OPTIONS_WXCONFIG
 
-AM_PATH_WXCONFIG([2.6.0], [],
-   [AC_MSG_ERROR([
-           wxWidgets must be installed on your system
-           but wx-config script couldn't be found.
+AM_PATH_WXCONFIG([2.8.0],
+  [AC_DEFINE([HAVE_WX28], [1], [Define to 1 if wxWidgets is at least version 2.8.0])],
+  [wxfb=1])
 
-           Please check that wx-config is in path, the directory
-           where wxWidgets libraries are installed (returned by
-           'wx-config --libs' command) is in LD_LIBRARY_PATH or
-           equivalent variable and wxWidgets version is 2.6.0 or above.
-   ])])
+if test -n "$wxfb"; then
+  AM_PATH_WXCONFIG([2.6.0], [],
+     [AC_MSG_ERROR([
+             wxWidgets must be installed on your system
+             but wx-config script couldn't be found.
 
-# AM_PATH_WXCONFIG([2.8.0],
-#   [AC_DEFINE([HAVE_WX28], [1], [Define to 1 if wxWidgets is at least version 2.8.0])],
-#   [AC_MSG_NOTICE([But it does not matter, we can use ${WX_VERSION} just fine!])])
+             Please check that wx-config is in path, the directory
+             where wxWidgets libraries are installed (returned by
+             'wx-config --libs' command) is in LD_LIBRARY_PATH or
+             equivalent variable and wxWidgets version is 2.6.0 or above.
+     ])])
+  AC_MSG_NOTICE([Disabling wxWidgets-2.8 specific features, falling back to wxWidgets-2.6 support.])
+fi
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

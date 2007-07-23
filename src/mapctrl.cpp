@@ -11,9 +11,9 @@
 
 #include "mapctrl.h"
 #include "battle.h"
-#include "springunitsync.h"
+#include "iunitsync.h"
 
-#include "images/select_icon.xpm"
+//#include "images/select_icon.xpm"
 
 
 BEGIN_EVENT_TABLE( MapCtrl, wxPanel )

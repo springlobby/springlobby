@@ -4,8 +4,7 @@
 #include "channellist.h"
 #include "channel.h"
 
-// FIXME make this the max value of the type it is used for
-#define SEEK_INVALID (-1)
+const user_map_t::size_type SEEKPOS_INVALID = -1;
 
 ChannelList::ChannelList() : m_seek(m_chans.end()), m_seekpos(-1)
 { }
@@ -13,13 +12,13 @@ ChannelList::ChannelList() : m_seek(m_chans.end()), m_seekpos(-1)
 void ChannelList::AddChannel( Channel& channel )
 {
   m_chans[channel.GetName()] = &channel;
-  m_seekpos = SEEK_INVALID;
+  m_seekpos = SEEKPOS_INVALID;
 }
 
 void ChannelList::RemoveChannel( const std::string& name )
 {
   m_chans.erase( name );
-  m_seekpos = SEEK_INVALID;
+  m_seekpos = SEEKPOS_INVALID;
 }
 
 Channel& ChannelList::GetChannel( const std::string& name )
@@ -32,7 +31,7 @@ Channel& ChannelList::GetChannel( const std::string& name )
 
 Channel& ChannelList::GetChannel( channel_map_t::size_type index )
 {
-  if (m_seekpos == SEEK_INVALID || m_seekpos > index) {
+  if (m_seekpos == SEEKPOS_INVALID || m_seekpos > index) {
     m_seek = m_chans.begin();
     m_seekpos = 0;
   }
