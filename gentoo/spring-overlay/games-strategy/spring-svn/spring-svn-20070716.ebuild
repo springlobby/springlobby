@@ -53,13 +53,14 @@ src_compile () {
 	ewarn "This ebuild installs directly from a development repository."
 	ewarn "The code might not even compile some times."
 	einfo "If anything is weird, please file a bug report at ${HOMEPAGE}."
+	MY_LIBDIR=${GAMES_PREFIX}/$(get_libdir)
 	scons configure \
 		$(use debug && echo debug=1) \
 		prefix="/usr" \
-		installprefix="${D}" \
+		installprefix="${D}usr/" \
 		datadir="${GAMES_DATADIR##/usr/}/${PN}" \
 		bindir="${GAMES_BINDIR##/usr/}" \
-		libdir="${games_get_libdir##/usr/}/${PN}" \
+		libdir="${MY_LIBDIR##/usr/}/${PN}" \
 		strip=0 \
 		|| die "configuration failed"
 	scons || die "build failed"
@@ -68,6 +69,7 @@ src_compile () {
 src_install () {
 	scons install || die "install failed"
 # FIXME move ${GAMES_BINDIR}/spring to ${GAMES_BINDIR}/spring-svn to coexist with release
+# FIXME and also tell the user about these changes
 
 	newicon "${FILESDIR}/spring.png" ${PN}.png
 	make_desktop_entry ${PN} "Spring RTS - svn" ${PN}.png
