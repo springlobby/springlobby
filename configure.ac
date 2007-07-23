@@ -21,9 +21,9 @@ AM_PATH_WXCONFIG([2.6.0], [],
            equivalent variable and wxWidgets version is 2.6.0 or above.
    ])])
 
-AM_PATH_WXCONFIG([2.8.0],
-  [AC_DEFINE([HAVE_WX28], [1], [Define to 1 if wxWidgets is at least version 2.8.0])],
-  [AC_MSG_NOTICE([But it does not matter, we can use ${WX_VERSION} just fine!])])
+# AM_PATH_WXCONFIG([2.8.0],
+#   [AC_DEFINE([HAVE_WX28], [1], [Define to 1 if wxWidgets is at least version 2.8.0])],
+#   [AC_MSG_NOTICE([But it does not matter, we can use ${WX_VERSION} just fine!])])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
