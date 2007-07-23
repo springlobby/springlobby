@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit games eutils
+inherit games eutils multilib
 
 MY_P=${PN}_${PV/_p/b}
 S=${WORKDIR}/${MY_P}
@@ -52,13 +52,14 @@ pkg_setup () {
 }
 
 src_compile () {
+	MY_LIBDIR=${GAMES_PREFIX}/$(get_libdir)
 	scons configure \
 		$(use debug && echo debug=1) \
 		prefix="/usr" \
-		installprefix="${D}" \
+		installprefix="${D}usr/" \
 		datadir="${GAMES_DATADIR##/usr/}/${PN}" \
 		bindir="${GAMES_BINDIR##/usr/}" \
-		libdir="${games_get_libdir##/usr/}/${PN}" \
+		libdir="${MY_LIBDIR##/usr/}/${PN}" \
 		strip=0 \
 		|| die "configuration failed"
 	scons || die "build failed"
