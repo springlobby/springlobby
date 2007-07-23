@@ -27,6 +27,7 @@
 #endif
 
 class wxImage;
+struct SpringMapInfo;
 
 /*
 const char* __stdcall GetSpringVersion()
@@ -38,7 +39,7 @@ typedef void (USYNC_CALL_CONV *UnInitPtr)();
 typedef int (USYNC_CALL_CONV *GetMapCountPtr)();
 typedef unsigned int (USYNC_CALL_CONV *GetMapChecksumPtr)(int);
 typedef const char* (USYNC_CALL_CONV *GetMapNamePtr)(int);
-typedef int (USYNC_CALL_CONV *GetMapInfoExPtr)(const char*, MapInfo*, int);
+typedef int (USYNC_CALL_CONV *GetMapInfoExPtr)(const char*, SpringMapInfo*, int);
 typedef void* (USYNC_CALL_CONV *GetMinimapPtr)(const char*, int);
 
 typedef unsigned int (USYNC_CALL_CONV *GetPrimaryModChecksumPtr)(int);
@@ -73,7 +74,7 @@ class SpringUnitSync : public IUnitSync
     int GetNumMaps();
     bool MapExists( const std::string& mapname );
     bool MapExists( const std::string& mapname, const std::string hash );
-    UnitSyncMap GetMap( const std::string& mapname );
+    UnitSyncMap GetMap( const std::string&, bool getmapinfo = false );
     int GetMapIndex( const std::string& name );
 
     int GetSideCount( const std::string& modname );
@@ -92,6 +93,8 @@ class SpringUnitSync : public IUnitSync
     wxImage GetCachedMinimap( const std::string& mapname, int size );
 
     wxString GetCachedMinimapFileName( const std::string& mapname, int size );
+
+    void ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
 
   private:
     bool m_loaded;

@@ -13,6 +13,25 @@
 #include "settings.h"
 
 
+struct SpringMapInfo
+{
+  char* description;
+  int tidalStrength;
+  int gravity;
+  float maxMetal;
+  int extractorRadius;
+  int minWind;
+  int maxWind;
+
+  int width;
+  int height;
+  int posCount;
+  StartPos positions[16];
+
+  char* author;
+};
+
+
 struct UnitSyncColour {
   unsigned int b : 5;
   unsigned int g : 6;
@@ -180,14 +199,27 @@ bool SpringUnitSync::MapExists( const std::string& mapname, const std::string ha
   return false;
 }
 
-UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname )
+UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname, bool getmapinfo )
 {
   UnitSyncMap m;
   if ( !m_loaded ) return m;
 
   int i = GetMapIndex( mapname );
   ASSERT_LOGIC( i >= 0, "Map does not exist" );
-  //m_get_map_info_ex( mapname.c_str(), &m.info, 0 );
+
+  if ( getmapinfo ) {
+    char tmpdesc[245+1];
+    char tmpauth[200+1];
+    
+    SpringMapInfo tm;
+    tm.description = &tmpdesc[0];
+    tm.author = &tmpauth[0];
+
+    m_get_map_info_ex( mapname.c_str(), &tm, 0 );
+
+    ConvertSpringMapInfo( tm, m.info );
+  }
+
   m.name = m_get_map_name( i );
   m.hash = i2s(m_get_map_checksum( i ));
   return m;
@@ -278,28 +310,58 @@ wxImage SpringUnitSync::GetCachedMinimap( const std::string& mapname, int size )
 
 wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int size )
 {
-  int mipheight = 1024;
-  int mipwidth = 512;
+  int height = 1024;
+  int width = 512;
 
   try {
     return GetCachedMinimap( mapname, size );
   } catch(...) {}
 
-  wxImage ret( mipwidth, mipheight );
+  wxImage ret( width, height );
   UnitSyncColour* colours = (UnitSyncColour*)m_get_minimap( mapname.c_str(), 0 );
   ASSERT_RUNTIME( colours != NULL, "GetMinimap failed" );
-  for ( int y = 0; y < mipheight; y++ ) {
-    for ( int x = 0; x < mipwidth; x++ ) {
-      int pos = y*(mipwidth)+x;
+  for ( int y = 0; y < height; y++ ) {
+    for ( int x = 0; x < width; x++ ) {
+      int pos = y*(width)+x;
       ret.SetRGB( x, y, (colours[pos].r/31.0)*255.0, (colours[pos].g/63.0)*255.0, (colours[pos].b/31.0)*255.0 );
     }
   }
-  ret.Rescale( size, size );
+
+  
+  UnitSyncMap map = GetMap( mapname, true );
+
+  if ( map.info.width >= map.info.height ) {
+    width = size;
+    height = (double)size * (double)( (double)map.info.height / (double)map.info.width );
+  } else {
+    width = (double)size * (double)( (double)map.info.width / (double)map.info.height );
+    height = size;
+  }
+
+  ret.Rescale( width, height );
 
   wxString fname = GetCachedMinimapFileName( mapname, size );
-
   ret.SaveFile( fname, wxBITMAP_TYPE_BMP );
 
   return ret;
+}
+
+
+void SpringUnitSync::ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out )
+{
+  out.author = in.author;
+  out.description = in.description;
+
+  out.extractorRadius = in.extractorRadius;
+  out.gravity = in.gravity;
+  out.tidalStrength = in.tidalStrength;
+  out.maxMetal = in.maxMetal;
+  out.minWind = in.minWind;
+  out.maxWind = in.maxWind;
+
+  out.width = in.width;
+  out.height = in.height;
+  out.posCount = in.posCount;
+  for ( int i = 0; i < in.posCount; i++) out.positions[i] = in.positions[i];
 }
 

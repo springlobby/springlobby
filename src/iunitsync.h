@@ -20,7 +20,7 @@ struct StartPos
 
 struct MapInfo
 {
-  char* description;
+  std::string description;
   int tidalStrength;
   int gravity;
   float maxMetal;
@@ -28,14 +28,12 @@ struct MapInfo
   int minWind;
   int maxWind;
 
-  // 0.61b1+
   int width;
   int height;
   int posCount;
-  StartPos positions[16];  // I'd rather not allocate memory, this should be enough
+  StartPos positions[16];
 
-  // VERSION>=1
-  char *author; // max 200 chars
+  std::string author;
 };
 
 struct UnitSyncMap
@@ -60,7 +58,7 @@ class IUnitSync
     virtual int GetNumMaps() = 0;
     virtual bool MapExists( const std::string& mapname ) = 0;
     virtual bool MapExists( const std::string& mapname, const std::string hash ) = 0;
-    virtual UnitSyncMap GetMap( const std::string& mapname ) = 0;
+    virtual UnitSyncMap GetMap( const std::string& mapname, bool getmapinfo = false ) = 0;
     virtual int GetMapIndex( const std::string& name ) = 0;
     virtual wxImage GetMinimap( const std::string& mapname, int size ) =0;
 
