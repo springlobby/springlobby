@@ -68,8 +68,8 @@ src_compile () {
 
 src_install () {
 	scons install || die "install failed"
-# FIXME move ${GAMES_BINDIR}/spring to ${GAMES_BINDIR}/spring-svn to coexist with release
-# FIXME and also tell the user about these changes
+	cd "${D%%/}${GAMES_BINDIR}"
+	mv spring ${PN}
 
 	newicon "${FILESDIR}/spring.png" ${PN}.png
 	make_desktop_entry ${PN} "Spring RTS - svn" ${PN}.png
