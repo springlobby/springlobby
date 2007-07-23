@@ -88,8 +88,8 @@ void SpringLobbyApp::OnTimer( wxTimerEvent& event )
 void SpringLobbyApp::InitDirs()
 {
   wxString path = wxStandardPaths::Get().GetUserDataDir();
-  if ( !wxPathExists( path ) ) wxMkdir( path );
-  path += _T(PATH_SEP); path += _T("cache"); path += _T(PATH_SEP);
-  if ( !wxPathExists( path ) ) wxMkdir( path );
+  if ( !wxDirExists( path ) ) wxMkdir( path );
+  path += wxFILE_SEP_PATH; path += _T("cache"); path += wxFILE_SEP_PATH;
+  if ( !wxDirExists( path ) ) wxMkdir( path );
 }
 

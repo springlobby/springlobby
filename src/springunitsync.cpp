@@ -256,7 +256,7 @@ std::string SpringUnitSync::GetFullUnitName( const std::string& modname, int ind
 
 wxString SpringUnitSync::GetCachedMinimapFileName( const std::string& mapname, int size )
 {
-  wxString path = wxStandardPaths::Get().GetUserDataDir() + _T(PATH_SEP) + _T("cache") + _T(PATH_SEP);
+  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxPATH_SEP + _T("cache") + wxPATH_SEP;
   wxString fname = WX_STRING( mapname );
   fname.Replace( _T("."), _T("_") );
   fname.Replace( _T(" "), _T("_") );
