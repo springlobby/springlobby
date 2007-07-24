@@ -91,7 +91,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
 {
   wxString s;
 
-  int NumTeams=0, NumAllys=0, LastOrder=-1,Lowest=-1;
+  int NumTeams=0, NumAllys=0, LastOrder=-1,Lowest=-1,MyPlayerNum=-1;
   int PlayerOrder[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int TeamConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int AllyConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
@@ -109,6 +109,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     User& u = battle.GetUser( Lowest );
 
     PlayerOrder[i] = Lowest;
+    if ( &battle.GetUser(Lowest) == &battle.GetMe() ) MyPlayerNum = i;
 
     UserBattleStatus bs = u.BattleStatus();
     if ( bs.spectator ) continue;
@@ -146,7 +147,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   else s += WX_STRING(("\tHostIP=" + bo.ip + ";\n"));
   s += wxString::Format( _T("\tHostPort=%d;\n\n"), bo.port );
 
-  s += wxString::Format( _T("\tMyPlayerNum=%d;\n\n"), battle.GetMyPlayerNum() );
+  s += wxString::Format( _T("\tMyPlayerNum=%d;\n\n"), MyPlayerNum );
 
   s += wxString::Format( _T("\tNumPlayers=%d;\n"), battle.GetNumUsers() );
   s += wxString::Format( _T("\tNumTeams=%d;\n"), NumTeams );
