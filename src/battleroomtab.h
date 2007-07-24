@@ -63,6 +63,8 @@ class BattleRoomTab : public wxPanel
     wxStaticText* m_color_lbl;
     wxStaticText* m_side_lbl;
     wxStaticText* m_map_lbl;
+    wxStaticText* m_wind_lbl;
+    wxStaticText* m_tidal_lbl;
 
     MapCtrl * m_minimap;
 

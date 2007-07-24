@@ -68,7 +68,12 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_ally_lbl = new wxStaticText( m_player_panel, -1, _("Ally") );
   m_color_lbl = new wxStaticText( m_player_panel, -1, _("Color") );
   m_side_lbl = new wxStaticText( m_player_panel, -1, _("Side") );
-  m_map_lbl = new wxStaticText( this, -1, RefineMapname( WX_STRING(battle.opts().mapname) ) );
+
+  UnitSyncMap map = usync()->GetMap( battle.opts().mapname, true );
+  m_map_lbl = new wxStaticText( this, -1, RefineMapname( WX_STRING(map.name) ) + wxString::Format( _T(" (%.0fx%.0f)"), map.info.width/512.0, map.info.height/512.0 ) );
+
+  m_wind_lbl = new wxStaticText( this, -1, wxString::Format( _("Wind: %d-%d"), map.info.minWind, map.info.maxWind) );
+  m_tidal_lbl = new wxStaticText( this, -1, wxString::Format( _("Tidal: %d"), map.info.tidalStrength) );
 
   m_minimap = new MapCtrl( this, 162, m_battle, true );
 
@@ -112,6 +117,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_info_sizer->Add( m_minimap, 0, wxEXPAND | wxALL, 1 );
   m_info_sizer->Add( m_map_lbl, 0, wxEXPAND | wxALL, 1 );
+  m_info_sizer->Add( m_wind_lbl, 0, wxEXPAND | wxALL, 1 );
+  m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND | wxALL, 1 );
 
   m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
   m_top_sizer->Add( m_info_sizer, 0, wxEXPAND | wxALL, 2 );
