@@ -8,6 +8,7 @@ class BattleListTab;
 class Battle;
 class User;
 class BattleRoomTab;
+class BattleMapTab;
 class wxBoxSizer;
 class wxImageList;
 class wxNotebook;
@@ -35,6 +36,7 @@ class MainJoinBattleTab : public wxPanel
     BattleListTab* m_list_tab;
 
     BattleRoomTab* m_battle_tab;
+    BattleMapTab* m_map_tab;
 
     Ui& m_ui;
 };

@@ -34,6 +34,8 @@ springlobby_SOURCES = \
 	src/battlelisttab.h \
 	src/battleroomlistctrl.cpp \
 	src/battleroomlistctrl.h \
+	src/battlemaptab.cpp \
+	src/battlemaptab.h \
 	src/battleroomtab.cpp \
 	src/battleroomtab.h \
 	src/boost/md5.cpp \
