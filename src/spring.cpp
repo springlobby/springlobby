@@ -3,6 +3,7 @@
 //
 
 #include <wx/file.h>
+#include <wx/intl.h>
 
 #include "spring.h"
 #include "springprocess.h"
@@ -203,10 +204,12 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
    if ( (battle.GetStartRect(AllyRevConv[i]) != 0) && (bo.starttype == ST_Choose) ) {
       BattleStartRect* sr = (BattleStartRect*)battle.GetStartRect(AllyRevConv[i]);
+      WXDLLIMPEXP_BASE wxLocale* locale = new wxLocale(wxLANGUAGE_ENGLISH, 0); // decimal point = .
       s += wxString::Format( _T("\t\tStartRectLeft=%.3f;\n"), sr->left / 200.0 );
       s += wxString::Format( _T("\t\tStartRectTop=%.3f;\n"), sr->top / 200.0 );
       s += wxString::Format( _T("\t\tStartRectRight=%.3f;\n"), sr->right / 200.0 );
       s += wxString::Format( _T("\t\tStartRectBottom=%.3f;\n"), sr->bottom / 200.0 );
+      delete locale; // automatically restores previous locale
     }
 
     s +=  _T("\t}\n");
