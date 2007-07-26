@@ -9,6 +9,7 @@
 #include <wx/image.h>
 #include <wx/intl.h>
 
+#include "utils.h"
 #include "mapctrl.h"
 #include "battle.h"
 #include "iunitsync.h"
@@ -22,9 +23,9 @@ END_EVENT_TABLE()
 
 
 MapCtrl::MapCtrl( wxWindow* parent, int size, Battle& battle, bool readonly ):
-  wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size) ), m_image(NULL), m_battle(battle)
+  wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size) ), m_image(NULL), m_battle(battle), m_mapname(_T("")) 
 {
-  LoadMinimap();
+  
 }
 
 
@@ -40,7 +41,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 
   int width, height;
   GetClientSize( &width, &height );
-
+  
   if ( m_image == NULL ) {
     dc.DrawText( _("Minimap n/a"), 0, 0 );
   } else {
@@ -63,7 +64,14 @@ void MapCtrl::LoadMinimap()
     GetClientSize( &w, &h );
     wxImage img = usync()->GetMinimap( m_battle.opts().mapname, w-2 );
     m_image = new wxBitmap( img );
-  } catch (...) {}
+    m_mapname = WX_STRING( m_battle.opts().mapname );
+    Refresh();
+    Update();
+  } catch (...) {
+    m_image = NULL;
+    m_mapname = _T("");
+  }
+
 }
 
 
@@ -72,5 +80,15 @@ void MapCtrl::FreeMinimap()
   if ( m_image != NULL ) {
     delete m_image;
     m_image = NULL;
+    m_mapname = _T("");
   }
 }
+
+
+void MapCtrl::UpdateMinimap()
+{
+  if ( m_mapname == WX_STRING( m_battle.opts().mapname ) ) return;
+  FreeMinimap();
+  LoadMinimap();
+}
+

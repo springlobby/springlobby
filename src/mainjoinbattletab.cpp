@@ -47,6 +47,26 @@ MainJoinBattleTab::~MainJoinBattleTab()
 
 }
 
+
+Battle* MainJoinBattleTab::GetCurrentBattle()
+{
+  if ( m_battle_tab != NULL ) return &m_battle_tab->GetBattle();
+
+  return NULL;
+}
+
+
+void MainJoinBattleTab::UpdateCurrentBattle()
+{
+  if ( m_battle_tab != NULL ) {
+    m_battle_tab->UpdateBattleInfo();
+  }
+  if ( m_map_tab != NULL ) {
+    //! @todo Update.
+  }
+}
+
+
 BattleListTab& MainJoinBattleTab::GetBattleListTab()
 {
   assert( m_list_tab != 0 );
@@ -55,7 +75,6 @@ BattleListTab& MainJoinBattleTab::GetBattleListTab()
 
 void MainJoinBattleTab::JoinBattle( Battle& battle )
 {
-  //if ( m_battle_tab != 0 ) delete m_battle_tab;
   LeaveCurrentBattle();
   m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
   m_map_tab = new BattleMapTab( m_tabs, m_ui, battle );

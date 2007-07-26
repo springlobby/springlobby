@@ -418,6 +418,9 @@ void Ui::OnUserLeftBattle( Battle& battle, User& user )
 void Ui::OnBattleInfoUpdated( Battle& battle )
 {
   m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
+    m_main_win->GetJoinTab().UpdateCurrentBattle();
+  }
 }
 
 

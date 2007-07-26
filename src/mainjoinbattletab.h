@@ -22,7 +22,9 @@ class MainJoinBattleTab : public wxPanel
     BattleListTab& GetBattleListTab();
 
     void JoinBattle( Battle& battle );
+    void UpdateCurrentBattle();
     void LeaveCurrentBattle();
+    Battle* GetCurrentBattle();
 
     void BattleUserUpdated( User& user );
     BattleRoomTab* GetBattleRoomTab() { return m_battle_tab; }

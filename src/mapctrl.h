@@ -13,15 +13,18 @@ class MapCtrl : public wxPanel
     MapCtrl( wxWindow* parent, int size, Battle& battle, bool readonly );
     ~MapCtrl();
 
+    void LoadMinimap();
+    void FreeMinimap();
+    void UpdateMinimap();
+
     void OnPaint( wxPaintEvent& event );
 
   protected:
 
     wxBitmap* m_image;
     Battle& m_battle;
+    wxString m_mapname;
 
-    void LoadMinimap();
-    void FreeMinimap();
 
   DECLARE_EVENT_TABLE();
 };

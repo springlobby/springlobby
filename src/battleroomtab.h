@@ -31,6 +31,8 @@ class BattleRoomTab : public wxPanel
    Battle& GetBattle();
    ChatPanel& GetChatPanel();
 
+   void UpdateBattleInfo();
+
    void OnLeave( wxCommandEvent& event );
    void OnImReady( wxCommandEvent& event );
    void OnImSpec( wxCommandEvent& event );
@@ -51,6 +53,7 @@ class BattleRoomTab : public wxPanel
     wxBoxSizer* m_info_sizer;
     wxBoxSizer* m_top_sizer;
     wxBoxSizer* m_buttons_sizer;
+    wxBoxSizer* m_info1_sizer;
     wxBoxSizer* m_main_sizer;
 
     wxComboBox* m_team_sel;
@@ -65,6 +68,7 @@ class BattleRoomTab : public wxPanel
     wxStaticText* m_map_lbl;
     wxStaticText* m_wind_lbl;
     wxStaticText* m_tidal_lbl;
+    wxStaticText* m_size_lbl;
 
     MapCtrl * m_minimap;
 

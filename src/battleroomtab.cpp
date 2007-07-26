@@ -70,8 +70,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_side_lbl = new wxStaticText( m_player_panel, -1, _("Side") );
 
   UnitSyncMap map = usync()->GetMap( battle.opts().mapname, true );
-  m_map_lbl = new wxStaticText( this, -1, RefineMapname( WX_STRING(map.name) ) + wxString::Format( _T(" (%.0fx%.0f)"), map.info.width/512.0, map.info.height/512.0 ) );
-
+  m_map_lbl = new wxStaticText( this, -1, RefineMapname( WX_STRING(map.name) ) );
+  m_size_lbl = new wxStaticText( this, -1, wxString::Format( _T("Size: %.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
   m_wind_lbl = new wxStaticText( this, -1, wxString::Format( _("Wind: %d-%d"), map.info.minWind, map.info.maxWind) );
   m_tidal_lbl = new wxStaticText( this, -1, wxString::Format( _("Tidal: %d"), map.info.tidalStrength) );
 
@@ -94,6 +94,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_info_sizer = new wxBoxSizer( wxVERTICAL );
   m_top_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
+  m_info1_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   // Put widgets in place
@@ -115,10 +116,13 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_splitter->SplitHorizontally( m_player_panel, m_chat, 50 );
 
-  m_info_sizer->Add( m_minimap, 0, wxEXPAND | wxALL, 1 );
-  m_info_sizer->Add( m_map_lbl, 0, wxEXPAND | wxALL, 1 );
-  m_info_sizer->Add( m_wind_lbl, 0, wxEXPAND | wxALL, 1 );
-  m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND | wxALL, 1 );
+  m_info1_sizer->Add( m_wind_lbl, 1, wxEXPAND );
+  m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
+
+  m_info_sizer->Add( m_minimap, 0, wxEXPAND );
+  m_info_sizer->Add( m_map_lbl, 0, wxEXPAND );
+  m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
+  m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
 
   m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
   m_top_sizer->Add( m_info_sizer, 0, wxEXPAND | wxALL, 2 );
@@ -135,6 +139,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   SetSizer( m_main_sizer );
   Layout();
 
+  UpdateBattleInfo();
+
   m_splitter->SetMinimumPaneSize( 100 );
   m_splitter->SetSashPosition( 200 );
 
@@ -149,6 +155,18 @@ BattleRoomTab::~BattleRoomTab()
 {
 
 }
+
+
+void BattleRoomTab::UpdateBattleInfo()
+{
+  UnitSyncMap map = usync()->GetMap( m_battle.opts().mapname, true );
+  m_map_lbl->SetLabel( RefineMapname( WX_STRING(map.name) ) );
+  m_size_lbl->SetLabel( wxString::Format( _T("Size: %.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
+  m_wind_lbl->SetLabel( wxString::Format( _("Wind: %d-%d"), map.info.minWind, map.info.maxWind) );
+  m_tidal_lbl->SetLabel( wxString::Format( _("Tidal: %d"), map.info.tidalStrength) );
+  m_minimap->UpdateMinimap();
+}
+
 
 BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
 {
