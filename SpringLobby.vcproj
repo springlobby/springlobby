@@ -319,10 +319,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\userlist.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\userlist.h"
 				>
 			</File>
@@ -496,6 +492,10 @@
 			</File>
 			<File
 				RelativePath=".\src\user.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\userlist.cpp"
 				>
 			</File>
 			<File
