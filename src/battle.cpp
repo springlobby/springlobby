@@ -63,19 +63,16 @@ void Battle::OnRequestBattleStatus()
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.team = lowest;
   bs.ally = lowest;
-  if ( IsSynced() ) bs.sync = SYNC_SYNCED;
-  else bs.sync = SYNC_UNSYNCED;
-
-  //m_serv.GetMe().SetBattleStatus( bs );
 
   SendMyBattleStatus();
-
 }
 
 
 void Battle::SendMyBattleStatus()
 {
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
+  if ( IsSynced() ) bs.sync = SYNC_SYNCED;
+  else bs.sync = SYNC_UNKNOWN;
   m_serv.SendMyBattleStatus( bs );
 }
 

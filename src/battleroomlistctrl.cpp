@@ -124,7 +124,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 
   icons().SetColourIcon( user.BattleStatus().team, wxColour( user.BattleStatus().color_r, user.BattleStatus().color_g, user.BattleStatus().color_b ) );
 
-  SetItemImage( index, (user.BattleStatus().spectator)?ICON_SPECTATOR:IconImageList::GetReadyIcon( user.BattleStatus().ready ) );
+  SetItemImage( index, (user.BattleStatus().spectator)?ICON_SPECTATOR:IconImageList::GetReadyIcon( user.BattleStatus().ready, user.BattleStatus().sync ) );
 
   SetItemColumnImage( index, 1, -1 );
 

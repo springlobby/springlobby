@@ -221,8 +221,12 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   battle.SetSpectators( spectators );
   battle.SetIsLocked( locked );
 
+  std::string oldmap = battle.opts().mapname;
+
   battle.SetMapHash( maphash );
   battle.SetMapname( map );
+
+  if ( oldmap != map ) battle.SendMyBattleStatus();
 
   m_ui.OnBattleInfoUpdated( battle );
 }
