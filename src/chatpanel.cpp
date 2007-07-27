@@ -155,7 +155,15 @@ void ChatPanel::_CreateControls( )
 //! @brief ChatPanel destructor.
 ChatPanel::~ChatPanel()
 {
-
+  if ( m_server != 0 ) {
+    if ( m_server->uidata.panel == this ) m_server->uidata.panel = 0;
+  }
+  if ( m_user != 0 ) {
+    if ( m_user->uidata.panel == this ) m_user->uidata.panel = 0;
+  }
+  if ( m_channel != 0 ) {
+    if ( m_channel->uidata.panel == this ) m_channel->uidata.panel = 0;
+  }
 }
 
 void ChatPanel::OnResize( wxSizeEvent& event )

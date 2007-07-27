@@ -42,11 +42,11 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
   int width, height;
   GetClientSize( &width, &height );
   
+  dc.SetBrush( wxBrush( *wxLIGHT_GREY, wxSOLID ) );
+  dc.DrawRectangle( 0, 0, width, height );
   if ( m_image == NULL ) {
-    dc.DrawText( _("Minimap n/a"), 0, 0 );
+    dc.DrawText( _("Minimap n/a"), 10, 10 );
   } else {
-    dc.SetBrush( wxBrush( *wxLIGHT_GREY, wxSOLID ) );
-    dc.DrawRectangle( 0, 0, width, height );
     if ( m_image->GetWidth() > m_image->GetHeight() ) {
       dc.DrawBitmap( *m_image, 1, (height - m_image->GetHeight()) / 2, false );
     } else {

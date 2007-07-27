@@ -69,11 +69,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_color_lbl = new wxStaticText( m_player_panel, -1, _("Color") );
   m_side_lbl = new wxStaticText( m_player_panel, -1, _("Side") );
 
-  UnitSyncMap map = usync()->GetMap( battle.opts().mapname, true );
-  m_map_lbl = new wxStaticText( this, -1, RefineMapname( WX_STRING(map.name) ) );
-  m_size_lbl = new wxStaticText( this, -1, wxString::Format( _T("Size: %.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
-  m_wind_lbl = new wxStaticText( this, -1, wxString::Format( _("Wind: %d-%d"), map.info.minWind, map.info.maxWind) );
-  m_tidal_lbl = new wxStaticText( this, -1, wxString::Format( _("Tidal: %d"), map.info.tidalStrength) );
+//  UnitSyncMap map = usync()->GetMap( battle.opts().mapname, true );
+  m_map_lbl = new wxStaticText( this, -1, RefineMapname( battle.opts().mapname ) );
+  m_size_lbl = new wxStaticText( this, -1, _("") );
+  m_wind_lbl = new wxStaticText( this, -1, _("") );
+  m_tidal_lbl = new wxStaticText( this, -1, _("") );
 
   m_minimap = new MapCtrl( this, 162, m_battle, true );
 
@@ -159,11 +159,18 @@ BattleRoomTab::~BattleRoomTab()
 
 void BattleRoomTab::UpdateBattleInfo()
 {
-  UnitSyncMap map = usync()->GetMap( m_battle.opts().mapname, true );
-  m_map_lbl->SetLabel( RefineMapname( WX_STRING(map.name) ) );
-  m_size_lbl->SetLabel( wxString::Format( _T("Size: %.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
-  m_wind_lbl->SetLabel( wxString::Format( _("Wind: %d-%d"), map.info.minWind, map.info.maxWind) );
-  m_tidal_lbl->SetLabel( wxString::Format( _("Tidal: %d"), map.info.tidalStrength) );
+  try {
+    UnitSyncMap map = usync()->GetMap( m_battle.opts().mapname, true );
+    m_map_lbl->SetLabel( RefineMapname( WX_STRING(map.name) ) );
+    m_size_lbl->SetLabel( wxString::Format( _("Size: %.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
+    m_wind_lbl->SetLabel( wxString::Format( _("Wind: %d-%d"), map.info.minWind, map.info.maxWind) );
+    m_tidal_lbl->SetLabel( wxString::Format( _("Tidal: %d"), map.info.tidalStrength) );
+  } catch (...) {
+    m_map_lbl->SetLabel( m_battle.opts().mapname );
+    m_size_lbl->SetLabel( _("Size: ?x?") );
+    m_wind_lbl->SetLabel( _("Wind: ?-?") );
+    m_tidal_lbl->SetLabel( _("Tidal: ?") );
+  }
   m_minimap->UpdateMinimap();
 }
 

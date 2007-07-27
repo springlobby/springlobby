@@ -131,7 +131,7 @@ int IconImageList::GetRankIcon( const int& rank, const bool& showlowest )
   }
   if ( rank <= RANK_1 ) return ICON_RANK1;
   if ( rank <= RANK_2 ) return ICON_RANK2;
-  if ( rank <= RANK_3 ) return ICON_RANK4;
+  if ( rank <= RANK_3 ) return ICON_RANK3;
   return ICON_RANK4;
 }
 
