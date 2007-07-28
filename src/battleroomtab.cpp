@@ -70,7 +70,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_side_lbl = new wxStaticText( m_player_panel, -1, _("Side") );
 
 //  UnitSyncMap map = usync()->GetMap( battle.opts().mapname, true );
-  m_map_lbl = new wxStaticText( this, -1, RefineMapname( battle.opts().mapname ) );
+  m_map_lbl = new wxStaticText( this, -1, RefineMapname( WX_STRING(battle.opts().mapname) ) );
   m_size_lbl = new wxStaticText( this, -1, _("") );
   m_wind_lbl = new wxStaticText( this, -1, _("") );
   m_tidal_lbl = new wxStaticText( this, -1, _("") );
@@ -166,7 +166,7 @@ void BattleRoomTab::UpdateBattleInfo()
     m_wind_lbl->SetLabel( wxString::Format( _("Wind: %d-%d"), map.info.minWind, map.info.maxWind) );
     m_tidal_lbl->SetLabel( wxString::Format( _("Tidal: %d"), map.info.tidalStrength) );
   } catch (...) {
-    m_map_lbl->SetLabel( m_battle.opts().mapname );
+    m_map_lbl->SetLabel( WX_STRING(m_battle.opts().mapname) );
     m_size_lbl->SetLabel( _("Size: ?x?") );
     m_wind_lbl->SetLabel( _("Wind: ?-?") );
     m_tidal_lbl->SetLabel( _("Tidal: ?") );
