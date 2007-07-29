@@ -64,6 +64,7 @@ class IUnitSync
 
     virtual int GetSideCount( const std::string& modname ) = 0;
     virtual std::string GetSideName( const std::string& modname, int index ) = 0;
+    virtual wxImage GetSidePicture(const std::string& SideName) =0;
 
     virtual bool LoadUnitSyncLib() = 0;
     virtual void FreeUnitSyncLib() = 0;

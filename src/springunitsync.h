@@ -58,6 +58,13 @@ typedef const char * (USYNC_CALL_CONV *GetUnitNamePtr)(int);
 typedef int (USYNC_CALL_CONV *GetUnitCountPtr)();
 typedef int (USYNC_CALL_CONV *ProcessUnitsNoChecksumPtr)();
 
+typedef int (USYNC_CALL_CONV *InitFindVFSPtr)(const char*);
+typedef int (USYNC_CALL_CONV *FindFilesVFSPtr)(int, char*, int);
+typedef int (USYNC_CALL_CONV *OpenFileVFSPtr)(const char*);
+typedef int (USYNC_CALL_CONV *FileSizeVFSPtr)(int);
+typedef int (USYNC_CALL_CONV *ReadFileVFSPtr)(int, void*, int);
+typedef void (USYNC_CALL_CONV *CloseFileVFSPtr)(int);
+
 
 class SpringUnitSync : public IUnitSync
 {
@@ -79,6 +86,7 @@ class SpringUnitSync : public IUnitSync
 
     int GetSideCount( const std::string& modname );
     std::string GetSideName( const std::string& modname, int index );
+    wxImage GetSidePicture(const std::string& SideName);
 
     bool LoadUnitSyncLib();
     void FreeUnitSyncLib();
@@ -125,6 +133,13 @@ class SpringUnitSync : public IUnitSync
     GetUnitNamePtr m_get_unit_name;
     GetFullUnitNamePtr m_get_unit_full_name;
     ProcessUnitsNoChecksumPtr m_proc_units_nocheck;
+
+    InitFindVFSPtr m_init_find_vfs;
+    FindFilesVFSPtr m_find_files_vfs;
+    OpenFileVFSPtr m_open_file_vfs;
+    FileSizeVFSPtr m_file_size_vfs;
+    ReadFileVFSPtr m_read_file_vfs;
+    CloseFileVFSPtr m_close_file_vfs;
 
     void* _GetLibFuncPtr( const std::string& name );
 };

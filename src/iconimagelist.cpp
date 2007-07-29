@@ -10,7 +10,7 @@
 #include "user.h"
 #include "battle.h"
 #include "utils.h"
-
+#include "iunitsync.h"
 
 #include "images/bot.xpm"
 #include "images/admin.xpm"
@@ -188,6 +188,12 @@ int IconImageList::GetSideIcon( const std::string& side )
   sn = sn.Lower();
   if ( sn  == _T("arm") ) return ICON_ARM;
   else if (  sn == _T("core") ) return ICON_CORE;
+  else if (ChachedSideIcons[side] == 0){
+      int IconPosition = Add(wxBitmap( usync()->GetSidePicture(side) ), wxNullBitmap);
+      ChachedSideIcons[side] = IconPosition;
+      return IconPosition;
+  }
+  else return ChachedSideIcons[side];
   return -1;
 }
 

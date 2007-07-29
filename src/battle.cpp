@@ -72,7 +72,7 @@ void Battle::SendMyBattleStatus()
 {
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   if ( IsSynced() ) bs.sync = SYNC_SYNCED;
-  else bs.sync = SYNC_UNKNOWN;
+  else bs.sync = SYNC_UNSYNCED;
   m_serv.SendMyBattleStatus( bs );
 }
 

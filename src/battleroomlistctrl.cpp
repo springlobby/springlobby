@@ -131,7 +131,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   if ( !user.BattleStatus().spectator ) {
 
     try {
-      int sideimg = IconImageList::GetSideIcon( usync()->GetSideName( user.GetBattle()->opts().modname, user.BattleStatus().side ) );
+      int sideimg = icons().GetSideIcon( usync()->GetSideName( user.GetBattle()->opts().modname, user.BattleStatus().side ) );
       if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
       else SetItem( index, 1, WX_STRING(usync()->GetSideName( user.GetBattle()->opts().modname, user.BattleStatus().side )) );
     } catch ( ... ) {
@@ -168,5 +168,6 @@ int BattleroomListCtrl::GetUserIndex( User& user )
   debug_error( "didn't find the battle." );
   return -1;
 }
+
 
 

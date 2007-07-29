@@ -28,19 +28,19 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 #dependencies check for mandrake-mandriva
 %if 0%{?suse_version}
 Requires: libwxgtk2.6 >= %{req_wxgtk}
-BuildRequires: gcc-c++ , make, automake1.8 >= %{req_automake}, autoconf2.5 >= %{req_autoconf}, libwxgtk2.6-devel >= %{req_wxgtk} 
+BuildRequires: gcc-c++ , make, subversion, automake1.8 >= %{req_automake}, autoconf2.5 >= %{req_autoconf}, libwxgtk2.6-devel >= %{req_wxgtk} 
 %endif
 
 #dependencies check for SuSe
 %if 0%{?suse_version}
 Requires: libwxgtk >= %{req_wxgtk}
-BuildRequires: gcc-c++ , make, automake >= %{req_automake}, autoconf >= %{req_autoconf}, libwxgtk-devel >= %{req_wxgtk} 
+BuildRequires: gcc-c++ , make, subversion, automake >= %{req_automake}, autoconf >= %{req_autoconf}, libwxgtk-devel >= %{req_wxgtk} 
 %endif
 
 #dependencies check for Fedora
 %if 0%{?fedora_version}
 Requires: libwxgtk >= %{req_wxgtk}
-BuildRequires: gcc-c++ , make, automake >= %{req_automake}, autoconf >= %{req_autoconf}, libwxgtk-devel >= %{req_wxgtk} 
+BuildRequires: gcc-c++ , make, subversion, automake >= %{req_automake}, autoconf >= %{req_autoconf}, libwxgtk-devel >= %{req_wxgtk} 
 %endif
 
 
@@ -53,9 +53,12 @@ Support all platforms supported by Spring engine.
 Have all the popular features seen in other clients. 
 Have a clean, well designed, and well documented source code.
 
+%prep
+svn co https://tc.serveftp.net/repos/springlobby/trunk springlobby && cd springlobby
+./autogen.sh
+
 %build
-autoreconf 
-./configure -prefix=/usr
+./configure
 make
 
 %install

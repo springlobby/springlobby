@@ -43,11 +43,14 @@
 		<Unit filename="src/base64.h" />
 		<Unit filename="src/battle.cpp" />
 		<Unit filename="src/battle.h" />
+		<Unit filename="src/battlelist.cpp" />
 		<Unit filename="src/battlelist.h" />
 		<Unit filename="src/battlelistctrl.cpp" />
 		<Unit filename="src/battlelistctrl.h" />
 		<Unit filename="src/battlelisttab.cpp" />
 		<Unit filename="src/battlelisttab.h" />
+		<Unit filename="src/battlemaptab.cpp" />
+		<Unit filename="src/battlemaptab.h" />
 		<Unit filename="src/battleroomlistctrl.cpp" />
 		<Unit filename="src/battleroomlistctrl.h" />
 		<Unit filename="src/battleroomtab.cpp" />
@@ -56,15 +59,18 @@
 		<Unit filename="src/boost/md5.hpp" />
 		<Unit filename="src/channel.cpp" />
 		<Unit filename="src/channel.h" />
+		<Unit filename="src/channellist.cpp" />
 		<Unit filename="src/channellist.h" />
 		<Unit filename="src/chatpanel.cpp" />
 		<Unit filename="src/chatpanel.h" />
 		<Unit filename="src/connectwindow.cpp" />
 		<Unit filename="src/connectwindow.h" />
+		<Unit filename="src/flagimagedata.h" />
 		<Unit filename="src/flagimages.cpp" />
 		<Unit filename="src/flagimages.h" />
 		<Unit filename="src/iconimagelist.cpp" />
 		<Unit filename="src/iconimagelist.h" />
+		<Unit filename="src/iunitsync.h" />
 		<Unit filename="src/mainchattab.cpp" />
 		<Unit filename="src/mainchattab.h" />
 		<Unit filename="src/mainjoinbattletab.cpp" />
@@ -73,6 +79,8 @@
 		<Unit filename="src/mainoptionstab.h" />
 		<Unit filename="src/mainwindow.cpp" />
 		<Unit filename="src/mainwindow.h" />
+		<Unit filename="src/mapctrl.cpp" />
+		<Unit filename="src/mapctrl.h" />
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/server.cpp" />
@@ -89,19 +97,25 @@
 		<Unit filename="src/springlobbyapp.h" />
 		<Unit filename="src/springoptionstab.cpp" />
 		<Unit filename="src/springoptionstab.h" />
+		<Unit filename="src/springprocess.cpp" />
+		<Unit filename="src/springprocess.h" />
+		<Unit filename="src/springunitsync.cpp" />
+		<Unit filename="src/springunitsync.h" />
 		<Unit filename="src/tasserver.cpp" />
 		<Unit filename="src/tasserver.h" />
 		<Unit filename="src/ui.cpp" />
 		<Unit filename="src/ui.h" />
-		<Unit filename="src/unitsync.cpp" />
-		<Unit filename="src/unitsync.h" />
+		<Unit filename="src/uiutils.cpp" />
+		<Unit filename="src/uiutils.h" />
 		<Unit filename="src/user.cpp" />
 		<Unit filename="src/user.h" />
+		<Unit filename="src/userlist.cpp" />
 		<Unit filename="src/userlist.h" />
 		<Unit filename="src/utils.cpp" />
 		<Unit filename="src/utils.h" />
 		<Extensions>
 			<code_completion />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

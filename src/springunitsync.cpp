@@ -2,6 +2,7 @@
 #include <wx/msgdlg.h>
 #include <wx/image.h>
 #include <wx/string.h>
+#include <wx/mstream.h>
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
@@ -116,6 +117,13 @@ bool SpringUnitSync::LoadUnitSyncLib()
     m_get_unit_full_name = (GetFullUnitNamePtr)_GetLibFuncPtr("GetFullUnitName");
     m_proc_units_nocheck = (ProcessUnitsNoChecksumPtr)_GetLibFuncPtr("ProcessUnitsNoChecksum");
 
+    m_init_find_vfs = (InitFindVFSPtr)_GetLibFuncPtr("InitFindVFS");
+    m_find_files_vfs = (FindFilesVFSPtr)_GetLibFuncPtr("FindFilesVFS");
+    m_open_file_vfs = (OpenFileVFSPtr)_GetLibFuncPtr("OpenFileVFS");
+    m_file_size_vfs = (FileSizeVFSPtr)_GetLibFuncPtr("FileSizeVFS");
+    m_read_file_vfs = (ReadFileVFSPtr)_GetLibFuncPtr("ReadFileVFS");
+    m_close_file_vfs = (CloseFileVFSPtr)_GetLibFuncPtr("CloseFileVFS");
+
     m_init( true, 1 );
   }
   catch ( std::runtime_error& e ) {
@@ -211,7 +219,7 @@ UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname, bool getmapinfo 
   if ( getmapinfo ) {
     char tmpdesc[245+1];
     char tmpauth[200+1];
-    
+
     SpringMapInfo tm;
     tm.description = &tmpdesc[0];
     tm.author = &tmpauth[0];
@@ -258,6 +266,27 @@ std::string SpringUnitSync::GetSideName( const std::string& modname, int index )
   m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
   ASSERT_LOGIC( m_get_side_count() > index, "Side index too high." );
   return m_get_side_name( index );
+}
+
+wxImage SpringUnitSync::GetSidePicture(const std::string& SideName )
+{
+  wxString ImgName = _("SidePics");
+  ImgName += _("/");
+  ImgName += WX_STRING( SideName ).Upper();
+  ImgName += _(".bmp");
+  int ini = m_open_file_vfs(ImgName.fn_str());
+  ASSERT_RUNTIME( ini != 0, "cannot find side image" );
+  int FileSize = m_file_size_vfs(ini);
+  if (FileSize == 0){
+       m_close_file_vfs(ini);
+       ASSERT_RUNTIME( FileSize != 0 , "side image has size 0" );
+  }
+  char* FileContent;
+  FileContent = new char [FileSize];
+  m_read_file_vfs(ini, FileContent, FileSize);
+  wxMemoryInputStream FileContentStream( FileContent, FileSize );
+//  delete[] FileContent;
+  return wxImage( FileContentStream, wxBITMAP_TYPE_ANY, -1);
 }
 
 int SpringUnitSync::GetNumUnits( const std::string& modname )
@@ -329,7 +358,7 @@ wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int size )
     }
   }
 
-  
+
   UnitSyncMap map = GetMap( mapname, true );
 
   if ( map.info.width >= map.info.height ) {
@@ -366,4 +395,5 @@ void SpringUnitSync::ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out
   out.posCount = in.posCount;
   for ( int i = 0; i < in.posCount; i++) out.positions[i] = in.positions[i];
 }
+
 
