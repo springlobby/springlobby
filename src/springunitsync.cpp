@@ -274,19 +274,24 @@ wxImage SpringUnitSync::GetSidePicture(const std::string& SideName )
   ImgName += _("/");
   ImgName += WX_STRING( SideName ).Upper();
   ImgName += _(".bmp");
+
   int ini = m_open_file_vfs(ImgName.fn_str());
   ASSERT_RUNTIME( ini != 0, "cannot find side image" );
+
   int FileSize = m_file_size_vfs(ini);
   if (FileSize == 0){
        m_close_file_vfs(ini);
        ASSERT_RUNTIME( FileSize != 0 , "side image has size 0" );
   }
+
   char* FileContent;
   FileContent = new char [FileSize];
   m_read_file_vfs(ini, FileContent, FileSize);
   wxMemoryInputStream FileContentStream( FileContent, FileSize );
-//  delete[] FileContent;
-  return wxImage( FileContentStream, wxBITMAP_TYPE_ANY, -1);
+
+  wxImage ret( FileContentStream, wxBITMAP_TYPE_ANY, -1);
+  delete[] FileContent;
+  return ret;
 }
 
 int SpringUnitSync::GetNumUnits( const std::string& modname )

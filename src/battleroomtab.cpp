@@ -55,10 +55,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
 
   m_player_panel = new wxPanel( m_splitter , -1 );
-  m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _("1"), wxDefaultPosition, wxDefaultSize, 16, team_choices );
-  m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _("1"), wxDefaultPosition, wxDefaultSize, 16, team_choices );
-  m_color_sel = new wxComboBox( m_player_panel, BROOM_COLOURSEL, _("black"), wxDefaultPosition, wxDefaultSize, 16, colour_choices );
-  m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL );
+  m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(40,CONTROL_HEIGHT), 16, team_choices );
+  m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(40,CONTROL_HEIGHT), 16, team_choices );
+  m_color_sel = new wxComboBox( m_player_panel, BROOM_COLOURSEL, _("black"), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), 16, colour_choices );
+  m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
   for ( int i = 0; i < usync()->GetSideCount( battle.opts().modname ); i++ ) {
     m_side_sel->Append( WX_STRING(usync()->GetSideName( battle.opts().modname, i )) );
