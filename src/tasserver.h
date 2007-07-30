@@ -27,6 +27,10 @@ class TASServer : public Server
 
     // Overloaded functions from Server
     void SetSocket( Socket* sock );
+
+    bool Register( const std::string& addr, const int port, const std::string& nick, const std::string& password );
+    void AcceptAgreement();
+
     void Connect( const std::string& addr, const int port );
     void Disconnect();
     bool IsConnected();
@@ -85,6 +89,8 @@ class TASServer : public Server
     std::list<TASPingListItem> m_pinglist;
 
     int m_battle_id;
+
+    std::string m_agreement;
 
     void _ReciveAndExecute();
 };

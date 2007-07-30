@@ -44,24 +44,23 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 
 
 //! @brief Constructor
-Socket::Socket( Server& serv ) : m_serv(serv)
+Socket::Socket( Server& serv, bool blocking ) : m_serv(serv), m_block(blocking)
 {
   m_connecting = false;
 
-/*  m_on_con = 0;
-  m_on_discon = 0;
-  m_on_data = 0;
-
-  m_udata = 0;*/
-
   m_sock = new wxSocketClient();
-  m_events = new SocketEvents( serv );
-  m_sock->SetFlags( wxSOCKET_NOWAIT );
 
-  m_sock->SetEventHandler(*m_events, SOCKET_ID);
   m_sock->SetClientData( (void*)this );
-  m_sock->SetNotify( wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG );
-  m_sock->Notify(true);
+  if ( !blocking ) {
+    m_events = new SocketEvents( serv );
+    m_sock->SetFlags( wxSOCKET_NOWAIT );
+
+    m_sock->SetEventHandler(*m_events, SOCKET_ID);
+    m_sock->SetNotify( wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG );
+    m_sock->Notify(true);
+  } else {
+    m_events = 0;
+  }
 }
 
 
@@ -69,6 +68,7 @@ Socket::Socket( Server& serv ) : m_serv(serv)
 Socket::~Socket()
 {
   m_sock->Destroy();
+  delete m_events;
 }
 
 
@@ -82,7 +82,7 @@ void Socket::Connect( const std::string& addr, const int port )
   wxaddr.Hostname( WX_STRING( addr ) );
   wxaddr.Service( port );
 
-  m_sock->Connect( wxaddr, false );
+  m_sock->Connect( wxaddr, m_block );
 
 }
 

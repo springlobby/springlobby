@@ -23,6 +23,7 @@
 #include "battle.h"
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
+#include "agreementdialog.h"
 
 
 Ui::Ui() :
@@ -136,6 +137,30 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
   m_serv->Connect( host, port );
 
 }
+
+
+bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password )
+{
+  std::string host;
+  int port;
+
+  if ( !sett().ServerExists( STL_STRING(servername) ) ) {
+    assert( false );
+    return false;
+  }
+
+  // Create new Server object
+  TASServer* serv = new TASServer( *this );
+  Socket* sock = new Socket( *serv, true );
+  serv->SetSocket( sock );
+
+  host = sett().GetServerHost( STL_STRING(servername) );
+  port = sett().GetServerPort( STL_STRING(servername) );
+
+  return serv->Register( host, port, STL_STRING(username), STL_STRING(password) );
+
+}
+
 
 bool Ui::IsConnected() const
 {
@@ -521,5 +546,15 @@ void Ui::OnBattleEnableAllUnits( Battle& battle )
     br->GetChatPanel().StatusMessage( _T("All units enabled.") );
   }
 
+}
+
+
+void Ui::OnAcceptAgreement( const std::string& agreement )
+{
+  AgreementDialog dlg( m_main_win, WX_STRING(agreement) );
+  if ( dlg.ShowModal() == 1 ) {
+    m_serv->AcceptAgreement();
+    m_serv->Login();
+  }
 }
 

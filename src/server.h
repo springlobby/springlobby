@@ -45,6 +45,9 @@ class Server
     virtual void SetSocket( Socket* sock );
     virtual Socket* GetSocket( ) { return m_sock; }
 
+    virtual bool Register( const std::string& addr, const int port, const std::string& nick, const std::string& password ) = 0;
+    virtual void AcceptAgreement() = 0;
+
     virtual void Connect( const std::string& addr, const int port ) = 0;
     virtual void Disconnect() = 0;
     virtual bool IsConnected() = 0;

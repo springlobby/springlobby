@@ -70,6 +70,9 @@ class ServerEvents
     void OnRequestBattleStatus( int battleid );
     void OnSaidBattle( int battleid, const std::string& nick, const std::string& msg );
     void OnBattleAction( int battleid, const std::string& nick, const std::string& msg );
+
+    void OnAcceptAgreement( const std::string& agreement );
+
   protected:
     Server& m_serv;
     Ui& m_ui;

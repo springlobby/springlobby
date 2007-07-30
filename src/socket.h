@@ -42,7 +42,7 @@ class Socket
 {
   public:
 
-    Socket( Server& serv );
+    Socket( Server& serv, bool blocking = false );
     ~Socket();
 
     // Socket interface
@@ -56,27 +56,13 @@ class Socket
     Sockstate State( );
     Sockerror Error( );
 
-/*    void SetUserdata( void* data ) { m_udata = data; }
-    void* GetUserdata() { return m_udata; }
-
-    void SetConnectedCallback( socket_callback callback ) { m_on_con = callback; }
-    socket_callback GetConnectedCallback() { return m_on_con; }
-
-    void SetDisconnectedCallback( socket_callback callback ) { m_on_discon = callback; }
-    socket_callback GetDisconnectedCallback() { return m_on_discon; }
-
-    void SetDataRecivedCallback( socket_callback callback ) { m_on_data = callback; }
-    socket_callback GetDataRecivedCallback() { return m_on_data; }
-*/
   protected:
   // Socket variables
     wxSocketClient* m_sock;
     SocketEvents* m_events;
-/*    socket_callback m_on_con;
-    socket_callback m_on_discon;
-    socket_callback m_on_data;*/
+
     bool m_connecting;
-    //void* m_udata;
+    bool m_block;
     Server& m_serv;
 };
 

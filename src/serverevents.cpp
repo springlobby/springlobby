@@ -366,3 +366,8 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
 }
 
 
+void ServerEvents::OnAcceptAgreement( const std::string& agreement )
+{
+  m_ui.OnAcceptAgreement( agreement );
+}
+

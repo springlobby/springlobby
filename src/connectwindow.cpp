@@ -13,6 +13,7 @@
 #include <wx/intl.h>
 #include <wx/settings.h>
 #include <wx/icon.h>
+#include <wx/msgdlg.h>
 #include "connectwindow.h"
 #include "settings.h"
 #include "ui.h"
@@ -115,6 +116,48 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_main_sizer->Add( m_tabs, 1, wxEXPAND );
   m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
 
+	
+  // Register page
+	wxBoxSizer* m_register_sizer = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* m_regnick_sizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_regnick_lbl = new wxStaticText( m_register_tab, wxID_ANY, _("Nick"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_regnick_sizer->Add( m_regnick_lbl, 1, wxALL, 4 );
+	
+	m_regnick_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_regnick_sizer->Add( m_regnick_text, 1, wxALL, 4 );
+	
+	m_register_sizer->Add( m_regnick_sizer, 0, wxEXPAND, 4 );
+	
+	m_regpass_sep = new wxStaticLine( m_register_tab, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	m_register_sizer->Add( m_regpass_sep, 0, wxALL|wxEXPAND, 4 );
+	
+	wxBoxSizer* m_regpass1_sizer = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_regpass1_lbl = new wxStaticText( m_register_tab, wxID_ANY, _("Password"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_regpass1_sizer->Add( m_regpass1_lbl, 1, wxALL, 4 );
+	
+	m_regpass1_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
+	m_regpass1_sizer->Add( m_regpass1_text, 1, wxALL, 4 );
+	
+	m_register_sizer->Add( m_regpass1_sizer, 0, wxEXPAND, 4 );
+	
+	wxBoxSizer* m_regpass1_sizer1 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_regpass2_lbl = new wxStaticText( m_register_tab, wxID_ANY, wxT("Retype password"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_regpass1_sizer1->Add( m_regpass2_lbl, 1, wxALL, 4 );
+	
+	m_regpass2_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
+	m_regpass1_sizer1->Add( m_regpass2_text, 1, wxALL, 4 );
+	
+	m_register_sizer->Add( m_regpass1_sizer1, 0, wxEXPAND, 4 );
+	
+	m_register_tab->SetSizer( m_register_sizer );
+	m_register_tab->Layout();
+	m_register_sizer->Fit( m_register_tab );
+
+
   // Set sizer.
   SetSizer( m_main_sizer );
 
@@ -139,15 +182,29 @@ ConnectWindow::~ConnectWindow()
 
 }
 
+
 void ConnectWindow::OnOk(wxCommandEvent& event)
 {
   Hide();
-  sett().SetDefaultServer( STL_STRING(m_server_combo->GetValue()) );
-  sett().SetServerAccountNick( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_nick_text->GetValue()) );
-  sett().SetServerAccountSavePass( STL_STRING(m_server_combo->GetValue()), m_rpass_check->GetValue() );
-  sett().SaveSettings();
+  if ( m_tabs->GetSelection() <= 0 ) {
+    sett().SetDefaultServer( STL_STRING(m_server_combo->GetValue()) );
+    sett().SetServerAccountNick( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_nick_text->GetValue()) );
+    sett().SetServerAccountSavePass( STL_STRING(m_server_combo->GetValue()), m_rpass_check->GetValue() );
+    sett().SaveSettings();
 
-  m_ui.DoConnect( m_server_combo->GetValue(), m_nick_text->GetValue(), m_pass_text->GetValue() );
+    m_ui.DoConnect( m_server_combo->GetValue(), m_nick_text->GetValue(), m_pass_text->GetValue() );
+  } else {
+    if ( m_ui.DoRegister( m_server_combo->GetValue(), m_regnick_text->GetValue(), m_regpass1_text->GetValue() ) ) {
+       m_tabs->SetSelection( 0 );
+       m_nick_text->SetValue(m_regnick_text->GetValue());
+       m_pass_text->SetValue(m_regpass1_text->GetValue());
+       Show();
+    } else {
+       Show();
+       wxMessageBox( _("Registration failed"), _("Registration failed"), wxOK );
+    }
+
+  }
 }
 
 void ConnectWindow::OnCancel(wxCommandEvent& event)

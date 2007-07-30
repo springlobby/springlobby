@@ -112,7 +112,7 @@ void TASServer::Connect( const std::string& addr, const int port )
     m_connected = true;
   }
   m_online = false;
-
+  m_agreement = "";
 }
 
 void TASServer::Disconnect()
@@ -126,6 +126,33 @@ bool TASServer::IsConnected()
 {
   if ( m_sock == 0 ) return false;
   return (m_sock->State() == SS_OPEN);
+}
+
+
+bool TASServer::Register( const std::string& addr, const int port, const std::string& nick, const std::string& password )
+{
+  debug_func( "" );
+
+  assert( m_sock != 0 );
+  m_sock->Connect( addr, port );
+  if ( !IsConnected() ) return false;
+
+  std::string data;
+  m_sock->Recive( data );
+  if ( GetWordParam( data ) != "TASServer" ) return false;
+
+  data = "REGISTER ";
+  data += nick;
+  data += " ";
+  data += GetPasswordHash( password );
+  data += "\n";
+  m_sock->Send( data );
+  data = "";
+
+  m_sock->Recive( data );
+  if ( data != "REGISTRATIONACCEPTED\n") return false;
+
+  return true;
 }
 
 
@@ -176,6 +203,12 @@ bool TASServer::IsOnline() {
 void TASServer::RequestChannels()
 {
   m_sock->Send( "CHANNELS\n" );
+}
+
+
+void TASServer::AcceptAgreement()
+{
+  m_sock->Send( "CONFIRMAGREEMENT\n" );
 }
 
 
@@ -470,20 +503,30 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     nick = GetWordParam( params );
     msg = GetSentenceParam( params );
     m_se->OnBattleAction( m_battle_id, nick, msg );
+  } else if ( cmd == "AGREEMENT" ) {
+    msg = GetSentenceParam( params );
+    m_agreement += msg;
+    m_agreement += "\n";
+  } else if ( cmd == "AGREEMENTEND" ) {
+    m_se->OnAcceptAgreement( m_agreement );
+    m_agreement = "";
   } else {
     debug( "??? Cmd: " + cmd + " params: " + params );
     m_se->OnUnknownCommand( cmd, params );
   }
   /*
-[14:12] !! Command: "JOINBATTLEFAILED" params: "Password required".
-[20:31] !! Command: "JOINBATTLE" params: "65096 1000 1000 500 2 0 0 0 1 -613726550".
-[20:31] !! Command: "CLIENTBATTLESTATUS" params: "Lucypher 4195396 16734810".
-[20:31] !! Command: "CLIENTBATTLESTATUS" params: "Drew11 20972544 200".
-[20:31] !! Command: "REQUESTBATTLESTATUS" params: "".
-[20:31] !! Command: "ADDSTARTRECT" params: "0 128 3 200 104".
-[20:31] !! Command: "ADDSTARTRECT" params: "1 0 104 77 200".
-[20:32] !! Command: "CLIENTBATTLESTATUS" params: "JabluchoPL 4195464 16734810".
-[20:32] !! Command: "SAIDBATTLE" params: "JabluchoPL hi".
+[11:14] !! Command: "AGREEMENT" params: "{\rtf1\ansi\ansicpg1250\deff0\deflang1060{\fonttbl{\f0\fswiss\fprq2\fcharset238 Verdana;}{\f1\fswiss\fprq2\fcharset238{\*\fname Arial;}Arial CE;}{\f2\fswiss\fcharset238{\*\fname Arial;}Arial CE;}}".
+[11:14] !! Command: "AGREEMENT" params: "{\*\generator Msftedit 5.41.15.1507;}\viewkind4\uc1\pard\ul\b\f0\fs22 Terms of Use\ulnone\b0\f1\fs20\par".
+[11:14] !! Command: "AGREEMENT" params: "\f2\par".
+[11:14] !! Command: "AGREEMENT" params: "\f0\fs16 While the administrators and moderators of this server will attempt to keep spammers and players violating this agreement off the server, it is impossible for them to maintain order at all times. Therefore you acknowledge that any messages in our channels express the views and opinions of the author and not the administrators or moderators (except for messages by these people) and hence will not be held liable.\par".
+[11:14] !! Command: "AGREEMENT" params: "\par".
+[11:14] !! Command: "AGREEMENT" params: "You agree not to use any abusive, obscene, vulgar, slanderous, hateful, threatening, sexually-oriented or any other material that may violate any applicable laws. Doing so may lead to you being immediately and permanently banned (and your service provider being informed). You agree that the administrators and moderators of this server have the right to mute, kick or ban you at any time should they see fit. As a user you agree to any information you have entered above being stored in a database. While this information will not be disclosed to any third party without your consent administrators and moderators cannot be held responsible for any hacking attempt that may lead to the data being compromised. Passwords are sent and stored in encoded form. Any personal information such as personal statistics will be kept privately and will not be disclosed to any third party.\par".
+[11:14] !! Command: "AGREEMENT" params: "\par".
+[11:14] !! Command: "AGREEMENT" params: "By using this service you hereby agree to all of the above terms.\fs18\par".
+[11:14] !! Command: "AGREEMENT" params: "\f2\fs20\par".
+[11:14] !! Command: "AGREEMENT" params: "}".
+[11:14] !! Command: "AGREEMENTEND" params: "".
+
   */
 }
 

@@ -31,6 +31,8 @@ class Ui
     void Disconnect();
     void DoConnect( const wxString& servername, const wxString& username, const wxString& password );
 
+    bool DoRegister( const wxString& servername, const wxString& username, const wxString& password );
+
     bool IsConnected() const;
     void JoinChannel( const wxString& name, const wxString& password );
 
@@ -84,6 +86,8 @@ class Ui
     void OnBattleAction( Battle& battle, const std::string& nick, const std::string& msg );
 
     void OnSpringTerminated( bool success );
+
+    void OnAcceptAgreement( const std::string& agreement );
 
     void OnMainWindowDestruct() { m_main_win = 0; }
 
