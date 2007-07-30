@@ -182,7 +182,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
       if ( TeamConv[battle.GetUser( PlayerOrder[tlf] ).BattleStatus().team] == i ) {
 
         // Make sure player is not spectator.
-        //if ( battle.GetUser( PlayerOrder[tlf] ).BattleStatus().spectator ) continue;
+        if ( battle.GetUser( PlayerOrder[tlf] ).BattleStatus().spectator ) continue;
 
         // Assign as team leader.
         TeamLeader = tlf;
@@ -193,11 +193,13 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
     s += wxString::Format( _T("\t\tTeamLeader=%d;\n") ,TeamLeader );
     s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().ally] );
+    const char* old_locale = std::setlocale(LC_NUMERIC, "C");
     s += wxString::Format( _T("\t\tRGBColor=%.5f %.5f %.5f;\n"),
            (double)(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().color_r/255.0),
            (double)(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().color_g/255.0),
            (double)(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().color_b/255.0)
          );
+    std::setlocale(LC_NUMERIC, old_locale);
     debug( i2s(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side) );
     s += WX_STRING(("\t\tSide=" + usync()->GetSideName( battle.opts().modname, battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side ) + ";\n"));
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().handicap );
