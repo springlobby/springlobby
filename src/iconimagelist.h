@@ -72,7 +72,7 @@ class IconImageList : public wxImageList
     static int GetReadyIcon( const bool& ready, const int& sync = 1 );
 
   protected:
-    std::map<std::string, int> ChachedSideIcons;
+    std::map<std::string, int> CachedSideIcons;
 };
 
 IconImageList& icons();

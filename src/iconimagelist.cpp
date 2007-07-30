@@ -188,12 +188,12 @@ int IconImageList::GetSideIcon( const std::string& side )
   sn = sn.Lower();
   if ( sn  == _T("arm") ) return ICON_ARM;
   else if (  sn == _T("core") ) return ICON_CORE;
-  else if (ChachedSideIcons[side] == 0){
+  else if (CachedSideIcons[side] == 0){
       int IconPosition = Add(wxBitmap( usync()->GetSidePicture(side) ), wxNullBitmap);
-      ChachedSideIcons[side] = IconPosition;
+      CachedSideIcons[side] = IconPosition;
       return IconPosition;
   }
-  else return ChachedSideIcons[side];
+  else return CachedSideIcons[side];
   return -1;
 }
 
