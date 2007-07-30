@@ -82,11 +82,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
-  m_leave_btn = new wxButton( this, BROOM_LEAVE, _("Leave"), wxDefaultPosition, wxSize(80,28) );
-  m_start_btn = new wxButton( this, -1, _("Start"), wxDefaultPosition, wxSize(80,28) );
+  m_leave_btn = new wxButton( this, BROOM_LEAVE, _("Leave"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
+  m_start_btn = new wxButton( this, -1, _("Start"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
-  m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(80,28) );
-  m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(80,28) );
+  m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
+  m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
   // Create Sizers
   m_players_sizer = new wxBoxSizer( wxVERTICAL );
