@@ -199,9 +199,10 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
        m_nick_text->SetValue(m_regnick_text->GetValue());
        m_pass_text->SetValue(m_regpass1_text->GetValue());
        Show();
+       wxMessageBox( _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
     } else {
        Show();
-       wxMessageBox( _("Registration failed"), _("Registration failed"), wxOK );
+       wxMessageBox( _("Registration failed."), _("Registration failed"), wxOK );
     }
 
   }

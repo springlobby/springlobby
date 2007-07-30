@@ -69,6 +69,7 @@ class ChatPanel : public wxPanel
 
   protected:
     void _SetChannel( Channel* channel );
+    void OutputLine( const wxString& message, const wxColour& col );
 
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.
 

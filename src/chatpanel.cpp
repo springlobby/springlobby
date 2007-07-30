@@ -1,8 +1,6 @@
 //
 // Class: ChatPanel
 //
-// Created on: Wed May  2 21:07:18 2007
-//
 
 #include <stdexcept>
 #include <wx/intl.h>
@@ -166,6 +164,17 @@ ChatPanel::~ChatPanel()
   }
 }
 
+
+void ChatPanel::OutputLine( const wxString& message, const wxColour& col )
+{
+  LogTime();
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(col));
+  m_chatlog_text->Freeze(); 
+  m_chatlog_text->AppendText( message + _T("\n") );
+	m_chatlog_text->Thaw(); 
+}
+
+
 void ChatPanel::OnResize( wxSizeEvent& event )
 {
   SetSize( event.GetSize() );
@@ -190,17 +199,13 @@ void ChatPanel::OnSay( wxCommandEvent& event )
 //! @todo Fix nicer format of chat messages and highlight messages to self
 void ChatPanel::Said( const wxString& who, const wxString& message )
 {
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
-  LogTime();
-  m_chatlog_text->AppendText( _T(" ") + who + _T(": ")+ message + _T("\n") );
+  OutputLine( _T(" ") + who + _T(": ")+ message, *wxBLACK );
 }
 
 
 void ChatPanel::DidAction( const wxString& who, const wxString& action )
 {
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
-  LogTime();
-  m_chatlog_text->AppendText( _T(" ") + who + _T(" ") + action + _T(".\n") );
+  OutputLine( _T(" ") + who + _T(" ") + action + _T("."), *wxBLACK );
 }
 
 
@@ -209,55 +214,39 @@ void ChatPanel::DidAction( const wxString& who, const wxString& action )
 //! @param message The MOTD message to output
 void ChatPanel::Motd( const wxString& message )
 {
-  debug_func( "" );
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 80, 128)));
-  m_chatlog_text->AppendText( _T(" ** motd ** ")+ message + _T("\n") );
+  OutputLine( _T(" ** motd ** ") + message, wxColour(0, 80, 128) );
 }
 
 
 void ChatPanel::StatusMessage( const wxString& message )
 {
-  debug_func( "" );
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(255, 150, 80)));
-  m_chatlog_text->AppendText( _T(" ** Server ** ")+ message + _T("\n") );
+  OutputLine( _T(" ** Server ** ")+ message, wxColour(255, 150, 80) );
 }
 
 
 void ChatPanel::UnknownCommand( const wxString& command, const wxString& params )
 {
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
-  LogTime();
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(128, 0, 0)));
-  m_chatlog_text->AppendText( _(" !! Command: \"") + command + _("\" params: \"") + params + _T("\".\n") );
+  OutputLine( _(" !! Command: \"") + command + _("\" params: \"") + params + _T("\"."), wxColour(128, 0, 0) );
 }
 
 
 void ChatPanel::Joined( User& who )
 {
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
-  LogTime();
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 80, 0)));
-  m_chatlog_text->AppendText( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" joined the channel.\n") );
+  OutputLine( _T(" ** ") + WX_STRING(who.GetNick()) + _(" joined the channel."), wxColour(0, 80, 0) );
   m_nicklist->AddUser( who );
-  //m_nicklist->UpdateSize();
 }
 
 
 void ChatPanel::Parted( User& who, const wxString& message )
 {
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
-  LogTime();
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 80, 0)));
-  m_chatlog_text->AppendText( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" ).\n") );
+  OutputLine( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" )."), wxColour(0, 80, 0) );
   m_nicklist->RemoveUser( who );
-//  m_nicklist->UpdateSize();
 }
 
 
 void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 {
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(wxColour(0, 0, 80)));
-  m_chatlog_text->AppendText( _T(" ** Channel topic: ")+ message + _("\n * Set by ") + who + _T(".\n") );
+  OutputLine( _T(" ** Channel topic: ")+ message + _("\n * Set by ") + who, wxColour(0, 0, 80) );
 }
 
 
@@ -269,10 +258,12 @@ void ChatPanel::UserStatusUpdated( User& who )
   }
 }
 
+
 Channel& ChatPanel::GetChannel()
 {
   return *m_channel;
 }
+
 
 Server* ChatPanel::GetServer()
 {
@@ -285,10 +276,12 @@ void ChatPanel::SetServer( Server* serv )
   m_server = serv;
 }
 
+
 bool ChatPanel::IsServerPanel()
 {
   return (m_type == CPT_Server);
 }
+
 
 //! @brief Set the Channel object
 //!
@@ -304,23 +297,8 @@ void ChatPanel::_SetChannel( Channel* channel )
   if ( m_channel != 0 ) {
     m_channel->uidata.panel = this;
   }
-  //m_nicklist->SetUserList( (UserList*)channel );
-  //m_nicklist->SetItemCount( channel->GetNumUsers() );
 
 }
-
-
-
-
-/*
-//! @brief Get Channel object
-//!
-//! @return Name of the chat/channel.
-Channel* ChatPanel::GetChannel()
-{
-
-}
-*/
 
 
 void ChatPanel::Say( const wxString& message )
@@ -358,6 +336,7 @@ void ChatPanel::Say( const wxString& message )
   }
 }
 
+
 void ChatPanel::Part()
 {
   debug_func( "" );
@@ -368,11 +347,12 @@ void ChatPanel::Part()
   }
 }
 
+
 void ChatPanel::LogTime()
 {
   wxDateTime now = wxDateTime::Now();
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
   m_chatlog_text->AppendText( _T("[") + now.Format( _T("%H:%M") ) + _T("]") );
-
 }
 
 
