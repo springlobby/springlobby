@@ -176,12 +176,19 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
     // Find Team Leader.
     int TeamLeader = -1;
+
     for( user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {
       // First Player That Is In The Team Is Leader.
       if ( TeamConv[battle.GetUser( PlayerOrder[tlf] ).BattleStatus().team] == i ) {
+
+        // Make sure player is not spectator.
+        //if ( battle.GetUser( PlayerOrder[tlf] ).BattleStatus().spectator ) continue;
+
+        // Assign as team leader.
         TeamLeader = tlf;
         break;
       }
+
     }
 
     s += wxString::Format( _T("\t\tTeamLeader=%d;\n") ,TeamLeader );
