@@ -8,6 +8,7 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/statline.h>
+#include <wx/intl.h>
 
 #include "agreementdialog.h"
 
