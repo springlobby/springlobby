@@ -226,7 +226,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   battle.SetMapHash( maphash );
   battle.SetMapname( map );
 
-  if ( oldmap != map ) battle.SendMyBattleStatus();
+  if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) ) battle.SendMyBattleStatus();
 
   m_ui.OnBattleInfoUpdated( battle );
 }

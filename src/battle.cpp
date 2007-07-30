@@ -63,6 +63,7 @@ void Battle::OnRequestBattleStatus()
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.team = lowest;
   bs.ally = lowest;
+  bs.spectator = false;
 
   SendMyBattleStatus();
 }
@@ -90,7 +91,12 @@ void Battle::SetImReady( bool ready )
 
 bool Battle::IsSynced()
 {
-  return ( usync()->MapExists( m_opts.mapname, m_opts.maphash ) && usync()->ModExists( m_opts.modname ) );
+  if ( IsMapAvailable() && IsModAvailable() ) {
+    return true;
+  } else {
+    return false;
+  }
+  //return ( usync()->MapExists( m_opts.mapname, m_opts.maphash ) && usync()->ModExists( m_opts.modname ) );
 }
 
 
