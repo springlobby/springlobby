@@ -22,6 +22,8 @@ springlobby_LDADD = \
 	$(WX_LIBS)
 
 springlobby_SOURCES = \
+	src/agreementdialog.cpp \
+	src/agreementdialog.h \
 	src/base64.cpp \
 	src/base64.h \
 	src/battle.cpp \
