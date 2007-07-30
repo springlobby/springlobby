@@ -23,9 +23,9 @@ END_EVENT_TABLE()
 
 
 MapCtrl::MapCtrl( wxWindow* parent, int size, Battle& battle, bool readonly ):
-  wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size) ), m_image(NULL), m_battle(battle), m_mapname(_T("")) 
+  wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size) ), m_image(NULL), m_battle(battle), m_mapname(_T(""))
 {
-  
+
 }
 
 
@@ -41,7 +41,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 
   int width, height, top = 1, left = 1;
   GetClientSize( &width, &height );
-  
+
   dc.SetBrush( wxBrush( *wxLIGHT_GREY, wxSOLID ) );
   dc.DrawRectangle( 0, 0, width, height );
   if ( m_image == NULL ) {

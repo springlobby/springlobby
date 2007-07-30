@@ -116,46 +116,46 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_main_sizer->Add( m_tabs, 1, wxEXPAND );
   m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
 
-	
+
   // Register page
-	wxBoxSizer* m_register_sizer = new wxBoxSizer( wxVERTICAL );
-	
-	wxBoxSizer* m_regnick_sizer = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_regnick_lbl = new wxStaticText( m_register_tab, wxID_ANY, _("Nick"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_regnick_sizer->Add( m_regnick_lbl, 1, wxALL, 4 );
-	
-	m_regnick_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	m_regnick_sizer->Add( m_regnick_text, 1, wxALL, 4 );
-	
-	m_register_sizer->Add( m_regnick_sizer, 0, wxEXPAND, 4 );
-	
-	m_regpass_sep = new wxStaticLine( m_register_tab, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	m_register_sizer->Add( m_regpass_sep, 0, wxALL|wxEXPAND, 4 );
-	
-	wxBoxSizer* m_regpass1_sizer = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_regpass1_lbl = new wxStaticText( m_register_tab, wxID_ANY, _("Password"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_regpass1_sizer->Add( m_regpass1_lbl, 1, wxALL, 4 );
-	
-	m_regpass1_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
-	m_regpass1_sizer->Add( m_regpass1_text, 1, wxALL, 4 );
-	
-	m_register_sizer->Add( m_regpass1_sizer, 0, wxEXPAND, 4 );
-	
-	wxBoxSizer* m_regpass1_sizer1 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_regpass2_lbl = new wxStaticText( m_register_tab, wxID_ANY, wxT("Retype password"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_regpass1_sizer1->Add( m_regpass2_lbl, 1, wxALL, 4 );
-	
-	m_regpass2_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
-	m_regpass1_sizer1->Add( m_regpass2_text, 1, wxALL, 4 );
-	
-	m_register_sizer->Add( m_regpass1_sizer1, 0, wxEXPAND, 4 );
-	
-	m_register_tab->SetSizer( m_register_sizer );
-	m_register_tab->Layout();
-	m_register_sizer->Fit( m_register_tab );
+  wxBoxSizer* m_register_sizer = new wxBoxSizer( wxVERTICAL );
+
+  wxBoxSizer* m_regnick_sizer = new wxBoxSizer( wxHORIZONTAL );
+
+  m_regnick_lbl = new wxStaticText( m_register_tab, wxID_ANY, _("Nick"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_regnick_sizer->Add( m_regnick_lbl, 1, wxALL, 4 );
+
+  m_regnick_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+  m_regnick_sizer->Add( m_regnick_text, 1, wxALL, 4 );
+
+  m_register_sizer->Add( m_regnick_sizer, 0, wxEXPAND, 4 );
+
+  m_regpass_sep = new wxStaticLine( m_register_tab, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+  m_register_sizer->Add( m_regpass_sep, 0, wxALL|wxEXPAND, 4 );
+
+  wxBoxSizer* m_regpass1_sizer = new wxBoxSizer( wxHORIZONTAL );
+
+  m_regpass1_lbl = new wxStaticText( m_register_tab, wxID_ANY, _("Password"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_regpass1_sizer->Add( m_regpass1_lbl, 1, wxALL, 4 );
+
+  m_regpass1_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
+  m_regpass1_sizer->Add( m_regpass1_text, 1, wxALL, 4 );
+
+  m_register_sizer->Add( m_regpass1_sizer, 0, wxEXPAND, 4 );
+
+  wxBoxSizer* m_regpass1_sizer1 = new wxBoxSizer( wxHORIZONTAL );
+
+  m_regpass2_lbl = new wxStaticText( m_register_tab, wxID_ANY, wxT("Retype password"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_regpass1_sizer1->Add( m_regpass2_lbl, 1, wxALL, 4 );
+
+  m_regpass2_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
+  m_regpass1_sizer1->Add( m_regpass2_text, 1, wxALL, 4 );
+
+  m_register_sizer->Add( m_regpass1_sizer1, 0, wxEXPAND, 4 );
+
+  m_register_tab->SetSizer( m_register_sizer );
+  m_register_tab->Layout();
+  m_register_sizer->Fit( m_register_tab );
 
 
   // Set sizer.

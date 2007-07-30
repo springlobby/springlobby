@@ -59,13 +59,13 @@ class ConnectWindow : public wxFrame
     wxBoxSizer* m_rpass_sizer;      //!< Sizer spacing the remember password setting
     wxBoxSizer* m_buttons_sizer;    //!< Sizer connecting the ok and cancel buttons
 
-		wxStaticText* m_regnick_lbl;
-		wxTextCtrl* m_regnick_text;
-		wxStaticLine* m_regpass_sep;
-		wxStaticText* m_regpass1_lbl;
-		wxTextCtrl* m_regpass1_text;
-		wxStaticText* m_regpass2_lbl;
-		wxTextCtrl* m_regpass2_text;
+    wxStaticText* m_regnick_lbl;
+    wxTextCtrl* m_regnick_text;
+    wxStaticLine* m_regpass_sep;
+    wxStaticText* m_regpass1_lbl;
+    wxTextCtrl* m_regpass1_text;
+    wxStaticText* m_regpass2_lbl;
+    wxTextCtrl* m_regpass2_text;
 
     Ui& m_ui;
 

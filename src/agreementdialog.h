@@ -6,21 +6,21 @@ class wxStaticText;
 class wxStaticLine;
 class wxButton;
 
-class AgreementDialog : public wxDialog 
+class AgreementDialog : public wxDialog
 {
-	public:
-		AgreementDialog( wxWindow* parent, const wxString& agreement );
-	
+  public:
+    AgreementDialog( wxWindow* parent, const wxString& agreement );
+
     void OnYes( wxCommandEvent& event );
     void OnNo( wxCommandEvent& event );
 
-	protected:
-		wxTextCtrl* m_text;
-		wxStaticText* m_accept_lbl;
-		wxStaticLine* m_button_sep;
-		wxButton* m_yes_btn;
-		wxButton* m_no_btn;
-	
+  protected:
+    wxTextCtrl* m_text;
+    wxStaticText* m_accept_lbl;
+    wxStaticLine* m_button_sep;
+    wxButton* m_yes_btn;
+    wxButton* m_no_btn;
+
     DECLARE_EVENT_TABLE()
 
 };
