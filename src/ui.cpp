@@ -236,6 +236,9 @@ void Ui::OnDisconnected( Server& server )
 {
   debug_func( "" );
   if ( m_main_win == 0 ) return;
+
+  mw().GetJoinTab().LeaveCurrentBattle();
+
   server.uidata.panel->StatusMessage( _T("Disconnected from server.") );
   server.uidata.panel->SetServer( 0 );
   server.uidata.panel = 0;
