@@ -233,14 +233,14 @@ void ChatPanel::UnknownCommand( const wxString& command, const wxString& params 
 void ChatPanel::Joined( User& who )
 {
   OutputLine( _T(" ** ") + WX_STRING(who.GetNick()) + _(" joined the channel."), wxColour(0, 80, 0) );
-  m_nicklist->AddUser( who );
+  if ( m_show_nick_list ) m_nicklist->AddUser( who );
 }
 
 
 void ChatPanel::Parted( User& who, const wxString& message )
 {
   OutputLine( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" )."), wxColour(0, 80, 0) );
-  m_nicklist->RemoveUser( who );
+  if ( m_show_nick_list ) m_nicklist->RemoveUser( who );
 }
 
 

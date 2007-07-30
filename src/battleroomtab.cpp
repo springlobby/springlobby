@@ -271,12 +271,14 @@ void BattleRoomTab::OnSideSel( wxCommandEvent& event )
 
 void BattleRoomTab::OnUserJoined( User& user )
 {
+  m_chat->Joined( user );
   m_players->AddUser( user );
 }
 
 
 void BattleRoomTab::OnUserLeft( User& user )
 {
+  m_chat->Parted( user, wxEmptyString );
   m_players->RemoveUser( user );
 }
 
