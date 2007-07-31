@@ -61,6 +61,7 @@ class Server
     virtual void JoinChannel( const std::string& channel, const std::string& key ) = 0;
     virtual void PartChannel( const std::string& channel ) = 0;
 
+    virtual void DoActionChannel( const std::string& channel, const std::string& msg ) = 0;
     virtual void SayChannel( const std::string& channel, const std::string& msg ) = 0;
     virtual void SayPrivate( const std::string& nick, const std::string& msg ) = 0;
 

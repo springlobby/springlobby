@@ -41,11 +41,14 @@ void Channel::Say( const std::string& message )
 
 void Channel::DidAction( User& who, const std::string& action )
 {
+  m_ui.OnChannelDidAction( *this, who, action );
 }
 
 
 void Channel::DoAction( const std::string& action )
 {
+  debug_func( "" );
+  m_serv.DoActionChannel( m_name, action );
 }
 
 
@@ -102,4 +105,19 @@ void Channel::RemoveUser( const std::string& nick )
 }
 
 
+bool Channel::ExecuteSayCommand( const std::string& in )
+{
+  if ( in.length() == 0 ) return true;
+
+  if ( in[0] != '/' ) return false;
+
+  std::string cmdline = in;
+  std::string param = GetWordParam( cmdline );
+  if ( param == "/me" ) {
+    DoAction( cmdline );
+    return true;
+  }
+
+  return false;
+}
 

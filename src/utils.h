@@ -27,4 +27,11 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #define CONTROL_HEIGHT 28
 #endif
 
+
+std::string GetWordParam( std::string& params );
+std::string GetSentenceParam( std::string& params );
+int GetIntParam( std::string& params );
+bool GetBoolParam( std::string& params );
+
+
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H

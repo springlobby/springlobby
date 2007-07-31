@@ -48,6 +48,7 @@ class TASServer : public Server
     void JoinChannel( const std::string& channel, const std::string& key );
     void PartChannel( const std::string& channel );
 
+    void DoActionChannel( const std::string& channel, const std::string& msg );
     void SayChannel( const std::string& channel, const std::string& msg );
     void SayPrivate( const std::string& nick, const std::string& msg );
 
@@ -62,10 +63,6 @@ class TASServer : public Server
     // TASServer specific functions
     void ExecuteCommand( const std::string& in );
     void ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid = -1 );
-
-    std::string GetWordParam( std::string& params );
-    std::string GetSentenceParam( std::string& params );
-    int GetIntParam( std::string& params );
 
     void HandlePong( int replyid );
     void HandlePinglist();

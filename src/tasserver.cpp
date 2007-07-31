@@ -517,72 +517,8 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     debug( "??? Cmd: " + cmd + " params: " + params );
     m_se->OnUnknownCommand( cmd, params );
   }
-  /*
-[11:14] !! Command: "AGREEMENT" params: "{\rtf1\ansi\ansicpg1250\deff0\deflang1060{\fonttbl{\f0\fswiss\fprq2\fcharset238 Verdana;}{\f1\fswiss\fprq2\fcharset238{\*\fname Arial;}Arial CE;}{\f2\fswiss\fcharset238{\*\fname Arial;}Arial CE;}}".
-[11:14] !! Command: "AGREEMENT" params: "{\*\generator Msftedit 5.41.15.1507;}\viewkind4\uc1\pard\ul\b\f0\fs22 Terms of Use\ulnone\b0\f1\fs20\par".
-[11:14] !! Command: "AGREEMENT" params: "\f2\par".
-[11:14] !! Command: "AGREEMENT" params: "\f0\fs16 While the administrators and moderators of this server will attempt to keep spammers and players violating this agreement off the server, it is impossible for them to maintain order at all times. Therefore you acknowledge that any messages in our channels express the views and opinions of the author and not the administrators or moderators (except for messages by these people) and hence will not be held liable.\par".
-[11:14] !! Command: "AGREEMENT" params: "\par".
-[11:14] !! Command: "AGREEMENT" params: "You agree not to use any abusive, obscene, vulgar, slanderous, hateful, threatening, sexually-oriented or any other material that may violate any applicable laws. Doing so may lead to you being immediately and permanently banned (and your service provider being informed). You agree that the administrators and moderators of this server have the right to mute, kick or ban you at any time should they see fit. As a user you agree to any information you have entered above being stored in a database. While this information will not be disclosed to any third party without your consent administrators and moderators cannot be held responsible for any hacking attempt that may lead to the data being compromised. Passwords are sent and stored in encoded form. Any personal information such as personal statistics will be kept privately and will not be disclosed to any third party.\par".
-[11:14] !! Command: "AGREEMENT" params: "\par".
-[11:14] !! Command: "AGREEMENT" params: "By using this service you hereby agree to all of the above terms.\fs18\par".
-[11:14] !! Command: "AGREEMENT" params: "\f2\fs20\par".
-[11:14] !! Command: "AGREEMENT" params: "}".
-[11:14] !! Command: "AGREEMENTEND" params: "".
-
-  */
 }
 
-std::string TASServer::GetWordParam( std::string& params )
-{
-  std::string::size_type pos;
-  std::string param;
-
-  pos = params.find( " ", 0 );
-  if ( pos == std::string::npos ) {
-    param = params;
-    params = "";
-    return param;
-  } else {
-    param = params.substr( 0, pos );
-    params = params.substr( pos + 1 );
-    return param;
-  }
-}
-
-std::string TASServer::GetSentenceParam( std::string& params )
-{
-  std::string::size_type pos;
-  std::string param;
-
-  pos = params.find( "\t", 0 );
-  if ( pos == std::string::npos ) {
-    param = params;
-    params = "";
-    return param;
-  } else {
-    param = params.substr( 0, pos );
-    params = params.substr( pos + 1 );
-    return param;
-  }
-}
-
-int TASServer::GetIntParam( std::string& params )
-{
-  std::string::size_type pos;
-  std::string param;
-
-  pos = params.find( " ", 0 );
-  if ( pos == std::string::npos ) {
-    param = params;
-    params = "";
-    return atoi( param.c_str() );
-  } else {
-    param = params.substr( 0, pos );
-    params = params.substr( pos + 1 );
-    return atoi( param.c_str() );
-  }
-}
 
 void TASServer::Ping()
 {
@@ -675,6 +611,17 @@ void TASServer::PartChannel( const std::string& channel )
 
   m_sock->Send( "LEAVE " + channel + "\n" );
 
+}
+
+
+void TASServer::DoActionChannel( const std::string& channel, const std::string& msg )
+{
+  //SAYEX channame {message}
+  debug_func( "" );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+
+  m_sock->Send( "SAYEX " + channel + " " + msg + "\n" );
 }
 
 

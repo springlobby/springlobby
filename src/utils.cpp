@@ -35,3 +35,64 @@ void debug_output( const std::string& prefix, const std::string& func, const std
   std::cout << prefix.c_str() << " " << func.c_str() << "( " << params.c_str() << " ): "<< tmpmsg.c_str() << std::endl;
 #endif
 }
+
+
+std::string GetWordParam( std::string& params )
+{
+  std::string::size_type pos;
+  std::string param;
+
+  pos = params.find( " ", 0 );
+  if ( pos == std::string::npos ) {
+    param = params;
+    params = "";
+    return param;
+  } else {
+    param = params.substr( 0, pos );
+    params = params.substr( pos + 1 );
+    return param;
+  }
+}
+
+
+std::string GetSentenceParam( std::string& params )
+{
+  std::string::size_type pos;
+  std::string param;
+
+  pos = params.find( "\t", 0 );
+  if ( pos == std::string::npos ) {
+    param = params;
+    params = "";
+    return param;
+  } else {
+    param = params.substr( 0, pos );
+    params = params.substr( pos + 1 );
+    return param;
+  }
+}
+
+
+int GetIntParam( std::string& params )
+{
+  std::string::size_type pos;
+  std::string param;
+
+  pos = params.find( " ", 0 );
+  if ( pos == std::string::npos ) {
+    param = params;
+    params = "";
+    return atoi( param.c_str() );
+  } else {
+    param = params.substr( 0, pos );
+    params = params.substr( pos + 1 );
+    return atoi( param.c_str() );
+  }
+}
+
+
+bool GetBoolParam( std::string& params )
+{
+  return (bool)GetIntParam( params );
+}
+

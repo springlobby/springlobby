@@ -215,8 +215,8 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 {
   wxString me = WX_STRING(GetMe().GetNick());
   wxColour col;
-  if ( who == me ) col.Set( 100,100,140 );
-  else if ( message.Contains( me ) ) col.Set( 255,40,40 );
+  if ( who.Upper() == me.Upper() ) col.Set( 100,100,140 );
+  else if ( message.Upper().Contains( me.Upper() ) ) col.Set( 255,40,40 );
   else col.Set( 0,0,0 );
 
   _OutputLine( _T(" <") + who + _T("> ")+ message, col );
@@ -225,7 +225,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 
 void ChatPanel::DidAction( const wxString& who, const wxString& action )
 {
-  _OutputLine( _T(" ") + who + _T(" ") + action + _T("."), *wxBLACK );
+  _OutputLine( _T(" * ") + who + _T(" ") + action, wxColour( 230, 0, 255 ) );
 }
 
 
@@ -338,6 +338,11 @@ void ChatPanel::Say( const wxString& message )
     if ( m_ui.ExecuteSayCommand( message ) ) return;
   }
 
+  if ( message == _T("/ver") ) {
+    // TODO fix real version numbers
+    _OutputLine( wxString::Format( _(" You have SpringLobby version %.2f r%d"), 0.01, 0 ), *wxBLACK );
+    return;
+  }
 
   if ( m_type == CPT_Channel ) {
 

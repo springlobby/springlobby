@@ -52,7 +52,7 @@ class Channel : public UserList
     std::string GetTopic();
     std::string GetTopicSetBy();
 
-    bool ExecuteSayCommand( const std::string& cmd ) { return false; }
+    bool ExecuteSayCommand( const std::string& in );
 
   protected:
     std::string m_topic;
