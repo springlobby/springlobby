@@ -67,13 +67,22 @@ bool SpringUnitSync::LoadUnitSyncLib()
 
   // Load the library.
   std::string loc;
+#ifdef WIN32
+  if ( sett().GetUnitSyncUseDefLoc() ) loc = sett().GetSpringDir() + PATH_SEP + dllname;
+#else
   if ( sett().GetUnitSyncUseDefLoc() ) loc = sett().GetSpringDir() + dllname;
+#endif
   else loc = sett().GetUnitSyncLoc();
 
   debug( "Loading from: " + loc );
 
   try {
     m_libhandle = new wxDynamicLibrary(WX_STRING(loc));
+    if (!m_libhandle->IsLoaded()) {
+      debug_error("wxDynamicLibrary created, but not loaded!");
+      delete m_libhandle;
+      m_libhandle = 0;
+    }
   } catch(...) {
     m_libhandle = 0;
   }
