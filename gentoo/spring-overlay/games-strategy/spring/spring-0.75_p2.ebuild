@@ -19,7 +19,7 @@ RESTRICT="nomirror"
 RDEPEND="
 	!virtual/game_spring
 	>=dev-lang/python-2.4
-	>=dev-libs/boost-1.34
+	dev-libs/boost
 	media-libs/devil
 	>=media-libs/freetype-2.0.0
 	media-libs/glew
