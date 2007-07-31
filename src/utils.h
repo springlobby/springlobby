@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include "nonportable.h"
-
 //! Converts a wxString to an stl string
 #define STL_STRING(v) std::string((const char*)v.mb_str(wxConvUTF8))
 

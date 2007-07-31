@@ -3,8 +3,6 @@
 
 #include <wx/panel.h>
 
-#include "nonportable.h"
-
 class wxStaticBoxSizer;
 class wxStaticBox;
 class wxStaticText;

@@ -2,12 +2,13 @@
 // Class: Settings
 //
 
-#include "settings.h"
-#include <wx/intl.h>
-#include <wx/filefn.h>
-#include "utils.h"
 #include <wx/config.h>
+#include <wx/filefn.h>
+#include <wx/intl.h>
 
+#include "nonportable.h"
+#include "settings.h"
+#include "utils.h"
 
 Settings& sett()
 {
@@ -324,7 +325,7 @@ std::string Settings::GetSpringUsedLoc()
 {
   if ( GetSpringUseDefLoc() ) {
     wxString tmp = WX_STRING(GetSpringDir());
-    tmp += PATH_SEP;
+    tmp += wxFILE_SEP_PATH;
     tmp += SPRING_BIN;
     return STL_STRING(tmp);
   } else {

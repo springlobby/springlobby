@@ -13,6 +13,7 @@
 #include <wx/button.h>
 #include <wx/msgdlg.h>
 
+#include "nonportable.h"
 #include "springoptionstab.h"
 #include "ui.h"
 #include "iunitsync.h"
