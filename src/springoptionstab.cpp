@@ -11,12 +11,14 @@
 #include <wx/radiobut.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
+#include <wx/msgdlg.h>
 
 #include "springoptionstab.h"
 #include "ui.h"
 #include "iunitsync.h"
 #include "utils.h"
 #include "settings.h"
+#include "spring.h"
 
 BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
 
@@ -147,6 +149,10 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
 
   usync()->FreeUnitSyncLib();
   usync()->LoadUnitSyncLib();
+
+  if ( !Spring::TestSpringBinary() ) {
+    wxMessageBox( _("There is probably a problem with your spring binary setting\nbecause trying to run Spring failed.\n\nYou might want to take another look at your settings."), _("Spring error"), wxOK );
+  }
 }
 
 

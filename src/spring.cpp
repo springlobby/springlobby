@@ -16,6 +16,13 @@
 #include "user.h"
 #include "iunitsync.h"
 
+#ifdef WIN32
+#define SPRING_VERSION_PARAM _T(" //V")
+#else
+#define SPRING_VERSION_PARAM _T(" -V")
+#endif
+
+
 Spring::Spring( Ui& ui) :
   m_ui(ui),
   m_process(0),
@@ -61,6 +68,14 @@ bool Spring::Run( Battle& battle )
   }
   m_running = true;
   return true;
+}
+
+
+bool Spring::TestSpringBinary()
+{
+  wxString bin = WX_STRING(sett().GetSpringUsedLoc()) + SPRING_VERSION_PARAM;
+  int ret = wxExecute( bin, wxEXEC_SYNC );
+  return ( ret != -1);
 }
 
 

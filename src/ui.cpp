@@ -5,7 +5,10 @@
 #include <wx/msgdlg.h>
 #include <wx/textdlg.h>
 #include <stdexcept>
+#include <wx/msgdlg.h>
+#include <wx/thread.h>
 
+#include "spring.h"
 #include "ui.h"
 #include "tasserver.h"
 #include "settings.h"
@@ -455,6 +458,9 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
 void Ui::OnJoinedBattle( Battle& battle )
 {
   mw().GetJoinTab().JoinBattle( battle );
+  if ( !Spring::TestSpringBinary() ) {
+    wxMessageBox( _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK ); 
+  }
 }
 
 

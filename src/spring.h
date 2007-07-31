@@ -7,6 +7,7 @@ class Battle;
 class Ui;
 class SpringProcess;
 
+
 class Spring
 {
   public:
@@ -15,6 +16,7 @@ class Spring
 
     bool IsRunning();
     bool Run( Battle& battle );
+    static bool TestSpringBinary();
 
     wxString GetScriptTxt( Battle& battle );
     void OnTerminated();
