@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <wx/msgdlg.h>
 #include <wx/thread.h>
+#include <wx/intl.h>
 
 #include "spring.h"
 #include "ui.h"

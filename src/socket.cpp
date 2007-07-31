@@ -44,7 +44,9 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 
 
 //! @brief Constructor
-Socket::Socket( Server& serv, bool blocking ) : m_serv(serv), m_block(blocking)
+Socket::Socket( Server& serv, bool blocking ) :
+  m_block(blocking),
+  m_serv(serv)
 {
   m_connecting = false;
 
