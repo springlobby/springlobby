@@ -4,8 +4,6 @@
 #include "iunitsync.h"
 #include "nonportable.h"
 
-static const char* dllname = "unitsync";
-
 class wxImage;
 class wxDynamicLibrary;
 struct SpringMapInfo;

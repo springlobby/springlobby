@@ -18,12 +18,6 @@
 #include "iunitsync.h"
 #include "nonportable.h"
 
-#ifdef WIN32
-#define SPRING_VERSION_PARAM _T(" //V")
-#else
-#define SPRING_VERSION_PARAM _T(" -V")
-#endif
-
 Spring::Spring( Ui& ui) :
   m_ui(ui),
   m_process(0),
@@ -75,7 +69,7 @@ bool Spring::Run( Battle& battle )
 bool Spring::TestSpringBinary()
 {
   wxArrayString res;
-  wxString bin = WX_STRING(sett().GetSpringUsedLoc()) + SPRING_VERSION_PARAM;
+  wxString bin = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ") + SPRING_VERSION_PARAM;
   int ret = wxExecute( bin, res );
   //bin = res.Item( 0 );
   return ( ret != -1);

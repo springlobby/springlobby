@@ -67,7 +67,7 @@ bool SpringUnitSync::LoadUnitSyncLib()
 
   // Load the library.
   std::string loc;
-  if ( sett().GetUnitSyncUseDefLoc() ) loc = sett().GetSpringDir() + STL_STRING(wxString(wxFILE_SEP_PATH)) + dllname;
+  if ( sett().GetUnitSyncUseDefLoc() ) loc = sett().GetSpringDir() + STL_STRING(wxString(wxFILE_SEP_PATH)) + STL_STRING(wxString(UNITSYNC_BIN));
   else loc = sett().GetUnitSyncLoc();
 
   debug( "Loading from: " + loc );
@@ -85,10 +85,7 @@ bool SpringUnitSync::LoadUnitSyncLib()
 
   if (m_libhandle == 0) {
     debug_error( "Couldn't load the unitsync library" );
-    std::string dlerr = MY_DLERROR();
-    debug_error( dlerr );
-
-    wxMessageDialog msg( 0, _("The unitsync library failed to load from the location \"") + WX_STRING(loc) + _("\".\nIt failed with the error message \"") + WX_STRING(dlerr)+ _("\".\n\nYou might want to look at the Spring Options again. If you need any help setting unitsync up you will find it under the Help main menu."), _("Error loading unitsync"), wxOK | wxICON_ERROR );
+    wxMessageDialog msg( 0, _("The unitsync library failed to load from the location \"") + WX_STRING(loc) + _("\".\n\nYou might want to look at the Spring Options again. If you need any help setting unitsync up you will find it under the Help main menu."), _("Error loading unitsync"), wxOK | wxICON_ERROR );
 
     msg.ShowModal();
 
