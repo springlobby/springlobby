@@ -22,6 +22,7 @@
 #include "mapctrl.h"
 #include "uiutils.h"
 
+
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
   EVT_BUTTON ( BROOM_LEAVE, BattleRoomTab::OnLeave )
@@ -160,7 +161,9 @@ BattleRoomTab::~BattleRoomTab()
 void BattleRoomTab::UpdateBattleInfo()
 {
   try {
-    UnitSyncMap map = usync()->GetMap( m_battle.opts().mapname, true );
+    UnitSyncMap map = usync()->GetMap( m_battle.opts().mapname );
+    if ( map.hash != m_map.hash ) map = m_map = usync()->GetMap( m_battle.opts().mapname, true );
+    else map = m_map;
     m_map_lbl->SetLabel( RefineMapname( WX_STRING(map.name) ) );
     m_size_lbl->SetLabel( wxString::Format( _("Size: %.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
     m_wind_lbl->SetLabel( wxString::Format( _("Wind: %d-%d"), map.info.minWind, map.info.maxWind) );

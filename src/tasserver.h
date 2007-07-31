@@ -56,6 +56,7 @@ class TASServer : public Server
     void JoinBattle( const int& battleid, const std::string& password = "" );
     void LeaveBattle( const int& battleid );
     void SendMyBattleStatus( UserBattleStatus& bs );
+    void SendMyUserStatus();
 
     void RequestChannels();
     // TASServer specific functions

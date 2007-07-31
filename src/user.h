@@ -72,6 +72,8 @@ class User
     int GetCpu() const { return m_cpu; }
     void SetCpu( const int& cpu ) { m_cpu = cpu; }
 
+    UserStatus& Status() { return m_status; }
+
     UserStatus GetStatus() const { return m_status; }
     void SetStatus( const UserStatus& status );
 
@@ -86,6 +88,8 @@ class User
 
     Battle* GetBattle();
     void SetBattle( Battle* battle );
+
+    void SendMyUserStatus();
 
     bool ExecuteSayCommand( const std::string& cmd ) { return false; }
 

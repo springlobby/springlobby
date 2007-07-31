@@ -747,6 +747,24 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 }
 
 
+void TASServer::SendMyUserStatus()
+{
+  debug_func( "" );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+  UserStatus& us = GetMe().Status();
+
+  UTASClientStatus taus;
+  taus.tasdata.in_game = us.in_game;
+  taus.tasdata.away = us.away;
+  taus.tasdata.rank = us.rank;
+  taus.tasdata.moderator = us.moderator;
+  taus.tasdata.bot = us.bot;
+
+  m_sock->Send( "MYSTATUS " + i2s( taus.byte ) + "\n" );
+}
+
+
 void TASServer::OnConnected( Socket* sock )
 {
   debug_func( "" );

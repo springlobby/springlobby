@@ -49,3 +49,9 @@ void User::SetBattleStatus( const UserBattleStatus& status, bool setorder )
   if ( !setorder ) m_bstatus.order = order;
 }
 
+
+void User::SendMyUserStatus()
+{
+  m_serv.SendMyUserStatus();
+}
+

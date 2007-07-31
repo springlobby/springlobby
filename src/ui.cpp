@@ -486,6 +486,10 @@ void Ui::OnBattleStarted( Battle& battle )
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) {
+      //battle.GetMe().BattleStatus().ready = false; TODO Fix I'm ready button update before enabling this
+      //battle.SendMyBattleStatus();
+      battle.GetMe().Status().in_game = true;
+      battle.GetMe().SendMyUserStatus();
       m_spring->Run( battle );
     }
   }
@@ -512,7 +516,10 @@ void Ui::OnBattleAction( Battle& battle, const std::string& nick, const std::str
 
 void Ui::OnSpringTerminated( bool success )
 {
+  if ( m_serv == 0 ) return;
 
+  m_serv->GetMe().Status().in_game = false;
+  m_serv->GetMe().SendMyUserStatus();
 }
 
 

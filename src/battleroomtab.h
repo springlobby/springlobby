@@ -3,6 +3,8 @@
 
 #include <wx/panel.h>
 
+#include "iunitsync.h"
+
 class Ui;
 class Battle;
 class BattleroomListCtrl;
@@ -17,6 +19,7 @@ class wxStaticLine;
 class wxButton;
 class wxCheckBox;
 class MapCtrl;
+
 
 class BattleRoomTab : public wxPanel
 {
@@ -47,6 +50,7 @@ class BattleRoomTab : public wxPanel
   protected:
     Ui& m_ui;
     Battle& m_battle;
+    UnitSyncMap m_map;
 
     wxBoxSizer* m_players_sizer;
     wxBoxSizer* m_player_sett_sizer;

@@ -4,6 +4,7 @@
 
 #include <wx/file.h>
 #include <wx/intl.h>
+#include <wx/arrstr.h>
 #include <clocale>
 
 #include "spring.h"
@@ -17,7 +18,7 @@
 #include "iunitsync.h"
 
 #ifdef WIN32
-#define SPRING_VERSION_PARAM _T(" //V")
+#define SPRING_VERSION_PARAM _T(" /V")
 #else
 #define SPRING_VERSION_PARAM _T(" -V")
 #endif
@@ -73,8 +74,10 @@ bool Spring::Run( Battle& battle )
 
 bool Spring::TestSpringBinary()
 {
+  wxArrayString res;
   wxString bin = WX_STRING(sett().GetSpringUsedLoc()) + SPRING_VERSION_PARAM;
-  int ret = wxExecute( bin, wxEXEC_SYNC );
+  int ret = wxExecute( bin, res );
+  //bin = res.Item( 0 );
   return ( ret != -1);
 }
 

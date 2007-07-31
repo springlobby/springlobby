@@ -72,6 +72,7 @@ class Server
     virtual void RequestChannels() = 0;
 
     virtual void SendMyBattleStatus( UserBattleStatus& bs ) = 0;
+    virtual void SendMyUserStatus() = 0;
 
     virtual void SetKeepaliveInterval( int seconds ) { m_keepalive = seconds; }
     virtual int GetKeepaliveInterval() { return m_keepalive; }
