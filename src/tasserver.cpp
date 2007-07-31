@@ -84,6 +84,7 @@ UserBattleStatus ConvTasbattlestatus( TASBattleStatus );
 TASBattleStatus ConvTasbattlestatus( UserBattleStatus );
 bool VersionSupportReplyid( int version );
 StartType IntToStartType( int start );
+NatType IntToNatType( int nat );
 GameType IntToGameType( int gt );
 
 TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(SER_VER_UNKNOWN), m_connected(false), m_online(false), m_buffer(""), m_last_ping(0), m_ping_id(1000),m_battle_id(-1) { m_se = new ServerEvents( *this, ui); }
@@ -355,7 +356,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     title = GetSentenceParam( params );
     mod = GetSentenceParam( params );
     //! @todo Fix nat settings
-    m_se->OnBattleOpened( id, replay, NAT_None, nick, host, port, maxplayers,
+    m_se->OnBattleOpened( id, replay, IntToNatType( nat ), nick, host, port, maxplayers,
                             haspass, (rank + 1)*100, hash, map, title, mod );
   } else if ( cmd == "JOINEDBATTLE" ) {
     id = GetIntParam( params );
@@ -852,6 +853,18 @@ StartType IntToStartType( int start )
     default: assert(false);
   };
   return ST_Fixed;
+}
+
+
+NatType IntToNatType( int nat )
+{
+  switch ( nat ) {
+    case 0: return NAT_None;
+    case 1: return NAT_Hole_punching;
+    case 2: return NAT_Fixed_source_ports;
+    default: assert(false);
+  };
+  return NAT_None;
 }
 
 
