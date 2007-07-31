@@ -23,7 +23,7 @@ END_EVENT_TABLE()
 
 
 MapCtrl::MapCtrl( wxWindow* parent, int size, Battle& battle, bool readonly ):
-  wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size) ), m_image(NULL), m_battle(battle), m_mapname(_T(""))
+  wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size) ), m_image(0), m_battle(battle), m_mapname(_T(""))
 {
 
 }
@@ -44,7 +44,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 
   dc.SetBrush( wxBrush( *wxLIGHT_GREY, wxSOLID ) );
   dc.DrawRectangle( 0, 0, width, height );
-  if ( m_image == NULL ) {
+  if ( !m_image ) {
     dc.DrawText( _("Minimap n/a"), 10, 10 );
     width--;
     height--;
@@ -83,7 +83,8 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 
 void MapCtrl::LoadMinimap()
 {
-  if ( m_image != NULL ) return;
+  if ( m_image )
+    return;
   try {
     int w, h;
     GetClientSize( &w, &h );
@@ -93,7 +94,7 @@ void MapCtrl::LoadMinimap()
     Refresh();
     Update();
   } catch (...) {
-    m_image = NULL;
+    m_image = 0;
     m_mapname = _T("");
   }
 
@@ -102,9 +103,9 @@ void MapCtrl::LoadMinimap()
 
 void MapCtrl::FreeMinimap()
 {
-  if ( m_image != NULL ) {
+  if ( m_image ) {
     delete m_image;
-    m_image = NULL;
+    m_image = 0;
     m_mapname = _T("");
   }
 }

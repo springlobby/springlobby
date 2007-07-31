@@ -354,7 +354,7 @@ wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int size )
 
   wxImage ret( width, height );
   UnitSyncColour* colours = (UnitSyncColour*)m_get_minimap( mapname.c_str(), 0 );
-  ASSERT_RUNTIME( colours != NULL, "GetMinimap failed" );
+  ASSERT_RUNTIME( colours , "GetMinimap failed" );
   for ( int y = 0; y < height; y++ ) {
     for ( int x = 0; x < width; x++ ) {
       int pos = y*(width)+x;
@@ -368,9 +368,9 @@ wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int size )
 
   if ( map.info.width >= map.info.height ) {
     width = size;
-    height = (double)size * (double)( (double)map.info.height / (double)map.info.width );
+    height = int( size * ( double(map.info.height) / map.info.width ));
   } else {
-    width = (double)size * (double)( (double)map.info.width / (double)map.info.height );
+    width = int( size * ( double(map.info.width) / map.info.height ));
     height = size;
   }
 

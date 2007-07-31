@@ -19,7 +19,7 @@
 #include "images/battle_map.xpm"
 #include "images/battle_settings.xpm"
 
-MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_battle_tab(NULL),m_map_tab(NULL),m_ui(ui)
+MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_battle_tab(0),m_map_tab(0),m_ui(ui)
 {
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   m_tabs = new wxNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
@@ -50,18 +50,19 @@ MainJoinBattleTab::~MainJoinBattleTab()
 
 Battle* MainJoinBattleTab::GetCurrentBattle()
 {
-  if ( m_battle_tab != NULL ) return &m_battle_tab->GetBattle();
+  if ( m_battle_tab )
+    return &m_battle_tab->GetBattle();
 
-  return NULL;
+  return 0;
 }
 
 
 void MainJoinBattleTab::UpdateCurrentBattle()
 {
-  if ( m_battle_tab != NULL ) {
+  if ( m_battle_tab ) {
     m_battle_tab->UpdateBattleInfo();
   }
-  if ( m_map_tab != NULL ) {
+  if ( m_map_tab ) {
     //! @todo Update.
   }
 }
@@ -85,13 +86,13 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
 
 void MainJoinBattleTab::LeaveCurrentBattle()
 {
-  if ( m_map_tab != NULL ) {
+  if ( m_map_tab ) {
     m_tabs->DeletePage( 2 );
-    m_map_tab = NULL;
+    m_map_tab = 0;
   }
-  if ( m_battle_tab != NULL ) {
+  if ( m_battle_tab ) {
     m_tabs->DeletePage( 1 );
-    m_battle_tab = NULL;
+    m_battle_tab = 0;
   }
 }
 
