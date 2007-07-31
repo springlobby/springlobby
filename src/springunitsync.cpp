@@ -1,16 +1,17 @@
-#include <wx/intl.h>
-#include <wx/msgdlg.h>
-#include <wx/image.h>
-#include <wx/string.h>
-#include <wx/mstream.h>
-#include <wx/stdpaths.h>
+#include <wx/dynlib.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
+#include <wx/image.h>
+#include <wx/intl.h>
+#include <wx/msgdlg.h>
+#include <wx/mstream.h>
+#include <wx/stdpaths.h>
+#include <wx/string.h>
+
 #include <cassert>
 #include <stdexcept>
 
 #include "springunitsync.h"
-
 #include "utils.h"
 #include "settings.h"
 
@@ -52,15 +53,15 @@ IUnitSync* usync()
 void* SpringUnitSync::_GetLibFuncPtr( const std::string& name )
 {
   assert( m_loaded );
-  void* ptr = 0;
-  ptr = MY_GET_PROC_ADDR( m_libhandle, name.c_str() );
-  ASSERT_RUNTIME( ptr != 0, "Couldn't load " + name + " from unitsync library" );
+  void* ptr = m_libhandle->GetSymbol(WX_STRING(name));
+  ASSERT_RUNTIME( ptr, "Couldn't load " + name + " from unitsync library" );
   return ptr;
 }
 
 bool SpringUnitSync::LoadUnitSyncLib()
 {
-  if ( m_loaded ) return true;
+  if ( m_loaded )
+    return true;
 
   wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
 
@@ -72,7 +73,7 @@ bool SpringUnitSync::LoadUnitSyncLib()
   debug( "Loading from: " + loc );
 
   try {
-    m_libhandle = MY_LOAD_LIBRARY( loc.c_str() );
+    m_libhandle = new wxDynamicLibrary(WX_STRING(loc));
   } catch(...) {
     m_libhandle = 0;
   }
@@ -140,7 +141,8 @@ void SpringUnitSync::FreeUnitSyncLib()
   if ( !m_loaded ) return;
   m_uninit();
 
-  MY_FREELIBRARY(m_libhandle);
+  delete m_libhandle;
+  m_libhandle = 0;
 
   m_loaded = false;
 }

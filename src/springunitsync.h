@@ -3,30 +3,18 @@
 
 #include "iunitsync.h"
 
-// FIXME this definitely cannot be used when compiling for windows on mingw under linux
-// FIXME wxDynamicLibrary instead?
 #ifdef WIN32
-  #include <windows.h>
-  #include <wx/msw/winundef.h>
   #define USYNC_CALL_CONV __stdcall
-  #define MY_GET_PROC_ADDR (void*)GetProcAddress
-  #define MY_LOAD_LIBRARY(LOC) (LoadLibrary(LOC))
   #define MY_DLERROR() ("bork")
-  #define MY_FREELIBRARY(LIB) (FreeLibrary(LIB))
-  typedef HINSTANCE lib_handle_t;
   static char* dllname = "\\unitsync.dll";
 #else
-  #include <dlfcn.h>
   #define USYNC_CALL_CONV
-  #define MY_GET_PROC_ADDR dlsym
-  #define MY_LOAD_LIBRARY(LOC) (dlopen((LOC), RTLD_LOCAL | RTLD_LAZY))
-  #define MY_DLERROR() (dlerror())
-  #define MY_FREELIBRARY(LIB) (dlclose(LIB))
-  typedef void* lib_handle_t;
+  #define MY_DLERROR() ("bork")
   static char* dllname = "/unitsync.so";
 #endif
 
 class wxImage;
+class wxDynamicLibrary;
 struct SpringMapInfo;
 
 /*
@@ -107,7 +95,7 @@ class SpringUnitSync : public IUnitSync
   private:
     bool m_loaded;
 
-    lib_handle_t m_libhandle;
+    wxDynamicLibrary* m_libhandle;
 
     InitPtr m_init;
     UnInitPtr m_uninit;
