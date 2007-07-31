@@ -165,7 +165,18 @@ ChatPanel::~ChatPanel()
 }
 
 
-void ChatPanel::OutputLine( const wxString& message, const wxColour& col )
+User& ChatPanel::GetMe()
+{
+  if ( m_type == CPT_Channel ) return m_channel->GetMe();
+  else if ( m_type == CPT_Battle ) return m_battle->GetMe();
+  else if ( m_type == CPT_Server ) return m_server->GetMe();
+  else if ( m_type == CPT_User ) return *m_user;
+
+  ASSERT_LOGIC( false, "GetMe() m_type invalid." );
+}
+
+
+void ChatPanel::_OutputLine( const wxString& message, const wxColour& col )
 {
   LogTime();
   m_chatlog_text->SetDefaultStyle(wxTextAttr(col));
@@ -200,16 +211,21 @@ void ChatPanel::OnSay( wxCommandEvent& event )
 //!
 //! @param who nick of the person who said something.
 //! @param message the message to be outputted.
-//! @todo Fix nicer format of chat messages and highlight messages to self
 void ChatPanel::Said( const wxString& who, const wxString& message )
 {
-  OutputLine( _T(" ") + who + _T(": ")+ message, *wxBLACK );
+  wxString me = WX_STRING(GetMe().GetNick());
+  wxColour col;
+  if ( who == me ) col.Set( 100,100,140 );
+  else if ( message.Contains( me ) ) col.Set( 255,40,40 );
+  else col.Set( 0,0,0 );
+
+  _OutputLine( _T(" <") + who + _T("> ")+ message, col );
 }
 
 
 void ChatPanel::DidAction( const wxString& who, const wxString& action )
 {
-  OutputLine( _T(" ") + who + _T(" ") + action + _T("."), *wxBLACK );
+  _OutputLine( _T(" ") + who + _T(" ") + action + _T("."), *wxBLACK );
 }
 
 
@@ -218,39 +234,49 @@ void ChatPanel::DidAction( const wxString& who, const wxString& action )
 //! @param message The MOTD message to output
 void ChatPanel::Motd( const wxString& message )
 {
-  OutputLine( _T(" ** motd ** ") + message, wxColour(0, 80, 128) );
+  _OutputLine( _T(" ** motd ** ") + message, wxColour(0, 80, 128) );
 }
 
 
 void ChatPanel::StatusMessage( const wxString& message )
 {
-  OutputLine( _T(" ** Server ** ")+ message, wxColour(255, 150, 80) );
+  _OutputLine( _T(" ** Server ** ")+ message, wxColour(255, 150, 80) );
 }
 
 
 void ChatPanel::UnknownCommand( const wxString& command, const wxString& params )
 {
-  OutputLine( _(" !! Command: \"") + command + _("\" params: \"") + params + _T("\"."), wxColour(128, 0, 0) );
+  _OutputLine( _(" !! Command: \"") + command + _("\" params: \"") + params + _T("\"."), wxColour(128, 0, 0) );
+}
+
+
+wxString ChatPanel::GetChatTypeStr()
+{
+  if ( m_type == CPT_Channel ) return _("channel");
+  else if ( m_type == CPT_Battle ) return _("battle");
+  else if ( m_type == CPT_Server ) return _("server");
+
+  return _T("ROOMTYPE FIXME");
 }
 
 
 void ChatPanel::Joined( User& who )
 {
-  OutputLine( _T(" ** ") + WX_STRING(who.GetNick()) + _(" joined the channel."), wxColour(0, 80, 0) );
+  _OutputLine( _T(" ** ") + WX_STRING(who.GetNick()) + _(" joined the ") + GetChatTypeStr() + _T("."), wxColour(0, 80, 0) );
   if ( m_show_nick_list ) m_nicklist->AddUser( who );
 }
 
 
 void ChatPanel::Parted( User& who, const wxString& message )
 {
-  OutputLine( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" )."), wxColour(0, 80, 0) );
+  _OutputLine( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" )."), wxColour(0, 80, 0) );
   if ( m_show_nick_list ) m_nicklist->RemoveUser( who );
 }
 
 
 void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 {
-  OutputLine( _T(" ** Channel topic: ")+ message + _("\n * Set by ") + who, wxColour(0, 0, 80) );
+  _OutputLine( _T(" ** Channel topic: ")+ message + _("\n * Set by ") + who, wxColour(0, 0, 80) );
 }
 
 

@@ -31,6 +31,7 @@ class Channel : public UserList
     // Properties
     void SetName( const std::string& name );
     std::string GetName();
+    User& GetMe();
 
     /*void SetUserData( void* userdata );
     void* GetUserData();*/

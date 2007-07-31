@@ -20,6 +20,12 @@ std::string Channel::GetName()
 }
 
 
+User& Channel::GetMe()
+{
+  return m_serv.GetMe();
+}
+
+
 void Channel::Said( User& who, const std::string& message )
 {
   m_ui.OnChannelSaid( *this , who, message );
