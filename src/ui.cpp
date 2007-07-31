@@ -490,8 +490,8 @@ void Ui::OnBattleStarted( Battle& battle )
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) {
-      //battle.GetMe().BattleStatus().ready = false; TODO Fix I'm ready button update before enabling this
-      //battle.SendMyBattleStatus();
+      battle.GetMe().BattleStatus().ready = false;
+      battle.SendMyBattleStatus();
       battle.GetMe().Status().in_game = true;
       battle.GetMe().SendMyUserStatus();
       m_spring->Run( battle );

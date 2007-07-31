@@ -18,7 +18,7 @@
 #include "iunitsync.h"
 
 #ifdef WIN32
-#define SPRING_VERSION_PARAM _T(" /V")
+#define SPRING_VERSION_PARAM _T(" //V")
 #else
 #define SPRING_VERSION_PARAM _T(" -V")
 #endif
