@@ -195,7 +195,7 @@ void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
 
 
 void ServerEvents::OnBattleInfoUpdated( int battleid, int metal, int energy, int units, StartType
-                    start, bool comm, bool dgun, bool dim, bool ghost, std::string hash )
+                    start, GameType gt, bool dgun, bool dim, bool ghost, std::string hash )
 {
   debug_func( "" );
   Battle& battle = m_serv.GetBattle( battleid );
@@ -204,7 +204,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int metal, int energy, int
   battle.SetStartEnergy( energy );
   battle.SetMaxUnits( units );
   battle.SetStartType( start );
-  battle.SetComEndsGame( comm );
+  battle.SetGameType( gt );
   battle.SetLimitDGun( dgun );
   battle.SetDimMMs( dim );
   battle.SetGhostedBuildings( ghost );

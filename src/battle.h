@@ -36,6 +36,12 @@ enum StartType {
   ST_Choose
 };
 
+enum GameType {
+  GT_ComContinue = 0,
+  GT_ComEnds,
+  GT_Lineage
+};
+
 
 #define DEFAULT_SERVER_PORT 8034
 
@@ -46,7 +52,7 @@ struct BattleOptions
     battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),
     nattype(NAT_None),port(DEFAULT_SERVER_PORT),maxplayers(0),spectators(0),
     startmetal(1000),startenergy(1000),maxunits(500),starttype(ST_Fixed),
-    comends(true),limitdgun(false),dimmms(false),ghostedbuildings(true),maphash(""),
+    gametype(GT_ComContinue),limitdgun(false),dimmms(false),ghostedbuildings(true),maphash(""),
     hashcode("") {}
 
   int battleid;
@@ -68,7 +74,7 @@ struct BattleOptions
   int maxunits;
   StartType starttype;
 
-  bool comends;
+  GameType gametype;
   bool limitdgun;
   bool dimmms;
   bool ghostedbuildings;
@@ -118,7 +124,7 @@ class Battle : public UserList
     void SetMaxUnits( const int& maxunits ) { m_opts.maxunits = maxunits; }
     void SetStartType( const StartType& starttype ) { m_opts.starttype = starttype; }
 
-    void SetComEndsGame( const bool& comends ) { m_opts.comends = comends; }
+    void SetGameType( const GameType& gt ) { m_opts.gametype = gt; }
     void SetLimitDGun( const bool& limdgun ) { m_opts.limitdgun = limdgun; }
     void SetDimMMs( const bool& dimmm ) { m_opts.dimmms = dimmm; }
     void SetGhostedBuildings( const bool& gbuilds ) { m_opts.ghostedbuildings = gbuilds; }

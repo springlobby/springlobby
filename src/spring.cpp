@@ -139,7 +139,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += wxString::Format( _T("\tStartEnergy=%d;\n"), bo.startenergy );
   s += wxString::Format( _T("\tMaxUnits=%d;\n"), bo.maxunits );
   s += wxString::Format( _T("\tStartPosType=%d;\n"), bo.starttype );
-  s += wxString::Format( _T("\tGameMode=0;\n") );
+  s += wxString::Format( _T("\tGameMode=%d;\n"), bo.gametype );
   s += WX_STRING(("\tGameType=" + usync()->GetModArchive(usync()->GetModIndex(bo.modname)) + ";\n"));
   s += wxString::Format( _T("\tLimitDGun=%d;\n"), bo.limitdgun?1:0 );
   s += wxString::Format( _T("\tDiminishingMMs=%d;\n"), bo.dimmms?1:0 );

@@ -84,7 +84,7 @@ UserBattleStatus ConvTasbattlestatus( TASBattleStatus );
 TASBattleStatus ConvTasbattlestatus( UserBattleStatus );
 bool VersionSupportReplyid( int version );
 StartType IntToStartType( int start );
-
+GameType IntToGameType( int gt );
 
 TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(SER_VER_UNKNOWN), m_connected(false), m_online(false), m_buffer(""), m_last_ping(0), m_ping_id(1000),m_battle_id(-1) { m_se = new ServerEvents( *this, ui); }
 
@@ -301,7 +301,8 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   std::string params = inparams;
   int pos, cpu, id, nat, port, maxplayers, rank, specs, metal, energy, units, start,
       top, left, right, bottom, ally;
-  bool replay, haspass, dgun, ghost, dim, comm;
+  bool replay, haspass, dgun, ghost, dim;
+  GameType gt;
   std::string hash;
   std::string nick, contry, host, map, title, mod, channel, error, msg;
   //NatType ntype;
@@ -431,25 +432,25 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     energy = GetIntParam( params );
     units = GetIntParam( params );
     start = GetIntParam( params );
-    comm = (bool)GetIntParam( params );
+    gt = IntToGameType( GetIntParam( params ) );
     dgun = (bool)GetIntParam( params );
     dim = (bool)GetIntParam( params );
     ghost = (bool)GetIntParam( params );
     hash = GetWordParam( params );
     m_battle_id = id;
     m_se->OnJoinedBattle( id );
-    m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), comm, dim, dgun, ghost, hash );
+    m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dim, dgun, ghost, hash );
   } else if ( cmd == "UPDATEBATTLEDETAILS" ) {
     metal = GetIntParam( params );
     energy = GetIntParam( params );
     units = GetIntParam( params );
     start = GetIntParam( params );
-    comm = (bool)GetIntParam( params );
+    gt = IntToGameType( GetIntParam( params ) );
     dgun = (bool)GetIntParam( params );
     dim = (bool)GetIntParam( params );
     ghost = (bool)GetIntParam( params );
     hash = GetWordParam( params );
-    m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), comm, dim, dgun, ghost, hash );
+    m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dim, dgun, ghost, hash );
     //UPDATEBATTLEDETAILS startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings
   } else if ( cmd == "CLIENTBATTLESTATUS" ) {
     nick = GetWordParam( params );
@@ -834,3 +835,14 @@ StartType IntToStartType( int start )
   return ST_Fixed;
 }
 
+
+GameType IntToGameType( int gt )
+{
+  switch ( gt ) {
+    case 0: return GT_ComContinue;
+    case 1: return GT_ComEnds;
+    case 2: return GT_Lineage;
+    default: assert(false);
+  };
+  return GT_ComContinue;
+}
