@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "nonportable.h"
+
 //! Converts a wxString to an stl string
 #define STL_STRING(v) std::string((const char*)v.mb_str(wxConvUTF8))
 
@@ -20,16 +22,6 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #define debug_func( params ) debug_output( "**", __FUNCTION__, params, "" )
 #define debug_warn( msg ) debug_output( "ww", __FUNCTION__, "", msg )
 #define debug_error( msg ) debug_output( "!!", __FUNCTION__, "", msg )
-
-#ifdef WIN32
-#define PATH_SEP "\\"
-#define SPRING_BIN "spring.exe"
-#define DOS_TXT true
-#else
-#define PATH_SEP "/"
-#define SPRING_BIN "spring"
-#define DOS_TXT false
-#endif
 
 #ifdef __WXMSW__
 #define CONTROL_HEIGHT 22

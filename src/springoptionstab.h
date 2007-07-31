@@ -3,6 +3,8 @@
 
 #include <wx/panel.h>
 
+#include "nonportable.h"
+
 class wxStaticBoxSizer;
 class wxStaticBox;
 class wxStaticText;
@@ -12,17 +14,6 @@ class wxTextCtrl;
 class wxBoxSizer;
 class Ui;
 
-#ifdef WIN32
-#define DLLEXT _T(".dll")
-#define EXEEXT _T(".exe")
-#define CHOOSE_EXE _("Executables (*.exe)|*.exe|Any File (*.*)|*.*")
-#define CHOOSE_DLL _("Library (*.dll)|*.dll|Any File (*.*)|*.*")
-#else
-#define DLLEXT _T(".so")
-#define EXEEXT _T("")
-#define CHOOSE_EXE _("Any file (*.*)|*.*")
-#define CHOOSE_DLL _("Library (*.so)|*.so|Any File (*.*)|*.*")
-#endif
 
 class SpringOptionsTab : public wxPanel
 {

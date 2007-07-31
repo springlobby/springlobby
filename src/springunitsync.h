@@ -2,14 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 
 #include "iunitsync.h"
-
-#ifdef WIN32
-  #define USYNC_CALL_CONV __stdcall
-  #define MY_DLERROR() ("bork")
-#else
-  #define USYNC_CALL_CONV
-  #define MY_DLERROR() ("bork")
-#endif
+#include "nonportable.h"
 
 static const char* dllname = "unitsync";
 

@@ -323,10 +323,10 @@ void   Settings::SetSpringLoc( const std::string& loc )
 std::string Settings::GetSpringUsedLoc()
 {
   if ( GetSpringUseDefLoc() ) {
-    std::string tmp = GetSpringDir();
+    wxString tmp = WX_STRING(GetSpringDir());
     tmp += PATH_SEP;
     tmp += SPRING_BIN;
-    return tmp;
+    return STL_STRING(tmp);
   } else {
     return GetSpringLoc();
   }

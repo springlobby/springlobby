@@ -16,13 +16,13 @@
 #include "battle.h"
 #include "user.h"
 #include "iunitsync.h"
+#include "nonportable.h"
 
 #ifdef WIN32
 #define SPRING_VERSION_PARAM _T(" //V")
 #else
 #define SPRING_VERSION_PARAM _T(" -V")
 #endif
-
 
 Spring::Spring( Ui& ui) :
   m_ui(ui),
