@@ -175,7 +175,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col )
   m_chatlog_text->ScrollLines( 10 );
   m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
 #endif
-	m_chatlog_text->Thaw(); 
+  m_chatlog_text->Thaw();
 }
 
 
