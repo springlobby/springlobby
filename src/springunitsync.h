@@ -6,12 +6,12 @@
 #ifdef WIN32
   #define USYNC_CALL_CONV __stdcall
   #define MY_DLERROR() ("bork")
-  static char* dllname = "\\unitsync.dll";
 #else
   #define USYNC_CALL_CONV
   #define MY_DLERROR() ("bork")
-  static char* dllname = "/unitsync.so";
 #endif
+
+static const char* dllname = "unitsync";
 
 class wxImage;
 class wxDynamicLibrary;
