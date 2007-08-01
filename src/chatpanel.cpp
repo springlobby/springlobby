@@ -170,7 +170,7 @@ User& ChatPanel::GetMe()
   if ( m_type == CPT_Channel ) return m_channel->GetMe();
   else if ( m_type == CPT_Battle ) return m_battle->GetMe();
   else if ( m_type == CPT_Server ) return m_server->GetMe();
-  else if ( m_type == CPT_User ) return *m_user;
+  else if ( m_type == CPT_User ) return m_ui.GetServer().GetMe();
 
   ASSERT_LOGIC( false, "GetMe() m_type invalid." );
 }

@@ -46,7 +46,7 @@ IUnitSync* usync()
 {
   static SpringUnitSync* m_sync = 0;
   if (!m_sync)
-    m_sync = new SpringUnitSync;
+    m_sync = new SpringUnitSync; // FIXME: This is a memleak, where to delete?
   return m_sync;
 }
 
