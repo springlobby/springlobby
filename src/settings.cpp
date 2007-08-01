@@ -66,7 +66,7 @@ bool Settings::ServerExists( const std::string& server_name )
 //! @note Normally this will be the previously selected server. But at first run it will be a server that is set as the default.
 std::string Settings::GetDefaultServer()
 {
-  return STL_STRING( m_config->Read( _T("/Servers/Default"), DEFSETT_DEFAULT_SERVER ) );
+  return STD_STRING( m_config->Read( _T("/Servers/Default"), DEFSETT_DEFAULT_SERVER ) );
 }
 
 
@@ -85,7 +85,7 @@ void   Settings::SetDefaultServer( const std::string& server_name )
 //! @param server_name the server name/alias
 std::string Settings::GetServerHost( const std::string& server_name )
 {
-  return STL_STRING( m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/host"), DEFSETT_DEFAULT_SERVER_HOST ) );
+  return STD_STRING( m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/host"), DEFSETT_DEFAULT_SERVER_HOST ) );
 }
 
 
@@ -143,7 +143,7 @@ void   Settings::SetServerName( const std::string& server_name, const std::strin
 //! @param server_name the server name/alias
 std::string Settings::GetServerAccountNick( const std::string& server_name )
 {
-  return STL_STRING( m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/nick"), _T("") ) );
+  return STD_STRING( m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/nick"), _T("") ) );
 }
 
 
@@ -163,7 +163,7 @@ void   Settings::SetServerAccountNick( const std::string& server_name, const std
 //! @todo Implement
 std::string Settings::GetServerAccountPass( const std::string& server_name )
 {
-  return STL_STRING( m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/pass"), _T("") ) );
+  return STD_STRING( m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/pass"), _T("") ) );
 }
 
 
@@ -257,7 +257,7 @@ void   Settings::SetMainWindowLeft( const int value )
 
 std::string Settings::GetSpringDir()
 {
-  return STL_STRING(m_config->Read( _T("/Spring/dir"), DEFSETT_SPRING_DIR ));
+  return STD_STRING(m_config->Read( _T("/Spring/dir"), DEFSETT_SPRING_DIR ));
 }
 
 
@@ -282,7 +282,7 @@ void   Settings::SetUnitSyncUseDefLoc( const bool usedefloc )
 
 std::string Settings::GetUnitSyncLoc()
 {
-  return STL_STRING(m_config->Read( _T("/Spring/unitsync_loc"), _T("") ));
+  return STD_STRING(m_config->Read( _T("/Spring/unitsync_loc"), _T("") ));
 }
 
 
@@ -310,7 +310,7 @@ void   Settings::SetSpringUseDefLoc( const bool usedefloc )
 
 std::string Settings::GetSpringLoc()
 {
-  return STL_STRING(m_config->Read( _T("/Spring/exec_loc"), _T("") ));
+  return STD_STRING(m_config->Read( _T("/Spring/exec_loc"), _T("") ));
 }
 
 
@@ -327,7 +327,7 @@ std::string Settings::GetSpringUsedLoc()
     wxString tmp = WX_STRING(GetSpringDir());
     tmp += wxFILE_SEP_PATH;
     tmp += SPRING_BIN;
-    return STL_STRING(tmp);
+    return STD_STRING(tmp);
   } else {
     return GetSpringLoc();
   }

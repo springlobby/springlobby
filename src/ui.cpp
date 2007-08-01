@@ -107,7 +107,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
   int port;
   Socket* sock;
 
-  if ( !sett().ServerExists( STL_STRING(servername) ) ) {
+  if ( !sett().ServerExists( STD_STRING(servername) ) ) {
     assert( false );
     return;
   }
@@ -120,19 +120,19 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
   m_serv->SetSocket( sock );
   //m_serv->SetServerEvents( &se() );
 
-  m_serv->SetUsername( STL_STRING(username) );
-  m_serv->SetPassword( STL_STRING(password) );
+  m_serv->SetUsername( STD_STRING(username) );
+  m_serv->SetPassword( STD_STRING(password) );
 
-  if ( sett().GetServerAccountSavePass( STL_STRING(servername) ) ) {
-    if ( m_serv->IsPasswordHash(STL_STRING(password)) ) sett().SetServerAccountPass( STL_STRING(servername), STL_STRING(password) );
-    else sett().SetServerAccountPass( STL_STRING(servername), m_serv->GetPasswordHash( STL_STRING(password) ) );
+  if ( sett().GetServerAccountSavePass( STD_STRING(servername) ) ) {
+    if ( m_serv->IsPasswordHash(STD_STRING(password)) ) sett().SetServerAccountPass( STD_STRING(servername), STD_STRING(password) );
+    else sett().SetServerAccountPass( STD_STRING(servername), m_serv->GetPasswordHash( STD_STRING(password) ) );
   } else {
-    sett().SetServerAccountPass( STL_STRING(servername), "" );
+    sett().SetServerAccountPass( STD_STRING(servername), "" );
   }
   sett().SaveSettings();
 
-  host = sett().GetServerHost( STL_STRING(servername) );
-  port = sett().GetServerPort( STL_STRING(servername) );
+  host = sett().GetServerHost( STD_STRING(servername) );
+  port = sett().GetServerPort( STD_STRING(servername) );
 
   m_serv->uidata.panel = m_main_win->GetChatTab().AddChatPannel( *m_serv, servername );
   m_serv->uidata.panel->StatusMessage( _T("Connecting to server ") + servername + _T("...") );
@@ -148,7 +148,7 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
   std::string host;
   int port;
 
-  if ( !sett().ServerExists( STL_STRING(servername) ) ) {
+  if ( !sett().ServerExists( STD_STRING(servername) ) ) {
     assert( false );
     return false;
   }
@@ -158,10 +158,10 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
   Socket* sock = new Socket( *serv, true );
   serv->SetSocket( sock );
 
-  host = sett().GetServerHost( STL_STRING(servername) );
-  port = sett().GetServerPort( STL_STRING(servername) );
+  host = sett().GetServerHost( STD_STRING(servername) );
+  port = sett().GetServerPort( STD_STRING(servername) );
 
-  return serv->Register( host, port, STL_STRING(username), STL_STRING(password) );
+  return serv->Register( host, port, STD_STRING(username), STD_STRING(password) );
 
 }
 
@@ -176,7 +176,7 @@ bool Ui::IsConnected() const
 void Ui::JoinChannel( const wxString& name, const wxString& password )
 {
   if ( m_serv != 0 )
-    m_serv->JoinChannel( STL_STRING(name), STL_STRING(password) );
+    m_serv->JoinChannel( STD_STRING(name), STD_STRING(password) );
 }
 
 
@@ -227,7 +227,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     if ( !pass.IsEmpty() ) channel = channel.BeforeFirst(' ');
     if ( channel.StartsWith(_T("#")) ) channel.Remove( 0, 1 );
 
-    m_serv->JoinChannel( STL_STRING(channel), STL_STRING(pass) );
+    m_serv->JoinChannel( STD_STRING(channel), STD_STRING(pass) );
     return true;
   }
   return false;

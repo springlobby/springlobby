@@ -348,25 +348,25 @@ void ChatPanel::Say( const wxString& message )
 
     assert( m_channel != 0 );
     if ( message.StartsWith( _T("/") ) ) {
-      if ( m_channel->ExecuteSayCommand( STL_STRING(message) ) ) return;
+      if ( m_channel->ExecuteSayCommand( STD_STRING(message) ) ) return;
     }
-    m_channel->Say( STL_STRING(message) );
+    m_channel->Say( STD_STRING(message) );
 
   } else if ( m_type == CPT_Battle ) {
 
     assert( m_battle != 0 );
     if ( message.StartsWith(_T("/")) ) {
-      if ( m_battle->ExecuteSayCommand( STL_STRING(message) ) ) return;
+      if ( m_battle->ExecuteSayCommand( STD_STRING(message) ) ) return;
     }
-    m_battle->Say( STL_STRING(message) );
+    m_battle->Say( STD_STRING(message) );
 
   } else if ( m_type == CPT_User ) {
 
     assert( m_user != 0 );
     if ( message.StartsWith(_T("/")) ) {
-      if ( m_user->ExecuteSayCommand( STL_STRING(message) ) ) return;
+      if ( m_user->ExecuteSayCommand( STD_STRING(message) ) ) return;
     }
-    m_user->Say( STL_STRING(message) );
+    m_user->Say( STD_STRING(message) );
 
   }
 }

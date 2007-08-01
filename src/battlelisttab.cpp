@@ -85,7 +85,7 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
 
   if ( battle.opts().ispassworded ) {
     wxPasswordEntryDialog pw( this, _("Battle password"), _("Enter password") );
-    if ( pw.ShowModal() == wxID_OK ) battle.Join( STL_STRING(pw.GetValue()) );
+    if ( pw.ShowModal() == wxID_OK ) battle.Join( STD_STRING(pw.GetValue()) );
   } else {
     battle.Join();
   }
@@ -111,7 +111,7 @@ void BattleListTab::OnListJoin( wxListEvent& event )
 
   if ( battle.opts().ispassworded ) {
     wxPasswordEntryDialog pw( this, _("Battle password"), _("Enter password") );
-    if ( pw.ShowModal() == wxID_OK ) battle.Join( STL_STRING(pw.GetValue()) );
+    if ( pw.ShowModal() == wxID_OK ) battle.Join( STD_STRING(pw.GetValue()) );
   } else {
     battle.Join();
   }

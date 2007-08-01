@@ -187,9 +187,9 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
 {
   Hide();
   if ( m_tabs->GetSelection() <= 0 ) {
-    sett().SetDefaultServer( STL_STRING(m_server_combo->GetValue()) );
-    sett().SetServerAccountNick( STL_STRING(m_server_combo->GetValue()), STL_STRING(m_nick_text->GetValue()) );
-    sett().SetServerAccountSavePass( STL_STRING(m_server_combo->GetValue()), m_rpass_check->GetValue() );
+    sett().SetDefaultServer( STD_STRING(m_server_combo->GetValue()) );
+    sett().SetServerAccountNick( STD_STRING(m_server_combo->GetValue()), STD_STRING(m_nick_text->GetValue()) );
+    sett().SetServerAccountSavePass( STD_STRING(m_server_combo->GetValue()), m_rpass_check->GetValue() );
     sett().SaveSettings();
 
     m_ui.DoConnect( m_server_combo->GetValue(), m_nick_text->GetValue(), m_pass_text->GetValue() );

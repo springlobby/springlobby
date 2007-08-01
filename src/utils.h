@@ -3,10 +3,10 @@
 
 #include <string>
 
-//! Converts a wxString to an stl string
-#define STL_STRING(v) std::string((const char*)v.mb_str(wxConvUTF8))
+//! Converts a wxString to an std::string
+#define STD_STRING(v) std::string((const char*)v.mb_str(wxConvUTF8))
 
-//! Converts an stl string to a wxString
+//! Converts an std::string to a wxString
 #define WX_STRING(v) wxString(v.c_str(),wxConvUTF8)
 
 #define ASSERT_LOGIC(cond,msg) if(!(cond))throw std::logic_error(msg)

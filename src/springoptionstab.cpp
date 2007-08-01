@@ -142,9 +142,9 @@ void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
 
 void SpringOptionsTab::OnApply( wxCommandEvent& event )
 {
-  sett().SetSpringDir( STL_STRING(m_dir_edit->GetValue()) );
-  sett().SetUnitSyncLoc( STL_STRING( m_sync_edit->GetValue() ) );
-  sett().SetSpringLoc( STL_STRING( m_exec_edit->GetValue() ) );
+  sett().SetSpringDir( STD_STRING(m_dir_edit->GetValue()) );
+  sett().SetUnitSyncLoc( STD_STRING( m_sync_edit->GetValue() ) );
+  sett().SetSpringLoc( STD_STRING( m_exec_edit->GetValue() ) );
   sett().SetSpringUseDefLoc( m_exec_def_radio->GetValue() );
   sett().SetUnitSyncUseDefLoc( m_sync_def_radio->GetValue() );
 

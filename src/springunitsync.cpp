@@ -67,7 +67,7 @@ bool SpringUnitSync::LoadUnitSyncLib()
 
   // Load the library.
   std::string loc;
-  if ( sett().GetUnitSyncUseDefLoc() ) loc = sett().GetSpringDir() + STL_STRING(wxString(wxFILE_SEP_PATH)) + STL_STRING(wxString(UNITSYNC_BIN));
+  if ( sett().GetUnitSyncUseDefLoc() ) loc = sett().GetSpringDir() + STD_STRING(wxString(wxFILE_SEP_PATH)) + STD_STRING(wxString(UNITSYNC_BIN));
   else loc = sett().GetUnitSyncLoc();
 
   debug( "Loading from: " + loc );
@@ -279,7 +279,7 @@ wxImage SpringUnitSync::GetSidePicture(const std::string& SideName )
   ImgName += WX_STRING( SideName ).Upper();
   ImgName += _T(".bmp");
 
-  int ini = m_open_file_vfs(STL_STRING(ImgName).c_str());
+  int ini = m_open_file_vfs(STD_STRING(ImgName).c_str());
   ASSERT_RUNTIME( ini, "cannot find side image" );
 
   int FileSize = m_file_size_vfs(ini);
