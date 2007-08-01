@@ -22,6 +22,7 @@ springlobby_LDADD = \
 	$(WX_LIBS)
 
 springlobby_SOURCES = \
+	src/nonportable.h \
 	src/agreementdialog.cpp \
 	src/agreementdialog.h \
 	src/base64.cpp \
