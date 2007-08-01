@@ -254,8 +254,8 @@ void TASServer::_ReciveAndExecute()
     if ( m_sock->Recive( data ) ) {
       m_buffer += data;
       if ( m_buffer.find( "\n", 0 ) != std::string::npos ) {
-        std::string cmd = m_buffer.substr( 0, m_buffer.find( "\n", 0 ) ); 
-        m_buffer = m_buffer.substr( m_buffer.find( "\n", 0 )+1, m_buffer.length() ); 
+        std::string cmd = m_buffer.substr( 0, m_buffer.find( "\n", 0 ) );
+        m_buffer = m_buffer.substr( m_buffer.find( "\n", 0 )+1, m_buffer.length() );
         ExecuteCommand( cmd );
       }
     }
