@@ -20,6 +20,7 @@ class wxCheckBox;
 class MapCtrl;
 class wxListCtrl;
 class wxChoice;
+class wxRadioBox;
 
 class BattleMapTab : public wxPanel
 {

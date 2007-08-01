@@ -15,6 +15,7 @@
 #include <wx/listctrl.h>
 #include <wx/settings.h>
 #include <wx/arrstr.h>
+#include <wx/choice.h>
 
 #include "battlemaptab.h"
 #include "ui.h"
@@ -114,7 +115,7 @@ void BattleMapTab::UpdateMap()
   m_map_opts_list->SetItem( 4, 1, wxString::Format( _T("%d"), map.info.extractorRadius ) );
   m_map_opts_list->SetItem( 5, 1, wxString::Format( _T("%.3f"), map.info.maxMetal ) );
 
-  int index = m_map_combo->FindString( RefineMapname( map.name ) );
+  int index = m_map_combo->FindString( RefineMapname( WX_STRING(map.name) ) );
   m_map_combo->SetSelection( index );
 
   m_start_radios->SetSelection( m_battle.opts().starttype );
