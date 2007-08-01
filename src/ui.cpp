@@ -529,11 +529,14 @@ void Ui::OnSpringTerminated( bool success )
 
 void Ui::OnBattleStartRectsUpdated( Battle& battle )
 {
+
+  mw().GetJoinTab().UpdateCurrentBattle();
+  /*
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     br->GetChatPanel().StatusMessage( _T("Start rects updated.") );
     br->UpdateBattleInfo();
-  }
+  }*/
 }
 
 

@@ -70,12 +70,26 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
     x2 = left + (sr->right * width) / 200;
     y2 = top + (sr->bottom * height) / 200;
 
-    wxColour c;
-    c.Set( 140, 170, 140 );
+    wxColour c( 140, 170, 140 );
+    dc.SetBrush( wxBrush( c, wxTRANSPARENT ) );
 
-    dc.SetBrush( wxBrush( c, wxSOLID ) );
-    dc.DrawRectangle( x1, y1, x2-x1, y2-y1 );
+    wxImage img( x2-x1, y2-y1 );
+    img.SetRGB( wxRect( 0, 0, x2-x1, y2-y1 ), 140, 200, 140 );
+    unsigned char *alpha = (unsigned char*)malloc( (x2-x1)*(y2-y1) );
+    for ( int y = 0; y < y2-y1; y++ ) {
+      int a;
+      if ( (y%3) == 0 ) a = 150;
+      else a = 110;
+      for ( int x = 0; x < x2-x1; x++ ) {
+        alpha[y*(x2-x1)+x] = a;
+      }
+    }
+    img.SetAlpha( alpha );
+    wxBitmap bmpimg( img );
+    dc.DrawBitmap( bmpimg, x1, y1, false );
+    dc.SetPen( wxPen( wxColour(0, 200, 0 ) ) );
     dc.DrawText( wxString::Format( _T("%d"), i+1), x1+1, y1+1 );
+    dc.DrawRectangle( x1, y1, x2-x1, y2-y1 );
   }
 
 }
