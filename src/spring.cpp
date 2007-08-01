@@ -75,7 +75,8 @@ bool Spring::TestSpringBinary()
   wxString foo = wxString::Format(_T("%d %d %d %d"), ret , res.GetCount() == 1 , err.GetCount() == 0 , res[0] == _T("Spring 0.74b3"));
   debug(STD_STRING(foo));
   // we can't trust ret value at all :(
-  return /* ret == 1 && */ res.GetCount() == 1 && err.GetCount() == 0 && res[0] == _T("Spring 0.74b3");
+  // FIXME check against something else than a hardcoded spring version, f.ex. the one tasserver gives
+  return /* ret == 1 && */ res.GetCount() == 1 && err.GetCount() == 0 /* && res[0] == _T("Spring 0.74b3") */;
 }
 
 
