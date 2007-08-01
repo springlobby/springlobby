@@ -96,7 +96,7 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, BLIST_LI
 
 BattleListCtrl::~BattleListCtrl()
 {
-
+  delete m_popup;
 }
 
 

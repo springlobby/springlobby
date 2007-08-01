@@ -40,7 +40,7 @@ Ui::Ui() :
 
 Ui::~Ui() {
   Disconnect();
-  if ( m_main_win != 0 ) delete m_main_win;
+  delete m_main_win;
   delete m_spring;
 }
 
