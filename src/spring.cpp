@@ -271,5 +271,59 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s.Replace( _T("\n"), _T("\r\n"), true );
   }
 
+  wxString ds = _T("[Script End]\n\n----------------------[ Debug info ]-----------------------------\nUsers:\n\n");
+  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
+    User& tmpu = battle.GetUser( i );
+    ds += WX_STRING( tmpu.GetNick() );
+    ds += wxString::Format( _T(":\n  team: %d ally: %d spec: %d order: %d side: %d hand: %d sync: %d ready: %d col: %d,%d,%d\n\n"),
+      tmpu.BattleStatus().team,
+      tmpu.BattleStatus().ally,
+      tmpu.BattleStatus().spectator,
+      tmpu.BattleStatus().order,
+      tmpu.BattleStatus().side,
+      tmpu.BattleStatus().handicap,
+      tmpu.BattleStatus().sync,
+      tmpu.BattleStatus().ready,
+      tmpu.BattleStatus().color_r,
+      tmpu.BattleStatus().color_g,
+      tmpu.BattleStatus().color_b
+    );
+  }
+
+  ds += _T("\n\nPlayerOrder: { ");
+  for ( int i = 0; i < 16; i++ ) {
+    ds += wxString::Format( _T(" %d,"), PlayerOrder[i] );
+  }
+  ds += _T(" }\n\n");
+
+  ds += _T("TeamConv: { ");
+  for ( int i = 0; i < 16; i++ ) {
+    ds += wxString::Format( _T(" %d,"), TeamConv[i] );
+  }
+  ds += _T(" }\n\n");
+
+  ds += _T("AllyConv: { ");
+  for ( int i = 0; i < 16; i++ ) {
+    ds += wxString::Format( _T(" %d,"), AllyConv[i] );
+  }
+  ds += _T(" }\n\n");
+
+  ds += _T("AllyRevConv: { ");
+  for ( int i = 0; i < 16; i++ ) {
+    ds += wxString::Format( _T(" %d,"), AllyRevConv[i] );
+  }
+  ds += _T(" }\n\n\n");
+
+  ds += wxString::Format( _T("NumTeams: %d\n\nNumAllys: %d\n\nMyPlayerNum: %d\n\n"), NumTeams, NumAllys, MyPlayerNum );
+
+  if ( DOS_TXT ) {
+    ds.Replace( _T("\n"), _T("\r\n"), true );
+  }
+
+  wxFile f( wxString(_T("script_springlobby_debug.txt")), wxFile::write );
+  f.Write( _T("[Script Start]") + s );
+  f.Write( ds );
+  f.Close();
+ 
   return s;
 }
