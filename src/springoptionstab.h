@@ -58,8 +58,6 @@ class SpringOptionsTab : public wxPanel
 
     wxBoxSizer* m_main_sizer;
     wxBoxSizer* m_dir_sizer;
-    wxBoxSizer* m_exec_sizer;
-    wxBoxSizer* m_sync_sizer;
     wxBoxSizer* m_aconf_sizer;
     wxBoxSizer* m_exec_loc_sizer;
     wxBoxSizer* m_sync_loc_sizer;

@@ -11,6 +11,26 @@
 #include "user.h"
 
 
+Server::~Server()
+{
+  while ( m_battles.GetNumBattles() > 0 ) {
+    Battle* b = &m_battles.GetFirstBattle();
+    m_battles.RemoveBattle( b->opts().battleid );
+    delete b;
+  }
+  while ( m_users.GetNumUsers() > 0 ) {
+    User* u = &m_users.GetUser( 0 );
+    m_users.RemoveUser( u->GetNick() );
+    delete u;
+  }
+  while ( m_channels.GetNumChannels() > 0 ) {
+    Channel* c = &m_channels.GetChannel( 0 );
+    m_channels.RemoveChannel( c->GetName() );
+    delete c;
+  }
+}
+
+
 void Server::SetSocket( Socket* sock )
 {
   assert( (!IsConnected()) || (sock == 0) ); m_sock = sock;
@@ -79,7 +99,7 @@ void Server::_RemoveUser( const std::string& nickname )
   User* u = &m_users.GetUser( nickname );
   m_users.RemoveUser( nickname );
   if ( u == 0 ) throw std::logic_error("Server::_RemoveUser(\"" + nickname + "\"): GetUser returned NULL pointer");
-  //delete u; //! @todo Fix memleak
+  delete u;
 }
 
 

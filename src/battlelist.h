@@ -19,6 +19,7 @@ class BattleList
     void AddBattle( Battle& battle );
     void RemoveBattle( battle_id_t const& id );
     Battle& GetBattle( battle_id_t const& id );
+    Battle& GetFirstBattle();
     bool BattleExists( battle_id_t const& id );
     battle_map_t::size_type GetNumBattles();
 

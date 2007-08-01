@@ -64,7 +64,6 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   m_dir_sizer = new wxBoxSizer( wxHORIZONTAL );
-  m_sync_sizer = new wxBoxSizer( wxVERTICAL );
   m_aconf_sizer = new wxBoxSizer( wxVERTICAL );
   m_exec_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_sync_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
