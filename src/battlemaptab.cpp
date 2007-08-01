@@ -131,3 +131,9 @@ void BattleMapTab::ReloadMaplist()
   }
 }
 
+
+void BattleMapTab::UpdateUser( User& user )
+{
+  if ( &m_battle.GetMe() == &user ) m_minimap->UpdateMinimap();
+}
+

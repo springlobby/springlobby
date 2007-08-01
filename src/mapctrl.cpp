@@ -13,6 +13,7 @@
 #include "mapctrl.h"
 #include "battle.h"
 #include "iunitsync.h"
+#include "user.h"
 
 //#include "images/select_icon.xpm"
 
@@ -74,7 +75,11 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
     dc.SetBrush( wxBrush( c, wxTRANSPARENT ) );
 
     wxImage img( x2-x1, y2-y1 );
-    img.SetRGB( wxRect( 0, 0, x2-x1, y2-y1 ), 140, 200, 140 );
+    if ( i == m_battle.GetMe().BattleStatus().ally ) {
+      img.SetRGB( wxRect( 0, 0, x2-x1, y2-y1 ), 140, 200, 140 );
+    } else {
+      img.SetRGB( wxRect( 0, 0, x2-x1, y2-y1 ), 200, 140, 140 );
+    }
     unsigned char *alpha = (unsigned char*)malloc( (x2-x1)*(y2-y1) );
     for ( int y = 0; y < y2-y1; y++ ) {
       int a;
@@ -87,7 +92,11 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
     img.SetAlpha( alpha );
     wxBitmap bmpimg( img );
     dc.DrawBitmap( bmpimg, x1, y1, false );
-    dc.SetPen( wxPen( wxColour(0, 200, 0 ) ) );
+    if ( i == m_battle.GetMe().BattleStatus().ally ) {
+      dc.SetPen( wxPen( wxColour(0, 200, 0 ) ) );
+    } else {
+      dc.SetPen( wxPen( wxColour(200, 0, 0 ) ) );
+    }
     dc.DrawText( wxString::Format( _T("%d"), i+1), x1+1, y1+1 );
     dc.DrawRectangle( x1, y1, x2-x1, y2-y1 );
   }

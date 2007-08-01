@@ -195,6 +195,8 @@ void BattleRoomTab::UpdateUser( User& user )
   m_side_sel->SetSelection( bs.side );
   m_spec_chk->SetValue( bs.spectator );
   m_ready_chk->SetValue( bs.ready );
+  
+  m_minimap->UpdateMinimap();
 }
 
 Battle& BattleRoomTab::GetBattle()

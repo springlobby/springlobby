@@ -101,5 +101,6 @@ void MainJoinBattleTab::BattleUserUpdated( User& user )
 {
   assert( m_battle_tab != 0 );
   m_battle_tab->UpdateUser( user );
+  m_map_tab->UpdateUser( user );
 }
 

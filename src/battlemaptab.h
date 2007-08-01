@@ -28,6 +28,8 @@ class BattleMapTab : public wxPanel
     BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle );
      ~BattleMapTab();
 
+     void UpdateUser( User& user );
+
      void UpdateMap();
      void ReloadMaplist();
 
