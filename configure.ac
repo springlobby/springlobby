@@ -1,5 +1,5 @@
 AC_PREREQ([2.59c])
-AC_INIT([SpringLobby], [0.1], [FIXME_our_bugs_email_address])
+AC_INIT([SpringLobby], [0.0.1], [FIXME_our_bugs_email_address])
 AM_INIT_AUTOMAKE([-Wall -Werror])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/springlobbyapp.cpp])
