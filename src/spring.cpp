@@ -70,13 +70,23 @@ bool Spring::TestSpringBinary()
 {
   wxArrayString res;
   wxArrayString err;
-  wxString bin = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ") + SPRING_VERSION_PARAM;
+  wxString bin = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ");
+#ifdef WIN32
+  bin += _T("//V"); // Hack, Spring returns -1 if called with correct param, wxExecute doesn't like that...
+  int ret = wxExecute( bin, res, err, wxEXEC_SYNC ); // Hack
+  return (ret != -1); // Hack, hack
+#else
+  bin += SPRING_VERSION_PARAM;
   int ret = wxExecute( bin, res, err, wxEXEC_SYNC );
-  wxString foo = wxString::Format(_T("%d %d %d %d"), ret , res.GetCount() == 1 , err.GetCount() == 0 , res[0] == _T("Spring 0.74b3"));
-  debug(STD_STRING(foo));
+  if ( res.GetCount() == 0 ) return false;
+  return res[0].Contains(_T("Spring"));
+#endif
+
+  //wxString foo = wxString::Format(_T("%d %d %d %d"), ret , res.GetCount() == 1 , err.GetCount() == 0 , res[0] == _T("Spring 0.74b3"));
+  //debug(STD_STRING(foo));
   // we can't trust ret value at all :(
   // FIXME check against something else than a hardcoded spring version, f.ex. the one tasserver gives
-  return /* ret == 1 && */ res.GetCount() == 1 && err.GetCount() == 0 /* && res[0] == _T("Spring 0.74b3") */;
+  //return /* ret == 1 && */ res.GetCount() == 1 && err.GetCount() == 0 /* && res[0].Contains(_T("Spring")) == _T("Spring 0.74b3") */;
 }
 
 
