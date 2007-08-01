@@ -63,7 +63,7 @@ void MainJoinBattleTab::UpdateCurrentBattle()
     m_battle_tab->UpdateBattleInfo();
   }
   if ( m_map_tab ) {
-    //! @todo Update.
+    m_map_tab->UpdateMap();
   }
 }
 

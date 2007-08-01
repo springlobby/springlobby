@@ -61,6 +61,8 @@ class SpringUnitSync : public IUnitSync
     bool MapExists( const std::string& mapname );
     bool MapExists( const std::string& mapname, const std::string hash );
     UnitSyncMap GetMap( const std::string&, bool getmapinfo = false );
+    UnitSyncMap GetMap( int index, bool getmapinfo = false );
+
     int GetMapIndex( const std::string& name );
 
     int GetSideCount( const std::string& modname );

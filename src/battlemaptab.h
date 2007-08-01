@@ -3,6 +3,8 @@
 
 #include <wx/panel.h>
 
+#include "iunitsync.h"
+
 class Ui;
 class Battle;
 class User;
@@ -16,6 +18,8 @@ class wxStaticLine;
 class wxButton;
 class wxCheckBox;
 class MapCtrl;
+class wxListCtrl;
+class wxChoice;
 
 class BattleMapTab : public wxPanel
 {
@@ -23,9 +27,19 @@ class BattleMapTab : public wxPanel
     BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle );
      ~BattleMapTab();
 
+     void UpdateMap();
+     void ReloadMaplist();
+
   protected:
     Ui& m_ui;
     Battle& m_battle;
+    UnitSyncMap m_map;
+
+		MapCtrl* m_minimap;
+		wxChoice* m_map_combo;
+		wxButton* m_browse_btn;
+		wxRadioBox* m_start_radios;
+		wxListCtrl* m_map_opts_list;
 
     DECLARE_EVENT_TABLE()
 };

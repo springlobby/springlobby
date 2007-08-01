@@ -214,11 +214,20 @@ bool SpringUnitSync::MapExists( const std::string& mapname, const std::string ha
 
 UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname, bool getmapinfo )
 {
+  int i = GetMapIndex( mapname );
+  ASSERT_LOGIC( i >= 0, "Map does not exist" );
+
+  return GetMap( i, getmapinfo );
+}
+
+
+UnitSyncMap SpringUnitSync::GetMap( int index, bool getmapinfo )
+{
   UnitSyncMap m;
   if ( !m_loaded ) return m;
 
-  int i = GetMapIndex( mapname );
-  ASSERT_LOGIC( i >= 0, "Map does not exist" );
+  m.name = m_get_map_name( index );
+  m.hash = i2s(m_get_map_checksum( index ));
 
   if ( getmapinfo ) {
     char tmpdesc[245+1];
@@ -228,15 +237,13 @@ UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname, bool getmapinfo 
     tm.description = &tmpdesc[0];
     tm.author = &tmpauth[0];
 
-    m_get_map_info_ex( mapname.c_str(), &tm, 0 );
+    m_get_map_info_ex( m.name.c_str(), &tm, 0 );
 
     ConvertSpringMapInfo( tm, m.info );
   }
-
-  m.name = m_get_map_name( i );
-  m.hash = i2s(m_get_map_checksum( i ));
   return m;
 }
+
 
 int SpringUnitSync::GetMapIndex( const std::string& name )
 {

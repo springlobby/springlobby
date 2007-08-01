@@ -59,6 +59,7 @@ class IUnitSync
     virtual bool MapExists( const std::string& mapname ) = 0;
     virtual bool MapExists( const std::string& mapname, const std::string hash ) = 0;
     virtual UnitSyncMap GetMap( const std::string& mapname, bool getmapinfo = false ) = 0;
+    virtual UnitSyncMap GetMap( int index, bool getmapinfo = false ) = 0;
     virtual int GetMapIndex( const std::string& name ) = 0;
     virtual wxImage GetMinimap( const std::string& mapname, int size ) =0;
 
