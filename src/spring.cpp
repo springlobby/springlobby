@@ -69,10 +69,13 @@ bool Spring::Run( Battle& battle )
 bool Spring::TestSpringBinary()
 {
   wxArrayString res;
+  wxArrayString err;
   wxString bin = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ") + SPRING_VERSION_PARAM;
-  int ret = wxExecute( bin, res );
-  //bin = res.Item( 0 );
-  return ( ret != -1);
+  int ret = wxExecute( bin, res, err, wxEXEC_SYNC );
+  wxString foo = wxString::Format(_T("%d %d %d %d"), ret , res.GetCount() == 1 , err.GetCount() == 0 , res[0] == _T("Spring 0.74b3"));
+  debug(STD_STRING(foo));
+  // we can't trust ret value at all :(
+  return /* ret == 1 && */ res.GetCount() == 1 && err.GetCount() == 0 && res[0] == _T("Spring 0.74b3");
 }
 
 
