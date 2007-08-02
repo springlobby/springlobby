@@ -54,6 +54,12 @@ BattleListTab::~BattleListTab()
 }
 
 
+void BattleListTab::RemoveAllBattles()
+{
+  while ( m_battle_list->GetItemCount() > 0 ) m_battle_list->DeleteItem( 0 );
+}
+
+
 void BattleListTab::AddBattle( Battle& battle )
 {
   m_battle_list->AddBattle( battle );

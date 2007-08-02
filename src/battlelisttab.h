@@ -23,6 +23,8 @@ class BattleListTab : public wxPanel
     void RemoveBattle( Battle& battle );
     void UpdateBattle( Battle& battle );
 
+    void RemoveAllBattles();
+
     void UpdateList();
 
     void OnJoin( wxCommandEvent& event );
