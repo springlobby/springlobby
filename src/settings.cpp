@@ -343,7 +343,7 @@ std::string Settings::GetUnitSyncUsedLoc( bool force, bool defloc )
   if ( force ) df = defloc;
   else df = GetUnitSyncUseDefLoc();
 
-  if ( sett().GetUnitSyncUseDefLoc() ) {
+  if ( df ) {
     return sett().GetSpringDir() + STD_STRING(wxString(wxFILE_SEP_PATH)) + STD_STRING(wxString(UNITSYNC_BIN));
   } else {
     return sett().GetUnitSyncLoc();
