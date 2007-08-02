@@ -15,6 +15,8 @@
 #include "channel.h"
 #include "user.h"
 #include "chatpanel.h"
+#include "ui.h"
+#include "server.h"
 
 #include "images/close.xpm"
 #include "images/server.xpm"
@@ -80,6 +82,20 @@ void MainChatTab::CloseAllChats()
     else if ( tmp->GetPanelType() == CPT_User ) tmp->SetUser( 0 );
     else if ( tmp->GetPanelType() == CPT_Server ) tmp->SetServer( 0 );
   }  
+}
+
+
+void MainChatTab::RejoinChannels()
+{
+  for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+    ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+    if ( tmp->GetPanelType() == CPT_Channel ) {
+      // TODO: This will not rejoin passworded channels.
+      std::string name = STD_STRING(m_chat_tabs->GetPageText(i));
+      // #springlobby is joined automatically
+      if ( name != "springlobby" ) m_ui.GetServer().JoinChannel( name, "" );
+    }
+  }
 }
 
 

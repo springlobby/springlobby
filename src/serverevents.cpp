@@ -32,7 +32,7 @@ void ServerEvents::OnDisconnected()
 
 void ServerEvents::OnLogin()
 {
-  //debug_func( "" );
+  
 }
 
 
@@ -40,7 +40,8 @@ void ServerEvents::OnLoginInfoComplete()
 {
   debug_func( "" );
   m_serv.JoinChannel( "springlobby", "" );
-  m_serv.RequestChannels();
+  //m_serv.RequestChannels();
+  m_ui.OnLoggedIn( );
 }
 
 

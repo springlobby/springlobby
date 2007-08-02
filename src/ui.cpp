@@ -261,6 +261,12 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 }
 
 
+void Ui::OnLoggedIn( )
+{
+  mw().GetChatTab().RejoinChannels();
+}
+
+
 void Ui::OnDisconnected( Server& server )
 {
   debug_func( "" );

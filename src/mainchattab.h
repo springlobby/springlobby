@@ -29,6 +29,8 @@ class MainChatTab : public wxPanel
 
     void CloseAllChats();
 
+    void RejoinChannels();
+
     void OnTabsChanged( wxNotebookEvent& event );
 
   protected:

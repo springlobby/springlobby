@@ -110,6 +110,8 @@ class ChatPanel : public wxPanel
 
     ChatPanelType m_type;       //!< Channel object.
 
+    wxString m_chan_pass;
+
     void LogTime();
     void _CreateControls( );
 
