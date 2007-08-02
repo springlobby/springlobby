@@ -414,7 +414,7 @@ void ChatPanel::Part()
 {
   debug_func( "" );
   if ( m_type == CPT_Channel ) {
-    assert( m_channel != 0 );
+    if ( m_channel == 0 ) return;
     m_channel->Leave();
     m_channel->uidata.panel = 0;
   }
