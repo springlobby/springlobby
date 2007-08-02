@@ -93,11 +93,15 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
     wxBitmap bmpimg( img );
     dc.DrawBitmap( bmpimg, x1, y1, false );
     if ( i == m_battle.GetMe().BattleStatus().ally ) {
-      dc.SetPen( wxPen( wxColour(0, 200, 0 ) ) );
+      c.Set( 0, 200, 0 );
     } else {
-      dc.SetPen( wxPen( wxColour(200, 0, 0 ) ) );
+      c.Set( 200, 0, 0 );
     }
-    dc.DrawText( wxString::Format( _T("%d"), i+1), x1+1, y1+1 );
+    dc.SetPen( wxPen( c ) );
+    dc.SetTextForeground( c );
+    int twidth, theight;
+    dc.GetTextExtent( wxString::Format( _T("%d"), i+1), &twidth, &theight );
+    dc.DrawText( wxString::Format( _T("%d"), i+1), x1 + (x2-x1) / 2 - twidth / 2, y1 + (y2-y1) / 2 - theight / 2 - 1 );
     dc.DrawRectangle( x1, y1, x2-x1, y2-y1 );
   }
 
