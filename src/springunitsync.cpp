@@ -66,9 +66,7 @@ bool SpringUnitSync::LoadUnitSyncLib()
   wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
 
   // Load the library.
-  std::string loc;
-  if ( sett().GetUnitSyncUseDefLoc() ) loc = sett().GetSpringDir() + STD_STRING(wxString(wxFILE_SEP_PATH)) + STD_STRING(wxString(UNITSYNC_BIN));
-  else loc = sett().GetUnitSyncLoc();
+  std::string loc = sett().GetUnitSyncUsedLoc();
 
   debug( "Loading from: " + loc );
 

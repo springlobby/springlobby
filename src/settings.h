@@ -84,12 +84,13 @@ class Settings
     void   SetUnitSyncUseDefLoc( const bool usedefloc );
     std::string GetUnitSyncLoc();
     void   SetUnitSyncLoc( const std::string& loc );
+    std::string GetUnitSyncUsedLoc( bool force = false, bool defloc = false );
 
     bool   GetSpringUseDefLoc();
     void   SetSpringUseDefLoc( const bool usedefloc );
     std::string GetSpringLoc();
     void   SetSpringLoc( const std::string& loc );
-    std::string GetSpringUsedLoc();
+    std::string GetSpringUsedLoc( bool force = false, bool defloc = false );
 
   protected:
     wxConfig* m_config; //!< wxConfig object to store and restore  all settings in.

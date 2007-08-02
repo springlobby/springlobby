@@ -26,7 +26,13 @@ class SpringOptionsTab : public wxPanel
     void OnApply( wxCommandEvent& event );
     void OnRestore( wxCommandEvent& event );
 
+    void OnDefaultExe( wxCommandEvent& event );
+    void OnDefaultUsync( wxCommandEvent& event );
+
     void DoRestore();
+
+    void HandleExeloc( bool defloc );
+    void HandleUsyncloc( bool defloc );
 
   protected:
 
@@ -71,7 +77,9 @@ enum
 {
     SPRING_DIRBROWSE = wxID_HIGHEST,
     SPRING_EXECBROWSE,
-    SPRING_SYNCBROWSE
+    SPRING_SYNCBROWSE,
+    SPRING_DEFEXE,
+    SPRING_DEFUSYNC
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGOPTIONSTAB_H

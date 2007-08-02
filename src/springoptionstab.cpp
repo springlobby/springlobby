@@ -26,6 +26,8 @@ BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
   EVT_BUTTON ( SPRING_DIRBROWSE, SpringOptionsTab::OnBrowseDir )
   EVT_BUTTON ( SPRING_EXECBROWSE, SpringOptionsTab::OnBrowseExec )
   EVT_BUTTON ( SPRING_SYNCBROWSE, SpringOptionsTab::OnBrowseSync )
+  EVT_RADIOBUTTON( SPRING_DEFEXE, SpringOptionsTab::OnDefaultExe )
+  EVT_RADIOBUTTON( SPRING_DEFUSYNC, SpringOptionsTab::OnDefaultUsync )
 
 END_EVENT_TABLE()
 
@@ -45,10 +47,10 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent
   m_sync_find_btn = new wxButton( this, -1, _("Find") );
   m_auto_btn = new wxButton( this, -1, _("Auto Configure") );
 
-  m_exec_def_radio = new wxRadioButton( this, -1, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
-  m_exec_spec_radio = new wxRadioButton( this, -1, _("Specify:") );
-  m_sync_def_radio = new wxRadioButton( this, -1, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
-  m_sync_spec_radio = new wxRadioButton( this, -1, _("Specify:") );
+  m_exec_def_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+  m_exec_spec_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Specify:") );
+  m_sync_def_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
+  m_sync_spec_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Specify:") );
 
   if ( sett().GetSpringUseDefLoc() ) m_exec_def_radio->SetValue( true );
   else m_exec_spec_radio->SetValue( true );
@@ -164,11 +166,57 @@ void SpringOptionsTab::DoRestore()
   m_sync_def_radio->SetValue( sett().GetUnitSyncUseDefLoc() );
   m_exec_spec_radio->SetValue( !sett().GetSpringUseDefLoc() );
   m_sync_spec_radio->SetValue( !sett().GetUnitSyncUseDefLoc() );
+  HandleExeloc( sett().GetSpringUseDefLoc() );
+  HandleUsyncloc( sett().GetUnitSyncUseDefLoc() );
 }
 
 
 void SpringOptionsTab::OnRestore( wxCommandEvent& event )
 {
   DoRestore();
+}
+
+
+void SpringOptionsTab::HandleExeloc( bool defloc )
+{
+  if ( defloc ) {
+    m_exec_edit->Enable( false );
+    m_exec_browse_btn->Enable( false );
+    m_exec_find_btn->Enable( false );
+    m_exec_edit->SetValue( WX_STRING(sett().GetSpringUsedLoc( true, true )) );
+  } else {
+    m_exec_edit->Enable( true );
+    m_exec_browse_btn->Enable( true );
+    m_exec_find_btn->Enable( true );
+    m_exec_edit->SetValue( WX_STRING(sett().GetSpringLoc()) );
+  }
+}
+
+
+void SpringOptionsTab::HandleUsyncloc( bool defloc )
+{
+  if ( defloc ) {
+    m_sync_edit->Enable( false );
+    m_sync_browse_btn->Enable( false );
+    m_sync_find_btn->Enable( false );
+    m_sync_edit->SetValue( WX_STRING(sett().GetUnitSyncUsedLoc( true, true )) );
+  } else {
+    m_sync_edit->Enable( true );
+    m_sync_browse_btn->Enable( true );
+    m_sync_find_btn->Enable( true );
+    m_sync_edit->SetValue( WX_STRING(sett().GetUnitSyncLoc()) );
+  }
+}
+
+
+void SpringOptionsTab::OnDefaultExe( wxCommandEvent& event )
+{
+  HandleExeloc( m_exec_def_radio->GetValue() );
+}
+
+
+void SpringOptionsTab::OnDefaultUsync( wxCommandEvent& event )
+{
+  HandleUsyncloc( m_sync_def_radio->GetValue() );
 }
 

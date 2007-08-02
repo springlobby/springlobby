@@ -321,9 +321,13 @@ void   Settings::SetSpringLoc( const std::string& loc )
 }
 
 
-std::string Settings::GetSpringUsedLoc()
+std::string Settings::GetSpringUsedLoc( bool force, bool defloc )
 {
-  if ( GetSpringUseDefLoc() ) {
+  bool df;
+  if ( force ) df = defloc;
+  else df = GetSpringUseDefLoc();
+
+  if ( df ) {
     wxString tmp = WX_STRING(GetSpringDir());
     tmp += wxFILE_SEP_PATH;
     tmp += SPRING_BIN;
@@ -333,4 +337,15 @@ std::string Settings::GetSpringUsedLoc()
   }
 }
 
+std::string Settings::GetUnitSyncUsedLoc( bool force, bool defloc )
+{
+  bool df;
+  if ( force ) df = defloc;
+  else df = GetUnitSyncUseDefLoc();
 
+  if ( sett().GetUnitSyncUseDefLoc() ) {
+    return sett().GetSpringDir() + STD_STRING(wxString(wxFILE_SEP_PATH)) + STD_STRING(wxString(UNITSYNC_BIN));
+  } else {
+    return sett().GetUnitSyncLoc();
+  }
+}
