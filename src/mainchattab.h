@@ -27,6 +27,8 @@ class MainChatTab : public wxPanel
     ChatPanel* AddChatPannel( Server& server, const wxString& name );
     ChatPanel* AddChatPannel( User& user );
 
+    void CloseAllChats();
+
     void OnTabsChanged( wxNotebookEvent& event );
 
   protected:

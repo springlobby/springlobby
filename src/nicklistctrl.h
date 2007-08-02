@@ -18,6 +18,8 @@ class NickListCtrl : public wxListCtrl
     void UserUpdated( User& user );
     void UserUpdated( const int& index );
 
+    void ClearUsers();
+
   protected:
     UserList* m_users;
 };

@@ -56,10 +56,16 @@ class ChatPanel : public wxPanel
     void UserStatusUpdated( User& who );
 
     Channel& GetChannel();
+    void SetChannel( Channel* chan );
+
     Server* GetServer();
     void SetServer( Server* serv );
 
+    User* GetUser();
+    void SetUser( User* usr );
+
     bool IsServerPanel();
+    ChatPanelType GetPanelType();
 
     void Say( const wxString& message );
     void Part();
@@ -70,6 +76,8 @@ class ChatPanel : public wxPanel
     wxString GetChatTypeStr();
 
     User& GetMe();
+
+    bool IsOk();
 
   protected:
     void _SetChannel( Channel* channel );

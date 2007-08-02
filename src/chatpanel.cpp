@@ -167,12 +167,7 @@ ChatPanel::~ChatPanel()
 
 User& ChatPanel::GetMe()
 {
-  if ( m_type == CPT_Channel ) return m_channel->GetMe();
-  else if ( m_type == CPT_Battle ) return m_battle->GetMe();
-  else if ( m_type == CPT_Server ) return m_server->GetMe();
-  else if ( m_type == CPT_User ) return m_ui.GetServer().GetMe();
-
-  ASSERT_LOGIC( false, "GetMe() m_type invalid." );
+  return m_ui.GetServer().GetMe();
 }
 
 
@@ -295,21 +290,61 @@ Channel& ChatPanel::GetChannel()
 }
 
 
+void ChatPanel::SetChannel( Channel* chan )
+{
+  ASSERT_LOGIC(m_type == CPT_Channel, "Not of type server" );
+  if ( (chan == 0) && (m_channel != 0) ) {
+    Parted( GetMe(), _("") );
+    m_channel->uidata.panel = 0;
+    if ( m_show_nick_list ) {
+      m_nicklist->ClearUsers();
+    }
+  } else if ( chan != 0 ) {
+    chan->uidata.panel = this;
+  }
+  m_channel = chan;
+}
+
+
 Server* ChatPanel::GetServer()
 {
   return m_server;
 }
 
+
 void ChatPanel::SetServer( Server* serv )
 {
   ASSERT_LOGIC(m_type == CPT_Server, "Not of type server" );
+  if ( (serv == 0) && (m_server != 0) ) m_server->uidata.panel = 0;
+  else if ( serv != 0 ) serv->uidata.panel = this;
   m_server = serv;
+}
+
+
+User* ChatPanel::GetUser()
+{
+  return m_user;
+}
+
+
+void ChatPanel::SetUser( User* usr )
+{
+  ASSERT_LOGIC(m_type == CPT_User, "Not of type server" );
+  if ( (usr == 0) && (m_user != 0) ) m_user->uidata.panel = 0;
+  else if ( usr != 0 ) usr->uidata.panel = this;
+  m_user = usr;
 }
 
 
 bool ChatPanel::IsServerPanel()
 {
   return (m_type == CPT_Server);
+}
+
+
+ChatPanelType ChatPanel::GetPanelType()
+{
+  return m_type;
 }
 
 
@@ -343,6 +378,9 @@ void ChatPanel::Say( const wxString& message )
     _OutputLine( wxString::Format( _(" You have SpringLobby version %.2f r%d"), 0.01, 0 ), *wxBLACK );
     return;
   }
+
+
+  if ( !IsOk() ) return;
 
   if ( m_type == CPT_Channel ) {
 
@@ -390,4 +428,13 @@ void ChatPanel::LogTime()
   m_chatlog_text->AppendText( _T("[") + now.Format( _T("%H:%M") ) + _T("]") );
 }
 
+
+bool ChatPanel::IsOk()
+{
+  if ( m_type == CPT_Channel ) return (m_channel != 0);
+  if ( m_type == CPT_Server ) return (m_server != 0);
+  if ( m_type == CPT_User ) return (m_user != 0);
+  if ( m_type == CPT_Battle ) return (m_battle != 0);
+  return false;
+}
 

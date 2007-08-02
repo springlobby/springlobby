@@ -81,59 +81,14 @@ void NickListCtrl::UserUpdated( const int& index )
 }
 
 
-/*
-void NickListCtrl::UpdateSize()
+void NickListCtrl::ClearUsers()
 {
-  assert( m_users != 0 );
-  //SetItemCount( m_users->GetNumUsers() );
-  //RefreshItems( 0, GetItemCount() );
-}
-
-wxString NickListCtrl::OnGetItemText(long item, long column) const
-{
-  if ( column == 0 ) {
-    return _T("");
+  while ( GetItemCount() > 0 ) {
+    DeleteItem( 0 );
   }
-
-  if ( m_users == 0 ) return _T("Error: no list");
-  if ( item >= m_users->GetNumUsers() ) return _T("Error: index >= max");
-
-  return WX_STRING( m_users->GetUser( item ).GetNick() );
-
 }
 
 
-int NickListCtrl::OnGetItemColumnImage(long item, long column) const
-{
-  debug_func( "" );
-
-  if ( column == 0 ) {
-    if ( m_users == 0 ) return -1;
-    if ( item >= m_users->GetNumUsers() ) return -1;
-    if (m_users->GetUser( item ).GetStatus().bot ) return 1;
-    else if (m_users->GetUser( item ).GetStatus().moderator ) return 0;
-  }
-  return -1;
-}
-
-
-int NickListCtrl::OnGetItemImage(long item) const
-{
-  debug_func( "" );
-
-  if ( m_users == 0 ) return ICON_NOSTATE;
-  if ( item >= m_users->GetNumUsers() ) return ICON_NOSTATE;
-
-  return GetStateIcon( m_users->GetUser( item ).GetStatus() );
-}
-
-
-wxListItemAttr* NickListCtrl::OnGetItemAttr(long item) const
-{
-  return 0;
-}
-
-*/
 struct upper {
  int operator()(int c)
  {

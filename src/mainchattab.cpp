@@ -71,8 +71,32 @@ ChatPanel& MainChatTab::ServerChat()
   return *m_server_chat;
 }
 
+
+void MainChatTab::CloseAllChats()
+{
+  for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+    ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+    if ( tmp->GetPanelType() == CPT_Channel ) tmp->SetChannel( 0 );
+    else if ( tmp->GetPanelType() == CPT_User ) tmp->SetUser( 0 );
+    else if ( tmp->GetPanelType() == CPT_Server ) tmp->SetServer( 0 );
+  }  
+}
+
+
 ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
 {
+
+  for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+    if ( m_chat_tabs->GetPageText(i) == WX_STRING(channel.GetName()) ) {
+      ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+      if ( tmp->GetPanelType() == CPT_Channel ) {
+        m_chat_tabs->SetSelection( i );
+        tmp->SetChannel( &channel );
+        return tmp;
+      }
+    }
+  }
+
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, channel );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(channel.GetName()), true, 2 );
   return chat;
@@ -80,12 +104,11 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
 
 ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
 {
-  ChatPanel* chat;
 
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
     if ( m_chat_tabs->GetPageText(i) == name ) {
       ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
-      if ( tmp->GetServer() == 0 ) {
+      if ( tmp->GetPanelType() == CPT_Server ) {
         m_chat_tabs->SetSelection( i );
         tmp->SetServer( &server );
         return tmp;
@@ -93,7 +116,7 @@ ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
     }
   }
 
-  chat = new ChatPanel( m_chat_tabs, m_ui, server );
+  ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, server );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, 1 );
 
   return chat;
@@ -101,6 +124,17 @@ ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
 
 ChatPanel* MainChatTab::AddChatPannel( User& user )
 {
+  for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+    if ( m_chat_tabs->GetPageText(i) == WX_STRING(user.GetNick()) ) {
+      ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+      if ( tmp->GetPanelType() == CPT_User ) {
+        m_chat_tabs->SetSelection( i );
+        tmp->SetUser( &user );
+        return tmp;
+      }
+    }
+  }
+
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, user );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(user.GetNick()), true, 3 );
   return chat;

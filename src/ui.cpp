@@ -271,6 +271,7 @@ void Ui::OnDisconnected( Server& server )
   server.uidata.panel->StatusMessage( _T("Disconnected from server.") );
   server.uidata.panel->SetServer( 0 );
   server.uidata.panel = 0;
+  mw().GetChatTab().CloseAllChats();
 }
 
 
