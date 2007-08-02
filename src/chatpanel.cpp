@@ -294,7 +294,7 @@ void ChatPanel::SetChannel( Channel* chan )
 {
   ASSERT_LOGIC(m_type == CPT_Channel, "Not of type server" );
   if ( (chan == 0) && (m_channel != 0) ) {
-    Parted( GetMe(), _("") );
+    StatusMessage( _("Chat closed.") );
     m_channel->uidata.panel = 0;
     if ( m_show_nick_list ) {
       m_nicklist->ClearUsers();
