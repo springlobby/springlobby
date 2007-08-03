@@ -96,7 +96,6 @@ bool Battle::IsSynced()
   } else {
     return false;
   }
-  //return ( usync()->MapExists( m_opts.mapname, m_opts.maphash ) && usync()->ModExists( m_opts.modname ) );
 }
 
 

@@ -35,6 +35,7 @@ class BattleListTab : public wxPanel
     wxStaticText* m_filter_text;
     wxComboBox* m_filter_combo;
     wxButton* m_join_button;
+    wxButton* m_host_button;
 
     wxBoxSizer* m_main_sizer;
     wxBoxSizer* m_tools_sizer;
@@ -46,7 +47,8 @@ class BattleListTab : public wxPanel
 
 enum
 {
-    BATTLE_JOIN = wxID_HIGHEST
+    BATTLE_JOIN = wxID_HIGHEST,
+    BATTLE_HOST
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H

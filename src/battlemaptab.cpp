@@ -104,6 +104,12 @@ BattleMapTab::~BattleMapTab()
 
 void BattleMapTab::UpdateMap()
 {
+  m_start_radios->SetSelection( m_battle.opts().starttype );
+
+  m_minimap->UpdateMinimap();
+
+  if ( !usync()->MapExists( m_battle.opts().mapname ) ) return;
+
   UnitSyncMap map = usync()->GetMap( m_battle.opts().mapname );
   if ( map.hash != m_map.hash ) map = m_map = usync()->GetMap( m_battle.opts().mapname, true );
   else map = m_map;
@@ -117,10 +123,6 @@ void BattleMapTab::UpdateMap()
 
   int index = m_map_combo->FindString( RefineMapname( WX_STRING(map.name) ) );
   m_map_combo->SetSelection( index );
-
-  m_start_radios->SetSelection( m_battle.opts().starttype );
-
-  m_minimap->UpdateMinimap();
 }
 
 void BattleMapTab::ReloadMaplist()

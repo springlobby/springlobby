@@ -31,6 +31,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 )
   m_filter_text = new wxStaticText( this, -1, _("Filter ") );
   m_filter_combo = new wxComboBox( this, -1, _("Show all") );
   m_join_button = new wxButton( this, BATTLE_JOIN, _("Join"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
+  m_host_button = new wxButton( this, BATTLE_HOST, _("Host new..."), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   m_tools_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -38,6 +39,8 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 )
   m_tools_sizer->Add( m_filter_text, 0, wxEXPAND | wxTOP, 4 );
   m_tools_sizer->Add( m_filter_combo, 0, wxEXPAND );
   m_tools_sizer->AddStretchSpacer();
+  m_tools_sizer->Add( m_host_button, 0, wxEXPAND );
+  m_tools_sizer->AddSpacer( 16 );
   m_tools_sizer->Add( m_join_button, 0, wxEXPAND );
 
   m_main_sizer->Add( m_battle_list, 1, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 2 );
@@ -113,8 +116,17 @@ void BattleListTab::OnListJoin( wxListEvent& event )
       wxLaunchDefaultBrowser( url );
     }
     return;
-  }
+  }  
 
+  if ( !battle.IsMapAvailable() ) {
+    if (wxMessageBox( _("You need to download the map before you can join this game. Do you want me to take you to the download page?"), _("Map not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+      wxString map = WX_STRING(battle.opts().mapname);
+      map.Replace(_T(" "), _T("%20") );
+      wxString url = _T("http://spring.unknown-files.net/page/search/1/13/") + map + _T("/");
+      wxLaunchDefaultBrowser( url );
+    }
+  }
+  
   if ( battle.opts().ispassworded ) {
     wxPasswordEntryDialog pw( this, _("Battle password"), _("Enter password") );
     if ( pw.ShowModal() == wxID_OK ) battle.Join( STD_STRING(pw.GetValue()) );
