@@ -110,9 +110,11 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     else map = usync()->GetMap( 0 ); // TODO: This might fail.
     bo.maphash = map.hash;
     bo.mapname = map.name;
+
+    bo.maxplayers = sett().GetLastHostPlayerNum();
+
 /*
     bo.nattype,
-    bo.maxplayers,
     bo.startmetal,
     bo.startenergy,
     bo.maxunits,

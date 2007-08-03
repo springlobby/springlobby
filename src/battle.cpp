@@ -48,11 +48,12 @@ void Battle::Leave()
 
 void Battle::OnRequestBattleStatus()
 {
-  int lowest = 1;
+  int lowest = 0;
   bool changed = true;
   while ( changed ) {
     changed = false;
     for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ ) {
+      if ( &GetUser( i ) == &GetMe() ) continue;
       if ( GetUser( i ).BattleStatus().team == lowest ) {
         lowest++;
         changed = true;
