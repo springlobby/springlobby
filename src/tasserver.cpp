@@ -668,7 +668,7 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
 
   wxString cmd = wxString::Format( _T("OPENBATTLE 0 %d %s %d %d %d %d %d %d %d %d %d %d %s %d %s %s\t%s\t%s\n"), 
     bo.nattype,
-    WX_STRING(password),
+    password.c_str(),
     bo.port,
     bo.maxplayers,
     bo.startmetal,
@@ -679,12 +679,12 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
     bo.limitdgun,
     bo.dimmms,
     bo.ghostedbuildings,
-    WX_STRING(bo.modhash),
+    bo.modhash.c_str(),
     bo.rankneeded,
-    WX_STRING(bo.maphash),
-    WX_STRING(bo.mapname),
-    WX_STRING(bo.description),
-    WX_STRING(bo.modname)
+    bo.maphash.c_str(),
+    bo.mapname.c_str(),
+    bo.description.c_str(),
+    bo.modname.c_str()
   );
 
   m_sock->Send( STD_STRING(cmd) );
