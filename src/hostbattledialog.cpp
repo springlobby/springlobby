@@ -148,8 +148,8 @@ void HostBattleDialog::ReloadModList()
 {
   m_mod_pic->Clear();
   for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
-    UnitSyncMod& m = usync()->GetMod( i );
-    m_mod_pic->Insert( m.name, i );
+    const UnitSyncMod& m = usync()->GetMod( i );
+    m_mod_pic->Insert( WX_STRING(m.name), i );
   }
   m_mod_pic->SetSelection( m_mod_pic->FindString( WX_STRING(sett().GetLastHostMod()) ) );
 }
