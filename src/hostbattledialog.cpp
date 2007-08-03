@@ -2,6 +2,7 @@
 // Class: HostBattleDialog
 //
 
+#include <wx/intl.h>
 #include <wx/string.h>
 #include <wx/sizer.h>
 #include <wx/choice.h>
@@ -17,8 +18,9 @@
 #include "hostbattledialog.h"
 
 
-HostBattleDialog::HostBattleDialog( wxWindow* parent, int id, wxString title, wxPoint pos, wxSize size, int style ) : wxDialog( parent, id, title, pos, size, style )
+HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _("Host new battle"), wxDefaultPosition, wxSize( 340,300 ), wxDEFAULT_DIALOG_STYLE )
 {
+
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
 	wxBoxSizer* m_main_sizer;

@@ -38,7 +38,7 @@ class HostBattleDialog : public wxDialog
 		wxButton* m_host_btn;
 	
 	public:
-		HostBattleDialog( wxWindow* parent, int id = wxID_ANY, wxString title = _("Host new battle"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 340,300 ), int style = wxDEFAULT_DIALOG_STYLE );
+		HostBattleDialog( wxWindow* parent );
 	
 };
 
