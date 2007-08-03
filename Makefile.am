@@ -1,5 +1,5 @@
 ## the following line may NOT be split, b/c of autoreconf 2.61 and older
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I m4 --install
 
 AM_CPPFLAGS = \
 	$(WX_CPPFLAGS)
