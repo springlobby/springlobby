@@ -52,6 +52,7 @@ class IUnitSync
     virtual int GetNumMods() = 0;
     virtual bool ModExists( const std::string& modname ) = 0;
     virtual UnitSyncMod GetMod( const std::string& modname ) = 0;
+    virtual UnitSyncMod GetMod( int index ) = 0;
     virtual int GetModIndex( const std::string& name ) = 0;
     virtual std::string GetModArchive( int index ) = 0;
 

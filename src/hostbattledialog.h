@@ -14,14 +14,15 @@ class wxButton;
 
 class HostBattleDialog : public wxDialog 
 {
-	private:
+	public:
+		HostBattleDialog( wxWindow* parent );
 	
+    void ReloadModList();
+
+    void OnOk( wxCommandEvent& event );
+    void OnCancel( wxCommandEvent& event );
+
 	protected:
-		enum
-		{
-			HOST_CANCEL = 1000,
-			HOST_OK,
-		};
 		
 		wxStaticText* m_desc_lbl;
 		wxTextCtrl* m_desc_text;
@@ -36,10 +37,14 @@ class HostBattleDialog : public wxDialog
 		wxStaticLine* m_buttons_sep;
 		wxButton* m_cancel_btn;
 		wxButton* m_host_btn;
-	
-	public:
-		HostBattleDialog( wxWindow* parent );
-	
+		
+    DECLARE_EVENT_TABLE()
+};
+
+enum
+{
+	HOST_CANCEL = wxID_HIGHEST,
+	HOST_OK
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_HOSTBATTLEDIALOG_H

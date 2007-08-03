@@ -54,6 +54,7 @@ class SpringUnitSync : public IUnitSync
     int GetNumMods();
     bool ModExists( const std::string& modname );
     UnitSyncMod GetMod( const std::string& modname );
+    UnitSyncMod GetMod( int index );
     int GetModIndex( const std::string& name );
     std::string GetModArchive( int index );
 

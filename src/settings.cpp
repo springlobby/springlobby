@@ -349,3 +349,77 @@ std::string Settings::GetUnitSyncUsedLoc( bool force, bool defloc )
     return sett().GetUnitSyncLoc();
   }
 }
+
+
+std::string Settings::GetLastHostDescription()
+{
+  return STD_STRING( m_config->Read( _T("/Hosting/LastDescription"), _T("") ) );
+}
+
+
+std::string Settings::GetLastHostMod()
+{
+  return STD_STRING( m_config->Read( _T("/Hosting/LastMod"), _T("") ) );
+}
+
+
+std::string Settings::GetLastHostPassword()
+{
+  return STD_STRING( m_config->Read( _T("/Hosting/LastPassword"), _T("") ) );
+}
+
+
+int Settings::GetLastHostPort()
+{
+  return m_config->Read( _T("/Hosting/LastPort"), DEFSETT_SPRING_PORT );
+}
+
+
+int Settings::GetLastHostPlayerNum()
+{
+  return m_config->Read( _T("/Hosting/LastPlayerNum"), 4 );
+}
+
+
+int Settings::GetLastHostNATSetting()
+{
+  return m_config->Read( _T("/Hosting/LastNATSetting"), (long)0 );
+}
+
+
+
+void Settings::SetLastHostDescription( const std::string& value )
+{
+  m_config->Write( _T("/Hosting/LastDescription"), WX_STRING( value ) );
+}
+
+
+void Settings::SetLastHostMod( const std::string& value )
+{
+  m_config->Write( _T("/Hosting/LastMod"), WX_STRING( value ) );
+}
+
+
+void Settings::SetLastHostPassword( const std::string& value )
+{
+  m_config->Write( _T("/Hosting/LastPassword"), WX_STRING( value ) );
+}
+
+
+void Settings::SetLastHostPort( int value )
+{
+  m_config->Write( _T("/Hosting/LastPort"), value );
+}
+
+
+void Settings::SetLastHostPlayerNum( int value )
+{
+  m_config->Write( _T("/Hosting/LastPlayerNum"), value );
+}
+
+
+void Settings::SetLastHostNATSetting( int value )
+{
+  m_config->Write( _T("/Hosting/LastNATSetting"), value );
+}
+

@@ -182,11 +182,20 @@ UnitSyncMod SpringUnitSync::GetMod( const std::string& modname )
   int i = GetModIndex( modname );
   ASSERT_LOGIC( i >= 0, "Mod does not exist" );
 
-  m.name = m_get_mod_name( i );
-  m.hash = i2s(m_get_mod_checksum( i ));
+  return GetMod( i );
+}
+
+
+UnitSyncMod SpringUnitSync::GetMod( int index )
+{
+  UnitSyncMod m;
+
+  m.name = m_get_mod_name( index );
+  m.hash = i2s(m_get_mod_checksum( index ));
 
   return m;
 }
+
 
 int SpringUnitSync::GetNumMaps()
 {

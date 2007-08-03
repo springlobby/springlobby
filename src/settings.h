@@ -1,19 +1,3 @@
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
 #ifndef SPRINGLOBBY_HEADERGUARD_SETTINGS_H
 #define SPRINGLOBBY_HEADERGUARD_SETTINGS_H
 
@@ -29,6 +13,7 @@
 #define DEFSETT_MW_TOP 50
 #define DEFSETT_MW_LEFT 50
 #define DEFSETT_SPRING_DIR wxGetCwd()
+#define DEFSETT_SPRING_PORT 8452
 
 //! @brief Class used to store and restore application settings.
 class Settings
@@ -91,6 +76,20 @@ class Settings
     std::string GetSpringLoc();
     void   SetSpringLoc( const std::string& loc );
     std::string GetSpringUsedLoc( bool force = false, bool defloc = false );
+
+    std::string GetLastHostDescription();
+    std::string GetLastHostMod();
+    std::string GetLastHostPassword();
+    int GetLastHostPort();
+    int GetLastHostPlayerNum();
+    int GetLastHostNATSetting();
+
+    void SetLastHostDescription( const std::string& value );
+    void SetLastHostMod( const std::string& value );
+    void SetLastHostPassword( const std::string& value );
+    void SetLastHostPort( int value );
+    void SetLastHostPlayerNum( int value );
+    void SetLastHostNATSetting( int value );
 
   protected:
     wxConfig* m_config; //!< wxConfig object to store and restore  all settings in.
