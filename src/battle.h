@@ -53,7 +53,7 @@ struct BattleOptions
     nattype(NAT_None),port(DEFAULT_SERVER_PORT),maxplayers(0),spectators(0),
     startmetal(1000),startenergy(1000),maxunits(500),starttype(ST_Fixed),
     gametype(GT_ComContinue),limitdgun(false),dimmms(false),ghostedbuildings(true),maphash(""),
-    hashcode("") {}
+    modhash("") {}
 
   int battleid;
   bool islocked;
@@ -80,7 +80,7 @@ struct BattleOptions
   bool ghostedbuildings;
 
   std::string maphash;
-  std::string hashcode;
+  std::string modhash;
 
   std::string description;
   std::string mapname;

@@ -387,6 +387,11 @@ int Settings::GetLastHostNATSetting()
 }
 
 
+std::string Settings::GetLastHostMap()
+{
+  return STD_STRING( m_config->Read( _T("/Hosting/LastMap"), _T("") ) );
+}
+
 
 void Settings::SetLastHostDescription( const std::string& value )
 {
@@ -421,5 +426,11 @@ void Settings::SetLastHostPlayerNum( int value )
 void Settings::SetLastHostNATSetting( int value )
 {
   m_config->Write( _T("/Hosting/LastNATSetting"), value );
+}
+
+
+void Settings::SetLastHostMap( const std::string& value )
+{
+  m_config->Write( _T("/Hosting/LastMap"), value );
 }
 

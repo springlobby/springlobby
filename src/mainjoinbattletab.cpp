@@ -84,6 +84,16 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
 }
 
 
+void MainJoinBattleTab::HostBattle( Battle& battle )
+{
+  LeaveCurrentBattle();
+  m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
+  m_map_tab = new BattleMapTab( m_tabs, m_ui, battle );
+  m_tabs->InsertPage( 1, m_battle_tab, _("Battleroom"), true, 1 );
+  m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, 2 );
+}
+
+
 void MainJoinBattleTab::LeaveCurrentBattle()
 {
   if ( m_map_tab ) {

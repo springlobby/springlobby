@@ -17,6 +17,7 @@ class Battle;
 class User;
 struct UserBattleStatus;
 class ChatPanel;
+struct BattleOptions;
 
 typedef int ServerError;
 
@@ -67,6 +68,7 @@ class Server
 
     virtual void SayBattle( int battleid, const std::string& msg ) = 0;
 
+    virtual void HostBattle( BattleOptions bo, const std::string& password = "" ) = 0;
     virtual void JoinBattle( const int& battleid, const std::string& password = "" ) = 0;
     virtual void LeaveBattle( const int& battleid ) = 0;
 

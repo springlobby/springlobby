@@ -80,6 +80,7 @@ class Ui
     void OnBattleEnableAllUnits( Battle& battle );
 
     void OnJoinedBattle( Battle& battle );
+    void OnHostedBattle( Battle& battle );
     void OnUserBattleStatus( Battle& battle, User& user );
     void OnRequestBattleStatus( Battle& battle );
 

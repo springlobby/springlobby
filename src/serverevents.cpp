@@ -156,9 +156,20 @@ void ServerEvents::OnJoinedBattle( int battleid )
 
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.spectator = false;
-  //m_serv.GetMe().SetBattleStatus( bs );
 
   m_ui.OnJoinedBattle( battle );
+}
+
+
+void ServerEvents::OnHostedBattle( int battleid )
+{
+  debug_func( "" );
+  Battle& battle = m_serv.GetBattle( battleid );
+
+  UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
+  bs.spectator = false;
+
+  m_ui.OnHostedBattle( battle );
 }
 
 

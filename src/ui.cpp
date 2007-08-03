@@ -274,9 +274,11 @@ void Ui::OnDisconnected( Server& server )
 
   mw().GetJoinTab().LeaveCurrentBattle();
   mw().GetJoinTab().GetBattleListTab().RemoveAllBattles();
-  server.uidata.panel->StatusMessage( _T("Disconnected from server.") );
-  server.uidata.panel->SetServer( 0 );
-  server.uidata.panel = 0;
+  if ( server.uidata.panel != 0 ) {
+    server.uidata.panel->StatusMessage( _T("Disconnected from server.") );
+    server.uidata.panel->SetServer( 0 );
+    server.uidata.panel = 0;
+  }
   mw().GetChatTab().CloseAllChats();
 }
 
@@ -472,6 +474,12 @@ void Ui::OnJoinedBattle( Battle& battle )
   if ( battle.opts().nattype != NAT_None ) {
     wxMessageBox( _("This game uses NAT traversal that is not yet supported\nby SpringLobby.\n\nYou will not be able to play in this battle."), _("NAT traversal"), wxOK );
   }
+}
+
+
+void Ui::OnHostedBattle( Battle& battle )
+{
+  mw().GetJoinTab().HostBattle( battle );
 }
 
 

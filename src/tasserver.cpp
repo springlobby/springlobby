@@ -298,6 +298,7 @@ void TASServer::ExecuteCommand( const std::string& in )
   ExecuteCommand( cmd, params );
 }
 
+
 void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
   std::string params = inparams;
@@ -513,6 +514,9 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   } else if ( cmd == "AGREEMENTEND" ) {
     m_se->OnAcceptAgreement( m_agreement );
     m_agreement = "";
+  } else if ( cmd == "OPENBATTLE" ) {
+    m_battle_id = GetIntParam( params );
+    m_se->OnHostedBattle( m_battle_id );
   } else {
     debug( "??? Cmd: " + cmd + " params: " + params );
     m_se->OnUnknownCommand( cmd, params );
@@ -653,6 +657,39 @@ void TASServer::SayBattle( int battleid, const std::string& msg )
   assert( IsOnline() );
   assert( m_sock != 0 );
   m_sock->Send( "SAYBATTLE " + msg + "\n" );
+}
+
+
+void TASServer::HostBattle( BattleOptions bo, const std::string& password )
+{
+  debug_func( "" );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+
+  wxString cmd = wxString::Format( _T("OPENBATTLE 0 %d %s %d %d %d %d %d %d %d %d %d %d %s %d %s %s\t%s\t%s\n"), 
+    bo.nattype,
+    WX_STRING(password),
+    bo.port,
+    bo.maxplayers,
+    bo.startmetal,
+    bo.startenergy,
+    bo.maxunits,
+    bo.starttype,
+    bo.gametype,
+    bo.limitdgun,
+    bo.dimmms,
+    bo.ghostedbuildings,
+    WX_STRING(bo.modhash),
+    bo.rankneeded,
+    WX_STRING(bo.maphash),
+    WX_STRING(bo.mapname),
+    WX_STRING(bo.description),
+    WX_STRING(bo.modname)
+  );
+
+  m_sock->Send( STD_STRING(cmd) );
+  // OPENBATTLE type natType password port maxplayers startingmetal startingenergy maxunits startpos 
+  // gameendcondition limitdgun diminishingMMs ghostedBuildings hashcode rank maphash {map} {title} {modname}
 }
 
 

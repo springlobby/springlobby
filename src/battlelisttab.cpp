@@ -9,6 +9,9 @@
 #include "chatpanel.h"
 #include "utils.h"
 #include "hostbattledialog.h"
+#include "server.h"
+#include "settings.h"
+#include "iunitsync.h"
 
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
@@ -93,7 +96,34 @@ void BattleListTab::OnHost( wxCommandEvent& event )
 {
   HostBattleDialog dlg( this );
   if ( dlg.ShowModal() == wxID_OK ) {
+    BattleOptions bo;
+    bo.description = sett().GetLastHostDescription();
+    bo.port = sett().GetLastHostPort();
 
+    UnitSyncMod mod = usync()->GetMod( sett().GetLastHostMod() );
+    bo.modhash = mod.hash;
+    bo.modname = mod.name;
+
+    UnitSyncMap map;
+    std::string mname = sett().GetLastHostMap();
+    if ( mname != "" ) map = usync()->GetMap( mname );
+    else map = usync()->GetMap( 0 ); // TODO: This might fail.
+    bo.maphash = map.hash;
+    bo.mapname = map.name;
+/*
+    bo.nattype,
+    bo.maxplayers,
+    bo.startmetal,
+    bo.startenergy,
+    bo.maxunits,
+    bo.starttype,
+    bo.gametype,
+    bo.limitdgun,
+    bo.dimmms,
+    bo.ghostedbuildings,
+)*/
+
+    m_ui.GetServer().HostBattle( bo, sett().GetLastHostPassword() );
   }
 }
 

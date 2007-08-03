@@ -83,6 +83,7 @@ class Settings
     int GetLastHostPort();
     int GetLastHostPlayerNum();
     int GetLastHostNATSetting();
+    std::string GetLastHostMap();
 
     void SetLastHostDescription( const std::string& value );
     void SetLastHostMod( const std::string& value );
@@ -90,6 +91,7 @@ class Settings
     void SetLastHostPort( int value );
     void SetLastHostPlayerNum( int value );
     void SetLastHostNATSetting( int value );
+    void SetLastHostMap( const std::string& value );
 
   protected:
     wxConfig* m_config; //!< wxConfig object to store and restore  all settings in.

@@ -165,12 +165,12 @@ void HostBattleDialog::OnOk( wxCommandEvent& event )
   sett().SetLastHostPort( tmp );
   sett().SetLastHostPlayerNum( m_players_slide->GetValue() );
   sett().SetLastHostNATSetting( m_nat_radios->GetSelection() );
-
+  EndModal( wxID_OK );
 }
 
 
 void HostBattleDialog::OnCancel( wxCommandEvent& event )
 {
-
+  EndModal( wxID_CANCEL );
 }
 

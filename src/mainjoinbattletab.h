@@ -21,6 +21,7 @@ class MainJoinBattleTab : public wxPanel
 
     BattleListTab& GetBattleListTab();
 
+    void HostBattle( Battle& battle );
     void JoinBattle( Battle& battle );
     void UpdateCurrentBattle();
     void LeaveCurrentBattle();

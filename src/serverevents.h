@@ -50,6 +50,7 @@ class ServerEvents
     void OnBattleInfoUpdated( int battleid, int spectators, bool locked, std::string maphash, const std::string& map );
     void OnBattleClosed( int battleid );
     void OnJoinedBattle( int battleid );
+    void OnHostedBattle( int battleid );
     void OnClientBattleStatus( int battleid, const std::string& nick, UserBattleStatus status );
     void OnBattleStartRectAdd( int battleid, int allyno, int left, int top, int right, int bottom );
     void OnBattleStartRectRemove( int battleid, int allyno );
