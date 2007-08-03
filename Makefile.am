@@ -54,6 +54,8 @@ springlobby_SOURCES = \
 	src/flagimagedata.h \
 	src/flagimages.cpp \
 	src/flagimages.h \
+	src/hostbattleialog.h \
+	src/hostbattleialog.cpp \
 	src/iconimagelist.cpp \
 	src/iconimagelist.h \
 	src/iunitsync.h \

@@ -8,6 +8,7 @@
 #include "ui.h"
 #include "chatpanel.h"
 #include "utils.h"
+#include "hostbattledialog.h"
 
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
@@ -19,8 +20,9 @@
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 
-  EVT_BUTTON              ( CHAT_SEND, BattleListTab::OnJoin     )
-  EVT_LIST_ITEM_ACTIVATED ( CHAT_SEND, BattleListTab::OnListJoin )
+  EVT_BUTTON              ( BATTLE_JOIN, BattleListTab::OnJoin     )
+  EVT_BUTTON              ( BATTLE_HOST, BattleListTab::OnHost     )
+  EVT_LIST_ITEM_ACTIVATED ( BATTLE_JOIN, BattleListTab::OnListJoin )
 
 END_EVENT_TABLE()
 
@@ -80,10 +82,21 @@ void BattleListTab::UpdateBattle( Battle& battle )
   m_battle_list->UpdateBattle( battle );
 }
 
+
 void BattleListTab::UpdateList()
 {
   m_battle_list->UpdateList();
 }
+
+
+void BattleListTab::OnHost( wxCommandEvent& event )
+{
+  HostBattleDialog dlg( this );
+  if ( dlg.ShowModal() == wxID_OK ) {
+
+  }
+}
+
 
 void BattleListTab::OnJoin( wxCommandEvent& event )
 {
@@ -92,12 +105,7 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
 
   Battle& battle = *((Battle*)m_battle_list->GetItemData( m_battle_list->GetSelectedIndex() ));
 
-  if ( battle.opts().ispassworded ) {
-    wxPasswordEntryDialog pw( this, _("Battle password"), _("Enter password") );
-    if ( pw.ShowModal() == wxID_OK ) battle.Join( STD_STRING(pw.GetValue()) );
-  } else {
-    battle.Join();
-  }
+  DoJoin( battle );
 }
 
 
@@ -108,8 +116,14 @@ void BattleListTab::OnListJoin( wxListEvent& event )
 
   Battle& battle = *((Battle*)m_battle_list->GetItemData( event.GetIndex() ));
 
+  DoJoin( battle );
+}
+
+
+void BattleListTab::DoJoin( Battle& battle )
+{
   if ( !battle.HasMod() ) {
-    if (wxMessageBox( _("You need to download the mod before you can join this game. Do you want me to take you to the download page?"), _("Mod not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+    if (wxMessageBox( _("You need to download the mod before you can join this game.\n\nDo you want me to take you to the download page?"), _("Mod not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString mod = WX_STRING(battle.opts().modname);
       mod.Replace(_T(" "), _T("%20") );
       wxString url = _T("http://spring.unknown-files.net/page/search/1/14/") + mod + _T("/");
@@ -119,7 +133,7 @@ void BattleListTab::OnListJoin( wxListEvent& event )
   }  
 
   if ( !battle.IsMapAvailable() ) {
-    if (wxMessageBox( _("You need to download the map before you can join this game. Do you want me to take you to the download page?"), _("Map not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+    if (wxMessageBox( _("You need to download the map to be able to play in this game.\n\nDo you want me to take you to the download page?"), _("Map not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString map = WX_STRING(battle.opts().mapname);
       map.Replace(_T(" "), _T("%20") );
       wxString url = _T("http://spring.unknown-files.net/page/search/1/13/") + map + _T("/");
@@ -134,3 +148,4 @@ void BattleListTab::OnListJoin( wxListEvent& event )
     battle.Join();
   }
 }
+

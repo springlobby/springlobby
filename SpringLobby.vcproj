@@ -235,6 +235,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\hostbattledialog.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\iconimagelist.h"
 				>
 			</File>
@@ -416,6 +420,10 @@
 			</File>
 			<File
 				RelativePath=".\src\flagimages.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\hostbattledialog.cpp"
 				>
 			</File>
 			<File
