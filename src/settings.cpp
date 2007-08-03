@@ -431,6 +431,6 @@ void Settings::SetLastHostNATSetting( int value )
 
 void Settings::SetLastHostMap( const std::string& value )
 {
-  m_config->Write( _T("/Hosting/LastMap"), value );
+  m_config->Write( _T("/Hosting/LastMap"), WX_STRING(value) );
 }
 
