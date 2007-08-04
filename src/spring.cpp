@@ -71,10 +71,13 @@ bool Spring::TestSpringBinary()
   wxArrayString res;
   wxArrayString err;
   wxString bin = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ");
+  /*
+   * This hack is necessary, because spring returns -1 on purpose in 0.75b2, when ever you query it's version. I have sent a patch, and hopefully this will change in future versions of spring. Because of the exact return value, wxExecute fails to record the single line of standard output we need. This seems to be a bug in wxWidgets 2.8 series in windows, but I have not yet sent a bug report. If either project fixes their bug, this can be done portably again.
+   */
 #ifdef WIN32
-  bin += _T("//V"); // Hack, Spring returns -1 if called with correct param, wxExecute doesn't like that...
-  int ret = wxExecute( bin, res, err, wxEXEC_SYNC ); // Hack
-  return (ret != -1); // Hack, hack
+  bin += _T("//V");
+  int ret = wxExecute( bin, res, err, wxEXEC_SYNC );
+  return (ret != -1);
 #else
   bin += SPRING_VERSION_PARAM;
   int ret = wxExecute( bin, res, err, wxEXEC_SYNC );
