@@ -223,7 +223,7 @@ ChatPanel& BattleRoomTab::GetChatPanel()
 
 void BattleRoomTab::OnStart( wxCommandEvent& event )
 {
-  ASSERT_LOGIC( IsHosted(), "This battle is not hosted by user." );
+  //ASSERT_LOGIC( IsHosted(), "This battle is not hosted by user." );
   m_ui.StartHostedBattle();
 }
 
