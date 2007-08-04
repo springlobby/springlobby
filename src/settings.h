@@ -4,8 +4,8 @@
 #include <string>
 #include <wx/config.h>
 
-#define DEFSETT_DEFAULT_SERVER _T("TAS Server")
-#define DEFSETT_DEFAULT_SERVER_HOST _T("taspringmaster.clan-sy.com")
+#define DEFSETT_DEFAULT_SERVER "TAS Server"
+#define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"
 #define DEFSETT_DEFAULT_SERVER_PORT 8200
 #define DEFSETT_SAVE_PASSWORD false
 #define DEFSETT_MW_WIDTH 600
