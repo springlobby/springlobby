@@ -10,7 +10,7 @@ AC_PROG_CXX
 
 AM_OPTIONS_WXCONFIG
 
-AM_PATH_WXCONFIG([2.6.0], [],
+AM_PATH_WXCONFIG([2.6.3], [],
    [AC_MSG_ERROR([
            wxWidgets must be installed on your system
            but wx-config script couldn't be found.
@@ -18,7 +18,7 @@ AM_PATH_WXCONFIG([2.6.0], [],
            Please check that wx-config is in path, the directory
            where wxWidgets libraries are installed (returned by
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
-           equivalent variable and wxWidgets version is 2.6.0 or above.
+           equivalent variable and wxWidgets version is 2.6.3 or above.
    ])])
 
 AC_MSG_CHECKING([if we can enable extra features that need wxWidgets-2.8])
