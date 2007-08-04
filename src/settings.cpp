@@ -63,7 +63,8 @@ bool Settings::ServerExists( const std::string& server_name )
 //! @note Normally this will be the previously selected server. But at first run it will be a server that is set as the default.
 std::string Settings::GetDefaultServer()
 {
-  return STD_STRING( m_config->Read( _T("/Servers/Default"), DEFSETT_DEFAULT_SERVER ) );
+  std::string serv = DEFSETT_DEFAULT_SERVER;
+  return STD_STRING( m_config->Read( _T("/Servers/Default"), WX_STRING(serv) ) );
 }
 
 
@@ -82,7 +83,8 @@ void   Settings::SetDefaultServer( const std::string& server_name )
 //! @param server_name the server name/alias
 std::string Settings::GetServerHost( const std::string& server_name )
 {
-  return STD_STRING( m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/host"), DEFSETT_DEFAULT_SERVER_HOST ) );
+  std::string host = DEFSETT_DEFAULT_SERVER_HOST;
+  return STD_STRING( m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/host"), WX_STRING(host) ) );
 }
 
 
