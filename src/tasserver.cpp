@@ -666,9 +666,9 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
   assert( IsOnline() );
   assert( m_sock != 0 );
 
-  wxString cmd = wxString::Format( _T("OPENBATTLE 0 %d %s %d %d %d %d %d %d %d %d %d %d %s %d %s %s\t%s\t%s\n"), 
-    bo.nattype,
-    password.c_str(),
+  wxString cmd = wxString::Format( _T("OPENBATTLE 0 %d "), bo.nattype );
+  cmd += WX_STRING(password);
+  cmd += wxString::Format( _T(" %d %d %d %d %d %d %d %d %d %d "),
     bo.port,
     bo.maxplayers,
     bo.startmetal,
@@ -678,14 +678,14 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
     bo.gametype,
     bo.limitdgun,
     bo.dimmms,
-    bo.ghostedbuildings,
-    bo.modhash.c_str(),
-    bo.rankneeded,
-    bo.maphash.c_str(),
-    bo.mapname.c_str(),
-    bo.description.c_str(),
-    bo.modname.c_str()
+    bo.ghostedbuildings
   );
+  cmd += WX_STRING(bo.modhash);
+  cmd += wxString::Format( _T(" %d "), bo.rankneeded );
+  cmd += WX_STRING( bo.maphash ) + _T(" ");
+  cmd += WX_STRING( bo.mapname ) + _T("\t");
+  cmd += WX_STRING( bo.description ) + _T("\t");
+  cmd += WX_STRING( bo.modname ) + _T("\n");
 
   m_sock->Send( STD_STRING(cmd) );
   // OPENBATTLE type natType password port maxplayers startingmetal startingenergy maxunits startpos 
