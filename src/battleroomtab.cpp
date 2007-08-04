@@ -25,6 +25,7 @@
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
+  EVT_BUTTON ( BROOM_START, BattleRoomTab::OnStart )
   EVT_BUTTON ( BROOM_LEAVE, BattleRoomTab::OnLeave )
   EVT_CHECKBOX( BROOM_IMREADY, BattleRoomTab::OnImReady )
   EVT_CHECKBOX( BROOM_SPEC, BattleRoomTab::OnImSpec )
@@ -84,7 +85,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
   m_leave_btn = new wxButton( this, BROOM_LEAVE, _("Leave"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
-  m_start_btn = new wxButton( this, -1, _("Start"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
+  m_start_btn = new wxButton( this, BROOM_START, _("Start"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
   m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
   m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
@@ -149,12 +150,22 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
     m_players->AddUser( battle.GetUser( i ) );
   }
 
+  if ( !IsHosted() ) {
+    m_start_btn->Enable( false );
+  }
+
 }
 
 
 BattleRoomTab::~BattleRoomTab()
 {
 
+}
+
+
+bool BattleRoomTab::IsHosted()
+{
+  return m_battle.IsFounderMe();
 }
 
 
@@ -208,6 +219,14 @@ ChatPanel& BattleRoomTab::GetChatPanel()
 {
   return *m_chat;
 }
+
+
+void BattleRoomTab::OnStart( wxCommandEvent& event )
+{
+  ASSERT_LOGIC( IsHosted(), "This battle is not hosted by user." );
+  m_ui.StartHostedBattle();
+}
+
 
 void BattleRoomTab::OnLeave( wxCommandEvent& event )
 {
@@ -279,6 +298,8 @@ void BattleRoomTab::OnUserJoined( User& user )
 {
   m_chat->Joined( user );
   m_players->AddUser( user );
+  if ( &user == &m_battle.GetMe() ) 
+    m_players->SetItemState( m_players->GetUserIndex( user ), wxLIST_MASK_STATE, wxLIST_STATE_SELECTED );
 }
 
 

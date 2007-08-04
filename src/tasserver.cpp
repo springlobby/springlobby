@@ -750,6 +750,13 @@ void TASServer::SendMyUserStatus()
 }
 
 
+void TASServer::StartHostedBattle()
+{
+  assert( m_battle_id != -1 );
+  m_se->OnStartHostedBattle( m_battle_id );
+}
+
+
 void TASServer::OnConnected( Socket* sock )
 {
   debug_func( "" );

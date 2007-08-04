@@ -71,6 +71,7 @@ class Server
     virtual void HostBattle( BattleOptions bo, const std::string& password = "" ) = 0;
     virtual void JoinBattle( const int& battleid, const std::string& password = "" ) = 0;
     virtual void LeaveBattle( const int& battleid ) = 0;
+    virtual void StartHostedBattle() = 0;
 
     virtual void RequestChannels() = 0;
 

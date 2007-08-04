@@ -59,6 +59,7 @@ class TASServer : public Server
     void LeaveBattle( const int& battleid );
     void SendMyBattleStatus( UserBattleStatus& bs );
     void SendMyUserStatus();
+    void StartHostedBattle();
 
     void RequestChannels();
     // TASServer specific functions

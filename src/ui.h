@@ -36,6 +36,8 @@ class Ui
     bool IsConnected() const;
     void JoinChannel( const wxString& name, const wxString& password );
 
+    void StartHostedBattle();
+
     void Quit();
 
     static bool Ask( const wxString& heading, const wxString& question );

@@ -34,8 +34,11 @@ class BattleRoomTab : public wxPanel
    Battle& GetBattle();
    ChatPanel& GetChatPanel();
 
+   bool IsHosted();
+
    void UpdateBattleInfo();
 
+   void OnStart( wxCommandEvent& event );
    void OnLeave( wxCommandEvent& event );
    void OnImReady( wxCommandEvent& event );
    void OnImSpec( wxCommandEvent& event );
@@ -101,7 +104,8 @@ enum
     BROOM_TEAMSEL,
     BROOM_ALLYSEL,
     BROOM_COLOURSEL,
-    BROOM_SIDESEL
+    BROOM_SIDESEL,
+    BROOM_START
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H

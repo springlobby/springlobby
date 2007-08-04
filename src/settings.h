@@ -38,8 +38,12 @@ class Settings
     int    GetServerPort( const std::string& server_name );
     void   SetServerPort( const std::string& server_name, const int value );
 
-    std::string GetServerName( const std::string& server_name );
-    void   SetServerName( const std::string& server_name, const std::string& value );
+    int GetNumServers();
+    void SetNumServers( int num );
+    void AddServer( const std::string& server_name );
+    int GetServerIndex( const std::string& server_name );
+
+    std::string GetServerName( int index );
 
     std::string GetServerAccountNick( const std::string& server_name );
     void   SetServerAccountNick( const std::string& server_name, const std::string& value );

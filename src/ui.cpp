@@ -180,6 +180,13 @@ void Ui::JoinChannel( const wxString& name, const wxString& password )
 }
 
 
+void Ui::StartHostedBattle()
+{
+  assert( m_serv != 0 );
+  m_serv->StartHostedBattle();
+}
+
+
 //! @brief Quits the entire application
 void Ui::Quit()
 {

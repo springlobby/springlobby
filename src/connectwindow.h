@@ -23,6 +23,8 @@ class ConnectWindow : public wxFrame
 
     // ConnectWindow interface
 
+    void ReloadServerList();
+
     void OnOk(wxCommandEvent& event);
     void OnCancel(wxCommandEvent& event);
 

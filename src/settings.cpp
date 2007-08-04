@@ -19,8 +19,7 @@ Settings& sett()
 Settings::Settings()
 {
   m_config = new wxConfig( _T("SpringLobby") );
-  if ( !m_config->Exists( _T("/Servers") ) )
-    SetDefaultSettings();
+  if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
 }
 
 Settings::~Settings()
@@ -45,12 +44,10 @@ bool Settings::IsFirstRun()
 //! @brief Restores default settings
 void Settings::SetDefaultSettings()
 {
-  wxString defserver;
-  defserver = DEFSETT_DEFAULT_SERVER;
-  m_config->Write( _T("/Servers/Default"), defserver );
-  m_config->Write( _T("/Server/")+defserver+_T("/host"), DEFSETT_DEFAULT_SERVER_HOST );
-  m_config->Write( _T("/Server/")+defserver+_T("/port"), DEFSETT_DEFAULT_SERVER_PORT );
-  //! @todo Save all default settings
+  AddServer( DEFSETT_DEFAULT_SERVER );
+  SetServerHost( DEFSETT_DEFAULT_SERVER, DEFSETT_DEFAULT_SERVER_HOST );
+  SetServerPort( DEFSETT_DEFAULT_SERVER, DEFSETT_DEFAULT_SERVER_PORT );
+  SetDefaultServer( DEFSETT_DEFAULT_SERVER );
 }
 
 
@@ -118,23 +115,46 @@ void   Settings::SetServerPort( const std::string& server_name, const int value 
 }
 
 
-//! @brief Get name/alias of a server.
-//!
-//! @param server_name the server name/alias
-//! @todo Implement
-std::string Settings::GetServerName( const std::string& server_name )
+void Settings::AddServer( const std::string& server_name )
 {
-  return "";
+  int index = GetServerIndex( server_name );
+  if ( index != -1 ) return;
+
+  index = GetNumServers();
+  SetNumServers( index + 1 );
+
+  m_config->Write( _T("/Servers/Server")+WX_STRING(i2s(index)), WX_STRING(server_name) );
 }
 
 
-//! @brief Set name/alias of a server.
-//!
-//! @param server_name the server name/alias
-//! @param value the vaule to be set
-//! @todo Implement
-void   Settings::SetServerName( const std::string& server_name, const std::string& value )
+int Settings::GetNumServers()
 {
+  return m_config->Read( _T("/Servers/Count"), (long)0 );
+}
+
+
+void Settings::SetNumServers( int num )
+{
+  m_config->Write( _T("/Servers/Count"), num );
+}
+
+
+int Settings::GetServerIndex( const std::string& server_name )
+{
+  int num = GetNumServers();
+  for ( int i= 0; i < num; i++ ) {
+    if ( GetServerName( i ) == server_name ) return i;
+  }
+  return -1;
+}
+
+
+//! @brief Get name/alias of a server.
+//!
+//! @param index the server index
+std::string Settings::GetServerName( int index )
+{
+  return STD_STRING(m_config->Read( wxString::Format( _T("/Servers/Server%d"), index ), _T("") ));
 }
 
 

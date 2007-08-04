@@ -4,6 +4,7 @@
 
 #include <wx/notebook.h>
 #include <wx/panel.h>
+#include <wx/tokenzr.h>
 #include <wx/stattext.h>
 #include <wx/combobox.h>
 #include <wx/checkbox.h>
@@ -54,6 +55,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 
   m_server_lbl =   new wxStaticText( m_login_tab, -1, _("Server") );
   m_server_combo = new wxComboBox  ( m_login_tab, -1, server );
+  m_server_combo->SetToolTip( _("Server to connect to. You can connect to any server you like by typing in hostaddress:port format.") );
 
   m_ser_acc_line = new wxStaticLine( m_login_tab );
 
@@ -173,6 +175,8 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 #ifdef __WXMSW__
   SetBackgroundColour( wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW) );
 #endif
+
+  ReloadServerList();
 }
 
 
@@ -183,6 +187,16 @@ ConnectWindow::~ConnectWindow()
 }
 
 
+void ConnectWindow::ReloadServerList()
+{
+  m_server_combo->Clear();
+  for ( int i = 0; i < sett().GetNumServers(); i++ ) {
+    m_server_combo->AppendString( WX_STRING(sett().GetServerName( i )) );
+  }
+  m_server_combo->SetValue( WX_STRING(sett().GetDefaultServer()) );
+}
+
+
 void ConnectWindow::OnOk(wxCommandEvent& event)
 {
   Hide();
@@ -190,6 +204,31 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
     sett().SetDefaultServer( STD_STRING(m_server_combo->GetValue()) );
     sett().SetServerAccountNick( STD_STRING(m_server_combo->GetValue()), STD_STRING(m_nick_text->GetValue()) );
     sett().SetServerAccountSavePass( STD_STRING(m_server_combo->GetValue()), m_rpass_check->GetValue() );
+	  
+    // We assume that the server is given as : "host:port" so we split based on ":"
+    wxArrayString serverString = wxStringTokenize(m_server_combo->GetValue(),_T(":") );
+
+    if ( serverString.GetCount() == 0 ) {
+      wxMessageBox( _("Invalid host/port or servername."), _("Invalid host"), wxOK );
+      return;
+    }
+
+    if ( serverString.GetCount() == 2 ) {
+      long port;
+      if( !serverString[1].ToLong( &port ) ) {
+        wxMessageBox( _("Invalid port."), _("Invalid port"), wxOK );
+        return;
+      }
+      sett().AddServer( STD_STRING(m_server_combo->GetValue()) );
+      sett().SetServerHost( STD_STRING(m_server_combo->GetValue()),STD_STRING(serverString[0]) );
+      sett().SetServerPort( STD_STRING(m_server_combo->GetValue()), (int)port );
+    }
+
+    if ( serverString.GetCount() != 1 && serverString.GetCount() != 2 ) {
+      wxMessageBox( _("Invalid host/port."), _("Invalid host"), wxOK );
+      return;
+    }
+	  
     sett().SaveSettings();
 
     m_ui.DoConnect( m_server_combo->GetValue(), m_nick_text->GetValue(), m_pass_text->GetValue() );
@@ -212,4 +251,5 @@ void ConnectWindow::OnCancel(wxCommandEvent& event)
 {
   Hide();
 }
+
 

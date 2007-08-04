@@ -173,6 +173,14 @@ void ServerEvents::OnHostedBattle( int battleid )
 }
 
 
+void ServerEvents::OnStartHostedBattle( int battleid )
+{
+  debug_func( "" );
+  Battle& battle = m_serv.GetBattle( battleid );
+  m_ui.OnBattleStarted( battle );
+}
+
+
 void ServerEvents::OnClientBattleStatus( int battleid, const std::string& nick, UserBattleStatus status )
 {
   Battle& battle = m_serv.GetBattle( battleid );

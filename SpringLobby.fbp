@@ -4,17 +4,17 @@
     <object class="Project" expanded="1">
         <property name="bitmaps"></property>
         <property name="code_generation">C++</property>
-        <property name="file"></property>
+        <property name="file">formbuilder</property>
         <property name="first_id">1000</property>
         <property name="icons"></property>
-        <property name="internationalize">0</property>
-        <property name="name">MyProject1</property>
+        <property name="internationalize">1</property>
+        <property name="name">SpringLobby</property>
         <property name="path">.</property>
-        <property name="precompiled_header">wx/wxprec.h</property>
+        <property name="precompiled_header"></property>
         <property name="relative_path">1</property>
-        <property name="use_enum">0</property>
+        <property name="use_enum">1</property>
         <property name="use_microsoft_bom">0</property>
-        <object class="Dialog" expanded="0">
+        <object class="Dialog" expanded="1">
             <property name="bg"></property>
             <property name="center"></property>
             <property name="enabled">1</property>
@@ -27,7 +27,7 @@
             <property name="minimum_size"></property>
             <property name="name">HostBattleDialog</property>
             <property name="pos"></property>
-            <property name="size">340,320</property>
+            <property name="size">340,300</property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
             <property name="subclass"></property>
             <property name="title">Host new battle</property>
@@ -152,7 +152,7 @@
                                 <property name="id">wxID_ANY</property>
                                 <property name="maximum_size"></property>
                                 <property name="minimum_size"></property>
-                                <property name="name">m_choice1</property>
+                                <property name="name">m_mod_pic</property>
                                 <property name="permission">protected</property>
                                 <property name="pos"></property>
                                 <property name="size"></property>
@@ -339,13 +339,13 @@
                                         <property name="id">wxID_ANY</property>
                                         <property name="maxValue">16</property>
                                         <property name="maximum_size"></property>
-                                        <property name="minValue">1</property>
+                                        <property name="minValue">2</property>
                                         <property name="minimum_size"></property>
                                         <property name="name">m_players_slide</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size"></property>
-                                        <property name="style">wxSL_AUTOTICKS|wxSL_BOTH|wxSL_HORIZONTAL|wxSL_LABELS|wxSL_TOP</property>
+                                        <property name="style">wxSL_AUTOTICKS|wxSL_BOTH|wxSL_HORIZONTAL|wxSL_LABELS</property>
                                         <property name="subclass"></property>
                                         <property name="tooltip">The maximun number of players to allow in the battle.</property>
                                         <property name="value">4</property>
@@ -454,11 +454,11 @@
                                 <property name="fg"></property>
                                 <property name="font"></property>
                                 <property name="hidden">0</property>
-                                <property name="id">wxID_ANY</property>
+                                <property name="id">HOST_CANCEL</property>
                                 <property name="label">Cancel</property>
                                 <property name="maximum_size"></property>
                                 <property name="minimum_size"></property>
-                                <property name="name">m_canel_btn</property>
+                                <property name="name">m_cancel_btn</property>
                                 <property name="permission">protected</property>
                                 <property name="pos"></property>
                                 <property name="size"></property>
@@ -487,7 +487,7 @@
                                 <property name="fg"></property>
                                 <property name="font"></property>
                                 <property name="hidden">0</property>
-                                <property name="id">wxID_ANY</property>
+                                <property name="id">HOST_OK</property>
                                 <property name="label">Host</property>
                                 <property name="maximum_size"></property>
                                 <property name="minimum_size"></property>
