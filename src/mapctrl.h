@@ -5,6 +5,8 @@
 
 class wxPanel;
 class wxBitmap;
+class wxDC;
+
 class Battle;
 
 
@@ -21,11 +23,21 @@ class MapCtrl : public wxPanel
     void OnPaint( wxPaintEvent& event );
     void OnResize( wxSizeEvent& event );
 
+    void OnMouseMove( wxMouseEvent& event );
+
   protected:
+
+    wxRect _GetMinimapRect();
+    wxRect _GetStartRect( int index );
+    void _DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxColour& col, bool mouseover );
+
+    void _SetMouseOverRect( int index );
 
     wxBitmap* m_image;
     Battle& m_battle;
     wxString m_mapname;
+    bool m_ro;
+    int m_mover_rect;
 
     wxSize m_lastsize;
 

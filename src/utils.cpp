@@ -7,9 +7,10 @@
 #include "utils.h"
 
 // FIXME this does not work on linux+mingw build for windows
-//#ifdef __WXMSW__
-//#include <windows.h>
-//#include <wx/msw/winundef.h>
+#ifdef _MSC_VER
+#include <windows.h>
+#include <wx/msw/winundef.h>
+#endif
 //#else
 #include <iostream>
 #include <ostream>
@@ -29,8 +30,10 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #ifdef __WXMSW__
   std::string tmp = prefix;
   tmp += " " + func + "( " + params + " )" + tmpmsg + "\n";
-// FIXME use wx logging thingies instead for portability
-//  OutputDebugString( tmp.c_str() );
+#ifdef _MSC_VER
+  OutputDebugString( tmp.c_str() );
+#endif
+
 #else
   std::cout << prefix.c_str() << " " << func.c_str() << "( " << params.c_str() << " ): "<< tmpmsg.c_str() << std::endl;
 #endif

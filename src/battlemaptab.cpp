@@ -53,8 +53,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 	m_map_combo = new wxChoice( this, BMAP_MAP_SEL, wxDefaultPosition, wxDefaultSize );
 	m_selmap_sizer->Add( m_map_combo, 1, wxALL, 2 );
 	
-	m_browse_btn = new wxButton( this, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, 0 );
-	m_browse_btn->Enable( false );
+	m_browse_btn = new wxButton( this, wxID_ANY, _("Select"), wxDefaultPosition, wxDefaultSize, 0 );
 	
 	m_selmap_sizer->Add( m_browse_btn, 0, wxALL, 2 );
 	
@@ -70,9 +69,9 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
   wxListItem col;
 
-  col.SetText( _T("Option") );
+  col.SetText( _("Option") );
   m_map_opts_list->InsertColumn( 0, col );
-  col.SetText( _T("Value") );
+  col.SetText( _("Value") );
   m_map_opts_list->InsertColumn( 1, col );
   m_map_opts_list->SetColumnWidth( 0, 90 );
   m_map_opts_list->SetColumnWidth( 1, 50 );
@@ -101,6 +100,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
   //m_map_combo->Enable( m_battle.IsFounderMe() );
   m_start_radios->Enable( m_battle.IsFounderMe() );
+
 }
 
 
