@@ -1,3 +1,4 @@
+/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 #include <cctype>
 
 #include "base64.h"

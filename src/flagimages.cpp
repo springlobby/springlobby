@@ -1,3 +1,4 @@
+/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 #include "flagimages.h"
 #include "flagimagedata.h"
 #include "utils.h"

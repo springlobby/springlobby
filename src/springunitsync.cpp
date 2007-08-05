@@ -1,3 +1,4 @@
+/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 #include <wx/dynlib.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
