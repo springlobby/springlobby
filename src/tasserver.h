@@ -63,6 +63,8 @@ class TASServer : public Server
     void StartHostedBattle();
     void SendHostedBattleMapInfo();
 
+    Battle* GetCurrentBattle();
+
     void RequestChannels();
     // TASServer specific functions
     void ExecuteCommand( const std::string& in );

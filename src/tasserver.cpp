@@ -732,6 +732,13 @@ void TASServer::SendHostedBattleMapInfo()
 }
 
 
+Battle* TASServer::GetCurrentBattle()
+{
+  assert( m_battle_id != -1 );
+  return &GetBattle( m_battle_id );
+}
+
+
 void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 {
   debug_func( "" );

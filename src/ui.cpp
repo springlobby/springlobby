@@ -184,6 +184,7 @@ void Ui::StartHostedBattle()
 {
   assert( m_serv != 0 );
   m_serv->StartHostedBattle();
+  sett().SetLastHostMap( m_serv->GetCurrentBattle()->opts().mapname );
 }
 
 

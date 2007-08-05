@@ -75,6 +75,8 @@ class Server
 
     virtual void SendHostedBattleMapInfo() = 0;
 
+    virtual Battle* GetCurrentBattle() = 0;
+
     virtual void RequestChannels() = 0;
 
     virtual void SendMyBattleStatus( UserBattleStatus& bs ) = 0;
