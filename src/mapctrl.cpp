@@ -25,10 +25,13 @@ BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
   EVT_MOTION( MapCtrl::OnMouseMove )
 END_EVENT_TABLE()
 
+const int boxsize = 8;
+
 
 MapCtrl::MapCtrl( wxWindow* parent, int size, Battle& battle, bool readonly ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
-    m_image(0), m_battle(battle), m_mapname(_T("")), m_lastsize(-1,-1),m_ro(readonly),m_mover_rect(-1)
+    m_image(0), m_battle(battle), m_mapname(_T("")), m_lastsize(-1,-1),m_ro(readonly),m_mover_rect(-2),
+    m_rect_area(RA_Main)
 {
   SetBackgroundStyle( wxBG_STYLE_CUSTOM );
   SetBackgroundColour( *wxLIGHT_GREY );
@@ -107,7 +110,6 @@ void MapCtrl::_DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxCol
   dc.SetPen( wxPen( col ) );
 
   if ( mouseover && !m_ro ) {
-    const int boxsize = 8;
     dc.DrawRectangle( sr.x+1, sr.y+1, sr.width-2, sr.height-2 );
     dc.SetPen( wxPen( *wxBLACK ) );
     dc.DrawRectangle( sr.x, sr.y, sr.width, sr.height );
@@ -187,36 +189,64 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   if ( _GetMinimapRect().Inside( p ) ) {
 
     // Check if point is in a startrect.
-    for ( int i = 0; i < 16; i++ ) {
+    for ( int i = 15; i >= 0; i-- ) {
 
       wxRect r = _GetStartRect( i );
       if ( r.IsEmpty() ) continue;
 
       if ( r.Inside( p ) ) {
 
-        if ( m_mover_rect != i ) {
-          _SetMouseOverRect( i );
-          UpdateMinimap();
-        }
+        if      ( (wxRect( r.x, r.y, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_UpLeft;
+        else if ( (wxRect( r.x + r.width - boxsize, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownRight;
+        else if ( (wxRect( r.x + r.width - boxsize, r.y + 1, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_UpRight;
+        else if ( (wxRect( r.x, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownLeft;
+        else m_rect_area = RA_Main;
+
+        _SetMouseOverRect( i );
+        
         return;
 
       }
 
     }
+    if ( m_mover_rect != -1 ) _SetMouseOverRect( -1 );
+
+  } else {
+     if ( m_mover_rect != -2 ) _SetMouseOverRect( -2 );
   }
 
-  if ( m_mover_rect != -1 ) {
-    _SetMouseOverRect( -1 );
-    UpdateMinimap();
-  }
+
 }
 
 
 void MapCtrl::_SetMouseOverRect( int index )
 {
+  int oldindex = m_mover_rect;
   m_mover_rect = index;
-  if ( m_mover_rect != -1 ) SetCursor( wxCursor( wxCURSOR_SIZING ) );
-  else SetCursor( wxCursor( wxCURSOR_ARROW ) );
+  _SetCursor();
+
+  if ( index != oldindex ) UpdateMinimap();
+}
+
+
+void MapCtrl::_SetCursor()
+{
+  if ( !m_ro ) {
+    if ( m_mover_rect >= 0 ) {
+      if      ( m_rect_area == RA_UpLeft )    SetCursor( wxCursor( wxCURSOR_SIZENWSE ) );
+      else if ( m_rect_area == RA_UpRight )   SetCursor( wxCursor( wxCURSOR_SIZENESW ) );
+      else if ( m_rect_area == RA_DownLeft )  SetCursor( wxCursor( wxCURSOR_SIZENESW ) );
+      else if ( m_rect_area == RA_DownRight ) SetCursor( wxCursor( wxCURSOR_SIZENWSE ) );
+      else SetCursor( wxCursor( wxCURSOR_SIZING ) );
+    } else if ( m_mover_rect == -1 ) {
+      SetCursor( wxCursor( wxCURSOR_CROSS ) );
+    } else {
+      SetCursor( wxCursor( wxCURSOR_ARROW ) );
+    }
+  } else {
+    if ( m_mover_rect >= 0 ) SetCursor( wxCursor( wxCURSOR_HAND ) );
+    else SetCursor( wxCursor( wxCURSOR_ARROW ) );
+  }
 }
 
 

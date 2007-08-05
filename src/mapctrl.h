@@ -9,6 +9,14 @@ class wxDC;
 
 class Battle;
 
+#define RA_Main -1
+#define RA_UpLeft 0
+#define RA_UpRight 1
+#define RA_DownRight 2
+#define RA_DownLeft 3
+
+typedef int RectArea;
+
 
 class MapCtrl : public wxPanel
 {
@@ -33,11 +41,14 @@ class MapCtrl : public wxPanel
 
     void _SetMouseOverRect( int index );
 
+    void _SetCursor();
+
     wxBitmap* m_image;
     Battle& m_battle;
     wxString m_mapname;
     bool m_ro;
     int m_mover_rect;
+    RectArea m_rect_area;
 
     wxSize m_lastsize;
 
