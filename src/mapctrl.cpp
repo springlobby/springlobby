@@ -25,6 +25,9 @@ BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
   EVT_PAINT( MapCtrl::OnPaint )
   EVT_SIZE( MapCtrl::OnResize )
   EVT_MOTION( MapCtrl::OnMouseMove )
+  EVT_LEFT_DOWN( MapCtrl::OnLeftDown )
+  EVT_LEFT_UP( MapCtrl::OnLeftUp )
+  EVT_MOUSEWHEEL( MapCtrl::OnMouseWheel )
 END_EVENT_TABLE()
 
 const int boxsize = 8;
@@ -33,7 +36,7 @@ const int boxsize = 8;
 MapCtrl::MapCtrl( wxWindow* parent, int size, Battle& battle, bool readonly ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
     m_image(0), m_battle(battle), m_mapname(_T("")), m_lastsize(-1,-1),m_ro(readonly),m_mover_rect(-2),
-    m_rect_area(RA_Main), m_last_rect_area(RA_Main), m_close_img(0), m_close_hi_img(0)
+    m_rect_area(RA_Main), m_last_rect_area(RA_Main), m_close_img(0), m_close_hi_img(0), m_maction(MA_None)
 {
   SetBackgroundStyle( wxBG_STYLE_CUSTOM );
   SetBackgroundColour( *wxLIGHT_GREY );
@@ -229,7 +232,100 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
      if ( m_mover_rect != -2 ) _SetMouseOverRect( -2 );
   }
 
+}
 
+
+void MapCtrl::OnLeftDown( wxMouseEvent& event )
+{
+  if ( !m_ro ) {
+    // In edit mode
+    if ( m_mover_rect >= 0 ) { // We are over a rect.
+
+      m_mdown_area = m_rect_area;
+      m_mdown_rect = m_mover_rect;
+
+      if      ( m_mdown_area == RA_UpLeft ) {
+        m_maction = MA_ResizeUpLeft;
+      } else if ( m_mdown_area == RA_UpRight ) {
+        m_maction = MA_Delete;
+      } else if ( m_mdown_area == RA_DownLeft ) {
+        m_maction = MA_ResizeDownLeft;
+      } else if ( m_mdown_area == RA_DownRight ) {
+        m_maction = MA_ResizeDownRight;
+      } else if ( m_mdown_area == RA_Main ) {
+        m_maction = MA_Move;
+      }
+
+    } else if ( m_mover_rect == -1 ) { // We are over empty minimap area.
+      m_maction = MA_Add;
+      m_mdown_x = event.GetX();
+      m_mdown_y = event.GetY();
+    } else if ( m_mover_rect == -2 ) { // We are outside the minimap.
+
+    }
+  } else {
+    // Readonly.
+    if ( m_mover_rect >= 0 ) {
+      // Join ally rect that user clicked on
+      if ( m_battle.GetMe().BattleStatus().ally != m_mover_rect ) {
+        m_battle.GetMe().BattleStatus().ally = m_mover_rect;
+        m_battle.SendMyBattleStatus();
+      }
+
+    }
+    m_maction = MA_None;
+  }
+}
+
+
+void MapCtrl::OnLeftUp( wxMouseEvent& event )
+{
+  if ( m_maction == MA_Add ) {
+    if ( ( abs( m_mdown_x - event.GetX() ) >= 40 ) && ( abs( m_mdown_y - event.GetY() ) >= 40 ) ) {
+      BattleStartRect r = _GetBattleRect( m_mdown_x<event.GetX()?m_mdown_x:event.GetX(), m_mdown_y<event.GetY()?m_mdown_y:event.GetY(), m_mdown_x>event.GetX()?m_mdown_x:event.GetX(), m_mdown_y>event.GetY()?m_mdown_y:event.GetY() );
+      m_battle.AddStartRect( _GetNewRectIndex(), r.left, r.top, r.right, r.bottom );
+      UpdateMinimap();
+    } else {
+      BattleStartRect r = _GetBattleRect( m_mdown_x, m_mdown_y, m_mdown_x + 40, m_mdown_y + 40 );
+      m_battle.AddStartRect( _GetNewRectIndex(), r.left, r.top, r.right, r.bottom );
+      UpdateMinimap();
+    }
+  } else if ( m_maction == MA_Delete ) {
+    if ( (m_mdown_area == m_rect_area) && (m_mover_rect == m_mdown_rect) ) {
+      m_battle.RemoveStartRect( m_mdown_rect );
+      UpdateMinimap();
+    }
+  }
+}
+
+
+int MapCtrl::_GetNewRectIndex()
+{
+  for (int i = 0; i < 16; i++ ) {
+    wxRect r = _GetStartRect( i );
+    if ( r.IsEmpty() ) return i;
+  }
+  return -1;
+}
+
+
+void MapCtrl::OnMouseWheel( wxMouseEvent& event )
+{
+}
+
+
+BattleStartRect MapCtrl::_GetBattleRect( int x1, int y1, int x2, int y2 )
+{
+  BattleStartRect br;
+  wxRect mr = _GetMinimapRect();
+
+  br.left = 200 * ( x1 - mr.x ) / mr.width;
+  br.top = 200 * ( y1 - mr.y ) / mr.height;
+  br.right = 200 * ( x2 - mr.x ) / mr.width;
+  br.bottom = 200 * ( y2 - mr.y ) / mr.height;
+
+  // Should auto-adjust when outside minimap.
+  return br;
 }
 
 

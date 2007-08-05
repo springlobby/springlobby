@@ -8,6 +8,7 @@ class wxBitmap;
 class wxDC;
 
 class Battle;
+struct BattleStartRect;
 
 #define RA_Main -1
 #define RA_UpLeft 0
@@ -16,6 +17,17 @@ class Battle;
 #define RA_DownLeft 3
 
 typedef int RectArea;
+
+#define MA_None 0
+#define MA_Add 1
+#define MA_Delete 2
+#define MA_Move 3
+#define MA_ResizeUpLeft 4
+#define MA_ResizeUpRight 5
+#define MA_ResizeDownLeft 6
+#define MA_ResizeDownRight 7
+
+typedef int MouseAction;
 
 
 class MapCtrl : public wxPanel
@@ -32,11 +44,16 @@ class MapCtrl : public wxPanel
     void OnResize( wxSizeEvent& event );
 
     void OnMouseMove( wxMouseEvent& event );
-
+    void OnLeftDown( wxMouseEvent& event );
+    void OnLeftUp( wxMouseEvent& event );
+    void OnMouseWheel( wxMouseEvent& event );
   protected:
 
+    BattleStartRect _GetBattleRect( int x1, int y1, int x2, int y2 );
     wxRect _GetMinimapRect();
     wxRect _GetStartRect( int index );
+    int _GetNewRectIndex();
+
     void _DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxColour& col, bool mouseover );
 
     void _SetMouseOverRect( int index );
@@ -46,10 +63,19 @@ class MapCtrl : public wxPanel
     wxBitmap* m_image;
     Battle& m_battle;
     wxString m_mapname;
+
     bool m_ro;
     int m_mover_rect;
+    int m_mdown_rect;
+
     RectArea m_rect_area;
     RectArea m_last_rect_area;
+
+    RectArea m_mdown_area;
+
+    MouseAction m_maction;
+    int m_mdown_x;
+    int m_mdown_y;
 
     wxSize m_lastsize;
 
