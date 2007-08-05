@@ -35,8 +35,17 @@ const int boxsize = 8;
 
 MapCtrl::MapCtrl( wxWindow* parent, int size, Battle& battle, bool readonly ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
-    m_image(0), m_battle(battle), m_mapname(_T("")), m_lastsize(-1,-1),m_ro(readonly),m_mover_rect(-2),
-    m_rect_area(RA_Main), m_last_rect_area(RA_Main), m_close_img(0), m_close_hi_img(0), m_maction(MA_None)
+  m_image(0),
+  m_battle(battle),
+  m_mapname(_T("")),
+  m_ro(readonly),
+  m_mover_rect(-2),
+  m_rect_area(RA_Main),
+  m_last_rect_area(RA_Main),
+  m_maction(MA_None),
+  m_lastsize(-1,-1),
+  m_close_img(0),
+  m_close_hi_img(0)
 {
   SetBackgroundStyle( wxBG_STYLE_CUSTOM );
   SetBackgroundColour( *wxLIGHT_GREY );
