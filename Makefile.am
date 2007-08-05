@@ -115,6 +115,7 @@ springlobby_SOURCES = \
 	src/images/chat_icon.xpm \
 	src/images/closed_game.xpm \
 	src/images/closed_pw_game.xpm \
+	src/images/close_hi.xpm \
 	src/images/close.xpm \
 	src/images/colourbox.xpm \
 	src/images/connect.xpm \

@@ -49,8 +49,12 @@ class MapCtrl : public wxPanel
     bool m_ro;
     int m_mover_rect;
     RectArea m_rect_area;
+    RectArea m_last_rect_area;
 
     wxSize m_lastsize;
+
+    wxBitmap* m_close_img;
+    wxBitmap* m_close_hi_img;
 
   DECLARE_EVENT_TABLE();
 };

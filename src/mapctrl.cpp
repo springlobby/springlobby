@@ -17,7 +17,8 @@
 #include "user.h"
 #include "utils.h"
 
-//#include "images/select_icon.xpm"
+#include "images/close.xpm"
+#include "images/close_hi.xpm"
 
 
 BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
@@ -32,16 +33,22 @@ const int boxsize = 8;
 MapCtrl::MapCtrl( wxWindow* parent, int size, Battle& battle, bool readonly ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
     m_image(0), m_battle(battle), m_mapname(_T("")), m_lastsize(-1,-1),m_ro(readonly),m_mover_rect(-2),
-    m_rect_area(RA_Main)
+    m_rect_area(RA_Main), m_last_rect_area(RA_Main), m_close_img(0), m_close_hi_img(0)
 {
   SetBackgroundStyle( wxBG_STYLE_CUSTOM );
   SetBackgroundColour( *wxLIGHT_GREY );
+  if ( !m_ro ) {
+    m_close_img = new wxBitmap( close_xpm );
+    m_close_hi_img = new wxBitmap( close_hi_xpm );
+  }
 }
 
 
 MapCtrl::~MapCtrl()
 {
   FreeMinimap();
+  delete m_close_img;
+  delete m_close_hi_img;
 }
 
 
@@ -111,6 +118,7 @@ void MapCtrl::_DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxCol
   dc.SetPen( wxPen( col ) );
 
   if ( mouseover && !m_ro ) {
+
     dc.DrawRectangle( sr.x+1, sr.y+1, sr.width-2, sr.height-2 );
     dc.SetPen( wxPen( *wxBLACK ) );
     dc.DrawRectangle( sr.x, sr.y, sr.width, sr.height );
@@ -118,8 +126,12 @@ void MapCtrl::_DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxCol
     dc.SetBrush( wxBrush( *wxBLACK, wxSOLID ) );
     dc.DrawRectangle( sr.x, sr.y, boxsize, boxsize );
     dc.DrawRectangle( sr.x + sr.width - boxsize, sr.y + sr.height - boxsize, boxsize, boxsize );
-    dc.DrawRectangle( sr.x + sr.width - boxsize, sr.y + 1, boxsize, boxsize );
+    //dc.DrawRectangle( sr.x + sr.width - boxsize, sr.y + 1, boxsize, boxsize );
     dc.DrawRectangle( sr.x, sr.y + sr.height - boxsize, boxsize, boxsize );
+
+    if ( m_rect_area != RA_UpRight ) dc.DrawBitmap( *m_close_img, sr.x + sr.width - 16, sr.y + 2, true );
+    else dc.DrawBitmap( *m_close_hi_img, sr.x + sr.width - 16, sr.y + 2, true );
+
   } else {
     dc.DrawRectangle( sr.x, sr.y, sr.width, sr.height );
   }
@@ -197,12 +209,13 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 
       if ( r.Inside( p ) ) {
 
-        if      ( (wxRect( r.x, r.y, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_UpLeft;
-        else if ( (wxRect( r.x + r.width - boxsize, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownRight;
-        else if ( (wxRect( r.x + r.width - boxsize, r.y + 1, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_UpRight;
-        else if ( (wxRect( r.x, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownLeft;
-        else m_rect_area = RA_Main;
-
+        if ( !m_ro ) {
+          if      ( (wxRect( r.x, r.y, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_UpLeft;
+          else if ( (wxRect( r.x + r.width - boxsize, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownRight;
+          else if ( (wxRect( r.x + r.width - m_close_img->GetWidth(), r.y + 1, m_close_img->GetWidth(), m_close_img->GetWidth() )).Inside( p ) ) m_rect_area = RA_UpRight;
+          else if ( (wxRect( r.x, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownLeft;
+          else m_rect_area = RA_Main;
+        }
         _SetMouseOverRect( i );
         
         return;
@@ -226,7 +239,8 @@ void MapCtrl::_SetMouseOverRect( int index )
   m_mover_rect = index;
   _SetCursor();
 
-  if ( index != oldindex ) UpdateMinimap();
+  if ( (index != oldindex) || (m_rect_area != m_last_rect_area) ) UpdateMinimap();
+  m_last_rect_area = m_rect_area;
 }
 
 
@@ -235,7 +249,7 @@ void MapCtrl::_SetCursor()
   if ( !m_ro ) {
     if ( m_mover_rect >= 0 ) {
       if      ( m_rect_area == RA_UpLeft )    SetCursor( wxCursor( wxCURSOR_SIZENWSE ) );
-      else if ( m_rect_area == RA_UpRight )   SetCursor( wxCursor( wxCURSOR_SIZENESW ) );
+      else if ( m_rect_area == RA_UpRight )   SetCursor( wxCursor( wxCURSOR_ARROW ) );
       else if ( m_rect_area == RA_DownLeft )  SetCursor( wxCursor( wxCURSOR_SIZENESW ) );
       else if ( m_rect_area == RA_DownRight ) SetCursor( wxCursor( wxCURSOR_SIZENWSE ) );
       else SetCursor( wxCursor( wxCURSOR_SIZING ) );
