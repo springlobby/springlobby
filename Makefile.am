@@ -1,4 +1,5 @@
 ## the following line may NOT be split, b/c of autoreconf 2.61 and older
+## the --install requires automake 1.10 which was released in 2006
 ACLOCAL_AMFLAGS = -I m4 --install
 
 AM_CPPFLAGS = \
