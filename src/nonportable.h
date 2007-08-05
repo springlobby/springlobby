@@ -11,7 +11,7 @@
   #define DOS_TXT true
 #else
   #define SPRING_VERSION_PARAM _T("-V")
-  #define CHOOSE_EXE _("Any file (*.*)|*.*")
+  #define CHOOSE_EXE _("Any file (*)|*")
   #define CHOOSE_DLL _("Library (*.so)|*.so|Any File (*.*)|*.*")
   #define USYNC_CALL_CONV
   #define SPRING_BIN _T("spring")
