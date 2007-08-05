@@ -2,7 +2,6 @@
 #define SPRINGLOBBY_HEADERGUARD_SETTINGS_H
 
 #include <string>
-#include <wx/config.h>
 
 #define DEFSETT_DEFAULT_SERVER "TAS Server"
 #define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"
@@ -14,6 +13,8 @@
 #define DEFSETT_MW_LEFT 50
 #define DEFSETT_SPRING_DIR wxGetCwd()
 #define DEFSETT_SPRING_PORT 8452
+
+class wxConfigBase;
 
 //! @brief Class used to store and restore application settings.
 class Settings
@@ -98,7 +99,7 @@ class Settings
     void SetLastHostMap( const std::string& value );
 
   protected:
-    wxConfig* m_config; //!< wxConfig object to store and restore  all settings in.
+    wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
 };
 
 Settings& sett();
