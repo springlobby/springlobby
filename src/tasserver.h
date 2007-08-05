@@ -61,7 +61,7 @@ class TASServer : public Server
     void SendMyUserStatus();
 
     void StartHostedBattle();
-    void SendHostedBattleMapInfo();
+    void SendHostInfo( HostInfo update );
 
     Battle* GetCurrentBattle();
 

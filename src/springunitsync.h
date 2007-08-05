@@ -123,6 +123,8 @@ class SpringUnitSync : public IUnitSync
     ReadFileVFSPtr m_read_file_vfs;
     CloseFileVFSPtr m_close_file_vfs;
 
+    UnitSyncMap m_map;
+
     void* _GetLibFuncPtr( const std::string& name );
 };
 

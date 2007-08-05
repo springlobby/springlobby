@@ -34,6 +34,7 @@ class BattleMapTab : public wxPanel
      void ReloadMaplist();
 
      void OnMapSelect( wxCommandEvent& event );
+     void OnStartTypeSelect( wxCommandEvent& event );
 
   protected:
     Ui& m_ui;
@@ -51,7 +52,8 @@ class BattleMapTab : public wxPanel
 
 enum
 {
-    BMAP_MAP_SEL
+  BMAP_MAP_SEL = wxID_HIGHEST,
+  BMAP_START_TYPE
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEMAPTAB_H

@@ -13,6 +13,8 @@ class Channel;
 class User;
 class Battle;
 
+typedef int HostInfo;
+
 //! @brief UI main class
 class Ui
 {
@@ -37,6 +39,7 @@ class Ui
     void JoinChannel( const wxString& name, const wxString& password );
 
     void StartHostedBattle();
+    void SendHostInfo( HostInfo update );
 
     void Quit();
 

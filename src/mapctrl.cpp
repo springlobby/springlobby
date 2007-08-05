@@ -20,11 +20,13 @@
 
 BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
   EVT_PAINT( MapCtrl::OnPaint )
+  EVT_SIZE( MapCtrl::OnResize )
 END_EVENT_TABLE()
 
 
 MapCtrl::MapCtrl( wxWindow* parent, int size, Battle& battle, bool readonly ):
-  wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size) ), m_image(0), m_battle(battle), m_mapname(_T(""))
+  wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
+    m_image(0), m_battle(battle), m_mapname(_T("")), m_lastsize(-1,-1)
 {
 
 }
@@ -40,9 +42,10 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 {
   wxPaintDC dc( this );
 
-  int width, height, top = 1, left = 1;
+  int width, height, top = 0, left = 0;
   GetClientSize( &width, &height );
 
+  dc.SetPen( wxPen( *wxLIGHT_GREY ) );
   dc.SetBrush( wxBrush( *wxLIGHT_GREY, wxSOLID ) );
   dc.DrawRectangle( 0, 0, width, height );
   if ( !m_image ) {
@@ -108,6 +111,12 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 }
 
 
+void MapCtrl::OnResize( wxSizeEvent& event )
+{
+  UpdateMinimap();
+}
+
+
 void MapCtrl::LoadMinimap()
 {
   if ( m_image )
@@ -115,14 +124,22 @@ void MapCtrl::LoadMinimap()
   try {
     int w, h;
     GetClientSize( &w, &h );
-    wxImage img = usync()->GetMinimap( m_battle.opts().mapname, w-2 );
+    if ( w * h == 0 ) {
+      m_image = 0;
+      m_mapname = _T("");
+      m_lastsize = wxSize( -1, -1 );
+      return;
+    }
+    wxImage img = usync()->GetMinimap( m_battle.opts().mapname, w );
     m_image = new wxBitmap( img );
     m_mapname = WX_STRING( m_battle.opts().mapname );
+    m_lastsize = wxSize( w, h );
     Refresh();
     Update();
   } catch (...) {
     m_image = 0;
     m_mapname = _T("");
+    
   }
 
 }
@@ -140,7 +157,9 @@ void MapCtrl::FreeMinimap()
 
 void MapCtrl::UpdateMinimap()
 {
-  if ( m_mapname != WX_STRING( m_battle.opts().mapname ) ) {
+  int w, h;
+  GetClientSize( &w, &h );
+  if ( (m_mapname != WX_STRING( m_battle.opts().mapname) || ( m_lastsize != wxSize(w, h) ) ) ) {
     FreeMinimap();
     LoadMinimap();
   }

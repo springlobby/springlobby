@@ -23,6 +23,18 @@ typedef int ServerError;
 
 #define PE_NONE 0
 
+
+#define HI_Map 1
+#define HI_Locked 2
+#define HI_Spectators 4
+#define HI_StartResources 8
+#define HI_MaxUnits 16
+#define HI_StartType 32
+#define HI_GameType 64
+#define HI_Options 128
+
+typedef int HostInfo;
+
 struct UiServerData {
   UiServerData(): panel(0) {}
   ChatPanel* panel;
@@ -73,7 +85,7 @@ class Server
     virtual void LeaveBattle( const int& battleid ) = 0;
     virtual void StartHostedBattle() = 0;
 
-    virtual void SendHostedBattleMapInfo() = 0;
+    virtual void SendHostInfo( HostInfo update ) = 0;
 
     virtual Battle* GetCurrentBattle() = 0;
 

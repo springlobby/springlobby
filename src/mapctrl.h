@@ -7,6 +7,7 @@ class wxPanel;
 class wxBitmap;
 class Battle;
 
+
 class MapCtrl : public wxPanel
 {
   public:
@@ -18,6 +19,7 @@ class MapCtrl : public wxPanel
     void UpdateMinimap();
 
     void OnPaint( wxPaintEvent& event );
+    void OnResize( wxSizeEvent& event );
 
   protected:
 
@@ -25,6 +27,7 @@ class MapCtrl : public wxPanel
     Battle& m_battle;
     wxString m_mapname;
 
+    wxSize m_lastsize;
 
   DECLARE_EVENT_TABLE();
 };

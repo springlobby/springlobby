@@ -31,11 +31,13 @@
 BEGIN_EVENT_TABLE(BattleMapTab, wxPanel)
 
   EVT_CHOICE( BMAP_MAP_SEL, BattleMapTab::OnMapSelect )
+  EVT_RADIOBOX( BMAP_START_TYPE, BattleMapTab::OnStartTypeSelect )
 
 END_EVENT_TABLE()
 
 
-BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPanel( parent, -1 ),m_ui(ui), m_battle(battle)
+BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ): 
+  wxPanel( parent, -1 ), m_ui(ui), m_battle(battle)
 {
 	wxBoxSizer* m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
 	wxBoxSizer* m_map_sizer = new wxBoxSizer( wxVERTICAL );
@@ -44,7 +46,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPanel
 	m_minimap = new MapCtrl( this, 352, m_battle, false );
 	m_minimap->SetMinSize( wxSize( 352,352 ) );
 	
-	m_map_sizer->Add( m_minimap, 0, wxALL, 2 );
+	m_map_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 2 );
 	
 	wxBoxSizer* m_selmap_sizer = new wxBoxSizer( wxHORIZONTAL );
 	
@@ -58,7 +60,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPanel
 	
 	m_map_sizer->Add( m_selmap_sizer, 0, wxEXPAND, 5 );
 	
-	m_main_sizer->Add( m_map_sizer, 0, wxEXPAND, 5 );
+	m_main_sizer->Add( m_map_sizer, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* m_opts_sizer = new wxBoxSizer( wxVERTICAL );
 	
@@ -84,18 +86,21 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPanel
 
 	m_opts_sizer->Add( m_map_opts_list, 0, wxALL, 2 );
 
-  wxString m_start_radiosChoices[] = { wxT("Fixed"), wxT("Random"), wxT("Choose in game") };
+  wxString m_start_radiosChoices[] = { _("Fixed"),_("Random"), _("Choose in game") };
 	int m_start_radiosNChoices = sizeof( m_start_radiosChoices ) / sizeof( wxString );
-	m_start_radios = new wxRadioBox( this, wxID_ANY, wxT("Startpositions"), wxDefaultPosition, wxSize( 150,-1 ), m_start_radiosNChoices, m_start_radiosChoices, 1, wxRA_SPECIFY_COLS );
+	m_start_radios = new wxRadioBox( this, BMAP_START_TYPE, _("Startpositions"), wxDefaultPosition, wxSize( 150,-1 ), m_start_radiosNChoices, m_start_radiosChoices, 1, wxRA_SPECIFY_COLS );
 	m_opts_sizer->Add( m_start_radios, 0, wxALL, 2 );
 	
-	m_main_sizer->Add( m_opts_sizer, 1, wxEXPAND, 5 );
-	m_main_sizer->AddStretchSpacer();
+	m_main_sizer->Add( m_opts_sizer, 0, wxEXPAND, 5 );
+	//m_main_sizer->AddStretchSpacer();
 	SetSizer( m_main_sizer );
 	Layout();
 
   ReloadMaplist();
   UpdateMap();
+
+  //m_map_combo->Enable( m_battle.IsFounderMe() );
+  m_start_radios->Enable( m_battle.IsFounderMe() );
 }
 
 
@@ -139,12 +144,20 @@ void BattleMapTab::ReloadMaplist()
 
 void BattleMapTab::UpdateUser( User& user )
 {
-  if ( &m_battle.GetMe() == &user ) m_minimap->UpdateMinimap();
+  if ( &m_battle.GetMe() == &user ) {
+    try {
+      m_minimap->UpdateMinimap();
+    } catch (...) { }
+  }
 }
 
 
 void BattleMapTab::OnMapSelect( wxCommandEvent& event )
 {
+  if ( !m_battle.IsFounderMe() ) {
+    m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( WX_STRING(m_battle.opts().mapname) ) ) );
+    return;
+  }
   int index = m_map_combo->GetCurrentSelection();
   //wxString name = m_map_combo->GetString( index );
 
@@ -152,6 +165,19 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
   m_battle.SetMapname( map.name );
   m_battle.SetMapHash( map.hash );
 
-  m_ui.GetServer().SendHostedBattleMapInfo();
+  m_ui.SendHostInfo( HI_Map );
+}
+
+
+void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
+{
+  int pos = m_start_radios->GetSelection();
+  switch ( pos ) {
+    case 0: m_battle.SetStartType( ST_Fixed ); break;
+    case 1: m_battle.SetStartType( ST_Random ); break;
+    case 2: m_battle.SetStartType( ST_Choose ); break;
+    default: assert(false);
+  };
+  m_ui.SendHostInfo( HI_StartType );
 }
 

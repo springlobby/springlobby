@@ -713,7 +713,7 @@ void TASServer::LeaveBattle( const int& battleid )
 }
 
 
-void TASServer::SendHostedBattleMapInfo()
+void TASServer::SendHostInfo( HostInfo update )
 {
   debug_func( "" );
   assert( IsOnline() );
@@ -722,13 +722,24 @@ void TASServer::SendHostedBattleMapInfo()
   Battle& battle = GetBattle( m_battle_id );
   BattleOptions bo = battle.opts();
 
-  // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
-  wxString cmd = _T("UPDATEBATTLEINFO");
-  cmd += wxString::Format( _T(" %d %d "), bo.spectators, bo.islocked );
-  cmd += WX_STRING( bo.maphash ) + _T(" ");
-  cmd += WX_STRING( bo.mapname ) + _T("\n");
+  if ( ( update & ( HI_Map | HI_Locked | HI_Spectators ) ) > 0 ) {
+    // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
+    wxString cmd = _T("UPDATEBATTLEINFO");
+    cmd += wxString::Format( _T(" %d %d "), bo.spectators, bo.islocked );
+    cmd += WX_STRING( bo.maphash ) + _T(" ");
+    cmd += WX_STRING( bo.mapname ) + _T("\n");
 
-  m_sock->Send( STD_STRING(cmd) );
+    m_sock->Send( STD_STRING(cmd) );
+  }
+  if ( ( update & (HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Options) ) > 0 ) {
+    // UPDATEBATTLEDETAILS startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings
+    wxString cmd = _T("UPDATEBATTLEDETAILS");
+    cmd += wxString::Format( _T(" %d %d %d %d %d %d %d %d\n"), 
+      bo.startmetal, bo.startenergy, bo.maxunits, bo.starttype, bo.gametype, bo.limitdgun, bo.dimmms, bo.ghostedbuildings
+    );
+
+    m_sock->Send( STD_STRING(cmd) );
+  }
 }
 
 
