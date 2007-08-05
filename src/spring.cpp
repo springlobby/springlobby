@@ -18,11 +18,12 @@
 #include "iunitsync.h"
 #include "nonportable.h"
 
-Spring::Spring( Ui& ui) :
+Spring::Spring( Ui& ui ) :
   m_ui(ui),
   m_process(0),
   m_running(false)
 { }
+
 
 Spring::~Spring()
 {
@@ -30,15 +31,17 @@ Spring::~Spring()
     delete m_process;
 }
 
+
 bool Spring::IsRunning()
 {
   return m_process != 0;
 }
 
+
 bool Spring::Run( Battle& battle )
 {
   if ( m_running ) {
-    debug_error( "Spring allready running!" );
+    debug_error( "Spring already running!" );
     return false;
   }
 
@@ -71,6 +74,7 @@ bool Spring::TestSpringBinary()
   wxArrayString res;
   wxArrayString err;
   wxString bin = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ");
+
   /*
    * This hack is necessary, because spring returns -1 on purpose in 0.75b2, when ever you query it's version. I have sent a patch, and hopefully this will change in future versions of spring. Because of the exact return value, wxExecute fails to record the single line of standard output we need. This seems to be a bug in wxWidgets 2.8 series in windows, but I have not yet sent a bug report. If either project fixes their bug, this can be done portably again.
    */

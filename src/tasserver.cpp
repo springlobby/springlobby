@@ -713,6 +713,25 @@ void TASServer::LeaveBattle( const int& battleid )
 }
 
 
+void TASServer::SendHostedBattleMapInfo()
+{
+  debug_func( "" );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+
+  Battle& battle = GetBattle( m_battle_id );
+  BattleOptions bo = battle.opts();
+
+  // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
+  wxString cmd = _T("UPDATEBATTLEINFO");
+  cmd += wxString::Format( _T(" %d %d "), bo.spectators, bo.islocked );
+  cmd += WX_STRING( bo.maphash ) + _T(" ");
+  cmd += WX_STRING( bo.mapname ) + _T("\n");
+
+  m_sock->Send( STD_STRING(cmd) );
+}
+
+
 void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 {
   debug_func( "" );

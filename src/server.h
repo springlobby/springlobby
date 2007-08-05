@@ -73,6 +73,8 @@ class Server
     virtual void LeaveBattle( const int& battleid ) = 0;
     virtual void StartHostedBattle() = 0;
 
+    virtual void SendHostedBattleMapInfo() = 0;
+
     virtual void RequestChannels() = 0;
 
     virtual void SendMyBattleStatus( UserBattleStatus& bs ) = 0;

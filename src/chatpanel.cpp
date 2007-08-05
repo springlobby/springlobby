@@ -424,7 +424,7 @@ void ChatPanel::Part()
 void ChatPanel::LogTime()
 {
   wxDateTime now = wxDateTime::Now();
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(*wxBLACK));
+  m_chatlog_text->SetDefaultStyle(wxTextAttr( wxColour( 100,100,140 ) ));
   m_chatlog_text->AppendText( _T("[") + now.Format( _T("%H:%M") ) + _T("]") );
 }
 

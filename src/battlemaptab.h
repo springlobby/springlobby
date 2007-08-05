@@ -33,6 +33,8 @@ class BattleMapTab : public wxPanel
      void UpdateMap();
      void ReloadMaplist();
 
+     void OnMapSelect( wxCommandEvent& event );
+
   protected:
     Ui& m_ui;
     Battle& m_battle;
@@ -49,7 +51,7 @@ class BattleMapTab : public wxPanel
 
 enum
 {
-    BMAP_NONE
+    BMAP_MAP_SEL
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEMAPTAB_H

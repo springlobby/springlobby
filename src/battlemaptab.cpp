@@ -26,8 +26,11 @@
 #include "chatpanel.h"
 #include "mapctrl.h"
 #include "uiutils.h"
+#include "server.h"
 
 BEGIN_EVENT_TABLE(BattleMapTab, wxPanel)
+
+  EVT_CHOICE( BMAP_MAP_SEL, BattleMapTab::OnMapSelect )
 
 END_EVENT_TABLE()
 
@@ -45,7 +48,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPanel
 	
 	wxBoxSizer* m_selmap_sizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_map_combo = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize );
+	m_map_combo = new wxChoice( this, BMAP_MAP_SEL, wxDefaultPosition, wxDefaultSize );
 	m_selmap_sizer->Add( m_map_combo, 1, wxALL, 2 );
 	
 	m_browse_btn = new wxButton( this, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, 0 );
@@ -137,5 +140,18 @@ void BattleMapTab::ReloadMaplist()
 void BattleMapTab::UpdateUser( User& user )
 {
   if ( &m_battle.GetMe() == &user ) m_minimap->UpdateMinimap();
+}
+
+
+void BattleMapTab::OnMapSelect( wxCommandEvent& event )
+{
+  int index = m_map_combo->GetCurrentSelection();
+  //wxString name = m_map_combo->GetString( index );
+
+  UnitSyncMap map = usync()->GetMap( index );
+  m_battle.SetMapname( map.name );
+  m_battle.SetMapHash( map.hash );
+
+  m_ui.GetServer().SendHostedBattleMapInfo();
 }
 
