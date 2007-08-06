@@ -101,9 +101,16 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     bo.description = sett().GetLastHostDescription();
     bo.port = sett().GetLastHostPort();
 
-    UnitSyncMod mod = usync()->GetMod( sett().GetLastHostMod() );
-    bo.modhash = mod.hash;
-    bo.modname = mod.name;
+    // Get selected mod from unitsync.
+    UnitSyncMod mod;
+    try {
+      mod = usync()->GetMod( sett().GetLastHostMod() );
+      bo.modhash = mod.hash;
+      bo.modname = mod.name;
+    } catch ( ... ) {
+      wxMessageBox( _("Battle not started beacuse the mod you selected could not be fond. "), _("Error starting battle."), wxOK );
+      return;
+    }
 
     UnitSyncMap map;
     std::string mname = sett().GetLastHostMap();
