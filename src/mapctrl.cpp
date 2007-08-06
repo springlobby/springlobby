@@ -349,14 +349,28 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   } else if ( m_maction == MA_ResizeDownRight ) {
 
     wxRect sr = _GetStartRect( m_mdown_rect );
-    if ( sr.IsEmpty() ) {
-      m_maction = MA_None;
-      return;
-    }
 
     wxRect nsr( sr.x, sr.y, event.GetX() - sr.x, event.GetY() - sr.y );
     if ( nsr.width < minboxsize ) nsr.SetWidth( minboxsize );
     if ( nsr.height < minboxsize ) nsr.SetHeight( minboxsize );
+    BattleStartRect bsr = _GetBattleRect( nsr.x, nsr.y, nsr.x + nsr.width, nsr.y + nsr.height, m_mdown_rect );
+    m_battle.AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom );
+    if ( sr != nsr ) RefreshRect( sr.Union( nsr ), false );
+    return;
+
+  } else if ( m_maction == MA_ResizeUpLeft ) {
+
+    wxRect sr = _GetStartRect( m_mdown_rect );
+
+    wxRect nsr( event.GetX(), event.GetY(), (sr.x - event.GetX()) + sr.width, (sr.y - event.GetY()) + sr.height );
+    if ( nsr.width < minboxsize ) {
+      nsr.SetLeft( event.GetX() - minboxsize + nsr.width );
+      nsr.SetWidth( minboxsize );
+    }
+    if ( nsr.height < minboxsize ) {
+      nsr.SetTop( event.GetY() - minboxsize + nsr.height );
+      nsr.SetHeight( minboxsize );
+    }
     BattleStartRect bsr = _GetBattleRect( nsr.x, nsr.y, nsr.x + nsr.width, nsr.y + nsr.height, m_mdown_rect );
     m_battle.AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom );
     if ( sr != nsr ) RefreshRect( sr.Union( nsr ), false );
@@ -470,7 +484,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
       m_ui.SendHostInfo( HI_StartRects );
     }
 
-  } else if ( m_maction == MA_ResizeDownRight ) {
+  } else if ( (m_maction == MA_ResizeDownRight)||(m_maction == MA_ResizeUpLeft) ) {
     m_battle.UpdateStartRect( m_mdown_rect );
     m_ui.SendHostInfo( HI_StartRects );
   }
