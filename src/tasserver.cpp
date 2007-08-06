@@ -721,6 +721,8 @@ void TASServer::SendHostInfo( HostInfo update )
   assert( m_sock != 0 );
 
   Battle& battle = GetBattle( m_battle_id );
+  assert( battle.IsFounderMe() );
+
   BattleOptions bo = battle.opts();
 
   if ( ( update & ( HI_Map | HI_Locked | HI_Spectators ) ) > 0 ) {
@@ -740,6 +742,37 @@ void TASServer::SendHostInfo( HostInfo update )
     );
 
     m_sock->Send( STD_STRING(cmd) );
+  }
+
+  if ( update & HI_StartRects ) { // Startrects should be updated.
+
+    for ( int i = 0; i < 16; i++ ) { // Loop through all, and remove updated or deleted.
+
+      wxString cmd;
+      BattleStartRect* sr = battle.GetStartRect( i );
+      if ( sr == 0 ) continue;
+      if ( sr->deleted ) {
+        cmd = wxString::Format( _T("REMOVESTARTRECT %d\n"), i );
+        m_sock->Send( STD_STRING(cmd) );
+        battle.StartRectRemoved( i );
+      } else if ( !sr->local && sr->updated ) {
+        cmd = wxString::Format( _T("REMOVESTARTRECT %d\n"), i );
+        m_sock->Send( STD_STRING(cmd) );
+      }
+
+    }
+
+    for ( int i = 0; i < 16; i++ ) { // Loop through all, and update.
+      wxString cmd;
+      BattleStartRect* sr = battle.GetStartRect( i );
+      if ( sr == 0 ) continue;
+      if ( sr->updated ) {
+        cmd = wxString::Format( _T("ADDSTARTRECT %d %d %d %d %d\n"), sr->ally, sr->left, sr->top, sr->right, sr->bottom );
+        m_sock->Send( STD_STRING(cmd) );
+        battle.StartRectUpdated( i );
+      }
+    }
+
   }
 }
 

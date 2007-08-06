@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_MAPCTRL_H
 
 #include <wx/string.h>
+#include "battle.h"
 
 class wxPanel;
 class wxBitmap;
@@ -9,6 +10,7 @@ class wxDC;
 
 class Battle;
 struct BattleStartRect;
+class Ui;
 
 #define RA_Main -1
 #define RA_UpLeft 0
@@ -33,7 +35,7 @@ typedef int MouseAction;
 class MapCtrl : public wxPanel
 {
   public:
-    MapCtrl( wxWindow* parent, int size, Battle& battle, bool readonly );
+    MapCtrl( wxWindow* parent, int size, Battle& battle, Ui& ui, bool readonly );
     ~MapCtrl();
 
     void LoadMinimap();
@@ -49,9 +51,11 @@ class MapCtrl : public wxPanel
     void OnMouseWheel( wxMouseEvent& event );
   protected:
 
-    BattleStartRect _GetBattleRect( int x1, int y1, int x2, int y2 );
+    BattleStartRect _GetBattleRect( int x1, int y1, int x2, int y2, int ally = -1 );
     wxRect _GetMinimapRect();
     wxRect _GetStartRect( int index );
+    wxRect _GetStartRect( const BattleStartRect& sr );
+
     int _GetNewRectIndex();
 
     void _DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxColour& col, bool mouseover );
@@ -62,6 +66,7 @@ class MapCtrl : public wxPanel
 
     wxBitmap* m_image;
     Battle& m_battle;
+    Ui& m_ui;
     wxString m_mapname;
 
     bool m_ro;
@@ -72,6 +77,7 @@ class MapCtrl : public wxPanel
     RectArea m_last_rect_area;
 
     RectArea m_mdown_area;
+    BattleStartRect m_tmp_brect;
 
     MouseAction m_maction;
     int m_mdown_x;

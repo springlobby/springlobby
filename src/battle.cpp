@@ -171,13 +171,23 @@ void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom 
 {
   ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), "Allyno out of bounds." );
   BattleStartRect* sr;
-  if ( m_rects[allyno] == 0 ) sr = new BattleStartRect();
-  else sr = m_rects[allyno];
+  bool local;
+  if ( m_rects[allyno] == 0 ) {
+    sr = new BattleStartRect();
+    local = true;
+  } else {
+    sr = m_rects[allyno];
+    local = false;
+  }
+
   sr->ally = allyno;
   sr->left = left;
   sr->top = top;
   sr->right = right;
   sr->bottom = bottom;
+  sr->local = local;
+  sr->updated = local;
+  sr->deleted = false;
   m_rects[allyno] = sr;
 }
 
@@ -186,9 +196,35 @@ void Battle::RemoveStartRect( int allyno )
 {
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
+  sr->deleted = true;
+}
+
+
+void Battle::UpdateStartRect( int allyno )
+{
+  BattleStartRect* sr = m_rects[allyno];
+  if ( sr == 0 ) return;
+  sr->updated = true;
+}
+
+
+void Battle::StartRectRemoved( int allyno )
+{
+  BattleStartRect* sr = m_rects[allyno];
+  if ( sr == 0 ) return;
   m_rects[allyno] = 0;
   delete sr;
 }
+
+
+void Battle::StartRectUpdated( int allyno )
+{
+  BattleStartRect* sr = m_rects[allyno];
+  if ( sr == 0 ) return;
+  sr->updated = false;
+  sr->local = false;
+}
+
 
 BattleStartRect* Battle::GetStartRect( int allyno )
 {

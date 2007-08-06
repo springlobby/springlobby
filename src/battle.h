@@ -76,6 +76,11 @@ struct BattleOptions
 
 struct BattleStartRect
 {
+  BattleStartRect() { local = true; updated = false; deleted = false; }
+  bool local;
+  bool updated;
+  bool deleted;
+
   int ally;
   int top;
   int left;
@@ -152,6 +157,11 @@ class Battle : public UserList
 
     void AddStartRect( int allyno, int left, int top, int right, int bottom );
     void RemoveStartRect( int allyno );
+    void UpdateStartRect( int allyno );
+
+    void StartRectRemoved( int allyno );
+    void StartRectUpdated( int allyno );
+
     BattleStartRect* GetStartRect( int allyno );
     void ClearStartRects();
 
