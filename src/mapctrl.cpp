@@ -74,10 +74,10 @@ wxRect MapCtrl::_GetMinimapRect()
   int cwidth, cheight, top = 0, left = 0;
   GetClientSize( &cwidth, &cheight );
 
-  if ( m_image->GetWidth() > m_image->GetHeight() ) {
-    top = (cheight - m_image->GetHeight()) / 2;
-  } else {
+  if ( m_image->GetWidth() < cwidth ) {
     left = (cwidth - m_image->GetWidth()) / 2;
+  } else {
+    top = (cheight - m_image->GetHeight()) / 2;
   }
   return wxRect( left, top, m_image->GetWidth(), m_image->GetHeight() );
 }
@@ -158,6 +158,119 @@ void MapCtrl::_DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxCol
   } else {
     dc.DrawRectangle( sr.x, sr.y, sr.width, sr.height );
   }
+}
+
+
+int MapCtrl::_GetNewRectIndex()
+{
+  for (int i = 0; i < 16; i++ ) {
+    wxRect r = _GetStartRect( i );
+    if ( r.IsEmpty() ) return i;
+  }
+  return -1;
+}
+
+
+BattleStartRect MapCtrl::_GetBattleRect( int x1, int y1, int x2, int y2, int ally )
+{
+  BattleStartRect br;
+  wxRect mr = _GetMinimapRect();
+
+  br.ally = ally;
+  br.left = 200 * ( x1 - mr.x ) / mr.width;
+  br.top = 200 * ( y1 - mr.y ) / mr.height;
+  br.right = 200 * ( x2 - mr.x ) / mr.width;
+  br.bottom = 200 * ( y2 - mr.y ) / mr.height;
+
+  if ( br.left < 0 ) br.left = 0; if ( br.left > 200 ) br.left = 200; 
+  if ( br.top < 0 ) br.top = 0; if ( br.top > 200 ) br.top = 200; 
+  if ( br.right < 0 ) br.right = 0; if ( br.right > 200 ) br.right = 200; 
+  if ( br.bottom < 0 ) br.bottom = 0; if ( br.bottom > 200 ) br.bottom = 200; 
+
+  return br;
+}
+
+
+void MapCtrl::_SetMouseOverRect( int index )
+{
+  int oldindex = m_mover_rect;
+  m_mover_rect = index;
+  _SetCursor();
+
+  if ( (index != oldindex) || (m_rect_area != m_last_rect_area) ) UpdateMinimap();
+  m_last_rect_area = m_rect_area;
+}
+
+
+void MapCtrl::_SetCursor()
+{
+  if ( !m_ro ) {
+    if ( m_mover_rect >= 0 ) {
+      if      ( m_rect_area == RA_UpLeft )    SetCursor( wxCursor( wxCURSOR_SIZENWSE ) );
+      else if ( m_rect_area == RA_UpRight )   SetCursor( wxCursor( wxCURSOR_ARROW ) );
+      else if ( m_rect_area == RA_DownLeft )  SetCursor( wxCursor( wxCURSOR_SIZENESW ) );
+      else if ( m_rect_area == RA_DownRight ) SetCursor( wxCursor( wxCURSOR_SIZENWSE ) );
+      else SetCursor( wxCursor( wxCURSOR_SIZING ) );
+    } else if ( m_mover_rect == -1 ) {
+      SetCursor( wxCursor( wxCURSOR_CROSS ) );
+    } else {
+      SetCursor( wxCursor( wxCURSOR_ARROW ) );
+    }
+  } else {
+    if ( m_mover_rect >= 0 ) SetCursor( wxCursor( wxCURSOR_HAND ) );
+    else SetCursor( wxCursor( wxCURSOR_ARROW ) );
+  }
+}
+
+
+void MapCtrl::LoadMinimap()
+{
+  if ( m_image )
+    return;
+  try {
+    int w, h;
+    GetClientSize( &w, &h );
+    if ( w * h == 0 ) {
+      m_image = 0;
+      m_mapname = _T("");
+      m_lastsize = wxSize( -1, -1 );
+      return;
+    }
+    wxImage img = usync()->GetMinimap( m_battle.opts().mapname, w, h );
+    m_image = new wxBitmap( img );
+    m_mapname = WX_STRING( m_battle.opts().mapname );
+    m_lastsize = wxSize( w, h );
+    Refresh();
+    Update();
+  } catch (...) {
+    m_image = 0;
+    m_mapname = _T("");
+    
+  }
+
+}
+
+
+void MapCtrl::FreeMinimap()
+{
+  if ( m_image ) {
+    delete m_image;
+    m_image = 0;
+    m_mapname = _T("");
+  }
+}
+
+
+void MapCtrl::UpdateMinimap()
+{
+  int w, h;
+  GetClientSize( &w, &h );
+  if ( (m_mapname != WX_STRING( m_battle.opts().mapname) || ( m_lastsize != wxSize(w, h) ) ) ) {
+    FreeMinimap();
+    LoadMinimap();
+  }
+  Refresh();
+  Update();
 }
 
 
@@ -343,121 +456,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
 }
 
 
-int MapCtrl::_GetNewRectIndex()
-{
-  for (int i = 0; i < 16; i++ ) {
-    wxRect r = _GetStartRect( i );
-    if ( r.IsEmpty() ) return i;
-  }
-  return -1;
-}
-
-
 void MapCtrl::OnMouseWheel( wxMouseEvent& event )
 {
 }
-
-
-BattleStartRect MapCtrl::_GetBattleRect( int x1, int y1, int x2, int y2, int ally )
-{
-  BattleStartRect br;
-  wxRect mr = _GetMinimapRect();
-
-  br.ally = ally;
-  br.left = 200 * ( x1 - mr.x ) / mr.width;
-  br.top = 200 * ( y1 - mr.y ) / mr.height;
-  br.right = 200 * ( x2 - mr.x ) / mr.width;
-  br.bottom = 200 * ( y2 - mr.y ) / mr.height;
-
-  if ( br.left < 0 ) br.left = 0; if ( br.left > 200 ) br.left = 200; 
-  if ( br.top < 0 ) br.top = 0; if ( br.top > 200 ) br.top = 200; 
-  if ( br.right < 0 ) br.right = 0; if ( br.right > 200 ) br.right = 200; 
-  if ( br.bottom < 0 ) br.bottom = 0; if ( br.bottom > 200 ) br.bottom = 200; 
-
-  return br;
-}
-
-
-void MapCtrl::_SetMouseOverRect( int index )
-{
-  int oldindex = m_mover_rect;
-  m_mover_rect = index;
-  _SetCursor();
-
-  if ( (index != oldindex) || (m_rect_area != m_last_rect_area) ) UpdateMinimap();
-  m_last_rect_area = m_rect_area;
-}
-
-
-void MapCtrl::_SetCursor()
-{
-  if ( !m_ro ) {
-    if ( m_mover_rect >= 0 ) {
-      if      ( m_rect_area == RA_UpLeft )    SetCursor( wxCursor( wxCURSOR_SIZENWSE ) );
-      else if ( m_rect_area == RA_UpRight )   SetCursor( wxCursor( wxCURSOR_ARROW ) );
-      else if ( m_rect_area == RA_DownLeft )  SetCursor( wxCursor( wxCURSOR_SIZENESW ) );
-      else if ( m_rect_area == RA_DownRight ) SetCursor( wxCursor( wxCURSOR_SIZENWSE ) );
-      else SetCursor( wxCursor( wxCURSOR_SIZING ) );
-    } else if ( m_mover_rect == -1 ) {
-      SetCursor( wxCursor( wxCURSOR_CROSS ) );
-    } else {
-      SetCursor( wxCursor( wxCURSOR_ARROW ) );
-    }
-  } else {
-    if ( m_mover_rect >= 0 ) SetCursor( wxCursor( wxCURSOR_HAND ) );
-    else SetCursor( wxCursor( wxCURSOR_ARROW ) );
-  }
-}
-
-
-void MapCtrl::LoadMinimap()
-{
-  if ( m_image )
-    return;
-  try {
-    int w, h;
-    GetClientSize( &w, &h );
-    if ( w * h == 0 ) {
-      m_image = 0;
-      m_mapname = _T("");
-      m_lastsize = wxSize( -1, -1 );
-      return;
-    }
-    wxImage img = usync()->GetMinimap( m_battle.opts().mapname, w, h );
-    m_image = new wxBitmap( img );
-    m_mapname = WX_STRING( m_battle.opts().mapname );
-    m_lastsize = wxSize( w, h );
-    Refresh();
-    Update();
-  } catch (...) {
-    m_image = 0;
-    m_mapname = _T("");
-    
-  }
-
-}
-
-
-void MapCtrl::FreeMinimap()
-{
-  if ( m_image ) {
-    delete m_image;
-    m_image = 0;
-    m_mapname = _T("");
-  }
-}
-
-
-void MapCtrl::UpdateMinimap()
-{
-  int w, h;
-  GetClientSize( &w, &h );
-  if ( (m_mapname != WX_STRING( m_battle.opts().mapname) || ( m_lastsize != wxSize(w, h) ) ) ) {
-    FreeMinimap();
-    LoadMinimap();
-  }
-  Refresh();
-  Update();
-}
-
 
