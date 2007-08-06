@@ -363,9 +363,9 @@ wxImage SpringUnitSync::GetCachedMinimap( const std::string& mapname, int size )
 
   if ( map.info.width >= map.info.height ) {
     width = size;
-    height = int( size * ( double(map.info.height) / map.info.width ));
+    height = (int)((double)((double)size * (double)map.info.height) / (double)map.info.width);
   } else {
-    width = int( size * ( double(map.info.width) / map.info.height ));
+    width = (int)((double)((double)size * (double)map.info.width) / (double)map.info.height);
     height = size;
   }
 

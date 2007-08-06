@@ -225,11 +225,6 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   if ( p == wxDefaultPosition ) return;
 
   if ( m_maction == MA_Add ) { // We are currently adding a rect.
-    if ( event.Leaving() ) { // Mouse left window, cancel add.
-      m_maction = MA_None;
-      m_tmp_brect.ally = -1;
-      return;
-    }
     wxRect oldr = _GetStartRect( m_tmp_brect );
     m_tmp_brect = _GetBattleRect( m_mdown_x<event.GetX()?m_mdown_x:event.GetX(), m_mdown_y<event.GetY()?m_mdown_y:event.GetY(), m_mdown_x>event.GetX()?m_mdown_x:event.GetX(), m_mdown_y>event.GetY()?m_mdown_y:event.GetY(), m_tmp_brect.ally );
     wxRect newr = _GetStartRect( m_tmp_brect );
@@ -374,7 +369,11 @@ BattleStartRect MapCtrl::_GetBattleRect( int x1, int y1, int x2, int y2, int all
   br.right = 200 * ( x2 - mr.x ) / mr.width;
   br.bottom = 200 * ( y2 - mr.y ) / mr.height;
 
-  // Should auto-adjust when outside minimap.
+  if ( br.left < 0 ) br.left = 0; if ( br.left > 200 ) br.left = 200; 
+  if ( br.top < 0 ) br.top = 0; if ( br.top > 200 ) br.top = 200; 
+  if ( br.right < 0 ) br.right = 0; if ( br.right > 200 ) br.right = 200; 
+  if ( br.bottom < 0 ) br.bottom = 0; if ( br.bottom > 200 ) br.bottom = 200; 
+
   return br;
 }
 
