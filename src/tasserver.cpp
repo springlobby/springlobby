@@ -668,7 +668,7 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
   assert( m_sock != 0 );
 
   wxString cmd = wxString::Format( _T("OPENBATTLE 0 %d "), bo.nattype );
-  cmd += WX_STRING(password);
+  cmd += (password=="")?_T("*"):WX_STRING(password);
   cmd += wxString::Format( _T(" %d %d %d %d %d %d %d %d %d %d "),
     bo.port,
     bo.maxplayers,
