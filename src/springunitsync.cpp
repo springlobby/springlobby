@@ -349,7 +349,7 @@ wxString SpringUnitSync::GetCachedMinimapFileName( const std::string& mapname, i
   return path + fname;
 }
 
-wxImage SpringUnitSync::GetCachedMinimap( const std::string& mapname, int size )
+wxImage SpringUnitSync::GetCachedMinimap( const std::string& mapname, int max_w, int max_h )
 {
   wxString fname = GetCachedMinimapFileName( mapname, 1024 );
 
@@ -361,14 +361,15 @@ wxImage SpringUnitSync::GetCachedMinimap( const std::string& mapname, int size )
 
   ASSERT_RUNTIME( wxFileExists( fname ), "File cached image does not exist" );
 
-  if ( map.info.width >= map.info.height ) {
-    width = size;
-    height = (int)((double)((double)size * (double)map.info.height) / (double)map.info.width);
-  } else {
-    width = (int)((double)((double)size * (double)map.info.width) / (double)map.info.height);
-    height = size;
+
+  width = max_w;
+  height = (int)((double)((double)max_w * (double)map.info.height) / (double)map.info.width);
+  if ( height > max_h ) {
+    width = (int)((double)((double)width * (double)max_h) / (double)height);
+    height = max_h;
   }
 
+  
   wxImage img( fname, wxBITMAP_TYPE_BMP );
   ASSERT_RUNTIME( img.Ok(), "Failed to load chache image" );
 
@@ -378,13 +379,13 @@ wxImage SpringUnitSync::GetCachedMinimap( const std::string& mapname, int size )
 }
 
 
-wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int size )
+wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int max_w, int max_h )
 {
   int height = 1024;
   int width = 512;
 
   try {
-    return GetCachedMinimap( mapname, size );
+    return GetCachedMinimap( mapname, max_w, max_h );
   } catch(...) {}
 
   wxImage ret( width, height );
@@ -401,13 +402,13 @@ wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int size )
 
   UnitSyncMap map = GetMap( mapname, true );
 
-  if ( map.info.width >= map.info.height ) {
-    width = size;
-    height = int( size * ( double(map.info.height) / map.info.width ));
-  } else {
-    width = int( size * ( double(map.info.width) / map.info.height ));
-    height = size;
+  width = max_w;
+  height = (int)((double)((double)max_w * (double)map.info.height) / (double)map.info.width);
+  if ( height > max_h ) {
+    width = (int)((double)((double)width * (double)max_h) / (double)height);
+    height = max_h;
   }
+
 
   wxString fname = GetCachedMinimapFileName( mapname, 1024 );
   ret.SaveFile( fname, wxBITMAP_TYPE_BMP );
@@ -435,5 +436,6 @@ void SpringUnitSync::ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out
   out.posCount = in.posCount;
   for ( int i = 0; i < in.posCount; i++) out.positions[i] = in.positions[i];
 }
+
 
 

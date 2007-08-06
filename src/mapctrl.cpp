@@ -423,7 +423,7 @@ void MapCtrl::LoadMinimap()
       m_lastsize = wxSize( -1, -1 );
       return;
     }
-    wxImage img = usync()->GetMinimap( m_battle.opts().mapname, w );
+    wxImage img = usync()->GetMinimap( m_battle.opts().mapname, w, h );
     m_image = new wxBitmap( img );
     m_mapname = WX_STRING( m_battle.opts().mapname );
     m_lastsize = wxSize( w, h );
@@ -459,4 +459,5 @@ void MapCtrl::UpdateMinimap()
   Refresh();
   Update();
 }
+
 
