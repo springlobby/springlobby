@@ -67,6 +67,9 @@ void MainJoinBattleTab::UpdateCurrentBattle()
   if ( m_map_tab ) {
     m_map_tab->UpdateMap();
   }
+  if ( m_opts_tab ) {
+    m_opts_tab->UpdateBattle();
+  }
 }
 
 

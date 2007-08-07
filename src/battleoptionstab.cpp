@@ -32,6 +32,13 @@
 #include "uiutils.h"
 #include "server.h"
 
+
+#define LIMIT_DGUN_INDEX 0
+#define GHOUSTED_INDEX  1
+#define DIM_MMS_INDEX 2
+#define LOCK_SPEED_INDEX 3
+
+
 BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
 
 //  EVT_CHOICE( BMAP_MAP_SEL, BattleOptionsTab::OnMapSelect )
@@ -66,7 +73,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, Battle& battle ):
 	m_metal_slider = new wxSlider( this, wxID_ANY, 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
 	m_metal_slider->SetToolTip( _("The amount of metal each player starts with.") );
 	
-	m_metal_sizer->Add( m_metal_slider, 1, wxALL, 5 );
+	m_metal_sizer->Add( m_metal_slider, 1, wxALL|wxEXPAND, 5 );
 	
 	m_resources_box->Add( m_metal_sizer, 0, wxEXPAND, 5 );
 	
@@ -82,7 +89,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, Battle& battle ):
 	m_energy_slider = new wxSlider( this, wxID_ANY, 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
 	m_energy_slider->SetToolTip( _("The amount of energy each player starts with.") );
 	
-	m_energy_sizer->Add( m_energy_slider, 1, wxALL, 5 );
+	m_energy_sizer->Add( m_energy_slider, 1, wxALL|wxEXPAND, 5 );
 	
 	m_resources_box->Add( m_energy_sizer, 1, wxEXPAND, 5 );
 	
@@ -98,7 +105,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, Battle& battle ):
   m_units_slider = new wxSlider( this, wxID_ANY, 500, 10, 5000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
 	m_units_slider->SetToolTip( _("The maximun number of units allowed per player.") );
 	
-	m_units_sizer->Add( m_units_slider, 1, wxALL, 5 );
+	m_units_sizer->Add( m_units_slider, 1, wxALL|wxEXPAND, 5 );
 	
 	m_resources_box->Add( m_units_sizer, 1, wxEXPAND, 5 );
 	
@@ -107,7 +114,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, Battle& battle ):
 	wxStaticBoxSizer* m_options_box;
 	m_options_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Options") ), wxVERTICAL );
 	
-	wxString m_options_checksChoices[] = { _("Limit d-gun"), _("Ghosted buildning"), _("Diminishing metal makers"), _("Lock game speed") };
+	wxString m_options_checksChoices[] = { _("Limit d-gun"), _("Ghosted buildning"), _("Diminishing metal makers")/*, _("Lock game speed")*/ };
 	int m_options_checksNChoices = sizeof( m_options_checksChoices ) / sizeof( wxString );
 	m_options_checks = new wxCheckListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_options_checksNChoices, m_options_checksChoices, 0 );
 	m_options_box->Add( m_options_checks, 0, wxALL|wxEXPAND, 5 );
@@ -190,6 +197,12 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, Battle& battle ):
 	this->SetSizer( m_main_sizer );
 	this->Layout();
 
+  if ( !m_battle.IsFounderMe() ) {
+    this->Enable( false );
+  }
+
+  ReloadUnits();
+  UpdateBattle();
 }
 
 
@@ -199,3 +212,22 @@ BattleOptionsTab::~BattleOptionsTab()
 }
 
 
+void BattleOptionsTab::UpdateBattle()
+{
+  m_end_radios->SetSelection( m_battle.opts().gametype );
+  m_metal_slider->SetValue( m_battle.opts().startmetal );
+  m_energy_slider->SetValue( m_battle.opts().startenergy );
+  m_units_slider->SetValue( m_battle.opts().maxunits );
+
+  m_options_checks->Check( LIMIT_DGUN_INDEX, m_battle.opts().limitdgun );
+  m_options_checks->Check( GHOUSTED_INDEX, m_battle.opts().ghostedbuildings );
+  m_options_checks->Check( DIM_MMS_INDEX, m_battle.opts().dimmms );
+  //m_options_checks->Check( LOCK_SPEED_INDEX, m_battle.opts().s );
+
+}
+
+
+void BattleOptionsTab::ReloadUnits()
+{
+
+}

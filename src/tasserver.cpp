@@ -443,7 +443,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     hash = GetWordParam( params );
     m_battle_id = id;
     m_se->OnJoinedBattle( id );
-    m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dim, dgun, ghost, hash );
+    m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dgun, dim, ghost, hash );
   } else if ( cmd == "UPDATEBATTLEDETAILS" ) {
     metal = GetIntParam( params );
     energy = GetIntParam( params );
@@ -454,7 +454,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     dim = (bool)GetIntParam( params );
     ghost = (bool)GetIntParam( params );
     hash = GetWordParam( params );
-    m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dim, dgun, ghost, hash );
+    m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dgun, dim, ghost, hash );
     //UPDATEBATTLEDETAILS startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings
   } else if ( cmd == "CLIENTBATTLESTATUS" ) {
     nick = GetWordParam( params );
@@ -477,7 +477,6 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     //REMOVESTARTRECT allyno
     ally = GetIntParam( params );
     m_se->OnBattleStartRectRemove( m_battle_id, ally );
-
   } else if ( cmd == "ENABLEALLUNITS" ) {
     //"ENABLEALLUNITS" params: "".
     m_se->OnBattleEnableAllUnits( m_battle_id );
@@ -491,7 +490,6 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     while ( (nick = GetWordParam( params )) != "" ) {
       m_se->OnBattleDisableUnit( m_battle_id, nick );
     }
-
   } else if ( cmd == "CHANNEL" ) {
     channel = GetWordParam( params );
     units = GetIntParam( params );

@@ -28,7 +28,10 @@ class BattleOptionsTab : public wxPanel
 {
   public:
     BattleOptionsTab( wxWindow* parent, Ui& ui, Battle& battle );
-     ~BattleOptionsTab();
+    ~BattleOptionsTab();
+
+    void UpdateBattle();
+    void ReloadUnits();
 
   protected:
     Ui& m_ui;
