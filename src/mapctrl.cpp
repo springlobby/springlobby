@@ -151,7 +151,7 @@ void MapCtrl::_DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxCol
     dc.DrawRectangle( sr.x, sr.y, boxsize, boxsize );
     dc.DrawRectangle( sr.x + sr.width - boxsize, sr.y + sr.height - boxsize, boxsize, boxsize );
     //dc.DrawRectangle( sr.x + sr.width - boxsize, sr.y + 1, boxsize, boxsize );
-    dc.DrawRectangle( sr.x, sr.y + sr.height - boxsize, boxsize, boxsize );
+    //dc.DrawRectangle( sr.x, sr.y + sr.height - boxsize, boxsize, boxsize );
 
     if ( m_rect_area != RA_UpRight ) dc.DrawBitmap( *m_close_img, sr.x + sr.width - 16, sr.y + 2, true );
     else dc.DrawBitmap( *m_close_hi_img, sr.x + sr.width - 16, sr.y + 2, true );
@@ -393,7 +393,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
           if      ( (wxRect( r.x + r.width - m_close_img->GetWidth(), r.y + 1, m_close_img->GetWidth(), m_close_img->GetWidth() )).Inside( p ) ) m_rect_area = RA_UpRight;
           else if ( (wxRect( r.x, r.y, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_UpLeft;
           else if ( (wxRect( r.x + r.width - boxsize, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownRight;
-          else if ( (wxRect( r.x, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownLeft;
+          //else if ( (wxRect( r.x, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownLeft;
           else m_rect_area = RA_Main;
         }
         _SetMouseOverRect( i );
@@ -428,7 +428,7 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
       } else if ( m_mdown_area == RA_UpRight ) {
         m_maction = MA_Delete;
       } else if ( m_mdown_area == RA_DownLeft ) {
-        m_maction = MA_ResizeDownLeft;
+//        m_maction = MA_ResizeDownLeft;
       } else if ( m_mdown_area == RA_DownRight ) {
         m_maction = MA_ResizeDownRight;
       } else if ( m_mdown_area == RA_Main ) {

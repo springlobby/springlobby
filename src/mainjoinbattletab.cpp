@@ -14,13 +14,14 @@
 #include "battlelisttab.h"
 #include "battleroomtab.h"
 #include "battlemaptab.h"
+#include "battleoptionstab.h"
 
 #include "images/battle_list.xpm"
 #include "images/battle.xpm"
 #include "images/battle_map.xpm"
 #include "images/battle_settings.xpm"
 
-MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_battle_tab(0),m_map_tab(0),m_ui(ui)
+MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_battle_tab(0),m_map_tab(0),m_opts_tab(0),m_ui(ui)
 {
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   m_tabs = new wxNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
@@ -80,23 +81,25 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
   LeaveCurrentBattle();
   m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
   m_map_tab = new BattleMapTab( m_tabs, m_ui, battle );
+  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle );
   m_tabs->InsertPage( 1, m_battle_tab, _("Battleroom"), true, 1 );
   m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, 2 );
+  m_tabs->InsertPage( 3, m_opts_tab, _("Options"), false, 3 );
 }
 
 
 void MainJoinBattleTab::HostBattle( Battle& battle )
 {
-  LeaveCurrentBattle();
-  m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
-  m_map_tab = new BattleMapTab( m_tabs, m_ui, battle );
-  m_tabs->InsertPage( 1, m_battle_tab, _("Battleroom"), true, 1 );
-  m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, 2 );
+  JoinBattle( battle );
 }
 
 
 void MainJoinBattleTab::LeaveCurrentBattle()
 {
+  if ( m_opts_tab ) {
+    m_tabs->DeletePage( 3 );
+    m_opts_tab = 0;
+  }
   if ( m_map_tab ) {
     m_tabs->DeletePage( 2 );
     m_map_tab = 0;

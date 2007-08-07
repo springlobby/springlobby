@@ -207,6 +207,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\battleoptionstab.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\battleroomlistctrl.h"
 				>
 			</File>
@@ -392,6 +396,10 @@
 			</File>
 			<File
 				RelativePath=".\src\battlemaptab.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\battleoptionstab.cpp"
 				>
 			</File>
 			<File
