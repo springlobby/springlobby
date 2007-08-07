@@ -24,6 +24,7 @@ typedef int ServerError;
 #define PE_NONE 0
 
 
+#define HI_None 0
 #define HI_Map 1
 #define HI_Locked 2
 #define HI_Spectators 4

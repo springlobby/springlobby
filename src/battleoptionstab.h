@@ -33,6 +33,16 @@ class BattleOptionsTab : public wxPanel
     void UpdateBattle();
     void ReloadUnits();
 
+    void OnEndSelect( wxCommandEvent& event );
+    void OnOptsCheck( wxCommandEvent& event );
+    void OnSlideChanged( wxScrollEvent& event );
+
+    void OnRestrict( wxCommandEvent& event );
+    void OnAllow( wxCommandEvent& event );
+    void OnLoadRestrictions( wxCommandEvent& event );
+    void OnSaveRestrictions( wxCommandEvent& event );
+    void OnClearRestrictions( wxCommandEvent& event );
+
   protected:
     Ui& m_ui;
     Battle& m_battle;
@@ -57,13 +67,24 @@ class BattleOptionsTab : public wxPanel
 		wxButton* m_save_btn;
 		wxButton* m_clear_btn;
 
+    int m_last_metal;
+    int m_last_energy;
+    int m_last_units;
+
     DECLARE_EVENT_TABLE()
 };
 
 enum
 {
-  BOPTS_MAP_SEL = wxID_HIGHEST,
-  BOPTS_START_TYPE
+  BOPTS_END = wxID_HIGHEST,
+  BOPTS_OPTS,
+  BOPTS_SLIDE,
+
+  BOPTS_RESTRICT,
+  BOPTS_ALLOW,
+  BOPTS_LOADRES,
+  BOPTS_SAVERES,
+  BOPTS_CLEARRES
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEOPTIONSTAB_H

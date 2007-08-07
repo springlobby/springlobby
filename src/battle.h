@@ -23,8 +23,8 @@ enum StartType {
 
 enum GameType {
   GT_ComContinue = 0,
-  GT_ComEnds,
-  GT_Lineage
+  GT_ComEnds = 1,
+  GT_Lineage = 2
 };
 
 
