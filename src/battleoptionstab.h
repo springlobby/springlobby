@@ -22,6 +22,7 @@ class wxListCtrl;
 class wxChoice;
 class wxRadioBox;
 class wxCheckListBox;
+class wxSlider;
 
 class BattleOptionsTab : public wxPanel
 {

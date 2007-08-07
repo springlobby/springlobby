@@ -516,7 +516,7 @@
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
-            <property name="name">MyPanel1</property>
+            <property name="name">BattleOptionsTab</property>
             <property name="pos"></property>
             <property name="size">663,433</property>
             <property name="subclass"></property>
