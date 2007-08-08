@@ -1,6 +1,12 @@
+dnl it is possible to make these work with older versions of autoconf+automake
+dnl but the developers will NOT support you if it fails
+dnl you really should just upgrade your autotools instead
+
+dnl if you have too old autoconf, comment out the following prereq AND edit Makefile.am
 AC_PREREQ([2.59c])
 AC_INIT([SpringLobby], [0.0.1], [FIXME_our_bugs_email_address])
-AM_INIT_AUTOMAKE([-Wall -Werror])
+dnl if you have too old automake, delete the version number from below AND edit Makefile.am
+AM_INIT_AUTOMAKE([1.10 -Wall -Werror])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/springlobbyapp.cpp])
 

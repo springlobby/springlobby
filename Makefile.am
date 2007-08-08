@@ -1,5 +1,6 @@
-## the following line may NOT be split, b/c of autoreconf 2.61 and older
+## the following clause may NOT be split, b/c of autoreconf 2.61 and older
 ## the --install requires automake 1.10 which was released in 2006
+## the --install can be edited out to use older automake
 ACLOCAL_AMFLAGS = -I m4 --install
 
 AM_CPPFLAGS = \
@@ -9,6 +10,8 @@ AM_CXXFLAGS = \
 	-Wall \
 	-Wno-strict-aliasing
 
+## if you don't have the required version of autoconf, comment out the
+## following clause, in which case you may NOT distribute the result!
 dist_doc_DATA = \
 	AUTHORS \
 	ChangeLog \
