@@ -174,7 +174,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   Layout();
   m_main_sizer->SetSizeHints( this );
 #ifdef __WXMSW__
-  SetBackgroundColour( wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW) );
+  SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE  ) );
 #endif
 
   ReloadServerList();
@@ -205,7 +205,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
     sett().SetDefaultServer( STD_STRING(m_server_combo->GetValue()) );
     sett().SetServerAccountNick( STD_STRING(m_server_combo->GetValue()), STD_STRING(m_nick_text->GetValue()) );
     sett().SetServerAccountSavePass( STD_STRING(m_server_combo->GetValue()), m_rpass_check->GetValue() );
-	  
+
     // We assume that the server is given as : "host:port" so we split based on ":"
     wxArrayString serverString = wxStringTokenize(m_server_combo->GetValue(),_T(":") );
 
@@ -229,7 +229,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
       wxMessageBox( _("Invalid host/port."), _("Invalid host"), wxOK );
       return;
     }
-	  
+
     sett().SaveSettings();
 
     m_ui.DoConnect( m_server_combo->GetValue(), m_nick_text->GetValue(), m_pass_text->GetValue() );

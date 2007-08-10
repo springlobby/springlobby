@@ -79,6 +79,7 @@ BattleListTab& MainJoinBattleTab::GetBattleListTab()
   return *m_list_tab;
 }
 
+
 void MainJoinBattleTab::JoinBattle( Battle& battle )
 {
   LeaveCurrentBattle();

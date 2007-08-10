@@ -1,121 +1,411 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<?xml version="1.0"?>
+<!DOCTYPE CodeBlocks_project_file>
 <CodeBlocks_project_file>
-	<FileVersion major="1" minor="6" />
+	<FileVersion major="1" minor="1"/>
 	<Project>
-		<Option title="springlobby" />
-		<Option pch_mode="2" />
-		<Option compiler="gcc" />
+		<Option title="springlobby"/>
+		<Option makefile="Makefile"/>
+		<Option makefile_is_custom="0"/>
+		<Option active_target="1"/>
+		<Option compiler="0"/>
 		<Build>
 			<Target title="GNU | Debug">
-				<Option output="bin/GNU/Debug/springlobby" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="src" />
-				<Option object_output="obj/GNU/Debug/" />
-				<Option type="0" />
-				<Option compiler="gcc" />
-				<Option projectLinkerOptionsRelation="2" />
+				<Option output="bin\GNU\Debug\springlobby"/>
+				<Option working_dir="src"/>
+				<Option object_output="obj\GNU\Debug\"/>
+				<Option deps_output=".deps"/>
+				<Option type="0"/>
+				<Option compiler="0"/>
+				<Option projectLinkerOptionsRelation="2"/>
+				<Option projectResourceIncludeDirsRelation="0"/>
 				<Compiler>
-					<Add option="-g" />
-					<Add option="`wx-config --cflags`" />
+					<Add option="-g"/>
+					<Add option="`wx-config --cflags`"/>
 				</Compiler>
 				<Linker>
-					<Add option="`wx-config --libs`" />
+					<Add option="`wx-config --libs`"/>
 				</Linker>
 			</Target>
 			<Target title="Win32 | Debug">
-				<Option output="bin/Win32/Debug/springlobby" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Win32/Debug/" />
-				<Option type="0" />
-				<Option compiler="mingw32_compiler" />
+				<Option output=".\bin\Win32\Debug\springlobby"/>
+				<Option working_dir=".\bin\Win32\Debug\"/>
+				<Option object_output=".\obj\Win32\Debug\"/>
+				<Option deps_output=".deps"/>
+				<Option type="0"/>
+				<Option compiler="0"/>
+				<Option projectResourceIncludeDirsRelation="0"/>
 				<Compiler>
-					<Add option="-g" />
+					<Add option="-Wall"/>
+					<Add option="-g"/>
+					<Add option="-pipe"/>
+					<Add option="-mthreads"/>
+					<Add option="-Winvalid-pch"/>
+					<Add option="-D__GNUWIN32__"/>
+					<Add option="-D__WXMSW__"/>
+					<Add option="-DWXUSINGDLL"/>
+					<Add option="-DUSE_PCH"/>
+					<Add directory="$(WX_DIR)\include"/>
+					<Add directory="$(WX_DIR)\lib\gcc_dll$(WX_CFG)\msw"/>
+					<Add directory="$(WX_DIR)\contrib\include"/>
 				</Compiler>
+				<ResourceCompiler>
+					<Add directory="$(WX_DIR)\include"/>
+				</ResourceCompiler>
+				<Linker>
+					<Add library="wxmsw28"/>
+					<Add directory="$(WX_DIR)\lib\gcc_dll$(WX_CFG)"/>
+				</Linker>
+				<Environment>
+					<Variable name="WX_DIR" value="C:\wxWidgets-2.8.4"/>
+					<Variable name="WX_CFG" value=""/>
+				</Environment>
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-Wall" />
-			<Add option="-pg" />
-			<Add directory="src" />
+			<Add option="-Wall"/>
+			<Add option="-pg"/>
+			<Add directory="src"/>
 		</Compiler>
 		<Linker>
-			<Add option="-pg" />
+			<Add option="-pg -lgmon"/>
+			<Add option="-pg"/>
 		</Linker>
-		<Unit filename="src/base64.cpp" />
-		<Unit filename="src/base64.h" />
-		<Unit filename="src/battle.cpp" />
-		<Unit filename="src/battle.h" />
-		<Unit filename="src/battlelist.cpp" />
-		<Unit filename="src/battlelist.h" />
-		<Unit filename="src/battlelistctrl.cpp" />
-		<Unit filename="src/battlelistctrl.h" />
-		<Unit filename="src/battlelisttab.cpp" />
-		<Unit filename="src/battlelisttab.h" />
-		<Unit filename="src/battlemaptab.cpp" />
-		<Unit filename="src/battlemaptab.h" />
-		<Unit filename="src/battleroomlistctrl.cpp" />
-		<Unit filename="src/battleroomlistctrl.h" />
-		<Unit filename="src/battleroomtab.cpp" />
-		<Unit filename="src/battleroomtab.h" />
-		<Unit filename="src/boost/md5.cpp" />
-		<Unit filename="src/boost/md5.hpp" />
-		<Unit filename="src/channel.cpp" />
-		<Unit filename="src/channel.h" />
-		<Unit filename="src/channellist.cpp" />
-		<Unit filename="src/channellist.h" />
-		<Unit filename="src/chatpanel.cpp" />
-		<Unit filename="src/chatpanel.h" />
-		<Unit filename="src/connectwindow.cpp" />
-		<Unit filename="src/connectwindow.h" />
-		<Unit filename="src/flagimagedata.h" />
-		<Unit filename="src/flagimages.cpp" />
-		<Unit filename="src/flagimages.h" />
-		<Unit filename="src/iconimagelist.cpp" />
-		<Unit filename="src/iconimagelist.h" />
-		<Unit filename="src/iunitsync.h" />
-		<Unit filename="src/mainchattab.cpp" />
-		<Unit filename="src/mainchattab.h" />
-		<Unit filename="src/mainjoinbattletab.cpp" />
-		<Unit filename="src/mainjoinbattletab.h" />
-		<Unit filename="src/mainoptionstab.cpp" />
-		<Unit filename="src/mainoptionstab.h" />
-		<Unit filename="src/mainwindow.cpp" />
-		<Unit filename="src/mainwindow.h" />
-		<Unit filename="src/mapctrl.cpp" />
-		<Unit filename="src/mapctrl.h" />
-		<Unit filename="src/nicklistctrl.cpp" />
-		<Unit filename="src/nicklistctrl.h" />
-		<Unit filename="src/server.cpp" />
-		<Unit filename="src/server.h" />
-		<Unit filename="src/serverevents.cpp" />
-		<Unit filename="src/serverevents.h" />
-		<Unit filename="src/settings.cpp" />
-		<Unit filename="src/settings.h" />
-		<Unit filename="src/socket.cpp" />
-		<Unit filename="src/socket.h" />
-		<Unit filename="src/spring.cpp" />
-		<Unit filename="src/spring.h" />
-		<Unit filename="src/springlobbyapp.cpp" />
-		<Unit filename="src/springlobbyapp.h" />
-		<Unit filename="src/springoptionstab.cpp" />
-		<Unit filename="src/springoptionstab.h" />
-		<Unit filename="src/springprocess.cpp" />
-		<Unit filename="src/springprocess.h" />
-		<Unit filename="src/springunitsync.cpp" />
-		<Unit filename="src/springunitsync.h" />
-		<Unit filename="src/tasserver.cpp" />
-		<Unit filename="src/tasserver.h" />
-		<Unit filename="src/ui.cpp" />
-		<Unit filename="src/ui.h" />
-		<Unit filename="src/uiutils.cpp" />
-		<Unit filename="src/uiutils.h" />
-		<Unit filename="src/user.cpp" />
-		<Unit filename="src/user.h" />
-		<Unit filename="src/userlist.cpp" />
-		<Unit filename="src/userlist.h" />
-		<Unit filename="src/utils.cpp" />
-		<Unit filename="src/utils.h" />
-		<Extensions>
-			<code_completion />
-			<envvars />
-		</Extensions>
+		<Unit filename="src\agreementdialog.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\agreementdialog.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\base64.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\base64.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\battle.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\battle.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\battlelist.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\battlelist.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\battlelistctrl.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\battlelistctrl.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\battlelisttab.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\battlelisttab.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\battlemaptab.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\battlemaptab.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\battleoptionstab.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\battleoptionstab.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\battleroomlistctrl.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\battleroomlistctrl.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\battleroomtab.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\battleroomtab.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\boost\md5.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\boost\md5.hpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\channel.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\channel.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\channellist.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\channellist.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\chatpanel.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\chatpanel.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\connectwindow.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\connectwindow.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\flagimagedata.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\flagimages.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\flagimages.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\hostbattledialog.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\hostbattledialog.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\iconimagelist.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\iconimagelist.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\iunitsync.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\mainchattab.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\mainchattab.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\mainjoinbattletab.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\mainjoinbattletab.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\mainoptionstab.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\mainoptionstab.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\mainwindow.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\mainwindow.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\mapctrl.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\mapctrl.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\nicklistctrl.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\nicklistctrl.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\nonportable.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\server.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\server.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\serverevents.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\serverevents.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\settings.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\settings.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\socket.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\socket.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\spring.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\spring.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\springlobbyapp.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\springlobbyapp.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\springoptionstab.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\springoptionstab.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\springprocess.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\springprocess.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\springunitsync.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\springunitsync.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\tasserver.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\tasserver.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\ui.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\ui.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\uiutils.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\uiutils.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\user.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\user.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\userlist.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\userlist.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="src\utils.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="GNU | Debug"/>
+			<Option target="Win32 | Debug"/>
+		</Unit>
+		<Unit filename="src\utils.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
 	</Project>
 </CodeBlocks_project_file>

@@ -17,7 +17,20 @@ class SpringOptionsTab : public wxPanel
 {
   public:
     SpringOptionsTab( wxWindow* parent, Ui& ui );
-     ~SpringOptionsTab();
+    ~SpringOptionsTab();
+
+    void DoRestore();
+
+    void HandleExeloc( bool defloc );
+    void HandleUsyncloc( bool defloc );
+
+    wxString AutoFindSpringDir( const wxString& def = _T("") );
+    wxString AutoFindSpringExe( const wxString& def = _T("") );
+    wxString AutoFindUnitSyncLib( const wxString& def = _T("") );
+
+    bool IsDataDir( const wxString& dir );
+    bool IsSpringExe( const wxString& exe );
+    bool IsUnitSyncLib( const wxString& lib );
 
     void OnBrowseDir( wxCommandEvent& event );
     void OnBrowseExec( wxCommandEvent& event );
@@ -29,10 +42,10 @@ class SpringOptionsTab : public wxPanel
     void OnDefaultExe( wxCommandEvent& event );
     void OnDefaultUsync( wxCommandEvent& event );
 
-    void DoRestore();
-
-    void HandleExeloc( bool defloc );
-    void HandleUsyncloc( bool defloc );
+    void OnAutoConf( wxCommandEvent& event );
+    void OnFindDir( wxCommandEvent& event );
+    void OnFindExec( wxCommandEvent& event );
+    void OnFindSync( wxCommandEvent& event );
 
   protected:
 
@@ -79,7 +92,12 @@ enum
     SPRING_EXECBROWSE,
     SPRING_SYNCBROWSE,
     SPRING_DEFEXE,
-    SPRING_DEFUSYNC
+    SPRING_DEFUSYNC,
+    SPRING_AUTOCONF,
+    SPRING_DIRFIND,
+    SPRING_EXECFIND,
+    SPRING_SYNCFIND,
+
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGOPTIONSTAB_H

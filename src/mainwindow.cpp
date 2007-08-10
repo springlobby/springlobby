@@ -63,7 +63,7 @@ MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)0, -1, _("Spring Lobby"),
   menuTools->Append(MENU_JOIN, _("&Join channel..."));
   menuTools->Append(MENU_CHAT, _("Open &chat..."));
   menuTools->AppendSeparator();
-  menuTools->Append(MENU_USYNC, _("&Reload unitsync"));
+  menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
 
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _("&About"));

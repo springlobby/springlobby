@@ -32,6 +32,7 @@ Settings::~Settings()
 //! @brief Saves the settings to file
 void Settings::SaveSettings()
 {
+  m_config->Write( _T("/General/firstrun"), false );
   m_config->Flush();
 }
 
@@ -352,7 +353,7 @@ std::string Settings::GetSpringUsedLoc( bool force, bool defloc )
 
   if ( df ) {
     wxString tmp = WX_STRING(GetSpringDir());
-    tmp += wxFILE_SEP_PATH;
+    if ( tmp.Last() != wxFILE_SEP_PATH ) tmp += wxFILE_SEP_PATH;
     tmp += SPRING_BIN;
     return STD_STRING(tmp);
   } else {
@@ -367,7 +368,10 @@ std::string Settings::GetUnitSyncUsedLoc( bool force, bool defloc )
   else df = GetUnitSyncUseDefLoc();
 
   if ( df ) {
-    return sett().GetSpringDir() + STD_STRING(wxString(wxFILE_SEP_PATH)) + STD_STRING(wxString(UNITSYNC_BIN));
+    wxString tmp = WX_STRING( sett().GetSpringDir() );
+    if ( tmp.Last() != wxFILE_SEP_PATH ) tmp += wxFILE_SEP_PATH;
+    tmp += UNITSYNC_BIN;
+    return STD_STRING( tmp );
   } else {
     return sett().GetUnitSyncLoc();
   }
