@@ -195,7 +195,9 @@ bool SpringOptionsTab::IsDataDir( const wxString& dir )
 bool SpringOptionsTab::IsSpringExe( const wxString& exe )
 {
   if ( !wxFile::Exists( exe ) ) return false;
+#ifdef HAVE_WX28
   if ( !wxFileName::IsFileExecutable( exe ) ) return false;
+#endif
   return true;
 }
 
@@ -213,7 +215,9 @@ wxString SpringOptionsTab::AutoFindSpringDir( const wxString& def )
   wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
   pl.Add( wxFileName::GetCwd() );
+#ifdef HAVE_WX28
   pl.Add( sp.GetExecutablePath() );
+#endif
   pl.Add( wxFileName::GetHomeDir() );
 #ifdef __WXMSW__
   pl.Add( _T("C:\\Program") );
@@ -221,8 +225,11 @@ wxString SpringOptionsTab::AutoFindSpringDir( const wxString& def )
 #endif
   pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
   pl.Add( sp.GetDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+#ifdef HAVE_WX28
   pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+#endif
 
+#ifdef HAVE_WX28
   for ( size_t i = 0; i < pl.Count(); i++ ) {
     wxString path = pl[i] + wxFileName::GetPathSeparator();
     if ( IsDataDir( path ) ) return path;
@@ -230,6 +237,7 @@ wxString SpringOptionsTab::AutoFindSpringDir( const wxString& def )
     if ( IsDataDir( path + _T(".spring") ) ) return path + _T(".spring");
     if ( IsDataDir( path + _T(".spring_data") ) ) return path + _T(".spring_data");
   }
+#endif
 
   return def;
 }
@@ -242,7 +250,9 @@ wxString SpringOptionsTab::AutoFindSpringExe( const wxString& def )
 
   pl.Add( m_dir_edit->GetValue() );
   pl.Add( wxFileName::GetCwd() );
+#ifdef HAVE_WX28
   pl.Add( sp.GetExecutablePath() );
+#endif
 #ifdef __WXMSW__
   pl.Add( _T("C:\\Program") );
   pl.Add( _T("C:\\Program Files") );
@@ -250,9 +260,12 @@ wxString SpringOptionsTab::AutoFindSpringExe( const wxString& def )
   pl.Add( wxFileName::GetHomeDir() );
   pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
   pl.Add( sp.GetDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+#ifdef HAVE_WX28
   pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+#endif
   pl.Add( m_dir_edit->GetValue() );
 
+#ifdef HAVE_WX28
   for ( size_t i = 0; i < pl.Count(); i++ ) {
     wxString path = pl[i];
     if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
@@ -260,6 +273,7 @@ wxString SpringOptionsTab::AutoFindSpringExe( const wxString& def )
     if ( IsSpringExe( path + _T("Spring") + wxFileName::GetPathSeparator() + SPRING_BIN ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + SPRING_BIN;
     if ( IsSpringExe( path + _T("spring") + wxFileName::GetPathSeparator() + SPRING_BIN ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + SPRING_BIN;
   }
+#endif
 
   return def;
 }
@@ -272,7 +286,9 @@ wxString SpringOptionsTab::AutoFindUnitSyncLib( const wxString& def )
 
   pl.Add( m_dir_edit->GetValue() );
   pl.Add( wxFileName::GetCwd() );
+#ifdef HAVE_WX28
   pl.Add( sp.GetExecutablePath() );
+#endif
 #ifdef __WXMSW__
   pl.Add( wxGetOSDirectory() );
   pl.Add( _T("C:\\Program") );
@@ -281,9 +297,12 @@ wxString SpringOptionsTab::AutoFindUnitSyncLib( const wxString& def )
   pl.Add( wxFileName::GetHomeDir() );
   pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
   pl.Add( sp.GetDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+#ifdef HAVE_WX28
   pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+#endif
   pl.Add( m_dir_edit->GetValue() );
 
+#ifdef HAVE_WX28
   for ( size_t i = 0; i < pl.Count(); i++ ) {
     wxString path = pl[i];
     if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
@@ -291,6 +310,7 @@ wxString SpringOptionsTab::AutoFindUnitSyncLib( const wxString& def )
     if ( IsUnitSyncLib( path + _T("Spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN;
     if ( IsUnitSyncLib( path + _T("spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN;
   }
+#endif
 
   return def;
 }
