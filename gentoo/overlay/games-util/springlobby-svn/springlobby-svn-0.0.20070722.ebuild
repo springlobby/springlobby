@@ -5,8 +5,8 @@
 inherit subversion
 
 DESCRIPTION="lobby client for spring rts engine"
-HOMEPAGE="http://tc.serveftp.net/trac"
-ESVN_REPO_URI="http://tc.serveftp.net/svn/springlobby/trunk"
+HOMEPAGE="http://springlobby.info"
+ESVN_REPO_URI="http://svn.springlobby.info/trunk"
 ESVN_BOOTSTRAP="./autogen.sh"
 
 LICENSE="GPL-2"

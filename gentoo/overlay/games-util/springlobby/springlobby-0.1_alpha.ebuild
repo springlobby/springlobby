@@ -5,7 +5,7 @@
 inherit eutils
 
 DESCRIPTION="lobby client for spring rts engine"
-HOMEPAGE="http://tc.serveftp.net/trac"
+HOMEPAGE="http://springlobby.info"
 SRC_URI="${P}.tar.gz"
 
 LICENSE="GPL-2"

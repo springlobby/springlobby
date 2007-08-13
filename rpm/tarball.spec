@@ -5,7 +5,7 @@
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
 #
-# Please submit bugfixes or comments via http://tc.serveftp.net/trac/newticket
+# Please submit bugfixes or comments via http://trac.springlobby.info/newticket
 #
 # norootforbuild
 
@@ -41,7 +41,7 @@
 Name:           SpringLobby
 Version:        1
 Release:        1
-Url:            http://tc.serveftp.net/trac/
+Url:            http://springlobby.info
 License:        GPL
 Group:          Amusements/Games/Other
 Autoreqprov:    on
