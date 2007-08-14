@@ -29,21 +29,21 @@
 
 BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
 
-  EVT_BUTTON ( SPRING_DIRBROWSE, SpringOptionsTab::OnBrowseDir )
-  EVT_BUTTON ( SPRING_EXECBROWSE, SpringOptionsTab::OnBrowseExec )
-  EVT_BUTTON ( SPRING_SYNCBROWSE, SpringOptionsTab::OnBrowseSync )
-  EVT_BUTTON ( SPRING_AUTOCONF, SpringOptionsTab::OnAutoConf )
-  EVT_BUTTON ( SPRING_DIRFIND, SpringOptionsTab::OnFindDir )
-  EVT_BUTTON ( SPRING_EXECFIND, SpringOptionsTab::OnFindExec )
-  EVT_BUTTON ( SPRING_SYNCFIND, SpringOptionsTab::OnFindSync )
+    EVT_BUTTON ( SPRING_DIRBROWSE, SpringOptionsTab::OnBrowseDir )
+    EVT_BUTTON ( SPRING_EXECBROWSE, SpringOptionsTab::OnBrowseExec )
+    EVT_BUTTON ( SPRING_SYNCBROWSE, SpringOptionsTab::OnBrowseSync )
+    EVT_BUTTON ( SPRING_AUTOCONF, SpringOptionsTab::OnAutoConf )
+    EVT_BUTTON ( SPRING_DIRFIND, SpringOptionsTab::OnFindDir )
+    EVT_BUTTON ( SPRING_EXECFIND, SpringOptionsTab::OnFindExec )
+    EVT_BUTTON ( SPRING_SYNCFIND, SpringOptionsTab::OnFindSync )
 
-  EVT_RADIOBUTTON( SPRING_DEFEXE, SpringOptionsTab::OnDefaultExe )
-  EVT_RADIOBUTTON( SPRING_DEFUSYNC, SpringOptionsTab::OnDefaultUsync )
+    EVT_RADIOBUTTON( SPRING_DEFEXE, SpringOptionsTab::OnDefaultExe )
+    EVT_RADIOBUTTON( SPRING_DEFUSYNC, SpringOptionsTab::OnDefaultUsync )
 
-END_EVENT_TABLE()
+    END_EVENT_TABLE()
 
 
-SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
+    SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
 {
 
   m_dir_text = new wxStaticText( this, -1, _("Spring directory") );
@@ -229,15 +229,15 @@ wxString SpringOptionsTab::AutoFindSpringDir( const wxString& def )
   pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
 #endif
 
-#ifdef HAVE_WX28
-  for ( size_t i = 0; i < pl.Count(); i++ ) {
+  for ( size_t i = 0; i < pl.GetCount(); i++ ) {
     wxString path = pl[i] + wxFileName::GetPathSeparator();
     if ( IsDataDir( path ) ) return path;
     if ( IsDataDir( path + _T("Spring") ) ) return path + _T("Spring");
+    if ( IsDataDir( path + _T("spring") ) ) return path + _T("spring");
+    if ( IsDataDir( path + _T("spring_data") ) ) return path + _T("spring_data");
     if ( IsDataDir( path + _T(".spring") ) ) return path + _T(".spring");
     if ( IsDataDir( path + _T(".spring_data") ) ) return path + _T(".spring_data");
   }
-#endif
 
   return def;
 }
@@ -256,6 +256,13 @@ wxString SpringOptionsTab::AutoFindSpringExe( const wxString& def )
 #ifdef __WXMSW__
   pl.Add( _T("C:\\Program") );
   pl.Add( _T("C:\\Program Files") );
+#else
+  pl.Add( _T("/usr/games") );
+  pl.Add( _T("/usr/games/bin") );
+  pl.Add( _T("/usr/bin") );
+  pl.Add( _T("/usr/local/games") );
+  pl.Add( _T("/usr/local/games/bin") );
+  pl.Add( _T("/usr/local/bin") );
 #endif
   pl.Add( wxFileName::GetHomeDir() );
   pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
@@ -265,15 +272,13 @@ wxString SpringOptionsTab::AutoFindSpringExe( const wxString& def )
 #endif
   pl.Add( m_dir_edit->GetValue() );
 
-#ifdef HAVE_WX28
-  for ( size_t i = 0; i < pl.Count(); i++ ) {
+  for ( size_t i = 0; i < pl.GetCount(); i++ ) {
     wxString path = pl[i];
     if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
     if ( IsSpringExe( path + SPRING_BIN ) ) return path + SPRING_BIN;
     if ( IsSpringExe( path + _T("Spring") + wxFileName::GetPathSeparator() + SPRING_BIN ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + SPRING_BIN;
     if ( IsSpringExe( path + _T("spring") + wxFileName::GetPathSeparator() + SPRING_BIN ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + SPRING_BIN;
   }
-#endif
 
   return def;
 }
@@ -293,6 +298,13 @@ wxString SpringOptionsTab::AutoFindUnitSyncLib( const wxString& def )
   pl.Add( wxGetOSDirectory() );
   pl.Add( _T("C:\\Program") );
   pl.Add( _T("C:\\Program Files") );
+#else
+  pl.Add( _T("/usr/games") );
+  pl.Add( _T("/usr/games/lib") );
+  pl.Add( _T("/usr/lib") );
+  pl.Add( _T("/usr/local/games") );
+  pl.Add( _T("/usr/local/games/lib") );
+  pl.Add( _T("/usr/local/lib") );
 #endif
   pl.Add( wxFileName::GetHomeDir() );
   pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
@@ -302,15 +314,13 @@ wxString SpringOptionsTab::AutoFindUnitSyncLib( const wxString& def )
 #endif
   pl.Add( m_dir_edit->GetValue() );
 
-#ifdef HAVE_WX28
-  for ( size_t i = 0; i < pl.Count(); i++ ) {
+  for ( size_t i = 0; i < pl.GetCount(); i++ ) {
     wxString path = pl[i];
     if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
     if ( IsUnitSyncLib( path + UNITSYNC_BIN ) ) return path + UNITSYNC_BIN;
     if ( IsUnitSyncLib( path + _T("Spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN;
     if ( IsUnitSyncLib( path + _T("spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN;
   }
-#endif
 
   return def;
 }
@@ -333,7 +343,7 @@ void SpringOptionsTab::OnFindDir( wxCommandEvent& event )
 void SpringOptionsTab::OnFindExec( wxCommandEvent& event )
 {
   wxString found = AutoFindSpringExe( m_exec_edit->GetValue() );
-  HandleExeloc( found == WX_STRING( sett().GetSpringUsedLoc() ) );
+  HandleExeloc( false );
   m_exec_edit->SetValue( found );
 }
 
@@ -341,7 +351,7 @@ void SpringOptionsTab::OnFindExec( wxCommandEvent& event )
 void SpringOptionsTab::OnFindSync( wxCommandEvent& event )
 {
   wxString found = AutoFindUnitSyncLib( m_sync_edit->GetValue() );
-  HandleUsyncloc( found == WX_STRING( sett().GetUnitSyncUsedLoc() ) );
+  HandleUsyncloc( false );
   m_sync_edit->SetValue( found );
 }
 
