@@ -25,6 +25,7 @@ bin_PROGRAMS = springlobby
 springlobby_LDADD = \
 	$(WX_LIBS)
 
+# the following line is searched for in a script to add filenames under it
 springlobby_SOURCES = \
 	src/nonportable.h \
 	src/agreementdialog.cpp \
