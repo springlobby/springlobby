@@ -308,7 +308,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   bool replay, haspass, dgun, ghost, dim;
   GameType gt;
   std::string hash;
-  std::string nick, contry, host, map, title, mod, channel, error, msg;
+  std::string nick, contry, host, map, title, mod, channel, error, msg, owner, ai;
   //NatType ntype;
   UserStatus cstatus;
   UTASClientStatus tasstatus;
@@ -357,7 +357,6 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     map = GetSentenceParam( params );
     title = GetSentenceParam( params );
     mod = GetSentenceParam( params );
-    //! @todo Fix nat settings
     m_se->OnBattleOpened( id, replay, IntToNatType( nat ), nick, host, port, maxplayers,
                             haspass, (rank + 1)*100, hash, map, title, mod );
   } else if ( cmd == "JOINEDBATTLE" ) {
@@ -516,6 +515,19 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   } else if ( cmd == "OPENBATTLE" ) {
     m_battle_id = GetIntParam( params );
     m_se->OnHostedBattle( m_battle_id );
+  } else if ( cmd == "ADDBOT" ) {
+    // ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}
+    id = GetIntParam( params );
+    nick = GetWordParam( params );
+    owner = GetWordParam( params );
+    tasbstatus.data = GetIntParam( params );
+    bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
+    color.data = GetIntParam( params );
+    bstatus.color_r = color.color.red;
+    bstatus.color_g = color.color.green;
+    bstatus.color_b = color.color.blue;
+    ai = GetSentenceParam( params );
+    m_se->OnBattleAddBot( id, nick, owner, bstatus, ai );
   } else {
     debug( "??? Cmd: " + cmd + " params: " + params );
     m_se->OnUnknownCommand( cmd, params );

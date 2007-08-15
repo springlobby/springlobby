@@ -19,6 +19,10 @@
 #include <wx/dir.h>
 #include <wx/file.h>
 
+#ifdef __WXMSW__
+#include <wx/msw/registry.h>
+#endif
+
 #include "nonportable.h"
 #include "springoptionstab.h"
 #include "ui.h"
@@ -220,6 +224,10 @@ wxString SpringOptionsTab::AutoFindSpringDir( const wxString& def )
 #endif
   pl.Add( wxFileName::GetHomeDir() );
 #ifdef __WXMSW__
+  wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
+  wxString tmp;
+  if ( programreg.QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
+
   pl.Add( _T("C:\\Program") );
   pl.Add( _T("C:\\Program Files") );
 #endif
@@ -254,6 +262,10 @@ wxString SpringOptionsTab::AutoFindSpringExe( const wxString& def )
   pl.Add( sp.GetExecutablePath() );
 #endif
 #ifdef __WXMSW__
+  wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
+  wxString tmp;
+  if ( programreg.QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
+
   pl.Add( _T("C:\\Program") );
   pl.Add( _T("C:\\Program Files") );
 #else
@@ -295,6 +307,10 @@ wxString SpringOptionsTab::AutoFindUnitSyncLib( const wxString& def )
   pl.Add( sp.GetExecutablePath() );
 #endif
 #ifdef __WXMSW__
+  wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
+  wxString tmp;
+  if ( programreg.QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
+
   pl.Add( wxGetOSDirectory() );
   pl.Add( _T("C:\\Program") );
   pl.Add( _T("C:\\Program Files") );

@@ -28,6 +28,8 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
   EVT_BUTTON ( BROOM_START, BattleRoomTab::OnStart )
   EVT_BUTTON ( BROOM_LEAVE, BattleRoomTab::OnLeave )
+  EVT_BUTTON ( BROOM_ADDBOT, BattleRoomTab::OnAddBot )
+
   EVT_CHECKBOX( BROOM_IMREADY, BattleRoomTab::OnImReady )
   EVT_CHECKBOX( BROOM_SPEC, BattleRoomTab::OnImSpec )
   EVT_COMBOBOX( BROOM_TEAMSEL, BattleRoomTab::OnTeamSel )
@@ -58,8 +60,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
 
   m_player_panel = new wxPanel( m_splitter , -1 );
-  m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(40,CONTROL_HEIGHT), 16, team_choices );
-  m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(40,CONTROL_HEIGHT), 16, team_choices );
+  m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
+  m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
   m_color_sel = new wxComboBox( m_player_panel, BROOM_COLOURSEL, _("black"), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), 16, colour_choices );
   m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
@@ -80,13 +82,14 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_minimap = new MapCtrl( this, 162, m_battle, m_ui, true );
 
-  m_players = new BattleroomListCtrl( m_player_panel );
+  m_players = new BattleroomListCtrl( m_player_panel, battle );
   m_chat = new ChatPanel( m_splitter, m_ui, battle );
 
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
   m_leave_btn = new wxButton( this, BROOM_LEAVE, _("Leave"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
   m_start_btn = new wxButton( this, BROOM_START, _("Start"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
+  m_addbot_btn = new wxButton( this, BROOM_ADDBOT, _("Add Bot..."), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
   m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
   m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
@@ -132,6 +135,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_buttons_sizer->Add( m_leave_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->AddStretchSpacer();
+  m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_start_btn, 0, wxEXPAND | wxALL, 2 );
 
@@ -234,6 +238,10 @@ void BattleRoomTab::OnLeave( wxCommandEvent& event )
   m_battle.Leave();
 }
 
+void BattleRoomTab::OnAddBot( wxCommandEvent& event )
+{
+}
+
 
 void BattleRoomTab::OnImReady( wxCommandEvent& event )
 {
@@ -299,8 +307,9 @@ void BattleRoomTab::OnUserJoined( User& user )
 {
   m_chat->Joined( user );
   m_players->AddUser( user );
-  if ( &user == &m_battle.GetMe() ) 
+  if ( &user == &m_battle.GetMe() ) {
     m_players->SetItemState( m_players->GetUserIndex( user ), wxLIST_MASK_STATE, wxLIST_STATE_SELECTED );
+  }
 }
 
 
@@ -310,4 +319,21 @@ void BattleRoomTab::OnUserLeft( User& user )
   m_players->RemoveUser( user );
 }
 
+
+void BattleRoomTab::OnBotAdded( BattleBot& bot )
+{
+  m_players->AddBot( bot );
+}
+
+
+void BattleRoomTab::OnBotRemoved( BattleBot& bot )
+{
+  m_players->RemoveBot( bot );
+}
+
+
+void BattleRoomTab::OnBotUpdated( BattleBot& bot )
+{
+  m_players->UpdateBot( bot );
+}
 

@@ -55,7 +55,7 @@ class ServerEvents
     void OnClientBattleStatus( int battleid, const std::string& nick, UserBattleStatus status );
     void OnBattleStartRectAdd( int battleid, int allyno, int left, int top, int right, int bottom );
     void OnBattleStartRectRemove( int battleid, int allyno );
-
+    void OnBattleAddBot( int battleid, const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll );
     void OnBattleDisableUnit( int battleid, const std::string& unitname );
     void OnBattleEnableUnit( int battleid, const std::string& unitname );
     void OnBattleEnableAllUnits( int battleid );

@@ -6,6 +6,7 @@
 
 #include <map>
 
+#define ICON_NONE -1
 #define ICON_ADMIN 0
 #define ICON_ADMIN_AWAY 1
 #define ICON_ADMIN_INGAME 2

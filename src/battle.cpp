@@ -4,6 +4,7 @@
 //
 
 #include <stdexcept>
+#include <assert.h>
 
 #include "battle.h"
 #include "ui.h"
@@ -13,11 +14,16 @@
 #include "utils.h"
 
 
+const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = -1;
+
+
 Battle::Battle( Server& serv, Ui& ui, int id ) :
   m_serv(serv),
   m_ui(ui),
   m_order(0),
   m_rects(16, static_cast<BattleStartRect*>(0)),
+  m_bot_seek(m_bots.end()),
+  m_bot_pos(BOT_SEEKPOS_INVALID),
   m_units_num(0)
 {
   m_opts.battleid = id;
@@ -267,5 +273,81 @@ void Battle::EnableAllUnits()
 std::string Battle::DisabledUnits()
 {
   return m_units;
+}
+
+
+void Battle::AddBot( const std::string& nick, const std::string& owner, const UserBattleStatus& bs, const std::string& aidll )
+{
+  BattleBot* bot = GetBot(nick);
+  bool created = true;
+  if ( bot == 0 ) bot = new BattleBot();
+  else created = false;
+
+  debug_func("created: " + i2s(created) );
+
+  bot->name = nick;
+  bot->bs = bs;
+  bot->bs.order = m_order++;
+  bot->owner = owner;
+  bot->aidll = aidll;
+
+  if ( created ) {
+    m_bots.push_back( bot );
+    m_bot_pos = BOT_SEEKPOS_INVALID;
+  }
+}
+
+
+void Battle::RemoveBot( const std::string& nick )
+{
+  BattleBot* bot = GetBot( nick );
+  m_bots.remove( bot );
+  delete bot;
+  m_bot_pos = BOT_SEEKPOS_INVALID;
+}
+
+
+void Battle::UpdateBot( const std::string& name, const UserBattleStatus& bs )
+{
+  BattleBot* bot = GetBot( name );
+  ASSERT_LOGIC( bot != 0, "Bad bot name" );
+  bot->bs = bs;
+}
+
+
+BattleBot* Battle::GetBot( const std::string& name )
+{
+  std::list<BattleBot*>::const_iterator i;
+  debug_func("");
+
+  for( i = m_bots.begin(); i != m_bots.end(); ++i )
+  {
+    debug( "index" );
+    if ( *i == 0 ) continue;
+    debug( (*i)->name );
+    if ( (*i)->name == name ) {
+      debug( "return != 0" );
+      return *i;
+    }
+  }
+  debug("return 0");
+  return 0;
+}
+
+BattleBot* Battle::GetBot( std::list<BattleBot*>::size_type index )
+{
+  if ((m_bot_pos == BOT_SEEKPOS_INVALID) || (m_bot_pos > index)) {
+    m_bot_seek = m_bots.begin();
+    m_bot_pos = 0;
+  }
+  std::advance( m_bot_seek, index - m_bot_pos );
+  m_bot_pos = index;
+  return *m_bot_seek;
+}
+
+
+std::list<BattleBot*>::size_type Battle::GetNumBots()
+{
+  return m_bots.size();
 }
 

@@ -2,8 +2,10 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLE_H
 
 #include <vector>
+#include <list>
 
 #include "userlist.h"
+#include "user.h"
 
 class Ui;
 class Server;
@@ -89,6 +91,14 @@ struct BattleStartRect
 };
 
 
+struct BattleBot {
+  UserBattleStatus bs;
+  std::string name;
+  std::string owner;
+  std::string aidll;
+};
+
+
 class Battle : public UserList
 {
   public:
@@ -159,6 +169,12 @@ class Battle : public UserList
     void RemoveStartRect( int allyno );
     void UpdateStartRect( int allyno );
 
+    void AddBot( const std::string& nick, const std::string& owner, const UserBattleStatus& bs, const std::string& aidll );
+    void RemoveBot( const std::string& nick );
+    void UpdateBot( const std::string& name, const UserBattleStatus& bs );
+    BattleBot* GetBot( const std::string& name );
+    BattleBot* GetBot( std::list<BattleBot*>::size_type index );
+    std::list<BattleBot*>::size_type GetNumBots();
     void StartRectRemoved( int allyno );
     void StartRectUpdated( int allyno );
 
@@ -172,7 +188,6 @@ class Battle : public UserList
     int GetNumDisabledUnits() { return m_units_num; }
 
   /*
-    DISABLEUNITS unitname1 unitname2
     ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}
   */
   protected:
@@ -185,6 +200,11 @@ class Battle : public UserList
     int m_order;
 
     std::vector<BattleStartRect*> m_rects;
+    std::list<BattleBot*> m_bots;
+    
+    std::list<BattleBot*>::iterator m_bot_seek;
+    std::list<BattleBot*>::size_type m_bot_pos;
+    
     std::string m_units;
     int m_units_num;
 

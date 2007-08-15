@@ -12,6 +12,7 @@ class wxString;
 class Channel;
 class User;
 class Battle;
+class BattleBot;
 
 typedef int HostInfo;
 
@@ -79,6 +80,10 @@ class Ui
     void OnBattleInfoUpdated( Battle& battle );
     void OnBattleStarted( Battle& battle );
     void OnBattleStartRectsUpdated( Battle& battle );
+
+    void OnBattleBotAdded( Battle& battle, BattleBot& bot );
+    void OnBattleBotRemoved( Battle& battle, BattleBot& bot );
+    void OnBattleBotUpdated( Battle& battle, BattleBot& bot );
 
     void OnBattleDisableUnit( Battle& battle, const std::string& unitname );
     void OnBattleEnableUnit( Battle& battle, const std::string& unitname );

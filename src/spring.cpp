@@ -127,8 +127,9 @@ wxString Spring::GetScriptTxt( Battle& battle )
 {
   wxString s;
 
-  int NumTeams=0, NumAllys=0, LastOrder=-1,Lowest=-1,MyPlayerNum=-1;
+  int NumTeams=0, NumBots = 0, NumAllys=0, LastOrder=-1,Lowest=-1,MyPlayerNum=-1;
   int PlayerOrder[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+  int BotOrder[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int TeamConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int AllyConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int AllyRevConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
@@ -162,6 +163,31 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
   }
 
+  // Get bot order
+  LastOrder = -1;
+  for ( std::list<BattleBot*>::size_type i = 0; i < battle.GetNumBots(); i++ ) {
+
+    Lowest = -1;
+
+    for ( std::list<BattleBot*>::size_type gl = 0; gl < battle.GetNumBots(); gl++ ) {
+      if ( battle.GetBot(gl)->bs.order <= LastOrder ) continue;
+      if ( Lowest == -1 ) Lowest = gl;
+      else if ( battle.GetBot(gl)->bs.order < battle.GetBot(Lowest)->bs.order ) Lowest = gl;
+    }
+
+    LastOrder = battle.GetBot(Lowest)->bs.order;
+    BotOrder[i] = Lowest;
+
+    if ( AllyConv[battle.GetBot(Lowest)->bs.ally] == -1 ) {
+      AllyConv[battle.GetBot(Lowest)->bs.ally] = NumAllys;
+      AllyRevConv[NumAllys] = battle.GetBot(Lowest)->bs.ally;
+      NumAllys++;
+    }
+
+    NumBots++;
+  }
+
+
   BattleOptions bo = battle.opts();
 
   // Start generating the script.
@@ -186,7 +212,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += wxString::Format( _T("\tMyPlayerNum=%d;\n\n"), MyPlayerNum );
 
   s += wxString::Format( _T("\tNumPlayers=%d;\n"), battle.GetNumUsers() );
-  s += wxString::Format( _T("\tNumTeams=%d;\n"), NumTeams );
+  s += wxString::Format( _T("\tNumTeams=%d;\n"), NumTeams + NumBots );
   s += wxString::Format( _T("\tNumAllyTeams=%d;\n\n"), NumAllys );
 
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
@@ -204,6 +230,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   }
 
   s += _T("\n");
+
 
   for ( int i = 0; i < NumTeams; i++ ) {
     s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i );
@@ -240,6 +267,31 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s +=  _T("\t}\n");
   }
 
+  for ( int i = 0; i < NumBots; i++ ) {
+
+    s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i + NumTeams );
+
+    BattleBot& bot = *battle.GetBot( BotOrder[i] );
+
+    // Find Team Leader.
+    int TeamLeader = TeamConv[ battle.GetUser( bot.owner ).BattleStatus().team ];
+
+    s += wxString::Format( _T("\t\tTeamLeader=%d;\n") ,TeamLeader );
+    s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[bot.bs.ally] );
+    const char* old_locale = std::setlocale(LC_NUMERIC, "C");
+    s += wxString::Format( _T("\t\tRGBColor=%.5f %.5f %.5f;\n"),
+                           (double)(bot.bs.color_r/255.0),
+                            (double)(bot.bs.color_g/255.0),
+                             (double)(bot.bs.color_b/255.0)
+                         );
+    std::setlocale(LC_NUMERIC, old_locale);
+    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( battle.opts().modname, bot.bs.side ) + ";\n"));
+    s += wxString::Format( _T("\t\tHandicap=%d;\n"), bot.bs.handicap );
+    s += WX_STRING(("\t\tAIDLL=AI/Bot-libs/" + bot.aidll + ";\n"));
+    s +=  _T("\t}\n");
+  }
+
+
   for ( int i = 0; i < NumAllys; i++ ) {
     s += wxString::Format( _T("\t[ALLYTEAM%d]\n\t{\n"), i );
 
@@ -259,6 +311,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s +=  _T("\t}\n");
   }
 
+
   s += wxString::Format( _T("\tNumRestrictions=%d;\n"), battle.GetNumDisabledUnits() );
   s += _T("\t[RESTRICT]\n");
   s += _T("\t{\n");
@@ -266,11 +319,13 @@ wxString Spring::GetScriptTxt( Battle& battle )
   std::string units = battle.DisabledUnits();
   std::string unit;
   int i = 0;
+
   while ( (unit = GetWord( units )) != "" ) {
     s += WX_STRING(("\t\tUnit" + i2s(i) + "=" + unit + ";\n"));
     s += wxString::Format( _T("\t\tLimit%d=0;\n"), i );
     i++;
   }
+
 
   s += _T("\t}\n");
   s += _T("}\n");
@@ -297,6 +352,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
       tmpu.BattleStatus().color_b
     );
   }
+
 
   ds += _T("\n\nPlayerOrder: { ");
   for ( int i = 0; i < 16; i++ ) {
@@ -332,6 +388,6 @@ wxString Spring::GetScriptTxt( Battle& battle )
   f.Write( _T("[Script Start]") + s );
   f.Write( ds );
   f.Close();
- 
+
   return s;
 }

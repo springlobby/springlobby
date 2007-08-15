@@ -387,6 +387,17 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
 }
 
 
+void ServerEvents::OnBattleAddBot( int battleid, const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll )
+{
+  debug_func("");
+  Battle& battle = m_serv.GetBattle( battleid );
+  battle.AddBot( nick, owner, status, aidll );
+  BattleBot* bot = battle.GetBot( nick );
+  ASSERT_LOGIC( bot != 0, "Bot null after add." );
+  m_ui.OnBattleBotAdded( battle, *bot );
+}
+
+
 void ServerEvents::OnAcceptAgreement( const std::string& agreement )
 {
   m_ui.OnAcceptAgreement( agreement );

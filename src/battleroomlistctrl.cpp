@@ -12,8 +12,8 @@
 #include "user.h"
 #include "utils.h"
 
-BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent ) : wxListCtrl(parent, -1,
-  wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL )
+BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxListCtrl(parent, -1,
+  wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL ), m_battle(battle)
 {
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
@@ -132,9 +132,9 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   if ( !user.BattleStatus().spectator ) {
 
     try {
-      int sideimg = icons().GetSideIcon( usync()->GetSideName( user.GetBattle()->opts().modname, user.BattleStatus().side ) );
+      int sideimg = icons().GetSideIcon( usync()->GetSideName( m_battle.opts().modname, user.BattleStatus().side ) );
       if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
-      else SetItem( index, 1, WX_STRING(usync()->GetSideName( user.GetBattle()->opts().modname, user.BattleStatus().side )) );
+      else SetItem( index, 1, WX_STRING(usync()->GetSideName( m_battle.opts().modname, user.BattleStatus().side )) );
     } catch ( ... ) {
       SetItem( index, 1, wxString::Format( _T("s%d"), user.BattleStatus().side + 1 ) );
     }
@@ -164,11 +164,91 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 int BattleroomListCtrl::GetUserIndex( User& user )
 {
   for (int i = 0; i < GetItemCount() ; i++ ) {
+    wxListItem item;
+    item.SetId( i );
+    GetItem( item );
+    if ( item.GetImage() == ICON_BOT ) continue;
     if ( (unsigned long)&user == GetItemData( i ) ) return i;
   }
   debug_error( "didn't find the battle." );
   return -1;
 }
+
+
+void BattleroomListCtrl::AddBot( BattleBot& bot )
+{
+  int index = InsertItem( 0, ICON_BOT );
+  assert( index != -1 );
+  SetItemData(index, (wxUIntPtr)&bot );
+
+  UpdateBot( index );
+}
+
+
+void BattleroomListCtrl::RemoveBot( BattleBot& bot )
+{
+  DeleteItem( GetBotIndex( bot ) );
+}
+
+
+void BattleroomListCtrl::UpdateBot( BattleBot& bot )
+{
+  UpdateBot( GetBotIndex( bot ) );
+}
+
+
+void BattleroomListCtrl::UpdateBot( const int& index )
+{
+  assert( index != -1 );
+
+  wxListItem item;
+  item.SetId( index );
+
+  if (!GetItem( item )) assert(false);
+
+  BattleBot& bot = *((BattleBot*)GetItemData( index ));
+
+  icons().SetColourIcon( bot.bs.team, wxColour( bot.bs.color_r, bot.bs.color_g, bot.bs.color_b ) );
+
+  SetItemImage( index, ICON_BOT );
+
+  SetItemColumnImage( index, 1, -1 );
+
+  try {
+    int sideimg = icons().GetSideIcon( usync()->GetSideName( m_battle.opts().modname, bot.bs.side ) );
+    if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
+    else SetItem( index, 1, WX_STRING(usync()->GetSideName( m_battle.opts().modname, bot.bs.side )) );
+  } catch ( ... ) {
+    SetItem( index, 1, wxString::Format( _T("s%d"), bot.bs.side + 1 ) );
+  }
+
+  SetItemColumnImage( index, 2, IconImageList::GetColourIcon( bot.bs.team ) );
+
+  SetItemColumnImage( index, 3, ICON_NONE );
+  SetItemColumnImage( index, 4, ICON_NONE );
+  SetItem( index, 5, WX_STRING( bot.name ) );
+
+  SetItem( index, 6, wxString::Format( _T("%d"), bot.bs.team + 1 ) );
+  SetItem( index, 7, wxString::Format( _T("%d"), bot.bs.ally + 1 ) );
+  SetItem( index, 9, wxString::Format( _T("%d%%"), bot.bs.handicap ) );
+
+  SetItem( index, 8, WX_STRING( bot.aidll ) );
+}
+
+
+int BattleroomListCtrl::GetBotIndex( BattleBot& bot )
+{
+  for (int i = 0; i < GetItemCount() ; i++ ) {
+    wxListItem item;
+    item.SetId( i );
+    GetItem( item );
+    if ( item.GetImage() != ICON_BOT ) continue;
+    if ( (unsigned long)&bot == GetItemData( i ) ) return i;
+  }
+  debug_error( "didn't find the bot." );
+  return -1;
+}
+
 
 
 

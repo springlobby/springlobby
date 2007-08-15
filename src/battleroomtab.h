@@ -7,6 +7,7 @@
 
 class Ui;
 class Battle;
+struct BattleBot;
 class BattleroomListCtrl;
 class User;
 class ChatPanel;
@@ -40,6 +41,7 @@ class BattleRoomTab : public wxPanel
 
    void OnStart( wxCommandEvent& event );
    void OnLeave( wxCommandEvent& event );
+   void OnAddBot( wxCommandEvent& event );
    void OnImReady( wxCommandEvent& event );
    void OnImSpec( wxCommandEvent& event );
    void OnTeamSel( wxCommandEvent& event );
@@ -49,6 +51,10 @@ class BattleRoomTab : public wxPanel
 
    void OnUserJoined( User& user );
    void OnUserLeft( User& user );
+
+   void OnBotAdded( BattleBot& bot );
+   void OnBotRemoved( BattleBot& bot );
+   void OnBotUpdated( BattleBot& bot );
 
   protected:
     Ui& m_ui;
@@ -89,6 +95,7 @@ class BattleRoomTab : public wxPanel
 
     wxButton* m_leave_btn;
     wxButton* m_start_btn;
+    wxButton* m_addbot_btn;
 
     wxCheckBox* m_ready_chk;
     wxCheckBox* m_spec_chk;
@@ -105,7 +112,8 @@ enum
     BROOM_ALLYSEL,
     BROOM_COLOURSEL,
     BROOM_SIDESEL,
-    BROOM_START
+    BROOM_START,
+    BROOM_ADDBOT
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
