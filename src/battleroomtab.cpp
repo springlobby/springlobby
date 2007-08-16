@@ -44,15 +44,10 @@ END_EVENT_TABLE()
 const wxString team_choices[] = { _T("1"), _T("2"), _T("3"), _T("4"), _T("5"), _T("6"), _T("7"), _T("8"), _T("9"), _T("10"), _T("11"), _T("12"), _T("13"), _T("14"), _T("15"), _T("16") };
 
 const wxString colour_choices[] = {
-  _T("black"), _T("dark gray"), _T("dark blue"), _T("bright blue"), _T("dark green"),
+  _T("gold"), _T("dark gray"), _T("dark blue"), _T("bright blue"), _T("dark green"),
   _T("bright green"), _T("dark cyan"), _T("bright cyan"), _T("dark red"), _T("bright red"),
   _T("dark magenta"), _T("bright magenta"), _T("dark yellow"), _T("bright yellow"),
   _T("light gray"), _T("inky blue")
-};
-
-const int colour_values[][3] = { {0,0,0}, {128, 128, 128}, {0, 0, 128}, {0, 0, 255},
-  {0, 128, 0}, {0, 255, 0}, {0, 128, 128}, {0, 255, 255}, {128, 0, 0}, {255, 0, 0},
-  {128, 0, 128}, {255, 0, 255}, {128, 128, 0}, {255, 255, 0}, {192, 192, 192}, {0, 220, 250}
 };
 
 
@@ -64,7 +59,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_player_panel = new wxPanel( m_splitter , -1 );
   m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
   m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
-  m_color_sel = new wxComboBox( m_player_panel, BROOM_COLOURSEL, _("black"), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), 16, colour_choices );
+  m_color_sel = new wxComboBox( m_player_panel, BROOM_COLOURSEL, _("orange"), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), 16, colour_choices );
   m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
   for ( int i = 0; i < usync()->GetSideCount( battle.opts().modname ); i++ ) {
@@ -242,7 +237,7 @@ void BattleRoomTab::OnLeave( wxCommandEvent& event )
 
 void BattleRoomTab::OnAddBot( wxCommandEvent& event )
 {
-  AddBotDialog dlg( this );
+  AddBotDialog dlg( this, m_battle );
   if ( dlg.ShowModal() == wxID_OK ) {
     UserBattleStatus bs;
     bs.team = m_battle.GetFreeTeamNum( false );
@@ -253,7 +248,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
     bs.ready = true;
     bs.order = 0;
     bs.handicap = 0;
-    m_battle.GetFreeColour( bs.color_r, bs.color_g, bs.color_b );
+    m_battle.GetFreeColour( bs.color_r, bs.color_g, bs.color_b, false );
     m_ui.GetServer().AddBot( m_battle.opts().battleid, STD_STRING(dlg.GetNick()), m_battle.GetMe().GetNick(), bs, STD_STRING(dlg.GetAI()) );
   }
 }

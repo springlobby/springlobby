@@ -12,6 +12,7 @@
 #include "server.h"
 #include "user.h"
 #include "utils.h"
+#include "uiutils.h"
 
 
 const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = -1;
@@ -62,6 +63,7 @@ int Battle::GetFreeTeamNum( bool excludeme )
     changed = false;
     for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ ) {
       if ( (&GetUser( i ) == &GetMe()) && excludeme ) continue;
+      //if ( GetUser( i ).BattleStatus().spectator ) continue;
       if ( GetUser( i ).BattleStatus().team == lowest ) {
         lowest++;
         changed = true;
@@ -81,9 +83,53 @@ int Battle::GetFreeTeamNum( bool excludeme )
 }
 
 
-void Battle::GetFreeColour( int& r, int& g, int& b )
+bool AreColoursSimilar( int r1, int g1, int b1, int r2, int g2, int b2, int mindiff = 10 )
 {
-  // TODO
+  int r,g,b;
+  r = r1 - r2;
+  g = g1 - g2;
+  b = b1 - b2;
+  r = r>0?r:-r;
+  g = g>0?g:-g;
+  b = b>0?b:-b;
+  if ( (r <= mindiff) && (g <= mindiff) && (b <= mindiff) ) return true;
+  return false;
+}
+
+
+void Battle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
+{
+  int lowest = 0;
+  bool changed = true;
+  while ( (changed) && (lowest < 16) ) {
+    changed = false;
+    for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ ) {
+      if ( (&GetUser( i ) == &GetMe()) && excludeme ) continue;
+      //if ( GetUser( i ).BattleStatus().spectator ) continue;
+      UserBattleStatus& bs = GetUser( i ).BattleStatus();
+      if ( AreColoursSimilar( bs.color_r, bs.color_g, bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
+        lowest++;
+        changed = true;
+        if ( lowest >= 16 ) break;
+      }
+    }
+    if ( lowest >= 16 ) break;
+    std::list<BattleBot*>::const_iterator i;
+    for( i = m_bots.begin(); i != m_bots.end(); ++i )
+    {
+      if ( *i == 0 ) continue;
+      if ( AreColoursSimilar( (*i)->bs.color_r, (*i)->bs.color_g, (*i)->bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
+        lowest++;
+        changed = true;
+        if ( lowest >= 16 ) break;
+      }
+    }
+  }
+  if ( lowest >= 16 ) lowest = 0;
+  
+  r = colour_values[lowest][0];
+  g = colour_values[lowest][1];
+  b = colour_values[lowest][2];
 }
 
 

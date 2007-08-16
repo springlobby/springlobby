@@ -9,13 +9,13 @@ class wxChoice;
 class wxStaticLine;
 class wxButton;
 class wxCommandEvent;
-
+class Battle;
 
 class AddBotDialog : public wxDialog 
 {
   public:
 
-    AddBotDialog( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Add bot"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 360,155 ), int style = wxDEFAULT_DIALOG_STYLE );
+    AddBotDialog( wxWindow* parent, Battle& battle );
 
     wxString GetNick();
     wxString GetAI();
@@ -33,6 +33,8 @@ class AddBotDialog : public wxDialog
     wxStaticLine* m_buttons_sep;
     wxButton* m_cancel_btn;
     wxButton* m_add_btn;
+
+    Battle& m_battle;
 
     DECLARE_EVENT_TABLE()
 };

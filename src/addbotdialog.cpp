@@ -12,6 +12,8 @@
 #include "addbotdialog.h"
 #include "settings.h"
 #include "utils.h"
+#include "battle.h"
+
 
 BEGIN_EVENT_TABLE( AddBotDialog, wxDialog )
     EVT_BUTTON( ADDBOT_CANCEL, AddBotDialog::OnClose )
@@ -19,7 +21,7 @@ BEGIN_EVENT_TABLE( AddBotDialog, wxDialog )
 END_EVENT_TABLE()
 
 
-AddBotDialog::AddBotDialog( wxWindow* parent, int id, wxString title, wxPoint pos, wxSize size, int style ) : wxDialog( parent, id, title, pos, size, style )
+AddBotDialog::AddBotDialog( wxWindow* parent, Battle& battle ) : wxDialog( parent, wxID_ANY, _("Add bot"), wxDefaultPosition, wxSize( 360,155 ) ), m_battle( battle )
 {
   this->SetSizeHints( wxDefaultSize, wxDefaultSize );
   
@@ -32,7 +34,12 @@ AddBotDialog::AddBotDialog( wxWindow* parent, int id, wxString title, wxPoint po
   m_nick_lbl = new wxStaticText( this, wxID_ANY, _("Nickname:"), wxDefaultPosition, wxDefaultSize, 0 );
   m_nick_sizer->Add( m_nick_lbl, 1, wxALL, 5 );
   
-  m_nick = new wxTextCtrl( this, wxID_ANY, _("Bot"), wxDefaultPosition, wxDefaultSize, 0 );
+  int bot = 1;
+  while ( m_battle.GetBot( "Bot" + i2s(bot) ) != 0 ) {
+    bot++;
+  }
+  
+  m_nick = new wxTextCtrl( this, wxID_ANY, wxString::Format( _("Bot%d"), bot ), wxDefaultPosition, wxDefaultSize, 0 );
   m_nick_sizer->Add( m_nick, 2, wxALL, 5 );
   
   m_main_sizer->Add( m_nick_sizer, 0, wxEXPAND, 5 );
@@ -60,12 +67,12 @@ AddBotDialog::AddBotDialog( wxWindow* parent, int id, wxString title, wxPoint po
   wxBoxSizer* m_buttons_sizer;
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
   
-  m_cancel_btn = new wxButton( this, ADDBOT_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_cancel_btn = new wxButton( this, ADDBOT_CANCEL, _("Cancel"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT), 0 );
   m_buttons_sizer->Add( m_cancel_btn, 0, wxALL, 5 );
   
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
   
-  m_add_btn = new wxButton( this, ADDBOT_ADD, _("Add Bot"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_add_btn = new wxButton( this, ADDBOT_ADD, _("Add Bot"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT), 0 );
   m_buttons_sizer->Add( m_add_btn, 0, wxALL, 5 );
   
   m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
