@@ -22,6 +22,8 @@
 #include "chatpanel.h"
 #include "mapctrl.h"
 #include "uiutils.h"
+#include "addbotdialog.h"
+#include "server.h"
 
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
@@ -240,6 +242,20 @@ void BattleRoomTab::OnLeave( wxCommandEvent& event )
 
 void BattleRoomTab::OnAddBot( wxCommandEvent& event )
 {
+  AddBotDialog dlg( this );
+  if ( dlg.ShowModal() == wxID_OK ) {
+    UserBattleStatus bs;
+    bs.team = m_battle.GetFreeTeamNum();
+    bs.ally = bs.team;
+    bs.sync = SYNC_SYNCED;
+    bs.spectator = false;
+    bs.side = 0;
+    bs.ready = true;
+    bs.order = 0;
+    bs.handicap = 0;
+    m_battle.GetFreeColour( bs.color_r, bs.color_g, bs.color_b );
+    m_ui.GetServer().AddBot( m_battle.opts().battleid, STD_STRING(dlg.GetNick()), m_battle.GetMe().GetNick(), bs, STD_STRING(dlg.GetAI()) );
+  }
 }
 
 

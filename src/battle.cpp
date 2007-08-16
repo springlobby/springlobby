@@ -54,7 +54,7 @@ void Battle::Leave()
 }
 
 
-void Battle::OnRequestBattleStatus()
+int Battle::GetFreeTeamNum()
 {
   int lowest = 0;
   bool changed = true;
@@ -67,12 +67,35 @@ void Battle::OnRequestBattleStatus()
         changed = true;
       }
     }
+    std::list<BattleBot*>::const_iterator i;
+    for( i = m_bots.begin(); i != m_bots.end(); ++i )
+    {
+      if ( *i == 0 ) continue;
+      if ( (*i)->bs.team == lowest ) {
+        lowest++;
+        changed = true;
+      }
+    }
   }
+  return lowest;
+}
+
+
+void Battle::GetFreeColour( int& r, int& g, int& b )
+{
+  // TODO
+}
+
+
+void Battle::OnRequestBattleStatus()
+{
+  int lowest = GetFreeTeamNum();
 
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.team = lowest;
   bs.ally = lowest;
   bs.spectator = false;
+  GetFreeColour( bs.color_r, bs.color_g, bs.color_b );
 
   SendMyBattleStatus();
 }

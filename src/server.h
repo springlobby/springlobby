@@ -87,6 +87,8 @@ class Server
     virtual void LeaveBattle( const int& battleid ) = 0;
     virtual void StartHostedBattle() = 0;
 
+    virtual void AddBot( int battleid, const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll ) = 0;
+
     virtual void SendHostInfo( HostInfo update ) = 0;
 
     virtual Battle* GetCurrentBattle() = 0;

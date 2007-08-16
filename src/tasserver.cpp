@@ -527,6 +527,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     bstatus.color_g = color.color.green;
     bstatus.color_b = color.color.blue;
     ai = GetSentenceParam( params );
+    ai = ai.substr( 0, ai.find_last_of( "." ) );
     m_se->OnBattleAddBot( id, nick, owner, bstatus, ai );
   } else {
     debug( "??? Cmd: " + cmd + " params: " + params );
@@ -835,6 +836,26 @@ void TASServer::StartHostedBattle()
 {
   assert( m_battle_id != -1 );
   m_se->OnStartHostedBattle( m_battle_id );
+}
+
+
+void TASServer::AddBot( int battleid, const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll )
+{
+  debug_func( "" );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+
+  UTASBattleStatus tasbs;
+  tasbs.tasdata = ConvTasbattlestatus( status );
+  UTASColor tascl;
+  tascl.color.red = status.color_r;
+  tascl.color.green = status.color_g;
+  tascl.color.blue = status.color_b;
+  tascl.color.zero = 0;
+  //ADDBOT name battlestatus teamcolor {AIDLL}
+  std::string cmd = "ADDBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + " " + aidll + ".dll\n";
+  debug( cmd );
+  m_sock->Send( cmd );
 }
 
 

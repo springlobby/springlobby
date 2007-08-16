@@ -28,6 +28,8 @@ springlobby_LDADD = \
 # the following line is searched for in a script to add filenames under it
 springlobby_SOURCES = \
 	src/nonportable.h \
+	src/addbotdialog.cpp \
+	src/addbotdialog.h \
 	src/agreementdialog.cpp \
 	src/agreementdialog.h \
 	src/base64.cpp \
