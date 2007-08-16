@@ -1,5 +1,6 @@
 
 
+#include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
