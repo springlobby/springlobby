@@ -54,14 +54,14 @@ void Battle::Leave()
 }
 
 
-int Battle::GetFreeTeamNum()
+int Battle::GetFreeTeamNum( bool excludeme )
 {
   int lowest = 0;
   bool changed = true;
   while ( changed ) {
     changed = false;
     for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ ) {
-      if ( &GetUser( i ) == &GetMe() ) continue;
+      if ( (&GetUser( i ) == &GetMe()) && excludeme ) continue;
       if ( GetUser( i ).BattleStatus().team == lowest ) {
         lowest++;
         changed = true;

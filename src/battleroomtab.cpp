@@ -245,7 +245,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
   AddBotDialog dlg( this );
   if ( dlg.ShowModal() == wxID_OK ) {
     UserBattleStatus bs;
-    bs.team = m_battle.GetFreeTeamNum();
+    bs.team = m_battle.GetFreeTeamNum( false );
     bs.ally = bs.team;
     bs.sync = SYNC_SYNCED;
     bs.spectator = false;

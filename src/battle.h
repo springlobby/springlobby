@@ -144,7 +144,7 @@ class Battle : public UserList
 
     int GetMyPlayerNum();
 
-    int GetFreeTeamNum();
+    int GetFreeTeamNum( bool excludeme = true );
     void GetFreeColour( int& r, int& g, int& b );
     
     void AddUser( User& user );

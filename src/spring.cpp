@@ -6,6 +6,7 @@
 #include <wx/file.h>
 #include <wx/intl.h>
 #include <wx/arrstr.h>
+#include <wx/filename.h>
 #include <clocale>
 
 #include "spring.h"
@@ -287,7 +288,15 @@ wxString Spring::GetScriptTxt( Battle& battle )
     std::setlocale(LC_NUMERIC, old_locale);
     s += WX_STRING(("\t\tSide=" + usync()->GetSideName( battle.opts().modname, bot.bs.side ) + ";\n"));
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), bot.bs.handicap );
-    s += WX_STRING(("\t\tAIDLL=AI/Bot-libs/" + bot.aidll + ";\n"));
+    
+    wxString ai = WX_STRING( bot.aidll );
+    if ( wxFileName::FileExists( WX_STRING( sett().GetSpringDir() ) + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
+      ai += _T(".dll");
+    } else {
+      ai += _T(".so");
+    }
+    
+    s += WX_STRING(("\t\tAIDLL=AI/Bot-libs/" + STD_STRING(ai) + ";\n"));
     s +=  _T("\t}\n");
   }
 
