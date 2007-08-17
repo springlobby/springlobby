@@ -317,10 +317,16 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     debug("Bot");
     m_sel_bot = (BattleBot*)event.GetData();
     m_popup->Enable( m_popup->FindItem( _("Side") ), true );
+    int item = m_popup->FindItem( _("Spectator") );
+    m_popup->Check( item, false );
+    m_popup->Enable( item, false );
   } else {
     debug("User");
     m_sel_user = (User*)event.GetData();
     m_popup->Enable( m_popup->FindItem( _("Side") ), false );
+    int item = m_popup->FindItem( _("Spectator") );
+    m_popup->Check( item, m_sel_user->BattleStatus().spectator );
+    m_popup->Enable( item, !m_sel_user->BattleStatus().spectator );
   }
   PopupMenu( m_popup );
 }
@@ -379,7 +385,7 @@ void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
   debug_func("");
   if ( m_sel_bot != 0 ) {
   } else if ( m_sel_user != 0 ) {
-    m_battle.ForceSpectator( *m_sel_user, event.GetInt() );
+    m_battle.ForceSpectator( *m_sel_user, true );
   }
 }
 
