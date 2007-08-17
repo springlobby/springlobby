@@ -4,6 +4,7 @@
 //
 
 #include <cassert>
+#include <stdexcept>
 
 #include "base64.h"
 #include "boost/md5.hpp"
@@ -688,6 +689,15 @@ void TASServer::SayBattle( int battleid, const std::string& msg )
 }
 
 
+void TASServer::DoActionBattle( int battleid, const std::string& msg )
+{
+  debug_func( "" );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+  m_sock->Send( "SAYBATTLEEX " + msg + "\n" );
+}
+
+
 void TASServer::HostBattle( BattleOptions bo, const std::string& password )
 {
   debug_func( "" );
@@ -862,6 +872,16 @@ void TASServer::ForceTeam( int battleid, const std::string& nick, int team )
   assert( IsOnline() );
   assert( m_sock != 0 );
 
+  if ( !GetBattle(battleid).IsFounderMe() ) {
+    if ( nick == GetMe().GetNick() ) {
+      GetMe().BattleStatus().team = team;
+      SendMyBattleStatus( GetMe().BattleStatus() );
+    } else {
+      DoActionBattle( battleid, "sugests that " + nick + " changes to team #" + i2s( team + 1 ) + "." );
+    }
+    return;
+  }
+
   //FORCETEAMNO username teamno
   m_sock->Send( "FORCETEAMNO " + nick + " " + i2s( team ) + "\n" );
 }
@@ -874,6 +894,16 @@ void TASServer::ForceAlly( int battleid, const std::string& nick, int ally )
   assert( IsOnline() );
   assert( m_sock != 0 );
 
+  if ( !GetBattle(battleid).IsFounderMe() ) {
+    if ( nick == GetMe().GetNick() ) {
+      GetMe().BattleStatus().ally = ally;
+      SendMyBattleStatus( GetMe().BattleStatus() );
+    } else {
+      DoActionBattle( battleid, "sugests that " + nick + " changes to ally #" + i2s( ally + 1 ) + "." );
+    }
+    return;
+  }
+
   //FORCEALLYNO username teamno
   m_sock->Send( "FORCEALLYNO " + nick + " " + i2s( ally ) + "\n" );
 }
@@ -885,6 +915,18 @@ void TASServer::ForceColour( int battleid, const std::string& nick, int r, int g
   assert( battleid == m_battle_id );
   assert( IsOnline() );
   assert( m_sock != 0 );
+
+  if ( !GetBattle(battleid).IsFounderMe() ) {
+    if ( nick == GetMe().GetNick() ) {
+      GetMe().BattleStatus().color_r = r;
+      GetMe().BattleStatus().color_g = g;
+      GetMe().BattleStatus().color_b = b;
+      SendMyBattleStatus( GetMe().BattleStatus() );
+    } else {
+      DoActionBattle( battleid, "sugests that " + nick + " changes colour." );
+    }
+    return;
+  }
 
   UTASColor tascl;
   tascl.color.red = r;
@@ -899,7 +941,28 @@ void TASServer::ForceColour( int battleid, const std::string& nick, int r, int g
 void TASServer::ForceSpectator( int battleid, const std::string& nick, bool spectator )
 {
   debug_func( "" );
-  if ( !spectator ) return;
+
+  if ( !GetBattle(battleid).IsFounderMe()) {
+    if ( nick == GetMe().GetNick() ) {
+      GetMe().BattleStatus().spectator = spectator;
+      SendMyBattleStatus( GetMe().BattleStatus() );
+    } else {
+      if ( spectator ) DoActionBattle( battleid, "sugests that " + nick + " becomes a spectator." );
+      else DoActionBattle( battleid, "sugests that " + nick + " plays." );
+    }
+    return;
+  }
+
+  if ( !spectator ) {
+    if ( nick == GetMe().GetNick() ) {
+      GetMe().BattleStatus().spectator = spectator;
+      SendMyBattleStatus( GetMe().BattleStatus() );
+    } else {
+      DoActionBattle( battleid, "sugests that " + nick + " plays." );
+    }
+    return;
+  }
+
   assert( battleid == m_battle_id );
   assert( IsOnline() );
   assert( m_sock != 0 );
@@ -915,6 +978,15 @@ void TASServer::BattleKickPlayer( int battleid, const std::string& nick )
   assert( battleid == m_battle_id );
   assert( IsOnline() );
   assert( m_sock != 0 );
+
+  if ( !GetBattle(battleid).IsFounderMe() ) {
+    if ( nick == GetMe().GetNick() ) {
+      LeaveBattle( battleid );
+    } else {
+      DoActionBattle( battleid, "thinks " + nick + " should leave." );
+    }
+    return;
+  }
 
   //KICKFROMBATTLE username
   m_sock->Send( "KICKFROMBATTLE " + nick + "\n" );
@@ -946,6 +1018,15 @@ void TASServer::RemoveBot( int battleid, const std::string& nick )
   debug_func( "" );
   assert( IsOnline() );
   assert( m_sock != 0 );
+
+  Battle& battle = GetBattle( battleid );
+  BattleBot* bot = battle.GetBot( nick );
+  ASSERT_LOGIC( bot != 0, "Bot does not exist." );
+
+  if (!( battle.IsFounderMe() || ( bot->owner == GetMe().GetNick() ) )) {
+    DoActionBattle( battleid, "thinks the bot " + nick + " should be removed." );
+    return;
+  }
 
   //REMOVEBOT name
   m_sock->Send( "REMOVEBOT " + nick + "\n" );

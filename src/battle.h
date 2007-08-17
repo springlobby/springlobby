@@ -155,6 +155,7 @@ class Battle : public UserList
     void KickPlayer( User& user );
 
     void Say( const std::string& msg );
+    void DoAction( const std::string& msg );
 
     bool IsMapAvailable();
     bool IsModAvailable();

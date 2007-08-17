@@ -81,6 +81,7 @@ class Server
     virtual void SayPrivate( const std::string& nick, const std::string& msg ) = 0;
 
     virtual void SayBattle( int battleid, const std::string& msg ) = 0;
+    virtual void DoActionBattle( int battleid, const std::string& msg ) = 0;
 
     virtual void HostBattle( BattleOptions bo, const std::string& password = "" ) = 0;
     virtual void JoinBattle( const int& battleid, const std::string& password = "" ) = 0;

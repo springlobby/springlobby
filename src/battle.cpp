@@ -189,6 +189,12 @@ void Battle::Say( const std::string& msg )
 }
 
 
+void Battle::DoAction( const std::string& msg )
+{
+  m_serv.DoActionBattle( opts().battleid, msg );
+}
+
+
 bool Battle::IsMapAvailable()
 {
   if ( !usync()->MapExists( m_opts.mapname ) ) return false;
