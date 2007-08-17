@@ -115,6 +115,8 @@ class Ui
 
     void OnMainWindowDestruct() { m_main_win = 0; }
 
+    void OnRing( const std::string& from );
+
   protected:
     Spring* m_spring;
 

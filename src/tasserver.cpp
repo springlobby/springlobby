@@ -546,6 +546,10 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     nick = GetWordParam( params );
     m_se->OnBattleRemoveBot( id, nick );
     //REMOVEBOT BATTLE_ID name
+  } else if ( cmd == "RING" ) {
+    nick = GetWordParam( params );
+    m_se->OnRing( nick );
+    //RING username
   } else {
     debug( "??? Cmd: " + cmd + " params: " + params );
     m_se->OnUnknownCommand( cmd, params );

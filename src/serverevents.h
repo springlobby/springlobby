@@ -84,6 +84,8 @@ class ServerEvents
 
     void OnAcceptAgreement( const std::string& agreement );
 
+    void OnRing( const std::string& from );
+
   protected:
     Server& m_serv;
     Ui& m_ui;

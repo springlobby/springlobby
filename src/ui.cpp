@@ -9,6 +9,7 @@
 #include <wx/msgdlg.h>
 #include <wx/thread.h>
 #include <wx/intl.h>
+#include <wx/utils.h>
 
 #include "spring.h"
 #include "ui.h"
@@ -634,5 +635,12 @@ void Ui::OnBattleBotUpdated( Battle& battle, BattleBot& bot )
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) br->OnBotUpdated( bot );
   }
+}
+
+
+void Ui::OnRing( const std::string& from )
+{
+  m_main_win->RequestUserAttention();
+  wxBell();
 }
 

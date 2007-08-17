@@ -425,3 +425,9 @@ void ServerEvents::OnAcceptAgreement( const std::string& agreement )
   m_ui.OnAcceptAgreement( agreement );
 }
 
+
+void ServerEvents::OnRing( const std::string& from )
+{
+  m_ui.OnRing( from );
+}
+
