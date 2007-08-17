@@ -31,7 +31,7 @@ class BattleroomListCtrl : public wxListCtrl
     void OnTeamSelect( wxCommandEvent& event );
     void OnAllySelect( wxCommandEvent& event );
     void OnColourSelect( wxCommandEvent& event );
-    void OnSideSelect( wxCommandEvent& event );
+    //void OnSideSelect( wxCommandEvent& event );
     void OnSpecSelect( wxCommandEvent& event );
 
     void OnKickPlayer( wxCommandEvent& event );
@@ -43,8 +43,8 @@ class BattleroomListCtrl : public wxListCtrl
 
     wxMenu* m_popup;
 
-    BattleBot* m_sel_bot;
     User* m_sel_user;
+    BattleBot* m_sel_bot;
 
     DECLARE_EVENT_TABLE();
 

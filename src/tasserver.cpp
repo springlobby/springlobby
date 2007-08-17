@@ -932,6 +932,21 @@ void TASServer::RemoveBot( int battleid, const std::string& nick )
 
 void TASServer::UpdateBot( int battleid, const std::string& nick, UserBattleStatus status )
 {
+  debug_func( "" );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+
+  UTASBattleStatus tasbs;
+  tasbs.tasdata = ConvTasbattlestatus( status );
+  UTASColor tascl;
+  tascl.color.red = status.color_r;
+  tascl.color.green = status.color_g;
+  tascl.color.blue = status.color_b;
+  tascl.color.zero = 0;
+  //UPDATEBOT name battlestatus teamcolor
+  std::string cmd = "UPDATEBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + "\n";
+  debug( cmd );
+  m_sock->Send( cmd );
 }
 
 

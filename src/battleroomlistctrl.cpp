@@ -25,7 +25,8 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl, wxListCtrl )
 END_EVENT_TABLE()
 
 BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxListCtrl(parent, BRLIST_LIST,
-  wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL ), m_battle(battle)
+  wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL ), m_battle(battle),
+  m_sel_user(0), m_sel_bot(0)
 {
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
@@ -94,7 +95,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
   for ( int i = 0; i < 16; i++ ) {
     wxMenuItem* team = new wxMenuItem( m_teams, BRLIST_TEAM + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
     m_teams->Append( team );
-    m_teams->Connect( BRLIST_TEAM + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnTeamSelect ) );
+    Connect( BRLIST_TEAM + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnTeamSelect ) );
   }
   m_popup->Append( -1, _("Team"), m_teams );
 
@@ -102,7 +103,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
   for ( int i = 0; i < 16; i++ ) {
     wxMenuItem* ally = new wxMenuItem( m_allies, BRLIST_ALLY + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
     m_allies->Append( ally );
-    m_allies->Connect( BRLIST_ALLY + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnAllySelect ) );
+    Connect( BRLIST_ALLY + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnAllySelect ) );
   }
   m_popup->Append( -1, _("Ally"), m_allies );
 
@@ -110,17 +111,17 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
   for ( int i = 0; i < 16; i++ ) {
     wxMenuItem* colour = new wxMenuItem( m_colours, BRLIST_COLOUR + i, colour_choices[i] , wxEmptyString, wxITEM_NORMAL );
     m_colours->Append( colour );
-    m_colours->Connect( BRLIST_COLOUR + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnColourSelect ) );
+    Connect( BRLIST_COLOUR + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnColourSelect ) );
   }
   m_popup->Append( -1, _("Colour"), m_colours );
 
-  wxMenu* m_sides = new wxMenu();
+/*  wxMenu* m_sides = new wxMenu();
   for ( int i = 0; i < usync()->GetSideCount( m_battle.opts().modname ); i++ ) {
     wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, WX_STRING(usync()->GetSideName( m_battle.opts().modname, i )), wxEmptyString, wxITEM_NORMAL );
     m_sides->Append( side );
-    m_sides->Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
+    Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
   }
-  m_popup->Append( -1, _("Side"), m_sides );
+  m_popup->Append( -1, _("Side"), m_sides );*/
 
   wxMenuItem* spec = new wxMenuItem( m_popup, BRLIST_SPEC, wxString( _("Spectator") ) , wxEmptyString, wxITEM_CHECK );
   m_popup->Append( spec );
@@ -131,9 +132,6 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
   m_popup->Append( kick );
   wxMenuItem* ring = new wxMenuItem( m_popup, BRLIST_RING, wxString( _("Ring") ) , wxEmptyString, wxITEM_NORMAL );
   m_popup->Append( ring );
-  
-  m_sel_user = NULL;
-  m_sel_bot = NULL;
 }
 
 
@@ -314,16 +312,14 @@ int BattleroomListCtrl::GetBotIndex( BattleBot& bot )
 void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 {
   debug_func("");
-  //m_sel_bot = NULL;
-  //m_sel_user = NULL;
-/*
+
   if ( event.GetImage() == ICON_BOT ) {
     debug("Bot");
     m_sel_bot = (BattleBot*)event.GetData();
   } else {
     debug("User");
     m_sel_user = (User*)event.GetData();
-  }*/
+  }
   PopupMenu( m_popup );
 }
 
@@ -332,12 +328,10 @@ void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 {
   debug_func("");
   int team = event.GetId() - BRLIST_TEAM;
-  if ( m_sel_bot != NULL ) {
-    debug("Bot");
-  }
-  if ( m_sel_user != NULL ) {
-    debug("User");
-    //m_battle.ForceTeam( *m_selected_user, team );
+  if ( m_sel_bot != 0 ) {
+    m_battle.SetBotTeam( m_sel_bot->name, team );
+  } else if ( m_sel_user != 0 ) {
+    m_battle.ForceTeam( *m_sel_user, team );
   }
 }
 
@@ -345,27 +339,44 @@ void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 {
   debug_func("");
-  debug( "index: " + i2s( event.GetId() - BRLIST_ALLY ) );
+  int ally = event.GetId() - BRLIST_ALLY;
+  if ( m_sel_bot != 0 ) {
+  } else if ( m_sel_user != 0 ) {
+
+    m_battle.ForceAlly( *m_sel_user, ally );
+  }
 }
 
 
 void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
 {
   debug_func("");
-  debug( "index: " + i2s( event.GetId() - BRLIST_COLOUR ) );
+  int index = event.GetId() - BRLIST_COLOUR;
+  if ( m_sel_bot != 0 ) {
+  } else if ( m_sel_user != 0 ) {
+    m_battle.ForceColour( *m_sel_user, colour_values[index][0], colour_values[index][1], colour_values[index][2] );
+  }
 }
 
-
+/*
 void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 {
   debug_func("");
-  debug( "index: " + i2s( event.GetId() - BRLIST_SIDE ) );
-}
+  int side = event.GetId() - BRLIST_SIDE;
+  if ( m_sel_bot != 0 ) {
+  } else if ( m_sel_user != 0 ) {
+    m_battle.ForceSide( *m_sel_user, side );
+  }
+}*/
 
 
 void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
 {
   debug_func("");
+  if ( m_sel_bot != 0 ) {
+  } else if ( m_sel_user != 0 ) {
+    m_battle.ForceSpectator( *m_sel_user, event.GetInt() );
+  }
 }
 
 

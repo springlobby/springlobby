@@ -345,7 +345,43 @@ std::string Battle::DisabledUnits()
 }
 
 
-void Battle::AddBot( const std::string& nick, const std::string& owner, const UserBattleStatus& bs, const std::string& aidll )
+void Battle::AddBot( const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll )
+{
+  m_serv.AddBot( m_opts.battleid, nick, owner, status, aidll );
+}
+
+
+void Battle::RemoveBot( const std::string& nick )
+{
+  m_serv.RemoveBot( m_opts.battleid, nick );
+}
+
+
+void Battle::SetBotTeam( const std::string& nick, int team )
+{
+  BattleBot* bot = GetBot( nick );
+  ASSERT_LOGIC( bot != 0, "Bot not found" );
+  bot->bs.team = team;
+  m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
+}
+
+
+void Battle::SetBotAlly( const std::string& nick, int ally )
+{
+}
+
+
+void Battle::SetBotSide( const std::string& nick, int side )
+{
+}
+
+
+void Battle::SetBotColour( const std::string& nick, int Colour )
+{
+}
+
+
+void Battle::OnBotAdded( const std::string& nick, const std::string& owner, const UserBattleStatus& bs, const std::string& aidll )
 {
   BattleBot* bot = GetBot(nick);
   bool created = true;
@@ -367,7 +403,7 @@ void Battle::AddBot( const std::string& nick, const std::string& owner, const Us
 }
 
 
-void Battle::RemoveBot( const std::string& nick )
+void Battle::OnBotRemoved( const std::string& nick )
 {
   BattleBot* bot = GetBot( nick );
   m_bots.remove( bot );
@@ -376,7 +412,7 @@ void Battle::RemoveBot( const std::string& nick )
 }
 
 
-void Battle::UpdateBot( const std::string& name, const UserBattleStatus& bs )
+void Battle::OnBotUpdated( const std::string& name, const UserBattleStatus& bs )
 {
   BattleBot* bot = GetBot( name );
   ASSERT_LOGIC( bot != 0, "Bad bot name" );

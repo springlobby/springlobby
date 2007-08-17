@@ -172,9 +172,13 @@ class Battle : public UserList
     void RemoveStartRect( int allyno );
     void UpdateStartRect( int allyno );
 
-    void AddBot( const std::string& nick, const std::string& owner, const UserBattleStatus& bs, const std::string& aidll );
+    void AddBot( const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll );
     void RemoveBot( const std::string& nick );
-    void UpdateBot( const std::string& name, const UserBattleStatus& bs );
+    void SetBotTeam( const std::string& nick, int team );
+    void SetBotAlly( const std::string& nick, int ally );
+    void SetBotSide( const std::string& nick, int side );
+    void SetBotColour( const std::string& nick, int Colour );
+
     BattleBot* GetBot( const std::string& name );
     BattleBot* GetBot( std::list<BattleBot*>::size_type index );
     std::list<BattleBot*>::size_type GetNumBots();
@@ -196,6 +200,10 @@ class Battle : public UserList
     void ForceColour( User& user, int r, int g, int b );
     void ForceSpectator( User& user, bool spectator );
     void BattleKickPlayer( User& user );
+
+    void OnBotAdded( const std::string& nick, const std::string& owner, const UserBattleStatus& bs, const std::string& aidll );
+    void OnBotRemoved( const std::string& nick );
+    void OnBotUpdated( const std::string& name, const UserBattleStatus& bs );
 
   protected:
     // Battle variables

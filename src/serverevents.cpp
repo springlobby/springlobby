@@ -391,7 +391,7 @@ void ServerEvents::OnBattleAddBot( int battleid, const std::string& nick, const 
 {
   debug_func("");
   Battle& battle = m_serv.GetBattle( battleid );
-  battle.AddBot( nick, owner, status, aidll );
+  battle.OnBotAdded( nick, owner, status, aidll );
   BattleBot* bot = battle.GetBot( nick );
   ASSERT_LOGIC( bot != 0, "Bot null after add." );
   m_ui.OnBattleBotAdded( battle, *bot );
