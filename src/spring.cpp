@@ -73,23 +73,15 @@ bool Spring::Run( Battle& battle )
 
 bool Spring::TestSpringBinary()
 {
-  wxArrayString res;
-  wxArrayString err;
-  wxString bin = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ");
 
-  /*
-   * This hack is necessary, because spring returns -1 on purpose in 0.75b2, when ever you query it's version. I have sent a patch, and hopefully this will change in future versions of spring. Because of the exact return value, wxExecute fails to record the single line of standard output we need. This seems to be a bug in wxWidgets 2.8 series in windows, but I have not yet sent a bug report. If either project fixes their bug, this can be done portably again.
-   */
-#ifdef WIN32
-  bin += _T("//V");
-  int ret = wxExecute( bin, res, err, wxEXEC_SYNC );
-  return (ret != -1);
-#else
-  bin += SPRING_VERSION_PARAM;
-  int ret = wxExecute( bin, res, err, wxEXEC_SYNC );
-  if ( res.GetCount() == 0 ) return false;
-  return res[0].Contains(_T("Spring"));
-#endif
+  if ( usync()->GetSpringVersion() != "")
+  {
+      return true;
+  }
+  else
+  {
+      return false;
+  }
 
   //wxString foo = wxString::Format(_T("%d %d %d %d"), ret , res.GetCount() == 1 , err.GetCount() == 0 , res[0] == _T("Spring 0.74b3"));
   //debug(STD_STRING(foo));
@@ -288,14 +280,14 @@ wxString Spring::GetScriptTxt( Battle& battle )
     std::setlocale(LC_NUMERIC, old_locale);
     s += WX_STRING(("\t\tSide=" + usync()->GetSideName( battle.opts().modname, bot.bs.side ) + ";\n"));
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), bot.bs.handicap );
-    
+
     wxString ai = WX_STRING( bot.aidll );
     if ( wxFileName::FileExists( WX_STRING( sett().GetSpringDir() ) + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
       ai += _T(".dll");
     } else {
       ai += _T(".so");
     }
-    
+
     s += WX_STRING(("\t\tAIDLL=AI/Bot-libs/" + STD_STRING(ai) + ";\n"));
     s +=  _T("\t}\n");
   }

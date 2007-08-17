@@ -214,7 +214,6 @@ User& Battle::GetMe()
 }
 
 
-
 bool Battle::IsFounderMe()
 {
   return (m_opts.founder == m_serv.GetMe().GetNick());
@@ -229,18 +228,29 @@ int Battle::GetMyPlayerNum()
   return -1;
 }
 
-void Battle::AddUser( User& user ) {
+
+void Battle::OnUserAdded( User& user )
+{
   user.SetBattle( this );
   UserList::AddUser( user );
-  UserBattleStatus bs;// = user.BattleStatus();
+  UserBattleStatus bs;
   bs.order = m_order++;
   user.SetBattleStatus( bs, true );
 }
 
-void Battle::RemoveUser( User& user ) {
+
+void Battle::OnUserRemoved( User& user )
+{
   user.SetBattle( 0 );
   UserList::RemoveUser( user.GetNick() );
 }
+
+
+void Battle::KickPlayer( User& user )
+{
+  m_serv.BattleKickPlayer( m_opts.battleid, user.GetNick() );
+}
+
 
 void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom )
 {

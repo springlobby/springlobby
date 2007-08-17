@@ -8,9 +8,8 @@ class wxImage;
 class wxDynamicLibrary;
 struct SpringMapInfo;
 
-/*
-const char* __stdcall GetSpringVersion()
-*/
+
+typedef const char* (USYNC_CALL_CONV *GetSpringVersionPtr)();
 
 typedef int (USYNC_CALL_CONV *InitPtr)(bool, int);
 typedef void (USYNC_CALL_CONV *UnInitPtr)();
@@ -44,7 +43,6 @@ typedef int (USYNC_CALL_CONV *FileSizeVFSPtr)(int);
 typedef int (USYNC_CALL_CONV *ReadFileVFSPtr)(int, void*, int);
 typedef void (USYNC_CALL_CONV *CloseFileVFSPtr)(int);
 
-
 class SpringUnitSync : public IUnitSync
 {
   public:
@@ -74,6 +72,8 @@ class SpringUnitSync : public IUnitSync
     void FreeUnitSyncLib();
 
     bool IsLoaded();
+
+    std::string GetSpringVersion();
 
     int GetNumUnits( const std::string& modname );
     int GetUnitIndex( const std::string& modname, const std::string& name );
@@ -122,6 +122,8 @@ class SpringUnitSync : public IUnitSync
     FileSizeVFSPtr m_file_size_vfs;
     ReadFileVFSPtr m_read_file_vfs;
     CloseFileVFSPtr m_close_file_vfs;
+
+    GetSpringVersionPtr m_get_spring_version;
 
     UnitSyncMap m_map;
 

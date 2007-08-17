@@ -211,7 +211,7 @@ void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
 
   m_ui.OnUserLeftBattle( battle, user );
 
-  battle.RemoveUser( user );
+  battle.OnUserRemoved( user );
 }
 
 

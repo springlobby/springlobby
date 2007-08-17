@@ -540,6 +540,11 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     bstatus.color_b = color.color.blue;
     m_se->OnBattleUpdateBot( id, nick, bstatus );
     //UPDATEBOT BATTLE_ID name battlestatus teamcolor
+  } else if ( cmd == "REMOVEBOT" ) {
+    id = GetIntParam( params );
+    nick = GetWordParam( params );
+    m_se->OnBattleRemoveBot( id, nick );
+    //REMOVEBOT BATTLE_ID name
   } else {
     debug( "??? Cmd: " + cmd + " params: " + params );
     m_se->OnUnknownCommand( cmd, params );

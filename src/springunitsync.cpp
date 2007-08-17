@@ -126,10 +126,12 @@ bool SpringUnitSync::LoadUnitSyncLib()
     m_read_file_vfs = (ReadFileVFSPtr)_GetLibFuncPtr("ReadFileVFS");
     m_close_file_vfs = (CloseFileVFSPtr)_GetLibFuncPtr("CloseFileVFS");
 
+    m_get_spring_version = (GetSpringVersionPtr)_GetLibFuncPtr("GetSpringVersion");
+
     m_init( true, 1 );
   }
-  catch ( std::runtime_error& e ) {
-    debug_error( e.what() );
+  catch ( ... ) {
+//    debug_error( e.what() );
     FreeUnitSyncLib();
     return false;
   }
@@ -151,6 +153,13 @@ void SpringUnitSync::FreeUnitSyncLib()
 bool SpringUnitSync::IsLoaded()
 {
   return m_loaded;
+}
+
+std::string SpringUnitSync::GetSpringVersion()
+{
+  if ( !m_loaded ) return "";
+  std::string SpringVersion = m_get_spring_version();
+  return SpringVersion;
 }
 
 int SpringUnitSync::GetNumMods()
@@ -369,7 +378,7 @@ wxImage SpringUnitSync::GetCachedMinimap( const std::string& mapname, int max_w,
     height = max_h;
   }
 
-  
+
   wxImage img( fname, wxBITMAP_TYPE_BMP );
   ASSERT_RUNTIME( img.Ok(), "Failed to load chache image" );
 

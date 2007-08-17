@@ -73,6 +73,8 @@ class IUnitSync
 
     virtual bool IsLoaded() = 0;
 
+    virtual std::string GetSpringVersion() = 0;
+
     virtual int GetNumUnits( const std::string& modname ) = 0;
     virtual int GetUnitIndex( const std::string& modname, const std::string& name ) = 0;
     virtual std::string GetFullUnitName( const std::string& modname, int index ) = 0;

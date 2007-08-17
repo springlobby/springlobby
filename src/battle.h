@@ -147,13 +147,12 @@ class Battle : public UserList
     int GetFreeTeamNum( bool excludeme = true );
     void GetFreeColour( int& r, int& g, int& b, bool excludeme = true );
 
-    void AddUser( User& user );
-    void RemoveUser( User& user );
-
     void Update();
 
     void Join( const std::string& password = "" );
     void Leave();
+
+    void KickPlayer( User& user );
 
     void Say( const std::string& msg );
 
@@ -200,6 +199,9 @@ class Battle : public UserList
     void ForceColour( User& user, int r, int g, int b );
     void ForceSpectator( User& user, bool spectator );
     void BattleKickPlayer( User& user );
+
+    void OnUserAdded( User& user );
+    void OnUserRemoved( User& user );
 
     void OnBotAdded( const std::string& nick, const std::string& owner, const UserBattleStatus& bs, const std::string& aidll );
     void OnBotRemoved( const std::string& nick );

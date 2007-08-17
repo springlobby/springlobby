@@ -115,13 +115,13 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
   }
   m_popup->Append( -1, _("Colour"), m_colours );
 
-/*  wxMenu* m_sides = new wxMenu();
+  m_sides = new wxMenu();
   for ( int i = 0; i < usync()->GetSideCount( m_battle.opts().modname ); i++ ) {
     wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, WX_STRING(usync()->GetSideName( m_battle.opts().modname, i )), wxEmptyString, wxITEM_NORMAL );
     m_sides->Append( side );
     Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
   }
-  m_popup->Append( -1, _("Side"), m_sides );*/
+  m_popup->Append( -1, _("Side"), m_sides );
 
   wxMenuItem* spec = new wxMenuItem( m_popup, BRLIST_SPEC, wxString( _("Spectator") ) , wxEmptyString, wxITEM_CHECK );
   m_popup->Append( spec );
@@ -159,7 +159,7 @@ void BattleroomListCtrl::AddUser( User& user )
 
 void BattleroomListCtrl::RemoveUser( User& user )
 {
-  //if ( &user == m_selected_user ) m_selected_user = 0;
+  if ( &user == m_sel_user ) m_sel_user = 0;
   DeleteItem( GetUserIndex( user ) );
 }
 
@@ -245,7 +245,7 @@ void BattleroomListCtrl::AddBot( BattleBot& bot )
 
 void BattleroomListCtrl::RemoveBot( BattleBot& bot )
 {
-  //if ( &bot == m_selected_bot ) m_selected_bot = 0;
+  if ( &bot == m_sel_bot ) m_sel_bot = 0;
   DeleteItem( GetBotIndex( bot ) );
 }
 
@@ -316,9 +316,11 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
   if ( event.GetImage() == ICON_BOT ) {
     debug("Bot");
     m_sel_bot = (BattleBot*)event.GetData();
+    m_popup->Enable( m_popup->FindItem( _("Side") ), true );
   } else {
     debug("User");
     m_sel_user = (User*)event.GetData();
+    m_popup->Enable( m_popup->FindItem( _("Side") ), false );
   }
   PopupMenu( m_popup );
 }
@@ -359,16 +361,17 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
   }
 }
 
-/*
+
 void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 {
   debug_func("");
   int side = event.GetId() - BRLIST_SIDE;
   if ( m_sel_bot != 0 ) {
+    m_battle.SetBotSide( m_sel_bot->name, side );
   } else if ( m_sel_user != 0 ) {
-    m_battle.ForceSide( *m_sel_user, side );
+
   }
-}*/
+}
 
 
 void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
@@ -384,6 +387,11 @@ void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
 void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& event )
 {
   debug_func("");
+  if ( m_sel_bot != 0 ) {
+    m_battle.RemoveBot( m_sel_bot->name );
+  } else if ( m_sel_user != 0 ) {
+    m_battle.KickPlayer( *m_sel_user );
+  }
 }
 
 
