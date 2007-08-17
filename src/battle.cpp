@@ -37,6 +37,13 @@ Battle::~Battle() {
   ClearStartRects();
 }
 
+
+Server& Battle::GetServer()
+{
+  return m_serv;
+}
+
+
 void Battle::Update()
 {
   m_ui.OnBattleInfoUpdated( *this );

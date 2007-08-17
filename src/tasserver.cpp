@@ -698,6 +698,15 @@ void TASServer::DoActionBattle( int battleid, const std::string& msg )
 }
 
 
+void TASServer::Ring( const std::string& nick )
+{
+  debug_func( "" );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+  m_sock->Send( "RING " + nick + "\n" );
+}
+
+
 void TASServer::HostBattle( BattleOptions bo, const std::string& password )
 {
   debug_func( "" );
@@ -1023,10 +1032,10 @@ void TASServer::RemoveBot( int battleid, const std::string& nick )
   BattleBot* bot = battle.GetBot( nick );
   ASSERT_LOGIC( bot != 0, "Bot does not exist." );
 
-  if (!( battle.IsFounderMe() || ( bot->owner == GetMe().GetNick() ) )) {
+/*  if (!( battle.IsFounderMe() || ( bot->owner == GetMe().GetNick() ) )) {
     DoActionBattle( battleid, "thinks the bot " + nick + " should be removed." );
     return;
-  }
+  }*/
 
   //REMOVEBOT name
   m_sock->Send( "REMOVEBOT " + nick + "\n" );

@@ -55,6 +55,8 @@ class TASServer : public Server
     void SayBattle( int battleid, const std::string& msg );
     void DoActionBattle( int battleid, const std::string& msg );
 
+    void Ring( const std::string& nick );
+
     void HostBattle( BattleOptions bo, const std::string& password = "" );
     void JoinBattle( const int& battleid, const std::string& password = "" );
     void LeaveBattle( const int& battleid );

@@ -11,6 +11,7 @@
 #include "iunitsync.h"
 #include "battle.h"
 #include "user.h"
+#include "server.h"
 #include "utils.h"
 #include "uiutils.h"
 
@@ -313,6 +314,8 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 {
   debug_func("");
 
+  if ( event.GetIndex() == -1 ) return;
+
   if ( event.GetImage() == ICON_BOT ) {
     debug("Bot");
     m_sel_user = 0;
@@ -332,7 +335,9 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     m_popup->Enable( item, true );
     m_popup->Enable( m_popup->FindItem( _("Ring") ), true );
   }
+  debug("Popup");
   PopupMenu( m_popup );
+  debug("Done");
 }
 
 
@@ -407,6 +412,10 @@ void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& event )
 void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& event )
 {
   debug_func("");
+  if ( m_sel_bot != 0 ) {
+  } else if ( m_sel_user != 0 ) {
+    m_battle.GetServer().Ring( m_sel_user->GetNick() );
+  }
 }
 
 

@@ -107,6 +107,8 @@ class Battle : public UserList
 
     const BattleOptions& opts() { return m_opts; }
 
+    Server& GetServer();
+
     void SetIsReplay( const bool& isreplay ) { m_opts.isreplay = isreplay; }
     void SetIsLocked( const bool& islocked ) { m_opts.islocked = islocked; }
     void SetIsPassworded( const bool& ispassworded ) { m_opts.ispassworded = ispassworded; }
