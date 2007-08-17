@@ -87,7 +87,16 @@ class Server
     virtual void LeaveBattle( const int& battleid ) = 0;
     virtual void StartHostedBattle() = 0;
 
+    virtual void ForceTeam( int battleid, const std::string& nick, int team ) = 0;
+    virtual void ForceAlly( int battleid, const std::string& nick, int ally ) = 0;
+    virtual void ForceColour( int battleid, const std::string& nick, int r, int g, int b ) = 0;
+    virtual void ForceSpectator( int battleid, const std::string& nick, bool spectator ) = 0;
+    virtual void BattleKickPlayer( int battleid, const std::string& nick ) = 0;
+
+
     virtual void AddBot( int battleid, const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll ) = 0;
+    virtual void RemoveBot( int battleid, const std::string& nick ) = 0;
+    virtual void UpdateBot( int battleid, const std::string& nick, UserBattleStatus status ) = 0;
 
     virtual void SendHostInfo( HostInfo update ) = 0;
 

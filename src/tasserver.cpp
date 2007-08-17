@@ -839,6 +839,72 @@ void TASServer::StartHostedBattle()
 }
 
 
+void TASServer::ForceTeam( int battleid, const std::string& nick, int team )
+{
+  debug_func( "" );
+  assert( battleid == m_battle_id );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+
+  //FORCETEAMNO username teamno
+  m_sock->Send( "FORCETEAMNO " + nick + " " + i2s( team ) + "\n" );
+}
+
+
+void TASServer::ForceAlly( int battleid, const std::string& nick, int ally )
+{
+  debug_func( "" );
+  assert( battleid == m_battle_id );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+
+  //FORCEALLYNO username teamno
+  m_sock->Send( "FORCEALLYNO " + nick + " " + i2s( ally ) + "\n" );
+}
+
+
+void TASServer::ForceColour( int battleid, const std::string& nick, int r, int g, int b )
+{
+  debug_func( "" );
+  assert( battleid == m_battle_id );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+
+  UTASColor tascl;
+  tascl.color.red = r;
+  tascl.color.green = g;
+  tascl.color.blue = b;
+  tascl.color.zero = 0;
+  //FORCETEAMCOLOR username color
+  m_sock->Send( "FORCETEAMCOLOR " + nick + " " + i2s( tascl.data ) + "\n" );
+}
+
+
+void TASServer::ForceSpectator( int battleid, const std::string& nick, bool spectator )
+{
+  debug_func( "" );
+  if ( !spectator ) return;
+  assert( battleid == m_battle_id );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+
+  //FORCESPECTATORMODE username
+  m_sock->Send( "FORCESPECTATORMODE " + nick + "\n" );
+}
+
+
+void TASServer::BattleKickPlayer( int battleid, const std::string& nick )
+{
+  debug_func( "" );
+  assert( battleid == m_battle_id );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+
+  //KICKFROMBATTLE username
+  m_sock->Send( "KICKFROMBATTLE " + nick + "\n" );
+}
+
+
 void TASServer::AddBot( int battleid, const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll )
 {
   debug_func( "" );
@@ -856,6 +922,16 @@ void TASServer::AddBot( int battleid, const std::string& nick, const std::string
   std::string cmd = "ADDBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + " " + aidll + ".dll\n";
   debug( cmd );
   m_sock->Send( cmd );
+}
+
+
+void TASServer::RemoveBot( int battleid, const std::string& nick )
+{
+}
+
+
+void TASServer::UpdateBot( int battleid, const std::string& nick, UserBattleStatus status )
+{
 }
 
 

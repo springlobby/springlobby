@@ -4,6 +4,7 @@
 //
 
 #include <wx/intl.h>
+#include <wx/menu.h>
 
 #include "battleroomlistctrl.h"
 #include "iconimagelist.h"
@@ -11,8 +12,19 @@
 #include "battle.h"
 #include "user.h"
 #include "utils.h"
+#include "uiutils.h"
 
-BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxListCtrl(parent, -1,
+
+BEGIN_EVENT_TABLE( BattleroomListCtrl, wxListCtrl )
+
+  EVT_LIST_ITEM_RIGHT_CLICK( BRLIST_LIST, BattleroomListCtrl::OnListRightClick )
+  EVT_MENU                 ( BRLIST_SPEC, BattleroomListCtrl::OnSpecSelect )
+  EVT_MENU                 ( BRLIST_KICK, BattleroomListCtrl::OnKickPlayer )
+  EVT_MENU                 ( BRLIST_RING, BattleroomListCtrl::OnRingPlayer )
+
+END_EVENT_TABLE()
+
+BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxListCtrl(parent, BRLIST_LIST,
   wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL ), m_battle(battle)
 {
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
@@ -75,6 +87,53 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
   SetColumnWidth( 7, 26 );
   SetColumnWidth( 8, 80 );
   SetColumnWidth( 9, 60 );
+
+  m_popup = new wxMenu();
+  wxMenu* m_teams;
+  m_teams = new wxMenu();
+  for ( int i = 0; i < 16; i++ ) {
+    wxMenuItem* team = new wxMenuItem( m_teams, BRLIST_TEAM + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
+    m_teams->Append( team );
+    m_teams->Connect( BRLIST_TEAM + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnTeamSelect ) );
+  }
+  m_popup->Append( -1, _("Team"), m_teams );
+
+  wxMenu* m_allies = new wxMenu();
+  for ( int i = 0; i < 16; i++ ) {
+    wxMenuItem* ally = new wxMenuItem( m_allies, BRLIST_ALLY + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
+    m_allies->Append( ally );
+    m_allies->Connect( BRLIST_ALLY + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnAllySelect ) );
+  }
+  m_popup->Append( -1, _("Ally"), m_allies );
+
+  wxMenu* m_colours = new wxMenu();
+  for ( int i = 0; i < 16; i++ ) {
+    wxMenuItem* colour = new wxMenuItem( m_colours, BRLIST_COLOUR + i, colour_choices[i] , wxEmptyString, wxITEM_NORMAL );
+    m_colours->Append( colour );
+    m_colours->Connect( BRLIST_COLOUR + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnColourSelect ) );
+  }
+  m_popup->Append( -1, _("Colour"), m_colours );
+
+  wxMenu* m_sides = new wxMenu();
+  for ( int i = 0; i < usync()->GetSideCount( m_battle.opts().modname ); i++ ) {
+    wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, WX_STRING(usync()->GetSideName( m_battle.opts().modname, i )), wxEmptyString, wxITEM_NORMAL );
+    m_sides->Append( side );
+    m_sides->Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
+  }
+  m_popup->Append( -1, _("Side"), m_sides );
+
+  wxMenuItem* spec = new wxMenuItem( m_popup, BRLIST_SPEC, wxString( _("Spectator") ) , wxEmptyString, wxITEM_CHECK );
+  m_popup->Append( spec );
+  
+  m_popup->AppendSeparator();
+  
+  wxMenuItem* kick = new wxMenuItem( m_popup, BRLIST_KICK, wxString( _("Kick") ) , wxEmptyString, wxITEM_NORMAL );
+  m_popup->Append( kick );
+  wxMenuItem* ring = new wxMenuItem( m_popup, BRLIST_RING, wxString( _("Ring") ) , wxEmptyString, wxITEM_NORMAL );
+  m_popup->Append( ring );
+  
+  m_sel_user = NULL;
+  m_sel_bot = NULL;
 }
 
 
@@ -102,6 +161,7 @@ void BattleroomListCtrl::AddUser( User& user )
 
 void BattleroomListCtrl::RemoveUser( User& user )
 {
+  //if ( &user == m_selected_user ) m_selected_user = 0;
   DeleteItem( GetUserIndex( user ) );
 }
 
@@ -187,6 +247,7 @@ void BattleroomListCtrl::AddBot( BattleBot& bot )
 
 void BattleroomListCtrl::RemoveBot( BattleBot& bot )
 {
+  //if ( &bot == m_selected_bot ) m_selected_bot = 0;
   DeleteItem( GetBotIndex( bot ) );
 }
 
@@ -250,5 +311,73 @@ int BattleroomListCtrl::GetBotIndex( BattleBot& bot )
 }
 
 
+void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
+{
+  debug_func("");
+  //m_sel_bot = NULL;
+  //m_sel_user = NULL;
+/*
+  if ( event.GetImage() == ICON_BOT ) {
+    debug("Bot");
+    m_sel_bot = (BattleBot*)event.GetData();
+  } else {
+    debug("User");
+    m_sel_user = (User*)event.GetData();
+  }*/
+  PopupMenu( m_popup );
+}
+
+
+void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
+{
+  debug_func("");
+  int team = event.GetId() - BRLIST_TEAM;
+  if ( m_sel_bot != NULL ) {
+    debug("Bot");
+  }
+  if ( m_sel_user != NULL ) {
+    debug("User");
+    //m_battle.ForceTeam( *m_selected_user, team );
+  }
+}
+
+
+void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
+{
+  debug_func("");
+  debug( "index: " + i2s( event.GetId() - BRLIST_ALLY ) );
+}
+
+
+void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
+{
+  debug_func("");
+  debug( "index: " + i2s( event.GetId() - BRLIST_COLOUR ) );
+}
+
+
+void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
+{
+  debug_func("");
+  debug( "index: " + i2s( event.GetId() - BRLIST_SIDE ) );
+}
+
+
+void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
+{
+  debug_func("");
+}
+
+
+void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& event )
+{
+  debug_func("");
+}
+
+
+void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& event )
+{
+  debug_func("");
+}
 
 

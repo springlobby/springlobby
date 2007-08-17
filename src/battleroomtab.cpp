@@ -43,13 +43,6 @@ END_EVENT_TABLE()
 
 const wxString team_choices[] = { _T("1"), _T("2"), _T("3"), _T("4"), _T("5"), _T("6"), _T("7"), _T("8"), _T("9"), _T("10"), _T("11"), _T("12"), _T("13"), _T("14"), _T("15"), _T("16") };
 
-const wxString colour_choices[] = {
-  _T("gold"), _T("dark gray"), _T("dark blue"), _T("bright blue"), _T("dark green"),
-  _T("bright green"), _T("dark cyan"), _T("bright cyan"), _T("dark red"), _T("bright red"),
-  _T("dark magenta"), _T("bright magenta"), _T("dark yellow"), _T("bright yellow"),
-  _T("light gray"), _T("inky blue")
-};
-
 
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPanel( parent, -1 ),m_ui(ui), m_battle(battle)
 {

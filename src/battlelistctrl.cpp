@@ -201,7 +201,7 @@ void BattleListCtrl::OnListRightClick( wxListEvent& event )
 void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 {
   if ( m_selected >= 0 ) {
-    Battle& battle = *((Battle*)GetItemData( m_selected ));
+    Battle& battle = *((Battle*)GetItemData( m_selected )); // FIXME m_selected might not exist.
     wxString map = WX_STRING(battle.opts().mapname);
     map = map.SubString(0, map.Find( '.', true ) - 1 );
     map.Replace(_T(" "), _T("%20") );
@@ -216,7 +216,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 void BattleListCtrl::OnDLMod( wxCommandEvent& event )
 {
   if ( m_selected >= 0 ) {
-    Battle& battle = *((Battle*)GetItemData( m_selected ));
+    Battle& battle = *((Battle*)GetItemData( m_selected )); // FIXME m_selected might not exist.
     wxString mod = WX_STRING(battle.opts().modname);
     mod.Replace(_T(" "), _T("%20") );
     wxString url = _T("http://spring.unknown-files.net/page/search/1/14/") + mod + _T("/");

@@ -60,8 +60,16 @@ class TASServer : public Server
     void SendMyBattleStatus( UserBattleStatus& bs );
     void SendMyUserStatus();
 
+    void ForceTeam( int battleid, const std::string& nick, int team );
+    void ForceAlly( int battleid, const std::string& nick, int ally );
+    void ForceColour( int battleid, const std::string& nick, int r, int g, int b );
+    void ForceSpectator( int battleid, const std::string& nick, bool spectator );
+    void BattleKickPlayer( int battleid, const std::string& nick );
+
     void AddBot( int battleid, const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll );
-    
+    void RemoveBot( int battleid, const std::string& nick );
+    void UpdateBot( int battleid, const std::string& nick, UserBattleStatus status );
+
     void StartHostedBattle();
     void SendHostInfo( HostInfo update );
 

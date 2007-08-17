@@ -178,6 +178,7 @@ class Battle : public UserList
     BattleBot* GetBot( const std::string& name );
     BattleBot* GetBot( std::list<BattleBot*>::size_type index );
     std::list<BattleBot*>::size_type GetNumBots();
+
     void StartRectRemoved( int allyno );
     void StartRectUpdated( int allyno );
 
@@ -190,9 +191,12 @@ class Battle : public UserList
     std::string DisabledUnits();
     int GetNumDisabledUnits() { return m_units_num; }
 
-  /*
-    ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}
-  */
+    void ForceTeam( User& user, int team );
+    void ForceAlly( User& user, int ally );
+    void ForceColour( User& user, int r, int g, int b );
+    void ForceSpectator( User& user, bool spectator );
+    void BattleKickPlayer( User& user );
+
   protected:
     // Battle variables
 

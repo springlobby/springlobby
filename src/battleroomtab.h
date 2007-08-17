@@ -100,7 +100,7 @@ class BattleRoomTab : public wxPanel
     wxCheckBox* m_ready_chk;
     wxCheckBox* m_spec_chk;
 
-    DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE();
 };
 
 enum

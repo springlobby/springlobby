@@ -25,6 +25,7 @@ enum ChatPanelType {
   CPT_Battle
 };
 
+
 /*! @brief wxPanel that contains a chat.
  *
  * This panel contains a chat with a multiline TextCtrl for the messages, a
@@ -115,7 +116,7 @@ class ChatPanel : public wxPanel
     void LogTime();
     void _CreateControls( );
 
-    DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE();
 };
 
 enum

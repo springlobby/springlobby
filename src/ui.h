@@ -16,6 +16,16 @@ class BattleBot;
 
 typedef int HostInfo;
 
+typedef int AlertEventType;
+
+#define AE_MESSAGE 1
+#define AE_HIGHLIGHT_MESSAGE 2
+#define AE_PM 4
+#define AE_ERROR 8
+#define AE_DISCONNECT 16
+#define AE_BATTLE_MESSAGE 32
+
+
 //! @brief UI main class
 class Ui
 {
@@ -47,6 +57,8 @@ class Ui
     static bool Ask( const wxString& heading, const wxString& question );
     static bool AskText( const wxString& heading, const wxString& question, wxString& answer );
     static void ShowMessage( const wxString& heading, const wxString& message );
+
+    //void OnAlertEvent( AlertEventType ); //TODO alert system
 
     MainWindow& mw();
 

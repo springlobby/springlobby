@@ -420,3 +420,33 @@ std::list<BattleBot*>::size_type Battle::GetNumBots()
   return m_bots.size();
 }
 
+
+void Battle::ForceTeam( User& user, int team )
+{
+  m_serv.ForceTeam( m_opts.battleid, user.GetNick(), team );
+}
+
+
+void Battle::ForceAlly( User& user, int ally )
+{
+  m_serv.ForceAlly( m_opts.battleid, user.GetNick(), ally );
+}
+
+
+void Battle::ForceColour( User& user, int r, int g, int b )
+{
+  m_serv.ForceColour( m_opts.battleid, user.GetNick(), r, g, b );
+}
+
+
+void Battle::ForceSpectator( User& user, bool spectator )
+{
+  m_serv.ForceSpectator( m_opts.battleid, user.GetNick(), spectator );
+}
+
+
+void Battle::BattleKickPlayer( User& user )
+{
+  m_serv.BattleKickPlayer( m_opts.battleid, user.GetNick() );
+}
+
