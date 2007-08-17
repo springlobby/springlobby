@@ -285,7 +285,7 @@ void BattleroomListCtrl::UpdateBot( const int& index )
 
   SetItemColumnImage( index, 3, ICON_NONE );
   SetItemColumnImage( index, 4, ICON_NONE );
-  SetItem( index, 5, WX_STRING( bot.name ) );
+  SetItem( index, 5, WX_STRING( bot.name ) + _T(" (") + WX_STRING( bot.owner) + _T(")") );
 
   SetItem( index, 6, wxString::Format( _T("%d"), bot.bs.team + 1 ) );
   SetItem( index, 7, wxString::Format( _T("%d"), bot.bs.ally + 1 ) );
@@ -315,6 +315,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 
   if ( event.GetImage() == ICON_BOT ) {
     debug("Bot");
+    m_sel_user = 0;
     m_sel_bot = (BattleBot*)event.GetData();
     m_popup->Enable( m_popup->FindItem( _("Side") ), true );
     int item = m_popup->FindItem( _("Spectator") );
@@ -322,6 +323,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     m_popup->Enable( item, false );
   } else {
     debug("User");
+    m_sel_bot = 0;
     m_sel_user = (User*)event.GetData();
     m_popup->Enable( m_popup->FindItem( _("Side") ), false );
     int item = m_popup->FindItem( _("Spectator") );
