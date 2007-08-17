@@ -341,8 +341,8 @@ void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
   debug_func("");
   int ally = event.GetId() - BRLIST_ALLY;
   if ( m_sel_bot != 0 ) {
+    m_battle.SetBotAlly( m_sel_bot->name, ally );
   } else if ( m_sel_user != 0 ) {
-
     m_battle.ForceAlly( *m_sel_user, ally );
   }
 }
@@ -353,6 +353,7 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
   debug_func("");
   int index = event.GetId() - BRLIST_COLOUR;
   if ( m_sel_bot != 0 ) {
+    m_battle.SetBotColour( m_sel_bot->name, colour_values[index][0], colour_values[index][1], colour_values[index][2] );
   } else if ( m_sel_user != 0 ) {
     m_battle.ForceColour( *m_sel_user, colour_values[index][0], colour_values[index][1], colour_values[index][2] );
   }

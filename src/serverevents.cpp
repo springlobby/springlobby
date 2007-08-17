@@ -398,6 +398,28 @@ void ServerEvents::OnBattleAddBot( int battleid, const std::string& nick, const 
 }
 
 
+void ServerEvents::OnBattleUpdateBot( int battleid, const std::string& nick, UserBattleStatus status )
+{
+  debug_func("");
+  Battle& battle = m_serv.GetBattle( battleid );
+  battle.OnBotUpdated( nick, status );
+  BattleBot* bot = battle.GetBot( nick );
+  ASSERT_LOGIC( bot != 0, "Bot null after add." );
+  m_ui.OnBattleBotUpdated( battle, *bot );
+}
+
+
+void ServerEvents::OnBattleRemoveBot( int battleid, const std::string& nick )
+{
+  debug_func("");
+  Battle& battle = m_serv.GetBattle( battleid );
+  BattleBot* bot = battle.GetBot( nick );
+  ASSERT_LOGIC( bot != 0, "Bot null after add." );
+  m_ui.OnBattleBotRemoved( battle, *bot );
+  battle.OnBotRemoved( nick );
+}
+
+
 void ServerEvents::OnAcceptAgreement( const std::string& agreement )
 {
   m_ui.OnAcceptAgreement( agreement );

@@ -368,16 +368,30 @@ void Battle::SetBotTeam( const std::string& nick, int team )
 
 void Battle::SetBotAlly( const std::string& nick, int ally )
 {
+  BattleBot* bot = GetBot( nick );
+  ASSERT_LOGIC( bot != 0, "Bot not found" );
+  bot->bs.ally = ally;
+  m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
 
 
 void Battle::SetBotSide( const std::string& nick, int side )
 {
+  BattleBot* bot = GetBot( nick );
+  ASSERT_LOGIC( bot != 0, "Bot not found" );
+  bot->bs.side = side;
+  m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
 
 
-void Battle::SetBotColour( const std::string& nick, int Colour )
+void Battle::SetBotColour( const std::string& nick, int r, int g, int b )
 {
+  BattleBot* bot = GetBot( nick );
+  ASSERT_LOGIC( bot != 0, "Bot not found" );
+  bot->bs.color_r = r;
+  bot->bs.color_g = g;
+  bot->bs.color_b = b;
+  m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
 
 

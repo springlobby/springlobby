@@ -177,7 +177,7 @@ class Battle : public UserList
     void SetBotTeam( const std::string& nick, int team );
     void SetBotAlly( const std::string& nick, int ally );
     void SetBotSide( const std::string& nick, int side );
-    void SetBotColour( const std::string& nick, int Colour );
+    void SetBotColour( const std::string& nick, int r, int g, int b );
 
     BattleBot* GetBot( const std::string& name );
     BattleBot* GetBot( std::list<BattleBot*>::size_type index );

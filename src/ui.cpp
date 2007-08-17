@@ -621,10 +621,18 @@ void Ui::OnBattleBotAdded( Battle& battle, BattleBot& bot )
 
 void Ui::OnBattleBotRemoved( Battle& battle, BattleBot& bot )
 {
+  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+  if ( br != 0 ) {
+    if ( &br->GetBattle() == &battle ) br->OnBotRemoved( bot );
+  }
 }
 
 
 void Ui::OnBattleBotUpdated( Battle& battle, BattleBot& bot )
 {
+  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+  if ( br != 0 ) {
+    if ( &br->GetBattle() == &battle ) br->OnBotUpdated( bot );
+  }
 }
 

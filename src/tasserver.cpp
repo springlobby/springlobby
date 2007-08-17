@@ -529,6 +529,17 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     ai = GetSentenceParam( params );
     ai = ai.substr( 0, ai.find_last_of( "." ) );
     m_se->OnBattleAddBot( id, nick, owner, bstatus, ai );
+  } else if ( cmd == "UPDATEBOT" ) {
+    id = GetIntParam( params );
+    nick = GetWordParam( params );
+    tasbstatus.data = GetIntParam( params );
+    bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
+    color.data = GetIntParam( params );
+    bstatus.color_r = color.color.red;
+    bstatus.color_g = color.color.green;
+    bstatus.color_b = color.color.blue;
+    m_se->OnBattleUpdateBot( id, nick, bstatus );
+    //UPDATEBOT BATTLE_ID name battlestatus teamcolor
   } else {
     debug( "??? Cmd: " + cmd + " params: " + params );
     m_se->OnUnknownCommand( cmd, params );
@@ -927,6 +938,12 @@ void TASServer::AddBot( int battleid, const std::string& nick, const std::string
 
 void TASServer::RemoveBot( int battleid, const std::string& nick )
 {
+  debug_func( "" );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+
+  //REMOVEBOT name
+  m_sock->Send( "REMOVEBOT " + nick + "\n" );
 }
 
 
