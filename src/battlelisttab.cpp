@@ -160,6 +160,7 @@ void BattleListTab::AddBattle( Battle& battle )
 
 void BattleListTab::RemoveBattle( Battle& battle )
 {
+  if ( &battle == m_sel_battle ) SelectBattle( 0 );
   m_battle_list->RemoveBattle( battle );
 }
 
@@ -167,6 +168,7 @@ void BattleListTab::RemoveBattle( Battle& battle )
 void BattleListTab::UpdateBattle( Battle& battle )
 {
   m_battle_list->UpdateBattle( battle );
+  if ( &battle == m_sel_battle ) SelectBattle( m_sel_battle );
 }
 
 

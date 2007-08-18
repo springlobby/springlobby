@@ -21,6 +21,7 @@ const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = -1;
 Battle::Battle( Server& serv, Ui& ui, int id ) :
   m_serv(serv),
   m_ui(ui),
+  m_ingame(false),
   m_order(0),
   m_rects(16, static_cast<BattleStartRect*>(0)),
   m_bot_seek(m_bots.end()),

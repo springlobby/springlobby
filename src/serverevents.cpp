@@ -97,18 +97,29 @@ void ServerEvents::OnNewUser( const std::string& nick, const std::string& countr
 
 void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
 {
-  //debug_func( "" );
+  debug( "----------------------------------------------------------------------" );
+  debug_func( "" );
   User& user = m_serv.GetUser( nick );
-  UserStatus us = user.GetStatus();
+//  UserStatus us = user.Status();
 
   user.SetStatus( status );
   m_ui.OnUserStatusChanged( user );
 
-  if ( !us.in_game && status.in_game && user.GetBattle() != 0 ) {
+  if ( user.GetBattle() != 0 ) {
+    debug( "User has joined game" );
     Battle& battle = *user.GetBattle();
-    if ( &battle.GetFounder() == &user )
-      m_ui.OnBattleStarted( battle );
+    debug( "user: " + user.GetNick() + " founder: " + battle.GetFounder().GetNick() );
+    if ( battle.GetFounder().GetNick() == user.GetNick() ) {
+      debug( "User is founder" );
+      if ( status.in_game != battle.GetInGame() ) {
+        debug( "Status changed!!" );
+        if ( status.in_game ) m_ui.OnBattleStarted( battle );
+        else m_ui.OnBattleInfoUpdated( battle );
+        battle.SetInGame( status.in_game );
+      }
+    }
   }
+  debug( "----------------------------------------------------------------------" );
 }
 
 
@@ -131,7 +142,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::
   Battle& battle = m_serv._AddBattle( id );
 
   User& user = m_serv.GetUser( nick );
-  battle.AddUser( user );
+  battle.OnUserAdded( user );
 
   battle.SetIsReplay( replay );
   battle.SetNatType( nat );
@@ -147,6 +158,9 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::
   battle.SetModname( mod );
 
   m_ui.OnBattleOpened( battle );
+  if ( user.Status().in_game ) {
+    m_ui.OnBattleStarted( battle );
+  }
 }
 
 
@@ -198,8 +212,12 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const std::string& nick )
   Battle& battle = m_serv.GetBattle( battleid );
   User& user = m_serv.GetUser( nick );
 
-  battle.AddUser( user );
+  battle.OnUserAdded( user );
   m_ui.OnUserJoinedBattle( battle, user );
+
+  if ( &user == &battle.GetFounder() ) {
+    if ( user.Status().in_game ) m_ui.OnBattleStarted( battle );
+  }
 }
 
 

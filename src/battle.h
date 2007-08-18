@@ -109,6 +109,9 @@ class Battle : public UserList
 
     Server& GetServer();
 
+    void SetInGame( bool ingame ) { m_ingame = ingame; }
+    bool GetInGame() { return m_ingame; }
+
     void SetIsReplay( const bool& isreplay ) { m_opts.isreplay = isreplay; }
     void SetIsLocked( const bool& islocked ) { m_opts.islocked = islocked; }
     void SetIsPassworded( const bool& ispassworded ) { m_opts.ispassworded = ispassworded; }
@@ -219,6 +222,8 @@ class Battle : public UserList
     BattleOptions m_opts;
     Server& m_serv;
     Ui& m_ui;
+
+    bool m_ingame;
 
     int m_order;
 

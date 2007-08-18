@@ -519,6 +519,8 @@ void Ui::OnRequestBattleStatus( Battle& battle )
 
 void Ui::OnBattleStarted( Battle& battle )
 {
+  debug_func("");
+  debug("----------------------------------------------------");
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) {
@@ -529,6 +531,7 @@ void Ui::OnBattleStarted( Battle& battle )
       m_spring->Run( battle );
     }
   }
+  mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
 }
 
 
