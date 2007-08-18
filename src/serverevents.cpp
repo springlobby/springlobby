@@ -97,29 +97,22 @@ void ServerEvents::OnNewUser( const std::string& nick, const std::string& countr
 
 void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
 {
-  debug( "----------------------------------------------------------------------" );
-  debug_func( "" );
+  //debug_func( "" );
   User& user = m_serv.GetUser( nick );
-//  UserStatus us = user.Status();
 
   user.SetStatus( status );
   m_ui.OnUserStatusChanged( user );
 
   if ( user.GetBattle() != 0 ) {
-    debug( "User has joined game" );
     Battle& battle = *user.GetBattle();
-    debug( "user: " + user.GetNick() + " founder: " + battle.GetFounder().GetNick() );
     if ( battle.GetFounder().GetNick() == user.GetNick() ) {
-      debug( "User is founder" );
       if ( status.in_game != battle.GetInGame() ) {
-        debug( "Status changed!!" );
+        battle.SetInGame( status.in_game );
         if ( status.in_game ) m_ui.OnBattleStarted( battle );
         else m_ui.OnBattleInfoUpdated( battle );
-        battle.SetInGame( status.in_game );
       }
     }
   }
-  debug( "----------------------------------------------------------------------" );
 }
 
 
@@ -159,6 +152,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::
 
   m_ui.OnBattleOpened( battle );
   if ( user.Status().in_game ) {
+    battle.SetInGame( true );
     m_ui.OnBattleStarted( battle );
   }
 }
@@ -192,6 +186,7 @@ void ServerEvents::OnStartHostedBattle( int battleid )
 {
   debug_func( "" );
   Battle& battle = m_serv.GetBattle( battleid );
+  battle.SetInGame( true );
   m_ui.OnBattleStarted( battle );
 }
 
@@ -215,8 +210,11 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const std::string& nick )
   battle.OnUserAdded( user );
   m_ui.OnUserJoinedBattle( battle, user );
 
-  if ( &user == &battle.GetFounder() ) {
-    if ( user.Status().in_game ) m_ui.OnBattleStarted( battle );
+ if ( &user == &battle.GetFounder() ) {
+    if ( user.Status().in_game ) {
+      battle.SetInGame( true );
+      m_ui.OnBattleStarted( battle );
+    }
   }
 }
 
@@ -227,9 +225,10 @@ void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
   Battle& battle = m_serv.GetBattle( battleid );
   User& user = m_serv.GetUser( nick );
 
+  battle.OnUserRemoved( user );
+
   m_ui.OnUserLeftBattle( battle, user );
 
-  battle.OnUserRemoved( user );
 }
 
 

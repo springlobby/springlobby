@@ -520,7 +520,6 @@ void Ui::OnRequestBattleStatus( Battle& battle )
 void Ui::OnBattleStarted( Battle& battle )
 {
   debug_func("");
-  debug("----------------------------------------------------");
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) {

@@ -132,7 +132,7 @@ void BattleListTab::SelectBattle( Battle* battle )
   if ( m_sel_battle != 0 ) {
     m_map_text->SetLabel( RefineMapname( WX_STRING(m_sel_battle->opts().mapname) ) );
     m_mod_text->SetLabel( WX_STRING(m_sel_battle->opts().modname) );
-    m_players_text->SetLabel( wxString::Format( _T("%d / %d"), m_sel_battle->GetNumUsers(), m_sel_battle->opts().maxplayers ) );
+    m_players_text->SetLabel( wxString::Format( _T("%d / %d"), m_sel_battle->GetNumUsers() - m_sel_battle->opts().spectators, m_sel_battle->opts().maxplayers ) );
     m_spec_text->SetLabel( wxString::Format( _T("%d"), m_sel_battle->opts().spectators ) );
     for ( unsigned int i = 0; i < m_sel_battle->GetNumUsers(); i++ ) {
       m_players->AddUser( m_sel_battle->GetUser( i ) );

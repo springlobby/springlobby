@@ -145,7 +145,7 @@ int IconImageList::GetFlagIcon( const std::string& flagname )
 
 int IconImageList::GetBattleStatusIcon( Battle& battle )
 {
-  if ( battle.GetFounder().GetStatus().in_game ) return ICON_STARTED_GAME;
+  if ( battle.GetInGame() ) return ICON_STARTED_GAME;
   if ( !battle.opts().islocked ) {
     if ( !battle.opts().ispassworded ) return ICON_OPEN_GAME;
     else return ICON_OPEN_PW_GAME;
