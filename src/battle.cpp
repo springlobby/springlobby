@@ -265,6 +265,26 @@ void Battle::KickPlayer( User& user )
 }
 
 
+bool Battle::IsEveryoneReady()
+{
+  for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
+    UserBattleStatus& bs = GetUser(i).BattleStatus();
+    if ( !bs.ready && !bs.spectator ) return false;
+  }
+  return true;
+}
+
+
+void Battle::RingNotReadyPlayers()
+{
+  for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
+    User& u = GetUser(i);
+    UserBattleStatus& bs = u.BattleStatus();
+    if ( !bs.ready && !bs.spectator ) m_serv.Ring( u.GetNick() );
+  }
+}
+
+
 void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom )
 {
   ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), "Allyno out of bounds." );

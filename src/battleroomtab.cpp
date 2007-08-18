@@ -11,6 +11,7 @@
 #include <wx/checkbox.h>
 #include <wx/button.h>
 #include <wx/sizer.h>
+#include <wx/msgdlg.h>
 
 #include "battleroomtab.h"
 #include "ui.h"
@@ -190,6 +191,7 @@ BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
   return *m_players;
 }
 
+
 void BattleRoomTab::UpdateUser( User& user )
 {
   m_players->UpdateUser( user );
@@ -205,10 +207,12 @@ void BattleRoomTab::UpdateUser( User& user )
   m_minimap->UpdateMinimap();
 }
 
+
 Battle& BattleRoomTab::GetBattle()
 {
   return m_battle;
 }
+
 
 ChatPanel& BattleRoomTab::GetChatPanel()
 {
@@ -218,7 +222,17 @@ ChatPanel& BattleRoomTab::GetChatPanel()
 
 void BattleRoomTab::OnStart( wxCommandEvent& event )
 {
-  //ASSERT_LOGIC( IsHosted(), "This battle is not hosted by user." );
+  m_battle.GetMe().BattleStatus().ready = true;
+
+  if ( !m_battle.IsEveryoneReady() ) {
+    wxMessageDialog dlg1( this, _("Some players are not ready yet.\nRing these players?"), _("Not ready"), wxYES_NO );
+    if ( dlg1.ShowModal() == wxID_YES ) {
+      m_battle.RingNotReadyPlayers();
+      return;
+    }
+    wxMessageDialog dlg2( this, _("Force start?"), _("Not ready"), wxYES_NO );
+    if ( dlg2.ShowModal() == wxID_NO ) return;
+  }
   m_ui.StartHostedBattle();
 }
 
@@ -227,6 +241,7 @@ void BattleRoomTab::OnLeave( wxCommandEvent& event )
 {
   m_battle.Leave();
 }
+
 
 void BattleRoomTab::OnAddBot( wxCommandEvent& event )
 {
