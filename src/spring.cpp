@@ -170,7 +170,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
     debug("5");
     for ( std::list<BattleBot*>::size_type gl = 0; gl < battle.GetNumBots(); gl++ ) {
-      if ( battle.GetBot(gl)->bs.order <= LastOrder ) continue;
+      if ( (battle.GetBot(gl)->bs.order <= LastOrder) && (LastOrder != -1) ) continue;
       if ( Lowest == -1 ) Lowest = gl;
       else if ( battle.GetBot(gl)->bs.order < battle.GetBot(Lowest)->bs.order ) Lowest = gl;
     }
