@@ -9,14 +9,18 @@
 #include "ui.h"
 #include "chatpanel.h"
 #include "utils.h"
+#include "uiutils.h"
 #include "hostbattledialog.h"
 #include "server.h"
 #include "settings.h"
 #include "iunitsync.h"
+#include "mapctrl.h"
+#include "nicklistctrl.h"
 
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
 #include <wx/stattext.h>
+#include <wx/statline.h>
 #include <wx/textdlg.h>
 #include <wx/combobox.h>
 #include <wx/button.h>
@@ -27,39 +31,118 @@ BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
   EVT_BUTTON              ( BATTLE_JOIN, BattleListTab::OnJoin     )
   EVT_BUTTON              ( BATTLE_HOST, BattleListTab::OnHost     )
   EVT_LIST_ITEM_ACTIVATED ( BATTLE_JOIN, BattleListTab::OnListJoin )
+  EVT_LIST_ITEM_SELECTED  ( BLIST_LIST,  BattleListTab::OnSelect   )
 
 END_EVENT_TABLE()
 
 
-BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
+BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
+  wxPanel( parent, -1 ),
+  m_ui(ui),
+  m_sel_battle(0)
 {
-  m_battle_list = new BattleListCtrl( this );
-  m_filter_text = new wxStaticText( this, -1, _("Filter ") );
-  m_filter_combo = new wxComboBox( this, -1, _("Show all") );
-  m_join_button = new wxButton( this, BATTLE_JOIN, _("Join"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
-  m_host_button = new wxButton( this, BATTLE_HOST, _("Host new..."), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
-
+  wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
-  m_tools_sizer = new wxBoxSizer( wxHORIZONTAL );
-
-  m_tools_sizer->Add( m_filter_text, 0, wxEXPAND | wxTOP, 4 );
-  m_tools_sizer->Add( m_filter_combo, 0, wxEXPAND );
-  m_tools_sizer->AddStretchSpacer();
-  m_tools_sizer->Add( m_host_button, 0, wxEXPAND );
-  m_tools_sizer->AddSpacer( 16 );
-  m_tools_sizer->Add( m_join_button, 0, wxEXPAND );
-
-  m_main_sizer->Add( m_battle_list, 1, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 2 );
-  m_main_sizer->Add( m_tools_sizer, 0, wxEXPAND | wxALL, 2 );
-
-  SetSizer( m_main_sizer );
-  Layout();
+  
+  m_battle_list = new BattleListCtrl( this );
+  m_main_sizer->Add( m_battle_list, 1, wxALL|wxEXPAND, 5 );
+  
+  wxBoxSizer* m_info_sizer;
+  m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
+  
+  m_minimap = new MapCtrl( this, 100, 0, m_ui, true );
+  m_info_sizer->Add( m_minimap, 0, wxALL, 5 );
+  
+  wxFlexGridSizer* m_data_sizer;
+  m_data_sizer = new wxFlexGridSizer( 4, 2, 0, 0 );
+  
+  m_map_lbl = new wxStaticText( this, wxID_ANY, _("Map:"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_data_sizer->Add( m_map_lbl, 0, wxALL, 5 );
+  
+  m_map_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+  m_data_sizer->Add( m_map_text, 0, wxALL, 5 );
+  
+  m_mod_lbl = new wxStaticText( this, wxID_ANY, _("Mod:"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_data_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
+  
+  m_mod_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+  m_data_sizer->Add( m_mod_text, 0, wxALL, 5 );
+  
+  m_players_lbl = new wxStaticText( this, wxID_ANY, _("Players:"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_data_sizer->Add( m_players_lbl, 0, wxALL, 5 );
+  
+  m_players_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+  m_data_sizer->Add( m_players_text, 0, wxALL, 5 );
+  
+  m_spec_lbl = new wxStaticText( this, wxID_ANY, _("Spectators:"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_data_sizer->Add( m_spec_lbl, 0, wxALL, 5 );
+  
+  m_spec_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+  m_data_sizer->Add( m_spec_text, 0, wxALL, 5 );
+  
+  m_info_sizer->Add( m_data_sizer, 1, wxEXPAND, 5 );
+  
+  m_players = new NickListCtrl( this, false );
+  m_info_sizer->Add( m_players, 1, wxALL|wxEXPAND, 5 );
+  
+  m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
+  
+  m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+  m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND, 5 );
+  
+  wxBoxSizer* m_buttons_sizer;
+  m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
+  
+  m_filter_lbl = new wxStaticText( this, wxID_ANY, _("Filter:"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_buttons_sizer->Add( m_filter_lbl, 0, wxALL, 5 );
+  
+  m_filter_combo = new wxComboBox( this, wxID_ANY, _("search"), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
+  m_filter_combo->Append( _("All") );
+  m_filter_combo->Append( _("Open only") );
+  m_buttons_sizer->Add( m_filter_combo, 0, 0, 5 );
+  
+  m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+  
+  m_host_btn = new wxButton( this, BATTLE_HOST, _("Host new..."), wxDefaultPosition, wxSize( -1,28 ), 0 );
+  m_buttons_sizer->Add( m_host_btn, 0, wxBOTTOM|wxLEFT|wxRIGHT, 5 );
+  
+  m_join_btn = new wxButton( this, BATTLE_JOIN, _("Join"), wxDefaultPosition, wxSize( -1,28 ), 0 );
+  m_buttons_sizer->Add( m_join_btn, 0, wxBOTTOM|wxRIGHT, 5 );
+  
+  m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
+  
+  this->SetSizer( m_main_sizer );
+  this->Layout();
+  
+  SelectBattle(0);
 }
 
 
 BattleListTab::~BattleListTab()
 {
 
+}
+
+
+void BattleListTab::SelectBattle( Battle* battle )
+{
+  m_sel_battle = battle;
+  m_minimap->SetBattle( m_sel_battle );
+  m_players->ClearUsers();
+  if ( m_sel_battle != 0 ) {
+    m_map_text->SetLabel( RefineMapname( WX_STRING(m_sel_battle->opts().mapname) ) );
+    m_mod_text->SetLabel( WX_STRING(m_sel_battle->opts().modname) );
+    m_players_text->SetLabel( wxString::Format( _T("%d / %d"), m_sel_battle->GetNumUsers(), m_sel_battle->opts().maxplayers ) );
+    m_spec_text->SetLabel( wxString::Format( _T("%d"), m_sel_battle->opts().spectators ) );
+    for ( unsigned int i = 0; i < m_sel_battle->GetNumUsers(); i++ ) {
+      m_players->AddUser( m_sel_battle->GetUser( i ) );
+    }
+  } else {
+    m_map_text->SetLabel( wxEmptyString );
+    m_mod_text->SetLabel( wxEmptyString );
+    m_players_text->SetLabel(  _T("0 / 0") );
+    m_spec_text->SetLabel( _T("0") );
+  }
 }
 
 
@@ -186,6 +269,18 @@ void BattleListTab::DoJoin( Battle& battle )
     if ( pw.ShowModal() == wxID_OK ) battle.Join( STD_STRING(pw.GetValue()) );
   } else {
     battle.Join();
+  }
+}
+
+
+void BattleListTab::OnSelect( wxListEvent& event )
+{
+  debug_func("");
+  if ( event.GetIndex() == -1 ) {
+    SelectBattle( 0 );
+  } else {
+    Battle& battle = *((Battle*)m_battle_list->GetItemData( event.GetIndex() ));
+    SelectBattle( &battle );
   }
 }
 

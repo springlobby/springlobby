@@ -9,7 +9,7 @@ class UserList;
 class NickListCtrl : public wxListCtrl
 {
   public:
-    NickListCtrl( wxWindow* parent );
+    NickListCtrl( wxWindow* parent, bool show_header = true );
     ~NickListCtrl();
 
     void AddUser( User& user );

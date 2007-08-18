@@ -12,9 +12,9 @@
 
 int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData);
 
-NickListCtrl::NickListCtrl( wxWindow* parent )
+NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header )
 : wxListCtrl( parent, -1, wxDefaultPosition, wxDefaultSize,
-             wxSUNKEN_BORDER | wxLC_REPORT | /*wxLC_VIRTUAL | wxLC_NO_HEADER |*/ wxLC_SINGLE_SEL )
+              wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | wxLC_SINGLE_SEL )
 {
   wxListItem col;
   col.SetText( _T("") );

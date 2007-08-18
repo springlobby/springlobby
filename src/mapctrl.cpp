@@ -10,6 +10,7 @@
 #include <wx/image.h>
 #include <wx/intl.h>
 #include <cmath>
+#include <stdexcept>
 
 #include "utils.h"
 #include "mapctrl.h"
@@ -35,7 +36,7 @@ END_EVENT_TABLE()
 const int boxsize = 8;
 const int minboxsize = 40;
 
-MapCtrl::MapCtrl( wxWindow* parent, int size, Battle& battle, Ui& ui, bool readonly ):
+MapCtrl::MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool readonly ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
   m_image(0),
   m_battle(battle),
@@ -68,6 +69,13 @@ MapCtrl::~MapCtrl()
 }
 
 
+void MapCtrl::SetBattle( Battle* battle )
+{
+  m_battle = battle;
+  UpdateMinimap();
+}
+
+
 wxRect MapCtrl::_GetMinimapRect()
 {
   if ( m_image == 0 ) return wxRect();
@@ -86,7 +94,8 @@ wxRect MapCtrl::_GetMinimapRect()
 
 wxRect MapCtrl::_GetStartRect( int index )
 {
-  BattleStartRect* sr = m_battle.GetStartRect( index );
+  ASSERT_LOGIC( m_battle != 0, "Battle = 0" );
+  BattleStartRect* sr = m_battle->GetStartRect( index );
   if ( sr == 0 ) return wxRect();
   if ( sr->deleted ) return wxRect();
   return _GetStartRect( *sr );
@@ -226,6 +235,8 @@ void MapCtrl::_SetCursor()
 
 void MapCtrl::LoadMinimap()
 {
+  if ( m_battle == 0 ) return;
+
   if ( m_image )
     return;
   try {
@@ -237,9 +248,9 @@ void MapCtrl::LoadMinimap()
       m_lastsize = wxSize( -1, -1 );
       return;
     }
-    wxImage img = usync()->GetMinimap( m_battle.opts().mapname, w, h );
+    wxImage img = usync()->GetMinimap( m_battle->opts().mapname, w, h );
     m_image = new wxBitmap( img );
-    m_mapname = WX_STRING( m_battle.opts().mapname );
+    m_mapname = WX_STRING( m_battle->opts().mapname );
     m_lastsize = wxSize( w, h );
     Refresh();
     Update();
@@ -265,8 +276,9 @@ void MapCtrl::FreeMinimap()
 void MapCtrl::UpdateMinimap()
 {
   int w, h;
+  if ( m_battle == 0 ) return;
   GetClientSize( &w, &h );
-  if ( (m_mapname != WX_STRING( m_battle.opts().mapname) || ( m_lastsize != wxSize(w, h) ) ) ) {
+  if ( (m_mapname != WX_STRING( m_battle->opts().mapname) || ( m_lastsize != wxSize(w, h) ) ) ) {
     FreeMinimap();
     LoadMinimap();
   }
@@ -282,11 +294,17 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
   int width, height, top = 0, left = 0;
   GetClientSize( &width, &height );
   
+  dc.SetPen( wxPen( *wxLIGHT_GREY ) );
+  dc.SetBrush( wxBrush( *wxLIGHT_GREY, wxSOLID ) );
+
+  if ( m_battle == 0 ) {
+    dc.DrawRectangle( 0, 0, width, height );
+    return;
+  }
+  
   wxRect r = _GetMinimapRect();
 
   // Draw background.
-  dc.SetPen( wxPen( *wxLIGHT_GREY ) );
-  dc.SetBrush( wxBrush( *wxLIGHT_GREY, wxSOLID ) );
   if ( r.y > 0 ) {
     dc.DrawRectangle( 0, 0, width, (height - r.height) / 2 );
     dc.DrawRectangle( 0, r.y+r.height, width, (height - r.height) / 2 + 1 );
@@ -311,7 +329,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
     wxRect sr = _GetStartRect( i );
     if ( sr.IsEmpty() ) continue;
     wxColour col;
-    if ( i == m_battle.GetMe().BattleStatus().ally ) {
+    if ( i == m_battle->GetMe().BattleStatus().ally ) {
       col.Set( 0, 200, 0 );
     } else {
       col.Set( 200, 0, 0 );
@@ -336,6 +354,7 @@ void MapCtrl::OnResize( wxSizeEvent& event )
 void MapCtrl::OnMouseMove( wxMouseEvent& event )
 {
   wxPoint p = event.GetPosition();
+  if ( m_battle == 0 ) return;
   if ( p == wxDefaultPosition ) return;
 
   if ( m_maction == MA_Add ) { // We are currently adding a rect.
@@ -354,7 +373,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     if ( nsr.width < minboxsize ) nsr.SetWidth( minboxsize );
     if ( nsr.height < minboxsize ) nsr.SetHeight( minboxsize );
     BattleStartRect bsr = _GetBattleRect( nsr.x, nsr.y, nsr.x + nsr.width, nsr.y + nsr.height, m_mdown_rect );
-    m_battle.AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom );
+    m_battle->AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom );
     if ( sr != nsr ) RefreshRect( sr.Union( nsr ), false );
     return;
 
@@ -372,7 +391,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
       nsr.SetHeight( minboxsize );
     }
     BattleStartRect bsr = _GetBattleRect( nsr.x, nsr.y, nsr.x + nsr.width, nsr.y + nsr.height, m_mdown_rect );
-    m_battle.AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom );
+    m_battle->AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom );
     if ( sr != nsr ) RefreshRect( sr.Union( nsr ), false );
     return;
 
@@ -414,6 +433,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 
 void MapCtrl::OnLeftDown( wxMouseEvent& event )
 {
+  if ( m_battle == 0 ) return;
   if ( !m_ro ) {
     // In edit mode
     if ( m_mover_rect >= 0 ) { // We are over an existing rect.
@@ -449,9 +469,9 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
     // Readonly.
     if ( m_mover_rect >= 0 ) {
       // Join ally rect that user clicked on
-      if ( m_battle.GetMe().BattleStatus().ally != m_mover_rect ) {
-        m_battle.GetMe().BattleStatus().ally = m_mover_rect;
-        m_battle.SendMyBattleStatus();
+      if ( m_battle->GetMe().BattleStatus().ally != m_mover_rect ) {
+        m_battle->GetMe().BattleStatus().ally = m_mover_rect;
+        m_battle->SendMyBattleStatus();
       }
 
     }
@@ -462,30 +482,30 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
 
 void MapCtrl::OnLeftUp( wxMouseEvent& event )
 {
-
+  if ( m_battle == 0 ) return;
   if ( m_maction == MA_Add ) {
 
     m_tmp_brect.ally = -1;
     if ( ( abs( m_mdown_x - event.GetX() ) >= minboxsize ) && ( abs( m_mdown_y - event.GetY() ) >= minboxsize ) ) {
       BattleStartRect r = _GetBattleRect( m_mdown_x<event.GetX()?m_mdown_x:event.GetX(), m_mdown_y<event.GetY()?m_mdown_y:event.GetY(), m_mdown_x>event.GetX()?m_mdown_x:event.GetX(), m_mdown_y>event.GetY()?m_mdown_y:event.GetY() );
-      m_battle.AddStartRect( _GetNewRectIndex(), r.left, r.top, r.right, r.bottom );
+      m_battle->AddStartRect( _GetNewRectIndex(), r.left, r.top, r.right, r.bottom );
       UpdateMinimap();
     } else {
       BattleStartRect r = _GetBattleRect( m_mdown_x, m_mdown_y, m_mdown_x + minboxsize, m_mdown_y + minboxsize );
-      m_battle.AddStartRect( _GetNewRectIndex(), r.left, r.top, r.right, r.bottom );
+      m_battle->AddStartRect( _GetNewRectIndex(), r.left, r.top, r.right, r.bottom );
       UpdateMinimap();
     }
     m_ui.SendHostInfo( HI_StartRects );
   } else if ( m_maction == MA_Delete ) {
 
     if ( (m_mdown_area == m_rect_area) && (m_mover_rect == m_mdown_rect) ) {
-      m_battle.RemoveStartRect( m_mdown_rect );
+      m_battle->RemoveStartRect( m_mdown_rect );
       UpdateMinimap();
       m_ui.SendHostInfo( HI_StartRects );
     }
 
   } else if ( (m_maction == MA_ResizeDownRight)||(m_maction == MA_ResizeUpLeft) ) {
-    m_battle.UpdateStartRect( m_mdown_rect );
+    m_battle->UpdateStartRect( m_mdown_rect );
     m_ui.SendHostInfo( HI_StartRects );
   }
 

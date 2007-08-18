@@ -176,6 +176,7 @@ int BattleListCtrl::GetBattleIndex( Battle& battle )
 void BattleListCtrl::OnSelected( wxListEvent& event )
 {
   m_selected = event.GetIndex();
+  event.Skip();
 }
 
 

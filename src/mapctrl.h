@@ -35,8 +35,10 @@ typedef int MouseAction;
 class MapCtrl : public wxPanel
 {
   public:
-    MapCtrl( wxWindow* parent, int size, Battle& battle, Ui& ui, bool readonly );
+    MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool readonly );
     ~MapCtrl();
+
+    void SetBattle( Battle* battle );
 
     void LoadMinimap();
     void FreeMinimap();
@@ -65,7 +67,7 @@ class MapCtrl : public wxPanel
     void _SetCursor();
 
     wxBitmap* m_image;
-    Battle& m_battle;
+    Battle* m_battle;
     Ui& m_ui;
     wxString m_mapname;
 
