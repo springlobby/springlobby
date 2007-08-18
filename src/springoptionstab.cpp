@@ -256,11 +256,6 @@ wxString SpringOptionsTab::AutoFindSpringExe( const wxString& def )
   wxPathList pl;
   wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
-  pl.Add( m_dir_edit->GetValue() );
-  pl.Add( wxFileName::GetCwd() );
-#ifdef HAVE_WX28
-  pl.Add( sp.GetExecutablePath() );
-#endif
 #ifdef __WXMSW__
   wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
   wxString tmp;
@@ -269,19 +264,29 @@ wxString SpringOptionsTab::AutoFindSpringExe( const wxString& def )
   pl.Add( _T("C:\\Program") );
   pl.Add( _T("C:\\Program Files") );
 #else
-  pl.Add( _T("/usr/games") );
-  pl.Add( _T("/usr/games/bin") );
-  pl.Add( _T("/usr/bin") );
   pl.Add( _T("/usr/local/games") );
   pl.Add( _T("/usr/local/games/bin") );
   pl.Add( _T("/usr/local/bin") );
+  pl.Add( _T("/usr/games") );
+  pl.Add( _T("/usr/games/bin") );
+  pl.Add( _T("/usr/bin") );
 #endif
+
+  pl.Add( m_dir_edit->GetValue() );
+  pl.Add( wxFileName::GetCwd() );
+
+#ifdef HAVE_WX28
+  pl.Add( sp.GetExecutablePath() );
+#endif
+
   pl.Add( wxFileName::GetHomeDir() );
   pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
   pl.Add( sp.GetDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+
 #ifdef HAVE_WX28
   pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
 #endif
+
   pl.Add( m_dir_edit->GetValue() );
 
   for ( size_t i = 0; i < pl.GetCount(); i++ ) {
@@ -301,11 +306,6 @@ wxString SpringOptionsTab::AutoFindUnitSyncLib( const wxString& def )
   wxPathList pl;
   wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
-  pl.Add( m_dir_edit->GetValue() );
-  pl.Add( wxFileName::GetCwd() );
-#ifdef HAVE_WX28
-  pl.Add( sp.GetExecutablePath() );
-#endif
 #ifdef __WXMSW__
   wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
   wxString tmp;
@@ -315,19 +315,35 @@ wxString SpringOptionsTab::AutoFindUnitSyncLib( const wxString& def )
   pl.Add( _T("C:\\Program") );
   pl.Add( _T("C:\\Program Files") );
 #else
-  pl.Add( _T("/usr/games") );
-  pl.Add( _T("/usr/games/lib") );
-  pl.Add( _T("/usr/lib") );
   pl.Add( _T("/usr/local/games") );
   pl.Add( _T("/usr/local/games/lib") );
   pl.Add( _T("/usr/local/lib") );
+  pl.Add( _T("/usr/games") );
+  pl.Add( _T("/usr/games/lib") );
+  pl.Add( _T("/usr/lib") );
 #endif
+
+  pl.Add( m_dir_edit->GetValue() );
+  pl.Add( wxFileName::GetCwd() );
+
+#ifdef HAVE_WX28
+  pl.Add( sp.GetExecutablePath() );
+#endif
+
+  pl.Add( wxFileName::GetCwd() );
+
+#ifdef HAVE_WX28
+  pl.Add( sp.GetExecutablePath() );
+#endif
+
   pl.Add( wxFileName::GetHomeDir() );
   pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
   pl.Add( sp.GetDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+
 #ifdef HAVE_WX28
   pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
 #endif
+
   pl.Add( m_dir_edit->GetValue() );
 
   for ( size_t i = 0; i < pl.GetCount(); i++ ) {

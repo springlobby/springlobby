@@ -94,16 +94,16 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_buttons_sizer->Add( m_ok_btn, 0, wxALL, 4 );
 
   m_rpass_sizer->AddStretchSpacer();
-  m_rpass_sizer->Add( m_rpass_check, 1, wxEXPAND | wxALL, 4 );
+  m_rpass_sizer->Add( m_rpass_check, 2, wxEXPAND | wxALL, 4 );
 
   m_pass_sizer->Add( m_pass_lbl, 1, wxEXPAND | wxALL, 4 );
-  m_pass_sizer->Add( m_pass_text, 1, wxEXPAND | wxALL, 4 );
+  m_pass_sizer->Add( m_pass_text, 2, wxEXPAND | wxALL, 4 );
 
   m_nick_sizer->Add( m_nick_lbl, 1, wxEXPAND | wxALL, 4 );
-  m_nick_sizer->Add( m_nick_text, 1, wxEXPAND | wxALL, 4 );
+  m_nick_sizer->Add( m_nick_text, 2, wxEXPAND | wxALL, 4 );
 
   m_server_sizer->Add( m_server_lbl, 1, wxEXPAND | wxALL, 4 );
-  m_server_sizer->Add( m_server_combo, 1, wxEXPAND | wxALL, 4 );
+  m_server_sizer->Add( m_server_combo, 2, wxEXPAND | wxALL, 4 );
 
   m_login_main_sizer->Add( m_server_sizer, 0, wxEXPAND );
   m_login_main_sizer->Add( m_ser_acc_line, 0, wxEXPAND | wxALL, 4 );
