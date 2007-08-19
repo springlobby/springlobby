@@ -87,7 +87,9 @@ AddBotDialog::AddBotDialog( wxWindow* parent, Battle& battle ) : wxDialog( paren
 
 wxString AddBotDialog::GetNick()
 {
-  return m_nick->GetValue();
+  wxString s = m_nick->GetValue();
+  s.Replace( _T(" "), _T("_") );
+  return s;
 }
 
 
