@@ -1,5 +1,5 @@
 /* XPM */
-static char * ready_q_xpm[] = {
+static const char * ready_q_xpm[] = {
 "16 16 40 1",
 " 	c None",
 ".	c #595959",

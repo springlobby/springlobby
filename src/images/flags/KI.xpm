@@ -1,5 +1,5 @@
 /* XPM */
-static char *KI_xpm[] = {
+static const char *KI_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 165 2",
 "   c black",

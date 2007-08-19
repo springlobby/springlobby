@@ -1,5 +1,5 @@
 /* XPM */
-static char * spectator_xpm[] = {
+static const char * spectator_xpm[] = {
 "16 16 99 2",
 "  	c None",
 ". 	c #000000",

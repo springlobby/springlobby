@@ -1,5 +1,5 @@
 /* XPM */
-static char *GA_xpm[] = {
+static const char *GA_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 158 2",
 "   c black",

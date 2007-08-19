@@ -1,5 +1,5 @@
 /* XPM */
-static char * ready_unsync_xpm[] = {
+static const char * ready_unsync_xpm[] = {
 "16 16 47 1",
 " 	c None",
 ".	c #595959",

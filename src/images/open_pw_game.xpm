@@ -1,5 +1,5 @@
 /* XPM */
-static char * open_pw_game_xpm[] = {
+static const char * open_pw_game_xpm[] = {
 "16 16 51 1",
 " 	c None",
 ".	c #595959",

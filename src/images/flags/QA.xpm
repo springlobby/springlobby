@@ -1,5 +1,5 @@
 /* XPM */
-static char *QA_xpm[] = {
+static const char *QA_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 108 2",
 "   c black",

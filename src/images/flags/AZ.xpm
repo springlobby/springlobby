@@ -1,5 +1,5 @@
 /* XPM */
-static char *AZ_xpm[] = {
+static const char *AZ_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 170 2",
 "   c black",

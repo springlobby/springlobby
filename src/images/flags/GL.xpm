@@ -1,5 +1,5 @@
 /* XPM */
-static char *GL_xpm[] = {
+static const char *GL_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 126 2",
 "   c black",

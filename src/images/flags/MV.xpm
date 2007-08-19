@@ -1,5 +1,5 @@
 /* XPM */
-static char *MV_xpm[] = {
+static const char *MV_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 149 2",
 "   c black",

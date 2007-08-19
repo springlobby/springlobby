@@ -1,5 +1,5 @@
 /* XPM */
-static char *TL_xpm[] = {
+static const char *TL_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 135 2",
 "   c black",

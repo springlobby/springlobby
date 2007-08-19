@@ -1,5 +1,5 @@
 /* XPM */
-static char * battle_xpm[] = {
+static const char * battle_xpm[] = {
 "12 12 9 1",
 " 	c None",
 ".	c #000000",

@@ -1,5 +1,5 @@
 /* XPM */
-static char * ingame_xpm[] = {
+static const char * ingame_xpm[] = {
 "16 16 9 1",
 " 	c None",
 ".	c #7E7E7E",
