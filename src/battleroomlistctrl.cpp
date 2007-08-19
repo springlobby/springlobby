@@ -124,8 +124,8 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
   }
   m_popup->Append( -1, _("Side"), m_sides );
 
-  wxMenuItem* spec = new wxMenuItem( m_popup, BRLIST_SPEC, wxString( _("Spectator") ) , wxEmptyString, wxITEM_CHECK );
-  m_popup->Append( spec );
+  m_spec_item = new wxMenuItem( m_popup, BRLIST_SPEC, wxString( _("Spectator") ) , wxEmptyString, wxITEM_CHECK );
+  m_popup->Append( m_spec_item );
   
   m_popup->AppendSeparator();
   
@@ -393,7 +393,7 @@ void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
 {
   debug_func("");
   if ( m_sel_user != 0 ) {
-    m_battle.ForceSpectator( *m_sel_user, true );
+    m_battle.ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
   }
 }
 

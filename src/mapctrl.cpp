@@ -36,12 +36,13 @@ END_EVENT_TABLE()
 const int boxsize = 8;
 const int minboxsize = 40;
 
-MapCtrl::MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool readonly ):
+MapCtrl::MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool readonly, bool fixed_size ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
   m_image(0),
   m_battle(battle),
   m_ui(ui),
   m_mapname(_T("")),
+  m_fixed_size(fixed_size),
   m_ro(readonly),
   m_mover_rect(-2),
   m_rect_area(RA_Main),
@@ -248,7 +249,7 @@ void MapCtrl::LoadMinimap()
       m_lastsize = wxSize( -1, -1 );
       return;
     }
-    wxImage img = usync()->GetMinimap( m_battle->opts().mapname, w, h );
+    wxImage img = usync()->GetMinimap( m_battle->opts().mapname, w, h, m_fixed_size );
     m_image = new wxBitmap( img );
     m_mapname = WX_STRING( m_battle->opts().mapname );
     m_lastsize = wxSize( w, h );

@@ -6,6 +6,7 @@
 class User;
 class Battle;
 struct BattleBot;
+//class wxMenuItem;
 
 class BattleroomListCtrl : public wxListCtrl
 {
@@ -47,6 +48,7 @@ class BattleroomListCtrl : public wxListCtrl
     BattleBot* m_sel_bot;
 
     wxMenu* m_sides;
+    wxMenuItem* m_spec_item;
 
     DECLARE_EVENT_TABLE();
 

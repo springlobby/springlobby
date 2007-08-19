@@ -79,10 +79,10 @@ class SpringUnitSync : public IUnitSync
     int GetUnitIndex( const std::string& modname, const std::string& name );
     std::string GetFullUnitName( const std::string& modname, int index );
 
-    wxImage GetMinimap( const std::string& mapname, int max_w, int max_h );
-    wxImage GetCachedMinimap( const std::string& mapname, int max_w, int max_h );
+    wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
+    wxImage GetCachedMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
 
-    wxString GetCachedMinimapFileName( const std::string& mapname, int size );
+    wxString GetCachedMinimapFileName( const std::string& mapname, int width = -1, int height = -1 );
 
     void ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
 

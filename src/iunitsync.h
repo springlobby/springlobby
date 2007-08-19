@@ -62,7 +62,7 @@ class IUnitSync
     virtual UnitSyncMap GetMap( const std::string& mapname, bool getmapinfo = false ) = 0;
     virtual UnitSyncMap GetMap( int index, bool getmapinfo = false ) = 0;
     virtual int GetMapIndex( const std::string& name ) = 0;
-    virtual wxImage GetMinimap( const std::string& mapname, int max_w, int max_h ) =0;
+    virtual wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false ) = 0;
 
     virtual int GetSideCount( const std::string& modname ) = 0;
     virtual std::string GetSideName( const std::string& modname, int index ) = 0;

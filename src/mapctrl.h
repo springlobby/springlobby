@@ -35,7 +35,7 @@ typedef int MouseAction;
 class MapCtrl : public wxPanel
 {
   public:
-    MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool readonly );
+    MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool readonly, bool fixed_size );
     ~MapCtrl();
 
     void SetBattle( Battle* battle );
@@ -71,6 +71,7 @@ class MapCtrl : public wxPanel
     Ui& m_ui;
     wxString m_mapname;
 
+    bool m_fixed_size;
     bool m_ro;
     int m_mover_rect;
     int m_mdown_rect;
