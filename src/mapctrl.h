@@ -2,7 +2,9 @@
 #define SPRINGLOBBY_HEADERGUARD_MAPCTRL_H
 
 #include <wx/string.h>
+
 #include "battle.h"
+#include "iunitsync.h"
 
 class wxPanel;
 class wxBitmap;
@@ -11,6 +13,7 @@ class wxDC;
 class Battle;
 struct BattleStartRect;
 class Ui;
+struct UnitSyncMap;
 
 #define RA_Main -1
 #define RA_UpLeft 0
@@ -35,7 +38,7 @@ typedef int MouseAction;
 class MapCtrl : public wxPanel
 {
   public:
-    MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool readonly, bool fixed_size );
+    MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types );
     ~MapCtrl();
 
     void SetBattle( Battle* battle );
@@ -71,6 +74,7 @@ class MapCtrl : public wxPanel
     Ui& m_ui;
     wxString m_mapname;
 
+    bool m_draw_start_types;
     bool m_fixed_size;
     bool m_ro;
     int m_mover_rect;
@@ -90,6 +94,12 @@ class MapCtrl : public wxPanel
 
     wxBitmap* m_close_img;
     wxBitmap* m_close_hi_img;
+
+    wxBitmap* m_start_ally;
+    wxBitmap* m_start_enemy;
+    wxBitmap* m_start_unused;
+
+    UnitSyncMap m_map;
 
   DECLARE_EVENT_TABLE();
 };

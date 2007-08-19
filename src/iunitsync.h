@@ -15,7 +15,7 @@ struct UnitSyncMod
 struct StartPos
 {
   int x;
-  int z;
+  int y;
 };
 
 struct MapInfo

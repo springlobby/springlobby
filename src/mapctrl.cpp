@@ -22,6 +22,9 @@
 
 #include "images/close.xpm"
 #include "images/close_hi.xpm"
+#include "images/start_ally.xpm"
+#include "images/start_enemy.xpm"
+#include "images/start_unused.xpm"
 
 
 BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
@@ -36,12 +39,13 @@ END_EVENT_TABLE()
 const int boxsize = 8;
 const int minboxsize = 40;
 
-MapCtrl::MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool readonly, bool fixed_size ):
+MapCtrl::MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
   m_image(0),
   m_battle(battle),
   m_ui(ui),
   m_mapname(_T("")),
+  m_draw_start_types(draw_start_types),
   m_fixed_size(fixed_size),
   m_ro(readonly),
   m_mover_rect(-2),
@@ -50,7 +54,10 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool reado
   m_maction(MA_None),
   m_lastsize(-1,-1),
   m_close_img(0),
-  m_close_hi_img(0)
+  m_close_hi_img(0),
+  m_start_ally(0),
+  m_start_enemy(0),
+  m_start_unused(0)
 {
   SetBackgroundStyle( wxBG_STYLE_CUSTOM );
   SetBackgroundColour( *wxLIGHT_GREY );
@@ -67,6 +74,9 @@ MapCtrl::~MapCtrl()
   FreeMinimap();
   delete m_close_img;
   delete m_close_hi_img;
+  delete m_start_ally;
+  delete m_start_enemy;
+  delete m_start_unused;
 }
 
 
@@ -215,6 +225,16 @@ void MapCtrl::_SetMouseOverRect( int index )
 
 void MapCtrl::_SetCursor()
 {
+  if ( m_battle != 0 ) {
+    if ( m_battle->opts().starttype != ST_Choose ) {
+      SetCursor( wxCursor( wxCURSOR_ARROW ) );
+      return;
+    }
+  } else {
+    SetCursor( wxCursor( wxCURSOR_ARROW ) );
+    return;
+  }
+
   if ( !m_ro ) {
     if ( m_mover_rect >= 0 ) {
       if      ( m_rect_area == RA_UpLeft )    SetCursor( wxCursor( wxCURSOR_SIZENWSE ) );
@@ -277,6 +297,7 @@ void MapCtrl::FreeMinimap()
 void MapCtrl::UpdateMinimap()
 {
   int w, h;
+  _SetCursor();
   if ( m_battle == 0 ) return;
   GetClientSize( &w, &h );
   if ( (m_mapname != WX_STRING( m_battle->opts().mapname) || ( m_lastsize != wxSize(w, h) ) ) ) {
@@ -316,28 +337,51 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
   }
 
   // Draw minimap.
+  wxRect mr = _GetMinimapRect();
   if ( !m_image ) {
     dc.DrawText( _("Minimap n/a"), 10, 10 );
   } else {
-    wxRect mr = _GetMinimapRect();
     dc.DrawBitmap( *m_image, mr.x, mr.y, false );
     width = mr.width;
     height = mr.height;
   }
 
-  // Draw startrects.
-  for ( int i = 0; i < 15; i++ ) {
-    wxRect sr = _GetStartRect( i );
-    if ( sr.IsEmpty() ) continue;
-    wxColour col;
-    if ( i == m_battle->GetMe().BattleStatus().ally ) {
-      col.Set( 0, 200, 0 );
-    } else {
-      col.Set( 200, 0, 0 );
-    }
-    _DrawStartRect( dc, i, sr, col, m_mover_rect == i );
-  }
+  if ( m_draw_start_types ) {
 
+    if ( m_battle->opts().starttype == ST_Choose ) {
+      // Draw startrects.
+      for ( int i = 0; i < 15; i++ ) {
+        wxRect sr = _GetStartRect( i );
+        if ( sr.IsEmpty() ) continue;
+        wxColour col;
+        if ( i == m_battle->GetMe().BattleStatus().ally ) {
+          col.Set( 0, 200, 0 );
+        } else {
+          col.Set( 200, 0, 0 );
+        }
+        _DrawStartRect( dc, i, sr, col, m_mover_rect == i );
+      }
+    } else if ( m_battle->opts().starttype == ST_Fixed ) {
+      // Draw startpositions
+      if ( m_map.name != m_battle->opts().mapname ) m_map = usync()->GetMap( m_battle->opts().mapname, true );
+
+      if ( !m_start_ally ) m_start_ally = new wxBitmap( start_ally_xpm );
+      if ( !m_start_enemy ) m_start_enemy = new wxBitmap( start_enemy_xpm );
+      if ( !m_start_unused ) m_start_unused = new wxBitmap( start_unused_xpm );
+
+      for ( int i = 0; i < m_map.info.posCount; i++ ) {
+        int x = ( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)width ) - 8.0;
+        int y = ( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)height ) - 8.0;
+        dc.DrawBitmap( *m_start_ally, x+mr.x, y+mr.y, true );
+        wxCoord w, h;
+        wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
+        dc.SetFont( f );
+        dc.GetTextExtent( wxString::Format(_T("%d"), i+1 ), &w, &h );
+        dc.DrawText( wxString::Format(_T("%d"), i+1 ), x+mr.x+(8-w/2), y+mr.y+(8-h/2) );
+      }
+    }
+
+  }
   // Draw add rect.
   if ( m_tmp_brect.ally != -1 ) {
     _DrawStartRect( dc, m_tmp_brect.ally, _GetStartRect(m_tmp_brect), *wxWHITE, false );
@@ -357,6 +401,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   wxPoint p = event.GetPosition();
   if ( m_battle == 0 ) return;
   if ( p == wxDefaultPosition ) return;
+  if ( m_battle->opts().starttype != ST_Choose ) return;
 
   if ( m_maction == MA_Add ) { // We are currently adding a rect.
 
@@ -435,6 +480,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 void MapCtrl::OnLeftDown( wxMouseEvent& event )
 {
   if ( m_battle == 0 ) return;
+  if ( m_battle->opts().starttype != ST_Choose ) return;
   if ( !m_ro ) {
     // In edit mode
     if ( m_mover_rect >= 0 ) { // We are over an existing rect.
@@ -484,6 +530,8 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
 void MapCtrl::OnLeftUp( wxMouseEvent& event )
 {
   if ( m_battle == 0 ) return;
+  if ( m_battle->opts().starttype != ST_Choose ) return;
+
   if ( m_maction == MA_Add ) {
 
     m_tmp_brect.ally = -1;
