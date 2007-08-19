@@ -110,6 +110,9 @@ springlobby_SOURCES = \
 	src/userlist.h \
 	src/utils.cpp \
 	src/utils.h \
+	src/images/start_ally.xpm \
+	src/images/start_enemy.xpm \
+	src/images/start_unused.xpm \
 	src/images/admin_away.xpm \
 	src/images/admin_ingame.xpm \
 	src/images/admin.xpm \
