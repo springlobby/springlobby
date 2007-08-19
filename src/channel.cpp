@@ -117,6 +117,9 @@ bool Channel::ExecuteSayCommand( const std::string& in )
   if ( param == "/me" ) {
     DoAction( cmdline );
     return true;
+  } else if ( param == "/sayver" ) {
+    DoAction( "is using SpringLobby v" + GetSpringLobbyVersion() );
+    return true;
   }
 
   return false;

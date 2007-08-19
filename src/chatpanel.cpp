@@ -375,8 +375,7 @@ void ChatPanel::Say( const wxString& message )
   }
 
   if ( message == _T("/ver") ) {
-    // TODO fix real version numbers
-    _OutputLine( wxString::Format( _(" You have SpringLobby version %.2f r%d"), 0.01, 0 ), *wxBLACK );
+    _OutputLine( _(" You have SpringLobby v") + WX_STRING( GetSpringLobbyVersion() ), *wxBLACK );
     return;
   }
 

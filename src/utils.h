@@ -32,6 +32,6 @@ std::string GetWordParam( std::string& params );
 std::string GetSentenceParam( std::string& params );
 int GetIntParam( std::string& params );
 bool GetBoolParam( std::string& params );
-
+std::string GetSpringLobbyVersion();
 
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H

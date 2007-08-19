@@ -15,9 +15,6 @@
 #include "server.h"
 #include "battle.h"
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported )
 {
@@ -316,13 +313,7 @@ void ServerEvents::OnJoinChannelResult( bool success, const std::string& channel
     Channel& chan = m_serv._AddChannel( channel );
     m_ui.OnJoinedChannelSuccessful( chan );
     if ( channel == "springlobby") {
-      std::string ver;
-#ifdef VERSION
-      ver = VERSION;
-#else
-      ver = "Unknown";
-#endif
-      m_serv.DoActionChannel( "springlobby", "is using SpringLobby v" + ver );
+      m_serv.DoActionChannel( "springlobby", "is using SpringLobby v" + GetSpringLobbyVersion() );
     }
 
   } else {

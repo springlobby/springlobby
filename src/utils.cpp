@@ -17,6 +17,10 @@
 #include <ostream>
 //#endif
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 std::string i2s( int x )
 {
   std::ostringstream o;
@@ -100,3 +104,12 @@ bool GetBoolParam( std::string& params )
   return (bool)GetIntParam( params );
 }
 
+
+std::string GetSpringLobbyVersion()
+{
+#ifdef VERSION
+  return VERSION;
+#else
+  return "Unknown";
+#endif
+}
