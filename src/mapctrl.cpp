@@ -313,7 +313,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 {
   wxPaintDC dc( this );
 
-  int width, height, top = 0, left = 0;
+  int width, height;
   GetClientSize( &width, &height );
   
   dc.SetPen( wxPen( *wxLIGHT_GREY ) );
@@ -370,8 +370,8 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
       if ( !m_start_unused ) m_start_unused = new wxBitmap( start_unused_xpm );
 
       for ( int i = 0; i < m_map.info.posCount; i++ ) {
-        int x = ( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)width ) - 8.0;
-        int y = ( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)height ) - 8.0;
+        int x = m_map.info.positions[i].x / double(m_map.info.width)  * width  - 8.0;
+        int y = m_map.info.positions[i].y / double(m_map.info.height) * height - 8.0;
         dc.DrawBitmap( *m_start_ally, x+mr.x, y+mr.y, true );
         wxCoord w, h;
         wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
