@@ -361,26 +361,35 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
         }
         _DrawStartRect( dc, i, sr, col, m_mover_rect == i );
       }
-    } else if ( m_battle->opts().starttype == ST_Fixed ) {
-      // Draw startpositions
+    } else {
+
       if ( m_map.name != m_battle->opts().mapname ) m_map = usync()->GetMap( m_battle->opts().mapname, true );
 
       if ( !m_start_ally ) m_start_ally = new wxBitmap( start_ally_xpm );
       if ( !m_start_enemy ) m_start_enemy = new wxBitmap( start_enemy_xpm );
       if ( !m_start_unused ) m_start_unused = new wxBitmap( start_unused_xpm );
 
-      for ( int i = 0; i < m_map.info.posCount; i++ ) {
-        int x = m_map.info.positions[i].x / double(m_map.info.width)  * width  - 8.0;
-        int y = m_map.info.positions[i].y / double(m_map.info.height) * height - 8.0;
-        dc.DrawBitmap( *m_start_ally, x+mr.x, y+mr.y, true );
-        wxCoord w, h;
+      if ( m_battle->opts().starttype == ST_Fixed ) {
+      // Draw startpositions
         wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
         dc.SetFont( f );
-        dc.GetTextExtent( wxString::Format(_T("%d"), i+1 ), &w, &h );
-        dc.DrawText( wxString::Format(_T("%d"), i+1 ), x+mr.x+(8-w/2), y+mr.y+(8-h/2) );
+        for ( int i = 0; i < m_map.info.posCount; i++ ) {
+          int x = ( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)width ) - 8.0;
+          int y = ( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)height ) - 8.0;
+          dc.DrawBitmap( *m_start_ally, x+mr.x, y+mr.y, true );
+          wxCoord w, h;
+          dc.GetTextExtent( wxString::Format(_T("%d"), i+1 ), &w, &h );
+          dc.DrawText( wxString::Format(_T("%d"), i+1 ), x+mr.x+(8-w/2), y+mr.y+(8-h/2) );
+        }
+      } else {
+        // Draw startpositions
+        for ( int i = 0; i < m_map.info.posCount; i++ ) {
+          int x = ( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)width ) - 8.0;
+          int y = ( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)height ) - 8.0;
+          dc.DrawBitmap( *m_start_unused, x+mr.x, y+mr.y, true );
+        }
       }
     }
-
   }
   // Draw add rect.
   if ( m_tmp_brect.ally != -1 ) {
