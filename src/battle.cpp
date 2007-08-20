@@ -222,6 +222,22 @@ bool Battle::IsModAvailable()
 }
 
 
+bool Battle::HaveMultipleBotsInSameTeam()
+{
+  std::list<BattleBot*>::const_iterator i;
+  debug_func("");
+
+  int teams[16] = { -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1 };
+  for( i = m_bots.begin(); i != m_bots.end(); ++i )
+  {
+    if ( *i == 0 ) continue;
+    if ( teams[(*i)->bs.team ] != -1 )return true;
+    teams[ (*i)->bs.team ] = 1;
+  }
+  return false;
+}
+
+
 User& Battle::GetMe()
 {
   return m_serv.GetMe();
@@ -474,7 +490,9 @@ void Battle::OnBotUpdated( const std::string& name, const UserBattleStatus& bs )
 {
   BattleBot* bot = GetBot( name );
   ASSERT_LOGIC( bot != 0, "Bad bot name" );
+  int order = bot->bs.order;
   bot->bs = bs;
+  bot->bs.order = order;
 }
 
 

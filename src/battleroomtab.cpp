@@ -222,6 +222,11 @@ ChatPanel& BattleRoomTab::GetChatPanel()
 
 void BattleRoomTab::OnStart( wxCommandEvent& event )
 {
+  if ( m_battle.HaveMultipleBotsInSameTeam() ) {
+    wxMessageDialog dlg( this, _("You have one or more bots shring team, this is not possible."), _("Bot team sharing."), wxOK );
+    dlg.ShowModal();
+    return;
+  }
   m_battle.GetMe().BattleStatus().ready = true;
 
   if ( !m_battle.IsEveryoneReady() ) {

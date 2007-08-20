@@ -168,6 +168,8 @@ class Battle : public UserList
     bool IsMapAvailable();
     bool IsModAvailable();
 
+    bool HaveMultipleBotsInSameTeam();
+
     void OnRequestBattleStatus();
     void SendMyBattleStatus();
 
