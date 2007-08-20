@@ -499,19 +499,15 @@ void Battle::OnBotUpdated( const std::string& name, const UserBattleStatus& bs )
 BattleBot* Battle::GetBot( const std::string& name )
 {
   std::list<BattleBot*>::const_iterator i;
-  debug_func("");
 
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
   {
-    debug( "index" );
     if ( *i == 0 ) continue;
     debug( (*i)->name );
     if ( (*i)->name == name ) {
-      debug( "return != 0" );
       return *i;
     }
   }
-  debug("return 0");
   return 0;
 }
 

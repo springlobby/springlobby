@@ -16,7 +16,7 @@ wxString RefineModname( wxString modname )
   modname.Replace(_T("Absolute Annihilation"), _T("AA") );
   modname.Replace(_T("Complete Annihilation"), _T("CA") );
   modname.Replace(_T("Balanced Annihilation"), _T("BA") );
-  modname.Replace(_T("Expand and Exterminate"), _T("EAE") );
+  modname.Replace(_T("Expand and Exterminate"), _T("EE") );
   modname.Replace(_T("War Evolution"), _T("WarEv") );
   modname.Replace(_T("TinyComm"), _T("TC") );
   modname.Replace(_T("BETA"), _T("b") );
