@@ -152,7 +152,8 @@ void HostBattleDialog::ReloadModList()
     const UnitSyncMod& m = usync()->GetMod( i );
     m_mod_pic->Insert( WX_STRING(m.name), i );
   }
-  m_mod_pic->SetSelection( m_mod_pic->FindString( WX_STRING(sett().GetLastHostMod()) ) );
+  wxString last = WX_STRING( sett().GetLastHostMod() );
+  if ( last != wxEmptyString ) m_mod_pic->SetSelection( m_mod_pic->FindString( last ) );
 }
 
 
@@ -166,6 +167,7 @@ void HostBattleDialog::OnOk( wxCommandEvent& event )
   sett().SetLastHostPort( tmp );
   sett().SetLastHostPlayerNum( m_players_slide->GetValue() );
   sett().SetLastHostNATSetting( m_nat_radios->GetSelection() );
+  sett().SaveSettings();
   EndModal( wxID_OK );
 }
 
