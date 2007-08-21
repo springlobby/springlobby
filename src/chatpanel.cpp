@@ -379,12 +379,12 @@ void ChatPanel::Say( const wxString& message )
     return;
   }
 
-
-  if ( !IsOk() ) return;
-
   if ( m_type == CPT_Channel ) {
 
-    assert( m_channel != 0 );
+    if ( m_channel == 0 ) {
+      _OutputLine( _(" You are not in channel or channel does not exist."), *wxRED );
+      return;
+    }
     if ( message.StartsWith( _T("/") ) ) {
       if ( m_channel->ExecuteSayCommand( STD_STRING(message) ) ) return;
     }
@@ -392,7 +392,10 @@ void ChatPanel::Say( const wxString& message )
 
   } else if ( m_type == CPT_Battle ) {
 
-    assert( m_battle != 0 );
+    if ( m_battle == 0 ) {
+      _OutputLine( _(" You are not in battle or battle does not exist."), *wxRED );
+      return;
+    }
     if ( message.StartsWith(_T("/")) ) {
       if ( m_battle->ExecuteSayCommand( STD_STRING(message) ) ) return;
     }
@@ -400,7 +403,10 @@ void ChatPanel::Say( const wxString& message )
 
   } else if ( m_type == CPT_User ) {
 
-    assert( m_user != 0 );
+    if ( m_user == 0 ) {
+      _OutputLine( _(" User is offline."), *wxRED );
+      return;
+    }
     if ( message.StartsWith(_T("/")) ) {
       if ( m_user->ExecuteSayCommand( STD_STRING(message) ) ) return;
     }

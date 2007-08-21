@@ -394,6 +394,10 @@ void Ui::OnUserOnline( User& user )
 
 void Ui::OnUserOffline( User& user )
 {
+  if ( user.uidata.panel ) {
+    user.uidata.panel->SetUser( 0 );
+    user.uidata.panel = 0;
+  }
 /*  UiUserData* data = (UiUserData*)user.GetUserData();
   if ( data == 0) return;
 
