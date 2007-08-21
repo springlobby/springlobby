@@ -2,13 +2,14 @@
 #define SPRINGLOBBY_HEADERGUARD_SPRING_H
 
 #include <wx/string.h>
+#include <wx/event.h>
 
 class Battle;
 class Ui;
 class SpringProcess;
 
 
-class Spring
+class Spring: public wxEvtHandler
 {
   public:
     Spring( Ui& ui);
@@ -19,12 +20,14 @@ class Spring
     static bool TestSpringBinary();
 
     wxString GetScriptTxt( Battle& battle );
-    void OnTerminated();
+    void OnTerminated( wxCommandEvent& event );
 
   protected:
     Ui& m_ui;
     SpringProcess* m_process;
     bool m_running;
+    
+    DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRING_H

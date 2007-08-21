@@ -15,6 +15,7 @@
 #include <wx/statbox.h>
 #include <wx/radiobox.h>
 #include <wx/textctrl.h>
+#include <wx/msgdlg.h>
 
 #include "hostbattledialog.h"
 #include "settings.h"
@@ -159,6 +160,11 @@ void HostBattleDialog::ReloadModList()
 
 void HostBattleDialog::OnOk( wxCommandEvent& event )
 {
+  if ( m_mod_pic->GetSelection() == wxNOT_FOUND ) {
+    wxMessageBox( _("You have to select a mod first."), _("No mod selected."), wxOK );
+    return;
+  }
+
   sett().SetLastHostDescription( STD_STRING(m_desc_text->GetValue()) );
   sett().SetLastHostMod( STD_STRING(m_mod_pic->GetString(m_mod_pic->GetSelection())) );
   sett().SetLastHostPassword( STD_STRING(m_pwd_text->GetValue()) );

@@ -51,13 +51,10 @@ NickListCtrl::~NickListCtrl()
 
 void NickListCtrl::AddUser( User& user )
 {
-  int index = InsertItem(0, IconImageList::GetUserStateIcon( user.GetStatus() ) );
+  int index = InsertItem( 0, IconImageList::GetUserStateIcon( user.GetStatus() ) );
+  SetItemData( index, (wxUIntPtr)&user );
   assert( index != -1 );
-  SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( user.GetCountry() ) );
-  SetItemColumnImage( index, 2, IconImageList::GetRankIcon( user.GetStatus().rank ) );
-  SetItem( index, 3, WX_STRING(user.GetNick()) );
-  SetItemData(index, (long)&user );
-  SortItems( NickListSortCallback, 0 );
+  UserUpdated( index );
 }
 
 void NickListCtrl::RemoveUser( const User& user )
@@ -74,11 +71,20 @@ void NickListCtrl::RemoveUser( const User& user )
 
 void NickListCtrl::UserUpdated( User& user )
 {
+  int index = GetUserIndex( user );
+  assert( index != -1 );
+  UserUpdated( index );
 }
 
 
 void NickListCtrl::UserUpdated( const int& index )
 {
+  User& user = *((User*)GetItemData( index ));
+  SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( user.GetCountry() ) );
+  SetItemColumnImage( index, 2, IconImageList::GetRankIcon( user.GetStatus().rank ) );
+  SetItem( index, 3, WX_STRING(user.GetNick()) );
+  SetItemData(index, (long)&user );
+  SortItems( NickListSortCallback, 0 );
 }
 
 
@@ -87,6 +93,16 @@ void NickListCtrl::ClearUsers()
   while ( GetItemCount() > 0 ) {
     DeleteItem( 0 );
   }
+}
+
+
+int NickListCtrl::GetUserIndex( User& user )
+{
+  for ( int i = 0; i < GetItemCount() ; i++ ) {
+    if ( (unsigned long)&user == GetItemData( i ) ) return i;
+  }
+  debug_error( "didn't find the user." );
+  return -1;
 }
 
 

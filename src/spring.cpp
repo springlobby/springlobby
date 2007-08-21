@@ -20,6 +20,13 @@
 #include "iunitsync.h"
 #include "nonportable.h"
 
+BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
+
+    EVT_COMMAND ( PROC_SPRING, wxEVT_SPRING_EXIT, Spring::OnTerminated )
+
+END_EVENT_TABLE();
+
+
 Spring::Spring( Ui& ui ) :
   m_ui(ui),
   m_process(0),
@@ -63,9 +70,15 @@ bool Spring::Run( Battle& battle )
   }
 
   if ( m_process == 0 ) m_process = new SpringProcess( *this );
-  if ( wxExecute( WX_STRING(sett().GetSpringUsedLoc()) + _T(" script_springlobby.txt"), wxEXEC_ASYNC, m_process ) == 0 ) {
+  wxString cmd = WX_STRING(sett().GetSpringUsedLoc()) + _T(" script_springlobby.txt");
+  m_process->Create();
+  m_process->SetCommand( cmd );
+  m_process->Run();
+  /*if ( wxExecute( WX_STRING(sett().GetSpringUsedLoc()) + _T(" script_springlobby.txt"), wxEXEC_ASYNC, m_process ) == 0 ) {
     return false;
-  }
+  }*/
+/*  debug( "Detached!" );
+  m_process->Detach();*/
   m_running = true;
   return true;
 }
@@ -91,9 +104,11 @@ bool Spring::TestSpringBinary()
 }
 
 
-void Spring::OnTerminated()
+void Spring::OnTerminated( wxCommandEvent& event )
 {
+  debug_func("");
   m_running = false;
+  m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
   m_ui.OnSpringTerminated( true );
 }
 

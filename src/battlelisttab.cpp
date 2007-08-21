@@ -204,7 +204,12 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     UnitSyncMap map;
     std::string mname = sett().GetLastHostMap();
     if ( mname != "" ) map = usync()->GetMap( mname );
-    else map = usync()->GetMap( 0 ); // TODO: This might fail.
+    else if ( usync()->GetNumMaps() <= 0 ) {
+      wxMessageBox( _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
+      return;
+    } else {
+      map = usync()->GetMap( 0 );
+    }
     bo.maphash = map.hash;
     bo.mapname = map.name;
 

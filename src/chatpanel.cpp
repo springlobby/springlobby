@@ -278,6 +278,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 
 void ChatPanel::UserStatusUpdated( User& who )
 {
+  debug_func("");
   if ( m_show_nick_list ) {
     assert( m_nicklist != 0 );
     m_nicklist->UserUpdated( who );
