@@ -65,7 +65,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_color_lbl = new wxStaticText( m_player_panel, -1, _("Color") );
   m_side_lbl = new wxStaticText( m_player_panel, -1, _("Side") );
 
-//  UnitSyncMap map = usync()->GetMap( battle.opts().mapname, true );
   m_map_lbl = new wxStaticText( this, -1, RefineMapname( WX_STRING(battle.opts().mapname) ) );
   m_size_lbl = new wxStaticText( this, -1, _("") );
   m_wind_lbl = new wxStaticText( this, -1, _("") );
@@ -75,6 +74,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_players = new BattleroomListCtrl( m_player_panel, battle );
   m_chat = new ChatPanel( m_splitter, m_ui, battle );
+
+  debug("1");
 
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
@@ -105,13 +106,16 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_player_sett_sizer->Add( m_side_lbl, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_side_sel, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_spec_chk, 0, wxEXPAND | wxALL, 2 );
+  debug("2");
 
   m_players_sizer->Add( m_players, 1, wxEXPAND );
   m_players_sizer->Add( m_player_sett_sizer, 0, wxEXPAND );
 
   m_player_panel->SetSizer( m_players_sizer );
 
+  debug("3");
   m_splitter->SplitHorizontally( m_player_panel, m_chat, 50 );
+  debug("4");
 
   m_info1_sizer->Add( m_wind_lbl, 1, wxEXPAND );
   m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
@@ -124,6 +128,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
   m_top_sizer->Add( m_info_sizer, 0, wxEXPAND | wxALL, 2 );
 
+  debug("5");
   m_buttons_sizer->Add( m_leave_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->AddStretchSpacer();
   m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
@@ -134,21 +139,28 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_main_sizer->Add( m_command_line, 0, wxEXPAND );
   m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
 
+  debug("6");
   SetSizer( m_main_sizer );
+  debug("6.1");
   Layout();
 
+  debug("7");
   UpdateBattleInfo();
+  debug("8");
 
   m_splitter->SetMinimumPaneSize( 100 );
   m_splitter->SetSashPosition( 200 );
 
+  debug("9");
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     m_players->AddUser( battle.GetUser( i ) );
   }
 
+  debug("10");
   if ( !IsHosted() ) {
     m_start_btn->Enable( false );
   }
+  debug("11");
 
 }
 

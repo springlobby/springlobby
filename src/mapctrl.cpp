@@ -257,29 +257,34 @@ void MapCtrl::_SetCursor()
 void MapCtrl::LoadMinimap()
 {
   if ( m_battle == 0 ) return;
-
-  if ( m_image )
-    return;
+  if ( m_image ) return;
+  if ( !usync()->MapExists( m_battle->opts().mapname ) ) return;
+  debug("1");
   try {
     int w, h;
     GetClientSize( &w, &h );
+    debug("2");
     if ( w * h == 0 ) {
       m_image = 0;
       m_mapname = _T("");
       m_lastsize = wxSize( -1, -1 );
       return;
     }
+    debug("3");
     wxImage img = usync()->GetMinimap( m_battle->opts().mapname, w, h, m_fixed_size );
+    debug("4");
     m_image = new wxBitmap( img );
     m_mapname = WX_STRING( m_battle->opts().mapname );
     m_lastsize = wxSize( w, h );
+    debug("5");
     Refresh();
     Update();
+    debug("6");
   } catch (...) {
     m_image = 0;
     m_mapname = _T("");
-    
   }
+  debug("7");
 
 }
 
@@ -311,11 +316,12 @@ void MapCtrl::UpdateMinimap()
 
 void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 {
+  debug_func("");
   wxPaintDC dc( this );
 
   int width, height;
   GetClientSize( &width, &height );
-  
+
   dc.SetPen( wxPen( *wxLIGHT_GREY ) );
   dc.SetBrush( wxBrush( *wxLIGHT_GREY, wxSOLID ) );
 
@@ -323,7 +329,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
     dc.DrawRectangle( 0, 0, width, height );
     return;
   }
-  
+
   wxRect r = _GetMinimapRect();
 
   // Draw background.
@@ -363,7 +369,12 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
       }
     } else {
 
-      if ( m_map.name != m_battle->opts().mapname ) m_map = usync()->GetMap( m_battle->opts().mapname, true );
+      try {
+        if ( m_map.name != m_battle->opts().mapname ) m_map = usync()->GetMap( m_battle->opts().mapname, true );
+      } catch (...) {
+        debug_error( "Map not found." );
+        return;
+      }
 
       if ( !m_start_ally ) m_start_ally = new wxBitmap( start_ally_xpm );
       if ( !m_start_enemy ) m_start_enemy = new wxBitmap( start_enemy_xpm );
@@ -395,7 +406,6 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
   if ( m_tmp_brect.ally != -1 ) {
     _DrawStartRect( dc, m_tmp_brect.ally, _GetStartRect(m_tmp_brect), *wxWHITE, false );
   }
-
 }
 
 

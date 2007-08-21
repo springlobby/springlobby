@@ -76,7 +76,6 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui,  Battle& battle )
 {
   debug_func( "wxWindow* parent, Battle& battle" );
   _CreateControls( );
-  //serv.uidata.panel = this;
 };
 
 void ChatPanel::_CreateControls( )
@@ -142,7 +141,6 @@ void ChatPanel::_CreateControls( )
 
   // Assign sizer to panel
   SetSizer( m_main_sizer );
-
 
   if ( m_show_nick_list ) {
     wxSize s = m_splitter->GetSize();
@@ -278,7 +276,6 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 
 void ChatPanel::UserStatusUpdated( User& who )
 {
-  debug_func("");
   if ( m_show_nick_list ) {
     assert( m_nicklist != 0 );
     m_nicklist->UserUpdated( who );

@@ -419,7 +419,6 @@ void Ui::OnUserOffline( User& user )
 
 void Ui::OnUserStatusChanged( User& user )
 {
-  debug_func("");
   for ( int i = 0; i < m_serv->GetNumChannels(); i++ ) {
     Channel& chan = m_serv->GetChannel( i );
     if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) ) {

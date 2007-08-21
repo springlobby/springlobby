@@ -216,16 +216,22 @@ int SpringUnitSync::GetNumMaps()
 bool SpringUnitSync::MapExists( const std::string& mapname )
 {
   if ( !m_loaded ) return false;
-  return GetMapIndex( mapname ) >= 0;
+  bool succ = false;
+  try {
+    succ = GetMapIndex( mapname ) >= 0;
+  } catch (...) { return false; }
+  return succ;
 }
 
 bool SpringUnitSync::MapExists( const std::string& mapname, const std::string hash )
 {
   if ( !m_loaded ) return false;
-  int i = GetMapIndex( mapname );
-  if ( i >= 0 ) {
-    return ( i2s(m_get_map_checksum( i )) == hash );
-  }
+  try {
+    int i = GetMapIndex( mapname );
+    if ( i >= 0 ) {
+      return ( i2s(m_get_map_checksum( i )) == hash );
+    }
+  } catch (...) {}
   return false;
 }
 
