@@ -246,6 +246,18 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
 
     m_serv->JoinChannel( STD_STRING(channel), STD_STRING(pass) );
     return true;
+  } else if ( cmd.BeforeFirst(' ').Lower() == _T("/away") ) {
+    if ( IsConnected() ) {
+      m_serv->GetMe().Status().away = true;
+      m_serv->GetMe().SendMyUserStatus();
+      return true;
+    }
+  } else if ( cmd.BeforeFirst(' ').Lower() == _T("/back") ) {
+    if ( IsConnected() ) {
+      m_serv->GetMe().Status().away = false;
+      m_serv->GetMe().SendMyUserStatus();
+      return true;
+    }
   }
   return false;
 }
@@ -407,6 +419,7 @@ void Ui::OnUserOffline( User& user )
 
 void Ui::OnUserStatusChanged( User& user )
 {
+  debug_func("");
   for ( int i = 0; i < m_serv->GetNumChannels(); i++ ) {
     Channel& chan = m_serv->GetChannel( i );
     if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) ) {

@@ -80,6 +80,7 @@ void NickListCtrl::UserUpdated( User& user )
 void NickListCtrl::UserUpdated( const int& index )
 {
   User& user = *((User*)GetItemData( index ));
+  SetItemImage( index, IconImageList::GetUserStateIcon( user.GetStatus() ) );
   SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( user.GetCountry() ) );
   SetItemColumnImage( index, 2, IconImageList::GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 3, WX_STRING(user.GetNick()) );
