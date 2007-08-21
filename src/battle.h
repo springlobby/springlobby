@@ -205,6 +205,7 @@ class Battle : public UserList
     std::string DisabledUnits();
     int GetNumDisabledUnits() { return m_units_num; }
 
+    void ForceSide( User& user, int side );
     void ForceTeam( User& user, int team );
     void ForceAlly( User& user, int ally );
     void ForceColour( User& user, int r, int g, int b );

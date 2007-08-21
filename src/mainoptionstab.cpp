@@ -14,6 +14,7 @@
 #include "mainoptionstab.h"
 #include "ui.h"
 #include "springoptionstab.h"
+#include "settings.h"
 
 #include "images/spring.xpm"
 
@@ -63,6 +64,7 @@ MainOptionsTab::~MainOptionsTab()
 void MainOptionsTab::OnApply( wxCommandEvent& event )
 {
   m_spring_opts->OnApply( event );
+  sett().SaveSettings();
 }
 
 

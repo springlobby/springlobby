@@ -384,7 +384,7 @@ void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
   if ( m_sel_bot != 0 ) {
     m_battle.SetBotSide( m_sel_bot->name, side );
   } else if ( m_sel_user != 0 ) {
-    m_battle.DoAction( "sugests that " + m_sel_user->GetNick() + " changes to side " + usync()->GetSideName( m_battle.opts().modname, side ) + "." );
+    m_battle.ForceSide( *m_sel_user, side );
   }
 }
 

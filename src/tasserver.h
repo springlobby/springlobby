@@ -63,6 +63,7 @@ class TASServer : public Server
     void SendMyBattleStatus( UserBattleStatus& bs );
     void SendMyUserStatus();
 
+    void ForceSide( int battleid, const std::string& nick, int side );
     void ForceTeam( int battleid, const std::string& nick, int team );
     void ForceAlly( int battleid, const std::string& nick, int ally );
     void ForceColour( int battleid, const std::string& nick, int r, int g, int b );

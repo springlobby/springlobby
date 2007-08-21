@@ -878,6 +878,22 @@ void TASServer::StartHostedBattle()
 }
 
 
+void TASServer::ForceSide( int battleid, const std::string& nick, int side )
+{
+  debug_func( "" );
+  assert( battleid == m_battle_id );
+  assert( IsOnline() );
+  assert( m_sock != 0 );
+
+  if ( nick == GetMe().GetNick() ) {
+    GetMe().BattleStatus().side = side;
+    SendMyBattleStatus( GetMe().BattleStatus() );
+  } else {
+    DoActionBattle( battleid, "sugests that " + nick + " changes to " + usync()->GetSideName( GetBattle(battleid).opts().modname, side ) + " side." );
+  }
+}
+
+
 void TASServer::ForceTeam( int battleid, const std::string& nick, int team )
 {
   debug_func( "" );

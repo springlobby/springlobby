@@ -529,6 +529,12 @@ std::list<BattleBot*>::size_type Battle::GetNumBots()
 }
 
 
+void Battle::ForceSide( User& user, int side )
+{
+  m_serv.ForceSide( m_opts.battleid, user.GetNick(), side );
+}
+
+
 void Battle::ForceTeam( User& user, int team )
 {
   m_serv.ForceTeam( m_opts.battleid, user.GetNick(), team );

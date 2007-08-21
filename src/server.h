@@ -90,6 +90,7 @@ class Server
     virtual void LeaveBattle( const int& battleid ) = 0;
     virtual void StartHostedBattle() = 0;
 
+    virtual void ForceSide( int battleid, const std::string& nick, int side ) = 0;
     virtual void ForceTeam( int battleid, const std::string& nick, int team ) = 0;
     virtual void ForceAlly( int battleid, const std::string& nick, int ally ) = 0;
     virtual void ForceColour( int battleid, const std::string& nick, int r, int g, int b ) = 0;
