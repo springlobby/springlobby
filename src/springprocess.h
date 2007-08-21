@@ -5,7 +5,9 @@
 #include <wx/string.h>
 #include <wx/event.h>
 
-DECLARE_EVENT_TYPE(wxEVT_SPRING_EXIT, -1)
+BEGIN_DECLARE_EVENT_TYPES()
+DECLARE_EVENT_TYPE( wxEVT_SPRING_EXIT, -1 )
+END_DECLARE_EVENT_TYPES()
 
 class Spring;
 
