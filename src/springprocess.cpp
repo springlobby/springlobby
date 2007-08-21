@@ -4,7 +4,7 @@
 #include "spring.h"
 #include "utils.h"
 
-DEFINE_EVENT_TYPE( wxEVT_SPRING_EXIT )
+DEFINE_LOCAL_EVENT_TYPE( wxEVT_SPRING_EXIT )
 
 
 SpringProcess::SpringProcess( Spring& sp ) :
