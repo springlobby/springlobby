@@ -181,7 +181,7 @@ void BattleListTab::UpdateList()
 void BattleListTab::OnHost( wxCommandEvent& event )
 {
   if ( !m_ui.IsConnected() ) {
-    wxMessageBox( _("You cannot a host game when beeing offline."), _("Not Online."), wxOK );
+    wxMessageBox( _("You cannot host a game while offline. Please connect to a lobby server."), _("Not Online."), wxOK );
     return;
   }
   HostBattleDialog dlg( this );
