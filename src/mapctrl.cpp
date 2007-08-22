@@ -463,7 +463,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   }
 
   // Make sure point is inside minimap
-  if ( _GetMinimapRect().Contains( p ) ) {
+  if ( _GetMinimapRect().Inside( p ) ) {
 
     // Check if point is in a startrect.
     for ( int i = 15; i >= 0; i-- ) {
@@ -471,12 +471,12 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
       wxRect r = _GetStartRect( i );
       if ( r.IsEmpty() ) continue;
 
-      if ( r.Contains( p ) ) {
+      if ( r.Inside( p ) ) {
 
         if ( !m_ro ) {
-          if      ( (wxRect( r.x + r.width - m_close_img->GetWidth(), r.y + 1, m_close_img->GetWidth(), m_close_img->GetWidth() )).Contains( p ) ) m_rect_area = RA_UpRight;
-          else if ( (wxRect( r.x, r.y, boxsize, boxsize )).Contains( p ) ) m_rect_area = RA_UpLeft;
-          else if ( (wxRect( r.x + r.width - boxsize, r.y + r.height - boxsize, boxsize, boxsize )).Contains( p ) ) m_rect_area = RA_DownRight;
+          if      ( (wxRect( r.x + r.width - m_close_img->GetWidth(), r.y + 1, m_close_img->GetWidth(), m_close_img->GetWidth() )).Inside( p ) ) m_rect_area = RA_UpRight;
+          else if ( (wxRect( r.x, r.y, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_UpLeft;
+          else if ( (wxRect( r.x + r.width - boxsize, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownRight;
           //else if ( (wxRect( r.x, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownLeft;
           else m_rect_area = RA_Main;
         }
