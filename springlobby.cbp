@@ -4,6 +4,7 @@
 	<Project>
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
+		<Option default_target="GNU | Debug" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="GNU | Debug">
@@ -15,10 +16,13 @@
 				<Option projectLinkerOptionsRelation="2" />
 				<Option projectResourceIncludeDirsRelation="0" />
 				<Compiler>
+					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
+					<Add option='-DVERSION=\\&quot;0.0.1-cb\\&quot;' />
 				</Compiler>
 				<Linker>
+					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
 				</Linker>
 			</Target>
@@ -154,8 +158,9 @@
 		<Extensions>
 			<code_completion />
 			<envvars />
-			<debugger />
-			<envvars />
+			<wxsmith version="1">
+				<gui name="wxWidgets" src="" main="" init_handlers="necessary" language="CPP" />
+			</wxsmith>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

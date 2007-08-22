@@ -203,10 +203,10 @@ BattleStartRect MapCtrl::_GetBattleRect( int x1, int y1, int x2, int y2, int all
   br.right = int( (200.0 * ( x2 - mr.x ) / mr.width) + 0.5 );
   br.bottom = int( (200.0 * ( y2 - mr.y ) / mr.height) + 0.5 );
 
-  if ( br.left < 0 ) br.left = 0; if ( br.left > 200 ) br.left = 200; 
-  if ( br.top < 0 ) br.top = 0; if ( br.top > 200 ) br.top = 200; 
-  if ( br.right < 0 ) br.right = 0; if ( br.right > 200 ) br.right = 200; 
-  if ( br.bottom < 0 ) br.bottom = 0; if ( br.bottom > 200 ) br.bottom = 200; 
+  if ( br.left < 0 ) br.left = 0; if ( br.left > 200 ) br.left = 200;
+  if ( br.top < 0 ) br.top = 0; if ( br.top > 200 ) br.top = 200;
+  if ( br.right < 0 ) br.right = 0; if ( br.right > 200 ) br.right = 200;
+  if ( br.bottom < 0 ) br.bottom = 0; if ( br.bottom > 200 ) br.bottom = 200;
 
   return br;
 }
@@ -463,7 +463,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   }
 
   // Make sure point is inside minimap
-  if ( _GetMinimapRect().Inside( p ) ) {
+  if ( _GetMinimapRect().Contains( p ) ) {
 
     // Check if point is in a startrect.
     for ( int i = 15; i >= 0; i-- ) {
@@ -471,17 +471,17 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
       wxRect r = _GetStartRect( i );
       if ( r.IsEmpty() ) continue;
 
-      if ( r.Inside( p ) ) {
+      if ( r.Contains( p ) ) {
 
         if ( !m_ro ) {
-          if      ( (wxRect( r.x + r.width - m_close_img->GetWidth(), r.y + 1, m_close_img->GetWidth(), m_close_img->GetWidth() )).Inside( p ) ) m_rect_area = RA_UpRight;
-          else if ( (wxRect( r.x, r.y, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_UpLeft;
-          else if ( (wxRect( r.x + r.width - boxsize, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownRight;
+          if      ( (wxRect( r.x + r.width - m_close_img->GetWidth(), r.y + 1, m_close_img->GetWidth(), m_close_img->GetWidth() )).Contains( p ) ) m_rect_area = RA_UpRight;
+          else if ( (wxRect( r.x, r.y, boxsize, boxsize )).Contains( p ) ) m_rect_area = RA_UpLeft;
+          else if ( (wxRect( r.x + r.width - boxsize, r.y + r.height - boxsize, boxsize, boxsize )).Contains( p ) ) m_rect_area = RA_DownRight;
           //else if ( (wxRect( r.x, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownLeft;
           else m_rect_area = RA_Main;
         }
         _SetMouseOverRect( i );
-        
+
         return;
 
       }
