@@ -1,6 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 
+#include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/choice.h>
 #include <wx/button.h>
