@@ -12,6 +12,7 @@ class wxDC;
 
 class Battle;
 struct BattleStartRect;
+class SinglePlayerBattle;
 class Ui;
 struct UnitSyncMap;
 
@@ -39,6 +40,7 @@ class MapCtrl : public wxPanel
 {
   public:
     MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types );
+    MapCtrl( wxWindow* parent, int size, SinglePlayerBattle* battle, Ui& ui );
     ~MapCtrl();
 
     void SetBattle( Battle* battle );

@@ -21,12 +21,14 @@
 #include "battlelisttab.h"
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
+#include "mainsingleplayertab.h"
 #include "mainoptionstab.h"
 #include "iunitsync.h"
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.xpm"
 #include "images/join_icon.xpm"
+#include "images/singleplayer_icon.xpm"
 #include "images/options_icon.xpm"
 #include "images/select_icon.xpm"
 
@@ -47,8 +49,9 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 END_EVENT_TABLE()
 
 
-MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)0, -1, _("Spring Lobby"),
-                               wxPoint(50, 50), wxSize(450, 340)), m_ui(ui)
+MainWindow::MainWindow( Ui& ui ) :
+  wxFrame( (wxFrame*)0, -1, _("Spring Lobby"), wxPoint(50, 50), wxSize(450, 340) ),
+  m_ui(ui)
 {
   SetIcon( wxIcon(springlobby_xpm) );
   wxMenu *menuFile = new wxMenu;
@@ -82,6 +85,7 @@ MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)0, -1, _("Spring Lobby"),
 
   m_chat_icon = new wxBitmap( chat_icon_xpm );
   m_battle_icon = new wxBitmap( join_icon_xpm );
+  m_sp_icon = new wxBitmap( singleplayer_icon_xpm );
   m_options_icon = new wxBitmap( options_icon_xpm );
   m_select_image = new wxBitmap( select_icon_xpm );
 
@@ -91,11 +95,13 @@ MainWindow::MainWindow( Ui& ui ) : wxFrame((wxFrame *)0, -1, _("Spring Lobby"),
   m_func_tabs->AssignImageList( m_func_tab_images );
   m_chat_tab = new MainChatTab( m_func_tabs, m_ui );
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
+  m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
 
   m_func_tabs->AddPage( m_chat_tab, _T(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
-  m_func_tabs->AddPage( m_opts_tab, _T(""), false, 2 );
+  m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
+  m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -139,29 +145,37 @@ void MainWindow::MakeImages()
 {
   m_func_tab_images->RemoveAll();
 
-  if ( m_func_tabs->GetSelection() == 0 ) {
-    wxBitmap img( *m_select_image );
+  //if ( m_func_tabs->GetSelection() == 0 ) {
+    /*wxBitmap img( *m_select_image );
     DrawBmpOnBmp( img, *m_chat_icon, 0, 0 );
     m_func_tab_images->Add( img );
-  } else {
+  } else {*/
     m_func_tab_images->Add( *m_chat_icon );
-  }
+  //}
 
-  if ( m_func_tabs->GetSelection() == 1 ) {
-    wxBitmap img( *m_select_image );
+  //if ( m_func_tabs->GetSelection() == 1 ) {
+    /*wxBitmap img( *m_select_image );
     DrawBmpOnBmp( img, *m_battle_icon, 0, 0 );
     m_func_tab_images->Add( img );
-  } else {
+  } else {*/
     m_func_tab_images->Add( *m_battle_icon );
-  }
+  //}
 
-  if ( m_func_tabs->GetSelection() == 2 ) {
-    wxBitmap img( *m_select_image );
+  //if ( m_func_tabs->GetSelection() == 2 ) {
+    /*wxBitmap img( *m_select_image );
+    DrawBmpOnBmp( img, *m_sp_icon, 0, 0 );
+    m_func_tab_images->Add( img );
+  } else {*/
+    m_func_tab_images->Add( *m_sp_icon );
+  //}
+
+  //if ( m_func_tabs->GetSelection() == 3 ) {
+    /*wxBitmap img( *m_select_image );
     DrawBmpOnBmp( img, *m_options_icon, 0, 0 );
     m_func_tab_images->Add( img );
-  } else {
+  } else {*/
     m_func_tab_images->Add( *m_options_icon );
-  }
+  //}
 
 }
 

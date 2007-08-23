@@ -564,8 +564,8 @@ void TASServer::Ping()
 
   m_ping_id++;
   if ( VersionSupportReplyid( m_ser_ver ) ) {
-    cmd += "#";
-    cmd += m_ping_id;
+    //cmd += "#";
+    //cmd += m_ping_id;
     cmd += " PING\n";
   } else {
     cmd += "PING ";
@@ -739,7 +739,7 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
   cmd += WX_STRING( bo.modname ) + _T("\n");
 
   m_sock->Send( STD_STRING(cmd) );
-  // OPENBATTLE type natType password port maxplayers startingmetal startingenergy maxunits startpos 
+  // OPENBATTLE type natType password port maxplayers startingmetal startingenergy maxunits startpos
   // gameendcondition limitdgun diminishingMMs ghostedBuildings hashcode rank maphash {map} {title} {modname}
 }
 
@@ -787,7 +787,7 @@ void TASServer::SendHostInfo( HostInfo update )
   if ( ( update & (HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Options) ) > 0 ) {
     // UPDATEBATTLEDETAILS startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings
     wxString cmd = _T("UPDATEBATTLEDETAILS");
-    cmd += wxString::Format( _T(" %d %d %d %d %d %d %d %d\n"), 
+    cmd += wxString::Format( _T(" %d %d %d %d %d %d %d %d\n"),
       bo.startmetal, bo.startenergy, bo.maxunits, bo.starttype, bo.gametype, bo.limitdgun, bo.dimmms, bo.ghostedbuildings
     );
 

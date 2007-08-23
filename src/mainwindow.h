@@ -10,6 +10,7 @@ class wxCommandEvent;
 class wxListbookEvent;
 class MainChatTab;
 class MainJoinBattleTab;
+class MainSinglePlayerTab;
 class wxBoxSizer;
 class wxListbook;
 class MainOptionsTab;
@@ -18,6 +19,7 @@ class wxImageList;
 
 // FIXME shouldn't copy this here
 typedef wxWindow wxNotebookPage;
+
 
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
@@ -60,11 +62,13 @@ class MainWindow : public wxFrame
 
     MainChatTab* m_chat_tab;
     MainJoinBattleTab* m_join_tab;
+    MainSinglePlayerTab* m_sp_tab;
     MainOptionsTab* m_opts_tab;
 
     wxBitmap* m_chat_icon;
     wxBitmap* m_battle_icon;
     wxBitmap* m_options_icon;
+    wxBitmap* m_sp_icon;
     wxBitmap* m_select_image;
 
     wxImageList* m_func_tab_images;

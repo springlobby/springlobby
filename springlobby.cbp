@@ -118,6 +118,8 @@
 		<Unit filename="src/mainjoinbattletab.h" />
 		<Unit filename="src/mainoptionstab.cpp" />
 		<Unit filename="src/mainoptionstab.h" />
+		<Unit filename="src/mainsingleplayertab.cpp" />
+		<Unit filename="src/mainsingleplayertab.h" />
 		<Unit filename="src/mainwindow.cpp" />
 		<Unit filename="src/mainwindow.h" />
 		<Unit filename="src/mapctrl.cpp" />
@@ -131,6 +133,8 @@
 		<Unit filename="src/serverevents.h" />
 		<Unit filename="src/settings.cpp" />
 		<Unit filename="src/settings.h" />
+		<Unit filename="src/singleplayerbattle.cpp" />
+		<Unit filename="src/singleplayerbattle.h" />
 		<Unit filename="src/socket.cpp" />
 		<Unit filename="src/socket.h" />
 		<Unit filename="src/spring.cpp" />

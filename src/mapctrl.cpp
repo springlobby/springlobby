@@ -69,6 +69,36 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool reado
 }
 
 
+MapCtrl::MapCtrl( wxWindow* parent, int size, SinglePlayerBattle* battle, Ui& ui ):
+  wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
+  m_image(0),
+  m_battle(0),
+  m_ui(ui),
+  m_mapname(_T("")),
+  m_draw_start_types(true),
+  m_fixed_size(false),
+  m_ro(false),
+  m_mover_rect(-2),
+  m_rect_area(RA_Main),
+  m_last_rect_area(RA_Main),
+  m_maction(MA_None),
+  m_lastsize(-1,-1),
+  m_close_img(0),
+  m_close_hi_img(0),
+  m_start_ally(0),
+  m_start_enemy(0),
+  m_start_unused(0)
+{
+  SetBackgroundStyle( wxBG_STYLE_CUSTOM );
+  SetBackgroundColour( *wxLIGHT_GREY );
+  if ( !m_ro ) {
+    m_close_img = new wxBitmap( close_xpm );
+    m_close_hi_img = new wxBitmap( close_hi_xpm );
+  }
+  m_tmp_brect.ally = -1;
+}
+
+
 MapCtrl::~MapCtrl()
 {
   FreeMinimap();
