@@ -5,6 +5,7 @@
 #include <wx/sizer.h>
 #include <wx/imaglist.h>
 #include <wx/notebook.h>
+#include <wx/icon.h>
 
 #include "singleplayertab.h"
 #include "mainsingleplayertab.h"
