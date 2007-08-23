@@ -155,6 +155,7 @@ springlobby_SOURCES = \
 	src/images/rank4.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
+	src/images/singleplayer_icon.xpm \
 	src/images/select_icon.xpm \
 	src/images/server.xpm \
 	src/images/spectator.xpm \
