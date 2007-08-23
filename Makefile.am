@@ -74,6 +74,8 @@ springlobby_SOURCES = \
 	src/mainjoinbattletab.h \
 	src/mainoptionstab.cpp \
 	src/mainoptionstab.h \
+	src/mainsingleplayertab.cpp \
+	src/mainsingleplayertab.h \
 	src/mainwindow.cpp \
 	src/mainwindow.h \
 	src/mapctrl.cpp \
@@ -90,6 +92,10 @@ springlobby_SOURCES = \
 	src/socket.h \
 	src/spring.cpp \
 	src/spring.h \
+	src/singleplayerbattle.cpp \
+	src/singleplayerbattle.h \
+	src/singleplayertab.cpp \
+	src/singleplayertab.h \
 	src/springlobbyapp.cpp \
 	src/springlobbyapp.h \
 	src/springoptionstab.cpp \
