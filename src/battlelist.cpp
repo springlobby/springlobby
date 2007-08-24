@@ -12,7 +12,7 @@ BattleList::BattleList()
 
 void BattleList::AddBattle( Battle& battle )
 {
-  m_battles[battle.opts().battleid] = &battle;
+  m_battles[battle.GetBattleId()] = &battle;
 }
 
 

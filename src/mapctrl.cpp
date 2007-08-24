@@ -1,8 +1,4 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
-//
-// Class: MapCtrl
-//
-
 
 #include <wx/panel.h>
 #include <wx/dcclient.h>
@@ -39,7 +35,7 @@ END_EVENT_TABLE()
 const int boxsize = 8;
 const int minboxsize = 40;
 
-MapCtrl::MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types ):
+MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
   m_image(0),
   m_battle(battle),
@@ -73,6 +69,7 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, SinglePlayerBattle* battle, Ui& ui
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
   m_image(0),
   m_battle(0),
+  m_sp_battle(0),
   m_ui(ui),
   m_mapname(_T("")),
   m_draw_start_types(true),
@@ -110,7 +107,7 @@ MapCtrl::~MapCtrl()
 }
 
 
-void MapCtrl::SetBattle( Battle* battle )
+void MapCtrl::SetBattle( IBattle* battle )
 {
   m_battle = battle;
   UpdateMinimap();
@@ -135,7 +132,7 @@ wxRect MapCtrl::_GetMinimapRect()
 
 wxRect MapCtrl::_GetStartRect( int index )
 {
-  ASSERT_LOGIC( m_battle != 0, "Battle = 0" );
+  ASSERT_LOGIC( BattleType() != BT_Multi, "MapCtrl::_GetStartRect(): Battle type is not BT_Multi" );
   BattleStartRect* sr = m_battle->GetStartRect( index );
   if ( sr == 0 ) return wxRect();
   if ( sr->deleted ) return wxRect();
@@ -256,7 +253,7 @@ void MapCtrl::_SetMouseOverRect( int index )
 void MapCtrl::_SetCursor()
 {
   if ( m_battle != 0 ) {
-    if ( m_battle->opts().starttype != ST_Choose ) {
+    if ( m_battle->GetStartType() != ST_Choose ) {
       SetCursor( wxCursor( wxCURSOR_ARROW ) );
       return;
     }
@@ -286,35 +283,31 @@ void MapCtrl::_SetCursor()
 
 void MapCtrl::LoadMinimap()
 {
+  debug_func("");
   if ( m_battle == 0 ) return;
   if ( m_image ) return;
-  if ( !usync()->MapExists( m_battle->opts().mapname ) ) return;
-  debug("1");
+  if ( !m_battle->MapExists() ) return;
+
+  wxString map = m_battle->GetMapName();
   try {
     int w, h;
     GetClientSize( &w, &h );
-    debug("2");
     if ( w * h == 0 ) {
       m_image = 0;
       m_mapname = _T("");
       m_lastsize = wxSize( -1, -1 );
       return;
     }
-    debug("3");
-    wxImage img = usync()->GetMinimap( m_battle->opts().mapname, w, h, m_fixed_size );
-    debug("4");
+    wxImage img = usync()->GetMinimap( STD_STRING(map), w, h, m_fixed_size );
     m_image = new wxBitmap( img );
-    m_mapname = WX_STRING( m_battle->opts().mapname );
+    m_mapname = map;
     m_lastsize = wxSize( w, h );
-    debug("5");
     Refresh();
     Update();
-    debug("6");
   } catch (...) {
     m_image = 0;
     m_mapname = _T("");
   }
-  debug("7");
 
 }
 
@@ -335,7 +328,7 @@ void MapCtrl::UpdateMinimap()
   _SetCursor();
   if ( m_battle == 0 ) return;
   GetClientSize( &w, &h );
-  if ( (m_mapname != WX_STRING( m_battle->opts().mapname) || ( m_lastsize != wxSize(w, h) ) ) ) {
+  if ( (m_mapname != m_battle->GetMapName() ) || ( m_lastsize != wxSize(w, h) ) ) {
     FreeMinimap();
     LoadMinimap();
   }
@@ -384,13 +377,13 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 
   if ( m_draw_start_types ) {
 
-    if ( m_battle->opts().starttype == ST_Choose ) {
+    if ( m_battle->GetStartType() == ST_Choose ) {
       // Draw startrects.
       for ( int i = 0; i < 15; i++ ) {
         wxRect sr = _GetStartRect( i );
         if ( sr.IsEmpty() ) continue;
         wxColour col;
-        if ( i == m_battle->GetMe().BattleStatus().ally ) {
+        if ( i == m_battle->GetMyAlly() ) {
           col.Set( 0, 200, 0 );
         } else {
           col.Set( 200, 0, 0 );
@@ -399,18 +392,19 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
       }
     } else {
 
-      try {
-        if ( m_map.name != m_battle->opts().mapname ) m_map = usync()->GetMap( m_battle->opts().mapname, true );
+      /*try {
+        if ( m_map.name != STD_STRING(m_battle->GetMapName()) ) m_map = usync()->GetMap( STD_STRING(m_battle->GetMapName()), true );
       } catch (...) {
         debug_error( "Map not found." );
         return;
-      }
+      }*/
+      m_map = m_battle->Map();
 
       if ( !m_start_ally ) m_start_ally = new wxBitmap( start_ally_xpm );
       if ( !m_start_enemy ) m_start_enemy = new wxBitmap( start_enemy_xpm );
       if ( !m_start_unused ) m_start_unused = new wxBitmap( start_unused_xpm );
 
-      if ( m_battle->opts().starttype == ST_Fixed ) {
+      if ( m_battle->GetStartType() == ST_Fixed ) {
       // Draw startpositions
         wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
         dc.SetFont( f );
@@ -450,7 +444,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   wxPoint p = event.GetPosition();
   if ( m_battle == 0 ) return;
   if ( p == wxDefaultPosition ) return;
-  if ( m_battle->opts().starttype != ST_Choose ) return;
+  if ( m_battle->GetStartType() != ST_Choose ) return;
 
   if ( m_maction == MA_Add ) { // We are currently adding a rect.
 
@@ -529,7 +523,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 void MapCtrl::OnLeftDown( wxMouseEvent& event )
 {
   if ( m_battle == 0 ) return;
-  if ( m_battle->opts().starttype != ST_Choose ) return;
+  if ( m_battle->GetStartType() != ST_Choose ) return;
   if ( !m_ro ) {
     // In edit mode
     if ( m_mover_rect >= 0 ) { // We are over an existing rect.
@@ -565,9 +559,8 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
     // Readonly.
     if ( m_mover_rect >= 0 ) {
       // Join ally rect that user clicked on
-      if ( m_battle->GetMe().BattleStatus().ally != m_mover_rect ) {
-        m_battle->GetMe().BattleStatus().ally = m_mover_rect;
-        m_battle->SendMyBattleStatus();
+      if ( m_battle->GetMyAlly() != m_mover_rect ) {
+        m_battle->SetMyAlly( m_mover_rect );
       }
 
     }
@@ -579,7 +572,7 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
 void MapCtrl::OnLeftUp( wxMouseEvent& event )
 {
   if ( m_battle == 0 ) return;
-  if ( m_battle->opts().starttype != ST_Choose ) return;
+  if ( m_battle->GetStartType() != ST_Choose ) return;
 
   if ( m_maction == MA_Add ) {
 

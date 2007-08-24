@@ -33,7 +33,7 @@ void ServerEvents::OnDisconnected()
 
 void ServerEvents::OnLogin()
 {
-  
+
 }
 
 
@@ -140,15 +140,14 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const std::
   battle.SetIsReplay( replay );
   battle.SetNatType( nat );
   battle.SetFounder( nick );
-  battle.SetIp( host );
+  battle.SetHostIp( host );
   battle.SetHostPort( port );
   battle.SetMaxPlayers( maxplayers );
   battle.SetIsPassworded( haspass );
   battle.SetRankNeeded( rank );
-  battle.SetMapHash( maphash );
-  battle.SetMapname( map );
+  battle.SetMap( WX_STRING(map), WX_STRING(maphash) );
   battle.SetDescription( title );
-  battle.SetModname( mod );
+  battle.SetMod( WX_STRING(mod), wxEmptyString );
 
   m_ui.OnBattleOpened( battle );
   if ( user.Status().in_game ) {
@@ -259,10 +258,9 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   battle.SetSpectators( spectators );
   battle.SetIsLocked( locked );
 
-  std::string oldmap = battle.opts().mapname;
+  std::string oldmap = STD_STRING(battle.GetMapName());
 
-  battle.SetMapHash( maphash );
-  battle.SetMapname( map );
+  battle.SetMap( WX_STRING(map), WX_STRING(maphash) );
 
   if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) ) battle.SendMyBattleStatus();
 

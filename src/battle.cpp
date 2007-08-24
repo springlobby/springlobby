@@ -134,7 +134,7 @@ void Battle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
     }
   }
   if ( lowest >= 16 ) lowest = 0;
-  
+
   r = colour_values[lowest][0];
   g = colour_values[lowest][1];
   b = colour_values[lowest][2];
@@ -177,7 +177,7 @@ void Battle::SetImReady( bool ready )
 
 bool Battle::IsSynced()
 {
-  if ( IsMapAvailable() && IsModAvailable() ) {
+  if ( MapExists() && ModExists() ) {
     return true;
   } else {
     return false;
@@ -185,25 +185,25 @@ bool Battle::IsSynced()
 }
 
 
-bool Battle::HasMod()
+/*bool Battle::HasMod()
 {
   return usync()->ModExists( m_opts.modname );
-}
+}*/
 
 
 void Battle::Say( const std::string& msg )
 {
-  m_serv.SayBattle( opts().battleid, msg );
+  m_serv.SayBattle( m_opts.battleid, msg );
 }
 
 
 void Battle::DoAction( const std::string& msg )
 {
-  m_serv.DoActionBattle( opts().battleid, msg );
+  m_serv.DoActionBattle( m_opts.battleid, msg );
 }
 
 
-bool Battle::IsMapAvailable()
+/*bool Battle::IsMapAvailable()
 {
   if ( !usync()->MapExists( m_opts.mapname ) ) return false;
 
@@ -219,7 +219,7 @@ bool Battle::IsModAvailable()
   UnitSyncMod mod = usync()->GetMod( m_opts.modname );
   return true;
   //return ( mod.hash == m_opts.hashcode );
-}
+}*/
 
 
 bool Battle::HaveMultipleBotsInSameTeam()

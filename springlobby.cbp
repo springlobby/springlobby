@@ -16,13 +16,12 @@
 				<Option projectLinkerOptionsRelation="2" />
 				<Option projectResourceIncludeDirsRelation="0" />
 				<Compiler>
-					<Add option="-pg" />
+					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
-					<Add option='-DVERSION=\\&quot;0.0.1-cb\\&quot;' />
+					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
 				</Compiler>
 				<Linker>
-					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
 				</Linker>
 			</Target>
@@ -66,12 +65,8 @@
 		</VirtualTargets>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-pg" />
 			<Add directory="src" />
 		</Compiler>
-		<Linker>
-			<Add option="-pg" />
-		</Linker>
 		<Unit filename="src/addbotdialog.cpp" />
 		<Unit filename="src/addbotdialog.h" />
 		<Unit filename="src/agreementdialog.cpp" />
@@ -109,6 +104,8 @@
 		<Unit filename="src/flagimages.h" />
 		<Unit filename="src/hostbattledialog.cpp" />
 		<Unit filename="src/hostbattledialog.h" />
+		<Unit filename="src/ibattle.cpp" />
+		<Unit filename="src/ibattle.h" />
 		<Unit filename="src/iconimagelist.cpp" />
 		<Unit filename="src/iconimagelist.h" />
 		<Unit filename="src/iunitsync.h" />
@@ -135,6 +132,8 @@
 		<Unit filename="src/settings.h" />
 		<Unit filename="src/singleplayerbattle.cpp" />
 		<Unit filename="src/singleplayerbattle.h" />
+		<Unit filename="src/singleplayertab.cpp" />
+		<Unit filename="src/singleplayertab.h" />
 		<Unit filename="src/socket.cpp" />
 		<Unit filename="src/socket.h" />
 		<Unit filename="src/spring.cpp" />

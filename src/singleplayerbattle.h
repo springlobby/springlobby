@@ -5,7 +5,11 @@
 #include <wx/string.h>
 #include <wx/gdicmn.h>
 
+#include "iunitsync.h"
+#include "ibattle.h"
+
 class Ui;
+
 
 
 class SinglePlayerBot
@@ -39,29 +43,27 @@ class SinglePlayerBot
 
 };
 
-
-typedef int SPGameType;
-enum {
-	SPGT_Pick = 1,
-	SPGT_Random
-};
-
-
+/*
 class SinglePlayerOptions
 {
   public:
 
-    void SetGameType( SPGameType gametype ) { m_type = gametype; }
-    SPGameType GetGameType() { return m_type; }
+    void SetGameType( StartType gametype ) { m_type = gametype; }
+    StartType GetGameType() { return m_type; }
+
+    void SetMap( UnitSyncMap map ) { m_map = map; }
+    UnitSyncMap& Map() { return m_map; }
 
   protected:
 
-    SPGameType m_type;
+    StartType m_type;
+    wxString m_mapname;
+    UnitSyncMap m_map;
 
-};
+};*/
 
 
-class SinglePlayerBattle
+class SinglePlayerBattle: public IBattle
 {
   public:
 
@@ -74,15 +76,21 @@ class SinglePlayerBattle
     SinglePlayerBot& GetBot( int index );
     int GetNumBots();
 
-    SinglePlayerOptions& opts() { return m_opts; }
+    //SinglePlayerOptions& opts() { return m_opts; }
 
     void SetStartPos( int index, wxPoint pos );
     wxPoint GetStartPos( int index );
+    void ResetStartPos( int index );
+
+    void GetFreeColour( int& r, int& g, int& b, bool excludeme = true ) {}
+
+    int GetMyAlly() { return -1; }
+    void SetMyAlly( int ally ) {}
 
   protected:
 
     Ui& m_ui;
-    SinglePlayerOptions m_opts;
+    //SinglePlayerOptions m_opts;
 
 };
 

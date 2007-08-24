@@ -205,26 +205,26 @@ wxString Spring::GetScriptTxt( Battle& battle )
   debug("7");
 
 
-  BattleOptions bo = battle.opts();
+  //BattleOptions bo = battle.opts();
 
   // Start generating the script.
   s  = wxString::Format( _T("[GAME]\n{\n") );
 
   //s += wxString::Format( _T("\tMapname=%s;\n"), bo.mapname.c_str() );
-  s += WX_STRING(("\tMapname=" + bo.mapname + ";\n"));
-  s += wxString::Format( _T("\tStartMetal=%d;\n"), bo.startmetal );
-  s += wxString::Format( _T("\tStartEnergy=%d;\n"), bo.startenergy );
-  s += wxString::Format( _T("\tMaxUnits=%d;\n"), bo.maxunits );
-  s += wxString::Format( _T("\tStartPosType=%d;\n"), bo.starttype );
-  s += wxString::Format( _T("\tGameMode=%d;\n"), bo.gametype );
-  s += WX_STRING(("\tGameType=" + usync()->GetModArchive(usync()->GetModIndex(bo.modname)) + ";\n"));
-  s += wxString::Format( _T("\tLimitDGun=%d;\n"), bo.limitdgun?1:0 );
-  s += wxString::Format( _T("\tDiminishingMMs=%d;\n"), bo.dimmms?1:0 );
-  s += wxString::Format( _T("\tGhostedBuildings=%d;\n\n"), bo.ghostedbuildings?1:0 );
+  s += _T("\tMapname=") + battle.GetMapName() + _T(";\n");
+  s += wxString::Format( _T("\tStartMetal=%d;\n"), battle.GetStartMetal() );
+  s += wxString::Format( _T("\tStartEnergy=%d;\n"), battle.GetStartEnergy() );
+  s += wxString::Format( _T("\tMaxUnits=%d;\n"), battle.GetMaxUnits() );
+  s += wxString::Format( _T("\tStartPosType=%d;\n"), battle.GetStartType() );
+  s += wxString::Format( _T("\tGameMode=%d;\n"), battle.GetGameType() );
+  s += WX_STRING(("\tGameType=" + usync()->GetModArchive(usync()->GetModIndex(STD_STRING(battle.GetModName()))) + ";\n"));
+  s += wxString::Format( _T("\tLimitDGun=%d;\n"), battle.LimitDGun()?1:0 );
+  s += wxString::Format( _T("\tDiminishingMMs=%d;\n"), battle.DimMMs()?1:0 );
+  s += wxString::Format( _T("\tGhostedBuildings=%d;\n\n"), battle.GhostedBuildings()?1:0 );
 
   if ( battle.IsFounderMe() ) s += wxString::Format( _T("\tHostIP=localhost;\n") );
-  else s += WX_STRING(("\tHostIP=" + bo.ip + ";\n"));
-  s += wxString::Format( _T("\tHostPort=%d;\n\n"), bo.port );
+  else s += WX_STRING(("\tHostIP=" + battle.GetHostIp() + ";\n"));
+  s += wxString::Format( _T("\tHostPort=%d;\n\n"), battle.GetHostPort() );
 
   s += wxString::Format( _T("\tMyPlayerNum=%d;\n\n"), MyPlayerNum );
 
@@ -283,7 +283,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
          );
     std::setlocale(LC_NUMERIC, old_locale);
     debug( i2s(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side) );
-    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( battle.opts().modname, battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side ) + ";\n"));
+    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( STD_STRING(battle.GetModName()), battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side ) + ";\n"));
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().handicap );
     s +=  _T("\t}\n");
   }
@@ -307,7 +307,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
                              (double)(bot.bs.color_b/255.0)
                          );
     std::setlocale(LC_NUMERIC, old_locale);
-    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( battle.opts().modname, bot.bs.side ) + ";\n"));
+    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( STD_STRING(battle.GetModName()), bot.bs.side ) + ";\n"));
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), bot.bs.handicap );
 
     wxString ai = WX_STRING( bot.aidll );
@@ -329,7 +329,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     int NumInAlly = 0;
     s += wxString::Format( _T("\t\tNumAllies=%d;\n"), NumInAlly );
 
-   if ( (battle.GetStartRect(AllyRevConv[i]) != 0) && (bo.starttype == ST_Choose) ) {
+   if ( (battle.GetStartRect(AllyRevConv[i]) != 0) && (battle.GetStartType() == ST_Choose) ) {
       BattleStartRect* sr = (BattleStartRect*)battle.GetStartRect(AllyRevConv[i]);
       const char* old_locale = std::setlocale(LC_NUMERIC, "C");
       s += wxString::Format( _T("\t\tStartRectLeft=%.3f;\n"), sr->left / 200.0 );

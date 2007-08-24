@@ -56,8 +56,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_color_sel = new wxComboBox( m_player_panel, BROOM_COLOURSEL, _("orange"), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), 16, colour_choices );
   m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
-  for ( int i = 0; i < usync()->GetSideCount( battle.opts().modname ); i++ ) {
-    m_side_sel->Append( WX_STRING(usync()->GetSideName( battle.opts().modname, i )) );
+  for ( int i = 0; i < usync()->GetSideCount( STD_STRING(m_battle.GetModName()) ); i++ ) {
+    m_side_sel->Append( WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), i )) );
   }
 
   m_team_lbl = new wxStaticText( m_player_panel, -1, _("Team") );
@@ -65,7 +65,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_color_lbl = new wxStaticText( m_player_panel, -1, _("Color") );
   m_side_lbl = new wxStaticText( m_player_panel, -1, _("Side") );
 
-  m_map_lbl = new wxStaticText( this, -1, RefineMapname( WX_STRING(battle.opts().mapname) ) );
+  m_map_lbl = new wxStaticText( this, -1, RefineMapname( battle.GetMapName() ) );
   m_size_lbl = new wxStaticText( this, -1, _("") );
   m_wind_lbl = new wxStaticText( this, -1, _("") );
   m_tidal_lbl = new wxStaticText( this, -1, _("") );
@@ -180,15 +180,15 @@ bool BattleRoomTab::IsHosted()
 void BattleRoomTab::UpdateBattleInfo()
 {
   try {
-    UnitSyncMap map = usync()->GetMap( m_battle.opts().mapname );
-    if ( map.hash != m_map.hash ) map = m_map = usync()->GetMap( m_battle.opts().mapname, true );
-    else map = m_map;
+    UnitSyncMap map = m_battle.Map();/*usync()->GetMap( STD_STRING(m_battle.GetMapName()) );
+    if ( map.hash != m_map.hash ) map = m_map = usync()->GetMap( STD_STRING(m_battle.GetMapName()), true );
+    else map = m_map;*/
     m_map_lbl->SetLabel( RefineMapname( WX_STRING(map.name) ) );
     m_size_lbl->SetLabel( wxString::Format( _("Size: %.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
     m_wind_lbl->SetLabel( wxString::Format( _("Wind: %d-%d"), map.info.minWind, map.info.maxWind) );
     m_tidal_lbl->SetLabel( wxString::Format( _("Tidal: %d"), map.info.tidalStrength) );
   } catch (...) {
-    m_map_lbl->SetLabel( WX_STRING(m_battle.opts().mapname) );
+    m_map_lbl->SetLabel( m_battle.GetMapName() );
     m_size_lbl->SetLabel( _("Size: ?x?") );
     m_wind_lbl->SetLabel( _("Wind: ?-?") );
     m_tidal_lbl->SetLabel( _("Tidal: ?") );
@@ -215,7 +215,7 @@ void BattleRoomTab::UpdateUser( User& user )
   m_side_sel->SetSelection( bs.side );
   m_spec_chk->SetValue( bs.spectator );
   m_ready_chk->SetValue( bs.ready );
-  
+
   m_minimap->UpdateMinimap();
 }
 
@@ -274,7 +274,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
     bs.order = 0;
     bs.handicap = 0;
     m_battle.GetFreeColour( bs.color_r, bs.color_g, bs.color_b, false );
-    m_ui.GetServer().AddBot( m_battle.opts().battleid, STD_STRING(dlg.GetNick()), m_battle.GetMe().GetNick(), bs, STD_STRING(dlg.GetAI()) );
+    m_ui.GetServer().AddBot( m_battle.GetBattleId(), STD_STRING(dlg.GetNick()), m_battle.GetMe().GetNick(), bs, STD_STRING(dlg.GetAI()) );
   }
 }
 

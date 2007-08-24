@@ -16,7 +16,7 @@ Server::~Server()
 {
   while ( m_battles.GetNumBattles() > 0 ) {
     Battle* b = &m_battles.GetFirstBattle();
-    m_battles.RemoveBattle( b->opts().battleid );
+    m_battles.RemoveBattle( b->GetBattleId() );
     delete b;
   }
   while ( m_users.GetNumUsers() > 0 ) {

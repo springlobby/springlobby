@@ -117,8 +117,8 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
   m_popup->Append( -1, _("Colour"), m_colours );
 
   m_sides = new wxMenu();
-  for ( int i = 0; i < usync()->GetSideCount( m_battle.opts().modname ); i++ ) {
-    wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, WX_STRING(usync()->GetSideName( m_battle.opts().modname, i )), wxEmptyString, wxITEM_NORMAL );
+  for ( int i = 0; i < usync()->GetSideCount( STD_STRING(m_battle.GetModName()) ); i++ ) {
+    wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), i )), wxEmptyString, wxITEM_NORMAL );
     m_sides->Append( side );
     Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
   }
@@ -126,9 +126,9 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
 
   m_spec_item = new wxMenuItem( m_popup, BRLIST_SPEC, wxString( _("Spectator") ) , wxEmptyString, wxITEM_CHECK );
   m_popup->Append( m_spec_item );
-  
+
   m_popup->AppendSeparator();
-  
+
   wxMenuItem* kick = new wxMenuItem( m_popup, BRLIST_KICK, wxString( _("Kick") ) , wxEmptyString, wxITEM_NORMAL );
   m_popup->Append( kick );
   wxMenuItem* ring = new wxMenuItem( m_popup, BRLIST_RING, wxString( _("Ring") ) , wxEmptyString, wxITEM_NORMAL );
@@ -191,9 +191,9 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   if ( !user.BattleStatus().spectator ) {
 
     try {
-      int sideimg = icons().GetSideIcon( usync()->GetSideName( m_battle.opts().modname, user.BattleStatus().side ) );
+      int sideimg = icons().GetSideIcon( usync()->GetSideName( STD_STRING(m_battle.GetModName()), user.BattleStatus().side ) );
       if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
-      else SetItem( index, 1, WX_STRING(usync()->GetSideName( m_battle.opts().modname, user.BattleStatus().side )) );
+      else SetItem( index, 1, WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), user.BattleStatus().side )) );
     } catch ( ... ) {
       SetItem( index, 1, wxString::Format( _T("s%d"), user.BattleStatus().side + 1 ) );
     }
@@ -275,9 +275,9 @@ void BattleroomListCtrl::UpdateBot( const int& index )
   SetItemColumnImage( index, 1, -1 );
 
   try {
-    int sideimg = icons().GetSideIcon( usync()->GetSideName( m_battle.opts().modname, bot.bs.side ) );
+    int sideimg = icons().GetSideIcon( usync()->GetSideName( STD_STRING(m_battle.GetModName()), bot.bs.side ) );
     if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
-    else SetItem( index, 1, WX_STRING(usync()->GetSideName( m_battle.opts().modname, bot.bs.side )) );
+    else SetItem( index, 1, WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), bot.bs.side )) );
   } catch ( ... ) {
     SetItem( index, 1, wxString::Format( _T("s%d"), bot.bs.side + 1 ) );
   }

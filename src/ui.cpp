@@ -186,7 +186,7 @@ void Ui::StartHostedBattle()
 {
   assert( m_serv != 0 );
   m_serv->StartHostedBattle();
-  sett().SetLastHostMap( m_serv->GetCurrentBattle()->opts().mapname );
+  sett().SetLastHostMap( STD_STRING(m_serv->GetCurrentBattle()->GetMapName()) );
 }
 
 
@@ -504,7 +504,7 @@ void Ui::OnJoinedBattle( Battle& battle )
   /*if ( !Spring::TestSpringBinary() ) {
     wxMessageBox( _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
   }*/
-  if ( battle.opts().nattype != NAT_None ) {
+  if ( battle.GetNatType() != NAT_None ) {
     wxMessageBox( _("This game uses NAT traversal that is not yet supported\nby SpringLobby.\n\nYou will not be able to play in this battle."), _("NAT traversal"), wxOK );
   }
 }

@@ -3,7 +3,7 @@
 
 #include <wx/string.h>
 
-#include "battle.h"
+#include "ibattle.h"
 #include "iunitsync.h"
 
 class wxPanel;
@@ -33,17 +33,18 @@ typedef int RectArea;
 #define MA_ResizeDownLeft 6
 #define MA_ResizeDownRight 7
 
+
 typedef int MouseAction;
 
 
 class MapCtrl : public wxPanel
 {
   public:
-    MapCtrl( wxWindow* parent, int size, Battle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types );
+    MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types );
     MapCtrl( wxWindow* parent, int size, SinglePlayerBattle* battle, Ui& ui );
     ~MapCtrl();
 
-    void SetBattle( Battle* battle );
+    void SetBattle( IBattle* battle );
 
     void LoadMinimap();
     void FreeMinimap();
@@ -56,7 +57,8 @@ class MapCtrl : public wxPanel
     void OnLeftDown( wxMouseEvent& event );
     void OnLeftUp( wxMouseEvent& event );
     void OnMouseWheel( wxMouseEvent& event );
-  protected:
+
+   protected:
 
     BattleStartRect _GetBattleRect( int x1, int y1, int x2, int y2, int ally = -1 );
     wxRect _GetMinimapRect();
@@ -72,7 +74,10 @@ class MapCtrl : public wxPanel
     void _SetCursor();
 
     wxBitmap* m_image;
-    Battle* m_battle;
+
+    IBattle* m_battle;
+    SinglePlayerBattle* m_sp_battle;
+
     Ui& m_ui;
     wxString m_mapname;
 

@@ -39,7 +39,7 @@ class BattleMapTab : public wxPanel
   protected:
     Ui& m_ui;
     Battle& m_battle;
-    UnitSyncMap m_map;
+    //UnitSyncMap m_map;
 
 		MapCtrl* m_minimap;
 		wxChoice* m_map_combo;

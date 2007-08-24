@@ -58,4 +58,3 @@ int SinglePlayerBattle::AddBot(int ally, int position, const wxString& aidll)
   return -1;
 }
 
-

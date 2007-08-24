@@ -150,15 +150,15 @@ void BattleListCtrl::UpdateBattle( const int& index )
   Battle& battle = *((Battle*)GetItemData( index ));
 
   SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
-  SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.opts().rankneeded, false ) );
+  SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
   SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
-  SetItem( index, 3, WX_STRING(battle.opts().description) );
-  SetItem( index, 4, RefineMapname( WX_STRING(battle.opts().mapname) ), battle.IsMapAvailable()?ICON_EXISTS:ICON_NEXISTS );
-  SetItem( index, 5, RefineModname( WX_STRING(battle.opts().modname) ), battle.IsModAvailable()?ICON_EXISTS:ICON_NEXISTS );
-  SetItem( index, 6, WX_STRING(battle.opts().founder) );
-  SetItem( index, 7, wxString::Format(_T("%d"), battle.opts().spectators) );
-  SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.opts().spectators ) );
-  SetItem( index, 9, wxString::Format(_T("%d"), battle.opts().maxplayers) );
+  SetItem( index, 3, WX_STRING(battle.GetDescription()) );
+  SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?ICON_EXISTS:ICON_NEXISTS );
+  SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?ICON_EXISTS:ICON_NEXISTS );
+  SetItem( index, 6, WX_STRING(battle.GetFounder().GetNick()) );
+  SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
+  SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
+  SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
 
 }
 
@@ -203,7 +203,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 {
   if ( m_selected >= 0 ) {
     Battle& battle = *((Battle*)GetItemData( m_selected )); // FIXME m_selected might not exist.
-    wxString map = WX_STRING(battle.opts().mapname);
+    wxString map = battle.GetMapName();
     map = map.SubString(0, map.Find( '.', true ) - 1 );
     wxString url = _T("http://spring.unknown-files.net/page/search/2/13/") + map + _T("/");
     if ( !wxLaunchDefaultBrowser( url ) ) {
@@ -217,7 +217,7 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
 {
   if ( m_selected >= 0 ) {
     Battle& battle = *((Battle*)GetItemData( m_selected )); // FIXME m_selected might not exist.
-    wxString mod = WX_STRING(battle.opts().modname);
+    wxString mod = battle.GetModName();
     //all the following manipulation is necessary because the publish name on UF doesn't necessary reflect the file name
     //and the mod filename isn't accessible trought unitsync
     mod.Replace(_T(" "), _T("*") );

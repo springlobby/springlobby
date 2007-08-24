@@ -773,14 +773,14 @@ void TASServer::SendHostInfo( HostInfo update )
   Battle& battle = GetBattle( m_battle_id );
   assert( battle.IsFounderMe() );
 
-  BattleOptions bo = battle.opts();
+  //BattleOptions bo = battle.opts();
 
   if ( ( update & ( HI_Map | HI_Locked | HI_Spectators ) ) > 0 ) {
     // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
     wxString cmd = _T("UPDATEBATTLEINFO");
-    cmd += wxString::Format( _T(" %d %d "), bo.spectators, bo.islocked );
-    cmd += WX_STRING( bo.maphash ) + _T(" ");
-    cmd += WX_STRING( bo.mapname ) + _T("\n");
+    cmd += wxString::Format( _T(" %d %d "), battle.GetSpectators(), battle.IsLocked() );
+    cmd += battle.GetMapHash() + _T(" ");
+    cmd += battle.GetMapName() + _T("\n");
 
     m_sock->Send( STD_STRING(cmd) );
   }
@@ -788,7 +788,8 @@ void TASServer::SendHostInfo( HostInfo update )
     // UPDATEBATTLEDETAILS startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings
     wxString cmd = _T("UPDATEBATTLEDETAILS");
     cmd += wxString::Format( _T(" %d %d %d %d %d %d %d %d\n"),
-      bo.startmetal, bo.startenergy, bo.maxunits, bo.starttype, bo.gametype, bo.limitdgun, bo.dimmms, bo.ghostedbuildings
+      battle.GetStartMetal(), battle.GetStartEnergy(), battle.GetMaxUnits(), battle.GetStartType(), battle.GetGameType(),
+      battle.LimitDGun(), battle.DimMMs(), battle.GhostedBuildings()
     );
 
     m_sock->Send( STD_STRING(cmd) );
@@ -889,7 +890,7 @@ void TASServer::ForceSide( int battleid, const std::string& nick, int side )
     GetMe().BattleStatus().side = side;
     SendMyBattleStatus( GetMe().BattleStatus() );
   } else {
-    DoActionBattle( battleid, "sugests that " + nick + " changes to " + usync()->GetSideName( GetBattle(battleid).opts().modname, side ) + " side." );
+    DoActionBattle( battleid, "sugests that " + nick + " changes to " + usync()->GetSideName( STD_STRING(GetBattle(battleid).GetModName()), side ) + " side." );
   }
 }
 
