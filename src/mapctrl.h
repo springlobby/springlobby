@@ -41,7 +41,6 @@ class MapCtrl : public wxPanel
 {
   public:
     MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types );
-    MapCtrl( wxWindow* parent, int size, SinglePlayerBattle* battle, Ui& ui );
     ~MapCtrl();
 
     void SetBattle( IBattle* battle );

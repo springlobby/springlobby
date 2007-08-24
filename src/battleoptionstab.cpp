@@ -25,7 +25,7 @@
 #include "ui.h"
 #include "iunitsync.h"
 #include "user.h"
-#include "battle.h"
+#include "ibattle.h"
 #include "utils.h"
 #include "chatpanel.h"
 #include "mapctrl.h"
@@ -55,7 +55,7 @@ BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
 END_EVENT_TABLE()
 
 
-BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, Battle& battle ):
+BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle ):
   wxPanel( parent, -1 ), m_ui(ui), m_battle(battle)
 {
 	wxBoxSizer* m_main_sizer;

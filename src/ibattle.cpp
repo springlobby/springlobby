@@ -8,6 +8,15 @@ IBattle::IBattle():
   m_mod_loaded(false),
   m_map_exists(false),
   m_mod_exists(false),
+
+  m_startmetal(1000),
+  m_startenergy(1000),
+  m_maxunits(500),
+
+  m_limitdgun(false),
+  m_dimmms(false),
+  m_ghostedbuildings(true),
+
   m_gametype(GT_ComContinue),
   m_starttype(ST_Fixed)
 {

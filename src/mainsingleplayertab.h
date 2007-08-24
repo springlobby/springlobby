@@ -10,6 +10,7 @@ class wxNotebook;
 class wxImageList;
 class wxBoxSizer;
 class SinglePlayerTab;
+class BattleOptionsTab;
 
 
 class MainSinglePlayerTab : public wxPanel
@@ -29,6 +30,7 @@ class MainSinglePlayerTab : public wxPanel
     wxNotebook* m_tabs;
 
     SinglePlayerTab* m_sp_tab;
+    BattleOptionsTab* m_opts_tab;
 
 };
 

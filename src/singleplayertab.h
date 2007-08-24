@@ -15,6 +15,7 @@ class wxWindow;
 class wxButton;
 class wxStaticLine;
 class wxChoice;
+class wxCommandEvent;
 
 
 class SinglePlayerTab: public wxPanel
@@ -24,6 +25,11 @@ class SinglePlayerTab: public wxPanel
     SinglePlayerTab( wxWindow* parent, Ui& ui );
     ~SinglePlayerTab();
 
+    void ReloadMaplist();
+
+    SinglePlayerBattle& GetBattle() { return m_battle; }
+
+    void OnMapSelect( wxCommandEvent& event );
   protected:
 
     Ui& m_ui;
@@ -37,6 +43,17 @@ class SinglePlayerTab: public wxPanel
 		wxButton* m_reset_btn;
 		wxButton* m_start_btn;
 
+  DECLARE_EVENT_TABLE()
+};
+
+
+enum
+{
+  SP_MAP_PICK = wxID_HIGHEST,
+  SP_BROWSE_MAP,
+  SP_ADD_BOT,
+  SP_RESET,
+  SP_START
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERTAB_H

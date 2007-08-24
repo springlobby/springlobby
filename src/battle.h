@@ -107,7 +107,7 @@ class Battle : public UserList, public IBattle
     void SetSpectators( const int& spectators ) { m_opts.spectators = spectators; }
     int GetSpectators() { return m_opts.spectators; }
 
-    void SetStartMetal( const int& smetal ) { m_opts.startmetal = smetal; }
+/*    void SetStartMetal( const int& smetal ) { m_opts.startmetal = smetal; }
     int GetStartMetal() { return m_opts.startmetal; }
     void SetStartEnergy( const int& senergy ) { m_opts.startenergy = senergy; }
     int GetStartEnergy() { return m_opts.startenergy; }
@@ -122,7 +122,7 @@ class Battle : public UserList, public IBattle
     bool DimMMs() { return m_opts.dimmms; }
     void SetGhostedBuildings( const bool& gbuilds ) { m_opts.ghostedbuildings = gbuilds; }
     bool GhostedBuildings() { return m_opts.ghostedbuildings; }
-
+*/
     void SetRankNeeded( const int& rankneeded ) { m_opts.rankneeded = rankneeded; }
     int GetRankNeeded() { return m_opts.rankneeded; }
 

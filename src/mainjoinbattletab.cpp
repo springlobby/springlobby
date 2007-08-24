@@ -10,6 +10,7 @@
 #include <wx/sizer.h>
 #include <wx/listbook.h>
 
+#include "battle.h"
 #include "mainjoinbattletab.h"
 #include "battlelisttab.h"
 #include "battleroomtab.h"
@@ -20,6 +21,7 @@
 #include "images/battle.xpm"
 #include "images/battle_map.xpm"
 #include "images/battle_settings.xpm"
+
 
 MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_battle_tab(0),m_map_tab(0),m_opts_tab(0),m_ui(ui)
 {

@@ -6,7 +6,7 @@
 #include "iunitsync.h"
 
 class Ui;
-class Battle;
+class IBattle;
 class User;
 class ChatPanel;
 class wxCommandEvent;
@@ -27,7 +27,7 @@ class wxSlider;
 class BattleOptionsTab : public wxPanel
 {
   public:
-    BattleOptionsTab( wxWindow* parent, Ui& ui, Battle& battle );
+    BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle );
     ~BattleOptionsTab();
 
     void UpdateBattle();
@@ -45,7 +45,7 @@ class BattleOptionsTab : public wxPanel
 
   protected:
     Ui& m_ui;
-    Battle& m_battle;
+    IBattle& m_battle;
 
 		wxRadioBox* m_end_radios;
 		wxStaticText* m_metal_lbl;
