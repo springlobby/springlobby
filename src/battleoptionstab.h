@@ -27,7 +27,7 @@ class wxSlider;
 class BattleOptionsTab : public wxPanel
 {
   public:
-    BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle );
+    BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, bool singleplayer );
     ~BattleOptionsTab();
 
     void UpdateBattle();
@@ -70,6 +70,8 @@ class BattleOptionsTab : public wxPanel
     int m_last_metal;
     int m_last_energy;
     int m_last_units;
+
+    bool m_sp;
 
     DECLARE_EVENT_TABLE()
 };

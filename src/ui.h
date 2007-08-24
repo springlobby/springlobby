@@ -50,7 +50,7 @@ class Ui
     void JoinChannel( const wxString& name, const wxString& password );
 
     void StartHostedBattle();
-    void SendHostInfo( HostInfo update );
+    //void SendHostInfo( HostInfo update );
 
     void Quit();
 

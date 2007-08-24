@@ -190,11 +190,11 @@ void Ui::StartHostedBattle()
 }
 
 
-void Ui::SendHostInfo( HostInfo update )
+/*void Ui::SendHostInfo( HostInfo update )
 {
   assert( m_serv != 0 );
   m_serv->SendHostInfo( update );
-}
+}*/
 
 
 //! @brief Quits the entire application

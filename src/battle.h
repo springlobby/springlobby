@@ -123,6 +123,9 @@ class Battle : public UserList, public IBattle
     void SetGhostedBuildings( const bool& gbuilds ) { m_opts.ghostedbuildings = gbuilds; }
     bool GhostedBuildings() { return m_opts.ghostedbuildings; }
 */
+
+    void SendHostInfo( HostInfo update );
+
     void SetRankNeeded( const int& rankneeded ) { m_opts.rankneeded = rankneeded; }
     int GetRankNeeded() { return m_opts.rankneeded; }
 

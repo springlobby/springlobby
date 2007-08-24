@@ -22,9 +22,10 @@ class SinglePlayerTab: public wxPanel
 {
   public:
 
-    SinglePlayerTab( wxWindow* parent, Ui& ui );
+    SinglePlayerTab( wxWindow* parent, Ui& ui, MainSinglePlayerTab& msptab );
     ~SinglePlayerTab();
 
+    void UpdateMinimap();
     void ReloadMaplist();
 
     SinglePlayerBattle& GetBattle() { return m_battle; }

@@ -37,6 +37,7 @@
 #define GHOUSTED_INDEX  1
 #define DIM_MMS_INDEX 2
 #define LOCK_SPEED_INDEX 3
+#define RANDOM_START_INDEX 3
 
 
 BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
@@ -55,8 +56,8 @@ BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
 END_EVENT_TABLE()
 
 
-BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle ):
-  wxPanel( parent, -1 ), m_ui(ui), m_battle(battle)
+BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, bool singleplayer ):
+  wxPanel( parent, -1 ), m_ui(ui), m_battle(battle), m_sp(singleplayer)
 {
 	wxBoxSizer* m_main_sizer;
 	m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -122,9 +123,12 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle ):
 	wxStaticBoxSizer* m_options_box;
 	m_options_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Options") ), wxVERTICAL );
 
-	wxString m_options_checksChoices[] = { _("Limit d-gun"), _("Ghosted buildning"), _("Diminishing metal makers")/*, _("Lock game speed")*/ };
-	int m_options_checksNChoices = sizeof( m_options_checksChoices ) / sizeof( wxString );
-	m_options_checks = new wxCheckListBox( this, BOPTS_OPTS, wxDefaultPosition, wxDefaultSize, m_options_checksNChoices, m_options_checksChoices, 0 );
+	m_options_checks = new wxCheckListBox( this, BOPTS_OPTS );
+	m_options_checks->Append( _("Limit d-gun") );
+	m_options_checks->Append( _("Ghosted buildning") );
+	m_options_checks->Append( _("Diminishing metal makers") );
+	if ( m_sp ) m_options_checks->Append( _("Random start postisions") );
+
 	m_options_box->Add( m_options_checks, 0, wxALL|wxEXPAND, 5 );
 
 	m_main_options_sizer->Add( m_options_box, 0, wxALL|wxEXPAND, 5 );
@@ -263,7 +267,7 @@ void BattleOptionsTab::OnEndSelect( wxCommandEvent& event )
       default: assert(false);
     }
 
-    m_ui.SendHostInfo( HI_GameType );
+    m_battle.SendHostInfo( HI_GameType );
 
   }
 
@@ -275,7 +279,16 @@ void BattleOptionsTab::OnOptsCheck( wxCommandEvent& event )
   m_battle.SetLimitDGun( m_options_checks->IsChecked( LIMIT_DGUN_INDEX ) );
   m_battle.SetGhostedBuildings( m_options_checks->IsChecked( GHOUSTED_INDEX ) );
   m_battle.SetDimMMs( m_options_checks->IsChecked( DIM_MMS_INDEX ) );
-  m_ui.SendHostInfo( HI_Options );
+
+  if ( m_sp ) {
+    if ( m_options_checks->IsChecked( RANDOM_START_INDEX ) ) m_battle.SetStartType( ST_Random );
+    else m_battle.SetStartType( ST_Fixed ); // TODO should be ST_Pick next spring release
+    m_battle.SendHostInfo( HI_Options|HI_StartType );
+  } else {
+    m_battle.SendHostInfo( HI_Options );
+  }
+
+
 }
 
 
@@ -297,7 +310,7 @@ void BattleOptionsTab::OnSlideChanged( wxScrollEvent& event )
   }
 
   if ( changed != HI_None ) {
-    m_ui.SendHostInfo( changed );
+    m_battle.SendHostInfo( changed );
   }
 }
 

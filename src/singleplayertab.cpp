@@ -22,10 +22,10 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 END_EVENT_TABLE()
 
 
-SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui):
+SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& msptab):
   wxPanel( parent, -1 ),
   m_ui( ui ),
-  m_battle( ui )
+  m_battle( ui, msptab )
 {
 	wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -82,6 +82,12 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui):
 SinglePlayerTab::~SinglePlayerTab()
 {
 
+}
+
+
+void SinglePlayerTab::UpdateMinimap()
+{
+  m_minimap->UpdateMinimap();
 }
 
 

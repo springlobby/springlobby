@@ -1,10 +1,13 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 #include "singleplayerbattle.h"
+#include "mainsingleplayertab.h"
+#include "server.h"
 
 
-SinglePlayerBattle::SinglePlayerBattle(Ui& ui):
-  m_ui(ui)
+SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
+  m_ui(ui),
+  m_sptab(msptab)
 {
 
 }
@@ -56,5 +59,11 @@ void SinglePlayerBattle::RemoveBot(int index)
 int SinglePlayerBattle::AddBot(int ally, int position, const wxString& aidll)
 {
   return -1;
+}
+
+
+void SinglePlayerBattle::SendHostInfo( HostInfo update )
+{
+  if ( (update && HI_StartType) != 0 ) m_sptab.UpdateMinimap();
 }
 

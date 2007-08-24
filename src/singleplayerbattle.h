@@ -10,6 +10,7 @@
 
 class Ui;
 
+class MainSinglePlayerTab;
 
 
 class SinglePlayerBot
@@ -67,7 +68,7 @@ class SinglePlayerBattle: public IBattle
 {
   public:
 
-    SinglePlayerBattle( Ui& ui );
+    SinglePlayerBattle( Ui& ui, MainSinglePlayerTab& msptab );
     ~SinglePlayerBattle();
 
     int AddBot( int ally, int position, const wxString& aidll );
@@ -87,10 +88,12 @@ class SinglePlayerBattle: public IBattle
     int GetMyAlly() { return -1; }
     void SetMyAlly( int ally ) {}
 
+    void SendHostInfo( HostInfo update );
+
   protected:
 
     Ui& m_ui;
-    //SinglePlayerOptions m_opts;
+    MainSinglePlayerTab& m_sptab;
 
 };
 

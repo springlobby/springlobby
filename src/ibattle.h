@@ -7,6 +7,8 @@
 #include "iunitsync.h"
 
 
+typedef int HostInfo;
+
 typedef int StartType;
 enum {
   ST_Fixed = 0,
@@ -99,6 +101,8 @@ class IBattle
     virtual bool DimMMs() { return m_dimmms; }
     virtual void SetGhostedBuildings( const bool& gbuilds ) { m_ghostedbuildings = gbuilds; }
     virtual bool GhostedBuildings() { return m_ghostedbuildings; }
+
+    virtual void SendHostInfo( HostInfo update ) = 0;
 
   protected:
 

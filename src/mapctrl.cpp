@@ -555,18 +555,18 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
       m_battle->AddStartRect( _GetNewRectIndex(), r.left, r.top, r.right, r.bottom );
       UpdateMinimap();
     }
-    m_ui.SendHostInfo( HI_StartRects );
+    m_battle->SendHostInfo( HI_StartRects );
   } else if ( m_maction == MA_Delete ) {
 
     if ( (m_mdown_area == m_rect_area) && (m_mover_rect == m_mdown_rect) ) {
       m_battle->RemoveStartRect( m_mdown_rect );
       UpdateMinimap();
-      m_ui.SendHostInfo( HI_StartRects );
+      m_battle->SendHostInfo( HI_StartRects );
     }
 
   } else if ( (m_maction == MA_ResizeDownRight)||(m_maction == MA_ResizeUpLeft) ) {
     m_battle->UpdateStartRect( m_mdown_rect );
-    m_ui.SendHostInfo( HI_StartRects );
+    m_battle->SendHostInfo( HI_StartRects );
   }
 
   m_maction = MA_None;

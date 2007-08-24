@@ -29,9 +29,9 @@ m_ui(ui)
 
   m_tabs->AssignImageList( m_imagelist );
 
-  m_sp_tab = new SinglePlayerTab( m_tabs, m_ui );
+  m_sp_tab = new SinglePlayerTab( m_tabs, m_ui, *this );
   m_tabs->AddPage( m_sp_tab, _("Game"), true, 0 );
-  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, m_sp_tab->GetBattle() );
+  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, m_sp_tab->GetBattle(), true );
   m_tabs->InsertPage( 1, m_opts_tab, _("Options"), false, 1 );
 
   m_main_sizer->Add( m_tabs, 1, wxEXPAND );
@@ -41,8 +41,14 @@ m_ui(ui)
 }
 
 
- MainSinglePlayerTab::~MainSinglePlayerTab()
+MainSinglePlayerTab::~MainSinglePlayerTab()
 {
 
+}
+
+
+void MainSinglePlayerTab::UpdateMinimap()
+{
+  m_sp_tab->UpdateMinimap();
 }
 

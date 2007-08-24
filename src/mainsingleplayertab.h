@@ -19,7 +19,7 @@ class MainSinglePlayerTab : public wxPanel
     MainSinglePlayerTab( wxWindow* parent, Ui& ui );
     ~MainSinglePlayerTab();
 
-
+    void UpdateMinimap();
 
   protected:
 

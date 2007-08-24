@@ -166,7 +166,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
   m_battle.SetMap( map );
 //  m_battle.SetMapHash( map.hash );
 
-  m_ui.SendHostInfo( HI_Map );
+  m_battle.SendHostInfo( HI_Map );
 }
 
 
@@ -179,6 +179,6 @@ void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
     case 2: m_battle.SetStartType( ST_Choose ); break;
     default: assert(false);
   };
-  m_ui.SendHostInfo( HI_StartType );
+  m_battle.SendHostInfo( HI_StartType );
 }
 

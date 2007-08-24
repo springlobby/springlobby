@@ -39,9 +39,15 @@ Battle::~Battle() {
 }
 
 
-Server& Battle::GetServer()
+Server& Battle::Battle::GetServer()
 {
   return m_serv;
+}
+
+
+void Battle::SendHostInfo( HostInfo update )
+{
+  m_serv.SendHostInfo( update );
 }
 
 
