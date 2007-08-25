@@ -48,6 +48,7 @@ class ChatPanel : public wxPanel
     void DidAction( const wxString& who, const wxString& action );
     void Motd( const wxString& message );
     void StatusMessage( const wxString& message );
+    void ClientMessage( const wxString& message );
 
     void UnknownCommand( const wxString& command, const wxString& params );
 

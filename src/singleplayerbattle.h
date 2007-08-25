@@ -4,6 +4,7 @@
 
 #include <wx/string.h>
 #include <wx/gdicmn.h>
+#include <vector>
 
 #include "iunitsync.h"
 #include "ibattle.h"
@@ -71,17 +72,11 @@ class SinglePlayerBattle: public IBattle
     SinglePlayerBattle( Ui& ui, MainSinglePlayerTab& msptab );
     ~SinglePlayerBattle();
 
-    unsigned int AddBot( int ally, int position, const wxString& aidll );
+    unsigned int AddBot( int ally, int posx, int posy, const wxString& aidll );
     void RemoveBot( unsigned int index );
-    void UpdateBot( unsigned int index, int ally, int position, int side );
+    void UpdateBot( unsigned int index, int ally, int posx, int posy, int side );
     BattleBot* GetBot( unsigned int index );
     unsigned int GetNumBots();
-
-    //SinglePlayerOptions& opts() { return m_opts; }
-
-    void SetStartPos( int index, wxPoint pos );
-    wxPoint GetStartPos( int index );
-    void ResetStartPos( int index );
 
     void GetFreeColour( int& r, int& g, int& b, bool excludeme = true ) {}
 
@@ -94,6 +89,7 @@ class SinglePlayerBattle: public IBattle
 
     Ui& m_ui;
     MainSinglePlayerTab& m_sptab;
+    std::vector<BattleBot*> m_bots;
 
 };
 

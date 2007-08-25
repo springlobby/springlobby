@@ -69,6 +69,7 @@ class MapCtrl : public wxPanel
 
     void _RequireImages();
 
+    void _DrawBot( wxDC& dc, BattleBot& bot, bool selected );
     void _DrawSinglePlayer( wxDC& dc );
     void _DrawBackground( wxDC& dc );
     void _DrawStartRects( wxDC& dc );
@@ -113,6 +114,9 @@ class MapCtrl : public wxPanel
     wxBitmap* m_start_ally;
     wxBitmap* m_start_enemy;
     wxBitmap* m_start_unused;
+
+    wxBitmap* m_player_img;
+    wxBitmap* m_bot_img;
 
     UnitSyncMap m_map;
 

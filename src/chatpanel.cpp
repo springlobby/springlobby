@@ -20,6 +20,7 @@
 #include "user.h"
 #include "battle.h"
 #include "nicklistctrl.h"
+#include "mainwindow.h"
 
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
@@ -209,11 +210,22 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 {
   wxString me = WX_STRING(GetMe().GetNick());
   wxColour col;
-  if ( who.Upper() == me.Upper() ) col.Set( 100,100,140 );
-  else if ( message.Upper().Contains( me.Upper() ) ) col.Set( 255,40,40 );
-  else col.Set( 0,0,0 );
+  bool req_user = false;
+  if ( m_type == CPT_User ) req_user = true;
+  if ( who.Upper() == me.Upper() ) {
+    col.Set( 100,100,140 );
+  } else if ( message.Upper().Contains( me.Upper() ) ) {
+    col.Set( 255,40,40 );
+    req_user = true;
+  } else {
+    col.Set( 0,0,0 );
+  }
 
   _OutputLine( _T(" <") + who + _T("> ")+ message, col );
+
+  if ( req_user ) {
+    if ( !m_ui.mw().IsActive() ) m_ui.mw().RequestUserAttention();
+  }
 }
 
 
@@ -235,6 +247,12 @@ void ChatPanel::Motd( const wxString& message )
 void ChatPanel::StatusMessage( const wxString& message )
 {
   _OutputLine( _T(" ** Server ** ")+ message, wxColour(255, 150, 80) );
+}
+
+
+void ChatPanel::ClientMessage( const wxString& message )
+{
+  _OutputLine( _T(" ** ") + message, wxColour( 20, 200, 25 ) );
 }
 
 

@@ -21,6 +21,8 @@
 #include "images/start_ally.xpm"
 #include "images/start_enemy.xpm"
 #include "images/start_unused.xpm"
+#include "images/player.xpm"
+#include "images/bot.xpm"
 
 
 BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
@@ -54,7 +56,9 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool read
   m_close_hi_img(0),
   m_start_ally(0),
   m_start_enemy(0),
-  m_start_unused(0)
+  m_start_unused(0),
+  m_player_img(0),
+  m_bot_img(0)
 {
   SetBackgroundStyle( wxBG_STYLE_CUSTOM );
   SetBackgroundColour( *wxLIGHT_GREY );
@@ -122,60 +126,6 @@ wxRect MapCtrl::_GetStartRect( const BattleStartRect& sr )
   y2 = int( (mr.y + sr.bottom * mr.height / 200.0) + 0.5 );
 
   return wxRect( x1, y1, x2-x1, y2-y1 );
-}
-
-
-void MapCtrl::_DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxColour& col, bool mouseover )
-{
-
-  if ( sr.width * sr.height == 0 ) return;
-
-  dc.SetBrush( wxBrush( *wxLIGHT_GREY, wxTRANSPARENT ) );
-
-  wxImage img( sr.width, sr.height );
-  wxColour light;
-  light.Set( col.Red()+100>200?200:col.Red()+100, col.Green()+100>200?200:col.Green()+100, col.Blue()+100>200?200:col.Blue()+100  );
-  img.SetRGB( wxRect( 0, 0, sr.width, sr.height ), light.Red(), light.Green(), light.Blue() );
-  unsigned char *alpha = (unsigned char*)malloc( (sr.width)*(sr.height) );
-  for ( int y = 0; y < sr.height; y++ ) {
-    int a;
-    if ( (y%3) == 0 ) a = 70;
-    else a = 40;
-    for ( int x = 0; x < sr.width; x++ ) {
-      alpha[y*(sr.width)+x] = a;
-    }
-  }
-  img.SetAlpha( alpha );
-  wxBitmap bmpimg( img );
-  dc.DrawBitmap( bmpimg, sr.x, sr.y, false );
-
-  int twidth, theight;
-/*  wxFont f( 12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL|wxFONTFLAG_ANTIALIASED, wxFONTWEIGHT_LIGHT );
-  dc.SetFont( f );*/
-  dc.GetTextExtent( wxString::Format( _T("%d"), index+1), &twidth, &theight );
-  dc.SetTextForeground( col );
-  dc.DrawText( wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1 );
-
-  dc.SetPen( wxPen( col ) );
-
-  if ( mouseover && !m_ro ) {
-
-    dc.DrawRectangle( sr.x+1, sr.y+1, sr.width-2, sr.height-2 );
-    dc.SetPen( wxPen( *wxBLACK ) );
-    dc.DrawRectangle( sr.x, sr.y, sr.width, sr.height );
-
-    dc.SetBrush( wxBrush( *wxBLACK, wxSOLID ) );
-    dc.DrawRectangle( sr.x, sr.y, boxsize, boxsize );
-    dc.DrawRectangle( sr.x + sr.width - boxsize, sr.y + sr.height - boxsize, boxsize, boxsize );
-    //dc.DrawRectangle( sr.x + sr.width - boxsize, sr.y + 1, boxsize, boxsize );
-    //dc.DrawRectangle( sr.x, sr.y + sr.height - boxsize, boxsize, boxsize );
-
-    if ( m_rect_area != RA_UpRight ) dc.DrawBitmap( *m_close_img, sr.x + sr.width - 16, sr.y + 2, true );
-    else dc.DrawBitmap( *m_close_hi_img, sr.x + sr.width - 16, sr.y + 2, true );
-
-  } else {
-    dc.DrawRectangle( sr.x, sr.y, sr.width, sr.height );
-  }
 }
 
 
@@ -312,6 +262,64 @@ void MapCtrl::_RequireImages()
   if ( !m_start_ally ) m_start_ally = new wxBitmap( start_ally_xpm );
   if ( !m_start_enemy ) m_start_enemy = new wxBitmap( start_enemy_xpm );
   if ( !m_start_unused ) m_start_unused = new wxBitmap( start_unused_xpm );
+  if ( !m_player_img ) m_player_img = new wxBitmap( player_xpm );
+  if ( !m_bot_img ) m_bot_img = new wxBitmap( bot_xpm );
+}
+
+
+void MapCtrl::_DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxColour& col, bool mouseover )
+{
+
+  if ( sr.width * sr.height == 0 ) return;
+
+  dc.SetBrush( wxBrush( *wxLIGHT_GREY, wxTRANSPARENT ) );
+
+  wxImage img( sr.width, sr.height );
+  wxColour light;
+  light.Set( col.Red()+100>200?200:col.Red()+100, col.Green()+100>200?200:col.Green()+100, col.Blue()+100>200?200:col.Blue()+100  );
+  img.SetRGB( wxRect( 0, 0, sr.width, sr.height ), light.Red(), light.Green(), light.Blue() );
+  unsigned char *alpha = (unsigned char*)malloc( (sr.width)*(sr.height) );
+  for ( int y = 0; y < sr.height; y++ ) {
+    int a;
+    if ( (y%3) == 0 ) a = 70;
+    else a = 40;
+    for ( int x = 0; x < sr.width; x++ ) {
+      alpha[y*(sr.width)+x] = a;
+    }
+  }
+  img.SetAlpha( alpha );
+  wxBitmap bmpimg( img );
+  dc.DrawBitmap( bmpimg, sr.x, sr.y, false );
+
+  int twidth, theight;
+/*  wxFont f( 12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL|wxFONTFLAG_ANTIALIASED, wxFONTWEIGHT_LIGHT );
+  dc.SetFont( f );*/
+  if ( index != -1 ) {
+    dc.GetTextExtent( wxString::Format( _T("%d"), index+1), &twidth, &theight );
+    dc.SetTextForeground( col );
+    dc.DrawText( wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1 );
+  }
+
+  dc.SetPen( wxPen( col ) );
+
+  if ( mouseover && !m_ro ) {
+
+    dc.DrawRectangle( sr.x+1, sr.y+1, sr.width-2, sr.height-2 );
+    dc.SetPen( wxPen( *wxBLACK ) );
+    dc.DrawRectangle( sr.x, sr.y, sr.width, sr.height );
+
+    dc.SetBrush( wxBrush( *wxBLACK, wxSOLID ) );
+    dc.DrawRectangle( sr.x, sr.y, boxsize, boxsize );
+    dc.DrawRectangle( sr.x + sr.width - boxsize, sr.y + sr.height - boxsize, boxsize, boxsize );
+    //dc.DrawRectangle( sr.x + sr.width - boxsize, sr.y + 1, boxsize, boxsize );
+    //dc.DrawRectangle( sr.x, sr.y + sr.height - boxsize, boxsize, boxsize );
+
+    if ( m_rect_area != RA_UpRight ) dc.DrawBitmap( *m_close_img, sr.x + sr.width - 16, sr.y + 2, true );
+    else dc.DrawBitmap( *m_close_hi_img, sr.x + sr.width - 16, sr.y + 2, true );
+
+  } else {
+    dc.DrawRectangle( sr.x, sr.y, sr.width, sr.height );
+  }
 }
 
 
@@ -397,8 +405,49 @@ void MapCtrl::_DrawStartPositions( wxDC& dc )
 }
 
 
+void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected )
+{
+  debug_func("");
+  wxRect mr = _GetMinimapRect();
+
+  selected = bot.aidll == ""; // TODO remove
+  wxBitmap* img;
+  if ( bot.aidll == "" ) img = m_player_img;
+  else img = m_bot_img;
+
+  int x = ( (double)((double)bot.posx / (double)m_map.info.width) * (double)mr.width ) - 8.0;
+  int y = ( (double)(bot.posy / (double)m_map.info.height) * (double)mr.height ) - 8.0;
+
+  debug( "x: " + i2s(x) + " y: " + i2s(y) );
+
+  if ( selected ) {
+    wxRect r( x+mr.x-2, y+mr.y-2, 60, 60 );
+    _DrawStartRect( dc, -1, r, wxColour(150,255,150), false );
+    dc.DrawBitmap( *m_close_img, r.x+r.width-16, r.y+2, true );
+    dc.DrawText( _("side :"), r.x+4, r.y+18 );
+    try {
+      std::string mod = STD_STRING(m_battle->GetModName());
+      usync()->GetSideCount( mod );
+      std::string side = usync()->GetSideName( mod, bot.bs.side );
+      wxBitmap bmp( usync()->GetSidePicture( side ) );
+      dc.DrawBitmap( bmp, r.x+40, r.y+18, true );
+    } catch (...) {}
+    dc.DrawText( wxString::Format( _("ally : %d"), bot.bs.ally ), r.x+4, r.y+32 );
+
+  } else {
+    _DrawStartRect( dc, -1, wxRect( x+mr.x-2, y+mr.y-2, 20, 20 ), wxColour(150,255,150), false );
+  }
+
+  dc.DrawBitmap( *img, x+mr.x, y+mr.y, true );
+}
+
+
 void MapCtrl::_DrawSinglePlayer( wxDC& dc )
 {
+  debug_func("");
+  if ( m_battle == 0 ) return;
+  if ( !m_battle->MapExists() ) return;
+
   wxRect mr = _GetMinimapRect();
   m_map = m_battle->Map();
   _RequireImages();
@@ -432,6 +481,14 @@ void MapCtrl::_DrawSinglePlayer( wxDC& dc )
       dc.GetTextExtent( wxString::Format(_T("%d"), i+1 ), &w, &h );
       dc.DrawText( wxString::Format(_T("%d"), i+1 ), x+mr.x+(8-w/2), y+mr.y+(8-h/2) );
     }
+  }
+
+  for ( int i = 0; i < m_battle->GetNumBots(); i++ ) {
+    BattleBot* bot = m_battle->GetBot(i);
+    if ( bot == 0 ) continue;
+
+    _DrawBot( dc, *bot, false );
+
   }
 
 }
