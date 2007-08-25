@@ -44,7 +44,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 	wxBoxSizer* m_map_sizer = new wxBoxSizer( wxVERTICAL );
 
 	m_map_sizer->SetMinSize(wxSize( 352,-1 ));
-  m_minimap = new MapCtrl( this, 352, &m_battle, m_ui, !battle.IsFounderMe(), false, true );
+  m_minimap = new MapCtrl( this, 352, &m_battle, m_ui, !battle.IsFounderMe(), false, true, false );
 	m_minimap->SetMinSize( wxSize( 352,352 ) );
 
 	m_map_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 2 );

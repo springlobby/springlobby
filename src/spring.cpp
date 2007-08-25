@@ -86,21 +86,9 @@ bool Spring::Run( Battle& battle )
 
 bool Spring::TestSpringBinary()
 {
-
-  if ( usync()->GetSpringVersion() != "")
-  {
-      return true;
-  }
-  else
-  {
-      return false;
-  }
-
-  //wxString foo = wxString::Format(_T("%d %d %d %d"), ret , res.GetCount() == 1 , err.GetCount() == 0 , res[0] == _T("Spring 0.74b3"));
-  //debug(STD_STRING(foo));
-  // we can't trust ret value at all :(
-  // FIXME check against something else than a hardcoded spring version, f.ex. the one tasserver gives
-  //return /* ret == 1 && */ res.GetCount() == 1 && err.GetCount() == 0 /* && res[0].Contains(_T("Spring")) == _T("Spring 0.74b3") */;
+  if ( !wxFileName::FileExists( WX_STRING(sett().GetSpringUsedLoc()) ) ) return false;
+  if ( usync()->GetSpringVersion() != "") return true;
+  else return false;
 }
 
 

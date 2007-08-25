@@ -40,7 +40,8 @@ typedef int MouseAction;
 class MapCtrl : public wxPanel
 {
   public:
-    MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types );
+    MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size,
+      bool draw_start_types, bool singleplayer );
     ~MapCtrl();
 
     void SetBattle( IBattle* battle );
@@ -66,6 +67,12 @@ class MapCtrl : public wxPanel
 
     int _GetNewRectIndex();
 
+    void _RequireImages();
+
+    void _DrawSinglePlayer( wxDC& dc );
+    void _DrawBackground( wxDC& dc );
+    void _DrawStartRects( wxDC& dc );
+    void _DrawStartPositions( wxDC& dc );
     void _DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxColour& col, bool mouseover );
 
     void _SetMouseOverRect( int index );
@@ -83,6 +90,8 @@ class MapCtrl : public wxPanel
     bool m_draw_start_types;
     bool m_fixed_size;
     bool m_ro;
+    bool m_sp;
+
     int m_mover_rect;
     int m_mdown_rect;
 

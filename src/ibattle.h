@@ -3,9 +3,10 @@
 
 
 #include <wx/string.h>
+#include <list>
 
 #include "iunitsync.h"
-
+#include "user.h"
 
 typedef int HostInfo;
 
@@ -46,6 +47,16 @@ struct BattleStartRect
   int left;
   int right;
   int bottom;
+};
+
+
+struct BattleBot {
+  UserBattleStatus bs;
+  int posx;
+  int posy;
+  std::string name;
+  std::string owner;
+  std::string aidll;
 };
 
 
@@ -103,6 +114,9 @@ class IBattle
     virtual bool GhostedBuildings() { return m_ghostedbuildings; }
 
     virtual void SendHostInfo( HostInfo update ) = 0;
+
+    virtual BattleBot* GetBot( unsigned int index ) = 0;
+    virtual unsigned int GetNumBots() = 0;
 
   protected:
 

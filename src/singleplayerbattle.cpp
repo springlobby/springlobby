@@ -31,32 +31,31 @@ void SinglePlayerBattle::SetStartPos(int index, wxPoint pos)
 }
 
 
-int SinglePlayerBattle::GetNumBots()
+unsigned int SinglePlayerBattle::GetNumBots()
 {
   return 0;
 }
 
 
-SinglePlayerBot& SinglePlayerBattle::GetBot(int index)
+BattleBot* SinglePlayerBattle::GetBot(unsigned int index)
 {
-  static SinglePlayerBot bot;
-  return bot;
+  return 0;
 }
 
 
-void SinglePlayerBattle::UpdateBot(int index, int ally, int position, int side)
-{
-
-}
-
-
-void SinglePlayerBattle::RemoveBot(int index)
+void SinglePlayerBattle::UpdateBot(unsigned int index, int ally, int position, int side)
 {
 
 }
 
 
-int SinglePlayerBattle::AddBot(int ally, int position, const wxString& aidll)
+void SinglePlayerBattle::RemoveBot(unsigned int index)
+{
+
+}
+
+
+unsigned int SinglePlayerBattle::AddBot(int ally, int position, const wxString& aidll)
 {
   return -1;
 }

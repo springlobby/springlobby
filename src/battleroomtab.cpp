@@ -70,7 +70,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_wind_lbl = new wxStaticText( this, -1, _("") );
   m_tidal_lbl = new wxStaticText( this, -1, _("") );
 
-  m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true );
+  m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true, false );
 
   m_players = new BattleroomListCtrl( m_player_panel, battle );
   m_chat = new ChatPanel( m_splitter, m_ui, battle );

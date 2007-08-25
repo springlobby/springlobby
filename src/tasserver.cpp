@@ -309,7 +309,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   bool replay, haspass, dgun, ghost, dim;
   GameType gt;
   std::string hash;
-  std::string nick, contry, host, map, title, mod, channel, error, msg, owner, ai;
+  std::string nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version;
   //NatType ntype;
   UserStatus cstatus;
   UTASClientStatus tasstatus;
@@ -327,7 +327,8 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
       m_ser_ver = SER_VER_0_34;
     else
       m_ser_ver = SER_VER_BAD;
-    m_se->OnConnected( "TAS Server", mod, (m_ser_ver > 0) );
+    supported_spring_version = GetWordParam( params );
+    m_se->OnConnected( "TAS Server", mod, (m_ser_ver > 0), supported_spring_version );
 
   } else if ( cmd == "ACCEPTED" ) {
     m_online = true;

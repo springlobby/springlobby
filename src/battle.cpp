@@ -517,7 +517,7 @@ BattleBot* Battle::GetBot( const std::string& name )
   return 0;
 }
 
-BattleBot* Battle::GetBot( std::list<BattleBot*>::size_type index )
+BattleBot* Battle::GetBot( unsigned int index )
 {
   if ((m_bot_pos == BOT_SEEKPOS_INVALID) || (m_bot_pos > index)) {
     m_bot_seek = m_bots.begin();
@@ -529,7 +529,7 @@ BattleBot* Battle::GetBot( std::list<BattleBot*>::size_type index )
 }
 
 
-std::list<BattleBot*>::size_type Battle::GetNumBots()
+unsigned int Battle::GetNumBots()
 {
   return m_bots.size();
 }

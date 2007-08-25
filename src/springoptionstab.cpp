@@ -419,10 +419,13 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
   sett().SetUnitSyncUseDefLoc( m_sync_def_radio->GetValue() );
 
   usync()->FreeUnitSyncLib();
-  usync()->LoadUnitSyncLib();
-
-  if ( !Spring::TestSpringBinary() ) {
-    wxMessageBox( _("There is probably a problem with your spring binary setting\nbecause trying to run Spring failed.\n\nYou might want to take another look at your settings."), _("Spring error"), wxOK );
+  if ( !usync()->LoadUnitSyncLib() ) {
+    wxMessageBox( _("SpringLobby is unable to load you unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
+  } else {
+    // If LoadUnitSyncLib() fails this will too.
+    if ( !Spring::TestSpringBinary() ) {
+      wxMessageBox( _("SpringLobby is unable to detect your spring version.\n\nYou might want to take another look at your spring executable settings."), _("Spring error"), wxOK );
+    }
   }
 }
 

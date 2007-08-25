@@ -22,7 +22,7 @@ class ServerEvents
 
   // Uicontrol interface
 
-    void OnConnected( const std::string& server_name, const std::string& server_ver, bool supported );
+    void OnConnected( const std::string& server_name, const std::string& server_ver, bool supported, const std::string server_spring_ver );
     void OnDisconnected();
 
     void OnLogin();

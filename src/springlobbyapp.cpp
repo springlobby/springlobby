@@ -47,6 +47,7 @@ bool SpringLobbyApp::OnInit()
 
   InitDirs();
 
+  usync()->LoadUnitSyncLib();
   m_ui = new Ui();
 
   m_ui->ShowMainWindow();
@@ -56,7 +57,6 @@ bool SpringLobbyApp::OnInit()
       wxOK | wxICON_INFORMATION, &m_ui->mw() );
     m_ui->mw().ShowConfigure();
   } else {
-    usync()->LoadUnitSyncLib();
     if ( usync()->IsLoaded() ) m_ui->Connect();
     else m_ui->mw().ShowConfigure();
   }

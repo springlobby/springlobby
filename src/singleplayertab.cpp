@@ -27,54 +27,54 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_ui( ui ),
   m_battle( ui, msptab )
 {
-	wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
+  wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true );
-	m_main_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 5 );
+  m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );
+  m_main_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 5 );
 
-	wxBoxSizer* m_ctrl_sizer = new wxBoxSizer( wxHORIZONTAL );
+  wxBoxSizer* m_ctrl_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	wxString m_map_pickChoices[] = {  };
-	int m_map_pickNChoices = sizeof( m_map_pickChoices ) / sizeof( wxString );
-	m_map_pick = new wxChoice( this, SP_MAP_PICK, wxDefaultPosition, wxDefaultSize, m_map_pickNChoices, m_map_pickChoices, 0 );
-	m_ctrl_sizer->Add( m_map_pick, 8, wxALL, 5 );
+  wxString m_map_pickChoices[] = {  };
+  int m_map_pickNChoices = sizeof( m_map_pickChoices ) / sizeof( wxString );
+  m_map_pick = new wxChoice( this, SP_MAP_PICK, wxDefaultPosition, wxDefaultSize, m_map_pickNChoices, m_map_pickChoices, 0 );
+  m_ctrl_sizer->Add( m_map_pick, 8, wxALL, 5 );
 
-	m_select_btn = new wxButton( this, SP_BROWSE_MAP, _("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
+  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
-	m_ctrl_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+  m_ctrl_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-	m_addbot_btn = new wxButton( this, SP_ADD_BOT, _("Add bot..."), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
-	m_ctrl_sizer->Add( m_addbot_btn, 0, wxALL, 5 );
+  m_addbot_btn = new wxButton( this, SP_ADD_BOT, _("Add bot..."), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
+  m_ctrl_sizer->Add( m_addbot_btn, 0, wxALL, 5 );
 
-	m_main_sizer->Add( m_ctrl_sizer, 0, wxEXPAND, 5 );
+  m_main_sizer->Add( m_ctrl_sizer, 0, wxEXPAND, 5 );
 
-	m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	m_main_sizer->Add( m_buttons_sep, 0, wxLEFT|wxRIGHT|wxEXPAND, 5 );
+  m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+  m_main_sizer->Add( m_buttons_sep, 0, wxLEFT|wxRIGHT|wxEXPAND, 5 );
 
-	wxBoxSizer* m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
+  wxBoxSizer* m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_reset_btn = new wxButton( this, SP_RESET, _("Reset"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
-	m_buttons_sizer->Add( m_reset_btn, 0, wxALL, 5 );
+  m_reset_btn = new wxButton( this, SP_RESET, _("Reset"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
+  m_buttons_sizer->Add( m_reset_btn, 0, wxALL, 5 );
 
-	m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+  m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-	m_start_btn = new wxButton( this, SP_START, _("Start"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
-	m_buttons_sizer->Add( m_start_btn, 0, wxALL, 5 );
+  m_start_btn = new wxButton( this, SP_START, _("Start"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
+  m_buttons_sizer->Add( m_start_btn, 0, wxALL, 5 );
 
-	m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
+  m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
-	this->SetSizer( m_main_sizer );
-	this->Layout();
+  this->SetSizer( m_main_sizer );
+  this->Layout();
 
-	ReloadMaplist();
+  ReloadMaplist();
 
-	if ( m_map_pick->GetCount() > 0 ) {
-	  m_map_pick->SetSelection(0);
+/*  if ( m_map_pick->GetCount() > 0 ) {
+    m_map_pick->SetSelection(0);
     UnitSyncMap map = usync()->GetMap( 0, true );
     m_battle.SetMap( map );
     m_minimap->UpdateMinimap();
-	}
+  }*/
 
 }
 

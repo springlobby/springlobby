@@ -65,14 +65,6 @@ struct BattleOptions
 };
 
 
-struct BattleBot {
-  UserBattleStatus bs;
-  std::string name;
-  std::string owner;
-  std::string aidll;
-};
-
-
 class Battle : public UserList, public IBattle
 {
   public:
@@ -184,8 +176,8 @@ class Battle : public UserList, public IBattle
     void SetBotColour( const std::string& nick, int r, int g, int b );
 
     BattleBot* GetBot( const std::string& name );
-    BattleBot* GetBot( std::list<BattleBot*>::size_type index );
-    std::list<BattleBot*>::size_type GetNumBots();
+    BattleBot* GetBot( unsigned int index );
+    unsigned int GetNumBots();
 
     void StartRectRemoved( int allyno );
     void StartRectUpdated( int allyno );

@@ -16,9 +16,10 @@
 #include "battle.h"
 
 
-void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported )
+void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported, const std::string server_spring_ver )
 {
-  debug_func( server_ver );
+  debug_func( server_ver + " " + server_spring_ver );
+  m_ui.SetSupportedSpring( server_spring_ver );
   m_ui.OnConnected( m_serv, server_name, server_ver, supported );
   m_serv.Login();
 }
@@ -27,6 +28,7 @@ void ServerEvents::OnConnected( const std::string& server_name, const std::strin
 void ServerEvents::OnDisconnected()
 {
   debug_func( "" );
+  m_ui.SetSupportedSpring ("");
   m_ui.OnDisconnected( m_serv );
 }
 

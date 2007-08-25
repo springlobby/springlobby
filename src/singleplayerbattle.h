@@ -71,11 +71,11 @@ class SinglePlayerBattle: public IBattle
     SinglePlayerBattle( Ui& ui, MainSinglePlayerTab& msptab );
     ~SinglePlayerBattle();
 
-    int AddBot( int ally, int position, const wxString& aidll );
-    void RemoveBot( int index );
-    void UpdateBot( int index, int ally, int position, int side );
-    SinglePlayerBot& GetBot( int index );
-    int GetNumBots();
+    unsigned int AddBot( int ally, int position, const wxString& aidll );
+    void RemoveBot( unsigned int index );
+    void UpdateBot( unsigned int index, int ally, int position, int side );
+    BattleBot* GetBot( unsigned int index );
+    unsigned int GetNumBots();
 
     //SinglePlayerOptions& opts() { return m_opts; }
 

@@ -50,7 +50,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxBoxSizer* m_info_sizer;
   m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_minimap = new MapCtrl( this, 100, 0, m_ui, true, true, false );
+  m_minimap = new MapCtrl( this, 100, 0, m_ui, true, true, false, false );
   m_info_sizer->Add( m_minimap, 0, wxALL, 5 );
 
   wxFlexGridSizer* m_data_sizer;
@@ -184,6 +184,10 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     wxMessageBox( _("You cannot host a game while offline. Please connect to a lobby server."), _("Not Online."), wxOK );
     return;
   }
+  if ( !m_ui.IsSpringCompatible() ){
+    wxMessageBox(_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION);
+    return;
+  }
   HostBattleDialog dlg( this );
   if ( dlg.ShowModal() == wxID_OK ) {
     BattleOptions bo;
@@ -256,6 +260,10 @@ void BattleListTab::OnListJoin( wxListEvent& event )
 
 void BattleListTab::DoJoin( Battle& battle )
 {
+  if ( !m_ui.IsSpringCompatible() ){
+    wxMessageBox(_("Joining battles is disabled due to the incompatible spring version you're using."), _("Spring error"), wxICON_EXCLAMATION);
+    return;
+  }
   if ( !battle.ModExists() ) {
     if (wxMessageBox( _("You need to download the mod before you can join this game.\n\nDo you want me to take you to the download page?"), _("Mod not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString mod = battle.GetModName();

@@ -61,8 +61,7 @@ void* SpringUnitSync::_GetLibFuncPtr( const std::string& name )
 
 bool SpringUnitSync::LoadUnitSyncLib()
 {
-  if ( m_loaded )
-    return true;
+  if ( m_loaded ) return true;
 
   wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
 
@@ -70,6 +69,12 @@ bool SpringUnitSync::LoadUnitSyncLib()
   std::string loc = sett().GetUnitSyncUsedLoc();
 
   debug( "Loading from: " + loc );
+
+  // Check if library exists
+  if ( !wxFileName::FileExists( WX_STRING(loc)) ) {
+    debug_error( "File not found: "+ loc );
+    return false;
+  }
 
   try {
     m_libhandle = new wxDynamicLibrary(WX_STRING(loc));
@@ -84,10 +89,6 @@ bool SpringUnitSync::LoadUnitSyncLib()
 
   if (m_libhandle == 0) {
     debug_error( "Couldn't load the unitsync library" );
-    wxMessageDialog msg( 0, _("The unitsync library failed to load from the location \"") + WX_STRING(loc) + _("\".\n\nYou might want to look at the Spring Options again. If you need any help setting unitsync up you will find it under the Help main menu."), _("Error loading unitsync"), wxOK | wxICON_ERROR );
-
-    msg.ShowModal();
-
     return false;
   }
 
@@ -139,6 +140,7 @@ bool SpringUnitSync::LoadUnitSyncLib()
   return true;
 }
 
+
 void SpringUnitSync::FreeUnitSyncLib()
 {
   if ( !m_loaded ) return;
@@ -150,10 +152,12 @@ void SpringUnitSync::FreeUnitSyncLib()
   m_loaded = false;
 }
 
+
 bool SpringUnitSync::IsLoaded()
 {
   return m_loaded;
 }
+
 
 std::string SpringUnitSync::GetSpringVersion()
 {
@@ -162,11 +166,13 @@ std::string SpringUnitSync::GetSpringVersion()
   return SpringVersion;
 }
 
+
 int SpringUnitSync::GetNumMods()
 {
   if ( !m_loaded ) return 0;
   return m_get_mod_count();
 }
+
 
 int SpringUnitSync::GetModIndex( const std::string& name )
 {
@@ -178,11 +184,13 @@ int SpringUnitSync::GetModIndex( const std::string& name )
   return -1;
 }
 
+
 bool SpringUnitSync::ModExists( const std::string& modname )
 {
   if ( !m_loaded ) return false;
   return GetModIndex( modname ) >= 0;
 }
+
 
 UnitSyncMod SpringUnitSync::GetMod( const std::string& modname )
 {
@@ -213,6 +221,7 @@ int SpringUnitSync::GetNumMaps()
   return m_get_map_count();
 }
 
+
 bool SpringUnitSync::MapExists( const std::string& mapname )
 {
   if ( !m_loaded ) return false;
@@ -222,6 +231,7 @@ bool SpringUnitSync::MapExists( const std::string& mapname )
   } catch (...) { return false; }
   return succ;
 }
+
 
 bool SpringUnitSync::MapExists( const std::string& mapname, const std::string hash )
 {
@@ -234,6 +244,7 @@ bool SpringUnitSync::MapExists( const std::string& mapname, const std::string ha
   } catch (...) {}
   return false;
 }
+
 
 UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname, bool getmapinfo )
 {
@@ -280,12 +291,14 @@ int SpringUnitSync::GetMapIndex( const std::string& name )
   return -1;
 }
 
+
 std::string SpringUnitSync::GetModArchive( int index )
 {
   if ( (!m_loaded) || (index < 0) ) return "unknown";
   ASSERT_LOGIC( index < m_get_mod_count(), "Bad index" );
   return m_get_mod_archive( index );
 }
+
 
 int SpringUnitSync::GetSideCount( const std::string& modname )
 {
@@ -294,6 +307,7 @@ int SpringUnitSync::GetSideCount( const std::string& modname )
   return m_get_side_count();
 }
 
+
 std::string SpringUnitSync::GetSideName( const std::string& modname, int index )
 {
   if ( (!m_loaded) || (index < 0) || (!ModExists(modname)) ) return "unknown";
@@ -301,6 +315,7 @@ std::string SpringUnitSync::GetSideName( const std::string& modname, int index )
   ASSERT_LOGIC( m_get_side_count() > index, "Side index too high." );
   return m_get_side_name( index );
 }
+
 
 wxImage SpringUnitSync::GetSidePicture(const std::string& SideName )
 {
@@ -327,6 +342,7 @@ wxImage SpringUnitSync::GetSidePicture(const std::string& SideName )
   return ret;
 }
 
+
 int SpringUnitSync::GetNumUnits( const std::string& modname )
 {
   if ( !m_loaded ) return 0;
@@ -334,6 +350,7 @@ int SpringUnitSync::GetNumUnits( const std::string& modname )
   m_proc_units_nocheck();
   return m_get_unit_count();
 }
+
 
 int SpringUnitSync::GetUnitIndex( const std::string& modname, const std::string& name )
 {
@@ -346,6 +363,7 @@ int SpringUnitSync::GetUnitIndex( const std::string& modname, const std::string&
   return -1;
 }
 
+
 std::string SpringUnitSync::GetFullUnitName( const std::string& modname, int index )
 {
   if ( (!m_loaded) || (index < 0) ) return "unknown";
@@ -353,6 +371,7 @@ std::string SpringUnitSync::GetFullUnitName( const std::string& modname, int ind
   m_proc_units_nocheck();
   return m_get_unit_full_name( index );
 }
+
 
 wxString SpringUnitSync::GetCachedMinimapFileName( const std::string& mapname, int width, int height )
 {
@@ -364,6 +383,7 @@ wxString SpringUnitSync::GetCachedMinimapFileName( const std::string& mapname, i
   fname += _T(".bmp");
   return path + fname;
 }
+
 
 wxImage SpringUnitSync::GetCachedMinimap( const std::string& mapname, int max_w, int max_h, bool store_size )
 {
