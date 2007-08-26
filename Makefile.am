@@ -27,6 +27,9 @@ springlobby_LDADD = \
 
 # the following line is searched for in a script to add filenames under it
 springlobby_SOURCES = \
+	src/images/up_downsel.xpm \
+	src/images/upsel_down.xpm \
+	src/images/up_down.xpm \
 	src/images/player.xpm \
 	src/ibattle.cpp \
 	src/ibattle.h \

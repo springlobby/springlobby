@@ -25,6 +25,7 @@ struct UnitSyncMap;
 #define RA_DownButton 5
 #define RA_Side 6
 #define RA_Close 7
+#define RA_Move 8
 
 typedef int RectArea;
 
