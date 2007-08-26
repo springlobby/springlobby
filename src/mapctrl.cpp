@@ -23,6 +23,11 @@
 #include "images/start_unused.xpm"
 #include "images/player.xpm"
 #include "images/bot.xpm"
+#include "images/arm.xpm"
+#include "images/core.xpm"
+#include "images/up_down.xpm"
+#include "images/upsel_down.xpm"
+#include "images/up_downsel.xpm"
 
 
 BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
@@ -58,7 +63,8 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool read
   m_start_enemy(0),
   m_start_unused(0),
   m_player_img(0),
-  m_bot_img(0)
+  m_bot_img(0),
+  m_bot_expanded(-1)
 {
   SetBackgroundStyle( wxBG_STYLE_CUSTOM );
   SetBackgroundColour( *wxLIGHT_GREY );
@@ -405,40 +411,112 @@ void MapCtrl::_DrawStartPositions( wxDC& dc )
 }
 
 
+wxRect MapCtrl::_GetBotRect( BattleBot& bot, bool selected )
+{
+  wxRect mr = _GetMinimapRect();
+  int x = ( (double)((double)bot.posx / (double)m_map.info.width) * (double)mr.width ) - 8.0;
+  int y = ( (double)(bot.posy / (double)m_map.info.height) * (double)mr.height ) - 8.0;
+  if ( selected ) return wxRect( x+mr.x-2, y+mr.y-2, 60, 60 );
+  else return wxRect( x+mr.x-2, y+mr.y-2, 20, 20 );
+}
+
+
+RectArea MapCtrl::_GetBotRectArea( const wxRect& botrect, int x, int y )
+{
+  x = x - botrect.x;
+  y = y - botrect.y;
+  wxRect close = _GetBotCloseRect();
+  if ( close.Inside( x, y ) ) return RA_Close;
+  wxRect side = _GetBotSideRect();
+  if ( side.Inside( x, y ) ) return RA_Side;
+  wxRect up = _GetBotUpButtonRect();
+  if ( up.Inside( x, y ) ) return RA_UpButton;
+  wxRect down = _GetBotDownButtonRect();
+  if ( down.Inside( x, y ) ) return RA_DownButton;
+
+  return RA_Main;
+}
+
+
+wxRect MapCtrl::_GetBotSideRect()
+{
+  return wxRect( 32, 22, 16, 16 );
+}
+
+
+wxRect MapCtrl::_GetBotCloseRect()
+{
+  return wxRect( 44, 4, 14, 14 );
+}
+
+
+wxRect MapCtrl::_GetBotUpButtonRect()
+{
+  return wxRect( 43, 38, 14, 8 );
+}
+
+
+wxRect MapCtrl::_GetBotDownButtonRect()
+{
+  return wxRect( 43, 46, 14, 8 );
+}
+
+
 void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected )
 {
   debug_func("");
-  wxRect mr = _GetMinimapRect();
 
-  selected = bot.aidll == ""; // TODO remove
   wxBitmap* img;
   if ( bot.aidll == "" ) img = m_player_img;
   else img = m_bot_img;
 
-  int x = ( (double)((double)bot.posx / (double)m_map.info.width) * (double)mr.width ) - 8.0;
-  int y = ( (double)(bot.posy / (double)m_map.info.height) * (double)mr.height ) - 8.0;
-
-  debug( "x: " + i2s(x) + " y: " + i2s(y) );
+  wxRect r = _GetBotRect( bot, selected );
 
   if ( selected ) {
-    wxRect r( x+mr.x-2, y+mr.y-2, 60, 60 );
     _DrawStartRect( dc, -1, r, wxColour(150,255,150), false );
-    dc.DrawBitmap( *m_close_img, r.x+r.width-16, r.y+2, true );
-    dc.DrawText( _("side :"), r.x+4, r.y+18 );
+    dc.DrawText( _("side :"), r.x+4, r.y+24 );
+
+    wxRect siderect = _GetBotSideRect();
+    if ( m_rect_area == RA_Side ) {
+      _DrawStartRect( dc, -1, wxRect( r.x+siderect.x, r.y+siderect.y, siderect.width, siderect.height ), wxColour(150,150,150), false );
+    }
+
+    wxBitmap* bmp = 0;
     try {
       std::string mod = STD_STRING(m_battle->GetModName());
       usync()->GetSideCount( mod );
       std::string side = usync()->GetSideName( mod, bot.bs.side );
-      wxBitmap bmp( usync()->GetSidePicture( side ) );
-      dc.DrawBitmap( bmp, r.x+40, r.y+18, true );
-    } catch (...) {}
-    dc.DrawText( wxString::Format( _("ally : %d"), bot.bs.ally ), r.x+4, r.y+32 );
+      bmp = new wxBitmap( usync()->GetSidePicture( side ) );
+    } catch (...) {
+      delete bmp;
+      if ( bot.bs.side == 0 ) bmp = new wxBitmap( arm_xpm );
+      else bmp = new wxBitmap( core_xpm );
+    }
+
+    dc.DrawBitmap( *bmp, r.x+siderect.x, r.y+siderect.y, true );
+    delete bmp;
+
+    dc.DrawText( wxString::Format( _("ally : 16"), bot.bs.ally ), r.x+4, r.y+40 );
+
+    wxRect updownrect = _GetBotUpButtonRect();
+    if ( m_rect_area == RA_UpButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownrect.x, r.y+updownrect.y, true );
+    else if ( m_rect_area == RA_DownButton ) dc.DrawBitmap( wxBitmap(up_downsel_xpm), r.x+updownrect.x, r.y+updownrect.y, true );
+    else dc.DrawBitmap( wxBitmap(up_down_xpm), r.x+updownrect.x, r.y+updownrect.y, true );
+
+    dc.SetPen( wxPen( *wxRED ) );
+    dc.SetBrush( wxBrush( *wxRED, wxSOLID ) );
+
+    dc.DrawRectangle( r.x+1, r.y+1, r.width-2, 18 );
+
+    wxRect closerect = _GetBotCloseRect();
+    if ( m_rect_area == RA_Close ) dc.DrawBitmap( *m_close_hi_img, r.x+closerect.x, r.y+closerect.y, true );
+    else dc.DrawBitmap( *m_close_img, r.x+closerect.x, r.y+closerect.y, true );
 
   } else {
-    _DrawStartRect( dc, -1, wxRect( x+mr.x-2, y+mr.y-2, 20, 20 ), wxColour(150,255,150), false );
+    _DrawStartRect( dc, -1, r, wxColour(150,255,150), false );
   }
 
-  dc.DrawBitmap( *img, x+mr.x, y+mr.y, true );
+  dc.DrawBitmap( *img, r.x+2, r.y+2, true );
 }
 
 
@@ -487,7 +565,7 @@ void MapCtrl::_DrawSinglePlayer( wxDC& dc )
     BattleBot* bot = m_battle->GetBot(i);
     if ( bot == 0 ) continue;
 
-    _DrawBot( dc, *bot, false );
+    _DrawBot( dc, *bot, i == m_bot_expanded );
 
   }
 
@@ -537,6 +615,39 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   wxPoint p = event.GetPosition();
   if ( m_battle == 0 ) return;
   if ( p == wxDefaultPosition ) return;
+
+  if ( m_sp ) {
+
+    if ( m_bot_expanded >= m_battle->GetNumBots() ) m_bot_expanded = -1;
+
+    if ( m_bot_expanded != -1 ) {
+      BattleBot* bot = m_battle->GetBot( m_bot_expanded );
+      ASSERT_LOGIC( bot != 0, "MapCtrl::OnMouseMove(): bot = 0" );
+      wxRect r = _GetBotRect( *bot, true );
+      if ( r.Inside( event.GetX(), event.GetY() )  ) {
+        RectArea last = m_rect_area;
+        m_rect_area = _GetBotRectArea( r, event.GetX(), event.GetY() );
+        if ( last != m_rect_area ) RefreshRect( r, false );
+      } else {
+        m_bot_expanded = -1;
+        RefreshRect( r, false );
+      }
+    } else {
+      for ( int i = 0; i < m_battle->GetNumBots(); i++ ) {
+        BattleBot* bot = m_battle->GetBot(i);
+        if ( bot == 0 ) continue;
+        wxRect r = _GetBotRect( *bot, false );
+        if ( r.Inside( event.GetX(), event.GetY() )  ) {
+          m_rect_area = _GetBotRectArea( r, event.GetX(), event.GetY() );
+          m_bot_expanded = i;
+          RefreshRect( _GetBotRect( *bot, true ), false );
+          break;
+        }
+      }
+    }
+    return;
+  }
+
   if ( m_battle->GetStartType() != ST_Choose ) return;
 
   if ( m_maction == MA_Add ) { // We are currently adding a rect.

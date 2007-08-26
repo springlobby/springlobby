@@ -21,6 +21,10 @@ struct UnitSyncMap;
 #define RA_UpRight 1
 #define RA_DownRight 2
 #define RA_DownLeft 3
+#define RA_UpButton 4
+#define RA_DownButton 5
+#define RA_Side 6
+#define RA_Close 7
 
 typedef int RectArea;
 
@@ -64,6 +68,13 @@ class MapCtrl : public wxPanel
     wxRect _GetMinimapRect();
     wxRect _GetStartRect( int index );
     wxRect _GetStartRect( const BattleStartRect& sr );
+
+    wxRect _GetBotRect( BattleBot& bot, bool selected );
+    RectArea _GetBotRectArea( const wxRect& botrect, int x, int y );
+    wxRect _GetBotSideRect();
+    wxRect _GetBotCloseRect();
+    wxRect _GetBotUpButtonRect();
+    wxRect _GetBotDownButtonRect();
 
     int _GetNewRectIndex();
 
@@ -119,6 +130,8 @@ class MapCtrl : public wxPanel
     wxBitmap* m_bot_img;
 
     UnitSyncMap m_map;
+
+    int m_bot_expanded;
 
   DECLARE_EVENT_TABLE();
 };

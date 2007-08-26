@@ -329,8 +329,8 @@ wxImage SpringUnitSync::GetSidePicture(const std::string& SideName )
 
   int FileSize = m_file_size_vfs(ini);
   if (FileSize == 0) {
-       m_close_file_vfs(ini);
-       ASSERT_RUNTIME( FileSize, "side image has size 0" );
+    m_close_file_vfs(ini);
+    ASSERT_RUNTIME( FileSize, "side image has size 0" );
   }
 
   char* FileContent = new char [FileSize];
