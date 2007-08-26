@@ -496,7 +496,7 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected )
     dc.DrawBitmap( *bmp, r.x+siderect.x, r.y+siderect.y, true );
     delete bmp;
 
-    dc.DrawText( wxString::Format( _("ally : 16"), bot.bs.ally ), r.x+4, r.y+40 );
+    dc.DrawText( wxString::Format( _("ally : %d"), bot.bs.ally + 1 ), r.x+4, r.y+40 );
 
     wxRect updownrect = _GetBotUpButtonRect();
     if ( m_rect_area == RA_UpButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownrect.x, r.y+updownrect.y, true );
@@ -727,6 +727,12 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 void MapCtrl::OnLeftDown( wxMouseEvent& event )
 {
   if ( m_battle == 0 ) return;
+
+  if ( m_sp ) {
+    if ( m_bot_expanded != -1 ) m_mdown_area = m_rect_area;
+    return;
+  }
+
   if ( m_battle->GetStartType() != ST_Choose ) return;
   if ( !m_ro ) {
     // In edit mode
@@ -776,6 +782,31 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
 void MapCtrl::OnLeftUp( wxMouseEvent& event )
 {
   if ( m_battle == 0 ) return;
+
+  if ( m_sp ) {
+    if ( m_bot_expanded == -1 ) return;
+    if ( m_rect_area != m_mdown_area ) return;
+    BattleBot* bot = m_battle->GetBot( m_bot_expanded );
+    ASSERT_LOGIC( bot != 0, "MapCtrl::OnLeftUp(): bot == 0" );
+    if ( m_mdown_area == RA_UpButton ) {
+      bot->bs.ally = ( bot->bs.ally + 1 ) % 16;
+      RefreshRect( _GetBotRect( *bot, true ), false );
+    } else if ( m_mdown_area == RA_DownButton ) {
+      bot->bs.ally = (bot->bs.ally - 1) >= 0 ? (bot->bs.ally - 1) : 15;
+      RefreshRect( _GetBotRect( *bot, true ), false );
+    } else if ( m_mdown_area == RA_Side ) {
+      try {
+        bot->bs.side = (bot->bs.side + 1) % usync()->GetSideCount( STD_STRING(m_battle->GetModName()) );
+      } catch(...) {}
+      RefreshRect( _GetBotRect( *bot, true ), false );
+    } else if ( m_mdown_area == RA_Close ) {
+      wxRect r = _GetBotRect( *bot, true );
+      m_battle->RemoveBot( m_bot_expanded );
+      RefreshRect( r, false );
+    }
+
+    return;
+  }
   if ( m_battle->GetStartType() != ST_Choose ) return;
 
   if ( m_maction == MA_Add ) {

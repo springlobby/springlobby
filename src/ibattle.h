@@ -117,6 +117,8 @@ class IBattle
 
     virtual BattleBot* GetBot( unsigned int index ) = 0;
     virtual unsigned int GetNumBots() = 0;
+    virtual unsigned int AddBot( int ally, int posx, int posy, const wxString& aidll ) { return -1; };
+    virtual void RemoveBot( unsigned int index ) {};
 
   protected:
 
