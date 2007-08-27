@@ -8,6 +8,7 @@
 #include <wx/panel.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
+#include <stdexcept>
 
 #include "singleplayertab.h"
 #include "mapctrl.h"
@@ -153,9 +154,15 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
   AddBotDialog dlg( this, m_battle, true );
   if ( dlg.ShowModal() == wxID_OK ) {
-    int x = 0, y = 0;
+    int x = 0, y = 0, r, g, b;
     m_battle.GetFreePosition( x, y );
-    m_battle.AddBot( m_battle.GetFreeAlly(), x, y, dlg.GetAI() );
+    m_battle.GetFreeColour( r, g, b, false );
+    int i = m_battle.AddBot( m_battle.GetFreeAlly(), x, y, dlg.GetAI() );
+    BattleBot* bot = m_battle.GetBot( i );
+    ASSERT_LOGIC( bot != 0, "bot == 0" );
+    bot->bs.color_r = r;
+    bot->bs.color_g = g;
+    bot->bs.color_b = b;
     m_minimap->UpdateMinimap();
   }
 }

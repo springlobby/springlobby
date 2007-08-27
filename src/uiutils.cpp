@@ -27,3 +27,18 @@ wxString RefineModname( wxString modname )
   modname.Replace(_T("Beta"), _T("b") );
   return modname;
 }
+
+
+bool AreColoursSimilar( int r1, int g1, int b1, int r2, int g2, int b2, int mindiff )
+{
+  int r,g,b;
+  r = r1 - r2;
+  g = g1 - g2;
+  b = b1 - b2;
+  r = r>0?r:-r;
+  g = g>0?g:-g;
+  b = b>0?b:-b;
+  if ( (r <= mindiff) && (g <= mindiff) && (b <= mindiff) ) return true;
+  return false;
+}
+

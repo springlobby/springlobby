@@ -220,9 +220,29 @@ void MapCtrl::_RelocateBots()
 }
 
 
-void MapCtrl::_GetClosestStartPos( int& index, int& x, int& y, int& range )
+void MapCtrl::_GetClosestStartPos( int fromx, int fromy, int& index, int& x, int& y, int& range )
 {
+  if ( m_battle == 0 ) return;
+  UnitSyncMap map = m_battle->Map();
 
+  int newrange;
+  range = -1;
+  index = -1;
+
+  for ( int i = 0; i < map.info.posCount; i++ ) {
+    int dx = fromx - map.info.positions[i].x;
+    int dy = fromy - map.info.positions[i].y;
+    newrange = (int)sqrt( dx*dx + dy*dy );
+    if ( ( range == -1 ) || ( range > newrange )) {
+      range = newrange;
+      index = i;
+    }
+  }
+
+  if ( index != -1 ) {
+    x = map.info.positions[index].x;
+    y = map.info.positions[index].y;
+  }
 }
 
 
@@ -524,8 +544,9 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     else if ( m_rect_area == RA_DownButton ) dc.DrawBitmap( wxBitmap(up_downsel_xpm), r.x+updownrect.x, r.y+updownrect.y, true );
     else dc.DrawBitmap( wxBitmap(up_down_xpm), r.x+updownrect.x, r.y+updownrect.y, true );
 
-    dc.SetPen( wxPen( *wxRED ) );
-    dc.SetBrush( wxBrush( *wxRED, wxSOLID ) );
+    wxColour col = wxColour( bot.bs.color_r,bot.bs.color_g,bot.bs.color_b );
+    dc.SetPen( wxPen( col ) );
+    dc.SetBrush( wxBrush( col, wxSOLID ) );
 
     dc.DrawRectangle( r.x+1, r.y+1, r.width-2, 18 );
 
@@ -653,6 +674,14 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
       boundry( bot->posx, 0, m_map.info.width );
       boundry( bot->posy, 0, m_map.info.height );
 
+      int x, y, index, range;
+      _GetClosestStartPos( bot->posx, bot->posy, index, x, y, range );
+      if ( index != -1 ) {
+        if ( range < (10.0 / (double)mr.width) * (double)m_map.info.width ) {
+          bot->posx = x;
+          bot->posy = y;
+        }
+      }
       RefreshRect( r.Union( _GetBotRect( *bot, false ) ), false );
       return;
     }

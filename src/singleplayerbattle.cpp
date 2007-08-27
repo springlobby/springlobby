@@ -6,13 +6,21 @@
 #include "mainsingleplayertab.h"
 #include "server.h"
 #include "utils.h"
+#include "uiutils.h"
 
 
 SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_ui(ui),
   m_sptab(msptab)
 {
-  AddBot( 0, 0, 0, _T("") );
+  int r,g,b;
+  GetFreeColour( r, g, b, false );
+  int i = AddBot( 0, 0, 0, _T("") );
+  BattleBot* bot = GetBot( i );
+  ASSERT_LOGIC( bot != 0, "bot == 0" );
+  bot->bs.color_r = r;
+  bot->bs.color_g = g;
+  bot->bs.color_b = b;
 }
 
 
@@ -113,5 +121,31 @@ void SinglePlayerBattle::GetFreePosition( int& x, int& y )
   }
   x = -1;
   y = -1;
+}
+
+
+void SinglePlayerBattle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
+{
+  int lowest = 0;
+  bool changed = true;
+  while ( (changed) && (lowest < 16) ) {
+    changed = false;
+    if ( lowest >= 16 ) break;
+    for( int i = 0; i < m_bots.size(); i++ ) {
+      BattleBot* bot = GetBot( i );
+      ASSERT_LOGIC( bot != 0, "bot == 0");
+
+      if ( AreColoursSimilar( bot->bs.color_r, bot->bs.color_g, bot->bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
+        lowest++;
+        changed = true;
+        if ( lowest >= 16 ) break;
+      }
+    }
+  }
+  if ( lowest >= 16 ) lowest = 0;
+
+  r = colour_values[lowest][0];
+  g = colour_values[lowest][1];
+  b = colour_values[lowest][2];
 }
 

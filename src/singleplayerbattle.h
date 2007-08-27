@@ -78,7 +78,7 @@ class SinglePlayerBattle: public IBattle
     BattleBot* GetBot( unsigned int index );
     unsigned int GetNumBots();
 
-    void GetFreeColour( int& r, int& g, int& b, bool excludeme = true ) {}
+    void GetFreeColour( int& r, int& g, int& b, bool excludeme = true );
 
     int GetMyAlly() { return -1; }
     void SetMyAlly( int ally ) {}
