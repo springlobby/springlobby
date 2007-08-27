@@ -20,6 +20,7 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
   EVT_CHOICE( SP_MAP_PICK, SinglePlayerTab::OnMapSelect )
   EVT_CHOICE( SP_MOD_PICK, SinglePlayerTab::OnModSelect )
+  EVT_BUTTON( SP_ADD_BOT , SinglePlayerTab::OnAddBot )
 
 END_EVENT_TABLE()
 
@@ -143,5 +144,12 @@ void SinglePlayerTab::OnMapSelect( wxCommandEvent& event )
 
 void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 {
+
+}
+
+
+void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
+{
+
 }
 

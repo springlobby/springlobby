@@ -11,11 +11,11 @@ class wxButton;
 class wxCommandEvent;
 class Battle;
 
-class AddBotDialog : public wxDialog 
+class AddBotDialog : public wxDialog
 {
   public:
 
-    AddBotDialog( wxWindow* parent, Battle& battle );
+    AddBotDialog( wxWindow* parent, Battle& battle, bool singleplayer = false );
 
     wxString GetNick();
     wxString GetAI();
@@ -35,6 +35,8 @@ class AddBotDialog : public wxDialog
     wxButton* m_add_btn;
 
     Battle& m_battle;
+
+    bool m_sp;
 
     DECLARE_EVENT_TABLE()
 };

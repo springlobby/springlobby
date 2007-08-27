@@ -81,12 +81,12 @@ class MapCtrl : public wxPanel
 
     void _RequireImages();
 
-    void _DrawBot( wxDC& dc, BattleBot& bot, bool selected );
+    void _DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving );
     void _DrawSinglePlayer( wxDC& dc );
     void _DrawBackground( wxDC& dc );
     void _DrawStartRects( wxDC& dc );
     void _DrawStartPositions( wxDC& dc );
-    void _DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxColour& col, bool mouseover );
+    void _DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxColour& col, bool mouseover, int alphalevel = 70 );
 
     void _SetMouseOverRect( int index );
 

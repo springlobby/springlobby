@@ -34,6 +34,8 @@ class SinglePlayerTab: public wxPanel
 
     void OnMapSelect( wxCommandEvent& event );
     void OnModSelect( wxCommandEvent& event );
+    void OnAddBot( wxCommandEvent& event );
+
   protected:
 
     Ui& m_ui;

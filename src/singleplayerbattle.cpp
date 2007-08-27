@@ -42,6 +42,7 @@ void SinglePlayerBattle::UpdateBot(unsigned int index, int ally, int posx, int p
 void SinglePlayerBattle::RemoveBot(unsigned int index)
 {
   delete m_bots[index];
+  m_bots[index] = 0;
   std::vector<BattleBot*>::iterator i = m_bots.begin();
   i += index;
   m_bots.erase( i );
