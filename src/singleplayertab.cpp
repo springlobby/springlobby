@@ -14,6 +14,7 @@
 #include "utils.h"
 #include "uiutils.h"
 #include "iunitsync.h"
+#include "addbotdialog.h"
 
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
@@ -150,6 +151,12 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 
 void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
-
+  AddBotDialog dlg( this, m_battle, true );
+  if ( dlg.ShowModal() == wxID_OK ) {
+    int x = 0, y = 0;
+    m_battle.GetFreePosition( x, y );
+    m_battle.AddBot( m_battle.GetFreeAlly(), x, y, dlg.GetAI() );
+    m_minimap->UpdateMinimap();
+  }
 }
 

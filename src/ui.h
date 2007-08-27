@@ -49,7 +49,6 @@ class Ui
     bool IsConnected() const;
     void JoinChannel( const wxString& name, const wxString& password );
 
-    std::string GetSupportedSpring() { return m_server_spring_ver; }
     void SetSupportedSpring(std::string spring_version) { m_server_spring_ver = spring_version; }
 
     bool IsSpringCompatible( );

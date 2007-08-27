@@ -9,13 +9,13 @@ class wxChoice;
 class wxStaticLine;
 class wxButton;
 class wxCommandEvent;
-class Battle;
+class IBattle;
 
 class AddBotDialog : public wxDialog
 {
   public:
 
-    AddBotDialog( wxWindow* parent, Battle& battle, bool singleplayer = false );
+    AddBotDialog( wxWindow* parent, IBattle& battle, bool singleplayer = false );
 
     wxString GetNick();
     wxString GetAI();
@@ -34,7 +34,7 @@ class AddBotDialog : public wxDialog
     wxButton* m_cancel_btn;
     wxButton* m_add_btn;
 
-    Battle& m_battle;
+    IBattle& m_battle;
 
     bool m_sp;
 

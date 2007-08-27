@@ -286,13 +286,11 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 {
   debug_func( "" );
   if ( !IsSpringCompatible () ){
-    wxString SpringVersion = _("unknown");
     if ( m_spring->TestSpringBinary() ) {
-      if (usync()->GetSpringVersion() != "") SpringVersion = WX_STRING( usync()->GetSpringVersion() );
       wxString message = _("Your spring version");
-      message += _T(" (") + SpringVersion + _T(") ");
+      message += _T(" (") + WX_STRING( usync()->GetSpringVersion() ) + _T(") ");
       message +=  _("is not supported by the lobby server that requires version");
-      message += _T(" (") +  WX_STRING(GetSupportedSpring()) + _T(").\n\n");
+      message += _T(" (") +  WX_STRING( m_server_spring_ver ) + _T(").\n\n");
       message += _("Online play will be disabled.");
       wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
     } else {

@@ -315,12 +315,14 @@ wxString SpringOptionsTab::AutoFindUnitSyncLib( const wxString& def )
   pl.Add( _T("C:\\Program") );
   pl.Add( _T("C:\\Program Files") );
 #else
+  pl.Add( _T("/usr/local/lib64") );
   pl.Add( _T("/usr/local/games") );
   pl.Add( _T("/usr/local/games/lib") );
   pl.Add( _T("/usr/local/lib") );
+  pl.Add( _T("/usr/lib64") );
+  pl.Add( _T("/usr/lib") );
   pl.Add( _T("/usr/games") );
   pl.Add( _T("/usr/games/lib") );
-  pl.Add( _T("/usr/lib") );
 #endif
 
   pl.Add( m_dir_edit->GetValue() );
@@ -349,7 +351,7 @@ wxString SpringOptionsTab::AutoFindUnitSyncLib( const wxString& def )
   for ( size_t i = 0; i < pl.GetCount(); i++ ) {
     wxString path = pl[i];
     if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
-    if ( IsUnitSyncLib( path + UNITSYNC_BIN ) ) return path + UNITSYNC_BIN;
+    if ( IsUnitSyncLib( path + wxFileName::GetPathSeparator() + UNITSYNC_BIN ) ) return path + wxFileName::GetPathSeparator() + UNITSYNC_BIN;
     if ( IsUnitSyncLib( path + _T("Spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN;
     if ( IsUnitSyncLib( path + _T("spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN;
   }

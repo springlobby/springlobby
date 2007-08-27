@@ -22,7 +22,7 @@ BEGIN_EVENT_TABLE( AddBotDialog, wxDialog )
 END_EVENT_TABLE()
 
 
-AddBotDialog::AddBotDialog( wxWindow* parent, Battle& battle , bool singleplayer):
+AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplayer):
   wxDialog( parent, wxID_ANY, _("Add bot"), wxDefaultPosition, wxSize( 360,155 ) ),
   m_battle( battle ),
   m_sp(singleplayer)
