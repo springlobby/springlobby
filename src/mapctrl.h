@@ -81,6 +81,10 @@ class MapCtrl : public wxPanel
 
     void _RequireImages();
 
+    void _RelocateBots();
+
+    void _GetClosestStartPos( int& index, int& x, int& y, int& range );
+
     void _DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving );
     void _DrawSinglePlayer( wxDC& dc );
     void _DrawBackground( wxDC& dc );

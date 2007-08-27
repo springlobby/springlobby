@@ -83,6 +83,9 @@ class SinglePlayerBattle: public IBattle
     int GetMyAlly() { return -1; }
     void SetMyAlly( int ally ) {}
 
+    int GetFreeAlly();
+    void GetFreePosition( int& x, int& y );
+
     void SendHostInfo( HostInfo update );
 
   protected:

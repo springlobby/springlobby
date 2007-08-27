@@ -32,21 +32,23 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-  wxBoxSizer* m_nick_sizer;
-  m_nick_sizer = new wxBoxSizer( wxHORIZONTAL );
+  if ( !m_sp ) {
+    wxBoxSizer* m_nick_sizer;
+    m_nick_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_nick_lbl = new wxStaticText( this, wxID_ANY, _("Nickname:"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_nick_sizer->Add( m_nick_lbl, 1, wxALL, 5 );
+    m_nick_lbl = new wxStaticText( this, wxID_ANY, _("Nickname:"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_nick_sizer->Add( m_nick_lbl, 1, wxALL, 5 );
 
-  int bot = 1;
-  while ( m_battle.GetBot( "Bot" + i2s(bot) ) != 0 ) {
-    bot++;
+    int bot = 1;
+    while ( m_battle.GetBot( "Bot" + i2s(bot) ) != 0 ) {
+      bot++;
+    }
+
+    m_nick = new wxTextCtrl( this, wxID_ANY, wxString::Format( _("Bot%d"), bot ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_nick_sizer->Add( m_nick, 2, wxALL, 5 );
+
+    m_main_sizer->Add( m_nick_sizer, 0, wxEXPAND, 5 );
   }
-
-  m_nick = new wxTextCtrl( this, wxID_ANY, wxString::Format( _("Bot%d"), bot ), wxDefaultPosition, wxDefaultSize, 0 );
-  m_nick_sizer->Add( m_nick, 2, wxALL, 5 );
-
-  m_main_sizer->Add( m_nick_sizer, 0, wxEXPAND, 5 );
 
   wxBoxSizer* m_ai_sizer;
   m_ai_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -54,9 +56,7 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
   m_ai_lbl = new wxStaticText( this, wxID_ANY, _("AI:"), wxDefaultPosition, wxDefaultSize, 0 );
   m_ai_sizer->Add( m_ai_lbl, 1, wxALL, 5 );
 
-  wxString m_aiChoices[] = { _("KAI-0.12"), _("AAI") };
-  int m_aiNChoices = sizeof( m_aiChoices ) / sizeof( wxString );
-  m_ai = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_aiNChoices, m_aiChoices, 0 );
+  m_ai = new wxChoice( this, wxID_ANY );
   m_ai->SetToolTip( _("Choose the AI library to use with this bot.") );
 
   m_ai_sizer->Add( m_ai, 2, wxALL, 5 );

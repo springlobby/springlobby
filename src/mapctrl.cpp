@@ -207,6 +207,25 @@ void MapCtrl::_SetCursor()
 }
 
 
+void MapCtrl::_RelocateBots()
+{
+  if ( m_battle == 0 ) return;
+
+  for ( int i = 0; i < m_battle->GetNumBots(); i++ ) {
+    BattleBot* bot = m_battle->GetBot( i );
+    ASSERT_LOGIC( bot != 0, "bot == 0" );
+    m_battle->GetFreePosition( bot->posx, bot->posy );
+    if ( bot->posx == -1 ) m_battle->RemoveBot( i );
+  }
+}
+
+
+void MapCtrl::_GetClosestStartPos( int& index, int& x, int& y, int& range )
+{
+
+}
+
+
 void MapCtrl::LoadMinimap()
 {
   debug_func("");
@@ -234,6 +253,7 @@ void MapCtrl::LoadMinimap()
     m_image = 0;
     m_mapname = _T("");
   }
+  if ( m_sp ) _RelocateBots();
 
 }
 

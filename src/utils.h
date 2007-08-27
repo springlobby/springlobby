@@ -9,8 +9,8 @@
 //! Converts an std::string to a wxString
 #define WX_STRING(v) wxString(v.c_str(),wxConvUTF8)
 
-#define ASSERT_LOGIC(cond,msg) if(!(cond)){debug_error(std::string("logic exception: ")+msg);throw std::logic_error(msg);}
-#define ASSERT_RUNTIME(cond,msg) if(!(cond)){debug_warn(std::string("runtime error: ")+msg);throw std::runtime_error(msg);}
+#define ASSERT_LOGIC(cond,msg) if(!(cond)){debug_error(std::string("logic ")+msg);throw std::logic_error(msg);}
+#define ASSERT_RUNTIME(cond,msg) if(!(cond)){debug_warn(std::string("runtime ")+msg);throw std::runtime_error(msg);}
 
 std::string i2s( int x );
 
