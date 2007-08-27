@@ -512,6 +512,7 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
   else img = m_bot_img;
 
   wxRect r = _GetBotRect( bot, selected );
+  wxColour col = wxColour( bot.bs.color_r,bot.bs.color_g,bot.bs.color_b );
 
   if ( selected ) {
     _DrawStartRect( dc, -1, r, wxColour(150,255,150), false, 170 );
@@ -544,7 +545,6 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     else if ( m_rect_area == RA_DownButton ) dc.DrawBitmap( wxBitmap(up_downsel_xpm), r.x+updownrect.x, r.y+updownrect.y, true );
     else dc.DrawBitmap( wxBitmap(up_down_xpm), r.x+updownrect.x, r.y+updownrect.y, true );
 
-    wxColour col = wxColour( bot.bs.color_r,bot.bs.color_g,bot.bs.color_b );
     dc.SetPen( wxPen( col ) );
     dc.SetBrush( wxBrush( col, wxSOLID ) );
 
@@ -554,11 +554,27 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     if ( m_rect_area == RA_Close ) dc.DrawBitmap( *m_close_hi_img, r.x+closerect.x, r.y+closerect.y, true );
     else dc.DrawBitmap( *m_close_img, r.x+closerect.x, r.y+closerect.y, true );
 
+    dc.DrawBitmap( *img, r.x+2, r.y+2, true );
+
   } else {
-    _DrawStartRect( dc, -1, r, wxColour(150,255,150), false );
+    //_DrawStartRect( dc, -1, r, wxColour(150,255,150), false );
+    dc.SetPen( wxPen( wxColour(150,255,150) ) );
+    dc.SetBrush( wxBrush( col, wxSOLID ) );
+    dc.DrawRectangle( r.x, r.y, r.width, r.height );
+    dc.DrawBitmap( *img, r.x+2, r.y+2, true );
+    int w, h;
+    dc.GetTextExtent( wxString::Format( _T("%d"), bot.bs.ally + 1 ), &w, &h );
+    int x = r.width - w - 2 + r.x;
+    int y = r.height - h - 2 + r.y;
+    dc.SetTextForeground( *wxBLACK );
+    dc.DrawText( wxString::Format( _T("%d"), bot.bs.ally + 1 ), x, y );
+    dc.DrawText( wxString::Format( _T("%d"), bot.bs.ally + 1 ), x+2, y );
+    dc.DrawText( wxString::Format( _T("%d"), bot.bs.ally + 1 ), x, y+2 );
+    dc.DrawText( wxString::Format( _T("%d"), bot.bs.ally + 1 ), x+2, y+2 );
+    dc.SetTextForeground( *wxWHITE );
+    dc.DrawText( wxString::Format( _T("%d"), bot.bs.ally + 1 ), x+1, y+1 );
   }
 
-  dc.DrawBitmap( *img, r.x+2, r.y+2, true );
 }
 
 
