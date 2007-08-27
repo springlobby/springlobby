@@ -7,6 +7,7 @@
 #include <wx/intl.h>
 #include <wx/arrstr.h>
 #include <wx/filename.h>
+#include <wx/stdpaths.h>
 #include <clocale>
 
 #include "spring.h"
@@ -54,13 +55,15 @@ bool Spring::Run( Battle& battle )
     return false;
   }
 
+  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
+
   try {
 
     if ( !wxFile::Access( wxString(_T("script_springlobby.txt")), wxFile::write ) ) {
       debug_error( "Access denied to script_springlobby.txt." );
     }
 
-    wxFile f( wxString(_T("script_springlobby.txt")), wxFile::write );
+    wxFile f( path + _T("script.txt"), wxFile::write );
     f.Write( GetScriptTxt(battle) );
     f.Close();
 
@@ -70,7 +73,7 @@ bool Spring::Run( Battle& battle )
   }
 
   if ( m_process == 0 ) m_process = new SpringProcess( *this );
-  wxString cmd = WX_STRING(sett().GetSpringUsedLoc()) + _T(" script_springlobby.txt");
+  wxString cmd = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ") + path + _T("script.txt");
   m_process->Create();
   m_process->SetCommand( cmd );
   m_process->Run();
@@ -430,7 +433,9 @@ wxString Spring::GetScriptTxt( Battle& battle )
   }
   debug("18");
 
-  wxFile f( wxString(_T("script_springlobby_debug.txt")), wxFile::write );
+  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
+
+  wxFile f( wxString(path + _T("script_debug.txt")), wxFile::write );
   f.Write( _T("[Script Start]") + s );
   f.Write( ds );
   f.Close();
