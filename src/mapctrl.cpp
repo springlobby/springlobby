@@ -483,7 +483,7 @@ RectArea MapCtrl::_GetBotRectArea( const wxRect& botrect, int x, int y )
 
 wxRect MapCtrl::_GetBotSideRect()
 {
-  return wxRect( 38, 22, 16, 16 );
+  return wxRect( 40, 22, 16, 16 );
 }
 
 
@@ -533,10 +533,10 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
   wxColour col = wxColour( bot.bs.color_r,bot.bs.color_g,bot.bs.color_b );
 
   if ( selected ) {
-    _DrawStartRect( dc, -1, r, col, false, 180 );
-    _DrawOutlinedText( dc, _("side:"), r.x+3, r.y+22, wxColour(50,50,50), *wxWHITE );
-
     wxRect siderect = _GetBotSideRect();
+    _DrawStartRect( dc, -1, r, col, false, 180 );
+    _DrawOutlinedText( dc, _("side:"), r.x+3, r.y+siderect.y-2, wxColour(50,50,50), *wxWHITE );
+
     if ( m_rect_area == RA_Side ) {
       _DrawStartRect( dc, -1, wxRect( r.x+siderect.x-1, r.y+siderect.y-1, siderect.width+2, siderect.height+2 ), col, false );
     }
@@ -557,10 +557,10 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     dc.DrawBitmap( *bmp, r.x+siderect.x, r.y+siderect.y, true );
     delete bmp;
 
-    _DrawOutlinedText( dc, wxString::Format( _("ally: %d"), bot.bs.ally + 1 ), r.x+4, r.y+40, wxColour(50,50,50), *wxWHITE );
+    wxRect updownrect = _GetBotUpButtonRect();
+    _DrawOutlinedText( dc, wxString::Format( _("ally: %d"), bot.bs.ally + 1 ), r.x+4, r.y+updownrect.y-2, wxColour(50,50,50), *wxWHITE );
     //dc.DrawText( wxString::Format( _("ally: %d"), bot.bs.ally + 1 ), r.x+4, r.y+40 );
 
-    wxRect updownrect = _GetBotUpButtonRect();
     if ( m_rect_area == RA_UpButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownrect.x, r.y+updownrect.y, true );
     else if ( m_rect_area == RA_DownButton ) dc.DrawBitmap( wxBitmap(up_downsel_xpm), r.x+updownrect.x, r.y+updownrect.y, true );
     else dc.DrawBitmap( wxBitmap(up_down_xpm), r.x+updownrect.x, r.y+updownrect.y, true );
@@ -577,23 +577,18 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     dc.DrawBitmap( *img, r.x+2, r.y+2, true );
 
   } else {
-    //_DrawStartRect( dc, -1, r, wxColour(150,255,150), false );
+
     dc.SetPen( wxPen( col ) );
     dc.SetBrush( wxBrush( col, wxSOLID ) );
     dc.DrawRectangle( r.x, r.y, r.width, r.height );
     dc.DrawBitmap( *img, r.x+2, r.y+2, true );
+
     int w, h;
     wxString allystr = wxString::Format( _T("%d"), bot.bs.ally + 1 );
     dc.GetTextExtent( allystr, &w, &h );
-    int x = r.width - w - 3 + r.x;
-    int y = r.height - h - 1 + r.y;
-    dc.SetTextForeground( *wxBLACK );
-    dc.DrawText( allystr, x, y );
-    dc.DrawText( allystr, x+2, y );
-    dc.DrawText( allystr, x, y+2 ); // Hack to get font outline
-    dc.DrawText( allystr, x+2, y+2 );
-    dc.SetTextForeground( *wxWHITE );
-    dc.DrawText( allystr, x+1, y+1 );
+
+    _DrawOutlinedText( dc, allystr, r.width - w - 3 + r.x, r.height - h - 1 + r.y, wxColour(50,50,50), *wxWHITE );
+
   }
 
 }
@@ -932,13 +927,12 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     if ( ( abs( m_mdown_x - event.GetX() ) >= minboxsize ) && ( abs( m_mdown_y - event.GetY() ) >= minboxsize ) ) {
       BattleStartRect r = _GetBattleRect( m_mdown_x<event.GetX()?m_mdown_x:event.GetX(), m_mdown_y<event.GetY()?m_mdown_y:event.GetY(), m_mdown_x>event.GetX()?m_mdown_x:event.GetX(), m_mdown_y>event.GetY()?m_mdown_y:event.GetY() );
       m_battle->AddStartRect( _GetNewRectIndex(), r.left, r.top, r.right, r.bottom );
-      UpdateMinimap();
     } else {
       BattleStartRect r = _GetBattleRect( m_mdown_x, m_mdown_y, m_mdown_x + minboxsize, m_mdown_y + minboxsize );
       m_battle->AddStartRect( _GetNewRectIndex(), r.left, r.top, r.right, r.bottom );
-      UpdateMinimap();
     }
     m_battle->SendHostInfo( HI_StartRects );
+    UpdateMinimap();
   } else if ( m_maction == MA_Delete ) {
 
     if ( (m_mdown_area == m_rect_area) && (m_mover_rect == m_mdown_rect) ) {
