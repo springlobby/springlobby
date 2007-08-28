@@ -343,7 +343,8 @@ void MapCtrl::_DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxCol
   if ( index != -1 ) {
     dc.GetTextExtent( wxString::Format( _T("%d"), index+1), &twidth, &theight );
     dc.SetTextForeground( col );
-    dc.DrawText( wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1 );
+    _DrawOutlinedText( dc, wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1, wxColour(50,50,50), *wxWHITE );
+    //dc.DrawText( wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1 );
   }
 
   dc.SetPen( wxPen( col ) );
