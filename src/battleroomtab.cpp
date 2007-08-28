@@ -99,9 +99,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_lock_chk = new wxCheckBox( this, BROOM_LOCK, _("Locked"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
 
-  m_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 150,240 ), wxLC_NO_HEADER|wxLC_REPORT );
+  m_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_NO_HEADER|wxLC_REPORT );
   m_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
-
+  m_opts_list->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
   wxListItem col;
 
   col.SetText( _("Option") );
@@ -156,7 +156,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_info_sizer->Add( m_map_lbl, 0, wxEXPAND );
   //m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
   //m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
-  m_info_sizer->Add( m_opts_list, 1, wxEXPAND );
+  m_info_sizer->Add( m_opts_list, 1, wxEXPAND | wxTOP, 4 );
 
 
   m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
