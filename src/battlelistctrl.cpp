@@ -205,6 +205,9 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
     Battle& battle = *((Battle*)GetItemData( m_selected )); // FIXME m_selected might not exist.
     wxString map = battle.GetMapName();
     map = map.SubString(0, map.Find( '.', true ) - 1 );
+    map.Replace(_T(" "), _T("*") );
+    map.Replace(_T("-"), _T("*") );
+    map.Replace(_T("_"), _T("*") );
     wxString url = _T("http://spring.unknown-files.net/page/search/2/13/") + map + _T("/");
     if ( !wxLaunchDefaultBrowser( url ) ) {
       wxMessageBox( _T("Couldn't launch browser. URL is: ") + url, _T("Couldn't launch browser.")  );
