@@ -76,6 +76,7 @@ class SinglePlayerBattle: public IBattle
     void RemoveBot( unsigned int index );
     void UpdateBot( unsigned int index, int ally, int posx, int posy, int side );
     BattleBot* GetBot( unsigned int index );
+    BattleBot* GetBotByStartPosition( unsigned int startpos );
     unsigned int GetNumBots();
 
     void GetFreeColour( int& r, int& g, int& b, bool excludeme = true );

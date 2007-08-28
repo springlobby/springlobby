@@ -32,9 +32,12 @@ class SinglePlayerTab: public wxPanel
 
     SinglePlayerBattle& GetBattle() { return m_battle; }
 
+    bool ValidSetup();
+
     void OnMapSelect( wxCommandEvent& event );
     void OnModSelect( wxCommandEvent& event );
     void OnAddBot( wxCommandEvent& event );
+    void OnStart( wxCommandEvent& event );
 
   protected:
 

@@ -564,8 +564,8 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     dc.DrawBitmap( *img, r.x+2, r.y+2, true );
     int w, h;
     dc.GetTextExtent( wxString::Format( _T("%d"), bot.bs.ally + 1 ), &w, &h );
-    int x = r.width - w - 2 + r.x;
-    int y = r.height - h - 2 + r.y;
+    int x = r.width - w - 3 + r.x;
+    int y = r.height - h - 1 + r.y;
     dc.SetTextForeground( *wxBLACK );
     dc.DrawText( wxString::Format( _T("%d"), bot.bs.ally + 1 ), x, y );
     dc.DrawText( wxString::Format( _T("%d"), bot.bs.ally + 1 ), x+2, y );

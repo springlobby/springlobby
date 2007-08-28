@@ -115,6 +115,7 @@ class IBattle
 
     virtual void SendHostInfo( HostInfo update ) = 0;
 
+    virtual BattleBot* GetBotByStartPosition( unsigned int startpos ) { return 0; };
     virtual BattleBot* GetBot( unsigned int index ) = 0;
     virtual BattleBot* GetBot( const std::string& name ) { return 0; };
     virtual unsigned int GetNumBots() = 0;
@@ -123,6 +124,10 @@ class IBattle
 
     virtual void GetFreePosition( int& x, int& y ) {}
     virtual int GetFreeAlly() { return 0; }
+
+    virtual int GetNumDisabledUnits() { return 0; }
+    virtual std::string DisabledUnits() { return ""; }
+
   protected:
 
     bool m_map_loaded;

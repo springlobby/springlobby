@@ -8,12 +8,14 @@
 #include <wx/panel.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
+#include <wx/msgdlg.h>
 #include <stdexcept>
 
 #include "singleplayertab.h"
 #include "mapctrl.h"
 #include "utils.h"
 #include "uiutils.h"
+#include "ui.h"
 #include "iunitsync.h"
 #include "addbotdialog.h"
 
@@ -23,6 +25,7 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
   EVT_CHOICE( SP_MAP_PICK, SinglePlayerTab::OnMapSelect )
   EVT_CHOICE( SP_MOD_PICK, SinglePlayerTab::OnModSelect )
   EVT_BUTTON( SP_ADD_BOT , SinglePlayerTab::OnAddBot )
+  EVT_BUTTON( SP_START , SinglePlayerTab::OnStart )
 
 END_EVENT_TABLE()
 
@@ -133,6 +136,34 @@ void SinglePlayerTab::ReloadModlist()
 }
 
 
+bool SinglePlayerTab::ValidSetup()
+{
+  int numBots = 0;
+  int first = -1;
+  for ( unsigned int i = 0; i < m_battle.Map().info.posCount; i++ ) {
+
+    BattleBot* bot = m_battle.GetBotByStartPosition( i );
+
+    if ( bot == 0 ) {
+      if ( first == -1 ) first = i;
+    } else {
+      numBots++;
+    }
+
+  }
+
+  if ( ( numBots < m_battle.GetNumBots() ) || ( first != m_battle.GetNumBots() ) ) {
+    if ( numBots < m_battle.GetNumBots() ) {
+      wxMessageBox( _("You have bots that are not assingled to startpositions. In the current version of spring you are only allowed to use start positions positioning them freely is not allowed.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
+    } else {
+      wxMessageBox( _("You are not using consecutive start position numbers.\n\nIn the current version of spring you are not allowed to skip any startpositions. You have to use all consecutive position.\n\nExample: if you have 2 bots + yourself you have to use start positions 1,2,3 not 1,3,4.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
+    }
+    return false;
+  }
+  return true;
+}
+
+
 void SinglePlayerTab::OnMapSelect( wxCommandEvent& event )
 {
   int index = m_map_pick->GetCurrentSelection();
@@ -165,5 +196,11 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
     bot->bs.color_b = b;
     m_minimap->UpdateMinimap();
   }
+}
+
+
+void SinglePlayerTab::OnStart( wxCommandEvent& event )
+{
+  if ( ValidSetup() ) m_ui.StartSinglePlayerGame( m_battle );
 }
 

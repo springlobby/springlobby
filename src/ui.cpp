@@ -190,6 +190,11 @@ void Ui::StartHostedBattle()
 }
 
 
+void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
+{
+  m_spring->Run( battle );
+}
+
 /*void Ui::SendHostInfo( HostInfo update )
 {
   assert( m_serv != 0 );

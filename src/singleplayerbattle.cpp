@@ -36,6 +36,21 @@ unsigned int SinglePlayerBattle::GetNumBots()
 }
 
 
+BattleBot* SinglePlayerBattle::GetBotByStartPosition( unsigned int startpos )
+{
+  const UnitSyncMap& map = Map();
+  ASSERT_LOGIC( (startpos < map.info.posCount) && (startpos >= 0), "Invalid startpos" );
+  for ( int bi = 0; bi < GetNumBots(); bi++ ) {
+    BattleBot* bot = GetBot( bi );
+    ASSERT_LOGIC( bot != 0, "Bot == 0" );
+    if ( ( map.info.positions[startpos].x == bot->posx ) && ( map.info.positions[startpos].y == bot->posy ) ) {
+      return bot;
+    }
+  }
+  return 0;
+}
+
+
 BattleBot* SinglePlayerBattle::GetBot(unsigned int index)
 {
   return m_bots[index];

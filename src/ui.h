@@ -12,6 +12,7 @@ class wxString;
 class Channel;
 class User;
 class Battle;
+class SinglePlayerBattle;
 class BattleBot;
 
 typedef int HostInfo;
@@ -54,6 +55,7 @@ class Ui
     bool IsSpringCompatible( );
 
     void StartHostedBattle();
+    void StartSinglePlayerGame( SinglePlayerBattle& battle );
     //void SendHostInfo( HostInfo update );
 
     void Quit();

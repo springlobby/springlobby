@@ -125,7 +125,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
 	m_options_checks = new wxCheckListBox( this, BOPTS_OPTS );
 	m_options_checks->Append( _("Limit d-gun") );
-	m_options_checks->Append( _("Ghosted buildning") );
+	m_options_checks->Append( _("Ghosted buildings") );
 	m_options_checks->Append( _("Diminishing metal makers") );
 	if ( m_sp ) m_options_checks->Append( _("Random start postisions") );
 
