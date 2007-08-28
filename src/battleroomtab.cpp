@@ -108,8 +108,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_opts_list->InsertColumn( 0, col );
   col.SetText( _("Value") );
   m_opts_list->InsertColumn( 1, col );
-  m_opts_list->SetColumnWidth( 0, 100 );
-  m_opts_list->SetColumnWidth( 1, 80 );
+  m_opts_list->SetColumnWidth( 0, 85 );
+  m_opts_list->SetColumnWidth( 1, 60 );
 
   m_opts_list->InsertItem( Opt_Pos_Size, _("Size") );
   m_opts_list->InsertItem( Opt_Pos_Windspeed, _("Windspeed") );
