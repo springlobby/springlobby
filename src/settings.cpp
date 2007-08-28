@@ -461,3 +461,16 @@ void Settings::SetLastHostMap( const std::string& value )
   m_config->Write( _T("/Hosting/LastMap"), WX_STRING(value) );
 }
 
+
+void Settings::SetLastAI( const std::string& ai )
+{
+  m_config->Write( _T("/SinglePlayer/LastAI"), WX_STRING(ai) );
+}
+
+
+std::string Settings::GetLastAI()
+{
+  return STD_STRING(m_config->Read( _T("/SinglePlayer/LastAI"), wxEmptyString ));
+}
+
+

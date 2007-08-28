@@ -529,7 +529,7 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   s += _T("\t}\n\n");
 
 
-  for ( int i = 0; i < battle.GetNumBots(); i++ ) { // TODO fix this when new Spring comes.
+  for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) { // TODO fix this when new Spring comes.
     BattleBot* bot = battle.GetBotByStartPosition( i );
     ASSERT_LOGIC( bot != 0, "bot == 0" );
     s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i );

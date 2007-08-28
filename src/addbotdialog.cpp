@@ -120,7 +120,12 @@ void AddBotDialog::ReloadAIList()
     if ( m_ai->FindString( filename ) == wxNOT_FOUND ) m_ai->Append( filename );
     cont = dir.GetNext(&filename);
   }
-  if ( m_ai->GetCount() > 0 ) m_ai->SetSelection( 0 );
+
+  if ( m_ai->GetCount() > 0 ) {
+    wxString ai = WX_STRING(sett().GetLastAI());
+    if ( ai == wxEmptyString ) ai = m_ai->GetString( 0 );
+    m_ai->SetStringSelection( ai );
+  }
 }
 
 
@@ -132,6 +137,7 @@ void AddBotDialog::OnClose( wxCommandEvent& event )
 
 void AddBotDialog::OnAddBot( wxCommandEvent& event )
 {
+  sett().SetLastAI( STD_STRING( GetAI() ) );
   EndModal( wxID_OK );
 }
 

@@ -98,6 +98,9 @@ class Settings
     void SetLastHostNATSetting( int value );
     void SetLastHostMap( const std::string& value );
 
+    void SetLastAI( const std::string& ai );
+    std::string GetLastAI();
+
   protected:
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
 };
