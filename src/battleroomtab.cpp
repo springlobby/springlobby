@@ -12,6 +12,7 @@
 #include <wx/button.h>
 #include <wx/sizer.h>
 #include <wx/msgdlg.h>
+#include <wx/settings.h>
 
 #include "battleroomtab.h"
 #include "ui.h"
@@ -26,6 +27,17 @@
 #include "addbotdialog.h"
 #include "server.h"
 
+
+#define Opt_Pos_Size 0
+#define Opt_Pos_Windspeed 1
+
+#define Opt_Pos_Startpos 3
+#define Opt_Pos_Gameend 4
+#define Opt_Pos_LimitDgun 5
+#define Opt_Pos_Startmetal 6
+#define Opt_Pos_Startenergy 7
+#define Opt_Pos_Maxunits 8
+#define Opt_Pos_Restrictions 9
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -87,17 +99,39 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_lock_chk = new wxCheckBox( this, BROOM_LOCK, _("Locked"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
 
+  m_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 150,240 ), wxLC_NO_HEADER|wxLC_REPORT );
+  m_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
+
+  wxListItem col;
+
+  col.SetText( _("Option") );
+  m_opts_list->InsertColumn( 0, col );
+  col.SetText( _("Value") );
+  m_opts_list->InsertColumn( 1, col );
+  m_opts_list->SetColumnWidth( 0, 100 );
+  m_opts_list->SetColumnWidth( 1, 80 );
+
+  m_opts_list->InsertItem( Opt_Pos_Size, _("Size") );
+  m_opts_list->InsertItem( Opt_Pos_Windspeed, _("Windspeed") );
+  m_opts_list->InsertItem( 2, wxEmptyString );
+  m_opts_list->InsertItem( Opt_Pos_Startpos, _("Startpos") );
+  m_opts_list->InsertItem( Opt_Pos_Gameend, _("Game end") );
+  m_opts_list->InsertItem( Opt_Pos_LimitDgun, _("Limit D-gun") );
+  m_opts_list->InsertItem( Opt_Pos_Startmetal, _("Start metal") );
+  m_opts_list->InsertItem( Opt_Pos_Startenergy, _("Start energy") );
+  m_opts_list->InsertItem( Opt_Pos_Maxunits, _("Max units") );
+  m_opts_list->InsertItem( Opt_Pos_Restrictions, _("Restrictions") );
+
   // Create Sizers
   m_players_sizer = new wxBoxSizer( wxVERTICAL );
   m_player_sett_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_info_sizer = new wxBoxSizer( wxVERTICAL );
   m_top_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
-  m_info1_sizer = new wxBoxSizer( wxHORIZONTAL );
+  //m_info1_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   // Put widgets in place
-
   m_player_sett_sizer->Add( m_team_lbl, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_team_sel, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_ally_lbl, 0, wxEXPAND | wxALL, 2 );
@@ -115,13 +149,15 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_splitter->SplitHorizontally( m_player_panel, m_chat, 50 );
 
-  m_info1_sizer->Add( m_wind_lbl, 1, wxEXPAND );
-  m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
+  //m_info1_sizer->Add( m_wind_lbl, 1, wxEXPAND );
+  //m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
 
   m_info_sizer->Add( m_minimap, 0, wxEXPAND );
   m_info_sizer->Add( m_map_lbl, 0, wxEXPAND );
-  m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
-  m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
+  //m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
+  //m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
+  m_info_sizer->Add( m_opts_list, 1, wxEXPAND );
+
 
   m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
   m_top_sizer->Add( m_info_sizer, 0, wxEXPAND | wxALL, 2 );
@@ -168,6 +204,28 @@ bool BattleRoomTab::IsHosted()
   return m_battle.IsFounderMe();
 }
 
+wxString _GetStartPosStr( StartType t )
+{
+  switch ( t ) {
+    case ST_Fixed: return _T("Fixed");
+    case ST_Random: return _T("Random");
+    case ST_Choose: return _T("Boxes");
+    case ST_Pick: return _T("Pick");
+    default: return _T("?");
+  };
+}
+
+
+wxString _GetGameTypeStr( GameType t )
+{
+  switch ( t ) {
+    case GT_ComContinue: return _T("Continue");
+    case GT_ComEnds: return _T("End");
+    case GT_Lineage: return _T("Lineage");
+    default: return _T("?");
+  };
+}
+
 
 void BattleRoomTab::UpdateBattleInfo()
 {
@@ -176,15 +234,24 @@ void BattleRoomTab::UpdateBattleInfo()
     if ( map.hash != m_map.hash ) map = m_map = usync()->GetMap( STD_STRING(m_battle.GetMapName()), true );
     else map = m_map;*/
     m_map_lbl->SetLabel( RefineMapname( WX_STRING(map.name) ) );
-    m_size_lbl->SetLabel( wxString::Format( _("Size: %.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
-    m_wind_lbl->SetLabel( wxString::Format( _("Wind: %d-%d"), map.info.minWind, map.info.maxWind) );
-    m_tidal_lbl->SetLabel( wxString::Format( _("Tidal: %d"), map.info.tidalStrength) );
+    m_opts_list->SetItem( Opt_Pos_Size, 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
+    m_opts_list->SetItem( Opt_Pos_Windspeed, 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind) );
+    //    m_opts_list->SetItem( 0, 1,  );
   } catch (...) {
     m_map_lbl->SetLabel( m_battle.GetMapName() );
     m_size_lbl->SetLabel( _("Size: ?x?") );
     m_wind_lbl->SetLabel( _("Wind: ?-?") );
     m_tidal_lbl->SetLabel( _("Tidal: ?") );
   }
+
+  m_opts_list->SetItem( Opt_Pos_Startpos, 1, _GetStartPosStr( m_battle.GetStartType() ) );
+  m_opts_list->SetItem( Opt_Pos_Gameend, 1, _GetGameTypeStr( m_battle.GetGameType() ) );
+  m_opts_list->SetItem( Opt_Pos_LimitDgun, 1, bool2yn( m_battle.LimitDGun() ) );
+  m_opts_list->SetItem( Opt_Pos_Startmetal, 1, wxString::Format( _T("%d"), m_battle.GetStartMetal() ) );
+  m_opts_list->SetItem( Opt_Pos_Startenergy, 1, wxString::Format( _T("%d"), m_battle.GetStartEnergy() ) );
+  m_opts_list->SetItem( Opt_Pos_Maxunits, 1, wxString::Format( _T("%d"), m_battle.GetMaxUnits() ) );
+  m_opts_list->SetItem( Opt_Pos_Restrictions, 1, bool2yn( m_battle.GetNumDisabledUnits() > 0 ) );
+
   m_lock_chk->SetValue( m_battle.IsLocked() );
   m_minimap->UpdateMinimap();
 }

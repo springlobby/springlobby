@@ -19,6 +19,7 @@ class wxSplitterWindow;
 class wxStaticLine;
 class wxButton;
 class wxCheckBox;
+class wxListCtrl;
 class MapCtrl;
 
 
@@ -102,6 +103,7 @@ class BattleRoomTab : public wxPanel
     wxCheckBox* m_spec_chk;
     wxCheckBox* m_lock_chk;
 
+    wxListCtrl* m_opts_list;
     DECLARE_EVENT_TABLE();
 };
 

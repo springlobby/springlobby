@@ -3,6 +3,8 @@
 
 #include <wx/string.h>
 
+#define bool2yn(b) ((b)?_("Yes"):_("No"))
+
 const wxString colour_choices[] = {
   _T("gold"), _T("dark gray"), _T("dark blue"), _T("bright blue"), _T("dark green"),
   _T("bright green"), _T("dark cyan"), _T("bright cyan"), _T("dark red"), _T("bright red"),
