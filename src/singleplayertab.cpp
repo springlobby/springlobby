@@ -177,7 +177,12 @@ void SinglePlayerTab::OnMapSelect( wxCommandEvent& event )
 
 void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 {
+  int index = m_mod_pick->GetCurrentSelection();
 
+  UnitSyncMod mod = usync()->GetMod( index );
+  m_battle.SetMod( mod );
+
+  m_minimap->UpdateMinimap();
 }
 
 

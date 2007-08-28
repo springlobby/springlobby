@@ -64,9 +64,14 @@ class IUnitSync
     virtual int GetMapIndex( const std::string& name ) = 0;
     virtual wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false ) = 0;
 
-    virtual int GetSideCount( const std::string& modname ) = 0;
-    virtual std::string GetSideName( const std::string& modname, int index ) = 0;
-    virtual wxImage GetSidePicture(const std::string& SideName) =0;
+    virtual void SetCurrentMod( const std::string& modname ) = 0;
+    virtual int GetSideCount() = 0;
+    virtual std::string GetSideName( int index ) = 0;
+    virtual wxImage GetSidePicture( const std::string& SideName ) =0;
+
+    virtual int GetNumUnits() = 0;
+    virtual int GetUnitIndex( const std::string& name ) = 0;
+    virtual std::string GetFullUnitName( int index ) = 0;
 
     virtual bool LoadUnitSyncLib() = 0;
     virtual void FreeUnitSyncLib() = 0;
@@ -75,9 +80,6 @@ class IUnitSync
 
     virtual std::string GetSpringVersion() = 0;
 
-    virtual int GetNumUnits( const std::string& modname ) = 0;
-    virtual int GetUnitIndex( const std::string& modname, const std::string& name ) = 0;
-    virtual std::string GetFullUnitName( const std::string& modname, int index ) = 0;
 };
 
 IUnitSync* usync();

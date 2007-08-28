@@ -307,7 +307,8 @@ wxString Spring::GetScriptTxt( Battle& battle )
          );
     std::setlocale(LC_NUMERIC, old_locale);
     debug( i2s(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side) );
-    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( STD_STRING(battle.GetModName()), battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side ) + ";\n"));
+    usync()->SetCurrentMod( STD_STRING(battle.GetModName()) );
+    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side ) + ";\n"));
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().handicap );
     s +=  _T("\t}\n");
   }
@@ -331,7 +332,8 @@ wxString Spring::GetScriptTxt( Battle& battle )
                              (double)(bot.bs.color_b/255.0)
                          );
     std::setlocale(LC_NUMERIC, old_locale);
-    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( STD_STRING(battle.GetModName()), bot.bs.side ) + ";\n"));
+    usync()->SetCurrentMod(STD_STRING(battle.GetModName()) );
+    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( bot.bs.side ) + ";\n"));
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), bot.bs.handicap );
 
     wxString ai = WX_STRING( bot.aidll );
@@ -541,7 +543,8 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
            (double)(bot->bs.color_b/255.0)
          );
     std::setlocale(LC_NUMERIC, old_locale);
-    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( STD_STRING(battle.GetModName()), bot->bs.side ) + ";\n"));
+    usync()->SetCurrentMod( STD_STRING(battle.GetModName()) );
+    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( bot->bs.side ) + ";\n"));
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), bot->bs.handicap );
     if ( bot->aidll != "" ) {
       wxString ai = WX_STRING( bot->aidll );

@@ -56,8 +56,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_color_sel = new wxComboBox( m_player_panel, BROOM_COLOURSEL, _("orange"), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), 16, colour_choices );
   m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
-  for ( int i = 0; i < usync()->GetSideCount( STD_STRING(m_battle.GetModName()) ); i++ ) {
-    m_side_sel->Append( WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), i )) );
+  usync()->SetCurrentMod( STD_STRING(m_battle.GetModName()) );
+  for ( int i = 0; i < usync()->GetSideCount(); i++ ) {
+    m_side_sel->Append( WX_STRING(usync()->GetSideName( i )) );
   }
 
   m_team_lbl = new wxStaticText( m_player_panel, -1, _("Team") );

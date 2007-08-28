@@ -300,24 +300,34 @@ std::string SpringUnitSync::GetModArchive( int index )
 }
 
 
-int SpringUnitSync::GetSideCount( const std::string& modname )
+void SpringUnitSync::SetCurrentMod( const std::string& modname )
 {
-  if ( (!m_loaded) || (!ModExists(modname)) ) return 0;
-  m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
+  if ( m_current_mod != modname ) {
+    m_uninit();
+    m_init( true, 1 );
+    m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
+    m_current_mod = modname;
+  }
+}
+
+
+int SpringUnitSync::GetSideCount()
+{
+  if ( (!m_loaded) || (!ModExists(m_current_mod)) ) return 0;
   return m_get_side_count();
 }
 
 
-std::string SpringUnitSync::GetSideName( const std::string& modname, int index )
+std::string SpringUnitSync::GetSideName( int index )
 {
-  if ( (!m_loaded) || (index < 0) || (!ModExists(modname)) ) return "unknown";
-  m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
+  if ( (!m_loaded) || (index < 0) || (!ModExists(m_current_mod)) ) return "unknown";
+  //m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
   ASSERT_LOGIC( m_get_side_count() > index, "Side index too high." );
   return m_get_side_name( index );
 }
 
 
-wxImage SpringUnitSync::GetSidePicture(const std::string& SideName )
+wxImage SpringUnitSync::GetSidePicture( const std::string& SideName )
 {
   wxString ImgName = _T("SidePics");
   ImgName += _T("/");
@@ -343,19 +353,19 @@ wxImage SpringUnitSync::GetSidePicture(const std::string& SideName )
 }
 
 
-int SpringUnitSync::GetNumUnits( const std::string& modname )
+int SpringUnitSync::GetNumUnits()
 {
   if ( !m_loaded ) return 0;
-  m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
+  //m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
   m_proc_units_nocheck();
   return m_get_unit_count();
 }
 
 
-int SpringUnitSync::GetUnitIndex( const std::string& modname, const std::string& name )
+int SpringUnitSync::GetUnitIndex( const std::string& name )
 {
   if ( !m_loaded ) return -1;
-  m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
+  //m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
   m_proc_units_nocheck();
   for ( int i = 0; i < m_get_unit_count(); i++ ) {
     if ( m_get_unit_name( i ) == name ) return i;
@@ -364,10 +374,10 @@ int SpringUnitSync::GetUnitIndex( const std::string& modname, const std::string&
 }
 
 
-std::string SpringUnitSync::GetFullUnitName( const std::string& modname, int index )
+std::string SpringUnitSync::GetFullUnitName( int index )
 {
   if ( (!m_loaded) || (index < 0) ) return "unknown";
-  m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
+  //m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
   m_proc_units_nocheck();
   return m_get_unit_full_name( index );
 }

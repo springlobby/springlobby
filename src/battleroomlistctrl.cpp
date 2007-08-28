@@ -117,8 +117,9 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
   m_popup->Append( -1, _("Colour"), m_colours );
 
   m_sides = new wxMenu();
-  for ( int i = 0; i < usync()->GetSideCount( STD_STRING(m_battle.GetModName()) ); i++ ) {
-    wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), i )), wxEmptyString, wxITEM_NORMAL );
+  usync()->SetCurrentMod( STD_STRING(m_battle.GetModName() ));
+  for ( int i = 0; i < usync()->GetSideCount(); i++ ) {
+    wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, WX_STRING(usync()->GetSideName( i )), wxEmptyString, wxITEM_NORMAL );
     m_sides->Append( side );
     Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
   }
@@ -191,9 +192,10 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   if ( !user.BattleStatus().spectator ) {
 
     try {
-      int sideimg = icons().GetSideIcon( usync()->GetSideName( STD_STRING(m_battle.GetModName()), user.BattleStatus().side ) );
+      usync()->SetCurrentMod( STD_STRING(m_battle.GetModName()) );
+      int sideimg = icons().GetSideIcon( usync()->GetSideName( user.BattleStatus().side ) );
       if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
-      else SetItem( index, 1, WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), user.BattleStatus().side )) );
+      else SetItem( index, 1, WX_STRING(usync()->GetSideName( user.BattleStatus().side )) );
     } catch ( ... ) {
       SetItem( index, 1, wxString::Format( _T("s%d"), user.BattleStatus().side + 1 ) );
     }
@@ -275,9 +277,10 @@ void BattleroomListCtrl::UpdateBot( const int& index )
   SetItemColumnImage( index, 1, -1 );
 
   try {
-    int sideimg = icons().GetSideIcon( usync()->GetSideName( STD_STRING(m_battle.GetModName()), bot.bs.side ) );
+    usync()->SetCurrentMod( STD_STRING(m_battle.GetModName()) );
+    int sideimg = icons().GetSideIcon( usync()->GetSideName( bot.bs.side ) );
     if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
-    else SetItem( index, 1, WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), bot.bs.side )) );
+    else SetItem( index, 1, WX_STRING(usync()->GetSideName( bot.bs.side )) );
   } catch ( ... ) {
     SetItem( index, 1, wxString::Format( _T("s%d"), bot.bs.side + 1 ) );
   }

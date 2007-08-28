@@ -526,8 +526,9 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     wxBitmap* bmp = 0;
     try {
       std::string mod = STD_STRING(m_battle->GetModName());
-      usync()->GetSideCount( mod );
-      std::string side = usync()->GetSideName( mod, bot.bs.side );
+      usync()->SetCurrentMod( mod );
+      usync()->GetSideCount();
+      std::string side = usync()->GetSideName( bot.bs.side );
       bmp = new wxBitmap( usync()->GetSidePicture( side ) );
     } catch (...) {
       delete bmp;
@@ -889,7 +890,8 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
 
     } else if ( m_mdown_area == RA_Side ) {
       try {
-        bot->bs.side = (bot->bs.side + 1) % usync()->GetSideCount( STD_STRING(m_battle->GetModName()) );
+        usync()->SetCurrentMod( STD_STRING(m_battle->GetModName()) );
+        bot->bs.side = (bot->bs.side + 1) % usync()->GetSideCount();
       } catch(...) {}
       RefreshRect( _GetBotRect( *bot, true ), false );
 
