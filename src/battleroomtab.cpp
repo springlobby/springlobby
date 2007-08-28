@@ -30,14 +30,15 @@
 
 #define Opt_Pos_Size 0
 #define Opt_Pos_Windspeed 1
+#define Opt_Pos_Tidal 2
 
-#define Opt_Pos_Startpos 3
-#define Opt_Pos_Gameend 4
-#define Opt_Pos_LimitDgun 5
-#define Opt_Pos_Startmetal 6
-#define Opt_Pos_Startenergy 7
-#define Opt_Pos_Maxunits 8
-#define Opt_Pos_Restrictions 9
+#define Opt_Pos_Startpos 4
+#define Opt_Pos_Gameend 5
+#define Opt_Pos_LimitDgun 6
+#define Opt_Pos_Startmetal 7
+#define Opt_Pos_Startenergy 8
+#define Opt_Pos_Maxunits 9
+#define Opt_Pos_Restrictions 10
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -66,7 +67,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_player_panel = new wxPanel( m_splitter , -1 );
   m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
   m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
-  m_color_sel = new wxComboBox( m_player_panel, BROOM_COLOURSEL, _("orange"), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), 16, colour_choices );
+  m_color_sel = new wxComboBox( m_player_panel, BROOM_COLOURSEL, _("gold"), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), 16, colour_choices );
   m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
   usync()->SetCurrentMod( STD_STRING(m_battle.GetModName()) );
@@ -113,7 +114,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_opts_list->InsertItem( Opt_Pos_Size, _("Size") );
   m_opts_list->InsertItem( Opt_Pos_Windspeed, _("Windspeed") );
-  m_opts_list->InsertItem( 2, wxEmptyString );
+  m_opts_list->InsertItem( Opt_Pos_Tidal, _("Tidal strength") );
+
+  m_opts_list->InsertItem( 3, wxEmptyString );
+
   m_opts_list->InsertItem( Opt_Pos_Startpos, _("Startpos") );
   m_opts_list->InsertItem( Opt_Pos_Gameend, _("Game end") );
   m_opts_list->InsertItem( Opt_Pos_LimitDgun, _("Limit D-gun") );
@@ -236,12 +240,13 @@ void BattleRoomTab::UpdateBattleInfo()
     m_map_lbl->SetLabel( RefineMapname( WX_STRING(map.name) ) );
     m_opts_list->SetItem( Opt_Pos_Size, 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
     m_opts_list->SetItem( Opt_Pos_Windspeed, 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind) );
+    m_opts_list->SetItem( Opt_Pos_Tidal, 1, wxString::Format( _T("%d"), map.info.tidalStrength) );
     //    m_opts_list->SetItem( 0, 1,  );
   } catch (...) {
     m_map_lbl->SetLabel( m_battle.GetMapName() );
-    m_size_lbl->SetLabel( _("Size: ?x?") );
-    m_wind_lbl->SetLabel( _("Wind: ?-?") );
-    m_tidal_lbl->SetLabel( _("Tidal: ?") );
+    m_opts_list->SetItem( Opt_Pos_Size, 1, _T("?x?") );
+    m_opts_list->SetItem( Opt_Pos_Windspeed, 1, _T("?-?") );
+    m_opts_list->SetItem( Opt_Pos_Tidal, 1, _T("?") );
   }
 
   m_opts_list->SetItem( Opt_Pos_Startpos, 1, _GetStartPosStr( m_battle.GetStartType() ) );
