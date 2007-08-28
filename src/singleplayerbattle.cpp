@@ -39,8 +39,8 @@ unsigned int SinglePlayerBattle::GetNumBots()
 BattleBot* SinglePlayerBattle::GetBotByStartPosition( unsigned int startpos )
 {
   const UnitSyncMap& map = Map();
-  ASSERT_LOGIC( (startpos < map.info.posCount) && (startpos >= 0), "Invalid startpos" );
-  for ( int bi = 0; bi < GetNumBots(); bi++ ) {
+  ASSERT_LOGIC( ((int)startpos < map.info.posCount) && (startpos >= 0), "Invalid startpos" );
+  for ( unsigned int bi = 0; bi < GetNumBots(); bi++ ) {
     BattleBot* bot = GetBot( bi );
     ASSERT_LOGIC( bot != 0, "Bot == 0" );
     if ( ( map.info.positions[startpos].x == bot->posx ) && ( map.info.positions[startpos].y == bot->posy ) ) {
@@ -102,7 +102,7 @@ int SinglePlayerBattle::GetFreeAlly()
   bool changed = true;
   while ( changed ) {
     changed = false;
-    for ( int i = 0; i < GetNumBots(); i++ ) {
+    for ( unsigned int i = 0; i < GetNumBots(); i++ ) {
       BattleBot* bot = GetBot( i );
       ASSERT_LOGIC( bot != 0, "Bot == 0" );
       if ( bot->bs.ally == lowest ) {
@@ -120,7 +120,7 @@ void SinglePlayerBattle::GetFreePosition( int& x, int& y )
   UnitSyncMap map = Map();
   for ( int i = 0; i < map.info.posCount; i++ ) {
     bool taken = false;
-    for ( int bi = 0; bi < GetNumBots(); bi++ ) {
+    for ( unsigned int bi = 0; bi < GetNumBots(); bi++ ) {
       BattleBot* bot = GetBot( bi );
       ASSERT_LOGIC( bot != 0, "Bot == 0" );
       if ( ( map.info.positions[i].x == bot->posx ) && ( map.info.positions[i].y == bot->posy ) ) {
@@ -146,7 +146,7 @@ void SinglePlayerBattle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
   while ( (changed) && (lowest < 16) ) {
     changed = false;
     if ( lowest >= 16 ) break;
-    for( int i = 0; i < m_bots.size(); i++ ) {
+    for( unsigned int i = 0; i < m_bots.size(); i++ ) {
       BattleBot* bot = GetBot( i );
       ASSERT_LOGIC( bot != 0, "bot == 0");
 

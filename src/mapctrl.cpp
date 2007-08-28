@@ -211,7 +211,7 @@ void MapCtrl::_RelocateBots()
 {
   if ( m_battle == 0 ) return;
 
-  for ( int i = 0; i < m_battle->GetNumBots(); i++ ) {
+  for ( unsigned int i = 0; i < m_battle->GetNumBots(); i++ ) {
     BattleBot* bot = m_battle->GetBot( i );
     ASSERT_LOGIC( bot != 0, "bot == 0" );
     m_battle->GetFreePosition( bot->posx, bot->posy );
@@ -433,8 +433,8 @@ void MapCtrl::_DrawStartPositions( wxDC& dc )
     wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
     dc.SetFont( f );
     for ( int i = 0; i < m_map.info.posCount; i++ ) {
-      int x = ( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)mr.width ) - 8.0;
-      int y = ( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)mr.height ) - 8.0;
+      int x = (int)( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)mr.width ) - 8;
+      int y = (int)( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)mr.height ) - 8;
       dc.DrawBitmap( *m_start_ally, x+mr.x, y+mr.y, true );
       wxCoord w, h;
       dc.GetTextExtent( wxString::Format(_T("%d"), i+1 ), &w, &h );
@@ -443,8 +443,8 @@ void MapCtrl::_DrawStartPositions( wxDC& dc )
   } else {
     // Draw startpositions
     for ( int i = 0; i < m_map.info.posCount; i++ ) {
-      int x = ( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)mr.width ) - 8.0;
-      int y = ( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)mr.height ) - 8.0;
+      int x = (int)( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)mr.width ) - 8;
+      int y = (int)( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)mr.height ) - 8;
       dc.DrawBitmap( *m_start_unused, x+mr.x, y+mr.y, true );
     }
   }
@@ -456,8 +456,8 @@ wxRect MapCtrl::_GetBotRect( BattleBot& bot, bool selected )
   ASSERT_LOGIC( m_battle != 0, "Bot == 0" );
   wxRect mr = _GetMinimapRect();
   m_map = m_battle->Map();
-  int x = ( (double)((double)bot.posx / (double)m_map.info.width) * (double)mr.width ) - 8.0;
-  int y = ( (double)(bot.posy / (double)m_map.info.height) * (double)mr.height ) - 8.0;
+  int x = (int)( (double)((double)bot.posx / (double)m_map.info.width) * (double)mr.width ) - 8;
+  int y = (int)( (double)(bot.posy / (double)m_map.info.height) * (double)mr.height ) - 8;
   if ( selected ) return wxRect( x+mr.x-2, y+mr.y-2, 60, 60 );
   else return wxRect( x+mr.x-2, y+mr.y-2, 20, 20 );
 }
@@ -596,15 +596,15 @@ void MapCtrl::_DrawSinglePlayer( wxDC& dc )
 
   for ( int i = 0; i < m_map.info.posCount; i++ ) {
 
-    int x = ( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)mr.width ) - 8.0;
-    int y = ( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)mr.height ) - 8.0;
+    int x = (int)( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)mr.width ) - 8;
+    int y = (int)( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)mr.height ) - 8;
 
     BattleBot* bot = 0;
-    for ( int bi = 0; bi < m_battle->GetNumBots(); bi++ ) {
+    for ( unsigned int bi = 0; bi < m_battle->GetNumBots(); bi++ ) {
       BattleBot* tbot = m_battle->GetBot(bi);
       if ( tbot == 0 ) continue;
       if ( (tbot->posx == m_map.info.positions[i].x) && (tbot->posy == m_map.info.positions[i].y) ) {
-        bot == tbot;
+        bot = tbot;
         break;
       }
     }
@@ -620,11 +620,11 @@ void MapCtrl::_DrawSinglePlayer( wxDC& dc )
     }
   }
 
-  for ( int i = 0; i < m_battle->GetNumBots(); i++ ) {
+  for ( unsigned int i = 0; i < m_battle->GetNumBots(); i++ ) {
     BattleBot* bot = m_battle->GetBot(i);
     if ( bot == 0 ) continue;
 
-    bool expanded = i == m_bot_expanded;
+    bool expanded = (int)i == m_bot_expanded;
     _DrawBot( dc, *bot, (m_maction != MA_Move) && expanded, (m_maction == MA_Move) && expanded );
 
   }
@@ -703,7 +703,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
       return;
     }
 
-    if ( m_bot_expanded >= m_battle->GetNumBots() ) m_bot_expanded = -1;
+    if ( m_bot_expanded >= (int)m_battle->GetNumBots() ) m_bot_expanded = -1;
 
     if ( m_bot_expanded != -1 ) {
       BattleBot* bot = m_battle->GetBot( m_bot_expanded );
@@ -718,7 +718,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
         RefreshRect( r, false );
       }
     } else {
-      for ( int i = 0; i < m_battle->GetNumBots(); i++ ) {
+      for ( unsigned int i = 0; i < m_battle->GetNumBots(); i++ ) {
         BattleBot* bot = m_battle->GetBot(i);
         if ( bot == 0 ) continue;
         wxRect r = _GetBotRect( *bot, false );

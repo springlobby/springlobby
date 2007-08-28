@@ -140,7 +140,7 @@ bool SinglePlayerTab::ValidSetup()
 {
   int numBots = 0;
   int first = -1;
-  for ( unsigned int i = 0; i < m_battle.Map().info.posCount; i++ ) {
+  for ( unsigned int i = 0; i < (unsigned int)m_battle.Map().info.posCount; i++ ) {
 
     BattleBot* bot = m_battle.GetBotByStartPosition( i );
 
@@ -152,8 +152,8 @@ bool SinglePlayerTab::ValidSetup()
 
   }
 
-  if ( ( numBots < m_battle.GetNumBots() ) || ( ( first != m_battle.GetNumBots() ) && ( first != -1 ) ) ) {
-    if ( numBots < m_battle.GetNumBots() ) {
+  if ( ( numBots < (int)m_battle.GetNumBots() ) || ( ( first != (int)m_battle.GetNumBots() ) && ( first != -1 ) ) ) {
+    if ( numBots < (int)m_battle.GetNumBots() ) {
       wxMessageBox( _("You have bots that are not assingled to startpositions. In the current version of spring you are only allowed to use start positions positioning them freely is not allowed.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
     } else {
       wxMessageBox( _("You are not using consecutive start position numbers.\n\nIn the current version of spring you are not allowed to skip any startpositions. You have to use all consecutive position.\n\nExample: if you have 2 bots + yourself you have to use start positions 1,2,3 not 1,3,4.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
