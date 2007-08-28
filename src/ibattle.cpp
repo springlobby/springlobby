@@ -32,6 +32,7 @@ void IBattle::SetMap(const wxString& mapname, const wxString& hash)
 {
   m_map_loaded = false;
   m_map_exists = usync()->MapExists( STD_STRING(mapname), STD_STRING(hash) );
+  m_map.hash = STD_STRING(hash);
   m_map_name = mapname;
 }
 
@@ -143,12 +144,12 @@ StartType IBattle::GetStartType()
 
 bool IBattle::MapExists()
 {
-  return m_map_exists;
+  return usync()->MapExists( STD_STRING(m_map_name), m_map.hash );
 }
 
 
 bool IBattle::ModExists()
 {
-  return m_mod_exists;
+  return usync()->ModExists( STD_STRING(m_mod_name) );
 }
 
