@@ -70,6 +70,8 @@ class MapCtrl : public wxPanel
     wxRect _GetStartRect( int index );
     wxRect _GetStartRect( const BattleStartRect& sr );
 
+    void _DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font );
+
     wxRect _GetBotRect( BattleBot& bot, bool selected );
     RectArea _GetBotRectArea( const wxRect& botrect, int x, int y );
     wxRect _GetBotSideRect();

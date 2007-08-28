@@ -483,7 +483,7 @@ RectArea MapCtrl::_GetBotRectArea( const wxRect& botrect, int x, int y )
 
 wxRect MapCtrl::_GetBotSideRect()
 {
-  return wxRect( 32, 22, 16, 16 );
+  return wxRect( 38, 22, 16, 16 );
 }
 
 
@@ -495,15 +495,29 @@ wxRect MapCtrl::_GetBotCloseRect()
 
 wxRect MapCtrl::_GetBotUpButtonRect()
 {
-  return wxRect( 43, 38, 14, 8 );
+  return wxRect( 44, 42, 14, 8 );
 }
 
 
 wxRect MapCtrl::_GetBotDownButtonRect()
 {
-  return wxRect( 43, 46, 14, 8 );
+  return wxRect( 44, 50, 14, 8 );
 }
 
+
+void MapCtrl::_DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font )
+{
+  dc.SetTextForeground( outline );
+  dc.DrawText( str, x, y );
+  dc.DrawText( str, x, y+1 );
+  dc.DrawText( str, x+1, y );
+  dc.DrawText( str, x+2, y );
+  dc.DrawText( str, x, y+2 ); // Hack to get font outline
+  dc.DrawText( str, x+2, y+2 );
+  dc.SetTextForeground( font );
+  dc.DrawText( str, x+1, y+1 );
+
+}
 
 void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
 {
@@ -511,16 +525,20 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
   if ( bot.aidll == "" ) img = m_player_img;
   else img = m_bot_img;
 
+  wxFont f( 9, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
+  dc.SetFont( f );
+  dc.SetTextForeground( *wxWHITE );
+
   wxRect r = _GetBotRect( bot, selected );
   wxColour col = wxColour( bot.bs.color_r,bot.bs.color_g,bot.bs.color_b );
 
   if ( selected ) {
-    _DrawStartRect( dc, -1, r, wxColour(150,255,150), false, 170 );
-    dc.DrawText( _("side :"), r.x+4, r.y+24 );
+    _DrawStartRect( dc, -1, r, col, false, 180 );
+    _DrawOutlinedText( dc, _("side:"), r.x+3, r.y+22, wxColour(50,50,50), *wxWHITE );
 
     wxRect siderect = _GetBotSideRect();
     if ( m_rect_area == RA_Side ) {
-      _DrawStartRect( dc, -1, wxRect( r.x+siderect.x-1, r.y+siderect.y-1, siderect.width+2, siderect.height+2 ), wxColour(150,255,150), false );
+      _DrawStartRect( dc, -1, wxRect( r.x+siderect.x-1, r.y+siderect.y-1, siderect.width+2, siderect.height+2 ), col, false );
     }
 
     wxBitmap* bmp = 0;
@@ -539,7 +557,8 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     dc.DrawBitmap( *bmp, r.x+siderect.x, r.y+siderect.y, true );
     delete bmp;
 
-    dc.DrawText( wxString::Format( _("ally : %d"), bot.bs.ally + 1 ), r.x+4, r.y+40 );
+    _DrawOutlinedText( dc, wxString::Format( _("ally: %d"), bot.bs.ally + 1 ), r.x+4, r.y+40, wxColour(50,50,50), *wxWHITE );
+    //dc.DrawText( wxString::Format( _("ally: %d"), bot.bs.ally + 1 ), r.x+4, r.y+40 );
 
     wxRect updownrect = _GetBotUpButtonRect();
     if ( m_rect_area == RA_UpButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownrect.x, r.y+updownrect.y, true );
@@ -559,21 +578,22 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
 
   } else {
     //_DrawStartRect( dc, -1, r, wxColour(150,255,150), false );
-    dc.SetPen( wxPen( wxColour(150,255,150) ) );
+    dc.SetPen( wxPen( col ) );
     dc.SetBrush( wxBrush( col, wxSOLID ) );
     dc.DrawRectangle( r.x, r.y, r.width, r.height );
     dc.DrawBitmap( *img, r.x+2, r.y+2, true );
     int w, h;
-    dc.GetTextExtent( wxString::Format( _T("%d"), bot.bs.ally + 1 ), &w, &h );
+    wxString allystr = wxString::Format( _T("%d"), bot.bs.ally + 1 );
+    dc.GetTextExtent( allystr, &w, &h );
     int x = r.width - w - 3 + r.x;
     int y = r.height - h - 1 + r.y;
     dc.SetTextForeground( *wxBLACK );
-    dc.DrawText( wxString::Format( _T("%d"), bot.bs.ally + 1 ), x, y );
-    dc.DrawText( wxString::Format( _T("%d"), bot.bs.ally + 1 ), x+2, y );
-    dc.DrawText( wxString::Format( _T("%d"), bot.bs.ally + 1 ), x, y+2 );
-    dc.DrawText( wxString::Format( _T("%d"), bot.bs.ally + 1 ), x+2, y+2 );
+    dc.DrawText( allystr, x, y );
+    dc.DrawText( allystr, x+2, y );
+    dc.DrawText( allystr, x, y+2 ); // Hack to get font outline
+    dc.DrawText( allystr, x+2, y+2 );
     dc.SetTextForeground( *wxWHITE );
-    dc.DrawText( wxString::Format( _T("%d"), bot.bs.ally + 1 ), x+1, y+1 );
+    dc.DrawText( allystr, x+1, y+1 );
   }
 
 }
