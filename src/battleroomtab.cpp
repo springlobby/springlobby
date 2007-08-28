@@ -34,6 +34,7 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
   EVT_BUTTON ( BROOM_ADDBOT, BattleRoomTab::OnAddBot )
 
   EVT_CHECKBOX( BROOM_IMREADY, BattleRoomTab::OnImReady )
+  EVT_CHECKBOX( BROOM_LOCK, BattleRoomTab::OnLock )
   EVT_CHECKBOX( BROOM_SPEC, BattleRoomTab::OnImSpec )
   EVT_COMBOBOX( BROOM_TEAMSEL, BattleRoomTab::OnTeamSel )
   EVT_COMBOBOX( BROOM_ALLYSEL, BattleRoomTab::OnAllySel )
@@ -76,8 +77,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_players = new BattleroomListCtrl( m_player_panel, battle );
   m_chat = new ChatPanel( m_splitter, m_ui, battle );
 
-  debug("1");
-
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
   m_leave_btn = new wxButton( this, BROOM_LEAVE, _("Leave"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
@@ -85,6 +84,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_addbot_btn = new wxButton( this, BROOM_ADDBOT, _("Add Bot..."), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
 
   m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+  m_lock_chk = new wxCheckBox( this, BROOM_LOCK, _("Locked"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
 
   // Create Sizers
@@ -107,16 +107,13 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_player_sett_sizer->Add( m_side_lbl, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_side_sel, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_spec_chk, 0, wxEXPAND | wxALL, 2 );
-  debug("2");
 
   m_players_sizer->Add( m_players, 1, wxEXPAND );
   m_players_sizer->Add( m_player_sett_sizer, 0, wxEXPAND );
 
   m_player_panel->SetSizer( m_players_sizer );
 
-  debug("3");
   m_splitter->SplitHorizontally( m_player_panel, m_chat, 50 );
-  debug("4");
 
   m_info1_sizer->Add( m_wind_lbl, 1, wxEXPAND );
   m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
@@ -129,10 +126,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
   m_top_sizer->Add( m_info_sizer, 0, wxEXPAND | wxALL, 2 );
 
-  debug("5");
   m_buttons_sizer->Add( m_leave_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->AddStretchSpacer();
   m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
+  m_buttons_sizer->Add( m_lock_chk, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_start_btn, 0, wxEXPAND | wxALL, 2 );
 
@@ -140,28 +137,22 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_main_sizer->Add( m_command_line, 0, wxEXPAND );
   m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
 
-  debug("6");
   SetSizer( m_main_sizer );
-  debug("6.1");
   Layout();
 
-  debug("7");
   UpdateBattleInfo();
-  debug("8");
 
   m_splitter->SetMinimumPaneSize( 100 );
   m_splitter->SetSashPosition( 200 );
 
-  debug("9");
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     m_players->AddUser( battle.GetUser( i ) );
   }
 
-  debug("10");
   if ( !IsHosted() ) {
     m_start_btn->Enable( false );
+    m_lock_chk->Enable( false );
   }
-  debug("11");
 
 }
 
@@ -194,6 +185,7 @@ void BattleRoomTab::UpdateBattleInfo()
     m_wind_lbl->SetLabel( _("Wind: ?-?") );
     m_tidal_lbl->SetLabel( _("Tidal: ?") );
   }
+  m_lock_chk->SetValue( m_battle.IsLocked() );
   m_minimap->UpdateMinimap();
 }
 
@@ -283,6 +275,13 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
 void BattleRoomTab::OnImReady( wxCommandEvent& event )
 {
   m_battle.SetImReady( m_ready_chk->GetValue() );
+}
+
+
+void BattleRoomTab::OnLock( wxCommandEvent& event )
+{
+  m_battle.SetIsLocked( m_lock_chk->GetValue() );
+  m_battle.SendHostInfo( HI_Locked );
 }
 
 
