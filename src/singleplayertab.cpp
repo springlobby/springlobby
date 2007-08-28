@@ -152,7 +152,7 @@ bool SinglePlayerTab::ValidSetup()
 
   }
 
-  if ( ( numBots < m_battle.GetNumBots() ) || ( first != m_battle.GetNumBots() ) ) {
+  if ( ( numBots < m_battle.GetNumBots() ) || ( ( first != m_battle.GetNumBots() ) && ( first != -1 ) ) ) {
     if ( numBots < m_battle.GetNumBots() ) {
       wxMessageBox( _("You have bots that are not assingled to startpositions. In the current version of spring you are only allowed to use start positions positioning them freely is not allowed.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
     } else {
