@@ -211,6 +211,60 @@ void Ui::Quit()
 }
 
 
+void Ui::ReloadUnitSync()
+{
+  usync()->FreeUnitSyncLib();
+  usync()->LoadUnitSyncLib();
+  ASSERT_LOGIC( m_main_win, "m_main_win = 0" );
+  m_main_win->GetJoinTab().GetBattleListTab().UpdateList();
+
+}
+
+
+void Ui::DownloadMap( const wxString& map )
+{
+  wxString mapname = map;
+  mapname = mapname.SubString(0, mapname.Find( '.', true ) - 1 );
+  mapname.Replace(_T(" "), _T("*") );
+  mapname.Replace(_T("-"), _T("*") );
+  mapname.Replace(_T("_"), _T("*") );
+  wxString url = _T("http://spring.unknown-files.net/page/search/2/13/") + mapname + _T("/");
+  if ( !wxLaunchDefaultBrowser( url ) ) {
+    wxMessageBox( _T("Couldn't launch browser. URL is: ") + url, _T("Couldn't launch browser.")  );
+  }
+}
+
+
+void Ui::DownloadMod( const wxString& mod )
+{
+  wxString modname = mod;
+  //all the following manipulation is necessary because the publish name on UF doesn't necessary reflect the file name
+  //and the mod filename isn't accessible trought unitsync
+  modname.Replace(_T(" "), _T("*") );
+  modname.Replace(_T("-"), _T("*") );
+  modname.Replace(_T("_"), _T("*") );
+  modname.Replace(_T("VERSION"), _T("*") );
+  modname.Replace(_T("Version"), _T("*") );
+  modname.Replace(_T("version"), _T("*") );
+  modname.Replace(_T("VER"), _T("*") );
+  modname.Replace(_T("Ver"), _T("*") );
+  modname.Replace(_T("ver"), _T("*") );
+  modname.Replace(_T("V"), _T("*") );
+  modname.Replace(_T("v"), _T("*") );
+  modname.Replace(_T("."), _T("*") );
+  modname.Replace(_T("ALPHA"), _T("*") );
+  modname.Replace(_T("Alpha"), _T("*") );
+  modname.Replace(_T("alpha"), _T("*") );
+  modname.Replace(_T("BETA"), _T("*") );
+  modname.Replace(_T("Beta"), _T("*") );
+  modname.Replace(_T("beta"), _T("*") );
+  wxString url = _T("http://spring.unknown-files.net/page/search/1/14/") + modname + _T("/");
+  if ( !wxLaunchDefaultBrowser( url ) ) {
+    wxMessageBox( _T("Couldn't launch browser. URL is: ") + url, _T("Couldn't launch browser.")  );
+  }
+}
+
+
 //! @brief Display a dialog asking a question with OK and Canel buttons
 //!
 //! @return true if OK button was pressed

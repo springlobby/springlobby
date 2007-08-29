@@ -284,9 +284,7 @@ void MainWindow::OnMenuQuit( wxCommandEvent& event )
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 {
-  usync()->FreeUnitSyncLib();
-  usync()->LoadUnitSyncLib();
-  m_join_tab->GetBattleListTab().UpdateList();
+  m_ui.ReloadUnitSync();
 }
 
 

@@ -29,6 +29,9 @@
 #include "images/up_down.xpm"
 #include "images/upsel_down.xpm"
 #include "images/up_downsel.xpm"
+#include "images/not_found_icon.xpm"
+#include "images/download_map.xpm"
+#include "images/reload_map.xpm"
 
 
 BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
@@ -65,6 +68,9 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool read
   m_start_unused(0),
   m_player_img(0),
   m_bot_img(0),
+  m_nfound_img(0),
+  m_reload_img(0),
+  m_dl_img(0),
   m_bot_expanded(-1)
 {
   SetBackgroundStyle( wxBG_STYLE_CUSTOM );
@@ -85,6 +91,9 @@ MapCtrl::~MapCtrl()
   delete m_start_ally;
   delete m_start_enemy;
   delete m_start_unused;
+  delete m_nfound_img;
+  delete m_reload_img;
+  delete m_dl_img;
 }
 
 
@@ -179,14 +188,26 @@ void MapCtrl::_SetMouseOverRect( int index )
 
 void MapCtrl::_SetCursor()
 {
-  if ( m_battle != 0 ) {
-    if ( m_battle->GetStartType() != ST_Choose ) {
-      SetCursor( wxCursor( wxCURSOR_ARROW ) );
-      return;
+  if ( !m_image ) {
+    if ( m_rect_area != RA_Main ) SetCursor( wxCursor( wxCURSOR_HAND ) );
+    else SetCursor( wxCursor( wxCURSOR_ARROW ) );
+    return;
+  }
+
+  if ( m_sp ) {
+
+    if ( m_battle != 0 ) {
+      if ( m_battle->GetStartType() != ST_Choose ) {
+        SetCursor( wxCursor( wxCURSOR_ARROW ) );
+        return;
+      } else {
+        SetCursor( wxCursor( wxCURSOR_ARROW ) );
+        return;
+      }
     }
-  } else {
     SetCursor( wxCursor( wxCURSOR_ARROW ) );
     return;
+
   }
 
   if ( !m_ro ) {
@@ -371,6 +392,22 @@ void MapCtrl::_DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxCol
 }
 
 
+wxRect MapCtrl::_GetRefreshRect()
+{
+  int width, height;
+  GetClientSize( &width, &height );
+  return wxRect( 5, height - 27, 72, 22 );
+}
+
+
+wxRect MapCtrl::_GetDownloadRect()
+{
+  int width, height;
+  GetClientSize( &width, &height );
+  return wxRect( 5, height - 52, 87, 22 );
+}
+
+
 void MapCtrl::_DrawBackground( wxDC& dc )
 {
   int width, height;
@@ -398,7 +435,25 @@ void MapCtrl::_DrawBackground( wxDC& dc )
 
   // Draw minimap.
   if ( !m_image ) {
-    dc.DrawText( _("Minimap n/a"), 10, 10 );
+
+    if ( m_sp ) return;
+
+    if ( !m_nfound_img ) m_nfound_img = new wxBitmap( not_found_icon_xpm );
+    if ( !m_reload_img ) m_reload_img = new wxBitmap( reload_map_xpm );
+    if ( !m_dl_img ) m_dl_img = new wxBitmap( download_map_xpm );
+
+    dc.DrawBitmap( *m_nfound_img, width/2 - 32, height/2 - 32, true );
+    if ( (m_rect_area == RA_Refresh) && (m_mdown_area != RA_Refresh) ) dc.DrawBitmap( *m_reload_img, 6, height - 28, true );
+    else dc.DrawBitmap( *m_reload_img, 5, height - 27, true );
+    if ( (m_rect_area == RA_Download) && (m_mdown_area != RA_Download) ) dc.DrawBitmap( *m_dl_img, 6, height - 53, true );
+    else dc.DrawBitmap( *m_dl_img, 5, height - 52, true );
+
+    dc.SetFont( wxFont( 9, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL ) );
+    if ( m_rect_area == RA_Refresh ) _DrawOutlinedText( dc, _("Refresh"), 28, height - 25, wxColour(50,50,50), *wxWHITE );
+    else _DrawOutlinedText( dc, _("Refresh"), 28, height - 25, *wxWHITE, wxColour(50,50,50) );
+    if ( m_rect_area == RA_Download ) _DrawOutlinedText( dc, _("Download"), 28, height - 50, wxColour(50,50,50), *wxWHITE );
+    else  _DrawOutlinedText( dc, _("Download"), 28, height - 50, *wxWHITE, wxColour(50,50,50) );
+
   } else {
     dc.DrawBitmap( *m_image, r.x, r.y, false );
     width = r.width;
@@ -658,6 +713,8 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 
   if ( m_battle == 0 ) return;
 
+  if ( !m_image ) return;
+
   if ( m_sp ) {
     _DrawSinglePlayer( dc );
   } else {
@@ -747,6 +804,25 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
           break;
         }
       }
+    }
+    return;
+  }
+
+  if ( !m_image ) {
+    wxRect r = _GetRefreshRect();
+    wxRect d = _GetDownloadRect();
+    RectArea old = m_rect_area;
+    if ( r.Inside( event.GetX(), event.GetY() ) ) {
+      m_rect_area = RA_Refresh;
+    } else if ( d.Inside( event.GetX(), event.GetY() ) ) {
+      m_rect_area = RA_Download;
+    } else {
+      m_rect_area = RA_Main;
+    }
+    _SetCursor();
+    if ( m_rect_area != old ) {
+      Refresh();
+      Update();
     }
     return;
   }
@@ -842,6 +918,15 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
     return;
   }
 
+  if ( !m_image ) {
+    if ( m_rect_area != RA_Main ) {
+      m_mdown_area = m_rect_area;
+      Refresh();
+      Update();
+    }
+    return;
+  }
+
   if ( m_battle->GetStartType() != ST_Choose ) return;
   if ( !m_ro ) {
     // In edit mode
@@ -922,6 +1007,22 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     m_maction = MA_None;
     return;
   }
+
+  if ( !m_image ) {
+    if ( m_mdown_area == m_rect_area ) {
+      if ( m_mdown_area == RA_Refresh ) {
+        m_ui.ReloadUnitSync();
+        UpdateMinimap();
+      } else if ( m_mdown_area == RA_Download ) {
+        m_ui.DownloadMap( m_battle->GetMapName() );
+      }
+    }
+    m_mdown_area = RA_Main;
+    Refresh();
+    Update();
+    return;
+  }
+
   if ( m_battle->GetStartType() != ST_Choose ) return;
 
   if ( m_maction == MA_Add ) {

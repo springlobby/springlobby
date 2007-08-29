@@ -8,11 +8,13 @@ class wxMenu;
 class Battle;
 class wxListEvent;
 class wxCommandEvent;
+class Ui;
+
 
 class BattleListCtrl : public wxListCtrl
 {
   public:
-    BattleListCtrl( wxWindow* parent );
+    BattleListCtrl( wxWindow* parent, Ui& ui );
     ~BattleListCtrl();
 
     void AddBattle( Battle& battle );
@@ -37,6 +39,7 @@ class BattleListCtrl : public wxListCtrl
 
     int m_selected;
     wxMenu* m_popup;
+    Ui& m_ui;
 
     DECLARE_EVENT_TABLE()
 };

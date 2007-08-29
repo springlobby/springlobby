@@ -15,6 +15,7 @@ class Battle;
 class SinglePlayerBattle;
 class BattleBot;
 
+
 typedef int HostInfo;
 
 typedef int AlertEventType;
@@ -60,10 +61,14 @@ class Ui
 
     void Quit();
 
+    void ReloadUnitSync();
+
+    void DownloadMap( const wxString& map );
+    void DownloadMod( const wxString& mod );
+
     static bool Ask( const wxString& heading, const wxString& question );
     static bool AskText( const wxString& heading, const wxString& question, wxString& answer );
     static void ShowMessage( const wxString& heading, const wxString& message );
-
     //void OnAlertEvent( AlertEventType ); //TODO alert system
 
     MainWindow& mw();

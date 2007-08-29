@@ -16,6 +16,8 @@ class SinglePlayerBattle;
 class Ui;
 struct UnitSyncMap;
 
+
+typedef int RectArea;
 #define RA_Main -1
 #define RA_UpLeft 0
 #define RA_UpRight 1
@@ -26,9 +28,11 @@ struct UnitSyncMap;
 #define RA_Side 6
 #define RA_Close 7
 #define RA_Move 8
+#define RA_Download 9
+#define RA_Refresh 10
 
-typedef int RectArea;
 
+typedef int MouseAction;
 #define MA_None 0
 #define MA_Add 1
 #define MA_Delete 2
@@ -37,9 +41,6 @@ typedef int RectArea;
 #define MA_ResizeUpRight 5
 #define MA_ResizeDownLeft 6
 #define MA_ResizeDownRight 7
-
-
-typedef int MouseAction;
 
 
 class MapCtrl : public wxPanel
@@ -78,6 +79,9 @@ class MapCtrl : public wxPanel
     wxRect _GetBotCloseRect();
     wxRect _GetBotUpButtonRect();
     wxRect _GetBotDownButtonRect();
+
+    wxRect _GetRefreshRect();
+    wxRect _GetDownloadRect();
 
     int _GetNewRectIndex();
 
@@ -135,6 +139,10 @@ class MapCtrl : public wxPanel
 
     wxBitmap* m_player_img;
     wxBitmap* m_bot_img;
+
+    wxBitmap* m_nfound_img;
+    wxBitmap* m_reload_img;
+    wxBitmap* m_dl_img;
 
     UnitSyncMap m_map;
 

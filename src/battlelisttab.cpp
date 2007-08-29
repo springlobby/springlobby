@@ -44,7 +44,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-  m_battle_list = new BattleListCtrl( this );
+  m_battle_list = new BattleListCtrl( this, m_ui );
   m_main_sizer->Add( m_battle_list, 1, wxALL|wxEXPAND, 5 );
 
   wxBoxSizer* m_info_sizer;

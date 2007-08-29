@@ -1,7 +1,8 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
-//
-// Class: BattleListCtrl
-//
+
+#include <wx/intl.h>
+#include <wx/menu.h>
+#include <wx/msgdlg.h>
 
 #include "battlelistctrl.h"
 #include "utils.h"
@@ -9,9 +10,7 @@
 #include "iconimagelist.h"
 #include "battle.h"
 #include "uiutils.h"
-#include <wx/intl.h>
-#include <wx/menu.h>
-#include <wx/msgdlg.h>
+#include "ui.h"
 
 
 BEGIN_EVENT_TABLE(BattleListCtrl, wxListCtrl)
@@ -26,7 +25,10 @@ BEGIN_EVENT_TABLE(BattleListCtrl, wxListCtrl)
 END_EVENT_TABLE()
 
 
-BattleListCtrl::BattleListCtrl( wxWindow* parent ) : wxListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL), m_selected(-1)
+BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
+  wxListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL),
+  m_selected(-1),
+  m_ui(ui)
 {
 
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
@@ -203,15 +205,15 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 {
   if ( m_selected >= 0 ) {
     Battle& battle = *((Battle*)GetItemData( m_selected )); // FIXME m_selected might not exist.
-    wxString map = battle.GetMapName();
-    map = map.SubString(0, map.Find( '.', true ) - 1 );
+    m_ui.DownloadMap( battle.GetMapName() );
+    /*map = map.SubString(0, map.Find( '.', true ) - 1 );
     map.Replace(_T(" "), _T("*") );
     map.Replace(_T("-"), _T("*") );
     map.Replace(_T("_"), _T("*") );
     wxString url = _T("http://spring.unknown-files.net/page/search/2/13/") + map + _T("/");
     if ( !wxLaunchDefaultBrowser( url ) ) {
       wxMessageBox( _T("Couldn't launch browser. URL is: ") + url, _T("Couldn't launch browser.")  );
-    }
+    }*/
   }
 }
 
@@ -220,7 +222,8 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
 {
   if ( m_selected >= 0 ) {
     Battle& battle = *((Battle*)GetItemData( m_selected )); // FIXME m_selected might not exist.
-    wxString mod = battle.GetModName();
+    m_ui.DownloadMod( battle.GetModName() );
+    /*wxString mod = battle.GetModName();
     //all the following manipulation is necessary because the publish name on UF doesn't necessary reflect the file name
     //and the mod filename isn't accessible trought unitsync
     mod.Replace(_T(" "), _T("*") );
@@ -244,7 +247,7 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
     wxString url = _T("http://spring.unknown-files.net/page/search/1/14/") + mod + _T("/");
     if ( !wxLaunchDefaultBrowser( url ) ) {
       wxMessageBox( _T("Couldn't launch browser. URL is: ") + url, _T("Couldn't launch browser.")  );
-    }
+    }*/
   }
 }
 
