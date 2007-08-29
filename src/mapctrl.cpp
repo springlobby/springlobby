@@ -580,7 +580,7 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
 
   } else {
 
-    dc.SetPen( wxPen( col ) );
+    dc.SetPen( wxPen( ColourDelta( col, -40 ) ) );
     dc.SetBrush( wxBrush( col, wxSOLID ) );
     dc.DrawRectangle( r.x, r.y, r.width, r.height );
     dc.DrawBitmap( *img, r.x+2, r.y+2, true );
