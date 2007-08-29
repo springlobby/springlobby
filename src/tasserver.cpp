@@ -551,6 +551,10 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     nick = GetWordParam( params );
     m_se->OnRing( nick );
     //RING username
+  } else if ( cmd == "SERVERMSG" ) {
+    msg = GetSentenceParam( params );
+    m_se->OnServerMessage( msg );
+    //SERVERMSG {message}
   } else {
     debug( "??? Cmd: " + cmd + " params: " + params );
     m_se->OnUnknownCommand( cmd, params );
@@ -827,6 +831,18 @@ void TASServer::SendHostInfo( HostInfo update )
     }
 
   }
+}
+
+
+void TASServer::SendRaw( const std::string& raw )
+{
+  m_sock->Send( raw + "\n" );
+}
+
+
+void TASServer::RequestInGameTime()
+{
+  m_sock->Send( "GETINGAMETIME\n" );
 }
 
 

@@ -451,3 +451,9 @@ void ServerEvents::OnRing( const std::string& from )
   m_ui.OnRing( from );
 }
 
+
+void ServerEvents::OnServerMessage( const std::string& message )
+{
+  m_ui.ShowMessage( WX_STRING(message), _("Server message") );
+}
+

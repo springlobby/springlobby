@@ -428,6 +428,10 @@ void ChatPanel::Say( const wxString& message )
     }
     m_user->Say( STD_STRING(message) );
 
+  } else if ( m_type == CPT_Server ) {
+    if ( m_server == 0 ) return;
+    m_server->SendRaw( STD_STRING(message) );
+    _OutputLine( _(" Sent raw: \"") + message + _("\\n\""), *wxBLACK );
   }
 }
 

@@ -86,6 +86,8 @@ class ServerEvents
 
     void OnRing( const std::string& from );
 
+    void OnServerMessage( const std::string& message );
+
   protected:
     Server& m_serv;
     Ui& m_ui;

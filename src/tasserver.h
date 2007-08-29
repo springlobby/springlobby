@@ -76,6 +76,9 @@ class TASServer : public Server
 
     void StartHostedBattle();
     void SendHostInfo( HostInfo update );
+    void SendRaw( const std::string& raw );
+
+    void RequestInGameTime();
 
     Battle* GetCurrentBattle();
 
