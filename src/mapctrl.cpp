@@ -9,6 +9,7 @@
 #include <stdexcept>
 
 #include "utils.h"
+#include "uiutils.h"
 #include "mapctrl.h"
 #include "iunitsync.h"
 #include "user.h"
@@ -496,13 +497,13 @@ wxRect MapCtrl::_GetBotCloseRect()
 
 wxRect MapCtrl::_GetBotUpButtonRect()
 {
-  return wxRect( 44, 42, 14, 8 );
+  return wxRect( 47, 42, 12, 8 );
 }
 
 
 wxRect MapCtrl::_GetBotDownButtonRect()
 {
-  return wxRect( 44, 50, 14, 8 );
+  return wxRect( 47, 50, 12, 8 );
 }
 
 
@@ -535,7 +536,7 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
 
   if ( selected ) {
     wxRect siderect = _GetBotSideRect();
-    _DrawStartRect( dc, -1, r, col, false, 180 );
+    _DrawStartRect( dc, -1, r,ColourDelta( col, -40 ) , false, 180 );
     _DrawOutlinedText( dc, _("side:"), r.x+3, r.y+siderect.y-2, wxColour(50,50,50), *wxWHITE );
 
     if ( m_rect_area == RA_Side ) {
@@ -559,7 +560,7 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     delete bmp;
 
     wxRect updownrect = _GetBotUpButtonRect();
-    _DrawOutlinedText( dc, wxString::Format( _("ally: %d"), bot.bs.ally + 1 ), r.x+4, r.y+updownrect.y-2, wxColour(50,50,50), *wxWHITE );
+    _DrawOutlinedText( dc, wxString::Format( _("ally: %d"), bot.bs.ally + 1 ), r.x+3, r.y+updownrect.y-2, wxColour(50,50,50), *wxWHITE );
     //dc.DrawText( wxString::Format( _("ally: %d"), bot.bs.ally + 1 ), r.x+4, r.y+40 );
 
     if ( m_rect_area == RA_UpButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownrect.x, r.y+updownrect.y, true );
@@ -694,6 +695,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 
   if ( m_sp ) {
 
+    if ( !m_battle->MapExists() ) return;
     if ( m_maction == MA_Move ) {
       BattleBot* bot = m_battle->GetBot( m_bot_expanded );
       ASSERT_LOGIC( bot != 0, "MapCtrl::OnMouseMove(): bot = 0" );

@@ -1,6 +1,9 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#include <wx/colour.h>
+
 #include "uiutils.h"
+
 
 wxString RefineMapname( wxString mapname )
 {
@@ -40,5 +43,52 @@ bool AreColoursSimilar( int r1, int g1, int b1, int r2, int g2, int b2, int mind
   b = b>0?b:-b;
   if ( (r <= mindiff) && (g <= mindiff) && (b <= mindiff) ) return true;
   return false;
+}
+
+
+void ColourDelta( int& r, int& g, int& b, const int& delta )
+{
+  int tmpdelta;
+  if ( delta > 0 ) {
+    r += delta;
+    tmpdelta = delta;
+    if ( r > 255 ) {
+      tmpdelta += r - 255;
+      r = 255;
+    }
+    g += tmpdelta;
+    tmpdelta = delta;
+    if ( g > 255 ) {
+      tmpdelta += g - 255;
+      g = 255;
+    }
+    b += tmpdelta;
+    if ( b > 255 ) b = 255;
+  } else {
+    r += delta;
+    tmpdelta = -delta;
+    if ( r < 0 ) {
+      tmpdelta -= r;
+      r = 0;
+    }
+    g -= tmpdelta;
+    tmpdelta = -delta;
+    if ( g < 0 ) {
+      tmpdelta -= g;
+      g = 0;
+    }
+    b -= tmpdelta;
+    if ( b < 0 ) b = 0;
+  }
+}
+
+
+wxColour ColourDelta( const wxColour& colour, const int& delta )
+{
+  int r = colour.Red();
+  int g = colour.Green();
+  int b = colour.Blue();
+  ColourDelta( r, g, b, delta );
+  return wxColour( r, g, b );
 }
 

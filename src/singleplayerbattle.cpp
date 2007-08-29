@@ -134,8 +134,8 @@ void SinglePlayerBattle::GetFreePosition( int& x, int& y )
       return;
     }
   }
-  x = -1;
-  y = -1;
+  x = map.info.width / 2;
+  y = map.info.height / 2;
 }
 
 

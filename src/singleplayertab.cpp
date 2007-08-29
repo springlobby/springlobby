@@ -156,7 +156,7 @@ bool SinglePlayerTab::ValidSetup()
     if ( numBots < (int)m_battle.GetNumBots() ) {
       wxMessageBox( _("You have bots that are not assingled to startpositions. In the current version of spring you are only allowed to use start positions positioning them freely is not allowed.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
     } else {
-      wxMessageBox( _("You are not using consecutive start position numbers.\n\nIn the current version of spring you are not allowed to skip any startpositions. You have to use all consecutive position.\n\nExample: if you have 2 bots + yourself you have to use start positions 1,2,3 not 1,3,4.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
+      wxMessageBox( _("You are not using consecutive start position numbers.\n\nIn the current version of spring you are not allowed to skip any startpositions. You have to use all consecutive position.\n\nExample: if you have 2 bots + yourself you have to use start positions 1,2,3 not 1,3,4 or 2,3,4.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
     }
     return false;
   }
