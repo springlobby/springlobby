@@ -14,6 +14,7 @@
 #include "settings.h"
 #include "utils.h"
 #include "battle.h"
+#include "iunitsync.h"
 
 
 BEGIN_EVENT_TABLE( AddBotDialog, wxDialog )
@@ -104,22 +105,17 @@ wxString AddBotDialog::GetAI()
 
 void AddBotDialog::ReloadAIList()
 {
-  wxDir dir( WX_STRING( sett().GetSpringDir() ) + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") );
-  wxString filename;
+  wxArrayString AIList;
+  try {
+    AIList = usync()->GetAIList();
+  } catch (...) {}
 
   m_ai->Clear();
-  if ( !dir.IsOpened() )
+  if ( AIList.GetCount() == 0 )
   {
     return;
   }
-
-  bool cont = dir.GetFirst( &filename, wxEmptyString, wxDIR_FILES );
-  while ( cont )
-  {
-    filename = filename.BeforeLast( '.' );
-    if ( m_ai->FindString( filename ) == wxNOT_FOUND ) m_ai->Append( filename );
-    cont = dir.GetNext(&filename);
-  }
+  for (unsigned int i =0; i < AIList.GetCount(); i++) m_ai->Append( AIList[i] );
 
   if ( m_ai->GetCount() > 0 ) {
     wxString ai = WX_STRING(sett().GetLastAI());

@@ -76,6 +76,8 @@ class SpringUnitSync : public IUnitSync
 
     std::string GetSpringVersion();
 
+    wxArrayString GetAIList();
+
     int GetNumUnits();
     int GetUnitIndex( const std::string& name );
     std::string GetFullUnitName( int index );

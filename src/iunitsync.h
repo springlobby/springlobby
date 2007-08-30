@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_IUNITSYNC_H
 
 #include <string>
+#include <wx/arrstr.h>
 
 class wxImage;
 
@@ -79,6 +80,8 @@ class IUnitSync
     virtual bool IsLoaded() = 0;
 
     virtual std::string GetSpringVersion() = 0;
+
+    virtual wxArrayString GetAIList() = 0;
 
 };
 

@@ -352,6 +352,28 @@ wxImage SpringUnitSync::GetSidePicture( const std::string& SideName )
   return ret;
 }
 
+wxArrayString SpringUnitSync::GetAIList()
+{
+  ASSERT_RUNTIME ( m_loaded, "unitsync not loaded" );
+
+  int ini = m_init_find_vfs ( "AI/Bot-libs/*" );
+  int BufferSize = 400;
+  char * FilePath = new char [BufferSize];
+  wxArrayString ret;
+
+  do
+  {
+    ini = m_find_files_vfs ( ini, FilePath, BufferSize );
+    wxString FileName = wxString ( FilePath, wxConvUTF8 );
+    FileName = FileName.AfterLast ( wxFileName::GetPathSeparator() ); // strip the file path
+    if ( !FileName.Contains ( _T(".dll") ) && !FileName.Contains (  _T(".so") ) ) continue; // FIXME this isn't exactly portable
+    FileName = FileName.SubString(0, FileName.Find( '.', true ) - 1 ); //strip the file extension
+    if ( ret.Index( FileName ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
+  } while (ini != 0);
+
+  return ret;
+}
+
 
 int SpringUnitSync::GetNumUnits()
 {
