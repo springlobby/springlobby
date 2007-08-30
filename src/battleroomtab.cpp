@@ -451,5 +451,6 @@ void BattleRoomTab::OnUnitSyncReloaded()
 {
   m_minimap->UpdateMinimap();
   UpdateBattleInfo();
+  m_battle.SendMyBattleStatus(); // This should reset sync status.
 }
 
