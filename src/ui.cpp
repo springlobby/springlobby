@@ -367,6 +367,12 @@ void Ui::ConsoleHelp( const wxString& topic )
 }
 
 
+ChatPanel* Ui::GetChannelChatPanel( const wxString& channel )
+{
+  mw().GetChannelChatPanel( channel );
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EVENTS
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -470,6 +476,15 @@ void Ui::OnChannelDidAction( Channel& channel , User& user, const std::string& a
     return;
   }
   channel.uidata.panel->DidAction( WX_STRING(user.GetNick()), WX_STRING( action ) );
+}
+
+
+void Ui::OnChannelMessage( const std::string& channel, const std::string& msg )
+{
+  ChatPanel* panel = GetChannelChatPanel( WX_STRING(channel) );
+  if ( panel != 0 ) {
+    panel->StatusMessage( WX_STRING(msg) );
+  }
 }
 
 

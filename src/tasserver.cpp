@@ -568,6 +568,11 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     msg = GetSentenceParam( params );
     m_se->OnServerMessage( "Failed to join channel #" + channel + ". " + msg );
     //JOINFAILED channame {reason}
+  } else if ( cmd == "CHANNELMESSAGE" ) {
+    channel = GetWordParam( params );
+    msg = GetSentenceParam( params );
+    m_se->OnChannelMessage( channel, msg );
+    //CHANNELMESSAGE channame {message}
   } else {
     debug( "??? Cmd: " + cmd + " params: " + params );
     m_se->OnUnknownCommand( cmd, params );

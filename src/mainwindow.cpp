@@ -211,6 +211,12 @@ ChatPanel* MainWindow::GetActiveChatPanel()
 }
 
 
+ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
+{
+  m_chat_tab->GetChannelChatPanel( channel );
+}
+
+
 //! @brief Open a new chat tab with a channel chat
 //!
 //! @param channel The channel name

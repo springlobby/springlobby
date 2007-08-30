@@ -81,6 +81,19 @@ ChatPanel* MainChatTab::GetActiveChatPanel()
 }
 
 
+ChatPanel* MainChatTab::GetChannelChatPanel( const wxString& channel )
+{
+  for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+    ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+    if ( tmp->GetPanelType() == CPT_Channel ) {
+      wxString name = m_chat_tabs->GetPageText(i);
+      if ( name.Lower() == channel.Lower() ) return (ChatPanel*)m_chat_tabs->GetPage(i);
+    }
+  }
+  return 0;
+}
+
+
 void MainChatTab::CloseAllChats()
 {
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {

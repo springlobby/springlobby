@@ -22,6 +22,7 @@ class MainChatTab : public wxPanel
     ~MainChatTab();
 
     ChatPanel* GetActiveChatPanel();
+    ChatPanel* GetChannelChatPanel( const wxString& channel );
 
     ChatPanel& ServerChat();
 

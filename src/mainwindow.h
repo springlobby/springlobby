@@ -56,7 +56,7 @@ class MainWindow : public wxFrame
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab();
     ChatPanel* GetActiveChatPanel();
-
+    ChatPanel* GetChannelChatPanel( const wxString& channel );
     void MakeImages();
 
   protected:

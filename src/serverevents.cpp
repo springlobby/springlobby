@@ -457,3 +457,10 @@ void ServerEvents::OnServerMessage( const std::string& message )
   m_ui.OnServerMessage( m_serv, message );
 }
 
+
+void ServerEvents::OnChannelMessage( const std::string& channel, const std::string& msg )
+{
+  m_ui.OnChannelMessage( channel, msg );
+}
+
+

@@ -87,6 +87,7 @@ class ServerEvents
     void OnRing( const std::string& from );
 
     void OnServerMessage( const std::string& message );
+    void OnChannelMessage( const std::string& channel, const std::string& msg );
 
   protected:
     Server& m_serv;

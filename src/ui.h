@@ -38,6 +38,7 @@ class Ui
 
     Server& GetServer();
     ChatPanel* GetActiveChatPanel();
+    ChatPanel* GetChannelChatPanel( const wxString& channel );
 
     bool ExecuteSayCommand( const wxString& cmd );
     void ConsoleHelp( const wxString& topic );
@@ -88,6 +89,8 @@ class Ui
     void OnChannelTopic( Channel& channel , const std::string user, const std::string& topic );
     void OnChannelSaid( Channel& channel , User& user, const std::string& message );
     void OnChannelDidAction( Channel& channel , User& user, const std::string& action );
+    void OnChannelMessage( const std::string& channel, const std::string& msg );
+
     void OnLeaveChannel( Channel& channel );
     void OnChannelList( const std::string& channel, const int& numusers );
     void OnUserOnline( User& user );
