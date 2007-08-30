@@ -20,6 +20,7 @@ class MainSinglePlayerTab : public wxPanel
     ~MainSinglePlayerTab();
 
     void UpdateMinimap();
+    void OnUnitSyncReloaded();
 
   protected:
 

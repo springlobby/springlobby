@@ -52,9 +52,12 @@ class MainWindow : public wxFrame
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
 
+    void OnUnitSyncReloaded();
+
     void OnTabsChanged( wxListbookEvent& event );
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab();
+    MainSinglePlayerTab& GetSPTab();
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
     void MakeImages();

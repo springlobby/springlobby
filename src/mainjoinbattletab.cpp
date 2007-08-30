@@ -134,3 +134,11 @@ void MainJoinBattleTab::BattleUserUpdated( User& user )
   m_map_tab->UpdateUser( user );
 }
 
+
+void MainJoinBattleTab::OnUnitSyncReloaded()
+{
+  GetBattleListTab().OnUnitSyncReloaded();
+  if ( GetBattleRoomTab() ) GetBattleRoomTab()->OnUnitSyncReloaded();
+  if ( GetBattleMapTab() ) GetBattleMapTab()->OnUnitSyncReloaded();
+}
+

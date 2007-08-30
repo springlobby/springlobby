@@ -40,32 +40,32 @@ END_EVENT_TABLE()
 BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   wxPanel( parent, -1 ), m_ui(ui), m_battle(battle)
 {
-	wxBoxSizer* m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
-	wxBoxSizer* m_map_sizer = new wxBoxSizer( wxVERTICAL );
+  wxBoxSizer* m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
+  wxBoxSizer* m_map_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_map_sizer->SetMinSize(wxSize( 352,-1 ));
+  m_map_sizer->SetMinSize(wxSize( 352,-1 ));
   m_minimap = new MapCtrl( this, 352, &m_battle, m_ui, !battle.IsFounderMe(), false, true, false );
-	m_minimap->SetMinSize( wxSize( 352,352 ) );
+  m_minimap->SetMinSize( wxSize( 352,352 ) );
 
-	m_map_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 2 );
+  m_map_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 2 );
 
-	wxBoxSizer* m_selmap_sizer = new wxBoxSizer( wxHORIZONTAL );
+  wxBoxSizer* m_selmap_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_map_combo = new wxChoice( this, BMAP_MAP_SEL, wxDefaultPosition, wxDefaultSize );
-	m_selmap_sizer->Add( m_map_combo, 1, wxALL, 2 );
+  m_map_combo = new wxChoice( this, BMAP_MAP_SEL, wxDefaultPosition, wxDefaultSize );
+  m_selmap_sizer->Add( m_map_combo, 1, wxALL, 2 );
 
-	m_browse_btn = new wxButton( this, wxID_ANY, _("Select"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_browse_btn = new wxButton( this, wxID_ANY, _("Select"), wxDefaultPosition, wxDefaultSize, 0 );
 
-	m_selmap_sizer->Add( m_browse_btn, 0, wxALL, 2 );
+  m_selmap_sizer->Add( m_browse_btn, 0, wxALL, 2 );
 
-	m_map_sizer->Add( m_selmap_sizer, 0, wxEXPAND, 5 );
+  m_map_sizer->Add( m_selmap_sizer, 0, wxEXPAND, 5 );
 
-	m_main_sizer->Add( m_map_sizer, 1, wxEXPAND, 5 );
+  m_main_sizer->Add( m_map_sizer, 1, wxEXPAND, 5 );
 
-	wxBoxSizer* m_opts_sizer = new wxBoxSizer( wxVERTICAL );
+  wxBoxSizer* m_opts_sizer = new wxBoxSizer( wxVERTICAL );
 
-	//m_opts_sizer->SetMinSize(wxSize( 200,-1 ));
-	m_map_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 150,240 ), wxLC_NO_HEADER|wxLC_REPORT );
+  //m_opts_sizer->SetMinSize(wxSize( 200,-1 ));
+  m_map_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 150,240 ), wxLC_NO_HEADER|wxLC_REPORT );
 //m_map_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
 
   wxListItem col;
@@ -84,17 +84,17 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   m_map_opts_list->InsertItem( 4, _("Extractor radius") );
   m_map_opts_list->InsertItem( 5, _("Max metal") );
 
-	m_opts_sizer->Add( m_map_opts_list, 0, wxALL, 2 );
+  m_opts_sizer->Add( m_map_opts_list, 0, wxALL, 2 );
 
   wxString m_start_radiosChoices[] = { _("Fixed"),_("Random"), _("Choose in game") };
-	int m_start_radiosNChoices = sizeof( m_start_radiosChoices ) / sizeof( wxString );
-	m_start_radios = new wxRadioBox( this, BMAP_START_TYPE, _("Startpositions"), wxDefaultPosition, wxSize( 150,-1 ), m_start_radiosNChoices, m_start_radiosChoices, 1, wxRA_SPECIFY_COLS );
-	m_opts_sizer->Add( m_start_radios, 0, wxALL, 2 );
+  int m_start_radiosNChoices = sizeof( m_start_radiosChoices ) / sizeof( wxString );
+  m_start_radios = new wxRadioBox( this, BMAP_START_TYPE, _("Startpositions"), wxDefaultPosition, wxSize( 150,-1 ), m_start_radiosNChoices, m_start_radiosChoices, 1, wxRA_SPECIFY_COLS );
+  m_opts_sizer->Add( m_start_radios, 0, wxALL, 2 );
 
-	m_main_sizer->Add( m_opts_sizer, 0, wxEXPAND, 5 );
-	//m_main_sizer->AddStretchSpacer();
-	SetSizer( m_main_sizer );
-	Layout();
+  m_main_sizer->Add( m_opts_sizer, 0, wxEXPAND, 5 );
+  //m_main_sizer->AddStretchSpacer();
+  SetSizer( m_main_sizer );
+  Layout();
 
   ReloadMaplist();
   UpdateMap();
@@ -180,5 +180,11 @@ void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
     default: assert(false);
   };
   m_battle.SendHostInfo( HI_StartType );
+}
+
+
+void BattleMapTab::OnUnitSyncReloaded()
+{
+  m_minimap->UpdateMinimap();
 }
 

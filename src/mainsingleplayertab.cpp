@@ -6,11 +6,13 @@
 #include <wx/imaglist.h>
 #include <wx/notebook.h>
 #include <wx/icon.h>
+#include <stdexcept>
 
 #include "singleplayertab.h"
 #include "battleoptionstab.h"
 #include "mainsingleplayertab.h"
 #include "ui.h"
+#include "utils.h"
 
 #include "images/battle.xpm"
 #include "images/battle_settings.xpm"
@@ -49,6 +51,16 @@ MainSinglePlayerTab::~MainSinglePlayerTab()
 
 void MainSinglePlayerTab::UpdateMinimap()
 {
+  m_sp_tab->UpdateMinimap();
+}
+
+
+void MainSinglePlayerTab::OnUnitSyncReloaded()
+{
+  debug_func("");
+  ASSERT_LOGIC( m_sp_tab != 0, "m_sp_tab = 0" );
+  m_sp_tab->ReloadMaplist();
+  m_sp_tab->ReloadModlist();
   m_sp_tab->UpdateMinimap();
 }
 

@@ -132,6 +132,9 @@ void SinglePlayerTab::ReloadModlist()
     } catch(...) {}
   }
 
+  if ( m_mod_pick->GetCount() > 0 ) {
+    if ( m_battle.GetModName() == wxEmptyString ) m_battle.SetMod( m_mod_pick->GetString( 0 ), wxEmptyString );
+  }
   m_mod_pick->SetStringSelection( RefineModname( WX_STRING(m_battle.GetModName()) ) );
 }
 

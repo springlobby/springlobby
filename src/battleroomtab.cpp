@@ -235,9 +235,8 @@ wxString _GetGameTypeStr( GameType t )
 void BattleRoomTab::UpdateBattleInfo()
 {
   try {
-    UnitSyncMap map = m_battle.Map();/*usync()->GetMap( STD_STRING(m_battle.GetMapName()) );
-    if ( map.hash != m_map.hash ) map = m_map = usync()->GetMap( STD_STRING(m_battle.GetMapName()), true );
-    else map = m_map;*/
+    ASSERT_RUNTIME( m_battle.MapExists(), "Map does not exist." );
+    UnitSyncMap map = m_battle.Map();
     m_map_lbl->SetLabel( RefineMapname( WX_STRING(map.name) ) );
     m_opts_list->SetItem( Opt_Pos_Size, 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
     m_opts_list->SetItem( Opt_Pos_Windspeed, 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind) );
@@ -445,5 +444,12 @@ void BattleRoomTab::OnBotRemoved( BattleBot& bot )
 void BattleRoomTab::OnBotUpdated( BattleBot& bot )
 {
   m_players->UpdateBot( bot );
+}
+
+
+void BattleRoomTab::OnUnitSyncReloaded()
+{
+  m_minimap->UpdateMinimap();
+  UpdateBattleInfo();
 }
 

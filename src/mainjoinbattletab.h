@@ -31,6 +31,9 @@ class MainJoinBattleTab : public wxPanel
 
     void BattleUserUpdated( User& user );
     BattleRoomTab* GetBattleRoomTab() { return m_battle_tab; }
+    BattleMapTab* GetBattleMapTab() { return m_map_tab; }
+
+    void OnUnitSyncReloaded();
 
   protected:
     wxBoxSizer* m_main_sizer;

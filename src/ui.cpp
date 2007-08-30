@@ -223,8 +223,7 @@ void Ui::ReloadUnitSync()
   usync()->FreeUnitSyncLib();
   usync()->LoadUnitSyncLib();
   ASSERT_LOGIC( m_main_win, "m_main_win = 0" );
-  m_main_win->GetJoinTab().GetBattleListTab().UpdateList();
-
+  m_main_win->OnUnitSyncReloaded();
 }
 
 

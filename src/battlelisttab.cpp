@@ -303,3 +303,9 @@ void BattleListTab::OnSelect( wxListEvent& event )
   }
 }
 
+void BattleListTab::OnUnitSyncReloaded()
+{
+  UpdateList();
+  m_minimap->UpdateMinimap();
+}
+

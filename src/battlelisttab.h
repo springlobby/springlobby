@@ -41,6 +41,7 @@ class BattleListTab : public wxPanel
     void DoJoin( Battle& battle );
 
     void OnSelect( wxListEvent& event );
+    void OnUnitSyncReloaded();
 
   protected:
     BattleListCtrl* m_battle_list;

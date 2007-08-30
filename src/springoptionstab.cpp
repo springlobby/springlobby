@@ -30,6 +30,7 @@
 #include "utils.h"
 #include "settings.h"
 #include "spring.h"
+#include "mainwindow.h"
 
 BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
 
@@ -429,6 +430,7 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
       wxMessageBox( _("SpringLobby is unable to detect your spring version.\n\nYou might want to take another look at your spring executable settings."), _("Spring error"), wxOK );
     }
   }
+  m_ui.mw().OnUnitSyncReloaded();
 }
 
 

@@ -12,6 +12,7 @@
 #include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
+#include <stdexcept>
 
 #include "mainwindow.h"
 #include "settings.h"
@@ -191,14 +192,21 @@ ChatPanel& servwin()
 //! @brief Returns the curent MainChatTab object
 MainChatTab& MainWindow::GetChatTab()
 {
-  assert( m_chat_tab != 0 );
+  ASSERT_LOGIC( m_chat_tab != 0, "m_chat_tab = 0" );
   return *m_chat_tab;
 }
 
 MainJoinBattleTab& MainWindow::GetJoinTab()
 {
-  assert( m_join_tab != 0 );
+  ASSERT_LOGIC( m_join_tab != 0, "m_join_tab = 0" );
   return *m_join_tab;
+}
+
+
+MainSinglePlayerTab& MainWindow::GetSPTab()
+{
+  ASSERT_LOGIC( m_sp_tab != 0, "m_sp_tab = 0" );
+  return *m_sp_tab;
 }
 
 
@@ -213,7 +221,7 @@ ChatPanel* MainWindow::GetActiveChatPanel()
 
 ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
 {
-  m_chat_tab->GetChannelChatPanel( channel );
+  return m_chat_tab->GetChannelChatPanel( channel );
 }
 
 
@@ -319,5 +327,13 @@ void MainWindow::OnShowDocs( wxCommandEvent& event )
 void MainWindow::OnTabsChanged( wxListbookEvent& event )
 {
   MakeImages();
+}
+
+
+void MainWindow::OnUnitSyncReloaded()
+{
+  debug_func("");
+  GetJoinTab().OnUnitSyncReloaded();
+  GetSPTab().OnUnitSyncReloaded();
 }
 

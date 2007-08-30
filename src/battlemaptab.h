@@ -36,16 +36,18 @@ class BattleMapTab : public wxPanel
      void OnMapSelect( wxCommandEvent& event );
      void OnStartTypeSelect( wxCommandEvent& event );
 
+    void OnUnitSyncReloaded();
+
   protected:
     Ui& m_ui;
     Battle& m_battle;
     //UnitSyncMap m_map;
 
-		MapCtrl* m_minimap;
-		wxChoice* m_map_combo;
-		wxButton* m_browse_btn;
-		wxRadioBox* m_start_radios;
-		wxListCtrl* m_map_opts_list;
+    MapCtrl* m_minimap;
+    wxChoice* m_map_combo;
+    wxButton* m_browse_btn;
+    wxRadioBox* m_start_radios;
+    wxListCtrl* m_map_opts_list;
 
     DECLARE_EVENT_TABLE()
 };

@@ -39,6 +39,8 @@ class SinglePlayerTab: public wxPanel
     void OnAddBot( wxCommandEvent& event );
     void OnStart( wxCommandEvent& event );
 
+    void OnUnitSyncReloaded();
+
   protected:
 
     Ui& m_ui;

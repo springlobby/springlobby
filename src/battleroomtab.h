@@ -29,34 +29,36 @@ class BattleRoomTab : public wxPanel
     BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle );
      ~BattleRoomTab();
 
-   BattleroomListCtrl& GetPlayersListCtrl();
+    BattleroomListCtrl& GetPlayersListCtrl();
 
-   void UpdateUser( User& user );
+    void UpdateUser( User& user );
 
-   Battle& GetBattle();
-   ChatPanel& GetChatPanel();
+    Battle& GetBattle();
+    ChatPanel& GetChatPanel();
 
-   bool IsHosted();
+    bool IsHosted();
 
-   void UpdateBattleInfo();
+    void UpdateBattleInfo();
 
-   void OnStart( wxCommandEvent& event );
-   void OnLeave( wxCommandEvent& event );
-   void OnAddBot( wxCommandEvent& event );
-   void OnImReady( wxCommandEvent& event );
-   void OnLock( wxCommandEvent& event );
-   void OnImSpec( wxCommandEvent& event );
-   void OnTeamSel( wxCommandEvent& event );
-   void OnAllySel( wxCommandEvent& event );
-   void OnColourSel( wxCommandEvent& event );
-   void OnSideSel( wxCommandEvent& event );
+    void OnStart( wxCommandEvent& event );
+    void OnLeave( wxCommandEvent& event );
+    void OnAddBot( wxCommandEvent& event );
+    void OnImReady( wxCommandEvent& event );
+    void OnLock( wxCommandEvent& event );
+    void OnImSpec( wxCommandEvent& event );
+    void OnTeamSel( wxCommandEvent& event );
+    void OnAllySel( wxCommandEvent& event );
+    void OnColourSel( wxCommandEvent& event );
+    void OnSideSel( wxCommandEvent& event );
 
-   void OnUserJoined( User& user );
-   void OnUserLeft( User& user );
+    void OnUserJoined( User& user );
+    void OnUserLeft( User& user );
 
-   void OnBotAdded( BattleBot& bot );
-   void OnBotRemoved( BattleBot& bot );
-   void OnBotUpdated( BattleBot& bot );
+    void OnBotAdded( BattleBot& bot );
+    void OnBotRemoved( BattleBot& bot );
+    void OnBotUpdated( BattleBot& bot );
+
+    void OnUnitSyncReloaded();
 
   protected:
     Ui& m_ui;
