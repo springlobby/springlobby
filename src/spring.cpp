@@ -59,6 +59,8 @@ bool Spring::Run( Battle& battle )
 
   wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
 
+  debug( "Path to script: " + STD_STRING(path) + "script.txt" );
+
   try {
 
     if ( !wxFile::Access( path + _T("script.txt"), wxFile::write ) ) {
@@ -76,11 +78,15 @@ bool Spring::Run( Battle& battle )
 
   if ( m_process == 0 ) m_process = new SpringProcess( *this );
   wxString cmd = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ") + path + _T("script.txt");
+  debug( "cmd: " + STD_STRING(cmd) );
+  debug( "m_process->Create();" );
   m_process->Create();
+  debug( "m_process->SetCommand( cmd );" );
   m_process->SetCommand( cmd );
+  debug( "m_process->Run();" );
   m_process->Run();
-
   m_running = true;
+  debug( "Done running = true" );
   return true;
 }
 
