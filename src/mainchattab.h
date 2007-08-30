@@ -21,6 +21,8 @@ class MainChatTab : public wxPanel
     MainChatTab( wxWindow* parent, Ui& ui );
     ~MainChatTab();
 
+    ChatPanel* GetActiveChatPanel();
+
     ChatPanel& ServerChat();
 
     ChatPanel* AddChatPannel( Channel& channel );

@@ -16,10 +16,17 @@ class wxListbook;
 class MainOptionsTab;
 class wxBitmap;
 class wxImageList;
+class ChatPanel;
 
 // FIXME shouldn't copy this here
 typedef wxWindow wxNotebookPage;
 
+
+// Page indexes
+#define PAGE_CHAT 0
+#define PAGE_JOIN 1
+#define PAGE_SINGLE 2
+#define PAGE_OPTOS 3
 
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
@@ -48,6 +55,7 @@ class MainWindow : public wxFrame
     void OnTabsChanged( wxListbookEvent& event );
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab();
+    ChatPanel* GetActiveChatPanel();
 
     void MakeImages();
 

@@ -27,6 +27,7 @@ class MainJoinBattleTab : public wxPanel
     void UpdateCurrentBattle();
     void LeaveCurrentBattle();
     Battle* GetCurrentBattle();
+    ChatPanel* GetActiveChatPanel();
 
     void BattleUserUpdated( User& user );
     BattleRoomTab* GetBattleRoomTab() { return m_battle_tab; }

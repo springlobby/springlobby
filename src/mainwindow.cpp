@@ -201,6 +201,16 @@ MainJoinBattleTab& MainWindow::GetJoinTab()
   return *m_join_tab;
 }
 
+
+ChatPanel* MainWindow::GetActiveChatPanel()
+{
+  int index = m_func_tabs->GetSelection();
+  if ( index == PAGE_CHAT ) return m_chat_tab->GetActiveChatPanel();
+  if ( index == PAGE_JOIN ) return m_join_tab->GetActiveChatPanel();
+  return 0;
+}
+
+
 //! @brief Open a new chat tab with a channel chat
 //!
 //! @param channel The channel name

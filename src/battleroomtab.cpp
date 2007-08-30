@@ -13,6 +13,7 @@
 #include <wx/sizer.h>
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
+#include <stdexcept>
 
 #include "battleroomtab.h"
 #include "ui.h"
@@ -293,6 +294,7 @@ Battle& BattleRoomTab::GetBattle()
 
 ChatPanel& BattleRoomTab::GetChatPanel()
 {
+  ASSERT_LOGIC( m_chat != 0, "m_chat = 0" );
   return *m_chat;
 }
 

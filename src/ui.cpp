@@ -52,6 +52,13 @@ Server& Ui::GetServer()
   return *m_serv;
 }
 
+
+ChatPanel* Ui::GetActiveChatPanel()
+{
+  return mw().GetActiveChatPanel();
+}
+
+
 MainWindow& Ui::mw()
 {
   assert( m_main_win != 0 );
@@ -318,12 +325,46 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/ingame") ) {
     m_serv->RequestInGameTime();
     return true;
+  } else if ( cmd.BeforeFirst(' ').Lower() == _T("/help") ) {
+    wxString topic = cmd.AfterFirst(' ');
+    ConsoleHelp( topic.Lower() );
+    return true;
   }
   return false;
 }
 
 
-
+void Ui::ConsoleHelp( const wxString& topic )
+{
+  ChatPanel* panel = GetActiveChatPanel();
+  if ( panel == 0 ) {
+    ShowMessage( _("Type /help in a chat box."), _("Help error") );
+    return;
+  }
+  if ( topic == wxEmptyString ) {
+    panel->ClientMessage( _("SpringLobby commands help.") );
+    panel->ClientMessage( _("") );
+    panel->ClientMessage( _("Global commands:") );
+    panel->ClientMessage( _("  \"/away\" - Sets your status to away.") );
+    panel->ClientMessage( _("  \"/back\" - Resets your away status.") );
+    panel->ClientMessage( _("  \"/help [topic]\" - Put topic if you want to know more specific information about a command.") );
+    panel->ClientMessage( _("  \"/join channel [password] [,channel2 [password2]]\" - Join a channel.") );
+    panel->ClientMessage( _("  \"/j\" - Alias to /join.") );
+    panel->ClientMessage( _("  \"/ingame\" - Show how much time you have in game.") );
+    panel->ClientMessage( _("  \"/sayver\" - Say what version of springlobby you have in chat.") );
+    panel->ClientMessage( _("  \"/ver\" - Display what version of SpringLobby you have.") );
+    panel->ClientMessage( _("") );
+    panel->ClientMessage( _("Chat commands:") );
+    panel->ClientMessage( _("  \"/me action\" - Say IRC style action message.") );
+    panel->ClientMessage( _("") );
+    panel->ClientMessage( _("If you are missing any commands, go to #springlobby and try to type it there :)") );
+//    panel->ClientMessage( _("  \"/\" - .") );
+  } else if ( topic == _T("topics") ) {
+    panel->ClientMessage( _("No topics written yet.") );
+  } else {
+    panel->ClientMessage( _("The topic \"") + topic + _("\" was not found. Type \"/help topics\" only for available topics.") );
+  }
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -523,6 +564,18 @@ void Ui::OnMotd( Server& server, const std::string& message )
 {
   if ( server.uidata.panel != 0 ) server.uidata.panel->Motd( WX_STRING(message) );
 }
+
+
+void Ui::OnServerMessage( Server& server, const std::string& message )
+{
+  ChatPanel* panel = GetActiveChatPanel();
+  if ( panel != 0 ) {
+    panel->StatusMessage( WX_STRING(message) );
+  } else {
+    ShowMessage( WX_STRING(message), _("Server message") );
+  }
+}
+
 
 void Ui::OnUserSaid( User& user, const std::string message, bool fromme )
 {

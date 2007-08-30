@@ -555,6 +555,19 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     msg = GetSentenceParam( params );
     m_se->OnServerMessage( msg );
     //SERVERMSG {message}
+  } else if ( cmd == "JOINBATTLEFAILED" ) {
+    msg = GetSentenceParam( params );
+    m_se->OnServerMessage( "Failed to join battle. " + msg );
+    //JOINBATTLEFAILED {reason}
+  } else if ( cmd == "OPENBATTLEFAILED" ) {
+    msg = GetSentenceParam( params );
+    m_se->OnServerMessage( "Failed to host new battle on server. " + msg );
+    //OPENBATTLEFAILED {reason}
+  } else if ( cmd == "JOINFAILED" ) {
+    channel = GetWordParam( params );
+    msg = GetSentenceParam( params );
+    m_se->OnServerMessage( "Failed to join channel #" + channel + ". " + msg );
+    //JOINFAILED channame {reason}
   } else {
     debug( "??? Cmd: " + cmd + " params: " + params );
     m_se->OnUnknownCommand( cmd, params );

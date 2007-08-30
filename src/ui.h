@@ -14,7 +14,7 @@ class User;
 class Battle;
 class SinglePlayerBattle;
 class BattleBot;
-
+class ChatPanel;
 
 typedef int HostInfo;
 
@@ -37,8 +37,10 @@ class Ui
     ~Ui();
 
     Server& GetServer();
+    ChatPanel* GetActiveChatPanel();
 
     bool ExecuteSayCommand( const wxString& cmd );
+    void ConsoleHelp( const wxString& topic );
 
     void ShowMainWindow();
     void ShowConnectWindow();
@@ -95,6 +97,7 @@ class Ui
 
     void OnUnknownCommand( Server& server, const std::string& command, const std::string& params );
     void OnMotd( Server& server, const std::string& message );
+    void OnServerMessage( Server& server, const std::string& message );
 
     void OnBattleOpened( Battle& battle );
     void OnBattleClosed( Battle& battle );
