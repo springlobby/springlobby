@@ -11,6 +11,8 @@
 #include <wx/splitter.h>
 #include <wx/combobox.h>
 #include <wx/button.h>
+#include <wx/tokenzr.h>
+#include <wx/msgdlg.h>
 
 #include "channel.h"
 #include "chatpanel.h"
@@ -31,23 +33,6 @@ BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 
 END_EVENT_TABLE()
 
-/*
-//! @brief ChatPanel constructor.
-//!
-//! @param parent the parent wxWindow.
-//! @param show_nick_list set to true if the nick list should be created.
-//! @todo Fix nick list
-//! @todo Enlarge the say input.
-ChatPanel::ChatPanel( wxWindow* parent, bool show_nick_list ) : wxPanel( parent, -1 )
-{
-  // Setting default values
-  m_show_nick_list = show_nick_list;
-  m_channel = 0;
-
-  _CreateControls();
-
-}
-*/
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui,  Channel& chan )
 : wxPanel( parent, -1),m_show_nick_list(true),m_ui(ui),m_channel(&chan),m_server(0),m_user(0),m_battle(0),m_type(CPT_Channel)
@@ -386,52 +371,64 @@ void ChatPanel::_SetChannel( Channel* channel )
 void ChatPanel::Say( const wxString& message )
 {
   debug_func( "" );
-  if ( message.Find('/') == 0 ) {
-    if ( m_ui.ExecuteSayCommand( message ) ) return;
+
+  wxStringTokenizer lines( message, _T("\n") );
+  if ( lines.CountTokens() > 5 ) {
+    wxMessageDialog dlg( &m_ui.mw(), wxString::Format( _("Are you sure you want to paste %d lines?"), lines.CountTokens() ), _("Flood warning"), wxYES_NO );
+    if ( dlg.ShowModal() == wxID_NO ) return;
   }
+  while ( lines.HasMoreTokens() ) {
+    wxString line = lines.GetNextToken();
+    debug("line: " + STD_STRING(line) );
 
-  if ( message == _T("/ver") ) {
-    _OutputLine( _(" You have SpringLobby v") + WX_STRING( GetSpringLobbyVersion() ), *wxBLACK );
-    return;
-  }
+    if ( line.Find('/') == 0 ) {
+      if ( m_ui.ExecuteSayCommand( line ) ) return;
+    }
 
-  if ( m_type == CPT_Channel ) {
-
-    if ( m_channel == 0 ) {
-      _OutputLine( _(" You are not in channel or channel does not exist."), *wxRED );
+    if ( line == _T("/ver") ) {
+      _OutputLine( _(" You have SpringLobby v") + WX_STRING( GetSpringLobbyVersion() ), *wxBLACK );
       return;
     }
-    if ( message.StartsWith( _T("/") ) ) {
-      if ( m_channel->ExecuteSayCommand( STD_STRING(message) ) ) return;
-    }
-    m_channel->Say( STD_STRING(message) );
 
-  } else if ( m_type == CPT_Battle ) {
+    if ( m_type == CPT_Channel ) {
 
-    if ( m_battle == 0 ) {
-      _OutputLine( _(" You are not in battle or battle does not exist."), *wxRED );
-      return;
-    }
-    if ( message.StartsWith(_T("/")) ) {
-      if ( m_battle->ExecuteSayCommand( STD_STRING(message) ) ) return;
-    }
-    m_battle->Say( STD_STRING(message) );
+      if ( m_channel == 0 ) {
+        _OutputLine( _(" You are not in channel or channel does not exist."), *wxRED );
+        return;
+      }
+      if ( line.StartsWith( _T("/") ) ) {
+        if ( m_channel->ExecuteSayCommand( STD_STRING(line) ) ) return;
+      }
+      m_channel->Say( STD_STRING(line) );
 
-  } else if ( m_type == CPT_User ) {
+    } else if ( m_type == CPT_Battle ) {
 
-    if ( m_user == 0 ) {
-      _OutputLine( _(" User is offline."), *wxRED );
-      return;
-    }
-    if ( message.StartsWith(_T("/")) ) {
-      if ( m_user->ExecuteSayCommand( STD_STRING(message) ) ) return;
-    }
-    m_user->Say( STD_STRING(message) );
+      if ( m_battle == 0 ) {
+        _OutputLine( _(" You are not in battle or battle does not exist."), *wxRED );
+        return;
+      }
+      if ( line.StartsWith(_T("/")) ) {
+        if ( m_battle->ExecuteSayCommand( STD_STRING(line) ) ) return;
+      }
+      m_battle->Say( STD_STRING(line) );
 
-  } else if ( m_type == CPT_Server ) {
-    if ( m_server == 0 ) return;
-    m_server->SendRaw( STD_STRING(message) );
-    _OutputLine( _(" Sent raw: \"") + message + _("\\n\""), *wxBLACK );
+    } else if ( m_type == CPT_User ) {
+
+      if ( m_user == 0 ) {
+        _OutputLine( _(" User is offline."), *wxRED );
+        return;
+      }
+      if ( line.StartsWith(_T("/")) ) {
+        if ( m_user->ExecuteSayCommand( STD_STRING(line) ) ) return;
+      }
+      m_user->Say( STD_STRING(line) );
+
+    } else if ( m_type == CPT_Server ) {
+      if ( m_server == 0 ) return;
+      m_server->SendRaw( STD_STRING(line) );
+      _OutputLine( _(" Sent raw: \"") + line + _("\\n\""), *wxBLACK );
+    }
+
   }
 }
 

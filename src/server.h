@@ -71,7 +71,7 @@ class Server
     virtual void Logout() = 0;
     virtual bool IsOnline() = 0;
 
-    virtual void Update() = 0;
+    virtual void Update( int mselapsed ) = 0;
 
     virtual void JoinChannel( const std::string& channel, const std::string& key ) = 0;
     virtual void PartChannel( const std::string& channel ) = 0;

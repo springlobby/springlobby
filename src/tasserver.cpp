@@ -1,7 +1,4 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
-//
-// Class: TASServer
-//
 
 #include <cassert>
 #include <stdexcept>
@@ -96,13 +93,9 @@ TASServer::~TASServer() { delete m_se; }
 void TASServer::SetSocket( Socket* sock )
 {
   Server::SetSocket( sock );
-  if ( sock == 0 ) return;
+  if ( m_sock == 0 ) return;
 
-  //sock->SetConnectedCallback( OnConnected );
-  //sock->SetDisconnectedCallback( OnDisconnected );
-  //sock->SetDataRecivedCallback( OnDataRecived );
-
-  //sock->SetUserdata( (void*)this );
+  m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
 
 }
 
@@ -215,10 +208,12 @@ void TASServer::AcceptAgreement()
 }
 
 
-void TASServer::Update()
+void TASServer::Update( int mselapsed )
 {
   //debug_func( "" );
   assert( m_sock != 0 ); // TODO: This should be handled and generate an error in released code.
+
+  m_sock->OnTimer( mselapsed );
 
   if ( !m_connected ) { // We are not formally connected yet, but might be.
     if ( IsConnected() ) {
@@ -226,7 +221,7 @@ void TASServer::Update()
       m_connected = true;
     }
     return;
-  } else { // We are connected allready.
+  } else { // We are connected already.
     if ( !IsConnected() ) {
       m_connected = false;
       m_online = false;

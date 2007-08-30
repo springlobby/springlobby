@@ -84,7 +84,7 @@ int SpringLobbyApp::OnExit()
 //! @brief Is called every 1/10 seconds to update statuses
 void SpringLobbyApp::OnTimer( wxTimerEvent& event )
 {
-  m_ui->OnUpdate();
+  m_ui->OnUpdate( event.GetInterval() );
 }
 
 

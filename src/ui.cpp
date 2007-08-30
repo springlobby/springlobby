@@ -369,7 +369,7 @@ void Ui::ConsoleHelp( const wxString& topic )
 
 ChatPanel* Ui::GetChannelChatPanel( const wxString& channel )
 {
-  mw().GetChannelChatPanel( channel );
+  return mw().GetChannelChatPanel( channel );
 }
 
 
@@ -378,10 +378,10 @@ ChatPanel* Ui::GetChannelChatPanel( const wxString& channel )
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void Ui::OnUpdate()
+void Ui::OnUpdate( int mselapsed )
 {
   if ( m_serv != 0 ) {
-    m_serv->Update();
+    m_serv->Update( mselapsed );
   }
 }
 

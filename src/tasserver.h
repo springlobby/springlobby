@@ -39,7 +39,7 @@ class TASServer : public Server
     void Logout();
     bool IsOnline();
 
-    void Update();
+    void Update( int mselapsed );
 
     void Ping();
 

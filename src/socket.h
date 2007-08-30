@@ -56,6 +56,9 @@ class Socket
     Sockstate State( );
     Sockerror Error( );
 
+    void SetSendRateLimit( int Bps = -1 );
+    void OnTimer( int mselapsed );
+
   protected:
   // Socket variables
     wxSocketClient* m_sock;
@@ -64,6 +67,10 @@ class Socket
     bool m_connecting;
     bool m_block;
     Server& m_serv;
+
+    int m_rate;
+    int m_sent;
+    std::string m_buffer;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SOCKET_H

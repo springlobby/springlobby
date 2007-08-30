@@ -76,7 +76,7 @@ class Ui
 
     MainWindow& mw();
 
-    void OnUpdate();
+    void OnUpdate( int mselapsed );
 
     void OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported);
     void OnLoggedIn( );
