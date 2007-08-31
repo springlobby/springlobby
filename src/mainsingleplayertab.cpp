@@ -59,8 +59,11 @@ void MainSinglePlayerTab::OnUnitSyncReloaded()
 {
   debug_func("");
   ASSERT_LOGIC( m_sp_tab != 0, "m_sp_tab = 0" );
+  debug("Reloading map list");
   m_sp_tab->ReloadMaplist();
+  debug("Reloading mod list");
   m_sp_tab->ReloadModlist();
+  debug("Reloading minimap");
   m_sp_tab->UpdateMinimap();
 }
 

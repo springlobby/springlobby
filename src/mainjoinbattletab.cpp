@@ -139,8 +139,18 @@ void MainJoinBattleTab::BattleUserUpdated( User& user )
 
 void MainJoinBattleTab::OnUnitSyncReloaded()
 {
+  debug_func("");
   GetBattleListTab().OnUnitSyncReloaded();
-  if ( GetBattleRoomTab() ) GetBattleRoomTab()->OnUnitSyncReloaded();
-  if ( GetBattleMapTab() ) GetBattleMapTab()->OnUnitSyncReloaded();
+  debug("Battle list tab reloaded");
+  if ( GetBattleRoomTab() ) {
+    debug("Reloading battleroom");
+    GetBattleRoomTab()->OnUnitSyncReloaded();
+    debug("Battleroom reloaded");
+  }
+  if ( GetBattleMapTab() ) {
+    debug("Reloading battlemap");
+    GetBattleMapTab()->OnUnitSyncReloaded();
+    debug("Battlemap reloaded");
+  }
 }
 
