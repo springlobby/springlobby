@@ -34,6 +34,7 @@
 
 Ui::Ui() :
   m_serv(0),
+  m_main_win(0),
   m_con_win(0)
 {
   m_main_win = new MainWindow( *this );
@@ -216,8 +217,7 @@ void Ui::ReloadUnitSync()
 {
   usync()->FreeUnitSyncLib();
   usync()->LoadUnitSyncLib();
-  ASSERT_LOGIC( m_main_win, "m_main_win = 0" );
-  m_main_win->OnUnitSyncReloaded();
+  if ( m_main_win != 0 ) m_main_win->OnUnitSyncReloaded();
 }
 
 
