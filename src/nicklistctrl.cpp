@@ -11,12 +11,21 @@
 #include "utils.h"
 #include "iconimagelist.h"
 #include "user.h"
+#include "ui.h"
+#include "mainwindow.h"
+
 
 int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData);
 
-NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header )
-: wxListCtrl( parent, -1, wxDefaultPosition, wxDefaultSize,
-              wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | wxLC_SINGLE_SEL )
+BEGIN_EVENT_TABLE( NickListCtrl, wxListCtrl )
+  EVT_LIST_ITEM_ACTIVATED( NICK_LIST, NickListCtrl::OnActivateItem )
+END_EVENT_TABLE()
+
+
+NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header ):
+  wxListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
+              wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | wxLC_SINGLE_SEL ),
+  m_ui(ui)
 {
   wxListItem col;
   col.SetText( _T("") );
@@ -116,6 +125,7 @@ struct upper {
  }
 };
 
+
 int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData)
 {
   User* user1 = (User*)item1;
@@ -144,5 +154,14 @@ int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData)
   if ( u1 > u2 ) return -1;
   if ( u1 < u2 ) return 1;
   return 0;
+}
+
+
+void NickListCtrl::OnActivateItem( wxListEvent& event )
+{
+  int index = event.GetIndex();
+  if ( index == -1 ) return;
+  User* user = (User*)event.GetData();
+  m_ui.mw().OpenPrivateChat( *user );
 }
 

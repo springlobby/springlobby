@@ -81,7 +81,7 @@ void ChatPanel::_CreateControls( )
 
     m_nick_sizer = new wxBoxSizer( wxVERTICAL );
 
-    m_nicklist = new NickListCtrl( m_nick_panel );
+    m_nicklist = new NickListCtrl( m_nick_panel, m_ui );
 
     m_nick_filter = new wxComboBox( m_nick_panel, -1, _T("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
 

@@ -45,7 +45,7 @@ BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
     EVT_RADIOBUTTON( SPRING_DEFEXE, SpringOptionsTab::OnDefaultExe )
     EVT_RADIOBUTTON( SPRING_DEFUSYNC, SpringOptionsTab::OnDefaultUsync )
 
-    END_EVENT_TABLE()
+END_EVENT_TABLE()
 
 
     SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
