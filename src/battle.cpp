@@ -4,7 +4,6 @@
 //
 
 #include <stdexcept>
-#include <assert.h>
 
 #include "battle.h"
 #include "ui.h"

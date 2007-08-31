@@ -264,7 +264,7 @@ void BattleRoomTab::UpdateBattleInfo()
 
 BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
 {
-  assert( m_players != 0);
+  ASSERT_LOGIC( m_players != 0, "m_players = 0" );
   return *m_players;
 }
 

@@ -17,6 +17,7 @@
 #include <wx/settings.h>
 #include <wx/arrstr.h>
 #include <wx/choice.h>
+#include <stdexcept>
 
 #include "battlemaptab.h"
 #include "ui.h"
@@ -177,7 +178,7 @@ void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
     case 0: m_battle.SetStartType( ST_Fixed ); break;
     case 1: m_battle.SetStartType( ST_Random ); break;
     case 2: m_battle.SetStartType( ST_Choose ); break;
-    default: assert(false);
+    default: ASSERT_LOGIC( false, "invalid pos" );
   };
   m_battle.SendHostInfo( HI_StartType );
 }

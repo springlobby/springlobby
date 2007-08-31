@@ -3,6 +3,7 @@
 #include <wx/intl.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
+#include <stdexcept>
 
 #include "battlelistctrl.h"
 #include "utils.h"
@@ -114,7 +115,7 @@ void BattleListCtrl::UpdateList()
 void BattleListCtrl::AddBattle( Battle& battle )
 {
   int index = InsertItem( 0, IconImageList::GetBattleStatusIcon( battle ) );
-  assert( index != -1 );
+  ASSERT_LOGIC( index != -1, "index = -1" );
   SetItemData(index, (wxUIntPtr)&battle );
 
   UpdateBattle( index );
@@ -142,12 +143,12 @@ void BattleListCtrl::UpdateBattle( Battle& battle )
 
 void BattleListCtrl::UpdateBattle( const int& index )
 {
-  assert( index != -1 );
+  ASSERT_LOGIC( index != -1, "index = -1" );
 
   wxListItem item;
   item.SetId( index );
 
-  if (!GetItem( item )) assert(false);
+  ASSERT_LOGIC( GetItem( item ), "!GetItem" );
 
   Battle& battle = *((Battle*)GetItemData( index ));
 

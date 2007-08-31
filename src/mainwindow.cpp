@@ -232,7 +232,7 @@ ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
 //! @sa Server::JoinChannel OpenPrivateChat
 void MainWindow::OpenChannelChat( Channel& channel )
 {
-  assert( m_chat_tab != 0 );
+  ASSERT_LOGIC( m_chat_tab != 0, "m_chat_tab" );
   m_chat_tab->AddChatPannel( channel );
 }
 
@@ -242,7 +242,7 @@ void MainWindow::OpenChannelChat( Channel& channel )
 //! @param nick The user to whom the chatwindow should be opened to
 void MainWindow::OpenPrivateChat( User& user )
 {
-  assert( m_chat_tab != 0 );
+  ASSERT_LOGIC( m_chat_tab != 0, "m_chat_tab" );
   m_chat_tab->AddChatPannel( user );
 }
 

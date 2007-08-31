@@ -3,13 +3,14 @@
 // Class: Server
 //
 
-#include <cassert>
 #include <stdexcept>
+
 #include "server.h"
 #include "socket.h"
 #include "battle.h"
 #include "channel.h"
 #include "user.h"
+#include "utils.h"
 
 
 Server::~Server()
@@ -34,7 +35,7 @@ Server::~Server()
 
 void Server::SetSocket( Socket* sock )
 {
-  assert( (!IsConnected()) || (sock == 0) ); m_sock = sock;
+  ASSERT_LOGIC( (!IsConnected()) || (sock == 0), "Not connected" ); m_sock = sock;
 }
 
 User& Server::GetUser( const std::string& nickname )

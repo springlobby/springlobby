@@ -1,6 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 #include <wx/socket.h>
+#include <stdexcept>
 
 #include "socket.h"
 #include "server.h"
@@ -16,27 +17,17 @@ END_EVENT_TABLE()
 void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 {
   Socket* sock = (Socket*)event.GetClientData();
-  //socket_callback callback;
 
-  assert( sock != 0 );
+  ASSERT_LOGIC( sock != 0, "sock = 0" );
 
   if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
-/*    callback = sock->GetDataRecivedCallback();
-    assert( callback != 0 );
-    callback( sock );*/
     m_serv.OnDataRecived( sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_LOST ) {
-/*    callback = sock->GetDisconnectedCallback();
-    assert( callback != 0 );
-    callback( sock );*/
     m_serv.OnDisconnected( sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
     m_serv.OnConnected( sock );
-/*    callback = sock->GetConnectedCallback();
-    assert( callback != 0 );
-    callback( sock );*/
   } else {
-    assert(false);
+    ASSERT_LOGIC( false, "Unknown socket event.");
   }
 }
 

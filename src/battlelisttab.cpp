@@ -25,6 +25,8 @@
 #include <wx/combobox.h>
 #include <wx/button.h>
 #include <wx/sizer.h>
+#include <stdexcept>
+
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 
@@ -238,7 +240,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
 
 void BattleListTab::OnJoin( wxCommandEvent& event )
 {
-  assert( m_battle_list != 0 );
+  ASSERT_LOGIC( m_battle_list != 0, "m_battle_list = 0" );
   if ( m_battle_list->GetSelectedIndex() < 0 ) return;
 
   Battle& battle = *((Battle*)m_battle_list->GetItemData( m_battle_list->GetSelectedIndex() ));
@@ -249,7 +251,7 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
 
 void BattleListTab::OnListJoin( wxListEvent& event )
 {
-  assert( m_battle_list != 0 );
+  ASSERT_LOGIC( m_battle_list != 0, "m_battle_list = 0" );
   if ( event.GetIndex() < 0 ) return;
 
   Battle& battle = *((Battle*)m_battle_list->GetItemData( event.GetIndex() ));

@@ -20,6 +20,7 @@
 #include <wx/choice.h>
 #include <wx/slider.h>
 #include <wx/checklst.h>
+#include <stdexcept>
 
 #include "battleoptionstab.h"
 #include "ui.h"
@@ -264,7 +265,7 @@ void BattleOptionsTab::OnEndSelect( wxCommandEvent& event )
       case 0: m_battle.SetGameType( GT_ComContinue ); break;
       case 1: m_battle.SetGameType( GT_ComEnds ); break;
       case 2: m_battle.SetGameType( GT_Lineage ); break;
-      default: assert(false);
+      default: ASSERT_LOGIC( false, "invalid selection");
     }
 
     m_battle.SendHostInfo( HI_GameType );

@@ -70,7 +70,7 @@ MainChatTab::~MainChatTab()
 
 ChatPanel& MainChatTab::ServerChat()
 {
-  assert( m_server_chat != 0 );
+  ASSERT_LOGIC( m_server_chat != 0, "m_server_chat = 0" );
   return *m_server_chat;
 }
 
@@ -98,6 +98,7 @@ void MainChatTab::CloseAllChats()
 {
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
     ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+    ASSERT_LOGIC( tmp != 0, "tmp = 0" );
     if ( tmp->GetPanelType() == CPT_Channel ) tmp->SetChannel( 0 );
     else if ( tmp->GetPanelType() == CPT_User ) tmp->SetUser( 0 );
     else if ( tmp->GetPanelType() == CPT_Server ) tmp->SetServer( 0 );

@@ -9,7 +9,6 @@
 #include <wx/stdpaths.h>
 #include <wx/string.h>
 
-#include <cassert>
 #include <stdexcept>
 
 #include "springunitsync.h"
@@ -53,7 +52,7 @@ IUnitSync* usync()
 
 void* SpringUnitSync::_GetLibFuncPtr( const std::string& name )
 {
-  assert( m_loaded );
+  ASSERT_LOGIC( m_loaded, "Unitsync not loaded" );
   void* ptr = m_libhandle->GetSymbol(WX_STRING(name));
   ASSERT_RUNTIME( ptr, "Couldn't load " + name + " from unitsync library" );
   return ptr;

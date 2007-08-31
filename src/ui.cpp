@@ -61,15 +61,15 @@ ChatPanel* Ui::GetActiveChatPanel()
 
 MainWindow& Ui::mw()
 {
-  assert( m_main_win != 0 );
+  ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0" );
   return *m_main_win;
 }
 
 //! @brief Shows the main window on screen
 void Ui::ShowMainWindow()
 {
-  assert( m_main_win != 0 );
-  m_main_win->Show(true);
+  ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0" );
+  mw().Show(true);
 }
 
 
@@ -79,7 +79,7 @@ void Ui::ShowMainWindow()
 void Ui::ShowConnectWindow()
 {
   if ( m_con_win == 0 ) {
-    assert( m_main_win != 0 );
+    ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0" );
     m_con_win = new ConnectWindow( m_main_win, *this );
   }
   m_con_win->CenterOnParent();
@@ -117,7 +117,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
   Socket* sock;
 
   if ( !sett().ServerExists( STD_STRING(servername) ) ) {
-    assert( false );
+    ASSERT_LOGIC( false, "Server does not exist in settings" );
     return;
   }
 
@@ -158,7 +158,7 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
   int port;
 
   if ( !sett().ServerExists( STD_STRING(servername) ) ) {
-    assert( false );
+    ASSERT_LOGIC( false, "Server does not exist in settings" );
     return false;
   }
 
@@ -191,7 +191,7 @@ void Ui::JoinChannel( const wxString& name, const wxString& password )
 
 void Ui::StartHostedBattle()
 {
-  assert( m_serv != 0 );
+  ASSERT_LOGIC( m_serv != 0, "m_serv = 0" );
   m_serv->StartHostedBattle();
   sett().SetLastHostMap( STD_STRING(m_serv->GetCurrentBattle()->GetMapName()) );
 }
@@ -202,17 +202,11 @@ void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
   m_spring->Run( battle );
 }
 
-/*void Ui::SendHostInfo( HostInfo update )
-{
-  assert( m_serv != 0 );
-  m_serv->SendHostInfo( update );
-}*/
-
 
 //! @brief Quits the entire application
 void Ui::Quit()
 {
-  assert( m_main_win != 0 );
+  ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0" );
   sett().SaveSettings();
   m_main_win->Close();
 }

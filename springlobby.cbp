@@ -11,7 +11,7 @@
 				<Option output="bin/GNU/Debug/springlobby" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="src" />
 				<Option object_output="obj/GNU/Debug/" />
-				<Option type="0" />
+				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Option projectResourceIncludeDirsRelation="0" />

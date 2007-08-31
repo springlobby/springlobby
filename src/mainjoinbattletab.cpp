@@ -9,6 +9,7 @@
 #include <wx/imaglist.h>
 #include <wx/sizer.h>
 #include <wx/listbook.h>
+#include <stdexcept>
 
 #include "battle.h"
 #include "mainjoinbattletab.h"
@@ -16,6 +17,7 @@
 #include "battleroomtab.h"
 #include "battlemaptab.h"
 #include "battleoptionstab.h"
+#include "utils.h"
 
 #include "images/battle_list.xpm"
 #include "images/battle.xpm"
@@ -86,7 +88,7 @@ void MainJoinBattleTab::UpdateCurrentBattle()
 
 BattleListTab& MainJoinBattleTab::GetBattleListTab()
 {
-  assert( m_list_tab != 0 );
+  ASSERT_LOGIC( m_list_tab != 0, "m_list_tab = 0" );
   return *m_list_tab;
 }
 
@@ -128,8 +130,8 @@ void MainJoinBattleTab::LeaveCurrentBattle()
 
 void MainJoinBattleTab::BattleUserUpdated( User& user )
 {
-  assert( m_battle_tab != 0 );
-  assert( m_map_tab != 0 );
+  ASSERT_LOGIC( m_battle_tab != 0, "m_battle_tab = 0" );
+  ASSERT_LOGIC( m_map_tab != 0, "m_map_tab = 0" );
   m_battle_tab->UpdateUser( user );
   m_map_tab->UpdateUser( user );
 }

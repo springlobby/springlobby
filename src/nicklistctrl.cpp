@@ -5,6 +5,8 @@
 
 #include <wx/imaglist.h>
 #include <cctype>
+#include <stdexcept>
+
 #include "nicklistctrl.h"
 #include "utils.h"
 #include "iconimagelist.h"
@@ -53,7 +55,7 @@ void NickListCtrl::AddUser( User& user )
 {
   int index = InsertItem( 0, IconImageList::GetUserStateIcon( user.GetStatus() ) );
   SetItemData( index, (wxUIntPtr)&user );
-  assert( index != -1 );
+  ASSERT_LOGIC( index != -1, "index = -1" );
   UserUpdated( index );
 }
 
@@ -72,7 +74,7 @@ void NickListCtrl::RemoveUser( const User& user )
 void NickListCtrl::UserUpdated( User& user )
 {
   int index = GetUserIndex( user );
-  assert( index != -1 );
+  ASSERT_LOGIC( index != -1, "index = -1" );
   UserUpdated( index );
 }
 
@@ -118,8 +120,8 @@ int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData)
 {
   User* user1 = (User*)item1;
   User* user2 = (User*)item2;
-  assert( user1 != 0 );
-  assert( user2 != 0 );
+  ASSERT_LOGIC( user1 != 0, "user1 = 0" );
+  ASSERT_LOGIC( user2 != 0, "user2 = 0" );
 
   int u1 = 0, u2 = 0;
 

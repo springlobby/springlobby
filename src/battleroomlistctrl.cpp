@@ -5,6 +5,7 @@
 
 #include <wx/intl.h>
 #include <wx/menu.h>
+#include <stdexcept>
 
 #include "battleroomlistctrl.h"
 #include "iconimagelist.h"
@@ -152,7 +153,7 @@ void BattleroomListCtrl::UpdateList()
 void BattleroomListCtrl::AddUser( User& user )
 {
   int index = InsertItem( 0, ICON_NREADY );
-  assert( index != -1 );
+  ASSERT_LOGIC( index != -1, "index = -1" );
   SetItemData(index, (wxUIntPtr)&user );
 
   UpdateUser( index );
@@ -174,12 +175,12 @@ void BattleroomListCtrl::UpdateUser( User& user )
 
 void BattleroomListCtrl::UpdateUser( const int& index )
 {
-  assert( index != -1 );
+  ASSERT_LOGIC( index != -1, "index = -1" );
 
   wxListItem item;
   item.SetId( index );
 
-  if (!GetItem( item )) assert(false);
+  ASSERT_LOGIC( GetItem( item ), "!GetItem" );
 
   User& user = *((User*)GetItemData( index ));
 
@@ -239,7 +240,7 @@ int BattleroomListCtrl::GetUserIndex( User& user )
 void BattleroomListCtrl::AddBot( BattleBot& bot )
 {
   int index = InsertItem( 0, ICON_BOT );
-  assert( index != -1 );
+  ASSERT_LOGIC( index != -1, "index = -1" );
   SetItemData(index, (wxUIntPtr)&bot );
 
   UpdateBot( index );
@@ -261,12 +262,12 @@ void BattleroomListCtrl::UpdateBot( BattleBot& bot )
 
 void BattleroomListCtrl::UpdateBot( const int& index )
 {
-  assert( index != -1 );
+  ASSERT_LOGIC( index != -1, "index = -1" );
 
   wxListItem item;
   item.SetId( index );
 
-  if (!GetItem( item )) assert(false);
+  ASSERT_LOGIC( GetItem( item ), "!GetItem" );
 
   BattleBot& bot = *((BattleBot*)GetItemData( index ));
 
