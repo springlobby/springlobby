@@ -57,11 +57,10 @@ bool SpringLobbyApp::OnInit()
       wxOK | wxICON_INFORMATION, &m_ui->mw() );
     m_ui->mw().ShowConfigure();
   } else {
-    if ( usync()->IsLoaded() ) m_ui->Connect();
-    else m_ui->mw().ShowConfigure();
+    m_ui->Connect();
   }
-
   m_ui->ReloadUnitSync();
+
 
   m_timer->Start( TIMER_INTERVAL );
 
