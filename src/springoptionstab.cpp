@@ -421,6 +421,8 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
   sett().SetSpringUseDefLoc( m_exec_def_radio->GetValue() );
   sett().SetUnitSyncUseDefLoc( m_sync_def_radio->GetValue() );
 
+  if ( sett().IsFirstRun() ) return;
+
   usync()->FreeUnitSyncLib();
   if ( !usync()->LoadUnitSyncLib() ) {
     wxMessageBox( _("SpringLobby is unable to load you unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );

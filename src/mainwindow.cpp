@@ -258,7 +258,7 @@ void MainWindow::CloseAllChats()
 //! @brief Displays the lobby configuration.
 void MainWindow::ShowConfigure()
 {
-  m_func_tabs->SetSelection( 2 );
+  m_func_tabs->SetSelection( 3 );
 }
 
 

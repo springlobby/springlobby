@@ -46,7 +46,7 @@ typedef void (USYNC_CALL_CONV *CloseFileVFSPtr)(int);
 class SpringUnitSync : public IUnitSync
 {
   public:
-    SpringUnitSync(): m_loaded(false) { LoadUnitSyncLib(); }
+    SpringUnitSync(): m_loaded(false) { /*LoadUnitSyncLib();*/ }
     ~SpringUnitSync() { FreeUnitSyncLib(); }
 
     int GetNumMods();

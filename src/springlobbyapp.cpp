@@ -47,8 +47,8 @@ bool SpringLobbyApp::OnInit()
 
   InitDirs();
 
-  usync()->LoadUnitSyncLib();
   m_ui = new Ui();
+  debug("Ui created");
 
   m_ui->ShowMainWindow();
 
@@ -60,6 +60,8 @@ bool SpringLobbyApp::OnInit()
     if ( usync()->IsLoaded() ) m_ui->Connect();
     else m_ui->mw().ShowConfigure();
   }
+
+  m_ui->ReloadUnitSync();
 
   m_timer->Start( TIMER_INTERVAL );
 
