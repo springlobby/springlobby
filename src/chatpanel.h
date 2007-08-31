@@ -81,6 +81,8 @@ class ChatPanel : public wxPanel
 
     bool IsOk();
 
+    void CheckLength();
+
   protected:
     void _SetChannel( Channel* channel );
     void _OutputLine( const wxString& message, const wxColour& col );

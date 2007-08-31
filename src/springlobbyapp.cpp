@@ -53,7 +53,7 @@ bool SpringLobbyApp::OnInit()
   m_ui->ShowMainWindow();
 
   if ( sett().IsFirstRun() ) {
-    wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nLooks like this is the first time you use SpringLobby. I have guessed\na configuration that I think will work for you but you should review it,\necpecially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect\nto a server, and enjoy a nice game of Spring :)"), _("Welcome"),
+    wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nLooks like this is the first time you use SpringLobby. I have guessed a configuration that I think will work for you but you should review it, ecpecially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
       wxOK | wxICON_INFORMATION, &m_ui->mw() );
     m_ui->mw().ShowConfigure();
   } else {

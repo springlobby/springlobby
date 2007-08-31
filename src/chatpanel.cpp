@@ -150,6 +150,16 @@ ChatPanel::~ChatPanel()
 }
 
 
+void ChatPanel::CheckLength()
+{
+  if ( m_chatlog_text->GetNumberOfLines() > 1000 ) {
+    int end = 0;
+    for ( int i = 0; i < 20; i++ ) end += m_chatlog_text->GetLineLength( i ) + 1;
+    m_chatlog_text->Remove( 0, end );
+  }
+}
+
+
 User& ChatPanel::GetMe()
 {
   return m_ui.GetServer().GetMe();
@@ -162,6 +172,7 @@ void ChatPanel::_OutputLine( const wxString& message, const wxColour& col )
   m_chatlog_text->SetDefaultStyle(wxTextAttr(col));
   m_chatlog_text->Freeze();
   m_chatlog_text->AppendText( message + _T("\n") );
+  CheckLength();
 #ifdef __WXMSW__
   m_chatlog_text->ScrollLines( 10 );
   m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
