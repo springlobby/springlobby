@@ -201,13 +201,15 @@ void ConnectWindow::ReloadServerList()
 void ConnectWindow::OnOk(wxCommandEvent& event)
 {
   Hide();
+  wxString HostAddress = m_server_combo->GetValue();
+  if (!HostAddress.Contains(_T(":")) && HostAddress != _T(DEFSETT_DEFAULT_SERVER) ) HostAddress+= _T(":") + wxString::Format(_T("%d"), DEFSETT_DEFAULT_SERVER_PORT ) ;
   if ( m_tabs->GetSelection() <= 0 ) {
-    sett().SetDefaultServer( STD_STRING(m_server_combo->GetValue()) );
-    sett().SetServerAccountNick( STD_STRING(m_server_combo->GetValue()), STD_STRING(m_nick_text->GetValue()) );
-    sett().SetServerAccountSavePass( STD_STRING(m_server_combo->GetValue()), m_rpass_check->GetValue() );
+    sett().SetDefaultServer( STD_STRING( HostAddress ) );
+    sett().SetServerAccountNick( STD_STRING( HostAddress ), STD_STRING(m_nick_text->GetValue()) );
+    sett().SetServerAccountSavePass( STD_STRING( HostAddress ), m_rpass_check->GetValue() );
 
     // We assume that the server is given as : "host:port" so we split based on ":"
-    wxArrayString serverString = wxStringTokenize(m_server_combo->GetValue(),_T(":") );
+    wxArrayString serverString = wxStringTokenize( HostAddress ,_T(":") );
 
     if ( serverString.GetCount() == 0 ) {
       wxMessageBox( _("Invalid host/port or servername."), _("Invalid host"), wxOK );
@@ -220,9 +222,13 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
         wxMessageBox( _("Invalid port."), _("Invalid port"), wxOK );
         return;
       }
-      sett().AddServer( STD_STRING(m_server_combo->GetValue()) );
-      sett().SetServerHost( STD_STRING(m_server_combo->GetValue()),STD_STRING(serverString[0]) );
-      sett().SetServerPort( STD_STRING(m_server_combo->GetValue()), (int)port );
+      if( port < 1 || port > 65535) {
+        wxMessageBox( _("Port number out of range.\n\nIt must be an integer between 1 and 65535"), _("Invalid port"), wxOK );
+        return;
+      }
+      sett().AddServer( STD_STRING( HostAddress ) );
+      sett().SetServerHost( STD_STRING( HostAddress ),STD_STRING(serverString[0]) );
+      sett().SetServerPort( STD_STRING( HostAddress ), (int)port );
     }
 
     if ( serverString.GetCount() != 1 && serverString.GetCount() != 2 ) {
@@ -231,10 +237,11 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
     }
 
     sett().SaveSettings();
+    ReloadServerList();
 
-    m_ui.DoConnect( m_server_combo->GetValue(), m_nick_text->GetValue(), m_pass_text->GetValue() );
+    m_ui.DoConnect( HostAddress, m_nick_text->GetValue(), m_pass_text->GetValue() );
   } else {
-    if ( m_ui.DoRegister( m_server_combo->GetValue(), m_regnick_text->GetValue(), m_regpass1_text->GetValue() ) ) {
+    if ( m_ui.DoRegister( HostAddress, m_regnick_text->GetValue(), m_regpass1_text->GetValue() ) ) {
        m_tabs->SetSelection( 0 );
        m_nick_text->SetValue(m_regnick_text->GetValue());
        m_pass_text->SetValue(m_regpass1_text->GetValue());

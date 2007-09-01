@@ -16,6 +16,7 @@
 
 class wxConfigBase;
 
+
 //! @brief Class used to store and restore application settings.
 class Settings
 {
@@ -102,7 +103,9 @@ class Settings
     std::string GetLastAI();
 
   protected:
+
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
+
 };
 
 Settings& sett();
