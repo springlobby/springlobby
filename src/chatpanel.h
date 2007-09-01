@@ -9,6 +9,7 @@ class wxSizeEvent;
 class wxBoxSizer;
 class wxSplitterWindow;
 class wxTextCtrl;
+class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
 class NickListCtrl;
@@ -75,6 +76,8 @@ class ChatPanel : public wxPanel
     void OnSay( wxCommandEvent& event );
     void OnResize( wxSizeEvent& event );
 
+    void OnLinkEvent ( wxTextUrlEvent& event );
+
     wxString GetChatTypeStr();
 
     User& GetMe();
@@ -126,6 +129,7 @@ enum
 {
     CHAT_SEND = wxID_HIGHEST,
     CHAT_TEXT,
+    CHAT_LOG,
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H

@@ -30,6 +30,8 @@ BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
   EVT_TEXT_ENTER ( CHAT_TEXT, ChatPanel::OnSay   )
   EVT_BUTTON     ( CHAT_SEND, ChatPanel::OnSay   )
   EVT_SIZE       (            ChatPanel::OnResize)
+  EVT_TEXT_URL   ( CHAT_LOG , ChatPanel::OnLinkEvent )
+
 
 END_EVENT_TABLE()
 
@@ -101,7 +103,7 @@ void ChatPanel::_CreateControls( )
   }
 
   // Creating ui elements
-  m_chatlog_text = new wxTextCtrl( m_chat_panel, -1, _T(""), wxDefaultPosition, wxDefaultSize,
+  m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T(""), wxDefaultPosition, wxDefaultSize,
                              wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 
   m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T(""), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), wxTE_PROCESS_ENTER );
@@ -188,6 +190,15 @@ void ChatPanel::OnResize( wxSizeEvent& event )
   if ( m_show_nick_list ) {
     wxSize s = m_splitter->GetSize();
     m_splitter->SetSashPosition( s.GetWidth() - 238, true );
+  }
+}
+
+void ChatPanel::OnLinkEvent( wxTextUrlEvent& event )
+{
+  if (!event.GetMouseEvent().LeftDown() ) return;
+  wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd());
+  if ( !wxLaunchDefaultBrowser( url ) ) {
+    wxMessageBox( _T("Couldn't launch browser. URL is: ") + url, _T("Couldn't launch browser.")  );
   }
 }
 
