@@ -28,6 +28,7 @@ BEGIN_EVENT_TABLE(ConnectWindow, wxFrame)
 
   EVT_BUTTON ( wxID_OK,     ConnectWindow::OnOk )
   EVT_BUTTON ( wxID_CANCEL, ConnectWindow::OnCancel )
+  EVT_COMBOBOX ( wxID_ANY , ConnectWindow::OnServerChange )
 
 END_EVENT_TABLE()
 
@@ -195,6 +196,14 @@ void ConnectWindow::ReloadServerList()
     m_server_combo->AppendString( WX_STRING(sett().GetServerName( i )) );
   }
   m_server_combo->SetValue( WX_STRING(sett().GetDefaultServer()) );
+}
+
+void ConnectWindow::OnServerChange( wxCommandEvent& event )
+{
+  wxString HostAddress = m_server_combo->GetValue();
+  if (!HostAddress.Contains(_T(":")) && HostAddress != wxString(DEFSETT_DEFAULT_SERVER, wxConvUTF8) ) HostAddress+= _T(":") + wxString::Format(_T("%d"), DEFSETT_DEFAULT_SERVER_PORT );
+  m_nick_text->SetValue( WX_STRING( sett().GetServerAccountNick( STD_STRING( HostAddress ) ) ) );
+  if ( sett().GetServerAccountSavePass( STD_STRING( HostAddress ) ) ) m_pass_text->SetValue ( WX_STRING ( sett().GetServerAccountPass ( STD_STRING ( HostAddress ) ) ) );
 }
 
 

@@ -25,6 +25,8 @@ class ConnectWindow : public wxFrame
 
     void ReloadServerList();
 
+    void OnServerChange( wxCommandEvent& event );
+
     void OnOk(wxCommandEvent& event);
     void OnCancel(wxCommandEvent& event);
 
