@@ -27,6 +27,8 @@ springlobby_LDADD = \
 
 # the following line is searched for in a script to add filenames under it
 springlobby_SOURCES = \
+	src/images/host_spectator.xpm \
+	src/images/host.xpm \
 	src/images/not_found_icon.xpm \
 	src/images/reload_map.xpm \
 	src/images/download_map.xpm \

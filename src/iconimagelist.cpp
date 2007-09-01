@@ -42,6 +42,8 @@
 #include "images/nready_q.xpm"
 
 #include "images/spectator.xpm"
+#include "images/host.xpm"
+#include "images/host_spectator.xpm"
 
 #include "images/arm.xpm"
 #include "images/core.xpm"
@@ -76,14 +78,16 @@ IconImageList::IconImageList() : wxImageList(16,16)
   Add( wxBitmap(started_game_xpm) );
 
   Add( wxBitmap(ready_unsync_xpm) );
-  Add( wxBitmap(ready_q_xpm) );
   Add( wxBitmap(nready_unsync_xpm) );
+  Add( wxBitmap(ready_q_xpm) );
   Add( wxBitmap(nready_q_xpm) );
 
   Add( wxBitmap(nexists_xpm) );
   Add( wxBitmap(exists_xpm) );
 
   Add( wxBitmap(spectator_xpm) );
+  Add( wxBitmap(host_xpm) );
+  Add( wxBitmap(host_spectator_xpm) );
 
   Add( wxBitmap(arm_xpm) );
   Add( wxBitmap(core_xpm) );
