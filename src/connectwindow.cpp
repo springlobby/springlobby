@@ -202,7 +202,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
 {
   Hide();
   wxString HostAddress = m_server_combo->GetValue();
-  if (!HostAddress.Contains(_T(":")) && HostAddress != _T(DEFSETT_DEFAULT_SERVER) ) HostAddress+= _T(":") + wxString::Format(_T("%d"), DEFSETT_DEFAULT_SERVER_PORT ) ;
+  if (!HostAddress.Contains(_T(":")) && HostAddress != wxString(DEFSETT_DEFAULT_SERVER, wxConvUTF8) ) HostAddress+= _T(":") + wxString::Format(_T("%d"), DEFSETT_DEFAULT_SERVER_PORT ) ;
   if ( m_tabs->GetSelection() <= 0 ) {
     sett().SetDefaultServer( STD_STRING( HostAddress ) );
     sett().SetServerAccountNick( STD_STRING( HostAddress ), STD_STRING(m_nick_text->GetValue()) );
