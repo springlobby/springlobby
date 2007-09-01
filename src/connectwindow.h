@@ -76,4 +76,11 @@ class ConnectWindow : public wxFrame
     DECLARE_EVENT_TABLE()
 };
 
+
+enum
+{
+  CON_SERV_SEL = wxID_HIGHEST
+};
+
+
 #endif // SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H

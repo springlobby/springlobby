@@ -28,7 +28,7 @@ BEGIN_EVENT_TABLE(ConnectWindow, wxFrame)
 
   EVT_BUTTON ( wxID_OK,     ConnectWindow::OnOk )
   EVT_BUTTON ( wxID_CANCEL, ConnectWindow::OnCancel )
-  EVT_COMBOBOX ( wxID_ANY , ConnectWindow::OnServerChange )
+  EVT_COMBOBOX ( CON_SERV_SEL , ConnectWindow::OnServerChange )
 
 END_EVENT_TABLE()
 
@@ -56,7 +56,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_register_tab = new wxPanel   ( m_tabs, -1 );
 
   m_server_lbl =   new wxStaticText( m_login_tab, -1, _("Server") );
-  m_server_combo = new wxComboBox  ( m_login_tab, -1, server );
+  m_server_combo = new wxComboBox  ( m_login_tab, CON_SERV_SEL, server );
   m_server_combo->SetToolTip( _("Server to connect to. You can connect to any server you like by typing in hostaddress:port format.") );
 
   m_ser_acc_line = new wxStaticLine( m_login_tab );
