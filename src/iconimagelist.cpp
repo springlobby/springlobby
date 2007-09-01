@@ -169,6 +169,12 @@ int IconImageList::GetColourIcon( const int& num )
 }
 
 
+int IconImageList::GetHostIcon( const bool& spectator )
+{
+  return spectator?ICON_HOST_SPECTATOR:ICON_HOST;
+}
+
+
 void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 {
   int index = GetColourIcon( num );

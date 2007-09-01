@@ -184,9 +184,20 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 
   User& user = *((User*)GetItemData( index ));
 
+  // Bold font if self.
+  if ( &user == &m_battle.GetMe() ) item.SetFont( wxFont( 10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD ) );
+  else item.SetFont( wxFont( 10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
+  SetItem( item );
+
   icons().SetColourIcon( user.BattleStatus().team, wxColour( user.BattleStatus().color_r, user.BattleStatus().color_g, user.BattleStatus().color_b ) );
 
-  SetItemImage( index, (user.BattleStatus().spectator)?ICON_SPECTATOR:IconImageList::GetReadyIcon( user.BattleStatus().ready, user.BattleStatus().sync ) );
+  int statimg;
+  if ( &m_battle.GetFounder() == &user ) {
+    statimg = IconImageList::GetHostIcon( user.BattleStatus().spectator );
+  } else {
+    statimg = user.BattleStatus().spectator?ICON_SPECTATOR:IconImageList::GetReadyIcon( user.BattleStatus().ready, user.BattleStatus().sync );
+  }
+  SetItemImage( index, statimg );
 
   SetItemColumnImage( index, 1, -1 );
 
@@ -209,7 +220,11 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 
   SetItemColumnImage( index, 3, IconImageList::GetFlagIcon( user.GetCountry() ) );
   SetItemColumnImage( index, 4, IconImageList::GetRankIcon( user.GetStatus().rank ) );
+
   SetItem( index, 5, WX_STRING( user.GetNick() ) );
+  if ( !user.Status().bot ) SetItemColumnImage( index, 5, -1 );
+  else SetItemColumnImage( index, 5, ICON_BOT );
+
   if ( !user.BattleStatus().spectator ) {
     SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
     SetItem( index, 7, wxString::Format( _T("%d"), user.BattleStatus().ally + 1 ) );
@@ -219,6 +234,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     SetItem( index, 7, _T("") );
     SetItem( index, 9, _T("") );
   }
+
   SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
 }
 
