@@ -332,24 +332,27 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s += wxString::Format( _T("\t\tTeamLeader=%d;\n") ,TeamLeader );
     s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[bot.bs.ally] );
     const char* old_locale = std::setlocale(LC_NUMERIC, "C");
-    s += wxString::Format( _T("\t\tRGBColor=%.5f %.5f %.5f;\n"),
-                           (double)(bot.bs.color_r/255.0),
-                            (double)(bot.bs.color_g/255.0),
-                             (double)(bot.bs.color_b/255.0)
-                         );
+    s += wxString::Format(
+      _T("\t\tRGBColor=%.5f %.5f %.5f;\n"),
+      (double)(bot.bs.color_r/255.0),
+      (double)(bot.bs.color_g/255.0),
+      (double)(bot.bs.color_b/255.0)
+    );
+
     std::setlocale(LC_NUMERIC, old_locale);
     usync()->SetCurrentMod(STD_STRING(battle.GetModName()) );
     s += WX_STRING(("\t\tSide=" + usync()->GetSideName( bot.bs.side ) + ";\n"));
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), bot.bs.handicap );
 
     wxString ai = WX_STRING( bot.aidll );
-    if ( wxFileName::FileExists( WX_STRING( sett().GetSpringDir() ) + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
+/*    if ( wxFileName::FileExists( WX_STRING( sett().GetSpringDir() ) + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
       ai += _T(".dll");
     } else {
       ai += _T(".so");
-    }
+    }*/
 
-    s += WX_STRING(("\t\tAIDLL=AI/Bot-libs/" + STD_STRING(ai) + ";\n"));
+    //s += WX_STRING(("\t\tAIDLL=AI/Bot-libs/" + STD_STRING(ai) + ";\n"));
+    s += _T("\t\tAIDLL=") + usync()->GetBotLibPath( ai ) + _T(";\n");
     s +=  _T("\t}\n");
   }
   debug("13");
@@ -554,12 +557,13 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), bot->bs.handicap );
     if ( bot->aidll != "" ) {
       wxString ai = WX_STRING( bot->aidll );
-      if ( wxFileName::FileExists( WX_STRING( sett().GetSpringDir() ) + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
+      /*if ( wxFileName::FileExists( WX_STRING( sett().GetSpringDir() ) + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
         ai += _T(".dll");
       } else {
         ai += _T(".so");
-      }
-      s += _T("\t\tAIDLL=AI/Bot-libs/") + ai + _T(";\n");
+      }*/
+      s += _T("\t\tAIDLL=") + usync()->GetBotLibPath( ai ) + _T(";\n");
+      //s += _T("\t\tAIDLL=AI/Bot-libs/") + ai + _T(";\n");
     }
     s +=  _T("\t}\n");
   }

@@ -363,7 +363,7 @@ wxImage SpringUnitSync::GetSidePicture( const std::string& SideName )
 
 wxArrayString SpringUnitSync::GetAIList()
 {
-  ASSERT_RUNTIME ( m_loaded, "unitsync not loaded" );
+  if ( !m_loaded ) return wxArrayString();
 
   int ini = m_init_find_vfs ( "AI/Bot-libs/*" );
   int BufferSize = 400;
@@ -381,6 +381,29 @@ wxArrayString SpringUnitSync::GetAIList()
   } while (ini != 0);
 
   return ret;
+}
+
+
+wxString SpringUnitSync::GetBotLibPath( const wxString& botlibname )
+{
+  if ( !m_loaded ) return wxEmptyString;
+
+  debug_func( "botlibname = \"" + STD_STRING(botlibname) + "\"" );
+  wxString search = _T("AI/Bot-libs/") + botlibname + _T("*");
+  int ini = m_init_find_vfs ( search.mb_str( wxConvUTF8 ) );
+  int BufferSize = 400;
+  char * FilePath = new char [BufferSize];
+
+  do
+  {
+    ini = m_find_files_vfs ( ini, FilePath, BufferSize );
+    wxString FileName = wxString( FilePath, wxConvUTF8 );
+    if ( !FileName.Contains ( _T(".dll") ) && !FileName.Contains (  _T(".so") ) ) continue; // FIXME this isn't exactly portable
+    debug( "AIdll: " + STD_STRING(FileName) );
+    return FileName;
+  } while (ini != 0);
+
+  return wxEmptyString;
 }
 
 

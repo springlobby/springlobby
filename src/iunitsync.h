@@ -82,6 +82,7 @@ class IUnitSync
     virtual std::string GetSpringVersion() = 0;
 
     virtual wxArrayString GetAIList() = 0;
+    virtual wxString GetBotLibPath( const wxString& botlibname ) = 0;
 
 };
 
