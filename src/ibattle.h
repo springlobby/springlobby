@@ -125,6 +125,9 @@ class IBattle
     virtual void GetFreePosition( int& x, int& y ) {}
     virtual int GetFreeAlly() { return 0; }
 
+    virtual void DisableUnit( const std::string& unitname ) {}
+    virtual void EnableUnit( const std::string& unitname ) {}
+    virtual void EnableAllUnits() {}
     virtual int GetNumDisabledUnits() { return 0; }
     virtual std::string DisabledUnits() { return ""; }
 

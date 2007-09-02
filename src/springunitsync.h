@@ -78,9 +78,11 @@ class SpringUnitSync : public IUnitSync
 
     wxArrayString GetAIList();
     wxString GetBotLibPath( const wxString& botlibname );
+
     int GetNumUnits();
     int GetUnitIndex( const std::string& name );
     std::string GetFullUnitName( int index );
+    wxArrayString GetUnitsList();
 
     wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
     wxImage GetCachedMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );

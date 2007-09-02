@@ -847,6 +847,11 @@ void TASServer::SendHostInfo( HostInfo update )
     }
 
   }
+  if ( update & HI_Restrictions ) {
+    std::string units = battle.DisabledUnits();
+    m_sock->Send( "ENABLEALLUNITS\n");
+    if ( units.length() > 0 ) m_sock->Send( "DISABLEUNIT " + units + "\n");
+  }
 }
 
 

@@ -73,6 +73,7 @@ class IUnitSync
     virtual int GetNumUnits() = 0;
     virtual int GetUnitIndex( const std::string& name ) = 0;
     virtual std::string GetFullUnitName( int index ) = 0;
+    virtual wxArrayString GetUnitsList() = 0;
 
     virtual bool LoadUnitSyncLib() = 0;
     virtual void FreeUnitSyncLib() = 0;

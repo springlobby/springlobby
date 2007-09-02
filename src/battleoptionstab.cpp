@@ -14,10 +14,11 @@
 #include <wx/sizer.h>
 #include <wx/radiobox.h>
 #include <wx/window.h>
-#include <wx/listctrl.h>
+#include <wx/listbox.h>
 #include <wx/settings.h>
 #include <wx/arrstr.h>
 #include <wx/choice.h>
+#include <wx/tokenzr.h>
 #include <wx/slider.h>
 #include <wx/checklst.h>
 #include <stdexcept>
@@ -60,161 +61,160 @@ END_EVENT_TABLE()
 BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, bool singleplayer ):
   wxPanel( parent, -1 ), m_ui(ui), m_battle(battle), m_sp(singleplayer)
 {
-	wxBoxSizer* m_main_sizer;
-	m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
+  wxBoxSizer* m_main_sizer;
+  m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	wxBoxSizer* m_main_options_sizer;
-	m_main_options_sizer = new wxBoxSizer( wxVERTICAL );
+  wxBoxSizer* m_main_options_sizer;
+  m_main_options_sizer = new wxBoxSizer( wxVERTICAL );
 
-	wxString m_end_radiosChoices[] = { _("Continue if commander dies"), _("End if commander dies"), _("Linage mode") };
-	int m_end_radiosNChoices = sizeof( m_end_radiosChoices ) / sizeof( wxString );
-	m_end_radios = new wxRadioBox( this, BOPTS_END, _("End condition"), wxDefaultPosition, wxDefaultSize, m_end_radiosNChoices, m_end_radiosChoices, 1, wxRA_SPECIFY_COLS );
-	m_main_options_sizer->Add( m_end_radios, 0, wxALL|wxEXPAND, 5 );
+  wxString m_end_radiosChoices[] = { _("Continue if commander dies"), _("End if commander dies"), _("Linage mode") };
+  int m_end_radiosNChoices = sizeof( m_end_radiosChoices ) / sizeof( wxString );
+  m_end_radios = new wxRadioBox( this, BOPTS_END, _("End condition"), wxDefaultPosition, wxDefaultSize, m_end_radiosNChoices, m_end_radiosChoices, 1, wxRA_SPECIFY_COLS );
+  m_main_options_sizer->Add( m_end_radios, 0, wxALL|wxEXPAND, 5 );
 
-	wxStaticBoxSizer* m_resources_box;
-	m_resources_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Resources") ), wxHORIZONTAL );
+  wxStaticBoxSizer* m_resources_box;
+  m_resources_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Resources") ), wxHORIZONTAL );
 
-	wxBoxSizer* m_metal_sizer;
-	m_metal_sizer = new wxBoxSizer( wxVERTICAL );
+  wxBoxSizer* m_metal_sizer;
+  m_metal_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_metal_lbl = new wxStaticText( this, wxID_ANY, _("Start Metal"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_metal_sizer->Add( m_metal_lbl, 0, wxALL, 5 );
+  m_metal_lbl = new wxStaticText( this, wxID_ANY, _("Start Metal"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_metal_sizer->Add( m_metal_lbl, 0, wxALL, 5 );
 
-	m_metal_slider = new wxSlider( this, BOPTS_SLIDE, 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
-	m_metal_slider->SetToolTip( _("The amount of metal each player starts with.") );
+  m_metal_slider = new wxSlider( this, BOPTS_SLIDE, 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
+  m_metal_slider->SetToolTip( _("The amount of metal each player starts with.") );
 
-	m_metal_sizer->Add( m_metal_slider, 1, wxALL|wxEXPAND, 5 );
+  m_metal_sizer->Add( m_metal_slider, 1, wxALL|wxEXPAND, 5 );
 
-	m_resources_box->Add( m_metal_sizer, 0, wxEXPAND, 5 );
+  m_resources_box->Add( m_metal_sizer, 0, wxEXPAND, 5 );
 
-	m_staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
-	m_resources_box->Add( m_staticline2, 0, wxALL|wxEXPAND, 5 );
+  m_staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+  m_resources_box->Add( m_staticline2, 0, wxALL|wxEXPAND, 5 );
 
-	wxBoxSizer* m_energy_sizer;
-	m_energy_sizer = new wxBoxSizer( wxVERTICAL );
+  wxBoxSizer* m_energy_sizer;
+  m_energy_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_energy_lbl = new wxStaticText( this, wxID_ANY, _("Start Energy"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_energy_sizer->Add( m_energy_lbl, 0, wxALL, 5 );
+  m_energy_lbl = new wxStaticText( this, wxID_ANY, _("Start Energy"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_energy_sizer->Add( m_energy_lbl, 0, wxALL, 5 );
 
-	m_energy_slider = new wxSlider( this, BOPTS_SLIDE, 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
-	m_energy_slider->SetToolTip( _("The amount of energy each player starts with.") );
+  m_energy_slider = new wxSlider( this, BOPTS_SLIDE, 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
+  m_energy_slider->SetToolTip( _("The amount of energy each player starts with.") );
 
-	m_energy_sizer->Add( m_energy_slider, 1, wxALL|wxEXPAND, 5 );
+  m_energy_sizer->Add( m_energy_slider, 1, wxALL|wxEXPAND, 5 );
 
-	m_resources_box->Add( m_energy_sizer, 1, wxEXPAND, 5 );
+  m_resources_box->Add( m_energy_sizer, 1, wxEXPAND, 5 );
 
-	m_staticline21 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
-	m_resources_box->Add( m_staticline21, 0, wxALL|wxEXPAND, 5 );
+  m_staticline21 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+  m_resources_box->Add( m_staticline21, 0, wxALL|wxEXPAND, 5 );
 
-	wxBoxSizer* m_units_sizer;
-	m_units_sizer = new wxBoxSizer( wxVERTICAL );
+  wxBoxSizer* m_units_sizer;
+  m_units_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_units_lbl = new wxStaticText( this, wxID_ANY, _("Max units"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_units_sizer->Add( m_units_lbl, 0, wxALL, 5 );
+  m_units_lbl = new wxStaticText( this, wxID_ANY, _("Max units"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_units_sizer->Add( m_units_lbl, 0, wxALL, 5 );
 
   m_units_slider = new wxSlider( this, BOPTS_SLIDE, 500, 10, 5000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
-	m_units_slider->SetToolTip( _("The maximun number of units allowed per player.") );
+  m_units_slider->SetToolTip( _("The maximun number of units allowed per player.") );
 
-	m_units_sizer->Add( m_units_slider, 1, wxALL|wxEXPAND, 5 );
+  m_units_sizer->Add( m_units_slider, 1, wxALL|wxEXPAND, 5 );
 
-	m_resources_box->Add( m_units_sizer, 1, wxEXPAND, 5 );
+  m_resources_box->Add( m_units_sizer, 1, wxEXPAND, 5 );
 
-	m_main_options_sizer->Add( m_resources_box, 1, wxALL|wxEXPAND, 5 );
+  m_main_options_sizer->Add( m_resources_box, 1, wxALL|wxEXPAND, 5 );
 
-	wxStaticBoxSizer* m_options_box;
-	m_options_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Options") ), wxVERTICAL );
+  wxStaticBoxSizer* m_options_box;
+  m_options_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Options") ), wxVERTICAL );
 
-	m_options_checks = new wxCheckListBox( this, BOPTS_OPTS );
-	m_options_checks->Append( _("Limit d-gun") );
-	m_options_checks->Append( _("Ghosted buildings") );
-	m_options_checks->Append( _("Diminishing metal makers") );
-	if ( m_sp ) m_options_checks->Append( _("Random start postisions") );
+  m_options_checks = new wxCheckListBox( this, BOPTS_OPTS );
+  m_options_checks->Append( _("Limit d-gun") );
+  m_options_checks->Append( _("Ghosted buildings") );
+  m_options_checks->Append( _("Diminishing metal makers") );
+  if ( m_sp ) m_options_checks->Append( _("Random start postisions") );
 
-	m_options_box->Add( m_options_checks, 0, wxALL|wxEXPAND, 5 );
+  m_options_box->Add( m_options_checks, 0, wxALL|wxEXPAND, 5 );
 
-	m_main_options_sizer->Add( m_options_box, 0, wxALL|wxEXPAND, 5 );
+  m_main_options_sizer->Add( m_options_box, 0, wxALL|wxEXPAND, 5 );
 
-	m_main_sizer->Add( m_main_options_sizer, 0, wxEXPAND, 5 );
+  m_main_sizer->Add( m_main_options_sizer, 0, wxEXPAND, 5 );
 
-	wxStaticBoxSizer* m_restr_box;
-	m_restr_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Unit restrictions") ), wxVERTICAL );
+  wxStaticBoxSizer* m_restr_box;
+  m_restr_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Unit restrictions") ), wxVERTICAL );
 
-	wxBoxSizer* m_top_restr_sizer;
-	m_top_restr_sizer = new wxBoxSizer( wxHORIZONTAL );
+  wxBoxSizer* m_top_restr_sizer;
+  m_top_restr_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	wxBoxSizer* m_allowed_sizer;
-	m_allowed_sizer = new wxBoxSizer( wxVERTICAL );
+  wxBoxSizer* m_allowed_sizer;
+  m_allowed_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_aloowed_lbl = new wxStaticText( this, wxID_ANY, _("Allowed units"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_allowed_sizer->Add( m_aloowed_lbl, 0, wxALL, 5 );
+  m_aloowed_lbl = new wxStaticText( this, wxID_ANY, _("Allowed units"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_allowed_sizer->Add( m_aloowed_lbl, 0, wxALL, 5 );
 
-	m_allowed_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	m_allowed_list->SetToolTip( _("Units in this list will be available in the game.") );
+  m_allowed_list = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_MULTIPLE|wxLB_NEEDED_SB|wxLB_SORT );
+  m_allowed_list->SetToolTip( _("Units in this list will be available in the game.") );
 
-	m_allowed_sizer->Add( m_allowed_list, 1, wxALL|wxEXPAND, 5 );
+  m_allowed_sizer->Add( m_allowed_list, 1, wxALL|wxEXPAND, 5 );
 
-	m_top_restr_sizer->Add( m_allowed_sizer, 1, wxEXPAND, 5 );
+  m_top_restr_sizer->Add( m_allowed_sizer, 1, wxEXPAND, 5 );
 
-	wxBoxSizer* m_mid_btn_sizer;
-	m_mid_btn_sizer = new wxBoxSizer( wxVERTICAL );
+  wxBoxSizer* m_mid_btn_sizer;
+  m_mid_btn_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_mid_btn_sizer->Add( 0, 50, 0, wxEXPAND, 0 );
+  m_mid_btn_sizer->Add( 0, 50, 0, wxEXPAND, 0 );
 
-	m_restrict_btn = new wxButton( this, BOPTS_RESTRICT, _(">"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	m_mid_btn_sizer->Add( m_restrict_btn, 0, wxALL, 5 );
+  m_restrict_btn = new wxButton( this, BOPTS_RESTRICT, _(">"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_mid_btn_sizer->Add( m_restrict_btn, 0, wxALL, 5 );
 
-	m_allow_btn = new wxButton( this, BOPTS_ALLOW, _("<"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	m_mid_btn_sizer->Add( m_allow_btn, 0, wxALL, 5 );
+  m_allow_btn = new wxButton( this, BOPTS_ALLOW, _("<"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_mid_btn_sizer->Add( m_allow_btn, 0, wxALL, 5 );
 
-	m_top_restr_sizer->Add( m_mid_btn_sizer, 0, wxEXPAND, 5 );
+  m_top_restr_sizer->Add( m_mid_btn_sizer, 0, wxEXPAND, 5 );
 
-	wxBoxSizer* m_restricted_sizer;
-	m_restricted_sizer = new wxBoxSizer( wxVERTICAL );
+  wxBoxSizer* m_restricted_sizer;
+  m_restricted_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_restricted_lbl = new wxStaticText( this, wxID_ANY, _("Restricted units"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_restricted_sizer->Add( m_restricted_lbl, 0, wxALL, 5 );
+  m_restricted_lbl = new wxStaticText( this, wxID_ANY, _("Restricted units"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_restricted_sizer->Add( m_restricted_lbl, 0, wxALL, 5 );
 
-	m_restrict_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	m_restrict_list->SetToolTip( _("Units in this list will not be available in the game.") );
+  m_restrict_list = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_MULTIPLE|wxLB_NEEDED_SB|wxLB_SORT );
+  m_restrict_list->SetToolTip( _("Units in this list will not be available in the game.") );
 
-	m_restricted_sizer->Add( m_restrict_list, 1, wxALL|wxEXPAND, 5 );
+  m_restricted_sizer->Add( m_restrict_list, 1, wxALL|wxEXPAND, 5 );
 
-	m_top_restr_sizer->Add( m_restricted_sizer, 1, wxEXPAND, 5 );
+  m_top_restr_sizer->Add( m_restricted_sizer, 1, wxEXPAND, 5 );
 
-	m_restr_box->Add( m_top_restr_sizer, 1, wxEXPAND, 5 );
+  m_restr_box->Add( m_top_restr_sizer, 1, wxEXPAND, 5 );
 
-	wxBoxSizer* m_restricted_btn_sizer;
-	m_restricted_btn_sizer = new wxBoxSizer( wxHORIZONTAL );
+  wxBoxSizer* m_restricted_btn_sizer;
+  m_restricted_btn_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_load_btn = new wxButton( this, BOPTS_LOADRES, _("Load..."), wxDefaultPosition, wxDefaultSize, 0 );
-	m_load_btn->SetToolTip( _("Load a saved set of restrictions.") );
+  m_load_btn = new wxButton( this, BOPTS_LOADRES, _("Load..."), wxDefaultPosition, wxDefaultSize, 0 );
+  m_load_btn->SetToolTip( _("Load a saved set of restrictions.") );
 
-	m_restricted_btn_sizer->Add( m_load_btn, 0, wxALL, 5 );
+  m_restricted_btn_sizer->Add( m_load_btn, 0, wxALL, 5 );
 
-	m_save_btn = new wxButton( this, BOPTS_SAVERES, _("Save..."), wxDefaultPosition, wxDefaultSize, 0 );
-	m_save_btn->SetToolTip( _("Save a set of restrictions.") );
+  m_save_btn = new wxButton( this, BOPTS_SAVERES, _("Save..."), wxDefaultPosition, wxDefaultSize, 0 );
+  m_save_btn->SetToolTip( _("Save a set of restrictions.") );
 
-	m_restricted_btn_sizer->Add( m_save_btn, 0, wxALL, 5 );
+  m_restricted_btn_sizer->Add( m_save_btn, 0, wxALL, 5 );
 
-	m_restricted_btn_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+  m_restricted_btn_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-	m_clear_btn = new wxButton( this, BOPTS_CLEARRES, _("Clear"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_clear_btn->SetToolTip( _("Enable all units.") );
+  m_clear_btn = new wxButton( this, BOPTS_CLEARRES, _("Clear"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_clear_btn->SetToolTip( _("Enable all units.") );
 
-	m_restricted_btn_sizer->Add( m_clear_btn, 0, wxALL, 5 );
+  m_restricted_btn_sizer->Add( m_clear_btn, 0, wxALL, 5 );
 
-	m_restr_box->Add( m_restricted_btn_sizer, 0, wxEXPAND, 5 );
+  m_restr_box->Add( m_restricted_btn_sizer, 0, wxEXPAND, 5 );
 
-	m_main_sizer->Add( m_restr_box, 1, wxALL|wxEXPAND, 5 );
+  m_main_sizer->Add( m_restr_box, 1, wxALL|wxEXPAND, 5 );
 
-	this->SetSizer( m_main_sizer );
-	this->Layout();
+  this->SetSizer( m_main_sizer );
+  this->Layout();
 
   if ( !m_battle.IsFounderMe() ) {
     this->Enable( false );
   }
 
-  ReloadUnits();
   UpdateBattle();
 }
 
@@ -240,16 +240,94 @@ void BattleOptionsTab::UpdateBattle()
   m_options_checks->Check( LIMIT_DGUN_INDEX, m_battle.LimitDGun() );
   m_options_checks->Check( GHOUSTED_INDEX, m_battle.GhostedBuildings() );
   m_options_checks->Check( DIM_MMS_INDEX, m_battle.DimMMs() );
-  //m_options_checks->Check( LOCK_SPEED_INDEX, m_battle.opts().s );
 
+  ReloadRestrictions();
 }
 
 
-void BattleOptionsTab::ReloadUnits()
+void BattleOptionsTab::ReloadRestrictions()
 {
+  m_allowed_list->Clear();
+  m_restrict_list->Clear();
+  m_allowed_list->InsertItems( usync()->GetUnitsList(), 0 );
+  wxString units( m_battle.DisabledUnits().c_str(), wxConvUTF8 );
 
+  wxStringTokenizer list( units, _T(" ") );
+  while ( list.HasMoreTokens() ) {
+    wxString unit = list.GetNextToken();
+    Restrict( unit );
+  }
 }
 
+
+int BattleOptionsTab::GetAllowedUnitIndex( const wxString& name )
+{
+  for ( unsigned int i = 0; i < m_allowed_list->GetCount(); i++ ) {
+    wxString tmp = m_allowed_list->GetString( i );
+    tmp = tmp.AfterLast( '(' );
+    tmp = tmp.BeforeLast( ')' );
+    if ( name == tmp ) return i;
+  }
+  return -1;
+}
+
+
+int BattleOptionsTab::GetRestrictedUnitIndex( const wxString& name )
+{
+  for ( unsigned int i = 0; i < m_restrict_list->GetCount(); i++ ) {
+    wxString tmp = m_restrict_list->GetString( i );
+    tmp = tmp.AfterLast( '(' );
+    tmp = tmp.BeforeLast( ')' );
+    if ( name == tmp ) return i;
+  }
+  return -1;
+}
+
+
+bool BattleOptionsTab::IsRestricted( const wxString& name )
+{
+  return ( GetRestrictedUnitIndex( name ) >= 0 );
+}
+
+
+void BattleOptionsTab::Restrict( const wxString& name )
+{
+  int i = GetAllowedUnitIndex( name );
+  Restrict( i );
+}
+
+
+void BattleOptionsTab::Allow( const wxString& name )
+{
+  int i = GetRestrictedUnitIndex( name );
+  Allow( i );
+}
+
+
+void BattleOptionsTab::Restrict( int index )
+{
+  if ( index >= 0 ) {
+    wxString unit = m_allowed_list->GetString( index );
+    m_restrict_list->Append( unit );
+    m_allowed_list->Delete( index );
+    unit = unit.AfterLast( '(' );
+    unit = unit.BeforeLast( ')' );
+    m_battle.DisableUnit( STD_STRING(unit) );
+  }
+}
+
+
+void BattleOptionsTab::Allow( int index)
+{
+  if ( index >= 0 ) {
+    wxString unit = m_restrict_list->GetString( index );
+    m_allowed_list->Append( unit );
+    m_restrict_list->Delete( index );
+    unit = unit.AfterLast( '(' );
+    unit = unit.BeforeLast( ')' );
+    m_battle.EnableUnit( STD_STRING(unit) );
+  }
+}
 
 
   //////////////////////////////////////////////////////////////////////////
@@ -318,16 +396,47 @@ void BattleOptionsTab::OnSlideChanged( wxScrollEvent& event )
 
 void BattleOptionsTab::OnRestrict( wxCommandEvent& event )
 {
+  wxArrayInt sel;
+  wxArrayString names;
+
+  m_allowed_list->GetSelections( sel );
+  for ( unsigned int i = 0; i < sel.Count(); i++ ) {
+    wxString name = m_allowed_list->GetString( sel.Item( i ) );
+    name = name.AfterLast( '(' );
+    name = name.BeforeLast( ')' );
+    names.Add( name );
+  }
+  for ( unsigned int i = 0; i < names.Count(); i++ ) {
+    Restrict( names.Item( i ) );
+  }
+  if ( names.Count() > 0 ) m_battle.SendHostInfo( HI_Restrictions );
 }
 
 
 void BattleOptionsTab::OnAllow( wxCommandEvent& event )
 {
+  wxArrayInt sel;
+  wxArrayString names;
+
+  m_restrict_list->GetSelections( sel );
+  for ( unsigned int i = 0; i < sel.Count(); i++ ) {
+    wxString name = m_restrict_list->GetString( sel.Item( i ) );
+    name = name.AfterLast( '(' );
+    name = name.BeforeLast( ')' );
+    names.Add( name );
+  }
+  for ( unsigned int i = 0; i < names.Count(); i++ ) {
+    Allow( names.Item( i ) );
+  }
+  if ( names.Count() > 0 ) m_battle.SendHostInfo( HI_Restrictions );
+
 }
 
 
 void BattleOptionsTab::OnLoadRestrictions( wxCommandEvent& event )
 {
+  m_battle.EnableAllUnits();
+  ReloadRestrictions();
 }
 
 
@@ -338,5 +447,6 @@ void BattleOptionsTab::OnSaveRestrictions( wxCommandEvent& event )
 
 void BattleOptionsTab::OnClearRestrictions( wxCommandEvent& event )
 {
+
 }
 

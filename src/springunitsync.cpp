@@ -437,6 +437,21 @@ std::string SpringUnitSync::GetFullUnitName( int index )
 }
 
 
+wxArrayString SpringUnitSync::GetUnitsList()
+{
+  wxArrayString ret;
+  if (!m_loaded) return ret;
+  m_add_all_archives( GetModArchive( GetModIndex( m_current_mod ) ).c_str() );
+  while ( m_proc_units_nocheck() );
+  for ( int i = 0; i < m_get_unit_count(); i++ ) {
+    wxString tmp = wxString(m_get_unit_full_name(i), wxConvUTF8) + _T("(");
+    tmp += wxString(m_get_unit_name(i), wxConvUTF8) + _T(")");
+    ret.Add( tmp );
+  }
+  return ret;
+}
+
+
 wxString SpringUnitSync::GetCachedMinimapFileName( const std::string& mapname, int width, int height )
 {
   wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator();

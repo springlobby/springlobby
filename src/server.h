@@ -34,6 +34,7 @@ typedef int ServerError;
 #define HI_GameType 64
 #define HI_Options 128
 #define HI_StartRects 256
+#define HI_Restrictions 512
 
 typedef int HostInfo;
 
