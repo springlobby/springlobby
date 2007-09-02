@@ -283,6 +283,7 @@ void ServerEvents::OnBattleClosed( int battleid )
 
 void ServerEvents::OnBattleDisableUnit( int battleid, const std::string& unitname )
 {
+  debug_func("");
   Battle& battle = m_serv.GetBattle( battleid );
   battle.DisableUnit( unitname );
   m_ui.OnBattleDisableUnit( battle, unitname );
@@ -291,6 +292,7 @@ void ServerEvents::OnBattleDisableUnit( int battleid, const std::string& unitnam
 
 void ServerEvents::OnBattleEnableUnit( int battleid, const std::string& unitname )
 {
+  debug_func("");
   Battle& battle = m_serv.GetBattle( battleid );
   battle.EnableUnit( unitname );
   m_ui.OnBattleEnableUnit( battle, unitname );
@@ -299,6 +301,7 @@ void ServerEvents::OnBattleEnableUnit( int battleid, const std::string& unitname
 
 void ServerEvents::OnBattleEnableAllUnits( int battleid )
 {
+  debug_func("");
   Battle& battle = m_serv.GetBattle( battleid );
   battle.EnableAllUnits();
   m_ui.OnBattleEnableAllUnits( battle );
