@@ -39,7 +39,9 @@ void Settings::SaveSettings()
 
 bool Settings::IsFirstRun()
 {
-  return m_config->Read( _T("/General/firstrun"), true );
+  bool first;
+  m_config->Read( _T("/General/firstrun"), &first, true );
+  return first;
 }
 
 
