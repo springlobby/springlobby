@@ -8,6 +8,7 @@ class SinglePlayerBattle;
 class Battle;
 class Ui;
 class SpringProcess;
+class wxSpringProcess;
 
 
 class Spring: public wxEvtHandler
@@ -28,6 +29,7 @@ class Spring: public wxEvtHandler
   protected:
     Ui& m_ui;
     SpringProcess* m_process;
+    wxSpringProcess* m_wx_process;
     bool m_running;
 
     DECLARE_EVENT_TABLE()

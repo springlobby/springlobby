@@ -75,16 +75,27 @@ bool Spring::Run( Battle& battle )
     debug_error( "Couldn't write script.txt" ); //!@todo Some message to user.
     return false;
   }
-
-  if ( m_process == 0 ) m_process = new SpringProcess( *this );
+  if ( sett().UseOldSpringLaunchMethod() )
+  {
+    if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
+  }
+  else
+  {
+    if ( m_process == 0 ) m_process = new SpringProcess( *this );
+  }
   wxString cmd = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ") + path + _T("script.txt");
   debug( "cmd: " + STD_STRING(cmd) );
-  debug( "m_process->Create();" );
-  m_process->Create();
-  debug( "m_process->SetCommand( cmd );" );
-  m_process->SetCommand( cmd );
-  debug( "m_process->Run();" );
-  m_process->Run();
+  if ( sett().UseOldSpringLaunchMethod() ) {
+    if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
+  }
+  else {
+    debug( "m_process->Create();" );
+    m_process->Create();
+    debug( "m_process->SetCommand( cmd );" );
+    m_process->SetCommand( cmd );
+    debug( "m_process->Run();" );
+    m_process->Run();
+  }
   m_running = true;
   debug( "Done running = true" );
   return true;
@@ -115,11 +126,25 @@ bool Spring::Run( SinglePlayerBattle& battle )
     return false;
   }
 
-  if ( m_process == 0 ) m_process = new SpringProcess( *this );
+  if ( sett().UseOldSpringLaunchMethod() )
+  {
+    if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
+  }
+  else
+  {
+    if ( m_process == 0 ) m_process = new SpringProcess( *this );
+  }
   wxString cmd = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ") + path + _T("script.txt");
-  m_process->Create();
-  m_process->SetCommand( cmd );
-  m_process->Run();
+  if ( sett().UseOldSpringLaunchMethod() )
+  {
+    if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
+  }
+  else
+  {
+    m_process->Create();
+    m_process->SetCommand( cmd );
+    m_process->Run();
+  }
 
   m_running = true;
   return true;
@@ -139,6 +164,7 @@ void Spring::OnTerminated( wxCommandEvent& event )
   debug_func("");
   m_running = false;
   m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
+  m_wx_process = 0;
   m_ui.OnSpringTerminated( true );
 }
 

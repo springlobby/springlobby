@@ -29,6 +29,8 @@ class Settings
 
     bool IsFirstRun();
 
+    bool UseOldSpringLaunchMethod();
+
     std::string GetDefaultServer();
     void   SetDefaultServer( const std::string& server_name );
 

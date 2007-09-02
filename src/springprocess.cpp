@@ -42,3 +42,21 @@ void* SpringProcess::Entry()
   return 0;
 }
 
+wxSpringProcess::wxSpringProcess( Spring& sp ) :
+  m_sp(sp)
+{
+  debug_func("");
+}
+
+
+wxSpringProcess::~wxSpringProcess()
+{
+  debug_func("");
+}
+
+void wxSpringProcess::OnTerminate( int pid, int status )
+{
+  wxCommandEvent event( wxEVT_SPRING_EXIT, PROC_SPRING );
+  m_sp.AddPendingEvent(event);
+}
+

@@ -4,6 +4,7 @@
 #include <wx/thread.h>
 #include <wx/string.h>
 #include <wx/event.h>
+#include <wx/process.h>
 
 BEGIN_DECLARE_EVENT_TYPES()
 DECLARE_LOCAL_EVENT_TYPE( wxEVT_SPRING_EXIT, 1 )
@@ -26,6 +27,18 @@ class SpringProcess: public wxThread
   protected:
     Spring& m_sp;
     wxString m_cmd;
+};
+
+class wxSpringProcess: public wxProcess
+{
+  public:
+    wxSpringProcess( Spring& sp );
+    ~wxSpringProcess();
+
+    void OnTerminate( int pid, int status );
+
+  protected:
+    Spring& m_sp;
 };
 
 const int PROC_SPRING = wxID_HIGHEST;

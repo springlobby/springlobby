@@ -43,6 +43,13 @@ bool Settings::IsFirstRun()
 }
 
 
+bool Settings::UseOldSpringLaunchMethod()
+{
+  bool * old;
+  m_config->Read( _T("/Spring/UseOldLaunchMethod"), old, false );
+  return old;
+}
+
 //! @brief Restores default settings
 void Settings::SetDefaultSettings()
 {
