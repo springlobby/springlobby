@@ -619,7 +619,7 @@ void TASServer::HandlePong( int replyid )
       m_se->OnPong( (time( 0 ) - m_pinglist.begin()->t) );
       m_pinglist.pop_front();
     } else {
-      m_se->OnPong( -1 );
+      m_se->OnPong( -2 );
     }
   }
 }
@@ -632,6 +632,7 @@ void TASServer::HandlePinglist()
   while ( !m_pinglist.empty() ) {
     if ( m_pinglist.begin()->t + PING_TIMEOUT < now ) {
       m_pinglist.pop_front();
+      m_se->OnPong( -1 );
     } else {
       break;
     }

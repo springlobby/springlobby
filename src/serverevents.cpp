@@ -82,7 +82,11 @@ void ServerEvents::OnMotd( const std::string& msg )
 
 void ServerEvents::OnPong( int ping_time )
 {
-  //debug_func( "" );
+  if ( ping_time == -1 ) {
+    debug( "Ping Timeout!" );
+    m_serv.Disconnect();
+    OnDisconnected();
+  }
 }
 
 
