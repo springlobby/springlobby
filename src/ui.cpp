@@ -405,6 +405,7 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 bool Ui::IsSpringCompatible( )
 {
   if ( !m_spring->TestSpringBinary() ) return false;
+  if ( m_server_spring_ver == "*" ) return true; // Server accepts any version.
   if ( (usync()->GetSpringVersion() == m_server_spring_ver ) && ( m_server_spring_ver != "" ) ) return true;
   else return false;
 }
