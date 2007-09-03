@@ -85,6 +85,7 @@ bool Spring::Run( Battle& battle )
   }
   wxString cmd = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ") + path + _T("script.txt");
   debug( "cmd: " + STD_STRING(cmd) );
+  wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
   if ( sett().UseOldSpringLaunchMethod() ) {
     if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
   }

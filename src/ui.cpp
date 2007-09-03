@@ -271,14 +271,14 @@ void Ui::DownloadMod( const wxString& mod )
 //! @note this does not return until the user pressed any of the buttons or closed the dialog.
 bool Ui::Ask( const wxString& heading, const wxString& question )
 {
-  wxMessageDialog ask_dlg(0, question, heading, wxOK | wxCANCEL );
-  return ( ask_dlg.ShowModal() == wxID_OK );
+  wxMessageDialog ask_dlg( &mw(), question, heading, wxYES_NO );
+  return ( ask_dlg.ShowModal() == wxID_YES );
 }
 
 
 bool Ui::AskText( const wxString& heading, const wxString& question, wxString& answer )
 {
-  wxTextEntryDialog name_dlg( 0, question, heading, _T(""), wxOK | wxCANCEL | wxCENTRE );
+  wxTextEntryDialog name_dlg( &mw(), question, heading, _T(""), wxOK | wxCANCEL | wxCENTRE );
   int res = name_dlg.ShowModal();
   answer = name_dlg.GetValue();
 
@@ -288,7 +288,7 @@ bool Ui::AskText( const wxString& heading, const wxString& question, wxString& a
 
 void Ui::ShowMessage( const wxString& heading, const wxString& message )
 {
-  wxMessageDialog msg( 0, heading, message, wxOK);
+  wxMessageDialog msg( &mw(), heading, message, wxOK);
   msg.ShowModal();
 }
 

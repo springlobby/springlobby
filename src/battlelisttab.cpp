@@ -1,7 +1,14 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
-//
-// Class: BattleListTab
-//
+
+#include <wx/intl.h>
+#include <wx/msgdlg.h>
+#include <wx/stattext.h>
+#include <wx/statline.h>
+#include <wx/textdlg.h>
+#include <wx/combobox.h>
+#include <wx/button.h>
+#include <wx/sizer.h>
+#include <stdexcept>
 
 #include "battlelisttab.h"
 #include "battlelistctrl.h"
@@ -16,16 +23,8 @@
 #include "iunitsync.h"
 #include "mapctrl.h"
 #include "nicklistctrl.h"
-
-#include <wx/intl.h>
-#include <wx/msgdlg.h>
-#include <wx/stattext.h>
-#include <wx/statline.h>
-#include <wx/textdlg.h>
-#include <wx/combobox.h>
-#include <wx/button.h>
-#include <wx/sizer.h>
-#include <stdexcept>
+#include "mainwindow.h"
+#include "mainjoinbattletab.h"
 
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
@@ -190,6 +189,16 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     wxMessageBox(_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION);
     return;
   }
+  Battle* battle = m_ui.mw().GetJoinTab().GetCurrentBattle();
+  if ( battle != 0 ) {
+    if ( m_ui.Ask( _("Already in a batle"), _("You are already in a battle.\n\nDo you want to leave current battle to start a new?") ) ) {
+      battle->Leave();
+      m_ui.mw().GetJoinTab().LeaveCurrentBattle();
+    } else {
+      return;
+    }
+  }
+
   HostBattleDialog dlg( this );
   if ( dlg.ShowModal() == wxID_OK ) {
     BattleOptions bo;
@@ -266,6 +275,17 @@ void BattleListTab::DoJoin( Battle& battle )
     wxMessageBox(_("Joining battles is disabled due to the incompatible spring version you're using."), _("Spring error"), wxICON_EXCLAMATION);
     return;
   }
+
+  Battle* curbattle = m_ui.mw().GetJoinTab().GetCurrentBattle();
+  if ( curbattle != 0 ) {
+    if ( m_ui.Ask( _("Already in a batle"), _("You are already in a battle.\n\nDo you want to leave current battle to and join this one?") ) ) {
+      curbattle->Leave();
+      m_ui.mw().GetJoinTab().LeaveCurrentBattle();
+    } else {
+      return;
+    }
+  }
+
   if ( !battle.ModExists() ) {
     if (wxMessageBox( _("You need to download the mod before you can join this game.\n\nDo you want me to take you to the download page?"), _("Mod not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString mod = battle.GetModName();

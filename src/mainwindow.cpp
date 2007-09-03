@@ -268,7 +268,7 @@ void MainWindow::OnMenuJoin( wxCommandEvent& event )
 
   if ( !m_ui.IsConnected() ) return;
   wxString answer;
-  if ( Ui::AskText( _("Join channel..."), _("Name of channel to join"), answer ) ) {
+  if ( m_ui.AskText( _("Join channel..."), _("Name of channel to join"), answer ) ) {
     m_ui.JoinChannel( answer, _T("") );
   }
 
@@ -280,7 +280,7 @@ void MainWindow::OnMenuChat( wxCommandEvent& event )
 
   if ( !m_ui.IsConnected() ) return;
   wxString answer;
-  if ( Ui::AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
+  if ( m_ui.AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
     if (m_ui.GetServer().UserExists( STD_STRING(answer) ) ) {
       OpenPrivateChat( m_ui.GetServer().GetUser( STD_STRING(answer) ) );
     }
