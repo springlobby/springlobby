@@ -129,6 +129,10 @@ bool SpringUnitSync::LoadUnitSyncLib()
     m_get_spring_version = (GetSpringVersionPtr)_GetLibFuncPtr("GetSpringVersion");
 
     m_init( true, 1 );
+    m_map_count = m_get_map_count();
+    m_mod_count = m_get_mod_count();
+    m_current_mod = "";
+    m_side_count = 0;
   }
   catch ( ... ) {
 //    debug_error( e.what() );
@@ -169,7 +173,7 @@ std::string SpringUnitSync::GetSpringVersion()
 int SpringUnitSync::GetNumMods()
 {
   if ( !m_loaded ) return 0;
-  return m_get_mod_count();
+  return m_mod_count;
 }
 
 
@@ -177,7 +181,7 @@ int SpringUnitSync::GetModIndex( const std::string& name )
 {
   //debug_func( "name = \"" + name + "\"" );
   if ( !m_loaded ) return -1;
-  for ( int i = 0; i < m_get_mod_count(); i++ ) {
+  for ( int i = 0; i < m_mod_count; i++ ) {
     std::string cmp = m_get_mod_name( i );
     if ( name == cmp ) return i;
   }
@@ -219,7 +223,7 @@ UnitSyncMod SpringUnitSync::GetMod( int index )
 int SpringUnitSync::GetNumMaps()
 {
   if ( !m_loaded ) return 0;
-  return m_get_map_count();
+  return m_map_count;
 }
 
 
@@ -283,8 +287,7 @@ UnitSyncMap SpringUnitSync::GetMap( int index, bool getmapinfo )
 int SpringUnitSync::GetMapIndex( const std::string& name )
 {
   if ( !m_loaded ) return -1;
-  int mc = m_get_map_count();
-  for ( int i = 0; i < mc; i++ ) {
+  for ( int i = 0; i < m_map_count; i++ ) {
     std::string cmp = m_get_map_name( i );
     if ( name == cmp )
       return i;
@@ -296,7 +299,7 @@ int SpringUnitSync::GetMapIndex( const std::string& name )
 std::string SpringUnitSync::GetModArchive( int index )
 {
   if ( (!m_loaded) || (index < 0) ) return "unknown";
-  ASSERT_LOGIC( index < m_get_mod_count(), "Bad index" );
+  ASSERT_LOGIC( index < m_mod_count, "Bad index" );
   std::string arch = m_get_mod_archive( index );
   return arch;
 }
@@ -310,6 +313,7 @@ void SpringUnitSync::SetCurrentMod( const std::string& modname )
     LoadUnitSyncLib();
     m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
     m_current_mod = modname;
+    m_side_count = m_get_side_count();
   }
 }
 
@@ -317,8 +321,8 @@ void SpringUnitSync::SetCurrentMod( const std::string& modname )
 int SpringUnitSync::GetSideCount()
 {
   if ( (!m_loaded) || (!ModExists(m_current_mod)) ) return 0;
-  m_add_all_archives( GetModArchive( GetModIndex( m_current_mod ) ).c_str() );
-  return m_get_side_count();
+  //m_add_all_archives( GetModArchive( GetModIndex( m_current_mod ) ).c_str() );
+  return m_side_count;
 }
 
 
@@ -327,8 +331,8 @@ std::string SpringUnitSync::GetSideName( int index )
   //debug_func("curmod = \"" + m_current_mod + "\" side = " + i2s(index) );
   if ( (!m_loaded) || (index < 0) || (!ModExists(m_current_mod)) ) return "unknown";
   m_add_all_archives( GetModArchive( GetModIndex( m_current_mod ) ).c_str() );
-  if ( index >= m_get_side_count() ) return "unknown";
-  ASSERT_LOGIC( m_get_side_count() > index, "Side index too high." );
+  if ( index >= m_side_count ) return "unknown";
+  ASSERT_LOGIC( m_side_count > index, "Side index too high." );
   return m_get_side_name( index );
 }
 

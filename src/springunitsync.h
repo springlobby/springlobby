@@ -46,7 +46,8 @@ typedef void (USYNC_CALL_CONV *CloseFileVFSPtr)(int);
 class SpringUnitSync : public IUnitSync
 {
   public:
-    SpringUnitSync(): m_loaded(false) { /*LoadUnitSyncLib();*/ }
+    SpringUnitSync(): m_loaded(false),m_map_count(0),m_mod_count(0),m_side_count(0)
+     {}
     ~SpringUnitSync() { FreeUnitSyncLib(); }
 
     int GetNumMods();
@@ -133,6 +134,10 @@ class SpringUnitSync : public IUnitSync
     UnitSyncMap m_map;
 
     std::string m_current_mod;
+
+    int m_map_count;
+    int m_mod_count;
+    int m_side_count;
 
     void* _GetLibFuncPtr( const std::string& name );
 };

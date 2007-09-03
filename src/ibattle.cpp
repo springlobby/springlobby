@@ -1,5 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#include <stdexcept>
+
 #include "ibattle.h"
 #include "utils.h"
 
@@ -30,24 +32,30 @@ IBattle::~IBattle()
 
 void IBattle::SetMap(const wxString& mapname, const wxString& hash)
 {
-  m_map_loaded = false;
-  m_map_exists = usync()->MapExists( STD_STRING(mapname), STD_STRING(hash) );
-  m_map.hash = STD_STRING(hash);
-  m_map_name = mapname;
+  if ( mapname != WX_STRING(m_map.name) ) {
+    m_map_loaded = false;
+    m_map_exists = usync()->MapExists( STD_STRING(mapname), STD_STRING(hash) );
+    m_map.hash = STD_STRING(hash);
+    m_map_name = mapname;
+  }
 }
 
 
 void IBattle::SetMap(const UnitSyncMap& map)
 {
-  m_map = map;
-  m_map_name = WX_STRING(map.name);
-  m_map_loaded = true;
-  m_map_exists = usync()->MapExists( STD_STRING(m_map_name), m_map.hash );
+  if ( map.name != m_map.name ) {
+    m_map = map;
+    m_map_name = WX_STRING(map.name);
+    m_map_loaded = true;
+    m_map_exists = usync()->MapExists( STD_STRING(m_map_name), m_map.hash );
+  }
 }
 
 
 const UnitSyncMap& IBattle::Map()
 {
+  ASSERT_LOGIC( m_map_exists, "Map does not exist." );
+
   if ( !m_map_loaded ) {
     try {
 
@@ -78,23 +86,28 @@ wxString IBattle::GetMapHash()
 
 void IBattle::SetMod( const wxString& modname, const wxString& hash )
 {
-  m_mod_loaded = false;
-  m_mod_exists = usync()->ModExists( STD_STRING(modname) );
-  m_mod_name = modname;
+  if ( m_mod_name != modname ){
+    m_mod_loaded = false;
+    m_mod_exists = usync()->ModExists( STD_STRING(modname) );
+    m_mod_name = modname;
+  }
 }
 
 
 void IBattle::SetMod( const UnitSyncMod& mod )
 {
-  m_mod = mod;
-  m_mod_name = WX_STRING(mod.name);
-  m_mod_loaded = true;
-  m_mod_exists = usync()->ModExists( STD_STRING(m_mod_name) );
+  if ( mod.name != m_mod.name ) {
+    m_mod = mod;
+    m_mod_name = WX_STRING(mod.name);
+    m_mod_loaded = true;
+    m_mod_exists = usync()->ModExists( STD_STRING(m_mod_name) );
+  }
 }
 
 
 const UnitSyncMod& IBattle::Mod()
 {
+  ASSERT_LOGIC( m_mod_exists, "Mod does not exist." );
   if ( !m_mod_loaded ) {
     try {
       m_mod = usync()->GetMod( STD_STRING(m_mod_name) );
@@ -144,12 +157,14 @@ StartType IBattle::GetStartType()
 
 bool IBattle::MapExists()
 {
-  return usync()->MapExists( STD_STRING(m_map_name), m_map.hash );
+  return m_map_exists;
+  //return usync()->MapExists( STD_STRING(m_map_name), m_map.hash );
 }
 
 
 bool IBattle::ModExists()
 {
-  return usync()->ModExists( STD_STRING(m_mod_name) );
+  return m_mod_exists;
+  //return usync()->ModExists( STD_STRING(m_mod_name) );
 }
 
