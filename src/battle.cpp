@@ -194,25 +194,6 @@ void Battle::DoAction( const std::string& msg )
 }
 
 
-/*bool Battle::IsMapAvailable()
-{
-  if ( !usync()->MapExists( m_opts.mapname ) ) return false;
-
-  UnitSyncMap map = usync()->GetMap( m_opts.mapname );
-  return ( map.hash == m_opts.maphash );
-}
-
-
-bool Battle::IsModAvailable()
-{
-  if ( !usync()->ModExists( m_opts.modname ) ) return false;
-
-  UnitSyncMod mod = usync()->GetMod( m_opts.modname );
-  return true;
-  //return ( mod.hash == m_opts.hashcode );
-}*/
-
-
 bool Battle::HaveMultipleBotsInSameTeam()
 {
   std::list<BattleBot*>::const_iterator i;

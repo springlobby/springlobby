@@ -78,6 +78,8 @@ int SpringLobbyApp::OnExit()
 
   usync()->FreeUnitSyncLib();
 
+  delete usync();
+
   return 0;
 }
 

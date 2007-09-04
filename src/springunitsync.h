@@ -1,13 +1,15 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 #define SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 
+#include <map>
+
 #include "iunitsync.h"
 #include "nonportable.h"
 
 class wxImage;
 class wxDynamicLibrary;
 struct SpringMapInfo;
-
+struct CachedMapInfo;
 
 typedef const char* (USYNC_CALL_CONV *GetSpringVersionPtr)();
 
@@ -43,12 +45,15 @@ typedef int (USYNC_CALL_CONV *FileSizeVFSPtr)(int);
 typedef int (USYNC_CALL_CONV *ReadFileVFSPtr)(int, void*, int);
 typedef void (USYNC_CALL_CONV *CloseFileVFSPtr)(int);
 
+
+typedef std::map<std::string,CachedMapInfo> MapCacheType;
+
+
 class SpringUnitSync : public IUnitSync
 {
   public:
-    SpringUnitSync(): m_loaded(false),m_map_count(0),m_mod_count(0),m_side_count(0)
-     {}
-    ~SpringUnitSync() { FreeUnitSyncLib(); }
+    SpringUnitSync(): m_loaded(false),m_map_count(0),m_mod_count(0),m_side_count(0) { _LoadMapInfoExCache(); }
+    ~SpringUnitSync() { FreeUnitSyncLib(); _SaveMapInfoExCache(); }
 
     int GetNumMods();
     bool ModExists( const std::string& modname );
@@ -91,6 +96,8 @@ class SpringUnitSync : public IUnitSync
     wxString GetCachedMinimapFileName( const std::string& mapname, int width = -1, int height = -1 );
 
     void ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
+    void ConvertSpringMapInfo( const CachedMapInfo& in, MapInfo& out );
+    void ConvertSpringMapInfo( const SpringMapInfo& in, CachedMapInfo& out, const std::string& mapname );
 
   private:
     bool m_loaded;
@@ -139,7 +146,13 @@ class SpringUnitSync : public IUnitSync
     int m_mod_count;
     int m_side_count;
 
+    MapCacheType m_mapinfo;
+
     void* _GetLibFuncPtr( const std::string& name );
+    MapInfo _GetMapInfoEx( const std::string& mapname );
+
+    void _LoadMapInfoExCache();
+    void _SaveMapInfoExCache();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H

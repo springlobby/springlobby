@@ -1,4 +1,5 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+
 #include <wx/dynlib.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
@@ -8,6 +9,7 @@
 #include <wx/mstream.h>
 #include <wx/stdpaths.h>
 #include <wx/string.h>
+#include <wx/file.h>
 
 #include <stdexcept>
 
@@ -32,6 +34,27 @@ struct SpringMapInfo
   StartPos positions[16];
 
   char* author;
+};
+
+
+struct CachedMapInfo
+{
+  char name[256];
+  char author[256];
+  char description[256];
+
+  int tidalStrength;
+  int gravity;
+  float maxMetal;
+  int extractorRadius;
+  int minWind;
+  int maxWind;
+
+  int width;
+  int height;
+
+  int posCount;
+  StartPos positions[16];
 };
 
 
@@ -260,6 +283,39 @@ UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname, bool getmapinfo 
 }
 
 
+MapInfo SpringUnitSync::_GetMapInfoEx( const std::string& mapname )
+{
+  MapCacheType::iterator i = m_mapinfo.find(mapname);
+  if ( i != m_mapinfo.end() ) {
+    debug("GetMapInfoEx cache lookup.");
+    MapInfo info;
+    CachedMapInfo cinfo = i->second;
+    ConvertSpringMapInfo( cinfo, info );
+    return info;
+  }
+
+  debug("GetMapInfoEx cache lookup failed.");
+
+  char tmpdesc[256];
+  char tmpauth[256];
+
+  SpringMapInfo tm;
+  tm.description = &tmpdesc[0];
+  tm.author = &tmpauth[0];
+
+  m_get_map_info_ex( mapname.c_str(), &tm, 0 );
+
+  MapInfo info;
+  ConvertSpringMapInfo( tm, info );
+
+  CachedMapInfo cinfo;
+  ConvertSpringMapInfo( tm, cinfo, mapname );
+  m_mapinfo[mapname] = cinfo;
+
+  return info;
+}
+
+
 UnitSyncMap SpringUnitSync::GetMap( int index, bool getmapinfo )
 {
   UnitSyncMap m;
@@ -268,18 +324,8 @@ UnitSyncMap SpringUnitSync::GetMap( int index, bool getmapinfo )
   m.name = m_get_map_name( index );
   m.hash = i2s(m_get_map_checksum( index ));
 
-  if ( getmapinfo ) {
-    char tmpdesc[245+1];
-    char tmpauth[200+1];
+  if ( getmapinfo ) m.info = _GetMapInfoEx( m.name );
 
-    SpringMapInfo tm;
-    tm.description = &tmpdesc[0];
-    tm.author = &tmpauth[0];
-
-    m_get_map_info_ex( m.name.c_str(), &tm, 0 );
-
-    ConvertSpringMapInfo( tm, m.info );
-  }
   return m;
 }
 
@@ -559,6 +605,98 @@ void SpringUnitSync::ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out
   out.height = in.height;
   out.posCount = in.posCount;
   for ( int i = 0; i < in.posCount; i++) out.positions[i] = in.positions[i];
+}
+
+
+void SpringUnitSync::ConvertSpringMapInfo( const CachedMapInfo& in, MapInfo& out )
+{
+  out.author = in.author;
+  out.description = in.description;
+
+  out.extractorRadius = in.extractorRadius;
+  out.gravity = in.gravity;
+  out.tidalStrength = in.tidalStrength;
+  out.maxMetal = in.maxMetal;
+  out.minWind = in.minWind;
+  out.maxWind = in.maxWind;
+
+  out.width = in.width;
+  out.height = in.height;
+  out.posCount = in.posCount;
+  for ( int i = 0; i < in.posCount; i++) out.positions[i] = in.positions[i];
+}
+
+
+void SpringUnitSync::ConvertSpringMapInfo( const SpringMapInfo& in, CachedMapInfo& out, const std::string& mapname )
+{
+  strncpy( &out.name[0], mapname.c_str(), 256 );
+  strncpy( &out.author[0], in.author, 256 );
+  strncpy( &out.description[0], in.description, 256 );
+
+  out.tidalStrength = in.tidalStrength;
+  out.gravity = in.gravity;
+  out.maxMetal = in.maxMetal;
+  out.extractorRadius = in.extractorRadius;
+  out.minWind = in.minWind;
+  out.maxWind = in.maxWind;
+
+  out.width = in.width;
+  out.height = in.height;
+
+  out.posCount = in.posCount;
+  for ( int i = 0; i < 16; i++ ) out.positions[i] = in.positions[i];
+}
+
+
+void SpringUnitSync::_LoadMapInfoExCache()
+{
+  debug_func("");
+
+  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator() + _T("mapinfoex.cache");
+
+  if ( !wxFileName::FileExists( path ) ) {
+    debug( "No cache file found." );
+    return;
+  }
+
+  wxFile f( path.c_str(), wxFile::read );
+  if ( !f.IsOpened() ) {
+    debug( "failed to open file for reading." );
+    return;
+  }
+
+  m_mapinfo.clear();
+
+  CachedMapInfo cinfo;
+  while ( !f.Eof() ) {
+    if ( f.Read( &cinfo, sizeof(CachedMapInfo) ) < sizeof(CachedMapInfo) ) {
+      debug_error( "Cache file invalid" );
+      m_mapinfo.clear();
+      break;
+    }
+    m_mapinfo[ std::string( &cinfo.name[0] ) ] = cinfo;
+  }
+  f.Close();
+}
+
+
+void SpringUnitSync::_SaveMapInfoExCache()
+{
+  debug_func("");
+  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator() + _T("mapinfoex.cache");
+
+  wxFile f( path.c_str(), wxFile::write );
+  if ( !f.IsOpened() ) {
+    debug( "failed to open file for writing." );
+    return;
+  }
+
+  MapCacheType::iterator i = m_mapinfo.begin();
+  while ( i != m_mapinfo.end() ) {
+    f.Write( &i->second, sizeof(CachedMapInfo) );
+    i++;
+  }
+  f.Close();
 }
 
 
