@@ -33,6 +33,7 @@ END_EVENT_TABLE();
 Spring::Spring( Ui& ui ) :
   m_ui(ui),
   m_process(0),
+  m_wx_process(0),
   m_running(false)
 { }
 
@@ -75,21 +76,15 @@ bool Spring::Run( Battle& battle )
     debug_error( "Couldn't write script.txt" ); //!@todo Some message to user.
     return false;
   }
-  if ( sett().UseOldSpringLaunchMethod() )
-  {
-    if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
-  }
-  else
-  {
-    if ( m_process == 0 ) m_process = new SpringProcess( *this );
-  }
   wxString cmd = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ") + path + _T("script.txt");
   debug( "cmd: " + STD_STRING(cmd) );
   wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
   if ( sett().UseOldSpringLaunchMethod() ) {
+    if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
     if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
   }
   else {
+    if ( m_process == 0 ) m_process = new SpringProcess( *this );
     debug( "m_process->Create();" );
     m_process->Create();
     debug( "m_process->SetCommand( cmd );" );
@@ -127,15 +122,12 @@ bool Spring::Run( SinglePlayerBattle& battle )
     return false;
   }
 
-  if ( sett().UseOldSpringLaunchMethod() ){
-    if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
-  } else {
-    if ( m_process == 0 ) m_process = new SpringProcess( *this );
-  }
   wxString cmd = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ") + path + _T("script.txt");
   if ( sett().UseOldSpringLaunchMethod() ) {
+    if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
     if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
   } else {
+    if ( m_process == 0 ) m_process = new SpringProcess( *this );
     m_process->Create();
     m_process->SetCommand( cmd );
     m_process->Run();
