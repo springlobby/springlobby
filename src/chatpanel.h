@@ -18,6 +18,8 @@ class User;
 class Server;
 class Battle;
 class Ui;
+class wxMenu;
+class wxMouseEvent;
 
 enum ChatPanelType {
   CPT_Channel,
@@ -73,11 +75,6 @@ class ChatPanel : public wxPanel
     void Say( const wxString& message );
     void Part();
 
-    void OnSay( wxCommandEvent& event );
-    void OnResize( wxSizeEvent& event );
-
-    void OnLinkEvent ( wxTextUrlEvent& event );
-
     wxString GetChatTypeStr();
 
     User& GetMe();
@@ -86,11 +83,39 @@ class ChatPanel : public wxPanel
 
     void CheckLength();
 
+    void OnSay( wxCommandEvent& event );
+    void OnResize( wxSizeEvent& event );
+
+    void OnLinkEvent( wxTextUrlEvent& event );
+    void OnMouseDown( wxMouseEvent& event );
+
+    void OnMenuSelectAll( wxCommandEvent& event );
+    void OnMenuCopy( wxCommandEvent& event );
+
+    void OnChannelMenuLeave( wxCommandEvent& event );
+    void OnChannelMenuInfo( wxCommandEvent& event );
+    void OnChannelMenuTopic( wxCommandEvent& event );
+    void OnChannelMenuMessage( wxCommandEvent& event );
+    void OnChannelMenuLock( wxCommandEvent& event );
+    void OnChannelMenuUnlock( wxCommandEvent& event );
+    void OnChannelMenuRegister( wxCommandEvent& event );
+    void OnChannelMenuUnregister( wxCommandEvent& event );
+    void OnChannelMenuSpamOn( wxCommandEvent& event );
+    void OnChannelMenuSpanOff( wxCommandEvent& event );
+    void OnChannelMenuSpamIsOn( wxCommandEvent& event );
+
+    void OnServerMenuDisconnect( wxCommandEvent& event );
+    void OnServerMenuReconnect( wxCommandEvent& event );
+    void OnServerMenuRemove( wxCommandEvent& event );
+    void OnServerMenuChangePassword( wxCommandEvent& event );
+    void OnServerMenuSetAccess( wxCommandEvent& event );
+    void OnServerMenuBroadcast( wxCommandEvent& event );
+
   protected:
     void _SetChannel( Channel* channel );
     void _OutputLine( const wxString& message, const wxColour& col );
 
-    bool m_show_nick_list;      //!< If the nicklist should be shown or not.
+   bool m_show_nick_list;      //!< If the nicklist should be shown or not.
 
     wxBoxSizer* m_main_sizer;   //!< Main sizer containing all other sizers.
     wxBoxSizer* m_chat_sizer;   //!< Sizer containing the chat messages, and send input and button.
@@ -119,8 +144,11 @@ class ChatPanel : public wxPanel
 
     wxString m_chan_pass;
 
+    wxMenu* m_popup_menu;
+
     void LogTime();
     void _CreateControls( );
+    void _CreatePopup();
 
     DECLARE_EVENT_TABLE();
 };
@@ -130,6 +158,23 @@ enum
     CHAT_SEND = wxID_HIGHEST,
     CHAT_TEXT,
     CHAT_LOG,
+    CHAT_MENU_CH_LEAVE,
+    CHAT_MENU_CH_INFO,
+    CHAT_MENU_CH_TOPIC,
+    CHAT_MENU_CH_MSG,
+    CHAT_MENU_CH_LOCK,
+    CHAT_MENU_CH_UNLOCK,
+    CHAT_MENU_CH_REG,
+    CHAT_MENU_CH_UNREG,
+    CHAT_MENU_CH_SPAM_ON,
+    CHAT_MENU_CH_SPAM_OFF,
+    CHAT_MENU_CH_SPAM_ISON,
+    CHAT_MENU_SV_DISCON,
+    CHAT_MENU_SV_RECON,
+    CHAT_MENU_SV_REMOVE,
+    CHAT_MENU_SV_CHPWD,
+    CHAT_MENU_SV_ACCESS,
+    CHAT_MENU_SV_BROADCAST
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H

@@ -6,6 +6,7 @@
 #include <wx/imaglist.h>
 #include <cctype>
 #include <stdexcept>
+#include <wx/menu.h>
 
 #include "nicklistctrl.h"
 #include "utils.h"
@@ -51,6 +52,69 @@ NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header ):
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
   SetImageList( &icons(), wxIMAGE_LIST_STATE );
+
+	wxMenu* m_user_menu;
+	m_user_menu = new wxMenu();
+	wxMenuItem* chatitem = new wxMenuItem( m_user_menu, wxID_ANY, wxString( wxT("Open Chat") ) , wxEmptyString, wxITEM_NORMAL );
+	m_user_menu->Append( chatitem );
+	wxMenuItem* joinbattleitem = new wxMenuItem( m_user_menu, wxID_ANY, wxString( wxT("Join same battle") ) , wxEmptyString, wxITEM_NORMAL );
+	m_user_menu->Append( joinbattleitem );
+
+	m_user_menu->AppendSeparator();
+	wxMenuItem* slapitem = new wxMenuItem( m_user_menu, wxID_ANY, wxString( wxT("Slap!") ) , wxEmptyString, wxITEM_NORMAL );
+	m_user_menu->Append( slapitem );
+
+	m_user_menu->AppendSeparator();
+	wxMenu* m_chanserv;
+	m_chanserv = new wxMenu();
+	wxMenuItem* chmuteitem = new wxMenuItem( m_chanserv, wxID_ANY, wxString( wxT("Mute...") ) , wxEmptyString, wxITEM_NORMAL );
+	m_chanserv->Append( chmuteitem );
+	wxMenuItem* chkickitem = new wxMenuItem( m_chanserv, wxID_ANY, wxString( wxT("Kick...") ) , wxEmptyString, wxITEM_NORMAL );
+	m_chanserv->Append( chkickitem );
+
+	m_chanserv->AppendSeparator();
+	wxMenuItem* chopitem = new wxMenuItem( m_chanserv, wxID_ANY, wxString( wxT("Op") ) , wxEmptyString, wxITEM_NORMAL );
+	m_chanserv->Append( chopitem );
+	wxMenuItem* chdeopitem = new wxMenuItem( m_chanserv, wxID_ANY, wxString( wxT("DeOp") ) , wxEmptyString, wxITEM_NORMAL );
+	m_chanserv->Append( chdeopitem );
+	m_user_menu->Append( -1, wxT("ChanServ"), m_chanserv );
+	wxMenu* m_admin;
+	m_admin = new wxMenu();
+	wxMenu* m_admin_info;
+	m_admin_info = new wxMenu();
+	wxMenuItem* admingameitem = new wxMenuItem( m_admin_info, wxID_ANY, wxString( wxT("Ingame time") ) , wxEmptyString, wxITEM_NORMAL );
+	m_admin_info->Append( admingameitem );
+	wxMenuItem* admlastloginitem = new wxMenuItem( m_admin_info, wxID_ANY, wxString( wxT("Last login") ) , wxEmptyString, wxITEM_NORMAL );
+	m_admin_info->Append( admlastloginitem );
+
+	m_admin_info->AppendSeparator();
+	wxMenuItem* admipitem = new wxMenuItem( m_admin_info, wxID_ANY, wxString( wxT("Current IP") ) , wxEmptyString, wxITEM_NORMAL );
+	m_admin_info->Append( admipitem );
+	wxMenuItem* admfindipitem = new wxMenuItem( m_admin_info, wxID_ANY, wxString( wxT("Find IPs") ) , wxEmptyString, wxITEM_NORMAL );
+	m_admin_info->Append( admfindipitem );
+	m_admin->Append( -1, wxT("Info"), m_admin_info );
+
+	m_admin->AppendSeparator();
+	wxMenuItem* admkickitem = new wxMenuItem( m_admin, wxID_ANY, wxString( wxT("Kick...") ) , wxEmptyString, wxITEM_NORMAL );
+	m_admin->Append( admkickitem );
+
+	m_admin->AppendSeparator();
+	wxMenuItem* admbanitem = new wxMenuItem( m_admin, wxID_ANY, wxString( wxT("Ban...") ) , wxEmptyString, wxITEM_NORMAL );
+	m_admin->Append( admbanitem );
+	wxMenuItem* admunbanitem = new wxMenuItem( m_admin, wxID_ANY, wxString( wxT("Unban") ) , wxEmptyString, wxITEM_NORMAL );
+	m_admin->Append( admunbanitem );
+
+	m_admin->AppendSeparator();
+	wxMenuItem* admmuteitem = new wxMenuItem( m_admin, wxID_ANY, wxString( wxT("Mute...") ) , wxEmptyString, wxITEM_NORMAL );
+	m_admin->Append( admmuteitem );
+	wxMenuItem* admunmuteitem = new wxMenuItem( m_admin, wxID_ANY, wxString( wxT("Unmute") ) , wxEmptyString, wxITEM_NORMAL );
+	m_admin->Append( admunmuteitem );
+
+	m_admin->AppendSeparator();
+	wxMenuItem* admringitem = new wxMenuItem( m_admin, wxID_ANY, wxString( wxT("Ring") ) , wxEmptyString, wxITEM_NORMAL );
+	m_admin->Append( admringitem );
+	m_user_menu->Append( -1, wxT("Admin"), m_admin );
+
 
 }
 

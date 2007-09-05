@@ -1,5 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#include <wx/string.h>
+#include <wx/intl.h>
 #include <stdexcept>
 
 #include "base64.h"
@@ -89,14 +91,70 @@ TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(SER_VER_UNKNOWN)
 
 TASServer::~TASServer() { delete m_se; }
 
+
+bool TASServer::ExecuteSayCommand( const wxString& cmd )
+{
+  if ( m_sock == 0 ) return false;
+  wxString subcmd = cmd.BeforeFirst(' ').Lower();
+  wxString params = cmd.AfterFirst( ' ' );
+  if ( subcmd == _("/ingame") ) {
+    m_sock->Send( "INGAME " + STD_STRING(params) + "\n" );
+    return true;
+  } else if ( subcmd == _("/kick") ) {
+    m_sock->Send( "KICK " + STD_STRING(params) + "\n" );
+    return true;
+  } else if ( subcmd == _("/ban") ) {
+    m_sock->Send( "BAN " + STD_STRING(params) + "\n" );
+    return true;
+  } else if ( subcmd == _("/unban") ) {
+    m_sock->Send( "UNBAN " + STD_STRING(params) + "\n" );
+    return true;
+  } else if ( subcmd == _("/banlist") ) {
+    m_sock->Send( "BANLIST\n" );
+    return true;
+  } else if ( subcmd == _("/topic") ) {
+    m_sock->Send( "TOPIC " + STD_STRING(params) + "\n" );
+    return true;
+  } else if ( subcmd == _("/chanmsg") ) {
+    m_sock->Send( "CHANMSG " + STD_STRING(params) + "\n" );
+    return true;
+  } else if ( subcmd == _("/ring") ) {
+    m_sock->Send( "RING " + STD_STRING(params) + "\n" );
+    return true;
+  } else if ( subcmd == _("/ip") ) {
+    m_sock->Send( "GETIP " + STD_STRING(params) + "\n" );
+    return true;
+  } else if ( subcmd == _("/mute") ) {
+    m_sock->Send( "MUTE " + STD_STRING(params) + "\n" );
+    return true;
+  } else if ( subcmd == _("/unmute") ) {
+    m_sock->Send( "UNMUTE " + STD_STRING(params) + "\n" );
+    return true;
+  } else if ( subcmd == _("/mutelist") ) {
+    m_sock->Send( "MUTELIST " + STD_STRING(params) + "\n" );
+    return true;
+  } else if ( subcmd == _("/lastlogin") ) {
+    m_sock->Send( "GETLASTLOGIN " + STD_STRING(params) + "\n" );
+    return true;
+  } else if ( subcmd == _("/findip") ) {
+    m_sock->Send( "FINDIP " + STD_STRING(params) + "\n" );
+    return true;
+  } else if ( subcmd == _("/lastip") ) {
+    m_sock->Send( "GETLASTIP " + STD_STRING(params) + "\n" );
+    return true;
+  }
+
+  return false;
+}
+
+
 void TASServer::SetSocket( Socket* sock )
 {
   Server::SetSocket( sock );
   if ( m_sock == 0 ) return;
-
   m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
-
 }
+
 
 void TASServer::Connect( const std::string& addr, const int port )
 {

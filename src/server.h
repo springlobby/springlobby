@@ -18,7 +18,7 @@ class User;
 struct UserBattleStatus;
 class ChatPanel;
 struct BattleOptions;
-
+class wxString;
 typedef int ServerError;
 
 #define PE_NONE 0
@@ -57,6 +57,8 @@ class Server
     virtual ~Server();
 
     // Server interface
+
+    virtual bool ExecuteSayCommand( const wxString& cmd ) = 0;
 
     virtual void SetSocket( Socket* sock );
     virtual Socket* GetSocket( ) { return m_sock; }

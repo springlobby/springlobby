@@ -98,6 +98,22 @@ void Ui::Connect()
 }
 
 
+void Ui::Reconnect()
+{
+  std::string servname = sett().GetDefaultServer();
+
+  std::string pass  = sett().GetServerAccountPass(servname);
+  if ( !sett().GetServerAccountSavePass(servname) ) {
+    wxString pass2 = WX_STRING(pass);
+    if ( !AskPassword( _("Server password"), _("Password"), pass2 ) ) return;
+    pass = STD_STRING(pass2);
+  }
+
+  if ( IsConnected() ) Disconnect();
+  DoConnect( WX_STRING(servname), WX_STRING(sett().GetServerAccountNick(servname)), WX_STRING(pass) );
+}
+
+
 void Ui::Disconnect()
 {
   if ( m_serv != 0 ) {
@@ -276,19 +292,28 @@ bool Ui::Ask( const wxString& heading, const wxString& question )
 }
 
 
+bool Ui::AskPassword( const wxString& heading, const wxString& message, wxString& password )
+{
+  wxPasswordEntryDialog pw_dlg( &mw(), message, heading, password );
+  int res = pw_dlg.ShowModal();
+  password = pw_dlg.GetValue();
+  return ( res == wxID_OK );
+}
+
+
 bool Ui::AskText( const wxString& heading, const wxString& question, wxString& answer )
 {
-  wxTextEntryDialog name_dlg( &mw(), question, heading, _T(""), wxOK | wxCANCEL | wxCENTRE );
+  wxTextEntryDialog name_dlg( &mw(), question, heading, answer, wxOK | wxCANCEL | wxCENTRE );
   int res = name_dlg.ShowModal();
   answer = name_dlg.GetValue();
 
-  return ( res == wxID_OK);
+  return ( res == wxID_OK );
 }
 
 
 void Ui::ShowMessage( const wxString& heading, const wxString& message )
 {
-  wxMessageDialog msg( &mw(), heading, message, wxOK);
+  wxMessageDialog msg( &mw(), message, heading, wxOK);
   msg.ShowModal();
 }
 
@@ -316,6 +341,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
       return true;
     }
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/ingame") ) {
+    if ( cmd.AfterFirst(' ') != wxEmptyString ) return false;
     m_serv->RequestInGameTime();
     return true;
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/help") ) {

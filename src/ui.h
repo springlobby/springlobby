@@ -47,6 +47,7 @@ class Ui
     void ShowConnectWindow();
     void Connect();
     void Disconnect();
+    void Reconnect();
     void DoConnect( const wxString& servername, const wxString& username, const wxString& password );
 
     bool DoRegister( const wxString& servername, const wxString& username, const wxString& password );
@@ -71,6 +72,7 @@ class Ui
 
     bool Ask( const wxString& heading, const wxString& question );
     bool AskText( const wxString& heading, const wxString& question, wxString& answer );
+    bool AskPassword( const wxString& heading, const wxString& message, wxString& password );
     void ShowMessage( const wxString& heading, const wxString& message );
     //void OnAlertEvent( AlertEventType ); //TODO alert system
 

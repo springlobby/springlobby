@@ -28,13 +28,11 @@ class Channel : public UserList
     Channel( Server& serv, Ui& ui ): m_serv(serv),m_ui(ui) {}
     virtual ~Channel() {}
 
-    // Properties
+    Server& GetServer() { return m_serv; }
+
     void SetName( const std::string& name );
     std::string GetName();
     User& GetMe();
-
-    /*void SetUserData( void* userdata );
-    void* GetUserData();*/
 
     // Channel Functions
     void Say( const std::string& message );

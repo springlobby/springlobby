@@ -26,6 +26,8 @@ class TASServer : public Server
     ~TASServer();
 
     // Overloaded functions from Server
+    bool ExecuteSayCommand( const wxString& cmd );
+
     void SetSocket( Socket* sock );
 
     bool Register( const std::string& addr, const int port, const std::string& nick, const std::string& password );
