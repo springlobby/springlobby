@@ -134,7 +134,7 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     m_sock->Send( "MUTELIST " + STD_STRING(params) + "\n" );
     return true;
   } else if ( subcmd == _("/lastlogin") ) {
-    m_sock->Send( "GETLASTLOGIN " + STD_STRING(params) + "\n" );
+    m_sock->Send( "GETLASTLOGINTIME" + STD_STRING(params) + "\n" );
     return true;
   } else if ( subcmd == _("/findip") ) {
     m_sock->Send( "FINDIP " + STD_STRING(params) + "\n" );
