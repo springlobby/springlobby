@@ -113,10 +113,10 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     m_sock->Send( "BANLIST\n" );
     return true;
   } else if ( subcmd == _("/topic") ) {
-    m_sock->Send( "TOPIC " + STD_STRING(params) + "\n" );
+    m_sock->Send( "CHANNELTOPIC " + STD_STRING(params) + "\n" );
     return true;
   } else if ( subcmd == _("/chanmsg") ) {
-    m_sock->Send( "CHANMSG " + STD_STRING(params) + "\n" );
+    m_sock->Send( "CHANNELMESSAGE " + STD_STRING(params) + "\n" );
     return true;
   } else if ( subcmd == _("/ring") ) {
     m_sock->Send( "RING " + STD_STRING(params) + "\n" );
