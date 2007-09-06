@@ -642,12 +642,14 @@ void Ui::OnBattleClosed( Battle& battle )
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) mw().GetJoinTab().LeaveCurrentBattle();
   }
-  User& user = battle.GetFounder();
-  user.SetBattle(0);
-  for ( int i = 0; i < m_serv->GetNumChannels(); i++ ) {
-    Channel& chan = m_serv->GetChannel( i );
-    if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) ) {
-      chan.uidata.panel->UserStatusUpdated( user );
+  for ( unsigned int b = 0; b < battle.GetNumUsers(); b++ ) {
+    User& user = battle.GetUser( b );
+    user.SetBattle(0);
+    for ( int i = 0; i < m_serv->GetNumChannels(); i++ ) {
+      Channel& chan = m_serv->GetChannel( i );
+      if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) ) {
+        chan.uidata.panel->UserStatusUpdated( user );
+      }
     }
   }
 }
