@@ -52,6 +52,8 @@ class TASServer : public Server
 
     void DoActionChannel( const std::string& channel, const std::string& msg );
     void SayChannel( const std::string& channel, const std::string& msg );
+
+    void DoActionPrivate( const std::string& nick, const std::string& msg );
     void SayPrivate( const std::string& nick, const std::string& msg );
 
     void SayBattle( int battleid, const std::string& msg );

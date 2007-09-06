@@ -82,8 +82,7 @@ bool Spring::Run( Battle& battle )
   if ( sett().UseOldSpringLaunchMethod() ) {
     if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
     if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
-  }
-  else {
+  } else {
     if ( m_process == 0 ) m_process = new SpringProcess( *this );
     debug( "m_process->Create();" );
     m_process->Create();

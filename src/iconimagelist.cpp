@@ -14,11 +14,23 @@
 #include "iunitsync.h"
 
 #include "images/bot.xpm"
+#include "images/bot_broom.xpm"
+#include "images/bot_ingame.xpm"
+
 #include "images/admin.xpm"
-#include "images/admin_ingame.xpm"
 #include "images/admin_away.xpm"
+#include "images/admin_broom.xpm"
+#include "images/admin_ingame.xpm"
+
+#include "images/chanop.xpm"
+#include "images/chanop_away.xpm"
+#include "images/chanop_broom.xpm"
+#include "images/chanop_ingame.xpm"
+
 #include "images/away.xpm"
+#include "images/broom.xpm"
 #include "images/ingame.xpm"
+
 #include "images/up.xpm"
 #include "images/down.xpm"
 #include "images/rank0.xpm"
@@ -59,12 +71,25 @@ IconImageList::IconImageList() : wxImageList(16,16)
 
   Add( wxBitmap(admin_xpm) );
   Add( wxBitmap(admin_away_xpm) );
+  Add( wxBitmap(admin_broom_xpm) );
   Add( wxBitmap(admin_ingame_xpm) );
+
   Add( wxBitmap(bot_xpm) );
+  Add( wxBitmap(bot_broom_xpm) );
+  Add( wxBitmap(bot_ingame_xpm) );
+
   Add( wxBitmap(away_xpm) );
+  Add( wxBitmap(broom_xpm) );
   Add( wxBitmap(ingame_xpm) );
+
+  Add( wxBitmap(chanop_xpm) );
+  Add( wxBitmap(chanop_away_xpm) );
+  Add( wxBitmap(chanop_broom_xpm) );
+  Add( wxBitmap(chanop_ingame_xpm) );
+
   Add( wxBitmap(up_xpm) );
   Add( wxBitmap(down_xpm) );
+
   Add( wxBitmap(rank0_xpm) );
   Add( wxBitmap(rank1_xpm) );
   Add( wxBitmap(rank2_xpm) );
@@ -112,7 +137,35 @@ IconImageList& icons()
 }
 
 
-int IconImageList::GetUserStateIcon( const UserStatus& us )
+int IconImageList::GetUserListStateIcon( const UserStatus& us, bool chanop, bool inbroom )
+{
+  if ( us.bot ) {
+    if ( us.in_game ) return ICON_BOT_INGAME;
+    if ( inbroom ) return ICON_BOT_BROOM;
+    return ICON_BOT;
+  }
+  if (us.moderator ) {
+    if ( us.in_game ) return ICON_ADMIN_INGAME;
+    if ( us.away ) return ICON_ADMIN_AWAY;
+    if ( inbroom ) return ICON_ADMIN_BROOM;
+    return ICON_ADMIN;
+  }
+  if ( chanop ) {
+    if ( us.in_game ) return ICON_OP_INGAME;
+    if ( us.away ) return ICON_OP_AWAY;
+    if ( inbroom ) return ICON_OP_BROOM;
+    return ICON_OP;
+  }
+
+  if ( us.in_game ) return ICON_INGAME;
+  if ( us.away ) return ICON_AWAY;
+  if ( inbroom ) return ICON_BROOM;
+
+  return ICON_NOSTATE;
+}
+
+
+int IconImageList::GetUserBattleStateIcon( const UserStatus& us )
 {
   if ( us.bot ) return ICON_BOT;
   if (us.moderator ) {

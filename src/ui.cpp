@@ -625,6 +625,13 @@ void Ui::OnUserSaid( User& user, const std::string message, bool fromme )
 void Ui::OnBattleOpened( Battle& battle )
 {
   mw().GetJoinTab().GetBattleListTab().AddBattle( battle );
+  User& user = battle.GetFounder();
+  for ( int i = 0; i < m_serv->GetNumChannels(); i++ ) {
+    Channel& chan = m_serv->GetChannel( i );
+    if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) ) {
+      chan.uidata.panel->UserStatusUpdated( user );
+    }
+  }
 }
 
 
@@ -634,6 +641,14 @@ void Ui::OnBattleClosed( Battle& battle )
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) mw().GetJoinTab().LeaveCurrentBattle();
+  }
+  User& user = battle.GetFounder();
+  user.SetBattle(0);
+  for ( int i = 0; i < m_serv->GetNumChannels(); i++ ) {
+    Channel& chan = m_serv->GetChannel( i );
+    if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) ) {
+      chan.uidata.panel->UserStatusUpdated( user );
+    }
   }
 }
 
@@ -646,6 +661,12 @@ void Ui::OnUserJoinedBattle( Battle& battle, User& user )
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) br->OnUserJoined( user );
   }
+  for ( int i = 0; i < m_serv->GetNumChannels(); i++ ) {
+    Channel& chan = m_serv->GetChannel( i );
+    if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) ) {
+      chan.uidata.panel->UserStatusUpdated( user );
+    }
+  }
 }
 
 
@@ -657,6 +678,12 @@ void Ui::OnUserLeftBattle( Battle& battle, User& user )
     if ( &br->GetBattle() == &battle ) {
       br->OnUserLeft( user );
       if ( &user == &m_serv->GetMe() ) mw().GetJoinTab().LeaveCurrentBattle();
+    }
+  }
+  for ( int i = 0; i < m_serv->GetNumChannels(); i++ ) {
+    Channel& chan = m_serv->GetChannel( i );
+    if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) ) {
+      chan.uidata.panel->UserStatusUpdated( user );
     }
   }
 }

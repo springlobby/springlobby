@@ -27,6 +27,14 @@ springlobby_LDADD = \
 
 # the following line is searched for in a script to add filenames under it
 springlobby_SOURCES = \
+	src/images/broom.xpm \
+	src/images/bot_ingame.xpm \
+	src/images/bot_broom.xpm \
+	src/images/chanop_ingame.xpm \
+	src/images/chanop_away.xpm \
+	src/images/chanop_broom.xpm \
+	src/images/chanop.xpm \
+	src/images/admin_broom.xpm \
 	src/images/host_spectator.xpm \
 	src/images/host.xpm \
 	src/images/not_found_icon.xpm \

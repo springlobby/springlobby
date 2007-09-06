@@ -19,6 +19,12 @@ void User::Say( const std::string& message )
 }
 
 
+void User::DoAction( const std::string& message )
+{
+  m_serv.DoActionPrivate( m_nick, message );
+}
+
+
 Battle* User::GetBattle()
 {
   return m_battle;

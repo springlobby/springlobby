@@ -81,7 +81,9 @@ class Server
 
     virtual void DoActionChannel( const std::string& channel, const std::string& msg ) = 0;
     virtual void SayChannel( const std::string& channel, const std::string& msg ) = 0;
+
     virtual void SayPrivate( const std::string& nick, const std::string& msg ) = 0;
+    virtual void DoActionPrivate( const std::string& nick, const std::string& msg ) = 0;
 
     virtual void SayBattle( int battleid, const std::string& msg ) = 0;
     virtual void DoActionBattle( int battleid, const std::string& msg ) = 0;
@@ -108,7 +110,7 @@ class Server
     virtual void SendHostInfo( HostInfo update ) = 0;
     virtual void SendRaw( const std::string& raw ) = 0;
 
-  virtual void RequestInGameTime() = 0;
+    virtual void RequestInGameTime() = 0;
 
     virtual Battle* GetCurrentBattle() = 0;
 

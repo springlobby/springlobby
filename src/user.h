@@ -85,6 +85,7 @@ class User
 
     void Said( const std::string& message );
     void Say( const std::string& message );
+    void DoAction( const std::string& message );
 
     Battle* GetBattle();
     void SetBattle( Battle* battle );

@@ -759,6 +759,16 @@ void TASServer::SayPrivate( const std::string& nick, const std::string& msg )
 }
 
 
+void TASServer::DoActionPrivate( const std::string& nick, const std::string& msg )
+{
+  debug_func( "" );
+  ASSERT_LOGIC( IsOnline(), "Not online" );
+  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+
+  m_sock->Send( "SAYPRIVATE /me " + nick + " " + msg + "\n" );
+}
+
+
 void TASServer::SayBattle( int battleid, const std::string& msg )
 {
   debug_func( "" );

@@ -111,11 +111,32 @@ class ChatPanel : public wxPanel
     void OnServerMenuSetAccess( wxCommandEvent& event );
     void OnServerMenuBroadcast( wxCommandEvent& event );
 
+    void OnUserMenuOpenChat( wxCommandEvent& event );
+    void OnUserMenuJoinSame( wxCommandEvent& event );
+    void OnUserMenuSlap( wxCommandEvent& event );
+    void OnUserMenuMute( wxCommandEvent& event );
+    void OnUserMenuUnmute( wxCommandEvent& event );
+    void OnUserMenuKick( wxCommandEvent& event );
+    void OnUserMenuOp( wxCommandEvent& event );
+    void OnUserMenuDeop( wxCommandEvent& event );
+    void OnUserMenuAdminIngame( wxCommandEvent& event );
+    void OnUserMenuAdminLastLogin( wxCommandEvent& event );
+    void OnUserMenuAdminCurrentIP( wxCommandEvent& event );
+    void OnUserMenuAdminFindIP( wxCommandEvent& event );
+    void OnUserMenuAdminKick( wxCommandEvent& event );
+    void OnUserMenuAdminBan( wxCommandEvent& event );
+    void OnUserMenuAdminUnban( wxCommandEvent& event );
+    void OnUserMenuAdminMute( wxCommandEvent& event );
+    void OnUserMenuAdminUnmute( wxCommandEvent& event );
+    void OnUserMenuAdminRing( wxCommandEvent& event );
+
   protected:
     void _SetChannel( Channel* channel );
     void _OutputLine( const wxString& message, const wxColour& col );
 
-   bool m_show_nick_list;      //!< If the nicklist should be shown or not.
+    User* _GetSelectedUser();
+
+    bool m_show_nick_list;      //!< If the nicklist should be shown or not.
 
     wxBoxSizer* m_main_sizer;   //!< Main sizer containing all other sizers.
     wxBoxSizer* m_chat_sizer;   //!< Sizer containing the chat messages, and send input and button.
@@ -149,6 +170,7 @@ class ChatPanel : public wxPanel
     void LogTime();
     void _CreateControls( );
     void _CreatePopup();
+    wxMenu* _CreateNickListMenu();
 
     DECLARE_EVENT_TABLE();
 };
@@ -158,6 +180,7 @@ enum
     CHAT_SEND = wxID_HIGHEST,
     CHAT_TEXT,
     CHAT_LOG,
+
     CHAT_MENU_CH_LEAVE,
     CHAT_MENU_CH_INFO,
     CHAT_MENU_CH_TOPIC,
@@ -169,12 +192,32 @@ enum
     CHAT_MENU_CH_SPAM_ON,
     CHAT_MENU_CH_SPAM_OFF,
     CHAT_MENU_CH_SPAM_ISON,
+
     CHAT_MENU_SV_DISCON,
     CHAT_MENU_SV_RECON,
     CHAT_MENU_SV_REMOVE,
     CHAT_MENU_SV_CHPWD,
     CHAT_MENU_SV_ACCESS,
-    CHAT_MENU_SV_BROADCAST
+    CHAT_MENU_SV_BROADCAST,
+
+    CHAT_MENU_US_CHAT,
+    CHAT_MENU_US_JOIN,
+    CHAT_MENU_US_SLAP,
+    CHAT_MENU_US_MUTE,
+    CHAT_MENU_US_UNMUTE,
+    CHAT_MENU_US_KICK,
+    CHAT_MENU_US_OP,
+    CHAT_MENU_US_DEOP,
+    CHAT_MENU_US_ADMIN_INGAME,
+    CHAT_MENU_US_ADMIN_LASTLOGIN,
+    CHAT_MENU_US_ADMIN_CURIP,
+    CHAT_MENU_US_ADMIN_FINDIP,
+    CHAT_MENU_US_ADMIN_KICK,
+    CHAT_MENU_US_ADMIN_BAN,
+    CHAT_MENU_US_ADMIN_UNBAN,
+    CHAT_MENU_US_ADMIN_MUTE,
+    CHAT_MENU_US_ADMIN_UNMUTE,
+    CHAT_MENU_US_ADMIN_RING
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
