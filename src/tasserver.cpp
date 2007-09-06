@@ -101,13 +101,13 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     m_sock->Send( "GETINGAMETIME " + STD_STRING(params) + "\n" );
     return true;
   } else if ( subcmd == _("/kick") ) {
-    m_sock->Send( "KICK " + STD_STRING(params) + "\n" );
+    m_sock->Send( "KICKUSER " + STD_STRING(params) + "\n" );
     return true;
   } else if ( subcmd == _("/ban") ) {
-    m_sock->Send( "BAN " + STD_STRING(params) + "\n" );
+    m_sock->Send( "BANLISTADD " + STD_STRING(params) + "\n" );
     return true;
   } else if ( subcmd == _("/unban") ) {
-    m_sock->Send( "UNBAN " + STD_STRING(params) + "\n" );
+    m_sock->Send( "BANLISTREMOVE " + STD_STRING(params) + "\n" );
     return true;
   } else if ( subcmd == _("/banlist") ) {
     m_sock->Send( "BANLIST\n" );
