@@ -98,7 +98,7 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
   wxString subcmd = cmd.BeforeFirst(' ').Lower();
   wxString params = cmd.AfterFirst( ' ' );
   if ( subcmd == _("/ingame") ) {
-    m_sock->Send( "INGAME " + STD_STRING(params) + "\n" );
+    m_sock->Send( "GETINGAMETIME " + STD_STRING(params) + "\n" );
     return true;
   } else if ( subcmd == _("/kick") ) {
     m_sock->Send( "KICK " + STD_STRING(params) + "\n" );
