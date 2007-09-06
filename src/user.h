@@ -63,6 +63,7 @@ class User
 
     // User interface
 
+    Server& GetServer() { return m_serv; }
     std::string GetNick() const { return m_nick; }
     void SetNick( const std::string& nick ) { m_nick = nick; }
 

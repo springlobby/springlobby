@@ -655,6 +655,7 @@ void ChatPanel::Say( const wxString& message )
       }
       if ( line.StartsWith( _T("/") ) ) {
         if ( m_channel->ExecuteSayCommand( STD_STRING(line) ) ) return;
+        if ( m_channel->GetServer().ExecuteSayCommand( line ) ) return;
       }
       m_channel->Say( STD_STRING(line) );
 
@@ -666,6 +667,7 @@ void ChatPanel::Say( const wxString& message )
       }
       if ( line.StartsWith(_T("/")) ) {
         if ( m_battle->ExecuteSayCommand( STD_STRING(line) ) ) return;
+        if ( m_battle->GetServer().ExecuteSayCommand( line ) ) return;
       }
       m_battle->Say( STD_STRING(line) );
 
@@ -677,6 +679,7 @@ void ChatPanel::Say( const wxString& message )
       }
       if ( line.StartsWith(_T("/")) ) {
         if ( m_user->ExecuteSayCommand( STD_STRING(line) ) ) return;
+        if ( m_user->GetServer().ExecuteSayCommand( line ) ) return;
       }
       m_user->Say( STD_STRING(line) );
 
