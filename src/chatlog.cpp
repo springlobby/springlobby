@@ -9,6 +9,7 @@
 #include <wx/dir.h>
 #include <wx/datetime.h>
 #include <wx/msgdlg.h>
+#include <wx/intl.h>
 
 #include "chatlog.h"
 #include "settings.h"
