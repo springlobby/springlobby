@@ -571,10 +571,10 @@ void ChatPanel::SetChannel( Channel* chan )
     }
   } else if ( chan != 0 ) {
     chan->uidata.panel = this;
+    if (m_chat_log) delete m_chat_log;
+    m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),WX_STRING(chan->GetName()));
   }
   m_channel = chan;
-  if (m_chat_log) delete m_chat_log;
-  m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),WX_STRING(chan->GetName()));
 }
 
 
