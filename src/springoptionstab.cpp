@@ -18,6 +18,7 @@
 #include <wx/stdpaths.h>
 #include <wx/dir.h>
 #include <wx/file.h>
+#include <wx/stdpaths.h>
 
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
