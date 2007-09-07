@@ -624,6 +624,12 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     msg = GetSentenceParam( params );
     m_se->OnChannelMessage( channel, msg );
     //CHANNELMESSAGE channame {message}
+  } else if ( cmd == "FORCELEAVECHANNEL" ) {
+    channel = GetWordParam( params );
+    nick = GetWordParam( params );
+    msg = GetSentenceParam( params );
+    m_se->OnChannelPart( channel, GetMe().GetNick(), "Kicked by <" + nick + "> " + msg );
+    //FORCELEAVECHANNEL channame username [{reason}]
   } else {
     debug( "??? Cmd: " + cmd + " params: " + params );
     m_se->OnUnknownCommand( cmd, params );

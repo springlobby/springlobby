@@ -536,6 +536,15 @@ void ChatPanel::Parted( User& who, const wxString& message )
 {
   _OutputLine( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" )."), wxColour(0, 80, 0) );
   if ( m_show_nick_list ) m_nicklist->RemoveUser( who );
+
+  if ( m_type == CPT_Channel ) {
+    if ( m_channel == 0 ) return;
+    if ( &who == &m_channel->GetMe() ) {
+      m_channel->uidata.panel = 0;
+      SetChannel( 0 );
+    }
+  }
+
 }
 
 
