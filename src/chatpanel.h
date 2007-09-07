@@ -42,8 +42,7 @@ enum ChatPanelType {
 class ChatPanel : public wxPanel
 {
   public:
-    //ChatPanel( wxWindow* parent, bool show_nick_list );
-    ChatPanel();
+
     ChatPanel( wxWindow* parent, Ui& ui, Channel& chan );
     ChatPanel( wxWindow* parent, Ui& ui, User& user );
     ChatPanel( wxWindow* parent, Ui& ui, Server& serv );
@@ -170,7 +169,7 @@ class ChatPanel : public wxPanel
 
     wxMenu* m_popup_menu;
 
-    chatlog* m_chat_log;
+    ChatLog* m_chat_log;
 
     void LogTime();
     void _CreateControls( );
