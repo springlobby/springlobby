@@ -27,6 +27,8 @@ springlobby_LDADD = \
 
 # the following line is searched for in a script to add filenames under it
 springlobby_SOURCES = \
+	src/chatlog.h \
+	src/chatlog.cpp \
 	src/images/broom.xpm \
 	src/images/bot_ingame.xpm \
 	src/images/bot_broom.xpm \
