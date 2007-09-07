@@ -357,7 +357,7 @@ void Ui::ConsoleHelp( const wxString& topic )
 {
   ChatPanel* panel = GetActiveChatPanel();
   if ( panel == 0 ) {
-    ShowMessage( _("Type /help in a chat box."), _("Help error") );
+    ShowMessage( _("Help error"), _("Type /help in a chat box.") );
     return;
   }
   if ( topic == wxEmptyString ) {
@@ -607,7 +607,7 @@ void Ui::OnServerMessage( Server& server, const std::string& message )
   if ( panel != 0 ) {
     panel->StatusMessage( WX_STRING(message) );
   } else {
-    ShowMessage( WX_STRING(message), _("Server message") );
+    ShowMessage( _("Server message"), WX_STRING(message) );
   }
 }
 
