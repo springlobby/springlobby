@@ -4,6 +4,8 @@
 #include <wx/panel.h>
 #include <wx/string.h>
 
+ #include "chatlog.h"
+
 class wxCommandEvent;
 class wxSizeEvent;
 class wxBoxSizer;
@@ -41,6 +43,7 @@ class ChatPanel : public wxPanel
 {
   public:
     //ChatPanel( wxWindow* parent, bool show_nick_list );
+    ChatPanel();
     ChatPanel( wxWindow* parent, Ui& ui, Channel& chan );
     ChatPanel( wxWindow* parent, Ui& ui, User& user );
     ChatPanel( wxWindow* parent, Ui& ui, Server& serv );
@@ -166,6 +169,8 @@ class ChatPanel : public wxPanel
     wxString m_chan_pass;
 
     wxMenu* m_popup_menu;
+
+    chatlog* m_chat_log;
 
     void LogTime();
     void _CreateControls( );

@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_SPRINGOPTIONSTAB_H
 
 #include <wx/panel.h>
+#include <wx/checkbox.h>
 
 class wxStaticBoxSizer;
 class wxStaticBox;
@@ -36,6 +37,7 @@ class SpringOptionsTab : public wxPanel
     void OnBrowseExec( wxCommandEvent& event );
     void OnBrowseSync( wxCommandEvent& event );
 
+
     void OnApply( wxCommandEvent& event );
     void OnRestore( wxCommandEvent& event );
 
@@ -46,6 +48,12 @@ class SpringOptionsTab : public wxPanel
     void OnFindDir( wxCommandEvent& event );
     void OnFindExec( wxCommandEvent& event );
     void OnFindSync( wxCommandEvent& event );
+
+    //Chat Log
+    //Note Chat Log will be Configurated in the "OnAutoConf"
+    void OnFindChatLog( wxCommandEvent& event );
+    void OnBrowseChatLog( wxCommandEvent& event );
+    wxString AutoFindChatLogDir( const wxString& def = _T("") );
 
   protected:
 
@@ -59,6 +67,7 @@ class SpringOptionsTab : public wxPanel
     wxButton* m_exec_find_btn;
     wxButton* m_sync_browse_btn;
     wxButton* m_sync_find_btn;
+
     wxButton* m_auto_btn;
 
     wxRadioButton* m_exec_def_radio;
@@ -70,16 +79,29 @@ class SpringOptionsTab : public wxPanel
     wxTextCtrl* m_exec_edit;
     wxTextCtrl* m_sync_edit;
 
+
     wxStaticBox* m_exec_box;
     wxStaticBox* m_sync_box;
     wxStaticBoxSizer* m_exec_box_sizer;
     wxStaticBoxSizer* m_sync_box_sizer;
+
 
     wxBoxSizer* m_main_sizer;
     wxBoxSizer* m_dir_sizer;
     wxBoxSizer* m_aconf_sizer;
     wxBoxSizer* m_exec_loc_sizer;
     wxBoxSizer* m_sync_loc_sizer;
+
+    //Chat Log
+    wxStaticText* m_chatlog_loc_text;
+    wxButton* m_chatlog_browse_btn;
+    wxButton* m_chatlog_find_btn;
+    wxCheckBox* m_chatlog_enable_chk;
+    wxTextCtrl* m_chatlog_edit;
+    wxStaticBox* m_chatlog_box;
+    wxStaticBoxSizer* m_chatlog_box_sizer;
+    wxBoxSizer* m_chatlog_loc_sizer;
+
 
     Ui& m_ui;
 
@@ -97,6 +119,11 @@ enum
     SPRING_DIRFIND,
     SPRING_EXECFIND,
     SPRING_SYNCFIND,
+
+    //Chat Log
+    CHATLOG_FIND,
+    CHATLOG_BROWSE,
+    CHATLOG_ENABLE,
 
 };
 

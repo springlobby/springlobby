@@ -85,6 +85,11 @@ class Settings
     void   SetSpringLoc( const std::string& loc );
     std::string GetSpringUsedLoc( bool force = false, bool defloc = false );
 
+    bool GetChatLogEnable();
+    void SetChatLogEnable( const bool value );
+    wxString GetChatLogLoc();
+    void   SetChatLogLoc( const wxString& loc );
+
     std::string GetLastHostDescription();
     std::string GetLastHostMod();
     std::string GetLastHostPassword();
@@ -100,6 +105,7 @@ class Settings
     void SetLastHostPlayerNum( int value );
     void SetLastHostNATSetting( int value );
     void SetLastHostMap( const std::string& value );
+
 
     void SetLastAI( const std::string& ai );
     std::string GetLastAI();

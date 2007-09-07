@@ -41,9 +41,12 @@ BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
     EVT_BUTTON ( SPRING_DIRFIND, SpringOptionsTab::OnFindDir )
     EVT_BUTTON ( SPRING_EXECFIND, SpringOptionsTab::OnFindExec )
     EVT_BUTTON ( SPRING_SYNCFIND, SpringOptionsTab::OnFindSync )
-
     EVT_RADIOBUTTON( SPRING_DEFEXE, SpringOptionsTab::OnDefaultExe )
     EVT_RADIOBUTTON( SPRING_DEFUSYNC, SpringOptionsTab::OnDefaultUsync )
+
+    //Chat Log
+    EVT_BUTTON ( CHATLOG_FIND, SpringOptionsTab::OnFindChatLog )
+    EVT_BUTTON ( CHATLOG_BROWSE, SpringOptionsTab::OnBrowseChatLog )
 
 END_EVENT_TABLE()
 
@@ -61,12 +64,14 @@ END_EVENT_TABLE()
   m_exec_find_btn = new wxButton( this, SPRING_EXECFIND, _("Find") );
   m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _("Browse") );
   m_sync_find_btn = new wxButton( this, SPRING_SYNCFIND, _("Find") );
+
   m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _("Auto Configure") );
 
   m_exec_def_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
   m_exec_spec_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Specify:") );
   m_sync_def_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
   m_sync_spec_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Specify:") );
+
 
   if ( sett().GetSpringUseDefLoc() ) m_exec_def_radio->SetValue( true );
   else m_exec_spec_radio->SetValue( true );
@@ -79,6 +84,14 @@ END_EVENT_TABLE()
 
   m_exec_box = new wxStaticBox( this, -1, _("Spring executable") );
   m_sync_box = new wxStaticBox( this, -1, _("UnitSync library") );
+
+  //Chat Log:
+  m_chatlog_loc_text = new wxStaticText( this, -1, _("Location") );
+  m_chatlog_browse_btn = new wxButton( this, CHATLOG_BROWSE, _("Browse") );
+  m_chatlog_find_btn = new wxButton( this, CHATLOG_FIND, _("Find") );
+  m_chatlog_enable_chk = new wxCheckBox( this, CHATLOG_ENABLE, _ ("Enable logging Chat."), wxDefaultPosition, wxDefaultSize,0);
+  m_chatlog_enable_chk->SetValue( sett().GetChatLogEnable() );
+  m_chatlog_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetChatLogLoc()) );
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   m_dir_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -101,6 +114,7 @@ END_EVENT_TABLE()
   m_sync_loc_sizer->Add( m_sync_browse_btn );
   m_sync_loc_sizer->Add( m_sync_find_btn );
 
+
   m_exec_box_sizer = new wxStaticBoxSizer( m_exec_box, wxVERTICAL );
   m_sync_box_sizer = new wxStaticBoxSizer( m_sync_box, wxVERTICAL );
 
@@ -118,6 +132,18 @@ END_EVENT_TABLE()
   m_main_sizer->Add( m_dir_sizer, 0, wxEXPAND | wxALL, 2 );
   m_main_sizer->Add( m_exec_box_sizer, 0, wxEXPAND | wxALL, 2 );
   m_main_sizer->Add( m_sync_box_sizer, 0, wxEXPAND | wxALL, 2 );
+  //Chat Log
+        m_chatlog_box = new wxStaticBox( this, -1, _("Log Chat") );
+        m_chatlog_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
+        m_chatlog_loc_sizer->Add( m_chatlog_loc_text, 0, wxALL, 2 );
+        m_chatlog_loc_sizer->Add( m_chatlog_edit, 1, wxEXPAND );
+        m_chatlog_loc_sizer->Add( m_chatlog_browse_btn );
+        m_chatlog_loc_sizer->Add( m_chatlog_find_btn );
+        m_chatlog_box_sizer = new wxStaticBoxSizer( m_chatlog_box, wxVERTICAL );
+        m_chatlog_box_sizer->Add( m_chatlog_enable_chk, 0, wxALL, 2 );
+        m_chatlog_box_sizer->Add( m_chatlog_loc_sizer, 0, wxEXPAND | wxALL, 2 );
+        m_main_sizer->Add( m_chatlog_box_sizer, 0, wxEXPAND | wxALL, 2 );
+  //END
   m_main_sizer->Add( m_aconf_sizer, 0, wxEXPAND | wxALL, 2 );
   m_main_sizer->AddStretchSpacer();
 
@@ -151,6 +177,10 @@ void SpringOptionsTab::DoRestore()
   m_sync_spec_radio->SetValue( !sett().GetUnitSyncUseDefLoc() );
   HandleExeloc( sett().GetSpringUseDefLoc() );
   HandleUsyncloc( sett().GetUnitSyncUseDefLoc() );
+
+  //Chat Log
+  m_chatlog_enable_chk->SetValue(  sett().GetChatLogEnable() );
+  m_chatlog_edit->SetValue(  WX_STRING(sett().GetChatLogLoc()) );
 }
 
 
@@ -366,6 +396,9 @@ void SpringOptionsTab::OnAutoConf( wxCommandEvent& event )
   OnFindDir( event );
   OnFindExec( event );
   OnFindSync( event );
+  //Chat Log
+  m_chatlog_enable_chk->SetValue(false);
+  m_chatlog_edit->SetValue( AutoFindChatLogDir() );
 }
 
 
@@ -404,8 +437,6 @@ void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
   if ( pic.ShowModal() == wxID_OK ) m_exec_edit->SetValue( pic.GetPath() );
 }
 
-
-
 void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
 {
   wxFileDialog pic( this, _("Choose a unitsync library"), WX_STRING(sett().GetSpringDir()), wxString(UNITSYNC_BIN), CHOOSE_DLL );
@@ -433,6 +464,10 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
     }
   }
   m_ui.mw().OnUnitSyncReloaded();
+
+  //Chat Log
+  sett().SetChatLogEnable( m_chatlog_enable_chk->GetValue());
+  sett().SetChatLogLoc( m_chatlog_edit->GetValue() );
 }
 
 
@@ -453,3 +488,19 @@ void SpringOptionsTab::OnDefaultUsync( wxCommandEvent& event )
   HandleUsyncloc( m_sync_def_radio->GetValue() );
 }
 
+//Chat Log
+void SpringOptionsTab::OnFindChatLog( wxCommandEvent& event )
+{
+  m_chatlog_edit->SetValue( AutoFindChatLogDir( m_chatlog_edit->GetValue() ) );
+}
+
+void SpringOptionsTab::OnBrowseChatLog( wxCommandEvent& event )
+{
+  wxDirDialog dirpic( this, _("Choose a directory"), WX_STRING(sett().GetSpringDir()), wxDD_DEFAULT_STYLE );
+  if ( dirpic.ShowModal() == wxID_OK ) m_chatlog_edit->SetValue( dirpic.GetPath() );
+}
+
+wxString SpringOptionsTab::AutoFindChatLogDir( const wxString& def )
+{
+  return  AutoFindSpringDir( m_chatlog_edit->GetValue() )+_("logs");
+}

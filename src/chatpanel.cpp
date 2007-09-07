@@ -14,6 +14,7 @@
 #include <wx/tokenzr.h>
 #include <wx/msgdlg.h>
 #include <wx/menu.h>
+#include <wx/utils.h>
 
 #include "channel.h"
 #include "chatpanel.h"
@@ -24,6 +25,8 @@
 #include "battle.h"
 #include "nicklistctrl.h"
 #include "mainwindow.h"
+#include "chatlog.h"
+#include "settings.h"
 
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
@@ -92,6 +95,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
   _CreateControls( );
   _SetChannel( &chan );
   m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), this, this );
+  m_chat_log = new chatlog(WX_STRING(sett().GetDefaultServer()),WX_STRING(chan.GetName()));
 }
 
 
@@ -100,6 +104,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user )
 {
   _CreateControls( );
   user.uidata.panel = this;
+  m_chat_log = new chatlog(WX_STRING(sett().GetDefaultServer()),WX_STRING(user.GetNick()));
 }
 
 
@@ -109,6 +114,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
   debug_func( "wxWindow* parent, Server& serv" );
   _CreateControls( );
   serv.uidata.panel = this;
+  m_chat_log = new chatlog(WX_STRING(sett().GetDefaultServer()),_("_SERVER"));
   m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), this, this );
 }
 
@@ -118,6 +124,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
 {
   debug_func( "wxWindow* parent, Battle& battle" );
   _CreateControls( );
+  wxDateTime now = wxDateTime::Now();
+  m_chat_log = new chatlog(WX_STRING(sett().GetDefaultServer()),_("_BATTLE_")+WX_STRING(now.Format( _T("%Y_%m_%d__%H_%M_%S"))));
 }
 
 
@@ -135,6 +143,8 @@ ChatPanel::~ChatPanel()
     if ( m_channel->uidata.panel == this ) m_channel->uidata.panel = 0;
     m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), this, this );
   }
+  if (m_chat_log) delete m_chat_log;
+  m_chat_log = NULL;
 }
 
 
@@ -409,6 +419,7 @@ void ChatPanel::_OutputLine( const wxString& message, const wxColour& col )
   m_chatlog_text->SetDefaultStyle(wxTextAttr(col));
   m_chatlog_text->Freeze();
   m_chatlog_text->AppendText( message + _T("\n") );
+  if (m_chat_log != NULL) {m_chat_log->AddMessage( message);}
   CheckLength();
 #ifdef __WXMSW__
   m_chatlog_text->ScrollLines( 10 );
@@ -562,6 +573,9 @@ void ChatPanel::SetChannel( Channel* chan )
     chan->uidata.panel = this;
   }
   m_channel = chan;
+  if (m_chat_log) delete m_chat_log;
+  m_chat_log = NULL;
+  m_chat_log = new chatlog(WX_STRING(sett().GetDefaultServer()),WX_STRING(chan->GetName()));
 }
 
 
@@ -577,6 +591,9 @@ void ChatPanel::SetServer( Server* serv )
   if ( (serv == 0) && (m_server != 0) ) m_server->uidata.panel = 0;
   else if ( serv != 0 ) serv->uidata.panel = this;
   m_server = serv;
+  if (m_chat_log) delete m_chat_log;
+  m_chat_log = NULL;
+  m_chat_log = new chatlog(WX_STRING(sett().GetDefaultServer()),_("_SERVER"));
 }
 
 
@@ -592,6 +609,9 @@ void ChatPanel::SetUser( User* usr )
   if ( (usr == 0) && (m_user != 0) ) m_user->uidata.panel = 0;
   else if ( usr != 0 ) usr->uidata.panel = this;
   m_user = usr;
+  if (m_chat_log) delete m_chat_log;
+  m_chat_log = NULL;
+  m_chat_log = new chatlog(WX_STRING(sett().GetDefaultServer()),WX_STRING(usr->GetNick()));
 }
 
 

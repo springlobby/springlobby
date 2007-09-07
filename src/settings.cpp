@@ -386,6 +386,26 @@ std::string Settings::GetUnitSyncUsedLoc( bool force, bool defloc )
   }
 }
 
+bool Settings::GetChatLogEnable()
+{
+    if (!m_config->Exists(_T("/ChatLog/chatlog_enable"))) SetChatLogEnable( false );
+    return m_config->Read( _T("/ChatLog/chatlog_enable"), true );
+}
+
+void Settings::SetChatLogEnable( const bool value )
+{
+    m_config->Write( _T("/ChatLog/chatlog_enable"), value );
+}
+
+wxString Settings::GetChatLogLoc()
+{
+  return m_config->Read( _T("/ChatLog/chatlog_loc"), _T("") );
+}
+
+void   Settings::SetChatLogLoc( const wxString& loc )
+{
+  m_config->Write( _T("/ChatLog/chatlog_loc"), loc );
+}
 
 std::string Settings::GetLastHostDescription()
 {
