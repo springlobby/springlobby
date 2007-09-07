@@ -94,7 +94,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
   debug_func( "wxWindow* parent, Channel& chan" );
   _CreateControls( );
   _SetChannel( &chan );
-  m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), this, this );
+  m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, this );
   m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),WX_STRING(chan.GetName()));
 }
 
@@ -115,7 +115,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
   _CreateControls( );
   serv.uidata.panel = this;
   m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),_("_SERVER"));
-  m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), this, this );
+  m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, this );
 }
 
 
@@ -143,8 +143,8 @@ ChatPanel::~ChatPanel()
   }
   if (m_chat_log) delete m_chat_log;
 
-  if ( m_type == CPT_Channel ) m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN );
-  if ( m_type == CPT_Server ) m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN );
+  if ( m_type == CPT_Channel ) m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, 0 );
+  if ( m_type == CPT_Server ) m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, 0 );
 }
 
 

@@ -31,6 +31,14 @@ enum ChatPanelType {
 };
 
 
+class ChatLogEvents: public wxEvtHandler
+{
+  public:
+
+  protected:
+
+};
+
 /*! @brief wxPanel that contains a chat.
  *
  * This panel contains a chat with a multiline TextCtrl for the messages, a
