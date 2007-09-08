@@ -355,8 +355,10 @@ void SpringUnitSync::SetCurrentMod( const std::string& modname )
 {
   debug_func("modname = \"" + modname + "\"" );
   if ( m_current_mod != modname ) {
-    FreeUnitSyncLib();
-    LoadUnitSyncLib();
+    //FreeUnitSyncLib();
+    //LoadUnitSyncLib();
+    m_uninit();
+    m_init( true, 1 );
     m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
     m_current_mod = modname;
     m_side_count = m_get_side_count();

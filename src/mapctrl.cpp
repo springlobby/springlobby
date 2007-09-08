@@ -515,8 +515,28 @@ wxRect MapCtrl::_GetBotRect( BattleBot& bot, bool selected )
   m_map = m_battle->Map();
   int x = (int)( (double)((double)bot.posx / (double)m_map.info.width) * (double)mr.width ) - 8;
   int y = (int)( (double)(bot.posy / (double)m_map.info.height) * (double)mr.height ) - 8;
-  if ( selected ) return wxRect( x+mr.x-2, y+mr.y-2, 60, 60 );
-  else return wxRect( x+mr.x-2, y+mr.y-2, 20, 20 );
+  if ( selected ) {
+    bool we = x+60>mr.width;
+    bool he = y+60>mr.height;
+    if ( we ) {
+      if ( he ) {
+        //bro = BRO_BottomRight;
+        return wxRect( mr.x+mr.width-60, mr.y+mr.height-60, 60, 60 );
+      } else {
+        //bro = BRO_TopRight;
+        return wxRect( mr.x+mr.width-60, y+mr.y-2, 60, 60 );
+      }
+    } else if ( he ) {
+      //bro = BRO_BottomLeft;
+      return wxRect( x+mr.x-2, mr.y+mr.height-60, 60, 60 );
+    } else {
+      //bro = BRO_TopLeft;
+      return wxRect( x+mr.x-2, y+mr.y-2, 60, 60 );
+    }
+  } else {
+    //bro = BRO_TopLeft;
+    return wxRect( x+mr.x-2, y+mr.y-2, 20, 20 );
+  }
 }
 
 
@@ -998,7 +1018,8 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     } else if ( m_mdown_area == RA_Side ) {
       try {
         usync()->SetCurrentMod( STD_STRING(m_battle->GetModName()) );
-        bot->bs.side = (bot->bs.side + 1) % usync()->GetSideCount();
+        if ( usync()->GetSideCount() > 0 ) bot->bs.side = (bot->bs.side + 1) % usync()->GetSideCount();
+        else bot->bs.side = 0;
       } catch(...) {}
       RefreshRect( _GetBotRect( *bot, true ), false );
 

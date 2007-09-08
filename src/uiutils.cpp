@@ -34,7 +34,7 @@ wxString RefineModname( wxString modname )
 
 wxString RTFtoText( wxString rtfinput )
 {
-  wxRegEx StripParenthesis = wxRegEx ( _T("{[:graph:]*}"), wxRE_ADVANCED ); // remove everything in {}, excluding the first level
+/*  wxRegEx StripParenthesis( _T("{[:graph:]*}"), wxRE_ADVANCED ); // remove everything in {}, excluding the first level
   if ( StripParenthesis.Matches( rtfinput ) ) StripParenthesis.ReplaceAll( rtfinput, _T("") );
 
   wxReg StripAfterSlash = wxRegEx ( _T("'\'[:graph:]*['\',' ']"), wxRE_ADVANCED ); //ignore anything in the form \please\ignore\this
@@ -42,7 +42,7 @@ wxString RTFtoText( wxString rtfinput )
 
   rtfinput.Replace( _T("{"), _T("") ); //strip inital & final parenthesis
   rtfinput.Replace( _T("}"), _T("") );
-
+*/
   return rtfinput;
 }
 

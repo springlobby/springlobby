@@ -90,13 +90,6 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   ReloadMaplist();
   ReloadModlist();
 
-/*  if ( m_map_pick->GetCount() > 0 ) {
-    m_map_pick->SetSelection(0);
-    UnitSyncMap map = usync()->GetMap( 0, true );
-    m_battle.SetMap( map );
-    m_minimap->UpdateMinimap();
-  }*/
-
 }
 
 

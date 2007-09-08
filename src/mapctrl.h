@@ -43,6 +43,12 @@ typedef int MouseAction;
 #define MA_ResizeDownRight 7
 
 
+typedef int BotRectOrient;
+#define BRO_TopLeft 0
+#define BRO_BottomLeft 1
+#define BRO_TopRight 2
+#define BRO_BottomRight 3
+
 class MapCtrl : public wxPanel
 {
   public:
