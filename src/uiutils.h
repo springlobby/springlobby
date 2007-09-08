@@ -22,6 +22,7 @@ const int colour_values[][3] = { {240,210,0}, {128, 128, 128}, {0, 0, 128}, {0, 
 
 wxString RefineMapname( wxString mapname );
 wxString RefineModname( wxString modname );
+wxString RTFtoText( wxString rtfinput );
 bool AreColoursSimilar( int r1, int g1, int b1, int r2, int g2, int b2, int mindiff = 10 );
 
 void ColourDelta( int& r, int& g, int& b, const int& delta );

@@ -1,6 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 #include <wx/colour.h>
+#include <wx/regex.h>
 
 #include "uiutils.h"
 
@@ -29,6 +30,20 @@ wxString RefineModname( wxString modname )
   modname.Replace(_T("Alpha"), _T("a") );
   modname.Replace(_T("Beta"), _T("b") );
   return modname;
+}
+
+wxString RTFtoText( wxString rtfinput )
+{
+  wxRegEx StripParenthesis = wxRegEx ( _T("{ * "), wxRE_ADVANCED ); // remove everything in {}, excluding the first level
+  if ( StripParenthesis.Matches( rtfinput ) ) StripParenthesis.ReplaceAll( rtfinput, _T("") );
+
+  wxReg StripAfterSlash = wxRegEx ( _T("'\'"), wxRE_ADVANCED ); //ignore anything in the form \please\ignore\this
+  if ( StripAfterSlash.Matches( rtfinput ) StripAfterSlash.ReplaceAll( rtfinput, _T("") );
+
+  rtfinput.Replace( _T("{"), _T("") ); //strip inital & final parenthesis
+  rtfinput.Replace( _T("}"), _T("") );
+
+  return rtfinput;
 }
 
 
