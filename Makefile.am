@@ -27,6 +27,10 @@ springlobby_LDADD = \
 
 # the following line is searched for in a script to add filenames under it
 springlobby_SOURCES = \
+	src/maplistctrl.cpp \
+	src/maplistctrl.h \
+	src/mapselectdialog.cpp \
+	src/mapselectdialog.h \
 	src/chatlog.h \
 	src/chatlog.cpp \
 	src/images/broom.xpm \
