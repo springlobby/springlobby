@@ -4,6 +4,7 @@
 #include <wx/regex.h>
 
 #include "uiutils.h"
+#include "utils.h"
 
 
 wxString RefineMapname( wxString mapname )
@@ -32,20 +33,29 @@ wxString RefineModname( wxString modname )
   return modname;
 }
 
+
 wxString RTFtoText( wxString rtfinput )
 {
-/*  wxRegEx StripParenthesis( _T("{[:graph:]*}"), wxRE_ADVANCED ); // remove everything in {}, excluding the first level
-  if ( StripParenthesis.Matches( rtfinput ) ) StripParenthesis.ReplaceAll( rtfinput, _T("") );
+  rtfinput = rtfinput.AfterFirst( '{' ).BeforeLast( '}' );
 
-  wxReg StripAfterSlash = wxRegEx ( _T("'\'[:graph:]*['\',' ']"), wxRE_ADVANCED ); //ignore anything in the form \please\ignore\this
-  if ( StripAfterSlash.Matches( rtfinput ) StripAfterSlash.ReplaceAll( rtfinput, _T("") );
+  rtfinput.Replace( _T("\\pard"), _T("") ); // remove a ambiguus char
 
-  rtfinput.Replace( _T("{"), _T("") ); //strip inital & final parenthesis
-  rtfinput.Replace( _T("}"), _T("") );
-*/
-  return rtfinput;
+  rtfinput.Replace( _T("\\par"), _T(" \n") ); // convert the end of lines
+
+  wxString BeforeBrack = rtfinput.BeforeFirst( '{' );
+  wxString AfterBrack = rtfinput.AfterLast( '}' );
+  rtfinput = BeforeBrack + AfterBrack; // remove everyhting that matches { text }
+
+  wxString out;
+  while ( rtfinput.Find('\\') >= 0 ) //remove anything in the form \please\ignore\this
+  {
+    out += rtfinput.BeforeFirst( '\\' );
+    rtfinput = rtfinput.AfterFirst ( '\\' );
+    rtfinput = rtfinput.AfterFirst ( ' ' );
+  } ;
+
+  return out;
 }
-
 
 bool AreColoursSimilar( int r1, int g1, int b1, int r2, int g2, int b2, int mindiff )
 {
