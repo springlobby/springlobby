@@ -8,6 +8,7 @@
 #include <wx/timer.h>
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
+#include <wx/image.h>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -44,6 +45,7 @@ SpringLobbyApp::~SpringLobbyApp()
 bool SpringLobbyApp::OnInit()
 {
   debug_func( "" );
+  wxInitAllImageHandlers();
 
   InitDirs();
 

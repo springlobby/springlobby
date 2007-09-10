@@ -131,6 +131,8 @@ class IBattle
     virtual int GetNumDisabledUnits() { return 0; }
     virtual std::string DisabledUnits() { return ""; }
 
+    virtual void OnUnitSyncReloaded();
+
   protected:
 
     bool m_map_loaded;

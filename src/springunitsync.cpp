@@ -158,7 +158,7 @@ bool SpringUnitSync::LoadUnitSyncLib()
     m_side_count = 0;
   }
   catch ( ... ) {
-//    debug_error( e.what() );
+    debug_error( "Failed to load Unitsync lib." );
     FreeUnitSyncLib();
     return false;
   }
@@ -169,6 +169,7 @@ bool SpringUnitSync::LoadUnitSyncLib()
 
 void SpringUnitSync::FreeUnitSyncLib()
 {
+  debug_func( "" );
   if ( !m_loaded ) return;
   m_uninit();
 
@@ -355,10 +356,10 @@ void SpringUnitSync::SetCurrentMod( const std::string& modname )
 {
   debug_func("modname = \"" + modname + "\"" );
   if ( m_current_mod != modname ) {
-    //FreeUnitSyncLib();
-    //LoadUnitSyncLib();
-    m_uninit();
-    m_init( true, 1 );
+    FreeUnitSyncLib();
+    LoadUnitSyncLib();
+    //m_uninit();
+    //m_init( true, 1 );
     m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
     m_current_mod = modname;
     m_side_count = m_get_side_count();
@@ -551,8 +552,6 @@ wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int max_w, int m
 {
   int height = 1024;
   int width = 512;
-
-  wxInitAllImageHandlers();
 
   try {
     return GetCachedMinimap( mapname, max_w, max_h, store_size );

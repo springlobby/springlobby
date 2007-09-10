@@ -168,3 +168,9 @@ bool IBattle::ModExists()
   //return usync()->ModExists( STD_STRING(m_mod_name) );
 }
 
+
+void IBattle::OnUnitSyncReloaded()
+{
+  m_mod_exists = usync()->ModExists( STD_STRING(m_mod_name) );
+  m_map_exists = usync()->MapExists( STD_STRING(m_map_name) );
+}

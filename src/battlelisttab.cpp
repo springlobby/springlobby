@@ -327,6 +327,10 @@ void BattleListTab::OnSelect( wxListEvent& event )
 
 void BattleListTab::OnUnitSyncReloaded()
 {
+  for ( int i = 0; i < m_battle_list->GetItemCount(); i++ ) {
+    Battle& battle = *((Battle*)m_battle_list->GetItemData( i ));
+    battle.OnUnitSyncReloaded();
+  }
   UpdateList();
   m_minimap->UpdateMinimap();
 }

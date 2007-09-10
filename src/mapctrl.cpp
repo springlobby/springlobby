@@ -828,8 +828,6 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     return;
   }
 
-  if ( !m_draw_start_types ) return;
-
   if ( !m_image ) {
     wxRect r = _GetRefreshRect();
     wxRect d = _GetDownloadRect();
@@ -848,6 +846,8 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     }
     return;
   }
+
+  if ( !m_draw_start_types ) return;
 
   if ( m_battle->GetStartType() != ST_Choose ) return;
 
@@ -940,8 +940,6 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
     return;
   }
 
-  if ( !m_draw_start_types ) return;
-
   if ( !m_image ) {
     if ( m_rect_area != RA_Main ) {
       m_mdown_area = m_rect_area;
@@ -950,6 +948,8 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
     }
     return;
   }
+
+  if ( !m_draw_start_types ) return;
 
   if ( m_battle->GetStartType() != ST_Choose ) return;
   if ( !m_ro ) {
@@ -1033,8 +1033,6 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     return;
   }
 
-  if ( !m_draw_start_types ) return;
-
   if ( !m_image ) {
     if ( m_mdown_area == m_rect_area ) {
       if ( m_mdown_area == RA_Refresh ) {
@@ -1049,6 +1047,8 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     Update();
     return;
   }
+
+  if ( !m_draw_start_types ) return;
 
   if ( m_battle->GetStartType() != ST_Choose ) return;
 
