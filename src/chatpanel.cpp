@@ -141,7 +141,7 @@ ChatPanel::~ChatPanel()
   if ( m_channel != 0 ) {
     if ( m_channel->uidata.panel == this ) m_channel->uidata.panel = 0;
   }
-  if (m_chat_log) delete m_chat_log;
+  delete m_chat_log;
 
   if ( m_type == CPT_Channel ) m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, 0 );
   if ( m_type == CPT_Server ) m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, 0 );
@@ -580,7 +580,7 @@ void ChatPanel::SetChannel( Channel* chan )
     }
   } else if ( chan != 0 ) {
     chan->uidata.panel = this;
-    if (m_chat_log) delete m_chat_log;
+    delete m_chat_log;
     m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),WX_STRING(chan->GetName()));
   }
   m_channel = chan;
@@ -599,7 +599,7 @@ void ChatPanel::SetServer( Server* serv )
   if ( (serv == 0) && (m_server != 0) ) m_server->uidata.panel = 0;
   else if ( serv != 0 ) serv->uidata.panel = this;
   m_server = serv;
-  if (m_chat_log) delete m_chat_log;
+  delete m_chat_log;
   m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),_("_SERVER"));
 }
 
@@ -613,11 +613,15 @@ User* ChatPanel::GetUser()
 void ChatPanel::SetUser( User* usr )
 {
   ASSERT_LOGIC(m_type == CPT_User, "Not of type server" );
+
   if ( (usr == 0) && (m_user != 0) ) m_user->uidata.panel = 0;
   else if ( usr != 0 ) usr->uidata.panel = this;
+
   m_user = usr;
-  if (m_chat_log) delete m_chat_log;
-  m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),WX_STRING(usr->GetNick()));
+
+  delete m_chat_log;
+  if ( m_user ) m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),WX_STRING(usr->GetNick()));
+  else m_chat_log = 0;
 }
 
 
