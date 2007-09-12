@@ -118,11 +118,9 @@ void BattleMapTab::UpdateMap()
 
   m_minimap->UpdateMinimap();
 
-  if ( !usync()->MapExists( STD_STRING(m_battle.GetMapName()) ) ) return;
+  if ( !m_battle.MapExists() ) return;
 
-  UnitSyncMap map = m_battle.Map(); /*usync()->GetMap( STD_STRING(m_battle.GetMapName()) );
-  if ( map.hash != m_map.hash ) map = m_map = usync()->GetMap( STD_STRING(m_battle.GetMapName()), true );
-  else map = m_map;*/
+  UnitSyncMap map = m_battle.Map();
 
   m_map_opts_list->SetItem( 0, 1, wxString::Format( _T("%dx%d"), map.info.width/512, map.info.height/512 ) );
   m_map_opts_list->SetItem( 1, 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind ) );

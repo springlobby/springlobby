@@ -630,6 +630,10 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     msg = GetSentenceParam( params );
     m_se->OnChannelPart( channel, GetMe().GetNick(), "Kicked by <" + nick + "> " + msg );
     //FORCELEAVECHANNEL channame username [{reason}]
+  } else if ( cmd == "DENIED" ) {
+    msg = GetSentenceParam( params );
+    m_se->OnServerMessage( msg );
+    //Command: "DENIED" params: "Already logged in".
   } else {
     debug( "??? Cmd: " + cmd + " params: " + params );
     m_se->OnUnknownCommand( cmd, params );

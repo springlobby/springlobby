@@ -10,6 +10,9 @@
 #include <wx/stdpaths.h>
 #include <wx/string.h>
 #include <wx/file.h>
+//#include <wx/txtstrm.h>
+//#include <wx/wfstream.h>
+#include <wx/textfile.h>
 
 #include <stdexcept>
 
@@ -468,7 +471,7 @@ int SpringUnitSync::GetNumUnits()
   return m_get_unit_count();
 }
 
-
+/*
 int SpringUnitSync::GetUnitIndex( const std::string& name )
 {
   if ( !m_loaded ) return -1;
@@ -479,8 +482,8 @@ int SpringUnitSync::GetUnitIndex( const std::string& name )
   }
   return -1;
 }
-
-
+*/
+/*
 std::string SpringUnitSync::GetFullUnitName( int index )
 {
   if ( (!m_loaded) || (index < 0) ) return "unknown";
@@ -488,12 +491,37 @@ std::string SpringUnitSync::GetFullUnitName( int index )
   while ( m_proc_units_nocheck() );
   return m_get_unit_full_name( index );
 }
+*/
+
+wxString _GetCachedModUnitsFileName( const wxString& mod )
+{
+  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator();
+  wxString fname = WX_STRING( mod );
+  fname.Replace( _T("."), _T("_") );
+  fname.Replace( _T(" "), _T("_") );
+  return path + fname + _T(".units");
+}
 
 
 wxArrayString SpringUnitSync::GetUnitsList()
 {
   wxArrayString ret;
   if (!m_loaded) return ret;
+
+  wxString path = _GetCachedModUnitsFileName( WX_STRING(m_current_mod) );
+  try {
+
+    ASSERT_RUNTIME( wxFileName::FileExists( path ), "Cache file does not exist" );
+    wxTextFile f;
+    ASSERT_RUNTIME( f.Open(path), "Failed to open file" );
+
+    wxString str;
+    for ( str = f.GetFirstLine(); !f.Eof(); str = f.GetNextLine() ) ret.Add( str );
+
+    return ret;
+
+  } catch(...) {}
+
   m_add_all_archives( GetModArchive( GetModIndex( m_current_mod ) ).c_str() );
   while ( m_proc_units_nocheck() );
   for ( int i = 0; i < m_get_unit_count(); i++ ) {
@@ -501,6 +529,22 @@ wxArrayString SpringUnitSync::GetUnitsList()
     tmp += wxString(m_get_unit_name(i), wxConvUTF8) + _T(")");
     ret.Add( tmp );
   }
+
+  try {
+
+    wxFile f( path, wxFile::write );
+    ASSERT_RUNTIME( f.IsOpened(), "Couldn't create file" );
+
+    for ( unsigned int i = 0; i < ret.GetCount(); i++ ) {
+      std::string tmp = STD_STRING( ret.Item(i) );
+      tmp += "\n";
+      f.Write( tmp.c_str(), tmp.length() );
+    }
+
+    f.Close();
+
+  } catch(...) {}
+
   return ret;
 }
 
@@ -675,7 +719,7 @@ void SpringUnitSync::_LoadMapInfoExCache()
 
   CachedMapInfo cinfo;
   while ( !f.Eof() ) {
-    if ( f.Read( &cinfo, sizeof(CachedMapInfo) ) < sizeof(CachedMapInfo) ) {
+    if ( (unsigned int)f.Read( &cinfo, sizeof(CachedMapInfo) ) < sizeof(CachedMapInfo) ) {
       debug_error( "Cache file invalid" );
       m_mapinfo.clear();
       break;
