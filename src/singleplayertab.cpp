@@ -35,9 +35,9 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_ui( ui ),
   m_battle( ui, msptab )
 {
-  try {
+  /*try {
     if ( usync()->GetNumMods() > 0 ) m_battle.SetMod( usync()->GetMod( 0 ) ); // TODO load latest used mod.
-  } catch (...) {}
+  } catch (...) {}*/
 
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -113,6 +113,12 @@ void SinglePlayerTab::ReloadMaplist()
       m_map_pick->Insert( RefineMapname( WX_STRING(usync()->GetMap( i, false ).name) ), i );
     } catch(...) {}
   }
+  m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
+  if ( m_battle.GetMapName() != wxEmptyString ) {
+    m_map_pick->SetStringSelection( m_battle.GetMapName() );
+  } else {
+    m_map_pick->SetSelection( m_map_pick->GetCount()-1 );
+  }
 }
 
 
@@ -125,15 +131,27 @@ void SinglePlayerTab::ReloadModlist()
     } catch(...) {}
   }
 
-  if ( m_mod_pick->GetCount() > 0 ) {
-    if ( m_battle.GetModName() == wxEmptyString ) m_battle.SetMod( m_mod_pick->GetString( 0 ), wxEmptyString );
+  m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
+  if ( m_battle.GetModName() != wxEmptyString ) {
+    m_mod_pick->SetStringSelection( m_battle.GetModName() );
+  } else {
+    m_mod_pick->SetSelection( m_mod_pick->GetCount()-1 );
   }
-  m_mod_pick->SetStringSelection( RefineModname( WX_STRING(m_battle.GetModName()) ) );
 }
 
 
 bool SinglePlayerTab::ValidSetup()
 {
+  if ( (unsigned int)m_mod_pick->GetSelection() >= m_mod_pick->GetCount()-1 ) {
+    wxMessageBox( _("You have to select a mod first."), _("Gamesetup error") );
+    return false;
+  }
+
+  if ( (unsigned int)m_map_pick->GetSelection() >= m_map_pick->GetCount()-1 ) {
+    wxMessageBox( _("You have to select a map first."), _("Gamesetup error") );
+    return false;
+  }
+
   int numBots = 0;
   int first = -1;
   for ( unsigned int i = 0; i < (unsigned int)m_battle.Map().info.posCount; i++ ) {
@@ -162,22 +180,26 @@ bool SinglePlayerTab::ValidSetup()
 
 void SinglePlayerTab::OnMapSelect( wxCommandEvent& event )
 {
-  int index = m_map_pick->GetCurrentSelection();
-
-  UnitSyncMap map = usync()->GetMap( index, true );
-  m_battle.SetMap( map );
-
+  unsigned int index = (unsigned int)m_map_pick->GetCurrentSelection();
+  if ( index >= m_map_pick->GetCount()-1 ) {
+    m_battle.SetMap( wxEmptyString, wxEmptyString );
+  } else {
+    UnitSyncMap map = usync()->GetMap( index, true );
+    m_battle.SetMap( map );
+  }
   m_minimap->UpdateMinimap();
 }
 
 
 void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 {
-  int index = m_mod_pick->GetCurrentSelection();
-
-  UnitSyncMod mod = usync()->GetMod( index );
-  m_battle.SetMod( mod );
-
+  unsigned int index = (unsigned int)m_mod_pick->GetCurrentSelection();
+  if ( index >= m_mod_pick->GetCount()-1 ) {
+    m_battle.SetMod( wxEmptyString, wxEmptyString );
+  } else {
+    UnitSyncMod mod = usync()->GetMod( index );
+    m_battle.SetMod( mod );
+  }
   m_minimap->UpdateMinimap();
 }
 
