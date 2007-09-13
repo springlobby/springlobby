@@ -21,7 +21,10 @@ editing configure.ac and Makefile.am, but then you are on your own. If you are
 not planning to make patches or maintain packaging for some operating system,
 it is recommended to use prebuilt/prepackaged version if available for your
 operating system, or tarball source release if not, as the tarball does not
-need autogen.sh invocation."
+need autogen.sh invocation.
+
+IF YOU JUST WANT TO PLAY SPRING, YOU SHOULD DOWNLOAD SPRINGLOBBY AS TARBALL.
+THEN AUTOGEN.SH IS NOT NEEDED. IT IS ONLY NEEDED AFTER SVN CHECKOUT."
 
 test -d debian && {
   rm -f config.sub config.guess
