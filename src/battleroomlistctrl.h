@@ -33,6 +33,7 @@ class BattleroomListCtrl : public wxListCtrl
     void OnAllySelect( wxCommandEvent& event );
     void OnColourSelect( wxCommandEvent& event );
     void OnSideSelect( wxCommandEvent& event );
+    void OnHandicapSelect( wxCommandEvent& event );
     void OnSpecSelect( wxCommandEvent& event );
 
     void OnKickPlayer( wxCommandEvent& event );
@@ -50,6 +51,8 @@ class BattleroomListCtrl : public wxListCtrl
     wxMenu* m_sides;
     wxMenuItem* m_spec_item;
 
+    wxMenuItem* m_handicap_item;
+
     DECLARE_EVENT_TABLE();
 
 };
@@ -61,7 +64,8 @@ enum
   BRLIST_ALLY = BRLIST_TEAM + 1000,
   BRLIST_COLOUR = BRLIST_ALLY + 1000,
   BRLIST_SIDE = BRLIST_COLOUR + 1000,
-  BRLIST_SPEC = BRLIST_SIDE + 1000,
+  BRLIST_HANDICAP = BRLIST_SIDE + 1000,
+  BRLIST_SPEC,
   BRLIST_KICK,
   BRLIST_RING
 };

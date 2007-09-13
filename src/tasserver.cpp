@@ -1142,6 +1142,20 @@ void TASServer::BattleKickPlayer( int battleid, const std::string& nick )
   m_sock->Send( "KICKFROMBATTLE " + nick + "\n" );
 }
 
+void TASServer::SetHandicap( int battleid, const std::string& nick, int handicap)
+{
+  debug_func( "" );
+  ASSERT_LOGIC( battleid == m_battle_id, "Not current battle" );
+  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  if ( !GetBattle(battleid).IsFounderMe() ) {
+    DoActionBattle( battleid, "thinks " + nick + " should get a " + i2s( handicap ) + "% resource bonus" );
+    return;
+  }
+
+  //HANDICAP username value
+  m_sock->Send( "HANDICAP " + nick + " " + i2s( handicap ) + " \n" );
+}
+
 
 void TASServer::AddBot( int battleid, const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll )
 {

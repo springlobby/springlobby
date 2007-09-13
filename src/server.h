@@ -101,6 +101,7 @@ class Server
     virtual void ForceColour( int battleid, const std::string& nick, int r, int g, int b ) = 0;
     virtual void ForceSpectator( int battleid, const std::string& nick, bool spectator ) = 0;
     virtual void BattleKickPlayer( int battleid, const std::string& nick ) = 0;
+    virtual void SetHandicap( int battleid, const std::string& nick, int handicap) = 0;
 
 
     virtual void AddBot( int battleid, const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll ) = 0;

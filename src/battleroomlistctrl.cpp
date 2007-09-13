@@ -5,6 +5,8 @@
 
 #include <wx/intl.h>
 #include <wx/menu.h>
+#include <wx/textdlg.h>
+#include <wx/msgdlg.h>
 #include <stdexcept>
 
 #include "battleroomlistctrl.h"
@@ -23,6 +25,7 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl, wxListCtrl )
   EVT_MENU                 ( BRLIST_SPEC, BattleroomListCtrl::OnSpecSelect )
   EVT_MENU                 ( BRLIST_KICK, BattleroomListCtrl::OnKickPlayer )
   EVT_MENU                 ( BRLIST_RING, BattleroomListCtrl::OnRingPlayer )
+  EVT_MENU                 ( BRLIST_HANDICAP, BattleroomListCtrl::OnHandicapSelect )
 
 END_EVENT_TABLE()
 
@@ -72,7 +75,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
   col.SetImage( -1 );
   InsertColumn( 8, col );
 
-  col.SetText( _("Handicap") );
+  col.SetText( _("Resource Bonus") );
   col.SetImage( -1 );
   InsertColumn( 9, col );
 
@@ -89,11 +92,12 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
   SetColumnWidth( 6, 26 );
   SetColumnWidth( 7, 26 );
   SetColumnWidth( 8, 80 );
-  SetColumnWidth( 9, 60 );
+  SetColumnWidth( 9, 130 );
 
   m_popup = new wxMenu();
   wxMenu* m_teams;
   m_teams = new wxMenu();
+
   for ( int i = 0; i < 16; i++ ) {
     wxMenuItem* team = new wxMenuItem( m_teams, BRLIST_TEAM + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
     m_teams->Append( team );
@@ -125,6 +129,14 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
     Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
   }
   m_popup->Append( -1, _("Side"), m_sides );
+
+  m_popup->AppendSeparator();
+
+  m_handicap_item = new wxMenuItem( m_popup, BRLIST_HANDICAP, _("Set Resource Bonus"), wxEmptyString, wxITEM_NORMAL );
+  //Connect( BRLIST_HANDICAP , wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnHandicapSelect ) );
+  m_popup->Append( m_handicap_item );
+
+  m_popup->AppendSeparator();
 
   m_spec_item = new wxMenuItem( m_popup, BRLIST_SPEC, wxString( _("Spectator") ) , wxEmptyString, wxITEM_CHECK );
   m_popup->Append( m_spec_item );
@@ -183,11 +195,6 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   ASSERT_LOGIC( GetItem( item ), "!GetItem" );
 
   User& user = *((User*)GetItemData( index ));
-
-  // Bold font if self.
-  if ( &user == &m_battle.GetMe() ) item.SetFont( wxFont( 10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD ) );
-  else item.SetFont( wxFont( 10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
-  SetItem( item );
 
   icons().SetColourIcon( user.BattleStatus().team, wxColour( user.BattleStatus().color_r, user.BattleStatus().color_g, user.BattleStatus().color_b ) );
 
@@ -340,21 +347,20 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     debug("Bot");
     m_sel_user = 0;
     m_sel_bot = (BattleBot*)event.GetData();
-    //m_popup->Enable( m_popup->FindItem( _("Side") ), true );
     int item = m_popup->FindItem( _("Spectator") );
-    m_popup->Check( item, false );
     m_popup->Enable( item, false );
+    m_popup->Check( item, false );
     m_popup->Enable( m_popup->FindItem( _("Ring") ), false );
   } else {
     debug("User");
     m_sel_bot = 0;
     m_sel_user = (User*)event.GetData();
-    //m_popup->Enable( m_popup->FindItem( _("Side") ), false );
     int item = m_popup->FindItem( _("Spectator") );
     m_popup->Check( item, m_sel_user->BattleStatus().spectator );
     m_popup->Enable( item, true );
     m_popup->Enable( m_popup->FindItem( _("Ring") ), true );
   }
+
   debug("Popup");
   PopupMenu( m_popup );
   debug("Done");
@@ -405,6 +411,28 @@ void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
     m_battle.SetBotSide( m_sel_bot->name, side );
   } else if ( m_sel_user != 0 ) {
     m_battle.ForceSide( *m_sel_user, side );
+  }
+}
+
+void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
+{
+  debug_func("");
+  wxTextEntryDialog dlg( this , _("Please enter a value between 0 and 100"), _("Set Resource Bonus"), _T("0"), wxOK, wxDefaultPosition );
+  if ( dlg.ShowModal() == wxID_OK ) {
+    long handicap;
+    if ( !dlg.GetValue().ToLong( &handicap ) ) {
+     wxMessageBox( _("Not a number"), _("Invalid number") );
+     return;
+    }
+    if ( handicap < 0 || handicap > 100 ) {
+      wxMessageBox( _("Value out of range.\n Enter an integer between 0 & 100."), _("Invalid number") );
+      return;
+    }
+    if ( m_sel_bot != 0 ) {
+      m_battle.SetBotHandicap( m_sel_bot->name, handicap );
+    } else if ( m_sel_user != 0 ) {
+      m_battle.SetHandicap( *m_sel_user, handicap );
+    }
   }
 }
 

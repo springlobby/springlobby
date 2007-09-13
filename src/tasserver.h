@@ -73,6 +73,7 @@ class TASServer : public Server
     void ForceColour( int battleid, const std::string& nick, int r, int g, int b );
     void ForceSpectator( int battleid, const std::string& nick, bool spectator );
     void BattleKickPlayer( int battleid, const std::string& nick );
+    void SetHandicap( int battleid, const std::string& nick, int handicap);
 
     void AddBot( int battleid, const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll );
     void RemoveBot( int battleid, const std::string& nick );

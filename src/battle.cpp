@@ -394,6 +394,15 @@ void Battle::SetBotColour( const std::string& nick, int r, int g, int b )
 }
 
 
+void Battle::SetBotHandicap( const std::string& nick, int handicap )
+{
+  BattleBot* bot = GetBot( nick );
+  ASSERT_LOGIC( bot != 0, "Bot not found" );
+  bot->bs.handicap = handicap;
+  m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
+}
+
+
 void Battle::OnBotAdded( const std::string& nick, const std::string& owner, const UserBattleStatus& bs, const std::string& aidll )
 {
   BattleBot* bot = GetBot(nick);
@@ -501,5 +510,10 @@ void Battle::ForceSpectator( User& user, bool spectator )
 void Battle::BattleKickPlayer( User& user )
 {
   m_serv.BattleKickPlayer( m_opts.battleid, user.GetNick() );
+}
+
+void Battle::SetHandicap( User& user, int handicap)
+{
+  m_serv.SetHandicap ( m_opts.battleid, user.GetNick(), handicap );
 }
 

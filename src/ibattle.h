@@ -57,6 +57,7 @@ struct BattleBot {
   std::string name;
   std::string owner;
   std::string aidll;
+
 };
 
 

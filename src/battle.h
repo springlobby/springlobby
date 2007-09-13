@@ -174,6 +174,7 @@ class Battle : public UserList, public IBattle
     void SetBotAlly( const std::string& nick, int ally );
     void SetBotSide( const std::string& nick, int side );
     void SetBotColour( const std::string& nick, int r, int g, int b );
+    void SetBotHandicap( const std::string& nick, int handicap );
 
     BattleBot* GetBot( const std::string& name );
     BattleBot* GetBot( unsigned int index );
@@ -191,6 +192,7 @@ class Battle : public UserList, public IBattle
     void ForceColour( User& user, int r, int g, int b );
     void ForceSpectator( User& user, bool spectator );
     void BattleKickPlayer( User& user );
+    void SetHandicap( User& user, int handicap);
 
     void OnUserAdded( User& user );
     void OnUserRemoved( User& user );
