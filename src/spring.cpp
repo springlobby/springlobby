@@ -76,7 +76,8 @@ bool Spring::Run( Battle& battle )
     debug_error( "Couldn't write script.txt" ); //!@todo Some message to user.
     return false;
   }
-  wxString cmd = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ") + path + _T("script.txt");
+
+  wxString cmd =  _T("\"") + WX_STRING(sett().GetSpringUsedLoc()) + _T("\" ") + path + _T("script.txt");
   debug( "cmd: " + STD_STRING(cmd) );
   wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
   if ( sett().UseOldSpringLaunchMethod() ) {
@@ -121,7 +122,7 @@ bool Spring::Run( SinglePlayerBattle& battle )
     return false;
   }
 
-  wxString cmd = WX_STRING(sett().GetSpringUsedLoc()) + _T(" ") + path + _T("script.txt");
+  wxString cmd =  _T("\"") + WX_STRING(sett().GetSpringUsedLoc()) + _T("\" ") + path + _T("script.txt");
   wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
   if ( sett().UseOldSpringLaunchMethod() ) {
     if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );

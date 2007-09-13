@@ -419,7 +419,7 @@ void ChatPanel::_OutputLine( const wxString& message, const wxColour& col )
   m_chatlog_text->SetDefaultStyle(wxTextAttr(col));
   m_chatlog_text->Freeze();
   m_chatlog_text->AppendText( message + _T("\n") );
-  m_chat_log->AddMessage(message);
+  if ( m_chat_log ) m_chat_log->AddMessage(message);
   CheckLength();
 #ifdef __WXMSW__
   m_chatlog_text->ScrollLines( 10 );
