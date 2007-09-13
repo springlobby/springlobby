@@ -24,8 +24,7 @@ Battle::Battle( Server& serv, Ui& ui, int id ) :
   m_order(0),
   m_rects(16, static_cast<BattleStartRect*>(0)),
   m_bot_seek(m_bots.end()),
-  m_bot_pos(BOT_SEEKPOS_INVALID),
-  m_units_num(0)
+  m_bot_pos(BOT_SEEKPOS_INVALID)
 {
   m_opts.battleid = id;
 }
@@ -342,38 +341,6 @@ BattleStartRect* Battle::GetStartRect( int allyno )
 void Battle::ClearStartRects()
 {
   for ( int i = 0; i < 16; i++ ) RemoveStartRect( i );
-}
-
-
-void Battle::DisableUnit( const std::string& unitname )
-{
-  std::string::size_type i = m_units.find( unitname, 0 );
-  if ( i != std::string::npos ) return;
-  m_units += unitname;
-  m_units += " ";
-  m_units_num++;
-}
-
-
-void Battle::EnableUnit( const std::string& unitname )
-{
-  std::string::size_type i = m_units.find( unitname, 0 );
-  if ( i == std::string::npos ) return;
-  m_units.replace( i, unitname.length()+1, "" );
-  m_units_num--;
-}
-
-
-void Battle::EnableAllUnits()
-{
-  m_units = "";
-  m_units_num = 0;
-}
-
-
-std::string Battle::DisabledUnits()
-{
-  return m_units;
 }
 
 

@@ -67,3 +67,9 @@ void MainSinglePlayerTab::OnUnitSyncReloaded()
   m_sp_tab->UpdateMinimap();
 }
 
+
+void MainSinglePlayerTab::ReloadRestrictions()
+{
+  m_opts_tab->ReloadRestrictions();
+}
+

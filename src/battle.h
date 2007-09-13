@@ -185,12 +185,6 @@ class Battle : public UserList, public IBattle
     BattleStartRect* GetStartRect( int allyno );
     void ClearStartRects();
 
-    void DisableUnit( const std::string& unitname );
-    void EnableUnit( const std::string& unitname );
-    void EnableAllUnits();
-    std::string DisabledUnits();
-    int GetNumDisabledUnits() { return m_units_num; }
-
     void ForceSide( User& user, int side );
     void ForceTeam( User& user, int team );
     void ForceAlly( User& user, int ally );
@@ -224,9 +218,6 @@ class Battle : public UserList, public IBattle
 
     std::list<BattleBot*>::iterator m_bot_seek;
     std::list<BattleBot*>::size_type m_bot_pos;
-
-    std::string m_units;
-    int m_units_num;
 
     void RemoveUser( std::string const& user ) {}
 };

@@ -22,6 +22,8 @@ class MainSinglePlayerTab : public wxPanel
     void UpdateMinimap();
     void OnUnitSyncReloaded();
 
+    void ReloadRestrictions();
+
   protected:
 
     Ui& m_ui;

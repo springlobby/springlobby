@@ -18,6 +18,7 @@
 #include "ui.h"
 #include "iunitsync.h"
 #include "addbotdialog.h"
+#include "server.h"
 
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
@@ -201,6 +202,7 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
     m_battle.SetMod( mod );
   }
   m_minimap->UpdateMinimap();
+  m_battle.SendHostInfo( HI_Restrictions );
 }
 
 

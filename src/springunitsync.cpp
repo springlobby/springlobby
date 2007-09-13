@@ -366,6 +366,7 @@ void SpringUnitSync::SetCurrentMod( const std::string& modname )
     m_add_all_archives( GetModArchive( GetModIndex( modname ) ).c_str() );
     m_current_mod = modname;
     m_side_count = m_get_side_count();
+    m_mod_units.Clear();
   }
 }
 
@@ -505,6 +506,9 @@ wxString _GetCachedModUnitsFileName( const wxString& mod )
 
 wxArrayString SpringUnitSync::GetUnitsList()
 {
+  if (!m_loaded) return wxArrayString();
+  if ( m_mod_units.GetCount() > 0 ) return m_mod_units;
+
   wxArrayString ret;
   if (!m_loaded) return ret;
 
@@ -530,6 +534,7 @@ wxArrayString SpringUnitSync::GetUnitsList()
     ret.Add( tmp );
   }
 
+  m_mod_units = ret;
   try {
 
     wxFile f( path, wxFile::write );

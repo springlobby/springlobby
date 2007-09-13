@@ -20,7 +20,9 @@ IBattle::IBattle():
   m_ghostedbuildings(true),
 
   m_gametype(GT_ComContinue),
-  m_starttype(ST_Fixed)
+  m_starttype(ST_Fixed),
+
+  m_units_num(0)
 {
 }
 
@@ -169,8 +171,43 @@ bool IBattle::ModExists()
 }
 
 
+
+void IBattle::DisableUnit( const std::string& unitname )
+{
+  std::string::size_type i = m_units.find( unitname, 0 );
+  if ( i != std::string::npos ) return;
+  m_units += unitname;
+  m_units += " ";
+  m_units_num++;
+}
+
+
+void IBattle::EnableUnit( const std::string& unitname )
+{
+  std::string::size_type i = m_units.find( unitname, 0 );
+  if ( i == std::string::npos ) return;
+  m_units.replace( i, unitname.length()+1, "" );
+  m_units_num--;
+}
+
+
+void IBattle::EnableAllUnits()
+{
+  m_units = "";
+  m_units_num = 0;
+}
+
+
+std::string IBattle::DisabledUnits()
+{
+  return m_units;
+}
+
+
 void IBattle::OnUnitSyncReloaded()
 {
   m_mod_exists = usync()->ModExists( STD_STRING(m_mod_name) );
   m_map_exists = usync()->MapExists( STD_STRING(m_map_name) );
 }
+
+

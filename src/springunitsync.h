@@ -141,6 +141,7 @@ class SpringUnitSync : public IUnitSync
     UnitSyncMap m_map;
 
     std::string m_current_mod;
+    wxArrayString m_mod_units;
 
     int m_map_count;
     int m_mod_count;
