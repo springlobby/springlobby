@@ -32,20 +32,27 @@ class Settings
     bool UseOldSpringLaunchMethod();
 
     std::string GetDefaultServer();
-    void   SetDefaultServer( const std::string& server_name );
+    void SetDefaultServer( const std::string& server_name );
 
-    bool   ServerExists( const std::string& server_name );
+    bool ServerExists( const std::string& server_name );
 
     std::string GetServerHost( const std::string& server_name );
     void   SetServerHost( const std::string& server_name, const std::string& value );
 
-    int    GetServerPort( const std::string& server_name );
-    void   SetServerPort( const std::string& server_name, const int value );
+    int GetServerPort( const std::string& server_name );
+    void SetServerPort( const std::string& server_name, const int value );
 
     int GetNumServers();
     void SetNumServers( int num );
     void AddServer( const std::string& server_name );
     int GetServerIndex( const std::string& server_name );
+
+    int GetNumChannelsJoin();
+    void SetNumChannelsJoin( int num );
+    void AddChannelJoin( const std::string& channel , const std::string& key );
+    void RemoveChannelJoin( const std::string& channel );
+    int GetChannelJoinIndex( const std::string& channel );
+    std::string GetChannelJoinName( int index );
 
     std::string GetServerName( int index );
 

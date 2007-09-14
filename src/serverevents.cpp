@@ -14,7 +14,7 @@
 #include "utils.h"
 #include "server.h"
 #include "battle.h"
-
+#include "settings.h"
 
 void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported, const std::string server_spring_ver )
 {
@@ -44,6 +44,13 @@ void ServerEvents::OnLoginInfoComplete()
   debug_func( "" );
   m_serv.JoinChannel( "springlobby", "" );
   //m_serv.RequestChannels();
+  int num = sett().GetNumChannelsJoin();
+  for ( int i= 0; i < num; i++ ) {
+    wxString channel = WX_STRING(sett().GetChannelJoinName(i));
+    wxString pass = channel.AfterFirst(' ');
+    if ( !pass.IsEmpty() ) channel = channel.BeforeFirst(' ');
+    m_serv.JoinChannel( STD_STRING(channel), STD_STRING(pass) );
+  }
   m_ui.OnLoggedIn( );
 }
 

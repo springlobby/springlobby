@@ -37,6 +37,7 @@ BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
   EVT_TEXT_URL    ( CHAT_LOG,  ChatPanel::OnLinkEvent )
 
   EVT_MENU        ( CHAT_MENU_CH_LEAVE, ChatPanel::OnChannelMenuLeave )
+  EVT_MENU        ( CHAT_MENU_CH_AUTOJOIN, ChatPanel::OnChannelAutoJoin )
   EVT_MENU        ( CHAT_MENU_CH_INFO, ChatPanel::OnChannelMenuInfo )
   EVT_MENU        ( CHAT_MENU_CH_TOPIC, ChatPanel::OnChannelMenuTopic )
   EVT_MENU        ( CHAT_MENU_CH_MSG, ChatPanel::OnChannelMenuMessage )
@@ -152,6 +153,7 @@ void ChatPanel::_CreateControls( )
 {
   debug_func( "" );
 
+  m_autorejoin = 0;
   // Creating sizers
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_chat_sizer = new wxBoxSizer( wxVERTICAL );
@@ -227,6 +229,16 @@ void ChatPanel::_CreatePopup()
 
     debug("channel");
     m_popup_menu = new wxMenu();
+    m_autorejoin = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_AUTOJOIN, _("Auto join this channel"), wxEmptyString, wxITEM_CHECK );
+    m_popup_menu->Append( m_autorejoin );
+    if ( m_channel->GetName() != "springlobby" ) {
+      bool isautojoin = sett().GetChannelJoinIndex( m_channel->GetName() ) >= 0;
+      m_autorejoin->Check( isautojoin );
+    } else {
+      m_autorejoin->Check( true );
+      m_autorejoin->Enable( false );
+    }
+
     wxMenuItem* leaveitem = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_LEAVE, _("Leave"), wxEmptyString, wxITEM_NORMAL );
     m_popup_menu->Append( leaveitem );
 
@@ -779,6 +791,24 @@ void ChatPanel::OnChannelMenuLeave( wxCommandEvent& event )
   if ( m_channel == 0 ) return;
   Part();
   SetChannel( 0 );
+}
+
+
+void ChatPanel::OnChannelAutoJoin( wxCommandEvent& event )
+{
+  if ( m_channel == 0 ) return;
+  if ( m_autorejoin == 0 ) return;
+
+  if ( m_autorejoin->IsChecked() ) {
+    wxString password;
+    if ( m_ui.AskPassword( _("Auto join channel"), _("Please enter password needed to join this channel, leave blank for no passwrd."), password )) {
+      sett().AddChannelJoin( m_channel->GetName(), STD_STRING(password) );
+      m_autorejoin->Check( true );
+    }
+  } else {
+    sett().RemoveChannelJoin( m_channel->GetName() );
+    m_autorejoin->Check( false );
+  }
 }
 
 

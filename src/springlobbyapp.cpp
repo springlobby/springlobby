@@ -16,6 +16,7 @@
 #include "utils.h"
 #include "ui.h"
 #include "iunitsync.h"
+#include "channel.h"
 
 #define TIMER_ID 101
 #define TIMER_INTERVAL 100
@@ -61,8 +62,8 @@ bool SpringLobbyApp::OnInit()
   } else {
     m_ui->Connect();
   }
+  
   m_ui->ReloadUnitSync();
-
 
   m_timer->Start( TIMER_INTERVAL );
 

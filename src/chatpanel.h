@@ -95,6 +95,7 @@ class ChatPanel : public wxPanel
     void OnMenuCopy( wxCommandEvent& event );
 
     void OnChannelMenuLeave( wxCommandEvent& event );
+    void OnChannelAutoJoin( wxCommandEvent& event );
     void OnChannelMenuInfo( wxCommandEvent& event );
     void OnChannelMenuTopic( wxCommandEvent& event );
     void OnChannelMenuMessage( wxCommandEvent& event );
@@ -168,7 +169,7 @@ class ChatPanel : public wxPanel
     wxString m_chan_pass;
 
     wxMenu* m_popup_menu;
-
+    wxMenuItem* m_autorejoin;
     ChatLog* m_chat_log;
 
     void LogTime();
@@ -186,6 +187,7 @@ enum
     CHAT_LOG,
 
     CHAT_MENU_CH_LEAVE,
+    CHAT_MENU_CH_AUTOJOIN,
     CHAT_MENU_CH_INFO,
     CHAT_MENU_CH_TOPIC,
     CHAT_MENU_CH_MSG,

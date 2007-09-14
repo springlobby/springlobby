@@ -139,11 +139,11 @@ void Settings::AddServer( const std::string& server_name )
   m_config->Write( _T("/Servers/Server")+WX_STRING(i2s(index)), WX_STRING(server_name) );
 }
 
-
 int Settings::GetNumServers()
 {
   return m_config->Read( _T("/Servers/Count"), (long)0 );
 }
+
 
 
 void Settings::SetNumServers( int num )
@@ -231,6 +231,57 @@ void   Settings::SetServerAccountSavePass( const std::string& server_name, const
   m_config->Write( _T("/Server/")+WX_STRING(server_name)+_T("/savepass"), (long int)value );
 }
 
+
+int Settings::GetNumChannelsJoin()
+{
+  return m_config->Read( _T("/Channels/Count"), (long)0 );
+}
+
+void Settings::SetNumChannelsJoin( int num )
+{
+  m_config->Write( _T("/Channels/Count"), num );
+}
+
+void Settings::AddChannelJoin( const std::string& channel , const std::string& key )
+{
+  int index = GetChannelJoinIndex( channel );
+  if ( index != -1 ) return;
+
+  index = GetNumChannelsJoin();
+  SetNumChannelsJoin( index + 1 );
+
+  m_config->Write( wxString::Format( _T("/Channels/Channel%d"), index ), WX_STRING(channel) + _T(" ") + WX_STRING(key) );
+}
+
+
+void Settings::RemoveChannelJoin( const std::string& channel )
+{
+  int index = GetChannelJoinIndex( channel );
+  if ( index == -1 ) return;
+  int total = GetNumChannelsJoin();
+  wxString LastEntry;
+  m_config->Read( _T("/Channels/Channel") + WX_STRING( i2s( total - 1 ) ), &LastEntry);
+  m_config->Write( _T("/Channels/Channel") + WX_STRING( i2s( index ) ), LastEntry );
+  m_config->DeleteEntry( _T("/Channels/Channel") + WX_STRING( i2s( total -1 ) ) );
+  SetNumChannelsJoin( total -1 );
+}
+
+
+int Settings::GetChannelJoinIndex( const std::string& server_name )
+{
+  int num = GetNumChannelsJoin();
+  for ( int i= 0; i < num; i++ ) {
+    wxString name = WX_STRING(GetChannelJoinName( i ));
+    name = name.BeforeFirst( ' ' );
+    if ( STD_STRING(name) == server_name ) return i;
+  }
+  return -1;
+}
+
+std::string Settings::GetChannelJoinName( int index )
+{
+  return STD_STRING(m_config->Read( wxString::Format( _T("/Channels/Channel%d"), index ), _T("") ));
+}
 
 //! @brief Get width of MainWindow.
 int    Settings::GetMainWindowWidth()
