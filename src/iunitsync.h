@@ -75,7 +75,7 @@ class IUnitSync
     //virtual std::string GetFullUnitName( int index ) = 0;
     virtual wxArrayString GetUnitsList() = 0;
 
-    virtual bool LoadUnitSyncLib() = 0;
+    virtual bool LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc ) = 0;
     virtual void FreeUnitSyncLib() = 0;
 
     virtual bool IsLoaded() = 0;

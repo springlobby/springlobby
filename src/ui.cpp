@@ -232,7 +232,7 @@ void Ui::Quit()
 void Ui::ReloadUnitSync()
 {
   usync()->FreeUnitSyncLib();
-  usync()->LoadUnitSyncLib();
+  usync()->LoadUnitSyncLib( WX_STRING(sett().GetSpringDir()), WX_STRING(sett().GetUnitSyncUsedLoc()) );
   if ( m_main_win != 0 ) m_main_win->OnUnitSyncReloaded();
 }
 

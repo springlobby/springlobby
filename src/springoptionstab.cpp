@@ -1,3 +1,4 @@
+
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 //
 // Class: SpringOptionsTab
@@ -456,7 +457,7 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
   if ( sett().IsFirstRun() ) return;
 
   usync()->FreeUnitSyncLib();
-  if ( !usync()->LoadUnitSyncLib() ) {
+  if ( !usync()->LoadUnitSyncLib( WX_STRING(sett().GetSpringDir()), WX_STRING(sett().GetUnitSyncUsedLoc()) ) ) {
     wxMessageBox( _("SpringLobby is unable to load you unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
   } else {
     // If LoadUnitSyncLib() fails this will too.

@@ -10,6 +10,7 @@ class wxImage;
 class wxDynamicLibrary;
 struct SpringMapInfo;
 struct CachedMapInfo;
+class wxCriticalSection;
 
 typedef const char* (USYNC_CALL_CONV *GetSpringVersionPtr)();
 
@@ -75,7 +76,7 @@ class SpringUnitSync : public IUnitSync
     std::string GetSideName( int index );
     wxImage GetSidePicture( const std::string& SideName );
 
-    bool LoadUnitSyncLib();
+    bool LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc );
     void FreeUnitSyncLib();
 
     bool IsLoaded();
@@ -91,13 +92,6 @@ class SpringUnitSync : public IUnitSync
     wxArrayString GetUnitsList();
 
     wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
-    wxImage GetCachedMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
-
-    wxString GetCachedMinimapFileName( const std::string& mapname, int width = -1, int height = -1 );
-
-    void ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
-    void ConvertSpringMapInfo( const CachedMapInfo& in, MapInfo& out );
-    void ConvertSpringMapInfo( const SpringMapInfo& in, CachedMapInfo& out, const std::string& mapname );
 
   private:
     bool m_loaded;
@@ -149,11 +143,33 @@ class SpringUnitSync : public IUnitSync
 
     MapCacheType m_mapinfo;
 
+    wxCriticalSection m_lock;
+
     void* _GetLibFuncPtr( const std::string& name );
     MapInfo _GetMapInfoEx( const std::string& mapname );
 
     void _LoadMapInfoExCache();
     void _SaveMapInfoExCache();
+
+    bool _LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc );
+    void _FreeUnitSyncLib();
+
+    int _GetModIndex( const std::string& name );
+    bool _ModExists( const std::string& modname );
+    UnitSyncMod _GetMod( int index );
+    std::string _GetModArchive( int index );
+
+    int _GetMapIndex( const std::string& name );
+    UnitSyncMap _GetMap( int index, bool getmapinfo = false );
+    UnitSyncMap _GetMap( const std::string& mapname, bool getmapinfo = false );
+
+    wxImage _GetCachedMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
+    wxString _GetCachedMinimapFileName( const std::string& mapname, int width = -1, int height = -1 );
+
+    void _ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
+    void _ConvertSpringMapInfo( const CachedMapInfo& in, MapInfo& out );
+    void _ConvertSpringMapInfo( const SpringMapInfo& in, CachedMapInfo& out, const std::string& mapname );
+
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H

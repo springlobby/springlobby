@@ -208,7 +208,7 @@
 		<Unit filename="src/socket.h" />
 		<Unit filename="src/spring.cpp" />
 		<Unit filename="src/spring.h" />
-		<Unit filename="src/springlobby.rs">
+		<Unit filename="src/springlobby.rc">
 			<Option target="Win32 | Debug" />
 		</Unit>
 		<Unit filename="src/springlobbyapp.cpp" />
@@ -239,6 +239,7 @@
 			<wxsmith version="1">
 				<gui name="wxWidgets" src="" main="" init_handlers="necessary" language="CPP" />
 			</wxsmith>
+			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
