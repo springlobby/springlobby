@@ -398,6 +398,11 @@ void Battle::SetBotHandicap( const std::string& nick, int handicap )
 {
   BattleBot* bot = GetBot( nick );
   ASSERT_LOGIC( bot != 0, "Bot not found" );
+  if ( bot->owner != GetMe().GetNick() && !IsFounderMe() )
+  {
+    m_serv.DoActionBattle( m_opts.battleid, "thinks " + nick + " should get a " + i2s( handicap ) + "% resource bonus" );
+    return;
+  }
   bot->bs.handicap = handicap;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
