@@ -10,6 +10,8 @@ AM_INIT_AUTOMAKE([1.10 -Wall -Werror])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/springlobbyapp.cpp])
 
+AC_CANONICAL_HOST
+
 AC_LANG([C++])
 
 AC_PROG_CXX
@@ -26,6 +28,16 @@ AM_PATH_WXCONFIG([2.6.3], [],
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
            equivalent variable and wxWidgets version is 2.6.3 or above.
    ])])
+
+AC_ARG_VAR([WINDRES], [Windows resource file compiler command])
+if test x$host_os = xmingw32msvc ; then
+  AC_CHECK_TOOL([WINDRES], [windres], [:])
+  if test x$WINDRES = x: ; then
+    AC_MSG_ERROR([missing required windres windows resource compiler.])
+  fi
+fi
+
+AM_CONDITIONAL([USE_WINDRES], [test x$host_os = xmingw32msvc])
 
 AC_MSG_CHECKING([if we can enable extra features that need wxWidgets-2.8])
 dnl we probably aren't supposed to use the function below, but it is the simplest way

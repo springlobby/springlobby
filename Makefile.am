@@ -25,6 +25,13 @@ bin_PROGRAMS = springlobby
 springlobby_LDADD = \
 	$(WX_LIBS)
 
+if USE_WINDRES
+RESOURCECOMPILE = $(WINDRES) -I $(srcdir)/src $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+    $(AM_CPPFLAGS) $(CPPFLAGS) # $(AM_CXXFLAGS) $(CXXFLAGS)
+.rc.o:
+	$(RESOURCECOMPILE) -o $@ -i $<
+endif
+
 # the following line is searched for in a script to add filenames under it
 springlobby_SOURCES = \
 	src/unitsyncthread.cpp \
@@ -434,4 +441,9 @@ springlobby_SOURCES = \
 	src/images/flags/ZA.xpm \
 	src/images/flags/ZM.xpm \
 	src/images/flags/ZW.xpm
+
+if USE_WINDRES
+springlobby_SOURCES += \
+	src/springlobby.rc
+endif
 
