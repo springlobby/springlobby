@@ -6,7 +6,8 @@ dnl if you have too old autoconf, comment out the following prereq AND edit Make
 AC_PREREQ([2.59c])
 AC_INIT([SpringLobby], [0.0.1-svn], [FIXME_our_bugs_email_address])
 dnl if you have too old automake, delete the version number from below AND edit Makefile.am
-AM_INIT_AUTOMAKE([1.10 -Wall -Werror])
+dnl we use filter-out GNU make extension in Makefile.am so we can't use -Werror below
+AM_INIT_AUTOMAKE([1.10 -Wall])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/springlobbyapp.cpp])
 
@@ -36,6 +37,9 @@ if test x$host_os = xmingw32msvc ; then
     AC_MSG_ERROR([missing required windres windows resource compiler.])
   fi
 fi
+
+AC_ARG_VAR([SVNVERSION], [Produce a compact version number for a working copy.])
+AC_CHECK_PROGS([SVNVERSION], [svnversion false])
 
 AM_CONDITIONAL([USE_WINDRES], [test x$host_os = xmingw32msvc])
 

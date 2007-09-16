@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include "utils.h"
+#include "revision.h"
 
 // FIXME this does not work on linux+mingw build for windows
 #ifdef _MSC_VER
@@ -108,8 +109,8 @@ bool GetBoolParam( std::string& params )
 std::string GetSpringLobbyVersion()
 {
 #ifdef VERSION
-  return VERSION;
+  return std::string(VERSION) + " built from " + revision();
 #else
-  return "Unknown";
+  return "Unknown" + " built from " + revision();
 #endif
 }

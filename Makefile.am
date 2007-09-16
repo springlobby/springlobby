@@ -6,6 +6,7 @@ ACLOCAL_AMFLAGS = -I m4 --install
 AM_CPPFLAGS = \
 	$(WX_CPPFLAGS)
 
+# strict aliasing check is disabled, because wxWidgets headers have problems
 AM_CXXFLAGS = \
 	-Wall \
 	-Wno-strict-aliasing
@@ -18,9 +19,11 @@ dist_doc_DATA = \
 	COPYING \
 	INSTALL \
 	NEWS \
-	README
+	README \
+	THANKS
 
-bin_PROGRAMS = springlobby
+bin_PROGRAMS = \
+	springlobby
 
 springlobby_LDADD = \
 	$(WX_LIBS)
@@ -32,8 +35,22 @@ RESOURCECOMPILE = $(WINDRES) -I $(srcdir)/src $(DEFS) $(DEFAULT_INCLUDES) $(INCL
 	$(RESOURCECOMPILE) -o $@ -i $<
 endif
 
+# filter-out is a GNU make extension, so we get a warning from automake
+# and we can not use -Werror in AM_INIT_AUTOMAKE because of this either
+# but without this construct we would have a circular dependency and make
+# would whine about it on every invocation
+revision.cpp: src/revision.cpp.in $(filter-out revision.%, $(springlobby_OBJECTS)) $(springlobby_DEPENDENCIES)
+	rm -f $@
+	sed 's/REV[^"]*/REV SVN '`$(SVNVERSION) $(top_srcdir) /trunk || echo svnversion failed or not found`'/' < $< > $@
+
+clean-local:
+	rm -f revision.cpp
+
 # the following line is searched for in a script to add filenames under it
 springlobby_SOURCES = \
+	revision.cpp \
+	src/revision.cpp.in \
+	src/revision.h \
 	src/unitsyncthread.cpp \
 	src/unitsyncthread.h \
 	src/maplistctrl.cpp \
