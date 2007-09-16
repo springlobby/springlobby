@@ -82,7 +82,7 @@ void Socket::Connect( const std::string& addr, const int port )
 void Socket::Disconnect( )
 {
   m_serv.OnDisconnected( this );
-  m_sock->Destroy();
+  m_sock->Close();
 }
 
 //! @brief Send data over connection

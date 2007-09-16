@@ -150,6 +150,8 @@ class MapCtrl : public wxPanel
     wxBitmap* m_reload_img;
     wxBitmap* m_dl_img;
 
+    bool m_caching_minimap;
+
     UnitSyncMap m_map;
 
     int m_bot_expanded;

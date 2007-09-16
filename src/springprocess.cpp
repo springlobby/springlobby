@@ -42,6 +42,7 @@ void* SpringProcess::Entry()
   return 0;
 }
 
+
 wxSpringProcess::wxSpringProcess( Spring& sp ) :
   m_sp(sp)
 {
@@ -53,6 +54,7 @@ wxSpringProcess::~wxSpringProcess()
 {
   debug_func("");
 }
+
 
 void wxSpringProcess::OnTerminate( int pid, int status )
 {
