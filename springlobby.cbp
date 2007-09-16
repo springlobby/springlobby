@@ -193,7 +193,9 @@
 		<Unit filename="src/mapctrl.h" />
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
+		<Unit filename="src/nonautotools.cpp" />
 		<Unit filename="src/nonportable.h" />
+		<Unit filename="src/revision.h" />
 		<Unit filename="src/server.cpp" />
 		<Unit filename="src/server.h" />
 		<Unit filename="src/serverevents.cpp" />
@@ -239,7 +241,6 @@
 			<wxsmith version="1">
 				<gui name="wxWidgets" src="" main="" init_handlers="necessary" language="CPP" />
 			</wxsmith>
-			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
