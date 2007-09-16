@@ -111,7 +111,7 @@ void SinglePlayerTab::ReloadMaplist()
   m_map_pick->Clear();
   for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
     try {
-      m_map_pick->Insert( RefineMapname( WX_STRING(usync()->GetMap( i, false ).name) ), i );
+      m_map_pick->Insert( RefineMapname( WX_STRING(usync()->GetMap( i ).name) ), i );
     } catch(...) {}
   }
   m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
@@ -185,8 +185,10 @@ void SinglePlayerTab::OnMapSelect( wxCommandEvent& event )
   if ( index >= m_map_pick->GetCount()-1 ) {
     m_battle.SetMap( wxEmptyString, wxEmptyString );
   } else {
-    UnitSyncMap map = usync()->GetMap( index, true );
-    m_battle.SetMap( map );
+    bool cached;
+    UnitSyncMap map = usync()->GetMapEx( index, cached );
+    if ( cached ) m_battle.SetMap( map );
+    else m_battle.SetMap( WX_STRING(map.name), WX_STRING(map.hash) );
   }
   m_minimap->UpdateMinimap();
 }
