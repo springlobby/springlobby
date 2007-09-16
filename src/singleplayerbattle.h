@@ -33,6 +33,9 @@ class SinglePlayerBot
     void SetPosistion( int pos ) { m_pos = pos; }
     int GetPosistion() { return m_pos; }
 
+    void SetHandicap( int handicap ) { m_handicap = handicap; }
+    int GetHandicap() { return m_handicap; }
+
     bool IsPlayer() { return m_dll.IsEmpty(); }
     bool IsBot() { return !m_dll.IsEmpty(); }
 
@@ -41,6 +44,7 @@ class SinglePlayerBot
     int m_ally;
     int m_pos;
     int m_side;
+    int m_handicap;
     wxString m_dll;
 
 };
@@ -72,7 +76,7 @@ class SinglePlayerBattle: public IBattle
     SinglePlayerBattle( Ui& ui, MainSinglePlayerTab& msptab );
     ~SinglePlayerBattle();
 
-    unsigned int AddBot( int ally, int posx, int posy, const wxString& aidll );
+    unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
     void RemoveBot( unsigned int index );
     void UpdateBot( unsigned int index, int ally, int posx, int posy, int side );
     BattleBot* GetBot( unsigned int index );

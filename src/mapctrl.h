@@ -23,13 +23,16 @@ typedef int RectArea;
 #define RA_UpRight 1
 #define RA_DownRight 2
 #define RA_DownLeft 3
-#define RA_UpButton 4
-#define RA_DownButton 5
+#define RA_UpAllyButton 4
+#define RA_DownAllyButton 5
 #define RA_Side 6
-#define RA_Close 7
-#define RA_Move 8
-#define RA_Download 9
-#define RA_Refresh 10
+#define RA_UpHandicapButton 7
+#define RA_DownHandicapButton 8
+#define RA_Handicap 9
+#define RA_Close 10
+#define RA_Move 11
+#define RA_Download 12
+#define RA_Refresh 13
 
 
 typedef int MouseAction;
@@ -81,10 +84,14 @@ class MapCtrl : public wxPanel
 
     wxRect _GetBotRect( BattleBot& bot, bool selected );
     RectArea _GetBotRectArea( const wxRect& botrect, int x, int y );
-    wxRect _GetBotSideRect();
-    wxRect _GetBotCloseRect();
-    wxRect _GetBotUpButtonRect();
-    wxRect _GetBotDownButtonRect();
+
+    wxRect _GetBotSideRect() { return wxRect( 40, 22, 16, 16 ); }
+    wxRect _GetBotHandicapRect() { return wxRect( 40, 44, 16, 16 ); }
+    wxRect _GetBotCloseRect() { return wxRect( 69, 4, 14, 14 ); }
+    wxRect _GetBotUpAllyButtonRect() { return wxRect( 47, 42, 12, 8 ); }
+    wxRect _GetBotDownAllyButtonRect() { return wxRect( 47, 50, 12, 8 ); }
+    wxRect _GetBotUpHandicapButtonRect() { return wxRect( 71, 57, 12, 8 ); }
+    wxRect _GetBotDownHandicapButtonRect() { return wxRect( 71, 65, 12, 8 ); }
 
     wxRect _GetRefreshRect();
     wxRect _GetDownloadRect();

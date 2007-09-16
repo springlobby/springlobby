@@ -15,7 +15,7 @@ SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
 {
   int r,g,b;
   GetFreeColour( r, g, b, false );
-  int i = AddBot( 0, 0, 0, _T("") );
+  int i = AddBot( 0, 0, 0, 0, _T("") );
   BattleBot* bot = GetBot( i );
   ASSERT_LOGIC( bot != 0, "bot == 0" );
   bot->bs.color_r = r;
@@ -76,13 +76,14 @@ void SinglePlayerBattle::RemoveBot(unsigned int index)
 }
 
 
-unsigned int SinglePlayerBattle::AddBot(int ally, int posx, int posy, const wxString& aidll)
+unsigned int SinglePlayerBattle::AddBot(int ally, int posx, int posy, int handicap, const wxString& aidll)
 {
   BattleBot* bot = new BattleBot;
   bot->bs.ally = ally;
   bot->bs.side = 0;
   bot->posx = posx;
   bot->posy = posy;
+  bot->handicap = handicap;
   bot->aidll = STD_STRING(aidll);
 
   m_bots.push_back( bot );

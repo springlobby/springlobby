@@ -54,6 +54,7 @@ struct BattleBot {
   UserBattleStatus bs;
   int posx;
   int posy;
+  int handicap;
   std::string name;
   std::string owner;
   std::string aidll;
@@ -120,7 +121,7 @@ class IBattle
     virtual BattleBot* GetBot( unsigned int index ) = 0;
     virtual BattleBot* GetBot( const std::string& name ) { return 0; };
     virtual unsigned int GetNumBots() = 0;
-    virtual unsigned int AddBot( int ally, int posx, int posy, const wxString& aidll ) { return -1; };
+    virtual unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll ) { return -1; };
     virtual void RemoveBot( unsigned int index ) {};
 
     virtual void GetFreePosition( int& x, int& y ) {}
