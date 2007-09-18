@@ -85,13 +85,13 @@ class MapCtrl : public wxPanel
     wxRect _GetBotRect( BattleBot& bot, bool selected );
     RectArea _GetBotRectArea( const wxRect& botrect, int x, int y );
 
-    wxRect _GetBotSideRect() { return wxRect( 40, 22, 16, 16 ); }
-    wxRect _GetBotHandicapRect() { return wxRect( 40, 44, 16, 16 ); }
-    wxRect _GetBotCloseRect() { return wxRect( 69, 4, 14, 14 ); }
-    wxRect _GetBotUpAllyButtonRect() { return wxRect( 47, 42, 12, 8 ); }
-    wxRect _GetBotDownAllyButtonRect() { return wxRect( 47, 50, 12, 8 ); }
-    wxRect _GetBotUpHandicapButtonRect() { return wxRect( 71, 57, 12, 8 ); }
-    wxRect _GetBotDownHandicapButtonRect() { return wxRect( 71, 65, 12, 8 ); }
+    wxRect _GetBotSideRect() { return wxRect( 37, 20, 16, 16 ); }
+    wxRect _GetBotHandicapRect() { return wxRect( 40, 55, 16, 16 ); }
+    wxRect _GetBotCloseRect() { return wxRect( 59, 4, 14, 14 ); }
+    wxRect _GetBotUpAllyButtonRect() { return wxRect( 61, 35, 12, 8 ); }
+    wxRect _GetBotDownAllyButtonRect() { return wxRect( 61, 43, 12, 8 ); }
+    wxRect _GetBotUpHandicapButtonRect() { return wxRect( 61, 52, 12, 8 ); }
+    wxRect _GetBotDownHandicapButtonRect() { return wxRect( 61, 60, 12, 8 ); }
 
     wxRect _GetRefreshRect();
     wxRect _GetDownloadRect();

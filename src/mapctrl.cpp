@@ -534,23 +534,25 @@ wxRect MapCtrl::_GetBotRect( BattleBot& bot, bool selected )
   m_map = m_battle->Map();
   int x = (int)( (double)((double)bot.posx / (double)m_map.info.width) * (double)mr.width ) - 8;
   int y = (int)( (double)(bot.posy / (double)m_map.info.height) * (double)mr.height ) - 8;
+  int box_height = 70;
+  int box_width = 75;
   if ( selected ) {
-    bool we = x+85>mr.width;
-    bool he = y+85>mr.height;
+    bool we = x+box_width>mr.width;
+    bool he = y+box_height>mr.height;
     if ( we ) {
       if ( he ) {
         //bro = BRO_BottomRight;
-        return wxRect( mr.x+mr.width-85, mr.y+mr.height-85, 85, 85 );
+        return wxRect( mr.x+mr.width-box_width, mr.y+mr.height-box_height, box_width, box_height );
       } else {
         //bro = BRO_TopRight;
-        return wxRect( mr.x+mr.width-85, y+mr.y-2, 85, 85 );
+        return wxRect( mr.x+mr.width-box_width, y+mr.y-2, box_width, box_height );
       }
     } else if ( he ) {
       //bro = BRO_BottomLeft;
-      return wxRect( x+mr.x-2, mr.y+mr.height-85, 85, 85 );
+      return wxRect( x+mr.x-2, mr.y+mr.height-box_height, box_width, box_height );
     } else {
       //bro = BRO_TopLeft;
-      return wxRect( x+mr.x-2, y+mr.y-2, 85, 85 );
+      return wxRect( x+mr.x-2, y+mr.y-2, box_width, box_height );
     }
   } else {
     //bro = BRO_TopLeft;
@@ -614,7 +616,7 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
   if ( selected ) {
     wxRect siderect = _GetBotSideRect();
     _DrawStartRect( dc, -1, r,ColourDelta( col, -40 ) , false, 180 );
-    _DrawOutlinedText( dc, _("side:"), r.x+3, r.y+siderect.y-2, wxColour(50,50,50), *wxWHITE );
+    _DrawOutlinedText( dc, _("side:"), r.x+3, r.y+siderect.y-1, wxColour(50,50,50), *wxWHITE );
 
     if ( m_rect_area == RA_Side ) {
       _DrawStartRect( dc, -1, wxRect( r.x+siderect.x-1, r.y+siderect.y-1, siderect.width+2, siderect.height+2 ), col, false );
@@ -637,7 +639,7 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     delete bmp;
 
     wxRect updownallyrect = _GetBotUpAllyButtonRect();
-    _DrawOutlinedText( dc, wxString::Format( _("ally: %d"), bot.bs.ally + 1 ), r.x+3, r.y+updownallyrect.y-2, wxColour(50,50,50), *wxWHITE );
+    _DrawOutlinedText( dc, wxString::Format( _("ally:   %d"), bot.bs.ally + 1 ), r.x+3, r.y+updownallyrect.y, wxColour(50,50,50), *wxWHITE );
     //dc.DrawText( wxString::Format( _("ally: %d"), bot.bs.ally + 1 ), r.x+4, r.y+40 );
 
     if ( m_rect_area == RA_UpAllyButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
@@ -645,7 +647,10 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     else dc.DrawBitmap( wxBitmap(up_down_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
 
     wxRect updownhandicaprect = _GetBotUpHandicapButtonRect();
-    _DrawOutlinedText( dc, wxString::Format( _("bonus: %d%%"), bot.bs.handicap ), r.x+3, r.y+updownhandicaprect.y-2, wxColour(50,50,50), *wxWHITE );
+    wxFont b( 6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
+    dc.SetFont( b );
+    _DrawOutlinedText( dc, wxString::Format( _("bonus: %d%%"), bot.bs.handicap ), r.x+3, r.y+updownhandicaprect.y+2, wxColour(50,50,50), *wxWHITE );
+    dc.SetFont( f );
 
     if ( m_rect_area == RA_UpHandicapButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownhandicaprect.x, r.y+updownhandicaprect.y, true );
     else if ( m_rect_area == RA_DownHandicapButton ) dc.DrawBitmap( wxBitmap(up_downsel_xpm), r.x+updownhandicaprect.x, r.y+updownhandicaprect.y, true );
@@ -1024,11 +1029,12 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
       RefreshRect( _GetBotRect( *bot, true ), false );
 
     } else if ( m_mdown_area == RA_UpHandicapButton ) {
-      bot->bs.handicap = ( bot->bs.handicap + 1 ) % 101;
+      if ( bot->bs.handicap == 100 ) bot->bs.handicap = 0;
+      else bot->bs.handicap = ( bot->bs.handicap + 5 );
       RefreshRect( _GetBotRect( *bot, true ), false );
 
     } else if ( m_mdown_area == RA_DownHandicapButton ) {
-      bot->bs.handicap = (bot->bs.handicap - 1) >= 0 ? (bot->bs.handicap - 1) : 100;
+      bot->bs.handicap = (bot->bs.handicap - 5) >= 0 ? (bot->bs.handicap - 5) : 100;
       RefreshRect( _GetBotRect( *bot, true ), false );
 
     } else if ( m_mdown_area == RA_Side ) {
