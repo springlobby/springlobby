@@ -26,10 +26,4 @@ need autogen.sh invocation.
 IF YOU JUST WANT TO PLAY SPRING, YOU SHOULD DOWNLOAD SPRINGLOBBY AS TARBALL.
 THEN AUTOGEN.SH IS NOT NEEDED. IT IS ONLY NEEDED AFTER SVN CHECKOUT."
 
-test -d debian && {
-  rm -f config.sub config.guess
-  ln -s /usr/share/misc/config.sub .
-  ln -s /usr/share/misc/config.guess .
-}
-
 exit 0
