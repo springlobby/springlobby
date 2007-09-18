@@ -5,11 +5,14 @@ dnl you really should just upgrade your autotools instead
 dnl if you have too old autoconf, comment out the following prereq AND edit Makefile.am
 AC_PREREQ([2.59c])
 AC_INIT([SpringLobby], [0.0.1-svn], [FIXME_our_bugs_email_address])
-dnl if you have too old automake, delete the version number from below AND edit Makefile.am
-dnl we use filter-out GNU make extension in Makefile.am so we can't use -Werror below
-AM_INIT_AUTOMAKE([1.10 -Wall])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/springlobbyapp.cpp])
+AC_CONFIG_AUX_DIR([autotools-aux])
+dnl if you have too old automake, delete the version number from below AND edit Makefile.am
+dnl we use filter-out GNU make extension in Makefile.am so we can't use -Werror below
+dnl we can't use -Wall either because we don't want to see the filter-out warning
+dnl FIXME add at least some warning categories. obviously we can't use -Wportability
+AM_INIT_AUTOMAKE([1.10 -Wnone])
 
 AC_CANONICAL_HOST
 
