@@ -41,7 +41,7 @@ endif
 # would whine about it on every invocation
 revision.cpp: src/revision.cpp.in $(filter-out revision.%, $(springlobby_OBJECTS)) $(springlobby_DEPENDENCIES)
 	rm -f $@
-	sed 's/REV[^"]*/REV SVN '`$(SVNVERSION) $(top_srcdir) /trunk || echo svnversion failed or not found`'/' < $< > $@
+	sed "s/REV[^\"]*/REV SVN `LC_ALL=C $(SVNVERSION) $(top_srcdir) /trunk || echo svnversion failed or not found`/" < $< > $@
 
 clean-local:
 	rm -f revision.cpp
