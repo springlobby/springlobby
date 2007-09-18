@@ -1029,11 +1029,12 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
       RefreshRect( _GetBotRect( *bot, true ), false );
 
     } else if ( m_mdown_area == RA_UpHandicapButton ) {
-      bot->bs.handicap = ( bot->bs.handicap + 1 ) % 101;
+      if ( bot->bs.handicap == 100 ) bot->bs.handicap = 0;
+      else bot->bs.handicap = ( bot->bs.handicap + 5 );
       RefreshRect( _GetBotRect( *bot, true ), false );
 
     } else if ( m_mdown_area == RA_DownHandicapButton ) {
-      bot->bs.handicap = (bot->bs.handicap - 1) >= 0 ? (bot->bs.handicap - 1) : 100;
+      bot->bs.handicap = (bot->bs.handicap - 5) >= 0 ? (bot->bs.handicap - 5) : 100;
       RefreshRect( _GetBotRect( *bot, true ), false );
 
     } else if ( m_mdown_area == RA_Side ) {
