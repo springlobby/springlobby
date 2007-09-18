@@ -1,5 +1,5 @@
 /* XPM */
-static char * join_icon_xpm[] = {
+static const char * join_icon_xpm[] = {
 "64 64 682 2",
 "  	c None",
 ". 	c #437CAC",

@@ -1,5 +1,5 @@
 /* XPM */
-static char * away_xpm[] = {
+static const char * away_xpm[] = {
 "16 16 7 1",
 " 	c None",
 ".	c #767676",

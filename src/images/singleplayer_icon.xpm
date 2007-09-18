@@ -1,5 +1,5 @@
 /* XPM */
-static char * singleplayer_icon_xpm[] = {
+static const char * singleplayer_icon_xpm[] = {
 "64 64 480 2",
 "  	c None",
 ". 	c #4F4F4F",
