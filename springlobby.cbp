@@ -14,7 +14,6 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
-				<Option projectResourceIncludeDirsRelation="0" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
@@ -31,7 +30,6 @@
 				<Option object_output="obj/Win32/Debug/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option projectResourceIncludeDirsRelation="0" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
@@ -241,6 +239,7 @@
 			<wxsmith version="1">
 				<gui name="wxWidgets" src="" main="" init_handlers="necessary" language="CPP" />
 			</wxsmith>
+			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
