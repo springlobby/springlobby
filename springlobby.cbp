@@ -4,7 +4,6 @@
 	<Project>
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
-		<Option default_target="GNU | Debug" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="GNU | Debug">
@@ -144,9 +143,6 @@
 				</Environment>
 			</Target>
 		</Build>
-		<VirtualTargets>
-			<Add alias="All" targets="GNU | Debug;" />
-		</VirtualTargets>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add directory="src" />
