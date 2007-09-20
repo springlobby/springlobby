@@ -73,6 +73,23 @@
 					<Variable name="WX_DIR" value="C:/wxWidgets-2.8.4" />
 				</Environment>
 			</Target>
+			<Target title="GNU | Profile">
+				<Option output="bin/GNU/Debug/springlobby" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="src" />
+				<Option object_output="obj/GNU/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="`wx-config --cflags`" />
+					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
+				</Compiler>
+				<Linker>
+					<Add option="`wx-config --libs`" />
+				</Linker>
+			</Target>
 		</Build>
 		<VirtualTargets>
 			<Add alias="All" targets="GNU | Debug;Win32 | Debug;" />
