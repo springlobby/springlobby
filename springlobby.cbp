@@ -8,9 +8,9 @@
 		<Build>
 			<Target title="GNU | Debug">
 				<Option output="bin/GNU/Debug/springlobby" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="bin/GNU/Debug" />
+				<Option working_dir="bin/GNU/Debug/" />
 				<Option object_output="obj/GNU/Debug/" />
-				<Option type="1" />
+				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
@@ -25,9 +25,9 @@
 			</Target>
 			<Target title="GNU | Profile">
 				<Option output="bin/GNU/Profile/springlobby" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="src" />
+				<Option working_dir="bin/GNU/Profile/" />
 				<Option object_output="obj/GNU/Profile/" />
-				<Option type="1" />
+				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
@@ -38,8 +38,8 @@
 					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
 				</Compiler>
 				<Linker>
-					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
+					<Add option="-pg" />
 				</Linker>
 			</Target>
 			<Target title="Win32 | Debug">
