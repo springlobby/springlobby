@@ -4,12 +4,11 @@
 	<Project>
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
-		<Option default_target="GNU | Debug" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="GNU | Debug">
 				<Option output="bin/GNU/Debug/springlobby" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="src" />
+				<Option working_dir="bin/GNU/Debug/" />
 				<Option object_output="obj/GNU/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -22,6 +21,25 @@
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
+				</Linker>
+			</Target>
+			<Target title="GNU | Profile">
+				<Option output="bin/GNU/Profile/springlobby" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="bin/GNU/Profile/" />
+				<Option object_output="obj/GNU/Profile/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="`wx-config --cflags`" />
+					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
+				</Compiler>
+				<Linker>
+					<Add option="`wx-config --libs`" />
+					<Add option="-pg" />
 				</Linker>
 			</Target>
 			<Target title="Win32 | Debug">
@@ -73,10 +91,57 @@
 					<Variable name="WX_DIR" value="C:/wxWidgets-2.8.4" />
 				</Environment>
 			</Target>
+			<Target title="Win32 | Profile">
+				<Option output="bin/Win32/Profile/springlobby" prefix_auto="0" extension_auto="1" />
+				<Option working_dir="$(WX_DIR)/lib/gcc_lib" />
+				<Option object_output="obj/Win32/Profile/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="-pipe" />
+					<Add option="-mthreads" />
+					<Add option="-Winvalid-pch" />
+					<Add option="-D__GNUWIN32__" />
+					<Add option="-D__WXMSW__" />
+					<Add option="-DWXUSINGDLL" />
+					<Add option="-DUSE_PCH" />
+					<Add option="-D__DEBUG__" />
+					<Add option="-D__WXDEBUG__" />
+					<Add directory="$(WX_DIR)/include" />
+					<Add directory="$(WX_DIR)/lib/gcc_dll/mswd" />
+					<Add directory="$(WX_DIR)/contrib/include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="$(WX_DIR)/include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-pg" />
+					<Add library="libwxregexd.a" />
+					<Add library="libwxzlibd.a" />
+					<Add library="libwxpngd.a" />
+					<Add library="libwxjpegd.a" />
+					<Add library="libwxtiffd.a" />
+					<Add library="libwxexpatd.a" />
+					<Add library="libwxbase28d.a" />
+					<Add library="libwxbase28d_net.a" />
+					<Add library="libwxmsw28d_core.a" />
+					<Add library="libwxmsw28d_adv.a" />
+					<Add library="libwxmsw28d_media.a" />
+					<Add library="libwxmsw28d_html.a" />
+					<Add library="libwxbase28d_xml.a" />
+					<Add library="libwxmsw28d_xrc.a" />
+					<Add library="libwxmsw28d_aui.a" />
+					<Add library="libwxmsw28d_richtext.a" />
+					<Add directory="$(WX_DIR)/lib/gcc_dll" />
+				</Linker>
+				<Environment>
+					<Variable name="WX_DIR" value="C:/wxWidgets-2.8.4" />
+				</Environment>
+			</Target>
 		</Build>
-		<VirtualTargets>
-			<Add alias="All" targets="GNU | Debug;Win32 | Debug;" />
-		</VirtualTargets>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add directory="src" />
@@ -210,6 +275,7 @@
 		<Unit filename="src/spring.h" />
 		<Unit filename="src/springlobby.rc">
 			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
 		</Unit>
 		<Unit filename="src/springlobbyapp.cpp" />
 		<Unit filename="src/springlobbyapp.h" />
