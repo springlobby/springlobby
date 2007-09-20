@@ -142,6 +142,9 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
   } else if ( subcmd == _("/lastip") ) {
     m_sock->Send( "GETLASTIP " + STD_STRING(params) + "\n" );
     return true;
+  } else if ( subcmd == _("/rename") ) {
+    m_sock->Send( "RENAMEACCOUNT " + STD_STRING(params) + "\n" );
+    return true;
   }
 
   return false;
