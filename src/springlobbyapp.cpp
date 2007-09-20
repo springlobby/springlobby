@@ -62,7 +62,7 @@ bool SpringLobbyApp::OnInit()
   } else {
     m_ui->Connect();
   }
-  
+
   m_ui->ReloadUnitSync();
 
   m_timer->Start( TIMER_INTERVAL );
