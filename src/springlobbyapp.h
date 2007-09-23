@@ -16,6 +16,8 @@ class SpringLobbyApp : public wxApp
     virtual bool OnInit();
     virtual int OnExit();
 
+    virtual void OnFatalException();
+
     // System Events
     void OnTimer( wxTimerEvent& event );
 
