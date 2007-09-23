@@ -25,7 +25,7 @@ void StackTrace::OnStackFrame ( const wxStackFrame& frame )
     PartToHash += _T("-> File: ") + frame.GetFileName() + wxString::Format( _T(" @Line : %d - "), frame.GetLine() );
 
     StackTraceString += _T("Function: ") +  frame.GetName(); // Function: function_name
-    PartToHash += _T("Function: ") +  frame.GetName();
+    PartToHash += _T("Function: ") +  frame.GetName() + _T("\n");
 
     int paramcount = frame.GetParamCount();
     if ( paramcount == 0 ){
@@ -51,10 +51,8 @@ void StackTrace::OnStackFrame ( const wxStackFrame& frame )
       if ( paramcount > 0 ) StackTraceString += _T(",");
     }
 
-    StackTraceString += _T(" )\n");
-
   }
-  else StackTraceString += _T("\n");
+  StackTraceString += _T("\n");
 
 }
 
