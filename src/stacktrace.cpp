@@ -3,10 +3,15 @@
 // Class: StackTrace
 //
 
-#include "stacktrace.h"
+
 #include "boost/md5.hpp"
+#include "base64.h"
+#include "stacktrace.h"
+#include "utils.h"
+
 
 StackTrace& stacktrace() { static StackTrace trace; return trace; };
+
 
 void StackTrace::OnStackFrame ( const wxStackFrame& frame )
 {
@@ -55,6 +60,5 @@ void StackTrace::OnStackFrame ( const wxStackFrame& frame )
 
 wxString StackTrace::GetStackTraceHash()
 {
-  wxString hash;
-  return hash;
+  return WX_STRING (  base64_encode( boost::md5( PartToHash.mb_str(wxConvUTF8) ).digest().value(), 16) );
 }
