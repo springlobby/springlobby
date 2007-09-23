@@ -10,12 +10,18 @@ class StackTrace : public wxStackWalker
     StackTrace() {}
     ~StackTrace() {}
 
+    wxString GetStackTrace() { return StackTraceString; }
+    wxString GetStackTraceHash();
+
   private:
 
     void OnStackFrame( const wxStackFrame& frame );
 
-    wxString StackFrame;
+    wxString StackTraceString;
+    wxString PartToHash;
 
 };
+
+StackTrace& stacktrace();
 
 #endif // SPRINGLOBBY_HEADERGUARD_STACKTRACE_H_INCLUDED

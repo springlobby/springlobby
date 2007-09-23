@@ -4,20 +4,26 @@
 //
 
 #include "stacktrace.h"
+#include "boost/md5.hpp"
 
+StackTrace& stacktrace() { static StackTrace trace; return trace; };
 
 void StackTrace::OnStackFrame ( const wxStackFrame& frame )
 {
-  StackFrame = wxString::Format( _T("(#%d) "), frame.GetLevel() ); // (#frame_level_number)
-  StackFrame += wxString::Format( _T("% -> %: "), frame.GetAddress(), frame.GetOffset() ); // calling_add -> return_addr
+  StackTraceString += wxString::Format( _T("(%d) "), frame.GetLevel() ); // (#frame_level_number)
+  PartToHash += wxString::Format( _T("(%d) "), frame.GetLevel() );
+  StackTraceString += wxString::Format( _T("%p -> %p: "), frame.GetAddress(), frame.GetOffset() ); // calling_add -> return_addr
+  PartToHash += wxString::Format( _T("%p -> %p: "), frame.GetAddress(), frame.GetOffset() );
 
-  if ( frame.HasSourceLocation() ) StackFrame += _T("File: ") + frame.GetFileName() + wxString::Format( _T(" @Line : %d -"), frame.GetLine() ); // File: file_name @Line: line_number
+  if ( frame.HasSourceLocation() ) StackTraceString += _T("File: ") + frame.GetFileName() + wxString::Format( _T(" @Line : %d -"), frame.GetLine() ); // File: file_name @Line: line_number
+  if ( frame.HasSourceLocation() ) PartToHash += _T("File: ") + frame.GetFileName() + wxString::Format( _T(" @Line : %d -"), frame.GetLine() );
 
-  StackFrame += _T("Function: ") +  frame.GetName(); // Function: function_name
+  StackTraceString += _T("Function: ") +  frame.GetName(); // Function: function_name
+  PartToHash += _T("Function: ") +  frame.GetName();
 
 
   int paramcount = frame.GetParamCount();
-  StackFrame += _T("(");
+  StackTraceString += _T("(");
   while ( paramcount > 0 )
   {
     wxString type;
@@ -26,15 +32,21 @@ void StackTrace::OnStackFrame ( const wxStackFrame& frame )
 
     if ( frame.GetParam( paramcount, &type, &name, &value) ) // data_type var_name = value,
     {
-      StackFrame += _T(" ") + type;
-      StackFrame += _T(" ") + name;
-      StackFrame += _T(" = ") + value;
+      StackTraceString += _T(" ") + type;
+      StackTraceString += _T(" ") + name;
+      StackTraceString += _T(" = ") + value;
     }
 
     paramcount--;
-    if ( paramcount > 0 ) StackFrame += _T(",");
+    if ( paramcount > 0 ) StackTraceString += _T(",");
   }
 
-  StackFrame += _T(" )\n");
+  StackTraceString += _T(" )\n");
 
+}
+
+wxString StackTrace::GetStackTraceHash()
+{
+  wxString hash;
+  return hash;
 }

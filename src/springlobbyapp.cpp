@@ -92,6 +92,14 @@ int SpringLobbyApp::OnExit()
 
 void SpringLobbyApp::OnFatalException()
 {
+  stacktrace().WalkFromException();
+  stacktrace().Walk( 1, 20);
+
+  wxString DebugInfo = _T("-------- Begin StackTrace --------\n\n");
+  DebugInfo += stacktrace().GetStackTrace();
+  DebugInfo += _T("\n-------- End StackTrace --------");
+
+  debug_error( STD_STRING(DebugInfo) );
 
 }
 
