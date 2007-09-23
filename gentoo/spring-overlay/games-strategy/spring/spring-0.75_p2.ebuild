@@ -47,7 +47,6 @@ my_depend_with_use () {
 
 pkg_setup () {
 	my_depend_with_use media-libs/libsdl X opengl
-	my_depend_with_use dev-libs/boost threads
 	${MY_DEPEND_WITH_USE} || die "Some dependencies need different use flags. Package setup failed."
 }
 
