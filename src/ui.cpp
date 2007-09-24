@@ -385,6 +385,7 @@ void Ui::ConsoleHelp( const wxString& topic )
     panel->ClientMessage( _("  \"/join channel [password] [,channel2 [password2]]\" - Join a channel.") );
     panel->ClientMessage( _("  \"/j\" - Alias to /join.") );
     panel->ClientMessage( _("  \"/ingame\" - Show how much time you have in game.") );
+    panel->ClientMessage( _("  \"/rename newalias\" - Changes your nickname to newalias.") );
     panel->ClientMessage( _("  \"/sayver\" - Say what version of springlobby you have in chat.") );
     panel->ClientMessage( _("  \"/ver\" - Display what version of SpringLobby you have.") );
     panel->ClientMessage( _("") );
