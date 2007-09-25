@@ -259,7 +259,7 @@ void Ui::DownloadMap( const wxString& map )
   mapname.Replace(_T(" "), _T("*") );
   mapname.Replace(_T("-"), _T("*") );
   mapname.Replace(_T("_"), _T("*") );
-  wxString url = _T("http://spring.unknown-files.net/page/search/2/13/") + mapname + _T("/");
+  wxString url = _T("http://www.unknown-files.net/spring/search/") + mapname + _T("/");
   OpenWebBrowser ( url );
 }
 
@@ -287,7 +287,7 @@ void Ui::DownloadMod( const wxString& mod )
   modname.Replace(_T("BETA"), _T("*") );
   modname.Replace(_T("Beta"), _T("*") );
   modname.Replace(_T("beta"), _T("*") );
-  wxString url = _T("http://spring.unknown-files.net/page/search/1/14/") + modname + _T("/");
+  wxString url = _T("http://www.unknown-files.net/spring/search/") + modname + _T("/");
   OpenWebBrowser ( url );
 }
 
