@@ -82,6 +82,24 @@ std::string GetSentenceParam( std::string& params )
 }
 
 
+std::string GetChatLineParam( std::string& params )
+{
+  std::string::size_type pos;
+  std::string param;
+
+  pos = params.find( "\n", 0 );
+  if ( pos == std::string::npos ) {
+    param = params;
+    params = "";
+    return param;
+  } else {
+    param = params.substr( 0, pos );
+    params = params.substr( pos + 1 );
+    return param;
+  }
+}
+
+
 int GetIntParam( std::string& params )
 {
   std::string::size_type pos;

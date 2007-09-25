@@ -32,6 +32,7 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 
 std::string GetWordParam( std::string& params );
 std::string GetSentenceParam( std::string& params );
+std::string GetChatLineParam( std::string& params );
 int GetIntParam( std::string& params );
 bool GetBoolParam( std::string& params );
 std::string GetSpringLobbyVersion();

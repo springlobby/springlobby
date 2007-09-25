@@ -450,7 +450,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   } else if ( cmd == "SAID" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
-    msg = GetSentenceParam( params );
+    msg = GetChatLineParam( params );
     m_se->OnChannelSaid( channel, nick, msg );
   } else if ( cmd == "JOINED" ) {
     channel = GetWordParam( params );
@@ -465,12 +465,12 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     channel = GetWordParam( params );
     nick = GetWordParam( params );
     pos = GetIntParam( params );
-    msg = GetSentenceParam( params );
+    msg = GetChatLineParam( params );
     m_se->OnChannelTopic( channel, nick, msg, pos/1000 );
   } else if ( cmd == "SAIDEX" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
-    msg = GetSentenceParam( params );
+    msg = GetChatLineParam( params );
     m_se->OnChannelAction( channel, nick, msg );
   } else if ( cmd == "CLIENTS" ) {
     channel = GetWordParam( params );
@@ -479,11 +479,11 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     }
   } else if ( cmd == "SAYPRIVATE" ) {
     nick = GetWordParam( params );
-    msg = GetSentenceParam( params );
+    msg = GetChatLineParam( params );
     m_se->OnPrivateMessage( nick, msg, true );
   } else if ( cmd == "SAIDPRIVATE" ) {
     nick = GetWordParam( params );
-    msg = GetSentenceParam( params );
+    msg = GetChatLineParam( params );
     m_se->OnPrivateMessage( nick, msg, false );
   } else if ( cmd == "JOINBATTLE" ) {
     id = GetIntParam( params );
@@ -555,11 +555,11 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_se->OnRequestBattleStatus( m_battle_id );
   } else if ( cmd == "SAIDBATTLE" ) {
     nick = GetWordParam( params );
-    msg = GetSentenceParam( params );
+    msg = GetChatLineParam( params );
     m_se->OnSaidBattle( m_battle_id, nick, msg );
   } else if ( cmd == "SAIDBATTLEEX" ) {
     nick = GetWordParam( params );
-    msg = GetSentenceParam( params );
+    msg = GetChatLineParam( params );
     m_se->OnBattleAction( m_battle_id, nick, msg );
   } else if ( cmd == "AGREEMENT" ) {
     msg = GetSentenceParam( params );
@@ -606,7 +606,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_se->OnRing( nick );
     //RING username
   } else if ( cmd == "SERVERMSG" ) {
-    msg = GetSentenceParam( params );
+    msg = GetChatLineParam( params );
     m_se->OnServerMessage( msg );
     //SERVERMSG {message}
   } else if ( cmd == "JOINBATTLEFAILED" ) {
@@ -624,7 +624,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     //JOINFAILED channame {reason}
   } else if ( cmd == "CHANNELMESSAGE" ) {
     channel = GetWordParam( params );
-    msg = GetSentenceParam( params );
+    msg = GetChatLineParam( params );
     m_se->OnChannelMessage( channel, msg );
     //CHANNELMESSAGE channame {message}
   } else if ( cmd == "FORCELEAVECHANNEL" ) {
