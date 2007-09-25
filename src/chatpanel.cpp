@@ -455,9 +455,7 @@ void ChatPanel::OnLinkEvent( wxTextUrlEvent& event )
 {
   if (!event.GetMouseEvent().LeftDown() ) return;
   wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd());
-  if ( !wxLaunchDefaultBrowser( url ) ) {
-    wxMessageBox( _T("Couldn't launch browser. URL is: ") + url, _T("Couldn't launch browser.")  );
-  }
+  m_ui.OpenWebBrowser( url );
 }
 
 

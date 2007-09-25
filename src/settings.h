@@ -31,13 +31,16 @@ class Settings
 
     bool UseOldSpringLaunchMethod();
 
+    wxString GetWebBrowserPath();
+    void SetWebBrowserPath( const wxString path );
+
     std::string GetDefaultServer();
     void SetDefaultServer( const std::string& server_name );
 
     bool ServerExists( const std::string& server_name );
 
     std::string GetServerHost( const std::string& server_name );
-    void   SetServerHost( const std::string& server_name, const std::string& value );
+    void SetServerHost( const std::string& server_name, const std::string& value );
 
     int GetServerPort( const std::string& server_name );
     void SetServerPort( const std::string& server_name, const int value );

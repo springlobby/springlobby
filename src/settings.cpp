@@ -52,6 +52,21 @@ bool Settings::UseOldSpringLaunchMethod()
   return old;
 }
 
+
+wxString Settings::GetWebBrowserPath()
+{
+  wxString path;
+  m_config->Read( _T("/General/WebBrowserPath"), &path, _T("use default") );
+  return path;
+}
+
+
+void Settings::SetWebBrowserPath( const wxString path )
+{
+  m_config->Write( _T("/General/WebBrowserPath"), path );
+}
+
+
 //! @brief Restores default settings
 void Settings::SetDefaultSettings()
 {

@@ -289,9 +289,7 @@ void BattleListTab::DoJoin( Battle& battle )
   if ( !battle.ModExists() ) {
     if (wxMessageBox( _("You need to download the mod before you can join this game.\n\nDo you want me to take you to the download page?"), _("Mod not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString mod = battle.GetModName();
-      mod.Replace(_T(" "), _T("%20") );
-      wxString url = _T("http://spring.unknown-files.net/page/search/1/14/") + mod + _T("/");
-      wxLaunchDefaultBrowser( url );
+      m_ui.DownloadMod ( mod );
     }
     return;
   }
@@ -299,9 +297,7 @@ void BattleListTab::DoJoin( Battle& battle )
   if ( !battle.MapExists() ) {
     if (wxMessageBox( _("You need to download the map to be able to play in this game.\n\nDo you want me to take you to the download page?"), _("Map not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString map = battle.GetMapName();
-      map.Replace(_T(" "), _T("%20") );
-      wxString url = _T("http://spring.unknown-files.net/page/search/1/13/") + map + _T("/");
-      wxLaunchDefaultBrowser( url );
+      m_ui.DownloadMap ( map );
     }
   }
 

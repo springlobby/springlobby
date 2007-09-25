@@ -74,6 +74,8 @@ class Ui
     void DownloadMap( const wxString& map );
     void DownloadMod( const wxString& mod );
 
+    void OpenWebBrowser( const wxString& url );
+
     bool Ask( const wxString& heading, const wxString& question );
     bool AskText( const wxString& heading, const wxString& question, wxString& answer );
     bool AskPassword( const wxString& heading, const wxString& message, wxString& password );

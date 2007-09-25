@@ -207,14 +207,6 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
   if ( m_selected >= 0 ) {
     Battle& battle = *((Battle*)GetItemData( m_selected )); // FIXME m_selected might not exist.
     m_ui.DownloadMap( battle.GetMapName() );
-    /*map = map.SubString(0, map.Find( '.', true ) - 1 );
-    map.Replace(_T(" "), _T("*") );
-    map.Replace(_T("-"), _T("*") );
-    map.Replace(_T("_"), _T("*") );
-    wxString url = _T("http://spring.unknown-files.net/page/search/2/13/") + map + _T("/");
-    if ( !wxLaunchDefaultBrowser( url ) ) {
-      wxMessageBox( _T("Couldn't launch browser. URL is: ") + url, _T("Couldn't launch browser.")  );
-    }*/
   }
 }
 
@@ -224,31 +216,6 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
   if ( m_selected >= 0 ) {
     Battle& battle = *((Battle*)GetItemData( m_selected )); // FIXME m_selected might not exist.
     m_ui.DownloadMod( battle.GetModName() );
-    /*wxString mod = battle.GetModName();
-    //all the following manipulation is necessary because the publish name on UF doesn't necessary reflect the file name
-    //and the mod filename isn't accessible trought unitsync
-    mod.Replace(_T(" "), _T("*") );
-    mod.Replace(_T("-"), _T("*") );
-    mod.Replace(_T("_"), _T("*") );
-    mod.Replace(_T("VERSION"), _T("*") );
-    mod.Replace(_T("Version"), _T("*") );
-    mod.Replace(_T("version"), _T("*") );
-    mod.Replace(_T("VER"), _T("*") );
-    mod.Replace(_T("Ver"), _T("*") );
-    mod.Replace(_T("ver"), _T("*") );
-    mod.Replace(_T("V"), _T("*") );
-    mod.Replace(_T("v"), _T("*") );
-    mod.Replace(_T("."), _T("*") );
-    mod.Replace(_T("ALPHA"), _T("*") );
-    mod.Replace(_T("Alpha"), _T("*") );
-    mod.Replace(_T("alpha"), _T("*") );
-    mod.Replace(_T("BETA"), _T("*") );
-    mod.Replace(_T("Beta"), _T("*") );
-    mod.Replace(_T("beta"), _T("*") );
-    wxString url = _T("http://spring.unknown-files.net/page/search/1/14/") + mod + _T("/");
-    if ( !wxLaunchDefaultBrowser( url ) ) {
-      wxMessageBox( _T("Couldn't launch browser. URL is: ") + url, _T("Couldn't launch browser.")  );
-    }*/
   }
 }
 

@@ -260,9 +260,7 @@ void Ui::DownloadMap( const wxString& map )
   mapname.Replace(_T("-"), _T("*") );
   mapname.Replace(_T("_"), _T("*") );
   wxString url = _T("http://spring.unknown-files.net/page/search/2/13/") + mapname + _T("/");
-  if ( !wxLaunchDefaultBrowser( url ) ) {
-    wxMessageBox( _T("Couldn't launch browser. URL is: ") + url, _T("Couldn't launch browser.")  );
-  }
+  OpenWebBrowser ( url );
 }
 
 
@@ -290,8 +288,19 @@ void Ui::DownloadMod( const wxString& mod )
   modname.Replace(_T("Beta"), _T("*") );
   modname.Replace(_T("beta"), _T("*") );
   wxString url = _T("http://spring.unknown-files.net/page/search/1/14/") + modname + _T("/");
-  if ( !wxLaunchDefaultBrowser( url ) ) {
-    wxMessageBox( _T("Couldn't launch browser. URL is: ") + url, _T("Couldn't launch browser.")  );
+  OpenWebBrowser ( url );
+}
+
+
+void Ui::OpenWebBrowser( const wxString& url )
+{
+  if ( sett().GetWebBrowserPath() == _T("use default") || sett().GetWebBrowserPath().IsEmpty() )
+  {
+      if ( !wxLaunchDefaultBrowser( url ) ) wxMessageBox( _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+  }
+  else
+  {
+    if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) ) wxMessageBox( _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
   }
 }
 

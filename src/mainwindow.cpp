@@ -314,13 +314,13 @@ void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 
 void MainWindow::OnReportBug( wxCommandEvent& event )
 {
-  wxLaunchDefaultBrowser( _T("http://trac.springlobby.info/newticket") );
+  m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") );
 }
 
 
 void MainWindow::OnShowDocs( wxCommandEvent& event )
 {
-  wxLaunchDefaultBrowser( _T("http://springlobby.info") );
+  m_ui.OpenWebBrowser( _T("http://springlobby.info") );
 }
 
 
