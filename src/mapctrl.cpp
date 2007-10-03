@@ -16,7 +16,6 @@
 #include "utils.h"
 #include "ui.h"
 #include "server.h"
-#include "unitsyncthread.h"
 
 #include "images/close.xpm"
 #include "images/close_hi.xpm"
@@ -72,8 +71,7 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool read
   m_nfound_img(0),
   m_reload_img(0),
   m_dl_img(0),
-  m_bot_expanded(-1),
-  m_caching_minimap(false)
+  m_bot_expanded(-1)
 {
   SetBackgroundStyle( wxBG_STYLE_CUSTOM );
   SetBackgroundColour( *wxLIGHT_GREY );
@@ -275,10 +273,7 @@ void MapCtrl::LoadMinimap()
   debug_func("");
   if ( m_battle == 0 ) return;
   if ( m_image ) return;
-  if ( !m_battle->MapExists() ) {
-    m_caching_minimap = false;
-    return;
-  }
+  if ( !m_battle->MapExists() ) return;
 
   wxString map = m_battle->GetMapName();
   try {
@@ -290,15 +285,8 @@ void MapCtrl::LoadMinimap()
       m_lastsize = wxSize( -1, -1 );
       return;
     }
-    wxImage img = usync()->GetMinimap( STD_STRING(map), w, h, m_fixed_size, m_caching_minimap );
-    m_caching_minimap = !m_caching_minimap;
-    if ( !m_caching_minimap ) {
-      debug("!m_caching_minimap");
-      m_image = new wxBitmap( img );
-    } else {
-      debug("m_caching_minimap");
-      m_ui.GetCacheThread().AddMinimapOrder( map );
-    }
+    wxImage img = usync()->GetMinimap( STD_STRING(map), w, h, m_fixed_size );
+    m_image = new wxBitmap( img );
     m_mapname = map;
     m_lastsize = wxSize( w, h );
     Refresh();
@@ -308,7 +296,7 @@ void MapCtrl::LoadMinimap()
     m_mapname = _T("");
   }
   if ( m_sp ) _RelocateBots();
-  debug("done");
+
 }
 
 
@@ -328,7 +316,7 @@ void MapCtrl::UpdateMinimap()
   _SetCursor();
   if ( m_battle == 0 ) return;
   GetClientSize( &w, &h );
-  if ( (m_mapname != m_battle->GetMapName() ) || ( m_lastsize != wxSize(w, h) ) || (m_caching_minimap) ) {
+  if ( (m_mapname != m_battle->GetMapName() ) || ( m_lastsize != wxSize(w, h) ) ) {
     FreeMinimap();
     LoadMinimap();
   }
@@ -447,13 +435,6 @@ void MapCtrl::_DrawBackground( wxDC& dc )
 
   // Draw minimap.
   if ( !m_image ) {
-
-    if ( m_caching_minimap ) {
-      if ( !m_reload_img ) m_reload_img = new wxBitmap( reload_map_xpm );
-      dc.DrawBitmap( *m_reload_img, 5, height - 27, true );
-      _DrawOutlinedText( dc, _("Caching..."), 28, height - 25, *wxWHITE, wxColour(50,50,50) );
-      return;
-    }
 
     if ( m_sp ) return;
 

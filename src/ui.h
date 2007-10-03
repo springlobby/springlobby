@@ -15,7 +15,6 @@ class Battle;
 class SinglePlayerBattle;
 class BattleBot;
 class ChatPanel;
-class UnitSyncThread;
 
 typedef int HostInfo;
 
@@ -40,8 +39,6 @@ class Ui
     Server& GetServer();
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
-
-    UnitSyncThread& GetCacheThread();
 
     bool ExecuteSayCommand( const wxString& cmd );
     void ConsoleHelp( const wxString& topic );
@@ -141,16 +138,10 @@ class Ui
 
     void OnRing( const std::string& from );
 
-    void OnMapInfoCached( const wxString& mapname );
-    void OnMinimapCached( const wxString& mapname );
-    void OnModUnitsCached( const wxString& modname );
-
   protected:
     Spring* m_spring;
 
     std::string m_server_spring_ver;
-
-    UnitSyncThread* m_thread;
 
     Server* m_serv;
     MainWindow* m_main_win;

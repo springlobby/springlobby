@@ -87,13 +87,11 @@ class SpringUnitSync : public IUnitSync
     wxString GetBotLibPath( const wxString& botlibname );
 
     int GetNumUnits();
+    //int GetUnitIndex( const std::string& name );
+    //std::string GetFullUnitName( int index );
     wxArrayString GetUnitsList();
 
-    wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size, bool& cached );
-
-    void CacheMapInfo( const wxString& map );
-    void CacheMinimap( const wxString& map );
-    void CacheModUnits( const wxString& mod );
+    wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
 
   private:
     bool m_loaded;
@@ -142,13 +140,10 @@ class SpringUnitSync : public IUnitSync
     int m_map_count;
     int m_mod_count;
     int m_side_count;
-    int m_last_mod_index;
-    std::string m_last_index_mod;
 
     MapCacheType m_mapinfo;
 
     wxCriticalSection m_lock;
-    //wxCriticalSection m_class_lock;
 
     void* _GetLibFuncPtr( const std::string& name );
     MapInfo _GetMapInfoEx( const std::string& mapname );
@@ -169,11 +164,11 @@ class SpringUnitSync : public IUnitSync
     UnitSyncMap _GetMap( const std::string& mapname, bool getmapinfo = false );
 
     wxImage _GetCachedMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
-    static wxString _GetCachedMinimapFileName( const std::string& mapname, int width = -1, int height = -1 );
+    wxString _GetCachedMinimapFileName( const std::string& mapname, int width = -1, int height = -1 );
 
-    static void _ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
-    static void _ConvertSpringMapInfo( const CachedMapInfo& in, MapInfo& out );
-    static void _ConvertSpringMapInfo( const SpringMapInfo& in, CachedMapInfo& out, const std::string& mapname );
+    void _ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
+    void _ConvertSpringMapInfo( const CachedMapInfo& in, MapInfo& out );
+    void _ConvertSpringMapInfo( const SpringMapInfo& in, CachedMapInfo& out, const std::string& mapname );
 
 };
 

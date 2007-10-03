@@ -63,7 +63,7 @@ class IUnitSync
     virtual UnitSyncMap GetMap( const std::string& mapname, bool getmapinfo = false ) = 0;
     virtual UnitSyncMap GetMap( int index, bool getmapinfo = false ) = 0;
     virtual int GetMapIndex( const std::string& name ) = 0;
-    virtual wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size, bool& cached ) = 0;
+    virtual wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false ) = 0;
 
     virtual void SetCurrentMod( const std::string& modname ) = 0;
     virtual int GetSideCount() = 0;
@@ -84,10 +84,6 @@ class IUnitSync
 
     virtual wxArrayString GetAIList() = 0;
     virtual wxString GetBotLibPath( const wxString& botlibname ) = 0;
-
-    virtual void CacheMapInfo( const wxString& map ) = 0;
-    virtual void CacheMinimap( const wxString& map ) = 0;
-    virtual void CacheModUnits( const wxString& mod ) = 0;
 
 };
 
