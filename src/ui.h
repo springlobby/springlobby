@@ -57,7 +57,9 @@ class Ui
 
     void SetSupportedSpring(std::string spring_version) { m_server_spring_ver = spring_version; }
 
-    bool IsSpringCompatible( );
+    bool IsSpringCompatible();
+
+    bool IsSpringRunning();
 
     void StartHostedBattle();
     void StartSinglePlayerGame( SinglePlayerBattle& battle );

@@ -220,6 +220,12 @@ void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
 }
 
 
+bool Ui::IsSpringRunning()
+{
+   return m_spring->IsRunning();
+}
+
+
 //! @brief Quits the entire application
 void Ui::Quit()
 {

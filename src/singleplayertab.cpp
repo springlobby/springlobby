@@ -226,6 +226,10 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 
 void SinglePlayerTab::OnStart( wxCommandEvent& event )
 {
+  if ( m_ui.IsSpringRunning() ) {
+    wxMessageBox(_("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
+    return;
+  }
   if ( ValidSetup() ) m_ui.StartSinglePlayerGame( m_battle );
 }
 
