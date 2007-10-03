@@ -48,10 +48,6 @@ Ui::~Ui() {
   Disconnect();
   delete m_main_win;
   delete m_spring;
-  m_thread->Delete();
-
-  m_thread_wait.Enter();
-  m_thread_wait.Leave();
 }
 
 
@@ -887,7 +883,7 @@ void Ui::OnRing( const std::string& from )
 
 void Ui::OnMapInfoCached( const wxString& mapname )
 {
-  mw().OnUnitSyncReloaded();
+
 }
 
 
@@ -899,16 +895,5 @@ void Ui::OnMinimapCached( const wxString& mapname )
 
 void Ui::OnModUnitsCached( const wxString& modname )
 {
-}
-
-
-void Ui::OnCachedThreadStarted()
-{
-  m_thread_wait.Enter();
-}
-
-void Ui::OnCachedThreadTerminated()
-{
-  m_thread_wait.Leave();
 }
 

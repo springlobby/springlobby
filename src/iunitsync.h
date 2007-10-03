@@ -60,10 +60,8 @@ class IUnitSync
     virtual int GetNumMaps() = 0;
     virtual bool MapExists( const std::string& mapname ) = 0;
     virtual bool MapExists( const std::string& mapname, const std::string hash ) = 0;
-    virtual UnitSyncMap GetMap( const std::string& mapname ) = 0;
-    virtual UnitSyncMap GetMap( int index ) = 0;
-    virtual UnitSyncMap GetMapEx( const std::string& mapname, bool& cached ) = 0;
-    virtual UnitSyncMap GetMapEx( int index, bool& cached ) = 0;
+    virtual UnitSyncMap GetMap( const std::string& mapname, bool getmapinfo = false ) = 0;
+    virtual UnitSyncMap GetMap( int index, bool getmapinfo = false ) = 0;
     virtual int GetMapIndex( const std::string& name ) = 0;
     virtual wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size, bool& cached ) = 0;
 
@@ -87,9 +85,9 @@ class IUnitSync
     virtual wxArrayString GetAIList() = 0;
     virtual wxString GetBotLibPath( const wxString& botlibname ) = 0;
 
-    virtual bool CacheMapInfo( const wxString& map ) = 0;
-    virtual bool CacheMinimap( const wxString& map ) = 0;
-    virtual bool CacheModUnits( const wxString& mod ) = 0;
+    virtual void CacheMapInfo( const wxString& map ) = 0;
+    virtual void CacheMinimap( const wxString& map ) = 0;
+    virtual void CacheModUnits( const wxString& mod ) = 0;
 
 };
 

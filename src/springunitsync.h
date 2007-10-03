@@ -66,10 +66,8 @@ class SpringUnitSync : public IUnitSync
     int GetNumMaps();
     bool MapExists( const std::string& mapname );
     bool MapExists( const std::string& mapname, const std::string hash );
-    UnitSyncMap GetMap( const std::string& name );
-    UnitSyncMap GetMap( int index );
-    UnitSyncMap GetMapEx( const std::string& name, bool& cached );
-    UnitSyncMap GetMapEx( int index, bool& cached );
+    UnitSyncMap GetMap( const std::string&, bool getmapinfo = false );
+    UnitSyncMap GetMap( int index, bool getmapinfo = false );
 
     int GetMapIndex( const std::string& name );
 
@@ -93,9 +91,9 @@ class SpringUnitSync : public IUnitSync
 
     wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size, bool& cached );
 
-    bool CacheMapInfo( const wxString& map );
-    bool CacheMinimap( const wxString& map );
-    bool CacheModUnits( const wxString& mod );
+    void CacheMapInfo( const wxString& map );
+    void CacheMinimap( const wxString& map );
+    void CacheModUnits( const wxString& mod );
 
   private:
     bool m_loaded;
@@ -153,7 +151,7 @@ class SpringUnitSync : public IUnitSync
     //wxCriticalSection m_class_lock;
 
     void* _GetLibFuncPtr( const std::string& name );
-    MapInfo _GetMapInfoEx( const std::string& mapname, bool& cached, bool force = false );
+    MapInfo _GetMapInfoEx( const std::string& mapname );
 
     void _LoadMapInfoExCache();
     void _SaveMapInfoExCache();
@@ -167,10 +165,8 @@ class SpringUnitSync : public IUnitSync
     std::string _GetModArchive( int index );
 
     int _GetMapIndex( const std::string& name );
-    UnitSyncMap _GetMap( int index );
-    UnitSyncMap _GetMap( const std::string& mapname );
-    UnitSyncMap _GetMapEx( int index, bool& cached, bool force = false );
-    UnitSyncMap _GetMapEx( const std::string& mapname, bool& cached, bool force = false );
+    UnitSyncMap _GetMap( int index, bool getmapinfo = false );
+    UnitSyncMap _GetMap( const std::string& mapname, bool getmapinfo = false );
 
     wxImage _GetCachedMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
     static wxString _GetCachedMinimapFileName( const std::string& mapname, int width = -1, int height = -1 );

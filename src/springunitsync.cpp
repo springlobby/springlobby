@@ -355,43 +355,25 @@ bool SpringUnitSync::MapExists( const std::string& mapname, const std::string ha
 }
 
 
-UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname )
+UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname, bool getmapinfo )
 {
   //debug_func( "" );
   //LOCK_UNITSYNC;
 
-  return _GetMap( mapname );
+  return _GetMap( mapname, getmapinfo );
 }
 
 
-UnitSyncMap SpringUnitSync::GetMapEx( const std::string& mapname, bool& cached )
-{
-  //debug_func( "" );
-  //LOCK_UNITSYNC;
-
-  return _GetMapEx( mapname, cached );
-}
-
-
-UnitSyncMap SpringUnitSync::_GetMap( const std::string& mapname )
+UnitSyncMap SpringUnitSync::_GetMap( const std::string& mapname, bool getmapinfo )
 {
   int i = _GetMapIndex( mapname );
   ASSERT_LOGIC( i >= 0, "Map does not exist" );
 
-  return _GetMap( i );
+  return _GetMap( i, getmapinfo );
 }
 
 
-UnitSyncMap SpringUnitSync::_GetMapEx( const std::string& mapname, bool& cached, bool force )
-{
-  int i = _GetMapIndex( mapname );
-  ASSERT_LOGIC( i >= 0, "Map does not exist" );
-
-  return _GetMapEx( i, cached, force );
-}
-
-
-MapInfo SpringUnitSync::_GetMapInfoEx( const std::string& mapname, bool& cached, bool force )
+MapInfo SpringUnitSync::_GetMapInfoEx( const std::string& mapname )
 {
   //debug_func("");
   MapCacheType::iterator i = m_mapinfo.find(mapname);
@@ -400,56 +382,41 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const std::string& mapname, bool& cached,
     MapInfo info;
     CachedMapInfo cinfo = i->second;
     _ConvertSpringMapInfo( cinfo, info );
-    cached = true;
     return info;
   }
-
-  cached = false;
 
   debug("GetMapInfoEx cache lookup failed.");
 
   char tmpdesc[256];
   char tmpauth[256];
 
+  SpringMapInfo tm;
+  tm.description = &tmpdesc[0];
+  tm.author = &tmpauth[0];
+
+  m_get_map_info_ex( mapname.c_str(), &tm, 0 );
+
   MapInfo info;
+  _ConvertSpringMapInfo( tm, info );
 
-  if ( force ) {
-    SpringMapInfo tm;
-    tm.description = &tmpdesc[0];
-    tm.author = &tmpauth[0];
-
-    m_get_map_info_ex( mapname.c_str(), &tm, 0 );
-
-    _ConvertSpringMapInfo( tm, info );
-
-    CachedMapInfo cinfo;
-    _ConvertSpringMapInfo( tm, cinfo, mapname );
-    m_mapinfo[mapname] = cinfo;
-  }
+  CachedMapInfo cinfo;
+  _ConvertSpringMapInfo( tm, cinfo, mapname );
+  m_mapinfo[mapname] = cinfo;
 
   return info;
 }
 
 
-UnitSyncMap SpringUnitSync::GetMap( int index )
+UnitSyncMap SpringUnitSync::GetMap( int index, bool getmapinfo )
 {
   //debug_func( "" );
   //LOCK_UNITSYNC;
 
-  return _GetMap( index );
+  return _GetMap( index, getmapinfo );
 }
 
 
-UnitSyncMap SpringUnitSync::GetMapEx( int index, bool& cached )
-{
-  //debug_func( "" );
-  //LOCK_UNITSYNC;
-
-  return _GetMapEx( index, cached );
-}
-
-
-UnitSyncMap SpringUnitSync::_GetMap( int index )
+UnitSyncMap SpringUnitSync::_GetMap( int index, bool getmapinfo )
 {
   UnitSyncMap m;
   if ( !m_loaded ) return m;
@@ -457,19 +424,7 @@ UnitSyncMap SpringUnitSync::_GetMap( int index )
   m.name = m_get_map_name( index );
   m.hash = i2s(m_get_map_checksum( index ));
 
-  return m;
-}
-
-
-UnitSyncMap SpringUnitSync::_GetMapEx( int index, bool& cached, bool force )
-{
-  UnitSyncMap m;
-  if ( !m_loaded ) return m;
-
-  m.name = m_get_map_name( index );
-  m.hash = i2s(m_get_map_checksum( index ));
-
-  m.info = _GetMapInfoEx( m.name, cached, force );
+  if ( getmapinfo ) m.info = _GetMapInfoEx( m.name );
 
   return m;
 }
@@ -547,7 +502,7 @@ std::string SpringUnitSync::GetSideName( int index )
   //LOCK_UNITSYNC;
 
   if ( (!m_loaded) || (index < 0) || (!_ModExists(m_current_mod)) ) return "unknown";
-  //m_add_all_archives( _GetModArchive( _GetModIndex( m_current_mod ) ).c_str() );
+  m_add_all_archives( _GetModArchive( _GetModIndex( m_current_mod ) ).c_str() );
   if ( index >= m_side_count ) return "unknown";
   ASSERT_LOGIC( m_side_count > index, "Side index too high." );
   return m_get_side_name( index );
@@ -559,7 +514,7 @@ wxImage SpringUnitSync::GetSidePicture( const std::string& SideName )
   debug_func( "" );
  // LOCK_UNITSYNC;
 
-  //m_add_all_archives( _GetModArchive( _GetModIndex( m_current_mod ) ).c_str() );
+  m_add_all_archives( _GetModArchive( _GetModIndex( m_current_mod ) ).c_str() );
   debug_func( "SideName = \"" + SideName + "\"" );
   wxString ImgName = _T("SidePics");
   ImgName += _T("/");
@@ -643,7 +598,7 @@ int SpringUnitSync::GetNumUnits()
   //LOCK_UNITSYNC;
 
   if ( !m_loaded ) return 0;
-  //m_add_all_archives( _GetModArchive( _GetModIndex( m_current_mod ) ).c_str() );
+  m_add_all_archives( _GetModArchive( _GetModIndex( m_current_mod ) ).c_str() );
   m_proc_units_nocheck();
 
   return m_get_unit_count();
@@ -735,17 +690,9 @@ wxImage SpringUnitSync::_GetCachedMinimap( const std::string& mapname, int max_w
 
   if ( !store_size ) {
 
-    bool cached = true;
-    /*UnitSyncMap map = _GetMap( mapname );
-    if ( map.hash != m_map.hash ) map = m_map = _GetMapEx( mapname, cached );
-    else map = m_map;*/
-    UnitSyncMap map = _GetMapEx( mapname, cached );
-    if ( !cached ) {
-      map.info.height = 512;
-      map.info.width = 512;
-    }
-
-    debug("MWidth: " + i2s(map.info.width) + " MHeight: " + i2s(map.info.height) );
+    UnitSyncMap map = _GetMap( mapname );
+    if ( map.hash != m_map.hash ) map = m_map = _GetMap( mapname, true );
+    else map = m_map;
 
     int height, width;
 
@@ -756,7 +703,6 @@ wxImage SpringUnitSync::_GetCachedMinimap( const std::string& mapname, int max_w
       height = max_h;
     }
 
-    debug("Width: " + i2s(width) + " Height: " + i2s(height) );
     img.Rescale( width, height );
 
   }
@@ -930,46 +876,18 @@ void SpringUnitSync::_SaveMapInfoExCache()
 }
 
 
-bool SpringUnitSync::CacheMapInfo( const wxString& mapname )
+void SpringUnitSync::CacheMapInfo( const wxString& map )
 {
   debug_func( "" );
-
-  MapCacheType::iterator i = m_mapinfo.find(STD_STRING(mapname));
-  if ( i != m_mapinfo.end() ) return false;
-
   LOCK_UNITSYNC;
-  if ( !m_loaded) return false;
-
-  char tmpdesc[256];
-  char tmpauth[256];
-
-  SpringMapInfo tm;
-  tm.description = &tmpdesc[0];
-  tm.author = &tmpauth[0];
-
-  m_get_map_info_ex( mapname.mb_str(wxConvUTF8), &tm, 0 );
-
-  MapInfo info;
-  _ConvertSpringMapInfo( tm, info );
-
-  CachedMapInfo cinfo;
-  _ConvertSpringMapInfo( tm, cinfo, STD_STRING(mapname) );
-  m_mapinfo[STD_STRING(mapname)] = cinfo;
-
-  return true;
 }
 
 
-bool SpringUnitSync::CacheMinimap( const wxString& mapname )
+void SpringUnitSync::CacheMinimap( const wxString& mapname )
 {
   debug_func( "" );
-  if ( wxFileExists( _GetCachedMinimapFileName( STD_STRING(mapname) ) ) &&
-       wxFileExists( _GetCachedMinimapFileName( STD_STRING(mapname), 160, 160 ) ) &&
-       wxFileExists( _GetCachedMinimapFileName( STD_STRING(mapname), 98, 98 ) )
-     ) return false;
-
   LOCK_UNITSYNC;
-  if ( !m_loaded) return false;
+  if ( wxFileExists( _GetCachedMinimapFileName( STD_STRING(mapname) ) ) ) return;
 
   int width = 512, height = 1024;
 
@@ -977,7 +895,9 @@ bool SpringUnitSync::CacheMinimap( const wxString& mapname )
   UnitSyncColour* colours;
   try {
     colours = (UnitSyncColour*)m_get_minimap( mapname.mb_str(wxConvUTF8), 0 );
-  } catch(...) { return false; }
+  } catch(...) {}
+
+  if ( !colours ) return;
 
   for ( int y = 0; y < height; y++ ) {
     for ( int x = 0; x < width; x++ ) {
@@ -989,8 +909,7 @@ bool SpringUnitSync::CacheMinimap( const wxString& mapname )
 
   UnitSyncMap map;
   try {
-    bool cached;
-    map = _GetMapEx( STD_STRING(mapname), cached, true );
+    map = _GetMap( STD_STRING(mapname), true );
   } catch(...) {}
 
   ret.Rescale( 512, 512 );
@@ -1016,24 +935,12 @@ bool SpringUnitSync::CacheMinimap( const wxString& mapname )
     ret.SaveFile( _GetCachedMinimapFileName( STD_STRING(mapname), max_w, max_h ), wxBITMAP_TYPE_PNG );
 
   }
-  return true;
 }
 
 
-bool SpringUnitSync::CacheModUnits( const wxString& mod )
+void SpringUnitSync::CacheModUnits( const wxString& mod )
 {
   debug_func( "" );
   LOCK_UNITSYNC;
-  return false;
 }
-
-
-
-
-
-
-
-
-
-
 

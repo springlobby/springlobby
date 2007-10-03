@@ -61,9 +61,8 @@ const UnitSyncMap& IBattle::Map()
   if ( !m_map_loaded ) {
     try {
 
-      bool cached;
-      m_map = usync()->GetMapEx( STD_STRING(m_map_name), cached );
-      m_map_loaded = cached;
+      m_map = usync()->GetMap( STD_STRING(m_map_name), true );
+      m_map_loaded = true;
       m_map_name = WX_STRING(m_map.name);
 
     } catch (...) {}

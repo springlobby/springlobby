@@ -29,7 +29,6 @@
 #include "mapctrl.h"
 #include "uiutils.h"
 #include "server.h"
-#include "unitsyncthread.h"
 
 BEGIN_EVENT_TABLE(BattleMapTab, wxPanel)
 
@@ -138,7 +137,7 @@ void BattleMapTab::ReloadMaplist()
 {
   m_map_combo->Clear();
   for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-    m_map_combo->Insert( RefineMapname( WX_STRING(usync()->GetMap( i ).name) ), i );
+    m_map_combo->Insert( RefineMapname( WX_STRING(usync()->GetMap( i, false ).name) ), i );
   }
 }
 
@@ -160,15 +159,11 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
     return;
   }
   int index = m_map_combo->GetCurrentSelection();
+  //wxString name = m_map_combo->GetString( index );
 
-  bool cached;
-  UnitSyncMap map = usync()->GetMapEx( index, cached );
-  if ( cached ) {
-    m_battle.SetMap( map );
-  } else {
-    m_ui.GetCacheThread().AddMapInfoOrder( WX_STRING(map.name) );
-    m_battle.SetMap( WX_STRING(map.name), WX_STRING(map.hash) );
-  }
+  UnitSyncMap map = usync()->GetMap( index, true );
+  m_battle.SetMap( map );
+//  m_battle.SetMapHash( map.hash );
 
   m_battle.SendHostInfo( HI_Map );
 }
