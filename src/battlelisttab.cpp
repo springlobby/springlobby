@@ -100,6 +100,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   m_filter_combo = new wxComboBox( this, wxID_ANY, _("search"), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
   m_filter_combo->Append( _("All") );
   m_filter_combo->Append( _("Open only") );
+  m_filter_combo->Disable();
   m_buttons_sizer->Add( m_filter_combo, 0, 0, 5 );
 
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
@@ -316,6 +317,30 @@ void BattleListTab::DoJoin( Battle& battle )
   } else {
     battle.Join();
   }
+}
+
+
+void BattleListTab::EnableJoinButton()
+{
+  m_join_btn->Enable();
+}
+
+
+void BattleListTab::DisableJoinButton()
+{
+  m_join_btn->Disable();
+}
+
+
+void BattleListTab::EnableHostButton()
+{
+  m_host_btn->Enable();
+}
+
+
+void BattleListTab::DisableHostButton()
+{
+  m_host_btn->Disable();
 }
 
 
