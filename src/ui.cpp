@@ -216,10 +216,6 @@ void Ui::StartHostedBattle()
 
 void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
 {
-  if ( IsSpringRunning() ) {
-    wxMessageBox(_("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
-    return;
-  }
   m_spring->Run( battle );
 }
 
@@ -768,12 +764,6 @@ void Ui::OnRequestBattleStatus( Battle& battle )
 void Ui::OnBattleStarted( Battle& battle )
 {
   debug_func("");
-
-  if ( IsSpringRunning() ) {
-    wxMessageBox(_("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
-    return;
-  }
-
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) {
