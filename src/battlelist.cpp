@@ -5,7 +5,6 @@
 #include "battle.h"
 
 #include <wx/string.h>
-#include <wx/file.h>
 
 BattleList::BattleList()
 {
@@ -39,7 +38,7 @@ battle_map_t::size_type BattleList_Iter::GetNumBattles()
 
 void BattleList_Iter::IteratorBegin()
 {
-   (m_battlelist)?(m_iterator = m_battlelist->m_battles.begin()):false;
+  if (m_battlelist) m_iterator = m_battlelist->m_battles.begin();
 }
 
 Battle& BattleList_Iter::GetBattle()

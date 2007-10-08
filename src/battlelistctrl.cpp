@@ -358,12 +358,12 @@ int wxCALLBACK BattleListCtrl::CompareDescriptionDOWN(long item1, long item2, lo
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( (WX_STRING(battle1.GetDescription()).MakeUpper()) < (WX_STRING(battle2.GetDescription()).MakeUpper()) )
-   { wxMessageBox("bigger");
+   { wxMessageBox(_("bigger"));
       return 1;
    }
   if ( (WX_STRING(battle1.GetDescription()).MakeUpper()) > (WX_STRING(battle2.GetDescription()).MakeUpper()) )
     {
-      wxMessageBox("smaller");
+      wxMessageBox(_("smaller"));
       return -1;
     }
 

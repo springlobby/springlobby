@@ -158,6 +158,8 @@
 		<Unit filename="src/battlelist.h" />
 		<Unit filename="src/battlelistctrl.cpp" />
 		<Unit filename="src/battlelistctrl.h" />
+		<Unit filename="src/battlelistfilter.cpp" />
+		<Unit filename="src/battlelistfilter.h" />
 		<Unit filename="src/battlelisttab.cpp" />
 		<Unit filename="src/battlelisttab.h" />
 		<Unit filename="src/battlemaptab.cpp" />

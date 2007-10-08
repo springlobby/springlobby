@@ -230,9 +230,9 @@ int wxCALLBACK NickListCtrl::ComparePlayernameUP(long item1, long item2, long so
 {
     // inverse the order
 
-    if ( wxString(((User*)item1)->GetNick()).MakeUpper() < wxString(((User*)item2)->GetNick()).MakeUpper() )
+    if ( WX_STRING(((User*)item1)->GetNick()).MakeUpper() < WX_STRING(((User*)item2)->GetNick()).MakeUpper() )
         return -1;
-    if ( wxString(((User*)item1)->GetNick()).MakeUpper() > wxString(((User*)item2)->GetNick()).MakeUpper() )
+    if ( WX_STRING(((User*)item1)->GetNick()).MakeUpper() > WX_STRING(((User*)item2)->GetNick()).MakeUpper() )
         return 1;
 
     return 0;
@@ -242,9 +242,9 @@ int wxCALLBACK NickListCtrl::ComparePlayernameUP(long item1, long item2, long so
 int wxCALLBACK NickListCtrl::ComparePlayernameDOWN(long item1, long item2, long sortData )
 {
     // inverse the order
-    if ( wxString(((User*)item1)->GetNick()).MakeUpper() < wxString(((User*)item2)->GetNick()).MakeUpper() )
+    if ( WX_STRING(((User*)item1)->GetNick()).MakeUpper() < WX_STRING(((User*)item2)->GetNick()).MakeUpper() )
         return 1;
-    if ( wxString(((User*)item1)->GetNick()).MakeUpper() > wxString(((User*)item2)->GetNick()).MakeUpper() )
+    if ( WX_STRING(((User*)item1)->GetNick()).MakeUpper() > WX_STRING(((User*)item2)->GetNick()).MakeUpper() )
         return -1;
 
     return 0;
