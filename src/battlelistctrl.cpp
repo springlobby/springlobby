@@ -216,14 +216,14 @@ void BattleListCtrl::Sort()
 int wxCALLBACK BattleListCtrl::CompareStatusUP(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   int b1 = 0, b2 = 0;
 
   if ( battle1.GetInGame() )
     b1 += 1000;
-  if ( battle1.GetInGame() )
+  if ( battle2.GetInGame() )
     b2 += 1000;
   if ( battle1.IsLocked() )
     b1 += 100;
@@ -247,14 +247,14 @@ int wxCALLBACK BattleListCtrl::CompareStatusUP(long item1, long item2, long sort
 int wxCALLBACK BattleListCtrl::CompareStatusDOWN(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   int b1 = 0, b2 = 0;
 
   if ( battle1.GetInGame() )
     b1 += 1000;
-  if ( battle1.GetInGame() )
+  if ( battle2.GetInGame() )
     b2 += 1000;
   if ( battle1.IsLocked() )
     b1 += 100;
@@ -278,7 +278,7 @@ int wxCALLBACK BattleListCtrl::CompareStatusDOWN(long item1, long item2, long so
 int wxCALLBACK BattleListCtrl::CompareRankUP(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( battle1.GetRankNeeded() < battle2.GetRankNeeded() )
@@ -293,7 +293,7 @@ int wxCALLBACK BattleListCtrl::CompareRankUP(long item1, long item2, long sortDa
 int wxCALLBACK BattleListCtrl::CompareRankDOWN(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( battle1.GetRankNeeded() < battle2.GetRankNeeded() )
@@ -308,7 +308,7 @@ int wxCALLBACK BattleListCtrl::CompareRankDOWN(long item1, long item2, long sort
 int wxCALLBACK BattleListCtrl::CompareCountryUP(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( WX_STRING(battle1.GetFounder().GetCountry()).MakeUpper() < WX_STRING(battle2.GetFounder().GetCountry()).MakeUpper() )
@@ -324,7 +324,7 @@ int wxCALLBACK BattleListCtrl::CompareCountryUP(long item1, long item2, long sor
 int wxCALLBACK BattleListCtrl::CompareCountryDOWN(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( WX_STRING(battle1.GetFounder().GetCountry()).MakeUpper() < WX_STRING(battle2.GetFounder().GetCountry()).MakeUpper() )
@@ -339,7 +339,7 @@ int wxCALLBACK BattleListCtrl::CompareCountryDOWN(long item1, long item2, long s
 int wxCALLBACK BattleListCtrl::CompareDescriptionUP(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( WX_STRING(battle1.GetDescription()).MakeUpper() < WX_STRING(battle2.GetDescription()).MakeUpper() )
@@ -354,16 +354,15 @@ int wxCALLBACK BattleListCtrl::CompareDescriptionUP(long item1, long item2, long
 int wxCALLBACK BattleListCtrl::CompareDescriptionDOWN(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( (WX_STRING(battle1.GetDescription()).MakeUpper()) < (WX_STRING(battle2.GetDescription()).MakeUpper()) )
-   { wxMessageBox(_("bigger"));
+   {
       return 1;
    }
   if ( (WX_STRING(battle1.GetDescription()).MakeUpper()) > (WX_STRING(battle2.GetDescription()).MakeUpper()) )
     {
-      wxMessageBox(_("smaller"));
       return -1;
     }
 
@@ -374,7 +373,7 @@ int wxCALLBACK BattleListCtrl::CompareDescriptionDOWN(long item1, long item2, lo
 int wxCALLBACK BattleListCtrl::CompareMapUP(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( RefineMapname( battle1.GetMapName() ).MakeUpper() < RefineMapname( battle2.GetMapName() ).MakeUpper() )
@@ -389,7 +388,7 @@ int wxCALLBACK BattleListCtrl::CompareMapUP(long item1, long item2, long sortDat
 int wxCALLBACK BattleListCtrl::CompareMapDOWN(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( RefineMapname( battle1.GetMapName() ).MakeUpper() < RefineMapname( battle2.GetMapName() ).MakeUpper() )
@@ -404,7 +403,7 @@ int wxCALLBACK BattleListCtrl::CompareMapDOWN(long item1, long item2, long sortD
 int wxCALLBACK BattleListCtrl::CompareModUP(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( RefineModname( battle1.GetModName() ).MakeUpper() < RefineModname( battle2.GetModName() ).MakeUpper() )
@@ -419,7 +418,7 @@ int wxCALLBACK BattleListCtrl::CompareModUP(long item1, long item2, long sortDat
 int wxCALLBACK BattleListCtrl::CompareModDOWN(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( RefineModname( battle1.GetModName() ).MakeUpper() < RefineModname( battle2.GetModName() ).MakeUpper() )
@@ -434,7 +433,7 @@ int wxCALLBACK BattleListCtrl::CompareModDOWN(long item1, long item2, long sortD
 int wxCALLBACK BattleListCtrl::CompareHostUP(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( WX_STRING(battle1.GetFounder().GetNick()).MakeUpper() < WX_STRING(battle2.GetFounder().GetNick()).MakeUpper() )
@@ -449,7 +448,7 @@ int wxCALLBACK BattleListCtrl::CompareHostUP(long item1, long item2, long sortDa
 int wxCALLBACK BattleListCtrl::CompareHostDOWN(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( WX_STRING(battle1.GetFounder().GetNick()).MakeUpper() < WX_STRING(battle2.GetFounder().GetNick()).MakeUpper() )
@@ -464,7 +463,7 @@ int wxCALLBACK BattleListCtrl::CompareHostDOWN(long item1, long item2, long sort
 int wxCALLBACK BattleListCtrl::CompareSpectatorsUP(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( battle1.GetSpectators() < battle2.GetSpectators() )
@@ -479,7 +478,7 @@ int wxCALLBACK BattleListCtrl::CompareSpectatorsUP(long item1, long item2, long 
 int wxCALLBACK BattleListCtrl::CompareSpectatorsDOWN(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( battle1.GetSpectators() < battle2.GetSpectators() )
@@ -494,7 +493,7 @@ int wxCALLBACK BattleListCtrl::CompareSpectatorsDOWN(long item1, long item2, lon
 int wxCALLBACK BattleListCtrl::ComparePlayerUP(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( battle1.GetNumUsers() - battle1.GetSpectators() < battle2.GetNumUsers() - battle2.GetSpectators() )
@@ -510,7 +509,7 @@ int wxCALLBACK BattleListCtrl::ComparePlayerUP(long item1, long item2, long sort
 int wxCALLBACK BattleListCtrl::ComparePlayerDOWN(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( battle1.GetNumUsers() - battle1.GetSpectators() < battle2.GetNumUsers() - battle2.GetSpectators() )
@@ -525,7 +524,7 @@ int wxCALLBACK BattleListCtrl::ComparePlayerDOWN(long item1, long item2, long so
 int wxCALLBACK BattleListCtrl::CompareMaxPlayerUP(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( battle1.GetMaxPlayers() < battle2.GetMaxPlayers() )
@@ -540,7 +539,7 @@ int wxCALLBACK BattleListCtrl::CompareMaxPlayerUP(long item1, long item2, long s
 int wxCALLBACK BattleListCtrl::CompareMaxPlayerDOWN(long item1, long item2, long sortData)
 {
   Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item2);
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
   if ( battle1.GetMaxPlayers() < battle2.GetMaxPlayers() )
