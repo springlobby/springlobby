@@ -53,8 +53,8 @@ class Server
     UiServerData uidata;
 
 
-    Server( Ui& ui): m_sock(0), m_ui(ui), m_keepalive(15) { }
-    virtual ~Server();
+    Server( Ui& ui): m_sock(0), m_ui(ui), m_keepalive(15),battles_iter(new BattleList_Iter(&m_battles)) {  }
+    virtual ~Server( );
 
     // Server interface
 
@@ -133,6 +133,8 @@ class Server
     virtual void OnConnected( Socket* sock ) = 0;
     virtual void OnDisconnected( Socket* sock ) = 0;
     virtual void OnDataRecived( Socket* sock ) = 0;
+
+    BattleList_Iter* const battles_iter;
 
     virtual User& GetMe() = 0;
     User& GetUser( const std::string& nickname );

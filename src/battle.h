@@ -29,7 +29,8 @@ struct BattleOptions
     battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),
     nattype(NAT_None),port(DEFAULT_SERVER_PORT),maxplayers(0),spectators(0),
     startmetal(1000),startenergy(1000),maxunits(500),starttype(ST_Fixed),
-    gametype(GT_ComContinue),limitdgun(false),dimmms(false),ghostedbuildings(true) {}
+    gametype(GT_ComContinue),limitdgun(false),dimmms(false),ghostedbuildings(true),
+    guilistactiv(false) {}
 
   int battleid;
   bool islocked;
@@ -62,6 +63,7 @@ struct BattleOptions
   std::string mapname;
   std::string modname;
 
+  bool guilistactiv;
 };
 
 
@@ -75,29 +77,32 @@ class Battle : public UserList, public IBattle
 
     Server& GetServer();
 
-    int GetBattleId() { return m_opts.battleid; }
+    int GetBattleId() const { return m_opts.battleid; }
+
+    bool GetGUIListActiv() const { return m_opts.guilistactiv; }
+    void SetGUIListActiv(bool Activ) { m_opts.guilistactiv = Activ; }
 
     void SetInGame( bool ingame ) { m_ingame = ingame; }
-    bool GetInGame() { return m_ingame; }
+    bool GetInGame() const { return m_ingame; }
 
     void SetIsReplay( const bool& isreplay ) { m_opts.isreplay = isreplay; }
     void SetIsLocked( const bool& islocked ) { m_opts.islocked = islocked; }
-    bool IsLocked() { return m_opts.islocked; }
+    bool IsLocked() const { return m_opts.islocked; }
     void SetIsPassworded( const bool& ispassworded ) { m_opts.ispassworded = ispassworded; }
-    bool IsPassworded() { return m_opts.ispassworded; }
+    bool IsPassworded() const { return m_opts.ispassworded; }
 
     void SetNatType( const NatType nattype ) { m_opts.nattype = nattype; }
-    NatType GetNatType() { return m_opts.nattype; }
+    NatType GetNatType() const { return m_opts.nattype; }
     void SetHostPort( int port) { m_opts.port = port; }
-    int GetHostPort() { return m_opts.port; }
+    int GetHostPort() const { return m_opts.port; }
     void SetFounder( const std::string& nick ) { m_opts.founder = nick; }
     void SetHostIp( const std::string& ip ) { m_opts.ip = ip; }
-    std::string GetHostIp() { return m_opts.ip; }
+    std::string GetHostIp() const { return m_opts.ip; }
 
     void SetMaxPlayers( const int& maxplayers ) { m_opts.maxplayers = maxplayers; }
-    int GetMaxPlayers() { return m_opts.maxplayers; }
+    int GetMaxPlayers() const { return m_opts.maxplayers; }
     void SetSpectators( const int& spectators ) { m_opts.spectators = spectators; }
-    int GetSpectators() { return m_opts.spectators; }
+    int GetSpectators() const { return m_opts.spectators; }
 
 /*    void SetStartMetal( const int& smetal ) { m_opts.startmetal = smetal; }
     int GetStartMetal() { return m_opts.startmetal; }
@@ -119,19 +124,19 @@ class Battle : public UserList, public IBattle
     void SendHostInfo( HostInfo update );
 
     void SetRankNeeded( const int& rankneeded ) { m_opts.rankneeded = rankneeded; }
-    int GetRankNeeded() { return m_opts.rankneeded; }
+    int GetRankNeeded() const { return m_opts.rankneeded; }
 
     //void SetMapHash( const std::string& maphash ) { m_opts.maphash = maphash; }
     //void SetMapname( const std::string& map ) { m_opts.mapname = map; }
     void SetDescription( const std::string& desc ) { m_opts.description = desc; }
-    std::string GetDescription() { return m_opts.description; }
+    std::string GetDescription() const { return m_opts.description; }
     //void SetModname( const std::string& mod ) { m_opts.modname = mod; }
 
     void SetImReady( bool ready );
 
     User& GetFounder() { return GetUser( m_opts.founder ); }
     User& GetMe();
-    bool IsFounderMe();
+    bool IsFounderMe() const;
 
     int GetMyPlayerNum();
 
@@ -154,7 +159,7 @@ class Battle : public UserList, public IBattle
     /*bool IsMapAvailable();
     bool IsModAvailable();*/
 
-    bool HaveMultipleBotsInSameTeam();
+    bool HaveMultipleBotsInSameTeam() const;
 
     void OnRequestBattleStatus();
     void SendMyBattleStatus();
