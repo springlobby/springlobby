@@ -4778,7 +4778,7 @@
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="1">
                     <property name="border">5</property>
-                    <property name="flag">wxEXPAND</property>
+                    <property name="flag">wxEXPAND|wxALIGN_CENTER_HORIZONTAL</property>
                     <property name="proportion">1</property>
                     <object class="wxStaticBoxSizer" expanded="1">
                         <property name="label"></property>
@@ -4790,7 +4790,7 @@
                             <property name="border">5</property>
                             <property name="flag">wxEXPAND</property>
                             <property name="proportion">1</property>
-                            <object class="wxBoxSizer" expanded="0">
+                            <object class="wxBoxSizer" expanded="1">
                                 <property name="minimum_size"></property>
                                 <property name="name">m_filter_body_row1_sizer</property>
                                 <property name="orient">wxHORIZONTAL</property>
@@ -4798,10 +4798,10 @@
                                 <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND</property>
-                                    <property name="proportion">0</property>
+                                    <property name="proportion">1</property>
                                     <object class="wxBoxSizer" expanded="0">
-                                        <property name="minimum_size"></property>
-                                        <property name="name">bSizer53</property>
+                                        <property name="minimum_size">464,-1</property>
+                                        <property name="name">m_filter_column_1</property>
                                         <property name="orient">wxHORIZONTAL</property>
                                         <property name="permission">none</property>
                                         <object class="sizeritem" expanded="1">
@@ -4818,11 +4818,11 @@
                                                 <property name="id">wxID_ANY</property>
                                                 <property name="label">Host:</property>
                                                 <property name="maximum_size"></property>
-                                                <property name="minimum_size">58,-1</property>
+                                                <property name="minimum_size">90,-1</property>
                                                 <property name="name">m_filter_host_text</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
-                                                <property name="size">58,-1</property>
+                                                <property name="size">-1,-1</property>
                                                 <property name="style"></property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
@@ -4918,7 +4918,7 @@
                                     <property name="proportion">0</property>
                                     <object class="wxBoxSizer" expanded="0">
                                         <property name="minimum_size"></property>
-                                        <property name="name">bSizer55</property>
+                                        <property name="name">m_filter_status_sizer</property>
                                         <property name="orient">wxHORIZONTAL</property>
                                         <property name="permission">none</property>
                                         <object class="sizeritem" expanded="1">
@@ -5030,7 +5030,7 @@
                                     <property name="proportion">0</property>
                                     <object class="wxBoxSizer" expanded="0">
                                         <property name="minimum_size"></property>
-                                        <property name="name">bSizer56</property>
+                                        <property name="name">m_filter_rank_sizer</property>
                                         <property name="orient">wxHORIZONTAL</property>
                                         <property name="permission">none</property>
                                         <object class="sizeritem" expanded="1">
@@ -5142,7 +5142,7 @@
                             <property name="border">5</property>
                             <property name="flag">wxEXPAND</property>
                             <property name="proportion">1</property>
-                            <object class="wxBoxSizer" expanded="0">
+                            <object class="wxBoxSizer" expanded="1">
                                 <property name="minimum_size"></property>
                                 <property name="name">m_filter_body_row2_sizer</property>
                                 <property name="orient">wxHORIZONTAL</property>
@@ -5150,10 +5150,10 @@
                                 <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND</property>
-                                    <property name="proportion">0</property>
-                                    <object class="wxBoxSizer" expanded="1">
-                                        <property name="minimum_size">435,-1</property>
-                                        <property name="name">bSizer58</property>
+                                    <property name="proportion">1</property>
+                                    <object class="wxBoxSizer" expanded="0">
+                                        <property name="minimum_size">520,-1</property>
+                                        <property name="name">m_filter_description_sizer</property>
                                         <property name="orient">wxHORIZONTAL</property>
                                         <property name="permission">none</property>
                                         <object class="sizeritem" expanded="1">
@@ -5170,7 +5170,7 @@
                                                 <property name="id">wxID_ANY</property>
                                                 <property name="label">Description:</property>
                                                 <property name="maximum_size"></property>
-                                                <property name="minimum_size">58,-1</property>
+                                                <property name="minimum_size">90,-1</property>
                                                 <property name="name">m_filter_description_text</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
@@ -5209,7 +5209,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="1">
                                             <property name="border">5</property>
-                                            <property name="flag">wxALIGN_CENTER_VERTICAL|wxALL</property>
+                                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
                                             <property name="proportion">0</property>
                                             <object class="wxTextCtrl" expanded="1">
                                                 <property name="bg"></property>
@@ -5221,11 +5221,11 @@
                                                 <property name="id">wxID_ANY</property>
                                                 <property name="maximum_size"></property>
                                                 <property name="maxlength">0</property>
-                                                <property name="minimum_size">-1,-1</property>
+                                                <property name="minimum_size">220,-1</property>
                                                 <property name="name">m_filter_description_edit</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
-                                                <property name="size">220,-1</property>
+                                                <property name="size">-1,-1</property>
                                                 <property name="style"></property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
@@ -5267,10 +5267,10 @@
                                 <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND|wxLEFT</property>
-                                    <property name="proportion">1</property>
+                                    <property name="proportion">0</property>
                                     <object class="wxBoxSizer" expanded="1">
                                         <property name="minimum_size"></property>
-                                        <property name="name">bSizer59</property>
+                                        <property name="name">m_filter_player_sizer</property>
                                         <property name="orient">wxHORIZONTAL</property>
                                         <property name="permission">none</property>
                                         <object class="sizeritem" expanded="1">
@@ -5287,11 +5287,11 @@
                                                 <property name="id">wxID_ANY</property>
                                                 <property name="label">Player:</property>
                                                 <property name="maximum_size"></property>
-                                                <property name="minimum_size"></property>
+                                                <property name="minimum_size">-1,-1</property>
                                                 <property name="name">m_filter_player_text</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
-                                                <property name="size">60,-1</property>
+                                                <property name="size">-1,-1</property>
                                                 <property name="style"></property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
@@ -5442,15 +5442,15 @@
                                 <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND</property>
-                                    <property name="proportion">0</property>
-                                    <object class="wxBoxSizer" expanded="1">
+                                    <property name="proportion">1</property>
+                                    <object class="wxBoxSizer" expanded="0">
                                         <property name="minimum_size"></property>
-                                        <property name="name">bSizer44</property>
+                                        <property name="name">m_filter_map_sizer</property>
                                         <property name="orient">wxHORIZONTAL</property>
                                         <property name="permission">none</property>
                                         <object class="sizeritem" expanded="1">
                                             <property name="border">5</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
                                             <property name="proportion">0</property>
                                             <object class="wxStaticText" expanded="1">
                                                 <property name="bg"></property>
@@ -5462,11 +5462,11 @@
                                                 <property name="id">wxID_ANY</property>
                                                 <property name="label">Map:</property>
                                                 <property name="maximum_size"></property>
-                                                <property name="minimum_size">58,-1</property>
+                                                <property name="minimum_size">90,-1</property>
                                                 <property name="name">m_filter_map_text</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
-                                                <property name="size">58,-1</property>
+                                                <property name="size">-1,-1</property>
                                                 <property name="style"></property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
@@ -5501,7 +5501,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="1">
                                             <property name="border">5</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
                                             <property name="proportion">0</property>
                                             <object class="wxTextCtrl" expanded="1">
                                                 <property name="bg"></property>
@@ -5560,14 +5560,14 @@
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND</property>
                                     <property name="proportion">1</property>
-                                    <object class="wxBoxSizer" expanded="1">
+                                    <object class="wxBoxSizer" expanded="0">
                                         <property name="minimum_size">-1,-1</property>
-                                        <property name="name">bSizer45</property>
+                                        <property name="name">m_filter_only_map_sizer</property>
                                         <property name="orient">wxHORIZONTAL</property>
                                         <property name="permission">none</property>
                                         <object class="sizeritem" expanded="1">
                                             <property name="border">5</property>
-                                            <property name="flag">wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALL</property>
+                                            <property name="flag">wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALL|wxALIGN_CENTER_VERTICAL</property>
                                             <property name="proportion">1</property>
                                             <object class="wxCheckBox" expanded="1">
                                                 <property name="bg"></property>
@@ -5622,10 +5622,10 @@
                                 <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND</property>
-                                    <property name="proportion">1</property>
-                                    <object class="wxBoxSizer" expanded="1">
+                                    <property name="proportion">0</property>
+                                    <object class="wxBoxSizer" expanded="0">
                                         <property name="minimum_size"></property>
-                                        <property name="name">bSizer46</property>
+                                        <property name="name">m_filter_maxplayer_sizer</property>
                                         <property name="orient">wxHORIZONTAL</property>
                                         <property name="permission">none</property>
                                         <object class="sizeritem" expanded="1">
@@ -5798,9 +5798,9 @@
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND</property>
                                     <property name="proportion">1</property>
-                                    <object class="wxBoxSizer" expanded="1">
+                                    <object class="wxBoxSizer" expanded="0">
                                         <property name="minimum_size"></property>
-                                        <property name="name">bSizer50</property>
+                                        <property name="name">m_filter_mod_sizer</property>
                                         <property name="orient">wxHORIZONTAL</property>
                                         <property name="permission">none</property>
                                         <object class="sizeritem" expanded="1">
@@ -5817,11 +5817,11 @@
                                                 <property name="id">wxID_ANY</property>
                                                 <property name="label">Mod:</property>
                                                 <property name="maximum_size"></property>
-                                                <property name="minimum_size">58,-1</property>
+                                                <property name="minimum_size">90,-1</property>
                                                 <property name="name">m_filter_mod_text</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
-                                                <property name="size">58,-1</property>
+                                                <property name="size">-1,-1</property>
                                                 <property name="style"></property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
@@ -5915,14 +5915,14 @@
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND</property>
                                     <property name="proportion">1</property>
-                                    <object class="wxBoxSizer" expanded="1">
+                                    <object class="wxBoxSizer" expanded="0">
                                         <property name="minimum_size">-1,-1</property>
-                                        <property name="name">bSizer52</property>
+                                        <property name="name">m_filter_only_mod_sizer</property>
                                         <property name="orient">wxHORIZONTAL</property>
                                         <property name="permission">none</property>
                                         <object class="sizeritem" expanded="1">
                                             <property name="border">5</property>
-                                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL</property>
+                                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND</property>
                                             <property name="proportion">1</property>
                                             <object class="wxCheckBox" expanded="1">
                                                 <property name="bg"></property>
@@ -5935,7 +5935,7 @@
                                                 <property name="id">wxID_ANY</property>
                                                 <property name="label">Only mods i have</property>
                                                 <property name="maximum_size"></property>
-                                                <property name="minimum_size">100,-1</property>
+                                                <property name="minimum_size">200,-1</property>
                                                 <property name="name">m_filter_mod_show</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
@@ -5977,10 +5977,10 @@
                                 <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND</property>
-                                    <property name="proportion">1</property>
-                                    <object class="wxBoxSizer" expanded="1">
+                                    <property name="proportion">0</property>
+                                    <object class="wxBoxSizer" expanded="0">
                                         <property name="minimum_size"></property>
-                                        <property name="name">bSizer51</property>
+                                        <property name="name">m_filter_spectator_sizer</property>
                                         <property name="orient">wxHORIZONTAL</property>
                                         <property name="permission">none</property>
                                         <object class="sizeritem" expanded="1">
@@ -5995,7 +5995,7 @@
                                                 <property name="font"></property>
                                                 <property name="hidden">0</property>
                                                 <property name="id">wxID_ANY</property>
-                                                <property name="label">Spectator:</property>
+                                                <property name="label">    Spectator:</property>
                                                 <property name="maximum_size"></property>
                                                 <property name="minimum_size"></property>
                                                 <property name="name">m_filter_spectator_text</property>
