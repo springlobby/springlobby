@@ -196,6 +196,12 @@ void BattleListTab::RemoveBattle( Battle& battle ) {
 }
 
 
+void BattleListTab::UserUpdate( User& user )
+{
+  if (m_sel_battle and user.GetBattle() == m_sel_battle) { m_players->UserUpdated( user ); }
+}
+
+
 void BattleListTab::UpdateBattle( Battle& battle )
 {
   if ( !battle.GetGUIListActiv() ) {

@@ -5,6 +5,8 @@
 
 #include "battlelistfilter.h"
 #include "battlelist.h"
+#include "user.h"
+
 
 class Ui;
 class Battle;
@@ -31,6 +33,8 @@ class BattleListTab : public wxPanel
     void AddBattle( Battle& battle );
     void RemoveBattle( Battle& battle );
     void UpdateBattle( Battle& battle );
+
+    void UserUpdate( User& user );
 
     void RemoveAllBattles();
 

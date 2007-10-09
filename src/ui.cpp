@@ -602,6 +602,7 @@ void Ui::OnUserStatusChanged( User& user )
       chan.uidata.panel->UserStatusUpdated( user );
     }
   }
+  if ( user.GetStatus().in_game ) mw().GetJoinTab().GetBattleListTab().UserUpdate( user );
 }
 
 
