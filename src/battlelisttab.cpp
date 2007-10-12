@@ -100,6 +100,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   m_filter_combo = new wxComboBox( this, wxID_ANY, _("search"), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
   m_filter_combo->Append( _("All") );
   m_filter_combo->Append( _("Open only") );
+  m_filter_combo->Disable();
   m_buttons_sizer->Add( m_filter_combo, 0, 0, 5 );
 
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
@@ -189,9 +190,13 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     wxMessageBox(_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION);
     return;
   }
+  if ( m_ui.IsSpringRunning() ) {
+    wxMessageBox(_("You already are running a Spring instance, close it first in order to be able to host a new game"), _("Spring error"), wxICON_EXCLAMATION );
+    return;
+  }
   Battle* battle = m_ui.mw().GetJoinTab().GetCurrentBattle();
   if ( battle != 0 ) {
-    if ( m_ui.Ask( _("Already in a batle"), _("You are already in a battle.\n\nDo you want to leave current battle to start a new?") ) ) {
+    if ( m_ui.Ask( _("Already in a battle"), _("You are already in a battle.\n\nDo you want to leave current battle to start a new?") ) ) {
       battle->Leave();
       m_ui.mw().GetJoinTab().LeaveCurrentBattle();
     } else {
@@ -212,7 +217,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
       bo.modhash = mod.hash;
       bo.modname = mod.name;
     } catch ( ... ) {
-      wxMessageBox( _("Battle not started beacuse the mod you selected could not be fond. "), _("Error starting battle."), wxOK );
+      wxMessageBox( _("Battle not started beacuse the mod you selected could not be found. "), _("Error starting battle."), wxOK );
       return;
     }
 
@@ -278,12 +283,17 @@ void BattleListTab::DoJoin( Battle& battle )
 
   Battle* curbattle = m_ui.mw().GetJoinTab().GetCurrentBattle();
   if ( curbattle != 0 ) {
-    if ( m_ui.Ask( _("Already in a batle"), _("You are already in a battle.\n\nDo you want to leave current battle to and join this one?") ) ) {
+    if ( m_ui.Ask( _("Already in a battle"), _("You are already in a battle.\n\nDo you want to leave current battle to and join this one?") ) ) {
       curbattle->Leave();
       m_ui.mw().GetJoinTab().LeaveCurrentBattle();
     } else {
       return;
     }
+  }
+
+  if ( m_ui.IsSpringRunning() ) {
+    wxMessageBox(_("You already are running a Spring instance, close it first in order to be able to join another battle."), _("Spring error"), wxICON_EXCLAMATION );
+    return;
   }
 
   if ( !battle.ModExists() ) {
@@ -307,6 +317,30 @@ void BattleListTab::DoJoin( Battle& battle )
   } else {
     battle.Join();
   }
+}
+
+
+void BattleListTab::EnableJoinButton()
+{
+  m_join_btn->Enable();
+}
+
+
+void BattleListTab::DisableJoinButton()
+{
+  m_join_btn->Disable();
+}
+
+
+void BattleListTab::EnableHostButton()
+{
+  m_host_btn->Enable();
+}
+
+
+void BattleListTab::DisableHostButton()
+{
+  m_host_btn->Disable();
 }
 
 

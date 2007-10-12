@@ -220,6 +220,12 @@ void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
 }
 
 
+bool Ui::IsSpringRunning()
+{
+   return m_spring->IsRunning();
+}
+
+
 //! @brief Quits the entire application
 void Ui::Quit()
 {
@@ -421,6 +427,10 @@ void Ui::OnUpdate( int mselapsed )
 void Ui::OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported )
 {
   debug_func( "" );
+
+  m_main_win->EnableChatTab();
+  m_main_win->EnableMultiplayerTab();
+
   if ( !IsSpringCompatible () ){
     if ( m_spring->TestSpringBinary() ) {
       wxString message = _("Your spring version");
@@ -432,8 +442,10 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
     } else {
       wxMessageBox( _("Couldn't get your spring version.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
     }
+    m_main_win->DisableMultiplayerTab();
   }
   server.uidata.panel->StatusMessage( _T("Connected to ") + WX_STRING(server_name) + _T(".") );
+
   //server.uidata.panel = m_main_win->GetChatTab().AddChatPannel( server, WX_STRING(server_name) );
 }
 
@@ -466,6 +478,10 @@ void Ui::OnDisconnected( Server& server )
     server.uidata.panel = 0;
   }
   mw().GetChatTab().CloseAllChats();
+
+  m_main_win->DisableChatTab();
+  m_main_win->DisableMultiplayerTab();
+
 }
 
 

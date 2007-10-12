@@ -191,8 +191,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   }
 
   if ( !IsHosted() ) {
-    m_start_btn->Enable( false );
-    m_lock_chk->Enable( false );
+    m_start_btn->Disable();
+    m_lock_chk->Disable();
+  } else {
+    m_battle.SetImReady ( true );
+    m_ready_chk->Disable();
   }
 
 }
@@ -279,7 +282,13 @@ void BattleRoomTab::UpdateUser( User& user )
   m_ally_sel->SetSelection( bs.ally );
   m_side_sel->SetSelection( bs.side );
   m_spec_chk->SetValue( bs.spectator );
-  m_ready_chk->SetValue( bs.ready );
+  if ( bs.spectator ) {
+    m_ready_chk->SetValue ( true );
+    m_ready_chk->Disable();
+  } else {
+    if ( !IsHosted() ) m_ready_chk->Enable();
+    m_ready_chk->SetValue( bs.ready );
+  }
 
   m_minimap->UpdateMinimap();
 }

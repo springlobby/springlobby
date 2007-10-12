@@ -54,6 +54,13 @@ class MainWindow : public wxFrame
 
     void OnUnitSyncReloaded();
 
+    void DisableChatTab();
+    void EnableChatTab();
+    void DisableMultiplayerTab();
+    void EnableMultiplayerTab();
+    void DisableSingleplayerTab();
+    void EnableSingleplayerTab();
+
     void OnTabsChanged( wxListbookEvent& event );
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab();
