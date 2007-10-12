@@ -138,6 +138,8 @@ class Battle : public UserList, public IBattle
     User& GetMe();
     bool IsFounderMe() const;
 
+    bool IsFull() { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
+
     int GetMyPlayerNum();
 
     int GetFreeTeamNum( bool excludeme = true );

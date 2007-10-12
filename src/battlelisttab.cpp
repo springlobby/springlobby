@@ -49,12 +49,22 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
+  wxBoxSizer* m_filter_sizer;
+  m_filter_sizer = new wxBoxSizer( wxVERTICAL );
+
   //m_filter = new BattleListFilter( parent );
-  m_filter = new BattleListFilter( parent , wxID_ANY , _("Battlelist Filter") , wxDefaultPosition , wxSize( 518,171 ) , wxRESIZE_BORDER | wxCAPTION | wxCLOSE_BOX | wxSYSTEM_MENU , this);
-  //m_main_sizer->Add( m_filter, 1, wxEXPAND );
+  m_filter = new BattleListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
+  m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
+
+  m_main_sizer->Add( m_filter_sizer );
+
+  wxBoxSizer* m_battlelist_sizer;
+  m_battlelist_sizer = new wxBoxSizer( wxVERTICAL );
 
   m_battle_list = new BattleListCtrl( this, m_ui );
-  m_main_sizer->Add( m_battle_list, 1, wxALL|wxEXPAND, 5 );
+  m_battlelist_sizer->Add( m_battle_list, 1, wxALL|wxEXPAND, 5 );
+
+  m_main_sizer->Add( m_battlelist_sizer, 1, wxEXPAND, 5 );;
 
   wxBoxSizer* m_info_sizer;
   m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -105,7 +115,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 	m_filter_show = new wxToggleButton( this, BATTLE_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
   m_buttons_sizer->Add( m_filter_show, 0, 0, 5 );
 
-	m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , wxT("Aktiv"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
   m_buttons_sizer->Add( m_filter_activ, 1, wxALL|wxEXPAND, 5 );
 
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
@@ -120,6 +130,8 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
   this->SetSizer( m_main_sizer );
   this->Layout();
+
+  m_filter->Hide();
 
   SelectBattle(0);
 }
@@ -336,14 +348,14 @@ void BattleListTab::OnFilter( wxCommandEvent& event )
     m_filter->Show();
   }
   else {
-    m_filter->Close();
+    m_filter->Hide();
   }
 }
 
 
 void BattleListTab::OnFilterActiv( wxCommandEvent& event )
 {
-  m_filter->SetActiv();
+  m_filter->SetActiv( m_filter_activ->GetValue() );
 }
 
 

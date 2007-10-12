@@ -5,7 +5,6 @@
 #include <wx/string.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
-#include <list.h>
 
 #include "battlelistfilter.h"
 #include "battlelist.h"

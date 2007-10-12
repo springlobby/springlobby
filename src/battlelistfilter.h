@@ -21,21 +21,20 @@ class BattleListTab;
 ///////////////////////////////////////////////////////////////////////////////
 /// Class BattleListFilter
 ///////////////////////////////////////////////////////////////////////////////
-class BattleListFilter : public wxDialog
+class BattleListFilter : public wxPanel
 {
 	public:
-    BattleListFilter( wxWindow* parent, int id, wxString title, wxPoint pos, wxSize size, int style , BattleListTab* parentBattleListTab);
+    BattleListFilter( wxWindow* parent, wxWindowID id, BattleListTab* parentBattleListTab, const wxPoint& pos, const wxSize& size, long style );
 
     void OnPlayerButton   ( wxCommandEvent& event );
     void OnMaxPlayerButton( wxCommandEvent& event );
     void OnSpectatorButton( wxCommandEvent& event );
     void OnActivate       ( wxCommandEvent& event );
-    void OnClose          ( wxCloseEvent&   event );
-    void SetActiv         ();
 
-    void OnChange   ( wxCommandEvent& event );
+    void SetActiv         ( bool state );
 
-    void OnStatusChange      ( wxCommandEvent& event );
+    void OnChange            ( wxCommandEvent& event );
+
     void OnRankChange        ( wxCommandEvent& event );
     void OnPlayerChange      ( wxCommandEvent& event );
     void OnMaxPlayerChange   ( wxCommandEvent& event );
@@ -46,9 +45,8 @@ class BattleListFilter : public wxDialog
 
 	protected:
 	  enum m_button_mode {m_equal,m_bigger,m_smaller};
-	  enum m_status      {m_all = -1,m_started = 0,m_open = 1,m_openpw = 2,m_closed = 3,m_closedpw = 4,m_unknown = 5};
 
-    char _GetButtonSign(m_button_mode value);
+    wxChar _GetButtonSign(m_button_mode value);
 		m_button_mode _GetNextMode(m_button_mode value);
 		bool _IntCompare(int a,int b,m_button_mode mode);
 
@@ -64,8 +62,13 @@ class BattleListFilter : public wxDialog
 		wxTextCtrl* m_filter_host_edit;
 
 		wxStaticText* m_filter_status_text;
-		wxChoice* m_filter_status_choice;
-		m_status m_filter_status_choice_value;
+		wxStaticText* m_filter_status_text1;
+		wxCheckBox* m_filter_status_locked;
+		wxCheckBox* m_filter_status_pass;
+		wxCheckBox* m_filter_status_start;
+		wxCheckBox* m_filter_status_full;
+		wxCheckBox* m_filter_status_open;
+
 		wxStaticText* m_filter_rank_text;
 		wxChoice* m_filter_rank_choice;
 		int m_filter_rank_choice_value;
@@ -106,7 +109,11 @@ enum
     BATTLE_FILTER_DESCRIPTION_EDIT,
     BATTLE_FILTER_MAP_EDIT,
     BATTLE_FILTER_MOD_EDIT,
-    BATTLE_FILTER_STATUS_CHOICE,
+    BATTLE_FILTER_LOCKED,
+    BATTLE_FILTER_OPEN,
+    BATTLE_FILTER_PASSWORDED,
+    BATTLE_FILTER_FULL,
+    BATTLE_FILTER_STARTED,
     BATTLE_FILTER_RANK_CHOICE,
     BATTLE_FILTER_PLAYER_CHOICE,
     BATTLE_FILTER_MAXPLAYER_CHOICE,
@@ -115,9 +122,7 @@ enum
     BATTLE_FILTER_MOD_SHOW,
     BATTLE_FILTER_PLAYER_BUTTON,
     BATTLE_FILTER_MAXPLAYER_BUTTON,
-    BATTLE_FILTER_SPECTATOR_BUTTON,
-    BATTLE_FILTER_ACTIV,
-    BATTLE_FILTER_ACTIV_TB
+    BATTLE_FILTER_SPECTATOR_BUTTON
 };
 
 #endif //SPRINGLOBBY_HEADERGUARD_BATTLELISTFILTER_H
