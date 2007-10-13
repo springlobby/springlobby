@@ -8,6 +8,10 @@
 #include "utils.h"
 #include "revision.h"
 
+#ifdef __WXMSW__
+#include <wx/msgdlg.h>
+#endif
+
 // FIXME this does not work on linux+mingw build for windows
 #ifdef _MSC_VER
 #include <windows.h>
@@ -36,6 +40,7 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #ifdef __WXMSW__
   std::string tmp = prefix;
   tmp += " " + func + "( " + params + " )" + tmpmsg + "\n";
+  if (prefix != "**" and prefix != "--" and prefix != "ww" ) { wxMessageBox( tmp ); }
 #ifdef _MSC_VER
   OutputDebugString( tmp.c_str() );
 #endif
@@ -129,6 +134,6 @@ std::string GetSpringLobbyVersion()
 #ifdef VERSION
   return std::string(VERSION) + " built from " + revision();
 #else
-  return "Unknown" + " built from " + revision();
+  return std::string("Unknown built from ") + revision();
 #endif
 }

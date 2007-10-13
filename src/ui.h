@@ -37,6 +37,7 @@ class Ui
     ~Ui();
 
     Server& GetServer();
+    bool    GetServerStatus() const;
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
 
