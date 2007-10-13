@@ -52,11 +52,10 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxBoxSizer* m_filter_sizer;
   m_filter_sizer = new wxBoxSizer( wxVERTICAL );
 
-  //m_filter = new BattleListFilter( parent );
   m_filter = new BattleListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
   m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
 
-  m_main_sizer->Add( m_filter_sizer );
+  m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
 
   wxBoxSizer* m_battlelist_sizer;
   m_battlelist_sizer = new wxBoxSizer( wxVERTICAL );
@@ -128,10 +127,10 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
   m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
+  m_filter->Hide();
+
   this->SetSizer( m_main_sizer );
   this->Layout();
-
-  m_filter->Hide();
 
   SelectBattle(0);
 }
@@ -351,10 +350,12 @@ void BattleListTab::OnHost( wxCommandEvent& event )
 void BattleListTab::OnFilter( wxCommandEvent& event )
 {
   if (m_filter_show->GetValue()) {
-    m_filter->Show();
+    m_filter->Show(  );
+    this->Layout();
   }
   else {
-    m_filter->Hide();
+    m_filter->Hide(  );
+    this->Layout();
   }
 }
 
