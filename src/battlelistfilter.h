@@ -46,7 +46,7 @@ class BattleListFilter : public wxPanel
 	protected:
 	  enum m_button_mode {m_equal,m_bigger,m_smaller};
 
-    wxChar _GetButtonSign(m_button_mode value);
+    wxString _GetButtonSign(m_button_mode value);
 		m_button_mode _GetNextMode(m_button_mode value);
 		bool _IntCompare(int a,int b,m_button_mode mode);
 

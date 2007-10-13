@@ -67,7 +67,7 @@ m_parent_battlelisttab( parentBattleListTab )
 
 	m_filter_column_1->Add( m_filter_host_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_host_edit = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_host_edit = new wxTextCtrl( this, BATTLE_FILTER_HOST_EDIT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_host_edit->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 	m_filter_host_edit->SetMinSize( wxSize( 220,-1 ) );
 
@@ -110,9 +110,8 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_rank_choiceChoices.Add( _T("4") );
 	m_filter_rank_choiceChoices.Add( _T("5") );
 
-	m_filter_rank_choice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), m_filter_rank_choiceChoices, wxSIMPLE_BORDER );
+	m_filter_rank_choice = new wxChoice( this, BATTLE_FILTER_RANK_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_rank_choiceChoices, wxSIMPLE_BORDER );
 	m_filter_rank_choice->SetMinSize( wxSize( 40,-1 ) );
-	m_filter_rank_choice->SetMaxSize( wxSize( 60,-1 ) );
 
 	m_filter_rank_sizer->Add( m_filter_rank_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -132,7 +131,7 @@ m_parent_battlelisttab( parentBattleListTab )
 
 	m_filter_description_sizer->Add( m_filter_description_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_description_edit = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_description_edit = new wxTextCtrl( this, BATTLE_FILTER_DESCRIPTION_EDIT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_description_edit->SetMinSize( wxSize( 220,-1 ) );
 
 	m_filter_description_sizer->Add( m_filter_description_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -170,14 +169,14 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_player_text->Wrap( -1 );
 	m_filter_player_sizer->Add( m_filter_player_text, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_player_button = new wxButton( this, wxID_ANY, _(">"), wxDefaultPosition, wxSize( 16,16 ), 0 );
+	m_filter_player_button = new wxButton( this, BATTLE_FILTER_PLAYER_BUTTON, _(">"), wxDefaultPosition, wxSize( 16,16 ), 0 );
 	m_filter_player_sizer->Add( m_filter_player_button, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_filter_player_choiceChoices;
 
   for (wxLongLong i = 0;i <= 32;i++) m_filter_player_choiceChoices.Add( i.ToString() );
 
-	m_filter_player_choice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), m_filter_player_choiceChoices, 0 );
+	m_filter_player_choice = new wxChoice( this, BATTLE_FILTER_PLAYER_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_player_choiceChoices, 0 );
 	m_filter_player_choice->SetMinSize( wxSize( 40,-1 ) );
 
 	m_filter_player_sizer->Add( m_filter_player_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -198,7 +197,7 @@ m_parent_battlelisttab( parentBattleListTab )
 
 	m_filter_map_sizer->Add( m_filter_map_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_map_edit = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_map_edit = new wxTextCtrl( this, BATTLE_FILTER_MAP_EDIT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_map_edit->SetMinSize( wxSize( 140,-1 ) );
 
 	m_filter_map_sizer->Add( m_filter_map_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -208,7 +207,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	wxBoxSizer* m_filter_only_map_sizer;
 	m_filter_only_map_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_filter_map_show = new wxCheckBox( this, wxID_ANY, _("Only maps i have"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	m_filter_map_show = new wxCheckBox( this, BATTLE_FILTER_MAP_SHOW, _("Only maps i have"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 
 	m_filter_map_show->SetMinSize( wxSize( 140,-1 ) );
 
@@ -223,7 +222,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_maxplayer_text->Wrap( -1 );
 	m_filter_maxplayer_sizer->Add( m_filter_maxplayer_text, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_maxplayer_button = new wxButton( this, wxID_ANY, _("<"), wxDefaultPosition, wxSize( 16,16 ), 0 );
+	m_filter_maxplayer_button = new wxButton( this, BATTLE_FILTER_MAXPLAYER_BUTTON, _("<"), wxDefaultPosition, wxSize( 16,16 ), 0 );
 	m_filter_maxplayer_sizer->Add( m_filter_maxplayer_button, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_filter_maxplayer_choiceChoices;
@@ -251,7 +250,7 @@ m_parent_battlelisttab( parentBattleListTab )
 
 	m_filter_mod_sizer->Add( m_filter_mod_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_mod_edit = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_mod_edit = new wxTextCtrl( this, BATTLE_FILTER_MOD_EDIT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_mod_edit->SetMinSize( wxSize( 140,-1 ) );
 
 	m_filter_mod_sizer->Add( m_filter_mod_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -261,7 +260,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	wxBoxSizer* m_filter_only_mod_sizer;
 	m_filter_only_mod_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_filter_mod_show = new wxCheckBox( this, wxID_ANY, _("Only mods i have"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	m_filter_mod_show = new wxCheckBox( this, BATTLE_FILTER_MOD_SHOW, _("Only mods i have"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 
 	m_filter_mod_show->SetMinSize( wxSize( 140,-1 ) );
 
@@ -276,7 +275,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_spectator_text->Wrap( -1 );
 	m_filter_spectator_sizer->Add( m_filter_spectator_text, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-	m_filter_spectator_button = new wxButton( this, wxID_ANY, _("="), wxDefaultPosition, wxSize( 16,16 ), 0 );
+	m_filter_spectator_button = new wxButton( this, BATTLE_FILTER_SPECTATOR_BUTTON, _("="), wxDefaultPosition, wxSize( 16,16 ), 0 );
 	m_filter_spectator_sizer->Add( m_filter_spectator_button, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_filter_spectator_choiceChoices;
@@ -294,18 +293,24 @@ m_parent_battlelisttab( parentBattleListTab )
 
 	m_filter_sizer->Add( m_filter_body_sizer, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
 
+  m_activ = false;
+  m_filter_rank_choice_value = -1;
+  m_filter_player_choice_value = -1;
+  m_filter_maxplayer_choice_value = -1;
+  m_filter_spectator_choice_value = -1;
+
 	this->SetSizer( m_filter_sizer );
 	this->Layout();
 	m_filter_sizer->Fit( this );
 }
 
 
-wxChar BattleListFilter::_GetButtonSign(m_button_mode value)
+wxString BattleListFilter::_GetButtonSign(m_button_mode value)
 {
   switch (value) {
-    case m_equal   : return '=';
-    case m_smaller : return '<';
-    default        : return '>';
+    case m_equal   : return _("=");
+    case m_smaller : return _("<");
+    default        : return _(">");
   }
 }
 
