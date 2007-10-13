@@ -85,14 +85,14 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
 
 
 
-  m_sortorder[0].col = 3;
-  m_sortorder[0].direction = false;
-  m_sortorder[1].col = 8;
-  m_sortorder[1].direction = false;
-  m_sortorder[2].col = 5;
-  m_sortorder[2].direction = false;
+  m_sortorder[0].col = 0;
+  m_sortorder[0].direction = true;
+  m_sortorder[1].col = 5;
+  m_sortorder[1].direction = true;
+  m_sortorder[2].col = 9;
+  m_sortorder[2].direction = true;
   m_sortorder[3].col = 4;
-  m_sortorder[3].direction = false;
+  m_sortorder[3].direction = true;
   Sort( );
 
 #ifdef __WXMSW__
@@ -225,17 +225,17 @@ int wxCALLBACK BattleListCtrl::CompareStatusUP(long item1, long item2, long sort
     b1 += 1000;
   if ( battle2.GetInGame() )
     b2 += 1000;
-  if ( battle1.IsPassworded() )
-    b1 += 100;
-  if ( battle2.IsPassworded() )
-    b2 += 100;
   if ( battle1.IsLocked() )
-    b1 += 50;
+    b1 += 100;
   if ( battle2.IsLocked() )
-    b2 += 50;
+    b2 += 100;
     if ( battle1.IsFull() )
-    b1 += 25;
+    b1 += 50;
   if ( battle2.IsFull() )
+    b2 += 50;
+  if ( battle1.IsPassworded() )
+    b1 += 25;
+  if ( battle2.IsPassworded() )
     b2 += 25;
 
   // inverse the order
@@ -260,17 +260,17 @@ int wxCALLBACK BattleListCtrl::CompareStatusDOWN(long item1, long item2, long so
     b1 += 1000;
   if ( battle2.GetInGame() )
     b2 += 1000;
-  if ( battle1.IsPassworded() )
-    b1 += 100;
-  if ( battle2.IsPassworded() )
-    b2 += 100;
   if ( battle1.IsLocked() )
-    b1 += 50;
+    b1 += 100;
   if ( battle2.IsLocked() )
-    b2 += 50;
+    b2 += 100;
     if ( battle1.IsFull() )
-    b1 += 25;
+    b1 += 50;
   if ( battle2.IsFull() )
+    b2 += 50;
+  if ( battle1.IsPassworded() )
+    b1 += 25;
+  if ( battle2.IsPassworded() )
     b2 += 25;
 
   // inverse the order

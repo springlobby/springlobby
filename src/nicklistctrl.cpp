@@ -32,26 +32,29 @@ NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* p
   m_menu(popup)
 {
   wxListItem col;
-  col.SetText( _T("") );
+  col.SetText( _("s") );
   col.SetImage( -1 );
   InsertColumn( 0, col );
-  col.SetText( _T("") );
+  col.SetText( _("c") );
   col.SetImage( -1 );
   InsertColumn( 1, col );
+  col.SetText( _("r") );
   col.SetImage( -1 );
   InsertColumn( 2, col );
-  col.SetText( _T("Nickname") );
+  col.SetText( _("Nickname") );
   col.SetImage( ICON_DOWN );
   InsertColumn( 3, col );
-  m_sortorder[0].col = 3;
+
+  m_sortorder[0].col = 0;
   m_sortorder[0].direction = false;
-  m_sortorder[1].col = 1;
-  m_sortorder[1].direction = false;
-  m_sortorder[2].col = 0;
-  m_sortorder[2].direction = false;
-  m_sortorder[3].col = 2;
-  m_sortorder[3].direction = false;
+  m_sortorder[1].col = 3;
+  m_sortorder[1].direction = true;
+  m_sortorder[2].col = 2;
+  m_sortorder[2].direction = true;
+  m_sortorder[3].col = 1;
+  m_sortorder[3].direction = true;
   Sort( );
+
 #ifdef __WXMSW__
   SetColumnWidth( 0, 45 );
 #else
@@ -141,38 +144,7 @@ struct upper {
  }
 };
 
-/*
-int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData)
-{
-  User* user1 = (User*)item1;
-  User* user2 = (User*)item2;
-  ASSERT_LOGIC( user1 != 0, "user1 = 0" );
-  ASSERT_LOGIC( user2 != 0, "user2 = 0" );
 
-  int u1 = 0, u2 = 0;
-
-  if ( user1->GetStatus().moderator )
-    u1 += 1000;
-  if ( user2->GetStatus().moderator )
-    u2 += 1000;
-  if ( user1->GetStatus().bot )
-    u1 += 100;
-  if ( user2->GetStatus().bot )
-    u2 += 100;
-
-  wxString nick1 = WX_STRING(user1->GetNick());
-  wxString nick2 = WX_STRING(user2->GetNick());
-
-  int cmp = nick1.CmpNoCase( nick2 );
-  if ( cmp < 0 ) u1 += 10;
-  else if ( cmp > 0 ) u2 += 10;
-
-  if ( u1 > u2 ) return -1;
-  if ( u1 < u2 ) return 1;
-  return 0;
-}
-
-*/
 void NickListCtrl::OnActivateItem( wxListEvent& event )
 {
   int index = event.GetIndex();
@@ -260,22 +232,18 @@ int wxCALLBACK NickListCtrl::ComparePlayerstatusUP(long item1, long item2, long 
 
   int u1 = 0, u2 = 0;
 
-  if ( user1->GetStatus().moderator )
-    u1 += 1000;
-  if ( user2->GetStatus().moderator )
-    u2 += 1000;
   if ( user1->GetStatus().bot )
-    u1 += 100;
+    u1 += 1000;
   if ( user2->GetStatus().bot )
+    u2 += 1000;
+  if ( user1->GetStatus().moderator )
+    u1 += 100;
+  if ( user2->GetStatus().moderator )
     u2 += 100;
-  if ( user1->GetStatus().away )
-    u1 += 50;
-  if ( user2->GetStatus().away )
-    u2 += 50;
   if ( user1->GetStatus().in_game )
-    u1 += 10;
+    u1 += -10;
   if ( user2->GetStatus().in_game )
-    u2 += 10;
+    u2 += -10;
 
     // inverse the order
     if ( u1 < u2 )
@@ -295,22 +263,19 @@ int wxCALLBACK NickListCtrl::ComparePlayerstatusDOWN(long item1, long item2, lon
 
   int u1 = 0, u2 = 0;
 
-  if ( user1->GetStatus().moderator )
-    u1 += 1000;
-  if ( user2->GetStatus().moderator )
-    u2 += 1000;
   if ( user1->GetStatus().bot )
-    u1 += 100;
+    u1 += 1000;
   if ( user2->GetStatus().bot )
+    u2 += 1000;
+  if ( user1->GetStatus().moderator )
+    u1 += 100;
+  if ( user2->GetStatus().moderator )
     u2 += 100;
-  if ( user1->GetStatus().away )
-    u1 += 50;
-  if ( user2->GetStatus().away )
-    u2 += 50;
   if ( user1->GetStatus().in_game )
-    u1 += 10;
+    u1 += -10;
   if ( user2->GetStatus().in_game )
-    u2 += 10;
+    u2 += -10;
+
 
     // inverse the order
     if ( u1 < u2 )
