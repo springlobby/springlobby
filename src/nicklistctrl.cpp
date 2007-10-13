@@ -5,7 +5,6 @@
 
 #include <wx/imaglist.h>
 #include <wx/menu.h>
-#include <cctype>
 #include <stdexcept>
 
 #include "nicklistctrl.h"
@@ -135,14 +134,6 @@ int NickListCtrl::GetUserIndex( User& user )
   debug_error( "didn't find the user." );
   return -1;
 }
-
-
-struct upper {
- int operator()(int c)
- {
-   return std::toupper((unsigned char)c);
- }
-};
 
 
 void NickListCtrl::OnActivateItem( wxListEvent& event )
