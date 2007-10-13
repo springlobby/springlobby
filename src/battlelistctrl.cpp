@@ -229,13 +229,13 @@ int wxCALLBACK BattleListCtrl::CompareStatusUP(long item1, long item2, long sort
     b1 += 100;
   if ( battle2.IsLocked() )
     b2 += 100;
-    if ( battle1.IsFull() )
-    b1 += 50;
-  if ( battle2.IsFull() )
-    b2 += 50;
   if ( battle1.IsPassworded() )
-    b1 += 25;
+    b1 += 50;
   if ( battle2.IsPassworded() )
+    b2 += 50;
+  if ( battle1.IsFull() )
+    b1 += 25;
+  if ( battle2.IsFull() )
     b2 += 25;
 
   // inverse the order
@@ -264,13 +264,13 @@ int wxCALLBACK BattleListCtrl::CompareStatusDOWN(long item1, long item2, long so
     b1 += 100;
   if ( battle2.IsLocked() )
     b2 += 100;
-    if ( battle1.IsFull() )
-    b1 += 50;
-  if ( battle2.IsFull() )
-    b2 += 50;
   if ( battle1.IsPassworded() )
-    b1 += 25;
+    b1 += 50;
   if ( battle2.IsPassworded() )
+    b2 += 50;
+  if ( battle1.IsFull() )
+    b1 += 25;
+  if ( battle2.IsFull() )
     b2 += 25;
 
   // inverse the order
