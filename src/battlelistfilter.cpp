@@ -10,6 +10,7 @@
 #include <wx/textctrl.h>
 #include <wx/choice.h>
 #include <wx/button.h>
+#include <wx/string.h>
 #include <wx/panel.h>
 #include <wx/statbox.h>
 #include <wx/event.h>
@@ -111,6 +112,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_rank_choiceChoices.Add( _T("5") );
 
 	m_filter_rank_choice = new wxChoice( this, BATTLE_FILTER_RANK_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_rank_choiceChoices, wxSIMPLE_BORDER );
+	m_filter_rank_choice->SetSelection( 0 );
 	m_filter_rank_choice->SetMinSize( wxSize( 40,-1 ) );
 
 	m_filter_rank_sizer->Add( m_filter_rank_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -178,6 +180,7 @@ m_parent_battlelisttab( parentBattleListTab )
   for (wxLongLong i = 0;i <= 32;i++) m_filter_player_choiceChoices.Add( i.ToString() );
 
 	m_filter_player_choice = new wxChoice( this, BATTLE_FILTER_PLAYER_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_player_choiceChoices, 0 );
+	m_filter_player_choice->SetSelection( 0 );
 	m_filter_player_choice->SetMinSize( wxSize( 40,-1 ) );
 
 	m_filter_player_sizer->Add( m_filter_player_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -231,6 +234,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	for (wxLongLong i = 0;i <= 32;i++) m_filter_maxplayer_choiceChoices.Add( i.ToString() );
 
 	m_filter_maxplayer_choice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), m_filter_maxplayer_choiceChoices, 0 );
+	m_filter_maxplayer_choice->SetSelection( 0 );
 	m_filter_maxplayer_choice->SetMinSize( wxSize( 40,-1 ) );
 
 	m_filter_maxplayer_sizer->Add( m_filter_maxplayer_choice, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -284,6 +288,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	for (wxLongLong i = 0;i <= 32;i++) m_filter_spectator_choiceChoices.Add( i.ToString() );
 
 	m_filter_spectator_choice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), m_filter_spectator_choiceChoices, 0 );
+	m_filter_spectator_choice->SetSelection( 0 );
 	m_filter_spectator_choice->SetMinSize( wxSize( 40,-1 ) );
 
 	m_filter_spectator_sizer->Add( m_filter_spectator_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
