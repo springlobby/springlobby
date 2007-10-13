@@ -15,8 +15,9 @@
 
 Server::~Server()
 {
-  while ( m_battles.GetNumBattles() > 0 ) {
-    Battle* b = &m_battles.GetFirstBattle();
+  while ( battles_iter->GetNumBattles() > 0 ) {
+    battles_iter->IteratorBegin();
+    Battle* b = &battles_iter->GetBattle();
     m_battles.RemoveBattle( b->GetBattleId() );
     delete b;
   }
@@ -30,6 +31,7 @@ Server::~Server()
     m_channels.RemoveChannel( c->GetName() );
     delete c;
   }
+  delete battles_iter;
 }
 
 
@@ -76,13 +78,13 @@ bool Server::ChannelExists( const std::string& name )
 
 Battle& Server::GetBattle( const int& battleid )
 {
-  return m_battles.GetBattle( battleid );
+  return battles_iter->GetBattle( battleid );
 }
 
 
 bool Server::BattleExists( const int& battleid )
 {
-  return m_battles.BattleExists( battleid );
+  return battles_iter->BattleExists( battleid );
 }
 
 
@@ -126,7 +128,7 @@ void Server::_RemoveChannel( const std::string& name )
 
 Battle& Server::_AddBattle( const int& id )
 {
-  if ( m_battles.BattleExists( id ) ) return m_battles.GetBattle( id );
+  if ( battles_iter->BattleExists( id ) ) return battles_iter->GetBattle( id );
   Battle* b = new Battle( *this, m_ui, id );
 
   m_battles.AddBattle( *b );
@@ -136,7 +138,7 @@ Battle& Server::_AddBattle( const int& id )
 
 void Server::_RemoveBattle( const int& id )
 {
-  Battle* b = &m_battles.GetBattle( id );
+  Battle* b = &battles_iter->GetBattle( id );
   m_battles.RemoveBattle( id );
   if ( b == 0 ) throw std::logic_error("Server::_RemoveBattle(): GetBattle returned NULL pointer");
   delete b;

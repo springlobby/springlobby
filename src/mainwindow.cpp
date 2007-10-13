@@ -236,6 +236,7 @@ ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
 void MainWindow::OpenChannelChat( Channel& channel )
 {
   ASSERT_LOGIC( m_chat_tab != 0, "m_chat_tab" );
+  m_func_tabs->SetSelection( 0 );
   m_chat_tab->AddChatPannel( channel );
 }
 
@@ -246,6 +247,7 @@ void MainWindow::OpenChannelChat( Channel& channel )
 void MainWindow::OpenPrivateChat( User& user )
 {
   ASSERT_LOGIC( m_chat_tab != 0, "m_chat_tab" );
+  m_func_tabs->SetSelection( 0 );
   m_chat_tab->AddChatPannel( user );
 }
 

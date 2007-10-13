@@ -32,7 +32,7 @@ Battle::Battle( Server& serv, Ui& ui, int id ) :
 
 Battle::~Battle() {
   for (user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-    GetUser(i).SetBattle( 0 );
+//    GetUser(i).SetBattle( 0 );
   ClearStartRects();
 }
 
@@ -193,7 +193,7 @@ void Battle::DoAction( const std::string& msg )
 }
 
 
-bool Battle::HaveMultipleBotsInSameTeam()
+bool Battle::HaveMultipleBotsInSameTeam() const
 {
   std::list<BattleBot*>::const_iterator i;
   debug_func("");
@@ -215,7 +215,7 @@ User& Battle::GetMe()
 }
 
 
-bool Battle::IsFounderMe()
+bool Battle::IsFounderMe() const
 {
   return (m_opts.founder == m_serv.GetMe().GetNick());
 }

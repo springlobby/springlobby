@@ -25,14 +25,18 @@
 #include "nicklistctrl.h"
 #include "mainwindow.h"
 #include "mainjoinbattletab.h"
+#include "battlelistfilter.h"
+#include "iconimagelist.h"
 
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 
-  EVT_BUTTON              ( BATTLE_JOIN, BattleListTab::OnJoin     )
-  EVT_BUTTON              ( BATTLE_HOST, BattleListTab::OnHost     )
-  EVT_LIST_ITEM_ACTIVATED ( BATTLE_JOIN, BattleListTab::OnListJoin )
-  EVT_LIST_ITEM_SELECTED  ( BLIST_LIST,  BattleListTab::OnSelect   )
+  EVT_BUTTON              ( BATTLE_JOIN              , BattleListTab::OnJoin        )
+  EVT_BUTTON              ( BATTLE_HOST              , BattleListTab::OnHost        )
+  EVT_TOGGLEBUTTON        ( BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter      )
+  EVT_LIST_ITEM_ACTIVATED ( BATTLE_JOIN              , BattleListTab::OnListJoin    )
+  EVT_LIST_ITEM_SELECTED  ( BLIST_LIST               , BattleListTab::OnSelect      )
+  EVT_CHECKBOX            ( BATTLE_LIST_FILTER_ACTIV , BattleListTab::OnFilterActiv )
 
 END_EVENT_TABLE()
 
@@ -45,8 +49,21 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
+  wxBoxSizer* m_filter_sizer;
+  m_filter_sizer = new wxBoxSizer( wxVERTICAL );
+
+  m_filter = new BattleListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
+  m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
+
+  m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
+
+  wxBoxSizer* m_battlelist_sizer;
+  m_battlelist_sizer = new wxBoxSizer( wxVERTICAL );
+
   m_battle_list = new BattleListCtrl( this, m_ui );
-  m_main_sizer->Add( m_battle_list, 1, wxALL|wxEXPAND, 5 );
+  m_battlelist_sizer->Add( m_battle_list, 1, wxALL|wxEXPAND, 5 );
+
+  m_main_sizer->Add( m_battlelist_sizer, 1, wxEXPAND, 5 );;
 
   wxBoxSizer* m_info_sizer;
   m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -94,14 +111,11 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxBoxSizer* m_buttons_sizer;
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_filter_lbl = new wxStaticText( this, wxID_ANY, _("Filter:"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_buttons_sizer->Add( m_filter_lbl, 0, wxALL, 5 );
+	m_filter_show = new wxToggleButton( this, BATTLE_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+  m_buttons_sizer->Add( m_filter_show, 0, 0, 5 );
 
-  m_filter_combo = new wxComboBox( this, wxID_ANY, _("search"), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
-  m_filter_combo->Append( _("All") );
-  m_filter_combo->Append( _("Open only") );
-  m_filter_combo->Disable();
-  m_buttons_sizer->Add( m_filter_combo, 0, 0, 5 );
+	m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_buttons_sizer->Add( m_filter_activ, 1, wxALL|wxEXPAND, 5 );
 
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
@@ -112,6 +126,8 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   m_buttons_sizer->Add( m_join_btn, 0, wxBOTTOM|wxRIGHT, 5 );
 
   m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
+
+  m_filter->Hide();
 
   this->SetSizer( m_main_sizer );
   this->Layout();
@@ -147,36 +163,119 @@ void BattleListTab::SelectBattle( Battle* battle )
   }
 }
 
+void BattleListTab::AddBattle( Battle& battle ) {
 
-void BattleListTab::RemoveAllBattles()
-{
-  while ( m_battle_list->GetItemCount() > 0 ) m_battle_list->DeleteItem( 0 );
+  if ( m_filter->GetActiv() and !m_filter->FilterBattle( battle ) ) {
+    return;
+  }
+  int index = m_battle_list->InsertItem( 0, IconImageList::GetBattleStatusIcon( battle ) );
+  ASSERT_LOGIC( index != -1, "index = -1" );
+  m_battle_list->SetItemData(index, (long)battle.GetBattleId() );
+  battle.SetGUIListActiv( true );
+
+  ASSERT_LOGIC( index != -1, "index = -1" );
+  //wxListItem item;
+  //item.SetId( index );
+
+ // ASSERT_LOGIC( m_battle_list->GetItem( item ), "!GetItem" );
+
+  m_battle_list->SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
+  m_battle_list->SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
+  m_battle_list->SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
+  m_battle_list->SetItem( index, 3, WX_STRING(battle.GetDescription()) );
+  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?ICON_EXISTS:ICON_NEXISTS );
+  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?ICON_EXISTS:ICON_NEXISTS );
+  m_battle_list->SetItem( index, 6, WX_STRING(battle.GetFounder().GetNick()) );
+  m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
+  m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
+  m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
+
+  m_battle_list->Sort();
 }
 
 
-void BattleListTab::AddBattle( Battle& battle )
-{
-  m_battle_list->AddBattle( battle );
-}
-
-
-void BattleListTab::RemoveBattle( Battle& battle )
-{
+void BattleListTab::RemoveBattle( Battle& battle ) {
   if ( &battle == m_sel_battle ) SelectBattle( 0 );
-  m_battle_list->RemoveBattle( battle );
+  for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
+    if ( battle.GetBattleId() == m_battle_list->GetItemData( i ) ) {
+      m_battle_list->DeleteItem( i );
+      break;
+    }
+  }
+  battle.SetGUIListActiv( false );
+  m_battle_list->Sort();
+}
+
+
+void BattleListTab::UserUpdate( User& user )
+{
+  if (m_sel_battle and user.GetBattle() == m_sel_battle) { m_players->UserUpdated( user ); }
 }
 
 
 void BattleListTab::UpdateBattle( Battle& battle )
 {
-  m_battle_list->UpdateBattle( battle );
+  if ( !battle.GetGUIListActiv() ) {
+    AddBattle( battle );
+    return;
+  }
+
+  if ( m_filter->GetActiv() and !m_filter->FilterBattle( battle ) ) {
+    RemoveBattle( battle );
+    return;
+  }
+
+  int index = -1;
+  for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
+    if ( battle.GetBattleId() == m_battle_list->GetItemData( i ) ) {
+      index = i;
+      break;
+    }
+  }
+
+  ASSERT_LOGIC( index != -1, "index = -1" );
+
+  //wxListItem item;
+  //item.SetId( index );
+
+  //ASSERT_LOGIC( m_battle_list->GetItem( item ), "!GetItem" );
+
+  //Battle& battle = m_ui.GetServer().battles_iter.GetBattle( m_battle_list->GetItemData( index ) );
+
+  m_battle_list->SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
+  m_battle_list->SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
+  m_battle_list->SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
+  m_battle_list->SetItem( index, 3, WX_STRING(battle.GetDescription()) );
+  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?ICON_EXISTS:ICON_NEXISTS );
+  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?ICON_EXISTS:ICON_NEXISTS );
+  m_battle_list->SetItem( index, 6, WX_STRING(battle.GetFounder().GetNick()) );
+  m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
+  m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
+  m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
+
+
   if ( &battle == m_sel_battle ) SelectBattle( m_sel_battle );
+  m_battle_list->Sort();
+
 }
 
 
-void BattleListTab::UpdateList()
-{
-  m_battle_list->UpdateList();
+void BattleListTab::RemoveAllBattles() {
+  SelectBattle( 0 );
+  m_ui.GetServer().battles_iter->IteratorBegin();
+  while (! m_ui.GetServer().battles_iter->EOL() ) {
+    m_ui.GetServer().battles_iter->GetBattle().SetGUIListActiv( false );
+  }
+  m_battle_list->DeleteAllItems();
+}
+
+
+void BattleListTab::UpdateList() {
+  m_ui.GetServer().battles_iter->IteratorBegin();
+  while (! m_ui.GetServer().battles_iter->EOL() ) {
+    Battle& b = m_ui.GetServer().battles_iter->GetBattle();
+    UpdateBattle(b);
+  }
 }
 
 
@@ -252,14 +351,32 @@ void BattleListTab::OnHost( wxCommandEvent& event )
 }
 
 
+void BattleListTab::OnFilter( wxCommandEvent& event )
+{
+  if (m_filter_show->GetValue()) {
+    m_filter->Show(  );
+    this->Layout();
+  }
+  else {
+    m_filter->Hide(  );
+    this->Layout();
+  }
+}
+
+
+void BattleListTab::OnFilterActiv( wxCommandEvent& event )
+{
+  m_filter->SetActiv( m_filter_activ->GetValue() );
+}
+
+
 void BattleListTab::OnJoin( wxCommandEvent& event )
 {
   ASSERT_LOGIC( m_battle_list != 0, "m_battle_list = 0" );
   if ( m_battle_list->GetSelectedIndex() < 0 ) return;
 
-  Battle& battle = *((Battle*)m_battle_list->GetItemData( m_battle_list->GetSelectedIndex() ));
+  DoJoin( m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetSelectedIndex() ) );
 
-  DoJoin( battle );
 }
 
 
@@ -268,9 +385,7 @@ void BattleListTab::OnListJoin( wxListEvent& event )
   ASSERT_LOGIC( m_battle_list != 0, "m_battle_list = 0" );
   if ( event.GetIndex() < 0 ) return;
 
-  Battle& battle = *((Battle*)m_battle_list->GetItemData( event.GetIndex() ));
-
-  DoJoin( battle );
+  DoJoin( m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetItemData( event.GetIndex() ) ) );
 }
 
 
@@ -350,18 +465,20 @@ void BattleListTab::OnSelect( wxListEvent& event )
   if ( event.GetIndex() == -1 ) {
     SelectBattle( 0 );
   } else {
-    Battle& battle = *((Battle*)m_battle_list->GetItemData( event.GetIndex() ));
-    SelectBattle( &battle );
+    SelectBattle( &m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetItemData( event.GetIndex() ) ) );
   }
 }
 
+
 void BattleListTab::OnUnitSyncReloaded()
 {
-  for ( int i = 0; i < m_battle_list->GetItemCount(); i++ ) {
-    Battle& battle = *((Battle*)m_battle_list->GetItemData( i ));
-    battle.OnUnitSyncReloaded();
+  if ( ! m_ui.GetServerStatus() ) { return; }
+
+  m_ui.GetServer().battles_iter->IteratorBegin();
+  while (! m_ui.GetServer().battles_iter->EOL() ) {
+    Battle& b = m_ui.GetServer().battles_iter->GetBattle();
+    b.OnUnitSyncReloaded();
   }
   UpdateList();
   m_minimap->UpdateMinimap();
 }
-

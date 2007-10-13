@@ -91,6 +91,7 @@ class BattleRoomTab : public wxPanel
 
     wxPanel* m_player_panel;
 
+
     BattleroomListCtrl* m_players;
     ChatPanel* m_chat;
     wxSplitterWindow* m_splitter;

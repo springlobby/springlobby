@@ -53,6 +53,11 @@ Server& Ui::GetServer()
   return *m_serv;
 }
 
+bool Ui::GetServerStatus() const
+{
+  return (bool)(m_serv);
+}
+
 
 ChatPanel* Ui::GetActiveChatPanel()
 {
@@ -472,6 +477,7 @@ void Ui::OnDisconnected( Server& server )
 
   mw().GetJoinTab().LeaveCurrentBattle();
   mw().GetJoinTab().GetBattleListTab().RemoveAllBattles();
+
   if ( server.uidata.panel != 0 ) {
     server.uidata.panel->StatusMessage( _T("Disconnected from server.") );
     server.uidata.panel->SetServer( 0 );
@@ -612,6 +618,7 @@ void Ui::OnUserStatusChanged( User& user )
       chan.uidata.panel->UserStatusUpdated( user );
     }
   }
+  if ( user.GetStatus().in_game ) mw().GetJoinTab().GetBattleListTab().UserUpdate( user );
 }
 
 
