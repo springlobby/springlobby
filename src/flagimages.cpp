@@ -12,7 +12,7 @@ int GetFlagIndex( const std::string& flag )
       return i;
     }
   }
-  debug_error( flag + " flag not found!" );
+  debug_warn( flag + " flag not found!" );
   return FLAG_NONE;
 }
 

@@ -171,7 +171,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_player_text->Wrap( -1 );
 	m_filter_player_sizer->Add( m_filter_player_text, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_player_button = new wxButton( this, BATTLE_FILTER_PLAYER_BUTTON, _(">"), wxDefaultPosition, wxSize( 25, 25 ), 0 );
+	m_filter_player_button = new wxButton( this, BATTLE_FILTER_PLAYER_BUTTON, _("="), wxDefaultPosition, wxSize( 25, 25 ), 0 );
 	m_filter_player_sizer->Add( m_filter_player_button, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_filter_player_choiceChoices;
@@ -226,14 +226,14 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_maxplayer_text->Wrap( -1 );
 	m_filter_maxplayer_sizer->Add( m_filter_maxplayer_text, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_maxplayer_button = new wxButton( this, BATTLE_FILTER_MAXPLAYER_BUTTON, _("<"), wxDefaultPosition, wxSize( 25, 25 ), 0 );
+	m_filter_maxplayer_button = new wxButton( this, BATTLE_FILTER_MAXPLAYER_BUTTON, _("="), wxDefaultPosition, wxSize( 25, 25 ), 0 );
 	m_filter_maxplayer_sizer->Add( m_filter_maxplayer_button, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_filter_maxplayer_choiceChoices;
   m_filter_maxplayer_choiceChoices.Add( _T("All") );
 	for (wxLongLong i = 0;i <= 32;i++) m_filter_maxplayer_choiceChoices.Add( i.ToString() );
 
-	m_filter_maxplayer_choice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), m_filter_maxplayer_choiceChoices, 0 );
+	m_filter_maxplayer_choice = new wxChoice( this, BATTLE_FILTER_MAXPLAYER_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_maxplayer_choiceChoices, 0 );
 	m_filter_maxplayer_choice->SetSelection( 0 );
 	m_filter_maxplayer_choice->SetMinSize( wxSize( 40,-1 ) );
 
@@ -287,7 +287,7 @@ m_parent_battlelisttab( parentBattleListTab )
   m_filter_spectator_choiceChoices.Add( _T("All") );
 	for (wxLongLong i = 0;i <= 32;i++) m_filter_spectator_choiceChoices.Add( i.ToString() );
 
-	m_filter_spectator_choice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), m_filter_spectator_choiceChoices, 0 );
+	m_filter_spectator_choice = new wxChoice( this, BATTLE_FILTER_SPECTATOR_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_spectator_choiceChoices, 0 );
 	m_filter_spectator_choice->SetSelection( 0 );
 	m_filter_spectator_choice->SetMinSize( wxSize( 40,-1 ) );
 
@@ -300,6 +300,9 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_sizer->Add( m_filter_body_sizer, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
 
   m_activ = false;
+  m_filter_player_mode = m_equal;
+  m_filter_maxplayer_mode = m_equal;
+  m_filter_spectator_mode = m_equal;
   m_filter_rank_choice_value = -1;
   m_filter_player_choice_value = -1;
   m_filter_maxplayer_choice_value = -1;
