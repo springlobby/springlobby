@@ -19,7 +19,7 @@
         <property name="relative_path">1</property>
         <property name="use_enum">1</property>
         <property name="use_microsoft_bom">0</property>
-        <object class="Dialog" expanded="1">
+        <object class="Dialog" expanded="0">
             <property name="bg"></property>
             <property name="center"></property>
             <property name="context_help"></property>
@@ -6416,9 +6416,10 @@
                 </object>
             </object>
         </object>
-        <object class="Dialog" expanded="1">
+        <object class="Dialog" expanded="0">
             <property name="bg"></property>
             <property name="center"></property>
+            <property name="context_help"></property>
             <property name="enabled">1</property>
             <property name="extra_style"></property>
             <property name="fg"></property>
@@ -6429,19 +6430,49 @@
             <property name="minimum_size"></property>
             <property name="name">CrashReportDialog</property>
             <property name="pos"></property>
-            <property name="size">470,402</property>
+            <property name="size">-1,-1</property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
             <property name="subclass"></property>
             <property name="title"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
+            <property name="window_name"></property>
             <property name="window_style"></property>
+            <event name="OnActivate"></event>
+            <event name="OnActivateApp"></event>
+            <event name="OnChar"></event>
             <event name="OnClose"></event>
+            <event name="OnEnterWindow"></event>
+            <event name="OnEraseBackground"></event>
+            <event name="OnHibernate"></event>
+            <event name="OnIconize"></event>
+            <event name="OnIdle"></event>
+            <event name="OnInitDialog"></event>
+            <event name="OnKeyDown"></event>
+            <event name="OnKeyUp"></event>
+            <event name="OnKillFocus"></event>
+            <event name="OnLeaveWindow"></event>
+            <event name="OnLeftDClick"></event>
+            <event name="OnLeftDown"></event>
+            <event name="OnLeftUp"></event>
+            <event name="OnMiddleDClick"></event>
+            <event name="OnMiddleDown"></event>
+            <event name="OnMiddleUp"></event>
+            <event name="OnMotion"></event>
+            <event name="OnMouseEvents"></event>
+            <event name="OnMouseWheel"></event>
+            <event name="OnPaint"></event>
+            <event name="OnRightDClick"></event>
+            <event name="OnRightDown"></event>
+            <event name="OnRightUp"></event>
+            <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
+            <event name="OnUpdateUI"></event>
             <object class="wxBoxSizer" expanded="1">
                 <property name="minimum_size"></property>
                 <property name="name">m_main_sizer</property>
                 <property name="orient">wxVERTICAL</property>
+                <property name="permission">none</property>
                 <object class="sizeritem" expanded="1">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
@@ -6450,6 +6481,7 @@
                         <property name="minimum_size">-1,10</property>
                         <property name="name">m_header_sizer</property>
                         <property name="orient">wxHORIZONTAL</property>
+                        <property name="permission">none</property>
                         <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
                             <property name="flag">wxEXPAND</property>
@@ -6458,6 +6490,7 @@
                                 <property name="minimum_size"></property>
                                 <property name="name">m_crashlogo_sizer</property>
                                 <property name="orient">wxVERTICAL</property>
+                                <property name="permission">none</property>
                                 <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxALL</property>
@@ -6465,6 +6498,7 @@
                                     <object class="wxStaticBitmap" expanded="1">
                                         <property name="bg"></property>
                                         <property name="bitmap">; Load From Icon Resource</property>
+                                        <property name="context_help"></property>
                                         <property name="enabled">1</property>
                                         <property name="fg"></property>
                                         <property name="font"></property>
@@ -6479,7 +6513,31 @@
                                         <property name="subclass"></property>
                                         <property name="tooltip"></property>
                                         <property name="window_extra_style"></property>
+                                        <property name="window_name"></property>
                                         <property name="window_style"></property>
+                                        <event name="OnChar"></event>
+                                        <event name="OnEnterWindow"></event>
+                                        <event name="OnEraseBackground"></event>
+                                        <event name="OnKeyDown"></event>
+                                        <event name="OnKeyUp"></event>
+                                        <event name="OnKillFocus"></event>
+                                        <event name="OnLeaveWindow"></event>
+                                        <event name="OnLeftDClick"></event>
+                                        <event name="OnLeftDown"></event>
+                                        <event name="OnLeftUp"></event>
+                                        <event name="OnMiddleDClick"></event>
+                                        <event name="OnMiddleDown"></event>
+                                        <event name="OnMiddleUp"></event>
+                                        <event name="OnMotion"></event>
+                                        <event name="OnMouseEvents"></event>
+                                        <event name="OnMouseWheel"></event>
+                                        <event name="OnPaint"></event>
+                                        <event name="OnRightDClick"></event>
+                                        <event name="OnRightDown"></event>
+                                        <event name="OnRightUp"></event>
+                                        <event name="OnSetFocus"></event>
+                                        <event name="OnSize"></event>
+                                        <event name="OnUpdateUI"></event>
                                     </object>
                                 </object>
                             </object>
@@ -6492,18 +6550,20 @@
                                 <property name="minimum_size"></property>
                                 <property name="name">m_infotext_sizer</property>
                                 <property name="orient">wxVERTICAL</property>
+                                <property name="permission">none</property>
                                 <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxALL|wxEXPAND</property>
                                     <property name="proportion">1</property>
                                     <object class="wxStaticText" expanded="1">
                                         <property name="bg"></property>
+                                        <property name="context_help"></property>
                                         <property name="enabled">1</property>
                                         <property name="fg"></property>
                                         <property name="font"></property>
                                         <property name="hidden">0</property>
                                         <property name="id">wxID_ANY</property>
-                                        <property name="label">SpringLobby has encountered a critical error and must be terminated.&#x0A;A stacktrace has been generated to help the developers to solve the issue, would you want to upload the stacktrace?</property>
+                                        <property name="label">SpringLobby has encountered a critical error&#x0A;and must be terminated.&#x0A;A stacktrace has been generated to help the &#x0A;developers to solve the issue, do you want &#x0A;to send them the following informations?</property>
                                         <property name="maximum_size"></property>
                                         <property name="minimum_size"></property>
                                         <property name="name">m_userinfo</property>
@@ -6514,7 +6574,32 @@
                                         <property name="subclass"></property>
                                         <property name="tooltip"></property>
                                         <property name="window_extra_style"></property>
+                                        <property name="window_name"></property>
                                         <property name="window_style"></property>
+                                        <property name="wrap">-1</property>
+                                        <event name="OnChar"></event>
+                                        <event name="OnEnterWindow"></event>
+                                        <event name="OnEraseBackground"></event>
+                                        <event name="OnKeyDown"></event>
+                                        <event name="OnKeyUp"></event>
+                                        <event name="OnKillFocus"></event>
+                                        <event name="OnLeaveWindow"></event>
+                                        <event name="OnLeftDClick"></event>
+                                        <event name="OnLeftDown"></event>
+                                        <event name="OnLeftUp"></event>
+                                        <event name="OnMiddleDClick"></event>
+                                        <event name="OnMiddleDown"></event>
+                                        <event name="OnMiddleUp"></event>
+                                        <event name="OnMotion"></event>
+                                        <event name="OnMouseEvents"></event>
+                                        <event name="OnMouseWheel"></event>
+                                        <event name="OnPaint"></event>
+                                        <event name="OnRightDClick"></event>
+                                        <event name="OnRightDown"></event>
+                                        <event name="OnRightUp"></event>
+                                        <event name="OnSetFocus"></event>
+                                        <event name="OnSize"></event>
+                                        <event name="OnUpdateUI"></event>
                                     </object>
                                 </object>
                             </object>
@@ -6529,34 +6614,57 @@
                         <property name="minimum_size"></property>
                         <property name="name">m_crashdump_sizer</property>
                         <property name="orient">wxVERTICAL</property>
+                        <property name="permission">none</property>
                         <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
-                            <property name="flag">wxALL|wxEXPAND</property>
+                            <property name="flag">wxEXPAND | wxALL</property>
                             <property name="proportion">1</property>
-                            <object class="wxTextCtrl" expanded="1">
+                            <object class="wxNotebook" expanded="1">
                                 <property name="bg"></property>
+                                <property name="bitmapsize"></property>
+                                <property name="context_help"></property>
                                 <property name="enabled">1</property>
                                 <property name="fg"></property>
                                 <property name="font"></property>
                                 <property name="hidden">0</property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="maximum_size"></property>
-                                <property name="maxlength">0</property>
                                 <property name="minimum_size"></property>
-                                <property name="name">m_crash_dump_text</property>
+                                <property name="name">m_notebook2</property>
                                 <property name="permission">protected</property>
                                 <property name="pos"></property>
                                 <property name="size"></property>
-                                <property name="style">wxTE_CHARWRAP|wxTE_MULTILINE|wxTE_READONLY|wxTE_WORDWRAP</property>
+                                <property name="style"></property>
                                 <property name="subclass"></property>
                                 <property name="tooltip"></property>
-                                <property name="value"></property>
                                 <property name="window_extra_style"></property>
+                                <property name="window_name"></property>
                                 <property name="window_style"></property>
-                                <event name="OnText"></event>
-                                <event name="OnTextEnter"></event>
-                                <event name="OnTextMaxLen"></event>
-                                <event name="OnTextURL"></event>
+                                <event name="OnChar"></event>
+                                <event name="OnEnterWindow"></event>
+                                <event name="OnEraseBackground"></event>
+                                <event name="OnKeyDown"></event>
+                                <event name="OnKeyUp"></event>
+                                <event name="OnKillFocus"></event>
+                                <event name="OnLeaveWindow"></event>
+                                <event name="OnLeftDClick"></event>
+                                <event name="OnLeftDown"></event>
+                                <event name="OnLeftUp"></event>
+                                <event name="OnMiddleDClick"></event>
+                                <event name="OnMiddleDown"></event>
+                                <event name="OnMiddleUp"></event>
+                                <event name="OnMotion"></event>
+                                <event name="OnMouseEvents"></event>
+                                <event name="OnMouseWheel"></event>
+                                <event name="OnNotebookPageChanged"></event>
+                                <event name="OnNotebookPageChanging"></event>
+                                <event name="OnPaint"></event>
+                                <event name="OnRightDClick"></event>
+                                <event name="OnRightDown"></event>
+                                <event name="OnRightUp"></event>
+                                <event name="OnSetFocus"></event>
+                                <event name="OnSize"></event>
+                                <event name="OnUpdateUI"></event>
                             </object>
                         </object>
                     </object>
@@ -6577,6 +6685,14 @@
                         <property name="minimum_size"></property>
                         <property name="name">m_dialog_buttons_sizer</property>
                         <property name="permission">protected</property>
+                        <event name="OnApplyButtonClick"></event>
+                        <event name="OnCancelButtonClick"></event>
+                        <event name="OnContextHelpButtonClick"></event>
+                        <event name="OnHelpButtonClick"></event>
+                        <event name="OnNoButtonClick"></event>
+                        <event name="OnOKButtonClick"></event>
+                        <event name="OnSaveButtonClick"></event>
+                        <event name="OnYesButtonClick"></event>
                     </object>
                 </object>
             </object>
