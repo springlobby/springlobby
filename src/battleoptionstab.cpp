@@ -189,11 +189,13 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
   m_load_btn = new wxButton( this, BOPTS_LOADRES, _("Load..."), wxDefaultPosition, wxDefaultSize, 0 );
   m_load_btn->SetToolTip( _("Load a saved set of restrictions.") );
+  m_load_btn->Disable();
 
   m_restricted_btn_sizer->Add( m_load_btn, 0, wxALL, 5 );
 
   m_save_btn = new wxButton( this, BOPTS_SAVERES, _("Save..."), wxDefaultPosition, wxDefaultSize, 0 );
   m_save_btn->SetToolTip( _("Save a set of restrictions.") );
+  m_save_btn->Disable();
 
   m_restricted_btn_sizer->Add( m_save_btn, 0, wxALL, 5 );
 
@@ -438,8 +440,6 @@ void BattleOptionsTab::OnAllow( wxCommandEvent& event )
 
 void BattleOptionsTab::OnLoadRestrictions( wxCommandEvent& event )
 {
-  m_battle.EnableAllUnits();
-  ReloadRestrictions();
 }
 
 
@@ -450,6 +450,7 @@ void BattleOptionsTab::OnSaveRestrictions( wxCommandEvent& event )
 
 void BattleOptionsTab::OnClearRestrictions( wxCommandEvent& event )
 {
-
+  m_battle.EnableAllUnits();
+  ReloadRestrictions();
 }
 
