@@ -20,6 +20,7 @@
 #include "battlelistfilter.h"
 #include "battlelistctrl.h"
 #include "battle.h"
+#include "uiutils.h"
 #include "utils.h"
 
 ///////////////////////////////////////////////////////////////////////////
@@ -412,10 +413,10 @@ bool BattleListFilter::FilterBattle(Battle& battle)
   if ( !WX_STRING( battle.GetFounder().GetNick() ).Upper().Contains( m_filter_host_edit->GetValue().Upper() ) ) return false;
 
   //Map:
-  if ( !WX_STRING( battle.GetMapName() ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) ) return false;
+  if ( !WX_STRING( RefineMapname(battle.GetMapName() ) ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) ) return false;
 
   //Mod:
-  if ( !WX_STRING( battle.GetModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) ) return false;
+  if ( !WX_STRING( battle.GetModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) and  !WX_STRING( RefineModname( battle.GetModName() ) ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) ) return false;
 
   return true;
 }
