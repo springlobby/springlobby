@@ -8,13 +8,14 @@
 #include <wx/checkbox.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
+#include <wx/intl.h>
 #include <wx/choice.h>
 #include <wx/button.h>
 #include <wx/string.h>
 #include <wx/panel.h>
 #include <wx/statbox.h>
 #include <wx/event.h>
-#include <string.h>
+#include <string>
 
 #include "battlelistfilter.h"
 #include "battlelistctrl.h"

@@ -6,6 +6,7 @@
 #include <wx/imaglist.h>
 #include <wx/menu.h>
 #include <wx/string.h>
+#include <wx/intl.h>
 #include <stdexcept>
 
 #include "nicklistctrl.h"
