@@ -145,6 +145,9 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
   } else if ( subcmd == _("/rename") ) {
     m_sock->Send( "RENAMEACCOUNT " + STD_STRING(params) + "\n" );
     return true;
+  } else if ( subcmd == _("/testmd5") ) {
+    ExecuteCommand( "SERVERMSG", GetPasswordHash(STD_STRING(params)) );
+    return true;
   }
 
   return false;
