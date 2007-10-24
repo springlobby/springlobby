@@ -3,7 +3,7 @@
 #include <wx/intl.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
-#include <stdexcept>
+#include <wx/string.h>
 
 #include "battlelistctrl.h"
 #include "utils.h"

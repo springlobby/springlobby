@@ -43,8 +43,8 @@ struct BattleOptions
   int port;
   std::string ip;
 
-  int maxplayers;
-  int spectators;
+  unsigned int maxplayers;
+  unsigned int spectators;
 
   int startmetal;
   int startenergy;
@@ -100,7 +100,7 @@ class Battle : public UserList, public IBattle
     std::string GetHostIp() const { return m_opts.ip; }
 
     void SetMaxPlayers( const int& maxplayers ) { m_opts.maxplayers = maxplayers; }
-    int GetMaxPlayers() const { return m_opts.maxplayers; }
+    unsigned int GetMaxPlayers() const { return m_opts.maxplayers; }
     void SetSpectators( const int& spectators ) { m_opts.spectators = spectators; }
     int GetSpectators() const { return m_opts.spectators; }
 
