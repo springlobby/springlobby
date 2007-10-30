@@ -40,7 +40,7 @@ void Project2Frm::CreateGUIControls()
 
 	SetTitle(wxT("Settings++"));
 	SetIcon(wxNullIcon);
-	SetSize(8,8,520,540);
+	SetSize(8,8,520,560);
 	Center();
 
 }
