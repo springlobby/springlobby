@@ -1,34 +1,26 @@
-#include "Main.hpp"
+//---------------------------------------------------------------------------
+//
+// Name:        Project2App.cpp
+// Author:      Kosh
+// Created:     29.10.2007 19:21:41
+// Description: 
+//
+//---------------------------------------------------------------------------
 
-// static class variable indicating if user changed settings
-bool (Main::settingsChanged) = false;
+#include "main.h"
+#include "frame.h"
 
-Main::Main() {}
-Main::~Main() {}
+IMPLEMENT_APP(Project2FrmApp)
 
-bool Main::OnInit() {
-	
-
-	//if (parser->readFile(getenv("HOME"), ".springrc")) {
-        
-        //insert configHandler sanity check
-        
-		// windows need to be able to update and serialize dictionary
-		Window* frame = new Window(wxT("Settings++"));
-	
-		frame->SetSize(0, 0, PWIN_SIZE_X, PWIN_SIZE_Y);
-		frame->SetSizeHints(PWIN_SIZE_X, PWIN_SIZE_Y, PWIN_SIZE_X, PWIN_SIZE_Y);
-		frame->CenterOnScreen(wxBOTH);
-		frame->Show(true);
-
-		return true;
-//	}
-//	else {
-//		wxMessageBox(_S("Unable to locate .springrc file!"), _S(""), wxOK, NULL);
-//		return false;
-//	}
+bool Project2FrmApp::OnInit()
+{
+    Project2Frm* frame = new Project2Frm(NULL);
+    SetTopWindow(frame);
+    frame->Show();
+    return true;
 }
-
-
-// macro providing main() entry point
-IMPLEMENT_APP(Main)
+ 
+int Project2FrmApp::OnExit()
+{
+	return 0;
+}

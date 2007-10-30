@@ -76,8 +76,6 @@
 #define ID_WINDOWP_GO_CBOX_19 369
 #define ID_WINDOWP_GO_CBOX_20 370
 #define ID_WINDOWP_GO_CBOX_21 371
-#define ID_WINDOWP_GO_CBOX_22 372
-#define ID_WINDOWP_GO_CBOX_23 373
 
 // ParentWin Audio Options slider IDs
 #define ID_AO_SLI_0 400
@@ -189,7 +187,7 @@ const Control AO_SLI[3] = {
 	{"unit reply volume",     "UnitReplySoundVolume", ID_AO_SLI_2,	"80" }
 };
 
-const Control GO_CBOX[24] = {
+const Control GO_CBOX[22] = {
 	{"shadows (slow)",                                  "Shadows",             ID_WINDOWP_GO_CBOX_0,	"0"},
 	{"3D trees (needs Vertex_Program)",                 "3DTrees",             ID_WINDOWP_GO_CBOX_1,	"1"},
 	{"high-resolution clouds (needs Fragment_Program)", "AdvSky",              ID_WINDOWP_GO_CBOX_2,	"0"},
@@ -208,12 +206,12 @@ const Control GO_CBOX[24] = {
 	{"draw smooth points",                              "SmoothPoints",        ID_WINDOWP_GO_CBOX_15,	"0"},
 	{"draw smooth lines",                               "SmoothLines",         ID_WINDOWP_GO_CBOX_16,	"0"},
 	{"enable LuaUI widgets",                            "LuaUI",               ID_WINDOWP_GO_CBOX_17,	"1"},
-	{"enable LuaRules gadgets",                         "LuaRules",            ID_WINDOWP_GO_CBOX_18,	"1"},
-	{"enable LuaGaia gadgets",                          "LuaGaia",             ID_WINDOWP_GO_CBOX_19,	"1"},
-	{"enable LuaShaders support",                       "LuaShaders",          ID_WINDOWP_GO_CBOX_20,	"1"},
-	{ "high-resolution LOS textures",                   "HighResLos",          ID_WINDOWP_GO_CBOX_21,	"1"},
-	{"fix rendering on alt-tab",                        "FixAltTab",           ID_WINDOWP_GO_CBOX_22,	"1"},
-	{"disallow helper AI's",                            "NoHelperAIs",         ID_WINDOWP_GO_CBOX_23,	"0"}
+// 	{"enable LuaRules gadgets",                         "LuaRules",            ID_WINDOWP_GO_CBOX_18,	"1"},
+// 	{"enable LuaGaia gadgets",                          "LuaGaia",             ID_WINDOWP_GO_CBOX_19,	"1"},
+ 	{"enable LuaShaders support",                       "LuaShaders",          ID_WINDOWP_GO_CBOX_18,	"1"},
+	{ "high-resolution LOS textures",                   "HighResLos",          ID_WINDOWP_GO_CBOX_19,	"1"},
+	{"fix rendering on alt-tab",                        "FixAltTab",           ID_WINDOWP_GO_CBOX_20,	"1"},
+	{"disallow helper AI's",                            "NoHelperAIs",         ID_WINDOWP_GO_CBOX_21,	"0"}
 };
 
 
