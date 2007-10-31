@@ -1,12 +1,3 @@
-//---------------------------------------------------------------------------
-//
-// Name:        Project2Frm.h
-// Author:      Kosh
-// Created:     29.10.2007 19:21:41
-// Description: Project2Frm class declaration
-//
-//---------------------------------------------------------------------------
-
 #ifndef __PROJECT2FRM_h__
 #define __PROJECT2FRM_h__
 
@@ -21,27 +12,21 @@
 	#include <wx/wxprec.h>
 #endif
 
-//Do not add custom headers between 
-//Header Include Start and Header Include End.
-//wxDev-C++ designer will remove them. Add custom headers after the block.
-////Header Include Start
 #include <wx/panel.h>
 #include <wx/notebook.h>
-////Header Include End
 
-////Dialog Style Start
 #undef Project2Frm_STYLE
 #define Project2Frm_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX
-////Dialog Style End
 
-class Project2Frm : public wxFrame
+
+class settings_frame : public wxFrame
 {
 	private:
 		DECLARE_EVENT_TABLE();
 		
 	public:
-		Project2Frm(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = Project2Frm_STYLE);
-		virtual ~Project2Frm();
+		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = Project2Frm_STYLE);
+		virtual ~settings_frame();
 		
 	private:
 		//Do not add custom control declarations between

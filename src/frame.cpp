@@ -1,21 +1,21 @@
 #include "frame.h"
 #include "tabs.h"
 
-BEGIN_EVENT_TABLE(Project2Frm,wxFrame)
-	EVT_CLOSE(Project2Frm::OnClose)
+BEGIN_EVENT_TABLE(settings_frame,wxFrame)
+	EVT_CLOSE(settings_frame::OnClose)
 END_EVENT_TABLE()
 
-Project2Frm::Project2Frm(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
+settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxFrame(parent, id, title, position, size, style)
 {
 	CreateGUIControls();
 }
 
-Project2Frm::~Project2Frm()
+settings_frame::~settings_frame()
 {
 }
 
-void Project2Frm::CreateGUIControls()
+void settings_frame::CreateGUIControls()
 {
 
 	Options = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_BOTTOM);
@@ -45,7 +45,7 @@ void Project2Frm::CreateGUIControls()
 
 }
 
-void Project2Frm::OnClose(wxCloseEvent& event)
+void settings_frame::OnClose(wxCloseEvent& event)
 {
 	Destroy();
 }

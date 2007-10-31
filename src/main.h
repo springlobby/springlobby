@@ -20,7 +20,7 @@
 	#include <wx/wxprec.h>
 #endif
 
-class Project2FrmApp : public wxApp
+class SettingsPlusPlus : public wxApp
 {
 	public:
 		bool OnInit();

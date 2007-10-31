@@ -10,17 +10,17 @@
 #include "main.h"
 #include "frame.h"
 
-IMPLEMENT_APP(Project2FrmApp)
+IMPLEMENT_APP(SettingsPlusPlus)
 
-bool Project2FrmApp::OnInit()
+bool SettingsPlusPlus::OnInit()
 {
-    Project2Frm* frame = new Project2Frm(NULL);
+    settings_frame* frame = new settings_frame(NULL);
     SetTopWindow(frame);
     frame->Show();
     return true;
 }
  
-int Project2FrmApp::OnExit()
+int SettingsPlusPlus::OnExit()
 {
 	return 0;
 }
