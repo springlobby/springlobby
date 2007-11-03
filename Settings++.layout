@@ -10,15 +10,15 @@ CursorCol=2
 CursorRow=93
 TopLine=58
 LeftChar=1
-Open=1
+Open=0
 Top=0
 [Editor_21]
 CursorCol=2
 CursorRow=159
 TopLine=128
 LeftChar=1
-Open=1
-Top=1
+Open=0
+Top=0
 [Editor_17]
 CursorCol=1
 CursorRow=22
@@ -154,7 +154,7 @@ Open=0
 Top=0
 [Editors]
 Focused=-1
-Order=-1
+Order=
 [Editor_22]
 Open=0
 Top=0

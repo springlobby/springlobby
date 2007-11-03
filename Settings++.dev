@@ -32,7 +32,7 @@ BuildCmd=
 
 [VersionInfo]
 Major=0
-Minor=1
+Minor=2
 Release=1
 Build=1
 LanguageID=1033
@@ -64,15 +64,15 @@ Linker=-mwindows_@@_-lwxmsw28_@@_-lwxmsw28_gl_@@_-lwxtiff_@@_-lwxjpeg_@@_-lwxpng
 PreprocDefines=__WXMSW___@@___GNUWIN32___@@___WIN95___@@_
 CompilerSettings=0000000001001000000000
 Icon=
-ExeOutput=Output\MingW
-ObjectOutput=Objects\MingW
+ExeOutput=bin\win
+ObjectOutput=obj\win
 OverrideOutput=0
 OverrideOutputName=Settings++.exe
 HostApplication=
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
-IncludeVersionInfo=0
+IncludeVersionInfo=1
 SupportXPThemes=0
 CompilerSet=0
 compilerType=0
