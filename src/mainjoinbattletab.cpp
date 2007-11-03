@@ -72,7 +72,8 @@ ChatPanel* MainJoinBattleTab::GetActiveChatPanel()
 }
 
 
-void MainJoinBattleTab::UpdateCurrentBattle()
+//void MainJoinBattleTab::UpdateCurrentBattle()
+void MainJoinBattleTab::UpdateCurrentBattle(bool updateRestrictions)
 {
   if ( m_battle_tab ) {
     m_battle_tab->UpdateBattleInfo();
@@ -82,6 +83,7 @@ void MainJoinBattleTab::UpdateCurrentBattle()
   }
   if ( m_opts_tab ) {
     m_opts_tab->UpdateBattle();
+    if ( updateRestrictions ) m_opts_tab->ReloadRestrictions();
   }
 }
 

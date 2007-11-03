@@ -218,6 +218,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   }
 
   UpdateBattle();
+  ReloadRestrictions();
 }
 
 
@@ -243,7 +244,7 @@ void BattleOptionsTab::UpdateBattle()
   m_options_checks->Check( GHOUSTED_INDEX, m_battle.GhostedBuildings() );
   m_options_checks->Check( DIM_MMS_INDEX, m_battle.DimMMs() );
 
-  ReloadRestrictions();
+  //ReloadRestrictions();
 }
 
 

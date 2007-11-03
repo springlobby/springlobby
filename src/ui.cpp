@@ -825,7 +825,8 @@ void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
     //std::string fullname = usync()->GetFullUnitName( battle.opts().modname, usync()->GetUnitIndex( battle.opts().modname, unitname ) );
     br->GetChatPanel().StatusMessage( WX_STRING( unitname ) + _T(" disabled.") );
   }
-  mw().GetJoinTab().UpdateCurrentBattle();
+  //mw().GetJoinTab().UpdateCurrentBattle();
+  mw().GetJoinTab().UpdateCurrentBattle(true);
 }
 
 
@@ -835,7 +836,8 @@ void Ui::OnBattleEnableUnit( Battle& battle, const std::string& unitname )
   if ( br != 0 ) {
     br->GetChatPanel().StatusMessage( WX_STRING(unitname) + _T(" disabled.") );
   }
-  mw().GetJoinTab().UpdateCurrentBattle();
+  //mw().GetJoinTab().UpdateCurrentBattle();
+  mw().GetJoinTab().UpdateCurrentBattle(true);
 }
 
 
@@ -845,7 +847,7 @@ void Ui::OnBattleEnableAllUnits( Battle& battle )
   if ( br != 0 ) {
     br->GetChatPanel().StatusMessage( _T("All units enabled.") );
   }
-  mw().GetJoinTab().UpdateCurrentBattle();
+  mw().GetJoinTab().UpdateCurrentBattle(true);
 }
 
 
