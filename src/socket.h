@@ -71,6 +71,8 @@ class Socket
     int m_rate;
     int m_sent;
     std::string m_buffer;
+
+    wxSocketClient* _CreateSocket();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SOCKET_H
