@@ -197,7 +197,7 @@ void BattleListTab::AddBattle( Battle& battle ) {
 void BattleListTab::RemoveBattle( Battle& battle ) {
   if ( &battle == m_sel_battle ) SelectBattle( 0 );
   for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
-    if ( battle.GetBattleId() == m_battle_list->GetItemData( i ) ) {
+    if ( battle.GetBattleId() == (int)m_battle_list->GetItemData( i ) ) {
       m_battle_list->DeleteItem( i );
       break;
     }
@@ -227,7 +227,7 @@ void BattleListTab::UpdateBattle( Battle& battle )
 
   int index = -1;
   for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
-    if ( battle.GetBattleId() == m_battle_list->GetItemData( i ) ) {
+    if ( battle.GetBattleId() == (int)m_battle_list->GetItemData( i ) ) {
       index = i;
       break;
     }
