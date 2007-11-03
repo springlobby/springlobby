@@ -1,3 +1,25 @@
+/**
+    This file is part of Settings++,
+    Copyright (C) 2007
+    Original work by Kloot
+    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
+    for more info/help
+
+    Settings++ is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Settings++ is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
+**/
+
 #include "tabs.h"
 
 void mouse_panel::initMouseSpeedSizer(wxStaticBoxSizer* sizer) {
@@ -34,7 +56,7 @@ void mouse_panel::initMouseOptsSizer(wxStaticBoxSizer* sizer) {
 	sizer->Add(checkBox0, 0, wxTOP, 0);
 	sizer->Add(checkBox1, 0, wxTOP, 0);
 	sizer->Add(0, 10, 0);
-	sizer->Add(new wxStaticText(this, _1, _S("Default Camera Mode"), wxDefaultPosition, wxDefaultSize, 10));
+	sizer->Add(new wxStaticText(this, _1, wxT("Default Camera Mode"), wxDefaultPosition, wxDefaultSize, 10));
 	sizer->Add(radioButtonA0, 0, wxTOP, 0);
 	sizer->Add(radioButtonA1, 0, wxTOP, 0);
 	sizer->Add(radioButtonA2, 0, wxTOP, 0);
@@ -49,8 +71,8 @@ mouse_panel::mouse_panel(wxWindow *parent, wxWindowID id , const wxString &title
 	wxSizer* cSizerL = new wxBoxSizer(wxVERTICAL);
 	wxSizer* cSizerR = new wxBoxSizer(wxVERTICAL);
 
-	wxStaticBoxSizer* mouseSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, _S("Mouse Speed"), WX_DEF_P, wxSize(100, 200), 0, _S("")), wxVERTICAL);
-	wxStaticBoxSizer* mouseOptsSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, _S("Mouse Options"), WX_DEF_P, wxSize(100, 100), 0, _S("")), wxVERTICAL);
+	wxStaticBoxSizer* mouseSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Mouse Speed"), WX_DEF_P, wxSize(100, 200), 0, _S("")), wxVERTICAL);
+	wxStaticBoxSizer* mouseOptsSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Mouse Options"), WX_DEF_P, wxSize(100, 100), 0, _S("")), wxVERTICAL);
 
 	initMouseSpeedSizer(mouseSpeedSizer);
 	initMouseOptsSizer(mouseOptsSizer);

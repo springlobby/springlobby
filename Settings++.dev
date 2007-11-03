@@ -1,5 +1,5 @@
 [Project]
-FileName=Project2.dev
+FileName=Settings++.dev
 Name=Settings++
 UnitCount=30
 PchHead=-1
@@ -67,7 +67,7 @@ Icon=
 ExeOutput=Output\MingW
 ObjectOutput=Objects\MingW
 OverrideOutput=0
-OverrideOutputName=Project2.exe
+OverrideOutputName=Settings++.exe
 HostApplication=
 CommandLine=
 UseCustomMakefile=0
@@ -135,9 +135,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=src\ConfigHandler.h
+FileName=src\tab_audio.cpp
 CompileCpp=1
-Folder=spring
+Folder=src
 Compile=1
 Link=1
 Priority=1000
@@ -255,16 +255,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=src\ConfigHandler.cpp
-CompileCpp=1
-Folder=spring
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit20]
 FileName=src\Defs.hpp
 CompileCpp=1
 Folder=src
@@ -274,10 +264,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit21]
-FileName=src\DotfileHandler.cpp
+[Unit20]
+FileName=src\tab_audio.h
 CompileCpp=1
-Folder=spring
+Folder=src
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit21]
+FileName=src\tab_abstract.h
+CompileCpp=1
+Folder=src
 Compile=1
 Link=1
 Priority=1000
@@ -285,9 +285,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit22]
-FileName=src\DotfileHandler.h
+FileName=src\tab_abstract.cpp
 CompileCpp=1
-Folder=spring
+Folder=src
 Compile=1
 Link=1
 Priority=1000
@@ -295,7 +295,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit23]
-FileName=src\errorhandler.cpp
+FileName=src\spring\ConfigHandler.cpp
 CompileCpp=1
 Folder=spring
 Compile=1
@@ -305,7 +305,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit24]
-FileName=src\errorhandler.h
+FileName=src\spring\ConfigHandler.h
 CompileCpp=1
 Folder=spring
 Compile=1
@@ -315,7 +315,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit25]
-FileName=src\RegHandler.cpp
+FileName=src\spring\DotfileHandler.cpp
 CompileCpp=1
 Folder=spring
 Compile=1
@@ -325,7 +325,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit26]
-FileName=src\RegHandler.h
+FileName=src\spring\DotfileHandler.h
 CompileCpp=1
 Folder=spring
 Compile=1
@@ -335,9 +335,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit27]
-FileName=src\tab_audio.cpp
+FileName=src\spring\errorhandler.cpp
 CompileCpp=1
-Folder=src
+Folder=spring
 Compile=1
 Link=1
 Priority=1000
@@ -345,9 +345,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit28]
-FileName=src\tab_audio.h
+FileName=src\spring\errorhandler.h
 CompileCpp=1
-Folder=src
+Folder=spring
 Compile=1
 Link=1
 Priority=1000
@@ -365,9 +365,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit29]
-FileName=src\tab_abstract.h
+FileName=src\spring\RegHandler.cpp
 CompileCpp=1
-Folder=src
+Folder=spring
 Compile=1
 Link=1
 Priority=1000
@@ -375,9 +375,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit30]
-FileName=src\tab_abstract.cpp
+FileName=src\spring\RegHandler.h
 CompileCpp=1
-Folder=src
+Folder=spring
 Compile=1
 Link=1
 Priority=1000

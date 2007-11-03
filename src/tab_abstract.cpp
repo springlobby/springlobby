@@ -1,3 +1,25 @@
+/**
+    This file is part of Settings++,
+    Copyright (C) 2007
+    Original work by Kloot
+    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
+    for more info/help
+
+    Settings++ is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Settings++ is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
+**/
+
 #include "tabs.h"
 
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
@@ -53,6 +75,13 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 		case ID_AO_SLI_2: { configHandler.SetInt(AO_SLI[2].key, value); } break;
 
 		case ID_DO_SLI_0: { configHandler.SetInt(DO_SLI[0].key, value); } break;
+
+		case ID_MO_SLI_0: { configHandler.SetInt(MO_SLI[0].key, value); } break;
+        case ID_MO_SLI_1: { configHandler.SetInt(MO_SLI[1].key, value); } break;
+        case ID_MO_SLI_2: { configHandler.SetInt(MO_SLI[2].key, value); } break;
+        case ID_MO_SLI_3: { configHandler.SetInt(MO_SLI[3].key, value); } break;
+        case ID_MO_SLI_4: { configHandler.SetInt(MO_SLI[4].key, value); } break;
+
 	}
 }
 
@@ -123,6 +152,7 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 
 		case ID_WINDOWP_DO_CBOX_0: { configHandler.SetInt(DO_CBOX[0].key, checked); } break;
 		case ID_WINDOWP_DO_CBOX_1: { configHandler.SetInt(DO_CBOX[1].key, checked); } break;
+		// todo add mouse boxes
 	}
 }
 
@@ -140,6 +170,7 @@ void abstract_panel::OnRadioButtonToggle(wxCommandEvent& event) {
 		case ID_WINDOWP_WR_RBUT_1: { configHandler.SetInt(WR_RBUT[0].key, 1); } break;	// Refl
 		case ID_WINDOWP_WR_RBUT_2: { configHandler.SetInt(WR_RBUT[0].key, 3); } break;	// Refl + Refr
 		case ID_WINDOWP_WR_RBUT_3: { configHandler.SetInt(WR_RBUT[0].key, 2); } break;	// Dyna
+		// todo add mous buttons
 	}
 }
 

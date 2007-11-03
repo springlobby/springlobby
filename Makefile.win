@@ -1,18 +1,18 @@
 # Project: Settings++
 # Compiler: Default GCC compiler
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ 6.10.2 on 30.10.07 21:33
+# Makefile created by wxDev-C++ 6.10.2 on 03.11.07 01:17
 
 CPP       = g++.exe
 CC        = gcc.exe
 WINDRES   = windres.exe
-OBJ       = Objects/MingW/main.o Objects/MingW/frame.o Objects/MingW/tab_debug.o Objects/MingW/tab_general.o Objects/MingW/tab_mouse.o Objects/MingW/tab_rendering.o Objects/MingW/tab_simple.o Objects/MingW/tab_video.o Objects/MingW/ConfigHandler.o Objects/MingW/DotfileHandler.o Objects/MingW/errorhandler.o Objects/MingW/RegHandler.o Objects/MingW/tab_audio.o Objects/MingW/tab_abstract.o
-LINKOBJ   = Objects/MingW/main.o Objects/MingW/frame.o Objects/MingW/tab_debug.o Objects/MingW/tab_general.o Objects/MingW/tab_mouse.o Objects/MingW/tab_rendering.o Objects/MingW/tab_simple.o Objects/MingW/tab_video.o Objects/MingW/ConfigHandler.o Objects/MingW/DotfileHandler.o Objects/MingW/errorhandler.o Objects/MingW/RegHandler.o Objects/MingW/tab_audio.o Objects/MingW/tab_abstract.o
+OBJ       = Objects/MingW/main.o Objects/MingW/frame.o Objects/MingW/tab_debug.o Objects/MingW/tab_general.o Objects/MingW/tab_mouse.o Objects/MingW/tab_rendering.o Objects/MingW/tab_simple.o Objects/MingW/tab_video.o Objects/MingW/tab_audio.o Objects/MingW/tab_abstract.o Objects/MingW/ConfigHandler.o Objects/MingW/DotfileHandler.o Objects/MingW/errorhandler.o Objects/MingW/RegHandler.o
+LINKOBJ   = Objects/MingW/main.o Objects/MingW/frame.o Objects/MingW/tab_debug.o Objects/MingW/tab_general.o Objects/MingW/tab_mouse.o Objects/MingW/tab_rendering.o Objects/MingW/tab_simple.o Objects/MingW/tab_video.o Objects/MingW/tab_audio.o Objects/MingW/tab_abstract.o Objects/MingW/ConfigHandler.o Objects/MingW/DotfileHandler.o Objects/MingW/errorhandler.o Objects/MingW/RegHandler.o
 LIBS      = -L"C:/Programme/Dev-Cpp/Lib" -mwindows -lwxmsw28 -lwxmsw28_gl -lwxtiff -lwxjpeg -lwxpng -lwxzlib -lwxregex -lwxexpat -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32 -lopengl32  
 INCS      = -I"include"
 CXXINCS   = -I"C:/Programme/Dev-Cpp/lib/gcc/mingw32/3.4.2/include" -I"C:/Programme/Dev-Cpp/include/c++/3.4.2/backward" -I"C:/Programme/Dev-Cpp/include/c++/3.4.2/mingw32" -I"C:/Programme/Dev-Cpp/include/c++/3.4.2" -I"C:/Programme/Dev-Cpp/include" -I"C:/Programme/Dev-Cpp/" -I"C:/Programme/Dev-Cpp/include/common/wx/msw" -I"C:/Programme/Dev-Cpp/include/common/wx/generic" -I"C:/Programme/Dev-Cpp/include/common/wx/fl" -I"C:/Programme/Dev-Cpp/include/common/wx/gizmos" -I"C:/Programme/Dev-Cpp/include/common/wx/html" -I"C:/Programme/Dev-Cpp/include/common/wx/mmedia" -I"C:/Programme/Dev-Cpp/include/common/wx/net" -I"C:/Programme/Dev-Cpp/include/common/wx/ogl" -I"C:/Programme/Dev-Cpp/include/common/wx/plot" -I"C:/Programme/Dev-Cpp/include/common/wx/protocol" -I"C:/Programme/Dev-Cpp/include/common/wx/stc" -I"C:/Programme/Dev-Cpp/include/common/wx/svg" -I"C:/Programme/Dev-Cpp/include/common/wx/xml" -I"C:/Programme/Dev-Cpp/include/common/wx/xrc" -I"C:/Programme/Dev-Cpp/include/common/wx" -I"C:/Programme/Dev-Cpp/include/common"
 RCINCS    = --include-dir "C:/PROGRA~1/Dev-Cpp/include/common"
-BIN       = Output/MingW/Project2.exe
+BIN       = Output/MingW/Settings++.exe
 DEFINES   =  -D__WXMSW__ -D__GNUWIN32__ -D__WIN95__
 CXXFLAGS  = $(CXXINCS) $(DEFINES) -fno-exceptions -fno-pcc-struct-return -fstrict-aliasing -Wall -D__WXMSW__ -D__GNUWIN32__ -D__WIN95__   -fexpensive-optimizations -O3
 CFLAGS    = $(INCS) $(DEFINES) -fno-exceptions -fno-pcc-struct-return -fstrict-aliasing -Wall -D__WXMSW__ -D__GNUWIN32__ -D__WIN95__   -fexpensive-optimizations -O3
@@ -27,46 +27,46 @@ clean: clean-custom
 	$(RM) $(OBJ) $(BIN)
 
 $(BIN): $(OBJ)
-	$(LINK) $(LINKOBJ) -o "Output\MingW\Project2.exe" $(LIBS)
+	$(LINK) $(LINKOBJ) -o "Output\MingW\Settings++.exe" $(LIBS)
 
 Objects/MingW/main.o: $(GLOBALDEPS) src/main.cpp src/main.h src/frame.h
 	$(CPP) -c src/main.cpp -o Objects/MingW/main.o $(CXXFLAGS)
 
-Objects/MingW/frame.o: $(GLOBALDEPS) src/frame.cpp src/frame.h src/tabs.h src/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
+Objects/MingW/frame.o: $(GLOBALDEPS) src/frame.cpp src/frame.h src/tabs.h src/spring/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
 	$(CPP) -c src/frame.cpp -o Objects/MingW/frame.o $(CXXFLAGS)
 
-Objects/MingW/tab_debug.o: $(GLOBALDEPS) src/tab_debug.cpp src/tabs.h src/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
+Objects/MingW/tab_debug.o: $(GLOBALDEPS) src/tab_debug.cpp src/tabs.h src/spring/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
 	$(CPP) -c src/tab_debug.cpp -o Objects/MingW/tab_debug.o $(CXXFLAGS)
 
-Objects/MingW/tab_general.o: $(GLOBALDEPS) src/tab_general.cpp src/tabs.h src/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
+Objects/MingW/tab_general.o: $(GLOBALDEPS) src/tab_general.cpp src/tabs.h src/spring/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
 	$(CPP) -c src/tab_general.cpp -o Objects/MingW/tab_general.o $(CXXFLAGS)
 
-Objects/MingW/tab_mouse.o: $(GLOBALDEPS) src/tab_mouse.cpp src/tabs.h src/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
+Objects/MingW/tab_mouse.o: $(GLOBALDEPS) src/tab_mouse.cpp src/tabs.h src/spring/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
 	$(CPP) -c src/tab_mouse.cpp -o Objects/MingW/tab_mouse.o $(CXXFLAGS)
 
-Objects/MingW/tab_rendering.o: $(GLOBALDEPS) src/tab_rendering.cpp src/tabs.h src/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
+Objects/MingW/tab_rendering.o: $(GLOBALDEPS) src/tab_rendering.cpp src/tabs.h src/spring/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
 	$(CPP) -c src/tab_rendering.cpp -o Objects/MingW/tab_rendering.o $(CXXFLAGS)
 
 Objects/MingW/tab_simple.o: $(GLOBALDEPS) src/tab_simple.cpp
 	$(CPP) -c src/tab_simple.cpp -o Objects/MingW/tab_simple.o $(CXXFLAGS)
 
-Objects/MingW/tab_video.o: $(GLOBALDEPS) src/tab_video.cpp src/tabs.h src/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
+Objects/MingW/tab_video.o: $(GLOBALDEPS) src/tab_video.cpp src/tabs.h src/spring/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
 	$(CPP) -c src/tab_video.cpp -o Objects/MingW/tab_video.o $(CXXFLAGS)
 
-Objects/MingW/ConfigHandler.o: $(GLOBALDEPS) src/ConfigHandler.cpp src/ConfigHandler.h src/RegHandler.h src/ConfigHandler.h src/DotfileHandler.h src/ConfigHandler.h
-	$(CPP) -c src/ConfigHandler.cpp -o Objects/MingW/ConfigHandler.o $(CXXFLAGS)
-
-Objects/MingW/DotfileHandler.o: $(GLOBALDEPS) src/DotfileHandler.cpp src/DotfileHandler.h src/ConfigHandler.h src/errorhandler.h
-	$(CPP) -c src/DotfileHandler.cpp -o Objects/MingW/DotfileHandler.o $(CXXFLAGS)
-
-Objects/MingW/errorhandler.o: $(GLOBALDEPS) src/errorhandler.cpp src/errorhandler.h
-	$(CPP) -c src/errorhandler.cpp -o Objects/MingW/errorhandler.o $(CXXFLAGS)
-
-Objects/MingW/RegHandler.o: $(GLOBALDEPS) src/RegHandler.cpp src/RegHandler.h src/ConfigHandler.h
-	$(CPP) -c src/RegHandler.cpp -o Objects/MingW/RegHandler.o $(CXXFLAGS)
-
-Objects/MingW/tab_audio.o: $(GLOBALDEPS) src/tab_audio.cpp src/tabs.h src/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
+Objects/MingW/tab_audio.o: $(GLOBALDEPS) src/tab_audio.cpp src/tabs.h src/spring/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
 	$(CPP) -c src/tab_audio.cpp -o Objects/MingW/tab_audio.o $(CXXFLAGS)
 
-Objects/MingW/tab_abstract.o: $(GLOBALDEPS) src/tab_abstract.cpp src/tabs.h src/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
+Objects/MingW/tab_abstract.o: $(GLOBALDEPS) src/tab_abstract.cpp src/tabs.h src/spring/ConfigHandler.h src/Defs.hpp src/tab_rendering.h src/tabs.h src/tab_abstract.h src/tab_audio.h src/tab_debug.h src/tab_general.h src/tab_mouse.h src/tabs.h src/tab_simple.h src/tab_video.h src/tabs.h
 	$(CPP) -c src/tab_abstract.cpp -o Objects/MingW/tab_abstract.o $(CXXFLAGS)
+
+Objects/MingW/ConfigHandler.o: $(GLOBALDEPS) src/spring/ConfigHandler.cpp src/spring/ConfigHandler.h src/spring/RegHandler.h src/spring/ConfigHandler.h src/spring/DotfileHandler.h src/spring/ConfigHandler.h
+	$(CPP) -c src/spring/ConfigHandler.cpp -o Objects/MingW/ConfigHandler.o $(CXXFLAGS)
+
+Objects/MingW/DotfileHandler.o: $(GLOBALDEPS) src/spring/DotfileHandler.cpp src/spring/DotfileHandler.h src/spring/ConfigHandler.h src/spring/errorhandler.h
+	$(CPP) -c src/spring/DotfileHandler.cpp -o Objects/MingW/DotfileHandler.o $(CXXFLAGS)
+
+Objects/MingW/errorhandler.o: $(GLOBALDEPS) src/spring/errorhandler.cpp src/spring/errorhandler.h
+	$(CPP) -c src/spring/errorhandler.cpp -o Objects/MingW/errorhandler.o $(CXXFLAGS)
+
+Objects/MingW/RegHandler.o: $(GLOBALDEPS) src/spring/RegHandler.cpp src/spring/RegHandler.h src/spring/ConfigHandler.h
+	$(CPP) -c src/spring/RegHandler.cpp -o Objects/MingW/RegHandler.o $(CXXFLAGS)

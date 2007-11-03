@@ -1,10 +1,14 @@
 /**
-    This file is part of Settings++,
+    This is Settings++,
     Copyright (C) 2007
     Original work by Kloot
     cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
+
+	All files in src/spring are taken from the spring engine source
+	(https://spring.clan-sy.com/svn/spring/trunk/) and slightly modified
+	(unnecessary includes removed and such)
 
     Settings++ is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,23 +23,3 @@
     You should have received a copy of the GNU General Public License
     along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
 **/
-
-#ifndef __TAB_DEBUG_h__
-#define __TAB_DEBUG_h__
-
-class debug_panel : public abstract_panel
-{
-
-	public:
-		debug_panel(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
-		virtual ~debug_panel();
-
-		void initDebugSizer(wxStaticBoxSizer*);
-
-    protected:
-        void OnClose(wxCloseEvent& event);
-		void CreateGUIControls();
-		DECLARE_EVENT_TABLE()
-};
-
-#endif
