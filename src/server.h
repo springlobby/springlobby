@@ -53,7 +53,7 @@ class Server
     UiServerData uidata;
 
 
-    Server( Ui& ui): m_sock(0), m_ui(ui), m_keepalive(15),battles_iter(new BattleList_Iter(&m_battles)) {  }
+    Server( Ui& ui): battles_iter(new BattleList_Iter(&m_battles)),m_sock(0), m_ui(ui),m_keepalive(15) {  }
     virtual ~Server( );
 
     // Server interface

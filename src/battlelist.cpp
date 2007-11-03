@@ -32,7 +32,7 @@ Battle& BattleList::GetFirstBattle()
 
 battle_map_t::size_type BattleList_Iter::GetNumBattles()
 {
-  return (m_battlelist)?(m_battlelist->m_battles.size()):NULL;
+  return (m_battlelist)?(m_battlelist->m_battles.size()):0;
 }
 
 
