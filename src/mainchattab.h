@@ -23,6 +23,7 @@ class MainChatTab : public wxPanel
 
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
+    ChatPanel* GetUserChatPanel( const wxString& user );
 
     ChatPanel& ServerChat();
 
@@ -35,6 +36,8 @@ class MainChatTab : public wxPanel
     void RejoinChannels();
 
     void OnTabsChanged( wxNotebookEvent& event );
+    void OnUserConnected( User& user );
+    void OnUserDisconnected( User& user );
 
   protected:
 

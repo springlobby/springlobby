@@ -768,6 +768,19 @@ bool ChatPanel::IsOk()
 }
 
 
+
+void ChatPanel::OnUserDisconnected()
+{
+  _OutputLine( _T(" ** User is now offline."), wxColour( 255, 0, 0 ) );
+}
+
+
+void ChatPanel::OnUserConnected()
+{
+  _OutputLine( _T(" ** User just got online."), wxColour( 20, 200, 25 ) );
+}
+
+
   //////////////////////////////////////////////////////////////////////////////////////
  // Menu Events
 //////////////////////////////////////////////////////////////////////////////////////

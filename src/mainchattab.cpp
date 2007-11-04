@@ -94,6 +94,39 @@ ChatPanel* MainChatTab::GetChannelChatPanel( const wxString& channel )
 }
 
 
+ChatPanel* MainChatTab::GetUserChatPanel( const wxString& user )
+{
+  for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+    ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+    if ( tmp->GetPanelType() == CPT_User ) {
+      wxString name = m_chat_tabs->GetPageText(i);
+      if ( name.Lower() == user.Lower() ) return (ChatPanel*)m_chat_tabs->GetPage(i);
+    }
+  }
+  return 0;
+}
+
+
+void MainChatTab::OnUserConnected( User& user )
+{
+  ChatPanel* panel = GetUserChatPanel( WX_STRING(user.GetNick()) );
+  if ( panel != 0 ) {
+    panel->SetUser( &user );
+    panel->OnUserConnected();
+  }
+}
+
+
+void MainChatTab::OnUserDisconnected( User& user )
+{
+  ChatPanel* panel = GetUserChatPanel( WX_STRING(user.GetNick()) );
+  if ( panel != 0 ) {
+    panel->OnUserDisconnected();
+    panel->SetUser( 0 );
+  }
+}
+
+
 void MainChatTab::CloseAllChats()
 {
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
@@ -111,10 +144,17 @@ void MainChatTab::RejoinChannels()
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
     ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
     if ( tmp->GetPanelType() == CPT_Channel ) {
+
       // TODO: This will not rejoin passworded channels.
       std::string name = STD_STRING(m_chat_tabs->GetPageText(i));
       // #springlobby is joined automatically
       if ( name != "springlobby" ) m_ui.GetServer().JoinChannel( name, "" );
+
+    } else if (tmp->GetPanelType() == CPT_User ) {
+
+      std::string name = STD_STRING(m_chat_tabs->GetPageText(i));
+      if ( m_ui.GetServer().UserExists( name ) ) tmp->SetUser( &m_ui.GetServer().GetUser( name ) );
+
     }
   }
 }
