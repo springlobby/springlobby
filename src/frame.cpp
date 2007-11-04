@@ -72,13 +72,13 @@ void settings_frame::CreateGUIControls()
 void settings_frame::initMenuBar() {
 	wxMenu* menuFile = new wxMenu();
 
-	menuFile->Append(ID_MENUITEM_SAVE, "Save settings");
-	menuFile->Append(ID_MENUITEM_RESET, "Reset settings to default values");
+	menuFile->Append(ID_MENUITEM_SAVE, wxT("Save settings"));
+	menuFile->Append(ID_MENUITEM_RESET, wxT("Reset settings to default values"));
 	menuFile->AppendSeparator();
-	menuFile->Append(ID_MENUITEM_QUIT, "Quit");
+	menuFile->Append(ID_MENUITEM_QUIT, wxT("Quit"));
 
 	wxMenuBar* menuBar = new wxMenuBar();
-	menuBar->Append(menuFile, "File");
+	menuBar->Append(menuFile, wxT("File"));
 
 	SetMenuBar(menuBar);
 }
