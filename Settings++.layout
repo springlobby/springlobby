@@ -27,12 +27,12 @@ LeftChar=1
 Open=0
 Top=0
 [Editor_2]
-CursorCol=5
-CursorRow=94
+CursorCol=47
+CursorRow=80
 TopLine=62
 LeftChar=1
-Open=0
-Top=0
+Open=1
+Top=1
 [Editor_0]
 CursorCol=1
 CursorRow=1
@@ -154,7 +154,7 @@ Open=0
 Top=0
 [Editors]
 Focused=-1
-Order=
+Order=-1
 [Editor_22]
 Open=0
 Top=0
