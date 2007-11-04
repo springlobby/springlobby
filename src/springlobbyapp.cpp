@@ -13,6 +13,7 @@
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
+#include "stacktrace.h"
 #include "utils.h"
 #include "ui.h"
 #include "iunitsync.h"
@@ -45,6 +46,8 @@ SpringLobbyApp::~SpringLobbyApp()
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
+  wxHandleFatalExceptions( true );
+
   debug_func( "" );
   wxInitAllImageHandlers();
 
@@ -84,6 +87,20 @@ int SpringLobbyApp::OnExit()
   delete usync();
 
   return 0;
+}
+
+
+void SpringLobbyApp::OnFatalException()
+{
+  wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
+
+  stacktrace().WalkFromException();
+  DebugInfo += stacktrace().GetStackTrace();
+
+  DebugInfo += _T("\n-------- End StackTrace --------");
+
+  debug_error( STD_STRING(DebugInfo) );
+
 }
 
 

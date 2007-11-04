@@ -41,30 +41,40 @@ Socket::Socket( Server& serv, bool blocking ):
 {
   m_connecting = false;
 
-  m_sock = new wxSocketClient();
+  m_sock = 0;
+  m_events = 0;
 
-  m_sock->SetClientData( (void*)this );
-  if ( !blocking ) {
-    m_events = new SocketEvents( serv );
-    m_sock->SetFlags( wxSOCKET_NOWAIT );
-
-    m_sock->SetEventHandler(*m_events, SOCKET_ID);
-    m_sock->SetNotify( wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG );
-    m_sock->Notify(true);
-  } else {
-    m_events = 0;
-  }
 }
 
 
 //! @brief Destructor
 Socket::~Socket()
 {
-  m_sock->Destroy();
+  if ( m_sock != 0 ) m_sock->Destroy();
   delete m_events;
 }
 
 
+wxSocketClient* Socket::_CreateSocket()
+{
+  wxSocketClient* sock = new wxSocketClient();
+
+  sock->SetClientData( (void*)this );
+  if ( !m_block ) {
+    if ( m_events == 0 ) m_events = new SocketEvents( m_serv );
+    sock->SetFlags( wxSOCKET_NOWAIT );
+
+    sock->SetEventHandler(*m_events, SOCKET_ID);
+    sock->SetNotify( wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG );
+    sock->Notify(true);
+  } else {
+    if ( m_events != 0 ) {
+      delete m_events;
+      m_events = 0;
+    }
+  }
+  return sock;
+}
 
 //! @brief Connect to remote host
 void Socket::Connect( const std::string& addr, const int port )
@@ -75,19 +85,26 @@ void Socket::Connect( const std::string& addr, const int port )
   wxaddr.Hostname( WX_STRING( addr ) );
   wxaddr.Service( port );
 
+  if ( m_sock != 0 ) m_sock->Destroy();
+  m_sock = _CreateSocket();
   m_sock->Connect( wxaddr, m_block );
-
 }
 
 void Socket::Disconnect( )
 {
+  if ( m_sock == 0 ) return;
   m_serv.OnDisconnected( this );
   m_sock->Destroy();
+  m_sock = 0;
 }
 
 //! @brief Send data over connection
 bool Socket::Send( const std::string& data )
 {
+  if ( m_sock == 0 ) {
+    debug_error( "Socket NULL" );
+    return false;
+  }
   if ( m_rate > 0 ) {
     m_buffer += data;
     int max = m_rate - m_sent;
@@ -109,6 +126,11 @@ bool Socket::Send( const std::string& data )
 //! @brief Recive data from connection
 bool Socket::Recive( std::string& data )
 {
+  if ( m_sock == 0 ) {
+    debug_error( "Socket NULL" );
+    return false;
+  }
+
   char buff[2];
   int readnum;
   int readbytes = 0;
@@ -136,6 +158,7 @@ bool Socket::Recive( std::string& data )
 //! @brief Get curent socket state
 Sockstate Socket::State( )
 {
+  if ( m_sock == 0 ) return SS_CLOSED;
   if ( m_sock->IsConnected() ) {
     m_connecting = false;
     return SS_OPEN;

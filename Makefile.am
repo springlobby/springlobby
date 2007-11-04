@@ -157,6 +157,8 @@ springlobby_SOURCES = \
 	src/springprocess.h \
 	src/springunitsync.cpp \
 	src/springunitsync.h \
+	src/stacktrace.cpp \
+	src/stacktrace.h \
 	src/tasserver.cpp \
 	src/tasserver.h \
 	src/ui.cpp \

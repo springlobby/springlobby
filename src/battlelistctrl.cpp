@@ -28,11 +28,11 @@ BEGIN_EVENT_TABLE(BattleListCtrl, wxListCtrl)
 END_EVENT_TABLE()
 
 
-Ui* BattleListCtrl::m_ui_for_sort = NULL;
+Ui* BattleListCtrl::m_ui_for_sort = 0;
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   wxListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL ),
-  m_selected(NULL),
+  m_selected(-1),
   m_ui(ui)
 {
 
@@ -131,7 +131,7 @@ void BattleListCtrl::OnSelected( wxListEvent& event )
 
 void BattleListCtrl::OnDeselected( wxListEvent& event )
 {
-  if ( m_selected == GetItemData( event.GetIndex() )  )
+  if ( m_selected == (int)GetItemData( event.GetIndex() )  )
   m_selected = -1;
 }
 
