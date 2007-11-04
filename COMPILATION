@@ -1,0 +1,12 @@
+--- compilation on windows
+wxDev-C++ (http://wxdsgn.sourceforge.net/) project file is included. 
+binary will be in bin/win
+
+--- compilation on linux
+you'll need libgtk2.0-dev and its dependencies, wxWidgets libs/headers
+for static linking are included. you don't need wxwidgets installed 
+in any shape or form. also scons must be installed, then just run 
+"scons" from a terminal in whatever directory you extracted the 
+archive into.
+binary will be in bin/linux
+
