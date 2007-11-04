@@ -83,17 +83,26 @@ void settings_frame::initMenuBar() {
 	SetMenuBar(menuBar);
 }
 
+void settings_frame::handleExit() {
+    if (abstract_panel::settingsChanged) {
+        if ((wxMessageBox(wxT("Save settings before exiting?"), wxT(""), wxYES_NO, this)) == wxYES) {
+			if (abstract_panel::saveSettings())
+			 (abstract_panel::settingsChanged) = false;
+		}
+    }
+    Destroy();
+    
+}
+
 void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 	switch (event.GetId()) {
 		case ID_MENUITEM_SAVE: {
 			if (abstract_panel::saveSettings())
 			 (abstract_panel::settingsChanged) = false;
-			    
-			 
 		} break;
 
 		case ID_MENUITEM_QUIT: {
-			//handleExit();
+			handleExit();
 		} break;
 
 		case ID_MENUITEM_RESET: {

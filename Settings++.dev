@@ -60,9 +60,9 @@ ResourceIncludes=
 MakeIncludes=
 Compiler=-fno-exceptions_@@_-fno-pcc-struct-return_@@_-fstrict-aliasing_@@_-Wall_@@_-D__WXMSW___@@_-D__GNUWIN32___@@_-D__WIN95___@@_
 CppCompiler=-fno-exceptions_@@_-fno-pcc-struct-return_@@_-fstrict-aliasing_@@_-Wall_@@_-D__WXMSW___@@_-D__GNUWIN32___@@_-D__WIN95___@@_
-Linker=-mwindows_@@_-lwxmsw28_@@_-lwxmsw28_gl_@@_-lwxtiff_@@_-lwxjpeg_@@_-lwxpng_@@_-lwxzlib_@@_-lwxregex_@@_-lwxexpat_@@_-lkernel32_@@_-luser32_@@_-lgdi32_@@_-lcomdlg32_@@_-lwinspool_@@_-lwinmm_@@_-lshell32_@@_-lcomctl32_@@_-lole32_@@_-loleaut32_@@_-luuid_@@_-lrpcrt4_@@_-ladvapi32_@@_-lwsock32_@@_-lodbc32_@@_-lopengl32_@@_
+Linker=-mwindows_@@_-lwxmsw28_@@_-lwxregex_@@_-lwxexpat_@@_-lkernel32_@@_-luser32_@@_-lgdi32_@@_-lcomdlg32_@@_-lwinspool_@@_-lwinmm_@@_-lshell32_@@_-lcomctl32_@@_-lole32_@@_-loleaut32_@@_-luuid_@@_-lrpcrt4_@@_-ladvapi32_@@__@@_
 PreprocDefines=__WXMSW___@@___GNUWIN32___@@___WIN95___@@_
-CompilerSettings=0000000001001000000000
+CompilerSettings=0000000001001000000100
 Icon=
 ExeOutput=bin\win
 ObjectOutput=obj\win
@@ -316,20 +316,20 @@ BuildCmd=
 
 [Unit25]
 FileName=src\spring\DotfileHandler.cpp
-CompileCpp=1
+CompileCpp=0
 Folder=spring
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit26]
 FileName=src\spring\DotfileHandler.h
-CompileCpp=1
+CompileCpp=0
 Folder=spring
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=

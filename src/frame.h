@@ -61,6 +61,7 @@ class settings_frame : public wxFrame
 		wxNotebook *Options;
 		
 		void initMenuBar();
+		void handleExit();
 		enum
 		{
 			////GUI Enum Control ID Start
