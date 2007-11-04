@@ -10,7 +10,7 @@ s_env=Environment()
 s_env.ParseConfig('wx2.8.6/bin/wx-config --prefix=wx2.8.6 --exec-prefix=wx2.8.6 --cxxflags --libs core,base')
 s_env.BuildDir('obj/linux/','src/')
 #s_env.Prepend(_LIBFLAGS=['-Wl','-Bstatic'])
-settings = s_env.Program(target='bin/linux/Settings++.bin',source=s_source,LIBS=s_env['LIBS'],LIBPATH=s_env['LIBPATH'])
+settings = s_env.Program(target='bin/linux/Settings++.bin',source=s_source)
 Default(settings)
 
 
