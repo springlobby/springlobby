@@ -129,13 +129,15 @@ void MainChatTab::OnUserDisconnected( User& user )
 
 void MainChatTab::CloseAllChats()
 {
+
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
     ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
-    ASSERT_LOGIC( tmp != 0, "tmp = 0" );
+    if ( tmp == 0 ) continue;
     if ( tmp->GetPanelType() == CPT_Channel ) tmp->SetChannel( 0 );
     else if ( tmp->GetPanelType() == CPT_User ) tmp->SetUser( 0 );
     else if ( tmp->GetPanelType() == CPT_Server ) tmp->SetServer( 0 );
   }
+
 }
 
 
