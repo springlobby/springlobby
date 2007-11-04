@@ -594,11 +594,14 @@ void Ui::OnUserOnline( User& user )
   data->panel = 0;
 
   user.SetUserData( (void*)data );*/
+
+  m_main_win->GetChatTab().OnUserConnected( user );
 }
 
 
 void Ui::OnUserOffline( User& user )
 {
+  m_main_win->GetChatTab().OnUserDisconnected( user );
   if ( user.uidata.panel ) {
     user.uidata.panel->SetUser( 0 );
     user.uidata.panel = 0;
