@@ -25,12 +25,14 @@
 
 BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_CLOSE(settings_frame::OnClose)
+	EVT_MENU(wxID_ANY,settings_frame::OnMenuChoice)
 END_EVENT_TABLE()
 
 settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxFrame(parent, id, title, position, size, style)
 {
 	CreateGUIControls();
+	initMenuBar();
 }
 
 settings_frame::~settings_frame()
@@ -40,7 +42,7 @@ settings_frame::~settings_frame()
 void settings_frame::CreateGUIControls()
 {
 
-	Options = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_BOTTOM);
+	Options = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP);
 	Options->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
 
 //	Simple = new wxPanel(Options, ID_SIMPLE, wxPoint(4,24), wxSize(724,552));
@@ -65,6 +67,39 @@ void settings_frame::CreateGUIControls()
 	SetSize(8,8,520,560);
 	Center();
 
+}
+
+void settings_frame::initMenuBar() {
+	wxMenu* menuFile = new wxMenu();
+
+	menuFile->Append(ID_MENUITEM_SAVE, "Save settings");
+	menuFile->Append(ID_MENUITEM_RESET, "Reset settings to default values");
+	menuFile->AppendSeparator();
+	menuFile->Append(ID_MENUITEM_QUIT, "Quit");
+
+	wxMenuBar* menuBar = new wxMenuBar();
+	menuBar->Append(menuFile, "File");
+
+	SetMenuBar(menuBar);
+}
+
+void settings_frame::OnMenuChoice(wxCommandEvent& event) {
+	switch (event.GetId()) {
+		case ID_MENUITEM_SAVE: {
+			if (abstract_panel::saveSettings())
+			 (abstract_panel::settingsChanged) = false;
+			    
+			 
+		} break;
+
+		case ID_MENUITEM_QUIT: {
+			//handleExit();
+		} break;
+
+		case ID_MENUITEM_RESET: {
+			//dialog->Show(true);
+		} break;
+	}
 }
 
 void settings_frame::OnClose(wxCloseEvent& event)

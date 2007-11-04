@@ -1,21 +1,21 @@
 # Project: Settings++
 # Compiler: Default GCC compiler
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ 6.10.2 on 03.11.07 23:06
+# Makefile created by wxDev-C++ 6.10.2 on 04.11.07 00:31
 
 CPP       = g++.exe
 CC        = gcc.exe
 WINDRES   = windres.exe
 OBJ       = obj/win/main.o obj/win/frame.o obj/win/tab_debug.o obj/win/tab_general.o obj/win/tab_mouse.o obj/win/tab_rendering.o obj/win/tab_simple.o obj/win/tab_video.o obj/win/tab_audio.o obj/win/tab_abstract.o obj/win/ConfigHandler.o obj/win/DotfileHandler.o obj/win/errorhandler.o obj/win/RegHandler.o obj/win/Settings++_private.res
 LINKOBJ   = obj/win/main.o obj/win/frame.o obj/win/tab_debug.o obj/win/tab_general.o obj/win/tab_mouse.o obj/win/tab_rendering.o obj/win/tab_simple.o obj/win/tab_video.o obj/win/tab_audio.o obj/win/tab_abstract.o obj/win/ConfigHandler.o obj/win/DotfileHandler.o obj/win/errorhandler.o obj/win/RegHandler.o obj/win/Settings++_private.res
-LIBS      = -L"C:/Programme/Dev-Cpp/Lib" -mwindows -lwxmsw28 -lwxmsw28_gl -lwxtiff -lwxjpeg -lwxpng -lwxzlib -lwxregex -lwxexpat -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32 -lopengl32  
+LIBS      = -L"C:/Programme/Dev-Cpp/Lib" -mwindows -lwxmsw28 -lwxmsw28_gl -lwxtiff -lwxjpeg -lwxpng -lwxzlib -lwxregex -lwxexpat -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32 -lopengl32  -g3 
 INCS      = -I"include"
 CXXINCS   = -I"C:/Programme/Dev-Cpp/lib/gcc/mingw32/3.4.2/include" -I"C:/Programme/Dev-Cpp/include/c++/3.4.2/backward" -I"C:/Programme/Dev-Cpp/include/c++/3.4.2/mingw32" -I"C:/Programme/Dev-Cpp/include/c++/3.4.2" -I"C:/Programme/Dev-Cpp/include" -I"C:/Programme/Dev-Cpp/" -I"C:/Programme/Dev-Cpp/include/common/wx/msw" -I"C:/Programme/Dev-Cpp/include/common/wx/generic" -I"C:/Programme/Dev-Cpp/include/common/wx/fl" -I"C:/Programme/Dev-Cpp/include/common/wx/gizmos" -I"C:/Programme/Dev-Cpp/include/common/wx/html" -I"C:/Programme/Dev-Cpp/include/common/wx/mmedia" -I"C:/Programme/Dev-Cpp/include/common/wx/net" -I"C:/Programme/Dev-Cpp/include/common/wx/ogl" -I"C:/Programme/Dev-Cpp/include/common/wx/plot" -I"C:/Programme/Dev-Cpp/include/common/wx/protocol" -I"C:/Programme/Dev-Cpp/include/common/wx/stc" -I"C:/Programme/Dev-Cpp/include/common/wx/svg" -I"C:/Programme/Dev-Cpp/include/common/wx/xml" -I"C:/Programme/Dev-Cpp/include/common/wx/xrc" -I"C:/Programme/Dev-Cpp/include/common/wx" -I"C:/Programme/Dev-Cpp/include/common"
 RCINCS    = --include-dir "C:/PROGRA~1/Dev-Cpp/include/common"
 BIN       = bin/win/Settings++.exe
 DEFINES   =  -D__WXMSW__ -D__GNUWIN32__ -D__WIN95__
-CXXFLAGS  = $(CXXINCS) $(DEFINES) -fno-exceptions -fno-pcc-struct-return -fstrict-aliasing -Wall -D__WXMSW__ -D__GNUWIN32__ -D__WIN95__   -fexpensive-optimizations -O3
-CFLAGS    = $(INCS) $(DEFINES) -fno-exceptions -fno-pcc-struct-return -fstrict-aliasing -Wall -D__WXMSW__ -D__GNUWIN32__ -D__WIN95__   -fexpensive-optimizations -O3
+CXXFLAGS  = $(CXXINCS) $(DEFINES) -fno-exceptions -fno-pcc-struct-return -fstrict-aliasing -Wall -D__WXMSW__ -D__GNUWIN32__ -D__WIN95__   -fexpensive-optimizations -O3 -g3
+CFLAGS    = $(INCS) $(DEFINES) -fno-exceptions -fno-pcc-struct-return -fstrict-aliasing -Wall -D__WXMSW__ -D__GNUWIN32__ -D__WIN95__   -fexpensive-optimizations -O3 -g3
 GPROF     = gprof.exe
 RM        = rm -f
 LINK      = g++.exe

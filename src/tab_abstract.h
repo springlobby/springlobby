@@ -24,9 +24,9 @@
 #define __TAB_ABSTRACT_h__
 #include <map>
 #include <string>
-typedef std::map<std::string,int>* intMap;
-typedef std::map<std::string,std::string>* stringMap;
-typedef std::map<std::string,float>* floatMap;
+typedef std::map<std::string,int> intMap;
+typedef std::map<std::string,std::string> stringMap;
+typedef std::map<std::string,float> floatMap;
 
 class abstract_panel : public wxPanel
 {
@@ -40,13 +40,16 @@ class abstract_panel : public wxPanel
 		void OnCheckBoxTick(wxCommandEvent&);
 		void OnRadioButtonToggle(wxCommandEvent&);
 		void update(wxIdleEvent&);
+		static intMap intSettings;
+		static stringMap stringSettings;
+		static floatMap floatSettings;
+		static bool settingsChanged;
+		static bool saveSettings();
         
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
-		static intMap intSettings;
-		static stringMap stringSettings;
-		static floatMap floatSettings;
+		
 		DECLARE_EVENT_TABLE()
 };
 

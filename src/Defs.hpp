@@ -42,7 +42,8 @@
 
 // ParentWin menu-item IDs
 #define ID_MENUITEM_SAVE  50
-#define ID_MENUITEM_QUIT  51
+#define ID_MENUITEM_RESET  51
+#define ID_MENUITEM_QUIT  52
 #define ID_MENUITEM_MOUSE 60
 
 // ParentWin TextInput IDs

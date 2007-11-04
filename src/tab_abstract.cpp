@@ -21,7 +21,12 @@
 **/
 
 #include "tabs.h"
-
+intMap abstract_panel::intSettings;
+stringMap abstract_panel::stringSettings;
+floatMap abstract_panel::floatSettings;
+bool abstract_panel::settingsChanged = false;
+    
+    
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : wxPanel(parent, id, pos, size, style,title) {
 
@@ -32,6 +37,8 @@ abstract_panel::~abstract_panel(void) {
 }
 
 void abstract_panel::OnSliderMove(wxCommandEvent& event) {
+
+    settingsChanged = true;
 
 	wxSlider* slider = (wxSlider*) event.GetEventObject();
 
@@ -44,49 +51,51 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 
 			if (val < 1536) {
 				slider->SetValue(1024);
-				configHandler.SetInt(RO_SLI[0].key, 1024);
+				(intSettings)[RO_SLI[0].key]=1024;
 			}
 			if (val > 1536 && val < 3072) {
 				slider->SetValue(2048);
-				configHandler.SetInt(RO_SLI[0].key, 2048);
+				(intSettings)[RO_SLI[0].key]=2048;
 			}
 			if (val > 3072 && val < 6144) {
 				slider->SetValue(4096);
-				configHandler.SetInt(RO_SLI[0].key, 4096);
+				(intSettings)[RO_SLI[0].key]=4096;
 			}
 		} break;
 
-		case ID_RO_SLI_1: { configHandler.SetInt(RO_SLI[1].key, value); } break;
-		case ID_RO_SLI_2: { configHandler.SetInt(RO_SLI[2].key, value); } break;
-		case ID_RO_SLI_3: { configHandler.SetInt(RO_SLI[3].key, value); } break;
-		case ID_RO_SLI_4: { configHandler.SetInt(RO_SLI[4].key, value); } break;
-		case ID_RO_SLI_5: { configHandler.SetInt(RO_SLI[5].key, value); } break;
-		case ID_RO_SLI_6: { configHandler.SetInt(RO_SLI[6].key, value); } break;
-		case ID_RO_SLI_7: { configHandler.SetInt(RO_SLI[7].key, value); } break;
-		case ID_RO_SLI_8: { configHandler.SetInt(RO_SLI[8].key, value); } break;
+		case ID_RO_SLI_1: { (intSettings)[RO_SLI[1].key]= value; } break;
+		case ID_RO_SLI_2: { (intSettings)[RO_SLI[2].key]= value; } break;
+		case ID_RO_SLI_3: { (intSettings)[RO_SLI[3].key]= value; } break;
+		case ID_RO_SLI_4: { (intSettings)[RO_SLI[4].key]= value; } break;
+		case ID_RO_SLI_5: { (intSettings)[RO_SLI[5].key]= value; } break;
+		case ID_RO_SLI_6: { (intSettings)[RO_SLI[6].key]= value; } break;
+		case ID_RO_SLI_7: { (intSettings)[RO_SLI[7].key]= value; } break;
+		case ID_RO_SLI_8: { (intSettings)[RO_SLI[8].key]= value; } break;
 
 		case ID_VO_SLI_0: {
-			configHandler.SetInt(VO_SLI_EXT[0].key, (value > 0)? 1: 0);
-			configHandler.SetInt(VO_SLI[0].key, value);
+			(intSettings)[VO_SLI_EXT[0].key]= (value > 0)? 1: 0;
+			(intSettings)[VO_SLI[0].key]= value;
 		} break;
 
-		case ID_AO_SLI_0: { configHandler.SetInt(AO_SLI[0].key, value); } break;
-		case ID_AO_SLI_1: { configHandler.SetInt(AO_SLI[1].key, value); } break;
-		case ID_AO_SLI_2: { configHandler.SetInt(AO_SLI[2].key, value); } break;
+		case ID_AO_SLI_0: { (intSettings)[AO_SLI[0].key]= value; } break;
+		case ID_AO_SLI_1: { (intSettings)[AO_SLI[1].key]= value; } break;
+		case ID_AO_SLI_2: { (intSettings)[AO_SLI[2].key]= value; } break;
 
-		case ID_DO_SLI_0: { configHandler.SetInt(DO_SLI[0].key, value); } break;
+		case ID_DO_SLI_0: { (intSettings)[DO_SLI[0].key]= value; } break;
 
-		case ID_MO_SLI_0: { configHandler.SetInt(MO_SLI[0].key, value); } break;
-        case ID_MO_SLI_1: { configHandler.SetInt(MO_SLI[1].key, value); } break;
-        case ID_MO_SLI_2: { configHandler.SetInt(MO_SLI[2].key, value); } break;
-        case ID_MO_SLI_3: { configHandler.SetInt(MO_SLI[3].key, value); } break;
-        case ID_MO_SLI_4: { configHandler.SetInt(MO_SLI[4].key, value); } break;
+		case ID_MO_SLI_0: { (intSettings)[MO_SLI[0].key]= value; } break;
+        case ID_MO_SLI_1: { (intSettings)[MO_SLI[1].key]= value; } break;
+        case ID_MO_SLI_2: { (intSettings)[MO_SLI[2].key]= value; } break;
+        case ID_MO_SLI_3: { (intSettings)[MO_SLI[3].key]= value; } break;
+        case ID_MO_SLI_4: { (intSettings)[MO_SLI[4].key]= value; } break;
 
 	}
 }
 
 
 void abstract_panel::OnTextUpdate(wxCommandEvent& event) {
+
+    settingsChanged = true;
 
 	wxTextCtrl* textField = (wxTextCtrl*) event.GetEventObject();
 	wxString wxStr = textField->GetValue();
@@ -97,18 +106,20 @@ void abstract_panel::OnTextUpdate(wxCommandEvent& event) {
 		case ID_RES_CHOICES_LBOX_X: {
 			// note: input validation?
 			if (success)
-			     configHandler.SetInt(RC_TEXT[0].key, int((*res)));
+			     (intSettings)[RC_TEXT[0].key]= int((*res));
 		} break;
 		case ID_RES_CHOICES_LBOX_Y: {
 			// note: input validation?
 			if (success)
-			     configHandler.SetInt(RC_TEXT[1].key, int((*res)));
+			     (intSettings)[RC_TEXT[1].key]= int((*res));
 		} break;
 	}
 }
 
 
 void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
+
+    settingsChanged = true;
 
 	wxCheckBox* checkBox = (wxCheckBox*) event.GetEventObject();
 	int checked = checkBox->IsChecked();
@@ -121,7 +132,7 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 		case ID_WINDOWP_VO_CBOX_3:
 		case ID_WINDOWP_VO_CBOX_4: {
 			int i = id - VO_CBOX[0].id;
-			configHandler.SetInt(VO_CBOX[i].key, checked);
+			(intSettings)[VO_CBOX[i].key]= checked;
 		} break;
 
 		case ID_WINDOWP_GO_CBOX_0:
@@ -147,43 +158,64 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 		case ID_WINDOWP_GO_CBOX_20:
 		case ID_WINDOWP_GO_CBOX_21: {
 			int i = id - GO_CBOX[0].id;
-			configHandler.SetInt(GO_CBOX[i].key, checked);
+			(intSettings)[GO_CBOX[i].key]= checked;
 		} break;
 
-		case ID_WINDOWP_DO_CBOX_0: { configHandler.SetInt(DO_CBOX[0].key, checked); } break;
-		case ID_WINDOWP_DO_CBOX_1: { configHandler.SetInt(DO_CBOX[1].key, checked); } break;
+		case ID_WINDOWP_DO_CBOX_0: { (intSettings)[DO_CBOX[0].key]= checked; } break;
+		case ID_WINDOWP_DO_CBOX_1: { (intSettings)[DO_CBOX[1].key]= checked; } break;
 		
-		case ID_WINDOWC_MO_CBOX_0: { configHandler.SetInt(MO_CBOX[0].key, checked); } break;
-		case ID_WINDOWC_MO_CBOX_1: { configHandler.SetInt(MO_CBOX[1].key, checked); } break;
+		case ID_WINDOWC_MO_CBOX_0: { (intSettings)[MO_CBOX[0].key]= checked; } break;
+		case ID_WINDOWC_MO_CBOX_1: { (intSettings)[MO_CBOX[1].key]= checked; } break;
 	}
 }
 
 
 void abstract_panel::OnRadioButtonToggle(wxCommandEvent& event) {
 
+    settingsChanged = true;
+
 	wxRadioButton* radioButton = (wxRadioButton*) event.GetEventObject();
 	radioButton->GetValue();
 
 	switch (event.GetId()) {
-		case ID_WINDOWP_VO_RBUT_0: { configHandler.SetInt(VO_RBUT[0].key, 16); } break;
-		case ID_WINDOWP_VO_RBUT_1: { configHandler.SetInt(VO_RBUT[0].key, 24); } break;
+		case ID_WINDOWP_VO_RBUT_0: { (intSettings)[VO_RBUT[0].key]= 16; } break;
+		case ID_WINDOWP_VO_RBUT_1: { (intSettings)[VO_RBUT[0].key]= 24; } break;
 
-		case ID_WINDOWP_WR_RBUT_0: { configHandler.SetInt(WR_RBUT[0].key, 0); } break;	// Basic
-		case ID_WINDOWP_WR_RBUT_1: { configHandler.SetInt(WR_RBUT[0].key, 1); } break;	// Refl
-		case ID_WINDOWP_WR_RBUT_2: { configHandler.SetInt(WR_RBUT[0].key, 3); } break;	// Refl + Refr
-		case ID_WINDOWP_WR_RBUT_3: { configHandler.SetInt(WR_RBUT[0].key, 2); } break;	// Dyna
+		case ID_WINDOWP_WR_RBUT_0: { (intSettings)[WR_RBUT[0].key]= 0; } break;	// Basic
+		case ID_WINDOWP_WR_RBUT_1: { (intSettings)[WR_RBUT[0].key]= 1; } break;	// Refl
+		case ID_WINDOWP_WR_RBUT_2: { (intSettings)[WR_RBUT[0].key]= 3; } break;	// Refl + Refr
+		case ID_WINDOWP_WR_RBUT_3: { (intSettings)[WR_RBUT[0].key]= 2; } break;	// Dyna
 		
-		case ID_WINDOWC_MO_RBUT_0: { configHandler.SetInt(MO_RBUT[0].key, 1); } break;	// OH button (CamMode 1)
-		case ID_WINDOWC_MO_RBUT_1: { configHandler.SetInt(MO_RBUT[1].key, 2); } break;	// ROH button (CamMode 2)
-		case ID_WINDOWC_MO_RBUT_2: { configHandler.SetInt(MO_RBUT[2].key, 3); } break;	// TW button (CamMode 3)
-		case ID_WINDOWC_MO_RBUT_3: { configHandler.SetInt(MO_RBUT[3].key, 0); } break;	// FPS button (CamMode 0)
-		case ID_WINDOWC_MO_RBUT_4: { configHandler.SetInt(MO_RBUT[4].key, 4); } break;	// FC button (CamMode 4)
+		case ID_WINDOWC_MO_RBUT_0: { (intSettings)[MO_RBUT[0].key]= 1; } break;	// OH button (CamMode 1)
+		case ID_WINDOWC_MO_RBUT_1: { (intSettings)[MO_RBUT[1].key]= 2; } break;	// ROH button (CamMode 2)
+		case ID_WINDOWC_MO_RBUT_2: { (intSettings)[MO_RBUT[2].key]= 3; } break;	// TW button (CamMode 3)
+		case ID_WINDOWC_MO_RBUT_3: { (intSettings)[MO_RBUT[3].key]= 0; } break;	// FPS button (CamMode 0)
+		case ID_WINDOWC_MO_RBUT_4: { (intSettings)[MO_RBUT[4].key]= 4; } break;	// FC button (CamMode 4)
 	}
 }
 
 
 void abstract_panel::update(wxIdleEvent& event) {
 	event.RequestMore();
+}
+
+bool abstract_panel::saveSettings() {
+    
+    for (intMap::iterator i = intSettings.begin(); i != intSettings.end();++i)
+    {
+        configHandler.SetInt(i->first,i->second);
+    }
+    for (stringMap::iterator s = stringSettings.begin(); s != stringSettings.end();++s)
+    {
+        configHandler.SetString(s->first,s->second);
+    }
+    for (floatMap::iterator f = floatSettings.begin(); f != floatSettings.end();++f)
+    {
+        // No implemantion yet?!
+        //configHandler.SetFloat(f->first,f->second);
+    }
+    //test ???
+    return true; 
 }
 
 

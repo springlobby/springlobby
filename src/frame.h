@@ -51,17 +51,6 @@ class settings_frame : public wxFrame
 		virtual ~settings_frame();
 		
 	private:
-		//Do not add custom control declarations between
-		//GUI Control Declaration Start and GUI Control Declaration End.
-		//wxDev-C++ will remove them. Add custom code after the block.
-		////GUI Control Declaration Start
-		wxPanel *WxPanel7;
-		wxPanel *WxPanel6;
-		wxPanel *WxPanel5;
-		wxPanel *WxPanel4;
-		wxPanel *WxPanel3;
-		wxPanel *WxPanel2;
-		wxPanel *WxPanel1;
 		wxPanel *Simple;
 		wxPanel *Debug;
 		wxPanel *Mouse;
@@ -70,23 +59,11 @@ class settings_frame : public wxFrame
 		wxPanel *Video;
 		wxPanel *Rendering;
 		wxNotebook *Options;
-		////GUI Control Declaration End
 		
-	private:
-		//Note: if you receive any error with these enum IDs, then you need to
-		//change your old form code that are based on the #define control IDs.
-		//#defines may replace a numeric value for the enum names.
-		//Try copy and pasting the below block in your old form header files.
+		void initMenuBar();
 		enum
 		{
 			////GUI Enum Control ID Start
-			ID_WXPANEL7 = 1017,
-			ID_WXPANEL6 = 1016,
-			ID_WXPANEL5 = 1015,
-			ID_WXPANEL4 = 1014,
-			ID_WXPANEL3 = 1013,
-			ID_WXPANEL2 = 1012,
-			ID_WXPANEL1 = 1011,
 			ID_SIMPLE = 1010,
 			ID_DEBUG = 1009,
 			ID_MOUSE = 1008,
@@ -98,9 +75,8 @@ class settings_frame : public wxFrame
 			////GUI Enum Control ID End
 			ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values
 		};
-		
-	private:
 		void OnClose(wxCloseEvent& event);
+		void OnMenuChoice(wxCommandEvent& event);
 		void CreateGUIControls();
 };
 
