@@ -20,28 +20,25 @@
     along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#include <wx/wx.h>
-#include <wx/gbsizer.h>
-#include <cstdlib>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <map>
-#include <unistd.h>
+#ifndef __TAB_QUALITY_VIDEO_h__
+#define __TAB_QUALITY_VIDEO_h__
+#include "tabs.h"
 
-#include "spring/ConfigHandler.h"
-#include "Defs.hpp"
-#include "tab_render_detail.h"
-#include "tab_quality_video.h"
+class tab_quality_video : public abstract_panel
+{
 
-#include "tab_abstract.h"
-#include "tab_audio.h"
-#include "tab_debug.h"
+	public:
+		tab_quality_video(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
+		virtual ~tab_quality_video();
 
-#include "tab_mouse.h"
+		void initVideoSizer(wxFlexGridSizer*);
+		void initQualitySizer(wxFlexGridSizer* );
 
-#include "tab_simple.h"
-#include "tab_video.h"
+	private:
+		void OnClose(wxCloseEvent& event);
+		void CreateGUIControls();
+    protected:
+		DECLARE_EVENT_TABLE()
+};
 
-#define TAB_SIZE wxSize(700,500)
+#endif

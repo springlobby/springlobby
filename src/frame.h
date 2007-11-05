@@ -68,6 +68,7 @@ class settings_frame : public wxFrame
 		enum
 		{
 			////GUI Enum Control ID Start
+			ID_QUALITY_VIDEO = 1012,
 			ID_RENDER_DETAIL = 1011,
 			ID_SIMPLE = 1010,
 			ID_DEBUG = 1009,

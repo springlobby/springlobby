@@ -132,37 +132,40 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 	switch (id) {
 		case ID_WINDOWP_VO_CBOX_0:
 		case ID_WINDOWP_VO_CBOX_1:
-		case ID_WINDOWP_VO_CBOX_2:
-		case ID_WINDOWP_VO_CBOX_3:
-		case ID_WINDOWP_VO_CBOX_4: {
+		case ID_WINDOWP_VO_CBOX_2: {
 			int i = id - VO_CBOX[0].id;
 			(intSettings)[VO_CBOX[i].key]= checked;
 		} break;
 
-		case ID_WINDOWP_GO_CBOX_0:
-		case ID_WINDOWP_GO_CBOX_1:
-		case ID_WINDOWP_GO_CBOX_2:
-		case ID_WINDOWP_GO_CBOX_3:
-		case ID_WINDOWP_GO_CBOX_4:
-		case ID_WINDOWP_GO_CBOX_5:
-		case ID_WINDOWP_GO_CBOX_6:
-		case ID_WINDOWP_GO_CBOX_7:
-		case ID_WINDOWP_GO_CBOX_8:
-		case ID_WINDOWP_GO_CBOX_9:
-		case ID_WINDOWP_GO_CBOX_10:
-		case ID_WINDOWP_GO_CBOX_11:
-		case ID_WINDOWP_GO_CBOX_12:
-		case ID_WINDOWP_GO_CBOX_13:
-		case ID_WINDOWP_GO_CBOX_14:
-		case ID_WINDOWP_GO_CBOX_15:
-		case ID_WINDOWP_GO_CBOX_16:
-		case ID_WINDOWP_GO_CBOX_17:
-		case ID_WINDOWP_GO_CBOX_18:
-		case ID_WINDOWP_GO_CBOX_19:
-		case ID_WINDOWP_GO_CBOX_20:
-		case ID_WINDOWP_GO_CBOX_21: {
-			int i = id - GO_CBOX[0].id;
-			(intSettings)[GO_CBOX[i].key]= checked;
+		case ID_WINDOWP_QA_CBOX_0:
+		case ID_WINDOWP_QA_CBOX_1:
+		case ID_WINDOWP_QA_CBOX_2:
+		case ID_WINDOWP_QA_CBOX_3:
+		case ID_WINDOWP_QA_CBOX_4:
+		case ID_WINDOWP_QA_CBOX_5:
+		case ID_WINDOWP_QA_CBOX_6:
+		case ID_WINDOWP_QA_CBOX_7:{
+			int i = id - QA_CBOX[0].id;
+			(intSettings)[QA_CBOX[i].key]= checked;
+		} break;
+            
+        //case ID_WINDOWP_UI_CBOX_0:
+		case ID_WINDOWP_UI_CBOX_1:
+		case ID_WINDOWP_UI_CBOX_2:
+		case ID_WINDOWP_UI_CBOX_3:
+		case ID_WINDOWP_UI_CBOX_4:
+		case ID_WINDOWP_UI_CBOX_5:
+		case ID_WINDOWP_UI_CBOX_6:
+		case ID_WINDOWP_UI_CBOX_7:
+		case ID_WINDOWP_UI_CBOX_8:
+		case ID_WINDOWP_UI_CBOX_9:
+		case ID_WINDOWP_UI_CBOX_10:
+		case ID_WINDOWP_UI_CBOX_11:
+		case ID_WINDOWP_UI_CBOX_12:
+		case ID_WINDOWP_UI_CBOX_13:
+		case ID_WINDOWP_UI_CBOX_14: {
+			int i = id - UI_CBOX[0].id;
+			(intSettings)[UI_CBOX[i].key]= checked;
 		} break;
 
 		case ID_WINDOWP_DO_CBOX_0: { (intSettings)[DO_CBOX[0].key]= checked; } break;

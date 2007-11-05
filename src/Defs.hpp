@@ -66,8 +66,6 @@
 #define ID_WINDOWP_VO_CBOX_0 250
 #define ID_WINDOWP_VO_CBOX_1 251
 #define ID_WINDOWP_VO_CBOX_2 252
-#define ID_WINDOWP_VO_CBOX_3 253
-#define ID_WINDOWP_VO_CBOX_4 254
 
 // ParentWin Video Options radiobutton IDs
 #define ID_WINDOWP_VO_RBUT_0 280
@@ -76,29 +74,33 @@
 // ParentWin Video Options slider IDs
 #define ID_VO_SLI_0 200
 
-// ParentWin General Options checkbox IDs
-#define ID_WINDOWP_GO_CBOX_0  350
-#define ID_WINDOWP_GO_CBOX_1  351
-#define ID_WINDOWP_GO_CBOX_2  352
-#define ID_WINDOWP_GO_CBOX_3  353
-#define ID_WINDOWP_GO_CBOX_4  354
-#define ID_WINDOWP_GO_CBOX_5  355
-#define ID_WINDOWP_GO_CBOX_6  356
-#define ID_WINDOWP_GO_CBOX_7  357
-#define ID_WINDOWP_GO_CBOX_8  358
-#define ID_WINDOWP_GO_CBOX_9  359
-#define ID_WINDOWP_GO_CBOX_10 360
-#define ID_WINDOWP_GO_CBOX_11 361
-#define ID_WINDOWP_GO_CBOX_12 362
-#define ID_WINDOWP_GO_CBOX_13 363
-#define ID_WINDOWP_GO_CBOX_14 364
-#define ID_WINDOWP_GO_CBOX_15 365
-#define ID_WINDOWP_GO_CBOX_16 366
-#define ID_WINDOWP_GO_CBOX_17 367
-#define ID_WINDOWP_GO_CBOX_18 368
-#define ID_WINDOWP_GO_CBOX_19 369
-#define ID_WINDOWP_GO_CBOX_20 370
-#define ID_WINDOWP_GO_CBOX_21 371
+// UI Options checkbox IDs
+#define ID_WINDOWP_UI_CBOX_1  360
+#define ID_WINDOWP_UI_CBOX_2  361
+#define ID_WINDOWP_UI_CBOX_3  362
+#define ID_WINDOWP_UI_CBOX_4  363
+#define ID_WINDOWP_UI_CBOX_5  364
+#define ID_WINDOWP_UI_CBOX_6  365
+#define ID_WINDOWP_UI_CBOX_7  366
+#define ID_WINDOWP_UI_CBOX_8  367
+#define ID_WINDOWP_UI_CBOX_9  368
+#define ID_WINDOWP_UI_CBOX_10 369
+#define ID_WINDOWP_UI_CBOX_11 370
+#define ID_WINDOWP_UI_CBOX_12 371
+#define ID_WINDOWP_UI_CBOX_13 372
+#define ID_WINDOWP_UI_CBOX_14 373
+
+//QUALITY OPTIONS checkbox IDs
+#define ID_WINDOWP_QA_CBOX_0  300
+#define ID_WINDOWP_QA_CBOX_1  301
+#define ID_WINDOWP_QA_CBOX_2  302
+#define ID_WINDOWP_QA_CBOX_3  303
+#define ID_WINDOWP_QA_CBOX_4  304
+#define ID_WINDOWP_QA_CBOX_5  305
+#define ID_WINDOWP_QA_CBOX_6  306
+#define ID_WINDOWP_QA_CBOX_7  307
+#define ID_WINDOWP_QA_CBOX_8  308
+#define ID_WINDOWP_QA_CBOX_9  309
 
 // ParentWin Audio Options slider IDs
 #define ID_AO_SLI_0 400
@@ -135,6 +137,7 @@
 #define ID_MO_SLI_2 662
 #define ID_MO_SLI_3 663
 #define ID_MO_SLI_4 664
+
 #include <wx/wx.h>
 #include <string>
 
@@ -181,12 +184,10 @@ const Control RO_SLI[9] = {
 	{"max texture stages (SM3)", "SM3MaxTextureStages", ID_RO_SLI_8,	"20"	}
 };
 
-const Control VO_CBOX[5] = {
+const Control VO_CBOX[3] = {
 	{"run full-screen",                "Fullscreen",              ID_WINDOWP_VO_CBOX_0,	"1"},
 	{"dual-screen mode",               "DualScreenMode",          ID_WINDOWP_VO_CBOX_1,	"0"},
-	{"mini-map on left (single screen)", "MinimapOnLeft",           ID_WINDOWP_VO_CBOX_2,	"1"},
-	{"mini-map on left (dual screen)",   "DualScreenMiniMapOnLeft", ID_WINDOWP_VO_CBOX_3,	"1"},
-	{"enable v-sync",                  "VSync",                   ID_WINDOWP_VO_CBOX_4,	"1"}
+	{"enable v-sync",                  "VSync",                   ID_WINDOWP_VO_CBOX_2,	"1"},
 };
 
 const Control VO_RBUT[2] = {
@@ -208,33 +209,42 @@ const Control AO_SLI[3] = {
 	{"maximum simultaneous sounds", "MaxSounds",            ID_AO_SLI_0,	"16" },
 	{"global sound volume",   "SoundVolume",                ID_AO_SLI_1,	"100"},
 	{"unit reply volume",     "UnitReplySoundVolume",       ID_AO_SLI_2,	"80" }
+	
 };
 
-const Control GO_CBOX[22] = {
-	{"shadows (slow)",                                  "Shadows",             ID_WINDOWP_GO_CBOX_0,	"0"},
-	{"3D trees (needs Vertex_Program)",                 "3DTrees",             ID_WINDOWP_GO_CBOX_1,	"1"},
-	{"high-resolution clouds (needs Fragment_Program)", "AdvSky",              ID_WINDOWP_GO_CBOX_2,	"0"},
-	{"dynamic clouds (slow)",                           "DynamicSky",          ID_WINDOWP_GO_CBOX_3,	"0"},
-	{"colorized elevation map",                         "ColorElev",           ID_WINDOWP_GO_CBOX_4,	"1"},
-	{"simplified mini-map colors",                      "SimpleMiniMapColors", ID_WINDOWP_GO_CBOX_5,	"0"},
-	{"reflective units (needs Fragment_Program)",       "AdvUnitShading",      ID_WINDOWP_GO_CBOX_6,	"0"},
-	{"never use shaders when rendering SM3 maps",       "SM3ForceFallbackTex", ID_WINDOWP_GO_CBOX_7,	"1"},
-	{"team-colored nanospray",                          "TeamNanoSpray",       ID_WINDOWP_GO_CBOX_8,	"1"},
-	{"draw commands on mini-map",                       "MiniMapDrawCommands", ID_WINDOWP_GO_CBOX_9,	"1"},
-	{"draw icons on mini-map",                          "MiniMapIcons",        ID_WINDOWP_GO_CBOX_10,	"1"},
-	{"draw markers on mini-map",                        "MiniMapMarker",       ID_WINDOWP_GO_CBOX_11,	"1"},
-	{"show in-game clock",                              "ShowClock",           ID_WINDOWP_GO_CBOX_12,	"1"},
-	{"show in-game player information",                 "ShowPlayerInfo",      ID_WINDOWP_GO_CBOX_13,	"1"},
-	{"show in-game framerate",                          "ShowFPS",             ID_WINDOWP_GO_CBOX_14,	"0"},
-	{"draw smooth points",                              "SmoothPoints",        ID_WINDOWP_GO_CBOX_15,	"0"},
-	{"draw smooth lines",                               "SmoothLines",         ID_WINDOWP_GO_CBOX_16,	"0"},
-	{"enable LuaUI widgets",                            "LuaUI",               ID_WINDOWP_GO_CBOX_17,	"1"},
-// 	{"enable LuaRules gadgets",                         "LuaRules",            ID_WINDOWP_GO_CBOX_18,	"1"},
-// 	{"enable LuaGaia gadgets",                          "LuaGaia",             ID_WINDOWP_GO_CBOX_19,	"1"},
- 	{"enable LuaShaders support",                       "LuaShaders",          ID_WINDOWP_GO_CBOX_18,	"1"},
-	{ "high-resolution LOS textures",                   "HighResLos",          ID_WINDOWP_GO_CBOX_19,	"1"},
-	{"fix rendering on alt-tab",                        "FixAltTab",           ID_WINDOWP_GO_CBOX_20,	"1"},
-	{"disallow helper AI's",                            "NoHelperAIs",         ID_WINDOWP_GO_CBOX_21,	"0"}
+const Control QA_CBOX[10] = {
+    {"shadows (slow)",                                  "Shadows",             ID_WINDOWP_QA_CBOX_0,	"0"},
+	{"3D trees (needs Vertex_Program)",                 "3DTrees",             ID_WINDOWP_QA_CBOX_1,	"1"},
+	{"high-resolution clouds (needs Fragment_Program)", "AdvSky",              ID_WINDOWP_QA_CBOX_2,	"0"},
+	{"dynamic clouds (slow)",                           "DynamicSky",          ID_WINDOWP_QA_CBOX_3,	"0"},
+	{"reflective units (needs Fragment_Program)",       "AdvUnitShading",      ID_WINDOWP_QA_CBOX_4,	"0"},
+	{"never use shaders when rendering SM3 maps",       "SM3ForceFallbackTex", ID_WINDOWP_QA_CBOX_5,	"1"},
+	{"enable LuaShaders support",                       "LuaShaders",          ID_WINDOWP_QA_CBOX_6,	"1"},
+	{"high-resolution LOS textures",                    "HighResLos",          ID_WINDOWP_QA_CBOX_7,	"1"},
+    {"draw smooth points",                              "SmoothPoints",        ID_WINDOWP_QA_CBOX_8,	"0"},
+	{"draw smooth lines",                               "SmoothLines",         ID_WINDOWP_QA_CBOX_9,	"0"},
+};
+	
+
+const Control UI_CBOX[14] = {
+	{"enable LuaUI widgets",                            "LuaUI",               ID_WINDOWP_UI_CBOX_1,	"1"},
+	
+	{"draw commands on mini-map",                       "MiniMapDrawCommands", ID_WINDOWP_UI_CBOX_2,	"1"},
+	{"draw icons on mini-map",                          "MiniMapIcons",        ID_WINDOWP_UI_CBOX_3,	"1"},
+	{"draw markers on mini-map",                        "MiniMapMarker",       ID_WINDOWP_UI_CBOX_4,	"1"},
+	{"mini-map on left (single screen)", 				"MinimapOnLeft",       ID_WINDOWP_UI_CBOX_5,	"1"},
+	{"mini-map on left (dual screen)",   				"DualScreenMiniMapOnLeft", ID_WINDOWP_UI_CBOX_6,"1"},
+	{"simplified mini-map colors",                      "SimpleMiniMapColors", ID_WINDOWP_UI_CBOX_7,	"0"},
+
+	{"team-colored nanospray",                          "TeamNanoSpray",       ID_WINDOWP_UI_CBOX_8,	"1"},
+	{"colorized elevation map",                         "ColorElev",           ID_WINDOWP_UI_CBOX_9,	"1"},
+	
+	{"show in-game clock",                              "ShowClock",           ID_WINDOWP_UI_CBOX_10,	"1"},
+	{"show in-game player information",                 "ShowPlayerInfo",      ID_WINDOWP_UI_CBOX_11,	"1"},
+	{"show in-game framerate",                          "ShowFPS",             ID_WINDOWP_UI_CBOX_12,	"0"},
+
+	{"fix rendering on alt-tab",                        "FixAltTab",           ID_WINDOWP_UI_CBOX_13,	"1"},
+	{"disallow helper AI's",                            "NoHelperAIs",         ID_WINDOWP_UI_CBOX_14,	"0"}
 };
 
 

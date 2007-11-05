@@ -135,9 +135,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=src\tab_abstract.h
+FileName=src\spring\ConfigHandler.cpp
 CompileCpp=1
-Folder=src
+Folder=spring
 Compile=1
 Link=1
 Priority=1000
@@ -154,37 +154,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
-FileName=src\tab_general.cpp
-CompileCpp=1
-Folder=src
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit9]
-FileName=src\tab_general.h
-CompileCpp=1
-Folder=src
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit10]
-FileName=src\tab_mouse.cpp
-CompileCpp=1
-Folder=src
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit11]
 FileName=src\tab_mouse.h
 CompileCpp=1
 Folder=src
@@ -194,27 +164,27 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit10]
+FileName=src\tab_simple.cpp
+CompileCpp=1
+Folder=src
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit11]
+FileName=src\tab_simple.h
+CompileCpp=1
+Folder=src
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit14]
-FileName=src\tab_video.cpp
-CompileCpp=1
-Folder=src
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit15]
-FileName=src\tabs.h
-CompileCpp=1
-Folder=src
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit16]
 FileName=src\Defs.hpp
 CompileCpp=1
 Folder=src
@@ -224,7 +194,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit17]
+[Unit15]
 FileName=src\tab_audio.cpp
 CompileCpp=1
 Folder=src
@@ -234,7 +204,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
+[Unit16]
 FileName=src\tab_audio.h
 CompileCpp=1
 Folder=src
@@ -244,7 +214,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit20]
+[Unit17]
+FileName=src\tab_abstract.h
+CompileCpp=1
+Folder=src
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit18]
 FileName=src\tab_abstract.cpp
 CompileCpp=1
 Folder=src
@@ -254,17 +234,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit21]
-FileName=src\spring\ConfigHandler.cpp
-CompileCpp=1
-Folder=spring
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit22]
+[Unit20]
 FileName=src\spring\ConfigHandler.h
 CompileCpp=1
 Folder=spring
@@ -274,7 +244,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit23]
+[Unit21]
 FileName=src\spring\DotfileHandler.cpp
 CompileCpp=0
 Folder=spring
@@ -284,7 +254,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit24]
+[Unit22]
 FileName=src\spring\DotfileHandler.h
 CompileCpp=0
 Folder=spring
@@ -294,7 +264,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit25]
+[Unit23]
 FileName=src\spring\errorhandler.cpp
 CompileCpp=1
 Folder=spring
@@ -304,7 +274,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit26]
+[Unit24]
 FileName=src\spring\errorhandler.h
 CompileCpp=1
 Folder=spring
@@ -314,7 +284,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit27]
+[Unit25]
 FileName=src\spring\RegHandler.cpp
 CompileCpp=1
 Folder=spring
@@ -324,10 +294,30 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit28]
+[Unit26]
 FileName=src\spring\RegHandler.h
 CompileCpp=1
 Folder=spring
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit27]
+FileName=src\settings.rc
+CompileCpp=1
+Folder=Resources
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit28]
+FileName=src\tab_render_detail.h
+CompileCpp=1
+Folder=src
 Compile=1
 Link=1
 Priority=1000
@@ -345,9 +335,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit29]
-FileName=src\settings.rc
+FileName=src\tab_render_detail.cpp
 CompileCpp=1
-Folder=Resources
+Folder=src
 Compile=1
 Link=1
 Priority=1000
@@ -355,7 +345,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit30]
-FileName=src\tab_render_detail.h
+FileName=src\tab_quality_video.cpp
 CompileCpp=1
 Folder=src
 Compile=1
@@ -365,7 +355,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit31]
-FileName=src\tab_render_detail.cpp
+FileName=src\tab_quality_video.h
 Folder=src
 Compile=1
 Link=1
@@ -375,7 +365,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit32]
-FileName=src\tab_render_detail.h
+FileName=src\tab_quality_video.cpp
 CompileCpp=1
 Folder=src
 Compile=1
@@ -385,7 +375,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit33]
-FileName=src\tab_render_detail.cpp
+FileName=src\tab_quality_video.h
 CompileCpp=1
 Folder=src
 Compile=1
@@ -395,7 +385,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=src\tab_simple.cpp
+FileName=src\tab_video.cpp
 CompileCpp=1
 Folder=src
 Compile=1
@@ -405,7 +395,17 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=src\tab_simple.h
+FileName=src\tabs.h
+CompileCpp=1
+Folder=src
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit8]
+FileName=src\tab_mouse.cpp
 CompileCpp=1
 Folder=src
 Compile=1
