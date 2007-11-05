@@ -42,6 +42,6 @@
 #include "tab_mouse.h"
 
 #include "tab_simple.h"
-#include "tab_video.h"
+//#include "tab_video.h"
 
 #define TAB_SIZE wxSize(700,500)

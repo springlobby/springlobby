@@ -54,7 +54,7 @@ void settings_frame::CreateGUIControls()
     
     Options->AddPage(new tab_render_detail(Options,ID_RENDER_DETAIL), wxT("Render Detail"));
 
-	Options->AddPage(new video_panel(Options,ID_VIDEO), wxT("Video"));
+//	Options->AddPage(new video_panel(Options,ID_VIDEO), wxT("Video"));
 
 	Options->AddPage(new audio_panel(Options,ID_AUDIO), wxT("Audio"));
 
