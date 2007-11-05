@@ -33,7 +33,7 @@
 #include "spring/ConfigHandler.h"
 #include "Defs.hpp"
 #include "tab_render_detail.h"
-#include "tab_rendering.h"
+
 #include "tab_abstract.h"
 #include "tab_audio.h"
 #include "tab_debug.h"

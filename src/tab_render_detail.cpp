@@ -51,7 +51,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 tab_render_detail::tab_render_detail(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : abstract_panel(parent, id , title , pos , size, style) {
 
-	wxSizer* parentSizer = new wxGridSizer(2,10,30);	// main window sizer (three columns)
+	wxSizer* parentSizer = new wxGridSizer(2,0,0);	// main window sizer (three columns)
 //	wxSizer* childLSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
 //	wxSizer* childRSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
 
@@ -69,7 +69,7 @@ tab_render_detail::tab_render_detail(wxWindow *parent, wxWindowID id , const wxS
     rendererSizerB->SetSizeHints(this);
     SetSizer(parentSizer);
     parentSizer->Add(rendererSizerA,0,wxALIGN_LEFT|wxALL,10);
-    parentSizer->Add(rendererSizerB,0,wxALIGN_LEFT|wxALL,10);
+    parentSizer->Add(rendererSizerB,0,wxALIGN_RIGHT|wxALL,10);
 
 //	childLSizer->Add(0, 5, 0);
  //	childLSizer->Add(rendererSizerA);
@@ -91,9 +91,9 @@ tab_render_detail::~tab_render_detail(void) {
 }
 
 BEGIN_EVENT_TABLE(tab_render_detail, abstract_panel)
-	EVT_SLIDER(wxID_ANY,            rendering_panel::OnSliderMove)
-	EVT_TEXT(wxID_ANY,              rendering_panel::OnTextUpdate)
-	EVT_CHECKBOX(wxID_ANY,          rendering_panel::OnCheckBoxTick)
-	EVT_RADIOBUTTON(wxID_ANY,       rendering_panel::OnRadioButtonToggle)
-	EVT_IDLE(                       rendering_panel::update)
+	EVT_SLIDER(wxID_ANY,            tab_render_detail::OnSliderMove)
+	EVT_TEXT(wxID_ANY,              tab_render_detail::OnTextUpdate)
+	EVT_CHECKBOX(wxID_ANY,          tab_render_detail::OnCheckBoxTick)
+	EVT_RADIOBUTTON(wxID_ANY,       tab_render_detail::OnRadioButtonToggle)
+	EVT_IDLE(                       tab_render_detail::update)
 END_EVENT_TABLE()
