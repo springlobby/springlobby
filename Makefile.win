@@ -1,7 +1,7 @@
 # Project: Settings++
 # Compiler: Default GCC compiler
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ 6.10.2 on 04.11.07 12:47
+# Makefile created by wxDev-C++ 6.10.2 on 05.11.07 12:38
 
 CPP       = g++.exe
 CC        = gcc.exe
@@ -68,5 +68,5 @@ obj/win/errorhandler.o: $(GLOBALDEPS) src/spring/errorhandler.cpp src/spring/err
 obj/win/RegHandler.o: $(GLOBALDEPS) src/spring/RegHandler.cpp src/spring/RegHandler.h src/spring/ConfigHandler.h
 	$(CPP) -c src/spring/RegHandler.cpp -o obj/win/RegHandler.o $(CXXFLAGS)
 
-obj/win/Settings++_private.res: obj/win/Settings++_private.rc 
+obj/win/Settings++_private.res: obj/win/Settings++_private.rc src/settings.rc 
 	$(WINDRES) --input-format=rc -o obj/win/Settings++_private.res $(RCINCS) obj/win/SETTIN~1.RC -O coff

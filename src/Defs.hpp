@@ -177,15 +177,15 @@ const Control RO_SLI[9] = {
 	{"grass detail",                 "GrassDetail",         ID_RO_SLI_4,	"10"	},
 	{"ground decals",                "GroundDecals",        ID_RO_SLI_5,	"120"	},
 	{"unit icon distance",           "UnitIconDist",        ID_RO_SLI_6,	"1000"	},
-	{"maximum simul. particles",     "MaxParticles",        ID_RO_SLI_7,	"20000"	},
+	{"maximum simultaneous particles",     "MaxParticles",        ID_RO_SLI_7,	"20000"	},
 	{"maximum texture stages (SM3)", "SM3MaxTextureStages", ID_RO_SLI_8,	"20"	}
 };
 
 const Control VO_CBOX[5] = {
 	{"run full-screen",                "Fullscreen",              ID_WINDOWP_VO_CBOX_0,	"1"},
 	{"dual-screen mode",               "DualScreenMode",          ID_WINDOWP_VO_CBOX_1,	"0"},
-	{"mini-map on left (single scr.)", "MinimapOnLeft",           ID_WINDOWP_VO_CBOX_2,	"1"},
-	{"mini-map on left (dual scr.)",   "DualScreenMiniMapOnLeft", ID_WINDOWP_VO_CBOX_3,	"1"},
+	{"mini-map on left (single screen)", "MinimapOnLeft",           ID_WINDOWP_VO_CBOX_2,	"1"},
+	{"mini-map on left (dual screen)",   "DualScreenMiniMapOnLeft", ID_WINDOWP_VO_CBOX_3,	"1"},
 	{"enable v-sync",                  "VSync",                   ID_WINDOWP_VO_CBOX_4,	"1"}
 };
 
@@ -205,9 +205,9 @@ const Control VO_SLI_EXT[1] = {
 
 
 const Control AO_SLI[3] = {
-	{"maximum simul. sounds", "MaxSounds",            ID_AO_SLI_0,	"16" },
-	{"global sound volume",   "SoundVolume",          ID_AO_SLI_1,	"100"},
-	{"unit reply volume",     "UnitReplySoundVolume", ID_AO_SLI_2,	"80" }
+	{"maximum simultaneous sounds", "MaxSounds",            ID_AO_SLI_0,	"16" },
+	{"global sound volume",   "SoundVolume",                ID_AO_SLI_1,	"100"},
+	{"unit reply volume",     "UnitReplySoundVolume",       ID_AO_SLI_2,	"80" }
 };
 
 const Control GO_CBOX[22] = {
@@ -240,7 +240,7 @@ const Control GO_CBOX[22] = {
 
 const Control MO_SLI[5] = {
 	{"overhead scroll speed (0 to disable)",    "OverheadScrollSpeed",    ID_MO_SLI_0,	"10"},
-	{"r. overhead scroll speed (0 to disable)", "RotOverheadScrollSpeed", ID_MO_SLI_1,	"0" },
+	{"rotatable overhead scroll speed (0 to disable)", "RotOverheadScrollSpeed", ID_MO_SLI_1,	"0" },
 	{"TW scroll speed (0 to disable)",          "TWScrollSpeed",          ID_MO_SLI_2,	"0" },
 	{"FPS scroll speed (0 to disable)",         "FPSScrollSpeed",         ID_MO_SLI_3,	"0" },
 	{"FC scroll speed (0 to disable)",          "CamFreeScrollSpeed",     ID_MO_SLI_4,	"0" }
@@ -256,12 +256,12 @@ const Control MO_SLI_EXT[5] = {
 
 
 const Control DO_SLI[1] = {
-	{"console verbose level", "VerboseLevel", ID_DO_SLI_0,	"0"}
+	{"console verbose level (0=min,10=max)", "VerboseLevel", ID_DO_SLI_0,	"0"}
 };
 
 const Control DO_CBOX[2] = {
 	{"catch AI exceptions",        "CatchAIExceptions", ID_WINDOWP_DO_CBOX_0,	"0"},
-	{"send debug info. to stdout", "StdoutDebug",       ID_WINDOWP_DO_CBOX_1,	"0"}
+	{"send debug info to console", "StdoutDebug",       ID_WINDOWP_DO_CBOX_1,	"0"}
 };
 
 const Control WR_RBUT[4] = {
@@ -321,8 +321,8 @@ const char DEFAULTS[NUM_DEFAULTS][64] = {
 	"UnitIconDist=1000",
 	"UnitLodDist=600",
 	"VSync=1",
-	"XResolution=1280",
-	"YResolution=960",
+	"XResolution=1024",
+	"YResolution=768",
 
 	"BuildIconsFirst=0",
 	"ColorElev=1",

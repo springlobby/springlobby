@@ -1,7 +1,7 @@
 [Project]
 FileName=Settings++.dev
 Name=Settings++
-UnitCount=30
+UnitCount=31
 PchHead=-1
 PchSource=-1
 Ver=3
@@ -378,6 +378,15 @@ BuildCmd=
 FileName=src\spring\RegHandler.h
 CompileCpp=1
 Folder=spring
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit31]
+FileName=src\settings.rc
+Folder=Resources
 Compile=1
 Link=1
 Priority=1000
