@@ -51,13 +51,11 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 tab_render_detail::tab_render_detail(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : abstract_panel(parent, id , title , pos , size, style) {
 
-	wxSizer* parentSizer = new wxGridSizer(2,0,0);	// main window sizer (three columns)
-//	wxSizer* childLSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
-//	wxSizer* childRSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
-
-	// sizers for static boxes containing sliders, checkboxes, radiobuttons
-	wxFlexGridSizer* rendererSizerA = new wxFlexGridSizer(2,40,10);
-	wxFlexGridSizer* rendererSizerB = new wxFlexGridSizer(2,40,10);
+	wxSizer* renderSizer = new wxGridSizer(2,0,0);
+	wxSizer* parentSizer = new wxGridSizer(1,0,0);
+	wxFlexGridSizer* rendererSizerA = new wxFlexGridSizer(2,35,10);
+	wxFlexGridSizer* rendererSizerB = new wxFlexGridSizer(2,35,10);
+	wxStaticBoxSizer* box = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Rendering Detail Levels"));
 	rendererSizerA->AddGrowableCol(0);
     rendererSizerA->AddGrowableCol(1);
     rendererSizerB->AddGrowableCol(0);
@@ -67,23 +65,13 @@ tab_render_detail::tab_render_detail(wxWindow *parent, wxWindowID id , const wxS
     rendererSizerA->SetSizeHints(this);
     rendererSizerB->Fit(this);
     rendererSizerB->SetSizeHints(this);
+    
+    renderSizer->Add(rendererSizerA,0,wxALIGN_LEFT|wxALL,0);
+    renderSizer->Add(rendererSizerB,0,wxALIGN_RIGHT|wxALL,0);
+    
+    box->Add(renderSizer,0,wxALIGN_CENTER|wxALL,15);
+    parentSizer->Add(box,0,wxALIGN_CENTER|wxALL,15);
     SetSizer(parentSizer);
-    parentSizer->Add(rendererSizerA,0,wxALIGN_LEFT|wxALL,10);
-    parentSizer->Add(rendererSizerB,0,wxALIGN_RIGHT|wxALL,10);
-
-//	childLSizer->Add(0, 5, 0);
- //	childLSizer->Add(rendererSizerA);
-// 	//childRSizer->Add(0, 10, 0);
-// 	//childRSizer->Add(rendererSizerB);
-// 
-// 	parentSizer->Add(5, 0, 0);
- //	parentSizer->Add(childLSizer);
-// 
-// 	parentSizer->Add(25, 0, 0);
-// 	parentSizer->Add(childRSizer);
-
-	
-
 }
 
 tab_render_detail::~tab_render_detail(void) {

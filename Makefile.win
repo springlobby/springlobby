@@ -1,7 +1,7 @@
 # Project: Settings++
 # Compiler: Default GCC compiler
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ 6.10.2 on 05.11.07 17:17
+# Makefile created by wxDev-C++ 6.10.2 on 05.11.07 18:15
 
 CPP       = g++.exe
 CC        = gcc.exe

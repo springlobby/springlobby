@@ -56,22 +56,35 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 }
 
 void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 8; i++) {
 		wxCheckBox* checkBox = new wxCheckBox(this, QA_CBOX[i].id, _S(QA_CBOX[i].lbl));
 		checkBox->SetValue(configHandler.GetInt(QA_CBOX[i].key,fromString<int>(QA_CBOX[i].def)));
 		sizer->Add(checkBox, 0, wxTOP, (i == 0)? 10: 0);
 	}
 	
-	int useFSAA = configHandler.GetInt(VO_SLI_EXT[0].key,fromString<int>(VO_SLI_EXT[0].def));
+	//sizer->AddSpacer(1);
+		
+}
+
+void tab_quality_video::initAASizer(wxFlexGridSizer* sizer){
+    for (int i = 8; i < 10; i++) {
+		wxCheckBox* checkBox = new wxCheckBox(this, QA_CBOX[i].id, _S(QA_CBOX[i].lbl));
+		checkBox->SetValue(configHandler.GetInt(QA_CBOX[i].key,fromString<int>(QA_CBOX[i].def)));
+		sizer->Add(checkBox, 0, wxTOP, (i == 8)? 10: 0);
+	}
+    int useFSAA = configHandler.GetInt(VO_SLI_EXT[0].key,fromString<int>(VO_SLI_EXT[0].def));
 	int FSAALev = configHandler.GetInt(VO_SLI[0].key,fromString<int>(VO_SLI[0].def));
 	wxSlider* slider = new wxSlider(this, VO_SLI[0].id, (useFSAA == 1)? FSAALev: 0, 0, 16, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
     sizer->Add(new wxStaticText(this, -1, _S(VO_SLI[0].lbl)), 0, wxTOP, 15);
 	sizer->Add(slider, 0, wxALIGN_LEFT, 0);
+}
 
-	sizer->AddSpacer(1);
+void tab_quality_video::initZBufferSizer(wxFlexGridSizer* sizer)
+{
+    //z-buffer
 	
-	//z-buffer
-	//add label
+	sizer->Add(new wxStaticText(this, -1, wxT("Resolution in bit")), 0, wxTOP ,15);
+	
 	wxRadioButton* radioButtonA0 = new wxRadioButton(this, VO_RBUT[0].id, _S(VO_RBUT[0].lbl), WX_DEF_P, WX_DEF_S, wxRB_GROUP, WX_DEF_V);
 	wxRadioButton* radioButtonA1 = new wxRadioButton(this, VO_RBUT[1].id, _S(VO_RBUT[1].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
 
@@ -79,38 +92,57 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
 		case 16: { radioButtonA0->SetValue(1); } break;
 		case 24: { radioButtonA1->SetValue(1); } break;
 	}
-	sizer->Add(radioButtonA0, 0, wxTOP, 10);
+	sizer->Add(radioButtonA0, 0, wxTOP, 0);
 	sizer->Add(radioButtonA1, 0, wxTOP,  0);
-	
+    
 }
 
 tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : abstract_panel(parent, id , title , pos , size, style) {
 
-	wxSizer* parentSizer = new wxGridSizer(2,0,0);	
+	wxSizer* parentSizer = new wxFlexGridSizer(2,0,0);	
+	wxSizer* leftSizer = new wxFlexGridSizer(1,15,0);
+	wxSizer* middleSizer = new wxFlexGridSizer(1,15,0);
+	wxSizer* rightSizer = new wxFlexGridSizer(1,15,0);//for info
 	wxFlexGridSizer* SizerA = new wxFlexGridSizer(1,10,10);
 	wxFlexGridSizer* SizerB = new wxFlexGridSizer(1,15,10);
+	wxFlexGridSizer* SizerC = new wxFlexGridSizer(1,15,10);
+	wxFlexGridSizer* SizerD = new wxFlexGridSizer(1,5,10);
 	wxStaticBoxSizer* boxA = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Render Quality Options"));
 	wxStaticBoxSizer* boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Video Mode Options"));
-	
+	wxStaticBoxSizer* boxC = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Anti-Aliasing Options"));
+	wxStaticBoxSizer* boxD = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Z-/Depth-Buffer"));
 	SizerA->AddGrowableCol(0);
-    //SizerA->AddGrowableCol(1);
     SizerB->AddGrowableCol(0);
-	//SizerB->AddGrowableCol(1);
+    SizerC->AddGrowableCol(0);
+    SizerD->AddGrowableCol(0);
+
 	
 	initQualitySizer(SizerA);
 	initVideoSizer(SizerB);
+	initAASizer(SizerC);
+	initZBufferSizer(SizerD);
 	
 	SizerA->Fit(this);
     SizerA->SetSizeHints(this);
     SizerB->Fit(this);
     SizerB->SetSizeHints(this);
+    SizerC->Fit(this);
+    SizerC->SetSizeHints(this);
+    SizerD->Fit(this);
+    SizerD->SetSizeHints(this);
     
     boxA->Add(SizerA);
     boxB->Add(SizerB);
-
-    parentSizer->Add(boxA,0,wxALIGN_LEFT|wxALL,10);
-    parentSizer->Add(boxB,0,wxALIGN_CENTER_HORIZONTAL |wxALL,10);
+    boxC->Add(SizerC);
+    boxD->Add(SizerD);
+    leftSizer->Add(boxB,0,wxEXPAND);
+    leftSizer->Add(boxC);
+    middleSizer->Add(boxA,0,wxEXPAND);
+    middleSizer->Add(boxD,0,wxEXPAND);
+    parentSizer->Add(leftSizer,0,wxALIGN_LEFT|wxALIGN_TOP |wxALL,10);
+    parentSizer->Add(middleSizer,0,wxALIGN_CENTER_HORIZONTAL|wxALL,10);
+   
     SetSizer(parentSizer);
 }
 

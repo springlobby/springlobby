@@ -108,8 +108,8 @@
 #define ID_AO_SLI_2 402
 
 // ParentWin Debug Options checkbox IDs
-#define ID_WINDOWP_DO_CBOX_0 550
-#define ID_WINDOWP_DO_CBOX_1 551
+#define ID_WINDOWP_DO_CBOX_0 540
+#define ID_WINDOWP_DO_CBOX_1 541
 
 // ParentWin Debug Options slider IDs
 #define ID_DO_SLI_0 500
