@@ -62,7 +62,7 @@ Compiler=-fno-exceptions_@@_-fno-pcc-struct-return_@@_-fstrict-aliasing_@@_-Wall
 CppCompiler=-fno-exceptions_@@_-fno-pcc-struct-return_@@_-fstrict-aliasing_@@_-Wall_@@_-D__WXMSW___@@_-D__GNUWIN32___@@_-D__WIN95___@@_
 Linker=-mwindows_@@_-lwxmsw28_@@_-lwxregex_@@_-lwxexpat_@@_-lkernel32_@@_-luser32_@@_-lgdi32_@@_-lcomdlg32_@@_-lwinspool_@@_-lwinmm_@@_-lshell32_@@_-lcomctl32_@@_-lole32_@@_-loleaut32_@@_-luuid_@@_-lrpcrt4_@@_-ladvapi32_@@__@@_
 PreprocDefines=__WXMSW___@@___GNUWIN32___@@___WIN95___@@_
-CompilerSettings=0000000001001000000100
+CompilerSettings=0000000000000000000100
 Icon=
 ExeOutput=bin\win
 ObjectOutput=obj\win
@@ -135,7 +135,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=src\tab_audio.cpp
+FileName=src\tab_abstract.h
 CompileCpp=1
 Folder=src
 Compile=1
@@ -194,47 +194,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
-FileName=src\tab_rendering.cpp
-CompileCpp=1
-Folder=src
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit13]
-FileName=src\tab_rendering.h
-CompileCpp=1
-Folder=src
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit14]
-FileName=src\tab_simple.cpp
-CompileCpp=1
-Folder=src
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit15]
-FileName=src\tab_simple.h
-CompileCpp=1
-Folder=src
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit16]
 FileName=src\tab_video.cpp
 CompileCpp=1
 Folder=src
@@ -244,7 +204,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit17]
+[Unit15]
 FileName=src\tabs.h
 CompileCpp=1
 Folder=src
@@ -254,7 +214,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
+[Unit16]
 FileName=src\Defs.hpp
 CompileCpp=1
 Folder=src
@@ -264,7 +224,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit20]
+[Unit17]
+FileName=src\tab_audio.cpp
+CompileCpp=1
+Folder=src
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit18]
 FileName=src\tab_audio.h
 CompileCpp=1
 Folder=src
@@ -274,17 +244,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit21]
-FileName=src\tab_abstract.h
-CompileCpp=1
-Folder=src
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit22]
+[Unit20]
 FileName=src\tab_abstract.cpp
 CompileCpp=1
 Folder=src
@@ -294,7 +254,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit23]
+[Unit21]
 FileName=src\spring\ConfigHandler.cpp
 CompileCpp=1
 Folder=spring
@@ -304,7 +264,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit24]
+[Unit22]
 FileName=src\spring\ConfigHandler.h
 CompileCpp=1
 Folder=spring
@@ -314,7 +274,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit25]
+[Unit23]
 FileName=src\spring\DotfileHandler.cpp
 CompileCpp=0
 Folder=spring
@@ -324,7 +284,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit26]
+[Unit24]
 FileName=src\spring\DotfileHandler.h
 CompileCpp=0
 Folder=spring
@@ -334,7 +294,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit27]
+[Unit25]
 FileName=src\spring\errorhandler.cpp
 CompileCpp=1
 Folder=spring
@@ -344,8 +304,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit28]
+[Unit26]
 FileName=src\spring\errorhandler.h
+CompileCpp=1
+Folder=spring
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit27]
+FileName=src\spring\RegHandler.cpp
+CompileCpp=1
+Folder=spring
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit28]
+FileName=src\spring\RegHandler.h
 CompileCpp=1
 Folder=spring
 Compile=1
@@ -365,9 +345,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit29]
-FileName=src\spring\RegHandler.cpp
+FileName=src\settings.rc
 CompileCpp=1
-Folder=spring
+Folder=Resources
 Compile=1
 Link=1
 Priority=1000
@@ -375,9 +355,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit30]
-FileName=src\spring\RegHandler.h
+FileName=src\tab_render_detail.h
 CompileCpp=1
-Folder=spring
+Folder=src
 Compile=1
 Link=1
 Priority=1000
@@ -385,8 +365,49 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit31]
-FileName=src\settings.rc
-Folder=Resources
+FileName=src\tab_render_detail.cpp
+Folder=src
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+CompileCpp=1
+
+[Unit32]
+FileName=src\tab_render_detail.h
+CompileCpp=1
+Folder=src
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit33]
+FileName=src\tab_render_detail.cpp
+CompileCpp=1
+Folder=src
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit12]
+FileName=src\tab_simple.cpp
+CompileCpp=1
+Folder=src
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit13]
+FileName=src\tab_simple.h
+CompileCpp=1
+Folder=src
 Compile=1
 Link=1
 Priority=1000

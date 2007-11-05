@@ -50,7 +50,7 @@ void settings_frame::CreateGUIControls()
 //	Simple->Add(new wxString(wxT("nothing here yet")));
 //	Options->AddPage(Simple, wxT("Simple"));
 
-	Options->AddPage(new rendering_panel(Options,ID_RENDERING), wxT("Rendering"));
+    Options->AddPage(new tab_render_detail(Options,ID_RENDER_DETAIL), wxT("Render Detail"));
 
 	Options->AddPage(new video_panel(Options,ID_VIDEO), wxT("Video"));
 
@@ -61,10 +61,12 @@ void settings_frame::CreateGUIControls()
 	Options->AddPage(new mouse_panel(Options, ID_MOUSE), wxT("Mouse"));
 
 	Options->AddPage(new debug_panel(Options,ID_DEBUG), wxT("Debug"));
+	
+	
 
 	SetTitle(wxT("Settings++"));
 	SetIcon(wxNullIcon);
-	SetSize(8,8,520,560);
+	SetSize(8,8,760,550);
 	Center();
 
 }

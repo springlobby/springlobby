@@ -58,6 +58,9 @@ class settings_frame : public wxFrame
 		wxPanel *General;
 		wxPanel *Video;
 		wxPanel *Rendering;
+		
+		wxPanel *Render_Detail;
+		
 		wxNotebook *Options;
 		
 		void initMenuBar();
@@ -65,6 +68,7 @@ class settings_frame : public wxFrame
 		enum
 		{
 			////GUI Enum Control ID Start
+			ID_RENDER_DETAIL = 1011,
 			ID_SIMPLE = 1010,
 			ID_DEBUG = 1009,
 			ID_MOUSE = 1008,

@@ -177,8 +177,8 @@ const Control RO_SLI[9] = {
 	{"grass detail",                 "GrassDetail",         ID_RO_SLI_4,	"10"	},
 	{"ground decals",                "GroundDecals",        ID_RO_SLI_5,	"120"	},
 	{"unit icon distance",           "UnitIconDist",        ID_RO_SLI_6,	"1000"	},
-	{"maximum simultaneous particles",     "MaxParticles",        ID_RO_SLI_7,	"20000"	},
-	{"maximum texture stages (SM3)", "SM3MaxTextureStages", ID_RO_SLI_8,	"20"	}
+	{"max simultaneous particles",     "MaxParticles",        ID_RO_SLI_7,	"20000"	},
+	{"max texture stages (SM3)", "SM3MaxTextureStages", ID_RO_SLI_8,	"20"	}
 };
 
 const Control VO_CBOX[5] = {

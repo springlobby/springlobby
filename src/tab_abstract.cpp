@@ -61,6 +61,10 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 				slider->SetValue(4096);
 				(intSettings)[RO_SLI[0].key]=4096;
 			}
+			if (val > 6144) {
+				slider->SetValue(8192);
+				(intSettings)[RO_SLI[0].key]=8192;
+			}
 		} break;
 
 		case ID_RO_SLI_1: { (intSettings)[RO_SLI[1].key]= value; } break;
