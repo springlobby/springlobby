@@ -48,6 +48,8 @@ class ServerEvents
     void OnUserLeftBattle( int battleid, const std::string& nick );
     void OnBattleInfoUpdated( int battleid, int metal, int energy, int units, StartType start, GameType gt, bool dgun, bool dim, bool ghost, std::string hash );
     void OnBattleInfoUpdated( int battleid, int spectators, bool locked, std::string maphash, const std::string& map );
+    void OnSetBattleInfo( int battleid, const std::string& param, const std::string& value );
+    void OnBattleInfoUpdated( int battleid );
     void OnBattleClosed( int battleid );
 
     void OnJoinedBattle( int battleid );
