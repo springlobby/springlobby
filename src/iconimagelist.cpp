@@ -38,6 +38,8 @@
 #include "images/rank2.xpm"
 #include "images/rank3.xpm"
 #include "images/rank4.xpm"
+#include "images/rank5.xpm"
+#include "images/rank6.xpm"
 
 #include "images/open_game.xpm"
 #include "images/open_pw_game.xpm"
@@ -95,6 +97,8 @@ IconImageList::IconImageList() : wxImageList(16,16)
   Add( wxBitmap(rank2_xpm) );
   Add( wxBitmap(rank3_xpm) );
   Add( wxBitmap(rank4_xpm) );
+  Add( wxBitmap(rank5_xpm) );
+  Add( wxBitmap(rank6_xpm) );
 
   Add( wxBitmap(open_game_xpm) );
   Add( wxBitmap(open_pw_game_xpm) );
@@ -190,7 +194,9 @@ int IconImageList::GetRankIcon( const int& rank, const bool& showlowest )
   if ( rank <= RANK_1 ) return ICON_RANK1;
   if ( rank <= RANK_2 ) return ICON_RANK2;
   if ( rank <= RANK_3 ) return ICON_RANK3;
-  return ICON_RANK4;
+  if ( rank <= RANK_4 ) return ICON_RANK4;
+  if ( rank <= RANK_5 ) return ICON_RANK5;
+  return ICON_RANK6;
 }
 
 
