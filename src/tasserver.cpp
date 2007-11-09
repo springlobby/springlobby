@@ -493,18 +493,24 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_se->OnPrivateMessage( nick, msg, false );
   } else if ( cmd == "JOINBATTLE" ) {
     id = GetIntParam( params );
-    metal = GetIntParam( params );
-    energy = GetIntParam( params );
-    units = GetIntParam( params );
-    start = GetIntParam( params );
-    gt = IntToGameType( GetIntParam( params ) );
-    dgun = (bool)GetIntParam( params );
-    dim = (bool)GetIntParam( params );
-    ghost = (bool)GetIntParam( params );
+    if ( m_ser_ver < SER_VER_0_35 ) {
+      metal = GetIntParam( params );
+      energy = GetIntParam( params );
+      units = GetIntParam( params );
+      start = GetIntParam( params );
+      gt = IntToGameType( GetIntParam( params ) );
+      dgun = (bool)GetIntParam( params );
+      dim = (bool)GetIntParam( params );
+      ghost = (bool)GetIntParam( params );
+    }
     hash = GetWordParam( params );
     m_battle_id = id;
     m_se->OnJoinedBattle( id );
-    m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dgun, dim, ghost, hash );
+    if ( m_ser_ver < SER_VER_0_35 ) {
+      m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dgun, dim, ghost, hash );
+    } else {
+      m_se->OnBattleInfoUpdated( m_battle_id );
+    }
   } else if ( cmd == "UPDATEBATTLEDETAILS" ) {
     metal = GetIntParam( params );
     energy = GetIntParam( params );
