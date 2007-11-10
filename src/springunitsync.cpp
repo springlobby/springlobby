@@ -614,6 +614,7 @@ wxArrayString SpringUnitSync::GetUnitsList()
     ASSERT_RUNTIME( wxFileName::FileExists( path ), "Cache file does not exist" );
     wxTextFile f;
     ASSERT_RUNTIME( f.Open(path), "Failed to open file" );
+    ASSERT_RUNTIME( f.GetLineCount() > 0, "File empty" );
 
     wxString str;
     for ( str = f.GetFirstLine(); !f.Eof(); str = f.GetNextLine() ) ret.Add( str );
