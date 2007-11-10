@@ -7,6 +7,7 @@
 #include <wx/menu.h>
 #include <wx/textdlg.h>
 #include <wx/msgdlg.h>
+#include <wx/colordlg.h>
 #include <stdexcept>
 
 #include "battleroomlistctrl.h"
@@ -25,6 +26,7 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl, wxListCtrl )
   EVT_MENU                 ( BRLIST_SPEC, BattleroomListCtrl::OnSpecSelect )
   EVT_MENU                 ( BRLIST_KICK, BattleroomListCtrl::OnKickPlayer )
   EVT_MENU                 ( BRLIST_RING, BattleroomListCtrl::OnRingPlayer )
+  EVT_MENU                 ( BRLIST_COLOUR, BattleroomListCtrl::OnColourSelect )
   EVT_MENU                 ( BRLIST_HANDICAP, BattleroomListCtrl::OnHandicapSelect )
 
 END_EVENT_TABLE()
@@ -113,14 +115,6 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
   }
   m_popup->Append( -1, _("Ally"), m_allies );
 
-  wxMenu* m_colours = new wxMenu();
-  for ( int i = 0; i < 16; i++ ) {
-    wxMenuItem* colour = new wxMenuItem( m_colours, BRLIST_COLOUR + i, colour_choices[i] , wxEmptyString, wxITEM_NORMAL );
-    m_colours->Append( colour );
-    Connect( BRLIST_COLOUR + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnColourSelect ) );
-  }
-  m_popup->Append( -1, _("Colour"), m_colours );
-
   m_sides = new wxMenu();
   usync()->SetCurrentMod( STD_STRING(m_battle.GetModName() ));
   for ( int i = 0; i < usync()->GetSideCount(); i++ ) {
@@ -132,8 +126,12 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
 
   m_popup->AppendSeparator();
 
+  wxMenuItem* m_colours = new wxMenuItem( m_popup, BRLIST_COLOUR, _("Set color"), wxEmptyString, wxITEM_NORMAL );
+  m_popup->Append( m_colours );
+
+  m_popup->AppendSeparator();
+
   m_handicap_item = new wxMenuItem( m_popup, BRLIST_HANDICAP, _("Set Resource Bonus"), wxEmptyString, wxITEM_NORMAL );
-  //Connect( BRLIST_HANDICAP , wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnHandicapSelect ) );
   m_popup->Append( m_handicap_item );
 
   m_popup->AppendSeparator();
@@ -394,11 +392,17 @@ void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
 {
   debug_func("");
-  int index = event.GetId() - BRLIST_COLOUR;
+
   if ( m_sel_bot != 0 ) {
-    m_battle.SetBotColour( m_sel_bot->name, colour_values[index][0], colour_values[index][1], colour_values[index][2] );
+    wxColour CurrentColor;
+    CurrentColor.Set( m_sel_bot->bs.color_r, m_sel_bot->bs.color_g, m_sel_bot->bs.color_b );
+    CurrentColor = wxGetColourFromUser(this, CurrentColor);
+    m_battle.SetBotColour( m_sel_bot->name, CurrentColor.Red(), CurrentColor.Green(), CurrentColor.Blue() );
   } else if ( m_sel_user != 0 ) {
-    m_battle.ForceColour( *m_sel_user, colour_values[index][0], colour_values[index][1], colour_values[index][2] );
+    wxColour CurrentColor;
+    CurrentColor.Set( m_sel_user->BattleStatus().color_r, m_sel_user->BattleStatus().color_g, m_sel_user->BattleStatus().color_b );
+    CurrentColor = wxGetColourFromUser(this, CurrentColor);
+    m_battle.ForceColour( *m_sel_user, CurrentColor.Red(), CurrentColor.Green(), CurrentColor.Blue() );
   }
 }
 

@@ -13,6 +13,7 @@
 #include <wx/sizer.h>
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
+#include <wx/colordlg.h>
 #include <stdexcept>
 
 #include "battleroomtab.h"
@@ -52,7 +53,7 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
   EVT_CHECKBOX( BROOM_SPEC, BattleRoomTab::OnImSpec )
   EVT_COMBOBOX( BROOM_TEAMSEL, BattleRoomTab::OnTeamSel )
   EVT_COMBOBOX( BROOM_ALLYSEL, BattleRoomTab::OnAllySel )
-  EVT_COMBOBOX( BROOM_COLOURSEL, BattleRoomTab::OnColourSel )
+  EVT_BUTTON( BROOM_COLOURSEL, BattleRoomTab::OnColourSel )
   EVT_COMBOBOX( BROOM_SIDESEL, BattleRoomTab::OnSideSel )
 
 END_EVENT_TABLE()
@@ -68,7 +69,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_player_panel = new wxPanel( m_splitter , -1 );
   m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
   m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
-  m_color_sel = new wxComboBox( m_player_panel, BROOM_COLOURSEL, _("gold"), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), 16, colour_choices );
+  m_color_sel = new wxButton( m_player_panel, BROOM_COLOURSEL, _("Color"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
   usync()->SetCurrentMod( STD_STRING(m_battle.GetModName()) );
@@ -78,7 +79,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_team_lbl = new wxStaticText( m_player_panel, -1, _("Team") );
   m_ally_lbl = new wxStaticText( m_player_panel, -1, _("Ally") );
-  m_color_lbl = new wxStaticText( m_player_panel, -1, _("Color") );
   m_side_lbl = new wxStaticText( m_player_panel, -1, _("Side") );
 
   m_map_lbl = new wxStaticText( this, -1, RefineMapname( battle.GetMapName() ) );
@@ -141,7 +141,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_player_sett_sizer->Add( m_team_sel, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_ally_lbl, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_ally_sel, 0, wxEXPAND | wxALL, 2 );
-  m_player_sett_sizer->Add( m_color_lbl, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_color_sel, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_side_lbl, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_side_sel, 0, wxEXPAND | wxALL, 2 );
@@ -402,10 +401,12 @@ void BattleRoomTab::OnColourSel( wxCommandEvent& event )
 {
   User& u = m_battle.GetMe();
   UserBattleStatus& bs = u.BattleStatus();
-  int i = m_color_sel->GetSelection();
-  bs.color_r = colour_values[i][0];
-  bs.color_g = colour_values[i][1];
-  bs.color_b = colour_values[i][2];
+  wxColour CurrentColor;
+  CurrentColor.Set( bs.color_r, bs.color_g, bs.color_b );
+  CurrentColor = wxGetColourFromUser(this, CurrentColor);
+  bs.color_r = CurrentColor.Red();
+  bs.color_g = CurrentColor.Green();
+  bs.color_b = CurrentColor.Blue();
   //u.SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
 }

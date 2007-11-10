@@ -75,12 +75,11 @@ class BattleRoomTab : public wxPanel
 
     wxComboBox* m_team_sel;
     wxComboBox* m_ally_sel;
-    wxComboBox* m_color_sel;
+    wxButton* m_color_sel;
     wxComboBox* m_side_sel;
 
     wxStaticText* m_team_lbl;
     wxStaticText* m_ally_lbl;
-    wxStaticText* m_color_lbl;
     wxStaticText* m_side_lbl;
     wxStaticText* m_map_lbl;
     wxStaticText* m_wind_lbl;
