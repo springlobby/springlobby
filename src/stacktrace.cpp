@@ -10,6 +10,9 @@
 #include "utils.h"
 
 
+#if wxUSE_STACKWALKER
+
+
 StackTrace& stacktrace() { static StackTrace trace; return trace; };
 
 
@@ -57,3 +60,5 @@ wxString StackTrace::GetStackTraceHash()
 {
   return WX_STRING (  base64_encode( boost::md5( PartToHash.mb_str(wxConvUTF8) ).digest().value(), 16) );
 }
+
+#endif

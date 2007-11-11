@@ -46,7 +46,9 @@ SpringLobbyApp::~SpringLobbyApp()
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
+#if wxUSE_ON_FATAL_EXCEPTION
   wxHandleFatalExceptions( true );
+#endif
 
   debug_func( "" );
   wxInitAllImageHandlers();
@@ -92,6 +94,9 @@ int SpringLobbyApp::OnExit()
 
 void SpringLobbyApp::OnFatalException()
 {
+
+#if wxUSE_STACKWALKER
+
   wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
 
   DebugInfo += _T("StackTraceID: ") + stacktrace().GetStackTraceHash() + _T("\n");
@@ -102,7 +107,9 @@ void SpringLobbyApp::OnFatalException()
   DebugInfo += _T("-------- End StackTrace --------");
 
   debug_error( STD_STRING(DebugInfo) );
-
+#else
+  debug_error( "Stacktrace not possible, please enable wxStackWalker" );
+#endif
 }
 
 
