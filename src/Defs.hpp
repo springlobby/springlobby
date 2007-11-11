@@ -44,7 +44,7 @@
 #define ID_MENUITEM_SAVE  50
 #define ID_MENUITEM_RESET  51
 #define ID_MENUITEM_QUIT  52
-#define ID_MENUITEM_MOUSE 60
+//#define ID_MENUITEM_MOUSE 60
 
 // ParentWin TextInput IDs
 #define ID_RES_CHOICES_LBOX_X 1111
@@ -101,6 +101,8 @@
 #define ID_WINDOWP_QA_CBOX_7  307
 #define ID_WINDOWP_QA_CBOX_8  308
 #define ID_WINDOWP_QA_CBOX_9  309
+
+#define ID_WINDOWP_WR_COMBOX  320
 
 // ParentWin Audio Options slider IDs
 #define ID_AO_SLI_0 400
@@ -169,7 +171,7 @@ template<typename Type> Type fromString(const std::string& s) {
         return r;
 }
 
-const wxWindowID _1 = wxWindowID(-1);
+//const wxWindowID _1 = wxWindowID(-1);
 const wxPoint zeroPoint = wxPoint(0,0);
 
 const Control RO_SLI[9] = {
@@ -221,7 +223,7 @@ const Control QA_CBOX[10] = {
 	{"never use shaders when rendering SM3 maps",       "SM3ForceFallbackTex", ID_WINDOWP_QA_CBOX_5,	"1"},
 	{"enable LuaShaders support",                       "LuaShaders",          ID_WINDOWP_QA_CBOX_6,	"1"},
 	{"high-resolution LOS textures",                    "HighResLos",          ID_WINDOWP_QA_CBOX_7,	"1"},
-    {"draw smooth points",                              "SmoothPoints",        ID_WINDOWP_QA_CBOX_8,	"0"},
+    	{"draw smooth points",                              "SmoothPoints",        ID_WINDOWP_QA_CBOX_8,	"0"},
 	{"draw smooth lines",                               "SmoothLines",         ID_WINDOWP_QA_CBOX_9,	"0"},
 };
 	
@@ -274,11 +276,15 @@ const Control DO_CBOX[2] = {
 	{"send debug info to console", "StdoutDebug",       ID_WINDOWP_DO_CBOX_1,	"0"}
 };
 
-const Control WR_RBUT[4] = {
-	{"basic",                   "ReflectiveWater", ID_WINDOWP_WR_RBUT_0,	"1"},
-	{"reflective",              "ReflectiveWater", ID_WINDOWP_WR_RBUT_1,	"1"},
-	{"reflective + refractive", "ReflectiveWater", ID_WINDOWP_WR_RBUT_2,	"1"},
-	{"dynamic",                 "ReflectiveWater", ID_WINDOWP_WR_RBUT_3,	"1"}
+const Control WR_COMBOX[4] = {
+	"basic",                   "ReflectiveWater", ID_WINDOWP_WR_COMBOX,	"1"
+	/*{"reflective",              "ReflectiveWater", ID_WINDOWP_WR_COMBOX_1,	"1"},
+	{"reflective + refractive", "ReflectiveWater", ID_WINDOWP_WR_COMBOX_2,	"1"},
+	{"dynamic",                 "ReflectiveWater", ID_WINDOWP_WR_COMBOX_3,	"1"}*/
+};
+
+const wxString WR_COMBOX_CHOICES[4] = {
+	wxT("basic"), wxT("reflective"), wxT("reflective + refractive"), wxT("dynamic")
 };
 
 const Control MO_CBOX[2] = {

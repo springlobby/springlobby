@@ -188,17 +188,36 @@ void abstract_panel::OnRadioButtonToggle(wxCommandEvent& event) {
 		case ID_WINDOWP_VO_RBUT_0: { (intSettings)[VO_RBUT[0].key]= 16; } break;
 		case ID_WINDOWP_VO_RBUT_1: { (intSettings)[VO_RBUT[0].key]= 24; } break;
 
-		case ID_WINDOWP_WR_RBUT_0: { (intSettings)[WR_RBUT[0].key]= 0; } break;	// Basic
-		case ID_WINDOWP_WR_RBUT_1: { (intSettings)[WR_RBUT[0].key]= 1; } break;	// Refl
-		case ID_WINDOWP_WR_RBUT_2: { (intSettings)[WR_RBUT[0].key]= 3; } break;	// Refl + Refr
-		case ID_WINDOWP_WR_RBUT_3: { (intSettings)[WR_RBUT[0].key]= 2; } break;	// Dyna
-		
 		case ID_WINDOWC_MO_RBUT_0: { (intSettings)[MO_RBUT[0].key]= 1; } break;	// OH button (CamMode 1)
 		case ID_WINDOWC_MO_RBUT_1: { (intSettings)[MO_RBUT[1].key]= 2; } break;	// ROH button (CamMode 2)
 		case ID_WINDOWC_MO_RBUT_2: { (intSettings)[MO_RBUT[2].key]= 3; } break;	// TW button (CamMode 3)
 		case ID_WINDOWC_MO_RBUT_3: { (intSettings)[MO_RBUT[3].key]= 0; } break;	// FPS button (CamMode 0)
 		case ID_WINDOWC_MO_RBUT_4: { (intSettings)[MO_RBUT[4].key]= 4; } break;	// FC button (CamMode 4)
 	}
+}
+
+void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
+
+    settingsChanged = true;
+
+	wxComboBox* comboBox = (wxComboBox*) event.GetEventObject();
+	wxString choice = comboBox->GetValue();
+
+	/*switch (event.GetId()) {
+	
+		case ID_WINDOWP_WR_RBUT_0: { (intSettings)[WR_RBUT[0].key]= 0; } break;	// Basic
+		case ID_WINDOWP_WR_RBUT_1: { (intSettings)[WR_RBUT[0].key]= 1; } break;	// Refl
+		case ID_WINDOWP_WR_RBUT_2: { (intSettings)[WR_RBUT[0].key]= 3; } break;	// Refl + Refr
+		case ID_WINDOWP_WR_RBUT_3: { (intSettings)[WR_RBUT[0].key]= 2; } break;	// Dyna
+		
+	}*/
+}
+
+wxArrayString abstract_panel::wxArrayStringFromCStringArray(const wxString* stdAr){
+	wxArrayString result = wxArrayString();
+	for (int i=0;i<4;++i)
+		result.Add(stdAr[i]);
+	return result;
 }
 
 
@@ -228,8 +247,9 @@ bool abstract_panel::saveSettings() {
 
 BEGIN_EVENT_TABLE(abstract_panel, wxPanel)
 	EVT_SLIDER(wxID_ANY,            abstract_panel::OnSliderMove)
-	EVT_TEXT(wxID_ANY,              abstract_panel::OnTextUpdate)
+//	EVT_TEXT(wxID_ANY,              abstract_panel::OnTextUpdate)
 	EVT_CHECKBOX(wxID_ANY,          abstract_panel::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       abstract_panel::OnRadioButtonToggle)
 	EVT_IDLE(                       abstract_panel::update)
+//	EVT_COMBOBOX(wxID_ANY, 		abstract_panel::OnComboBoxChange)
 END_EVENT_TABLE()

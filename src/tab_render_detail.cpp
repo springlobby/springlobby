@@ -34,7 +34,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 			extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V
 		);
 		slider->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
-		sizerL->Add(new wxStaticText(this, _1,  _S(RO_SLI[i].lbl)), 0,wxALIGN_CENTER_VERTICAL|wxALL);
+		sizerL->Add(new wxStaticText(this, -1,  _S(RO_SLI[i].lbl)), 0,wxALIGN_CENTER_VERTICAL|wxALL);
 		sizerL->Add(slider, 0,wxALIGN_CENTER_VERTICAL|wxALL);
 	}
 	for (int i = 5; i <= 8; i++) {
@@ -43,7 +43,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 			extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V
 		);
 		slider->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
-		sizerR->Add(new wxStaticText(this, _1,  _S(RO_SLI[i].lbl)), 0,wxALIGN_CENTER_VERTICAL|wxALL);
+		sizerR->Add(new wxStaticText(this, -1,  _S(RO_SLI[i].lbl)), 0,wxALIGN_CENTER_VERTICAL|wxALL);
 		sizerR->Add(slider, 0,wxALIGN_CENTER_VERTICAL|wxALL);
 	}
 }

@@ -56,7 +56,7 @@ void mouse_panel::initMouseOptsSizer(wxStaticBoxSizer* sizer) {
 	sizer->Add(checkBox0, 0, wxTOP, 0);
 	sizer->Add(checkBox1, 0, wxTOP, 0);
 	sizer->Add(0, 10, 0);
-	sizer->Add(new wxStaticText(this, _1, wxT("Default Camera Mode"), wxDefaultPosition, wxDefaultSize, 10));
+	sizer->Add(new wxStaticText(this, -1, wxT("Default Camera Mode"), wxDefaultPosition, wxDefaultSize, 10));
 	sizer->Add(radioButtonA0, 0, wxTOP, 0);
 	sizer->Add(radioButtonA1, 0, wxTOP, 0);
 	sizer->Add(radioButtonA2, 0, wxTOP, 0);

@@ -40,6 +40,7 @@ class abstract_panel : public wxPanel
 		void OnCheckBoxTick(wxCommandEvent&);
 		void OnRadioButtonToggle(wxCommandEvent&);
 		void update(wxIdleEvent&);
+		void OnComboBoxChange(wxCommandEvent& event);
 		static intMap intSettings;
 		static stringMap stringSettings;
 		static floatMap floatSettings;
@@ -49,6 +50,7 @@ class abstract_panel : public wxPanel
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+		wxArrayString wxArrayStringFromCStringArray(const wxString* stdAr);
 		
 		DECLARE_EVENT_TABLE()
 };
