@@ -6,6 +6,8 @@
 #include <wx/config.h>
 #include <wx/filefn.h>
 #include <wx/intl.h>
+#include <wx/stdpaths.h>
+#include <wx/filename.h>
 
 #include "nonportable.h"
 #include "settings.h"
@@ -64,6 +66,20 @@ wxString Settings::GetWebBrowserPath()
 void Settings::SetWebBrowserPath( const wxString path )
 {
   m_config->Write( _T("/General/WebBrowserPath"), path );
+}
+
+
+wxString Settings::GetCachePath()
+{
+  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache");
+  m_config->Read( _T("/General/CachePath"), &path, path );
+  return path + wxFileName::GetPathSeparator();
+}
+
+
+void Settings::SetCachePath( const wxString path )
+{
+  m_config->Write( _T("/General/CachePath"), path );
 }
 
 

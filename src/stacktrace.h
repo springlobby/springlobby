@@ -4,6 +4,8 @@
 #include <wx/string.h>
 #include <wx/stackwalk.h>
 
+#if wxUSE_STACKWALKER
+
 class StackTrace : public wxStackWalker
 {
   public:
@@ -23,5 +25,7 @@ class StackTrace : public wxStackWalker
 };
 
 StackTrace& stacktrace();
+
+#endif
 
 #endif // SPRINGLOBBY_HEADERGUARD_STACKTRACE_H_INCLUDED
