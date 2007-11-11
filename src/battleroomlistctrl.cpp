@@ -404,6 +404,7 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
     CurrentColor = wxGetColourFromUser(this, CurrentColor);
     m_battle.ForceColour( *m_sel_user, CurrentColor.Red(), CurrentColor.Green(), CurrentColor.Blue() );
   }
+
 }
 
 

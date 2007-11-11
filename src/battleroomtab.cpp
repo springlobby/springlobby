@@ -28,6 +28,7 @@
 #include "uiutils.h"
 #include "addbotdialog.h"
 #include "server.h"
+#include "iconimagelist.h"
 
 
 #define Opt_Pos_Size 0
@@ -66,10 +67,12 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   // Create all widgets
   m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
 
+  UserBattleStatus& myself = m_battle.GetMe().BattleStatus();
+
   m_player_panel = new wxPanel( m_splitter , -1 );
   m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
   m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
-  m_color_sel = new wxButton( m_player_panel, BROOM_COLOURSEL, _("Color"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+  m_color_sel = new wxBitmapButton( m_player_panel, BROOM_COLOURSEL, icons().GetBitmap( icons().GetColourIcon( myself.team ) ) , wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
   usync()->SetCurrentMod( STD_STRING(m_battle.GetModName()) );
@@ -79,6 +82,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_team_lbl = new wxStaticText( m_player_panel, -1, _("Team") );
   m_ally_lbl = new wxStaticText( m_player_panel, -1, _("Ally") );
+  m_color_lbl = new wxStaticText( m_player_panel, -1, _("Color") );
   m_side_lbl = new wxStaticText( m_player_panel, -1, _("Side") );
 
   m_map_lbl = new wxStaticText( this, -1, RefineMapname( battle.GetMapName() ) );
@@ -141,6 +145,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_player_sett_sizer->Add( m_team_sel, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_ally_lbl, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_ally_sel, 0, wxEXPAND | wxALL, 2 );
+  m_player_sett_sizer->Add( m_color_lbl, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_color_sel, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_side_lbl, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_side_sel, 0, wxEXPAND | wxALL, 2 );
@@ -288,6 +293,8 @@ void BattleRoomTab::UpdateUser( User& user )
     if ( !IsHosted() ) m_ready_chk->Enable();
     m_ready_chk->SetValue( bs.ready );
   }
+
+  m_color_sel->SetBitmapLabel( icons().GetBitmap( icons().GetColourIcon( bs.team ) ) );
 
   m_minimap->UpdateMinimap();
 }
