@@ -16,6 +16,7 @@ IUSE="debug"
 
 RDEPEND="
 	!virtual/game_spring
+	!games-strategy/taspring-linux-release
 	>=dev-lang/python-2.4
 	>=dev-libs/boost-1.34
 	media-libs/devil

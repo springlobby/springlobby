@@ -18,6 +18,7 @@ RESTRICT="nomirror"
 
 RDEPEND="
 	!virtual/game_spring
+	!games-strategy/taspring-linux-release
 	>=dev-lang/python-2.4
 	dev-libs/boost
 	media-libs/devil
