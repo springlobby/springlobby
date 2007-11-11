@@ -85,6 +85,9 @@ class ChatPanel : public wxPanel
 
     void CheckLength();
 
+    void OnUserDisconnected();
+    void OnUserConnected();
+
     void OnSay( wxCommandEvent& event );
     void OnResize( wxSizeEvent& event );
 

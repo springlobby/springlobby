@@ -582,7 +582,7 @@ Channel& ChatPanel::GetChannel()
 
 void ChatPanel::SetChannel( Channel* chan )
 {
-  ASSERT_LOGIC(m_type == CPT_Channel, "Not of type server" );
+  ASSERT_LOGIC(m_type == CPT_Channel, "Not of type channel" );
   if ( (chan == 0) && (m_channel != 0) ) {
     StatusMessage( _("Chat closed.") );
     m_channel->uidata.panel = 0;
@@ -611,7 +611,8 @@ void ChatPanel::SetServer( Server* serv )
   else if ( serv != 0 ) serv->uidata.panel = this;
   m_server = serv;
   delete m_chat_log;
-  m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),_("_SERVER"));
+  if ( m_server ) m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),_("_SERVER"));
+  else m_chat_log = 0;
 }
 
 
@@ -623,7 +624,7 @@ User* ChatPanel::GetUser()
 
 void ChatPanel::SetUser( User* usr )
 {
-  ASSERT_LOGIC(m_type == CPT_User, "Not of type server" );
+  ASSERT_LOGIC(m_type == CPT_User, "Not of type user" );
 
   if ( (usr == 0) && (m_user != 0) ) m_user->uidata.panel = 0;
   else if ( usr != 0 ) usr->uidata.panel = this;
@@ -765,6 +766,19 @@ bool ChatPanel::IsOk()
   if ( m_type == CPT_User ) return (m_user != 0);
   if ( m_type == CPT_Battle ) return (m_battle != 0);
   return false;
+}
+
+
+
+void ChatPanel::OnUserDisconnected()
+{
+  _OutputLine( _T(" ** User is now offline."), wxColour( 255, 0, 0 ) );
+}
+
+
+void ChatPanel::OnUserConnected()
+{
+  _OutputLine( _T(" ** User just got online."), wxColour( 20, 200, 25 ) );
 }
 
 

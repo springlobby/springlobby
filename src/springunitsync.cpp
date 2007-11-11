@@ -18,6 +18,7 @@
 
 #include "springunitsync.h"
 #include "utils.h"
+#include "settings.h"
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -589,10 +590,11 @@ int SpringUnitSync::GetNumUnits()
 
 wxString _GetCachedModUnitsFileName( const wxString& mod )
 {
-  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator();
+  wxString path = sett().GetCachePath(); //wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator();
   wxString fname = WX_STRING( mod );
   fname.Replace( _T("."), _T("_") );
   fname.Replace( _T(" "), _T("_") );
+  debug(STD_STRING(path));
   return path + fname + _T(".units");
 }
 
@@ -614,6 +616,7 @@ wxArrayString SpringUnitSync::GetUnitsList()
     ASSERT_RUNTIME( wxFileName::FileExists( path ), "Cache file does not exist" );
     wxTextFile f;
     ASSERT_RUNTIME( f.Open(path), "Failed to open file" );
+    ASSERT_RUNTIME( f.GetLineCount() > 0, "File empty" );
 
     wxString str;
     for ( str = f.GetFirstLine(); !f.Eof(); str = f.GetNextLine() ) ret.Add( str );
@@ -652,7 +655,7 @@ wxArrayString SpringUnitSync::GetUnitsList()
 
 wxString SpringUnitSync::_GetCachedMinimapFileName( const std::string& mapname, int width, int height )
 {
-  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator();
+  wxString path = sett().GetCachePath(); //wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator();
   wxString fname = WX_STRING( mapname );
   fname.Replace( _T("."), _T("_") );
   fname.Replace( _T(" "), _T("_") );
@@ -806,7 +809,7 @@ void SpringUnitSync::_LoadMapInfoExCache()
 {
   debug_func("");
 
-  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator() + _T("mapinfoex.cache");
+  wxString path = sett().GetCachePath() + _T("mapinfoex.cache"); //wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator() + _T("mapinfoex.cache");
 
   if ( !wxFileName::FileExists( path ) ) {
     debug( "No cache file found." );
@@ -837,7 +840,7 @@ void SpringUnitSync::_LoadMapInfoExCache()
 void SpringUnitSync::_SaveMapInfoExCache()
 {
   debug_func("");
-  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator() + _T("mapinfoex.cache");
+  wxString path = sett().GetCachePath() + _T("mapinfoex.cache"); //wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator() + _T("mapinfoex.cache");
 
   wxFile f( path.c_str(), wxFile::write );
   if ( !f.IsOpened() ) {

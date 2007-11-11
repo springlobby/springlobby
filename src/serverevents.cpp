@@ -281,6 +281,34 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
 }
 
 
+void ServerEvents::OnSetBattleInfo( int battleid, const std::string& param, const std::string& value )
+{
+  debug_func( "" );
+  Battle& battle = m_serv.GetBattle( battleid );
+
+  std::string val = value;
+
+  // TODO: This is a temporary solution until we can dump tasserver < 0.35 support
+  if      ( param == "game/startpostype"     ) battle.SetStartType( GetIntParam(val) );
+  else if ( param == "game/maxunits"         ) battle.SetMaxUnits( GetIntParam(val) );
+  else if ( param == "game/limitdgun"        ) battle.SetLimitDGun( GetIntParam(val) );
+  else if ( param == "game/startmetal"       ) battle.SetStartMetal( GetIntParam(val) );
+  else if ( param == "game/gamemode"         ) battle.SetGameType( GetIntParam(val) );
+  else if ( param == "game/ghostedbuildings" ) battle.SetGhostedBuildings( GetIntParam(val) );
+  else if ( param == "game/startenergy"      ) battle.SetStartEnergy( GetIntParam(val) );
+  else if ( param == "game/diminishingmms"   ) battle.SetDimMMs( GetIntParam(val) );
+
+}
+
+
+void ServerEvents::OnBattleInfoUpdated( int battleid )
+{
+  debug_func( "" );
+  Battle& battle = m_serv.GetBattle( battleid );
+  m_ui.OnBattleInfoUpdated( battle );
+}
+
+
 void ServerEvents::OnBattleClosed( int battleid )
 {
   debug_func( "" );

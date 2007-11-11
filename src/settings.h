@@ -34,6 +34,9 @@ class Settings
     wxString GetWebBrowserPath();
     void SetWebBrowserPath( const wxString path );
 
+    wxString GetCachePath();
+    void SetCachePath( const wxString path );
+
     std::string GetDefaultServer();
     void SetDefaultServer( const std::string& server_name );
 

@@ -10,6 +10,8 @@ class Server;
 #define RANK_2 300
 #define RANK_3 400
 #define RANK_4 500
+#define RANK_5 600
+#define RANK_6 700
 
 #define SYNC_UNKNOWN 0
 #define SYNC_SYNCED 1

@@ -16,9 +16,10 @@
 
 #define SER_VER_BAD -1
 #define SER_VER_UNKNOWN 0
-#define SER_VER_0_32 1
-#define SER_VER_0_33 -2
-#define SER_VER_0_34 -3
+#define SER_VER_0_32 32
+#define SER_VER_0_33 -33
+#define SER_VER_0_34 -34
+#define SER_VER_0_35 35
 
 //! @brief Struct used internally by the TASServer class to get client status information.
 struct TASClientstatus {
@@ -382,6 +383,8 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
       m_ser_ver = SER_VER_0_32;
     else if ( mod == "0.34" )
       m_ser_ver = SER_VER_0_34;
+    else if ( mod == "0.35" )
+      m_ser_ver = SER_VER_0_35;
     else
       m_ser_ver = SER_VER_BAD;
     supported_spring_version = GetWordParam( params );
@@ -490,18 +493,24 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_se->OnPrivateMessage( nick, msg, false );
   } else if ( cmd == "JOINBATTLE" ) {
     id = GetIntParam( params );
-    metal = GetIntParam( params );
-    energy = GetIntParam( params );
-    units = GetIntParam( params );
-    start = GetIntParam( params );
-    gt = IntToGameType( GetIntParam( params ) );
-    dgun = (bool)GetIntParam( params );
-    dim = (bool)GetIntParam( params );
-    ghost = (bool)GetIntParam( params );
+    if ( m_ser_ver < SER_VER_0_35 ) {
+      metal = GetIntParam( params );
+      energy = GetIntParam( params );
+      units = GetIntParam( params );
+      start = GetIntParam( params );
+      gt = IntToGameType( GetIntParam( params ) );
+      dgun = (bool)GetIntParam( params );
+      dim = (bool)GetIntParam( params );
+      ghost = (bool)GetIntParam( params );
+    }
     hash = GetWordParam( params );
     m_battle_id = id;
     m_se->OnJoinedBattle( id );
-    m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dgun, dim, ghost, hash );
+    if ( m_ser_ver < SER_VER_0_35 ) {
+      m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dgun, dim, ghost, hash );
+    } else {
+      m_se->OnBattleInfoUpdated( m_battle_id );
+    }
   } else if ( cmd == "UPDATEBATTLEDETAILS" ) {
     metal = GetIntParam( params );
     energy = GetIntParam( params );
@@ -574,6 +583,11 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   } else if ( cmd == "OPENBATTLE" ) {
     m_battle_id = GetIntParam( params );
     m_se->OnHostedBattle( m_battle_id );
+
+    if ( m_ser_ver >= SER_VER_0_35 ) {
+      SendHostInfo( HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Options );
+    }
+
   } else if ( cmd == "ADDBOT" ) {
     // ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}
     id = GetIntParam( params );
@@ -640,6 +654,16 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     msg = GetSentenceParam( params );
     m_se->OnServerMessage( msg );
     //Command: "DENIED" params: "Already logged in".
+  } else if ( cmd == "SETSCRIPTTAGS" ) {
+    while ( (msg = GetSentenceParam( params )) != "" ) {
+      std::string::size_type pos = msg.find( "=", 0 );
+      std::string param =  msg.substr( 0, pos );
+      msg = msg.substr( pos + 1 );
+
+      m_se->OnSetBattleInfo( m_battle_id, param, msg );
+    }
+    m_se->OnBattleInfoUpdated( m_battle_id );
+    // !! Command: "SETSCRIPTTAGS" params: "game/startpostype=0	game/maxunits=1000	game/limitdgun=0	game/startmetal=1000	game/gamemode=0	game/ghostedbuildings=-1	game/startenergy=1000	game/diminishingmms=0"
   } else {
     debug( "??? Cmd: " + cmd + " params: " + params );
     m_se->OnUnknownCommand( cmd, params );
@@ -823,18 +847,22 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
 
   wxString cmd = wxString::Format( _T("OPENBATTLE 0 %d "), bo.nattype );
   cmd += (password=="")?_T("*"):WX_STRING(password);
-  cmd += wxString::Format( _T(" %d %d %d %d %d %d %d %d %d %d "),
+  cmd += wxString::Format( _T(" %d %d "),
     bo.port,
-    bo.maxplayers,
-    bo.startmetal,
-    bo.startenergy,
-    bo.maxunits,
-    bo.starttype,
-    bo.gametype,
-    bo.limitdgun,
-    bo.dimmms,
-    bo.ghostedbuildings
+    bo.maxplayers
   );
+  if ( m_ser_ver < SER_VER_0_35 ) {
+    cmd += wxString::Format( _T("%d %d %d %d %d %d %d %d "),
+      bo.startmetal,
+      bo.startenergy,
+      bo.maxunits,
+      bo.starttype,
+      bo.gametype,
+      bo.limitdgun,
+      bo.dimmms,
+      bo.ghostedbuildings
+    );
+  }
   cmd += WX_STRING(bo.modhash);
   cmd += wxString::Format( _T(" %d "), bo.rankneeded );
   cmd += WX_STRING( bo.maphash ) + _T(" ");
@@ -843,6 +871,7 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
   cmd += WX_STRING( bo.modname ) + _T("\n");
 
   m_sock->Send( STD_STRING(cmd) );
+
   // OPENBATTLE type natType password port maxplayers startingmetal startingenergy maxunits startpos
   // gameendcondition limitdgun diminishingMMs ghostedBuildings hashcode rank maphash {map} {title} {modname}
 }
@@ -891,12 +920,21 @@ void TASServer::SendHostInfo( HostInfo update )
     m_sock->Send( STD_STRING(cmd) );
   }
   if ( ( update & (HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Options) ) > 0 ) {
-    // UPDATEBATTLEDETAILS startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings
-    wxString cmd = _T("UPDATEBATTLEDETAILS");
-    cmd += wxString::Format( _T(" %d %d %d %d %d %d %d %d\n"),
-      battle.GetStartMetal(), battle.GetStartEnergy(), battle.GetMaxUnits(), battle.GetStartType(), battle.GetGameType(),
-      battle.LimitDGun(), battle.DimMMs(), battle.GhostedBuildings()
-    );
+    wxString cmd;
+    if ( m_ser_ver < SER_VER_0_35 ) {
+      // UPDATEBATTLEDETAILS startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings
+      cmd = _T("UPDATEBATTLEDETAILS");
+      cmd += wxString::Format( _T(" %d %d %d %d %d %d %d %d\n"),
+        battle.GetStartMetal(), battle.GetStartEnergy(), battle.GetMaxUnits(), battle.GetStartType(), battle.GetGameType(),
+        battle.LimitDGun(), battle.DimMMs(), battle.GhostedBuildings()
+      );
+    } else {
+      cmd = _T("SETSCRIPTTAGS");
+      cmd += wxString::Format( _T(" game/startpostype=%d\tgame/maxunits=%d\tgame/limitdgun=%d\tgame/startmetal=%d\tgame/gamemode=%d\tgame/ghostedbuildings=%d\tgame/startenergy=%d\tgame/diminishingmms=%d\n"),
+        battle.GetStartType(), battle.GetMaxUnits(), battle.LimitDGun(), battle.GetStartMetal(),
+        battle.GetGameType(), battle.GhostedBuildings(), battle.GetStartEnergy(), battle.DimMMs()
+      );
+    }
 
     m_sock->Send( STD_STRING(cmd) );
   }
