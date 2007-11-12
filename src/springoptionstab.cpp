@@ -20,6 +20,7 @@
 #include <wx/dir.h>
 #include <wx/file.h>
 #include <wx/stdpaths.h>
+#include <wx/log.h>
 
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
@@ -458,11 +459,11 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
 
   usync()->FreeUnitSyncLib();
   if ( !usync()->LoadUnitSyncLib( WX_STRING(sett().GetSpringDir()), WX_STRING(sett().GetUnitSyncUsedLoc()) ) ) {
-    wxMessageBox( _("SpringLobby is unable to load you unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
+    wxLogWarning( _("SpringLobby is unable to load you unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
   } else {
     // If LoadUnitSyncLib() fails this will too.
     if ( !Spring::TestSpringBinary() ) {
-      wxMessageBox( _("SpringLobby is unable to detect your spring version.\n\nYou might want to take another look at your spring executable settings."), _("Spring error"), wxOK );
+      wxLogWarning( _("SpringLobby is unable to detect your spring version.\n\nYou might want to take another look at your spring executable settings."), _("Spring error"), wxOK );
     }
   }
   m_ui.mw().OnUnitSyncReloaded();

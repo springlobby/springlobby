@@ -293,11 +293,11 @@ void Ui::OpenWebBrowser( const wxString& url )
 {
   if ( sett().GetWebBrowserPath() == _T("use default") || sett().GetWebBrowserPath().IsEmpty() )
   {
-      if ( !wxLaunchDefaultBrowser( url ) ) wxMessageBox( _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+      if ( !wxLaunchDefaultBrowser( url ) ) wxLogWarning( _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
   }
   else
   {
-    if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) ) wxMessageBox( _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
+    if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) ) wxLogWarning( _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
   }
 }
 
@@ -444,9 +444,9 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
       message +=  _("is not supported by the lobby server that requires version");
       message += _T(" (") +  WX_STRING( m_server_spring_ver ) + _T(").\n\n");
       message += _("Online play will be disabled.");
-      wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
+      wxLogWarning ( message, _("Spring error"), wxICON_EXCLAMATION );
     } else {
-      wxMessageBox( _("Couldn't get your spring version.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
+      wxLogWarning( _("Couldn't get your spring version.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
     }
     m_main_win->DisableMultiplayerTab();
   }
@@ -741,10 +741,10 @@ void Ui::OnJoinedBattle( Battle& battle )
 {
   mw().GetJoinTab().JoinBattle( battle );
   /*if ( !Spring::TestSpringBinary() ) {
-    wxMessageBox( _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
+    wxLogWarning( _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
   }*/
   if ( battle.GetNatType() != NAT_None ) {
-    wxMessageBox( _("This game uses NAT traversal that is not yet supported\nby SpringLobby.\n\nYou will not be able to play in this battle."), _("NAT traversal"), wxOK );
+    wxLogWarning( _("This game uses NAT traversal that is not yet supported\nby SpringLobby.\n\nYou will not be able to play in this battle."), _("NAT traversal"), wxOK );
   }
 }
 

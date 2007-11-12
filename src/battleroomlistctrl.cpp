@@ -427,11 +427,11 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
   if ( dlg.ShowModal() == wxID_OK ) {
     long handicap;
     if ( !dlg.GetValue().ToLong( &handicap ) ) {
-     wxMessageBox( _("Not a number"), _("Invalid number") );
+     wxLogWarning( _("Not a number"), _("Invalid number") );
      return;
     }
     if ( handicap < 0 || handicap > 100 ) {
-      wxMessageBox( _("Value out of range.\n Enter an integer between 0 & 100."), _("Invalid number") );
+      wxLogWarning( _("Value out of range.\n Enter an integer between 0 & 100."), _("Invalid number") );
       return;
     }
     if ( m_sel_bot != 0 ) {
