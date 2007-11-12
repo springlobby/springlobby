@@ -4,6 +4,7 @@
 #include "utils.h"
 
 #include <wx/imaglist.h>
+#include <wx/log.h>
 
 int GetFlagIndex( const std::string& flag )
 {
@@ -12,7 +13,7 @@ int GetFlagIndex( const std::string& flag )
       return i;
     }
   }
-  debug_warn( flag + " flag not found!" );
+  wxLogDebug( WX_STRING(flag) + _T(" flag not found!") );
   return FLAG_NONE;
 }
 

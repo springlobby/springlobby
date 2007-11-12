@@ -1,6 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 #include <wx/socket.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "socket.h"
@@ -102,7 +103,7 @@ void Socket::Disconnect( )
 bool Socket::Send( const std::string& data )
 {
   if ( m_sock == 0 ) {
-    debug_error( "Socket NULL" );
+    wxLogError( _T("Socket NULL") );
     return false;
   }
   if ( m_rate > 0 ) {
@@ -127,7 +128,7 @@ bool Socket::Send( const std::string& data )
 bool Socket::Recive( std::string& data )
 {
   if ( m_sock == 0 ) {
-    debug_error( "Socket NULL" );
+    wxLogError( _T("Socket NULL") );
     return false;
   }
 

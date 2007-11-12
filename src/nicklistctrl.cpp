@@ -7,6 +7,7 @@
 #include <wx/menu.h>
 #include <wx/string.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "nicklistctrl.h"
@@ -95,7 +96,7 @@ void NickListCtrl::RemoveUser( const User& user )
       return;
     }
   }
-  debug_error( "Didn't find the user to remove." );
+  wxLogError( _T("Didn't find the user to remove.") );
 }
 
 
@@ -133,7 +134,7 @@ int NickListCtrl::GetUserIndex( User& user )
   for ( int i = 0; i < GetItemCount() ; i++ ) {
     if ( (unsigned long)&user == GetItemData( i ) ) return i;
   }
-  debug_error( "didn't find the user." );
+  wxLogError( _T("didn't find the user.") );
   return -1;
 }
 

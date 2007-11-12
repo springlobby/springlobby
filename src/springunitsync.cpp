@@ -13,6 +13,7 @@
 //#include <wx/txtstrm.h>
 //#include <wx/wfstream.h>
 #include <wx/textfile.h>
+#include <wx/log.h>
 
 #include <stdexcept>
 
@@ -106,18 +107,18 @@ bool SpringUnitSync::_LoadUnitSyncLib( const wxString& springdir, const wxString
   // Load the library.
   std::string loc = STD_STRING(unitsyncloc);
 
-  debug( "Loading from: " + loc );
+  wxLogDebug( _T("Loading from: ") + WX_STRING(loc) );
 
   // Check if library exists
   if ( !wxFileName::FileExists( WX_STRING(loc)) ) {
-    debug_error( "File not found: "+ loc );
+    wxLogError( _T("File not found: ") + WX_STRING(loc) );
     return false;
   }
 
   try {
     m_libhandle = new wxDynamicLibrary(WX_STRING(loc));
     if (!m_libhandle->IsLoaded()) {
-      debug_error("wxDynamicLibrary created, but not loaded!");
+      wxLogError( _T("wxDynamicLibrary created, but not loaded!") );
       delete m_libhandle;
       m_libhandle = 0;
     }
@@ -126,7 +127,7 @@ bool SpringUnitSync::_LoadUnitSyncLib( const wxString& springdir, const wxString
   }
 
   if (m_libhandle == 0) {
-    debug_error( "Couldn't load the unitsync library" );
+    wxLogError( _T("Couldn't load the unitsync library") );
     return false;
   }
 
@@ -174,7 +175,7 @@ bool SpringUnitSync::_LoadUnitSyncLib( const wxString& springdir, const wxString
     m_side_count = 0;
   }
   catch ( ... ) {
-    debug_error( "Failed to load Unitsync lib." );
+    wxLogError( _T("Failed to load Unitsync lib.") );
     _FreeUnitSyncLib();
     return false;
   }
@@ -361,14 +362,14 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const std::string& mapname )
   debug_func("");
   MapCacheType::iterator i = m_mapinfo.find(mapname);
   if ( i != m_mapinfo.end() ) {
-    debug("GetMapInfoEx cache lookup.");
+    wxLogDebug( _T("GetMapInfoEx cache lookup.") );
     MapInfo info;
     CachedMapInfo cinfo = i->second;
     _ConvertSpringMapInfo( cinfo, info );
     return info;
   }
 
-  debug("GetMapInfoEx cache lookup failed.");
+  wxLogDebug( _T("GetMapInfoEx cache lookup failed.") );
 
   char tmpdesc[256];
   char tmpauth[256];
@@ -567,7 +568,7 @@ wxString SpringUnitSync::GetBotLibPath( const wxString& botlibname )
     ini = m_find_files_vfs ( ini, FilePath, BufferSize );
     wxString FileName = wxString( FilePath, wxConvUTF8 );
     if ( !FileName.Contains ( _T(".dll") ) && !FileName.Contains (  _T(".so") ) ) continue; // FIXME this isn't exactly portable
-    debug( "AIdll: " + STD_STRING(FileName) );
+    wxLogDebug( _T("AIdll: ") + FileName );
     return FileName;
   } while (ini != 0);
 
@@ -594,7 +595,7 @@ wxString _GetCachedModUnitsFileName( const wxString& mod )
   wxString fname = WX_STRING( mod );
   fname.Replace( _T("."), _T("_") );
   fname.Replace( _T(" "), _T("_") );
-  debug(STD_STRING(path));
+  wxLogDebug( path );
   return path + fname + _T(".units");
 }
 
@@ -707,7 +708,7 @@ wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int max_w, int m
   try {
     return _GetCachedMinimap( mapname, max_w, max_h, store_size );
   } catch(...) {
-    debug( "Cache lookup failed." );
+    wxLogDebug( _T("Cache lookup failed.") );
   }
 
   wxImage ret( width, height );
@@ -812,13 +813,13 @@ void SpringUnitSync::_LoadMapInfoExCache()
   wxString path = sett().GetCachePath() + _T("mapinfoex.cache"); //wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator() + _T("mapinfoex.cache");
 
   if ( !wxFileName::FileExists( path ) ) {
-    debug( "No cache file found." );
+    wxLogDebug( _T("No cache file found.") );
     return;
   }
 
   wxFile f( path.c_str(), wxFile::read );
   if ( !f.IsOpened() ) {
-    debug( "failed to open file for reading." );
+    wxLogDebug( _T("failed to open file for reading.") );
     return;
   }
 
@@ -827,7 +828,7 @@ void SpringUnitSync::_LoadMapInfoExCache()
   CachedMapInfo cinfo;
   while ( !f.Eof() ) {
     if ( (unsigned int)f.Read( &cinfo, sizeof(CachedMapInfo) ) < sizeof(CachedMapInfo) ) {
-      debug_error( "Cache file invalid" );
+      wxLogError( _T("Cache file invalid") );
       m_mapinfo.clear();
       break;
     }
@@ -844,7 +845,7 @@ void SpringUnitSync::_SaveMapInfoExCache()
 
   wxFile f( path.c_str(), wxFile::write );
   if ( !f.IsOpened() ) {
-    debug( "failed to open file for writing." );
+    wxLogDebug( _T("failed to open file for writing.") );
     return;
   }
 

@@ -12,6 +12,7 @@
 #include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "mainwindow.h"
@@ -338,12 +339,12 @@ void MainWindow::OnTabsChanged( wxListbookEvent& event )
 void MainWindow::OnUnitSyncReloaded()
 {
   debug_func("");
-  debug("Reloading join tab");
+  wxLogDebug( _T("Reloading join tab") );
   GetJoinTab().OnUnitSyncReloaded();
-  debug("Join tab updated");
-  debug("Reloading Singleplayer tab");
+  wxLogDebug( _T("Join tab updated") );
+  wxLogDebug( _T("Reloading Singleplayer tab") );
   GetSPTab().OnUnitSyncReloaded();
-  debug("Singleplayer tab updated");
+  wxLogDebug( _T("Singleplayer tab updated") );
 }
 
 

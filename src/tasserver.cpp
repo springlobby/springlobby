@@ -2,6 +2,7 @@
 
 #include <wx/string.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "base64.h"
@@ -1216,7 +1217,7 @@ void TASServer::AddBot( int battleid, const std::string& nick, const std::string
   tascl.color.zero = 0;
   //ADDBOT name battlestatus teamcolor {AIDLL}
   std::string cmd = "ADDBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + " " + aidll + ".dll\n";
-  debug( cmd );
+  wxLogDebug( WX_STRING(cmd) );
   m_sock->Send( cmd );
 }
 
@@ -1256,7 +1257,7 @@ void TASServer::UpdateBot( int battleid, const std::string& nick, UserBattleStat
   tascl.color.zero = 0;
   //UPDATEBOT name battlestatus teamcolor
   std::string cmd = "UPDATEBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + "\n";
-  debug( cmd );
+  wxLogDebug( WX_STRING(cmd) );
   m_sock->Send( cmd );
 }
 

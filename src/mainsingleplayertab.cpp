@@ -6,6 +6,7 @@
 #include <wx/imaglist.h>
 #include <wx/notebook.h>
 #include <wx/icon.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "singleplayertab.h"
@@ -59,11 +60,11 @@ void MainSinglePlayerTab::OnUnitSyncReloaded()
 {
   debug_func("");
   ASSERT_LOGIC( m_sp_tab != 0, "m_sp_tab = 0" );
-  debug("Reloading map list");
+  wxLogDebug( _T("Reloading map list") );
   m_sp_tab->ReloadMaplist();
-  debug("Reloading mod list");
+  wxLogDebug( _T("Reloading mod list") );
   m_sp_tab->ReloadModlist();
-  debug("Reloading minimap");
+  wxLogDebug( _T("Reloading minimap") );
   m_sp_tab->UpdateMinimap();
 }
 

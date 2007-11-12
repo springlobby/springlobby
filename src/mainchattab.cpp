@@ -9,6 +9,7 @@
 #include <wx/sizer.h>
 #include <wx/notebook.h>
 #include <wx/listbook.h>
+#include <wx/log.h>
 
 #include "mainchattab.h"
 #include "utils.h"
@@ -231,7 +232,7 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
 
   wxWindow* newpage = m_chat_tabs->GetPage( newsel );
   if ( newpage == 0 ) { // Not sure what to do here
-    debug_error( "Newpage NULL." );
+    wxLogError( _T("Newpage NULL.") );
     return;
   }
 

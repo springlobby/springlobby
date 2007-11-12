@@ -4,6 +4,8 @@
 #include "spring.h"
 #include "utils.h"
 
+#include <wx/log.h>
+
 DEFINE_LOCAL_EVENT_TYPE( wxEVT_SPRING_EXIT )
 
 
@@ -38,7 +40,7 @@ void* SpringProcess::Entry()
 {
   debug_func("");
   system( STD_STRING(m_cmd).c_str() );
-  debug("Spring closed.");
+  wxLogDebug("Spring closed.");
   return 0;
 }
 

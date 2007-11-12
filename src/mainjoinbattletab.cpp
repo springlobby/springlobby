@@ -9,6 +9,7 @@
 #include <wx/imaglist.h>
 #include <wx/sizer.h>
 #include <wx/listbook.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "battle.h"
@@ -154,16 +155,16 @@ void MainJoinBattleTab::OnUnitSyncReloaded()
 {
   debug_func("");
   GetBattleListTab().OnUnitSyncReloaded();
-  debug("Battle list tab reloaded");
+  wxLogDebug( _T("Battle list tab reloaded") );
   if ( GetBattleRoomTab() ) {
-    debug("Reloading battleroom");
+    wxLogDebug( _T("Reloading battleroom") );
     GetBattleRoomTab()->OnUnitSyncReloaded();
-    debug("Battleroom reloaded");
+    wxLogDebug( _T("Battleroom reloaded") );
   }
   if ( GetBattleMapTab() ) {
-    debug("Reloading battlemap");
+    wxLogDebug( _T("Reloading battlemap") );
     GetBattleMapTab()->OnUnitSyncReloaded();
-    debug("Battlemap reloaded");
+    wxLogDebug( _T("Battlemap reloaded") );
   }
 }
 

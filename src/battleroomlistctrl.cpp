@@ -8,6 +8,7 @@
 #include <wx/textdlg.h>
 #include <wx/msgdlg.h>
 #include <wx/colordlg.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "battleroomlistctrl.h"
@@ -253,7 +254,7 @@ int BattleroomListCtrl::GetUserIndex( User& user )
     if ( item.GetImage() == ICON_BOT ) continue;
     if ( (unsigned long)&user == GetItemData( i ) ) return i;
   }
-  debug_error( "didn't find the battle." );
+  wxLogError( _T("didn't find the battle.") );
   return -1;
 }
 
@@ -330,7 +331,7 @@ int BattleroomListCtrl::GetBotIndex( BattleBot& bot )
     if ( item.GetImage() != ICON_BOT ) continue;
     if ( (unsigned long)&bot == GetItemData( i ) ) return i;
   }
-  debug_error( "didn't find the bot." );
+  wxLogError( _T("didn't find the bot.") );
   return -1;
 }
 
@@ -342,7 +343,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
   if ( event.GetIndex() == -1 ) return;
 
   if ( event.GetImage() == ICON_BOT ) {
-    debug("Bot");
+    wxLogDebug(_T("Bot"));
     m_sel_user = 0;
     m_sel_bot = (BattleBot*)event.GetData();
     int item = m_popup->FindItem( _("Spectator") );
@@ -350,7 +351,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     m_popup->Check( item, false );
     m_popup->Enable( m_popup->FindItem( _("Ring") ), false );
   } else {
-    debug("User");
+    wxLogDebug(_T("User"));
     m_sel_bot = 0;
     m_sel_user = (User*)event.GetData();
     int item = m_popup->FindItem( _("Spectator") );
@@ -359,9 +360,9 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     m_popup->Enable( m_popup->FindItem( _("Ring") ), true );
   }
 
-  debug("Popup");
+  wxLogDebug(_T("Popup"));
   PopupMenu( m_popup );
-  debug("Done");
+  wxLogDebug(_T("Done"));
 }
 
 

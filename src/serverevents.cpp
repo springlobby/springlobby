@@ -4,6 +4,7 @@
 //
 
 #include <wx/intl.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "serverevents.h"
@@ -90,7 +91,7 @@ void ServerEvents::OnMotd( const std::string& msg )
 void ServerEvents::OnPong( int ping_time )
 {
   if ( ping_time == -1 ) {
-    debug( "Ping Timeout!" );
+    wxLogWarning( _T("Ping Timeout!") );
     m_serv.Disconnect();
     OnDisconnected();
   }

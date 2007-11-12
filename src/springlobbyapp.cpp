@@ -9,6 +9,7 @@
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <wx/image.h>
+#include <wx/log.h>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -56,7 +57,7 @@ bool SpringLobbyApp::OnInit()
   InitDirs();
 
   m_ui = new Ui();
-  debug("Ui created");
+  wxLogDebug( _T("Ui created") );
 
   m_ui->ShowMainWindow();
 
@@ -106,9 +107,9 @@ void SpringLobbyApp::OnFatalException()
 
   DebugInfo += _T("-------- End StackTrace --------");
 
-  debug_error( STD_STRING(DebugInfo) );
+  wxLogError( DebugInfo );
 #else
-  debug_error( "Stacktrace not possible, please enable wxStackWalker" );
+  wxLogError( _T("Stacktrace not possible, please enable wxStackWalker") );
 #endif
 }
 

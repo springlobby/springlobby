@@ -4,6 +4,7 @@
 //
 
 #include <stdexcept>
+#include <wx/log.h>
 
 #include "battle.h"
 #include "ui.h"
@@ -456,7 +457,7 @@ BattleBot* Battle::GetBot( const std::string& name )
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
   {
     if ( *i == 0 ) continue;
-    debug( (*i)->name );
+    wxLogDebug( WX_STRING((*i)->name) );
     if ( (*i)->name == name ) {
       return *i;
     }

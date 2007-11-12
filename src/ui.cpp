@@ -10,6 +10,7 @@
 #include <wx/thread.h>
 #include <wx/intl.h>
 #include <wx/utils.h>
+#include <wx/log.h>
 
 #include "spring.h"
 #include "ui.h"
@@ -513,7 +514,7 @@ void Ui::OnChannelSaid( Channel& channel, User& user, const std::string& message
 {
   debug_func( "" );
   if ( channel.uidata.panel == 0 ) {
-    debug_error( "ud->panel NULL" );
+    wxLogError( _T("ud->panel NULL") );
     return;
   }
   channel.uidata.panel->Said( WX_STRING(user.GetNick()), WX_STRING( message ) );
@@ -524,7 +525,7 @@ void Ui::OnChannelDidAction( Channel& channel , User& user, const std::string& a
 {
   debug_func( "" );
   if ( channel.uidata.panel == 0 ) {
-    debug_error( "ud->panel NULL" );
+    wxLogError( _T("ud->panel NULL") );
     return;
   }
   channel.uidata.panel->DidAction( WX_STRING(user.GetNick()), WX_STRING( action ) );
@@ -553,7 +554,7 @@ void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 {
   //debug_func( "" );
   if ( chan.uidata.panel == 0 ) {
-    debug_error( "ud->panel NULL" );
+    wxLogError( _T("ud->panel NULL") );
     return;
   }
   chan.uidata.panel->Joined( user );
@@ -564,7 +565,7 @@ void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason
 {
   //debug_func( "" );
   if ( chan.uidata.panel == 0 ) {
-    debug_error( "ud->panel NULL" );
+    wxLogError( ("ud->panel NULL") );
     return;
   }
   chan.uidata.panel->Parted( user, WX_STRING(reason) );
@@ -575,7 +576,7 @@ void Ui::OnChannelTopic( Channel& channel , const std::string user, const std::s
 {
   debug_func( "" );
   if ( channel.uidata.panel == 0 ) {
-    debug_error( "ud->panel NULL" );
+    wxLogError( _T("ud->panel NULL") );
     return;
   }
   channel.uidata.panel->SetTopic( WX_STRING(user), WX_STRING(topic) );

@@ -14,6 +14,7 @@
 #include <wx/tokenzr.h>
 #include <wx/msgdlg.h>
 #include <wx/menu.h>
+#include <wx/log.h>
 #include <wx/utils.h>
 
 #include "channel.h"
@@ -228,7 +229,7 @@ void ChatPanel::_CreatePopup()
   debug_func("");
   if ( m_type == CPT_Channel ) {
 
-    debug("channel");
+    wxLogDebug(_T("channel"));
     m_popup_menu = new wxMenu();
     m_autorejoin = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_AUTOJOIN, _("Auto join this channel"), wxEmptyString, wxITEM_CHECK );
     m_popup_menu->Append( m_autorejoin );
@@ -289,7 +290,7 @@ void ChatPanel::_CreatePopup()
 
   } else if ( m_type == CPT_Server ) {
 
-    debug( "server" );
+    wxLogDebug( _T("server") );
     m_popup_menu = new wxMenu();
 
     wxMenuItem* disconnectitem = new wxMenuItem( m_popup_menu, CHAT_MENU_SV_DISCON, _("Disconnect"), wxEmptyString, wxITEM_NORMAL );
@@ -678,7 +679,7 @@ void ChatPanel::Say( const wxString& message )
   }
   while ( lines.HasMoreTokens() ) {
     wxString line = lines.GetNextToken();
-    debug("line: " + STD_STRING(line) );
+    wxLogDebug(_T("line: ") + line );
 
     if ( line.Find('/') == 0 ) {
       if ( m_ui.ExecuteSayCommand( line ) ) return;
