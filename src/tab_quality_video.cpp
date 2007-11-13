@@ -48,8 +48,6 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 	subSizer->Add(5, 0, 0);
 	subSizer->Add(yResInput, 0, wxALIGN_RIGHT, 10);
 
-
-	// note: actually viewport dimension
 	sizer->Add(new wxStaticText(this, -1, wxT("Screen Resolution")), 0, wxTOP , 15);
 	sizer->Add(subSizer);
 
@@ -66,10 +64,10 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
 	wxArrayString choices ; //wxArrayStringFromCStringArray(WR_COMBOX_CHOICES);
 	choices.Add(wxT("ES"));
 
-
+	sizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP , 10);
 	wxComboBox* waterQuality = new wxComboBox(this, ID_WINDOWP_WR_COMBOX, WR_COMBOX_CHOICES[0], wxDefaultPosition, wxSize(220,21), 
 			4,WR_COMBOX_CHOICES,wxCB_DROPDOWN);
-	sizer->Add(waterQuality, 0, wxTOP, 10);	
+	sizer->Add(waterQuality, 0, wxBOTTOM, 5);	
 }
 
 void tab_quality_video::initAASizer(wxFlexGridSizer* sizer){

@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007 
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104 
     for more info/help
 
@@ -26,7 +26,8 @@ IMPLEMENT_APP(SettingsPlusPlus)
 
 bool SettingsPlusPlus::OnInit()
 {
-    settings_frame* frame = new settings_frame(NULL);
+    settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
+    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
     SetTopWindow(frame);
     frame->Show();
     return true;
