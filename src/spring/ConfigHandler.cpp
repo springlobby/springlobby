@@ -57,4 +57,5 @@ void ConfigHandler::Deallocate()
 }
 
 ConfigHandler::~ConfigHandler() {
+	
 }

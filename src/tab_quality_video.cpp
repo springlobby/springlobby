@@ -60,10 +60,6 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
 		sizer->Add(checkBox, 0, wxTOP, (i == 0)? 10: 0);
 	}
 	
-	sizer->AddSpacer(1);
-	wxArrayString choices ; //wxArrayStringFromCStringArray(WR_COMBOX_CHOICES);
-	choices.Add(wxT("ES"));
-
 	sizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP , 10);
 	wxComboBox* waterQuality = new wxComboBox(this, ID_WINDOWP_WR_COMBOX, WR_COMBOX_CHOICES[0], wxDefaultPosition, wxSize(220,21), 
 			4,WR_COMBOX_CHOICES,wxCB_DROPDOWN);
