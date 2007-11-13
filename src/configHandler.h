@@ -23,11 +23,11 @@
 
 #define configHandler (ConfigHandler::GetInstance())
 
-typedef int (USYNC_CALL_CONV *GetSpringConfigInt)(std::string , int );
-typedef const char* (USYNC_CALL_CONV *GetSpringConfigString)(std::string , std::string );
+typedef int (USYNC_CALL_CONV *GetSpringConfigInt)(const char* , int );
+typedef const char* (USYNC_CALL_CONV *GetSpringConfigString)(const char* , const char* );
 
-typedef void (USYNC_CALL_CONV *SetSpringConfigString)(std::string , std::string );
-typedef void (USYNC_CALL_CONV *SetSpringConfigInt)(std::string , int );
+typedef void (USYNC_CALL_CONV *SetSpringConfigString)(const char* , const char* );
+typedef void (USYNC_CALL_CONV *SetSpringConfigInt)(const char* , int );
 
 class wxDynamicLibrary;
 

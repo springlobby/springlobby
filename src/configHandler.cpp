@@ -18,7 +18,7 @@ bool ConfigHandler::LoadUnitSyncLib( const wxString& springdir, const wxString& 
 	wxSetWorkingDirectory( wxT(".") );
 
 	// Load the library.
-	std::string loc = "/home/kosh/projekte/settings/bin/linux/unitsync_new.so";//STD_STRING(unitsyncloc);
+	std::string loc = "/home/kosh/projekte/settings/bin/linux/unitsync.so";//STD_STRING(unitsyncloc);
 
 	std::cout <<( "Loading from: " + loc );
 
@@ -86,24 +86,24 @@ ConfigHandler& ConfigHandler::GetInstance(){
 
 void ConfigHandler::SetInt(std::string name, int value){
 	LOCK_UNITSYNC;
-	h_SetSpringConfigInt(name,value);
+	h_SetSpringConfigInt(name.c_str(),value);
 }
 
 
 void ConfigHandler::SetString(std::string name, std::string value){
 	LOCK_UNITSYNC;
-	h_SetSpringConfigString(name,value);
+	h_SetSpringConfigString(name.c_str(),value.c_str());
 }
 
 
 std::string ConfigHandler::GetString(std::string name, std::string def) {
 	LOCK_UNITSYNC;
-	return h_GetSpringConfigString(name,def);
+	return h_GetSpringConfigString(name.c_str(),def.c_str());
 }
 
 int ConfigHandler::GetInt(std::string name, int def){
 	LOCK_UNITSYNC;
-	return h_GetSpringConfigInt(name,def);
+	return h_GetSpringConfigInt(name.c_str(),def);
 }
 
 ConfigHandler::~ConfigHandler()
