@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -247,7 +247,7 @@ bool abstract_panel::saveSettings() {
 
 BEGIN_EVENT_TABLE(abstract_panel, wxPanel)
 	EVT_SLIDER(wxID_ANY,            abstract_panel::OnSliderMove)
-//	EVT_TEXT(wxID_ANY,              abstract_panel::OnTextUpdate)
+	EVT_TEXT(wxID_ANY,              abstract_panel::OnTextUpdate)
 	EVT_CHECKBOX(wxID_ANY,          abstract_panel::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       abstract_panel::OnRadioButtonToggle)
 	EVT_IDLE(                       abstract_panel::update)

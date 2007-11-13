@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -66,8 +66,9 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
 	wxArrayString choices ; //wxArrayStringFromCStringArray(WR_COMBOX_CHOICES);
 	choices.Add(wxT("ES"));
 
-//wxComboBox(wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, const wxSize& size, const wxArrayString& choices, long style = 0, const wxValidator& validator = wxDefaultValidator, const wxString& name = "comboBox")
-	wxComboBox* waterQuality = new wxComboBox(this, ID_WINDOWP_WR_COMBOX, WR_COMBOX_CHOICES[0], wxDefaultPosition, wxSize(220,21), 3,WR_COMBOX_CHOICES,wxCB_DROPDOWN);
+
+	wxComboBox* waterQuality = new wxComboBox(this, ID_WINDOWP_WR_COMBOX, WR_COMBOX_CHOICES[0], wxDefaultPosition, wxSize(220,21), 
+			4,WR_COMBOX_CHOICES,wxCB_DROPDOWN);
 	sizer->Add(waterQuality, 0, wxTOP, 10);	
 }
 
@@ -102,7 +103,8 @@ void tab_quality_video::initZBufferSizer(wxFlexGridSizer* sizer)
     
 }
 
-tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
+tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , 
+		const wxSize& size, long style)
                 : abstract_panel(parent, id , title , pos , size, style) {
 
 	wxSizer* parentSizer = new wxFlexGridSizer(2,0,0);	
@@ -157,9 +159,9 @@ tab_quality_video::~tab_quality_video(void) {
 
 BEGIN_EVENT_TABLE(tab_quality_video, abstract_panel)
 	EVT_SLIDER(wxID_ANY,            tab_quality_video::OnSliderMove)
-//	EVT_TEXT(wxID_ANY,              tab_quality_video::OnTextUpdate)
+	EVT_TEXT(wxID_ANY,              tab_quality_video::OnTextUpdate)
 	EVT_CHECKBOX(wxID_ANY,          tab_quality_video::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       tab_quality_video::OnRadioButtonToggle)
 	EVT_IDLE(                       tab_quality_video::update)
-//	EVT_COMBOBOX(wxID_ANY, 		tab_quality_video::OnSliderMove)
+	EVT_COMBOBOX(ID_WINDOWP_WR_COMBOX, 		tab_quality_video::OnComboBoxChange)
 END_EVENT_TABLE()
