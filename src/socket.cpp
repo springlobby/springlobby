@@ -112,7 +112,7 @@ bool Socket::Send( const std::string& data )
     if ( max > 0 ) {
       std::string send = m_buffer.substr( 0, max );
       m_buffer.erase( 0, max );
-      debug( "send: " + i2s(send.length()) + " sent: " + i2s(m_sent) + " max: " + i2s(max) + " buff: " +i2s(m_buffer.length()) );
+      wxLogDebug( _T("send: ") + WX_STRING(i2s(send.length())) + _T(" sent: ") + WX_STRING(i2s(m_sent)) + _T(" max: ") + WX_STRING(i2s(max)) + _T(" buff: ") + WX_STRING(i2s(m_buffer.length())) );
       m_sock->Write( (void*)send.c_str(), send.length() );
       m_sent += send.length();
     }

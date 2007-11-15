@@ -666,7 +666,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_se->OnBattleInfoUpdated( m_battle_id );
     // !! Command: "SETSCRIPTTAGS" params: "game/startpostype=0	game/maxunits=1000	game/limitdgun=0	game/startmetal=1000	game/gamemode=0	game/ghostedbuildings=-1	game/startenergy=1000	game/diminishingmms=0"
   } else {
-    debug( "??? Cmd: " + cmd + " params: " + params );
+    wxLogDebug( _T("??? Cmd: ") + WX_STRING(cmd) + _T(" params: ")+ WX_STRING(params) );
     m_se->OnUnknownCommand( cmd, params );
   }
 }
