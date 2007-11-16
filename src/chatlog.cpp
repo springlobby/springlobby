@@ -82,7 +82,7 @@ bool ChatLog::_CreateFolder(const wxString& server)
 
 bool ChatLog::_WriteLine(const wxString& text)
 {
-  ASSERT_LOGIC( m_logfile, "m_logfile = 0" );
+  ASSERT_LOGIC( m_logfile, _T("m_logfile = 0") );
   if ( !m_logfile->Write( text, wxConvUTF8 ) ) {
     m_active = false;
     wxLogWarning( _T("Couldn't write message to log.\nLogging will be disabled for room ") + m_server + _T("::") + m_room + _T(".\n\nRejoin room to reactivate logging."), _T("Warning") );

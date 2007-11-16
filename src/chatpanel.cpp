@@ -569,7 +569,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 void ChatPanel::UserStatusUpdated( User& who )
 {
   if ( m_show_nick_list ) {
-    ASSERT_LOGIC( m_nicklist != 0, "m_nicklist = 0" );
+    ASSERT_LOGIC( m_nicklist != 0, _T("m_nicklist = 0") );
     m_nicklist->UserUpdated( who );
   }
 }
@@ -583,7 +583,7 @@ Channel& ChatPanel::GetChannel()
 
 void ChatPanel::SetChannel( Channel* chan )
 {
-  ASSERT_LOGIC(m_type == CPT_Channel, "Not of type channel" );
+  ASSERT_LOGIC(m_type == CPT_Channel, _T("Not of type channel") );
   if ( (chan == 0) && (m_channel != 0) ) {
     StatusMessage( _("Chat closed.") );
     m_channel->uidata.panel = 0;
@@ -607,7 +607,7 @@ Server* ChatPanel::GetServer()
 
 void ChatPanel::SetServer( Server* serv )
 {
-  ASSERT_LOGIC(m_type == CPT_Server, "Not of type server" );
+  ASSERT_LOGIC(m_type == CPT_Server, _T("Not of type server") );
   if ( (serv == 0) && (m_server != 0) ) m_server->uidata.panel = 0;
   else if ( serv != 0 ) serv->uidata.panel = this;
   m_server = serv;
@@ -625,7 +625,7 @@ User* ChatPanel::GetUser()
 
 void ChatPanel::SetUser( User* usr )
 {
-  ASSERT_LOGIC(m_type == CPT_User, "Not of type user" );
+  ASSERT_LOGIC(m_type == CPT_User, _T("Not of type user") );
 
   if ( (usr == 0) && (m_user != 0) ) m_user->uidata.panel = 0;
   else if ( usr != 0 ) usr->uidata.panel = this;

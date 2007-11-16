@@ -170,15 +170,15 @@ void BattleListTab::AddBattle( Battle& battle ) {
     return;
   }
   int index = m_battle_list->InsertItem( 0, IconImageList::GetBattleStatusIcon( battle ) );
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
   m_battle_list->SetItemData(index, (long)battle.GetBattleId() );
   battle.SetGUIListActiv( true );
 
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
   //wxListItem item;
   //item.SetId( index );
 
- // ASSERT_LOGIC( m_battle_list->GetItem( item ), "!GetItem" );
+ // ASSERT_LOGIC( m_battle_list->GetItem( item ), _T("!GetItem") );
 
   m_battle_list->SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
   m_battle_list->SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
@@ -234,12 +234,12 @@ void BattleListTab::UpdateBattle( Battle& battle )
     }
   }
 
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
 
   //wxListItem item;
   //item.SetId( index );
 
-  //ASSERT_LOGIC( m_battle_list->GetItem( item ), "!GetItem" );
+  //ASSERT_LOGIC( m_battle_list->GetItem( item ), _T("!GetItem") );
 
   //Battle& battle = m_ui.GetServer().battles_iter.GetBattle( m_battle_list->GetItemData( index ) );
 
@@ -373,7 +373,7 @@ void BattleListTab::OnFilterActiv( wxCommandEvent& event )
 
 void BattleListTab::OnJoin( wxCommandEvent& event )
 {
-  ASSERT_LOGIC( m_battle_list != 0, "m_battle_list = 0" );
+  ASSERT_LOGIC( m_battle_list != 0, _T("m_battle_list = 0") );
   if ( m_battle_list->GetSelectedIndex() < 0 ) return;
 
   DoJoin( m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetSelectedIndex() ) );
@@ -383,7 +383,7 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
 
 void BattleListTab::OnListJoin( wxListEvent& event )
 {
-  ASSERT_LOGIC( m_battle_list != 0, "m_battle_list = 0" );
+  ASSERT_LOGIC( m_battle_list != 0, _T("m_battle_list = 0") );
   if ( event.GetIndex() < 0 ) return;
 
   DoJoin( m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetItemData( event.GetIndex() ) ) );

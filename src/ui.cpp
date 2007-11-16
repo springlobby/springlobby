@@ -50,7 +50,7 @@ Ui::~Ui() {
 
 Server& Ui::GetServer()
 {
-  ASSERT_LOGIC( m_serv != 0, "m_serv NULL!" );
+  ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
   return *m_serv;
 }
 
@@ -68,14 +68,14 @@ ChatPanel* Ui::GetActiveChatPanel()
 
 MainWindow& Ui::mw()
 {
-  ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0" );
+  ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   return *m_main_win;
 }
 
 //! @brief Shows the main window on screen
 void Ui::ShowMainWindow()
 {
-  ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0" );
+  ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   mw().Show(true);
 }
 
@@ -86,7 +86,7 @@ void Ui::ShowMainWindow()
 void Ui::ShowConnectWindow()
 {
   if ( m_con_win == 0 ) {
-    ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0" );
+    ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
     m_con_win = new ConnectWindow( m_main_win, *this );
   }
   m_con_win->CenterOnParent();
@@ -140,7 +140,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
   Socket* sock;
 
   if ( !sett().ServerExists( STD_STRING(servername) ) ) {
-    ASSERT_LOGIC( false, "Server does not exist in settings" );
+    ASSERT_LOGIC( false, _T("Server does not exist in settings") );
     return;
   }
 
@@ -181,7 +181,7 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
   int port;
 
   if ( !sett().ServerExists( STD_STRING(servername) ) ) {
-    ASSERT_LOGIC( false, "Server does not exist in settings" );
+    ASSERT_LOGIC( false, _T("Server does not exist in settings") );
     return false;
   }
 
@@ -214,7 +214,7 @@ void Ui::JoinChannel( const wxString& name, const wxString& password )
 
 void Ui::StartHostedBattle()
 {
-  ASSERT_LOGIC( m_serv != 0, "m_serv = 0" );
+  ASSERT_LOGIC( m_serv != 0, _T("m_serv = 0") );
   m_serv->StartHostedBattle();
   sett().SetLastHostMap( STD_STRING(m_serv->GetCurrentBattle()->GetMapName()) );
 }
@@ -235,7 +235,7 @@ bool Ui::IsSpringRunning()
 //! @brief Quits the entire application
 void Ui::Quit()
 {
-  ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0" );
+  ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   sett().SaveSettings();
   m_main_win->Close();
 }

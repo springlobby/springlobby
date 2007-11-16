@@ -17,7 +17,7 @@ SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   GetFreeColour( r, g, b, false );
   int i = AddBot( 0, 0, 0, 0, _T("") );
   BattleBot* bot = GetBot( i );
-  ASSERT_LOGIC( bot != 0, "bot == 0" );
+  ASSERT_LOGIC( bot != 0, _T("bot == 0") );
   bot->bs.color_r = r;
   bot->bs.color_g = g;
   bot->bs.color_b = b;
@@ -39,10 +39,10 @@ unsigned int SinglePlayerBattle::GetNumBots()
 BattleBot* SinglePlayerBattle::GetBotByStartPosition( unsigned int startpos )
 {
   const UnitSyncMap& map = Map();
-  ASSERT_LOGIC( ((int)startpos < map.info.posCount) && (startpos >= 0), "Invalid startpos" );
+  ASSERT_LOGIC( ((int)startpos < map.info.posCount) && (startpos >= 0), _T("Invalid startpos") );
   for ( unsigned int bi = 0; bi < GetNumBots(); bi++ ) {
     BattleBot* bot = GetBot( bi );
-    ASSERT_LOGIC( bot != 0, "Bot == 0" );
+    ASSERT_LOGIC( bot != 0, _T("Bot == 0") );
     if ( ( map.info.positions[startpos].x == bot->posx ) && ( map.info.positions[startpos].y == bot->posy ) ) {
       return bot;
     }
@@ -106,7 +106,7 @@ int SinglePlayerBattle::GetFreeAlly()
     changed = false;
     for ( unsigned int i = 0; i < GetNumBots(); i++ ) {
       BattleBot* bot = GetBot( i );
-      ASSERT_LOGIC( bot != 0, "Bot == 0" );
+      ASSERT_LOGIC( bot != 0, _T("Bot == 0") );
       if ( bot->bs.ally == lowest ) {
         lowest++;
         changed = true;
@@ -124,7 +124,7 @@ void SinglePlayerBattle::GetFreePosition( int& x, int& y )
     bool taken = false;
     for ( unsigned int bi = 0; bi < GetNumBots(); bi++ ) {
       BattleBot* bot = GetBot( bi );
-      ASSERT_LOGIC( bot != 0, "Bot == 0" );
+      ASSERT_LOGIC( bot != 0, _T("Bot == 0") );
       if ( ( map.info.positions[i].x == bot->posx ) && ( map.info.positions[i].y == bot->posy ) ) {
         taken = true;
         break;
@@ -150,7 +150,7 @@ void SinglePlayerBattle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
     if ( lowest >= 16 ) break;
     for( unsigned int i = 0; i < m_bots.size(); i++ ) {
       BattleBot* bot = GetBot( i );
-      ASSERT_LOGIC( bot != 0, "bot == 0");
+      ASSERT_LOGIC( bot != 0, _T("bot == 0"));
 
       if ( AreColoursSimilar( bot->bs.color_r, bot->bs.color_g, bot->bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
         lowest++;

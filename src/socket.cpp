@@ -19,7 +19,7 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 {
   Socket* sock = (Socket*)event.GetClientData();
 
-  ASSERT_LOGIC( sock != 0, "sock = 0" );
+  ASSERT_LOGIC( sock != 0, _T("sock = 0") );
 
   if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
     m_serv.OnDataRecived( sock );
@@ -28,7 +28,7 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
   } else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
     m_serv.OnConnected( sock );
   } else {
-    ASSERT_LOGIC( false, "Unknown socket event.");
+    ASSERT_LOGIC( false, _T("Unknown socket event."));
   }
 }
 

@@ -83,9 +83,9 @@ IUnitSync* usync()
 
 void* SpringUnitSync::_GetLibFuncPtr( const std::string& name )
 {
-  ASSERT_LOGIC( m_loaded, "Unitsync not loaded" );
+  ASSERT_LOGIC( m_loaded, _T("Unitsync not loaded") );
   void* ptr = m_libhandle->GetSymbol(WX_STRING(name));
-  ASSERT_RUNTIME( ptr, "Couldn't load " + name + " from unitsync library" );
+  ASSERT_RUNTIME( ptr, _T("Couldn't load ") + WX_STRING(name) + _T(" from unitsync library") );
   return ptr;
 }
 
@@ -274,7 +274,7 @@ UnitSyncMod SpringUnitSync::GetMod( const std::string& modname )
   if ( !m_loaded ) return m;
 
   int i = _GetModIndex( modname );
-  ASSERT_LOGIC( i >= 0, "Mod does not exist" );
+  ASSERT_LOGIC( i >= 0, _T("Mod does not exist") );
 
   return _GetMod( i );
 }
@@ -351,7 +351,7 @@ UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname, bool getmapinfo 
 UnitSyncMap SpringUnitSync::_GetMap( const std::string& mapname, bool getmapinfo )
 {
   int i = _GetMapIndex( mapname );
-  ASSERT_LOGIC( i >= 0, "Map does not exist" );
+  ASSERT_LOGIC( i >= 0, _T("Map does not exist") );
 
   return _GetMap( i, getmapinfo );
 }
@@ -447,7 +447,7 @@ std::string SpringUnitSync::GetModArchive( int index )
 std::string SpringUnitSync::_GetModArchive( int index )
 {
   if ( (!m_loaded) || (index < 0) ) return "unknown";
-  ASSERT_LOGIC( index < m_mod_count, "Bad index" );
+  ASSERT_LOGIC( index < m_mod_count, _T("Bad index") );
 
   return m_get_mod_archive( index );;
 }
@@ -488,7 +488,7 @@ std::string SpringUnitSync::GetSideName( int index )
   if ( (!m_loaded) || (index < 0) || (!_ModExists(m_current_mod)) ) return "unknown";
   m_add_all_archives( _GetModArchive( _GetModIndex( m_current_mod ) ).c_str() );
   if ( index >= m_side_count ) return "unknown";
-  ASSERT_LOGIC( m_side_count > index, "Side index too high." );
+  ASSERT_LOGIC( m_side_count > index, _T("Side index too high.") );
   return m_get_side_name( index );
 }
 
@@ -506,12 +506,12 @@ wxImage SpringUnitSync::GetSidePicture( const std::string& SideName )
   ImgName += _T(".bmp");
 
   int ini = m_open_file_vfs(STD_STRING(ImgName).c_str());
-  ASSERT_RUNTIME( ini, "cannot find side image" );
+  ASSERT_RUNTIME( ini, _T("cannot find side image") );
 
   int FileSize = m_file_size_vfs(ini);
   if (FileSize == 0) {
     m_close_file_vfs(ini);
-    ASSERT_RUNTIME( FileSize, "side image has size 0" );
+    ASSERT_RUNTIME( FileSize, _T("side image has size 0") );
   }
 
   char* FileContent = new char [FileSize];
@@ -614,10 +614,10 @@ wxArrayString SpringUnitSync::GetUnitsList()
   wxString path = _GetCachedModUnitsFileName( WX_STRING(m_current_mod) );
   try {
 
-    ASSERT_RUNTIME( wxFileName::FileExists( path ), "Cache file does not exist" );
+    ASSERT_RUNTIME( wxFileName::FileExists( path ), _T("Cache file does not exist") );
     wxTextFile f;
-    ASSERT_RUNTIME( f.Open(path), "Failed to open file" );
-    ASSERT_RUNTIME( f.GetLineCount() > 0, "File empty" );
+    ASSERT_RUNTIME( f.Open(path), _T("Failed to open file") );
+    ASSERT_RUNTIME( f.GetLineCount() > 0, _T("File empty") );
 
     wxString str;
     for ( str = f.GetFirstLine(); !f.Eof(); str = f.GetNextLine() ) ret.Add( str );
@@ -638,7 +638,7 @@ wxArrayString SpringUnitSync::GetUnitsList()
   try {
 
     wxFile f( path, wxFile::write );
-    ASSERT_RUNTIME( f.IsOpened(), "Couldn't create file" );
+    ASSERT_RUNTIME( f.IsOpened(), _T("Couldn't create file") );
 
     for ( unsigned int i = 0; i < ret.GetCount(); i++ ) {
       std::string tmp = STD_STRING( ret.Item(i) );
@@ -669,10 +669,10 @@ wxString SpringUnitSync::_GetCachedMinimapFileName( const std::string& mapname, 
 wxImage SpringUnitSync::_GetCachedMinimap( const std::string& mapname, int max_w, int max_h, bool store_size )
 {
   wxString fname = store_size? _GetCachedMinimapFileName( mapname, max_w, max_h ) : _GetCachedMinimapFileName( mapname );
-  ASSERT_RUNTIME( wxFileExists( fname ), "File cached image does not exist" );
+  ASSERT_RUNTIME( wxFileExists( fname ), _T("File cached image does not exist") );
 
   wxImage img( fname, wxBITMAP_TYPE_PNG );
-  ASSERT_RUNTIME( img.Ok(), "Failed to load chache image" );
+  ASSERT_RUNTIME( img.Ok(), _T("Failed to load chache image") );
 
   if ( !store_size ) {
 
@@ -713,7 +713,7 @@ wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int max_w, int m
 
   wxImage ret( width, height );
   UnitSyncColour* colours = (UnitSyncColour*)m_get_minimap( mapname.c_str(), 0 );
-  ASSERT_RUNTIME( colours , "GetMinimap failed" );
+  ASSERT_RUNTIME( colours , _T("GetMinimap failed") );
   for ( int y = 0; y < height; y++ ) {
     for ( int x = 0; x < width; x++ ) {
       int pos = y*(width)+x;

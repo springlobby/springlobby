@@ -216,7 +216,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
     m_battle.GetFreeColour( r, g, b, false );
     int i = m_battle.AddBot( m_battle.GetFreeAlly(), x, y, handicap, dlg.GetAI() );
     BattleBot* bot = m_battle.GetBot( i );
-    ASSERT_LOGIC( bot != 0, "bot == 0" );
+    ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     bot->bs.color_r = r;
     bot->bs.color_g = g;
     bot->bs.color_b = b;

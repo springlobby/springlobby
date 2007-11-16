@@ -37,7 +37,7 @@ Server::~Server()
 
 void Server::SetSocket( Socket* sock )
 {
-  ASSERT_LOGIC( (!IsConnected()) || (sock == 0), "Not connected" ); m_sock = sock;
+  ASSERT_LOGIC( (!IsConnected()) || (sock == 0), _T("Not connected") ); m_sock = sock;
 }
 
 User& Server::GetUser( const std::string& nickname )

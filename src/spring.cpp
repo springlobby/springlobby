@@ -513,12 +513,12 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot = battle.GetBotByStartPosition( i );
-    ASSERT_LOGIC( bot != 0, "bot == 0" );
+    ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     if ( bot->aidll == "" ) PlayerTeam = i;
     if ( AllyConv[bot->bs.ally] == -1 ) AllyConv[bot->bs.ally] = NumAllys++;
   }
 
-  ASSERT_LOGIC( PlayerTeam != -1, "no player found" );
+  ASSERT_LOGIC( PlayerTeam != -1, _T("no player found") );
 
   // Start generating the script.
   s  = wxString::Format( _T("[GAME]\n{\n") );
@@ -555,7 +555,7 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) { // TODO fix this when new Spring comes.
     BattleBot* bot = battle.GetBotByStartPosition( i );
-    ASSERT_LOGIC( bot != 0, "bot == 0" );
+    ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i );
 
     s += _T("\t\tTeamLeader=0;\n");

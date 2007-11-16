@@ -176,7 +176,7 @@ void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
     case 0: m_battle.SetStartType( ST_Fixed ); break;
     case 1: m_battle.SetStartType( ST_Random ); break;
     case 2: m_battle.SetStartType( ST_Choose ); break;
-    default: ASSERT_LOGIC( false, "invalid pos" );
+    default: ASSERT_LOGIC( false, _T("invalid pos") );
   };
   m_battle.SendHostInfo( HI_StartType );
 }

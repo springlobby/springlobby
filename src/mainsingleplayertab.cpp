@@ -59,7 +59,7 @@ void MainSinglePlayerTab::UpdateMinimap()
 void MainSinglePlayerTab::OnUnitSyncReloaded()
 {
   wxLogDebugFunc( _T("") );
-  ASSERT_LOGIC( m_sp_tab != 0, "m_sp_tab = 0" );
+  ASSERT_LOGIC( m_sp_tab != 0, _T("m_sp_tab = 0") );
   wxLogDebug( _T("Reloading map list") );
   m_sp_tab->ReloadMaplist();
   wxLogDebug( _T("Reloading mod list") );

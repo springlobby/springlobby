@@ -349,7 +349,7 @@ void BattleOptionsTab::OnEndSelect( wxCommandEvent& event )
       case 0: m_battle.SetGameType( GT_ComContinue ); break;
       case 1: m_battle.SetGameType( GT_ComEnds ); break;
       case 2: m_battle.SetGameType( GT_Lineage ); break;
-      default: ASSERT_LOGIC( false, "invalid selection");
+      default: ASSERT_LOGIC( false, _T("invalid selection") );
     }
 
     m_battle.SendHostInfo( HI_GameType );

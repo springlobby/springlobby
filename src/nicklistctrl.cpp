@@ -82,7 +82,7 @@ void NickListCtrl::AddUser( User& user )
 {
   int index = InsertItem( 0, IconImageList::GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
   SetItemData( index, (wxUIntPtr)&user );
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
   UserUpdated( index );
   Sort();
 }
@@ -103,7 +103,7 @@ void NickListCtrl::RemoveUser( const User& user )
 void NickListCtrl::UserUpdated( User& user )
 {
   int index = GetUserIndex( user );
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
   UserUpdated( index );
 }
 
@@ -221,8 +221,8 @@ int wxCALLBACK NickListCtrl::ComparePlayerstatusUP(long item1, long item2, long 
 {
   User* user1 = (User*)item1;
   User* user2 = (User*)item2;
-  ASSERT_LOGIC( user1 != 0, "user1 = 0" );
-  ASSERT_LOGIC( user2 != 0, "user2 = 0" );
+  ASSERT_LOGIC( user1 != 0, _T("user1 = 0") );
+  ASSERT_LOGIC( user2 != 0, _T("user2 = 0") );
 
   int u1 = 0, u2 = 0;
 
@@ -252,8 +252,8 @@ int wxCALLBACK NickListCtrl::ComparePlayerstatusDOWN(long item1, long item2, lon
 {
   User* user1 = (User*)item1;
   User* user2 = (User*)item2;
-  ASSERT_LOGIC( user1 != 0, "user1 = 0" );
-  ASSERT_LOGIC( user2 != 0, "user2 = 0" );
+  ASSERT_LOGIC( user1 != 0, _T("user1 = 0") );
+  ASSERT_LOGIC( user2 != 0, _T("user2 = 0") );
 
   int u1 = 0, u2 = 0;
 

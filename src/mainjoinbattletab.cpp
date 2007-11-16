@@ -91,7 +91,7 @@ void MainJoinBattleTab::UpdateCurrentBattle(bool updateRestrictions)
 
 BattleListTab& MainJoinBattleTab::GetBattleListTab()
 {
-  ASSERT_LOGIC( m_list_tab != 0, "m_list_tab = 0" );
+  ASSERT_LOGIC( m_list_tab != 0, _T("m_list_tab = 0") );
   return *m_list_tab;
 }
 
@@ -144,8 +144,8 @@ void MainJoinBattleTab::LeaveCurrentBattle()
 
 void MainJoinBattleTab::BattleUserUpdated( User& user )
 {
-  ASSERT_LOGIC( m_battle_tab != 0, "m_battle_tab = 0" );
-  ASSERT_LOGIC( m_map_tab != 0, "m_map_tab = 0" );
+  ASSERT_LOGIC( m_battle_tab != 0, _T("m_battle_tab = 0") );
+  ASSERT_LOGIC( m_map_tab != 0, _T("m_map_tab = 0") );
   m_battle_tab->UpdateUser( user );
   m_map_tab->UpdateUser( user );
 }

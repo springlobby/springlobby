@@ -164,7 +164,7 @@ void BattleroomListCtrl::UpdateList()
 void BattleroomListCtrl::AddUser( User& user )
 {
   int index = InsertItem( 0, ICON_NREADY );
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
   SetItemData(index, (wxUIntPtr)&user );
 
   UpdateUser( index );
@@ -186,12 +186,12 @@ void BattleroomListCtrl::UpdateUser( User& user )
 
 void BattleroomListCtrl::UpdateUser( const int& index )
 {
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
 
   wxListItem item;
   item.SetId( index );
 
-  ASSERT_LOGIC( GetItem( item ), "!GetItem" );
+  ASSERT_LOGIC( GetItem( item ), _T("!GetItem") );
 
   User& user = *((User*)GetItemData( index ));
 
@@ -262,7 +262,7 @@ int BattleroomListCtrl::GetUserIndex( User& user )
 void BattleroomListCtrl::AddBot( BattleBot& bot )
 {
   int index = InsertItem( 0, ICON_BOT );
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
   SetItemData(index, (wxUIntPtr)&bot );
 
   UpdateBot( index );
@@ -284,12 +284,12 @@ void BattleroomListCtrl::UpdateBot( BattleBot& bot )
 
 void BattleroomListCtrl::UpdateBot( const int& index )
 {
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
 
   wxListItem item;
   item.SetId( index );
 
-  ASSERT_LOGIC( GetItem( item ), "!GetItem" );
+  ASSERT_LOGIC( GetItem( item ), _T("!GetItem") );
 
   BattleBot& bot = *((BattleBot*)GetItemData( index ));
 

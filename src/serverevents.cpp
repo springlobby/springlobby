@@ -456,7 +456,7 @@ void ServerEvents::OnBattleAddBot( int battleid, const std::string& nick, const 
   Battle& battle = m_serv.GetBattle( battleid );
   battle.OnBotAdded( nick, owner, status, aidll );
   BattleBot* bot = battle.GetBot( nick );
-  ASSERT_LOGIC( bot != 0, "Bot null after add." );
+  ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
   m_ui.OnBattleBotAdded( battle, *bot );
 }
 
@@ -467,7 +467,7 @@ void ServerEvents::OnBattleUpdateBot( int battleid, const std::string& nick, Use
   Battle& battle = m_serv.GetBattle( battleid );
   battle.OnBotUpdated( nick, status );
   BattleBot* bot = battle.GetBot( nick );
-  ASSERT_LOGIC( bot != 0, "Bot null after add." );
+  ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
   m_ui.OnBattleBotUpdated( battle, *bot );
 }
 
@@ -477,7 +477,7 @@ void ServerEvents::OnBattleRemoveBot( int battleid, const std::string& nick )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   BattleBot* bot = battle.GetBot( nick );
-  ASSERT_LOGIC( bot != 0, "Bot null after add." );
+  ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
   m_ui.OnBattleBotRemoved( battle, *bot );
   battle.OnBotRemoved( nick );
 }
