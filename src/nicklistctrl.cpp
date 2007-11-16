@@ -151,7 +151,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
 
 void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc("");
   if ( m_menu != 0 ) PopupMenu( m_menu );
 }
 

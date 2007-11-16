@@ -197,7 +197,7 @@ void Battle::DoAction( const std::string& msg )
 bool Battle::HaveMultipleBotsInSameTeam() const
 {
   std::list<BattleBot*>::const_iterator i;
-  debug_func("");
+  wxLogDebugFunc("");
 
   int teams[16] = { -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1 };
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
@@ -416,7 +416,7 @@ void Battle::OnBotAdded( const std::string& nick, const std::string& owner, cons
   if ( bot == 0 ) bot = new BattleBot();
   else created = false;
 
-  debug_func("created: " + i2s(created) );
+  wxLogDebugFunc("created: " + i2s(created) );
 
   bot->name = nick;
   bot->bs = bs;

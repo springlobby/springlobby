@@ -17,9 +17,6 @@
 #include <windows.h>
 #include <wx/msw/winundef.h>
 #endif
-//#else
-#include <iostream>
-#include <ostream>
 //#endif
 
 #ifdef HAVE_CONFIG_H
@@ -31,23 +28,6 @@ std::string i2s( int x )
   std::ostringstream o;
   o << x;
   return o.str();
-}
-
-void debug_output( const std::string& prefix, const std::string& func, const std::string& params, const std::string& msg )
-{
-  std::string tmpmsg = msg;
-  if ( msg != "" ) tmpmsg = std::string(": ") + msg;
-#ifdef __WXMSW__
-  std::string tmp = prefix;
-  tmp += " " + func + "( " + params + " )" + tmpmsg + "\n";
-  if (prefix != "**" and prefix != "--" and prefix != "ww" ) { wxLogWarning( WX_STRING(tmp) ); }
-#ifdef _MSC_VER
-  OutputDebugString( tmp.c_str() );
-#endif
-
-#else
-  std::cout << prefix.c_str() << " " << func.c_str() << "( " << params.c_str() << " ): "<< tmpmsg.c_str() << std::endl;
-#endif
 }
 
 

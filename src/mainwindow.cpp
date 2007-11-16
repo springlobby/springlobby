@@ -338,7 +338,7 @@ void MainWindow::OnTabsChanged( wxListbookEvent& event )
 
 void MainWindow::OnUnitSyncReloaded()
 {
-  debug_func("");
+  wxLogDebugFunc("");
   wxLogDebug( _T("Reloading join tab") );
   GetJoinTab().OnUnitSyncReloaded();
   wxLogDebug( _T("Join tab updated") );

@@ -15,10 +15,8 @@
 
 std::string i2s( int x );
 
-void debug_output( const std::string& prefix, const std::string& func, const std::string& params, const std::string& msg );
 
-
-#define debug_func( params ) wxLogTrace( __FUNCTION__ + _T(" ( ") + params + _T(" )"),,)
+#define wxLogDebugFunc( params ) wxLogTrace( __FUNCTION__ + _T(" ( ") + params + _T(" )"),,)
 
 
 #define boundry(var,min,max) var=(var<(min))?(min):(var>(max))?(max):var

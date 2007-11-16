@@ -92,7 +92,7 @@ void* SpringUnitSync::_GetLibFuncPtr( const std::string& name )
 
 bool SpringUnitSync::LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc )
 {
-  debug_func("");
+  wxLogDebugFunc("");
   LOCK_UNITSYNC;
   return _LoadUnitSyncLib( springdir, unitsyncloc );
 }
@@ -186,7 +186,7 @@ bool SpringUnitSync::_LoadUnitSyncLib( const wxString& springdir, const wxString
 
 void SpringUnitSync::FreeUnitSyncLib()
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
   _FreeUnitSyncLib();
 }
@@ -213,7 +213,7 @@ bool SpringUnitSync::IsLoaded()
 
 std::string SpringUnitSync::GetSpringVersion()
 {
-  debug_func("");
+  wxLogDebugFunc("");
   LOCK_UNITSYNC;
   if ( !m_loaded ) return "";
   std::string SpringVersion = m_get_spring_version();
@@ -223,7 +223,7 @@ std::string SpringUnitSync::GetSpringVersion()
 
 int SpringUnitSync::GetNumMods()
 {
-  debug_func("");
+  wxLogDebugFunc("");
   LOCK_UNITSYNC;
   if ( !m_loaded ) return 0;
   return m_mod_count;
@@ -232,7 +232,7 @@ int SpringUnitSync::GetNumMods()
 
 int SpringUnitSync::GetModIndex( const std::string& name )
 {
-  debug_func( "name = \"" + name + "\"" );
+  wxLogDebugFunc( "name = \"" + name + "\"" );
   LOCK_UNITSYNC;
   return _GetModIndex( name );
 }
@@ -252,7 +252,7 @@ int SpringUnitSync::_GetModIndex( const std::string& name )
 
 bool SpringUnitSync::ModExists( const std::string& modname )
 {
-  debug_func( "modname = \"" + modname + "\"" );
+  wxLogDebugFunc( "modname = \"" + modname + "\"" );
   LOCK_UNITSYNC;
   return _ModExists( modname );
 }
@@ -267,7 +267,7 @@ bool SpringUnitSync::_ModExists( const std::string& modname )
 
 UnitSyncMod SpringUnitSync::GetMod( const std::string& modname )
 {
-  debug_func( "modname = \"" + modname + "\"" );
+  wxLogDebugFunc( "modname = \"" + modname + "\"" );
   LOCK_UNITSYNC;
 
   UnitSyncMod m;
@@ -282,7 +282,7 @@ UnitSyncMod SpringUnitSync::GetMod( const std::string& modname )
 
 UnitSyncMod SpringUnitSync::GetMod( int index )
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
   return _GetMod( index );
 }
@@ -301,7 +301,7 @@ UnitSyncMod SpringUnitSync::_GetMod( int index )
 
 int SpringUnitSync::GetNumMaps()
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   if ( !m_loaded ) return 0;
@@ -311,7 +311,7 @@ int SpringUnitSync::GetNumMaps()
 
 bool SpringUnitSync::MapExists( const std::string& mapname )
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   if ( !m_loaded ) return false;
@@ -325,7 +325,7 @@ bool SpringUnitSync::MapExists( const std::string& mapname )
 
 bool SpringUnitSync::MapExists( const std::string& mapname, const std::string hash )
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   if ( !m_loaded ) return false;
@@ -341,7 +341,7 @@ bool SpringUnitSync::MapExists( const std::string& mapname, const std::string ha
 
 UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname, bool getmapinfo )
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   return _GetMap( mapname, getmapinfo );
@@ -359,7 +359,7 @@ UnitSyncMap SpringUnitSync::_GetMap( const std::string& mapname, bool getmapinfo
 
 MapInfo SpringUnitSync::_GetMapInfoEx( const std::string& mapname )
 {
-  debug_func("");
+  wxLogDebugFunc("");
   MapCacheType::iterator i = m_mapinfo.find(mapname);
   if ( i != m_mapinfo.end() ) {
     wxLogDebug( _T("GetMapInfoEx cache lookup.") );
@@ -393,7 +393,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const std::string& mapname )
 
 UnitSyncMap SpringUnitSync::GetMap( int index, bool getmapinfo )
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   return _GetMap( index, getmapinfo );
@@ -416,7 +416,7 @@ UnitSyncMap SpringUnitSync::_GetMap( int index, bool getmapinfo )
 
 int SpringUnitSync::GetMapIndex( const std::string& name )
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   return _GetMapIndex( name );
@@ -437,7 +437,7 @@ int SpringUnitSync::_GetMapIndex( const std::string& name )
 
 std::string SpringUnitSync::GetModArchive( int index )
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   return _GetModArchive( index );
@@ -455,10 +455,10 @@ std::string SpringUnitSync::_GetModArchive( int index )
 
 void SpringUnitSync::SetCurrentMod( const std::string& modname )
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
-  debug_func("modname = \"" + modname + "\"" );
+  wxLogDebugFunc("modname = \"" + modname + "\"" );
   if ( m_current_mod != modname ) {
     m_uninit();
     m_init( true, 1 );
@@ -472,7 +472,7 @@ void SpringUnitSync::SetCurrentMod( const std::string& modname )
 
 int SpringUnitSync::GetSideCount()
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   if ( (!m_loaded) || (!_ModExists(m_current_mod)) ) return 0;
@@ -482,7 +482,7 @@ int SpringUnitSync::GetSideCount()
 
 std::string SpringUnitSync::GetSideName( int index )
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   if ( (!m_loaded) || (index < 0) || (!_ModExists(m_current_mod)) ) return "unknown";
@@ -495,11 +495,11 @@ std::string SpringUnitSync::GetSideName( int index )
 
 wxImage SpringUnitSync::GetSidePicture( const std::string& SideName )
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   m_add_all_archives( _GetModArchive( _GetModIndex( m_current_mod ) ).c_str() );
-  debug_func( "SideName = \"" + SideName + "\"" );
+  wxLogDebugFunc( "SideName = \"" + SideName + "\"" );
   wxString ImgName = _T("SidePics");
   ImgName += _T("/");
   ImgName += WX_STRING( SideName ).Upper();
@@ -526,7 +526,7 @@ wxImage SpringUnitSync::GetSidePicture( const std::string& SideName )
 
 wxArrayString SpringUnitSync::GetAIList()
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   if ( !m_loaded ) return wxArrayString();
@@ -552,12 +552,12 @@ wxArrayString SpringUnitSync::GetAIList()
 
 wxString SpringUnitSync::GetBotLibPath( const wxString& botlibname )
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   if ( !m_loaded ) return wxEmptyString;
 
-  debug_func( "botlibname = \"" + STD_STRING(botlibname) + "\"" );
+  wxLogDebugFunc( "botlibname = \"" + STD_STRING(botlibname) + "\"" );
   wxString search = _T("AI/Bot-libs/") + botlibname + _T("*");
   int ini = m_init_find_vfs ( search.mb_str( wxConvUTF8 ) );
   int BufferSize = 400;
@@ -578,7 +578,7 @@ wxString SpringUnitSync::GetBotLibPath( const wxString& botlibname )
 
 int SpringUnitSync::GetNumUnits()
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   if ( !m_loaded ) return 0;
@@ -602,7 +602,7 @@ wxString _GetCachedModUnitsFileName( const wxString& mod )
 
 wxArrayString SpringUnitSync::GetUnitsList()
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   if (!m_loaded) return wxArrayString();
@@ -699,7 +699,7 @@ wxImage SpringUnitSync::_GetCachedMinimap( const std::string& mapname, int max_w
 
 wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size )
 {
-  debug_func( "" );
+  wxLogDebugFunc( "" );
   LOCK_UNITSYNC;
 
   int height = 1024;
@@ -808,7 +808,7 @@ void SpringUnitSync::_ConvertSpringMapInfo( const SpringMapInfo& in, CachedMapIn
 
 void SpringUnitSync::_LoadMapInfoExCache()
 {
-  debug_func("");
+  wxLogDebugFunc("");
 
   wxString path = sett().GetCachePath() + _T("mapinfoex.cache"); //wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator() + _T("mapinfoex.cache");
 
@@ -840,7 +840,7 @@ void SpringUnitSync::_LoadMapInfoExCache()
 
 void SpringUnitSync::_SaveMapInfoExCache()
 {
-  debug_func("");
+  wxLogDebugFunc("");
   wxString path = sett().GetCachePath() + _T("mapinfoex.cache"); //wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator() + _T("mapinfoex.cache");
 
   wxFile f( path.c_str(), wxFile::write );

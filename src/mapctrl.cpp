@@ -270,7 +270,7 @@ void MapCtrl::_GetClosestStartPos( int fromx, int fromy, int& index, int& x, int
 
 void MapCtrl::LoadMinimap()
 {
-  debug_func("");
+  wxLogDebugFunc("");
   if ( m_battle == 0 ) return;
   if ( m_image ) return;
   if ( !m_battle->MapExists() ) return;
@@ -667,7 +667,7 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
 
 void MapCtrl::_DrawSinglePlayer( wxDC& dc )
 {
-  debug_func("");
+  wxLogDebugFunc("");
   if ( m_battle == 0 ) return;
   if ( !m_battle->MapExists() ) return;
 
@@ -720,7 +720,7 @@ void MapCtrl::_DrawSinglePlayer( wxDC& dc )
 
 void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 {
-  debug_func("");
+  wxLogDebugFunc("");
   wxPaintDC dc( this );
 
   _DrawBackground( dc );

@@ -153,7 +153,7 @@ void MainJoinBattleTab::BattleUserUpdated( User& user )
 
 void MainJoinBattleTab::OnUnitSyncReloaded()
 {
-  debug_func("");
+  wxLogDebugFunc("");
   GetBattleListTab().OnUnitSyncReloaded();
   wxLogDebug( _T("Battle list tab reloaded") );
   if ( GetBattleRoomTab() ) {
