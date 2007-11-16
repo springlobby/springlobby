@@ -91,7 +91,7 @@ void ServerEvents::OnMotd( const std::string& msg )
 void ServerEvents::OnPong( int ping_time )
 {
   if ( ping_time == -1 ) {
-    wxLogWarning( _T("Ping Timeout!") );
+    wxLogWarning( _("Ping Timeout!") );
     m_serv.Disconnect();
     OnDisconnected();
   }

@@ -162,7 +162,7 @@ void HostBattleDialog::ReloadModList()
 void HostBattleDialog::OnOk( wxCommandEvent& event )
 {
   if ( m_mod_pic->GetSelection() == wxNOT_FOUND ) {
-    wxLogWarning( _("You have to select a mod first."), _("No mod selected."), wxOK );
+    wxLogWarning( _("You have to select a mod first.") );
     return;
   }
 

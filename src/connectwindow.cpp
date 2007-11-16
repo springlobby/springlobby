@@ -223,18 +223,18 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
     wxArrayString serverString = wxStringTokenize( HostAddress ,_T(":") );
 
     if ( serverString.GetCount() == 0 ) {
-      wxLogWarning( _("Invalid host/port or servername."), _("Invalid host"), wxOK );
+      wxLogWarning( _("Invalid host/port or servername.") );
       return;
     }
 
     if ( serverString.GetCount() == 2 ) {
       long port;
       if( !serverString[1].ToLong( &port ) ) {
-        wxLogWarning( _("Invalid port."), _("Invalid port"), wxOK );
+        wxLogWarning( _("Invalid port.") );
         return;
       }
       if( port < 1 || port > 65535) {
-        wxLogWarning( _("Port number out of range.\n\nIt must be an integer between 1 and 65535"), _("Invalid port"), wxOK );
+        wxLogWarning( _("Port number out of range.\n\nIt must be an integer between 1 and 65535") );
         return;
       }
       sett().AddServer( STD_STRING( HostAddress ) );
@@ -243,7 +243,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
     }
 
     if ( serverString.GetCount() != 1 && serverString.GetCount() != 2 ) {
-      wxLogWarning( _("Invalid host/port."), _("Invalid host"), wxOK );
+      wxLogWarning( _("Invalid host/port.") );
       return;
     }
 
@@ -257,10 +257,10 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
        m_nick_text->SetValue(m_regnick_text->GetValue());
        m_pass_text->SetValue(m_regpass1_text->GetValue());
        Show();
-       wxLogMessage( _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
+       wxLogMessage( _("Registration successful,\nyou should now be able to login.") );
     } else {
        Show();
-       wxLogWarning( _("Registration failed."), _("Registration failed"), wxOK );
+       wxLogWarning( _("Registration failed.") );
     }
 
   }
