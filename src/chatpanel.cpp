@@ -484,12 +484,12 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
   } else {
     col.Set( 0,0,0 );
   }
-  
+
   if ( who == _T("MelBot") && message.Contains (  _T(":") ) ) {
     wxString who2;
     wxString message2;
     who2= message.BeforeFirst( ':' ) + _T("@IRC");
-    message2 = message.AfterFirst( ':' ); 
+    message2 = message.AfterFirst( ':' );
     _OutputLine( _T(" <") + who2 + _T("> ")+ message2, col );
   } else {
     _OutputLine( _T(" <") + who + _T("> ")+ message, col );
