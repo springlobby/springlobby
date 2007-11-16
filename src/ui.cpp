@@ -432,7 +432,7 @@ void Ui::OnUpdate( int mselapsed )
 //! @todo Display in servertab
 void Ui::OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported )
 {
-  wxLogDebugFunc( "" );
+  wxLogDebugFunc( _T("") );
 
   m_main_win->EnableChatTab();
   m_main_win->EnableMultiplayerTab();
@@ -473,7 +473,7 @@ void Ui::OnLoggedIn( )
 
 void Ui::OnDisconnected( Server& server )
 {
-  wxLogDebugFunc( "" );
+  wxLogDebugFunc( _T("") );
   if ( m_main_win == 0 ) return;
 
   mw().GetJoinTab().LeaveCurrentBattle();
@@ -497,7 +497,7 @@ void Ui::OnDisconnected( Server& server )
 //! @todo Check if a pannel allready exists for this channel
 void Ui::OnJoinedChannelSuccessful( Channel& chan )
 {
-  wxLogDebugFunc( "" );
+  wxLogDebugFunc( _T("") );
 
   chan.uidata.panel = 0;
   m_main_win->OpenChannelChat( chan );
@@ -512,7 +512,7 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
 //! @brief Called when something is said in a channel
 void Ui::OnChannelSaid( Channel& channel, User& user, const std::string& message )
 {
-  wxLogDebugFunc( "" );
+  wxLogDebugFunc( _T("") );
   if ( channel.uidata.panel == 0 ) {
     wxLogError( _T("ud->panel NULL") );
     return;
@@ -523,7 +523,7 @@ void Ui::OnChannelSaid( Channel& channel, User& user, const std::string& message
 
 void Ui::OnChannelDidAction( Channel& channel , User& user, const std::string& action )
 {
-  wxLogDebugFunc( "" );
+  wxLogDebugFunc( _T("") );
   if ( channel.uidata.panel == 0 ) {
     wxLogError( _T("ud->panel NULL") );
     return;
@@ -552,7 +552,7 @@ void Ui::OnLeaveChannel( Channel& channel )
 
 void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 {
-  //wxLogDebugFunc( "" );
+  //wxLogDebugFunc( _T("") );
   if ( chan.uidata.panel == 0 ) {
     wxLogError( _T("ud->panel NULL") );
     return;
@@ -563,7 +563,7 @@ void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 
 void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason )
 {
-  //wxLogDebugFunc( "" );
+  //wxLogDebugFunc( _T("") );
   if ( chan.uidata.panel == 0 ) {
     wxLogError( ("ud->panel NULL") );
     return;
@@ -574,7 +574,7 @@ void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason
 
 void Ui::OnChannelTopic( Channel& channel , const std::string user, const std::string& topic )
 {
-  wxLogDebugFunc( "" );
+  wxLogDebugFunc( _T("") );
   if ( channel.uidata.panel == 0 ) {
     wxLogError( _T("ud->panel NULL") );
     return;
@@ -774,7 +774,7 @@ void Ui::OnRequestBattleStatus( Battle& battle )
 
 void Ui::OnBattleStarted( Battle& battle )
 {
-  wxLogDebugFunc("");
+  wxLogDebugFunc( _T("") );
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) {

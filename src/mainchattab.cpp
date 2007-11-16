@@ -223,7 +223,7 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
 
 void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
 {
-  wxLogDebugFunc( "" );
+  wxLogDebugFunc( _T("") );
 
   int oldsel = event.GetOldSelection();
   if ( oldsel < 0 ) return;

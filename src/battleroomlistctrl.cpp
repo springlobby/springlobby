@@ -338,7 +338,7 @@ int BattleroomListCtrl::GetBotIndex( BattleBot& bot )
 
 void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 {
-  wxLogDebugFunc("");
+  wxLogDebugFunc( _T("") );
 
   if ( event.GetIndex() == -1 ) return;
 
@@ -368,7 +368,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 
 void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc("");
+  wxLogDebugFunc( _T("") );
   int team = event.GetId() - BRLIST_TEAM;
   if ( m_sel_bot != 0 ) {
     m_battle.SetBotTeam( m_sel_bot->name, team );
@@ -380,7 +380,7 @@ void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc("");
+  wxLogDebugFunc( _T("") );
   int ally = event.GetId() - BRLIST_ALLY;
   if ( m_sel_bot != 0 ) {
     m_battle.SetBotAlly( m_sel_bot->name, ally );
@@ -392,7 +392,7 @@ void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc("");
+  wxLogDebugFunc( _T("") );
 
   if ( m_sel_bot != 0 ) {
     wxColour CurrentColor;
@@ -411,7 +411,7 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc("");
+  wxLogDebugFunc( _T("") );
   int side = event.GetId() - BRLIST_SIDE;
   if ( m_sel_bot != 0 ) {
     m_battle.SetBotSide( m_sel_bot->name, side );
@@ -422,7 +422,7 @@ void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc("");
+  wxLogDebugFunc( _T("") );
   wxTextEntryDialog dlg( this , _("Please enter a value between 0 and 100"), _("Set Resource Bonus"), _T("0"), wxOK, wxDefaultPosition );
   if ( dlg.ShowModal() == wxID_OK ) {
     long handicap;
@@ -445,7 +445,7 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc("");
+  wxLogDebugFunc( _T("") );
   if ( m_sel_user != 0 ) {
     m_battle.ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
   }
@@ -454,7 +454,7 @@ void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& event )
 {
-  wxLogDebugFunc("");
+  wxLogDebugFunc( _T("") );
   if ( m_sel_bot != 0 ) {
     m_battle.RemoveBot( m_sel_bot->name );
   } else if ( m_sel_user != 0 ) {
@@ -465,7 +465,7 @@ void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& event )
 {
-  wxLogDebugFunc("");
+  wxLogDebugFunc( _T("") );
   if ( m_sel_bot != 0 ) {
   } else if ( m_sel_user != 0 ) {
     m_battle.GetServer().Ring( m_sel_user->GetNick() );

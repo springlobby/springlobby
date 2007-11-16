@@ -83,7 +83,7 @@ END_EVENT_TABLE()
 
 void ChatPanel::OnMouseDown( wxMouseEvent& event )
 {
-  wxLogDebugFunc( "" );
+  wxLogDebugFunc( _T("") );
   _CreatePopup();
   if ( m_popup_menu != 0 ) PopupMenu( m_popup_menu );
   else event.Skip();
@@ -93,7 +93,7 @@ void ChatPanel::OnMouseDown( wxMouseEvent& event )
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
 : wxPanel( parent, -1),m_show_nick_list(true),m_ui(ui),m_channel(&chan),m_server(0),m_user(0),m_battle(0),m_type(CPT_Channel),m_popup_menu(0)
 {
-  wxLogDebugFunc( "wxWindow* parent, Channel& chan" );
+  wxLogDebugFunc( _T("wxWindow* parent, Channel& chan") );
   _CreateControls( );
   _SetChannel( &chan );
   m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, this );
@@ -113,7 +113,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user )
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
 : wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(0),m_server(&serv),m_user(0),m_battle(0),m_type(CPT_Server),m_popup_menu(0)
 {
-  wxLogDebugFunc( "wxWindow* parent, Server& serv" );
+  wxLogDebugFunc( _T("wxWindow* parent, Server& serv") );
   _CreateControls( );
   serv.uidata.panel = this;
   m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),_("_SERVER"));
@@ -124,7 +124,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
 : wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(0),m_server(0),m_user(0),m_battle(&battle),m_type(CPT_Battle),m_popup_menu(0)
 {
-  wxLogDebugFunc( "wxWindow* parent, Battle& battle" );
+  wxLogDebugFunc( _T("wxWindow* parent, Battle& battle") );
   _CreateControls( );
   wxDateTime now = wxDateTime::Now();
   m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),_("_BATTLE_")+WX_STRING(now.Format( _T("%Y_%m_%d__%H_%M_%S"))));
@@ -152,7 +152,7 @@ ChatPanel::~ChatPanel()
 
 void ChatPanel::_CreateControls( )
 {
-  wxLogDebugFunc( "" );
+  wxLogDebugFunc( _T("") );
 
   m_autorejoin = 0;
   // Creating sizers
@@ -226,7 +226,7 @@ void ChatPanel::_CreateControls( )
 void ChatPanel::_CreatePopup()
 {
   if ( m_popup_menu != 0 ) return;
-  wxLogDebugFunc("");
+  wxLogDebugFunc( _T("") );
   if ( m_type == CPT_Channel ) {
 
     wxLogDebug(_T("channel"));
@@ -670,7 +670,7 @@ void ChatPanel::_SetChannel( Channel* channel )
 
 void ChatPanel::Say( const wxString& message )
 {
-  wxLogDebugFunc( "" );
+  wxLogDebugFunc( _T("") );
 
   wxStringTokenizer lines( message, _T("\n") );
   if ( lines.CountTokens() > 5 ) {
@@ -743,7 +743,7 @@ void ChatPanel::Say( const wxString& message )
 
 void ChatPanel::Part()
 {
-  wxLogDebugFunc( "" );
+  wxLogDebugFunc( _T("") );
   if ( m_type == CPT_Channel ) {
     if ( m_channel == 0 ) return;
     m_channel->Leave();

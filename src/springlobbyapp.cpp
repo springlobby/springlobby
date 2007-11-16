@@ -51,7 +51,7 @@ bool SpringLobbyApp::OnInit()
   wxHandleFatalExceptions( true );
 #endif
 
-  wxLogDebugFunc( "" );
+  wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
 
   InitDirs();
@@ -80,7 +80,7 @@ bool SpringLobbyApp::OnInit()
 //! @brief Finalizes the application
 int SpringLobbyApp::OnExit()
 {
-  wxLogDebugFunc( "" );
+  wxLogDebugFunc( _T("") );
 
   m_timer->Stop();
   delete m_ui;

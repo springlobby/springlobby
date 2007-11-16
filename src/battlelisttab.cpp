@@ -462,7 +462,7 @@ void BattleListTab::DisableHostButton()
 
 void BattleListTab::OnSelect( wxListEvent& event )
 {
-  wxLogDebugFunc("");
+  wxLogDebugFunc( _T("") );
   if ( event.GetIndex() == -1 ) {
     SelectBattle( 0 );
   } else {
