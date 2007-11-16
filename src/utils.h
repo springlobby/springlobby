@@ -10,8 +10,8 @@
 //! Converts an std::string to a wxString
 #define WX_STRING(v) wxString(v.c_str(),wxConvUTF8)
 
-#define ASSERT_LOGIC(cond,msg) if(!(cond)){wxLogFatalError(_T("logic ")+ wxString(msg) );throw std::logic_error(std::string((const char*)(msg)));}
-#define ASSERT_RUNTIME(cond,msg) if(!(cond)){wxLogDebug(_T("runtime ")+ wxString(msg) );throw std::runtime_error(std::string((const char*)msg)));}
+#define ASSERT_LOGIC(cond,msg) if(!(cond)){wxLogFatalError(_T("logic ")+ wxString(msg) );throw std::logic_error(std::string((const char*)msg));}
+#define ASSERT_RUNTIME(cond,msg) if(!(cond)){wxLogDebug(_T("runtime ")+ wxString(msg) );throw std::runtime_error(std::string((const char*)msg));}
 
 std::string i2s( int x );
 
