@@ -16,7 +16,7 @@
 std::string i2s( int x );
 
 
-#define wxLogDebugFunc( params ) wxLogTrace( __FUNCTION__ + _T(" ( ") + params + _T(" )"),,)
+#define wxLogDebugFunc( params ) wxLogTrace(_T("Function Calls"), wxString(__FUNCTION__, wxConvUTF8 ) + _T(" ( ") + wxString(params) + _T(" )") )
 
 
 #define boundry(var,min,max) var=(var<(min))?(min):(var>(max))?(max):var
