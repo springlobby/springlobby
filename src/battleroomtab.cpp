@@ -14,6 +14,7 @@
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
 #include <wx/colordlg.h>
+#include <wx/colour.h>
 #include <stdexcept>
 
 #include "battleroomtab.h"
