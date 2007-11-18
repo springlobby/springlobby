@@ -394,15 +394,17 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
   debug_func("");
 
   if ( m_sel_bot != 0 ) {
-    wxColour CurrentColor;
-    CurrentColor.Set( m_sel_bot->bs.color_r, m_sel_bot->bs.color_g, m_sel_bot->bs.color_b );
-    CurrentColor = wxGetColourFromUser(this, CurrentColor);
-    m_battle.SetBotColour( m_sel_bot->name, CurrentColor.Red(), CurrentColor.Green(), CurrentColor.Blue() );
+    wxColour CurrentColour;
+    CurrentColour.Set( m_sel_bot->bs.color_r, m_sel_bot->bs.color_g, m_sel_bot->bs.color_b );
+    CurrentColour = wxGetColourFromUser(this, CurrentColour);
+    if ( !CurrentColour.IsOk() ) return;
+    m_battle.SetBotColour( m_sel_bot->name, CurrentColour.Red(), CurrentColour.Green(), CurrentColour.Blue() );
   } else if ( m_sel_user != 0 ) {
-    wxColour CurrentColor;
-    CurrentColor.Set( m_sel_user->BattleStatus().color_r, m_sel_user->BattleStatus().color_g, m_sel_user->BattleStatus().color_b );
-    CurrentColor = wxGetColourFromUser(this, CurrentColor);
-    m_battle.ForceColour( *m_sel_user, CurrentColor.Red(), CurrentColor.Green(), CurrentColor.Blue() );
+    wxColour CurrentColour;
+    CurrentColour.Set( m_sel_user->BattleStatus().color_r, m_sel_user->BattleStatus().color_g, m_sel_user->BattleStatus().color_b );
+    CurrentColour = wxGetColourFromUser(this, CurrentColour);
+    if ( !CurrentColour.IsOk() ) return;
+    m_battle.ForceColour( *m_sel_user, CurrentColour.Red(), CurrentColour.Green(), CurrentColour.Blue() );
   }
 
 }

@@ -178,6 +178,7 @@ void TASServer::Connect( const std::string& addr, const int port )
 void TASServer::Disconnect()
 {
   ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  m_sock->Send( "EXIT\n" ); // EXIT command for new protocol compatibility
   m_sock->Disconnect();
   m_connected = false;
 }

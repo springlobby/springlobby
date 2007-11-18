@@ -255,7 +255,7 @@ void Ui::DownloadMap( const wxString& map )
   mapname.Replace(_T(" "), _T("*") );
   mapname.Replace(_T("-"), _T("*") );
   mapname.Replace(_T("_"), _T("*") );
-  wxString url = _T("http://www.unknown-files.net/spring/search/") + mapname + _T("/");
+  wxString url = _T("http://www.unknown-files.net/spring/search/") + mapname + _T("/filename/");
   OpenWebBrowser ( url );
 }
 
