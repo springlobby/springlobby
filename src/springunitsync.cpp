@@ -857,4 +857,26 @@ void SpringUnitSync::_SaveMapInfoExCache()
 }
 
 
+wxArrayString SpringUnitSync::GetReplayList()
+{
+  debug_func( "" );
+  LOCK_UNITSYNC;
+
+  if ( !m_loaded ) return wxArrayString();
+
+  int ini = m_init_find_vfs ( "demos/*.sdf" );
+  int BufferSize = 400;
+  char * FilePath = new char [BufferSize];
+  wxArrayString ret;
+
+  do
+  {
+    ini = m_find_files_vfs ( ini, FilePath, BufferSize );
+    wxString FileName = wxString ( FilePath, wxConvUTF8 );
+    ret.Add ( FileName );
+  } while (ini != 0);
+
+  return ret;
+}
+
 

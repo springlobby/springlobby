@@ -5,6 +5,15 @@
 
 class wxColour;
 
+struct ReplayData
+{
+  long int day;
+  long int month;
+  long int year;
+  wxString MapName;
+  wxString SpringVersion;
+  wxString ReplayName;
+};
 
 #define bool2yn(b) ((b)?_("Yes"):_("No"))
 
@@ -27,5 +36,7 @@ bool AreColoursSimilar( int r1, int g1, int b1, int r2, int g2, int b2, int mind
 
 void ColourDelta( int& r, int& g, int& b, const int& delta );
 wxColour ColourDelta( const wxColour& colour, const int& delta );
+
+ReplayData GetReplayInfos ( wxString& ReplayPath );
 
 #endif // SPRINGLOBBY_HEADERGUARD_UIUTILS_H

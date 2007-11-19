@@ -1,7 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 #include <wx/colour.h>
-#include <wx/regex.h>
+#include <wx/tokenzr.h>
 
 #include "uiutils.h"
 #include "utils.h"
@@ -115,5 +115,28 @@ wxColour ColourDelta( const wxColour& colour, const int& delta )
   int b = colour.Blue();
   ColourDelta( r, g, b, delta );
   return wxColour( r, g, b );
+}
+
+
+ReplayData GetReplayInfos ( wxString& ReplayPath )
+{
+  debug_func( STD_STRING( ReplayPath ) );
+  ReplayData ret;
+  wxString FileName = ReplayPath.BeforeLast( '/' ); // strips file path
+  FileName = FileName.Left( FileName.Find( _T(".sdf") ) ); //strips the file extension
+  wxStringTokenizer args ( FileName, '-' ); // chunks by '-' separator
+  if ( args.CountTokens() != 3 || args.CountTokens() != 4 ) // not a spring standard replay filename
+  {
+    ret.ReplayName = FileName;
+    return ret;
+  }
+  wxString date = args.GetNextToken(); // date format YYMMDD
+  date.Left( 2 ).ToLong( &ret.year );
+  date.Mid( 3, 4 ).ToLong( &ret.month );
+  date.Mid( 5, 6 ).ToLong( &ret.day );
+  ret.MapName = args.GetNextToken();
+  ret.SpringVersion = args.GetNextToken();
+  ret.ReplayName = args.GetNextToken(); // void string if multiple replays wich share previous paramteres aren't present
+  return ret;
 }
 

@@ -93,6 +93,8 @@ class SpringUnitSync : public IUnitSync
 
     wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
 
+    wxArrayString GetReplayList();
+
   private:
     bool m_loaded;
 
