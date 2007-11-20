@@ -412,7 +412,7 @@ void BattleRoomTab::OnColourSel( wxCommandEvent& event )
   wxColour CurrentColuor;
   CurrentColuor.Set( bs.color_r, bs.color_g, bs.color_b );
   CurrentColuor = wxGetColourFromUser(this, CurrentColuor);
-  if ( !CurrentColuor.IsOk() ) return;
+  if ( !CurrentColuor.IsColourOk() ) return;
   bs.color_r = CurrentColuor.Red();
   bs.color_g = CurrentColuor.Green();
   bs.color_b = CurrentColuor.Blue();
