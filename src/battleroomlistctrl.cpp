@@ -343,7 +343,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
   if ( event.GetIndex() == -1 ) return;
 
   if ( event.GetImage() == ICON_BOT ) {
-    wxLogDebug(_T("Bot"));
+    wxLogMessage(_T("Bot"));
     m_sel_user = 0;
     m_sel_bot = (BattleBot*)event.GetData();
     int item = m_popup->FindItem( _("Spectator") );
@@ -351,7 +351,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     m_popup->Check( item, false );
     m_popup->Enable( m_popup->FindItem( _("Ring") ), false );
   } else {
-    wxLogDebug(_T("User"));
+    wxLogMessage(_T("User"));
     m_sel_bot = 0;
     m_sel_user = (User*)event.GetData();
     int item = m_popup->FindItem( _("Spectator") );
@@ -360,9 +360,9 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     m_popup->Enable( m_popup->FindItem( _("Ring") ), true );
   }
 
-  wxLogDebug(_T("Popup"));
+  wxLogMessage(_T("Popup"));
   PopupMenu( m_popup );
-  wxLogDebug(_T("Done"));
+  wxLogMessage(_T("Done"));
 }
 
 

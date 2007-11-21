@@ -155,16 +155,16 @@ void MainJoinBattleTab::OnUnitSyncReloaded()
 {
   wxLogDebugFunc( _T("") );
   GetBattleListTab().OnUnitSyncReloaded();
-  wxLogDebug( _T("Battle list tab reloaded") );
+  wxLogMessage( _T("Battle list tab reloaded") );
   if ( GetBattleRoomTab() ) {
-    wxLogDebug( _T("Reloading battleroom") );
+    wxLogMessage( _T("Reloading battleroom") );
     GetBattleRoomTab()->OnUnitSyncReloaded();
-    wxLogDebug( _T("Battleroom reloaded") );
+    wxLogMessage( _T("Battleroom reloaded") );
   }
   if ( GetBattleMapTab() ) {
-    wxLogDebug( _T("Reloading battlemap") );
+    wxLogMessage( _T("Reloading battlemap") );
     GetBattleMapTab()->OnUnitSyncReloaded();
-    wxLogDebug( _T("Battlemap reloaded") );
+    wxLogMessage( _T("Battlemap reloaded") );
   }
 }
 

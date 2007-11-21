@@ -13,7 +13,7 @@ int GetFlagIndex( const std::string& flag )
       return i;
     }
   }
-  wxLogDebug( WX_STRING(flag) + _T(" flag not found!") );
+  wxLogMessage( WX_STRING(flag) + _T(" flag not found!") );
   return FLAG_NONE;
 }
 

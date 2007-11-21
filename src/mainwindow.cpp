@@ -339,12 +339,12 @@ void MainWindow::OnTabsChanged( wxListbookEvent& event )
 void MainWindow::OnUnitSyncReloaded()
 {
   wxLogDebugFunc( _T("") );
-  wxLogDebug( _T("Reloading join tab") );
+  wxLogMessage( _T("Reloading join tab") );
   GetJoinTab().OnUnitSyncReloaded();
-  wxLogDebug( _T("Join tab updated") );
-  wxLogDebug( _T("Reloading Singleplayer tab") );
+  wxLogMessage( _T("Join tab updated") );
+  wxLogMessage( _T("Reloading Singleplayer tab") );
   GetSPTab().OnUnitSyncReloaded();
-  wxLogDebug( _T("Singleplayer tab updated") );
+  wxLogMessage( _T("Singleplayer tab updated") );
 }
 
 

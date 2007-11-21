@@ -229,7 +229,7 @@ void ChatPanel::_CreatePopup()
   wxLogDebugFunc( _T("") );
   if ( m_type == CPT_Channel ) {
 
-    wxLogDebug(_T("channel"));
+    wxLogMessage(_T("channel"));
     m_popup_menu = new wxMenu();
     m_autorejoin = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_AUTOJOIN, _("Auto join this channel"), wxEmptyString, wxITEM_CHECK );
     m_popup_menu->Append( m_autorejoin );
@@ -290,7 +290,7 @@ void ChatPanel::_CreatePopup()
 
   } else if ( m_type == CPT_Server ) {
 
-    wxLogDebug( _T("server") );
+    wxLogMessage( _T("server") );
     m_popup_menu = new wxMenu();
 
     wxMenuItem* disconnectitem = new wxMenuItem( m_popup_menu, CHAT_MENU_SV_DISCON, _("Disconnect"), wxEmptyString, wxITEM_NORMAL );
@@ -679,7 +679,7 @@ void ChatPanel::Say( const wxString& message )
   }
   while ( lines.HasMoreTokens() ) {
     wxString line = lines.GetNextToken();
-    wxLogDebug(_T("line: ") + line );
+    wxLogMessage(_T("line: ") + line );
 
     if ( line.Find('/') == 0 ) {
       if ( m_ui.ExecuteSayCommand( line ) ) return;

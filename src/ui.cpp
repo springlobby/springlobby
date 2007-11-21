@@ -565,7 +565,7 @@ void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason
 {
   //wxLogDebugFunc( _T("") );
   if ( chan.uidata.panel == 0 ) {
-    wxLogError( ("ud->panel NULL") );
+    wxLogError( _T("ud->panel NULL") );
     return;
   }
   chan.uidata.panel->Parted( user, WX_STRING(reason) );

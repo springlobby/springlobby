@@ -66,12 +66,12 @@ bool SpringLobbyApp::OnInit()
   InitDirs();
 
   m_ui = new Ui();
-  wxLogDebug( _T("Ui created") );
+  wxLogMessage( _T("Ui created") );
 
   m_ui->ShowMainWindow();
 
   if ( sett().IsFirstRun() ) {
-    wxLogMessage(_("Hi ") + wxGetUserName() + _(",\nLooks like this is the first time you use SpringLobby. I have guessed a configuration that I think will work for you but you should review it, ecpecially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)" ) );
+    wxLogWarning(_("Hi ") + wxGetUserName() + _(",\nLooks like this is the first time you use SpringLobby. I have guessed a configuration that I think will work for you but you should review it, ecpecially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)" ) );
     m_ui->mw().ShowConfigure();
   } else {
     m_ui->Connect();

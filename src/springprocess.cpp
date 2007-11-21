@@ -40,7 +40,7 @@ void* SpringProcess::Entry()
 {
   wxLogDebugFunc( _T("") );
   system( STD_STRING(m_cmd).c_str() );
-  wxLogDebug("Spring closed.");
+  wxLogMessage(_T("Spring closed."));
   return 0;
 }
 

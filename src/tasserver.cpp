@@ -666,7 +666,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_se->OnBattleInfoUpdated( m_battle_id );
     // !! Command: "SETSCRIPTTAGS" params: "game/startpostype=0	game/maxunits=1000	game/limitdgun=0	game/startmetal=1000	game/gamemode=0	game/ghostedbuildings=-1	game/startenergy=1000	game/diminishingmms=0"
   } else {
-    wxLogDebug( _T("??? Cmd: ") + WX_STRING(cmd) + _T(" params: ")+ WX_STRING(params) );
+    wxLogMessage( _T("??? Cmd: ") + WX_STRING(cmd) + _T(" params: ")+ WX_STRING(params) );
     m_se->OnUnknownCommand( cmd, params );
   }
 }
@@ -771,7 +771,7 @@ void TASServer::DoActionChannel( const std::string& channel, const std::string& 
 {
   //SAYEX channame {message}
   wxLogDebugFunc( _T("") );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   m_sock->Send( "SAYEX " + channel + " " + msg + "\n" );
@@ -1217,7 +1217,7 @@ void TASServer::AddBot( int battleid, const std::string& nick, const std::string
   tascl.color.zero = 0;
   //ADDBOT name battlestatus teamcolor {AIDLL}
   std::string cmd = "ADDBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + " " + aidll + ".dll\n";
-  wxLogDebug( WX_STRING(cmd) );
+  wxLogMessage( WX_STRING(cmd) );
   m_sock->Send( cmd );
 }
 
@@ -1257,7 +1257,7 @@ void TASServer::UpdateBot( int battleid, const std::string& nick, UserBattleStat
   tascl.color.zero = 0;
   //UPDATEBOT name battlestatus teamcolor
   std::string cmd = "UPDATEBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + "\n";
-  wxLogDebug( WX_STRING(cmd) );
+  wxLogMessage( WX_STRING(cmd) );
   m_sock->Send( cmd );
 }
 
