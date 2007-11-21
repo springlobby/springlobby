@@ -409,13 +409,13 @@ void BattleRoomTab::OnColourSel( wxCommandEvent& event )
 {
   User& u = m_battle.GetMe();
   UserBattleStatus& bs = u.BattleStatus();
-  wxColour CurrentColuor;
-  CurrentColuor.Set( bs.color_r, bs.color_g, bs.color_b );
-  CurrentColuor = wxGetColourFromUser(this, CurrentColuor);
-  if ( !CurrentColuor.IsColourOk() ) return;
-  bs.color_r = CurrentColuor.Red();
-  bs.color_g = CurrentColuor.Green();
-  bs.color_b = CurrentColuor.Blue();
+  wxColour CurrentColour;
+  CurrentColour.Set( bs.color_r, bs.color_g, bs.color_b );
+  CurrentColour = wxGetColourFromUser(this, CurrentColour);
+  if ( !CurrentColour.IsColourOk() ) return;
+  bs.color_r = CurrentColour.Red();
+  bs.color_g = CurrentColour.Green();
+  bs.color_b = CurrentColour.Blue();
   //u.SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
 }
