@@ -31,6 +31,11 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #define CONTROL_HEIGHT 28
 #endif
 
+#ifdef HAVE_WX28
+#define IsColourOk() IsOk()
+#else
+#define IsColourOk() Ok()
+#endif
 
 std::string GetWordParam( std::string& params );
 std::string GetSentenceParam( std::string& params );
