@@ -16,9 +16,9 @@
 #include <wx/textfile.h>
 
 #ifdef WIN32
-  #define USYNC_CALL_CONV __stdcall
+  	#define USYNC_CALL_CONV __stdcall
 #else
-  #define USYNC_CALL_CONV
+  	#define USYNC_CALL_CONV
 #endif
 
 #define configHandler (ConfigHandler::GetInstance())
@@ -69,6 +69,8 @@ protected:
 	
 	SetSpringConfigString h_SetSpringConfigString;
 	SetSpringConfigInt h_SetSpringConfigInt;
+	
+	std::string getUsyncLoc();
 	
 	bool is_loaded;
 };

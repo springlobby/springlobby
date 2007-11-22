@@ -1,5 +1,9 @@
 #include "configHandler.h"
+#include "frame_get_usync.h"
 #include <iostream>
+#ifndef RUNMODE_STANDALONE
+	// if extra include for springlobby unitsync method needed
+#endif
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 
@@ -18,13 +22,17 @@ bool ConfigHandler::LoadUnitSyncLib( const wxString& springdir, const wxString& 
 	wxSetWorkingDirectory( wxT(".") );
 
 	// Load the library.
-	std::string loc = "/home/kosh/projekte/settings/bin/linux/unitsync.so";//STD_STRING(unitsyncloc);
-
+	std::string loc = getUsyncLoc();
 	std::cout <<( "Loading from: " + loc );
 
 	// Check if library exists
-	if ( !wxFileName::FileExists( _S(loc)) ) {
+	while ( !wxFileName::FileExists( _S(loc)) ) {
 		std::cout <<( "File not found: "+ loc );
+		GetUSyncFrame* getUSyncFrame = new GetUSyncFrame();
+		
+		// get new location from dialog
+		
+		delete getUSyncFrame;
 		return false;
 	}
 
@@ -117,3 +125,17 @@ void ConfigHandler::Deallocate()
 		delete instance;
 	instance=0;
 }
+
+std::string ConfigHandler::getUsyncLoc()
+{
+	std::string loc ;
+	#ifdef RUNMODE_STANDALONE
+		// own method
+		
+	#else
+		// springlobby method
+		
+	#endif
+	
+}
+	
