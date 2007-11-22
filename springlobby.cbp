@@ -18,8 +18,6 @@
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
 					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
-					<Add option="-D__DEBUG__" />
-					<Add option="-D__WXDEBUG__" />
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
@@ -38,8 +36,6 @@
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
 					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
-					<Add option="-D__DEBUG__" />
-					<Add option="-D__WXDEBUG__" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
@@ -62,8 +58,6 @@
 					<Add option="-D__WXMSW__" />
 					<Add option="-DWXUSINGDLL" />
 					<Add option="-DUSE_PCH" />
-					<Add option="-D__DEBUG__" />
-					<Add option="-D__WXDEBUG__" />
 					<Add directory="$(WX_DIR)/include" />
 					<Add directory="$(WX_DIR)/lib/gcc_dll/mswd" />
 					<Add directory="$(WX_DIR)/contrib/include" />
@@ -112,8 +106,6 @@
 					<Add option="-D__WXMSW__" />
 					<Add option="-DWXUSINGDLL" />
 					<Add option="-DUSE_PCH" />
-					<Add option="-D__DEBUG__" />
-					<Add option="-D__WXDEBUG__" />
 					<Add directory="$(WX_DIR)/include" />
 					<Add directory="$(WX_DIR)/lib/gcc_dll/mswd" />
 					<Add directory="$(WX_DIR)/contrib/include" />
