@@ -99,7 +99,7 @@ class IBattle
     virtual int GetMyAlly() = 0;
     virtual void SetMyAlly( int ally ) = 0;
 
-    virtual bool IsFounderMe() { return true; }
+    virtual bool IsFounderMe() =0;
 
     virtual void SetStartMetal( const int& smetal ) { m_startmetal = smetal; }
     virtual int GetStartMetal() { return m_startmetal; }

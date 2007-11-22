@@ -213,12 +213,19 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   this->SetSizer( m_main_sizer );
   this->Layout();
 
-  if ( !m_battle.IsFounderMe() ) {
-    this->Enable( false );
-  }
-
   UpdateBattle();
   ReloadRestrictions();
+
+  if ( !m_battle.IsFounderMe() ) {
+    m_end_radios->Disable();
+    m_options_checks->Disable();
+    m_metal_slider->Disable();
+    m_energy_slider->Disable();
+    m_units_slider->Disable();
+    m_restrict_btn->Disable();
+    m_allow_btn->Disable();
+    m_clear_btn->Disable();
+  }
 }
 
 
