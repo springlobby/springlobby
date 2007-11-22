@@ -55,10 +55,8 @@ bool SpringLobbyApp::OnInit()
   //initializes logging in both std::cout and gui messages
   wxLog *logger = new wxLogStream( &std::cout );
   wxLog::SetActiveTarget( logger );
-  logger->SetLogLevel( wxLOG_Trace );
-  logger->SetVerbose( true );
   wxLogChain *logChain = new wxLogChain( new wxLogGui );
-  wxLog::AddTraceMask(_T("Function Calls"));
+  logChain->SetLogLevel( wxLOG_Warning );
 
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
