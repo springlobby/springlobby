@@ -4,7 +4,6 @@
 //
 
 #include <wx/intl.h>
-#include <wx/log.h>
 #include <stdexcept>
 
 #include "serverevents.h"

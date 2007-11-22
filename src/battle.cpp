@@ -4,7 +4,6 @@
 //
 
 #include <stdexcept>
-#include <wx/log.h>
 
 #include "battle.h"
 #include "ui.h"

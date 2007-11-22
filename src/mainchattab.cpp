@@ -9,7 +9,6 @@
 #include <wx/sizer.h>
 #include <wx/notebook.h>
 #include <wx/listbook.h>
-#include <wx/log.h>
 
 #include "mainchattab.h"
 #include "utils.h"

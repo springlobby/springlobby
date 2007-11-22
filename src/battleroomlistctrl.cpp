@@ -8,7 +8,6 @@
 #include <wx/textdlg.h>
 #include <wx/msgdlg.h>
 #include <wx/colordlg.h>
-#include <wx/log.h>
 #include <stdexcept>
 
 #include "battleroomlistctrl.h"

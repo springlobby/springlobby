@@ -12,7 +12,6 @@
 #include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
-#include <wx/log.h>
 #include <stdexcept>
 
 #include "mainwindow.h"

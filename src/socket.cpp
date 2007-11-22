@@ -1,7 +1,6 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 #include <wx/socket.h>
-#include <wx/log.h>
 #include <stdexcept>
 
 #include "socket.h"

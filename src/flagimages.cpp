@@ -4,7 +4,6 @@
 #include "utils.h"
 
 #include <wx/imaglist.h>
-#include <wx/log.h>
 
 int GetFlagIndex( const std::string& flag )
 {

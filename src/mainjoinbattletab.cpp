@@ -9,7 +9,6 @@
 #include <wx/imaglist.h>
 #include <wx/sizer.h>
 #include <wx/listbook.h>
-#include <wx/log.h>
 #include <stdexcept>
 
 #include "battle.h"

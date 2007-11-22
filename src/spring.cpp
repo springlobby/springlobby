@@ -8,7 +8,6 @@
 #include <wx/arrstr.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
-#include <wx/log.h>
 #include <clocale>
 #include <stdexcept>
 

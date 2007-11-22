@@ -10,7 +10,6 @@
 #include <wx/thread.h>
 #include <wx/intl.h>
 #include <wx/utils.h>
-#include <wx/log.h>
 
 #include "spring.h"
 #include "ui.h"

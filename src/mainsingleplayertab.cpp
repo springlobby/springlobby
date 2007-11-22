@@ -6,7 +6,6 @@
 #include <wx/imaglist.h>
 #include <wx/notebook.h>
 #include <wx/icon.h>
-#include <wx/log.h>
 #include <stdexcept>
 
 #include "singleplayertab.h"

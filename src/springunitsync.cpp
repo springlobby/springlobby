@@ -13,7 +13,6 @@
 //#include <wx/txtstrm.h>
 //#include <wx/wfstream.h>
 #include <wx/textfile.h>
-#include <wx/log.h>
 
 #include <stdexcept>
 

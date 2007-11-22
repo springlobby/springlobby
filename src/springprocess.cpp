@@ -4,7 +4,6 @@
 #include "spring.h"
 #include "utils.h"
 
-#include <wx/log.h>
 
 DEFINE_LOCAL_EVENT_TYPE( wxEVT_SPRING_EXIT )
 

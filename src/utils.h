@@ -4,6 +4,12 @@
 #include <string>
 #include <wx/log.h>
 
+#ifndef __WXDEBUG__
+#define wxLogDebugFunc( params ) wxLogMessage( wxString(__FUNCTION__, wxConvUTF8 ) + _T(" ( ") + wxString(params) + _T(" )") )
+#else
+#define wxLogDebugFunc( params ) wxLogTrace( params )
+#endif
+
 //! Converts a wxString to an std::string
 #define STD_STRING(v) std::string((const char*)(v).mb_str(wxConvUTF8))
 
@@ -14,9 +20,6 @@
 #define ASSERT_RUNTIME(cond,msg) if(!(cond)){wxLogMessage(_T("runtime ")+ wxString(msg) );throw std::runtime_error(std::string(wxString(msg).mb_str()));}
 
 std::string i2s( int x );
-
-
-#define wxLogDebugFunc( params ) wxLogMessage( wxString(__FUNCTION__, wxConvUTF8 ) + _T(" ( ") + wxString(params) + _T(" )") )
 
 
 #define boundry(var,min,max) var=(var<(min))?(min):(var>(max))?(max):var

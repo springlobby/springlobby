@@ -10,7 +10,6 @@
 #include <wx/msgdlg.h>
 #include <wx/intl.h>
 #include <wx/filename.h>
-#include <wx/log.h>
 #include <stdexcept>
 
 #include "chatlog.h"

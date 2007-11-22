@@ -9,7 +9,6 @@
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <wx/image.h>
-#include <wx/log.h>
 #include <iostream>
 
 #include "springlobbyapp.h"

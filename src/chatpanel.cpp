@@ -14,7 +14,6 @@
 #include <wx/tokenzr.h>
 #include <wx/msgdlg.h>
 #include <wx/menu.h>
-#include <wx/log.h>
 #include <wx/utils.h>
 
 #include "channel.h"

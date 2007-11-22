@@ -7,7 +7,6 @@
 #include <wx/menu.h>
 #include <wx/string.h>
 #include <wx/intl.h>
-#include <wx/log.h>
 #include <stdexcept>
 
 #include "nicklistctrl.h"
