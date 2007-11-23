@@ -11,7 +11,7 @@ class wxDynamicLibrary;
 struct SpringMapInfo;
 struct CachedMapInfo;
 class wxCriticalSection;
-
+/*
 typedef const char* (USYNC_CALL_CONV *GetSpringVersionPtr)();
 
 typedef int (USYNC_CALL_CONV *InitPtr)(bool, int);
@@ -45,7 +45,7 @@ typedef int (USYNC_CALL_CONV *OpenFileVFSPtr)(const char*);
 typedef int (USYNC_CALL_CONV *FileSizeVFSPtr)(int);
 typedef int (USYNC_CALL_CONV *ReadFileVFSPtr)(int, void*, int);
 typedef void (USYNC_CALL_CONV *CloseFileVFSPtr)(int);
-
+*/
 
 typedef std::map<std::string,CachedMapInfo> MapCacheType;
 
@@ -53,7 +53,7 @@ typedef std::map<std::string,CachedMapInfo> MapCacheType;
 class SpringUnitSync : public IUnitSync
 {
   public:
-    SpringUnitSync(): m_loaded(false),m_map_count(0),m_mod_count(0),m_side_count(0) { _LoadMapInfoExCache(); }
+    SpringUnitSync(): m_map_count(0),m_mod_count(0),m_side_count(0) { _LoadMapInfoExCache(); }
     ~SpringUnitSync() { FreeUnitSyncLib(); _SaveMapInfoExCache(); }
 
     int GetNumMods();
@@ -94,7 +94,7 @@ class SpringUnitSync : public IUnitSync
     wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
 
   private:
-    bool m_loaded;
+/*    bool m_loaded;
 
     wxDynamicLibrary* m_libhandle;
 
@@ -131,7 +131,7 @@ class SpringUnitSync : public IUnitSync
     CloseFileVFSPtr m_close_file_vfs;
 
     GetSpringVersionPtr m_get_spring_version;
-
+*/
     UnitSyncMap m_map;
 
     std::string m_current_mod;
@@ -145,7 +145,7 @@ class SpringUnitSync : public IUnitSync
 
     wxCriticalSection m_lock;
 
-    void* _GetLibFuncPtr( const std::string& name );
+//    void* _GetLibFuncPtr( const std::string& name );
     MapInfo _GetMapInfoEx( const std::string& mapname );
 
     void _LoadMapInfoExCache();

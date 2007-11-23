@@ -19,6 +19,7 @@
 #include "springunitsync.h"
 #include "utils.h"
 #include "settings.h"
+#include "springunitsynclib.h"
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -80,15 +81,6 @@ IUnitSync* usync()
 }
 
 
-void* SpringUnitSync::_GetLibFuncPtr( const std::string& name )
-{
-  ASSERT_LOGIC( m_loaded, "Unitsync not loaded" );
-  void* ptr = m_libhandle->GetSymbol(WX_STRING(name));
-  ASSERT_RUNTIME( ptr, "Couldn't load " + name + " from unitsync library" );
-  return ptr;
-}
-
-
 bool SpringUnitSync::LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc )
 {
   debug_func("");
@@ -99,86 +91,12 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& springdir, const wxString&
 
 bool SpringUnitSync::_LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc )
 {
-  if ( m_loaded ) return true;
-
   wxSetWorkingDirectory( springdir );
-
-  // Load the library.
-  std::string loc = STD_STRING(unitsyncloc);
-
-  debug( "Loading from: " + loc );
-
-  // Check if library exists
-  if ( !wxFileName::FileExists( WX_STRING(loc)) ) {
-    debug_error( "File not found: "+ loc );
-    return false;
-  }
-
   try {
-    m_libhandle = new wxDynamicLibrary(WX_STRING(loc));
-    if (!m_libhandle->IsLoaded()) {
-      debug_error("wxDynamicLibrary created, but not loaded!");
-      delete m_libhandle;
-      m_libhandle = 0;
-    }
-  } catch(...) {
-    m_libhandle = 0;
-  }
-
-  if (m_libhandle == 0) {
-    debug_error( "Couldn't load the unitsync library" );
+    susynclib()->Load( unitsyncloc );
+  } catch (...) {
     return false;
   }
-
-  m_loaded = true;
-
-  // Load all function from library.
-  try {
-    m_init = (InitPtr)_GetLibFuncPtr("Init");
-    m_uninit = (UnInitPtr)_GetLibFuncPtr("UnInit");
-
-    m_get_map_count = (GetMapCountPtr)_GetLibFuncPtr("GetMapCount");
-    m_get_map_checksum = (GetMapChecksumPtr)_GetLibFuncPtr("GetMapChecksum");
-    m_get_map_name = (GetMapNamePtr)_GetLibFuncPtr("GetMapName");
-    m_get_map_info_ex = (GetMapInfoExPtr)_GetLibFuncPtr("GetMapInfoEx");
-    m_get_minimap = (GetMinimapPtr)_GetLibFuncPtr("GetMinimap");
-    m_get_mod_checksum = (GetPrimaryModChecksumPtr)_GetLibFuncPtr("GetPrimaryModChecksum");
-    m_get_mod_index = (GetPrimaryModIndexPtr)_GetLibFuncPtr("GetPrimaryModIndex");
-    m_get_mod_name = (GetPrimaryModNamePtr)_GetLibFuncPtr("GetPrimaryModName");
-    m_get_mod_count = (GetPrimaryModCountPtr)_GetLibFuncPtr("GetPrimaryModCount");
-    m_get_mod_archive = (GetPrimaryModArchivePtr)_GetLibFuncPtr("GetPrimaryModArchive");
-
-    m_get_side_count = (GetSideCountPtr)_GetLibFuncPtr("GetSideCount");
-    m_get_side_name = (GetSideNamePtr)_GetLibFuncPtr("GetSideName");
-
-    m_add_all_archives = (AddAllArchivesPtr)_GetLibFuncPtr("AddAllArchives");
-
-    m_get_unit_count = (GetUnitCountPtr)_GetLibFuncPtr("GetUnitCount");
-    m_get_unit_name = (GetUnitNamePtr)_GetLibFuncPtr("GetUnitName");
-    m_get_unit_full_name = (GetFullUnitNamePtr)_GetLibFuncPtr("GetFullUnitName");
-    m_proc_units_nocheck = (ProcessUnitsNoChecksumPtr)_GetLibFuncPtr("ProcessUnitsNoChecksum");
-
-    m_init_find_vfs = (InitFindVFSPtr)_GetLibFuncPtr("InitFindVFS");
-    m_find_files_vfs = (FindFilesVFSPtr)_GetLibFuncPtr("FindFilesVFS");
-    m_open_file_vfs = (OpenFileVFSPtr)_GetLibFuncPtr("OpenFileVFS");
-    m_file_size_vfs = (FileSizeVFSPtr)_GetLibFuncPtr("FileSizeVFS");
-    m_read_file_vfs = (ReadFileVFSPtr)_GetLibFuncPtr("ReadFileVFS");
-    m_close_file_vfs = (CloseFileVFSPtr)_GetLibFuncPtr("CloseFileVFS");
-
-    m_get_spring_version = (GetSpringVersionPtr)_GetLibFuncPtr("GetSpringVersion");
-
-    m_init( true, 1 );
-    m_map_count = m_get_map_count();
-    m_mod_count = m_get_mod_count();
-    m_current_mod = "";
-    m_side_count = 0;
-  }
-  catch ( ... ) {
-    debug_error( "Failed to load Unitsync lib." );
-    _FreeUnitSyncLib();
-    return false;
-  }
-
   return true;
 }
 
@@ -186,65 +104,46 @@ bool SpringUnitSync::_LoadUnitSyncLib( const wxString& springdir, const wxString
 void SpringUnitSync::FreeUnitSyncLib()
 {
   debug_func( "" );
-  LOCK_UNITSYNC;
-  _FreeUnitSyncLib();
-}
-
-
-void SpringUnitSync::_FreeUnitSyncLib()
-{
-  if ( !m_loaded ) return;
-  m_uninit();
-
-  delete m_libhandle;
-  m_libhandle = 0;
-
-  m_loaded = false;
+  susynclib()->Unload();
 }
 
 
 bool SpringUnitSync::IsLoaded()
 {
-  LOCK_UNITSYNC;
-  return m_loaded;
+  return susynclib()->IsLoaded();
 }
 
 
 std::string SpringUnitSync::GetSpringVersion()
 {
   debug_func("");
-  LOCK_UNITSYNC;
-  if ( !m_loaded ) return "";
-  std::string SpringVersion = m_get_spring_version();
-  return SpringVersion;
+  return STD_STRING(susynclib()->GetSpringVersion());
 }
 
 
 int SpringUnitSync::GetNumMods()
 {
   debug_func("");
-  LOCK_UNITSYNC;
-  if ( !m_loaded ) return 0;
-  return m_mod_count;
+  return susynclib()->GetPrimaryModCount();
 }
 
 
 int SpringUnitSync::GetModIndex( const std::string& name )
 {
   debug_func( "name = \"" + name + "\"" );
-  LOCK_UNITSYNC;
   return _GetModIndex( name );
 }
 
 
 int SpringUnitSync::_GetModIndex( const std::string& name )
 {
-  if ( !m_loaded ) return -1;
-  for ( int i = 0; i < m_mod_count; i++ ) {
-    std::string cmp = m_get_mod_name( i );
-    if ( name == cmp ) return i;
-  }
-  //debug_warn( "Mod not found." );
+  try {
+    int count = susynclib()->GetPrimaryModCount();
+    for ( int i = 0; i < count; i++ ) {
+      std::string cmp = STD_STRING(susynclib()->GetPrimaryModName( i ));
+      if ( name == cmp ) return i;
+    }
+  } catch (...) {}
   return -1;
 }
 
@@ -252,86 +151,57 @@ int SpringUnitSync::_GetModIndex( const std::string& name )
 bool SpringUnitSync::ModExists( const std::string& modname )
 {
   debug_func( "modname = \"" + modname + "\"" );
-  LOCK_UNITSYNC;
-  return _ModExists( modname );
-}
-
-
-bool SpringUnitSync::_ModExists( const std::string& modname )
-{
-  if ( !m_loaded ) return false;
-  return _GetModIndex( modname ) >= 0;
+  try {
+    return susynclib()->GetPrimaryModIndex( WX_STRING(modname) ) >= 0;
+  } catch (...) {}
+  return false;
 }
 
 
 UnitSyncMod SpringUnitSync::GetMod( const std::string& modname )
 {
   debug_func( "modname = \"" + modname + "\"" );
-  LOCK_UNITSYNC;
-
   UnitSyncMod m;
-  if ( !m_loaded ) return m;
 
-  int i = _GetModIndex( modname );
-  ASSERT_LOGIC( i >= 0, "Mod does not exist" );
-
-  return _GetMod( i );
+  int i = susynclib()->GetPrimaryModIndex( WX_STRING(modname) );
+  return GetMod( i );
 }
 
 
 UnitSyncMod SpringUnitSync::GetMod( int index )
 {
   debug_func( "" );
-  LOCK_UNITSYNC;
-  return _GetMod( index );
-}
-
-
-UnitSyncMod SpringUnitSync::_GetMod( int index )
-{
   UnitSyncMod m;
 
-  m.name = m_get_mod_name( index );
-  m.hash = i2s(m_get_mod_checksum( index ));
-
-  return m;
+  m.name = STD_STRING(susynclib()->GetPrimaryModName( index ));
+  m.hash = i2s(susynclib()->GetPrimaryModChecksum( index ));
 }
 
 
 int SpringUnitSync::GetNumMaps()
 {
   debug_func( "" );
-  LOCK_UNITSYNC;
-
-  if ( !m_loaded ) return 0;
-  return m_map_count;
+  return susynclib()->GetMapCount();
 }
 
 
 bool SpringUnitSync::MapExists( const std::string& mapname )
 {
   debug_func( "" );
-  LOCK_UNITSYNC;
-
-  if ( !m_loaded ) return false;
-  bool succ = false;
   try {
-    succ = _GetMapIndex( mapname ) >= 0;
-  } catch (...) { return false; }
-  return succ;
+    return GetMapIndex( mapname ) >= 0;
+  } catch (...) {}
+  return false;
 }
 
 
 bool SpringUnitSync::MapExists( const std::string& mapname, const std::string hash )
 {
   debug_func( "" );
-  LOCK_UNITSYNC;
-
-  if ( !m_loaded ) return false;
   try {
-    int i = _GetMapIndex( mapname );
+    int i = GetMapIndex( mapname );
     if ( i >= 0 ) {
-      return ( i2s(m_get_map_checksum( i )) == hash );
+      return ( i2s(susynclib()->GetMapChecksum( i )) == hash );
     }
   } catch (...) {}
   return false;
@@ -340,19 +210,8 @@ bool SpringUnitSync::MapExists( const std::string& mapname, const std::string ha
 
 UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname, bool getmapinfo )
 {
-  debug_func( "" );
-  LOCK_UNITSYNC;
-
-  return _GetMap( mapname, getmapinfo );
-}
-
-
-UnitSyncMap SpringUnitSync::_GetMap( const std::string& mapname, bool getmapinfo )
-{
-  int i = _GetMapIndex( mapname );
-  ASSERT_LOGIC( i >= 0, "Map does not exist" );
-
-  return _GetMap( i, getmapinfo );
+  int i = GetMapIndex( mapname );
+  return GetMap( i, getmapinfo );
 }
 
 
@@ -377,7 +236,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const std::string& mapname )
   tm.description = &tmpdesc[0];
   tm.author = &tmpauth[0];
 
-  m_get_map_info_ex( mapname.c_str(), &tm, 0 );
+  tm = susynclib()->GetMapInfoEx( WX_STRING(mapname), 0 );
 
   MapInfo info;
   _ConvertSpringMapInfo( tm, info );
@@ -392,44 +251,24 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const std::string& mapname )
 
 UnitSyncMap SpringUnitSync::GetMap( int index, bool getmapinfo )
 {
-  debug_func( "" );
-  LOCK_UNITSYNC;
-
-  return _GetMap( index, getmapinfo );
-}
-
-
-UnitSyncMap SpringUnitSync::_GetMap( int index, bool getmapinfo )
-{
   UnitSyncMap m;
-  if ( !m_loaded ) return m;
-
-  m.name = m_get_map_name( index );
-  m.hash = i2s(m_get_map_checksum( index ));
-
+  m.name = STD_STRING(susynclib()->GetMapName( index ));
+  m.hash = i2s(susynclib()->GetMapChecksum( index ));
   if ( getmapinfo ) m.info = _GetMapInfoEx( m.name );
-
   return m;
-}
-
-
-int SpringUnitSync::GetMapIndex( const std::string& name )
-{
-  debug_func( "" );
-  LOCK_UNITSYNC;
-
-  return _GetMapIndex( name );
 }
 
 
 int SpringUnitSync::_GetMapIndex( const std::string& name )
 {
-  if ( !m_loaded ) return -1;
-  for ( int i = 0; i < m_map_count; i++ ) {
-    std::string cmp = m_get_map_name( i );
-    if ( name == cmp )
-      return i;
-  }
+  try {
+    int count = susynclib()->GetMapCount();
+    for ( int i = 0; i < count; i++ ) {
+      std::string cmp = STD_STRING(susynclib()->GetMapName( i ));
+      if ( name == cmp )
+        return i;
+    }
+  } catch(...) {}
   return -1;
 }
 
@@ -445,10 +284,7 @@ std::string SpringUnitSync::GetModArchive( int index )
 
 std::string SpringUnitSync::_GetModArchive( int index )
 {
-  if ( (!m_loaded) || (index < 0) ) return "unknown";
-  ASSERT_LOGIC( index < m_mod_count, "Bad index" );
-
-  return m_get_mod_archive( index );;
+  return STD_STRING(susynclib()->GetPrimaryModArchive( index ));
 }
 
 
