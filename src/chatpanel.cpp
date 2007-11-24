@@ -430,15 +430,17 @@ void ChatPanel::_OutputLine( const wxString& message, const wxColour& col )
 {
   LogTime();
   m_chatlog_text->SetDefaultStyle(wxTextAttr(col));
+  #ifndef HAVE_WX28
   m_chatlog_text->Freeze();
+  #endif
   m_chatlog_text->AppendText( message + _T("\n") );
   if ( m_chat_log ) m_chat_log->AddMessage(message);
   CheckLength();
-#ifdef __WXMSW__
   m_chatlog_text->ScrollLines( 10 );
   m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
-#endif
+  #ifndef HAVE_WX28
   m_chatlog_text->Thaw();
+  #endif
 }
 
 
