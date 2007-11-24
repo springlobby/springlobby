@@ -21,7 +21,7 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
   ASSERT_LOGIC( sock != 0, "sock = 0" );
 
   if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
-    m_serv.OnDataRecived( sock );
+    m_serv.OnDataReceived( sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_LOST ) {
     m_serv.OnDisconnected( sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
@@ -123,8 +123,8 @@ bool Socket::Send( const std::string& data )
 }
 
 
-//! @brief Recive data from connection
-bool Socket::Recive( std::string& data )
+//! @brief Receive data from connection
+bool Socket::Receive( std::string& data )
 {
   if ( m_sock == 0 ) {
     debug_error( "Socket NULL" );
