@@ -436,8 +436,8 @@ void ChatPanel::_OutputLine( const wxString& message, const wxColour& col )
   m_chatlog_text->AppendText( message + _T("\n") );
   if ( m_chat_log ) m_chat_log->AddMessage(message);
   CheckLength();
-  //m_chatlog_text->ScrollLines( 10 );
-  //m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
+  m_chatlog_text->ScrollLines( 10 );
+  m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
   #ifdef HAVE_WX26
   m_chatlog_text->Thaw();
   #endif
