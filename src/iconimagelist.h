@@ -91,7 +91,7 @@ class IconImageList : public wxImageList
     static int GetHostIcon( const bool& spectator = false );
     static int GetColourIcon( const int& num );
     void SetColourIcon( const int& num, const wxColour& colour );
-    int GetSideIcon( const std::string& side );
+    int GetSideIcon( const std::string& modname, const std::string& side );
     static int GetReadyIcon( const bool& ready, const int& sync = 1 );
 
   protected:
