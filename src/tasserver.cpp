@@ -363,10 +363,10 @@ void TASServer::ExecuteCommand( const std::string& in )
 void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
   std::string params = inparams;
-  int pos, cpu, id, nat, port, maxplayers, rank, specs, metal, energy, units, start,
+  int pos, cpu, id, nat, port, maxplayers, rank, specs, metal = 0, energy = 0, units, start = 0,
       top, left, right, bottom, ally;
-  bool replay, haspass, dgun, ghost, dim;
-  GameType gt;
+  bool replay, haspass, dgun = false, ghost = false, dim = false;
+  GameType gt = GT_ComContinue;
   std::string hash;
   std::string nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version;
   //NatType ntype;
