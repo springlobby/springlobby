@@ -3,6 +3,13 @@
 
 #include <string>
 
+#if( wxMAJOR_VERSION==2 && wxMINOR_VERSION == 6 )
+#define HAVE_WX26
+#elif( wxMAJOR_VERSION==2 && wxMINOR_VERSION == 8 )
+#define HAVE_WX28
+#endif
+
+
 //! Converts a wxString to an std::string
 #define STD_STRING(v) std::string((const char*)v.mb_str(wxConvUTF8))
 
@@ -31,10 +38,10 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #define CONTROL_HEIGHT 28
 #endif
 
-#ifdef HAVE_WX28
-#define IsColourOk() IsOk()
-#else
+#if HAVE_WX26
 #define IsColourOk() Ok()
+#else
+#define IsColourOk() IsOk()
 #endif
 
 std::string GetWordParam( std::string& params );
