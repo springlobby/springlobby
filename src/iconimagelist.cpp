@@ -252,14 +252,14 @@ void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 }
 
 
-int IconImageList::GetSideIcon( const std::string& side )
+int IconImageList::GetSideIcon( const std::string& modname, const std::string& side )
 {
   wxString sn = WX_STRING( side );
   sn = sn.Lower();
   if ( sn  == _T("arm") ) return ICON_ARM;
   else if (  sn == _T("core") ) return ICON_CORE;
   else if (CachedSideIcons[side] == 0){
-      int IconPosition = Add(wxBitmap( usync()->GetSidePicture(side) ), wxNullBitmap);
+      int IconPosition = Add(wxBitmap( usync()->GetSidePicture( modname , side ) ), wxNullBitmap);
       CachedSideIcons[side] = IconPosition;
       return IconPosition;
   }

@@ -71,10 +71,9 @@ class SpringUnitSync : public IUnitSync
 
     int GetMapIndex( const std::string& name );
 
-    void SetCurrentMod( const std::string& modname );
-    int GetSideCount();
-    std::string GetSideName( int index );
-    wxImage GetSidePicture( const std::string& SideName );
+    int GetSideCount( const std::string& modname );
+    std::string GetSideName( const std::string& modname, int index );
+    wxImage GetSidePicture( const std::string& modname, const std::string& SideName );
 
     bool LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc );
     void FreeUnitSyncLib();
@@ -84,12 +83,11 @@ class SpringUnitSync : public IUnitSync
     std::string GetSpringVersion();
 
     wxArrayString GetAIList();
-    wxString GetBotLibPath( const wxString& botlibname );
 
-    int GetNumUnits();
+    int GetNumUnits( const std::string& modname );
     //int GetUnitIndex( const std::string& name );
     //std::string GetFullUnitName( int index );
-    wxArrayString GetUnitsList();
+    wxArrayString GetUnitsList( const std::string& modname );
 
     wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
 
@@ -132,9 +130,10 @@ class SpringUnitSync : public IUnitSync
 
     GetSpringVersionPtr m_get_spring_version;
 */
+
+
     UnitSyncMap m_map;
 
-    std::string m_current_mod;
     wxArrayString m_mod_units;
 
     int m_map_count;
@@ -144,6 +143,7 @@ class SpringUnitSync : public IUnitSync
     MapCacheType m_mapinfo;
 
     wxCriticalSection m_lock;
+
 
 //    void* _GetLibFuncPtr( const std::string& name );
     MapInfo _GetMapInfoEx( const std::string& mapname );

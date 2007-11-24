@@ -65,13 +65,6 @@ struct CachedMapInfo
 };
 
 
-struct UnitSyncColour {
-  unsigned int b : 5;
-  unsigned int g : 6;
-  unsigned int r : 5;
-};
-
-
 IUnitSync* usync()
 {
   static SpringUnitSync* m_sync = 0;
@@ -288,69 +281,49 @@ std::string SpringUnitSync::_GetModArchive( int index )
 }
 
 
-void SpringUnitSync::SetCurrentMod( const std::string& modname )
+int SpringUnitSync::GetSideCount( const std::string& modname )
 {
-  debug_func( "" );
-  LOCK_UNITSYNC;
+  debug_func( modname );
 
-  debug_func("modname = \"" + modname + "\"" );
-  if ( m_current_mod != modname ) {
-    m_uninit();
-    m_init( true, 1 );
-    m_add_all_archives( _GetModArchive( _GetModIndex( modname ) ).c_str() );
-    m_current_mod = modname;
-    m_side_count = m_get_side_count();
-    m_mod_units.Clear();
-  }
+  if ( !_ModExists( modname ) ) return 0;
+  return susynclib()->GetSideCount();
 }
 
 
-int SpringUnitSync::GetSideCount()
+std::string SpringUnitSync::GetSideName( const std::string& modname, int index )
 {
   debug_func( "" );
-  LOCK_UNITSYNC;
 
-  if ( (!m_loaded) || (!_ModExists(m_current_mod)) ) return 0;
-  return m_side_count;
+  if ( (index < 0) || (!_ModExists( modname )) ) return "unknown";
+  susynclib()->AddAllArchives( _GetModArchive( _GetModIndex( modname ) ) );
+  if ( index >= GetSideCount( modname ) ) return "unknown";
+  ASSERT_LOGIC( GetSideCount( modname ) > index, "Side index too high." );
+  return STD_STRING(susynclib()->GetSideName( index ));
 }
 
 
-std::string SpringUnitSync::GetSideName( int index )
+wxImage SpringUnitSync::GetSidePicture( const std::string& modname, const std::string& SideName )
 {
   debug_func( "" );
-  LOCK_UNITSYNC;
 
-  if ( (!m_loaded) || (index < 0) || (!_ModExists(m_current_mod)) ) return "unknown";
-  m_add_all_archives( _GetModArchive( _GetModIndex( m_current_mod ) ).c_str() );
-  if ( index >= m_side_count ) return "unknown";
-  ASSERT_LOGIC( m_side_count > index, "Side index too high." );
-  return m_get_side_name( index );
-}
-
-
-wxImage SpringUnitSync::GetSidePicture( const std::string& SideName )
-{
-  debug_func( "" );
-  LOCK_UNITSYNC;
-
-  m_add_all_archives( _GetModArchive( _GetModIndex( m_current_mod ) ).c_str() );
+  susynclib()->AddAllArchives( _GetModArchive( _GetModIndex( modname ) ) );
   debug_func( "SideName = \"" + SideName + "\"" );
   wxString ImgName = _T("SidePics");
   ImgName += _T("/");
   ImgName += WX_STRING( SideName ).Upper();
   ImgName += _T(".bmp");
 
-  int ini = m_open_file_vfs(STD_STRING(ImgName).c_str());
+  int ini = susynclib()->OpenFileVFS (ImgName );
   ASSERT_RUNTIME( ini, "cannot find side image" );
 
-  int FileSize = m_file_size_vfs(ini);
+  int FileSize = susynclib()->FileSizeVFS(ini);
   if (FileSize == 0) {
-    m_close_file_vfs(ini);
+    susynclib()->CloseFileVFS(ini);
     ASSERT_RUNTIME( FileSize, "side image has size 0" );
   }
 
   char* FileContent = new char [FileSize];
-  m_read_file_vfs(ini, FileContent, FileSize);
+  susynclib()->ReadFileVFS(ini, FileContent, FileSize);
   wxMemoryInputStream FileContentStream( FileContent, FileSize );
 
   wxImage ret( FileContentStream, wxBITMAP_TYPE_ANY, -1);
@@ -362,65 +335,34 @@ wxImage SpringUnitSync::GetSidePicture( const std::string& SideName )
 wxArrayString SpringUnitSync::GetAIList()
 {
   debug_func( "" );
-  LOCK_UNITSYNC;
 
-  if ( !m_loaded ) return wxArrayString();
-
-  int ini = m_init_find_vfs ( "AI/Bot-libs/*" );
-  int BufferSize = 400;
-  char * FilePath = new char [BufferSize];
+  int ini = susynclib()->InitFindVFS( "AI/Bot-libs/*" );
+  bool more;
+  wxString FileName;
   wxArrayString ret;
 
   do
   {
-    ini = m_find_files_vfs ( ini, FilePath, BufferSize );
-    wxString FileName = wxString ( FilePath, wxConvUTF8 );
-    FileName = FileName.AfterLast ( wxFileName::GetPathSeparator() ); // strip the file path
+    more = susynclib()->FindFilesVFS( ini, FileName );
     if ( !FileName.Contains ( _T(".dll") ) && !FileName.Contains (  _T(".so") ) ) continue; // FIXME this isn't exactly portable
-    FileName = FileName.SubString(0, FileName.Find( '.', true ) - 1 ); //strip the file extension
-    if ( ret.Index( FileName ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
-  } while (ini != 0);
+    if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
+  } while ( !more );
+
+  const int LuaAICount = susynclib()->GetLuaAICount();
+  for ( int i = 0; i < LuaAICount; i++ ) ret.Add( _( "LuaAI" ) +  susynclib()->GetLuaAIName( i ) );
 
   return ret;
 }
 
 
-wxString SpringUnitSync::GetBotLibPath( const wxString& botlibname )
+int SpringUnitSync::GetNumUnits( const std::string& modname )
 {
   debug_func( "" );
-  LOCK_UNITSYNC;
 
-  if ( !m_loaded ) return wxEmptyString;
+  susynclib()->AddAllArchives( _GetModArchive( _GetModIndex( modname ) ) );
+  susynclib()->ProcessUnitsNoChecksum();
 
-  debug_func( "botlibname = \"" + STD_STRING(botlibname) + "\"" );
-  wxString search = _T("AI/Bot-libs/") + botlibname + _T("*");
-  int ini = m_init_find_vfs ( search.mb_str( wxConvUTF8 ) );
-  int BufferSize = 400;
-  char * FilePath = new char [BufferSize];
-
-  do
-  {
-    ini = m_find_files_vfs ( ini, FilePath, BufferSize );
-    wxString FileName = wxString( FilePath, wxConvUTF8 );
-    if ( !FileName.Contains ( _T(".dll") ) && !FileName.Contains (  _T(".so") ) ) continue; // FIXME this isn't exactly portable
-    debug( "AIdll: " + STD_STRING(FileName) );
-    return FileName;
-  } while (ini != 0);
-
-  return wxEmptyString;
-}
-
-
-int SpringUnitSync::GetNumUnits()
-{
-  debug_func( "" );
-  LOCK_UNITSYNC;
-
-  if ( !m_loaded ) return 0;
-  m_add_all_archives( _GetModArchive( _GetModIndex( m_current_mod ) ).c_str() );
-  m_proc_units_nocheck();
-
-  return m_get_unit_count();
+  return susynclib()->GetUnitCount();
 }
 
 
@@ -435,18 +377,15 @@ wxString _GetCachedModUnitsFileName( const wxString& mod )
 }
 
 
-wxArrayString SpringUnitSync::GetUnitsList()
+wxArrayString SpringUnitSync::GetUnitsList( const std::string& modname )
 {
   debug_func( "" );
-  LOCK_UNITSYNC;
 
-  if (!m_loaded) return wxArrayString();
   if ( m_mod_units.GetCount() > 0 ) return m_mod_units;
 
   wxArrayString ret;
-  if (!m_loaded) return ret;
 
-  wxString path = _GetCachedModUnitsFileName( WX_STRING(m_current_mod) );
+  wxString path = _GetCachedModUnitsFileName( WX_STRING( modname ) );
   try {
 
     ASSERT_RUNTIME( wxFileName::FileExists( path ), "Cache file does not exist" );
@@ -461,11 +400,11 @@ wxArrayString SpringUnitSync::GetUnitsList()
 
   } catch(...) {}
 
-  m_add_all_archives( _GetModArchive( _GetModIndex( m_current_mod ) ).c_str() );
-  while ( m_proc_units_nocheck() );
-  for ( int i = 0; i < m_get_unit_count(); i++ ) {
-    wxString tmp = wxString(m_get_unit_full_name(i), wxConvUTF8) + _T("(");
-    tmp += wxString(m_get_unit_name(i), wxConvUTF8) + _T(")");
+  susynclib()->AddAllArchives( _GetModArchive( _GetModIndex( modname ) ) );
+  while ( susynclib()->ProcessUnitsNoChecksum() );
+  for ( int i = 0; i < susynclib()->GetUnitCount(); i++ ) {
+    wxString tmp = susynclib()->GetUnitName(i) + _T("(");
+    tmp += susynclib()->GetUnitName(i) + _T(")");
     ret.Add( tmp );
   }
 
@@ -535,7 +474,6 @@ wxImage SpringUnitSync::_GetCachedMinimap( const std::string& mapname, int max_w
 wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size )
 {
   debug_func( "" );
-  LOCK_UNITSYNC;
 
   int height = 1024;
   int width = 512;
@@ -546,16 +484,7 @@ wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int max_w, int m
     debug( "Cache lookup failed." );
   }
 
-  wxImage ret( width, height );
-  UnitSyncColour* colours = (UnitSyncColour*)m_get_minimap( mapname.c_str(), 0 );
-  ASSERT_RUNTIME( colours , "GetMinimap failed" );
-  for ( int y = 0; y < height; y++ ) {
-    for ( int x = 0; x < width; x++ ) {
-      int pos = y*(width)+x;
-      typedef unsigned char uchar;
-      ret.SetRGB( x, y, uchar((colours[pos].r/31.0)*255.0), uchar((colours[pos].g/63.0)*255.0), uchar((colours[pos].b/31.0)*255.0) );
-    }
-  }
+  wxImage ret = susynclib()->GetMinimap( WX_STRING(mapname), 0 );
 
 
   UnitSyncMap map = _GetMap( mapname, true );
