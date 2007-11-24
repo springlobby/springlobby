@@ -193,8 +193,8 @@ class SpringUnitSyncLib
     wxString GetPrimaryModArchiveList( int arnr );
     unsigned int GetPrimaryModChecksumFromName( const wxString& name );
 
-    int GetSideCount();
-    wxString GetSideName( int index );
+    int GetSideCount( const wxString& modName );
+    wxString GetSideName( const wxString& modName, int index );
 
     /**
      * Add all achives.
@@ -236,7 +236,7 @@ class SpringUnitSyncLib
     float GetOptionNumberMin( int optIndex );
     float GetOptionNumberMax( int optIndex );
     float GetOptionNumberStep( int optIndex );
-    const wxString GetOptionStringDef( int optIndex );
+    wxString GetOptionStringDef( int optIndex );
     int GetOptionStringMaxLen( int optIndex );
     int GetOptionListCount( int optIndex );
     wxString GetOptionListDef( int optIndex );
