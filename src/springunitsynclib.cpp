@@ -226,3 +226,405 @@ void* SpringUnitSyncLib::_GetLibFuncPtr( const wxString& name )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+wxString SpringUnitSyncLib::GetSpringVersion()
+{
+  ASSERT_RUNTIME( m_get_spring_version, "Function was not in unitsync library." );
+  return WX_STRINGC( m_get_spring_version() );
+}
+
+int SpringUnitSyncLib::GetMapCount()
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+unsigned int SpringUnitSyncLib::GetMapChecksum( int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetMapName( int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+SpringMapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName, int miplevel )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+unsigned int SpringUnitSyncLib::GetPrimaryModChecksum( int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::GetPrimaryModIndex( const wxString& modName )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetPrimaryModName( int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::GetPrimaryModCount()
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetPrimaryModArchive( int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetPrimaryModShortName( int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetPrimaryModVersion( int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetPrimaryModMutator( int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetPrimaryModGame( int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetPrimaryModShortGame( int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetPrimaryModDescription( int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::GetPrimaryModArchiveCount( int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetPrimaryModArchiveList( int arnr )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+unsigned int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::GetSideCount( const wxString& modName )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetSideName( const wxString& modName, int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+void SpringUnitSyncLib::AddAllArchives( const wxString& root )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetFullUnitName( int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetUnitName( int index )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::GetUnitCount()
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::ProcessUnitsNoChecksum()
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::InitFindVFS( const wxString& pattern )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+bool SpringUnitSyncLib::FindFilesVFS( int handle, wxString& name )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::OpenFileVFS( const wxString& name )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::FileSizeVFS( int handle )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::ReadFileVFS( int handle, void* buffer, int bufferLength )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+void SpringUnitSyncLib::CloseFileVFS( int handle )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::GetLuaAICount()
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetLuaAIName( int aiIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetLuaAIDesc( int aiIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::GetModOptionCount()
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetOptionKey( int optIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetOptionName( int optIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetOptionDesc( int optIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::GetOptionType( int optIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::GetOptionBoolDef( int optIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+float SpringUnitSyncLib::GetOptionNumberDef( int optIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+float SpringUnitSyncLib::GetOptionNumberMin( int optIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+float SpringUnitSyncLib::GetOptionNumberMax( int optIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+float SpringUnitSyncLib::GetOptionNumberStep( int optIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetOptionStringDef( int optIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::GetOptionStringMaxLen( int optIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::GetOptionListCount( int optIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetOptionListDef( int optIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetOptionListItemKey( int optIndex, int itemIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetOptionListItemName( int optIndex, int itemIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString GetOptionListItemDesc( int optIndex, int itemIndex )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::OpenArchive( const wxString& name )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+void SpringUnitSyncLib::CloseArchive( int archive )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::FindFilesArchive( int archive, int cur, wxString& nameBuf )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::OpenArchiveFile( int archive, const wxString& name )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::ReadArchiveFile( int archive, int handle, void* buffer, int numBytes)
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+void SpringUnitSyncLib::CloseArchiveFile( int archive, int handle )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::SizeArchiveFile( int archive, int handle )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+int SpringUnitSyncLib::GetSpringConfigInt( const wxString& key, int defValue )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+wxString SpringUnitSyncLib::GetSpringConfigString( const wxString& key, const wxString& defValue )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+float SpringUnitSyncLib::GetSpringConfigFloat( const wxString& key, const float defValue )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+void SpringUnitSyncLib::SetSpringConfigString( const wxString& key, const wxString& value )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+void SpringUnitSyncLib::SetSpringConfigInt( const wxString& key, int value )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
+void SpringUnitSyncLib::SetSpringConfigFloat( const wxString& key, const float value )
+{
+  ASSERT_LOGIC( false, "Not Implemented Yet" );
+}
+
+
