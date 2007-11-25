@@ -38,7 +38,7 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #define CONTROL_HEIGHT 28
 #endif
 
-#if HAVE_WX26
+#ifdef HAVE_WX26
 #define IsColourOk() Ok()
 #else
 #define IsColourOk() IsOk()
