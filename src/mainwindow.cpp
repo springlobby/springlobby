@@ -104,9 +104,6 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
 
-  m_chat_tab->Disable();
-  m_join_tab->Disable();
-
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
   SetSizer( m_main_sizer );
