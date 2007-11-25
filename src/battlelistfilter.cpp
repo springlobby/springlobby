@@ -382,29 +382,29 @@ bool BattleListFilter::FilterBattle(Battle& battle)
   if (!m_activ) return true;
 
   //Battle Status Check
-  if ( !m_filter_status_start->GetValue() and battle.GetInGame() ) return false;
-  if ( !m_filter_status_locked->GetValue() and battle.IsLocked() ) return false;
-  if ( !m_filter_status_pass->GetValue() and battle.IsPassworded() ) return false;
-  if ( !m_filter_status_full->GetValue()  and battle.IsFull() ) return false;
-  if ( !m_filter_status_open->GetValue() and !battle.IsPassworded() and !battle.IsLocked() and !battle.GetInGame() and !battle.IsFull() ) return false;
+  if ( !m_filter_status_start->GetValue() && battle.GetInGame() ) return false;
+  if ( !m_filter_status_locked->GetValue() && battle.IsLocked() ) return false;
+  if ( !m_filter_status_pass->GetValue() && battle.IsPassworded() ) return false;
+  if ( !m_filter_status_full->GetValue()  && battle.IsFull() ) return false;
+  if ( !m_filter_status_open->GetValue() && !battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull() ) return false;
 
   //Rank Check
-  if ( (m_filter_rank_choice_value != -1) and (m_filter_rank_choice_value+1)*100 != battle.GetRankNeeded()) return false;
+  if ( (m_filter_rank_choice_value != -1) && (m_filter_rank_choice_value+1)*100 != battle.GetRankNeeded()) return false;
 
   //Player Check
-  if ( (m_filter_player_choice_value != -1) and !_IntCompare( battle.GetNumUsers() - battle.GetSpectators() , m_filter_player_choice_value , m_filter_player_mode ) ) return false;
+  if ( (m_filter_player_choice_value != -1) && !_IntCompare( battle.GetNumUsers() - battle.GetSpectators() , m_filter_player_choice_value , m_filter_player_mode ) ) return false;
 
   //MaxPlayer Check
-  if ( (m_filter_maxplayer_choice_value != -1) and !_IntCompare( battle.GetMaxPlayers() , m_filter_maxplayer_choice_value , m_filter_maxplayer_mode ) ) return false;
+  if ( (m_filter_maxplayer_choice_value != -1) && !_IntCompare( battle.GetMaxPlayers() , m_filter_maxplayer_choice_value , m_filter_maxplayer_mode ) ) return false;
 
   //Spectator Check
-  if ( (m_filter_spectator_choice_value != -1) and !_IntCompare( battle.GetSpectators() , m_filter_spectator_choice_value , m_filter_spectator_mode ) ) return false;
+  if ( (m_filter_spectator_choice_value != -1) && !_IntCompare( battle.GetSpectators() , m_filter_spectator_choice_value , m_filter_spectator_mode ) ) return false;
 
   //Only Maps i have Check
-  if (m_filter_map_show->GetValue() and !battle.MapExists()) return false;
+  if (m_filter_map_show->GetValue() && !battle.MapExists()) return false;
 
   //Only Mods i have Check
-  if (m_filter_mod_show->GetValue() and !battle.ModExists()) return false;
+  if (m_filter_mod_show->GetValue() && !battle.ModExists()) return false;
 
   //Description:
   if ( !WX_STRING( battle.GetDescription() ).Upper().Contains( m_filter_description_edit->GetValue().Upper() ) ) return false;
@@ -416,7 +416,7 @@ bool BattleListFilter::FilterBattle(Battle& battle)
   if ( !WX_STRING( RefineMapname(battle.GetMapName() ) ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) ) return false;
 
   //Mod:
-  if ( !WX_STRING( battle.GetModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) and  !WX_STRING( RefineModname( battle.GetModName() ) ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) ) return false;
+  if ( !WX_STRING( battle.GetModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !WX_STRING( RefineModname( battle.GetModName() ) ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) ) return false;
 
   return true;
 }

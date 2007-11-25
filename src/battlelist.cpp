@@ -45,13 +45,13 @@ Battle& BattleList_Iter::GetBattle()
 {
 
   Battle* battle = m_iterator->second;
-  if ( m_battlelist and m_iterator != m_battlelist->m_battles.end() ) ++m_iterator;
+  if ( m_battlelist && m_iterator != m_battlelist->m_battles.end() ) ++m_iterator;
   return *battle;
 }
 
 bool BattleList_Iter::EOL()
 {
-  return ( m_battlelist and m_iterator == m_battlelist->m_battles.end() )?true:false;
+  return ( m_battlelist && m_iterator == m_battlelist->m_battles.end() )?true:false;
 }
 
 

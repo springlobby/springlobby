@@ -165,7 +165,7 @@ void BattleListTab::SelectBattle( Battle* battle )
 
 void BattleListTab::AddBattle( Battle& battle ) {
 
-  if ( m_filter->GetActiv() and !m_filter->FilterBattle( battle ) ) {
+  if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     return;
   }
   int index = m_battle_list->InsertItem( 0, IconImageList::GetBattleStatusIcon( battle ) );
@@ -209,7 +209,7 @@ void BattleListTab::RemoveBattle( Battle& battle ) {
 
 void BattleListTab::UserUpdate( User& user )
 {
-  if (m_sel_battle and user.GetBattle() == m_sel_battle) { m_players->UserUpdated( user ); }
+  if (m_sel_battle && user.GetBattle() == m_sel_battle) { m_players->UserUpdated( user ); }
 }
 
 
@@ -220,7 +220,7 @@ void BattleListTab::UpdateBattle( Battle& battle )
     return;
   }
 
-  if ( m_filter->GetActiv() and !m_filter->FilterBattle( battle ) ) {
+  if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     RemoveBattle( battle );
     return;
   }

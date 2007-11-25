@@ -93,7 +93,7 @@ bool ChatLog::_WriteLine(const wxString& text)
 bool ChatLog::_OpenLogFile(const wxString& server,const wxString& room)
 {
   wxString path = _GetPath() + wxFileName::GetPathSeparator() + server + wxFileName::GetPathSeparator() + room + _T(".txt");
-  if ( m_parent_dir_exists and LogEnabled() and _CreateFolder(server) ) {
+  if ( m_parent_dir_exists && LogEnabled() && _CreateFolder(server) ) {
     if ( wxFileExists( path ) ) {
       m_logfile = new wxFile( path, wxFile::write_append );
     } else {
