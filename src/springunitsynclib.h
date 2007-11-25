@@ -295,6 +295,16 @@ class SpringUnitSyncLib
     //! Path to unitsync.
     wxString m_path;
 
+    //! Struct to hold pixel's RGB values for minimaps
+    struct UnitSyncColours
+    {
+      unsigned int b : 5;
+      unsigned int g : 6;
+      unsigned int r : 5;
+    };
+
+    //! Macro that checks if a function is present/loaded, unitsync is loaded, and locks it on call.
+    #define InitLib( arg ) { LOCK_UNITSYNC; ASSERT_RUNTIME( m_loaded, "Unitsync not loaded." ); ASSERT_RUNTIME( arg, "Function was not in unitsync library." ); }
 
     /**
      * Loads a function pointer from unitsync.

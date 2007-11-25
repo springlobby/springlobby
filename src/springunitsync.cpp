@@ -149,6 +149,8 @@ UnitSyncMod SpringUnitSync::GetMod( int index )
 
   m.name = STD_STRING(susynclib()->GetPrimaryModName( index ));
   m.hash = i2s(susynclib()->GetPrimaryModChecksum( index ));
+
+  return m;
 }
 
 
