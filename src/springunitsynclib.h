@@ -5,11 +5,32 @@
 #include <wx/string.h>
 
 #include "nonportable.h"
+#include "iunitsync.h"
 
 class wxString;
 class wxImage;
 struct SpringMapInfo;
 class wxDynamicLibrary;
+
+
+struct SpringMapInfo
+{
+  char* description;
+  int tidalStrength;
+  int gravity;
+  float maxMetal;
+  int extractorRadius;
+  int minWind;
+  int maxWind;
+
+  int width;
+  int height;
+  int posCount;
+  StartPos positions[16];
+
+  char* author;
+};
+
 
 /**
  * \defgroup DllPointerTypes Pointer types used with the unitsync library.

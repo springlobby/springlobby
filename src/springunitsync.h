@@ -90,6 +90,13 @@ class SpringUnitSync : public IUnitSync
     wxArrayString GetUnitsList( const std::string& modname );
 
     wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
+    static wxString _GetCachedMinimapFileName( const std::string& mapname, int width = -1, int height = -1 );
+
+
+    bool CacheMapInfo( const wxString& map );
+    bool CacheMinimap( const wxString& map );
+    bool CacheModUnits( const wxString& mod );
+    bool ReloadUnitSyncLib();
 
   private:
 /*    bool m_loaded;

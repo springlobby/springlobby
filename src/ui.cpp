@@ -30,6 +30,7 @@
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
 #include "agreementdialog.h"
+#include "unitsyncthread.h"
 
 
 Ui::Ui() :
@@ -39,12 +40,18 @@ Ui::Ui() :
 {
   m_main_win = new MainWindow( *this );
   m_spring = new Spring(*this);
+  m_thread = new UnitSyncThread( *this );
+  m_thread->Init();
 }
 
 Ui::~Ui() {
   Disconnect();
   delete m_main_win;
   delete m_spring;
+  m_thread->Delete();
+
+  m_thread_wait.Enter();
+  m_thread_wait.Leave();
 }
 
 Server& Ui::GetServer()
@@ -897,3 +904,31 @@ void Ui::OnRing( const std::string& from )
   wxBell();
 }
 
+
+void Ui::OnMapInfoCached( const wxString& mapname )
+{
+  mw().OnUnitSyncReloaded();
+}
+
+
+void Ui::OnMinimapCached( const wxString& mapname )
+{
+  mw().OnUnitSyncReloaded();
+}
+
+
+void Ui::OnModUnitsCached( const wxString& modname )
+{
+}
+
+
+void Ui::OnCachedThreadStarted()
+{
+  m_thread_wait.Enter();
+}
+
+
+void Ui::OnCachedThreadTerminated()
+{
+  m_thread_wait.Leave();
+}

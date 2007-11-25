@@ -52,7 +52,6 @@ void UnitSyncThread::OnExit()
 void UnitSyncThread::AddMapInfoOrder( const wxString& map )
 {
   LOCK_CACHE;
-  m_delay = startdelay;
   _AddJob( JT_MAPINFO, map );
 }
 
@@ -62,7 +61,6 @@ void UnitSyncThread::AddMinimapOrder( const wxString& map )
   debug_func("");
   LOCK_CACHE;
   debug("");
-  m_delay = startdelay;
   _AddJob( JT_MINIMAP, map );
 }
 
@@ -70,7 +68,6 @@ void UnitSyncThread::AddMinimapOrder( const wxString& map )
 void UnitSyncThread::AddModUnitsOrder( const wxString& mod )
 {
   LOCK_CACHE;
-  m_delay = startdelay;
   _AddJob( JT_UNITS, mod );
 }
 
@@ -78,7 +75,6 @@ void UnitSyncThread::AddModUnitsOrder( const wxString& mod )
 void UnitSyncThread::AddReloadOrder()
 {
   LOCK_CACHE;
-  m_delay = startdelay;
   _AddJob( JT_RELOAD, wxEmptyString );
 }
 
