@@ -332,6 +332,16 @@ void MainWindow::OnShowDocs( wxCommandEvent& event )
 void MainWindow::OnTabsChanged( wxListbookEvent& event )
 {
   MakeImages();
+
+  int newsel = event.GetSelection();
+
+  if ( newsel == 0 || newsel == 1 )
+  {
+    try
+    {
+      if ( !m_ui.IsConnected() ) m_ui.Connect();
+    } catch( std::logic_error& e ) {}
+  }
 }
 
 
@@ -344,39 +354,4 @@ void MainWindow::OnUnitSyncReloaded()
   debug("Reloading Singleplayer tab");
   GetSPTab().OnUnitSyncReloaded();
   debug("Singleplayer tab updated");
-}
-
-
-void MainWindow::DisableChatTab()
-{
-  m_chat_tab->Disable();
-}
-
-
-void MainWindow::EnableChatTab()
-{
-  m_chat_tab->Enable();
-}
-
-
-void MainWindow::DisableMultiplayerTab()
-{
-  m_join_tab->Disable();
-}
-
-
-void MainWindow::EnableMultiplayerTab()
-{
-  m_join_tab->Enable();
-}
-
-void MainWindow::DisableSingleplayerTab()
-{
-  m_sp_tab->Disable();
-}
-
-
-void MainWindow::EnableSingleplayerTab()
-{
-  m_sp_tab->Enable();
 }

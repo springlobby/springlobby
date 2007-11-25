@@ -433,8 +433,6 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 {
   debug_func( "" );
 
-  m_main_win->EnableChatTab();
-  m_main_win->EnableMultiplayerTab();
 
   if ( !IsSpringCompatible () ){
     if ( m_spring->TestSpringBinary() ) {
@@ -445,9 +443,8 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
       message += _("Online play will be disabled.");
       wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
     } else {
-      wxMessageBox( _("Couldn't get your spring version.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
+      wxMessageBox( _("Couldn't get your spring version (spring's unitsync library not found).\n\nOnline play will be disabled.\nPlese check again your options then reconnect."), _("Spring error"), wxICON_EXCLAMATION );
     }
-    m_main_win->DisableMultiplayerTab();
   }
   server.uidata.panel->StatusMessage( _T("Connected to ") + WX_STRING(server_name) + _T(".") );
 
@@ -484,9 +481,6 @@ void Ui::OnDisconnected( Server& server )
     server.uidata.panel = 0;
   }
   mw().GetChatTab().CloseAllChats();
-
-  m_main_win->DisableChatTab();
-  m_main_win->DisableMultiplayerTab();
 
 }
 
