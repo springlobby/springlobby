@@ -402,7 +402,7 @@ unsigned int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& n
 {
   InitLib( m_get_primary_mod_checksum_from_name );
 
-  return WX_STRINGC( m_get_primary_mod_checksum_from_name( name.mb_str( wxConvUTF8 ) ) );
+  return m_get_primary_mod_checksum_from_name( name.mb_str( wxConvUTF8 ) );
 }
 
 
@@ -426,7 +426,7 @@ void SpringUnitSyncLib::AddAllArchives( const wxString& root )
 {
   InitLib( m_add_all_archives );
 
-  return WX_STRINGC( m_add_all_archives( root.mb_str() ) );
+  m_add_all_archives( root.mb_str() );
 }
 
 
@@ -474,7 +474,7 @@ bool SpringUnitSyncLib::FindFilesVFS( int handle, wxString& name )
 {
   InitLib( m_find_files_vfs );
 
-  return m_find_files_vfs( handle,name.mb_str( wxConvUTF8 ) );
+  return m_find_files_vfs( handle, name.mb_str( wxConvUTF8 ) );
 }
 
 
@@ -482,7 +482,7 @@ int SpringUnitSyncLib::OpenFileVFS( const wxString& name )
 {
   InitLib( m_open_file_vfs );
 
-  return m_open_file_vfs( name.mb_str( wxConvUTF8 );
+  return m_open_file_vfs( name.mb_str( wxConvUTF8 ) );
 }
 
 
@@ -746,7 +746,7 @@ wxString SpringUnitSyncLib::GetSpringConfigString( const wxString& key, const wx
 {
   InitLib( m_get_spring_config_string );
 
-  return WX_STRINGC( m_get_spring_config_string( key.mb_str( wxConvUTF8 ), defValue.mb_str( wxConvUTF8 ) );
+  return WX_STRINGC( m_get_spring_config_string( key.mb_str( wxConvUTF8 ), defValue.mb_str( wxConvUTF8 ) ) );
 }
 
 
