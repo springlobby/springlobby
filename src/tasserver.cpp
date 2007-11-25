@@ -199,7 +199,7 @@ bool TASServer::Register( const std::string& addr, const int port, const std::st
   if ( !IsConnected() ) return false;
 
   std::string data;
-  m_sock->Recive( data );
+  m_sock->Receive( data );
   if ( GetWordParam( data ) != "TASServer" ) return false;
 
   data = "REGISTER ";
@@ -210,7 +210,7 @@ bool TASServer::Register( const std::string& addr, const int port, const std::st
   m_sock->Send( data );
   data = "";
 
-  m_sock->Recive( data );
+  m_sock->Receive( data );
   if ( data != "REGISTRATIONACCEPTED\n") return false;
 
   return true;
@@ -300,19 +300,19 @@ void TASServer::Update( int mselapsed )
     HandlePinglist();
   }
 
-  _ReciveAndExecute();
+  _ReceiveAndExecute();
 
 }
 
 
-void TASServer::_ReciveAndExecute()
+void TASServer::_ReceiveAndExecute()
 {
   std::string data;
 
   do {
 
     data = "";
-    if ( m_sock->Recive( data ) ) {
+    if ( m_sock->Receive( data ) ) {
       m_buffer += data;
       if ( m_buffer.find( "\n", 0 ) != std::string::npos ) {
         std::string cmd = m_buffer.substr( 0, m_buffer.find( "\n", 0 ) );
@@ -363,10 +363,10 @@ void TASServer::ExecuteCommand( const std::string& in )
 void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
   std::string params = inparams;
-  int pos, cpu, id, nat, port, maxplayers, rank, specs, metal, energy, units, start,
+  int pos, cpu, id, nat, port, maxplayers, rank, specs, metal = 0, energy = 0, units, start = 0,
       top, left, right, bottom, ally;
-  bool replay, haspass, dgun, ghost, dim;
-  GameType gt;
+  bool replay, haspass, dgun = false, ghost = false, dim = false;
+  GameType gt = GT_ComContinue;
   std::string hash;
   std::string nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version;
   //NatType ntype;
@@ -1281,10 +1281,10 @@ void TASServer::OnDisconnected( Socket* sock )
 }
 
 
-void TASServer::OnDataRecived( Socket* sock )
+void TASServer::OnDataReceived( Socket* sock )
 {
   //TASServer* serv = (TASServer*)sock->GetUserdata();
-  _ReciveAndExecute();
+  _ReceiveAndExecute();
 }
 
 

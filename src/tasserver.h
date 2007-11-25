@@ -97,7 +97,7 @@ class TASServer : public Server
 
     void OnConnected( Socket* sock );
     void OnDisconnected( Socket* sock );
-    void OnDataRecived( Socket* sock );
+    void OnDataReceived( Socket* sock );
 
     bool IsPasswordHash( const std::string& pass );
     std::string GetPasswordHash( const std::string& pass );
@@ -118,7 +118,7 @@ class TASServer : public Server
 
     std::string m_agreement;
 
-    void _ReciveAndExecute();
+    void _ReceiveAndExecute();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H

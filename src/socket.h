@@ -51,7 +51,7 @@ class Socket
     void Disconnect( );
 
     bool Send( const std::string& data );
-    bool Recive( std::string& data );
+    bool Receive( std::string& data );
 
     Sockstate State( );
     Sockerror Error( );
