@@ -2,6 +2,7 @@
 
 #include <wx/filename.h>
 #include <wx/dynlib.h>
+#include <wx/image.h>
 #include <stdexcept>
 
 #include "springunitsynclib.h"
@@ -228,6 +229,7 @@ void* SpringUnitSyncLib::_GetLibFuncPtr( const wxString& name )
 
 wxString SpringUnitSyncLib::GetSpringVersion()
 {
+  ASSERT_RUNTIME( m_loaded, "Unitsync not loaded." );
   ASSERT_RUNTIME( m_get_spring_version, "Function was not in unitsync library." );
   return WX_STRINGC( m_get_spring_version() );
 }

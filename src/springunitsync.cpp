@@ -286,7 +286,7 @@ int SpringUnitSync::GetSideCount( const std::string& modname )
   debug_func( modname );
 
   if ( !_ModExists( modname ) ) return 0;
-  return susynclib()->GetSideCount();
+  return susynclib()->GetSideCount( WX_STRING(modname) );
 }
 
 
@@ -295,10 +295,10 @@ std::string SpringUnitSync::GetSideName( const std::string& modname, int index )
   debug_func( "" );
 
   if ( (index < 0) || (!_ModExists( modname )) ) return "unknown";
-  susynclib()->AddAllArchives( _GetModArchive( _GetModIndex( modname ) ) );
+  susynclib()->AddAllArchives( WX_STRING(_GetModArchive( _GetModIndex( modname)  ) ) );
   if ( index >= GetSideCount( modname ) ) return "unknown";
   ASSERT_LOGIC( GetSideCount( modname ) > index, "Side index too high." );
-  return STD_STRING(susynclib()->GetSideName( index ));
+  return STD_STRING(susynclib()->GetSideName( WX_STRING(modname), index ));
 }
 
 
@@ -306,7 +306,7 @@ wxImage SpringUnitSync::GetSidePicture( const std::string& modname, const std::s
 {
   debug_func( "" );
 
-  susynclib()->AddAllArchives( _GetModArchive( _GetModIndex( modname ) ) );
+  susynclib()->AddAllArchives( WX_STRING(_GetModArchive( _GetModIndex( modname ) ) ) );
   debug_func( "SideName = \"" + SideName + "\"" );
   wxString ImgName = _T("SidePics");
   ImgName += _T("/");
@@ -336,7 +336,7 @@ wxArrayString SpringUnitSync::GetAIList()
 {
   debug_func( "" );
 
-  int ini = susynclib()->InitFindVFS( "AI/Bot-libs/*" );
+  int ini = susynclib()->InitFindVFS( _T("AI/Bot-libs/*") );
   bool more;
   wxString FileName;
   wxArrayString ret;
@@ -359,7 +359,7 @@ int SpringUnitSync::GetNumUnits( const std::string& modname )
 {
   debug_func( "" );
 
-  susynclib()->AddAllArchives( _GetModArchive( _GetModIndex( modname ) ) );
+  susynclib()->AddAllArchives( WX_STRING(_GetModArchive( _GetModIndex( modname ) )) );
   susynclib()->ProcessUnitsNoChecksum();
 
   return susynclib()->GetUnitCount();
@@ -400,7 +400,7 @@ wxArrayString SpringUnitSync::GetUnitsList( const std::string& modname )
 
   } catch(...) {}
 
-  susynclib()->AddAllArchives( _GetModArchive( _GetModIndex( modname ) ) );
+  susynclib()->AddAllArchives( WX_STRING(_GetModArchive( _GetModIndex( modname ) )) );
   while ( susynclib()->ProcessUnitsNoChecksum() );
   for ( int i = 0; i < susynclib()->GetUnitCount(); i++ ) {
     wxString tmp = susynclib()->GetUnitName(i) + _T("(");
