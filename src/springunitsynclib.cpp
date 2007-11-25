@@ -2,6 +2,7 @@
 
 #include <wx/filename.h>
 #include <wx/dynlib.h>
+#include <wx/image.h>
 #include <stdexcept>
 
 #include "springunitsynclib.h"
@@ -286,7 +287,7 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName, int miplevel
     {
       int pos = y*width + x;
       typedef unsigned char uchar;
-      ret.SetRGB( x, y, uchar( ( colours[pos].r/31.0*255.0 ), ( colours[pos].g/63.0*255.0 ), ( colours[pos].b/31.0*255.0 ) ) );
+      ret.SetRGB( x, y, uchar( colours[pos].r/31.0*255.0 ), uchar( colours[pos].g/63.0*255.0 ), uchar( colours[pos].b/31.0*255.0 ) );
     }
   }
 
@@ -754,7 +755,7 @@ float SpringUnitSyncLib::GetSpringConfigFloat( const wxString& key, const float 
 {
   InitLib( m_get_spring_config_float );
 
-  return WX_STRINGC( m_get_spring_config_float( key.mb_str( wxConvUTF8 ), defValue );
+  return m_get_spring_config_float( key.mb_str( wxConvUTF8 ), defValue );
 }
 
 
