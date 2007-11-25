@@ -37,7 +37,7 @@ Battle::~Battle() {
 }
 
 
-Server& Battle::Battle::GetServer()
+Server& Battle::GetServer()
 {
   return m_serv;
 }
