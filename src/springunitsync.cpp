@@ -286,7 +286,7 @@ int SpringUnitSync::GetSideCount( const std::string& modname )
   debug_func( modname );
 
   if ( !_ModExists( modname ) ) return 0;
-  return susynclib()->GetSideCount();
+  return susynclib()->GetSideCount( modname );
 }
 
 
@@ -298,7 +298,7 @@ std::string SpringUnitSync::GetSideName( const std::string& modname, int index )
   susynclib()->AddAllArchives( _GetModArchive( _GetModIndex( modname ) ) );
   if ( index >= GetSideCount( modname ) ) return "unknown";
   ASSERT_LOGIC( GetSideCount( modname ) > index, "Side index too high." );
-  return STD_STRING(susynclib()->GetSideName( index ));
+  return STD_STRING(susynclib()->GetSideName( modname, index ));
 }
 
 
