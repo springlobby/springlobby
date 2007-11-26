@@ -530,7 +530,8 @@ wxArrayString SpringUnitSync::GetAIList()
 
   if ( !m_loaded ) return wxArrayString();
 
-  int ini = m_init_find_vfs ( "AI/Bot-libs/*" );
+  wxString AiSearchPath = wxString(_T("AI/Bot-libs/*")) + DLL_EXTENSION;
+  int ini = m_init_find_vfs ( AiSearchPath.mb_str( wxConvUTF8 ) ); // FIXME this isn't exactly portable
   int BufferSize = 400;
   char * FilePath = new char [BufferSize];
   wxArrayString ret;
@@ -539,9 +540,8 @@ wxArrayString SpringUnitSync::GetAIList()
   {
     ini = m_find_files_vfs ( ini, FilePath, BufferSize );
     wxString FileName = wxString ( FilePath, wxConvUTF8 );
-    FileName = FileName.AfterLast ( wxFileName::GetPathSeparator() ); // strip the file path
-    if ( !FileName.Contains ( DLL_EXTENSION ) ) continue; // FIXME this isn't exactly portable
-    FileName = FileName.SubString(0, FileName.Find( '.', true ) - 1 ); //strip the file extension
+    FileName = FileName.AfterLast ( '/' ); // strip the file path
+    FileName = FileName.BeforeLast( '.' ); //strip the file extension
     if ( ret.Index( FileName ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
   } while (ini != 0);
 
@@ -557,7 +557,7 @@ wxString SpringUnitSync::GetBotLibPath( const wxString& botlibname )
   if ( !m_loaded ) return wxEmptyString;
 
   debug_func( "botlibname = \"" + STD_STRING(botlibname) + "\"" );
-  wxString search = _T("AI/Bot-libs/") + botlibname + _T("*");
+  wxString search = _T("AI/Bot-libs/") + botlibname + DLL_EXTENSION; // FIXME this isn't exactly portable
   int ini = m_init_find_vfs ( search.mb_str( wxConvUTF8 ) );
   int BufferSize = 400;
   char * FilePath = new char [BufferSize];
@@ -566,7 +566,6 @@ wxString SpringUnitSync::GetBotLibPath( const wxString& botlibname )
   {
     ini = m_find_files_vfs ( ini, FilePath, BufferSize );
     wxString FileName = wxString( FilePath, wxConvUTF8 );
-    if ( !FileName.Contains ( _T(".dll") ) && !FileName.Contains (  _T(".so") ) ) continue; // FIXME this isn't exactly portable
     debug( "AIdll: " + STD_STRING(FileName) );
     return FileName;
   } while (ini != 0);
