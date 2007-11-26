@@ -20,29 +20,25 @@
     along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#include <wx/wx.h>
-#include <wx/gbsizer.h>
-#include <cstdlib>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <map>
-#include <unistd.h>
+#ifndef __TAB_UI_h__
+#define __TAB_UI_h__
+#include "tabs.h"
 
-#include "configHandler.h"
-#include "Defs.hpp"
-#include "tab_render_detail.h"
-#include "tab_quality_video.h"
+class tab_ui : public abstract_panel
+{
 
-#include "tab_abstract.h"
-#include "tab_audio.h"
-#include "tab_debug.h"
+	public:
+		tab_ui(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
+		virtual ~tab_ui();
 
-#include "tab_mouse.h"
-#include "tab_ui.h"
+		void initCameraSizer(wxStaticBoxSizer*);
+		void initScrollSpeedSizer(wxStaticBoxSizer* );
+		void initUiOptSizer(wxStaticBoxSizer* );
 
-#include "tab_simple.h"
-//#include "tab_video.h"
+    protected:
+        void OnClose(wxCloseEvent& event);
+		void CreateGUIControls();
+		DECLARE_EVENT_TABLE()
+};
 
-#define TAB_SIZE wxSize(700,500)
+#endif

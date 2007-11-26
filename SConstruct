@@ -1,6 +1,6 @@
 s_pref =  'obj/linux/'
 s_source = [s_pref+'Main.cpp',s_pref+'frame.cpp',s_pref+'configHandler.cpp']
-s_source+= [s_pref+'tab_abstract.cpp',s_pref+'tab_audio.cpp',s_pref+'tab_debug.cpp',s_pref+'tab_mouse.cpp',s_pref+'tab_render_detail.cpp',s_pref+'tab_quality_video.cpp']
+s_source+= [s_pref+'tab_abstract.cpp',s_pref+'tab_audio.cpp',s_pref+'tab_debug.cpp',s_pref+'tab_render_detail.cpp',s_pref+'tab_quality_video.cpp',s_pref+'tab_ui.cpp']
 
 
 

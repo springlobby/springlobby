@@ -54,7 +54,9 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 }
 
 void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
-	for (int i = 0; i < 8; i++) {
+	// i < 8 with High resolution LOS textures
+	// i < 7 without
+	for (int i = 0; i < 7; i++) {
 		wxCheckBox* checkBox = new wxCheckBox(this, QA_CBOX[i].id, _S(QA_CBOX[i].lbl));
 		checkBox->SetValue(configHandler.GetInt(QA_CBOX[i].key,fromString<int>(QA_CBOX[i].def)));
 		sizer->Add(checkBox, 0, wxTOP, (i == 0)? 10: 0);

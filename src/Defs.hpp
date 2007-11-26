@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -251,11 +251,11 @@ const Control UI_CBOX[14] = {
 
 
 const Control MO_SLI[5] = {
-	{"overhead scroll speed (0 to disable)",    "OverheadScrollSpeed",    ID_MO_SLI_0,	"10"},
-	{"rotatable overhead scroll speed (0 to disable)", "RotOverheadScrollSpeed", ID_MO_SLI_1,	"0" },
-	{"TW scroll speed (0 to disable)",          "TWScrollSpeed",          ID_MO_SLI_2,	"0" },
-	{"FPS scroll speed (0 to disable)",         "FPSScrollSpeed",         ID_MO_SLI_3,	"0" },
-	{"FC scroll speed (0 to disable)",          "CamFreeScrollSpeed",     ID_MO_SLI_4,	"0" }
+	{"Overhead Camera scroll speed",    "OverheadScrollSpeed",    ID_MO_SLI_0,	"10"},
+	{"Rotatable overhead Camera scroll speed", "RotOverheadScrollSpeed", ID_MO_SLI_1,	"0" },
+	{"Total War Camera scroll speed",          "TWScrollSpeed",          ID_MO_SLI_2,	"0" },
+	{"First Person Camera scroll speed",         "FPSScrollSpeed",         ID_MO_SLI_3,	"0" },
+	{"Free Camera scroll speed",          "CamFreeScrollSpeed",     ID_MO_SLI_4,	"0" }
 };
 
 const Control MO_SLI_EXT[5] = {

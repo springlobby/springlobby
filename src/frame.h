@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -68,6 +68,7 @@ class settings_frame : public wxFrame
 		enum
 		{
 			////GUI Enum Control ID Start
+			ID_UI = 1013,
 			ID_QUALITY_VIDEO = 1012,
 			ID_RENDER_DETAIL = 1011,
 			ID_SIMPLE = 1010,
