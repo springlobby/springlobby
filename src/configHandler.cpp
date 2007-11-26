@@ -6,6 +6,8 @@
 #endif
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
+#define ASSERT_LOGIC(cond,msg) if(!(cond)){std::cout << (std::string("logic ")+msg);}
+#define ASSERT_RUNTIME(cond,msg) if(!(cond)){std::cout << (std::string("runtime ")+msg);}
 
 inline wxString _S (const std::string str)
 {
@@ -23,19 +25,19 @@ bool ConfigHandler::LoadUnitSyncLib( const wxString& springdir, const wxString& 
 
 	// Load the library.
 	std::string loc = getUsyncLoc();
-	std::cout <<( "Loading from: " + loc );
+	
 
 	// Check if library exists
-	while ( !wxFileName::FileExists( _S(loc)) ) {
+	if ( !wxFileName::FileExists( _S(loc)) ) {
 		std::cout <<( "File not found: "+ loc );
-		GetUSyncFrame* getUSyncFrame = new GetUSyncFrame();
+		//GetUSyncFrame* getUSyncFrame = new GetUSyncFrame();
 		
 		// get new location from dialog
 		
-		delete getUSyncFrame;
+		//delete getUSyncFrame;
 		return false;
 	}
-
+	std::cout <<( "Loading from: " + loc + "\n");
 	try {
 		m_libhandle = new wxDynamicLibrary(_S(loc));
 		if (!m_libhandle->IsLoaded()) {
@@ -78,10 +80,11 @@ bool ConfigHandler::LoadUnitSyncLib( const wxString& springdir, const wxString& 
 
 void* ConfigHandler::GetLibFuncPtr( const std::string& name )
 {
-	//ASSERT_LOGIC( m_loaded, "Unitsync not loaded" );
-	void* ptr = m_libhandle->GetSymbol(_S(name));
-	//ASSERT_RUNTIME( ptr, "Couldn't load " + name + " from unitsync library" );
-	return ptr;
+	ASSERT_LOGIC( is_loaded, "Unitsync not loaded" );
+	//if(m_libhandle != 0){
+		void* ptr = m_libhandle->GetSymbol(_S(name));
+	ASSERT_RUNTIME( ptr, "Couldn't load " + name + " from unitsync library" );
+		return ptr;
 }
 
 ConfigHandler& ConfigHandler::GetInstance(){
@@ -93,6 +96,7 @@ ConfigHandler& ConfigHandler::GetInstance(){
 }
 
 void ConfigHandler::SetInt(std::string name, int value){
+	ASSERT_LOGIC( is_loaded, "Unitsync not loaded" );
 	LOCK_UNITSYNC;
 	h_SetSpringConfigInt(name.c_str(),value);
 }
@@ -110,6 +114,7 @@ std::string ConfigHandler::GetString(std::string name, std::string def) {
 }
 
 int ConfigHandler::GetInt(std::string name, int def){
+	ASSERT_LOGIC( is_loaded, "Unitsync not loaded \n" );
 	LOCK_UNITSYNC;
 	return h_GetSpringConfigInt(name.c_str(),def);
 }
@@ -131,11 +136,12 @@ std::string ConfigHandler::getUsyncLoc()
 	std::string loc ;
 	#ifdef RUNMODE_STANDALONE
 		// own method
+		loc = "unitsync.so";
 		
 	#else
 		// springlobby method
-		
+		loc = "/home/kosh/projekte/eclipse/settings/bin/linux/unitsync.so";
 	#endif
-	
+	return loc;
 }
 	

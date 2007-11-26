@@ -60,9 +60,19 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
 		sizer->Add(checkBox, 0, wxTOP, (i == 0)? 10: 0);
 	}
 	
+	int waterOptIndex;
+	int waterSetting = configHandler.GetInt(WR_COMBOX[0].key,fromString<int>(WR_COMBOX[0].def)); 
+	switch (waterSetting)
+	{
+		case 0:
+		case 1: waterOptIndex = waterSetting; break;
+		case 2: waterOptIndex = 3; break;
+		case 3: waterOptIndex = 2; break;
+	}
+	
 	sizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP , 10);
-	wxComboBox* waterQuality = new wxComboBox(this, ID_WINDOWP_WR_COMBOX, WR_COMBOX_CHOICES[0], wxDefaultPosition, wxSize(220,21), 
-			4,WR_COMBOX_CHOICES,wxCB_DROPDOWN);
+	wxComboBox* waterQuality = new wxComboBox(this, ID_WINDOWP_WR_COMBOX, WR_COMBOX_CHOICES[waterOptIndex], wxDefaultPosition, wxSize(220,21), 
+			4,WR_COMBOX_CHOICES,wxCB_DROPDOWN|wxCB_READONLY);
 	sizer->Add(waterQuality, 0, wxBOTTOM, 5);	
 }
 
@@ -153,7 +163,8 @@ tab_quality_video::~tab_quality_video(void) {
 
 BEGIN_EVENT_TABLE(tab_quality_video, abstract_panel)
 	EVT_SLIDER(wxID_ANY,            tab_quality_video::OnSliderMove)
-	EVT_TEXT(wxID_ANY,              tab_quality_video::OnTextUpdate)
+	EVT_TEXT(ID_RES_CHOICES_LBOX_X, tab_quality_video::OnTextUpdate)
+	EVT_TEXT(ID_RES_CHOICES_LBOX_Y, tab_quality_video::OnTextUpdate)
 	EVT_CHECKBOX(wxID_ANY,          tab_quality_video::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       tab_quality_video::OnRadioButtonToggle)
 	EVT_IDLE(                       tab_quality_video::update)
