@@ -2,6 +2,9 @@
 #define SPRINGLOBBY_HEADERGUARD_USER_H
 
 #include <string>
+#include <wx/string.h>
+#include <wx/intl.h>
+
 
 class Server;
 
@@ -96,6 +99,22 @@ class User
     void SendMyUserStatus();
 
     bool ExecuteSayCommand( const std::string& cmd ) { return false; }
+
+
+    static wxString GetRankName(int rank) {
+    //TODO: better interface to ranks?
+        switch(rank) {
+            case RANK_0: return _("Newbie");
+            case RANK_1: return _("Beginner");
+            case RANK_2: return _("Average");
+            case RANK_3: return _("Above average");
+            case RANK_4: return _("Experienced");
+            case RANK_5: return _("Highly experienced");
+            case RANK_6: return _("Veteran");
+        }
+        return "no rank";
+    }
+
 
   protected:
     // User variables

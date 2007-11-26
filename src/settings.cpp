@@ -530,6 +530,10 @@ std::string Settings::GetLastHostMap()
   return STD_STRING( m_config->Read( _T("/Hosting/LastMap"), _T("") ) );
 }
 
+int Settings::GetLastRankLimit()
+{
+  return m_config->Read( _T("/Hosting/LastRank"), 0l );
+}
 
 void Settings::SetLastHostDescription( const std::string& value )
 {
@@ -572,6 +576,10 @@ void Settings::SetLastHostMap( const std::string& value )
   m_config->Write( _T("/Hosting/LastMap"), WX_STRING(value) );
 }
 
+void Settings::SetLastRankLimit( int rank )
+{
+  m_config->Write( _T("/Hosting/LastRank"), rank );
+}
 
 void Settings::SetLastAI( const std::string& ai )
 {

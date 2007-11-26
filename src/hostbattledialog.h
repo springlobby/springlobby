@@ -12,18 +12,20 @@ class wxRadioBox;
 class wxStaticLine;
 class wxButton;
 
-class HostBattleDialog : public wxDialog 
+class HostBattleDialog : public wxDialog
 {
 	public:
 		HostBattleDialog( wxWindow* parent );
-	
+
     void ReloadModList();
+
+    void FillRanks();
 
     void OnOk( wxCommandEvent& event );
     void OnCancel( wxCommandEvent& event );
 
 	protected:
-		
+
 		wxStaticText* m_desc_lbl;
 		wxTextCtrl* m_desc_text;
 		wxStaticText* m_mod_lbl;
@@ -37,7 +39,9 @@ class HostBattleDialog : public wxDialog
 		wxStaticLine* m_buttons_sep;
 		wxButton* m_cancel_btn;
 		wxButton* m_host_btn;
-		
+		wxStaticText* m_rank_lbl;
+		wxChoice* m_rank_pic;
+
     DECLARE_EVENT_TABLE()
 };
 

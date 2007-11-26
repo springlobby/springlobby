@@ -6,7 +6,8 @@
 #include "user.h"
 #include "battle.h"
 #include "server.h"
-
+#include <wx/string.h>
+#include <wx/intl.h>
 
 void User::Said( const std::string& message )
 {
@@ -61,4 +62,3 @@ void User::SendMyUserStatus()
 {
   m_serv.SendMyUserStatus();
 }
-
