@@ -540,7 +540,7 @@ wxArrayString SpringUnitSync::GetAIList()
     ini = m_find_files_vfs ( ini, FilePath, BufferSize );
     wxString FileName = wxString ( FilePath, wxConvUTF8 );
     FileName = FileName.AfterLast ( wxFileName::GetPathSeparator() ); // strip the file path
-    if ( !FileName.Contains ( _T(".dll") ) && !FileName.Contains (  _T(".so") ) ) continue; // FIXME this isn't exactly portable
+    if ( !FileName.Contains ( DLL_EXTENSION ) ) continue; // FIXME this isn't exactly portable
     FileName = FileName.SubString(0, FileName.Find( '.', true ) - 1 ); //strip the file extension
     if ( ret.Index( FileName ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
   } while (ini != 0);
