@@ -25,7 +25,7 @@ SpringUnitSyncLib::~SpringUnitSyncLib()
 }
 
 
-SpringUnitSyncLib* susync()
+SpringUnitSyncLib* susynclib()
 {
   static SpringUnitSyncLib lib;
   return &lib;
@@ -222,6 +222,47 @@ void* SpringUnitSyncLib::_GetLibFuncPtr( const wxString& name )
 }
 
 
+void SpringUnitSyncLib::_ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out )
+{
+  out.author = in.author;
+  out.description = in.description;
+
+  out.extractorRadius = in.extractorRadius;
+  out.gravity = in.gravity;
+  out.tidalStrength = in.tidalStrength;
+  out.maxMetal = in.maxMetal;
+  out.minWind = in.minWind;
+  out.maxWind = in.maxWind;
+
+  out.width = in.width;
+  out.height = in.height;
+  out.posCount = in.posCount;
+  for ( int i = 0; i < in.posCount; i++) out.positions[i] = in.positions[i];
+}
+
+
+void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
+{
+  debug_func( "" );
+  if ( m_current_mod != modname ) {
+    m_uninit();
+    m_init( true, 1 );
+    AddAllArchives( GetPrimaryModArchive( GetModIndex( modname ) ) );
+    m_current_mod = modname;
+  }
+}
+
+
+int SpringUnitSyncLib::GetModIndex( const wxString& name )
+{
+  int count = GetPrimaryModCount();
+  for ( int i = 0; i < count; i++ ) {
+    if ( name == GetPrimaryModName( i ) ) return i;
+  }
+  return -1;
+}
+
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  //  -- The UnitSync functions --
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -229,13 +270,8 @@ void* SpringUnitSyncLib::_GetLibFuncPtr( const wxString& name )
 
 wxString SpringUnitSyncLib::GetSpringVersion()
 {
-<<<<<<< HEAD:src/springunitsynclib.cpp
-  ASSERT_RUNTIME( m_loaded, "Unitsync not loaded." );
-  ASSERT_RUNTIME( m_get_spring_version, "Function was not in unitsync library." );
-=======
   InitLib( m_get_spring_version );
 
->>>>>>> bd/usync_refac:src/springunitsynclib.cpp
   return WX_STRINGC( m_get_spring_version() );
 }
 
@@ -263,15 +299,24 @@ wxString SpringUnitSyncLib::GetMapName( int index )
 }
 
 
-SpringMapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
+MapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
 {
   InitLib( m_get_map_info_ex );
 
-  SpringMapInfo ret;
-  bool result = m_get_map_info_ex( mapName.mb_str( wxConvUTF8 ), &ret, version );
-  ASSERT_RUNTIME( result, "Failed to get map infos");
+  char tmpdesc[256];
+  char tmpauth[256];
 
-  return ret;
+  MapInfo info;
+
+  SpringMapInfo tm;
+  tm.description = &tmpdesc[0];
+  tm.author = &tmpauth[0];
+
+  bool result = m_get_map_info_ex( mapName.mb_str( wxConvUTF8 ), &tm, version );
+  ASSERT_RUNTIME( result, "Failed to get map infos");
+  _ConvertSpringMapInfo( tm, info );
+
+  return info;
 }
 
 
@@ -416,7 +461,8 @@ int SpringUnitSyncLib::GetSideCount( const wxString& modName )
 {
   InitLib( m_get_side_count );
 
-  return m_get_side_count( modName.mb_str( wxConvUTF8 ) );
+  _SetCurrentMod( modName );
+  return m_get_side_count();
 }
 
 
@@ -424,7 +470,8 @@ wxString SpringUnitSyncLib::GetSideName( const wxString& modName, int index )
 {
   InitLib( m_get_side_name );
 
-  return WX_STRINGC( m_get_side_name( modName.mb_str(), index ) );
+  _SetCurrentMod( modName );
+  return WX_STRINGC( m_get_side_name( index ) );
 }
 
 
@@ -480,7 +527,12 @@ bool SpringUnitSyncLib::FindFilesVFS( int handle, wxString& name )
 {
   InitLib( m_find_files_vfs );
 
-  return m_find_files_vfs( handle, name.mb_str( wxConvUTF8 ) );
+  char buffer[1025];
+  bool ret = m_find_files_vfs( handle, &buffer[0], 1024 );
+  buffer[1024] = 0;
+  name = WX_STRINGC( &buffer[0] );
+
+  return ret;
 }
 
 
@@ -528,7 +580,7 @@ wxString SpringUnitSyncLib::GetLuaAIName( int aiIndex )
 {
   InitLib( m_get_luaai_count );
 
-  return m_get_luaai_name( aiIndex );
+  return WX_STRINGC(m_get_luaai_name( aiIndex ));
 }
 
 
@@ -676,7 +728,7 @@ wxString SpringUnitSyncLib::GetOptionListItemName( int optIndex, int itemIndex )
 }
 
 
-wxString GetOptionListItemDesc( int optIndex, int itemIndex )
+wxString SpringUnitSyncLib::GetOptionListItemDesc( int optIndex, int itemIndex )
 {
   InitLib( m_get_option_list_item_desc );
 
@@ -704,7 +756,13 @@ int SpringUnitSyncLib::FindFilesArchive( int archive, int cur, wxString& nameBuf
 {
   InitLib( m_find_Files_archive );
 
-  return m_find_Files_archive( archive, cur, nameBuf.mb_str( wxConvUTF8 ) );
+  char buffer[1025];
+  int size = 1024;
+  bool ret = m_find_Files_archive( archive, cur, &buffer[0], &size );
+  buffer[1024] = 0;
+  nameBuf = WX_STRINGC( &buffer[0] );
+
+  return ret;
 }
 
 

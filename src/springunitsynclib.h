@@ -178,6 +178,7 @@ class SpringUnitSyncLib
     bool IsLoaded();
 
 
+    int GetModIndex( const wxString& name );
 
     wxString GetSpringVersion();
 
@@ -190,7 +191,7 @@ class SpringUnitSyncLib
      * @param version will get author if >=1.
      * @note Throws runtime_error if unsuccessful.
      */
-    SpringMapInfo GetMapInfoEx( const wxString& mapName, int version );
+    MapInfo GetMapInfoEx( const wxString& mapName, int version );
 
     /**
      * Get minimap.
@@ -280,7 +281,6 @@ class SpringUnitSyncLib
     void SetSpringConfigInt( const wxString& key, int value );
     void SetSpringConfigFloat( const wxString& key, const float value );
 
-
   protected:
 
     //! Keeps track if unitsync is loaded or not.
@@ -294,6 +294,9 @@ class SpringUnitSyncLib
 
     //! Path to unitsync.
     wxString m_path;
+
+    //! Last used mod.
+    wxString m_current_mod;
 
     //! Struct to hold pixel's RGB values for minimaps
     struct UnitSyncColours
@@ -322,6 +325,10 @@ class SpringUnitSyncLib
      * Returns true if the library is loaded. Internal.
      */
     bool _IsLoaded();
+
+    void _ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
+
+    void _SetCurrentMod( const wxString& modname );
 
     /**
      * \defgroup DllFuncPointers Pointers to the functions in unitsync.

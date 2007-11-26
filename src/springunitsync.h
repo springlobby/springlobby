@@ -66,8 +66,11 @@ class SpringUnitSync : public IUnitSync
     int GetNumMaps();
     bool MapExists( const std::string& mapname );
     bool MapExists( const std::string& mapname, const std::string hash );
+
     UnitSyncMap GetMap( const std::string&, bool getmapinfo = false );
     UnitSyncMap GetMap( int index, bool getmapinfo = false );
+    UnitSyncMap GetMapEx( const std::string& mapname );
+    UnitSyncMap GetMapEx( int index );
 
     int GetMapIndex( const std::string& name );
 
@@ -161,7 +164,6 @@ class SpringUnitSync : public IUnitSync
     bool _LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc );
     void _FreeUnitSyncLib();
 
-    int _GetModIndex( const std::string& name );
     bool _ModExists( const std::string& modname );
     UnitSyncMod _GetMod( int index );
     std::string _GetModArchive( int index );
@@ -169,11 +171,10 @@ class SpringUnitSync : public IUnitSync
     int _GetMapIndex( const std::string& name );
     UnitSyncMap _GetMap( int index, bool getmapinfo = false );
     UnitSyncMap _GetMap( const std::string& mapname, bool getmapinfo = false );
-
+    UnitSyncMap _GetMapEx( const std::string& mapname, bool force = false );
+    MapInfo _GetMapInfoEx( const std::string& mapname, bool force );
     wxImage _GetCachedMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
-    wxString _GetCachedMinimapFileName( const std::string& mapname, int width = -1, int height = -1 );
 
-    void _ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
     void _ConvertSpringMapInfo( const CachedMapInfo& in, MapInfo& out );
     void _ConvertSpringMapInfo( const SpringMapInfo& in, CachedMapInfo& out, const std::string& mapname );
 
