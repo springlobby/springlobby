@@ -450,13 +450,12 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 {
   wxLogDebugFunc( _T("") );
 
-
   if ( !IsSpringCompatible () ){
     if ( m_spring->TestSpringBinary() ) {
       wxString message = _("Your spring version");
       message += _T(" (") + WX_STRING( usync()->GetSpringVersion() ) + _T(") ");
       message +=  _("is not supported by the lobby server that requires version");
-      message += _T(" (") +  WX_STRING( m_server_spring_ver ) + _T(").\n\n");
+      message += _T(" (") +  WX_STRING( m_serv->GetRequiredSpring() ) + _T(").\n\n");
       message += _("Online play will be disabled.");
       wxLogWarning ( _T("server not supports current spring version") );
       wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
@@ -474,8 +473,8 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 bool Ui::IsSpringCompatible( )
 {
   if ( !m_spring->TestSpringBinary() ) return false;
-  if ( m_server_spring_ver == "*" ) return true; // Server accepts any version.
-  if ( (usync()->GetSpringVersion() == m_server_spring_ver ) && ( m_server_spring_ver != "" ) ) return true;
+  if ( m_serv->GetRequiredSpring() == "*" ) return true; // Server accepts any version.
+  if ( (usync()->GetSpringVersion() == m_serv->GetRequiredSpring() ) && ( m_serv->GetRequiredSpring() != "" ) ) return true;
   else return false;
 }
 

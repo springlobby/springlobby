@@ -16,10 +16,11 @@
 #include "battle.h"
 #include "settings.h"
 
-void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported, const std::string server_spring_ver )
+void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported, const std::string server_spring_ver, const int udpport, bool lanmode )
 {
   wxLogDebugFunc( WX_STRING(server_ver) + _T(" ") + WX_STRING(server_spring_ver) );
-  m_ui.SetSupportedSpring( server_spring_ver );
+  m_serv.SetRequiredSpring( server_spring_ver );
+  m_serv.SetUdpPort( udpport );
   m_ui.OnConnected( m_serv, server_name, server_ver, supported );
   m_serv.Login();
 }
@@ -28,7 +29,8 @@ void ServerEvents::OnConnected( const std::string& server_name, const std::strin
 void ServerEvents::OnDisconnected()
 {
   wxLogDebugFunc( _T("") );
-  m_ui.SetSupportedSpring ("");
+  m_serv.SetRequiredSpring ("");
+  m_serv.SetUdpPort( 0 );
   m_ui.OnDisconnected( m_serv );
 }
 
