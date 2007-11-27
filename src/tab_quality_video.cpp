@@ -156,7 +156,7 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
     parentSizer->Add(leftSizer,0,wxALIGN_LEFT|wxALIGN_TOP |wxALL,10);
     parentSizer->Add(middleSizer,0,wxALIGN_CENTER_HORIZONTAL|wxALL,10);
    
-    SetSizer(parentSizer);
+    SetSizer(parentSizer, true); // true --> delete old sizer if present
 }
 
 tab_quality_video::~tab_quality_video(void) {

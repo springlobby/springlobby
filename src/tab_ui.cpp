@@ -89,7 +89,7 @@ tab_ui::tab_ui(wxWindow *parent, wxWindowID id , const wxString &title , const w
 	//pSizer->Add(25, 0, 0);
 	pSizer->Add(cSizerR,0,wxALL,10);
 
-	SetSizer(pSizer);
+	SetSizer(pSizer, true); // true --> delete old sizer if present
 
 }
 

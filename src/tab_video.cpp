@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -90,7 +90,7 @@ video_panel::video_panel(wxWindow *parent, wxWindowID id , const wxString &title
 	parentSizer->Add(10, 0, 0);
 	parentSizer->Add(childLSizer);
 
-	SetSizer(parentSizer);
+	SetSizer(parentSizer, true); // true --> delete old sizer if present
 
 }
 
