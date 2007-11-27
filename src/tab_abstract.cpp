@@ -113,24 +113,30 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 void abstract_panel::OnTextUpdate(wxCommandEvent& event) {
 
     settingsChanged = true;
+    int eventID = event.GetId();
     
-	wxTextCtrl* textField = (wxTextCtrl*) event.GetEventObject();
-	wxString wxStr = textField->GetValue();
-    long* res = new long; 
-    bool success = (wxStr.ToLong(res));
-
-	switch (event.GetId()) {
-		case ID_RES_CHOICES_LBOX_X: {
-			// note: input validation?
-			if (success)
-			     (intSettings)[RC_TEXT[0].key]= int((*res));
-		} break;
-		case ID_RES_CHOICES_LBOX_Y: {
-			// note: input validation?
-			if (success)
-			     (intSettings)[RC_TEXT[1].key]= int((*res));
-		} break;
-	}
+    if (eventID == ID_RES_CHOICES_LBOX_X || eventID == ID_RES_CHOICES_LBOX_Y)
+    	    {
+    		wxTextCtrl* textField = (wxTextCtrl*) event.GetEventObject();
+    		wxString wxStr = textField->GetValue();
+    	    long* res = new long; 
+    	    bool success = (wxStr.ToLong(res));
+    	    
+    	    switch (eventID) {
+    	    		case ID_RES_CHOICES_LBOX_X: {
+    	    			// TODO: input validation?
+    	    			if (success)
+    	    			     (intSettings)[RC_TEXT[0].key]= int((*res));
+    	    		} break;
+    	    		case ID_RES_CHOICES_LBOX_Y: {
+    	    			// TODO: input validation?
+    	    			if (success)
+    	    			     (intSettings)[RC_TEXT[1].key]= int((*res));
+    	    		} break;
+    	    	}
+    }
+	
+	
 }
 
 

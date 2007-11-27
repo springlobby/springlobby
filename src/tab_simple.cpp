@@ -96,6 +96,8 @@ tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title ,
 tab_simple::~tab_simple(void) {
 	
 }
+
+
 //disbaled for the moment
 BEGIN_EVENT_TABLE(tab_simple, abstract_panel)
 	EVT_SLIDER(1,            tab_simple::OnSliderMove)
