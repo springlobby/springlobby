@@ -25,16 +25,29 @@ intMap abstract_panel::intSettings;
 stringMap abstract_panel::stringSettings;
 floatMap abstract_panel::floatSettings;
 bool abstract_panel::settingsChanged = false;
-    
+bool abstract_panel::expertModeEnabled = false;
+ 
     
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : wxPanel(parent, id, pos, size, style,title) {
-
+//	abstract_panel::expertModeEnadbled = false;
 }
 
 abstract_panel::~abstract_panel(void) {
 
 }
+
+void abstract_panel::enableExpertMode(bool arg)
+{
+	expertModeEnabled = arg;
+}
+
+bool abstract_panel::isExpertModeEnabled()
+{
+	return expertModeEnabled;
+}
+
+
 
 void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 
@@ -232,10 +245,6 @@ wxArrayString abstract_panel::wxArrayStringFromCStringArray(const wxString* stdA
 }
 
 
-void abstract_panel::update(wxIdleEvent& event) {
-	event.RequestMore();
-}
-
 bool abstract_panel::saveSettings() {
     
     for (intMap::iterator i = intSettings.begin(); i != intSettings.end();++i)
@@ -254,13 +263,15 @@ bool abstract_panel::saveSettings() {
     //test ???
     return true; 
 }
-
+void abstract_panel::update(wxIdleEvent& event) {
+	event.RequestMore();
+}
 
 BEGIN_EVENT_TABLE(abstract_panel, wxPanel)
-	EVT_SLIDER(0,            abstract_panel::OnSliderMove)
-	EVT_TEXT(0,              abstract_panel::OnTextUpdate)
-	EVT_CHECKBOX(0,          abstract_panel::OnCheckBoxTick)
-	EVT_RADIOBUTTON(0,       abstract_panel::OnRadioButtonToggle)
+	EVT_SLIDER(wxID_ANY,            abstract_panel::OnSliderMove)
+	EVT_TEXT(wxID_ANY,              abstract_panel::OnTextUpdate)
+	EVT_CHECKBOX(wxID_ANY,          abstract_panel::OnCheckBoxTick)
+	EVT_RADIOBUTTON(wxID_ANY,       abstract_panel::OnRadioButtonToggle)
 	EVT_IDLE(                       abstract_panel::update)
-	EVT_COMBOBOX(0, 		abstract_panel::OnComboBoxChange)
+	EVT_COMBOBOX(wxID_ANY, 		abstract_panel::OnComboBoxChange)
 END_EVENT_TABLE()

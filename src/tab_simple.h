@@ -22,6 +22,7 @@
 
 #ifndef __TAB_SIMPLE_h__
 #define __TAB_SIMPLE_h__
+
 #include "tabs.h"
 
 class tab_simple : public abstract_panel
@@ -31,11 +32,16 @@ class tab_simple : public abstract_panel
 		tab_simple(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
 		virtual ~tab_simple();
 
-		//void initRendererSizer(wxFlexGridSizer*,wxFlexGridSizer*);
+		void initOptSizer(wxFlexGridSizer*);
 
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+		
+		wxComboBox* renderQuality_CBX;
+		wxComboBox* renderDetail_CBX;
+		wxComboBox* videoMode_CBX;
+		
 		DECLARE_EVENT_TABLE()
 };   
     

@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -39,6 +39,9 @@ class tab_quality_video : public abstract_panel
 	private:
 		void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+
+		wxComboBox* waterQuality;
+		
     protected:
 		DECLARE_EVENT_TABLE()
 };

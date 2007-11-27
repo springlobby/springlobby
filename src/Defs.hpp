@@ -74,6 +74,12 @@
 // ParentWin Video Options slider IDs
 #define ID_VO_SLI_0 200
 
+// tab_simple controls
+#define ID_SIMPLE_QUAL_CBX		390
+#define ID_SIMPLE_DETAIL_CBX	391
+#define ID_SIMPLE_MODE_CBX		392
+
+
 // UI Options checkbox IDs
 #define ID_WINDOWP_UI_CBOX_1  360
 #define ID_WINDOWP_UI_CBOX_2  361
