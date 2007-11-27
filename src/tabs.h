@@ -39,7 +39,7 @@
 #include "tab_audio.h"
 #include "tab_debug.h"
 
-#include "tab_mouse.h"
+//#include "tab_mouse.h"
 #include "tab_ui.h"
 
 #include "tab_simple.h"

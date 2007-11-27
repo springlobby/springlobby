@@ -20,24 +20,11 @@
     along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#ifndef __TAB_SIMPLE_h__
-#define __TAB_SIMPLE_h__
-#include "tabs.h"
 
-class tab_simple : public abstract_panel
-{
- 	
-	public:
-		tab_simple(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
-		virtual ~tab_simple();
-
-		//void initRendererSizer(wxFlexGridSizer*,wxFlexGridSizer*);
-
-    protected:
-        void OnClose(wxCloseEvent& event);
-		void CreateGUIControls();
-		DECLARE_EVENT_TABLE()
-};   
-    
-#endif    
-
+#ifndef PRESETS_H_
+#define PRESETS_H_
+/**** Presets for tab_simple go here
+ * 
+ * 
+ */
+#endif /*PRESETS_H_*/

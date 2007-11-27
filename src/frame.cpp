@@ -50,17 +50,15 @@ void settings_frame::CreateGUIControls()
 //	Simple->Add(new wxString(wxT("nothing here yet")));
 //	Options->AddPage(Simple, wxT("Simple"));
 
+	Options->AddPage(new tab_simple(Options,ID_SIMPLE),wxT("Simple"));
+	
     Options->AddPage(new tab_quality_video(Options,ID_QUALITY_VIDEO), wxT("Render Quality / Video Mode"));
     
     Options->AddPage(new tab_render_detail(Options,ID_RENDER_DETAIL), wxT("Render Detail"));
     
     Options->AddPage(new tab_ui(Options,ID_UI), wxT("UI Options"));
 
-//	Options->AddPage(new video_panel(Options,ID_VIDEO), wxT("Video"));
-
 	Options->AddPage(new audio_panel(Options,ID_AUDIO), wxT("Audio"));
-
-	//Options->AddPage(new mouse_panel(Options, ID_MOUSE), wxT("Mouse"));
 
 	Options->AddPage(new debug_panel(Options,ID_DEBUG), wxT("Debug"));
 	
@@ -119,5 +117,6 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 
 void settings_frame::OnClose(wxCloseEvent& event)
 {
+	handleExit();
 	Destroy();
 }
