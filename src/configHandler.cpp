@@ -140,7 +140,7 @@ std::string ConfigHandler::getUsyncLoc()
 		
 	#else
 		// springlobby method
-		loc = "/home/kosh/projekte/eclipse/settings/bin/linux/unitsync.so";
+		loc = "/home/kosh/projekte/settings/bin/linux/unitsync.so";
 	#endif
 	return loc;
 }

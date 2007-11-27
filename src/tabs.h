@@ -38,11 +38,8 @@
 #include "tab_abstract.h"
 #include "tab_audio.h"
 #include "tab_debug.h"
-
-//#include "tab_mouse.h"
 #include "tab_ui.h"
-
 #include "tab_simple.h"
-//#include "tab_video.h"
+
 
 #define TAB_SIZE wxSize(700,500)
