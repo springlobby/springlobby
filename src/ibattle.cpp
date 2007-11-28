@@ -80,7 +80,9 @@ wxString IBattle::GetMapName()
 wxString IBattle::GetMapHash()
 {
   if ( m_map.hash == "" ) {
-    m_map.hash = usync()->GetMap( m_map.name ).hash;
+    try {
+      m_map.hash = usync()->GetMap( m_map.name ).hash;
+    } catch (...) { debug_warn("Couldn't get map hash from unitsync."); }
   }
   return WX_STRING(m_map.hash);
 }

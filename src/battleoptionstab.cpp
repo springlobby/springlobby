@@ -254,7 +254,9 @@ void BattleOptionsTab::ReloadRestrictions()
   m_restrict_list->Clear();
   if ( m_battle.GetModName() == wxEmptyString ) return;
 
-  m_allowed_list->InsertItems( usync()->GetUnitsList( STD_STRING(m_battle.GetModName()) ), 0 );
+  try {
+    m_allowed_list->InsertItems( usync()->GetUnitsList( STD_STRING(m_battle.GetModName()) ), 0 );
+  } catch (...) {}
   wxString units( m_battle.DisabledUnits().c_str(), wxConvUTF8 );
 
   wxStringTokenizer list( units, _T(" ") );

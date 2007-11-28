@@ -11,41 +11,7 @@ class wxDynamicLibrary;
 struct SpringMapInfo;
 struct CachedMapInfo;
 class wxCriticalSection;
-/*
-typedef const char* (USYNC_CALL_CONV *GetSpringVersionPtr)();
 
-typedef int (USYNC_CALL_CONV *InitPtr)(bool, int);
-typedef void (USYNC_CALL_CONV *UnInitPtr)();
-
-typedef int (USYNC_CALL_CONV *GetMapCountPtr)();
-typedef unsigned int (USYNC_CALL_CONV *GetMapChecksumPtr)(int);
-typedef const char* (USYNC_CALL_CONV *GetMapNamePtr)(int);
-typedef int (USYNC_CALL_CONV *GetMapInfoExPtr)(const char*, SpringMapInfo*, int);
-typedef void* (USYNC_CALL_CONV *GetMinimapPtr)(const char*, int);
-
-typedef unsigned int (USYNC_CALL_CONV *GetPrimaryModChecksumPtr)(int);
-typedef int (USYNC_CALL_CONV *GetPrimaryModIndexPtr)(const char*);
-typedef const char* (USYNC_CALL_CONV *GetPrimaryModNamePtr)(int);
-typedef int (USYNC_CALL_CONV *GetPrimaryModCountPtr)();
-typedef const char* (USYNC_CALL_CONV *GetPrimaryModArchivePtr)(int);
-
-typedef int (USYNC_CALL_CONV *GetSideCountPtr)();
-typedef const char* (USYNC_CALL_CONV *GetSideNamePtr)(int);
-
-typedef void (USYNC_CALL_CONV *AddAllArchivesPtr)(const char*);
-
-typedef const char * (USYNC_CALL_CONV *GetFullUnitNamePtr)(int);
-typedef const char * (USYNC_CALL_CONV *GetUnitNamePtr)(int);
-typedef int (USYNC_CALL_CONV *GetUnitCountPtr)();
-typedef int (USYNC_CALL_CONV *ProcessUnitsNoChecksumPtr)();
-
-typedef int (USYNC_CALL_CONV *InitFindVFSPtr)(const char*);
-typedef int (USYNC_CALL_CONV *FindFilesVFSPtr)(int, char*, int);
-typedef int (USYNC_CALL_CONV *OpenFileVFSPtr)(const char*);
-typedef int (USYNC_CALL_CONV *FileSizeVFSPtr)(int);
-typedef int (USYNC_CALL_CONV *ReadFileVFSPtr)(int, void*, int);
-typedef void (USYNC_CALL_CONV *CloseFileVFSPtr)(int);
-*/
 
 typedef std::map<std::string,CachedMapInfo> MapCacheType;
 
@@ -93,8 +59,6 @@ class SpringUnitSync : public IUnitSync
     wxArrayString GetUnitsList( const std::string& modname );
 
     wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
-    static wxString _GetCachedMinimapFileName( const std::string& mapname, int width = -1, int height = -1 );
-
 
     bool CacheMapInfo( const wxString& map );
     bool CacheMinimap( const wxString& map );
@@ -141,6 +105,7 @@ class SpringUnitSync : public IUnitSync
     GetSpringVersionPtr m_get_spring_version;
 */
 
+    static wxString _GetCachedMinimapFileName( const std::string& mapname, int width = -1, int height = -1 );
 
     UnitSyncMap m_map;
 

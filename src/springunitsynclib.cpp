@@ -62,7 +62,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
     m_libhandle = 0;
   }
 
-  ASSERT_RUNTIME( m_libhandle == 0, "Couldn't load the unitsync library" );
+  ASSERT_RUNTIME( m_libhandle != 0, "Couldn't load the unitsync library" );
 
   m_loaded = true;
 
@@ -215,10 +215,13 @@ bool SpringUnitSyncLib::_IsLoaded()
 
 void* SpringUnitSyncLib::_GetLibFuncPtr( const wxString& name )
 {
-  ASSERT_LOGIC( m_loaded, "Unitsync not loaded" );
-  void* ptr = m_libhandle->GetSymbol(WX_STRING(name));
-  if ( !ptr ) debug( "Couldn't load " + STD_STRING(name) + " from unitsync library" );
-  return ptr;
+  ASSERT_LOGIC( m_libhandle != 0, "Unitsync not loaded" );
+  try {
+    void* ptr = m_libhandle->GetSymbol(WX_STRING(name));
+    if ( !ptr ) debug( "Couldn't load " + STD_STRING(name) + " from unitsync library" );
+    return ptr;
+  } catch(...) {}
+  return 0;
 }
 
 

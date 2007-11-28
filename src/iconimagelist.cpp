@@ -259,11 +259,12 @@ int IconImageList::GetSideIcon( const std::string& modname, const std::string& s
   if ( sn  == _T("arm") ) return ICON_ARM;
   else if (  sn == _T("core") ) return ICON_CORE;
   else if (CachedSideIcons[side] == 0){
+    try {
       int IconPosition = Add(wxBitmap( usync()->GetSidePicture( modname , side ) ), wxNullBitmap);
       CachedSideIcons[side] = IconPosition;
       return IconPosition;
-  }
-  else return CachedSideIcons[side];
+    } catch (...) {};
+  } else return CachedSideIcons[side];
   return -1;
 }
 

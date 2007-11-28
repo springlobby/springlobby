@@ -230,7 +230,7 @@ UnitSyncMap SpringUnitSync::GetMap( int index, bool getmapinfo )
   UnitSyncMap m;
   m.name = STD_STRING(susynclib()->GetMapName( index ));
   m.hash = i2s(susynclib()->GetMapChecksum( index ));
-  if ( getmapinfo ) m.info = _GetMapInfoEx( m.name );
+  if ( getmapinfo ) m.info = susynclib()->GetMapInfoEx( WX_STRING(m.name), 1 );
   return m;
 }
 
@@ -242,7 +242,7 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
   m.name = STD_STRING(susynclib()->GetMapName( index ));
   m.hash = i2s(susynclib()->GetMapChecksum( index ));
 
-  m.info = _GetMapInfoEx( m.name );
+  m.info = susynclib()->GetMapInfoEx( WX_STRING(m.name), 1 );
 
   return m;
 }
@@ -250,14 +250,14 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
 
 UnitSyncMap SpringUnitSync::GetMapEx( const std::string& mapname )
 {
-  int i = _GetMapIndex( mapname );
+  int i = GetMapIndex( mapname );
   ASSERT_LOGIC( i >= 0, "Map does not exist" );
 
   return GetMapEx( i );
 }
 
 
-int SpringUnitSync::_GetMapIndex( const std::string& name )
+int SpringUnitSync::GetMapIndex( const std::string& name )
 {
   try {
     int count = susynclib()->GetMapCount();
@@ -290,7 +290,7 @@ int SpringUnitSync::GetSideCount( const std::string& modname )
 {
   debug_func( modname );
 
-  if ( !_ModExists( modname ) ) return 0;
+  if ( !ModExists( modname ) ) return 0;
   return susynclib()->GetSideCount( WX_STRING(modname) );
 }
 
@@ -299,7 +299,7 @@ std::string SpringUnitSync::GetSideName( const std::string& modname, int index )
 {
   debug_func( "" );
 
-  if ( (index < 0) || (!_ModExists( modname )) ) return "unknown";
+  if ( (index < 0) || (!ModExists( modname )) ) return "unknown";
   susynclib()->AddAllArchives( WX_STRING(_GetModArchive( susynclib()->GetModIndex( WX_STRING(modname) )  ) ) );
   if ( index >= GetSideCount( modname ) ) return "unknown";
   ASSERT_LOGIC( GetSideCount( modname ) > index, "Side index too high." );
@@ -455,8 +455,8 @@ wxImage SpringUnitSync::_GetCachedMinimap( const std::string& mapname, int max_w
 
   if ( !store_size ) {
 
-    UnitSyncMap map = _GetMap( mapname );
-    if ( map.hash != m_map.hash ) map = m_map = _GetMap( mapname, true );
+    UnitSyncMap map = GetMap( mapname );
+    if ( map.hash != m_map.hash ) map = m_map = GetMap( mapname, true );
     else map = m_map;
 
     int height, width;
@@ -535,7 +535,7 @@ bool SpringUnitSync::CacheMinimap( const wxString& mapname )
 
   UnitSyncMap map;
   try {
-    map = _GetMapEx( STD_STRING(mapname), true );
+    map = GetMapEx( STD_STRING(mapname) );
   } catch(...) {
     return false;
   }

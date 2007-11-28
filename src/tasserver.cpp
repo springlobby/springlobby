@@ -1054,7 +1054,9 @@ void TASServer::ForceSide( int battleid, const std::string& nick, int side )
     GetMe().BattleStatus().side = side;
     SendMyBattleStatus( GetMe().BattleStatus() );
   } else {
-    DoActionBattle( battleid, "sugests that " + nick + " changes to " + usync()->GetSideName( STD_STRING(GetBattle(battleid).GetModName()), side ) + " side." );
+    try {
+      DoActionBattle( battleid, "sugests that " + nick + " changes to " + usync()->GetSideName( STD_STRING(GetBattle(battleid).GetModName()), side ) + " side." );
+    } catch (...) {}
   }
 }
 

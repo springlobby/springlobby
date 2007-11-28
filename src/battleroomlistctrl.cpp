@@ -117,11 +117,13 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
   m_popup->Append( -1, _("Ally"), m_allies );
 
   m_sides = new wxMenu();
-  for ( int i = 0; i < usync()->GetSideCount( STD_STRING(m_battle.GetModName()) ); i++ ) {
-    wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), i )), wxEmptyString, wxITEM_NORMAL );
-    m_sides->Append( side );
-    Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
-  }
+  try {
+    for ( int i = 0; i < usync()->GetSideCount( STD_STRING(m_battle.GetModName()) ); i++ ) {
+      wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), i )), wxEmptyString, wxITEM_NORMAL );
+      m_sides->Append( side );
+      Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
+    }
+  } catch (...) {}
   m_popup->Append( -1, _("Side"), m_sides );
 
   m_popup->AppendSeparator();
