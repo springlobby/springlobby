@@ -158,7 +158,10 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
    
     SetSizer(parentSizer, true); // true --> delete old sizer if present
 }
-
+void tab_quality_video::updateControls()
+{
+	
+}
 tab_quality_video::~tab_quality_video(void) {
 
 }

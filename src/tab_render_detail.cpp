@@ -50,30 +50,34 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 
 tab_render_detail::tab_render_detail(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : abstract_panel(parent, id , title , pos , size, style) {
-
-	wxSizer* renderSizer = new wxGridSizer(2,0,0);
-	wxSizer* parentSizer = new wxGridSizer(1,0,0);
-	wxFlexGridSizer* rendererSizerA = new wxFlexGridSizer(2,35,10);
-	wxFlexGridSizer* rendererSizerB = new wxFlexGridSizer(2,35,10);
-	wxStaticBoxSizer* box = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Rendering Detail Levels"));
-	rendererSizerA->AddGrowableCol(0);
-    rendererSizerA->AddGrowableCol(1);
-    rendererSizerB->AddGrowableCol(0);
-	rendererSizerB->AddGrowableCol(1);
-	initRendererSizer(rendererSizerA,rendererSizerB);
-	rendererSizerA->Fit(this);
-    rendererSizerA->SetSizeHints(this);
-    rendererSizerB->Fit(this);
-    rendererSizerB->SetSizeHints(this);
-    
-    renderSizer->Add(rendererSizerA,0,wxALIGN_LEFT|wxALL,0);
-    renderSizer->Add(rendererSizerB,0,wxALIGN_RIGHT|wxALL,0);
-    
-    box->Add(renderSizer,0,wxEXPAND|wxALIGN_LEFT|wxALL,0);
-    parentSizer->Add(box,0,wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL|wxALL,15);
-    SetSizer(parentSizer, true); // true --> delete old sizer if present
+	updateControls();
+	
 }
-
+void tab_render_detail::updateControls()
+{
+	wxSizer* renderSizer = new wxGridSizer(2,0,0);
+		wxSizer* parentSizer = new wxGridSizer(1,0,0);
+		wxFlexGridSizer* rendererSizerA = new wxFlexGridSizer(2,35,10);
+		wxFlexGridSizer* rendererSizerB = new wxFlexGridSizer(2,35,10);
+		wxStaticBoxSizer* box = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Rendering Detail Levels"));
+		rendererSizerA->AddGrowableCol(0);
+	    rendererSizerA->AddGrowableCol(1);
+	    rendererSizerB->AddGrowableCol(0);
+		rendererSizerB->AddGrowableCol(1);
+		initRendererSizer(rendererSizerA,rendererSizerB);
+		rendererSizerA->Fit(this);
+	    rendererSizerA->SetSizeHints(this);
+	    rendererSizerB->Fit(this);
+	    rendererSizerB->SetSizeHints(this);
+	    
+	    renderSizer->Add(rendererSizerA,0,wxALIGN_LEFT|wxALL,0);
+	    renderSizer->Add(rendererSizerB,0,wxALIGN_RIGHT|wxALL,0);
+	    
+	    box->Add(renderSizer,0,wxEXPAND|wxALIGN_LEFT|wxALL,0);
+	    parentSizer->Add(box,0,wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL|wxALL,15);
+	    SetSizer(parentSizer, true); // true --> delete old sizer if present
+	
+}
 tab_render_detail::~tab_render_detail(void) {
 	
 }

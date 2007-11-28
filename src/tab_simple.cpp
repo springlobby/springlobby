@@ -21,18 +21,17 @@
 **/
 
 #include "tabs.h"
-#include "presets.h"
 
 void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 	sizer->Add(new wxStaticText(this, -1,  wxT("RENDER_QUALITY")), 0,wxALL);
 	//sizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP , 10);
-	renderQuality_CBX = new wxComboBox(this, ID_SIMPLE_QUAL_CBX, vlow_To_vHigh[0], wxDefaultPosition, wxSize(220,21), 
-					5,vlow_To_vHigh,wxCB_DROPDOWN|wxCB_READONLY);
+	renderQuality_CBX = new wxComboBox(this, ID_SIMPLE_QUAL_CBX, levels_vlow_To_vHigh[0], wxDefaultPosition, wxSize(220,21), 
+					5,levels_vlow_To_vHigh,wxCB_DROPDOWN|wxCB_READONLY);
 	sizer->Add(renderQuality_CBX, 0, wxBOTTOM, 15);	
 	
 	sizer->Add(new wxStaticText(this, -1,  wxT("RENDER_DETAIL")), 0,wxALL);
-	renderDetail_CBX = new wxComboBox(this, ID_SIMPLE_DETAIL_CBX, low_To_High[0], wxDefaultPosition, wxSize(220,21), 
-					3,low_To_High,wxCB_DROPDOWN|wxCB_READONLY);
+	renderDetail_CBX = new wxComboBox(this, ID_SIMPLE_DETAIL_CBX, levels_low_To_High[0], wxDefaultPosition, wxSize(220,21), 
+					3,levels_low_To_High,wxCB_DROPDOWN|wxCB_READONLY);
 	sizer->Add(renderDetail_CBX, 0, wxBOTTOM, 15);	
 
 	sizer->Add(new wxStaticText(this, -1,  wxT("VIDEO_MODE")), 0,wxALL);
@@ -46,6 +45,7 @@ void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : abstract_panel(parent, id , title , pos , size, style) {
 
+	SetSizer(0, true);
 	wxSizer* parentSizer = new wxFlexGridSizer(2,0,0);	
 		wxSizer* leftSizer = new wxFlexGridSizer(1,15,0);
 		wxSizer* middleSizer = new wxFlexGridSizer(1,15,0);
@@ -93,18 +93,34 @@ tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title ,
 	    SetSizer(parentSizer, true); // true --> delete old sizer if present
 }
 
+void tab_simple::updateControls()
+{
+	
+}
+
 tab_simple::~tab_simple(void) {
 	
 }
 
+void tab_simple::OnComboBoxChange(wxCommandEvent& event)
+{
+	abstract_panel::OnComboBoxChange(event);
+	detailTab->updateControls();
+}
+
+void tab_simple::setTabs(abstract_panel* a,abstract_panel* b)
+{
+	detailTab = a;
+}
 
 //disbaled for the moment
 BEGIN_EVENT_TABLE(tab_simple, abstract_panel)
-	EVT_SLIDER(1,            tab_simple::OnSliderMove)
-	EVT_TEXT(1,              tab_simple::OnTextUpdate)
-	EVT_CHECKBOX(1,          tab_simple::OnCheckBoxTick)
-	EVT_RADIOBUTTON(1,       tab_simple::OnRadioButtonToggle)
+	EVT_SLIDER(wxID_ANY,            tab_simple::OnSliderMove)
+	EVT_TEXT(wxID_ANY,              tab_simple::OnTextUpdate)
+	EVT_CHECKBOX(wxID_ANY,          tab_simple::OnCheckBoxTick)
+	EVT_RADIOBUTTON(wxID_ANY,       tab_simple::OnRadioButtonToggle)
 	EVT_IDLE(                       tab_simple::update)
+	EVT_COMBOBOX(wxID_ANY, 		tab_simple::OnComboBoxChange)
 END_EVENT_TABLE()
 
 

@@ -21,6 +21,7 @@
 **/
 
 #include "tabs.h"
+
 intMap abstract_panel::intSettings;
 stringMap abstract_panel::stringSettings;
 floatMap abstract_panel::floatSettings;
@@ -220,7 +221,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
     settingsChanged = true;
 
 	wxComboBox* comboBox = (wxComboBox*) event.GetEventObject();
-	wxString choice = comboBox->GetValue();
+	const wxString choice = comboBox->GetValue();
 			
 	switch (event.GetId())
 	{
@@ -237,6 +238,46 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 				case 1: { (intSettings)[WR_COMBOX[0].key]= 1; } break;	// Refl
 				case 2: { (intSettings)[WR_COMBOX[0].key]= 3; } break;	// Refl + Refr
 				case 3: { (intSettings)[WR_COMBOX[0].key]= 2; } break;	// Dyna
+			}
+			break;
+		}
+		case ID_SIMPLE_QUAL_CBX:
+		{
+			for (int i=0; i<10;++i)
+			{
+				presetValues<int> pop = prVal_RenderQuality[i]; 
+				 int k = (pop.values[choice]);
+				 
+				(intSettings)[prVal_RenderQuality[i].key]= k;
+				std::cout << prVal_RenderQuality[i].key<< " = " << k << "  choice: " << choice.mb_str()<<"\n";
+			}
+			break;
+		}
+		case ID_SIMPLE_DETAIL_CBX:
+		{
+			for (int i=0; i<9;++i)
+						{
+							presetValues<int> pop = prVal_RenderDetail[i]; 
+							 int k = (pop.values[choice]);
+							 
+							(intSettings)[prVal_RenderDetail[i].key]= k;
+							std::cout << prVal_RenderDetail[i].key<< " = " << k << "  choice: " << choice.mb_str()<<"\n";
+						}
+						break;
+			break;
+		}
+		case ID_SIMPLE_MODE_CBX:
+		{
+			int modeIndex=-1;
+			for (int i=0; i<3;++i)
+			{
+				if (choice == vl_Resolution_Str[i])
+					modeIndex = i;
+			}
+			if (modeIndex!=-1)
+			{
+				(intSettings)["XResolution"] = vl_Resolution_X[modeIndex];
+				(intSettings)["YResolution"] = vl_Resolution_Y[modeIndex];
 			}
 			break;
 		}
@@ -272,6 +313,9 @@ bool abstract_panel::saveSettings() {
 void abstract_panel::update(wxIdleEvent& event) {
 	event.RequestMore();
 }
+
+void abstract_panel::updateControls()
+{}
 
 BEGIN_EVENT_TABLE(abstract_panel, wxPanel)
 	EVT_SLIDER(wxID_ANY,            abstract_panel::OnSliderMove)

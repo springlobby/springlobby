@@ -36,7 +36,7 @@
 
 #include <wx/panel.h>
 #include <wx/notebook.h>
-
+#include "tabs.h"
 #undef Project2Frm_STYLE
 #define Project2Frm_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX
 
@@ -51,15 +51,18 @@ class settings_frame : public wxFrame
 		virtual ~settings_frame();
 		
 	private:
-		wxPanel *Simple;
-		wxPanel *Debug;
-		wxPanel *Mouse;
-		wxPanel *Audio;
-		wxPanel *General;
-		wxPanel *Video;
-		wxPanel *Rendering;
+		tab_simple* simpleTab;
+//		wxPanel *Debug;
+//		wxPanel *Mouse;
+//		wxPanel *Audio;
+//		wxPanel *General;
+//		wxPanel *Video;
+//		wxPanel *Rendering;
+//		
+		abstract_panel* detailTab;
+		abstract_panel* qualityTab;
 		
-		wxPanel *Render_Detail;
+		wxPanel panelArray[6];
 		
 		wxNotebook *Options;
 		

@@ -92,7 +92,10 @@ tab_ui::tab_ui(wxWindow *parent, wxWindowID id , const wxString &title , const w
 	SetSizer(pSizer, true); // true --> delete old sizer if present
 
 }
-
+void tab_ui::updateControls()
+{
+	
+}
 tab_ui::~tab_ui(void) {
 
 }

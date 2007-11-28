@@ -33,6 +33,11 @@ class tab_simple : public abstract_panel
 		virtual ~tab_simple();
 
 		void initOptSizer(wxFlexGridSizer*);
+		
+		void updateControls();
+		
+		void setTabs(abstract_panel* ,abstract_panel* );
+		void OnComboBoxChange(wxCommandEvent& event);
 
     protected:
         void OnClose(wxCloseEvent& event);
@@ -41,6 +46,9 @@ class tab_simple : public abstract_panel
 		wxComboBox* renderQuality_CBX;
 		wxComboBox* renderDetail_CBX;
 		wxComboBox* videoMode_CBX;
+		
+		//dirty
+		abstract_panel* detailTab;
 		
 		DECLARE_EVENT_TABLE()
 };   

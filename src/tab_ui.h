@@ -34,7 +34,7 @@ class tab_ui : public abstract_panel
 		void initCameraSizer(wxStaticBoxSizer*);
 		void initScrollSpeedSizer(wxStaticBoxSizer* );
 		void initUiOptSizer(wxStaticBoxSizer* );
-
+		void updateControls();
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();

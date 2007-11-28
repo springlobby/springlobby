@@ -21,7 +21,7 @@
 **/
 
 #include "frame.h"
-#include "tabs.h"
+
 
 BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_CLOSE(settings_frame::OnClose)
@@ -49,12 +49,14 @@ void settings_frame::CreateGUIControls()
 //	Simple->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
 //	Simple->Add(new wxString(wxT("nothing here yet")));
 //	Options->AddPage(Simple, wxT("Simple"));
-
-	Options->AddPage(new tab_simple(Options,ID_SIMPLE),wxT("Simple"));
+	simpleTab = new tab_simple(Options,ID_SIMPLE);
+	Options->AddPage(simpleTab,wxT("Simple"));
 	
-    Options->AddPage(new tab_quality_video(Options,ID_QUALITY_VIDEO), wxT("Render Quality / Video Mode"));
+	qualityTab = new tab_quality_video(Options,ID_QUALITY_VIDEO);
+    Options->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
     
-    Options->AddPage(new tab_render_detail(Options,ID_RENDER_DETAIL), wxT("Render Detail"));
+    detailTab = new tab_render_detail(Options,ID_RENDER_DETAIL);
+    Options->AddPage(detailTab, wxT("Render Detail"));
     
     Options->AddPage(new tab_ui(Options,ID_UI), wxT("UI Options"));
 
@@ -62,6 +64,7 @@ void settings_frame::CreateGUIControls()
 
 	Options->AddPage(new debug_panel(Options,ID_DEBUG), wxT("Debug"));
 	
+	simpleTab->setTabs(detailTab,qualityTab);
 	
 
 	SetTitle(wxT("Settings++"));
@@ -120,3 +123,5 @@ void settings_frame::OnClose(wxCloseEvent& event)
 	handleExit();
 	Destroy();
 }
+
+

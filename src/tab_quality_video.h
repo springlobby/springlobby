@@ -35,7 +35,7 @@ class tab_quality_video : public abstract_panel
 		void initQualitySizer(wxFlexGridSizer* );
 		void initAASizer(wxFlexGridSizer* );
 		void initZBufferSizer(wxFlexGridSizer* );
-
+		void updateControls();
 	private:
 		void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();

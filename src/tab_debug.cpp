@@ -59,7 +59,10 @@ debug_panel::debug_panel(wxWindow *parent, wxWindowID id , const wxString &title
 	SetSizer(parentSizer, true); // true --> delete old sizer if present
 
 }
-
+void debug_panel::updateControls()
+{
+	
+}
 debug_panel::~debug_panel(void) {
 
 }
