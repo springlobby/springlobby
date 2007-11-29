@@ -584,4 +584,12 @@ std::string Settings::GetLastAI()
   return STD_STRING(m_config->Read( _T("/SinglePlayer/LastAI"), wxEmptyString ));
 }
 
+void Settings::SetDisplayJoinLeave( bool display )
+{
+  m_config->Write( _T("/Channels/DisplayJoinLeave"), display);
+}
 
+bool Settings::GetDisplayJoinLeave()
+{
+  return m_config->Read( _T("/Channels/DisplayJoinLeave"), true);
+}

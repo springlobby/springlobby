@@ -123,6 +123,9 @@ class Settings
     void SetLastAI( const std::string& ai );
     std::string GetLastAI();
 
+    void SetDisplayJoinLeave( bool display );
+    bool GetDisplayJoinLeave();
+
   protected:
 
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
