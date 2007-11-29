@@ -74,8 +74,6 @@ class IUnitSync
     virtual wxImage GetSidePicture( const std::string& modname, const std::string& SideName ) =0;
 
     virtual int GetNumUnits( const std::string& modname ) = 0;
-    //virtual int GetUnitIndex( const std::string& name ) = 0;
-    //virtual std::string GetFullUnitName( int index ) = 0;
     virtual wxArrayString GetUnitsList( const std::string& modname ) = 0;
 
     virtual bool LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc ) = 0;

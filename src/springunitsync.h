@@ -54,8 +54,6 @@ class SpringUnitSync : public IUnitSync
     wxArrayString GetAIList();
 
     int GetNumUnits( const std::string& modname );
-    //int GetUnitIndex( const std::string& name );
-    //std::string GetFullUnitName( int index );
     wxArrayString GetUnitsList( const std::string& modname );
 
     wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false );
@@ -66,44 +64,6 @@ class SpringUnitSync : public IUnitSync
     bool ReloadUnitSyncLib();
 
   private:
-/*    bool m_loaded;
-
-    wxDynamicLibrary* m_libhandle;
-
-    InitPtr m_init;
-    UnInitPtr m_uninit;
-
-    GetMapCountPtr m_get_map_count;
-    GetMapChecksumPtr m_get_map_checksum;
-    GetMapNamePtr m_get_map_name;
-    GetMapInfoExPtr m_get_map_info_ex;
-    GetMinimapPtr m_get_minimap;
-
-    GetPrimaryModChecksumPtr m_get_mod_checksum;
-    GetPrimaryModIndexPtr m_get_mod_index;
-    GetPrimaryModNamePtr m_get_mod_name;
-    GetPrimaryModCountPtr m_get_mod_count;
-    GetPrimaryModArchivePtr m_get_mod_archive;
-
-    GetSideCountPtr m_get_side_count;
-    GetSideNamePtr m_get_side_name;
-
-    AddAllArchivesPtr m_add_all_archives;
-
-    GetUnitCountPtr m_get_unit_count;
-    GetUnitNamePtr m_get_unit_name;
-    GetFullUnitNamePtr m_get_unit_full_name;
-    ProcessUnitsNoChecksumPtr m_proc_units_nocheck;
-
-    InitFindVFSPtr m_init_find_vfs;
-    FindFilesVFSPtr m_find_files_vfs;
-    OpenFileVFSPtr m_open_file_vfs;
-    FileSizeVFSPtr m_file_size_vfs;
-    ReadFileVFSPtr m_read_file_vfs;
-    CloseFileVFSPtr m_close_file_vfs;
-
-    GetSpringVersionPtr m_get_spring_version;
-*/
 
     static wxString _GetCachedMinimapFileName( const std::string& mapname, int width = -1, int height = -1 );
 
