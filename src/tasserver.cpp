@@ -325,8 +325,18 @@ void TASServer::_ReciveAndExecute()
 }
 
 
+wxString _ConvertTASServerPhailChecksum( const wxString& buggedcsum )
+{
+  signed long temp;
+  buggedcsum.ToLong( &temp );
+  unsigned int temp2 = (unsigned int)temp;
+  return wxString::Format( _T("%u"), temp2 );
+}
+
+
 void TASServer::ExecuteCommand( const std::string& in )
 {
+  debug( in );
   std::string cmd;
   std::string params = in;
   std::string::size_type pos = 0;
@@ -430,7 +440,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     id = GetIntParam( params );
     specs = GetIntParam( params );
     haspass = (bool)GetIntParam( params );
-    hash = GetWordParam( params );
+    hash = STD_STRING(_ConvertTASServerPhailChecksum( WX_STRING(GetWordParam( params )) ) );
     map = GetSentenceParam( params );
     m_se->OnBattleInfoUpdated( id, specs, haspass, hash, map );
   } else if ( cmd == "LOGININFOEND" ) {

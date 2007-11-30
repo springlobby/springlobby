@@ -183,7 +183,7 @@ class SpringUnitSyncLib
     wxString GetSpringVersion();
 
     int GetMapCount();
-    unsigned int GetMapChecksum( int index );
+    wxString GetMapChecksum( int index );
     wxString GetMapName( int index );
 
     /**

@@ -174,20 +174,23 @@ bool SpringUnitSync::MapExists( const std::string& mapname )
 bool SpringUnitSync::MapExists( const std::string& mapname, const std::string hash )
 {
   debug_func( "" );
+  int index;
+  std::string usynchash;
   try {
-    int i = GetMapIndex( mapname );
-    if ( i >= 0 ) {
-      return ( i2s(susynclib()->GetMapChecksum( i )) == hash );
+    index = GetMapIndex( mapname );
+    if ( index >= 0 ) {
+      usynchash = STD_STRING( susynclib()->GetMapChecksum( index ) );
+      return ( usynchash == hash );
     }
   } catch (...) {}
   return false;
 }
 
 
-UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname, bool getmapinfo )
+UnitSyncMap SpringUnitSync::GetMap( const std::string& mapname )
 {
   int i = GetMapIndex( mapname );
-  return GetMap( i, getmapinfo );
+  return GetMap( i );
 }
 
 /*
@@ -225,12 +228,11 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const std::string& mapname )
 }
 */
 
-UnitSyncMap SpringUnitSync::GetMap( int index, bool getmapinfo )
+UnitSyncMap SpringUnitSync::GetMap( int index )
 {
   UnitSyncMap m;
   m.name = STD_STRING(susynclib()->GetMapName( index ));
-  m.hash = i2s(susynclib()->GetMapChecksum( index ));
-  if ( getmapinfo ) m.info = susynclib()->GetMapInfoEx( WX_STRING(m.name), 1 );
+  m.hash = STD_STRING(susynclib()->GetMapChecksum( index ));
   return m;
 }
 
@@ -240,7 +242,7 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
   UnitSyncMap m;
 
   m.name = STD_STRING(susynclib()->GetMapName( index ));
-  m.hash = i2s(susynclib()->GetMapChecksum( index ));
+  m.hash = STD_STRING(susynclib()->GetMapChecksum( index ));
 
   m.info = susynclib()->GetMapInfoEx( WX_STRING(m.name), 1 );
 
@@ -456,7 +458,7 @@ wxImage SpringUnitSync::_GetCachedMinimap( const std::string& mapname, int max_w
   if ( !store_size ) {
 
     UnitSyncMap map = GetMap( mapname );
-    if ( map.hash != m_map.hash ) map = m_map = GetMap( mapname, true );
+    if ( map.hash != m_map.hash ) map = m_map = GetMapEx( mapname );
     else map = m_map;
 
     int height, width;

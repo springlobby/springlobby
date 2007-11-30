@@ -138,7 +138,7 @@ void BattleMapTab::ReloadMaplist()
   m_map_combo->Clear();
   try {
     for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-      m_map_combo->Insert( RefineMapname( WX_STRING(usync()->GetMap( i, false ).name) ), i );
+      m_map_combo->Insert( RefineMapname( WX_STRING(usync()->GetMap( i ).name) ), i );
     }
   } catch(...){}
 }
@@ -163,7 +163,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
   int index = m_map_combo->GetCurrentSelection();
   //wxString name = m_map_combo->GetString( index );
   try {
-    UnitSyncMap map = usync()->GetMap( index, true );
+    UnitSyncMap map = usync()->GetMapEx( index );
     m_battle.SetMap( map );
   } catch (...) {}
 //  m_battle.SetMapHash( map.hash );

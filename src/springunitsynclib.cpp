@@ -286,11 +286,12 @@ int SpringUnitSyncLib::GetMapCount()
 }
 
 
-unsigned int SpringUnitSyncLib::GetMapChecksum( int index )
+wxString SpringUnitSyncLib::GetMapChecksum( int index )
 {
   InitLib( m_get_map_checksum );
 
-  return m_get_map_checksum( index );
+  unsigned int csum = m_get_map_checksum( index );
+  return wxString::Format( _T("%u"), csum );
 }
 
 

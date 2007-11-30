@@ -61,8 +61,8 @@ class IUnitSync
     virtual bool MapExists( const std::string& mapname ) = 0;
     virtual bool MapExists( const std::string& mapname, const std::string hash ) = 0;
 
-    virtual UnitSyncMap GetMap( const std::string& mapname, bool getmapinfo = false ) = 0;
-    virtual UnitSyncMap GetMap( int index, bool getmapinfo = false ) = 0;
+    virtual UnitSyncMap GetMap( const std::string& mapname ) = 0;
+    virtual UnitSyncMap GetMap( int index ) = 0;
     virtual UnitSyncMap GetMapEx( const std::string& mapname ) = 0;
     virtual UnitSyncMap GetMapEx( int index ) = 0;
 
