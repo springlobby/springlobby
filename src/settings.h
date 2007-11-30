@@ -123,8 +123,8 @@ class Settings
     void SetLastAI( const std::string& ai );
     std::string GetLastAI();
 
-    void SetDisplayJoinLeave( bool display );
-    bool GetDisplayJoinLeave();
+    void SetDisplayJoinLeave( bool display, const wxString& channel  );
+    bool GetDisplayJoinLeave( const wxString& channel );
 
   protected:
 

@@ -245,8 +245,11 @@ void ChatPanel::_CreatePopup()
     m_popup_menu->Append( leaveitem );
 
     displayjoinitem = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_DISPLAYJOIN, _("Display Join/Leave Messages"), wxEmptyString, wxITEM_CHECK );
-    m_popup_menu->Append( displayjoinitem );
-    displayjoinitem->Check(sett().GetDisplayJoinLeave());
+    if ( m_type == CPT_Channel )
+    {
+      m_popup_menu->Append( displayjoinitem );
+      displayjoinitem->Check( sett().GetDisplayJoinLeave( m_channel->GetName() ) );
+    }
 
     m_popup_menu->AppendSeparator();
     wxMenuItem* selectitem = new wxMenuItem( m_popup_menu, wxID_SELECTALL, _("Select all"), wxEmptyString, wxITEM_NORMAL );
@@ -554,17 +557,20 @@ wxString ChatPanel::GetChatTypeStr()
 
 void ChatPanel::Joined( User& who )
 {
-  if( sett().GetDisplayJoinLeave() ) { _OutputLine( _T(" ** ") + WX_STRING(who.GetNick()) + _(" joined the ") + GetChatTypeStr() + _T("."), wxColour(0, 80, 0) ); }
-  if ( m_show_nick_list ) m_nicklist->AddUser( who );
+  if ( m_type == CPT_Channel )
+  {
+    if( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) { _OutputLine( _T(" ** ") + WX_STRING(who.GetNick()) + _(" joined the ") + GetChatTypeStr() + _T("."), wxColour(0, 80, 0) ); }
+    if ( m_show_nick_list ) m_nicklist->AddUser( who );
+  }
 }
 
 
 void ChatPanel::Parted( User& who, const wxString& message )
 {
-  if( sett().GetDisplayJoinLeave() ) { _OutputLine( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" )."), wxColour(0, 80, 0) ); }
-  if ( m_show_nick_list ) m_nicklist->RemoveUser( who );
-
   if ( m_type == CPT_Channel ) {
+    if( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) { _OutputLine( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" )."), wxColour(0, 80, 0) ); }
+    if ( m_show_nick_list ) m_nicklist->RemoveUser( who );
+
     if ( m_channel == 0 ) return;
     if ( &who == &m_channel->GetMe() ) {
       m_channel->uidata.panel = 0;
@@ -826,11 +832,11 @@ void ChatPanel::OnChannelMenuDisplayJoinLeave( wxCommandEvent& event )
 {
     if ( m_channel == 0 ) return;
     if(!displayjoinitem->IsChecked()) {
-        sett().SetDisplayJoinLeave(false);
+        sett().SetDisplayJoinLeave( false, m_channel->GetName() );
         displayjoinitem->Check( false );
     }
     else {
-        sett().SetDisplayJoinLeave(true);
+        sett().SetDisplayJoinLeave( true, m_channel->GetName() );
         displayjoinitem->Check( true );
    }
 }
