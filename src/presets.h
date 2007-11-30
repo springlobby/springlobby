@@ -49,12 +49,12 @@ public:
 };
 typedef std::map<std::string,int> intMap;
 
-const wxString levels_low_To_High[3] = { wxT("low"),wxT("medium"),wxT("high")};
+const wxString levels_low_To_High[4] = { wxT("low"),wxT("medium"),wxT("high")};
 const wxString levels_vlow_To_vHigh[5] = { wxT("very low"),wxT("low"),wxT("medium"),wxT("high"),wxT("very high")};
 
 /** RENDER_DETAIL ***************************************************************/
-const int vl_ShadowMapSize[3] = 		{ 2048,		4096,	8192 	}; //shadowmapsize
-const int vl_TreeRadius[3] = 			{ 600,		1800,	3000 	}; //tree view distance
+const int vl_ShadowMapSize[3] = 		{ 1024,		4096,	8192 	}; //shadowmapsize
+const int vl_TreeRadius[3] = 			{ 600,		1900,	3000 	}; //tree view distance
 const int vl_GroundDetail[3] =			{ 20, 		70,		120		}; //terrain detail
 const int vl_UnitLodDist[3] =			{ 100,		350,	600		}; //unit detail
 const int vl_GrassDetail[3] = 			{ 0,		5,		10		}; //grass detail

@@ -258,10 +258,10 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 						{
 							presetValues<int> pop = prVal_RenderDetail[i]; 
 							 int k = (pop.values[choice]);
-							 
+							 std::cout << "k: " << k << " key: "<<prVal_RenderDetail[i].key <<" choice: " << choice.mb_str() << "\n";
 							(intSettings)[prVal_RenderDetail[i].key]= k;
 						}
-						break;
+			std::cout << "\n";
 			break;
 		}
 		case ID_SIMPLE_MODE_CBX:
@@ -309,10 +309,10 @@ bool abstract_panel::saveSettings() {
     return true; 
 }
 void abstract_panel::update(wxIdleEvent& event) {
-	event.RequestMore();
+	//event.RequestMore();
 }
 
-void abstract_panel::updateControls()
+void abstract_panel::updateControls(bool a)
 {}
 
 BEGIN_EVENT_TABLE(abstract_panel, wxPanel)

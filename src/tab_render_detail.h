@@ -32,10 +32,14 @@ class tab_render_detail : public abstract_panel
 		virtual ~tab_render_detail();
 
 		void initRendererSizer(wxFlexGridSizer*,wxFlexGridSizer*);
-		void updateControls();
+		void updateControls(bool dummy);
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+		
+		wxSlider** ctrl_detail_sliders;
+		static const int ctrl_detail_sliders_size = 9;
+		
 		DECLARE_EVENT_TABLE()
 };   
     
