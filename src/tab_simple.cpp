@@ -105,7 +105,7 @@ tab_simple::~tab_simple(void) {
 void tab_simple::OnComboBoxChange(wxCommandEvent& event)
 {
 	abstract_panel::OnComboBoxChange(event);
-	detailTab->updateControls();
+	//detailTab->updateControls();
 }
 
 void tab_simple::setTabs(abstract_panel* a,abstract_panel* b)
