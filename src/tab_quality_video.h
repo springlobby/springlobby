@@ -40,7 +40,17 @@ class tab_quality_video : public abstract_panel
 		void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
 
-		wxComboBox* waterQuality;
+		wxComboBox* ctrl_waterQ_CBox;
+		wxCheckBox** ctrl_vo_Boxes;
+		static const int ctrl_vo_Boxes_size = 3; 
+		wxTextCtrl* ctrl_x_res;
+		wxTextCtrl* ctrl_y_res;
+		wxCheckBox** ctrl_qa_Boxes;
+		static const int ctrl_qa_Boxes_size = 10;
+		wxSlider* ctrl_fsaa_slider;
+		
+		wxRadioButton* ctrl_z_radio1;
+		wxRadioButton* ctrl_z_radio2;
 		
     protected:
 		DECLARE_EVENT_TABLE()

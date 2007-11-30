@@ -243,25 +243,23 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		}
 		case ID_SIMPLE_QUAL_CBX:
 		{
-			for (int i=0; i<10;++i)
+			for (int i=0; i<prVal_RenderQuality_size;++i)
 			{
 				presetValues<int> pop = prVal_RenderQuality[i]; 
 				 int k = (pop.values[choice]);
 				 
 				(intSettings)[prVal_RenderQuality[i].key]= k;
-				std::cout << prVal_RenderQuality[i].key<< " = " << k << "  choice: " << choice.mb_str()<<"\n";
 			}
 			break;
 		}
 		case ID_SIMPLE_DETAIL_CBX:
 		{
-			for (int i=0; i<9;++i)
+			for (int i=0; i<prVal_RenderDetail_size;++i)
 						{
 							presetValues<int> pop = prVal_RenderDetail[i]; 
 							 int k = (pop.values[choice]);
 							 
 							(intSettings)[prVal_RenderDetail[i].key]= k;
-							std::cout << prVal_RenderDetail[i].key<< " = " << k << "  choice: " << choice.mb_str()<<"\n";
 						}
 						break;
 			break;
@@ -269,7 +267,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		case ID_SIMPLE_MODE_CBX:
 		{
 			int modeIndex=-1;
-			for (int i=0; i<3;++i)
+			for (int i=0; i<vl_Resolution_Str_size;++i)
 			{
 				if (choice == vl_Resolution_Str[i])
 					modeIndex = i;

@@ -25,70 +25,112 @@
 void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 
 	// i < "sizeof"(VO_CBOX)
-	for (int i = 0; i < 3; i++) {
-		wxCheckBox* checkBox = new wxCheckBox(this, VO_CBOX[i].id, _S(VO_CBOX[i].lbl));
-		checkBox->SetValue(configHandler.GetInt(VO_CBOX[i].key,fromString<int>(VO_CBOX[i].def)));
-		sizer->Add(checkBox, 0, wxTOP, (i == 0)? 10: 0);
+	for (int i = 0; i < ctrl_vo_Boxes_size; i++) {
+		ctrl_vo_Boxes[i] = new wxCheckBox(this, VO_CBOX[i].id, _S(VO_CBOX[i].lbl));
+		ctrl_vo_Boxes[i]->SetValue(configHandler.GetInt(VO_CBOX[i].key,fromString<int>(VO_CBOX[i].def)));
+		sizer->Add(ctrl_vo_Boxes[i], 0, wxTOP, (i == 0)? 10: 0);
 	}
 
-	wxTextCtrl* xResInput = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_X, wxT(""), WX_DEF_P, wxSize(60, 20), 0);
-	wxTextCtrl* yResInput = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_Y, wxT(""), WX_DEF_P, wxSize(60, 20), 0);
-
-    std::string s;
-     toString<int>(s,configHandler.GetInt(RC_TEXT[0].key,fromString<int>(RC_TEXT[0].def))); 
-	xResInput->ChangeValue(_S(s.c_str()));
-     toString<int>(s,configHandler.GetInt(RC_TEXT[1].key,fromString<int>(RC_TEXT[1].def))); 
-	yResInput->ChangeValue(_S(s.c_str()));
-
-
+	ctrl_x_res = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_X, wxT(""), WX_DEF_P, wxSize(60, 20), 0);
+	ctrl_y_res = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_Y, wxT(""), WX_DEF_P, wxSize(60, 20), 0);
+	 std::string s;
+	     toString<int>(s,configHandler.GetInt(RC_TEXT[0].key,fromString<int>(RC_TEXT[0].def))); 
+	     ctrl_x_res->ChangeValue(_S(s.c_str()));
+	     toString<int>(s,configHandler.GetInt(RC_TEXT[1].key,fromString<int>(RC_TEXT[1].def))); 
+	     ctrl_y_res->ChangeValue(_S(s.c_str()));
+	
 	wxSizer* subSizer = new wxBoxSizer(wxHORIZONTAL);
-	subSizer->Add(xResInput, 0, wxALIGN_LEFT, 10);
+	subSizer->Add(ctrl_x_res, 0, wxALIGN_LEFT, 10);
 	subSizer->Add(5, 0, 0);
 	subSizer->Add(new wxStaticText(this, -1, wxT("x")), 0, wxTOP | wxBOTTOM, 0);
 	subSizer->Add(5, 0, 0);
-	subSizer->Add(yResInput, 0, wxALIGN_RIGHT, 10);
+	subSizer->Add(ctrl_y_res, 0, wxALIGN_RIGHT, 10);
 
 	sizer->Add(new wxStaticText(this, -1, wxT("Screen Resolution")), 0, wxTOP , 15);
 	sizer->Add(subSizer);
 
 }
 
+void tab_quality_video::updateControls()
+{
+//	
+//	for (int i = 0; i < ctrl_vo_Boxes_size; i++) {
+//		ctrl_vo_Boxes[i]->SetValue(intSettings[VO_CBOX[i].key]);
+//	}
+//	
+//	
+//	 std::string s;
+//     toString<int>(s,intSettings[RC_TEXT[0].key]); 
+//     ctrl_x_res->ChangeValue(_S(s.c_str()));
+//     toString<int>(s,intSettings[RC_TEXT[1].key]); 
+//     ctrl_y_res->ChangeValue(_S(s.c_str()));
+     
+     for (int i = 0; i < ctrl_qa_Boxes_size-3; i++) {
+     		ctrl_qa_Boxes[i]->SetValue(intSettings[QA_CBOX[i].key]);
+     	}
+     // QA_BOX[7] is left out (HIGH_RES_LOS_TEX)
+//     for (int i = 8; i < ctrl_qa_Boxes_size; i++) {
+//         		ctrl_qa_Boxes[i]->SetValue(intSettings[QA_CBOX[i].key]);
+//         	}
+     
+   
+     int waterOptIndex;
+     int waterSetting = intSettings[WR_COMBOX[0].key]; 
+ 	switch (waterSetting)
+ 	{
+ 		case 0:
+ 		case 1: waterOptIndex = waterSetting; break;
+ 		case 2: waterOptIndex = 3; break;
+ 		case 3: waterOptIndex = 2; break;
+ 	}
+     ctrl_waterQ_CBox->SetValue(WR_COMBOX_CHOICES[waterOptIndex]);
+     
+     int useFSAA = intSettings[VO_SLI_EXT[0].key];
+     int FSAALev = intSettings[VO_SLI[0].key];
+     ctrl_fsaa_slider->SetValue((useFSAA == 1)? FSAALev: 0);
+     
+ 	switch (intSettings[VO_RBUT[0].key]) {
+ 		case 16: { ctrl_z_radio1->SetValue(1); } break;
+ 		case 24: { ctrl_z_radio2->SetValue(1); } break;
+ 	}
+}
+
 void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
 	// i < 8 with High resolution LOS textures
 	// i < 7 without
-	for (int i = 0; i < 7; i++) {
-		wxCheckBox* checkBox = new wxCheckBox(this, QA_CBOX[i].id, _S(QA_CBOX[i].lbl));
-		checkBox->SetValue(configHandler.GetInt(QA_CBOX[i].key,fromString<int>(QA_CBOX[i].def)));
-		sizer->Add(checkBox, 0, wxTOP, (i == 0)? 10: 0);
+	for (int i = 0; i < ctrl_qa_Boxes_size-3; i++) {
+		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, _S(QA_CBOX[i].lbl));
+		ctrl_qa_Boxes[i]->SetValue(configHandler.GetInt(QA_CBOX[i].key,fromString<int>(QA_CBOX[i].def)));
+		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 0)? 10: 0);
 	}
-	
-	int waterOptIndex;
-	int waterSetting = configHandler.GetInt(WR_COMBOX[0].key,fromString<int>(WR_COMBOX[0].def)); 
-	switch (waterSetting)
-	{
-		case 0:
-		case 1: waterOptIndex = waterSetting; break;
-		case 2: waterOptIndex = 3; break;
-		case 3: waterOptIndex = 2; break;
-	}
+	   int waterOptIndex;
+	     int waterSetting = configHandler.GetInt(WR_COMBOX[0].key,fromString<int>(WR_COMBOX[0].def)); 
+	 	switch (waterSetting)
+	 	{
+	 		case 0:
+	 		case 1: waterOptIndex = waterSetting; break;
+	 		case 2: waterOptIndex = 3; break;
+	 		case 3: waterOptIndex = 2; break;
+	 	}
+	     
 	
 	sizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP , 10);
-	waterQuality = new wxComboBox(this, ID_WINDOWP_WR_COMBOX, WR_COMBOX_CHOICES[waterOptIndex], wxDefaultPosition, wxSize(220,21), 
+	ctrl_waterQ_CBox = new wxComboBox(this, ID_WINDOWP_WR_COMBOX, WR_COMBOX_CHOICES[waterOptIndex], wxDefaultPosition, wxSize(220,21), 
 			4,WR_COMBOX_CHOICES,wxCB_DROPDOWN|wxCB_READONLY);
-	sizer->Add(waterQuality, 0, wxBOTTOM, 5);	
+	sizer->Add(ctrl_waterQ_CBox, 0, wxBOTTOM, 5);	
 }
 
 void tab_quality_video::initAASizer(wxFlexGridSizer* sizer){
-    for (int i = 8; i < 10; i++) {
-		wxCheckBox* checkBox = new wxCheckBox(this, QA_CBOX[i].id, _S(QA_CBOX[i].lbl));
-		checkBox->SetValue(configHandler.GetInt(QA_CBOX[i].key,fromString<int>(QA_CBOX[i].def)));
-		sizer->Add(checkBox, 0, wxTOP, (i == 8)? 10: 0);
+    for (int i = 8; i < ctrl_qa_Boxes_size; i++) {
+    	ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, _S(QA_CBOX[i].lbl));
+    	ctrl_qa_Boxes[i]->SetValue(configHandler.GetInt(QA_CBOX[i].key,fromString<int>(QA_CBOX[i].def)));
+		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 8)? 10: 0);
 	}
     int useFSAA = configHandler.GetInt(VO_SLI_EXT[0].key,fromString<int>(VO_SLI_EXT[0].def));
 	int FSAALev = configHandler.GetInt(VO_SLI[0].key,fromString<int>(VO_SLI[0].def));
-	wxSlider* slider = new wxSlider(this, VO_SLI[0].id, (useFSAA == 1)? FSAALev: 0, 0, 16, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	ctrl_fsaa_slider = new wxSlider(this, VO_SLI[0].id, (useFSAA == 1)? FSAALev: 0, 0, 16, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
     sizer->Add(new wxStaticText(this, -1, _S(VO_SLI[0].lbl)), 0, wxTOP, 15);
-	sizer->Add(slider, 0, wxALIGN_LEFT, 0);
+	sizer->Add(ctrl_fsaa_slider, 0, wxALIGN_LEFT, 0);
 }
 
 void tab_quality_video::initZBufferSizer(wxFlexGridSizer* sizer)
@@ -97,22 +139,23 @@ void tab_quality_video::initZBufferSizer(wxFlexGridSizer* sizer)
 	
 	sizer->Add(new wxStaticText(this, -1, wxT("Resolution in bit")), 0, wxTOP ,15);
 	
-	wxRadioButton* radioButtonA0 = new wxRadioButton(this, VO_RBUT[0].id, _S(VO_RBUT[0].lbl), WX_DEF_P, WX_DEF_S, wxRB_GROUP, WX_DEF_V);
-	wxRadioButton* radioButtonA1 = new wxRadioButton(this, VO_RBUT[1].id, _S(VO_RBUT[1].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
+	ctrl_z_radio1 = new wxRadioButton(this, VO_RBUT[0].id, _S(VO_RBUT[0].lbl), WX_DEF_P, WX_DEF_S, wxRB_GROUP, WX_DEF_V);
+	ctrl_z_radio2 = new wxRadioButton(this, VO_RBUT[1].id, _S(VO_RBUT[1].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
 
 	switch (configHandler.GetInt(VO_RBUT[0].key,fromString<int>(VO_RBUT[0].def))) {
-		case 16: { radioButtonA0->SetValue(1); } break;
-		case 24: { radioButtonA1->SetValue(1); } break;
-	}
-	sizer->Add(radioButtonA0, 0, wxTOP, 0);
-	sizer->Add(radioButtonA1, 0, wxTOP,  0);
+	 		case 16: { ctrl_z_radio1->SetValue(1); } break;
+	 		case 24: { ctrl_z_radio2->SetValue(1); } break;
+	 	}
+	sizer->Add(ctrl_z_radio1, 0, wxTOP, 0);
+	sizer->Add(ctrl_z_radio2, 0, wxTOP,  0);
     
 }
 
 tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , 
 		const wxSize& size, long style)
                 : abstract_panel(parent, id , title , pos , size, style) {
-
+	ctrl_qa_Boxes = new wxCheckBox*[ctrl_qa_Boxes_size];
+	ctrl_vo_Boxes = new wxCheckBox*[ctrl_vo_Boxes_size];
 	wxSizer* parentSizer = new wxFlexGridSizer(2,0,0);	
 	wxSizer* leftSizer = new wxFlexGridSizer(1,15,0);
 	wxSizer* middleSizer = new wxFlexGridSizer(1,15,0);
@@ -136,6 +179,7 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
 	initAASizer(SizerC);
 	initZBufferSizer(SizerD);
 	
+	
 	SizerA->Fit(this);
     SizerA->SetSizeHints(this);
     SizerB->Fit(this);
@@ -157,11 +201,9 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
     parentSizer->Add(middleSizer,0,wxALIGN_CENTER_HORIZONTAL|wxALL,10);
    
     SetSizer(parentSizer, true); // true --> delete old sizer if present
+   
 }
-void tab_quality_video::updateControls()
-{
-	
-}
+
 tab_quality_video::~tab_quality_video(void) {
 
 }

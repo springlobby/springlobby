@@ -49,6 +49,7 @@ class tab_simple : public abstract_panel
 		
 		//dirty
 		abstract_panel* detailTab;
+		abstract_panel* qualityTab;
 		
 		DECLARE_EVENT_TABLE()
 };   

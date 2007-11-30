@@ -31,8 +31,7 @@
  */
 template <typename T> class presetValues 
 {
-	
-	//T def;
+
 public: 
 	std::map<wxString,T> values;
 		std::string key;
@@ -45,7 +44,6 @@ public:
 			values[levelLabels[i]]=values_arg[i];
 		}
 		key = key_arg;
-		//def = def_arg;
 	}
 	
 };
@@ -75,7 +73,8 @@ const presetValues<int> pr_UnitIconDist = presetValues<int>("UnitIconDist",level
 const presetValues<int> pr_MaxParticles = presetValues<int>("MaxParticles",levels_low_To_High,vl_MaxParticles);
 const presetValues<int> pr_SM3MaxTextureStages = presetValues<int>("SM3MaxTextureStages",levels_low_To_High,vl_SM3MaxTextureStages);
 
-const presetValues<int> prVal_RenderDetail[9] = {pr_ShadowMapSize, pr_TreeRadius, pr_GroundDetail,
+const int prVal_RenderDetail_size = 9;
+const presetValues<int> prVal_RenderDetail[prVal_RenderDetail_size] = {pr_ShadowMapSize, pr_TreeRadius, pr_GroundDetail,
 		pr_UnitLodDist, pr_GrassDetail, pr_GroundDecals,
 		pr_UnitIconDist, pr_MaxParticles, pr_SM3MaxTextureStages};
 
@@ -88,6 +87,7 @@ const int vl_AdvSky[5] = {0,0,1,1,1};//high-res clouds
 const int vl_DynamicSky[5] = {0,0,0,1,1};//dynamic clouds
 const int vl_SmoothPoints[5] = {0,1,1,1,1};
 const int vl_SmoothLines[5] = {0,0,1,1,1};
+const int vl_FSAA[5] = {0,1,1,1,1};//fullscreen aa enable/disable
 const int vl_FSAALevel[5] = {0,1,2,8,16};//fullscreen aa samples
 const int vl_AdvUnitShading[5] = {0,0,0,1,1}; //refl. units
 
@@ -99,16 +99,19 @@ const presetValues<int> pr_AdvSky = presetValues<int>("AdvSky",levels_vlow_To_vH
 const presetValues<int> pr_DynamicSky = presetValues<int>("DynamicSky",levels_vlow_To_vHigh,vl_DynamicSky); 
 const presetValues<int> pr_SmoothPoints = presetValues<int>("SmoothPoints",levels_vlow_To_vHigh,vl_SmoothPoints);
 const presetValues<int> pr_SmoothLines = presetValues<int>("SmoothLines",levels_vlow_To_vHigh,vl_SmoothLines);
+const presetValues<int> pr_FSAA = presetValues<int>("FSAA",levels_vlow_To_vHigh,vl_FSAA); 
 const presetValues<int> pr_FSAALevel = presetValues<int>("FSAALevel",levels_vlow_To_vHigh,vl_FSAALevel); 
 const presetValues<int> pr_AdvUnitShading = presetValues<int>("AdvUnitShading",levels_vlow_To_vHigh,vl_AdvUnitShading);
 
-const presetValues<int> prVal_RenderQuality[10] = { pr_DepthBufferBits, pr_ReflectiveWater, pr_Shadows, pr_3DTrees,
-		pr_AdvSky, pr_DynamicSky, pr_SmoothPoints, pr_SmoothLines, pr_FSAALevel, pr_AdvUnitShading };
+const int prVal_RenderQuality_size = 11;
+const presetValues<int> prVal_RenderQuality[prVal_RenderQuality_size] = { pr_DepthBufferBits, pr_ReflectiveWater, pr_Shadows, pr_3DTrees,
+		pr_AdvSky, pr_DynamicSky, pr_SmoothPoints, pr_SmoothLines,pr_FSAA, pr_FSAALevel, pr_AdvUnitShading };
 
 /** VIDEO MODES ********************************************************/
 const int vl_Resolution_X[3] = { 800, 1024, 1280 };
 const int vl_Resolution_Y[3] = { 600,  768, 1024 };
-const wxString vl_Resolution_Str[3] = { wxT("800 x 600"), wxT("1024 x 768"), wxT("1280 x 1024")};
+const int vl_Resolution_Str_size = 3;
+const wxString vl_Resolution_Str[vl_Resolution_Str_size] = { wxT("800 x 600"), wxT("1024 x 768"), wxT("1280 x 1024")};
 
 
 #endif /*PRESETS_H_*/
