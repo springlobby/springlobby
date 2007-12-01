@@ -2,10 +2,11 @@
 #include "frame_get_usync.h"
 #include <iostream>
 #include "se_settings.h"
+//TODO Team-Decision: might not be necessary because of shared config
 #ifndef RUNMODE_STANDALONE
 	// if extra include for springlobby unitsync method needed
 #endif
-
+//TODO find suitable place, at least guard it
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 #define ASSERT_LOGIC(cond,msg) if(!(cond)){std::cerr << (std::string("logic ")+msg);}
 #define ASSERT_RUNTIME(cond,msg) if(!(cond)){std::cerr << (std::string("runtime ")+msg);}
@@ -93,6 +94,7 @@ void* ConfigHandler::GetLibFuncPtr( const std::string& name )
 ConfigHandler& ConfigHandler::GetInstance(){
 	if (!instance){
 		instance = new ConfigHandler();
+		//TODO something a little more sophisticated
 		if(!instance->LoadUnitSyncLib(wxT(""),wxT("")))
 		{
 			wxMessageBox(wxT("Unitsync could not be loaded. CRAASH!"), wxT(""), wxOK, 0);

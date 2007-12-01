@@ -11,7 +11,7 @@
 #include <wx/filename.h>
 //
 #include <string>
-
+//TODO make sure HAS_WX_28 etc is availabe
 
 #define SET_MODE_EXPERT 5000
 #define SET_MODE_SIMPLE 5001

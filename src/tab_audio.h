@@ -23,6 +23,7 @@
 #ifndef __TAB_AUDIO_h__
 #define __TAB_AUDIO_h__
 
+//TODO merge with debug?
 class audio_panel : public abstract_panel
 {
 

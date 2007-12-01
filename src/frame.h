@@ -37,17 +37,16 @@
 #include <wx/panel.h>
 #include <wx/notebook.h>
 #include "tabs.h"
-#undef Project2Frm_STYLE
-#define Project2Frm_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX
 
 
+//TODO use icon
 class settings_frame : public wxFrame
 {
 	private:
 		DECLARE_EVENT_TABLE();
 		
 	public:
-		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = Project2Frm_STYLE);
+		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style =  wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX);
 		virtual ~settings_frame();
 		
 	private:
@@ -55,13 +54,7 @@ class settings_frame : public wxFrame
 		tab_ui* uiTab;
 		audio_panel* audioTab;
 		debug_panel* debugTab;
-//		wxPanel *Debug;
-//		wxPanel *Mouse;
-//		wxPanel *Audio;
-//		wxPanel *General;
-//		wxPanel *Video;
-//		wxPanel *Rendering;
-//		
+
 		abstract_panel* detailTab;
 		abstract_panel* qualityTab;
 		
@@ -70,7 +63,7 @@ class settings_frame : public wxFrame
 		wxMenu* menuFile;
 		wxMenu* menuMode;
 		
-		wxNotebook *Options;
+		wxNotebook *notebook;
 		
 		void initMenuBar();
 		void handleExit();

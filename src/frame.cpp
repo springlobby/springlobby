@@ -41,42 +41,34 @@ settings_frame::~settings_frame()
 
 void settings_frame::CreateGUIControls()
 {
+	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP);
+	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
 
-	Options = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP);
-	Options->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
+	simpleTab = new tab_simple(notebook,ID_SIMPLE);
+		
+	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
+       
+    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
+   
+    uiTab = new tab_ui(notebook,ID_UI);
+    notebook->AddPage(uiTab, wxT("UI Options"));
 
-//	Simple = new wxPanel(Options, ID_SIMPLE, wxPoint(4,24), wxSize(724,552));
-//	Simple->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
-//	Simple->Add(new wxString(wxT("nothing here yet")));
-//	Options->AddPage(Simple, wxT("Simple"));
-	simpleTab = new tab_simple(Options,ID_SIMPLE);
-	//Options->AddPage(simpleTab,wxT("Simple"));
-	
-	qualityTab = new tab_quality_video(Options,ID_QUALITY_VIDEO);
-    //Options->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
-    
-    detailTab = new tab_render_detail(Options,ID_RENDER_DETAIL);
-    //Options->AddPage(detailTab, wxT("Render Detail"));
-    
-    uiTab = new tab_ui(Options,ID_UI);
-    Options->AddPage(uiTab, wxT("UI Options"));
+    audioTab = new audio_panel(notebook,ID_AUDIO);
+    notebook->AddPage(audioTab, wxT("Audio"));
 
-    audioTab = new audio_panel(Options,ID_AUDIO);
-	Options->AddPage(audioTab, wxT("Audio"));
-
-	debugTab = new debug_panel(Options,ID_DEBUG);
-	Options->AddPage(debugTab, wxT("Debug"));
+	debugTab = new debug_panel(notebook,ID_DEBUG);
+	notebook->AddPage(debugTab, wxT("Debug"));
 	
 	simpleTab->setTabs(detailTab,qualityTab);
 
 	switch(OptionsHandler.getMode()){
 		case SET_MODE_EXPERT: {
-			Options->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
-			Options->AddPage(detailTab, wxT("Render Detail"));
+			notebook->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
+			notebook->AddPage(detailTab, wxT("Render Detail"));
 		}
 			break;
 		case SET_MODE_SIMPLE: {
-			Options->InsertPage(0,simpleTab,wxT("SIMPLE"));
+			notebook->InsertPage(0,simpleTab,wxT("SIMPLE"));
 		}
 		break;
 	}
@@ -155,9 +147,9 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		case ID_MENUITEM_SIMPLE: {
 			if (OptionsHandler.getMode()==SET_MODE_EXPERT) {
 				OptionsHandler.setMode(SET_MODE_SIMPLE);
-				Options->InsertPage(0,simpleTab,wxT("SIMPLE"));
-				Options->RemovePage(5);
-				Options->RemovePage(4);
+				notebook->InsertPage(0,simpleTab,wxT("SIMPLE"));
+				notebook->RemovePage(5);
+				notebook->RemovePage(4);
 				if (!OptionsHandler.getDisableWarning()){
 					wxMessageBox(wxT("Changes made on Quality/Detail tab in expert mode"
 							"\n will be lost if you change simple options again."), wxT(""), wxOK, this);
@@ -167,9 +159,9 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		case ID_MENUITEM_EXPERT: {
 			if (OptionsHandler.getMode()==SET_MODE_SIMPLE) {
 				OptionsHandler.setMode(SET_MODE_EXPERT);
-			    Options->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
-			    Options->AddPage(detailTab, wxT("Render Detail"));
-			    Options->RemovePage(0);
+				notebook->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
+				notebook->AddPage(detailTab, wxT("Render Detail"));
+				notebook->RemovePage(0);
 			}
 		} break;
 		case ID_MENUITEM_DISABLE_WARN:{

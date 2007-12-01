@@ -49,9 +49,11 @@ public:
 };
 typedef std::map<std::string,int> intMap;
 
+//TODO figure out why length = 3 doesnt work
 const wxString levels_low_To_High[4] = { wxT("low"),wxT("medium"),wxT("high")};
 const wxString levels_vlow_To_vHigh[5] = { wxT("very low"),wxT("low"),wxT("medium"),wxT("high"),wxT("very high")};
 
+//TODO generally rethink preset values
 /** RENDER_DETAIL ***************************************************************/
 const int vl_ShadowMapSize[3] = 		{ 1024,		4096,	8192 	}; //shadowmapsize
 const int vl_TreeRadius[3] = 			{ 600,		1900,	3000 	}; //tree view distance
@@ -107,6 +109,7 @@ const int prVal_RenderQuality_size = 11;
 const presetValues<int> prVal_RenderQuality[prVal_RenderQuality_size] = { pr_DepthBufferBits, pr_ReflectiveWater, pr_Shadows, pr_3DTrees,
 		pr_AdvSky, pr_DynamicSky, pr_SmoothPoints, pr_SmoothLines,pr_FSAA, pr_FSAALevel, pr_AdvUnitShading };
 
+//TODO add more video modes
 /** VIDEO MODES ********************************************************/
 const int vl_Resolution_X[3] = { 800, 1024, 1280 };
 const int vl_Resolution_Y[3] = { 600,  768, 1024 };

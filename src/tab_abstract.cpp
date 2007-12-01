@@ -335,6 +335,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 	}
 }
 
+//TODO is this still needed?
 wxArrayString abstract_panel::wxArrayStringFromCStringArray(const wxString* stdAr){
 	wxArrayString result = wxArrayString();
 	for (int i=0;i<4;++i)
@@ -342,7 +343,7 @@ wxArrayString abstract_panel::wxArrayStringFromCStringArray(const wxString* stdA
 	return result;
 }
 
-
+//TODO inquire about floatsettings
 bool abstract_panel::saveSettings() {
     
     for (intMap::iterator i = intSettings.begin(); i != intSettings.end();++i)
@@ -361,8 +362,10 @@ bool abstract_panel::saveSettings() {
     //test ???
     return true; 
 }
+
+//TODO what good is this actually
 void abstract_panel::update(wxIdleEvent& event) {
-	//event.RequestMore();
+	
 }
 
 void abstract_panel::updateControls(int what_to_update)

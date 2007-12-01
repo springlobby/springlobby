@@ -184,7 +184,7 @@ template<typename Type> Type fromString(const std::string& s) {
         return r;
 }
 
-//TODO CHANGE
+//TODO guard properly
 #ifndef JUFGDJ
 	#define STD_STRING(v) std::string((const char*)v.mb_str(wxConvUTF8))
 	#ifdef WIN32
@@ -205,6 +205,7 @@ template<typename Type> Type fromString(const std::string& s) {
 //const wxWindowID _1 = wxWindowID(-1);
 const wxPoint zeroPoint = wxPoint(0,0);
 
+//TODO find reasonable default values
 const Control RO_SLI[9] = {
 	{"shadow-map size",              "ShadowMapSize",       ID_RO_SLI_0,	"2048"	},
 	{"tree view-distance",           "TreeRadius",          ID_RO_SLI_1,	"3000"	},

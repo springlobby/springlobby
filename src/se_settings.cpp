@@ -18,7 +18,6 @@ void se_settings::save()
 se_settings::se_settings()
 {
 	se_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
-	  //if ( !se_config->Exists( _T("/Server") ) ) SetDefaultSettings();
 }
 
 se_settings::~se_settings()
