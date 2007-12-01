@@ -126,7 +126,7 @@ void settings_frame::resetSettings()
 {
 	abstract_panel::loadDefaults();
 	uiTab->updateControls(UPDATE_ALL);
-	//simpleTab->updateControls(UPDATE_ALL);
+	simpleTab->updateControls(UPDATE_ALL);
 	detailTab->updateControls(UPDATE_ALL);
 	qualityTab->updateControls(UPDATE_ALL);
 	debugTab->updateControls(UPDATE_ALL);
