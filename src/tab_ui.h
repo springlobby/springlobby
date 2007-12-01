@@ -34,10 +34,19 @@ class tab_ui : public abstract_panel
 		void initCameraSizer(wxStaticBoxSizer*);
 		void initScrollSpeedSizer(wxStaticBoxSizer* );
 		void initUiOptSizer(wxStaticBoxSizer* );
-		void updateControls();
+		void updateControls(int what_to_update);
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+		wxSlider** ctrl_scroll_slider;
+		const int ctrl_scroll_slider_size = 5;
+		wxRadioButton* ctrl_cam_radio0;
+		wxRadioButton* ctrl_cam_radio1;
+		wxRadioButton* ctrl_cam_radio2;
+		wxRadioButton* ctrl_cam_radio3;
+		wxRadioButton* ctrl_cam_radio4;
+		wxCheckBox** ctrl_ui_chkb;
+		const int ctrl_ui_chkb_size = 13;
 		DECLARE_EVENT_TABLE()
 };
 

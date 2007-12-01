@@ -107,15 +107,15 @@ void tab_simple::OnComboBoxChange(wxCommandEvent& event)
 	abstract_panel::OnComboBoxChange(event);
 	switch( event.GetId()){
 		case ID_SIMPLE_MODE_CBX: {
-			qualityTab->updateControls(true);
+			qualityTab->updateControls(UPDATE_VIDEO_MODE);
 			break;
 		}
 		case ID_SIMPLE_DETAIL_CBX: {
-			detailTab->updateControls(false);
+			detailTab->updateControls(UPDATE_ALL);
 			break;
 		}
 		case ID_SIMPLE_QUAL_CBX: {
-			qualityTab->updateControls(false);
+			qualityTab->updateControls(UPDATE_QA_BOXES);
 			break;
 		}
 	}

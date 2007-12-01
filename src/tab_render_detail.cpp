@@ -72,7 +72,7 @@ tab_render_detail::tab_render_detail(wxWindow *parent, wxWindowID id , const wxS
 		    SetSizer(parentSizer, true); // true --> delete old sizer if present
 	
 }
-void tab_render_detail::updateControls(bool dummy)
+void tab_render_detail::updateControls(int what_to_update)
 {
 	for (int i = 0; i < ctrl_detail_sliders_size; i++) {
 		ctrl_detail_sliders[i]->SetValue(intSettings[RO_SLI[i].key]);

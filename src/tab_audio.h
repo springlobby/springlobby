@@ -35,6 +35,11 @@ class audio_panel : public abstract_panel
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+		
+		wxSlider* slider0;
+		wxSlider* slider1;
+		wxSlider* slider2;
+		
 		DECLARE_EVENT_TABLE()
 };
 

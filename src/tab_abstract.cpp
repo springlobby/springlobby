@@ -312,7 +312,7 @@ void abstract_panel::update(wxIdleEvent& event) {
 	//event.RequestMore();
 }
 
-void abstract_panel::updateControls(bool a)
+void abstract_panel::updateControls(int what_to_update)
 {}
 
 BEGIN_EVENT_TABLE(abstract_panel, wxPanel)

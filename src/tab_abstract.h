@@ -49,7 +49,7 @@ class abstract_panel : public wxPanel
 		static bool saveSettings();
 		static void enableExpertMode(bool);
 		static bool isExpertModeEnabled();
-		virtual void updateControls(bool);
+		virtual void updateControls(int what_to_update);
         
     protected:
         void OnClose(wxCloseEvent& event);

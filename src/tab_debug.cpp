@@ -23,9 +23,9 @@
 #include "tabs.h"
 
 void debug_panel::initDebugSizer(wxStaticBoxSizer* sizer) {
-	wxSlider* slider = new wxSlider(this, DO_SLI[0].id, configHandler.GetInt(DO_SLI[0].key,fromString<int>(DO_SLI[0].def)), 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
-	wxCheckBox* checkBox0 = new wxCheckBox(this, DO_CBOX[0].id, _S(DO_CBOX[0].lbl));
-	wxCheckBox* checkBox1 = new wxCheckBox(this, DO_CBOX[1].id, _S(DO_CBOX[1].lbl));
+	slider = new wxSlider(this, DO_SLI[0].id, configHandler.GetInt(DO_SLI[0].key,fromString<int>(DO_SLI[0].def)), 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	checkBox0 = new wxCheckBox(this, DO_CBOX[0].id, _S(DO_CBOX[0].lbl));
+	checkBox1 = new wxCheckBox(this, DO_CBOX[1].id, _S(DO_CBOX[1].lbl));
 
 	checkBox0->SetValue(configHandler.GetInt(DO_CBOX[0].key,fromString<int>(DO_SLI[0].def)));
 	checkBox1->SetValue(configHandler.GetInt(DO_CBOX[1].key,fromString<int>(DO_SLI[1].def)));
@@ -61,7 +61,9 @@ debug_panel::debug_panel(wxWindow *parent, wxWindowID id , const wxString &title
 }
 void debug_panel::updateControls()
 {
-	
+	checkBox0->SetValue(intSettings[DO_CBOX[0].key]);
+	checkBox1->SetValue(intSettings[DO_CBOX[1].key]);
+	slider->SetValue(intSettings[DO_SLI[0].key]);
 }
 debug_panel::~debug_panel(void) {
 
