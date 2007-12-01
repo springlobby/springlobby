@@ -131,6 +131,9 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				Options->InsertPage(0,simpleTab,wxT("SIMPLE"));
 				Options->RemovePage(5);
 				Options->RemovePage(4);
+				wxMessageBox(wxT("Changes made on Quality/Detail tab in expert mode"
+						"\n will be lost if you change simple options again."), wxT(""), wxOK, this);
+				//simpleTab->updateControls(UPDATE_EXPERTMODE_WARNING_ON_SIMPLETAB);
 			}
 		} break;
 		case ID_MENUITEM_EXPERT: {
