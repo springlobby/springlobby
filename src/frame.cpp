@@ -89,16 +89,17 @@ void settings_frame::CreateGUIControls()
 }
 
 void settings_frame::initMenuBar() {
-	wxMenu* menuFile = new wxMenu();
+	menuFile = new wxMenu();
 
 	menuFile->Append(ID_MENUITEM_SAVE, wxT("Save settings"));
 	menuFile->Append(ID_MENUITEM_RESET, wxT("Reset settings to default values"));
+	menuFile->AppendCheckItem(ID_MENUITEM_DISABLE_WARN, wxT("disable expert mode warning"));
 	menuFile->AppendSeparator();
 	menuFile->Append(ID_MENUITEM_QUIT, wxT("Quit"));
 
-  //  menuFile->Enable(ID_MENUITEM_RESET,true);
+	menuFile->Check(ID_MENUITEM_DISABLE_WARN,OptionsHandler.getDisableWarning());
 	
-	wxMenu* menuMode = new wxMenu();
+	menuMode = new wxMenu();
 	menuMode->AppendRadioItem(ID_MENUITEM_SIMPLE,wxT("simple (few options)"));
 	menuMode->AppendRadioItem(ID_MENUITEM_EXPERT,wxT("expert (all options"));
         
@@ -112,6 +113,9 @@ void settings_frame::initMenuBar() {
 		}
 		break;
 	}
+	
+	//wxMenu* menuMode = new wxMenu();
+	
 	
 	wxMenuBar* menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, wxT("File"));
@@ -154,9 +158,10 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				Options->InsertPage(0,simpleTab,wxT("SIMPLE"));
 				Options->RemovePage(5);
 				Options->RemovePage(4);
-				wxMessageBox(wxT("Changes made on Quality/Detail tab in expert mode"
-						"\n will be lost if you change simple options again."), wxT(""), wxOK, this);
-				//simpleTab->updateControls(UPDATE_EXPERTMODE_WARNING_ON_SIMPLETAB);
+				if (!OptionsHandler.getDisableWarning()){
+					wxMessageBox(wxT("Changes made on Quality/Detail tab in expert mode"
+							"\n will be lost if you change simple options again."), wxT(""), wxOK, this);
+				}
 			}
 		} break;
 		case ID_MENUITEM_EXPERT: {
@@ -166,6 +171,9 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 			    Options->AddPage(detailTab, wxT("Render Detail"));
 			    Options->RemovePage(0);
 			}
+		} break;
+		case ID_MENUITEM_DISABLE_WARN:{
+			OptionsHandler.setDisableWarning(menuFile->IsChecked(ID_MENUITEM_DISABLE_WARN));
 		} break;
 	}
 }

@@ -67,6 +67,9 @@ class settings_frame : public wxFrame
 		
 		wxPanel panelArray[6];
 		
+		wxMenu* menuFile;
+		wxMenu* menuMode;
+		
 		wxNotebook *Options;
 		
 		void initMenuBar();
