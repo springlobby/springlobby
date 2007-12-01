@@ -1,6 +1,7 @@
 #include "configHandler.h"
 #include "frame_get_usync.h"
 #include <iostream>
+#include "se_settings.h"
 #ifndef RUNMODE_STANDALONE
 	// if extra include for springlobby unitsync method needed
 #endif
@@ -8,12 +9,6 @@
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 #define ASSERT_LOGIC(cond,msg) if(!(cond)){std::cout << (std::string("logic ")+msg);}
 #define ASSERT_RUNTIME(cond,msg) if(!(cond)){std::cout << (std::string("runtime ")+msg);}
-
-inline wxString _S (const std::string str)
-{
-	return wxString(str.c_str(),*wxConvCurrent);
-}
-
 
 ConfigHandler* ConfigHandler::instance=0;
 
@@ -24,7 +19,7 @@ bool ConfigHandler::LoadUnitSyncLib( const wxString& springdir, const wxString& 
 	wxSetWorkingDirectory( wxT(".") );
 
 	// Load the library.
-	std::string loc = getUsyncLoc();
+	std::string loc = OptionsHandler.getUsyncLoc();//getUsyncLoc();
 	
 
 	// Check if library exists

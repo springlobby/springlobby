@@ -1,5 +1,15 @@
 #include "se_settings.h"
 
+se_settings* se_settings::instance = 0;
+
+se_settings& se_settings::getInstance()
+{
+	if (!instance){
+			instance = new se_settings();
+	}
+	return *instance;
+}
+
 se_settings::se_settings()
 {
 	se_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
