@@ -10,6 +10,11 @@ se_settings& se_settings::getInstance()
 	return *instance;
 }
 
+void se_settings::save()
+{
+	se_config->Flush();
+}
+
 se_settings::se_settings()
 {
 	se_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
@@ -18,6 +23,7 @@ se_settings::se_settings()
 
 se_settings::~se_settings()
 {
+	delete se_config;
 }
 
 int se_settings::getMode()

@@ -44,11 +44,8 @@ class abstract_panel : public wxPanel
 		static intMap intSettings;
 		static stringMap stringSettings;
 		static floatMap floatSettings;
-		static bool expertModeEnabled;
 		static bool settingsChanged;
 		static bool saveSettings();
-		static void enableExpertMode(bool);
-		static bool isExpertModeEnabled();
 
 		static void loadDefaults();
 		virtual void updateControls(int what_to_update);

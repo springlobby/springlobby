@@ -21,7 +21,7 @@
 **/
 
 #include "frame.h"
-
+#include "se_settings.h"
 
 BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_CLOSE(settings_frame::OnClose)
@@ -50,7 +50,7 @@ void settings_frame::CreateGUIControls()
 //	Simple->Add(new wxString(wxT("nothing here yet")));
 //	Options->AddPage(Simple, wxT("Simple"));
 	simpleTab = new tab_simple(Options,ID_SIMPLE);
-	Options->AddPage(simpleTab,wxT("Simple"));
+	//Options->AddPage(simpleTab,wxT("Simple"));
 	
 	qualityTab = new tab_quality_video(Options,ID_QUALITY_VIDEO);
     //Options->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
@@ -68,7 +68,18 @@ void settings_frame::CreateGUIControls()
 	Options->AddPage(debugTab, wxT("Debug"));
 	
 	simpleTab->setTabs(detailTab,qualityTab);
-	
+
+	switch(OptionsHandler.getMode()){
+		case SET_MODE_EXPERT: {
+			Options->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
+			Options->AddPage(detailTab, wxT("Render Detail"));
+		}
+			break;
+		case SET_MODE_SIMPLE: {
+			Options->InsertPage(0,simpleTab,wxT("SIMPLE"));
+		}
+		break;
+	}
 
 	SetTitle(wxT("Settings++"));
 	SetIcon(wxNullIcon);
@@ -91,6 +102,17 @@ void settings_frame::initMenuBar() {
 	menuMode->AppendRadioItem(ID_MENUITEM_SIMPLE,wxT("simple (few options)"));
 	menuMode->AppendRadioItem(ID_MENUITEM_EXPERT,wxT("expert (all options"));
         
+	switch(OptionsHandler.getMode()){
+	case SET_MODE_EXPERT: {
+			menuMode->Check(ID_MENUITEM_EXPERT,true);
+		}
+			break;
+		case SET_MODE_SIMPLE: {
+			menuMode->Check(ID_MENUITEM_SIMPLE,true);
+		}
+		break;
+	}
+	
 	wxMenuBar* menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, wxT("File"));
 	menuBar->Append(menuMode, wxT("Mode"));
@@ -105,6 +127,7 @@ void settings_frame::handleExit() {
 			 (abstract_panel::settingsChanged) = false;
 		}
     }
+    OptionsHandler.save();
     Destroy();
     
 }
@@ -126,8 +149,8 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 			}
 		} break;
 		case ID_MENUITEM_SIMPLE: {
-			if (abstract_panel::isExpertModeEnabled()) {
-				abstract_panel::enableExpertMode(false);
+			if (OptionsHandler.getMode()==SET_MODE_EXPERT) {
+				OptionsHandler.setMode(SET_MODE_SIMPLE);
 				Options->InsertPage(0,simpleTab,wxT("SIMPLE"));
 				Options->RemovePage(5);
 				Options->RemovePage(4);
@@ -137,8 +160,8 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 			}
 		} break;
 		case ID_MENUITEM_EXPERT: {
-			if (!abstract_panel::isExpertModeEnabled()) {
-				abstract_panel::enableExpertMode(true);
+			if (OptionsHandler.getMode()==SET_MODE_SIMPLE) {
+				OptionsHandler.setMode(SET_MODE_EXPERT);
 			    Options->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
 			    Options->AddPage(detailTab, wxT("Render Detail"));
 			    Options->RemovePage(0);

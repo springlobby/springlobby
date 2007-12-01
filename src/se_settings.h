@@ -30,6 +30,7 @@ public:
 	std::string getUsyncLoc();
 	void setUsyncLoc(std::string);
 	static se_settings& getInstance();
+	void save();
 	
 private:
 	wxConfig* se_config;

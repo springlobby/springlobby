@@ -26,8 +26,6 @@ intMap abstract_panel::intSettings;
 stringMap abstract_panel::stringSettings;
 floatMap abstract_panel::floatSettings;
 bool abstract_panel::settingsChanged = false;
-bool abstract_panel::expertModeEnabled = false;
- 
     
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : wxPanel(parent, id, pos, size, style,title) {
@@ -36,16 +34,6 @@ abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString 
 
 abstract_panel::~abstract_panel(void) {
 
-}
-
-void abstract_panel::enableExpertMode(bool arg)
-{
-	expertModeEnabled = arg;
-}
-
-bool abstract_panel::isExpertModeEnabled()
-{
-	return expertModeEnabled;
 }
 
 void abstract_panel::loadDefaults()
