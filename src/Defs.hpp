@@ -150,6 +150,9 @@
 
 #include <wx/wx.h>
 #include <string>
+#include <iostream>
+//#include <fstream>
+#include <sstream>
 
 struct Control {
     //const char lbl[64];
@@ -166,6 +169,7 @@ inline wxString _S (const std::string str)
 }
 
 template<typename Type> void toString(std::string& s, Type t) {
+	//using namespace std;
 			std::stringstream ss;
 			ss << t;
 			ss >> s;
@@ -178,6 +182,24 @@ template<typename Type> Type fromString(const std::string& s) {
         ss >> r;
         return r;
 }
+
+//TODO CHANGE
+#ifndef JUFGDJ
+	#define STD_STRING(v) std::string((const char*)v.mb_str(wxConvUTF8))
+	#ifdef WIN32
+	  #define CHOOSE_DLL _("Library (*.dll)|*.dll|Any File (*.*)|*.*")
+	  #define USYNC_CALL_CONV __stdcall
+	  #define SPRING_BIN _T("spring.exe")
+	  #define UNITSYNC_BIN _T("unitsync.dll")
+	  #define DOS_TXT true
+	#else
+	  #define CHOOSE_DLL _("Library (*.so)|*.so|Any File (*.*)|*.*")
+	  #define USYNC_CALL_CONV
+	  #define SPRING_BIN _T("spring")
+	  #define UNITSYNC_BIN _T("unitsync.so")
+	  #define DOS_TXT false
+	#endif
+#endif
 
 //const wxWindowID _1 = wxWindowID(-1);
 const wxPoint zeroPoint = wxPoint(0,0);

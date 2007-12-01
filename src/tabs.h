@@ -41,6 +41,7 @@
 #include "tab_ui.h"
 #include "tab_simple.h"
 #include "presets.h"
+//#include "se_settings.h"
 
 
 #define TAB_SIZE wxSize(700,500)
