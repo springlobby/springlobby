@@ -53,10 +53,10 @@ void settings_frame::CreateGUIControls()
 	Options->AddPage(simpleTab,wxT("Simple"));
 	
 	qualityTab = new tab_quality_video(Options,ID_QUALITY_VIDEO);
-    Options->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
+    //Options->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
     
     detailTab = new tab_render_detail(Options,ID_RENDER_DETAIL);
-    Options->AddPage(detailTab, wxT("Render Detail"));
+    //Options->AddPage(detailTab, wxT("Render Detail"));
     
     uiTab = new tab_ui(Options,ID_UI);
     Options->AddPage(uiTab, wxT("UI Options"));
@@ -85,10 +85,15 @@ void settings_frame::initMenuBar() {
 	menuFile->AppendSeparator();
 	menuFile->Append(ID_MENUITEM_QUIT, wxT("Quit"));
 
-    menuFile->Enable(ID_MENUITEM_RESET,true);
+  //  menuFile->Enable(ID_MENUITEM_RESET,true);
+	
+	wxMenu* menuMode = new wxMenu();
+	menuMode->AppendRadioItem(ID_MENUITEM_SIMPLE,wxT("simple (few options)"));
+	menuMode->AppendRadioItem(ID_MENUITEM_EXPERT,wxT("expert (all options"));
         
 	wxMenuBar* menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, wxT("File"));
+	menuBar->Append(menuMode, wxT("Mode"));
 
 	SetMenuBar(menuBar);
 }
@@ -120,18 +125,41 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 						resetSettings();
 			}
 		} break;
+		case ID_MENUITEM_SIMPLE: {
+			if (abstract_panel::isExpertModeEnabled()) {
+				abstract_panel::enableExpertMode(false);
+				Options->InsertPage(0,simpleTab,wxT("SIMPLE"));
+				Options->RemovePage(5);
+				Options->RemovePage(4);
+				wxMessageBox(wxT("Changes made on Quality/Detail tab in expert mode"
+						"\n will be lost if you change simple options again."), wxT(""), wxOK, this);
+				//simpleTab->updateControls(UPDATE_EXPERTMODE_WARNING_ON_SIMPLETAB);
+			}
+		} break;
+		case ID_MENUITEM_EXPERT: {
+			if (!abstract_panel::isExpertModeEnabled()) {
+				abstract_panel::enableExpertMode(true);
+			    Options->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
+			    Options->AddPage(detailTab, wxT("Render Detail"));
+			    Options->RemovePage(0);
+			}
+		} break;
 	}
 }
 void settings_frame::resetSettings()
 {
 	abstract_panel::loadDefaults();
+	updateAllControls();
+}
+
+void settings_frame::updateAllControls()
+{
 	uiTab->updateControls(UPDATE_ALL);
 	simpleTab->updateControls(UPDATE_ALL);
 	detailTab->updateControls(UPDATE_ALL);
 	qualityTab->updateControls(UPDATE_ALL);
 	debugTab->updateControls(UPDATE_ALL);
 	audioTab->updateControls(UPDATE_ALL);
-	
 }
 void settings_frame::OnClose(wxCloseEvent& event)
 {
