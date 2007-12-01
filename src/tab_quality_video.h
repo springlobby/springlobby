@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -35,10 +35,23 @@ class tab_quality_video : public abstract_panel
 		void initQualitySizer(wxFlexGridSizer* );
 		void initAASizer(wxFlexGridSizer* );
 		void initZBufferSizer(wxFlexGridSizer* );
-
+		void updateControls(int);
 	private:
 		void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+
+		wxComboBox* ctrl_waterQ_CBox;
+		wxCheckBox** ctrl_vo_Boxes;
+		static const int ctrl_vo_Boxes_size = 3; 
+		wxTextCtrl* ctrl_x_res;
+		wxTextCtrl* ctrl_y_res;
+		wxCheckBox** ctrl_qa_Boxes;
+		static const int ctrl_qa_Boxes_size = 10;
+		wxSlider* ctrl_fsaa_slider;
+		
+		wxRadioButton* ctrl_z_radio1;
+		wxRadioButton* ctrl_z_radio2;
+		
     protected:
 		DECLARE_EVENT_TABLE()
 };

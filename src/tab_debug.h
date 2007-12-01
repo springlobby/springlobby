@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -31,10 +31,14 @@ class debug_panel : public abstract_panel
 		virtual ~debug_panel();
 
 		void initDebugSizer(wxStaticBoxSizer*);
-
+		void updateControls(int);
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+		wxCheckBox* checkBox0 ;
+		wxCheckBox* checkBox1 ;
+		wxSlider* slider;
+		
 		DECLARE_EVENT_TABLE()
 };
 

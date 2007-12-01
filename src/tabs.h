@@ -38,10 +38,14 @@
 #include "tab_abstract.h"
 #include "tab_audio.h"
 #include "tab_debug.h"
-
-#include "tab_mouse.h"
-
+#include "tab_ui.h"
 #include "tab_simple.h"
-//#include "tab_video.h"
+#include "presets.h"
+//#include "se_settings.h"
+
 
 #define TAB_SIZE wxSize(700,500)
+#define UPDATE_VIDEO_MODE 	2002
+#define UPDATE_QA_BOXES	  	2001
+#define UPDATE_ALL			2000
+#define UPDATE_EXPERTMODE_WARNING_ON_SIMPLETAB 2003

@@ -16,9 +16,9 @@
 #include <wx/textfile.h>
 
 #ifdef WIN32
-  #define USYNC_CALL_CONV __stdcall
+  	#define USYNC_CALL_CONV __stdcall
 #else
-  #define USYNC_CALL_CONV
+  	#define USYNC_CALL_CONV
 #endif
 
 #define configHandler (ConfigHandler::GetInstance())
@@ -28,6 +28,9 @@ typedef const char* (USYNC_CALL_CONV *GetSpringConfigString)(const char* , const
 
 typedef void (USYNC_CALL_CONV *SetSpringConfigString)(const char* , const char* );
 typedef void (USYNC_CALL_CONV *SetSpringConfigInt)(const char* , int );
+
+typedef int (USYNC_CALL_CONV *InitPtr)(bool, int);
+typedef void (USYNC_CALL_CONV *UnInitPtr)();
 
 class wxDynamicLibrary;
 
@@ -50,7 +53,7 @@ public:
 	//float GetFloat(const std::string& name, const float def) ;
 
 	static ConfigHandler& GetInstance();
-	
+	void FreeUnitSyncLib();
 	static void Deallocate();
 	ConfigHandler(): is_loaded(false){};
 	virtual ~ConfigHandler();
@@ -69,6 +72,9 @@ protected:
 	
 	SetSpringConfigString h_SetSpringConfigString;
 	SetSpringConfigInt h_SetSpringConfigInt;
+	
+	InitPtr m_init;
+	    UnInitPtr m_uninit;
 	
 	bool is_loaded;
 };

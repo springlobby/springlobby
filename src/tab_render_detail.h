@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -32,10 +32,14 @@ class tab_render_detail : public abstract_panel
 		virtual ~tab_render_detail();
 
 		void initRendererSizer(wxFlexGridSizer*,wxFlexGridSizer*);
-
+		void updateControls(int what_to_update);
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+		
+		wxSlider** ctrl_detail_sliders;
+		static const int ctrl_detail_sliders_size = 9;
+		
 		DECLARE_EVENT_TABLE()
 };   
     

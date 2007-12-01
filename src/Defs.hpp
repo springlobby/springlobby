@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -44,7 +44,10 @@
 #define ID_MENUITEM_SAVE  50
 #define ID_MENUITEM_RESET  51
 #define ID_MENUITEM_QUIT  52
-//#define ID_MENUITEM_MOUSE 60
+#define ID_MENUITEM_DISABLE_WARN 53
+#define ID_MENUITE_MODE 60
+#define ID_MENUITEM_EXPERT 62
+#define ID_MENUITEM_SIMPLE 61
 
 // ParentWin TextInput IDs
 #define ID_RES_CHOICES_LBOX_X 1111
@@ -73,6 +76,12 @@
 
 // ParentWin Video Options slider IDs
 #define ID_VO_SLI_0 200
+
+// tab_simple controls
+#define ID_SIMPLE_QUAL_CBX		390
+#define ID_SIMPLE_DETAIL_CBX	391
+#define ID_SIMPLE_MODE_CBX		392
+
 
 // UI Options checkbox IDs
 #define ID_WINDOWP_UI_CBOX_1  360
@@ -142,6 +151,9 @@
 
 #include <wx/wx.h>
 #include <string>
+#include <iostream>
+//#include <fstream>
+#include <sstream>
 
 struct Control {
     //const char lbl[64];
@@ -158,6 +170,7 @@ inline wxString _S (const std::string str)
 }
 
 template<typename Type> void toString(std::string& s, Type t) {
+	//using namespace std;
 			std::stringstream ss;
 			ss << t;
 			ss >> s;
@@ -171,9 +184,28 @@ template<typename Type> Type fromString(const std::string& s) {
         return r;
 }
 
+//TODO guard properly
+#ifndef JUFGDJ
+	#define STD_STRING(v) std::string((const char*)v.mb_str(wxConvUTF8))
+	#ifdef WIN32
+	  #define CHOOSE_DLL _("Library (*.dll)|*.dll|Any File (*.*)|*.*")
+	  #define USYNC_CALL_CONV __stdcall
+	  #define SPRING_BIN _T("spring.exe")
+	  #define UNITSYNC_BIN _T("unitsync.dll")
+	  #define DOS_TXT true
+	#else
+	  #define CHOOSE_DLL _("Library (*.so)|*.so|Any File (*.*)|*.*")
+	  #define USYNC_CALL_CONV
+	  #define SPRING_BIN _T("spring")
+	  #define UNITSYNC_BIN _T("unitsync.so")
+	  #define DOS_TXT false
+	#endif
+#endif
+
 //const wxWindowID _1 = wxWindowID(-1);
 const wxPoint zeroPoint = wxPoint(0,0);
 
+//TODO find reasonable default values
 const Control RO_SLI[9] = {
 	{"shadow-map size",              "ShadowMapSize",       ID_RO_SLI_0,	"2048"	},
 	{"tree view-distance",           "TreeRadius",          ID_RO_SLI_1,	"3000"	},
@@ -251,11 +283,11 @@ const Control UI_CBOX[14] = {
 
 
 const Control MO_SLI[5] = {
-	{"overhead scroll speed (0 to disable)",    "OverheadScrollSpeed",    ID_MO_SLI_0,	"10"},
-	{"rotatable overhead scroll speed (0 to disable)", "RotOverheadScrollSpeed", ID_MO_SLI_1,	"0" },
-	{"TW scroll speed (0 to disable)",          "TWScrollSpeed",          ID_MO_SLI_2,	"0" },
-	{"FPS scroll speed (0 to disable)",         "FPSScrollSpeed",         ID_MO_SLI_3,	"0" },
-	{"FC scroll speed (0 to disable)",          "CamFreeScrollSpeed",     ID_MO_SLI_4,	"0" }
+	{"Overhead Camera scroll speed",    "OverheadScrollSpeed",    ID_MO_SLI_0,	"10"},
+	{"Rotatable overhead Camera scroll speed", "RotOverheadScrollSpeed", ID_MO_SLI_1,	"0" },
+	{"Total War Camera scroll speed",          "TWScrollSpeed",          ID_MO_SLI_2,	"0" },
+	{"First Person Camera scroll speed",         "FPSScrollSpeed",         ID_MO_SLI_3,	"0" },
+	{"Free Camera scroll speed",          "CamFreeScrollSpeed",     ID_MO_SLI_4,	"0" }
 };
 
 const Control MO_SLI_EXT[5] = {
@@ -313,7 +345,7 @@ const Control RC_TEXT[2] = {
 #define WX_DEF_S wxSize(-1, -1)
 #define WX_SLI_S wxSize(200, -1)
 
-
+/** not used
 #define NUM_DEFAULTS 88
 const char DEFAULTS[NUM_DEFAULTS][64] = {
 	"3DTrees=1",
@@ -415,6 +447,6 @@ const char DEFAULTS[NUM_DEFAULTS][64] = {
 	"SoundVolume=100",
 	"UnitReplySoundVolume=80"
 };
-
+**/
 
 #endif

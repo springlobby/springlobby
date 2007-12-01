@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -20,8 +20,8 @@
     along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#ifndef __PROJECT2FRM_h__
-#define __PROJECT2FRM_h__
+#ifndef __SETTINGS_FRAME_h__
+#define __SETTINGS_FRAME_h__
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
@@ -36,38 +36,41 @@
 
 #include <wx/panel.h>
 #include <wx/notebook.h>
-
-#undef Project2Frm_STYLE
-#define Project2Frm_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX
+#include "tabs.h"
 
 
+//TODO use icon
 class settings_frame : public wxFrame
 {
 	private:
 		DECLARE_EVENT_TABLE();
 		
 	public:
-		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = Project2Frm_STYLE);
+		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style =  wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX);
 		virtual ~settings_frame();
 		
 	private:
-		wxPanel *Simple;
-		wxPanel *Debug;
-		wxPanel *Mouse;
-		wxPanel *Audio;
-		wxPanel *General;
-		wxPanel *Video;
-		wxPanel *Rendering;
+		tab_simple* simpleTab;
+		tab_ui* uiTab;
+		audio_panel* audioTab;
+		debug_panel* debugTab;
+
+		abstract_panel* detailTab;
+		abstract_panel* qualityTab;
 		
-		wxPanel *Render_Detail;
+		wxPanel panelArray[6];
 		
-		wxNotebook *Options;
+		wxMenu* menuFile;
+		wxMenu* menuMode;
+		
+		wxNotebook *notebook;
 		
 		void initMenuBar();
 		void handleExit();
 		enum
 		{
 			////GUI Enum Control ID Start
+			ID_UI = 1013,
 			ID_QUALITY_VIDEO = 1012,
 			ID_RENDER_DETAIL = 1011,
 			ID_SIMPLE = 1010,
@@ -84,6 +87,8 @@ class settings_frame : public wxFrame
 		void OnClose(wxCloseEvent& event);
 		void OnMenuChoice(wxCommandEvent& event);
 		void CreateGUIControls();
+		void resetSettings();
+		void updateAllControls();
 };
 
 #endif

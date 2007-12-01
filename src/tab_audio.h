@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -23,6 +23,7 @@
 #ifndef __TAB_AUDIO_h__
 #define __TAB_AUDIO_h__
 
+//TODO merge with debug?
 class audio_panel : public abstract_panel
 {
 
@@ -31,10 +32,15 @@ class audio_panel : public abstract_panel
 		virtual ~audio_panel();
 
 		void initAudioSizer(wxStaticBoxSizer*);
-	
+		void updateControls(int);
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+		
+		wxSlider* slider0;
+		wxSlider* slider1;
+		wxSlider* slider2;
+		
 		DECLARE_EVENT_TABLE()
 };
 

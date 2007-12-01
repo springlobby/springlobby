@@ -1,16 +1,19 @@
 #include "configHandler.h"
+#include "frame_get_usync.h"
 #include <iostream>
-
+#include "se_settings.h"
+//TODO Team-Decision: might not be necessary because of shared config
+#ifndef RUNMODE_STANDALONE
+	// if extra include for springlobby unitsync method needed
+#endif
+//TODO find suitable place, at least guard it
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
-
-inline wxString _S (const std::string str)
-{
-	return wxString(str.c_str(),*wxConvCurrent);
-}
-
+#define ASSERT_LOGIC(cond,msg) if(!(cond)){std::cerr << (std::string("logic ")+msg);}
+#define ASSERT_RUNTIME(cond,msg) if(!(cond)){std::cerr << (std::string("runtime ")+msg);}
 
 ConfigHandler* ConfigHandler::instance=0;
 
+/* mostly copied from springlobbysource*/
 bool ConfigHandler::LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc )
 {
 	if ( is_loaded ) return true;
@@ -18,22 +21,22 @@ bool ConfigHandler::LoadUnitSyncLib( const wxString& springdir, const wxString& 
 	wxSetWorkingDirectory( wxT(".") );
 
 	// Load the library.
-	std::string loc = "/home/kosh/projekte/settings/bin/linux/unitsync.so";//STD_STRING(unitsyncloc);
-
-	std::cout <<( "Loading from: " + loc );
+	std::string loc = OptionsHandler.getUsyncLoc();//getUsyncLoc();
+	std::cout <<( "Loading from: " + loc + "\n");
 
 	// Check if library exists
 	if ( !wxFileName::FileExists( _S(loc)) ) {
-		std::cout <<( "File not found: "+ loc );
+		std::cerr <<( "File not found: "+ loc );
 		return false;
 	}
-
+	
 	try {
 		m_libhandle = new wxDynamicLibrary(_S(loc));
 		if (!m_libhandle->IsLoaded()) {
 			std::cout <<("wxDynamicLibrary created, but not loaded!");
 			delete m_libhandle;
 			m_libhandle = 0;
+			
 		}
 	} catch(...) {
 		m_libhandle = 0;
@@ -48,7 +51,8 @@ bool ConfigHandler::LoadUnitSyncLib( const wxString& springdir, const wxString& 
 
 	// Load all function from library.
 	try {
-
+		 m_init = (InitPtr)GetLibFuncPtr("Init");
+		    m_uninit = (UnInitPtr)GetLibFuncPtr("UnInit");
 		h_GetSpringConfigInt = (GetSpringConfigInt)GetLibFuncPtr("GetSpringConfigInt");
 		h_GetSpringConfigString = (GetSpringConfigString)GetLibFuncPtr("GetSpringConfigString");
 		h_GetSpringConfigInt = (GetSpringConfigInt)GetLibFuncPtr("GetSpringConfigInt");
@@ -58,7 +62,7 @@ bool ConfigHandler::LoadUnitSyncLib( const wxString& springdir, const wxString& 
 	}
 	catch ( ... ) {
 		std::cout <<( "Failed to load Unitsync lib." );
-		//_FreeUnitSyncLib();
+		FreeUnitSyncLib();
 		return false;
 	}
 
@@ -66,20 +70,36 @@ bool ConfigHandler::LoadUnitSyncLib( const wxString& springdir, const wxString& 
 }
 
 
+void ConfigHandler::FreeUnitSyncLib()
+{
+	LOCK_UNITSYNC;
+	  if ( !is_loaded ) return;
+	  m_uninit();
 
+	  delete m_libhandle;
+	  m_libhandle = 0;
+
+	  is_loaded = false;
+}
 
 void* ConfigHandler::GetLibFuncPtr( const std::string& name )
 {
-	//ASSERT_LOGIC( m_loaded, "Unitsync not loaded" );
-	void* ptr = m_libhandle->GetSymbol(_S(name));
-	//ASSERT_RUNTIME( ptr, "Couldn't load " + name + " from unitsync library" );
-	return ptr;
+	ASSERT_LOGIC( is_loaded, "Unitsync not loaded" );
+	//if(m_libhandle != 0){
+		void* ptr = m_libhandle->GetSymbol(_S(name));
+	ASSERT_RUNTIME( ptr, "Couldn't load " + name + " from unitsync library" );
+		return ptr;
 }
 
 ConfigHandler& ConfigHandler::GetInstance(){
 	if (!instance){
 		instance = new ConfigHandler();
-		instance->LoadUnitSyncLib(wxT(""),wxT(""));
+		//TODO something a little more sophisticated
+		if(!instance->LoadUnitSyncLib(wxT(""),wxT("")))
+		{
+			wxMessageBox(wxT("Unitsync could not be loaded. CRAASH!"), wxT(""), wxOK, 0);
+			exit(1);
+		}
 	}
 	return *instance;
 }
@@ -102,6 +122,7 @@ std::string ConfigHandler::GetString(std::string name, std::string def) {
 }
 
 int ConfigHandler::GetInt(std::string name, int def){
+	//ASSERT_LOGIC( is_loaded, "Unitsync not loaded \n" );
 	LOCK_UNITSYNC;
 	return h_GetSpringConfigInt(name.c_str(),def);
 }
@@ -117,3 +138,5 @@ void ConfigHandler::Deallocate()
 		delete instance;
 	instance=0;
 }
+
+	

@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -20,23 +20,33 @@
     along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#ifndef __TAB_MOUSE_h__
-#define __TAB_MOUSE_h__
+#ifndef __TAB_UI_h__
+#define __TAB_UI_h__
 #include "tabs.h"
 
-class mouse_panel : public abstract_panel
+class tab_ui : public abstract_panel
 {
 
 	public:
-		mouse_panel(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
-		virtual ~mouse_panel();
+		tab_ui(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
+		virtual ~tab_ui();
 
-		void initMouseOptsSizer(wxStaticBoxSizer*);
-		void initMouseSpeedSizer(wxStaticBoxSizer* );
-
+		void initCameraSizer(wxStaticBoxSizer*);
+		void initScrollSpeedSizer(wxStaticBoxSizer* );
+		void initUiOptSizer(wxStaticBoxSizer* );
+		void updateControls(int what_to_update);
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+		wxSlider** ctrl_scroll_slider;
+		static const int ctrl_scroll_slider_size = 5;
+		wxRadioButton* ctrl_cam_radio0;
+		wxRadioButton* ctrl_cam_radio1;
+		wxRadioButton* ctrl_cam_radio2;
+		wxRadioButton* ctrl_cam_radio3;
+		wxRadioButton* ctrl_cam_radio4;
+		wxCheckBox** ctrl_ui_chkb;
+		static const int ctrl_ui_chkb_size = 13;
 		DECLARE_EVENT_TABLE()
 };
 

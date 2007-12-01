@@ -2,7 +2,7 @@
     This file is part of Settings++,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (René Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Renï¿½ Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -46,11 +46,18 @@ class abstract_panel : public wxPanel
 		static floatMap floatSettings;
 		static bool settingsChanged;
 		static bool saveSettings();
+
+		static void loadDefaults();
+		virtual void updateControls(int what_to_update);
+
         
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
 		wxArrayString wxArrayStringFromCStringArray(const wxString* stdAr);
+		
+    private:
+    	
 		
 		DECLARE_EVENT_TABLE()
 };
