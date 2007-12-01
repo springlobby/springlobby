@@ -50,7 +50,71 @@ bool abstract_panel::isExpertModeEnabled()
 
 void abstract_panel::loadDefaults()
 {
-	
+	//const Control RO_SLI[9]
+	for (int i = 0;i< 9; ++i)
+		intSettings[RO_SLI[i].key] = fromString<int>( RO_SLI[i].def);
+
+	//const Control VO_CBOX[3]
+	for (int i = 0;i< 3; ++i)
+		intSettings[VO_CBOX[i].key] = fromString<int>( VO_CBOX[i].def);	
+
+	//const Control VO_RBUT[2] 
+	for (int i = 0;i< 2; ++i)
+		intSettings[VO_RBUT[i].key] = fromString<int>( VO_RBUT[i].def);	
+
+	//	const Control VO_SLI[1] 
+	for (int i = 0;i< 1; ++i)
+		intSettings[VO_SLI[i].key] = fromString<int>( VO_SLI[i].def);	
+
+	//	const Control VO_SLI_EXT[1]   
+	for (int i = 0;i< 1; ++i)
+		intSettings[VO_SLI_EXT[i].key] = fromString<int>( VO_SLI_EXT[i].def);	
+
+//	const Control AO_SLI[3]       
+	for (int i = 0;i< 3; ++i)
+		intSettings[AO_SLI[i].key] = fromString<int>( AO_SLI[i].def);	
+
+	//	const Control QA_CBOX[10]
+	for (int i = 0;i< 10; ++i)
+		intSettings[QA_CBOX[i].key] = fromString<int>( QA_CBOX[i].def);	
+
+	//	const Control UI_CBOX[14] 
+	for (int i = 0;i< 14; ++i)
+		intSettings[UI_CBOX[i].key] = fromString<int>(UI_CBOX [i].def);	
+
+	//	const Control MO_SLI[5]  
+	for (int i = 0;i< 5; ++i)
+		intSettings[MO_SLI[i].key] = fromString<int>( MO_SLI[i].def);
+
+	//	const Control MO_SLI_EXT[5] 
+	for (int i = 0;i< 5; ++i)
+		intSettings[MO_SLI_EXT[i].key] = fromString<int>( MO_SLI_EXT[i].def);
+
+	//	const Control DO_SLI[1]      
+	for (int i = 0;i< 1; ++i)
+		intSettings[DO_SLI[i].key] = fromString<int>( DO_SLI[i].def);
+
+	//	const Control DO_CBOX[2]
+	for (int i = 0;i< 2; ++i)
+		intSettings[DO_CBOX[i].key] = fromString<int>( DO_CBOX[i].def);
+
+	//	const Control WR_COMBOX[4] 
+	for (int i = 0;i< 4; ++i)
+		intSettings[WR_COMBOX[i].key] = fromString<int>( WR_COMBOX[i].def);
+
+	//	const Control MO_CBOX[2] 
+	for (int i = 0;i< 2; ++i)
+		intSettings[MO_CBOX[i].key] = fromString<int>( MO_CBOX[i].def);
+
+	//	const Control MO_RBUT[5]
+	for (int i = 0;i< 5; ++i)
+		intSettings[MO_RBUT[i].key] = fromString<int>(MO_RBUT [i].def);
+
+	//	const Control RC_TEXT[2]
+	for (int i = 0;i< 2; ++i)
+		intSettings[RC_TEXT[i].key] = fromString<int>( RC_TEXT[i].def);
+
+
 }
 
 void abstract_panel::OnSliderMove(wxCommandEvent& event) {
