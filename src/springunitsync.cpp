@@ -481,6 +481,7 @@ wxImage SpringUnitSync::_GetCachedMinimap( const std::string& mapname, int max_w
 wxImage SpringUnitSync::GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size )
 {
   debug_func( "" );
+  CacheMinimap( WX_STRING(mapname) );
   return _GetCachedMinimap( mapname, max_w, max_h, store_size );
 }
 
