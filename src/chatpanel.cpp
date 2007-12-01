@@ -248,7 +248,7 @@ void ChatPanel::_CreatePopup()
     if ( m_type == CPT_Channel )
     {
       m_popup_menu->Append( displayjoinitem );
-      displayjoinitem->Check( sett().GetDisplayJoinLeave( m_channel->GetName() ) );
+      displayjoinitem->Check( sett().GetDisplayJoinLeave( WX_STRING( m_channel->GetName() ) ) );
     }
 
     m_popup_menu->AppendSeparator();
@@ -559,7 +559,7 @@ void ChatPanel::Joined( User& who )
 {
   if ( m_type == CPT_Channel )
   {
-    if( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) { _OutputLine( _T(" ** ") + WX_STRING(who.GetNick()) + _(" joined the ") + GetChatTypeStr() + _T("."), wxColour(0, 80, 0) ); }
+    if( sett().GetDisplayJoinLeave( WX_STRING( m_channel->GetName() ) ) ) { _OutputLine( _T(" ** ") + WX_STRING(who.GetNick()) + _(" joined the ") + GetChatTypeStr() + _T("."), wxColour(0, 80, 0) ); }
     if ( m_show_nick_list ) m_nicklist->AddUser( who );
   }
 }
@@ -568,7 +568,7 @@ void ChatPanel::Joined( User& who )
 void ChatPanel::Parted( User& who, const wxString& message )
 {
   if ( m_type == CPT_Channel ) {
-    if( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) { _OutputLine( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" )."), wxColour(0, 80, 0) ); }
+    if( sett().GetDisplayJoinLeave( WX_STRING( m_channel->GetName() ) ) ) { _OutputLine( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" )."), wxColour(0, 80, 0) ); }
     if ( m_show_nick_list ) m_nicklist->RemoveUser( who );
 
     if ( m_channel == 0 ) return;
@@ -832,11 +832,11 @@ void ChatPanel::OnChannelMenuDisplayJoinLeave( wxCommandEvent& event )
 {
     if ( m_channel == 0 ) return;
     if(!displayjoinitem->IsChecked()) {
-        sett().SetDisplayJoinLeave( false, m_channel->GetName() );
+        sett().SetDisplayJoinLeave( false, WX_STRING( m_channel->GetName() ) );
         displayjoinitem->Check( false );
     }
     else {
-        sett().SetDisplayJoinLeave( true, m_channel->GetName() );
+        sett().SetDisplayJoinLeave( true, WX_STRING( m_channel->GetName() ) );
         displayjoinitem->Check( true );
    }
 }
