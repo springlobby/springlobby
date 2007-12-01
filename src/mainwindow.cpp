@@ -51,7 +51,7 @@ END_EVENT_TABLE()
 
 
 MainWindow::MainWindow( Ui& ui ) :
-  wxFrame( (wxFrame*)0, -1, _("Spring Lobby"), wxPoint(50, 50), wxSize(450, 340) ),
+  wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
   m_ui(ui)
 {
   SetIcon( wxIcon(springlobby_xpm) );
