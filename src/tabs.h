@@ -44,3 +44,6 @@
 
 
 #define TAB_SIZE wxSize(700,500)
+#define UPDATE_VIDEO_MODE 	2002
+#define UPDATE_QA_BOXES	  	2001
+#define UPDATE_ALL			2000

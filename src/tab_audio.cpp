@@ -23,9 +23,9 @@
 #include "tabs.h"
 
 void audio_panel::initAudioSizer(wxStaticBoxSizer* sizer) {
-	wxSlider* slider0 = new wxSlider(this, AO_SLI[0].id, configHandler.GetInt(AO_SLI[0].key,fromString<int>(AO_SLI[0].def)), 8, 128, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
-	wxSlider* slider1 = new wxSlider(this, AO_SLI[1].id, configHandler.GetInt(AO_SLI[1].key,fromString<int>(AO_SLI[1].def)), 1, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
-	wxSlider* slider2 = new wxSlider(this, AO_SLI[2].id, configHandler.GetInt(AO_SLI[2].key,fromString<int>(AO_SLI[2].def)), 1, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	slider0 = new wxSlider(this, AO_SLI[0].id, configHandler.GetInt(AO_SLI[0].key,fromString<int>(AO_SLI[0].def)), 8, 128, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	slider1 = new wxSlider(this, AO_SLI[1].id, configHandler.GetInt(AO_SLI[1].key,fromString<int>(AO_SLI[1].def)), 1, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	slider2 = new wxSlider(this, AO_SLI[2].id, configHandler.GetInt(AO_SLI[2].key,fromString<int>(AO_SLI[2].def)), 1, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 
     slider0->SetTickFreq((128-8) / 10   ,1);
     slider1->SetTickFreq(10             ,1);
@@ -59,7 +59,9 @@ audio_panel::audio_panel(wxWindow *parent, wxWindowID id , const wxString &title
 }
 void audio_panel::updateControls()
 {
-	
+	slider0->SetValue(intSettings[AO_SLI[0].key]);
+	slider1->SetValue(intSettings[AO_SLI[1].key]);
+	slider2->SetValue(intSettings[AO_SLI[2].key]);
 }
 audio_panel::~audio_panel(void) {
 

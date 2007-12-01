@@ -32,7 +32,7 @@ class tab_render_detail : public abstract_panel
 		virtual ~tab_render_detail();
 
 		void initRendererSizer(wxFlexGridSizer*,wxFlexGridSizer*);
-		void updateControls(bool dummy);
+		void updateControls(int what_to_update);
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();

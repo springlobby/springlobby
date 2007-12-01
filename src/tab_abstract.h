@@ -49,8 +49,12 @@ class abstract_panel : public wxPanel
 		static bool saveSettings();
 		static void enableExpertMode(bool);
 		static bool isExpertModeEnabled();
+<<<<<<< HEAD:src/tab_abstract.h
 		static void loadDefaults();
 		virtual void updateControls(bool);
+=======
+		virtual void updateControls(int what_to_update);
+>>>>>>> ea5c1665635624e6df227e60a4d140e23f7c4a6f:src/tab_abstract.h
         
     protected:
         void OnClose(wxCloseEvent& event);

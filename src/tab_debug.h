@@ -35,6 +35,10 @@ class debug_panel : public abstract_panel
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+		wxCheckBox* checkBox0 ;
+		wxCheckBox* checkBox1 ;
+		wxSlider* slider;
+		
 		DECLARE_EVENT_TABLE()
 };
 

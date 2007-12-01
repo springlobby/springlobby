@@ -51,9 +51,9 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 
 }
 
-void tab_quality_video::updateControls(bool update_mode_only)
+void tab_quality_video::updateControls(int what_to_update)
 {
-	if (update_mode_only)
+	if (what_to_update == UPDATE_VIDEO_MODE || what_to_update == UPDATE_ALL)
 	{
 		std::string s;
 		toString<int>(s,intSettings[RC_TEXT[0].key]); 
@@ -61,10 +61,10 @@ void tab_quality_video::updateControls(bool update_mode_only)
 		toString<int>(s,intSettings[RC_TEXT[1].key]); 
 		ctrl_y_res->ChangeValue(_S(s.c_str()));
 	}
-	else
+	if (what_to_update == UPDATE_QA_BOXES || what_to_update == UPDATE_ALL)
 	{
 		//option 5-7 are not on presets
-		for (int i = 0; i < ctrl_qa_Boxes_size-5; i++) {
+		for (int i = 0; i < 4; i++) {
 			ctrl_qa_Boxes[i]->SetValue(intSettings[QA_CBOX[i].key]);
 		}
 		for (int i = 8; i < ctrl_qa_Boxes_size; i++) {
@@ -89,6 +89,18 @@ void tab_quality_video::updateControls(bool update_mode_only)
 		switch (intSettings[VO_RBUT[0].key]) {
 		case 16: { ctrl_z_radio1->SetValue(1); } break;
 		case 24: { ctrl_z_radio2->SetValue(1); } break;
+		}
+	}
+	
+	if (what_to_update == UPDATE_ALL)
+	{
+		//the rest
+		for (int i = 5; i < 8; i++) {
+					ctrl_qa_Boxes[i]->SetValue(intSettings[QA_CBOX[i].key]);
+		}
+		
+		for (int i = 0; i < ctrl_vo_Boxes_size; i++) {
+			ctrl_vo_Boxes[i]->SetValue(configHandler.GetInt(VO_CBOX[i].key,fromString<int>(VO_CBOX[i].def)));
 		}
 	}
 }
