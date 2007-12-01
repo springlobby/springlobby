@@ -334,10 +334,7 @@ void MainWindow::OnTabsChanged( wxListbookEvent& event )
 
   if ( newsel == 0 || newsel == 1 )
   {
-    try
-    {
-      if ( !m_ui.IsConnected() ) m_ui.Connect();
-    } catch( std::logic_error& e ) {}
+    if ( !m_ui.IsConnected() && m_ui.IsMainWindowCreated() ) m_ui.Connect();
   }
 }
 

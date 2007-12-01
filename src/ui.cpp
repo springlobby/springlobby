@@ -71,6 +71,14 @@ MainWindow& Ui::mw()
   return *m_main_win;
 }
 
+
+bool Ui::IsMainWindowCreated()
+{
+  if ( m_main_win == 0 ) return false;
+  else return true;
+}
+
+
 //! @brief Shows the main window on screen
 void Ui::ShowMainWindow()
 {
