@@ -325,10 +325,8 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 						{
 							presetValues<int> pop = prVal_RenderDetail[i]; 
 							 int k = (pop.values[choice]);
-							 std::cout << "k: " << k << " key: "<<prVal_RenderDetail[i].key <<" choice: " << choice.mb_str() << "\n";
 							(intSettings)[prVal_RenderDetail[i].key]= k;
 						}
-			std::cout << "\n";
 			break;
 		}
 		case ID_SIMPLE_MODE_CBX:
