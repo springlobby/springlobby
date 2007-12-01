@@ -319,7 +319,7 @@ const Control RC_TEXT[2] = {
 #define WX_DEF_S wxSize(-1, -1)
 #define WX_SLI_S wxSize(200, -1)
 
-
+/** not used
 #define NUM_DEFAULTS 88
 const char DEFAULTS[NUM_DEFAULTS][64] = {
 	"3DTrees=1",
@@ -421,6 +421,6 @@ const char DEFAULTS[NUM_DEFAULTS][64] = {
 	"SoundVolume=100",
 	"UnitReplySoundVolume=80"
 };
-
+**/
 
 #endif
