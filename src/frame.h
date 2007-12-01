@@ -92,6 +92,7 @@ class settings_frame : public wxFrame
 		void OnMenuChoice(wxCommandEvent& event);
 		void CreateGUIControls();
 		void resetSettings();
+		void updateAllControls();
 };
 
 #endif

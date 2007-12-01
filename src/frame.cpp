@@ -53,10 +53,10 @@ void settings_frame::CreateGUIControls()
 	Options->AddPage(simpleTab,wxT("Simple"));
 	
 	qualityTab = new tab_quality_video(Options,ID_QUALITY_VIDEO);
-    Options->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
+    //Options->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
     
     detailTab = new tab_render_detail(Options,ID_RENDER_DETAIL);
-    Options->AddPage(detailTab, wxT("Render Detail"));
+    //Options->AddPage(detailTab, wxT("Render Detail"));
     
     uiTab = new tab_ui(Options,ID_UI);
     Options->AddPage(uiTab, wxT("UI Options"));
@@ -126,23 +126,37 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 			}
 		} break;
 		case ID_MENUITEM_SIMPLE: {
-			
+			if (abstract_panel::isExpertModeEnabled()) {
+				abstract_panel::enableExpertMode(false);
+				Options->InsertPage(0,simpleTab,wxT("SIMPLE"));
+				Options->RemovePage(5);
+				Options->RemovePage(4);
+			}
 		} break;
 		case ID_MENUITEM_EXPERT: {
-			
+			if (!abstract_panel::isExpertModeEnabled()) {
+				abstract_panel::enableExpertMode(true);
+			    Options->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
+			    Options->AddPage(detailTab, wxT("Render Detail"));
+			    Options->RemovePage(0);
+			}
 		} break;
 	}
 }
 void settings_frame::resetSettings()
 {
 	abstract_panel::loadDefaults();
+	updateAllControls();
+}
+
+void settings_frame::updateAllControls()
+{
 	uiTab->updateControls(UPDATE_ALL);
 	simpleTab->updateControls(UPDATE_ALL);
 	detailTab->updateControls(UPDATE_ALL);
 	qualityTab->updateControls(UPDATE_ALL);
 	debugTab->updateControls(UPDATE_ALL);
 	audioTab->updateControls(UPDATE_ALL);
-	
 }
 void settings_frame::OnClose(wxCloseEvent& event)
 {
