@@ -394,6 +394,7 @@ wxString SpringOptionsTab::AutoFindUnitSyncLib( const wxString& def )
   pl.Add( _T("/usr/lib64") );
   pl.Add( _T("/usr/lib") );
   pl.Add( _T("/usr/games") );
+  pl.Add( _T("/usr/games/lib64") );
   pl.Add( _T("/usr/games/lib") );
 #endif
 
