@@ -85,10 +85,15 @@ void settings_frame::initMenuBar() {
 	menuFile->AppendSeparator();
 	menuFile->Append(ID_MENUITEM_QUIT, wxT("Quit"));
 
-    menuFile->Enable(ID_MENUITEM_RESET,true);
+  //  menuFile->Enable(ID_MENUITEM_RESET,true);
+	
+	wxMenu* menuMode = new wxMenu();
+	menuMode->AppendRadioItem(ID_MENUITEM_SIMPLE,wxT("simple (few options)"));
+	menuMode->AppendRadioItem(ID_MENUITEM_EXPERT,wxT("expert (all options"));
         
 	wxMenuBar* menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, wxT("File"));
+	menuBar->Append(menuMode, wxT("Mode"));
 
 	SetMenuBar(menuBar);
 }
@@ -119,6 +124,12 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 			if ((wxMessageBox(wxT("Reset ALL settings to default values?"), wxT(""), wxYES_NO, this)) == wxYES) {
 						resetSettings();
 			}
+		} break;
+		case ID_MENUITEM_SIMPLE: {
+			
+		} break;
+		case ID_MENUITEM_EXPERT: {
+			
 		} break;
 	}
 }
