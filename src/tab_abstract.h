@@ -49,6 +49,7 @@ class abstract_panel : public wxPanel
 		static bool saveSettings();
 		static void enableExpertMode(bool);
 		static bool isExpertModeEnabled();
+		static void loadDefaults();
 		virtual void updateControls(bool);
         
     protected:
@@ -56,7 +57,8 @@ class abstract_panel : public wxPanel
 		void CreateGUIControls();
 		wxArrayString wxArrayStringFromCStringArray(const wxString* stdAr);
 		
-		
+    private:
+    	
 		
 		DECLARE_EVENT_TABLE()
 };

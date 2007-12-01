@@ -58,11 +58,14 @@ void settings_frame::CreateGUIControls()
     detailTab = new tab_render_detail(Options,ID_RENDER_DETAIL);
     Options->AddPage(detailTab, wxT("Render Detail"));
     
-    Options->AddPage(new tab_ui(Options,ID_UI), wxT("UI Options"));
+    uiTab = new tab_ui(Options,ID_UI);
+    Options->AddPage(uiTab, wxT("UI Options"));
 
-	Options->AddPage(new audio_panel(Options,ID_AUDIO), wxT("Audio"));
+    audioTab = new audio_panel(Options,ID_AUDIO);
+	Options->AddPage(audioTab, wxT("Audio"));
 
-	Options->AddPage(new debug_panel(Options,ID_DEBUG), wxT("Debug"));
+	debugTab = new debug_panel(Options,ID_DEBUG);
+	Options->AddPage(debugTab, wxT("Debug"));
 	
 	simpleTab->setTabs(detailTab,qualityTab);
 	
@@ -113,11 +116,23 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		} break;
 
 		case ID_MENUITEM_RESET: {
-			//dialog->Show(true);
+			if ((wxMessageBox(wxT("Reset ALL settings to default values?"), wxT(""), wxYES_NO, this)) == wxYES) {
+						resetSettings();
+			}
 		} break;
 	}
 }
-
+void settings_frame::resetSettings()
+{
+	abstract_panel::loadDefaults();
+	uiTab->updateControls(UPDATE_ALL);
+	simpleTab->updateControls(UPDATE_ALL);
+	detailTab->updateControls(UPDATE_ALL);
+	qualityTab->updateControls(UPDATE_ALL);
+	debugTab->updateControls(UPDATE_ALL);
+	audioTab->updateControls(UPDATE_ALL);
+	
+}
 void settings_frame::OnClose(wxCloseEvent& event)
 {
 	handleExit();

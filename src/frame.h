@@ -20,8 +20,8 @@
     along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#ifndef __PROJECT2FRM_h__
-#define __PROJECT2FRM_h__
+#ifndef __SETTINGS_FRAME_h__
+#define __SETTINGS_FRAME_h__
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
@@ -52,6 +52,9 @@ class settings_frame : public wxFrame
 		
 	private:
 		tab_simple* simpleTab;
+		tab_ui* uiTab;
+		audio_panel* audioTab;
+		debug_panel* debugTab;
 //		wxPanel *Debug;
 //		wxPanel *Mouse;
 //		wxPanel *Audio;
@@ -88,6 +91,7 @@ class settings_frame : public wxFrame
 		void OnClose(wxCloseEvent& event);
 		void OnMenuChoice(wxCommandEvent& event);
 		void CreateGUIControls();
+		void resetSettings();
 };
 
 #endif

@@ -48,7 +48,10 @@ bool abstract_panel::isExpertModeEnabled()
 	return expertModeEnabled;
 }
 
-
+vois abstract_panel::loadDefaults()
+{
+	
+}
 
 void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 
