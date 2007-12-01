@@ -85,7 +85,7 @@ void settings_frame::initMenuBar() {
 	menuFile->AppendSeparator();
 	menuFile->Append(ID_MENUITEM_QUIT, wxT("Quit"));
 
-    menuFile->Enable(ID_MENUITEM_RESET,false);
+    menuFile->Enable(ID_MENUITEM_RESET,true);
         
 	wxMenuBar* menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, wxT("File"));

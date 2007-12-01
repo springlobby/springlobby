@@ -95,7 +95,7 @@ void tab_quality_video::updateControls(int what_to_update)
 	if (what_to_update == UPDATE_ALL)
 	{
 		//the rest
-		for (int i = 5; i < 8; i++) {
+		for (int i = 5; i < 7; i++) {
 					ctrl_qa_Boxes[i]->SetValue(intSettings[QA_CBOX[i].key]);
 		}
 		
