@@ -93,7 +93,7 @@ tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title ,
 	SetSizer(parentSizer, true); // true --> delete old sizer if present
 }
 
-void tab_simple::updateControls()
+void tab_simple::updateControls(int what_to_update)
 {
 
 }

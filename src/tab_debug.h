@@ -31,7 +31,7 @@ class debug_panel : public abstract_panel
 		virtual ~debug_panel();
 
 		void initDebugSizer(wxStaticBoxSizer*);
-		void updateControls();
+		void updateControls(int);
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();

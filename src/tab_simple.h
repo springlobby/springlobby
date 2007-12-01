@@ -34,7 +34,7 @@ class tab_simple : public abstract_panel
 
 		void initOptSizer(wxFlexGridSizer*);
 		
-		void updateControls();
+		void updateControls(int);
 		
 		void setTabs(abstract_panel* ,abstract_panel* );
 		void OnComboBoxChange(wxCommandEvent& event);

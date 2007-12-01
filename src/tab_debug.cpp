@@ -59,7 +59,7 @@ debug_panel::debug_panel(wxWindow *parent, wxWindowID id , const wxString &title
 	SetSizer(parentSizer, true); // true --> delete old sizer if present
 
 }
-void debug_panel::updateControls()
+void debug_panel::updateControls(int what_to_update)
 {
 	checkBox0->SetValue(intSettings[DO_CBOX[0].key]);
 	checkBox1->SetValue(intSettings[DO_CBOX[1].key]);

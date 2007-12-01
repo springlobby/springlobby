@@ -57,7 +57,7 @@ audio_panel::audio_panel(wxWindow *parent, wxWindowID id , const wxString &title
 
 	SetSizer(parentSizer, true); // true --> delete old sizer if present
 }
-void audio_panel::updateControls()
+void audio_panel::updateControls(int what_to_update)
 {
 	slider0->SetValue(intSettings[AO_SLI[0].key]);
 	slider1->SetValue(intSettings[AO_SLI[1].key]);
