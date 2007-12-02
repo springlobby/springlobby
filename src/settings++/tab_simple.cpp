@@ -22,6 +22,8 @@
 
 #include "tabs.h"
 
+const wxString infoTextContent= wxT("INFOTEXT HERE");
+
 void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 	sizer->Add(new wxStaticText(this, -1,  wxT("RENDER_QUALITY")), 0,wxALL);
 	//sizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP , 10);
@@ -42,20 +44,26 @@ void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 
 }
 
+void tab_simple::initInfoSizer(wxFlexGridSizer* sizer)
+{
+	infoText = new wxStaticText(this,-1,infoTextContent);
+	sizer->Add(infoText,0,wxALL,10);
+}
+
 tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
 : abstract_panel(parent, id , title , pos , size, style) {
 
 	SetSizer(0, true);
 	wxSizer* parentSizer = new wxFlexGridSizer(2,0,0);	
-	wxSizer* leftSizer = new wxFlexGridSizer(1,15,0);
+	//wxSizer* leftSizer = new wxFlexGridSizer(1,15,0);
 	wxSizer* middleSizer = new wxFlexGridSizer(1,15,0);
-	wxSizer* rightSizer = new wxFlexGridSizer(1,15,0);//for info
+	//wxSizer* rightSizer = new wxFlexGridSizer(1,15,0);//for info
 	wxFlexGridSizer* Sizer_CBX = new wxFlexGridSizer(2,10,10);
-	wxFlexGridSizer* SizerB = new wxFlexGridSizer(1,15,10);
-	wxFlexGridSizer* SizerC = new wxFlexGridSizer(1,15,10);
-	wxFlexGridSizer* SizerD = new wxFlexGridSizer(1,5,10);
+	wxFlexGridSizer* Sizer_info = new wxFlexGridSizer(1,15,10);
+	//wxFlexGridSizer* SizerC = new wxFlexGridSizer(1,15,10);
+	//wxFlexGridSizer* SizerD = new wxFlexGridSizer(1,5,10);
 	wxStaticBoxSizer* boxA = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("SIMPLE_OPTIONS"));
-	//		wxStaticBoxSizer* boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Video Mode Options"));
+	wxStaticBoxSizer* boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Info"));
 	//		wxStaticBoxSizer* boxC = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Anti-Aliasing Options"));
 	//		wxStaticBoxSizer* boxD = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Z-/Depth-Buffer"));
 	//		Sizer_CBX->AddGrowableCol(0);
@@ -66,29 +74,31 @@ tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title ,
 
 
 	initOptSizer(Sizer_CBX);
+	initInfoSizer(Sizer_info);
+	
 	//		initVideoSizer(SizerB);
 	//		initAASizer(SizerC);
 	//		initZBufferSizer(SizerD);
 
 	Sizer_CBX->Fit(this);
 	Sizer_CBX->SetSizeHints(this);
-	//	    SizerB->Fit(this);
-	//	    SizerB->SetSizeHints(this);
+    Sizer_info->Fit(this);
+    Sizer_info->SetSizeHints(this);
 	//	    SizerC->Fit(this);
 	//	    SizerC->SetSizeHints(this);
 	//	    SizerD->Fit(this);
 	//	    SizerD->SetSizeHints(this);
 
 	boxA->Add(Sizer_CBX);
-	//	    boxB->Add(SizerB);
+	boxB->Add(Sizer_info);
 	//	    boxC->Add(SizerC);
 	//	    boxD->Add(SizerD);
 	//	    leftSizer->Add(boxB,0,wxEXPAND);
 	//	    leftSizer->Add(boxC);
 	middleSizer->Add(boxA,0,wxEXPAND);
-	//middleSizer->Add(boxD,0,wxEXPAND);
+	middleSizer->Add(boxB,0,wxEXPAND);
 	//  parentSizer->Add(leftSizer,0,wxALIGN_LEFT|wxALIGN_TOP |wxALL,10);
-	parentSizer->Add(middleSizer,0,wxALIGN_CENTER_HORIZONTAL|wxALL,10);
+	parentSizer->Add(middleSizer,0,wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND,10);
 
 	SetSizer(parentSizer, true); // true --> delete old sizer if present
 }

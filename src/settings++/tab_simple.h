@@ -25,6 +25,8 @@
 
 #include "tabs.h"
 
+
+
 class tab_simple : public abstract_panel
 {
  	
@@ -32,7 +34,6 @@ class tab_simple : public abstract_panel
 		tab_simple(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
 		virtual ~tab_simple();
 
-		void initOptSizer(wxFlexGridSizer*);
 		
 		void updateControls(int);
 		
@@ -42,10 +43,14 @@ class tab_simple : public abstract_panel
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
-		
+		void initOptSizer(wxFlexGridSizer*);
+		void initInfoSizer(wxFlexGridSizer*);
+				
 		wxComboBox* renderQuality_CBX;
 		wxComboBox* renderDetail_CBX;
 		wxComboBox* videoMode_CBX;
+		
+		wxStaticText* infoText;
 		
 		//dirty
 		abstract_panel* detailTab;
