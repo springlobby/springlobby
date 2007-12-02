@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# dunno if it would work with plain sh, please verify
+# usage: tools/fix-xpm
+# no parameters
+# no output
+
+cd $(dirname $0)/..
+find src/ -name \*.xpm -exec sed -i 's/^static char/static const char/' {} \;

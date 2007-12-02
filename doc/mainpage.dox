@@ -1,0 +1,20 @@
+ 
+/*!
+
+@mainpage SpringLobby Source Documentation
+
+
+@section intro Introduction
+
+This is the source documentation for the SpringLobby client. The SpringLobby is an open source lobby client for the TA Spring project written in C++ and licensed with the GPL license. This documentation will try to help ease the development of the SpringLobby and help new developers to understand the source.
+
+@section trac The SpringLobby Trac
+
+A trac server for SpringLobby has been setup at http://springlobby.info
+
+*/
+
+/*!
+ @namespace std
+ @brief The standard std namespace.
+*/

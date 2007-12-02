@@ -1,0 +1,11 @@
+/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+
+namespace {
+  const char* g_revision = "REV unset";
+}
+
+const char* revision()
+{
+  return g_revision;
+}
+

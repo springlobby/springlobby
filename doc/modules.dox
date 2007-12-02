@@ -1,0 +1,31 @@
+/*!
+
+@page modules Source Modules
+
+These are the modules that make up the sourcecode of the SpringLobby client. TODO
+
+
+@section server_module Server Module
+
+This module handles the connection with the server. TODO
+
+
+@section setting_module Settings Module
+
+Saves and restores application settings. TODO
+
+
+@section gui_module GUI Module
+
+The module that binds it all together to creates the application. TODO
+
+
+@section socket_module Socket Module
+
+Handles communication through TCP. TODO
+
+
+
+
+
+*/
