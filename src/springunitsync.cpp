@@ -344,16 +344,15 @@ wxArrayString SpringUnitSync::GetAIList()
   debug_func( "" );
 
   int ini = susynclib()->InitFindVFS( _T("AI/Bot-libs/*") );
-  bool more;
   wxString FileName;
   wxArrayString ret;
 
-  do
-  {
-    more = susynclib()->FindFilesVFS( ini, FileName );
+  ini = susynclib()->FindFilesVFS( ini, FileName );
+  while ( ini ) {
     if ( !FileName.Contains ( _T(".dll") ) && !FileName.Contains (  _T(".so") ) ) continue; // FIXME this isn't exactly portable
     if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
-  } while ( !more );
+    ini = susynclib()->FindFilesVFS( ini, FileName );
+  }
 
   try { // Older versions of unitsync does not have these functions.
     const int LuaAICount = susynclib()->GetLuaAICount();
