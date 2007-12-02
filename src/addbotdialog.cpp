@@ -9,6 +9,7 @@
 #include <wx/statline.h>
 #include <wx/filename.h>
 #include <wx/dir.h>
+#include <wx/msgdlg.h>
 
 #include "addbotdialog.h"
 #include "settings.h"
@@ -112,18 +113,17 @@ void AddBotDialog::ReloadAIList()
   } catch (...) {}
 
   m_ai->Clear();
-  if ( AIList.GetCount() == 0 )
-  {
-    return;
-  }
-  for (unsigned int i =0; i < AIList.GetCount(); i++) m_ai->Append( AIList[i] );
 
-  if ( m_ai->GetCount() > 0 ) {
+  for ( unsigned int i = 0; i < AIList.GetCount(); i++ ) m_ai->Append( AIList[i] );
+
+  if ( AIList.GetCount() > 0 ) {
     wxString ai = WX_STRING(sett().GetLastAI());
     if ( ai == wxEmptyString ) {
       ai = m_ai->GetString( 0 );
     }
     m_ai->SetStringSelection( ai );
+  } else {
+    wxMessageBox( _("No AI bots found in your Spring installation."), _("No bot-libs found"), wxOK, this );
   }
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
 }

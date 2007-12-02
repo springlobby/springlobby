@@ -355,8 +355,10 @@ wxArrayString SpringUnitSync::GetAIList()
     if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
   } while ( !more );
 
-  const int LuaAICount = susynclib()->GetLuaAICount();
-  for ( int i = 0; i < LuaAICount; i++ ) ret.Add( _( "LuaAI" ) +  susynclib()->GetLuaAIName( i ) );
+  try { // Older versions of unitsync does not have these functions.
+    const int LuaAICount = susynclib()->GetLuaAICount();
+    for ( int i = 0; i < LuaAICount; i++ ) ret.Add( _( "LuaAI" ) +  susynclib()->GetLuaAIName( i ) );
+  } catch (...) {}
 
   return ret;
 }
