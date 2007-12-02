@@ -23,14 +23,14 @@ dist_doc_DATA = \
 	THANKS
 
 bin_PROGRAMS = \
-	springlobby \
-	settings++
+	springlobby
+#	settings++
 
 springlobby_LDADD = \
 	$(WX_LIBS)
 
-settings++_LDADD = \
-	$(WX_LIBS)
+#settings++_LDADD = \
+#	$(WX_LIBS)
 
 if USE_WINDRES
 RESOURCECOMPILE = $(WINDRES) -I $(srcdir)/src $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -506,34 +506,34 @@ springlobby_SOURCES += \
 	src/settings++/tab_render_detail.h \
 	src/settings++/tab_abstract.h
 
-settings++_SOURCES = \
-	src/settings++ \
-	src/settings++/frame.cpp \
-	src/settings++/tabs.h \
-	src/settings++/main.h \
-	src/settings++/tab_ui.cpp \
-	src/settings++/tab_render_detail.cpp \
-	src/settings++/tab_quality_video.h \
-	src/settings++/frame_get_usync.h \
-	src/settings++/frame.h \
-	src/settings++/tab_audio.h \
-	src/settings++/se_settings.h \
-	src/settings++/tab_debug.cpp \
-	src/settings++/tab_debug.h \
-	src/settings++/se_settings.cpp \
-	src/settings++/tab_audio.cpp \
-	src/settings++/frame_get_usync.cpp \
-	src/settings++/presets.h \
-	src/settings++/tab_abstract.cpp \
-	src/settings++/configHandler.h \
-	src/settings++/configHandler.cpp \
-	src/settings++/settings.rc \
-	src/settings++/Main.cpp \
-	src/settings++/Defs.hpp \
-	src/settings++/tab_simple.cpp \
-	src/settings++/tab_quality_video.cpp \
-	src/settings++/tab_ui.h \
-	src/settings++/tab_simple.h \
-	src/settings++/tab_render_detail.h \
-	src/settings++/tab_abstract.h
+# settings++_SOURCES = \
+# 	src/settings++ \
+# 	src/settings++/frame.cpp \
+# 	src/settings++/tabs.h \
+# 	src/settings++/main.h \
+# 	src/settings++/tab_ui.cpp \
+# 	src/settings++/tab_render_detail.cpp \
+# 	src/settings++/tab_quality_video.h \
+# 	src/settings++/frame_get_usync.h \
+# 	src/settings++/frame.h \
+# 	src/settings++/tab_audio.h \
+# 	src/settings++/se_settings.h \
+# 	src/settings++/tab_debug.cpp \
+# 	src/settings++/tab_debug.h \
+# 	src/settings++/se_settings.cpp \
+# 	src/settings++/tab_audio.cpp \
+# 	src/settings++/frame_get_usync.cpp \
+# 	src/settings++/presets.h \
+# 	src/settings++/tab_abstract.cpp \
+# 	src/settings++/configHandler.h \
+# 	src/settings++/configHandler.cpp \
+# 	src/settings++/settings.rc \
+# 	src/settings++/Main.cpp \
+# 	src/settings++/Defs.hpp \
+# 	src/settings++/tab_simple.cpp \
+# 	src/settings++/tab_quality_video.cpp \
+# 	src/settings++/tab_ui.h \
+# 	src/settings++/tab_simple.h \
+# 	src/settings++/tab_render_detail.h \
+# 	src/settings++/tab_abstract.h
 
