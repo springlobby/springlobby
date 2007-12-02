@@ -324,28 +324,37 @@ MapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
 }
 
 
-wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName, int miplevel )
+wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
 {
   InitLib( m_get_minimap );
 
-  int height = 1024;
-  int width = 512;
-  wxImage ret( height, width);
+  const int height = 1024;
+  const int width = 1024;
+  //wxImage ret( height, width );
 
-  UnitSyncColours* colours = (UnitSyncColours*)m_get_minimap( mapFileName.mb_str( wxConvUTF8 ), miplevel );
+  debug( STD_STRING(mapFileName).c_str() );
+
+  unsigned short* colours = (unsigned short*)m_get_minimap( STD_STRING(mapFileName).c_str(), 0 ); // miplevel should not be 10 ffs
   ASSERT_RUNTIME( colours, "Get minimap failed" );
 
-  for ( int y = 0; y < height; y++ )
+  typedef unsigned char uchar;
+  uchar* true_colours = (uchar*)malloc( width*height*3 );
+
+  for ( int i = 0; i < width*height; i++ ) {
+    true_colours[(i*3)  ] = uchar( (( colours[i] >> 11 )/31.0)*255.0 );
+    true_colours[(i*3)+1] = uchar( (( (colours[i] >> 5) & 63 )/63.0)*255.0 );;
+    true_colours[(i*3)+2] = uchar( (( colours[i] & 31 )/31.0)*255.0 );
+  }
+  /*for ( int y = 0; y < height; y++ )
   {
     for ( int x = 0; x < width; x++ )
     {
       int pos = y*width + x;
-      typedef unsigned char uchar;
       ret.SetRGB( x, y, uchar( colours[pos].r/31.0*255.0 ), uchar( colours[pos].g/63.0*255.0 ), uchar( colours[pos].b/31.0*255.0 ) );
     }
-  }
+  }*/
 
-  return ret;
+  return wxImage( width, height, true_colours, false );
 }
 
 

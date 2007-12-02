@@ -198,7 +198,7 @@ class SpringUnitSyncLib
      * @param miplevel should be 0-10 not sure what it does, 10 seems to work fine.
      * @note Throws runtime_error if unsuccessful.
      */
-    wxImage GetMinimap( const wxString& mapFileName, int miplevel );
+    wxImage GetMinimap( const wxString& mapFileName );
 
     unsigned int GetPrimaryModChecksum( int index );
     int GetPrimaryModIndex( const wxString& modName );
@@ -297,14 +297,6 @@ class SpringUnitSyncLib
 
     //! Last used mod.
     wxString m_current_mod;
-
-    //! Struct to hold pixel's RGB values for minimaps
-    struct UnitSyncColours
-    {
-      unsigned int b : 5;
-      unsigned int g : 6;
-      unsigned int r : 5;
-    };
 
     //! Macro that checks if a function is present/loaded, unitsync is loaded, and locks it on call.
     #define InitLib( arg ) { LOCK_UNITSYNC; ASSERT_RUNTIME( m_loaded, "Unitsync not loaded." ); ASSERT_RUNTIME( arg, "Function was not in unitsync library." ); }

@@ -531,7 +531,7 @@ bool SpringUnitSync::CacheMinimap( const wxString& mapname )
 
   wxImage ret;
   try {
-    ret = susynclib()->GetMinimap( mapname, 10 );
+    ret = susynclib()->GetMinimap( mapname );
   } catch (...) {
     return false;
   }
