@@ -113,8 +113,8 @@ void SinglePlayerTab::ReloadMaplist()
   } catch(...) {}
   m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
   if ( m_battle.GetMapName() != wxEmptyString ) {
-    m_map_pick->SetStringSelection( m_battle.GetMapName() );
-    m_addbot_btn->Enable(true);
+    m_map_pick->SetStringSelection( RefineMapname( m_battle.GetMapName() ) );
+    if ( m_map_pick->GetStringSelection() == wxEmptyString ) SetMap( m_mod_pick->GetCount()-1 );
   } else {
     m_map_pick->SetSelection( m_map_pick->GetCount()-1 );
     m_addbot_btn->Enable(false);
@@ -134,10 +134,44 @@ void SinglePlayerTab::ReloadModlist()
   m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
 
   if ( m_battle.GetModName() != wxEmptyString ) {
-    m_mod_pick->SetStringSelection( m_battle.GetModName() );
+    m_mod_pick->SetStringSelection( RefineModname( m_battle.GetModName() ) );
+    if ( m_mod_pick->GetStringSelection() == wxEmptyString ) SetMod( m_mod_pick->GetCount()-1 );
   } else {
     m_mod_pick->SetSelection( m_mod_pick->GetCount()-1 );
   }
+}
+
+
+void SinglePlayerTab::SetMap( unsigned int index )
+{
+  m_addbot_btn->Enable( false );
+  if ( index >= m_map_pick->GetCount()-1 ) {
+    m_battle.SetMap( wxEmptyString, wxEmptyString );
+  } else {
+    try {
+      UnitSyncMap map = usync()->GetMap( index, true );
+      m_battle.SetMap( map );
+      m_addbot_btn->Enable( true );
+    } catch (...) {}
+  }
+  m_minimap->UpdateMinimap();
+  m_map_pick->SetSelection( index );
+}
+
+
+void SinglePlayerTab::SetMod( unsigned int index )
+{
+  if ( index >= m_mod_pick->GetCount()-1 ) {
+    m_battle.SetMod( wxEmptyString, wxEmptyString );
+  } else {
+    try {
+      UnitSyncMod mod = usync()->GetMod( index );
+      m_battle.SetMod( mod );
+    } catch (...) {}
+  }
+  m_minimap->UpdateMinimap();
+  m_battle.SendHostInfo( HI_Restrictions ); // Update restrictions in options.
+  m_mod_pick->SetSelection( index );
 }
 
 
@@ -182,33 +216,14 @@ bool SinglePlayerTab::ValidSetup()
 void SinglePlayerTab::OnMapSelect( wxCommandEvent& event )
 {
   unsigned int index = (unsigned int)m_map_pick->GetCurrentSelection();
-  if ( index >= m_map_pick->GetCount()-1 ) {
-    m_battle.SetMap( wxEmptyString, wxEmptyString );
-    m_addbot_btn->Enable(false);
-  } else {
-    try {
-      UnitSyncMap map = usync()->GetMapEx( index );
-      m_battle.SetMap( map );
-      m_addbot_btn->Enable(true);
-    } catch (...) {
-      m_addbot_btn->Enable(false);
-    }
-  }
-  m_minimap->UpdateMinimap();
+  SetMap( index );
 }
 
 
 void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 {
   unsigned int index = (unsigned int)m_mod_pick->GetCurrentSelection();
-  if ( index >= m_mod_pick->GetCount()-1 ) {
-    m_battle.SetMod( wxEmptyString, wxEmptyString );
-  } else {
-    UnitSyncMod mod = usync()->GetMod( index );
-    m_battle.SetMod( mod );
-  }
-  m_minimap->UpdateMinimap();
-  m_battle.SendHostInfo( HI_Restrictions );
+  SetMod( index );
 }
 
 
