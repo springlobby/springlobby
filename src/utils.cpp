@@ -8,9 +8,6 @@
 #include "utils.h"
 #include "revision.h"
 
-#ifdef __WXMSW__
-#include <wx/msgdlg.h>
-#endif
 
 // FIXME this does not work on linux+mingw build for windows
 #ifdef _MSC_VER
