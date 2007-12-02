@@ -149,7 +149,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
     m_battle.SetMap( wxEmptyString, wxEmptyString );
   } else {
     try {
-      UnitSyncMap map = usync()->GetMap( index, true );
+      UnitSyncMap map = usync()->GetMapEx( index );
       m_battle.SetMap( map );
       m_addbot_btn->Enable( true );
     } catch (...) {}
