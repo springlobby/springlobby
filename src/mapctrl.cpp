@@ -606,8 +606,9 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     wxBitmap* bmp = 0;
     try {
       std::string mod = STD_STRING(m_battle->GetModName());
-      usync()->GetSideCount( mod );
-      std::string side = usync()->GetSideName( mod, bot.bs.side );
+      int scount = usync()->GetSideCount( mod );
+      if ( scount <= 0 ) ASSERT_RUNTIME( false, "Mod has no sides." );
+      std::string side = usync()->GetSideName( mod, bot.bs.side % scount );
       bmp = new wxBitmap( usync()->GetSidePicture( mod, side ) );
     } catch (...) {
       delete bmp;
