@@ -334,6 +334,15 @@ wxString _ConvertTASServerPhailChecksum( const wxString& buggedcsum )
 }
 
 
+wxString _ConvertToTASServerBuggedChecksum( const wxString& csum )
+{
+  signed long temp;
+  csum.ToLong( &temp );
+  int temp2 = (int)temp;
+  return wxString::Format( _T("%u"), temp2 );
+}
+
+
 void TASServer::ExecuteCommand( const std::string& in )
 {
   debug( in );
@@ -925,7 +934,7 @@ void TASServer::SendHostInfo( HostInfo update )
     // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
     wxString cmd = _T("UPDATEBATTLEINFO");
     cmd += wxString::Format( _T(" %d %d "), battle.GetSpectators(), battle.IsLocked() );
-    cmd += battle.GetMapHash() + _T(" ");
+    cmd += _ConvertToTASServerBuggedChecksum( battle.GetMapHash() ) + _T(" ");
     cmd += battle.GetMapName() + _T("\n");
 
     m_sock->Send( STD_STRING(cmd) );
