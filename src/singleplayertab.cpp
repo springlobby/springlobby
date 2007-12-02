@@ -114,8 +114,10 @@ void SinglePlayerTab::ReloadMaplist()
   m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
   if ( m_battle.GetMapName() != wxEmptyString ) {
     m_map_pick->SetStringSelection( m_battle.GetMapName() );
+    m_addbot_btn->Enable(true);
   } else {
     m_map_pick->SetSelection( m_map_pick->GetCount()-1 );
+    m_addbot_btn->Enable(false);
   }
 }
 
@@ -182,11 +184,15 @@ void SinglePlayerTab::OnMapSelect( wxCommandEvent& event )
   unsigned int index = (unsigned int)m_map_pick->GetCurrentSelection();
   if ( index >= m_map_pick->GetCount()-1 ) {
     m_battle.SetMap( wxEmptyString, wxEmptyString );
+    m_addbot_btn->Enable(false);
   } else {
     try {
       UnitSyncMap map = usync()->GetMapEx( index );
       m_battle.SetMap( map );
-    } catch (...) {}
+      m_addbot_btn->Enable(true);
+    } catch (...) {
+      m_addbot_btn->Enable(false);
+    }
   }
   m_minimap->UpdateMinimap();
 }
