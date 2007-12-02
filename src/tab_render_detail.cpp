@@ -33,6 +33,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 			this, RO_SLI[i].id, configHandler.GetInt(RO_SLI[i].key,fromString<int>(RO_SLI[i].def)),
 			extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V		);
 		//ctrl_detail_sliders[i]->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
+		ctrl_detail_sliders[i]->SetToolTip(RO_SLI[i].tTip[0]);
 		sizerL->Add(new wxStaticText(this, -1,  _S(RO_SLI[i].lbl)), 0,wxALIGN_CENTER_VERTICAL|wxALL);
 		sizerL->Add(ctrl_detail_sliders[i], 0,wxALIGN_CENTER_VERTICAL|wxALL);
 	}
@@ -41,6 +42,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 			this, RO_SLI[i].id, configHandler.GetInt(RO_SLI[i].key,fromString<int>(RO_SLI[i].def)),
 			extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V);
 		//ctrl_detail_sliders[i]->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
+		ctrl_detail_sliders[i]->SetToolTip(RO_SLI[i].tTip[0]);
 		sizerR->Add(new wxStaticText(this, -1,  _S(RO_SLI[i].lbl)), 0,wxALIGN_CENTER_VERTICAL|wxALL);
 		sizerR->Add(ctrl_detail_sliders[i], 0,wxALIGN_CENTER_VERTICAL|wxALL);
 	}
