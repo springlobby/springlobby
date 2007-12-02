@@ -71,7 +71,7 @@ void tab_quality_video::updateControls(int what_to_update)
 			ctrl_qa_Boxes[i]->SetValue(intSettings[QA_CBOX[i].key]);
 		}
 
-		int waterOptIndex;
+		int waterOptIndex = 0;
 		int waterSetting = intSettings[WR_COMBOX[0].key]; 
 		switch (waterSetting)
 		{

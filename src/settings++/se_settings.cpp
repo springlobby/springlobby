@@ -63,10 +63,6 @@ void se_settings::setUsyncLoc(std::string loc)
 }
 
 
-std::string se_settings::getDefUsyncLoc()
-{
-	
-}
 
 /*copied from springlobby source*/
 wxString se_settings::AutoFindUnitSyncLib( const wxString& def )

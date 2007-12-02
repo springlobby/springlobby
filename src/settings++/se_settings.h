@@ -34,7 +34,7 @@ public:
 	
 private:
 	wxConfig* se_config;
-	std::string getDefUsyncLoc();
+	
 	wxString AutoFindUnitSyncLib( const wxString& def );
 	bool IsUnitSyncLib( const wxString& lib );
 	
