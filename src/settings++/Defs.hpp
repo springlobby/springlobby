@@ -313,7 +313,7 @@ const Control DO_CBOX[2] = {
 
 
 const Control WR_COMBOX[1] = {
-	"basic",                   "ReflectiveWater", ID_WINDOWP_WR_COMBOX,	"1", {wxT("placeholder")}
+		{"basic",                   "ReflectiveWater", ID_WINDOWP_WR_COMBOX,	"1", {wxT("placeholder")}}
 	/*{"reflective",              "ReflectiveWater", ID_WINDOWP_WR_COMBOX_1,	"1"},
 	{"reflective + refractive", "ReflectiveWater", ID_WINDOWP_WR_COMBOX_2,	"1"},
 	{"dynamic",                 "ReflectiveWater", ID_WINDOWP_WR_COMBOX_3,	"1"}*/

@@ -117,7 +117,7 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
 		ctrl_qa_Boxes[i]->SetToolTip(QA_CBOX[i].tTip[0]);
 		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 0)? 10: 0);
 	}
-	int waterOptIndex;
+	int waterOptIndex =0;
 	int waterSetting = configHandler.GetInt(WR_COMBOX[0].key,fromString<int>(WR_COMBOX[0].def)); 
 	switch (waterSetting)
 	{
@@ -177,7 +177,7 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
 	wxSizer* parentSizer = new wxFlexGridSizer(2,0,0);	
 	wxSizer* leftSizer = new wxFlexGridSizer(1,15,0);
 	wxSizer* middleSizer = new wxFlexGridSizer(1,15,0);
-	wxSizer* rightSizer = new wxFlexGridSizer(1,15,0);//for info
+	//wxSizer* rightSizer = new wxFlexGridSizer(1,15,0);//for info
 	wxFlexGridSizer* SizerA = new wxFlexGridSizer(1,10,10);
 	wxFlexGridSizer* SizerB = new wxFlexGridSizer(1,15,10);
 	wxFlexGridSizer* SizerC = new wxFlexGridSizer(1,15,10);

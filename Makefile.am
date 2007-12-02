@@ -490,6 +490,7 @@ springlobby_SOURCES += \
 	src/settings++/tab_audio.cpp \
 	src/settings++/frame_get_usync.cpp \
 	src/settings++/presets.h \
+	src/settings++/presets.cpp \
 	src/settings++/tab_abstract.cpp \
 	src/settings++/configHandler.h \
 	src/settings++/configHandler.cpp \
@@ -525,6 +526,7 @@ endif
  	src/settings++/tab_audio.cpp \
  	src/settings++/frame_get_usync.cpp \
  	src/settings++/presets.h \
+ 	src/settings++/presets.cpp \
  	src/settings++/tab_abstract.cpp \
  	src/settings++/configHandler.h \
  	src/settings++/configHandler.cpp \

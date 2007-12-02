@@ -25,6 +25,7 @@
 #define SETTINGS_PRESETS_H_
 #include <map>
 #include <string>
+#include <wx/string.h>
 /**** Presets for tab_simple go here
  * 
  * 
@@ -37,14 +38,7 @@ public:
 		std::string key;
 	
 	//levelLabels and values_arg MUST have same length
-	presetValues ( std::string key_arg,const wxString* levelLabels,const T* values_arg)
-	{
-		for(int i = 0; i< sizeof(levelLabels)+1;++i)
-		{
-			values[levelLabels[i]]=values_arg[i];
-		}
-		key = key_arg;
-	}
+		presetValues ( std::string key_arg,const wxString* levelLabels,const T* values_arg);
 	
 };
 typedef std::map<std::string,int> intMap;
