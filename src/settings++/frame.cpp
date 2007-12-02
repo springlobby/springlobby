@@ -38,7 +38,7 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 settings_frame::~settings_frame()
 {
 }
-
+//TODO hide debug/audio tab in simple mode
 void settings_frame::CreateGUIControls()
 {
 	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP);
@@ -115,7 +115,7 @@ void settings_frame::initMenuBar() {
 
 	SetMenuBar(menuBar);
 }
-
+//TODO add cancel option
 void settings_frame::handleExit() {
     if (abstract_panel::settingsChanged) {
         if ((wxMessageBox(wxT("Save settings before exiting?"), wxT(""), wxYES_NO, this)) == wxYES) {
@@ -127,7 +127,7 @@ void settings_frame::handleExit() {
     Destroy();
     
 }
-
+//TODO hide/show debug/audio tab in simple/expert mode
 void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 	switch (event.GetId()) {
 		case ID_MENUITEM_SAVE: {

@@ -22,6 +22,7 @@
 
 #include "tabs.h"
 
+//TODO maybe use only one chkbox for minimap on left
 void tab_ui::initScrollSpeedSizer(wxStaticBoxSizer* sizer) {
 	// i < "sizeof"(MO_SLI)
 	sizer->Add(5,10,0);

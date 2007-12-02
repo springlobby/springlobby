@@ -24,6 +24,7 @@
 
 const wxString infoTextContent= wxT("INFOTEXT HERE");
 
+//TODO add slider for global audio volume;
 void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 	sizer->Add(new wxStaticText(this, -1,  wxT("RENDER_QUALITY")), 0,wxALL);
 	//sizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP , 10);
@@ -102,7 +103,7 @@ tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title ,
 
 	SetSizer(parentSizer, true); // true --> delete old sizer if present
 }
-
+//TODO update volume slider
 void tab_simple::updateControls(int what_to_update)
 {
 

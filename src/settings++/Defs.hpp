@@ -209,6 +209,7 @@ template<typename Type> Type fromString(const std::string& s) {
 const wxPoint zeroPoint = wxPoint(0,0);
 
 //TODO find reasonable default values
+//TODO is max_texture stages obsolte?
 const Control RO_SLI[9] = {
 	{"shadow-map size",              "ShadowMapSize",       ID_RO_SLI_0,	"2048", {wxT("placeholder")}	},
 	{"tree view-distance",           "TreeRadius",          ID_RO_SLI_1,	"3000", {wxT("placeholder")}	},
@@ -279,7 +280,7 @@ const Control UI_CBOX[14] = {
 	{"show in-game clock",                              "ShowClock",           ID_WINDOWP_UI_CBOX_10,	"1", {wxT("placeholder")}},
 	{"show in-game player information",                 "ShowPlayerInfo",      ID_WINDOWP_UI_CBOX_11,	"1", {wxT("placeholder")}},
 	{"show in-game framerate",                          "ShowFPS",             ID_WINDOWP_UI_CBOX_12,	"0", {wxT("placeholder")}},
-
+//TODO is there even a reason that it should be disabled?
 	{"fix rendering on alt-tab",                        "FixAltTab",           ID_WINDOWP_UI_CBOX_13,	"1", {wxT("placeholder")}},
 	{"disallow helper AI's",                            "NoHelperAIs",         ID_WINDOWP_UI_CBOX_14,	"0", {wxT("placeholder")}}
 };
