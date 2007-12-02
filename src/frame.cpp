@@ -72,7 +72,7 @@ void settings_frame::CreateGUIControls()
 		}
 		break;
 	}
-
+	notebook->ChangeSelection(0);
 	SetTitle(wxT("Settings++"));
 	SetIcon(wxNullIcon);
 	SetSize(8,8,760,550);
