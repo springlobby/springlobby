@@ -497,7 +497,6 @@ springlobby_SOURCES += \
 	src/settings++/tab_abstract.cpp \
 	src/settings++/configHandler.h \
 	src/settings++/configHandler.cpp \
-	src/settings++/settings.rc \
 	src/settings++/Defs.hpp \
 	src/settings++/tab_simple.cpp \
 	src/settings++/tab_quality_video.cpp \
@@ -505,6 +504,12 @@ springlobby_SOURCES += \
 	src/settings++/tab_simple.h \
 	src/settings++/tab_render_detail.h \
 	src/settings++/tab_abstract.h
+
+if USE_WINDRES
+	springlobby_SOURCES += \
+		src/springlobby.rc
+endif
+
 
 # settings++_SOURCES = \
 # 	src/settings++ \

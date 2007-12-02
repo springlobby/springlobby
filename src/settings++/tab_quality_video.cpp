@@ -35,9 +35,9 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 	ctrl_y_res = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_Y, wxT(""), WX_DEF_P, wxSize(60, 20), 0);
 	std::string s;
 	toString<int>(s,configHandler.GetInt(RC_TEXT[0].key,fromString<int>(RC_TEXT[0].def))); 
-	ctrl_x_res->ChangeValue(_S(s.c_str()));
+	ctrl_x_res->SetValue(_S(s.c_str()));
 	toString<int>(s,configHandler.GetInt(RC_TEXT[1].key,fromString<int>(RC_TEXT[1].def))); 
-	ctrl_y_res->ChangeValue(_S(s.c_str()));
+	ctrl_y_res->SetValue(_S(s.c_str()));
 
 	wxSizer* subSizer = new wxBoxSizer(wxHORIZONTAL);
 	subSizer->Add(ctrl_x_res, 0, wxALIGN_LEFT, 10);
@@ -57,9 +57,9 @@ void tab_quality_video::updateControls(int what_to_update)
 	{
 		std::string s;
 		toString<int>(s,intSettings[RC_TEXT[0].key]); 
-		ctrl_x_res->ChangeValue(_S(s.c_str()));
+		ctrl_x_res->SetValue(_S(s.c_str()));
 		toString<int>(s,intSettings[RC_TEXT[1].key]); 
-		ctrl_y_res->ChangeValue(_S(s.c_str()));
+		ctrl_y_res->SetValue(_S(s.c_str()));
 	}
 	if (what_to_update == UPDATE_QA_BOXES || what_to_update == UPDATE_ALL)
 	{
