@@ -52,13 +52,10 @@ bool SpringLobbyApp::OnInit()
 #endif
 
   //initializes logging in both std::cout and gui messages
-  wxLog *loggergui = new wxLogGui();
-  wxLog *logger = new wxLogStream( &std::cout );
-  wxLog::SetActiveTarget( logger );
-  wxLogChain *logChain = new wxLogChain( loggergui );
-  wxLog::SetActiveTarget( logChain );
-  loggergui->SetLogLevel( wxLOG_Warning );
-  logger->SetLogLevel( wxLOG_Trace );
+  wxLog *loggerconsole = new wxLogStream( &std::cout );
+  wxLogChain *logChain = new wxLogChain( loggerconsole );
+  logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+  logChain->SetLogLevel( wxLOG_Trace );
 
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
