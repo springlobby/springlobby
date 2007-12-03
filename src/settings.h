@@ -110,6 +110,7 @@ class Settings
     int GetLastHostPlayerNum();
     int GetLastHostNATSetting();
     std::string GetLastHostMap();
+    int GetLastRankLimit();
 
     void SetLastHostDescription( const std::string& value );
     void SetLastHostMod( const std::string& value );
@@ -118,6 +119,7 @@ class Settings
     void SetLastHostPlayerNum( int value );
     void SetLastHostNATSetting( int value );
     void SetLastHostMap( const std::string& value );
+    void SetLastRankLimit( int rank );
 
 
     void SetLastAI( const std::string& ai );

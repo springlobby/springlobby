@@ -865,7 +865,7 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
     );
   }
   cmd += WX_STRING(bo.modhash);
-  cmd += wxString::Format( _T(" %d "), bo.rankneeded );
+  cmd += wxString::Format( _T(" %d "), bo.rankneeded/100 );
   cmd += WX_STRING( bo.maphash ) + _T(" ");
   cmd += WX_STRING( bo.mapname ) + _T("\t");
   cmd += WX_STRING( bo.description ) + _T("\t");
