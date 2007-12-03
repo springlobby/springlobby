@@ -34,6 +34,9 @@ class Settings
     wxString GetWebBrowserPath();
     void SetWebBrowserPath( const wxString path );
 
+    wxString GetCachePath();
+    void SetCachePath( const wxString path );
+
     std::string GetDefaultServer();
     void SetDefaultServer( const std::string& server_name );
 
@@ -119,6 +122,9 @@ class Settings
 
     void SetLastAI( const std::string& ai );
     std::string GetLastAI();
+
+    void SetDisplayJoinLeave( bool display, const wxString& channel  );
+    bool GetDisplayJoinLeave( const wxString& channel );
 
   protected:
 

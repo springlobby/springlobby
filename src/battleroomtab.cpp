@@ -13,6 +13,8 @@
 #include <wx/sizer.h>
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
+#include <wx/colordlg.h>
+#include <wx/colour.h>
 #include <stdexcept>
 
 #include "battleroomtab.h"
@@ -27,6 +29,7 @@
 #include "uiutils.h"
 #include "addbotdialog.h"
 #include "server.h"
+#include "iconimagelist.h"
 
 
 #define Opt_Pos_Size 0
@@ -52,7 +55,7 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
   EVT_CHECKBOX( BROOM_SPEC, BattleRoomTab::OnImSpec )
   EVT_COMBOBOX( BROOM_TEAMSEL, BattleRoomTab::OnTeamSel )
   EVT_COMBOBOX( BROOM_ALLYSEL, BattleRoomTab::OnAllySel )
-  EVT_COMBOBOX( BROOM_COLOURSEL, BattleRoomTab::OnColourSel )
+  EVT_BUTTON( BROOM_COLOURSEL, BattleRoomTab::OnColourSel )
   EVT_COMBOBOX( BROOM_SIDESEL, BattleRoomTab::OnSideSel )
 
 END_EVENT_TABLE()
@@ -65,10 +68,12 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   // Create all widgets
   m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
 
+  UserBattleStatus& myself = m_battle.GetMe().BattleStatus();
+
   m_player_panel = new wxPanel( m_splitter , -1 );
   m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
   m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
-  m_color_sel = new wxComboBox( m_player_panel, BROOM_COLOURSEL, _("gold"), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), 16, colour_choices );
+  m_color_sel = new wxBitmapButton( m_player_panel, BROOM_COLOURSEL, icons().GetBitmap( icons().GetColourIcon( myself.team ) ) , wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
   usync()->SetCurrentMod( STD_STRING(m_battle.GetModName()) );
@@ -290,6 +295,8 @@ void BattleRoomTab::UpdateUser( User& user )
     m_ready_chk->SetValue( bs.ready );
   }
 
+  m_color_sel->SetBitmapLabel( icons().GetBitmap( icons().GetColourIcon( bs.team ) ) );
+
   m_minimap->UpdateMinimap();
 }
 
@@ -402,10 +409,13 @@ void BattleRoomTab::OnColourSel( wxCommandEvent& event )
 {
   User& u = m_battle.GetMe();
   UserBattleStatus& bs = u.BattleStatus();
-  int i = m_color_sel->GetSelection();
-  bs.color_r = colour_values[i][0];
-  bs.color_g = colour_values[i][1];
-  bs.color_b = colour_values[i][2];
+  wxColour CurrentColour;
+  CurrentColour.Set( bs.color_r, bs.color_g, bs.color_b );
+  CurrentColour = wxGetColourFromUser(this, CurrentColour);
+  if ( !CurrentColour.IsColourOk() ) return;
+  bs.color_r = CurrentColour.Red();
+  bs.color_g = CurrentColour.Green();
+  bs.color_b = CurrentColour.Blue();
   //u.SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
 }

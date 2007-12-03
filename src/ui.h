@@ -83,6 +83,8 @@ class Ui
 
     MainWindow& mw();
 
+    bool IsMainWindowCreated();
+
     void OnUpdate( int mselapsed );
 
     void OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported);

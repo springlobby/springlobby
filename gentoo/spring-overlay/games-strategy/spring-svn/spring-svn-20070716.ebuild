@@ -16,6 +16,7 @@ IUSE="debug"
 
 RDEPEND="
 	!virtual/game_spring
+	!games-strategy/taspring-linux-release
 	>=dev-lang/python-2.4
 	>=dev-libs/boost-1.34
 	media-libs/devil
@@ -45,7 +46,7 @@ my_depend_with_use () {
 
 pkg_setup () {
 	my_depend_with_use media-libs/libsdl X opengl
-	if ! has_version >=dev-libs/boost-1.34.0 ; then
+	if ! has_version \>=dev-libs/boost-1.34.0 ; then
 		my_depend_with_use dev-libs/boost threads
 	fi
 	${MY_DEPEND_WITH_USE} || die "Some dependencies need different use flags. Package setup failed."

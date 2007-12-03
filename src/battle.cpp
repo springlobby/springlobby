@@ -37,7 +37,7 @@ Battle::~Battle() {
 }
 
 
-Server& Battle::Battle::GetServer()
+Server& Battle::GetServer()
 {
   return m_serv;
 }
@@ -215,7 +215,7 @@ User& Battle::GetMe()
 }
 
 
-bool Battle::IsFounderMe() const
+bool Battle::IsFounderMe()
 {
   return (m_opts.founder == m_serv.GetMe().GetNick());
 }

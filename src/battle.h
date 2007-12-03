@@ -136,7 +136,7 @@ class Battle : public UserList, public IBattle
 
     User& GetFounder() { return GetUser( m_opts.founder ); }
     User& GetMe();
-    bool IsFounderMe() const;
+    bool IsFounderMe();
 
     bool IsFull() { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
 

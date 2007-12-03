@@ -37,6 +37,7 @@ BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
   EVT_TEXT_URL    ( CHAT_LOG,  ChatPanel::OnLinkEvent )
 
   EVT_MENU        ( CHAT_MENU_CH_LEAVE, ChatPanel::OnChannelMenuLeave )
+  EVT_MENU        ( CHAT_MENU_CH_DISPLAYJOIN, ChatPanel::OnChannelMenuDisplayJoinLeave )
   EVT_MENU        ( CHAT_MENU_CH_AUTOJOIN, ChatPanel::OnChannelAutoJoin )
   EVT_MENU        ( CHAT_MENU_CH_INFO, ChatPanel::OnChannelMenuInfo )
   EVT_MENU        ( CHAT_MENU_CH_TOPIC, ChatPanel::OnChannelMenuTopic )
@@ -243,6 +244,13 @@ void ChatPanel::_CreatePopup()
     wxMenuItem* leaveitem = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_LEAVE, _("Leave"), wxEmptyString, wxITEM_NORMAL );
     m_popup_menu->Append( leaveitem );
 
+    displayjoinitem = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_DISPLAYJOIN, _("Display Join/Leave Messages"), wxEmptyString, wxITEM_CHECK );
+    if ( m_type == CPT_Channel )
+    {
+      m_popup_menu->Append( displayjoinitem );
+      displayjoinitem->Check( sett().GetDisplayJoinLeave( WX_STRING( m_channel->GetName() ) ) );
+    }
+
     m_popup_menu->AppendSeparator();
     wxMenuItem* selectitem = new wxMenuItem( m_popup_menu, wxID_SELECTALL, _("Select all"), wxEmptyString, wxITEM_NORMAL );
     m_popup_menu->Append( selectitem );
@@ -430,15 +438,17 @@ void ChatPanel::_OutputLine( const wxString& message, const wxColour& col )
 {
   LogTime();
   m_chatlog_text->SetDefaultStyle(wxTextAttr(col));
+  #ifdef __WXMSW__
   m_chatlog_text->Freeze();
+  #endif
   m_chatlog_text->AppendText( message + _T("\n") );
   if ( m_chat_log ) m_chat_log->AddMessage(message);
   CheckLength();
-#ifdef __WXMSW__
   m_chatlog_text->ScrollLines( 10 );
   m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
-#endif
+  #ifdef __WXMSW__
   m_chatlog_text->Thaw();
+  #endif
 }
 
 
@@ -485,7 +495,16 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
     col.Set( 0,0,0 );
   }
 
-  _OutputLine( _T(" <") + who + _T("> ")+ message, col );
+  if ( who == _T("MelBot") && message.Contains (  _T("<") ) && message.Contains (  _T(">") )  ) {
+    wxString who2;
+    wxString message2;
+    who2= message.BeforeFirst( '>' ).AfterFirst ( '<' ) + _T("@IRC");
+    message2 = message.AfterFirst( '>' );
+    _OutputLine( _T(" <") + who2 + _T("> ")+ message2, col );
+  } else {
+    _OutputLine( _T(" <") + who + _T("> ")+ message, col );
+  }
+
 
   if ( req_user ) {
     if ( !m_ui.mw().IsActive() ) m_ui.mw().RequestUserAttention();
@@ -538,17 +557,20 @@ wxString ChatPanel::GetChatTypeStr()
 
 void ChatPanel::Joined( User& who )
 {
-  _OutputLine( _T(" ** ") + WX_STRING(who.GetNick()) + _(" joined the ") + GetChatTypeStr() + _T("."), wxColour(0, 80, 0) );
-  if ( m_show_nick_list ) m_nicklist->AddUser( who );
+  if ( m_type == CPT_Channel )
+  {
+    if( sett().GetDisplayJoinLeave( WX_STRING( m_channel->GetName() ) ) ) { _OutputLine( _T(" ** ") + WX_STRING(who.GetNick()) + _(" joined the ") + GetChatTypeStr() + _T("."), wxColour(0, 80, 0) ); }
+    if ( m_show_nick_list ) m_nicklist->AddUser( who );
+  }
 }
 
 
 void ChatPanel::Parted( User& who, const wxString& message )
 {
-  _OutputLine( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" )."), wxColour(0, 80, 0) );
-  if ( m_show_nick_list ) m_nicklist->RemoveUser( who );
-
   if ( m_type == CPT_Channel ) {
+    if( sett().GetDisplayJoinLeave( WX_STRING( m_channel->GetName() ) ) ) { _OutputLine( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" )."), wxColour(0, 80, 0) ); }
+    if ( m_show_nick_list ) m_nicklist->RemoveUser( who );
+
     if ( m_channel == 0 ) return;
     if ( &who == &m_channel->GetMe() ) {
       m_channel->uidata.panel = 0;
@@ -806,6 +828,18 @@ void ChatPanel::OnChannelMenuLeave( wxCommandEvent& event )
   SetChannel( 0 );
 }
 
+void ChatPanel::OnChannelMenuDisplayJoinLeave( wxCommandEvent& event )
+{
+    if ( m_channel == 0 ) return;
+    if(!displayjoinitem->IsChecked()) {
+        sett().SetDisplayJoinLeave( false, WX_STRING( m_channel->GetName() ) );
+        displayjoinitem->Check( false );
+    }
+    else {
+        sett().SetDisplayJoinLeave( true, WX_STRING( m_channel->GetName() ) );
+        displayjoinitem->Check( true );
+   }
+}
 
 void ChatPanel::OnChannelAutoJoin( wxCommandEvent& event )
 {

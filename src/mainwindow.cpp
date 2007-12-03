@@ -51,7 +51,7 @@ END_EVENT_TABLE()
 
 
 MainWindow::MainWindow( Ui& ui ) :
-  wxFrame( (wxFrame*)0, -1, _("Spring Lobby"), wxPoint(50, 50), wxSize(450, 340) ),
+  wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
   m_ui(ui)
 {
   SetIcon( wxIcon(springlobby_xpm) );
@@ -103,9 +103,6 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
-
-  m_chat_tab->Disable();
-  m_join_tab->Disable();
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -332,6 +329,13 @@ void MainWindow::OnShowDocs( wxCommandEvent& event )
 void MainWindow::OnTabsChanged( wxListbookEvent& event )
 {
   MakeImages();
+
+  int newsel = event.GetSelection();
+
+  if ( newsel == 0 || newsel == 1 )
+  {
+    if ( !m_ui.IsConnected() && m_ui.IsMainWindowCreated() ) m_ui.Connect();
+  }
 }
 
 
@@ -344,39 +348,4 @@ void MainWindow::OnUnitSyncReloaded()
   debug("Reloading Singleplayer tab");
   GetSPTab().OnUnitSyncReloaded();
   debug("Singleplayer tab updated");
-}
-
-
-void MainWindow::DisableChatTab()
-{
-  m_chat_tab->Disable();
-}
-
-
-void MainWindow::EnableChatTab()
-{
-  m_chat_tab->Enable();
-}
-
-
-void MainWindow::DisableMultiplayerTab()
-{
-  m_join_tab->Disable();
-}
-
-
-void MainWindow::EnableMultiplayerTab()
-{
-  m_join_tab->Enable();
-}
-
-void MainWindow::DisableSingleplayerTab()
-{
-  m_sp_tab->Disable();
-}
-
-
-void MainWindow::EnableSingleplayerTab()
-{
-  m_sp_tab->Enable();
 }

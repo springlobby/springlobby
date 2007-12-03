@@ -1,5 +1,5 @@
 /* XPM */
-static char * rank5_xpm[] = {
+static const char * rank5_xpm[] = {
 "16 16 32 1",
 " 	c None",
 ".	c #000000",

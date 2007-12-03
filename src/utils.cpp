@@ -40,7 +40,7 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #ifdef __WXMSW__
   std::string tmp = prefix;
   tmp += " " + func + "( " + params + " )" + tmpmsg + "\n";
-  if (prefix != "**" and prefix != "--" and prefix != "ww" ) { wxMessageBox( WX_STRING(tmp) ); }
+  if (prefix != "**" && prefix != "--" && prefix != "ww" ) { wxMessageBox( WX_STRING(tmp) ); }
 #ifdef _MSC_VER
   OutputDebugString( tmp.c_str() );
 #endif
