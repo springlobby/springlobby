@@ -153,6 +153,8 @@ bool SinglePlayerTab::ValidSetup()
     return false;
   }
 
+  if ( usync()->VersionSupports( GF_XYStartPos ) ) return true;
+
   int numBots = 0;
   int first = -1;
   for ( unsigned int i = 0; i < (unsigned int)m_battle.Map().info.posCount; i++ ) {

@@ -82,6 +82,7 @@ class SpringUnitSync : public IUnitSync
     bool IsLoaded();
 
     std::string GetSpringVersion();
+    bool VersionSupports( GameFeature feature );
 
     wxArrayString GetAIList();
     wxString GetBotLibPath( const wxString& botlibname );
