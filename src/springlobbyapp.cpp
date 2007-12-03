@@ -112,7 +112,7 @@ void SpringLobbyApp::OnFatalException()
 
   DebugInfo += _T("-------- End StackTrace --------");
 
-  wxLogError( DebugInfo );
+  wxLogMessage( DebugInfo );
 #else
   wxLogError( _("Stacktrace not possible, please enable wxStackWalker") );
 #endif
