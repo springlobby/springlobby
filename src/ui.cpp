@@ -480,6 +480,7 @@ void Ui::OnDisconnected( Server& server )
   debug_func( "" );
   if ( m_main_win == 0 ) return;
 
+  mw().GetJoinTab().GetBattleListTab().SetFilterActiv( false );
   mw().GetJoinTab().LeaveCurrentBattle();
   mw().GetJoinTab().GetBattleListTab().RemoveAllBattles();
 

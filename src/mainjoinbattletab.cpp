@@ -105,18 +105,12 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
   m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, 2 );
   m_tabs->InsertPage( 3, m_opts_tab, _("Options"), false, 3 );
 
-  m_list_tab->DisableHostButton();
-  m_list_tab->DisableJoinButton();
-
 }
 
 
 void MainJoinBattleTab::HostBattle( Battle& battle )
 {
   JoinBattle( battle );
-
-  m_list_tab->DisableHostButton();
-  m_list_tab->DisableJoinButton();
 }
 
 
@@ -135,8 +129,6 @@ void MainJoinBattleTab::LeaveCurrentBattle()
     m_battle_tab = 0;
   }
 
-  m_list_tab->EnableHostButton();
-  m_list_tab->EnableJoinButton();
 
 }
 

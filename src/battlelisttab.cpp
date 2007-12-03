@@ -279,6 +279,13 @@ void BattleListTab::UpdateList() {
 }
 
 
+void BattleListTab::SetFilterActiv( bool activ )
+{
+  m_filter->SetActiv( activ );
+  m_filter_activ->SetValue( activ );
+}
+
+
 void BattleListTab::OnHost( wxCommandEvent& event )
 {
   if ( !m_ui.IsConnected() ) {
@@ -366,6 +373,11 @@ void BattleListTab::OnFilter( wxCommandEvent& event )
 
 void BattleListTab::OnFilterActiv( wxCommandEvent& event )
 {
+  if ( !m_ui.IsConnected() )
+  {
+    m_filter_activ->SetValue( !m_filter_activ->GetValue() );
+    return;
+  }
   m_filter->SetActiv( m_filter_activ->GetValue() );
 }
 
@@ -432,30 +444,6 @@ void BattleListTab::DoJoin( Battle& battle )
   } else {
     battle.Join();
   }
-}
-
-
-void BattleListTab::EnableJoinButton()
-{
-  m_join_btn->Enable();
-}
-
-
-void BattleListTab::DisableJoinButton()
-{
-  m_join_btn->Disable();
-}
-
-
-void BattleListTab::EnableHostButton()
-{
-  m_host_btn->Enable();
-}
-
-
-void BattleListTab::DisableHostButton()
-{
-  m_host_btn->Disable();
 }
 
 
