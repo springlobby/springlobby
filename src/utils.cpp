@@ -7,6 +7,7 @@
 
 #include "utils.h"
 #include "revision.h"
+#include "stacktrace.h"
 
 
 // FIXME this does not work on linux+mingw build for windows
@@ -19,6 +20,27 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
+
+void DumpStackTraceToLog()
+{
+
+#if wxUSE_STACKWALKER
+
+  wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
+
+  DebugInfo += _T("StackTraceID: ") + stacktrace().GetStackTraceHash() + _T("\n");
+
+  stacktrace().Walk(2);
+  DebugInfo += stacktrace().GetStackTrace();
+
+  DebugInfo += _T("-------- End StackTrace --------");
+
+  wxLogMessage( DebugInfo );
+#else
+  wxLogError( _("Stacktrace not possible, please enable wxStackWalker") );
+#endif
+}
+
 
 std::string i2s( int x )
 {
