@@ -29,6 +29,7 @@ BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_MENU(wxID_ANY,settings_frame::OnMenuChoice)
 END_EVENT_TABLE()
 
+//TODO use icon
 settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxFrame(parent, id, title, position, size, style)
 {

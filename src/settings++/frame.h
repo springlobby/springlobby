@@ -39,7 +39,7 @@
 #include "tabs.h"
 
 
-//TODO use icon
+
 class settings_frame : public wxFrame
 {
 	private:

@@ -300,7 +300,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		{
 			for (int i=0; i<prVal_RenderQuality_size;++i)
 			{
-				presetValues<int> pop = prVal_RenderQuality[i]; 
+				presetValues<int,5> pop = prVal_RenderQuality[i]; 
 				 int k = (pop.values[choice]);
 				 
 				(intSettings)[prVal_RenderQuality[i].key]= k;
@@ -311,7 +311,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		{
 			for (int i=0; i<prVal_RenderDetail_size;++i)
 						{
-							presetValues<int> pop = prVal_RenderDetail[i]; 
+							presetValues<int,3> pop = prVal_RenderDetail[i]; 
 							 int k = (pop.values[choice]);
 							(intSettings)[prVal_RenderDetail[i].key]= k;
 						}
