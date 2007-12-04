@@ -134,7 +134,7 @@ MainWindow::~MainWindow()
   delete m_options_icon;
   delete m_select_image;
   
-
+  
 }
 
 

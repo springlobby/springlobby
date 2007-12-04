@@ -48,7 +48,7 @@ class settings_frame : public wxFrame
 	public:
 		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style =  wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX);
 		virtual ~settings_frame();
-		
+		void handleExit();
 	private:
 		tab_simple* simpleTab;
 		tab_ui* uiTab;
@@ -58,7 +58,7 @@ class settings_frame : public wxFrame
 		abstract_panel* detailTab;
 		abstract_panel* qualityTab;
 		
-		wxPanel panelArray[6];
+		//wxPanel panelArray[6];
 		
 		wxMenu* menuFile;
 		wxMenu* menuMode;
@@ -66,7 +66,7 @@ class settings_frame : public wxFrame
 		wxNotebook *notebook;
 		
 		void initMenuBar();
-		void handleExit();
+		
 		enum
 		{
 			////GUI Enum Control ID Start
