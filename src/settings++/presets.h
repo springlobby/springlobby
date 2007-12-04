@@ -105,10 +105,11 @@ const presetValues<int> prVal_RenderQuality[prVal_RenderQuality_size] = { pr_Dep
 
 //TODO add more video modes
 /** VIDEO MODES ********************************************************/
-const int vl_Resolution_X[3] = { 800, 1024, 1280 };
-const int vl_Resolution_Y[3] = { 600,  768, 1024 };
-const int vl_Resolution_Str_size = 3;
-const wxString vl_Resolution_Str[vl_Resolution_Str_size] = { wxT("800 x 600"), wxT("1024 x 768"), wxT("1280 x 1024")};
+const int vl_Resolution_X[7] = { 800, 1024, 1280, 1600, 1280, 1440, 1920};
+const int vl_Resolution_Y[7] = { 600,  768, 1024, 1200,  800,  900, 1200};
+const int vl_Resolution_Str_size = 7;
+const wxString vl_Resolution_Str[vl_Resolution_Str_size] = { wxT("800 x 600"), wxT("1024 x 768"), wxT("1280 x 1024"),
+		wxT("1600 x 1200"), wxT("1280 x 800 (widescreen)"), wxT("1440 x 900 (widescreen)"), wxT("19200 x 1200 (widescreen)")};
 
 
 #endif /*PRESETS_H_*/

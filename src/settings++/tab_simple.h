@@ -49,6 +49,7 @@ class tab_simple : public abstract_panel
 		wxComboBox* renderQuality_CBX;
 		wxComboBox* renderDetail_CBX;
 		wxComboBox* videoMode_CBX;
+		wxSlider* audioVolume_SLI;
 		
 		wxStaticText* infoText;
 		

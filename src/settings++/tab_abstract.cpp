@@ -335,14 +335,6 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 	}
 }
 
-//TODO is this still needed?
-wxArrayString abstract_panel::wxArrayStringFromCStringArray(const wxString* stdAr){
-	wxArrayString result = wxArrayString();
-	for (int i=0;i<4;++i)
-		result.Add(stdAr[i]);
-	return result;
-}
-
 //TODO inquire about floatsettings
 bool abstract_panel::saveSettings() {
     try {

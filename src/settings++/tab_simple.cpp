@@ -24,7 +24,7 @@
 
 const wxString infoTextContent= wxT("INFOTEXT HERE");
 
-//TODO add slider for global audio volume;
+
 void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 	sizer->Add(new wxStaticText(this, -1,  wxT("RENDER_QUALITY")), 0,wxALL);
 	//sizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP , 10);
@@ -39,10 +39,12 @@ void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 
 	sizer->Add(new wxStaticText(this, -1,  wxT("VIDEO_MODE")), 0,wxALL);
 	videoMode_CBX = new wxComboBox(this, ID_SIMPLE_MODE_CBX, vl_Resolution_Str[0], wxDefaultPosition, wxSize(220,21), 
-			3,vl_Resolution_Str,wxCB_DROPDOWN|wxCB_READONLY);
+			vl_Resolution_Str_size,vl_Resolution_Str,wxCB_DROPDOWN|wxCB_READONLY);
 	sizer->Add(videoMode_CBX, 0, wxBOTTOM, 15);	
-
-
+	
+	sizer->Add(new wxStaticText(this, -1, (AO_SLI[1].lbl)), 0, wxTOP, 15);
+	audioVolume_SLI =  new wxSlider(this, AO_SLI[1].id, configHandler->GetSpringConfigInt(AO_SLI[1].key,fromString<int>(AO_SLI[1].def)), 0, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	sizer->Add(audioVolume_SLI, 0, wxBOTTOM, 15);	
 }
 
 void tab_simple::initInfoSizer(wxFlexGridSizer* sizer)
@@ -103,10 +105,10 @@ tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title ,
 
 	SetSizer(parentSizer, true); // true --> delete old sizer if present
 }
-//TODO update volume slider
+
 void tab_simple::updateControls(int what_to_update)
 {
-
+	audioVolume_SLI->SetValue(intSettings[AO_SLI[1].key]);
 }
 
 tab_simple::~tab_simple(void) {

@@ -41,7 +41,7 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 settings_frame::~settings_frame()
 {
 }
-//TODO hide debug/audio tab in simple mode
+
 void settings_frame::CreateGUIControls()
 {
 	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP);
@@ -57,10 +57,8 @@ void settings_frame::CreateGUIControls()
     notebook->AddPage(uiTab, wxT("UI Options"));
 
     audioTab = new audio_panel(notebook,ID_AUDIO);
-    notebook->AddPage(audioTab, wxT("Audio"));
-
+    
 	debugTab = new debug_panel(notebook,ID_DEBUG);
-	notebook->AddPage(debugTab, wxT("Debug"));
 	
 	simpleTab->setTabs(detailTab,qualityTab);
 
@@ -68,6 +66,8 @@ void settings_frame::CreateGUIControls()
 		case SET_MODE_EXPERT: {
 			notebook->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
 			notebook->AddPage(detailTab, wxT("Render Detail"));
+			notebook->AddPage(audioTab, wxT("Audio"));
+			notebook->AddPage(debugTab, wxT("Debug"));
 		}
 			break;
 		case SET_MODE_SIMPLE: {
@@ -139,10 +139,15 @@ void settings_frame::handleExit() {
         }
     	
     }
+    else
+    {
+    	OptionsHandler.save();
+    	Destroy();
+    }
     
     
 }
-//TODO hide/show debug/audio tab in simple/expert mode
+
 void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 	switch (event.GetId()) {
 		case ID_MENUITEM_SAVE: {
@@ -165,10 +170,14 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				notebook->InsertPage(0,simpleTab,wxT("SIMPLE"));
 				notebook->RemovePage(5);
 				notebook->RemovePage(4);
+				notebook->RemovePage(3);
+				notebook->RemovePage(2);
+				SetTitle(wxT("Settings++ (simple mode)"));
+				updateAllControls();
 				if (!OptionsHandler.getDisableWarning()){
 					wxMessageBox(wxT("Changes made on Quality/Detail tab in expert mode"
 							"\n will be lost if you change simple options again."), wxT(""), wxOK, this);
-				}
+				}	
 			}
 		} break;
 		case ID_MENUITEM_EXPERT: {
@@ -176,7 +185,11 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				OptionsHandler.setMode(SET_MODE_EXPERT);
 				notebook->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
 				notebook->AddPage(detailTab, wxT("Render Detail"));
+				notebook->AddPage(audioTab, wxT("Audio"));
+				notebook->AddPage(debugTab, wxT("Debug"));
 				notebook->RemovePage(0);
+				SetTitle(wxT("Settings++ (expert mode)"));
+				updateAllControls();
 			}
 		} break;
 		case ID_MENUITEM_DISABLE_WARN:{

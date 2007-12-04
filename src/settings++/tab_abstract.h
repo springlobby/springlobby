@@ -55,8 +55,7 @@ class abstract_panel : public wxPanel
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
-		wxArrayString wxArrayStringFromCStringArray(const wxString* stdAr);
-		
+				
     private:
     	
 		
