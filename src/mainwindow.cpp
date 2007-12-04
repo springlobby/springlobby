@@ -133,6 +133,7 @@ MainWindow::~MainWindow()
   delete m_battle_icon;
   delete m_options_icon;
   delete m_select_image;
+  
 
 }
 

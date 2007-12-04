@@ -482,7 +482,6 @@ springlobby_SOURCES += \
 	src/settings++/tab_ui.cpp \
 	src/settings++/tab_render_detail.cpp \
 	src/settings++/tab_quality_video.h \
-	src/settings++/frame_get_usync.h \
 	src/settings++/frame.h \
 	src/settings++/tab_audio.h \
 	src/settings++/se_settings.h \
@@ -490,12 +489,9 @@ springlobby_SOURCES += \
 	src/settings++/tab_debug.h \
 	src/settings++/se_settings.cpp \
 	src/settings++/tab_audio.cpp \
-	src/settings++/frame_get_usync.cpp \
 	src/settings++/presets.h \
 	src/settings++/presets.cpp \
 	src/settings++/tab_abstract.cpp \
-	src/settings++/configHandler.h \
-	src/settings++/configHandler.cpp \
 	src/settings++/Defs.hpp \
 	src/settings++/tab_simple.cpp \
 	src/settings++/tab_quality_video.cpp \
@@ -518,7 +514,6 @@ endif
  	src/settings++/tab_ui.cpp \
  	src/settings++/tab_render_detail.cpp \
  	src/settings++/tab_quality_video.h \
- 	src/settings++/frame_get_usync.h \
  	src/settings++/frame.h \
  	src/settings++/tab_audio.h \
  	src/settings++/se_settings.h \
@@ -526,12 +521,9 @@ endif
  	src/settings++/tab_debug.h \
  	src/settings++/se_settings.cpp \
  	src/settings++/tab_audio.cpp \
- 	src/settings++/frame_get_usync.cpp \
  	src/settings++/presets.h \
  	src/settings++/presets.cpp \
  	src/settings++/tab_abstract.cpp \
- 	src/settings++/configHandler.h \
- 	src/settings++/configHandler.cpp \
  	src/settings++/Main.cpp \
  	src/settings++/Defs.hpp \
  	src/settings++/tab_simple.cpp \

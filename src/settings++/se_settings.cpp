@@ -49,12 +49,12 @@ void se_settings::setDisableWarning(bool disable)
 	se_config->Write( _T("/SettingsPP/disableWarning"), disable);
 }
 
-std::string se_settings::getUsyncLoc()
+wxString se_settings::getUsyncLoc()
 {
 	wxString def;
 	def = AutoFindUnitSyncLib(def);
 	
-	return STD_STRING(se_config->Read( _T("/Spring/unitsync_loc"), def ));
+	return (se_config->Read( _T("/Spring/unitsync_loc"), def ));
 }
 
 void se_settings::setUsyncLoc(std::string loc)

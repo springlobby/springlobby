@@ -327,8 +327,8 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 			}
 			if (modeIndex!=-1)
 			{
-				(intSettings)["XResolution"] = vl_Resolution_X[modeIndex];
-				(intSettings)["YResolution"] = vl_Resolution_Y[modeIndex];
+				(intSettings)[wxT("XResolution")] = vl_Resolution_X[modeIndex];
+				(intSettings)[wxT("YResolution")] = vl_Resolution_Y[modeIndex];
 			}
 			break;
 		}
@@ -348,16 +348,16 @@ bool abstract_panel::saveSettings() {
     
     for (intMap::iterator i = intSettings.begin(); i != intSettings.end();++i)
     {
-        configHandler.SetInt(i->first,i->second);
+        configHandler->SetSpringConfigInt(i->first,i->second);
     }
     for (stringMap::iterator s = stringSettings.begin(); s != stringSettings.end();++s)
     {
-        configHandler.SetString(s->first,s->second);
+        //configHandler->SetSpringConfigString(s->first,s->second);
     }
     for (floatMap::iterator f = floatSettings.begin(); f != floatSettings.end();++f)
     {
         // No implemantion yet?!
-        //configHandler.SetFloat(f->first,f->second);
+        //configHandler->SetSpringConfigFloat(f->first,f->second);
     }
     //test ???
     return true; 

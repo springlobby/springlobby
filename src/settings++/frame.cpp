@@ -22,6 +22,7 @@
 
 #include "frame.h"
 #include "se_settings.h"
+#include "../springunitsynclib.h"
 
 BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_CLOSE(settings_frame::OnClose)
@@ -33,6 +34,8 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 {
 	CreateGUIControls();
 	initMenuBar();
+	//TODO call only when standalone
+	//susynclib()->Load(OptionsHandler->getUsyncLoc());
 }
 
 settings_frame::~settings_frame()
@@ -43,7 +46,7 @@ void settings_frame::CreateGUIControls()
 {
 	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP);
 	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
-
+	try {
 	simpleTab = new tab_simple(notebook,ID_SIMPLE);
 		
 	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
@@ -71,6 +74,10 @@ void settings_frame::CreateGUIControls()
 			notebook->InsertPage(0,simpleTab,wxT("SIMPLE"));
 		}
 		break;
+	}
+	} catch (...) {
+		wxMessageBox(wxT("DOH. unitsync not loaded. closing..."), wxT(""), wxOK, this);
+		Destroy();
 	}
 	notebook->SetSelection(0);
 	SetTitle(wxT("Settings++"));

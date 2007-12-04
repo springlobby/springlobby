@@ -30,7 +30,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 	// i < "sizeof"(RO_SLI)
 	for (int i = 0; i < ctrl_detail_sliders_size-4; i++) {
 		ctrl_detail_sliders[i] = new wxSlider(
-			this, RO_SLI[i].id, configHandler.GetInt(RO_SLI[i].key,fromString<int>(RO_SLI[i].def)),
+			this, RO_SLI[i].id, configHandler->GetSpringConfigInt(RO_SLI[i].key,fromString<int>(RO_SLI[i].def)),
 			extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V		);
 		//ctrl_detail_sliders[i]->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
 		ctrl_detail_sliders[i]->SetToolTip(RO_SLI[i].tTip[0]);
@@ -39,7 +39,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 	}
 	for (int i = 5; i < ctrl_detail_sliders_size; i++) {
 		ctrl_detail_sliders[i] = new wxSlider(
-			this, RO_SLI[i].id, configHandler.GetInt(RO_SLI[i].key,fromString<int>(RO_SLI[i].def)),
+			this, RO_SLI[i].id, configHandler->GetSpringConfigInt(RO_SLI[i].key,fromString<int>(RO_SLI[i].def)),
 			extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V);
 		//ctrl_detail_sliders[i]->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
 		ctrl_detail_sliders[i]->SetToolTip(RO_SLI[i].tTip[0]);

@@ -24,9 +24,10 @@
 #define __TAB_ABSTRACT_h__
 #include <map>
 #include <string>
-typedef std::map<std::string,int> intMap;
-typedef std::map<std::string,std::string> stringMap;
-typedef std::map<std::string,float> floatMap;
+#include <wx/string.h>
+typedef std::map<wxString,int> intMap;
+typedef std::map<wxString,wxString> stringMap;
+typedef std::map<wxString,float> floatMap;
 
 class abstract_panel : public wxPanel
 {

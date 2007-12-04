@@ -35,13 +35,13 @@ template <typename T> class presetValues
 
 public: 
 	std::map<wxString,T> values;
-		std::string key;
+		wxString key;
 	
 	//levelLabels and values_arg MUST have same length
-		presetValues ( std::string key_arg,const wxString* levelLabels,const T* values_arg);
+		presetValues ( wxString key_arg,const wxString* levelLabels,const T* values_arg);
 	
 };
-typedef std::map<std::string,int> intMap;
+//typedef std::map<std::string,int> intMap;
 
 //TODO figure out why length = 3 doesnt work
 const wxString levels_low_To_High[4] = { wxT("low"),wxT("medium"),wxT("high")};
@@ -59,15 +59,15 @@ const int vl_UnitIconDist[3] = 			{ 100,		550,	1000	}; // unit icon distance
 const int vl_MaxParticles[3] = 			{ 100,		9950,	20000	};
 const int vl_SM3MaxTextureStages[3] = 	{ 1,		10,		20		};
 
-const presetValues<int> pr_ShadowMapSize = presetValues<int>("ShadowMapSize",levels_low_To_High,vl_ShadowMapSize);
-const presetValues<int> pr_TreeRadius = presetValues<int>("TreeRadius",levels_low_To_High,vl_TreeRadius);
-const presetValues<int> pr_GroundDetail = presetValues<int>("GroundDetail",levels_low_To_High,vl_GroundDetail);
-const presetValues<int> pr_UnitLodDist = presetValues<int>("UnitLodDist",levels_low_To_High,vl_UnitLodDist);
-const presetValues<int> pr_GrassDetail = presetValues<int>("GrassDetail",levels_low_To_High,vl_GrassDetail);
-const presetValues<int> pr_GroundDecals = presetValues<int>("GroundDecals",levels_low_To_High,vl_GroundDecals);
-const presetValues<int> pr_UnitIconDist = presetValues<int>("UnitIconDist",levels_low_To_High,vl_UnitIconDist);
-const presetValues<int> pr_MaxParticles = presetValues<int>("MaxParticles",levels_low_To_High,vl_MaxParticles);
-const presetValues<int> pr_SM3MaxTextureStages = presetValues<int>("SM3MaxTextureStages",levels_low_To_High,vl_SM3MaxTextureStages);
+const presetValues<int> pr_ShadowMapSize = presetValues<int>(wxT("ShadowMapSize"),levels_low_To_High,vl_ShadowMapSize);
+const presetValues<int> pr_TreeRadius = presetValues<int>(wxT("TreeRadius"),levels_low_To_High,vl_TreeRadius);
+const presetValues<int> pr_GroundDetail = presetValues<int>(wxT("GroundDetail"),levels_low_To_High,vl_GroundDetail);
+const presetValues<int> pr_UnitLodDist = presetValues<int>(wxT("UnitLodDist"),levels_low_To_High,vl_UnitLodDist);
+const presetValues<int> pr_GrassDetail = presetValues<int>(wxT("GrassDetail"),levels_low_To_High,vl_GrassDetail);
+const presetValues<int> pr_GroundDecals = presetValues<int>(wxT("GroundDecals"),levels_low_To_High,vl_GroundDecals);
+const presetValues<int> pr_UnitIconDist = presetValues<int>(wxT("UnitIconDist"),levels_low_To_High,vl_UnitIconDist);
+const presetValues<int> pr_MaxParticles = presetValues<int>(wxT("MaxParticles"),levels_low_To_High,vl_MaxParticles);
+const presetValues<int> pr_SM3MaxTextureStages = presetValues<int>(wxT("SM3MaxTextureStages"),levels_low_To_High,vl_SM3MaxTextureStages);
 
 const int prVal_RenderDetail_size = 9;
 const presetValues<int> prVal_RenderDetail[prVal_RenderDetail_size] = {pr_ShadowMapSize, pr_TreeRadius, pr_GroundDetail,
@@ -87,17 +87,17 @@ const int vl_FSAA[5] = {0,1,1,1,1};//fullscreen aa enable/disable
 const int vl_FSAALevel[5] = {0,1,2,8,16};//fullscreen aa samples
 const int vl_AdvUnitShading[5] = {0,0,0,1,1}; //refl. units
 
-const presetValues<int> pr_DepthBufferBits = presetValues<int>("DepthBufferBits",levels_vlow_To_vHigh,vl_DepthBufferBits);
-const presetValues<int> pr_ReflectiveWater = presetValues<int>("ReflectiveWater",levels_vlow_To_vHigh,vl_ReflectiveWater);
-const presetValues<int> pr_Shadows = presetValues<int>("Shadows",levels_vlow_To_vHigh,vl_Shadows);
-const presetValues<int> pr_3DTrees = presetValues<int>("3DTrees",levels_vlow_To_vHigh,vl_3DTrees);
-const presetValues<int> pr_AdvSky = presetValues<int>("AdvSky",levels_vlow_To_vHigh,vl_AdvSky); 
-const presetValues<int> pr_DynamicSky = presetValues<int>("DynamicSky",levels_vlow_To_vHigh,vl_DynamicSky); 
-const presetValues<int> pr_SmoothPoints = presetValues<int>("SmoothPoints",levels_vlow_To_vHigh,vl_SmoothPoints);
-const presetValues<int> pr_SmoothLines = presetValues<int>("SmoothLines",levels_vlow_To_vHigh,vl_SmoothLines);
-const presetValues<int> pr_FSAA = presetValues<int>("FSAA",levels_vlow_To_vHigh,vl_FSAA); 
-const presetValues<int> pr_FSAALevel = presetValues<int>("FSAALevel",levels_vlow_To_vHigh,vl_FSAALevel); 
-const presetValues<int> pr_AdvUnitShading = presetValues<int>("AdvUnitShading",levels_vlow_To_vHigh,vl_AdvUnitShading);
+const presetValues<int> pr_DepthBufferBits = presetValues<int>(wxT("DepthBufferBits"),levels_vlow_To_vHigh,vl_DepthBufferBits);
+const presetValues<int> pr_ReflectiveWater = presetValues<int>(wxT("ReflectiveWater"),levels_vlow_To_vHigh,vl_ReflectiveWater);
+const presetValues<int> pr_Shadows = presetValues<int>(wxT("Shadows"),levels_vlow_To_vHigh,vl_Shadows);
+const presetValues<int> pr_3DTrees = presetValues<int>(wxT("3DTrees"),levels_vlow_To_vHigh,vl_3DTrees);
+const presetValues<int> pr_AdvSky = presetValues<int>(wxT("AdvSky"),levels_vlow_To_vHigh,vl_AdvSky); 
+const presetValues<int> pr_DynamicSky = presetValues<int>(wxT("DynamicSky"),levels_vlow_To_vHigh,vl_DynamicSky); 
+const presetValues<int> pr_SmoothPoints = presetValues<int>(wxT("SmoothPoints"),levels_vlow_To_vHigh,vl_SmoothPoints);
+const presetValues<int> pr_SmoothLines = presetValues<int>(wxT("SmoothLines"),levels_vlow_To_vHigh,vl_SmoothLines);
+const presetValues<int> pr_FSAA = presetValues<int>(wxT("FSAA"),levels_vlow_To_vHigh,vl_FSAA); 
+const presetValues<int> pr_FSAALevel = presetValues<int>(wxT("FSAALevel"),levels_vlow_To_vHigh,vl_FSAALevel); 
+const presetValues<int> pr_AdvUnitShading = presetValues<int>(wxT("AdvUnitShading"),levels_vlow_To_vHigh,vl_AdvUnitShading);
 
 const int prVal_RenderQuality_size = 11;
 const presetValues<int> prVal_RenderQuality[prVal_RenderQuality_size] = { pr_DepthBufferBits, pr_ReflectiveWater, pr_Shadows, pr_3DTrees,

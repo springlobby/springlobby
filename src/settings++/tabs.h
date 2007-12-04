@@ -30,7 +30,8 @@
 #include <map>
 #include <unistd.h>
 
-#include "configHandler.h"
+//#include "configHandler.h"
+#include "../springunitsynclib.h"
 #include "Defs.hpp"
 #include "tab_render_detail.h"
 #include "tab_quality_video.h"
@@ -43,7 +44,7 @@
 #include "presets.h"
 //#include "se_settings.h"
 
-
+#define configHandler (susynclib())
 #define TAB_SIZE wxSize(700,500)
 #define UPDATE_VIDEO_MODE 	2002
 #define UPDATE_QA_BOXES	  	2001

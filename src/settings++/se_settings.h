@@ -9,6 +9,7 @@
 //#include <wx/intl.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
+#include <wx/string.h>
 //
 #include <string>
 //TODO make sure HAS_WX_28 etc is availabe
@@ -27,7 +28,7 @@ public:
 	void setMode(int);
 	bool getDisableWarning();
 	void setDisableWarning(bool);
-	std::string getUsyncLoc();
+	wxString getUsyncLoc();
 	void setUsyncLoc(std::string);
 	static se_settings& getInstance();
 	void save();

@@ -27,7 +27,7 @@ void tab_ui::initScrollSpeedSizer(wxStaticBoxSizer* sizer) {
 	// i < "sizeof"(MO_SLI)
 	sizer->Add(5,10,0);
 	for (int i = 0; i < ctrl_scroll_slider_size; i++) {
-		ctrl_scroll_slider[i] = new wxSlider(this, MO_SLI[i].id, configHandler.GetInt(MO_SLI[i].key,fromString<int>(MO_SLI[i].def)), 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+		ctrl_scroll_slider[i] = new wxSlider(this, MO_SLI[i].id, configHandler->GetSpringConfigInt((MO_SLI[i].key),fromString<int>(MO_SLI[i].def)), 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 		if (i > 0)
 			sizer->Add(5,32,0);
 		sizer->Add(new wxStaticText(this, wxID_ANY, _S(MO_SLI[i].lbl), wxDefaultPosition, wxDefaultSize, 10));
@@ -43,7 +43,7 @@ void tab_ui::initCameraSizer(wxStaticBoxSizer* sizer) {
 	ctrl_cam_radio3 = new wxRadioButton(this, MO_RBUT[3].id, _S(MO_RBUT[3].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
 	ctrl_cam_radio4 = new wxRadioButton(this, MO_RBUT[4].id, _S(MO_RBUT[4].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
 
-	switch (configHandler.GetInt(MO_RBUT[0].key,fromString<int>(MO_RBUT[0].def))) {
+	switch (configHandler->GetSpringConfigInt(MO_RBUT[0].key,fromString<int>(MO_RBUT[0].def))) {
 		case 0: { ctrl_cam_radio3->SetValue(1); } break;	// CamMode 0: FPS
 		case 1: { ctrl_cam_radio0->SetValue(1); } break;	// CamMode 1: OH
 		case 2: { ctrl_cam_radio1->SetValue(1); } break;	// CamMode 2: ROH
@@ -62,7 +62,7 @@ void tab_ui::initUiOptSizer(wxStaticBoxSizer* sizer)
 {
 	for (int i = 0; i < ctrl_ui_chkb_size; i++) {
 		ctrl_ui_chkb[i] = new wxCheckBox(this, UI_CBOX[i].id, _S(UI_CBOX[i].lbl));
-			ctrl_ui_chkb[i]->SetValue(configHandler.GetInt(UI_CBOX[i].key,fromString<int>(UI_CBOX[i].def)));
+			ctrl_ui_chkb[i]->SetValue(configHandler->GetSpringConfigInt(UI_CBOX[i].key,fromString<int>(UI_CBOX[i].def)));
 			sizer->Add(ctrl_ui_chkb[i], 0, wxTOP, (i == 0)? 10: 0);
 		}
 }
