@@ -23,13 +23,13 @@ dist_doc_DATA = \
 	THANKS
 
 bin_PROGRAMS = \
-	springlobby
-	settings++
+	springlobby \
+	springsettings
 
 springlobby_LDADD = \
 	$(WX_LIBS)
 
-settings++_LDADD = \
+springsettings_LDADD = \
 	$(WX_LIBS)
 
 if USE_WINDRES
@@ -507,36 +507,43 @@ if USE_WINDRES
 endif
 
 
- settings++_SOURCES = \
- 	src/settings++ \
- 	src/settings++/frame.cpp \
+springsettings_SOURCES = \
+	revision.cpp \
+	src/revision.cpp.in \
+	src/revision.h \
+	src/utils.cpp \
+	src/utils.h \
+	src/springunitsynclib.cpp \
+	src/springunitsynclib.h \
+	src/settings++ \
+	src/settings++/frame.cpp \
 	src/settings++/tabs.h \
- 	src/settings++/main.h \
- 	src/settings++/tab_ui.cpp \
- 	src/settings++/tab_render_detail.cpp \
- 	src/settings++/tab_quality_video.h \
- 	src/settings++/frame.h \
- 	src/settings++/tab_audio.h \
- 	src/settings++/se_settings.h \
- 	src/settings++/se_utils.h \
- 	src/settings++/tab_debug.cpp \
- 	src/settings++/tab_debug.h \
- 	src/settings++/se_settings.cpp \
- 	src/settings++/tab_audio.cpp \
- 	src/settings++/presets.h \
- 	src/settings++/presets.cpp \
- 	src/settings++/tab_abstract.cpp \
- 	src/settings++/Main.cpp \
- 	src/settings++/Defs.hpp \
- 	src/settings++/tab_simple.cpp \
- 	src/settings++/tab_quality_video.cpp \
- 	src/settings++/tab_ui.h \
- 	src/settings++/tab_simple.h \
- 	src/settings++/tab_render_detail.h \
- 	src/settings++/tab_abstract.h
+	src/settings++/main.h \
+	src/settings++/tab_ui.cpp \
+	src/settings++/tab_render_detail.cpp \
+	src/settings++/tab_quality_video.h \
+	src/settings++/frame.h \
+	src/settings++/tab_audio.h \
+	src/settings++/se_settings.h \
+	src/settings++/se_utils.h \
+	src/settings++/tab_debug.cpp \
+	src/settings++/tab_debug.h \
+	src/settings++/se_settings.cpp \
+	src/settings++/tab_audio.cpp \
+	src/settings++/presets.h \
+	src/settings++/presets.cpp \
+	src/settings++/tab_abstract.cpp \
+	src/settings++/Main.cpp \
+	src/settings++/Defs.hpp \
+	src/settings++/tab_simple.cpp \
+	src/settings++/tab_quality_video.cpp \
+	src/settings++/tab_ui.h \
+	src/settings++/tab_simple.h \
+	src/settings++/tab_render_detail.h \
+	src/settings++/tab_abstract.h
 
 if USE_WINDRES
-	settings++_SOURCES += \
+	springsettings_SOURCES += \
 		src/springlobby.rc
 endif
 
