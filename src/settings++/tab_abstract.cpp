@@ -345,19 +345,24 @@ wxArrayString abstract_panel::wxArrayStringFromCStringArray(const wxString* stdA
 
 //TODO inquire about floatsettings
 bool abstract_panel::saveSettings() {
-    
-    for (intMap::iterator i = intSettings.begin(); i != intSettings.end();++i)
-    {
-        configHandler->SetSpringConfigInt(i->first,i->second);
-    }
-    for (stringMap::iterator s = stringSettings.begin(); s != stringSettings.end();++s)
-    {
-        //configHandler->SetSpringConfigString(s->first,s->second);
-    }
-    for (floatMap::iterator f = floatSettings.begin(); f != floatSettings.end();++f)
-    {
-        // No implemantion yet?!
-        //configHandler->SetSpringConfigFloat(f->first,f->second);
+    try {
+	    for (intMap::iterator i = intSettings.begin(); i != intSettings.end();++i)
+	    {
+	        configHandler->SetSpringConfigInt(i->first,i->second);
+	    }
+	    for (stringMap::iterator s = stringSettings.begin(); s != stringSettings.end();++s)
+	    {
+	    	//not used
+	        //configHandler->SetSpringConfigString(s->first,s->second);
+	    }
+	    for (floatMap::iterator f = floatSettings.begin(); f != floatSettings.end();++f)
+	    {
+	        // not used
+	        //configHandler->SetSpringConfigFloat(f->first,f->second);
+	    }
+    } catch (...) {
+    	wxMessageBox(_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK, 0);
+    	return false;
     }
     //test ???
     return true; 
