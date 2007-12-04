@@ -41,9 +41,7 @@ public:
 		presetValues ( wxString key_arg,const wxString* levelLabels,const T* values_arg);
 	
 };
-//typedef std::map<std::string,int> intMap;
 
-//TODO figure out why length = 3 doesnt work
 const wxString levels_low_To_High[3] = { wxT("low"),wxT("medium"),wxT("high")};
 const wxString levels_vlow_To_vHigh[5] = { wxT("very low"),wxT("low"),wxT("medium"),wxT("high"),wxT("very high")};
 

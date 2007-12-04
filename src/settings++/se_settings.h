@@ -29,7 +29,7 @@ public:
 	bool getDisableWarning();
 	void setDisableWarning(bool);
 	wxString getUsyncLoc();
-	void setUsyncLoc(std::string);
+	void setUsyncLoc(wxString);
 	static se_settings& getInstance();
 	void save();
 	

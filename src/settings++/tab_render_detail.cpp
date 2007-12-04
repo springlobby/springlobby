@@ -21,6 +21,7 @@
 **/
 
 #include "tabs.h"
+#include "se_utils.h"
 
 void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSizer* sizerR ) {
 	const int extrema[] = {

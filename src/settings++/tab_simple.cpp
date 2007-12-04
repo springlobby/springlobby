@@ -21,8 +21,9 @@
  **/
 
 #include "tabs.h"
+#include "se_utils.h"
 
-const wxString infoTextContent= wxT("INFOTEXT HERE");
+const wxString infoTextContent= _T("INFOTEXT HERE");
 
 
 void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {

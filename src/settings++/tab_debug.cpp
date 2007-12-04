@@ -21,6 +21,7 @@
 **/
 
 #include "tabs.h"
+#include "se_utils.h"
 
 void debug_panel::initDebugSizer(wxStaticBoxSizer* sizer) {
 	slider = new wxSlider(this, DO_SLI[0].id, configHandler->GetSpringConfigInt(DO_SLI[0].key,fromString<int>(DO_SLI[0].def)), 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
@@ -45,7 +46,7 @@ debug_panel::debug_panel(wxWindow *parent, wxWindowID id , const wxString &title
 	wxSizer* childLSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
 
 	// sizers for static boxes containing sliders, checkboxes, radiobuttons
-	wxStaticBoxSizer* debugSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Debug Options"), WX_DEF_P, wxSize(220, 300), 0, _S("")), wxVERTICAL);
+	wxStaticBoxSizer* debugSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Debug Options"), WX_DEF_P, wxSize(220, 300), 0, wxEmptyString), wxVERTICAL);
 
 	initDebugSizer(debugSizer);
 

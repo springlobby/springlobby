@@ -21,6 +21,7 @@
 **/
 
 #include "tabs.h"
+#include "se_utils.h"
 
 //TODO maybe use only one chkbox for minimap on left
 void tab_ui::initScrollSpeedSizer(wxStaticBoxSizer* sizer) {
@@ -94,9 +95,9 @@ tab_ui::tab_ui(wxWindow *parent, wxWindowID id , const wxString &title , const w
 	wxFlexGridSizer* cSizerL = new wxFlexGridSizer(1,10,10);
 	wxFlexGridSizer* cSizerR = new wxFlexGridSizer(1,10,10);
 
-	wxStaticBoxSizer* scrollSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Scroll Speeds (0 to disable)"), WX_DEF_P, wxSize(100, 200), 0, _S("")), wxVERTICAL);
-	wxStaticBoxSizer* cameraSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Default Camera Mode"), WX_DEF_P, wxSize(100, 100), 0, _S("")), wxVERTICAL);
-	wxStaticBoxSizer* uiOptSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Misc. UI Options"), WX_DEF_P, wxSize(100, 100), 0, _S("")), wxVERTICAL);
+	wxStaticBoxSizer* scrollSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Scroll Speeds (0 to disable)"), WX_DEF_P, wxSize(100, 200), 0, wxEmptyString), wxVERTICAL);
+	wxStaticBoxSizer* cameraSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Default Camera Mode"), WX_DEF_P, wxSize(100, 100), 0, wxEmptyString), wxVERTICAL);
+	wxStaticBoxSizer* uiOptSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Misc. UI Options"), WX_DEF_P, wxSize(100, 100), 0, wxEmptyString), wxVERTICAL);
 
 	initScrollSpeedSizer(scrollSpeedSizer);
 	initCameraSizer(cameraSizer);

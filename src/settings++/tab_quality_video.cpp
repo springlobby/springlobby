@@ -21,6 +21,7 @@
  **/
 
 #include "tabs.h"
+#include "se_utils.h"
 
 void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 
@@ -38,9 +39,9 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 	ctrl_y_res->SetToolTip(RC_TEXT[1].tTip[0]);
 	std::string s;
 	toString<int>(s,configHandler->GetSpringConfigInt(RC_TEXT[0].key,fromString<int>(RC_TEXT[0].def))); 
-	ctrl_x_res->SetValue(_S(s.c_str()));
+	ctrl_x_res->SetValue(_S(s));
 	toString<int>(s,configHandler->GetSpringConfigInt(RC_TEXT[1].key,fromString<int>(RC_TEXT[1].def))); 
-	ctrl_y_res->SetValue(_S(s.c_str()));
+	ctrl_y_res->SetValue(_S(s));
 
 	wxSizer* subSizer = new wxBoxSizer(wxHORIZONTAL);
 	subSizer->Add(ctrl_x_res, 0, wxALIGN_LEFT, 10);
@@ -60,9 +61,9 @@ void tab_quality_video::updateControls(int what_to_update)
 	{
 		std::string s;
 		toString<int>(s,intSettings[RC_TEXT[0].key]); 
-		ctrl_x_res->SetValue(_S(s.c_str()));
+		ctrl_x_res->SetValue(_S(s));
 		toString<int>(s,intSettings[RC_TEXT[1].key]); 
-		ctrl_y_res->SetValue(_S(s.c_str()));
+		ctrl_y_res->SetValue(_S(s));
 	}
 	if (what_to_update == UPDATE_QA_BOXES || what_to_update == UPDATE_ALL)
 	{

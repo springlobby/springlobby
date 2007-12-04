@@ -1,4 +1,6 @@
 #include "se_settings.h"
+#include "se_utils.h"
+
 //TODO guard properly
 #ifndef JUFGDJ
 	#ifdef WIN32
@@ -64,9 +66,9 @@ wxString se_settings::getUsyncLoc()
 	return (se_config->Read( _T("/Spring/unitsync_loc"), def ));
 }
 
-void se_settings::setUsyncLoc(std::string loc)
+void se_settings::setUsyncLoc(wxString loc)
 {
-	se_config->Write( _T("/Spring/unitsync_loc"), _S(loc) );
+	se_config->Write( _T("/Spring/unitsync_loc"), loc );
 }
 
 

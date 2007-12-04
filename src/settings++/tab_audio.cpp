@@ -21,6 +21,7 @@
 **/
 
 #include "tabs.h"
+#include "se_utils.h"
 
 void audio_panel::initAudioSizer(wxStaticBoxSizer* sizer) {
 	slider0 = new wxSlider(this, AO_SLI[0].id, configHandler->GetSpringConfigInt(AO_SLI[0].key,fromString<int>(AO_SLI[0].def)), 8, 128, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
@@ -45,7 +46,7 @@ audio_panel::audio_panel(wxWindow *parent, wxWindowID id , const wxString &title
 	wxSizer* childLSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
 
 	// sizers for static boxes containing sliders, checkboxes, radiobuttons
-    wxStaticBoxSizer* audioSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Audio Options"), WX_DEF_P, wxSize(230, 100), 0, _S("")), wxVERTICAL);
+    wxStaticBoxSizer* audioSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Audio Options"), WX_DEF_P, wxSize(230, 100), 0, wxEmptyString), wxVERTICAL);
 	initAudioSizer(audioSizer);
 
 

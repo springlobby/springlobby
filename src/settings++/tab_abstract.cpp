@@ -21,6 +21,7 @@
 **/
 
 #include "tabs.h"
+#include "se_utils.h"
 
 intMap abstract_panel::intSettings;
 stringMap abstract_panel::stringSettings;
