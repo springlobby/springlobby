@@ -101,27 +101,36 @@ wxString AddBotDialog::GetNick()
 
 wxString AddBotDialog::GetAI()
 {
-  return m_ai->GetStringSelection();
+  return m_ais[ m_ai->GetSelection() ];
+}
+
+
+wxString AddBotDialog::_RefineAIName( const wxString& name )
+{
+  wxString ret = name.BeforeLast('.').AfterLast('/');
+  if ( m_ai->FindString( ret ) == wxNOT_FOUND ) return ret;
+  wxString ret2;
+  int i = 2;
+  do {
+    ret2 = ret + wxString::Format( _T(" (%d)"), i );
+    i++;
+  } while ( m_ai->FindString( ret2 ) != wxNOT_FOUND );
+  return ret2;
 }
 
 
 void AddBotDialog::ReloadAIList()
 {
-  wxArrayString AIList;
   try {
-    AIList = usync()->GetAIList();
+    m_ais = usync()->GetAIList();
   } catch (...) {}
 
   m_ai->Clear();
+  for ( unsigned int i = 0; i < m_ais.GetCount(); i++ ) m_ai->Append( _RefineAIName(m_ais[i]) );
 
-  for ( unsigned int i = 0; i < AIList.GetCount(); i++ ) m_ai->Append( AIList[i] );
-
-  if ( AIList.GetCount() > 0 ) {
-    wxString ai = WX_STRING(sett().GetLastAI());
-    if ( ai == wxEmptyString ) {
-      ai = m_ai->GetString( 0 );
-    }
-    m_ai->SetStringSelection( ai );
+  if ( m_ais.GetCount() > 0 ) {
+    m_ai->SetStringSelection( WX_STRING(sett().GetLastAI()) );
+    if ( m_ai->GetStringSelection() == wxEmptyString ) m_ai->SetSelection( 0 );
   } else {
     wxMessageBox( _("No AI bots found in your Spring installation."), _("No bot-libs found"), wxOK, this );
   }
@@ -137,7 +146,7 @@ void AddBotDialog::OnClose( wxCommandEvent& event )
 
 void AddBotDialog::OnAddBot( wxCommandEvent& event )
 {
-  sett().SetLastAI( STD_STRING( GetAI() ) );
+  sett().SetLastAI( STD_STRING( m_ai->GetStringSelection() ) );
   EndModal( wxID_OK );
 }
 

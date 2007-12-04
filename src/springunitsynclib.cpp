@@ -216,11 +216,12 @@ bool SpringUnitSyncLib::_IsLoaded()
 void* SpringUnitSyncLib::_GetLibFuncPtr( const wxString& name )
 {
   ASSERT_LOGIC( m_libhandle != 0, "Unitsync not loaded" );
-  try {
-    void* ptr = m_libhandle->GetSymbol(WX_STRING(name));
+  if ( m_libhandle->HasSymbol( name ) ){
+    void* ptr = m_libhandle->GetSymbol( name );
     if ( !ptr ) debug( "Couldn't load " + STD_STRING(name) + " from unitsync library" );
     return ptr;
-  } catch(...) {}
+  }
+  debug( "Couldn't load " + STD_STRING(name) + " from unitsync library" );
   return 0;
 }
 
@@ -532,16 +533,16 @@ int SpringUnitSyncLib::InitFindVFS( const wxString& pattern )
 {
   InitLib( m_proc_units_nocheck );
 
-  return m_init_find_vfs( pattern.mb_str( wxConvUTF8 ) );
+  return m_init_find_vfs( STD_STRING(pattern).c_str() );
 }
 
 
-bool SpringUnitSyncLib::FindFilesVFS( int handle, wxString& name )
+int SpringUnitSyncLib::FindFilesVFS( int handle, wxString& name )
 {
   InitLib( m_find_files_vfs );
 
   char buffer[1025];
-  bool ret = m_find_files_vfs( handle, &buffer[0], 1024 );
+  int ret = m_find_files_vfs( handle, &buffer[0], 1024 );
   buffer[1024] = 0;
   name = WX_STRINGC( &buffer[0] );
 
