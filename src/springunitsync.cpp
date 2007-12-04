@@ -1,5 +1,3 @@
-<<<<<<< HEAD:src/springunitsync.cpp
-=======
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 #include <wx/dynlib.h>
@@ -676,5 +674,4 @@ void SpringUnitSync::_SaveMapInfoExCache()
   f.Close();
 }
 
->>>>>>> 1bf5de30d8032bdd89f23893c83f10f1dba89d49:src/springunitsync.cpp
 
