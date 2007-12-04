@@ -83,7 +83,7 @@ END_EVENT_TABLE()
 
 void ChatPanel::OnMouseDown( wxMouseEvent& event )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
   _CreatePopup();
   if ( m_popup_menu != 0 ) PopupMenu( m_popup_menu );
   else event.Skip();
@@ -93,7 +93,7 @@ void ChatPanel::OnMouseDown( wxMouseEvent& event )
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
 : wxPanel( parent, -1),m_show_nick_list(true),m_ui(ui),m_channel(&chan),m_server(0),m_user(0),m_battle(0),m_type(CPT_Channel),m_popup_menu(0)
 {
-  debug_func( "wxWindow* parent, Channel& chan" );
+  wxLogDebugFunc( _T("wxWindow* parent, Channel& chan") );
   _CreateControls( );
   _SetChannel( &chan );
   m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, this );
@@ -113,7 +113,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user )
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
 : wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(0),m_server(&serv),m_user(0),m_battle(0),m_type(CPT_Server),m_popup_menu(0)
 {
-  debug_func( "wxWindow* parent, Server& serv" );
+  wxLogDebugFunc( _T("wxWindow* parent, Server& serv") );
   _CreateControls( );
   serv.uidata.panel = this;
   m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),_("_SERVER"));
@@ -124,7 +124,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
 : wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(0),m_server(0),m_user(0),m_battle(&battle),m_type(CPT_Battle),m_popup_menu(0)
 {
-  debug_func( "wxWindow* parent, Battle& battle" );
+  wxLogDebugFunc( _T("wxWindow* parent, Battle& battle") );
   _CreateControls( );
   wxDateTime now = wxDateTime::Now();
   m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),_("_BATTLE_")+WX_STRING(now.Format( _T("%Y_%m_%d__%H_%M_%S"))));
@@ -152,7 +152,7 @@ ChatPanel::~ChatPanel()
 
 void ChatPanel::_CreateControls( )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
 
   m_autorejoin = 0;
   // Creating sizers
@@ -226,10 +226,10 @@ void ChatPanel::_CreateControls( )
 void ChatPanel::_CreatePopup()
 {
   if ( m_popup_menu != 0 ) return;
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   if ( m_type == CPT_Channel ) {
 
-    debug("channel");
+    wxLogMessage(_T("channel"));
     m_popup_menu = new wxMenu();
     m_autorejoin = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_AUTOJOIN, _("Auto join this channel"), wxEmptyString, wxITEM_CHECK );
     m_popup_menu->Append( m_autorejoin );
@@ -297,7 +297,7 @@ void ChatPanel::_CreatePopup()
 
   } else if ( m_type == CPT_Server ) {
 
-    debug( "server" );
+    wxLogMessage( _T("server") );
     m_popup_menu = new wxMenu();
 
     wxMenuItem* disconnectitem = new wxMenuItem( m_popup_menu, CHAT_MENU_SV_DISCON, _("Disconnect"), wxEmptyString, wxITEM_NORMAL );
@@ -590,7 +590,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 void ChatPanel::UserStatusUpdated( User& who )
 {
   if ( m_show_nick_list ) {
-    ASSERT_LOGIC( m_nicklist != 0, "m_nicklist = 0" );
+    ASSERT_LOGIC( m_nicklist != 0, _T("m_nicklist = 0") );
     m_nicklist->UserUpdated( who );
   }
 }
@@ -604,7 +604,7 @@ Channel& ChatPanel::GetChannel()
 
 void ChatPanel::SetChannel( Channel* chan )
 {
-  ASSERT_LOGIC(m_type == CPT_Channel, "Not of type channel" );
+  ASSERT_LOGIC(m_type == CPT_Channel, _T("Not of type channel") );
   if ( (chan == 0) && (m_channel != 0) ) {
     StatusMessage( _("Chat closed.") );
     m_channel->uidata.panel = 0;
@@ -628,7 +628,7 @@ Server* ChatPanel::GetServer()
 
 void ChatPanel::SetServer( Server* serv )
 {
-  ASSERT_LOGIC(m_type == CPT_Server, "Not of type server" );
+  ASSERT_LOGIC(m_type == CPT_Server, _T("Not of type server") );
   if ( (serv == 0) && (m_server != 0) ) m_server->uidata.panel = 0;
   else if ( serv != 0 ) serv->uidata.panel = this;
   m_server = serv;
@@ -646,7 +646,7 @@ User* ChatPanel::GetUser()
 
 void ChatPanel::SetUser( User* usr )
 {
-  ASSERT_LOGIC(m_type == CPT_User, "Not of type user" );
+  ASSERT_LOGIC(m_type == CPT_User, _T("Not of type user") );
 
   if ( (usr == 0) && (m_user != 0) ) m_user->uidata.panel = 0;
   else if ( usr != 0 ) usr->uidata.panel = this;
@@ -691,7 +691,7 @@ void ChatPanel::_SetChannel( Channel* channel )
 
 void ChatPanel::Say( const wxString& message )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
 
   wxStringTokenizer lines( message, _T("\n") );
   if ( lines.CountTokens() > 5 ) {
@@ -700,7 +700,7 @@ void ChatPanel::Say( const wxString& message )
   }
   while ( lines.HasMoreTokens() ) {
     wxString line = lines.GetNextToken();
-    debug("line: " + STD_STRING(line) );
+    wxLogMessage(_T("line: ") + line );
 
     if ( line.Find('/') == 0 ) {
       if ( m_ui.ExecuteSayCommand( line ) ) return;
@@ -764,7 +764,7 @@ void ChatPanel::Say( const wxString& message )
 
 void ChatPanel::Part()
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
   if ( m_type == CPT_Channel ) {
     if ( m_channel == 0 ) return;
     m_channel->Leave();

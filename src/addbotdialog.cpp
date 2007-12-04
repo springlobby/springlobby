@@ -9,6 +9,7 @@
 #include <wx/statline.h>
 #include <wx/filename.h>
 #include <wx/dir.h>
+#include <stdexcept>
 
 #include "addbotdialog.h"
 #include "settings.h"

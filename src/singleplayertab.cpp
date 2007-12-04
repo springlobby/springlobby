@@ -179,11 +179,13 @@ void SinglePlayerTab::SetMod( unsigned int index )
 bool SinglePlayerTab::ValidSetup()
 {
   if ( (unsigned int)m_mod_pick->GetSelection() >= m_mod_pick->GetCount()-1 ) {
+    wxLogWarning( _T("no mod selected") );
     wxMessageBox( _("You have to select a mod first."), _("Gamesetup error") );
     return false;
   }
 
   if ( (unsigned int)m_map_pick->GetSelection() >= m_map_pick->GetCount()-1 ) {
+    wxLogWarning( _T("no map selected") );
     wxMessageBox( _("You have to select a map first."), _("Gamesetup error") );
     return false;
   }
@@ -204,8 +206,10 @@ bool SinglePlayerTab::ValidSetup()
 
   if ( ( numBots < (int)m_battle.GetNumBots() ) || ( ( first != (int)m_battle.GetNumBots() ) && ( first != -1 ) ) ) {
     if ( numBots < (int)m_battle.GetNumBots() ) {
+      wxLogWarning( _T("players in non canonical startpositions unsupported by this spring version") );
       wxMessageBox( _("You have bots that are not assingled to startpositions. In the current version of spring you are only allowed to use start positions positioning them freely is not allowed.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
     } else {
+      wxLogWarning( _T("players in non-consegutive startpositions") );
       wxMessageBox( _("You are not using consecutive start position numbers.\n\nIn the current version of spring you are not allowed to skip any startpositions. You have to use all consecutive position.\n\nExample: if you have 2 bots + yourself you have to use start positions 1,2,3 not 1,3,4 or 2,3,4.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
     }
     return false;
@@ -237,7 +241,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
     m_battle.GetFreeColour( r, g, b, false );
     int i = m_battle.AddBot( m_battle.GetFreeAlly(), x, y, handicap, dlg.GetAI() );
     BattleBot* bot = m_battle.GetBot( i );
-    ASSERT_LOGIC( bot != 0, "bot == 0" );
+    ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     bot->bs.color_r = r;
     bot->bs.color_g = g;
     bot->bs.color_b = b;
@@ -249,6 +253,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 void SinglePlayerTab::OnStart( wxCommandEvent& event )
 {
   if ( m_ui.IsSpringRunning() ) {
+    wxLogWarning(_T("trying to start spring while another instance is running") );
     wxMessageBox(_("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
     return;
   }

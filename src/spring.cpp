@@ -54,18 +54,18 @@ bool Spring::IsRunning()
 bool Spring::Run( Battle& battle )
 {
   if ( m_running ) {
-    debug_error( "Spring already running!" );
+    wxLogError( _T("Spring already running!") );
     return false;
   }
 
   wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
 
-  debug( "Path to script: " + STD_STRING(path) + "script.txt" );
+  wxLogMessage( _T("Path to script: ") + path + _T("script.txt") );
 
   try {
 
     if ( !wxFile::Access( path + _T("script.txt"), wxFile::write ) ) {
-      debug_error( "Access denied to script.txt." );
+      wxLogError( _T("Access denied to script.txt.") );
     }
 
     wxFile f( path + _T("script.txt"), wxFile::write );
@@ -73,27 +73,27 @@ bool Spring::Run( Battle& battle )
     f.Close();
 
   } catch (...) {
-    debug_error( "Couldn't write script.txt" ); //!@todo Some message to user.
+    wxLogError( _T("Couldn't write script.txt") );
     return false;
   }
 
   wxString cmd =  _T("\"") + WX_STRING(sett().GetSpringUsedLoc()) + _T("\" ") + path + _T("script.txt");
-  debug( "cmd: " + STD_STRING(cmd) );
+  wxLogMessage( _T("cmd: ") + cmd );
   wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
   if ( sett().UseOldSpringLaunchMethod() ) {
     if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
     if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
   } else {
     if ( m_process == 0 ) m_process = new SpringProcess( *this );
-    debug( "m_process->Create();" );
+    wxLogMessage( _T("m_process->Create();") );
     m_process->Create();
-    debug( "m_process->SetCommand( cmd );" );
+    wxLogMessage( _T("m_process->SetCommand( cmd );") );
     m_process->SetCommand( cmd );
-    debug( "m_process->Run();" );
+    wxLogMessage( _T("m_process->Run();") );
     m_process->Run();
   }
   m_running = true;
-  debug( "Done running = true" );
+  wxLogMessage( _T("Done running = true") );
   return true;
 }
 
@@ -101,7 +101,7 @@ bool Spring::Run( Battle& battle )
 bool Spring::Run( SinglePlayerBattle& battle )
 {
   if ( m_running ) {
-    debug_error( "Spring already running!" );
+    wxLogError( _T("Spring already running!") );
     return false;
   }
 
@@ -110,7 +110,7 @@ bool Spring::Run( SinglePlayerBattle& battle )
   try {
 
     if ( !wxFile::Access( path + _T("script.txt"), wxFile::write ) ) {
-      debug_error( "Access denied to script.txt." );
+      wxLogError( _T("Access denied to script.txt.") );
     }
 
     wxFile f( path + _T("script.txt"), wxFile::write );
@@ -118,7 +118,7 @@ bool Spring::Run( SinglePlayerBattle& battle )
     f.Close();
 
   } catch (...) {
-    debug_error( "Couldn't write script.txt" ); //!@todo Some message to user.
+    wxLogError( _T("Couldn't write script.txt") );
     return false;
   }
 
@@ -149,7 +149,7 @@ bool Spring::TestSpringBinary()
 
 void Spring::OnTerminated( wxCommandEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   m_running = false;
   m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
   m_wx_process = 0;
@@ -186,19 +186,19 @@ wxString Spring::GetScriptTxt( Battle& battle )
   int AllyConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int AllyRevConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
-  debug("1 numusers: " + i2s(battle.GetNumUsers()) );
+  wxLogMessage(_T("1 numusers: ") + WX_STRING(i2s(battle.GetNumUsers())) );
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     Lowest = -1;
     // Find next player in the order they were sent from the server.
-    debug("2 i: " + i2s(i) );
+    wxLogMessage(_T("2 i: ") + WX_STRING(i2s(i)) );
     for ( user_map_t::size_type gl = 0; gl < battle.GetNumUsers(); gl++ ) {
       User& ou = battle.GetUser(gl);
-      debug("2.1 order: " + i2s(ou.BattleStatus().order) );
+      wxLogMessage(_T("2.1 order: ") + WX_STRING( i2s(ou.BattleStatus().order)) );
       if ( (ou.BattleStatus().order <= LastOrder) && (LastOrder != -1) ) continue;
       if ( Lowest == -1 ) Lowest = gl;
       else if ( ou.BattleStatus().order < battle.GetUser(Lowest).BattleStatus().order ) Lowest = gl;
     }
-    debug("3 Lowest: " + i2s(Lowest) );
+    wxLogMessage(_T("3 Lowest: ") + WX_STRING(i2s(Lowest)) );
     LastOrder = battle.GetUser(Lowest).BattleStatus().order;
     User& u = battle.GetUser( Lowest );
 
@@ -219,7 +219,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     }
 
   }
-  debug("4");
+  wxLogMessage(_T("4"));
 
   // Get bot order
   LastOrder = -1;
@@ -227,13 +227,13 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
     Lowest = -1;
 
-    debug("5");
+    wxLogMessage(_T("5"));
     for ( std::list<BattleBot*>::size_type gl = 0; gl < battle.GetNumBots(); gl++ ) {
       if ( (battle.GetBot(gl)->bs.order <= LastOrder) && (LastOrder != -1) ) continue;
       if ( Lowest == -1 ) Lowest = gl;
       else if ( battle.GetBot(gl)->bs.order < battle.GetBot(Lowest)->bs.order ) Lowest = gl;
     }
-    debug("6");
+    wxLogMessage(_T("6"));
 
     LastOrder = battle.GetBot(Lowest)->bs.order;
     BotOrder[i] = Lowest;
@@ -246,7 +246,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
     NumBots++;
   }
-  debug("7");
+  wxLogMessage(_T("7"));
 
 
   //BattleOptions bo = battle.opts();
@@ -276,7 +276,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += wxString::Format( _T("\tNumTeams=%d;\n"), NumTeams + NumBots );
   s += wxString::Format( _T("\tNumAllyTeams=%d;\n\n"), NumAllys );
 
-  debug("8");
+  wxLogMessage(_T("8"));
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     s += wxString::Format( _T("\t[PLAYER%d]\n"), i );
     s += wxString::Format( _T("\t{\n") );
@@ -290,7 +290,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     }
     s += wxString::Format( _T("\t}\n") );
   }
-  debug("9");
+  wxLogMessage(_T("9"));
 
   s += _T("\n");
 
@@ -301,7 +301,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     // Find Team Leader.
     int TeamLeader = -1;
 
-    debug("10");
+    wxLogMessage(_T("10"));
     for( user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {
       // First Player That Is In The Team Is Leader.
       if ( TeamConv[battle.GetUser( PlayerOrder[tlf] ).BattleStatus().team] == i ) {
@@ -315,7 +315,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
       }
 
     }
-    debug("11");
+    wxLogMessage(_T("11"));
 
     s += wxString::Format( _T("\t\tTeamLeader=%d;\n") ,TeamLeader );
     s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().ally] );
@@ -326,13 +326,13 @@ wxString Spring::GetScriptTxt( Battle& battle )
            (double)(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().color_b/255.0)
          );
     std::setlocale(LC_NUMERIC, old_locale);
-    debug( i2s(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side) );
+    wxLogMessage( WX_STRING(i2s(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side)) );
     usync()->SetCurrentMod( STD_STRING(battle.GetModName()) );
     s += WX_STRING(("\t\tSide=" + usync()->GetSideName( battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side ) + ";\n"));
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().handicap );
     s +=  _T("\t}\n");
   }
-  debug("12");
+  wxLogMessage( _T("12") );
 
   for ( int i = 0; i < NumBots; i++ ) {
 
@@ -369,7 +369,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s += _T("\t\tAIDLL=") + usync()->GetBotLibPath( ai ) + _T(";\n");
     s +=  _T("\t}\n");
   }
-  debug("13");
+  wxLogMessage( _T("13") );
 
 
   for ( int i = 0; i < NumAllys; i++ ) {
@@ -391,7 +391,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s +=  _T("\t}\n");
   }
 
-  debug("14");
+  wxLogMessage( _T("14") );
 
   s += wxString::Format( _T("\tNumRestrictions=%d;\n"), battle.GetNumDisabledUnits() );
   s += _T("\t[RESTRICT]\n");
@@ -407,7 +407,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     i++;
   }
 
-  debug("15");
+  wxLogMessage( _T("15") );
 
   s += _T("\t}\n");
   s += _T("}\n");
@@ -435,7 +435,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     );
   }
 
-  debug("16");
+  wxLogMessage( _T("16") );
   ds += _T("\n\nBots: \n\n");
   for ( std::list<BattleBot*>::size_type i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot = battle.GetBot(i);
@@ -458,7 +458,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
       bot->bs.color_b
     );
   }
-  debug("17");
+  wxLogMessage( _T("17") );
 
   ds += _T("\n\nPlayerOrder: { ");
   for ( int i = 0; i < 16; i++ ) {
@@ -489,7 +489,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   if ( DOS_TXT ) {
     ds.Replace( _T("\n"), _T("\r\n"), true );
   }
-  debug("18");
+  wxLogMessage( _T("18") );
 
   wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
 
@@ -497,7 +497,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   f.Write( _T("[Script Start]") + s );
   f.Write( ds );
   f.Close();
-  debug("19");
+  wxLogMessage( _T("19") );
 
   return s;
 }
@@ -512,12 +512,12 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot = battle.GetBotByStartPosition( i );
-    ASSERT_LOGIC( bot != 0, "bot == 0" );
+    ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     if ( bot->aidll == "" ) PlayerTeam = i;
     if ( AllyConv[bot->bs.ally] == -1 ) AllyConv[bot->bs.ally] = NumAllys++;
   }
 
-  ASSERT_LOGIC( PlayerTeam != -1, "no player found" );
+  ASSERT_LOGIC( PlayerTeam != -1, _T("no player found") );
 
   // Start generating the script.
   s  = wxString::Format( _T("[GAME]\n{\n") );
@@ -554,7 +554,7 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) { // TODO fix this when new Spring comes.
     BattleBot* bot = battle.GetBotByStartPosition( i );
-    ASSERT_LOGIC( bot != 0, "bot == 0" );
+    ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i );
 
     s += _T("\t\tTeamLeader=0;\n");

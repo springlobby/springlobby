@@ -4,50 +4,53 @@
 //
 
 #include <sstream>
+#include <wx/intl.h>
+#include <wx/msgdlg.h>
 
 #include "utils.h"
 #include "revision.h"
+#include "stacktrace.h"
 
-#ifdef __WXMSW__
-#include <wx/msgdlg.h>
-#endif
 
 // FIXME this does not work on linux+mingw build for windows
 #ifdef _MSC_VER
 #include <windows.h>
 #include <wx/msw/winundef.h>
 #endif
-//#else
-#include <iostream>
-#include <ostream>
 //#endif
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
+void DumpStackTraceToLog()
+{
+
+#if wxUSE_STACKWALKER
+
+  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output") );
+
+  wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
+
+  DebugInfo += _T("StackTraceID: ") + stacktrace().GetStackTraceHash() + _T("\n");
+
+  stacktrace().Walk();
+  DebugInfo += stacktrace().GetStackTrace();
+
+  DebugInfo += _T("-------- End StackTrace --------");
+
+  wxLogMessage( DebugInfo );
+#else
+  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker") );
+#endif
+}
+
+
 std::string i2s( int x )
 {
   std::ostringstream o;
   o << x;
   return o.str();
-}
-
-void debug_output( const std::string& prefix, const std::string& func, const std::string& params, const std::string& msg )
-{
-  std::string tmpmsg = msg;
-  if ( msg != "" ) tmpmsg = std::string(": ") + msg;
-#ifdef __WXMSW__
-  std::string tmp = prefix;
-  tmp += " " + func + "( " + params + " )" + tmpmsg + "\n";
-  if (prefix != "**" && prefix != "--" && prefix != "ww" ) { wxMessageBox( WX_STRING(tmp) ); }
-#ifdef _MSC_VER
-  OutputDebugString( tmp.c_str() );
-#endif
-
-#else
-  std::cout << prefix.c_str() << " " << func.c_str() << "( " << params.c_str() << " ): "<< tmpmsg.c_str() << std::endl;
-#endif
 }
 
 

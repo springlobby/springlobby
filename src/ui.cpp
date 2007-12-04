@@ -49,7 +49,7 @@ Ui::~Ui() {
 
 Server& Ui::GetServer()
 {
-  ASSERT_LOGIC( m_serv != 0, "m_serv NULL!" );
+  ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
   return *m_serv;
 }
 
@@ -67,7 +67,7 @@ ChatPanel* Ui::GetActiveChatPanel()
 
 MainWindow& Ui::mw()
 {
-  ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0" );
+  ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   return *m_main_win;
 }
 
@@ -82,7 +82,7 @@ bool Ui::IsMainWindowCreated()
 //! @brief Shows the main window on screen
 void Ui::ShowMainWindow()
 {
-  ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0" );
+  ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   mw().Show(true);
 }
 
@@ -93,7 +93,7 @@ void Ui::ShowMainWindow()
 void Ui::ShowConnectWindow()
 {
   if ( m_con_win == 0 ) {
-    ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0" );
+    ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
     m_con_win = new ConnectWindow( m_main_win, *this );
   }
   m_con_win->CenterOnParent();
@@ -147,7 +147,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
   Socket* sock;
 
   if ( !sett().ServerExists( STD_STRING(servername) ) ) {
-    ASSERT_LOGIC( false, "Server does not exist in settings" );
+    ASSERT_LOGIC( false, _T("Server does not exist in settings") );
     return;
   }
 
@@ -188,7 +188,7 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
   int port;
 
   if ( !sett().ServerExists( STD_STRING(servername) ) ) {
-    ASSERT_LOGIC( false, "Server does not exist in settings" );
+    ASSERT_LOGIC( false, _T("Server does not exist in settings") );
     return false;
   }
 
@@ -221,7 +221,7 @@ void Ui::JoinChannel( const wxString& name, const wxString& password )
 
 void Ui::StartHostedBattle()
 {
-  ASSERT_LOGIC( m_serv != 0, "m_serv = 0" );
+  ASSERT_LOGIC( m_serv != 0, _T("m_serv = 0") );
   m_serv->StartHostedBattle();
   sett().SetLastHostMap( STD_STRING(m_serv->GetCurrentBattle()->GetMapName()) );
 }
@@ -242,7 +242,7 @@ bool Ui::IsSpringRunning()
 //! @brief Quits the entire application
 void Ui::Quit()
 {
-  ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0" );
+  ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   sett().SaveSettings();
   m_main_win->Close();
 }
@@ -300,11 +300,20 @@ void Ui::OpenWebBrowser( const wxString& url )
 {
   if ( sett().GetWebBrowserPath() == _T("use default") || sett().GetWebBrowserPath().IsEmpty() )
   {
-      if ( !wxLaunchDefaultBrowser( url ) ) wxMessageBox( _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+      if ( !wxLaunchDefaultBrowser( url ) )
+      {
+        wxLogWarning( _T("can't't launch default browser") );
+        wxMessageBox( _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+      }
   }
   else
   {
-    if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) ) wxMessageBox( _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
+    if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
+    {
+      wxLogWarning( _T("can't launch browser: ") + sett().GetWebBrowserPath() );
+      wxMessageBox( _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
+    }
+
   }
 }
 
@@ -439,7 +448,7 @@ void Ui::OnUpdate( int mselapsed )
 //! @todo Display in servertab
 void Ui::OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
 
 
   if ( !IsSpringCompatible () ){
@@ -449,9 +458,11 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
       message +=  _("is not supported by the lobby server that requires version");
       message += _T(" (") +  WX_STRING( m_server_spring_ver ) + _T(").\n\n");
       message += _("Online play will be disabled.");
+      wxLogWarning ( _T("server not supports current spring version") );
       wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
     } else {
-      wxMessageBox( _("Couldn't get your spring version (spring's unitsync library not found).\n\nOnline play will be disabled.\nPlese check again your options then reconnect."), _("Spring error"), wxICON_EXCLAMATION );
+      wxLogWarning( _T("can't get spring version from unitsync") );
+      wxMessageBox( _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
     }
   }
   server.uidata.panel->StatusMessage( _T("Connected to ") + WX_STRING(server_name) + _T(".") );
@@ -477,7 +488,7 @@ void Ui::OnLoggedIn( )
 
 void Ui::OnDisconnected( Server& server )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
   if ( m_main_win == 0 ) return;
 
   mw().GetJoinTab().GetBattleListTab().SetFilterActiv( false );
@@ -499,7 +510,7 @@ void Ui::OnDisconnected( Server& server )
 //! @todo Check if a pannel allready exists for this channel
 void Ui::OnJoinedChannelSuccessful( Channel& chan )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
 
   chan.uidata.panel = 0;
   m_main_win->OpenChannelChat( chan );
@@ -514,9 +525,9 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
 //! @brief Called when something is said in a channel
 void Ui::OnChannelSaid( Channel& channel, User& user, const std::string& message )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
   if ( channel.uidata.panel == 0 ) {
-    debug_error( "ud->panel NULL" );
+    wxLogError( _T("ud->panel NULL") );
     return;
   }
   channel.uidata.panel->Said( WX_STRING(user.GetNick()), WX_STRING( message ) );
@@ -525,9 +536,9 @@ void Ui::OnChannelSaid( Channel& channel, User& user, const std::string& message
 
 void Ui::OnChannelDidAction( Channel& channel , User& user, const std::string& action )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
   if ( channel.uidata.panel == 0 ) {
-    debug_error( "ud->panel NULL" );
+    wxLogError( _T("ud->panel NULL") );
     return;
   }
   channel.uidata.panel->DidAction( WX_STRING(user.GetNick()), WX_STRING( action ) );
@@ -554,9 +565,9 @@ void Ui::OnLeaveChannel( Channel& channel )
 
 void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 {
-  //debug_func( "" );
+  //wxLogDebugFunc( _T("") );
   if ( chan.uidata.panel == 0 ) {
-    debug_error( "ud->panel NULL" );
+    wxLogError( _T("ud->panel NULL") );
     return;
   }
   chan.uidata.panel->Joined( user );
@@ -565,9 +576,9 @@ void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 
 void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason )
 {
-  //debug_func( "" );
+  //wxLogDebugFunc( _T("") );
   if ( chan.uidata.panel == 0 ) {
-    debug_error( "ud->panel NULL" );
+    wxLogError( _T("ud->panel NULL") );
     return;
   }
   chan.uidata.panel->Parted( user, WX_STRING(reason) );
@@ -576,9 +587,9 @@ void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason
 
 void Ui::OnChannelTopic( Channel& channel , const std::string user, const std::string& topic )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
   if ( channel.uidata.panel == 0 ) {
-    debug_error( "ud->panel NULL" );
+    wxLogError( _T("ud->panel NULL") );
     return;
   }
   channel.uidata.panel->SetTopic( WX_STRING(user), WX_STRING(topic) );
@@ -743,9 +754,14 @@ void Ui::OnJoinedBattle( Battle& battle )
 {
   mw().GetJoinTab().JoinBattle( battle );
   /*if ( !Spring::TestSpringBinary() ) {
+<<<<<<< HEAD:src/ui.cpp
+    wxLogWarning( _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online.") );
+=======
     wxMessageBox( _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
+>>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/ui.cpp
   }*/
   if ( battle.GetNatType() != NAT_None ) {
+    wxLogWarning( _T("joining game with NAT transversal") );
     wxMessageBox( _("This game uses NAT traversal that is not yet supported\nby SpringLobby.\n\nYou will not be able to play in this battle."), _("NAT traversal"), wxOK );
   }
 }
@@ -776,7 +792,7 @@ void Ui::OnRequestBattleStatus( Battle& battle )
 
 void Ui::OnBattleStarted( Battle& battle )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) {

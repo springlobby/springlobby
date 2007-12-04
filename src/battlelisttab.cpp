@@ -169,15 +169,15 @@ void BattleListTab::AddBattle( Battle& battle ) {
     return;
   }
   int index = m_battle_list->InsertItem( 0, IconImageList::GetBattleStatusIcon( battle ) );
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
   m_battle_list->SetItemData(index, (long)battle.GetBattleId() );
   battle.SetGUIListActiv( true );
 
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
   //wxListItem item;
   //item.SetId( index );
 
- // ASSERT_LOGIC( m_battle_list->GetItem( item ), "!GetItem" );
+ // ASSERT_LOGIC( m_battle_list->GetItem( item ), _T("!GetItem") );
 
   m_battle_list->SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
   m_battle_list->SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
@@ -233,12 +233,12 @@ void BattleListTab::UpdateBattle( Battle& battle )
     }
   }
 
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
 
   //wxListItem item;
   //item.SetId( index );
 
-  //ASSERT_LOGIC( m_battle_list->GetItem( item ), "!GetItem" );
+  //ASSERT_LOGIC( m_battle_list->GetItem( item ), _T("!GetItem") );
 
   //Battle& battle = m_ui.GetServer().battles_iter.GetBattle( m_battle_list->GetItemData( index ) );
 
@@ -289,14 +289,18 @@ void BattleListTab::SetFilterActiv( bool activ )
 void BattleListTab::OnHost( wxCommandEvent& event )
 {
   if ( !m_ui.IsConnected() ) {
-    wxMessageBox( _("You cannot host a game while offline. Please connect to a lobby server."), _("Not Online."), wxOK );
+    wxLogWarning( _T("Trying to host while offline") );
+    wxMessageBox( _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK );
+    m_ui.ShowConnectWindow();
     return;
   }
   if ( !m_ui.IsSpringCompatible() ){
+    wxLogWarning(_T("Hosting is disabled due to the incompatible version ") );
     wxMessageBox(_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION);
     return;
   }
   if ( m_ui.IsSpringRunning() ) {
+    wxLogWarning(_T("trying to host while spring is running") );
     wxMessageBox(_("You already are running a Spring instance, close it first in order to be able to host a new game"), _("Spring error"), wxICON_EXCLAMATION );
     return;
   }
@@ -323,6 +327,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
       bo.modhash = mod.hash;
       bo.modname = mod.name;
     } catch ( ... ) {
+      wxLogWarning( _T("can't host: mod not found") );
       wxMessageBox( _("Battle not started beacuse the mod you selected could not be found. "), _("Error starting battle."), wxOK );
       return;
     }
@@ -331,6 +336,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     std::string mname = sett().GetLastHostMap();
     if ( mname != "" ) map = usync()->GetMap( mname );
     else if ( usync()->GetNumMaps() <= 0 ) {
+      wxLogWarning( _T("no maps found") );
       wxMessageBox( _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
       return;
     } else {
@@ -386,7 +392,7 @@ void BattleListTab::OnFilterActiv( wxCommandEvent& event )
 
 void BattleListTab::OnJoin( wxCommandEvent& event )
 {
-  ASSERT_LOGIC( m_battle_list != 0, "m_battle_list = 0" );
+  ASSERT_LOGIC( m_battle_list != 0, _T("m_battle_list = 0") );
   if ( m_battle_list->GetSelectedIndex() < 0 ) return;
 
   DoJoin( m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetSelectedIndex() ) );
@@ -396,7 +402,7 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
 
 void BattleListTab::OnListJoin( wxListEvent& event )
 {
-  ASSERT_LOGIC( m_battle_list != 0, "m_battle_list = 0" );
+  ASSERT_LOGIC( m_battle_list != 0, _T("m_battle_list = 0") );
   if ( event.GetIndex() < 0 ) return;
 
   DoJoin( m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetItemData( event.GetIndex() ) ) );
@@ -406,6 +412,7 @@ void BattleListTab::OnListJoin( wxListEvent& event )
 void BattleListTab::DoJoin( Battle& battle )
 {
   if ( !m_ui.IsSpringCompatible() ){
+    wxLogWarning(_T("trying to join battles with imcompatible spring version") );
     wxMessageBox(_("Joining battles is disabled due to the incompatible spring version you're using."), _("Spring error"), wxICON_EXCLAMATION);
     return;
   }
@@ -421,6 +428,7 @@ void BattleListTab::DoJoin( Battle& battle )
   }
 
   if ( m_ui.IsSpringRunning() ) {
+    wxLogWarning(_T("trying to join a battle while spring is running") );
     wxMessageBox(_("You already are running a Spring instance, close it first in order to be able to join another battle."), _("Spring error"), wxICON_EXCLAMATION );
     return;
   }
@@ -451,7 +459,7 @@ void BattleListTab::DoJoin( Battle& battle )
 
 void BattleListTab::OnSelect( wxListEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   if ( event.GetIndex() == -1 ) {
     SelectBattle( 0 );
   } else {

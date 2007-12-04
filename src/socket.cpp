@@ -18,7 +18,7 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 {
   Socket* sock = (Socket*)event.GetClientData();
 
-  ASSERT_LOGIC( sock != 0, "sock = 0" );
+  ASSERT_LOGIC( sock != 0, _T("sock = 0") );
 
   if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
     m_serv.OnDataReceived( sock );
@@ -27,7 +27,7 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
   } else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
     m_serv.OnConnected( sock );
   } else {
-    ASSERT_LOGIC( false, "Unknown socket event.");
+    ASSERT_LOGIC( false, _T("Unknown socket event."));
   }
 }
 
@@ -102,7 +102,7 @@ void Socket::Disconnect( )
 bool Socket::Send( const std::string& data )
 {
   if ( m_sock == 0 ) {
-    debug_error( "Socket NULL" );
+    wxLogError( _T("Socket NULL") );
     return false;
   }
   if ( m_rate > 0 ) {
@@ -111,7 +111,7 @@ bool Socket::Send( const std::string& data )
     if ( max > 0 ) {
       std::string send = m_buffer.substr( 0, max );
       m_buffer.erase( 0, max );
-      debug( "send: " + i2s(send.length()) + " sent: " + i2s(m_sent) + " max: " + i2s(max) + " buff: " +i2s(m_buffer.length()) );
+      wxLogMessage( _T("send: ") + WX_STRING(i2s(send.length())) + _T(" sent: ") + WX_STRING(i2s(m_sent)) + _T(" max: ") + WX_STRING(i2s(max)) + _T(" buff: ") + WX_STRING(i2s(m_buffer.length())) );
       m_sock->Write( (void*)send.c_str(), send.length() );
       m_sent += send.length();
     }
@@ -127,7 +127,7 @@ bool Socket::Send( const std::string& data )
 bool Socket::Receive( std::string& data )
 {
   if ( m_sock == 0 ) {
-    debug_error( "Socket NULL" );
+    wxLogError( _T("Socket NULL") );
     return false;
   }
 

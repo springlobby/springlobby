@@ -88,8 +88,6 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_pwd_text->SetToolTip( _("Password needed to join game. Keep empty for no password") );
 
 	m_pwd_sizer->Add( m_pwd_text, 1, wxALL, 5 );
-
-
 	m_pwd_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
 	m_main_sizer->Add( m_pwd_sizer, 0, wxEXPAND, 5 );
@@ -105,8 +103,6 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_port_text->SetToolTip( _("UDP port to host game on. Default is 8452.") );
 
 	m_port_sizer->Add( m_port_text, 1, wxALL, 5 );
-
-
 	m_port_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
 	m_main_sizer->Add( m_port_sizer, 0, wxEXPAND, 5 );
@@ -188,8 +184,6 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_pl_nat_sizer->Add( m_rank_box, 1, wxALL|wxEXPAND, 5 );
 
 	m_main_sizer->Add( m_pl_nat_sizer, 0, wxEXPAND, 5 );
-
-
 	m_main_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
 	m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
@@ -200,8 +194,6 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 
 	m_cancel_btn = new wxButton( this, HOST_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttons_sizer->Add( m_cancel_btn, 0, wxALL, 5 );
-
-
 	m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
 	m_host_btn = new wxButton( this, HOST_OK, _("Host"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -233,6 +225,7 @@ void HostBattleDialog::ReloadModList()
 void HostBattleDialog::OnOk( wxCommandEvent& event )
 {
   if ( m_mod_pic->GetSelection() == wxNOT_FOUND ) {
+    wxLogWarning( _T("no mod selected") );
     wxMessageBox( _("You have to select a mod first."), _("No mod selected."), wxOK );
     return;
   }

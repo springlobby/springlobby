@@ -56,7 +56,7 @@ void IBattle::SetMap(const UnitSyncMap& map)
 
 const UnitSyncMap& IBattle::Map()
 {
-  ASSERT_LOGIC( m_map_exists, "Map does not exist." );
+  ASSERT_LOGIC( m_map_exists, _T("Map does not exist.") );
 
   if ( !m_map_loaded ) {
     try {
@@ -109,7 +109,7 @@ void IBattle::SetMod( const UnitSyncMod& mod )
 
 const UnitSyncMod& IBattle::Mod()
 {
-  ASSERT_LOGIC( m_mod_exists, "Mod does not exist." );
+  ASSERT_LOGIC( m_mod_exists, _T("Mod does not exist.") );
   if ( !m_mod_loaded ) {
     try {
       m_mod = usync()->GetMod( STD_STRING(m_mod_name) );

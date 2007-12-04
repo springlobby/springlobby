@@ -81,7 +81,7 @@ void NickListCtrl::AddUser( User& user )
 {
   int index = InsertItem( 0, IconImageList::GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
   SetItemData( index, (wxUIntPtr)&user );
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
   UserUpdated( index );
   Sort();
 }
@@ -95,14 +95,14 @@ void NickListCtrl::RemoveUser( const User& user )
       return;
     }
   }
-  debug_error( "Didn't find the user to remove." );
+  wxLogError( _T("Didn't find the user to remove.") );
 }
 
 
 void NickListCtrl::UserUpdated( User& user )
 {
   int index = GetUserIndex( user );
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
   UserUpdated( index );
 }
 
@@ -133,7 +133,7 @@ int NickListCtrl::GetUserIndex( User& user )
   for ( int i = 0; i < GetItemCount() ; i++ ) {
     if ( (unsigned long)&user == GetItemData( i ) ) return i;
   }
-  debug_error( "didn't find the user." );
+  wxLogError( _T("didn't find the user.") );
   return -1;
 }
 
@@ -150,7 +150,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
 
 void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   if ( m_menu != 0 ) PopupMenu( m_menu );
 }
 
@@ -220,8 +220,8 @@ int wxCALLBACK NickListCtrl::ComparePlayerstatusUP(long item1, long item2, long 
 {
   User* user1 = (User*)item1;
   User* user2 = (User*)item2;
-  ASSERT_LOGIC( user1 != 0, "user1 = 0" );
-  ASSERT_LOGIC( user2 != 0, "user2 = 0" );
+  ASSERT_LOGIC( user1 != 0, _T("user1 = 0") );
+  ASSERT_LOGIC( user2 != 0, _T("user2 = 0") );
 
   int u1 = 0, u2 = 0;
 
@@ -251,8 +251,8 @@ int wxCALLBACK NickListCtrl::ComparePlayerstatusDOWN(long item1, long item2, lon
 {
   User* user1 = (User*)item1;
   User* user2 = (User*)item2;
-  ASSERT_LOGIC( user1 != 0, "user1 = 0" );
-  ASSERT_LOGIC( user2 != 0, "user2 = 0" );
+  ASSERT_LOGIC( user1 != 0, _T("user1 = 0") );
+  ASSERT_LOGIC( user2 != 0, _T("user2 = 0") );
 
   int u1 = 0, u2 = 0;
 

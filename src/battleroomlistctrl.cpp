@@ -164,7 +164,7 @@ void BattleroomListCtrl::UpdateList()
 void BattleroomListCtrl::AddUser( User& user )
 {
   int index = InsertItem( 0, ICON_NREADY );
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
   SetItemData(index, (wxUIntPtr)&user );
 
   UpdateUser( index );
@@ -186,12 +186,12 @@ void BattleroomListCtrl::UpdateUser( User& user )
 
 void BattleroomListCtrl::UpdateUser( const int& index )
 {
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
 
   wxListItem item;
   item.SetId( index );
 
-  ASSERT_LOGIC( GetItem( item ), "!GetItem" );
+  ASSERT_LOGIC( GetItem( item ), _T("!GetItem") );
 
   User& user = *((User*)GetItemData( index ));
 
@@ -254,7 +254,7 @@ int BattleroomListCtrl::GetUserIndex( User& user )
     if ( item.GetImage() == ICON_BOT ) continue;
     if ( (unsigned long)&user == GetItemData( i ) ) return i;
   }
-  debug_error( "didn't find the battle." );
+  wxLogError( _T("didn't find the battle.") );
   return -1;
 }
 
@@ -262,7 +262,7 @@ int BattleroomListCtrl::GetUserIndex( User& user )
 void BattleroomListCtrl::AddBot( BattleBot& bot )
 {
   int index = InsertItem( 0, ICON_BOT );
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
   SetItemData(index, (wxUIntPtr)&bot );
 
   UpdateBot( index );
@@ -284,12 +284,12 @@ void BattleroomListCtrl::UpdateBot( BattleBot& bot )
 
 void BattleroomListCtrl::UpdateBot( const int& index )
 {
-  ASSERT_LOGIC( index != -1, "index = -1" );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
 
   wxListItem item;
   item.SetId( index );
 
-  ASSERT_LOGIC( GetItem( item ), "!GetItem" );
+  ASSERT_LOGIC( GetItem( item ), _T("!GetItem") );
 
   BattleBot& bot = *((BattleBot*)GetItemData( index ));
 
@@ -331,19 +331,19 @@ int BattleroomListCtrl::GetBotIndex( BattleBot& bot )
     if ( item.GetImage() != ICON_BOT ) continue;
     if ( (unsigned long)&bot == GetItemData( i ) ) return i;
   }
-  debug_error( "didn't find the bot." );
+  wxLogError( _T("didn't find the bot.") );
   return -1;
 }
 
 
 void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
 
   if ( event.GetIndex() == -1 ) return;
 
   if ( event.GetImage() == ICON_BOT ) {
-    debug("Bot");
+    wxLogMessage(_T("Bot"));
     m_sel_user = 0;
     m_sel_bot = (BattleBot*)event.GetData();
     int item = m_popup->FindItem( _("Spectator") );
@@ -351,7 +351,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     m_popup->Check( item, false );
     m_popup->Enable( m_popup->FindItem( _("Ring") ), false );
   } else {
-    debug("User");
+    wxLogMessage(_T("User"));
     m_sel_bot = 0;
     m_sel_user = (User*)event.GetData();
     int item = m_popup->FindItem( _("Spectator") );
@@ -360,15 +360,15 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     m_popup->Enable( m_popup->FindItem( _("Ring") ), true );
   }
 
-  debug("Popup");
+  wxLogMessage(_T("Popup"));
   PopupMenu( m_popup );
-  debug("Done");
+  wxLogMessage(_T("Done"));
 }
 
 
 void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   int team = event.GetId() - BRLIST_TEAM;
   if ( m_sel_bot != 0 ) {
     m_battle.SetBotTeam( m_sel_bot->name, team );
@@ -380,7 +380,7 @@ void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   int ally = event.GetId() - BRLIST_ALLY;
   if ( m_sel_bot != 0 ) {
     m_battle.SetBotAlly( m_sel_bot->name, ally );
@@ -392,7 +392,7 @@ void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
 
   if ( m_sel_bot != 0 ) {
     wxColour CurrentColour;
@@ -413,7 +413,7 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   int side = event.GetId() - BRLIST_SIDE;
   if ( m_sel_bot != 0 ) {
     m_battle.SetBotSide( m_sel_bot->name, side );
@@ -424,15 +424,17 @@ void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   wxTextEntryDialog dlg( this , _("Please enter a value between 0 and 100"), _("Set Resource Bonus"), _T("0"), wxOK, wxDefaultPosition );
   if ( dlg.ShowModal() == wxID_OK ) {
     long handicap;
     if ( !dlg.GetValue().ToLong( &handicap ) ) {
+     wxLogWarning( _T("input is not a number") );
      wxMessageBox( _("Not a number"), _("Invalid number") );
      return;
     }
     if ( handicap < 0 || handicap > 100 ) {
+      wxLogWarning( _T("input value is out of range") );
       wxMessageBox( _("Value out of range.\n Enter an integer between 0 & 100."), _("Invalid number") );
       return;
     }
@@ -447,7 +449,7 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   if ( m_sel_user != 0 ) {
     m_battle.ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
   }
@@ -456,7 +458,7 @@ void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   if ( m_sel_bot != 0 ) {
     m_battle.RemoveBot( m_sel_bot->name );
   } else if ( m_sel_user != 0 ) {
@@ -467,7 +469,7 @@ void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   if ( m_sel_bot != 0 ) {
   } else if ( m_sel_user != 0 ) {
     m_battle.GetServer().Ring( m_sel_user->GetNick() );
