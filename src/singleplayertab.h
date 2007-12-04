@@ -41,6 +41,9 @@ class SinglePlayerTab: public wxPanel
 
     void OnUnitSyncReloaded();
 
+    void SetMap( unsigned int index );
+    void SetMod( unsigned int index );
+
   protected:
 
     Ui& m_ui;

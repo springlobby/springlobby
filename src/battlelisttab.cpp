@@ -339,6 +339,8 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     bo.maphash = map.hash;
     bo.mapname = map.name;
 
+    bo.rankneeded = sett().GetLastRankLimit();
+
     bo.maxplayers = sett().GetLastHostPlayerNum();
 
 /*

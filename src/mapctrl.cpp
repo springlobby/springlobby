@@ -421,20 +421,11 @@ void MapCtrl::_DrawBackground( wxDC& dc )
     return;
   }
 
-  wxRect r = _GetMinimapRect();
-
-  // Draw background.
-  if ( r.y > 0 ) {
-    dc.DrawRectangle( 0, 0, width, (height - r.height) / 2 );
-    dc.DrawRectangle( 0, r.y+r.height, width, (height - r.height) / 2 + 1 );
-  }
-  if ( r.x > 0 ) {
-    dc.DrawRectangle( 0, 0, (width - r.width) / 2, height );
-    dc.DrawRectangle( r.x+r.width, 0, (width - r.width) / 2 + 1, height );
-  }
-
   // Draw minimap.
   if ( !m_image ) {
+
+    // Draw background.
+    dc.DrawRectangle( 0, 0, width, height );
 
     if ( m_sp ) return;
 
@@ -455,9 +446,21 @@ void MapCtrl::_DrawBackground( wxDC& dc )
     else  _DrawOutlinedText( dc, _("Download"), 28, height - 50, *wxWHITE, wxColour(50,50,50) );
 
   } else {
+
+    wxRect r = _GetMinimapRect();
+
+    // Draw background where the minimap is not drawn(to avoid flickering).
+    if ( r.y > 0 ) {
+      dc.DrawRectangle( 0, 0, width, (height - r.height) / 2 );
+      dc.DrawRectangle( 0, r.y+r.height, width, (height - r.height) / 2 + 1 );
+    }
+    if ( r.x > 0 ) {
+      dc.DrawRectangle( 0, 0, (width - r.width) / 2, height );
+      dc.DrawRectangle( r.x+r.width, 0, (width - r.width) / 2 + 1, height );
+    }
+
+    // Draw minimap
     dc.DrawBitmap( *m_image, r.x, r.y, false );
-    width = r.width;
-    height = r.height;
   }
 
 }
