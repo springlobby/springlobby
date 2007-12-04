@@ -24,8 +24,8 @@
 
 void debug_panel::initDebugSizer(wxStaticBoxSizer* sizer) {
 	slider = new wxSlider(this, DO_SLI[0].id, configHandler->GetSpringConfigInt(DO_SLI[0].key,fromString<int>(DO_SLI[0].def)), 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
-	checkBox0 = new wxCheckBox(this, DO_CBOX[0].id, _S(DO_CBOX[0].lbl));
-	checkBox1 = new wxCheckBox(this, DO_CBOX[1].id, _S(DO_CBOX[1].lbl));
+	checkBox0 = new wxCheckBox(this, DO_CBOX[0].id, (DO_CBOX[0].lbl));
+	checkBox1 = new wxCheckBox(this, DO_CBOX[1].id, (DO_CBOX[1].lbl));
 
 	checkBox0->SetValue(configHandler->GetSpringConfigInt(DO_CBOX[0].key,fromString<int>(DO_SLI[0].def)));
 	checkBox1->SetValue(configHandler->GetSpringConfigInt(DO_CBOX[1].key,fromString<int>(DO_SLI[1].def)));
@@ -34,7 +34,7 @@ void debug_panel::initDebugSizer(wxStaticBoxSizer* sizer) {
 	sizer->Add(checkBox0, 0, wxTOP, 0);
 	sizer->Add(checkBox1, 0, wxTOP, 0);
 	sizer->Add(0, 10, 0);
-	sizer->Add(new wxStaticText(this, -1, _S(DO_SLI[0].lbl)), 0, wxTOP, 10);
+	sizer->Add(new wxStaticText(this, -1, (DO_SLI[0].lbl)), 0, wxTOP, 10);
 	sizer->Add(slider, 0, wxTOP, 0);
 }
 

@@ -1,5 +1,12 @@
 #include "se_settings.h"
-
+//TODO guard properly
+#ifndef JUFGDJ
+	#ifdef WIN32
+	  #define UNITSYNC_BIN _T("unitsync.dll")
+	#else
+	  #define UNITSYNC_BIN _T("unitsync.so")
+	#endif
+#endif
 se_settings* se_settings::instance = 0;
 
 se_settings& se_settings::getInstance()

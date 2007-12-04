@@ -26,7 +26,7 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 
 	// i < "sizeof"(VO_CBOX)
 	for (int i = 0; i < ctrl_vo_Boxes_size; i++) {
-		ctrl_vo_Boxes[i] = new wxCheckBox(this, VO_CBOX[i].id, _S(VO_CBOX[i].lbl));
+		ctrl_vo_Boxes[i] = new wxCheckBox(this, VO_CBOX[i].id, (VO_CBOX[i].lbl));
 		ctrl_vo_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(VO_CBOX[i].key,fromString<int>(VO_CBOX[i].def)));
 		ctrl_vo_Boxes[i]->SetToolTip(VO_CBOX[i].tTip[0]);
 		sizer->Add(ctrl_vo_Boxes[i], 0, wxTOP, (i == 0)? 10: 0);
@@ -112,7 +112,7 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
 	// i < 8 with High resolution LOS textures
 	// i < 7 without
 	for (int i = 0; i < ctrl_qa_Boxes_size-3; i++) {
-		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, _S(QA_CBOX[i].lbl));
+		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, (QA_CBOX[i].lbl));
 		ctrl_qa_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(QA_CBOX[i].key,fromString<int>(QA_CBOX[i].def)));
 		ctrl_qa_Boxes[i]->SetToolTip(QA_CBOX[i].tTip[0]);
 		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 0)? 10: 0);
@@ -136,7 +136,7 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
 
 void tab_quality_video::initAASizer(wxFlexGridSizer* sizer){
 	for (int i = 8; i < ctrl_qa_Boxes_size; i++) {
-		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, _S(QA_CBOX[i].lbl));
+		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, (QA_CBOX[i].lbl));
 		ctrl_qa_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(QA_CBOX[i].key,fromString<int>(QA_CBOX[i].def)));
 		ctrl_qa_Boxes[i]->SetToolTip(QA_CBOX[i].tTip[0]);
 		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 8)? 10: 0);
@@ -144,7 +144,7 @@ void tab_quality_video::initAASizer(wxFlexGridSizer* sizer){
 	int useFSAA = configHandler->GetSpringConfigInt(VO_SLI_EXT[0].key,fromString<int>(VO_SLI_EXT[0].def));
 	int FSAALev = configHandler->GetSpringConfigInt(VO_SLI[0].key,fromString<int>(VO_SLI[0].def));
 	ctrl_fsaa_slider = new wxSlider(this, VO_SLI[0].id, (useFSAA == 1)? FSAALev: 0, 0, 16, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
-	sizer->Add(new wxStaticText(this, -1, _S(VO_SLI[0].lbl)), 0, wxTOP, 15);
+	sizer->Add(new wxStaticText(this, -1, (VO_SLI[0].lbl)), 0, wxTOP, 15);
 	sizer->Add(ctrl_fsaa_slider, 0, wxALIGN_LEFT, 0);
 }
 
@@ -154,8 +154,8 @@ void tab_quality_video::initZBufferSizer(wxFlexGridSizer* sizer)
 
 	sizer->Add(new wxStaticText(this, -1, wxT("Resolution in bit")), 0, wxTOP ,15);
 
-	ctrl_z_radio1 = new wxRadioButton(this, VO_RBUT[0].id, _S(VO_RBUT[0].lbl), WX_DEF_P, WX_DEF_S, wxRB_GROUP, WX_DEF_V);
-	ctrl_z_radio2 = new wxRadioButton(this, VO_RBUT[1].id, _S(VO_RBUT[1].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
+	ctrl_z_radio1 = new wxRadioButton(this, VO_RBUT[0].id, (VO_RBUT[0].lbl), WX_DEF_P, WX_DEF_S, wxRB_GROUP, WX_DEF_V);
+	ctrl_z_radio2 = new wxRadioButton(this, VO_RBUT[1].id, (VO_RBUT[1].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
 
 	ctrl_z_radio1->SetToolTip(VO_RBUT[0].tTip[0]);
 	ctrl_z_radio2->SetToolTip(VO_RBUT[1].tTip[0]);

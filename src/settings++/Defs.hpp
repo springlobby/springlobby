@@ -151,16 +151,14 @@
 
 
 
-#include <wx/wx.h>
+#include <wx/string.h>
 #include <string>
 #include <iostream>
 //#include <fstream>
 #include <sstream>
 
 struct Control {
-    //const char lbl[64];
-    const std::string lbl;
-    //const char key[64];
+    const wxString lbl;
     const wxString key;
     int id;
     const std::string def; //default value for confighandler, not control
@@ -187,137 +185,116 @@ template<typename Type> Type fromString(const std::string& s) {
         return r;
 }
 
-//TODO guard properly
-#ifndef JUFGDJ
-	#define STD_STRING(v) std::string((const char*)v.mb_str(wxConvUTF8))
-	#ifdef WIN32
-	  #define CHOOSE_DLL _("Library (*.dll)|*.dll|Any File (*.*)|*.*")
-	  #define USYNC_CALL_CONV __stdcall
-	  #define SPRING_BIN _T("spring.exe")
-	  #define UNITSYNC_BIN _T("unitsync.dll")
-	  #define DOS_TXT true
-	#else
-	  #define CHOOSE_DLL _("Library (*.so)|*.so|Any File (*.*)|*.*")
-	  #define USYNC_CALL_CONV
-	  #define SPRING_BIN _T("spring")
-	  #define UNITSYNC_BIN _T("unitsync.so")
-	  #define DOS_TXT false
-	#endif
-#endif
-
-//const wxWindowID _1 = wxWindowID(-1);
-const wxPoint zeroPoint = wxPoint(0,0);
-
 //TODO find reasonable default values
 //TODO is max_texture stages obsolte?
 const Control RO_SLI[9] = {
-	{"shadow-map size",              _T("ShadowMapSize"),       ID_RO_SLI_0,	"2048", {wxT("placeholder")}	},
-	{"tree view-distance",           _T("TreeRadius"),          ID_RO_SLI_1,	"3000", {wxT("placeholder")}	},
-	{"terrain detail",               _T("GroundDetail"),        ID_RO_SLI_2,	"120", {wxT("placeholder")}	},
-	{"unit detail",                  _T("UnitLodDist"),         ID_RO_SLI_3,	"600", {wxT("placeholder")}	},
-	{"grass detail",                 _T("GrassDetail"),         ID_RO_SLI_4,	"10", {wxT("placeholder")}	},
-	{"ground decals",                _T("GroundDecals"),        ID_RO_SLI_5,	"120", {wxT("placeholder")}	},
-	{"unit icon distance",           _T("UnitIconDist"),        ID_RO_SLI_6,	"1000", {wxT("placeholder")}	},
-	{"max simultaneous particles",     _T("MaxParticles"),        ID_RO_SLI_7,	"20000"	, {wxT("placeholder")}},
-	{"max texture stages (SM3)", _T("SM3MaxTextureStages"), ID_RO_SLI_8,	"20"	, {wxT("placeholder")}}
+	{_T("shadow-map size"),              wxT("ShadowMapSize"),       ID_RO_SLI_0,	"2048", {wxT("placeholder")}	},
+	{_T("tree view-distance"),           wxT("TreeRadius"),          ID_RO_SLI_1,	"3000", {wxT("placeholder")}	},
+	{_T("terrain detail"),               wxT("GroundDetail"),        ID_RO_SLI_2,	"120", {wxT("placeholder")}	},
+	{_T("unit detail"),                  wxT("UnitLodDist"),         ID_RO_SLI_3,	"600", {wxT("placeholder")}	},
+	{_T("grass detail"),                 wxT("GrassDetail"),         ID_RO_SLI_4,	"10", {wxT("placeholder")}	},
+	{_T("ground decals"),                wxT("GroundDecals"),        ID_RO_SLI_5,	"120", {wxT("placeholder")}	},
+	{_T("unit icon distance"),           wxT("UnitIconDist"),        ID_RO_SLI_6,	"1000", {wxT("placeholder")}	},
+	{_T("max simultaneous particles"),     wxT("MaxParticles"),        ID_RO_SLI_7,	"20000"	, {wxT("placeholder")}},
+	{_T("max texture stages (SM3)"), wxT("SM3MaxTextureStages"), ID_RO_SLI_8,	"20"	, {wxT("placeholder")}}
 };
 
 const Control VO_CBOX[3] = {
-	{"run full-screen",                _T("Fullscreen"),              ID_WINDOWP_VO_CBOX_0,	"1", {wxT("placeholder")}},
-	{"dual-screen mode",               _T("DualScreenMode"),          ID_WINDOWP_VO_CBOX_1,	"0", {wxT("placeholder")}},
-	{"enable v-sync",                  _T("VSync"),                   ID_WINDOWP_VO_CBOX_2,	"1", {wxT("placeholder")}},
+	{_T("run full-screen"),                wxT("Fullscreen"),              ID_WINDOWP_VO_CBOX_0,	"1", {wxT("placeholder")}},
+	{_T("dual-screen mode"),               wxT("DualScreenMode"),          ID_WINDOWP_VO_CBOX_1,	"0", {wxT("placeholder")}},
+	{_T("enable v-sync"),                  wxT("VSync"),                   ID_WINDOWP_VO_CBOX_2,	"1", {wxT("placeholder")}},
 };
 
 const Control VO_RBUT[2] = {
-	{"16-bit Z-buffer", _T("DepthBufferBits"), ID_WINDOWP_VO_RBUT_0,	"16", {wxT("placeholder")}},
-	{"24-bit Z-buffer", _T("DepthBufferBits"), ID_WINDOWP_VO_RBUT_1,	"16", {wxT("placeholder")}}
+	{_T("16-bit Z-buffer"), wxT("DepthBufferBits"), ID_WINDOWP_VO_RBUT_0,	"16", {wxT("placeholder")}},
+	{_T("24-bit Z-buffer"), wxT("DepthBufferBits"), ID_WINDOWP_VO_RBUT_1,	"16", {wxT("placeholder")}}
 };
 
 
 const Control VO_SLI[1] = {
-	{"full-screen anti-aliasing samples", _T("FSAALevel"), ID_VO_SLI_0,	"0", {wxT("placeholder")}}
+	{_T("full-screen anti-aliasing samples"), wxT("FSAALevel"), ID_VO_SLI_0,	"0", {wxT("placeholder")}}
 };
 
 const Control VO_SLI_EXT[1] = {
-	{"", _T("FSAA"), -1, "0"}
+	{_T(""), wxT("FSAA"), -1, "0"}
 };
 
 
 const Control AO_SLI[3] = {
-	{"maximum simultaneous sounds", _T("MaxSounds"),            ID_AO_SLI_0,	"16" , {wxT("placeholder")}},
-	{"global sound volume",   _T("SoundVolume"),                ID_AO_SLI_1,	"100", {wxT("placeholder")}},
-	{"unit reply volume",     _T("UnitReplySoundVolume"),       ID_AO_SLI_2,	"80" , {wxT("placeholder")}}
+	{_T("maximum simultaneous sounds"), wxT("MaxSounds"),            ID_AO_SLI_0,	"16" , {wxT("placeholder")}},
+	{_T("global sound volume"),   wxT("SoundVolume"),                ID_AO_SLI_1,	"100", {wxT("placeholder")}},
+	{_T("unit reply volume"),     wxT("UnitReplySoundVolume"),       ID_AO_SLI_2,	"80" , {wxT("placeholder")}}
 	
 };
 
 const Control QA_CBOX[10] = {
-    {"shadows (slow)",                                  _T("Shadows"),             ID_WINDOWP_QA_CBOX_0,	"0", {wxT("placeholder")}},
-	{"3D trees (needs Vertex_Program)",                 _T("3DTrees"),             ID_WINDOWP_QA_CBOX_1,	"1", {wxT("placeholder")}},
-	{"high-resolution clouds (needs Fragment_Program)", _T("AdvSky"),              ID_WINDOWP_QA_CBOX_2,	"0", {wxT("placeholder")}},
-	{"dynamic clouds (slow)",                           _T("DynamicSky"),          ID_WINDOWP_QA_CBOX_3,	"0", {wxT("placeholder")}},
-	{"reflective units (needs Fragment_Program)",       _T("AdvUnitShading"),      ID_WINDOWP_QA_CBOX_4,	"0", {wxT("placeholder")}},
-	{"never use shaders when rendering SM3 maps",       _T("SM3ForceFallbackTex"), ID_WINDOWP_QA_CBOX_5,	"1", {wxT("placeholder")}},
-	{"enable LuaShaders support",                       _T("LuaShaders"),          ID_WINDOWP_QA_CBOX_6,	"1", {wxT("placeholder")}},
-	{"high-resolution LOS textures",                    _T("HighResLos"),          ID_WINDOWP_QA_CBOX_7,	"1", {wxT("placeholder")}},
-    	{"draw smooth points",                              _T("SmoothPoints"),        ID_WINDOWP_QA_CBOX_8,	"0", {wxT("placeholder")}},
-	{"draw smooth lines",                               _T("SmoothLines"),         ID_WINDOWP_QA_CBOX_9,	"0", {wxT("placeholder")}},
+    {_T("shadows (slow)"),                                  wxT("Shadows"),             ID_WINDOWP_QA_CBOX_0,	"0", {wxT("placeholder")}},
+	{_T("3D trees (needs Vertex_Program)"),                 wxT("3DTrees"),             ID_WINDOWP_QA_CBOX_1,	"1", {wxT("placeholder")}},
+	{_T("high-resolution clouds (needs Fragment_Program)"), wxT("AdvSky"),              ID_WINDOWP_QA_CBOX_2,	"0", {wxT("placeholder")}},
+	{_T("dynamic clouds (slow)"),                           wxT("DynamicSky"),          ID_WINDOWP_QA_CBOX_3,	"0", {wxT("placeholder")}},
+	{_T("reflective units (needs Fragment_Program)"),       wxT("AdvUnitShading"),      ID_WINDOWP_QA_CBOX_4,	"0", {wxT("placeholder")}},
+	{_T("never use shaders when rendering SM3 maps"),       wxT("SM3ForceFallbackTex"), ID_WINDOWP_QA_CBOX_5,	"1", {wxT("placeholder")}},
+	{_T("enable LuaShaders support"),                       wxT("LuaShaders"),          ID_WINDOWP_QA_CBOX_6,	"1", {wxT("placeholder")}},
+	{_T("high-resolution LOS textures"),                    wxT("HighResLos"),          ID_WINDOWP_QA_CBOX_7,	"1", {wxT("placeholder")}},
+    {_T("draw smooth points"),                              wxT("SmoothPoints"),        ID_WINDOWP_QA_CBOX_8,	"0", {wxT("placeholder")}},
+	{_T("draw smooth lines"),                               wxT("SmoothLines"),         ID_WINDOWP_QA_CBOX_9,	"0", {wxT("placeholder")}},
 };
 	
 
 const Control UI_CBOX[14] = {
-	{"enable LuaUI widgets",                            _T("LuaUI"),               ID_WINDOWP_UI_CBOX_1,	"1", {wxT("placeholder")}},
+	{_T("enable LuaUI widgets"),                            wxT("LuaUI"),               ID_WINDOWP_UI_CBOX_1,	"1", {wxT("placeholder")}},
 	
-	{"draw commands on mini-map",                       _T("MiniMapDrawCommands"), ID_WINDOWP_UI_CBOX_2,	"1", {wxT("placeholder")}},
-	{"draw icons on mini-map",                          _T("MiniMapIcons"),        ID_WINDOWP_UI_CBOX_3,	"1", {wxT("placeholder")}},
-	{"draw markers on mini-map",                        _T("MiniMapMarker"),       ID_WINDOWP_UI_CBOX_4,	"1", {wxT("placeholder")}},
-	{"mini-map on left (single screen)", 				_T("MinimapOnLeft"),       ID_WINDOWP_UI_CBOX_5,	"1", {wxT("placeholder")}},
-	{"mini-map on left (dual screen)",   				_T("DualScreenMiniMapOnLeft"), ID_WINDOWP_UI_CBOX_6,"1", {wxT("placeholder")}},
-	{"simplified mini-map colors",                      _T("SimpleMiniMapColors"), ID_WINDOWP_UI_CBOX_7,	"0", {wxT("placeholder")}},
+	{_T("draw commands on mini-map"),                       wxT("MiniMapDrawCommands"), ID_WINDOWP_UI_CBOX_2,	"1", {wxT("placeholder")}},
+	{_T("draw icons on mini-map"),                          wxT("MiniMapIcons"),        ID_WINDOWP_UI_CBOX_3,	"1", {wxT("placeholder")}},
+	{_T("draw markers on mini-map"),                        wxT("MiniMapMarker"),       ID_WINDOWP_UI_CBOX_4,	"1", {wxT("placeholder")}},
+	{_T("mini-map on left (single screen)"), 				wxT("MinimapOnLeft"),       ID_WINDOWP_UI_CBOX_5,	"1", {wxT("placeholder")}},
+	{_T("mini-map on left (dual screen)"),   				wxT("DualScreenMiniMapOnLeft"), ID_WINDOWP_UI_CBOX_6,"1", {wxT("placeholder")}},
+	{_T("simplified mini-map colors"),                      wxT("SimpleMiniMapColors"), ID_WINDOWP_UI_CBOX_7,	"0", {wxT("placeholder")}},
 
-	{"team-colored nanospray",                          _T("TeamNanoSpray"),       ID_WINDOWP_UI_CBOX_8,	"1", {wxT("placeholder")}},
-	{"colorized elevation map",                         _T("ColorElev"),           ID_WINDOWP_UI_CBOX_9,	"1", {wxT("placeholder")}},
+	{_T("team-colored nanospray"),                          wxT("TeamNanoSpray"),       ID_WINDOWP_UI_CBOX_8,	"1", {wxT("placeholder")}},
+	{_T("colorized elevation map"),                         wxT("ColorElev"),           ID_WINDOWP_UI_CBOX_9,	"1", {wxT("placeholder")}},
 	
-	{"show in-game clock",                              _T("ShowClock"),           ID_WINDOWP_UI_CBOX_10,	"1", {wxT("placeholder")}},
-	{"show in-game player information",                 _T("ShowPlayerInfo"),      ID_WINDOWP_UI_CBOX_11,	"1", {wxT("placeholder")}},
-	{"show in-game framerate",                          _T("ShowFPS"),             ID_WINDOWP_UI_CBOX_12,	"0", {wxT("placeholder")}},
+	{_T("show in-game clock"),                              wxT("ShowClock"),           ID_WINDOWP_UI_CBOX_10,	"1", {wxT("placeholder")}},
+	{_T("show in-game player information"),                 wxT("ShowPlayerInfo"),      ID_WINDOWP_UI_CBOX_11,	"1", {wxT("placeholder")}},
+	{_T("show in-game framerate"),                          wxT("ShowFPS"),             ID_WINDOWP_UI_CBOX_12,	"0", {wxT("placeholder")}},
 //TODO is there even a reason that it should be disabled?
-	{"fix rendering on alt-tab",                        _T("FixAltTab"),           ID_WINDOWP_UI_CBOX_13,	"1", {wxT("placeholder")}},
-	{"disallow helper AI's",                            _T("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_14,	"0", {wxT("placeholder")}}
+	{_T("fix rendering on alt-tab"),                        wxT("FixAltTab"),           ID_WINDOWP_UI_CBOX_13,	"1", {wxT("placeholder")}},
+	{_T("disallow helper AI's"),                            wxT("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_14,	"0", {wxT("placeholder")}}
 };
 
 
 const Control MO_SLI[5] = {
-	{"Overhead Camera scroll speed",    _T("OverheadScrollSpeed"),    ID_MO_SLI_0,	"10", {wxT("placeholder")}},
-	{"Rotatable overhead Camera scroll speed", _T("RotOverheadScrollSpeed"), ID_MO_SLI_1,	"0" , {wxT("placeholder")}},
-	{"Total War Camera scroll speed",          _T("TWScrollSpeed"),          ID_MO_SLI_2,	"0" , {wxT("placeholder")}},
-	{"First Person Camera scroll speed",         _T("FPSScrollSpeed"),         ID_MO_SLI_3,	"0" , {wxT("placeholder")}},
-	{"Free Camera scroll speed",          _T("CamFreeScrollSpeed"),     ID_MO_SLI_4,	"0" , {wxT("placeholder")}}
+	{_T("Overhead Camera scroll speed"),    wxT("OverheadScrollSpeed"),    ID_MO_SLI_0,	"10", {wxT("placeholder")}},
+	{_T("Rotatable overhead Camera scroll speed"), wxT("RotOverheadScrollSpeed"), ID_MO_SLI_1,	"0" , {wxT("placeholder")}},
+	{_T("Total War Camera scroll speed"),          wxT("TWScrollSpeed"),          ID_MO_SLI_2,	"0" , {wxT("placeholder")}},
+	{_T("First Person Camera scroll speed"),         wxT("FPSScrollSpeed"),         ID_MO_SLI_3,	"0" , {wxT("placeholder")}},
+	{_T("Free Camera scroll speed"),          wxT("CamFreeScrollSpeed"),     ID_MO_SLI_4,	"0" , {wxT("placeholder")}}
 };
 
 const Control MO_SLI_EXT[5] = {
-	{"", _T("OverheadEnabled"), -1,	"1", {wxT("placeholder")}},
-	{"", _T("RotOverheadEnabled"), -1,	"0", {wxT("placeholder")}},
-	{"", _T("TWEnabled"), -1,		"0", {wxT("placeholder")}},
-	{"", _T("FPSEnabled"), -1,		"0", {wxT("placeholder")}},
-	{"", _T("CamFreeEnabled"), -1,	"0", {wxT("placeholder")}}
+	{_T(""), wxT("OverheadEnabled"), -1,	"1", {wxT("placeholder")}},
+	{_T(""), wxT("RotOverheadEnabled"), -1,	"0", {wxT("placeholder")}},
+	{_T(""), wxT("TWEnabled"), -1,		"0", {wxT("placeholder")}},
+	{_T(""), wxT("FPSEnabled"), -1,		"0", {wxT("placeholder")}},
+	{_T(""), wxT("CamFreeEnabled"), -1,	"0", {wxT("placeholder")}}
 };
 
 
 const Control DO_SLI[1] = {
-	{"console verbose level (0=min,10=max)", _T("VerboseLevel"), ID_DO_SLI_0,	"0", {wxT("placeholder")}}
+	{_T("console verbose level (0=min,10=max)"), wxT("VerboseLevel"), ID_DO_SLI_0,	"0", {wxT("placeholder")}}
 };
 
 const Control DO_CBOX[2] = {
-	{"catch AI exceptions",        _T("CatchAIExceptions"), ID_WINDOWP_DO_CBOX_0,	"0", {wxT("placeholder")}},
-	{"send debug info to console", _T("StdoutDebug"),       ID_WINDOWP_DO_CBOX_1,	"0", {wxT("placeholder")}}
+	{_T("catch AI exceptions"),        wxT("CatchAIExceptions"), ID_WINDOWP_DO_CBOX_0,	"0", {wxT("placeholder")}},
+	{_T("send debug info to console"), wxT("StdoutDebug"),       ID_WINDOWP_DO_CBOX_1,	"0", {wxT("placeholder")}}
 };
 
 
 const Control WR_COMBOX[1] = {
-		{"basic",                  _T("ReflectiveWater"), ID_WINDOWP_WR_COMBOX,	"1", {wxT("placeholder")}}
-	/*{"reflective",              "ReflectiveWater", ID_WINDOWP_WR_COMBOX_1,	"1"},
-	{"reflective + refractive", "ReflectiveWater", ID_WINDOWP_WR_COMBOX_2,	"1"},
-	{"dynamic",                 "ReflectiveWater", ID_WINDOWP_WR_COMBOX_3,	"1"}*/
+		{_T("basic"),                  wxT("ReflectiveWater"), ID_WINDOWP_WR_COMBOX,	"1", {wxT("placeholder")}}
+	/*{_T("reflective",              "ReflectiveWater", ID_WINDOWP_WR_COMBOX_1,	"1"},
+	{_T("reflective + refractive", "ReflectiveWater", ID_WINDOWP_WR_COMBOX_2,	"1"},
+	{_T("dynamic",                 "ReflectiveWater", ID_WINDOWP_WR_COMBOX_3,	"1"}*/
 };
 
 const wxString WR_COMBOX_CHOICES[4] = {
@@ -325,21 +302,21 @@ const wxString WR_COMBOX_CHOICES[4] = {
 };
 
 const Control MO_CBOX[2] = {
-	{"invert mouse y-axis",             _T("InvertMouse"),      ID_WINDOWC_MO_CBOX_0,	"1", {wxT("placeholder")}},
-	{"mini-map 3-button mouse support", _T("MiniMapFullProxy"), ID_WINDOWC_MO_CBOX_1,	"1", {wxT("placeholder")}}
+	{_T("invert mouse y-axis"),             wxT("InvertMouse"),      ID_WINDOWC_MO_CBOX_0,	"1", {wxT("placeholder")}},
+	{_T("mini-map 3-button mouse support"), wxT("MiniMapFullProxy"), ID_WINDOWC_MO_CBOX_1,	"1", {wxT("placeholder")}}
 };
 
 const Control MO_RBUT[5] = {
-	{"OH (overhead)",            _T("CamMode"), ID_WINDOWC_MO_RBUT_0,	"1", {wxT("placeholder")}},
-	{"ROH (rotatable overhead)", _T("CamMode"), ID_WINDOWC_MO_RBUT_1,	"1", {wxT("placeholder")}},
-	{"TW (total war)",           _T("CamMode"), ID_WINDOWC_MO_RBUT_2,	"1", {wxT("placeholder")}},
-	{"FP (first-person)",        _T("CamMode"), ID_WINDOWC_MO_RBUT_3,	"1", {wxT("placeholder")}},
-	{"FC (free camera)",         _T("CamMode"), ID_WINDOWC_MO_RBUT_4,	"1", {wxT("placeholder")}}
+	{_T("OH (overhead)"),            wxT("CamMode"), ID_WINDOWC_MO_RBUT_0,	"1", {_T("placeholder")}},
+	{_T("ROH (rotatable overhead)"), wxT("CamMode"), ID_WINDOWC_MO_RBUT_1,	"1", {_T("placeholder")}},
+	{_T("TW (total war)"),           wxT("CamMode"), ID_WINDOWC_MO_RBUT_2,	"1", {_T("placeholder")}},
+	{_T("FP (first-person)"),        wxT("CamMode"), ID_WINDOWC_MO_RBUT_3,	"1", {_T("placeholder")}},
+	{_T("FC (free camera)"),         wxT("CamMode"), ID_WINDOWC_MO_RBUT_4,	"1", {_T("placeholder")}}
 };
 
 const Control RC_TEXT[2] = {
-	{"", _T("XResolution"), -1,	"1024", {wxT("placeholder")}},
-	{"", _T("YResolution"), -1,	"768" , {wxT("placeholder")}}
+	{_T(""), wxT("XResolution"), -1,	"1024", {_T("placeholder")}},
+	{_T(""), wxT("YResolution"), -1,	"768" , {_T("placeholder")}}
 };
 
 

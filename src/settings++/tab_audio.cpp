@@ -30,11 +30,11 @@ void audio_panel::initAudioSizer(wxStaticBoxSizer* sizer) {
     slider0->SetTickFreq((128-8) / 10   ,1);
     slider1->SetTickFreq(10             ,1);
     slider2->SetTickFreq(10             ,1);
-	sizer->Add(new wxStaticText(this, -1, _S(AO_SLI[0].lbl)), 0, wxTOP, 15);
+	sizer->Add(new wxStaticText(this, -1, (AO_SLI[0].lbl)), 0, wxTOP, 15);
 	sizer->Add(slider0, 0, wxALIGN_LEFT, 0);
-	sizer->Add(new wxStaticText(this, -1, _S(AO_SLI[1].lbl)), 0, wxTOP, 15);
+	sizer->Add(new wxStaticText(this, -1, (AO_SLI[1].lbl)), 0, wxTOP, 15);
 	sizer->Add(slider1, 0, wxALIGN_LEFT, 0);
-	sizer->Add(new wxStaticText(this, -1, _S(AO_SLI[2].lbl)), 0, wxTOP, 15);
+	sizer->Add(new wxStaticText(this, -1, (AO_SLI[2].lbl)), 0, wxTOP, 15);
 	sizer->Add(slider2, 0, wxALIGN_LEFT, 0);
 }
 
