@@ -87,7 +87,7 @@ void abstract_panel::loadDefaults()
 		intSettings[DO_CBOX[i].key] = fromString<int>( DO_CBOX[i].def);
 
 	//	const Control WR_COMBOX[4] 
-	for (int i = 0;i< 4; ++i)
+	for (int i = 0;i< 1; ++i)
 		intSettings[WR_COMBOX[i].key] = fromString<int>( WR_COMBOX[i].def);
 
 	//	const Control MO_CBOX[2] 

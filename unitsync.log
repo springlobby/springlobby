@@ -27,3 +27,63 @@ Using read-write data directory: /home/kosh/.spring/
 Using read-only  data directory: /usr/share/games/spring_svn/
 Using read-only  data directory: /lib/spring_svn/
 unitsync: hosting
+unitsync initialized
+Using read-write data directory: /home/kosh/.spring/
+Using read-only  data directory: /usr/share/games/spring_svn/
+Using read-only  data directory: /lib/spring_svn/
+unitsync: hosting
+unitsync deinitialized
+----
+unitsync initialized
+Using read-write data directory: /home/kosh/.spring/
+Using read-only  data directory: /usr/share/games/spring_svn/
+Using read-only  data directory: /lib/spring_svn/
+unitsync: hosting
+unitsync initialized
+Using read-write data directory: /home/kosh/.spring/
+Using read-only  data directory: /usr/share/games/spring_svn/
+Using read-only  data directory: /lib/spring_svn/
+unitsync: hosting
+unitsync deinitialized
+----
+unitsync initialized
+Using read-write data directory: /home/kosh/.spring/
+Using read-only  data directory: /usr/share/games/spring_svn/
+Using read-only  data directory: /lib/spring_svn/
+unitsync: hosting
+unitsync initialized
+Using read-write data directory: /home/kosh/.spring/
+Using read-only  data directory: /usr/share/games/spring_svn/
+Using read-only  data directory: /lib/spring_svn/
+unitsync: hosting
+unitsync deinitialized
+----
+unitsync initialized
+Using read-write data directory: /home/kosh/.spring/
+Using read-only  data directory: /usr/share/games/spring_svn/
+Using read-only  data directory: /lib/spring_svn/
+unitsync: hosting
+unitsync initialized
+Using read-write data directory: /home/kosh/.spring/
+Using read-only  data directory: /usr/share/games/spring_svn/
+Using read-only  data directory: /lib/spring_svn/
+unitsync: hosting
+unitsync deinitialized
+----
+unitsync initialized
+Using read-write data directory: /home/kosh/.spring/
+Using read-only  data directory: /usr/share/games/spring_svn/
+Using read-only  data directory: /lib/spring_svn/
+unitsync: hosting
+unitsync initialized
+Using read-write data directory: /home/kosh/.spring/
+Using read-only  data directory: /usr/share/games/spring_svn/
+Using read-only  data directory: /lib/spring_svn/
+unitsync: hosting
+unitsync deinitialized
+----
+unitsync initialized
+Using read-write data directory: /home/kosh/.spring/
+Using read-only  data directory: /usr/share/games/spring_svn/
+Using read-only  data directory: /lib/spring_svn/
+unitsync: hosting
