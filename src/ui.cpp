@@ -292,11 +292,19 @@ void Ui::OpenWebBrowser( const wxString& url )
 {
   if ( sett().GetWebBrowserPath() == _T("use default") || sett().GetWebBrowserPath().IsEmpty() )
   {
+<<<<<<< HEAD:src/ui.cpp
       if ( !wxLaunchDefaultBrowser( url ) ) wxLogWarning( _("Couldn't launch browser. URL is: ") + url );
+=======
+      if ( !wxLaunchDefaultBrowser( url ) ) wxMessageBox( _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+>>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/ui.cpp
   }
   else
   {
+<<<<<<< HEAD:src/ui.cpp
     if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) ) wxLogWarning( _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath() );
+=======
+    if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) ) wxMessageBox( _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
+>>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/ui.cpp
   }
 }
 
@@ -443,9 +451,17 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
       message +=  _("is not supported by the lobby server that requires version");
       message += _T(" (") +  WX_STRING( m_server_spring_ver ) + _T(").\n\n");
       message += _("Online play will be disabled.");
+<<<<<<< HEAD:src/ui.cpp
       wxLogWarning ( message );
+=======
+      wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
+>>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/ui.cpp
     } else {
+<<<<<<< HEAD:src/ui.cpp
       wxLogWarning( _("Couldn't get your spring version.\n\nOnline play will be disabled.") );
+=======
+      wxMessageBox( _("Couldn't get your spring version.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
+>>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/ui.cpp
     }
     m_main_win->DisableMultiplayerTab();
   }
@@ -740,10 +756,18 @@ void Ui::OnJoinedBattle( Battle& battle )
 {
   mw().GetJoinTab().JoinBattle( battle );
   /*if ( !Spring::TestSpringBinary() ) {
+<<<<<<< HEAD:src/ui.cpp
     wxLogWarning( _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online.") );
+=======
+    wxMessageBox( _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
+>>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/ui.cpp
   }*/
   if ( battle.GetNatType() != NAT_None ) {
+<<<<<<< HEAD:src/ui.cpp
     wxLogWarning( _("This game uses NAT traversal that is not yet supported\nby SpringLobby.\n\nYou might not be able to play in this battle.\n Join at your own risk.") );
+=======
+    wxMessageBox( _("This game uses NAT traversal that is not yet supported\nby SpringLobby.\n\nYou will not be able to play in this battle."), _("NAT traversal"), wxOK );
+>>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/ui.cpp
   }
 }
 

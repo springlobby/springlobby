@@ -282,15 +282,19 @@ void BattleListTab::UpdateList() {
 void BattleListTab::OnHost( wxCommandEvent& event )
 {
   if ( !m_ui.IsConnected() ) {
-    wxLogWarning( _("You cannot host a game while offline. Please connect to a lobby server.") );
+    wxLogWarning( _T("Trying to host while offline") );
+    wxMessageBox( _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK );
+    m_ui.ShowConnectWindow();
     return;
   }
   if ( !m_ui.IsSpringCompatible() ){
-    wxLogWarning(_("Hosting is disabled due to the incompatible version you're using") );
+    wxLogWarning(_T("Hosting is disabled due to the incompatible version ") );
+    wxMessageBox(_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION);
     return;
   }
   if ( m_ui.IsSpringRunning() ) {
-    wxLogWarning(_("You already are running a Spring instance, close it first in order to be able to host a new game") );
+    wxLogWarning(_T("trying to host while spring is running") );
+    wxMessageBox(_("You already are running a Spring instance, close it first in order to be able to host a new game"), _("Spring error"), wxICON_EXCLAMATION );
     return;
   }
   Battle* battle = m_ui.mw().GetJoinTab().GetCurrentBattle();
@@ -316,7 +320,8 @@ void BattleListTab::OnHost( wxCommandEvent& event )
       bo.modhash = mod.hash;
       bo.modname = mod.name;
     } catch ( ... ) {
-      wxLogWarning( _("Battle not started beacuse the mod you selected could not be found. ") );
+      wxLogWarning( _T("can't host: mod not found") );
+      wxMessageBox( _("Battle not started beacuse the mod you selected could not be found. "), _("Error starting battle."), wxOK );
       return;
     }
 
@@ -324,7 +329,8 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     std::string mname = sett().GetLastHostMap();
     if ( mname != "" ) map = usync()->GetMap( mname );
     else if ( usync()->GetNumMaps() <= 0 ) {
-      wxLogWarning( _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly.") );
+      wxLogWarning( _T("no maps found") );
+      wxMessageBox( _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
       return;
     } else {
       map = usync()->GetMap( 0 );
@@ -392,7 +398,8 @@ void BattleListTab::OnListJoin( wxListEvent& event )
 void BattleListTab::DoJoin( Battle& battle )
 {
   if ( !m_ui.IsSpringCompatible() ){
-    wxLogWarning(_("Joining battles is disabled due to the incompatible spring version you're using.") );
+    wxLogWarning(_T("trying to join battles with imcompatible spring version") );
+    wxMessageBox(_("Joining battles is disabled due to the incompatible spring version you're using."), _("Spring error"), wxICON_EXCLAMATION);
     return;
   }
 
@@ -407,7 +414,8 @@ void BattleListTab::DoJoin( Battle& battle )
   }
 
   if ( m_ui.IsSpringRunning() ) {
-    wxLogWarning(_("You already are running a Spring instance, close it first in order to be able to join another battle.") );
+    wxLogWarning(_T("trying to join a battle while spring is running") );
+    wxMessageBox(_("You already are running a Spring instance, close it first in order to be able to join another battle."), _("Spring error"), wxICON_EXCLAMATION );
     return;
   }
 

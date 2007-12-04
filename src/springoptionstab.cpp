@@ -458,11 +458,19 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
 
   usync()->FreeUnitSyncLib();
   if ( !usync()->LoadUnitSyncLib( WX_STRING(sett().GetSpringDir()), WX_STRING(sett().GetUnitSyncUsedLoc()) ) ) {
+<<<<<<< HEAD:src/springoptionstab.cpp
     wxLogWarning( _("SpringLobby is unable to load you unitsync library.\n\nYou might want to take another look at your unitsync setting.") );
+=======
+    wxMessageBox( _("SpringLobby is unable to load you unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
+>>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/springoptionstab.cpp
   } else {
     // If LoadUnitSyncLib() fails this will too.
     if ( !Spring::TestSpringBinary() ) {
+<<<<<<< HEAD:src/springoptionstab.cpp
       wxLogWarning( _("SpringLobby is unable to detect your spring version.\n\nYou might want to take another look at your spring executable settings.") );
+=======
+      wxMessageBox( _("SpringLobby is unable to detect your spring version.\n\nYou might want to take another look at your spring executable settings."), _("Spring error"), wxOK );
+>>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/springoptionstab.cpp
     }
   }
   m_ui.mw().OnUnitSyncReloaded();
