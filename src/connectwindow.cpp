@@ -16,10 +16,7 @@
 #include <wx/settings.h>
 #include <wx/icon.h>
 #include <wx/msgdlg.h>
-<<<<<<< HEAD:src/connectwindow.cpp
 
-=======
->>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/connectwindow.cpp
 #include "connectwindow.h"
 #include "settings.h"
 #include "ui.h"
@@ -225,30 +222,21 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
     wxArrayString serverString = wxStringTokenize( HostAddress ,_T(":") );
 
     if ( serverString.GetCount() == 0 ) {
-<<<<<<< HEAD:src/connectwindow.cpp
-      wxLogWarning( _("Invalid host/port or servername.") );
-=======
+      wxLogWarning( _T("Invalid port or servername.") );
       wxMessageBox( _("Invalid host/port or servername."), _("Invalid host"), wxOK );
->>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/connectwindow.cpp
       return;
     }
 
     if ( serverString.GetCount() == 2 ) {
       long port;
       if( !serverString[1].ToLong( &port ) ) {
-<<<<<<< HEAD:src/connectwindow.cpp
-        wxLogWarning( _("Invalid port.") );
-=======
+        wxLogWarning( _T("Invalid port.") );
         wxMessageBox( _("Invalid port."), _("Invalid port"), wxOK );
->>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/connectwindow.cpp
         return;
       }
       if( port < 1 || port > 65535) {
-<<<<<<< HEAD:src/connectwindow.cpp
-        wxLogWarning( _("Port number out of range.\n\nIt must be an integer between 1 and 65535") );
-=======
+        wxLogWarning( _T("port number out of range") );
         wxMessageBox( _("Port number out of range.\n\nIt must be an integer between 1 and 65535"), _("Invalid port"), wxOK );
->>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/connectwindow.cpp
         return;
       }
       sett().AddServer( STD_STRING( HostAddress ) );
@@ -257,11 +245,8 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
     }
 
     if ( serverString.GetCount() != 1 && serverString.GetCount() != 2 ) {
-<<<<<<< HEAD:src/connectwindow.cpp
-      wxLogWarning( _("Invalid host/port.") );
-=======
+      wxLogWarning( _T("invalid host/port.") );
       wxMessageBox( _("Invalid host/port."), _("Invalid host"), wxOK );
->>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/connectwindow.cpp
       return;
     }
 
@@ -275,18 +260,11 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
        m_nick_text->SetValue(m_regnick_text->GetValue());
        m_pass_text->SetValue(m_regpass1_text->GetValue());
        Show();
-<<<<<<< HEAD:src/connectwindow.cpp
-       wxLogWarning( _("Registration successful,\nyou should now be able to login.") );
-=======
        wxMessageBox( _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
->>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/connectwindow.cpp
     } else {
        Show();
-<<<<<<< HEAD:src/connectwindow.cpp
-       wxLogWarning( _("Registration failed.") );
-=======
+       wxLogWarning( _T("registration failed.") );
        wxMessageBox( _("Registration failed."), _("Registration failed"), wxOK );
->>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/connectwindow.cpp
     }
 
   }

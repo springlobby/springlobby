@@ -24,25 +24,11 @@
 void DumpStackTraceToLog()
 {
 
-<<<<<<< HEAD:src/utils.cpp
 #if wxUSE_STACKWALKER
 
   wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
 
   DebugInfo += _T("StackTraceID: ") + stacktrace().GetStackTraceHash() + _T("\n");
-=======
-void debug_output( const std::string& prefix, const std::string& func, const std::string& params, const std::string& msg )
-{
-  std::string tmpmsg = msg;
-  if ( msg != "" ) tmpmsg = std::string(": ") + msg;
-#ifdef __WXMSW__
-  std::string tmp = prefix;
-  tmp += " " + func + "( " + params + " )" + tmpmsg + "\n";
-  if (prefix != "**" and prefix != "--" and prefix != "ww" ) { wxMessageBox( WX_STRING(tmp) ); }
-#ifdef _MSC_VER
-  OutputDebugString( tmp.c_str() );
-#endif
->>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/utils.cpp
 
   stacktrace().Walk(2);
   DebugInfo += stacktrace().GetStackTrace();
