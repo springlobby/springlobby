@@ -15,6 +15,8 @@
 #include "iconimagelist.h"
 #include "iunitsync.h"
 #include "battle.h"
+#include "uiutils.h"
+#include "ui.h"
 #include "user.h"
 #include "server.h"
 #include "utils.h"
@@ -24,6 +26,7 @@
 BEGIN_EVENT_TABLE( BattleroomListCtrl, wxListCtrl )
 
   EVT_LIST_ITEM_RIGHT_CLICK( BRLIST_LIST, BattleroomListCtrl::OnListRightClick )
+  EVT_LIST_COL_CLICK       ( BRLIST_LIST, BattleroomListCtrl::OnColClick )
   EVT_MENU                 ( BRLIST_SPEC, BattleroomListCtrl::OnSpecSelect )
   EVT_MENU                 ( BRLIST_KICK, BattleroomListCtrl::OnKickPlayer )
   EVT_MENU                 ( BRLIST_RING, BattleroomListCtrl::OnRingPlayer )
@@ -32,9 +35,12 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl, wxListCtrl )
 
 END_EVENT_TABLE()
 
-BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxListCtrl(parent, BRLIST_LIST,
+Ui* BattleroomListCtrl::m_ui_for_sort = 0;
+
+BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui ) : wxListCtrl(parent, BRLIST_LIST,
   wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL ), m_battle(battle),
-  m_sel_user(0), m_sel_bot(0)
+  m_sel_user(0), m_sel_bot(0),
+  m_ui(ui)
 {
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
@@ -82,11 +88,17 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle ) : wxL
   col.SetImage( -1 );
   InsertColumn( 9, col );
 
-#ifdef __WXMSW__
-  SetColumnWidth( 0, 45 );
-#else
+  m_sortorder[0].col = 7;
+  m_sortorder[0].direction = true;
+  m_sortorder[1].col = 6;
+  m_sortorder[1].direction = true;
+  m_sortorder[2].col = 5;
+  m_sortorder[2].direction = true;
+  m_sortorder[3].col = 1;
+  m_sortorder[3].direction = true;
+  Sort( );
+
   SetColumnWidth( 0, 20 );
-#endif
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );
   SetColumnWidth( 3, 20 );
@@ -251,10 +263,14 @@ int BattleroomListCtrl::GetUserIndex( User& user )
     wxListItem item;
     item.SetId( i );
     GetItem( item );
-    if ( item.GetImage() == ICON_BOT ) continue;
-    if ( (unsigned long)&user == GetItemData( i ) ) return i;
+    if ( (unsigned long)&user == GetItemData( i ) ) {
+      if ( item.GetImage() == ICON_BOT )
+        return -1;
+      else
+        return i;
+    }
   }
-  debug_error( "didn't find the battle." );
+  debug_error( "didn't find the user." );
   return -1;
 }
 
@@ -352,6 +368,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     m_popup->Enable( m_popup->FindItem( _("Ring") ), false );
   } else {
     debug("User");
+    wxMessageBox( _("USER USER USER"), _("Invalid number") );
     m_sel_bot = 0;
     m_sel_user = (User*)event.GetData();
     int item = m_popup->FindItem( _("Spectator") );
@@ -385,7 +402,7 @@ void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
   if ( m_sel_bot != 0 ) {
     m_battle.SetBotAlly( m_sel_bot->name, ally );
   } else if ( m_sel_user != 0 ) {
-    m_battle.ForceAlly( *m_sel_user, ally );
+    //m_battle.ForceAlly( *m_sel_user, ally );
   }
 }
 
@@ -421,6 +438,7 @@ void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
     m_battle.ForceSide( *m_sel_user, side );
   }
 }
+
 
 void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
 {
@@ -473,5 +491,396 @@ void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& event )
     m_battle.GetServer().Ring( m_sel_user->GetNick() );
   }
 }
+
+
+void BattleroomListCtrl::OnColClick( wxListEvent& event )
+{
+  if ( event.GetColumn() == -1 ) return;
+  wxListItem col;
+  GetColumn( m_sortorder[0].col, col );
+  col.SetImage( -1 );
+  SetColumn( m_sortorder[0].col, col );
+
+  int i;
+  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
+  if ( i > 3 ) { i = 3; }
+  for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
+  m_sortorder[0].col = event.GetColumn();
+  m_sortorder[0].direction = !m_sortorder[0].direction;
+
+
+  GetColumn( m_sortorder[0].col, col );
+  col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
+  SetColumn( m_sortorder[0].col, col );
+
+  Sort();
+}
+
+
+void BattleroomListCtrl::Sort()
+{
+  BattleroomListCtrl::m_ui_for_sort = &m_ui;
+  if (!m_ui_for_sort || !m_ui_for_sort->GetServerStatus()  ) return;
+  for (int i = 0; i >= 0; i--) { // FIXME: set to i = 3
+    switch ( m_sortorder[ i ].col ) {
+      case 0 : SortItems( ( m_sortorder[ i ].direction )?&CompareStatusUP:&CompareStatusDOWN , 0 ); break;
+      case 1 : SortItems( ( m_sortorder[ i ].direction )?&CompareSideUP:&CompareSideDOWN , 0 ); break;
+      case 2 : SortItems( ( m_sortorder[ i ].direction )?&CompareColorUP:&CompareColorDOWN , 0 ); break;
+      case 3 : SortItems( ( m_sortorder[ i ].direction )?&CompareCountryUP:&CompareCountryDOWN , 0 ); break;
+      case 4 : SortItems( ( m_sortorder[ i ].direction )?&CompareRankUP:&CompareRankDOWN , 0 ); break;
+      case 5 : SortItems( ( m_sortorder[ i ].direction )?&CompareNicknameUP:&CompareNicknameDOWN , (wxUIntPtr)this ); break;
+      case 6 : SortItems( ( m_sortorder[ i ].direction )?&CompareTeamUP:&CompareTeamDOWN , 0 ); break;
+      case 7 : SortItems( ( m_sortorder[ i ].direction )?&CompareAllyUP:&CompareAllyDOWN , 0 ); break;
+      case 8 : SortItems( ( m_sortorder[ i ].direction )?&CompareCpuUP:&CompareCpuDOWN , 0 ); break;
+      case 9 : SortItems( ( m_sortorder[ i ].direction )?&CompareHandicapUP:&CompareHandicapDOWN , 0 ); break;
+    }
+  }
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareStatusUP(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  int b1 = 0, b2 = 0;
+
+  if ( battle1.GetInGame() )
+    b1 += 1000;
+  if ( battle2.GetInGame() )
+    b2 += 1000;
+  if ( battle1.IsLocked() )
+    b1 += 100;
+  if ( battle2.IsLocked() )
+    b2 += 100;
+  if ( battle1.IsPassworded() )
+    b1 += 50;
+  if ( battle2.IsPassworded() )
+    b2 += 50;
+  if ( battle1.IsFull() )
+    b1 += 25;
+  if ( battle2.IsFull() )
+    b2 += 25;
+
+  // inverse the order
+  if ( b1 < b2 )
+      return -1;
+  if ( b1 > b2 )
+      return 1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareStatusDOWN(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  int b1 = 0, b2 = 0;
+
+  if ( battle1.GetInGame() )
+    b1 += 1000;
+  if ( battle2.GetInGame() )
+    b2 += 1000;
+  if ( battle1.IsLocked() )
+    b1 += 100;
+  if ( battle2.IsLocked() )
+    b2 += 100;
+  if ( battle1.IsPassworded() )
+    b1 += 50;
+  if ( battle2.IsPassworded() )
+    b2 += 50;
+  if ( battle1.IsFull() )
+    b1 += 25;
+  if ( battle2.IsFull() )
+    b2 += 25;
+
+  // inverse the order
+  if ( b1 < b2 )
+      return 1;
+  if ( b1 > b2 )
+      return -1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareSideUP(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( WX_STRING(battle1.GetDescription()).MakeUpper() < WX_STRING(battle2.GetDescription()).MakeUpper() )
+      return -1;
+  if ( WX_STRING(battle1.GetDescription()).MakeUpper() > WX_STRING(battle2.GetDescription()).MakeUpper() )
+      return 1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareSideDOWN(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( (WX_STRING(battle1.GetDescription()).MakeUpper()) < (WX_STRING(battle2.GetDescription()).MakeUpper()) )
+   {
+      return 1;
+   }
+  if ( (WX_STRING(battle1.GetDescription()).MakeUpper()) > (WX_STRING(battle2.GetDescription()).MakeUpper()) )
+    {
+      return -1;
+    }
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareColorUP(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() < RefineMapname( battle2.GetMapName() ).MakeUpper() )
+      return -1;
+  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() > RefineMapname( battle2.GetMapName() ).MakeUpper() )
+      return 1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareColorDOWN(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() < RefineMapname( battle2.GetMapName() ).MakeUpper() )
+      return 1;
+  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() > RefineMapname( battle2.GetMapName() ).MakeUpper() )
+      return -1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareCountryUP(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( WX_STRING(battle1.GetFounder().GetCountry()).MakeUpper() < WX_STRING(battle2.GetFounder().GetCountry()).MakeUpper() )
+      return -1;
+  if ( WX_STRING(battle1.GetFounder().GetCountry()).MakeUpper() > WX_STRING(battle2.GetFounder().GetCountry()).MakeUpper() )
+      return 1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareCountryDOWN(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( WX_STRING(battle1.GetFounder().GetCountry()).MakeUpper() < WX_STRING(battle2.GetFounder().GetCountry()).MakeUpper() )
+      return 1;
+  if ( WX_STRING(battle1.GetFounder().GetCountry()).MakeUpper() > WX_STRING(battle2.GetFounder().GetCountry()).MakeUpper() )
+      return -1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareRankUP(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( battle1.GetRankNeeded() < battle2.GetRankNeeded() )
+      return -1;
+  if ( battle1.GetRankNeeded() > battle2.GetRankNeeded() )
+      return 1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareRankDOWN(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( battle1.GetRankNeeded() < battle2.GetRankNeeded() )
+      return 1;
+  if ( battle1.GetRankNeeded() > battle2.GetRankNeeded() )
+      return -1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareNicknameUP(long item1, long item2, long sortData)
+{
+  wxString name1;
+  BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
+
+  if ( bl.GetUserIndex( *(User*)item1 ) == -1 )
+    name1 = _T("aa"); //(WX_STRING(((BattleBot*)item1)->name ) + _T(" (") + WX_STRING( ((BattleBot*)item1)->owner) + _T(")")).MakeUpper();
+  else
+    name1 = _T("aa"); //WX_STRING(((User*)item1)->GetNick()).MakeUpper();
+
+  wxString name2;
+  if ( bl.GetUserIndex( *(User*)item2 ) == -1 )
+    name2 = _T("aa"); //(WX_STRING(((BattleBot*)item2)->name ) + _T(" (") + WX_STRING( ((BattleBot*)item2)->owner) + _T(")")).MakeUpper();
+  else
+    name2 = _T("aa"); //WX_STRING(((User*)item2)->GetNick()).MakeUpper();
+
+  if ( name1 < name2 )
+      return -1;
+  if ( name1 > name2 )
+      return 1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareNicknameDOWN(long item1, long item2, long sortData)
+{
+  return CompareNicknameUP(item1, item2, sortData)*-1;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareTeamUP(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( WX_STRING(battle1.GetFounder().GetNick()).MakeUpper() < WX_STRING(battle2.GetFounder().GetNick()).MakeUpper() )
+      return -1;
+  if ( WX_STRING(battle1.GetFounder().GetNick()).MakeUpper() > WX_STRING(battle2.GetFounder().GetNick()).MakeUpper() )
+      return 1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareTeamDOWN(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( WX_STRING(battle1.GetFounder().GetNick()).MakeUpper() < WX_STRING(battle2.GetFounder().GetNick()).MakeUpper() )
+      return 1;
+  if ( WX_STRING(battle1.GetFounder().GetNick()).MakeUpper() > WX_STRING(battle2.GetFounder().GetNick()).MakeUpper() )
+      return -1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareAllyUP(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( battle1.GetSpectators() < battle2.GetSpectators() )
+      return -1;
+  if ( battle1.GetSpectators() > battle2.GetSpectators() )
+      return 1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareAllyDOWN(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( battle1.GetSpectators() < battle2.GetSpectators() )
+      return 1;
+  if ( battle1.GetSpectators() > battle2.GetSpectators() )
+      return -1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareCpuUP(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( battle1.GetNumUsers() - battle1.GetSpectators() < battle2.GetNumUsers() - battle2.GetSpectators() )
+      return -1;
+  if ( battle1.GetNumUsers() - battle1.GetSpectators() > battle2.GetNumUsers() - battle2.GetSpectators() )
+      return 1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareCpuDOWN(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( battle1.GetNumUsers() - battle1.GetSpectators() < battle2.GetNumUsers() - battle2.GetSpectators() )
+      return 1;
+  if ( battle1.GetNumUsers() - battle1.GetSpectators() > battle2.GetNumUsers() - battle2.GetSpectators() )
+      return -1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareHandicapUP(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( battle1.GetMaxPlayers() < battle2.GetMaxPlayers() )
+      return -1;
+  if ( battle1.GetMaxPlayers() > battle2.GetMaxPlayers() )
+      return 1;
+
+  return 0;
+}
+
+
+int wxCALLBACK BattleroomListCtrl::CompareHandicapDOWN(long item1, long item2, long sortData)
+{
+  Ui* ui = m_ui_for_sort;
+  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
+  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
+
+  if ( battle1.GetMaxPlayers() < battle2.GetMaxPlayers() )
+      return 1;
+  if ( battle1.GetMaxPlayers() > battle2.GetMaxPlayers() )
+      return -1;
+
+  return 0;
+}
+
 
 
