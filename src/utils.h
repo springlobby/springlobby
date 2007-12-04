@@ -23,7 +23,7 @@
 //! Converts an std::string to a wxString
 #define WX_STRING(v) wxString((v).c_str(),wxConvUTF8)
 
-#define ASSERT_LOGIC(cond,msg) if(!(cond)){wxLogFatalError(_T("logic error: ")+ wxString(msg) ); DumpStackTraceToLog(); throw std::logic_error(std::string(wxString(msg).mb_str()));}
+#define ASSERT_LOGIC(cond,msg) if(!(cond)){wxLogError(_T("logic error: ")+ wxString(msg) ); DumpStackTraceToLog(); throw std::logic_error(std::string(wxString(msg).mb_str()));}
 #define ASSERT_RUNTIME(cond,msg) if(!(cond)){wxLogMessage(_T("runtime error: ")+ wxString(msg) );throw std::runtime_error(std::string(wxString(msg).mb_str()));}
 
 std::string i2s( int x );
