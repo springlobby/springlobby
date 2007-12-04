@@ -36,9 +36,6 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_ui( ui ),
   m_battle( ui, msptab )
 {
-  /*try {
-    if ( usync()->GetNumMods() > 0 ) m_battle.SetMod( usync()->GetMod( 0 ) ); // TODO load latest used mod.
-  } catch (...) {}*/
 
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -109,16 +106,18 @@ void SinglePlayerTab::UpdateMinimap()
 void SinglePlayerTab::ReloadMaplist()
 {
   m_map_pick->Clear();
-  for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-    try {
-      m_map_pick->Insert( RefineMapname( WX_STRING(usync()->GetMap( i, false ).name) ), i );
-    } catch(...) {}
-  }
+  try {
+    for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
+      m_map_pick->Insert( RefineMapname( WX_STRING(usync()->GetMap( i ).name) ), i );
+    }
+  } catch(...) {}
   m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
   if ( m_battle.GetMapName() != wxEmptyString ) {
     m_map_pick->SetStringSelection( m_battle.GetMapName() );
+    m_addbot_btn->Enable(true);
   } else {
     m_map_pick->SetSelection( m_map_pick->GetCount()-1 );
+    m_addbot_btn->Enable(false);
   }
 }
 
@@ -126,13 +125,14 @@ void SinglePlayerTab::ReloadMaplist()
 void SinglePlayerTab::ReloadModlist()
 {
   m_mod_pick->Clear();
-  for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
-    try {
+  try {
+    for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
       m_mod_pick->Insert( RefineModname( WX_STRING(usync()->GetMod( i ).name) ), i );
-    } catch(...) {}
-  }
+    }
+  } catch (...) {}
 
   m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
+
   if ( m_battle.GetModName() != wxEmptyString ) {
     m_mod_pick->SetStringSelection( m_battle.GetModName() );
   } else {
@@ -184,9 +184,15 @@ void SinglePlayerTab::OnMapSelect( wxCommandEvent& event )
   unsigned int index = (unsigned int)m_map_pick->GetCurrentSelection();
   if ( index >= m_map_pick->GetCount()-1 ) {
     m_battle.SetMap( wxEmptyString, wxEmptyString );
+    m_addbot_btn->Enable(false);
   } else {
-    UnitSyncMap map = usync()->GetMap( index, true );
-    m_battle.SetMap( map );
+    try {
+      UnitSyncMap map = usync()->GetMapEx( index );
+      m_battle.SetMap( map );
+      m_addbot_btn->Enable(true);
+    } catch (...) {
+      m_addbot_btn->Enable(false);
+    }
   }
   m_minimap->UpdateMinimap();
 }

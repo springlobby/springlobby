@@ -24,6 +24,7 @@ class AddBotDialog : public wxDialog
 
     void OnClose( wxCommandEvent& event );
     void OnAddBot( wxCommandEvent& event );
+    void OnSelectBot( wxCommandEvent& event );
 
   protected:
     wxStaticText* m_nick_lbl;
@@ -44,7 +45,8 @@ class AddBotDialog : public wxDialog
 enum
 {
   ADDBOT_ADD = wxID_HIGHEST,
-  ADDBOT_CANCEL
+  ADDBOT_CANCEL,
+  ADDBOT_AI
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_ADDBOTDIALOG_H

@@ -606,10 +606,10 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     wxBitmap* bmp = 0;
     try {
       std::string mod = STD_STRING(m_battle->GetModName());
-      usync()->SetCurrentMod( mod );
-      usync()->GetSideCount();
-      std::string side = usync()->GetSideName( bot.bs.side );
-      bmp = new wxBitmap( usync()->GetSidePicture( side ) );
+      int scount = usync()->GetSideCount( mod );
+      if ( scount <= 0 ) ASSERT_RUNTIME( false, "Mod has no sides." );
+      std::string side = usync()->GetSideName( mod, bot.bs.side % scount );
+      bmp = new wxBitmap( usync()->GetSidePicture( mod, side ) );
     } catch (...) {
       delete bmp;
       if ( bot.bs.side == 0 ) bmp = new wxBitmap( arm_xpm );
@@ -1020,8 +1020,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
 
     } else if ( m_mdown_area == RA_Side ) {
       try {
-        usync()->SetCurrentMod( STD_STRING(m_battle->GetModName()) );
-        if ( usync()->GetSideCount() > 0 ) bot->bs.side = (bot->bs.side + 1) % usync()->GetSideCount();
+        if ( usync()->GetSideCount( STD_STRING(m_battle->GetModName()) ) > 0 ) bot->bs.side = (bot->bs.side + 1) % usync()->GetSideCount( STD_STRING(m_battle->GetModName()) );
         else bot->bs.side = 0;
       } catch(...) {}
       RefreshRect( _GetBotRect( *bot, true ), false );

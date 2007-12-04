@@ -325,8 +325,18 @@ void TASServer::_ReceiveAndExecute()
 }
 
 
+wxString _ConvertTASServerPhailChecksum( const wxString& buggedcsum )
+{
+  signed long temp;
+  buggedcsum.ToLong( &temp );
+  unsigned int temp2 = (unsigned int)temp;
+  return wxString::Format( _T("%u"), temp2 );
+}
+
+
 void TASServer::ExecuteCommand( const std::string& in )
 {
+  debug( in );
   std::string cmd;
   std::string params = in;
   std::string::size_type pos = 0;
@@ -430,7 +440,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     id = GetIntParam( params );
     specs = GetIntParam( params );
     haspass = (bool)GetIntParam( params );
-    hash = GetWordParam( params );
+    hash = STD_STRING(_ConvertTASServerPhailChecksum( WX_STRING(GetWordParam( params )) ) );
     map = GetSentenceParam( params );
     m_se->OnBattleInfoUpdated( id, specs, haspass, hash, map );
   } else if ( cmd == "LOGININFOEND" ) {
@@ -1054,8 +1064,9 @@ void TASServer::ForceSide( int battleid, const std::string& nick, int side )
     GetMe().BattleStatus().side = side;
     SendMyBattleStatus( GetMe().BattleStatus() );
   } else {
-    usync()->SetCurrentMod( STD_STRING(GetBattle(battleid).GetModName()) );
-    DoActionBattle( battleid, "sugests that " + nick + " changes to " + usync()->GetSideName( side ) + " side." );
+    try {
+      DoActionBattle( battleid, "sugests that " + nick + " changes to " + usync()->GetSideName( STD_STRING(GetBattle(battleid).GetModName()), side ) + " side." );
+    } catch (...) {}
   }
 }
 
