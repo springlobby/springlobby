@@ -361,7 +361,7 @@ bool abstract_panel::saveSettings() {
 	        //configHandler->SetSpringConfigFloat(f->first,f->second);
 	    }
     } catch (...) {
-    	wxMessageBox(_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK, 0);
+    	wxMessageBox(_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK|wxICON_HAND, 0);
     	return false;
     }
     //test ???

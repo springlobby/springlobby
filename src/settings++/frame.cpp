@@ -76,7 +76,7 @@ void settings_frame::CreateGUIControls()
 		break;
 	}
 	} catch (...) {
-		wxMessageBox(wxT("DOH. unitsync not loaded. closing..."), wxT(""), wxOK, this);
+		wxMessageBox(wxT("DOH. unitsync not loaded. closing..."), wxT(""), wxOK|wxICON_HAND, this);
 		Destroy();
 	}
 	notebook->SetSelection(0);
@@ -122,16 +122,24 @@ void settings_frame::initMenuBar() {
 
 	SetMenuBar(menuBar);
 }
-//TODO add cancel option
+
 void settings_frame::handleExit() {
     if (abstract_panel::settingsChanged) {
-        if ((wxMessageBox(wxT("Save settings before exiting?"), wxT(""), wxYES_NO, this)) == wxYES) {
-			if (abstract_panel::saveSettings())
-			 (abstract_panel::settingsChanged) = false;
-		}
+    	int action = wxMessageBox(wxT("Save settings before exiting?"), wxT(""), wxYES_NO|wxCANCEL, this);
+        switch (action) {
+        case wxYES:
+        	if (abstract_panel::saveSettings())
+        				 (abstract_panel::settingsChanged) = false;
+        case wxNO:
+        	OptionsHandler.save();
+        	    Destroy();
+        	    break;
+        case wxCANCEL:
+        	break;
+        }
+    	
     }
-    OptionsHandler.save();
-    Destroy();
+    
     
 }
 //TODO hide/show debug/audio tab in simple/expert mode
