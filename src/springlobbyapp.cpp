@@ -105,7 +105,7 @@ void SpringLobbyApp::OnFatalException()
 
 #if wxUSE_STACKWALKER
 
-  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output") );
+  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"), _("Critical error"), wxICON_ERROR  );
 
   wxLogError( _T("uncaught exception") );
   wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
@@ -119,7 +119,7 @@ void SpringLobbyApp::OnFatalException()
 
   wxLogMessage( DebugInfo );
 #else
-  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker") );
+  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker"), _("Critical error"), wxICON_ERROR  );
 #endif
 }
 
