@@ -562,35 +562,6 @@ void BattleroomListCtrl::Sort()
 
 int wxCALLBACK BattleroomListCtrl::CompareStatusUP(long item1, long item2, long sortData)
 {
-  Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-
-  int b1 = 0, b2 = 0;
-
-  if ( battle1.GetInGame() )
-    b1 += 1000;
-  if ( battle2.GetInGame() )
-    b2 += 1000;
-  if ( battle1.IsLocked() )
-    b1 += 100;
-  if ( battle2.IsLocked() )
-    b2 += 100;
-  if ( battle1.IsPassworded() )
-    b1 += 50;
-  if ( battle2.IsPassworded() )
-    b2 += 50;
-  if ( battle1.IsFull() )
-    b1 += 25;
-  if ( battle2.IsFull() )
-    b2 += 25;
-
-  // inverse the order
-  if ( b1 < b2 )
-      return -1;
-  if ( b1 > b2 )
-      return 1;
-
   return 0;
 }
 
@@ -603,15 +574,6 @@ int wxCALLBACK BattleroomListCtrl::CompareStatusDOWN(long item1, long item2, lon
 
 int wxCALLBACK BattleroomListCtrl::CompareSideUP(long item1, long item2, long sortData)
 {
-  Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-
-  if ( WX_STRING(battle1.GetDescription()).MakeUpper() < WX_STRING(battle2.GetDescription()).MakeUpper() )
-      return -1;
-  if ( WX_STRING(battle1.GetDescription()).MakeUpper() > WX_STRING(battle2.GetDescription()).MakeUpper() )
-      return 1;
-
   return 0;
 }
 
@@ -624,16 +586,6 @@ int wxCALLBACK BattleroomListCtrl::CompareSideDOWN(long item1, long item2, long 
 
 int wxCALLBACK BattleroomListCtrl::CompareColorUP(long item1, long item2, long sortData)
 {
-  Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-
-  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() < RefineMapname( battle2.GetMapName() ).MakeUpper() )
-      return -1;
-  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() > RefineMapname( battle2.GetMapName() ).MakeUpper() )
-      return 1;
-
-  return 0;
 }
 
 
@@ -645,16 +597,6 @@ int wxCALLBACK BattleroomListCtrl::CompareColorDOWN(long item1, long item2, long
 
 int wxCALLBACK BattleroomListCtrl::CompareCountryUP(long item1, long item2, long sortData)
 {
-  Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-
-  if ( WX_STRING(battle1.GetFounder().GetCountry()).MakeUpper() < WX_STRING(battle2.GetFounder().GetCountry()).MakeUpper() )
-      return -1;
-  if ( WX_STRING(battle1.GetFounder().GetCountry()).MakeUpper() > WX_STRING(battle2.GetFounder().GetCountry()).MakeUpper() )
-      return 1;
-
-  return 0;
 }
 
 
@@ -666,16 +608,6 @@ int wxCALLBACK BattleroomListCtrl::CompareCountryDOWN(long item1, long item2, lo
 
 int wxCALLBACK BattleroomListCtrl::CompareRankUP(long item1, long item2, long sortData)
 {
-  Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-
-  if ( battle1.GetRankNeeded() < battle2.GetRankNeeded() )
-      return -1;
-  if ( battle1.GetRankNeeded() > battle2.GetRankNeeded() )
-      return 1;
-
-  return 0;
 }
 
 
@@ -794,16 +726,6 @@ int wxCALLBACK BattleroomListCtrl::CompareAllyDOWN(long item1, long item2, long 
 
 int wxCALLBACK BattleroomListCtrl::CompareCpuUP(long item1, long item2, long sortData)
 {
-  Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-
-  if ( battle1.GetNumUsers() - battle1.GetSpectators() < battle2.GetNumUsers() - battle2.GetSpectators() )
-      return -1;
-  if ( battle1.GetNumUsers() - battle1.GetSpectators() > battle2.GetNumUsers() - battle2.GetSpectators() )
-      return 1;
-
-  return 0;
 }
 
 
@@ -815,16 +737,6 @@ int wxCALLBACK BattleroomListCtrl::CompareCpuDOWN(long item1, long item2, long s
 
 int wxCALLBACK BattleroomListCtrl::CompareHandicapUP(long item1, long item2, long sortData)
 {
-  Ui* ui = m_ui_for_sort;
-  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-
-  if ( battle1.GetMaxPlayers() < battle2.GetMaxPlayers() )
-      return -1;
-  if ( battle1.GetMaxPlayers() > battle2.GetMaxPlayers() )
-      return 1;
-
-  return 0;
 }
 
 
