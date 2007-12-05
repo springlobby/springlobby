@@ -23,6 +23,16 @@
 #include "frame.h"
 #include "se_settings.h"
 #include "../springunitsynclib.h"
+//#include <wx/notebook.h>
+#include <wx/wx.h>
+#include "tab_render_detail.h"
+#include "tab_quality_video.h"
+#include "tab_abstract.h"
+#include "tab_audio.h"
+#include "tab_debug.h"
+#include "tab_ui.h"
+#include "tab_simple.h"
+#include "Defs.hpp"
 
 BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_CLOSE(settings_frame::OnClose)

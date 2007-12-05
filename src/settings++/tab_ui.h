@@ -22,7 +22,18 @@
 
 #ifndef __TAB_UI_h__
 #define __TAB_UI_h__
-#include "tabs.h"
+
+#include "tab_abstract.h"
+
+class wxCheckBox;
+class wxStaticBoxSizer;
+class wxRadioButton;
+class wxString;
+class wxWindow;
+class wxPoint;
+class wxSize;
+class wxCloseEvent;
+class wxSlider;
 
 class tab_ui : public abstract_panel
 {

@@ -22,7 +22,20 @@
 
 #ifndef __TAB_QUALITY_VIDEO_h__
 #define __TAB_QUALITY_VIDEO_h__
-#include "tabs.h"
+
+#include "tab_abstract.h"
+
+class wxComboBox;
+class wxCheckBox;
+class wxTextCtrl;
+class wxFlexGridSizer;
+class wxRadioButton;
+class wxString;
+class wxWindow;
+class wxPoint;
+class wxSize;
+class wxCloseEvent;
+class wxSlider;
 
 class tab_quality_video : public abstract_panel
 {

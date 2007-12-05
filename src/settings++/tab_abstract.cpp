@@ -20,8 +20,18 @@
     along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#include "tabs.h"
+//#include "tabs.h"
+#include "tab_abstract.h"
+//#include <wx/string.h>
+//#include <wx/gbsizer.h>
+//#include <wx/event.h>
+//#include <wx/panelg.h>
+#include <wx/wx.h>
+
+#include "../springunitsynclib.h"
+#include "Defs.hpp"
 #include "se_utils.h"
+#include "presets.h"
 
 intMap abstract_panel::intSettings;
 stringMap abstract_panel::stringSettings;
@@ -361,11 +371,6 @@ bool abstract_panel::saveSettings() {
     return true; 
 }
 
-//TODO what good is this actually
-void abstract_panel::update(wxIdleEvent& event) {
-	
-}
-
 void abstract_panel::updateControls(int what_to_update)
 {}
 
@@ -374,6 +379,6 @@ BEGIN_EVENT_TABLE(abstract_panel, wxPanel)
 	EVT_TEXT(wxID_ANY,              abstract_panel::OnTextUpdate)
 	EVT_CHECKBOX(wxID_ANY,          abstract_panel::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       abstract_panel::OnRadioButtonToggle)
-	EVT_IDLE(                       abstract_panel::update)
+//	EVT_IDLE(                       abstract_panel::update)
 	EVT_COMBOBOX(wxID_ANY, 		abstract_panel::OnComboBoxChange)
 END_EVENT_TABLE()

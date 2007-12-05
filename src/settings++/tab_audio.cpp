@@ -20,8 +20,11 @@
     along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#include "tabs.h"
+#include "tab_audio.h"
 #include "se_utils.h"
+#include <wx/wx.h>
+#include "../springunitsynclib.h"
+#include "Defs.hpp"
 
 void audio_panel::initAudioSizer(wxStaticBoxSizer* sizer) {
 	slider0 = new wxSlider(this, AO_SLI[0].id, configHandler->GetSpringConfigInt(AO_SLI[0].key,fromString<int>(AO_SLI[0].def)), 8, 128, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
@@ -77,5 +80,5 @@ BEGIN_EVENT_TABLE(audio_panel, wxPanel)
 	EVT_TEXT(wxID_ANY,              audio_panel::OnTextUpdate)
 	EVT_CHECKBOX(wxID_ANY,          audio_panel::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       audio_panel::OnRadioButtonToggle)
-	EVT_IDLE(                       audio_panel::update)
+//	EVT_IDLE(                       audio_panel::update)
 END_EVENT_TABLE()

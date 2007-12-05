@@ -23,22 +23,21 @@
 #ifndef __SETTINGS_FRAME_h__
 #define __SETTINGS_FRAME_h__
 
-#ifdef __BORLANDC__
-	#pragma hdrstop
-#endif
 
-#ifndef WX_PRECOMP
-	#include <wx/wx.h>
-	#include <wx/frame.h>
-#else
-	#include <wx/wxprec.h>
-#endif
-
-#include <wx/panel.h>
-#include <wx/notebook.h>
-#include "tabs.h"
-
-
+#include <wx/frame.h>
+class wxNotebook;
+class tab_simple;
+class tab_ui;
+class audio_panel;
+class debug_panel;
+class abstract_panel;
+class wxMenu;
+class wxCommanEvent;
+class wxCloseEvent;
+class wxString;
+class wxWindow;
+class wxPoint;
+class wxSize;
 
 class settings_frame : public wxFrame
 {

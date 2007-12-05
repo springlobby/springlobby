@@ -149,13 +149,21 @@
 #define ID_MO_SLI_3 663
 #define ID_MO_SLI_4 664
 
+#define SLI_STYLE (wxSL_LABELS | wxSL_AUTOTICKS)
+#define WX_DEF_V wxDefaultValidator
+#define WX_DEF_P wxPoint(-1, -1)
+#define WX_DEF_S wxSize(-1, -1)
+#define WX_SLI_S wxSize(200, -1)
 
+#define configHandler (susynclib())
+#define TAB_SIZE wxSize(700,500)
+#define UPDATE_VIDEO_MODE 	2002
+#define UPDATE_QA_BOXES	  	2001
+#define UPDATE_ALL			2000
+#define UPDATE_EXPERTMODE_WARNING_ON_SIMPLETAB 2003
 
 #include <wx/string.h>
 #include <string>
-#include <iostream>
-//#include <fstream>
-#include <sstream>
 
 struct Control {
     const wxString lbl;
@@ -164,26 +172,6 @@ struct Control {
     const std::string def; //default value for confighandler, not control
     const wxString tTip [1];
 };
-
-//inline wxString _S (const std::string str)
-//{
-//	return wxString(str.c_str(),*wxConvCurrent);
-//}
-//
-//template<typename Type> void toString(std::string& s, Type t) {
-//	//using namespace std;
-//			std::stringstream ss;
-//			ss << t;
-//			ss >> s;
-//}
-//
-//template<typename Type> Type fromString(const std::string& s) {
-//        std::stringstream ss;
-//        ss << s;
-//        Type r;
-//        ss >> r;
-//        return r;
-//}
 
 //TODO find reasonable default values
 //TODO is max_texture stages obsolte?
@@ -319,13 +307,6 @@ const Control RC_TEXT[2] = {
 	{_T(""), wxT("YResolution"), -1,	"768" , {_T("placeholder")}}
 };
 
-
-
-#define SLI_STYLE (wxSL_LABELS | wxSL_AUTOTICKS)
-#define WX_DEF_V wxDefaultValidator
-#define WX_DEF_P wxPoint(-1, -1)
-#define WX_DEF_S wxSize(-1, -1)
-#define WX_SLI_S wxSize(200, -1)
 
 /** not used
 #define NUM_DEFAULTS 88

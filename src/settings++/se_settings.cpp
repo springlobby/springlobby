@@ -1,6 +1,15 @@
 #include "se_settings.h"
 #include "se_utils.h"
+#include "Defs.hpp"
 
+#include <wx/config.h>
+#include <wx/filefn.h>
+#include <wx/intl.h>
+#include <wx/stdpaths.h>
+#include <wx/filename.h>
+#include <wx/string.h>
+//
+#include <string>
 //TODO guard properly
 #ifndef JUFGDJ
 	#ifdef WIN32

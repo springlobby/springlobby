@@ -2,17 +2,9 @@
 #define SE_SETTINGS_H_
 
 //#include <wx/wx.h>
-#include "Defs.hpp"
 
-#include <wx/config.h>
-//#include <wx/filefn.h>
-//#include <wx/intl.h>
-#include <wx/stdpaths.h>
-#include <wx/filename.h>
-#include <wx/string.h>
-//
-#include <string>
-
+class wxString;
+class wxConfigBase;
 
 #define SET_MODE_EXPERT 5000
 #define SET_MODE_SIMPLE 5001
@@ -34,7 +26,7 @@ public:
 	void save();
 	
 private:
-	wxConfig* se_config;
+	wxConfigBase* se_config;
 	
 	wxString AutoFindUnitSyncLib( const wxString& def );
 	bool IsUnitSyncLib( const wxString& lib );

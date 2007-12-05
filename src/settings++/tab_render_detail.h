@@ -22,7 +22,21 @@
 
 #ifndef __TAB_RENDER_DETAIL_h__
 #define __TAB_RENDER_DETAIL_h__
-#include "tabs.h"
+
+#include "tab_abstract.h"
+
+//class wxComboBox;
+//class wxCheckBox;
+//class wxTextCtrl;
+class wxSlider;
+class wxFlexGridSizer;
+//class wxRadioButton;
+class wxString;
+//class wxCommandEvent;
+class wxWindow;
+class wxPoint;
+class wxSize;
+class wxCloseEvent;
 
 class tab_render_detail : public abstract_panel
 {

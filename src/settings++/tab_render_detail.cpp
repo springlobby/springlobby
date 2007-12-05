@@ -20,8 +20,11 @@
     along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#include "tabs.h"
+#include "tab_render_detail.h"
 #include "se_utils.h"
+#include <wx/wx.h>
+#include "../springunitsynclib.h"
+#include "Defs.hpp"
 
 void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSizer* sizerR ) {
 	const int extrema[] = {
@@ -91,5 +94,5 @@ BEGIN_EVENT_TABLE(tab_render_detail, abstract_panel)
 	EVT_TEXT(wxID_ANY,              tab_render_detail::OnTextUpdate)
 	EVT_CHECKBOX(wxID_ANY,          tab_render_detail::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       tab_render_detail::OnRadioButtonToggle)
-	EVT_IDLE(                       tab_render_detail::update)
+//	EVT_IDLE(                       tab_render_detail::update)
 END_EVENT_TABLE()

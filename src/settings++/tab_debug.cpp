@@ -20,8 +20,11 @@
     along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#include "tabs.h"
+#include "tab_debug.h"
 #include "se_utils.h"
+#include <wx/wx.h>
+#include "../springunitsynclib.h"
+#include "Defs.hpp"
 
 void debug_panel::initDebugSizer(wxStaticBoxSizer* sizer) {
 	slider = new wxSlider(this, DO_SLI[0].id, configHandler->GetSpringConfigInt(DO_SLI[0].key,fromString<int>(DO_SLI[0].def)), 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
@@ -75,5 +78,5 @@ BEGIN_EVENT_TABLE(debug_panel, abstract_panel)
 	EVT_TEXT(wxID_ANY,              debug_panel::OnTextUpdate)
 	EVT_CHECKBOX(wxID_ANY,          debug_panel::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       debug_panel::OnRadioButtonToggle)
-	EVT_IDLE(                       debug_panel::update)
+	//EVT_IDLE(                       debug_panel::update)
 END_EVENT_TABLE()

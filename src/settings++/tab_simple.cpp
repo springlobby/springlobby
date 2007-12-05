@@ -20,8 +20,12 @@
     along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include "tabs.h"
+#include "tab_simple.h"
 #include "se_utils.h"
+#include <wx/wx.h>
+#include "../springunitsynclib.h"
+#include "Defs.hpp"
+#include "presets.h"
 
 const wxString infoTextContent= _T("INFOTEXT HERE");
 
@@ -146,7 +150,7 @@ BEGIN_EVENT_TABLE(tab_simple, abstract_panel)
 	EVT_TEXT(wxID_ANY,              tab_simple::OnTextUpdate)
 	EVT_CHECKBOX(wxID_ANY,          tab_simple::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       tab_simple::OnRadioButtonToggle)
-	EVT_IDLE(                       tab_simple::update)
+//	EVT_IDLE(                       tab_simple::update)
 	EVT_COMBOBOX(wxID_ANY, 		tab_simple::OnComboBoxChange)
 END_EVENT_TABLE()
 

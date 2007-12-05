@@ -23,6 +23,17 @@
 #ifndef __TAB_DEBUG_h__
 #define __TAB_DEBUG_h__
 
+#include "tab_abstract.h"
+
+class wxCheckBox;
+class wxSlider;
+class wxStaticBoxSizer;
+class wxString;
+class wxWindow;
+class wxPoint;
+class wxSize;
+class wxCloseEvent;
+
 class debug_panel : public abstract_panel
 {
 

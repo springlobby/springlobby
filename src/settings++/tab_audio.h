@@ -23,6 +23,17 @@
 #ifndef __TAB_AUDIO_h__
 #define __TAB_AUDIO_h__
 
+#include "tab_abstract.h"
+
+
+class wxSlider;
+class wxStaticBoxSizer;
+class wxString;
+class wxWindow;
+class wxPoint;
+class wxSize;
+class wxCloseEvent;
+
 class audio_panel : public abstract_panel
 {
 

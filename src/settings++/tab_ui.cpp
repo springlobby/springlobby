@@ -20,15 +20,20 @@
     along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#include "tabs.h"
+#include "tab_ui.h"
 #include "se_utils.h"
+#include <wx/wx.h>
+#include "../springunitsynclib.h"
+#include "Defs.hpp"
+
 
 //TODO maybe use only one chkbox for minimap on left
 void tab_ui::initScrollSpeedSizer(wxStaticBoxSizer* sizer) {
 	// i < "sizeof"(MO_SLI)
 	sizer->Add(5,10,0);
 	for (int i = 0; i < ctrl_scroll_slider_size; i++) {
-		ctrl_scroll_slider[i] = new wxSlider(this, MO_SLI[i].id, configHandler->GetSpringConfigInt((MO_SLI[i].key),fromString<int>(MO_SLI[i].def)), 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+		ctrl_scroll_slider[i] = new wxSlider(this, MO_SLI[i].id, configHandler->GetSpringConfigInt((MO_SLI[i].key),
+				fromString<int>(MO_SLI[i].def)), 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 		if (i > 0)
 			sizer->Add(5,32,0);
 		sizer->Add(new wxStaticText(this, wxID_ANY, (MO_SLI[i].lbl), wxDefaultPosition, wxDefaultSize, 10));
@@ -95,9 +100,12 @@ tab_ui::tab_ui(wxWindow *parent, wxWindowID id , const wxString &title , const w
 	wxFlexGridSizer* cSizerL = new wxFlexGridSizer(1,10,10);
 	wxFlexGridSizer* cSizerR = new wxFlexGridSizer(1,10,10);
 
-	wxStaticBoxSizer* scrollSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Scroll Speeds (0 to disable)"), WX_DEF_P, wxSize(100, 200), 0, wxEmptyString), wxVERTICAL);
-	wxStaticBoxSizer* cameraSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Default Camera Mode"), WX_DEF_P, wxSize(100, 100), 0, wxEmptyString), wxVERTICAL);
-	wxStaticBoxSizer* uiOptSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Misc. UI Options"), WX_DEF_P, wxSize(100, 100), 0, wxEmptyString), wxVERTICAL);
+	wxStaticBoxSizer* scrollSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Scroll Speeds (0 to disable)"),
+			WX_DEF_P, wxSize(100, 200), 0, wxEmptyString), wxVERTICAL);
+	wxStaticBoxSizer* cameraSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Default Camera Mode"),
+			WX_DEF_P, wxSize(100, 100), 0, wxEmptyString), wxVERTICAL);
+	wxStaticBoxSizer* uiOptSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Misc. UI Options"), 
+			WX_DEF_P, wxSize(100, 100), 0, wxEmptyString), wxVERTICAL);
 
 	initScrollSpeedSizer(scrollSpeedSizer);
 	initCameraSizer(cameraSizer);
@@ -124,5 +132,5 @@ BEGIN_EVENT_TABLE(tab_ui, abstract_panel)
 	EVT_TEXT(wxID_ANY,              tab_ui::OnTextUpdate)
 	EVT_CHECKBOX(wxID_ANY,          tab_ui::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       tab_ui::OnRadioButtonToggle)
-	EVT_IDLE(                       tab_ui::update)
+//	EVT_IDLE(                       tab_ui::update)
 END_EVENT_TABLE()

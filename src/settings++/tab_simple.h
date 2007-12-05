@@ -23,8 +23,21 @@
 #ifndef __TAB_SIMPLE_h__
 #define __TAB_SIMPLE_h__
 
-#include "tabs.h"
+#include "tab_abstract.h"
 
+class wxComboBox;
+//class wxCheckBox;
+//class wxTextCtrl;
+class wxSlider;
+class wxFlexGridSizer;
+//class wxRadioButton;
+class wxString;
+//class wxCommandEvent;
+class wxWindow;
+class wxPoint;
+class wxSize;
+class wxCloseEvent;
+class wxStaticText;
 
 
 class tab_simple : public abstract_panel

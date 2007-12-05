@@ -22,9 +22,12 @@
 #include "main.h"
 #include "frame.h"
 
-IMPLEMENT_APP(SettingsPlusPlus)
+IMPLEMENT_APP(Springsettings)
 
-bool SettingsPlusPlus::OnInit()
+#include <wx/string.h>
+#include <wx/wx.h>
+
+bool Springsettings::OnInit()
 {
     settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("springsettings"),wxDefaultPosition,
     		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
@@ -33,7 +36,7 @@ bool SettingsPlusPlus::OnInit()
     return true;
 }
  
-int SettingsPlusPlus::OnExit()
+int Springsettings::OnExit()
 {
 	return 0;
 }

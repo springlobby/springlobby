@@ -22,9 +22,20 @@
 
 #ifndef __TAB_ABSTRACT_h__
 #define __TAB_ABSTRACT_h__
+
+
+//#include <wx/frame.h>
+#include <wx/generic/panelg.h>
 #include <map>
-#include <string>
-#include <wx/string.h>
+class wxString;
+class wxCommandEvent;
+
+class wxWindow;
+class wxPoint;
+class wxSize;
+class wxCloseEvent;
+
+
 typedef std::map<wxString,int> intMap;
 typedef std::map<wxString,wxString> stringMap;
 typedef std::map<wxString,float> floatMap;
@@ -33,14 +44,15 @@ class abstract_panel : public wxPanel
 {
 
 	public:
-		abstract_panel(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
+		abstract_panel(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), 
+				const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
 		virtual ~abstract_panel();
 
 		void OnSliderMove(wxCommandEvent&);
 		void OnTextUpdate(wxCommandEvent&);
 		void OnCheckBoxTick(wxCommandEvent&);
 		void OnRadioButtonToggle(wxCommandEvent&);
-		void update(wxIdleEvent&);
+		//void update(wxIdleEvent&);
 		void OnComboBoxChange(wxCommandEvent& event);
 		static intMap intSettings;
 		static stringMap stringSettings;

@@ -23,17 +23,9 @@
 #ifndef __PROJECT2FRMApp_h__
 #define __PROJECT2FRMApp_h__
 
-#ifdef __BORLANDC__
-	#pragma hdrstop
-#endif
+#include <wx/app.h>
 
-#ifndef WX_PRECOMP
-	#include <wx/wx.h>
-#else
-	#include <wx/wxprec.h>
-#endif
-
-class SettingsPlusPlus : public wxApp
+class Springsettings : public wxApp
 {
 	public:
 		bool OnInit();

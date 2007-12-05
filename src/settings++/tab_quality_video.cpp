@@ -20,8 +20,11 @@
     along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include "tabs.h"
+#include "tab_quality_video.h"
 #include "se_utils.h"
+#include <wx/wx.h>
+#include "../springunitsynclib.h"
+#include "Defs.hpp"
 
 void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 
@@ -228,11 +231,11 @@ tab_quality_video::~tab_quality_video(void) {
 }
 
 BEGIN_EVENT_TABLE(tab_quality_video, abstract_panel)
-EVT_SLIDER(wxID_ANY,            tab_quality_video::OnSliderMove)
-EVT_TEXT(ID_RES_CHOICES_LBOX_X, tab_quality_video::OnTextUpdate)
-EVT_TEXT(ID_RES_CHOICES_LBOX_Y, tab_quality_video::OnTextUpdate)
-EVT_CHECKBOX(wxID_ANY,          tab_quality_video::OnCheckBoxTick)
-EVT_RADIOBUTTON(wxID_ANY,       tab_quality_video::OnRadioButtonToggle)
-EVT_IDLE(                       tab_quality_video::update)
+	EVT_SLIDER(wxID_ANY,            tab_quality_video::OnSliderMove)
+	EVT_TEXT(ID_RES_CHOICES_LBOX_X, tab_quality_video::OnTextUpdate)
+	EVT_TEXT(ID_RES_CHOICES_LBOX_Y, tab_quality_video::OnTextUpdate)
+	EVT_CHECKBOX(wxID_ANY,          tab_quality_video::OnCheckBoxTick)
+	EVT_RADIOBUTTON(wxID_ANY,       tab_quality_video::OnRadioButtonToggle)
+	//EVT_IDLE(                       tab_quality_video::update)
 EVT_COMBOBOX(ID_WINDOWP_WR_COMBOX, 		tab_quality_video::OnComboBoxChange)
 END_EVENT_TABLE()
