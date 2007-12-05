@@ -20,13 +20,17 @@
     along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-//#include "tabs.h"
 #include "tab_abstract.h"
-//#include <wx/string.h>
-//#include <wx/gbsizer.h>
-//#include <wx/event.h>
-//#include <wx/panelg.h>
-#include <wx/wx.h>
+#include <wx/string.h>
+#include <wx/gbsizer.h>
+#include <wx/event.h>
+#include <wx/defs.h>
+#include <wx/slider.h>
+#include <wx/checkbox.h>
+#include <wx/radiobut.h>
+#include <wx/combobox.h>
+#include <wx/msgdlg.h>
+
 
 #include "../springunitsynclib.h"
 #include "Defs.hpp"
@@ -34,8 +38,8 @@
 #include "presets.h"
 
 intMap abstract_panel::intSettings;
-stringMap abstract_panel::stringSettings;
-floatMap abstract_panel::floatSettings;
+//stringMap abstract_panel::stringSettings;
+//floatMap abstract_panel::floatSettings;
 bool abstract_panel::settingsChanged = false;
     
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
@@ -51,67 +55,67 @@ void abstract_panel::loadDefaults()
 {
 	//const Control RO_SLI[9]
 	for (int i = 0;i< 9; ++i)
-		intSettings[RO_SLI[i].key] = fromString<int>( RO_SLI[i].def);
+		intSettings[RO_SLI[i].key] = fromString( RO_SLI[i].def);
 
 	//const Control VO_CBOX[3]
 	for (int i = 0;i< 3; ++i)
-		intSettings[VO_CBOX[i].key] = fromString<int>( VO_CBOX[i].def);	
+		intSettings[VO_CBOX[i].key] = fromString( VO_CBOX[i].def);	
 
 	//const Control VO_RBUT[2] 
 	for (int i = 0;i< 2; ++i)
-		intSettings[VO_RBUT[i].key] = fromString<int>( VO_RBUT[i].def);	
+		intSettings[VO_RBUT[i].key] = fromString( VO_RBUT[i].def);	
 
 	//	const Control VO_SLI[1] 
 	for (int i = 0;i< 1; ++i)
-		intSettings[VO_SLI[i].key] = fromString<int>( VO_SLI[i].def);	
+		intSettings[VO_SLI[i].key] = fromString( VO_SLI[i].def);	
 
 	//	const Control VO_SLI_EXT[1]   
 	for (int i = 0;i< 1; ++i)
-		intSettings[VO_SLI_EXT[i].key] = fromString<int>( VO_SLI_EXT[i].def);	
+		intSettings[VO_SLI_EXT[i].key] = fromString( VO_SLI_EXT[i].def);	
 
 //	const Control AO_SLI[3]       
 	for (int i = 0;i< 3; ++i)
-		intSettings[AO_SLI[i].key] = fromString<int>( AO_SLI[i].def);	
+		intSettings[AO_SLI[i].key] = fromString( AO_SLI[i].def);	
 
 	//	const Control QA_CBOX[10]
 	for (int i = 0;i< 10; ++i)
-		intSettings[QA_CBOX[i].key] = fromString<int>( QA_CBOX[i].def);	
+		intSettings[QA_CBOX[i].key] = fromString( QA_CBOX[i].def);	
 
 	//	const Control UI_CBOX[14] 
 	for (int i = 0;i< 14; ++i)
-		intSettings[UI_CBOX[i].key] = fromString<int>(UI_CBOX [i].def);	
+		intSettings[UI_CBOX[i].key] = fromString(UI_CBOX [i].def);	
 
 	//	const Control MO_SLI[5]  
 	for (int i = 0;i< 5; ++i)
-		intSettings[MO_SLI[i].key] = fromString<int>( MO_SLI[i].def);
+		intSettings[MO_SLI[i].key] = fromString( MO_SLI[i].def);
 
 	//	const Control MO_SLI_EXT[5] 
 	for (int i = 0;i< 5; ++i)
-		intSettings[MO_SLI_EXT[i].key] = fromString<int>( MO_SLI_EXT[i].def);
+		intSettings[MO_SLI_EXT[i].key] = fromString( MO_SLI_EXT[i].def);
 
 	//	const Control DO_SLI[1]      
 	for (int i = 0;i< 1; ++i)
-		intSettings[DO_SLI[i].key] = fromString<int>( DO_SLI[i].def);
+		intSettings[DO_SLI[i].key] = fromString( DO_SLI[i].def);
 
 	//	const Control DO_CBOX[2]
 	for (int i = 0;i< 2; ++i)
-		intSettings[DO_CBOX[i].key] = fromString<int>( DO_CBOX[i].def);
+		intSettings[DO_CBOX[i].key] = fromString( DO_CBOX[i].def);
 
 	//	const Control WR_COMBOX[4] 
 	for (int i = 0;i< 1; ++i)
-		intSettings[WR_COMBOX[i].key] = fromString<int>( WR_COMBOX[i].def);
+		intSettings[WR_COMBOX[i].key] = fromString( WR_COMBOX[i].def);
 
 	//	const Control MO_CBOX[2] 
 	for (int i = 0;i< 2; ++i)
-		intSettings[MO_CBOX[i].key] = fromString<int>( MO_CBOX[i].def);
+		intSettings[MO_CBOX[i].key] = fromString( MO_CBOX[i].def);
 
 	//	const Control MO_RBUT[5]
 	for (int i = 0;i< 5; ++i)
-		intSettings[MO_RBUT[i].key] = fromString<int>(MO_RBUT [i].def);
+		intSettings[MO_RBUT[i].key] = fromString(MO_RBUT [i].def);
 
 	//	const Control RC_TEXT[2]
 	for (int i = 0;i< 2; ++i)
-		intSettings[RC_TEXT[i].key] = fromString<int>( RC_TEXT[i].def);
+		intSettings[RC_TEXT[i].key] = fromString( RC_TEXT[i].def);
 
 
 }
@@ -353,16 +357,16 @@ bool abstract_panel::saveSettings() {
 	    {
 	        configHandler->SetSpringConfigInt(i->first,i->second);
 	    }
-	    for (stringMap::iterator s = stringSettings.begin(); s != stringSettings.end();++s)
-	    {
-	    	//not used
-	        //configHandler->SetSpringConfigString(s->first,s->second);
-	    }
-	    for (floatMap::iterator f = floatSettings.begin(); f != floatSettings.end();++f)
-	    {
-	        // not used
-	        //configHandler->SetSpringConfigFloat(f->first,f->second);
-	    }
+//	    for (stringMap::iterator s = stringSettings.begin(); s != stringSettings.end();++s)
+//	    {
+//	    	//not used
+//	        //configHandler->SetSpringConfigString(s->first,s->second);
+//	    }
+//	    for (floatMap::iterator f = floatSettings.begin(); f != floatSettings.end();++f)
+//	    {
+//	        // not used
+//	        //configHandler->SetSpringConfigFloat(f->first,f->second);
+//	    }
     } catch (...) {
     	wxMessageBox(_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK|wxICON_HAND, 0);
     	return false;

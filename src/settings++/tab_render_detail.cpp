@@ -22,7 +22,12 @@
 
 #include "tab_render_detail.h"
 #include "se_utils.h"
-#include <wx/wx.h>
+#include <wx/string.h>
+#include <wx/stattext.h>
+#include <wx/sizer.h>
+#include <wx/event.h>
+#include <wx/defs.h>
+#include <wx/slider.h>
 #include "../springunitsynclib.h"
 #include "Defs.hpp"
 
@@ -34,7 +39,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 	// i < "sizeof"(RO_SLI)
 	for (int i = 0; i < ctrl_detail_sliders_size-4; i++) {
 		ctrl_detail_sliders[i] = new wxSlider(
-			this, RO_SLI[i].id, configHandler->GetSpringConfigInt(RO_SLI[i].key,fromString<int>(RO_SLI[i].def)),
+			this, RO_SLI[i].id, configHandler->GetSpringConfigInt(RO_SLI[i].key,fromString(RO_SLI[i].def)),
 			extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V		);
 		//ctrl_detail_sliders[i]->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
 		ctrl_detail_sliders[i]->SetToolTip(RO_SLI[i].tTip[0]);
@@ -43,7 +48,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 	}
 	for (int i = 5; i < ctrl_detail_sliders_size; i++) {
 		ctrl_detail_sliders[i] = new wxSlider(
-			this, RO_SLI[i].id, configHandler->GetSpringConfigInt(RO_SLI[i].key,fromString<int>(RO_SLI[i].def)),
+			this, RO_SLI[i].id, configHandler->GetSpringConfigInt(RO_SLI[i].key,fromString(RO_SLI[i].def)),
 			extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V);
 		//ctrl_detail_sliders[i]->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
 		ctrl_detail_sliders[i]->SetToolTip(RO_SLI[i].tTip[0]);
@@ -91,8 +96,8 @@ tab_render_detail::~tab_render_detail(void) {
 
 BEGIN_EVENT_TABLE(tab_render_detail, abstract_panel)
 	EVT_SLIDER(wxID_ANY,            tab_render_detail::OnSliderMove)
-	EVT_TEXT(wxID_ANY,              tab_render_detail::OnTextUpdate)
-	EVT_CHECKBOX(wxID_ANY,          tab_render_detail::OnCheckBoxTick)
+//	EVT_TEXT(wxID_ANY,              tab_render_detail::OnTextUpdate)
+	//EVT_CHECKBOX(wxID_ANY,          tab_render_detail::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       tab_render_detail::OnRadioButtonToggle)
 //	EVT_IDLE(                       tab_render_detail::update)
 END_EVENT_TABLE()

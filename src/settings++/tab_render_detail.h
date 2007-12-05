@@ -25,14 +25,9 @@
 
 #include "tab_abstract.h"
 
-//class wxComboBox;
-//class wxCheckBox;
-//class wxTextCtrl;
 class wxSlider;
 class wxFlexGridSizer;
-//class wxRadioButton;
 class wxString;
-//class wxCommandEvent;
 class wxWindow;
 class wxPoint;
 class wxSize;

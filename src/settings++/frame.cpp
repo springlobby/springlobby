@@ -20,11 +20,13 @@
     along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
+#include <wx/notebook.h>
+#include <wx/menu.h>
+#include <wx/msgdlg.h>
+
 #include "frame.h"
 #include "se_settings.h"
 #include "../springunitsynclib.h"
-//#include <wx/notebook.h>
-#include <wx/wx.h>
 #include "tab_render_detail.h"
 #include "tab_quality_video.h"
 #include "tab_abstract.h"

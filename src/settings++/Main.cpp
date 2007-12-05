@@ -25,7 +25,7 @@
 IMPLEMENT_APP(Springsettings)
 
 #include <wx/string.h>
-#include <wx/wx.h>
+#include <wx/defs.h>
 
 bool Springsettings::OnInit()
 {

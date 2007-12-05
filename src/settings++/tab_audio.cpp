@@ -22,14 +22,23 @@
 
 #include "tab_audio.h"
 #include "se_utils.h"
-#include <wx/wx.h>
+#include <wx/string.h>
+#include <wx/sizer.h>
+#include <wx/event.h>
+#include <wx/defs.h>
+#include <wx/slider.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
 #include "../springunitsynclib.h"
 #include "Defs.hpp"
 
 void audio_panel::initAudioSizer(wxStaticBoxSizer* sizer) {
-	slider0 = new wxSlider(this, AO_SLI[0].id, configHandler->GetSpringConfigInt(AO_SLI[0].key,fromString<int>(AO_SLI[0].def)), 8, 128, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
-	slider1 = new wxSlider(this, AO_SLI[1].id, configHandler->GetSpringConfigInt(AO_SLI[1].key,fromString<int>(AO_SLI[1].def)), 1, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
-	slider2 = new wxSlider(this, AO_SLI[2].id, configHandler->GetSpringConfigInt(AO_SLI[2].key,fromString<int>(AO_SLI[2].def)), 1, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	slider0 = new wxSlider(this, AO_SLI[0].id, configHandler->GetSpringConfigInt(AO_SLI[0].key,
+			fromString(AO_SLI[0].def)), 8, 128, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	slider1 = new wxSlider(this, AO_SLI[1].id, configHandler->GetSpringConfigInt(AO_SLI[1].key,
+			fromString(AO_SLI[1].def)), 1, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	slider2 = new wxSlider(this, AO_SLI[2].id, configHandler->GetSpringConfigInt(AO_SLI[2].key,
+			fromString(AO_SLI[2].def)), 1, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 
     slider0->SetTickFreq((128-8) / 10   ,1);
     slider1->SetTickFreq(10             ,1);
@@ -49,7 +58,8 @@ audio_panel::audio_panel(wxWindow *parent, wxWindowID id , const wxString &title
 	wxSizer* childLSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
 
 	// sizers for static boxes containing sliders, checkboxes, radiobuttons
-    wxStaticBoxSizer* audioSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Audio Options"), WX_DEF_P, wxSize(230, 100), 0, wxEmptyString), wxVERTICAL);
+    wxStaticBoxSizer* audioSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Audio Options"),
+    		WX_DEF_P, wxSize(230, 100), 0, wxEmptyString), wxVERTICAL);
 	initAudioSizer(audioSizer);
 
 
@@ -77,8 +87,8 @@ audio_panel::~audio_panel(void) {
 
 BEGIN_EVENT_TABLE(audio_panel, wxPanel)
 	EVT_SLIDER(wxID_ANY,            audio_panel::OnSliderMove)
-	EVT_TEXT(wxID_ANY,              audio_panel::OnTextUpdate)
-	EVT_CHECKBOX(wxID_ANY,          audio_panel::OnCheckBoxTick)
+//	EVT_TEXT(wxID_ANY,              audio_panel::OnTextUpdate)
+//	EVT_CHECKBOX(wxID_ANY,          audio_panel::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       audio_panel::OnRadioButtonToggle)
 //	EVT_IDLE(                       audio_panel::update)
 END_EVENT_TABLE()

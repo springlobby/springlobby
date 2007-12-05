@@ -22,7 +22,13 @@
 
 #include "tab_simple.h"
 #include "se_utils.h"
-#include <wx/wx.h>
+#include <wx/string.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/event.h>
+#include <wx/defs.h>
+#include <wx/slider.h>
+#include <wx/combobox.h>
 #include "../springunitsynclib.h"
 #include "Defs.hpp"
 #include "presets.h"
@@ -48,7 +54,7 @@ void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 	sizer->Add(videoMode_CBX, 0, wxBOTTOM, 15);	
 	
 	sizer->Add(new wxStaticText(this, -1, (AO_SLI[1].lbl)), 0, wxTOP, 15);
-	audioVolume_SLI =  new wxSlider(this, AO_SLI[1].id, configHandler->GetSpringConfigInt(AO_SLI[1].key,fromString<int>(AO_SLI[1].def)), 0, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	audioVolume_SLI =  new wxSlider(this, AO_SLI[1].id, configHandler->GetSpringConfigInt(AO_SLI[1].key,fromString(AO_SLI[1].def)), 0, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 	sizer->Add(audioVolume_SLI, 0, wxBOTTOM, 15);	
 }
 

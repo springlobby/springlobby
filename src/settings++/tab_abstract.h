@@ -25,7 +25,7 @@
 
 
 //#include <wx/frame.h>
-#include <wx/generic/panelg.h>
+#include <wx/panel.h>
 #include <map>
 class wxString;
 class wxCommandEvent;
@@ -55,8 +55,8 @@ class abstract_panel : public wxPanel
 		//void update(wxIdleEvent&);
 		void OnComboBoxChange(wxCommandEvent& event);
 		static intMap intSettings;
-		static stringMap stringSettings;
-		static floatMap floatSettings;
+		//static stringMap stringSettings;
+		//static floatMap floatSettings;
 		static bool settingsChanged;
 		static bool saveSettings();
 
