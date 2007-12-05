@@ -17,7 +17,6 @@ class MainOptionsTab;
 class wxBitmap;
 class wxImageList;
 class ChatPanel;
-class settings_frame;
 
 // FIXME shouldn't copy this here
 typedef wxWindow wxNotebookPage;
@@ -86,8 +85,6 @@ class MainWindow : public wxFrame
 
     wxImageList* m_func_tab_images;
     
-    settings_frame* se_frame;
-
     DECLARE_EVENT_TABLE()
 };
 
@@ -96,7 +93,6 @@ class MainWindow : public wxFrame
 // wxWidget IDs
 enum
 {
-	MENU_SETTINGSPP,
     MENU_ABOUT = wxID_ABOUT,
     MENU_QUIT = wxID_EXIT,
 
