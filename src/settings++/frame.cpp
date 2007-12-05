@@ -1,23 +1,23 @@
 /**
-    This file is part of Settings++,
+    This file is part of springsettings,
     Copyright (C) 2007
     Original work by Kloot
     cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
-    Settings++ is free software: you can redistribute it and/or modify
+    springsettings is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Settings++ is distributed in the hope that it will be useful,
+    springsettings is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
+    along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
 #include "frame.h"
@@ -81,7 +81,7 @@ void settings_frame::CreateGUIControls()
 		Destroy();
 	}
 	notebook->SetSelection(0);
-	SetTitle(wxT("Settings++"));
+	SetTitle(wxT("springsettings"));
 	SetIcon(wxNullIcon);
 	SetSize(8,8,760,550);
 	Center();
@@ -173,7 +173,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				notebook->RemovePage(4);
 				notebook->RemovePage(3);
 				notebook->RemovePage(2);
-				SetTitle(wxT("Settings++ (simple mode)"));
+				SetTitle(wxT("springsettings (simple mode)"));
 				updateAllControls();
 				if (!OptionsHandler.getDisableWarning()){
 					wxMessageBox(wxT("Changes made on Quality/Detail tab in expert mode"
@@ -189,7 +189,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				notebook->AddPage(audioTab, wxT("Audio"));
 				notebook->AddPage(debugTab, wxT("Debug"));
 				notebook->RemovePage(0);
-				SetTitle(wxT("Settings++ (expert mode)"));
+				SetTitle(wxT("springsettings (expert mode)"));
 				updateAllControls();
 			}
 		} break;
