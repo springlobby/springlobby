@@ -33,6 +33,8 @@
 #include "images/options_icon.xpm"
 #include "images/select_icon.xpm"
 
+#include "settings++/frame.h"
+
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
@@ -44,6 +46,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_USYNC, MainWindow::OnUnitSyncReload )
   EVT_MENU( MENU_TRAC, MainWindow::OnReportBug )
   EVT_MENU( MENU_DOC, MainWindow::OnShowDocs )
+  EVT_MENU( MENU_SETTINGSPP, MainWindow::OnShowSettingsPP )
 
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
 
@@ -68,7 +71,8 @@ MainWindow::MainWindow( Ui& ui ) :
   menuTools->Append(MENU_CHAT, _("Open &chat..."));
   menuTools->AppendSeparator();
   menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
-  
+  menuTools->Append(MENU_SETTINGSPP, _("Settings++"));
+
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _("&About"));
   menuHelp->Append(MENU_TRAC, _("&Report a bug..."));
@@ -129,7 +133,8 @@ MainWindow::~MainWindow()
   delete m_battle_icon;
   delete m_options_icon;
   delete m_select_image;
-   
+  
+  
 }
 
 
@@ -348,3 +353,9 @@ void MainWindow::OnUnitSyncReloaded()
   debug("Singleplayer tab updated");
 }
 
+void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
+{
+	se_frame = new settings_frame(NULL,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
+	    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+	se_frame->Show();
+}
