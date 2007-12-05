@@ -177,7 +177,7 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
   }
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, channel );
-  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(channel.GetName()), true, 2 );
+  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(channel.GetName()), true, -1 );
   return chat;
 }
 
@@ -197,7 +197,6 @@ ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, server );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, 1 );
-
   return chat;
 }
 
@@ -228,6 +227,11 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
   if ( oldsel < 0 ) return;
   int newsel = event.GetSelection();
   if ( newsel < 0 ) return;
+
+  // delete the icon to show that no new events happened
+  if ( m_chat_tabs->GetPageImage( newsel ) == 2 ) {
+    m_chat_tabs->SetPageImage( newsel, -1);
+  }
 
   wxWindow* newpage = m_chat_tabs->GetPage( newsel );
   if ( newpage == 0 ) { // Not sure what to do here

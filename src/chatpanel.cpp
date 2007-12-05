@@ -15,6 +15,7 @@
 #include <wx/msgdlg.h>
 #include <wx/menu.h>
 #include <wx/utils.h>
+#include <wx/notebook.h>
 
 #include "channel.h"
 #include "chatpanel.h"
@@ -94,7 +95,7 @@ void ChatPanel::OnMouseDown( wxMouseEvent& event )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
-: wxPanel( parent, -1),m_show_nick_list(true),m_ui(ui),m_channel(&chan),m_server(0),m_user(0),m_battle(0),m_type(CPT_Channel),m_popup_menu(0)
+: wxPanel( parent, -1),m_show_nick_list(true),m_chat_tabs((wxNotebook*)parent),m_ui(ui),m_channel(&chan),m_server(0),m_user(0),m_battle(0),m_type(CPT_Channel),m_popup_menu(0)
 {
   wxLogDebugFunc( _T("wxWindow* parent, Channel& chan") );
   _CreateControls( );
@@ -452,6 +453,13 @@ void ChatPanel::_OutputLine( const wxString& message, const wxColour& col )
   m_chatlog_text->Freeze();
   #endif
   m_chatlog_text->AppendText( message + _T("\n") );
+
+  // change the image of the tab to show new events
+  if ( m_channel != 0 && m_ui.GetActiveChatPanel() != this )
+    for ( int i=0; i < m_chat_tabs->GetPageCount( ); ++i )
+      if ( m_chat_tabs->GetPage( i ) == this )
+        m_chat_tabs->SetPageImage( i, 2 );
+
   if ( m_chat_log ) m_chat_log->AddMessage(message);
   CheckLength();
   m_chatlog_text->ScrollLines( 10 );
@@ -505,7 +513,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
     col.Set( 0,0,0 );
   }
 
-  if ( who == _T("MelBot") && message.Contains (  _T("<") ) && message.Contains (  _T(">") )  ) {
+  if ( who == _T("MelBot") && message.StartsWith( _T("<") ) && message.Contains (  _T(">") )  ) {
     wxString who2;
     wxString message2;
     who2= message.BeforeFirst( '>' ).AfterFirst ( '<' ) + _T("@IRC");
