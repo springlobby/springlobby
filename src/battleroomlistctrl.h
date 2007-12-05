@@ -9,6 +9,11 @@ class Ui;
 struct BattleBot;
 //class wxMenuItem;
 
+struct item_content {
+  bool is_bot;
+  void* data;
+};
+
 class BattleroomListCtrl : public wxListCtrl
 {
   public:
@@ -77,6 +82,7 @@ class BattleroomListCtrl : public wxListCtrl
 
     User* m_sel_user;
     BattleBot* m_sel_bot;
+    std::vector<item_content> items;
 
     wxMenu* m_sides;
     wxMenuItem* m_spec_item;
