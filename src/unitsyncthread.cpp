@@ -93,7 +93,11 @@ void UnitSyncThread::Resume()
   //if ( !IsRunning() ) wxThread::Resume();
 }
 
-
+void UnitSyncThread::Delete()
+{
+  wxThread::Delete();
+  m_wait.Leave();
+}
 
 void UnitSyncThread::_CacheLoop()
 {
@@ -102,15 +106,22 @@ void UnitSyncThread::_CacheLoop()
   wxString params;
   while ( !TestDestroy() ) {
 
-    _GetNextJob( job, params );
+    try {
 
-    switch ( job ) {
-      case JT_MAPINFO : _DoMapInfoJob( params ); break;
-      case JT_MINIMAP : _DoMinimapJob( params ); break;
-      case JT_UNITS   : _DoUnitsJob( params ); break;
-      case JT_RELOAD   : _DoReloadJob(); break;
-      case JT_PAUSE   : m_wait.Enter(); break;
-    };
+      _GetNextJob( job, params );
+
+      switch ( job ) {
+        case JT_MAPINFO : _DoMapInfoJob( params ); break;
+        case JT_MINIMAP : _DoMinimapJob( params ); break;
+        case JT_UNITS   : _DoUnitsJob( params ); break;
+        case JT_RELOAD   : _DoReloadJob(); break;
+        default:
+        case JT_PAUSE   : m_wait.Enter(); break;
+      };
+
+    } catch (...) {
+      m_wait.Enter();
+    }
 
   }
   m_ui.OnCachedThreadTerminated();
