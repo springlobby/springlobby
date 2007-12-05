@@ -56,6 +56,7 @@ bool SpringLobbyApp::OnInit()
   wxLogChain *logChain = new wxLogChain( loggerconsole );
   logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
   logChain->SetLogLevel( wxLOG_Trace );
+  logChain->SetVerbose( true );
 
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();

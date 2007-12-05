@@ -5,7 +5,7 @@
 #include <wx/log.h>
 
 #ifndef __WXDEBUG__
-#define wxLogDebugFunc( params ) wxLogMessage( wxString(__FUNCTION__, wxConvUTF8 ) + _T(" ( ") + wxString(params) + _T(" )") )
+#define wxLogDebugFunc( params ) wxLogVerbose( wxString(__FUNCTION__, wxConvUTF8 ) + _T(" ( ") + wxString(params) + _T(" )") )
 #else
 #define wxLogDebugFunc( params ) wxLogTrace(_T("function calls"), params )
 #endif
