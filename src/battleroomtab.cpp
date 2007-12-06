@@ -93,7 +93,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true, false );
 
-  m_players = new BattleroomListCtrl( m_player_panel, battle );
+  m_players = new BattleroomListCtrl( m_player_panel, battle, m_ui );
   m_chat = new ChatPanel( m_splitter, m_ui, battle );
 
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
