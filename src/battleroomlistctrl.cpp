@@ -652,6 +652,47 @@ int wxCALLBACK BattleroomListCtrl::CompareSideDOWN(long item1, long item2, long 
 
 int wxCALLBACK BattleroomListCtrl::CompareColorUP(long item1, long item2, long sortData)
 {
+  BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
+  item_content content1 = bl.items[(size_t)item1];
+  item_content content2 = bl.items[(size_t)item2];
+
+  int color1_r, color1_g, color1_b;
+  if ( content1.is_bot )
+    {
+      if ( ((BattleBot*)content1.data)->bs.spectator ) return -1;
+      color1_r = ((BattleBot*)content1.data)->bs.color_r;
+      color1_g = ((BattleBot*)content1.data)->bs.color_g;
+      color1_b = ((BattleBot*)content1.data)->bs.color_b;
+    }
+  else
+    {
+      if ( ((User*)content1.data)->BattleStatus().spectator ) return -1;
+      color1_r = ((User*)content1.data)->BattleStatus().color_r;
+      color1_g = ((User*)content1.data)->BattleStatus().color_g;
+      color1_b = ((User*)content1.data)->BattleStatus().color_b;
+    }
+
+  int color2_r, color2_g, color2_b;
+  if ( content2.is_bot )
+    {
+      if ( ((BattleBot*)content2.data)->bs.spectator ) return 1;
+      color2_r = ((BattleBot*)content2.data)->bs.color_r;
+      color2_g = ((BattleBot*)content2.data)->bs.color_g;
+      color2_b = ((BattleBot*)content2.data)->bs.color_b;
+    }
+  else
+    {
+      if ( ((User*)content2.data)->BattleStatus().spectator ) return 1;
+      color2_r = ((User*)content2.data)->BattleStatus().color_r;
+      color2_g = ((User*)content2.data)->BattleStatus().color_g;
+      color2_b = ((User*)content2.data)->BattleStatus().color_b;
+    }
+
+  if ( (color1_r + color1_g + color1_b)/3 < (color2_r + color2_g + color2_b)/3 )
+      return -1;
+  if ( (color1_r + color1_g + color1_b)/3 > (color2_r + color2_g + color2_b)/3 )
+      return 1;
+
   return 0;
 }
 
