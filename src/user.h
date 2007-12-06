@@ -112,7 +112,7 @@ class User
             case RANK_5: return _("Highly experienced");
             case RANK_6: return _("Veteran");
         }
-        return "no rank";
+        return _("no rank");
     }
 
 
