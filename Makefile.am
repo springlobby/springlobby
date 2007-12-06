@@ -477,7 +477,6 @@ springlobby_SOURCES = \
 springlobby_SOURCES += \
 	src/settings++ \
 	src/settings++/frame.cpp \
-	src/settings++/tabs.h \
 	src/settings++/main.h \
 	src/settings++/tab_ui.cpp \
 	src/settings++/tab_render_detail.cpp \
@@ -518,7 +517,6 @@ springsettings_SOURCES = \
 	src/springunitsynclib.h \
 	src/settings++ \
 	src/settings++/frame.cpp \
-	src/settings++/tabs.h \
 	src/settings++/main.h \
 	src/settings++/tab_ui.cpp \
 	src/settings++/tab_render_detail.cpp \

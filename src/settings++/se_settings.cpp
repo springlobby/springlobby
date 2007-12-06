@@ -4,10 +4,13 @@
 
 #include <wx/config.h>
 #include <wx/filefn.h>
+#include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
 #include <wx/string.h>
+#include <wx/dir.h>
+#include <wx/file.h>
 //
 #include <string>
 //TODO guard properly
@@ -143,6 +146,6 @@ wxString se_settings::AutoFindUnitSyncLib( const wxString& def )
 
 bool se_settings::IsUnitSyncLib( const wxString& lib )
 {
-  if ( !wxFile::Exists( lib ) ) return false;
+  if ( !(wxFile::Exists( lib )) ) return false;
   return true;
 }

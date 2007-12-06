@@ -1,6 +1,5 @@
 #ifndef SE_UTILS_H_
 #define SE_UTILS_H_
-//TODO put implementation in file
 
 #include <wx/string.h>
 #include <string>
