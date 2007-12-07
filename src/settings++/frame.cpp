@@ -67,7 +67,7 @@ void settings_frame::CreateGUIControls()
     detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
    
     uiTab = new tab_ui(notebook,ID_UI);
-    notebook->AddPage(uiTab, wxT("UI Options"));
+    notebook->AddPage(uiTab, wxT("UI options"));
 
     audioTab = new audio_panel(notebook,ID_AUDIO);
     
@@ -77,14 +77,14 @@ void settings_frame::CreateGUIControls()
 
 	switch(OptionsHandler.getMode()){
 		case SET_MODE_EXPERT: {
-			notebook->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
-			notebook->AddPage(detailTab, wxT("Render Detail"));
+			notebook->AddPage(qualityTab, wxT("Render quality / Video mode"));
+			notebook->AddPage(detailTab, wxT("Render detail"));
 			notebook->AddPage(audioTab, wxT("Audio"));
 			notebook->AddPage(debugTab, wxT("Debug"));
 		}
 			break;
 		case SET_MODE_SIMPLE: {
-			notebook->InsertPage(0,simpleTab,wxT("SIMPLE"));
+			notebook->InsertPage(0,simpleTab,wxT("Combined options"));
 		}
 		break;
 	}
@@ -93,7 +93,10 @@ void settings_frame::CreateGUIControls()
 		Destroy();
 	}
 	notebook->SetSelection(0);
-	SetTitle(wxT("springsettings"));
+	if (OptionsHandler.getMode()==SET_MODE_EXPERT)
+		SetTitle(wxT("SpringSettings (expert mode)"));
+	else
+		SetTitle(wxT("SpringSettings (simple mode)"));
 	SetIcon(wxNullIcon);
 	SetSize(8,8,760,550);
 	Center();
@@ -105,15 +108,15 @@ void settings_frame::initMenuBar() {
 
 	menuFile->Append(ID_MENUITEM_SAVE, wxT("Save settings"));
 	menuFile->Append(ID_MENUITEM_RESET, wxT("Reset settings to default values"));
-	menuFile->AppendCheckItem(ID_MENUITEM_DISABLE_WARN, wxT("disable expert mode warning"));
+	menuFile->AppendCheckItem(ID_MENUITEM_DISABLE_WARN, wxT("Disable expert mode warning"));
 	menuFile->AppendSeparator();
 	menuFile->Append(ID_MENUITEM_QUIT, wxT("Quit"));
 
 	menuFile->Check(ID_MENUITEM_DISABLE_WARN,OptionsHandler.getDisableWarning());
 	
 	menuMode = new wxMenu();
-	menuMode->AppendRadioItem(ID_MENUITEM_SIMPLE,wxT("simple (few options)"));
-	menuMode->AppendRadioItem(ID_MENUITEM_EXPERT,wxT("expert (all options"));
+	menuMode->AppendRadioItem(ID_MENUITEM_SIMPLE,wxT("Simple (few options)"));
+	menuMode->AppendRadioItem(ID_MENUITEM_EXPERT,wxT("Expert (all options"));
         
 	switch(OptionsHandler.getMode()){
 	case SET_MODE_EXPERT: {
@@ -180,12 +183,12 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		case ID_MENUITEM_SIMPLE: {
 			if (OptionsHandler.getMode()==SET_MODE_EXPERT) {
 				OptionsHandler.setMode(SET_MODE_SIMPLE);
-				notebook->InsertPage(0,simpleTab,wxT("SIMPLE"));
+				notebook->InsertPage(0,simpleTab,wxT("Combined options"));
 				notebook->RemovePage(5);
 				notebook->RemovePage(4);
 				notebook->RemovePage(3);
 				notebook->RemovePage(2);
-				SetTitle(wxT("springsettings (simple mode)"));
+				SetTitle(wxT("SpringSettings (simple mode)"));
 				updateAllControls();
 				if (!OptionsHandler.getDisableWarning()){
 					wxMessageBox(wxT("Changes made on Quality/Detail tab in expert mode"
@@ -196,12 +199,12 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		case ID_MENUITEM_EXPERT: {
 			if (OptionsHandler.getMode()==SET_MODE_SIMPLE) {
 				OptionsHandler.setMode(SET_MODE_EXPERT);
-				notebook->AddPage(qualityTab, wxT("Render Quality / Video Mode"));
-				notebook->AddPage(detailTab, wxT("Render Detail"));
+				notebook->AddPage(qualityTab, wxT("Render quality / Video mode"));
+				notebook->AddPage(detailTab, wxT("Render detail"));
 				notebook->AddPage(audioTab, wxT("Audio"));
 				notebook->AddPage(debugTab, wxT("Debug"));
 				notebook->RemovePage(0);
-				SetTitle(wxT("springsettings (expert mode)"));
+				SetTitle(wxT("SpringSettings (expert mode)"));
 				updateAllControls();
 			}
 		} break;
