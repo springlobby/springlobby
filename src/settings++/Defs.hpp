@@ -176,21 +176,22 @@ struct Control {
 //TODO find reasonable default values
 //TODO is max_texture stages obsolte?
 const Control RO_SLI[9] = {
-	{_T("shadow-map size"),              wxT("ShadowMapSize"),       ID_RO_SLI_0,	"2048", {_T("placeholder")}	},
+	{_T("shadow-map size"),              wxT("ShadowMapSize"),       ID_RO_SLI_0,	"2048", {_T("higher value = better looking shadows")}	},
 	{_T("tree view-distance"),           wxT("TreeRadius"),          ID_RO_SLI_1,	"3000", {_T("placeholder")}	},
-	{_T("terrain detail"),               wxT("GroundDetail"),        ID_RO_SLI_2,	"120", {_T("placeholder")}	},
-	{_T("unit detail"),                  wxT("UnitLodDist"),         ID_RO_SLI_3,	"600", {_T("placeholder")}	},
-	{_T("grass detail"),                 wxT("GrassDetail"),         ID_RO_SLI_4,	"10", {_T("placeholder")}	},
-	{_T("ground decals"),                wxT("GroundDecals"),        ID_RO_SLI_5,	"120", {_T("placeholder")}	},
-	{_T("unit icon distance"),           wxT("UnitIconDist"),        ID_RO_SLI_6,	"1000", {_T("placeholder")}	},
-	{_T("max simultaneous particles"),     wxT("MaxParticles"),        ID_RO_SLI_7,	"20000"	, {_T("placeholder")}},
+	{_T("terrain detail"),               wxT("GroundDetail"),        ID_RO_SLI_2,	"120", {_T("higher value = more terrain details")}	},
+	{_T("unit detail"),                  wxT("UnitLodDist"),         ID_RO_SLI_3,	"600", {_T("higher value = more detailed units")}	},
+	{_T("grass detail"),                 wxT("GrassDetail"),         ID_RO_SLI_4,	"10", {_T("higher value = more detailed graas")}	},
+	{_T("ground decals"),                wxT("GroundDecals"),        ID_RO_SLI_5,	"120", {_T("higher value = more ground decals")}	},
+	{_T("unit icon distance"),           wxT("UnitIconDist"),        ID_RO_SLI_6,	"1000", {_T("determines at which range units are still fully rendered\n"
+																								"higher value = greater range = more units rendered at the same time")}	},
+	{_T("max simultaneous particles"),     wxT("MaxParticles"),        ID_RO_SLI_7,	"20000"	, {_T("limits how many particles are displayed at the same time")}},
 	{_T("max texture stages (SM3)"), wxT("SM3MaxTextureStages"), ID_RO_SLI_8,	"20"	, {_T("placeholder")}}
 };
 
 const Control VO_CBOX[3] = {
-	{_T("run full-screen"),                wxT("Fullscreen"),              ID_WINDOWP_VO_CBOX_0,	"1", {_T("placeholder")}},
-	{_T("dual-screen mode"),               wxT("DualScreenMode"),          ID_WINDOWP_VO_CBOX_1,	"0", {_T("placeholder")}},
-	{_T("enable v-sync"),                  wxT("VSync"),                   ID_WINDOWP_VO_CBOX_2,	"1", {_T("placeholder")}},
+	{_T("run full-screen"),                wxT("Fullscreen"),              ID_WINDOWP_VO_CBOX_0,	"1", {_T("run fullscreen or in a window?")}},
+	{_T("dual-screen mode"),               wxT("DualScreenMode"),          ID_WINDOWP_VO_CBOX_1,	"0", {_T("if you have two monitors you can use both")}},
+	{_T("enable v-sync"),                  wxT("VSync"),                   ID_WINDOWP_VO_CBOX_2,	"1", {_T("V-Sync on/off")}},
 };
 
 const Control VO_RBUT[2] = {
@@ -200,7 +201,7 @@ const Control VO_RBUT[2] = {
 
 
 const Control VO_SLI[1] = {
-	{_T("full-screen anti-aliasing samples"), wxT("FSAALevel"), ID_VO_SLI_0,	"0", {_T("placeholder")}}
+	{_T("full-screen anti-aliasing samples"), wxT("FSAALevel"), ID_VO_SLI_0,	"0", {_T("how much anti-aliasing should be applied")}}
 };
 
 const Control VO_SLI_EXT[1] = {
@@ -209,28 +210,28 @@ const Control VO_SLI_EXT[1] = {
 
 
 const Control AO_SLI[3] = {
-	{_T("maximum simultaneous sounds"), wxT("MaxSounds"),            ID_AO_SLI_0,	"16" , {_T("placeholder")}},
-	{_T("global sound volume"),   wxT("SoundVolume"),                ID_AO_SLI_1,	"100", {_T("placeholder")}},
-	{_T("unit reply volume"),     wxT("UnitReplySoundVolume"),       ID_AO_SLI_2,	"80" , {_T("placeholder")}}
+	{_T("maximum simultaneous sounds"), wxT("MaxSounds"),            ID_AO_SLI_0,	"16" , {_T("maximum different sounds played at the same time")}},
+	{_T("global sound volume"),   wxT("SoundVolume"),                ID_AO_SLI_1,	"100", {_T("overall sound volume")}},
+	{_T("unit reply volume"),     wxT("UnitReplySoundVolume"),       ID_AO_SLI_2,	"80" , {_T("reply volume relative to global volume")}}
 	
 };
 
 const Control QA_CBOX[10] = {
-    {_T("shadows (slow)"),                                  wxT("Shadows"),             ID_WINDOWP_QA_CBOX_0,	"0", {_T("placeholder")}},
-	{_T("3D trees (needs Vertex_Program)"),                 wxT("3DTrees"),             ID_WINDOWP_QA_CBOX_1,	"1", {_T("placeholder")}},
-	{_T("high-resolution clouds (needs Fragment_Program)"), wxT("AdvSky"),              ID_WINDOWP_QA_CBOX_2,	"0", {_T("placeholder")}},
-	{_T("dynamic clouds (slow)"),                           wxT("DynamicSky"),          ID_WINDOWP_QA_CBOX_3,	"0", {_T("placeholder")}},
-	{_T("reflective units (needs Fragment_Program)"),       wxT("AdvUnitShading"),      ID_WINDOWP_QA_CBOX_4,	"0", {_T("placeholder")}},
-	{_T("never use shaders when rendering SM3 maps"),       wxT("SM3ForceFallbackTex"), ID_WINDOWP_QA_CBOX_5,	"1", {_T("placeholder")}},
-	{_T("enable LuaShaders support"),                       wxT("LuaShaders"),          ID_WINDOWP_QA_CBOX_6,	"1", {_T("placeholder")}},
+    {_T("shadows (slow)"),                                  wxT("Shadows"),             ID_WINDOWP_QA_CBOX_0,	"0", {_T("enable shadows?")}},
+	{_T("3D trees (needs Vertex_Program)"),                 wxT("3DTrees"),             ID_WINDOWP_QA_CBOX_1,	"1", {_T("want better looking trees?")}},
+	{_T("high-resolution clouds (needs Fragment_Program)"), wxT("AdvSky"),              ID_WINDOWP_QA_CBOX_2,	"0", {_T("want better looking sky?")}},
+	{_T("dynamic clouds (slow)"),                           wxT("DynamicSky"),          ID_WINDOWP_QA_CBOX_3,	"0", {_T("want moving clouds in the sky?")}},
+	{_T("reflective units (needs Fragment_Program)"),       wxT("AdvUnitShading"),      ID_WINDOWP_QA_CBOX_4,	"0", {_T("shiny units?")}},
+	{_T("never use shaders when rendering SM3 maps"),       wxT("SM3ForceFallbackTex"), ID_WINDOWP_QA_CBOX_5,	"1", {_T("problems with sm3 maps? enable this")}},
+	{_T("enable LuaShaders support"),                       wxT("LuaShaders"),          ID_WINDOWP_QA_CBOX_6,	"1", {_T("makes for some cool effects")}},
 	{_T("high-resolution LOS textures"),                    wxT("HighResLos"),          ID_WINDOWP_QA_CBOX_7,	"1", {_T("placeholder")}},
-    {_T("draw smooth points"),                              wxT("SmoothPoints"),        ID_WINDOWP_QA_CBOX_8,	"0", {_T("placeholder")}},
-	{_T("draw smooth lines"),                               wxT("SmoothLines"),         ID_WINDOWP_QA_CBOX_9,	"0", {_T("placeholder")}},
+    {_T("draw smooth points"),                              wxT("SmoothPoints"),        ID_WINDOWP_QA_CBOX_8,	"0", {_T("should points be anti-aliased")}},
+	{_T("draw smooth lines"),                               wxT("SmoothLines"),         ID_WINDOWP_QA_CBOX_9,	"0", {_T("should lines be anti-aliased")}},
 };
 	
 
 const Control UI_CBOX[14] = {
-	{_T("enable LuaUI widgets"),                            wxT("LuaUI"),               ID_WINDOWP_UI_CBOX_1,	"1", {_T("placeholder")}},
+	{_T("enable LuaUI widgets"),                            wxT("LuaUI"),               ID_WINDOWP_UI_CBOX_1,	"1", {_T("mark to be able to use")}},
 	
 	{_T("draw commands on mini-map"),                       wxT("MiniMapDrawCommands"), ID_WINDOWP_UI_CBOX_2,	"1", {_T("placeholder")}},
 	{_T("draw icons on mini-map"),                          wxT("MiniMapIcons"),        ID_WINDOWP_UI_CBOX_3,	"1", {_T("placeholder")}},
@@ -252,11 +253,11 @@ const Control UI_CBOX[14] = {
 
 
 const Control MO_SLI[5] = {
-	{_T("Overhead Camera scroll speed"),    wxT("OverheadScrollSpeed"),    ID_MO_SLI_0,	"10", {_T("placeholder")}},
-	{_T("Rotatable overhead Camera scroll speed"), wxT("RotOverheadScrollSpeed"), ID_MO_SLI_1,	"0" , {_T("placeholder")}},
-	{_T("Total War Camera scroll speed"),          wxT("TWScrollSpeed"),          ID_MO_SLI_2,	"0" , {_T("placeholder")}},
-	{_T("First Person Camera scroll speed"),         wxT("FPSScrollSpeed"),         ID_MO_SLI_3,	"0" , {_T("placeholder")}},
-	{_T("Free Camera scroll speed"),          wxT("CamFreeScrollSpeed"),     ID_MO_SLI_4,	"0" , {_T("placeholder")}}
+	{_T("Overhead Camera"),    wxT("OverheadScrollSpeed"),    ID_MO_SLI_0,	"10", {_T("placeholder")}},
+	{_T("Rotatable overhead Camera"), wxT("RotOverheadScrollSpeed"), ID_MO_SLI_1,	"0" , {_T("placeholder")}},
+	{_T("Total War Camera"),          wxT("TWScrollSpeed"),          ID_MO_SLI_2,	"0" , {_T("placeholder")}},
+	{_T("First Person Camera"),         wxT("FPSScrollSpeed"),         ID_MO_SLI_3,	"0" , {_T("placeholder")}},
+	{_T("Free Camera"),          wxT("CamFreeScrollSpeed"),     ID_MO_SLI_4,	"0" , {_T("placeholder")}}
 };
 
 const Control MO_SLI_EXT[5] = {
@@ -295,11 +296,11 @@ const Control MO_CBOX[2] = {
 };
 
 const Control MO_RBUT[5] = {
-	{_T("OH (overhead)"),            wxT("CamMode"), ID_WINDOWC_MO_RBUT_0,	"1", {_T("placeholder")}},
-	{_T("ROH (rotatable overhead)"), wxT("CamMode"), ID_WINDOWC_MO_RBUT_1,	"1", {_T("placeholder")}},
-	{_T("TW (total war)"),           wxT("CamMode"), ID_WINDOWC_MO_RBUT_2,	"1", {_T("placeholder")}},
-	{_T("FP (first-person)"),        wxT("CamMode"), ID_WINDOWC_MO_RBUT_3,	"1", {_T("placeholder")}},
-	{_T("FC (free camera)"),         wxT("CamMode"), ID_WINDOWC_MO_RBUT_4,	"1", {_T("placeholder")}}
+	{_T("Overhead)"),            wxT("CamMode"), ID_WINDOWC_MO_RBUT_0,	"1", {_T("placeholder")}},
+	{_T("Rotatable Overhead)"), wxT("CamMode"), ID_WINDOWC_MO_RBUT_1,	"1", {_T("placeholder")}},
+	{_T("Total War)"),           wxT("CamMode"), ID_WINDOWC_MO_RBUT_2,	"1", {_T("placeholder")}},
+	{_T("First Person"),        wxT("CamMode"), ID_WINDOWC_MO_RBUT_3,	"1", {_T("placeholder")}},
+	{_T("Free Camera"),         wxT("CamMode"), ID_WINDOWC_MO_RBUT_4,	"1", {_T("placeholder")}}
 };
 
 const Control RC_TEXT[2] = {
