@@ -83,6 +83,9 @@ class TASServer : public Server
     void SendHostInfo( HostInfo update );
     void SendRaw( const std::string& raw );
 
+    void SendUdpSourcePort( int udpport );
+    void SendNATHelperInfos( const wxString& username, const wxString& ip, int port );
+
     void RequestInGameTime();
 
     Battle* GetCurrentBattle();

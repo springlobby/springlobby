@@ -657,6 +657,10 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     msg = GetSentenceParam( params );
     m_se->OnServerMessage( msg );
     //Command: "DENIED" params: "Already logged in".
+  } else if ( cmd == "HOSTPORT" ) {
+    udpport = GetIntParam( params );
+    m_se->OnHostUdpPort( udpport );
+    //HOSTPORT port
   } else if ( cmd == "SETSCRIPTTAGS" ) {
     while ( (msg = GetSentenceParam( params )) != "" ) {
       std::string::size_type pos = msg.find( "=", 0 );
@@ -1260,6 +1264,30 @@ void TASServer::UpdateBot( int battleid, const std::string& nick, UserBattleStat
   //UPDATEBOT name battlestatus teamcolor
   std::string cmd = "UPDATEBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + "\n";
   wxLogMessage( WX_STRING(cmd) );
+  m_sock->Send( cmd );
+}
+
+
+void TASServer::SendUdpSourcePort( int udpport )
+{
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
+
+  //UDPSOURCEPORT port
+  m_sock->Send( "UDPSOURCEPORT " + i2s( udpport ) + "\n" );
+}
+
+
+void TASServer::SendNATHelperInfos( const wxString& username, const wxString& ip, int port )
+{
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
+
+  //CLIENTIPPORT username ip port
+  std::string cmd = "CLIENTIPPORT " + STD_STRING( username ) + " " + STD_STRING( ip ) + " " + i2s (port ) + "\n";
+  wxLogMessage ( WX_STRING( cmd ) );
   m_sock->Send( cmd );
 }
 

@@ -508,3 +508,9 @@ void ServerEvents::OnChannelMessage( const std::string& channel, const std::stri
 }
 
 
+void ServerEvents::OnHostUdpPort( const int& udpport )
+{
+
+}
+
+
