@@ -90,6 +90,22 @@ class Server
 
     virtual void Ring( const std::string& nick ) = 0;
 
+    virtual void ModeratorSetTopic( const std::string& channel, const std::string& topic ) = 0;
+    virtual void ModeratorMute( const std::string& channel, const std::string& nick, int duration, bool byip ) = 0;
+    virtual void ModeratorUnmute( const std::string& channel, const std::string& nick ) = 0;
+    virtual void ModeratorKick( const std::string& channel, const std::string& reason ) = 0;
+    virtual void ModeratorBan( const std::string& nick, bool byip ) = 0;
+    virtual void ModeratorUnban( const std::string& nick ) = 0;
+    virtual void ModeratorGetIP( const std::string& nick ) = 0;
+    virtual void ModeratorGetLastLogin( const std::string& nick ) = 0;
+    virtual void ModeratorGetLastIP( const std::string& nick ) = 0;
+    virtual void ModeratorFindByIP( const std::string& ipadress ) = 0;
+    virtual void ModeratorSetChannelKey( const std::string& channel, const std::string& key ) = 0;
+
+    virtual void AdminGetAccountAccess( const std::string& nick ) = 0;
+    virtual void AdminChangeAccountAccess( const std::string& nick, const std::string& accesscode ) = 0;
+    virtual void AdminSetBotMode( const std::string& nick, bool isbot ) = 0;
+
     virtual void HostBattle( BattleOptions bo, const std::string& password = "" ) = 0;
     virtual void JoinBattle( const int& battleid, const std::string& password = "" ) = 0;
     virtual void LeaveBattle( const int& battleid ) = 0;
@@ -111,7 +127,7 @@ class Server
     virtual void SendHostInfo( HostInfo update ) = 0;
     virtual void SendRaw( const std::string& raw ) = 0;
 
-    virtual void RequestInGameTime() = 0;
+    virtual void RequestInGameTime( const std::string& nick ) = 0;
 
     virtual Battle* GetCurrentBattle() = 0;
 

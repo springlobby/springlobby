@@ -61,6 +61,22 @@ class TASServer : public Server
 
     void Ring( const std::string& nick );
 
+    void ModeratorSetTopic( const std::string& channel, const std::string& topic );
+    void ModeratorSetChannelKey( const std::string& channel, const std::string& key );
+    void ModeratorMute( const std::string& channel, const std::string& nick, int duration, bool byip );
+    void ModeratorUnmute( const std::string& channel, const std::string& nick );
+    void ModeratorKick( const std::string& channel, const std::string& reason );
+    void ModeratorBan( const std::string& nick, bool byip );
+    void ModeratorUnban( const std::string& nick );
+    void ModeratorGetIP( const std::string& nick );
+    void ModeratorGetLastLogin( const std::string& nick );
+    void ModeratorGetLastIP( const std::string& nick );
+    void ModeratorFindByIP( const std::string& ipadress );
+
+    void AdminGetAccountAccess( const std::string& nick );
+    void AdminChangeAccountAccess( const std::string& nick, const std::string& accesscode );
+    void AdminSetBotMode( const std::string& nick, bool isbot );
+
     void HostBattle( BattleOptions bo, const std::string& password = "" );
     void JoinBattle( const int& battleid, const std::string& password = "" );
     void LeaveBattle( const int& battleid );
@@ -83,7 +99,7 @@ class TASServer : public Server
     void SendHostInfo( HostInfo update );
     void SendRaw( const std::string& raw );
 
-    void RequestInGameTime();
+    void RequestInGameTime( const std::string& nick );
 
     Battle* GetCurrentBattle();
 

@@ -840,6 +840,89 @@ void TASServer::Ring( const std::string& nick )
 }
 
 
+
+
+void TASServer::ModeratorSetTopic( const std::string& channel, const std::string& topic )
+{
+  m_sock->Send( "CHANNELTOPIC " + channel + " " + topic + "\n" );
+}
+
+
+void TASServer::ModeratorMute( const std::string& channel, const std::string& nick, int duration, bool byip )
+{
+  wxString dur;
+  dur << duration;
+  m_sock->Send( STD_STRING( "MUTE " + channel + " " + nick + " " + dur + (byip?" ip":"") + "\n" ) );
+}
+
+
+void TASServer::ModeratorUnmute( const std::string& channel, const std::string& nick )
+{
+  m_sock->Send( "UNMUTE " + channel + " " + nick + "\n" );
+}
+
+
+void TASServer::ModeratorKick( const std::string& channel, const std::string& reason )
+{
+  m_sock->Send( "KICKUSER " + channel + " " + reason + "\n" );
+}
+
+
+void TASServer::ModeratorBan( const std::string& nick, bool byip )
+{
+  m_sock->Send( "BAN " + nick + (byip?" ip":"") + "\n" );
+}
+
+
+void TASServer::ModeratorUnban( const std::string& nick )
+{
+}
+
+
+void TASServer::ModeratorGetIP( const std::string& nick )
+{
+}
+
+
+void TASServer::ModeratorGetLastLogin( const std::string& nick )
+{
+}
+
+
+void TASServer::ModeratorGetLastIP( const std::string& nick )
+{
+}
+
+
+void TASServer::ModeratorFindByIP( const std::string& ipadress )
+{
+}
+
+
+void TASServer::ModeratorSetChannelKey( const std::string& channel, const std::string& key)
+{
+}
+
+
+void TASServer::AdminGetAccountAccess( const std::string& nick )
+{
+}
+
+
+void TASServer::AdminChangeAccountAccess( const std::string& nick, const std::string& accesscode )
+{
+}
+
+
+void TASServer::AdminSetBotMode( const std::string& nick, bool isbot )
+{
+  m_sock->Send( "SETBOTMODE " + nick + " " + (isbot?"1":"0") + "\n" );
+}
+
+
+
+
+
 void TASServer::HostBattle( BattleOptions bo, const std::string& password )
 {
   wxLogDebugFunc( _T("") );
@@ -985,9 +1068,9 @@ void TASServer::SendRaw( const std::string& raw )
 }
 
 
-void TASServer::RequestInGameTime()
+void TASServer::RequestInGameTime( const std::string& nick )
 {
-  m_sock->Send( "GETINGAMETIME\n" );
+  m_sock->Send( "GETINGAMETIME " + nick + "\n" );
 }
 
 

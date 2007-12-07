@@ -67,16 +67,21 @@ BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
   EVT_MENU        ( CHAT_MENU_US_KICK, ChatPanel::OnUserMenuKick )
   EVT_MENU        ( CHAT_MENU_US_OP, ChatPanel::OnUserMenuOp )
   EVT_MENU        ( CHAT_MENU_US_DEOP, ChatPanel::OnUserMenuDeop )
-  EVT_MENU        ( CHAT_MENU_US_ADMIN_INGAME, ChatPanel::OnUserMenuAdminIngame )
-  EVT_MENU        ( CHAT_MENU_US_ADMIN_LASTLOGIN, ChatPanel::OnUserMenuAdminLastLogin )
-  EVT_MENU        ( CHAT_MENU_US_ADMIN_CURIP, ChatPanel::OnUserMenuAdminCurrentIP )
-  EVT_MENU        ( CHAT_MENU_US_ADMIN_FINDIP, ChatPanel::OnUserMenuAdminFindIP )
-  EVT_MENU        ( CHAT_MENU_US_ADMIN_KICK, ChatPanel::OnUserMenuAdminKick )
-  EVT_MENU        ( CHAT_MENU_US_ADMIN_BAN, ChatPanel::OnUserMenuAdminBan )
-  EVT_MENU        ( CHAT_MENU_US_ADMIN_UNBAN, ChatPanel::OnUserMenuAdminUnban )
-  EVT_MENU        ( CHAT_MENU_US_ADMIN_MUTE, ChatPanel::OnUserMenuAdminMute )
-  EVT_MENU        ( CHAT_MENU_US_ADMIN_UNMUTE, ChatPanel::OnUserMenuAdminUnmute )
-  EVT_MENU        ( CHAT_MENU_US_ADMIN_RING, ChatPanel::OnUserMenuAdminRing )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_INGAME, ChatPanel::OnUserMenuModeratorIngame )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_LASTLOGIN, ChatPanel::OnUserMenuModeratorLastLogin )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_CURIP, ChatPanel::OnUserMenuModeratorCurrentIP )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_FINDIP, ChatPanel::OnUserMenuModeratorFindIP )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_KICK, ChatPanel::OnUserMenuModeratorKick )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_BAN, ChatPanel::OnUserMenuModeratorBan )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_UNBAN, ChatPanel::OnUserMenuModeratorUnban )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_MUTE, ChatPanel::OnUserMenuModeratorMute )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_MUTE_5, ChatPanel::OnUserMenuModeratorMute5 )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_MUTE_10, ChatPanel::OnUserMenuModeratorMute10 )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_MUTE_30, ChatPanel::OnUserMenuModeratorMute30 )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_MUTE_120, ChatPanel::OnUserMenuModeratorMute120 )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_MUTE_1440, ChatPanel::OnUserMenuModeratorMute1440 )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_UNMUTE, ChatPanel::OnUserMenuModeratorUnmute )
+  EVT_MENU        ( CHAT_MENU_US_MODERATOR_RING, ChatPanel::OnUserMenuModeratorRing )
 
 END_EVENT_TABLE()
 
@@ -312,9 +317,9 @@ void ChatPanel::_CreatePopup()
     m_popup_menu->Append( copyitem );
 
     m_popup_menu->AppendSeparator();
-    wxMenu* m_admin;
+    wxMenu* m_moderator;
 
-    m_admin = new wxMenu();
+    m_moderator = new wxMenu();
     wxMenu* m_accounts;
     m_accounts = new wxMenu();
     wxMenuItem* removeitem = new wxMenuItem( m_accounts, CHAT_MENU_SV_REMOVE, _("Remove..."), wxEmptyString, wxITEM_NORMAL );
@@ -323,12 +328,12 @@ void ChatPanel::_CreatePopup()
     m_accounts->Append( chpwditem );
     wxMenuItem* setaccessitem = new wxMenuItem( m_accounts, CHAT_MENU_SV_ACCESS, _("Set access..."), wxEmptyString, wxITEM_NORMAL );
     m_accounts->Append( setaccessitem );
-    m_admin->Append( -1, wxT("Accounts"), m_accounts );
+    m_moderator->Append( -1, wxT("Accounts"), m_accounts );
 
-    m_admin->AppendSeparator();
-    wxMenuItem* broadcastitem = new wxMenuItem( m_admin, CHAT_MENU_SV_BROADCAST, _("Broadcast..."), wxEmptyString, wxITEM_NORMAL );
-    m_admin->Append( broadcastitem );
-    m_popup_menu->Append( -1, wxT("Admin"), m_admin );
+    m_moderator->AppendSeparator();
+    wxMenuItem* broadcastitem = new wxMenuItem( m_moderator, CHAT_MENU_SV_BROADCAST, _("Broadcast..."), wxEmptyString, wxITEM_NORMAL );
+    m_moderator->Append( broadcastitem );
+    m_popup_menu->Append( -1, wxT("Moderator"), m_moderator );
   } else {
     m_popup_menu = 0;
   }
@@ -366,42 +371,59 @@ wxMenu* ChatPanel::_CreateNickListMenu()
   wxMenuItem* chdeopitem = new wxMenuItem( m_chanserv, CHAT_MENU_US_DEOP, wxString( wxT("DeOp") ) , wxEmptyString, wxITEM_NORMAL );
   m_chanserv->Append( chdeopitem );
   m_user_menu->Append( -1, wxT("ChanServ"), m_chanserv );
-  wxMenu* m_admin;
-  m_admin = new wxMenu();
-  wxMenu* m_admin_info;
-  m_admin_info = new wxMenu();
-  wxMenuItem* admingameitem = new wxMenuItem( m_admin_info, CHAT_MENU_US_ADMIN_INGAME, wxString( wxT("Ingame time") ) , wxEmptyString, wxITEM_NORMAL );
-  m_admin_info->Append( admingameitem );
-  wxMenuItem* admlastloginitem = new wxMenuItem( m_admin_info, CHAT_MENU_US_ADMIN_LASTLOGIN, wxString( wxT("Last login") ) , wxEmptyString, wxITEM_NORMAL );
-  m_admin_info->Append( admlastloginitem );
 
-  m_admin_info->AppendSeparator();
-  wxMenuItem* admipitem = new wxMenuItem( m_admin_info, CHAT_MENU_US_ADMIN_CURIP, wxString( wxT("Current IP") ) , wxEmptyString, wxITEM_NORMAL );
-  m_admin_info->Append( admipitem );
-  wxMenuItem* admfindipitem = new wxMenuItem( m_admin_info, CHAT_MENU_US_ADMIN_FINDIP, wxString( wxT("Find IPs") ) , wxEmptyString, wxITEM_NORMAL );
-  m_admin_info->Append( admfindipitem );
-  m_admin->Append( -1, wxT("Info"), m_admin_info );
+  if( m_ui.GetServer().GetMe().GetStatus().moderator ) {
+    wxMenu* m_moderator;
+    m_moderator = new wxMenu();
+    wxMenu* m_moderator_info;
+    m_moderator_info = new wxMenu();
+    wxMenuItem* modingameitem = new wxMenuItem( m_moderator_info, CHAT_MENU_US_MODERATOR_INGAME, wxString( wxT("Ingame time") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator_info->Append( modingameitem );
+    wxMenuItem* modlastloginitem = new wxMenuItem( m_moderator_info, CHAT_MENU_US_MODERATOR_LASTLOGIN, wxString( wxT("Last login") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator_info->Append( modlastloginitem );
 
-  m_admin->AppendSeparator();
-  wxMenuItem* admkickitem = new wxMenuItem( m_admin, CHAT_MENU_US_ADMIN_KICK, wxString( wxT("Kick...") ) , wxEmptyString, wxITEM_NORMAL );
-  m_admin->Append( admkickitem );
+    m_moderator_info->AppendSeparator();
+    wxMenuItem* modipitem = new wxMenuItem( m_moderator_info, CHAT_MENU_US_MODERATOR_CURIP, wxString( wxT("Current IP") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator_info->Append( modipitem );
+    wxMenuItem* modfindipitem = new wxMenuItem( m_moderator_info, CHAT_MENU_US_MODERATOR_FINDIP, wxString( wxT("Find IPs") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator_info->Append( modfindipitem );
+    m_moderator->Append( -1, wxT("Info"), m_moderator_info );
 
-  m_admin->AppendSeparator();
-  wxMenuItem* admbanitem = new wxMenuItem( m_admin, CHAT_MENU_US_ADMIN_BAN, wxString( wxT("Ban...") ) , wxEmptyString, wxITEM_NORMAL );
-  m_admin->Append( admbanitem );
-  wxMenuItem* admunbanitem = new wxMenuItem( m_admin, CHAT_MENU_US_ADMIN_UNBAN, wxString( wxT("Unban") ) , wxEmptyString, wxITEM_NORMAL );
-  m_admin->Append( admunbanitem );
+    m_moderator->AppendSeparator();
 
-  m_admin->AppendSeparator();
-  wxMenuItem* admmuteitem = new wxMenuItem( m_admin, CHAT_MENU_US_ADMIN_MUTE, wxString( wxT("Mute...") ) , wxEmptyString, wxITEM_NORMAL );
-  m_admin->Append( admmuteitem );
-  wxMenuItem* admunmuteitem = new wxMenuItem( m_admin, CHAT_MENU_US_ADMIN_UNMUTE, wxString( wxT("Unmute") ) , wxEmptyString, wxITEM_NORMAL );
-  m_admin->Append( admunmuteitem );
+    wxMenu* m_moderator_mute;
+    m_moderator_mute = new wxMenu();
+    wxMenuItem* modmuteitem = new wxMenuItem( m_moderator_mute, CHAT_MENU_US_MODERATOR_MUTE, wxString( wxT("Mute...") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator_mute->Append( modmuteitem );
+    wxMenuItem* modmute5item = new wxMenuItem( m_moderator_mute, CHAT_MENU_US_MODERATOR_MUTE_5, wxString( wxT("Mute for 5 minutes") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator_mute->Append( modmute5item );
+    wxMenuItem* modmute10item = new wxMenuItem( m_moderator_mute, CHAT_MENU_US_MODERATOR_MUTE_10, wxString( wxT("Mute for 10 minutes") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator_mute->Append( modmute10item );
+    wxMenuItem* modmute30item = new wxMenuItem( m_moderator_mute, CHAT_MENU_US_MODERATOR_MUTE_30, wxString( wxT("Mute for 30 minutes") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator_mute->Append( modmute30item );
+    wxMenuItem* modmute120item = new wxMenuItem( m_moderator_mute, CHAT_MENU_US_MODERATOR_MUTE_120, wxString( wxT("Mute for 2 hours") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator_mute->Append( modmute120item );
+    wxMenuItem* modmute1440item = new wxMenuItem( m_moderator_mute, CHAT_MENU_US_MODERATOR_MUTE_1440, wxString( wxT("Mute for 1 day") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator_mute->Append( modmute1440item );
+    m_moderator_mute->AppendSeparator();
+    wxMenuItem* modunmuteitem = new wxMenuItem( m_moderator_mute, CHAT_MENU_US_MODERATOR_UNMUTE, wxString( wxT("Unmute") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator_mute->Append( modunmuteitem );
+    m_moderator->Append( -1, wxT("Mute"), m_moderator_mute );
 
-  m_admin->AppendSeparator();
-  wxMenuItem* admringitem = new wxMenuItem( m_admin, CHAT_MENU_US_ADMIN_RING, wxString( wxT("Ring") ) , wxEmptyString, wxITEM_NORMAL );
-  m_admin->Append( admringitem );
-  m_user_menu->Append( -1, wxT("Admin"), m_admin );
+    wxMenuItem* modkickitem = new wxMenuItem( m_moderator, CHAT_MENU_US_MODERATOR_KICK, wxString( wxT("Kick...") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator->Append( modkickitem );
+
+    m_moderator->AppendSeparator();
+    wxMenuItem* modbanitem = new wxMenuItem( m_moderator, CHAT_MENU_US_MODERATOR_BAN, wxString( wxT("Ban...") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator->Append( modbanitem );
+    wxMenuItem* modunbanitem = new wxMenuItem( m_moderator, CHAT_MENU_US_MODERATOR_UNBAN, wxString( wxT("Unban") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator->Append( modunbanitem );
+
+    m_moderator->AppendSeparator();
+    wxMenuItem* modringitem = new wxMenuItem( m_moderator, CHAT_MENU_US_MODERATOR_RING, wxString( wxT("Ring") ) , wxEmptyString, wxITEM_NORMAL );
+    m_moderator->Append( modringitem );
+    m_user_menu->Append( -1, wxT("Moderator"), m_moderator );
+  }
 
   return m_user_menu;
 }
@@ -1193,61 +1215,98 @@ void ChatPanel::OnUserMenuDeop( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnUserMenuAdminIngame( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorIngame( wxCommandEvent& event )
 {
   m_ui.ShowMessage( _("Error"), _("Not Implemented") );
 }
 
 
-void ChatPanel::OnUserMenuAdminLastLogin( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorLastLogin( wxCommandEvent& event )
 {
   m_ui.ShowMessage( _("Error"), _("Not Implemented") );
 }
 
 
-void ChatPanel::OnUserMenuAdminCurrentIP( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorCurrentIP( wxCommandEvent& event )
 {
   m_ui.ShowMessage( _("Error"), _("Not Implemented") );
 }
 
 
-void ChatPanel::OnUserMenuAdminFindIP( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorFindIP( wxCommandEvent& event )
 {
   m_ui.ShowMessage( _("Error"), _("Not Implemented") );
 }
 
 
-void ChatPanel::OnUserMenuAdminKick( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorKick( wxCommandEvent& event )
+{
+  wxString reason;
+  if ( !m_ui.AskText( _("Kick user"), _("Reason:"), reason ) ) return;
+  m_ui.GetServer().ModeratorKick( _GetSelectedUser()->GetNick(), STD_STRING(reason) );
+}
+
+
+void ChatPanel::OnUserMenuModeratorBan( wxCommandEvent& event )
 {
   m_ui.ShowMessage( _("Error"), _("Not Implemented") );
 }
 
 
-void ChatPanel::OnUserMenuAdminBan( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorUnban( wxCommandEvent& event )
 {
   m_ui.ShowMessage( _("Error"), _("Not Implemented") );
 }
 
 
-void ChatPanel::OnUserMenuAdminUnban( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorMute( wxCommandEvent& event )
 {
-  m_ui.ShowMessage( _("Error"), _("Not Implemented") );
+  wxString duration;
+  if ( !m_ui.AskText( _("Mute user"), _("Duration:"), duration ) ) return;
+  long int dur = 0;
+  duration.ToLong(&dur, dur);
+  m_ui.GetServer().ModeratorMute( m_channel->GetName(), _GetSelectedUser()->GetNick(), (int) dur, false );
 }
 
 
-void ChatPanel::OnUserMenuAdminMute( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorMute5( wxCommandEvent& event )
 {
-  m_ui.ShowMessage( _("Error"), _("Not Implemented") );
+  m_ui.GetServer().ModeratorMute( m_channel->GetName(), _GetSelectedUser()->GetNick(), 5, false );
 }
 
 
-void ChatPanel::OnUserMenuAdminUnmute( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorMute10( wxCommandEvent& event )
 {
-  m_ui.ShowMessage( _("Error"), _("Not Implemented") );
+  m_ui.GetServer().ModeratorMute( m_channel->GetName(), _GetSelectedUser()->GetNick(), 10, false );
 }
 
 
-void ChatPanel::OnUserMenuAdminRing( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorMute30( wxCommandEvent& event )
+{
+  m_ui.GetServer().ModeratorMute( m_channel->GetName(), _GetSelectedUser()->GetNick(), 30, false );
+}
+
+
+void ChatPanel::OnUserMenuModeratorMute120( wxCommandEvent& event )
+{
+  m_ui.GetServer().ModeratorMute( m_channel->GetName(), _GetSelectedUser()->GetNick(), 120, false );
+}
+
+
+void ChatPanel::OnUserMenuModeratorMute1440( wxCommandEvent& event )
+{
+  m_ui.GetServer().ModeratorMute( m_channel->GetName(), _GetSelectedUser()->GetNick(), 1440, false );
+}
+
+
+
+void ChatPanel::OnUserMenuModeratorUnmute( wxCommandEvent& event )
+{
+  m_ui.GetServer().ModeratorUnmute( m_channel->GetName(), _GetSelectedUser()->GetNick() );
+}
+
+
+void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event )
 {
   m_ui.ShowMessage( _("Error"), _("Not Implemented") );
 }

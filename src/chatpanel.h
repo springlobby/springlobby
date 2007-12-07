@@ -126,16 +126,21 @@ class ChatPanel : public wxPanel
     void OnUserMenuKick( wxCommandEvent& event );
     void OnUserMenuOp( wxCommandEvent& event );
     void OnUserMenuDeop( wxCommandEvent& event );
-    void OnUserMenuAdminIngame( wxCommandEvent& event );
-    void OnUserMenuAdminLastLogin( wxCommandEvent& event );
-    void OnUserMenuAdminCurrentIP( wxCommandEvent& event );
-    void OnUserMenuAdminFindIP( wxCommandEvent& event );
-    void OnUserMenuAdminKick( wxCommandEvent& event );
-    void OnUserMenuAdminBan( wxCommandEvent& event );
-    void OnUserMenuAdminUnban( wxCommandEvent& event );
-    void OnUserMenuAdminMute( wxCommandEvent& event );
-    void OnUserMenuAdminUnmute( wxCommandEvent& event );
-    void OnUserMenuAdminRing( wxCommandEvent& event );
+    void OnUserMenuModeratorIngame( wxCommandEvent& event );
+    void OnUserMenuModeratorLastLogin( wxCommandEvent& event );
+    void OnUserMenuModeratorCurrentIP( wxCommandEvent& event );
+    void OnUserMenuModeratorFindIP( wxCommandEvent& event );
+    void OnUserMenuModeratorKick( wxCommandEvent& event );
+    void OnUserMenuModeratorBan( wxCommandEvent& event );
+    void OnUserMenuModeratorUnban( wxCommandEvent& event );
+    void OnUserMenuModeratorMute( wxCommandEvent& event );
+    void OnUserMenuModeratorMute5( wxCommandEvent& event );
+    void OnUserMenuModeratorMute10( wxCommandEvent& event );
+    void OnUserMenuModeratorMute30( wxCommandEvent& event );
+    void OnUserMenuModeratorMute120( wxCommandEvent& event );
+    void OnUserMenuModeratorMute1440( wxCommandEvent& event );
+    void OnUserMenuModeratorUnmute( wxCommandEvent& event );
+    void OnUserMenuModeratorRing( wxCommandEvent& event );
 
   protected:
     void _SetChannel( Channel* channel );
@@ -220,16 +225,21 @@ enum
     CHAT_MENU_US_KICK,
     CHAT_MENU_US_OP,
     CHAT_MENU_US_DEOP,
-    CHAT_MENU_US_ADMIN_INGAME,
-    CHAT_MENU_US_ADMIN_LASTLOGIN,
-    CHAT_MENU_US_ADMIN_CURIP,
-    CHAT_MENU_US_ADMIN_FINDIP,
-    CHAT_MENU_US_ADMIN_KICK,
-    CHAT_MENU_US_ADMIN_BAN,
-    CHAT_MENU_US_ADMIN_UNBAN,
-    CHAT_MENU_US_ADMIN_MUTE,
-    CHAT_MENU_US_ADMIN_UNMUTE,
-    CHAT_MENU_US_ADMIN_RING
+    CHAT_MENU_US_MODERATOR_INGAME,
+    CHAT_MENU_US_MODERATOR_LASTLOGIN,
+    CHAT_MENU_US_MODERATOR_CURIP,
+    CHAT_MENU_US_MODERATOR_FINDIP,
+    CHAT_MENU_US_MODERATOR_KICK,
+    CHAT_MENU_US_MODERATOR_BAN,
+    CHAT_MENU_US_MODERATOR_UNBAN,
+    CHAT_MENU_US_MODERATOR_MUTE,
+    CHAT_MENU_US_MODERATOR_MUTE_5,
+    CHAT_MENU_US_MODERATOR_MUTE_10,
+    CHAT_MENU_US_MODERATOR_MUTE_30,
+    CHAT_MENU_US_MODERATOR_MUTE_120,
+    CHAT_MENU_US_MODERATOR_MUTE_1440,
+    CHAT_MENU_US_MODERATOR_UNMUTE,
+    CHAT_MENU_US_MODERATOR_RING
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
