@@ -331,7 +331,7 @@ void ChatPanel::_CreatePopup()
     m_user_menu->AppendSeparator();
     wxMenuItem* broadcastitem = new wxMenuItem( m_user_menu, CHAT_MENU_SV_BROADCAST, _("Broadcast..."), wxEmptyString, wxITEM_NORMAL );
     m_user_menu->Append( broadcastitem );
-    m_popup_menu->Append( -1, wxT("Moderator"), m_user_menu );
+    m_popup_menu->Append( -1, wxT("Admin"), m_user_menu );
   } else {
     m_popup_menu = 0;
   }
