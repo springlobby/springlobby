@@ -61,7 +61,7 @@ class TASServer : public Server
 
     void Ring( const std::string& nick );
 
-    void ModeratorSetTopic( const std::string& channel, const std::string& topic );
+    void ModeratorSetChannelTopic( const std::string& channel, const std::string& topic );
     void ModeratorSetChannelKey( const std::string& channel, const std::string& key );
     void ModeratorMute( const std::string& channel, const std::string& nick, int duration, bool byip );
     void ModeratorUnmute( const std::string& channel, const std::string& nick );

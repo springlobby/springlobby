@@ -1,6 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 #include <wx/string.h>
+#include <wx/regex.h>
 #include <wx/intl.h>
 #include <stdexcept>
 
@@ -625,7 +626,14 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     //RING username
   } else if ( cmd == "SERVERMSG" ) {
     msg = GetChatLineParam( params );
-    m_se->OnServerMessage( msg );
+
+    // if a moderator asked for a players IP, just give him all smurfs
+    wxRegEx ipregex( "'s IP is (([0-9]{1,3}\.){3}[0-9]{1,3})" );
+    if ( ipregex.Matches( msg ) ) {
+      ModeratorFindByIP( STD_STRING( ipregex.GetMatch( msg, 1) ) );
+    } else {
+      m_se->OnServerMessage( msg );
+    }
     //SERVERMSG {message}
   } else if ( cmd == "JOINBATTLEFAILED" ) {
     msg = GetSentenceParam( params );
@@ -842,9 +850,15 @@ void TASServer::Ring( const std::string& nick )
 
 
 
-void TASServer::ModeratorSetTopic( const std::string& channel, const std::string& topic )
+void TASServer::ModeratorSetChannelTopic( const std::string& channel, const std::string& topic )
 {
   m_sock->Send( "CHANNELTOPIC " + channel + " " + topic + "\n" );
+}
+
+
+void TASServer::ModeratorSetChannelKey( const std::string& channel, const std::string& key)
+{
+  m_sock->Send( "SETCHANNELKEY " + channel + " " + key + "\n" );
 }
 
 
@@ -870,47 +884,49 @@ void TASServer::ModeratorKick( const std::string& channel, const std::string& re
 
 void TASServer::ModeratorBan( const std::string& nick, bool byip )
 {
-  m_sock->Send( "BAN " + nick + (byip?" ip":"") + "\n" );
+  // FIXME TASServer::ModeratorBan not yet implemented
 }
 
 
 void TASServer::ModeratorUnban( const std::string& nick )
 {
+  // FIXME TASServer::ModeratorUnban not yet implemented
 }
 
 
 void TASServer::ModeratorGetIP( const std::string& nick )
 {
+  m_sock->Send( "GETIP " + nick + "\n" );
 }
 
 
 void TASServer::ModeratorGetLastLogin( const std::string& nick )
 {
+  m_sock->Send( "GETLASTLOGINTIME " + nick + "\n" );
 }
 
 
 void TASServer::ModeratorGetLastIP( const std::string& nick )
 {
+  m_sock->Send( "GETLASTIP " + nick + "\n" );
 }
 
 
 void TASServer::ModeratorFindByIP( const std::string& ipadress )
 {
-}
-
-
-void TASServer::ModeratorSetChannelKey( const std::string& channel, const std::string& key)
-{
+  m_sock->Send( "FINDIP " + ipadress + "\n" );
 }
 
 
 void TASServer::AdminGetAccountAccess( const std::string& nick )
 {
+  // FIXME TASServer::AdminGetAccountAccess not yet implemented
 }
 
 
 void TASServer::AdminChangeAccountAccess( const std::string& nick, const std::string& accesscode )
 {
+  // FIXME TASServer::AdminChangeAccountAccess not yet implemented
 }
 
 

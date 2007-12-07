@@ -127,9 +127,7 @@ class ChatPanel : public wxPanel
     void OnUserMenuOp( wxCommandEvent& event );
     void OnUserMenuDeop( wxCommandEvent& event );
     void OnUserMenuModeratorIngame( wxCommandEvent& event );
-    void OnUserMenuModeratorLastLogin( wxCommandEvent& event );
     void OnUserMenuModeratorCurrentIP( wxCommandEvent& event );
-    void OnUserMenuModeratorFindIP( wxCommandEvent& event );
     void OnUserMenuModeratorKick( wxCommandEvent& event );
     void OnUserMenuModeratorBan( wxCommandEvent& event );
     void OnUserMenuModeratorUnban( wxCommandEvent& event );
@@ -226,9 +224,7 @@ enum
     CHAT_MENU_US_OP,
     CHAT_MENU_US_DEOP,
     CHAT_MENU_US_MODERATOR_INGAME,
-    CHAT_MENU_US_MODERATOR_LASTLOGIN,
     CHAT_MENU_US_MODERATOR_CURIP,
-    CHAT_MENU_US_MODERATOR_FINDIP,
     CHAT_MENU_US_MODERATOR_KICK,
     CHAT_MENU_US_MODERATOR_BAN,
     CHAT_MENU_US_MODERATOR_UNBAN,
