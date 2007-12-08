@@ -16,12 +16,14 @@
 #define HAVE_WX28
 #endif
 
+//! Converts an std::string to a wxString
+#define WX_STRING(v) wxString(v.c_str(),wxConvUTF8)
+#define WX_STRINGC(v) wxString(v,wxConvUTF8)
+
 
 //! Converts a wxString to an std::string
 #define STD_STRING(v) std::string((const char*)(v).mb_str(wxConvUTF8))
 
-//! Converts an std::string to a wxString
-#define WX_STRING(v) wxString((v).c_str(),wxConvUTF8)
 
 #define ASSERT_LOGIC(cond,msg) if(!(cond)){wxLogError(_T("logic error: ")+ wxString(msg) ); DumpStackTraceToLog(); throw std::logic_error(std::string(wxString(msg).mb_str()));}
 #define ASSERT_RUNTIME(cond,msg) if(!(cond)){wxLogMessage(_T("runtime error: ")+ wxString(msg) );throw std::runtime_error(std::string(wxString(msg).mb_str()));}

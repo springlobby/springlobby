@@ -45,6 +45,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
+	SetSizeHints( wxDefaultSize, wxDefaultSize );
 	wxBoxSizer* m_main_sizer;
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -99,7 +100,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_port_lbl->Wrap( -1 );
 	m_port_sizer->Add( m_port_lbl, 1, wxALL, 5 );
 
-	m_port_text = new wxTextCtrl( this, wxID_ANY, WX_STRING(i2s(sett().GetLastHostPort())), wxDefaultPosition, wxDefaultSize, 0 );
+	m_port_text = new wxTextCtrl( this, wxID_ANY, wxString::Format( _T("%d"), sett().GetLastHostPort()), wxDefaultPosition, wxDefaultSize, 0 );
 	m_port_text->SetToolTip( _("UDP port to host game on. Default is 8452.") );
 
 	m_port_sizer->Add( m_port_text, 1, wxALL, 5 );
@@ -113,7 +114,6 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_players_box->SetMinSize( wxSize( -1,60 ) );
 	m_players_slide = new wxSlider( this, wxID_ANY, sett().GetLastHostPlayerNum(), 2, 16, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_BOTH|wxSL_HORIZONTAL|wxSL_LABELS );
 	m_players_slide->SetToolTip( _("The maximum number of players to allow in the battle.") );
-
 	m_players_box->Add( m_players_slide, 0, wxALL|wxEXPAND, 5 );
 
 	m_main_sizer->Add( m_players_box, 0, wxALL|wxEXPAND, 5 );
@@ -213,10 +213,12 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 void HostBattleDialog::ReloadModList()
 {
   m_mod_pic->Clear();
-  for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
-    const UnitSyncMod& m = usync()->GetMod( i );
-    m_mod_pic->Insert( WX_STRING(m.name), i );
-  }
+  try {
+    for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
+      const UnitSyncMod& m = usync()->GetMod( i );
+      m_mod_pic->Insert( WX_STRING(m.name), i );
+    }
+  } catch (...) {}
   wxString last = WX_STRING( sett().GetLastHostMod() );
   if ( last != wxEmptyString ) m_mod_pic->SetSelection( m_mod_pic->FindString( last ) );
 }

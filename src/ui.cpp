@@ -30,6 +30,7 @@
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
 #include "agreementdialog.h"
+#include "unitsyncthread.h"
 
 
 Ui::Ui() :
@@ -37,14 +38,22 @@ Ui::Ui() :
   m_main_win(0),
   m_con_win(0)
 {
+  ReloadUnitSync();
+
   m_main_win = new MainWindow( *this );
   m_spring = new Spring(*this);
+  m_thread = new UnitSyncThread( *this );
+  m_thread->Init();
 }
 
 Ui::~Ui() {
   Disconnect();
   delete m_main_win;
   delete m_spring;
+  m_thread->Delete();
+
+  m_thread_wait.Enter();
+  m_thread_wait.Leave();
 }
 
 Server& Ui::GetServer()
@@ -453,13 +462,15 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 
   if ( !IsSpringCompatible () ){
     if ( m_spring->TestSpringBinary() ) {
-      wxString message = _("Your spring version");
-      message += _T(" (") + WX_STRING( usync()->GetSpringVersion() ) + _T(") ");
-      message +=  _("is not supported by the lobby server that requires version");
-      message += _T(" (") +  WX_STRING( m_server_spring_ver ) + _T(").\n\n");
-      message += _("Online play will be disabled.");
-      wxLogWarning ( _T("server not supports current spring version") );
-      wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
+      try {
+        wxString message = _("Your spring version");
+        message += _T(" (") + WX_STRING( usync()->GetSpringVersion() ) + _T(") ");
+        message +=  _("is not supported by the lobby server that requires version");
+        message += _T(" (") +  WX_STRING( m_server_spring_ver ) + _T(").\n\n");
+        message += _("Online play will be disabled.");
+        wxLogWarning ( _T("server not supports current spring version") );
+        wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
+      } catch (...) {}
     } else {
       wxLogWarning( _T("can't get spring version from unitsync") );
       wxMessageBox( _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
@@ -473,10 +484,13 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 
 bool Ui::IsSpringCompatible( )
 {
-  if ( !m_spring->TestSpringBinary() ) return false;
-  if ( m_server_spring_ver == "*" ) return true; // Server accepts any version.
-  if ( (usync()->GetSpringVersion() == m_server_spring_ver ) && ( m_server_spring_ver != "" ) ) return true;
-  else return false;
+  try {
+    if ( !m_spring->TestSpringBinary() ) return false;
+    if ( m_server_spring_ver == "*" ) return true; // Server accepts any version.
+    if ( (usync()->GetSpringVersion() == m_server_spring_ver ) && ( m_server_spring_ver != "" ) ) return true;
+    else return false;
+  } catch (...) {}
+  return false;
 }
 
 
@@ -916,3 +930,31 @@ void Ui::OnRing( const std::string& from )
   wxBell();
 }
 
+
+void Ui::OnMapInfoCached( const wxString& mapname )
+{
+  mw().OnUnitSyncReloaded();
+}
+
+
+void Ui::OnMinimapCached( const wxString& mapname )
+{
+  mw().OnUnitSyncReloaded();
+}
+
+
+void Ui::OnModUnitsCached( const wxString& modname )
+{
+}
+
+
+void Ui::OnCachedThreadStarted()
+{
+  m_thread_wait.Enter();
+}
+
+
+void Ui::OnCachedThreadTerminated()
+{
+  m_thread_wait.Leave();
+}

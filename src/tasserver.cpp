@@ -325,8 +325,27 @@ void TASServer::_ReceiveAndExecute()
 }
 
 
+wxString _ConvertTASServerPhailChecksum( const wxString& buggedcsum )
+{
+  signed long temp;
+  buggedcsum.ToLong( &temp );
+  unsigned int temp2 = (unsigned int)temp;
+  return wxString::Format( _T("%u"), temp2 );
+}
+
+
+wxString _ConvertToTASServerBuggedChecksum( const wxString& csum )
+{
+  signed long temp;
+  csum.ToLong( &temp );
+  int temp2 = (int)temp;
+  return wxString::Format( _T("%u"), temp2 );
+}
+
+
 void TASServer::ExecuteCommand( const std::string& in )
 {
+  wxLogMessage( WX_STRING( in ) );
   std::string cmd;
   std::string params = in;
   std::string::size_type pos = 0;
@@ -430,7 +449,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     id = GetIntParam( params );
     specs = GetIntParam( params );
     haspass = (bool)GetIntParam( params );
-    hash = GetWordParam( params );
+    hash = STD_STRING(_ConvertTASServerPhailChecksum( WX_STRING(GetWordParam( params )) ) );
     map = GetSentenceParam( params );
     m_se->OnBattleInfoUpdated( id, specs, haspass, hash, map );
   } else if ( cmd == "LOGININFOEND" ) {
@@ -915,7 +934,7 @@ void TASServer::SendHostInfo( HostInfo update )
     // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
     wxString cmd = _T("UPDATEBATTLEINFO");
     cmd += wxString::Format( _T(" %d %d "), battle.GetSpectators(), battle.IsLocked() );
-    cmd += battle.GetMapHash() + _T(" ");
+    cmd += _ConvertToTASServerBuggedChecksum( battle.GetMapHash() ) + _T(" ");
     cmd += battle.GetMapName() + _T("\n");
 
     m_sock->Send( STD_STRING(cmd) );
@@ -1054,8 +1073,9 @@ void TASServer::ForceSide( int battleid, const std::string& nick, int side )
     GetMe().BattleStatus().side = side;
     SendMyBattleStatus( GetMe().BattleStatus() );
   } else {
-    usync()->SetCurrentMod( STD_STRING(GetBattle(battleid).GetModName()) );
-    DoActionBattle( battleid, "sugests that " + nick + " changes to " + usync()->GetSideName( side ) + " side." );
+    try {
+      DoActionBattle( battleid, "sugests that " + nick + " changes to " + usync()->GetSideName( STD_STRING(GetBattle(battleid).GetModName()), side ) + " side." );
+    } catch (...) {}
   }
 }
 
