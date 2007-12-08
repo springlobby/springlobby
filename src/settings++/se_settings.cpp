@@ -38,6 +38,7 @@ void se_settings::save()
 
 se_settings::se_settings()
 {
+	//TODO create if not present
 	se_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
 }
 
