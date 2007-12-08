@@ -1,5 +1,5 @@
 /**
-    This file is part of springsettings,
+c    This file is part of springsettings,
     Copyright (C) 2007
     Original work by Kloot
     cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
