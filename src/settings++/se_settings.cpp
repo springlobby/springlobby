@@ -83,6 +83,12 @@ void se_settings::setUsyncLoc(wxString loc)
 	se_config->Write( _T("/Spring/unitsync_loc"), loc );
 }
 
+//TODO think about standalone
+wxString se_settings::getSpringDir()
+{
+  return se_config->Read( _T("/Spring/dir"), _T("C:/programme/spring_svn") );
+}
+
 
 
 /*copied from springlobby source*/

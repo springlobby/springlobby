@@ -21,6 +21,7 @@ public:
 	bool getDisableWarning();
 	void setDisableWarning(bool);
 	wxString getUsyncLoc();
+	wxString getSpringDir();
 	void setUsyncLoc(wxString);
 	static se_settings& getInstance();
 	void save();
