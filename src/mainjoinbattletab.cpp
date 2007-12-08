@@ -90,7 +90,7 @@ void MainJoinBattleTab::UpdateCurrentBattle(bool updateRestrictions)
 
 BattleListTab& MainJoinBattleTab::GetBattleListTab()
 {
-  ASSERT_LOGIC( m_list_tab != 0, "m_list_tab = 0" );
+  ASSERT_LOGIC( m_list_tab != 0, _T("m_list_tab = 0") );
   return *m_list_tab;
 }
 
@@ -105,18 +105,12 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
   m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, 2 );
   m_tabs->InsertPage( 3, m_opts_tab, _("Options"), false, 3 );
 
-  m_list_tab->DisableHostButton();
-  m_list_tab->DisableJoinButton();
-
 }
 
 
 void MainJoinBattleTab::HostBattle( Battle& battle )
 {
   JoinBattle( battle );
-
-  m_list_tab->DisableHostButton();
-  m_list_tab->DisableJoinButton();
 }
 
 
@@ -135,16 +129,14 @@ void MainJoinBattleTab::LeaveCurrentBattle()
     m_battle_tab = 0;
   }
 
-  m_list_tab->EnableHostButton();
-  m_list_tab->EnableJoinButton();
 
 }
 
 
 void MainJoinBattleTab::BattleUserUpdated( User& user )
 {
-  ASSERT_LOGIC( m_battle_tab != 0, "m_battle_tab = 0" );
-  ASSERT_LOGIC( m_map_tab != 0, "m_map_tab = 0" );
+  ASSERT_LOGIC( m_battle_tab != 0, _T("m_battle_tab = 0") );
+  ASSERT_LOGIC( m_map_tab != 0, _T("m_map_tab = 0") );
   m_battle_tab->UpdateUser( user );
   m_map_tab->UpdateUser( user );
 }
@@ -152,18 +144,18 @@ void MainJoinBattleTab::BattleUserUpdated( User& user )
 
 void MainJoinBattleTab::OnUnitSyncReloaded()
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   GetBattleListTab().OnUnitSyncReloaded();
-  debug("Battle list tab reloaded");
+  wxLogMessage( _T("Battle list tab reloaded") );
   if ( GetBattleRoomTab() ) {
-    debug("Reloading battleroom");
+    wxLogMessage( _T("Reloading battleroom") );
     GetBattleRoomTab()->OnUnitSyncReloaded();
-    debug("Battleroom reloaded");
+    wxLogMessage( _T("Battleroom reloaded") );
   }
   if ( GetBattleMapTab() ) {
-    debug("Reloading battlemap");
+    wxLogMessage( _T("Reloading battlemap") );
     GetBattleMapTab()->OnUnitSyncReloaded();
-    debug("Battlemap reloaded");
+    wxLogMessage( _T("Battlemap reloaded") );
   }
 }
 

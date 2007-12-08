@@ -9,6 +9,7 @@
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <wx/image.h>
+#include <iostream>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -50,17 +51,29 @@ bool SpringLobbyApp::OnInit()
   wxHandleFatalExceptions( true );
 #endif
 
-  debug_func( "" );
+  //initializes logging in both std::cout and gui messages
+  #if wxUSE_STD_IOSTREAM
+  wxLog *loggerconsole = new wxLogStream( &std::cout );
+  wxLogChain *logChain = new wxLogChain( loggerconsole );
+  logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+  logChain->SetLogLevel( wxLOG_Trace );
+  logChain->SetVerbose( true );
+  #else
+  wxLog::SetLogLevel( wxLOG_Warning );
+  #endif
+
+  wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
 
   InitDirs();
 
   m_ui = new Ui();
-  debug("Ui created");
+  wxLogMessage( _T("Ui created") );
 
   m_ui->ShowMainWindow();
 
   if ( sett().IsFirstRun() ) {
+    wxLogMessage( _T("first time startup"));
     wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nLooks like this is the first time you use SpringLobby. I have guessed a configuration that I think will work for you but you should review it, ecpecially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
       wxOK | wxICON_INFORMATION, &m_ui->mw() );
     m_ui->mw().ShowConfigure();
@@ -79,7 +92,7 @@ bool SpringLobbyApp::OnInit()
 //! @brief Finalizes the application
 int SpringLobbyApp::OnExit()
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
 
   m_timer->Stop();
   delete m_ui;
@@ -97,6 +110,9 @@ void SpringLobbyApp::OnFatalException()
 
 #if wxUSE_STACKWALKER
 
+  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"), _("Critical error"), wxICON_ERROR  );
+
+  wxLogError( _T("uncaught exception") );
   wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
 
   DebugInfo += _T("StackTraceID: ") + stacktrace().GetStackTraceHash() + _T("\n");
@@ -106,9 +122,9 @@ void SpringLobbyApp::OnFatalException()
 
   DebugInfo += _T("-------- End StackTrace --------");
 
-  debug_error( STD_STRING(DebugInfo) );
+  wxLogMessage( DebugInfo );
 #else
-  debug_error( "Stacktrace not possible, please enable wxStackWalker" );
+  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker"), _("Critical error"), wxICON_ERROR  );
 #endif
 }
 

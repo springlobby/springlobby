@@ -56,7 +56,7 @@ void IBattle::SetMap(const UnitSyncMap& map)
 
 const UnitSyncMap& IBattle::Map()
 {
-  ASSERT_LOGIC( m_map_exists, "Map does not exist." );
+  ASSERT_LOGIC( m_map_exists, _T("Map does not exist.") );
 
   if ( !m_map_loaded ) {
     try {
@@ -82,7 +82,7 @@ wxString IBattle::GetMapHash()
   if ( m_map.hash == "" ) {
     try {
       m_map.hash = usync()->GetMap( m_map.name ).hash;
-    } catch (...) { debug_warn("Couldn't get map hash from unitsync."); }
+    } catch (...) { wxLogWarning( _T("Couldn't get map hash from unitsync.") ); }
   }
   return WX_STRING(m_map.hash);
 }
@@ -111,7 +111,7 @@ void IBattle::SetMod( const UnitSyncMod& mod )
 
 const UnitSyncMod& IBattle::Mod()
 {
-  ASSERT_LOGIC( m_mod_exists, "Mod does not exist." );
+  ASSERT_LOGIC( m_mod_exists, _T("Mod does not exist.") );
   if ( !m_mod_loaded ) {
     try {
       m_mod = usync()->GetMod( STD_STRING(m_mod_name) );

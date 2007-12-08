@@ -51,11 +51,6 @@ class BattleListTab : public wxPanel
 
     void DoJoin( Battle& battle );
 
-    void EnableJoinButton();
-    void DisableJoinButton();
-    void EnableHostButton();
-    void DisableHostButton();
-
     void OnSelect( wxListEvent& event );
     void OnUnitSyncReloaded();
 

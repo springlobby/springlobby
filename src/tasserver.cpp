@@ -165,7 +165,7 @@ void TASServer::SetSocket( Socket* sock )
 
 void TASServer::Connect( const std::string& addr, const int port )
 {
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
   m_sock->Connect( addr, port );
   if ( IsConnected() ) {
     m_last_ping = time( 0 );
@@ -177,7 +177,7 @@ void TASServer::Connect( const std::string& addr, const int port )
 
 void TASServer::Disconnect()
 {
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
   m_sock->Send( "EXIT\n" ); // EXIT command for new protocol compatibility
   m_sock->Disconnect();
   m_connected = false;
@@ -192,9 +192,9 @@ bool TASServer::IsConnected()
 
 bool TASServer::Register( const std::string& addr, const int port, const std::string& nick, const std::string& password )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
 
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
   m_sock->Connect( addr, port );
   if ( !IsConnected() ) return false;
 
@@ -238,7 +238,7 @@ User& TASServer::GetMe()
 
 void TASServer::Login()
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
 
   std::string data = "LOGIN ";
   data += m_user;
@@ -251,7 +251,7 @@ void TASServer::Login()
 
 void TASServer::Logout()
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
   Disconnect();
 }
 
@@ -275,7 +275,7 @@ void TASServer::AcceptAgreement()
 
 void TASServer::Update( int mselapsed )
 {
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   m_sock->OnTimer( mselapsed );
 
@@ -345,7 +345,7 @@ wxString _ConvertToTASServerBuggedChecksum( const wxString& csum )
 
 void TASServer::ExecuteCommand( const std::string& in )
 {
-  debug( in );
+  wxLogMessage( WX_STRING( in ) );
   std::string cmd;
   std::string params = in;
   std::string::size_type pos = 0;
@@ -361,7 +361,7 @@ void TASServer::ExecuteCommand( const std::string& in )
 
   pos = params.find( "\n", 0 );
   if ( pos != std::string::npos ) {
-    ASSERT_LOGIC( pos < params.length(), "losing data" ); // We might be throwing away a second command following this one.
+    ASSERT_LOGIC( pos < params.length(), _T("losing data") ); // We might be throwing away a second command following this one.
     params.replace( pos, params.length() - pos, "" );
   }
 
@@ -685,7 +685,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_se->OnBattleInfoUpdated( m_battle_id );
     // !! Command: "SETSCRIPTTAGS" params: "game/startpostype=0	game/maxunits=1000	game/limitdgun=0	game/startmetal=1000	game/gamemode=0	game/ghostedbuildings=-1	game/startenergy=1000	game/diminishingmms=0"
   } else {
-    debug( "??? Cmd: " + cmd + " params: " + params );
+    wxLogMessage( _T("??? Cmd: ") + WX_STRING(cmd) + _T(" params: ")+ WX_STRING(params) );
     m_se->OnUnknownCommand( cmd, params );
   }
 }
@@ -693,7 +693,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
 
 void TASServer::Ping()
 {
-  //debug_func( "" );
+  //wxLogDebugFunc( _T("") );
   std::string cmd = "";
 
   m_ping_id++;
@@ -761,9 +761,9 @@ void TASServer::HandlePinglist()
 void TASServer::JoinChannel( const std::string& channel, const std::string& key )
 {
   //JOIN channame [key]
-  debug_func( channel );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( WX_STRING(channel) );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   std::string cmd = "JOIN " + channel;
   if ( key != "" )
@@ -777,9 +777,9 @@ void TASServer::JoinChannel( const std::string& channel, const std::string& key 
 void TASServer::PartChannel( const std::string& channel )
 {
   //LEAVE channame
-  debug_func( "channel" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("channel") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   m_sock->Send( "LEAVE " + channel + "\n" );
 
@@ -789,9 +789,9 @@ void TASServer::PartChannel( const std::string& channel )
 void TASServer::DoActionChannel( const std::string& channel, const std::string& msg )
 {
   //SAYEX channame {message}
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   m_sock->Send( "SAYEX " + channel + " " + msg + "\n" );
 }
@@ -800,9 +800,9 @@ void TASServer::DoActionChannel( const std::string& channel, const std::string& 
 void TASServer::SayChannel( const std::string& channel, const std::string& msg )
 {
   //SAY channame {message}
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   m_sock->Send( "SAY " + channel + " " + msg + "\n" );
 }
@@ -811,9 +811,9 @@ void TASServer::SayChannel( const std::string& channel, const std::string& msg )
 void TASServer::SayPrivate( const std::string& nick, const std::string& msg )
 {
   //SAYPRIVATE username {message}
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   m_sock->Send( "SAYPRIVATE " + nick + " " + msg + "\n" );
 }
@@ -821,9 +821,9 @@ void TASServer::SayPrivate( const std::string& nick, const std::string& msg )
 
 void TASServer::DoActionPrivate( const std::string& nick, const std::string& msg )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   m_sock->Send( "SAYPRIVATE /me " + nick + " " + msg + "\n" );
 }
@@ -831,9 +831,9 @@ void TASServer::DoActionPrivate( const std::string& nick, const std::string& msg
 
 void TASServer::SayBattle( int battleid, const std::string& msg )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   m_sock->Send( "SAYBATTLE " + msg + "\n" );
 }
@@ -841,9 +841,9 @@ void TASServer::SayBattle( int battleid, const std::string& msg )
 
 void TASServer::DoActionBattle( int battleid, const std::string& msg )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   m_sock->Send( "SAYBATTLEEX " + msg + "\n" );
 }
@@ -851,9 +851,9 @@ void TASServer::DoActionBattle( int battleid, const std::string& msg )
 
 void TASServer::Ring( const std::string& nick )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   m_sock->Send( "RING " + nick + "\n" );
 }
@@ -861,9 +861,9 @@ void TASServer::Ring( const std::string& nick )
 
 void TASServer::HostBattle( BattleOptions bo, const std::string& password )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   wxString cmd = wxString::Format( _T("OPENBATTLE 0 %d "), bo.nattype );
   cmd += (password=="")?_T("*"):WX_STRING(password);
@@ -884,7 +884,7 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
     );
   }
   cmd += WX_STRING(bo.modhash);
-  cmd += wxString::Format( _T(" %d "), bo.rankneeded );
+  cmd += wxString::Format( _T(" %d "), bo.rankneeded/100 );
   cmd += WX_STRING( bo.maphash ) + _T(" ");
   cmd += WX_STRING( bo.mapname ) + _T("\t");
   cmd += WX_STRING( bo.description ) + _T("\t");
@@ -900,9 +900,9 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
 void TASServer::JoinBattle( const int& battleid, const std::string& password )
 {
   //JOINBATTLE BATTLE_ID [parameter]
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   m_sock->Send( "JOINBATTLE " + i2s( battleid ) + " " + password + "\n" );
 }
@@ -911,9 +911,9 @@ void TASServer::JoinBattle( const int& battleid, const std::string& password )
 void TASServer::LeaveBattle( const int& battleid )
 {
   //LEAVEBATTLE
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   m_sock->Send( "LEAVEBATTLE\n" );
 }
@@ -921,12 +921,12 @@ void TASServer::LeaveBattle( const int& battleid )
 
 void TASServer::SendHostInfo( HostInfo update )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   Battle& battle = GetBattle( m_battle_id );
-  ASSERT_LOGIC( battle.IsFounderMe(), "I'm not founder" );
+  ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
 
   //BattleOptions bo = battle.opts();
 
@@ -1012,16 +1012,16 @@ void TASServer::RequestInGameTime()
 
 Battle* TASServer::GetCurrentBattle()
 {
-  ASSERT_LOGIC( m_battle_id != -1, "invalid m_battle_id value" );
+  ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
   return &GetBattle( m_battle_id );
 }
 
 
 void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   GetMe().SetBattleStatus( bs );
 
@@ -1039,9 +1039,9 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 
 void TASServer::SendMyUserStatus()
 {
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
   UserStatus& us = GetMe().Status();
 
   UTASClientStatus taus;
@@ -1057,17 +1057,17 @@ void TASServer::SendMyUserStatus()
 
 void TASServer::StartHostedBattle()
 {
-  ASSERT_LOGIC( m_battle_id != -1, "Invalid m_battle_id" );
+  ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
   m_se->OnStartHostedBattle( m_battle_id );
 }
 
 
 void TASServer::ForceSide( int battleid, const std::string& nick, int side )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( battleid == m_battle_id, "Not current battle" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   if ( nick == GetMe().GetNick() ) {
     GetMe().BattleStatus().side = side;
@@ -1082,10 +1082,10 @@ void TASServer::ForceSide( int battleid, const std::string& nick, int side )
 
 void TASServer::ForceTeam( int battleid, const std::string& nick, int team )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( battleid == m_battle_id, "Not current battle" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   if ( !GetBattle(battleid).IsFounderMe() ) {
     if ( nick == GetMe().GetNick() ) {
@@ -1104,10 +1104,10 @@ void TASServer::ForceTeam( int battleid, const std::string& nick, int team )
 
 void TASServer::ForceAlly( int battleid, const std::string& nick, int ally )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( battleid == m_battle_id, "Not current battle" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   if ( !GetBattle(battleid).IsFounderMe() ) {
     if ( nick == GetMe().GetNick() ) {
@@ -1126,10 +1126,10 @@ void TASServer::ForceAlly( int battleid, const std::string& nick, int ally )
 
 void TASServer::ForceColour( int battleid, const std::string& nick, int r, int g, int b )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( battleid == m_battle_id, "Not current battle" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   if ( !GetBattle(battleid).IsFounderMe() ) {
     if ( nick == GetMe().GetNick() ) {
@@ -1155,7 +1155,7 @@ void TASServer::ForceColour( int battleid, const std::string& nick, int r, int g
 
 void TASServer::ForceSpectator( int battleid, const std::string& nick, bool spectator )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
 
   if ( !GetBattle(battleid).IsFounderMe()) {
     if ( nick == GetMe().GetNick() ) {
@@ -1178,9 +1178,9 @@ void TASServer::ForceSpectator( int battleid, const std::string& nick, bool spec
     return;
   }
 
-  ASSERT_LOGIC( battleid == m_battle_id, "Not current battle" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   //FORCESPECTATORMODE username
   m_sock->Send( "FORCESPECTATORMODE " + nick + "\n" );
@@ -1189,10 +1189,10 @@ void TASServer::ForceSpectator( int battleid, const std::string& nick, bool spec
 
 void TASServer::BattleKickPlayer( int battleid, const std::string& nick )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( battleid == m_battle_id, "Not current battle" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   if ( !GetBattle(battleid).IsFounderMe() ) {
     if ( nick == GetMe().GetNick() ) {
@@ -1209,9 +1209,9 @@ void TASServer::BattleKickPlayer( int battleid, const std::string& nick )
 
 void TASServer::SetHandicap( int battleid, const std::string& nick, int handicap)
 {
-  debug_func( "" );
-  ASSERT_LOGIC( battleid == m_battle_id, "Not current battle" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
   if ( !GetBattle(battleid).IsFounderMe() ) {
     DoActionBattle( battleid, "thinks " + nick + " should get a " + i2s( handicap ) + "% resource bonus" );
     return;
@@ -1224,9 +1224,9 @@ void TASServer::SetHandicap( int battleid, const std::string& nick, int handicap
 
 void TASServer::AddBot( int battleid, const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   UTASBattleStatus tasbs;
   tasbs.tasdata = ConvTasbattlestatus( status );
@@ -1237,20 +1237,20 @@ void TASServer::AddBot( int battleid, const std::string& nick, const std::string
   tascl.color.zero = 0;
   //ADDBOT name battlestatus teamcolor {AIDLL}
   std::string cmd = "ADDBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + " " + aidll + ".dll\n";
-  debug( cmd );
+  wxLogMessage( WX_STRING(cmd) );
   m_sock->Send( cmd );
 }
 
 
 void TASServer::RemoveBot( int battleid, const std::string& nick )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   Battle& battle = GetBattle( battleid );
   BattleBot* bot = battle.GetBot( nick );
-  ASSERT_LOGIC( bot != 0, "Bot does not exist." );
+  ASSERT_LOGIC( bot != 0, _T("Bot does not exist.") );
 
 /*  if (!( battle.IsFounderMe() || ( bot->owner == GetMe().GetNick() ) )) {
     DoActionBattle( battleid, "thinks the bot " + nick + " should be removed." );
@@ -1264,9 +1264,9 @@ void TASServer::RemoveBot( int battleid, const std::string& nick )
 
 void TASServer::UpdateBot( int battleid, const std::string& nick, UserBattleStatus status )
 {
-  debug_func( "" );
-  ASSERT_LOGIC( IsOnline(), "Not online" );
-  ASSERT_LOGIC( m_sock != 0, "m_sock = 0" );
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   UTASBattleStatus tasbs;
   tasbs.tasdata = ConvTasbattlestatus( status );
@@ -1277,14 +1277,14 @@ void TASServer::UpdateBot( int battleid, const std::string& nick, UserBattleStat
   tascl.color.zero = 0;
   //UPDATEBOT name battlestatus teamcolor
   std::string cmd = "UPDATEBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + "\n";
-  debug( cmd );
+  wxLogMessage( WX_STRING(cmd) );
   m_sock->Send( cmd );
 }
 
 
 void TASServer::OnConnected( Socket* sock )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
   //TASServer* serv = (TASServer*)sock->GetUserdata();
   m_last_ping = time( 0 );
   m_connected = true;
@@ -1294,7 +1294,7 @@ void TASServer::OnConnected( Socket* sock )
 
 void TASServer::OnDisconnected( Socket* sock )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
   m_connected = false;
   m_online = false;
   m_se->OnDisconnected();
@@ -1366,7 +1366,7 @@ StartType IntToStartType( int start )
     case 0: return ST_Fixed;
     case 1: return ST_Random;
     case 2: return ST_Choose;
-    default: ASSERT_LOGIC( false, "invalid value" );
+    default: ASSERT_LOGIC( false, _T("invalid value") );
   };
   return ST_Fixed;
 }
@@ -1378,7 +1378,7 @@ NatType IntToNatType( int nat )
     case 0: return NAT_None;
     case 1: return NAT_Hole_punching;
     case 2: return NAT_Fixed_source_ports;
-    default: ASSERT_LOGIC( false, "invalid value" );
+    default: ASSERT_LOGIC( false, _T("invalid value") );
   };
   return NAT_None;
 }
@@ -1390,7 +1390,7 @@ GameType IntToGameType( int gt )
     case 0: return GT_ComContinue;
     case 1: return GT_ComEnds;
     case 2: return GT_Lineage;
-    default: ASSERT_LOGIC( false, "invalid value" );
+    default: ASSERT_LOGIC( false, _T("invalid value") );
   };
   return GT_ComContinue;
 }
