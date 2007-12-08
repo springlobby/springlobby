@@ -41,20 +41,18 @@ void SpringUnitSyncLib::Load( const wxString& path )
   m_path = path;
 
   // Load the library.
-  std::string loc = STD_STRING( path );
-
-  debug( "Loading from: " + loc );
+  wxLogMessage( _T("Loading from: ") + path );
 
   // Check if library exists
   if ( !wxFileName::FileExists( path ) ) {
-    debug_error( "File not found: "+ loc );
+    wxLogError( _T("File not found: ") + path );
     return;
   }
 
   try {
     m_libhandle = new wxDynamicLibrary( path );
     if ( !m_libhandle->IsLoaded() ) {
-      debug_error("wxDynamicLibrary created, but not loaded!");
+      wxLogError(_T("wxDynamicLibrary created, but not loaded!"));
       delete m_libhandle;
       m_libhandle = 0;
     }
@@ -62,7 +60,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
     m_libhandle = 0;
   }
 
-  ASSERT_RUNTIME( m_libhandle != 0, "Couldn't load the unitsync library" );
+  ASSERT_RUNTIME( m_libhandle != 0, _T("Couldn't load the unitsync library") );
 
   m_loaded = true;
 
@@ -166,7 +164,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
   }
   catch ( ... ) {
     _Unload();
-    ASSERT_RUNTIME( false, "Failed to load Unitsync lib." );
+    ASSERT_RUNTIME( false, _T("Failed to load Unitsync lib.") );
   }
 
 }
@@ -215,13 +213,13 @@ bool SpringUnitSyncLib::_IsLoaded()
 
 void* SpringUnitSyncLib::_GetLibFuncPtr( const wxString& name )
 {
-  ASSERT_LOGIC( m_libhandle != 0, "Unitsync not loaded" );
+  ASSERT_LOGIC( m_libhandle != 0, _T("Unitsync not loaded") );
   if ( m_libhandle->HasSymbol( name ) ){
     void* ptr = m_libhandle->GetSymbol( name );
-    if ( !ptr ) debug( "Couldn't load " + STD_STRING(name) + " from unitsync library" );
+    if ( !ptr ) wxLogMessage( _T("Couldn't load ") + name + _T(" from unitsync library") );
     return ptr;
   }
-  debug( "Couldn't load " + STD_STRING(name) + " from unitsync library" );
+  wxLogMessage( _T("Couldn't load ") + name + _T(" from unitsync library") );
   return 0;
 }
 
@@ -247,7 +245,7 @@ void SpringUnitSyncLib::_ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo&
 
 void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
   if ( m_current_mod != modname ) {
     m_uninit();
     m_init( true, 1 );
@@ -318,7 +316,7 @@ MapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
   tm.author = &tmpauth[0];
 
   bool result = m_get_map_info_ex( mapName.mb_str( wxConvUTF8 ), &tm, version );
-  ASSERT_RUNTIME( result, "Failed to get map infos");
+  ASSERT_RUNTIME( result, _T("Failed to get map infos") );
   _ConvertSpringMapInfo( tm, info );
 
   return info;
@@ -333,10 +331,10 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
   const int width = 1024;
   //wxImage ret( height, width );
 
-  debug( STD_STRING(mapFileName).c_str() );
+  wxLogMessage( mapFileName );
 
   unsigned short* colours = (unsigned short*)m_get_minimap( STD_STRING(mapFileName).c_str(), 0 ); // miplevel should not be 10 ffs
-  ASSERT_RUNTIME( colours, "Get minimap failed" );
+  ASSERT_RUNTIME( colours, _T("Get minimap failed") );
 
   typedef unsigned char uchar;
   uchar* true_colours = (uchar*)malloc( width*height*3 );

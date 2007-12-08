@@ -2,6 +2,13 @@
 #define SPRINGLOBBY_HEADERGUARD_UTILS_H
 
 #include <string>
+#include <wx/log.h>
+
+#ifndef __WXDEBUG__
+#define wxLogDebugFunc( params ) wxLogVerbose( wxString(__FUNCTION__, wxConvUTF8 ) + _T(" ( ") + wxString(params) + _T(" )") )
+#else
+#define wxLogDebugFunc( params ) wxLogTrace(_T("function calls"), params )
+#endif
 
 #if( wxMAJOR_VERSION==2 && wxMINOR_VERSION == 6 )
 #define HAVE_WX26
@@ -9,26 +16,19 @@
 #define HAVE_WX28
 #endif
 
-
-//! Converts a wxString to an std::string
-#define STD_STRING(v) std::string((const char*)v.mb_str(wxConvUTF8))
-
 //! Converts an std::string to a wxString
 #define WX_STRING(v) wxString(v.c_str(),wxConvUTF8)
 #define WX_STRINGC(v) wxString(v,wxConvUTF8)
 
-#define ASSERT_LOGIC(cond,msg) if(!(cond)){debug_error(std::string("logic ")+msg);throw std::logic_error(msg);}
-#define ASSERT_RUNTIME(cond,msg) if(!(cond)){debug_warn(std::string("runtime ")+msg);throw std::runtime_error(msg);}
+
+//! Converts a wxString to an std::string
+#define STD_STRING(v) std::string((const char*)(v).mb_str(wxConvUTF8))
+
+
+#define ASSERT_LOGIC(cond,msg) if(!(cond)){wxLogError(_T("logic error: ")+ wxString(msg) ); DumpStackTraceToLog(); throw std::logic_error(std::string(wxString(msg).mb_str()));}
+#define ASSERT_RUNTIME(cond,msg) if(!(cond)){wxLogMessage(_T("runtime error: ")+ wxString(msg) );throw std::runtime_error(std::string(wxString(msg).mb_str()));}
 
 std::string i2s( int x );
-
-void debug_output( const std::string& prefix, const std::string& func, const std::string& params, const std::string& msg );
-
-
-#define debug( msg ) debug_output( "--", __FUNCTION__, "", msg )
-#define debug_func( params ) debug_output( "**", __FUNCTION__, params, "" )
-#define debug_warn( msg ) debug_output( "ww", __FUNCTION__, "", msg )
-#define debug_error( msg ) debug_output( "!!", __FUNCTION__, "", msg )
 
 
 #define boundry(var,min,max) var=(var<(min))?(min):(var>(max))?(max):var
@@ -45,6 +45,7 @@ void debug_output( const std::string& prefix, const std::string& func, const std
 #define IsColourOk() IsOk()
 #endif
 
+void DumpStackTraceToLog();
 std::string GetWordParam( std::string& params );
 std::string GetSentenceParam( std::string& params );
 std::string GetChatLineParam( std::string& params );

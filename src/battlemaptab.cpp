@@ -66,8 +66,9 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   wxBoxSizer* m_opts_sizer = new wxBoxSizer( wxVERTICAL );
 
   //m_opts_sizer->SetMinSize(wxSize( 200,-1 ));
-  m_map_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 150,240 ), wxLC_NO_HEADER|wxLC_REPORT );
-//m_map_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
+  m_map_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 150,160 ), wxLC_NO_HEADER|wxLC_REPORT );
+  m_map_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
+  m_map_opts_list->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
 
   wxListItem col;
 
@@ -179,7 +180,7 @@ void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
     case 0: m_battle.SetStartType( ST_Fixed ); break;
     case 1: m_battle.SetStartType( ST_Random ); break;
     case 2: m_battle.SetStartType( ST_Choose ); break;
-    default: ASSERT_LOGIC( false, "invalid pos" );
+    default: ASSERT_LOGIC( false, _T("invalid pos") );
   };
   m_battle.SendHostInfo( HI_StartType );
 }

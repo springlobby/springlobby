@@ -46,6 +46,8 @@ class UnitSyncThread: public wxThread, public wxEvtHandler
     void Pause();
     void Resume();
 
+    void Delete();
+
     void OnMapInfoCached( wxCommandEvent& event );
     void OnMinimapCached( wxCommandEvent& event );
     void OnModUnitsCached( wxCommandEvent& event );
