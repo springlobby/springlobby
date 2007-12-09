@@ -1,15 +1,17 @@
 #ifndef SE_UTILS_H_
 #define SE_UTILS_H_
 
+#include <wx/string.h>
+#include <string>
+#include <sstream>
 //! Converts a wxString to an std::string
 #define STD_STRING(v) std::string((const char*)v.mb_str(wxConvUTF8))
 
-class wxString;
+#define _S(v) wxString(v.c_str(),wxConvUTF8)
 
-inline wxString _S (const std::string str);
+void toString(std::string& s, int t);
 
-template<typename Type> void toString(std::string& s, Type t);
-
-template<typename Type> Type fromString(const std::string& s);
+int fromString(const std::string& s);
 
 #endif /*SE_UTILS_H_*/
+_H_*/

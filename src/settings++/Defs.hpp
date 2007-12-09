@@ -167,10 +167,7 @@ struct Control {
     const wxString tTip [1];
 };
 
-inline wxString _S (const std::string str)
-{
-	return wxString(str.c_str(),*wxConvCurrent);
-}
+#define _S(v) wxString(v.c_str(),wxConvUTF8)
 
 template<typename Type> void toString(std::string& s, Type t) {
 	//using namespace std;

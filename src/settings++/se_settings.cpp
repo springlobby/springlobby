@@ -2,15 +2,15 @@
 #include "se_utils.h"
 #include "Defs.hpp"
 
-#include <wx/config.h>
-#include <wx/filefn.h>
-#include <wx/filename.h>
-#include <wx/intl.h>
-#include <wx/stdpaths.h>
-#include <wx/filename.h>
-#include <wx/string.h>
-#include <wx/dir.h>
-#include <wx/file.h>
+//#include <wx/config.h>
+//#include <wx/filefn.h>
+//#include <wx/filename.h>
+//#include <wx/intl.h>
+//#include <wx/stdpaths.h>
+//#include <wx/filename.h>
+//#include <wx/string.h>
+//#include <wx/dir.h>
+//#include <wx/file.h>
 //
 #include <string>
 //TODO guard properly
@@ -74,7 +74,8 @@ void se_settings::setDisableWarning(bool disable)
 wxString se_settings::getUsyncLoc()
 {
 	wxString def;
-	def = AutoFindUnitSyncLib(def);
+	//TODO
+	def = _T("");//AutoFindUnitSyncLib(def);
 	
 	return (se_config->Read( _T("/Spring/unitsync_loc"), def ));
 }
@@ -93,7 +94,7 @@ wxString se_settings::getSpringDir()
 
 
 /*copied from springlobby source*/
-wxString se_settings::AutoFindUnitSyncLib( const wxString& def )
+/*wxString se_settings::AutoFindUnitSyncLib( const wxString& def )
 {
   wxPathList pl;
   wxStandardPathsBase& sp = wxStandardPathsBase::Get();
@@ -150,9 +151,10 @@ wxString se_settings::AutoFindUnitSyncLib( const wxString& def )
 
   return def;
 }
-
+*/
 bool se_settings::IsUnitSyncLib( const wxString& lib )
 {
-  if ( !(wxFile::Exists( lib )) ) return false;
+	//TODO VORSICHT
+  //if ( !(wxFile::Exists( lib )) ) return false;
   return true;
 }

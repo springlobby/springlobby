@@ -1,10 +1,10 @@
 #ifndef SE_SETTINGS_H_
 #define SE_SETTINGS_H_
 
-//#include <wx/wx.h>
+#include <wx/wx.h>
 
-class wxString;
-class wxConfigBase;
+//ass wxString;
+#include <wx/config.h>
 
 #define SET_MODE_EXPERT 5000
 #define SET_MODE_SIMPLE 5001
@@ -29,7 +29,7 @@ public:
 private:
 	wxConfigBase* se_config;
 	
-	wxString AutoFindUnitSyncLib( const wxString& def );
+	//String AutoFindUnitSyncLib( const wxString& def );
 	bool IsUnitSyncLib( const wxString& lib );
 	
 	static se_settings* instance ;
