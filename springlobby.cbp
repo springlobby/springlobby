@@ -286,6 +286,8 @@
 		<Unit filename="src/springprocess.h" />
 		<Unit filename="src/springunitsync.cpp" />
 		<Unit filename="src/springunitsync.h" />
+		<Unit filename="src/springunitsynclib.cpp" />
+		<Unit filename="src/springunitsynclib.h" />
 		<Unit filename="src/stacktrace.cpp" />
 		<Unit filename="src/stacktrace.h" />
 		<Unit filename="src/tasserver.cpp" />
@@ -308,7 +310,6 @@
 			<wxsmith version="1">
 				<gui name="wxWidgets" src="" main="" init_handlers="necessary" language="CPP" />
 			</wxsmith>
-			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

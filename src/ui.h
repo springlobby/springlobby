@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_UI_H
 
 #include <string>
+#include <wx/thread.h>
 
 class Server;
 class TASServer;
@@ -15,6 +16,7 @@ class Battle;
 class SinglePlayerBattle;
 class BattleBot;
 class ChatPanel;
+class UnitSyncThread;
 
 typedef int HostInfo;
 
@@ -143,10 +145,19 @@ class Ui
 
     void OnRing( const std::string& from );
 
+    void OnMapInfoCached( const wxString& mapname );
+    void OnMinimapCached( const wxString& mapname );
+    void OnModUnitsCached( const wxString& modname );
+    void OnCachedThreadTerminated();
+    void OnCachedThreadStarted();
+
   protected:
     Spring* m_spring;
 
     std::string m_server_spring_ver;
+
+    UnitSyncThread* m_thread;
+    wxCriticalSection m_thread_wait;
 
     Server* m_serv;
     MainWindow* m_main_win;

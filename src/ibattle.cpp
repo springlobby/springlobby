@@ -61,7 +61,7 @@ const UnitSyncMap& IBattle::Map()
   if ( !m_map_loaded ) {
     try {
 
-      m_map = usync()->GetMap( STD_STRING(m_map_name), true );
+      m_map = usync()->GetMapEx( STD_STRING(m_map_name) );
       m_map_loaded = true;
       m_map_name = WX_STRING(m_map.name);
 
@@ -80,7 +80,9 @@ wxString IBattle::GetMapName()
 wxString IBattle::GetMapHash()
 {
   if ( m_map.hash == "" ) {
-    m_map.hash = usync()->GetMap( m_map.name ).hash;
+    try {
+      m_map.hash = usync()->GetMap( m_map.name ).hash;
+    } catch (...) { wxLogWarning( _T("Couldn't get map hash from unitsync.") ); }
   }
   return WX_STRING(m_map.hash);
 }
