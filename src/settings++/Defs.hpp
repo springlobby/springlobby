@@ -229,7 +229,7 @@ const Control QA_CBOX[10] = {
 	{_T("Draw smooth lines"),                               wxT("SmoothLines"),         ID_WINDOWP_QA_CBOX_9,	"0", {_T("should lines be anti-aliased")}},
 };
 	
-
+//TODO add scroll wheel speed 
 const Control UI_CBOX[14] = {
 	{_T("Enable LuaUI widgets"),                            wxT("LuaUI"),               ID_WINDOWP_UI_CBOX_1,	"1", {_T("mark to be able to use")}},
 	
