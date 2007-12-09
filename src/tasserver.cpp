@@ -628,8 +628,8 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     msg = GetChatLineParam( params );
 
     // if a moderator asked for a players IP, just give him all smurfs
-    wxRegEx ipregex( "'s IP is (([0-9]{1,3}\.){3}[0-9]{1,3})" );
-    if ( ipregex.Matches( msg ) ) {
+    wxRegEx ipregex( _T("'s IP is (([0-9]{1,3}'.'){3}[0-9]{1,3})") );
+    if ( ipregex.Matches( WX_STRING( msg ) ) ) {
       ModeratorFindByIP( STD_STRING( ipregex.GetMatch( msg, 1) ) );
     } else {
       m_se->OnServerMessage( msg );
