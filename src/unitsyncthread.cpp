@@ -138,7 +138,7 @@ bool UnitSyncThread::_GetNextJob( JobType& jobtype, wxString& params )
 
   wxString Order = m_orders.Item(0);
   m_orders.RemoveAt( 0 );
-  ASSERT_LOGIC( Order.Length() > 0, "Bad order" );
+  ASSERT_LOGIC( Order.Length() > 0, _T("Bad order") );
   jobtype = Order[0];
   params = Order.Remove( 0, 1 );
   return true;
