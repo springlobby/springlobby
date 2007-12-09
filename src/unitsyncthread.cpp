@@ -60,7 +60,6 @@ void UnitSyncThread::AddMinimapOrder( const wxString& map )
 {
   wxLogDebugFunc( _T("") );
   LOCK_CACHE;
-  wxLogMessage( _T("") );
   _AddJob( JT_MINIMAP, map );
 }
 
