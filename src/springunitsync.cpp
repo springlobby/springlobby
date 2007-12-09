@@ -346,6 +346,7 @@ wxArrayString SpringUnitSync::GetAIList()
   wxLogDebugFunc( _T("") );
   int ini = susynclib()->InitFindVFS( _T("AI/Bot-libs/*") + wxString(DLL_EXTENSION) );
   wxArrayString ret;
+  wxString FileName;
 
   ini = susynclib()->FindFilesVFS( ini, FileName );
   while ( ini ) {

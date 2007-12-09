@@ -511,8 +511,14 @@ springsettings_SOURCES = \
 	revision.cpp \
 	src/revision.cpp.in \
 	src/revision.h \
+	src/base64.cpp \
+	src/base64.h \
 	src/utils.cpp \
 	src/utils.h \
+	src/stacktrace.cpp \
+	src/stacktrace.h \
+	src/boost/md5.cpp \
+	src/boost/md5.hpp \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
 	src/settings++ \
