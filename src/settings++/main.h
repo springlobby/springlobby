@@ -30,6 +30,7 @@ class Springsettings : public wxApp
 	public:
 		bool OnInit();
 		int OnExit();
+		virtual void OnFatalException();
 };
 
 #endif
