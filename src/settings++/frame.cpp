@@ -40,14 +40,8 @@
 BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_CLOSE(settings_frame::OnClose)
 	EVT_MENU(wxID_ANY,settings_frame::OnMenuChoice)
-	EVT_NOTEBOOK_PAGE_CHANGED(ID_OPTIONS,settings_frame::OnNBchange)
 END_EVENT_TABLE()
 
-
-void settings_frame::OnNBchange( wxNotebookEvent& e)
-{
-	
-}
 
 void settings_frame::AddTabs()
 {
@@ -72,7 +66,6 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	susynclib()->Load(OptionsHandler.getUsyncLoc());
 	CreateGUIControls();
 	initMenuBar();
-	
 }
 
 settings_frame::~settings_frame()
@@ -85,11 +78,7 @@ void settings_frame::CreateGUIControls()
 	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
 	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
 	
-	
-			//simpleTab->setTabs(detailTab,qualityTab);
-	
-			
-			switch(OptionsHandler.getMode()){
+		switch(OptionsHandler.getMode()){
 					case SET_MODE_EXPERT: 
 						
 								qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO,false);
@@ -114,24 +103,11 @@ void settings_frame::CreateGUIControls()
 					break;
 			}
 			notebook->SetSelection(0);
-
-	
 		
 	if (OptionsHandler.getMode()==SET_MODE_EXPERT)
 		SetTitle(wxT("SpringSettings (expert mode)"));
 	else
 		SetTitle(wxT("SpringSettings (simple mode)"));
-
-	
-	book_sizer = new wxFlexGridSizer(1,0,0);
-	book_sizer->AddGrowableCol(0);
-	book_sizer->Add(notebook,0,wxEXPAND);
-	book_sizer->SetSizeHints(this);
-//	container->SetSizer(book_sizer);
-//	
-//	  book_sizer2 = new wxFlexGridSizer(1,0,0);
-//		book_sizer2->Add(container);
-		SetSizer(book_sizer);
 	
 	SetIcon(wxNullIcon);
 	SetSize(8,8,760,550);
@@ -164,10 +140,6 @@ void settings_frame::initMenuBar() {
 		}
 		break;
 	}
-	
-	//wxMenu* menuMode = new wxMenu();
-	
-	
 	wxMenuBar* menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, wxT("File"));
 	menuBar->Append(menuMode, wxT("Mode"));
@@ -189,15 +161,13 @@ void settings_frame::handleExit() {
         case wxCANCEL:
         	break;
         }
-    	
     }
     else
     {
     	OptionsHandler.save();
     	Destroy();
     }
-    
-    
+ 
 }
 
 void settings_frame::OnMenuChoice(wxCommandEvent& event) {
@@ -221,8 +191,8 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				OptionsHandler.setMode(SET_MODE_SIMPLE);
 				
 				simpleTab = new tab_simple(notebook,ID_SIMPLE);
-								notebook->InsertPage(0,simpleTab,wxT("Combined options"));
-								simpleTab->updateControls(UPDATE_ALL);
+				notebook->InsertPage(0,simpleTab,wxT("Combined options"));
+				simpleTab->updateControls(UPDATE_ALL);
 				
 				notebook->DeletePage(5);
 				notebook->DeletePage(4);
@@ -232,8 +202,6 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				detailTab = 0;
 				audioTab = 0;
 				debugTab = 0;
-				
-				
 				
 				SetTitle(wxT("SpringSettings (simple mode)"));
 				if (!OptionsHandler.getDisableWarning()){
@@ -245,8 +213,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		case ID_MENUITEM_EXPERT: 
 			if (OptionsHandler.getMode()==SET_MODE_SIMPLE) {
 				OptionsHandler.setMode(SET_MODE_EXPERT);
-				
-				
+								
 				qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO,false);
 			    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
 			    audioTab = new audio_panel(notebook,ID_AUDIO);
@@ -255,8 +222,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				notebook->AddPage(detailTab, wxT("Render detail"));
 				notebook->AddPage(audioTab, wxT("Audio"));
 				notebook->AddPage(debugTab, wxT("Debug"));
-				
-				
+						
 				notebook->DeletePage(0);
 				simpleTab = 0;
 				SetTitle(wxT("SpringSettings (expert mode)"));
@@ -280,6 +246,7 @@ void settings_frame::resetSettings()
 	//updateAllControls();
 }
 
+//TODO broken
 void settings_frame::updateAllControls()
 {
 	uiTab->updateControls(UPDATE_ALL);

@@ -224,10 +224,10 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , bool upda
 	boxB->Add(SizerB,1,wxEXPAND);
 	boxC->Add(SizerC,1,wxEXPAND);
 	boxD->Add(SizerD,1,wxEXPAND);
-	leftSizer->Add(boxB,1,wxEXPAND);
-	leftSizer->Add(boxC,1,wxEXPAND);
-	middleSizer->Add(boxA,1,wxEXPAND);
-	middleSizer->Add(boxD,1,wxEXPAND);
+	leftSizer->Add(boxB,1,wxEXPAND|wxALL);
+	leftSizer->Add(boxC,1,wxEXPAND|wxALL);
+	middleSizer->Add(boxA,1,wxEXPAND|wxALL);
+	middleSizer->Add(boxD,1,wxEXPAND|wxALL);
 	parentSizer->Add(leftSizer,2,wxALIGN_LEFT|wxALIGN_TOP |wxALL|wxEXPAND,10);
 	parentSizer->Add(middleSizer,2,wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND,10);
 

@@ -36,6 +36,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 		1024, 8192,   600, 3000,   20, 120,   100, 600,   0, 10,   0, 100,   100, 1000,   1000, 20000,   1, 20
 	};
 	//TODO change shadowmaps into combobox oä
+	// http://www.wxwidgets.org/wiki/index.php/WxSlider_step_intervals
 	// i < "sizeof"(RO_SLI)
 	for (int i = 0; i < ctrl_detail_sliders_size-4; i++) {
 		ctrl_detail_sliders[i] = new wxSlider(
