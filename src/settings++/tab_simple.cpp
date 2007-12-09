@@ -1,30 +1,41 @@
 /**
-    This file is part of Settings++,
+    This file is part of springsettings,
     Copyright (C) 2007
     Original work by Kloot
     cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
-    Settings++ is free software: you can redistribute it and/or modify
+    springsettings is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Settings++ is distributed in the hope that it will be useful,
+    springsettings is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
+    along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include "tabs.h"
+#include "tab_simple.h"
+#include "se_utils.h"
+#include <wx/string.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/event.h>
+#include <wx/defs.h>
+#include <wx/slider.h>
+#include <wx/combobox.h>
+#include "../springunitsynclib.h"
+#include "Defs.hpp"
+#include "presets.h"
 
-const wxString infoTextContent= wxT("INFOTEXT HERE");
+const wxString infoTextContent= _T("INFOTEXT HERE");
 
-//TODO add slider for global audio volume;
+
 void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 	sizer->Add(new wxStaticText(this, -1,  wxT("RENDER_QUALITY")), 0,wxALL);
 	//sizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP , 10);
@@ -39,10 +50,12 @@ void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 
 	sizer->Add(new wxStaticText(this, -1,  wxT("VIDEO_MODE")), 0,wxALL);
 	videoMode_CBX = new wxComboBox(this, ID_SIMPLE_MODE_CBX, vl_Resolution_Str[0], wxDefaultPosition, wxSize(220,21), 
-			3,vl_Resolution_Str,wxCB_DROPDOWN|wxCB_READONLY);
+			vl_Resolution_Str_size,vl_Resolution_Str,wxCB_DROPDOWN|wxCB_READONLY);
 	sizer->Add(videoMode_CBX, 0, wxBOTTOM, 15);	
-
-
+	
+	sizer->Add(new wxStaticText(this, -1, (AO_SLI[1].lbl)), 0, wxTOP, 15);
+	audioVolume_SLI =  new wxSlider(this, AO_SLI[1].id, configHandler->GetSpringConfigInt(AO_SLI[1].key,fromString(AO_SLI[1].def)), 0, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	sizer->Add(audioVolume_SLI, 0, wxBOTTOM, 15);	
 }
 
 void tab_simple::initInfoSizer(wxFlexGridSizer* sizer)
@@ -54,7 +67,7 @@ void tab_simple::initInfoSizer(wxFlexGridSizer* sizer)
 tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
 : abstract_panel(parent, id , title , pos , size, style) {
 
-	SetSizer(0, true);
+	
 	wxSizer* parentSizer = new wxFlexGridSizer(2,0,0);	
 	//wxSizer* leftSizer = new wxFlexGridSizer(1,15,0);
 	wxSizer* middleSizer = new wxFlexGridSizer(1,15,0);
@@ -101,12 +114,12 @@ tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title ,
 	//  parentSizer->Add(leftSizer,0,wxALIGN_LEFT|wxALIGN_TOP |wxALL,10);
 	parentSizer->Add(middleSizer,0,wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND,10);
 
-	SetSizer(parentSizer, true); // true --> delete old sizer if present
+	SetSizer(parentSizer); // true --> delete old sizer if present
 }
-//TODO update volume slider
+
 void tab_simple::updateControls(int what_to_update)
 {
-
+	audioVolume_SLI->SetValue(intSettings[AO_SLI[1].key]);
 }
 
 tab_simple::~tab_simple(void) {
@@ -143,7 +156,7 @@ BEGIN_EVENT_TABLE(tab_simple, abstract_panel)
 	EVT_TEXT(wxID_ANY,              tab_simple::OnTextUpdate)
 	EVT_CHECKBOX(wxID_ANY,          tab_simple::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       tab_simple::OnRadioButtonToggle)
-	EVT_IDLE(                       tab_simple::update)
+//	EVT_IDLE(                       tab_simple::update)
 	EVT_COMBOBOX(wxID_ANY, 		tab_simple::OnComboBoxChange)
 END_EVENT_TABLE()
 

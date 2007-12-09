@@ -223,7 +223,7 @@ int IconImageList::GetBattleStatusIcon( Battle& battle )
 
 int IconImageList::GetColourIcon( const int& num )
 {
-  ASSERT_LOGIC( num < NUM_COLOUR_ICONS, "Colour index too high" );
+  ASSERT_LOGIC( num < NUM_COLOUR_ICONS, _T("Colour index too high") );
   return ICON_COLOURS_START + num;
 }
 

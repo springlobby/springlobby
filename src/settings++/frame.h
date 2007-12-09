@@ -1,45 +1,46 @@
 /**
-    This file is part of Settings++,
+    This file is part of springsettings,
     Copyright (C) 2007
     Original work by Kloot
     cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
-    Settings++ is free software: you can redistribute it and/or modify
+    springsettings is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Settings++ is distributed in the hope that it will be useful,
+    springsettings is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
+    along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
 #ifndef __SETTINGS_FRAME_h__
 #define __SETTINGS_FRAME_h__
 
-#ifdef __BORLANDC__
-	#pragma hdrstop
-#endif
 
-#ifndef WX_PRECOMP
-	#include <wx/wx.h>
-	#include <wx/frame.h>
-#else
-	#include <wx/wxprec.h>
-#endif
+#include <wx/frame.h>
+class wxNotebook;
+class tab_simple;
+class tab_ui;
+class audio_panel;
+class debug_panel;
+class abstract_panel;
+class wxMenu;
+class wxCommanEvent;
+class wxCloseEvent;
+class wxString;
+class wxWindow;
+class wxPoint;
+class wxSize;
+class wxFlexGridSizer;
+class wxNotebookEvent;
 
-#include <wx/panel.h>
-#include <wx/notebook.h>
-#include "tabs.h"
-
-
-//TODO use icon
 class settings_frame : public wxFrame
 {
 	private:
@@ -62,9 +63,11 @@ class settings_frame : public wxFrame
 		
 		wxMenu* menuFile;
 		wxMenu* menuMode;
-		
+		void AddTabs();
 		wxNotebook *notebook;
-		
+		wxFlexGridSizer *book_sizer;
+		wxFlexGridSizer* book_sizer2;
+		void OnNBchange(wxNotebookEvent&);
 		void initMenuBar();
 		
 		enum

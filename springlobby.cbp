@@ -38,8 +38,8 @@
 					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
 				</Compiler>
 				<Linker>
-					<Add option="`wx-config --libs`" />
 					<Add option="-pg" />
+					<Add option="`wx-config --libs`" />
 				</Linker>
 			</Target>
 			<Target title="Win32 | Debug">

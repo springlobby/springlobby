@@ -1,26 +1,35 @@
 /**
-    This file is part of Settings++,
+    This file is part of springsettings,
     Copyright (C) 2007
     Original work by Kloot
     cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
-    Settings++ is free software: you can redistribute it and/or modify
+    springsettings is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Settings++ is distributed in the hope that it will be useful,
+    springsettings is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
+    along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#include "tabs.h"
+#include "tab_render_detail.h"
+#include "se_utils.h"
+#include <wx/string.h>
+#include <wx/stattext.h>
+#include <wx/sizer.h>
+#include <wx/event.h>
+#include <wx/defs.h>
+#include <wx/slider.h>
+#include "../springunitsynclib.h"
+#include "Defs.hpp"
 
 void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSizer* sizerR ) {
 	const int extrema[] = {
@@ -30,20 +39,20 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 	// i < "sizeof"(RO_SLI)
 	for (int i = 0; i < ctrl_detail_sliders_size-4; i++) {
 		ctrl_detail_sliders[i] = new wxSlider(
-			this, RO_SLI[i].id, configHandler->GetSpringConfigInt(RO_SLI[i].key,fromString<int>(RO_SLI[i].def)),
+			this, RO_SLI[i].id, configHandler->GetSpringConfigInt(RO_SLI[i].key,fromString(RO_SLI[i].def)),
 			extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V		);
 		//ctrl_detail_sliders[i]->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
 		ctrl_detail_sliders[i]->SetToolTip(RO_SLI[i].tTip[0]);
-		sizerL->Add(new wxStaticText(this, -1,  _S(RO_SLI[i].lbl)), 0,wxALIGN_CENTER_VERTICAL|wxALL);
+		sizerL->Add(new wxStaticText(this, -1,  (RO_SLI[i].lbl)), 0,wxALIGN_CENTER_VERTICAL|wxALL);
 		sizerL->Add(ctrl_detail_sliders[i], 0,wxALIGN_CENTER_VERTICAL|wxALL);
 	}
 	for (int i = 5; i < ctrl_detail_sliders_size; i++) {
 		ctrl_detail_sliders[i] = new wxSlider(
-			this, RO_SLI[i].id, configHandler->GetSpringConfigInt(RO_SLI[i].key,fromString<int>(RO_SLI[i].def)),
+			this, RO_SLI[i].id, configHandler->GetSpringConfigInt(RO_SLI[i].key,fromString(RO_SLI[i].def)),
 			extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V);
 		//ctrl_detail_sliders[i]->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
 		ctrl_detail_sliders[i]->SetToolTip(RO_SLI[i].tTip[0]);
-		sizerR->Add(new wxStaticText(this, -1,  _S(RO_SLI[i].lbl)), 0,wxALIGN_CENTER_VERTICAL|wxALL);
+		sizerR->Add(new wxStaticText(this, -1,  (RO_SLI[i].lbl)), 0,wxALIGN_CENTER_VERTICAL|wxALL);
 		sizerR->Add(ctrl_detail_sliders[i], 0,wxALIGN_CENTER_VERTICAL|wxALL);
 	}
 }
@@ -71,7 +80,7 @@ tab_render_detail::tab_render_detail(wxWindow *parent, wxWindowID id , const wxS
 		    
 		    box->Add(renderSizer,0,wxEXPAND|wxALIGN_LEFT|wxALL,0);
 		    parentSizer->Add(box,0,wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL|wxALL,15);
-		    SetSizer(parentSizer, true); // true --> delete old sizer if present
+		    SetSizer(parentSizer); // true --> delete old sizer if present
 	
 }
 void tab_render_detail::updateControls(int what_to_update)
@@ -87,8 +96,8 @@ tab_render_detail::~tab_render_detail(void) {
 
 BEGIN_EVENT_TABLE(tab_render_detail, abstract_panel)
 	EVT_SLIDER(wxID_ANY,            tab_render_detail::OnSliderMove)
-	EVT_TEXT(wxID_ANY,              tab_render_detail::OnTextUpdate)
-	EVT_CHECKBOX(wxID_ANY,          tab_render_detail::OnCheckBoxTick)
+//	EVT_TEXT(wxID_ANY,              tab_render_detail::OnTextUpdate)
+	//EVT_CHECKBOX(wxID_ANY,          tab_render_detail::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       tab_render_detail::OnRadioButtonToggle)
-	EVT_IDLE(                       tab_render_detail::update)
+//	EVT_IDLE(                       tab_render_detail::update)
 END_EVENT_TABLE()

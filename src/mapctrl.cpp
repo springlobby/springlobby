@@ -122,7 +122,7 @@ wxRect MapCtrl::_GetMinimapRect()
 
 wxRect MapCtrl::_GetStartRect( int index )
 {
-  ASSERT_LOGIC( BattleType() != BT_Multi, "MapCtrl::_GetStartRect(): Battle type is not BT_Multi" );
+  ASSERT_LOGIC( BattleType() != BT_Multi, _T("MapCtrl::_GetStartRect(): Battle type is not BT_Multi") );
   BattleStartRect* sr = m_battle->GetStartRect( index );
   if ( sr == 0 ) return wxRect();
   if ( sr->deleted ) return wxRect();
@@ -235,7 +235,7 @@ void MapCtrl::_RelocateBots()
 
   for ( unsigned int i = 0; i < m_battle->GetNumBots(); i++ ) {
     BattleBot* bot = m_battle->GetBot( i );
-    ASSERT_LOGIC( bot != 0, "bot == 0" );
+    ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     m_battle->GetFreePosition( bot->posx, bot->posy );
     if ( bot->posx == -1 ) m_battle->RemoveBot( i );
   }
@@ -270,7 +270,7 @@ void MapCtrl::_GetClosestStartPos( int fromx, int fromy, int& index, int& x, int
 
 void MapCtrl::LoadMinimap()
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   if ( m_battle == 0 ) return;
   if ( m_image ) return;
   if ( !m_battle->MapExists() ) return;
@@ -421,20 +421,11 @@ void MapCtrl::_DrawBackground( wxDC& dc )
     return;
   }
 
-  wxRect r = _GetMinimapRect();
-
-  // Draw background.
-  if ( r.y > 0 ) {
-    dc.DrawRectangle( 0, 0, width, (height - r.height) / 2 );
-    dc.DrawRectangle( 0, r.y+r.height, width, (height - r.height) / 2 + 1 );
-  }
-  if ( r.x > 0 ) {
-    dc.DrawRectangle( 0, 0, (width - r.width) / 2, height );
-    dc.DrawRectangle( r.x+r.width, 0, (width - r.width) / 2 + 1, height );
-  }
-
   // Draw minimap.
   if ( !m_image ) {
+
+    // Draw background.
+    dc.DrawRectangle( 0, 0, width, height );
 
     if ( m_sp ) return;
 
@@ -455,9 +446,21 @@ void MapCtrl::_DrawBackground( wxDC& dc )
     else  _DrawOutlinedText( dc, _("Download"), 28, height - 50, *wxWHITE, wxColour(50,50,50) );
 
   } else {
+
+    wxRect r = _GetMinimapRect();
+
+    // Draw background where the minimap is not drawn(to avoid flickering).
+    if ( r.y > 0 ) {
+      dc.DrawRectangle( 0, 0, width, (height - r.height) / 2 );
+      dc.DrawRectangle( 0, r.y+r.height, width, (height - r.height) / 2 + 1 );
+    }
+    if ( r.x > 0 ) {
+      dc.DrawRectangle( 0, 0, (width - r.width) / 2, height );
+      dc.DrawRectangle( r.x+r.width, 0, (width - r.width) / 2 + 1, height );
+    }
+
+    // Draw minimap
     dc.DrawBitmap( *m_image, r.x, r.y, false );
-    width = r.width;
-    height = r.height;
   }
 
 }
@@ -510,7 +513,7 @@ void MapCtrl::_DrawStartPositions( wxDC& dc )
 
 wxRect MapCtrl::_GetBotRect( BattleBot& bot, bool selected )
 {
-  ASSERT_LOGIC( m_battle != 0, "Bot == 0" );
+  ASSERT_LOGIC( m_battle != 0, _T("Bot == 0") );
   wxRect mr = _GetMinimapRect();
   m_map = m_battle->Map();
   int x = (int)( (double)((double)bot.posx / (double)m_map.info.width) * (double)mr.width ) - 8;
@@ -607,7 +610,7 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     try {
       std::string mod = STD_STRING(m_battle->GetModName());
       int scount = usync()->GetSideCount( mod );
-      if ( scount <= 0 ) ASSERT_RUNTIME( false, "Mod has no sides." );
+      if ( scount <= 0 ) ASSERT_RUNTIME( false, _T("Mod has no sides.") );
       std::string side = usync()->GetSideName( mod, bot.bs.side % scount );
       bmp = new wxBitmap( usync()->GetSidePicture( mod, side ) );
     } catch (...) {
@@ -667,7 +670,7 @@ void MapCtrl::_DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
 
 void MapCtrl::_DrawSinglePlayer( wxDC& dc )
 {
-  debug_func("");
+  wxLogDebugFunc(_T("") );
   if ( m_battle == 0 ) return;
   if ( !m_battle->MapExists() ) return;
 
@@ -720,7 +723,7 @@ void MapCtrl::_DrawSinglePlayer( wxDC& dc )
 
 void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   wxPaintDC dc( this );
 
   _DrawBackground( dc );
@@ -769,7 +772,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     if ( !m_battle->MapExists() ) return;
     if ( m_maction == MA_Move ) {
       BattleBot* bot = m_battle->GetBot( m_bot_expanded );
-      ASSERT_LOGIC( bot != 0, "MapCtrl::OnMouseMove(): bot = 0" );
+      ASSERT_LOGIC( bot != 0, _T("MapCtrl::OnMouseMove(): bot = 0") );
       m_map = m_battle->Map();
 
       wxRect mr = _GetMinimapRect();
@@ -796,7 +799,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 
     if ( m_bot_expanded != -1 ) {
       BattleBot* bot = m_battle->GetBot( m_bot_expanded );
-      ASSERT_LOGIC( bot != 0, "MapCtrl::OnMouseMove(): bot = 0" );
+      ASSERT_LOGIC( bot != 0, _T("MapCtrl::OnMouseMove(): bot = 0") );
       wxRect r = _GetBotRect( *bot, true );
       if ( r.Inside( event.GetX(), event.GetY() )  ) {
         RectArea last = m_rect_area;
@@ -929,7 +932,7 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
     if ( m_mdown_area == RA_Move ) m_maction = MA_Move;
     else m_maction = MA_None;
     BattleBot* bot = m_battle->GetBot( m_bot_expanded );
-    ASSERT_LOGIC( bot != 0, "MapCtrl::OnLeftDown(): bot = 0" );
+    ASSERT_LOGIC( bot != 0, _T("MapCtrl::OnLeftDown(): bot = 0") );
     RefreshRect( _GetBotRect( *bot, true ), false );
     return;
   }
@@ -999,7 +1002,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     if ( m_bot_expanded == -1 ) return;
     if ( m_rect_area != m_mdown_area ) return;
     BattleBot* bot = m_battle->GetBot( m_bot_expanded );
-    ASSERT_LOGIC( bot != 0, "MapCtrl::OnLeftUp(): bot == 0" );
+    ASSERT_LOGIC( bot != 0, _T("MapCtrl::OnLeftUp(): bot == 0") );
 
     if ( m_mdown_area == RA_UpAllyButton ) {
       bot->bs.ally = ( bot->bs.ally + 1 ) % 16;

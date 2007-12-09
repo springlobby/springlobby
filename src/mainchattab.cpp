@@ -70,7 +70,7 @@ MainChatTab::~MainChatTab()
 
 ChatPanel& MainChatTab::ServerChat()
 {
-  ASSERT_LOGIC( m_server_chat != 0, "m_server_chat = 0" );
+  ASSERT_LOGIC( m_server_chat != 0, _T("m_server_chat = 0") );
   return *m_server_chat;
 }
 
@@ -222,7 +222,7 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
 
 void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
 
   int oldsel = event.GetOldSelection();
   if ( oldsel < 0 ) return;
@@ -231,13 +231,13 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
 
   wxWindow* newpage = m_chat_tabs->GetPage( newsel );
   if ( newpage == 0 ) { // Not sure what to do here
-    debug_error( "Newpage NULL." );
+    wxLogError( _T("Newpage NULL.") );
     return;
   }
 
   if ( newsel >= (int)m_chat_tabs->GetPageCount() - 1 ) { // We are going to remove page
     ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
-    ASSERT_LOGIC( delpage != 0 , "MainChatTab::OnTabsChanged(): delpage NULL" );
+    ASSERT_LOGIC( delpage != 0 , _T("MainChatTab::OnTabsChanged(): delpage NULL") );
 
     if ( !delpage->IsServerPanel() ) {
       delpage->Part();

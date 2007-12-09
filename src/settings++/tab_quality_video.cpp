@@ -1,33 +1,46 @@
 /**
-    This file is part of Settings++,
+c    This file is part of springsettings,
     Copyright (C) 2007
     Original work by Kloot
     cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
-    Settings++ is free software: you can redistribute it and/or modify
+    springsettings is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Settings++ is distributed in the hope that it will be useful,
+    springsettings is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
+    along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include "tabs.h"
+#include "tab_quality_video.h"
+#include "se_utils.h"
+#include <wx/string.h>
+#include <wx/sizer.h>
+#include <wx/event.h>
+#include <wx/defs.h>
+#include <wx/slider.h>
+#include <wx/checkbox.h>
+#include <wx/stattext.h>
+#include <wx/checkbox.h>
+#include <wx/radiobut.h>
+#include <wx/combobox.h>
+#include "../springunitsynclib.h"
+#include "Defs.hpp"
 
 void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 
 	// i < "sizeof"(VO_CBOX)
 	for (int i = 0; i < ctrl_vo_Boxes_size; i++) {
-		ctrl_vo_Boxes[i] = new wxCheckBox(this, VO_CBOX[i].id, _S(VO_CBOX[i].lbl));
-		ctrl_vo_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(VO_CBOX[i].key,fromString<int>(VO_CBOX[i].def)));
+		ctrl_vo_Boxes[i] = new wxCheckBox(this, VO_CBOX[i].id, (VO_CBOX[i].lbl));
+		ctrl_vo_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(VO_CBOX[i].key,fromString(VO_CBOX[i].def)));
 		ctrl_vo_Boxes[i]->SetToolTip(VO_CBOX[i].tTip[0]);
 		sizer->Add(ctrl_vo_Boxes[i], 0, wxTOP, (i == 0)? 10: 0);
 	}
@@ -37,10 +50,10 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 	ctrl_x_res->SetToolTip(RC_TEXT[0].tTip[0]);
 	ctrl_y_res->SetToolTip(RC_TEXT[1].tTip[0]);
 	std::string s;
-	toString<int>(s,configHandler->GetSpringConfigInt(RC_TEXT[0].key,fromString<int>(RC_TEXT[0].def))); 
-	ctrl_x_res->SetValue(_S(s.c_str()));
-	toString<int>(s,configHandler->GetSpringConfigInt(RC_TEXT[1].key,fromString<int>(RC_TEXT[1].def))); 
-	ctrl_y_res->SetValue(_S(s.c_str()));
+	toString(s,configHandler->GetSpringConfigInt(RC_TEXT[0].key,fromString(RC_TEXT[0].def))); 
+	ctrl_x_res->SetValue(_S(s));
+	toString(s,configHandler->GetSpringConfigInt(RC_TEXT[1].key,fromString(RC_TEXT[1].def))); 
+	ctrl_y_res->SetValue(_S(s));
 
 	wxSizer* subSizer = new wxBoxSizer(wxHORIZONTAL);
 	subSizer->Add(ctrl_x_res, 0, wxALIGN_LEFT, 10);
@@ -59,10 +72,10 @@ void tab_quality_video::updateControls(int what_to_update)
 	if (what_to_update == UPDATE_VIDEO_MODE || what_to_update == UPDATE_ALL)
 	{
 		std::string s;
-		toString<int>(s,intSettings[RC_TEXT[0].key]); 
-		ctrl_x_res->SetValue(_S(s.c_str()));
-		toString<int>(s,intSettings[RC_TEXT[1].key]); 
-		ctrl_y_res->SetValue(_S(s.c_str()));
+		toString(s,intSettings[RC_TEXT[0].key]); 
+		ctrl_x_res->SetValue(_S(s));
+		toString(s,intSettings[RC_TEXT[1].key]); 
+		ctrl_y_res->SetValue(_S(s));
 	}
 	if (what_to_update == UPDATE_QA_BOXES || what_to_update == UPDATE_ALL)
 	{
@@ -103,7 +116,7 @@ void tab_quality_video::updateControls(int what_to_update)
 		}
 		
 		for (int i = 0; i < ctrl_vo_Boxes_size; i++) {
-			ctrl_vo_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(VO_CBOX[i].key,fromString<int>(VO_CBOX[i].def)));
+			ctrl_vo_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(VO_CBOX[i].key,fromString(VO_CBOX[i].def)));
 		}
 	}
 }
@@ -112,13 +125,13 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
 	// i < 8 with High resolution LOS textures
 	// i < 7 without
 	for (int i = 0; i < ctrl_qa_Boxes_size-3; i++) {
-		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, _S(QA_CBOX[i].lbl));
-		ctrl_qa_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(QA_CBOX[i].key,fromString<int>(QA_CBOX[i].def)));
+		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, (QA_CBOX[i].lbl));
+		ctrl_qa_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(QA_CBOX[i].key,fromString(QA_CBOX[i].def)));
 		ctrl_qa_Boxes[i]->SetToolTip(QA_CBOX[i].tTip[0]);
 		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 0)? 10: 0);
 	}
 	int waterOptIndex =0;
-	int waterSetting = configHandler->GetSpringConfigInt(WR_COMBOX[0].key,fromString<int>(WR_COMBOX[0].def)); 
+	int waterSetting = configHandler->GetSpringConfigInt(WR_COMBOX[0].key,fromString(WR_COMBOX[0].def)); 
 	switch (waterSetting)
 	{
 	case 0:
@@ -136,15 +149,15 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
 
 void tab_quality_video::initAASizer(wxFlexGridSizer* sizer){
 	for (int i = 8; i < ctrl_qa_Boxes_size; i++) {
-		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, _S(QA_CBOX[i].lbl));
-		ctrl_qa_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(QA_CBOX[i].key,fromString<int>(QA_CBOX[i].def)));
+		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, (QA_CBOX[i].lbl));
+		ctrl_qa_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(QA_CBOX[i].key,fromString(QA_CBOX[i].def)));
 		ctrl_qa_Boxes[i]->SetToolTip(QA_CBOX[i].tTip[0]);
 		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 8)? 10: 0);
 	}
-	int useFSAA = configHandler->GetSpringConfigInt(VO_SLI_EXT[0].key,fromString<int>(VO_SLI_EXT[0].def));
-	int FSAALev = configHandler->GetSpringConfigInt(VO_SLI[0].key,fromString<int>(VO_SLI[0].def));
+	int useFSAA = configHandler->GetSpringConfigInt(VO_SLI_EXT[0].key,fromString(VO_SLI_EXT[0].def));
+	int FSAALev = configHandler->GetSpringConfigInt(VO_SLI[0].key,fromString(VO_SLI[0].def));
 	ctrl_fsaa_slider = new wxSlider(this, VO_SLI[0].id, (useFSAA == 1)? FSAALev: 0, 0, 16, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
-	sizer->Add(new wxStaticText(this, -1, _S(VO_SLI[0].lbl)), 0, wxTOP, 15);
+	sizer->Add(new wxStaticText(this, -1, (VO_SLI[0].lbl)), 0, wxTOP, 15);
 	sizer->Add(ctrl_fsaa_slider, 0, wxALIGN_LEFT, 0);
 }
 
@@ -154,13 +167,13 @@ void tab_quality_video::initZBufferSizer(wxFlexGridSizer* sizer)
 
 	sizer->Add(new wxStaticText(this, -1, wxT("Resolution in bit")), 0, wxTOP ,15);
 
-	ctrl_z_radio1 = new wxRadioButton(this, VO_RBUT[0].id, _S(VO_RBUT[0].lbl), WX_DEF_P, WX_DEF_S, wxRB_GROUP, WX_DEF_V);
-	ctrl_z_radio2 = new wxRadioButton(this, VO_RBUT[1].id, _S(VO_RBUT[1].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
+	ctrl_z_radio1 = new wxRadioButton(this, VO_RBUT[0].id, (VO_RBUT[0].lbl), WX_DEF_P, WX_DEF_S, wxRB_GROUP, WX_DEF_V);
+	ctrl_z_radio2 = new wxRadioButton(this, VO_RBUT[1].id, (VO_RBUT[1].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
 
 	ctrl_z_radio1->SetToolTip(VO_RBUT[0].tTip[0]);
 	ctrl_z_radio2->SetToolTip(VO_RBUT[1].tTip[0]);
 	
-	switch (configHandler->GetSpringConfigInt(VO_RBUT[0].key,fromString<int>(VO_RBUT[0].def))) {
+	switch (configHandler->GetSpringConfigInt(VO_RBUT[0].key,fromString(VO_RBUT[0].def))) {
 	case 16: { ctrl_z_radio1->SetValue(1); } break;
 	case 24: { ctrl_z_radio2->SetValue(1); } break;
 	}
@@ -227,11 +240,11 @@ tab_quality_video::~tab_quality_video(void) {
 }
 
 BEGIN_EVENT_TABLE(tab_quality_video, abstract_panel)
-EVT_SLIDER(wxID_ANY,            tab_quality_video::OnSliderMove)
-EVT_TEXT(ID_RES_CHOICES_LBOX_X, tab_quality_video::OnTextUpdate)
-EVT_TEXT(ID_RES_CHOICES_LBOX_Y, tab_quality_video::OnTextUpdate)
-EVT_CHECKBOX(wxID_ANY,          tab_quality_video::OnCheckBoxTick)
-EVT_RADIOBUTTON(wxID_ANY,       tab_quality_video::OnRadioButtonToggle)
-EVT_IDLE(                       tab_quality_video::update)
+	EVT_SLIDER(wxID_ANY,            tab_quality_video::OnSliderMove)
+	EVT_TEXT(ID_RES_CHOICES_LBOX_X, tab_quality_video::OnTextUpdate)
+	EVT_TEXT(ID_RES_CHOICES_LBOX_Y, tab_quality_video::OnTextUpdate)
+	EVT_CHECKBOX(wxID_ANY,          tab_quality_video::OnCheckBoxTick)
+	EVT_RADIOBUTTON(wxID_ANY,       tab_quality_video::OnRadioButtonToggle)
+	//EVT_IDLE(                       tab_quality_video::update)
 EVT_COMBOBOX(ID_WINDOWP_WR_COMBOX, 		tab_quality_video::OnComboBoxChange)
 END_EVENT_TABLE()

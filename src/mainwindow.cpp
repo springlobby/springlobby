@@ -197,20 +197,20 @@ ChatPanel& servwin()
 //! @brief Returns the curent MainChatTab object
 MainChatTab& MainWindow::GetChatTab()
 {
-  ASSERT_LOGIC( m_chat_tab != 0, "m_chat_tab = 0" );
+  ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab = 0") );
   return *m_chat_tab;
 }
 
 MainJoinBattleTab& MainWindow::GetJoinTab()
 {
-  ASSERT_LOGIC( m_join_tab != 0, "m_join_tab = 0" );
+  ASSERT_LOGIC( m_join_tab != 0, _T("m_join_tab = 0") );
   return *m_join_tab;
 }
 
 
 MainSinglePlayerTab& MainWindow::GetSPTab()
 {
-  ASSERT_LOGIC( m_sp_tab != 0, "m_sp_tab = 0" );
+  ASSERT_LOGIC( m_sp_tab != 0, _T("m_sp_tab = 0") );
   return *m_sp_tab;
 }
 
@@ -237,7 +237,7 @@ ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
 //! @sa Server::JoinChannel OpenPrivateChat
 void MainWindow::OpenChannelChat( Channel& channel )
 {
-  ASSERT_LOGIC( m_chat_tab != 0, "m_chat_tab" );
+  ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
   m_func_tabs->SetSelection( 0 );
   m_chat_tab->AddChatPannel( channel );
 }
@@ -248,7 +248,7 @@ void MainWindow::OpenChannelChat( Channel& channel )
 //! @param nick The user to whom the chatwindow should be opened to
 void MainWindow::OpenPrivateChat( User& user )
 {
-  ASSERT_LOGIC( m_chat_tab != 0, "m_chat_tab" );
+  ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
   m_func_tabs->SetSelection( 0 );
   m_chat_tab->AddChatPannel( user );
 }
@@ -344,13 +344,13 @@ void MainWindow::OnTabsChanged( wxListbookEvent& event )
 
 void MainWindow::OnUnitSyncReloaded()
 {
-  debug_func("");
-  debug("Reloading join tab");
+  wxLogDebugFunc( _T("") );
+  wxLogMessage( _T("Reloading join tab") );
   GetJoinTab().OnUnitSyncReloaded();
-  debug("Join tab updated");
-  debug("Reloading Singleplayer tab");
+  wxLogMessage( _T("Join tab updated") );
+  wxLogMessage( _T("Reloading Singleplayer tab") );
   GetSPTab().OnUnitSyncReloaded();
-  debug("Singleplayer tab updated");
+  wxLogMessage( _T("Singleplayer tab updated") );
 }
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent& event )

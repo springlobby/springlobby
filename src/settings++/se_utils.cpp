@@ -1,21 +1,16 @@
 #include "se_utils.h"
 
-inline wxString _S (const std::string str)
-{
-	return wxString(str.c_str(),*wxConvCurrent);
-}
-
-template<typename Type> void toString(std::string& s, Type t) {
-	//using namespace std;
+void toString(std::string& s, int t) {
 			std::stringstream ss;
 			ss << t;
 			ss >> s;
 }
 
-template<typename Type> Type fromString(const std::string& s) {
+int fromString(const std::string& s) {
         std::stringstream ss;
         ss << s;
-        Type r;
+        int r;
         ss >> r;
         return r;
 }
+

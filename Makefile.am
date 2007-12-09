@@ -23,13 +23,13 @@ dist_doc_DATA = \
 	THANKS
 
 bin_PROGRAMS = \
-	springlobby
-	settings++
+	springlobby \
+	springsettings
 
 springlobby_LDADD = \
 	$(WX_LIBS)
 
-settings++_LDADD = \
+springsettings_LDADD = \
 	$(WX_LIBS)
 
 if USE_WINDRES
@@ -43,7 +43,8 @@ endif
 # and we can not use -Werror in AM_INIT_AUTOMAKE because of this either
 # but without this construct we would have a circular dependency and make
 # would whine about it on every invocation
-revision.cpp: src/revision.cpp.in $(filter-out revision.%, $(springlobby_OBJECTS)) $(springlobby_DEPENDENCIES)
+
+revision.cpp: src/revision.cpp.in $(filter-out revision.%, $(springlobby_SOURCES)) $(springlobby_DEPENDENCIES)
 	rm -f $@
 	sed "s/REV[^\"]*/REV SVN `LC_ALL=C $(SVNVERSION) $(top_srcdir) /trunk || echo svnversion failed or not found`/" < $< > $@
 
@@ -477,7 +478,6 @@ springlobby_SOURCES = \
 springlobby_SOURCES += \
 	src/settings++ \
 	src/settings++/frame.cpp \
-	src/settings++/tabs.h \
 	src/settings++/main.h \
 	src/settings++/tab_ui.cpp \
 	src/settings++/tab_render_detail.cpp \
@@ -485,6 +485,8 @@ springlobby_SOURCES += \
 	src/settings++/frame.h \
 	src/settings++/tab_audio.h \
 	src/settings++/se_settings.h \
+	src/settings++/se_utils.h \
+	src/settings++/se_utils.cpp \
 	src/settings++/tab_debug.cpp \
 	src/settings++/tab_debug.h \
 	src/settings++/se_settings.cpp \
@@ -506,35 +508,49 @@ if USE_WINDRES
 endif
 
 
- settings++_SOURCES = \
- 	src/settings++ \
- 	src/settings++/frame.cpp \
-	src/settings++/tabs.h \
- 	src/settings++/main.h \
- 	src/settings++/tab_ui.cpp \
- 	src/settings++/tab_render_detail.cpp \
- 	src/settings++/tab_quality_video.h \
- 	src/settings++/frame.h \
- 	src/settings++/tab_audio.h \
- 	src/settings++/se_settings.h \
- 	src/settings++/tab_debug.cpp \
- 	src/settings++/tab_debug.h \
- 	src/settings++/se_settings.cpp \
- 	src/settings++/tab_audio.cpp \
- 	src/settings++/presets.h \
- 	src/settings++/presets.cpp \
- 	src/settings++/tab_abstract.cpp \
- 	src/settings++/Main.cpp \
- 	src/settings++/Defs.hpp \
- 	src/settings++/tab_simple.cpp \
- 	src/settings++/tab_quality_video.cpp \
- 	src/settings++/tab_ui.h \
- 	src/settings++/tab_simple.h \
- 	src/settings++/tab_render_detail.h \
- 	src/settings++/tab_abstract.h
+springsettings_SOURCES = \
+	revision.cpp \
+	src/revision.cpp.in \
+	src/revision.h \
+	src/base64.cpp \
+	src/base64.h \
+	src/utils.cpp \
+	src/utils.h \
+	src/stacktrace.cpp \
+	src/stacktrace.h \
+	src/boost/md5.cpp \
+	src/boost/md5.hpp \
+	src/springunitsynclib.cpp \
+	src/springunitsynclib.h \
+	src/settings++ \
+	src/settings++/frame.cpp \
+	src/settings++/main.h \
+	src/settings++/tab_ui.cpp \
+	src/settings++/tab_render_detail.cpp \
+	src/settings++/tab_quality_video.h \
+	src/settings++/frame.h \
+	src/settings++/tab_audio.h \
+	src/settings++/se_settings.h \
+	src/settings++/se_utils.cpp \
+	src/settings++/se_utils.h \
+	src/settings++/tab_debug.cpp \
+	src/settings++/tab_debug.h \
+	src/settings++/se_settings.cpp \
+	src/settings++/tab_audio.cpp \
+	src/settings++/presets.h \
+	src/settings++/presets.cpp \
+	src/settings++/tab_abstract.cpp \
+	src/settings++/Main.cpp \
+	src/settings++/Defs.hpp \
+	src/settings++/tab_simple.cpp \
+	src/settings++/tab_quality_video.cpp \
+	src/settings++/tab_ui.h \
+	src/settings++/tab_simple.h \
+	src/settings++/tab_render_detail.h \
+	src/settings++/tab_abstract.h
 
 if USE_WINDRES
-	settings++_SOURCES += \
+	springsettings_SOURCES += \
 		src/springlobby.rc
 endif
 

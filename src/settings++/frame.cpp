@@ -39,7 +39,42 @@
 BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_CLOSE(settings_frame::OnClose)
 	EVT_MENU(wxID_ANY,settings_frame::OnMenuChoice)
+	EVT_NOTEBOOK_PAGE_CHANGED(ID_OPTIONS,settings_frame::OnNBchange)
 END_EVENT_TABLE()
+
+
+void settings_frame::OnNBchange( wxNotebookEvent& e)
+{
+	UpdateWindowUI();
+	Update();
+}
+
+void settings_frame::AddTabs()
+{
+	try {
+		simpleTab = new tab_simple(notebook,ID_SIMPLE);
+		
+		qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
+	       
+	    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
+	   
+	    uiTab = new tab_ui(notebook,ID_UI);
+
+
+	    audioTab = new audio_panel(notebook,ID_AUDIO);
+	    
+		debugTab = new debug_panel(notebook,ID_DEBUG);
+		
+		simpleTab->setTabs(detailTab,qualityTab);
+				
+					
+				} catch (...) {
+					wxMessageBox(wxT("DOH. unitsync not loaded. closing..."), wxT(""), wxOK|wxICON_HAND, this);
+					Destroy();
+				}
+		
+		
+}
 
 //TODO use icon
 settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
@@ -50,6 +85,7 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	susynclib()->Load(OptionsHandler.getUsyncLoc());
 	CreateGUIControls();
 	initMenuBar();
+	
 }
 
 settings_frame::~settings_frame()
@@ -58,55 +94,46 @@ settings_frame::~settings_frame()
 
 void settings_frame::CreateGUIControls()
 {
-	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP);
+	//wxPanel* container = new wxPanel(this,666,wxPoint(-1,-1),wxSize(-1,-1));
+	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
 	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
-	try {
-	simpleTab = new tab_simple(notebook,ID_SIMPLE);
-		
-	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
-       
-    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
-   
-    uiTab = new tab_ui(notebook,ID_UI);
-
-
-    audioTab = new audio_panel(notebook,ID_AUDIO);
-    
-	debugTab = new debug_panel(notebook,ID_DEBUG);
 	
-	simpleTab->setTabs(detailTab,qualityTab);
+	
+	AddTabs();
+			
+			switch(OptionsHandler.getMode()){
+					case SET_MODE_EXPERT: 
+						notebook->AddPage(uiTab, wxT("UI options"));
+						notebook->AddPage(qualityTab, wxT("Render quality / Video mode"));
+						notebook->AddPage(detailTab, wxT("Render detail"));
+						notebook->AddPage(audioTab, wxT("Audio"));
+						notebook->AddPage(debugTab, wxT("Debug"));
+					
+						break;
+					case SET_MODE_SIMPLE: 
+						notebook->AddPage(uiTab, wxT("UI options"));
+						notebook->InsertPage(0,simpleTab,wxT("Combined options"));
+					
+					break;
+			}
+			notebook->SetSelection(0);
 
-	switch(OptionsHandler.getMode()){
-		case SET_MODE_EXPERT: {
-			notebook->AddPage(uiTab, wxT("UI options"));
-			notebook->AddPage(qualityTab, wxT("Render quality / Video mode"));
-			notebook->AddPage(detailTab, wxT("Render detail"));
-			notebook->AddPage(audioTab, wxT("Audio"));
-			notebook->AddPage(debugTab, wxT("Debug"));
-		}
-			break;
-		case SET_MODE_SIMPLE: {
-			notebook->AddPage(uiTab, wxT("UI options"));
-			notebook->InsertPage(0,simpleTab,wxT("Combined options"));
-		}
-		break;
-	}
-	} catch (...) {
-		wxMessageBox(wxT("DOH. unitsync not loaded. closing..."), wxT(""), wxOK|wxICON_HAND, this);
-		Destroy();
-	}
-	notebook->SetSelection(0);
+	
 	if (OptionsHandler.getMode()==SET_MODE_EXPERT)
 		SetTitle(wxT("SpringSettings (expert mode)"));
 	else
 		SetTitle(wxT("SpringSettings (simple mode)"));
+
 	
-	//	book_sizer = new wxFlexGridSizer(1,0,0);
-	//	book_sizer->AddGrowableCol(0);
-	//	book_sizer->Add(notebook);
-	//	book_sizer->SetSizeHints(this);
-		//SetSizer(book_sizer);
-		
+	book_sizer = new wxFlexGridSizer(1,0,0);
+	book_sizer->AddGrowableCol(0);
+	book_sizer->Add(notebook,0,wxEXPAND);
+	book_sizer->SetSizeHints(this);
+//	container->SetSizer(book_sizer);
+//	
+//	  book_sizer2 = new wxFlexGridSizer(1,0,0);
+//		book_sizer2->Add(container);
+		SetSizer(book_sizer);
 	
 	SetIcon(wxNullIcon);
 	SetSize(8,8,760,550);
@@ -194,12 +221,13 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		case ID_MENUITEM_SIMPLE: 
 			if (OptionsHandler.getMode()==SET_MODE_EXPERT) {
 				OptionsHandler.setMode(SET_MODE_SIMPLE);
+				AddTabs();
 				updateAllControls();
 				notebook->InsertPage(0,simpleTab,wxT("Combined options"));
-				notebook->RemovePage(5);
-				notebook->RemovePage(4);
-				notebook->RemovePage(3);
-				notebook->RemovePage(2);
+				notebook->DeletePage(5);
+				notebook->DeletePage(4);
+				notebook->DeletePage(3);
+				notebook->DeletePage(2);
 				SetTitle(wxT("SpringSettings (simple mode)"));
 				updateAllControls();
 				if (!OptionsHandler.getDisableWarning()){
@@ -211,14 +239,14 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		case ID_MENUITEM_EXPERT: 
 			if (OptionsHandler.getMode()==SET_MODE_SIMPLE) {
 				OptionsHandler.setMode(SET_MODE_EXPERT);
-
+				AddTabs();
 				updateAllControls();
 
 				notebook->AddPage(qualityTab, wxT("Render quality / Video mode"));
 				notebook->AddPage(detailTab, wxT("Render detail"));
 				notebook->AddPage(audioTab, wxT("Audio"));
 				notebook->AddPage(debugTab, wxT("Debug"));
-				notebook->RemovePage(0);
+				notebook->DeletePage(0);
 				SetTitle(wxT("SpringSettings (expert mode)"));
 
 			}

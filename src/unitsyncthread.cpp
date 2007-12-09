@@ -58,9 +58,8 @@ void UnitSyncThread::AddMapInfoOrder( const wxString& map )
 
 void UnitSyncThread::AddMinimapOrder( const wxString& map )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   LOCK_CACHE;
-  debug("");
   _AddJob( JT_MINIMAP, map );
 }
 
@@ -93,7 +92,11 @@ void UnitSyncThread::Resume()
   //if ( !IsRunning() ) wxThread::Resume();
 }
 
-
+void UnitSyncThread::Delete()
+{
+  wxThread::Delete();
+  m_wait.Leave();
+}
 
 void UnitSyncThread::_CacheLoop()
 {
@@ -102,15 +105,22 @@ void UnitSyncThread::_CacheLoop()
   wxString params;
   while ( !TestDestroy() ) {
 
-    _GetNextJob( job, params );
+    try {
 
-    switch ( job ) {
-      case JT_MAPINFO : _DoMapInfoJob( params ); break;
-      case JT_MINIMAP : _DoMinimapJob( params ); break;
-      case JT_UNITS   : _DoUnitsJob( params ); break;
-      case JT_RELOAD   : _DoReloadJob(); break;
-      case JT_PAUSE   : m_wait.Enter(); break;
-    };
+      _GetNextJob( job, params );
+
+      switch ( job ) {
+        case JT_MAPINFO : _DoMapInfoJob( params ); break;
+        case JT_MINIMAP : _DoMinimapJob( params ); break;
+        case JT_UNITS   : _DoUnitsJob( params ); break;
+        case JT_RELOAD   : _DoReloadJob(); break;
+        default:
+        case JT_PAUSE   : m_wait.Enter(); break;
+      };
+
+    } catch (...) {
+      m_wait.Enter();
+    }
 
   }
   m_ui.OnCachedThreadTerminated();
@@ -127,7 +137,7 @@ bool UnitSyncThread::_GetNextJob( JobType& jobtype, wxString& params )
 
   wxString Order = m_orders.Item(0);
   m_orders.RemoveAt( 0 );
-  ASSERT_LOGIC( Order.Length() > 0, "Bad order" );
+  ASSERT_LOGIC( Order.Length() > 0, _T("Bad order") );
   jobtype = Order[0];
   params = Order.Remove( 0, 1 );
   return true;
@@ -173,28 +183,28 @@ void UnitSyncThread::_DoReloadJob()
 
 void UnitSyncThread::OnMinimapCached( wxCommandEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   m_ui.OnMinimapCached( m_last_job );
 }
 
 
 void UnitSyncThread::OnMapInfoCached( wxCommandEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   m_ui.OnMinimapCached( m_last_job );
 }
 
 
 void UnitSyncThread::OnModUnitsCached( wxCommandEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   m_ui.OnMinimapCached( m_last_job );
 }
 
 
 void UnitSyncThread::OnReloadComplete( wxCommandEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   m_ui.OnMinimapCached( m_last_job );
 }
 

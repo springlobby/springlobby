@@ -1,30 +1,45 @@
 /**
-    This file is part of Settings++,
+    This file is part of springsettings,
     Copyright (C) 2007
     Original work by Kloot
     cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
-    Settings++ is free software: you can redistribute it and/or modify
+    springsettings is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Settings++ is distributed in the hope that it will be useful,
+    springsettings is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Settings++.  If not, see <http://www.gnu.org/licenses/>.
+    along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#include "tabs.h"
+#include "tab_abstract.h"
+#include <wx/string.h>
+#include <wx/gbsizer.h>
+#include <wx/event.h>
+#include <wx/defs.h>
+#include <wx/slider.h>
+#include <wx/checkbox.h>
+#include <wx/radiobut.h>
+#include <wx/combobox.h>
+#include <wx/msgdlg.h>
+
+
+#include "../springunitsynclib.h"
+#include "Defs.hpp"
+#include "se_utils.h"
+#include "presets.h"
 
 intMap abstract_panel::intSettings;
-stringMap abstract_panel::stringSettings;
-floatMap abstract_panel::floatSettings;
+//stringMap abstract_panel::stringSettings;
+//floatMap abstract_panel::floatSettings;
 bool abstract_panel::settingsChanged = false;
     
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
@@ -40,67 +55,67 @@ void abstract_panel::loadDefaults()
 {
 	//const Control RO_SLI[9]
 	for (int i = 0;i< 9; ++i)
-		intSettings[RO_SLI[i].key] = fromString<int>( RO_SLI[i].def);
+		intSettings[RO_SLI[i].key] = fromString( RO_SLI[i].def);
 
 	//const Control VO_CBOX[3]
 	for (int i = 0;i< 3; ++i)
-		intSettings[VO_CBOX[i].key] = fromString<int>( VO_CBOX[i].def);	
+		intSettings[VO_CBOX[i].key] = fromString( VO_CBOX[i].def);	
 
 	//const Control VO_RBUT[2] 
 	for (int i = 0;i< 2; ++i)
-		intSettings[VO_RBUT[i].key] = fromString<int>( VO_RBUT[i].def);	
+		intSettings[VO_RBUT[i].key] = fromString( VO_RBUT[i].def);	
 
 	//	const Control VO_SLI[1] 
 	for (int i = 0;i< 1; ++i)
-		intSettings[VO_SLI[i].key] = fromString<int>( VO_SLI[i].def);	
+		intSettings[VO_SLI[i].key] = fromString( VO_SLI[i].def);	
 
 	//	const Control VO_SLI_EXT[1]   
 	for (int i = 0;i< 1; ++i)
-		intSettings[VO_SLI_EXT[i].key] = fromString<int>( VO_SLI_EXT[i].def);	
+		intSettings[VO_SLI_EXT[i].key] = fromString( VO_SLI_EXT[i].def);	
 
 //	const Control AO_SLI[3]       
 	for (int i = 0;i< 3; ++i)
-		intSettings[AO_SLI[i].key] = fromString<int>( AO_SLI[i].def);	
+		intSettings[AO_SLI[i].key] = fromString( AO_SLI[i].def);	
 
 	//	const Control QA_CBOX[10]
 	for (int i = 0;i< 10; ++i)
-		intSettings[QA_CBOX[i].key] = fromString<int>( QA_CBOX[i].def);	
+		intSettings[QA_CBOX[i].key] = fromString( QA_CBOX[i].def);	
 
 	//	const Control UI_CBOX[14] 
 	for (int i = 0;i< 14; ++i)
-		intSettings[UI_CBOX[i].key] = fromString<int>(UI_CBOX [i].def);	
+		intSettings[UI_CBOX[i].key] = fromString(UI_CBOX [i].def);	
 
 	//	const Control MO_SLI[5]  
 	for (int i = 0;i< 5; ++i)
-		intSettings[MO_SLI[i].key] = fromString<int>( MO_SLI[i].def);
+		intSettings[MO_SLI[i].key] = fromString( MO_SLI[i].def);
 
 	//	const Control MO_SLI_EXT[5] 
 	for (int i = 0;i< 5; ++i)
-		intSettings[MO_SLI_EXT[i].key] = fromString<int>( MO_SLI_EXT[i].def);
+		intSettings[MO_SLI_EXT[i].key] = fromString( MO_SLI_EXT[i].def);
 
 	//	const Control DO_SLI[1]      
 	for (int i = 0;i< 1; ++i)
-		intSettings[DO_SLI[i].key] = fromString<int>( DO_SLI[i].def);
+		intSettings[DO_SLI[i].key] = fromString( DO_SLI[i].def);
 
 	//	const Control DO_CBOX[2]
 	for (int i = 0;i< 2; ++i)
-		intSettings[DO_CBOX[i].key] = fromString<int>( DO_CBOX[i].def);
+		intSettings[DO_CBOX[i].key] = fromString( DO_CBOX[i].def);
 
 	//	const Control WR_COMBOX[4] 
 	for (int i = 0;i< 1; ++i)
-		intSettings[WR_COMBOX[i].key] = fromString<int>( WR_COMBOX[i].def);
+		intSettings[WR_COMBOX[i].key] = fromString( WR_COMBOX[i].def);
 
 	//	const Control MO_CBOX[2] 
 	for (int i = 0;i< 2; ++i)
-		intSettings[MO_CBOX[i].key] = fromString<int>( MO_CBOX[i].def);
+		intSettings[MO_CBOX[i].key] = fromString( MO_CBOX[i].def);
 
 	//	const Control MO_RBUT[5]
 	for (int i = 0;i< 5; ++i)
-		intSettings[MO_RBUT[i].key] = fromString<int>(MO_RBUT [i].def);
+		intSettings[MO_RBUT[i].key] = fromString(MO_RBUT [i].def);
 
 	//	const Control RC_TEXT[2]
 	for (int i = 0;i< 2; ++i)
-		intSettings[RC_TEXT[i].key] = fromString<int>( RC_TEXT[i].def);
+		intSettings[RC_TEXT[i].key] = fromString( RC_TEXT[i].def);
 
 
 }
@@ -300,7 +315,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		{
 			for (int i=0; i<prVal_RenderQuality_size;++i)
 			{
-				presetValues<int> pop = prVal_RenderQuality[i]; 
+				presetValues<int,5> pop = prVal_RenderQuality[i]; 
 				 int k = (pop.values[choice]);
 				 
 				(intSettings)[prVal_RenderQuality[i].key]= k;
@@ -311,7 +326,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		{
 			for (int i=0; i<prVal_RenderDetail_size;++i)
 						{
-							presetValues<int> pop = prVal_RenderDetail[i]; 
+							presetValues<int,3> pop = prVal_RenderDetail[i]; 
 							 int k = (pop.values[choice]);
 							(intSettings)[prVal_RenderDetail[i].key]= k;
 						}
@@ -335,14 +350,6 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 	}
 }
 
-//TODO is this still needed?
-wxArrayString abstract_panel::wxArrayStringFromCStringArray(const wxString* stdAr){
-	wxArrayString result = wxArrayString();
-	for (int i=0;i<4;++i)
-		result.Add(stdAr[i]);
-	return result;
-}
-
 //TODO inquire about floatsettings
 bool abstract_panel::saveSettings() {
     try {
@@ -350,27 +357,22 @@ bool abstract_panel::saveSettings() {
 	    {
 	        configHandler->SetSpringConfigInt(i->first,i->second);
 	    }
-	    for (stringMap::iterator s = stringSettings.begin(); s != stringSettings.end();++s)
-	    {
-	    	//not used
-	        //configHandler->SetSpringConfigString(s->first,s->second);
-	    }
-	    for (floatMap::iterator f = floatSettings.begin(); f != floatSettings.end();++f)
-	    {
-	        // not used
-	        //configHandler->SetSpringConfigFloat(f->first,f->second);
-	    }
+//	    for (stringMap::iterator s = stringSettings.begin(); s != stringSettings.end();++s)
+//	    {
+//	    	//not used
+//	        //configHandler->SetSpringConfigString(s->first,s->second);
+//	    }
+//	    for (floatMap::iterator f = floatSettings.begin(); f != floatSettings.end();++f)
+//	    {
+//	        // not used
+//	        //configHandler->SetSpringConfigFloat(f->first,f->second);
+//	    }
     } catch (...) {
-    	wxMessageBox(_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK, 0);
+    	wxMessageBox(_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK|wxICON_HAND, 0);
     	return false;
     }
     //test ???
     return true; 
-}
-
-//TODO what good is this actually
-void abstract_panel::update(wxIdleEvent& event) {
-	
 }
 
 void abstract_panel::updateControls(int what_to_update)
@@ -381,6 +383,6 @@ BEGIN_EVENT_TABLE(abstract_panel, wxPanel)
 	EVT_TEXT(wxID_ANY,              abstract_panel::OnTextUpdate)
 	EVT_CHECKBOX(wxID_ANY,          abstract_panel::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       abstract_panel::OnRadioButtonToggle)
-	EVT_IDLE(                       abstract_panel::update)
+//	EVT_IDLE(                       abstract_panel::update)
 	EVT_COMBOBOX(wxID_ANY, 		abstract_panel::OnComboBoxChange)
 END_EVENT_TABLE()

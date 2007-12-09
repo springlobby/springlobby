@@ -196,7 +196,7 @@ void Battle::DoAction( const std::string& msg )
 bool Battle::HaveMultipleBotsInSameTeam() const
 {
   std::list<BattleBot*>::const_iterator i;
-  debug_func("");
+  wxLogDebugFunc(_T(""));
 
   int teams[16] = { -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1 };
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
@@ -225,7 +225,7 @@ int Battle::GetMyPlayerNum()
   for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
     if ( &GetUser(i) == &m_serv.GetMe() ) return i;
   }
-  ASSERT_LOGIC(false, "You are not in this game.");
+  ASSERT_LOGIC(false, _T("You are not in this game.") );
   return -1;
 }
 
@@ -275,7 +275,7 @@ void Battle::RingNotReadyPlayers()
 
 void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom )
 {
-  ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), "Allyno out of bounds." );
+  ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), _T("Allyno out of bounds.") );
   BattleStartRect* sr;
   bool local;
   if ( m_rects[allyno] == 0 ) {
@@ -334,7 +334,7 @@ void Battle::StartRectUpdated( int allyno )
 
 BattleStartRect* Battle::GetStartRect( int allyno )
 {
-  ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), "Allyno out of bounds." );
+  ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), _T("Allyno out of bounds.") );
   return m_rects[allyno];
 }
 
@@ -359,7 +359,7 @@ void Battle::RemoveBot( const std::string& nick )
 void Battle::SetBotTeam( const std::string& nick, int team )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, "Bot not found" );
+  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
   bot->bs.team = team;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
@@ -368,7 +368,7 @@ void Battle::SetBotTeam( const std::string& nick, int team )
 void Battle::SetBotAlly( const std::string& nick, int ally )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, "Bot not found" );
+  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
   bot->bs.ally = ally;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
@@ -377,7 +377,7 @@ void Battle::SetBotAlly( const std::string& nick, int ally )
 void Battle::SetBotSide( const std::string& nick, int side )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, "Bot not found" );
+  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
   bot->bs.side = side;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
@@ -386,7 +386,7 @@ void Battle::SetBotSide( const std::string& nick, int side )
 void Battle::SetBotColour( const std::string& nick, int r, int g, int b )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, "Bot not found" );
+  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
   bot->bs.color_r = r;
   bot->bs.color_g = g;
   bot->bs.color_b = b;
@@ -397,7 +397,7 @@ void Battle::SetBotColour( const std::string& nick, int r, int g, int b )
 void Battle::SetBotHandicap( const std::string& nick, int handicap )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, "Bot not found" );
+  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
   if ( bot->owner != GetMe().GetNick() && !IsFounderMe() )
   {
     m_serv.DoActionBattle( m_opts.battleid, "thinks " + nick + " should get a " + i2s( handicap ) + "% resource bonus" );
@@ -415,7 +415,7 @@ void Battle::OnBotAdded( const std::string& nick, const std::string& owner, cons
   if ( bot == 0 ) bot = new BattleBot();
   else created = false;
 
-  debug_func("created: " + i2s(created) );
+  wxLogDebugFunc( _T("created: ") + WX_STRING(i2s(created)) );
 
   bot->name = nick;
   bot->bs = bs;
@@ -442,7 +442,7 @@ void Battle::OnBotRemoved( const std::string& nick )
 void Battle::OnBotUpdated( const std::string& name, const UserBattleStatus& bs )
 {
   BattleBot* bot = GetBot( name );
-  ASSERT_LOGIC( bot != 0, "Bad bot name" );
+  ASSERT_LOGIC( bot != 0, _T("Bad bot name") );
   int order = bot->bs.order;
   bot->bs = bs;
   bot->bs.order = order;
@@ -456,7 +456,7 @@ BattleBot* Battle::GetBot( const std::string& name )
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
   {
     if ( *i == 0 ) continue;
-    debug( (*i)->name );
+    wxLogMessage( WX_STRING((*i)->name) );
     if ( (*i)->name == name ) {
       return *i;
     }

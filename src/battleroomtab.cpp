@@ -94,7 +94,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true, false );
 
-  m_players = new BattleroomListCtrl( m_player_panel, battle );
+  m_players = new BattleroomListCtrl( m_player_panel, battle, m_ui );
   m_chat = new ChatPanel( m_splitter, m_ui, battle );
 
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
@@ -244,7 +244,7 @@ wxString _GetGameTypeStr( GameType t )
 void BattleRoomTab::UpdateBattleInfo()
 {
   try {
-    ASSERT_RUNTIME( m_battle.MapExists(), "Map does not exist." );
+    ASSERT_RUNTIME( m_battle.MapExists(), _T("Map does not exist.") );
     UnitSyncMap map = m_battle.Map();
     m_map_lbl->SetLabel( RefineMapname( WX_STRING(map.name) ) );
     m_opts_list->SetItem( Opt_Pos_Size, 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
@@ -273,7 +273,7 @@ void BattleRoomTab::UpdateBattleInfo()
 
 BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
 {
-  ASSERT_LOGIC( m_players != 0, "m_players = 0" );
+  ASSERT_LOGIC( m_players != 0, _T("m_players = 0") );
   return *m_players;
 }
 
@@ -310,7 +310,7 @@ Battle& BattleRoomTab::GetBattle()
 
 ChatPanel& BattleRoomTab::GetChatPanel()
 {
-  ASSERT_LOGIC( m_chat != 0, "m_chat = 0" );
+  ASSERT_LOGIC( m_chat != 0, _T("m_chat = 0") );
   return *m_chat;
 }
 

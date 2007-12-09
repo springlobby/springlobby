@@ -14,4 +14,4 @@ void toString(std::string& s, int t);
 int fromString(const std::string& s);
 
 #endif /*SE_UTILS_H_*/
-_H_*/
+
