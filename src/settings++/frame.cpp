@@ -261,10 +261,10 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				simpleTab = 0;
 				SetTitle(wxT("SpringSettings (expert mode)"));
 				uiTab->updateControls(UPDATE_ALL);
-					detailTab->updateControls(UPDATE_ALL);
-					qualityTab->updateControls(UPDATE_ALL);
-					debugTab->updateControls(UPDATE_ALL);
-					audioTab->updateControls(UPDATE_ALL);
+				detailTab->updateControls(UPDATE_ALL);
+				qualityTab->updateControls(UPDATE_ALL);
+				debugTab->updateControls(UPDATE_ALL);
+				audioTab->updateControls(UPDATE_ALL);
 	
 			}
 			break;
@@ -275,8 +275,9 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 }
 void settings_frame::resetSettings()
 {
+	//TODO unbreak;
 	abstract_panel::loadDefaults();
-	updateAllControls();
+	//updateAllControls();
 }
 
 void settings_frame::updateAllControls()
