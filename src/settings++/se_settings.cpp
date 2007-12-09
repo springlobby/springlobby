@@ -125,6 +125,7 @@ wxString se_settings::AutoFindUnitSyncLib( const wxString& def )
 
 bool se_settings::IsUnitSyncLib( const wxString& lib )
 {
-  if ( !wxFile::Exists( lib ) ) return false;
+	//TODO VORSICHT!!
+  //if ( !wxFile::Exists( lib ) ) return false;
   return true;
 }

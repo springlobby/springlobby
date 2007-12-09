@@ -32,10 +32,12 @@ END_EVENT_TABLE()
 settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxFrame(parent, id, title, position, size, style)
 {
+	wxSetWorkingDirectory("c:/programme/spring_svn");
+	susynclib()->Load(OptionsHandler.getUsyncLoc());
 	CreateGUIControls();
 	initMenuBar();
 	//TODO call only when standalone
-	//susynclib()->Load(OptionsHandler->getUsyncLoc());
+	
 }
 
 settings_frame::~settings_frame()
