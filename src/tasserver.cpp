@@ -885,7 +885,8 @@ void TASServer::ModeratorMute( const std::string& channel, const std::string& ni
 {
   wxString dur;
   dur << duration;
-  m_sock->Send( STD_STRING( "MUTE " + channel + " " + nick + " " + dur + (byip?" ip":"") + "\n" ) );
+  wxString cmd = wxString::Format(_T("MUTE %s %s %d"), WX_STRING(channel).mb_str(wxConvUTF8), WX_STRING(nick).mb_str(wxConvUTF8), duration ) + (byip?_T(" ip"):_T("") ) + _T("\n");
+  m_sock->Send( STD_STRING( cmd ) );
 }
 
 

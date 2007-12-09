@@ -306,7 +306,7 @@ std::string SpringUnitSync::GetSideName( const std::string& modname, int index )
   if ( (index < 0) || (!ModExists( modname )) ) return "unknown";
   susynclib()->AddAllArchives( WX_STRING(_GetModArchive( susynclib()->GetModIndex( WX_STRING(modname) )  ) ) );
   if ( index >= GetSideCount( modname ) ) return "unknown";
-  ASSERT_LOGIC( GetSideCount( modname ) > index, "Side index too high." );
+  ASSERT_LOGIC( GetSideCount( modname ) > index, _T("Side index too high.") );
   return STD_STRING(susynclib()->GetSideName( WX_STRING(modname), index ));
 }
 
