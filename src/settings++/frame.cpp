@@ -68,7 +68,7 @@ void settings_frame::CreateGUIControls()
     detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
    
     uiTab = new tab_ui(notebook,ID_UI);
-    
+
 
     audioTab = new audio_panel(notebook,ID_AUDIO);
     
@@ -193,7 +193,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				notebook->RemovePage(3);
 				notebook->RemovePage(2);
 				SetTitle(wxT("SpringSettings (simple mode)"));
-				
+				updateAllControls();
 				if (!OptionsHandler.getDisableWarning()){
 					wxMessageBox(wxT("Changes made on Quality/Detail tab in expert mode"
 							"\n will be lost if you change simple options again."), wxT(""), wxOK, this);
@@ -203,14 +203,16 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		case ID_MENUITEM_EXPERT: 
 			if (OptionsHandler.getMode()==SET_MODE_SIMPLE) {
 				OptionsHandler.setMode(SET_MODE_EXPERT);
+
 				updateAllControls();
+
 				notebook->AddPage(qualityTab, wxT("Render quality / Video mode"));
 				notebook->AddPage(detailTab, wxT("Render detail"));
 				notebook->AddPage(audioTab, wxT("Audio"));
 				notebook->AddPage(debugTab, wxT("Debug"));
 				notebook->RemovePage(0);
 				SetTitle(wxT("SpringSettings (expert mode)"));
-				
+
 			}
 			break;
 		case ID_MENUITEM_DISABLE_WARN:
