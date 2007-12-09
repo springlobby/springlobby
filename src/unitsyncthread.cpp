@@ -60,7 +60,6 @@ void UnitSyncThread::AddMinimapOrder( const wxString& map )
 {
   wxLogDebugFunc( _T("") );
   LOCK_CACHE;
-  wxLogMessage( _T("") );
   _AddJob( JT_MINIMAP, map );
 }
 
@@ -138,7 +137,7 @@ bool UnitSyncThread::_GetNextJob( JobType& jobtype, wxString& params )
 
   wxString Order = m_orders.Item(0);
   m_orders.RemoveAt( 0 );
-  ASSERT_LOGIC( Order.Length() > 0, "Bad order" );
+  ASSERT_LOGIC( Order.Length() > 0, _T("Bad order") );
   jobtype = Order[0];
   params = Order.Remove( 0, 1 );
   return true;

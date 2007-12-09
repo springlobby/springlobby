@@ -257,7 +257,7 @@ UnitSyncMap SpringUnitSync::GetMapEx( const std::string& mapname )
 {
   wxLogDebugFunc( _T("") );
   int i = GetMapIndex( mapname );
-  ASSERT_LOGIC( i >= 0, "Map does not exist" );
+  ASSERT_LOGIC( i >= 0, _T("Map does not exist") );
   return GetMapEx( i );
 }
 
@@ -306,7 +306,7 @@ std::string SpringUnitSync::GetSideName( const std::string& modname, int index )
   if ( (index < 0) || (!ModExists( modname )) ) return "unknown";
   susynclib()->AddAllArchives( WX_STRING(_GetModArchive( susynclib()->GetModIndex( WX_STRING(modname) )  ) ) );
   if ( index >= GetSideCount( modname ) ) return "unknown";
-  ASSERT_LOGIC( GetSideCount( modname ) > index, "Side index too high." );
+  ASSERT_LOGIC( GetSideCount( modname ) > index, _T("Side index too high.") );
   return STD_STRING(susynclib()->GetSideName( WX_STRING(modname), index ));
 }
 
@@ -347,8 +347,8 @@ wxArrayString SpringUnitSync::GetAIList()
 
   int ini = susynclib()->InitFindVFS( _T("AI/Bot-libs/*") + wxString(DLL_EXTENSION) );
 
-  wxString FileName;
   wxArrayString ret;
+  wxString FileName;
 
   ini = susynclib()->FindFilesVFS( ini, FileName );
   while ( ini ) {

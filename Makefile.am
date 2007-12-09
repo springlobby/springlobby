@@ -43,6 +43,7 @@ endif
 # and we can not use -Werror in AM_INIT_AUTOMAKE because of this either
 # but without this construct we would have a circular dependency and make
 # would whine about it on every invocation
+
 revision.cpp: src/revision.cpp.in $(filter-out revision.%, $(springlobby_SOURCES)) $(springlobby_DEPENDENCIES)
 	rm -f $@
 	sed "s/REV[^\"]*/REV SVN `LC_ALL=C $(SVNVERSION) $(top_srcdir) /trunk || echo svnversion failed or not found`/" < $< > $@
@@ -511,8 +512,14 @@ springsettings_SOURCES = \
 	revision.cpp \
 	src/revision.cpp.in \
 	src/revision.h \
+	src/base64.cpp \
+	src/base64.h \
 	src/utils.cpp \
 	src/utils.h \
+	src/stacktrace.cpp \
+	src/stacktrace.h \
+	src/boost/md5.cpp \
+	src/boost/md5.hpp \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
 	src/settings++ \
