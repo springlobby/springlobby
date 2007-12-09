@@ -60,11 +60,11 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 tab_render_detail::tab_render_detail(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : abstract_panel(parent, id , title , pos , size, style) {
 	ctrl_detail_sliders = new wxSlider*[ctrl_detail_sliders_size];
-		wxSizer* renderSizer = new wxGridSizer(2,0,0);
-			wxSizer* parentSizer = new wxGridSizer(1,0,0);
-			wxFlexGridSizer* rendererSizerA = new wxFlexGridSizer(2,35,10);
-			wxFlexGridSizer* rendererSizerB = new wxFlexGridSizer(2,35,10);
-			wxStaticBoxSizer* box = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Rendering Detail Levels"));
+		 renderSizer = new wxGridSizer(2,0,0);
+			 parentSizer = new wxGridSizer(1,0,0);
+			 rendererSizerA = new wxFlexGridSizer(2,35,10);
+			 rendererSizerB = new wxFlexGridSizer(2,35,10);
+			 box = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Rendering Detail Levels"));
 			rendererSizerA->AddGrowableCol(0);
 		    rendererSizerA->AddGrowableCol(1);
 		    rendererSizerB->AddGrowableCol(0);

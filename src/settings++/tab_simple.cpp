@@ -68,16 +68,16 @@ tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title ,
 : abstract_panel(parent, id , title , pos , size, style) {
 
 	SetSizer(0, true);
-	wxSizer* parentSizer = new wxFlexGridSizer(2,0,0);	
+	 parentSizer = new wxFlexGridSizer(2,0,0);	
 	//wxSizer* leftSizer = new wxFlexGridSizer(1,15,0);
-	wxSizer* middleSizer = new wxFlexGridSizer(1,15,0);
+	 middleSizer = new wxFlexGridSizer(1,15,0);
 	//wxSizer* rightSizer = new wxFlexGridSizer(1,15,0);//for info
-	wxFlexGridSizer* Sizer_CBX = new wxFlexGridSizer(2,10,10);
-	wxFlexGridSizer* Sizer_info = new wxFlexGridSizer(1,15,10);
+	 Sizer_CBX = new wxFlexGridSizer(2,10,10);
+	 Sizer_info = new wxFlexGridSizer(1,15,10);
 	//wxFlexGridSizer* SizerC = new wxFlexGridSizer(1,15,10);
 	//wxFlexGridSizer* SizerD = new wxFlexGridSizer(1,5,10);
-	wxStaticBoxSizer* boxA = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("SIMPLE_OPTIONS"));
-	wxStaticBoxSizer* boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Info"));
+	 boxA = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("SIMPLE_OPTIONS"));
+	 boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Info"));
 	//		wxStaticBoxSizer* boxC = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Anti-Aliasing Options"));
 	//		wxStaticBoxSizer* boxD = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Z-/Depth-Buffer"));
 	//		Sizer_CBX->AddGrowableCol(0);

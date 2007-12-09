@@ -187,18 +187,18 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
 : abstract_panel(parent, id , title , pos , size, style) {
 	ctrl_qa_Boxes = new wxCheckBox*[ctrl_qa_Boxes_size];
 	ctrl_vo_Boxes = new wxCheckBox*[ctrl_vo_Boxes_size];
-	wxSizer* parentSizer = new wxFlexGridSizer(2,0,0);	
-	wxSizer* leftSizer = new wxFlexGridSizer(1,15,0);
-	wxSizer* middleSizer = new wxFlexGridSizer(1,15,0);
+	 parentSizer = new wxFlexGridSizer(2,0,0);	
+	 leftSizer = new wxFlexGridSizer(1,15,0);
+	 middleSizer = new wxFlexGridSizer(1,15,0);
 	//wxSizer* rightSizer = new wxFlexGridSizer(1,15,0);//for info
-	wxFlexGridSizer* SizerA = new wxFlexGridSizer(1,10,10);
-	wxFlexGridSizer* SizerB = new wxFlexGridSizer(1,15,10);
-	wxFlexGridSizer* SizerC = new wxFlexGridSizer(1,15,10);
-	wxFlexGridSizer* SizerD = new wxFlexGridSizer(1,5,10);
-	wxStaticBoxSizer* boxA = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Render Quality Options"));
-	wxStaticBoxSizer* boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Video Mode Options"));
-	wxStaticBoxSizer* boxC = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Anti-Aliasing Options"));
-	wxStaticBoxSizer* boxD = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Z-/Depth-Buffer"));
+	 SizerA = new wxFlexGridSizer(1,10,10);
+	 SizerB = new wxFlexGridSizer(1,15,10);
+	 SizerC = new wxFlexGridSizer(1,15,10);
+	 SizerD = new wxFlexGridSizer(1,5,10);
+	 boxA = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Render Quality Options"));
+	 boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Video Mode Options"));
+	 boxC = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Anti-Aliasing Options"));
+	 boxD = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Z-/Depth-Buffer"));
 	SizerA->AddGrowableCol(0);
 	SizerB->AddGrowableCol(0);
 	SizerC->AddGrowableCol(0);

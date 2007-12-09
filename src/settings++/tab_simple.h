@@ -38,7 +38,7 @@ class wxPoint;
 class wxSize;
 class wxCloseEvent;
 class wxStaticText;
-
+class wxStaticBoxSizer;
 
 class tab_simple : public abstract_panel
 {
@@ -69,6 +69,16 @@ class tab_simple : public abstract_panel
 		//dirty
 		abstract_panel* detailTab;
 		abstract_panel* qualityTab;
+		
+		wxSizer* parentSizer;	
+			
+			wxSizer* middleSizer ;
+			
+			wxFlexGridSizer* Sizer_CBX ;
+			wxFlexGridSizer* Sizer_info;
+			
+			wxStaticBoxSizer* boxA ;
+			wxStaticBoxSizer* boxB ;
 		
 		DECLARE_EVENT_TABLE()
 };   

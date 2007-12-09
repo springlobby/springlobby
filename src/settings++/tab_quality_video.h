@@ -36,6 +36,7 @@ class wxPoint;
 class wxSize;
 class wxCloseEvent;
 class wxSlider;
+class wxStaticBoxSizer;
 
 class tab_quality_video : public abstract_panel
 {
@@ -64,6 +65,19 @@ class tab_quality_video : public abstract_panel
 		
 		wxRadioButton* ctrl_z_radio1;
 		wxRadioButton* ctrl_z_radio2;
+		
+		wxSizer* parentSizer ;	
+			wxSizer* leftSizer ;
+			wxSizer* middleSizer;
+			//wxSizer* rightSizer = new wxFlexGridSizer(1,15,0);//for info
+			wxFlexGridSizer* SizerA ;
+			wxFlexGridSizer* SizerB ;
+			wxFlexGridSizer* SizerC ;
+			wxFlexGridSizer* SizerD ;
+			wxStaticBoxSizer* boxA ;
+			wxStaticBoxSizer* boxB ;
+			wxStaticBoxSizer* boxC ;
+			wxStaticBoxSizer* boxD ;
 		
     protected:
 		DECLARE_EVENT_TABLE()
