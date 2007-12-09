@@ -53,20 +53,20 @@ void debug_panel::initDebugSizer(wxStaticBoxSizer* sizer) {
 debug_panel::debug_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : abstract_panel(parent, id , title , pos , size, style) {
 
-	wxSizer* parentSizer = new wxBoxSizer(wxHORIZONTAL);	// main window sizer (three columns)
-	wxSizer* childLSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
+	 parentSizer = new wxBoxSizer(wxHORIZONTAL);	// main window sizer (three columns)
+	 childLSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
 
 	// sizers for static boxes containing sliders, checkboxes, radiobuttons
-	wxStaticBoxSizer* debugSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Debug Options"), WX_DEF_P, wxSize(220, 300), 0, wxEmptyString), wxVERTICAL);
+	 debugSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Debug Options"), WX_DEF_P, wxSize(220, 300), 0, wxEmptyString), wxVERTICAL);
 
 	initDebugSizer(debugSizer);
 
 
 	childLSizer->Add(0, 5, 0);
-	childLSizer->Add(debugSizer);
+	childLSizer->Add(debugSizer,0,wxEXPAND);
 
 	parentSizer->Add(10, 0, 0);
-	parentSizer->Add(childLSizer);
+	parentSizer->Add(childLSizer,0,wxEXPAND);
 
 	SetSizer(parentSizer); // true --> delete old sizer if present
 

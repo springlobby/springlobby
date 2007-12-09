@@ -32,6 +32,7 @@ class wxWindow;
 class wxPoint;
 class wxSize;
 class wxCloseEvent;
+class wxStaticBoxSizer;
 
 class tab_render_detail : public abstract_panel
 {
@@ -48,6 +49,12 @@ class tab_render_detail : public abstract_panel
 		
 		wxSlider** ctrl_detail_sliders;
 		static const int ctrl_detail_sliders_size = 9;
+		
+		wxSizer* renderSizer ;
+					wxSizer* parentSizer ;
+					wxFlexGridSizer* rendererSizerA ;
+					wxFlexGridSizer* rendererSizerB ;
+					wxStaticBoxSizer* box ;
 		
 		DECLARE_EVENT_TABLE()
 };   

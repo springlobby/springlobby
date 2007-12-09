@@ -67,17 +67,19 @@ void tab_simple::initInfoSizer(wxFlexGridSizer* sizer)
 tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
 : abstract_panel(parent, id , title , pos , size, style) {
 
+
 	
-	wxSizer* parentSizer = new wxFlexGridSizer(2,0,0);	
+	 parentSizer = new wxFlexGridSizer(2,1,1);	
+
 	//wxSizer* leftSizer = new wxFlexGridSizer(1,15,0);
-	wxSizer* middleSizer = new wxFlexGridSizer(1,15,0);
+	 middleSizer = new wxFlexGridSizer(1,15,1);
 	//wxSizer* rightSizer = new wxFlexGridSizer(1,15,0);//for info
-	wxFlexGridSizer* Sizer_CBX = new wxFlexGridSizer(2,10,10);
-	wxFlexGridSizer* Sizer_info = new wxFlexGridSizer(1,15,10);
+	 Sizer_CBX = new wxFlexGridSizer(2,10,10);
+	 Sizer_info = new wxFlexGridSizer(1,15,10);
 	//wxFlexGridSizer* SizerC = new wxFlexGridSizer(1,15,10);
 	//wxFlexGridSizer* SizerD = new wxFlexGridSizer(1,5,10);
-	wxStaticBoxSizer* boxA = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("SIMPLE_OPTIONS"));
-	wxStaticBoxSizer* boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Info"));
+	 boxA = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("SIMPLE_OPTIONS"));
+	 boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Info"));
 	//		wxStaticBoxSizer* boxC = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Anti-Aliasing Options"));
 	//		wxStaticBoxSizer* boxD = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Z-/Depth-Buffer"));
 	//		Sizer_CBX->AddGrowableCol(0);
@@ -103,16 +105,16 @@ tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title ,
 	//	    SizerD->Fit(this);
 	//	    SizerD->SetSizeHints(this);
 
-	boxA->Add(Sizer_CBX);
-	boxB->Add(Sizer_info);
+	boxA->Add(Sizer_CBX,1,wxEXPAND);
+	boxB->Add(Sizer_info,1,wxEXPAND);
 	//	    boxC->Add(SizerC);
 	//	    boxD->Add(SizerD);
 	//	    leftSizer->Add(boxB,0,wxEXPAND);
 	//	    leftSizer->Add(boxC);
-	middleSizer->Add(boxA,0,wxEXPAND);
-	middleSizer->Add(boxB,0,wxEXPAND);
+	middleSizer->Add(boxA,1,wxEXPAND);
+	middleSizer->Add(boxB,1,wxEXPAND);
 	//  parentSizer->Add(leftSizer,0,wxALIGN_LEFT|wxALIGN_TOP |wxALL,10);
-	parentSizer->Add(middleSizer,0,wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND,10);
+	parentSizer->Add(middleSizer,1,wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND,10);
 
 	SetSizer(parentSizer); // true --> delete old sizer if present
 }
@@ -123,26 +125,28 @@ void tab_simple::updateControls(int what_to_update)
 }
 
 tab_simple::~tab_simple(void) {
-
+				
+	
 }
 
 void tab_simple::OnComboBoxChange(wxCommandEvent& event)
 {
+	//TODO
 	abstract_panel::OnComboBoxChange(event);
-	switch( event.GetId()){
-		case ID_SIMPLE_MODE_CBX: {
-			qualityTab->updateControls(UPDATE_VIDEO_MODE);
-			break;
-		}
-		case ID_SIMPLE_DETAIL_CBX: {
-			detailTab->updateControls(UPDATE_ALL);
-			break;
-		}
-		case ID_SIMPLE_QUAL_CBX: {
-			qualityTab->updateControls(UPDATE_QA_BOXES);
-			break;
-		}
-	}
+//	switch( event.GetId()){
+//		case ID_SIMPLE_MODE_CBX: {
+//			qualityTab->updateControls(UPDATE_VIDEO_MODE);
+//			break;
+//		}
+//		case ID_SIMPLE_DETAIL_CBX: {
+//			detailTab->updateControls(UPDATE_ALL);
+//			break;
+//		}
+//		case ID_SIMPLE_QUAL_CBX: {
+//			qualityTab->updateControls(UPDATE_QA_BOXES);
+//			break;
+//		}
+//	}
 }
 
 void tab_simple::setTabs(abstract_panel* a,abstract_panel* b)

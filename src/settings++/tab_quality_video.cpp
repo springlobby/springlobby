@@ -182,23 +182,23 @@ void tab_quality_video::initZBufferSizer(wxFlexGridSizer* sizer)
 
 }
 
-tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , 
+tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , bool updateOnCreate,const wxString &title , const wxPoint& pos , 
 		const wxSize& size, long style)
 : abstract_panel(parent, id , title , pos , size, style) {
 	ctrl_qa_Boxes = new wxCheckBox*[ctrl_qa_Boxes_size];
 	ctrl_vo_Boxes = new wxCheckBox*[ctrl_vo_Boxes_size];
-	wxSizer* parentSizer = new wxFlexGridSizer(2,0,0);	
-	wxSizer* leftSizer = new wxFlexGridSizer(1,15,0);
-	wxSizer* middleSizer = new wxFlexGridSizer(1,15,0);
+	 parentSizer = new wxFlexGridSizer(2,0,0);	
+	 leftSizer = new wxFlexGridSizer(1,15,0);
+	 middleSizer = new wxFlexGridSizer(1,15,0);
 	//wxSizer* rightSizer = new wxFlexGridSizer(1,15,0);//for info
-	wxFlexGridSizer* SizerA = new wxFlexGridSizer(1,10,10);
-	wxFlexGridSizer* SizerB = new wxFlexGridSizer(1,15,10);
-	wxFlexGridSizer* SizerC = new wxFlexGridSizer(1,15,10);
-	wxFlexGridSizer* SizerD = new wxFlexGridSizer(1,5,10);
-	wxStaticBoxSizer* boxA = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Render Quality Options"));
-	wxStaticBoxSizer* boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Video Mode Options"));
-	wxStaticBoxSizer* boxC = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Anti-Aliasing Options"));
-	wxStaticBoxSizer* boxD = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Z-/Depth-Buffer"));
+	 SizerA = new wxFlexGridSizer(1,10,10);
+	 SizerB = new wxFlexGridSizer(1,15,10);
+	 SizerC = new wxFlexGridSizer(1,15,10);
+	 SizerD = new wxFlexGridSizer(1,5,10);
+	 boxA = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Render Quality Options"));
+	 boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Video Mode Options"));
+	 boxC = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Anti-Aliasing Options"));
+	 boxD = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Z-/Depth-Buffer"));
 	SizerA->AddGrowableCol(0);
 	SizerB->AddGrowableCol(0);
 	SizerC->AddGrowableCol(0);
@@ -220,19 +220,20 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
 	SizerD->Fit(this);
 	SizerD->SetSizeHints(this);
 
-	boxA->Add(SizerA);
-	boxB->Add(SizerB);
-	boxC->Add(SizerC);
-	boxD->Add(SizerD);
-	leftSizer->Add(boxB,0,wxEXPAND);
-	leftSizer->Add(boxC);
-	middleSizer->Add(boxA,0,wxEXPAND);
-	middleSizer->Add(boxD,0,wxEXPAND);
-	parentSizer->Add(leftSizer,0,wxALIGN_LEFT|wxALIGN_TOP |wxALL,10);
-	parentSizer->Add(middleSizer,0,wxALIGN_CENTER_HORIZONTAL|wxALL,10);
+	boxA->Add(SizerA,1,wxEXPAND);
+	boxB->Add(SizerB,1,wxEXPAND);
+	boxC->Add(SizerC,1,wxEXPAND);
+	boxD->Add(SizerD,1,wxEXPAND);
+	leftSizer->Add(boxB,1,wxEXPAND);
+	leftSizer->Add(boxC,1,wxEXPAND);
+	middleSizer->Add(boxA,1,wxEXPAND);
+	middleSizer->Add(boxD,1,wxEXPAND);
+	parentSizer->Add(leftSizer,2,wxALIGN_LEFT|wxALIGN_TOP |wxALL|wxEXPAND,10);
+	parentSizer->Add(middleSizer,2,wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND,10);
 
 	SetSizer(parentSizer, true); // true --> delete old sizer if present
-
+	if (updateOnCreate)
+		updateControls(UPDATE_ALL);
 }
 
 tab_quality_video::~tab_quality_video(void) {

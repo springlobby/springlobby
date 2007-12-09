@@ -34,6 +34,8 @@ class wxPoint;
 class wxSize;
 class wxCloseEvent;
 class wxSlider;
+class wxStaticBoxSizer;
+class wxFlexGridSizer;
 
 class tab_ui : public abstract_panel
 {
@@ -58,6 +60,15 @@ class tab_ui : public abstract_panel
 		wxRadioButton* ctrl_cam_radio4;
 		wxCheckBox** ctrl_ui_chkb;
 		static const int ctrl_ui_chkb_size = 13;
+		
+		wxFlexGridSizer* pSizer;
+			wxFlexGridSizer* cSizerL ;
+			wxFlexGridSizer* cSizerR;
+
+			wxStaticBoxSizer* scrollSpeedSizer ;
+			wxStaticBoxSizer* cameraSizer;
+			wxStaticBoxSizer* uiOptSizer;
+		
 		DECLARE_EVENT_TABLE()
 };
 

@@ -40,6 +40,7 @@ class wxPoint;
 class wxSize;
 class wxFlexGridSizer;
 class wxNotebookEvent;
+class genricWrapper;
 
 class settings_frame : public wxFrame
 {
@@ -67,6 +68,7 @@ class settings_frame : public wxFrame
 		wxNotebook *notebook;
 		wxFlexGridSizer *book_sizer;
 		wxFlexGridSizer* book_sizer2;
+		
 		void OnNBchange(wxNotebookEvent&);
 		void initMenuBar();
 		

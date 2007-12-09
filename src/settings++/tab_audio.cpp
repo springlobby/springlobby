@@ -54,20 +54,20 @@ void audio_panel::initAudioSizer(wxStaticBoxSizer* sizer) {
 audio_panel::audio_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : abstract_panel(parent, id , title , pos , size, style) {
 
-	wxSizer* parentSizer = new wxBoxSizer(wxHORIZONTAL);	// main window sizer (three columns)
-	wxSizer* childLSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
+	 parentSizer = new wxBoxSizer(wxHORIZONTAL);	// main window sizer (three columns)
+	 childLSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
 
 	// sizers for static boxes containing sliders, checkboxes, radiobuttons
-    wxStaticBoxSizer* audioSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Audio Options"),
+   audioSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Audio Options"),
     		WX_DEF_P, wxSize(230, 100), 0, wxEmptyString), wxVERTICAL);
 	initAudioSizer(audioSizer);
 
 
 	childLSizer->Add(0, 5, 0);
-	childLSizer->Add(audioSizer);
+	childLSizer->Add(audioSizer,1,wxEXPAND);
 
 	parentSizer->Add(10, 0, 0);
-	parentSizer->Add(childLSizer);
+	parentSizer->Add(childLSizer,1,wxEXPAND);
 
 	SetSizer(parentSizer); // true --> delete old sizer if present
 }

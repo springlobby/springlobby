@@ -96,15 +96,15 @@ tab_ui::tab_ui(wxWindow *parent, wxWindowID id , const wxString &title , const w
                 : abstract_panel(parent, id , title , pos , size, style) {
 	ctrl_scroll_slider = new wxSlider*[ctrl_scroll_slider_size];
 	ctrl_ui_chkb = new wxCheckBox*[ctrl_ui_chkb_size];
-	wxFlexGridSizer* pSizer = new wxFlexGridSizer(2,15,15);
-	wxFlexGridSizer* cSizerL = new wxFlexGridSizer(1,10,10);
-	wxFlexGridSizer* cSizerR = new wxFlexGridSizer(1,10,10);
+	 pSizer = new wxFlexGridSizer(2,15,15);
+	 cSizerL = new wxFlexGridSizer(1,10,10);
+	 cSizerR = new wxFlexGridSizer(1,10,10);
 
-	wxStaticBoxSizer* scrollSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Scroll Speeds (0 to disable)"),
+	 scrollSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Scroll Speeds (0 to disable)"),
 			WX_DEF_P, wxSize(100, 200), 0, wxEmptyString), wxVERTICAL);
-	wxStaticBoxSizer* cameraSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Default Camera Mode"),
+	 cameraSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Default Camera Mode"),
 			WX_DEF_P, wxSize(100, 100), 0, wxEmptyString), wxVERTICAL);
-	wxStaticBoxSizer* uiOptSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Misc. UI Options"), 
+	 uiOptSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Misc. UI Options"), 
 			WX_DEF_P, wxSize(100, 100), 0, wxEmptyString), wxVERTICAL);
 
 	initScrollSpeedSizer(scrollSpeedSizer);
