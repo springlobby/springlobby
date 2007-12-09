@@ -428,7 +428,7 @@ void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
   if ( m_sel_bot != 0 ) {
     m_battle.SetBotAlly( m_sel_bot->name, ally );
   } else if ( m_sel_user != 0 ) {
-    //m_battle.ForceAlly( *m_sel_user, ally );
+    m_battle.ForceAlly( *m_sel_user, ally );
   }
 }
 
