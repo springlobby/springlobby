@@ -257,7 +257,7 @@ UnitSyncMap SpringUnitSync::GetMapEx( const std::string& mapname )
 {
   wxLogDebugFunc( _T("") );
   int i = GetMapIndex( mapname );
-  ASSERT_LOGIC( i >= 0, "Map does not exist" );
+  ASSERT_LOGIC( i >= 0, _T("Map does not exist") );
   return GetMapEx( i );
 }
 
