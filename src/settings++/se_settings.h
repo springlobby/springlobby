@@ -2,17 +2,9 @@
 #define SE_SETTINGS_H_
 
 //#include <wx/wx.h>
-#include "Defs.hpp"
 
-#include <wx/config.h>
-//#include <wx/filefn.h>
-//#include <wx/intl.h>
-#include <wx/stdpaths.h>
-#include <wx/filename.h>
-#include <wx/string.h>
-//
-#include <string>
-//TODO make sure HAS_WX_28 etc is availabe
+class wxString;
+class wxConfigBase;
 
 #define SET_MODE_EXPERT 5000
 #define SET_MODE_SIMPLE 5001
@@ -29,12 +21,13 @@ public:
 	bool getDisableWarning();
 	void setDisableWarning(bool);
 	wxString getUsyncLoc();
-	void setUsyncLoc(std::string);
+	wxString getSpringDir();
+	void setUsyncLoc(wxString);
 	static se_settings& getInstance();
 	void save();
 	
 private:
-	wxConfig* se_config;
+	wxConfigBase* se_config;
 	
 	wxString AutoFindUnitSyncLib( const wxString& def );
 	bool IsUnitSyncLib( const wxString& lib );

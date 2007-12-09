@@ -100,6 +100,14 @@ void settings_frame::CreateGUIControls()
 		SetTitle(wxT("SpringSettings (expert mode)"));
 	else
 		SetTitle(wxT("SpringSettings (simple mode)"));
+	
+	//	book_sizer = new wxFlexGridSizer(1,0,0);
+	//	book_sizer->AddGrowableCol(0);
+	//	book_sizer->Add(notebook);
+	//	book_sizer->SetSizeHints(this);
+		//SetSizer(book_sizer);
+		
+	
 	SetIcon(wxNullIcon);
 	SetSize(8,8,760,550);
 	Center();

@@ -4,6 +4,8 @@
 //! Converts a wxString to an std::string
 #define STD_STRING(v) std::string((const char*)v.mb_str(wxConvUTF8))
 
+class wxString;
+
 inline wxString _S (const std::string str);
 
 template<typename Type> void toString(std::string& s, Type t);
