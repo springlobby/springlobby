@@ -1,5 +1,26 @@
 #include "se_settings.h"
+#include "se_utils.h"
+#include "Defs.hpp"
 
+#include <wx/config.h>
+#include <wx/filefn.h>
+#include <wx/filename.h>
+#include <wx/intl.h>
+#include <wx/stdpaths.h>
+#include <wx/filename.h>
+#include <wx/string.h>
+#include <wx/dir.h>
+#include <wx/file.h>
+//
+#include <string>
+//TODO guard properly
+#ifndef JUFGDJ
+	#ifdef WIN32
+	  #define UNITSYNC_BIN _T("unitsync.dll")
+	#else
+	  #define UNITSYNC_BIN _T("unitsync.so")
+	#endif
+#endif
 se_settings* se_settings::instance = 0;
 
 se_settings& se_settings::getInstance()
@@ -17,6 +38,7 @@ void se_settings::save()
 
 se_settings::se_settings()
 {
+	//TODO create if not present
 	se_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
 }
 
@@ -57,9 +79,15 @@ wxString se_settings::getUsyncLoc()
 	return (se_config->Read( _T("/Spring/unitsync_loc"), def ));
 }
 
-void se_settings::setUsyncLoc(std::string loc)
+void se_settings::setUsyncLoc(wxString loc)
 {
-	se_config->Write( _T("/Spring/unitsync_loc"), _S(loc) );
+	se_config->Write( _T("/Spring/unitsync_loc"), loc );
+}
+
+//TODO think about standalone
+wxString se_settings::getSpringDir()
+{
+  return se_config->Read( _T("/Spring/dir"), _T("C:/programme/spring_svn") );
 }
 
 
@@ -125,7 +153,6 @@ wxString se_settings::AutoFindUnitSyncLib( const wxString& def )
 
 bool se_settings::IsUnitSyncLib( const wxString& lib )
 {
-	//TODO VORSICHT!!
-  //if ( !wxFile::Exists( lib ) ) return false;
+  if ( !(wxFile::Exists( lib )) ) return false;
   return true;
 }
