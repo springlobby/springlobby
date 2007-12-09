@@ -28,9 +28,9 @@
 #include <iostream>
 #include <wx/msgdlg.h>
 
-IMPLEMENT_APP(SettingsPlusPlus)
+IMPLEMENT_APP(Springsettings)
 
-bool SettingsPlusPlus::OnInit()
+bool Springsettings::OnInit()
 {
 
 		#if wxUSE_ON_FATAL_EXCEPTION
@@ -55,16 +55,16 @@ bool SettingsPlusPlus::OnInit()
     return true;
 }
 
-int SettingsPlusPlus::OnExit()
+int Springsettings::OnExit()
 {
 	return 0;
 }
 
-void SettingsPlusPlus::OnFatalException()
+void Springsettings::OnFatalException()
 {
 		#if wxUSE_STACKWALKER
 
-		wxMessageBox( _("SpringSettings has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"), _("Critical error"), wxICON_ERROR  );
+		wxMessageBox( _T("SpringSettings has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"), _T("Critical error"), wxICON_ERROR  );
 
 		wxLogError( _T("uncaught exception") );
 		wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
