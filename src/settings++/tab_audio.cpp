@@ -43,12 +43,12 @@ void audio_panel::initAudioSizer(wxStaticBoxSizer* sizer) {
     slider0->SetTickFreq((128-8) / 10   ,1);
     slider1->SetTickFreq(10             ,1);
     slider2->SetTickFreq(10             ,1);
+    sizer->Add(new wxStaticText(this, -1, (AO_SLI[1].lbl)), 0, wxTOP, 15);
+    sizer->Add(slider1, 0, wxALIGN_LEFT, 0);
 	sizer->Add(new wxStaticText(this, -1, (AO_SLI[0].lbl)), 0, wxTOP, 15);
 	sizer->Add(slider0, 0, wxALIGN_LEFT, 0);
-	sizer->Add(new wxStaticText(this, -1, (AO_SLI[1].lbl)), 0, wxTOP, 15);
-	sizer->Add(slider1, 0, wxALIGN_LEFT, 0);
 	sizer->Add(new wxStaticText(this, -1, (AO_SLI[2].lbl)), 0, wxTOP, 15);
-	sizer->Add(slider2, 0, wxALIGN_LEFT, 0);
+	sizer->Add(slider2, 0, wxALIGN_LEFT|wxBOTTOM, 15);
 }
 
 audio_panel::audio_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
@@ -64,10 +64,10 @@ audio_panel::audio_panel(wxWindow *parent, wxWindowID id , const wxString &title
 
 
 	childLSizer->Add(0, 5, 0);
-	childLSizer->Add(audioSizer,1,wxEXPAND);
+	childLSizer->Add(audioSizer,0,wxEXPAND|wxALL,5);
 
 	parentSizer->Add(10, 0, 0);
-	parentSizer->Add(childLSizer,1,wxEXPAND);
+	parentSizer->Add(childLSizer,0,wxEXPAND|wxTOP,5);
 
 	SetSizer(parentSizer); // true --> delete old sizer if present
 }

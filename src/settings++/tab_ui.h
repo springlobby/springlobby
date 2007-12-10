@@ -64,6 +64,7 @@ class tab_ui : public abstract_panel
 		wxFlexGridSizer* pSizer;
 			wxFlexGridSizer* cSizerL ;
 			wxFlexGridSizer* cSizerR;
+			wxFlexGridSizer* cSizerM;
 
 			wxStaticBoxSizer* scrollSpeedSizer ;
 			wxStaticBoxSizer* cameraSizer;

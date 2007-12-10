@@ -29,6 +29,7 @@
 #include <wx/defs.h>
 #include <wx/slider.h>
 #include <wx/combobox.h>
+#include <wx/button.h>
 #include "../springunitsynclib.h"
 #include "Defs.hpp"
 #include "presets.h"
@@ -37,11 +38,11 @@ const wxString infoTextContent= _T("INFOTEXT HERE");
 
 
 void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
-	sizer->Add(new wxStaticText(this, -1,  wxT("RENDER_QUALITY")), 0,wxALL);
-	//sizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP , 10);
+	sizer->Add(new wxStaticText(this, -1,  wxT("RENDER_QUALITY")), 0,wxTOP|wxBOTTOM,15);
+	
 	renderQuality_CBX = new wxComboBox(this, ID_SIMPLE_QUAL_CBX, levels_vlow_To_vHigh[0], wxDefaultPosition, wxSize(220,21), 
 			5,levels_vlow_To_vHigh,wxCB_DROPDOWN|wxCB_READONLY);
-	sizer->Add(renderQuality_CBX, 0, wxBOTTOM, 15);	
+	sizer->Add(renderQuality_CBX, 0, wxTOP|wxBOTTOM, 15);	
 
 	sizer->Add(new wxStaticText(this, -1,  wxT("RENDER_DETAIL")), 0,wxALL);
 	renderDetail_CBX = new wxComboBox(this, ID_SIMPLE_DETAIL_CBX, levels_low_To_High[0], wxDefaultPosition, wxSize(220,21), 
@@ -64,6 +65,12 @@ void tab_simple::initInfoSizer(wxFlexGridSizer* sizer)
 	sizer->Add(infoText,0,wxALL,10);
 }
 
+void tab_simple::initButSizer(wxSizer* sizer)
+{
+	goExpert_BUT = new wxButton(this, ID_SIMPLE_GOEXPERT_BUT,_T("Switch to expert mode"),wxPoint(-1,-1),wxSize(-1,-1),wxBU_EXACTFIT);
+	sizer->Add(goExpert_BUT,0,wxALIGN_CENTER_VERTICAL);
+}
+
 tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
 : abstract_panel(parent, id , title , pos , size, style) {
 
@@ -72,11 +79,11 @@ tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title ,
 	 parentSizer = new wxFlexGridSizer(2,1,1);	
 
 	//wxSizer* leftSizer = new wxFlexGridSizer(1,15,0);
-	 middleSizer = new wxFlexGridSizer(1,15,1);
-	//wxSizer* rightSizer = new wxFlexGridSizer(1,15,0);//for info
+	 leftSizer = new wxFlexGridSizer(1,15,1);
+	 rightSizer = new wxFlexGridSizer(1,15,1);
 	 Sizer_CBX = new wxFlexGridSizer(2,10,10);
 	 Sizer_info = new wxFlexGridSizer(1,15,10);
-	//wxFlexGridSizer* SizerC = new wxFlexGridSizer(1,15,10);
+	 Sizer_BUT = new wxBoxSizer(wxVERTICAL);
 	//wxFlexGridSizer* SizerD = new wxFlexGridSizer(1,5,10);
 	 boxA = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("SIMPLE_OPTIONS"));
 	 boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Info"));
@@ -91,8 +98,7 @@ tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title ,
 
 	initOptSizer(Sizer_CBX);
 	initInfoSizer(Sizer_info);
-	
-	//		initVideoSizer(SizerB);
+	initButSizer(Sizer_BUT);
 	//		initAASizer(SizerC);
 	//		initZBufferSizer(SizerD);
 
@@ -100,21 +106,21 @@ tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title ,
 	Sizer_CBX->SetSizeHints(this);
     Sizer_info->Fit(this);
     Sizer_info->SetSizeHints(this);
-	//	    SizerC->Fit(this);
-	//	    SizerC->SetSizeHints(this);
-	//	    SizerD->Fit(this);
-	//	    SizerD->SetSizeHints(this);
-
+    Sizer_BUT->Fit(this);
+    Sizer_BUT->SetSizeHints(this);
+    
 	boxA->Add(Sizer_CBX,1,wxEXPAND);
 	boxB->Add(Sizer_info,1,wxEXPAND);
-	//	    boxC->Add(SizerC);
+	
 	//	    boxD->Add(SizerD);
 	//	    leftSizer->Add(boxB,0,wxEXPAND);
 	//	    leftSizer->Add(boxC);
-	middleSizer->Add(boxA,1,wxEXPAND);
-	middleSizer->Add(boxB,1,wxEXPAND);
+	leftSizer->Add(boxA,1,wxEXPAND);
+	leftSizer->Add(boxB,1,wxEXPAND);
+	rightSizer->Add(Sizer_BUT,1,wxEXPAND|wxALIGN_CENTER);
 	//  parentSizer->Add(leftSizer,0,wxALIGN_LEFT|wxALIGN_TOP |wxALL,10);
-	parentSizer->Add(middleSizer,1,wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND,10);
+	parentSizer->Add(leftSizer,1,wxALL|wxEXPAND,15);
+	parentSizer->Add(goExpert_BUT,0,wxLEFT|wxALIGN_CENTER,35);
 
 	SetSizer(parentSizer); // true --> delete old sizer if present
 }

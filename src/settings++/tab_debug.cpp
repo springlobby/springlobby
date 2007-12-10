@@ -43,11 +43,12 @@ void debug_panel::initDebugSizer(wxStaticBoxSizer* sizer) {
 	checkBox1->SetValue(configHandler->GetSpringConfigInt(DO_CBOX[1].key,fromString(DO_SLI[1].def)));
 
 	sizer->Add(0, 10, 0);
-	sizer->Add(checkBox0, 0, wxTOP, 0);
-	sizer->Add(checkBox1, 0, wxTOP, 0);
+	sizer->Add(checkBox0, 0, wxTOP, 5);
+	sizer->Add(checkBox1, 0, wxTOP, 5);
 	sizer->Add(0, 10, 0);
-	sizer->Add(new wxStaticText(this, -1, (DO_SLI[0].lbl)), 0, wxTOP, 10);
-	sizer->Add(slider, 0, wxTOP, 0);
+	sizer->Add(new wxStaticText(this, -1, (DO_SLI[0].lbl)), 0, wxTOP, 15);
+	sizer->Add(slider, 0, wxTOP, 5);
+	sizer->Add(0, 10, 0);
 }
 
 debug_panel::debug_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
@@ -57,16 +58,16 @@ debug_panel::debug_panel(wxWindow *parent, wxWindowID id , const wxString &title
 	 childLSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
 
 	// sizers for static boxes containing sliders, checkboxes, radiobuttons
-	 debugSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Debug Options"), WX_DEF_P, wxSize(220, 300), 0, wxEmptyString), wxVERTICAL);
+	 debugSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Debug Options"), WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
 
 	initDebugSizer(debugSizer);
 
 
 	childLSizer->Add(0, 5, 0);
-	childLSizer->Add(debugSizer,0,wxEXPAND);
+	childLSizer->Add(debugSizer,0,wxEXPAND|wxALL,5);
 
 	parentSizer->Add(10, 0, 0);
-	parentSizer->Add(childLSizer,0,wxEXPAND);
+	parentSizer->Add(childLSizer,0,wxEXPAND|wxTOP,5);
 
 	SetSizer(parentSizer); // true --> delete old sizer if present
 

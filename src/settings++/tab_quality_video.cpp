@@ -56,14 +56,18 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 	ctrl_y_res->SetValue(_S(s));
 
 	wxSizer* subSizer = new wxBoxSizer(wxHORIZONTAL);
+	
 	subSizer->Add(ctrl_x_res, 0, wxALIGN_LEFT, 10);
 	subSizer->Add(5, 0, 0);
 	subSizer->Add(new wxStaticText(this, -1, wxT("x")), 0, wxTOP | wxBOTTOM, 0);
 	subSizer->Add(5, 0, 0);
 	subSizer->Add(ctrl_y_res, 0, wxALIGN_RIGHT, 10);
-
-	sizer->Add(new wxStaticText(this, -1, wxT("Screen Resolution")), 0, wxTOP , 15);
-	sizer->Add(subSizer);
+	
+	wxSizer* subSizer2 = new wxBoxSizer(wxVERTICAL);
+	subSizer2->Add(new wxStaticText(this, -1, wxT("Screen Resolution")), 1, wxTOP|wxEXPAND , 15);
+	subSizer2->Add(subSizer);
+	sizer->Add(subSizer2);
+	sizer->Add(0,5,0);
 
 }
 
@@ -140,11 +144,12 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
 	case 3: waterOptIndex = 2; break;
 	}
 
-	sizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP , 10);
+	sizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP| wxEXPAND, 10);
 	ctrl_waterQ_CBox = new wxComboBox(this, ID_WINDOWP_WR_COMBOX, WR_COMBOX_CHOICES[waterOptIndex], wxDefaultPosition, wxSize(220,21), 
 			4,WR_COMBOX_CHOICES,wxCB_DROPDOWN|wxCB_READONLY);
 	ctrl_waterQ_CBox->SetToolTip(WR_COMBOX[0].tTip[0]);
-	sizer->Add(ctrl_waterQ_CBox, 0, wxBOTTOM, 5);	
+	sizer->Add(ctrl_waterQ_CBox, 0, wxBOTTOM, 10);	
+	
 }
 
 void tab_quality_video::initAASizer(wxFlexGridSizer* sizer){
@@ -154,11 +159,13 @@ void tab_quality_video::initAASizer(wxFlexGridSizer* sizer){
 		ctrl_qa_Boxes[i]->SetToolTip(QA_CBOX[i].tTip[0]);
 		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 8)? 10: 0);
 	}
+	wxSizer* subsizer = new wxBoxSizer(wxVERTICAL);
 	int useFSAA = configHandler->GetSpringConfigInt(VO_SLI_EXT[0].key,fromString(VO_SLI_EXT[0].def));
 	int FSAALev = configHandler->GetSpringConfigInt(VO_SLI[0].key,fromString(VO_SLI[0].def));
 	ctrl_fsaa_slider = new wxSlider(this, VO_SLI[0].id, (useFSAA == 1)? FSAALev: 0, 0, 16, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
-	sizer->Add(new wxStaticText(this, -1, (VO_SLI[0].lbl)), 0, wxTOP, 15);
-	sizer->Add(ctrl_fsaa_slider, 0, wxALIGN_LEFT, 0);
+	subsizer->Add(new wxStaticText(this, -1, (VO_SLI[0].lbl)), 0, wxTOP|wxEXPAND, 10);
+	subsizer->Add(ctrl_fsaa_slider, 0, wxALIGN_LEFT|wxBOTTOM|wxEXPAND, 5);
+	sizer->Add(subsizer);
 }
 
 void tab_quality_video::initZBufferSizer(wxFlexGridSizer* sizer)
@@ -178,7 +185,7 @@ void tab_quality_video::initZBufferSizer(wxFlexGridSizer* sizer)
 	case 24: { ctrl_z_radio2->SetValue(1); } break;
 	}
 	sizer->Add(ctrl_z_radio1, 0, wxTOP, 0);
-	sizer->Add(ctrl_z_radio2, 0, wxTOP,  0);
+	sizer->Add(ctrl_z_radio2, 0, wxBOTTOM,  10);
 
 }
 
@@ -222,11 +229,11 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , bool upda
 
 	boxA->Add(SizerA,1,wxEXPAND);
 	boxB->Add(SizerB,1,wxEXPAND);
-	boxC->Add(SizerC,1,wxEXPAND);
+	boxC->Add(SizerC,0);
 	boxD->Add(SizerD,1,wxEXPAND);
-	leftSizer->Add(boxB,1,wxEXPAND|wxALL);
+	leftSizer->Add(boxB,1,wxEXPAND|wxALL,5);
 	leftSizer->Add(boxC,1,wxEXPAND|wxALL);
-	middleSizer->Add(boxA,1,wxEXPAND|wxALL);
+	middleSizer->Add(boxA,1,wxEXPAND|wxALL,5);
 	middleSizer->Add(boxD,1,wxEXPAND|wxALL);
 	parentSizer->Add(leftSizer,2,wxALIGN_LEFT|wxALIGN_TOP |wxALL|wxEXPAND,10);
 	parentSizer->Add(middleSizer,2,wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND,10);

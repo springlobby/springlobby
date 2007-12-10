@@ -39,6 +39,7 @@ class wxSize;
 class wxCloseEvent;
 class wxStaticText;
 class wxStaticBoxSizer;
+class wxButton;
 
 class tab_simple : public abstract_panel
 {
@@ -58,12 +59,12 @@ class tab_simple : public abstract_panel
 		void CreateGUIControls();
 		void initOptSizer(wxFlexGridSizer*);
 		void initInfoSizer(wxFlexGridSizer*);
-				
+		void initButSizer(wxSizer* );
 		wxComboBox* renderQuality_CBX;
 		wxComboBox* renderDetail_CBX;
 		wxComboBox* videoMode_CBX;
 		wxSlider* audioVolume_SLI;
-		
+		wxButton* goExpert_BUT;
 		wxStaticText* infoText;
 		
 		//dirty
@@ -72,13 +73,15 @@ class tab_simple : public abstract_panel
 		
 		wxSizer* parentSizer;	
 			
-			wxSizer* middleSizer ;
-			
-			wxFlexGridSizer* Sizer_CBX ;
-			wxFlexGridSizer* Sizer_info;
-			
-			wxStaticBoxSizer* boxA ;
-			wxStaticBoxSizer* boxB ;
+		wxFlexGridSizer* leftSizer ;
+		wxFlexGridSizer* rightSizer;
+		wxFlexGridSizer* Sizer_CBX ;
+		wxFlexGridSizer* Sizer_info;
+		wxSizer* Sizer_BUT;
+		
+		wxStaticBoxSizer* boxA ;
+		wxStaticBoxSizer* boxB ;
+		
 		
 		DECLARE_EVENT_TABLE()
 };   

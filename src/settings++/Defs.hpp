@@ -81,6 +81,7 @@
 #define ID_SIMPLE_QUAL_CBX		390
 #define ID_SIMPLE_DETAIL_CBX	391
 #define ID_SIMPLE_MODE_CBX		392
+#define ID_SIMPLE_GOEXPERT_BUT 	393
 
 
 // UI Options checkbox IDs
@@ -271,7 +272,7 @@ const Control MO_SLI_EXT[5] = {
 
 
 const Control DO_SLI[1] = {
-	{_T("Console verbose level (0=min,10=max)"), wxT("VerboseLevel"), ID_DO_SLI_0,	"0", {_T("placeholder")}}
+	{_T("Console verbose level (0=min,10=max)"), wxT("VerboseLevel"), ID_DO_SLI_0,	"0", {_T("How much information should be outputted?")}}
 };
 
 const Control DO_CBOX[2] = {

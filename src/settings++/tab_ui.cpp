@@ -36,7 +36,7 @@ void tab_ui::initScrollSpeedSizer(wxStaticBoxSizer* sizer) {
 				fromString(MO_SLI[i].def)), 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 		if (i > 0)
 			sizer->Add(5,32,0);
-		sizer->Add(new wxStaticText(this, wxID_ANY, (MO_SLI[i].lbl), wxDefaultPosition, wxDefaultSize, 10));
+		sizer->Add(new wxStaticText(this, wxID_ANY, (MO_SLI[i].lbl), wxDefaultPosition, wxDefaultSize, 10),1,wxEXPAND);
 		sizer->Add(ctrl_scroll_slider[i], 0, wxTOP, 0);
 	}
 	sizer->Add(5,10,0);
@@ -58,19 +58,22 @@ void tab_ui::initCameraSizer(wxStaticBoxSizer* sizer) {
 	}
 
 	sizer->Add(ctrl_cam_radio0, 0, wxTOP, 10);
-	sizer->Add(ctrl_cam_radio1, 0, wxTOP, 0);
-	sizer->Add(ctrl_cam_radio2, 0, wxTOP, 0);
-	sizer->Add(ctrl_cam_radio3, 0, wxTOP, 0);
-	sizer->Add(ctrl_cam_radio4, 0, wxTOP, 0);
+	sizer->Add(ctrl_cam_radio1, 0, wxTOP, 5);
+	sizer->Add(ctrl_cam_radio2, 0, wxTOP, 5);
+	sizer->Add(ctrl_cam_radio3, 0, wxTOP, 5);
+	sizer->Add(ctrl_cam_radio4, 0, wxTOP|wxBOTTOM, 5);
 }
 
 void tab_ui::initUiOptSizer(wxStaticBoxSizer* sizer)
 {
+	wxBoxSizer* subSizer = new wxBoxSizer(wxVERTICAL);
 	for (int i = 0; i < ctrl_ui_chkb_size; i++) {
 		ctrl_ui_chkb[i] = new wxCheckBox(this, UI_CBOX[i].id, (UI_CBOX[i].lbl));
 			ctrl_ui_chkb[i]->SetValue(configHandler->GetSpringConfigInt(UI_CBOX[i].key,fromString(UI_CBOX[i].def)));
-			sizer->Add(ctrl_ui_chkb[i], 0, wxTOP, (i == 0)? 10: 0);
+			subSizer->Add(ctrl_ui_chkb[i], 0, wxTOP, 5);
 		}
+	sizer->Add(subSizer);
+	sizer->Add(0,5,0);
 }
 
 void tab_ui::updateControls(int what_to_update)
@@ -96,28 +99,37 @@ tab_ui::tab_ui(wxWindow *parent, wxWindowID id , const wxString &title , const w
                 : abstract_panel(parent, id , title , pos , size, style) {
 	ctrl_scroll_slider = new wxSlider*[ctrl_scroll_slider_size];
 	ctrl_ui_chkb = new wxCheckBox*[ctrl_ui_chkb_size];
-	 pSizer = new wxFlexGridSizer(2,15,15);
+	 pSizer = new wxFlexGridSizer(3,15,15);
 	 cSizerL = new wxFlexGridSizer(1,10,10);
 	 cSizerR = new wxFlexGridSizer(1,10,10);
+	 cSizerM = new wxFlexGridSizer(1,10,10);
 
 	 scrollSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Scroll Speeds (0 to disable)"),
-			WX_DEF_P, wxSize(100, 200), 0, wxEmptyString), wxVERTICAL);
+			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
 	 cameraSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Default Camera Mode"),
-			WX_DEF_P, wxSize(100, 100), 0, wxEmptyString), wxVERTICAL);
+			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
 	 uiOptSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Misc. UI Options"), 
-			WX_DEF_P, wxSize(100, 100), 0, wxEmptyString), wxVERTICAL);
+			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
 
 	initScrollSpeedSizer(scrollSpeedSizer);
 	initCameraSizer(cameraSizer);
 	initUiOptSizer(uiOptSizer);
 
-	cSizerR->Add(uiOptSizer);
-	cSizerL->Add(scrollSpeedSizer);
-	cSizerR->Add(cameraSizer,0,wxEXPAND);
-	//pSizer->Add(5, 0, 0);
-	pSizer->Add(cSizerL,0,wxALL,10);
-	//pSizer->Add(25, 0, 0);
-	pSizer->Add(cSizerR,0,wxALL,10);
+	cSizerM->Add(uiOptSizer,0,wxALL,5);
+	cSizerL->Add(scrollSpeedSizer,0,wxALL,5);
+	cSizerR->Add(cameraSizer,0,wxALL,5);
+	
+	cSizerL->Fit(this);
+	cSizerL->SetSizeHints(this);
+	cSizerM->Fit(this);
+	cSizerM->SetSizeHints(this);
+	cSizerR->Fit(this);
+	cSizerR->SetSizeHints(this);
+				
+	
+	pSizer->Add(cSizerL,0,wxALL|wxEXPAND,10);
+	pSizer->Add(cSizerM,0,wxALL|wxEXPAND,10);
+	pSizer->Add(cSizerR,0,wxALL|wxEXPAND,10);
 
 	SetSizer(pSizer); // true --> delete old sizer if present
 
