@@ -28,7 +28,7 @@
 #include <wx/event.h>
 #include <wx/defs.h>
 #include <wx/slider.h>
-#include "../springunitsynclib.h"
+//#include "../springunitsynclib.h"
 #include "Defs.hpp"
 
 void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSizer* sizerR ) {
@@ -40,8 +40,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 	// i < "sizeof"(RO_SLI)
 	for (int i = 0; i < ctrl_detail_sliders_size-4; i++) {
 		ctrl_detail_sliders[i] = new wxSlider(
-			this, RO_SLI[i].id, configHandler->GetSpringConfigInt(RO_SLI[i].key,fromString(RO_SLI[i].def)),
-			extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V		);
+			this, RO_SLI[i].id, 0, extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V		);
 		//ctrl_detail_sliders[i]->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
 		ctrl_detail_sliders[i]->SetToolTip(RO_SLI[i].tTip[0]);
 		sizerL->Add(new wxStaticText(this, -1,  (RO_SLI[i].lbl)), 1,wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND);
@@ -49,8 +48,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 	}
 	for (int i = 5; i < ctrl_detail_sliders_size; i++) {
 		ctrl_detail_sliders[i] = new wxSlider(
-			this, RO_SLI[i].id, configHandler->GetSpringConfigInt(RO_SLI[i].key,fromString(RO_SLI[i].def)),
-			extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V);
+			this, RO_SLI[i].id, 0, extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V);
 		//ctrl_detail_sliders[i]->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
 		ctrl_detail_sliders[i]->SetToolTip(RO_SLI[i].tTip[0]);
 		sizerR->Add(new wxStaticText(this, -1,  (RO_SLI[i].lbl)), 1,wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND);
@@ -81,6 +79,8 @@ tab_render_detail::tab_render_detail(wxWindow *parent, wxWindowID id , const wxS
 		    
 		    box->Add(renderSizer,0,wxEXPAND|wxALIGN_LEFT|wxTOP,15);
 		    parentSizer->Add(box,0,wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL|wxALL,15);
+		    
+		    updateControls(UPDATE_ALL);
 		    SetSizer(parentSizer); // true --> delete old sizer if present
 	
 }

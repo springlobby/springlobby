@@ -64,6 +64,10 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	//TODO call only when standalone
 	wxSetWorkingDirectory(OptionsHandler.getSpringDir());
 	susynclib()->Load(OptionsHandler.getUsyncLoc());
+	
+	//TODO logtrycatch
+	abstract_panel::loadValuesIntoMap();
+	
 	CreateGUIControls();
 	initMenuBar();
 }
@@ -81,7 +85,7 @@ void settings_frame::CreateGUIControls()
 		switch(OptionsHandler.getMode()){
 					case SET_MODE_EXPERT: 
 						
-								qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO,false);
+								qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
 							    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
 							    uiTab = new tab_ui(notebook,ID_UI);
 							    audioTab = new audio_panel(notebook,ID_AUDIO);
@@ -214,7 +218,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 			if (OptionsHandler.getMode()==SET_MODE_SIMPLE) {
 				OptionsHandler.setMode(SET_MODE_EXPERT);
 								
-				qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO,false);
+				qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
 			    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
 			    audioTab = new audio_panel(notebook,ID_AUDIO);
 			    debugTab = new debug_panel(notebook,ID_DEBUG);

@@ -51,6 +51,14 @@ abstract_panel::~abstract_panel(void) {
 
 }
 
+void abstract_panel::loadValuesIntoMap()
+{
+	for (int i = 0; i< allControls_size;++i)
+	{
+		intSettings[allControls[i].key] = configHandler->GetSpringConfigInt(allControls[i].key,fromString(allControls[i].def));
+	}
+}
+
 void abstract_panel::loadDefaults()
 {
 	//const Control RO_SLI[9]
@@ -234,7 +242,9 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 		case ID_WINDOWP_QA_CBOX_4:
 		case ID_WINDOWP_QA_CBOX_5:
 		case ID_WINDOWP_QA_CBOX_6:
-		case ID_WINDOWP_QA_CBOX_7:{
+		case ID_WINDOWP_QA_CBOX_7:
+		case ID_WINDOWP_QA_CBOX_8:
+		case ID_WINDOWP_QA_CBOX_9:{
 			int i = id - QA_CBOX[0].id;
 			(intSettings)[QA_CBOX[i].key]= checked;
 		} break;

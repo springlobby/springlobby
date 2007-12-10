@@ -42,7 +42,7 @@ class tab_quality_video : public abstract_panel
 {
 
 	public:
-		tab_quality_video(wxWindow *parent, wxWindowID id, bool updateOnCreate ,const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
+		tab_quality_video(wxWindow *parent, wxWindowID id, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
 		virtual ~tab_quality_video();
 
 		void initVideoSizer(wxFlexGridSizer*);

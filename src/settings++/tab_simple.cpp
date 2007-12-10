@@ -30,7 +30,7 @@
 #include <wx/slider.h>
 #include <wx/combobox.h>
 #include <wx/button.h>
-#include "../springunitsynclib.h"
+//#include "../springunitsynclib.h"
 #include "Defs.hpp"
 #include "presets.h"
 
@@ -55,7 +55,7 @@ void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 	sizer->Add(videoMode_CBX, 0, wxBOTTOM, 15);	
 	
 	sizer->Add(new wxStaticText(this, -1, (AO_SLI[1].lbl)), 0, wxTOP, 15);
-	audioVolume_SLI =  new wxSlider(this, AO_SLI[1].id, configHandler->GetSpringConfigInt(AO_SLI[1].key,fromString(AO_SLI[1].def)), 0, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	audioVolume_SLI =  new wxSlider(this, AO_SLI[1].id,0, 0, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 	sizer->Add(audioVolume_SLI, 0, wxBOTTOM, 15);	
 }
 
@@ -121,7 +121,8 @@ tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title ,
 	//  parentSizer->Add(leftSizer,0,wxALIGN_LEFT|wxALIGN_TOP |wxALL,10);
 	parentSizer->Add(leftSizer,1,wxALL|wxEXPAND,15);
 	parentSizer->Add(goExpert_BUT,0,wxLEFT|wxALIGN_CENTER,35);
-
+	
+	updateControls(UPDATE_ALL);
 	SetSizer(parentSizer); // true --> delete old sizer if present
 }
 

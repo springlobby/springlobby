@@ -31,16 +31,13 @@
 #include <wx/checkbox.h>
 #include <wx/stattext.h>
 
-#include "../springunitsynclib.h"
+//#include "../springunitsynclib.h"
 #include "Defs.hpp"
 
 void debug_panel::initDebugSizer(wxStaticBoxSizer* sizer) {
-	slider = new wxSlider(this, DO_SLI[0].id, configHandler->GetSpringConfigInt(DO_SLI[0].key,fromString(DO_SLI[0].def)), 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	slider = new wxSlider(this, DO_SLI[0].id, 0, 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 	checkBox0 = new wxCheckBox(this, DO_CBOX[0].id, (DO_CBOX[0].lbl));
 	checkBox1 = new wxCheckBox(this, DO_CBOX[1].id, (DO_CBOX[1].lbl));
-
-	checkBox0->SetValue(configHandler->GetSpringConfigInt(DO_CBOX[0].key,fromString(DO_SLI[0].def)));
-	checkBox1->SetValue(configHandler->GetSpringConfigInt(DO_CBOX[1].key,fromString(DO_SLI[1].def)));
 
 	sizer->Add(0, 10, 0);
 	sizer->Add(checkBox0, 0, wxTOP, 5);
@@ -69,6 +66,7 @@ debug_panel::debug_panel(wxWindow *parent, wxWindowID id , const wxString &title
 	parentSizer->Add(10, 0, 0);
 	parentSizer->Add(childLSizer,0,wxEXPAND|wxTOP,5);
 
+	updateControls(UPDATE_ALL);
 	SetSizer(parentSizer); // true --> delete old sizer if present
 
 }

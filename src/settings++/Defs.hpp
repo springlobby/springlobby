@@ -163,7 +163,7 @@
 #define UPDATE_ALL			2000
 #define UPDATE_EXPERTMODE_WARNING_ON_SIMPLETAB 2003
 
-#include <wx/wx.h>
+#include <wx/string.h>
 #include <string>
 
 struct Control {
@@ -310,6 +310,43 @@ const Control RC_TEXT[2] = {
 	{_T(""), wxT("YResolution"), -1,	"768" , {_T("placeholder")}}
 };
 
+const int allControls_size = 61;
+const Control allControls[allControls_size] = {
+		// RO_SLI[9]
+		RO_SLI[0],RO_SLI[1],RO_SLI[2],RO_SLI[3],RO_SLI[4],RO_SLI[5],RO_SLI[6],RO_SLI[7],RO_SLI[8],
+		// VO_CBOX[3]
+		VO_CBOX[0],VO_CBOX[1],VO_CBOX[2],
+		//VO_RBUT[2] <- only one key
+		VO_RBUT[0],
+		// VO_SLI[1]
+		VO_SLI[0],
+		//VO_SLI_EXT[1]
+		VO_SLI_EXT[0],
+		// AO_SLI[3]
+		AO_SLI[0],AO_SLI[1],AO_SLI[2],
+		// QA_CBOX[10]
+		QA_CBOX[0],QA_CBOX[1],QA_CBOX[2],QA_CBOX[3],QA_CBOX[4],QA_CBOX[5],QA_CBOX[6],QA_CBOX[7],QA_CBOX[8],
+		QA_CBOX[9],
+		//UI_CBOX[14]
+		UI_CBOX[0],UI_CBOX[1],UI_CBOX[2],UI_CBOX[3],UI_CBOX[4],UI_CBOX[5],UI_CBOX[6],UI_CBOX[7],UI_CBOX[8],
+		UI_CBOX[9],UI_CBOX[10],UI_CBOX[11],UI_CBOX[12],UI_CBOX[13],
+		//MO_SLI[5]
+		MO_SLI[0],MO_SLI[1],MO_SLI[2],MO_SLI[3],MO_SLI[4],
+		//MO_SLI_EXT[5]
+		MO_SLI_EXT[0],MO_SLI_EXT[1],MO_SLI_EXT[2],MO_SLI_EXT[3],MO_SLI_EXT[4],
+		//DO_SLI[1]
+		DO_SLI[0],
+		//DO_CBOX[2]
+		DO_CBOX[0],DO_CBOX[1],
+		//WR_COMBOX[1]
+		WR_COMBOX[0],
+		//MO_CBOX[2]
+		MO_CBOX[0],MO_CBOX[1],
+		//MO_RBUT[5] <- only first
+		MO_RBUT[0],
+		//RC_TEXT[2]
+		RC_TEXT[0],RC_TEXT[1]
+};
 
 /** not used
 #define NUM_DEFAULTS 88
