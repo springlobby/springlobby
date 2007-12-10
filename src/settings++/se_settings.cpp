@@ -38,7 +38,7 @@ void se_settings::save()
 
 se_settings::se_settings()
 {
-	//TODO create if not present
+	//TODO think about standalone
 	se_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
 }
 
@@ -84,13 +84,49 @@ void se_settings::setUsyncLoc(wxString loc)
 	se_config->Write( _T("/Spring/unitsync_loc"), loc );
 }
 
-//TODO think about standalone
 wxString se_settings::getSpringDir()
 {
-  return se_config->Read( _T("/Spring/dir"), _T("C:/programme/spring_svn") );
+	wxString def = AutoFindSpringDir(def);
+	return se_config->Read( _T("/Spring/dir"), def );
 }
 
+/*copied from springlobby source*/
+wxString SpringOptionsTab::AutoFindSpringDir( const wxString& def )
+{
+  wxPathList pl;
+  wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
+  pl.Add( wxFileName::GetCwd() );
+#ifdef HAVE_WX28
+  pl.Add( sp.GetExecutablePath() );
+#endif
+  pl.Add( wxFileName::GetHomeDir() );
+#ifdef __WXMSW__
+  wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
+  wxString tmp;
+  if ( programreg.QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
+
+  pl.Add( _T("C:\\Program") );
+  pl.Add( _T("C:\\Program Files") );
+#endif
+  pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+  pl.Add( sp.GetDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+#ifdef HAVE_WX28
+  pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+#endif
+
+  for ( size_t i = 0; i < pl.GetCount(); i++ ) {
+    wxString path = pl[i] + wxFileName::GetPathSeparator();
+    if ( IsDataDir( path ) ) return path;
+    if ( IsDataDir( path + _T("Spring") ) ) return path + _T("Spring");
+    if ( IsDataDir( path + _T("spring") ) ) return path + _T("spring");
+    if ( IsDataDir( path + _T("spring_data") ) ) return path + _T("spring_data");
+    if ( IsDataDir( path + _T(".spring") ) ) return path + _T(".spring");
+    if ( IsDataDir( path + _T(".spring_data") ) ) return path + _T(".spring_data");
+  }
+
+  return def;
+}
 
 /*copied from springlobby source*/
 wxString se_settings::AutoFindUnitSyncLib( const wxString& def )
