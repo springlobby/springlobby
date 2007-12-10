@@ -90,6 +90,7 @@ abstract_panel::~abstract_panel(void) {
 
 void abstract_panel::loadValuesIntoMap()
 {
+	//TODO logtrycatch
 	for (int i = 0; i< allControls_size;++i)
 	{
 		intSettings[allControls[i].key] = configHandler->GetSpringConfigInt(allControls[i].key,fromString(allControls[i].def));

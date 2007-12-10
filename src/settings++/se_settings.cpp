@@ -11,16 +11,10 @@
 #include <wx/string.h>
 #include <wx/dir.h>
 #include <wx/file.h>
-//
+#include "../nonportable.h"
 #include <string>
-//TODO guard properly
-#ifndef JUFGDJ
-	#ifdef WIN32
-	  #define UNITSYNC_BIN _T("unitsync.dll")
-	#else
-	  #define UNITSYNC_BIN _T("unitsync.so")
-	#endif
-#endif
+
+
 se_settings* se_settings::instance = 0;
 
 se_settings& se_settings::getInstance()
@@ -91,7 +85,7 @@ wxString se_settings::getSpringDir()
 }
 
 /*copied from springlobby source*/
-wxString SpringOptionsTab::AutoFindSpringDir( const wxString& def )
+wxString se_settings::AutoFindSpringDir( const wxString& def )
 {
   wxPathList pl;
   wxStandardPathsBase& sp = wxStandardPathsBase::Get();
@@ -191,4 +185,10 @@ bool se_settings::IsUnitSyncLib( const wxString& lib )
 {
   if ( !(wxFile::Exists( lib )) ) return false;
   return true;
+}
+
+bool se_settings::IsDataDir( const wxString& dir )
+{
+  if ( wxDir::Exists( dir + wxFileName::GetPathSeparator() + _T("maps") ) ) return true;
+  return false;
 }

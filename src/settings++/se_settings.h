@@ -1,8 +1,6 @@
 #ifndef SE_SETTINGS_H_
 #define SE_SETTINGS_H_
 
-//#include <wx/wx.h>
-
 class wxString;
 class wxConfigBase;
 
@@ -29,8 +27,12 @@ public:
 private:
 	wxConfigBase* se_config;
 	
+	//** copied from springlobby source
 	wxString AutoFindUnitSyncLib( const wxString& def );
+	wxString AutoFindSpringDir( const wxString& def );
 	bool IsUnitSyncLib( const wxString& lib );
+	bool IsDataDir( const wxString& dir );
+	//***
 	
 	static se_settings* instance ;
 };

@@ -46,11 +46,11 @@ END_EVENT_TABLE()
 settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxFrame(parent, id, title, position, size, style)
 {
-	//TODO call only when standalone
-	wxSetWorkingDirectory(OptionsHandler.getSpringDir());
-	susynclib()->Load(OptionsHandler.getUsyncLoc());
+	#ifdef SPRINGSETTINGS_RUNMODE_STANDALONE
+		wxSetWorkingDirectory(OptionsHandler.getSpringDir());
+		susynclib()->Load(OptionsHandler.getUsyncLoc());
+	#endif
 	
-	//TODO logtrycatch
 	abstract_panel::loadValuesIntoMap();
 	
 	CreateGUIControls();
@@ -155,27 +155,27 @@ void settings_frame::handleExit() {
     	OptionsHandler.save();
     	Destroy();
     }
- 
 }
 
 void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 	switch (event.GetId()) {
-		case ID_MENUITEM_SAVE: {
+		case ID_MENUITEM_SAVE: 
 			if (abstract_panel::saveSettings())
 			 (abstract_panel::settingsChanged) = false;
-		} break;
+		 break;
 
-		case ID_MENUITEM_QUIT: {
+		case ID_MENUITEM_QUIT: 
 			handleExit();
-		} break;
+		 break;
 
 		case ID_MENUITEM_RESET: 
 			if ((wxMessageBox(wxT("Reset ALL settings to default values?"), wxT(""), wxYES_NO, this)) == wxYES) {
 						resetSettings();
 			}
 		 break;
+		 
 		case ID_MENUITEM_SIMPLE: 
-			if (OptionsHandler.getMode()==SET_MODE_EXPERT) {
+			if (OptionsHandler.getMode()==SET_MODE_EXPERT) 
 				OptionsHandler.setMode(SET_MODE_SIMPLE);
 				
 				simpleTab = new tab_simple(this,notebook,ID_SIMPLE);
@@ -195,8 +195,8 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				if (!OptionsHandler.getDisableWarning()){
 					wxMessageBox(expertModeWarning, wxT(""), wxOK, this);
 				}	
-			}
 		  break;
+		  
 		case ID_MENUITEM_EXPERT: 
 			if (OptionsHandler.getMode()==SET_MODE_SIMPLE) {
 				switchToExpertMode();
