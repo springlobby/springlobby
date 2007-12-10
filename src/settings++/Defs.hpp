@@ -174,19 +174,18 @@ struct Control {
     const wxString tTip [1];
 };
 
-//TODO find reasonable default values
 //TODO is max_texture stages obsolte?
 const Control RO_SLI[9] = {
 	{_T("Shadow-map size"),              wxT("ShadowMapSize"),       ID_RO_SLI_0,	"2048", {_T("higher value = better looking shadows\n"
 																								"possible values: 1024, 2048, 4096, 8192")}	},
-	{_T("Tree view-distance"),           wxT("TreeRadius"),          ID_RO_SLI_1,	"3000", {_T("placeholder")}	},
-	{_T("Terrain detail"),               wxT("GroundDetail"),        ID_RO_SLI_2,	"120", {_T("higher value = more terrain details")}	},
-	{_T("Unit detail"),                  wxT("UnitLodDist"),         ID_RO_SLI_3,	"600", {_T("higher value = more detailed units")}	},
-	{_T("Grass detail"),                 wxT("GrassDetail"),         ID_RO_SLI_4,	"10", {_T("higher value = more detailed graas")}	},
-	{_T("Ground decals"),                wxT("GroundDecals"),        ID_RO_SLI_5,	"120", {_T("higher value = more ground decals")}	},
-	{_T("Unit icon distance"),           wxT("UnitIconDist"),        ID_RO_SLI_6,	"1000", {_T("determines at which range units are still fully rendered\n"
+	{_T("Tree view-distance"),           wxT("TreeRadius"),          ID_RO_SLI_1,	"1000", {_T("placeholder")}	},
+	{_T("Terrain detail"),               wxT("GroundDetail"),        ID_RO_SLI_2,	"80", {_T("higher value = more terrain details")}	},
+	{_T("Unit detail"),                  wxT("UnitLodDist"),         ID_RO_SLI_3,	"300", {_T("higher value = more detailed units")}	},
+	{_T("Grass detail"),                 wxT("GrassDetail"),         ID_RO_SLI_4,	"3", {_T("higher value = more detailed graas")}	},
+	{_T("Ground decals"),                wxT("GroundDecals"),        ID_RO_SLI_5,	"40", {_T("higher value = more ground decals")}	},
+	{_T("Unit icon distance"),           wxT("UnitIconDist"),        ID_RO_SLI_6,	"350", {_T("determines at which range units are still fully rendered\n"
 																								"higher value = greater range = more units rendered at the same time")}	},
-	{_T("Max simultaneous particles"),     wxT("MaxParticles"),        ID_RO_SLI_7,	"20000"	, {_T("limits how many particles are displayed at the same time")}},
+	{_T("Max simultaneous particles"),     wxT("MaxParticles"),        ID_RO_SLI_7,	"5000"	, {_T("limits how many particles are displayed at the same time")}},
 	{_T("Max texture stages (SM3)"), wxT("SM3MaxTextureStages"), ID_RO_SLI_8,	"20"	, {_T("placeholder")}}
 };
 
@@ -310,44 +309,6 @@ const Control RC_TEXT[2] = {
 	{_T(""), wxT("YResolution"), -1,	"768" , {_T("placeholder")}}
 };
 
-const int allControls_size = 61;
-const Control allControls[allControls_size] = {
-		// RO_SLI[9]
-		RO_SLI[0],RO_SLI[1],RO_SLI[2],RO_SLI[3],RO_SLI[4],RO_SLI[5],RO_SLI[6],RO_SLI[7],RO_SLI[8],
-		// VO_CBOX[3]
-		VO_CBOX[0],VO_CBOX[1],VO_CBOX[2],
-		//VO_RBUT[2] <- only one key
-		VO_RBUT[0],
-		// VO_SLI[1]
-		VO_SLI[0],
-		//VO_SLI_EXT[1]
-		VO_SLI_EXT[0],
-		// AO_SLI[3]
-		AO_SLI[0],AO_SLI[1],AO_SLI[2],
-		// QA_CBOX[10]
-		QA_CBOX[0],QA_CBOX[1],QA_CBOX[2],QA_CBOX[3],QA_CBOX[4],QA_CBOX[5],QA_CBOX[6],QA_CBOX[7],QA_CBOX[8],
-		QA_CBOX[9],
-		//UI_CBOX[14]
-		UI_CBOX[0],UI_CBOX[1],UI_CBOX[2],UI_CBOX[3],UI_CBOX[4],UI_CBOX[5],UI_CBOX[6],UI_CBOX[7],UI_CBOX[8],
-		UI_CBOX[9],UI_CBOX[10],UI_CBOX[11],UI_CBOX[12],UI_CBOX[13],
-		//MO_SLI[5]
-		MO_SLI[0],MO_SLI[1],MO_SLI[2],MO_SLI[3],MO_SLI[4],
-		//MO_SLI_EXT[5]
-		MO_SLI_EXT[0],MO_SLI_EXT[1],MO_SLI_EXT[2],MO_SLI_EXT[3],MO_SLI_EXT[4],
-		//DO_SLI[1]
-		DO_SLI[0],
-		//DO_CBOX[2]
-		DO_CBOX[0],DO_CBOX[1],
-		//WR_COMBOX[1]
-		WR_COMBOX[0],
-		//MO_CBOX[2]
-		MO_CBOX[0],MO_CBOX[1],
-		//MO_RBUT[5] <- only first
-		MO_RBUT[0],
-		//RC_TEXT[2]
-		RC_TEXT[0],RC_TEXT[1]
-};
-
 /** not used
 #define NUM_DEFAULTS 88
 const char DEFAULTS[NUM_DEFAULTS][64] = {
@@ -380,7 +341,6 @@ const char DEFAULTS[NUM_DEFAULTS][64] = {
 	"DualScreenMode=0",
 	"FixAltTab=1",
 	"Fullscreen=0",
-	"FixAltTab=1",
 	"HighResLos=1",
 	"NoHelperAIs=0",
 	"TeamNanoSpray=1",

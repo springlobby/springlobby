@@ -42,21 +42,6 @@ BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_MENU(wxID_ANY,settings_frame::OnMenuChoice)
 END_EVENT_TABLE()
 
-
-void settings_frame::AddTabs()
-{
-//	try {
-//		
-//				
-//					
-//				} catch (...) {
-//					wxMessageBox(wxT("DOH. unitsync not loaded. closing..."), wxT(""), wxOK|wxICON_HAND, this);
-//					Destroy();
-//				}
-//		
-//		
-}
-
 //TODO use icon
 settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxFrame(parent, id, title, position, size, style)
@@ -91,19 +76,18 @@ void settings_frame::CreateGUIControls()
 							    audioTab = new audio_panel(notebook,ID_AUDIO);
 							    debugTab = new debug_panel(notebook,ID_DEBUG);
 							    
-						notebook->AddPage(uiTab, wxT("UI options"));
-						notebook->AddPage(qualityTab, wxT("Render quality / Video mode"));
-						notebook->AddPage(detailTab, wxT("Render detail"));
-						notebook->AddPage(debugTab, wxT("Debug"));
-						notebook->AddPage(audioTab, wxT("Audio"));
-						
+								notebook->AddPage(uiTab, uiTabCap);
+								notebook->AddPage(qualityTab, qualityTabCap);
+								notebook->AddPage(detailTab, detailTabCap);
+								notebook->AddPage(debugTab, debugTabCap);
+								notebook->AddPage(audioTab,audioTabCap);
 					
 						break;
 					case SET_MODE_SIMPLE:
-						simpleTab = new tab_simple(notebook,ID_SIMPLE);
+						simpleTab = new tab_simple(this,notebook,ID_SIMPLE);
 						 uiTab = new tab_ui(notebook,ID_UI);
-						notebook->AddPage(simpleTab,wxT("Combined options"));
-						notebook->AddPage(uiTab, wxT("UI options"));					
+						notebook->AddPage(simpleTab,simpleTabCap);
+						notebook->AddPage(uiTab, uiTabCap);					
 					break;
 			}
 			notebook->SetSelection(0);
@@ -194,8 +178,8 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 			if (OptionsHandler.getMode()==SET_MODE_EXPERT) {
 				OptionsHandler.setMode(SET_MODE_SIMPLE);
 				
-				simpleTab = new tab_simple(notebook,ID_SIMPLE);
-				notebook->InsertPage(0,simpleTab,wxT("Combined options"));
+				simpleTab = new tab_simple(this,notebook,ID_SIMPLE);
+				notebook->InsertPage(0,simpleTab,simpleTabCap);
 				simpleTab->updateControls(UPDATE_ALL);
 				
 				notebook->DeletePage(5);
@@ -209,33 +193,13 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				
 				SetTitle(wxT("SpringSettings (simple mode)"));
 				if (!OptionsHandler.getDisableWarning()){
-					wxMessageBox(wxT("Changes made on Quality/Detail tab in expert mode"
-							"\n will be lost if you change simple options again."), wxT(""), wxOK, this);
+					wxMessageBox(expertModeWarning, wxT(""), wxOK, this);
 				}	
 			}
 		  break;
 		case ID_MENUITEM_EXPERT: 
 			if (OptionsHandler.getMode()==SET_MODE_SIMPLE) {
-				OptionsHandler.setMode(SET_MODE_EXPERT);
-								
-				qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
-			    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
-			    audioTab = new audio_panel(notebook,ID_AUDIO);
-			    debugTab = new debug_panel(notebook,ID_DEBUG);
-				notebook->AddPage(qualityTab, wxT("Render quality / Video mode"));
-				notebook->AddPage(detailTab, wxT("Render detail"));
-				notebook->AddPage(audioTab, wxT("Audio"));
-				notebook->AddPage(debugTab, wxT("Debug"));
-						
-				notebook->DeletePage(0);
-				simpleTab = 0;
-				SetTitle(wxT("SpringSettings (expert mode)"));
-				uiTab->updateControls(UPDATE_ALL);
-				detailTab->updateControls(UPDATE_ALL);
-				qualityTab->updateControls(UPDATE_ALL);
-				debugTab->updateControls(UPDATE_ALL);
-				audioTab->updateControls(UPDATE_ALL);
-	
+				switchToExpertMode();
 			}
 			break;
 		case ID_MENUITEM_DISABLE_WARN:
@@ -245,20 +209,47 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 }
 void settings_frame::resetSettings()
 {
-	//TODO unbreak;
 	abstract_panel::loadDefaults();
-	//updateAllControls();
+	updateAllControls();
 }
 
-//TODO broken
-void settings_frame::updateAllControls()
+void settings_frame::switchToExpertMode()
 {
+	OptionsHandler.setMode(SET_MODE_EXPERT);
+					
+	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
+    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
+    audioTab = new audio_panel(notebook,ID_AUDIO);
+    debugTab = new debug_panel(notebook,ID_DEBUG);
+	notebook->AddPage(qualityTab, qualityTabCap);
+	notebook->AddPage(detailTab, detailTabCap);
+	notebook->AddPage(debugTab, debugTabCap);
+	notebook->AddPage(audioTab,audioTabCap);
+			
+	notebook->DeletePage(0);
+	simpleTab = 0;
+	SetTitle(wxT("SpringSettings (expert mode)"));
 	uiTab->updateControls(UPDATE_ALL);
-	simpleTab->updateControls(UPDATE_ALL);
 	detailTab->updateControls(UPDATE_ALL);
 	qualityTab->updateControls(UPDATE_ALL);
 	debugTab->updateControls(UPDATE_ALL);
 	audioTab->updateControls(UPDATE_ALL);
+}
+
+void settings_frame::updateAllControls()
+{
+	if (uiTab)
+		uiTab->updateControls(UPDATE_ALL);
+	if (simpleTab)
+		simpleTab->updateControls(UPDATE_ALL);
+	if (detailTab)
+		detailTab->updateControls(UPDATE_ALL);
+	if (qualityTab)
+		qualityTab->updateControls(UPDATE_ALL);
+	if (debugTab)
+		debugTab->updateControls(UPDATE_ALL);
+	if (audioTab)
+		audioTab->updateControls(UPDATE_ALL);
 }
 void settings_frame::OnClose(wxCloseEvent& event)
 {

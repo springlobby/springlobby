@@ -40,12 +40,14 @@ class wxCloseEvent;
 class wxStaticText;
 class wxStaticBoxSizer;
 class wxButton;
+class settings_frame;
 
 class tab_simple : public abstract_panel
 {
  	
 	public:
-		tab_simple(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
+		tab_simple(settings_frame* _origin, wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), 
+				const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
 		virtual ~tab_simple();
 
 		
@@ -56,6 +58,7 @@ class tab_simple : public abstract_panel
 
     protected:
         void OnClose(wxCloseEvent& event);
+        void OnButtonClick(wxCommandEvent& event);
 		void CreateGUIControls();
 		void initOptSizer(wxFlexGridSizer*);
 		void initInfoSizer(wxFlexGridSizer*);
@@ -72,7 +75,7 @@ class tab_simple : public abstract_panel
 		abstract_panel* qualityTab;
 		
 		wxSizer* parentSizer;	
-			
+		
 		wxFlexGridSizer* leftSizer ;
 		wxFlexGridSizer* rightSizer;
 		wxFlexGridSizer* Sizer_CBX ;
@@ -81,7 +84,7 @@ class tab_simple : public abstract_panel
 		
 		wxStaticBoxSizer* boxA ;
 		wxStaticBoxSizer* boxB ;
-		
+		settings_frame* origin;
 		
 		DECLARE_EVENT_TABLE()
 };   

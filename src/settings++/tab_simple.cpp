@@ -33,6 +33,7 @@
 //#include "../springunitsynclib.h"
 #include "Defs.hpp"
 #include "presets.h"
+#include "frame.h"
 
 const wxString infoTextContent= _T("INFOTEXT HERE");
 
@@ -71,37 +72,24 @@ void tab_simple::initButSizer(wxSizer* sizer)
 	sizer->Add(goExpert_BUT,0,wxALIGN_CENTER_VERTICAL);
 }
 
-tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
+tab_simple::tab_simple(settings_frame* _origin, wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
 : abstract_panel(parent, id , title , pos , size, style) {
 
-
+	origin = _origin;
 	
 	 parentSizer = new wxFlexGridSizer(2,1,1);	
-
-	//wxSizer* leftSizer = new wxFlexGridSizer(1,15,0);
 	 leftSizer = new wxFlexGridSizer(1,15,1);
 	 rightSizer = new wxFlexGridSizer(1,15,1);
 	 Sizer_CBX = new wxFlexGridSizer(2,10,10);
 	 Sizer_info = new wxFlexGridSizer(1,15,10);
 	 Sizer_BUT = new wxBoxSizer(wxVERTICAL);
-	//wxFlexGridSizer* SizerD = new wxFlexGridSizer(1,5,10);
 	 boxA = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("SIMPLE_OPTIONS"));
 	 boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Info"));
-	//		wxStaticBoxSizer* boxC = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Anti-Aliasing Options"));
-	//		wxStaticBoxSizer* boxD = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Z-/Depth-Buffer"));
-	//		Sizer_CBX->AddGrowableCol(0);
-	//		Sizer_CBX->AddGrowableCol(1);
-	//	    SizerB->AddGrowableCol(0);
-	//	    SizerC->AddGrowableCol(0);
-	//	    SizerD->AddGrowableCol(0);
-
-
+	
 	initOptSizer(Sizer_CBX);
 	initInfoSizer(Sizer_info);
 	initButSizer(Sizer_BUT);
-	//		initAASizer(SizerC);
-	//		initZBufferSizer(SizerD);
-
+	
 	Sizer_CBX->Fit(this);
 	Sizer_CBX->SetSizeHints(this);
     Sizer_info->Fit(this);
@@ -112,13 +100,10 @@ tab_simple::tab_simple(wxWindow *parent, wxWindowID id , const wxString &title ,
 	boxA->Add(Sizer_CBX,1,wxEXPAND);
 	boxB->Add(Sizer_info,1,wxEXPAND);
 	
-	//	    boxD->Add(SizerD);
-	//	    leftSizer->Add(boxB,0,wxEXPAND);
-	//	    leftSizer->Add(boxC);
 	leftSizer->Add(boxA,1,wxEXPAND);
 	leftSizer->Add(boxB,1,wxEXPAND);
 	rightSizer->Add(Sizer_BUT,1,wxEXPAND|wxALIGN_CENTER);
-	//  parentSizer->Add(leftSizer,0,wxALIGN_LEFT|wxALIGN_TOP |wxALL,10);
+	
 	parentSizer->Add(leftSizer,1,wxALL|wxEXPAND,15);
 	parentSizer->Add(goExpert_BUT,0,wxLEFT|wxALIGN_CENTER,35);
 	
@@ -138,22 +123,7 @@ tab_simple::~tab_simple(void) {
 
 void tab_simple::OnComboBoxChange(wxCommandEvent& event)
 {
-	//TODO
 	abstract_panel::OnComboBoxChange(event);
-//	switch( event.GetId()){
-//		case ID_SIMPLE_MODE_CBX: {
-//			qualityTab->updateControls(UPDATE_VIDEO_MODE);
-//			break;
-//		}
-//		case ID_SIMPLE_DETAIL_CBX: {
-//			detailTab->updateControls(UPDATE_ALL);
-//			break;
-//		}
-//		case ID_SIMPLE_QUAL_CBX: {
-//			qualityTab->updateControls(UPDATE_QA_BOXES);
-//			break;
-//		}
-//	}
 }
 
 void tab_simple::setTabs(abstract_panel* a,abstract_panel* b)
@@ -162,13 +132,19 @@ void tab_simple::setTabs(abstract_panel* a,abstract_panel* b)
 	qualityTab = b;
 }
 
+void tab_simple::OnButtonClick(wxCommandEvent& event)
+{
+	origin->switchToExpertMode();
+}
+
 BEGIN_EVENT_TABLE(tab_simple, abstract_panel)
 	EVT_SLIDER(wxID_ANY,            tab_simple::OnSliderMove)
-	EVT_TEXT(wxID_ANY,              tab_simple::OnTextUpdate)
+//	EVT_TEXT(wxID_ANY,              tab_simple::OnTextUpdate)
 	EVT_CHECKBOX(wxID_ANY,          tab_simple::OnCheckBoxTick)
-	EVT_RADIOBUTTON(wxID_ANY,       tab_simple::OnRadioButtonToggle)
+//	EVT_RADIOBUTTON(wxID_ANY,       tab_simple::OnRadioButtonToggle)
 //	EVT_IDLE(                       tab_simple::update)
-	EVT_COMBOBOX(wxID_ANY, 		tab_simple::OnComboBoxChange)
+	EVT_COMBOBOX(wxID_ANY, 			tab_simple::OnComboBoxChange)
+	EVT_BUTTON(ID_SIMPLE_GOEXPERT_BUT,	tab_simple::OnButtonClick)
 END_EVENT_TABLE()
 
 

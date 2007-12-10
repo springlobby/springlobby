@@ -28,6 +28,8 @@
 class wxNotebook;
 class tab_simple;
 class tab_ui;
+class tab_render_detail;
+class tab_quality_video;
 class audio_panel;
 class debug_panel;
 class abstract_panel;
@@ -42,29 +44,39 @@ class wxFlexGridSizer;
 class wxNotebookEvent;
 class genricWrapper;
 
+const wxString simpleTabCap= _T("Combined Options");
+const wxString qualityTabCap= _T("Render quality / Video mode");
+const wxString detailTabCap = _T("Render detail");
+const wxString debugTabCap = _T("Debug");
+const wxString uiTabCap= _T("UI options");
+const wxString audioTabCap = _T("Audio");
+const wxString expertModeWarning = _T("Changes made on Quality/Detail tab in expert mode"
+									"\n will be lost if you change simple options again.");
+
+
 class settings_frame : public wxFrame
 {
 	private:
 		DECLARE_EVENT_TABLE();
 		
 	public:
-		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style =  wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX);
+		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, 
+				const wxSize& size = wxDefaultSize, long style =  wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX);
 		virtual ~settings_frame();
 		void handleExit();
+		void switchToExpertMode();
+		
 	private:
 		tab_simple* simpleTab;
 		tab_ui* uiTab;
 		audio_panel* audioTab;
 		debug_panel* debugTab;
-
-		abstract_panel* detailTab;
-		abstract_panel* qualityTab;
-		
-		//wxPanel panelArray[6];
-		
+		tab_render_detail* detailTab;
+		tab_quality_video* qualityTab;
+									
 		wxMenu* menuFile;
 		wxMenu* menuMode;
-		void AddTabs();
+		
 		wxNotebook *notebook;
 		wxFlexGridSizer *book_sizer;
 		wxFlexGridSizer* book_sizer2;
@@ -95,5 +107,6 @@ class settings_frame : public wxFrame
 		void resetSettings();
 		void updateAllControls();
 };
+
 
 #endif
