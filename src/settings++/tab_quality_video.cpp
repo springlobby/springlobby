@@ -32,7 +32,7 @@ c    This file is part of springsettings,
 #include <wx/checkbox.h>
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
-//#include "../springunitsynclib.h"
+
 #include "Defs.hpp"
 
 void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {

@@ -30,27 +30,40 @@
 #include <wx/slider.h>
 #include <wx/combobox.h>
 #include <wx/button.h>
-//#include "../springunitsynclib.h"
+
 #include "Defs.hpp"
 #include "presets.h"
 #include "frame.h"
 
-const wxString infoTextContent= _T("INFOTEXT HERE");
+const wxString infoTextContent= _T("These options let you roughly control Spring's rendering.\n"
+									"For more speed try lowering the settings.\n"
+									"Full control over all settings is available in the\n"
+									"\"Expert mode\", either click on the button on the\n"
+									"right or use the \"Mode\" menu in the top menubar.\n"
+									"You can go back to this mode at any time by choosing\n"
+									"\"Simple mode\" from the \"Mode\" menu.\n"
+									"If you encounter error messages concerning graphics\n"
+									"when running Spring it might be necessary to disable\n "
+									"some options in expert mode.\n");
 
+const wxString renderQuality_CBX_lbl = _T("Graphics quality");
+const wxString renderDetail_CBX_lbl = _T("Graphics detail");
+const wxString videoMode_CBX_lbl = _T("Screen resolution");
+const wxString button_lbl = _T("Switch to expert mode");
 
 void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
-	sizer->Add(new wxStaticText(this, -1,  wxT("RENDER_QUALITY")), 0,wxTOP|wxBOTTOM,15);
+	sizer->Add(new wxStaticText(this, -1, renderQuality_CBX_lbl) , 0,wxTOP|wxBOTTOM,15);
 	
 	renderQuality_CBX = new wxComboBox(this, ID_SIMPLE_QUAL_CBX, levels_vlow_To_vHigh[0], wxDefaultPosition, wxSize(220,21), 
 			5,levels_vlow_To_vHigh,wxCB_DROPDOWN|wxCB_READONLY);
 	sizer->Add(renderQuality_CBX, 0, wxTOP|wxBOTTOM, 15);	
 
-	sizer->Add(new wxStaticText(this, -1,  wxT("RENDER_DETAIL")), 0,wxALL);
+	sizer->Add(new wxStaticText(this, -1,renderDetail_CBX_lbl  ), 0,wxALL);
 	renderDetail_CBX = new wxComboBox(this, ID_SIMPLE_DETAIL_CBX, levels_low_To_High[0], wxDefaultPosition, wxSize(220,21), 
 			3,levels_low_To_High,wxCB_DROPDOWN|wxCB_READONLY);
 	sizer->Add(renderDetail_CBX, 0, wxBOTTOM, 15);	
 
-	sizer->Add(new wxStaticText(this, -1,  wxT("VIDEO_MODE")), 0,wxALL);
+	sizer->Add(new wxStaticText(this, -1,  videoMode_CBX_lbl ), 0,wxALL);
 	videoMode_CBX = new wxComboBox(this, ID_SIMPLE_MODE_CBX, vl_Resolution_Str[0], wxDefaultPosition, wxSize(220,21), 
 			vl_Resolution_Str_size,vl_Resolution_Str,wxCB_DROPDOWN|wxCB_READONLY);
 	sizer->Add(videoMode_CBX, 0, wxBOTTOM, 15);	
@@ -68,7 +81,7 @@ void tab_simple::initInfoSizer(wxFlexGridSizer* sizer)
 
 void tab_simple::initButSizer(wxSizer* sizer)
 {
-	goExpert_BUT = new wxButton(this, ID_SIMPLE_GOEXPERT_BUT,_T("Switch to expert mode"),wxPoint(-1,-1),wxSize(-1,-1),wxBU_EXACTFIT);
+	goExpert_BUT = new wxButton(this, ID_SIMPLE_GOEXPERT_BUT,button_lbl ,wxPoint(-1,-1) ,wxSize(-1,-1), wxBU_EXACTFIT);
 	sizer->Add(goExpert_BUT,0,wxALIGN_CENTER_VERTICAL);
 }
 

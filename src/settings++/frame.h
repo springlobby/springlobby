@@ -51,7 +51,8 @@ const wxString debugTabCap = _T("Debug");
 const wxString uiTabCap= _T("UI options");
 const wxString audioTabCap = _T("Audio");
 const wxString expertModeWarning = _T("Changes made on Quality/Detail tab in expert mode"
-									"\n will be lost if you change simple options again.");
+									"\n will be lost if you change simple options again.\n"
+									"(this message can be disabled in the \"File\" menu)");
 
 
 class settings_frame : public wxFrame

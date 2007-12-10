@@ -31,7 +31,7 @@
 #include <wx/checkbox.h>
 #include <wx/stattext.h>
 
-//#include "../springunitsynclib.h"
+
 #include "Defs.hpp"
 
 void debug_panel::initDebugSizer(wxStaticBoxSizer* sizer) {

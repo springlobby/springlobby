@@ -29,7 +29,7 @@
 #include <wx/slider.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
-//#include "../springunitsynclib.h"
+
 #include "Defs.hpp"
 
 void audio_panel::initAudioSizer(wxStaticBoxSizer* sizer) {
