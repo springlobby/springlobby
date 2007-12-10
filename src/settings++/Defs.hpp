@@ -149,7 +149,7 @@
 #define ID_MO_SLI_3 663
 #define ID_MO_SLI_4 664
 
-#define SLI_STYLE (wxSL_LABELS | wxSL_AUTOTICKS)
+#define SLI_STYLE (wxSL_LABELS )
 #define WX_DEF_V wxDefaultValidator
 #define WX_DEF_P wxPoint(-1, -1)
 #define WX_DEF_S wxSize(-1, -1)
@@ -176,7 +176,8 @@ struct Control {
 //TODO find reasonable default values
 //TODO is max_texture stages obsolte?
 const Control RO_SLI[9] = {
-	{_T("Shadow-map size"),              wxT("ShadowMapSize"),       ID_RO_SLI_0,	"2048", {_T("higher value = better looking shadows")}	},
+	{_T("Shadow-map size"),              wxT("ShadowMapSize"),       ID_RO_SLI_0,	"2048", {_T("higher value = better looking shadows\n"
+																								"possible values: 1024, 2048, 4096, 8192")}	},
 	{_T("Tree view-distance"),           wxT("TreeRadius"),          ID_RO_SLI_1,	"3000", {_T("placeholder")}	},
 	{_T("Terrain detail"),               wxT("GroundDetail"),        ID_RO_SLI_2,	"120", {_T("higher value = more terrain details")}	},
 	{_T("Unit detail"),                  wxT("UnitLodDist"),         ID_RO_SLI_3,	"600", {_T("higher value = more detailed units")}	},

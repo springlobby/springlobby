@@ -44,7 +44,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 			extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V		);
 		//ctrl_detail_sliders[i]->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
 		ctrl_detail_sliders[i]->SetToolTip(RO_SLI[i].tTip[0]);
-		sizerL->Add(new wxStaticText(this, -1,  (RO_SLI[i].lbl)), 0,wxALIGN_CENTER_VERTICAL|wxALL);
+		sizerL->Add(new wxStaticText(this, -1,  (RO_SLI[i].lbl)), 0,wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND);
 		sizerL->Add(ctrl_detail_sliders[i], 0,wxALIGN_CENTER_VERTICAL|wxALL);
 	}
 	for (int i = 5; i < ctrl_detail_sliders_size; i++) {
@@ -53,7 +53,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 			extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(200, -1), SLI_STYLE, WX_DEF_V);
 		//ctrl_detail_sliders[i]->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
 		ctrl_detail_sliders[i]->SetToolTip(RO_SLI[i].tTip[0]);
-		sizerR->Add(new wxStaticText(this, -1,  (RO_SLI[i].lbl)), 0,wxALIGN_CENTER_VERTICAL|wxALL);
+		sizerR->Add(new wxStaticText(this, -1,  (RO_SLI[i].lbl)), 0,wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND);
 		sizerR->Add(ctrl_detail_sliders[i], 0,wxALIGN_CENTER_VERTICAL|wxALL);
 	}
 }
@@ -79,7 +79,7 @@ tab_render_detail::tab_render_detail(wxWindow *parent, wxWindowID id , const wxS
 		    renderSizer->Add(rendererSizerA,0,wxALIGN_LEFT|wxALL,0);
 		    renderSizer->Add(rendererSizerB,0,wxALIGN_RIGHT|wxALL,0);
 		    
-		    box->Add(renderSizer,0,wxEXPAND|wxALIGN_LEFT|wxALL,0);
+		    box->Add(renderSizer,0,wxEXPAND|wxALIGN_LEFT|wxTOP,15);
 		    parentSizer->Add(box,0,wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL|wxALL,15);
 		    SetSizer(parentSizer); // true --> delete old sizer if present
 	
@@ -99,6 +99,6 @@ BEGIN_EVENT_TABLE(tab_render_detail, abstract_panel)
 	EVT_SLIDER(wxID_ANY,            tab_render_detail::OnSliderMove)
 //	EVT_TEXT(wxID_ANY,              tab_render_detail::OnTextUpdate)
 	//EVT_CHECKBOX(wxID_ANY,          tab_render_detail::OnCheckBoxTick)
-	EVT_RADIOBUTTON(wxID_ANY,       tab_render_detail::OnRadioButtonToggle)
+//	EVT_RADIOBUTTON(wxID_ANY,       tab_render_detail::OnRadioButtonToggle)
 //	EVT_IDLE(                       tab_render_detail::update)
 END_EVENT_TABLE()
