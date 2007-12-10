@@ -161,6 +161,24 @@ void settings_frame::handleExit() {
     }
 }
 
+void settings_frame::handleExternExit() {
+	if (abstract_panel::settingsChanged) {
+		int action = wxMessageBox(wxT("Save settings before exiting?"), wxT(""), wxYES_NO, this);
+		switch (action) {
+		case wxYES:
+			if (abstract_panel::saveSettings())
+				(abstract_panel::settingsChanged) = false;
+		case wxNO:
+			OptionsHandler.save();
+			Destroy();
+			break;
+
+		}
+	}
+	OptionsHandler.save();
+	Destroy();
+}
+
 void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 	switch (event.GetId()) {
 		case ID_MENUITEM_SAVE: 

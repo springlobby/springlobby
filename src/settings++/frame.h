@@ -64,7 +64,7 @@ class settings_frame : public wxFrame
 		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, 
 				const wxSize& size = wxDefaultSize, long style =  wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX);
 		virtual ~settings_frame();
-		void handleExit();
+		void handleExternExit();
 		void switchToExpertMode();
 		
 	private:
@@ -84,6 +84,7 @@ class settings_frame : public wxFrame
 		
 		void OnNBchange(wxNotebookEvent&);
 		void initMenuBar();
+		void handleExit();
 		
 		enum
 		{

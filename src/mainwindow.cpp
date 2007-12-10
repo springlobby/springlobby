@@ -119,6 +119,8 @@ MainWindow::MainWindow( Ui& ui ) :
 
 MainWindow::~MainWindow()
 {
+	se_frame->handleExternExit();
+	
   int x, y, w, h;
   GetSize( &w, &h );
   sett().SetMainWindowHeight( h );
@@ -133,7 +135,6 @@ MainWindow::~MainWindow()
   delete m_battle_icon;
   delete m_options_icon;
   delete m_select_image;
-  
   
 }
 
