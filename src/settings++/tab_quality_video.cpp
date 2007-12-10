@@ -132,11 +132,14 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
 		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 0)? 10: 0);
 	}
 
-	sizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP| wxEXPAND, 10);
+	wxSizer* subSizer = new wxBoxSizer(wxVERTICAL);
+	subSizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP| wxEXPAND, 10);
 	ctrl_waterQ_CBox = new wxComboBox(this, ID_WINDOWP_WR_COMBOX, WR_COMBOX_CHOICES[0], wxDefaultPosition, wxSize(220,21), 
 			4,WR_COMBOX_CHOICES,wxCB_DROPDOWN|wxCB_READONLY);
 	ctrl_waterQ_CBox->SetToolTip(WR_COMBOX[0].tTip[0]);
-	sizer->Add(ctrl_waterQ_CBox, 0, wxBOTTOM, 10);	
+	subSizer->Add(ctrl_waterQ_CBox, 0, wxBOTTOM, 5);
+	
+	sizer->Add(subSizer,0, wxBOTTOM, 5);
 	
 }
 

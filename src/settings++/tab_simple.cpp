@@ -96,8 +96,8 @@ tab_simple::tab_simple(settings_frame* _origin, wxWindow *parent, wxWindowID id 
 	 Sizer_CBX = new wxFlexGridSizer(2,10,10);
 	 Sizer_info = new wxFlexGridSizer(1,15,10);
 	 Sizer_BUT = new wxBoxSizer(wxVERTICAL);
-	 boxA = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("SIMPLE_OPTIONS"));
-	 boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Info"));
+	 boxA = new wxStaticBoxSizer(wxVERTICAL ,this,_T("Options"));
+	 boxB = new wxStaticBoxSizer(wxVERTICAL ,this,_T("Info"));
 	
 	initOptSizer(Sizer_CBX);
 	initInfoSizer(Sizer_info);
