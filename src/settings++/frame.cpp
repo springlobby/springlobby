@@ -23,6 +23,7 @@
 #include <wx/notebook.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
+#include <wx/icon.h>
 
 #include "frame.h"
 #include "se_settings.h"
@@ -36,6 +37,7 @@
 #include "tab_simple.h"
 #include "Defs.hpp"
 
+#include "../images/springsettings.xpm"
 
 BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_CLOSE(settings_frame::OnClose)
@@ -46,14 +48,16 @@ END_EVENT_TABLE()
 settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxFrame(parent, id, title, position, size, style)
 {
-	#ifdef SPRINGSETTINGS_RUNMODE_STANDALONE
-		wxSetWorkingDirectory(OptionsHandler.getSpringDir());
-		susynclib()->Load(OptionsHandler.getUsyncLoc());
-	#endif
+	
+	wxSetWorkingDirectory(OptionsHandler.getSpringDir());
+	susynclib()->Load(OptionsHandler.getUsyncLoc());
 	
 	abstract_panel::loadValuesIntoMap();
 	
 	CreateGUIControls();
+	
+	SetIcon( wxIcon(springsettings_xpm) );
+	
 	initMenuBar();
 }
 

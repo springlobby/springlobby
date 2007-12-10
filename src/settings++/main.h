@@ -23,8 +23,6 @@
 #ifndef SPRINGSETTINGS_MAIN_h
 #define SPRINGSETTINGS_MAIN_h
 
-#define SPRINGSETTINGS_RUNMODE_STANDALONE
-
 #include <wx/app.h>
 
 class Springsettings : public wxApp

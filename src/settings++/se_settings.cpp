@@ -80,7 +80,8 @@ void se_settings::setUsyncLoc(wxString loc)
 
 wxString se_settings::getSpringDir()
 {
-	wxString def = AutoFindSpringDir(def);
+	wxString def;
+	def= AutoFindSpringDir(def);
 	return se_config->Read( _T("/Spring/dir"), def );
 }
 

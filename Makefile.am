@@ -499,6 +499,7 @@ springlobby_SOURCES += \
 	src/settings++/tab_quality_video.cpp \
 	src/settings++/tab_ui.h \
 	src/settings++/tab_simple.h \
+	src/images/springsettings.xpm \
 	src/settings++/tab_render_detail.h \
 	src/settings++/tab_abstract.h
 
@@ -546,6 +547,7 @@ springsettings_SOURCES = \
 	src/settings++/tab_quality_video.cpp \
 	src/settings++/tab_ui.h \
 	src/settings++/tab_simple.h \
+	src/images/springsettings.xpm \
 	src/settings++/tab_render_detail.h \
 	src/settings++/tab_abstract.h
 
