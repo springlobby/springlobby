@@ -102,7 +102,7 @@ MainWindow::MainWindow( Ui& ui ) :
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
-
+  
   m_func_tabs->AddPage( m_chat_tab, _T(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
@@ -119,8 +119,6 @@ MainWindow::MainWindow( Ui& ui ) :
 
 MainWindow::~MainWindow()
 {
-	se_frame->handleExternExit();
-	
   int x, y, w, h;
   GetSize( &w, &h );
   sett().SetMainWindowHeight( h );
@@ -357,6 +355,6 @@ void MainWindow::OnUnitSyncReloaded()
 void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 {
 	se_frame = new settings_frame(NULL,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
-	    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+	  	    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
 	se_frame->Show();
 }

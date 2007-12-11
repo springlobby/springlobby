@@ -48,7 +48,7 @@ END_EVENT_TABLE()
 settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxFrame(parent, id, title, position, size, style)
 {
-	
+	goingDown = false;
 	wxSetWorkingDirectory(OptionsHandler.getSpringDir());
 	susynclib()->Load(OptionsHandler.getUsyncLoc());
 	
@@ -63,6 +63,8 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 
 settings_frame::~settings_frame()
 {
+	if (!goingDown)
+	handleExit();
 }
 
 void settings_frame::CreateGUIControls()
@@ -140,6 +142,7 @@ void settings_frame::initMenuBar() {
 }
 
 void settings_frame::handleExit() {
+	
     if (abstract_panel::settingsChanged) {
     	int action = wxMessageBox(wxT("Save settings before exiting?"), wxT(""), wxYES_NO|wxCANCEL, this);
         switch (action) {
@@ -147,6 +150,7 @@ void settings_frame::handleExit() {
         	if (abstract_panel::saveSettings())
         				 (abstract_panel::settingsChanged) = false;
         case wxNO:
+        	goingDown = true;
         	OptionsHandler.save();
         	    Destroy();
         	    break;
@@ -156,27 +160,10 @@ void settings_frame::handleExit() {
     }
     else
     {
+    	goingDown = true;
     	OptionsHandler.save();
     	Destroy();
     }
-}
-
-void settings_frame::handleExternExit() {
-	if (abstract_panel::settingsChanged) {
-		int action = wxMessageBox(wxT("Save settings before exiting?"), wxT(""), wxYES_NO, this);
-		switch (action) {
-		case wxYES:
-			if (abstract_panel::saveSettings())
-				(abstract_panel::settingsChanged) = false;
-		case wxNO:
-			OptionsHandler.save();
-			Destroy();
-			break;
-
-		}
-	}
-	OptionsHandler.save();
-	Destroy();
 }
 
 void settings_frame::OnMenuChoice(wxCommandEvent& event) {
@@ -275,8 +262,8 @@ void settings_frame::updateAllControls()
 }
 void settings_frame::OnClose(wxCloseEvent& event)
 {
-	handleExit();
-	//Destroy();
+	if (!goingDown)
+		handleExit();
 }
 
 
