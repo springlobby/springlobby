@@ -182,6 +182,8 @@
 		<Unit filename="src/chatpanel.h" />
 		<Unit filename="src/connectwindow.cpp" />
 		<Unit filename="src/connectwindow.h" />
+		<Unit filename="src/crashreport.cpp" />
+		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/flagimagedata.h" />
 		<Unit filename="src/flagimages.cpp" />
 		<Unit filename="src/flagimages.h" />
@@ -288,8 +290,6 @@
 		<Unit filename="src/springunitsync.h" />
 		<Unit filename="src/springunitsynclib.cpp" />
 		<Unit filename="src/springunitsynclib.h" />
-		<Unit filename="src/stacktrace.cpp" />
-		<Unit filename="src/stacktrace.h" />
 		<Unit filename="src/tasserver.cpp" />
 		<Unit filename="src/tasserver.h" />
 		<Unit filename="src/ui.cpp" />
@@ -310,6 +310,7 @@
 			<wxsmith version="1">
 				<gui name="wxWidgets" src="" main="" init_handlers="necessary" language="CPP" />
 			</wxsmith>
+			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

@@ -9,12 +9,13 @@
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <wx/image.h>
+#include <wx/debugrpt.h>
 #include <iostream>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
-#include "stacktrace.h"
+#include "crashreport.h"
 #include "utils.h"
 #include "ui.h"
 #include "iunitsync.h"
@@ -107,25 +108,7 @@ int SpringLobbyApp::OnExit()
 
 void SpringLobbyApp::OnFatalException()
 {
-
-#if wxUSE_STACKWALKER
-
-  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"), _("Critical error"), wxICON_ERROR  );
-
-  wxLogError( _T("uncaught exception") );
-  wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
-
-  DebugInfo += _T("StackTraceID: ") + stacktrace().GetStackTraceHash() + _T("\n");
-
-  stacktrace().WalkFromException();
-  DebugInfo += stacktrace().GetStackTrace();
-
-  DebugInfo += _T("-------- End StackTrace --------");
-
-  wxLogMessage( DebugInfo );
-#else
-  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker"), _("Critical error"), wxICON_ERROR  );
-#endif
+//  m_crash_report.GenerateReport(wxDebugReport::Context_Exception);
 }
 
 

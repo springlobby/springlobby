@@ -4,12 +4,9 @@
 //
 
 #include <sstream>
-#include <wx/intl.h>
-#include <wx/msgdlg.h>
 
 #include "utils.h"
 #include "revision.h"
-#include "stacktrace.h"
 
 
 // FIXME this does not work on linux+mingw build for windows
@@ -22,28 +19,6 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-
-void DumpStackTraceToLog()
-{
-
-#if wxUSE_STACKWALKER
-
-  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"),_("Critical error"), wxICON_ERROR );
-
-  wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
-
-  DebugInfo += _T("StackTraceID: ") + stacktrace().GetStackTraceHash() + _T("\n");
-
-  stacktrace().Walk();
-  DebugInfo += stacktrace().GetStackTrace();
-
-  DebugInfo += _T("-------- End StackTrace --------");
-
-  wxLogMessage( DebugInfo );
-#else
-  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker"),_("Critical error"), wxICON_ERROR );
-#endif
-}
 
 
 std::string i2s( int x )
