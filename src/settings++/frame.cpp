@@ -48,7 +48,7 @@ END_EVENT_TABLE()
 settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxFrame(parent, id, title, position, size, style)
 {
-	goingDown = false;
+	alreadyCalled = false;
 	parentWindow = parent;
 	wxSetWorkingDirectory(OptionsHandler.getSpringDir());
 	susynclib()->Load(OptionsHandler.getUsyncLoc());
@@ -69,18 +69,18 @@ settings_frame::~settings_frame()
 
 void settings_frame::handleExternExit()
 {
-	goingDown = true;
-	int choice = wxMessageBox(wxT("Save Spring settings before exiting?"), wxT(""), wxYES_NO |wxICON_QUESTION, parentWindow);
-	
-	if ( choice == wxYES)
-				  abstract_panel::saveSettings();	   
-	abstract_panel::settingsChanged = false;    
-	
-	OptionsHandler.save();
-	Destroy();
+	if ( !alreadyCalled){
+		alreadyCalled = true;
+		int choice = wxMessageBox(wxT("Save Spring settings before exiting?"), wxT("dummy"), wxYES_NO |wxICON_QUESTION,NULL);	
+		if ( choice == wxYES)
+					  abstract_panel::saveSettings();	
+		abstract_panel::settingsChanged = false;    
+		OptionsHandler.save();
+		//Destroy();
+	}
 }
 
-void settings_frame::handleExit(bool isExtern) {
+void settings_frame::handleExit() {
     if (abstract_panel::settingsChanged) {
     	int action = wxMessageBox(wxT("Save Spring settings before exiting?"), wxT(""),wxYES_NO|wxCANCEL|wxICON_QUESTION , this);
         switch (action) {
@@ -88,11 +88,8 @@ void settings_frame::handleExit(bool isExtern) {
         	if (abstract_panel::saveSettings())
         				 (abstract_panel::settingsChanged) = false;
         case wxNO:
-        	if (!goingDown) {
-	        	goingDown = true;
 	        	OptionsHandler.save();
         	    Destroy();
-        	}
         	break;
         	
         case wxCANCEL:
@@ -108,7 +105,6 @@ void settings_frame::handleExit(bool isExtern) {
 
 void settings_frame::CreateGUIControls()
 {
-	//wxPanel* container = new wxPanel(this,666,wxPoint(-1,-1),wxSize(-1,-1));
 	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
 	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
 	
@@ -188,8 +184,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		 break;
 
 		case ID_MENUITEM_QUIT: 
-			if (!goingDown)
-				handleExit(false);
+				handleExit();
 		 break;
 
 		case ID_MENUITEM_RESET: 
@@ -277,8 +272,9 @@ void settings_frame::updateAllControls()
 }
 void settings_frame::OnClose(wxCloseEvent& event)
 {
-	if (!goingDown)
-		handleExit(false);
+	if ( !alreadyCalled){
+		handleExit();
+	}
 }
 
 

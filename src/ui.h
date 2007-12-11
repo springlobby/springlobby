@@ -141,7 +141,7 @@ class Ui
 
     void OnAcceptAgreement( const std::string& agreement );
 
-    void OnMainWindowDestruct() { m_main_win = 0; }
+    void OnMainWindowDestruct();
 
     void OnRing( const std::string& from );
 

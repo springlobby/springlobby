@@ -33,6 +33,7 @@
 #include "unitsyncthread.h"
 
 
+
 Ui::Ui() :
   m_serv(0),
   m_main_win(0),
@@ -957,4 +958,10 @@ void Ui::OnCachedThreadStarted()
 void Ui::OnCachedThreadTerminated()
 {
   m_thread_wait.Leave();
+}
+
+void Ui::OnMainWindowDestruct() 
+{ 
+	m_main_win->forceSettingsFrameClose();
+	m_main_win = 0;
 }

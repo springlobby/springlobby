@@ -53,7 +53,7 @@ class MainWindow : public wxFrame
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
     void OnShowSettingsPP( wxCommandEvent& event );
-
+    void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
 
     void OnTabsChanged( wxListbookEvent& event );

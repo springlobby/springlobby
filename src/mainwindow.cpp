@@ -118,14 +118,14 @@ MainWindow::MainWindow( Ui& ui ) :
   se_frame_active = false;
 }
 
+void MainWindow::forceSettingsFrameClose()
+{
+	if (se_frame_active && se_frame != 0)
+		se_frame->handleExternExit();
+}
 
 MainWindow::~MainWindow()
-{
-	if(se_frame_active){
-		se_frame_active = false;
-		delete se_frame;
-	}
-
+{ 	
   int x, y, w, h;
   GetSize( &w, &h );
   sett().SetMainWindowHeight( h );

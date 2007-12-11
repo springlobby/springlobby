@@ -84,7 +84,8 @@ class settings_frame : public wxFrame
 		
 		void OnNBchange(wxNotebookEvent&);
 		void initMenuBar();
-		void handleExit(bool);
+		void handleExit();
+		bool alreadyCalled;
 		
 		enum
 		{
@@ -108,7 +109,7 @@ class settings_frame : public wxFrame
 		void CreateGUIControls();
 		void resetSettings();
 		void updateAllControls();
-		bool goingDown;
+		
 };
 
 
