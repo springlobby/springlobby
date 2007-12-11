@@ -109,16 +109,23 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
-
+  
   SetSizer( m_main_sizer );
 
   SetSize( sett().GetMainWindowLeft(), sett().GetMainWindowTop(), sett().GetMainWindowWidth(), sett().GetMainWindowHeight() );
   Layout();
+  
+  se_frame_active = false;
 }
 
 
 MainWindow::~MainWindow()
 {
+	if(se_frame_active){
+		se_frame_active = false;
+		delete se_frame;
+	}
+
   int x, y, w, h;
   GetSize( &w, &h );
   sett().SetMainWindowHeight( h );
@@ -354,7 +361,8 @@ void MainWindow::OnUnitSyncReloaded()
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 {
-	se_frame = new settings_frame(NULL,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
+	se_frame = new settings_frame(this,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
 	  	    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+	se_frame_active = true;
 	se_frame->Show();
 }

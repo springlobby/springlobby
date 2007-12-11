@@ -49,6 +49,7 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 : wxFrame(parent, id, title, position, size, style)
 {
 	goingDown = false;
+	parentWindow = parent;
 	wxSetWorkingDirectory(OptionsHandler.getSpringDir());
 	susynclib()->Load(OptionsHandler.getUsyncLoc());
 	
@@ -63,8 +64,46 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 
 settings_frame::~settings_frame()
 {
-	if (!goingDown)
-	handleExit();
+	
+}
+
+void settings_frame::handleExternExit()
+{
+	goingDown = true;
+	int choice = wxMessageBox(wxT("Save Spring settings before exiting?"), wxT(""), wxYES_NO |wxICON_QUESTION, parentWindow);
+	
+	if ( choice == wxYES)
+				  abstract_panel::saveSettings();	   
+	abstract_panel::settingsChanged = false;    
+	
+	OptionsHandler.save();
+	Destroy();
+}
+
+void settings_frame::handleExit(bool isExtern) {
+    if (abstract_panel::settingsChanged) {
+    	int action = wxMessageBox(wxT("Save Spring settings before exiting?"), wxT(""),wxYES_NO|wxCANCEL|wxICON_QUESTION , this);
+        switch (action) {
+        case wxYES:
+        	if (abstract_panel::saveSettings())
+        				 (abstract_panel::settingsChanged) = false;
+        case wxNO:
+        	if (!goingDown) {
+	        	goingDown = true;
+	        	OptionsHandler.save();
+        	    Destroy();
+        	}
+        	break;
+        	
+        case wxCANCEL:
+        	break;
+        }
+    }
+    else
+    {		
+    	OptionsHandler.save();
+    	Destroy();		
+    }
 }
 
 void settings_frame::CreateGUIControls()
@@ -141,31 +180,6 @@ void settings_frame::initMenuBar() {
 	SetMenuBar(menuBar);
 }
 
-void settings_frame::handleExit() {
-	
-    if (abstract_panel::settingsChanged) {
-    	int action = wxMessageBox(wxT("Save settings before exiting?"), wxT(""), wxYES_NO|wxCANCEL, this);
-        switch (action) {
-        case wxYES:
-        	if (abstract_panel::saveSettings())
-        				 (abstract_panel::settingsChanged) = false;
-        case wxNO:
-        	goingDown = true;
-        	OptionsHandler.save();
-        	    Destroy();
-        	    break;
-        case wxCANCEL:
-        	break;
-        }
-    }
-    else
-    {
-    	goingDown = true;
-    	OptionsHandler.save();
-    	Destroy();
-    }
-}
-
 void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 	switch (event.GetId()) {
 		case ID_MENUITEM_SAVE: 
@@ -174,7 +188,8 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		 break;
 
 		case ID_MENUITEM_QUIT: 
-			handleExit();
+			if (!goingDown)
+				handleExit(false);
 		 break;
 
 		case ID_MENUITEM_RESET: 
@@ -263,7 +278,7 @@ void settings_frame::updateAllControls()
 void settings_frame::OnClose(wxCloseEvent& event)
 {
 	if (!goingDown)
-		handleExit();
+		handleExit(false);
 }
 
 

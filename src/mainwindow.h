@@ -87,6 +87,7 @@ class MainWindow : public wxFrame
     wxImageList* m_func_tab_images;
     
     settings_frame* se_frame;
+    bool se_frame_active;
 
     DECLARE_EVENT_TABLE()
 };
