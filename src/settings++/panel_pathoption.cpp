@@ -104,7 +104,7 @@ void PathOptionPanel::UsePaths(wxCommandEvent& event)
 {
 	OptionsHandler.setSpringDir( springdir_ctrl->GetValue() );
 	OptionsHandler.setUsyncLoc(  usync_ctrl->GetValue() );
-
+	OptionsHandler.save();
 
 	susynclib()->Unload();
 	wxSetWorkingDirectory(OptionsHandler.getSpringDir());

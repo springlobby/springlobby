@@ -106,8 +106,9 @@ void settings_frame::handleExternExit()
 						  abstract_panel::saveSettings();	
 			//abstract_panel::settingsChanged = false;   
 		}
-		OptionsHandler.save();
+		
 	}
+	OptionsHandler.save();
 }
 
 void settings_frame::handleExit() {
@@ -165,6 +166,8 @@ void settings_frame::CreateGUIControls()
 		SetTitle(wxT("SpringSettings (expert mode)"));
 	else
 		SetTitle(wxT("SpringSettings (simple mode)"));
+	
+	abstract_panel::settingsChanged = false; 
 
 }
 

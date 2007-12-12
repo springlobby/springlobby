@@ -27,6 +27,7 @@
 
 #include <iostream>
 #include <wx/msgdlg.h>
+#include "../springunitsynclib.h"
 
 IMPLEMENT_APP(Springsettings)
 
@@ -57,6 +58,7 @@ bool Springsettings::OnInit()
 
 int Springsettings::OnExit()
 {
+	susynclib()->Unload();
 	return 0;
 }
 
