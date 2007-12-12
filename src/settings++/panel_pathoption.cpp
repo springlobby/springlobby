@@ -1,0 +1,136 @@
+#include "panel_pathoption.h"
+
+#include <wx/filedlg.h>
+#include <wx/dirdlg.h>
+#include <wx/sizer.h>
+#include <wx/statbox.h>
+#include <wx/intl.h>
+#include <wx/textctrl.h>
+#include <wx/radiobut.h>
+#include <wx/stattext.h>
+#include <wx/button.h>
+#include <wx/msgdlg.h>
+#include <wx/filefn.h>
+#include <wx/filename.h>
+#include <wx/stdpaths.h>
+#include <wx/dir.h>
+#include <wx/file.h>
+#include <wx/stdpaths.h>
+
+#include "Defs.hpp"
+#include "frame.h"
+#include "se_settings.h" 
+#include "../nonportable.h"
+#include "../springunitsynclib.h"
+#include "se_utils.h"
+
+
+
+PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxPanel(parent,-1),origin(_origin)
+{
+	springdir_lbl = new wxStaticText(this, -1, _T("Path to your Spring installation directory: "));
+	usync_loc_lbl = new wxStaticText (this, -1 , _T("Path to unitsync shared library"));
+	explanation_text = new wxStaticText (this, -1 , _T("There was a problem retrieving your settings.\n"
+														"Please check that the paths below are correct.\n"
+														"When you have corrected them, click\n"
+														"the \"Use these Paths\" button to try again."));
+	
+	usync_loc_lbl->SetToolTip(_T("unitsync.so on linux, unitsync.dll on windows"));
+	springdir_lbl->SetToolTip(_T("the datadir on linux (/home/user/.spring/ is standard)"
+								",\n the path you specified in the installer on windows"));
+	
+	springdir_browse_btn = new wxButton(this, ID_PATH_SPRINGDIR_BTN, _T("Browse") );
+	paths_ok_btn = new wxButton(this,ID_PATH_OK_BTN,_T("Use these paths"),wxPoint(-1,-1) ,wxSize(-1,-1), wxBU_EXACTFIT);
+	usync_browse_btn = new wxButton(this, ID_PATH_USYNC_BTN, _T("Browse") ); 
+
+	springdir_ctrl = new wxTextCtrl(this,-1,OptionsHandler.getSpringDir()); 
+
+	usync_ctrl = new wxTextCtrl(this,-1,OptionsHandler.getUsyncLoc());
+	
+
+	usync_sizer =  new wxFlexGridSizer(1,5,5);	
+	springdir_sizer = new wxFlexGridSizer(1,5,5);
+	subSizer = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer* subSizerA = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer* subSizerB = new wxBoxSizer(wxHORIZONTAL);
+	main_sizer = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Path settings")) ;
+	
+	usync_sizer->Add(usync_loc_lbl,2,wxEXPAND);
+	
+	subSizerB->Add(usync_ctrl,2,wxEXPAND);
+	subSizerB->Add(usync_browse_btn,0,wxEXPAND);
+	usync_sizer->Add(subSizerB,1,wxEXPAND);
+	
+	springdir_sizer->Add(springdir_lbl,2,wxEXPAND);
+	
+	subSizerA->Add(springdir_ctrl,2,wxEXPAND);
+	subSizerA->Add(springdir_browse_btn,0,wxEXPAND);
+	springdir_sizer->Add(subSizerA,1,wxALL|wxEXPAND);
+	
+	usync_sizer->SetSizeHints(this);
+	usync_sizer->Fit(this);
+	springdir_sizer->SetSizeHints(this);
+	springdir_sizer->Fit(this);
+	
+	
+	subSizer->Add(explanation_text,1,wxALL|wxEXPAND,10);
+	subSizer->Add(springdir_sizer,1,wxALL|wxEXPAND,10);
+	subSizer->Add(usync_sizer,1,wxALL|wxEXPAND,10);
+	subSizer->Add(paths_ok_btn,0,wxALL|wxEXPAND,10);
+	
+	main_sizer->Add(subSizer,0,wxALL,10);
+	
+	SetSizer(main_sizer);
+}
+
+void PathOptionPanel::SetSpringPath(wxCommandEvent& event)
+{
+	  wxDirDialog dirpic( this, _("Choose a directory"), OptionsHandler.getSpringDir(), wxDD_DEFAULT_STYLE );
+	  if ( dirpic.ShowModal() == wxID_OK )
+		  springdir_ctrl->SetValue( dirpic.GetPath() );
+}
+
+
+//PathOptionPanel::
+//PathOptionPanel::
+void PathOptionPanel::SetUsyncPath(wxCommandEvent& event)
+{
+	wxFileDialog pic( this, _("Choose a unitsync library"), OptionsHandler.getSpringDir(), wxString(UNITSYNC_BIN), CHOOSE_DLL );
+	  if ( pic.ShowModal() == wxID_OK ) 
+		  usync_ctrl->SetValue( pic.GetPath() );
+}
+
+void PathOptionPanel::UsePaths(wxCommandEvent& event)
+{
+	OptionsHandler.setSpringDir( springdir_ctrl->GetValue() );
+	OptionsHandler.setUsyncLoc(  usync_ctrl->GetValue() );
+
+
+	susynclib()->Unload();
+	wxSetWorkingDirectory(OptionsHandler.getSpringDir());
+	susynclib()->Load( OptionsHandler.getUsyncLoc());
+	
+	
+	if ( !(susynclib()->IsLoaded()) )
+	{
+		//wxLogWarning( _T("can't load unitsync") );
+		wxMessageBox( _("SpringSettings is unable to load your unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
+	}
+	else
+	{
+		//origin->dostuff();
+	}
+}
+
+PathOptionPanel::~PathOptionPanel()
+{
+}
+
+
+BEGIN_EVENT_TABLE(PathOptionPanel, wxPanel)
+	EVT_BUTTON ( ID_PATH_SPRINGDIR_BTN, PathOptionPanel:: SetSpringPath)
+	EVT_BUTTON ( ID_PATH_USYNC_BTN, PathOptionPanel::SetUsyncPath )
+	EVT_BUTTON ( ID_PATH_OK_BTN, PathOptionPanel::UsePaths )
+	
+END_EVENT_TABLE()
+

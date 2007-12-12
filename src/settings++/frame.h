@@ -42,7 +42,8 @@ class wxPoint;
 class wxSize;
 class wxFlexGridSizer;
 class wxNotebookEvent;
-class genricWrapper;
+class PathOptionPanel;
+
 
 const wxString simpleTabCap= _T("Combined Options");
 const wxString qualityTabCap= _T("Render quality / Video mode");
@@ -81,6 +82,7 @@ class settings_frame : public wxFrame
 		wxNotebook *notebook;
 		wxFlexGridSizer *book_sizer;
 		wxFlexGridSizer* book_sizer2;
+		PathOptionPanel* pathOpt_panel;
 		
 		void OnNBchange(wxNotebookEvent&);
 		void initMenuBar();

@@ -36,6 +36,7 @@
 #include "tab_ui.h"
 #include "tab_simple.h"
 #include "Defs.hpp"
+#include "panel_pathoption.h"
 
 #include "../images/springsettings.xpm"
 
@@ -66,7 +67,14 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	else
 	{
 		//TODO get return value and sth useful with it
+		//pathOpt_panel = new PathOptionPanel(this);
+		notebook->AddPage(new PathOptionPanel(notebook,this),_T("Error!"));
+		SetTitle(wxT("SpringSettings"));
 	}
+	 
+	 SetIcon(wxNullIcon);
+	 SetSize(8,8,760,550);
+	 Center();
 }
 
 settings_frame::~settings_frame()
@@ -144,10 +152,6 @@ void settings_frame::CreateGUIControls()
 		SetTitle(wxT("SpringSettings (expert mode)"));
 	else
 		SetTitle(wxT("SpringSettings (simple mode)"));
-	
-	SetIcon(wxNullIcon);
-	SetSize(8,8,760,550);
-	Center();
 
 }
 
@@ -179,7 +183,9 @@ void settings_frame::initMenuBar() {
 	wxMenuBar* menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, wxT("File"));
 	menuBar->Append(menuMode, wxT("Mode"));
-
+	
+	//TODO PROFILES!!!
+	
 	SetMenuBar(menuBar);
 }
 

@@ -84,6 +84,10 @@ wxString se_settings::getSpringDir()
 	def= AutoFindSpringDir(def);
 	return se_config->Read( _T("/Spring/dir"), def );
 }
+void se_settings::setSpringDir(wxString spring_dir)
+{
+	se_config->Write( _T("/Spring/dir"), spring_dir );
+}
 
 /*copied from springlobby source*/
 wxString se_settings::AutoFindSpringDir( const wxString& def )

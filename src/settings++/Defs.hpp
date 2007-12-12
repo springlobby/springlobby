@@ -150,6 +150,11 @@
 #define ID_MO_SLI_3 663
 #define ID_MO_SLI_4 664
 
+// panel_paths ids
+#define ID_PATH_SPRINGDIR_BTN 	700
+#define ID_PATH_USYNC_BTN		701
+#define ID_PATH_OK_BTN			702
+
 #define SLI_STYLE (wxSL_LABELS )
 #define WX_DEF_V wxDefaultValidator
 #define WX_DEF_P wxPoint(-1, -1)
