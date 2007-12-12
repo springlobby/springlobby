@@ -36,7 +36,8 @@ c    This file is part of springsettings,
 #include "Defs.hpp"
 
 void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
-
+	
+	
 	// i < "sizeof"(VO_CBOX)
 	for (int i = 0; i < ctrl_vo_Boxes_size; i++) {
 		ctrl_vo_Boxes[i] = new wxCheckBox(this, VO_CBOX[i].id, (VO_CBOX[i].lbl));
@@ -122,14 +123,18 @@ void tab_quality_video::updateControls(int what_to_update)
 	
 }
 
-void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) {
+void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) 
+{
+	sizer->Add(new wxStaticText(this, -1, wxT("If an option needs special hardware to work\n"
+												"it will be mentioned in the tooltip.")), 1, wxTOP|wxEXPAND , 10);
+	
 	// i < 8 with High resolution LOS textures
 	// i < 7 without
 	for (int i = 0; i < ctrl_qa_Boxes_size-3; i++) {
 		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, (QA_CBOX[i].lbl));
 		//ctrl_qa_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(QA_CBOX[i].key,fromString(QA_CBOX[i].def)));
 		ctrl_qa_Boxes[i]->SetToolTip(QA_CBOX[i].tTip[0]);
-		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 0)? 10: 0);
+		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 0)? 5: 0);
 	}
 
 	wxSizer* subSizer = new wxBoxSizer(wxVERTICAL);

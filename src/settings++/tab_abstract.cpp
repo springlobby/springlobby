@@ -33,6 +33,7 @@
 
 
 #include "../springunitsynclib.h"
+#include "../utils.h"
 #include "Defs.hpp"
 #include "se_utils.h"
 #include "presets.h"
@@ -40,7 +41,10 @@
 intMap abstract_panel::intSettings;
 //stringMap abstract_panel::stringSettings;
 //floatMap abstract_panel::floatSettings;
+
+//TODO why does this get true on startup?
 bool abstract_panel::settingsChanged = false;
+
 const int allControls_size = 61;
 const Control allControls[allControls_size] = {
 		// RO_SLI[9]
@@ -90,11 +94,21 @@ abstract_panel::~abstract_panel(void) {
 
 void abstract_panel::loadValuesIntoMap()
 {
-	//TODO logtrycatch
-	for (int i = 0; i< allControls_size;++i)
+	try 
 	{
-		intSettings[allControls[i].key] = configHandler->GetSpringConfigInt(allControls[i].key,fromString(allControls[i].def));
+		for (int i = 0; i< allControls_size;++i)
+		{
+			intSettings[allControls[i].key] = configHandler->GetSpringConfigInt(allControls[i].key,fromString(allControls[i].def));
+		}
 	}
+	catch (...)
+	{
+		wxMessageBox(_T("Could not access your settings.\n"
+				"Check for unitsync not properly loaded"), wxT(""), wxOK|wxICON_HAND, 0);
+		//return false;
+	} //TODO
+	
+	//return true; // SUCCESS!
 }
 
 void abstract_panel::loadDefaults()
@@ -402,7 +416,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 bool abstract_panel::saveSettings() {
     try {
 	    for (intMap::iterator i = intSettings.begin(); i != intSettings.end();++i)
-	    {//TODO logcatchtry
+	    {
 	        configHandler->SetSpringConfigInt(i->first,i->second);
 	    }
 //	    for (stringMap::iterator s = stringSettings.begin(); s != stringSettings.end();++s)
@@ -419,7 +433,7 @@ bool abstract_panel::saveSettings() {
     	wxMessageBox(_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK|wxICON_HAND, 0);
     	return false;
     }
-    //test ???
+    //TODO is sth actually done with returnvalue?
     return true; 
 }
 

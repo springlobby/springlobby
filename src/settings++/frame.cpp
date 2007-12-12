@@ -44,7 +44,6 @@ BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_MENU(wxID_ANY,settings_frame::OnMenuChoice)
 END_EVENT_TABLE()
 
-//TODO use icon
 settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxFrame(parent, id, title, position, size, style)
 {
@@ -53,13 +52,18 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	wxSetWorkingDirectory(OptionsHandler.getSpringDir());
 	susynclib()->Load(OptionsHandler.getUsyncLoc());
 	
-	abstract_panel::loadValuesIntoMap();
-	
-	CreateGUIControls();
-	
 	SetIcon( wxIcon(springsettings_xpm) );
-	
-	initMenuBar();
+	//TODO get return value and sth useful with it
+	// if ()
+	abstract_panel::loadValuesIntoMap();
+	{
+		CreateGUIControls();
+		initMenuBar();
+	}
+	//else
+	{
+		//make app unusable
+	}
 }
 
 settings_frame::~settings_frame()
@@ -76,7 +80,6 @@ void settings_frame::handleExternExit()
 					  abstract_panel::saveSettings();	
 		abstract_panel::settingsChanged = false;    
 		OptionsHandler.save();
-		//Destroy();
 	}
 }
 
@@ -119,9 +122,9 @@ void settings_frame::CreateGUIControls()
 							    
 								notebook->AddPage(uiTab, uiTabCap);
 								notebook->AddPage(qualityTab, qualityTabCap);
-								notebook->AddPage(detailTab, detailTabCap);
-								notebook->AddPage(debugTab, debugTabCap);
+								notebook->AddPage(detailTab, detailTabCap);					
 								notebook->AddPage(audioTab,audioTabCap);
+								notebook->AddPage(debugTab, debugTabCap);
 					
 						break;
 					case SET_MODE_SIMPLE:
@@ -242,9 +245,9 @@ void settings_frame::switchToExpertMode()
     debugTab = new debug_panel(notebook,ID_DEBUG);
 	notebook->AddPage(qualityTab, qualityTabCap);
 	notebook->AddPage(detailTab, detailTabCap);
-	notebook->AddPage(debugTab, debugTabCap);
 	notebook->AddPage(audioTab,audioTabCap);
-			
+	notebook->AddPage(debugTab, debugTabCap);
+	
 	notebook->DeletePage(0);
 	simpleTab = 0;
 	SetTitle(wxT("SpringSettings (expert mode)"));

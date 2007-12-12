@@ -219,12 +219,12 @@ const Control AO_SLI[3] = {
 
 const Control QA_CBOX[10] = {
     {_T("Shadows (slow)"),                                  wxT("Shadows"),             ID_WINDOWP_QA_CBOX_0,	"0", {_T("enable shadows?")}},
-	{_T("3D trees (requirements see tooltip)"),                 wxT("3DTrees"),             ID_WINDOWP_QA_CBOX_1,	"1", {_T("want better looking trees?\n"
+	{_T("3D trees"),                 wxT("3DTrees"),             ID_WINDOWP_QA_CBOX_1,	"1", {_T("want better looking trees?\n"
 														"needs Geforce 2/Radeon 8500/Intel 830 or later class graphic card")}},
-	{_T("High-resolution clouds (requirements see tooltip)"), wxT("AdvSky"),              ID_WINDOWP_QA_CBOX_2,	"0", {_T("want better looking sky?\n"
+	{_T("High-resolution clouds"), wxT("AdvSky"),              ID_WINDOWP_QA_CBOX_2,	"0", {_T("want better looking sky?\n"
 														"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card")}},
 	{_T("Dynamic clouds (slow)"),                           wxT("DynamicSky"),          ID_WINDOWP_QA_CBOX_3,	"0", {_T("want moving clouds in the sky?")}},
-	{_T("Reflective units (requirements see tooltip)"),       wxT("AdvUnitShading"),      ID_WINDOWP_QA_CBOX_4,	"0", {_T("shiny units?\n"
+	{_T("Reflective units"),       wxT("AdvUnitShading"),      ID_WINDOWP_QA_CBOX_4,	"0", {_T("shiny units?\n"
 														"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card")}},
 	{_T("Never use shaders when rendering SM3 maps"),       wxT("SM3ForceFallbackTex"), ID_WINDOWP_QA_CBOX_5,	"1", {_T("problems with sm3 maps? enable this")}},
 	{_T("Enable LuaShaders support"),                       wxT("LuaShaders"),          ID_WINDOWP_QA_CBOX_6,	"1", {_T("makes for some cool effects")}},
