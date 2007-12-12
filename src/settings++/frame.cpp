@@ -52,17 +52,20 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	wxSetWorkingDirectory(OptionsHandler.getSpringDir());
 	susynclib()->Load(OptionsHandler.getUsyncLoc());
 	
+	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
+	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
+	
 	SetIcon( wxIcon(springsettings_xpm) );
-	//TODO get return value and sth useful with it
-	// if ()
-	abstract_panel::loadValuesIntoMap();
+	
+	
+	 if (abstract_panel::loadValuesIntoMap())
 	{
 		CreateGUIControls();
 		initMenuBar();
 	}
-	//else
+	else
 	{
-		//make app unusable
+		//TODO get return value and sth useful with it
 	}
 }
 
@@ -75,16 +78,20 @@ void settings_frame::handleExternExit()
 {
 	if ( !alreadyCalled){
 		alreadyCalled = true;
-		int choice = wxMessageBox(wxT("Save Spring settings before exiting?"), wxT("dummy"), wxYES_NO |wxICON_QUESTION,NULL);	
-		if ( choice == wxYES)
-					  abstract_panel::saveSettings();	
-		abstract_panel::settingsChanged = false;    
+		if (abstract_panel::settingsChanged)
+		{
+			int choice = wxMessageBox(wxT("Save Spring settings before exiting?"), wxT("dummy"), wxYES_NO |wxICON_QUESTION,NULL);	
+			if ( choice == wxYES)
+						  abstract_panel::saveSettings();	
+			//abstract_panel::settingsChanged = false;   
+		}
 		OptionsHandler.save();
 	}
 }
 
 void settings_frame::handleExit() {
-    if (abstract_panel::settingsChanged) {
+    if (abstract_panel::settingsChanged) 
+    {
     	int action = wxMessageBox(wxT("Save Spring settings before exiting?"), wxT(""),wxYES_NO|wxCANCEL|wxICON_QUESTION , this);
         switch (action) {
         case wxYES:
@@ -108,10 +115,7 @@ void settings_frame::handleExit() {
 
 void settings_frame::CreateGUIControls()
 {
-	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
-	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
-	
-		switch(OptionsHandler.getMode()){
+	switch(OptionsHandler.getMode()){
 					case SET_MODE_EXPERT: 
 						
 								qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);

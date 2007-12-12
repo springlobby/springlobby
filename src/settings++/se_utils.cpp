@@ -1,5 +1,8 @@
 #include "se_utils.h"
 
+#include <string>
+#include <sstream>
+
 void toString(std::string& s, int t) {
 			std::stringstream ss;
 			ss << t;

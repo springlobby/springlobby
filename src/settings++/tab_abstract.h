@@ -62,7 +62,7 @@ class abstract_panel : public wxPanel
 
 		static void loadDefaults();
 		virtual void updateControls(int what_to_update);
-		static void loadValuesIntoMap();
+		static bool loadValuesIntoMap();
         
     protected:
         void OnClose(wxCloseEvent& event);
