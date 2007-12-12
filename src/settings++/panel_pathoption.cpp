@@ -33,37 +33,38 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 	explanation_text = new wxStaticText (this, -1 , _T("There was a problem retrieving your settings.\n"
 														"Please check that the paths below are correct.\n"
 														"When you have corrected them, click\n"
-														"the \"Use these Paths\" button to try again."));
+														"the \"Use these Paths\" button to try again."),
+														wxDefaultPosition,wxSize(450,-1));
 	
 	usync_loc_lbl->SetToolTip(_T("unitsync.so on linux, unitsync.dll on windows"));
 	springdir_lbl->SetToolTip(_T("the datadir on linux (/home/user/.spring/ is standard)"
 								",\n the path you specified in the installer on windows"));
 	
 	springdir_browse_btn = new wxButton(this, ID_PATH_SPRINGDIR_BTN, _T("Browse") );
-	paths_ok_btn = new wxButton(this,ID_PATH_OK_BTN,_T("Use these paths"),wxPoint(-1,-1) ,wxSize(-1,-1), wxBU_EXACTFIT);
+	paths_ok_btn = new wxButton(this,ID_PATH_OK_BTN,_T("Use these paths"),wxDefaultPosition ,wxSize(-1,-1), wxBU_EXACTFIT);
 	usync_browse_btn = new wxButton(this, ID_PATH_USYNC_BTN, _T("Browse") ); 
 
-	springdir_ctrl = new wxTextCtrl(this,-1,OptionsHandler.getSpringDir()); 
+	springdir_ctrl = new wxTextCtrl(this,-1,OptionsHandler.getSpringDir(), wxDefaultPosition,wxSize(400,-1)); 
 
-	usync_ctrl = new wxTextCtrl(this,-1,OptionsHandler.getUsyncLoc());
+	usync_ctrl = new wxTextCtrl(this,-1,OptionsHandler.getUsyncLoc(), wxDefaultPosition,wxSize(400,-1));
 	
 
 	usync_sizer =  new wxFlexGridSizer(1,5,5);	
 	springdir_sizer = new wxFlexGridSizer(1,5,5);
-	subSizer = new wxBoxSizer(wxVERTICAL);
+	parentSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* subSizerA = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* subSizerB = new wxBoxSizer(wxHORIZONTAL);
 	main_sizer = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Path settings")) ;
 	
-	usync_sizer->Add(usync_loc_lbl,2,wxEXPAND);
+	usync_sizer->Add(usync_loc_lbl,1,wxEXPAND);
 	
-	subSizerB->Add(usync_ctrl,2,wxEXPAND);
+	subSizerB->Add(usync_ctrl,1,wxEXPAND);
 	subSizerB->Add(usync_browse_btn,0,wxEXPAND);
 	usync_sizer->Add(subSizerB,1,wxEXPAND);
 	
-	springdir_sizer->Add(springdir_lbl,2,wxEXPAND);
+	springdir_sizer->Add(springdir_lbl,1,wxEXPAND);
 	
-	subSizerA->Add(springdir_ctrl,2,wxEXPAND);
+	subSizerA->Add(springdir_ctrl,1,wxEXPAND);
 	subSizerA->Add(springdir_browse_btn,0,wxEXPAND);
 	springdir_sizer->Add(subSizerA,1,wxALL|wxEXPAND);
 	
@@ -73,14 +74,14 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 	springdir_sizer->Fit(this);
 	
 	
-	subSizer->Add(explanation_text,1,wxALL|wxEXPAND,10);
-	subSizer->Add(springdir_sizer,1,wxALL|wxEXPAND,10);
-	subSizer->Add(usync_sizer,1,wxALL|wxEXPAND,10);
-	subSizer->Add(paths_ok_btn,0,wxALL|wxEXPAND,10);
+	main_sizer->Add(explanation_text,1,wxALL|wxEXPAND,15);
+	main_sizer->Add(springdir_sizer,1,wxALL|wxEXPAND,10);
+	main_sizer->Add(usync_sizer,1,wxALL|wxEXPAND,10);
+	main_sizer->Add(paths_ok_btn,0,wxALL|wxEXPAND,10);
 	
-	main_sizer->Add(subSizer,0,wxALL,10);
+	parentSizer->Add(main_sizer,0,wxALL,10);
 	
-	SetSizer(main_sizer);
+	SetSizer(parentSizer);
 }
 
 void PathOptionPanel::SetSpringPath(wxCommandEvent& event)

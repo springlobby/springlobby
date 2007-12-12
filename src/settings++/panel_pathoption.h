@@ -37,7 +37,7 @@ private:
 	    settings_frame* origin;
 	    wxFlexGridSizer* usync_sizer;
 	    wxFlexGridSizer* springdir_sizer;
-	    wxBoxSizer* subSizer;
+	    wxBoxSizer* parentSizer;
 	    wxStaticBoxSizer* main_sizer;
 	    
 	    DECLARE_EVENT_TABLE()
