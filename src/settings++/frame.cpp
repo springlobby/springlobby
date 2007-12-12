@@ -100,8 +100,8 @@ void settings_frame::handleExternExit()
 	if ( !alreadyCalled){
 		alreadyCalled = true;
 		if (abstract_panel::settingsChanged)
-		{
-			int choice = wxMessageBox(wxT("Save Spring settings before exiting?"), wxT("dummy"), wxYES_NO |wxICON_QUESTION,NULL);	
+		{	//TODO use custom frame for to set icon
+			int choice = wxMessageBox(wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"), wxYES_NO |wxICON_QUESTION,NULL);	
 			if ( choice == wxYES)
 						  abstract_panel::saveSettings();	
 			//abstract_panel::settingsChanged = false;   
@@ -114,7 +114,7 @@ void settings_frame::handleExternExit()
 void settings_frame::handleExit() {
     if (abstract_panel::settingsChanged) 
     {
-    	int action = wxMessageBox(wxT("Save Spring settings before exiting?"), wxT(""),wxYES_NO|wxCANCEL|wxICON_QUESTION , this);
+    	int action = wxMessageBox(wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION , this);
         switch (action) {
         case wxYES:
         	if (abstract_panel::saveSettings())
@@ -217,7 +217,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		 break;
 
 		case ID_MENUITEM_RESET: 
-			if ((wxMessageBox(wxT("Reset ALL settings to default values?"), wxT(""), wxYES_NO, this)) == wxYES) {
+			if ((wxMessageBox(wxT("Reset ALL settings to default values?"), wxT("Confirmation needed"), wxYES_NO, this)) == wxYES) {
 						resetSettings();
 			}
 		 break;

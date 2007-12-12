@@ -103,11 +103,10 @@ bool abstract_panel::loadValuesIntoMap()
 	}
 	catch (...)
 	{
-		wxMessageBox(_T("Could not access your settings.\n"
-				"Check for unitsync not properly loaded"), wxT(""), wxOK|wxICON_HAND, 0);
+		wxMessageBox(_T("Could not access your settings.\n"), wxT("Error"), wxOK|wxICON_HAND, 0);
 		abstract_panel::settingsChanged = false;
 		return false;
-	} //TODO
+	} 
 	
 	return true; // SUCCESS!
 }
