@@ -115,6 +115,8 @@ springlobby_SOURCES = \
 	src/chatpanel.h \
 	src/connectwindow.cpp \
 	src/connectwindow.h \
+	src/crashreport.cpp \
+	src/crashreport.h \
 	src/flagimagedata.h \
 	src/flagimages.cpp \
 	src/flagimages.h \
@@ -159,8 +161,6 @@ springlobby_SOURCES = \
 	src/springprocess.h \
 	src/springunitsync.cpp \
 	src/springunitsync.h \
-	src/stacktrace.cpp \
-	src/stacktrace.h \
 	src/tasserver.cpp \
 	src/tasserver.h \
 	src/ui.cpp \

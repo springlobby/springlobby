@@ -1,9 +1,9 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 //
-// Class: CrashReport
+// Classes: NetDebugReport CrashReport StackTrace
 //
 
-#include <wx/debugrpt.h>
+
 #include <wx/msgdlg.h>
 
 #include "crashreport.h"
@@ -13,34 +13,39 @@
 
 void CrashReport::GenerateReport(wxDebugReport::Context ctx)
 {
-    wxDebugReportCompress *report = m_uploadReport ? new DebugReport
-                                                   : new wxDebugReportCompress;
+  wxDebugReportCompress *report = false          ? new NetDebugReport /// TODO (cloud#1#): check if online
+                                                 : new wxDebugReportCompress;
 
-    // add all standard files: currently this means just a minidump and an
-    // XML file with system info and stack trace
-    report->AddAll(ctx);
+  // add all standard files: currently this means just a minidump and an
+  // XML file with system info and stack trace
+  report->AddAll(ctx);
 
 
-    // calling Show() is not mandatory, but is more polite
-    if ( wxDebugReportPreviewStd().Show(*report) )
+#ifdef VERSION
+  report->AddText( _T("AppVersion.txt"), WX_STRING( GetSpringLobbyVersion() ), _("build version") );
+#endif
+
+
+  // calling Show() is not mandatory, but is more polite
+  if ( wxDebugReportPreviewStd().Show(*report) )
+  {
+    if ( report->Process() )
     {
-        if ( report->Process() )
-        {
-            if ( m_uploadReport ) /// TODO (BrainDamage#1#): check if the network
-            {
-                wxLogMessage(_T("Report successfully uploaded."));
-            }
-            else
-            {
-                wxLogMessage(_T("Report generated in \"%s\"."),
-                             report->GetCompressedFileName().c_str());
-                report->Reset();
-            }
-        }
+      if ( false ) /// TODO (BrainDamage#1#): check if the network works
+      {
+        wxLogMessage(_T("Report successfully uploaded."));
+      }
+      else
+      {
+        wxLogMessage(_T("Report generated in \"%s\"."),
+                     report->GetCompressedFileName().c_str());
+        report->Reset();
+      }
     }
-    //else: user cancelled the report
+  }
+  //else: user cancelled the report
 
-    delete report;
+  delete report;
 }
 
 #else // wxUSE_DEBUGREPORT
@@ -51,3 +56,9 @@ void CrashReport::GenerateReport(wxDebugReport::Context ctx)
 }
 
 #endif// !wxUSE_DEBUGREPORT
+
+CrashReport& crashreport()
+{
+  static CrashReport c;
+  return c;
+}

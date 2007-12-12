@@ -66,6 +66,8 @@ bool SpringLobbyApp::OnInit()
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
 
+int* i = 0; *i =1;
+
   InitDirs();
 
   m_ui = new Ui();
@@ -108,7 +110,7 @@ int SpringLobbyApp::OnExit()
 
 void SpringLobbyApp::OnFatalException()
 {
-//  m_crash_report.GenerateReport(wxDebugReport::Context_Exception);
+  CrashReport().GenerateReport(wxDebugReport::Context_Exception);
 }
 
 

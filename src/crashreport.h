@@ -1,22 +1,24 @@
 #ifndef CRASHREPORT_H_INCLUDED
 #define CRASHREPORT_H_INCLUDED
 
+#include <wx/debugrpt.h>
+
 #if wxUSE_DEBUGREPORT
 
-class DebugReport : public wxDebugReportUpload
+class NetDebugReport : public wxDebugReportUpload /// FIXME (BrainDamage#1#): this doesn't do anything
 {
-public:
-    DebugReport() : wxDebugReportUpload
-                       (
-                        _T("http://"),
-                        _T("report:file"),
-                        _T("action")
-                       )
-    {
-    }
+  public:
+      NetDebugReport() : wxDebugReportUpload
+                         (
+                          _T("http://"),
+                          _T("report:file"),
+                          _T("action")
+                         )
+      {
+      }
 
-protected:
-    virtual bool OnServerReply(const wxArrayString& reply){}
+  protected:
+      virtual bool OnServerReply(const wxArrayString& reply){ return false; }
 };
 
 class CrashReport
@@ -27,9 +29,6 @@ class CrashReport
 
     void GenerateReport(wxDebugReport::Context ctx);
 
-  protected:
-
-    bool m_uploadReport;
 };
 
 #else // wxUSE_DEBUGREPORT
@@ -45,6 +44,6 @@ class CrashReport
 
 #endif // !wxUSE_DEBUGREPORT
 
-CrashReport& m_crash_report();
+CrashReport& crashreport();
 
 #endif // SPRINGLOBBY_HEADERGUARD_CRASHREPORT_H_INCLUDED
