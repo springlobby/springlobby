@@ -307,23 +307,26 @@ void Ui::DownloadMod( const wxString& mod )
 
 void Ui::OpenWebBrowser( const wxString& url )
 {
-  if ( sett().GetWebBrowserPath() == _T("use default") || sett().GetWebBrowserPath().IsEmpty() )
+  try
   {
+    if ( sett().GetWebBrowserPath() == _T("use default") || sett().GetWebBrowserPath().IsEmpty() )
+    {
       if ( !wxLaunchDefaultBrowser( url ) )
       {
         wxLogWarning( _T("can't't launch default browser") );
         wxMessageBox( _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
       }
-  }
-  else
-  {
-    if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
-    {
-      wxLogWarning( _T("can't launch browser: ") + sett().GetWebBrowserPath() );
-      wxMessageBox( _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
     }
+    else
+    {
+      if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
+      {
+        wxLogWarning( _T("can't launch browser: ") + sett().GetWebBrowserPath() );
+        wxMessageBox( _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
+      }
 
-  }
+    }
+  } catch (...){}
 }
 
 
