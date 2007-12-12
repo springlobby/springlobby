@@ -66,15 +66,28 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	}
 	else
 	{
-		//TODO get return value and sth useful with it
-		//pathOpt_panel = new PathOptionPanel(this);
 		notebook->AddPage(new PathOptionPanel(notebook,this),_T("Error!"));
 		SetTitle(wxT("SpringSettings"));
 	}
 	 
-	 SetIcon(wxNullIcon);
 	 SetSize(8,8,760,550);
 	 Center();
+}
+
+void settings_frame::buildGuiFromErrorPanel()
+{
+	notebook->DeletePage(0);
+	
+	//to be safe we'll try again
+	if (abstract_panel::loadValuesIntoMap())
+	{
+		CreateGUIControls();
+		initMenuBar();
+	}
+	else
+	{
+		notebook->AddPage(new PathOptionPanel(notebook,this),_T("Error!"));
+	}
 }
 
 settings_frame::~settings_frame()

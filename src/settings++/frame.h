@@ -67,6 +67,7 @@ class settings_frame : public wxFrame
 		virtual ~settings_frame();
 		void handleExternExit();
 		void switchToExpertMode();
+		void buildGuiFromErrorPanel();
 		
 	private:
 		tab_simple* simpleTab;

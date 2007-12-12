@@ -118,7 +118,7 @@ void PathOptionPanel::UsePaths(wxCommandEvent& event)
 	}
 	else
 	{
-		//origin->dostuff();
+		origin->buildGuiFromErrorPanel();
 	}
 }
 
