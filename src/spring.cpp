@@ -478,25 +478,25 @@ wxString Spring::GetScriptTxt( Battle& battle )
   wxLogMessage( _T("17") );
 
   ds += _T("\n\nPlayerOrder: { ");
-  for ( int i = 0; i < ordered_users[i].size(); i++ ) {
+  for ( std::vector<UserOrder>::size_type i = 0; i < ordered_users.size(); i++ ) {
     ds += wxString::Format( _T(" %d,"), ordered_users[i].index );
   }
   ds += _T(" }\n\n");
 
   ds += _T("TeamConv: { ");
-  for ( int i = 0; i < TeamConv.size(); i++ ) {
+  for ( std::vector<int>::size_type i = 0; i < TeamConv.size(); i++ ) {
     ds += wxString::Format( _T(" %d,"), TeamConv[i] );
   }
   ds += _T(" }\n\n");
 
   ds += _T("AllyConv: { ");
-  for ( int i = 0; i < AllyConv.size(); i++ ) {
+  for ( std::vector<int>::size_type i = 0; i < AllyConv.size(); i++ ) {
     ds += wxString::Format( _T(" %d,"), AllyConv[i] );
   }
   ds += _T(" }\n\n");
 
   ds += _T("AllyRevConv: { ");
-  for ( int i = 0; i < AllyRevConv.size(); i++ ) {
+  for ( std::vector<int>::size_type i = 0; i < AllyRevConv.size(); i++ ) {
     ds += wxString::Format( _T(" %d,"), AllyRevConv[i] );
   }
   ds += _T(" }\n\n\n");
