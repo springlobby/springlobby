@@ -336,7 +336,7 @@ BattleStartRect* Battle::GetStartRect( int allyno )
 
 void Battle::ClearStartRects()
 {
-  for ( int i = 0; i < 16; i++ ) RemoveStartRect( i );
+  for ( std::vector<BattleStartRect*>::size_type i = 0; i < GetNumRects(); i++ ) RemoveStartRect( i );
 }
 
 
@@ -516,5 +516,11 @@ void Battle::BattleKickPlayer( User& user )
 void Battle::SetHandicap( User& user, int handicap)
 {
   m_serv.SetHandicap ( m_opts.battleid, user.GetNick(), handicap );
+}
+
+
+std::vector<BattleStartRect*>::size_type Battle::GetNumRects()
+{
+  return m_rects.size();
 }
 
