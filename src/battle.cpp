@@ -14,7 +14,7 @@
 #include "uiutils.h"
 
 
-const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = -1;
+const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBot*>::size_type)(-1);
 
 
 Battle::Battle( Server& serv, Ui& ui, int id ) :

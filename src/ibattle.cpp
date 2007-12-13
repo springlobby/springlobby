@@ -212,4 +212,8 @@ void IBattle::OnUnitSyncReloaded()
   m_map_exists = usync()->MapExists( STD_STRING(m_map_name) );
 }
 
+unsigned int IBattle::AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll ) {
+  return (unsigned int)(-1);/// note: that looks pretty crappy and needs to be investigated.
+}
+
 
