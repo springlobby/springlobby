@@ -16,6 +16,7 @@
 #include <wx/dir.h>
 #include <wx/file.h>
 #include <wx/stdpaths.h>
+#include <wx/icon.h>
 
 #include "Defs.hpp"
 #include "frame.h"
@@ -24,7 +25,8 @@
 #include "../springunitsynclib.h"
 #include "se_utils.h"
 
-
+#include "custom_msgbox.h"
+#include "../images/springsettings.xpm"
 
 PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxPanel(parent,-1),origin(_origin)
 {
@@ -115,7 +117,7 @@ void PathOptionPanel::UsePaths(wxCommandEvent& event)
 	if ( !(susynclib()->IsLoaded()) )
 	{
 		//wxLogWarning( _T("can't load unitsync") );
-		wxMessageBox( _("SpringSettings is unable to load your unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
+		customMessageBox(new wxIcon(springsettings_xpm), _("SpringSettings is unable to load your unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
 	}
 	else
 	{

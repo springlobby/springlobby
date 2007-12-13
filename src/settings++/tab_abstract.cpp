@@ -30,8 +30,10 @@
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
 #include <wx/msgdlg.h>
+#include <wx/icon.h>
 
-
+#include "custom_msgbox.h"
+#include "../images/springsettings.xpm"
 #include "../springunitsynclib.h"
 #include "../utils.h"
 #include "Defs.hpp"
@@ -103,7 +105,7 @@ bool abstract_panel::loadValuesIntoMap()
 	}
 	catch (...)
 	{
-		wxMessageBox(_T("Could not access your settings.\n"), wxT("Error"), wxOK|wxICON_HAND, 0);
+		customMessageBox(new wxIcon(springsettings_xpm),_T("Could not access your settings.\n"), wxT("Error"), wxOK|wxICON_HAND, 0);
 		abstract_panel::settingsChanged = false;
 		return false;
 	} 
@@ -430,7 +432,7 @@ bool abstract_panel::saveSettings() {
 //	        //configHandler->SetSpringConfigFloat(f->first,f->second);
 //	    }
     } catch (...) {
-    	wxMessageBox(_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK|wxICON_HAND, 0);
+    	customMessageBox(new wxIcon(springsettings_xpm),_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK|wxICON_HAND, 0);
     	return false;
     }
     //TODO is sth actually done with returnvalue?

@@ -503,7 +503,9 @@ springlobby_SOURCES += \
 	src/settings++/tab_render_detail.h \
 	src/settings++/tab_abstract.h \
 	src/settings++/panel_pathoption.h \
-	src/settings++/panel_pathoption.cpp
+	src/settings++/panel_pathoption.cpp \
+	src/settings++/custom_msgbox.h \
+	src/settings++/custom_msgbox.cpp 
 
 if USE_WINDRES
 	springlobby_SOURCES += \
@@ -553,7 +555,9 @@ springsettings_SOURCES = \
 	src/settings++/tab_render_detail.h \
 	src/settings++/tab_abstract.h \
 	src/settings++/panel_pathoption.h \
-	src/settings++/panel_pathoption.cpp
+	src/settings++/panel_pathoption.cpp	\
+	src/settings++/custom_msgbox.h \
+	src/settings++/custom_msgbox.cpp
 
 if USE_WINDRES
 	springsettings_SOURCES += \

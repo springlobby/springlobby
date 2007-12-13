@@ -37,8 +37,10 @@
 #include "tab_simple.h"
 #include "Defs.hpp"
 #include "panel_pathoption.h"
+#include "custom_msgbox.h"
 
 #include "../images/springsettings.xpm"
+
 
 BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_CLOSE(settings_frame::OnClose)
@@ -56,9 +58,8 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
 	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
 	
-	SetIcon( wxIcon(springsettings_xpm) );
-	
-	
+	settingsIcon  = new wxIcon(springsettings_xpm);
+			
 	 if (abstract_panel::loadValuesIntoMap())
 	{
 		CreateGUIControls();
@@ -69,7 +70,7 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 		notebook->AddPage(new PathOptionPanel(notebook,this),_T("Error!"));
 		SetTitle(wxT("SpringSettings"));
 	}
-	 
+	 SetIcon(*settingsIcon);
 	 SetSize(8,8,760,550);
 	 Center();
 }
@@ -101,7 +102,7 @@ void settings_frame::handleExternExit()
 		alreadyCalled = true;
 		if (abstract_panel::settingsChanged)
 		{	//TODO use custom frame for to set icon
-			int choice = wxMessageBox(wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"), wxYES_NO |wxICON_QUESTION,NULL);	
+			int choice = customMessageBox(settingsIcon,wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"), wxYES_NO |wxICON_QUESTION,this);	
 			if ( choice == wxYES)
 						  abstract_panel::saveSettings();	
 			//abstract_panel::settingsChanged = false;   
@@ -114,7 +115,7 @@ void settings_frame::handleExternExit()
 void settings_frame::handleExit() {
     if (abstract_panel::settingsChanged) 
     {
-    	int action = wxMessageBox(wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION , this);
+    	int action = customMessageBox(settingsIcon,wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION , this);
         switch (action) {
         case wxYES:
         	if (abstract_panel::saveSettings())
@@ -217,7 +218,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		 break;
 
 		case ID_MENUITEM_RESET: 
-			if ((wxMessageBox(wxT("Reset ALL settings to default values?"), wxT("Confirmation needed"), wxYES_NO, this)) == wxYES) {
+			if ((customMessageBox(settingsIcon,wxT("Reset ALL settings to default values?"), wxT("Confirmation needed"), wxYES_NO, this)) == wxYES) {
 						resetSettings();
 			}
 		 break;
@@ -241,7 +242,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				
 				SetTitle(wxT("SpringSettings (simple mode)"));
 				if (!OptionsHandler.getDisableWarning()){
-					wxMessageBox(expertModeWarning, wxT(""), wxOK, this);
+					customMessageBox(settingsIcon,expertModeWarning, wxT("Hint"), wxOK, this);
 				}	
 		  break;
 		  
