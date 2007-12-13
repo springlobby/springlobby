@@ -99,7 +99,7 @@ void Battle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
 {
   int lowest = 0;
   bool changed = true;
-  while ( (changed) && (lowest < 16) ) {
+  while ( changed ) {
     changed = false;
     for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ ) {
       if ( (&GetUser( i ) == &GetMe()) && excludeme ) continue;
