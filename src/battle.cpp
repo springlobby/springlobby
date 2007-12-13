@@ -271,7 +271,7 @@ void Battle::RingNotReadyPlayers()
 
 void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom )
 {
-  ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), _T("Allyno out of bounds.") );
+  ASSERT_LOGIC( (allyno >= 0), _T("Allyno out of bounds.") );
   BattleStartRect* sr;
   bool local;
   if ( m_rects[allyno] == 0 ) {
@@ -330,7 +330,7 @@ void Battle::StartRectUpdated( int allyno )
 
 BattleStartRect* Battle::GetStartRect( int allyno )
 {
-  ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), _T("Allyno out of bounds.") );
+  ASSERT_LOGIC( (allyno >= 0), _T("Allyno out of bounds.") );
   return m_rects[allyno];
 }
 
