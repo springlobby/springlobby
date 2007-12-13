@@ -108,10 +108,8 @@ void Battle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
       if ( AreColoursSimilar( bs.color_r, bs.color_g, bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
         lowest++;
         changed = true;
-        if ( lowest >= 16 ) break;
       }
     }
-    if ( lowest >= 16 ) break;
     std::list<BattleBot*>::const_iterator i;
     for( i = m_bots.begin(); i != m_bots.end(); ++i )
     {
@@ -119,11 +117,9 @@ void Battle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
       if ( AreColoursSimilar( (*i)->bs.color_r, (*i)->bs.color_g, (*i)->bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
         lowest++;
         changed = true;
-        if ( lowest >= 16 ) break;
       }
     }
   }
-  if ( lowest >= 16 ) lowest = 0;
 
   r = colour_values[lowest][0];
   g = colour_values[lowest][1];
