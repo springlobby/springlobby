@@ -390,8 +390,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
       return true;
     }
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/ingame") ) {
-    if ( cmd.AfterFirst(' ') != wxEmptyString ) return false;
-    m_serv->RequestInGameTime( m_serv->GetMe().GetNick() );
+    m_serv->RequestInGameTime( _T("") );
     return true;
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/help") ) {
     wxString topic = cmd.AfterFirst(' ');
