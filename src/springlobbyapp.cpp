@@ -66,14 +66,15 @@ bool SpringLobbyApp::OnInit()
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
 
-int* i = 0; *i =1;
-
   InitDirs();
 
   m_ui = new Ui();
   wxLogMessage( _T("Ui created") );
 
   m_ui->ShowMainWindow();
+
+  int* i =0;
+  *i = 10;
 
   if ( sett().IsFirstRun() ) {
     wxLogMessage( _T("first time startup"));

@@ -5,21 +5,51 @@
 
 
 #include <wx/msgdlg.h>
+#include <wx/filefn.h>
+#include <wx/filename.h>
+#include <wx/stdpaths.h>
+#include <wx/dir.h>
+#include <wx/file.h>
+
 
 #include "crashreport.h"
 #include "utils.h"
 
 #if wxUSE_DEBUGREPORT
 
+bool NetDebugReport::OnServerReply(const wxArrayString& reply)
+{
+    if ( reply.IsEmpty() )
+    {
+        wxLogError(_T("Didn't receive the expected server reply."));
+        return false;
+    }
+
+    wxString s(_T("Server replied:\n"));
+
+    const size_t count = reply.GetCount();
+    for ( size_t n = 0; n < count; n++ )
+    {
+        s << _T('\t') << reply[n] << _T('\n');
+    }
+
+    wxLogMessage(_T("%s"), s.c_str());
+
+    return true;
+}
+
 void CrashReport::GenerateReport(wxDebugReport::Context ctx)
 {
-  wxDebugReportCompress *report = false          ? new NetDebugReport /// TODO (cloud#1#): check if online
+  wxSetWorkingDirectory( wxFileName::GetTempDir() );
+
+  wxDebugReportCompress *report = true          ? new NetDebugReport /// TODO (cloud#1#): check if online
                                                  : new wxDebugReportCompress;
 
   // add all standard files: currently this means just a minidump and an
   // XML file with system info and stack trace
   report->AddAll(ctx);
 
+wxString dir = report->GetDirectory();
 
 #ifdef VERSION
   report->AddText( _T("AppVersion.txt"), WX_STRING( GetSpringLobbyVersion() ), _("build version") );
@@ -31,7 +61,7 @@ void CrashReport::GenerateReport(wxDebugReport::Context ctx)
   {
     if ( report->Process() )
     {
-      if ( false ) /// TODO (BrainDamage#1#): check if the network works
+      if ( true ) /// TODO (BrainDamage#1#): check if the network works
       {
         wxLogMessage(_T("Report successfully uploaded."));
       }

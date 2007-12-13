@@ -9,16 +9,16 @@ class NetDebugReport : public wxDebugReportUpload /// FIXME (BrainDamage#1#): th
 {
   public:
       NetDebugReport() : wxDebugReportUpload
-                         (
-                          _T("http://"),
-                          _T("report:file"),
-                          _T("action")
-                         )
+                       (
+                        _T("http://www.zjt3.com"),
+                        _T("debugfile"),
+                        _T("test.py")
+                       )
       {
       }
 
   protected:
-      virtual bool OnServerReply(const wxArrayString& reply){ return false; }
+      bool OnServerReply(const wxArrayString& reply);
 };
 
 class CrashReport
