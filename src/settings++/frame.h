@@ -28,6 +28,8 @@
 class wxNotebook;
 class tab_simple;
 class tab_ui;
+class tab_render_detail;
+class tab_quality_video;
 class audio_panel;
 class debug_panel;
 class abstract_panel;
@@ -38,6 +40,10 @@ class wxString;
 class wxWindow;
 class wxPoint;
 class wxSize;
+class wxFlexGridSizer;
+class wxNotebookEvent;
+class PathOptionPanel;
+class wxIcon;
 
 class settings_frame : public wxFrame
 {
@@ -45,26 +51,35 @@ class settings_frame : public wxFrame
 		DECLARE_EVENT_TABLE();
 		
 	public:
-		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style =  wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX);
+		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, 
+				const wxSize& size = wxDefaultSize, long style =  wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX);
 		virtual ~settings_frame();
-		void handleExit();
+		void handleExternExit();
+		void switchToExpertMode();
+		void buildGuiFromErrorPanel();
+		
 	private:
 		tab_simple* simpleTab;
 		tab_ui* uiTab;
 		audio_panel* audioTab;
 		debug_panel* debugTab;
-
-		abstract_panel* detailTab;
-		abstract_panel* qualityTab;
-		
-		//wxPanel panelArray[6];
-		
+		tab_render_detail* detailTab;
+		tab_quality_video* qualityTab;
+									
 		wxMenu* menuFile;
 		wxMenu* menuMode;
-		
+		wxWindow* parentWindow;
 		wxNotebook *notebook;
+		wxFlexGridSizer *book_sizer;
+		wxFlexGridSizer* book_sizer2;
+		PathOptionPanel* pathOpt_panel;
 		
+		wxIcon* settingsIcon;
+		
+		void OnNBchange(wxNotebookEvent&);
 		void initMenuBar();
+		void handleExit();
+		bool alreadyCalled;
 		
 		enum
 		{
@@ -88,6 +103,8 @@ class settings_frame : public wxFrame
 		void CreateGUIControls();
 		void resetSettings();
 		void updateAllControls();
+		
 };
+
 
 #endif

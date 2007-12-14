@@ -20,8 +20,8 @@
     along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-#ifndef __PROJECT2FRMApp_h__
-#define __PROJECT2FRMApp_h__
+#ifndef SPRINGSETTINGS_MAIN_h
+#define SPRINGSETTINGS_MAIN_h
 
 #include <wx/app.h>
 

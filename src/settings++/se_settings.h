@@ -1,8 +1,6 @@
 #ifndef SE_SETTINGS_H_
 #define SE_SETTINGS_H_
 
-//#include <wx/wx.h>
-
 class wxString;
 class wxConfigBase;
 
@@ -23,14 +21,26 @@ public:
 	wxString getUsyncLoc();
 	wxString getSpringDir();
 	void setUsyncLoc(wxString);
+	void setSpringDir(wxString);
+	wxString getSimpleRes();
+	void setSimpleRes(wxString);
+	wxString getSimpleQuality();
+	void setSimpleQuality(wxString);
+	wxString getSimpleDetail();
+	void setSimpleDetail(wxString);
 	static se_settings& getInstance();
+	void reload();
 	void save();
 	
 private:
 	wxConfigBase* se_config;
 	
+	//** copied from springlobby source
 	wxString AutoFindUnitSyncLib( const wxString& def );
+	wxString AutoFindSpringDir( const wxString& def );
 	bool IsUnitSyncLib( const wxString& lib );
+	bool IsDataDir( const wxString& dir );
+	//***
 	
 	static se_settings* instance ;
 };

@@ -10,6 +10,7 @@ class wxStaticLine;
 class wxButton;
 class wxCommandEvent;
 class IBattle;
+class wxIcon;
 
 class AddBotDialog : public wxDialog
 {
@@ -38,11 +39,13 @@ class AddBotDialog : public wxDialog
     IBattle& m_battle;
 
     wxArrayString m_ais;
-
+   
     bool m_sp;
 
     wxString _RefineAIName( const wxString& name );
-
+    
+    wxIcon* m_sl_icon;
+    
     DECLARE_EVENT_TABLE()
 };
 

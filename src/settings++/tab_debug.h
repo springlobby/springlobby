@@ -50,6 +50,12 @@ class debug_panel : public abstract_panel
 		wxCheckBox* checkBox1 ;
 		wxSlider* slider;
 		
+		wxSizer* parentSizer ;	// main window sizer (three columns)
+			wxSizer* childLSizer ;		// main window left column sizer
+
+			// sizers for static boxes containing sliders, checkboxes, radiobuttons
+			wxStaticBoxSizer* debugSizer;
+		
 		DECLARE_EVENT_TABLE()
 };
 

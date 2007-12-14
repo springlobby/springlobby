@@ -22,17 +22,8 @@
 
 #include "tab_ui.h"
 #include "se_utils.h"
-#include <wx/string.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/statbox.h>
-#include <wx/event.h>
-#include <wx/defs.h>
-#include <wx/slider.h>
-#include <wx/checkbox.h>
-#include <wx/radiobut.h>
-#include <wx/combobox.h>
-#include "../springunitsynclib.h"
+#include <wx/wx.h>
+
 #include "Defs.hpp"
 
 
@@ -41,11 +32,12 @@ void tab_ui::initScrollSpeedSizer(wxStaticBoxSizer* sizer) {
 	// i < "sizeof"(MO_SLI)
 	sizer->Add(5,10,0);
 	for (int i = 0; i < ctrl_scroll_slider_size; i++) {
-		ctrl_scroll_slider[i] = new wxSlider(this, MO_SLI[i].id, configHandler->GetSpringConfigInt((MO_SLI[i].key),
-				fromString(MO_SLI[i].def)), 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+		//set to dummy value
+		ctrl_scroll_slider[i] = new wxSlider(this, MO_SLI[i].id, 0, 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+		ctrl_scroll_slider[i]->SetToolTip(MO_SLI[i].tTip[0]);
 		if (i > 0)
 			sizer->Add(5,32,0);
-		sizer->Add(new wxStaticText(this, wxID_ANY, (MO_SLI[i].lbl), wxDefaultPosition, wxDefaultSize, 10));
+		sizer->Add(new wxStaticText(this, wxID_ANY, (MO_SLI[i].lbl), wxDefaultPosition, wxDefaultSize, 10),1,wxEXPAND);
 		sizer->Add(ctrl_scroll_slider[i], 0, wxTOP, 0);
 	}
 	sizer->Add(5,10,0);
@@ -57,29 +49,31 @@ void tab_ui::initCameraSizer(wxStaticBoxSizer* sizer) {
 	ctrl_cam_radio2 = new wxRadioButton(this, MO_RBUT[2].id, (MO_RBUT[2].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
 	ctrl_cam_radio3 = new wxRadioButton(this, MO_RBUT[3].id, (MO_RBUT[3].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
 	ctrl_cam_radio4 = new wxRadioButton(this, MO_RBUT[4].id, (MO_RBUT[4].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
-
-	switch (configHandler->GetSpringConfigInt(MO_RBUT[0].key,fromString(MO_RBUT[0].def))) {
-		case 0: { ctrl_cam_radio3->SetValue(1); } break;	// CamMode 0: FPS
-		case 1: { ctrl_cam_radio0->SetValue(1); } break;	// CamMode 1: OH
-		case 2: { ctrl_cam_radio1->SetValue(1); } break;	// CamMode 2: ROH
-		case 3: { ctrl_cam_radio2->SetValue(1); } break;	// CamMode 3: TW
-		case 4: { ctrl_cam_radio4->SetValue(1); } break;	// CamMode 4: FC
-	}
-
+	
+	ctrl_cam_radio0->SetToolTip(MO_RBUT[0].tTip[0]);
+	ctrl_cam_radio1->SetToolTip(MO_RBUT[1].tTip[0]);
+	ctrl_cam_radio2->SetToolTip(MO_RBUT[2].tTip[0]);
+	ctrl_cam_radio3->SetToolTip(MO_RBUT[3].tTip[0]);
+	ctrl_cam_radio4->SetToolTip(MO_RBUT[4].tTip[0]);
+	
+	
 	sizer->Add(ctrl_cam_radio0, 0, wxTOP, 10);
-	sizer->Add(ctrl_cam_radio1, 0, wxTOP, 0);
-	sizer->Add(ctrl_cam_radio2, 0, wxTOP, 0);
-	sizer->Add(ctrl_cam_radio3, 0, wxTOP, 0);
-	sizer->Add(ctrl_cam_radio4, 0, wxTOP, 0);
+	sizer->Add(ctrl_cam_radio1, 0, wxTOP, 5);
+	sizer->Add(ctrl_cam_radio2, 0, wxTOP, 5);
+	sizer->Add(ctrl_cam_radio3, 0, wxTOP, 5);
+	sizer->Add(ctrl_cam_radio4, 0, wxTOP|wxBOTTOM, 5);
 }
 
 void tab_ui::initUiOptSizer(wxStaticBoxSizer* sizer)
 {
+	wxBoxSizer* subSizer = new wxBoxSizer(wxVERTICAL);
 	for (int i = 0; i < ctrl_ui_chkb_size; i++) {
 		ctrl_ui_chkb[i] = new wxCheckBox(this, UI_CBOX[i].id, (UI_CBOX[i].lbl));
-			ctrl_ui_chkb[i]->SetValue(configHandler->GetSpringConfigInt(UI_CBOX[i].key,fromString(UI_CBOX[i].def)));
-			sizer->Add(ctrl_ui_chkb[i], 0, wxTOP, (i == 0)? 10: 0);
+			subSizer->Add(ctrl_ui_chkb[i], 0, wxTOP, 5);
+			ctrl_ui_chkb[i]->SetToolTip(UI_CBOX[i].tTip[0]);
 		}
+	sizer->Add(subSizer);
+	sizer->Add(0,5,0);
 }
 
 void tab_ui::updateControls(int what_to_update)
@@ -105,30 +99,40 @@ tab_ui::tab_ui(wxWindow *parent, wxWindowID id , const wxString &title , const w
                 : abstract_panel(parent, id , title , pos , size, style) {
 	ctrl_scroll_slider = new wxSlider*[ctrl_scroll_slider_size];
 	ctrl_ui_chkb = new wxCheckBox*[ctrl_ui_chkb_size];
-	wxFlexGridSizer* pSizer = new wxFlexGridSizer(2,15,15);
-	wxFlexGridSizer* cSizerL = new wxFlexGridSizer(1,10,10);
-	wxFlexGridSizer* cSizerR = new wxFlexGridSizer(1,10,10);
+	 pSizer = new wxFlexGridSizer(3,15,15);
+	 cSizerL = new wxFlexGridSizer(1,10,10);
+	 cSizerR = new wxFlexGridSizer(1,10,10);
+	 cSizerM = new wxFlexGridSizer(1,10,10);
 
-	wxStaticBoxSizer* scrollSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Scroll Speeds (0 to disable)"),
-			WX_DEF_P, wxSize(100, 200), 0, wxEmptyString), wxVERTICAL);
-	wxStaticBoxSizer* cameraSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Default Camera Mode"),
-			WX_DEF_P, wxSize(100, 100), 0, wxEmptyString), wxVERTICAL);
-	wxStaticBoxSizer* uiOptSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Misc. UI Options"), 
-			WX_DEF_P, wxSize(100, 100), 0, wxEmptyString), wxVERTICAL);
+	 scrollSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Scroll Speeds (0 to disable)"),
+			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
+	 cameraSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Default Camera Mode"),
+			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
+	 uiOptSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Misc. UI Options"), 
+			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
 
 	initScrollSpeedSizer(scrollSpeedSizer);
 	initCameraSizer(cameraSizer);
 	initUiOptSizer(uiOptSizer);
 
-	cSizerR->Add(uiOptSizer);
-	cSizerL->Add(scrollSpeedSizer);
-	cSizerR->Add(cameraSizer,0,wxEXPAND);
-	//pSizer->Add(5, 0, 0);
-	pSizer->Add(cSizerL,0,wxALL,10);
-	//pSizer->Add(25, 0, 0);
-	pSizer->Add(cSizerR,0,wxALL,10);
-
-	SetSizer(pSizer, true); // true --> delete old sizer if present
+	cSizerM->Add(uiOptSizer,0,wxALL,5);
+	cSizerL->Add(scrollSpeedSizer,0,wxALL,5);
+	cSizerR->Add(cameraSizer,0,wxALL,5);
+	
+	cSizerL->Fit(this);
+	cSizerL->SetSizeHints(this);
+	cSizerM->Fit(this);
+	cSizerM->SetSizeHints(this);
+	cSizerR->Fit(this);
+	cSizerR->SetSizeHints(this);
+				
+	
+	pSizer->Add(cSizerL,0,wxALL|wxEXPAND,10);
+	pSizer->Add(cSizerM,0,wxALL|wxEXPAND,10);
+	pSizer->Add(cSizerR,0,wxALL|wxEXPAND,10);
+	
+	updateControls(UPDATE_ALL);
+	SetSizer(pSizer); // true --> delete old sizer if present
 
 }
 

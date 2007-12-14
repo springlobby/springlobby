@@ -23,6 +23,9 @@
 #include "utils.h"
 #include "uiutils.h"
 
+#include "settings++/custom_msgbox.h"
+#include "images/springlobby.xpm"
+#include <wx/icon.h>
 
 BEGIN_EVENT_TABLE( BattleroomListCtrl, wxListCtrl )
 
@@ -43,6 +46,8 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   m_sel_user(0), m_sel_bot(0),
   m_ui(ui)
 {
+  m_sl_icon = new wxIcon(springlobby_xpm);
+  
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
   SetImageList( &icons(), wxIMAGE_LIST_STATE );
@@ -473,12 +478,12 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
     long handicap;
     if ( !dlg.GetValue().ToLong( &handicap ) ) {
      wxLogWarning( _T("input is not a number") );
-     wxMessageBox( _("Not a number"), _("Invalid number") );
+     customMessageBox(m_sl_icon, _("Not a number"), _("Invalid number") );
      return;
     }
     if ( handicap < 0 || handicap > 100 ) {
       wxLogWarning( _T("input value is out of range") );
-      wxMessageBox( _("Value out of range.\n Enter an integer between 0 & 100."), _("Invalid number") );
+      customMessageBox(m_sl_icon, _("Value out of range.\n Enter an integer between 0 & 100."), _("Invalid number") );
       return;
     }
     if ( m_sel_bot != 0 ) {

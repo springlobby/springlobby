@@ -81,6 +81,7 @@
 #define ID_SIMPLE_QUAL_CBX		390
 #define ID_SIMPLE_DETAIL_CBX	391
 #define ID_SIMPLE_MODE_CBX		392
+#define ID_SIMPLE_GOEXPERT_BUT 	393
 
 
 // UI Options checkbox IDs
@@ -149,7 +150,12 @@
 #define ID_MO_SLI_3 663
 #define ID_MO_SLI_4 664
 
-#define SLI_STYLE (wxSL_LABELS | wxSL_AUTOTICKS)
+// panel_paths ids
+#define ID_PATH_SPRINGDIR_BTN 	700
+#define ID_PATH_USYNC_BTN		701
+#define ID_PATH_OK_BTN			702
+
+#define SLI_STYLE (wxSL_LABELS )
 #define WX_DEF_V wxDefaultValidator
 #define WX_DEF_P wxPoint(-1, -1)
 #define WX_DEF_S wxSize(-1, -1)
@@ -173,19 +179,20 @@ struct Control {
     const wxString tTip [1];
 };
 
-//TODO find reasonable default values
 //TODO is max_texture stages obsolte?
 const Control RO_SLI[9] = {
-	{_T("Shadow-map size"),              wxT("ShadowMapSize"),       ID_RO_SLI_0,	"2048", {_T("higher value = better looking shadows")}	},
-	{_T("Tree view-distance"),           wxT("TreeRadius"),          ID_RO_SLI_1,	"3000", {_T("placeholder")}	},
-	{_T("Terrain detail"),               wxT("GroundDetail"),        ID_RO_SLI_2,	"120", {_T("higher value = more terrain details")}	},
-	{_T("Unit detail"),                  wxT("UnitLodDist"),         ID_RO_SLI_3,	"600", {_T("higher value = more detailed units")}	},
-	{_T("Grass detail"),                 wxT("GrassDetail"),         ID_RO_SLI_4,	"10", {_T("higher value = more detailed graas")}	},
-	{_T("Ground decals"),                wxT("GroundDecals"),        ID_RO_SLI_5,	"120", {_T("higher value = more ground decals")}	},
-	{_T("Unit icon distance"),           wxT("UnitIconDist"),        ID_RO_SLI_6,	"1000", {_T("determines at which range units are still fully rendered\n"
+	{_T("Shadow-map size"),              wxT("ShadowMapSize"),       ID_RO_SLI_0,	"2048", {_T("higher value = better looking shadows\n"
+																								"possible values: 1024, 2048, 4096, 8192")}	},
+	{_T("Tree view-distance"),           wxT("TreeRadius"),          ID_RO_SLI_1,	"1000", {_T("sets the maximum distance at which trees will still be rendered")}	},
+	{_T("Terrain detail"),               wxT("GroundDetail"),        ID_RO_SLI_2,	"80", {_T("higher value = more terrain details")}	},
+	{_T("Unit detail"),                  wxT("UnitLodDist"),         ID_RO_SLI_3,	"300", {_T("higher value = more detailed units")}	},
+	{_T("Grass detail"),                 wxT("GrassDetail"),         ID_RO_SLI_4,	"3", {_T("higher value = more detailed graas")}	},
+	{_T("Ground decals"),                wxT("GroundDecals"),        ID_RO_SLI_5,	"40", {_T("higher value = more ground decals")}	},
+	{_T("Unit icon distance"),           wxT("UnitIconDist"),        ID_RO_SLI_6,	"350", {_T("determines at which range units are still fully rendered\n"
 																								"higher value = greater range = more units rendered at the same time")}	},
-	{_T("Max simultaneous particles"),     wxT("MaxParticles"),        ID_RO_SLI_7,	"20000"	, {_T("limits how many particles are displayed at the same time")}},
-	{_T("Max texture stages (SM3)"), wxT("SM3MaxTextureStages"), ID_RO_SLI_8,	"20"	, {_T("placeholder")}}
+	{_T("Max simultaneous particles"),     wxT("MaxParticles"),        ID_RO_SLI_7,	"5000"	, {_T("limits how many particles are displayed at the same time")}},
+	{_T("Max texture stages (SM3)"), wxT("SM3MaxTextureStages"), ID_RO_SLI_8,	"6"	, {_T("Decrease this if you are having bad perfomance on maps in sm3 format,\n"
+																						"increase if sm3 maps look ugly.")}}
 };
 
 const Control VO_CBOX[3] = {
@@ -218,13 +225,16 @@ const Control AO_SLI[3] = {
 
 const Control QA_CBOX[10] = {
     {_T("Shadows (slow)"),                                  wxT("Shadows"),             ID_WINDOWP_QA_CBOX_0,	"0", {_T("enable shadows?")}},
-	{_T("3D trees (needs Vertex_Program)"),                 wxT("3DTrees"),             ID_WINDOWP_QA_CBOX_1,	"1", {_T("want better looking trees?")}},
-	{_T("High-resolution clouds (needs Fragment_Program)"), wxT("AdvSky"),              ID_WINDOWP_QA_CBOX_2,	"0", {_T("want better looking sky?")}},
+	{_T("3D trees"),                 wxT("3DTrees"),             ID_WINDOWP_QA_CBOX_1,	"1", {_T("want better looking trees?\n"
+														"needs Geforce 2/Radeon 8500/Intel 830 or later class graphic card")}},
+	{_T("High-resolution clouds"), wxT("AdvSky"),              ID_WINDOWP_QA_CBOX_2,	"0", {_T("want better looking sky?\n"
+														"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card")}},
 	{_T("Dynamic clouds (slow)"),                           wxT("DynamicSky"),          ID_WINDOWP_QA_CBOX_3,	"0", {_T("want moving clouds in the sky?")}},
-	{_T("Reflective units (needs Fragment_Program)"),       wxT("AdvUnitShading"),      ID_WINDOWP_QA_CBOX_4,	"0", {_T("shiny units?")}},
+	{_T("Reflective units"),       wxT("AdvUnitShading"),      ID_WINDOWP_QA_CBOX_4,	"0", {_T("shiny units?\n"
+														"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card")}},
 	{_T("Never use shaders when rendering SM3 maps"),       wxT("SM3ForceFallbackTex"), ID_WINDOWP_QA_CBOX_5,	"1", {_T("problems with sm3 maps? enable this")}},
 	{_T("Enable LuaShaders support"),                       wxT("LuaShaders"),          ID_WINDOWP_QA_CBOX_6,	"1", {_T("makes for some cool effects")}},
-	{_T("High-resolution LOS textures"),                    wxT("HighResLos"),          ID_WINDOWP_QA_CBOX_7,	"1", {_T("placeholder")}},
+	{_T("High-resolution LOS textures"),                    wxT("HighResLos"),          ID_WINDOWP_QA_CBOX_7,	"1", {_T("smoother Line of Sight overlays")}},
     {_T("Draw smooth points"),                              wxT("SmoothPoints"),        ID_WINDOWP_QA_CBOX_8,	"0", {_T("should points be anti-aliased")}},
 	{_T("Draw smooth lines"),                               wxT("SmoothLines"),         ID_WINDOWP_QA_CBOX_9,	"0", {_T("should lines be anti-aliased")}},
 };
@@ -233,54 +243,65 @@ const Control QA_CBOX[10] = {
 const Control UI_CBOX[14] = {
 	{_T("Enable LuaUI widgets"),                            wxT("LuaUI"),               ID_WINDOWP_UI_CBOX_1,	"1", {_T("mark to be able to use")}},
 	
-	{_T("Draw commands on mini-map"),                       wxT("MiniMapDrawCommands"), ID_WINDOWP_UI_CBOX_2,	"1", {_T("placeholder")}},
-	{_T("Draw icons on mini-map"),                          wxT("MiniMapIcons"),        ID_WINDOWP_UI_CBOX_3,	"1", {_T("placeholder")}},
-	{_T("Draw markers on mini-map"),                        wxT("MiniMapMarker"),       ID_WINDOWP_UI_CBOX_4,	"1", {_T("placeholder")}},
-	{_T("Mini-map on left (single screen)"), 				wxT("MinimapOnLeft"),       ID_WINDOWP_UI_CBOX_5,	"1", {_T("placeholder")}},
-	{_T("Mini-map on left (dual screen)"),   				wxT("DualScreenMiniMapOnLeft"), ID_WINDOWP_UI_CBOX_6,"1", {_T("placeholder")}},
-	{_T("Simplified mini-map colors"),                      wxT("SimpleMiniMapColors"), ID_WINDOWP_UI_CBOX_7,	"0", {_T("placeholder")}},
+	{_T("Draw commands on mini-map"),                       wxT("MiniMapDrawCommands"), ID_WINDOWP_UI_CBOX_2,	"1", {_T("default value is \"on\"")}},
+	{_T("Draw icons on mini-map"),                          wxT("MiniMapIcons"),        ID_WINDOWP_UI_CBOX_3,	"1", {_T("default value is \"on\"")}},
+	{_T("Draw markers on mini-map"),                        wxT("MiniMapMarker"),       ID_WINDOWP_UI_CBOX_4,	"1", {_T("default value is \"on\"")}},
+	{_T("Mini-map on left (single screen)"), 				wxT("MinimapOnLeft"),       ID_WINDOWP_UI_CBOX_5,	"1", {_T("left is the default")}},
+	{_T("Mini-map on left (dual screen)"),   				wxT("DualScreenMiniMapOnLeft"), ID_WINDOWP_UI_CBOX_6,"1", {_T("left is the default")}},
+	{_T("Simplified mini-map colors"),                      wxT("SimpleMiniMapColors"), ID_WINDOWP_UI_CBOX_7,	"0", {_T("Use less colors")}},
 
-	{_T("Team-colored nanospray"),                          wxT("TeamNanoSpray"),       ID_WINDOWP_UI_CBOX_8,	"1", {_T("placeholder")}},
-	{_T("Colorized elevation map"),                         wxT("ColorElev"),           ID_WINDOWP_UI_CBOX_9,	"1", {_T("placeholder")}},
+	{_T("Team-colored nanospray"),                          wxT("TeamNanoSpray"),       ID_WINDOWP_UI_CBOX_8,	"1", 
+																				{_T("Should nano particels be the color of your team?")}},
+	{_T("Colorized elevation map"),                         wxT("ColorElev"),           ID_WINDOWP_UI_CBOX_9,	"1", {_T("makes differences in height clearer")}},
 	
-	{_T("Show in-game clock"),                              wxT("ShowClock"),           ID_WINDOWP_UI_CBOX_10,	"1", {_T("placeholder")}},
-	{_T("Show in-game player information"),                 wxT("ShowPlayerInfo"),      ID_WINDOWP_UI_CBOX_11,	"1", {_T("placeholder")}},
-	{_T("Show in-game framerate"),                          wxT("ShowFPS"),             ID_WINDOWP_UI_CBOX_12,	"0", {_T("placeholder")}},
+	{_T("Show in-game clock"),                              wxT("ShowClock"),           ID_WINDOWP_UI_CBOX_10,	"1",
+										{_T("requires \"Enable LuaWidgets\" to be set.\nWill be displayed in the bottom right corner")}},
+	{_T("Show in-game player information"),                 wxT("ShowPlayerInfo"),      ID_WINDOWP_UI_CBOX_11,	"1",
+										{_T("requires \"Enable LuaWidgets\" to be set.\nWill be displayed in the bottom right corner")}},
+	{_T("Show in-game framerate"),                          wxT("ShowFPS"),             ID_WINDOWP_UI_CBOX_12,	"0", 
+										{_T("requires \"Enable LuaWidgets\" to be set.\nWill be displayed in the bottom right corner")}},
 //TODO is there even a reason that it should be disabled?
-	{_T("Fix rendering on alt-tab"),                        wxT("FixAltTab"),           ID_WINDOWP_UI_CBOX_13,	"1", {_T("placeholder")}},
-	{_T("Disallow helper AI's"),                            wxT("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_14,	"0", {_T("placeholder")}}
+	{_T("Fix rendering on alt-tab"),                        wxT("FixAltTab"),           ID_WINDOWP_UI_CBOX_13,	"1", {_T("Do not change if not needed")}},
+	{_T("Disallow helper AI's"),                            wxT("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_14,	"0", {_T("Disables Economy AI, etc.")}}
 };
 
 
 const Control MO_SLI[5] = {
-	{_T("Overhead Camera"),    wxT("OverheadScrollSpeed"),    ID_MO_SLI_0,	"10", {_T("placeholder")}},
-	{_T("Rotatable overhead Camera"), wxT("RotOverheadScrollSpeed"), ID_MO_SLI_1,	"0" , {_T("placeholder")}},
-	{_T("Total War Camera"),          wxT("TWScrollSpeed"),          ID_MO_SLI_2,	"0" , {_T("placeholder")}},
-	{_T("First Person Camera"),         wxT("FPSScrollSpeed"),         ID_MO_SLI_3,	"0" , {_T("placeholder")}},
-	{_T("Free Camera"),          wxT("CamFreeScrollSpeed"),     ID_MO_SLI_4,	"0" , {_T("placeholder")}}
+	{_T("Overhead camera"),    wxT("OverheadScrollSpeed"),    ID_MO_SLI_0,	"10", {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("Rotatable overhead camera"), wxT("RotOverheadScrollSpeed"), ID_MO_SLI_1,	"0" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("Total war camera"),          wxT("TWScrollSpeed"),          ID_MO_SLI_2,	"0" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("First person camera"),         wxT("FPSScrollSpeed"),         ID_MO_SLI_3,	"0" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("Free camera"),          wxT("CamFreeScrollSpeed"),     ID_MO_SLI_4,	"0" , {_T("set the scroll speed (mouse + keyboard) for this mode")}}
 };
 
 const Control MO_SLI_EXT[5] = {
-	{_T(""), wxT("OverheadEnabled"), -1,	"1", {_T("placeholder")}},
-	{_T(""), wxT("RotOverheadEnabled"), -1,	"0", {_T("placeholder")}},
-	{_T(""), wxT("TWEnabled"), -1,		"0", {_T("placeholder")}},
-	{_T(""), wxT("FPSEnabled"), -1,		"0", {_T("placeholder")}},
-	{_T(""), wxT("CamFreeEnabled"), -1,	"0", {_T("placeholder")}}
+	{_T(""), wxT("OverheadEnabled"), -1,	"1", {_T("Make this the default view when startins Spring.\n"
+													"Can be changed ingame.")}},
+	{_T(""), wxT("RotOverheadEnabled"), -1,	"0", {_T("Make this the default view when startins Spring.\n"
+													"Can be changed ingame.")}},
+	{_T(""), wxT("TWEnabled"), -1,		"0", {_T("Make this the default view when startins Spring.\n"
+												"Can be changed ingame.")}},
+	{_T(""), wxT("FPSEnabled"), -1,		"0", {_T("Make this the default view when startins Spring.\n"
+												"Can be changed ingame.")}},
+	{_T(""), wxT("CamFreeEnabled"), -1,	"0", {_T("Make this the default view when startins Spring.\n"
+												"Can be changed ingame.")}},
 };
 
 
 const Control DO_SLI[1] = {
-	{_T("Console verbose level (0=min,10=max)"), wxT("VerboseLevel"), ID_DO_SLI_0,	"0", {_T("placeholder")}}
+	{_T("Console verbose level (0=min,10=max)"), wxT("VerboseLevel"), ID_DO_SLI_0,	"0", {_T("How much information should be outputted?")}}
 };
 
 const Control DO_CBOX[2] = {
-	{_T("Catch AI exceptions"),        wxT("CatchAIExceptions"), ID_WINDOWP_DO_CBOX_0,	"0", {_T("placeholder")}},
-	{_T("Send debug info to console"), wxT("StdoutDebug"),       ID_WINDOWP_DO_CBOX_1,	"0", {_T("placeholder")}}
+	{_T("Catch AI exceptions"),        wxT("CatchAIExceptions"), ID_WINDOWP_DO_CBOX_0,	"1", {_T("disable for AI debugging")}},
+	{_T("Send debug info to console"), wxT("StdoutDebug"),       ID_WINDOWP_DO_CBOX_1,	"0", {_T("if disabled these will only be logged")}}
 };
 
 
 const Control WR_COMBOX[1] = {
-		{_T("Basic"),                  wxT("ReflectiveWater"), ID_WINDOWP_WR_COMBOX,	"1", {_T("placeholder")}}
+		{_T("Basic"),                  wxT("ReflectiveWater"), ID_WINDOWP_WR_COMBOX,	"1", {_T("Depending on the power of your graphics card,\n"
+																								"selecting higher quality than basic can have a\n"
+																								"major impact on Spring's performance.\n")}}
 	/*{_T("reflective",              "ReflectiveWater", ID_WINDOWP_WR_COMBOX_1,	"1"},
 	{_T("reflective + refractive", "ReflectiveWater", ID_WINDOWP_WR_COMBOX_2,	"1"},
 	{_T("dynamic",                 "ReflectiveWater", ID_WINDOWP_WR_COMBOX_3,	"1"}*/
@@ -291,23 +312,22 @@ const wxString WR_COMBOX_CHOICES[4] = {
 };
 
 const Control MO_CBOX[2] = {
-	{_T("Invert mouse y-axis"),             wxT("InvertMouse"),      ID_WINDOWC_MO_CBOX_0,	"1", {_T("placeholder")}},
-	{_T("Mini-map 3-button mouse support"), wxT("MiniMapFullProxy"), ID_WINDOWC_MO_CBOX_1,	"1", {_T("placeholder")}}
+	{_T("Invert mouse y-axis"),             wxT("InvertMouse"),      ID_WINDOWC_MO_CBOX_0,	"1", {_T("swap up/down with down/up")}},
+	{_T("Mini-map 3-button mouse support"), wxT("MiniMapFullProxy"), ID_WINDOWC_MO_CBOX_1,	"1", {_T("if you don't want to able to use that button, disable it here")}}
 };
 
 const Control MO_RBUT[5] = {
-	{_T("Overhead)"),            wxT("CamMode"), ID_WINDOWC_MO_RBUT_0,	"1", {_T("placeholder")}},
-	{_T("Rotatable Overhead)"), wxT("CamMode"), ID_WINDOWC_MO_RBUT_1,	"1", {_T("placeholder")}},
-	{_T("Total War)"),           wxT("CamMode"), ID_WINDOWC_MO_RBUT_2,	"1", {_T("placeholder")}},
-	{_T("First Person"),        wxT("CamMode"), ID_WINDOWC_MO_RBUT_3,	"1", {_T("placeholder")}},
-	{_T("Free Camera"),         wxT("CamMode"), ID_WINDOWC_MO_RBUT_4,	"1", {_T("placeholder")}}
+	{_T("Overhead"),            wxT("CamMode"), ID_WINDOWC_MO_RBUT_0,	"1", {_T("Static bird's eye view")}},
+	{_T("Rotatable overhead"), wxT("CamMode"), ID_WINDOWC_MO_RBUT_1,	"1", {_T("Same as overhead, but you can rotate around the z-axis")}},
+	{_T("Total war"),           wxT("CamMode"), ID_WINDOWC_MO_RBUT_2,	"1", {_T("top-view camera, which can be tilted on the X axis")}},
+	{_T("First person"),        wxT("CamMode"), ID_WINDOWC_MO_RBUT_3,	"1", {_T("Camera from unit's point of view")}},
+	{_T("Free camera"),         wxT("CamMode"), ID_WINDOWC_MO_RBUT_4,	"1", {_T("Modify the view anyway you want")}}
 };
 
 const Control RC_TEXT[2] = {
-	{_T(""), wxT("XResolution"), -1,	"1024", {_T("placeholder")}},
-	{_T(""), wxT("YResolution"), -1,	"768" , {_T("placeholder")}}
+	{_T(""), wxT("XResolution"), -1,	"1024", {_T("screen width")}},
+	{_T(""), wxT("YResolution"), -1,	"768" , {_T("screen height")}}
 };
-
 
 /** not used
 #define NUM_DEFAULTS 88
@@ -341,7 +361,6 @@ const char DEFAULTS[NUM_DEFAULTS][64] = {
 	"DualScreenMode=0",
 	"FixAltTab=1",
 	"Fullscreen=0",
-	"FixAltTab=1",
 	"HighResLos=1",
 	"NoHelperAIs=0",
 	"TeamNanoSpray=1",

@@ -29,47 +29,48 @@
 #include <wx/slider.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
-#include "../springunitsynclib.h"
+
 #include "Defs.hpp"
 
 void audio_panel::initAudioSizer(wxStaticBoxSizer* sizer) {
-	slider0 = new wxSlider(this, AO_SLI[0].id, configHandler->GetSpringConfigInt(AO_SLI[0].key,
-			fromString(AO_SLI[0].def)), 8, 128, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
-	slider1 = new wxSlider(this, AO_SLI[1].id, configHandler->GetSpringConfigInt(AO_SLI[1].key,
-			fromString(AO_SLI[1].def)), 1, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
-	slider2 = new wxSlider(this, AO_SLI[2].id, configHandler->GetSpringConfigInt(AO_SLI[2].key,
-			fromString(AO_SLI[2].def)), 1, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	slider0 = new wxSlider(this, AO_SLI[0].id, 8, 8, 128, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	slider1 = new wxSlider(this, AO_SLI[1].id, 1, 1, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	slider2 = new wxSlider(this, AO_SLI[2].id, 1, 1, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	slider0->SetToolTip(AO_SLI[0].tTip[0]);
+	slider1->SetToolTip(AO_SLI[1].tTip[0]);
+	slider2->SetToolTip(AO_SLI[2].tTip[0]);
 
     slider0->SetTickFreq((128-8) / 10   ,1);
     slider1->SetTickFreq(10             ,1);
     slider2->SetTickFreq(10             ,1);
+    sizer->Add(new wxStaticText(this, -1, (AO_SLI[1].lbl)), 0, wxTOP, 15);
+    sizer->Add(slider1, 0, wxALIGN_LEFT, 0);
 	sizer->Add(new wxStaticText(this, -1, (AO_SLI[0].lbl)), 0, wxTOP, 15);
 	sizer->Add(slider0, 0, wxALIGN_LEFT, 0);
-	sizer->Add(new wxStaticText(this, -1, (AO_SLI[1].lbl)), 0, wxTOP, 15);
-	sizer->Add(slider1, 0, wxALIGN_LEFT, 0);
 	sizer->Add(new wxStaticText(this, -1, (AO_SLI[2].lbl)), 0, wxTOP, 15);
-	sizer->Add(slider2, 0, wxALIGN_LEFT, 0);
+	sizer->Add(slider2, 0, wxALIGN_LEFT|wxBOTTOM, 15);
 }
 
 audio_panel::audio_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : abstract_panel(parent, id , title , pos , size, style) {
 
-	wxSizer* parentSizer = new wxBoxSizer(wxHORIZONTAL);	// main window sizer (three columns)
-	wxSizer* childLSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
+	 parentSizer = new wxBoxSizer(wxHORIZONTAL);	// main window sizer (three columns)
+	 childLSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
 
 	// sizers for static boxes containing sliders, checkboxes, radiobuttons
-    wxStaticBoxSizer* audioSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Audio Options"),
+   audioSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Audio Options"),
     		WX_DEF_P, wxSize(230, 100), 0, wxEmptyString), wxVERTICAL);
 	initAudioSizer(audioSizer);
 
 
 	childLSizer->Add(0, 5, 0);
-	childLSizer->Add(audioSizer);
+	childLSizer->Add(audioSizer,0,wxEXPAND|wxALL,5);
 
 	parentSizer->Add(10, 0, 0);
-	parentSizer->Add(childLSizer);
+	parentSizer->Add(childLSizer,0,wxEXPAND|wxTOP,5);
 
-	SetSizer(parentSizer, true); // true --> delete old sizer if present
+	updateControls(UPDATE_ALL);
+	SetSizer(parentSizer); // true --> delete old sizer if present
 }
 
 void audio_panel::updateControls(int what_to_update)

@@ -33,6 +33,9 @@
 #include "images/rank5.xpm"
 #include "images/rank6.xpm"
 
+#include "settings++/custom_msgbox.h"
+#include "images/springlobby.xpm"
+#include <wx/icon.h>
 
 BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
 
@@ -43,6 +46,8 @@ END_EVENT_TABLE()
 
 HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _("Host new battle"), wxDefaultPosition, wxSize( 385,441 ), wxDEFAULT_DIALOG_STYLE )
 {
+	m_sl_icon = new wxIcon(springlobby_xpm);
+	
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
 	SetSizeHints( wxDefaultSize, wxDefaultSize );
@@ -228,7 +233,7 @@ void HostBattleDialog::OnOk( wxCommandEvent& event )
 {
   if ( m_mod_pic->GetSelection() == wxNOT_FOUND ) {
     wxLogWarning( _T("no mod selected") );
-    wxMessageBox( _("You have to select a mod first."), _("No mod selected."), wxOK );
+    customMessageBox(m_sl_icon, _("You have to select a mod first."), _("No mod selected."), wxOK );
     return;
   }
 

@@ -102,23 +102,30 @@ MainWindow::MainWindow( Ui& ui ) :
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
-
+  
   m_func_tabs->AddPage( m_chat_tab, _T(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
-
+  
   SetSizer( m_main_sizer );
 
   SetSize( sett().GetMainWindowLeft(), sett().GetMainWindowTop(), sett().GetMainWindowWidth(), sett().GetMainWindowHeight() );
   Layout();
+  
+  se_frame_active = false;
 }
 
+void MainWindow::forceSettingsFrameClose()
+{
+	if (se_frame_active && se_frame != 0)
+		se_frame->handleExternExit();
+}
 
 MainWindow::~MainWindow()
-{
+{ 	
   int x, y, w, h;
   GetSize( &w, &h );
   sett().SetMainWindowHeight( h );
@@ -133,7 +140,6 @@ MainWindow::~MainWindow()
   delete m_battle_icon;
   delete m_options_icon;
   delete m_select_image;
-  
   
 }
 
@@ -355,7 +361,8 @@ void MainWindow::OnUnitSyncReloaded()
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 {
-	se_frame = new settings_frame(NULL,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
-	    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+	se_frame = new settings_frame(this,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
+	  	    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+	se_frame_active = true;
 	se_frame->Show();
 }

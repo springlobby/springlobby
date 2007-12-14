@@ -13,6 +13,7 @@ class wxRadioButton;
 class wxStaticBitmap;
 class wxStaticLine;
 class wxButton;
+class wxIcon;
 
 class HostBattleDialog : public wxDialog
 {
@@ -60,6 +61,8 @@ class HostBattleDialog : public wxDialog
 		wxButton* m_cancel_btn;
 
 		wxButton* m_host_btn;
+		
+		wxIcon* m_sl_icon;
 
     DECLARE_EVENT_TABLE()
 };

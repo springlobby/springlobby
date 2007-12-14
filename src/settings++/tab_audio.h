@@ -51,6 +51,10 @@ class audio_panel : public abstract_panel
 		wxSlider* slider1;
 		wxSlider* slider2;
 		
+		wxSizer* parentSizer ;	// main window sizer (three columns)
+			wxSizer* childLSizer;
+			wxStaticBoxSizer* audioSizer;
+		
 		DECLARE_EVENT_TABLE()
 };
 
