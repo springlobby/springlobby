@@ -2,7 +2,6 @@
 
 #include <wx/intl.h>
 #include <wx/menu.h>
-#include <wx/msgdlg.h>
 #include <wx/string.h>
 
 #include "battlelistctrl.h"

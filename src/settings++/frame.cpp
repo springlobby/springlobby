@@ -22,7 +22,6 @@
 
 #include <wx/notebook.h>
 #include <wx/menu.h>
-#include <wx/msgdlg.h>
 #include <wx/icon.h>
 
 #include "frame.h"

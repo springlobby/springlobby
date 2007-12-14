@@ -5,6 +5,7 @@
 
 class Ui;
 class wxTimer;
+class wxIcon;
 
 //! @brief SpringLobby wxApp
 class SpringLobbyApp : public wxApp
