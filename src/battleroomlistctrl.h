@@ -8,6 +8,7 @@ class Battle;
 class Ui;
 struct BattleBot;
 //class wxMenuItem;
+class wxIcon;
 
 struct item_content {
   bool is_bot;
@@ -91,7 +92,9 @@ class BattleroomListCtrl : public wxListCtrl
 
     Ui& m_ui;
     static Ui* m_ui_for_sort;
-
+    
+    wxIcon* m_sl_icon;
+    
     DECLARE_EVENT_TABLE();
 
 };

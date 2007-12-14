@@ -11,6 +11,10 @@
 #include "revision.h"
 #include "stacktrace.h"
 
+#include "settings++/custom_msgbox.h"
+#include "images/springlobby.xpm"
+#include <wx/icon.h>
+
 
 // FIXME this does not work on linux+mingw build for windows
 #ifdef _MSC_VER
@@ -28,7 +32,7 @@ void DumpStackTraceToLog()
 
 #if wxUSE_STACKWALKER
 
-  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"),_("Critical error"), wxICON_ERROR );
+	customMessageBox(new wxIcon(springlobby_xpm), _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"),_("Critical error"), wxICON_ERROR );
 
   wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
 
@@ -41,7 +45,7 @@ void DumpStackTraceToLog()
 
   wxLogMessage( DebugInfo );
 #else
-  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker"),_("Critical error"), wxICON_ERROR );
+  customMessageBox(new wxIcon(springlobby_xpm), _("SpringLobby has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker"),_("Critical error"), wxICON_ERROR );
 #endif
 }
 

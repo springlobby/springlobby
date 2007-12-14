@@ -50,6 +50,7 @@ class SpringUnitSync : public IUnitSync
     bool IsLoaded();
 
     std::string GetSpringVersion();
+    bool VersionSupports( GameFeature feature );
 
     wxArrayString GetAIList();
 

@@ -2,7 +2,10 @@
 #define CHATLOG_H_INCLUDED
 
 #include <wx/string.h>
-#include <wx/file.h>
+//#include <wx/file.h> //moved to cpp in favour of forward declaration
+
+class wxIcon;
+class wxFile;
 
 class ChatLog
 {
@@ -22,6 +25,8 @@ class ChatLog
     wxString m_room;
     bool m_active;
     static bool m_parent_dir_exists;
+    
+    wxIcon* m_sl_icon;
 };
 
 #endif // CHATLOG_H_INCLUDED

@@ -18,7 +18,7 @@ class SinglePlayerBot
 {
   public:
 
-    SinglePlayerBot(): m_ally(-1),m_pos(-1) { }
+    SinglePlayerBot(): m_ally(-1),m_pos_x(0),m_pos_y(0) { }
     ~SinglePlayerBot() {}
 
     void SetAIDll( const wxString& dll ) { m_dll = dll; }
@@ -30,8 +30,11 @@ class SinglePlayerBot
     void SetSide( int side ) { m_side = side; }
     int GetSide() { return m_side; }
 
-    void SetPosistion( int pos ) { m_pos = pos; }
-    int GetPosistion() { return m_pos; }
+    void SetPosistion( int posx, int posy ) { m_pos_x = posx; m_pos_y = posy; }
+    void SetPosistionX( int pos ) { m_pos_x = pos; }
+    int GetPosistionX() { return m_pos_x; }
+    void SetPosistionY( int pos ) { m_pos_y = pos; }
+    int GetPosistionY() { return m_pos_y; }
 
     void SetHandicap( int handicap ) { m_handicap = handicap; }
     int GetHandicap() { return m_handicap; }
@@ -42,7 +45,8 @@ class SinglePlayerBot
   private:
 
     int m_ally;
-    int m_pos;
+    unsigned int m_pos_x;
+    unsigned int m_pos_y;
     int m_side;
     int m_handicap;
     wxString m_dll;

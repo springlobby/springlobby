@@ -95,6 +95,21 @@ std::string SpringUnitSync::GetSpringVersion()
 }
 
 
+bool SpringUnitSync::VersionSupports( GameFeature feature )
+{
+  wxString ver = WX_STRING( GetSpringVersion() );
+  float nver = 0;
+  if      ( ver == _T("0.75b2") ) nver = 75.2;
+  else if ( ver == _T("0.75b2+") ) nver = 76.0;
+  else if ( ver == _T("0.76b1") ) nver = 76.1;
+
+  switch (feature) {
+    case GF_XYStartPos: return nver >= 76.0;
+  }
+  return false;
+}
+
+
 int SpringUnitSync::GetNumMods()
 {
   wxLogDebugFunc( _T("") );
@@ -346,8 +361,9 @@ wxArrayString SpringUnitSync::GetAIList()
   wxLogDebugFunc( _T("") );
 
   int ini = susynclib()->InitFindVFS( _T("AI/Bot-libs/*") + wxString(DLL_EXTENSION) );
-  wxString FileName;
+
   wxArrayString ret;
+  wxString FileName;
 
   ini = susynclib()->FindFilesVFS( ini, FileName );
   while ( ini ) {

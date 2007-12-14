@@ -33,6 +33,8 @@
 #include "images/options_icon.xpm"
 #include "images/select_icon.xpm"
 
+#include "settings++/frame.h"
+
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
@@ -44,6 +46,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_USYNC, MainWindow::OnUnitSyncReload )
   EVT_MENU( MENU_TRAC, MainWindow::OnReportBug )
   EVT_MENU( MENU_DOC, MainWindow::OnShowDocs )
+  EVT_MENU( MENU_SETTINGSPP, MainWindow::OnShowSettingsPP )
 
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
 
@@ -68,6 +71,7 @@ MainWindow::MainWindow( Ui& ui ) :
   menuTools->Append(MENU_CHAT, _("Open &chat..."));
   menuTools->AppendSeparator();
   menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
+  menuTools->Append(MENU_SETTINGSPP, _("Settings++"));
 
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _("&About"));
@@ -98,23 +102,30 @@ MainWindow::MainWindow( Ui& ui ) :
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
-
+  
   m_func_tabs->AddPage( m_chat_tab, _T(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
-
+  
   SetSizer( m_main_sizer );
 
   SetSize( sett().GetMainWindowLeft(), sett().GetMainWindowTop(), sett().GetMainWindowWidth(), sett().GetMainWindowHeight() );
   Layout();
+  
+  se_frame_active = false;
 }
 
+void MainWindow::forceSettingsFrameClose()
+{
+	if (se_frame_active && se_frame != 0)
+		se_frame->handleExternExit();
+}
 
 MainWindow::~MainWindow()
-{
+{ 	
   int x, y, w, h;
   GetSize( &w, &h );
   sett().SetMainWindowHeight( h );
@@ -129,7 +140,7 @@ MainWindow::~MainWindow()
   delete m_battle_icon;
   delete m_options_icon;
   delete m_select_image;
-
+  
 }
 
 
@@ -325,7 +336,6 @@ void MainWindow::OnShowDocs( wxCommandEvent& event )
   m_ui.OpenWebBrowser( _T("http://springlobby.info") );
 }
 
-
 void MainWindow::OnTabsChanged( wxListbookEvent& event )
 {
   MakeImages();
@@ -338,7 +348,6 @@ void MainWindow::OnTabsChanged( wxListbookEvent& event )
   }
 }
 
-
 void MainWindow::OnUnitSyncReloaded()
 {
   wxLogDebugFunc( _T("") );
@@ -348,4 +357,12 @@ void MainWindow::OnUnitSyncReloaded()
   wxLogMessage( _T("Reloading Singleplayer tab") );
   GetSPTab().OnUnitSyncReloaded();
   wxLogMessage( _T("Singleplayer tab updated") );
+}
+
+void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
+{
+	se_frame = new settings_frame(this,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
+	  	    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+	se_frame_active = true;
+	se_frame->Show();
 }
