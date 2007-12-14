@@ -510,9 +510,17 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   int AllyConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
   int NumAllys = 0;
   int PlayerTeam = -1;
+  int starttype;
+
+  if ( usync()->VersionSupports( GF_XYStartPos ) ) starttype = 3;
+  else starttype = 0;
+
+  wxLogMessage( _T("StartPosType=") + WX_STRING( i2s( starttype ) ) );
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
-    BattleBot* bot = battle.GetBotByStartPosition( i );
+    BattleBot* bot;// = battle.GetBotByStartPosition( i );
+    if ( starttype == 3) bot = battle.GetBot( i );
+    else bot = battle.GetBotByStartPosition( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     if ( bot->aidll == "" ) PlayerTeam = i;
     if ( AllyConv[bot->bs.ally] == -1 ) AllyConv[bot->bs.ally] = NumAllys++;
@@ -528,7 +536,7 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   s += wxString::Format( _T("\tStartMetal=%d;\n"), battle.GetStartMetal() );
   s += wxString::Format( _T("\tStartEnergy=%d;\n"), battle.GetStartEnergy() );
   s += wxString::Format( _T("\tMaxUnits=%d;\n"), battle.GetMaxUnits() );
-  s += wxString::Format( _T("\tStartPosType=%d;\n"), battle.GetStartType() );
+  s += wxString::Format( _T("\tStartPosType=%d;\n"), starttype );
   s += wxString::Format( _T("\tGameMode=%d;\n"), battle.GetGameType() );
   s += WX_STRING(("\tGameType=" + usync()->GetModArchive(usync()->GetModIndex(STD_STRING(battle.GetModName()))) + ";\n"));
   s += wxString::Format( _T("\tLimitDGun=%d;\n"), battle.LimitDGun()?1:0 );
@@ -554,10 +562,16 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) { // TODO fix this when new Spring comes.
-    BattleBot* bot = battle.GetBotByStartPosition( i );
+    BattleBot* bot;
+    if ( starttype == 3) bot = battle.GetBot( i );
+    else bot = battle.GetBotByStartPosition( i );
+
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i );
-
+    if ( starttype == 3 ){
+      s += wxString::Format( _T("\t\tStartPosX=%d;\n"), bot->posx );
+      s += wxString::Format( _T("\t\tStartPosZ=%d;\n"), bot->posy );
+    }
     s += _T("\t\tTeamLeader=0;\n");
     s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[bot->bs.ally] );
     const char* old_locale = std::setlocale(LC_NUMERIC, "C");
@@ -570,14 +584,7 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
     s += WX_STRING(("\t\tSide=" + usync()->GetSideName( STD_STRING(battle.GetModName()), bot->bs.side ) + ";\n"));
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), bot->bs.handicap );
     if ( bot->aidll != "" ) {
-      wxString ai = WX_STRING( bot->aidll );
-      /*if ( wxFileName::FileExists( WX_STRING( sett().GetSpringDir() ) + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
-        ai += _T(".dll");
-      } else {
-        ai += _T(".so");
-      }*/
-      s += _T("\t\tAIDLL=") + ai + _T(";\n");
-      //s += _T("\t\tAIDLL=AI/Bot-libs/") + ai + _T(";\n");
+      s += _T("\t\tAIDLL=") + WX_STRING( bot->aidll ) + _T(";\n");
     }
     s +=  _T("\t}\n");
   }

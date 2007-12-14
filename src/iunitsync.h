@@ -45,6 +45,11 @@ struct UnitSyncMap
   MapInfo info;
 };
 
+typedef int GameFeature;
+enum {
+  GF_XYStartPos = 1
+};
+
 class IUnitSync
 {
   public:
@@ -82,6 +87,7 @@ class IUnitSync
     virtual bool IsLoaded() = 0;
 
     virtual std::string GetSpringVersion() = 0;
+    virtual bool VersionSupports( GameFeature feature ) = 0;
 
     virtual wxArrayString GetAIList() = 0;
 
