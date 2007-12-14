@@ -47,7 +47,8 @@ struct UnitSyncMap
 
 typedef int GameFeature;
 enum {
-  GF_XYStartPos = 1
+  GF_XYStartPos = 1,
+  USYNC_Sett_Handler = 2
 };
 
 class IUnitSync

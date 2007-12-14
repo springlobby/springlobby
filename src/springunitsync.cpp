@@ -105,6 +105,7 @@ bool SpringUnitSync::VersionSupports( GameFeature feature )
 
   switch (feature) {
     case GF_XYStartPos: return nver >= 76.0;
+    case USYNC_Sett_Handler: return nver >= 76.0;
   }
   return false;
 }

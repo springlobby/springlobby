@@ -71,7 +71,9 @@ MainWindow::MainWindow( Ui& ui ) :
   menuTools->Append(MENU_CHAT, _("Open &chat..."));
   menuTools->AppendSeparator();
   menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
-  menuTools->Append(MENU_SETTINGSPP, _("Settings++"));
+  m_settings_menu = new wxMenuItem( menuTools, MENU_SETTINGSPP, _("Settings++"), wxEmptyString, wxITEM_NORMAL );
+  menuTools->Append( m_settings_menu );
+  m_settings_menu->Enable( false ); /// disable the spring settings tool until we have unitsync loaded, so we know for sure it's working
 
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _("&About"));
@@ -102,19 +104,19 @@ MainWindow::MainWindow( Ui& ui ) :
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
-  
+
   m_func_tabs->AddPage( m_chat_tab, _T(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
-  
+
   SetSizer( m_main_sizer );
 
   SetSize( sett().GetMainWindowLeft(), sett().GetMainWindowTop(), sett().GetMainWindowWidth(), sett().GetMainWindowHeight() );
   Layout();
-  
+
   se_frame_active = false;
 }
 
@@ -125,7 +127,7 @@ void MainWindow::forceSettingsFrameClose()
 }
 
 MainWindow::~MainWindow()
-{ 	
+{
   int x, y, w, h;
   GetSize( &w, &h );
   sett().SetMainWindowHeight( h );
@@ -140,7 +142,7 @@ MainWindow::~MainWindow()
   delete m_battle_icon;
   delete m_options_icon;
   delete m_select_image;
-  
+
 }
 
 
@@ -357,6 +359,16 @@ void MainWindow::OnUnitSyncReloaded()
   wxLogMessage( _T("Reloading Singleplayer tab") );
   GetSPTab().OnUnitSyncReloaded();
   wxLogMessage( _T("Singleplayer tab updated") );
+  if ( usync()->VersionSupports( USYNC_Sett_Handler ) )
+  {
+    m_settings_menu->Enable( true );
+    wxLogMessage( _T("SpringSettingsTool Enabled") );
+  }
+  else
+  {
+    m_settings_menu->Enable( false );
+    wxLogMessage( _T("SpringSettingsTool Disabled") );
+  }
 }
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent& event )

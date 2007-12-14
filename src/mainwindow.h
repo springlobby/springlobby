@@ -18,6 +18,7 @@ class wxBitmap;
 class wxImageList;
 class ChatPanel;
 class settings_frame;
+class wxMenuItem;
 
 // FIXME shouldn't copy this here
 typedef wxWindow wxNotebookPage;
@@ -56,6 +57,7 @@ class MainWindow : public wxFrame
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
 
+
     void OnTabsChanged( wxListbookEvent& event );
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab();
@@ -68,6 +70,8 @@ class MainWindow : public wxFrame
     // MainWindow variables
 
     Ui& m_ui;
+
+    wxMenuItem* m_settings_menu;
 
     wxBoxSizer* m_main_sizer;
     wxListbook* m_func_tabs;
@@ -85,7 +89,7 @@ class MainWindow : public wxFrame
     wxBitmap* m_select_image;
 
     wxImageList* m_func_tab_images;
-    
+
     settings_frame* se_frame;
     bool se_frame_active;
 
