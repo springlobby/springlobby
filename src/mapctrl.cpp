@@ -16,6 +16,7 @@
 #include "utils.h"
 #include "ui.h"
 #include "server.h"
+#include "ibattle.h"
 
 #include "images/close.xpm"
 #include "images/close_hi.xpm"
@@ -147,7 +148,8 @@ wxRect MapCtrl::_GetStartRect( const BattleStartRect& sr )
 
 int MapCtrl::_GetNewRectIndex()
 {
-  for (int i = 0; i < 16; i++ ) {
+  ASSERT_LOGIC ( m_battle, _T("getting a rectangle index not in a battle"));
+  for ( std::vector<BattleStartRect*>::size_type i = 0; i < m_battle->GetNumRects() ; i++ ) {
     wxRect r = _GetStartRect( i );
     if ( r.IsEmpty() ) return i;
   }

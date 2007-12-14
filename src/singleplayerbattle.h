@@ -95,6 +95,8 @@ class SinglePlayerBattle: public IBattle
 
     void SendHostInfo( HostInfo update );
 
+    std::vector<BattleStartRect*>::size_type GetNumRects() { return 0; }
+
   protected:
 
     Ui& m_ui;

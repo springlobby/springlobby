@@ -4,6 +4,7 @@
 
 #include <wx/string.h>
 #include <list>
+#include <vector>
 
 #include "iunitsync.h"
 #include "user.h"
@@ -134,6 +135,8 @@ class IBattle
     virtual std::string DisabledUnits();
 
     virtual void OnUnitSyncReloaded();
+
+    virtual std::vector<BattleStartRect*>::size_type GetNumRects() =0;
 
   protected:
 
