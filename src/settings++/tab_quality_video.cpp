@@ -158,6 +158,7 @@ void tab_quality_video::initAASizer(wxFlexGridSizer* sizer){
 	wxSizer* subsizer = new wxBoxSizer(wxVERTICAL);
 
 	ctrl_fsaa_slider = new wxSlider(this, VO_SLI[0].id,  0, 0, 16, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	ctrl_fsaa_slider->SetToolTip(VO_SLI[0].tTip[0]);
 	subsizer->Add(new wxStaticText(this, -1, (VO_SLI[0].lbl)), 0, wxTOP|wxEXPAND, 10);
 	subsizer->Add(ctrl_fsaa_slider, 0, wxALIGN_LEFT|wxBOTTOM|wxEXPAND, 5);
 	sizer->Add(subsizer);
@@ -185,11 +186,11 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
 : abstract_panel(parent, id , title , pos , size, style) {
 	ctrl_qa_Boxes = new wxCheckBox*[ctrl_qa_Boxes_size];
 	ctrl_vo_Boxes = new wxCheckBox*[ctrl_vo_Boxes_size];
-	 parentSizer = new wxFlexGridSizer(2,0,0);	
+	 parentSizer = new wxFlexGridSizer(3,0,0);	
 	 leftSizer = new wxFlexGridSizer(1,15,0);
 	 middleSizer = new wxFlexGridSizer(1,15,0);
-	//wxSizer* rightSizer = new wxFlexGridSizer(1,15,0);//for info
-	 SizerA = new wxFlexGridSizer(1,10,10);
+	 rightSizer = new wxFlexGridSizer(1,15,0);//for info
+	 SizerA = new wxFlexGridSizer(1,15,10);
 	 SizerB = new wxFlexGridSizer(1,15,10);
 	 SizerC = new wxFlexGridSizer(1,15,10);
 	 SizerD = new wxFlexGridSizer(1,5,10);
@@ -220,14 +221,15 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
 
 	boxA->Add(SizerA,1,wxEXPAND);
 	boxB->Add(SizerB,1,wxEXPAND);
-	boxC->Add(SizerC,0);
+	boxC->Add(SizerC,1,wxEXPAND);
 	boxD->Add(SizerD,1,wxEXPAND);
 	leftSizer->Add(boxB,1,wxEXPAND|wxALL,5);
-	leftSizer->Add(boxC,1,wxEXPAND|wxALL);
+	rightSizer->Add(boxC,1,wxEXPAND|wxALL,5);
 	middleSizer->Add(boxA,1,wxEXPAND|wxALL,5);
-	middleSizer->Add(boxD,1,wxEXPAND|wxALL);
-	parentSizer->Add(leftSizer,2,wxALIGN_LEFT|wxALIGN_TOP |wxALL|wxEXPAND,10);
-	parentSizer->Add(middleSizer,2,wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND,10);
+	leftSizer->Add(boxD,1,wxEXPAND|wxALL,5);
+	parentSizer->Add(leftSizer,0,wxALL|wxEXPAND,10);
+	parentSizer->Add(middleSizer,0,wxALL|wxEXPAND,10);
+	parentSizer->Add(rightSizer,0,wxALL|wxEXPAND,10);
 
 	updateControls(UPDATE_ALL);
 	

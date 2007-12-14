@@ -34,6 +34,7 @@
 #include "Defs.hpp"
 #include "presets.h"
 #include "frame.h"
+#include "se_settings.h"
 
 const wxString infoTextContent= _T("These options let you roughly control Spring's rendering.\n"
 									"For more speed try lowering the settings.\n"
@@ -55,22 +56,29 @@ const wxString button_lbl = _T("Switch to expert mode");
 void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 	sizer->Add(new wxStaticText(this, -1, renderQuality_CBX_lbl) , 0,wxTOP|wxBOTTOM,15);
 	
-	renderQuality_CBX = new wxComboBox(this, ID_SIMPLE_QUAL_CBX, levels_vlow_To_vHigh[0], wxDefaultPosition, wxSize(220,21), 
-			5,levels_vlow_To_vHigh,wxCB_DROPDOWN|wxCB_READONLY);
+	renderQuality_CBX = new wxComboBox(this, ID_SIMPLE_QUAL_CBX, OptionsHandler.getSimpleQuality(), wxDefaultPosition, wxSize(220,21), 
+			levels_vlow_To_vHigh_size,levels_vlow_To_vHigh,wxCB_DROPDOWN|wxCB_READONLY);
+	renderQuality_CBX->SetToolTip(_T("Sets all quality options to predefined values according to your choice."));
 	sizer->Add(renderQuality_CBX, 0, wxTOP|wxBOTTOM, 15);	
-
+	
 	sizer->Add(new wxStaticText(this, -1,renderDetail_CBX_lbl  ), 0,wxALL);
-	renderDetail_CBX = new wxComboBox(this, ID_SIMPLE_DETAIL_CBX, levels_low_To_High[0], wxDefaultPosition, wxSize(220,21), 
-			3,levels_low_To_High,wxCB_DROPDOWN|wxCB_READONLY);
+	renderDetail_CBX = new wxComboBox(this, ID_SIMPLE_DETAIL_CBX, OptionsHandler.getSimpleDetail(), wxDefaultPosition, wxSize(220,21), 
+			levels_low_To_High_size,levels_low_To_High,wxCB_DROPDOWN|wxCB_READONLY);
+	renderDetail_CBX->SetToolTip(_T("Sets all detail options to predefined values according to your choice."));
 	sizer->Add(renderDetail_CBX, 0, wxBOTTOM, 15);	
 
 	sizer->Add(new wxStaticText(this, -1,  videoMode_CBX_lbl ), 0,wxALL);
-	videoMode_CBX = new wxComboBox(this, ID_SIMPLE_MODE_CBX, vl_Resolution_Str[0], wxDefaultPosition, wxSize(220,21), 
+	videoMode_CBX = new wxComboBox(this, ID_SIMPLE_MODE_CBX, OptionsHandler.getSimpleRes(), wxDefaultPosition, wxSize(220,21), 
 			vl_Resolution_Str_size,vl_Resolution_Str,wxCB_DROPDOWN|wxCB_READONLY);
+	videoMode_CBX->SetToolTip(_T("Select the resolution fitting your monitor(s).\n"
+			"Selecting a dual screen resolution will automatically enable dual screen mode.\n"
+			"If the appropiate resolution is not available you can set it manually in expert mode.\n"
+			"Please also contact the author so it can be added in future releases."));
 	sizer->Add(videoMode_CBX, 0, wxBOTTOM, 15);	
 	
 	sizer->Add(new wxStaticText(this, -1, (AO_SLI[1].lbl)), 0, wxTOP, 15);
 	audioVolume_SLI =  new wxSlider(this, AO_SLI[1].id,0, 0, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	audioVolume_SLI->SetToolTip(AO_SLI[1].tTip[0]);
 	sizer->Add(audioVolume_SLI, 0, wxBOTTOM, 15);	
 }
 
@@ -140,15 +148,22 @@ void tab_simple::OnComboBoxChange(wxCommandEvent& event)
 	abstract_panel::OnComboBoxChange(event);
 }
 
-void tab_simple::setTabs(abstract_panel* a,abstract_panel* b)
-{
-	detailTab = a;
-	qualityTab = b;
-}
+//void tab_simple::setTabs(abstract_panel* a,abstract_panel* b)
+//{
+//	detailTab = a;
+//	qualityTab = b;
+//}
 
 void tab_simple::OnButtonClick(wxCommandEvent& event)
 {
 	origin->switchToExpertMode();
+}
+
+void tab_simple::saveCbxChoices()
+{
+	OptionsHandler.setSimpleDetail(renderDetail_CBX->GetValue());
+	OptionsHandler.setSimpleRes(videoMode_CBX->GetValue());
+	OptionsHandler.setSimpleQuality(renderQuality_CBX->GetValue());
 }
 
 BEGIN_EVENT_TABLE(tab_simple, abstract_panel)

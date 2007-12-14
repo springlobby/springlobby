@@ -41,9 +41,10 @@ public:
 		presetValues ( wxString key_arg,const wxString* levelLabels,const T* values_arg);
 	
 };
-
-const wxString levels_low_To_High[3] = { wxT("low"),wxT("medium"),wxT("high")};
-const wxString levels_vlow_To_vHigh[5] = { wxT("very low"),wxT("low"),wxT("medium"),wxT("high"),wxT("very high")};
+const int levels_low_To_High_size = 3;
+const int levels_vlow_To_vHigh_size =5;
+const wxString levels_low_To_High[levels_low_To_High_size] = { wxT("low"),wxT("medium"),wxT("high")};
+const wxString levels_vlow_To_vHigh[levels_vlow_To_vHigh_size] = { wxT("very low"),wxT("low"),wxT("medium"),wxT("high"),wxT("very high")};
 
 //TODO generally rethink preset values
 /** RENDER_DETAIL ***************************************************************/
@@ -55,7 +56,7 @@ const int vl_GrassDetail[3] = 			{ 0,		5,		10		}; //grass detail
 const int vl_GroundDecals[3] = 			{ 0,		50,		100		}; // ground decals
 const int vl_UnitIconDist[3] = 			{ 100,		550,	1000	}; // unit icon distance
 const int vl_MaxParticles[3] = 			{ 100,		9950,	20000	};
-const int vl_SM3MaxTextureStages[3] = 	{ 1,		10,		20		};
+const int vl_SM3MaxTextureStages[3] = 	{ 1,		6,		20		};
 
 const presetValues<int, 3> pr_ShadowMapSize = presetValues<int, 3>(wxT("ShadowMapSize"),levels_low_To_High,vl_ShadowMapSize);
 const presetValues<int, 3> pr_TreeRadius = presetValues<int, 3>(wxT("TreeRadius"),levels_low_To_High,vl_TreeRadius);
@@ -103,11 +104,13 @@ const presetValues<int, 5> prVal_RenderQuality[prVal_RenderQuality_size] = { pr_
 
 
 /** VIDEO MODES ********************************************************/
-const int vl_Resolution_X[7] = { 800, 1024, 1280, 1600, 1280, 1440, 1920};
-const int vl_Resolution_Y[7] = { 600,  768, 1024, 1200,  800,  900, 1200};
-const int vl_Resolution_Str_size = 7;
+const int vl_Resolution_X[10] = { 800, 1024, 1280, 1600, 1280, 1440, 1920, 2048, 2560, 3200};
+const int vl_Resolution_Y[10] = { 600,  768, 1024, 1200,  800,  900, 1200,  768, 1024, 1200};
+const int vl_Resolution_Str_size = 10;
+const int vl_Resolution_startOfDualScreenRes = 7;
 const wxString vl_Resolution_Str[vl_Resolution_Str_size] = { wxT("800 x 600"), wxT("1024 x 768"), wxT("1280 x 1024"),
-		wxT("1600 x 1200"), wxT("1280 x 800 (widescreen)"), wxT("1440 x 900 (widescreen)"), wxT("1920 x 1200 (widescreen)")};
+		wxT("1600 x 1200"), wxT("1280 x 800 (widescreen)"), wxT("1440 x 900 (widescreen)"), wxT("1920 x 1200 (widescreen)"),
+		wxT("2048 x 768 (dual-screen)"), wxT("2560 x 1024 (dual-screen)"), wxT("3200 x 1200 (dual-screen)")};
 
 
 #endif /*PRESETS_H_*/

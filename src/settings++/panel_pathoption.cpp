@@ -38,10 +38,6 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 														"the \"Use these Paths\" button to try again."),
 														wxDefaultPosition,wxSize(450,-1));
 	
-	usync_loc_lbl->SetToolTip(_T("unitsync.so on linux, unitsync.dll on windows"));
-	springdir_lbl->SetToolTip(_T("the datadir on linux (/home/user/.spring/ is standard)"
-								",\n the path you specified in the installer on windows"));
-	
 	springdir_browse_btn = new wxButton(this, ID_PATH_SPRINGDIR_BTN, _T("Browse") );
 	paths_ok_btn = new wxButton(this,ID_PATH_OK_BTN,_T("Use these paths"),wxDefaultPosition ,wxSize(-1,-1), wxBU_EXACTFIT);
 	usync_browse_btn = new wxButton(this, ID_PATH_USYNC_BTN, _T("Browse") ); 
@@ -49,7 +45,9 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 	springdir_ctrl = new wxTextCtrl(this,-1,OptionsHandler.getSpringDir(), wxDefaultPosition,wxSize(400,-1)); 
 
 	usync_ctrl = new wxTextCtrl(this,-1,OptionsHandler.getUsyncLoc(), wxDefaultPosition,wxSize(400,-1));
-	
+	usync_ctrl->SetToolTip(_T("unitsync.so on linux, unitsync.dll on windows"));
+	springdir_ctrl->SetToolTip(_T("the datadir on linux (/home/user/.spring/ is standard)"
+									",\n the path you specified in the installer on windows"));
 
 	usync_sizer =  new wxFlexGridSizer(1,5,5);	
 	springdir_sizer = new wxFlexGridSizer(1,5,5);

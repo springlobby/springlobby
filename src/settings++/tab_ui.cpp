@@ -34,6 +34,7 @@ void tab_ui::initScrollSpeedSizer(wxStaticBoxSizer* sizer) {
 	for (int i = 0; i < ctrl_scroll_slider_size; i++) {
 		//set to dummy value
 		ctrl_scroll_slider[i] = new wxSlider(this, MO_SLI[i].id, 0, 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+		ctrl_scroll_slider[i]->SetToolTip(MO_SLI[i].tTip[0]);
 		if (i > 0)
 			sizer->Add(5,32,0);
 		sizer->Add(new wxStaticText(this, wxID_ANY, (MO_SLI[i].lbl), wxDefaultPosition, wxDefaultSize, 10),1,wxEXPAND);
@@ -48,7 +49,14 @@ void tab_ui::initCameraSizer(wxStaticBoxSizer* sizer) {
 	ctrl_cam_radio2 = new wxRadioButton(this, MO_RBUT[2].id, (MO_RBUT[2].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
 	ctrl_cam_radio3 = new wxRadioButton(this, MO_RBUT[3].id, (MO_RBUT[3].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
 	ctrl_cam_radio4 = new wxRadioButton(this, MO_RBUT[4].id, (MO_RBUT[4].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
-
+	
+	ctrl_cam_radio0->SetToolTip(MO_RBUT[0].tTip[0]);
+	ctrl_cam_radio1->SetToolTip(MO_RBUT[1].tTip[0]);
+	ctrl_cam_radio2->SetToolTip(MO_RBUT[2].tTip[0]);
+	ctrl_cam_radio3->SetToolTip(MO_RBUT[3].tTip[0]);
+	ctrl_cam_radio4->SetToolTip(MO_RBUT[4].tTip[0]);
+	
+	
 	sizer->Add(ctrl_cam_radio0, 0, wxTOP, 10);
 	sizer->Add(ctrl_cam_radio1, 0, wxTOP, 5);
 	sizer->Add(ctrl_cam_radio2, 0, wxTOP, 5);
@@ -62,6 +70,7 @@ void tab_ui::initUiOptSizer(wxStaticBoxSizer* sizer)
 	for (int i = 0; i < ctrl_ui_chkb_size; i++) {
 		ctrl_ui_chkb[i] = new wxCheckBox(this, UI_CBOX[i].id, (UI_CBOX[i].lbl));
 			subSizer->Add(ctrl_ui_chkb[i], 0, wxTOP, 5);
+			ctrl_ui_chkb[i]->SetToolTip(UI_CBOX[i].tTip[0]);
 		}
 	sizer->Add(subSizer);
 	sizer->Add(0,5,0);

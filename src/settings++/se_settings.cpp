@@ -12,7 +12,8 @@
 #include <wx/dir.h>
 #include <wx/file.h>
 #include "../nonportable.h"
-#include <string>
+#include "presets.h" 
+//#include <string>
 
 
 se_settings* se_settings::instance = 0;
@@ -44,32 +45,31 @@ se_settings::~se_settings()
 int se_settings::getMode()
 {
 	int mode;
-	se_config->Read( _T("/SettingsPP/mode"), &mode, SET_MODE_SIMPLE );
+	se_config->Read( _T("/SpringSettings/mode"), &mode, SET_MODE_SIMPLE );
 	return mode;
 }
 
 void se_settings::setMode(int mode)
 {
-	se_config->Write( _T("/SettingsPP/mode"), mode );
+	se_config->Write( _T("/SpringSettings/mode"), mode );
 }
 
 bool se_settings::getDisableWarning()
 {
 	bool tmp;
-	se_config->Read( _T("/SettingsPP/disableWarning"), &tmp, false );
+	se_config->Read( _T("/SpringSettings/disableWarning"), &tmp, false );
 	return tmp;
 }
 
 void se_settings::setDisableWarning(bool disable)
 {
-	se_config->Write( _T("/SettingsPP/disableWarning"), disable);
+	se_config->Write( _T("/SpringSettings/disableWarning"), disable);
 }
 
 wxString se_settings::getUsyncLoc()
 {
 	wxString def;
 	def = AutoFindUnitSyncLib(def);
-	
 	return (se_config->Read( _T("/Spring/unitsync_loc"), def ));
 }
 
@@ -81,13 +81,50 @@ void se_settings::setUsyncLoc(wxString loc)
 wxString se_settings::getSpringDir()
 {
 	wxString def;
-	def= AutoFindSpringDir(def);
-	return se_config->Read( _T("/Spring/dir"), def );
+	def= AutoFindSpringDir(def); 
+	se_config->Read( _T("/Spring/dir"), def );
+	return def;
 }
 void se_settings::setSpringDir(wxString spring_dir)
 {
 	se_config->Write( _T("/Spring/dir"), spring_dir );
 }
+
+wxString se_settings::getSimpleRes()
+{
+	wxString def = vl_Resolution_Str[1];
+	se_config->Read( _T("/SpringSettings/SimpleRes"),&def);
+	return def;
+}
+void se_settings::setSimpleRes(wxString res)
+{
+	se_config->Write(_T("/SpringSettings/SimpleRes"),res);
+}
+
+wxString se_settings::getSimpleQuality()
+{
+	wxString def = wxT("medium");
+	se_config->Read( _T("/SpringSettings/SimpleQuality"),&def);
+	return def;
+}
+
+void se_settings::setSimpleQuality(wxString qual)
+{
+	se_config->Write(_T("/SpringSettings/SimpleQuality"),qual);
+}
+
+wxString se_settings::getSimpleDetail()
+{
+	wxString def = wxT("medium");
+	se_config->Read( _T("/SpringSettings/SimpleDetail"),&def);
+	return def;
+}
+
+void se_settings::setSimpleDetail(wxString det)
+{
+	se_config->Write(_T("/SpringSettings/SimpleDetail"),det);
+}
+	
 
 /*copied from springlobby source*/
 wxString se_settings::AutoFindSpringDir( const wxString& def )

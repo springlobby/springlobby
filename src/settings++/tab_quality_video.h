@@ -69,7 +69,7 @@ class tab_quality_video : public abstract_panel
 		wxSizer* parentSizer ;	
 			wxSizer* leftSizer ;
 			wxSizer* middleSizer;
-			//wxSizer* rightSizer = new wxFlexGridSizer(1,15,0);//for info
+			wxSizer* rightSizer;
 			wxFlexGridSizer* SizerA ;
 			wxFlexGridSizer* SizerB ;
 			wxFlexGridSizer* SizerC ;

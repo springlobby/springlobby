@@ -41,6 +41,17 @@
 
 #include "../images/springsettings.xpm"
 
+const wxString simpleTabCap= _T("Combined Options");
+const wxString qualityTabCap= _T("Render quality / Video mode");
+const wxString detailTabCap = _T("Render detail");
+const wxString debugTabCap = _T("Debug");
+const wxString uiTabCap= _T("UI options");
+const wxString audioTabCap = _T("Audio");
+const wxString expertModeWarning = _T("Changes made on Quality/Detail tab in expert mode"
+									"\n will be lost if you change simple options again.\n"
+									"Also these changes WILL NOT be reflected by the \n"
+									"selected choices on the Combined options tab.\n"
+									"(this message can be disabled in the \"File\" menu)");
 
 BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_CLOSE(settings_frame::OnClose)
@@ -101,11 +112,14 @@ void settings_frame::handleExternExit()
 	if ( !alreadyCalled){
 		alreadyCalled = true;
 		if (abstract_panel::settingsChanged)
-		{	//TODO use custom frame for to set icon
+		{	
 			int choice = customMessageBox(settingsIcon,wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"), wxYES_NO |wxICON_QUESTION,this);	
 			if ( choice == wxYES)
-						  abstract_panel::saveSettings();	
-			//abstract_panel::settingsChanged = false;   
+			{
+				abstract_panel::saveSettings();
+				if (simpleTab)
+					simpleTab->saveCbxChoices();
+			}
 		}
 		
 	}
@@ -120,6 +134,8 @@ void settings_frame::handleExit() {
         case wxYES:
         	if (abstract_panel::saveSettings())
         				 (abstract_panel::settingsChanged) = false;
+        	if (simpleTab)
+        						simpleTab->saveCbxChoices();
         case wxNO:
 	        	OptionsHandler.save();
         	    Destroy();

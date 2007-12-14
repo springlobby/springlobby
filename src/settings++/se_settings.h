@@ -22,6 +22,12 @@ public:
 	wxString getSpringDir();
 	void setUsyncLoc(wxString);
 	void setSpringDir(wxString);
+	wxString getSimpleRes();
+	void setSimpleRes(wxString);
+	wxString getSimpleQuality();
+	void setSimpleQuality(wxString);
+	wxString getSimpleDetail();
+	void setSimpleDetail(wxString);
 	static se_settings& getInstance();
 	void save();
 	

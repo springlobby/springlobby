@@ -38,13 +38,13 @@
 #include "../utils.h"
 #include "Defs.hpp"
 #include "se_utils.h"
+#include "se_settings.h"
 #include "presets.h"
 
 intMap abstract_panel::intSettings;
 //stringMap abstract_panel::stringSettings;
 //floatMap abstract_panel::floatSettings;
 
-//TODO why does this get true on startup?
 bool abstract_panel::settingsChanged = false;
 
 const int allControls_size = 61;
@@ -389,11 +389,11 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		case ID_SIMPLE_DETAIL_CBX:
 		{
 			for (int i=0; i<prVal_RenderDetail_size;++i)
-						{
-							presetValues<int,3> pop = prVal_RenderDetail[i]; 
-							 int k = (pop.values[choice]);
-							(intSettings)[prVal_RenderDetail[i].key]= k;
-						}
+			{
+				presetValues<int,3> pop = prVal_RenderDetail[i]; 
+				 int k = (pop.values[choice]);
+				(intSettings)[prVal_RenderDetail[i].key]= k;
+			}
 			break;
 		}
 		case ID_SIMPLE_MODE_CBX:
@@ -408,6 +408,10 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 			{
 				(intSettings)[wxT("XResolution")] = vl_Resolution_X[modeIndex];
 				(intSettings)[wxT("YResolution")] = vl_Resolution_Y[modeIndex];
+				if (modeIndex > vl_Resolution_startOfDualScreenRes)
+					(intSettings)[wxT("DualScreenMode")] = 1;
+				else
+					(intSettings)[wxT("DualScreenMode")] = 0;
 			}
 			break;
 		}
@@ -435,7 +439,7 @@ bool abstract_panel::saveSettings() {
     	customMessageBox(new wxIcon(springsettings_xpm),_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK|wxICON_HAND, 0);
     	return false;
     }
-    //TODO is sth actually done with returnvalue?
+    
     return true; 
 }
 
