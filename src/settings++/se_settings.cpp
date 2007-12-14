@@ -31,9 +31,14 @@ void se_settings::save()
 	se_config->Flush();
 }
 
+void se_settings::reload()
+{
+	delete se_config;
+	se_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
+}
+
 se_settings::se_settings()
 {
-	//TODO think about standalone
 	se_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
 }
 

@@ -29,6 +29,7 @@ public:
 	wxString getSimpleDetail();
 	void setSimpleDetail(wxString);
 	static se_settings& getInstance();
+	void reload();
 	void save();
 	
 private:

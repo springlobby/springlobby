@@ -63,6 +63,7 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 {
 	alreadyCalled = false;
 	parentWindow = parent;
+	OptionsHandler.reload();
 	wxSetWorkingDirectory(OptionsHandler.getSpringDir());
 	susynclib()->Load(OptionsHandler.getUsyncLoc());
 	
