@@ -138,7 +138,7 @@ void AddBotDialog::ReloadAIList()
     m_ai->SetStringSelection( WX_STRING(sett().GetLastAI()) );
     if ( m_ai->GetStringSelection() == wxEmptyString ) m_ai->SetSelection( 0 );
   } else {
-    customMessageBox(m_sl_icon, _("No AI bots found in your Spring installation."), _("No bot-libs found"), wxOK, this );
+    customMessageBox(SL_MAIN_WINDOW_PTR, m_sl_icon, _("No AI bots found in your Spring installation."), _("No bot-libs found"), wxOK);
   }
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
 }

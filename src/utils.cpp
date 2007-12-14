@@ -32,7 +32,7 @@ void DumpStackTraceToLog()
 
 #if wxUSE_STACKWALKER
 
-	customMessageBox(new wxIcon(springlobby_xpm), _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"),_("Critical error"), wxICON_ERROR );
+	customMessageBox(SL_MAIN_WINDOW_PTR, new wxIcon(springlobby_xpm), _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"),_("Critical error"), wxICON_ERROR );
 
   wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
 
@@ -45,7 +45,7 @@ void DumpStackTraceToLog()
 
   wxLogMessage( DebugInfo );
 #else
-  customMessageBox(new wxIcon(springlobby_xpm), _("SpringLobby has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker"),_("Critical error"), wxICON_ERROR );
+  customMessageBox(SL_MAIN_WINDOW_PTR, new wxIcon(springlobby_xpm), _("SpringLobby has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker"),_("Critical error"), wxICON_ERROR );
 #endif
 }
 

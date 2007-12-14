@@ -228,7 +228,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
 
     if ( serverString.GetCount() == 0 ) {
       wxLogWarning( _T("Invalid port or servername.") );
-      customMessageBox(m_sl_icon, _("Invalid host/port or servername."), _("Invalid host"), wxOK );
+      customMessageBox(SL_MAIN_WINDOW_PTR, m_sl_icon, _("Invalid host/port or servername."), _("Invalid host"), wxOK );
       return;
     }
 
@@ -236,12 +236,12 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
       long port;
       if( !serverString[1].ToLong( &port ) ) {
         wxLogWarning( _T("Invalid port.") );
-        customMessageBox(m_sl_icon, _("Invalid port."), _("Invalid port"), wxOK );
+        customMessageBox(SL_MAIN_WINDOW_PTR, m_sl_icon, _("Invalid port."), _("Invalid port"), wxOK );
         return;
       }
       if( port < 1 || port > 65535) {
         wxLogWarning( _T("port number out of range") );
-        customMessageBox(m_sl_icon, _("Port number out of range.\n\nIt must be an integer between 1 and 65535"), _("Invalid port"), wxOK );
+        customMessageBox(SL_MAIN_WINDOW_PTR, m_sl_icon, _("Port number out of range.\n\nIt must be an integer between 1 and 65535"), _("Invalid port"), wxOK );
         return;
       }
       sett().AddServer( STD_STRING( HostAddress ) );
@@ -251,7 +251,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
 
     if ( serverString.GetCount() != 1 && serverString.GetCount() != 2 ) {
       wxLogWarning( _T("invalid host/port.") );
-      customMessageBox(m_sl_icon, _("Invalid host/port."), _("Invalid host"), wxOK );
+      customMessageBox(SL_MAIN_WINDOW_PTR, m_sl_icon, _("Invalid host/port."), _("Invalid host"), wxOK );
       return;
     }
 
@@ -265,11 +265,11 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
        m_nick_text->SetValue(m_regnick_text->GetValue());
        m_pass_text->SetValue(m_regpass1_text->GetValue());
        Show();
-       customMessageBox(m_sl_icon, _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
+       customMessageBox(SL_MAIN_WINDOW_PTR, m_sl_icon, _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
     } else {
        Show();
        wxLogWarning( _T("registration failed.") );
-       customMessageBox(m_sl_icon, _("Registration failed."), _("Registration failed"), wxOK );
+       customMessageBox(SL_MAIN_WINDOW_PTR, m_sl_icon, _("Registration failed."), _("Registration failed"), wxOK );
     }
 
   }

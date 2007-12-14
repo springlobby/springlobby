@@ -233,7 +233,7 @@ void HostBattleDialog::OnOk( wxCommandEvent& event )
 {
   if ( m_mod_pic->GetSelection() == wxNOT_FOUND ) {
     wxLogWarning( _T("no mod selected") );
-    customMessageBox(m_sl_icon, _("You have to select a mod first."), _("No mod selected."), wxOK );
+    customMessageBox(SL_MAIN_WINDOW_PTR, m_sl_icon, _("You have to select a mod first."), _("No mod selected."), wxOK );
     return;
   }
 

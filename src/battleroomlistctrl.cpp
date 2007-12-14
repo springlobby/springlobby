@@ -478,12 +478,12 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
     long handicap;
     if ( !dlg.GetValue().ToLong( &handicap ) ) {
      wxLogWarning( _T("input is not a number") );
-     customMessageBox(m_sl_icon, _("Not a number"), _("Invalid number") );
+     customMessageBox(SL_MAIN_WINDOW_PTR, m_sl_icon, _("Not a number"), _("Invalid number") );
      return;
     }
     if ( handicap < 0 || handicap > 100 ) {
       wxLogWarning( _T("input value is out of range") );
-      customMessageBox(m_sl_icon, _("Value out of range.\n Enter an integer between 0 & 100."), _("Invalid number") );
+      customMessageBox(SL_MAIN_WINDOW_PTR, m_sl_icon, _("Value out of range.\n Enter an integer between 0 & 100."), _("Invalid number") );
       return;
     }
     if ( m_sel_bot != 0 ) {
