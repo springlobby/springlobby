@@ -17,7 +17,6 @@ class SinglePlayerBattle;
 class BattleBot;
 class ChatPanel;
 class UnitSyncThread;
-class wxIcon;
 
 typedef int HostInfo;
 
@@ -163,8 +162,7 @@ class Ui
     Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
-    
-    wxIcon* m_sl_icon;
+   
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_UI_H

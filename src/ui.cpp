@@ -40,8 +40,6 @@ Ui::Ui() :
   m_main_win(0),
   m_con_win(0)
 {
-  m_sl_icon = new wxIcon(springlobby_xpm);
-
   ReloadUnitSync();
 
   m_main_win = new MainWindow( *this );
@@ -320,7 +318,7 @@ void Ui::OpenWebBrowser( const wxString& url )
       if ( !wxLaunchDefaultBrowser( url ) )
       {
         wxLogWarning( _T("can't't launch default browser") );
-        customMessageBox(m_sl_icon, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+        customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
       }
     }
     else
@@ -328,7 +326,7 @@ void Ui::OpenWebBrowser( const wxString& url )
       if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
       {
         wxLogWarning( _T("can't launch browser: ") + sett().GetWebBrowserPath() );
-        customMessageBox(m_sl_icon, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
+        customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
       }
     }
   } catch (...){}
@@ -476,11 +474,11 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
         message += _T(" (") +  WX_STRING( m_server_spring_ver ) + _T(").\n\n");
         message += _("Online play will be disabled.");
         wxLogWarning ( _T("server not supports current spring version") );
-        customMessageBox (m_sl_icon, message, _("Spring error"), wxICON_EXCLAMATION );
+        customMessageBox (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION );
       } catch (...) {}
     } else {
       wxLogWarning( _T("can't get spring version from unitsync") );
-      customMessageBox(m_sl_icon, _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
+      customMessageBox(SL_MAIN_ICON, _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
     }
   }
   server.uidata.panel->StatusMessage( _T("Connected to ") + WX_STRING(server_name) + _T(".") );
@@ -778,12 +776,12 @@ void Ui::OnJoinedBattle( Battle& battle )
 <<<<<<< HEAD:src/ui.cpp
     wxLogWarning( _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online.") );
 =======
-    customMessageBox(m_sl_icon, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
+    customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
 >>>>>>> 6abeaad... experimental replace of customMessageBox with wxLogWarning and wxLogMessage:src/ui.cpp
   }*/
   if ( battle.GetNatType() != NAT_None ) {
     wxLogWarning( _T("joining game with NAT transversal") );
-    customMessageBox(m_sl_icon, _("This game uses NAT traversal that is not yet supported\nby SpringLobby.\n\nYou will not be able to play in this battle."), _("NAT traversal"), wxOK );
+    customMessageBox(SL_MAIN_ICON, _("This game uses NAT traversal that is not yet supported\nby SpringLobby.\n\nYou will not be able to play in this battle."), _("NAT traversal"), wxOK );
   }
 }
 

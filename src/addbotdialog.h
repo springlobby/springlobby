@@ -10,7 +10,6 @@ class wxStaticLine;
 class wxButton;
 class wxCommandEvent;
 class IBattle;
-class wxIcon;
 
 class AddBotDialog : public wxDialog
 {
@@ -43,9 +42,7 @@ class AddBotDialog : public wxDialog
     bool m_sp;
 
     wxString _RefineAIName( const wxString& name );
-    
-    wxIcon* m_sl_icon;
-    
+      
     DECLARE_EVENT_TABLE()
 };
 

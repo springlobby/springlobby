@@ -4,12 +4,15 @@
 #include <wx/msgdlg.h>
 #include <wx/defs.h>
 
+#define SL_MAIN_ICON 1
+#define SS_MAIN_ICON 2
+
 class wxIcon;
 class wxWindow;
 class wxPoint;
 class wxString;
 
-int customMessageBox( wxIcon* icon , const wxString& message,
+int customMessageBox( int whichIcon , const wxString& message,
         const wxString& caption = wxMessageBoxCaptionStr,
         long style = wxOK|wxCENTRE, wxWindow *parent = NULL, const int x = -1, const int y = -1 );
 

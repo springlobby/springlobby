@@ -92,9 +92,7 @@ class BattleroomListCtrl : public wxListCtrl
 
     Ui& m_ui;
     static Ui* m_ui_for_sort;
-    
-    wxIcon* m_sl_icon;
-    
+      
     DECLARE_EVENT_TABLE();
 
 };

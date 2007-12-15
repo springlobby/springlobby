@@ -4,8 +4,10 @@
 #include <wx/frame.h>
 #include <wx/defs.h>
 
+#include "../images/springsettings.xpm"
+#include "../images/springlobby.xpm"
 
-CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
+CustomMessageBox::CustomMessageBox(wxIcon* icon  ,wxWindow *parent, const wxString& message,
         const wxString& caption ,
         long style, const wxPoint& pos ) 
 			: wxMessageDialog(parent,message,caption,style,pos)
@@ -17,9 +19,18 @@ CustomMessageBox::~CustomMessageBox()
 {
 }
 
-int customMessageBox(wxIcon* icon , const wxString& message,const wxString& caption,
+int customMessageBox(int whichIcon, const wxString& message,const wxString& caption,
         long style , wxWindow *parent,int x, int y )
 {
+		wxIcon* icon;
+		switch (whichIcon)
+		{
+			case SL_MAIN_ICON: icon = new wxIcon(springlobby_xpm); break;
+			case SS_MAIN_ICON: icon = new wxIcon(springsettings_xpm); break;
+			//TODO i think theres an default icon, use that
+			default: icon = new wxIcon(springlobby_xpm); break;
+					
+		}
 		CustomMessageBox dlg(icon,parent,message,caption,style,wxPoint(x,y));
 		int re = dlg.ShowModal();
 		switch (re)

@@ -13,7 +13,6 @@ class wxNotebook;
 class wxCheckBox;
 class wxStaticLine;
 class Ui;
-class wxIcon;
 
 //! @brief wxFrame with a connection dialog used to specify username, password, and server. It can also register a new acount.
 class ConnectWindow : public wxFrame
@@ -73,9 +72,7 @@ class ConnectWindow : public wxFrame
     wxTextCtrl* m_regpass2_text;
 
     Ui& m_ui;
-    
-    wxIcon* m_sl_icon;
-
+  
     DECLARE_EVENT_TABLE()
 };
 

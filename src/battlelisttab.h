@@ -22,7 +22,6 @@ class wxButton;
 class wxBoxSizer;
 class wxStaticText;
 class wxStaticLine;
-class wxIcon;
 
 class BattleListTab : public wxPanel
 {
@@ -79,8 +78,6 @@ class BattleListTab : public wxPanel
 
     Battle* m_sel_battle;
     
-    wxIcon* m_sl_icon;
-
     DECLARE_EVENT_TABLE();
 };
 

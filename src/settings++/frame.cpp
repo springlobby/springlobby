@@ -37,8 +37,9 @@
 #include "Defs.hpp"
 #include "panel_pathoption.h"
 #include "custom_msgbox.h"
-
 #include "../images/springsettings.xpm"
+
+
 
 const wxString simpleTabCap= _T("Combined Options");
 const wxString qualityTabCap= _T("Render quality / Video mode");
@@ -113,7 +114,7 @@ void settings_frame::handleExternExit()
 		alreadyCalled = true;
 		if (abstract_panel::settingsChanged)
 		{	
-			int choice = customMessageBox(settingsIcon,wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"), wxYES_NO |wxICON_QUESTION,this);	
+			int choice = customMessageBox(SS_MAIN_ICON,wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"), wxYES_NO |wxICON_QUESTION,this);	
 			if ( choice == wxYES)
 			{
 				abstract_panel::saveSettings();
@@ -129,7 +130,7 @@ void settings_frame::handleExternExit()
 void settings_frame::handleExit() {
     if (abstract_panel::settingsChanged) 
     {
-    	int action = customMessageBox(settingsIcon,wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION , this);
+    	int action = customMessageBox(SS_MAIN_ICON,wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION , this);
         switch (action) {
         case wxYES:
         	if (abstract_panel::saveSettings())
@@ -234,7 +235,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		 break;
 
 		case ID_MENUITEM_RESET: 
-			if ((customMessageBox(settingsIcon,wxT("Reset ALL settings to default values?"), wxT("Confirmation needed"), wxYES_NO, this)) == wxYES) {
+			if ((customMessageBox(SS_MAIN_ICON,wxT("Reset ALL settings to default values?"), wxT("Confirmation needed"), wxYES_NO, this)) == wxYES) {
 						resetSettings();
 			}
 		 break;
@@ -258,7 +259,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				
 				SetTitle(wxT("SpringSettings (simple mode)"));
 				if (!OptionsHandler.getDisableWarning()){
-					customMessageBox(settingsIcon,expertModeWarning, wxT("Hint"), wxOK, this);
+					customMessageBox(SS_MAIN_ICON,expertModeWarning, wxT("Hint"), wxOK, this);
 				}	
 		  break;
 		  

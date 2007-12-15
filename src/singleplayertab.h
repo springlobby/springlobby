@@ -17,8 +17,6 @@ class wxStaticLine;
 class wxChoice;
 class wxStaticText;
 class wxCommandEvent;
-class wxIcon;
-
 
 class SinglePlayerTab: public wxPanel
 {
@@ -61,8 +59,6 @@ class SinglePlayerTab: public wxPanel
     wxButton* m_reset_btn;
     wxButton* m_start_btn;
 
-    wxIcon* m_sl_icon;
-    
   DECLARE_EVENT_TABLE()
 };
 

@@ -105,7 +105,7 @@ bool abstract_panel::loadValuesIntoMap()
 	}
 	catch (...)
 	{
-		customMessageBox(new wxIcon(springsettings_xpm),_T("Could not access your settings.\n"), wxT("Error"), wxOK|wxICON_HAND, 0);
+		customMessageBox(SS_MAIN_ICON,_T("Could not access your settings.\n"), wxT("Error"), wxOK|wxICON_HAND, 0);
 		abstract_panel::settingsChanged = false;
 		return false;
 	} 
@@ -436,7 +436,7 @@ bool abstract_panel::saveSettings() {
 //	        //configHandler->SetSpringConfigFloat(f->first,f->second);
 //	    }
     } catch (...) {
-    	customMessageBox(new wxIcon(springsettings_xpm),_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK|wxICON_HAND, 0);
+    	customMessageBox(SS_MAIN_ICON,_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK|wxICON_HAND, 0);
     	return false;
     }
     

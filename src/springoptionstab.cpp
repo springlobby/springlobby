@@ -61,8 +61,6 @@ END_EVENT_TABLE()
 
     SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
 {
-  m_sl_icon = new wxIcon(springlobby_xpm);
-
   m_dir_text = new wxStaticText( this, -1, _("Spring directory") );
   m_exec_loc_text = new wxStaticText( this, -1, _("Location") );
   m_sync_loc_text = new wxStaticText( this, -1, _("Location") );
@@ -512,12 +510,12 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
   usync()->FreeUnitSyncLib();
   if ( !usync()->LoadUnitSyncLib( WX_STRING(sett().GetSpringDir()), WX_STRING(sett().GetUnitSyncUsedLoc()) ) ) {
     wxLogWarning( _T("can't load unitsync") );
-    customMessageBox( m_sl_icon, _("SpringLobby is unable to load you unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
+    customMessageBox( SL_MAIN_ICON, _("SpringLobby is unable to load you unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
   } else {
     // If LoadUnitSyncLib() fails this will too.
     if ( !Spring::TestSpringBinary() ) {
       wxLogWarning( _T("can't load unitsync") );
-      customMessageBox( m_sl_icon, _("SpringLobby is unable to detect your spring version from the unitsync library.\n\nYou might want to take another look at your settings."), _("Spring error"), wxOK );
+      customMessageBox( SL_MAIN_ICON, _("SpringLobby is unable to detect your spring version from the unitsync library.\n\nYou might want to take another look at your settings."), _("Spring error"), wxOK );
     }
   }
   m_ui.mw().OnUnitSyncReloaded();

@@ -115,7 +115,7 @@ void PathOptionPanel::UsePaths(wxCommandEvent& event)
 	if ( !(susynclib()->IsLoaded()) )
 	{
 		//wxLogWarning( _T("can't load unitsync") );
-		customMessageBox(new wxIcon(springsettings_xpm), _("SpringSettings is unable to load your unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
+		customMessageBox(SS_MAIN_ICON, _("SpringSettings is unable to load your unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
 	}
 	else
 	{
