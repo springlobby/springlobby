@@ -28,7 +28,8 @@ int customMessageBox(int whichIcon, const wxString& message,const wxString& capt
 			case SL_MAIN_ICON: icon = new wxIcon(springlobby_xpm); break;
 			case SS_MAIN_ICON: icon = new wxIcon(springsettings_xpm); break;
 			//TODO i think theres an default icon, use that
-			default: icon = new wxIcon(springlobby_xpm); break;
+			
+			default: icon = new wxIcon(wxNullIcon); break;
 					
 		}
 		CustomMessageBox dlg(icon,parent,message,caption,style,wxPoint(x,y));

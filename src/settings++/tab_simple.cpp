@@ -52,7 +52,6 @@ const wxString renderDetail_CBX_lbl = _T("Graphics detail");
 const wxString videoMode_CBX_lbl = _T("Screen resolution");
 const wxString button_lbl = _T("Switch to expert mode");
 
-//TODO keep the values of the comboboxes somewhere safe
 void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 	sizer->Add(new wxStaticText(this, -1, renderQuality_CBX_lbl) , 0,wxTOP|wxBOTTOM,15);
 	
