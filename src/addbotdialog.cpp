@@ -10,7 +10,6 @@
 #include <wx/filename.h>
 #include <wx/dir.h>
 #include <stdexcept>
-#include <wx/msgdlg.h>
 
 #include "addbotdialog.h"
 #include "settings.h"
@@ -19,8 +18,6 @@
 #include "iunitsync.h"
 
 #include "settings++/custom_msgbox.h"
-#include "images/springlobby.xpm"
-#include <wx/icon.h>
 
 BEGIN_EVENT_TABLE( AddBotDialog, wxDialog )
     EVT_BUTTON( ADDBOT_CANCEL, AddBotDialog::OnClose )
@@ -34,7 +31,7 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
   m_battle( battle ),
   m_sp(singleplayer)
 {
- 
+
   this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
   wxBoxSizer* m_main_sizer;

@@ -5,7 +5,6 @@
 
 #include <wx/textdlg.h>
 #include <stdexcept>
-#include <wx/msgdlg.h>
 #include <wx/thread.h>
 #include <wx/intl.h>
 #include <wx/utils.h>
@@ -32,8 +31,6 @@
 #include "unitsyncthread.h"
 
 #include "settings++/custom_msgbox.h"
-#include "images/springlobby.xpm"
-#include <wx/icon.h>
 
 Ui::Ui() :
   m_serv(0),

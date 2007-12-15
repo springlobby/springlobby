@@ -15,7 +15,6 @@
 #include <wx/intl.h>
 #include <wx/settings.h>
 #include <wx/icon.h>
-#include <wx/msgdlg.h>
 
 #include "connectwindow.h"
 #include "settings.h"
@@ -24,8 +23,6 @@
 #include "utils.h"
 
 #include "settings++/custom_msgbox.h"
-#include "images/springlobby.xpm"
-#include <wx/icon.h>
 
 // Define events.
 BEGIN_EVENT_TABLE(ConnectWindow, wxFrame)

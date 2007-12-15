@@ -29,11 +29,8 @@
 #include <wx/checkbox.h>
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
-#include <wx/msgdlg.h>
-#include <wx/icon.h>
 
 #include "custom_msgbox.h"
-#include "../images/springsettings.xpm"
 #include "../springunitsynclib.h"
 #include "../utils.h"
 #include "Defs.hpp"
@@ -84,7 +81,7 @@ const Control allControls[allControls_size] = {
 		//RC_TEXT[2]
 		RC_TEXT[0],RC_TEXT[1]
 };
-    
+
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : wxPanel(parent, id, pos, size, style,title) {
 //	abstract_panel::expertModeEnadbled = false;
@@ -96,7 +93,7 @@ abstract_panel::~abstract_panel(void) {
 
 bool abstract_panel::loadValuesIntoMap()
 {
-	try 
+	try
 	{
 		for (int i = 0; i< allControls_size;++i)
 		{
@@ -108,8 +105,8 @@ bool abstract_panel::loadValuesIntoMap()
 		customMessageBox(SS_MAIN_ICON,_T("Could not access your settings.\n"), wxT("Error"), wxOK|wxICON_HAND, 0);
 		abstract_panel::settingsChanged = false;
 		return false;
-	} 
-	
+	}
+
 	return true; // SUCCESS!
 }
 
@@ -121,41 +118,41 @@ void abstract_panel::loadDefaults()
 
 	//const Control VO_CBOX[3]
 	for (int i = 0;i< 3; ++i)
-		intSettings[VO_CBOX[i].key] = fromString( VO_CBOX[i].def);	
+		intSettings[VO_CBOX[i].key] = fromString( VO_CBOX[i].def);
 
-	//const Control VO_RBUT[2] 
+	//const Control VO_RBUT[2]
 	for (int i = 0;i< 2; ++i)
-		intSettings[VO_RBUT[i].key] = fromString( VO_RBUT[i].def);	
+		intSettings[VO_RBUT[i].key] = fromString( VO_RBUT[i].def);
 
-	//	const Control VO_SLI[1] 
+	//	const Control VO_SLI[1]
 	for (int i = 0;i< 1; ++i)
-		intSettings[VO_SLI[i].key] = fromString( VO_SLI[i].def);	
+		intSettings[VO_SLI[i].key] = fromString( VO_SLI[i].def);
 
-	//	const Control VO_SLI_EXT[1]   
+	//	const Control VO_SLI_EXT[1]
 	for (int i = 0;i< 1; ++i)
-		intSettings[VO_SLI_EXT[i].key] = fromString( VO_SLI_EXT[i].def);	
+		intSettings[VO_SLI_EXT[i].key] = fromString( VO_SLI_EXT[i].def);
 
-//	const Control AO_SLI[3]       
+//	const Control AO_SLI[3]
 	for (int i = 0;i< 3; ++i)
-		intSettings[AO_SLI[i].key] = fromString( AO_SLI[i].def);	
+		intSettings[AO_SLI[i].key] = fromString( AO_SLI[i].def);
 
 	//	const Control QA_CBOX[10]
 	for (int i = 0;i< 10; ++i)
-		intSettings[QA_CBOX[i].key] = fromString( QA_CBOX[i].def);	
+		intSettings[QA_CBOX[i].key] = fromString( QA_CBOX[i].def);
 
-	//	const Control UI_CBOX[14] 
+	//	const Control UI_CBOX[14]
 	for (int i = 0;i< 14; ++i)
-		intSettings[UI_CBOX[i].key] = fromString(UI_CBOX [i].def);	
+		intSettings[UI_CBOX[i].key] = fromString(UI_CBOX [i].def);
 
-	//	const Control MO_SLI[5]  
+	//	const Control MO_SLI[5]
 	for (int i = 0;i< 5; ++i)
 		intSettings[MO_SLI[i].key] = fromString( MO_SLI[i].def);
 
-	//	const Control MO_SLI_EXT[5] 
+	//	const Control MO_SLI_EXT[5]
 	for (int i = 0;i< 5; ++i)
 		intSettings[MO_SLI_EXT[i].key] = fromString( MO_SLI_EXT[i].def);
 
-	//	const Control DO_SLI[1]      
+	//	const Control DO_SLI[1]
 	for (int i = 0;i< 1; ++i)
 		intSettings[DO_SLI[i].key] = fromString( DO_SLI[i].def);
 
@@ -163,11 +160,11 @@ void abstract_panel::loadDefaults()
 	for (int i = 0;i< 2; ++i)
 		intSettings[DO_CBOX[i].key] = fromString( DO_CBOX[i].def);
 
-	//	const Control WR_COMBOX[4] 
+	//	const Control WR_COMBOX[4]
 	for (int i = 0;i< 1; ++i)
 		intSettings[WR_COMBOX[i].key] = fromString( WR_COMBOX[i].def);
 
-	//	const Control MO_CBOX[2] 
+	//	const Control MO_CBOX[2]
 	for (int i = 0;i< 2; ++i)
 		intSettings[MO_CBOX[i].key] = fromString( MO_CBOX[i].def);
 
@@ -247,14 +244,14 @@ void abstract_panel::OnTextUpdate(wxCommandEvent& event) {
 
     settingsChanged = true;
     int eventID = event.GetId();
-    
+
     if (eventID == ID_RES_CHOICES_LBOX_X || eventID == ID_RES_CHOICES_LBOX_Y)
     	    {
     		wxTextCtrl* textField = (wxTextCtrl*) event.GetEventObject();
     		wxString wxStr = textField->GetValue();
-    	    long* res = new long; 
+    	    long* res = new long;
     	    bool success = (wxStr.ToLong(res));
-    	    
+
     	    switch (eventID) {
     	    		case ID_RES_CHOICES_LBOX_X: {
     	    			// TODO: input validation?
@@ -268,8 +265,8 @@ void abstract_panel::OnTextUpdate(wxCommandEvent& event) {
     	    		} break;
     	    	}
     }
-	
-	
+
+
 }
 
 
@@ -302,7 +299,7 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 			int i = id - QA_CBOX[0].id;
 			(intSettings)[QA_CBOX[i].key]= checked;
 		} break;
-            
+
         //case ID_WINDOWP_UI_CBOX_0:
 		case ID_WINDOWP_UI_CBOX_1:
 		case ID_WINDOWP_UI_CBOX_2:
@@ -324,7 +321,7 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 
 		case ID_WINDOWP_DO_CBOX_0: { (intSettings)[DO_CBOX[0].key]= checked; } break;
 		case ID_WINDOWP_DO_CBOX_1: { (intSettings)[DO_CBOX[1].key]= checked; } break;
-		
+
 		case ID_WINDOWC_MO_CBOX_0: { (intSettings)[MO_CBOX[0].key]= checked; } break;
 		case ID_WINDOWC_MO_CBOX_1: { (intSettings)[MO_CBOX[1].key]= checked; } break;
 	}
@@ -356,7 +353,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 
 	wxComboBox* comboBox = (wxComboBox*) event.GetEventObject();
 	const wxString choice = comboBox->GetValue();
-			
+
 	switch (event.GetId())
 	{
 		case ID_WINDOWP_WR_COMBOX:
@@ -379,9 +376,9 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		{
 			for (int i=0; i<prVal_RenderQuality_size;++i)
 			{
-				presetValues<int,5> pop = prVal_RenderQuality[i]; 
+				presetValues<int,5> pop = prVal_RenderQuality[i];
 				 int k = (pop.values[choice]);
-				 
+
 				(intSettings)[prVal_RenderQuality[i].key]= k;
 			}
 			break;
@@ -390,7 +387,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		{
 			for (int i=0; i<prVal_RenderDetail_size;++i)
 			{
-				presetValues<int,3> pop = prVal_RenderDetail[i]; 
+				presetValues<int,3> pop = prVal_RenderDetail[i];
 				 int k = (pop.values[choice]);
 				(intSettings)[prVal_RenderDetail[i].key]= k;
 			}
@@ -439,8 +436,8 @@ bool abstract_panel::saveSettings() {
     	customMessageBox(SS_MAIN_ICON,_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK|wxICON_HAND, 0);
     	return false;
     }
-    
-    return true; 
+
+    return true;
 }
 
 void abstract_panel::updateControls(int what_to_update)

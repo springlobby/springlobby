@@ -17,7 +17,6 @@
 #include <wx/radiobut.h>
 #include <wx/textctrl.h>
 #include <wx/statbmp.h>
-#include <wx/msgdlg.h>
 
 #include "hostbattledialog.h"
 #include "settings.h"
@@ -34,8 +33,6 @@
 #include "images/rank6.xpm"
 
 #include "settings++/custom_msgbox.h"
-#include "images/springlobby.xpm"
-#include <wx/icon.h>
 
 BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
 
