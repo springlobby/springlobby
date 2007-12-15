@@ -1061,9 +1061,9 @@ void TASServer::SendHostInfo( HostInfo update )
 
   if ( update & HI_StartRects ) { // Startrects should be updated.
 
-    for ( int i = 10; i < 16; i++ ) battle.RemoveStartRect( i );
-    for ( int i = 0; i < 10; i++ ) { // Loop through all, and remove updated or deleted.
-
+    for ( std::vector<BattleStartRect*>::size_type i = 10; i < battle.GetNumRects(); i++ ) battle.RemoveStartRect( i ); /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >10 start boxes)
+    for ( std::vector<BattleStartRect*>::size_type i = 0; i < battle.GetNumRects(); i++ ) { // Loop through all, and remove updated or deleted.
+      if ( i >= 10 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >10 start boxes)
       wxString cmd;
       BattleStartRect* sr = battle.GetStartRect( i );
       if ( sr == 0 ) continue;
@@ -1078,7 +1078,8 @@ void TASServer::SendHostInfo( HostInfo update )
 
     }
 
-    for ( int i = 0; i < 10; i++ ) { // Loop through all, and update.
+    for ( std::vector<BattleStartRect*>::size_type i = 0; i < battle.GetNumRects(); i++ ) { // Loop through all, and update.
+      if ( i >= 10 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >10 start boxes)
       wxString cmd;
       BattleStartRect* sr = battle.GetStartRect( i );
       if ( sr == 0 ) continue;
@@ -1086,6 +1087,7 @@ void TASServer::SendHostInfo( HostInfo update )
         cmd = wxString::Format( _T("ADDSTARTRECT %d %d %d %d %d\n"), sr->ally, sr->left, sr->top, sr->right, sr->bottom );
         m_sock->Send( STD_STRING(cmd) );
         battle.StartRectUpdated( i );
+
       }
     }
 

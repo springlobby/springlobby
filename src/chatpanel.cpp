@@ -593,7 +593,18 @@ void ChatPanel::Parted( User& who, const wxString& message )
 
 void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 {
-  _OutputLine( _T(" ** Channel topic: ")+ message + _("\n * Set by ") + who, wxColour(0, 0, 80) );
+  wxString refined = message;
+  refined.Replace( _T("\\n"), _T("\n") );
+  /*
+  int pos = refined.Find( _T("\\n") ); // serch for the \n string
+  while ( pos != -1 )
+  {
+    if ( refined.Mid( pos - 1, 3 ) == _T("\\\n") ) continue; // the string \\n means escaped \n
+    refined = refined.Left ( pos -1 ) + _T("\n") + refined.Right( pos +1 ); // replace the /n string with the carriage return char
+    pos = refined.Find( _T("\\n") );
+  }
+  */
+  _OutputLine( _T(" ** Channel topic: ")+ refined  + _("\n * Set by ") + who, wxColour(0, 0, 80) );
 }
 
 

@@ -211,6 +211,8 @@ class Battle : public UserList, public IBattle
     int GetMyAlly() { return GetMe().BattleStatus().ally; }
     void SetMyAlly( int ally ) { GetMe().BattleStatus().ally = ally; SendMyBattleStatus(); }
 
+    std::vector<BattleStartRect*>::size_type GetNumRects();
+
   protected:
     // Battle variables
 
