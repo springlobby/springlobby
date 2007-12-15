@@ -38,7 +38,7 @@
 #include "panel_pathoption.h"
 #include "custom_msgbox.h"
 #include "../images/springsettings.xpm"
-
+#include "helpmenufunctions.h"
 
 
 const wxString simpleTabCap= _T("Combined Options");
@@ -203,6 +203,11 @@ void settings_frame::initMenuBar() {
 	menuMode = new wxMenu();
 	menuMode->AppendRadioItem(ID_MENUITEM_SIMPLE,wxT("Simple (few options)"));
 	menuMode->AppendRadioItem(ID_MENUITEM_EXPERT,wxT("Expert (all options"));
+	
+	menuHelp = new wxMenu();
+	menuHelp->Append(ID_MENUITEM_ABOUT, wxT("About"));
+	menuHelp->Append(ID_MENUITEM_CONTACT, wxT("Contact"));
+	
         
 	switch(OptionsHandler.getMode()){
 	case SET_MODE_EXPERT: {
@@ -217,6 +222,7 @@ void settings_frame::initMenuBar() {
 	wxMenuBar* menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, wxT("File"));
 	menuBar->Append(menuMode, wxT("Mode"));
+	menuBar->Append(menuHelp, wxT("Help"));
 	
 	//TODO PROFILES!!!
 	
@@ -270,6 +276,10 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 			break;
 		case ID_MENUITEM_DISABLE_WARN:
 			OptionsHandler.setDisableWarning(menuFile->IsChecked(ID_MENUITEM_DISABLE_WARN));
+			break;
+			
+		case ID_MENUITEM_ABOUT:
+			//showAbout();
 			break;
 	}
 }

@@ -505,7 +505,9 @@ springlobby_SOURCES += \
 	src/settings++/panel_pathoption.h \
 	src/settings++/panel_pathoption.cpp \
 	src/settings++/custom_msgbox.h \
-	src/settings++/custom_msgbox.cpp 
+	src/settings++/custom_msgbox.cpp \
+	src/settings++/helpmenufunctions.h \
+	src/settings++/helpmenufunctions.cpp 
 
 if USE_WINDRES
 	springlobby_SOURCES += \
@@ -557,7 +559,9 @@ springsettings_SOURCES = \
 	src/settings++/panel_pathoption.h \
 	src/settings++/panel_pathoption.cpp	\
 	src/settings++/custom_msgbox.h \
-	src/settings++/custom_msgbox.cpp
+	src/settings++/custom_msgbox.cpp \
+	src/settings++/helpmenufunctions.h \
+	src/settings++/helpmenufunctions.cpp
 
 if USE_WINDRES
 	springsettings_SOURCES += \

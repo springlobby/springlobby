@@ -68,6 +68,7 @@ class settings_frame : public wxFrame
 									
 		wxMenu* menuFile;
 		wxMenu* menuMode;
+		wxMenu* menuHelp;
 		wxWindow* parentWindow;
 		wxNotebook *notebook;
 		wxFlexGridSizer *book_sizer;
