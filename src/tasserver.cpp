@@ -14,6 +14,8 @@
 #include "serverevents.h"
 #include "socket.h"
 
+#include <wx/socket.h>
+
 #define SER_VER_BAD -1
 #define SER_VER_UNKNOWN 0
 #define SER_VER_0_32 32
@@ -165,7 +167,9 @@ void TASServer::SetSocket( Socket* sock )
 
 void TASServer::Connect( const std::string& addr, const int port )
 {
+  m_addr=addr;
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
+
   m_sock->Connect( addr, port );
   if ( IsConnected() ) {
     m_last_ping = time( 0 );
@@ -296,6 +300,11 @@ void TASServer::Update( int mselapsed )
     time_t now = time( 0 );
     if ( m_last_ping + m_keepalive < now ) { // Is it time for a keepalive PING?
       Ping();
+      /// Nat travelsal "ping"
+      Battle *battle=GetCurrentBattle();
+      if(battle){
+        if((battle->GetNatType()==NAT_Hole_punching) && !battle->GetInGame())UDPPing();
+      }
     }
     HandlePinglist();
   }
@@ -658,8 +667,12 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_se->OnServerMessage( msg );
     //Command: "DENIED" params: "Already logged in".
   } else if ( cmd == "HOSTPORT" ) {
-    udpport = GetIntParam( params );
-    m_se->OnHostUdpPortChange( udpport );
+    int tmp_port = GetIntParam( params );
+    m_se->OnHostUdpPortChange( tmp_port );
+    //HOSTPORT port
+  } else if ( cmd == "UDPSOURCEPORT" ) {
+    int tmp_port = GetIntParam( params );
+    m_se->OnUdpSourcePort( tmp_port );
     //HOSTPORT port
   } else if ( cmd == "SETSCRIPTTAGS" ) {
     while ( (msg = GetSentenceParam( params )) != "" ) {
@@ -703,6 +716,21 @@ void TASServer::Ping()
   m_last_ping = time( 0 );
 }
 
+
+void TASServer::UDPPing(){/// used for nat travelsal
+#ifndef WX26
+  wxLogMessage(_T("UDPPing address ")+WX_STRING(m_addr)+_T(" port ")+WX_STRING(i2s(m_udp_port)));
+
+  wxIPV4address wxaddr;
+  wxaddr.Hostname(WX_STRING(m_addr));
+  wxaddr.Service(m_udp_port);
+
+  wxDatagramSocket udp_socket(wxaddr,wxSOCKET_WAITALL);
+
+  char *message="ipv4 sux!";
+  udp_socket.SendTo(wxaddr,message,strlen(message)+1);
+#endif
+}
 
 void TASServer::HandlePong( int replyid )
 {
@@ -891,6 +919,7 @@ void TASServer::JoinBattle( const int& battleid, const std::string& password )
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
+  UDPPing();
   m_sock->Send( "JOINBATTLE " + i2s( battleid ) + " " + password + "\n" );
 }
 
@@ -999,7 +1028,8 @@ void TASServer::RequestInGameTime()
 
 Battle* TASServer::GetCurrentBattle()
 {
-  ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
+  //ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
+  if(m_battle_id==-1) return NULL;
   return &GetBattle( m_battle_id );
 }
 

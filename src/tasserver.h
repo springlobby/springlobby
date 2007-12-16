@@ -45,6 +45,8 @@ class TASServer : public Server
 
     void Ping();
 
+    void UDPPing();/// used for nat travelsal
+
     User& GetMe();
 
     void JoinChannel( const std::string& channel, const std::string& key );
@@ -120,6 +122,8 @@ class TASServer : public Server
     int m_battle_id;
 
     std::string m_agreement;
+
+    std::string m_addr;
 
     void _ReceiveAndExecute();
 };

@@ -513,3 +513,8 @@ void ServerEvents::OnHostUdpPortChange( const int& udpport )
   if ( !m_serv.GetCurrentBattle() ) return;
   if ( m_serv.GetCurrentBattle()->GetNatType() == NAT_Hole_punching || m_serv.GetCurrentBattle()->GetNatType() == NAT_Fixed_source_ports ) m_serv.GetCurrentBattle()->SetHostPort( udpport );
 }
+
+void ServerEvents::OnUdpSourcePort(int udpport){
+  if ( !m_serv.GetCurrentBattle() ) return;
+  m_serv.GetCurrentBattle()->SetExternalUdpSourcePort(udpport);
+}
