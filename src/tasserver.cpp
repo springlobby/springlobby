@@ -725,10 +725,15 @@ void TASServer::UDPPing(){/// used for nat travelsal
   wxaddr.Hostname(WX_STRING(m_addr));
   wxaddr.Service(m_udp_port);
 
-  wxDatagramSocket udp_socket(wxaddr,wxSOCKET_WAITALL);
+  wxDatagramSocket udp_socket(wxaddr,/* wxSOCKET_WAITALL*/wxSOCKET_NONE);
 
   char *message="ipv4 sux!";
-  udp_socket.SendTo(wxaddr,message,strlen(message)+1);
+  if(udp_socket.IsOk()){
+    udp_socket.SendTo(wxaddr,message,strlen(message)+1);
+  }else{
+    wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));
+  }
+  if(udp_socket.Error())wxLogMessage(_T("Error=")+WX_STRING(i2s(udp_socket.LastError())));
 #endif
 }
 
@@ -919,7 +924,14 @@ void TASServer::JoinBattle( const int& battleid, const std::string& password )
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
-  UDPPing();
+  //UDPPing();
+  if(BattleExists(battleid)){
+    Battle *battle=&GetBattle(battleid);
+    if(battle){
+      if(battle->GetNatType()==NAT_Hole_punching)UDPPing();
+    }
+  }
+
   m_sock->Send( "JOINBATTLE " + i2s( battleid ) + " " + password + "\n" );
 }
 
