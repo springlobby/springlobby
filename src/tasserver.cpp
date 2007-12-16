@@ -659,7 +659,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     //Command: "DENIED" params: "Already logged in".
   } else if ( cmd == "HOSTPORT" ) {
     udpport = GetIntParam( params );
-    m_se->OnHostUdpPort( udpport );
+    m_se->OnHostUdpPortChange( udpport );
     //HOSTPORT port
   } else if ( cmd == "SETSCRIPTTAGS" ) {
     while ( (msg = GetSentenceParam( params )) != "" ) {

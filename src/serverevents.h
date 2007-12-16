@@ -91,7 +91,7 @@ class ServerEvents
     void OnServerMessage( const std::string& message );
     void OnChannelMessage( const std::string& channel, const std::string& msg );
 
-    void OnHostUdpPort( const int& udpport );
+    void OnHostUdpPortChange( const int& udpport );
 
   protected:
     Server& m_serv;

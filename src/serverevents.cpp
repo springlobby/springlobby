@@ -508,9 +508,8 @@ void ServerEvents::OnChannelMessage( const std::string& channel, const std::stri
 }
 
 
-void ServerEvents::OnHostUdpPort( const int& udpport )
+void ServerEvents::OnHostUdpPortChange( const int& udpport )
 {
-
+  if ( !m_serv.GetCurrentBattle() ) return;
+  if ( m_serv.GetCurrentBattle()->GetNatType() == NAT_Hole_punching || m_serv.GetCurrentBattle()->GetNatType() == NAT_Fixed_source_ports ) m_serv.GetCurrentBattle()->SetHostPort( udpport );
 }
-
-
