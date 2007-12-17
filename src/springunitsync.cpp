@@ -91,7 +91,11 @@ bool SpringUnitSync::IsLoaded()
 std::string SpringUnitSync::GetSpringVersion()
 {
   wxLogDebugFunc( _T("") );
+  try
+  {
   return STD_STRING(susynclib()->GetSpringVersion());
+  } catch (...) {}
+  return "";
 }
 
 
@@ -359,10 +363,12 @@ wxArrayString SpringUnitSync::GetAIList()
     ini = susynclib()->FindFilesVFS( ini, FileName );
   }
 
+  if(susynclib()->HasLuaAI()){
   try { // Older versions of unitsync does not have these functions.
     const int LuaAICount = susynclib()->GetLuaAICount();
     for ( int i = 0; i < LuaAICount; i++ ) ret.Add( _( "LuaAI" ) +  susynclib()->GetLuaAIName( i ) );
   } catch (...) {}
+  }
 
   return ret;
 }

@@ -21,13 +21,14 @@ enum NatType {
 
 
 #define DEFAULT_SERVER_PORT 8034
+#define DEFAULT_EXTERNAL_UDP_SOURCE_PORT 12345
 
 
 struct BattleOptions
 {
   BattleOptions() :
     battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),
-    nattype(NAT_None),port(DEFAULT_SERVER_PORT),maxplayers(0),spectators(0),
+    nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
     startmetal(1000),startenergy(1000),maxunits(500),starttype(ST_Fixed),
     gametype(GT_ComContinue),limitdgun(false),dimmms(false),ghostedbuildings(true),
     guilistactiv(false) {}
@@ -42,6 +43,7 @@ struct BattleOptions
   NatType nattype;
   int port;
   std::string ip;
+  int externaludpsourceport;
 
   unsigned int maxplayers;
   unsigned int spectators;
@@ -94,6 +96,10 @@ class Battle : public UserList, public IBattle
     void SetNatType( const NatType nattype ) { m_opts.nattype = nattype; }
     NatType GetNatType() const { return m_opts.nattype; }
     void SetHostPort( int port) { m_opts.port = port; }
+
+    void SetExternalUdpSourcePort(int port){m_opts.externaludpsourceport=port;}
+    int GetExternalUdpSourcePort(){return m_opts.externaludpsourceport;}
+
     int GetHostPort() const { return m_opts.port; }
     void SetFounder( const std::string& nick ) { m_opts.founder = nick; }
     void SetHostIp( const std::string& ip ) { m_opts.ip = ip; }

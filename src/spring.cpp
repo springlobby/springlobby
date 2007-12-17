@@ -143,12 +143,9 @@ bool Spring::Run( SinglePlayerBattle& battle )
 
 bool Spring::TestSpringBinary()
 {
-  try {
-    if ( !wxFileName::FileExists( WX_STRING(sett().GetSpringUsedLoc()) ) ) return false;
-    if ( usync()->GetSpringVersion() != "") return true;
-    else return false;
-  } catch (...) {}
-  return false;
+  if ( !wxFileName::FileExists( WX_STRING(sett().GetSpringUsedLoc()) ) ) return false;
+  if ( usync()->GetSpringVersion() != "") return true;
+  else return false;
 }
 
 
@@ -524,14 +521,18 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 {
   wxString s;
   std::vector<int> AllyConv;
+
   int NumAllys = 0;
   int PlayerTeam = -1;
 
-  for ( std::vector<int>::size_type i = 0; i < battle.GetNumBots(); i++ ) {
+  for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot = battle.GetBotByStartPosition( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     if ( bot->aidll == "" ) PlayerTeam = i;
-    if ( AllyConv[bot->bs.ally] == -1 ) AllyConv[bot->bs.ally] = NumAllys++;
+    if(bot->bs.ally>int(AllyConv.size())-1){
+      AllyConv.resize(bot->bs.ally+1,-1);
+    }
+    if( AllyConv[bot->bs.ally] == -1 ) AllyConv[bot->bs.ally] = NumAllys++;
   }
 
   ASSERT_LOGIC( PlayerTeam != -1, _T("no player found") );
@@ -629,4 +630,3 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   return s;
 }
-

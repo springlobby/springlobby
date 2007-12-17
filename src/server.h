@@ -144,6 +144,12 @@ class Server
     virtual bool IsPasswordHash( const std::string& pass ) = 0;
     virtual std::string GetPasswordHash( const std::string& pass ) = 0;
 
+    std::string GetRequiredSpring() { return m_required_spring_ver; }
+    int GetUdpPort() { return m_udp_port; }
+
+    void SetRequiredSpring( const std::string& version ) { m_required_spring_ver = version; }
+    void SetUdpPort( const int port ) { m_udp_port = port; }
+
     virtual void Ping() = 0;
 
     virtual void OnConnected( Socket* sock ) = 0;
@@ -171,6 +177,9 @@ class Server
     std::string m_user;
     std::string m_pass;
     bool m_pass_hash;
+    std::string m_required_spring_ver;
+    int m_udp_port;
+
 
     ChannelList m_channels;
     UserList m_users;
