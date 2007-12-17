@@ -303,7 +303,14 @@ void TASServer::Update( int mselapsed )
       /// Nat travelsal "ping"
       Battle *battle=GetCurrentBattle();
       if(battle){
-        if((battle->GetNatType()==NAT_Hole_punching) && !battle->GetInGame())UDPPing();
+        if((battle->GetNatType()==NAT_Hole_punching) && !battle->GetInGame()){
+          UDPPing();
+        }else{
+          if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
+          if(battle->GetInGame())wxLogMessage( _T("pinging: current battle is in game") );
+        }
+      }else{
+        wxLogMessage( _T("pinging: No current battle set") );
       }
     }
     HandlePinglist();
@@ -721,11 +728,15 @@ void TASServer::UDPPing(){/// used for nat travelsal
 #ifndef WX26
   wxLogMessage(_T("UDPPing address ")+WX_STRING(m_addr)+_T(" port ")+WX_STRING(i2s(m_udp_port)));
 
+  wxIPV4address local_addr;
+  local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
+  local_addr.Service(12345);
+
+  wxDatagramSocket udp_socket(local_addr,/* wxSOCKET_WAITALL*/wxSOCKET_NONE);
+
   wxIPV4address wxaddr;
   wxaddr.Hostname(WX_STRING(m_addr));
   wxaddr.Service(m_udp_port);
-
-  wxDatagramSocket udp_socket(wxaddr,/* wxSOCKET_WAITALL*/wxSOCKET_NONE);
 
   char *message="ipv4 sux!";
   if(udp_socket.IsOk()){
@@ -930,6 +941,8 @@ void TASServer::JoinBattle( const int& battleid, const std::string& password )
     if(battle){
       if(battle->GetNatType()==NAT_Hole_punching)UDPPing();
     }
+  }else{
+    wxLogMessage( _T("battle doesnt exist") );
   }
 
   m_sock->Send( "JOINBATTLE " + i2s( battleid ) + " " + password + "\n" );
