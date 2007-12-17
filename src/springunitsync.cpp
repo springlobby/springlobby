@@ -105,7 +105,11 @@ int SpringUnitSync::GetNumMods()
 int SpringUnitSync::GetModIndex( const std::string& name )
 {
   wxLogDebugFunc( _T("name = \"") + WX_STRING(name) + _T("\"") );
-  return susynclib()->GetModIndex( WX_STRING(name) );
+  try
+  {
+    return susynclib()->GetModIndex( WX_STRING(name) );
+  } catch (...){}
+  return -1;
 }
 
 /*
@@ -126,7 +130,7 @@ bool SpringUnitSync::ModExists( const std::string& modname )
 {
   wxLogDebugFunc( _T("modname = \"") + WX_STRING(modname) + _T("\"") );
   try {
-    return susynclib()->GetPrimaryModIndex( WX_STRING(modname) ) >= 0;
+    return GetModIndex( modname ) >=0;
   } catch (...) {}
   return false;
 }
