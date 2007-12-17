@@ -279,7 +279,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 			break;
 			
 		case ID_MENUITEM_ABOUT:
-			//showAbout();
+			showAbout();
 			break;
 	}
 }

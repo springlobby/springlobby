@@ -9,6 +9,8 @@
 wxWindow* CustomMessageBox::m_settingsWindow = 0;
 wxWindow* CustomMessageBox::m_lobbyWindow = 0;
 
+
+
 CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
         const wxString& caption ,
         long style, const wxPoint& pos ) 
@@ -73,3 +75,14 @@ int customMessageBox( int whichIcon , const wxString& message,const wxString& ca
 		}
 		return -1;
 }
+
+CreditsDialog::CreditsDialog(wxWindow* parent,wxString& title) : wxDialogl(parent,-1,title,wxDefaultPosition,
+		wxDefaultSize,wxDEFAULT_DIALOG_STYLE|wxFRAME_FLOAT_ON_PARENT)
+{
+	
+}
+
+CreditsDialog::~CreditsDialog()
+{
+}
+

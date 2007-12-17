@@ -1,13 +1,19 @@
 #include "helpmenufunctions.h"
-//#include <wx/aboutdlg.h>
+#include <wx/aboutdlg.h>
+#include "../images/springsettings.xpm"
+#include <wx/icon.h>
+#include "../utils.h"
 
 void showAbout()
 {
-//	 wxAboutDialogInfo info;
-//	 info.SetName(_("My Program"));
-//	 info.SetVersion(_("1.2.3 Beta"));
-//	 info.SetDescription(_("This program does something great."));
-//	 info.SetCopyright(_T("(C) 2007 Me <my@email.addre.ss>"));
-//
-//	 wxAboutBox(info);
+#ifdef HAVE_WX28
+	 wxAboutDialogInfo info;
+	 info.SetName(_T("SpringSettings"));
+	 info.SetVersion(_T("0.1"));
+	 info.SetDescription(_T("SpringSettings is a graphical frontend to the options of the spring engine"));
+	 info.SetCopyright(_T("(C) 2007 koshi <koshi@springlobby.info>"));
+	 info.SetIcon(wxIcon(springsettings_xpm));
+	 wxAboutBox(info);
+
+#endif
 }

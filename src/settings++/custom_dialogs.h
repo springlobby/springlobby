@@ -3,6 +3,7 @@
 
 #include <wx/msgdlg.h>
 #include <wx/defs.h>
+#include <wx/dialog.h>
 
 #define SL_MAIN_ICON 1
 #define SS_MAIN_ICON 2
@@ -36,5 +37,11 @@ protected:
 	static wxWindow* m_lobbyWindow;
 };
 
+class CreditsDialog: public wxDialog
+{
+public:
+	CreditsDialog();
+	virtual ~CreditsDialog();
+};
 
 #endif /*CUSTOM_MSG_DLG_H_*/
