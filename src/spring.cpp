@@ -528,7 +528,6 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   int NumAllys = 0;
   int PlayerTeam = -1;
 
-  /**/
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot = battle.GetBotByStartPosition( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
@@ -538,7 +537,6 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
     }
     if( AllyConv[bot->bs.ally] == -1 ) AllyConv[bot->bs.ally] = NumAllys++;
   }
-  /**/
 
   ASSERT_LOGIC( PlayerTeam != -1, _T("no player found") );
 
