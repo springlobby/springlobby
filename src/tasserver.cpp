@@ -728,7 +728,7 @@ void TASServer::Ping()
 
 
 void TASServer::UDPPing(){/// used for nat travelsal
-#ifndef WX26
+#if(NAT_TRAVERSAL_SUPPORT)
   wxLogMessage(_T("UDPPing address ")+WX_STRING(m_addr)+_T(" port ")+WX_STRING(i2s(m_udp_port)));
 
   wxIPV4address local_addr;

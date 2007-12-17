@@ -16,6 +16,12 @@
 #define HAVE_WX28
 #endif
 
+#if( (wxMAJOR_VERSION==2 && wxMINOR_VERSION >= 8) || wxMAJOR_VERSION>2 )
+#define NAT_TRAVERSAL_SUPPORT 1
+#else
+#define NAT_TRAVERSAL_SUPPORT 0
+#endif
+
 
 //! Converts a wxString to an std::string
 #define STD_STRING(v) std::string((const char*)(v).mb_str(wxConvUTF8))
