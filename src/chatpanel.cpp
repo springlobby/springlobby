@@ -446,6 +446,7 @@ User& ChatPanel::GetMe()
 
 void ChatPanel::_OutputLine( const wxString& message, const wxColour& col )
 {
+  if (! m_chatlog_text ) return;
   LogTime();
   m_chatlog_text->SetDefaultStyle(wxTextAttr(col));
   #ifdef __WXMSW__
@@ -796,6 +797,7 @@ void ChatPanel::Part()
 
 void ChatPanel::LogTime()
 {
+  if ( !m_chatlog_text ) return;
   wxDateTime now = wxDateTime::Now();
   m_chatlog_text->SetDefaultStyle(wxTextAttr( wxColour( 100,100,140 ) ));
   m_chatlog_text->AppendText( _T("[") + now.Format( _T("%H:%M") ) + _T("]") );
