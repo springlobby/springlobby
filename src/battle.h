@@ -169,7 +169,7 @@ class Battle : public UserList, public IBattle
     bool IsSynced();
     //bool HasMod();
 
-    bool ExecuteSayCommand( const std::string& cmd ) { return false; }
+    bool ExecuteSayCommand( const wxString& cmd );
 
     void AddStartRect( int allyno, int left, int top, int right, int bottom );
     void RemoveStartRect( int allyno );

@@ -833,7 +833,7 @@ void TASServer::DoActionPrivate( const std::string& nick, const std::string& msg
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
-  m_sock->Send( "SAYPRIVATE /me " + nick + " " + msg + "\n" );
+  m_sock->Send( "SAYPRIVATEEX " + nick + " " + msg + "\n" );
 }
 
 
