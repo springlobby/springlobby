@@ -58,8 +58,6 @@ class Ui
     bool IsConnected() const;
     void JoinChannel( const wxString& name, const wxString& password );
 
-    void SetSupportedSpring(std::string spring_version) { m_server_spring_ver = spring_version; }
-
     bool IsSpringCompatible();
 
     bool IsSpringRunning();
@@ -89,7 +87,7 @@ class Ui
 
     void OnUpdate( int mselapsed );
 
-    void OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported);
+    void OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported );
     void OnLoggedIn( );
     void OnDisconnected( Server& server );
 
