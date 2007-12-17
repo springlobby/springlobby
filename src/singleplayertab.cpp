@@ -8,7 +8,6 @@
 #include <wx/panel.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
-#include <wx/msgdlg.h>
 #include <stdexcept>
 
 #include "singleplayertab.h"
@@ -21,8 +20,6 @@
 #include "server.h"
 
 #include "settings++/custom_msgbox.h"
-#include "images/springlobby.xpm"
-#include <wx/icon.h>
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
@@ -38,7 +35,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   wxPanel( parent, -1 ),
   m_ui( ui ),
   m_battle( ui, msptab )
-{	
+{
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );

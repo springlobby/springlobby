@@ -7,7 +7,6 @@
 #include <wx/filefn.h>
 #include <wx/dir.h>
 #include <wx/datetime.h>
-#include <wx/msgdlg.h>
 #include <wx/intl.h>
 #include <wx/filename.h>
 #include <stdexcept>
@@ -17,8 +16,6 @@
 #include "utils.h"
 
 #include "settings++/custom_msgbox.h"
-#include "images/springlobby.xpm"
-#include <wx/icon.h>
 
 bool ChatLog::m_parent_dir_exists = true;
 
@@ -28,7 +25,7 @@ ChatLog::ChatLog(const wxString& server,const wxString& room):
   m_room( room ),
   m_active( _OpenLogFile(server,room) )
 {
- 
+
 }
 
 

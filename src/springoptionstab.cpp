@@ -13,7 +13,6 @@
 #include <wx/radiobut.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
-#include <wx/msgdlg.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
@@ -35,8 +34,6 @@
 #include "mainwindow.h"
 
 #include "settings++/custom_msgbox.h"
-#include "images/springlobby.xpm"
-#include <wx/icon.h>
 
 BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
 

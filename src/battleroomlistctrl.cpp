@@ -6,7 +6,6 @@
 #include <wx/intl.h>
 #include <wx/menu.h>
 #include <wx/textdlg.h>
-#include <wx/msgdlg.h>
 #include <wx/colordlg.h>
 #include <wx/colour.h>
 #include <stdexcept>
@@ -24,8 +23,6 @@
 #include "uiutils.h"
 
 #include "settings++/custom_msgbox.h"
-#include "images/springlobby.xpm"
-#include <wx/icon.h>
 
 BEGIN_EVENT_TABLE( BattleroomListCtrl, wxListCtrl )
 
