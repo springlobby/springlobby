@@ -269,6 +269,15 @@ void Battle::RingNotReadyPlayers()
 }
 
 
+bool Battle::ExecuteSayCommand( const wxString& cmd )
+{
+  if ( cmd.BeforeFirst(' ').Lower() == _T("/me") ) {
+    m_serv.DoActionBattle( m_opts.battleid, STD_STRING( cmd.AfterFirst(' ') )  );
+    return true;
+  }  else return false;
+}
+
+
 void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom )
 {
   ASSERT_LOGIC( (allyno >= 0), _T("Allyno out of bounds.") );

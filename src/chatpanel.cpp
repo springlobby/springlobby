@@ -446,6 +446,7 @@ User& ChatPanel::GetMe()
 
 void ChatPanel::_OutputLine( const wxString& message, const wxColour& col )
 {
+  if (! m_chatlog_text ) return;
   LogTime();
   m_chatlog_text->SetDefaultStyle(wxTextAttr(col));
   #ifdef __WXMSW__
@@ -713,8 +714,11 @@ void ChatPanel::_SetChannel( Channel* channel )
 void ChatPanel::Say( const wxString& message )
 {
   wxLogDebugFunc( _T("") );
-
+#ifdef __WXMSW__
   wxStringTokenizer lines( message, _T("\n") );
+#else
+  wxStringTokenizer lines( message, _T("\r\n") );
+#endif
   if ( lines.CountTokens() > 5 ) {
     wxMessageDialog dlg( &m_ui.mw(), wxString::Format( _("Are you sure you want to paste %d lines?"), lines.CountTokens() ), _("Flood warning"), wxYES_NO );
     if ( dlg.ShowModal() == wxID_NO ) return;
@@ -751,7 +755,7 @@ void ChatPanel::Say( const wxString& message )
         return;
       }
       if ( line.StartsWith(_T("/")) ) {
-        if ( m_battle->ExecuteSayCommand( STD_STRING(line) ) ) return;
+        if ( m_battle->ExecuteSayCommand( line ) ) return;
         if ( m_battle->GetServer().ExecuteSayCommand( line ) ) return;
       }
       m_battle->Say( STD_STRING(line) );
@@ -763,7 +767,7 @@ void ChatPanel::Say( const wxString& message )
         return;
       }
       if ( line.StartsWith(_T("/")) ) {
-        if ( m_user->ExecuteSayCommand( STD_STRING(line) ) ) return;
+        if ( m_user->ExecuteSayCommand( line ) ) return;
         if ( m_user->GetServer().ExecuteSayCommand( line ) ) return;
       }
       m_user->Say( STD_STRING(line) );
@@ -796,6 +800,7 @@ void ChatPanel::Part()
 
 void ChatPanel::LogTime()
 {
+  if ( !m_chatlog_text ) return;
   wxDateTime now = wxDateTime::Now();
   m_chatlog_text->SetDefaultStyle(wxTextAttr( wxColour( 100,100,140 ) ));
   m_chatlog_text->AppendText( _T("[") + now.Format( _T("%H:%M") ) + _T("]") );

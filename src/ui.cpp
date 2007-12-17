@@ -390,7 +390,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
       return true;
     }
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/ingame") ) {
-    m_serv->RequestInGameTime( _T("") );
+    m_serv->RequestInGameTime( "" );
     return true;
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/help") ) {
     wxString topic = cmd.AfterFirst(' ');
@@ -778,7 +778,7 @@ void Ui::OnJoinedBattle( Battle& battle )
   }*/
   if ( battle.GetNatType() != NAT_None ) {
     wxLogWarning( _T("joining game with NAT transversal") );
-    wxMessageBox( _("This game uses NAT traversal that is not yet supported\nby SpringLobby.\n\nYou will not be able to play in this battle."), _("NAT traversal"), wxOK );
+    wxMessageBox( _("This game uses NAT traversal that is not yet supported\nby SpringLobby.\n\nYou might not be able to play in this battle."), _("NAT traversal"), wxOK );
   }
 }
 
