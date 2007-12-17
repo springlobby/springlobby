@@ -116,7 +116,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
 	m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
   m_buttons_sizer->Add( m_filter_activ, 1, wxALL|wxEXPAND, 5 );
-  #ifdef WX26
+  #ifdef HAVE_WX26
   m_filter_activ->Disable();
   #endif
 
