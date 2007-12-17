@@ -143,12 +143,9 @@ bool Spring::Run( SinglePlayerBattle& battle )
 
 bool Spring::TestSpringBinary()
 {
-  try {
-    if ( !wxFileName::FileExists( WX_STRING(sett().GetSpringUsedLoc()) ) ) return false;
-    if ( usync()->GetSpringVersion() != "") return true;
-    else return false;
-  } catch (...) {}
-  return false;
+  if ( !wxFileName::FileExists( WX_STRING(sett().GetSpringUsedLoc()) ) ) return false;
+  if ( usync()->GetSpringVersion() != "") return true;
+  else return false;
 }
 
 

@@ -463,15 +463,13 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 
   if ( !IsSpringCompatible () ){
     if ( m_spring->TestSpringBinary() ) {
-      try {
-        wxString message = _("Your spring version");
-        message += _T(" (") + WX_STRING( usync()->GetSpringVersion() ) + _T(") ");
-        message +=  _("is not supported by the lobby server that requires version");
-        message += _T(" (") +  WX_STRING( m_server_spring_ver ) + _T(").\n\n");
-        message += _("Online play will be disabled.");
-        wxLogWarning ( _T("server not supports current spring version") );
-        wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
-      } catch (...) {}
+      wxString message = _("Your spring version");
+      message += _T(" (") + WX_STRING( usync()->GetSpringVersion() ) + _T(") ");
+      message +=  _("is not supported by the lobby server that requires version");
+      message += _T(" (") +  WX_STRING( m_serv->GetRequiredSpring() ) + _T(").\n\n");
+      message += _("Online play will be disabled.");
+      wxLogWarning ( _T("server not supports current spring version") );
+      wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
     } else {
       wxLogWarning( _T("can't get spring version from unitsync") );
       wxMessageBox( _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
@@ -485,13 +483,10 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 
 bool Ui::IsSpringCompatible( )
 {
-  try {
-    if ( !m_spring->TestSpringBinary() ) return false;
-    if ( m_server_spring_ver == "*" ) return true; // Server accepts any version.
-    if ( (usync()->GetSpringVersion() == m_server_spring_ver ) && ( m_server_spring_ver != "" ) ) return true;
-    else return false;
-  } catch (...) {}
-  return false;
+  if ( !m_spring->TestSpringBinary() ) return false;
+  if ( m_server_spring_ver == "*" ) return true; // Server accepts any version.
+  if ( (usync()->GetSpringVersion() == m_serv->GetRequiredSpring() ) && ( m_serv->GetRequiredSpring() != "" ) ) return true;
+  else return false;
 }
 
 

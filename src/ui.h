@@ -152,8 +152,6 @@ class Ui
   protected:
     Spring* m_spring;
 
-    std::string m_server_spring_ver;
-
     UnitSyncThread* m_thread;
     wxCriticalSection m_thread_wait;
 

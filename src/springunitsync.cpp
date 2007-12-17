@@ -91,7 +91,11 @@ bool SpringUnitSync::IsLoaded()
 std::string SpringUnitSync::GetSpringVersion()
 {
   wxLogDebugFunc( _T("") );
+  try
+  {
   return STD_STRING(susynclib()->GetSpringVersion());
+  } catch (...) {}
+  return "";
 }
 
 
