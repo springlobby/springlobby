@@ -303,14 +303,15 @@ void TASServer::Update( int mselapsed )
       /// Nat travelsal "ping"
       Battle *battle=GetCurrentBattle();
       if(battle){
-        if((battle->GetNatType()==NAT_Hole_punching) && !battle->GetInGame()){
+        if((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports)) && !battle->GetInGame()){
           UDPPing();
         }else{
-          if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
-          if(battle->GetInGame())wxLogMessage( _T("pinging: current battle is in game") );
+          /// old logging for debug
+          //if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
+          //if(battle->GetInGame())wxLogMessage( _T("pinging: current battle is in game") );
         }
       }else{
-        wxLogMessage( _T("pinging: No current battle set") );
+        //wxLogMessage( _T("pinging: No current battle set") );
       }
     }
     HandlePinglist();
@@ -378,6 +379,8 @@ void TASServer::ExecuteCommand( const std::string& in )
 
 void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
+  wxLogDebugFunc( _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams));
+
   std::string params = inparams;
   int pos, cpu, id, nat, port, maxplayers, rank, specs, metal = 0, energy = 0, units, start = 0,
       top, left, right, bottom, ally, udpport;
@@ -939,7 +942,7 @@ void TASServer::JoinBattle( const int& battleid, const std::string& password )
   if(BattleExists(battleid)){
     Battle *battle=&GetBattle(battleid);
     if(battle){
-      if(battle->GetNatType()==NAT_Hole_punching)UDPPing();
+      if((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))UDPPing();
     }
   }else{
     wxLogMessage( _T("battle doesnt exist") );
