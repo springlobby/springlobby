@@ -12,9 +12,12 @@ class wxWindow;
 class wxPoint;
 class wxString;
 
-int customMessageBox( int whichIcon , const wxString& message,
-        const wxString& caption = wxMessageBoxCaptionStr,
-        long style = wxOK|wxCENTRE, wxWindow *parent = NULL, const int x = -1, const int y = -1 );
+#define SL_MAIN_WINDOW_PTR CustomMessageBox::getLobbypointer() 
+#define SE_FRAME_PTR CustomMessageBox::getSettingspointer()
+
+int customMessageBox(int whichIcon , const wxString& message,
+        const wxString& caption = wxMessageBoxCaptionStr, 
+        long style = wxOK|wxCENTRE,  const int x = -1, const int y = -1 );
 
 class CustomMessageBox : public wxMessageDialog
 {
@@ -23,6 +26,14 @@ public:
 	        const wxString& caption = wxMessageBoxCaptionStr,
 	        long style = wxOK|wxCENTRE, const wxPoint& pos = wxDefaultPosition);
 	virtual ~CustomMessageBox();
+	static void setLobbypointer(wxWindow*);
+	static void setSettingspointer(wxWindow*);
+	static wxWindow* getLobbypointer();
+	static wxWindow* getSettingspointer();
+	
+protected:
+	static wxWindow* m_settingsWindow;
+	static wxWindow* m_lobbyWindow;
 };
 
 

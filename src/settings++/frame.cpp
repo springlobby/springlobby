@@ -114,7 +114,7 @@ void settings_frame::handleExternExit()
 		alreadyCalled = true;
 		if (abstract_panel::settingsChanged)
 		{	
-			int choice = customMessageBox(SS_MAIN_ICON,wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"), wxYES_NO |wxICON_QUESTION,this);	
+			int choice = customMessageBox(SS_MAIN_ICON,wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"), wxYES_NO |wxICON_QUESTION);	
 			if ( choice == wxYES)
 			{
 				abstract_panel::saveSettings();
@@ -130,7 +130,7 @@ void settings_frame::handleExternExit()
 void settings_frame::handleExit() {
     if (abstract_panel::settingsChanged) 
     {
-    	int action = customMessageBox(SS_MAIN_ICON,wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION , this);
+    	int action = customMessageBox(SS_MAIN_ICON,wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION );
         switch (action) {
         case wxYES:
         	if (abstract_panel::saveSettings())
@@ -241,7 +241,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		 break;
 
 		case ID_MENUITEM_RESET: 
-			if ((customMessageBox(SS_MAIN_ICON,wxT("Reset ALL settings to default values?"), wxT("Confirmation needed"), wxYES_NO, this)) == wxYES) {
+			if ((customMessageBox(SS_MAIN_ICON,wxT("Reset ALL settings to default values?"), wxT("Confirmation needed"), wxYES_NO)) == wxYES) {
 						resetSettings();
 			}
 		 break;
@@ -265,7 +265,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				
 				SetTitle(wxT("SpringSettings (simple mode)"));
 				if (!OptionsHandler.getDisableWarning()){
-					customMessageBox(SS_MAIN_ICON,expertModeWarning, wxT("Hint"), wxOK, this);
+					customMessageBox(SS_MAIN_ICON,expertModeWarning, wxT("Hint"), wxOK);
 				}	
 		  break;
 		  
