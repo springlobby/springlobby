@@ -104,10 +104,20 @@ std::string SpringUnitSync::GetSpringVersion()
 bool SpringUnitSync::VersionSupports( GameFeature feature )
 {
   wxString ver = WX_STRING( GetSpringVersion() );
-  float nver = 0;
-  if      ( ver == _T("0.75b2") ) nver = 75.2;
-  else if ( ver == _T("0.75b2+") ) nver = 76.0;
-  else if ( ver == _T("0.76b1") ) nver = 76.1;
+  double nver = 0;
+  ver = ver.BeforeFirst('b') + ver.AfterFirst('b'); //remove the beta flag
+  ver.Replace( _T("."), _T(",") ); // use a column as decimal separator isntead of the dot
+  if ( ver.Contains( _T("+") ) ) //remove the + (development) flag, and increase the version
+  {
+    ver = ver.BeforeFirst('+');
+    ver.ToDouble( &nver); // convert to float
+    nver = floor ( ( nver * 100 ) + 0.9 ); // increments version and rounds up the decimal to 0
+  }
+  else
+  {
+    ver.ToDouble( &nver); // convert to float
+    nver = nver * 100;
+  }
 
   switch (feature) {
     case GF_XYStartPos: return nver >= 76.0;
