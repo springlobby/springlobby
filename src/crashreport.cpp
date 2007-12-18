@@ -17,6 +17,10 @@
 
 #if wxUSE_DEBUGREPORT
 
+NetDebugReport::NetDebugReport() : wxDebugReportUpload ( _T("http://www.zjt3.com"), _T("debugfile"), _T("test.py") )
+{
+}
+
 bool NetDebugReport::OnServerReply(const wxArrayString& reply)
 {
     if ( reply.IsEmpty() )

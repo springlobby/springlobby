@@ -5,17 +5,10 @@
 
 #if wxUSE_DEBUGREPORT
 
-class NetDebugReport : public wxDebugReportUpload /// FIXME (BrainDamage#1#): this doesn't do anything
+class NetDebugReport : public wxDebugReportUpload
 {
   public:
-      NetDebugReport() : wxDebugReportUpload
-                       (
-                        _T("http://www.zjt3.com"),
-                        _T("debugfile"),
-                        _T("test.py")
-                       )
-      {
-      }
+      NetDebugReport(); /// FIXME (BrainDamage#1#): this fails
 
   protected:
       bool OnServerReply(const wxArrayString& reply);
