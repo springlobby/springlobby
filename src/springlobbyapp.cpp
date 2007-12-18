@@ -33,7 +33,7 @@ BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
 END_EVENT_TABLE()
 
 SpringLobbyApp::SpringLobbyApp()
-{
+{ 
   m_timer = new wxTimer(this, TIMER_ID);
 }
 
@@ -47,6 +47,7 @@ SpringLobbyApp::~SpringLobbyApp()
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
+
 #if wxUSE_ON_FATAL_EXCEPTION
   wxHandleFatalExceptions( true );
 #endif

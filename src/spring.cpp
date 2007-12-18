@@ -524,9 +524,16 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   int NumAllys = 0;
   int PlayerTeam = -1;
+  int starttype;
+
+  if ( usync()->VersionSupports( GF_XYStartPos ) ) starttype = 3;
+  else starttype = 0;
+
+  wxLogMessage( _T("StartPosType=") + WX_STRING( i2s( starttype ) ) );
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
-    BattleBot* bot = battle.GetBotByStartPosition( i );
+    BattleBot* bot;
+    if ( starttype == 3) bot = battle.GetBot( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     if ( bot->aidll == "" ) PlayerTeam = i;
     if(bot->bs.ally>int(AllyConv.size())-1){
@@ -569,12 +576,16 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
     s += wxString::Format( _T("\t\tteam=%d;\n"), PlayerTeam );
   s += _T("\t}\n\n");
 
-
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) { // TODO fix this when new Spring comes.
-    BattleBot* bot = battle.GetBotByStartPosition( i );
+    BattleBot* bot;
+    if ( starttype == 3) bot = battle.GetBot( i );
+    else bot = battle.GetBotByStartPosition( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i );
-
+    if ( starttype == 3 ){
+      s += wxString::Format( _T("\t\tStartPosX=%d;\n"), bot->posx );
+      s += wxString::Format( _T("\t\tStartPosZ=%d;\n"), bot->posy );
+    }
     s += _T("\t\tTeamLeader=0;\n");
     s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[bot->bs.ally] );
     const char* old_locale = std::setlocale(LC_NUMERIC, "C");

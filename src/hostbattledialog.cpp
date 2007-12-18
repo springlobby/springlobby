@@ -17,7 +17,6 @@
 #include <wx/radiobut.h>
 #include <wx/textctrl.h>
 #include <wx/statbmp.h>
-#include <wx/msgdlg.h>
 
 #include "hostbattledialog.h"
 #include "settings.h"
@@ -33,6 +32,7 @@
 #include "images/rank5.xpm"
 #include "images/rank6.xpm"
 
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
 
@@ -228,7 +228,7 @@ void HostBattleDialog::OnOk( wxCommandEvent& event )
 {
   if ( m_mod_pic->GetSelection() == wxNOT_FOUND ) {
     wxLogWarning( _T("no mod selected") );
-    wxMessageBox( _("You have to select a mod first."), _("No mod selected."), wxOK );
+    customMessageBox(SL_MAIN_ICON, _("You have to select a mod first."), _("No mod selected."), wxOK );
     return;
   }
 

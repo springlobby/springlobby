@@ -3,10 +3,8 @@
 // Class: Ui
 //
 
-#include <wx/msgdlg.h>
 #include <wx/textdlg.h>
 #include <stdexcept>
-#include <wx/msgdlg.h>
 #include <wx/thread.h>
 #include <wx/intl.h>
 #include <wx/utils.h>
@@ -32,15 +30,17 @@
 #include "agreementdialog.h"
 #include "unitsyncthread.h"
 
+#include "settings++/custom_dialogs.h"
 
 Ui::Ui() :
   m_serv(0),
   m_main_win(0),
   m_con_win(0)
 {
-  ReloadUnitSync();
+   ReloadUnitSync();
 
   m_main_win = new MainWindow( *this );
+  CustomMessageBox::setLobbypointer(m_main_win);
   m_spring = new Spring(*this);
   m_thread = new UnitSyncThread( *this );
   m_thread->Init();
@@ -48,6 +48,7 @@ Ui::Ui() :
 
 Ui::~Ui() {
   Disconnect();
+
   delete m_main_win;
   delete m_spring;
   m_thread->Delete();
@@ -253,6 +254,7 @@ void Ui::Quit()
 {
   ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   sett().SaveSettings();
+  m_main_win->forceSettingsFrameClose();
   m_main_win->Close();
 }
 
@@ -307,26 +309,23 @@ void Ui::DownloadMod( const wxString& mod )
 
 void Ui::OpenWebBrowser( const wxString& url )
 {
-  try
+  if ( sett().GetWebBrowserPath() == _T("use default") || sett().GetWebBrowserPath().IsEmpty() )
   {
-    if ( sett().GetWebBrowserPath() == _T("use default") || sett().GetWebBrowserPath().IsEmpty() )
-    {
       if ( !wxLaunchDefaultBrowser( url ) )
       {
-        wxLogWarning( _T("can't't launch default browser") );
-        wxMessageBox( _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+        wxLogWarning( _T("can't launch default browser") );
+        customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
       }
-    }
-    else
+  }
+  else
+  {
+    if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
     {
-      if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
-      {
-        wxLogWarning( _T("can't launch browser: ") + sett().GetWebBrowserPath() );
-        wxMessageBox( _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
-      }
-
+      wxLogWarning( _T("can't launch browser: ") + sett().GetWebBrowserPath() );
+      customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
     }
-  } catch (...){}
+
+  }
 }
 
 
@@ -472,7 +471,7 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
       wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
     } else {
       wxLogWarning( _T("can't get spring version from unitsync") );
-      wxMessageBox( _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
+      customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
     }
   }
   server.uidata.panel->StatusMessage( _T("Connected to ") + WX_STRING(server_name) + _T(".") );
@@ -763,17 +762,13 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
 void Ui::OnJoinedBattle( Battle& battle )
 {
   mw().GetJoinTab().JoinBattle( battle );
-  /*if ( !Spring::TestSpringBinary() ) {
-<<<<<<< HEAD:src/ui.cpp
-    wxLogWarning( _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online.") );
-=======
-    wxMessageBox( _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
->>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/ui.cpp
-  }*/
+  if ( !Spring::TestSpringBinary() ) {
+    customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
+  }
   if ( battle.GetNatType() != NAT_None ) {
     wxLogWarning( _T("joining game with NAT transversal") );
 #if(!NAT_TRAVERSAL_SUPPORT)
-    wxMessageBox( _("This game uses NAT traversal that is not supported by wx 2.6 build of springlobby. \n\nYou will not be able to play in this battle. \nUpdate your wxwidgets to 2.8 or newer to enable NAT traversal support."), _("NAT traversal"), wxOK );
+    customMessageBox(SL_MAIN_ICON, _("This game uses NAT traversal that is not supported by wx 2.6 build of springlobby. \n\nYou will not be able to play in this battle. \nUpdate your wxwidgets to 2.8 or newer to enable NAT traversal support."), _("NAT traversal"), wxOK );
 #endif
   }
 }
@@ -955,4 +950,9 @@ void Ui::OnCachedThreadStarted()
 void Ui::OnCachedThreadTerminated()
 {
   m_thread_wait.Leave();
+}
+
+void Ui::OnMainWindowDestruct()
+{
+	m_main_win = 0;
 }

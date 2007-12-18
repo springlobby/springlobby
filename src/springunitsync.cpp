@@ -91,11 +91,39 @@ bool SpringUnitSync::IsLoaded()
 std::string SpringUnitSync::GetSpringVersion()
 {
   wxLogDebugFunc( _T("") );
+  std::string ret;
   try
   {
-  return STD_STRING(susynclib()->GetSpringVersion());
-  } catch (...) {}
-  return "";
+    ret = STD_STRING(susynclib()->GetSpringVersion());
+  }
+  catch (...){}
+  return ret;
+}
+
+
+bool SpringUnitSync::VersionSupports( GameFeature feature )
+{
+  wxString ver = WX_STRING( GetSpringVersion() );
+  double nver = 0;
+  ver = ver.BeforeFirst('b') + ver.AfterFirst('b'); //remove the beta flag
+  ver.Replace( _T("."), _T(",") ); // use a column as decimal separator isntead of the dot
+  if ( ver.Contains( _T("+") ) ) //remove the + (development) flag, and increase the version
+  {
+    ver = ver.BeforeFirst('+');
+    ver.ToDouble( &nver); // convert to float
+    nver = floor ( ( nver * 100 ) + 0.9 ); // increments version and rounds up the decimal to 0
+  }
+  else
+  {
+    ver.ToDouble( &nver); // convert to float
+    nver = nver * 100;
+  }
+
+  switch (feature) {
+    case GF_XYStartPos: return nver >= 76.0;
+    case USYNC_Sett_Handler: return nver >= 76.0;
+  }
+  return false;
 }
 
 
@@ -354,8 +382,9 @@ wxArrayString SpringUnitSync::GetAIList()
   wxLogDebugFunc( _T("") );
 
   int ini = susynclib()->InitFindVFS( _T("AI/Bot-libs/*") + wxString(DLL_EXTENSION) );
-  wxString FileName;
+
   wxArrayString ret;
+  wxString FileName;
 
   ini = susynclib()->FindFilesVFS( ini, FileName );
   while ( ini ) {

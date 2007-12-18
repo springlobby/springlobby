@@ -60,7 +60,7 @@ class HostBattleDialog : public wxDialog
 		wxButton* m_cancel_btn;
 
 		wxButton* m_host_btn;
-
+		
     DECLARE_EVENT_TABLE()
 };
 
