@@ -15,6 +15,8 @@
 #include "serverevents.h"
 #include "socket.h"
 
+#include <wx/socket.h>
+
 #define SER_VER_BAD -1
 #define SER_VER_UNKNOWN 0
 #define SER_VER_0_32 32
@@ -166,7 +168,9 @@ void TASServer::SetSocket( Socket* sock )
 
 void TASServer::Connect( const std::string& addr, const int port )
 {
+  m_addr=addr;
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
+
   m_sock->Connect( addr, port );
   if ( IsConnected() ) {
     m_last_ping = time( 0 );
@@ -297,6 +301,19 @@ void TASServer::Update( int mselapsed )
     time_t now = time( 0 );
     if ( m_last_ping + m_keepalive < now ) { // Is it time for a keepalive PING?
       Ping();
+      /// Nat travelsal "ping"
+      Battle *battle=GetCurrentBattle();
+      if(battle){
+        if((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports)) && !battle->GetInGame()){
+          UDPPing();
+        }else{
+          /// old logging for debug
+          //if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
+          //if(battle->GetInGame())wxLogMessage( _T("pinging: current battle is in game") );
+        }
+      }else{
+        //wxLogMessage( _T("pinging: No current battle set") );
+      }
     }
     HandlePinglist();
   }
@@ -382,10 +399,12 @@ void TASServer::ExecuteCommand( const std::string& in )
 
 void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
+  wxLogDebugFunc( _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams));
+
   std::string params = inparams;
   int pos, cpu, id, nat, port, maxplayers, rank, specs, metal = 0, energy = 0, units, start = 0,
-      top, left, right, bottom, ally;
-  bool replay, haspass, dgun = false, ghost = false, dim = false;
+      top, left, right, bottom, ally, udpport;
+  bool replay, haspass, dgun = false, ghost = false, dim = false, lanmode = false;
   GameType gt = GT_ComContinue;
   std::string hash;
   std::string nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version;
@@ -409,7 +428,9 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     else
       m_ser_ver = SER_VER_BAD;
     supported_spring_version = GetWordParam( params );
-    m_se->OnConnected( "TAS Server", mod, (m_ser_ver > 0), supported_spring_version );
+    udpport = GetIntParam( params );
+    lanmode = GetBoolParam( params );
+    m_se->OnConnected( "TAS Server", mod, (m_ser_ver > 0), supported_spring_version, udpport, lanmode );
 
   } else if ( cmd == "ACCEPTED" ) {
     m_online = true;
@@ -682,6 +703,14 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     msg = GetSentenceParam( params );
     m_se->OnServerMessage( msg );
     //Command: "DENIED" params: "Already logged in".
+  } else if ( cmd == "HOSTPORT" ) {
+    int tmp_port = GetIntParam( params );
+    m_se->OnHostUdpPortChange( tmp_port );
+    //HOSTPORT port
+  } else if ( cmd == "UDPSOURCEPORT" ) {
+    int tmp_port = GetIntParam( params );
+    m_se->OnUdpSourcePort( tmp_port );
+    //HOSTPORT port
   } else if ( cmd == "SETSCRIPTTAGS" ) {
     while ( (msg = GetSentenceParam( params )) != "" ) {
       std::string::size_type pos = msg.find( "=", 0 );
@@ -724,6 +753,30 @@ void TASServer::Ping()
   m_last_ping = time( 0 );
 }
 
+
+void TASServer::UDPPing(){/// used for nat travelsal
+#if(NAT_TRAVERSAL_SUPPORT)
+  wxLogMessage(_T("UDPPing address ")+WX_STRING(m_addr)+_T(" port ")+WX_STRING(i2s(m_udp_port)));
+
+  wxIPV4address local_addr;
+  local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
+  local_addr.Service(12345);
+
+  wxDatagramSocket udp_socket(local_addr,/* wxSOCKET_WAITALL*/wxSOCKET_NONE);
+
+  wxIPV4address wxaddr;
+  wxaddr.Hostname(WX_STRING(m_addr));
+  wxaddr.Service(m_udp_port);
+
+  char *message="ipv4 sux!";
+  if(udp_socket.IsOk()){
+    udp_socket.SendTo(wxaddr,message,strlen(message)+1);
+  }else{
+    wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));
+  }
+  if(udp_socket.Error())wxLogMessage(_T("Error=")+WX_STRING(i2s(udp_socket.LastError())));
+#endif
+}
 
 void TASServer::HandlePong( int replyid )
 {
@@ -833,7 +886,7 @@ void TASServer::DoActionPrivate( const std::string& nick, const std::string& msg
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
-  m_sock->Send( "SAYPRIVATE /me " + nick + " " + msg + "\n" );
+  m_sock->Send( "SAYPRIVATEEX " + nick + " " + msg + "\n" );
 }
 
 
@@ -1004,6 +1057,16 @@ void TASServer::JoinBattle( const int& battleid, const std::string& password )
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
+  //UDPPing();
+  if(BattleExists(battleid)){
+    Battle *battle=&GetBattle(battleid);
+    if(battle){
+      if((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))UDPPing();
+    }
+  }else{
+    wxLogMessage( _T("battle doesnt exist") );
+  }
+
   m_sock->Send( "JOINBATTLE " + i2s( battleid ) + " " + password + "\n" );
 }
 
@@ -1061,9 +1124,9 @@ void TASServer::SendHostInfo( HostInfo update )
 
   if ( update & HI_StartRects ) { // Startrects should be updated.
 
-    for ( int i = 10; i < 16; i++ ) battle.RemoveStartRect( i );
-    for ( int i = 0; i < 10; i++ ) { // Loop through all, and remove updated or deleted.
-
+    for ( std::vector<BattleStartRect*>::size_type i = 10; i < battle.GetNumRects(); i++ ) battle.RemoveStartRect( i ); /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >10 start boxes)
+    for ( std::vector<BattleStartRect*>::size_type i = 0; i < battle.GetNumRects(); i++ ) { // Loop through all, and remove updated or deleted.
+      if ( i >= 10 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >10 start boxes)
       wxString cmd;
       BattleStartRect* sr = battle.GetStartRect( i );
       if ( sr == 0 ) continue;
@@ -1078,7 +1141,8 @@ void TASServer::SendHostInfo( HostInfo update )
 
     }
 
-    for ( int i = 0; i < 10; i++ ) { // Loop through all, and update.
+    for ( std::vector<BattleStartRect*>::size_type i = 0; i < battle.GetNumRects(); i++ ) { // Loop through all, and update.
+      if ( i >= 10 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >10 start boxes)
       wxString cmd;
       BattleStartRect* sr = battle.GetStartRect( i );
       if ( sr == 0 ) continue;
@@ -1086,6 +1150,7 @@ void TASServer::SendHostInfo( HostInfo update )
         cmd = wxString::Format( _T("ADDSTARTRECT %d %d %d %d %d\n"), sr->ally, sr->left, sr->top, sr->right, sr->bottom );
         m_sock->Send( STD_STRING(cmd) );
         battle.StartRectUpdated( i );
+
       }
     }
 
@@ -1112,7 +1177,9 @@ void TASServer::RequestInGameTime( const std::string& nick )
 
 Battle* TASServer::GetCurrentBattle()
 {
-  ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
+  //ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
+  if(m_battle_id==-1) return NULL;
+  if(!BattleExists(m_battle_id))return NULL;
   return &GetBattle( m_battle_id );
 }
 
@@ -1378,6 +1445,30 @@ void TASServer::UpdateBot( int battleid, const std::string& nick, UserBattleStat
   //UPDATEBOT name battlestatus teamcolor
   std::string cmd = "UPDATEBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + "\n";
   wxLogMessage( WX_STRING(cmd) );
+  m_sock->Send( cmd );
+}
+
+
+void TASServer::SendUdpSourcePort( int udpport )
+{
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
+
+  //UDPSOURCEPORT port
+  m_sock->Send( "UDPSOURCEPORT " + i2s( udpport ) + "\n" );
+}
+
+
+void TASServer::SendNATHelperInfos( const wxString& username, const wxString& ip, int port )
+{
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( IsOnline(), _T("Not online") );
+  ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
+
+  //CLIENTIPPORT username ip port
+  std::string cmd = "CLIENTIPPORT " + STD_STRING( username ) + " " + STD_STRING( ip ) + " " + i2s (port ) + "\n";
+  wxLogMessage ( WX_STRING( cmd ) );
   m_sock->Send( cmd );
 }
 

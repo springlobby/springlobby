@@ -389,8 +389,12 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
       return true;
     }
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/ingame") ) {
+<<<<<<< HEAD:src/ui.cpp
     if ( cmd.AfterFirst(' ') != wxEmptyString ) return false;
     m_serv->RequestInGameTime("");
+=======
+    m_serv->RequestInGameTime( "" );
+>>>>>>> 3b057734670f1d37b9ed7bc911ca2bd14a2555c9:src/ui.cpp
     return true;
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/help") ) {
     wxString topic = cmd.AfterFirst(' ');
@@ -461,9 +465,9 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 {
   wxLogDebugFunc( _T("") );
 
-
   if ( !IsSpringCompatible () ){
     if ( m_spring->TestSpringBinary() ) {
+<<<<<<< HEAD:src/ui.cpp
       try {
         wxString message = _("Your spring version");
         message += _T(" (") + WX_STRING( usync()->GetSpringVersion() ) + _T(") ");
@@ -473,6 +477,15 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
         wxLogWarning ( _T("server not supports current spring version") );
         customMessageBox (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION );
       } catch (...) {}
+=======
+      wxString message = _("Your spring version");
+      message += _T(" (") + WX_STRING( usync()->GetSpringVersion() ) + _T(") ");
+      message +=  _("is not supported by the lobby server that requires version");
+      message += _T(" (") +  WX_STRING( m_serv->GetRequiredSpring() ) + _T(").\n\n");
+      message += _("Online play will be disabled.");
+      wxLogWarning ( _T("server not supports current spring version") );
+      wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
+>>>>>>> 3b057734670f1d37b9ed7bc911ca2bd14a2555c9:src/ui.cpp
     } else {
       wxLogWarning( _T("can't get spring version from unitsync") );
       customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
@@ -486,13 +499,10 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 
 bool Ui::IsSpringCompatible( )
 {
-  try {
-    if ( !m_spring->TestSpringBinary() ) return false;
-    if ( m_server_spring_ver == "*" ) return true; // Server accepts any version.
-    if ( (usync()->GetSpringVersion() == m_server_spring_ver ) && ( m_server_spring_ver != "" ) ) return true;
-    else return false;
-  } catch (...) {}
-  return false;
+  if ( !m_spring->TestSpringBinary() ) return false;
+  if ( m_serv->GetRequiredSpring() == "*" ) return true; // Server accepts any version.
+  if ( (usync()->GetSpringVersion() == m_serv->GetRequiredSpring() ) && ( m_serv->GetRequiredSpring() != "" ) ) return true;
+  else return false;
 }
 
 
@@ -778,7 +788,13 @@ void Ui::OnJoinedBattle( Battle& battle )
   }*/
   if ( battle.GetNatType() != NAT_None ) {
     wxLogWarning( _T("joining game with NAT transversal") );
+<<<<<<< HEAD:src/ui.cpp
     customMessageBox(SL_MAIN_ICON,  _("This game uses NAT traversal that is not yet supported\nby SpringLobby.\n\nYou will not be able to play in this battle."), _("NAT traversal"), wxOK );
+=======
+#if(!NAT_TRAVERSAL_SUPPORT)
+    wxMessageBox( _("This game uses NAT traversal that is not supported by wx 2.6 build of springlobby. \n\nYou will not be able to play in this battle. \nUpdate your wxwidgets to 2.8 or newer to enable NAT traversal support."), _("NAT traversal"), wxOK );
+#endif
+>>>>>>> 3b057734670f1d37b9ed7bc911ca2bd14a2555c9:src/ui.cpp
   }
 }
 

@@ -237,6 +237,9 @@ int wxCALLBACK BattleListCtrl::CompareStatusUP(long item1, long item2, long sort
   if ( battle2.IsFull() )
     b2 += 25;
 
+  if ( b1 > 1000 ) b1 = 1000;
+  if ( b2 > 1000 ) b2 = 1000;
+
   // inverse the order
   if ( b1 < b2 )
       return -1;
@@ -271,6 +274,9 @@ int wxCALLBACK BattleListCtrl::CompareStatusDOWN(long item1, long item2, long so
     b1 += 25;
   if ( battle2.IsFull() )
     b2 += 25;
+
+  if ( b1 > 1000 ) b1 = 1000;
+  if ( b2 > 1000 ) b2 = 1000;
 
   // inverse the order
   if ( b1 < b2 )

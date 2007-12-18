@@ -91,9 +91,13 @@ bool SpringUnitSync::IsLoaded()
 std::string SpringUnitSync::GetSpringVersion()
 {
   wxLogDebugFunc( _T("") );
+<<<<<<< HEAD:src/springunitsync.cpp
   std::string ret;
+=======
+>>>>>>> 3b057734670f1d37b9ed7bc911ca2bd14a2555c9:src/springunitsync.cpp
   try
   {
+<<<<<<< HEAD:src/springunitsync.cpp
     ret = STD_STRING(susynclib()->GetSpringVersion());
   }
   catch (...){}
@@ -114,6 +118,11 @@ bool SpringUnitSync::VersionSupports( GameFeature feature )
     case USYNC_Sett_Handler: return nver >= 76.0;
   }
   return false;
+=======
+  return STD_STRING(susynclib()->GetSpringVersion());
+  } catch (...) {}
+  return "";
+>>>>>>> 3b057734670f1d37b9ed7bc911ca2bd14a2555c9:src/springunitsync.cpp
 }
 
 
@@ -127,7 +136,11 @@ int SpringUnitSync::GetNumMods()
 int SpringUnitSync::GetModIndex( const std::string& name )
 {
   wxLogDebugFunc( _T("name = \"") + WX_STRING(name) + _T("\"") );
-  return susynclib()->GetModIndex( WX_STRING(name) );
+  try
+  {
+    return susynclib()->GetModIndex( WX_STRING(name) );
+  } catch (...){}
+  return -1;
 }
 
 /*
@@ -148,7 +161,7 @@ bool SpringUnitSync::ModExists( const std::string& modname )
 {
   wxLogDebugFunc( _T("modname = \"") + WX_STRING(modname) + _T("\"") );
   try {
-    return susynclib()->GetPrimaryModIndex( WX_STRING(modname) ) >= 0;
+    return GetModIndex( modname ) >=0;
   } catch (...) {}
   return false;
 }
@@ -378,10 +391,12 @@ wxArrayString SpringUnitSync::GetAIList()
     ini = susynclib()->FindFilesVFS( ini, FileName );
   }
 
+  if(susynclib()->HasLuaAI()){
   try { // Older versions of unitsync does not have these functions.
     const int LuaAICount = susynclib()->GetLuaAICount();
     for ( int i = 0; i < LuaAICount; i++ ) ret.Add( _( "LuaAI" ) +  susynclib()->GetLuaAIName( i ) );
   } catch (...) {}
+  }
 
   return ret;
 }
