@@ -13,7 +13,7 @@
 //#include <wx/txtstrm.h>
 //#include <wx/wfstream.h>
 #include <wx/textfile.h>
-
+#include <cmath>
 #include <stdexcept>
 
 #include "springunitsync.h"
@@ -111,7 +111,7 @@ bool SpringUnitSync::VersionSupports( GameFeature feature )
   {
     ver = ver.BeforeFirst('+');
     ver.ToDouble( &nver); // convert to float
-    nver = floor ( ( nver * 100 ) + 0.9 ); // increments version and rounds up the decimal to 0
+    nver = std::floor ( ( nver * 100 ) + 0.9 ); // increments version and rounds up the decimal to 0
   }
   else
   {
