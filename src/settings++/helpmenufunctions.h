@@ -3,5 +3,7 @@
 
 void showAbout();
 void showCredits();
+void openNewTicket();
+void openContactPage();
 
 #endif /*HELPMENUFUNCTIONS_H_*/

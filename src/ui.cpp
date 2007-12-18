@@ -313,7 +313,7 @@ void Ui::OpenWebBrowser( const wxString& url )
   {
       if ( !wxLaunchDefaultBrowser( url ) )
       {
-        wxLogWarning( _T("can't't launch default browser") );
+        wxLogWarning( _T("can't launch default browser") );
         customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
       }
   }

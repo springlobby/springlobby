@@ -208,6 +208,7 @@ void settings_frame::initMenuBar() {
 	menuHelp->Append(ID_MENUITEM_ABOUT, wxT("About"));
 	menuHelp->Append(ID_MENUITEM_CONTACT, wxT("Contact"));
 	menuHelp->Append(ID_MENUITEM_CREDITS, wxT("Credits"));
+	menuHelp->Append(ID_MENUITEM_BUGREPORT, wxT("Report a bug"));
 	
 	switch(OptionsHandler.getMode()){
 	case SET_MODE_EXPERT: {
@@ -283,6 +284,12 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 			break;
 		case ID_MENUITEM_CREDITS:
 			showCredits();
+			break;
+		case ID_MENUITEM_CONTACT:
+			openContactPage();
+			break;
+		case ID_MENUITEM_BUGREPORT:
+			openNewTicket();
 			break;
 	}
 }

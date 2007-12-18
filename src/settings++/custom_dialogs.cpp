@@ -39,11 +39,15 @@ void CustomMessageBox::setLobbypointer(wxWindow* arg)
 
  wxWindow* CustomMessageBox::getLobbypointer()
 {
+//	 if (m_lobbyWindow==0)
+//			 wxLogWarning(_T("null parent window in custom message dialog"));
 	return m_lobbyWindow;
 }
 
  wxWindow* CustomMessageBox::getSettingspointer()
 {
+//	 if (m_settingsWindow==0)
+//		 wxLogWarning(_T("null parent window in custom message dialog"));
 	return m_settingsWindow;
 }
 
