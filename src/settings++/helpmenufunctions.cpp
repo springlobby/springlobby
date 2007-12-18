@@ -21,7 +21,7 @@ void showAbout()
 	 wxAboutDialogInfo info;
 	 info.SetName(_T("SpringSettings"));
 	 info.SetVersion(_T("0.1"));//WX_STRING(ver));
-	 info.SetDescription(_T("SpringSettings is a graphical frontend to the options of the spring engine"));
+	 info.SetDescription(_T("SpringSettings is a graphical frontend to the Settings of the Spring engine"));
 	 info.SetCopyright(_T("(C) 2007 koshi <koshi@springlobby.info>"));
 	 info.SetIcon(wxIcon(springsettings_xpm));
 	 wxAboutBox(info);
@@ -32,8 +32,9 @@ void showAbout()
 void showCredits()
 {
 	CreditsDialog dlg(CustomMessageBox::getSettingspointer(),_T("Credits"),SS_MAIN_ICON);
-	dlg.AddCredit(_T("IUB"),_T("BKJB"));
-	dlg.AddCredit(_T("IUB"),_T("BKJB"));
+	dlg.AddCredit(_T("Kloot"),_T("wrote Settings++ from which SpringSettings originated"));
+	dlg.AddCredit(_T("The SpringLobby team"),_T("thanks for inviting me in, code to re-use, infrastructure and help in general"));
+	dlg.AddCredit(_T("everyone reporting bugs/suggestions"),_T(""));
 	dlg.ShowModal();
 }
 

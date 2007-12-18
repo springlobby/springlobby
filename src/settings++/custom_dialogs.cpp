@@ -117,7 +117,7 @@ void CreditsDialog::AddCredit(wxString person,wxString message)
 	text_ctrl->SetDefaultStyle(wxTextAttr(wxNullColour,wxNullColour,*heavyFont));
 	text_ctrl->AppendText(person + _T(": "));
 	text_ctrl->SetDefaultStyle(wxTextAttr(wxNullColour,wxNullColour,*wxNORMAL_FONT));
-	text_ctrl->AppendText(message + _T("\n"));
+	text_ctrl->AppendText(message + _T("\n\n"));
 }
 
 CreditsDialog::~CreditsDialog()
