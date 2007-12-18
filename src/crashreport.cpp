@@ -17,7 +17,7 @@
 
 #if wxUSE_DEBUGREPORT
 
-NetDebugReport::NetDebugReport() : wxDebugReportUpload ( _T("http://www.zjt3.com"), _T("debugfile"), _T("test.py") )
+NetDebugReport::NetDebugReport() : wxDebugReportUpload ( _T("http://trac.springlobby.info/attachment/ticket/236"), _T("attachment"), _T("?action=new") )
 {
 }
 
