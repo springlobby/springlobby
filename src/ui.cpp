@@ -48,7 +48,7 @@ Ui::Ui() :
 
 Ui::~Ui() {
   Disconnect();
-  
+
   delete m_main_win;
   delete m_spring;
   m_thread->Delete();
@@ -389,12 +389,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
       return true;
     }
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/ingame") ) {
-<<<<<<< HEAD:src/ui.cpp
-    if ( cmd.AfterFirst(' ') != wxEmptyString ) return false;
-    m_serv->RequestInGameTime("");
-=======
     m_serv->RequestInGameTime( "" );
->>>>>>> 3b057734670f1d37b9ed7bc911ca2bd14a2555c9:src/ui.cpp
     return true;
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/help") ) {
     wxString topic = cmd.AfterFirst(' ');
@@ -467,17 +462,6 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 
   if ( !IsSpringCompatible () ){
     if ( m_spring->TestSpringBinary() ) {
-<<<<<<< HEAD:src/ui.cpp
-      try {
-        wxString message = _("Your spring version");
-        message += _T(" (") + WX_STRING( usync()->GetSpringVersion() ) + _T(") ");
-        message +=  _("is not supported by the lobby server that requires version");
-        message += _T(" (") +  WX_STRING( m_server_spring_ver ) + _T(").\n\n");
-        message += _("Online play will be disabled.");
-        wxLogWarning ( _T("server not supports current spring version") );
-        customMessageBox (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION );
-      } catch (...) {}
-=======
       wxString message = _("Your spring version");
       message += _T(" (") + WX_STRING( usync()->GetSpringVersion() ) + _T(") ");
       message +=  _("is not supported by the lobby server that requires version");
@@ -485,7 +469,6 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
       message += _("Online play will be disabled.");
       wxLogWarning ( _T("server not supports current spring version") );
       wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
->>>>>>> 3b057734670f1d37b9ed7bc911ca2bd14a2555c9:src/ui.cpp
     } else {
       wxLogWarning( _T("can't get spring version from unitsync") );
       customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
@@ -779,22 +762,14 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
 void Ui::OnJoinedBattle( Battle& battle )
 {
   mw().GetJoinTab().JoinBattle( battle );
-  /*if ( !Spring::TestSpringBinary() ) {
-<<<<<<< HEAD:src/ui.cpp
-    wxLogWarning( _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online.") );
-=======
-    customMessageBox(SL_MAIN_WINDOW_PTR, m_sl_icon, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
->>>>>>> 6abeaad... experimental replace of customMessageBox with wxLogWarning and wxLogMessage:src/ui.cpp
-  }*/
+  if ( !Spring::TestSpringBinary() ) {
+    customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
+  }
   if ( battle.GetNatType() != NAT_None ) {
     wxLogWarning( _T("joining game with NAT transversal") );
-<<<<<<< HEAD:src/ui.cpp
-    customMessageBox(SL_MAIN_ICON,  _("This game uses NAT traversal that is not yet supported\nby SpringLobby.\n\nYou will not be able to play in this battle."), _("NAT traversal"), wxOK );
-=======
 #if(!NAT_TRAVERSAL_SUPPORT)
-    wxMessageBox( _("This game uses NAT traversal that is not supported by wx 2.6 build of springlobby. \n\nYou will not be able to play in this battle. \nUpdate your wxwidgets to 2.8 or newer to enable NAT traversal support."), _("NAT traversal"), wxOK );
+    customMessageBox(SL_MAIN_ICON, _("This game uses NAT traversal that is not supported by wx 2.6 build of springlobby. \n\nYou will not be able to play in this battle. \nUpdate your wxwidgets to 2.8 or newer to enable NAT traversal support."), _("NAT traversal"), wxOK );
 #endif
->>>>>>> 3b057734670f1d37b9ed7bc911ca2bd14a2555c9:src/ui.cpp
   }
 }
 
@@ -977,7 +952,7 @@ void Ui::OnCachedThreadTerminated()
   m_thread_wait.Leave();
 }
 
-void Ui::OnMainWindowDestruct() 
-{ 
+void Ui::OnMainWindowDestruct()
+{
 	m_main_win = 0;
 }

@@ -91,13 +91,9 @@ bool SpringUnitSync::IsLoaded()
 std::string SpringUnitSync::GetSpringVersion()
 {
   wxLogDebugFunc( _T("") );
-<<<<<<< HEAD:src/springunitsync.cpp
   std::string ret;
-=======
->>>>>>> 3b057734670f1d37b9ed7bc911ca2bd14a2555c9:src/springunitsync.cpp
   try
   {
-<<<<<<< HEAD:src/springunitsync.cpp
     ret = STD_STRING(susynclib()->GetSpringVersion());
   }
   catch (...){}
@@ -118,11 +114,6 @@ bool SpringUnitSync::VersionSupports( GameFeature feature )
     case USYNC_Sett_Handler: return nver >= 76.0;
   }
   return false;
-=======
-  return STD_STRING(susynclib()->GetSpringVersion());
-  } catch (...) {}
-  return "";
->>>>>>> 3b057734670f1d37b9ed7bc911ca2bd14a2555c9:src/springunitsync.cpp
 }
 
 
