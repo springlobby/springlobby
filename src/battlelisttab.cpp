@@ -27,7 +27,7 @@
 #include "battlelistfilter.h"
 #include "iconimagelist.h"
 
-#include "settings++/custom_msgbox.h"
+#include "settings++/custom_dialogs.h"
 #include "images/springlobby.xpm"
 #include <wx/icon.h>
 

@@ -2,5 +2,6 @@
 #define HELPMENUFUNCTIONS_H_
 
 void showAbout();
+void showCredits();
 
 #endif /*HELPMENUFUNCTIONS_H_*/

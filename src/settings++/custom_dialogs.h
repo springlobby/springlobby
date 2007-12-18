@@ -12,6 +12,7 @@ class wxIcon;
 class wxWindow;
 class wxPoint;
 class wxString;
+class wxTextCtrl;
 
 #define SL_MAIN_WINDOW_PTR CustomMessageBox::getLobbypointer() 
 #define SE_FRAME_PTR CustomMessageBox::getSettingspointer()
@@ -40,8 +41,12 @@ protected:
 class CreditsDialog: public wxDialog
 {
 public:
-	CreditsDialog();
+	CreditsDialog(wxWindow* parent,wxString title, int whichIcon);
 	virtual ~CreditsDialog();
+	void AddCredit(wxString,wxString);
+	
+private:
+	wxTextCtrl* text_ctrl;
 };
 
 #endif /*CUSTOM_MSG_DLG_H_*/

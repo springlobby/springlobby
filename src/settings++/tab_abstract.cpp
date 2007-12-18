@@ -30,7 +30,7 @@
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
 
-#include "custom_msgbox.h"
+#include "custom_dialogs.h"
 #include "../springunitsynclib.h"
 #include "../utils.h"
 #include "Defs.hpp"

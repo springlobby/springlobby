@@ -3,6 +3,8 @@
 #include "../images/springsettings.xpm"
 #include <wx/icon.h>
 #include "../utils.h"
+#include "custom_dialogs.h"
+#include <wx/string.h>
 
 void showAbout()
 {
@@ -16,4 +18,12 @@ void showAbout()
 	 wxAboutBox(info);
 
 #endif
+}
+
+void showCredits()
+{
+	CreditsDialog dlg(CustomMessageBox::getSettingspointer(),_T("Credits"),SS_MAIN_ICON);
+	dlg.AddCredit(_T("IUB"),_T("BKJB"));
+	dlg.AddCredit(_T("IUB"),_T("BKJB"));
+	dlg.ShowModal();
 }

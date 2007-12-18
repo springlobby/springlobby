@@ -19,7 +19,7 @@
 #include "addbotdialog.h"
 #include "server.h"
 
-#include "settings++/custom_msgbox.h"
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 

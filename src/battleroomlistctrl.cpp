@@ -22,7 +22,7 @@
 #include "utils.h"
 #include "uiutils.h"
 
-#include "settings++/custom_msgbox.h"
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE( BattleroomListCtrl, wxListCtrl )
 

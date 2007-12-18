@@ -504,8 +504,8 @@ springlobby_SOURCES += \
 	src/settings++/tab_abstract.h \
 	src/settings++/panel_pathoption.h \
 	src/settings++/panel_pathoption.cpp \
-	src/settings++/custom_msgbox.h \
-	src/settings++/custom_msgbox.cpp \
+	src/settings++/custom_dialogs.h \
+	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
 	src/settings++/helpmenufunctions.cpp 
 
@@ -558,8 +558,8 @@ springsettings_SOURCES = \
 	src/settings++/tab_abstract.h \
 	src/settings++/panel_pathoption.h \
 	src/settings++/panel_pathoption.cpp	\
-	src/settings++/custom_msgbox.h \
-	src/settings++/custom_msgbox.cpp \
+	src/settings++/custom_dialogs.h \
+	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
 	src/settings++/helpmenufunctions.cpp
 

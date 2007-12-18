@@ -33,7 +33,7 @@
 #include "spring.h"
 #include "mainwindow.h"
 
-#include "settings++/custom_msgbox.h"
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
 

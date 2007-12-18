@@ -17,7 +17,7 @@
 #include "battle.h"
 #include "iunitsync.h"
 
-#include "settings++/custom_msgbox.h"
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE( AddBotDialog, wxDialog )
     EVT_BUTTON( ADDBOT_CANCEL, AddBotDialog::OnClose )

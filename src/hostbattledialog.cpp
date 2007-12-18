@@ -32,7 +32,7 @@
 #include "images/rank5.xpm"
 #include "images/rank6.xpm"
 
-#include "settings++/custom_msgbox.h"
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
 

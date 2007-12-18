@@ -30,7 +30,7 @@
 #include "agreementdialog.h"
 #include "unitsyncthread.h"
 
-#include "settings++/custom_msgbox.h"
+#include "settings++/custom_dialogs.h"
 
 Ui::Ui() :
   m_serv(0),

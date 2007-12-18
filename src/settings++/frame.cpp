@@ -36,7 +36,7 @@
 #include "tab_simple.h"
 #include "Defs.hpp"
 #include "panel_pathoption.h"
-#include "custom_msgbox.h"
+#include "custom_dialogs.h"
 #include "../images/springsettings.xpm"
 #include "helpmenufunctions.h"
 
@@ -207,8 +207,8 @@ void settings_frame::initMenuBar() {
 	menuHelp = new wxMenu();
 	menuHelp->Append(ID_MENUITEM_ABOUT, wxT("About"));
 	menuHelp->Append(ID_MENUITEM_CONTACT, wxT("Contact"));
+	menuHelp->Append(ID_MENUITEM_CREDITS, wxT("Credits"));
 	
-        
 	switch(OptionsHandler.getMode()){
 	case SET_MODE_EXPERT: {
 			menuMode->Check(ID_MENUITEM_EXPERT,true);
@@ -222,7 +222,7 @@ void settings_frame::initMenuBar() {
 	wxMenuBar* menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, wxT("File"));
 	menuBar->Append(menuMode, wxT("Mode"));
-	menuBar->Append(menuHelp, wxT("Help"));
+	menuBar->Append(menuHelp, wxT("Info/Help"));
 	
 	//TODO PROFILES!!!
 	
@@ -280,6 +280,9 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 			
 		case ID_MENUITEM_ABOUT:
 			showAbout();
+			break;
+		case ID_MENUITEM_CREDITS:
+			showCredits();
 			break;
 	}
 }

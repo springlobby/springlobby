@@ -23,7 +23,7 @@
 #include "../springunitsynclib.h"
 #include "se_utils.h"
 
-#include "custom_msgbox.h"
+#include "custom_dialogs.h"
 
 PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxPanel(parent,-1),origin(_origin)
 {

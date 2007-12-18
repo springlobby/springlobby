@@ -22,7 +22,7 @@
 #include "images/connect.xpm"
 #include "utils.h"
 
-#include "settings++/custom_msgbox.h"
+#include "settings++/custom_dialogs.h"
 
 // Define events.
 BEGIN_EVENT_TABLE(ConnectWindow, wxFrame)
