@@ -100,6 +100,7 @@ void PathOptionPanel::UsePaths(wxCommandEvent& event)
 {
 	OptionsHandler.setUsyncLoc(  usync_ctrl->GetValue() );
 		
+	//TODO !!!
 	//if ( !(loadUnitsync()) )
 	{
 		//wxLogWarning( _T("can't load unitsync") );

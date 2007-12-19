@@ -5,7 +5,9 @@
 
 #define _S(v) wxString(v.c_str(),wxConvUTF8)
 
-void loadUnitsync();
+//bool loadUnitsync();
+
+void toh(void);
 
 void toString(std::string& s, int t);
 
