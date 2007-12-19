@@ -100,15 +100,15 @@ void PathOptionPanel::SetUsyncPath(wxCommandEvent& event)
 
 void PathOptionPanel::UsePaths(wxCommandEvent& event)
 {
-	OptionsHandler.setSpringDir( springdir_ctrl->GetValue() );
 	OptionsHandler.setUsyncLoc(  usync_ctrl->GetValue() );
-	OptionsHandler.save();
-
-	susynclib()->Unload();
-	wxSetWorkingDirectory(OptionsHandler.getSpringDir());
-	susynclib()->Load( OptionsHandler.getUsyncLoc());
-
-
+		
+	try{
+		susynclib()->Load( OptionsHandler.getUsyncLoc());
+	}
+	catch (...) {
+		customMessageBox(SS_MAIN_ICON, _("SpringSettings is unableGGGGGr options."), _("SpringSettings error"), wxOK );
+	}
+	
 	if ( !(susynclib()->IsLoaded()) )
 	{
 		//wxLogWarning( _T("can't load unitsync") );
@@ -117,7 +117,9 @@ void PathOptionPanel::UsePaths(wxCommandEvent& event)
 	else
 	{
 		origin->buildGuiFromErrorPanel();
+		OptionsHandler.save();
 	}
+
 }
 
 PathOptionPanel::~PathOptionPanel()

@@ -8,7 +8,6 @@
 #include "springunitsynclib.h"
 #include "utils.h"
 
-
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 
 SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path ):
@@ -50,6 +49,9 @@ void SpringUnitSyncLib::Load( const wxString& path )
   }
 
   try {
+#ifdef __WXMSW__
+    wxSetWorkingDirectory( path.BeforeLast('/') );
+#endif
     m_libhandle = new wxDynamicLibrary( path );
     if ( !m_libhandle->IsLoaded() ) {
       wxLogError(_T("wxDynamicLibrary created, but not loaded!"));

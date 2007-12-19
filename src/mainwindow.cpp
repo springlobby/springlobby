@@ -366,7 +366,8 @@ void MainWindow::OnUnitSyncReloaded()
   }
   else
   {
-    m_settings_menu->Enable( false );
+	  //TODO !!!!
+    m_settings_menu->Enable( true );
     wxLogMessage( _T("SpringSettingsTool Disabled") );
   }
 }
