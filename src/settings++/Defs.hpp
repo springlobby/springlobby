@@ -69,7 +69,7 @@
 #define ID_RO_SLI_5 105
 #define ID_RO_SLI_6 106
 #define ID_RO_SLI_7 107
-#define ID_RO_SLI_8 108
+//#define ID_RO_SLI_8 108
 
 // ParentWin Video Options checkbox IDs
 #define ID_WINDOWP_VO_CBOX_0 250
@@ -185,7 +185,7 @@ struct Control {
 };
 
 //TODO is max_texture stages obsolte?
-const Control RO_SLI[9] = {
+const Control RO_SLI[] = {
 	{_T("Shadow-map size"),              wxT("ShadowMapSize"),       ID_RO_SLI_0,	"2048", {_T("higher value = better looking shadows\n"
 																								"possible values: 1024, 2048, 4096, 8192")}	},
 	{_T("Tree view-distance"),           wxT("TreeRadius"),          ID_RO_SLI_1,	"1000", {_T("sets the maximum distance at which trees will still be rendered")}	},
@@ -196,8 +196,8 @@ const Control RO_SLI[9] = {
 	{_T("Unit icon distance"),           wxT("UnitIconDist"),        ID_RO_SLI_6,	"350", {_T("determines at which range units are still fully rendered\n"
 																								"higher value = greater range = more units rendered at the same time")}	},
 	{_T("Max simultaneous particles"),     wxT("MaxParticles"),        ID_RO_SLI_7,	"5000"	, {_T("limits how many particles are displayed at the same time")}},
-	{_T("Max texture stages (SM3)"), wxT("SM3MaxTextureStages"), ID_RO_SLI_8,	"6"	, {_T("Decrease this if you are having bad perfomance on maps in sm3 format,\n"
-																						"increase if sm3 maps look ugly.")}}
+	//{_T("Max texture stages (SM3)"), wxT("SM3MaxTextureStages"), ID_RO_SLI_8,	"6"	, {_T("Decrease this if you are having bad perfomance on maps in sm3 format,\n"
+	// not needed atm																				"increase if sm3 maps look ugly.")}}
 };
 
 const Control VO_CBOX[3] = {

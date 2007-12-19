@@ -44,10 +44,10 @@ intMap abstract_panel::intSettings;
 
 bool abstract_panel::settingsChanged = false;
 
-const int allControls_size = 61;
+const int allControls_size = 60;
 const Control allControls[allControls_size] = {
-		// RO_SLI[9]
-		RO_SLI[0],RO_SLI[1],RO_SLI[2],RO_SLI[3],RO_SLI[4],RO_SLI[5],RO_SLI[6],RO_SLI[7],RO_SLI[8],
+		// RO_SLI[8]
+		RO_SLI[0],RO_SLI[1],RO_SLI[2],RO_SLI[3],RO_SLI[4],RO_SLI[5],RO_SLI[6],RO_SLI[7],
 		// VO_CBOX[3]
 		VO_CBOX[0],VO_CBOX[1],VO_CBOX[2],
 		//VO_RBUT[2] <- only one key
@@ -113,7 +113,7 @@ bool abstract_panel::loadValuesIntoMap()
 void abstract_panel::loadDefaults()
 {
 	//const Control RO_SLI[9]
-	for (int i = 0;i< 9; ++i)
+	for (int i = 0;i< 8; ++i)
 		intSettings[RO_SLI[i].key] = fromString( RO_SLI[i].def);
 
 	//const Control VO_CBOX[3]
@@ -217,7 +217,7 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 		case ID_RO_SLI_5: { (intSettings)[RO_SLI[5].key]= value; } break;
 		case ID_RO_SLI_6: { (intSettings)[RO_SLI[6].key]= value; } break;
 		case ID_RO_SLI_7: { (intSettings)[RO_SLI[7].key]= value; } break;
-		case ID_RO_SLI_8: { (intSettings)[RO_SLI[8].key]= value; } break;
+		//case ID_RO_SLI_8: { (intSettings)[RO_SLI[8].key]= value; } break;
 
 		case ID_VO_SLI_0: {
 			(intSettings)[VO_SLI_EXT[0].key]= (value > 0)? 1: 0;
