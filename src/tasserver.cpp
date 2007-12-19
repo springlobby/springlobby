@@ -457,7 +457,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     maxplayers = GetIntParam( params );
     haspass = (bool)GetIntParam( params );
     rank = GetIntParam( params );
-    hash = STD_STRING( _ConvertTASServerPhailChecksum( GetWordParam( params ) ) );
+    hash = STD_STRING( _ConvertTASServerPhailChecksum( WX_STRING( GetWordParam( params ) ) ) );
     map = GetSentenceParam( params );
     title = GetSentenceParam( params );
     mod = GetSentenceParam( params );
@@ -545,7 +545,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
       dim = (bool)GetIntParam( params );
       ghost = (bool)GetIntParam( params );
     }
-    hash = STD_STRING( _ConvertTASServerPhailChecksum( GetWordParam( params ) ) );
+    hash = STD_STRING( _ConvertTASServerPhailChecksum( WX_STRING( GetWordParam( params ) ) ) );
     m_battle_id = id;
     m_se->OnJoinedBattle( id );
     if ( m_ser_ver < SER_VER_0_35 ) {
@@ -562,7 +562,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     dgun = (bool)GetIntParam( params );
     dim = (bool)GetIntParam( params );
     ghost = (bool)GetIntParam( params );
-    hash = STD_STRING( _ConvertTASServerPhailChecksum( GetWordParam( params ) ) );
+    hash = STD_STRING( _ConvertTASServerPhailChecksum( WX_STRING( GetWordParam( params ) ) ) );
     m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dgun, dim, ghost, hash );
     //UPDATEBATTLEDETAILS startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings
   } else if ( cmd == "CLIENTBATTLESTATUS" ) {
