@@ -220,6 +220,9 @@ void ChatPanel::_CreateControls( )
     wxSize s = m_splitter->GetSize();
     m_splitter->SetSashPosition( s.GetWidth() - 238, true );
   }
+
+  m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
+
 }
 
 
