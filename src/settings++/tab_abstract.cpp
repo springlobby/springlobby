@@ -433,7 +433,7 @@ bool abstract_panel::saveSettings() {
 //	        //configHandler->SetSpringConfigFloat(f->first,f->second);
 //	    }
     } catch (...) {
-    	customMessageBox(SS_MAIN_ICON,_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK|wxICON_HAND, 0);
+    	customMessageBox(SS_MAIN_ICON,_T("Could not save, unitsync not properly loaded"), wxT("SpringSettings Error"), wxOK|wxICON_HAND, 0);
     	return false;
     }
 

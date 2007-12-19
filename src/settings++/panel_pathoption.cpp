@@ -16,12 +16,13 @@
 #include <wx/file.h>
 #include <wx/stdpaths.h>
 
+#include "se_utils.h"
 #include "Defs.hpp"
 #include "frame.h"
 #include "se_settings.h"
 #include "../nonportable.h"
 #include "../springunitsynclib.h"
-#include "se_utils.h"
+
 
 #include "custom_dialogs.h"
 
@@ -88,9 +89,6 @@ void PathOptionPanel::SetSpringPath(wxCommandEvent& event)
 		  springdir_ctrl->SetValue( dirpic.GetPath() );
 }
 
-
-//PathOptionPanel::
-//PathOptionPanel::
 void PathOptionPanel::SetUsyncPath(wxCommandEvent& event)
 {
 	wxFileDialog pic( this, _("Choose a unitsync library"), OptionsHandler.getSpringDir(), wxString(UNITSYNC_BIN), CHOOSE_DLL );
@@ -102,19 +100,12 @@ void PathOptionPanel::UsePaths(wxCommandEvent& event)
 {
 	OptionsHandler.setUsyncLoc(  usync_ctrl->GetValue() );
 		
-	try{
-		susynclib()->Load( OptionsHandler.getUsyncLoc());
-	}
-	catch (...) {
-		customMessageBox(SS_MAIN_ICON, _("SpringSettings is unableGGGGGr options."), _("SpringSettings error"), wxOK );
-	}
-	
-	if ( !(susynclib()->IsLoaded()) )
+	//if ( !(loadUnitsync()) )
 	{
 		//wxLogWarning( _T("can't load unitsync") );
 		customMessageBox(SS_MAIN_ICON, _("SpringSettings is unable to load your unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
 	}
-	else
+	//else
 	{
 		origin->buildGuiFromErrorPanel();
 		OptionsHandler.save();

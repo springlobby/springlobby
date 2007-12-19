@@ -50,7 +50,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
 
   try {
 #ifdef __WXMSW__
-    wxSetWorkingDirectory( path.BeforeLast('/') );
+    wxSetWorkingDirectory( path.BeforeLast('\\') );
 #endif
     m_libhandle = new wxDynamicLibrary( path );
     if ( !m_libhandle->IsLoaded() ) {
