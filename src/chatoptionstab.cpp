@@ -467,7 +467,9 @@ void ChatOptionsTab::OnUseSystemColors( wxCommandEvent& event )
 
 void ChatOptionsTab::OnNormalSelect( wxCommandEvent& event )
 {
-  wxColourDialog dlg( this );
+  wxColourData c;
+  c.SetColour( m_normal_color->GetBackgroundColour() );
+  wxColourDialog dlg( this, &c );
   if ( dlg.ShowModal() == wxID_OK ) m_normal_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
@@ -476,7 +478,9 @@ void ChatOptionsTab::OnNormalSelect( wxCommandEvent& event )
 
 void ChatOptionsTab::OnBGSelect( wxCommandEvent& event )
 {
-  wxColourDialog dlg( this );
+  wxColourData c;
+  c.SetColour( m_bg_color->GetBackgroundColour() );
+  wxColourDialog dlg( this, &c );
   if ( dlg.ShowModal() == wxID_OK ) m_bg_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
@@ -485,7 +489,9 @@ void ChatOptionsTab::OnBGSelect( wxCommandEvent& event )
 
 void ChatOptionsTab::OnActionSelect( wxCommandEvent& event )
 {
-  wxColourDialog dlg( this );
+  wxColourData c;
+  c.SetColour( m_action_color->GetBackgroundColour() );
+  wxColourDialog dlg( this, &c );
   if ( dlg.ShowModal() == wxID_OK ) m_action_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
@@ -494,7 +500,9 @@ void ChatOptionsTab::OnActionSelect( wxCommandEvent& event )
 
 void ChatOptionsTab::OnHighlightSelect( wxCommandEvent& event )
 {
-  wxColourDialog dlg( this );
+  wxColourData c;
+  c.SetColour( m_highlight_color->GetBackgroundColour() );
+  wxColourDialog dlg( this, &c );
   if ( dlg.ShowModal() == wxID_OK ) m_highlight_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
@@ -503,7 +511,9 @@ void ChatOptionsTab::OnHighlightSelect( wxCommandEvent& event )
 
 void ChatOptionsTab::OnJoinLeaveSelect( wxCommandEvent& event )
 {
-  wxColourDialog dlg( this );
+  wxColourData c;
+  c.SetColour( m_joinleave_color->GetBackgroundColour() );
+  wxColourDialog dlg( this, &c );
   if ( dlg.ShowModal() == wxID_OK ) m_joinleave_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
@@ -512,7 +522,9 @@ void ChatOptionsTab::OnJoinLeaveSelect( wxCommandEvent& event )
 
 void ChatOptionsTab::OnNotificationSelect( wxCommandEvent& event )
 {
-  wxColourDialog dlg( this );
+  wxColourData c;
+  c.SetColour( m_note_color->GetBackgroundColour() );
+  wxColourDialog dlg( this, &c );
   if ( dlg.ShowModal() == wxID_OK ) m_note_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
@@ -521,7 +533,9 @@ void ChatOptionsTab::OnNotificationSelect( wxCommandEvent& event )
 
 void ChatOptionsTab::OnMyMessSelect( wxCommandEvent& event )
 {
-  wxColourDialog dlg( this );
+  wxColourData c;
+  c.SetColour( m_my_color->GetBackgroundColour() );
+  wxColourDialog dlg( this, &c );
   if ( dlg.ShowModal() == wxID_OK ) m_my_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
@@ -530,7 +544,9 @@ void ChatOptionsTab::OnMyMessSelect( wxCommandEvent& event )
 
 void ChatOptionsTab::OnServerSelect( wxCommandEvent& event )
 {
-  wxColourDialog dlg( this );
+  wxColourData c;
+  c.SetColour( m_server_color->GetBackgroundColour() );
+  wxColourDialog dlg( this, &c );
   if ( dlg.ShowModal() == wxID_OK ) m_server_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
@@ -539,7 +555,9 @@ void ChatOptionsTab::OnServerSelect( wxCommandEvent& event )
 
 void ChatOptionsTab::OnClientSelect( wxCommandEvent& event )
 {
-  wxColourDialog dlg( this );
+  wxColourData c;
+  c.SetColour( m_client_color->GetBackgroundColour() );
+  wxColourDialog dlg( this, &c );
   if ( dlg.ShowModal() == wxID_OK ) m_client_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
@@ -548,7 +566,9 @@ void ChatOptionsTab::OnClientSelect( wxCommandEvent& event )
 
 void ChatOptionsTab::OnErrorSelect( wxCommandEvent& event )
 {
-  wxColourDialog dlg( this );
+  wxColourData c;
+  c.SetColour( m_error_color->GetBackgroundColour() );
+  wxColourDialog dlg( this, &c );
   if ( dlg.ShowModal() == wxID_OK ) m_error_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
@@ -557,7 +577,9 @@ void ChatOptionsTab::OnErrorSelect( wxCommandEvent& event )
 
 void ChatOptionsTab::OnTimestampSelect( wxCommandEvent& event )
 {
-  wxColourDialog dlg( this );
+  wxColourData c;
+  c.SetColour( m_ts_color->GetBackgroundColour() );
+  wxColourDialog dlg( this, &c );
   if ( dlg.ShowModal() == wxID_OK ) m_ts_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
