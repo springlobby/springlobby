@@ -276,7 +276,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   bCustomColorsSizer->Add( bColorSizer, 1, wxEXPAND, 5 );
 
-  m_test_text = new wxTextCtrl( m_custom_colors, wxID_ANY, _("[19:35] ** Server ** Connected to TAS Server.\n[22:30] <Dude> hi everyone\n[22:30] ** Dude2 joined the channel.\n[22:30] * Dude2 thinks his colors looks nice\n[22:45] <Dude> Dude2: orl?\n[22:46] <Dude2> But could be better, should tweak them some more...\n"), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH );
+  m_test_text = new wxTextCtrl( m_custom_colors, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH );
   bCustomColorsSizer->Add( m_test_text, 1, wxALL|wxEXPAND, 5 );
 
   m_custom_colors->SetSizer( bCustomColorsSizer );
@@ -351,56 +351,9 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   this->SetSizer( bMainSizerV );
   this->Layout();
-/*
-  m_colour_box = new wxStaticBox( this, -1, _("Colors") );
 
-//   m_normal_color_sel = new wxBitmapButton( m_player_panel, BROOM_COLOURSEL, icons().GetBitmap( icons().GetColourIcon( myself.team ) ) , wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-
-
-  m_normal_sizer = new wxBoxSizer( wxHORIZONTAL );
-  m_normal_text = new wxStaticText( this, -1, _("Normal") );
-  m_normal_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetChatColorNormal().GetAsString(wxC2S_HTML_SYNTAX)) );
-  m_normal_sizer->Add(m_normal_text, 0, wxALL, 2);
-  m_normal_sizer->AddStretchSpacer();
-  m_normal_sizer->Add(m_normal_edit, 0, wxALL, 2);
-
-  m_mine_sizer = new wxBoxSizer( wxHORIZONTAL );
-  m_mine_text = new wxStaticText( this, -1, _("Mine") );
-  m_mine_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetChatColorMine().GetAsString(wxC2S_HTML_SYNTAX)) );
-  m_mine_sizer->Add(m_mine_text, 0, wxALL, 2);
-  m_mine_sizer->AddStretchSpacer();
-  m_mine_sizer->Add(m_mine_edit, 0, wxALL, 2);
-
-  m_notification_text = new wxStaticText( this, -1, _("Notifications") );
-  m_action_text = new wxStaticText( this, -1, _("Actions") );
-  m_server_text = new wxStaticText( this, -1, _("Server messages") );
-  m_client_text = new wxStaticText( this, -1, _("Client messages") );
-  m_joinpart_text = new wxStaticText( this, -1, _("Join/Part info") );
-  m_error_text = new wxStaticText( this, -1, _("Errors") );
-  m_time_text = new wxStaticText( this, -1, _("Time") );
-
-
-  m_main_sizer = new wxBoxSizer( wxVERTICAL );
-  m_colour_box_sizer = new wxStaticBoxSizer( m_colour_box, wxVERTICAL );
-
-  m_colour_box_sizer->Add( m_normal_sizer, 0, wxALL, 2 );
-  m_colour_box_sizer->Add( m_mine_sizer, 0, wxALL, 2 );
-//   m_colour_box_sizer->Add( m_notification_sizer, 0, wxALL, 2 );
-//   m_colour_box_sizer->Add( m_action_sizer, 0, wxALL, 2 );
-//   m_colour_box_sizer->Add( m_server_sizer, 0, wxALL, 2 );
-//   m_colour_box_sizer->Add( m_client_sizer, 0, wxALL, 2 );
-//   m_colour_box_sizer->Add( m_joinpart_sizer, 0, wxALL, 2 );
-//   m_colour_box_sizer->Add( m_error_sizer, 0, wxALL, 2 );
-//   m_colour_box_sizer->Add( m_time_sizer, 0, wxALL, 2 );
-
-  m_main_sizer->Add( m_colour_box_sizer, 0, wxEXPAND | wxALL, 2 );
-
-  m_main_sizer->AddStretchSpacer();
-
-  SetSizer( m_main_sizer );
-  Layout();
-*/
   DoRestore();
+  UpdateTextSample();
 }
 
 
@@ -412,6 +365,55 @@ ChatOptionsTab::~ChatOptionsTab()
 
 void ChatOptionsTab::UpdateTextSample()
 {
+  m_test_text->SetBackgroundColour( m_bg_color->GetBackgroundColour() );
+
+  m_test_text->Clear();
+
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T("[19:35]") );
+  m_test_text->SetDefaultStyle(wxTextAttr( m_server_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T(" ** Server ** Connected to TAS Server.\n") );
+
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T("[22:30]") );
+  m_test_text->SetDefaultStyle(wxTextAttr( m_normal_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T(" <Dude> hi everyone\n") );
+
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T("[22:30]") );
+  m_test_text->SetDefaultStyle(wxTextAttr( m_joinleave_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T(" ** Dude2 joined the channel.\n") );
+
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T("[22:31]") );
+  m_test_text->SetDefaultStyle(wxTextAttr( m_action_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T(" * Dude2 thinks his colors looks nice\n") );
+
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T("[22:33]") );
+  m_test_text->SetDefaultStyle(wxTextAttr( m_note_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T("<Dude> Dude2: orl?\n") );
+
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T("[22:33]") );
+  m_test_text->SetDefaultStyle(wxTextAttr( m_my_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T(" <Dude2> Yeah, but could be better, should tweak them some more...\n") );
+
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T("[22:33]") );
+  m_test_text->SetDefaultStyle(wxTextAttr( m_highlight_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T(" <Dude> bla bla bla Highlighted word bla bla.\n") );
+
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T("[22:33]") );
+  m_test_text->SetDefaultStyle(wxTextAttr( m_error_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T(" !! Error error.\n") );
+
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T("[22:33]") );
+  m_test_text->SetDefaultStyle(wxTextAttr( m_client_color->GetBackgroundColour() ));
+  m_test_text->AppendText( _T(" ** Client message.\n") );
+
 }
 
 
