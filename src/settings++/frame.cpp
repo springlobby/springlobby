@@ -65,10 +65,8 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	parentWindow = parent;
 	OptionsHandler.reload();
 	
-	openUrl(_T(""));// if this doesnt throw undefined reference
-	//loadUnitsync();//this shouldnt either
-	toh();
-	
+	loadUnitsync();
+		
 	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
 	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
 	
