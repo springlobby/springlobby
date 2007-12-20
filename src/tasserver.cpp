@@ -354,10 +354,10 @@ wxString _ConvertTASServerPhailChecksum( const wxString& buggedcsum )
 
 wxString _ConvertToTASServerBuggedChecksum( const wxString& csum )
 {
-  signed long temp;
-  csum.ToLong( &temp );
+  unsigned long temp;
+  csum.ToULong( &temp );
   int temp2 = (int)temp;
-  return wxString::Format( _T("%u"), temp2 );
+  return wxString::Format( _T("%d"), temp2 );
 }
 
 
@@ -1042,7 +1042,7 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
   cmd += WX_STRING( bo.mapname ) + _T("\t");
   cmd += WX_STRING( bo.description ) + _T("\t");
   cmd += WX_STRING( bo.modname ) + _T("\n");
-
+  wxLogMessage( cmd );
   m_sock->Send( STD_STRING(cmd) );
 
   // OPENBATTLE type natType password port maxplayers startingmetal startingenergy maxunits startpos
