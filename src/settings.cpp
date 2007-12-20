@@ -601,3 +601,114 @@ bool Settings::GetDisplayJoinLeave( const wxString& channel  )
 {
   return m_config->Read( _T("/Channels/DisplayJoinLeave/") +  channel, true);
 }
+
+wxColour Settings::GetChatColorNormal()
+{
+  return wxColour( m_config->Read( _T("/Chat/Colour/Normal"), _( "#000000" ) ) );
+}
+
+void Settings::SetChatColorNormal( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Normal"), value.GetAsString( wxC2S_HTML_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorBackground()
+{
+  return wxColour( m_config->Read( _T("/Chat/Colour/Background"), _( "#FFFFFF" ) ) );
+}
+
+void Settings::SetChatColorBackground( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Background"), value.GetAsString( wxC2S_HTML_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorHighlight()
+{
+  return wxColour( m_config->Read( _T("/Chat/Colour/Highlight"), _( "#FF0000" ) ) );
+}
+
+void Settings::SetChatColorHighlight( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Highlight"), value.GetAsString( wxC2S_HTML_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorMine()
+{
+  return wxColour( m_config->Read( _T("/Chat/Colour/Mine"), _( "#64648c" ) ) );
+}
+
+void Settings::SetChatColorMine( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Mine"), value.GetAsString( wxC2S_HTML_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorNotification()
+{
+  return wxColour( m_config->Read( _T("/Chat/Colour/Notification"), _( "#FF2828" ) ) );
+}
+
+void Settings::SetChatColorNotification( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Notification"), value.GetAsString( wxC2S_HTML_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorAction()
+{
+  return wxColour( m_config->Read( _T("/Chat/Colour/Action"), _( "#E600FF" ) ) );
+}
+
+void Settings::SetChatColorAction( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Action"), value.GetAsString( wxC2S_HTML_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorServer()
+{
+  return wxColour( m_config->Read( _T("/Chat/Colour/Server"), _( "#005080" ) ) );
+}
+
+void Settings::SetChatColorServer( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Server"), value.GetAsString( wxC2S_HTML_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorClient()
+{
+  return wxColour( m_config->Read( _T("/Chat/Colour/Client"), _( "#14C819" ) ) );
+}
+
+void Settings::SetChatColorClient( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Client"), value.GetAsString( wxC2S_HTML_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorJoinPart()
+{
+  return wxColour( m_config->Read( _T("/Chat/Colour/JoinPart"), _( "#005000" ) ) );
+}
+
+void Settings::SetChatColorJoinPart( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/JoinPart"), value.GetAsString( wxC2S_HTML_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorError()
+{
+  return wxColour( m_config->Read( _T("/Chat/Colour/Error"), _( "#800000" ) ) );
+}
+
+void Settings::SetChatColorError( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Error"), value.GetAsString( wxC2S_HTML_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorTime()
+{
+  return wxColour( m_config->Read( _T("/Chat/Colour/Time"), _( "#64648C" ) ) );
+}
+
+void Settings::SetChatColorTime( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Time"), value.GetAsString( wxC2S_HTML_SYNTAX ) );
+}
+
