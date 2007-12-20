@@ -12,9 +12,9 @@
 #include "uiutils.h"
 #include "ui.h"
 #include "server.h"
+//#include "customListItem.h"
 
-
-BEGIN_EVENT_TABLE(BattleListCtrl, wxListCtrl)
+BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 
   EVT_LIST_ITEM_SELECTED   ( BLIST_LIST, BattleListCtrl::OnSelected )
   EVT_LIST_ITEM_DESELECTED ( BLIST_LIST, BattleListCtrl::OnDeselected )
@@ -29,8 +29,8 @@ END_EVENT_TABLE()
 
 Ui* BattleListCtrl::m_ui_for_sort = 0;
 
-BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
-  wxListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL ),
+BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui, int coloumCount ):
+  customListCtrl(coloumCount,parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL ),
   m_selected(-1),
   m_ui(ui)
 {
@@ -43,43 +43,45 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
 
   col.SetText( _T("s") );
   col.SetImage( -1 );
-  InsertColumn( 0, col );
+
+  InsertColumn( 0, col, _T("Status") );
 
   col.SetText( _T("c") );
   col.SetImage( -1 );
-  InsertColumn( 1, col );
+  
+  InsertColumn( 1, col, _T("Country"));
 
   col.SetText( _T("r") );
   col.SetImage( -1 );
-  InsertColumn( 2, col );
+  InsertColumn( 2, col, _T("Minimum rank to join") );
 
   col.SetText( _("Description") );
   col.SetImage( ICON_DOWN );
-  InsertColumn( 3, col );
+  InsertColumn( 3, col, _T("Game description") );
 
   col.SetText( _("Map") );
   col.SetImage( -1 );
-  InsertColumn( 4, col );
+  InsertColumn( 4, col, _T("Mapname") );
 
   col.SetText( _("Mod") );
   col.SetImage( -1 );
-  InsertColumn( 5, col );
+  InsertColumn( 5, col, _T("Modname") );
 
   col.SetText( _("Host") );
   col.SetImage( -1 );
-  InsertColumn( 6, col );
+  InsertColumn( 6, col, _T("Name of the Host") );
 
   col.SetText( _("s") );
   col.SetImage( -1 );
-  InsertColumn( 7, col );
+  InsertColumn( 7, col, _T("sssss") );
 
   col.SetText( _("p") );
   col.SetImage( -1 );
-  InsertColumn( 8, col );
+  InsertColumn( 8, col, _T("pppp") );
 
   col.SetText( _("m") );
   col.SetImage( -1 );
-  InsertColumn( 9, col );
+  InsertColumn( 9, col, _T("mmmm") );
 
 
 

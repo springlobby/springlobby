@@ -9,6 +9,8 @@
 #include "battlelistfilter.h"
 #include "battlelist.h"
 
+#include "customListCtrl.h"
+
 class wxMenu;
 class Battle;
 class wxListEvent;
@@ -16,16 +18,16 @@ class wxCommandEvent;
 class Ui;
 
 
-class BattleListCtrl : public wxListCtrl
+class BattleListCtrl : public customListCtrl
 {
   public:
-    BattleListCtrl( wxWindow* parent, Ui& ui );
+    BattleListCtrl( wxWindow* parent, Ui& ui,int coloumCount );
     ~BattleListCtrl();
 
 
     int GetSelectedIndex();
     void Sort();
-
+    
     void OnSelected( wxListEvent& event );
     void OnDeselected( wxListEvent& event );
     void OnListRightClick( wxListEvent& event );

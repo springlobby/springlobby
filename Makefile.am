@@ -470,7 +470,9 @@ springlobby_SOURCES = \
 	src/images/flags/YT.xpm \
 	src/images/flags/ZA.xpm \
 	src/images/flags/ZM.xpm \
-	src/images/flags/ZW.xpm
+	src/images/flags/ZW.xpm \
+	src/customListCtrl.h \
+	src/customListCtrl.cpp 
 
 
 # TODO keep only a single list instead of duplicating the lists below

@@ -28,9 +28,10 @@
 #include "iconimagelist.h"
 
 #include "settings++/custom_dialogs.h"
-#include "images/springlobby.xpm"
-#include <wx/icon.h>
+//#include "images/springlobby.xpm"
+//#include <wx/icon.h>
 
+#define BATTLELIST_COLOUMNCOUNT 10
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 
@@ -63,7 +64,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxBoxSizer* m_battlelist_sizer;
   m_battlelist_sizer = new wxBoxSizer( wxVERTICAL );
 
-  m_battle_list = new BattleListCtrl( this, m_ui );
+  m_battle_list = new BattleListCtrl( this, m_ui, BATTLELIST_COLOUMNCOUNT );
   m_battlelist_sizer->Add( m_battle_list, 1, wxALL|wxEXPAND, 5 );
 
   m_main_sizer->Add( m_battlelist_sizer, 1, wxEXPAND, 5 );;
