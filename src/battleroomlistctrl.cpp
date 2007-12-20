@@ -24,7 +24,7 @@
 
 #include "settings++/custom_dialogs.h"
 
-BEGIN_EVENT_TABLE( BattleroomListCtrl, wxListCtrl )
+BEGIN_EVENT_TABLE( BattleroomListCtrl,  customListCtrl)
 
   EVT_LIST_ITEM_RIGHT_CLICK( BRLIST_LIST, BattleroomListCtrl::OnListRightClick )
   EVT_LIST_COL_CLICK       ( BRLIST_LIST, BattleroomListCtrl::OnColClick )
@@ -38,8 +38,9 @@ END_EVENT_TABLE()
 
 Ui* BattleroomListCtrl::m_ui_for_sort = 0;
 
-BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui ) : wxListCtrl(parent, BRLIST_LIST,
-  wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL ), m_battle(battle),
+BattleroomListCtrl::BattleroomListCtrl(int coloumCount, wxWindow* parent, Battle& battle, Ui& ui ) : 
+	customListCtrl(coloumCount,parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL ),
+	m_battle(battle),
   m_sel_user(0), m_sel_bot(0),
   m_ui(ui)
 {
@@ -51,43 +52,43 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
 
   col.SetText( _T("r") );
   col.SetImage( -1 );
-  InsertColumn( 0, col );
+  InsertColumn( 0, col, _T("Player/Bot"));
 
   col.SetText( _T("s") );
   col.SetImage( -1 );
-  InsertColumn( 1, col );
+  InsertColumn( 1, col,_T("Faction icon") );
 
   col.SetText( _T("c") );
   col.SetImage( -1 );
-  InsertColumn( 2, col );
+  InsertColumn( 2, col, _T("Teamcolour") );
 
   col.SetText( _T("f") );
   col.SetImage( -1 );
-  InsertColumn( 3, col );
+  InsertColumn( 3, col, _T("Country") );
 
   col.SetText( _T("r") );
   col.SetImage( -1 );
-  InsertColumn( 4, col );
+  InsertColumn( 4, col, _T("Rank") );
 
   col.SetText( _("Nickname") );
   col.SetImage( -1 );
-  InsertColumn( 5, col );
+  InsertColumn( 5, col, _T("Ingame name") );
 
   col.SetText( _("t") );
   col.SetImage( -1 );
-  InsertColumn( 6, col );
+  InsertColumn( 6, col, _T("Team number") );
 
   col.SetText( _("a") );
   col.SetImage( -1 );
-  InsertColumn( 7, col );
+  InsertColumn( 7, col, _T("Ally number") );
 
   col.SetText( _("cpu") );
   col.SetImage( -1 );
-  InsertColumn( 8, col );
+  InsertColumn( 8, col, _T("CPU speed (might not be accurate)") );
 
   col.SetText( _("Resource Bonus") );
   col.SetImage( -1 );
-  InsertColumn( 9, col );
+  InsertColumn( 9, col, _T("Resource Bonus") );
 
   m_sortorder[0].col = 7;
   m_sortorder[0].direction = true;

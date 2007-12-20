@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H
 
 #include <wx/listctrl.h>
+#include "customListCtrl.h"
 
 class User;
 class Battle;
@@ -10,15 +11,16 @@ struct BattleBot;
 //class wxMenuItem;
 class wxIcon;
 
+
 struct item_content {
   bool is_bot;
   void* data;
 };
 
-class BattleroomListCtrl : public wxListCtrl
+class BattleroomListCtrl : public customListCtrl
 {
   public:
-    BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui );
+    BattleroomListCtrl( int coloumnCount,wxWindow* parent, Battle& battle, Ui& ui );
      ~BattleroomListCtrl();
 
     void Sort();

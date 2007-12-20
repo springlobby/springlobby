@@ -43,6 +43,7 @@
 #define Opt_Pos_Startenergy 8
 #define Opt_Pos_Maxunits 9
 #define Opt_Pos_Restrictions 10
+#define LISTCTRL_COLOUMN_COUNT 10
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -94,7 +95,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true, false );
 
-  m_players = new BattleroomListCtrl( m_player_panel, battle, m_ui );
+  m_players = new BattleroomListCtrl(LISTCTRL_COLOUMN_COUNT, m_player_panel, battle, m_ui );
   m_chat = new ChatPanel( m_splitter, m_ui, battle );
 
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
