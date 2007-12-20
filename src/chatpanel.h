@@ -141,10 +141,10 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorRing( wxCommandEvent& event );
 
   protected:
-    void _SetChannel( Channel* channel );
-    void _OutputLine( const wxString& message, const wxColour& col );
+    void SetChannel( Channel* channel );
+    void OutputLine( const wxString& message, const wxColour& col );
 
-    User* _GetSelectedUser();
+    User* GetSelectedUser();
 
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.
 
@@ -181,9 +181,9 @@ class ChatPanel : public wxPanel
     wxMenuItem* displayjoinitem;
 
     void LogTime();
-    void _CreateControls( );
-    void _CreatePopup();
-    wxMenu* _CreateNickListMenu();
+    void CreateControls( );
+    void CreatePopup();
+    wxMenu* CreateNickListMenu();
 
     DECLARE_EVENT_TABLE();
 };
