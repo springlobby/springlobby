@@ -476,7 +476,8 @@ springlobby_SOURCES = \
 # TODO keep only a single list instead of duplicating the lists below
 # note, integrated has everything but main.cpp
 springlobby_SOURCES += \
-	src/settings++ \
+	src/settings++/se_utils.h \
+	src/settings++/se_utils.cpp \
 	src/settings++/frame.cpp \
 	src/settings++/main.h \
 	src/settings++/tab_ui.cpp \
@@ -485,8 +486,6 @@ springlobby_SOURCES += \
 	src/settings++/frame.h \
 	src/settings++/tab_audio.h \
 	src/settings++/se_settings.h \
-	src/settings++/se_utils.h \
-	src/settings++/se_utils.cpp \
 	src/settings++/tab_debug.cpp \
 	src/settings++/tab_debug.h \
 	src/settings++/se_settings.cpp \
@@ -529,7 +528,8 @@ springsettings_SOURCES = \
 	src/boost/md5.hpp \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
-	src/settings++ \
+	src/settings++/se_utils.cpp \
+	src/settings++/se_utils.h \
 	src/settings++/frame.cpp \
 	src/settings++/main.h \
 	src/settings++/tab_ui.cpp \
@@ -538,8 +538,6 @@ springsettings_SOURCES = \
 	src/settings++/frame.h \
 	src/settings++/tab_audio.h \
 	src/settings++/se_settings.h \
-	src/settings++/se_utils.cpp \
-	src/settings++/se_utils.h \
 	src/settings++/tab_debug.cpp \
 	src/settings++/tab_debug.h \
 	src/settings++/se_settings.cpp \
@@ -561,7 +559,8 @@ springsettings_SOURCES = \
 	src/settings++/custom_dialogs.h \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
-	src/settings++/helpmenufunctions.cpp
+	src/settings++/helpmenufunctions.cpp 
+
 
 if USE_WINDRES
 	springsettings_SOURCES += \

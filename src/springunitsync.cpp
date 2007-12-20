@@ -15,6 +15,7 @@
 #include <wx/textfile.h>
 #include <cmath>
 #include <stdexcept>
+#include <clocale>
 
 #include "springunitsync.h"
 #include "utils.h"
@@ -106,7 +107,7 @@ bool SpringUnitSync::VersionSupports( GameFeature feature )
   wxString ver = WX_STRING( GetSpringVersion() );
   double nver = 0;
   ver = ver.BeforeFirst('b') + ver.AfterFirst('b'); //remove the beta flag
-  ver.Replace( _T("."), _T(",") ); // use a column as decimal separator isntead of the dot
+  const char* old_locale = std::setlocale(LC_NUMERIC, "C"); //temp switch to C locale for the decimal separator
   if ( ver.Contains( _T("+") ) ) //remove the + (development) flag, and increase the version
   {
     ver = ver.BeforeFirst('+');
@@ -118,7 +119,7 @@ bool SpringUnitSync::VersionSupports( GameFeature feature )
     ver.ToDouble( &nver); // convert to float
     nver = nver * 100;
   }
-
+  std::setlocale(LC_NUMERIC, old_locale);
   switch (feature) {
     case GF_XYStartPos: return nver >= 76.0;
     case USYNC_Sett_Handler: return nver >= 76.0;
