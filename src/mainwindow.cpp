@@ -66,26 +66,26 @@ MainWindow::MainWindow( Ui& ui ) :
 
   wxMenu *menuEdit = new wxMenu;
 
-  wxMenu *menuTools = new wxMenu;
-  menuTools->Append(MENU_JOIN, _("&Join channel..."));
-  menuTools->Append(MENU_CHAT, _("Open &chat..."));
-  menuTools->AppendSeparator();
-  menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
-  m_settings_menu = new wxMenuItem( menuTools, MENU_SETTINGSPP, _("Settings++"), wxEmptyString, wxITEM_NORMAL );
-  menuTools->Append( m_settings_menu );
-  m_settings_menu->Enable( false ); /// disable the spring settings tool until we have unitsync loaded, so we know for sure it's working
+  m_menuTools = new wxMenu;
+  m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
+  m_menuTools->Append(MENU_CHAT, _("Open &chat..."));
+  m_menuTools->AppendSeparator();
+  m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
+  m_settings_menu = new wxMenuItem( m_menuTools, MENU_SETTINGSPP, _("SpringSettings"), wxEmptyString, wxITEM_NORMAL );
+  
+  //m_settings_menu->Enable( false ); /// disable the spring settings tool until we have unitsync loaded, so we know for sure it's working
 
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _("&About"));
   menuHelp->Append(MENU_TRAC, _("&Report a bug..."));
   menuHelp->Append(MENU_DOC, _("&Documentation"));
 
-  wxMenuBar *menubar = new wxMenuBar;
-  menubar->Append(menuFile, _("&File"));
-  menubar->Append(menuEdit, _("&Edit"));
-  menubar->Append(menuTools, _("&Tools"));
-  menubar->Append(menuHelp, _("&Help"));
-  SetMenuBar(menubar);
+  m_menubar = new wxMenuBar;
+  m_menubar->Append(menuFile, _("&File"));
+  m_menubar->Append(menuEdit, _("&Edit"));
+  m_menubar->Append(m_menuTools, _("&Tools"));
+  m_menubar->Append(menuHelp, _("&Help"));
+  SetMenuBar(m_menubar);
 
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
@@ -361,13 +361,19 @@ void MainWindow::OnUnitSyncReloaded()
   wxLogMessage( _T("Singleplayer tab updated") );
   if ( usync()->VersionSupports( USYNC_Sett_Handler ) )
   {
-    m_settings_menu->Enable( true );
-    wxLogMessage( _T("SpringSettingsTool Enabled") );
+	  if (m_menubar->FindItem(MENU_SETTINGSPP)==0)
+	  {
+		  m_menuTools->Append( m_settings_menu );
+		  wxLogMessage( _T("SpringSettingsTool Enabled") );
+	  }
   }
   else
   {
-    m_settings_menu->Enable( false );
-    wxLogMessage( _T("SpringSettingsTool Disabled") );
+	  if (m_menubar->FindItem(MENU_SETTINGSPP)!=0)
+	  {
+	 	m_menuTools->Remove( m_settings_menu );
+	 	wxLogMessage( _T("SpringSettingsTool Disabled") );
+	  }
   }
 }
 

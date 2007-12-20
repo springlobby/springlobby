@@ -473,10 +473,10 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
       message += _T(" (") +  WX_STRING( m_serv->GetRequiredSpring() ) + _T(").\n\n");
       message += _("Online play will be disabled.");
       wxLogWarning ( _T("server not supports current spring version") );
-      wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
+      customMessageBox (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
     } else {
       wxLogWarning( _T("can't get spring version from unitsync") );
-      customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
+      customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     }
   }
   server.uidata.panel->StatusMessage( _T("Connected to ") + WX_STRING(server_name) + _T(".") );

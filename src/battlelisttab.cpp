@@ -302,12 +302,12 @@ void BattleListTab::OnHost( wxCommandEvent& event )
   }
   if ( !m_ui.IsSpringCompatible() ){
     wxLogWarning(_T("Hosting is disabled due to the incompatible version ") );
-    customMessageBox(SL_MAIN_ICON,_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION);
+    customMessageBox(SL_MAIN_ICON,_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION|wxOK);
     return;
   }
   if ( m_ui.IsSpringRunning() ) {
     wxLogWarning(_T("trying to host while spring is running") );
-    customMessageBox(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to host a new game"), _("Spring error"), wxICON_EXCLAMATION );
+    customMessageBox(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to host a new game"), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     return;
   }
   Battle* battle = m_ui.mw().GetJoinTab().GetCurrentBattle();
