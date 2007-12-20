@@ -106,7 +106,7 @@ bool SpringUnitSync::VersionSupports( GameFeature feature )
   wxString ver = WX_STRING( GetSpringVersion() );
   double nver = 0;
   ver = ver.BeforeFirst('b') + ver.AfterFirst('b'); //remove the beta flag
-  ver.Replace( _T("."), _T(",") ); // use a column as decimal separator isntead of the dot
+ // ver.Replace( _T("."), _T(",") ); // use a column as decimal separator isntead of the dot
   if ( ver.Contains( _T("+") ) ) //remove the + (development) flag, and increase the version
   {
     ver = ver.BeforeFirst('+');
