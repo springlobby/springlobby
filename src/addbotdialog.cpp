@@ -10,7 +10,6 @@
 #include <wx/filename.h>
 #include <wx/dir.h>
 #include <stdexcept>
-#include <wx/msgdlg.h>
 
 #include "addbotdialog.h"
 #include "settings.h"
@@ -18,6 +17,7 @@
 #include "battle.h"
 #include "iunitsync.h"
 
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE( AddBotDialog, wxDialog )
     EVT_BUTTON( ADDBOT_CANCEL, AddBotDialog::OnClose )
@@ -31,6 +31,7 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
   m_battle( battle ),
   m_sp(singleplayer)
 {
+
   this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
   wxBoxSizer* m_main_sizer;
@@ -133,7 +134,7 @@ void AddBotDialog::ReloadAIList()
     m_ai->SetStringSelection( WX_STRING(sett().GetLastAI()) );
     if ( m_ai->GetStringSelection() == wxEmptyString ) m_ai->SetSelection( 0 );
   } else {
-    wxMessageBox( _("No AI bots found in your Spring installation."), _("No bot-libs found"), wxOK, this );
+    customMessageBox(SL_MAIN_ICON, _("No AI bots found in your Spring installation."), _("No bot-libs found"), wxOK );
   }
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
 }

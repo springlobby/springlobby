@@ -6,7 +6,6 @@
 #include <wx/intl.h>
 #include <wx/menu.h>
 #include <wx/textdlg.h>
-#include <wx/msgdlg.h>
 #include <wx/colordlg.h>
 #include <wx/colour.h>
 #include <stdexcept>
@@ -23,6 +22,7 @@
 #include "utils.h"
 #include "uiutils.h"
 
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE( BattleroomListCtrl, wxListCtrl )
 
@@ -473,12 +473,12 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
     long handicap;
     if ( !dlg.GetValue().ToLong( &handicap ) ) {
      wxLogWarning( _T("input is not a number") );
-     wxMessageBox( _("Not a number"), _("Invalid number") );
+     customMessageBox(SL_MAIN_ICON, _("Not a number"), _("Invalid number") );
      return;
     }
     if ( handicap < 0 || handicap > 100 ) {
       wxLogWarning( _T("input value is out of range") );
-      wxMessageBox( _("Value out of range.\n Enter an integer between 0 & 100."), _("Invalid number") );
+      customMessageBox(SL_MAIN_ICON, _("Value out of range.\n Enter an integer between 0 & 100."), _("Invalid number") );
       return;
     }
     if ( m_sel_bot != 0 ) {

@@ -13,8 +13,9 @@
 //#include <wx/txtstrm.h>
 //#include <wx/wfstream.h>
 #include <wx/textfile.h>
-
+#include <cmath>
 #include <stdexcept>
+#include <clocale>
 
 #include "springunitsync.h"
 #include "utils.h"
@@ -91,11 +92,39 @@ bool SpringUnitSync::IsLoaded()
 std::string SpringUnitSync::GetSpringVersion()
 {
   wxLogDebugFunc( _T("") );
+  std::string ret;
   try
   {
-  return STD_STRING(susynclib()->GetSpringVersion());
-  } catch (...) {}
-  return "";
+    ret = STD_STRING(susynclib()->GetSpringVersion());
+  }
+  catch (...){}
+  return ret;
+}
+
+
+bool SpringUnitSync::VersionSupports( GameFeature feature )
+{
+  wxString ver = WX_STRING( GetSpringVersion() );
+  double nver = 0;
+  ver = ver.BeforeFirst('b') + ver.AfterFirst('b'); //remove the beta flag
+  const char* old_locale = std::setlocale(LC_NUMERIC, "C"); //temp switch to C locale for the decimal separator
+  if ( ver.Contains( _T("+") ) ) //remove the + (development) flag, and increase the version
+  {
+    ver = ver.BeforeFirst('+');
+    ver.ToDouble( &nver); // convert to float
+    nver = std::floor ( ( nver * 100 ) + 0.9 ); // increments version and rounds up the decimal to 0
+  }
+  else
+  {
+    ver.ToDouble( &nver); // convert to float
+    nver = nver * 100;
+  }
+  std::setlocale(LC_NUMERIC, old_locale);
+  switch (feature) {
+    case GF_XYStartPos: return nver >= 76.0;
+    case USYNC_Sett_Handler: return nver >= 76.0;
+  }
+  return false;
 }
 
 
@@ -354,8 +383,9 @@ wxArrayString SpringUnitSync::GetAIList()
   wxLogDebugFunc( _T("") );
 
   int ini = susynclib()->InitFindVFS( _T("AI/Bot-libs/*") + wxString(DLL_EXTENSION) );
-  wxString FileName;
+
   wxArrayString ret;
+  wxString FileName;
 
   ini = susynclib()->FindFilesVFS( ini, FileName );
   while ( ini ) {

@@ -139,7 +139,7 @@ class Ui
 
     void OnAcceptAgreement( const std::string& agreement );
 
-    void OnMainWindowDestruct() { m_main_win = 0; }
+    void OnMainWindowDestruct();
 
     void OnRing( const std::string& from );
 
@@ -158,6 +158,7 @@ class Ui
     Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
+   
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_UI_H

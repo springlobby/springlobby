@@ -77,7 +77,7 @@ class BattleListTab : public wxPanel
     Ui& m_ui;
 
     Battle* m_sel_battle;
-
+    
     DECLARE_EVENT_TABLE();
 };
 

@@ -72,7 +72,7 @@ class ConnectWindow : public wxFrame
     wxTextCtrl* m_regpass2_text;
 
     Ui& m_ui;
-
+  
     DECLARE_EVENT_TABLE()
 };
 
