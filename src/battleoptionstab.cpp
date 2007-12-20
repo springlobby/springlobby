@@ -69,6 +69,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
   wxString m_end_radiosChoices[] = { _("Continue if commander dies"), _("End if commander dies"), _("Linage mode") };
   int m_end_radiosNChoices = sizeof( m_end_radiosChoices ) / sizeof( wxString );
+  //TODO these need to be tooltipped, no idea how yet
   m_end_radios = new wxRadioBox( this, BOPTS_END, _("End condition"), wxDefaultPosition, wxDefaultSize, m_end_radiosNChoices, m_end_radiosChoices, 1, wxRA_SPECIFY_COLS );
   m_main_options_sizer->Add( m_end_radios, 0, wxALL|wxEXPAND, 5 );
 
@@ -124,7 +125,8 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
   wxStaticBoxSizer* m_options_box;
   m_options_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Options") ), wxVERTICAL );
-
+  
+  //TODO these need to be tooltipped, no idea how yet
   m_options_checks = new wxCheckListBox( this, BOPTS_OPTS );
   m_options_checks->Append( _("Limit d-gun") );
   m_options_checks->Append( _("Ghosted buildings") );
