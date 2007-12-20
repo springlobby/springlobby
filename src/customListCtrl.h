@@ -37,6 +37,7 @@ private:
     wxTipWindow *tw;
     int coloumnCount;
     wxString* m_tooltips;
+    int getColoumnFromPosition(wxPoint pos);
 public:
 	customListCtrl(int coloumnCount_,wxWindow* parent, wxWindowID id, const wxPoint& pt, 
                     const wxSize& sz,long style);

@@ -1,5 +1,6 @@
 #include "customListCtrl.h"
   
+#define TOOLTIP_DELAY 200
 //TODO maybe test why this needed
 wxMyTipWindow::wxMyTipWindow(wxWindow* parent, const wxString& text):
 								wxTipWindow(parent, text)
@@ -46,14 +47,27 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
     if (tipTimer.IsRunning() == true)
         tipTimer.Stop();
     wxPoint position = event.GetPosition();
+    
     int flag = 0;
     long *ptrSubItem;
     long item = HitTest(position, flag, ptrSubItem);
     if (item != wxNOT_FOUND)
     {
-        tipTimer.Start(1200, wxTIMER_ONE_SHOT);
-        text = m_tooltips[item % coloumnCount];
+        tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+        text = m_tooltips[getColoumnFromPosition(position)];
     }
+}
+
+int customListCtrl::getColoumnFromPosition(wxPoint pos)
+{
+	int x_pos = 0;
+	for (int i = 0; i <coloumnCount;++i)
+	{
+		x_pos += GetColumnWidth(i);
+		if (pos.x < x_pos)
+			return i;
+	}
+	return -1;
 }
  
 BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
