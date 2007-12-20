@@ -141,7 +141,7 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorRing( wxCommandEvent& event );
 
   protected:
-    void SetChannel( Channel* channel );
+    void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col );
 
     User* GetSelectedUser();

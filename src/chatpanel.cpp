@@ -98,7 +98,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
 {
   wxLogDebugFunc( _T("wxWindow* parent, Channel& chan") );
   CreateControls( );
-  SetChannel( &chan );
+  _SetChannel( &chan );
   m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, this );
   m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),WX_STRING(chan.GetName()));
 }
@@ -696,7 +696,7 @@ ChatPanelType ChatPanel::GetPanelType()
 //! @brief Set the Channel object
 //!
 //! @param channel the Channel object.
-void ChatPanel::SetChannel( Channel* channel )
+void ChatPanel::_SetChannel( Channel* channel )
 {
   if ( m_channel != 0 ) {
     m_channel->uidata.panel = 0;
