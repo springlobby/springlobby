@@ -141,7 +141,7 @@ class TASServer : public Server
 
     std::string m_addr;
 
-    void _ReceiveAndExecute();
+    void ReceiveAndExecute();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H

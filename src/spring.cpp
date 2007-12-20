@@ -533,7 +533,7 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot;
-    if ( starttype == 3) bot = battle.GetBot( i );
+    bot = battle.GetBot( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     if ( bot->aidll == "" ) PlayerTeam = i;
     if(bot->bs.ally>int(AllyConv.size())-1){
