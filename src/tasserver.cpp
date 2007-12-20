@@ -318,12 +318,12 @@ void TASServer::Update( int mselapsed )
     HandlePinglist();
   }
 
-  _ReceiveAndExecute();
+  ReceiveAndExecute();
 
 }
 
 
-void TASServer::_ReceiveAndExecute()
+void TASServer::ReceiveAndExecute()
 {
   std::string data;
 
@@ -1495,7 +1495,7 @@ void TASServer::OnDisconnected( Socket* sock )
 void TASServer::OnDataReceived( Socket* sock )
 {
   //TASServer* serv = (TASServer*)sock->GetUserdata();
-  _ReceiveAndExecute();
+  ReceiveAndExecute();
 }
 
 
