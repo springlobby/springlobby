@@ -112,21 +112,30 @@ void ServerEvents::OnNewUser( const std::string& nick, const std::string& countr
 
 void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
 {
-  //wxLogDebugFunc( _T("") );
-  User& user = m_serv.GetUser( nick );
+  wxLogDebugFunc( _T("") );
+  try{
+    wxLogMessage( _T("calling m_serv.GetUser( nick ) ") );
+    User& user = m_serv.GetUser( nick );
+    wxLogMessage( _T("calling user.SetStatus( status ) ") );
 
-  user.SetStatus( status );
-  m_ui.OnUserStatusChanged( user );
+    user.SetStatus( status );
 
-  if ( user.GetBattle() != 0 ) {
-    Battle& battle = *user.GetBattle();
-    if ( battle.GetFounder().GetNick() == user.GetNick() ) {
-      if ( status.in_game != battle.GetInGame() ) {
-        battle.SetInGame( status.in_game );
-        if ( status.in_game ) m_ui.OnBattleStarted( battle );
-        else m_ui.OnBattleInfoUpdated( battle );
+    wxLogMessage( _T("calling m_ui.OnUserStatusChanged( user ) ") );
+    m_ui.OnUserStatusChanged( user );
+    wxLogMessage( _T("updating battles ") );
+
+    if ( user.GetBattle() != 0 ) {
+      Battle& battle = *user.GetBattle();
+      if ( battle.GetFounder().GetNick() == user.GetNick() ) {
+        if ( status.in_game != battle.GetInGame() ) {
+          battle.SetInGame( status.in_game );
+          if ( status.in_game ) m_ui.OnBattleStarted( battle );
+          else m_ui.OnBattleInfoUpdated( battle );
+        }
       }
     }
+  }catch(...){
+    wxLogWarning( _("OnUserStatus() failed ! (exception)") );
   }
 }
 
