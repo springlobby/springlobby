@@ -426,7 +426,7 @@ void BattleListTab::DoJoin( Battle& battle )
 {
   if ( !m_ui.IsSpringCompatible() ){
     wxLogWarning(_T("trying to join battles with imcompatible spring version") );
-    customMessageBox(SL_MAIN_ICON,_("Joining battles is disabled due to the incompatible spring version you're using."), _("Spring error"), wxICON_EXCLAMATION);
+    customMessageBox(SL_MAIN_ICON,_("Joining battles is disabled due to the incompatible spring version you're using."), _("Spring error"), wxICON_EXCLAMATION|wxOK);
     return;
   }
 
@@ -442,7 +442,7 @@ void BattleListTab::DoJoin( Battle& battle )
 
   if ( m_ui.IsSpringRunning() ) {
     wxLogWarning(_T("trying to join a battle while spring is running") );
-    customMessageBox(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to join another battle."), _("Spring error"), wxICON_EXCLAMATION );
+    customMessageBox(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to join another battle."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     return;
   }
 

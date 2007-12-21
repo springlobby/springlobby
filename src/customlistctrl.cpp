@@ -37,16 +37,14 @@ void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip)
 
 void customListCtrl::OnTimer(wxTimerEvent& event)
 {
-#ifdef __WXMSW__ 
-	if (tw)
-	    tw = 0;
-#endif
-
-   tw = new wxMyTipWindow(this, text);
+	 if (!text.empty())
+		{
+		    tw = new wxTipWindow(this, text);
 #ifndef __WXMSW__ 
-   //settings one on win results in no tooltips displayed, ever
-   tw->SetBoundingRect(wxRect(0,0,50,50));
+		    tw->SetBoundingRect(wxRect(1,1,50,50));
 #endif
+		}
+
 }
 
 //TODO http://www.wxwidgets.org/manuals/stable/wx_wxtipwindow.html#wxtipwindowsettipwindowptr
@@ -60,11 +58,6 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
         tipTimer.Stop();
 
     }
-    #ifdef __WXMSW__ 
-	if (tw)
-	    tw = 0;
-	#endif
-   
     wxPoint position = event.GetPosition();
 
     int flag = 0;
@@ -73,7 +66,15 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
     if (item != wxNOT_FOUND)
     {
         tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-        text = m_tooltips[getColoumnFromPosition(position)];
+        int coloumn = getColoumnFromPosition(position);
+        if (coloumn >= coloumnCount || coloumn < 0)
+        {
+        	text = _T("");
+        }
+        else
+        {
+        	text = m_tooltips[getColoumnFromPosition(position)];
+        }
     }
 }
 
@@ -90,6 +91,8 @@ int customListCtrl::getColoumnFromPosition(wxPoint pos)
 }
  
 BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
-    EVT_MOTION(customListCtrl::OnMouseMotion)
-    EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)
+	#ifndef __WXMSW__ 
+    	EVT_MOTION(customListCtrl::OnMouseMotion)
+    	EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)
+    #endif
 END_EVENT_TABLE()
