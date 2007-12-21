@@ -2,7 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H
 
 #include <wx/listctrl.h>
-#include "customListCtrl.h"
+#include "customlistctrl.h"
 
 class User;
 class Battle;

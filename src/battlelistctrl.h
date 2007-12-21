@@ -1,15 +1,10 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLELISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLELISTCTRL_H
 
-#include <wx/listctrl.h>
-#include <wx/string.h>
-#include <wx/sizer.h>
-#include <wx/textctrl.h>
-
 #include "battlelistfilter.h"
 #include "battlelist.h"
 
-#include "customListCtrl.h"
+#include "customlistctrl.h"
 
 class wxMenu;
 class Battle;
