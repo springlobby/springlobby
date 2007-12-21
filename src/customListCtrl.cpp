@@ -1,7 +1,9 @@
 #include "customListCtrl.h"
   
-#define TOOLTIP_DELAY 200
+#define TOOLTIP_DELAY 1000
+
 //TODO maybe test why this needed
+//http://wxforum.shadonet.com/viewtopic.php?t=14672&highlight=wxtipwindow
 wxMyTipWindow::wxMyTipWindow(wxWindow* parent, const wxString& text):
 								wxTipWindow(parent, text)
 {
@@ -10,7 +12,7 @@ wxMyTipWindow::wxMyTipWindow(wxWindow* parent, const wxString& text):
 	
 void wxMyTipWindow::OnKeyDown(wxKeyEvent& event)
 {
-   
+	
 }
 
  
@@ -35,21 +37,38 @@ void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip)
 
 void customListCtrl::OnTimer(wxTimerEvent& event)
 {
-    if (!text.empty())
-    {
-        tw = new wxMyTipWindow(this, text);
-        tw->SetBoundingRect(wxRect(1,1,50,50));
-    }
+#ifdef __WXMSW__ 
+	if (tw)
+	    tw = 0;
+#endif
+
+   tw = new wxMyTipWindow(this, text);
+#ifndef __WXMSW__ 
+   //settings one on win results in no tooltips displayed, ever
+   tw->SetBoundingRect(wxRect(0,0,50,50));
+#endif
 }
 
+//TODO http://www.wxwidgets.org/manuals/stable/wx_wxtipwindow.html#wxtipwindowsettipwindowptr
+// must have sth to do with crash on windows
+//if to tootips are displayed
 void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
+	//shouldnt be necessary .Start() will actually stop if running and then start aka restart
     if (tipTimer.IsRunning() == true)
+    {
         tipTimer.Stop();
+
+    }
+    #ifdef __WXMSW__ 
+	if (tw)
+	    tw = 0;
+	#endif
+   
     wxPoint position = event.GetPosition();
-    
+
     int flag = 0;
-    long *ptrSubItem;
+    long *ptrSubItem = new long;
     long item = HitTest(position, flag, ptrSubItem);
     if (item != wxNOT_FOUND)
     {
