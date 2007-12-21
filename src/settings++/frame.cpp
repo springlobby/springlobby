@@ -302,7 +302,8 @@ void settings_frame::resetSettings()
 void settings_frame::switchToExpertMode()
 {
 	OptionsHandler.setMode(SET_MODE_EXPERT);
-					
+	menuMode->Check(ID_MENUITEM_EXPERT,true);
+	
 	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
     detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
     audioTab = new audio_panel(notebook,ID_AUDIO);
