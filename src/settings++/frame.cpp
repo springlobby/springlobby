@@ -136,7 +136,7 @@ void settings_frame::handleExit() {
         	if (abstract_panel::saveSettings())
         				 (abstract_panel::settingsChanged) = false;
         	if (simpleTab)
-        						simpleTab->saveCbxChoices();
+        			simpleTab->saveCbxChoices();
         case wxNO:
 	        	OptionsHandler.save();
         	    Destroy();
@@ -254,6 +254,10 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				simpleTab = new tab_simple(this,notebook,ID_SIMPLE);
 				notebook->InsertPage(0,simpleTab,simpleTabCap);
 				simpleTab->updateControls(UPDATE_ALL);
+				
+				//if not on ui page goto simple
+				if (notebook->GetSelection()!=1)
+					notebook->SetSelection(0);
 				
 				notebook->DeletePage(5);
 				notebook->DeletePage(4);

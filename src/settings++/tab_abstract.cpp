@@ -382,6 +382,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 
 				(intSettings)[prVal_RenderQuality[i].key]= k;
 			}
+
 			break;
 		}
 		case ID_SIMPLE_DETAIL_CBX:

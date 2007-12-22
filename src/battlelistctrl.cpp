@@ -13,6 +13,8 @@
 #include "ui.h"
 #include "server.h"
 
+#define TOOLTIP_DELAY 1000
+
 BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 
   EVT_LIST_ITEM_SELECTED   ( BLIST_LIST, BattleListCtrl::OnSelected )
@@ -22,6 +24,9 @@ BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
   EVT_LIST_COL_CLICK       ( BLIST_LIST, BattleListCtrl::OnColClick )
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
   EVT_MENU                 ( BLIST_DLMOD, BattleListCtrl::OnDLMod )
+#ifndef __WXMSW__ 
+  EVT_MOTION(BattleListCtrl::OnMouseMotion)
+#endif
 
 END_EVENT_TABLE()
 
@@ -573,5 +578,71 @@ int wxCALLBACK BattleListCtrl::CompareMaxPlayerDOWN(long item1, long item2, long
   return 0;
 }
 
+void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
+{
+	if (event.Leaving())
+	{
+		m_tiptext = _T("");
+		tipTimer.Stop();
+	}
+	else
+	{
+	    if (tipTimer.IsRunning() == true)
+	    {
+	        tipTimer.Stop();
+	    }
+	    
+	    wxPoint position = event.GetPosition();
+	
+	    int flag = wxLIST_HITTEST_ONITEM;
+	    long *ptrSubItem = new long;
+	    long item = HitTest(position, flag, ptrSubItem);
+	    if (item != wxNOT_FOUND)
+	    {
+	    	Ui* ui = m_ui_for_sort;
+	    	Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
+	        int coloumn = getColoumnFromPosition(position);
+	        switch (coloumn)
+	        {
+	        case 0: // status
+	        	//battle.get
+	        	break;	
+	        case 1: // country
+	        	m_tiptext = WX_STRING(battle.GetFounder().GetCountry());
+	        	break;	
+	        case 2: // rank_min
+	        	m_tiptext = WX_STRING(m_colinfovec[coloumn].first);
+	        	break;	
+	        case 3: // descrp
+	        	m_tiptext = WX_STRING(battle.GetDescription());
+	        	break;
+	        case 4: //map
+	        	m_tiptext = WX_STRING(battle.GetMapName());
+	        	break;
+	        case 5: //mod
+	        	m_tiptext = WX_STRING(battle.GetModName());
+	        	break;
+	        case 6: // host
+	        	m_tiptext = WX_STRING(battle.GetFounder().GetNick());
+	        	break;
+	        case 7: // specs
+	        	m_tiptext = _T("");
+	        	for (int i = battle.GetNumUsers()-1; i > battle.GetNumUsers() - battle.GetSpectators();--i)
+	        		m_tiptext << WX_STRING(battle.GetUser(i).GetNick());
+	        	break;
+	    	case 8: // player
+	    		for (int i = 0; i < battle.GetNumUsers();--i)
+	    			m_tiptext << WX_STRING(battle.GetUser(i).GetNick());
+	    		break;
+	    	case 9: //may player
+	    		m_tiptext = WX_STRING(m_colinfovec[coloumn].first);
+	    	    break;  	
+	        	
+	        default: m_tiptext = _T(""); break;
+	        }
+	        tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+	    }
+	}
+}
 
 

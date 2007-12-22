@@ -5,8 +5,8 @@
 customListCtrl::customListCtrl(int coloumnCount_,wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style):
 					wxListCtrl (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER)
 {
-	tw = NULL;
-	text = _T("BIBKJBKJB");
+	m_tipwindow = NULL;
+	m_tiptext = _T("BIBKJBKJB");
 	SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
 }
 
@@ -20,11 +20,11 @@ void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool mo
 void customListCtrl::OnTimer(wxTimerEvent& event)
 {
 		
-	 if (!text.empty())
+	 if (!m_tiptext.empty())
 		{
-		    tw = new wxTipWindow(this, text);
+		    m_tipwindow = new wxTipWindow(this, m_tiptext);
 #ifndef __WXMSW__ 
-		    tw->SetBoundingRect(wxRect(1,1,50,50));
+		    m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
 #endif
 		}
 }
@@ -36,7 +36,7 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
 	if (event.Leaving())
 	{
-		text = _T("");
+		m_tiptext = _T("");
 		tipTimer.Stop();
 	}
 	else
@@ -57,12 +57,12 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 	        int coloumn = getColoumnFromPosition(position);
 	        if (coloumn >= m_colinfovec.size() || coloumn < 0)
 	        {
-	        	text = _T("");
+	        	m_tiptext = _T("");
 	        }
 	        else
 	        {	
 	        	tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-	        	text = m_colinfovec[coloumn].first;
+	        	m_tiptext = m_colinfovec[coloumn].first;
 	        }
 	    }
 	}
@@ -88,7 +88,7 @@ void customListCtrl::OnStartResizeCol(wxListEvent& event)
 
 void customListCtrl::noOp(wxMouseEvent& event)
 {
-	text = _T("");
+	m_tiptext = _T("");
 }
  
 BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
@@ -97,6 +97,5 @@ BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
     	EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)
     #endif
     	EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, customListCtrl::OnStartResizeCol) 
-    	//EVT_KILL_FOCUS(customListCtrl::noOp)
     	EVT_LEAVE_WINDOW(customListCtrl::noOp)
 END_EVENT_TABLE()

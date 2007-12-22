@@ -28,7 +28,7 @@ class BattleListCtrl : public customListCtrl
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );
-
+    void OnMouseMotion(wxMouseEvent& event);
     void OnColClick( wxListEvent& event );
   protected:
     static int wxCALLBACK CompareStatusUP(long item1, long item2, long sortData);

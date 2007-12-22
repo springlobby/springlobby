@@ -15,10 +15,10 @@ typedef std::vector<colInfo> colInfoVec;
 
 class customListCtrl : public wxListCtrl
 {
-private:
+protected:
     wxTimer     tipTimer;
-    wxString    text;
-    wxTipWindow *tw;
+    wxString    m_tiptext;
+    wxTipWindow *m_tipwindow;
     int coloumnCount;
    
     colInfoVec m_colinfovec;
