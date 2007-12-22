@@ -25,6 +25,11 @@ BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 
 END_EVENT_TABLE()
 
+#ifdef __WXMSW__
+	#define nonIcon ICON_EMPTY
+#else
+	#define nonIcon -1
+#endif
 
 Ui* BattleListCtrl::m_ui_for_sort = 0;
 
@@ -38,51 +43,47 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui, int coloumCount ):
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
   SetImageList( &icons(), wxIMAGE_LIST_STATE );
   
-#ifdef __WXMSW__
-   int iconIndex = ICON_EMPTY;
-#else
-   int iconIndex = -1;
-#endif
+
   wxListItem col;
 
   col.SetText( _T("s") );
-  col.SetImage( iconIndex );
+  col.SetImage( nonIcon );
   InsertColumn( 0, col, _T("Status"), false );
 
   col.SetText( _T("c") );
-  col.SetImage( iconIndex );
+  col.SetImage( nonIcon );
   InsertColumn( 1, col, _T("Country"), false);
 
   col.SetText( _T("r") );
-  col.SetImage(  iconIndex);
+  col.SetImage(  nonIcon);
   InsertColumn( 2, col, _T("Minimum rank to join"), false );
 
   col.SetText( _("Description") );
-  col.SetImage( iconIndex );
+  col.SetImage( nonIcon );
   InsertColumn( 3, col, _T("Game description") );
 
   col.SetText( _("Map") );
-  col.SetImage( iconIndex );
+  col.SetImage( nonIcon );
   InsertColumn( 4, col, _T("Mapname") );
 
   col.SetText( _("Mod") );
-  col.SetImage( iconIndex );
+  col.SetImage( nonIcon );
   InsertColumn( 5, col, _T("Modname") );
 
   col.SetText( _("Host") );
-  col.SetImage( iconIndex);
+  col.SetImage( nonIcon);
   InsertColumn( 6, col, _T("Name of the Host") );
   
   col.SetText( _("s") );
-  col.SetImage( iconIndex );
+  col.SetImage( nonIcon );
   InsertColumn( 7, col, _T("Number of Spectators"), false );
 
   col.SetText( _("p") );
-  col.SetImage( iconIndex );
+  col.SetImage( nonIcon );
   InsertColumn( 8, col, _T("Number of Players joined"), false );
 
   col.SetText( _("m") );
-  col.SetImage(  iconIndex);
+  col.SetImage(  nonIcon);
   InsertColumn( 9, col, _T("Maximum number of Players that can join"), false );
 
   m_sortorder[0].col = 0;
@@ -104,13 +105,13 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui, int coloumCount ):
   SetColumnWidth( 9, wxLIST_AUTOSIZE_USEHEADER );
 
 #else
-  SetColumnWidth( 0, 32 );
-  SetColumnWidth( 1, 32 );
-  SetColumnWidth( 2, 32 ); 
+  SetColumnWidth( 0, 20 );
+  SetColumnWidth( 1, 20 );
+  SetColumnWidth( 2, 20 ); 
 
-  SetColumnWidth( 7, 32 );
-  SetColumnWidth( 8, 32 );
-  SetColumnWidth( 9, 36 );
+  SetColumnWidth( 7, 28 ); // alittle more than before for dual digets
+  SetColumnWidth( 8, 28 );
+  SetColumnWidth( 9, 28 );
 #endif
  
   SetColumnWidth( 3, 170 );
@@ -181,7 +182,7 @@ void BattleListCtrl::OnColClick( wxListEvent& event )
   if ( event.GetColumn() == -1 ) return;
   wxListItem col;
   GetColumn( m_sortorder[0].col, col );
-  col.SetImage( -1 );
+  col.SetImage( nonIcon );
   SetColumn( m_sortorder[0].col, col );
 
   int i;
@@ -193,7 +194,7 @@ void BattleListCtrl::OnColClick( wxListEvent& event )
 
 
   GetColumn( m_sortorder[0].col, col );
-  col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
+  //col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
   Sort();

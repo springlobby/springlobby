@@ -538,7 +538,7 @@ void BattleroomListCtrl::OnColClick( wxListEvent& event )
 
 
   GetColumn( m_sortorder[0].col, col );
-  col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
+  //col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
   Sort();
