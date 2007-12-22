@@ -25,6 +25,7 @@ customListCtrl::customListCtrl(int coloumnCount_,wxWindow* parent, wxWindowID id
 {
 	tw = NULL;
 	text = _T("BIBKJBKJB");
+	//SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
 }
 
 void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
@@ -43,7 +44,6 @@ void customListCtrl::OnTimer(wxTimerEvent& event)
 		    tw->SetBoundingRect(wxRect(1,1,50,50));
 #endif
 		}
-
 }
 
 //TODO http://www.wxwidgets.org/manuals/stable/wx_wxtipwindow.html#wxtipwindowsettipwindowptr
@@ -51,6 +51,7 @@ void customListCtrl::OnTimer(wxTimerEvent& event)
 //if to tootips are displayed
 void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
+	//try {
 	//shouldnt be necessary .Start() will actually stop if running and then start aka restart
     if (tipTimer.IsRunning() == true)
     {
@@ -75,6 +76,8 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
         	text = m_colinfovec[coloumn].first;
         }
     }
+//	}
+//	catch (...){}
 }
 
 int customListCtrl::getColoumnFromPosition(wxPoint pos)
@@ -94,11 +97,20 @@ void customListCtrl::OnStartResizeCol(wxListEvent& event)
 	if (!m_colinfovec[event.GetColumn()].second)
 		event.Veto();
 }
+
+void customListCtrl::noOp(wxFocusEvent& event)
+{
+	try {
+		tw->Destroy();
+	}
+	catch (...){}
+}
  
 BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
 	#ifndef __WXMSW__ 
     	EVT_MOTION(customListCtrl::OnMouseMotion)
     	EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)
     #endif
-    	EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, customListCtrl::OnStartResizeCol) 	
+    	EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, customListCtrl::OnStartResizeCol) 
+    //	EVT_KILL_FOCUS(customListCtrl::noOp)
 END_EVENT_TABLE()

@@ -39,6 +39,7 @@ public:
     void OnTimer(wxTimerEvent& event);
     void OnMouseMotion(wxMouseEvent& event);
     void OnStartResizeCol(wxListEvent& event) ;
+    void noOp(wxFocusEvent& event);
     
     DECLARE_EVENT_TABLE()
 };
