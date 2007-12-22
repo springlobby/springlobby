@@ -75,15 +75,15 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui, int coloumCount ):
   
   col.SetText( _("s") );
   col.SetImage( iconIndex );
-  InsertColumn( 7, col, _T("sssss"), false );
+  InsertColumn( 7, col, _T("Number of Spectators"), false );
 
   col.SetText( _("p") );
   col.SetImage( iconIndex );
-  InsertColumn( 8, col, _T("pppp"), false );
+  InsertColumn( 8, col, _T("Number of Players joined"), false );
 
   col.SetText( _("m") );
   col.SetImage(  iconIndex);
-  InsertColumn( 9, col, _T("mmmm"), false );
+  InsertColumn( 9, col, _T("Maximum number of Players that can join"), false );
 
   m_sortorder[0].col = 0;
   m_sortorder[0].direction = true;

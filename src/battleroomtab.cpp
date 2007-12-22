@@ -204,8 +204,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   UpdateBattleInfo();
 
-  
- m_splitter->SetSashPosition(-520);
   m_splitter->SetMinimumPaneSize( 240 );
   
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
