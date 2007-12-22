@@ -2,30 +2,12 @@
   
 #define TOOLTIP_DELAY 1000
 
-//TODO maybe test why this needed
-//http://wxforum.shadonet.com/viewtopic.php?t=14672&highlight=wxtipwindow
-wxMyTipWindow::wxMyTipWindow(wxWindow* parent, const wxString& text):
-								wxTipWindow(parent, text)
-{
-		
-}
-	
-void wxMyTipWindow::OnKeyDown(wxKeyEvent& event)
-{
-	
-}
-
- 
-BEGIN_EVENT_TABLE(wxMyTipWindow, wxTipWindow)
-    EVT_KEY_DOWN(wxMyTipWindow::OnKeyDown)
-END_EVENT_TABLE()
- 
 customListCtrl::customListCtrl(int coloumnCount_,wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style):
 					wxListCtrl (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER)
 {
 	tw = NULL;
 	text = _T("BIBKJBKJB");
-	//SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
+	SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
 }
 
 void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
@@ -37,6 +19,7 @@ void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool mo
 
 void customListCtrl::OnTimer(wxTimerEvent& event)
 {
+		
 	 if (!text.empty())
 		{
 		    tw = new wxTipWindow(this, text);
@@ -51,33 +34,38 @@ void customListCtrl::OnTimer(wxTimerEvent& event)
 //if to tootips are displayed
 void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
-	//try {
-	//shouldnt be necessary .Start() will actually stop if running and then start aka restart
-    if (tipTimer.IsRunning() == true)
-    {
-        tipTimer.Stop();
-
-    }
-    wxPoint position = event.GetPosition();
-
-    int flag = 0;
-    long *ptrSubItem = new long;
-    long item = HitTest(position, flag, ptrSubItem);
-    if (item != wxNOT_FOUND)
-    {
-        tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-        int coloumn = getColoumnFromPosition(position);
-        if (coloumn >= m_colinfovec.size() || coloumn < 0)
-        {
-        	text = _T("");
-        }
-        else
-        {
-        	text = m_colinfovec[coloumn].first;
-        }
-    }
-//	}
-//	catch (...){}
+	if (event.Leaving())
+	{
+		text = _T("");
+		tipTimer.Stop();
+	}
+	else
+	{
+	    if (tipTimer.IsRunning() == true)
+	    {
+	        tipTimer.Stop();
+	    }
+	    
+	    wxPoint position = event.GetPosition();
+	
+	    int flag = wxLIST_HITTEST_ONITEM;
+	    long *ptrSubItem = new long;
+	    long item = HitTest(position, flag, ptrSubItem);
+	    if (item != wxNOT_FOUND)
+	    {
+	        
+	        int coloumn = getColoumnFromPosition(position);
+	        if (coloumn >= m_colinfovec.size() || coloumn < 0)
+	        {
+	        	text = _T("");
+	        }
+	        else
+	        {	
+	        	tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+	        	text = m_colinfovec[coloumn].first;
+	        }
+	    }
+	}
 }
 
 int customListCtrl::getColoumnFromPosition(wxPoint pos)
@@ -98,12 +86,9 @@ void customListCtrl::OnStartResizeCol(wxListEvent& event)
 		event.Veto();
 }
 
-void customListCtrl::noOp(wxFocusEvent& event)
+void customListCtrl::noOp(wxMouseEvent& event)
 {
-	try {
-		tw->Destroy();
-	}
-	catch (...){}
+	text = _T("");
 }
  
 BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
@@ -112,5 +97,6 @@ BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
     	EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)
     #endif
     	EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, customListCtrl::OnStartResizeCol) 
-    //	EVT_KILL_FOCUS(customListCtrl::noOp)
+    	//EVT_KILL_FOCUS(customListCtrl::noOp)
+    	EVT_LEAVE_WINDOW(customListCtrl::noOp)
 END_EVENT_TABLE()

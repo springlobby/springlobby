@@ -13,14 +13,6 @@
 typedef std::pair<wxString,bool> colInfo;
 typedef std::vector<colInfo> colInfoVec;
 
-class wxMyTipWindow : public wxTipWindow
-{
-    public:
-    wxMyTipWindow(wxWindow* parent, const wxString& text);
-    void OnKeyDown(wxKeyEvent& event);
-    DECLARE_EVENT_TABLE()
-};
- 
 class customListCtrl : public wxListCtrl
 {
 private:
@@ -39,7 +31,7 @@ public:
     void OnTimer(wxTimerEvent& event);
     void OnMouseMotion(wxMouseEvent& event);
     void OnStartResizeCol(wxListEvent& event) ;
-    void noOp(wxFocusEvent& event);
+    void noOp(wxMouseEvent& event);
     
     DECLARE_EVENT_TABLE()
 };
