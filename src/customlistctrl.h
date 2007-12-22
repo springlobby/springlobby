@@ -28,7 +28,7 @@ private:
     wxString    text;
     wxTipWindow *tw;
     int coloumnCount;
-    wxString* m_tooltips;
+   
     colInfoVec m_colinfovec;
     int getColoumnFromPosition(wxPoint pos);
 public:

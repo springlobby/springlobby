@@ -173,7 +173,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_player_panel->SetSizer( m_players_sizer );
 
-  m_splitter->SplitHorizontally( m_player_panel, m_chat, 50 );
+  m_splitter->SplitHorizontally( m_player_panel, m_chat );
 
   //m_info1_sizer->Add( m_wind_lbl, 1, wxEXPAND );
   //m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
@@ -204,9 +204,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   UpdateBattleInfo();
 
-  m_splitter->SetMinimumPaneSize( 100 );
-  m_splitter->SetSashPosition( 200 );
-
+  
+ m_splitter->SetSashPosition(-520);
+  m_splitter->SetMinimumPaneSize( 240 );
+  
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     m_players->AddUser( battle.GetUser( i ) );
   }

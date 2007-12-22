@@ -52,35 +52,35 @@ BattleroomListCtrl::BattleroomListCtrl(int coloumCount, wxWindow* parent, Battle
 
   col.SetText( _T("r") );
   col.SetImage( -1 );
-  InsertColumn( 0, col, _T("Player/Bot"));
+  InsertColumn( 0, col, _T("Player/Bot"), false);
 
   col.SetText( _T("s") );
   col.SetImage( -1 );
-  InsertColumn( 1, col,_T("Faction icon") );
+  InsertColumn( 1, col,_T("Faction icon"), false );
 
   col.SetText( _T("c") );
   col.SetImage( -1 );
-  InsertColumn( 2, col, _T("Teamcolour") );
+  InsertColumn( 2, col, _T("Teamcolour"), false );
 
   col.SetText( _T("f") );
   col.SetImage( -1 );
-  InsertColumn( 3, col, _T("Country") );
+  InsertColumn( 3, col, _T("Country"), false );
 
   col.SetText( _T("r") );
   col.SetImage( -1 );
-  InsertColumn( 4, col, _T("Rank") );
+  InsertColumn( 4, col, _T("Rank"), false );
 
   col.SetText( _("Nickname") );
   col.SetImage( -1 );
-  InsertColumn( 5, col, _T("Ingame name") );
+  InsertColumn( 5, col, _T("Ingame name"));
 
   col.SetText( _("t") );
   col.SetImage( -1 );
-  InsertColumn( 6, col, _T("Team number") );
+  InsertColumn( 6, col, _T("Team number"), false );
 
   col.SetText( _("a") );
   col.SetImage( -1 );
-  InsertColumn( 7, col, _T("Ally number") );
+  InsertColumn( 7, col, _T("Ally number"), false );
 
   col.SetText( _("cpu") );
   col.SetImage( -1 );

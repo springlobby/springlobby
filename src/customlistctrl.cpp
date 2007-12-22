@@ -25,8 +25,6 @@ customListCtrl::customListCtrl(int coloumnCount_,wxWindow* parent, wxWindowID id
 {
 	tw = NULL;
 	text = _T("BIBKJBKJB");
-	coloumnCount  = coloumnCount_;
-	m_tooltips = new wxString[coloumnCount];
 }
 
 void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
@@ -68,13 +66,13 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
     {
         tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
         int coloumn = getColoumnFromPosition(position);
-        if (coloumn >= coloumnCount || coloumn < 0)
+        if (coloumn >= m_colinfovec.size() || coloumn < 0)
         {
         	text = _T("");
         }
         else
         {
-        	text = m_colinfovec[getColoumnFromPosition(position)].first;
+        	text = m_colinfovec[coloumn].first;
         }
     }
 }
@@ -82,7 +80,7 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 int customListCtrl::getColoumnFromPosition(wxPoint pos)
 {
 	int x_pos = 0;
-	for (int i = 0; i <coloumnCount;++i)
+	for (int i = 0; i <m_colinfovec.size();++i)
 	{
 		x_pos += GetColumnWidth(i);
 		if (pos.x < x_pos)
