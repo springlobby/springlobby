@@ -399,7 +399,8 @@ void TASServer::ExecuteCommand( const std::string& in )
 
 void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
-  wxLogDebugFunc( /* _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams) */ );
+	//TODO use or not?
+ // wxLogDebugFunc( /* _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams) */ );
 
   std::string params = inparams;
   int pos, cpu, id, nat, port, maxplayers, rank, specs, metal = 0, energy = 0, units, start = 0,
