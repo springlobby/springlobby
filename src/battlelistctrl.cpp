@@ -596,7 +596,10 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 	
 	    int flag = wxLIST_HITTEST_ONITEM;
 	    long *ptrSubItem = new long;
-	    long item = HitTest(position, flag, ptrSubItem);
+	    try{ 
+	    	
+	    long item = GetItemData(HitTest(position, flag, ptrSubItem));
+	    	
 	    if (item != wxNOT_FOUND)
 	    {
 	    	Ui* ui = m_ui_for_sort;
@@ -628,11 +631,12 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 	        case 7: // specs
 	        	m_tiptext = _T("");
 	        	for (int i = battle.GetNumUsers()-1; i > battle.GetNumUsers() - battle.GetSpectators();--i)
-	        		m_tiptext << WX_STRING(battle.GetUser(i).GetNick());
+	        		m_tiptext << WX_STRING(battle.GetUser(i).GetNick())  << _T("\n");
 	        	break;
 	    	case 8: // player
-	    		for (int i = 0; i < battle.GetNumUsers();--i)
-	    			m_tiptext << WX_STRING(battle.GetUser(i).GetNick());
+	    		m_tiptext = _T("");
+	    		for (int i = 0; i < battle.GetNumUsers();++i)
+	    			m_tiptext << WX_STRING(battle.GetUser(i).GetNick()) << _T("\n");
 	    		break;
 	    	case 9: //may player
 	    		m_tiptext = WX_STRING(m_colinfovec[coloumn].first);
@@ -642,6 +646,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 	        }
 	        tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 	    }
+	    }catch(...){}
 	}
 }
 
