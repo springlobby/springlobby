@@ -8,6 +8,7 @@
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
+#include <wx/font.h>
 
 #include "nonportable.h"
 #include "settings.h"
@@ -705,3 +706,14 @@ void Settings::SetChatColorTime( wxColour value )
   m_config->Write( _T("/Chat/Colour/Time"), GetColorString(value) );
 }
 
+wxFont Settings::GetChatFont()
+{
+  wxFont f;
+  f.SetNativeFontInfo( m_config->Read( _T("/Chat/Font"), wxEmptyString ) );
+  return f;
+}
+
+void Settings::SetChatFont( wxFont value )
+{
+  m_config->Write( _T("/Chat/Font"), value.GetNativeFontInfoDesc() );
+}

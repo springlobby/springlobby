@@ -222,7 +222,7 @@ void ChatPanel::_CreateControls( )
   }
 
   m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
-
+  m_chatlog_text->SetFont( sett().GetChatFont() );
 }
 
 
@@ -442,6 +442,7 @@ void ChatPanel::_OutputLine( const wxString& message, const wxColour& col )
   LogTime();
   m_chatlog_text->SetDefaultStyle(wxTextAttr(col));
   m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
+  m_chatlog_text->SetFont( sett().GetChatFont() );
   #ifdef __WXMSW__
   m_chatlog_text->Freeze();
   #endif
@@ -782,6 +783,7 @@ void ChatPanel::LogTime()
   wxDateTime now = wxDateTime::Now();
   m_chatlog_text->SetDefaultStyle(wxTextAttr( sett().GetChatColorTime() ));
   m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
+  m_chatlog_text->SetFont( sett().GetChatFont() );
   m_chatlog_text->AppendText( _T("[") + now.Format( _T("%H:%M") ) + _T("]") );
 }
 
