@@ -68,6 +68,8 @@
 
 #include "flagimages.h"
 
+#include "images/empty.xpm"
+
 IconImageList::IconImageList() : wxImageList(16,16)
 {
 
@@ -131,6 +133,7 @@ IconImageList::IconImageList() : wxImageList(16,16)
 
   AddFlagImages( *this );
 
+  Add( wxBitmap(empty_xpm) );
 }
 
 

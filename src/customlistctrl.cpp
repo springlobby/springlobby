@@ -29,10 +29,11 @@ customListCtrl::customListCtrl(int coloumnCount_,wxWindow* parent, wxWindowID id
 	m_tooltips = new wxString[coloumnCount];
 }
 
-void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip)
+void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
 {
 	wxListCtrl::InsertColumn(i,item);
-	m_tooltips[i] = tip;
+	colInfo temp(tip,modifiable);
+	m_colinfovec.push_back(temp);
 }
 
 void customListCtrl::OnTimer(wxTimerEvent& event)
@@ -73,7 +74,7 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
         }
         else
         {
-        	text = m_tooltips[getColoumnFromPosition(position)];
+        	text = m_colinfovec[getColoumnFromPosition(position)].first;
         }
     }
 }
@@ -89,10 +90,17 @@ int customListCtrl::getColoumnFromPosition(wxPoint pos)
 	}
 	return -1;
 }
+
+void customListCtrl::OnStartResizeCol(wxListEvent& event) 
+{
+	if (!m_colinfovec[event.GetColumn()].second)
+		event.Veto();
+}
  
 BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
 	#ifndef __WXMSW__ 
     	EVT_MOTION(customListCtrl::OnMouseMotion)
     	EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)
     #endif
+    	EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, customListCtrl::OnStartResizeCol) 	
 END_EVENT_TABLE()

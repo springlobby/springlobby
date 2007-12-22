@@ -12,7 +12,6 @@
 #include "uiutils.h"
 #include "ui.h"
 #include "server.h"
-//#include "customListItem.h"
 
 BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 
@@ -30,7 +29,7 @@ END_EVENT_TABLE()
 Ui* BattleListCtrl::m_ui_for_sort = 0;
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui, int coloumCount ):
-  customListCtrl(coloumCount,parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL ),
+  customListCtrl(coloumCount,parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT),
   m_selected(-1),
   m_ui(ui)
 {
@@ -38,53 +37,53 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui, int coloumCount ):
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
   SetImageList( &icons(), wxIMAGE_LIST_STATE );
-
+  
+#ifdef __WXMSW__
+   int iconIndex = ICON_EMPTY;
+#else
+   int iconIndex = -1;
+#endif
   wxListItem col;
 
   col.SetText( _T("s") );
-  col.SetImage( -1 );
-
-  InsertColumn( 0, col, _T("Status") );
+  col.SetImage( iconIndex );
+  InsertColumn( 0, col, _T("Status"), false );
 
   col.SetText( _T("c") );
-  col.SetImage( -1 );
-  
-  InsertColumn( 1, col, _T("Country"));
+  col.SetImage( iconIndex );
+  InsertColumn( 1, col, _T("Country"), false);
 
   col.SetText( _T("r") );
-  col.SetImage( -1 );
-  InsertColumn( 2, col, _T("Minimum rank to join") );
+  col.SetImage(  iconIndex);
+  InsertColumn( 2, col, _T("Minimum rank to join"), false );
 
   col.SetText( _("Description") );
-  col.SetImage( ICON_DOWN );
+  col.SetImage( iconIndex );
   InsertColumn( 3, col, _T("Game description") );
 
   col.SetText( _("Map") );
-  col.SetImage( -1 );
+  col.SetImage( iconIndex );
   InsertColumn( 4, col, _T("Mapname") );
 
   col.SetText( _("Mod") );
-  col.SetImage( -1 );
+  col.SetImage( iconIndex );
   InsertColumn( 5, col, _T("Modname") );
 
   col.SetText( _("Host") );
-  col.SetImage( -1 );
+  col.SetImage( iconIndex);
   InsertColumn( 6, col, _T("Name of the Host") );
-
+  
   col.SetText( _("s") );
-  col.SetImage( -1 );
-  InsertColumn( 7, col, _T("sssss") );
+  col.SetImage( iconIndex );
+  InsertColumn( 7, col, _T("sssss"), false );
 
   col.SetText( _("p") );
-  col.SetImage( -1 );
-  InsertColumn( 8, col, _T("pppp") );
+  col.SetImage( iconIndex );
+  InsertColumn( 8, col, _T("pppp"), false );
 
   col.SetText( _("m") );
-  col.SetImage( -1 );
-  InsertColumn( 9, col, _T("mmmm") );
-
-
-
+  col.SetImage(  iconIndex);
+  InsertColumn( 9, col, _T("mmmm"), false );
 
   m_sortorder[0].col = 0;
   m_sortorder[0].direction = true;
@@ -97,20 +96,28 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui, int coloumCount ):
   Sort( );
 
 #ifdef __WXMSW__
-  SetColumnWidth( 0, 45 );
+  SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 7, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 8, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 9, wxLIST_AUTOSIZE_USEHEADER );
+
 #else
-  SetColumnWidth( 0, 20 );
+  SetColumnWidth( 0, 32 );
+  SetColumnWidth( 1, 32 );
+  SetColumnWidth( 2, 32 ); 
+
+  SetColumnWidth( 7, 32 );
+  SetColumnWidth( 8, 32 );
+  SetColumnWidth( 9, 36 );
 #endif
-  SetColumnWidth( 1, 20 );
-  SetColumnWidth( 2, 20 );
+ 
   SetColumnWidth( 3, 170 );
   SetColumnWidth( 4, 140 );
   SetColumnWidth( 5, 130 );
   SetColumnWidth( 6, 110 );
-  SetColumnWidth( 7, 26 );
-  SetColumnWidth( 8, 26 );
-  SetColumnWidth( 9, 26 );
-
+ 
   m_popup = new wxMenu( _T("") );
   m_popup->Append( BLIST_DLMAP, _("Download &map") );
   m_popup->Append( BLIST_DLMOD, _("Download m&od") );

@@ -7,19 +7,11 @@
 #include <wx/tipwin.h>
 #include <wx/timer.h>
 #define IDD_TIP_TIMER 666
+#include <vector>
+#include <utility>
 
-/*class customListItem : public wxListItem
-{
-private:
-	wxString m_tiptext;
-public:
-
-	void SetToolTip(wxString tip)
-	{
-		m_tiptext = tip;
-	}
-	
-};*/
+typedef std::pair<wxString,bool> colInfo;
+typedef std::vector<colInfo> colInfoVec;
 
 class wxMyTipWindow : public wxTipWindow
 {
@@ -37,14 +29,16 @@ private:
     wxTipWindow *tw;
     int coloumnCount;
     wxString* m_tooltips;
+    colInfoVec m_colinfovec;
     int getColoumnFromPosition(wxPoint pos);
 public:
 	customListCtrl(int coloumnCount_,wxWindow* parent, wxWindowID id, const wxPoint& pt, 
                     const wxSize& sz,long style);
 	
-	void InsertColumn(long i, wxListItem item, wxString tip);
+	void InsertColumn(long i, wxListItem item, wxString tip, bool = true);
     void OnTimer(wxTimerEvent& event);
     void OnMouseMotion(wxMouseEvent& event);
+    void OnStartResizeCol(wxListEvent& event) ;
     
     DECLARE_EVENT_TABLE()
 };
