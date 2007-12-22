@@ -57,6 +57,7 @@ class tab_simple : public abstract_panel
 		void OnComboBoxChange(wxCommandEvent& event);
 
     protected:
+    	void getSetUpResolutionCBX();
         void OnClose(wxCloseEvent& event);
         void OnButtonClick(wxCommandEvent& event);
 		void CreateGUIControls();

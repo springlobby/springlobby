@@ -1,5 +1,5 @@
 /**
-    This file is part of springsettings,
+d     This file is part of springsettings,
     Copyright (C) 2007
     Original work by Kloot
     cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
@@ -35,6 +35,7 @@
 #include "presets.h"
 #include "frame.h"
 #include "se_settings.h"
+#include "../springunitsynclib.h"
 
 const wxString infoTextContent= _T("These options let you roughly control Spring's rendering.\n"
 									"For more speed try lowering the settings.\n"
@@ -52,6 +53,33 @@ const wxString renderDetail_CBX_lbl = _T("Graphics detail");
 const wxString videoMode_CBX_lbl = _T("Screen resolution");
 const wxString button_lbl = _T("Switch to expert mode");
 
+void tab_simple::getSetUpResolutionCBX()
+{
+	int x_res = 0;
+	int y_res = 0;
+	
+	if (abstract_panel::settingsChanged)
+	{
+		x_res = intSettings[RC_TEXT[0].key];
+		y_res = intSettings[RC_TEXT[1].key];
+	}
+	else 
+	{
+		try{
+			x_res = susynclib()->GetSpringConfigInt(RC_TEXT[0].key,fromString(RC_TEXT[0].def));
+			y_res = susynclib()->GetSpringConfigInt(RC_TEXT[1].key,fromString(RC_TEXT[1].def));
+		}
+		catch (...)	{}
+	}
+	wxString currentRes;
+	currentRes << x_res << _T(" x ") << y_res;
+	wxArrayString choices(vl_Resolution_Str_size,vl_Resolution_Str);
+	choices.Add((currentRes + _T(" (current)")));
+
+	videoMode_CBX = new wxComboBox(this, ID_SIMPLE_MODE_CBX,currentRes , wxDefaultPosition, wxSize(220,21), 
+			choices,wxCB_DROPDOWN|wxCB_READONLY);
+}
+
 void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 	sizer->Add(new wxStaticText(this, -1, renderQuality_CBX_lbl) , 0,wxTOP|wxBOTTOM,15);
 	
@@ -67,8 +95,7 @@ void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 	sizer->Add(renderDetail_CBX, 0, wxBOTTOM, 15);	
 
 	sizer->Add(new wxStaticText(this, -1,  videoMode_CBX_lbl ), 0,wxALL);
-	videoMode_CBX = new wxComboBox(this, ID_SIMPLE_MODE_CBX, OptionsHandler.getSimpleRes(), wxDefaultPosition, wxSize(220,21), 
-			vl_Resolution_Str_size,vl_Resolution_Str,wxCB_DROPDOWN|wxCB_READONLY);
+	getSetUpResolutionCBX();
 	videoMode_CBX->SetToolTip(_T("Select the resolution fitting your monitor(s).\n"
 			"Selecting a dual screen resolution will automatically enable dual screen mode.\n"
 			"If the appropiate resolution is not available you can set it manually in expert mode.\n"
@@ -146,12 +173,6 @@ void tab_simple::OnComboBoxChange(wxCommandEvent& event)
 {
 	abstract_panel::OnComboBoxChange(event);
 }
-
-//void tab_simple::setTabs(abstract_panel* a,abstract_panel* b)
-//{
-//	detailTab = a;
-//	qualityTab = b;
-//}
 
 void tab_simple::OnButtonClick(wxCommandEvent& event)
 {
