@@ -53,7 +53,7 @@ class Ui
     void Reconnect();
     void DoConnect( const wxString& servername, const wxString& username, const wxString& password );
 
-    bool DoRegister( const wxString& servername, const wxString& username, const wxString& password );
+    bool DoRegister( const wxString& servername, const wxString& username, const wxString& password, wxString* reason );
 
     bool IsConnected() const;
     void JoinChannel( const wxString& name, const wxString& password );

@@ -195,7 +195,7 @@ bool TASServer::IsConnected()
 }
 
 
-bool TASServer::Register( const std::string& addr, const int port, const std::string& nick, const std::string& password )
+bool TASServer::Register( const std::string& addr, const int port, const std::string& nick, const std::string& password, wxString* reason )
 {
   wxLogDebugFunc( _T("") );
 
@@ -216,7 +216,11 @@ bool TASServer::Register( const std::string& addr, const int port, const std::st
   data = "";
 
   m_sock->Receive( data );
-  if ( data != "REGISTRATIONACCEPTED\n") return false;
+  if ( data != "REGISTRATIONACCEPTED\n") 
+  {
+	  *reason = WX_STRING(data.substr(19,data.size()));
+	  return false;
+  }
 
   return true;
 }

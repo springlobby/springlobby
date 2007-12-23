@@ -255,7 +255,14 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
 
     m_ui.DoConnect( HostAddress, m_nick_text->GetValue(), m_pass_text->GetValue() );
   } else {
-    if ( m_ui.DoRegister( HostAddress, m_regnick_text->GetValue(), m_regpass1_text->GetValue() ) ) {
+	  wxString* reason = new wxString();
+	  if (m_regpass2_text->GetValue()!= m_regpass1_text->GetValue())
+	  {
+		  Show();
+         wxLogWarning( _T("registration failed, reason: password/confirmation mismatch")  );
+         customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\nPassword / confirmation mismatch") , _("Registration failed."), wxOK );
+	  }
+	  else if ( m_ui.DoRegister( HostAddress, m_regnick_text->GetValue(), m_regpass1_text->GetValue(),reason ) ) {
        m_tabs->SetSelection( 0 );
        m_nick_text->SetValue(m_regnick_text->GetValue());
        m_pass_text->SetValue(m_regpass1_text->GetValue());
@@ -263,8 +270,8 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
        customMessageBox(SL_MAIN_ICON, _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
     } else {
        Show();
-       wxLogWarning( _T("registration failed.") );
-       customMessageBox(SL_MAIN_ICON, _("Registration failed."), _("Registration failed"), wxOK );
+       wxLogWarning( _T("registration failed, reason: ")+(*reason)  );
+       customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\n")+(*reason) , _("Registration failed."), wxOK );
     }
 
   }

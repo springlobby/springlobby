@@ -192,7 +192,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 }
 
 
-bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password )
+bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password,wxString* reason)
 {
   std::string host;
   int port;
@@ -210,7 +210,7 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
   host = sett().GetServerHost( STD_STRING(servername) );
   port = sett().GetServerPort( STD_STRING(servername) );
 
-  return serv->Register( host, port, STD_STRING(username), STD_STRING(password) );
+  return serv->Register( host, port, STD_STRING(username), STD_STRING(password),reason );
 
 }
 
