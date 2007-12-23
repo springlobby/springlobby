@@ -46,6 +46,8 @@ class Channel : public UserList
     void Left( User& who, const std::string& reason );
     void Joined( User& who );
 
+    void OnChannelJoin( User& who );
+
     void SetTopic( const std::string& topic, const std::string& who );
     std::string GetTopic();
     std::string GetTopicSetBy();

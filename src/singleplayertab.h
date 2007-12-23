@@ -18,7 +18,6 @@ class wxChoice;
 class wxStaticText;
 class wxCommandEvent;
 
-
 class SinglePlayerTab: public wxPanel
 {
   public:

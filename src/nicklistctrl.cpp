@@ -102,8 +102,12 @@ void NickListCtrl::RemoveUser( const User& user )
 void NickListCtrl::UserUpdated( User& user )
 {
   int index = GetUserIndex( user );
-  ASSERT_LOGIC( index != -1, _T("index = -1") );
-  UserUpdated( index );
+  //ASSERT_LOGIC( index != -1, _T("index = -1") );
+  if(index!=-1){
+    UserUpdated( index );
+  }else{
+    wxLogWarning(_T("NickListCtrl::UserUpdated error, index == -1 ."));
+  }
 }
 
 

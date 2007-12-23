@@ -45,6 +45,8 @@ class TASServer : public Server
 
     void Ping();
 
+    void UDPPing();/// used for nat travelsal
+
     User& GetMe();
 
     void JoinChannel( const std::string& channel, const std::string& key );
@@ -101,6 +103,9 @@ class TASServer : public Server
 
     void RequestInGameTime( const std::string& nick );
 
+    void SendUdpSourcePort( int udpport );
+    void SendNATHelperInfos( const wxString& username, const wxString& ip, int port );
+
     Battle* GetCurrentBattle();
 
     void RequestChannels();
@@ -134,7 +139,9 @@ class TASServer : public Server
 
     std::string m_agreement;
 
-    void _ReceiveAndExecute();
+    std::string m_addr;
+
+    void ReceiveAndExecute();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H

@@ -1,4 +1,4 @@
-## the following clause may NOT be split, b/c of autoreconf 2.61 and older
+c## the following clause may NOT be split, b/c of autoreconf 2.61 and older
 ## the --install requires automake 1.10 which was released in 2006
 ## the --install can be edited out to use older automake
 ACLOCAL_AMFLAGS = -I m4 --install
@@ -23,9 +23,13 @@ dist_doc_DATA = \
 	THANKS
 
 bin_PROGRAMS = \
-	springlobby
+	springlobby \
+	springsettings
 
 springlobby_LDADD = \
+	$(WX_LIBS)
+
+springsettings_LDADD = \
 	$(WX_LIBS)
 
 if USE_WINDRES
@@ -39,7 +43,8 @@ endif
 # and we can not use -Werror in AM_INIT_AUTOMAKE because of this either
 # but without this construct we would have a circular dependency and make
 # would whine about it on every invocation
-revision.cpp: src/revision.cpp.in $(filter-out revision.%, $(springlobby_OBJECTS)) $(springlobby_DEPENDENCIES)
+
+revision.cpp: src/revision.cpp.in $(filter-out revision.%, $(springlobby_SOURCES)) $(springlobby_DEPENDENCIES)
 	rm -f $@
 	sed "s/REV[^\"]*/REV SVN `LC_ALL=C $(SVNVERSION) $(top_srcdir) /trunk || echo svnversion failed or not found`/" < $< > $@
 
@@ -467,8 +472,94 @@ springlobby_SOURCES = \
 	src/images/flags/ZM.xpm \
 	src/images/flags/ZW.xpm
 
-if USE_WINDRES
+
+# TODO keep only a single list instead of duplicating the lists below
+# note, integrated has everything but main.cpp
 springlobby_SOURCES += \
-	src/springlobby.rc
+	src/settings++/se_utils.h \
+	src/settings++/se_utils.cpp \
+	src/settings++/frame.cpp \
+	src/settings++/main.h \
+	src/settings++/tab_ui.cpp \
+	src/settings++/tab_render_detail.cpp \
+	src/settings++/tab_quality_video.h \
+	src/settings++/frame.h \
+	src/settings++/tab_audio.h \
+	src/settings++/se_settings.h \
+	src/settings++/tab_debug.cpp \
+	src/settings++/tab_debug.h \
+	src/settings++/se_settings.cpp \
+	src/settings++/tab_audio.cpp \
+	src/settings++/presets.h \
+	src/settings++/presets.cpp \
+	src/settings++/tab_abstract.cpp \
+	src/settings++/Defs.hpp \
+	src/settings++/tab_simple.cpp \
+	src/settings++/tab_quality_video.cpp \
+	src/settings++/tab_ui.h \
+	src/settings++/tab_simple.h \
+	src/images/springsettings.xpm \
+	src/settings++/tab_render_detail.h \
+	src/settings++/tab_abstract.h \
+	src/settings++/panel_pathoption.h \
+	src/settings++/panel_pathoption.cpp \
+	src/settings++/custom_dialogs.h \
+	src/settings++/custom_dialogs.cpp \
+	src/settings++/helpmenufunctions.h \
+	src/settings++/helpmenufunctions.cpp
+
+if USE_WINDRES
+	springlobby_SOURCES += \
+		src/springlobby.rc
+endif
+
+
+springsettings_SOURCES = \
+	revision.cpp \
+	src/revision.cpp.in \
+	src/revision.h \
+	src/utils.cpp \
+	src/utils.h \
+	src/crashreport.cpp \
+	src/crashreport.h \
+	src/springunitsynclib.cpp \
+	src/springunitsynclib.h \
+	src/settings++/se_utils.cpp \
+	src/settings++/se_utils.h \
+	src/settings++/frame.cpp \
+	src/settings++/main.h \
+	src/settings++/tab_ui.cpp \
+	src/settings++/tab_render_detail.cpp \
+	src/settings++/tab_quality_video.h \
+	src/settings++/frame.h \
+	src/settings++/tab_audio.h \
+	src/settings++/se_settings.h \
+	src/settings++/tab_debug.cpp \
+	src/settings++/tab_debug.h \
+	src/settings++/se_settings.cpp \
+	src/settings++/tab_audio.cpp \
+	src/settings++/presets.h \
+	src/settings++/presets.cpp \
+	src/settings++/tab_abstract.cpp \
+	src/settings++/Main.cpp \
+	src/settings++/Defs.hpp \
+	src/settings++/tab_simple.cpp \
+	src/settings++/tab_quality_video.cpp \
+	src/settings++/tab_ui.h \
+	src/settings++/tab_simple.h \
+	src/images/springsettings.xpm \
+	src/settings++/tab_render_detail.h \
+	src/settings++/tab_abstract.h \
+	src/settings++/panel_pathoption.h \
+	src/settings++/panel_pathoption.cpp	\
+	src/settings++/custom_dialogs.h \
+	src/settings++/custom_dialogs.cpp \
+	src/settings++/helpmenufunctions.h \
+	src/settings++/helpmenufunctions.cpp
+
+
+if USE_WINDRES
+	springsettings_SOURCES += \
+		src/springlobby.rc
 endif
 
