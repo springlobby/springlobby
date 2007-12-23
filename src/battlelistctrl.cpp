@@ -580,21 +580,17 @@ int wxCALLBACK BattleListCtrl::CompareMaxPlayerDOWN(long item1, long item2, long
 
 void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
-	if (tipTimer.IsRunning() == true)
-	{
-		tipTimer.Stop();
-	}
-
 	wxPoint position = event.GetPosition();
 
-	int flag = wxLIST_HITTEST_ONITEM;
-	long *ptrSubItem = new long;
 	try{ 
 		tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-		long item = GetItemData(HitTest(position, flag, ptrSubItem));
+		int flag = wxLIST_HITTEST_ONITEM;
+		long *ptrSubItem = new long;
+		long item_hit = HitTest(position, flag, ptrSubItem);
 
-		if (item != wxNOT_FOUND)
+		if (item_hit != wxNOT_FOUND)
 		{
+			long item = GetItemData(item_hit);
 			Ui* ui = m_ui_for_sort;
 			Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
 			int coloumn = getColoumnFromPosition(position);

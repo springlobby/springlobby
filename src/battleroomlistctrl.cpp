@@ -979,15 +979,15 @@ void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 	tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 	wxPoint position = event.GetPosition();
 
-	int flag = wxLIST_HITTEST_ONITEM;
-	long *ptrSubItem = new long;
-
 	try{
-		long item = GetItemData(HitTest(position, flag, ptrSubItem));
+		int flag = wxLIST_HITTEST_ONITEM;
+		long *ptrSubItem = new long;
+		long item_hit = HitTest(position, flag, ptrSubItem);
 		int coloumn = getColoumnFromPosition(position);
 
-		if (item != wxNOT_FOUND)
-		{
+		if (item_hit != wxNOT_FOUND)
+		{				
+			long item = GetItemData(item_hit);
 			item_content content = this->items[(size_t)item];
 
 			if (coloumn > (int)m_colinfovec.size() || coloumn < 0)

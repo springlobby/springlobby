@@ -345,12 +345,12 @@ void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
 	long *ptrSubItem = new long;
 
 	try{
-		long item = GetItemData(HitTest(position, flag, ptrSubItem));
+		long item_hit = HitTest(position, flag, ptrSubItem);
 		int coloumn = getColoumnFromPosition(position);
 
-		if (item != wxNOT_FOUND)
+		if (item_hit != wxNOT_FOUND)
 		{
-			User* user = (User*) item;
+			User* user = (User*) GetItemData(item_hit);
 			
 			if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
 			{
