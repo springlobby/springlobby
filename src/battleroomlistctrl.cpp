@@ -38,8 +38,14 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  customListCtrl)
 #ifndef __WXMSW__ //disables tooltips on win
   EVT_MOTION(BattleroomListCtrl::OnMouseMotion)
 #endif
-
+  
 END_EVENT_TABLE()
+
+#ifdef __WXMSW__
+	#define nonIcon ICON_EMPTY
+#else
+	#define nonIcon -1
+#endif
 
 Ui* BattleroomListCtrl::m_ui_for_sort = 0;
 
@@ -56,43 +62,43 @@ BattleroomListCtrl::BattleroomListCtrl(int coloumCount, wxWindow* parent, Battle
   wxListItem col;
 
   col.SetText( _T("r") );
-  col.SetImage( -1 );
+  col.SetImage(nonIcon );
   InsertColumn( 0, col, _T("Player/Bot"), false);
 
   col.SetText( _T("s") );
-  col.SetImage( -1 );
+  col.SetImage( nonIcon );
   InsertColumn( 1, col,_T("Faction icon"), false );
 
   col.SetText( _T("c") );
-  col.SetImage( -1 );
+  col.SetImage(  nonIcon);
   InsertColumn( 2, col, _T("Teamcolour"), false );
 
   col.SetText( _T("f") );
-  col.SetImage( -1 );
+  col.SetImage( nonIcon );
   InsertColumn( 3, col, _T("Country"), false );
 
   col.SetText( _T("r") );
-  col.SetImage( -1 );
+  col.SetImage( nonIcon );
   InsertColumn( 4, col, _T("Rank"), false );
 
   col.SetText( _("Nickname") );
-  col.SetImage( -1 );
+  col.SetImage( nonIcon );
   InsertColumn( 5, col, _T("Ingame name"));
 
   col.SetText( _("t") );
-  col.SetImage( -1 );
+  col.SetImage(nonIcon );
   InsertColumn( 6, col, _T("Team number"), false );
 
   col.SetText( _("a") );
-  col.SetImage( -1 );
+  col.SetImage( nonIcon );
   InsertColumn( 7, col, _T("Ally number"), false );
 
   col.SetText( _("cpu") );
-  col.SetImage( -1 );
+  col.SetImage( nonIcon );
   InsertColumn( 8, col, _T("CPU speed (might not be accurate)") );
 
   col.SetText( _("Resource Bonus") );
-  col.SetImage( -1 );
+  col.SetImage( nonIcon );
   InsertColumn( 9, col, _T("Resource Bonus") );
 
   m_sortorder[0].col = 7;
@@ -104,17 +110,25 @@ BattleroomListCtrl::BattleroomListCtrl(int coloumCount, wxWindow* parent, Battle
   Sort( );
 
 #ifdef __WXMSW__
-  SetColumnWidth( 0, 45 );
+  SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
+   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
+   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
+    SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
+    SetColumnWidth( 4, wxLIST_AUTOSIZE_USEHEADER );
+    SetColumnWidth( 6, wxLIST_AUTOSIZE_USEHEADER );
+    SetColumnWidth( 7, wxLIST_AUTOSIZE_USEHEADER );
 #else
   SetColumnWidth( 0, 20 );
-#endif
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );
   SetColumnWidth( 3, 20 );
-  SetColumnWidth( 4, 20 );
-  SetColumnWidth( 5, 170 );
+  SetColumnWidth( 4, 20 ); 
   SetColumnWidth( 6, 26 );
   SetColumnWidth( 7, 26 );
+#endif
+  
+  SetColumnWidth( 5, 170 );
+ 
   SetColumnWidth( 8, 80 );
   SetColumnWidth( 9, 130 );
 
