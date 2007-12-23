@@ -41,6 +41,10 @@
 #define LOCK_SPEED_INDEX 3
 #define RANDOM_START_INDEX 3
 
+#define SLI_METAL_ID 	9000
+#define SLI_ENERGY_ID	9001
+#define SLI_UNITS_ID	9002
+
 
 BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
 
@@ -82,7 +86,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_metal_lbl = new wxStaticText( this, wxID_ANY, _("Start Metal"), wxDefaultPosition, wxDefaultSize, 0 );
   m_metal_sizer->Add( m_metal_lbl, 0, wxALL, 5 );
 
-  m_metal_slider = new wxSlider( this, BOPTS_SLIDE, 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
+  m_metal_slider = new wxSlider( this, SLI_METAL_ID, 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
   m_metal_slider->SetToolTip( _("The amount of metal each player starts with.") );
 
   m_metal_sizer->Add( m_metal_slider, 1, wxALL|wxEXPAND, 5 );
@@ -98,7 +102,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_energy_lbl = new wxStaticText( this, wxID_ANY, _("Start Energy"), wxDefaultPosition, wxDefaultSize, 0 );
   m_energy_sizer->Add( m_energy_lbl, 0, wxALL, 5 );
 
-  m_energy_slider = new wxSlider( this, BOPTS_SLIDE, 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
+  m_energy_slider = new wxSlider( this,SLI_ENERGY_ID , 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
   m_energy_slider->SetToolTip( _("The amount of energy each player starts with.") );
 
   m_energy_sizer->Add( m_energy_slider, 1, wxALL|wxEXPAND, 5 );
@@ -114,7 +118,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_units_lbl = new wxStaticText( this, wxID_ANY, _("Max units"), wxDefaultPosition, wxDefaultSize, 0 );
   m_units_sizer->Add( m_units_lbl, 0, wxALL, 5 );
 
-  m_units_slider = new wxSlider( this, BOPTS_SLIDE, 500, 10, 5000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
+  m_units_slider = new wxSlider( this, SLI_UNITS_ID, 500, 10, 5000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
   m_units_slider->SetToolTip( _("The maximun number of units allowed per player.") );
 
   m_units_sizer->Add( m_units_slider, 1, wxALL|wxEXPAND, 5 );
@@ -389,8 +393,9 @@ void BattleOptionsTab::OnOptsCheck( wxCommandEvent& event )
 
 void BattleOptionsTab::OnSlideChanged( wxScrollEvent& event )
 {
+  /* for reference
   HostInfo changed = HI_None;
-  if        ( m_last_metal != m_metal_slider->GetValue() ) {
+  if  		( m_last_metal != m_metal_slider->GetValue() ) {
     m_last_metal = m_metal_slider->GetValue();
     m_battle.SetStartMetal( m_last_metal );
     changed |= HI_StartResources;
@@ -402,10 +407,24 @@ void BattleOptionsTab::OnSlideChanged( wxScrollEvent& event )
     m_last_units = m_units_slider->GetValue();
     m_battle.SetMaxUnits( m_last_units );
     changed |= HI_MaxUnits;
-  }
-
-  if ( changed != HI_None ) {
-    m_battle.SendHostInfo( changed );
+  }*/
+  switch (event.GetId())
+  {
+  case SLI_METAL_ID:
+	  m_last_metal = m_metal_slider->GetValue();
+	      m_battle.SetStartMetal( m_last_metal );
+	      m_battle.SendHostInfo(HI_StartResources);
+	  break;
+  case SLI_ENERGY_ID:
+	  m_last_energy = m_energy_slider->GetValue();
+	      m_battle.SetStartEnergy( m_last_energy );
+	      m_battle.SendHostInfo(HI_StartResources);
+	  break;
+  case SLI_UNITS_ID:
+	  m_last_units = m_units_slider->GetValue();
+	     m_battle.SetMaxUnits( m_last_units );
+	     m_battle.SendHostInfo(HI_MaxUnits);
+	  break;
   }
 }
 
