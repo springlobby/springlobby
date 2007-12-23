@@ -590,7 +590,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 	int flag = wxLIST_HITTEST_ONITEM;
 	long *ptrSubItem = new long;
 	try{ 
-
+		tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 		long item = GetItemData(HitTest(position, flag, ptrSubItem));
 
 		if (item != wxNOT_FOUND)
@@ -602,7 +602,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 			{
 			case 0: // status
 			m_tiptext = IconImageList::GetBattleStatus(battle);
-			break;	
+				break;	
 			case 1: // country
 				m_tiptext = WX_STRING(battle.GetFounder().GetCountry());
 				break;	
@@ -644,9 +644,8 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 				break;  	
 
 			default: m_tiptext = _T("");
-			break;
+				break;
 			}
-			tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 		}
 	}
 	catch(...){}
