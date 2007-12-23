@@ -629,7 +629,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 	        	m_tiptext = WX_STRING(battle.GetFounder().GetNick());
 	        	break;
 	        case 7: // specs
-	        	m_tiptext = _T("");
+	        	m_tiptext = _T("Spectators:\n");
 	        	for (unsigned int i = battle.GetNumUsers()-1; i > battle.GetNumUsers() - battle.GetSpectators()-1;--i)
 	        	{
 	        		if (i < battle.GetNumUsers()-1)
@@ -638,7 +638,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 	        	}
 	        	break;
 	    	case 8: // player
-	    		m_tiptext = _T("");
+	    		m_tiptext = _T("Active Players:\n");
 	    		for (unsigned int i = 0; i < battle.GetNumUsers();++i)
 	    		{
 	    			if ( i> 0)
@@ -647,10 +647,11 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 	    		}
 	    		break;
 	    	case 9: //may player
-	    		m_tiptext = WX_STRING(m_colinfovec[coloumn].first);
+	    		m_tiptext = (m_colinfovec[coloumn].first);
 	    	    break;  	
 	        	
-	        default: m_tiptext = _T(""); break;
+	        default: m_tiptext = _T("");
+	        break;
 	        }
 	        tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 	    }

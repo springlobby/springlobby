@@ -968,30 +968,27 @@ void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 	}
 	else
 	{
-		if (tipTimer.IsRunning() == true)
-		{
-			tipTimer.Stop();
-		}
-
+		tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 		wxPoint position = event.GetPosition();
 
 		int flag = wxLIST_HITTEST_ONITEM;
 		long *ptrSubItem = new long;
 
-		try{ 
-
+		try{
 			long item = GetItemData(HitTest(position, flag, ptrSubItem));
+			int coloumn = getColoumnFromPosition(position);
 
 			if (item != wxNOT_FOUND)
 			{
 				//BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
 				item_content content = this->items[(size_t)item];
-				int coloumn = getColoumnFromPosition(position);
+
 				if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
 				{
 					m_tiptext = _T("");
 				}
-				else{
+				else
+				{
 					switch (coloumn)
 					{
 					case 0: // is bot?
@@ -1036,7 +1033,6 @@ void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 						m_tiptext =m_colinfovec[coloumn].first;
 						break;
 					}
-					tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 				}
 			}
 		}catch(...){}
