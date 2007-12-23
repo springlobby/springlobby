@@ -24,7 +24,7 @@ BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
   EVT_LIST_COL_CLICK       ( BLIST_LIST, BattleListCtrl::OnColClick )
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
   EVT_MENU                 ( BLIST_DLMOD, BattleListCtrl::OnDLMod )
-#ifndef __WXMSW__ 
+#ifndef __WXMSW__ //disables tooltips on win
   EVT_MOTION(BattleListCtrl::OnMouseMotion)
 #endif
 

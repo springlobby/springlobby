@@ -73,7 +73,8 @@ class BattleroomListCtrl : public customListCtrl
     static int wxCALLBACK CompareHandicapUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareHandicapDOWN(long item1, long item2, long sortData);
     wxString GetCellContentsString( long row_number, int column );
-
+    void OnMouseMotion(wxMouseEvent& event);
+    
     struct {
       int col;
       bool direction;
