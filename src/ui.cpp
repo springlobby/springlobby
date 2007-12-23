@@ -588,6 +588,17 @@ void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 }
 
 
+void Ui::OnChannelJoin( Channel& chan, User& user )
+{
+  //wxLogDebugFunc( _T("") );
+  if ( chan.uidata.panel == 0 ) {
+    wxLogError( _T("ud->panel NULL") );
+    return;
+  }
+  chan.uidata.panel->OnChannelJoin( user );
+}
+
+
 void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason )
 {
   //wxLogDebugFunc( _T("") );

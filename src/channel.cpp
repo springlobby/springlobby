@@ -74,6 +74,13 @@ void Channel::Joined( User& who )
 }
 
 
+void Channel::OnChannelJoin( User& who )
+{
+  AddUser( who );
+  m_ui.OnChannelJoin( *this, who );
+}
+
+
 void Channel::SetTopic( const std::string& topic, const std::string& who )
 {
   m_topic = topic;

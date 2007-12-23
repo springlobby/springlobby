@@ -503,7 +503,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   } else if ( cmd == "JOINED" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
-    m_se->OnChannelJoin( channel, nick );
+    m_se->OnUserJoinChannel( channel, nick );
   } else if ( cmd == "LEFT" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
