@@ -25,7 +25,7 @@
 #include "settings++/custom_dialogs.h"
 
 // Define events.
-BEGIN_EVENT_TABLE(ConnectWindow, wxFrame)
+BEGIN_EVENT_TABLE(ConnectWindow, wxDialog)
 
   EVT_BUTTON ( wxID_OK,     ConnectWindow::OnOk )
   EVT_BUTTON ( wxID_CANCEL, ConnectWindow::OnCancel )
@@ -37,8 +37,8 @@ END_EVENT_TABLE()
 //!
 //! @param parent Parent window
 ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
-: wxFrame( parent, -1, _("Connect to lobby server"), wxDefaultPosition, wxSize(300, 300),
-           wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN|wxFRAME_FLOAT_ON_PARENT ), m_ui(ui)
+: wxDialog( parent, -1, _("Connect to lobby server"), wxDefaultPosition, wxSize(300, 300),
+           wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN ), m_ui(ui)
 {
   wxString server;
   wxString username;
