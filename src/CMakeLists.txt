@@ -17,6 +17,7 @@ SET(SRCS
 	channel.cpp
 	channellist.cpp
 	chatlog.cpp
+	chatoptionstab.cpp
 	chatpanel.cpp
 	connectwindow.cpp
 	flagimages.cpp
