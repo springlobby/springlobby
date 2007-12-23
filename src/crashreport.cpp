@@ -86,7 +86,7 @@ wxString dir = report->GetDirectory();
 
 void CrashReport::GenerateReport(wxDebugReport::Context ctx)
 {
-  wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR );
+  wxLogError( _("The application has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR );
 }
 
 #endif// !wxUSE_DEBUGREPORT
