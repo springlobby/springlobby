@@ -580,83 +580,76 @@ int wxCALLBACK BattleListCtrl::CompareMaxPlayerDOWN(long item1, long item2, long
 
 void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
-	if (event.Leaving())
+	if (tipTimer.IsRunning() == true)
 	{
-		m_tiptext = _T("");
 		tipTimer.Stop();
 	}
-	else
-	{
-	    if (tipTimer.IsRunning() == true)
-	    {
-	        tipTimer.Stop();
-	    }
-	    
-	    wxPoint position = event.GetPosition();
-	
-	    int flag = wxLIST_HITTEST_ONITEM;
-	    long *ptrSubItem = new long;
-	    try{ 
-	    	
-	    long item = GetItemData(HitTest(position, flag, ptrSubItem));
-	    	
-	    if (item != wxNOT_FOUND)
-	    {
-	    	Ui* ui = m_ui_for_sort;
-	    	Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
-	        int coloumn = getColoumnFromPosition(position);
-	        switch (coloumn)
-	        {
-	        case 0: // status
-	        	m_tiptext = IconImageList::GetBattleStatus(battle);
-	        	break;	
-	        case 1: // country
-	        	m_tiptext = WX_STRING(battle.GetFounder().GetCountry());
-	        	break;	
-	        case 2: // rank_min
-	        	m_tiptext = WX_STRING(m_colinfovec[coloumn].first);
-	        	break;	
-	        case 3: // descrp
-	        	m_tiptext = WX_STRING(battle.GetDescription());
-	        	break;
-	        case 4: //map
-	        	m_tiptext = WX_STRING(battle.GetMapName());
-	        	break;
-	        case 5: //mod
-	        	m_tiptext = WX_STRING(battle.GetModName());
-	        	break;
-	        case 6: // host
-	        	m_tiptext = WX_STRING(battle.GetFounder().GetNick());
-	        	break;
-	        case 7: // specs
-	        	m_tiptext = _T("Spectators:\n");
-	        	for (unsigned int i = battle.GetNumUsers()-1; i > battle.GetNumUsers() - battle.GetSpectators()-1;--i)
-	        	{
-	        		if (i < battle.GetNumUsers()-1)
-	        			m_tiptext << _T("\n");
-	        		m_tiptext << WX_STRING(battle.GetUser(i).GetNick()) ;
-	        	}
-	        	break;
-	    	case 8: // player
-	    		m_tiptext = _T("Active Players:\n");
-	    		for (unsigned int i = 0; i < battle.GetNumUsers()-battle.GetSpectators();++i)
-	    		{
-	    			if ( i> 0)
-	    				m_tiptext << _T("\n");
-	    			m_tiptext << WX_STRING(battle.GetUser(i).GetNick());
-	    		}
-	    		break;
-	    	case 9: //may player
-	    		m_tiptext = (m_colinfovec[coloumn].first);
-	    	    break;  	
-	        	
-	        default: m_tiptext = _T("");
-	        break;
-	        }
-	        tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-	    }
-	    }catch(...){}
+
+	wxPoint position = event.GetPosition();
+
+	int flag = wxLIST_HITTEST_ONITEM;
+	long *ptrSubItem = new long;
+	try{ 
+
+		long item = GetItemData(HitTest(position, flag, ptrSubItem));
+
+		if (item != wxNOT_FOUND)
+		{
+			Ui* ui = m_ui_for_sort;
+			Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
+			int coloumn = getColoumnFromPosition(position);
+			switch (coloumn)
+			{
+			case 0: // status
+			m_tiptext = IconImageList::GetBattleStatus(battle);
+			break;	
+			case 1: // country
+				m_tiptext = WX_STRING(battle.GetFounder().GetCountry());
+				break;	
+			case 2: // rank_min
+				m_tiptext = WX_STRING(m_colinfovec[coloumn].first);
+				break;	
+			case 3: // descrp
+				m_tiptext = WX_STRING(battle.GetDescription());
+				break;
+			case 4: //map
+				m_tiptext = WX_STRING(battle.GetMapName());
+				break;
+			case 5: //mod
+				m_tiptext = WX_STRING(battle.GetModName());
+				break;
+			case 6: // host
+				m_tiptext = WX_STRING(battle.GetFounder().GetNick());
+				break;
+			case 7: // specs
+				m_tiptext = _T("Spectators:\n");
+				for (unsigned int i = battle.GetNumUsers()-1; i > battle.GetNumUsers() - battle.GetSpectators()-1;--i)
+				{
+					if (i < battle.GetNumUsers()-1)
+						m_tiptext << _T("\n");
+					m_tiptext << WX_STRING(battle.GetUser(i).GetNick()) ;
+				}
+				break;
+			case 8: // player
+				m_tiptext = _T("Active Players:\n");
+				for (unsigned int i = 0; i < battle.GetNumUsers()-battle.GetSpectators();++i)
+				{
+					if ( i> 0)
+						m_tiptext << _T("\n");
+					m_tiptext << WX_STRING(battle.GetUser(i).GetNick());
+				}
+				break;
+			case 9: //may player
+				m_tiptext = (m_colinfovec[coloumn].first);
+				break;  	
+
+			default: m_tiptext = _T("");
+			break;
+			}
+			tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+		}
 	}
+	catch(...){}
 }
 
 
