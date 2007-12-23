@@ -16,6 +16,7 @@
 #include "utils.h"
 #include "ui.h"
 #include "server.h"
+#include "ibattle.h"
 
 #include "images/close.xpm"
 #include "images/close_hi.xpm"
@@ -147,7 +148,8 @@ wxRect MapCtrl::_GetStartRect( const BattleStartRect& sr )
 
 int MapCtrl::_GetNewRectIndex()
 {
-  for (int i = 0; i < 16; i++ ) {
+  ASSERT_LOGIC ( m_battle, _T("getting a rectangle index not in a battle"));
+  for ( std::vector<BattleStartRect*>::size_type i = 0; i < m_battle->GetNumRects() ; i++ ) {
     wxRect r = _GetStartRect( i );
     if ( r.IsEmpty() ) return i;
   }
@@ -864,7 +866,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     if ( nsr.width < minboxsize ) nsr.SetWidth( minboxsize );
     if ( nsr.height < minboxsize ) nsr.SetHeight( minboxsize );
     BattleStartRect bsr = _GetBattleRect( nsr.x, nsr.y, nsr.x + nsr.width, nsr.y + nsr.height, m_mdown_rect );
-    m_battle->AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom );
+    m_battle->AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom ); /// FIXME (BrainDamage#3#): this fails when team boxes > 16
     if ( sr != nsr ) RefreshRect( sr.Union( nsr ), false );
     return;
 

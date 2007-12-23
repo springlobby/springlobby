@@ -16,10 +16,11 @@
 #include "battle.h"
 #include "settings.h"
 
-void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported, const std::string server_spring_ver )
+void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported, const std::string server_spring_ver, const int udpport, bool lanmode )
 {
   wxLogDebugFunc( WX_STRING(server_ver) + _T(" ") + WX_STRING(server_spring_ver) );
-  m_ui.SetSupportedSpring( server_spring_ver );
+  m_serv.SetRequiredSpring( server_spring_ver );
+  m_serv.SetUdpPort( udpport );
   m_ui.OnConnected( m_serv, server_name, server_ver, supported );
   m_serv.Login();
 }
@@ -28,7 +29,8 @@ void ServerEvents::OnConnected( const std::string& server_name, const std::strin
 void ServerEvents::OnDisconnected()
 {
   wxLogDebugFunc( _T("") );
-  m_ui.SetSupportedSpring ("");
+  m_serv.SetRequiredSpring ("");
+  m_serv.SetUdpPort( 0 );
   m_ui.OnDisconnected( m_serv );
 }
 
@@ -110,21 +112,30 @@ void ServerEvents::OnNewUser( const std::string& nick, const std::string& countr
 
 void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
 {
-  //wxLogDebugFunc( _T("") );
-  User& user = m_serv.GetUser( nick );
+  wxLogDebugFunc( _T("") );
+  try{
+    wxLogMessage( _T("calling m_serv.GetUser( nick ) ") );
+    User& user = m_serv.GetUser( nick );
+    wxLogMessage( _T("calling user.SetStatus( status ) ") );
 
-  user.SetStatus( status );
-  m_ui.OnUserStatusChanged( user );
+    user.SetStatus( status );
 
-  if ( user.GetBattle() != 0 ) {
-    Battle& battle = *user.GetBattle();
-    if ( battle.GetFounder().GetNick() == user.GetNick() ) {
-      if ( status.in_game != battle.GetInGame() ) {
-        battle.SetInGame( status.in_game );
-        if ( status.in_game ) m_ui.OnBattleStarted( battle );
-        else m_ui.OnBattleInfoUpdated( battle );
+    wxLogMessage( _T("calling m_ui.OnUserStatusChanged( user ) ") );
+    m_ui.OnUserStatusChanged( user );
+    wxLogMessage( _T("updating battles ") );
+
+    if ( user.GetBattle() != 0 ) {
+      Battle& battle = *user.GetBattle();
+      if ( battle.GetFounder().GetNick() == user.GetNick() ) {
+        if ( status.in_game != battle.GetInGame() ) {
+          battle.SetInGame( status.in_game );
+          if ( status.in_game ) m_ui.OnBattleStarted( battle );
+          else m_ui.OnBattleInfoUpdated( battle );
+        }
       }
     }
+  }catch(...){
+    wxLogWarning( _("OnUserStatus() failed ! (exception)") );
   }
 }
 
@@ -374,7 +385,7 @@ void ServerEvents::OnChannelSaid( const std::string& channel, const std::string&
 void ServerEvents::OnChannelJoin( const std::string& channel, const std::string& who )
 {
   wxLogDebugFunc( _T("") );
-  m_serv.GetChannel( channel ).Joined( m_serv.GetUser( who ) );
+  m_serv.GetChannel( channel ).OnChannelJoin( m_serv.GetUser( who ) );
 }
 
 
@@ -410,6 +421,13 @@ void ServerEvents::OnPrivateMessage( const std::string& user, const std::string&
 void ServerEvents::OnChannelList( const std::string& channel, const int& numusers )
 {
   m_ui.OnChannelList( channel, numusers );
+}
+
+
+void ServerEvents::OnUserJoinChannel( const std::string& channel, const std::string& who )
+{
+  wxLogDebugFunc( _T("") );
+  m_serv.GetChannel( channel ).Joined( m_serv.GetUser( who ) );
 }
 
 
@@ -506,3 +524,13 @@ void ServerEvents::OnChannelMessage( const std::string& channel, const std::stri
 }
 
 
+void ServerEvents::OnHostUdpPortChange( const int& udpport )
+{
+  if ( !m_serv.GetCurrentBattle() ) return;
+  if ( m_serv.GetCurrentBattle()->GetNatType() == NAT_Hole_punching || m_serv.GetCurrentBattle()->GetNatType() == NAT_Fixed_source_ports ) m_serv.GetCurrentBattle()->SetHostPort( udpport );
+}
+
+void ServerEvents::OnUdpSourcePort(int udpport){
+  if ( !m_serv.GetCurrentBattle() ) return;
+  m_serv.GetCurrentBattle()->SetExternalUdpSourcePort(udpport);
+}

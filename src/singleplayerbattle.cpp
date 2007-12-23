@@ -143,23 +143,21 @@ void SinglePlayerBattle::GetFreePosition( int& x, int& y )
 
 void SinglePlayerBattle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
 {
-  int lowest = 0;
+  unsigned int lowest = 0;
   bool changed = true;
-  while ( (changed) && (lowest < 16) ) {
+  while (changed) {
     changed = false;
-    if ( lowest >= 16 ) break;
+    if ( lowest >= m_bots.size() ) break;
     for( unsigned int i = 0; i < m_bots.size(); i++ ) {
       BattleBot* bot = GetBot( i );
       ASSERT_LOGIC( bot != 0, _T("bot == 0"));
-
       if ( AreColoursSimilar( bot->bs.color_r, bot->bs.color_g, bot->bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
         lowest++;
         changed = true;
-        if ( lowest >= 16 ) break;
+        if ( lowest >= m_bots.size() ) break;
       }
     }
   }
-  if ( lowest >= 16 ) lowest = 0;
 
   r = colour_values[lowest][0];
   g = colour_values[lowest][1];

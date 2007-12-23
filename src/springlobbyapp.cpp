@@ -34,7 +34,7 @@ BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
 END_EVENT_TABLE()
 
 SpringLobbyApp::SpringLobbyApp()
-{
+{ 
   m_timer = new wxTimer(this, TIMER_ID);
 }
 
@@ -48,6 +48,7 @@ SpringLobbyApp::~SpringLobbyApp()
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
+
 #if wxUSE_ON_FATAL_EXCEPTION
   wxHandleFatalExceptions( true );
 #endif
@@ -78,8 +79,9 @@ bool SpringLobbyApp::OnInit()
 
   if ( sett().IsFirstRun() ) {
     wxLogMessage( _T("first time startup"));
-    wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nLooks like this is the first time you use SpringLobby. I have guessed a configuration that I think will work for you but you should review it, ecpecially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
+    wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nLooks like this is the first time you use SpringLobby. I have guessed a configuration that I think will work for you but you should review it, expecially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
       wxOK | wxICON_INFORMATION, &m_ui->mw() );
+    wxMessageBox(_("You're using a wxwidgets library of the 2.6.x series\n battle filtering, advanced gui and joining/hosting games using nat traversal\n won't be available"), _("Missing Functionality"), wxICON_INFORMATION, &m_ui->mw() );
     m_ui->mw().ShowConfigure();
   } else {
     m_ui->Connect();

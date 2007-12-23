@@ -33,6 +33,8 @@
 #include "images/options_icon.xpm"
 #include "images/select_icon.xpm"
 
+#include "settings++/frame.h"
+
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
@@ -44,6 +46,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_USYNC, MainWindow::OnUnitSyncReload )
   EVT_MENU( MENU_TRAC, MainWindow::OnReportBug )
   EVT_MENU( MENU_DOC, MainWindow::OnShowDocs )
+  EVT_MENU( MENU_SETTINGSPP, MainWindow::OnShowSettingsPP )
 
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
 
@@ -68,6 +71,9 @@ MainWindow::MainWindow( Ui& ui ) :
   menuTools->Append(MENU_CHAT, _("Open &chat..."));
   menuTools->AppendSeparator();
   menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
+  m_settings_menu = new wxMenuItem( menuTools, MENU_SETTINGSPP, _("Settings++"), wxEmptyString, wxITEM_NORMAL );
+  menuTools->Append( m_settings_menu );
+  m_settings_menu->Enable( false ); /// disable the spring settings tool until we have unitsync loaded, so we know for sure it's working
 
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _("&About"));
@@ -110,8 +116,15 @@ MainWindow::MainWindow( Ui& ui ) :
 
   SetSize( sett().GetMainWindowLeft(), sett().GetMainWindowTop(), sett().GetMainWindowWidth(), sett().GetMainWindowHeight() );
   Layout();
+
+  se_frame_active = false;
 }
 
+void MainWindow::forceSettingsFrameClose()
+{
+	if (se_frame_active && se_frame != 0)
+		se_frame->handleExternExit();
+}
 
 MainWindow::~MainWindow()
 {
@@ -325,7 +338,6 @@ void MainWindow::OnShowDocs( wxCommandEvent& event )
   m_ui.OpenWebBrowser( _T("http://springlobby.info") );
 }
 
-
 void MainWindow::OnTabsChanged( wxListbookEvent& event )
 {
   MakeImages();
@@ -338,7 +350,6 @@ void MainWindow::OnTabsChanged( wxListbookEvent& event )
   }
 }
 
-
 void MainWindow::OnUnitSyncReloaded()
 {
   wxLogDebugFunc( _T("") );
@@ -348,4 +359,22 @@ void MainWindow::OnUnitSyncReloaded()
   wxLogMessage( _T("Reloading Singleplayer tab") );
   GetSPTab().OnUnitSyncReloaded();
   wxLogMessage( _T("Singleplayer tab updated") );
+  if ( usync()->VersionSupports( USYNC_Sett_Handler ) )
+  {
+    m_settings_menu->Enable( true );
+    wxLogMessage( _T("SpringSettingsTool Enabled") );
+  }
+  else
+  {
+    m_settings_menu->Enable( false );
+    wxLogMessage( _T("SpringSettingsTool Disabled") );
+  }
+}
+
+void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
+{
+	se_frame = new settings_frame(this,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
+	  	    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+	se_frame_active = true;
+	se_frame->Show();
 }

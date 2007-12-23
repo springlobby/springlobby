@@ -4,6 +4,7 @@
 
 #include <wx/string.h>
 #include <list>
+#include <vector>
 
 #include "iunitsync.h"
 #include "user.h"
@@ -121,7 +122,7 @@ class IBattle
     virtual BattleBot* GetBot( unsigned int index ) = 0;
     virtual BattleBot* GetBot( const std::string& name ) { return 0; };
     virtual unsigned int GetNumBots() = 0;
-    virtual unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll ) { return -1; };
+    virtual unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
     virtual void RemoveBot( unsigned int index ) {};
 
     virtual void GetFreePosition( int& x, int& y ) {}
@@ -134,6 +135,8 @@ class IBattle
     virtual std::string DisabledUnits();
 
     virtual void OnUnitSyncReloaded();
+
+    virtual std::vector<BattleStartRect*>::size_type GetNumRects() =0;
 
   protected:
 

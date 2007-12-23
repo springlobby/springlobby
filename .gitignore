@@ -9,3 +9,7 @@ bin
 obj
 springlobby.layout
 springlobby.depend
+*~
+.cproject
+.project
+unitsync.log

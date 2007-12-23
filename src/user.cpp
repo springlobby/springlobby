@@ -6,6 +6,8 @@
 #include "user.h"
 #include "battle.h"
 #include "server.h"
+#include "utils.h"
+
 #include <wx/string.h>
 #include <wx/intl.h>
 
@@ -61,4 +63,13 @@ void User::SetBattleStatus( const UserBattleStatus& status, bool setorder )
 void User::SendMyUserStatus()
 {
   m_serv.SendMyUserStatus();
+}
+
+
+bool User::ExecuteSayCommand( const wxString& cmd )
+{
+  if ( cmd.BeforeFirst(' ').Lower() == _T("/me") ) {
+    m_serv.DoActionPrivate( m_nick, STD_STRING( cmd.AfterFirst(' ') )  );
+    return true;
+  }  else return false;
 }

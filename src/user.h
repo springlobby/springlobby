@@ -98,7 +98,7 @@ class User
 
     void SendMyUserStatus();
 
-    bool ExecuteSayCommand( const std::string& cmd ) { return false; }
+    bool ExecuteSayCommand( const wxString& cmd );
 
 
     static wxString GetRankName(int rank) {
