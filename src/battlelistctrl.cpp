@@ -639,7 +639,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 	        	break;
 	    	case 8: // player
 	    		m_tiptext = _T("Active Players:\n");
-	    		for (unsigned int i = 0; i < battle.GetNumUsers();++i)
+	    		for (unsigned int i = 0; i < battle.GetNumUsers()-battle.GetSpectators();++i)
 	    		{
 	    			if ( i> 0)
 	    				m_tiptext << _T("\n");
