@@ -975,80 +975,73 @@ int wxCALLBACK BattleroomListCtrl::CompareHandicapDOWN(long item1, long item2, l
 
 void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
-	if (event.Leaving())
-	{
-		m_tiptext = _T("");
-		tipTimer.Stop();
-	}
-	else
-	{
-		tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-		wxPoint position = event.GetPosition();
 
-		int flag = wxLIST_HITTEST_ONITEM;
-		long *ptrSubItem = new long;
+	tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+	wxPoint position = event.GetPosition();
 
-		try{
-			long item = GetItemData(HitTest(position, flag, ptrSubItem));
-			int coloumn = getColoumnFromPosition(position);
+	int flag = wxLIST_HITTEST_ONITEM;
+	long *ptrSubItem = new long;
 
-			if (item != wxNOT_FOUND)
+	try{
+		long item = GetItemData(HitTest(position, flag, ptrSubItem));
+		int coloumn = getColoumnFromPosition(position);
+
+		if (item != wxNOT_FOUND)
+		{
+			item_content content = this->items[(size_t)item];
+
+			if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
 			{
-				//BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-				item_content content = this->items[(size_t)item];
-
-				if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
+				m_tiptext = _T("");
+			}
+			else
+			{
+				switch (coloumn)
 				{
-					m_tiptext = _T("");
-				}
-				else
-				{
-					switch (coloumn)
-					{
-					case 0: // is bot?
-						if ( content.is_bot )
-							m_tiptext = _T("This is an AI controlled Player (bot)");
-						else if ( ((User*)content.data)->BattleStatus().spectator )
-							m_tiptext = _T("Spectator");
-						else
-							m_tiptext =  _T("Human Player");
-						break;	
-					case 1: // icon
-						if ( content.is_bot )
-							m_tiptext = WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()),  
-									((BattleBot*)content.data)->bs.side ));
-						else if ( ((User*)content.data)->BattleStatus().spectator )
-							m_tiptext = _T("Spectators have no side");
-						else
-							m_tiptext =  WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), 
-									((User*)content.data)->BattleStatus().side ));
-						break;
+				case 0: // is bot?
+					if ( content.is_bot )
+						m_tiptext = _T("This is an AI controlled Player (bot)");
+					else if ( ((User*)content.data)->BattleStatus().spectator )
+						m_tiptext = _T("Spectator");
+					else
+						m_tiptext =  _T("Human Player");
+					break;	
+				case 1: // icon
+					if ( content.is_bot )
+						m_tiptext = WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()),  
+								((BattleBot*)content.data)->bs.side ));
+					else if ( ((User*)content.data)->BattleStatus().spectator )
+						m_tiptext = _T("Spectators have no side");
+					else
+						m_tiptext =  WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), 
+								((User*)content.data)->BattleStatus().side ));
+					break;
 
-					case 3: // country
-						m_tiptext = (content.is_bot ? _T("This bot is from nowhere particluar") 
-								: WX_STRING(((User*)content.data)->GetCountry()).MakeUpper());
-						break;	
-					case 4: // rank
-						m_tiptext = (content.is_bot ? _T("This bot has no rank") 
-								: ((User*)content.data)->GetRankName(((User*)content.data)->GetStatus().rank));
-						break;	
+				case 3: // country
+					m_tiptext = (content.is_bot ? _T("This bot is from nowhere particluar") 
+							: WX_STRING(((User*)content.data)->GetCountry()).MakeUpper());
+					break;	
+				case 4: // rank
+					m_tiptext = (content.is_bot ? _T("This bot has no rank") 
+							: ((User*)content.data)->GetRankName(((User*)content.data)->GetStatus().rank));
+					break;	
 
-					case 5: //name
-						m_tiptext = WX_STRING( (content.is_bot ?((BattleBot*)content.data)->name
-								: ((User*)content.data)->GetNick() ));
-						break;
+				case 5: //name
+					m_tiptext = WX_STRING( (content.is_bot ?((BattleBot*)content.data)->name
+							: ((User*)content.data)->GetNick() ));
+					break;
 
-					case 8: // cpu
-						m_tiptext = (content.is_bot ? WX_STRING (((BattleBot*)content.data)->aidll)
-								: m_colinfovec[coloumn].first);
-						break;	
+				case 8: // cpu
+					m_tiptext = (content.is_bot ? WX_STRING (((BattleBot*)content.data)->aidll)
+							: m_colinfovec[coloumn].first);
+					break;	
 
-					default: 
-						m_tiptext =m_colinfovec[coloumn].first;
-						break;
-					}
+				default: 
+					m_tiptext =m_colinfovec[coloumn].first;
+					break;
 				}
 			}
-		}catch(...){}
-	}
+		}
+	}catch(...){}
+
 }
