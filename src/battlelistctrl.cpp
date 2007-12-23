@@ -38,8 +38,8 @@ END_EVENT_TABLE()
 
 Ui* BattleListCtrl::m_ui_for_sort = 0;
 
-BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui, int coloumCount ):
-  customListCtrl(coloumCount,parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT),
+BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
+  customListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT),
   m_selected(-1),
   m_ui(ui)
 {

@@ -24,7 +24,7 @@ protected:
     colInfoVec m_colinfovec;
     int getColoumnFromPosition(wxPoint pos);
 public:
-	customListCtrl(int coloumnCount_,wxWindow* parent, wxWindowID id, const wxPoint& pt, 
+	customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, 
                     const wxSize& sz,long style);
 	
 	void InsertColumn(long i, wxListItem item, wxString tip, bool = true);

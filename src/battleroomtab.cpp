@@ -31,7 +31,6 @@
 #include "server.h"
 #include "iconimagelist.h"
 
-
 #define Opt_Pos_Size 0
 #define Opt_Pos_Windspeed 1
 #define Opt_Pos_Tidal 2
@@ -43,7 +42,6 @@
 #define Opt_Pos_Startenergy 8
 #define Opt_Pos_Maxunits 9
 #define Opt_Pos_Restrictions 10
-#define LISTCTRL_COLOUMN_COUNT 10
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -102,7 +100,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 		  					"You can see the starting positions,\n"
 		  					"and also (if set) starting boxes"));
 
-  m_players = new BattleroomListCtrl(LISTCTRL_COLOUMN_COUNT, m_player_panel, battle, m_ui );
+  m_players = new BattleroomListCtrl( m_player_panel, battle, m_ui );
   m_chat = new ChatPanel( m_splitter, m_ui, battle );
   m_chat->SetToolTip(_T("This chat is exlusivly for participants of this battle"));
 

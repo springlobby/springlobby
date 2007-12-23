@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H
 
-#include <wx/listctrl.h>
+//#include <wx/listctrl.h>
 #include "customlistctrl.h"
 
 class User;
@@ -20,7 +20,7 @@ struct item_content {
 class BattleroomListCtrl : public customListCtrl
 {
   public:
-    BattleroomListCtrl( int coloumnCount,wxWindow* parent, Battle& battle, Ui& ui );
+    BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui );
      ~BattleroomListCtrl();
 
     void Sort();

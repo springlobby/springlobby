@@ -16,7 +16,7 @@ class Ui;
 class BattleListCtrl : public customListCtrl
 {
   public:
-    BattleListCtrl( wxWindow* parent, Ui& ui,int coloumCount );
+    BattleListCtrl( wxWindow* parent, Ui& ui );
     ~BattleListCtrl();
 
 
