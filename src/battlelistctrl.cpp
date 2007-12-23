@@ -608,7 +608,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 	        switch (coloumn)
 	        {
 	        case 0: // status
-	        	//battle.get
+	        	m_tiptext = IconImageList::GetBattleStatus(battle);
 	        	break;	
 	        case 1: // country
 	        	m_tiptext = WX_STRING(battle.GetFounder().GetCountry());
@@ -630,13 +630,21 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 	        	break;
 	        case 7: // specs
 	        	m_tiptext = _T("");
-	        	for (int i = battle.GetNumUsers()-1; i > battle.GetNumUsers() - battle.GetSpectators();--i)
-	        		m_tiptext << WX_STRING(battle.GetUser(i).GetNick())  << _T("\n");
+	        	for (unsigned int i = battle.GetNumUsers()-1; i > battle.GetNumUsers() - battle.GetSpectators()-1;--i)
+	        	{
+	        		if (i < battle.GetNumUsers()-1)
+	        			m_tiptext << _T("\n");
+	        		m_tiptext << WX_STRING(battle.GetUser(i).GetNick()) ;
+	        	}
 	        	break;
 	    	case 8: // player
 	    		m_tiptext = _T("");
-	    		for (int i = 0; i < battle.GetNumUsers();++i)
-	    			m_tiptext << WX_STRING(battle.GetUser(i).GetNick()) << _T("\n");
+	    		for (unsigned int i = 0; i < battle.GetNumUsers();++i)
+	    		{
+	    			if ( i> 0)
+	    				m_tiptext << _T("\n");
+	    			m_tiptext << WX_STRING(battle.GetUser(i).GetNick());
+	    		}
 	    		break;
 	    	case 9: //may player
 	    		m_tiptext = WX_STRING(m_colinfovec[coloumn].first);

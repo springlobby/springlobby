@@ -223,6 +223,20 @@ int IconImageList::GetBattleStatusIcon( Battle& battle )
   return ICON_GAME_UNKNOWN;
 }
 
+wxString IconImageList::GetBattleStatus( Battle& battle )
+{
+  if ( battle.GetInGame() ) return _T("Game has already started");
+  if ( !battle.IsLocked() ) {
+    if ( !battle.IsPassworded() ) return _T("Game is open for players");
+    else return _T("You need a password to join");
+  } else {
+    if ( !battle.IsPassworded() ) return _T("Game is closed");
+    else return _T("Game is closed (and passworded)");
+  }
+
+  return _T("Game has unknown status");
+}
+
 
 int IconImageList::GetColourIcon( const int& num )
 {

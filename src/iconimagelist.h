@@ -88,7 +88,7 @@ class IconImageList : public wxImageList
     static int GetRankIcon( const int& rank, const bool& showlowest = true );
     static int GetFlagIcon( const std::string& flagname );
     static int GetBattleStatusIcon( Battle& battle );
-
+    static wxString GetBattleStatus(Battle& battle);
     static int GetHostIcon( const bool& spectator = false );
     static int GetColourIcon( const int& num );
     void SetColourIcon( const int& num, const wxColour& colour );
