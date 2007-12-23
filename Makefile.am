@@ -1,4 +1,4 @@
-## the following clause may NOT be split, b/c of autoreconf 2.61 and older
+c## the following clause may NOT be split, b/c of autoreconf 2.61 and older
 ## the --install requires automake 1.10 which was released in 2006
 ## the --install can be edited out to use older automake
 ACLOCAL_AMFLAGS = -I m4 --install
@@ -506,7 +506,7 @@ springlobby_SOURCES += \
 	src/settings++/custom_dialogs.h \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
-	src/settings++/helpmenufunctions.cpp 
+	src/settings++/helpmenufunctions.cpp
 
 if USE_WINDRES
 	springlobby_SOURCES += \
@@ -518,14 +518,10 @@ springsettings_SOURCES = \
 	revision.cpp \
 	src/revision.cpp.in \
 	src/revision.h \
-	src/base64.cpp \
-	src/base64.h \
 	src/utils.cpp \
 	src/utils.h \
-	src/stacktrace.cpp \
-	src/stacktrace.h \
-	src/boost/md5.cpp \
-	src/boost/md5.hpp \
+	src/crashreport.cpp \
+	src/crashreport.h \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
 	src/settings++/se_utils.cpp \
@@ -559,7 +555,7 @@ springsettings_SOURCES = \
 	src/settings++/custom_dialogs.h \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
-	src/settings++/helpmenufunctions.cpp 
+	src/settings++/helpmenufunctions.cpp
 
 
 if USE_WINDRES
