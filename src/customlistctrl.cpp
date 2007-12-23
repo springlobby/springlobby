@@ -7,7 +7,6 @@ customListCtrl::customListCtrl(int coloumnCount_,wxWindow* parent, wxWindowID id
 {
 	m_tipwindow = NULL;
 	m_tiptext = _T("BIBKJBKJB");
-	SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
 }
 
 void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
