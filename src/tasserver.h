@@ -5,6 +5,7 @@
 #include <list>
 
 #include "server.h"
+#include "uiutils.h"
 
 //! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
 struct TASPingListItem {

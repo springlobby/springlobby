@@ -249,7 +249,9 @@ void TASServer::Login()
   data += m_user;
   data += " ";
   data += GetPasswordHash( m_pass );
-  data += " 2100 * SpringLobby 0.1\n";
+  data += " ";
+	data += wxString::Format( _T( "%d" ), GetHostCPUSpeed() ).ToAscii();
+  data += " * SpringLobby 0.1\n";
   m_sock->Send( data );
 
 }

@@ -1,3 +1,5 @@
+/// \file uiutils.cpp
+
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 #include <wx/colour.h>
@@ -117,3 +119,60 @@ wxColour ColourDelta( const wxColour& colour, const int& delta )
   return wxColour( r, g, b );
 }
 
+
+// ------------------------------------------------------------------------------------------------------------------------
+///
+/// Read out Host's CPU Speed
+///
+/// \return Sum of each CPU's Speed of this Computer
+///
+/// \TODO Porting to Windows
+///
+// ------------------------------------------------------------------------------------------------------------------------
+long
+GetHostCPUSpeed() {
+
+	double totalcpuspeed = 0;
+
+#ifdef __WXMSW__
+
+// Windows Stuff goes here.
+
+#else
+
+	// Create an Inputstream from /proc/cpuinfo
+	std::ifstream fin( "/proc/cpuinfo" );
+	std::string line;
+	std::string content_str( "" );
+
+	// Read from Inputstream
+	if ( fin ) {
+		while ( std::getline( fin, line ) ) {
+			// std::cout << "Read from file: " << line << std::endl;
+			content_str.append( line );
+			content_str.append( "\n" );
+		}
+	}
+
+	wxString content = wxString::FromAscii( content_str.c_str() );
+
+	// Building a RegEx to match one Block of CPU Info
+	wxRegEx regex_CPUSection( wxT( "processor.*?(cpu MHz.*?:.*?(\\d+\\.\\d+)).*?\n\n" ), wxRE_ADVANCED );
+	// Replace each Block of CPU Info with only the CPU Speed in MHz
+	regex_CPUSection.Replace( &content, _T( "\\2\n" ) );
+
+	// Tokenize the String containing all CPU Speed of the Host: e.g. 3000.0\n3000.0\n
+	wxStringTokenizer tokenlist( content, wxT( "\n" ) );
+
+	// Sum up all CPU Speeds
+	while ( tokenlist.HasMoreTokens() ) {
+		wxString token = tokenlist.GetNextToken();
+		long cpuspeed = 0;
+		token.ToLong( &cpuspeed, 10 );
+		totalcpuspeed += cpuspeed;
+	}
+
+#endif
+
+	return totalcpuspeed;
+}
