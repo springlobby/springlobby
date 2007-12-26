@@ -9,6 +9,10 @@ typedef std::vector<mmOptionBool> optionVectorBool;
 typedef std::vector<mmOptionFloat> optionVectorFloat;
 typedef std::vector<mmOptionString> optionVectorString;
 typedef std::vector<mmOptionList> optionVectorList;
+typedef std::vector<mmOptionBool> optionVectorBool;
+typedef std::vector<mmOptionFloat> optionVectorFloat;
+typedef std::vector<mmOptionString> optionVectorString;
+typedef std::vector<mmOptionList> optionVectorList;
 
 class mmOptionsWrapper
 {
@@ -18,7 +22,7 @@ public:
 	bool loadMapOptions(wxString mapname);
 	bool loadModOptions();
 
-private:
+//private:
 	optionVectorBool m_mod_options_bool;
 	optionVectorBool m_map_options_bool;
 	

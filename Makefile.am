@@ -476,7 +476,9 @@ springlobby_SOURCES = \
 	src/mmoptionmodel.h \
 	src/mmoptionmodel.cpp \
 	src/mmoptionswrapper.h \
-	src/mmoptionswrapper.cpp
+	src/mmoptionswrapper.cpp \
+	src/battleroommmoptionstab.h \
+	src/battleroommmoptionstab.cpp
 
 
 # TODO keep only a single list instead of duplicating the lists below

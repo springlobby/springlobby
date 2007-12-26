@@ -13,6 +13,7 @@ class BattleOptionsTab;
 class wxBoxSizer;
 class wxImageList;
 class wxNotebook;
+class BattleroomMMOptionsTab;
 
 class MainJoinBattleTab : public wxPanel
 {
@@ -47,7 +48,7 @@ class MainJoinBattleTab : public wxPanel
     BattleRoomTab* m_battle_tab;
     BattleMapTab* m_map_tab;
     BattleOptionsTab* m_opts_tab;
-
+    BattleroomMMOptionsTab* m_mm_opts_tab;
     Ui& m_ui;
 };
 

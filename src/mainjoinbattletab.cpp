@@ -18,6 +18,7 @@
 #include "battlemaptab.h"
 #include "battleoptionstab.h"
 #include "utils.h"
+#include "battleroommmoptionstab.h"
 
 #include "images/battle_list.xpm"
 #include "images/battle.xpm"
@@ -101,9 +102,11 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
   m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
   m_map_tab = new BattleMapTab( m_tabs, m_ui, battle );
   m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle, false );
+  m_mm_opts_tab = new BattleroomMMOptionsTab( m_tabs);
   m_tabs->InsertPage( 1, m_battle_tab, _("Battleroom"), true, 1 );
   m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, 2 );
   m_tabs->InsertPage( 3, m_opts_tab, _("Options"), false, 3 );
+  m_tabs->InsertPage( 4, m_mm_opts_tab, _("Map/Mod Options"), false );
 
 }
 
@@ -116,7 +119,11 @@ void MainJoinBattleTab::HostBattle( Battle& battle )
 
 void MainJoinBattleTab::LeaveCurrentBattle()
 {
-  if ( m_opts_tab ) {
+	if ( m_mm_opts_tab ) {
+	    m_tabs->DeletePage( 4 );
+	    m_mm_opts_tab = 0;
+	  }
+if ( m_opts_tab ) {
     m_tabs->DeletePage( 3 );
     m_opts_tab = 0;
   }

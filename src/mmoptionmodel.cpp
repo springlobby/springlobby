@@ -10,20 +10,20 @@ mmOptionModel::~mmOptionModel()
 }
 
 mmOptionBool::mmOptionBool(wxString name_, wxString key_, wxString description_, bool def_):
-	def(def_),value(def_),mmOptionModel(name,key,description_,IS_BOOL_OPTION)
+	mmOptionModel(name_,key_,description_,IS_BOOL_OPTION),def(def_),value(def_)
 	{
 	
 	}
 
 
 mmOptionFloat::mmOptionFloat(wxString name_, wxString key_, wxString description_, float def_, float stepping_, float min_, float max_):
-	def(def_),value(def_),stepping(stepping_),min(min_),max(max_),mmOptionModel(name,key,description_,IS_FLOAT_OPTION)
+	mmOptionModel(name_,key_,description_,IS_FLOAT_OPTION),def(def_),value(def_),stepping(stepping_),min(min_),max(max_)
 	{
 	
 	}
 
 mmOptionString::mmOptionString(wxString name_, wxString key_, wxString description_, wxString def_, int max_len_):
-	def(def_),value(def_),max_len(max_len_),mmOptionModel(name,key,description_,IS_STRING_OPTION)
+	mmOptionModel(name_,key_,description_,IS_STRING_OPTION),def(def_),value(def_),max_len(max_len_)
 	{
 	
 	}
