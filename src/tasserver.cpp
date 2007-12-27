@@ -195,7 +195,7 @@ bool TASServer::IsConnected()
 }
 
 
-bool TASServer::Register( const std::string& addr, const int port, const std::string& nick, const std::string& password )
+bool TASServer::Register( const std::string& addr, const int port, const std::string& nick, const std::string& password, wxString* reason )
 {
   wxLogDebugFunc( _T("") );
 
@@ -216,7 +216,11 @@ bool TASServer::Register( const std::string& addr, const int port, const std::st
   data = "";
 
   m_sock->Receive( data );
-  if ( data != "REGISTRATIONACCEPTED\n") return false;
+  if ( data != "REGISTRATIONACCEPTED\n")
+  {
+	  *reason = WX_STRING(data.substr(19,data.size()));
+	  return false;
+  }
 
   return true;
 }
@@ -399,7 +403,8 @@ void TASServer::ExecuteCommand( const std::string& in )
 
 void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
-  wxLogDebugFunc( /* _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams) */ );
+	//TODO use or not?
+ // wxLogDebugFunc( /* _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams) */ );
 
   std::string params = inparams;
   int pos, cpu, id, nat, port, maxplayers, rank, specs, metal = 0, energy = 0, units, start = 0,

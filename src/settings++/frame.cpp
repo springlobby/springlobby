@@ -136,7 +136,7 @@ void settings_frame::handleExit() {
         	if (abstract_panel::saveSettings())
         				 (abstract_panel::settingsChanged) = false;
         	if (simpleTab)
-        						simpleTab->saveCbxChoices();
+        			simpleTab->saveCbxChoices();
         case wxNO:
 	        	OptionsHandler.save();
         	    Destroy();
@@ -255,6 +255,10 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				notebook->InsertPage(0,simpleTab,simpleTabCap);
 				simpleTab->updateControls(UPDATE_ALL);
 				
+				//if not on ui page goto simple
+				if (notebook->GetSelection()!=1)
+					notebook->SetSelection(0);
+				
 				notebook->DeletePage(5);
 				notebook->DeletePage(4);
 				notebook->DeletePage(3);
@@ -302,7 +306,8 @@ void settings_frame::resetSettings()
 void settings_frame::switchToExpertMode()
 {
 	OptionsHandler.setMode(SET_MODE_EXPERT);
-					
+	menuMode->Check(ID_MENUITEM_EXPERT,true);
+	
 	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
     detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
     audioTab = new audio_panel(notebook,ID_AUDIO);

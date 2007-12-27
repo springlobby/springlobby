@@ -67,6 +67,7 @@
 #define ICON_UNK_FLAG ICON_COLOURS_START+NUM_COLOUR_ICONS
 #define ICON_FLAGS_BASE ICON_UNK_FLAG+1
 
+#define ICON_EMPTY ICON_FLAGS_BASE+243+1
 
 // Icon Aliases
 #define ICON_READY ICON_OPEN_GAME
@@ -87,7 +88,7 @@ class IconImageList : public wxImageList
     static int GetRankIcon( const int& rank, const bool& showlowest = true );
     static int GetFlagIcon( const std::string& flagname );
     static int GetBattleStatusIcon( Battle& battle );
-
+    static wxString GetBattleStatus(Battle& battle);
     static int GetHostIcon( const bool& spectator = false );
     static int GetColourIcon( const int& num );
     void SetColourIcon( const int& num, const wxColour& colour );
