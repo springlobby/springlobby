@@ -12,6 +12,11 @@
 BattleroomMMOptionsTab::BattleroomMMOptionsTab( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
 	m_mapmodoptions = new mmOptionsWrapper();
+	if (!m_mapmodoptions->loadOptions(ModOption))
+	{
+		//TODO display error and call m_mapmodoptions->loadOptions(MapOption)
+	}
+	
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 	
 	
@@ -52,27 +57,36 @@ BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
 
 void BattleroomMMOptionsTab::setupModOptionsSizer()
 {
-	for (unsigned int i = 0; i < m_mapmodoptions->m_mod_options_float.size();++i)
-	{
-		m_mod_layout->Add(new wxStaticText(this,-1,m_mapmodoptions->m_mod_options_float[i].description),0,10);
-		m_mod_layout->Add(new wxSlider(this,-1,
-				int(m_mapmodoptions->m_mod_options_float[i].def*100),
-				int(m_mapmodoptions->m_mod_options_float[i].min*100),
-				int(m_mapmodoptions->m_mod_options_float[i].max*100),
-				wxDefaultPosition,wxSize(200,-1),wxSL_HORIZONTAL|wxSL_TOP|wxSL_AUTOTICKS|wxSL_LABELS),200,10);
-		
-	}
+	for (optionMapBoolIter i = (*m_mapmodoptions->m_boolMaps[MODOPTS]).begin(); i != (*m_mapmodoptions->m_boolMaps[MODOPTS]).end();++i)
+		{
+			mmOptionBool current = i->second;
+			m_mod_layout->Add(new wxCheckBox(this,-1,current.description));
+		}
 	
-	for (unsigned int i = 0; i < m_mapmodoptions->m_mod_options_bool.size();++i)
-	{
-		m_mod_layout->Add(new wxCheckBox(this,-1,m_mapmodoptions->m_mod_options_bool[i].description));
-	}
+/**** use iterators *****/
 	
-	for (unsigned int i = 0; i < m_mapmodoptions->m_mod_options_list.size();++i)
-	{
-		m_mod_layout->Add(new wxStaticText(this,-1,m_mapmodoptions->m_mod_options_list[i].description),0,5);
-		m_mod_layout->Add(new wxChoice(this,-1,wxDefaultPosition,wxDefaultSize,m_mapmodoptions->m_mod_options_list[i].cbx_choices));
-	}
+//	for (optionMapFloatIter i = m_mapmodoptions->m_mod_options_float.begin(); i != m_mapmodoptions->m_mod_options_float.end();++i)
+//	{
+//		mmOptionFloat current = i->second;
+//		m_mod_layout->Add(new wxStaticText(this,-1,current.description),0,10);
+//		m_mod_layout->Add(new wxSlider(this,-1,
+//				int(current.def*100),
+//				int(current.min*100),
+//				int(current.max*100),
+//				wxDefaultPosition,wxSize(200,-1),wxSL_HORIZONTAL|wxSL_TOP|wxSL_AUTOTICKS|wxSL_LABELS),200,10);
+//		
+//	}
+	
+//	for (unsigned int i = 0; i < m_mapmodoptions->m_mod_options_bool.size();++i)
+//	{
+//		m_mod_layout->Add(new wxCheckBox(this,-1,m_mapmodoptions->m_mod_options_bool[i].description));
+//	}
+//	
+//	for (unsigned int i = 0; i < m_mapmodoptions->m_mod_options_list.size();++i)
+//	{
+//		m_mod_layout->Add(new wxStaticText(this,-1,m_mapmodoptions->m_mod_options_list[i].description),0,5);
+//		m_mod_layout->Add(new wxChoice(this,-1,wxDefaultPosition,wxDefaultSize,m_mapmodoptions->m_mod_options_list[i].cbx_choices));
+//	}
 	
 }
 

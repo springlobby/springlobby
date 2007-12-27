@@ -33,7 +33,8 @@ typedef std::vector<listItem> ListItemVec;
 struct mmOptionModel
 {
 	mmOptionModel(wxString name_, wxString key_, wxString description_, int type_ = IS_UNDEFINED_OPTION);
-	virtual ~mmOptionModel();
+	~mmOptionModel();
+	mmOptionModel();
 	
 	wxString name, key, description;
 	int type;
@@ -42,7 +43,7 @@ struct mmOptionModel
 struct mmOptionBool : public mmOptionModel
 {
 	mmOptionBool(wxString name_, wxString key_, wxString description_, bool def_);
-	
+	mmOptionBool();
 	bool def;
 	bool value;
 };
@@ -50,6 +51,7 @@ struct mmOptionBool : public mmOptionModel
 struct mmOptionFloat : public mmOptionModel
 {
 	mmOptionFloat(wxString name_, wxString key_, wxString description_, float def_, float stepping_, float min_, float max_);
+	mmOptionFloat();
 	
 	float def;
 	float value;
@@ -61,6 +63,7 @@ struct mmOptionFloat : public mmOptionModel
 struct mmOptionString : public mmOptionModel
 {
 	mmOptionString(wxString name_, wxString key_, wxString description_, wxString def_, int max_len_);
+	mmOptionString();
 	
 	wxString def;
 	wxString value;
@@ -70,10 +73,12 @@ struct mmOptionString : public mmOptionModel
 struct mmOptionList : public mmOptionModel
 {
 	mmOptionList(wxString name_, wxString key_, wxString description_, wxString def_);
+	mmOptionList();
+	
 	void addItem(wxString key_, wxString name_, wxString desc_);
 	
 	wxString def;
-	//listItem value;
+	wxString value;
 	ListItemVec listitems;
 	wxArrayString cbx_choices;
 	
