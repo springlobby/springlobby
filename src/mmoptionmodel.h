@@ -2,6 +2,7 @@
 #define MMOPTIONMODEL_H_
 
 #include <wx/string.h>
+#include <wx/arrstr.h>
 #include <vector>
 
 #define IS_UNDEFINED_OPTION 0
@@ -18,10 +19,19 @@ enum OptionType {
 	opt_number = 3,
 	opt_string = 4
 };*/
-
-class mmOptionModel
+struct listItem
 {
-public:
+	listItem(wxString key_, wxString name_,wxString desc_);
+	
+		wxString key;
+		wxString name;
+		wxString desc;
+};
+
+typedef std::vector<listItem> ListItemVec;
+
+struct mmOptionModel
+{
 	mmOptionModel(wxString name_, wxString key_, wxString description_, int type_ = IS_UNDEFINED_OPTION);
 	virtual ~mmOptionModel();
 	
@@ -29,18 +39,16 @@ public:
 	int type;
 };
 
-class mmOptionBool : public mmOptionModel
+struct mmOptionBool : public mmOptionModel
 {
-public:
 	mmOptionBool(wxString name_, wxString key_, wxString description_, bool def_);
 	
 	bool def;
 	bool value;
 };
 
-class mmOptionFloat : public mmOptionModel
+struct mmOptionFloat : public mmOptionModel
 {
-public:
 	mmOptionFloat(wxString name_, wxString key_, wxString description_, float def_, float stepping_, float min_, float max_);
 	
 	float def;
@@ -50,9 +58,8 @@ public:
 	float min, max;
 };
 
-class mmOptionString : public mmOptionModel
+struct mmOptionString : public mmOptionModel
 {
-public:
 	mmOptionString(wxString name_, wxString key_, wxString description_, wxString def_, int max_len_);
 	
 	wxString def;
@@ -60,13 +67,16 @@ public:
 	int max_len;
 };
 
-class mmOptionList : public mmOptionModel
+struct mmOptionList : public mmOptionModel
 {
-public:
-	mmOptionList(wxString name_, wxString key_, wxString description_, bool def);
+	mmOptionList(wxString name_, wxString key_, wxString description_, wxString def_);
+	void addItem(wxString key_, wxString name_, wxString desc_);
 	
 	wxString def;
-	wxString value;
+	//listItem value;
+	ListItemVec listitems;
+	wxArrayString cbx_choices;
+	
 };
 
 #endif /*MMOPTIONMODEL_H_*/
