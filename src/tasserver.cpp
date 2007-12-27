@@ -216,7 +216,7 @@ bool TASServer::Register( const std::string& addr, const int port, const std::st
   data = "";
 
   m_sock->Receive( data );
-  if ( data != "REGISTRATIONACCEPTED\n") 
+  if ( data != "REGISTRATIONACCEPTED\n")
   {
 	  *reason = WX_STRING(data.substr(19,data.size()));
 	  return false;
@@ -717,12 +717,12 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_se->OnUdpSourcePort( tmp_port );
     //HOSTPORT port
   } else if ( cmd == "SETSCRIPTTAGS" ) {
+    int count = 0;
     while ( (msg = GetSentenceParam( params )) != "" ) {
-      std::string::size_type pos = msg.find( "=", 0 );
-      std::string param =  msg.substr( 0, pos );
-      msg = msg.substr( pos + 1 );
-
-      m_se->OnSetBattleInfo( m_battle_id, param, msg );
+      std::string key = GetWordParam( msg );
+      std::string value = GetWordParam ( msg );
+      count++;
+      m_se->OnSetBattleInfo( m_battle_id, key, msg );
     }
     m_se->OnBattleInfoUpdated( m_battle_id );
     // !! Command: "SETSCRIPTTAGS" params: "game/startpostype=0	game/maxunits=1000	game/limitdgun=0	game/startmetal=1000	game/gamemode=0	game/ghostedbuildings=-1	game/startenergy=1000	game/diminishingmms=0"
