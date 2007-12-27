@@ -61,6 +61,7 @@ class ChatPanel : public wxPanel
     void Parted( User& who, const wxString& message );
     void SetTopic( const wxString& who, const wxString& message );
     void UserStatusUpdated( User& who );
+    void OnChannelJoin( User& who );
 
     Channel& GetChannel();
     void SetChannel( Channel* chan );
@@ -142,9 +143,9 @@ class ChatPanel : public wxPanel
 
   protected:
     void _SetChannel( Channel* channel );
-    void _OutputLine( const wxString& message, const wxColour& col );
+    void OutputLine( const wxString& message, const wxColour& col );
 
-    User* _GetSelectedUser();
+    User* GetSelectedUser();
 
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.
 
@@ -181,9 +182,9 @@ class ChatPanel : public wxPanel
     wxMenuItem* displayjoinitem;
 
     void LogTime();
-    void _CreateControls( );
-    void _CreatePopup();
-    wxMenu* _CreateNickListMenu();
+    void CreateControls( );
+    void CreatePopup();
+    wxMenu* CreateNickListMenu();
 
     DECLARE_EVENT_TABLE();
 };

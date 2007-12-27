@@ -395,6 +395,11 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     wxString topic = cmd.AfterFirst(' ');
     ConsoleHelp( topic.Lower() );
     return true;
+  } else if ( cmd.BeforeFirst(' ').Lower() == _T("/msg") ) {
+    wxString user = cmd.AfterFirst(' ').BeforeFirst(' ');
+    wxString msg = cmd.AfterFirst(' ').AfterFirst(' ');
+    m_serv->SayPrivate( STD_STRING( user ), STD_STRING( msg ) );
+    return true;
   }
   return false;
 }
@@ -580,6 +585,17 @@ void Ui::OnUserJoinedChannel( Channel& chan, User& user )
     return;
   }
   chan.uidata.panel->Joined( user );
+}
+
+
+void Ui::OnChannelJoin( Channel& chan, User& user )
+{
+  //wxLogDebugFunc( _T("") );
+  if ( chan.uidata.panel == 0 ) {
+    wxLogError( _T("ud->panel NULL") );
+    return;
+  }
+  chan.uidata.panel->OnChannelJoin( user );
 }
 
 

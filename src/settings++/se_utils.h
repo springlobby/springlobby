@@ -3,18 +3,16 @@
 
 #include <wx/string.h>
 
-//! Converts a wxString to an std::string
-//#ifndef STD_STRING
-//#define STD_STRING(v) std::string((const char*)v.mb_str(wxConvUTF8))
-//#endif
-
 #define _S(v) wxString(v.c_str(),wxConvUTF8)
+
+void loadUnitsync();
 
 void toString(std::string& s, int t);
 
 int fromString(const std::string& s);
 
 void openUrl(const wxString& url);
+
 
 #endif /*SE_UTILS_H_*/
 

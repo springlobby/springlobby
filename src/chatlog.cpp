@@ -23,7 +23,7 @@ ChatLog::ChatLog(const wxString& server,const wxString& room):
   m_logfile( 0 ),
   m_server( server ),
   m_room( room ),
-  m_active( _OpenLogFile(server,room) )
+  m_active( OpenLogFile(server,room) )
 {
 
 }
@@ -33,8 +33,8 @@ ChatLog::~ChatLog()
 {
   if ( m_active && m_logfile ) {
     wxDateTime now = wxDateTime::Now();
-    _WriteLine( _("### Session Closed at [") + now.Format( _("%Y-%m-%d %H:%M") ) + _("]") );
-    _WriteLine( _(" \n \n \n") );
+    WriteLine( _("### Session Closed at [") + now.Format( _("%Y-%m-%d %H:%M") ) + _("]") );
+    WriteLine( _(" \n \n \n") );
     if ( m_logfile->IsOpened() ) m_logfile->Close();
   }
   delete m_logfile;
@@ -47,9 +47,9 @@ bool ChatLog::AddMessage(const wxString& text)
     return true;
   }
   else if ( !m_logfile) {
-    m_active = _OpenLogFile(m_server,m_room);
+    m_active = OpenLogFile(m_server,m_room);
   }
-  return (m_active)? _WriteLine(LogTime()+_(" ")+text+_("\n")) : false;
+  return (m_active)? WriteLine(LogTime()+_(" ")+text+_("\n")) : false;
 }
 
 
@@ -65,7 +65,7 @@ wxString ChatLog::_GetPath()
 }
 
 
-bool ChatLog::_CreateFolder(const wxString& server)
+bool ChatLog::CreateFolder(const wxString& server)
 {
   if ( !( wxDirExists( _GetPath() ) || wxMkdir( _GetPath(), 0777) ) ) {
     wxLogWarning( _T("can't create logging folder: ") + _GetPath() );
@@ -83,7 +83,7 @@ bool ChatLog::_CreateFolder(const wxString& server)
 }
 
 
-bool ChatLog::_WriteLine(const wxString& text)
+bool ChatLog::WriteLine(const wxString& text)
 {
   ASSERT_LOGIC( m_logfile, _T("m_logfile = 0") );
   if ( !m_logfile->Write( text, wxConvUTF8 ) ) {
@@ -95,10 +95,10 @@ bool ChatLog::_WriteLine(const wxString& text)
   return true;
 }
 
-bool ChatLog::_OpenLogFile(const wxString& server,const wxString& room)
+bool ChatLog::OpenLogFile(const wxString& server,const wxString& room)
 {
   wxString path = _GetPath() + wxFileName::GetPathSeparator() + server + wxFileName::GetPathSeparator() + room + _T(".txt");
-  if ( m_parent_dir_exists && LogEnabled() && _CreateFolder(server) ) {
+  if ( m_parent_dir_exists && LogEnabled() && CreateFolder(server) ) {
     if ( wxFileExists( path ) ) {
       m_logfile = new wxFile( path, wxFile::write_append );
     } else {
@@ -112,7 +112,7 @@ bool ChatLog::_OpenLogFile(const wxString& server,const wxString& room)
     }
     else {
       wxDateTime now = wxDateTime::Now();
-      _WriteLine( _T("### Session Start at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _T("]\n") );
+      WriteLine( _T("### Session Start at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _T("]\n") );
       return true;
     }
   }

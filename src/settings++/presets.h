@@ -56,7 +56,7 @@ const int vl_GrassDetail[3] = 			{ 0,		5,		10		}; //grass detail
 const int vl_GroundDecals[3] = 			{ 0,		50,		100		}; // ground decals
 const int vl_UnitIconDist[3] = 			{ 100,		550,	1000	}; // unit icon distance
 const int vl_MaxParticles[3] = 			{ 100,		9950,	20000	};
-const int vl_SM3MaxTextureStages[3] = 	{ 1,		6,		20		};
+//const int vl_SM3MaxTextureStages[3] = 	{ 1,		6,		20		};
 
 const presetValues<int, 3> pr_ShadowMapSize = presetValues<int, 3>(wxT("ShadowMapSize"),levels_low_To_High,vl_ShadowMapSize);
 const presetValues<int, 3> pr_TreeRadius = presetValues<int, 3>(wxT("TreeRadius"),levels_low_To_High,vl_TreeRadius);
@@ -66,12 +66,12 @@ const presetValues<int, 3> pr_GrassDetail = presetValues<int, 3>(wxT("GrassDetai
 const presetValues<int, 3> pr_GroundDecals = presetValues<int, 3>(wxT("GroundDecals"),levels_low_To_High,vl_GroundDecals);
 const presetValues<int, 3> pr_UnitIconDist = presetValues<int, 3>(wxT("UnitIconDist"),levels_low_To_High,vl_UnitIconDist);
 const presetValues<int, 3> pr_MaxParticles = presetValues<int, 3>(wxT("MaxParticles"),levels_low_To_High,vl_MaxParticles);
-const presetValues<int, 3> pr_SM3MaxTextureStages = presetValues<int, 3>(wxT("SM3MaxTextureStages"),levels_low_To_High,vl_SM3MaxTextureStages);
+//const presetValues<int, 3> pr_SM3MaxTextureStages = presetValues<int, 3>(wxT("SM3MaxTextureStages"),levels_low_To_High,vl_SM3MaxTextureStages);
 
-const int prVal_RenderDetail_size = 9;
+const int prVal_RenderDetail_size = 8;
 const presetValues<int, 3> prVal_RenderDetail[prVal_RenderDetail_size] = {pr_ShadowMapSize, pr_TreeRadius, pr_GroundDetail,
 		pr_UnitLodDist, pr_GrassDetail, pr_GroundDecals,
-		pr_UnitIconDist, pr_MaxParticles, pr_SM3MaxTextureStages};
+		pr_UnitIconDist, pr_MaxParticles};
 
 /** RENDER QUALITY **********************************************************/
 const int vl_DepthBufferBits[5] = {16,16,16,24,24};
