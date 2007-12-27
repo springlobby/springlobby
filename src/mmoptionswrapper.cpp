@@ -253,5 +253,10 @@ void  mmOptionsWrapper::getOptions(wxStringPairVec* list, GameOption modmapFlag)
 	}
 }
 
-
+bool mmOptionsWrapper::setSingleOption(wxString key,wxString value,GameOption modmapFlag)
+{
+	wxStringPairVec temp;
+	temp.push_back( wxStringPair(key,value) );
+	return setOptions(&temp,modmapFlag);
+}
 

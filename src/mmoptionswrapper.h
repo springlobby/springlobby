@@ -47,6 +47,7 @@ public:
 	bool keyExists(wxString key,GameOption,bool showError, int* optType);
 	bool setOptions(wxStringPairVec*,GameOption);
 	void getOptions(wxStringPairVec*,GameOption);
+	bool setSingleOption(wxString,wxString, GameOption modmapFlag);
 
 //private:
 		
