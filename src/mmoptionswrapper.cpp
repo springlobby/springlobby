@@ -106,6 +106,7 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag,wxString mapname)
 			}
 		}
 	}
+	return true;
 }
 
 bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showError, int* optType)
@@ -229,9 +230,27 @@ bool  mmOptionsWrapper::setOptions(wxStringPairVec* options, GameOption modmapFl
 	return true;
 }
 
-void  mmOptionsWrapper::getOptions(wxStringPairVec*, GameOption modmapFlag)
+void  mmOptionsWrapper::getOptions(wxStringPairVec* list, GameOption modmapFlag)
 {
+	for (optionMapBoolIter it = m_boolMaps[modmapFlag]->begin(); it != m_boolMaps[modmapFlag]->end(); ++it)
+	{
+		list->push_back( wxStringPair( (*it).first, wxString::Format(_T("%d"),(*it).second.value) ) );
+	}
+
+	for (optionMapStringIter it = m_stringMaps[modmapFlag]->begin(); it != m_stringMaps[modmapFlag]->end(); ++it)
+	{
+		list->push_back( wxStringPair( (*it).first, (*it).second.value) );
+	}
+
+	for (optionMapFloatIter it = m_floatMaps[modmapFlag]->begin(); it != m_floatMaps[modmapFlag]->end(); ++it)
+	{
+		list->push_back( wxStringPair( (*it).first, wxString::Format(_T("%f"),(*it).second.value) ) );
+	}
 	
+	for (optionMapListIter it = m_listMaps[modmapFlag]->begin(); it != m_listMaps[modmapFlag]->end(); ++it)
+	{
+		list->push_back( wxStringPair( (*it).first, (*it).second.value) );
+	}
 }
 
 
