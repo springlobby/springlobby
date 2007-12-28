@@ -197,6 +197,8 @@ wxString Spring::GetScriptTxt( Battle& battle )
   std::vector<int> TeamConv, AllyConv, AllyRevConv;
   /// AllyRevConv.size() gives number of allies
 
+  wxStringPairVec optlist;
+
   wxLogMessage(_T("1 numusers: ") + WX_STRING(i2s(battle.GetNumUsers())) );
 
   /// Fill ordered_users and sort it
@@ -281,6 +283,17 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += wxString::Format( _T("\tLimitDGun=%d;\n"), battle.LimitDGun()?1:0 );
   s += wxString::Format( _T("\tDiminishingMMs=%d;\n"), battle.DimMMs()?1:0 );
   s += wxString::Format( _T("\tGhostedBuildings=%d;\n\n"), battle.GhostedBuildings()?1:0 );
+
+  battle.CustomBattleOptions().getOptions( &optlist, MapOption );
+  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t") + it->first + _T("=") + it->second + _T(";\n");
+  }
+  battle.CustomBattleOptions().getOptions( &optlist, ModOption );
+  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t") + it->first + _T("=") + it->second + _T(";\n");
+  }
 
   if ( battle.IsFounderMe() ) s += wxString::Format( _T("\tHostIP=localhost;\n") );
   else s += WX_STRING(("\tHostIP=" + battle.GetHostIp() + ";\n"));
@@ -529,7 +542,9 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   if ( usync()->VersionSupports( GF_XYStartPos ) ) starttype = 3;
   else starttype = 0;
 
-  wxLogMessage( _T("StartPosType=") + WX_STRING( i2s( starttype ) ) );
+  wxStringPairVec optlist;
+
+  wxLogMessage( _T("StartPosType=%d"), starttype );
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot;
@@ -558,6 +573,17 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   s += wxString::Format( _T("\tLimitDGun=%d;\n"), battle.LimitDGun()?1:0 );
   s += wxString::Format( _T("\tDiminishingMMs=%d;\n"), battle.DimMMs()?1:0 );
   s += wxString::Format( _T("\tGhostedBuildings=%d;\n\n"), battle.GhostedBuildings()?1:0 );
+
+  battle.CustomBattleOptions().getOptions( &optlist, MapOption );
+  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t") + it->first + _T("=") + it->second + _T(";\n");
+  }
+  battle.CustomBattleOptions().getOptions( &optlist, ModOption );
+  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t") + it->first + _T("=") + it->second + _T(";\n");
+  }
 
   s += _T("\tHostIP=localhost;\n");
 
