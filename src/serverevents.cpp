@@ -15,6 +15,7 @@
 #include "server.h"
 #include "battle.h"
 #include "settings.h"
+#include "mmoptionswrapper.h"
 
 void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported, const std::string server_spring_ver, const int udpport, bool lanmode )
 {
@@ -313,11 +314,12 @@ void ServerEvents::OnSetBattleInfo( int battleid, const std::string& param, cons
     else if ( key.Left( 10 ) == _T( "MAPOPTIONS/" ) )
     {
       key = key.BeforeFirst( '/' );
-      if ( wxStringPairVec )
+      if (  !m_opt_wrap().setSingleOption( key, WX_STRING( val ), MapOption ) ) m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
     }
     else if ( key.Left( 10 ) == _T( "M0DOPTIONS/" ) )
     {
-      key = key.BeforeFirst( '/' )
+      key = key.BeforeFirst( '/' );
+      if (  !m_opt_wrap().setSingleOption( key, WX_STRING( val ), ModOption ) ) m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
     }
   }
 }

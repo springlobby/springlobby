@@ -50,12 +50,14 @@ public:
 	bool setSingleOption(wxString,wxString, GameOption modmapFlag);
 
 //private:
-		
+
 	optionMapBool* m_boolMaps[2];
-	optionMapFloat* m_floatMaps[2]; 
+	optionMapFloat* m_floatMaps[2];
 	optionMapString* m_stringMaps[2];
 	optionMapList* m_listMaps[2];
-			
+
 };
+
+mmOptionsWrapper& m_opt_wrap();
 
 #endif /*MMOPTIONSORAPPER_H_*/

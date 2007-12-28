@@ -4,6 +4,8 @@
 #include "utils.h"
 #include "settings++/custom_dialogs.h"
 
+mmOptionsWrapper& m_opt_wrap() { static mmOptionsWrapper c; return c; };
+
 mmOptionsWrapper::mmOptionsWrapper()
 {
 	for (int i = 0; i < 2; ++i)
@@ -12,7 +14,7 @@ mmOptionsWrapper::mmOptionsWrapper()
 		m_floatMaps[i]	= new optionMapFloat;
 		m_stringMaps[i] = new optionMapString;
 		m_listMaps[i]	= new optionMapList;
-	
+
 	}
 }
 
@@ -32,12 +34,12 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag,wxString mapname)
 	switch (modmapFlag)
 	{
 		case MapOption:
-			try 
+			try
 			{
 				count = susynclib()->GetMapOptionCount(mapname);
-				
+
 			}
-			catch(...) 
+			catch(...)
 			{
 				wxLogError(_T("Could not load map Options"));
 				return false;
@@ -45,11 +47,11 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag,wxString mapname)
 			singleError = _T("Cannot load map-option #");
 			break;
 		case ModOption:
-			try 
+			try
 			{
 				count = susynclib()->GetModOptionCount();
 			}
-			catch(...) 
+			catch(...)
 			{
 				wxLogError(_T("Could not load mod Options"));
 				return false;
@@ -57,7 +59,7 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag,wxString mapname)
 			singleError = _T("Cannot load mod-option #");
 			break;
 	}
-	
+
 	mmOptionList* templist;
 	for (int i = 0; i < count; ++i)
 	{
@@ -89,7 +91,7 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag,wxString mapname)
 				case IS_LIST_OPTION:
 					 templist = new mmOptionList(susynclib()->GetOptionName(i),key,
 							susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
-					 int listitemcount = susynclib()->GetOptionListCount(i); 
+					 int listitemcount = susynclib()->GetOptionListCount(i);
 					 for (int j = 0; j < listitemcount; ++j)
 					 {
 						 templist->addItem(susynclib()->GetOptionListItemKey(i,j),susynclib()->GetOptionListItemName(i,j),
@@ -97,7 +99,7 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag,wxString mapname)
 					 }
 					 (*m_listMaps[modmapFlag])[key] = (*templist);
 				}
-	
+
 			}
 			catch(...)
 			{
@@ -135,14 +137,14 @@ bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showE
 		*optType = IS_FLOAT_OPTION;
 		exists = true;
 	}
-	
+
 	if (exists && showError)
 	{
 		customMessageBox(SL_MAIN_ICON,duplicateKeyError,_T("Mod/map option error"),wxOK);
 		wxLogWarning(_T("duplicate key in mapmodoptions"));
 		return true;
 	}
-	else 
+	else
 		return false;
 }
 
@@ -152,7 +154,7 @@ bool  mmOptionsWrapper::setOptions(wxStringPairVec* options, GameOption modmapFl
 	{
 		wxString key = it->first;
 		wxString value = it->second;
-		
+
 		//we don't want to add a key that doesn't already exists
 		int* optType = new int(IS_UNDEFINED_OPTION);
 		if(!keyExists(key,modmapFlag,false,optType))
@@ -186,7 +188,7 @@ bool  mmOptionsWrapper::setOptions(wxStringPairVec* options, GameOption modmapFl
 					return false;
 				}
 				else
-					(*m_boolMaps[modmapFlag])[key].value = bool(*l_val); 
+					(*m_boolMaps[modmapFlag])[key].value = bool(*l_val);
 				break;
 			}
 			case IS_STRING_OPTION :
@@ -198,7 +200,7 @@ bool  mmOptionsWrapper::setOptions(wxStringPairVec* options, GameOption modmapFl
 					return false;
 				}
 				else
-					(*m_stringMaps[modmapFlag])[key].value = value; 
+					(*m_stringMaps[modmapFlag])[key].value = value;
 				break;
 			}
 			case IS_LIST_OPTION :
@@ -214,7 +216,7 @@ bool  mmOptionsWrapper::setOptions(wxStringPairVec* options, GameOption modmapFl
 						 break;
 					 }
 				 }
-				 
+
 				 if (valid_string)
 					 (*m_listMaps[modmapFlag])[key].key = value;
 				 else
@@ -246,7 +248,7 @@ void  mmOptionsWrapper::getOptions(wxStringPairVec* list, GameOption modmapFlag)
 	{
 		list->push_back( wxStringPair( (*it).first, wxString::Format(_T("%f"),(*it).second.value) ) );
 	}
-	
+
 	for (optionMapListIter it = m_listMaps[modmapFlag]->begin(); it != m_listMaps[modmapFlag]->end(); ++it)
 	{
 		list->push_back( wxStringPair( (*it).first, (*it).second.value) );
