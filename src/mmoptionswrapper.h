@@ -58,6 +58,4 @@ public:
 
 };
 
-mmOptionsWrapper& m_opt_wrap();
-
 #endif /*MMOPTIONSORAPPER_H_*/

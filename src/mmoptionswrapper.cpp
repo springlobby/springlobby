@@ -4,8 +4,6 @@
 #include "utils.h"
 #include "settings++/custom_dialogs.h"
 
-mmOptionsWrapper& m_opt_wrap() { static mmOptionsWrapper c; return c; };
-
 mmOptionsWrapper::mmOptionsWrapper()
 {
 	for (int i = 0; i < 2; ++i)

@@ -8,6 +8,7 @@
 
 #include "iunitsync.h"
 #include "user.h"
+#include "mmoptionswrapper.h"
 
 typedef int HostInfo;
 
@@ -138,6 +139,8 @@ class IBattle
 
     virtual std::vector<BattleStartRect*>::size_type GetNumRects() =0;
 
+    virtual mmOptionsWrapper CustomBattleOptions() { return m_opt_wrap; }
+
   protected:
 
     bool m_map_loaded;
@@ -148,6 +151,8 @@ class IBattle
     UnitSyncMod m_mod;
     wxString m_map_name;
     wxString m_mod_name;
+
+    mmOptionsWrapper m_opt_wrap;
 
     int m_startmetal;
     int m_startenergy;
