@@ -301,7 +301,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const std::string& param, cons
   std::string val = value;
   wxString key = WX_STRING( param );
   if ( key.Left( 4 ) == _T("game/") )
-  {
+  {/// TODO (BrainDamage#1#): remove all the engine hardcoded static containers/parsing code and move them to the new dynamic
     key = key.BeforeFirst( '/' );
     if      ( key == _T("startpostype")     ) battle.SetStartType( GetIntParam(val) );
     else if ( key == _T("maxunits")         ) battle.SetMaxUnits( GetIntParam(val) );
