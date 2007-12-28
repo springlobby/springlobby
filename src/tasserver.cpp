@@ -717,11 +717,10 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_se->OnUdpSourcePort( tmp_port );
     //HOSTPORT port
   } else if ( cmd == "SETSCRIPTTAGS" ) {
-    int count = 0;
-    while ( (msg = GetSentenceParam( params )) != "" ) {
-      std::string key = GetWordParam( msg );
-      std::string value = GetWordParam ( msg );
-      count++;
+    wxString command;
+    while ( (command = WX_STRING(GetSentenceParam( params ))) != _T("") ) {
+      wxString key = command.BeforeFirst( '=' );
+      wxString value = command.AfterFirst( '=' );
       m_se->OnSetBattleInfo( m_battle_id, key, msg );
     }
     m_se->OnBattleInfoUpdated( m_battle_id );
@@ -1124,15 +1123,15 @@ void TASServer::SendHostInfo( HostInfo update )
       battle.CustomBattleOptions().getOptions( &optlist, MapOption );
       for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
       {
-        cmd += _T("game/mapoptions/") + it->first + _T(" ") + it->second + _T("\t");
+        cmd += _T("game/mapoptions/") + it->first + _T("=") + it->second + _T("\t");
       }
       battle.CustomBattleOptions().getOptions( &optlist, ModOption );
       for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
       {
-        cmd += _T("game/modoptions/") + it->first + _T(" ") + it->second + _T("\t");
+        cmd += _T("game/modoptions/") + it->first + _T("=") + it->second + _T("\t");
       }
 
-      cmd += wxString::Format( _T("game/startpostype %d\tgame/maxunits %d\tgame/limitdgun %d\tgame/startmetal %d\tgame/gamemode %d\tgame/ghostedbuildings %d\tgame/startenergy %d\tgame/diminishingmms %d\n"),
+      cmd += wxString::Format( _T("game/startpostype=%d\tgame/maxunits=%d\tgame/limitdgun %d\tgame/startmetal=%d\tgame/gamemode=%d\tgame/ghostedbuildings=%d\tgame/startenergy=%d\tgame/diminishingmms=%d\n"),
         battle.GetStartType(), battle.GetMaxUnits(), battle.LimitDGun(), battle.GetStartMetal(),
         battle.GetGameType(), battle.GhostedBuildings(), battle.GetStartEnergy(), battle.DimMMs()
       );

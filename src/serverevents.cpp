@@ -292,13 +292,13 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
 }
 
 
-void ServerEvents::OnSetBattleInfo( int battleid, const std::string& param, const std::string& value )
+void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const wxString& value )
 {
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
 
-  std::string val = value;
-  wxString key = WX_STRING( param );
+  std::string val = STD_STRING(value);
+  wxString key = param;
   if ( key.Left( 4 ) == _T("game/") )
   {/// TODO (BrainDamage#1#): remove all the engine hardcoded static containers/parsing code and move them to the new dynamic
     key = key.BeforeFirst( '/' );
@@ -310,15 +310,15 @@ void ServerEvents::OnSetBattleInfo( int battleid, const std::string& param, cons
     else if ( key == _T("ghostedbuildings") ) battle.SetGhostedBuildings( GetIntParam(val) );
     else if ( key == _T("startenergy")      ) battle.SetStartEnergy( GetIntParam(val) );
     else if ( key == _T("diminishingmms")   ) battle.SetDimMMs( GetIntParam(val) );
-    else if ( key.Left( 10 ) == _T( "MAPOPTIONS/" ) )
+    else if ( key.Left( 10 ) == _T( "mapoptions/" ) )
     {
       key = key.BeforeFirst( '/' );
-      if (  !battle.CustomBattleOptions().setSingleOption( key, WX_STRING( val ), MapOption ) ) m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+      if (  !battle.CustomBattleOptions().setSingleOption( key,  value, MapOption ) ) m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
     }
-    else if ( key.Left( 10 ) == _T( "M0DOPTIONS/" ) )
+    else if ( key.Left( 10 ) == _T( "modoptions/" ) )
     {
       key = key.BeforeFirst( '/' );
-      if (  !battle.CustomBattleOptions().setSingleOption( key, WX_STRING( val ), ModOption ) ) m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+      if (  !battle.CustomBattleOptions().setSingleOption( key, value, ModOption ) ) m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
     }
   }
 }
