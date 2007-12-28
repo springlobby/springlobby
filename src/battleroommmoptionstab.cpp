@@ -8,6 +8,7 @@
 #include <wx/stattext.h>
 #include <wx/defs.h>
 #include "mmoptionswrapper.h"
+#include "spinctld.h"
 
 BattleroomMMOptionsTab::BattleroomMMOptionsTab( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
@@ -67,6 +68,31 @@ void BattleroomMMOptionsTab::setupModOptionsSizer()
 		}
 	
 /**** use iterators *****/
+	
+	/*  wxSpinCtrlDbl( wxWindow &parent, wxWindowID id,
+	                   const wxString &value = wxEmptyString,
+	                   const wxPoint& pos = wxDefaultPosition,
+	                   const wxSize& size = wxSize(95,-1),
+	                   long style = 0,
+	                   double min = 0.0, double max = 100.0,
+	                   double initial = 0.0,
+	                   double increment = 1.0, int digits = wxSPINCTRLDBL_AUTODIGITS,
+	                   const wxString& name = _T("wxSpinCtrlDbl") ) */
+	for ( optionMapFloatIter it = (*m_mapmodoptions->m_floatMaps[ModOption]).begin(); it != (*m_mapmodoptions->m_floatMaps[ModOption]).end(); ++it)	
+	{
+			mmOptionFloat current = it->second;
+			wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
+			wxSpinCtrlDbl* tempchoice = new wxSpinCtrlDbl();
+			tempchoice->Create(this, -1, _T(""),
+					wxDefaultPosition, wxDefaultSize, 0, double(current.min), double(current.max),
+														double(current.value),double(current.stepping) );
+			tempchoice->SetToolTip(current.description);
+			
+			tempbox->Add(new wxStaticText(this,-1,current.name),0,5);
+			tempbox->Add(tempchoice);
+			m_mod_layout->Add(tempbox);
+	}
+	
 	
 //	for (optionMapFloatIter i = m_mapmodoptions->m_mod_options_float.begin(); i != m_mapmodoptions->m_mod_options_float.end();++i)
 //	{
