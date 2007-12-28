@@ -34,6 +34,7 @@ class wxWindow;
 class wxPoint;
 class wxSize;
 class wxCloseEvent;
+class wxSpinEvent;
 
 
 typedef std::map<wxString,int> intMap;
@@ -63,7 +64,7 @@ class abstract_panel : public wxPanel
 		static void loadDefaults();
 		virtual void updateControls(int what_to_update);
 		static bool loadValuesIntoMap();
-        
+		void OnSpinControlChange(wxSpinEvent& event);
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
