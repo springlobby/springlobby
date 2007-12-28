@@ -37,7 +37,7 @@ mmOptionString::mmOptionString():mmOptionModel()
 {}
 
 mmOptionList::mmOptionList(wxString name_, wxString key_, wxString description_, wxString def_):
-	mmOptionModel(name_,key_,description_,IS_LIST_OPTION),def(def_)
+	mmOptionModel(name_,key_,description_,IS_LIST_OPTION),def(def_),value(def_)
 {}
 
 mmOptionList::mmOptionList():mmOptionModel()

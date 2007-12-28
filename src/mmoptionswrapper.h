@@ -34,7 +34,7 @@ typedef std::vector<wxStringPair> wxStringPairVec;
 typedef int GameOption;
 enum {
 	MapOption = 1,
-	ModOption = 2
+	ModOption = 0
 };
 
 class mmOptionsWrapper
@@ -47,6 +47,7 @@ public:
 	bool keyExists(wxString key,GameOption,bool showError, int* optType);
 	bool setOptions(wxStringPairVec*,GameOption);
 	void getOptions(wxStringPairVec*,GameOption);
+	bool setSingleOption(wxString,wxString, GameOption modmapFlag);
 
 //private:
 		

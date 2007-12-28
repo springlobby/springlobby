@@ -4,7 +4,7 @@
 #include <wx/statbox.h>
 #include <wx/checkbox.h>
 #include <wx/slider.h>
-#include <wx/choice.h>
+#include <wx/combobox.h>
 #include <wx/stattext.h>
 #include <wx/defs.h>
 #include "mmoptionswrapper.h"
@@ -57,10 +57,13 @@ BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
 
 void BattleroomMMOptionsTab::setupModOptionsSizer()
 {
-	for (optionMapBoolIter i = (*m_mapmodoptions->m_boolMaps[MODOPTS]).begin(); i != (*m_mapmodoptions->m_boolMaps[MODOPTS]).end();++i)
+	for (optionMapBoolIter i = (*m_mapmodoptions->m_boolMaps[ModOption]).begin(); i != (*m_mapmodoptions->m_boolMaps[ModOption]).end();++i)
 		{
 			mmOptionBool current = i->second;
-			m_mod_layout->Add(new wxCheckBox(this,-1,current.description));
+			wxCheckBox* temp = new wxCheckBox(this,-1,current.name);
+			temp->SetToolTip(current.description);
+			temp->SetValue(current.value);
+			m_mod_layout->Add(temp);
 		}
 	
 /**** use iterators *****/
@@ -82,11 +85,18 @@ void BattleroomMMOptionsTab::setupModOptionsSizer()
 //		m_mod_layout->Add(new wxCheckBox(this,-1,m_mapmodoptions->m_mod_options_bool[i].description));
 //	}
 //	
-//	for (unsigned int i = 0; i < m_mapmodoptions->m_mod_options_list.size();++i)
-//	{
-//		m_mod_layout->Add(new wxStaticText(this,-1,m_mapmodoptions->m_mod_options_list[i].description),0,5);
-//		m_mod_layout->Add(new wxChoice(this,-1,wxDefaultPosition,wxDefaultSize,m_mapmodoptions->m_mod_options_list[i].cbx_choices));
-//	}
+	
+	for ( optionMapListIter it = (*m_mapmodoptions->m_listMaps[ModOption]).begin(); it != (*m_mapmodoptions->m_listMaps[ModOption]).end(); ++it)	
+	{
+		mmOptionList current = it->second;
+		wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
+		wxComboBox* tempchoice = new wxComboBox(this, -1, current.value, wxDefaultPosition, wxDefaultSize, current.cbx_choices);
+		tempchoice->SetToolTip(current.description);
+		
+		tempbox->Add(new wxStaticText(this,-1,current.name),0,5);
+		tempbox->Add(tempchoice);
+		m_mod_layout->Add(tempbox);
+	}
 	
 }
 
