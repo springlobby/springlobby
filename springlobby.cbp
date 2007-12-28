@@ -168,6 +168,8 @@
 		<Unit filename="src/battleoptionstab.h" />
 		<Unit filename="src/battleroomlistctrl.cpp" />
 		<Unit filename="src/battleroomlistctrl.h" />
+		<Unit filename="src/battleroommmoptionstab.cpp" />
+		<Unit filename="src/battleroommmoptionstab.h" />
 		<Unit filename="src/battleroomtab.cpp" />
 		<Unit filename="src/battleroomtab.h" />
 		<Unit filename="src/boost/md5.cpp" />
@@ -182,6 +184,8 @@
 		<Unit filename="src/chatpanel.h" />
 		<Unit filename="src/connectwindow.cpp" />
 		<Unit filename="src/connectwindow.h" />
+		<Unit filename="src/customlistctrl.cpp" />
+		<Unit filename="src/customlistctrl.h" />
 		<Unit filename="src/flagimagedata.h" />
 		<Unit filename="src/flagimages.cpp" />
 		<Unit filename="src/flagimages.h" />
@@ -255,6 +259,10 @@
 		<Unit filename="src/mainwindow.h" />
 		<Unit filename="src/mapctrl.cpp" />
 		<Unit filename="src/mapctrl.h" />
+		<Unit filename="src/mmoptionmodel.cpp" />
+		<Unit filename="src/mmoptionmodel.h" />
+		<Unit filename="src/mmoptionswrapper.cpp" />
+		<Unit filename="src/mmoptionswrapper.h" />
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonautotools.cpp" />

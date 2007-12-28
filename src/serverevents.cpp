@@ -292,23 +292,35 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
 }
 
 
-void ServerEvents::OnSetBattleInfo( int battleid, const std::string& param, const std::string& value )
+void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const wxString& value )
 {
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
 
-  std::string val = value;
-
-  // TODO: This is a temporary solution until we can dump tasserver < 0.35 support
-  if      ( param == "game/startpostype"     ) battle.SetStartType( GetIntParam(val) );
-  else if ( param == "game/maxunits"         ) battle.SetMaxUnits( GetIntParam(val) );
-  else if ( param == "game/limitdgun"        ) battle.SetLimitDGun( GetIntParam(val) );
-  else if ( param == "game/startmetal"       ) battle.SetStartMetal( GetIntParam(val) );
-  else if ( param == "game/gamemode"         ) battle.SetGameType( GetIntParam(val) );
-  else if ( param == "game/ghostedbuildings" ) battle.SetGhostedBuildings( GetIntParam(val) );
-  else if ( param == "game/startenergy"      ) battle.SetStartEnergy( GetIntParam(val) );
-  else if ( param == "game/diminishingmms"   ) battle.SetDimMMs( GetIntParam(val) );
-
+  std::string val = STD_STRING(value);
+  wxString key = param;
+  if ( key.Left( 4 ) == _T("game/") )
+  {/// TODO (BrainDamage#1#): remove all the engine hardcoded static containers/parsing code and move them to the new dynamic
+    key = key.BeforeFirst( '/' );
+    if      ( key == _T("startpostype")     ) battle.SetStartType( GetIntParam(val) );
+    else if ( key == _T("maxunits")         ) battle.SetMaxUnits( GetIntParam(val) );
+    else if ( key == _T("limitdgun")        ) battle.SetLimitDGun( GetIntParam(val) );
+    else if ( key == _T("startmetal")       ) battle.SetStartMetal( GetIntParam(val) );
+    else if ( key == _T("gamemode")         ) battle.SetGameType( GetIntParam(val) );
+    else if ( key == _T("ghostedbuildings") ) battle.SetGhostedBuildings( GetIntParam(val) );
+    else if ( key == _T("startenergy")      ) battle.SetStartEnergy( GetIntParam(val) );
+    else if ( key == _T("diminishingmms")   ) battle.SetDimMMs( GetIntParam(val) );
+    else if ( key.Left( 10 ) == _T( "mapoptions/" ) )
+    {
+      key = key.BeforeFirst( '/' );
+      if (  !battle.CustomBattleOptions().setSingleOption( key,  value, MapOption ) ) m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+    }
+    else if ( key.Left( 10 ) == _T( "modoptions/" ) )
+    {
+      key = key.BeforeFirst( '/' );
+      if (  !battle.CustomBattleOptions().setSingleOption( key, value, ModOption ) ) m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+    }
+  }
 }
 
 
