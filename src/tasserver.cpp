@@ -721,7 +721,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     while ( (command = WX_STRING(GetSentenceParam( params ))) != _T("") ) {
       wxString key = command.BeforeFirst( '=' );
       wxString value = command.AfterFirst( '=' );
-      m_se->OnSetBattleInfo( m_battle_id, key, msg );
+      m_se->OnSetBattleInfo( m_battle_id, key, WX_STRING(msg) );
     }
     m_se->OnBattleInfoUpdated( m_battle_id );
     // !! Command: "SETSCRIPTTAGS" params: "game/startpostype=0	game/maxunits=1000	game/limitdgun=0	game/startmetal=1000	game/gamemode=0	game/ghostedbuildings=-1	game/startenergy=1000	game/diminishingmms=0"
