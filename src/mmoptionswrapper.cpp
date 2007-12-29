@@ -6,7 +6,7 @@
 
 mmOptionsWrapper::mmOptionsWrapper()
 {
-	for (int i = 0; i < 2; ++i)
+	for (int i = 0; i < optionCategoriesCount; ++i)
 	{
 		m_boolMaps[i] 	= new optionMapBool;
 		m_floatMaps[i]	= new optionMapFloat;
@@ -260,3 +260,48 @@ bool mmOptionsWrapper::setSingleOption(wxString key,wxString value,GameOption mo
 	return setOptions(&temp,modmapFlag);
 }
 
+bool mmOptionsWrapper::setSingleOption(wxString key,wxString value)
+{
+	int* dummy = new int(0);
+	if (keyExists(key,ModOption,false,dummy))
+		return setSingleOption(key,value,ModOption);
+	else if (keyExists(key,MapOption,false,dummy))
+		return setSingleOption(key,value,MapOption);
+	else
+		return false;
+}
+
+wxString mmOptionsWrapper::getSingleValue(wxString key)
+{
+//	int* optType = new int(0);
+//	if (keyExists(key,ModOption,false,optType))	
+//	{
+//		switch (*optType)
+//		{
+//		
+//			default:
+//				return wxEmptyString;
+//		}
+//	}
+//	else if (keyExists(key,MapOption,false,optType))
+//	{
+//		switch (*optType)
+//		{
+//		
+//			default:
+//				return wxEmptyString;
+//		}
+//	}
+	
+	return wxEmptyString;
+}
+
+bool mmOptionsWrapper::reloadMapOptions(wxString mapname)
+{
+	m_boolMaps[MapOption] 	= new optionMapBool;
+	m_floatMaps[MapOption]	= new optionMapFloat;
+	m_stringMaps[MapOption] = new optionMapString;
+	m_listMaps[MapOption]	= new optionMapList;
+	
+	return loadMapOptions(mapname);
+}

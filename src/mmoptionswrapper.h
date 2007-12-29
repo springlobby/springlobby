@@ -35,7 +35,7 @@ typedef int GameOption;
 enum {
 	MapOption = 1,
 	ModOption = 0
-};
+};// should reflect: optionCategoriesCount
 
 class mmOptionsWrapper
 {
@@ -43,18 +43,23 @@ public:
 	mmOptionsWrapper();
 	virtual ~mmOptionsWrapper();
 	bool loadMapOptions(wxString mapname);
+	bool reloadMapOptions(wxString mapname); //recreates the containers and read from unitsync with new mapname
 	bool loadOptions(GameOption, wxString mapname = _T(""));
 	bool keyExists(wxString key,GameOption,bool showError, int* optType);
 	bool setOptions(wxStringPairVec*,GameOption);
 	void getOptions(wxStringPairVec*,GameOption);
+	
+	wxString getSingleValue(wxString key);//TODO implement!
+	
 	bool setSingleOption(wxString,wxString, GameOption modmapFlag);
+	bool setSingleOption(wxString,wxString);
 
 //private:
-
-	optionMapBool* m_boolMaps[2];
-	optionMapFloat* m_floatMaps[2];
-	optionMapString* m_stringMaps[2];
-	optionMapList* m_listMaps[2];
+	const static int optionCategoriesCount = 2;
+	optionMapBool* m_boolMaps[optionCategoriesCount];
+	optionMapFloat* m_floatMaps[optionCategoriesCount];
+	optionMapString* m_stringMaps[optionCategoriesCount];
+	optionMapList* m_listMaps[optionCategoriesCount];
 
 };
 
