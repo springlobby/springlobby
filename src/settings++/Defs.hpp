@@ -105,6 +105,10 @@
 #define ID_WINDOWP_UI_CBOX_12 371
 #define ID_WINDOWP_UI_CBOX_13 372
 #define ID_WINDOWP_UI_CBOX_14 373
+#define ID_WINDOWP_UI_CBOX_15 374
+
+//Zoom opt
+#define ID_WINDOWP_UI_MW_SPD  385
 
 //QUALITY OPTIONS checkbox IDs
 #define ID_WINDOWP_QA_CBOX_0  300
@@ -184,6 +188,13 @@ struct Control {
     const wxString tTip [1];
 };
 
+const Control UI_ZOOM[] = {
+	{_T("Scrollwheel speed"),           wxT("ScrollWheelSpeed"),      ID_WINDOWP_UI_MW_SPD,	"25", 
+			{_T("Higher values mean faster zoom with mouse wheel.\n"
+				"Negative values will invert zoom direction.\n"
+				"Results may vary depending on camera mode!")}	}
+				
+};
 //TODO is max_texture stages obsolte?
 const Control RO_SLI[] = {
 	{_T("Shadow-map size"),              wxT("ShadowMapSize"),       ID_RO_SLI_0,	"2048", {_T("higher value = better looking shadows\n"
@@ -245,7 +256,7 @@ const Control QA_CBOX[10] = {
 };
 	
 //TODO add scroll wheel speed 
-const Control UI_CBOX[14] = {
+const Control UI_CBOX[15] = {
 	{_T("Enable LuaUI widgets"),                            wxT("LuaUI"),               ID_WINDOWP_UI_CBOX_1,	"1", {_T("mark to be able to use")}},
 	
 	{_T("Draw commands on mini-map"),                       wxT("MiniMapDrawCommands"), ID_WINDOWP_UI_CBOX_2,	"1", {_T("default value is \"on\"")}},
@@ -267,7 +278,8 @@ const Control UI_CBOX[14] = {
 										{_T("requires \"Enable LuaWidgets\" to be set.\nWill be displayed in the bottom right corner")}},
 //TODO is there even a reason that it should be disabled?
 	{_T("Fix rendering on alt-tab"),                        wxT("FixAltTab"),           ID_WINDOWP_UI_CBOX_13,	"1", {_T("Do not change if not needed")}},
-	{_T("Disallow helper AI's"),                            wxT("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_14,	"0", {_T("Disables Economy AI, etc.")}}
+	{_T("Disallow helper AI's"),                            wxT("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_14,	"0", {_T("Disables Economy AI, etc.")}},
+	{_T("Disable scroll on window edge"),					wxT("WindowedEdgeMove"),	ID_WINDOWP_UI_CBOX_15,	"0", {_T("useful if run in windowed mode")}}
 };
 
 

@@ -33,7 +33,7 @@ BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
 END_EVENT_TABLE()
 
 SpringLobbyApp::SpringLobbyApp()
-{ 
+{
   m_timer = new wxTimer(this, TIMER_ID);
 }
 
@@ -74,6 +74,9 @@ bool SpringLobbyApp::OnInit()
   m_ui->ShowMainWindow();
 
   if ( sett().IsFirstRun() ) {
+    #ifdef __WXMSW__
+      sett().SetOldSpringLaunchMethod( true );
+    #endif
     wxLogMessage( _T("first time startup"));
     wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nLooks like this is the first time you use SpringLobby. I have guessed a configuration that I think will work for you but you should review it, expecially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
       wxOK | wxICON_INFORMATION, &m_ui->mw() );

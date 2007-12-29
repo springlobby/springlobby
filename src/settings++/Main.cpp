@@ -27,6 +27,7 @@
 
 #include <iostream>
 #include <wx/msgdlg.h>
+#include <wx/intl.h>
 #include "../springunitsynclib.h"
 
 IMPLEMENT_APP(Springsettings)

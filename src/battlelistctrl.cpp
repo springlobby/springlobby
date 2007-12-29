@@ -47,7 +47,7 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
   SetImageList( &icons(), wxIMAGE_LIST_STATE );
-  
+
 
   wxListItem col;
 
@@ -78,7 +78,7 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   col.SetText( _("Host") );
   col.SetImage( nonIcon);
   InsertColumn( 6, col, _T("Name of the Host") );
-  
+
   col.SetText( _("s") );
   col.SetImage( nonIcon );
   InsertColumn( 7, col, _T("Number of Spectators"), false );
@@ -112,18 +112,18 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
 #else
   SetColumnWidth( 0, 20 );
   SetColumnWidth( 1, 20 );
-  SetColumnWidth( 2, 20 ); 
+  SetColumnWidth( 2, 20 );
 
   SetColumnWidth( 7, 28 ); // alittle more than before for dual digets
   SetColumnWidth( 8, 28 );
   SetColumnWidth( 9, 28 );
 #endif
- 
+
   SetColumnWidth( 3, 170 );
   SetColumnWidth( 4, 140 );
   SetColumnWidth( 5, 130 );
   SetColumnWidth( 6, 110 );
- 
+
   m_popup = new wxMenu( _T("") );
   m_popup->Append( BLIST_DLMAP, _("Download &map") );
   m_popup->Append( BLIST_DLMOD, _("Download m&od") );
@@ -582,7 +582,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
 	wxPoint position = event.GetPosition();
 
-	try{ 
+	try{
 		tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 		int flag = wxLIST_HITTEST_ONITEM;
 		long *ptrSubItem = new long;
@@ -598,21 +598,21 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 			{
 			case 0: // status
 			m_tiptext = IconImageList::GetBattleStatus(battle);
-				break;	
+				break;
 			case 1: // country
 				m_tiptext = WX_STRING(battle.GetFounder().GetCountry());
-				break;	
+				break;
 			case 2: // rank_min
 				m_tiptext = WX_STRING(m_colinfovec[coloumn].first);
-				break;	
+				break;
 			case 3: // descrp
 				m_tiptext = WX_STRING(battle.GetDescription());
 				break;
 			case 4: //map
-				m_tiptext = WX_STRING(battle.GetMapName());
+				m_tiptext = RefineMapname(WX_STRING(battle.GetMapName()));
 				break;
 			case 5: //mod
-				m_tiptext = WX_STRING(battle.GetModName());
+				m_tiptext = RefineModname(WX_STRING(battle.GetModName()));
 				break;
 			case 6: // host
 				m_tiptext = WX_STRING(battle.GetFounder().GetNick());
@@ -637,7 +637,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 				break;
 			case 9: //may player
 				m_tiptext = (m_colinfovec[coloumn].first);
-				break;  	
+				break;
 
 			default: m_tiptext = _T("");
 				break;

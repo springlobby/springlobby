@@ -576,6 +576,12 @@ void ChatPanel::Joined( User& who )
 }
 
 
+void ChatPanel::OnChannelJoin( User& who )
+{
+    if ( m_type == CPT_Channel && m_show_nick_list ) m_nicklist->AddUser( who );
+}
+
+
 void ChatPanel::Parted( User& who, const wxString& message )
 {
   if ( m_type == CPT_Channel ) {

@@ -397,7 +397,7 @@ void ServerEvents::OnChannelSaid( const std::string& channel, const std::string&
 void ServerEvents::OnChannelJoin( const std::string& channel, const std::string& who )
 {
   wxLogDebugFunc( _T("") );
-  m_serv.GetChannel( channel ).Joined( m_serv.GetUser( who ) );
+  m_serv.GetChannel( channel ).OnChannelJoin( m_serv.GetUser( who ) );
 }
 
 
@@ -433,6 +433,13 @@ void ServerEvents::OnPrivateMessage( const std::string& user, const std::string&
 void ServerEvents::OnChannelList( const std::string& channel, const int& numusers )
 {
   m_ui.OnChannelList( channel, numusers );
+}
+
+
+void ServerEvents::OnUserJoinChannel( const std::string& channel, const std::string& who )
+{
+  wxLogDebugFunc( _T("") );
+  m_serv.GetChannel( channel ).Joined( m_serv.GetUser( who ) );
 }
 
 
