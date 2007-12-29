@@ -1120,12 +1120,12 @@ void TASServer::SendHostInfo( HostInfo update )
 
       wxStringPairVec optlist;
 
-      battle.CustomBattleOptions().getOptions( &optlist, MapOption );
+      battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
       for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
       {
         cmd += _T("game/mapoptions/") + it->first + _T("=") + it->second + _T("\t");
       }
-      battle.CustomBattleOptions().getOptions( &optlist, ModOption );
+      battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
       for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
       {
         cmd += _T("game/modoptions/") + it->first + _T("=") + it->second + _T("\t");

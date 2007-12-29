@@ -6,6 +6,11 @@
 
 mmOptionsWrapper::mmOptionsWrapper()
 {
+	unLoadOptions();
+}
+
+void mmOptionsWrapper::unLoadOptions()
+{
 	for (int i = 0; i < optionCategoriesCount; ++i)
 	{
 		m_boolMaps[i] 	= new optionMapBool;

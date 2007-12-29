@@ -50,6 +50,7 @@ public:
 	bool setOptions(wxStringPairVec*,GameOption);
 	void getOptions(wxStringPairVec*,GameOption);
 	void getOptionsMap(wxStringMap*,GameOption);
+	void unLoadOptions();
 	
 	wxString getSingleValue(wxString key);//TODO implement!
 	

@@ -17,6 +17,7 @@ class mmOptionsWrapper;
 class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
+class IBattle;
 
 typedef std::vector<wxCheckBox*> chkBoxVec;
 typedef std::vector<wxComboBox*> comboBoxVec;
@@ -25,11 +26,13 @@ typedef std::vector<wxComboBox*> comboBoxVec;
 class BattleroomMMOptionsTab : public wxPanel 
 {
 	public:
-		BattleroomMMOptionsTab( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
+		BattleroomMMOptionsTab( IBattle& battle, wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
 		~BattleroomMMOptionsTab();
 		void setupMapOptionsSizer();
 		void UpdateOptControls(/* wxstringpairvec* list **/);
 	protected:
+		 IBattle& m_battle;
+		
 		wxBoxSizer* m_main_sizer;
 		wxStaticBoxSizer* m_mod_options_sizer;
 		wxFlexGridSizer* m_mod_layout;

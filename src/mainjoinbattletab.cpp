@@ -86,6 +86,10 @@ void MainJoinBattleTab::UpdateCurrentBattle(bool updateRestrictions)
     m_opts_tab->UpdateBattle();
     if ( updateRestrictions ) m_opts_tab->ReloadRestrictions();
   }
+  if ( m_mm_opts_tab ){
+	  if ( !m_battle_tab->GetBattle().IsFounderMe() )
+		  m_mm_opts_tab->UpdateOptControls();
+  }
 }
 
 
@@ -99,10 +103,11 @@ BattleListTab& MainJoinBattleTab::GetBattleListTab()
 void MainJoinBattleTab::JoinBattle( Battle& battle )
 {
   LeaveCurrentBattle();
+  
   m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
   m_map_tab = new BattleMapTab( m_tabs, m_ui, battle );
   m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle, false );
-  m_mm_opts_tab = new BattleroomMMOptionsTab( m_tabs);
+  m_mm_opts_tab = new BattleroomMMOptionsTab( battle, m_tabs);
   m_tabs->InsertPage( 1, m_battle_tab, _("Battleroom"), true, 1 );
   m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, 2 );
   m_tabs->InsertPage( 3, m_opts_tab, _("Options"), false, 3 );
@@ -135,7 +140,7 @@ if ( m_opts_tab ) {
     m_tabs->DeletePage( 1 );
     m_battle_tab = 0;
   }
-
+ 
 
 }
 

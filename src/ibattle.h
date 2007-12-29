@@ -139,7 +139,7 @@ class IBattle
 
     virtual std::vector<BattleStartRect*>::size_type GetNumRects() =0;
 
-    virtual mmOptionsWrapper CustomBattleOptions() { return m_opt_wrap; }
+    virtual mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
 
   protected:
 

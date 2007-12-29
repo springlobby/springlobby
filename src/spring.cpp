@@ -284,12 +284,12 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += wxString::Format( _T("\tDiminishingMMs=%d;\n"), battle.DimMMs()?1:0 );
   s += wxString::Format( _T("\tGhostedBuildings=%d;\n\n"), battle.GhostedBuildings()?1:0 );
 
-  battle.CustomBattleOptions().getOptions( &optlist, MapOption );
+  battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
   for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
     s += _T("\t") + it->first + _T("=") + it->second + _T(";\n");
   }
-  battle.CustomBattleOptions().getOptions( &optlist, ModOption );
+  battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
   for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
     s += _T("\t") + it->first + _T("=") + it->second + _T(";\n");
@@ -574,12 +574,12 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   s += wxString::Format( _T("\tDiminishingMMs=%d;\n"), battle.DimMMs()?1:0 );
   s += wxString::Format( _T("\tGhostedBuildings=%d;\n\n"), battle.GhostedBuildings()?1:0 );
 
-  battle.CustomBattleOptions().getOptions( &optlist, MapOption );
+  battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
   for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
     s += _T("\t") + it->first + _T("=") + it->second + _T(";\n");
   }
-  battle.CustomBattleOptions().getOptions( &optlist, ModOption );
+  battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
   for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
     s += _T("\t") + it->first + _T("=") + it->second + _T(";\n");
