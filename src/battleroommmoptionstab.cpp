@@ -9,6 +9,7 @@
 #include <wx/defs.h>
 #include "mmoptionswrapper.h"
 #include "spinctld.h"
+#include <map>
 
 BEGIN_EVENT_TABLE( BattleroomMMOptionsTab,  wxPanel)
 	EVT_COMBOBOX(wxID_ANY, BattleroomMMOptionsTab::OnComBoxChange)
@@ -77,7 +78,7 @@ void BattleroomMMOptionsTab::setupModOptionsSizer()
 			mmOptionBool current = i->second;
 			wxCheckBox* temp = new wxCheckBox(this,BOOL_START_ID+ctrl_count,current.name);
 			temp->SetToolTip(current.description);
-			m_chkbox_vec.push_back(temp);
+			m_chkbox_vec[ModOption]->push_back(temp);
 			temp->SetValue(current.value);
 			m_mod_layout->Add(temp);
 			ctrl_count++;
@@ -95,40 +96,22 @@ void BattleroomMMOptionsTab::setupModOptionsSizer()
 	                   double increment = 1.0, int digits = wxSPINCTRLDBL_AUTODIGITS,
 	                   const wxString& name = _T("wxSpinCtrlDbl") ) */
 	ctrl_count = 0;
-	for ( optionMapFloatIter it = (*m_mapmodoptions->m_floatMaps[ModOption]).begin(); it != (*m_mapmodoptions->m_floatMaps[ModOption]).end(); ++it)	
-	{
-			mmOptionFloat current = it->second;
-			wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
-			wxSpinCtrlDbl* tempchoice = new wxSpinCtrlDbl();
-			tempchoice->Create(this, -1, _T(""),
-					wxDefaultPosition, wxDefaultSize, 0, double(current.min), double(current.max),
-														double(current.value),double(current.stepping) );
-			tempchoice->SetToolTip(current.description);
-			
-			tempbox->Add(new wxStaticText(this,-1,current.name),0,5);
-			tempbox->Add(tempchoice);
-			m_mod_layout->Add(tempbox);
-			ctrl_count++;
-	}
-	
-	
-//	for (optionMapFloatIter i = m_mapmodoptions->m_mod_options_float.begin(); i != m_mapmodoptions->m_mod_options_float.end();++i)
+//	for ( optionMapFloatIter it = (*m_mapmodoptions->m_floatMaps[ModOption]).begin(); it != (*m_mapmodoptions->m_floatMaps[ModOption]).end(); ++it)	
 //	{
-//		mmOptionFloat current = i->second;
-//		m_mod_layout->Add(new wxStaticText(this,-1,current.description),0,10);
-//		m_mod_layout->Add(new wxSlider(this,-1,
-//				int(current.def*100),
-//				int(current.min*100),
-//				int(current.max*100),
-//				wxDefaultPosition,wxSize(200,-1),wxSL_HORIZONTAL|wxSL_TOP|wxSL_AUTOTICKS|wxSL_LABELS),200,10);
-//		
+//			mmOptionFloat current = it->second;
+//			wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
+//			wxSpinCtrlDbl* tempchoice = new wxSpinCtrlDbl();
+//			tempchoice->Create(this, -1, _T(""),
+//					wxDefaultPosition, wxDefaultSize, 0, double(current.min), double(current.max),
+//														double(current.value),double(current.stepping) );
+//			tempchoice->SetToolTip(current.description);
+//			
+//			tempbox->Add(new wxStaticText(this,-1,current.name),0,5);
+//			tempbox->Add(tempchoice);
+//			m_mod_layout->Add(tempbox);
+//			ctrl_count++;
 //	}
 	
-//	for (unsigned int i = 0; i < m_mapmodoptions->m_mod_options_bool.size();++i)
-//	{
-//		m_mod_layout->Add(new wxCheckBox(this,-1,m_mapmodoptions->m_mod_options_bool[i].description));
-//	}
-//	
 	ctrl_count = 0;
 	for ( optionMapListIter it = (*m_mapmodoptions->m_listMaps[ModOption]).begin(); it != (*m_mapmodoptions->m_listMaps[ModOption]).end(); ++it)	
 	{
@@ -137,7 +120,7 @@ void BattleroomMMOptionsTab::setupModOptionsSizer()
 		wxComboBox* tempchoice = new wxComboBox(this, -1, current.value, wxDefaultPosition, wxDefaultSize, current.cbx_choices);
 		tempchoice->SetToolTip(current.description);
 		tempchoice->SetName(current.key);
-		m_combox_vec.push_back(tempchoice);
+		m_combox_vec[ModOption]->push_back(tempchoice);
 		tempbox->Add(new wxStaticText(this,-1,current.name),0,5);
 		tempbox->Add(tempchoice);
 		m_mod_layout->Add(tempbox);
@@ -149,16 +132,18 @@ void BattleroomMMOptionsTab::setupModOptionsSizer()
 void BattleroomMMOptionsTab::OnChkBoxChange(wxCommandEvent& event)
 {
 	int event_id = event.GetId();
-	if (event_id < BOOL_START_ID || event_id > int(BOOL_START_ID +m_chkbox_vec.size()))
-		return;
-	else
+	for ( GameOption g = 0; g < mmOptionsWrapper::optionCategoriesCount; g++ )
 	{
-		wxCheckBox* box = (wxCheckBox*) event.GetEventObject();
-		
-		//TODO do sth meaningful with returnvalue
-		m_mapmodoptions->setSingleOption(box->GetName(),wxString::Format(_T("%d"),box->GetValue()));
+		if (event_id < BOOL_START_ID || event_id > int(BOOL_START_ID +m_chkbox_vec[g]->size()))
+			return;
+		else
+		{
+			wxCheckBox* box = (wxCheckBox*) event.GetEventObject();
+			
+			//TODO do sth meaningful with returnvalue
+			m_mapmodoptions->setSingleOption( box->GetName(),wxString::Format( _T("%d"),box->GetValue() ) );
+		}
 	}
-	
 	
 }
 
@@ -167,21 +152,30 @@ void BattleroomMMOptionsTab::OnComBoxChange(wxCommandEvent& event)
 	
 }
 
+// might be slow as hell (if hell is slow :P )
 void BattleroomMMOptionsTab::UpdateOptControls(/* wxstringpairvec* list **/)
 {
-	/**** 
-	 * 
-	let opth be pointer to optionswrapper
+	typedef std::map<wxString,wxString> wxStringMap;
 	
-	
-	for (chkBoxVec:iterator it = m_chkbox_vec.begin(); it != m_chkbox_vec.end();++it)
+	for ( GameOption g = 0; g < mmOptionsWrapper::optionCategoriesCount; g++ )
 	{
-		m_chkbox_vec
+		wxStringMap* opt_map = new wxStringMap;
+		m_mapmodoptions->getOptionsMap(opt_map,g);
+		
+		for(chkBoxVec::iterator it = m_chkbox_vec[g]->begin(); it != m_chkbox_vec[g]->end(); ++it)
+		{
+			wxCheckBox* cur = (*it);
+			wxString value = (*opt_map)[cur->GetName()];
+			long* l_val = new long;
+			value.ToLong(l_val);
+			cur->SetValue(l_val);
+			
+		}
+		
 	}
 	
 	
 	
 	
 	
-	*/
 }

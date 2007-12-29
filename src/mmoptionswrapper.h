@@ -30,6 +30,7 @@ typedef std::map<wxString,mmOptionList>::iterator optionMapListIter;
 
 typedef std::pair< wxString,wxString> wxStringPair;
 typedef std::vector<wxStringPair> wxStringPairVec;
+typedef std::map<wxString,wxString> wxStringMap;
 
 typedef int GameOption;
 enum {
@@ -48,6 +49,7 @@ public:
 	bool keyExists(wxString key,GameOption,bool showError, int* optType);
 	bool setOptions(wxStringPairVec*,GameOption);
 	void getOptions(wxStringPairVec*,GameOption);
+	void getOptionsMap(wxStringMap*,GameOption);
 	
 	wxString getSingleValue(wxString key);//TODO implement!
 	
@@ -60,6 +62,8 @@ public:
 	optionMapFloat* m_floatMaps[optionCategoriesCount];
 	optionMapString* m_stringMaps[optionCategoriesCount];
 	optionMapList* m_listMaps[optionCategoriesCount];
+protected:
+	bool setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, int optType);
 
 };
 

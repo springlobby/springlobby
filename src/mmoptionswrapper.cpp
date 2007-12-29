@@ -159,72 +159,8 @@ bool  mmOptionsWrapper::setOptions(wxStringPairVec* options, GameOption modmapFl
 			return false;
 		else
 		{
-			switch (*optType)
-			{
-			case IS_FLOAT_OPTION :
-			{
-				//test if min < val < max
-				double* d_val = new double;
-				bool d_conv_ok = value.ToDouble(d_val);
-				float fl_value = float(*d_val);
-				if( !d_conv_ok || fl_value < (*m_floatMaps[modmapFlag])[key].min || fl_value > (*m_floatMaps[modmapFlag])[key].max )
-				{
-					wxLogWarning(_T("recieved number option exceeds boundaries"));
-					return false;
-				}
-				else
-					(*m_floatMaps[modmapFlag])[key].value = fl_value;
-				break;
-			}
-			case IS_BOOL_OPTION :
-			{
-				long* l_val = new long;
-				bool l_conv_ok = value.ToLong(l_val);
-				if( !l_conv_ok || ( *l_val != 1 && *l_val != 0 ) )
-				{
-					wxLogWarning(_T("recieved bool option that is neither 0 or 1"));
-					return false;
-				}
-				else
-					(*m_boolMaps[modmapFlag])[key].value = bool(*l_val);
-				break;
-			}
-			case IS_STRING_OPTION :
-			{
-				// test if maxlength isn't exceeded
-				if ( int(value.Len())> (*m_stringMaps[modmapFlag])[key].max_len )
-				{
-					wxLogWarning(_T("recieved string option exceeds max_len"));
-					return false;
-				}
-				else
-					(*m_stringMaps[modmapFlag])[key].value = value;
-				break;
-			}
-			case IS_LIST_OPTION :
-			{
-				// test if valid value, aka is in list
-				 int listitemcount = (*m_listMaps[modmapFlag])[key].listitems.size();
-				 bool valid_string = false;
-				 for (int j = 0; j < listitemcount; ++j)
-				 {
-					 if ( (*m_listMaps[modmapFlag])[key].listitems[j].key == value)
-					 {
-						 valid_string = true;
-						 break;
-					 }
-				 }
-
-				 if (valid_string)
-					 (*m_listMaps[modmapFlag])[key].key = value;
-				 else
-				 {
-					 wxLogWarning(_T("recieved list option is not valid"));
-					 return false;
-				 }
-				break;
-			}
-			}
+			if ( !setSingleOptionTypeSwitch( key, value, modmapFlag,  *optType) )
+				return false;
 		}
 	}
 	return true;
@@ -253,6 +189,29 @@ void  mmOptionsWrapper::getOptions(wxStringPairVec* list, GameOption modmapFlag)
 	}
 }
 
+void mmOptionsWrapper::getOptionsMap(wxStringMap* map, GameOption modmapFlag)
+{
+	for (optionMapBoolIter it = m_boolMaps[modmapFlag]->begin(); it != m_boolMaps[modmapFlag]->end(); ++it)
+	{
+		(*map)[(*it).first] =  wxString::Format(_T("%d"),(*it).second.value);
+	}
+
+	for (optionMapStringIter it = m_stringMaps[modmapFlag]->begin(); it != m_stringMaps[modmapFlag]->end(); ++it)
+	{
+		(*map)[(*it).first] = (*it).second.value;
+	}
+
+	for (optionMapFloatIter it = m_floatMaps[modmapFlag]->begin(); it != m_floatMaps[modmapFlag]->end(); ++it)
+	{
+		(*map)[(*it).first] = wxString::Format(_T("%f"),(*it).second.value);
+	}
+
+	for (optionMapListIter it = m_listMaps[modmapFlag]->begin(); it != m_listMaps[modmapFlag]->end(); ++it)
+	{
+		(*map)[(*it).first] = (*it).second.value;
+	}
+}
+
 bool mmOptionsWrapper::setSingleOption(wxString key,wxString value,GameOption modmapFlag)
 {
 	wxStringPairVec temp;
@@ -273,27 +232,89 @@ bool mmOptionsWrapper::setSingleOption(wxString key,wxString value)
 
 wxString mmOptionsWrapper::getSingleValue(wxString key)
 {
-//	int* optType = new int(0);
-//	if (keyExists(key,ModOption,false,optType))	
-//	{
-//		switch (*optType)
-//		{
-//		
-//			default:
-//				return wxEmptyString;
-//		}
-//	}
-//	else if (keyExists(key,MapOption,false,optType))
-//	{
-//		switch (*optType)
-//		{
-//		
-//			default:
-//				return wxEmptyString;
-//		}
-//	}
-	
+	int* optType = new int(0);
+	for ( GameOption g = 0; g < optionCategoriesCount; g++ )
+	{
+		if (keyExists(key,ModOption,false,optType))	
+		{
+			// TODO implment
+		}
+	}
 	return wxEmptyString;
+}
+
+bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, int optType)
+{
+	switch (optType)
+	{
+		case IS_FLOAT_OPTION :
+		{
+			//test if min < val < max
+			double* d_val = new double;
+			bool d_conv_ok = value.ToDouble(d_val);
+			float fl_value = float(*d_val);
+			if( !d_conv_ok || fl_value < (*m_floatMaps[modmapFlag])[key].min || fl_value > (*m_floatMaps[modmapFlag])[key].max )
+			{
+				wxLogWarning(_T("recieved number option exceeds boundaries"));
+				return false;
+			}
+			else
+				(*m_floatMaps[modmapFlag])[key].value = fl_value;
+			break;
+		}
+		case IS_BOOL_OPTION :
+		{
+			long* l_val = new long;
+			bool l_conv_ok = value.ToLong(l_val);
+			if( !l_conv_ok || ( *l_val != 1 && *l_val != 0 ) )
+			{
+				wxLogWarning(_T("recieved bool option that is neither 0 or 1"));
+				return false;
+			}
+			else
+				(*m_boolMaps[modmapFlag])[key].value = bool(*l_val);
+			break;
+		}
+		case IS_STRING_OPTION :
+		{
+			// test if maxlength isn't exceeded
+			if ( int(value.Len())> (*m_stringMaps[modmapFlag])[key].max_len )
+			{
+				wxLogWarning(_T("recieved string option exceeds max_len"));
+				return false;
+			}
+			else
+				(*m_stringMaps[modmapFlag])[key].value = value;
+			break;
+		}
+		case IS_LIST_OPTION :
+		{
+			// test if valid value, aka is in list
+			int listitemcount = (*m_listMaps[modmapFlag])[key].listitems.size();
+			bool valid_string = false;
+			for (int j = 0; j < listitemcount; ++j)
+			{
+				if ( (*m_listMaps[modmapFlag])[key].listitems[j].key == value)
+				{
+					valid_string = true;
+					break;
+				}
+			}
+	
+			if (valid_string)
+				(*m_listMaps[modmapFlag])[key].key = value;
+			else
+			{
+				wxLogWarning(_T("recieved list option is not valid"));
+				return false;
+			}
+			break;
+		}
+		default: 
+			return false;
+	}
+	//if we made it here, all is good
+	return true;
 }
 
 bool mmOptionsWrapper::reloadMapOptions(wxString mapname)

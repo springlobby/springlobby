@@ -3,6 +3,7 @@
 
 #include <wx/panel.h>
 #include <vector>
+#include "mmoptionswrapper.h"
 
 const int BOOL_START_ID = 3000;
 const int FLOAT_START_ID = 4000;
@@ -36,8 +37,8 @@ class BattleroomMMOptionsTab : public wxPanel
 		wxFlexGridSizer* m_map_layout;
 		mmOptionsWrapper* m_mapmodoptions;
 		
-		chkBoxVec m_chkbox_vec;
-		comboBoxVec m_combox_vec;
+		chkBoxVec* m_chkbox_vec[mmOptionsWrapper::optionCategoriesCount];
+		comboBoxVec* m_combox_vec[mmOptionsWrapper::optionCategoriesCount];
 		//add similar for other controls
 		
 		void setupModOptionsSizer();
