@@ -866,7 +866,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     if ( nsr.width < minboxsize ) nsr.SetWidth( minboxsize );
     if ( nsr.height < minboxsize ) nsr.SetHeight( minboxsize );
     BattleStartRect bsr = GetBattleRect( nsr.x, nsr.y, nsr.x + nsr.width, nsr.y + nsr.height, m_mdown_rect );
-    m_battle->AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom ); /// FIXME (BrainDamage#3#): this fails when team boxes > 16
+    m_battle->AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom );
     if ( sr != nsr ) RefreshRect( sr.Union( nsr ), false );
     return;
 
