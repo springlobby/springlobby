@@ -154,7 +154,7 @@ void BattleroomMMOptionsTab::OnChkBoxChange(wxCommandEvent& event)
 				customMessageBox(0,_T("hjöhjö"),_T("obdslbnvcl"));
 			if (m_battle.IsFounderMe())
 				m_battle.SendHostInfo(HI_Options);
-		}activeradars
+		}
 	}
 	
 }
