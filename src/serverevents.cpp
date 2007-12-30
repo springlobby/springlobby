@@ -45,6 +45,7 @@ void ServerEvents::OnLoginInfoComplete()
 {
   wxLogDebugFunc( _T("") );
   m_serv.JoinChannel( "springlobby", "" );
+  m_serv.JoinChannel( "newbies", "" );
   //m_serv.RequestChannels();
   int num = sett().GetNumChannelsJoin();
   for ( int i= 0; i < num; i++ ) {
