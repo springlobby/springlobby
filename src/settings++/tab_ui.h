@@ -36,6 +36,7 @@ class wxCloseEvent;
 class wxSlider;
 class wxStaticBoxSizer;
 class wxFlexGridSizer;
+class wxSpinCtrl;
 
 class tab_ui : public abstract_panel
 {
@@ -47,6 +48,7 @@ class tab_ui : public abstract_panel
 		void initCameraSizer(wxStaticBoxSizer*);
 		void initScrollSpeedSizer(wxStaticBoxSizer* );
 		void initUiOptSizer(wxStaticBoxSizer* );
+		void initZoomSizer(wxStaticBoxSizer* );
 		void updateControls(int what_to_update);
     protected:
         void OnClose(wxCloseEvent& event);
@@ -59,13 +61,15 @@ class tab_ui : public abstract_panel
 		wxRadioButton* ctrl_cam_radio3;
 		wxRadioButton* ctrl_cam_radio4;
 		wxCheckBox** ctrl_ui_chkb;
-		static const int ctrl_ui_chkb_size = 13;
+		wxSpinCtrl* ctrl_zoom_spin;
+		static const int ctrl_ui_chkb_size = 15;
 		
 		wxFlexGridSizer* pSizer;
 			wxFlexGridSizer* cSizerL ;
 			wxFlexGridSizer* cSizerR;
 			wxFlexGridSizer* cSizerM;
-
+			
+			wxStaticBoxSizer* zoomSizer;
 			wxStaticBoxSizer* scrollSpeedSizer ;
 			wxStaticBoxSizer* cameraSizer;
 			wxStaticBoxSizer* uiOptSizer;

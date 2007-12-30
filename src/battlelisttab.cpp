@@ -28,9 +28,10 @@
 #include "iconimagelist.h"
 
 #include "settings++/custom_dialogs.h"
-#include "images/springlobby.xpm"
-#include <wx/icon.h>
+//#include "images/springlobby.xpm"
+//#include <wx/icon.h>
 
+#define BATTLELIST_COLOUMNCOUNT 10
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 
@@ -302,12 +303,12 @@ void BattleListTab::OnHost( wxCommandEvent& event )
   }
   if ( !m_ui.IsSpringCompatible() ){
     wxLogWarning(_T("Hosting is disabled due to the incompatible version ") );
-    customMessageBox(SL_MAIN_ICON,_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION);
+    customMessageBox(SL_MAIN_ICON,_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION|wxOK);
     return;
   }
   if ( m_ui.IsSpringRunning() ) {
     wxLogWarning(_T("trying to host while spring is running") );
-    customMessageBox(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to host a new game"), _("Spring error"), wxICON_EXCLAMATION );
+    customMessageBox(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to host a new game"), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     return;
   }
   Battle* battle = m_ui.mw().GetJoinTab().GetCurrentBattle();
@@ -341,7 +342,8 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     UnitSyncMap map;
     std::string mname = sett().GetLastHostMap();
     try {
-      if ( mname != "" ) map = usync()->GetMap( mname );
+      if ( usync()->MapExists(mname) ) 
+    	  map = usync()->GetMap( mname );
       else if ( usync()->GetNumMaps() <= 0 ) {
         wxLogWarning( _T("no maps found") );
         customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
@@ -425,7 +427,7 @@ void BattleListTab::DoJoin( Battle& battle )
 {
   if ( !m_ui.IsSpringCompatible() ){
     wxLogWarning(_T("trying to join battles with imcompatible spring version") );
-    customMessageBox(SL_MAIN_ICON,_("Joining battles is disabled due to the incompatible spring version you're using."), _("Spring error"), wxICON_EXCLAMATION);
+    customMessageBox(SL_MAIN_ICON,_("Joining battles is disabled due to the incompatible spring version you're using."), _("Spring error"), wxICON_EXCLAMATION|wxOK);
     return;
   }
 
@@ -441,7 +443,7 @@ void BattleListTab::DoJoin( Battle& battle )
 
   if ( m_ui.IsSpringRunning() ) {
     wxLogWarning(_T("trying to join a battle while spring is running") );
-    customMessageBox(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to join another battle."), _("Spring error"), wxICON_EXCLAMATION );
+    customMessageBox(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to join another battle."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     return;
   }
 

@@ -55,6 +55,12 @@ bool Settings::UseOldSpringLaunchMethod()
 }
 
 
+void Settings::SetOldSpringLaunchMethod( bool value )
+{
+  m_config->Read( _T("/Spring/UseOldLaunchMethod"), value );
+}
+
+
 wxString Settings::GetWebBrowserPath()
 {
   wxString path;

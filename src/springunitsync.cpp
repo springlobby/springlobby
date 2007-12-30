@@ -107,7 +107,9 @@ bool SpringUnitSync::VersionSupports( GameFeature feature )
   wxString ver = WX_STRING( GetSpringVersion() );
   double nver = 0;
   ver = ver.BeforeFirst('b') + ver.AfterFirst('b'); //remove the beta flag
+
   const char* old_locale = std::setlocale(LC_NUMERIC, "C"); //temp switch to C locale for the decimal separator
+
   if ( ver.Contains( _T("+") ) ) //remove the + (development) flag, and increase the version
   {
     ver = ver.BeforeFirst('+');

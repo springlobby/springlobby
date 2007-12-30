@@ -30,6 +30,7 @@ class Settings
     bool IsFirstRun();
 
     bool UseOldSpringLaunchMethod();
+    void SetOldSpringLaunchMethod( bool value );
 
     wxString GetWebBrowserPath();
     void SetWebBrowserPath( const wxString path );

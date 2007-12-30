@@ -90,6 +90,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
   wxString m_start_radiosChoices[] = { _("Fixed"),_("Random"), _("Choose in game") };
   int m_start_radiosNChoices = sizeof( m_start_radiosChoices ) / sizeof( wxString );
+  //TODO these need to be tooltipped, no idea how yet
   m_start_radios = new wxRadioBox( this, BMAP_START_TYPE, _("Startpositions"), wxDefaultPosition, wxSize( 150,-1 ), m_start_radiosNChoices, m_start_radiosChoices, 1, wxRA_SPECIFY_COLS );
   m_opts_sizer->Add( m_start_radios, 0, wxALL, 2 );
 
