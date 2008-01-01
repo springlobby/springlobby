@@ -4,7 +4,12 @@
 //
 
 #include <sstream>
+#ifndef __WXMSW__
 #include <wx/intl.h>
+#else
+#include <wx/intl.h>
+#include <wx/string.h>
+#endif
 #include <wx/msgdlg.h>
 
 #include "utils.h"

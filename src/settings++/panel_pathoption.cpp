@@ -4,7 +4,11 @@
 #include <wx/dirdlg.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
+#ifndef __WXMSW__
 #include <wx/intl.h>
+#else
+#include <wx/string.h>
+#endif
 #include <wx/textctrl.h>
 #include <wx/radiobut.h>
 #include <wx/stattext.h>
@@ -83,7 +87,10 @@ void PathOptionPanel::UsePaths(wxCommandEvent& event)
 	
 	if ( !(susynclib()->IsLoaded()) )
 	{
-		customMessageBox(SS_MAIN_ICON, _("SpringSettings is unable to load your unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
+		customMessageBox(SS_MAIN_ICON, _("SpringSettings is unable to load your unitsync library.\n"
+				"You might want to take another look at your unitsync setting.\n"
+				"Your Spring version has to be 0.76 or newer, otherwise \n"
+				"this will fail in any case."), _("Spring error"), wxOK );
 	}
 	else
 	{
