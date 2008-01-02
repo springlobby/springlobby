@@ -121,18 +121,20 @@ tab_ui::tab_ui(wxWindow *parent, wxWindowID id , const wxString &title , const w
 
 	 scrollSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Scroll Speeds (mouse + keyboard)"),
 			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
+	
+
 	 cameraSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Default Camera Mode"),
 			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
 	 uiOptSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Misc. UI Options"), 
 			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
-
 	 zoomSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Zoom"), 
 	 			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
 	 
 	initScrollSpeedSizer(scrollSpeedSizer);
-	initCameraSizer(cameraSizer);
 	initUiOptSizer(uiOptSizer);
+	initCameraSizer(cameraSizer);
 	initZoomSizer(zoomSizer);
+	
 
 	cSizerM->Add(uiOptSizer,0,wxALL,5);
 	cSizerL->Add(scrollSpeedSizer,0,wxALL,5);

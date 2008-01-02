@@ -86,7 +86,7 @@ const Control allControls[allControls_size] = {
 };
 
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
-                : wxPanel(parent, id, pos, size, style,title) {
+                : wxPanel(parent, id, pos, size, style|wxTAB_TRAVERSAL,title) {
 //	abstract_panel::expertModeEnadbled = false;
 }
 

@@ -76,7 +76,7 @@ void tab_simple::getSetUpResolutionCBX()
 	wxArrayString choices(vl_Resolution_Str_size,vl_Resolution_Str);
 	choices.Add((currentRes + _T(" (current)")));
 
-	videoMode_CBX = new wxComboBox(this, ID_SIMPLE_MODE_CBX,currentRes , wxDefaultPosition, wxSize(220,21), 
+	videoMode_CBX = new wxComboBox(this, ID_SIMPLE_MODE_CBX,choices.Last() , wxDefaultPosition, wxSize(220,21), 
 			choices,wxCB_DROPDOWN|wxCB_READONLY);
 }
 
