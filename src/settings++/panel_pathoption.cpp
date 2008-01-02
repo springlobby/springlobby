@@ -32,7 +32,7 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 	explanation_text = new wxStaticText (this, -1 , _T("There was a problem retrieving your settings.\n"
 														"Please check that the path below is correct.\n"
 														"When you have corrected it, click\n"
-														"the \"Use this Paths\" button to try again."),
+														"the \"Use this Path\" button to try again."),
 														wxDefaultPosition,wxSize(450,-1));
 
 	
