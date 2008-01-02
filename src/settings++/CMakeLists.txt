@@ -16,4 +16,4 @@ SET(SRCS
 	tab_ui.cpp
 )
 
-ADD_LIBRARY(Settings++ ${SRCS})
+ADD_LIBRARY(Settings++ SHARED ${SRCS})

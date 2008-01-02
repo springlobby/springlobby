@@ -1,7 +1,15 @@
+/// \file uiutils.h
+
 #ifndef SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 #define SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 
+
+// Standard C++ Libraries
+#include <fstream>
+
+// wxWidgets Libraries
 #include <wx/string.h>
+#include <wx/tokenzr.h>
 
 class wxColour;
 
@@ -27,5 +35,7 @@ bool AreColoursSimilar( int r1, int g1, int b1, int r2, int g2, int b2, int mind
 
 void ColourDelta( int& r, int& g, int& b, const int& delta );
 wxColour ColourDelta( const wxColour& colour, const int& delta );
+
+long GetHostCPUSpeed();
 
 #endif // SPRINGLOBBY_HEADERGUARD_UIUTILS_H

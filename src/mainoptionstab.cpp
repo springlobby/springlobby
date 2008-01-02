@@ -14,9 +14,11 @@
 #include "mainoptionstab.h"
 #include "ui.h"
 #include "springoptionstab.h"
+#include "chatoptionstab.h"
 #include "settings.h"
 
 #include "images/spring.xpm"
+#include "images/userchat.xpm"
 
 BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 
@@ -32,11 +34,15 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   m_imagelist = new wxImageList( 12, 12 );
   m_imagelist->Add( wxIcon(spring_xpm) );
+  m_imagelist->Add( wxIcon(userchat_xpm) );
 
   m_tabs->AssignImageList( m_imagelist );
 
   m_spring_opts = new SpringOptionsTab( m_tabs, m_ui );
   m_tabs->AddPage( m_spring_opts, _("Spring"), true, 0 );
+
+  m_chat_opts = new ChatOptionsTab( m_tabs, m_ui );
+  m_tabs->AddPage( m_chat_opts, _("Chat"), true, 1 );
 
   m_restore_btn = new wxButton( this, wxID_REVERT, _("Restore") );
   m_apply_btn = new wxButton( this, wxID_APPLY, _("Apply") );
@@ -64,6 +70,7 @@ MainOptionsTab::~MainOptionsTab()
 void MainOptionsTab::OnApply( wxCommandEvent& event )
 {
   m_spring_opts->OnApply( event );
+  m_chat_opts->OnApply( event );
   sett().SaveSettings();
 }
 
@@ -71,6 +78,7 @@ void MainOptionsTab::OnApply( wxCommandEvent& event )
 void MainOptionsTab::OnRestore( wxCommandEvent& event )
 {
   m_spring_opts->OnRestore( event );
+  m_chat_opts->OnRestore( event );
 }
 
 

@@ -116,6 +116,8 @@ springlobby_SOURCES = \
 	src/channel.h \
 	src/channellist.cpp \
 	src/channellist.h \
+	src/chatoptionstab.cpp \
+	src/chatoptionstab.h \
 	src/chatpanel.cpp \
 	src/chatpanel.h \
 	src/connectwindow.cpp \

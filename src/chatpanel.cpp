@@ -223,6 +223,9 @@ void ChatPanel::CreateControls( )
     wxSize s = m_splitter->GetSize();
     m_splitter->SetSashPosition( s.GetWidth() - 238, true );
   }
+
+  m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
+
 }
 
 
@@ -449,6 +452,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col )
   if (! m_chatlog_text ) return;
   LogTime();
   m_chatlog_text->SetDefaultStyle(wxTextAttr(col));
+  m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
   #ifdef __WXMSW__
   m_chatlog_text->Freeze();
   #endif
@@ -498,12 +502,12 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
   bool req_user = false;
   if ( m_type == CPT_User ) req_user = true;
   if ( who.Upper() == me.Upper() ) {
-    col.Set( 100,100,140 );
+    col = sett().GetChatColorMine();
   } else if ( message.Upper().Contains( me.Upper() ) ) {
-    col.Set( 255,40,40 );
+    col = sett().GetChatColorNotification();
     req_user = true;
   } else {
-    col.Set( 0,0,0 );
+    col = sett().GetChatColorNormal();
   }
 
   if ( who == _T("MelBot") && message.Contains (  _T("<") ) && message.Contains (  _T(">") )  ) {
@@ -808,7 +812,8 @@ void ChatPanel::LogTime()
 {
   if ( !m_chatlog_text ) return;
   wxDateTime now = wxDateTime::Now();
-  m_chatlog_text->SetDefaultStyle(wxTextAttr( wxColour( 100,100,140 ) ));
+  m_chatlog_text->SetDefaultStyle(wxTextAttr( sett().GetChatColorTime() ));
+  m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
   m_chatlog_text->AppendText( _T("[") + now.Format( _T("%H:%M") ) + _T("]") );
 }
 

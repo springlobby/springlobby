@@ -253,7 +253,9 @@ void TASServer::Login()
   data += m_user;
   data += " ";
   data += GetPasswordHash( m_pass );
-  data += " 2100 * SpringLobby 0.1\n";
+  data += " ";
+	data += wxString::Format( _T( "%d" ), GetHostCPUSpeed() ).ToAscii();
+  data += " * SpringLobby 0.1\n";
   m_sock->Send( data );
 
 }
@@ -403,8 +405,7 @@ void TASServer::ExecuteCommand( const std::string& in )
 
 void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
-	//TODO use or not?
- // wxLogDebugFunc( /* _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams) */ );
+  wxLogDebugFunc( _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams));
 
   std::string params = inparams;
   int pos, cpu, id, nat, port, maxplayers, rank, specs, metal = 0, energy = 0, units, start = 0,
