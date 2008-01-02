@@ -4,12 +4,7 @@
 //
 
 #include <sstream>
-#ifndef __WXMSW__
 #include <wx/intl.h>
-#else
-#include <wx/intl.h>
-#include <wx/string.h>
-#endif
 #include <wx/msgdlg.h>
 
 #include "utils.h"
@@ -17,9 +12,6 @@
 #include "stacktrace.h"
 
 #include "settings++/custom_dialogs.h"
-#include "images/springlobby.xpm"
-#include <wx/icon.h>
-
 
 // FIXME this does not work on linux+mingw build for windows
 #ifdef _MSC_VER
