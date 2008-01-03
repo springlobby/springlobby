@@ -59,6 +59,7 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
 END_EVENT_TABLE()
 
+//TODO make this more flexible
 const wxString team_choices[] = { _T("1"), _T("2"), _T("3"), _T("4"), _T("5"), _T("6"), _T("7"), _T("8"), _T("9"), _T("10"), _T("11"), _T("12"), _T("13"), _T("14"), _T("15"), _T("16") };
 
 

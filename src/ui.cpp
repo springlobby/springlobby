@@ -715,7 +715,11 @@ void Ui::OnBattleClosed( Battle& battle )
   mw().GetJoinTab().GetBattleListTab().RemoveBattle( battle );
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
-    if ( &br->GetBattle() == &battle ) mw().GetJoinTab().LeaveCurrentBattle();
+    if ( &br->GetBattle() == &battle )
+	{
+    	customMessageBox(SL_MAIN_ICON,_T("The current battle was closed by the host."),_T("Battle closed"));
+		mw().GetJoinTab().LeaveCurrentBattle();
+	}
   }
   for ( unsigned int b = 0; b < battle.GetNumUsers(); b++ ) {
     User& user = battle.GetUser( b );
