@@ -22,6 +22,7 @@ class Battle;
 class Ui;
 class wxMenu;
 class wxMouseEvent;
+class wxFocusEvent;
 
 enum ChatPanelType {
   CPT_Channel,
@@ -140,6 +141,7 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorMute1440( wxCommandEvent& event );
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
+    void OnFocusLost( wxFocusEvent& event );
 
   protected:
     void _SetChannel( Channel* channel );

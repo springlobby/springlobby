@@ -15,6 +15,7 @@
 #include <wx/msgdlg.h>
 #include <wx/menu.h>
 #include <wx/utils.h>
+#include <wx/event.h>
 
 #include "channel.h"
 #include "chatpanel.h"
@@ -28,6 +29,8 @@
 #include "chatlog.h"
 #include "settings.h"
 
+//could be read from config, so user gets to decide
+const bool draw_focus_lost_seperation = false;
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 
@@ -80,6 +83,8 @@ BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
   EVT_MENU        ( CHAT_MENU_US_MODERATOR_MUTE_1440, ChatPanel::OnUserMenuModeratorMute1440 )
   EVT_MENU        ( CHAT_MENU_US_MODERATOR_UNMUTE, ChatPanel::OnUserMenuModeratorUnmute )
   EVT_MENU        ( CHAT_MENU_US_MODERATOR_RING, ChatPanel::OnUserMenuModeratorRing )
+  
+  EVT_KILL_FOCUS  ( ChatPanel::OnFocusLost )
 
 END_EVENT_TABLE()
 
@@ -1308,5 +1313,19 @@ void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event )
 {
   m_ui.GetServer().Ring( GetSelectedUser()->GetNick() );
 }
+
+void ChatPanel::OnFocusLost( wxFocusEvent& event)
+{
+	//maybe differentiate the origin
+	wxColour col;
+	col.Set( 240,0,0 );
+	wxString message = _T("----------------------------------------------------------------------------------------");
+	
+	if ( draw_focus_lost_seperation && !m_chatlog_text->GetValue().EndsWith( (message + _T("\n") ) ) )
+		OutputLine( message, col );
+	 
+}
+
+
 
 
