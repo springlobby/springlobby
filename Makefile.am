@@ -472,7 +472,9 @@ springlobby_SOURCES = \
 	src/images/flags/ZM.xpm \
 	src/images/flags/ZW.xpm \
 	src/customlistctrl.h \
-	src/customlistctrl.cpp 
+	src/customlistctrl.cpp \
+	src/lobbysounds.h \
+	src/lobbysounds.cpp
 
 
 # TODO keep only a single list instead of duplicating the lists below

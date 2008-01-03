@@ -15,7 +15,7 @@
 #define DEFSETT_SPRING_PORT 8452
 
 class wxConfigBase;
-
+typedef int SoundType;
 
 //! @brief Class used to store and restore application settings.
 class Settings
@@ -128,6 +128,12 @@ class Settings
 
     void SetDisplayJoinLeave( bool display, const wxString& channel  );
     bool GetDisplayJoinLeave( const wxString& channel );
+    
+    void SetEnableSounds(bool enable);
+    bool GetEnableSounds();
+    void SetSoundFilename (wxString& filename, SoundType soundtype);
+    wxString GetSoundFilename ( SoundType soundtype );
+    void SetDefaultSounds();
 
   protected:
 
