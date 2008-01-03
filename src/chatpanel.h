@@ -11,6 +11,7 @@ class wxSizeEvent;
 class wxBoxSizer;
 class wxSplitterWindow;
 class wxTextCtrl;
+class wxRichTextCtrl;
 class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
@@ -160,7 +161,7 @@ class ChatPanel : public wxPanel
     wxPanel* m_chat_panel;      //!< Panel containing the chat. Only used when nicklist is visible.
     wxPanel* m_nick_panel;      //!< Panel containing the nicklist.
 
-    wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
+    wxRichTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
     wxTextCtrl* m_say_text;     //!< The say textcontrol.
 
     NickListCtrl* m_nicklist;   //!< The nicklist.

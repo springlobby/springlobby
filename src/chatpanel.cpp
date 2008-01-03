@@ -16,6 +16,7 @@
 #include <wx/menu.h>
 #include <wx/utils.h>
 #include <wx/event.h>
+#include <wx/richtext/richtextctrl.h>
 
 #include "channel.h"
 #include "chatpanel.h"
@@ -197,7 +198,7 @@ void ChatPanel::CreateControls( )
   }
 
   // Creating ui elements
-  m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T(""), wxDefaultPosition, wxDefaultSize,
+  m_chatlog_text = new wxRichTextCtrl( m_chat_panel, CHAT_LOG, _T(""), wxDefaultPosition, wxDefaultSize,
                              wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 
   m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T(""), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), wxTE_PROCESS_ENTER );
