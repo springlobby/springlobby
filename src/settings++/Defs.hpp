@@ -204,7 +204,7 @@ const Control RO_SLI[] = {
 	{_T("Terrain detail"),               wxT("GroundDetail"),        ID_RO_SLI_2,	"80", {_T("higher value = more terrain details")}	},
 	{_T("Unit detail"),                  wxT("UnitLodDist"),         ID_RO_SLI_3,	"300", {_T("higher value = more detailed units")}	},
 	{_T("Grass detail"),                 wxT("GrassDetail"),         ID_RO_SLI_4,	"3", {_T("higher value = more detailed graas")}	},
-	{_T("Ground decals"),                wxT("GroundDecals"),        ID_RO_SLI_5,	"40", {_T("higher value = more ground decals")}	},
+	{_T("Ground decals"),                wxT("GroundDecals"),        ID_RO_SLI_5,	"0", {_T("only on/off available at this time")}	},
 	{_T("Unit icon distance"),           wxT("UnitIconDist"),        ID_RO_SLI_6,	"350", {_T("determines at which range units are still fully rendered\n"
 																								"higher value = greater range = more units rendered at the same time")}	},
 	{_T("Max simultaneous particles"),     wxT("MaxParticles"),        ID_RO_SLI_7,	"5000"	, {_T("limits how many particles are displayed at the same time")}},

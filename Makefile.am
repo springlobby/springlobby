@@ -471,6 +471,7 @@ springlobby_SOURCES = \
 	src/images/flags/ZA.xpm \
 	src/images/flags/ZM.xpm \
 	src/images/flags/ZW.xpm \
+	src/images/empty.xpm \
 	src/customlistctrl.h \
 	src/customlistctrl.cpp \
 	src/lobbysounds.h \
