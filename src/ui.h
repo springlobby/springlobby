@@ -149,6 +149,8 @@ class Ui
     void OnModUnitsCached( const wxString& modname );
     void OnCachedThreadTerminated();
     void OnCachedThreadStarted();
+    
+    bool IsThisMe(User& other);
 
   protected:
     Spring* m_spring;

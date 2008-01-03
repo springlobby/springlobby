@@ -976,3 +976,12 @@ void Ui::OnMainWindowDestruct()
 {
 	m_main_win = 0;
 }
+
+bool Ui::IsThisMe(User& other)
+{
+	//if i'm not connected i have no identity
+	if (!IsConnected() || m_serv==0)
+		return false;
+	else
+		return ( other.GetNick()==m_serv->GetMe().GetNick() );
+}
