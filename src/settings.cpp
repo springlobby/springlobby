@@ -12,7 +12,6 @@
 #include "nonportable.h"
 #include "settings.h"
 #include "utils.h"
-#include "lobbysounds.h"
 
 Settings& sett()
 {
@@ -609,56 +608,3 @@ bool Settings::GetDisplayJoinLeave( const wxString& channel  )
   return m_config->Read( _T("/Channels/DisplayJoinLeave/") +  channel, true);
 }
 
-void Settings::SetEnableSounds(bool enable)
-{
-	m_config->Write( _T("/Sounds/sounds_enabled") , enable);
-}
-
-bool Settings::GetEnableSounds()
-{
-	//TODO FIXME: why do i need the temp here?
-	bool tmp;
-	tmp = m_config->Read( _T("/Sounds/sounds_enabled") , &tmp );
-	return tmp;
-}
-
-void Settings::SetSoundFilename (wxString& filename, SoundType soundtype)
-{
-	//TODO check for sanity of filename, no unplayble sound my be allowed
-	switch (soundtype)
-	{
-		case SOUND_RING:
-			m_config->Write( _T("/Sounds/Ring"), filename );
-			break;
-		case SOUND_MISC:
-			m_config->Write( _T("/Sounds/Misc"), filename );
-			break;
-	}
-}
-
-wxString Settings::GetSoundFilename ( SoundType soundtype )
-{
-	wxString filename = _T("");
-	//no need for default filenames, because
-	// a) SetDefaultSounds() will have been called
-	// b) no unplayable filename should find its way into the config
-	// c) playsound will just revert to wxBell on failure
-	switch (soundtype)
-	{
-		case SOUND_RING:
-			filename = m_config->Read( _T("/Sounds/Ring"), _T("") );
-			break;
-		case SOUND_MISC:
-			filename = m_config->Read( _T("/Sounds/Misc"), _T("") );
-			break;
-	}
-	
-	return filename;
-}
-
-void Settings::SetDefaultSounds()
-{
-	//TODO select default sounds
-	m_config->Write( _T("/Sounds/Ring"),  _T("") );
-	m_config->Write( _T("/Sounds/Misc"),  _T("") );
-}

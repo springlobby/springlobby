@@ -29,7 +29,6 @@
 #include "mainjoinbattletab.h"
 #include "agreementdialog.h"
 #include "unitsyncthread.h"
-#include "lobbysounds.h"
 
 #include "settings++/custom_dialogs.h"
 
@@ -941,8 +940,7 @@ void Ui::OnBattleBotUpdated( Battle& battle, BattleBot& bot )
 void Ui::OnRing( const std::string& from )
 {
   m_main_win->RequestUserAttention();
-  if (sett().GetEnableSounds())
-	  PlaySound(SOUND_RING);
+  wxBell();
 }
 
 
