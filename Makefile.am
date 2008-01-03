@@ -474,8 +474,8 @@ springlobby_SOURCES = \
 	src/images/empty.xpm \
 	src/customlistctrl.h \
 	src/customlistctrl.cpp \
-	src/lobbysounds.h \
-	src/lobbysounds.cpp
+	src/customrichtextctrl.h \
+	src/customrichtextctrl.cpp
 
 
 # TODO keep only a single list instead of duplicating the lists below
