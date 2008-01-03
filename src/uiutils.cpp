@@ -8,6 +8,10 @@
 #include "uiutils.h"
 #include "utils.h"
 
+#ifdef __WXMSW__
+#include <wx/msw/registry.h>
+#endif
+
 
 wxString RefineMapname( wxString mapname )
 {
@@ -132,11 +136,21 @@ wxColour ColourDelta( const wxColour& colour, const int& delta )
 long
 GetHostCPUSpeed() {
 
-	double totalcpuspeed = 0;
+	long totalcpuspeed = 0;
 
 #ifdef __WXMSW__
 
-// Windows Stuff goes here.
+	//afaik there is no way to determine the number of sub keys for a given key
+	//so i'll hardcode some value here and hope bd doesn't hit me with a stick :P
+	for (int i = 0; i< 16; ++i)
+	{
+	  wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\")+	wxString::Format(_T("%d"), i));
+	  long* tmp = new long;
+	  if ( programreg.QueryValue( _T("~MHz"), tmp ) )
+	  {
+		   totalcpuspeed += (*tmp);
+	  }
+	}
 
 #else
 
