@@ -203,13 +203,11 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
 	SizerC->AddGrowableCol(0);
 	SizerD->AddGrowableCol(0);
 
-
-	initQualitySizer(SizerA);
 	initVideoSizer(SizerB);
-	initAASizer(SizerC);
 	initZBufferSizer(SizerD);
-
-
+	initQualitySizer(SizerA);
+	initAASizer(SizerC);
+	
 	SizerA->Fit(this);
 	SizerA->SetSizeHints(this);
 	SizerB->Fit(this);

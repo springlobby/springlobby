@@ -35,9 +35,9 @@
 #include "Defs.hpp"
 
 void debug_panel::initDebugSizer(wxStaticBoxSizer* sizer) {
-	slider = new wxSlider(this, DO_SLI[0].id, 0, 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 	checkBox0 = new wxCheckBox(this, DO_CBOX[0].id, (DO_CBOX[0].lbl));
 	checkBox1 = new wxCheckBox(this, DO_CBOX[1].id, (DO_CBOX[1].lbl));
+	slider = new wxSlider(this, DO_SLI[0].id, 0, 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 
 	slider->SetToolTip( DO_SLI[0].tTip[0]);
 	checkBox0->SetToolTip(DO_CBOX[0].tTip[0]);

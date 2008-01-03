@@ -45,7 +45,7 @@ intMap abstract_panel::intSettings;
 
 bool abstract_panel::settingsChanged = false;
 
-const int allControls_size = 62;
+const int allControls_size = 63;
 const Control allControls[allControls_size] = {
 		// RO_SLI[8]
 		RO_SLI[0],RO_SLI[1],RO_SLI[2],RO_SLI[3],RO_SLI[4],RO_SLI[5],RO_SLI[6],RO_SLI[7],
@@ -62,9 +62,9 @@ const Control allControls[allControls_size] = {
 		// QA_CBOX[10]
 		QA_CBOX[0],QA_CBOX[1],QA_CBOX[2],QA_CBOX[3],QA_CBOX[4],QA_CBOX[5],QA_CBOX[6],QA_CBOX[7],QA_CBOX[8],
 		QA_CBOX[9],
-		//UI_CBOX[15]
+		//UI_CBOX[16]
 		UI_CBOX[0],UI_CBOX[1],UI_CBOX[2],UI_CBOX[3],UI_CBOX[4],UI_CBOX[5],UI_CBOX[6],UI_CBOX[7],UI_CBOX[8],
-		UI_CBOX[9],UI_CBOX[10],UI_CBOX[11],UI_CBOX[12],UI_CBOX[13],UI_CBOX[14],
+		UI_CBOX[9],UI_CBOX[10],UI_CBOX[11],UI_CBOX[12],UI_CBOX[13],UI_CBOX[14],UI_CBOX[15],
 		//MO_SLI[5]
 		MO_SLI[0],MO_SLI[1],MO_SLI[2],MO_SLI[3],MO_SLI[4],
 		//MO_SLI_EXT[5]
@@ -86,7 +86,7 @@ const Control allControls[allControls_size] = {
 };
 
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
-                : wxPanel(parent, id, pos, size, style,title) {
+                : wxPanel(parent, id, pos, size, style|wxTAB_TRAVERSAL,title) {
 //	abstract_panel::expertModeEnadbled = false;
 }
 
@@ -143,8 +143,8 @@ void abstract_panel::loadDefaults()
 	for (int i = 0;i< 10; ++i)
 		intSettings[QA_CBOX[i].key] = fromString( QA_CBOX[i].def);
 
-	//	const Control UI_CBOX[15]
-	for (int i = 0;i< 15; ++i)
+	//	const Control UI_CBOX[16]
+	for (int i = 0;i< 16; ++i)
 		intSettings[UI_CBOX[i].key] = fromString(UI_CBOX [i].def);
 
 	//	const Control MO_SLI[5]
@@ -321,7 +321,8 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 		case ID_WINDOWP_UI_CBOX_12:
 		case ID_WINDOWP_UI_CBOX_13:
 		case ID_WINDOWP_UI_CBOX_14:
-		case ID_WINDOWP_UI_CBOX_15:{
+		case ID_WINDOWP_UI_CBOX_15:
+		case ID_WINDOWP_UI_CBOX_16:{
 			int i = id - UI_CBOX[0].id;
 			(intSettings)[UI_CBOX[i].key]= checked;
 		} break;

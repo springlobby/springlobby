@@ -12,9 +12,6 @@
 #include "stacktrace.h"
 
 #include "settings++/custom_dialogs.h"
-#include "images/springlobby.xpm"
-#include <wx/icon.h>
-
 
 // FIXME this does not work on linux+mingw build for windows
 #ifdef _MSC_VER
