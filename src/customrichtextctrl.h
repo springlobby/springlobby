@@ -4,14 +4,14 @@
 #include <wx/richtext/richtextctrl.h>
 
 class wxFocusEvent;
-
-class customRichtextCtrl : public wxRichTextCtrl
+class wxMouseEvent;
+class customRichTextCtrl : public wxRichTextCtrl
 {
 public:
-	customRichtextCtrl(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& value = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, 
+	customRichTextCtrl(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& value = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, 
 			long style = 0, const wxValidator& validator = wxDefaultValidator, const wxString& name = wxTextCtrlNameStr);
-	virtual ~customRichtextCtrl();
-	void OnFocusLost(wxFocusEvent& event);
+	virtual ~customRichTextCtrl();
+	void OnFocusLost(wxMouseEvent& event);
 	void OnFocusGained(wxFocusEvent& event);
 	
 protected:
