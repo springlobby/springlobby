@@ -1,7 +1,7 @@
 #ifndef BATTLEROOMMMOPTIONSTAB_H_
 #define BATTLEROOMMMOPTIONSTAB_H_
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 #include <vector>
 #include "mmoptionswrapper.h"
 
@@ -23,7 +23,7 @@ typedef std::vector<wxCheckBox*> chkBoxVec;
 typedef std::vector<wxComboBox*> comboBoxVec;
 //add similar for other controls
 
-class BattleroomMMOptionsTab : public wxPanel 
+class BattleroomMMOptionsTab : public wxScrolledWindow
 {
 	public:
 		BattleroomMMOptionsTab( IBattle& battle, wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );

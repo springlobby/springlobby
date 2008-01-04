@@ -17,11 +17,11 @@
 BEGIN_EVENT_TABLE( BattleroomMMOptionsTab,  wxPanel)
 	EVT_COMBOBOX(wxID_ANY, BattleroomMMOptionsTab::OnComBoxChange)
 	EVT_CHECKBOX(wxID_ANY, BattleroomMMOptionsTab::OnChkBoxChange)
-	
+
 END_EVENT_TABLE()
 
-BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) 
-: wxPanel( parent, id, pos, size, style ),m_battle(battle)
+BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style )
+: wxScrolledWindow( parent, id, pos, size, style | wxHSCROLL ),m_battle(battle)
 {
 
 	for ( GameOption g = 0; g < mmOptionsWrapper::optionCategoriesCount; g++ )
@@ -32,35 +32,35 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 	m_mapmodoptions = battle.CustomBattleOptions();
 	m_mapmodoptions->loadOptions(ModOption);
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
-	
-	
+
+
 	m_mod_options_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Mod Options") ), wxVERTICAL );
-	
-	
+
+
 	m_mod_layout = new wxFlexGridSizer( 2, 2, 10, 10 );
 	m_mod_layout->SetFlexibleDirection( wxBOTH );
 	m_mod_layout->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	m_mod_options_sizer->Add( m_mod_layout, 1, wxEXPAND, 5 );
-	
+
 	setupModOptionsSizer();
-	
+
 	m_main_sizer->Add( m_mod_options_sizer, 1, wxEXPAND, 5 );
-	
-	
+
+
 	//m_main_sizer->Add( 0, 5, 1, wxEXPAND, 5 );
-	
+
 	m_map_options_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Map Options") ), wxVERTICAL );
-	
-	
+
+
 	m_map_layout = new wxFlexGridSizer( 2, 2, 0, 0 );
 	m_map_layout->SetFlexibleDirection( wxBOTH );
 	m_map_layout->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	m_map_options_sizer->Add( m_map_layout, 1, wxEXPAND, 5 );
-	
+
 	m_main_sizer->Add( m_map_options_sizer, 1, wxEXPAND, 5 );
-	
+
 	this->SetSizer( m_main_sizer );
 	this->Layout();
 }
@@ -88,10 +88,10 @@ void BattleroomMMOptionsTab::setupModOptionsSizer()
 			m_mod_layout->Add(temp);
 			ctrl_count++;
 		}
-	
-	
+
+
 /**** use iterators *****/
-	
+
 	/*  wxSpinCtrlDbl( wxWindow &parent, wxWindowID id,
 	                   const wxString &value = wxEmptyString,
 	                   const wxPoint& pos = wxDefaultPosition,
@@ -102,7 +102,7 @@ void BattleroomMMOptionsTab::setupModOptionsSizer()
 	                   double increment = 1.0, int digits = wxSPINCTRLDBL_AUTODIGITS,
 	                   const wxString& name = _T("wxSpinCtrlDbl") ) */
 	ctrl_count = 0;
-//	for ( optionMapFloatIter it = (*optWrap->m_floatMaps[ModOption]).begin(); it != (*optWrap->m_floatMaps[ModOption]).end(); ++it)	
+//	for ( optionMapFloatIter it = (*optWrap->m_floatMaps[ModOption]).begin(); it != (*optWrap->m_floatMaps[ModOption]).end(); ++it)
 //	{
 //			mmOptionFloat current = it->second;
 //			wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
@@ -111,15 +111,15 @@ void BattleroomMMOptionsTab::setupModOptionsSizer()
 //					wxDefaultPosition, wxDefaultSize, 0, double(current.min), double(current.max),
 //														double(current.value),double(current.stepping) );
 //			tempchoice->SetToolTip(current.description);
-//			
+//
 //			tempbox->Add(new wxStaticText(this,-1,current.name),0,5);
 //			tempbox->Add(tempchoice);
 //			m_mod_layout->Add(tempbox);
 //			ctrl_count++;
 //	}
-	
+
 	ctrl_count = 0;
-	for ( optionMapListIter it = (*optWrap->m_listMaps[ModOption]).begin(); it != (*optWrap->m_listMaps[ModOption]).end(); ++it)	
+	for ( optionMapListIter it = (*optWrap->m_listMaps[ModOption]).begin(); it != (*optWrap->m_listMaps[ModOption]).end(); ++it)
 	{
 		mmOptionList current = it->second;
 		wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
@@ -130,11 +130,11 @@ void BattleroomMMOptionsTab::setupModOptionsSizer()
 		m_combox_vec[ModOption]->push_back(tempchoice);
 		tempbox->Add(new wxStaticText(this,-1,current.name),0,5);
 		tempbox->Add(tempchoice);
-		
+
 		m_mod_layout->Add(tempbox);
 		ctrl_count++;
 	}
-	
+
 }
 
 void BattleroomMMOptionsTab::OnChkBoxChange(wxCommandEvent& event)
@@ -148,20 +148,21 @@ void BattleroomMMOptionsTab::OnChkBoxChange(wxCommandEvent& event)
 		else
 		{
 			wxCheckBox* box = (wxCheckBox*) event.GetEventObject();
-			
-			//TODO do sth meaningful with returnvalue
+
 			if(optWrap->setSingleOption( box->GetName(),wxString::Format( _T("%d"),box->GetValue() ) ))
-				customMessageBox(0,_T("hjöhjö"),_T("obdslbnvcl"));
-			if (m_battle.IsFounderMe())
-				m_battle.SendHostInfo(HI_Options);
+			{
+		        if (m_battle.IsFounderMe())
+		          m_battle.SendHostInfo(HI_Options);
+			}
+
 		}
 	}
-	
+
 }
 
 void BattleroomMMOptionsTab::OnComBoxChange(wxCommandEvent& event)
 {
-	
+
 }
 
 // might be slow as hell (if hell is slow :P )
@@ -169,12 +170,12 @@ void BattleroomMMOptionsTab::UpdateOptControls(/* wxstringpairvec* list **/)
 {
 	typedef std::map<wxString,wxString> wxStringMap;
 	mmOptionsWrapper* optWrap = m_mapmodoptions;
-	
+
 	for ( GameOption g = 0; g < mmOptionsWrapper::optionCategoriesCount; g++ )
 	{
 		wxStringMap* opt_map = new wxStringMap;
 		optWrap->getOptionsMap(opt_map,g);
-		
+
 		for(chkBoxVec::iterator it = m_chkbox_vec[g]->begin(); it != m_chkbox_vec[g]->end(); ++it)
 		{
 			wxCheckBox* cur = (*it);
@@ -182,21 +183,21 @@ void BattleroomMMOptionsTab::UpdateOptControls(/* wxstringpairvec* list **/)
 			long* l_val = new long;
 			value.ToLong(l_val);
 			cur->SetValue(l_val);
-			
+
 		}
-		
+
 		for(comboBoxVec::iterator it = m_combox_vec[g]->begin(); it != m_combox_vec[g]->end(); ++it)
 		{
 			wxComboBox* cur = (*it);
 			wxString value = (*opt_map)[cur->GetName()];
-			
+
 			cur->SetValue(value);
-			
+
 		}
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 }
