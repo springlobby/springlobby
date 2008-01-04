@@ -234,7 +234,8 @@ const Control VO_SLI_EXT[1] = {
 
 
 const Control AO_SLI[3] = {
-	{_T("Maximum simultaneous sounds"), wxT("MaxSounds"),            ID_AO_SLI_0,	"16" , {_T("maximum different sounds played at the same time")}},
+	{_T("Maximum simultaneous sounds"), wxT("MaxSounds"),            ID_AO_SLI_0,	"8" , {_T("maximum different sounds played at the same time\n"
+																								"Set this to zero to disable sound completely.")}},
 	{_T("Global sound volume"),   wxT("SoundVolume"),                ID_AO_SLI_1,	"100", {_T("overall sound volume")}},
 	{_T("Unit reply volume"),     wxT("UnitReplySoundVolume"),       ID_AO_SLI_2,	"80" , {_T("reply volume relative to global volume")}}
 	
