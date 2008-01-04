@@ -1123,12 +1123,12 @@ void TASServer::SendHostInfo( HostInfo update )
       battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
       for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
       {
-        cmd += _T("game/mapoptions/") + it->first + _T("=") + it->second + _T("\t");
+        cmd += _T("game/mapoptions/") + it->first + _T("=") + it->second + _T('\t');
       }
       battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
       for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
       {
-        cmd += _T("game/modoptions/") + it->first + _T("=") + it->second + _T("\t");
+        cmd += _T("game/modoptions/") + it->first + _T("=") + it->second + _T('\t');
       }
 
       cmd += wxString::Format( _T("game/startpostype=%d\tgame/maxunits=%d\tgame/limitdgun %d\tgame/startmetal=%d\tgame/gamemode=%d\tgame/ghostedbuildings=%d\tgame/startenergy=%d\tgame/diminishingmms=%d\n"),

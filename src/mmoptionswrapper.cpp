@@ -145,7 +145,11 @@ bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showE
 	{
 		customMessageBox(SL_MAIN_ICON,duplicateKeyError,_T("Mod/map option error"),wxOK);
 		wxLogWarning(_T("duplicate key in mapmodoptions"));
-		return true;
+		return false;
+	}
+	else if ( exists && !showError )
+	{
+	  return true;
 	}
 	else
 		return false;
@@ -240,7 +244,7 @@ wxString mmOptionsWrapper::getSingleValue(wxString key)
 	int* optType = new int(0);
 	for ( GameOption g = 0; g < optionCategoriesCount; g++ )
 	{
-		if (keyExists(key,ModOption,false,optType))	
+		if (keyExists(key,ModOption,false,optType))
 		{
 			// TODO implment
 		}
@@ -305,7 +309,7 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 					break;
 				}
 			}
-	
+
 			if (valid_string)
 				(*m_listMaps[modmapFlag])[key].key = value;
 			else
@@ -315,7 +319,7 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 			}
 			break;
 		}
-		default: 
+		default:
 			return false;
 	}
 	//if we made it here, all is good
@@ -328,6 +332,6 @@ bool mmOptionsWrapper::reloadMapOptions(wxString mapname)
 	m_floatMaps[MapOption]	= new optionMapFloat;
 	m_stringMaps[MapOption] = new optionMapString;
 	m_listMaps[MapOption]	= new optionMapList;
-	
+
 	return loadMapOptions(mapname);
 }
