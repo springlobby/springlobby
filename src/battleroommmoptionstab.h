@@ -18,9 +18,11 @@ class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
 class IBattle;
+class wxSpinCtrlDbl;
 
 typedef std::vector<wxCheckBox*> chkBoxVec;
 typedef std::vector<wxComboBox*> comboBoxVec;
+typedef std::vector<wxSpinCtrlDbl*> spinCtrlVec;
 //add similar for other controls
 
 class BattleroomMMOptionsTab : public wxScrolledWindow
@@ -42,6 +44,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		
 		chkBoxVec* m_chkbox_vec[mmOptionsWrapper::optionCategoriesCount];
 		comboBoxVec* m_combox_vec[mmOptionsWrapper::optionCategoriesCount];
+		spinCtrlVec* m_spinctrl_vec[mmOptionsWrapper::optionCategoriesCount];
 		//add similar for other controls
 		
 		void setupModOptionsSizer();
