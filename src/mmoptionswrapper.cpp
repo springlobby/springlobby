@@ -301,17 +301,19 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 			// test if valid value, aka is in list
 			int listitemcount = (*m_listMaps[modmapFlag])[key].listitems.size();
 			bool valid_string = false;
+			wxString newVal;
 			for (int j = 0; j < listitemcount; ++j)
 			{
-				if ( (*m_listMaps[modmapFlag])[key].listitems[j].key == value)
+				if ( (*m_listMaps[modmapFlag])[key].listitems[j].name == value)
 				{
 					valid_string = true;
+					newVal = (*m_listMaps[modmapFlag])[key].listitems[j].key;
 					break;
 				}
 			}
 
 			if (valid_string)
-				(*m_listMaps[modmapFlag])[key].key = value;
+				(*m_listMaps[modmapFlag])[key].value = newVal;
 			else
 			{
 				wxLogWarning(_T("recieved list option is not valid"));

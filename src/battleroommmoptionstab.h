@@ -12,18 +12,20 @@ const int STRING_START_ID = 6000;
 
 class wxBoxSizer;
 class wxStaticBoxSizer;
-class wxFlexGridSizer;
+//class wxFlexGridSizer;
 class mmOptionsWrapper;
 class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
 class IBattle;
 class wxSpinCtrlDbl;
+class wxTextCtrl;
+class wxSpinEvent;
 
 typedef std::vector<wxCheckBox*> chkBoxVec;
 typedef std::vector<wxComboBox*> comboBoxVec;
 typedef std::vector<wxSpinCtrlDbl*> spinCtrlVec;
-//add similar for other controls
+typedef std::vector<wxTextCtrl*> textCtrlVec;
 
 class BattleroomMMOptionsTab : public wxScrolledWindow
 {
@@ -37,19 +39,21 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		
 		wxBoxSizer* m_main_sizer;
 		wxStaticBoxSizer* m_mod_options_sizer;
-		wxFlexGridSizer* m_mod_layout;
+		wxBoxSizer* m_mod_layout;
 		wxStaticBoxSizer* m_map_options_sizer;
-		wxFlexGridSizer* m_map_layout;
+		wxBoxSizer* m_map_layout;
 		mmOptionsWrapper* m_mapmodoptions;
 		
 		chkBoxVec* m_chkbox_vec[mmOptionsWrapper::optionCategoriesCount];
 		comboBoxVec* m_combox_vec[mmOptionsWrapper::optionCategoriesCount];
 		spinCtrlVec* m_spinctrl_vec[mmOptionsWrapper::optionCategoriesCount];
-		//add similar for other controls
+		textCtrlVec* m_textctrl_vec[mmOptionsWrapper::optionCategoriesCount];
 		
-		void setupModOptionsSizer();
+		void setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag);
 		void OnComBoxChange(wxCommandEvent&);
 		void OnChkBoxChange(wxCommandEvent&);
+		void OnTextCtrlChange(wxCommandEvent& event);
+		void OnSpinCtrlChange(wxSpinEvent& event);
 	
 		
 		DECLARE_EVENT_TABLE();
