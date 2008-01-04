@@ -22,7 +22,7 @@ Battle::Battle( Server& serv, Ui& ui, int id ) :
   m_ui(ui),
   m_ingame(false),
   m_order(0),
-  m_rects(16, static_cast<BattleStartRect*>(0)),
+  m_rects(m_opts.maxplayers, static_cast<BattleStartRect*>(0)),
   m_bot_seek(m_bots.end()),
   m_bot_pos(BOT_SEEKPOS_INVALID)
 {
@@ -194,7 +194,7 @@ bool Battle::HaveMultipleBotsInSameTeam() const
   std::list<BattleBot*>::const_iterator i;
   wxLogDebugFunc(_T(""));
 
-  int teams[16] = { -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1 };
+  std::vector<int> teams ( GetMaxPlayers(), -1 );
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
   {
     if ( *i == 0 ) continue;
@@ -280,7 +280,7 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
 
 void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom )
 {
-  ASSERT_LOGIC( (allyno >= 0), _T("Allyno out of bounds.") );
+  ASSERT_LOGIC( (allyno >= 0 || allyno < GetMaxPlayers() ), _T("Allyno out of bounds.") );
   BattleStartRect* sr;
   bool local;
   if ( m_rects[allyno] == 0 ) {
@@ -339,7 +339,7 @@ void Battle::StartRectUpdated( int allyno )
 
 BattleStartRect* Battle::GetStartRect( int allyno )
 {
-  ASSERT_LOGIC( (allyno >= 0), _T("Allyno out of bounds.") );
+  ASSERT_LOGIC( (allyno >= 0 || allyno < GetMaxPlayers() ), _T("Allyno out of bounds.") );
   return m_rects[allyno];
 }
 
