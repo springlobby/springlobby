@@ -3,13 +3,17 @@
 set -e
 cd $(dirname $0)/..
 
-function create-build-dir ()
+create-build-dir ()
 {
+	echo -n creating $1 with $2 ...
 	(
 	if [ ! -d $1 ] ; then
 		mkdir $1
 		cd $1
 		../configure --config-cache $2
+		echo done
+	else
+		echo skipped
 	fi
 	)
 }
