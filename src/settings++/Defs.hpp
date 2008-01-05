@@ -234,7 +234,8 @@ const Control VO_SLI_EXT[1] = {
 
 
 const Control AO_SLI[3] = {
-	{_T("Maximum simultaneous sounds"), wxT("MaxSounds"),            ID_AO_SLI_0,	"16" , {_T("maximum different sounds played at the same time")}},
+	{_T("Maximum simultaneous sounds"), wxT("MaxSounds"),            ID_AO_SLI_0,	"8" , {_T("maximum different sounds played at the same time\n"
+																								"Set this to zero to disable sound completely.")}},
 	{_T("Global sound volume"),   wxT("SoundVolume"),                ID_AO_SLI_1,	"100", {_T("overall sound volume")}},
 	{_T("Unit reply volume"),     wxT("UnitReplySoundVolume"),       ID_AO_SLI_2,	"80" , {_T("reply volume relative to global volume")}}
 	
@@ -288,10 +289,10 @@ const Control UI_CBOX[16] = {
 
 const Control MO_SLI[5] = {
 	{_T("Overhead camera"),    wxT("OverheadScrollSpeed"),    ID_MO_SLI_0,	"10", {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("Rotatable overhead camera"), wxT("RotOverheadScrollSpeed"), ID_MO_SLI_1,	"5" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("Total war camera"),          wxT("TWScrollSpeed"),          ID_MO_SLI_2,	"5" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("First person camera"),         wxT("FPSScrollSpeed"),         ID_MO_SLI_3,	"5" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("Free camera"),          wxT("CamFreeScrollSpeed"),     ID_MO_SLI_4,	"5" , {_T("set the scroll speed (mouse + keyboard) for this mode")}}
+	{_T("Rotatable overhead camera"), wxT("RotOverheadScrollSpeed"), ID_MO_SLI_1,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("Total war camera"),          wxT("TWScrollSpeed"),          ID_MO_SLI_2,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("First person camera"),         wxT("FPSScrollSpeed"),         ID_MO_SLI_3,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("Free camera"),          wxT("CamFreeScrollSpeed"),     ID_MO_SLI_4,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}}
 };
 
 const Control MO_SLI_EXT[5] = {

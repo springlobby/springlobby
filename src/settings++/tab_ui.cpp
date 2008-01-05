@@ -35,7 +35,7 @@ void tab_ui::initScrollSpeedSizer(wxStaticBoxSizer* sizer) {
 											"mode from being cycled through ingame.")) , 0,wxBOTTOM,15);
 	for (int i = 0; i < ctrl_scroll_slider_size; i++) {
 		//set to dummy value
-		ctrl_scroll_slider[i] = new wxSlider(this, MO_SLI[i].id, 0, 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+		ctrl_scroll_slider[i] = new wxSlider(this, MO_SLI[i].id, 0, 0, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 		ctrl_scroll_slider[i]->SetToolTip(MO_SLI[i].tTip[0]);
 		if (i > 0)
 			sizer->Add(5,23,0);
