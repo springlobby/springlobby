@@ -309,6 +309,8 @@
 		<Unit filename="src/singleplayertab.h" />
 		<Unit filename="src/socket.cpp" />
 		<Unit filename="src/socket.h" />
+		<Unit filename="src/spinctld.cpp" />
+		<Unit filename="src/spinctld.h" />
 		<Unit filename="src/spring.cpp" />
 		<Unit filename="src/spring.h" />
 		<Unit filename="src/springlobby.rc">
