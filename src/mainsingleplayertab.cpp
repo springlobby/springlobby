@@ -11,6 +11,7 @@
 #include "singleplayertab.h"
 #include "battleoptionstab.h"
 #include "mainsingleplayertab.h"
+#include "battleroommmoptionstab.h"
 #include "ui.h"
 #include "utils.h"
 
@@ -34,7 +35,9 @@ m_ui(ui)
   m_sp_tab = new SinglePlayerTab( m_tabs, m_ui, *this );
   m_tabs->AddPage( m_sp_tab, _("Game"), true, 0 );
   m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, m_sp_tab->GetBattle(), true );
+  m_mm_opts_tab = new BattleroomMMOptionsTab( m_sp_tab->GetBattle(), m_tabs);
   m_tabs->InsertPage( 1, m_opts_tab, _("Options"), false, 1 );
+  m_tabs->InsertPage( 2, m_mm_opts_tab, _("Map/Mod Options"), false );
 
   m_main_sizer->Add( m_tabs, 1, wxEXPAND );
 
@@ -72,4 +75,3 @@ void MainSinglePlayerTab::ReloadRestrictions()
 {
   m_opts_tab->ReloadRestrictions();
 }
-
