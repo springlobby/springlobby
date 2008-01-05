@@ -38,7 +38,7 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 	
 	battle.CustomBattleOptions()->loadOptions(ModOption);
 	ASSERT_LOGIC( (battle.GetMapName()!= _T("")), _T("no mapname") );
-	//battle.CustomBattleOptions()->loadOptions(MapOption,battle.GetMapName());
+	battle.CustomBattleOptions()->loadOptions(MapOption,battle.GetMapName());
 	
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
