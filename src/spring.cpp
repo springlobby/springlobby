@@ -526,8 +526,7 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   int PlayerTeam = -1;
   int starttype;
 
-  if ( usync()->VersionSupports( GF_XYStartPos ) ) starttype = 3;
-  else starttype = 0;
+  if ( usync()->VersionSupports( GF_XYStartPos ) && battle.GetStartType() == ST_Fixed ) battle.SetStartType( ST_Pick );
 
   wxLogMessage( _T("StartPosType=") + WX_STRING( i2s( starttype ) ) );
 
