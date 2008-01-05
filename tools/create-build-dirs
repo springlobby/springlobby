@@ -5,11 +5,19 @@ cd $(dirname $0)/..
 
 create-build-dir ()
 {
-	echo -n creating $1 with $2 ...
+	echo -n creating $1 ...
 	(
 	if [ ! -d $1 ] ; then
 		mkdir $1
-		cd $1
+		echo done
+	else
+		echo skipped
+	fi
+	)
+	echo -n configuring $1 with $2 ...
+	(
+	cd $1
+	if [ ! -f Makefile ] ; then
 		../configure --config-cache $2
 		echo done
 	else
