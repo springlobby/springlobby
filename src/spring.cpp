@@ -524,11 +524,10 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   int NumAllys = 0;
   int PlayerTeam = -1;
-  int starttype;
 
   if ( usync()->VersionSupports( GF_XYStartPos ) && battle.GetStartType() == ST_Fixed ) battle.SetStartType( ST_Pick );
 
-  wxLogMessage( _T("StartPosType=") + WX_STRING( i2s( starttype ) ) );
+  wxLogMessage( _T("StartPosType=") + WX_STRING( i2s( battle.GetStartType() ) ) );
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot;
