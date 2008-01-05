@@ -34,30 +34,31 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		~BattleroomMMOptionsTab();
 		void setupMapOptionsSizer();
 		void UpdateOptControls(/* wxstringpairvec* list **/);
+		void ReloadOptions();
 	protected:
 		 IBattle& m_battle;
-		
+
 		wxBoxSizer* m_main_sizer;
 		wxStaticBoxSizer* m_mod_options_sizer;
 		wxBoxSizer* m_mod_layout;
 		wxStaticBoxSizer* m_map_options_sizer;
 		wxBoxSizer* m_map_layout;
 		mmOptionsWrapper* m_mapmodoptions;
-		
+
 		chkBoxVec* m_chkbox_vec[mmOptionsWrapper::optionCategoriesCount];
 		comboBoxVec* m_combox_vec[mmOptionsWrapper::optionCategoriesCount];
 		spinCtrlVec* m_spinctrl_vec[mmOptionsWrapper::optionCategoriesCount];
 		textCtrlVec* m_textctrl_vec[mmOptionsWrapper::optionCategoriesCount];
-		
+
 		void setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag);
 		void OnComBoxChange(wxCommandEvent&);
 		void OnChkBoxChange(wxCommandEvent&);
 		void OnTextCtrlChange(wxCommandEvent& event);
 		void OnSpinCtrlChange(wxSpinEvent& event);
-	
-		
+
+
 		DECLARE_EVENT_TABLE();
-	
+
 };
 
 #endif /*BATTLEROOMMMOPTIONSTAB_H_*/

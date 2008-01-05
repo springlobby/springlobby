@@ -11,6 +11,7 @@ class wxImageList;
 class wxBoxSizer;
 class SinglePlayerTab;
 class BattleOptionsTab;
+class BattleroomMMOptionsTab;
 
 
 class MainSinglePlayerTab : public wxPanel
@@ -34,6 +35,7 @@ class MainSinglePlayerTab : public wxPanel
 
     SinglePlayerTab* m_sp_tab;
     BattleOptionsTab* m_opts_tab;
+    BattleroomMMOptionsTab* m_mm_opts_tab;
 
 };
 

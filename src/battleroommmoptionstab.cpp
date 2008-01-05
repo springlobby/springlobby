@@ -21,7 +21,7 @@ BEGIN_EVENT_TABLE( BattleroomMMOptionsTab,  wxPanel)
 	EVT_CHECKBOX					(wxID_ANY, BattleroomMMOptionsTab::OnChkBoxChange)
 	EVT_TEXT_ENTER					(wxID_ANY,  BattleroomMMOptionsTab::OnTextCtrlChange)
 	EVT_SPINCTRL					(wxID_ANY,  BattleroomMMOptionsTab::OnSpinCtrlChange)
-	
+
 END_EVENT_TABLE()
 
 BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style )
@@ -35,23 +35,24 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 		m_spinctrl_vec[g] = new spinCtrlVec;
 		m_textctrl_vec[g] = new textCtrlVec;
 	}
-	
+
 	battle.CustomBattleOptions()->loadOptions(ModOption);
-	ASSERT_LOGIC( (battle.GetMapName()!= _T("")), _T("no mapname") );
-	battle.CustomBattleOptions()->loadOptions(MapOption,battle.GetMapName());
-	
+
+	//ASSERT_LOGIC( (battle.GetMapName()!= _T("")), _T("no mapname") );
+	//battle.CustomBattleOptions()->loadOptions(MapOption,battle.GetMapName());
+
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
 	m_mod_options_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Mod Options") ), wxVERTICAL );
 	m_mod_layout = new wxBoxSizer( wxVERTICAL);
 	setupOptionsSizer(m_mod_layout,ModOption);
 	m_mod_options_sizer->Add( m_mod_layout, 1, wxEXPAND, 5 );
-	
+
 	m_map_options_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Map Options") ), wxVERTICAL );
 	m_map_layout = new wxBoxSizer( wxVERTICAL);
 	setupOptionsSizer(m_map_layout,MapOption);
 	m_map_options_sizer->Add( m_map_layout, 1, wxEXPAND, 5 );
-	
+
 	m_main_sizer->Add( m_mod_options_sizer, 1, wxEXPAND, 5 );
 	m_main_sizer->Add( m_map_options_sizer, 1, wxEXPAND, 5 );
 
@@ -61,7 +62,7 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 
 BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
 {
-	
+
 }
 
 // always set the controls name to the option key
@@ -73,7 +74,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 	wxFlexGridSizer* spinSizer =  new wxFlexGridSizer( 2, 2, 10, 10 );
 	wxFlexGridSizer* textSizer =  new wxFlexGridSizer( 2, 2, 10, 10 );
 	wxFlexGridSizer* chkSizer = new wxFlexGridSizer( 2, 2, 10, 10 );
-	
+
 	int ctrl_count = 0;
 	for (optionMapBoolIter i = optWrap->m_boolMaps[optFlag]->begin(); i != optWrap->m_boolMaps[optFlag]->end();++i)
 		{
@@ -87,7 +88,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 			chkSizer->Add(temp);
 			ctrl_count++;
 		}
-	
+
 	ctrl_count = 0;
 	for ( optionMapFloatIter it = (*optWrap->m_floatMaps[optFlag]).begin(); it != (*optWrap->m_floatMaps[optFlag]).end(); ++it)
 	{
@@ -122,7 +123,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		cbxSizer->Add(tempbox);
 		ctrl_count++;
 	}
-	
+
 	ctrl_count = 0;
 	for ( optionMapStringIter it = (*optWrap->m_stringMaps[optFlag]).begin(); it != (*optWrap->m_stringMaps[optFlag]).end(); ++it)
 	{
@@ -140,13 +141,13 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		textSizer->Add(tempbox);
 		ctrl_count++;
 	}
-	
+
 	optFlagSizer->Add(chkSizer,0,wxALL,10);
 	optFlagSizer->Add(spinSizer,0,wxALL,10);
-	optFlagSizer->Add(cbxSizer,0,wxALL,10);	
+	optFlagSizer->Add(cbxSizer,0,wxALL,10);
 	optFlagSizer->Add(textSizer,0,wxALL,10);
-		
-		
+
+
 }
 
 void BattleroomMMOptionsTab::OnChkBoxChange(wxCommandEvent& event)
@@ -211,7 +212,7 @@ void BattleroomMMOptionsTab::OnTextCtrlChange(wxCommandEvent& event)
 				if(optWrap->setSingleOption( box->GetName(), box->GetValue() ) )
 				{
 			        if (m_battle.IsFounderMe())
-			          m_battle.SendHostInfo(HI_Options); 
+			          m_battle.SendHostInfo(HI_Options);
 			        //you can't set more than one option at once, can you?
 			        break;
 				}
@@ -235,7 +236,7 @@ void BattleroomMMOptionsTab::OnSpinCtrlChange(wxSpinEvent& event)
 				if(optWrap->setSingleOption( box->GetName(),wxString::Format( _T("%f"),box->GetValue() ) ))
 				{
 			        if (m_battle.IsFounderMe())
-			          m_battle.SendHostInfo(HI_Options); 
+			          m_battle.SendHostInfo(HI_Options);
 			        //you can't set more than one option at once, can you?
 			        break;
 				}
@@ -273,7 +274,7 @@ void BattleroomMMOptionsTab::UpdateOptControls(/* wxstringpairvec* list **/)
 			cur->SetValue(value);
 
 		}
-		
+
 		for(textCtrlVec::iterator it = m_textctrl_vec[g]->begin(); it != m_textctrl_vec[g]->end(); ++it)
 		{
 			wxTextCtrl* cur = (*it);
@@ -282,7 +283,7 @@ void BattleroomMMOptionsTab::UpdateOptControls(/* wxstringpairvec* list **/)
 			cur->SetValue(value);
 
 		}
-		
+
 		for(spinCtrlVec::iterator it = m_spinctrl_vec[g]->begin(); it != m_spinctrl_vec[g]->end(); ++it)
 		{
 			wxSpinCtrlDbl* cur = (*it);
