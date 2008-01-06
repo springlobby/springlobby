@@ -283,6 +283,7 @@ void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom 
   ASSERT_LOGIC( (allyno >= 0 || allyno < GetMaxPlayers() ), _T("Allyno out of bounds.") );
   BattleStartRect* sr;
   bool local;
+  if ( allyno >= m_rects.size() ) m_rects.push_back(0); // add new element is it exceeds the vector bounds
   if ( m_rects[allyno] == 0 ) {
     sr = new BattleStartRect();
     local = true;
@@ -305,6 +306,7 @@ void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom 
 
 void Battle::RemoveStartRect( int allyno )
 {
+  if ( allyno >= m_rects.size() ) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   sr->deleted = true;
@@ -313,6 +315,7 @@ void Battle::RemoveStartRect( int allyno )
 
 void Battle::UpdateStartRect( int allyno )
 {
+  if ( allyno >= m_rects.size() ) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   sr->updated = true;
@@ -321,6 +324,7 @@ void Battle::UpdateStartRect( int allyno )
 
 void Battle::StartRectRemoved( int allyno )
 {
+  if ( allyno >= m_rects.size() ) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   m_rects[allyno] = 0;
@@ -330,6 +334,7 @@ void Battle::StartRectRemoved( int allyno )
 
 void Battle::StartRectUpdated( int allyno )
 {
+  if ( allyno >= m_rects.size() ) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   sr->updated = false;
