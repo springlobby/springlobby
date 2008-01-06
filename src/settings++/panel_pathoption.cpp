@@ -30,13 +30,13 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 {
 	usync_loc_lbl = new wxStaticText (this, -1 , _T("Path to unitsync shared library"));
 	explanation_text = new wxStaticText (this, -1 , _T("There was a problem retrieving your settings.\n"
-														"Please check that the paths below are correct.\n"
-														"When you have corrected them, click\n"
-														"the \"Use these Paths\" button to try again."),
+														"Please check that the path below is correct.\n"
+														"When you have corrected it, click\n"
+														"the \"Use this Path\" button to try again."),
 														wxDefaultPosition,wxSize(450,-1));
 
 	
-	paths_ok_btn = new wxButton(this,ID_PATH_OK_BTN,_T("Use these paths"),wxDefaultPosition ,wxSize(-1,-1), wxBU_EXACTFIT);
+	paths_ok_btn = new wxButton(this,ID_PATH_OK_BTN,_T("Use this path"),wxDefaultPosition ,wxSize(-1,-1), wxBU_EXACTFIT);
 	usync_browse_btn = new wxButton(this, ID_PATH_USYNC_BTN, _T("Browse") );
 
 	
@@ -83,7 +83,10 @@ void PathOptionPanel::UsePaths(wxCommandEvent& event)
 	
 	if ( !(susynclib()->IsLoaded()) )
 	{
-		customMessageBox(SS_MAIN_ICON, _("SpringSettings is unable to load your unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
+		customMessageBox(SS_MAIN_ICON, _("SpringSettings is unable to load your unitsync library.\n"
+				"You might want to take another look at your unitsync setting.\n"
+				"Your Spring version has to be 0.76 or newer, otherwise \n"
+				"this will fail in any case."), _("Spring error"), wxOK );
 	}
 	else
 	{

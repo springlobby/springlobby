@@ -13,8 +13,9 @@
 #include "ui.h"
 #include "server.h"
 
+#define TOOLTIP_DELAY 1000
 
-BEGIN_EVENT_TABLE(BattleListCtrl, wxListCtrl)
+BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 
   EVT_LIST_ITEM_SELECTED   ( BLIST_LIST, BattleListCtrl::OnSelected )
   EVT_LIST_ITEM_DESELECTED ( BLIST_LIST, BattleListCtrl::OnDeselected )
@@ -23,14 +24,22 @@ BEGIN_EVENT_TABLE(BattleListCtrl, wxListCtrl)
   EVT_LIST_COL_CLICK       ( BLIST_LIST, BattleListCtrl::OnColClick )
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
   EVT_MENU                 ( BLIST_DLMOD, BattleListCtrl::OnDLMod )
+#ifndef __WXMSW__ //disables tooltips on win
+  EVT_MOTION(BattleListCtrl::OnMouseMotion)
+#endif
 
 END_EVENT_TABLE()
 
+#ifdef __WXMSW__
+	#define nonIcon ICON_EMPTY
+#else
+	#define nonIcon -1
+#endif
 
 Ui* BattleListCtrl::m_ui_for_sort = 0;
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
-  wxListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL ),
+  customListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT),
   m_selected(-1),
   m_ui(ui)
 {
@@ -39,50 +48,48 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
   SetImageList( &icons(), wxIMAGE_LIST_STATE );
 
+
   wxListItem col;
 
   col.SetText( _T("s") );
-  col.SetImage( -1 );
-  InsertColumn( 0, col );
+  col.SetImage( nonIcon );
+  InsertColumn( 0, col, _T("Status"), false );
 
   col.SetText( _T("c") );
-  col.SetImage( -1 );
-  InsertColumn( 1, col );
+  col.SetImage( nonIcon );
+  InsertColumn( 1, col, _T("Country"), false);
 
   col.SetText( _T("r") );
-  col.SetImage( -1 );
-  InsertColumn( 2, col );
+  col.SetImage(  nonIcon);
+  InsertColumn( 2, col, _T("Minimum rank to join"), false );
 
   col.SetText( _("Description") );
-  col.SetImage( ICON_DOWN );
-  InsertColumn( 3, col );
+  col.SetImage( nonIcon );
+  InsertColumn( 3, col, _T("Game description") );
 
   col.SetText( _("Map") );
-  col.SetImage( -1 );
-  InsertColumn( 4, col );
+  col.SetImage( nonIcon );
+  InsertColumn( 4, col, _T("Mapname") );
 
   col.SetText( _("Mod") );
-  col.SetImage( -1 );
-  InsertColumn( 5, col );
+  col.SetImage( nonIcon );
+  InsertColumn( 5, col, _T("Modname") );
 
   col.SetText( _("Host") );
-  col.SetImage( -1 );
-  InsertColumn( 6, col );
+  col.SetImage( nonIcon);
+  InsertColumn( 6, col, _T("Name of the Host") );
 
   col.SetText( _("s") );
-  col.SetImage( -1 );
-  InsertColumn( 7, col );
+  col.SetImage( nonIcon );
+  InsertColumn( 7, col, _T("Number of Spectators"), false );
 
   col.SetText( _("p") );
-  col.SetImage( -1 );
-  InsertColumn( 8, col );
+  col.SetImage( nonIcon );
+  InsertColumn( 8, col, _T("Number of Players joined"), false );
 
   col.SetText( _("m") );
-  col.SetImage( -1 );
-  InsertColumn( 9, col );
-
-
-
+  col.SetImage(  nonIcon);
+  InsertColumn( 9, col, _T("Maximum number of Players that can join"), false );
 
   m_sortorder[0].col = 0;
   m_sortorder[0].direction = true;
@@ -95,19 +102,27 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   Sort( );
 
 #ifdef __WXMSW__
-  SetColumnWidth( 0, 45 );
+  SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 7, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 8, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 9, wxLIST_AUTOSIZE_USEHEADER );
+
 #else
   SetColumnWidth( 0, 20 );
-#endif
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );
+
+  SetColumnWidth( 7, 28 ); // alittle more than before for dual digets
+  SetColumnWidth( 8, 28 );
+  SetColumnWidth( 9, 28 );
+#endif
+
   SetColumnWidth( 3, 170 );
   SetColumnWidth( 4, 140 );
   SetColumnWidth( 5, 130 );
   SetColumnWidth( 6, 110 );
-  SetColumnWidth( 7, 26 );
-  SetColumnWidth( 8, 26 );
-  SetColumnWidth( 9, 26 );
 
   m_popup = new wxMenu( _T("") );
   m_popup->Append( BLIST_DLMAP, _("Download &map") );
@@ -172,7 +187,7 @@ void BattleListCtrl::OnColClick( wxListEvent& event )
   if ( event.GetColumn() == -1 ) return;
   wxListItem col;
   GetColumn( m_sortorder[0].col, col );
-  col.SetImage( -1 );
+  col.SetImage( nonIcon );
   SetColumn( m_sortorder[0].col, col );
 
   int i;
@@ -184,7 +199,7 @@ void BattleListCtrl::OnColClick( wxListEvent& event )
 
 
   GetColumn( m_sortorder[0].col, col );
-  col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
+  //col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
   Sort();
@@ -563,5 +578,77 @@ int wxCALLBACK BattleListCtrl::CompareMaxPlayerDOWN(long item1, long item2, long
   return 0;
 }
 
+void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
+{
+	wxPoint position = event.GetPosition();
+
+	try{
+		tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+		int flag = wxLIST_HITTEST_ONITEM;
+		long *ptrSubItem = new long;
+#ifdef HAVE_WX28
+		long item_hit = HitTest(position, flag, ptrSubItem);
+#else
+		long item_hit = HitTest(position, flag);
+#endif
+
+		if (item_hit != wxNOT_FOUND)
+		{
+			long item = GetItemData(item_hit);
+			Ui* ui = m_ui_for_sort;
+			Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
+			int coloumn = getColoumnFromPosition(position);
+			switch (coloumn)
+			{
+			case 0: // status
+			m_tiptext = IconImageList::GetBattleStatus(battle);
+				break;
+			case 1: // country
+				m_tiptext = WX_STRING(battle.GetFounder().GetCountry());
+				break;
+			case 2: // rank_min
+				m_tiptext = WX_STRING(m_colinfovec[coloumn].first);
+				break;
+			case 3: // descrp
+				m_tiptext = WX_STRING(battle.GetDescription());
+				break;
+			case 4: //map
+				m_tiptext = RefineMapname(WX_STRING(battle.GetMapName()));
+				break;
+			case 5: //mod
+				m_tiptext = RefineModname(WX_STRING(battle.GetModName()));
+				break;
+			case 6: // host
+				m_tiptext = WX_STRING(battle.GetFounder().GetNick());
+				break;
+			case 7: // specs
+				m_tiptext = _T("Spectators:\n");
+				for (unsigned int i = battle.GetNumUsers()-1; i > battle.GetNumUsers() - battle.GetSpectators()-1;--i)
+				{
+					if (i < battle.GetNumUsers()-1)
+						m_tiptext << _T("\n");
+					m_tiptext << WX_STRING(battle.GetUser(i).GetNick()) ;
+				}
+				break;
+			case 8: // player
+				m_tiptext = _T("Active Players:\n");
+				for (unsigned int i = 0; i < battle.GetNumUsers()-battle.GetSpectators();++i)
+				{
+					if ( i> 0)
+						m_tiptext << _T("\n");
+					m_tiptext << WX_STRING(battle.GetUser(i).GetNick());
+				}
+				break;
+			case 9: //may player
+				m_tiptext = (m_colinfovec[coloumn].first);
+				break;
+
+			default: m_tiptext = _T("");
+				break;
+			}
+		}
+	}
+	catch(...){}
+}
 
 

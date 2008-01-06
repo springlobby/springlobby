@@ -13,6 +13,7 @@
 #include <wx/file.h>
 #include "../nonportable.h"
 #include "presets.h" 
+#include "custom_dialogs.h"
 //#include <string>
 
 
@@ -75,7 +76,8 @@ wxString se_settings::getUsyncLoc()
 {
 	wxString def;
 	def = AutoFindUnitSyncLib(def);
-	return (se_config->Read( _T("/Spring/unitsync_loc"), def ));
+	def = (se_config->Read( _T("/Spring/unitsync_loc"), def ));
+	return def;
 }
 
 void se_settings::setUsyncLoc(wxString loc)
@@ -87,6 +89,7 @@ wxString se_settings::getSpringDir()
 {
 	wxString def;
 	def= AutoFindSpringDir(def); 
+	
 	se_config->Read( _T("/Spring/dir"), def );
 	return def;
 }
@@ -139,7 +142,7 @@ wxString se_settings::AutoFindSpringDir( const wxString& def )
 
   pl.Add( wxFileName::GetCwd() );
 #ifdef HAVE_WX28
-  pl.Add( sp.GetExecutablePath() );
+  pl.Add( sp.GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) );
 #endif
   pl.Add( wxFileName::GetHomeDir() );
 #ifdef __WXMSW__
@@ -176,9 +179,15 @@ wxString se_settings::AutoFindUnitSyncLib( const wxString& def )
   wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
 #ifdef __WXMSW__
-  wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
+	#ifdef HAVE_WX28
+	  pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+	#endif
+  wxRegKey* programreg = new wxRegKey( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Spring") );
   wxString tmp;
-  if ( programreg.QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
+  if ( programreg->QueryValue( _T("DisplayIcon"), tmp ) ) pl.Add( tmp.BeforeLast( wxFileName::GetPathSeparator() ) ); 
+    
+   programreg = new wxRegKey( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
+if ( programreg->QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
 
   pl.Add( wxGetOSDirectory() );
   pl.Add( _T("C:\\Program") );
@@ -197,15 +206,10 @@ wxString se_settings::AutoFindUnitSyncLib( const wxString& def )
   //pl.Add( m_dir_edit->GetValue() );
   pl.Add( wxFileName::GetCwd() );
 
-#ifdef HAVE_WX28
-  pl.Add( sp.GetExecutablePath() );
-#endif
+
 
   pl.Add( wxFileName::GetCwd() );
 
-#ifdef HAVE_WX28
-  pl.Add( sp.GetExecutablePath() );
-#endif
 
   pl.Add( wxFileName::GetHomeDir() );
   pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );

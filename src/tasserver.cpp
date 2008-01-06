@@ -195,7 +195,7 @@ bool TASServer::IsConnected()
 }
 
 
-bool TASServer::Register( const std::string& addr, const int port, const std::string& nick, const std::string& password )
+bool TASServer::Register( const std::string& addr, const int port, const std::string& nick, const std::string& password, wxString* reason )
 {
   wxLogDebugFunc( _T("") );
 
@@ -216,7 +216,11 @@ bool TASServer::Register( const std::string& addr, const int port, const std::st
   data = "";
 
   m_sock->Receive( data );
-  if ( data != "REGISTRATIONACCEPTED\n") return false;
+  if ( data != "REGISTRATIONACCEPTED\n")
+  {
+	  *reason = WX_STRING(data.substr(19,data.size()));
+	  return false;
+  }
 
   return true;
 }
@@ -399,7 +403,8 @@ void TASServer::ExecuteCommand( const std::string& in )
 
 void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
-  wxLogDebugFunc( /* _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams) */ );
+	//TODO use or not?
+ // wxLogDebugFunc( /* _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams) */ );
 
   std::string params = inparams;
   int pos, cpu, id, nat, port, maxplayers, rank, specs, metal = 0, energy = 0, units, start = 0,
@@ -1124,9 +1129,9 @@ void TASServer::SendHostInfo( HostInfo update )
 
   if ( update & HI_StartRects ) { // Startrects should be updated.
 
-    for ( std::vector<BattleStartRect*>::size_type i = 10; i < battle.GetNumRects(); i++ ) battle.RemoveStartRect( i ); /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >10 start boxes)
+    for ( std::vector<BattleStartRect*>::size_type i = 16; i < battle.GetNumRects(); i++ ) battle.RemoveStartRect( i ); /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
     for ( std::vector<BattleStartRect*>::size_type i = 0; i < battle.GetNumRects(); i++ ) { // Loop through all, and remove updated or deleted.
-      if ( i >= 10 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >10 start boxes)
+      if ( i >= 16 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
       wxString cmd;
       BattleStartRect* sr = battle.GetStartRect( i );
       if ( sr == 0 ) continue;
@@ -1142,7 +1147,7 @@ void TASServer::SendHostInfo( HostInfo update )
     }
 
     for ( std::vector<BattleStartRect*>::size_type i = 0; i < battle.GetNumRects(); i++ ) { // Loop through all, and update.
-      if ( i >= 10 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >10 start boxes)
+      if ( i >= 16 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
       wxString cmd;
       BattleStartRect* sr = battle.GetStartRect( i );
       if ( sr == 0 ) continue;
@@ -1509,7 +1514,6 @@ UserStatus ConvTasclientstatus( TASClientstatus tas )
   stat.in_game = tas.in_game;
   stat.away = tas.away;
   stat.rank = (tas.rank + 1) * 100;
-  if ( stat.rank > RANK_4 ) stat.rank = RANK_4;
   stat.moderator = tas.moderator;
   stat.bot = tas.bot;
   return stat;

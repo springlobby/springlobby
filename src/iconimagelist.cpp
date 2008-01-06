@@ -68,6 +68,8 @@
 
 #include "flagimages.h"
 
+#include "images/empty.xpm"
+
 IconImageList::IconImageList() : wxImageList(16,16)
 {
 
@@ -131,6 +133,7 @@ IconImageList::IconImageList() : wxImageList(16,16)
 
   AddFlagImages( *this );
 
+  Add( wxBitmap(empty_xpm) );
 }
 
 
@@ -218,6 +221,20 @@ int IconImageList::GetBattleStatusIcon( Battle& battle )
   }
 
   return ICON_GAME_UNKNOWN;
+}
+
+wxString IconImageList::GetBattleStatus( Battle& battle )
+{
+  if ( battle.GetInGame() ) return _T("Game has already started");
+  if ( !battle.IsLocked() ) {
+    if ( !battle.IsPassworded() ) return _T("Game is open for players");
+    else return _T("You need a password to join");
+  } else {
+    if ( !battle.IsPassworded() ) return _T("Game is closed");
+    else return _T("Game is closed (and passworded)");
+  }
+
+  return _T("Game has unknown status");
 }
 
 

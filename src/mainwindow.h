@@ -19,6 +19,8 @@ class wxImageList;
 class ChatPanel;
 class settings_frame;
 class wxMenuItem;
+class wxMenuBar;
+class wxMenu;
 
 // FIXME shouldn't copy this here
 typedef wxWindow wxNotebookPage;
@@ -72,6 +74,8 @@ class MainWindow : public wxFrame
     Ui& m_ui;
 
     wxMenuItem* m_settings_menu;
+    wxMenuBar* m_menubar;
+    wxMenu* m_menuTools;
 
     wxBoxSizer* m_main_sizer;
     wxListbook* m_func_tabs;

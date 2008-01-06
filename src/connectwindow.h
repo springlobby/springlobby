@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H
 #define SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H
 
-#include <wx/frame.h>
+#include <wx/dialog.h>
 
 class wxPanel;
 class wxComboBox;
@@ -15,7 +15,7 @@ class wxStaticLine;
 class Ui;
 
 //! @brief wxFrame with a connection dialog used to specify username, password, and server. It can also register a new acount.
-class ConnectWindow : public wxFrame
+class ConnectWindow : public wxDialog
 {
   public:
     ConnectWindow( wxWindow* parent, Ui& ui );

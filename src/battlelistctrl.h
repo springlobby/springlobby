@@ -1,13 +1,10 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLELISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLELISTCTRL_H
 
-#include <wx/listctrl.h>
-#include <wx/string.h>
-#include <wx/sizer.h>
-#include <wx/textctrl.h>
-
 #include "battlelistfilter.h"
 #include "battlelist.h"
+
+#include "customlistctrl.h"
 
 class wxMenu;
 class Battle;
@@ -16,7 +13,7 @@ class wxCommandEvent;
 class Ui;
 
 
-class BattleListCtrl : public wxListCtrl
+class BattleListCtrl : public customListCtrl
 {
   public:
     BattleListCtrl( wxWindow* parent, Ui& ui );
@@ -25,13 +22,13 @@ class BattleListCtrl : public wxListCtrl
 
     int GetSelectedIndex();
     void Sort();
-
+    
     void OnSelected( wxListEvent& event );
     void OnDeselected( wxListEvent& event );
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );
-
+    void OnMouseMotion(wxMouseEvent& event);
     void OnColClick( wxListEvent& event );
   protected:
     static int wxCALLBACK CompareStatusUP(long item1, long item2, long sortData);
