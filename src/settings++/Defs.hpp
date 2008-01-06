@@ -289,10 +289,10 @@ const Control UI_CBOX[16] = {
 
 const Control MO_SLI[5] = {
 	{_T("Overhead camera"),    wxT("OverheadScrollSpeed"),    ID_MO_SLI_0,	"10", {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("Rotatable overhead camera"), wxT("RotOverheadScrollSpeed"), ID_MO_SLI_1,	"5" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("Total war camera"),          wxT("TWScrollSpeed"),          ID_MO_SLI_2,	"5" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("First person camera"),         wxT("FPSScrollSpeed"),         ID_MO_SLI_3,	"5" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("Free camera"),          wxT("CamFreeScrollSpeed"),     ID_MO_SLI_4,	"5" , {_T("set the scroll speed (mouse + keyboard) for this mode")}}
+	{_T("Rotatable overhead camera"), wxT("RotOverheadScrollSpeed"), ID_MO_SLI_1,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("Total war camera"),          wxT("TWScrollSpeed"),          ID_MO_SLI_2,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("First person camera"),         wxT("FPSScrollSpeed"),         ID_MO_SLI_3,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("Free camera"),          wxT("CamFreeScrollSpeed"),     ID_MO_SLI_4,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}}
 };
 
 const Control MO_SLI_EXT[5] = {
