@@ -50,8 +50,8 @@ BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
 
   EVT_RADIOBOX( BOPTS_END, BattleOptionsTab::OnEndSelect )
   EVT_CHECKLISTBOX( BOPTS_OPTS, BattleOptionsTab::OnOptsCheck )
-  EVT_COMMAND_SCROLL_THUMBRELEASE( BOPTS_SLIDE, BattleOptionsTab::OnSlideChanged )
-  EVT_COMMAND_SCROLL_CHANGED( BOPTS_SLIDE, BattleOptionsTab::OnSlideChanged )
+  EVT_COMMAND_SCROLL_THUMBRELEASE( wxID_ANY, BattleOptionsTab::OnSlideChanged )
+  EVT_COMMAND_SCROLL_CHANGED( wxID_ANY, BattleOptionsTab::OnSlideChanged )
 
   EVT_BUTTON( BOPTS_RESTRICT, BattleOptionsTab::OnRestrict )
   EVT_BUTTON( BOPTS_ALLOW, BattleOptionsTab::OnAllow )

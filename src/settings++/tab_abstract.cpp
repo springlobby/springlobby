@@ -86,8 +86,9 @@ const Control allControls[allControls_size] = {
 };
 
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
-                : wxPanel(parent, id, pos, size, style|wxTAB_TRAVERSAL,title) {
+                : wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title) {
 //	abstract_panel::expertModeEnadbled = false;
+	SetScrollbars( 10, 10, 62, 62 );
 }
 
 abstract_panel::~abstract_panel(void) {
@@ -236,11 +237,26 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 
 		case ID_DO_SLI_0: { (intSettings)[DO_SLI[0].key]= value; } break;
 
-		case ID_MO_SLI_0: { (intSettings)[MO_SLI[0].key]= value; } break;
-        case ID_MO_SLI_1: { (intSettings)[MO_SLI[1].key]= value; } break;
-        case ID_MO_SLI_2: { (intSettings)[MO_SLI[2].key]= value; } break;
-        case ID_MO_SLI_3: { (intSettings)[MO_SLI[3].key]= value; } break;
-        case ID_MO_SLI_4: { (intSettings)[MO_SLI[4].key]= value; } break;
+		case ID_MO_SLI_0: { 
+			(intSettings)[MO_SLI[0].key]= value; 
+			(intSettings)[MO_SLI_EXT[0].key]= ( value > 0 ? 1 : 0);
+			} break;
+        case ID_MO_SLI_1:  { 
+			(intSettings)[MO_SLI[1].key]= value; 
+			(intSettings)[MO_SLI_EXT[1].key]= ( value > 0 ? 1 : 0);
+			} break;
+        case ID_MO_SLI_2:  { 
+			(intSettings)[MO_SLI[2].key]= value; 
+			(intSettings)[MO_SLI_EXT[2].key]= ( value > 0 ? 1 : 0);
+			} break;
+        case ID_MO_SLI_3:  { 
+			(intSettings)[MO_SLI[3].key]= value; 
+			(intSettings)[MO_SLI_EXT[3].key]= ( value > 0 ? 1 : 0);
+			} break;
+        case ID_MO_SLI_4:  { 
+			(intSettings)[MO_SLI[4].key]= value; 
+			(intSettings)[MO_SLI_EXT[4].key]= ( value > 0 ? 1 : 0);
+			} break;
 
 	}
 }

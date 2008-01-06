@@ -25,7 +25,8 @@
 
 
 //#include <wx/frame.h>
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
+
 #include <map>
 class wxString;
 class wxCommandEvent;
@@ -41,7 +42,7 @@ typedef std::map<wxString,int> intMap;
 typedef std::map<wxString,wxString> stringMap;
 typedef std::map<wxString,float> floatMap;
 
-class abstract_panel : public wxPanel
+class abstract_panel : public wxScrolledWindow
 {
 
 	public:
