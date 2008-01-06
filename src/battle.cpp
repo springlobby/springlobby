@@ -22,7 +22,7 @@ Battle::Battle( Server& serv, Ui& ui, int id ) :
   m_ui(ui),
   m_ingame(false),
   m_order(0),
-  m_rects(m_opts.maxplayers, static_cast<BattleStartRect*>(0)),
+  m_rects(16, static_cast<BattleStartRect*>(0)),
   m_bot_seek(m_bots.end()),
   m_bot_pos(BOT_SEEKPOS_INVALID)
 {
@@ -340,6 +340,7 @@ void Battle::StartRectUpdated( int allyno )
 BattleStartRect* Battle::GetStartRect( int allyno )
 {
   ASSERT_LOGIC( (allyno >= 0 || allyno < GetMaxPlayers() ), _T("Allyno out of bounds.") );
+  if ( allyno >= m_rects.size() ) return 0;
   return m_rects[allyno];
 }
 
