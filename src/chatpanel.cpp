@@ -616,7 +616,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
     pos = refined.Find( _T("\\n") );
   }
   */
-  OutputLine( _T(" ** Channel topic: ")+ message + _("\n * Set by ") + who, sett().GetChatColorServer() );
+  OutputLine( _T(" ** Channel topic: ")+ refined + _("\n * Set by ") + who, sett().GetChatColorServer() );
 }
 
 
