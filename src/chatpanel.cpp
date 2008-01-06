@@ -464,7 +464,10 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col )
   if ( m_channel != 0 && m_ui.GetActiveChatPanel() != this )
     for ( int i=0; i < m_chat_tabs->GetPageCount( ); ++i )
       if ( m_chat_tabs->GetPage( i ) == this )
-        m_chat_tabs->SetPageImage( i, 2 );
+      {
+        if ( m_type == CPT_Channel ) m_chat_tabs->SetPageImage( i, 4 );
+        if ( m_type == CPT_User ) m_chat_tabs->SetPageImage( i, 5 );
+      }
 
   if ( m_chat_log ) m_chat_log->AddMessage(message);
   CheckLength();

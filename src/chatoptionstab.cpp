@@ -441,6 +441,8 @@ void ChatOptionsTab::OnApply( wxCommandEvent& event )
   sett().SetChatColorError( m_error_color->GetBackgroundColour() );
   sett().SetChatColorTime( m_ts_color->GetBackgroundColour() );
   sett().SetChatFont( m_chat_font );
+  //m_ui.mw().GetChatTab().ChangeUnreadChannelColour( m_note_color->GetBackgroundColour() );
+  //m_ui.mw().GetChatTab().ChangeUnreadPMColour( m_note_color->GetBackgroundColour() );
 }
 
 
