@@ -3,10 +3,8 @@
 // Class: Ui
 //
 
-#include <wx/msgdlg.h>
 #include <wx/textdlg.h>
 #include <stdexcept>
-#include <wx/msgdlg.h>
 #include <wx/thread.h>
 #include <wx/intl.h>
 #include <wx/utils.h>
@@ -32,15 +30,17 @@
 #include "agreementdialog.h"
 #include "unitsyncthread.h"
 
+#include "settings++/custom_dialogs.h"
 
 Ui::Ui() :
   m_serv(0),
   m_main_win(0),
   m_con_win(0)
 {
-  ReloadUnitSync();
+   ReloadUnitSync();
 
   m_main_win = new MainWindow( *this );
+  CustomMessageBox::setLobbypointer(m_main_win);
   m_spring = new Spring(*this);
   m_thread = new UnitSyncThread( *this );
   m_thread->Init();
@@ -48,6 +48,7 @@ Ui::Ui() :
 
 Ui::~Ui() {
   Disconnect();
+
   delete m_main_win;
   delete m_spring;
   m_thread->Delete();
@@ -191,7 +192,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 }
 
 
-bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password )
+bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password,wxString* reason)
 {
   std::string host;
   int port;
@@ -209,7 +210,7 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
   host = sett().GetServerHost( STD_STRING(servername) );
   port = sett().GetServerPort( STD_STRING(servername) );
 
-  return serv->Register( host, port, STD_STRING(username), STD_STRING(password) );
+  return serv->Register( host, port, STD_STRING(username), STD_STRING(password),reason );
 
 }
 
@@ -253,6 +254,7 @@ void Ui::Quit()
 {
   ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   sett().SaveSettings();
+  m_main_win->forceSettingsFrameClose();
   m_main_win->Close();
 }
 
@@ -311,8 +313,8 @@ void Ui::OpenWebBrowser( const wxString& url )
   {
       if ( !wxLaunchDefaultBrowser( url ) )
       {
-        wxLogWarning( _T("can't't launch default browser") );
-        wxMessageBox( _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+        wxLogWarning( _T("can't launch default browser") );
+        customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
       }
   }
   else
@@ -320,7 +322,7 @@ void Ui::OpenWebBrowser( const wxString& url )
     if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
     {
       wxLogWarning( _T("can't launch browser: ") + sett().GetWebBrowserPath() );
-      wxMessageBox( _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
+      customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
     }
 
   }
@@ -387,12 +389,16 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
       return true;
     }
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/ingame") ) {
-    if ( cmd.AfterFirst(' ') != wxEmptyString ) return false;
-    m_serv->RequestInGameTime( m_serv->GetMe().GetNick() );
+    m_serv->RequestInGameTime( "" );
     return true;
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/help") ) {
     wxString topic = cmd.AfterFirst(' ');
     ConsoleHelp( topic.Lower() );
+    return true;
+  } else if ( cmd.BeforeFirst(' ').Lower() == _T("/msg") ) {
+    wxString user = cmd.AfterFirst(' ').BeforeFirst(' ');
+    wxString msg = cmd.AfterFirst(' ').AfterFirst(' ');
+    m_serv->SayPrivate( STD_STRING( user ), STD_STRING( msg ) );
     return true;
   }
   return false;
@@ -459,21 +465,18 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 {
   wxLogDebugFunc( _T("") );
 
-
   if ( !IsSpringCompatible () ){
     if ( m_spring->TestSpringBinary() ) {
-      try {
-        wxString message = _("Your spring version");
-        message += _T(" (") + WX_STRING( usync()->GetSpringVersion() ) + _T(") ");
-        message +=  _("is not supported by the lobby server that requires version");
-        message += _T(" (") +  WX_STRING( m_server_spring_ver ) + _T(").\n\n");
-        message += _("Online play will be disabled.");
-        wxLogWarning ( _T("server not supports current spring version") );
-        wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
-      } catch (...) {}
+      wxString message = _("Your spring version");
+      message += _T(" (") + WX_STRING( usync()->GetSpringVersion() ) + _T(") ");
+      message +=  _("is not supported by the lobby server that requires version");
+      message += _T(" (") +  WX_STRING( m_serv->GetRequiredSpring() ) + _T(").\n\n");
+      message += _("Online play will be disabled.");
+      wxLogWarning ( _T("server not supports current spring version") );
+      customMessageBox (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
     } else {
       wxLogWarning( _T("can't get spring version from unitsync") );
-      wxMessageBox( _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
+      customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     }
   }
   server.uidata.panel->StatusMessage( _T("Connected to ") + WX_STRING(server_name) + _T(".") );
@@ -484,13 +487,10 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
 
 bool Ui::IsSpringCompatible( )
 {
-  try {
-    if ( !m_spring->TestSpringBinary() ) return false;
-    if ( m_server_spring_ver == "*" ) return true; // Server accepts any version.
-    if ( (usync()->GetSpringVersion() == m_server_spring_ver ) && ( m_server_spring_ver != "" ) ) return true;
-    else return false;
-  } catch (...) {}
-  return false;
+  if ( !m_spring->TestSpringBinary() ) return false;
+  if ( m_serv->GetRequiredSpring() == "*" ) return true; // Server accepts any version.
+  if ( (usync()->GetSpringVersion() == m_serv->GetRequiredSpring() ) && ( m_serv->GetRequiredSpring() != "" ) ) return true;
+  else return false;
 }
 
 
@@ -585,6 +585,17 @@ void Ui::OnUserJoinedChannel( Channel& chan, User& user )
     return;
   }
   chan.uidata.panel->Joined( user );
+}
+
+
+void Ui::OnChannelJoin( Channel& chan, User& user )
+{
+  //wxLogDebugFunc( _T("") );
+  if ( chan.uidata.panel == 0 ) {
+    wxLogError( _T("ud->panel NULL") );
+    return;
+  }
+  chan.uidata.panel->OnChannelJoin( user );
 }
 
 
@@ -767,16 +778,14 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
 void Ui::OnJoinedBattle( Battle& battle )
 {
   mw().GetJoinTab().JoinBattle( battle );
-  /*if ( !Spring::TestSpringBinary() ) {
-<<<<<<< HEAD:src/ui.cpp
-    wxLogWarning( _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online.") );
-=======
-    wxMessageBox( _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
->>>>>>> 6abeaad... experimental replace of wxMessageBox with wxLogWarning and wxLogMessage:src/ui.cpp
-  }*/
+  if ( !Spring::TestSpringBinary() ) {
+    customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
+  }
   if ( battle.GetNatType() != NAT_None ) {
     wxLogWarning( _T("joining game with NAT transversal") );
-    wxMessageBox( _("This game uses NAT traversal that is not yet supported\nby SpringLobby.\n\nYou will not be able to play in this battle."), _("NAT traversal"), wxOK );
+#if(!NAT_TRAVERSAL_SUPPORT)
+    customMessageBox(SL_MAIN_ICON, _("This game uses NAT traversal that is not supported by wx 2.6 build of springlobby. \n\nYou will not be able to play in this battle. \nUpdate your wxwidgets to 2.8 or newer to enable NAT traversal support."), _("NAT traversal"), wxOK );
+#endif
   }
 }
 
@@ -957,4 +966,9 @@ void Ui::OnCachedThreadStarted()
 void Ui::OnCachedThreadTerminated()
 {
   m_thread_wait.Leave();
+}
+
+void Ui::OnMainWindowDestruct()
+{
+	m_main_win = 0;
 }

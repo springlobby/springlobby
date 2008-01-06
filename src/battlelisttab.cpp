@@ -1,7 +1,6 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 #include <wx/stattext.h>
 #include <wx/statline.h>
 #include <wx/textdlg.h>
@@ -28,6 +27,11 @@
 #include "battlelistfilter.h"
 #include "iconimagelist.h"
 
+#include "settings++/custom_dialogs.h"
+//#include "images/springlobby.xpm"
+//#include <wx/icon.h>
+
+#define BATTLELIST_COLOUMNCOUNT 10
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 
@@ -45,7 +49,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxPanel( parent, -1 ),
   m_ui(ui),
   m_sel_battle(0)
-{
+{	
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -116,6 +120,9 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
 	m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
   m_buttons_sizer->Add( m_filter_activ, 1, wxALL|wxEXPAND, 5 );
+  #ifdef HAVE_WX26
+  m_filter_activ->Disable();
+  #endif
 
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
@@ -290,18 +297,18 @@ void BattleListTab::OnHost( wxCommandEvent& event )
 {
   if ( !m_ui.IsConnected() ) {
     wxLogWarning( _T("Trying to host while offline") );
-    wxMessageBox( _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK );
+    customMessageBox(SL_MAIN_ICON, _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK );
     m_ui.ShowConnectWindow();
     return;
   }
   if ( !m_ui.IsSpringCompatible() ){
     wxLogWarning(_T("Hosting is disabled due to the incompatible version ") );
-    wxMessageBox(_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION);
+    customMessageBox(SL_MAIN_ICON,_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION|wxOK);
     return;
   }
   if ( m_ui.IsSpringRunning() ) {
     wxLogWarning(_T("trying to host while spring is running") );
-    wxMessageBox(_("You already are running a Spring instance, close it first in order to be able to host a new game"), _("Spring error"), wxICON_EXCLAMATION );
+    customMessageBox(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to host a new game"), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     return;
   }
   Battle* battle = m_ui.mw().GetJoinTab().GetCurrentBattle();
@@ -328,24 +335,25 @@ void BattleListTab::OnHost( wxCommandEvent& event )
       bo.modname = mod.name;
     } catch ( ... ) {
       wxLogWarning( _T("can't host: mod not found") );
-      wxMessageBox( _("Battle not started beacuse the mod you selected could not be found. "), _("Error starting battle."), wxOK );
+      customMessageBox( SL_MAIN_ICON,_("Battle not started beacuse the mod you selected could not be found. "), _("Error starting battle."), wxOK );
       return;
     }
 
     UnitSyncMap map;
     std::string mname = sett().GetLastHostMap();
     try {
-      if ( mname != "" ) map = usync()->GetMap( mname );
+      if ( usync()->MapExists(mname) ) 
+    	  map = usync()->GetMap( mname );
       else if ( usync()->GetNumMaps() <= 0 ) {
         wxLogWarning( _T("no maps found") );
-        wxMessageBox( _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
+        customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
         return;
       } else {
         map = usync()->GetMap( 0 );
       }
     } catch ( ... ) {
       wxLogWarning( _T("no maps found") );
-      wxMessageBox( _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
+      customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
       return;
     }
     bo.maphash = map.hash;
@@ -419,7 +427,7 @@ void BattleListTab::DoJoin( Battle& battle )
 {
   if ( !m_ui.IsSpringCompatible() ){
     wxLogWarning(_T("trying to join battles with imcompatible spring version") );
-    wxMessageBox(_("Joining battles is disabled due to the incompatible spring version you're using."), _("Spring error"), wxICON_EXCLAMATION);
+    customMessageBox(SL_MAIN_ICON,_("Joining battles is disabled due to the incompatible spring version you're using."), _("Spring error"), wxICON_EXCLAMATION|wxOK);
     return;
   }
 
@@ -435,12 +443,12 @@ void BattleListTab::DoJoin( Battle& battle )
 
   if ( m_ui.IsSpringRunning() ) {
     wxLogWarning(_T("trying to join a battle while spring is running") );
-    wxMessageBox(_("You already are running a Spring instance, close it first in order to be able to join another battle."), _("Spring error"), wxICON_EXCLAMATION );
+    customMessageBox(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to join another battle."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     return;
   }
 
   if ( !battle.ModExists() ) {
-    if (wxMessageBox( _("You need to download the mod before you can join this game.\n\nDo you want me to take you to the download page?"), _("Mod not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+    if (customMessageBox( SL_MAIN_ICON,_("You need to download the mod before you can join this game.\n\nDo you want me to take you to the download page?"), _("Mod not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString mod = battle.GetModName();
       m_ui.DownloadMod ( mod );
     }
@@ -448,7 +456,7 @@ void BattleListTab::DoJoin( Battle& battle )
   }
 
   if ( !battle.MapExists() ) {
-    if (wxMessageBox( _("You need to download the map to be able to play in this game.\n\nDo you want me to take you to the download page?"), _("Map not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+    if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to play in this game.\n\nDo you want me to take you to the download page?"), _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString map = battle.GetMapName();
       m_ui.DownloadMap ( map );
     }

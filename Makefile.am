@@ -23,9 +23,13 @@ dist_doc_DATA = \
 	THANKS
 
 bin_PROGRAMS = \
-	springlobby
+	springlobby \
+	springsettings
 
 springlobby_LDADD = \
+	$(WX_LIBS)
+
+springsettings_LDADD = \
 	$(WX_LIBS)
 
 if USE_WINDRES
@@ -39,7 +43,8 @@ endif
 # and we can not use -Werror in AM_INIT_AUTOMAKE because of this either
 # but without this construct we would have a circular dependency and make
 # would whine about it on every invocation
-revision.cpp: src/revision.cpp.in $(filter-out revision.%, $(springlobby_OBJECTS)) $(springlobby_DEPENDENCIES)
+
+revision.cpp: src/revision.cpp.in $(filter-out revision.%, $(springlobby_SOURCES)) $(springlobby_DEPENDENCIES)
 	rm -f $@
 	sed "s/REV[^\"]*/REV SVN `LC_ALL=C $(SVNVERSION) $(top_srcdir) /trunk || echo svnversion failed or not found`/" < $< > $@
 
@@ -111,6 +116,8 @@ springlobby_SOURCES = \
 	src/channel.h \
 	src/channellist.cpp \
 	src/channellist.h \
+	src/chatoptionstab.cpp \
+	src/chatoptionstab.h \
 	src/chatpanel.cpp \
 	src/chatpanel.h \
 	src/connectwindow.cpp \
@@ -210,8 +217,8 @@ springlobby_SOURCES = \
 	src/images/rank2.xpm \
 	src/images/rank3.xpm \
 	src/images/rank4.xpm \
-        src/images/rank5.xpm \
-        src/images/rank6.xpm \
+	src/images/rank5.xpm \
+	src/images/rank6.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
 	src/images/singleplayer_icon.xpm \
@@ -465,10 +472,103 @@ springlobby_SOURCES = \
 	src/images/flags/YT.xpm \
 	src/images/flags/ZA.xpm \
 	src/images/flags/ZM.xpm \
-	src/images/flags/ZW.xpm
+	src/images/flags/ZW.xpm \
+	src/images/empty.xpm \
+	src/customlistctrl.h \
+	src/customlistctrl.cpp 
+
+
+# TODO keep only a single list instead of duplicating the lists below
+# note, integrated has everything but main.cpp
+springlobby_SOURCES += \
+	src/settings++/se_utils.h \
+	src/settings++/se_utils.cpp \
+	src/settings++/frame.cpp \
+	src/settings++/main.h \
+	src/settings++/tab_ui.cpp \
+	src/settings++/tab_render_detail.cpp \
+	src/settings++/tab_quality_video.h \
+	src/settings++/frame.h \
+	src/settings++/tab_audio.h \
+	src/settings++/se_settings.h \
+	src/settings++/tab_debug.cpp \
+	src/settings++/tab_debug.h \
+	src/settings++/se_settings.cpp \
+	src/settings++/tab_audio.cpp \
+	src/settings++/presets.h \
+	src/settings++/presets.cpp \
+	src/settings++/tab_abstract.cpp \
+	src/settings++/Defs.hpp \
+	src/settings++/tab_simple.cpp \
+	src/settings++/tab_quality_video.cpp \
+	src/settings++/tab_ui.h \
+	src/settings++/tab_simple.h \
+	src/images/springsettings.xpm \
+	src/settings++/tab_render_detail.h \
+	src/settings++/tab_abstract.h \
+	src/settings++/panel_pathoption.h \
+	src/settings++/panel_pathoption.cpp \
+	src/settings++/custom_dialogs.h \
+	src/settings++/custom_dialogs.cpp \
+	src/settings++/helpmenufunctions.h \
+	src/settings++/helpmenufunctions.cpp 
 
 if USE_WINDRES
-springlobby_SOURCES += \
-	src/springlobby.rc
+	springlobby_SOURCES += \
+		src/springlobby.rc
+endif
+
+
+springsettings_SOURCES = \
+	revision.cpp \
+	src/revision.cpp.in \
+	src/revision.h \
+	src/base64.cpp \
+	src/base64.h \
+	src/utils.cpp \
+	src/utils.h \
+	src/stacktrace.cpp \
+	src/stacktrace.h \
+	src/boost/md5.cpp \
+	src/boost/md5.hpp \
+	src/springunitsynclib.cpp \
+	src/springunitsynclib.h \
+	src/settings++/se_utils.cpp \
+	src/settings++/se_utils.h \
+	src/settings++/frame.cpp \
+	src/settings++/main.h \
+	src/settings++/tab_ui.cpp \
+	src/settings++/tab_render_detail.cpp \
+	src/settings++/tab_quality_video.h \
+	src/settings++/frame.h \
+	src/settings++/tab_audio.h \
+	src/settings++/se_settings.h \
+	src/settings++/tab_debug.cpp \
+	src/settings++/tab_debug.h \
+	src/settings++/se_settings.cpp \
+	src/settings++/tab_audio.cpp \
+	src/settings++/presets.h \
+	src/settings++/presets.cpp \
+	src/settings++/tab_abstract.cpp \
+	src/settings++/Main.cpp \
+	src/settings++/Defs.hpp \
+	src/settings++/tab_simple.cpp \
+	src/settings++/tab_quality_video.cpp \
+	src/settings++/tab_ui.h \
+	src/settings++/tab_simple.h \
+	src/images/springsettings.xpm \
+	src/settings++/tab_render_detail.h \
+	src/settings++/tab_abstract.h \
+	src/settings++/panel_pathoption.h \
+	src/settings++/panel_pathoption.cpp	\
+	src/settings++/custom_dialogs.h \
+	src/settings++/custom_dialogs.cpp \
+	src/settings++/helpmenufunctions.h \
+	src/settings++/helpmenufunctions.cpp 
+
+
+if USE_WINDRES
+	springsettings_SOURCES += \
+		src/springlobby.rc
 endif
 

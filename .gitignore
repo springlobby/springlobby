@@ -5,7 +5,12 @@ autotools-aux
 build-*
 config.h.in
 configure
+doc
 bin
 obj
 springlobby.layout
 springlobby.depend
+*~
+.cproject
+.project
+unitsync.log

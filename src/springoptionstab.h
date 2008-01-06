@@ -13,7 +13,6 @@ class wxTextCtrl;
 class wxBoxSizer;
 class Ui;
 
-
 class SpringOptionsTab : public wxPanel
 {
   public:
@@ -111,8 +110,7 @@ class SpringOptionsTab : public wxPanel
     wxStaticBox* m_chatlog_box;
     wxStaticBoxSizer* m_chatlog_box_sizer;
     wxBoxSizer* m_chatlog_loc_sizer;
-
-
+  
     Ui& m_ui;
 
     DECLARE_EVENT_TABLE()

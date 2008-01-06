@@ -10,6 +10,8 @@
 #include <wx/stdpaths.h>
 #include <clocale>
 #include <stdexcept>
+#include <vector>
+#include <algorithm>
 
 #include "spring.h"
 #include "springprocess.h"
@@ -141,12 +143,9 @@ bool Spring::Run( SinglePlayerBattle& battle )
 
 bool Spring::TestSpringBinary()
 {
-  try {
-    if ( !wxFileName::FileExists( WX_STRING(sett().GetSpringUsedLoc()) ) ) return false;
-    if ( usync()->GetSpringVersion() != "") return true;
-    else return false;
-  } catch (...) {}
-  return false;
+  if ( !wxFileName::FileExists( WX_STRING(sett().GetSpringUsedLoc()) ) ) return false;
+  if ( usync()->GetSpringVersion() != "") return true;
+  else return false;
 }
 
 
@@ -177,78 +176,92 @@ std::string GetWord( std::string& params )
   }
 }
 
+  struct UserOrder{
+    int index;/// user number for GetUser
+    int order;/// user order (we'll sort by it)
+    bool operator<(UserOrder b) const {/// comparison function for sorting
+      return order<b.order;
+    }
+  };
+
 
 wxString Spring::GetScriptTxt( Battle& battle )
 {
+  wxLogMessage(_T("0 GetScriptTxt called "));
   wxString s;
 
-  int NumTeams=0, NumBots = 0, NumAllys=0, LastOrder=-1,Lowest=-1,MyPlayerNum=-1;
-  int PlayerOrder[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-  int BotOrder[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-  int TeamConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-  int AllyConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-  int AllyRevConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+  int  NumTeams=0, MyPlayerNum=-1;
+
+  std::vector<UserOrder> ordered_users;
+  std::vector<UserOrder> ordered_bots;
+  std::vector<int> TeamConv, AllyConv, AllyRevConv;
+  /// AllyRevConv.size() gives number of allies
 
   wxLogMessage(_T("1 numusers: ") + WX_STRING(i2s(battle.GetNumUsers())) );
-  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
-    Lowest = -1;
-    // Find next player in the order they were sent from the server.
-    wxLogMessage(_T("2 i: ") + WX_STRING(i2s(i)) );
-    for ( user_map_t::size_type gl = 0; gl < battle.GetNumUsers(); gl++ ) {
-      User& ou = battle.GetUser(gl);
-      wxLogMessage(_T("2.1 order: ") + WX_STRING( i2s(ou.BattleStatus().order)) );
-      if ( (ou.BattleStatus().order <= LastOrder) && (LastOrder != -1) ) continue;
-      if ( Lowest == -1 ) Lowest = gl;
-      else if ( ou.BattleStatus().order < battle.GetUser(Lowest).BattleStatus().order ) Lowest = gl;
+
+  /// Fill ordered_users and sort it
+  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ){
+    UserOrder tmp;
+    tmp.index=i;
+    tmp.order=battle.GetUser(i).BattleStatus().order;
+    ordered_users.push_back(tmp);
+  }
+  std::sort(ordered_users.begin(),ordered_users.end());
+
+  /// process ordered users, convert teams and allys
+  for(int i=0;i<int(ordered_users.size());++i){
+    wxLogMessage(_T("2 order ") + WX_STRING(i2s(ordered_users[i].order))+_T(" index ")+ WX_STRING(i2s(ordered_users[i].index)));
+    User &user = battle.GetUser(ordered_users[i].index);
+
+    if ( &user == &battle.GetMe() ) MyPlayerNum = i;
+
+    UserBattleStatus status = user.BattleStatus();
+    if ( status.spectator ) continue;
+
+    if(status.team>int(TeamConv.size())-1){
+      TeamConv.resize(status.team+1,-1);
     }
-    wxLogMessage(_T("3 Lowest: ") + WX_STRING(i2s(Lowest)) );
-    LastOrder = battle.GetUser(Lowest).BattleStatus().order;
-    User& u = battle.GetUser( Lowest );
+    if ( TeamConv[status.team] == -1 ) TeamConv[status.team] = NumTeams++;
 
-    PlayerOrder[i] = Lowest;
-    if ( &u == &battle.GetMe() ) MyPlayerNum = i;
-
-    UserBattleStatus bs = u.BattleStatus();
-    if ( bs.spectator ) continue;
-
-    // Transform team numbers.
-    if ( TeamConv[bs.team] == -1 ) TeamConv[bs.team] = NumTeams++;
-
-    // Transform ally numbers.
-    if ( AllyConv[bs.ally] == -1 ) {
-      AllyConv[bs.ally] = NumAllys;
-      AllyRevConv[NumAllys] = bs.ally;
-      NumAllys++;
+    if(status.ally>int(AllyConv.size())-1){
+      AllyConv.resize(status.ally+1,-1);
+    }
+    if ( AllyConv[status.ally] == -1 ) {
+      AllyConv[status.ally] = AllyRevConv.size();
+      AllyRevConv.push_back(status.ally);
     }
 
   }
-  wxLogMessage(_T("4"));
+  wxLogMessage(_T("3"));
 
-  // Get bot order
-  LastOrder = -1;
+  /// sort and process bots now
+
   for ( std::list<BattleBot*>::size_type i = 0; i < battle.GetNumBots(); i++ ) {
-
-    Lowest = -1;
-
-    wxLogMessage(_T("5"));
-    for ( std::list<BattleBot*>::size_type gl = 0; gl < battle.GetNumBots(); gl++ ) {
-      if ( (battle.GetBot(gl)->bs.order <= LastOrder) && (LastOrder != -1) ) continue;
-      if ( Lowest == -1 ) Lowest = gl;
-      else if ( battle.GetBot(gl)->bs.order < battle.GetBot(Lowest)->bs.order ) Lowest = gl;
-    }
-    wxLogMessage(_T("6"));
-
-    LastOrder = battle.GetBot(Lowest)->bs.order;
-    BotOrder[i] = Lowest;
-
-    if ( AllyConv[battle.GetBot(Lowest)->bs.ally] == -1 ) {
-      AllyConv[battle.GetBot(Lowest)->bs.ally] = NumAllys;
-      AllyRevConv[NumAllys] = battle.GetBot(Lowest)->bs.ally;
-      NumAllys++;
-    }
-
-    NumBots++;
+    UserOrder tmp;
+    tmp.index=i;
+    tmp.order=battle.GetBot(i)->bs.order;
+    ordered_bots.push_back(tmp);
   }
+  std::sort(ordered_bots.begin(),ordered_bots.end());
+
+  for(int i=0;i<int(ordered_bots.size());++i){
+
+    BattleBot &bot=*battle.GetBot(ordered_bots[i].index);
+
+    if(bot.bs.ally>int(AllyConv.size())-1){
+      AllyConv.resize(bot.bs.ally+1,-1);
+    }
+    if(AllyConv[bot.bs.ally]==-1){
+      AllyConv[bot.bs.ally]=AllyRevConv.size();
+      AllyRevConv.push_back(bot.bs.ally);
+    }
+  }
+
+  ///(dmytry aka dizekat) i don't want to change code below, so these vars for compatibility. If you want, refactor it.
+
+  int NumAllys=AllyRevConv.size();
+  int NumBots=ordered_bots.size();
+
   wxLogMessage(_T("7"));
 
 
@@ -283,13 +296,13 @@ wxString Spring::GetScriptTxt( Battle& battle )
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     s += wxString::Format( _T("\t[PLAYER%d]\n"), i );
     s += wxString::Format( _T("\t{\n") );
-    s += WX_STRING(("\t\tname=" + battle.GetUser( PlayerOrder[i] ).GetNick() + ";\n"));
-    wxString cc = WX_STRING( battle.GetUser( PlayerOrder[i] ).GetCountry() );
+    s += WX_STRING(("\t\tname=" + battle.GetUser( ordered_users[i].index ).GetNick() + ";\n"));
+    wxString cc = WX_STRING( battle.GetUser( ordered_users[i].index ).GetCountry() );
     cc.MakeLower();
     s += _T("\t\tcountryCode=") + cc + _T(";\n");
-    s += wxString::Format( _T("\t\tSpectator=%d;\n"), battle.GetUser( PlayerOrder[i] ).BattleStatus().spectator?1:0 );
-    if ( !(battle.GetUser( PlayerOrder[i] ).BattleStatus().spectator) ) {
-      s += wxString::Format( _T("\t\tteam=%d;\n"), TeamConv[battle.GetUser( PlayerOrder[i] ).BattleStatus().team] );
+    s += wxString::Format( _T("\t\tSpectator=%d;\n"), battle.GetUser( ordered_users[i].index ).BattleStatus().spectator?1:0 );
+    if ( !(battle.GetUser( ordered_users[i].index ).BattleStatus().spectator) ) {
+      s += wxString::Format( _T("\t\tteam=%d;\n"), TeamConv[battle.GetUser( ordered_users[i].index ).BattleStatus().team] );
     }
     s += wxString::Format( _T("\t}\n") );
   }
@@ -307,10 +320,10 @@ wxString Spring::GetScriptTxt( Battle& battle )
     wxLogMessage(_T("10"));
     for( user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {
       // First Player That Is In The Team Is Leader.
-      if ( TeamConv[battle.GetUser( PlayerOrder[tlf] ).BattleStatus().team] == i ) {
+      if ( TeamConv[battle.GetUser( ordered_users[tlf].index ).BattleStatus().team] == i ) {
 
         // Make sure player is not spectator.
-        if ( battle.GetUser( PlayerOrder[tlf] ).BattleStatus().spectator ) continue;
+        if ( battle.GetUser( ordered_users[tlf].index ).BattleStatus().spectator ) continue;
 
         // Assign as team leader.
         TeamLeader = tlf;
@@ -321,17 +334,17 @@ wxString Spring::GetScriptTxt( Battle& battle )
     wxLogMessage(_T("11"));
 
     s += wxString::Format( _T("\t\tTeamLeader=%d;\n") ,TeamLeader );
-    s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().ally] );
+    s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().ally] );
     const char* old_locale = std::setlocale(LC_NUMERIC, "C");
     s += wxString::Format( _T("\t\tRGBColor=%.5f %.5f %.5f;\n"),
-           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().color_r/255.0),
-           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().color_g/255.0),
-           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().color_b/255.0)
+           (double)(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().color_r/255.0),
+           (double)(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().color_g/255.0),
+           (double)(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().color_b/255.0)
          );
     std::setlocale(LC_NUMERIC, old_locale);
-    wxLogMessage( WX_STRING( i2s(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side) ) );
-    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( STD_STRING(battle.GetModName()), battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side ) + ";\n"));
-    s += wxString::Format( _T("\t\tHandicap=%d;\n"), battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().handicap );
+    wxLogMessage( WX_STRING( i2s(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side) ) );
+    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( STD_STRING(battle.GetModName()), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side ) + ";\n"));
+    s += wxString::Format( _T("\t\tHandicap=%d;\n"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().handicap );
     s +=  _T("\t}\n");
   }
   wxLogMessage( _T("12") );
@@ -340,7 +353,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
     s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i + NumTeams );
 
-    BattleBot& bot = *battle.GetBot( BotOrder[i] );
+    BattleBot& bot = *battle.GetBot( ordered_bots[i].index );
 
     // Find Team Leader.
     int TeamLeader = TeamConv[ battle.GetUser( bot.owner ).BattleStatus().team ];
@@ -462,25 +475,25 @@ wxString Spring::GetScriptTxt( Battle& battle )
   wxLogMessage( _T("17") );
 
   ds += _T("\n\nPlayerOrder: { ");
-  for ( int i = 0; i < 16; i++ ) {
-    ds += wxString::Format( _T(" %d,"), PlayerOrder[i] );
+  for ( std::vector<UserOrder>::size_type i = 0; i < ordered_users.size(); i++ ) {
+    ds += wxString::Format( _T(" %d,"), ordered_users[i].index );
   }
   ds += _T(" }\n\n");
 
   ds += _T("TeamConv: { ");
-  for ( int i = 0; i < 16; i++ ) {
+  for ( std::vector<int>::size_type i = 0; i < TeamConv.size(); i++ ) {
     ds += wxString::Format( _T(" %d,"), TeamConv[i] );
   }
   ds += _T(" }\n\n");
 
   ds += _T("AllyConv: { ");
-  for ( int i = 0; i < 16; i++ ) {
+  for ( std::vector<int>::size_type i = 0; i < AllyConv.size(); i++ ) {
     ds += wxString::Format( _T(" %d,"), AllyConv[i] );
   }
   ds += _T(" }\n\n");
 
   ds += _T("AllyRevConv: { ");
-  for ( int i = 0; i < 16; i++ ) {
+  for ( std::vector<int>::size_type i = 0; i < AllyRevConv.size(); i++ ) {
     ds += wxString::Format( _T(" %d,"), AllyRevConv[i] );
   }
   ds += _T(" }\n\n\n");
@@ -507,15 +520,24 @@ wxString Spring::GetScriptTxt( Battle& battle )
 wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 {
   wxString s;
-  int AllyConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+  std::vector<int> AllyConv;
+
   int NumAllys = 0;
   int PlayerTeam = -1;
 
+  if ( usync()->VersionSupports( GF_XYStartPos ) && battle.GetStartType() == ST_Fixed ) battle.SetStartType( ST_Pick );
+
+  wxLogMessage( _T("StartPosType=") + WX_STRING( i2s( battle.GetStartType() ) ) );
+
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
-    BattleBot* bot = battle.GetBotByStartPosition( i );
+    BattleBot* bot;
+    bot = battle.GetBot( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     if ( bot->aidll == "" ) PlayerTeam = i;
-    if ( AllyConv[bot->bs.ally] == -1 ) AllyConv[bot->bs.ally] = NumAllys++;
+    if(bot->bs.ally>int(AllyConv.size())-1){
+      AllyConv.resize(bot->bs.ally+1,-1);
+    }
+    if( AllyConv[bot->bs.ally] == -1 ) AllyConv[bot->bs.ally] = NumAllys++;
   }
 
   ASSERT_LOGIC( PlayerTeam != -1, _T("no player found") );
@@ -552,12 +574,16 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
     s += wxString::Format( _T("\t\tteam=%d;\n"), PlayerTeam );
   s += _T("\t}\n\n");
 
-
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) { // TODO fix this when new Spring comes.
-    BattleBot* bot = battle.GetBotByStartPosition( i );
+    BattleBot* bot;
+    if ( battle.GetStartType() == 3) bot = battle.GetBot( i );
+    else bot = battle.GetBotByStartPosition( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i );
-
+    if ( battle.GetStartType() == 3 ){
+      s += wxString::Format( _T("\t\tStartPosX=%d;\n"), bot->posx );
+      s += wxString::Format( _T("\t\tStartPosZ=%d;\n"), bot->posy );
+    }
     s += _T("\t\tTeamLeader=0;\n");
     s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[bot->bs.ally] );
     const char* old_locale = std::setlocale(LC_NUMERIC, "C");
@@ -613,4 +639,3 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   return s;
 }
-

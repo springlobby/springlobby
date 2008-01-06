@@ -17,6 +17,7 @@ class Socket;
 class User;
 struct UserBattleStatus;
 class ServerEvents;
+class wxString;
 
 //! @brief TASServer protocol implementation.
 class TASServer : public Server
@@ -30,7 +31,7 @@ class TASServer : public Server
 
     void SetSocket( Socket* sock );
 
-    bool Register( const std::string& addr, const int port, const std::string& nick, const std::string& password );
+    bool Register( const std::string& addr, const int port, const std::string& nick, const std::string& password,wxString* reason );
     void AcceptAgreement();
 
     void Connect( const std::string& addr, const int port );
@@ -44,6 +45,8 @@ class TASServer : public Server
     void Update( int mselapsed );
 
     void Ping();
+
+    void UDPPing();/// used for nat travelsal
 
     User& GetMe();
 
@@ -101,6 +104,9 @@ class TASServer : public Server
 
     void RequestInGameTime( const std::string& nick );
 
+    void SendUdpSourcePort( int udpport );
+    void SendNATHelperInfos( const wxString& username, const wxString& ip, int port );
+
     Battle* GetCurrentBattle();
 
     void RequestChannels();
@@ -134,7 +140,9 @@ class TASServer : public Server
 
     std::string m_agreement;
 
-    void _ReceiveAndExecute();
+    std::string m_addr;
+
+    void ReceiveAndExecute();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H

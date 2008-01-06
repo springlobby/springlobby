@@ -15,7 +15,6 @@
 #include <wx/intl.h>
 #include <wx/settings.h>
 #include <wx/icon.h>
-#include <wx/msgdlg.h>
 
 #include "connectwindow.h"
 #include "settings.h"
@@ -23,9 +22,10 @@
 #include "images/connect.xpm"
 #include "utils.h"
 
+#include "settings++/custom_dialogs.h"
 
 // Define events.
-BEGIN_EVENT_TABLE(ConnectWindow, wxFrame)
+BEGIN_EVENT_TABLE(ConnectWindow, wxDialog)
 
   EVT_BUTTON ( wxID_OK,     ConnectWindow::OnOk )
   EVT_BUTTON ( wxID_CANCEL, ConnectWindow::OnCancel )
@@ -37,7 +37,7 @@ END_EVENT_TABLE()
 //!
 //! @param parent Parent window
 ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
-: wxFrame( parent, -1, _("Connect to lobby server"), wxDefaultPosition, wxSize(300, 300),
+: wxDialog( parent, -1, _("Connect to lobby server"), wxDefaultPosition, wxSize(300, 300),
            wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN ), m_ui(ui)
 {
   wxString server;
@@ -223,7 +223,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
 
     if ( serverString.GetCount() == 0 ) {
       wxLogWarning( _T("Invalid port or servername.") );
-      wxMessageBox( _("Invalid host/port or servername."), _("Invalid host"), wxOK );
+      customMessageBox(SL_MAIN_ICON, _("Invalid host/port or servername."), _("Invalid host"), wxOK );
       return;
     }
 
@@ -231,12 +231,12 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
       long port;
       if( !serverString[1].ToLong( &port ) ) {
         wxLogWarning( _T("Invalid port.") );
-        wxMessageBox( _("Invalid port."), _("Invalid port"), wxOK );
+        customMessageBox(SL_MAIN_ICON, _("Invalid port."), _("Invalid port"), wxOK );
         return;
       }
       if( port < 1 || port > 65535) {
         wxLogWarning( _T("port number out of range") );
-        wxMessageBox( _("Port number out of range.\n\nIt must be an integer between 1 and 65535"), _("Invalid port"), wxOK );
+        customMessageBox(SL_MAIN_ICON, _("Port number out of range.\n\nIt must be an integer between 1 and 65535"), _("Invalid port"), wxOK );
         return;
       }
       sett().AddServer( STD_STRING( HostAddress ) );
@@ -246,7 +246,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
 
     if ( serverString.GetCount() != 1 && serverString.GetCount() != 2 ) {
       wxLogWarning( _T("invalid host/port.") );
-      wxMessageBox( _("Invalid host/port."), _("Invalid host"), wxOK );
+      customMessageBox(SL_MAIN_ICON, _("Invalid host/port."), _("Invalid host"), wxOK );
       return;
     }
 
@@ -255,16 +255,23 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
 
     m_ui.DoConnect( HostAddress, m_nick_text->GetValue(), m_pass_text->GetValue() );
   } else {
-    if ( m_ui.DoRegister( HostAddress, m_regnick_text->GetValue(), m_regpass1_text->GetValue() ) ) {
+	  wxString* reason = new wxString();
+	  if (m_regpass2_text->GetValue()!= m_regpass1_text->GetValue())
+	  {
+		  Show();
+         wxLogWarning( _T("registration failed, reason: password/confirmation mismatch")  );
+         customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\nPassword / confirmation mismatch") , _("Registration failed."), wxOK );
+	  }
+	  else if ( m_ui.DoRegister( HostAddress, m_regnick_text->GetValue(), m_regpass1_text->GetValue(),reason ) ) {
        m_tabs->SetSelection( 0 );
        m_nick_text->SetValue(m_regnick_text->GetValue());
        m_pass_text->SetValue(m_regpass1_text->GetValue());
        Show();
-       wxMessageBox( _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
+       customMessageBox(SL_MAIN_ICON, _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
     } else {
        Show();
-       wxLogWarning( _T("registration failed.") );
-       wxMessageBox( _("Registration failed."), _("Registration failed"), wxOK );
+       wxLogWarning( _T("registration failed, reason: ")+(*reason)  );
+       customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\n")+(*reason) , _("Registration failed."), wxOK );
     }
 
   }

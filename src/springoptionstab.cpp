@@ -13,7 +13,6 @@
 #include <wx/radiobut.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
-#include <wx/msgdlg.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
@@ -33,6 +32,8 @@
 #include "settings.h"
 #include "spring.h"
 #include "mainwindow.h"
+
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
 
@@ -57,47 +58,34 @@ END_EVENT_TABLE()
 
     SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
 {
-
-  m_dir_text = new wxStaticText( this, -1, _("Spring directory") );
-  m_exec_loc_text = new wxStaticText( this, -1, _("Location") );
-  m_sync_loc_text = new wxStaticText( this, -1, _("Location") );
-  m_web_loc_text = new wxStaticText( this, -1, _("Web Browser") );
-
+  m_dir_text = new wxStaticText( this, -1, _("Spring directory") ); 
+  m_dir_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringDir()) );
   m_dir_browse_btn = new wxButton( this, SPRING_DIRBROWSE, _("Browse") );
   m_dir_find_btn = new wxButton( this, SPRING_DIRFIND, _("Find") );
-  m_exec_browse_btn = new wxButton( this, SPRING_EXECBROWSE, _("Browse") );
-  m_exec_find_btn = new wxButton( this, SPRING_EXECFIND, _("Find") );
-  m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _("Browse") );
-  m_sync_find_btn = new wxButton( this, SPRING_SYNCFIND, _("Find") );
-  m_web_browse_btn = new wxButton( this, SPRING_WEBBROWSE, _("Browse") );
-
-  m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _("Auto Configure") );
-
+  
+  m_exec_box = new wxStaticBox( this, -1, _("Spring executable") );
   m_exec_def_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
   m_exec_spec_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Specify:") );
+  m_exec_loc_text = new wxStaticText( this, -1, _("Location") );
+  m_exec_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringLoc()) );
+  m_exec_browse_btn = new wxButton( this, SPRING_EXECBROWSE, _("Browse") );
+  m_exec_find_btn = new wxButton( this, SPRING_EXECFIND, _("Find") );
+  
+  m_sync_box = new wxStaticBox( this, -1, _("UnitSync library") );
   m_sync_def_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
   m_sync_spec_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Specify:") );
+  m_sync_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetUnitSyncLoc()) );
+  m_sync_loc_text = new wxStaticText( this, -1, _("Location") );
+  m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _("Browse") );
+  m_sync_find_btn = new wxButton( this, SPRING_SYNCFIND, _("Find") );
+  
+  m_web_box = new wxStaticBox( this , -1, _("Web Browser") );
+  m_web_loc_text = new wxStaticText( this, -1, _("Web Browser") );
   m_web_def_radio = new wxRadioButton( this, SPRING_DEFWEB, _("Default Browser."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
   m_web_spec_radio = new wxRadioButton( this, SPRING_DEFWEB, _("Specify:") );
-
-
-  if ( sett().GetSpringUseDefLoc() ) m_exec_def_radio->SetValue( true );
-  else m_exec_spec_radio->SetValue( true );
-  if ( sett().GetUnitSyncUseDefLoc() ) m_sync_def_radio->SetValue( true );
-  else m_sync_spec_radio->SetValue( true );
-  if ( sett().GetWebBrowserPath().IsEmpty() ) m_web_def_radio->SetValue( true );
-  else m_web_spec_radio->SetValue( true );
-
-
-  m_dir_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringDir()) );
-  m_exec_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringLoc()) );
-  m_sync_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetUnitSyncLoc()) );
   m_web_edit = new wxTextCtrl( this, -1, sett().GetWebBrowserPath() );
-
-  m_exec_box = new wxStaticBox( this, -1, _("Spring executable") );
-  m_sync_box = new wxStaticBox( this, -1, _("UnitSync library") );
-  m_web_box = new wxStaticBox( this , -1, _("Web Browser") );
-
+  m_web_browse_btn = new wxButton( this, SPRING_WEBBROWSE, _("Browse") );
+  
   //Chat Log:
   m_chatlog_loc_text = new wxStaticText( this, -1, _("Location") );
   m_chatlog_browse_btn = new wxButton( this, CHATLOG_BROWSE, _("Browse") );
@@ -105,6 +93,15 @@ END_EVENT_TABLE()
   m_chatlog_enable_chk = new wxCheckBox( this, CHATLOG_ENABLE, _ ("Enable logging Chat."), wxDefaultPosition, wxDefaultSize,0);
   m_chatlog_enable_chk->SetValue( sett().GetChatLogEnable() );
   m_chatlog_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetChatLogLoc()) );
+  
+  m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _("Auto Configure") );
+
+  if ( sett().GetSpringUseDefLoc() ) m_exec_def_radio->SetValue( true );
+  else m_exec_spec_radio->SetValue( true );
+  if ( sett().GetUnitSyncUseDefLoc() ) m_sync_def_radio->SetValue( true );
+  else m_sync_spec_radio->SetValue( true );
+  if ( sett().GetWebBrowserPath().IsEmpty() ) m_web_def_radio->SetValue( true );
+  else m_web_spec_radio->SetValue( true );
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   m_dir_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -507,12 +504,12 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
   usync()->FreeUnitSyncLib();
   if ( !usync()->LoadUnitSyncLib( WX_STRING(sett().GetSpringDir()), WX_STRING(sett().GetUnitSyncUsedLoc()) ) ) {
     wxLogWarning( _T("can't load unitsync") );
-    wxMessageBox( _("SpringLobby is unable to load you unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
+    customMessageBox( SL_MAIN_ICON, _("SpringLobby is unable to load you unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
   } else {
     // If LoadUnitSyncLib() fails this will too.
     if ( !Spring::TestSpringBinary() ) {
       wxLogWarning( _T("can't load unitsync") );
-      wxMessageBox( _("SpringLobby is unable to detect your spring version from the unitsync library.\n\nYou might want to take another look at your settings."), _("Spring error"), wxOK );
+      customMessageBox( SL_MAIN_ICON, _("SpringLobby is unable to detect your spring version from the unitsync library.\n\nYou might want to take another look at your settings."), _("Spring error"), wxOK );
     }
   }
   m_ui.mw().OnUnitSyncReloaded();

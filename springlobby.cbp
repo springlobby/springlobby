@@ -178,10 +178,14 @@
 		<Unit filename="src/channellist.h" />
 		<Unit filename="src/chatlog.cpp" />
 		<Unit filename="src/chatlog.h" />
+		<Unit filename="src/chatoptionstab.cpp" />
+		<Unit filename="src/chatoptionstab.h" />
 		<Unit filename="src/chatpanel.cpp" />
 		<Unit filename="src/chatpanel.h" />
 		<Unit filename="src/connectwindow.cpp" />
 		<Unit filename="src/connectwindow.h" />
+		<Unit filename="src/customlistctrl.cpp" />
+		<Unit filename="src/customlistctrl.h" />
 		<Unit filename="src/flagimagedata.h" />
 		<Unit filename="src/flagimages.cpp" />
 		<Unit filename="src/flagimages.h" />
@@ -264,6 +268,35 @@
 		<Unit filename="src/server.h" />
 		<Unit filename="src/serverevents.cpp" />
 		<Unit filename="src/serverevents.h" />
+		<Unit filename="src/settings++/Defs.hpp" />
+		<Unit filename="src/settings++/custom_dialogs.cpp" />
+		<Unit filename="src/settings++/custom_dialogs.h" />
+		<Unit filename="src/settings++/frame.cpp" />
+		<Unit filename="src/settings++/frame.h" />
+		<Unit filename="src/settings++/helpmenufunctions.cpp" />
+		<Unit filename="src/settings++/helpmenufunctions.h" />
+		<Unit filename="src/settings++/panel_pathoption.cpp" />
+		<Unit filename="src/settings++/panel_pathoption.h" />
+		<Unit filename="src/settings++/presets.cpp" />
+		<Unit filename="src/settings++/presets.h" />
+		<Unit filename="src/settings++/se_settings.cpp" />
+		<Unit filename="src/settings++/se_settings.h" />
+		<Unit filename="src/settings++/se_utils.cpp" />
+		<Unit filename="src/settings++/se_utils.h" />
+		<Unit filename="src/settings++/tab_abstract.cpp" />
+		<Unit filename="src/settings++/tab_abstract.h" />
+		<Unit filename="src/settings++/tab_audio.cpp" />
+		<Unit filename="src/settings++/tab_audio.h" />
+		<Unit filename="src/settings++/tab_debug.cpp" />
+		<Unit filename="src/settings++/tab_debug.h" />
+		<Unit filename="src/settings++/tab_quality_video.cpp" />
+		<Unit filename="src/settings++/tab_quality_video.h" />
+		<Unit filename="src/settings++/tab_render_detail.cpp" />
+		<Unit filename="src/settings++/tab_render_detail.h" />
+		<Unit filename="src/settings++/tab_simple.cpp" />
+		<Unit filename="src/settings++/tab_simple.h" />
+		<Unit filename="src/settings++/tab_ui.cpp" />
+		<Unit filename="src/settings++/tab_ui.h" />
 		<Unit filename="src/settings.cpp" />
 		<Unit filename="src/settings.h" />
 		<Unit filename="src/singleplayerbattle.cpp" />
@@ -310,6 +343,7 @@
 			<wxsmith version="1">
 				<gui name="wxWidgets" src="" main="" init_handlers="necessary" language="CPP" />
 			</wxsmith>
+			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

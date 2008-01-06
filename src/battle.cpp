@@ -14,7 +14,7 @@
 #include "uiutils.h"
 
 
-const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = -1;
+const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBot*>::size_type)(-1);
 
 
 Battle::Battle( Server& serv, Ui& ui, int id ) :
@@ -99,7 +99,7 @@ void Battle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
 {
   int lowest = 0;
   bool changed = true;
-  while ( (changed) && (lowest < 16) ) {
+  while ( changed ) {
     changed = false;
     for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ ) {
       if ( (&GetUser( i ) == &GetMe()) && excludeme ) continue;
@@ -108,10 +108,8 @@ void Battle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
       if ( AreColoursSimilar( bs.color_r, bs.color_g, bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
         lowest++;
         changed = true;
-        if ( lowest >= 16 ) break;
       }
     }
-    if ( lowest >= 16 ) break;
     std::list<BattleBot*>::const_iterator i;
     for( i = m_bots.begin(); i != m_bots.end(); ++i )
     {
@@ -119,11 +117,9 @@ void Battle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
       if ( AreColoursSimilar( (*i)->bs.color_r, (*i)->bs.color_g, (*i)->bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
         lowest++;
         changed = true;
-        if ( lowest >= 16 ) break;
       }
     }
   }
-  if ( lowest >= 16 ) lowest = 0;
 
   r = colour_values[lowest][0];
   g = colour_values[lowest][1];
@@ -198,7 +194,7 @@ bool Battle::HaveMultipleBotsInSameTeam() const
   std::list<BattleBot*>::const_iterator i;
   wxLogDebugFunc(_T(""));
 
-  int teams[16] = { -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1 };
+  std::vector<int> teams ( GetMaxPlayers(), -1 );
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
   {
     if ( *i == 0 ) continue;
@@ -273,11 +269,21 @@ void Battle::RingNotReadyPlayers()
 }
 
 
+bool Battle::ExecuteSayCommand( const wxString& cmd )
+{
+  if ( cmd.BeforeFirst(' ').Lower() == _T("/me") ) {
+    m_serv.DoActionBattle( m_opts.battleid, STD_STRING( cmd.AfterFirst(' ') )  );
+    return true;
+  }  else return false;
+}
+
+
 void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom )
 {
-  ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), _T("Allyno out of bounds.") );
+  ASSERT_LOGIC( (allyno >= 0 || allyno < GetMaxPlayers() ), _T("Allyno out of bounds.") );
   BattleStartRect* sr;
   bool local;
+  if ( allyno >= m_rects.size() ) m_rects.push_back(0); // add new element is it exceeds the vector bounds
   if ( m_rects[allyno] == 0 ) {
     sr = new BattleStartRect();
     local = true;
@@ -300,6 +306,7 @@ void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom 
 
 void Battle::RemoveStartRect( int allyno )
 {
+  if ( allyno >= m_rects.size() ) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   sr->deleted = true;
@@ -308,6 +315,7 @@ void Battle::RemoveStartRect( int allyno )
 
 void Battle::UpdateStartRect( int allyno )
 {
+  if ( allyno >= m_rects.size() ) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   sr->updated = true;
@@ -316,6 +324,7 @@ void Battle::UpdateStartRect( int allyno )
 
 void Battle::StartRectRemoved( int allyno )
 {
+  if ( allyno >= m_rects.size() ) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   m_rects[allyno] = 0;
@@ -325,6 +334,7 @@ void Battle::StartRectRemoved( int allyno )
 
 void Battle::StartRectUpdated( int allyno )
 {
+  if ( allyno >= m_rects.size() ) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   sr->updated = false;
@@ -334,13 +344,14 @@ void Battle::StartRectUpdated( int allyno )
 
 BattleStartRect* Battle::GetStartRect( int allyno )
 {
-  ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), _T("Allyno out of bounds.") );
+  ASSERT_LOGIC( (allyno >= 0 || allyno < GetMaxPlayers() ), _T("Allyno out of bounds.") );
+  if ( allyno >= m_rects.size() ) return 0;
   return m_rects[allyno];
 }
 
 void Battle::ClearStartRects()
 {
-  for ( int i = 0; i < 16; i++ ) RemoveStartRect( i );
+  for ( std::vector<BattleStartRect*>::size_type i = 0; i < GetNumRects(); i++ ) RemoveStartRect( i );
 }
 
 
@@ -520,5 +531,11 @@ void Battle::BattleKickPlayer( User& user )
 void Battle::SetHandicap( User& user, int handicap)
 {
   m_serv.SetHandicap ( m_opts.battleid, user.GetNick(), handicap );
+}
+
+
+std::vector<BattleStartRect*>::size_type Battle::GetNumRects()
+{
+  return m_rects.size();
 }
 

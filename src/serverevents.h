@@ -22,7 +22,7 @@ class ServerEvents
 
   // Uicontrol interface
 
-    void OnConnected( const std::string& server_name, const std::string& server_ver, bool supported, const std::string server_spring_ver );
+    void OnConnected( const std::string& server_name, const std::string& server_ver, bool supported, const std::string server_spring_ver, const int udpport, bool lanmode );
     void OnDisconnected();
 
     void OnLogin();
@@ -77,6 +77,7 @@ class ServerEvents
     void OnChannelTopic( const std::string& channel, const std::string& who, const std::string& message, int when );
     void OnChannelAction( const std::string& channel, const std::string& who, const std::string& action );
     void OnChannelList( const std::string& channel, const int& numusers );
+    void OnUserJoinChannel( const std::string& channel, const std::string& who );
 
     void OnPrivateMessage( const std::string& user, const std::string& message, bool fromme = false );
 
@@ -90,6 +91,10 @@ class ServerEvents
 
     void OnServerMessage( const std::string& message );
     void OnChannelMessage( const std::string& channel, const std::string& msg );
+
+    void OnHostUdpPortChange(const int& udpport);
+
+    void OnUdpSourcePort(int udpport);
 
   protected:
     Server& m_serv;

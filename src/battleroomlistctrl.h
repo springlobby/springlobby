@@ -1,20 +1,23 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H
 
-#include <wx/listctrl.h>
+//#include <wx/listctrl.h>
+#include "customlistctrl.h"
 
 class User;
 class Battle;
 class Ui;
 struct BattleBot;
 //class wxMenuItem;
+class wxIcon;
+
 
 struct item_content {
   bool is_bot;
   void* data;
 };
 
-class BattleroomListCtrl : public wxListCtrl
+class BattleroomListCtrl : public customListCtrl
 {
   public:
     BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui );
@@ -70,7 +73,8 @@ class BattleroomListCtrl : public wxListCtrl
     static int wxCALLBACK CompareHandicapUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareHandicapDOWN(long item1, long item2, long sortData);
     wxString GetCellContentsString( long row_number, int column );
-
+    void OnMouseMotion(wxMouseEvent& event);
+    
     struct {
       int col;
       bool direction;
@@ -91,7 +95,7 @@ class BattleroomListCtrl : public wxListCtrl
 
     Ui& m_ui;
     static Ui* m_ui_for_sort;
-
+      
     DECLARE_EVENT_TABLE();
 
 };

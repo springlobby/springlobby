@@ -8,7 +8,6 @@
 #include "springunitsynclib.h"
 #include "utils.h"
 
-
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 
 SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path ):
@@ -50,6 +49,9 @@ void SpringUnitSyncLib::Load( const wxString& path )
   }
 
   try {
+#ifdef __WXMSW__
+    wxSetWorkingDirectory( path.BeforeLast('\\') );
+#endif
     m_libhandle = new wxDynamicLibrary( path );
     if ( !m_libhandle->IsLoaded() ) {
       wxLogError(_T("wxDynamicLibrary created, but not loaded!"));
@@ -579,6 +581,10 @@ void SpringUnitSyncLib::CloseFileVFS( int handle )
   m_close_file_vfs( handle );
 }
 
+bool SpringUnitSyncLib::HasLuaAI()
+{
+  return m_get_luaai_count&&m_get_luaai_name&&m_get_luaai_desc;
+}
 
 int SpringUnitSyncLib::GetLuaAICount()
 {
@@ -590,7 +596,7 @@ int SpringUnitSyncLib::GetLuaAICount()
 
 wxString SpringUnitSyncLib::GetLuaAIName( int aiIndex )
 {
-  InitLib( m_get_luaai_count );
+  InitLib( m_get_luaai_name );
 
   return WX_STRINGC(m_get_luaai_name( aiIndex ));
 }
