@@ -178,6 +178,8 @@
 		<Unit filename="src/channellist.h" />
 		<Unit filename="src/chatlog.cpp" />
 		<Unit filename="src/chatlog.h" />
+		<Unit filename="src/chatoptionstab.cpp" />
+		<Unit filename="src/chatoptionstab.h" />
 		<Unit filename="src/chatpanel.cpp" />
 		<Unit filename="src/chatpanel.h" />
 		<Unit filename="src/connectwindow.cpp" />
