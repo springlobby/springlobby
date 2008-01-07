@@ -433,10 +433,31 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s += wxString::Format( _T("\t\tLimit%d=0;\n"), i );
     i++;
   }
-
+  s += _T("\t}\n");
   wxLogMessage( _T("15") );
 
+  s += _T("\t[mapoptions]\n");
+  s += _T("\t{\n");
+  battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
+  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t\t") + it->first + _T("=") + it->second + _T(";\n");
+  }
   s += _T("\t}\n");
+
+  wxLogMessage( _T("16") );
+
+  s += _T("\t[modoptions]");
+  s += _T("\t{\n");
+  battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
+  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t\t") + it->first + _T("=") + it->second + _T(";\n");
+  }
+  s += _T("\t}\n");
+
+  wxLogMessage( _T("17") );
+
   s += _T("}\n");
 
   if ( DOS_TXT ) {
@@ -462,7 +483,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     );
   }
 
-  wxLogMessage( _T("16") );
+  wxLogMessage( _T("18") );
   ds += _T("\n\nBots: \n\n");
   for ( std::list<BattleBot*>::size_type i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot = battle.GetBot(i);
@@ -485,7 +506,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
       bot->bs.color_b
     );
   }
-  wxLogMessage( _T("17") );
+  wxLogMessage( _T("19") );
 
   ds += _T("\n\nPlayerOrder: { ");
   for ( std::vector<UserOrder>::size_type i = 0; i < ordered_users.size(); i++ ) {
@@ -516,7 +537,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   if ( DOS_TXT ) {
     ds.Replace( _T("\n"), _T("\r\n"), true );
   }
-  wxLogMessage( _T("18") );
+  wxLogMessage( _T("20") );
 
   wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
 
@@ -524,7 +545,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   f.Write( _T("[Script Start]") + s );
   f.Write( ds );
   f.Close();
-  wxLogMessage( _T("19") );
+  wxLogMessage( _T("21") );
 
   return s;
 }
@@ -573,17 +594,6 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   s += wxString::Format( _T("\tLimitDGun=%d;\n"), battle.LimitDGun()?1:0 );
   s += wxString::Format( _T("\tDiminishingMMs=%d;\n"), battle.DimMMs()?1:0 );
   s += wxString::Format( _T("\tGhostedBuildings=%d;\n\n"), battle.GhostedBuildings()?1:0 );
-
-  battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
-  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
-  {
-    s += _T("\t") + it->first + _T("=") + it->second + _T(";\n");
-  }
-  battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
-  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
-  {
-    s += _T("\t") + it->first + _T("=") + it->second + _T(";\n");
-  }
 
   s += _T("\tHostIP=localhost;\n");
 
@@ -656,9 +666,26 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
     s += wxString::Format( _T("\t\tLimit%d=0;\n"), i );
     i++;
   }
-
-
   s += _T("\t}\n");
+
+  s += _T("\t[mapoptions]\n");
+  s += _T("\t{\n");
+  battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
+  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t\t") + it->first + _T("=") + it->second + _T(";\n");
+  }
+  s += _T("\t}\n");
+
+  s += _T("\t[modoptions]");
+  s += _T("\t{\n");
+  battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
+  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t\t") + it->first + _T("=") + it->second + _T(";\n");
+  }
+  s += _T("\t}\n");
+
   s += _T("}\n");
 
   if ( DOS_TXT ) {

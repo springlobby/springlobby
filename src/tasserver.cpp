@@ -1123,14 +1123,14 @@ void TASServer::SendHostInfo( HostInfo update )
       battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
       for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
       {
-        cmd += _T("game/mapoptions/") + it->first + _T("=") + it->second + _T('\t');
+        cmd += _T("game\\mapoptions\\") + it->first + _T("=") + it->second + _T('\t');
       }
       battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
       for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
       {
-        cmd += _T("game/modoptions/") + it->first + _T("=") + it->second + _T('\t');
+        cmd += _T("game\\modoptions\\") + it->first + _T("=") + it->second + _T('\t');
       }
-
+/// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
       cmd += wxString::Format( _T("game/startpostype=%d\tgame/maxunits=%d\tgame/limitdgun %d\tgame/startmetal=%d\tgame/gamemode=%d\tgame/ghostedbuildings=%d\tgame/startenergy=%d\tgame/diminishingmms=%d\n"),
         battle.GetStartType(), battle.GetMaxUnits(), battle.LimitDGun(), battle.GetStartMetal(),
         battle.GetGameType(), battle.GhostedBuildings(), battle.GetStartEnergy(), battle.DimMMs()
