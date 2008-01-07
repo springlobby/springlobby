@@ -16,6 +16,7 @@
 #define DEFSETT_SPRING_PORT 8452
 
 class wxConfigBase;
+class wxFont;
 
 
 //! @brief Class used to store and restore application settings.
@@ -31,6 +32,7 @@ class Settings
     bool IsFirstRun();
 
     bool UseOldSpringLaunchMethod();
+    void SetOldSpringLaunchMethod( bool value );
 
     wxString GetWebBrowserPath();
     void SetWebBrowserPath( const wxString path );
@@ -151,6 +153,8 @@ class Settings
     void SetChatColorError( wxColour value );
     wxColour GetChatColorTime();
     void SetChatColorTime( wxColour value );
+    wxFont GetChatFont();
+    void SetChatFont( wxFont value );
 
   protected:
 

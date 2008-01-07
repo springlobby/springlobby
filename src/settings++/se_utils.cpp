@@ -6,6 +6,8 @@
 #include "custom_dialogs.h"
 #include <wx/utils.h>
 #include <wx/log.h>
+#include "se_settings.h"
+#include "../springunitsynclib.h"
 
 void toString(std::string& s, int t) {
 			std::stringstream ss;
@@ -19,6 +21,23 @@ int fromString(const std::string& s) {
         int r;
         ss >> r;
         return r;
+}
+
+void loadUnitsync()
+{
+	//should be done in susynclib()->Load
+	//wxSetWorkingDirectory(OptionsHandler.getUsyncLoc().BeforeLast('\\'));
+	
+	try
+	{
+		wxCriticalSection m_lock;
+		wxCriticalSectionLocker lock_criticalsection(m_lock);
+		susynclib()->Load(OptionsHandler.getUsyncLoc());
+	}
+	catch (...)
+	{
+		//TODO log that
+	}
 }
 
 void openUrl(const wxString& url)

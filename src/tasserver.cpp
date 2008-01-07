@@ -195,7 +195,7 @@ bool TASServer::IsConnected()
 }
 
 
-bool TASServer::Register( const std::string& addr, const int port, const std::string& nick, const std::string& password )
+bool TASServer::Register( const std::string& addr, const int port, const std::string& nick, const std::string& password, wxString* reason )
 {
   wxLogDebugFunc( _T("") );
 
@@ -216,7 +216,11 @@ bool TASServer::Register( const std::string& addr, const int port, const std::st
   data = "";
 
   m_sock->Receive( data );
-  if ( data != "REGISTRATIONACCEPTED\n") return false;
+  if ( data != "REGISTRATIONACCEPTED\n")
+  {
+	  *reason = WX_STRING(data.substr(19,data.size()));
+	  return false;
+  }
 
   return true;
 }
@@ -318,12 +322,12 @@ void TASServer::Update( int mselapsed )
     HandlePinglist();
   }
 
-  _ReceiveAndExecute();
+  ReceiveAndExecute();
 
 }
 
 
-void TASServer::_ReceiveAndExecute()
+void TASServer::ReceiveAndExecute()
 {
   std::string data;
 
@@ -343,7 +347,7 @@ void TASServer::_ReceiveAndExecute()
 }
 
 
-wxString _ConvertTASServerPhailChecksum( const wxString& buggedcsum )
+wxString ConvertTASServerPhailChecksum( const wxString& buggedcsum )
 {
   signed long temp;
   buggedcsum.ToLong( &temp );
@@ -352,12 +356,12 @@ wxString _ConvertTASServerPhailChecksum( const wxString& buggedcsum )
 }
 
 
-wxString _ConvertToTASServerBuggedChecksum( const wxString& csum )
+wxString ConvertToTASServerBuggedChecksum( const wxString& csum )
 {
-  signed long temp;
-  csum.ToLong( &temp );
+  unsigned long temp;
+  csum.ToULong( &temp );
   int temp2 = (int)temp;
-  return wxString::Format( _T("%u"), temp2 );
+  return wxString::Format( _T("%d"), temp2 );
 }
 
 
@@ -399,7 +403,8 @@ void TASServer::ExecuteCommand( const std::string& in )
 
 void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
-  wxLogDebugFunc( _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams));
+	//TODO use or not?
+ // wxLogDebugFunc( /* _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams) */ );
 
   std::string params = inparams;
   int pos, cpu, id, nat, port, maxplayers, rank, specs, metal = 0, energy = 0, units, start = 0,
@@ -457,7 +462,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     maxplayers = GetIntParam( params );
     haspass = (bool)GetIntParam( params );
     rank = GetIntParam( params );
-    hash = GetWordParam( params );
+    hash = STD_STRING( ConvertTASServerPhailChecksum( WX_STRING( GetWordParam( params ) ) ) );
     map = GetSentenceParam( params );
     title = GetSentenceParam( params );
     mod = GetSentenceParam( params );
@@ -471,7 +476,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     id = GetIntParam( params );
     specs = GetIntParam( params );
     haspass = (bool)GetIntParam( params );
-    hash = STD_STRING(_ConvertTASServerPhailChecksum( WX_STRING(GetWordParam( params )) ) );
+    hash = STD_STRING(ConvertTASServerPhailChecksum( WX_STRING(GetWordParam( params )) ) );
     map = GetSentenceParam( params );
     m_se->OnBattleInfoUpdated( id, specs, haspass, hash, map );
   } else if ( cmd == "LOGININFOEND" ) {
@@ -503,7 +508,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   } else if ( cmd == "JOINED" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
-    m_se->OnChannelJoin( channel, nick );
+    m_se->OnUserJoinChannel( channel, nick );
   } else if ( cmd == "LEFT" ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
@@ -545,7 +550,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
       dim = (bool)GetIntParam( params );
       ghost = (bool)GetIntParam( params );
     }
-    hash = GetWordParam( params );
+    hash = STD_STRING( ConvertTASServerPhailChecksum( WX_STRING( GetWordParam( params ) ) ) );
     m_battle_id = id;
     m_se->OnJoinedBattle( id );
     if ( m_ser_ver < SER_VER_0_35 ) {
@@ -562,7 +567,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     dgun = (bool)GetIntParam( params );
     dim = (bool)GetIntParam( params );
     ghost = (bool)GetIntParam( params );
-    hash = GetWordParam( params );
+    hash = STD_STRING( ConvertTASServerPhailChecksum( WX_STRING( GetWordParam( params ) ) ) );
     m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dgun, dim, ghost, hash );
     //UPDATEBATTLEDETAILS startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings
   } else if ( cmd == "CLIENTBATTLESTATUS" ) {
@@ -1036,13 +1041,13 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
       bo.ghostedbuildings
     );
   }
-  cmd += WX_STRING(bo.modhash);
+  cmd += ConvertToTASServerBuggedChecksum ( WX_STRING(bo.modhash) );
   cmd += wxString::Format( _T(" %d "), bo.rankneeded/100 );
-  cmd += WX_STRING( bo.maphash ) + _T(" ");
+  cmd += ConvertToTASServerBuggedChecksum( WX_STRING( bo.maphash ) ) + _T(" ");
   cmd += WX_STRING( bo.mapname ) + _T("\t");
   cmd += WX_STRING( bo.description ) + _T("\t");
   cmd += WX_STRING( bo.modname ) + _T("\n");
-
+  wxLogMessage( cmd );
   m_sock->Send( STD_STRING(cmd) );
 
   // OPENBATTLE type natType password port maxplayers startingmetal startingenergy maxunits startpos
@@ -1097,7 +1102,7 @@ void TASServer::SendHostInfo( HostInfo update )
     // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
     wxString cmd = _T("UPDATEBATTLEINFO");
     cmd += wxString::Format( _T(" %d %d "), battle.GetSpectators(), battle.IsLocked() );
-    cmd += _ConvertToTASServerBuggedChecksum( battle.GetMapHash() ) + _T(" ");
+    cmd += ConvertToTASServerBuggedChecksum( battle.GetMapHash() ) + _T(" ");
     cmd += battle.GetMapName() + _T("\n");
 
     m_sock->Send( STD_STRING(cmd) );
@@ -1124,9 +1129,9 @@ void TASServer::SendHostInfo( HostInfo update )
 
   if ( update & HI_StartRects ) { // Startrects should be updated.
 
-    for ( std::vector<BattleStartRect*>::size_type i = 10; i < battle.GetNumRects(); i++ ) battle.RemoveStartRect( i ); /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >10 start boxes)
+    for ( std::vector<BattleStartRect*>::size_type i = 16; i < battle.GetNumRects(); i++ ) battle.RemoveStartRect( i ); /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
     for ( std::vector<BattleStartRect*>::size_type i = 0; i < battle.GetNumRects(); i++ ) { // Loop through all, and remove updated or deleted.
-      if ( i >= 10 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >10 start boxes)
+      if ( i >= 16 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
       wxString cmd;
       BattleStartRect* sr = battle.GetStartRect( i );
       if ( sr == 0 ) continue;
@@ -1142,7 +1147,7 @@ void TASServer::SendHostInfo( HostInfo update )
     }
 
     for ( std::vector<BattleStartRect*>::size_type i = 0; i < battle.GetNumRects(); i++ ) { // Loop through all, and update.
-      if ( i >= 10 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >10 start boxes)
+      if ( i >= 16 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
       wxString cmd;
       BattleStartRect* sr = battle.GetStartRect( i );
       if ( sr == 0 ) continue;
@@ -1495,7 +1500,7 @@ void TASServer::OnDisconnected( Socket* sock )
 void TASServer::OnDataReceived( Socket* sock )
 {
   //TASServer* serv = (TASServer*)sock->GetUserdata();
-  _ReceiveAndExecute();
+  ReceiveAndExecute();
 }
 
 
@@ -1509,7 +1514,6 @@ UserStatus ConvTasclientstatus( TASClientstatus tas )
   stat.in_game = tas.in_game;
   stat.away = tas.away;
   stat.rank = (tas.rank + 1) * 100;
-  if ( stat.rank > RANK_4 ) stat.rank = RANK_4;
   stat.moderator = tas.moderator;
   stat.bot = tas.bot;
   return stat;

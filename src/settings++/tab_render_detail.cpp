@@ -33,10 +33,10 @@
 
 void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSizer* sizerR ) {
 	const int extrema[] = {
-		1024, 8192,   600, 3000,   20, 120,   100, 600,   0, 10,   0, 100,   100, 1000,   1000, 20000,   1, 20
+		1024, 8192,   600, 3000,   20, 120,   100, 600,   0, 10,   0, 1,   100, 1000,   1000, 20000,   1, 20
 	};
 	
-	for (int i = 0; i < ctrl_detail_sliders_size-4; i++) {
+	for (int i = 0; i < ctrl_detail_sliders_size/2; i++) {
 		ctrl_detail_sliders[i] = new wxSlider(
 			this, RO_SLI[i].id, 0, extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(180, -1), SLI_STYLE, WX_DEF_V		);
 		//ctrl_detail_sliders[i]->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);
@@ -44,7 +44,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSize
 		sizerL->Add(new wxStaticText(this, -1,  (RO_SLI[i].lbl)), 1,wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND);
 		sizerL->Add(ctrl_detail_sliders[i], 0,wxALIGN_CENTER_VERTICAL|wxALL);
 	}
-	for (int i = 5; i < ctrl_detail_sliders_size; i++) {
+	for (int i = ctrl_detail_sliders_size/2; i < ctrl_detail_sliders_size; i++) {
 		ctrl_detail_sliders[i] = new wxSlider(
 			this, RO_SLI[i].id, 0, extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(180, -1), SLI_STYLE, WX_DEF_V);
 		//ctrl_detail_sliders[i]->SetTickFreq((extrema[(i*2)+1] - extrema[i * 2]) / 10  ,1);

@@ -192,7 +192,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 }
 
 
-bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password )
+bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password,wxString* reason)
 {
   std::string host;
   int port;
@@ -210,7 +210,7 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
   host = sett().GetServerHost( STD_STRING(servername) );
   port = sett().GetServerPort( STD_STRING(servername) );
 
-  return serv->Register( host, port, STD_STRING(username), STD_STRING(password) );
+  return serv->Register( host, port, STD_STRING(username), STD_STRING(password),reason );
 
 }
 
@@ -395,6 +395,11 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     wxString topic = cmd.AfterFirst(' ');
     ConsoleHelp( topic.Lower() );
     return true;
+  } else if ( cmd.BeforeFirst(' ').Lower() == _T("/msg") ) {
+    wxString user = cmd.AfterFirst(' ').BeforeFirst(' ');
+    wxString msg = cmd.AfterFirst(' ').AfterFirst(' ');
+    m_serv->SayPrivate( STD_STRING( user ), STD_STRING( msg ) );
+    return true;
   }
   return false;
 }
@@ -468,10 +473,10 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
       message += _T(" (") +  WX_STRING( m_serv->GetRequiredSpring() ) + _T(").\n\n");
       message += _("Online play will be disabled.");
       wxLogWarning ( _T("server not supports current spring version") );
-      wxMessageBox ( message, _("Spring error"), wxICON_EXCLAMATION );
+      customMessageBox (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
     } else {
       wxLogWarning( _T("can't get spring version from unitsync") );
-      customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION );
+      customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     }
   }
   server.uidata.panel->StatusMessage( _T("Connected to ") + WX_STRING(server_name) + _T(".") );
@@ -580,6 +585,17 @@ void Ui::OnUserJoinedChannel( Channel& chan, User& user )
     return;
   }
   chan.uidata.panel->Joined( user );
+}
+
+
+void Ui::OnChannelJoin( Channel& chan, User& user )
+{
+  //wxLogDebugFunc( _T("") );
+  if ( chan.uidata.panel == 0 ) {
+    wxLogError( _T("ud->panel NULL") );
+    return;
+  }
+  chan.uidata.panel->OnChannelJoin( user );
 }
 
 

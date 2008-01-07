@@ -25,7 +25,8 @@
 
 
 //#include <wx/frame.h>
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
+
 #include <map>
 class wxString;
 class wxCommandEvent;
@@ -34,13 +35,14 @@ class wxWindow;
 class wxPoint;
 class wxSize;
 class wxCloseEvent;
+class wxSpinEvent;
 
 
 typedef std::map<wxString,int> intMap;
 typedef std::map<wxString,wxString> stringMap;
 typedef std::map<wxString,float> floatMap;
 
-class abstract_panel : public wxPanel
+class abstract_panel : public wxScrolledWindow
 {
 
 	public:
@@ -63,7 +65,7 @@ class abstract_panel : public wxPanel
 		static void loadDefaults();
 		virtual void updateControls(int what_to_update);
 		static bool loadValuesIntoMap();
-        
+		void OnSpinControlChange(wxSpinEvent& event);
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();

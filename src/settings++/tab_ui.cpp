@@ -23,7 +23,7 @@
 #include "tab_ui.h"
 #include "se_utils.h"
 #include <wx/wx.h>
-
+#include <wx/spinctrl.h>
 #include "Defs.hpp"
 
 
@@ -31,12 +31,14 @@
 void tab_ui::initScrollSpeedSizer(wxStaticBoxSizer* sizer) {
 	// i < "sizeof"(MO_SLI)
 	sizer->Add(5,10,0);
+	sizer->Add(new wxStaticText(this, -1, _T("Setting a slider to 0 will exclude that\n"
+											"mode from being cycled through ingame.")) , 0,wxBOTTOM,15);
 	for (int i = 0; i < ctrl_scroll_slider_size; i++) {
 		//set to dummy value
-		ctrl_scroll_slider[i] = new wxSlider(this, MO_SLI[i].id, 0, 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+		ctrl_scroll_slider[i] = new wxSlider(this, MO_SLI[i].id, 0, 0, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 		ctrl_scroll_slider[i]->SetToolTip(MO_SLI[i].tTip[0]);
 		if (i > 0)
-			sizer->Add(5,32,0);
+			sizer->Add(5,23,0);
 		sizer->Add(new wxStaticText(this, wxID_ANY, (MO_SLI[i].lbl), wxDefaultPosition, wxDefaultSize, 10),1,wxEXPAND);
 		sizer->Add(ctrl_scroll_slider[i], 0, wxTOP, 0);
 	}
@@ -76,6 +78,17 @@ void tab_ui::initUiOptSizer(wxStaticBoxSizer* sizer)
 	sizer->Add(0,5,0);
 }
 
+void tab_ui::initZoomSizer(wxStaticBoxSizer* sizer)
+{
+	wxBoxSizer* subSizer = new wxBoxSizer(wxVERTICAL);
+	ctrl_zoom_spin = new wxSpinCtrl(this,UI_ZOOM[0].id,_T(""),wxDefaultPosition,wxDefaultSize,wxSP_ARROW_KEYS,-255,255);
+	ctrl_zoom_spin->SetToolTip(UI_ZOOM[0].tTip[0]);
+	subSizer->Add(new wxStaticText(this, -1, UI_ZOOM[0].lbl) , 0,wxTOP,10);
+	subSizer->Add(ctrl_zoom_spin,0,wxALIGN_RIGHT|wxALL,5);
+	sizer->Add(subSizer,5,wxALL);
+	sizer->Add(0,5,0);
+}
+
 void tab_ui::updateControls(int what_to_update)
 {
 	for (int i = 0; i < ctrl_ui_chkb_size; i++) {
@@ -93,6 +106,8 @@ void tab_ui::updateControls(int what_to_update)
 	for (int i = 0; i < ctrl_scroll_slider_size; i++) {
 			ctrl_scroll_slider[i]->SetValue(intSettings[MO_SLI[i].key]);
 		}
+	
+	ctrl_zoom_spin->SetValue(intSettings[UI_ZOOM[0].key]);
 }
 
 tab_ui::tab_ui(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
@@ -104,20 +119,27 @@ tab_ui::tab_ui(wxWindow *parent, wxWindowID id , const wxString &title , const w
 	 cSizerR = new wxFlexGridSizer(1,10,10);
 	 cSizerM = new wxFlexGridSizer(1,10,10);
 
-	 scrollSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Scroll Speeds (0 to disable)"),
+	 scrollSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Scroll Speeds (mouse + keyboard)"),
 			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
+	
+
 	 cameraSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Default Camera Mode"),
 			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
 	 uiOptSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Misc. UI Options"), 
 			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
-
+	 zoomSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Zoom"), 
+	 			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
+	 
 	initScrollSpeedSizer(scrollSpeedSizer);
-	initCameraSizer(cameraSizer);
 	initUiOptSizer(uiOptSizer);
+	initCameraSizer(cameraSizer);
+	initZoomSizer(zoomSizer);
+	
 
 	cSizerM->Add(uiOptSizer,0,wxALL,5);
 	cSizerL->Add(scrollSpeedSizer,0,wxALL,5);
 	cSizerR->Add(cameraSizer,0,wxALL,5);
+	cSizerR->Add(zoomSizer,1,wxALL|wxEXPAND,5);
 	
 	cSizerL->Fit(this);
 	cSizerL->SetSizeHints(this);

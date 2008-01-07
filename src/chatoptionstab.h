@@ -69,6 +69,7 @@ class ChatOptionsTab : public wxPanel
 
     wxStaticText* m_text_sample;
     wxStaticText* m_fontname;
+    wxStaticText* m_font_label;
     wxButton* m_select_font;
     wxCheckBox* m_use_sys_colors;
     wxPanel* m_custom_colors;
@@ -104,35 +105,8 @@ class ChatOptionsTab : public wxPanel
 
     wxTextCtrl* m_highlight_words;
 
-/*
-    wxStaticText* m_normal_text;
-    wxStaticText* m_mine_text;
-    wxStaticText* m_notification_text;
-    wxStaticText* m_action_text;
-    wxStaticText* m_server_text;
-    wxStaticText* m_client_text;
-    wxStaticText* m_joinpart_text;
-    wxStaticText* m_error_text;
-    wxStaticText* m_time_text;
+    wxFont m_chat_font;
 
-    wxTextCtrl* m_normal_edit;
-    wxTextCtrl* m_mine_edit;
-    wxTextCtrl* m_notification_edit;
-    wxTextCtrl* m_action_edit;
-    wxTextCtrl* m_server_edit;
-    wxTextCtrl* m_client_edit;
-    wxTextCtrl* m_joinpart_edit;
-    wxTextCtrl* m_error_edit;
-    wxTextCtrl* m_time_edit;
-
-    wxBoxSizer* m_normal_sizer;
-    wxBoxSizer* m_mine_sizer;
-
-    wxStaticBox* m_colour_box;
-    wxStaticBoxSizer* m_colour_box_sizer;
-
-    wxBoxSizer* m_main_sizer;
-*/
     Ui& m_ui;
 
     DECLARE_EVENT_TABLE()

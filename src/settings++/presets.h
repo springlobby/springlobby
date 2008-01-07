@@ -53,10 +53,10 @@ const int vl_TreeRadius[3] = 			{ 600,		1900,	3000 	}; //tree view distance
 const int vl_GroundDetail[3] =			{ 20, 		70,		120		}; //terrain detail
 const int vl_UnitLodDist[3] =			{ 100,		350,	600		}; //unit detail
 const int vl_GrassDetail[3] = 			{ 0,		5,		10		}; //grass detail
-const int vl_GroundDecals[3] = 			{ 0,		50,		100		}; // ground decals
+const int vl_GroundDecals[3] = 			{ 0,		0,		1		}; // ground decals
 const int vl_UnitIconDist[3] = 			{ 100,		550,	1000	}; // unit icon distance
 const int vl_MaxParticles[3] = 			{ 100,		9950,	20000	};
-const int vl_SM3MaxTextureStages[3] = 	{ 1,		6,		20		};
+//const int vl_SM3MaxTextureStages[3] = 	{ 1,		6,		20		};
 
 const presetValues<int, 3> pr_ShadowMapSize = presetValues<int, 3>(wxT("ShadowMapSize"),levels_low_To_High,vl_ShadowMapSize);
 const presetValues<int, 3> pr_TreeRadius = presetValues<int, 3>(wxT("TreeRadius"),levels_low_To_High,vl_TreeRadius);
@@ -66,12 +66,12 @@ const presetValues<int, 3> pr_GrassDetail = presetValues<int, 3>(wxT("GrassDetai
 const presetValues<int, 3> pr_GroundDecals = presetValues<int, 3>(wxT("GroundDecals"),levels_low_To_High,vl_GroundDecals);
 const presetValues<int, 3> pr_UnitIconDist = presetValues<int, 3>(wxT("UnitIconDist"),levels_low_To_High,vl_UnitIconDist);
 const presetValues<int, 3> pr_MaxParticles = presetValues<int, 3>(wxT("MaxParticles"),levels_low_To_High,vl_MaxParticles);
-const presetValues<int, 3> pr_SM3MaxTextureStages = presetValues<int, 3>(wxT("SM3MaxTextureStages"),levels_low_To_High,vl_SM3MaxTextureStages);
+//const presetValues<int, 3> pr_SM3MaxTextureStages = presetValues<int, 3>(wxT("SM3MaxTextureStages"),levels_low_To_High,vl_SM3MaxTextureStages);
 
-const int prVal_RenderDetail_size = 9;
+const int prVal_RenderDetail_size = 8;
 const presetValues<int, 3> prVal_RenderDetail[prVal_RenderDetail_size] = {pr_ShadowMapSize, pr_TreeRadius, pr_GroundDetail,
 		pr_UnitLodDist, pr_GrassDetail, pr_GroundDecals,
-		pr_UnitIconDist, pr_MaxParticles, pr_SM3MaxTextureStages};
+		pr_UnitIconDist, pr_MaxParticles};
 
 /** RENDER QUALITY **********************************************************/
 const int vl_DepthBufferBits[5] = {16,16,16,24,24};
@@ -104,12 +104,15 @@ const presetValues<int, 5> prVal_RenderQuality[prVal_RenderQuality_size] = { pr_
 
 
 /** VIDEO MODES ********************************************************/
-const int vl_Resolution_X[10] = { 800, 1024, 1280, 1600, 1280, 1440, 1920, 2048, 2560, 3200};
-const int vl_Resolution_Y[10] = { 600,  768, 1024, 1200,  800,  900, 1200,  768, 1024, 1200};
-const int vl_Resolution_Str_size = 10;
-const int vl_Resolution_startOfDualScreenRes = 7;
-const wxString vl_Resolution_Str[vl_Resolution_Str_size] = { wxT("800 x 600"), wxT("1024 x 768"), wxT("1280 x 1024"),
-		wxT("1600 x 1200"), wxT("1280 x 800 (widescreen)"), wxT("1440 x 900 (widescreen)"), wxT("1920 x 1200 (widescreen)"),
+const int vl_Resolution_Str_size = 13;
+const int vl_Resolution_X[vl_Resolution_Str_size] = { 800, 1024, 1152, 1280, 1280, 1600, 1280, 1440, 1680, 1920, 2048, 2560, 3200};
+const int vl_Resolution_Y[vl_Resolution_Str_size] = { 600,  768,  864,  960, 1024, 1200,  800,  900, 1050, 1200,  768, 1024, 1200};
+const int vl_Resolution_startOfDualScreenRes = 10;
+//must be same order
+const wxString vl_Resolution_Str[vl_Resolution_Str_size] = 
+{ 		wxT("800 x 600"), wxT("1024 x 768"), wxT("1152 x 864"), wxT("1280 x 960"), wxT("1280 x 1024"),
+		wxT("1600 x 1200"), wxT("1280 x 800 (widescreen)"), wxT("1440 x 900 (widescreen)"), wxT("1680 x 1050 (widescreen)") ,
+							wxT("1920 x 1200 (widescreen)"),
 		wxT("2048 x 768 (dual-screen)"), wxT("2560 x 1024 (dual-screen)"), wxT("3200 x 1200 (dual-screen)")};
 
 

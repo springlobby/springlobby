@@ -17,6 +17,7 @@ class Socket;
 class User;
 struct UserBattleStatus;
 class ServerEvents;
+class wxString;
 
 //! @brief TASServer protocol implementation.
 class TASServer : public Server
@@ -30,7 +31,7 @@ class TASServer : public Server
 
     void SetSocket( Socket* sock );
 
-    bool Register( const std::string& addr, const int port, const std::string& nick, const std::string& password );
+    bool Register( const std::string& addr, const int port, const std::string& nick, const std::string& password,wxString* reason );
     void AcceptAgreement();
 
     void Connect( const std::string& addr, const int port );
@@ -141,7 +142,7 @@ class TASServer : public Server
 
     std::string m_addr;
 
-    void _ReceiveAndExecute();
+    void ReceiveAndExecute();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H

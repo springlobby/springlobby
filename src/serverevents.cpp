@@ -112,21 +112,30 @@ void ServerEvents::OnNewUser( const std::string& nick, const std::string& countr
 
 void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
 {
-  //wxLogDebugFunc( _T("") );
-  User& user = m_serv.GetUser( nick );
+  wxLogDebugFunc( _T("") );
+  try{
+    wxLogMessage( _T("calling m_serv.GetUser( nick ) ") );
+    User& user = m_serv.GetUser( nick );
+    wxLogMessage( _T("calling user.SetStatus( status ) ") );
 
-  user.SetStatus( status );
-  m_ui.OnUserStatusChanged( user );
+    user.SetStatus( status );
 
-  if ( user.GetBattle() != 0 ) {
-    Battle& battle = *user.GetBattle();
-    if ( battle.GetFounder().GetNick() == user.GetNick() ) {
-      if ( status.in_game != battle.GetInGame() ) {
-        battle.SetInGame( status.in_game );
-        if ( status.in_game ) m_ui.OnBattleStarted( battle );
-        else m_ui.OnBattleInfoUpdated( battle );
+    wxLogMessage( _T("calling m_ui.OnUserStatusChanged( user ) ") );
+    m_ui.OnUserStatusChanged( user );
+    wxLogMessage( _T("updating battles ") );
+
+    if ( user.GetBattle() != 0 ) {
+      Battle& battle = *user.GetBattle();
+      if ( battle.GetFounder().GetNick() == user.GetNick() ) {
+        if ( status.in_game != battle.GetInGame() ) {
+          battle.SetInGame( status.in_game );
+          if ( status.in_game ) m_ui.OnBattleStarted( battle );
+          else m_ui.OnBattleInfoUpdated( battle );
+        }
       }
     }
+  }catch(...){
+    wxLogWarning( _("OnUserStatus() failed ! (exception)") );
   }
 }
 
@@ -376,7 +385,7 @@ void ServerEvents::OnChannelSaid( const std::string& channel, const std::string&
 void ServerEvents::OnChannelJoin( const std::string& channel, const std::string& who )
 {
   wxLogDebugFunc( _T("") );
-  m_serv.GetChannel( channel ).Joined( m_serv.GetUser( who ) );
+  m_serv.GetChannel( channel ).OnChannelJoin( m_serv.GetUser( who ) );
 }
 
 
@@ -412,6 +421,13 @@ void ServerEvents::OnPrivateMessage( const std::string& user, const std::string&
 void ServerEvents::OnChannelList( const std::string& channel, const int& numusers )
 {
   m_ui.OnChannelList( channel, numusers );
+}
+
+
+void ServerEvents::OnUserJoinChannel( const std::string& channel, const std::string& who )
+{
+  wxLogDebugFunc( _T("") );
+  m_serv.GetChannel( channel ).Joined( m_serv.GetUser( who ) );
 }
 
 

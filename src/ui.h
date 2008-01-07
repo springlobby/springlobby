@@ -53,7 +53,7 @@ class Ui
     void Reconnect();
     void DoConnect( const wxString& servername, const wxString& username, const wxString& password );
 
-    bool DoRegister( const wxString& servername, const wxString& username, const wxString& password );
+    bool DoRegister( const wxString& servername, const wxString& username, const wxString& password, wxString* reason );
 
     bool IsConnected() const;
     void JoinChannel( const wxString& name, const wxString& password );
@@ -93,6 +93,7 @@ class Ui
 
     void OnJoinedChannelSuccessful( Channel& chan );
     void OnUserJoinedChannel( Channel& chan, User& user );
+    void OnChannelJoin( Channel& chan, User& user );
     void OnUserLeftChannel( Channel& chan, User& user, const std::string& reason );
 
     void OnChannelTopic( Channel& channel , const std::string user, const std::string& topic );
@@ -158,7 +159,7 @@ class Ui
     Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
-   
+
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_UI_H

@@ -29,6 +29,7 @@
 #include <wx/checkbox.h>
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
+#include <wx/spinctrl.h>
 
 #include "custom_dialogs.h"
 #include "../springunitsynclib.h"
@@ -44,10 +45,10 @@ intMap abstract_panel::intSettings;
 
 bool abstract_panel::settingsChanged = false;
 
-const int allControls_size = 61;
+const int allControls_size = 63;
 const Control allControls[allControls_size] = {
-		// RO_SLI[9]
-		RO_SLI[0],RO_SLI[1],RO_SLI[2],RO_SLI[3],RO_SLI[4],RO_SLI[5],RO_SLI[6],RO_SLI[7],RO_SLI[8],
+		// RO_SLI[8]
+		RO_SLI[0],RO_SLI[1],RO_SLI[2],RO_SLI[3],RO_SLI[4],RO_SLI[5],RO_SLI[6],RO_SLI[7],
 		// VO_CBOX[3]
 		VO_CBOX[0],VO_CBOX[1],VO_CBOX[2],
 		//VO_RBUT[2] <- only one key
@@ -61,9 +62,9 @@ const Control allControls[allControls_size] = {
 		// QA_CBOX[10]
 		QA_CBOX[0],QA_CBOX[1],QA_CBOX[2],QA_CBOX[3],QA_CBOX[4],QA_CBOX[5],QA_CBOX[6],QA_CBOX[7],QA_CBOX[8],
 		QA_CBOX[9],
-		//UI_CBOX[14]
+		//UI_CBOX[16]
 		UI_CBOX[0],UI_CBOX[1],UI_CBOX[2],UI_CBOX[3],UI_CBOX[4],UI_CBOX[5],UI_CBOX[6],UI_CBOX[7],UI_CBOX[8],
-		UI_CBOX[9],UI_CBOX[10],UI_CBOX[11],UI_CBOX[12],UI_CBOX[13],
+		UI_CBOX[9],UI_CBOX[10],UI_CBOX[11],UI_CBOX[12],UI_CBOX[13],UI_CBOX[14],UI_CBOX[15],
 		//MO_SLI[5]
 		MO_SLI[0],MO_SLI[1],MO_SLI[2],MO_SLI[3],MO_SLI[4],
 		//MO_SLI_EXT[5]
@@ -79,12 +80,15 @@ const Control allControls[allControls_size] = {
 		//MO_RBUT[5] <- only first
 		MO_RBUT[0],
 		//RC_TEXT[2]
-		RC_TEXT[0],RC_TEXT[1]
+		RC_TEXT[0],RC_TEXT[1],
+		//UI_ZOOM[1]
+		UI_ZOOM[0]
 };
 
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
-                : wxPanel(parent, id, pos, size, style,title) {
+                : wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title) {
 //	abstract_panel::expertModeEnadbled = false;
+	SetScrollbars( 10, 10, 62, 62 );
 }
 
 abstract_panel::~abstract_panel(void) {
@@ -113,7 +117,7 @@ bool abstract_panel::loadValuesIntoMap()
 void abstract_panel::loadDefaults()
 {
 	//const Control RO_SLI[9]
-	for (int i = 0;i< 9; ++i)
+	for (int i = 0;i< 8; ++i)
 		intSettings[RO_SLI[i].key] = fromString( RO_SLI[i].def);
 
 	//const Control VO_CBOX[3]
@@ -140,8 +144,8 @@ void abstract_panel::loadDefaults()
 	for (int i = 0;i< 10; ++i)
 		intSettings[QA_CBOX[i].key] = fromString( QA_CBOX[i].def);
 
-	//	const Control UI_CBOX[14]
-	for (int i = 0;i< 14; ++i)
+	//	const Control UI_CBOX[16]
+	for (int i = 0;i< 16; ++i)
 		intSettings[UI_CBOX[i].key] = fromString(UI_CBOX [i].def);
 
 	//	const Control MO_SLI[5]
@@ -175,8 +179,11 @@ void abstract_panel::loadDefaults()
 	//	const Control RC_TEXT[2]
 	for (int i = 0;i< 2; ++i)
 		intSettings[RC_TEXT[i].key] = fromString( RC_TEXT[i].def);
-
-
+	
+	//	const Control UI_ZOOM[1]
+	for (int i = 0;i< 1; ++i)
+		intSettings[UI_ZOOM[i].key] = fromString( UI_ZOOM[i].def);
+	
 }
 
 void abstract_panel::OnSliderMove(wxCommandEvent& event) {
@@ -217,7 +224,7 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 		case ID_RO_SLI_5: { (intSettings)[RO_SLI[5].key]= value; } break;
 		case ID_RO_SLI_6: { (intSettings)[RO_SLI[6].key]= value; } break;
 		case ID_RO_SLI_7: { (intSettings)[RO_SLI[7].key]= value; } break;
-		case ID_RO_SLI_8: { (intSettings)[RO_SLI[8].key]= value; } break;
+		//case ID_RO_SLI_8: { (intSettings)[RO_SLI[8].key]= value; } break;
 
 		case ID_VO_SLI_0: {
 			(intSettings)[VO_SLI_EXT[0].key]= (value > 0)? 1: 0;
@@ -230,11 +237,26 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 
 		case ID_DO_SLI_0: { (intSettings)[DO_SLI[0].key]= value; } break;
 
-		case ID_MO_SLI_0: { (intSettings)[MO_SLI[0].key]= value; } break;
-        case ID_MO_SLI_1: { (intSettings)[MO_SLI[1].key]= value; } break;
-        case ID_MO_SLI_2: { (intSettings)[MO_SLI[2].key]= value; } break;
-        case ID_MO_SLI_3: { (intSettings)[MO_SLI[3].key]= value; } break;
-        case ID_MO_SLI_4: { (intSettings)[MO_SLI[4].key]= value; } break;
+		case ID_MO_SLI_0: { 
+			(intSettings)[MO_SLI[0].key]= value; 
+			(intSettings)[MO_SLI_EXT[0].key]= ( value > 0 ? 1 : 0);
+			} break;
+        case ID_MO_SLI_1:  { 
+			(intSettings)[MO_SLI[1].key]= value; 
+			(intSettings)[MO_SLI_EXT[1].key]= ( value > 0 ? 1 : 0);
+			} break;
+        case ID_MO_SLI_2:  { 
+			(intSettings)[MO_SLI[2].key]= value; 
+			(intSettings)[MO_SLI_EXT[2].key]= ( value > 0 ? 1 : 0);
+			} break;
+        case ID_MO_SLI_3:  { 
+			(intSettings)[MO_SLI[3].key]= value; 
+			(intSettings)[MO_SLI_EXT[3].key]= ( value > 0 ? 1 : 0);
+			} break;
+        case ID_MO_SLI_4:  { 
+			(intSettings)[MO_SLI[4].key]= value; 
+			(intSettings)[MO_SLI_EXT[4].key]= ( value > 0 ? 1 : 0);
+			} break;
 
 	}
 }
@@ -314,7 +336,9 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 		case ID_WINDOWP_UI_CBOX_11:
 		case ID_WINDOWP_UI_CBOX_12:
 		case ID_WINDOWP_UI_CBOX_13:
-		case ID_WINDOWP_UI_CBOX_14: {
+		case ID_WINDOWP_UI_CBOX_14:
+		case ID_WINDOWP_UI_CBOX_15:
+		case ID_WINDOWP_UI_CBOX_16:{
 			int i = id - UI_CBOX[0].id;
 			(intSettings)[UI_CBOX[i].key]= checked;
 		} break;
@@ -372,6 +396,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 			}
 			break;
 		}
+		//TODO save choices in option handler in 
 		case ID_SIMPLE_QUAL_CBX:
 		{
 			for (int i=0; i<prVal_RenderQuality_size;++i)
@@ -381,6 +406,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 
 				(intSettings)[prVal_RenderQuality[i].key]= k;
 			}
+
 			break;
 		}
 		case ID_SIMPLE_DETAIL_CBX:
@@ -414,6 +440,15 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		}
 	}
 }
+void abstract_panel::OnSpinControlChange(wxSpinEvent& event)
+{
+	if (event.GetId()==ID_WINDOWP_UI_MW_SPD)
+	{
+		wxSpinCtrl* zoom = (wxSpinCtrl*) event.GetEventObject();
+		(intSettings)[UI_ZOOM[0].key] = zoom->GetValue();
+		settingsChanged = true;
+	}
+}
 
 //TODO inquire about floatsettings
 bool abstract_panel::saveSettings() {
@@ -433,7 +468,7 @@ bool abstract_panel::saveSettings() {
 //	        //configHandler->SetSpringConfigFloat(f->first,f->second);
 //	    }
     } catch (...) {
-    	customMessageBox(SS_MAIN_ICON,_T("Could not save, unitsync not properly loaded"), wxT(""), wxOK|wxICON_HAND, 0);
+    	customMessageBox(SS_MAIN_ICON,_T("Could not save, unitsync not properly loaded"), wxT("SpringSettings Error"), wxOK|wxICON_HAND, 0);
     	return false;
     }
 
@@ -449,5 +484,6 @@ BEGIN_EVENT_TABLE(abstract_panel, wxPanel)
 	EVT_CHECKBOX(wxID_ANY,          abstract_panel::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       abstract_panel::OnRadioButtonToggle)
 //	EVT_IDLE(                       abstract_panel::update)
+	EVT_SPINCTRL(wxID_ANY, 				abstract_panel::OnSpinControlChange)
 	EVT_COMBOBOX(wxID_ANY, 		abstract_panel::OnComboBoxChange)
 END_EVENT_TABLE()

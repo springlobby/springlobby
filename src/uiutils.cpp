@@ -117,3 +117,24 @@ wxColour ColourDelta( const wxColour& colour, const int& delta )
   return wxColour( r, g, b );
 }
 
+
+wxString GetColorString( const wxColour& color )
+{
+  return wxString::Format( _T("%d %d %d"), color.Red(), color.Green(), color.Blue() );
+}
+
+
+wxColour GetColorFromStrng( const wxString color )
+{
+  wxString c = color;
+  long r = 0, g = 0, b = 0;
+  c.BeforeFirst( ' ' ).ToLong( &r );
+  c = c.AfterFirst( ' ' );
+  c.BeforeFirst( ' ' ).ToLong( &g );
+  c = c.AfterFirst( ' ' );
+  c.BeforeFirst( ' ' ).ToLong( &b );
+  return wxColour( r%256, g%256, b%256 );
+}
+
+
+

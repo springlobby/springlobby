@@ -39,7 +39,7 @@
 #include "custom_dialogs.h"
 #include "../images/springsettings.xpm"
 #include "helpmenufunctions.h"
-
+#include "se_utils.h"
 
 const wxString simpleTabCap= _T("Combined Options");
 const wxString qualityTabCap= _T("Render quality / Video mode");
@@ -64,9 +64,9 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	alreadyCalled = false;
 	parentWindow = parent;
 	OptionsHandler.reload();
-	wxSetWorkingDirectory(OptionsHandler.getSpringDir());
-	susynclib()->Load(OptionsHandler.getUsyncLoc());
 	
+	loadUnitsync();
+		
 	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
 	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
 	
@@ -136,7 +136,7 @@ void settings_frame::handleExit() {
         	if (abstract_panel::saveSettings())
         				 (abstract_panel::settingsChanged) = false;
         	if (simpleTab)
-        						simpleTab->saveCbxChoices();
+        			simpleTab->saveCbxChoices();
         case wxNO:
 	        	OptionsHandler.save();
         	    Destroy();
@@ -255,6 +255,10 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				notebook->InsertPage(0,simpleTab,simpleTabCap);
 				simpleTab->updateControls(UPDATE_ALL);
 				
+				//if not on ui page goto simple
+				if (notebook->GetSelection()!=1)
+					notebook->SetSelection(0);
+				
 				notebook->DeletePage(5);
 				notebook->DeletePage(4);
 				notebook->DeletePage(3);
@@ -302,7 +306,8 @@ void settings_frame::resetSettings()
 void settings_frame::switchToExpertMode()
 {
 	OptionsHandler.setMode(SET_MODE_EXPERT);
-					
+	menuMode->Check(ID_MENUITEM_EXPERT,true);
+	
 	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
     detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
     audioTab = new audio_panel(notebook,ID_AUDIO);
