@@ -146,6 +146,12 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_opts_list->InsertItem( Opt_Pos_Maxunits, _("Max units") );
   m_opts_list->InsertItem( Opt_Pos_Restrictions, _("Restrictions") );
 
+  // add map/mod options to the list
+  int pos = Opt_Pos_Restrictions;
+  pos = AddMMOptionsToList( pos, ModOption );
+  pos = AddMMOptionsToList( pos, MapOption );
+
+
   // Create Sizers
   m_players_sizer = new wxBoxSizer( wxVERTICAL );
   m_player_sett_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -203,7 +209,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   UpdateBattleInfo();
 
   m_splitter->SetMinimumPaneSize( 240 );
-  
+
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     m_players->AddUser( battle.GetUser( i ) );
   }
@@ -277,6 +283,13 @@ void BattleRoomTab::UpdateBattleInfo()
   m_opts_list->SetItem( Opt_Pos_Startenergy, 1, wxString::Format( _T("%d"), m_battle.GetStartEnergy() ) );
   m_opts_list->SetItem( Opt_Pos_Maxunits, 1, wxString::Format( _T("%d"), m_battle.GetMaxUnits() ) );
   m_opts_list->SetItem( Opt_Pos_Restrictions, 1, bool2yn( m_battle.GetNumDisabledUnits() > 0 ) );
+
+  int total = m_opts_list->GetItemCount();
+  for ( int i = Opt_Pos_Restrictions +1; i < total; i++ ) m_opts_list->DeleteItem( i );
+
+  int pos = Opt_Pos_Restrictions;
+  pos = AddMMOptionsToList( pos, ModOption );
+  pos = AddMMOptionsToList( pos, MapOption );
 
   m_lock_chk->SetValue( m_battle.IsLocked() );
   m_minimap->UpdateMinimap();
@@ -486,3 +499,43 @@ void BattleRoomTab::OnUnitSyncReloaded()
   m_battle.SendMyBattleStatus(); // This should reset sync status.
 }
 
+int BattleRoomTab::AddMMOptionsToList( int pos, GameOption optFlag )
+{
+
+  mmOptionsWrapper* optWrap = m_battle.CustomBattleOptions();
+
+  /// add bool options
+  for (optionMapBoolIter i = optWrap->m_boolMaps[optFlag]->begin(); i != optWrap->m_boolMaps[optFlag]->end();++i)
+  {
+    pos++;
+    mmOptionBool current = i->second;
+    m_opts_list->InsertItem( pos, current.name );
+    m_opts_list->SetItem( pos, 1 , bool2yn( current.value ) );
+  }
+  /// add float options
+  for ( optionMapFloatIter it = (*optWrap->m_floatMaps[optFlag]).begin(); it != (*optWrap->m_floatMaps[optFlag]).end(); ++it)
+  {
+    pos++;
+    mmOptionFloat current = it->second;
+    m_opts_list->InsertItem( pos, current.name );
+    m_opts_list->SetItem( pos, 1 , wxString::Format( _("%f"), current.value ) );
+  }
+  /// add list options
+  for ( optionMapListIter it = (*optWrap->m_listMaps[optFlag]).begin(); it != (*optWrap->m_listMaps[optFlag]).end(); ++it)
+  {
+    pos++;
+    mmOptionList current = it->second;
+    m_opts_list->InsertItem( pos, current.name );
+    m_opts_list->SetItem( pos, 1 ,  current.value );
+  }
+  /// add string options
+  for ( optionMapStringIter it = (*optWrap->m_stringMaps[optFlag]).begin(); it != (*optWrap->m_stringMaps[optFlag]).end(); ++it)
+  {
+    pos++;
+    mmOptionString current = it->second;
+    m_opts_list->InsertItem( pos, current.name );
+    m_opts_list->SetItem( pos, 1 , current.value );
+  }
+
+  return pos;
+}

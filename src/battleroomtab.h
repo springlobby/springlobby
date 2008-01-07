@@ -5,6 +5,7 @@
 #include <wx/bmpbuttn.h>
 
 #include "iunitsync.h"
+#include "mmoptionswrapper.h"
 
 class Ui;
 class Battle;
@@ -61,7 +62,11 @@ class BattleRoomTab : public wxPanel
 
     void OnUnitSyncReloaded();
 
+
   protected:
+
+    int AddMMOptionsToList( int pos, GameOption optFlag );
+
     Ui& m_ui;
     Battle& m_battle;
     UnitSyncMap m_map;
