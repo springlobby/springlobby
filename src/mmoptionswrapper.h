@@ -7,9 +7,6 @@
 #include <utility>
 #include <wx/string.h>
 
-#define MODOPTS 0
-#define MAPOPTS 1
-
 typedef std::map<wxString,mmOptionBool> optionMapBool;
 typedef std::map<wxString,mmOptionFloat> optionMapFloat;
 typedef std::map<wxString,mmOptionString> optionMapString;
@@ -46,20 +43,20 @@ public:
 	bool loadMapOptions(wxString mapname);
 	bool reloadMapOptions(wxString mapname); //recreates the containers and read from unitsync with new mapname
 	bool loadOptions(GameOption, wxString mapname = _T(""));
-	bool keyExists(wxString key,GameOption,bool showError, int* optType);
+	bool keyExists(wxString key,GameOption,bool showError, OptionType* optType);
 	bool setOptions(wxStringPairVec*,GameOption);
 	void getOptions(wxStringPairVec*,GameOption);
 	void getOptionsMap(wxStringMap*,GameOption);
 	void unLoadOptions();
 	void unLoadOptions(GameOption);
-	
+
 	wxString getSingleValue(wxString key);
 	wxString getSingleValue(wxString key, GameOption modmapFlag);
-	
+
 	bool setSingleOption(wxString,wxString, GameOption modmapFlag);
 	bool setSingleOption(wxString,wxString);
-	
-	int GetSingleOptionType (wxString key);
+
+	OptionType GetSingleOptionType (wxString key);
 
 //private:
 	const static int optionCategoriesCount = 2;
@@ -68,7 +65,7 @@ public:
 	optionMapString* m_stringMaps[optionCategoriesCount];
 	optionMapList* m_listMaps[optionCategoriesCount];
 protected:
-	bool setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, int optType);
+	bool setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType);
 
 };
 

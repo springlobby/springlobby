@@ -6,7 +6,7 @@
 
 mmOptionsWrapper::mmOptionsWrapper()
 {
-	
+
 }
 
 void mmOptionsWrapper::unLoadOptions()
@@ -31,19 +31,19 @@ mmOptionsWrapper::~mmOptionsWrapper()
 
 bool mmOptionsWrapper::loadMapOptions(wxString mapname)
 {
-	
+
 	return loadOptions(MapOption,mapname);
 }
 
-int mmOptionsWrapper::GetSingleOptionType (wxString key)
+OptionType mmOptionsWrapper::GetSingleOptionType (wxString key)
 {
-	int* type = new int(0);
+	OptionType* type = new OptionType(opt_undefined);
 	for ( GameOption g = 0; g < optionCategoriesCount; g++ )
 	{
 		if (keyExists(key,g,false,type))
 			return *type;
 	}
-	return IS_UNDEFINED_OPTION;
+	return opt_undefined;
 }
 
 
@@ -85,7 +85,7 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag,wxString mapname)
 	for (int i = 0; i < count; ++i)
 	{
 		wxString key = susynclib()->GetOptionKey(i);
-		int* dummy = new int(0);
+		OptionType* dummy = new OptionType(opt_undefined);
 		if (keyExists(key,modmapFlag,true,dummy))
 		{
 			return false;
@@ -96,20 +96,20 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag,wxString mapname)
 			{
 				switch (susynclib()->GetOptionType(i))
 				{
-				case IS_FLOAT_OPTION:
+				case opt_float:
 					(*m_floatMaps[modmapFlag])[key] = mmOptionFloat(susynclib()->GetOptionName(i),key,
 							susynclib()->GetOptionDesc(i),susynclib()->GetOptionNumberDef(i), susynclib()->GetOptionNumberStep(i),
 							susynclib()->GetOptionNumberMin(i),susynclib()->GetOptionNumberMax(i));
 					break;
-				case IS_BOOL_OPTION:
+				case opt_bool:
 					(*m_boolMaps[modmapFlag])[key] = mmOptionBool(susynclib()->GetOptionName(i),key,
 							susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i));
 					break;
-				case IS_STRING_OPTION:
+				case opt_string:
 					(*m_stringMaps[modmapFlag])[key] = mmOptionString(susynclib()->GetOptionName(i),key,
 							susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i));
 					break;
-				case IS_LIST_OPTION:
+				case opt_list:
 					 templist = new mmOptionList(susynclib()->GetOptionName(i),key,
 							susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
 					 int listitemcount = susynclib()->GetOptionListCount(i);
@@ -132,30 +132,30 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag,wxString mapname)
 	return true;
 }
 
-bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showError, int* optType)
+bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showError, OptionType* optType)
 {
 	wxString duplicateKeyError = _T("Please contact the mod's author and tell him\n"
 										"to use unique keys in his ModOptions.lua");
 	bool exists = false;
-	*optType = IS_UNDEFINED_OPTION;
+	*optType = opt_undefined;
 	if ( (*m_listMaps[modmapFlag]).find(key)!=  (*m_listMaps[modmapFlag]).end())
 	{
-		*optType = IS_LIST_OPTION;
+		*optType = opt_list;
 		exists = true;
 	}
 	else if ( (*m_stringMaps[modmapFlag]).find(key)!=  (*m_stringMaps[modmapFlag]).end())
 	{
-		*optType = IS_STRING_OPTION;
+		*optType = opt_string;
 		exists = true;
 	}
 	else if ( (*m_boolMaps[modmapFlag]).find(key)!=  (*m_boolMaps[modmapFlag]).end())
 	{
-		*optType = IS_BOOL_OPTION;
+		*optType = opt_bool;
 		exists = true;
 	}
 	else if ( (*m_floatMaps[modmapFlag]).find(key)!=  (*m_floatMaps[modmapFlag]).end())
 	{
-		*optType = IS_FLOAT_OPTION;
+		*optType = opt_float;
 		exists = true;
 	}
 
@@ -181,7 +181,7 @@ bool  mmOptionsWrapper::setOptions(wxStringPairVec* options, GameOption modmapFl
 		wxString value = it->second;
 
 		//we don't want to add a key that doesn't already exists
-		int* optType = new int(IS_UNDEFINED_OPTION);
+		OptionType* optType = new OptionType(opt_undefined);
 		if(!keyExists(key,modmapFlag,false,optType))
 			return false;
 		else
@@ -248,7 +248,7 @@ bool mmOptionsWrapper::setSingleOption(wxString key,wxString value,GameOption mo
 
 bool mmOptionsWrapper::setSingleOption(wxString key,wxString value)
 {
-	int* dummy = new int(0);
+	OptionType* dummy = new OptionType(opt_undefined);
 	if (keyExists(key,ModOption,false,dummy))
 		return setSingleOption(key,value,ModOption);
 	else if (keyExists(key,MapOption,false,dummy))
@@ -270,31 +270,31 @@ wxString mmOptionsWrapper::getSingleValue(wxString key)
 
 wxString mmOptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag)
 {
-	int* optType = new int(0);
-	
+	OptionType* optType = new OptionType(opt_undefined);
+
 	if ( keyExists(key,modmapFlag,false,optType) )
 	{
 		switch (*optType)
 		{
-		case IS_FLOAT_OPTION: 
+		case opt_float:
 			return wxString::Format( _T("%f"),(*m_floatMaps[modmapFlag])[key].value );
-		case IS_BOOL_OPTION:
+		case opt_bool:
 			return wxString::Format(_T("%d"), (*m_boolMaps[modmapFlag])[key].value );
-		case IS_STRING_OPTION:
+		case opt_string:
 			return (*m_stringMaps[modmapFlag])[key].value;
-		case IS_LIST_OPTION:
+		case opt_list:
 			return (*m_listMaps[modmapFlag])[key].value;
 		}
 	}
-	
+
 	return wxEmptyString;
 }
 
-bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, int optType)
+bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType)
 {
 	switch (optType)
 	{
-		case IS_FLOAT_OPTION :
+		case opt_float :
 		{
 			//test if min < val < max
 			double* d_val = new double;
@@ -309,7 +309,7 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 				(*m_floatMaps[modmapFlag])[key].value = fl_value;
 			break;
 		}
-		case IS_BOOL_OPTION :
+		case opt_bool :
 		{
 			long* l_val = new long;
 			bool l_conv_ok = value.ToLong(l_val);
@@ -322,7 +322,7 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 				(*m_boolMaps[modmapFlag])[key].value = bool(*l_val);
 			break;
 		}
-		case IS_STRING_OPTION :
+		case opt_string :
 		{
 			// test if maxlength isn't exceeded
 			if ( int(value.Len())> (*m_stringMaps[modmapFlag])[key].max_len )
@@ -334,7 +334,7 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 				(*m_stringMaps[modmapFlag])[key].value = value;
 			break;
 		}
-		case IS_LIST_OPTION :
+		case opt_list :
 		{
 			// test if valid value, aka is in list
 			int listitemcount = (*m_listMaps[modmapFlag])[key].listitems.size();
