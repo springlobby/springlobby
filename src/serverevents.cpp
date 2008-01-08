@@ -267,7 +267,12 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
 
   battle.SetMap( WX_STRING(map), WX_STRING(maphash) );
 
-  if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) ) battle.SendMyBattleStatus();
+  if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) )
+  {
+    battle.SendMyBattleStatus();
+    battle.CustomBattleOptions()->loadOptions( MapOption, WX_STRING( map ) );
+    m_ui.OnBattleMapChanged( battle );
+  }
 
   m_ui.OnBattleInfoUpdated( battle );
 }

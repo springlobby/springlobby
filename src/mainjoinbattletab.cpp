@@ -74,7 +74,7 @@ ChatPanel* MainJoinBattleTab::GetActiveChatPanel()
 
 
 //void MainJoinBattleTab::UpdateCurrentBattle()
-void MainJoinBattleTab::UpdateCurrentBattle(bool updateRestrictions)
+void MainJoinBattleTab::UpdateCurrentBattle(bool updateRestrictions, bool MapChanged)
 {
   if ( m_battle_tab ) {
     m_battle_tab->UpdateBattleInfo();
@@ -89,6 +89,10 @@ void MainJoinBattleTab::UpdateCurrentBattle(bool updateRestrictions)
   if ( m_mm_opts_tab ){
 	  if ( !m_battle_tab->GetBattle().IsFounderMe() )
 	  {
+	    if ( MapChanged )
+	    {
+	      m_mm_opts_tab->OnRefreshControls(MapOption);
+	    }
       for ( int i = 0; i < m_battle_tab->GetBattle().ChangedOptions.GetCount(); i++ ) m_mm_opts_tab->UpdateOptControls(  m_battle_tab->GetBattle().ChangedOptions[i] );
       m_battle_tab->GetBattle().ChangedOptions.Empty();
 	  }
