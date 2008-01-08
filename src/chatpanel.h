@@ -144,7 +144,7 @@ class ChatPanel : public wxPanel
 
   protected:
     void _SetChannel( Channel* channel );
-    void OutputLine( const wxString& message, const wxColour& col );
+    void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
 
     User* GetSelectedUser();
 
