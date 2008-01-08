@@ -285,7 +285,7 @@ void BattleRoomTab::UpdateBattleInfo()
   m_opts_list->SetItem( Opt_Pos_Restrictions, 1, bool2yn( m_battle.GetNumDisabledUnits() > 0 ) );
 
   int total = m_opts_list->GetItemCount();
-  for ( int i = Opt_Pos_Restrictions +1; i < total; i++ ) m_opts_list->DeleteItem( i );
+  for ( int i = Opt_Pos_Restrictions +1; i < total+3; i++ ) m_opts_list->DeleteItem( i );
 
   int pos = Opt_Pos_Restrictions;
   pos = AddMMOptionsToList( pos, ModOption );

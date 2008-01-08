@@ -88,7 +88,8 @@ void MainJoinBattleTab::UpdateCurrentBattle(bool updateRestrictions)
   }
   if ( m_mm_opts_tab ){
 	  if ( !m_battle_tab->GetBattle().IsFounderMe() )
-		  m_mm_opts_tab->UpdateOptControls();
+		  //TODO fixme
+		  m_mm_opts_tab->UpdateOptControls(_T(""));
   }
 }
 

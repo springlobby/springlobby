@@ -2,7 +2,7 @@
 #define BATTLEROOMMMOPTIONSTAB_H_
 
 #include <wx/scrolwin.h>
-#include <vector>
+#include <map>
 #include "mmoptionswrapper.h"
 
 const int BOOL_START_ID = 3000;
@@ -22,10 +22,10 @@ class wxSpinCtrlDbl;
 class wxTextCtrl;
 class wxSpinEvent;
 
-typedef std::vector<wxCheckBox*> chkBoxVec;
-typedef std::vector<wxComboBox*> comboBoxVec;
-typedef std::vector<wxSpinCtrlDbl*> spinCtrlVec;
-typedef std::vector<wxTextCtrl*> textCtrlVec;
+typedef std::map<wxString,wxCheckBox*> chkBoxMap;
+typedef std::map<wxString,wxComboBox*> comboBoxMap;
+typedef std::map<wxString,wxSpinCtrlDbl*> spinCtrlMap;
+typedef std::map<wxString,wxTextCtrl*> textCtrlMap;
 
 class BattleroomMMOptionsTab : public wxScrolledWindow
 {
@@ -33,7 +33,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		BattleroomMMOptionsTab( IBattle& battle, wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
 		~BattleroomMMOptionsTab();
 		void setupMapOptionsSizer();
-		void UpdateOptControls(/* wxstringpairvec* list **/);
+		void UpdateOptControls(wxString controlName);
 	protected:
 		 IBattle& m_battle;
 
@@ -44,11 +44,11 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		wxBoxSizer* m_map_layout;
 		mmOptionsWrapper* m_mapmodoptions;
 
-		chkBoxVec* m_chkbox_vec[mmOptionsWrapper::optionCategoriesCount];
-		comboBoxVec* m_combox_vec[mmOptionsWrapper::optionCategoriesCount];
-		spinCtrlVec* m_spinctrl_vec[mmOptionsWrapper::optionCategoriesCount];
-		textCtrlVec* m_textctrl_vec[mmOptionsWrapper::optionCategoriesCount];
-
+		chkBoxMap m_chkbox_map;
+		comboBoxMap m_combox_map;
+		spinCtrlMap m_spinctrl_map;
+		textCtrlMap m_textctrl_map;
+		
 		void setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag);
 		void OnComBoxChange(wxCommandEvent&);
 		void OnChkBoxChange(wxCommandEvent&);
