@@ -97,12 +97,12 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   if ( (update && HI_Restrictions) != 0 ) m_sptab.ReloadRestrictions();
   if ( (update && HI_Map_Changed) != 0 )
   {
-    CustomBattleOptions()->loadOptions( MapOption, m_map.name );
+    CustomBattleOptions()->loadOptions( MapOption, WX_STRING(m_map.name) );
     m_sptab.ReloadMapOptContrls();
   }
   if ( (update && HI_Mod_Changed) != 0 )
   {
-    CustomBattleOptions()->loadOptions( ModOption, m_mod.name );
+    CustomBattleOptions()->loadOptions( ModOption, WX_STRING(m_mod.name) );
     m_sptab.ReloadModOptContrls();
   }
 }
