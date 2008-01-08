@@ -259,31 +259,45 @@ void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
 	{
 		wxString key = it->first;
 		if (key.StartsWith(pref))
+		{
+			delete it->second;
 			m_chkbox_map.erase(it);
+		}
 	}
 	for (spinCtrlMap::iterator it = m_spinctrl_map.begin(); it != m_spinctrl_map.end(); ++it)
 	{
 		wxString key = it->first;
 		if (key.StartsWith(pref))
+		{
+			delete it->second;
 			m_spinctrl_map.erase(it);
+		}
 	}
 	for (textCtrlMap::iterator it = m_textctrl_map.begin(); it != m_textctrl_map.end(); ++it)
 	{
 		wxString key = it->first;
 		if (key.StartsWith(pref))
+		{
+			delete it->second;
 			m_textctrl_map.erase(it);
+		}
 	}
 	for (comboBoxMap::iterator it = m_combox_map.begin(); it != m_combox_map.end(); ++it)
 	{
 		wxString key = it->first;
 		if (key.StartsWith(pref))
+		{
+			delete it->second;
 			m_combox_map.erase(it);
+		}
 	}
 	
 	//reloading the controls
 	switch (flag)
 	{
 		case ModOption:
+			m_mod_layout = 0;
+			delete m_mod_layout;
 			m_mod_layout = new wxBoxSizer( wxVERTICAL);
 			setupOptionsSizer(m_mod_layout,ModOption);
 			break;
@@ -293,6 +307,7 @@ void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
 			break;
 	}
 	
-	
+	this->SetSizer( m_main_sizer, true );
+	this->Layout();
 	
 }
