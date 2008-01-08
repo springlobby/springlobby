@@ -31,8 +31,9 @@ typedef std::map<wxString,wxString> wxStringMap;
 
 typedef int GameOption;
 enum {
-	MapOption = 1,
-	ModOption = 0
+  EngineOption = 2,
+	MapOption    = 1,
+	ModOption    = 0
 };// should reflect: optionCategoriesCount
 
 class mmOptionsWrapper

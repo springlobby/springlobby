@@ -1108,34 +1108,24 @@ void TASServer::SendHostInfo( HostInfo update )
   }
   if ( ( update & (HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Options) ) > 0 ) {
     wxString cmd;
-    if ( m_ser_ver < SER_VER_0_35 ) {
-      // UPDATEBATTLEDETAILS startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings
-      cmd = _T("UPDATEBATTLEDETAILS");
-      cmd += wxString::Format( _T(" %d %d %d %d %d %d %d %d\n"),
-        battle.GetStartMetal(), battle.GetStartEnergy(), battle.GetMaxUnits(), battle.GetStartType(), battle.GetGameType(),
-        battle.LimitDGun(), battle.DimMMs(), battle.GhostedBuildings()
-      );
-    } else {
-      cmd = _T("SETSCRIPTTAGS ");
 
-      wxStringPairVec optlist;
+    cmd = _T("SETSCRIPTTAGS ");
 
-      battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
-      for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
-      {
-        cmd += _T("game\\mapoptions\\") + it->first + _T("=") + it->second + _T('\t');
-      }
-      battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
-      for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
-      {
-        cmd += _T("game\\modoptions\\") + it->first + _T("=") + it->second + _T('\t');
-      }
-/// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
-      cmd += wxString::Format( _T("game/startpostype=%d\tgame/maxunits=%d\tgame/limitdgun %d\tgame/startmetal=%d\tgame/gamemode=%d\tgame/ghostedbuildings=%d\tgame/startenergy=%d\tgame/diminishingmms=%d\n"),
-        battle.GetStartType(), battle.GetMaxUnits(), battle.LimitDGun(), battle.GetStartMetal(),
-        battle.GetGameType(), battle.GhostedBuildings(), battle.GetStartEnergy(), battle.DimMMs()
-      );
+    for ( int i = 0; i < battle.ChangedOptions.GetCount(); i++ )
+    {
+      wxString key = battle.ChangedOptions[i];
+      if ( key.BeforeFirst( '_' ) == _T("map") )
+        cmd += _T("game\\mapoption\\") + key.AfterFirst( '-' ) + _T("=") + battle.CustomBattleOptions()->getSingleValue( key.AfterFirst( '-' ), MapOption ) + _T("\t");
+      if ( key.BeforeFirst( '_' ) == _T("mod") )
+        cmd += _T("game\\modoption\\") + key.AfterFirst( '-' ) + _T("=") + battle.CustomBattleOptions()->getSingleValue( key.AfterFirst( '-' ), ModOption ) + _T("\t");
     }
+    battle.ChangedOptions.Empty();
+
+/// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
+    cmd += wxString::Format( _T("game/startpostype=%d\tgame/maxunits=%d\tgame/limitdgun %d\tgame/startmetal=%d\tgame/gamemode=%d\tgame/ghostedbuildings=%d\tgame/startenergy=%d\tgame/diminishingmms=%d\n"),
+      battle.GetStartType(), battle.GetMaxUnits(), battle.LimitDGun(), battle.GetStartMetal(),
+      battle.GetGameType(), battle.GhostedBuildings(), battle.GetStartEnergy(), battle.DimMMs()
+    );
 
     m_sock->Send( STD_STRING(cmd) );
   }

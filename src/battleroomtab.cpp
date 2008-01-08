@@ -120,7 +120,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_opts_list->SetColumnWidth( 0, 85 );
   m_opts_list->SetColumnWidth( 1, 60 );
 
-  int pos = 0;
+  long pos = 0;
 
   m_opts_list->InsertItem( pos, _("Size") );
   m_opt_list_map[ _("Size") ] = pos;
@@ -148,9 +148,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   // add map/mod options to the list
   m_opts_list->InsertItem( pos++, wxEmptyString );
-  pos = AddMMOptionsToList( pos++, ModOption );
+  pos = AddMMOptionsToList( pos, ModOption );
   m_opts_list->InsertItem( pos++, wxEmptyString );
-  pos = AddMMOptionsToList( pos++, MapOption );
+  pos = AddMMOptionsToList( pos, MapOption );
 
 
   // Create Sizers
@@ -277,22 +277,39 @@ void BattleRoomTab::UpdateBattleInfo()
     m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, _T("?") );
   }
 
-  m_opts_list->SetItem( m_opt_list_map[ _("Startpos") ], 1, _GetStartPosStr( m_battle.GetStartType() ) );
-  m_opts_list->SetItem( m_opt_list_map[  _("Game end") ], 1, _GetGameTypeStr( m_battle.GetGameType() ) );
-  m_opts_list->SetItem( m_opt_list_map[ _("Limit D-gun") ], 1, bool2yn( m_battle.LimitDGun() ) );
-  m_opts_list->SetItem( m_opt_list_map[ _("Start metal") ], 1, wxString::Format( _T("%d"), m_battle.GetStartMetal() ) );
-  m_opts_list->SetItem( m_opt_list_map[ _("Start energy") ], 1, wxString::Format( _T("%d"), m_battle.GetStartEnergy() ) );
-  m_opts_list->SetItem( m_opt_list_map[ _("Max units") ], 1, wxString::Format( _T("%d"), m_battle.GetMaxUnits() ) );
-  m_opts_list->SetItem( m_opt_list_map[ _("Restrictions") ], 1, bool2yn( m_battle.GetNumDisabledUnits() > 0 ) );
+  for ( int i = 0; i < m_battle.ChangedOptions.GetCount(); i++ )
+  {
+    long type;
+    m_battle.ChangedOptions[i].BeforeFirst( '_' ).ToLong( &type );
+    wxString key = m_battle.ChangedOptions[i].AfterFirst( '_' );
+    long index = m_opt_list_map[ key ];
+    wxString value;
+    if ( type == EngineOption )
+    {
+      if ( key == _("Startpos") ) value = _GetStartPosStr( m_battle.GetStartType() );
+      if ( key == _("Game end") ) value = _GetGameTypeStr( m_battle.GetGameType() );
+      if ( key == _("Limit D-gun") ) value = bool2yn( m_battle.LimitDGun() );
+      if ( key == _("Start metal") ) value = wxString::Format( _T("%d"), m_battle.GetStartMetal() );
+      if ( key == _("Start energy") ) value =  wxString::Format( _T("%d"), m_battle.GetStartEnergy() );
+      if ( key == _("Max units") ) value = wxString::Format( _T("%d"), m_battle.GetMaxUnits() );
+      if ( key == _("Restrictions") ) value = bool2yn( m_battle.GetNumDisabledUnits() > 0 );
+    }
+    if ( type == MapOption || type == ModOption )
+    {
+      OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( key );
+      if ( DataType == opt_bool )
+      {
+        long boolval;
+        m_battle.CustomBattleOptions()->getSingleValue( key, type ).ToLong( &boolval );
+        value = bool2yn( boolval );
+      }
+      else if ( DataType == opt_float || DataType == opt_list || DataType == opt_string )
+        m_battle.CustomBattleOptions()->getSingleValue( key, type );
+    }
+    m_opts_list->SetItem( index, 1, value );
+  }
 
-  int pos = m_opt_list_map[ _("Restrictions") ];
-  int total = m_opts_list->GetItemCount();
-  for ( int i = pos + 2; i < total+3; i++ ) m_opts_list->DeleteItem( i );
-
-  m_opts_list->InsertItem( pos++, wxEmptyString );
-  pos = AddMMOptionsToList( pos++, ModOption );
-  m_opts_list->InsertItem( pos++, wxEmptyString );
-  pos = AddMMOptionsToList( pos++, MapOption );
+  m_battle.ChangedOptions.Empty();
 
   m_lock_chk->SetValue( m_battle.IsLocked() );
   m_minimap->UpdateMinimap();
@@ -502,47 +519,26 @@ void BattleRoomTab::OnUnitSyncReloaded()
   m_battle.SendMyBattleStatus(); // This should reset sync status.
 }
 
-int BattleRoomTab::AddMMOptionsToList( int pos, GameOption optFlag )
+int BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
 {
-
-  mmOptionsWrapper* optWrap = m_battle.CustomBattleOptions();
-
-  /// add bool options
-  for (optionMapBoolIter i = optWrap->m_boolMaps[optFlag]->begin(); i != optWrap->m_boolMaps[optFlag]->end();++i)
+  wxStringPairVec optlist;
+  m_battle.CustomBattleOptions()->getOptions( &optlist, optFlag );
+  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
     pos++;
-    mmOptionBool current = i->second;
-    m_opts_list->InsertItem( pos, current.name );
-    m_opt_list_map[ current.name ] = pos;
-    m_opts_list->SetItem( pos, 1 , bool2yn( current.value ) );
+    m_opts_list->InsertItem( pos, it->first );/// FIXME (BrainDamage#1#): change from key entry to option name
+    m_opt_list_map[ it->first ] = pos;
+    OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( it->first );
+    wxString value;
+    if ( DataType == opt_bool )
+    {
+      long boolval;
+      it->second.ToLong( &boolval );
+      value = bool2yn( boolval );
+    }
+    else if ( DataType == opt_float || DataType == opt_list || DataType == opt_string )
+      value = it->second;
+    m_opts_list->SetItem( pos, 1, value );
   }
-  /// add float options
-  for ( optionMapFloatIter it = (*optWrap->m_floatMaps[optFlag]).begin(); it != (*optWrap->m_floatMaps[optFlag]).end(); ++it)
-  {
-    pos++;
-    mmOptionFloat current = it->second;
-    m_opts_list->InsertItem( pos, current.name );
-    m_opt_list_map[ current.name ] = pos;
-    m_opts_list->SetItem( pos, 1 , wxString::Format( _("%f"), current.value ) );
-  }
-  /// add list options
-  for ( optionMapListIter it = (*optWrap->m_listMaps[optFlag]).begin(); it != (*optWrap->m_listMaps[optFlag]).end(); ++it)
-  {
-    pos++;
-    mmOptionList current = it->second;
-    m_opts_list->InsertItem( pos, current.name );
-    m_opt_list_map[ current.name ] = pos;
-    m_opts_list->SetItem( pos, 1 ,  current.value );
-  }
-  /// add string options
-  for ( optionMapStringIter it = (*optWrap->m_stringMaps[optFlag]).begin(); it != (*optWrap->m_stringMaps[optFlag]).end(); ++it)
-  {
-    pos++;
-    mmOptionString current = it->second;
-    m_opts_list->InsertItem( pos, current.name );
-    m_opt_list_map[ current.name ] = pos;
-    m_opts_list->SetItem( pos, 1 , current.value );
-  }
-
   return pos;
 }

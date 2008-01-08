@@ -141,6 +141,8 @@ class IBattle
 
     virtual mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
 
+    wxArrayString ChangedOptions;
+
   protected:
 
     bool m_map_loaded;
