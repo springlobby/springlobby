@@ -255,25 +255,6 @@ void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
 }
 
 
-void ServerEvents::OnBattleInfoUpdated( int battleid, int metal, int energy, int units, StartType
-                    start, GameType gt, bool dgun, bool dim, bool ghost, std::string hash )
-{
-  wxLogDebugFunc( _T("") );
-  Battle& battle = m_serv.GetBattle( battleid );
-
-  battle.SetStartMetal( metal );
-  battle.SetStartEnergy( energy );
-  battle.SetMaxUnits( units );
-  battle.SetStartType( start );
-  battle.SetGameType( gt );
-  battle.SetLimitDGun( dgun );
-  battle.SetDimMMs( dim );
-  battle.SetGhostedBuildings( ghost );
-//  battle.SetH( hash );
-  m_ui.OnBattleInfoUpdated( battle );
-}
-
-
 void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, std::string maphash, const std::string& map )
 {
   wxLogDebugFunc( _T("") );
