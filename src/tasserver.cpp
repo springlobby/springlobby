@@ -544,18 +544,6 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_battle_id = id;
     m_se->OnJoinedBattle( id );
     m_se->OnBattleInfoUpdated( m_battle_id );
-  } else if ( cmd == "UPDATEBATTLEDETAILS" ) {
-    metal = GetIntParam( params );
-    energy = GetIntParam( params );
-    units = GetIntParam( params );
-    start = GetIntParam( params );
-    gt = IntToGameType( GetIntParam( params ) );
-    dgun = (bool)GetIntParam( params );
-    dim = (bool)GetIntParam( params );
-    ghost = (bool)GetIntParam( params );
-    hash = STD_STRING( ConvertTASServerPhailChecksum( WX_STRING( GetWordParam( params ) ) ) );
-    m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dgun, dim, ghost, hash );
-    //UPDATEBATTLEDETAILS startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings
   } else if ( cmd == "CLIENTBATTLESTATUS" ) {
     nick = GetWordParam( params );
     tasbstatus.data = GetIntParam( params );
