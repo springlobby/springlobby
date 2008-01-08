@@ -241,15 +241,35 @@ bool mmOptionsWrapper::setSingleOption(wxString key,wxString value)
 
 wxString mmOptionsWrapper::getSingleValue(wxString key)
 {
-	int* optType = new int(0);
 	for ( GameOption g = 0; g < optionCategoriesCount; g++ )
 	{
-		if (keyExists(key,ModOption,false,optType))
-		{
-			// TODO implment
-		}
+		wxString tmp = getSingleValue(key,g);
+		if (tmp != wxEmptyString)
+			return tmp;
 	}
 	return wxEmptyString;
+}
+
+wxString mmOptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag)
+{
+	int* optType = new int(0);
+	
+	if ( keyExists(key,modmapFlag,false,optType) )
+	{
+		switch (optType)
+		{
+		case IS_FLOAT_OPTION:
+			return (*m_floatMaps[modmapFlag])[key].value;
+		case IS_BOOL_OPTION:
+			return (*m_boolMaps[modmapFlag])[key].value;
+		case IS_STRING_OPTION:
+			return (*m_stringMaps[modmapFlag])[key].value;
+		case IS_LIST_OPTION:
+			return (*m_listMaps[modmapFlag])[key].value;
+		}
+	}
+	else 
+		return wxEmptyString;
 }
 
 bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, int optType)
