@@ -147,6 +147,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_opt_list_map[ _("Restrictions") ] = pos;
 
   // add map/mod options to the list
+  m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetModName() );
+  m_battle.CustomBattleOptions()->loadOptions( MapOption, m_battle.GetMapName() );
+
   m_opts_list->InsertItem( pos++, wxEmptyString );
   pos = AddMMOptionsToList( pos, ModOption );
   m_opts_list->InsertItem( pos++, wxEmptyString );
@@ -519,7 +522,7 @@ void BattleRoomTab::OnUnitSyncReloaded()
   m_battle.SendMyBattleStatus(); // This should reset sync status.
 }
 
-int BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
+long BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
 {
   wxStringTripleVec optlist;
   m_battle.CustomBattleOptions()->getOptions( &optlist, optFlag );
