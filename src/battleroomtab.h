@@ -6,6 +6,7 @@
 
 #include "iunitsync.h"
 #include "mmoptionswrapper.h"
+#include <map>
 
 class Ui;
 class Battle;
@@ -24,6 +25,7 @@ class wxCheckBox;
 class wxListCtrl;
 class MapCtrl;
 
+typedef std::map<wxString,long> OptionListMap;
 
 class BattleRoomTab : public wxPanel
 {
@@ -70,6 +72,8 @@ class BattleRoomTab : public wxPanel
     Ui& m_ui;
     Battle& m_battle;
     UnitSyncMap m_map;
+
+    OptionListMap m_opt_list_map;
 
     wxBoxSizer* m_players_sizer;
     wxBoxSizer* m_player_sett_sizer;
