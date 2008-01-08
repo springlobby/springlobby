@@ -526,7 +526,7 @@ int BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
   for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
     pos++;
-    m_opts_list->InsertItem( pos, it->second.first );/// FIXME (BrainDamage#1#): change from key entry to option name
+    m_opts_list->InsertItem( pos, it->second.first );
     m_opt_list_map[ it->first ] = pos;
     OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( it->first );
     wxString value;
