@@ -400,6 +400,15 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     wxString msg = cmd.AfterFirst(' ').AfterFirst(' ');
     m_serv->SayPrivate( STD_STRING( user ), STD_STRING( msg ) );
     return true;
+  } else if ( cmd.BeforeFirst(' ').Lower() == _T("/channels") ) {
+    ChatPanel* panel = GetActiveChatPanel();
+    if ( panel == 0 ) {
+      ShowMessage( _("error"), _("no active chat panels open.") );
+      return false;
+    }
+    panel->StatusMessage(_("Active chat channels:"));
+    m_serv->RequestChannels();
+    return true;
   }
   return false;
 }
@@ -418,6 +427,7 @@ void Ui::ConsoleHelp( const wxString& topic )
     panel->ClientMessage( _("Global commands:") );
     panel->ClientMessage( _("  \"/away\" - Sets your status to away.") );
     panel->ClientMessage( _("  \"/back\" - Resets your away status.") );
+    panel->ClientMessage( _("  \"/channels\" - Lists currently active channels.") );
     panel->ClientMessage( _("  \"/help [topic]\" - Put topic if you want to know more specific information about a command.") );
     panel->ClientMessage( _("  \"/join channel [password] [,channel2 [password2]]\" - Join a channel.") );
     panel->ClientMessage( _("  \"/j\" - Alias to /join.") );
@@ -623,7 +633,12 @@ void Ui::OnChannelTopic( Channel& channel , const std::string user, const std::s
 
 void Ui::OnChannelList( const std::string& channel, const int& numusers )
 {
-
+  ChatPanel* panel = GetActiveChatPanel();
+  if ( panel == 0 ) {
+    ShowMessage( _("error"), _("no active chat panels open.") );
+    return;
+  }
+  panel->StatusMessage( channel + + wxString::Format( _("(%d users)"), numusers) );
 }
 
 
