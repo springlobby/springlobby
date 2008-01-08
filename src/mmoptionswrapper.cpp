@@ -6,19 +6,23 @@
 
 mmOptionsWrapper::mmOptionsWrapper()
 {
-	unLoadOptions();
+	
 }
 
 void mmOptionsWrapper::unLoadOptions()
 {
-	for (int i = 0; i < optionCategoriesCount; ++i)
+	for (GameOption i = 0; i < optionCategoriesCount; ++i)
 	{
-		m_boolMaps[i] 	= new optionMapBool;
-		m_floatMaps[i]	= new optionMapFloat;
-		m_stringMaps[i] = new optionMapString;
-		m_listMaps[i]	= new optionMapList;
-
+		unLoadOptions( i );
 	}
+}
+
+void mmOptionsWrapper::unLoadOptions(GameOption i)
+{
+	m_boolMaps[i] 	= new optionMapBool;
+	m_floatMaps[i]	= new optionMapFloat;
+	m_stringMaps[i] = new optionMapString;
+	m_listMaps[i]	= new optionMapList;
 }
 
 mmOptionsWrapper::~mmOptionsWrapper()
@@ -27,13 +31,27 @@ mmOptionsWrapper::~mmOptionsWrapper()
 
 bool mmOptionsWrapper::loadMapOptions(wxString mapname)
 {
+	
 	return loadOptions(MapOption,mapname);
 }
+
+int mmOptionsWrapper::GetSingleOptionType (wxString key)
+{
+	int* type = new int(0);
+	for ( GameOption g = 0; g < optionCategoriesCount; g++ )
+	{
+		if (keyExists(key,g,false,type))
+			return *type;
+	}
+	return IS_UNDEFINED_OPTION;
+}
+
 
 bool mmOptionsWrapper::loadOptions(GameOption modmapFlag,wxString mapname)
 {
 	int count = 0;
 	wxString singleError;
+	unLoadOptions(modmapFlag);
 	switch (modmapFlag)
 	{
 		case MapOption:

@@ -250,3 +250,49 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 	
 }
 
+void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
+{
+	wxString pref = wxString::Format( _T("%d"),flag) + wxsep;
+	
+	//purgin existing keys from map
+	for (chkBoxMap::iterator it = m_chkbox_map.begin(); it != m_chkbox_map.end(); ++it)
+	{
+		wxString key = it->first;
+		if (key.StartsWith(pref))
+			m_chkbox_map.erase(it);
+	}
+	for (spinCtrlMap::iterator it = m_spinctrl_map.begin(); it != m_spinctrl_map.end(); ++it)
+	{
+		wxString key = it->first;
+		if (key.StartsWith(pref))
+			m_spinctrl_map.erase(it);
+	}
+	for (textCtrlMap::iterator it = m_textctrl_map.begin(); it != m_textctrl_map.end(); ++it)
+	{
+		wxString key = it->first;
+		if (key.StartsWith(pref))
+			m_textctrl_map.erase(it);
+	}
+	for (comboBoxMap::iterator it = m_combox_map.begin(); it != m_combox_map.end(); ++it)
+	{
+		wxString key = it->first;
+		if (key.StartsWith(pref))
+			m_combox_map.erase(it);
+	}
+	
+	//reloading the controls
+	switch (flag)
+	{
+		case ModOption:
+			m_mod_layout = new wxBoxSizer( wxVERTICAL);
+			setupOptionsSizer(m_mod_layout,ModOption);
+			break;
+		case MapOption:
+			m_map_layout = new wxBoxSizer( wxVERTICAL);
+			setupOptionsSizer(m_map_layout,MapOption);
+			break;
+	}
+	
+	
+	
+}

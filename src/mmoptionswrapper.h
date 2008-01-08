@@ -51,12 +51,15 @@ public:
 	void getOptions(wxStringPairVec*,GameOption);
 	void getOptionsMap(wxStringMap*,GameOption);
 	void unLoadOptions();
+	void unLoadOptions(GameOption);
 	
 	wxString getSingleValue(wxString key);
 	wxString getSingleValue(wxString key, GameOption modmapFlag);
 	
 	bool setSingleOption(wxString,wxString, GameOption modmapFlag);
 	bool setSingleOption(wxString,wxString);
+	
+	int GetSingleOptionType (wxString key);
 
 //private:
 	const static int optionCategoriesCount = 2;

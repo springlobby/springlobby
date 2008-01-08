@@ -54,6 +54,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		void OnChkBoxChange(wxCommandEvent&);
 		void OnTextCtrlChange(wxCommandEvent& event);
 		void OnSpinCtrlChange(wxSpinEvent& event);
+		void OnRefreshControls(GameOption flag);
 
 
 		DECLARE_EVENT_TABLE();
