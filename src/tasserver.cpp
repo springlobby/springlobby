@@ -616,7 +616,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   } else if ( cmd == "OPENBATTLE" ) {
     m_battle_id = GetIntParam( params );
     m_se->OnHostedBattle( m_battle_id );
-    SendHostInfo( HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Options );
+    SendHostInfo( HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Send_All_opts );
   } else if ( cmd == "ADDBOT" ) {
     // ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}
     id = GetIntParam( params );
@@ -1076,20 +1076,37 @@ void TASServer::SendHostInfo( HostInfo update )
 
     m_sock->Send( STD_STRING(cmd) );
   }
-  if ( ( update & (HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Options) ) > 0 ) {
+  if ( ( update & (HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Options|HI_Send_All_opts) ) > 0 ) {
     wxString cmd;
 
     cmd = _T("SETSCRIPTTAGS ");
 
-    for ( int i = 0; i < battle.ChangedOptions.GetCount(); i++ )
+    if ( ( update & HI_Send_All_opts ) > 0 )
     {
-      wxString key = battle.ChangedOptions[i];
-      if ( key.BeforeFirst( '_' ) == _T("map") )
-        cmd += _T("game\\mapoption\\") + key.AfterFirst( '-' ) + _T("=") + battle.CustomBattleOptions()->getSingleValue( key.AfterFirst( '-' ), MapOption ) + _T("\t");
-      if ( key.BeforeFirst( '_' ) == _T("mod") )
-        cmd += _T("game\\modoption\\") + key.AfterFirst( '-' ) + _T("=") + battle.CustomBattleOptions()->getSingleValue( key.AfterFirst( '-' ), ModOption ) + _T("\t");
+      wxStringTripleVec optlist;
+      battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
+      for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+      {
+        cmd += _T("game\\mapoption\\") + it->first + _T("=") + it->second.second + _T("\t");
+      }
+      battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
+      for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+      {
+        cmd += _T("game\\modoption\\") + it->first + _T("=") + it->second.second + _T("\t");
+      }
     }
-    battle.ChangedOptions.Empty();
+    else
+    {
+      for ( int i = 0; i < battle.ChangedOptions.GetCount(); i++ )
+      {
+        wxString key = battle.ChangedOptions[i];
+        if ( key.BeforeFirst( '_' ) == _T("map") )
+          cmd += _T("game\\mapoption\\") + key.AfterFirst( '-' ) + _T("=") + battle.CustomBattleOptions()->getSingleValue( key.AfterFirst( '-' ), MapOption ) + _T("\t");
+        if ( key.BeforeFirst( '_' ) == _T("mod") )
+          cmd += _T("game\\modoption\\") + key.AfterFirst( '-' ) + _T("=") + battle.CustomBattleOptions()->getSingleValue( key.AfterFirst( '-' ), ModOption ) + _T("\t");
+      }
+      battle.ChangedOptions.Empty();
+    }
 
 /// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
     cmd += wxString::Format( _T("game/startpostype=%d\tgame/maxunits=%d\tgame/limitdgun %d\tgame/startmetal=%d\tgame/gamemode=%d\tgame/ghostedbuildings=%d\tgame/startenergy=%d\tgame/diminishingmms=%d\n"),
