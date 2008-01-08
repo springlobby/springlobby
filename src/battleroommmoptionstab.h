@@ -34,6 +34,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		~BattleroomMMOptionsTab();
 		void setupMapOptionsSizer();
 		void UpdateOptControls(wxString controlName);
+		void OnRefreshControls(GameOption flag);
 	protected:
 		 IBattle& m_battle;
 
@@ -48,13 +49,12 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		comboBoxMap m_combox_map;
 		spinCtrlMap m_spinctrl_map;
 		textCtrlMap m_textctrl_map;
-		
+
 		void setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag);
 		void OnComBoxChange(wxCommandEvent&);
 		void OnChkBoxChange(wxCommandEvent&);
 		void OnTextCtrlChange(wxCommandEvent& event);
 		void OnSpinCtrlChange(wxSpinEvent& event);
-		void OnRefreshControls(GameOption flag);
 
 
 		DECLARE_EVENT_TABLE();

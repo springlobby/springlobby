@@ -540,24 +540,10 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_se->OnPrivateMessage( nick, msg, false );
   } else if ( cmd == "JOINBATTLE" ) {
     id = GetIntParam( params );
-    if ( m_ser_ver < SER_VER_0_35 ) {
-      metal = GetIntParam( params );
-      energy = GetIntParam( params );
-      units = GetIntParam( params );
-      start = GetIntParam( params );
-      gt = IntToGameType( GetIntParam( params ) );
-      dgun = (bool)GetIntParam( params );
-      dim = (bool)GetIntParam( params );
-      ghost = (bool)GetIntParam( params );
-    }
     hash = STD_STRING( ConvertTASServerPhailChecksum( WX_STRING( GetWordParam( params ) ) ) );
     m_battle_id = id;
     m_se->OnJoinedBattle( id );
-    if ( m_ser_ver < SER_VER_0_35 ) {
-      m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dgun, dim, ghost, hash );
-    } else {
-      m_se->OnBattleInfoUpdated( m_battle_id );
-    }
+    m_se->OnBattleInfoUpdated( m_battle_id );
   } else if ( cmd == "UPDATEBATTLEDETAILS" ) {
     metal = GetIntParam( params );
     energy = GetIntParam( params );
@@ -630,11 +616,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   } else if ( cmd == "OPENBATTLE" ) {
     m_battle_id = GetIntParam( params );
     m_se->OnHostedBattle( m_battle_id );
-
-    if ( m_ser_ver >= SER_VER_0_35 ) {
-      SendHostInfo( HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Options );
-    }
-
+    SendHostInfo( HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Options );
   } else if ( cmd == "ADDBOT" ) {
     // ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}
     id = GetIntParam( params );
@@ -1028,18 +1010,6 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
     bo.port,
     bo.maxplayers
   );
-  if ( m_ser_ver < SER_VER_0_35 ) {
-    cmd += wxString::Format( _T("%d %d %d %d %d %d %d %d "),
-      bo.startmetal,
-      bo.startenergy,
-      bo.maxunits,
-      bo.starttype,
-      bo.gametype,
-      bo.limitdgun,
-      bo.dimmms,
-      bo.ghostedbuildings
-    );
-  }
   cmd += ConvertToTASServerBuggedChecksum ( WX_STRING(bo.modhash) );
   cmd += wxString::Format( _T(" %d "), bo.rankneeded/100 );
   cmd += ConvertToTASServerBuggedChecksum( WX_STRING( bo.maphash ) ) + _T(" ");

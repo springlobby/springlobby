@@ -75,3 +75,15 @@ void MainSinglePlayerTab::ReloadRestrictions()
 {
   m_opts_tab->ReloadRestrictions();
 }
+
+
+void MainSinglePlayerTab::ReloadMapOptContrls()
+{
+  m_mm_opts_tab->OnRefreshControls( MapOption );
+}
+
+
+void MainSinglePlayerTab::ReloadModOptContrls()
+{
+  m_mm_opts_tab->OnRefreshControls( ModOption );
+}
