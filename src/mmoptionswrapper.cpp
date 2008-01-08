@@ -256,20 +256,20 @@ wxString mmOptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag)
 	
 	if ( keyExists(key,modmapFlag,false,optType) )
 	{
-		switch (optType)
+		switch (*optType)
 		{
-		case IS_FLOAT_OPTION:
-			return (*m_floatMaps[modmapFlag])[key].value;
+		case IS_FLOAT_OPTION: 
+			return wxString::Format( _T("%f"),(*m_floatMaps[modmapFlag])[key].value );
 		case IS_BOOL_OPTION:
-			return (*m_boolMaps[modmapFlag])[key].value;
+			return wxString::Format(_T("%d"), (*m_boolMaps[modmapFlag])[key].value );
 		case IS_STRING_OPTION:
 			return (*m_stringMaps[modmapFlag])[key].value;
 		case IS_LIST_OPTION:
 			return (*m_listMaps[modmapFlag])[key].value;
 		}
 	}
-	else 
-		return wxEmptyString;
+	
+	return wxEmptyString;
 }
 
 bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, int optType)

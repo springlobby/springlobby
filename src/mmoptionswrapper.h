@@ -52,7 +52,8 @@ public:
 	void getOptionsMap(wxStringMap*,GameOption);
 	void unLoadOptions();
 	
-	wxString getSingleValue(wxString key);//TODO implement!
+	wxString getSingleValue(wxString key);
+	wxString getSingleValue(wxString key, GameOption modmapFlag);
 	
 	bool setSingleOption(wxString,wxString, GameOption modmapFlag);
 	bool setSingleOption(wxString,wxString);
