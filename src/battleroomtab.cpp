@@ -521,23 +521,23 @@ void BattleRoomTab::OnUnitSyncReloaded()
 
 int BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
 {
-  wxStringPairVec optlist;
+  wxStringTripleVec optlist;
   m_battle.CustomBattleOptions()->getOptions( &optlist, optFlag );
-  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
     pos++;
-    m_opts_list->InsertItem( pos, it->first );/// FIXME (BrainDamage#1#): change from key entry to option name
+    m_opts_list->InsertItem( pos, it->second.first );/// FIXME (BrainDamage#1#): change from key entry to option name
     m_opt_list_map[ it->first ] = pos;
     OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( it->first );
     wxString value;
     if ( DataType == opt_bool )
     {
       long boolval;
-      it->second.ToLong( &boolval );
+      it->second.second.ToLong( &boolval );
       value = bool2yn( boolval );
     }
     else if ( DataType == opt_float || DataType == opt_list || DataType == opt_string )
-      value = it->second;
+      value = it->second.second;
     m_opts_list->SetItem( pos, 1, value );
   }
   return pos;

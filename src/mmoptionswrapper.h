@@ -25,8 +25,10 @@ typedef std::map<wxString,mmOptionFloat>::iterator optionMapFloatIter;
 typedef std::map<wxString,mmOptionString>::iterator optionMapStringIter;
 typedef std::map<wxString,mmOptionList>::iterator optionMapListIter;
 
-typedef std::pair< wxString,wxString> wxStringPair;
+typedef std::pair < wxString,wxString> wxStringPair;
+typedef std::pair < wxString, wxStringPair> wxStringTriple;
 typedef std::vector<wxStringPair> wxStringPairVec;
+typedef std::vector<wxStringTriple> wxStringTripleVec;
 typedef std::map<wxString,wxString> wxStringMap;
 
 typedef int GameOption;
@@ -46,7 +48,7 @@ public:
 	bool loadOptions(GameOption, wxString mapname = _T(""));
 	bool keyExists(wxString key,GameOption,bool showError, OptionType* optType);
 	bool setOptions(wxStringPairVec*,GameOption);
-	void getOptions(wxStringPairVec*,GameOption);
+	void getOptions(wxStringTripleVec*,GameOption);
 	void getOptionsMap(wxStringMap*,GameOption);
 	void unLoadOptions();
 	void unLoadOptions(GameOption);

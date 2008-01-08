@@ -197,7 +197,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   std::vector<int> TeamConv, AllyConv, AllyRevConv;
   /// AllyRevConv.size() gives number of allies
 
-  wxStringPairVec optlist;
+  wxStringTripleVec optlist;
 
   wxLogMessage(_T("1 numusers: ") + WX_STRING(i2s(battle.GetNumUsers())) );
 
@@ -285,14 +285,14 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += wxString::Format( _T("\tGhostedBuildings=%d;\n\n"), battle.GhostedBuildings()?1:0 );
 
   battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
-  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
-    s += _T("\t") + it->first + _T("=") + it->second + _T(";\n");
+    s += _T("\t") + it->first + _T("=") + it->second.second + _T(";\n");
   }
   battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
-  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
-    s += _T("\t") + it->first + _T("=") + it->second + _T(";\n");
+    s += _T("\t") + it->first + _T("=") + it->second.second + _T(";\n");
   }
 
   if ( battle.IsFounderMe() ) s += wxString::Format( _T("\tHostIP=localhost;\n") );
@@ -439,9 +439,9 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += _T("\t[mapoptions]\n");
   s += _T("\t{\n");
   battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
-  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
-    s += _T("\t\t") + it->first + _T("=") + it->second + _T(";\n");
+    s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
   }
   s += _T("\t}\n");
 
@@ -450,9 +450,9 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += _T("\t[modoptions]");
   s += _T("\t{\n");
   battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
-  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
-    s += _T("\t\t") + it->first + _T("=") + it->second + _T(";\n");
+    s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
   }
   s += _T("\t}\n");
 
@@ -563,7 +563,7 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   if ( usync()->VersionSupports( GF_XYStartPos ) ) starttype = 3;
   else starttype = 0;
 
-  wxStringPairVec optlist;
+  wxStringTripleVec optlist;
 
   wxLogMessage( _T("StartPosType=%d"), starttype );
 
@@ -671,18 +671,18 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   s += _T("\t[mapoptions]\n");
   s += _T("\t{\n");
   battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
-  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
-    s += _T("\t\t") + it->first + _T("=") + it->second + _T(";\n");
+    s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
   }
   s += _T("\t}\n");
 
   s += _T("\t[modoptions]");
   s += _T("\t{\n");
   battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
-  for (wxStringPairVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
-    s += _T("\t\t") + it->first + _T("=") + it->second + _T(";\n");
+    s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
   }
   s += _T("\t}\n");
 
