@@ -35,6 +35,8 @@ typedef int ServerError;
 #define HI_Options 128
 #define HI_StartRects 256
 #define HI_Restrictions 512
+#define HI_Map_Changed 1024
+#define HI_Mod_Changed 2048
 
 typedef int HostInfo;
 

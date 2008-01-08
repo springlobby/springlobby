@@ -24,6 +24,8 @@ class MainSinglePlayerTab : public wxPanel
     void OnUnitSyncReloaded();
 
     void ReloadRestrictions();
+    void ReloadMapOptContrls();
+    void ReloadModOptContrls();
 
   protected:
 
