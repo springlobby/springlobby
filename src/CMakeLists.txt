@@ -13,13 +13,14 @@ SET(SRCS
 	battlemaptab.cpp
 	battleoptionstab.cpp
 	battleroomlistctrl.cpp
+	battleroommmoptionstab.cpp
 	battleroomtab.cpp
 	channel.cpp
 	channellist.cpp
 	chatlog.cpp
-	chatoptionstab.cpp
 	chatpanel.cpp
 	connectwindow.cpp
+	customlistctrl.cpp
 	flagimages.cpp
 	hostbattledialog.cpp
 	ibattle.cpp
@@ -32,6 +33,8 @@ SET(SRCS
 	mapctrl.cpp
 	maplistctrl.cpp
 	mapselectdialog.cpp
+	mmoptionmodel.cpp
+	mmoptionswrapper.cpp
 	nicklistctrl.cpp
 	nonautotools.cpp
 	server.cpp
@@ -40,6 +43,7 @@ SET(SRCS
 	singleplayerbattle.cpp
 	singleplayertab.cpp
 	socket.cpp
+	spinctld.cpp
 	spring.cpp
 	springlobbyapp.cpp
 	springoptionstab.cpp

@@ -299,7 +299,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 
   std::string val = STD_STRING(value);
   wxString key = param;
-  if ( key.Left( 4 ) == _T("game/") )
+  if ( key.Left( 4 ) == _T("game/") )/// FIXME (BrainDamage#1#): change the slash type when the new spring version gets out
   {/// TODO (BrainDamage#1#): remove all the engine hardcoded static containers/parsing code and move them to the new dynamic
     key = key.BeforeFirst( '/' );
     if      ( key == _T("startpostype")     ) battle.SetStartType( GetIntParam(val) );
@@ -310,14 +310,18 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     else if ( key == _T("ghostedbuildings") ) battle.SetGhostedBuildings( GetIntParam(val) );
     else if ( key == _T("startenergy")      ) battle.SetStartEnergy( GetIntParam(val) );
     else if ( key == _T("diminishingmms")   ) battle.SetDimMMs( GetIntParam(val) );
-    else if ( key.Left( 10 ) == _T( "mapoptions/" ) )
+  }
+  if ( key.Left( 4 ) == _T("game\\") )
+  {
+    key = key.BeforeFirst( '\\' );
+     if ( key.Left( 10 ) == _T( "mapoptions\\" ) )
     {
-      key = key.BeforeFirst( '/' );
+      key = key.BeforeFirst( '\\' );
       if (  !battle.CustomBattleOptions()->setSingleOption( key,  value, MapOption ) ) m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
     }
-    else if ( key.Left( 10 ) == _T( "modoptions/" ) )
+    else if ( key.Left( 10 ) == _T( "modoptions\\" ) )
     {
-      key = key.BeforeFirst( '/' );
+      key = key.BeforeFirst( '\\' );
       if (  !battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) ) m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
     }
   }

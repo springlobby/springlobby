@@ -34,7 +34,6 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		~BattleroomMMOptionsTab();
 		void setupMapOptionsSizer();
 		void UpdateOptControls(/* wxstringpairvec* list **/);
-		void ReloadOptions();
 	protected:
 		 IBattle& m_battle;
 

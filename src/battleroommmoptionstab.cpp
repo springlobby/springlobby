@@ -38,8 +38,7 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 
 	battle.CustomBattleOptions()->loadOptions(ModOption);
 
-	//ASSERT_LOGIC( (battle.GetMapName()!= _T("")), _T("no mapname") );
-	//battle.CustomBattleOptions()->loadOptions(MapOption,battle.GetMapName());
+	battle.CustomBattleOptions()->loadOptions(MapOption,battle.GetMapName());
 
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -99,6 +98,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 					wxDefaultPosition, wxDefaultSize, 0, double(current.min), double(current.max),
 					double(current.value),double(current.stepping), wxSPINCTRLDBL_AUTODIGITS, current.key);
 			tempspin->SetToolTip(current.description);
+			tempspin->Enable(enable);
 			m_spinctrl_vec[optFlag]->push_back(tempspin);
 			tempbox->Add(new wxStaticText(this,-1,current.name),0,5);
 			tempbox->Add(tempspin);
