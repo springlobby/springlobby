@@ -27,8 +27,9 @@ Battle::Battle( Server& serv, Ui& ui, int id ) :
   m_bot_pos(BOT_SEEKPOS_INVALID)
 {
   m_opts.battleid = id;
-  CustomBattleOptions()->loadOptions( ModOption, m_mod.name );
-  CustomBattleOptions()->loadOptions( MapOption, m_map.name );
+
+  CustomBattleOptions()->loadOptions( ModOption, WX_STRING(m_mod.name) );
+  CustomBattleOptions()->loadOptions( MapOption, WX_STRING(m_map.name) );
 }
 
 
