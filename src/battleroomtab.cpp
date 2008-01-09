@@ -133,18 +133,25 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_opts_list->InsertItem( pos++, _("Startpos") );
   m_opt_list_map[ _T("startpostype") ] = pos;
+  UpdateScriptTag( wxString::Format(_T("%d_startpostype"), EngineOption ) );
   m_opts_list->InsertItem( pos++, _("Game end") );
   m_opt_list_map[  _T("gamemode") ] = pos;
+  UpdateScriptTag( wxString::Format(_T("%d_gamemode"), EngineOption ) );
   m_opts_list->InsertItem( pos++, _("Limit D-gun") );
   m_opt_list_map[ _T("limitdgun") ] = pos;
+  UpdateScriptTag( wxString::Format(_T("%d_limitdgun"), EngineOption ) );
   m_opts_list->InsertItem( pos++, _("Start metal") );
   m_opt_list_map[ _T("startmetal") ] = pos;
+  UpdateScriptTag( wxString::Format(_T("%d_startmetal"), EngineOption ) );
   m_opts_list->InsertItem( pos++, _("Start energy") );
   m_opt_list_map[ _T("startenergy") ] = pos;
+  UpdateScriptTag( wxString::Format(_T("%d_startenergy"), EngineOption ) );
   m_opts_list->InsertItem( pos++, _("Max units") );
   m_opt_list_map[ _T("maxunits") ] = pos;
+  UpdateScriptTag( wxString::Format(_T("%d_maxunits"), EngineOption ) );
   m_opts_list->InsertItem( pos++, _("Restrictions") );
   m_opt_list_map[ _T("restrictions") ] = pos;
+  UpdateScriptTag( wxString::Format(_T("%d_restrictions"), EngineOption ) );
 
   // add map/mod options to the list
   m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetModName() );
