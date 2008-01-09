@@ -454,7 +454,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
   LogTime();
   m_chatlog_text->SetDefaultStyle(wxTextAttr(col));
   m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
-  if ( m_channel->GetName() == _T("news") )
+  if ( m_channel->GetName() == "news" )
   {
     wxFont f = fon;
     f.SetFamily( wxFONTFAMILY_MODERN );
