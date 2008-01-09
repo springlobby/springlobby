@@ -638,7 +638,7 @@ void Ui::OnChannelList( const std::string& channel, const int& numusers )
     ShowMessage( _("error"), _("no active chat panels open.") );
     return;
   }
-  panel->StatusMessage( channel + + wxString::Format( _("(%d users)"), numusers) );
+  panel->StatusMessage( channel  + wxString::Format( _("(%d users)"), numusers) );
 }
 
 
