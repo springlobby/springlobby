@@ -31,7 +31,6 @@ mmOptionsWrapper::~mmOptionsWrapper()
 
 bool mmOptionsWrapper::loadMapOptions(wxString mapname)
 {
-
 	return loadOptions(MapOption,mapname);
 }
 
