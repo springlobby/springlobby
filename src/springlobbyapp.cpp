@@ -77,6 +77,7 @@ bool SpringLobbyApp::OnInit()
     #ifdef __WXMSW__
       sett().SetOldSpringLaunchMethod( true );
     #endif
+    sett().AddChannelJoin( "newbies", "" );
     wxLogMessage( _T("first time startup"));
     wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nLooks like this is the first time you use SpringLobby. I have guessed a configuration that I think will work for you but you should review it, expecially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
       wxOK | wxICON_INFORMATION, &m_ui->mw() );

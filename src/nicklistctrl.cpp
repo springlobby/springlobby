@@ -342,10 +342,15 @@ void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
 	wxPoint position = event.GetPosition();
 
 	int flag = wxLIST_HITTEST_ONITEM;
-	long *ptrSubItem = new long;
+	
 
 	try{
+#ifdef HAVE_WX28
+		long *ptrSubItem = new long;
 		long item_hit = HitTest(position, flag, ptrSubItem);
+#else
+		long item_hit = HitTest(position, flag);
+#endif
 		int coloumn = getColoumnFromPosition(position);
 
 		if (item_hit != wxNOT_FOUND)

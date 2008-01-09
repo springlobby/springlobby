@@ -48,13 +48,18 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 	    wxPoint position = event.GetPosition();
 	
 	    int flag = wxLIST_HITTEST_ONITEM;
+	    
+#ifdef HAVE_WX28
 	    long *ptrSubItem = new long;
-	    long item = HitTest(position, flag, ptrSubItem);
-	    if (item != wxNOT_FOUND)
+		long item_hit = HitTest(position, flag, ptrSubItem);
+#else
+		long item_hit = HitTest(position, flag);
+#endif
+	    if (item_hit != wxNOT_FOUND)
 	    {
 	        
 	        int coloumn = getColoumnFromPosition(position);
-	        if (coloumn >= m_colinfovec.size() || coloumn < 0)
+	        if (coloumn >= int(m_colinfovec.size()) || coloumn < 0)
 	        {
 	        	m_tiptext = _T("");
 	        }
@@ -70,7 +75,7 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 int customListCtrl::getColoumnFromPosition(wxPoint pos)
 {
 	int x_pos = 0;
-	for (int i = 0; i <m_colinfovec.size();++i)
+	for (int i = 0; i < int(m_colinfovec.size());++i)
 	{
 		x_pos += GetColumnWidth(i);
 		if (pos.x < x_pos)

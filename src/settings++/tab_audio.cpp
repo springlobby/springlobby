@@ -33,14 +33,14 @@
 #include "Defs.hpp"
 
 void audio_panel::initAudioSizer(wxStaticBoxSizer* sizer) {
-	slider0 = new wxSlider(this, AO_SLI[0].id, 8, 8, 128, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 	slider1 = new wxSlider(this, AO_SLI[1].id, 1, 1, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
+	slider0 = new wxSlider(this, AO_SLI[0].id, 8, 0, 128, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 	slider2 = new wxSlider(this, AO_SLI[2].id, 1, 1, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 	slider0->SetToolTip(AO_SLI[0].tTip[0]);
 	slider1->SetToolTip(AO_SLI[1].tTip[0]);
 	slider2->SetToolTip(AO_SLI[2].tTip[0]);
 
-    slider0->SetTickFreq((128-8) / 10   ,1);
+    slider0->SetTickFreq((128 / 10 )  ,1);
     slider1->SetTickFreq(10             ,1);
     slider2->SetTickFreq(10             ,1);
     sizer->Add(new wxStaticText(this, -1, (AO_SLI[1].lbl)), 0, wxTOP, 15);
