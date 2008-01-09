@@ -407,10 +407,8 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
  // wxLogDebugFunc( /* _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams) */ );
 
   std::string params = inparams;
-  int pos, cpu, id, nat, port, maxplayers, rank, specs, metal = 0, energy = 0, units, start = 0,
-      top, left, right, bottom, ally, udpport;
-  bool replay, haspass, dgun = false, ghost = false, dim = false, lanmode = false;
-  GameType gt = GT_ComContinue;
+  int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally, udpport;
+  bool replay, haspass,lanmode = false;
   std::string hash;
   std::string nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version;
   //NatType ntype;
@@ -544,18 +542,6 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_battle_id = id;
     m_se->OnJoinedBattle( id );
     m_se->OnBattleInfoUpdated( m_battle_id );
-  } else if ( cmd == "UPDATEBATTLEDETAILS" ) {
-    metal = GetIntParam( params );
-    energy = GetIntParam( params );
-    units = GetIntParam( params );
-    start = GetIntParam( params );
-    gt = IntToGameType( GetIntParam( params ) );
-    dgun = (bool)GetIntParam( params );
-    dim = (bool)GetIntParam( params );
-    ghost = (bool)GetIntParam( params );
-    hash = STD_STRING( ConvertTASServerPhailChecksum( WX_STRING( GetWordParam( params ) ) ) );
-    m_se->OnBattleInfoUpdated( m_battle_id, metal, energy, units, IntToStartType(start), gt, dgun, dim, ghost, hash );
-    //UPDATEBATTLEDETAILS startingmetal startingenergy maxunits startpos gameendcondition limitdgun diminishingMMs ghostedBuildings
   } else if ( cmd == "CLIENTBATTLESTATUS" ) {
     nick = GetWordParam( params );
     tasbstatus.data = GetIntParam( params );
@@ -616,7 +602,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   } else if ( cmd == "OPENBATTLE" ) {
     m_battle_id = GetIntParam( params );
     m_se->OnHostedBattle( m_battle_id );
-    SendHostInfo( HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Options );
+    SendHostInfo( HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Send_All_opts );
   } else if ( cmd == "ADDBOT" ) {
     // ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}
     id = GetIntParam( params );
@@ -1076,20 +1062,40 @@ void TASServer::SendHostInfo( HostInfo update )
 
     m_sock->Send( STD_STRING(cmd) );
   }
-  if ( ( update & (HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Options) ) > 0 ) {
+  if ( ( update & (HI_StartResources|HI_MaxUnits|HI_StartType|HI_GameType|HI_Options|HI_Send_All_opts) ) > 0 ) {
     wxString cmd;
 
     cmd = _T("SETSCRIPTTAGS ");
 
-    for ( int i = 0; i < battle.ChangedOptions.GetCount(); i++ )
+    if ( ( update & HI_Send_All_opts ) > 0 )
     {
-      wxString key = battle.ChangedOptions[i];
-      if ( key.BeforeFirst( '_' ) == _T("map") )
-        cmd += _T("game\\mapoption\\") + key.AfterFirst( '-' ) + _T("=") + battle.CustomBattleOptions()->getSingleValue( key.AfterFirst( '-' ), MapOption ) + _T("\t");
-      if ( key.BeforeFirst( '_' ) == _T("mod") )
-        cmd += _T("game\\modoption\\") + key.AfterFirst( '-' ) + _T("=") + battle.CustomBattleOptions()->getSingleValue( key.AfterFirst( '-' ), ModOption ) + _T("\t");
+      wxStringTripleVec optlist;
+      battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
+      for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+      {
+        cmd += _T("game\\mapoption\\") + it->first + _T("=") + it->second.second + _T("\t");
+      }
+      battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
+      for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+      {
+        cmd += _T("game\\modoption\\") + it->first + _T("=") + it->second.second + _T("\t");
+      }
     }
-    battle.ChangedOptions.Empty();
+    else
+    {
+      for ( int i = 0; i < battle.ChangedOptions.GetCount(); i++ )
+      {
+        wxString key = battle.ChangedOptions[i];
+        long type;
+        key.BeforeFirst( '_' ).ToLong( &type );
+        key = key.AfterFirst( '_' );
+        if ( type == MapOption )
+          cmd += _T("game\\mapoption\\") + key.AfterFirst( '-' ) + _T("=") + battle.CustomBattleOptions()->getSingleValue( key.AfterFirst( '-' ), MapOption ) + _T("\t");
+        if ( type == ModOption )
+          cmd += _T("game\\modoption\\") + key.AfterFirst( '-' ) + _T("=") + battle.CustomBattleOptions()->getSingleValue( key.AfterFirst( '-' ), ModOption ) + _T("\t");
+      }
+      battle.ChangedOptions.Empty();
+    }
 
 /// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
     cmd += wxString::Format( _T("game/startpostype=%d\tgame/maxunits=%d\tgame/limitdgun %d\tgame/startmetal=%d\tgame/gamemode=%d\tgame/ghostedbuildings=%d\tgame/startenergy=%d\tgame/diminishingmms=%d\n"),

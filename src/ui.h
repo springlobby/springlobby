@@ -119,6 +119,7 @@ class Ui
     void OnBattleInfoUpdated( Battle& battle );
     void OnBattleStarted( Battle& battle );
     void OnBattleStartRectsUpdated( Battle& battle );
+    void OnBattleMapChanged( Battle& battle );
 
     void OnBattleBotAdded( Battle& battle, BattleBot& bot );
     void OnBattleBotRemoved( Battle& battle, BattleBot& bot );

@@ -863,6 +863,12 @@ void Ui::OnBattleStartRectsUpdated( Battle& battle )
 }
 
 
+void Ui::OnBattleMapChanged( Battle& battle )
+{
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
+}
+
+
 void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
 {
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();

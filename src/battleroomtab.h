@@ -67,7 +67,7 @@ class BattleRoomTab : public wxPanel
 
   protected:
 
-    int AddMMOptionsToList( long pos, GameOption optFlag );
+    long AddMMOptionsToList( long pos, GameOption optFlag );
 
     Ui& m_ui;
     Battle& m_battle;

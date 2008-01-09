@@ -161,11 +161,14 @@ void BattleroomMMOptionsTab::OnChkBoxChange(wxCommandEvent& event)
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long* gameoption = new long;
 	box->GetName().BeforeFirst(sep).ToLong(gameoption);
-	
+
 	if( optWrap->setSingleOption( key ,wxString::Format( _T("%d"),box->GetValue() ), int(*gameoption) ) )
 	{
         if (m_battle.IsFounderMe())
+        {
+          m_battle.ChangedOptions.Add( wxString::Format(_T("%d_"), gameoption ) + key );
           m_battle.SendHostInfo(HI_Options);
+        }
 	}
 }
 
@@ -179,7 +182,10 @@ void BattleroomMMOptionsTab::OnComBoxChange(wxCommandEvent& event)
 	if(optWrap->setSingleOption( box->GetName(), box->GetValue(), int(*gameoption) ) )
 	{
         if (m_battle.IsFounderMe())
+        {
+          m_battle.ChangedOptions.Add( wxString::Format(_T("%d_"), gameoption ) + key );
           m_battle.SendHostInfo(HI_Options);
+        }
 	}
 }
 
@@ -193,7 +199,10 @@ void BattleroomMMOptionsTab::OnTextCtrlChange(wxCommandEvent& event)
 	if(optWrap->setSingleOption( box->GetName(), box->GetValue(), int(*gameoption) ) )
 	{
 		if (m_battle.IsFounderMe())
+		{
+		  m_battle.ChangedOptions.Add( wxString::Format(_T("%d_"), gameoption ) + key );
 			m_battle.SendHostInfo(HI_Options);
+		}
 
 	}
 }
@@ -208,7 +217,10 @@ void BattleroomMMOptionsTab::OnSpinCtrlChange(wxSpinEvent& event)
 	if(optWrap->setSingleOption( box->GetName(),wxString::Format( _T("%f"),box->GetValue() ), int(*gameoption) ) )
 	{
 		if (m_battle.IsFounderMe())
+		{
+		  m_battle.ChangedOptions.Add( wxString::Format(_T("%d_"), gameoption ) + key );
 			m_battle.SendHostInfo(HI_Options);
+		}
 	}
 }
 
@@ -219,7 +231,7 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 	controlName.BeforeFirst(sep).ToLong(gameoption);
 	wxString optKey = controlName.AfterFirst(sep);
 	wxString value = optWrap->getSingleValue( optKey, int(*gameoption) );
-	
+
 	if ( m_chkbox_map.find(controlName) != m_chkbox_map.end() )
 	{
 		wxCheckBox* cur = m_chkbox_map[controlName] ;
@@ -247,13 +259,13 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 		value.ToDouble(l_val);
 		cur->SetValue(*l_val);
 	}
-	
+
 }
 
 void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
 {
 	wxString pref = wxString::Format( _T("%d"),flag) + wxsep;
-	
+
 	//purgin existing keys from map
 	for (chkBoxMap::iterator it = m_chkbox_map.begin(); it != m_chkbox_map.end(); ++it)
 	{
@@ -291,7 +303,7 @@ void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
 			m_combox_map.erase(it);
 		}
 	}
-	
+
 	//reloading the controls
 	switch (flag)
 	{
@@ -306,8 +318,8 @@ void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
 			setupOptionsSizer(m_map_layout,MapOption);
 			break;
 	}
-	
+
 	this->SetSizer( m_main_sizer, true );
 	this->Layout();
-	
+
 }

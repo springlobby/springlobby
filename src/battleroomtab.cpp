@@ -132,21 +132,24 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_opts_list->InsertItem( pos++, wxEmptyString );
 
   m_opts_list->InsertItem( pos++, _("Startpos") );
-  m_opt_list_map[ _("Startpos") ] = pos;
+  m_opt_list_map[ _T("startpostype") ] = pos;
   m_opts_list->InsertItem( pos++, _("Game end") );
-  m_opt_list_map[  _("Game end") ] = pos;
+  m_opt_list_map[  _T("gamemode") ] = pos;
   m_opts_list->InsertItem( pos++, _("Limit D-gun") );
-  m_opt_list_map[ _("Limit D-gun") ] = pos;
+  m_opt_list_map[ _T("limitdgun") ] = pos;
   m_opts_list->InsertItem( pos++, _("Start metal") );
-  m_opt_list_map[ _("Start metal") ] = pos;
+  m_opt_list_map[ _T("startmetal") ] = pos;
   m_opts_list->InsertItem( pos++, _("Start energy") );
-  m_opt_list_map[ _("Start energy") ] = pos;
+  m_opt_list_map[ _T("startenergy") ] = pos;
   m_opts_list->InsertItem( pos++, _("Max units") );
-  m_opt_list_map[ _("Max units") ] = pos;
+  m_opt_list_map[ _T("maxunits") ] = pos;
   m_opts_list->InsertItem( pos++, _("Restrictions") );
-  m_opt_list_map[ _("Restrictions") ] = pos;
+  m_opt_list_map[ _T("restrictions") ] = pos;
 
   // add map/mod options to the list
+  m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetModName() );
+  m_battle.CustomBattleOptions()->loadOptions( MapOption, m_battle.GetMapName() );
+
   m_opts_list->InsertItem( pos++, wxEmptyString );
   pos = AddMMOptionsToList( pos, ModOption );
   m_opts_list->InsertItem( pos++, wxEmptyString );
@@ -286,13 +289,13 @@ void BattleRoomTab::UpdateBattleInfo()
     wxString value;
     if ( type == EngineOption )
     {
-      if ( key == _("Startpos") ) value = _GetStartPosStr( m_battle.GetStartType() );
-      if ( key == _("Game end") ) value = _GetGameTypeStr( m_battle.GetGameType() );
-      if ( key == _("Limit D-gun") ) value = bool2yn( m_battle.LimitDGun() );
-      if ( key == _("Start metal") ) value = wxString::Format( _T("%d"), m_battle.GetStartMetal() );
-      if ( key == _("Start energy") ) value =  wxString::Format( _T("%d"), m_battle.GetStartEnergy() );
-      if ( key == _("Max units") ) value = wxString::Format( _T("%d"), m_battle.GetMaxUnits() );
-      if ( key == _("Restrictions") ) value = bool2yn( m_battle.GetNumDisabledUnits() > 0 );
+      if ( key == _T("startpostype") ) value = _GetStartPosStr( m_battle.GetStartType() );
+      if ( key == _T("gamemode") ) value = _GetGameTypeStr( m_battle.GetGameType() );
+      if ( key == _T("limitdgun") ) value = bool2yn( m_battle.LimitDGun() );
+      if ( key == _T("startmetal") ) value = wxString::Format( _T("%d"), m_battle.GetStartMetal() );
+      if ( key == _T("startenergy") ) value =  wxString::Format( _T("%d"), m_battle.GetStartEnergy() );
+      if ( key == _T("maxunits") ) value = wxString::Format( _T("%d"), m_battle.GetMaxUnits() );
+      if ( key == _T("restrictions") ) value = bool2yn( m_battle.GetNumDisabledUnits() > 0 );
     }
     if ( type == MapOption || type == ModOption )
     {
@@ -519,14 +522,14 @@ void BattleRoomTab::OnUnitSyncReloaded()
   m_battle.SendMyBattleStatus(); // This should reset sync status.
 }
 
-int BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
+long BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
 {
   wxStringTripleVec optlist;
   m_battle.CustomBattleOptions()->getOptions( &optlist, optFlag );
   for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
     pos++;
-    m_opts_list->InsertItem( pos, it->second.first );/// FIXME (BrainDamage#1#): change from key entry to option name
+    m_opts_list->InsertItem( pos, it->second.first );
     m_opt_list_map[ it->first ] = pos;
     OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( it->first );
     wxString value;
