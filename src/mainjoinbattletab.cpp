@@ -74,18 +74,17 @@ ChatPanel* MainJoinBattleTab::GetActiveChatPanel()
 
 
 //void MainJoinBattleTab::UpdateCurrentBattle()
-void MainJoinBattleTab::UpdateCurrentBattle(bool updateRestrictions, bool MapChanged)
+void MainJoinBattleTab::UpdateCurrentBattle( bool MapChanged, bool UpdateRestrictions )
 {
   if ( m_battle_tab ) {
-    if ( updateRestrictions ) m_battle_tab->GetBattle().ChangedOptions.Add( wxString::Format(_T("%d_restrictions"), EngineOption ) );
     m_battle_tab->UpdateBattleInfo();
+    if ( UpdateRestrictions ) m_battle_tab->UpdateScriptTag( wxString::Format(_T("%d_restrictions"), EngineOption ) );
   }
   if ( m_map_tab ) {
     m_map_tab->UpdateMap();
   }
-  if ( m_opts_tab ) {
-    m_opts_tab->UpdateBattle();
-    if ( updateRestrictions ) m_opts_tab->ReloadRestrictions();
+  if ( m_opts_tab && UpdateRestrictions ) {
+    m_opts_tab->ReloadRestrictions();
   }
   if ( m_mm_opts_tab ){
 	  if ( !m_battle_tab->GetBattle().IsFounderMe() )
@@ -94,9 +93,23 @@ void MainJoinBattleTab::UpdateCurrentBattle(bool updateRestrictions, bool MapCha
 	    {
 	      m_mm_opts_tab->OnRefreshControls(MapOption);
 	    }
-      for ( int i = 0; i < m_battle_tab->GetBattle().ChangedOptions.GetCount(); i++ ) m_mm_opts_tab->UpdateOptControls(  m_battle_tab->GetBattle().ChangedOptions[i] );
-      m_battle_tab->GetBattle().ChangedOptions.Empty();
 	  }
+  }
+}
+
+void MainJoinBattleTab::UpdateCurrentBattleTags( const wxString& Tag )
+{
+  if ( m_battle_tab ) {
+    m_battle_tab->UpdateScriptTag( Tag );
+  }
+
+  if ( m_opts_tab ) {
+    m_opts_tab->UpdateScriptTag( Tag );
+  }
+
+  if ( m_mm_opts_tab ){
+	  if ( !m_battle_tab->GetBattle().IsFounderMe() )
+      m_mm_opts_tab->UpdateOptControls( Tag );
   }
 }
 

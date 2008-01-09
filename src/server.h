@@ -128,6 +128,7 @@ class Server
     virtual void UpdateBot( int battleid, const std::string& nick, UserBattleStatus status ) = 0;
 
     virtual void SendHostInfo( HostInfo update ) = 0;
+    virtual void SendHostScriptTags( const wxString& Tag ) = 0;
     virtual void SendRaw( const std::string& raw ) = 0;
 
     virtual void RequestInGameTime( const std::string& nick ) = 0;

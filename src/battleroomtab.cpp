@@ -280,44 +280,44 @@ void BattleRoomTab::UpdateBattleInfo()
     m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, _T("?") );
   }
 
-  for ( int i = 0; i < m_battle.ChangedOptions.GetCount(); i++ )
-  {
-    long type;
-    m_battle.ChangedOptions[i].BeforeFirst( '_' ).ToLong( &type );
-    wxString key = m_battle.ChangedOptions[i].AfterFirst( '_' );
-    long index = m_opt_list_map[ key ];
-    wxString value;
-    if ( type == EngineOption )
-    {
-      if ( key == _T("startpostype") ) value = _GetStartPosStr( m_battle.GetStartType() );
-      if ( key == _T("gamemode") ) value = _GetGameTypeStr( m_battle.GetGameType() );
-      if ( key == _T("limitdgun") ) value = bool2yn( m_battle.LimitDGun() );
-      if ( key == _T("startmetal") ) value = wxString::Format( _T("%d"), m_battle.GetStartMetal() );
-      if ( key == _T("startenergy") ) value =  wxString::Format( _T("%d"), m_battle.GetStartEnergy() );
-      if ( key == _T("maxunits") ) value = wxString::Format( _T("%d"), m_battle.GetMaxUnits() );
-      if ( key == _T("restrictions") ) value = bool2yn( m_battle.GetNumDisabledUnits() > 0 );
-    }
-    if ( type == MapOption || type == ModOption )
-    {
-      OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( key );
-      if ( DataType == opt_bool )
-      {
-        long boolval;
-        m_battle.CustomBattleOptions()->getSingleValue( key, type ).ToLong( &boolval );
-        value = bool2yn( boolval );
-      }
-      else if ( DataType == opt_float || DataType == opt_list || DataType == opt_string )
-        m_battle.CustomBattleOptions()->getSingleValue( key, type );
-    }
-    m_opts_list->SetItem( index, 1, value );
-  }
-
-  m_battle.ChangedOptions.Empty();
-
   m_lock_chk->SetValue( m_battle.IsLocked() );
   m_minimap->UpdateMinimap();
 }
 
+
+void BattleRoomTab::UpdateScriptTag( const wxString& Tag )
+{
+  long type;
+  Tag.BeforeFirst( '_' ).ToLong( &type );
+  wxString key = Tag.AfterFirst( '_' );
+  long index = m_opt_list_map[ key ];
+  wxString value;
+  if ( type == EngineOption )
+  {
+    if ( key == _T("startpostype") ) value = _GetStartPosStr( m_battle.GetStartType() );
+    if ( key == _T("gamemode") ) value = _GetGameTypeStr( m_battle.GetGameType() );
+    if ( key == _T("limitdgun") ) value = bool2yn( m_battle.LimitDGun() );
+    if ( key == _T("startmetal") ) value = wxString::Format( _T("%d"), m_battle.GetStartMetal() );
+    if ( key == _T("startenergy") ) value =  wxString::Format( _T("%d"), m_battle.GetStartEnergy() );
+    if ( key == _T("maxunits") ) value = wxString::Format( _T("%d"), m_battle.GetMaxUnits() );
+    if ( key == _T("restrictions") ) value = bool2yn( m_battle.GetNumDisabledUnits() > 0 );
+    if ( !value.IsEmpty() ) m_opts_list->SetItem( index, 1, value );
+  }
+  if ( type == MapOption || type == ModOption )
+  {
+    OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( key );
+    if ( DataType == opt_bool )
+    {
+      long boolval;
+      m_battle.CustomBattleOptions()->getSingleValue( key, type ).ToLong( &boolval );
+      m_opts_list->SetItem( index, 1, bool2yn( boolval ) );
+    }
+    else if ( DataType == opt_float || DataType == opt_list || DataType == opt_string )
+    {
+      m_opts_list->SetItem( index, 1, m_battle.CustomBattleOptions()->getSingleValue( key, type ) );
+    }
+  }
+}
 
 BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
 {

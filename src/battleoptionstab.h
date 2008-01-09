@@ -30,7 +30,7 @@ class BattleOptionsTab : public wxPanel
     BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, bool singleplayer );
     ~BattleOptionsTab();
 
-    void UpdateBattle();
+    void UpdateScriptTag( const wxString& Tag );
     void ReloadRestrictions();
 
     int GetAllowedUnitIndex( const wxString& name );
@@ -52,6 +52,9 @@ class BattleOptionsTab : public wxPanel
     void OnClearRestrictions( wxCommandEvent& event );
 
   protected:
+
+    void UpdateBattle();
+
     Ui& m_ui;
     IBattle& m_battle;
 

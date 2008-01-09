@@ -774,6 +774,14 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
   }
 }
 
+void Ui::OnBattleTagUpdated( Battle& battle, const wxString& Tag )
+{
+  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
+    mw().GetJoinTab().UpdateCurrentBattleTags( Tag );
+  }
+}
+
 
 void Ui::OnJoinedBattle( Battle& battle )
 {
@@ -865,7 +873,7 @@ void Ui::OnBattleStartRectsUpdated( Battle& battle )
 
 void Ui::OnBattleMapChanged( Battle& battle )
 {
-  mw().GetJoinTab().UpdateCurrentBattle( false, true );
+  mw().GetJoinTab().UpdateCurrentBattle( true );
 }
 
 
@@ -877,7 +885,7 @@ void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
     br->GetChatPanel().StatusMessage( WX_STRING( unitname ) + _T(" disabled.") );
   }
   //mw().GetJoinTab().UpdateCurrentBattle();
-  mw().GetJoinTab().UpdateCurrentBattle(true);
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
@@ -888,7 +896,7 @@ void Ui::OnBattleEnableUnit( Battle& battle, const std::string& unitname )
     br->GetChatPanel().StatusMessage( WX_STRING(unitname) + _T(" disabled.") );
   }
   //mw().GetJoinTab().UpdateCurrentBattle();
-  mw().GetJoinTab().UpdateCurrentBattle(true);
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
@@ -898,7 +906,7 @@ void Ui::OnBattleEnableAllUnits( Battle& battle )
   if ( br != 0 ) {
     br->GetChatPanel().StatusMessage( _T("All units enabled.") );
   }
-  mw().GetJoinTab().UpdateCurrentBattle(true);
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
