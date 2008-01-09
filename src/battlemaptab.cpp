@@ -116,8 +116,6 @@ BattleMapTab::~BattleMapTab()
 
 void BattleMapTab::UpdateMap()
 {
-  m_start_radios->SetSelection( m_battle.GetStartType() );
-
   m_minimap->UpdateMinimap();
 
   if ( !m_battle.MapExists() ) return;
@@ -134,6 +132,23 @@ void BattleMapTab::UpdateMap()
   int index = m_map_combo->FindString( RefineMapname( WX_STRING(map.name) ) );
   m_map_combo->SetSelection( index );
 }
+
+
+void BattleMapTab::UpdateScriptTag( const wxString& Tag )
+{
+  long type;
+  Tag.BeforeFirst( '_' ).ToLong( &type );
+  wxString key = Tag.AfterFirst( '_' );
+  if ( type == EngineOption )
+  {
+    if ( key == _T("startpostype") )
+    {
+     m_start_radios->SetSelection( m_battle.GetStartType() );
+     UpdateMap();
+    }
+  }
+}
+
 
 void BattleMapTab::ReloadMaplist()
 {
@@ -181,9 +196,10 @@ void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
     case 0: m_battle.SetStartType( ST_Fixed ); break;
     case 1: m_battle.SetStartType( ST_Random ); break;
     case 2: m_battle.SetStartType( ST_Choose ); break;
+    case 3: m_battle.SetStartType( ST_Pick ); break;
     default: ASSERT_LOGIC( false, _T("invalid pos") );
   };
-  m_battle.SendHostInfo( HI_StartType );
+  m_battle.SendBattleTag( wxString::Format(_T("%d_startpostype"), EngineOption ) );
 }
 
 

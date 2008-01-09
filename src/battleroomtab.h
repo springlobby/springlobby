@@ -43,6 +43,7 @@ class BattleRoomTab : public wxPanel
     bool IsHosted();
 
     void UpdateBattleInfo();
+    void UpdateScriptTag( const wxString& Tag );
 
     void OnStart( wxCommandEvent& event );
     void OnLeave( wxCommandEvent& event );

@@ -100,6 +100,8 @@ class TASServer : public Server
 
     void StartHostedBattle();
     void SendHostInfo( HostInfo update );
+    void SendHostScriptTags( const wxString& Tag );
+
     void SendRaw( const std::string& raw );
 
     void RequestInGameTime( const std::string& nick );
