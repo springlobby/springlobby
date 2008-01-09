@@ -448,13 +448,22 @@ User& ChatPanel::GetMe()
 }
 
 
-void ChatPanel::OutputLine( const wxString& message, const wxColour& col )
+void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const wxFont& fon )
 {
   if (! m_chatlog_text ) return;
   LogTime();
   m_chatlog_text->SetDefaultStyle(wxTextAttr(col));
   m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
-  m_chatlog_text->SetFont( sett().GetChatFont() );
+  if ( m_channel )
+  {
+    if ( m_channel->GetName() == "news" )
+    {
+      wxFont f = fon;
+      f.SetFamily( wxFONTFAMILY_MODERN );
+     m_chatlog_text->SetFont( f );
+    }
+  }
+  else m_chatlog_text->SetFont( fon );
   #ifdef __WXMSW__
   m_chatlog_text->Freeze();
   #endif
@@ -527,9 +536,9 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
     wxString message2;
     who2= message.BeforeFirst( '>' ).AfterFirst ( '<' ) + _T("@IRC");
     message2 = message.AfterFirst( '>' );
-    OutputLine( _T(" <") + who2 + _T("> ")+ message2, col );
+    OutputLine( _T(" <") + who2 + _T("> ")+ message2, col, sett().GetChatFont() );
   } else {
-    OutputLine( _T(" <") + who + _T("> ")+ message, col );
+    OutputLine( _T(" <") + who + _T("> ")+ message, col, sett().GetChatFont() );
   }
 
 
@@ -541,7 +550,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 
 void ChatPanel::DidAction( const wxString& who, const wxString& action )
 {
-  OutputLine( _T(" * ") + who + _T(" ") + action, sett().GetChatColorAction() );
+  OutputLine( _T(" * ") + who + _T(" ") + action, sett().GetChatColorAction(), sett().GetChatFont() );
 }
 
 
@@ -550,25 +559,33 @@ void ChatPanel::DidAction( const wxString& who, const wxString& action )
 //! @param message The MOTD message to output
 void ChatPanel::Motd( const wxString& message )
 {
-  OutputLine( _T(" ** motd ** ") + message, sett().GetChatColorServer() );
+  wxFont f = m_chatlog_text->GetFont();
+  f.SetFamily( wxFONTFAMILY_MODERN );
+  OutputLine( _T(" ** motd ** ") + message, sett().GetChatColorServer(), f );
 }
 
 
 void ChatPanel::StatusMessage( const wxString& message )
 {
-  OutputLine( _T(" ** Server ** ")+ message, sett().GetChatColorServer() );
+  wxFont f = m_chatlog_text->GetFont();
+  f.SetFamily( wxFONTFAMILY_MODERN );
+  OutputLine( _T(" ** Server ** ")+ message, sett().GetChatColorServer(), f );
 }
 
 
 void ChatPanel::ClientMessage( const wxString& message )
 {
-  OutputLine( _T(" ** ") + message, sett().GetChatColorClient() );
+  wxFont f = m_chatlog_text->GetFont();
+  f.SetFamily( wxFONTFAMILY_MODERN );
+  OutputLine( _T(" ** ") + message, sett().GetChatColorClient(), f );
 }
 
 
 void ChatPanel::UnknownCommand( const wxString& command, const wxString& params )
 {
-  OutputLine( _(" !! Command: \"") + command + _("\" params: \"") + params + _T("\"."), sett().GetChatColorError() );
+  wxFont f = m_chatlog_text->GetFont();
+  f.SetFamily( wxFONTFAMILY_MODERN );
+  OutputLine( _(" !! Command: \"") + command + _("\" params: \"") + params + _T("\"."), sett().GetChatColorError(), f );
 }
 
 
@@ -586,7 +603,7 @@ void ChatPanel::Joined( User& who )
 {
   if ( m_type == CPT_Channel )
   {
-    if( sett().GetDisplayJoinLeave( WX_STRING( m_channel->GetName() ) ) ) { OutputLine( _T(" ** ") + WX_STRING(who.GetNick()) + _(" joined the ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart() ); }
+    if( sett().GetDisplayJoinLeave( WX_STRING( m_channel->GetName() ) ) ) { OutputLine( _T(" ** ") + WX_STRING(who.GetNick()) + _(" joined the ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
     if ( m_show_nick_list ) m_nicklist->AddUser( who );
   }
 }
@@ -601,7 +618,7 @@ void ChatPanel::OnChannelJoin( User& who )
 void ChatPanel::Parted( User& who, const wxString& message )
 {
   if ( m_type == CPT_Channel ) {
-    if( sett().GetDisplayJoinLeave( WX_STRING( m_channel->GetName() ) ) ) { OutputLine( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" )."), sett().GetChatColorJoinPart() ); }
+    if( sett().GetDisplayJoinLeave( WX_STRING( m_channel->GetName() ) ) ) { OutputLine( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" )."), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
     if ( m_show_nick_list ) m_nicklist->RemoveUser( who );
 
     if ( m_channel == 0 ) return;
@@ -627,7 +644,9 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
     pos = refined.Find( _T("\\n") );
   }
   */
-  OutputLine( _T(" ** Channel topic: ")+ refined + _("\n * Set by ") + who, sett().GetChatColorServer() );
+  wxFont f = m_chatlog_text->GetFont();
+  f.SetFamily( wxFONTFAMILY_MODERN );
+  OutputLine( _T(" ** Channel topic: ")+ refined + _("\n * Set by ") + who, sett().GetChatColorServer(), f );
 }
 
 
@@ -754,14 +773,14 @@ void ChatPanel::Say( const wxString& message )
     }
 
     if ( line == _T("/ver") ) {
-      OutputLine( _(" You have SpringLobby v") + WX_STRING( GetSpringLobbyVersion() ), *wxBLACK );
+      OutputLine( _(" You have SpringLobby v") + WX_STRING( GetSpringLobbyVersion() ), sett().GetChatColorNormal() , sett().GetChatFont() );
       return;
     }
 
     if ( m_type == CPT_Channel ) {
 
       if ( m_channel == 0 ) {
-        OutputLine( _(" You are not in channel or channel does not exist."), *wxRED );
+        OutputLine( _(" You are not in channel or channel does not exist."), sett().GetChatColorError(), sett().GetChatFont() );
         return;
       }
       if ( line.StartsWith( _T("/") ) ) {
@@ -773,7 +792,7 @@ void ChatPanel::Say( const wxString& message )
     } else if ( m_type == CPT_Battle ) {
 
       if ( m_battle == 0 ) {
-        OutputLine( _(" You are not in battle or battle does not exist."), *wxRED );
+        OutputLine( _(" You are not in battle or battle does not exist."), sett().GetChatColorError(), sett().GetChatFont() );
         return;
       }
       if ( line.StartsWith(_T("/")) ) {
@@ -785,7 +804,7 @@ void ChatPanel::Say( const wxString& message )
     } else if ( m_type == CPT_User ) {
 
       if ( m_user == 0 ) {
-        OutputLine( _(" User is offline."), *wxRED );
+        OutputLine( _(" User is offline."), sett().GetChatColorError(), sett().GetChatFont() );
         return;
       }
       if ( line.StartsWith(_T("/")) ) {
@@ -802,7 +821,7 @@ void ChatPanel::Say( const wxString& message )
       }
 
       m_server->SendRaw( STD_STRING(line) );
-      OutputLine( _(" Sent: \"") + line + _("\""), *wxBLACK );
+      OutputLine( _(" Sent: \"") + line + _("\""), sett().GetChatColorNormal(), sett().GetChatFont() );
     }
 
   }
@@ -844,13 +863,13 @@ bool ChatPanel::IsOk()
 
 void ChatPanel::OnUserDisconnected()
 {
-  OutputLine( _T(" ** User is now offline."), sett().GetChatColorJoinPart() );
+  OutputLine( _T(" ** User is now offline."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 }
 
 
 void ChatPanel::OnUserConnected()
 {
-  OutputLine( _T(" ** User just got online."), sett().GetChatColorJoinPart() );
+  OutputLine( _T(" ** User just got online."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 }
 
 
