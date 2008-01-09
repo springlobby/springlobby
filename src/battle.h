@@ -219,8 +219,6 @@ class Battle : public UserList, public IBattle
 
     std::vector<BattleStartRect*>::size_type GetNumRects();
 
-    wxArrayString ChangedOptions;
-
   protected:
     // Battle variables
 

@@ -407,10 +407,8 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
  // wxLogDebugFunc( /* _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams) */ );
 
   std::string params = inparams;
-  int pos, cpu, id, nat, port, maxplayers, rank, specs, metal = 0, energy = 0, units, start = 0,
-      top, left, right, bottom, ally, udpport;
-  bool replay, haspass, dgun = false, ghost = false, dim = false, lanmode = false;
-  GameType gt = GT_ComContinue;
+  int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally, udpport;
+  bool replay, haspass,lanmode = false;
   std::string hash;
   std::string nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version;
   //NatType ntype;
@@ -1088,9 +1086,12 @@ void TASServer::SendHostInfo( HostInfo update )
       for ( int i = 0; i < battle.ChangedOptions.GetCount(); i++ )
       {
         wxString key = battle.ChangedOptions[i];
-        if ( key.BeforeFirst( '_' ) == _T("map") )
+        long type;
+        key.BeforeFirst( '_' ).ToLong( &type );
+        key = key.AfterFirst( '_' );
+        if ( type == MapOption )
           cmd += _T("game\\mapoption\\") + key.AfterFirst( '-' ) + _T("=") + battle.CustomBattleOptions()->getSingleValue( key.AfterFirst( '-' ), MapOption ) + _T("\t");
-        if ( key.BeforeFirst( '_' ) == _T("mod") )
+        if ( type == ModOption )
           cmd += _T("game\\modoption\\") + key.AfterFirst( '-' ) + _T("=") + battle.CustomBattleOptions()->getSingleValue( key.AfterFirst( '-' ), ModOption ) + _T("\t");
       }
       battle.ChangedOptions.Empty();

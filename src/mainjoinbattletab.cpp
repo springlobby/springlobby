@@ -77,6 +77,7 @@ ChatPanel* MainJoinBattleTab::GetActiveChatPanel()
 void MainJoinBattleTab::UpdateCurrentBattle(bool updateRestrictions, bool MapChanged)
 {
   if ( m_battle_tab ) {
+    if ( updateRestrictions ) m_battle_tab->GetBattle().ChangedOptions.Add( wxString::Format(_T("%d_restrictions"), EngineOption ) );
     m_battle_tab->UpdateBattleInfo();
   }
   if ( m_map_tab ) {
