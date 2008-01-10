@@ -224,16 +224,17 @@ void BattleroomMMOptionsTab::OnSpinCtrlChange(wxSpinEvent& event)
 void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 {
 	mmOptionsWrapper* optWrap = m_battle.CustomBattleOptions();
-	long* gameoption = new long;
-	controlName.BeforeFirst(sep).ToLong(gameoption);
+	long gameoption;
+	controlName.BeforeFirst(sep).ToLong(&gameoption);
 	wxString optKey = controlName.AfterFirst(sep);
-	wxString value = optWrap->getSingleValue( optKey, int(*gameoption) );
-
-	if ( m_chkbox_map.find(controlName) != m_chkbox_map.end() )
+	wxString value = optWrap->getSingleValue( optKey, int(gameoption) );
+	ASSERT_LOGIC ( 0==8,controlName );
+	ASSERT_LOGIC ( m_chkbox_map.find(controlName) != m_chkbox_map.end(), controlName );
+	if (true)
 	{
 		wxCheckBox* cur = m_chkbox_map[controlName] ;
-		long* l_val = new long;
-		value.ToLong(l_val);
+		long l_val;
+		value.ToLong(&l_val);
 		cur->SetValue(l_val);
 	}
 
@@ -252,9 +253,9 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 	else if ( m_spinctrl_map.find(controlName) != m_spinctrl_map.end() )
 	{
 		wxSpinCtrlDbl* cur = m_spinctrl_map[controlName] ;
-		double* l_val = new double;
-		value.ToDouble(l_val);
-		cur->SetValue(*l_val);
+		double l_val;
+		value.ToDouble(&l_val);
+		cur->SetValue(l_val);
 	}
 
 }
