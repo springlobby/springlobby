@@ -689,7 +689,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     while ( (command = WX_STRING(GetSentenceParam( params ))) != _T("") ) {
       wxString key = command.BeforeFirst( '=' );
       wxString value = command.AfterFirst( '=' );
-      m_se->OnSetBattleInfo( m_battle_id, key, WX_STRING(msg) );
+      m_se->OnSetBattleInfo( m_battle_id, key, value );
     }
     m_se->OnBattleInfoUpdated( m_battle_id );
     // !! Command: "SETSCRIPTTAGS" params: "game/startpostype=0	game/maxunits=1000	game/limitdgun=0	game/startmetal=1000	game/gamemode=0	game/ghostedbuildings=-1	game/startenergy=1000	game/diminishingmms=0"
@@ -1071,12 +1071,12 @@ void TASServer::SendHostInfo( HostInfo update )
     battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
     for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
     {
-      cmd += _T("game\\mapoption\\") + it->first + _T("=") + it->second.second + _T("\t");
+      cmd += _T("game\\mapoptions\\") + it->first + _T("=") + it->second.second + _T("\t");
     }
     battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
     for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
     {
-      cmd += _T("game\\modoption\\") + it->first + _T("=") + it->second.second + _T("\t");
+      cmd += _T("game\\modoptions\\") + it->first + _T("=") + it->second.second + _T("\t");
     }
 
 /// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
@@ -1146,11 +1146,11 @@ void TASServer::SendHostScriptTags( const wxString& Tag )
   wxString key = Tag.AfterFirst( '_' );
   if ( type == MapOption )
   {
-    cmd += _T("game\\mapoption\\") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, MapOption ) + _T("\n");
+    cmd += _T("game\\mapoptions\\") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, MapOption ) + _T("\n");
   }
   if ( type == ModOption )
   {
-    cmd += _T("game\\modoption\\") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, ModOption ) + _T("\n");
+    cmd += _T("game\\modoptions\\") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, ModOption ) + _T("\n");
   }
   if ( type == EngineOption )
   {
