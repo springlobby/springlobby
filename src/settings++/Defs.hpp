@@ -106,6 +106,7 @@
 #define ID_WINDOWP_UI_CBOX_13 372
 #define ID_WINDOWP_UI_CBOX_14 373
 #define ID_WINDOWP_UI_CBOX_15 374
+#define ID_WINDOWP_UI_CBOX_16 375
 
 //Zoom opt
 #define ID_WINDOWP_UI_MW_SPD  385
@@ -203,7 +204,7 @@ const Control RO_SLI[] = {
 	{_T("Terrain detail"),               wxT("GroundDetail"),        ID_RO_SLI_2,	"80", {_T("higher value = more terrain details")}	},
 	{_T("Unit detail"),                  wxT("UnitLodDist"),         ID_RO_SLI_3,	"300", {_T("higher value = more detailed units")}	},
 	{_T("Grass detail"),                 wxT("GrassDetail"),         ID_RO_SLI_4,	"3", {_T("higher value = more detailed graas")}	},
-	{_T("Ground decals"),                wxT("GroundDecals"),        ID_RO_SLI_5,	"40", {_T("higher value = more ground decals")}	},
+	{_T("Ground decals"),                wxT("GroundDecals"),        ID_RO_SLI_5,	"0", {_T("only on/off available at this time")}	},
 	{_T("Unit icon distance"),           wxT("UnitIconDist"),        ID_RO_SLI_6,	"350", {_T("determines at which range units are still fully rendered\n"
 																								"higher value = greater range = more units rendered at the same time")}	},
 	{_T("Max simultaneous particles"),     wxT("MaxParticles"),        ID_RO_SLI_7,	"5000"	, {_T("limits how many particles are displayed at the same time")}},
@@ -233,7 +234,8 @@ const Control VO_SLI_EXT[1] = {
 
 
 const Control AO_SLI[3] = {
-	{_T("Maximum simultaneous sounds"), wxT("MaxSounds"),            ID_AO_SLI_0,	"16" , {_T("maximum different sounds played at the same time")}},
+	{_T("Maximum simultaneous sounds"), wxT("MaxSounds"),            ID_AO_SLI_0,	"8" , {_T("maximum different sounds played at the same time\n"
+																								"Set this to zero to disable sound completely.")}},
 	{_T("Global sound volume"),   wxT("SoundVolume"),                ID_AO_SLI_1,	"100", {_T("overall sound volume")}},
 	{_T("Unit reply volume"),     wxT("UnitReplySoundVolume"),       ID_AO_SLI_2,	"80" , {_T("reply volume relative to global volume")}}
 	
@@ -256,7 +258,7 @@ const Control QA_CBOX[10] = {
 };
 	
 //TODO add scroll wheel speed 
-const Control UI_CBOX[15] = {
+const Control UI_CBOX[16] = {
 	{_T("Enable LuaUI widgets"),                            wxT("LuaUI"),               ID_WINDOWP_UI_CBOX_1,	"1", {_T("mark to be able to use")}},
 	
 	{_T("Draw commands on mini-map"),                       wxT("MiniMapDrawCommands"), ID_WINDOWP_UI_CBOX_2,	"1", {_T("default value is \"on\"")}},
@@ -278,29 +280,32 @@ const Control UI_CBOX[15] = {
 										{_T("requires \"Enable LuaWidgets\" to be set.\nWill be displayed in the bottom right corner")}},
 //TODO is there even a reason that it should be disabled?
 	{_T("Fix rendering on alt-tab"),                        wxT("FixAltTab"),           ID_WINDOWP_UI_CBOX_13,	"1", {_T("Do not change if not needed")}},
-	{_T("Disallow helper AI's"),                            wxT("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_14,	"0", {_T("Disables Economy AI, etc.")}},
-	{_T("Disable scroll on window edge"),					wxT("WindowedEdgeMove"),	ID_WINDOWP_UI_CBOX_15,	"0", {_T("useful if run in windowed mode")}}
+	{_T("Disallow helper AI's"),                            wxT("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_14,	"0", {_T("Disables Economy AI, etc.\n"
+																														"If enabled might screw with LuaUi.")}},
+	{_T("Enable scroll on window edge"),					wxT("WindowedEdgeMove"),	ID_WINDOWP_UI_CBOX_15,	"1", {_T("Scroll the screen when mouse reaches the screen's edge.")}},
+	{_T("Invert Mouse"),									wxT("InvertMouse"),			ID_WINDOWP_UI_CBOX_16,	"0", {_T("Inverts the Mouse Y-axis in FPS mode")}},
+	
 };
 
 
 const Control MO_SLI[5] = {
 	{_T("Overhead camera"),    wxT("OverheadScrollSpeed"),    ID_MO_SLI_0,	"10", {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("Rotatable overhead camera"), wxT("RotOverheadScrollSpeed"), ID_MO_SLI_1,	"0" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("Total war camera"),          wxT("TWScrollSpeed"),          ID_MO_SLI_2,	"0" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("First person camera"),         wxT("FPSScrollSpeed"),         ID_MO_SLI_3,	"0" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("Free camera"),          wxT("CamFreeScrollSpeed"),     ID_MO_SLI_4,	"0" , {_T("set the scroll speed (mouse + keyboard) for this mode")}}
+	{_T("Rotatable overhead camera"), wxT("RotOverheadScrollSpeed"), ID_MO_SLI_1,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("Total war camera"),          wxT("TWScrollSpeed"),          ID_MO_SLI_2,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("First person camera"),         wxT("FPSScrollSpeed"),         ID_MO_SLI_3,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("Free camera"),          wxT("CamFreeScrollSpeed"),     ID_MO_SLI_4,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}}
 };
 
 const Control MO_SLI_EXT[5] = {
 	{_T(""), wxT("OverheadEnabled"), -1,	"1", {_T("Make this the default view when startins Spring.\n"
 													"Can be changed ingame.")}},
-	{_T(""), wxT("RotOverheadEnabled"), -1,	"0", {_T("Make this the default view when startins Spring.\n"
+	{_T(""), wxT("RotOverheadEnabled"), -1,	"1", {_T("Make this the default view when startins Spring.\n"
 													"Can be changed ingame.")}},
-	{_T(""), wxT("TWEnabled"), -1,		"0", {_T("Make this the default view when startins Spring.\n"
+	{_T(""), wxT("TWEnabled"), -1,		"1", {_T("Make this the default view when startins Spring.\n"
 												"Can be changed ingame.")}},
-	{_T(""), wxT("FPSEnabled"), -1,		"0", {_T("Make this the default view when startins Spring.\n"
+	{_T(""), wxT("FPSEnabled"), -1,		"1", {_T("Make this the default view when startins Spring.\n"
 												"Can be changed ingame.")}},
-	{_T(""), wxT("CamFreeEnabled"), -1,	"0", {_T("Make this the default view when startins Spring.\n"
+	{_T(""), wxT("CamFreeEnabled"), -1,	"1", {_T("Make this the default view when startins Spring.\n"
 												"Can be changed ingame.")}},
 };
 

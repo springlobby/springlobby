@@ -75,43 +75,43 @@ class MapCtrl : public wxPanel
 
    protected:
 
-    BattleStartRect _GetBattleRect( int x1, int y1, int x2, int y2, int ally = -1 );
-    wxRect _GetMinimapRect();
-    wxRect _GetStartRect( int index );
-    wxRect _GetStartRect( const BattleStartRect& sr );
+    BattleStartRect GetBattleRect( int x1, int y1, int x2, int y2, int ally = -1 );
+    wxRect GetMinimapRect();
+    wxRect GetStartRect( int index );
+    wxRect GetStartRect( const BattleStartRect& sr );
 
-    void _DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font );
+    void DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font );
 
-    wxRect _GetBotRect( BattleBot& bot, bool selected );
-    RectArea _GetBotRectArea( const wxRect& botrect, int x, int y );
+    wxRect GetBotRect( BattleBot& bot, bool selected );
+    RectArea GetBotRectArea( const wxRect& botrect, int x, int y );
 
-    wxRect _GetBotSideRect() { return wxRect( 37, 20, 16, 16 ); }
-    wxRect _GetBotHandicapRect() { return wxRect( 40, 55, 16, 16 ); }
-    wxRect _GetBotCloseRect() { return wxRect( 59, 4, 14, 14 ); }
-    wxRect _GetBotUpAllyButtonRect() { return wxRect( 61, 35, 12, 8 ); }
-    wxRect _GetBotDownAllyButtonRect() { return wxRect( 61, 43, 12, 8 ); }
-    wxRect _GetBotUpHandicapButtonRect() { return wxRect( 61, 52, 12, 8 ); }
-    wxRect _GetBotDownHandicapButtonRect() { return wxRect( 61, 60, 12, 8 ); }
+    wxRect GetBotSideRect() { return wxRect( 37, 20, 16, 16 ); }
+    wxRect GetBotHandicapRect() { return wxRect( 40, 55, 16, 16 ); }
+    wxRect GetBotCloseRect() { return wxRect( 59, 4, 14, 14 ); }
+    wxRect GetBotUpAllyButtonRect() { return wxRect( 61, 35, 12, 8 ); }
+    wxRect GetBotDownAllyButtonRect() { return wxRect( 61, 43, 12, 8 ); }
+    wxRect GetBotUpHandicapButtonRect() { return wxRect( 61, 52, 12, 8 ); }
+    wxRect GetBotDownHandicapButtonRect() { return wxRect( 61, 60, 12, 8 ); }
 
-    wxRect _GetRefreshRect();
-    wxRect _GetDownloadRect();
+    wxRect GetRefreshRect();
+    wxRect GetDownloadRect();
 
-    int _GetNewRectIndex();
+    int GetNewRectIndex();
 
-    void _RequireImages();
+    void RequireImages();
 
-    void _RelocateBots();
+    void RelocateBots();
 
-    void _GetClosestStartPos( int fromx, int fromy, int& index, int& x, int& y, int& range );
+    void GetClosestStartPos( int fromx, int fromy, int& index, int& x, int& y, int& range );
 
-    void _DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving );
-    void _DrawSinglePlayer( wxDC& dc );
-    void _DrawBackground( wxDC& dc );
-    void _DrawStartRects( wxDC& dc );
-    void _DrawStartPositions( wxDC& dc );
-    void _DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxColour& col, bool mouseover, int alphalevel = 70 );
+    void DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving );
+    void DrawSinglePlayer( wxDC& dc );
+    void DrawBackground( wxDC& dc );
+    void DrawStartRects( wxDC& dc );
+    void DrawStartPositions( wxDC& dc );
+    void DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxColour& col, bool mouseover, int alphalevel = 70 );
 
-    void _SetMouseOverRect( int index );
+    void SetMouseOverRect( int index );
 
     void _SetCursor();
 

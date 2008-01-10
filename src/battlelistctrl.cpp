@@ -586,7 +586,11 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 		tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 		int flag = wxLIST_HITTEST_ONITEM;
 		long *ptrSubItem = new long;
+#ifdef HAVE_WX28
 		long item_hit = HitTest(position, flag, ptrSubItem);
+#else
+		long item_hit = HitTest(position, flag);
+#endif
 
 		if (item_hit != wxNOT_FOUND)
 		{

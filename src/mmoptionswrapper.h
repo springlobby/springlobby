@@ -110,7 +110,7 @@ public:
 	OptionType GetSingleOptionType (wxString key);
 
 //private:
-	const static int optionCategoriesCount = 2;
+	const static int optionCategoriesCount = 3;
 	optionMapBool* m_boolMaps[optionCategoriesCount];
 	optionMapFloat* m_floatMaps[optionCategoriesCount];
 	optionMapString* m_stringMaps[optionCategoriesCount];

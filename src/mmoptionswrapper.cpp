@@ -240,18 +240,18 @@ void mmOptionsWrapper::getOptionsMap(wxStringMap* map, GameOption modmapFlag)
 
 bool mmOptionsWrapper::setSingleOption(wxString key,wxString value,GameOption modmapFlag)
 {
-	wxStringPairVec temp;
-	temp.push_back( wxStringPair(key,value) );
-	return setOptions(&temp,modmapFlag);
+	OptionType* optType = new OptionType(opt_undefined);
+	keyExists( key, modmapFlag, false, optType );
+	return setSingleOptionTypeSwitch(key,value,modmapFlag,*optType);
 }
 
 bool mmOptionsWrapper::setSingleOption(wxString key,wxString value)
 {
-	OptionType* dummy = new OptionType(opt_undefined);
-	if (keyExists(key,ModOption,false,dummy))
-		return setSingleOption(key,value,ModOption);
-	else if (keyExists(key,MapOption,false,dummy))
-		return setSingleOption(key,value,MapOption);
+	OptionType* optType = new OptionType(opt_undefined);
+	if (keyExists(key,ModOption,false,optType))
+		return setSingleOptionTypeSwitch(key,value,ModOption,*optType);
+	else if (keyExists(key,MapOption,false,optType))
+		return setSingleOptionTypeSwitch(key,value,MapOption,*optType);
 	else
 		return false;
 }
