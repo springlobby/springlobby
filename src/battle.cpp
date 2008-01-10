@@ -52,9 +52,9 @@ void Battle::SendHostInfo( HostInfo update )
 }
 
 
-void Battle::SendBattleTag( const wxString& Tag )
+void Battle::SendHostInfo( const wxString& Tag )
 {
-  m_serv.SendHostScriptTags( Tag );
+  m_serv.SendHostInfo( Tag );
 }
 
 
@@ -64,9 +64,9 @@ void Battle::Update()
 }
 
 
-void Battle::UpdateTag( const wxString& Tag )
+void Battle::Update( const wxString& Tag )
 {
-  m_ui.OnBattleTagUpdated( *this, Tag );
+  m_ui.OnBattleInfoUpdated( *this, Tag );
 }
 
 

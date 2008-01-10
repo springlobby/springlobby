@@ -789,11 +789,11 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
   }
 }
 
-void Ui::OnBattleTagUpdated( Battle& battle, const wxString& Tag )
+void Ui::OnBattleInfoUpdated( Battle& battle, const wxString& Tag )
 {
   m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
   if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
-    mw().GetJoinTab().UpdateCurrentBattleTags( Tag );
+    mw().GetJoinTab().UpdateCurrentBattle( Tag );
   }
 }
 

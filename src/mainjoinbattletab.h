@@ -27,7 +27,7 @@ class MainJoinBattleTab : public wxPanel
     void JoinBattle( Battle& battle );
     //void UpdateCurrentBattle();
     void UpdateCurrentBattle( bool MapChanged = false,  bool UpdateRestrictions = true );
-    void UpdateCurrentBattleTags( const wxString& Tag );
+    void UpdateCurrentBattle( const wxString& Tag );
     void LeaveCurrentBattle();
     Battle* GetCurrentBattle();
     ChatPanel* GetActiveChatPanel();

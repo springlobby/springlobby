@@ -1129,7 +1129,7 @@ void TASServer::SendHostInfo( HostInfo update )
 }
 
 
-void TASServer::SendHostScriptTags( const wxString& Tag )
+void TASServer::SendHostInfo( const wxString& Tag )
 {
   wxLogDebugFunc( _T("") );
   ASSERT_LOGIC( IsOnline(), _T("Not online") );

@@ -98,7 +98,7 @@ class SinglePlayerBattle: public IBattle
     void GetFreePosition( int& x, int& y );
 
     void SendHostInfo( HostInfo update );
-    void SendBattleTag( const wxString& Tag ){}
+    void SendHostInfo( const wxString& Tag ){}
 
     std::vector<BattleStartRect*>::size_type GetNumRects() { return 0; }
 

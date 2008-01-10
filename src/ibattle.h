@@ -118,7 +118,7 @@ class IBattle
     virtual bool GhostedBuildings() { return m_ghostedbuildings; }
 
     virtual void SendHostInfo( HostInfo update ) = 0;
-    virtual void SendBattleTag( const wxString& Tag ) = 0;
+    virtual void SendHostInfo( const wxString& Tag ) = 0;
 
     virtual BattleBot* GetBotByStartPosition( unsigned int startpos ) { return 0; };
     virtual BattleBot* GetBot( unsigned int index ) = 0;

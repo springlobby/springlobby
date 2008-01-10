@@ -78,10 +78,10 @@ void MainJoinBattleTab::UpdateCurrentBattle( bool MapChanged, bool UpdateRestric
 {
   if ( m_battle_tab ) {
     m_battle_tab->UpdateBattleInfo();
-    if ( UpdateRestrictions ) m_battle_tab->UpdateScriptTag( wxString::Format(_T("%d_restrictions"), EngineOption ) );
+    if ( UpdateRestrictions ) m_battle_tab->UpdateBattleInfo( wxString::Format(_T("%d_restrictions"), EngineOption ) );
   }
   if ( m_map_tab ) {
-    m_map_tab->UpdateMap();
+    m_map_tab->Update();
   }
   if ( m_opts_tab && UpdateRestrictions ) {
     m_opts_tab->ReloadRestrictions();
@@ -97,14 +97,14 @@ void MainJoinBattleTab::UpdateCurrentBattle( bool MapChanged, bool UpdateRestric
   }
 }
 
-void MainJoinBattleTab::UpdateCurrentBattleTags( const wxString& Tag )
+void MainJoinBattleTab::UpdateCurrentBattle( const wxString& Tag )
 {
   if ( m_battle_tab ) {
-    m_battle_tab->UpdateScriptTag( Tag );
+    m_battle_tab->UpdateBattleInfo( Tag );
   }
 
   if ( m_opts_tab ) {
-    m_opts_tab->UpdateScriptTag( Tag );
+    m_opts_tab->UpdateBattle( Tag );
   }
 
   if ( m_mm_opts_tab ){

@@ -277,7 +277,6 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   m_ui.OnBattleInfoUpdated( battle );
 }
 
-//TODO this needs severe fixery!
 void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const wxString& value )
 {
   wxLogDebugFunc( param + _T(", ") + value );
@@ -296,7 +295,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     else if ( key == _T("ghostedbuildings") ) battle.SetGhostedBuildings( GetIntParam(val) );
     else if ( key == _T("startenergy")      ) battle.SetStartEnergy( GetIntParam(val) );
     else if ( key == _T("diminishingmms")   ) battle.SetDimMMs( GetIntParam(val) );
-    battle.UpdateTag( wxString::Format(_T("%d_"), EngineOption ) + key );
+    battle.Update( wxString::Format(_T("%d_"), EngineOption ) + key );
   }
   else if ( key.Left( 5 ) == _T("game\\") )
   {
@@ -306,14 +305,14 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     {
       key = key.AfterFirst( '\\' );
       if (  battle.CustomBattleOptions()->setSingleOption( key,  value, MapOption ) )  // m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
-        battle.UpdateTag( wxString::Format(_T("%d_"), MapOption ) + key );
+        battle.Update( wxString::Format(_T("%d_"), MapOption ) + key );
     }
     else if ( key.Left( 11 ) == _T( "modoptions\\" ) )
     {
       key = key.AfterFirst( '\\' );
       std::string test = STD_STRING( key );
       if (  battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) );//m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
-        battle.UpdateTag(  wxString::Format(_T("%d_"), ModOption ) + key );
+        battle.Update(  wxString::Format(_T("%d_"), ModOption ) + key );
     }
   }
 }

@@ -128,7 +128,7 @@ class Battle : public UserList, public IBattle
 */
 
     void SendHostInfo( HostInfo update );
-    void SendBattleTag( const wxString& Tag );
+    void SendHostInfo( const wxString& Tag );
 
     void SetRankNeeded( const int& rankneeded ) { m_opts.rankneeded = rankneeded; }
     int GetRankNeeded() const { return m_opts.rankneeded; }
@@ -153,7 +153,7 @@ class Battle : public UserList, public IBattle
     void GetFreeColour( int& r, int& g, int& b, bool excludeme = true );
 
     void Update();
-    void UpdateTag( const wxString& Tag );
+    void Update( const wxString& Tag );
 
     void Join( const std::string& password = "" );
     void Leave();

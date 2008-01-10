@@ -57,7 +57,7 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 
 	m_main_sizer->Add( m_mod_options_sizer, 1, wxEXPAND, 5 );
 	m_main_sizer->Add( m_map_options_sizer, 1, wxEXPAND, 5 );
-	
+
 	this->SetSizer( m_main_sizer );
 	this->Layout();
 }
@@ -167,7 +167,7 @@ void BattleroomMMOptionsTab::OnChkBoxChange(wxCommandEvent& event)
 	{
         if (m_battle.IsFounderMe())
         {
-          m_battle.SendBattleTag( wxString::Format(_T("%d"), gameoption ) + wxsep + key );
+          m_battle.SendHostInfo( wxString::Format(_T("%d"), gameoption ) + wxsep + key );
         }
 	}
 }
@@ -183,7 +183,7 @@ void BattleroomMMOptionsTab::OnComBoxChange(wxCommandEvent& event)
 	{
         if (m_battle.IsFounderMe())
         {
-          m_battle.SendBattleTag( wxString::Format(_T("%d"), gameoption ) + wxsep + key );
+          m_battle.SendHostInfo( wxString::Format(_T("%d"), gameoption ) + wxsep + key );
         }
 	}
 }
@@ -199,7 +199,7 @@ void BattleroomMMOptionsTab::OnTextCtrlChange(wxCommandEvent& event)
 	{
 		if (m_battle.IsFounderMe())
 		{
-		  m_battle.SendBattleTag( wxString::Format(_T("%d"), gameoption ) + wxsep + key );
+		  m_battle.SendHostInfo( wxString::Format(_T("%d"), gameoption ) + wxsep + key );
 		}
 
 	}
@@ -216,7 +216,7 @@ void BattleroomMMOptionsTab::OnSpinCtrlChange(wxSpinEvent& event)
 	{
 		if (m_battle.IsFounderMe())
 		{
-		  m_battle.SendBattleTag( wxString::Format(_T("%d"), gameoption ) + wxsep + key );
+		  m_battle.SendHostInfo( wxString::Format(_T("%d"), gameoption ) + wxsep + key );
 		}
 	}
 }
