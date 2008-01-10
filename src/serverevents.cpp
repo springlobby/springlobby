@@ -277,7 +277,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   m_ui.OnBattleInfoUpdated( battle );
 }
 
-
+//TODO this needs severe fixery!
 void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const wxString& value )
 {
   wxLogDebugFunc( _T("") );
@@ -285,6 +285,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 
   std::string val = STD_STRING(value);
   wxString key = param;
+  //problem one: why 4 not 5? why dos 5 give some strange stl exception?
   if ( key.Left( 4 ) == _T("game/") )/// FIXME (BrainDamage#1#): change the slash type when the new spring version gets out
   {/// TODO (BrainDamage#1#): remove all the engine hardcoded static containers/parsing code and move them to the new dynamic
     key = key.BeforeFirst( '/' );
@@ -298,18 +299,25 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     else if ( key == _T("diminishingmms")   ) battle.SetDimMMs( GetIntParam(val) );
     battle.UpdateTag( wxString::Format(_T("%d_"), EngineOption ) + key );
   }
-  if ( key.Left( 4 ) == _T("game\\") )
+  //agian 4 vs 5
+  else if ( key.Left( 4 ) == _T("game\\") )
   {
-    key = key.BeforeFirst( '\\' );
+	  //this actually never gets called
+	  ASSERT_LOGIC ( 0==8,key );
+	  
+	  //changed all following BeforeFirst to AfterFirst, before didn't seem to make sense to me
+    key = key.AfterFirst( '\\' );
+    // 10 vs 11 
      if ( key.Left( 10 ) == _T( "mapoptions\\" ) )
     {
-      key = key.BeforeFirst( '\\' );
+      key = key.AfterFirst( '\\' );
       if (  !battle.CustomBattleOptions()->setSingleOption( key,  value, MapOption ) ) m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
       battle.UpdateTag( wxString::Format(_T("%d_"), MapOption ) + key );
     }
+     //again 10 vs 11
     else if ( key.Left( 10 ) == _T( "modoptions\\" ) )
     {
-      key = key.BeforeFirst( '\\' );
+      key = key.AfterFirst( '\\' );
       if (  !battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) ) m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
      battle.UpdateTag(  wxString::Format(_T("%d_"), ModOption ) + key );
     }

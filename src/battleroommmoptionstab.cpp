@@ -228,9 +228,7 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 	controlName.BeforeFirst(sep).ToLong(&gameoption);
 	wxString optKey = controlName.AfterFirst(sep);
 	wxString value = optWrap->getSingleValue( optKey, int(gameoption) );
-	ASSERT_LOGIC ( 0==8,controlName );
-	ASSERT_LOGIC ( m_chkbox_map.find(controlName) != m_chkbox_map.end(), controlName );
-	if (true)
+	if ( m_chkbox_map.find(controlName) != m_chkbox_map.end() )
 	{
 		wxCheckBox* cur = m_chkbox_map[controlName] ;
 		long l_val;
