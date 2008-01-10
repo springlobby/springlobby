@@ -340,19 +340,21 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 			// test if valid value, aka is in list
 			int listitemcount = (*m_listMaps[modmapFlag])[key].listitems.size();
 			bool valid_string = false;
-			wxString newVal;
-			for (int j = 0; j < listitemcount; ++j)
+			int j = 0;
+			for (; j < listitemcount; ++j)
 			{
-				if ( (*m_listMaps[modmapFlag])[key].listitems[j].name == value)
+				if ( (*m_listMaps[modmapFlag])[key].listitems[j].key == value)
 				{
 					valid_string = true;
-					newVal = (*m_listMaps[modmapFlag])[key].listitems[j].key;
 					break;
 				}
 			}
 
 			if (valid_string)
-				(*m_listMaps[modmapFlag])[key].value = newVal;
+			{
+				(*m_listMaps[modmapFlag])[key].value = (*m_listMaps[modmapFlag])[key].listitems[j].key;
+				(*m_listMaps[modmapFlag])[key].cur_choice_index = j;
+			}
 			else
 			{
 				wxLogWarning(_T("recieved list option is not valid"));
@@ -375,4 +377,20 @@ bool mmOptionsWrapper::reloadMapOptions(wxString mapname)
 	m_listMaps[MapOption]	= new optionMapList;
 
 	return loadMapOptions(mapname);
+}
+
+wxString mmOptionsWrapper::GetNameListOptValue(wxString key, GameOption flag)
+{
+	OptionType optType; 
+	if (flag < ModOption || flag > LastOption - 1)
+		return wxEmptyString;
+	else if ( keyExists(key,flag,false,&optType) )
+	{
+		if ( optType == opt_list)
+			return (*m_listMaps[flag])[key].cbx_choices[ (*m_listMaps[flag])[key].cur_choice_index ] ;
+	}
+	
+	// at this point retrieval failed
+	return wxEmptyString;
+	
 }

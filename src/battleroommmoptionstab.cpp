@@ -104,7 +104,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 			tempspin->SetToolTip(current.description);
 			tempspin->Enable(enable);
 			tempspin->SetName(pref+current.key);
-			m_spinctrl_map[pref+current.name] = tempspin;
+			m_spinctrl_map[pref+current.key] = tempspin;
 			tempbox->Add(new wxStaticText(this,-1,current.name),0,5);
 			tempbox->Add(tempspin);
 			spinSizer->Add(tempbox);
@@ -117,11 +117,11 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		mmOptionList current = it->second;
 		wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
 		wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.def, wxDefaultPosition,
-				wxDefaultSize, current.cbx_choices, 0, wxDefaultValidator, current.key);
+				wxDefaultSize, current.cbx_choices, 0, wxDefaultValidator);
 		tempchoice->SetToolTip(current.description);
 		tempchoice->SetName(pref+current.key);
 		tempchoice->Enable(enable);
-		m_combox_map[pref+current.name] = tempchoice;
+		m_combox_map[pref+current.key] = tempchoice;
 		tempbox->Add(new wxStaticText(this,-1,current.name),0,5);
 		tempbox->Add(tempchoice);
 
@@ -139,7 +139,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		temptext->SetToolTip(current.description);
 		temptext->SetName(pref+current.key);
 		temptext->Enable(enable);
-		m_textctrl_map[pref+current.name] = temptext;
+		m_textctrl_map[pref+current.key] = temptext;
 		tempbox->Add(new wxStaticText(this,-1,current.name),0,5);
 		tempbox->Add(temptext);
 
@@ -236,19 +236,19 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 		cur->SetValue(l_val);
 	}
 
-	else if ( m_combox_map.find(controlName) != m_combox_map.end() )
+	 if ( m_combox_map.find(controlName) != m_combox_map.end() )
 	{
 		wxComboBox* cur = m_combox_map[controlName];
 		cur->SetValue(value);
 	}
 
-	else if ( m_textctrl_map.find(controlName) != m_textctrl_map.end() )
+	 if ( m_textctrl_map.find(controlName) != m_textctrl_map.end() )
 	{
 		wxTextCtrl* cur = m_textctrl_map[controlName];
 		cur->SetValue(value);
 	}
 
-	else if ( m_spinctrl_map.find(controlName) != m_spinctrl_map.end() )
+	 if ( m_spinctrl_map.find(controlName) != m_spinctrl_map.end() )
 	{
 		wxSpinCtrlDbl* cur = m_spinctrl_map[controlName] ;
 		double l_val;

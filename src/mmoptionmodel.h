@@ -113,6 +113,8 @@ struct mmOptionList : public mmOptionModel
 	wxString def;
 	//! will always reflect the name of the currently "selected" listitem
 	wxString value;
+	//! index of current value in cbx_choices, so one can assign new combox value
+	int cur_choice_index;
 	//! holds a variable amount of ListItems
 	ListItemVec listitems;
 	//! for easy mapping to a combobox
