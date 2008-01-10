@@ -28,8 +28,6 @@ Battle::Battle( Server& serv, Ui& ui, int id ) :
 {
   m_opts.battleid = id;
 
-  CustomBattleOptions()->loadOptions( ModOption, WX_STRING(m_mod.name) );
-  CustomBattleOptions()->loadOptions( MapOption, WX_STRING(m_map.name) );
 }
 
 

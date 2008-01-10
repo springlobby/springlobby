@@ -189,6 +189,9 @@ void ServerEvents::OnJoinedBattle( int battleid )
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.spectator = false;
 
+  battle.CustomBattleOptions()->loadOptions( MapOption, battle.GetMapName() );
+  battle.CustomBattleOptions()->loadOptions( ModOption, battle.GetModName() );
+
   m_ui.OnJoinedBattle( battle );
 }
 
