@@ -102,7 +102,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   }
   if ( (update && HI_Mod_Changed) != 0 )
   {
-    CustomBattleOptions()->loadOptions( ModOption, WX_STRING(m_mod.name) );
+    CustomBattleOptions()->loadOptions( ModOption );
     m_sptab.ReloadModOptContrls();
   }
 }
