@@ -3,10 +3,10 @@
 #include "springunitsynclib.h"
 #include "utils.h"
 #include "settings++/custom_dialogs.h"
-
+#include <stdexcept>
 mmOptionsWrapper::mmOptionsWrapper()
 {
-
+	unLoadOptions();
 }
 
 void mmOptionsWrapper::unLoadOptions()
@@ -137,22 +137,24 @@ bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showE
 										"to use unique keys in his ModOptions.lua");
 	bool exists = false;
 	*optType = opt_undefined;
-	if ( (*m_listMaps[modmapFlag]).find(key)!=  (*m_listMaps[modmapFlag]).end())
+	if ( modmapFlag < ModOption || modmapFlag > LastOption -1 )
+		return false;//, wxString::Format(_T("%d"),modmapFlag));
+	if ( m_listMaps[modmapFlag]->find(key) !=  m_listMaps[modmapFlag]->end())
 	{
 		*optType = opt_list;
 		exists = true;
 	}
-	else if ( (*m_stringMaps[modmapFlag]).find(key)!=  (*m_stringMaps[modmapFlag]).end())
+	else if ( m_stringMaps[modmapFlag]->find(key) !=  m_stringMaps[modmapFlag]->end())
 	{
 		*optType = opt_string;
 		exists = true;
 	}
-	else if ( (*m_boolMaps[modmapFlag]).find(key)!=  (*m_boolMaps[modmapFlag]).end())
+	else if ( m_boolMaps[modmapFlag]->find(key) !=  m_boolMaps[modmapFlag]->end())
 	{
 		*optType = opt_bool;
 		exists = true;
 	}
-	else if ( (*m_floatMaps[modmapFlag]).find(key)!=  (*m_floatMaps[modmapFlag]).end())
+	else if ( m_floatMaps[modmapFlag]->find(key)!=  m_floatMaps[modmapFlag]->end())
 	{
 		*optType = opt_float;
 		exists = true;

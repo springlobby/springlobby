@@ -37,7 +37,8 @@ typedef int GameOption;
 enum {
   EngineOption = 2,
 	MapOption    = 1,
-	ModOption    = 0
+	ModOption    = 0,
+	LastOption = 2
 };// should reflect: optionCategoriesCount
 
 class mmOptionsWrapper
@@ -110,7 +111,7 @@ public:
 	OptionType GetSingleOptionType (wxString key);
 
 //private:
-	const static int optionCategoriesCount = 3;
+	const static int optionCategoriesCount = 2;
 	optionMapBool* m_boolMaps[optionCategoriesCount];
 	optionMapFloat* m_floatMaps[optionCategoriesCount];
 	optionMapString* m_stringMaps[optionCategoriesCount];
