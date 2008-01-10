@@ -1146,11 +1146,11 @@ void TASServer::SendHostScriptTags( const wxString& Tag )
   wxString key = Tag.AfterFirst( '_' );
   if ( type == MapOption )
   {
-    cmd += _T("game\\mapoption\\") + key.AfterFirst( '-' ) + _T("=") + battle.CustomBattleOptions()->getSingleValue( key.AfterFirst( '-' ), MapOption ) + _T("\n");
+    cmd += _T("game\\mapoption\\") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, MapOption ) + _T("\n");
   }
   if ( type == ModOption )
   {
-    cmd += _T("game\\modoption\\") + key.AfterFirst( '-' ) + _T("=") + battle.CustomBattleOptions()->getSingleValue( key.AfterFirst( '-' ), ModOption ) + _T("\n");
+    cmd += _T("game\\modoption\\") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, ModOption ) + _T("\n");
   }
   if ( type == EngineOption )
   {
