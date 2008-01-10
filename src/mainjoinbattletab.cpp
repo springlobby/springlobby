@@ -91,7 +91,10 @@ void MainJoinBattleTab::UpdateCurrentBattle( bool MapChanged, bool UpdateRestric
 	  {
 	    if ( MapChanged )
 	    {
-	      m_mm_opts_tab->OnRefreshControls(MapOption);
+	      //m_mm_opts_tab->OnRefreshControls(MapOption);
+	    	//wuick and dirty?
+	    	m_tabs->DeletePage (4);
+	      m_tabs->InsertPage( 4, m_mm_opts_tab, _("Map/Mod Options"), false );
 	    }
 	  }
   }

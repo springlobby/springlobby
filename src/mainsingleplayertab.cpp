@@ -79,11 +79,20 @@ void MainSinglePlayerTab::ReloadRestrictions()
 
 void MainSinglePlayerTab::ReloadMapOptContrls()
 {
-  m_mm_opts_tab->OnRefreshControls( MapOption );
+	
+  //m_mm_opts_tab->OnRefreshControls( MapOption );
+	m_tabs->DeletePage(2);
+	  m_mm_opts_tab = 0;
+	m_mm_opts_tab = new BattleroomMMOptionsTab( m_sp_tab->GetBattle(), m_tabs);
+  m_tabs->InsertPage( 2, m_mm_opts_tab, _("Map/Mod Options"), false );
 }
 
 
 void MainSinglePlayerTab::ReloadModOptContrls()
 {
-  m_mm_opts_tab->OnRefreshControls( ModOption );
+  //m_mm_opts_tab->OnRefreshControls( ModOption );
+  m_tabs->DeletePage(2);
+  m_mm_opts_tab = 0;
+  m_mm_opts_tab = new BattleroomMMOptionsTab( m_sp_tab->GetBattle(), m_tabs);
+  m_tabs->InsertPage( 2, m_mm_opts_tab, _("Map/Mod Options"), false );
 }
