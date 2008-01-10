@@ -110,8 +110,11 @@ public:
 	//! returns the option type of specified key (all containers are tried)
 	OptionType GetSingleOptionType (wxString key);
 	
-	//!returns the name associated w current value of listoption
+	//!returns the cbx_choice associated w current listoption
 	wxString GetNameListOptValue(wxString key, GameOption flag);
+	
+	//! returns the listitem key associated with listitem name
+	wxString GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag);
 
 //private:
 	const static int optionCategoriesCount = 2;

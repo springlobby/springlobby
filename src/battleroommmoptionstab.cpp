@@ -116,8 +116,11 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 	{
 		mmOptionList current = it->second;
 		wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
-		wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.def, wxDefaultPosition,
+		
+		//TODO find right default value
+		wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[0], wxDefaultPosition,
 				wxDefaultSize, current.cbx_choices, 0, wxDefaultValidator);
+		
 		tempchoice->SetToolTip(current.description);
 		tempchoice->SetName(pref+current.key);
 		tempchoice->Enable(enable);
@@ -176,10 +179,13 @@ void BattleroomMMOptionsTab::OnComBoxChange(wxCommandEvent& event)
 {
 	mmOptionsWrapper* optWrap = m_battle.CustomBattleOptions();
 	wxComboBox* box = (wxComboBox*) event.GetEventObject();
+	
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
-	if(optWrap->setSingleOption( key, box->GetValue(), int(gameoption) ) )
+	wxString itemKey = optWrap->GetNameListOptItemKey(key,  box->GetValue(), int(gameoption) );
+	
+	if(optWrap->setSingleOption( key, itemKey, int(gameoption) ) )
 	{
         if (m_battle.IsFounderMe())
         {
@@ -239,7 +245,7 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 	 if ( m_combox_map.find(controlName) != m_combox_map.end() )
 	{
 		wxComboBox* cur = m_combox_map[controlName];
-		cur->SetValue(value);
+		cur->SetValue(optWrap->GetNameListOptValue( optKey,  gameoption));
 	}
 
 	 if ( m_textctrl_map.find(controlName) != m_textctrl_map.end() )

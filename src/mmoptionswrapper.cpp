@@ -212,7 +212,7 @@ void  mmOptionsWrapper::getOptions(wxStringTripleVec* list, GameOption modmapFla
 	}
 
 	for (optionMapListIter it = m_listMaps[modmapFlag]->begin(); it != m_listMaps[modmapFlag]->end(); ++it)
-	{
+	{																					//TODO fixme
 		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, (*it).second.value) ) );
 	}
 }
@@ -282,7 +282,7 @@ wxString mmOptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag)
 		case opt_bool:
 			return wxString::Format(_T("%d"), (*m_boolMaps[modmapFlag])[key].value );
 		case opt_string:
-			return (*m_stringMaps[modmapFlag])[key].value;
+			return  (*m_stringMaps[modmapFlag])[key].value ;
 		case opt_list:
 			return (*m_listMaps[modmapFlag])[key].value;
 		}
@@ -387,10 +387,32 @@ wxString mmOptionsWrapper::GetNameListOptValue(wxString key, GameOption flag)
 	else if ( keyExists(key,flag,false,&optType) )
 	{
 		if ( optType == opt_list)
-			return (*m_listMaps[flag])[key].cbx_choices[ (*m_listMaps[flag])[key].cur_choice_index ] ;
+		{
+			return ( (*m_listMaps[flag])[key].cbx_choices[ (*m_listMaps[flag])[key].cur_choice_index ] );
+		}
 	}
 	
 	// at this point retrieval failed
 	return wxEmptyString;
+}
+
+wxString mmOptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag)
+{
+	OptionType optType; 
+	if (flag < ModOption || flag > LastOption - 1)
+		return wxEmptyString;
+	else if ( keyExists(optkey,flag,false,&optType) )
+	{
+		if ( optType == opt_list)
+		{
+			for (ListItemVec::iterator it = (*m_listMaps[flag])[optkey].listitems.begin(); it != (*m_listMaps[flag])[optkey].listitems.end(); ++it)
+			{
+				if (it->name == itemname)
+					return it->key;
+			}
+		}
+	}
 	
+	// at this point retrieval failed
+	return wxEmptyString;
 }
