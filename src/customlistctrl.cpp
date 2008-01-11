@@ -5,7 +5,9 @@
 customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style):
 					wxListCtrl (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER)
 {
+#if wxUSE_TIPWINDOW
 	m_tipwindow = NULL;
+#endif
 	m_tiptext = _T("BIBKJBKJB");
 }
 
