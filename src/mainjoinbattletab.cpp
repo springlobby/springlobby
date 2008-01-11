@@ -101,9 +101,9 @@ void MainJoinBattleTab::UpdateCurrentBattle( bool MapChanged, bool UpdateRestric
     m_opts_tab->ReloadRestrictions();
   }
   if ( m_mm_opts_tab ){
-	 //if ( !m_battle_tab->GetBattle().IsFounderMe() )
+	 if ( !m_battle_tab->GetBattle().IsFounderMe() )
 	  {
-	   // if ( MapChanged )
+	    if ( MapChanged )
 	    {
 	      m_mm_opts_tab->OnRefreshControls(MapOption);
 	    	//wuick and dirty?

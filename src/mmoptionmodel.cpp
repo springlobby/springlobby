@@ -50,7 +50,9 @@ mmOptionString::mmOptionString():mmOptionModel()
 
 mmOptionList::mmOptionList(wxString name_, wxString key_, wxString description_, wxString def_):
 	mmOptionModel(name_,key_,description_,opt_list),def(def_),value(def_)
-{}
+{
+	cur_choice_index = 0;
+}
 
 mmOptionList::mmOptionList():mmOptionModel()
 {

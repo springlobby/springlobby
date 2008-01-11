@@ -106,8 +106,9 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		mmOptionList current = it->second;
 		wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
 		
-		//TODO find right default value
-		wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[0], wxDefaultPosition,
+		
+		int index = boundry(current.cur_choice_index,0,current.cbx_choices.GetCount()-1);
+		wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[index], wxDefaultPosition,
 				wxDefaultSize, current.cbx_choices, 0, wxDefaultValidator);
 		
 		tempchoice->SetToolTip(current.description);
