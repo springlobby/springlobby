@@ -24,8 +24,10 @@ BEGIN_EVENT_TABLE( NickListCtrl, customListCtrl )
   EVT_LIST_ITEM_ACTIVATED( NICK_LIST, NickListCtrl::OnActivateItem )
   EVT_LIST_COL_CLICK( NICK_LIST, NickListCtrl::OnColClick )
   EVT_CONTEXT_MENU( NickListCtrl::OnShowMenu )
-#ifndef __WXMSW__ //disables tooltips on win
+#ifdef wxUSE_TIPWINDOW
+#ifndef __WXMSW__ //disables tooltips on win and mac
   EVT_MOTION(NickListCtrl::OnMouseMotion)
+#endif
 #endif
 END_EVENT_TABLE()
 
@@ -337,7 +339,7 @@ int wxCALLBACK NickListCtrl::ComparePlayercountryDOWN(long item1, long item2, lo
 
 void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
-
+#ifdef wxUSE_TIPWINDOW
 	tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 	wxPoint position = event.GetPosition();
 
@@ -401,6 +403,6 @@ void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
 			}
 		}
 	}catch(...){}
-
+#endif
 }
 

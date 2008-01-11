@@ -72,7 +72,11 @@ class BattleListTab : public wxPanel
     wxButton* m_join_btn;
 
     wxCheckBox* m_filter_activ;
-    wxToggleButton* m_filter_show;
+#ifdef wxUSE_TOGGLEBTN
+		wxToggleButton* m_filter_show;
+#else
+		wxCheckbox* m_filter_show;
+#endif
 
     Ui& m_ui;
 

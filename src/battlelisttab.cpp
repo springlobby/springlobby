@@ -114,8 +114,12 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
   wxBoxSizer* m_buttons_sizer;
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
-
+  
+#ifdef  wxUSE_TOGGLEBTN
 	m_filter_show = new wxToggleButton( this, BATTLE_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+#else
+	m_filter_show = new wxCheckBox( this, BATTLE_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+#endif
   m_buttons_sizer->Add( m_filter_show, 0, 0, 5 );
 
 	m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
