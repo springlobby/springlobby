@@ -882,7 +882,7 @@ void Ui::OnSpringTerminated( bool success )
 
 void Ui::OnBattleStartRectsUpdated( Battle& battle )
 {
-  mw().GetJoinTab().UpdateCurrentBattle();
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
