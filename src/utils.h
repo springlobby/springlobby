@@ -52,6 +52,7 @@ std::string i2s( int x );
 #endif
 
 void DumpStackTraceToLog();
+void InitializeLoggingTargets();
 std::string GetWordParam( std::string& params );
 std::string GetSentenceParam( std::string& params );
 std::string GetChatLineParam( std::string& params );
