@@ -58,11 +58,11 @@ END_EVENT_TABLE()
 
     SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
 {
-  m_dir_text = new wxStaticText( this, -1, _("Spring directory") ); 
+  m_dir_text = new wxStaticText( this, -1, _("Spring directory") );
   m_dir_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringDir()) );
   m_dir_browse_btn = new wxButton( this, SPRING_DIRBROWSE, _("Browse") );
   m_dir_find_btn = new wxButton( this, SPRING_DIRFIND, _("Find") );
-  
+
   m_exec_box = new wxStaticBox( this, -1, _("Spring executable") );
   m_exec_def_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
   m_exec_spec_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Specify:") );
@@ -70,7 +70,7 @@ END_EVENT_TABLE()
   m_exec_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringLoc()) );
   m_exec_browse_btn = new wxButton( this, SPRING_EXECBROWSE, _("Browse") );
   m_exec_find_btn = new wxButton( this, SPRING_EXECFIND, _("Find") );
-  
+
   m_sync_box = new wxStaticBox( this, -1, _("UnitSync library") );
   m_sync_def_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
   m_sync_spec_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Specify:") );
@@ -78,14 +78,14 @@ END_EVENT_TABLE()
   m_sync_loc_text = new wxStaticText( this, -1, _("Location") );
   m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _("Browse") );
   m_sync_find_btn = new wxButton( this, SPRING_SYNCFIND, _("Find") );
-  
+
   m_web_box = new wxStaticBox( this , -1, _("Web Browser") );
   m_web_loc_text = new wxStaticText( this, -1, _("Web Browser") );
   m_web_def_radio = new wxRadioButton( this, SPRING_DEFWEB, _("Default Browser."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
   m_web_spec_radio = new wxRadioButton( this, SPRING_DEFWEB, _("Specify:") );
   m_web_edit = new wxTextCtrl( this, -1, sett().GetWebBrowserPath() );
   m_web_browse_btn = new wxButton( this, SPRING_WEBBROWSE, _("Browse") );
-  
+
   //Chat Log:
   m_chatlog_loc_text = new wxStaticText( this, -1, _("Location") );
   m_chatlog_browse_btn = new wxButton( this, CHATLOG_BROWSE, _("Browse") );
@@ -93,7 +93,7 @@ END_EVENT_TABLE()
   m_chatlog_enable_chk = new wxCheckBox( this, CHATLOG_ENABLE, _ ("Enable logging Chat."), wxDefaultPosition, wxDefaultSize,0);
   m_chatlog_enable_chk->SetValue( sett().GetChatLogEnable() );
   m_chatlog_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetChatLogLoc()) );
-  
+
   m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _("Auto Configure") );
 
   if ( sett().GetSpringUseDefLoc() ) m_exec_def_radio->SetValue( true );
@@ -421,9 +421,9 @@ wxString SpringOptionsTab::AutoFindUnitSyncLib( const wxString& def )
   for ( size_t i = 0; i < pl.GetCount(); i++ ) {
     wxString path = pl[i];
     if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
-    if ( IsUnitSyncLib( path + UNITSYNC_BIN ) ) return path + UNITSYNC_BIN;
-    if ( IsUnitSyncLib( path + _T("Spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN;
-    if ( IsUnitSyncLib( path + _T("spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN;
+    if ( IsUnitSyncLib( path + _T("unitsync") + GetLibExtension() ) ) return path + _T("unitsync") + GetLibExtension();
+    if ( IsUnitSyncLib( path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+    if ( IsUnitSyncLib( path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
   }
 
   return def;
@@ -478,7 +478,7 @@ void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
 
 void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
 {
-  wxFileDialog pic( this, _("Choose a unitsync library"), WX_STRING(sett().GetSpringDir()), wxString(UNITSYNC_BIN), CHOOSE_DLL );
+  wxFileDialog pic( this, _("Choose an unitsync library"), WX_STRING(sett().GetSpringDir()), _T("unitsync") + GetLibExtension(), wxString(_("Library")) + _T("(*") + GetLibExtension() + _T(")|*") + GetLibExtension() + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
   if ( pic.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pic.GetPath() );
 }
 

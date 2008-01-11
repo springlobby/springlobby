@@ -6,6 +6,7 @@
 #include <sstream>
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
+#include <wx/dynlib.h>
 #include <iostream>
 
 #include "utils.h"
@@ -24,6 +25,11 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
+
+wxString GetLibExtension()
+{
+  return wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
+}
 
 
 void DumpStackTraceToLog()

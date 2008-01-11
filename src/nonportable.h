@@ -4,26 +4,20 @@
 #if defined(__WXMSW__)
   #define SPRING_VERSION_PARAM _T("/V")
   #define CHOOSE_EXE _("Executables (*.exe)|*.exe|Any File (*.*)|*.*")
-  #define CHOOSE_DLL _("Library (*.dll)|*.dll|Any File (*.*)|*.*")
   #define USYNC_CALL_CONV __stdcall
   #define SPRING_BIN _T("spring.exe")
-  #define UNITSYNC_BIN _T("unitsync.dll")
   #define DOS_TXT true
 #elif defined(__WXGTK__)
   #define SPRING_VERSION_PARAM _T("-V")
   #define CHOOSE_EXE _("Any file (*)|*")
-  #define CHOOSE_DLL _("Library (*.so)|*.so|Any File (*.*)|*.*")
   #define USYNC_CALL_CONV
   #define SPRING_BIN _T("spring")
-  #define UNITSYNC_BIN _T("unitsync.so")
   #define DOS_TXT false
 #elif defined(__WXMAC__)
   #define SPRING_VERSION_PARAM _T("-V")
   #define CHOOSE_EXE _("App Bundles (*.app)|*.app|Any File (*.*)|*.*")
-  #define CHOOSE_DLL _("Library (*.dylib)|*.dylib|Any File (*.*)|*.*")
   #define USYNC_CALL_CONV
   #define SPRING_BIN _T("Spring.app")
-  #define UNITSYNC_BIN _T("unitsync.dylib")
   #define DOS_TXT false
 #endif
 

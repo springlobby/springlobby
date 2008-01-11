@@ -11,8 +11,8 @@
 #include <wx/string.h>
 #include <wx/dir.h>
 #include <wx/file.h>
-#include "../nonportable.h"
-#include "presets.h" 
+#include "../utils.h"
+#include "presets.h"
 #include "custom_dialogs.h"
 //#include <string>
 
@@ -88,8 +88,8 @@ void se_settings::setUsyncLoc(wxString loc)
 wxString se_settings::getSpringDir()
 {
 	wxString def;
-	def= AutoFindSpringDir(def); 
-	
+	def= AutoFindSpringDir(def);
+
 	se_config->Read( _T("/Spring/dir"), def );
 	return def;
 }
@@ -132,7 +132,7 @@ void se_settings::setSimpleDetail(wxString det)
 {
 	se_config->Write(_T("/SpringSettings/SimpleDetail"),det);
 }
-	
+
 
 /*copied from springlobby source*/
 wxString se_settings::AutoFindSpringDir( const wxString& def )
@@ -184,8 +184,8 @@ wxString se_settings::AutoFindUnitSyncLib( const wxString& def )
 	#endif
   wxRegKey* programreg = new wxRegKey( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Spring") );
   wxString tmp;
-  if ( programreg->QueryValue( _T("DisplayIcon"), tmp ) ) pl.Add( tmp.BeforeLast( wxFileName::GetPathSeparator() ) ); 
-    
+  if ( programreg->QueryValue( _T("DisplayIcon"), tmp ) ) pl.Add( tmp.BeforeLast( wxFileName::GetPathSeparator() ) );
+
    programreg = new wxRegKey( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
 if ( programreg->QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
 
@@ -224,9 +224,9 @@ if ( programreg->QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
   for ( size_t i = 0; i < pl.GetCount(); i++ ) {
     wxString path = pl[i];
     if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
-    if ( IsUnitSyncLib( path + UNITSYNC_BIN ) ) return path + UNITSYNC_BIN;
-    if ( IsUnitSyncLib( path + _T("Spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN;
-    if ( IsUnitSyncLib( path + _T("spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + UNITSYNC_BIN;
+    if ( IsUnitSyncLib( path + _T("unitsync") + GetLibExtension() ) ) return path + _T("unitsync") + GetLibExtension();
+    if ( IsUnitSyncLib( path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+    if ( IsUnitSyncLib( path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
   }
 
   return def;

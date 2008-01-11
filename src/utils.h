@@ -51,6 +51,7 @@ std::string i2s( int x );
 #define IsColourOk() IsOk()
 #endif
 
+wxString GetLibExtension();
 void DumpStackTraceToLog();
 void InitializeLoggingTargets();
 std::string GetWordParam( std::string& params );
