@@ -51,18 +51,27 @@ bool SpringLobbyApp::OnInit()
 #if wxUSE_ON_FATAL_EXCEPTION
   wxHandleFatalExceptions( true );
 #endif
-
-  //initializes logging in both std::cout and gui messages
-  #if wxUSE_STD_IOSTREAM
-  wxLog *loggerconsole = new wxLogStream( &std::cout );
+  
+//initializes logging in both std::cout and gui messages
+#ifdef __WXMSW__
+  wxLog *loggerconsole = new wxLogWindow(0, _T("SpringLobby error console")  );
   wxLogChain *logChain = new wxLogChain( loggerconsole );
   logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
   logChain->SetLogLevel( wxLOG_Trace );
   logChain->SetVerbose( true );
-  #else
-  wxLog::SetLogLevel( wxLOG_Warning );
-  #endif
-
+#else
+	#if wxUSE_STD_IOSTREAM
+	  wxLog *loggerconsole = new wxLogStream( &std::cout );
+	  wxLogChain *logChain = new wxLogChain( loggerconsole );
+	  logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+	  logChain->SetLogLevel( wxLOG_Trace );
+	  logChain->SetVerbose( true );
+	#else
+	  wxLog::SetLogLevel( wxLOG_Warning );
+	#endif
+#endif
+  
+  
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
 
@@ -73,6 +82,12 @@ bool SpringLobbyApp::OnInit()
 
   m_ui->ShowMainWindow();
 
+<<<<<<< HEAD:src/springlobbyapp.cpp
+=======
+//  int* i =0;
+//  *i = 10;
+
+>>>>>>> e1b94b8... added wxlogwindow for msw:src/springlobbyapp.cpp
   if ( sett().IsFirstRun() ) {
     #ifdef __WXMSW__
       sett().SetOldSpringLaunchMethod( true );
