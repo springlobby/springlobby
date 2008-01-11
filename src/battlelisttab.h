@@ -76,7 +76,7 @@ class BattleListTab : public wxPanel
 #if wxUSE_TOGGLEBTN
 		wxToggleButton* m_filter_show;
 #else
-		wxCheckbox* m_filter_show;
+		wxCheckBox* m_filter_show;
 #endif
 
     Ui& m_ui;
