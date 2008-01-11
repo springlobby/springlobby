@@ -289,7 +289,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
   wxString key = param;
   if ( key.Left( 5 ) == _T("game/") )/// FIXME (BrainDamage#1#): change the slash type when the new spring version gets out
   {/// TODO (BrainDamage#1#): remove all the engine hardcoded static containers/parsing code and move them to the new dynamic
-    key = key.BeforeFirst( '/' );
+    key = key.AfterFirst( '/' );
     if      ( key == _T("startpostype")     ) battle.SetStartType( GetIntParam(val) );
     else if ( key == _T("maxunits")         ) battle.SetMaxUnits( GetIntParam(val) );
     else if ( key == _T("limitdgun")        ) battle.SetLimitDGun( GetIntParam(val) );
@@ -303,7 +303,6 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
   else if ( key.Left( 5 ) == _T("game\\") )
   {
     key = key.AfterFirst( '\\' );
-    std::string test = STD_STRING( key );
      if ( key.Left( 11 ) == _T( "mapoptions\\" ) )
     {
       key = key.AfterFirst( '\\' );
@@ -313,7 +312,6 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     else if ( key.Left( 11 ) == _T( "modoptions\\" ) )
     {
       key = key.AfterFirst( '\\' );
-      std::string test = STD_STRING( key );
       if (  battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) );//m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
         battle.Update(  wxString::Format(_T("%d_"), ModOption ) + key );
     }
