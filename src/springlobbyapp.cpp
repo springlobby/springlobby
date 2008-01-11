@@ -9,7 +9,6 @@
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <wx/image.h>
-#include <iostream>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -52,16 +51,8 @@ bool SpringLobbyApp::OnInit()
   wxHandleFatalExceptions( true );
 #endif
 
-  //initializes logging in both std::cout and gui messages
-  #if wxUSE_STD_IOSTREAM
-  wxLog *loggerconsole = new wxLogStream( &std::cout );
-  wxLogChain *logChain = new wxLogChain( loggerconsole );
-  logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
-  logChain->SetLogLevel( wxLOG_Trace );
-  logChain->SetVerbose( true );
-  #else
-  wxLog::SetLogLevel( wxLOG_Warning );
-  #endif
+  //initialize all loggers
+  InitializeLoggingTargets();
 
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
