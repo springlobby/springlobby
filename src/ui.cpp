@@ -889,7 +889,11 @@ void Ui::OnBattleStartRectsUpdated( Battle& battle )
 void Ui::OnBattleMapChanged( Battle& battle )
 {
   mw().GetJoinTab().UpdateCurrentBattle( true );
-  customMessageBox(SL_MAIN_ICON,_T("FUCKSHIT"),_T("FUCKSHIT"));
+  if (battle.IsFounderMe())
+  {
+	  battle.CustomBattleOptions()->loadMapOptions(battle.GetMapName());
+	  mw().GetJoinTab().ReloadMMoptTab();
+  }
 }
 
 
