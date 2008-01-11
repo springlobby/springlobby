@@ -1088,7 +1088,7 @@ void TASServer::SendHostInfo( HostInfo update )
     m_sock->Send( STD_STRING(cmd) );
   }
 
-  if ( update & (HI_StartRects) ) { // Startrects should be updated.
+  if ( (update & HI_StartRects) > 0 ) { // Startrects should be updated.
 
     for ( std::vector<BattleStartRect*>::size_type i = 16; i < battle.GetNumRects(); i++ ) battle.RemoveStartRect( i ); /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
     for ( std::vector<BattleStartRect*>::size_type i = 0; i < battle.GetNumRects(); i++ ) { // Loop through all, and remove updated or deleted.
@@ -1121,7 +1121,7 @@ void TASServer::SendHostInfo( HostInfo update )
     }
 
   }
-  if ( update & HI_Restrictions ) {
+  if ( (update & HI_Restrictions) > 0 ) {
     std::string units = battle.DisabledUnits();
     m_sock->Send( "ENABLEALLUNITS\n");
     if ( units.length() > 0 ) m_sock->Send( "DISABLEUNITS " + units + "\n");
