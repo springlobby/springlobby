@@ -18,7 +18,7 @@ void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool mo
 
 void customListCtrl::OnTimer(wxTimerEvent& event)
 {
-#ifdef wxUSE_TIPWINDOW
+#if wxUSE_TIPWINDOW
 	
 		 if (!m_tiptext.empty())
 			{
@@ -36,7 +36,7 @@ void customListCtrl::OnTimer(wxTimerEvent& event)
 //if to tootips are displayed
 void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
-#ifdef wxUSE_TIPWINDOW
+#if wxUSE_TIPWINDOW
 	if (event.Leaving())
 	{
 		m_tiptext = _T("");
@@ -101,7 +101,7 @@ void customListCtrl::noOp(wxMouseEvent& event)
 }
  
 BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
-#ifdef wxUSE_TIPWINDOW
+#if wxUSE_TIPWINDOW
 	#ifndef __WXMSW__ 
     	EVT_MOTION(customListCtrl::OnMouseMotion)
     	EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)

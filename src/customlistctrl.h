@@ -4,7 +4,7 @@
 #include <wx/window.h>
 #include <wx/listctrl.h>
 #include <wx/string.h>
-#ifdef wxUSE_TIPWINDOW
+#if wxUSE_TIPWINDOW
 #include <wx/tipwin.h>
 #endif
 #include <wx/timer.h>
@@ -20,7 +20,7 @@ class customListCtrl : public wxListCtrl
 protected:
     wxTimer     tipTimer;
     wxString    m_tiptext;
-    #ifdef wxUSE_TIPWINDOW
+    #if wxUSE_TIPWINDOW
     wxTipWindow *m_tipwindow;
     #endif
     int coloumnCount;

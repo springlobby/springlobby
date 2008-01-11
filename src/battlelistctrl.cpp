@@ -24,7 +24,7 @@ BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
   EVT_LIST_COL_CLICK       ( BLIST_LIST, BattleListCtrl::OnColClick )
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
   EVT_MENU                 ( BLIST_DLMOD, BattleListCtrl::OnDLMod )
-#ifdef wxUSE_TIPWINDOW
+#if wxUSE_TIPWINDOW
 #ifndef __WXMSW__ //disables tooltips on win
   EVT_MOTION(BattleListCtrl::OnMouseMotion)
 #endif
@@ -581,7 +581,7 @@ int wxCALLBACK BattleListCtrl::CompareMaxPlayerDOWN(long item1, long item2, long
 
 void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
-#ifdef wxUSE_TIPWINDOW
+#if wxUSE_TIPWINDOW
 	wxPoint position = event.GetPosition();
 
 	try{
