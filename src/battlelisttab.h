@@ -23,6 +23,7 @@ class wxBoxSizer;
 class wxStaticText;
 class wxStaticLine;
 
+
 class BattleListTab : public wxPanel
 {
   friend class BattleListFilter;

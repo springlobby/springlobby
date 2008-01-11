@@ -7,6 +7,7 @@
 #include <wx/combobox.h>
 #include <wx/button.h>
 #include <wx/sizer.h>
+#include <wx/checkbox.h>
 #include <stdexcept>
 
 #include "battlelisttab.h"
