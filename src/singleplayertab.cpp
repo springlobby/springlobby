@@ -143,7 +143,7 @@ void SinglePlayerTab::ReloadModlist()
 
 void SinglePlayerTab::SetMap( unsigned int index )
 {
-	m_ui.ReloadUnitSync();
+	//m_ui.ReloadUnitSync();
   m_addbot_btn->Enable( false );
   if ( index >= m_map_pick->GetCount()-1 ) {
     m_battle.SetMap( wxEmptyString, wxEmptyString );
@@ -162,7 +162,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
 
 void SinglePlayerTab::SetMod( unsigned int index )
 {
-	m_ui.ReloadUnitSync();
+	//m_ui.ReloadUnitSync();
   if ( index >= m_mod_pick->GetCount()-1 ) {
     m_battle.SetMod( wxEmptyString, wxEmptyString );
   } else {
