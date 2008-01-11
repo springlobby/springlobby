@@ -173,6 +173,7 @@ void BattleMapTab::UpdateUser( User& user )
 
 void BattleMapTab::OnMapSelect( wxCommandEvent& event )
 {
+	m_ui.ReloadUnitSync();
   if ( !m_battle.IsFounderMe() ) {
     m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetMapName() ) ) );
     return;
@@ -184,7 +185,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
     m_battle.SetMap( map );
   } catch (...) {}
 //  m_battle.SetMapHash( map.hash );
-
+  
   m_battle.SendHostInfo( HI_Map );
 }
 

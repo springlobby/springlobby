@@ -21,11 +21,13 @@ class IBattle;
 class wxSpinCtrlDbl;
 class wxTextCtrl;
 class wxSpinEvent;
+class wxStaticText;
 
 typedef std::map<wxString,wxCheckBox*> chkBoxMap;
 typedef std::map<wxString,wxComboBox*> comboBoxMap;
 typedef std::map<wxString,wxSpinCtrlDbl*> spinCtrlMap;
 typedef std::map<wxString,wxTextCtrl*> textCtrlMap;
+typedef std::map<wxString,wxStaticText*> staticTextMap;
 
 class BattleroomMMOptionsTab : public wxScrolledWindow
 {
@@ -49,6 +51,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		comboBoxMap m_combox_map;
 		spinCtrlMap m_spinctrl_map;
 		textCtrlMap m_textctrl_map;
+		staticTextMap m_statictext_map;
 
 		void setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag);
 		void OnComBoxChange(wxCommandEvent&);

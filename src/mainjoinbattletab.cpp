@@ -25,6 +25,8 @@
 #include "images/battle_map.xpm"
 #include "images/battle_settings.xpm"
 
+#include "ui.h"
+
 
 MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_battle_tab(0),m_map_tab(0),m_opts_tab(0),m_ui(ui)
 {
@@ -72,6 +74,18 @@ ChatPanel* MainJoinBattleTab::GetActiveChatPanel()
   return 0;
 }
 
+void MainJoinBattleTab::ReloadMMoptTab()
+{
+	int curPage = m_tabs->GetSelection();
+	m_tabs->DeletePage (4);
+	m_mm_opts_tab = 0;
+	m_battle_tab->GetBattle().CustomBattleOptions()->loadMapOptions(m_battle_tab->GetBattle().GetMapName());
+	m_mm_opts_tab = new BattleroomMMOptionsTab(m_battle_tab->GetBattle(), m_tabs);
+	//m_mm_opts_tab.
+	m_tabs->InsertPage( 4, m_mm_opts_tab, _("Map/Mod Options"), false );
+	if (curPage == 4)
+		m_tabs->SetSelection(curPage);
+}
 
 //void MainJoinBattleTab::UpdateCurrentBattle()
 void MainJoinBattleTab::UpdateCurrentBattle( bool MapChanged, bool UpdateRestrictions )
@@ -87,16 +101,13 @@ void MainJoinBattleTab::UpdateCurrentBattle( bool MapChanged, bool UpdateRestric
     m_opts_tab->ReloadRestrictions();
   }
   if ( m_mm_opts_tab ){
-	  if ( !m_battle_tab->GetBattle().IsFounderMe() )
+	 //if ( !m_battle_tab->GetBattle().IsFounderMe() )
 	  {
-	    if ( MapChanged )
+	   // if ( MapChanged )
 	    {
-	      //m_mm_opts_tab->OnRefreshControls(MapOption);
+	      m_mm_opts_tab->OnRefreshControls(MapOption);
 	    	//wuick and dirty?
-	    	m_tabs->DeletePage (4);
-	    	m_mm_opts_tab = 0;
-	    	//m_mm_opts_tab = new BattleroomMMOptionsTab( battle, m_tabs);
-	      m_tabs->InsertPage( 4, m_mm_opts_tab, _("Map/Mod Options"), false );
+	    	//ReloadMMoptTab();
 	    }
 	  }
   }

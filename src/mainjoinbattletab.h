@@ -37,7 +37,9 @@ class MainJoinBattleTab : public wxPanel
     BattleMapTab* GetBattleMapTab() { return m_map_tab; }
 
     void OnUnitSyncReloaded();
-
+    
+    void ReloadMMoptTab();
+    
   protected:
     wxBoxSizer* m_main_sizer;
 
@@ -51,6 +53,8 @@ class MainJoinBattleTab : public wxPanel
     BattleOptionsTab* m_opts_tab;
     BattleroomMMOptionsTab* m_mm_opts_tab;
     Ui& m_ui;
+    
+    
 };
 
 enum

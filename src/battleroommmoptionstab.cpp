@@ -30,19 +30,6 @@ END_EVENT_TABLE()
 BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style )
 : wxScrolledWindow( parent, id, pos, size, style | wxHSCROLL ),m_battle(battle)
 {
-
-//	for ( GameOption g = 0; g < mmOptionsWrapper::optionCategoriesCount; g++ )
-//	{
-//		m_chkbox_map[g] = new chkBoxVec;
-//		m_combox_map[g] = new comboBoxVec;
-//		m_spinctrl_map[g] = new spinCtrlVec;
-//		m_textctrl_map[g] = new textCtrlVec;
-//	}
-
-//	battle.CustomBattleOptions()->loadOptions(ModOption);
-//
-//	battle.CustomBattleOptions()->loadOptions(MapOption,battle.GetMapName());
-
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
 	m_mod_options_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Mod Options") ), wxVERTICAL );
@@ -105,7 +92,9 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 			tempspin->Enable(enable);
 			tempspin->SetName(pref+current.key);
 			m_spinctrl_map[pref+current.key] = tempspin;
-			tempbox->Add(new wxStaticText(this,-1,current.name),0,5);
+			 wxStaticText* tempst = new wxStaticText(this,-1,current.name);
+			 m_statictext_map[pref+current.key] = tempst;
+			tempbox->Add(tempst,0,5 );
 			tempbox->Add(tempspin);
 			spinSizer->Add(tempbox);
 			ctrl_count++;
@@ -125,7 +114,9 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		tempchoice->SetName(pref+current.key);
 		tempchoice->Enable(enable);
 		m_combox_map[pref+current.key] = tempchoice;
-		tempbox->Add(new wxStaticText(this,-1,current.name),0,5);
+		wxStaticText* tempst = new wxStaticText(this,-1,current.name);
+		m_statictext_map[pref+current.key] = tempst;
+		tempbox->Add(tempst,0,5);
 		tempbox->Add(tempchoice);
 
 		cbxSizer->Add(tempbox);
@@ -143,7 +134,9 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		temptext->SetName(pref+current.key);
 		temptext->Enable(enable);
 		m_textctrl_map[pref+current.key] = temptext;
-		tempbox->Add(new wxStaticText(this,-1,current.name),0,5);
+		wxStaticText* tempst = new wxStaticText(this,-1,current.name);
+		m_statictext_map[pref+current.key] = tempst;
+		tempbox->Add(tempst,0,5);
 		tempbox->Add(temptext);
 
 		textSizer->Add(tempbox);
@@ -305,23 +298,35 @@ void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
 			m_combox_map.erase(it);
 		}
 	}
-
+	for (staticTextMap::iterator it = m_statictext_map.begin(); it != m_statictext_map.end(); ++it)
+	{
+		wxString key = it->first;
+		if (key.StartsWith(pref))
+		{
+			delete it->second;
+			m_statictext_map.erase(it);
+		}
+	}
+	
 	//reloading the controls
 	switch (flag)
 	{
 		case ModOption:
-			m_mod_layout = 0;
-			delete m_mod_layout;
+			m_mod_options_sizer->Remove(m_mod_layout);
 			m_mod_layout = new wxBoxSizer( wxVERTICAL);
 			setupOptionsSizer(m_mod_layout,ModOption);
+			m_mod_options_sizer->Add( m_mod_options_sizer, 1, wxEXPAND, 5 );
 			break;
 		case MapOption:
+			m_map_options_sizer->Remove(m_map_layout);
 			m_map_layout = new wxBoxSizer( wxVERTICAL);
 			setupOptionsSizer(m_map_layout,MapOption);
+			m_map_options_sizer->Add( m_map_layout, 1, wxEXPAND, 5 );
 			break;
 	}
-
-	this->SetSizer( m_main_sizer, true );
+	
+		
+	//this->SetSizer( m_main_sizer, true );
 	this->Layout();
 
 }
