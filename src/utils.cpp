@@ -6,6 +6,7 @@
 #include <sstream>
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
+#include <iostream>
 
 #include "utils.h"
 #include "revision.h"
