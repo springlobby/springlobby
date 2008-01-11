@@ -33,7 +33,7 @@
 #include "mapctrl.h"
 #include "uiutils.h"
 #include "server.h"
-
+#include "mmoptionswrapper.h"
 
 #define LIMIT_DGUN_INDEX 0
 #define GHOUSTED_INDEX  1

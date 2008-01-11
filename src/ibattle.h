@@ -8,7 +8,9 @@
 
 #include "iunitsync.h"
 #include "user.h"
-#include "mmoptionswrapper.h"
+
+
+class mmOptionsWrapper;
 
 typedef int HostInfo;
 
@@ -140,7 +142,7 @@ class IBattle
 
     virtual std::vector<BattleStartRect*>::size_type GetNumRects() =0;
 
-    virtual mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
+    virtual mmOptionsWrapper* CustomBattleOptions() =0;
 
     wxArrayString ChangedOptions;
 
@@ -155,9 +157,7 @@ class IBattle
     wxString m_map_name;
     wxString m_mod_name;
 
-    mmOptionsWrapper m_opt_wrap;
-
-    int m_startmetal;
+        int m_startmetal;
     int m_startenergy;
     int m_maxunits;
 

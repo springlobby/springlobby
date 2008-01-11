@@ -94,6 +94,8 @@ void MainJoinBattleTab::UpdateCurrentBattle( bool MapChanged, bool UpdateRestric
 	      //m_mm_opts_tab->OnRefreshControls(MapOption);
 	    	//wuick and dirty?
 	    	m_tabs->DeletePage (4);
+	    	m_mm_opts_tab = 0;
+	    	//m_mm_opts_tab = new BattleroomMMOptionsTab( battle, m_tabs);
 	      m_tabs->InsertPage( 4, m_mm_opts_tab, _("Map/Mod Options"), false );
 	    }
 	  }

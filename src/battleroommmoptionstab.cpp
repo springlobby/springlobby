@@ -39,9 +39,9 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 //		m_textctrl_map[g] = new textCtrlVec;
 //	}
 
-	battle.CustomBattleOptions()->loadOptions(ModOption);
-
-	battle.CustomBattleOptions()->loadOptions(MapOption,battle.GetMapName());
+//	battle.CustomBattleOptions()->loadOptions(ModOption);
+//
+//	battle.CustomBattleOptions()->loadOptions(MapOption,battle.GetMapName());
 
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 

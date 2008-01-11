@@ -7,6 +7,7 @@
 #include "server.h"
 #include "utils.h"
 #include "uiutils.h"
+#include "ui.h"
 
 
 SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
@@ -97,11 +98,13 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   if ( (update && HI_Restrictions) != 0 ) m_sptab.ReloadRestrictions();
   if ( (update && HI_Map_Changed) != 0 )
   {
+	  m_ui.ReloadUnitSync();
     CustomBattleOptions()->loadOptions( MapOption, WX_STRING(m_map.name) );
     m_sptab.ReloadMapOptContrls();
   }
   if ( (update && HI_Mod_Changed) != 0 )
   {
+	m_ui.ReloadUnitSync();
     CustomBattleOptions()->loadOptions( ModOption );
     m_sptab.ReloadModOptContrls();
   }
