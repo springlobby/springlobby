@@ -42,7 +42,7 @@ class BattleRoomTab : public wxPanel
 
     bool IsHosted();
 
-    void UpdateBattleInfo();
+    void UpdateBattleInfo( bool MapChanged = false );
     void UpdateBattleInfo( const wxString& Tag );
 
     void OnStart( wxCommandEvent& event );
@@ -73,6 +73,8 @@ class BattleRoomTab : public wxPanel
     Ui& m_ui;
     Battle& m_battle;
     UnitSyncMap m_map;
+
+    long m_map_opts_index;
 
     OptionListMap m_opt_list_map;
 
