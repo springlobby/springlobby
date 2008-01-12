@@ -91,7 +91,7 @@ void MainJoinBattleTab::ReloadMMoptTab()
 void MainJoinBattleTab::UpdateCurrentBattle( bool MapChanged, bool UpdateRestrictions )
 {
   if ( m_battle_tab ) {
-    m_battle_tab->UpdateBattleInfo();
+    m_battle_tab->UpdateBattleInfo( MapChanged );
     if ( UpdateRestrictions ) m_battle_tab->UpdateBattleInfo( wxString::Format(_T("%d_restrictions"), EngineOption ) );
   }
   if ( m_map_tab ) {
