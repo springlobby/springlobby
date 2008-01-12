@@ -318,12 +318,15 @@ wxString Spring::GetScriptTxt( Battle& battle )
     int TeamLeader = -1;
 
     wxLogMessage(_T("10"));
-    for( user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {
+    for( user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {/// change: moved check if spectator above use of TeamConv array, coz TeamConv array does not include spectators.
+
+      // Make sure player is not spectator.
+      if ( battle.GetUser( ordered_users[tlf].index ).BattleStatus().spectator ) continue;
+
       // First Player That Is In The Team Is Leader.
       if ( TeamConv[battle.GetUser( ordered_users[tlf].index ).BattleStatus().team] == i ) {
 
-        // Make sure player is not spectator.
-        if ( battle.GetUser( ordered_users[tlf].index ).BattleStatus().spectator ) continue;
+
 
         // Assign as team leader.
         TeamLeader = tlf;
@@ -356,7 +359,19 @@ wxString Spring::GetScriptTxt( Battle& battle )
     BattleBot& bot = *battle.GetBot( ordered_bots[i].index );
 
     // Find Team Leader.
-    int TeamLeader = TeamConv[ battle.GetUser( bot.owner ).BattleStatus().team ];
+    int TeamLeader;
+    for(TeamLeader=0;TeamLeader<ordered_users.size();TeamLeader++){
+      if(&battle.GetUser(ordered_users[TeamLeader].index)==&battle.GetUser(bot.owner))goto leader_found;
+    }
+    TeamLeader=0;
+    wxLogMessage( _T("Internal error: team leader not found for bot! Using 0") );
+    leader_found:
+    /*
+    if(battle.GetUser( bot.owner ).BattleStatus().spectator){
+      TeamLeader=battle.GetUser( bot.owner ).BattleStatus().team;
+    }else{
+      TeamLeader = TeamConv[ battle.GetUser( bot.owner ).BattleStatus().team ];
+    }*/
 
     s += wxString::Format( _T("\t\tTeamLeader=%d;\n") ,TeamLeader );
     s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[bot.bs.ally] );

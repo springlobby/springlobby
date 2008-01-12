@@ -8,10 +8,12 @@
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
+#include <wx/font.h>
 
 #include "nonportable.h"
 #include "settings.h"
 #include "utils.h"
+#include "uiutils.h"
 
 Settings& sett()
 {
@@ -467,7 +469,7 @@ std::string Settings::GetUnitSyncUsedLoc( bool force, bool defloc )
   if ( df ) {
     wxString tmp = WX_STRING( sett().GetSpringDir() );
     if ( tmp.Last() != wxFILE_SEP_PATH ) tmp += wxFILE_SEP_PATH;
-    tmp += UNITSYNC_BIN;
+    tmp += _T("unitsync") + GetLibExtension();
     return STD_STRING( tmp );
   } else {
     return sett().GetUnitSyncLoc();
@@ -606,4 +608,126 @@ void Settings::SetDisplayJoinLeave( bool display, const wxString& channel  )
 bool Settings::GetDisplayJoinLeave( const wxString& channel  )
 {
   return m_config->Read( _T("/Channels/DisplayJoinLeave/") +  channel, true);
+}
+
+wxColour Settings::GetChatColorNormal()
+{
+  return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Normal"), _T( "0 0 0" ) ) ) );
+}
+
+void Settings::SetChatColorNormal( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Normal"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorBackground()
+{
+  return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Background"), _T( "255 255 255" ) ) ) );
+}
+
+void Settings::SetChatColorBackground( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Background"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorHighlight()
+{
+  return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Highlight"), _T( "255 0 0" ) ) ) );
+}
+
+void Settings::SetChatColorHighlight( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Highlight"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorMine()
+{
+  return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Mine"), _T( "100 100 140" ) ) ) );
+}
+
+void Settings::SetChatColorMine( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Mine"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorNotification()
+{
+  return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Notification"), _T( "255 40 40" ) ) ) );
+}
+
+void Settings::SetChatColorNotification( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Notification"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorAction()
+{
+  return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Action"), _T( "230 0 255" ) ) ) );
+}
+
+void Settings::SetChatColorAction( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Action"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorServer()
+{
+  return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Server"), _T( "0 80 128" ) ) ) );
+}
+
+void Settings::SetChatColorServer( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Server"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorClient()
+{
+  return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Client"), _T( "20 200 25" ) ) ) );
+}
+
+void Settings::SetChatColorClient( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Client"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorJoinPart()
+{
+  return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/JoinPart"), _T( "0 80 0" ) ) ) );
+}
+
+void Settings::SetChatColorJoinPart( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/JoinPart"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorError()
+{
+  return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Error"), _T( "128 0 0" ) ) ) );
+}
+
+void Settings::SetChatColorError( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Error"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorTime()
+{
+  return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Time"), _T( "100 100 140" ) ) ) );
+}
+
+void Settings::SetChatColorTime( wxColour value )
+{
+  m_config->Write( _T("/Chat/Colour/Time"), GetColorString(value) );
+}
+
+wxFont Settings::GetChatFont()
+{
+  wxFont f;
+  f.SetNativeFontInfo( m_config->Read( _T("/Chat/Font"), wxEmptyString ) );
+  return f;
+}
+
+void Settings::SetChatFont( wxFont value )
+{
+  m_config->Write( _T("/Chat/Font"), value.GetNativeFontInfoDesc() );
 }

@@ -4,6 +4,8 @@
 //
 
 #include <sstream>
+#include <wx/dynlib.h>
+#include <iostream>
 
 #include "utils.h"
 #include "revision.h"
@@ -21,27 +23,28 @@
 #include "config.h"
 #endif
 
+
+wxString GetLibExtension()
+{
+  return wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
+}
+
+
 //! @brief Initializes the logging functions.
 ///initializes logging in both std::cout and gui messages
 void InitializeLoggingTargets()
+
 {
-#ifdef __WXMSW__
-  wxLog *loggerconsole = new wxLogWindow(0, _T("SpringLobby error console")  );
+	#if wxUSE_STD_IOSTREAM
+  wxLog *loggerconsole = new wxLogStream( &std::cout );
   wxLogChain *logChain = new wxLogChain( loggerconsole );
+  #else
+  wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
+  wxLogChain *logChain = new wxLogChain( loggerwin );
+  #endif
   logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
   logChain->SetLogLevel( wxLOG_Trace );
   logChain->SetVerbose( true );
-#else
-	#if wxUSE_STD_IOSTREAM
-	  wxLog *loggerconsole = new wxLogStream( &std::cout );
-	  wxLogChain *logChain = new wxLogChain( loggerconsole );
-	  logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
-	  logChain->SetLogLevel( wxLOG_Trace );
-	  logChain->SetVerbose( true );
-	#else
-	  wxLog::SetLogLevel( wxLOG_Warning );
-	#endif
-#endif
 }
 
 std::string i2s( int x )

@@ -4,7 +4,7 @@
 #include <wx/panel.h>
 #include <wx/string.h>
 
- #include "chatlog.h"
+#include "chatlog.h"
 
 class wxCommandEvent;
 class wxSizeEvent;
@@ -14,6 +14,7 @@ class wxTextCtrl;
 class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
+class wxNotebook;
 class NickListCtrl;
 class Channel;
 class User;
@@ -143,7 +144,7 @@ class ChatPanel : public wxPanel
 
   protected:
     void _SetChannel( Channel* channel );
-    void OutputLine( const wxString& message, const wxColour& col );
+    void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
 
     User* GetSelectedUser();
 
@@ -176,6 +177,7 @@ class ChatPanel : public wxPanel
 
     wxString m_chan_pass;
 
+    wxNotebook* m_chat_tabs;
     wxMenu* m_popup_menu;
     wxMenuItem* m_autorejoin;
     ChatLog* m_chat_log;

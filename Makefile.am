@@ -116,6 +116,8 @@ springlobby_SOURCES = \
 	src/channel.h \
 	src/channellist.cpp \
 	src/channellist.h \
+	src/chatoptionstab.cpp \
+	src/chatoptionstab.h \
 	src/chatpanel.cpp \
 	src/chatpanel.h \
 	src/connectwindow.cpp \
@@ -215,8 +217,8 @@ springlobby_SOURCES = \
 	src/images/rank2.xpm \
 	src/images/rank3.xpm \
 	src/images/rank4.xpm \
-        src/images/rank5.xpm \
-        src/images/rank6.xpm \
+	src/images/rank5.xpm \
+	src/images/rank6.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
 	src/images/singleplayer_icon.xpm \

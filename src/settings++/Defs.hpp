@@ -280,7 +280,8 @@ const Control UI_CBOX[16] = {
 										{_T("requires \"Enable LuaWidgets\" to be set.\nWill be displayed in the bottom right corner")}},
 //TODO is there even a reason that it should be disabled?
 	{_T("Fix rendering on alt-tab"),                        wxT("FixAltTab"),           ID_WINDOWP_UI_CBOX_13,	"1", {_T("Do not change if not needed")}},
-	{_T("Disallow helper AI's"),                            wxT("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_14,	"0", {_T("Disables Economy AI, etc.")}},
+	{_T("Disallow helper AI's"),                            wxT("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_14,	"0", {_T("Disables Economy AI, etc.\n"
+																														"If enabled might screw with LuaUi.")}},
 	{_T("Enable scroll on window edge"),					wxT("WindowedEdgeMove"),	ID_WINDOWP_UI_CBOX_15,	"1", {_T("Scroll the screen when mouse reaches the screen's edge.")}},
 	{_T("Invert Mouse"),									wxT("InvertMouse"),			ID_WINDOWP_UI_CBOX_16,	"0", {_T("Inverts the Mouse Y-axis in FPS mode")}},
 	
@@ -289,10 +290,10 @@ const Control UI_CBOX[16] = {
 
 const Control MO_SLI[5] = {
 	{_T("Overhead camera"),    wxT("OverheadScrollSpeed"),    ID_MO_SLI_0,	"10", {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("Rotatable overhead camera"), wxT("RotOverheadScrollSpeed"), ID_MO_SLI_1,	"5" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("Total war camera"),          wxT("TWScrollSpeed"),          ID_MO_SLI_2,	"5" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("First person camera"),         wxT("FPSScrollSpeed"),         ID_MO_SLI_3,	"5" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_T("Free camera"),          wxT("CamFreeScrollSpeed"),     ID_MO_SLI_4,	"5" , {_T("set the scroll speed (mouse + keyboard) for this mode")}}
+	{_T("Rotatable overhead camera"), wxT("RotOverheadScrollSpeed"), ID_MO_SLI_1,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("Total war camera"),          wxT("TWScrollSpeed"),          ID_MO_SLI_2,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("First person camera"),         wxT("FPSScrollSpeed"),         ID_MO_SLI_3,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}},
+	{_T("Free camera"),          wxT("CamFreeScrollSpeed"),     ID_MO_SLI_4,	"10" , {_T("set the scroll speed (mouse + keyboard) for this mode")}}
 };
 
 const Control MO_SLI_EXT[5] = {

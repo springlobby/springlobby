@@ -38,11 +38,11 @@ class AddBotDialog : public wxDialog
     IBattle& m_battle;
 
     wxArrayString m_ais;
-   
+
     bool m_sp;
 
-    wxString _RefineAIName( const wxString& name );
-      
+    wxString RefineAIName( const wxString& name );
+
     DECLARE_EVENT_TABLE()
 };
 

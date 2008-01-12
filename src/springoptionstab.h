@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SPRINGOPTIONSTAB_H
 #define SPRINGLOBBY_HEADERGUARD_SPRINGOPTIONSTAB_H
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 #include <wx/checkbox.h>
 
 class wxStaticBoxSizer;
@@ -13,7 +13,7 @@ class wxTextCtrl;
 class wxBoxSizer;
 class Ui;
 
-class SpringOptionsTab : public wxPanel
+class SpringOptionsTab : public wxScrolledWindow
 {
   public:
     SpringOptionsTab( wxWindow* parent, Ui& ui );
