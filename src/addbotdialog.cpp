@@ -107,7 +107,7 @@ wxString AddBotDialog::GetAI()
 }
 
 
-wxString AddBotDialog::_RefineAIName( const wxString& name )
+wxString AddBotDialog::RefineAIName( const wxString& name )
 {
   wxString ret = name.BeforeLast('.').AfterLast('/');
   if ( m_ai->FindString( ret ) == wxNOT_FOUND ) return ret;
@@ -128,7 +128,7 @@ void AddBotDialog::ReloadAIList()
   } catch (...) {}
 
   m_ai->Clear();
-  for ( unsigned int i = 0; i < m_ais.GetCount(); i++ ) m_ai->Append( _RefineAIName(m_ais[i]) );
+  for ( unsigned int i = 0; i < m_ais.GetCount(); i++ ) m_ai->Append( RefineAIName(m_ais[i]) );
 
   if ( m_ais.GetCount() > 0 ) {
     m_ai->SetStringSelection( WX_STRING(sett().GetLastAI()) );

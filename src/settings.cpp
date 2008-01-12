@@ -469,7 +469,7 @@ std::string Settings::GetUnitSyncUsedLoc( bool force, bool defloc )
   if ( df ) {
     wxString tmp = WX_STRING( sett().GetSpringDir() );
     if ( tmp.Last() != wxFILE_SEP_PATH ) tmp += wxFILE_SEP_PATH;
-    tmp += UNITSYNC_BIN;
+    tmp += _T("unitsync") + GetLibExtension();
     return STD_STRING( tmp );
   } else {
     return sett().GetUnitSyncLoc();

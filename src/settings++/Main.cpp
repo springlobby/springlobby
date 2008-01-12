@@ -34,21 +34,8 @@ IMPLEMENT_APP(Springsettings)
 
 bool Springsettings::OnInit()
 {
-
-		#if wxUSE_ON_FATAL_EXCEPTION
-		wxHandleFatalExceptions( true );
-		#endif
-
-		//initializes logging in both std::cout and gui messages
-		#if wxUSE_STD_IOSTREAM
-		wxLog *loggerconsole = new wxLogStream( &std::cout );
-		wxLogChain *logChain = new wxLogChain( loggerconsole );
-		logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
-		logChain->SetLogLevel( wxLOG_Trace );
-		logChain->SetVerbose( true );
-		#else
-		wxLog::SetLogLevel( wxLOG_Warning );
-		#endif
+	//initialize all loggers
+    InitializeLoggingTargets();
 
     settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("springsettings"),wxDefaultPosition,
     		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
