@@ -21,6 +21,8 @@
 
 #include "settings++/custom_dialogs.h"
 
+#include "springunitsynclib.h"
+
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
   EVT_CHOICE( SP_MAP_PICK, SinglePlayerTab::OnMapSelect )
@@ -169,6 +171,7 @@ void SinglePlayerTab::SetMod( unsigned int index )
     try {
       UnitSyncMod mod = usync()->GetMod( index );
       m_battle.SetMod( mod );
+      m_battle.CustomBattleOptions()->loadOptions(ModOption);
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();

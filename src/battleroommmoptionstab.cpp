@@ -316,7 +316,8 @@ void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
 			m_mod_options_sizer->Remove(m_mod_layout);
 			m_mod_layout = new wxBoxSizer( wxVERTICAL);
 			setupOptionsSizer(m_mod_layout,ModOption);
-			m_mod_options_sizer->Add( m_mod_options_sizer, 1, wxEXPAND, 5 );
+			//m_mod_options_sizer->Add( m_mod_options_sizer, 1, wxEXPAND, 5 );
+			m_mod_options_sizer->Add( m_mod_layout, 1, wxEXPAND, 5 );
 			break;
 		case MapOption:
 			m_map_options_sizer->Remove(m_map_layout);

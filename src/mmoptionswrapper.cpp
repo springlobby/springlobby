@@ -70,6 +70,7 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag,wxString mapname)
 			try
 			{
 				count = susynclib()->GetModOptionCount();
+				customMessageBox(SL_MAIN_ICON,wxString::Format(_T("%d"),count),_T("Mod option count"),wxOK);
 			}
 			catch(...)
 			{
