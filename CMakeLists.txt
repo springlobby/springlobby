@@ -28,6 +28,7 @@ IF(wxWidgets_FOUND)
 
 	# We define the include paths here, our minimal source dir is one,
 	# and also the include dirs defined by wxWidgets
+	INCLUDE_DIRECTORIES(${SpringLobbySrc_SOURCE_DIR} ${SettingsSrc_SOURCE_DIR}  ${wxWidgets_INCLUDE_DIRS} )
 	SET(SpringLobbySrc
 		src/boost/md5.cpp
 		src/addbotdialog.cpp
