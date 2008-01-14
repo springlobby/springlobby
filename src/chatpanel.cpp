@@ -1353,24 +1353,28 @@ void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event )
 void ChatPanel::OnFocusLost( wxFocusEvent& event)
 {
 	//maybe differentiate the origin
-	wxColour col;
-	col.Set( 240,0,0 );
-	wxString message = _T("----------------------------------------------------------------------------------------");
-
-	if ( draw_focus_lost_seperation && !m_chatlog_text->GetValue().EndsWith( (message + _T("\n") ) ) )
-		OutputLine( message, col, sett().GetChatFont());
-	// m_chatlog_text->OnFocusGained(event);
-
-	 wxWindow* window = event.GetWindow();
-	 if (window != 0)
+    wxWindow* window = event.GetWindow();
+	 if (window ==  this->GetParent())
 	 {
-		 window->SetFocus();
+		 event.Skip();
 	 }
 	 else {
-		 this->GetParent()->SetFocus();
-		//event.Skip();
+        wxString message = _T("----------------------------------------------------------------------------------------");
+
+        if ( draw_focus_lost_seperation && !m_chatlog_text->GetValue().EndsWith( (message + _T("\n") ) ) )
+            OutputLine( message, sett().GetChatColorHighlight(), sett().GetChatFont());
+        // m_chatlog_text->OnFocusGained(event);
+
+         wxWindow* window = event.GetWindow();
+         if (window != 0)
+         {
+             window->SetFocus();
+         }
+         else {
+             this->GetParent()->SetFocus();
+            //event.Skip();
+         }
 	 }
 
-	 event.Skip();
 }
 
