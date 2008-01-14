@@ -943,7 +943,7 @@ void TASServer::ModeratorMute( const std::string& channel, const std::string& ni
 {
   wxString dur;
   dur << duration;
-  wxString cmd = wxString::Format(_T("MUTE %s %s %d"), WX_STRING(channel).mb_str(wxConvUTF8), WX_STRING(nick).mb_str(wxConvUTF8), duration ) + (byip?_T(" ip"):_T("") ) + _T("\n");
+  wxString cmd = wxString::Format(_T("MUTE %s %s %d"), WX_STRING(channel).c_str(), WX_STRING(nick).c_str(), duration ) + (byip?_T(" ip"):_T("") ) + _T("\n");
   m_sock->Send( STD_STRING( cmd ) );
 }
 
@@ -1449,7 +1449,7 @@ void TASServer::UpdateBot( int battleid, const std::string& nick, UserBattleStat
   tascl.color.zero = 0;
   //UPDATEBOT name battlestatus teamcolor
   std::string cmd = "UPDATEBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + "\n";
-  wxLogMessage( _T("%s"), WX_STRING(cmd) );
+  wxLogMessage( _T("%s"), WX_STRING(cmd).c_str() );
   m_sock->Send( cmd );
 }
 
