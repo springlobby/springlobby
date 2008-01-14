@@ -27,6 +27,7 @@ Battle::Battle( Server& serv, Ui& ui, int id ) :
   m_bot_pos(BOT_SEEKPOS_INVALID)
 {
   m_opts.battleid = id;
+
 }
 
 
@@ -49,9 +50,21 @@ void Battle::SendHostInfo( HostInfo update )
 }
 
 
+void Battle::SendHostInfo( const wxString& Tag )
+{
+  m_serv.SendHostInfo( Tag );
+}
+
+
 void Battle::Update()
 {
   m_ui.OnBattleInfoUpdated( *this );
+}
+
+
+void Battle::Update( const wxString& Tag )
+{
+  m_ui.OnBattleInfoUpdated( *this, Tag );
 }
 
 
