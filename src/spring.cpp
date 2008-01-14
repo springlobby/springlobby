@@ -360,7 +360,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
     // Find Team Leader.
     int TeamLeader;
-    for(TeamLeader=0;TeamLeader<ordered_users.size();TeamLeader++){
+    for(TeamLeader=0;TeamLeader<int(ordered_users.size());TeamLeader++){
       if(&battle.GetUser(ordered_users[TeamLeader].index)==&battle.GetUser(bot.owner))goto leader_found;
     }
     TeamLeader=0;

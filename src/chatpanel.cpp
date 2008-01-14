@@ -462,7 +462,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
   // change the image of the tab to show new events
   if ( m_channel != 0 && m_ui.GetActiveChatPanel() != this )
-    for ( int i=0; i < m_chat_tabs->GetPageCount( ); ++i )
+    for ( int i=0; i < int(m_chat_tabs->GetPageCount( )); ++i )
       if ( m_chat_tabs->GetPage( i ) == this )
       {
         if ( m_type == CPT_Channel ) m_chat_tabs->SetPageImage( i, 4 );
