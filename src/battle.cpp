@@ -467,7 +467,7 @@ BattleBot* Battle::GetBot( const std::string& name )
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
   {
     if ( *i == 0 ) continue;
-    wxLogMessage( _T("%s"), WX_STRING((*i)->name).mb_str() );
+    wxLogMessage( _T("%s"), WX_STRING((*i)->name).c_str ());
     if ( (*i)->name == name ) {
       return *i;
     }

@@ -321,7 +321,7 @@ void Ui::OpenWebBrowser( const wxString& url )
   {
     if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
     {
-      wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().mb_str() );
+      wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().c_str() );
       customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
     }
 

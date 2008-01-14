@@ -367,7 +367,7 @@ wxString ConvertToTASServerBuggedChecksum( const wxString& csum )
 
 void TASServer::ExecuteCommand( const std::string& in )
 {
-  wxLogMessage( _T("s"), WX_STRING(in).mb_str()  );
+  wxLogMessage( _T("s"), WX_STRING(in).c_str()  );
   std::string cmd;
   std::string params = in;
   std::string::size_type pos = 0;
@@ -727,7 +727,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_se->OnBattleInfoUpdated( m_battle_id );
     // !! Command: "SETSCRIPTTAGS" params: "game/startpostype=0	game/maxunits=1000	game/limitdgun=0	game/startmetal=1000	game/gamemode=0	game/ghostedbuildings=-1	game/startenergy=1000	game/diminishingmms=0"
   } else {
-    wxLogMessage( _T("??? Cmd: %s params: %s"), WX_STRING(cmd).mb_str(), WX_STRING(params).mb_str() );
+    wxLogMessage( _T("??? Cmd: %s params: %s"), WX_STRING(cmd).c_str(), WX_STRING(params).c_str() );
     m_se->OnUnknownCommand( cmd, params );
   }
 }
@@ -761,7 +761,7 @@ void TASServer::Ping()
 
 void TASServer::UDPPing(){/// used for nat travelsal
 #if(NAT_TRAVERSAL_SUPPORT)
-  wxLogMessage(_T("UDPPing address %s port %d"), WX_STRING(m_addr).mb_str(), m_udp_port);
+  wxLogMessage(_T("UDPPing address %s port %d"), WX_STRING(m_addr).c_str(), m_udp_port);
 
   wxIPV4address local_addr;
   local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
@@ -1047,7 +1047,7 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
   cmd += WX_STRING( bo.mapname ) + _T("\t");
   cmd += WX_STRING( bo.description ) + _T("\t");
   cmd += WX_STRING( bo.modname ) + _T("\n");
-  wxLogMessage( _T("%s"), cmd.mb_str() );
+  wxLogMessage( _T("%s"), cmd.c_str() );
   m_sock->Send( STD_STRING(cmd) );
 
   // OPENBATTLE type natType password port maxplayers startingmetal startingenergy maxunits startpos
@@ -1409,7 +1409,7 @@ void TASServer::AddBot( int battleid, const std::string& nick, const std::string
   tascl.color.zero = 0;
   //ADDBOT name battlestatus teamcolor {AIDLL}
   std::string cmd = "ADDBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + " " + aidll + ".dll\n";
-  wxLogMessage( _T("%s"), WX_STRING(cmd).mb_str() );
+  wxLogMessage( _T("%s"), WX_STRING(cmd).c_str() );
   m_sock->Send( cmd );
 }
 
@@ -1473,7 +1473,7 @@ void TASServer::SendNATHelperInfos( const wxString& username, const wxString& ip
 
   //CLIENTIPPORT username ip port
   std::string cmd = "CLIENTIPPORT " + STD_STRING( username ) + " " + STD_STRING( ip ) + " " + i2s (port ) + "\n";
-  wxLogMessage ( _T("%s"), WX_STRING( cmd ).mb_str() );
+  wxLogMessage ( _T("%s"), WX_STRING( cmd ).c_str() );
   m_sock->Send( cmd );
 }
 
