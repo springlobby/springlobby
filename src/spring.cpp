@@ -62,7 +62,7 @@ bool Spring::Run( Battle& battle )
 
   wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
 
-  wxLogMessage( _T("Path to script: %sscript.txt"), path.mb_str() );
+  wxLogMessage( _T("Path to script: %sscript.txt"), path.c_str() );
 
   try {
 
@@ -80,7 +80,7 @@ bool Spring::Run( Battle& battle )
   }
 
   wxString cmd =  _T("\"") + WX_STRING(sett().GetSpringUsedLoc()) + _T("\" ") + path + _T("script.txt");
-  wxLogMessage( _T("cmd: %s"), cmd.mb_str() );
+  wxLogMessage( _T("cmd: %s"), cmd.c_str() );
   wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
   if ( sett().UseOldSpringLaunchMethod() ) {
     if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
