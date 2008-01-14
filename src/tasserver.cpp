@@ -367,7 +367,7 @@ wxString ConvertToTASServerBuggedChecksum( const wxString& csum )
 
 void TASServer::ExecuteCommand( const std::string& in )
 {
-  wxLogMessage( WX_STRING( in ) );
+  wxLogMessage( _T("s"), WX_STRING(in).mb_str()  );
   std::string cmd;
   std::string params = in;
   std::string::size_type pos = 0;
@@ -404,7 +404,7 @@ void TASServer::ExecuteCommand( const std::string& in )
 void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
 	//TODO use or not?
- // wxLogDebugFunc( /* _T("cmd=")+WX_STRING(cmd)+_T(" inparams=")+WX_STRING(inparams) */ );
+ // wxLogDebugFunc( /* _T("cmd=%s inparams=%s"), WX_STRING(cmd), WX_STRING(inparams) */ );
 
   std::string params = inparams;
   int pos, cpu, id, nat, port, maxplayers, rank, specs, metal = 0, energy = 0, units, start = 0,
@@ -727,7 +727,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     m_se->OnBattleInfoUpdated( m_battle_id );
     // !! Command: "SETSCRIPTTAGS" params: "game/startpostype=0	game/maxunits=1000	game/limitdgun=0	game/startmetal=1000	game/gamemode=0	game/ghostedbuildings=-1	game/startenergy=1000	game/diminishingmms=0"
   } else {
-    wxLogMessage( _T("??? Cmd: ") + WX_STRING(cmd) + _T(" params: ")+ WX_STRING(params) );
+    wxLogMessage( _T("??? Cmd: %s params: %s"), WX_STRING(cmd).mb_str(), WX_STRING(params).mb_str() );
     m_se->OnUnknownCommand( cmd, params );
   }
 }
@@ -761,7 +761,7 @@ void TASServer::Ping()
 
 void TASServer::UDPPing(){/// used for nat travelsal
 #if(NAT_TRAVERSAL_SUPPORT)
-  wxLogMessage(_T("UDPPing address ")+WX_STRING(m_addr)+_T(" port ")+WX_STRING(i2s(m_udp_port)));
+  wxLogMessage(_T("UDPPing address %s port %d"), WX_STRING(m_addr).mb_str(), m_udp_port);
 
   wxIPV4address local_addr;
   local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
@@ -779,7 +779,7 @@ void TASServer::UDPPing(){/// used for nat travelsal
   }else{
     wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));
   }
-  if(udp_socket.Error())wxLogMessage(_T("Error=")+WX_STRING(i2s(udp_socket.LastError())));
+  if(udp_socket.Error())wxLogMessage(_T("Error=%d"),udp_socket.LastError());
 #endif
 }
 
@@ -1047,7 +1047,7 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
   cmd += WX_STRING( bo.mapname ) + _T("\t");
   cmd += WX_STRING( bo.description ) + _T("\t");
   cmd += WX_STRING( bo.modname ) + _T("\n");
-  wxLogMessage( cmd );
+  wxLogMessage( _T("%s"), cmd.mb_str() );
   m_sock->Send( STD_STRING(cmd) );
 
   // OPENBATTLE type natType password port maxplayers startingmetal startingenergy maxunits startpos
@@ -1409,7 +1409,7 @@ void TASServer::AddBot( int battleid, const std::string& nick, const std::string
   tascl.color.zero = 0;
   //ADDBOT name battlestatus teamcolor {AIDLL}
   std::string cmd = "ADDBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + " " + aidll + ".dll\n";
-  wxLogMessage( WX_STRING(cmd) );
+  wxLogMessage( _T("%s"), WX_STRING(cmd).mb_str() );
   m_sock->Send( cmd );
 }
 
@@ -1449,7 +1449,7 @@ void TASServer::UpdateBot( int battleid, const std::string& nick, UserBattleStat
   tascl.color.zero = 0;
   //UPDATEBOT name battlestatus teamcolor
   std::string cmd = "UPDATEBOT " + nick + " " + i2s( tasbs.data ) + " " + i2s( tascl.data ) + "\n";
-  wxLogMessage( WX_STRING(cmd) );
+  wxLogMessage( _T("%s"), WX_STRING(cmd) );
   m_sock->Send( cmd );
 }
 
@@ -1473,7 +1473,7 @@ void TASServer::SendNATHelperInfos( const wxString& username, const wxString& ip
 
   //CLIENTIPPORT username ip port
   std::string cmd = "CLIENTIPPORT " + STD_STRING( username ) + " " + STD_STRING( ip ) + " " + i2s (port ) + "\n";
-  wxLogMessage ( WX_STRING( cmd ) );
+  wxLogMessage ( _T("%s"), WX_STRING( cmd ).mb_str() );
   m_sock->Send( cmd );
 }
 
