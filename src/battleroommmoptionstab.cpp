@@ -105,12 +105,12 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 	{
 		mmOptionList current = it->second;
 		wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
-		
-		
-		int index = boundry(current.cur_choice_index,0,current.cbx_choices.GetCount()-1);
+
+
+		int index = boundry(current.cur_choice_index,0,int(current.cbx_choices.GetCount()-1));
 		wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[index], wxDefaultPosition,
 				wxDefaultSize, current.cbx_choices, 0, wxDefaultValidator);
-		
+
 		tempchoice->SetToolTip(current.description);
 		tempchoice->SetName(pref+current.key);
 		tempchoice->Enable(enable);
@@ -173,12 +173,12 @@ void BattleroomMMOptionsTab::OnComBoxChange(wxCommandEvent& event)
 {
 	mmOptionsWrapper* optWrap = m_battle.CustomBattleOptions();
 	wxComboBox* box = (wxComboBox*) event.GetEventObject();
-	
+
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
 	wxString itemKey = optWrap->GetNameListOptItemKey(key,  box->GetValue(), int(gameoption) );
-	
+
 	if(optWrap->setSingleOption( key, itemKey, int(gameoption) ) )
 	{
         if (m_battle.IsFounderMe())
@@ -308,7 +308,7 @@ void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
 			m_statictext_map.erase(it);
 		}
 	}
-	
+
 	//reloading the controls
 	switch (flag)
 	{
@@ -326,8 +326,8 @@ void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
 			m_map_options_sizer->Add( m_map_layout, 1, wxEXPAND, 5 );
 			break;
 	}
-	
-		
+
+
 	//this->SetSizer( m_main_sizer, true );
 	this->Layout();
 
