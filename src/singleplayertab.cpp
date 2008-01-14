@@ -171,7 +171,6 @@ void SinglePlayerTab::SetMod( unsigned int index )
     try {
       UnitSyncMod mod = usync()->GetMod( index );
       m_battle.SetMod( mod );
-      m_battle.CustomBattleOptions()->loadOptions(ModOption);
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
