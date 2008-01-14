@@ -35,10 +35,11 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  customListCtrl)
   EVT_MENU                 ( BRLIST_RING, BattleroomListCtrl::OnRingPlayer )
   EVT_MENU                 ( BRLIST_COLOUR, BattleroomListCtrl::OnColourSelect )
   EVT_MENU                 ( BRLIST_HANDICAP, BattleroomListCtrl::OnHandicapSelect )
+#if wxUSE_TIPWINDOW
 #ifndef __WXMSW__ //disables tooltips on win
   EVT_MOTION(BattleroomListCtrl::OnMouseMotion)
 #endif
-  
+#endif
 END_EVENT_TABLE()
 
 #ifdef __WXMSW__
@@ -977,7 +978,7 @@ int wxCALLBACK BattleroomListCtrl::CompareHandicapDOWN(long item1, long item2, l
 
 void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
-
+#if wxUSE_TIPWINDOW
 	tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 	wxPoint position = event.GetPosition();
 
@@ -1049,5 +1050,5 @@ void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 			}
 		}
 	}catch(...){}
-
+#endif
 }

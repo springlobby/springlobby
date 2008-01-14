@@ -21,6 +21,8 @@
 
 #include "settings++/custom_dialogs.h"
 
+#include "springunitsynclib.h"
+
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
   EVT_CHOICE( SP_MAP_PICK, SinglePlayerTab::OnMapSelect )
@@ -143,6 +145,7 @@ void SinglePlayerTab::ReloadModlist()
 
 void SinglePlayerTab::SetMap( unsigned int index )
 {
+	//m_ui.ReloadUnitSync();
   m_addbot_btn->Enable( false );
   if ( index >= m_map_pick->GetCount()-1 ) {
     m_battle.SetMap( wxEmptyString, wxEmptyString );
@@ -154,12 +157,14 @@ void SinglePlayerTab::SetMap( unsigned int index )
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
+  m_battle.SendHostInfo( HI_Map_Changed ); // reload map options
   m_map_pick->SetSelection( index );
 }
 
 
 void SinglePlayerTab::SetMod( unsigned int index )
 {
+	//m_ui.ReloadUnitSync();
   if ( index >= m_mod_pick->GetCount()-1 ) {
     m_battle.SetMod( wxEmptyString, wxEmptyString );
   } else {
@@ -170,6 +175,7 @@ void SinglePlayerTab::SetMod( unsigned int index )
   }
   m_minimap->UpdateMinimap();
   m_battle.SendHostInfo( HI_Restrictions ); // Update restrictions in options.
+  m_battle.SendHostInfo( HI_Mod_Changed ); // reload mod options
   m_mod_pick->SetSelection( index );
 }
 

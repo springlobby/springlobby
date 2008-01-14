@@ -470,7 +470,7 @@ void MapCtrl::DrawBackground( wxDC& dc )
 
 void MapCtrl::DrawStartRects( wxDC& dc )
 {
-  for ( int i = 0; i < m_battle->GetNumRects(); i++ ) {
+  for ( int i = 0; i < int(m_battle->GetNumRects()); i++ ) {
     wxRect sr = GetStartRect( i );
     if ( sr.IsEmpty() ) continue;
     wxColour col;

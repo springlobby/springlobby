@@ -39,7 +39,12 @@ class MainChatTab : public wxPanel
     void OnUserConnected( User& user );
     void OnUserDisconnected( User& user );
 
+    void ChangeUnreadChannelColour( const wxColour& colour );
+    void ChangeUnreadPMColour( const wxColour& colour );
+
   protected:
+
+    wxImage ReplaceChannelStatusColour( wxImage& img, const wxColour& colour );
 
     Ui& m_ui;
 

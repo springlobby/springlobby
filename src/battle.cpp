@@ -27,6 +27,7 @@ Battle::Battle( Server& serv, Ui& ui, int id ) :
   m_bot_pos(BOT_SEEKPOS_INVALID)
 {
   m_opts.battleid = id;
+
 }
 
 
@@ -49,9 +50,21 @@ void Battle::SendHostInfo( HostInfo update )
 }
 
 
+void Battle::SendHostInfo( const wxString& Tag )
+{
+  m_serv.SendHostInfo( Tag );
+}
+
+
 void Battle::Update()
 {
   m_ui.OnBattleInfoUpdated( *this );
+}
+
+
+void Battle::Update( const wxString& Tag )
+{
+  m_ui.OnBattleInfoUpdated( *this, Tag );
 }
 
 
@@ -194,7 +207,7 @@ bool Battle::HaveMultipleBotsInSameTeam() const
   std::list<BattleBot*>::const_iterator i;
   wxLogDebugFunc(_T(""));
 
-  int teams[16] = { -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1 };
+  std::vector<int> teams ( GetMaxPlayers(), -1 );
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
   {
     if ( *i == 0 ) continue;
@@ -280,9 +293,10 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
 
 void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom )
 {
-  ASSERT_LOGIC( (allyno >= 0), _T("Allyno out of bounds.") );
+  ASSERT_LOGIC( (allyno >= 0 || allyno < int(GetMaxPlayers()) ), _T("Allyno out of bounds.") );
   BattleStartRect* sr;
   bool local;
+  if ( allyno >= int(m_rects.size()) ) m_rects.push_back(0); // add new element is it exceeds the vector bounds
   if ( m_rects[allyno] == 0 ) {
     sr = new BattleStartRect();
     local = true;
@@ -305,6 +319,7 @@ void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom 
 
 void Battle::RemoveStartRect( int allyno )
 {
+  if ( allyno >= int(m_rects.size() )) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   sr->deleted = true;
@@ -313,6 +328,7 @@ void Battle::RemoveStartRect( int allyno )
 
 void Battle::UpdateStartRect( int allyno )
 {
+  if ( allyno >= int(m_rects.size()) ) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   sr->updated = true;
@@ -321,6 +337,7 @@ void Battle::UpdateStartRect( int allyno )
 
 void Battle::StartRectRemoved( int allyno )
 {
+  if ( allyno >= int(m_rects.size()) ) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   m_rects[allyno] = 0;
@@ -330,6 +347,7 @@ void Battle::StartRectRemoved( int allyno )
 
 void Battle::StartRectUpdated( int allyno )
 {
+  if ( allyno >= int(m_rects.size()) ) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   sr->updated = false;
@@ -339,7 +357,8 @@ void Battle::StartRectUpdated( int allyno )
 
 BattleStartRect* Battle::GetStartRect( int allyno )
 {
-  ASSERT_LOGIC( (allyno >= 0), _T("Allyno out of bounds.") );
+  ASSERT_LOGIC( (allyno >= 0 || allyno < int(GetMaxPlayers()) ), _T("Allyno out of bounds.") );
+  if ( allyno >= int(m_rects.size() )) return 0;
   return m_rects[allyno];
 }
 
@@ -461,7 +480,7 @@ BattleBot* Battle::GetBot( const std::string& name )
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
   {
     if ( *i == 0 ) continue;
-    wxLogMessage( WX_STRING((*i)->name) );
+    wxLogMessage( _T("%s"), WX_STRING((*i)->name).c_str ());
     if ( (*i)->name == name ) {
       return *i;
     }

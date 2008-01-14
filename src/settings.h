@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_SETTINGS_H
 
 #include <string>
+#include <wx/colour.h>
 
 #define DEFSETT_DEFAULT_SERVER "TAS Server"
 #define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"
@@ -16,6 +17,8 @@
 
 class wxConfigBase;
 typedef int SoundType;
+class wxFont;
+
 
 //! @brief Class used to store and restore application settings.
 class Settings
@@ -134,6 +137,31 @@ class Settings
     void SetSoundFilename (wxString& filename, SoundType soundtype);
     wxString GetSoundFilename ( SoundType soundtype );
     void SetDefaultSounds();
+
+    wxColour GetChatColorNormal();
+    void SetChatColorNormal( wxColour value );
+    wxColour GetChatColorBackground();
+    void SetChatColorBackground( wxColour value );
+    wxColour GetChatColorHighlight();
+    void SetChatColorHighlight( wxColour value );
+    wxColour GetChatColorMine();
+    void SetChatColorMine( wxColour value );
+    wxColour GetChatColorNotification();
+    void SetChatColorNotification( wxColour value );
+    wxColour GetChatColorAction();
+    void SetChatColorAction( wxColour value );
+    wxColour GetChatColorServer();
+    void SetChatColorServer( wxColour value );
+    wxColour GetChatColorClient();
+    void SetChatColorClient( wxColour value );
+    wxColour GetChatColorJoinPart();
+    void SetChatColorJoinPart( wxColour value );
+    wxColour GetChatColorError();
+    void SetChatColorError( wxColour value );
+    wxColour GetChatColorTime();
+    void SetChatColorTime( wxColour value );
+    wxFont GetChatFont();
+    void SetChatFont( wxFont value );
 
   protected:
 

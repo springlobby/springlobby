@@ -6,6 +6,8 @@
 #include <sstream>
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
+#include <wx/dynlib.h>
+#include <iostream>
 
 #include "utils.h"
 #include "revision.h"
@@ -24,12 +26,15 @@
 #include "config.h"
 #endif
 
+wxString GetLibExtension()
+{
+  return wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
+}
+
+
 void DumpStackTraceToLog()
 {
-
-#if wxUSE_STACKWALKER
-
-	customMessageBox(SL_MAIN_ICON, _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"),_("Critical error"), wxICON_ERROR );
+  #if wxUSE_STACKWALKER
 
   wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
 
@@ -41,11 +46,30 @@ void DumpStackTraceToLog()
   DebugInfo += _T("-------- End StackTrace --------");
 
   wxLogMessage( DebugInfo );
-#else
+
+  customMessageBox(SL_MAIN_ICON, _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"),_("Critical error"), wxICON_ERROR );
+
+  #else
   customMessageBox(SL_MAIN_ICON, _("SpringLobby has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker"),_("Critical error"), wxICON_ERROR );
-#endif
+  #endif
 }
 
+//! @brief Initializes the logging functions.
+///initializes logging in both std::cout and gui messages
+void InitializeLoggingTargets()
+
+{
+	#if wxUSE_STD_IOSTREAM
+  wxLog *loggerconsole = new wxLogStream( &std::cout );
+  wxLogChain *logChain = new wxLogChain( loggerconsole );
+  #else
+  wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
+  wxLogChain *logChain = new wxLogChain( loggerwin );
+  #endif
+  logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+  logChain->SetLogLevel( wxLOG_Trace );
+  logChain->SetVerbose( true );
+}
 
 std::string i2s( int x )
 {

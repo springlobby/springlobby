@@ -168,6 +168,8 @@
 		<Unit filename="src/battleoptionstab.h" />
 		<Unit filename="src/battleroomlistctrl.cpp" />
 		<Unit filename="src/battleroomlistctrl.h" />
+		<Unit filename="src/battleroommmoptionstab.cpp" />
+		<Unit filename="src/battleroommmoptionstab.h" />
 		<Unit filename="src/battleroomtab.cpp" />
 		<Unit filename="src/battleroomtab.h" />
 		<Unit filename="src/boost/md5.cpp" />
@@ -178,6 +180,8 @@
 		<Unit filename="src/channellist.h" />
 		<Unit filename="src/chatlog.cpp" />
 		<Unit filename="src/chatlog.h" />
+		<Unit filename="src/chatoptionstab.cpp" />
+		<Unit filename="src/chatoptionstab.h" />
 		<Unit filename="src/chatpanel.cpp" />
 		<Unit filename="src/chatpanel.h" />
 		<Unit filename="src/connectwindow.cpp" />
@@ -257,6 +261,10 @@
 		<Unit filename="src/mainwindow.h" />
 		<Unit filename="src/mapctrl.cpp" />
 		<Unit filename="src/mapctrl.h" />
+		<Unit filename="src/mmoptionmodel.cpp" />
+		<Unit filename="src/mmoptionmodel.h" />
+		<Unit filename="src/mmoptionswrapper.cpp" />
+		<Unit filename="src/mmoptionswrapper.h" />
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonautotools.cpp" />
@@ -303,6 +311,8 @@
 		<Unit filename="src/singleplayertab.h" />
 		<Unit filename="src/socket.cpp" />
 		<Unit filename="src/socket.h" />
+		<Unit filename="src/spinctld.cpp" />
+		<Unit filename="src/spinctld.h" />
 		<Unit filename="src/spring.cpp" />
 		<Unit filename="src/spring.h" />
 		<Unit filename="src/springlobby.rc">

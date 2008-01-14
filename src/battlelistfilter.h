@@ -1,7 +1,9 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLELISTFILTER_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLELISTFILTER_H
 
+#if wxUSE_TOGGLEBTN
 #include <wx/tglbtn.h>
+#endif
 #include <wx/stattext.h>
 #include <wx/checkbox.h>
 #include <wx/sizer.h>
@@ -53,8 +55,11 @@ class BattleListFilter : public wxPanel
     bool m_activ;
 
 		BattleListTab* m_parent_battlelisttab;
-
+#if wxUSE_TOGGLEBTN
 		wxToggleButton* m_filter_show;
+#else
+		wxCheckBox* m_filter_show;
+#endif
 		wxStaticText* m_filter_text;
 
 		wxCheckBox* m_filter_activ;

@@ -321,7 +321,7 @@ void Ui::OpenWebBrowser( const wxString& url )
   {
     if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
     {
-      wxLogWarning( _T("can't launch browser: ") + sett().GetWebBrowserPath() );
+      wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().c_str() );
       customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
     }
 
@@ -400,6 +400,15 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     wxString msg = cmd.AfterFirst(' ').AfterFirst(' ');
     m_serv->SayPrivate( STD_STRING( user ), STD_STRING( msg ) );
     return true;
+  } else if ( cmd.BeforeFirst(' ').Lower() == _T("/channels") ) {
+    ChatPanel* panel = GetActiveChatPanel();
+    if ( panel == 0 ) {
+      ShowMessage( _("error"), _("no active chat panels open.") );
+      return false;
+    }
+    panel->StatusMessage(_("Active chat channels:"));
+    m_serv->RequestChannels();
+    return true;
   }
   return false;
 }
@@ -418,6 +427,7 @@ void Ui::ConsoleHelp( const wxString& topic )
     panel->ClientMessage( _("Global commands:") );
     panel->ClientMessage( _("  \"/away\" - Sets your status to away.") );
     panel->ClientMessage( _("  \"/back\" - Resets your away status.") );
+    panel->ClientMessage( _("  \"/channels\" - Lists currently active channels.") );
     panel->ClientMessage( _("  \"/help [topic]\" - Put topic if you want to know more specific information about a command.") );
     panel->ClientMessage( _("  \"/join channel [password] [,channel2 [password2]]\" - Join a channel.") );
     panel->ClientMessage( _("  \"/j\" - Alias to /join.") );
@@ -623,7 +633,12 @@ void Ui::OnChannelTopic( Channel& channel , const std::string user, const std::s
 
 void Ui::OnChannelList( const std::string& channel, const int& numusers )
 {
-
+  ChatPanel* panel = GetActiveChatPanel();
+  if ( panel == 0 ) {
+    ShowMessage( _("error"), _("no active chat panels open.") );
+    return;
+  }
+  panel->StatusMessage( WX_STRING(channel)  + wxString::Format( _("(%d users)"), numusers) );
 }
 
 
@@ -778,6 +793,14 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
   }
 }
 
+void Ui::OnBattleInfoUpdated( Battle& battle, const wxString& Tag )
+{
+  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
+    mw().GetJoinTab().UpdateCurrentBattle( Tag );
+  }
+}
+
 
 void Ui::OnJoinedBattle( Battle& battle )
 {
@@ -863,7 +886,18 @@ void Ui::OnSpringTerminated( bool success )
 
 void Ui::OnBattleStartRectsUpdated( Battle& battle )
 {
-  mw().GetJoinTab().UpdateCurrentBattle();
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
+}
+
+
+void Ui::OnBattleMapChanged( Battle& battle )
+{
+  mw().GetJoinTab().UpdateCurrentBattle( true );
+  if (battle.IsFounderMe())
+  {
+	  battle.CustomBattleOptions()->loadMapOptions(battle.GetMapName());
+	  mw().GetJoinTab().ReloadMMoptTab();
+  }
 }
 
 
@@ -875,7 +909,7 @@ void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
     br->GetChatPanel().StatusMessage( WX_STRING( unitname ) + _T(" disabled.") );
   }
   //mw().GetJoinTab().UpdateCurrentBattle();
-  mw().GetJoinTab().UpdateCurrentBattle(true);
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
@@ -886,7 +920,7 @@ void Ui::OnBattleEnableUnit( Battle& battle, const std::string& unitname )
     br->GetChatPanel().StatusMessage( WX_STRING(unitname) + _T(" disabled.") );
   }
   //mw().GetJoinTab().UpdateCurrentBattle();
-  mw().GetJoinTab().UpdateCurrentBattle(true);
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
@@ -896,7 +930,7 @@ void Ui::OnBattleEnableAllUnits( Battle& battle )
   if ( br != 0 ) {
     br->GetChatPanel().StatusMessage( _T("All units enabled.") );
   }
-  mw().GetJoinTab().UpdateCurrentBattle(true);
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 

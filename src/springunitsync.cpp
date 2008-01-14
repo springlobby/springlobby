@@ -384,7 +384,7 @@ wxArrayString SpringUnitSync::GetAIList()
 {
   wxLogDebugFunc( _T("") );
 
-  int ini = susynclib()->InitFindVFS( _T("AI/Bot-libs/*") + wxString(DLL_EXTENSION) );
+  int ini = susynclib()->InitFindVFS(  wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
 
   wxArrayString ret;
   wxString FileName;
@@ -423,7 +423,7 @@ wxString _GetCachedModUnitsFileName( const wxString& mod )
   wxString fname = WX_STRING( mod );
   fname.Replace( _T("."), _T("_") );
   fname.Replace( _T(" "), _T("_") );
-  wxLogMessage( path );
+  wxLogMessage( _T("%s"), path.c_str() );
   return path + fname + _T(".units");
 }
 

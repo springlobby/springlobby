@@ -7,6 +7,7 @@
 #include <wx/combobox.h>
 #include <wx/button.h>
 #include <wx/sizer.h>
+#include <wx/checkbox.h>
 #include <stdexcept>
 
 #include "battlelisttab.h"
@@ -37,10 +38,15 @@ BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 
   EVT_BUTTON              ( BATTLE_JOIN              , BattleListTab::OnJoin        )
   EVT_BUTTON              ( BATTLE_HOST              , BattleListTab::OnHost        )
-  EVT_TOGGLEBUTTON        ( BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter      )
   EVT_LIST_ITEM_ACTIVATED ( BATTLE_JOIN              , BattleListTab::OnListJoin    )
   EVT_LIST_ITEM_SELECTED  ( BLIST_LIST               , BattleListTab::OnSelect      )
   EVT_CHECKBOX            ( BATTLE_LIST_FILTER_ACTIV , BattleListTab::OnFilterActiv )
+#if  wxUSE_TOGGLEBTN
+  EVT_TOGGLEBUTTON        ( BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter  )
+#else
+  EVT_CHECKBOX            ( BATTLE_LIST_FILTER_BUTTON , BattleListTab::OnFilter )
+#endif
+ 
 
 END_EVENT_TABLE()
 
@@ -114,8 +120,12 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
   wxBoxSizer* m_buttons_sizer;
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
-
+  
+#if  wxUSE_TOGGLEBTN
 	m_filter_show = new wxToggleButton( this, BATTLE_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+#else
+	m_filter_show = new wxCheckBox( this, BATTLE_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+#endif
   m_buttons_sizer->Add( m_filter_show, 0, 0, 5 );
 
 	m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -448,7 +458,7 @@ void BattleListTab::DoJoin( Battle& battle )
   }
 
   if ( !battle.ModExists() ) {
-    if (customMessageBox( SL_MAIN_ICON,_("You need to download the mod before you can join this game.\n\nDo you want me to take you to the download page?"), _("Mod not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+    if (customMessageBox( SL_MAIN_ICON,_("You need to download the mod before you can join this game.\n\nDo you want me to take you to the download page?"), _("Mod not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString mod = battle.GetModName();
       m_ui.DownloadMod ( mod );
     }
@@ -456,7 +466,7 @@ void BattleListTab::DoJoin( Battle& battle )
   }
 
   if ( !battle.MapExists() ) {
-    if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to play in this game.\n\nDo you want me to take you to the download page?"), _("Map not awailable"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+    if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to play in this game.\n\nDo you want me to take you to the download page?"), _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString map = battle.GetMapName();
       m_ui.DownloadMap ( map );
     }

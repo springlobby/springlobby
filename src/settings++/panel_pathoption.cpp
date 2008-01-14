@@ -22,6 +22,7 @@
 #include "se_settings.h"
 #include "../nonportable.h"
 #include "../springunitsynclib.h"
+#include "../utils.h"
 
 
 #include "custom_dialogs.h"
@@ -35,17 +36,17 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 														"the \"Use this Path\" button to try again."),
 														wxDefaultPosition,wxSize(450,-1));
 
-	
+
 	paths_ok_btn = new wxButton(this,ID_PATH_OK_BTN,_T("Use this path"),wxDefaultPosition ,wxSize(-1,-1), wxBU_EXACTFIT);
 	usync_browse_btn = new wxButton(this, ID_PATH_USYNC_BTN, _T("Browse") );
 
-	
+
 
 	usync_ctrl = new wxTextCtrl(this,-1,OptionsHandler.getUsyncLoc(), wxDefaultPosition,wxSize(400,-1));
 	usync_ctrl->SetToolTip(_T("unitsync.so on linux, unitsync.dll on windows"));
 
 	usync_sizer =  new wxFlexGridSizer(1,5,5);
-	
+
 	parentSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* subSizerB = new wxBoxSizer(wxHORIZONTAL);
 	main_sizer = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Path settings")) ;
@@ -70,7 +71,7 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 
 void PathOptionPanel::SetUsyncPath(wxCommandEvent& event)
 {
-	wxFileDialog pic( this, _("Choose a unitsync library"), OptionsHandler.getSpringDir(), wxString(UNITSYNC_BIN), CHOOSE_DLL );
+  wxFileDialog pic( this, _("Choose an unitsync library"), OptionsHandler.getSpringDir(), _T("unitsync") + GetLibExtension(), wxString(_("Library")) + _T("(*") + GetLibExtension() + _T(")|*") + GetLibExtension() + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
 	  if ( pic.ShowModal() == wxID_OK )
 		  usync_ctrl->SetValue( pic.GetPath() );
 }
@@ -78,9 +79,9 @@ void PathOptionPanel::SetUsyncPath(wxCommandEvent& event)
 void PathOptionPanel::UsePaths(wxCommandEvent& event)
 {
 	OptionsHandler.setUsyncLoc(  usync_ctrl->GetValue() );
-		
+
 	loadUnitsync();
-	
+
 	if ( !(susynclib()->IsLoaded()) )
 	{
 		customMessageBox(SS_MAIN_ICON, _("SpringSettings is unable to load your unitsync library.\n"

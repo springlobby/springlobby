@@ -62,7 +62,7 @@ bool Spring::Run( Battle& battle )
 
   wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
 
-  wxLogMessage( _T("Path to script: ") + path + _T("script.txt") );
+  wxLogMessage( _T("Path to script: %sscript.txt"), path.c_str() );
 
   try {
 
@@ -80,7 +80,7 @@ bool Spring::Run( Battle& battle )
   }
 
   wxString cmd =  _T("\"") + WX_STRING(sett().GetSpringUsedLoc()) + _T("\" ") + path + _T("script.txt");
-  wxLogMessage( _T("cmd: ") + cmd );
+  wxLogMessage( _T("cmd: %s"), cmd.c_str() );
   wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
   if ( sett().UseOldSpringLaunchMethod() ) {
     if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
@@ -197,6 +197,8 @@ wxString Spring::GetScriptTxt( Battle& battle )
   std::vector<int> TeamConv, AllyConv, AllyRevConv;
   /// AllyRevConv.size() gives number of allies
 
+  wxStringTripleVec optlist;
+
   wxLogMessage(_T("1 numusers: ") + WX_STRING(i2s(battle.GetNumUsers())) );
 
   /// Fill ordered_users and sort it
@@ -210,7 +212,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
   /// process ordered users, convert teams and allys
   for(int i=0;i<int(ordered_users.size());++i){
-    wxLogMessage(_T("2 order ") + WX_STRING(i2s(ordered_users[i].order))+_T(" index ")+ WX_STRING(i2s(ordered_users[i].index)));
+    wxLogMessage(_T("2 order %d index %d"), ordered_users[i].order, ordered_users[i].index);
     User &user = battle.GetUser(ordered_users[i].index);
 
     if ( &user == &battle.GetMe() ) MyPlayerNum = i;
@@ -282,6 +284,17 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += wxString::Format( _T("\tDiminishingMMs=%d;\n"), battle.DimMMs()?1:0 );
   s += wxString::Format( _T("\tGhostedBuildings=%d;\n\n"), battle.GhostedBuildings()?1:0 );
 
+  battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t") + it->first + _T("=") + it->second.second + _T(";\n");
+  }
+  battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t") + it->first + _T("=") + it->second.second + _T(";\n");
+  }
+
   if ( battle.IsFounderMe() ) s += wxString::Format( _T("\tHostIP=localhost;\n") );
   else s += WX_STRING(("\tHostIP=" + battle.GetHostIp() + ";\n"));
   s += wxString::Format( _T("\tHostPort=%d;\n\n"), battle.GetHostPort() );
@@ -318,12 +331,15 @@ wxString Spring::GetScriptTxt( Battle& battle )
     int TeamLeader = -1;
 
     wxLogMessage(_T("10"));
-    for( user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {
+    for( user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {/// change: moved check if spectator above use of TeamConv array, coz TeamConv array does not include spectators.
+
+      // Make sure player is not spectator.
+      if ( battle.GetUser( ordered_users[tlf].index ).BattleStatus().spectator ) continue;
+
       // First Player That Is In The Team Is Leader.
       if ( TeamConv[battle.GetUser( ordered_users[tlf].index ).BattleStatus().team] == i ) {
 
-        // Make sure player is not spectator.
-        if ( battle.GetUser( ordered_users[tlf].index ).BattleStatus().spectator ) continue;
+
 
         // Assign as team leader.
         TeamLeader = tlf;
@@ -342,7 +358,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
            (double)(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().color_b/255.0)
          );
     std::setlocale(LC_NUMERIC, old_locale);
-    wxLogMessage( WX_STRING( i2s(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side) ) );
+    wxLogMessage( _T("%d"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side );
     s += WX_STRING(("\t\tSide=" + usync()->GetSideName( STD_STRING(battle.GetModName()), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side ) + ";\n"));
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().handicap );
     s +=  _T("\t}\n");
@@ -356,7 +372,19 @@ wxString Spring::GetScriptTxt( Battle& battle )
     BattleBot& bot = *battle.GetBot( ordered_bots[i].index );
 
     // Find Team Leader.
-    int TeamLeader = TeamConv[ battle.GetUser( bot.owner ).BattleStatus().team ];
+    int TeamLeader;
+    for(TeamLeader=0;TeamLeader<int(ordered_users.size());TeamLeader++){
+      if(&battle.GetUser(ordered_users[TeamLeader].index)==&battle.GetUser(bot.owner))goto leader_found;
+    }
+    TeamLeader=0;
+    wxLogMessage( _T("Internal error: team leader not found for bot! Using 0") );
+    leader_found:
+    /*
+    if(battle.GetUser( bot.owner ).BattleStatus().spectator){
+      TeamLeader=battle.GetUser( bot.owner ).BattleStatus().team;
+    }else{
+      TeamLeader = TeamConv[ battle.GetUser( bot.owner ).BattleStatus().team ];
+    }*/
 
     s += wxString::Format( _T("\t\tTeamLeader=%d;\n") ,TeamLeader );
     s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[bot.bs.ally] );
@@ -420,10 +448,31 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s += wxString::Format( _T("\t\tLimit%d=0;\n"), i );
     i++;
   }
-
+  s += _T("\t}\n");
   wxLogMessage( _T("15") );
 
+  s += _T("\t[mapoptions]\n");
+  s += _T("\t{\n");
+  battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
+  }
   s += _T("\t}\n");
+
+  wxLogMessage( _T("16") );
+
+  s += _T("\t[modoptions]");
+  s += _T("\t{\n");
+  battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
+  }
+  s += _T("\t}\n");
+
+  wxLogMessage( _T("17") );
+
   s += _T("}\n");
 
   if ( DOS_TXT ) {
@@ -449,7 +498,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     );
   }
 
-  wxLogMessage( _T("16") );
+  wxLogMessage( _T("18") );
   ds += _T("\n\nBots: \n\n");
   for ( std::list<BattleBot*>::size_type i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot = battle.GetBot(i);
@@ -472,7 +521,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
       bot->bs.color_b
     );
   }
-  wxLogMessage( _T("17") );
+  wxLogMessage( _T("19") );
 
   ds += _T("\n\nPlayerOrder: { ");
   for ( std::vector<UserOrder>::size_type i = 0; i < ordered_users.size(); i++ ) {
@@ -503,7 +552,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   if ( DOS_TXT ) {
     ds.Replace( _T("\n"), _T("\r\n"), true );
   }
-  wxLogMessage( _T("18") );
+  wxLogMessage( _T("20") );
 
   wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
 
@@ -511,7 +560,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   f.Write( _T("[Script Start]") + s );
   f.Write( ds );
   f.Close();
-  wxLogMessage( _T("19") );
+  wxLogMessage( _T("21") );
 
   return s;
 }
@@ -524,12 +573,13 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   int NumAllys = 0;
   int PlayerTeam = -1;
-  int starttype;
 
-  if ( usync()->VersionSupports( GF_XYStartPos ) ) starttype = 3;
-  else starttype = 0;
+  if ( usync()->VersionSupports( GF_XYStartPos ) && battle.GetStartType() == ST_Fixed ) battle.SetStartType( ST_Pick );
 
-  wxLogMessage( _T("StartPosType=") + WX_STRING( i2s( starttype ) ) );
+  wxStringTripleVec optlist;
+
+  wxLogMessage( _T("StartPosType=") + WX_STRING( i2s( battle.GetStartType() ) ) );
+
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot;
@@ -578,11 +628,11 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) { // TODO fix this when new Spring comes.
     BattleBot* bot;
-    if ( starttype == 3) bot = battle.GetBot( i );
+    if ( battle.GetStartType() == 3) bot = battle.GetBot( i );
     else bot = battle.GetBotByStartPosition( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i );
-    if ( starttype == 3 ){
+    if ( battle.GetStartType() == 3 ){
       s += wxString::Format( _T("\t\tStartPosX=%d;\n"), bot->posx );
       s += wxString::Format( _T("\t\tStartPosZ=%d;\n"), bot->posy );
     }
@@ -630,9 +680,26 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
     s += wxString::Format( _T("\t\tLimit%d=0;\n"), i );
     i++;
   }
-
-
   s += _T("\t}\n");
+
+  s += _T("\t[mapoptions]\n");
+  s += _T("\t{\n");
+  battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
+  }
+  s += _T("\t}\n");
+
+  s += _T("\t[modoptions]");
+  s += _T("\t{\n");
+  battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
+  }
+  s += _T("\t}\n");
+
   s += _T("}\n");
 
   if ( DOS_TXT ) {

@@ -116,6 +116,8 @@ springlobby_SOURCES = \
 	src/channel.h \
 	src/channellist.cpp \
 	src/channellist.h \
+	src/chatoptionstab.cpp \
+	src/chatoptionstab.h \
 	src/chatpanel.cpp \
 	src/chatpanel.h \
 	src/connectwindow.cpp \
@@ -215,8 +217,8 @@ springlobby_SOURCES = \
 	src/images/rank2.xpm \
 	src/images/rank3.xpm \
 	src/images/rank4.xpm \
-        src/images/rank5.xpm \
-        src/images/rank6.xpm \
+	src/images/rank5.xpm \
+	src/images/rank6.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
 	src/images/singleplayer_icon.xpm \
@@ -475,7 +477,16 @@ springlobby_SOURCES = \
 	src/customlistctrl.h \
 	src/customlistctrl.cpp \
 	src/customrichtextctrl.h \
-	src/customrichtextctrl.cpp
+	src/customrichtextctrl.cpp \
+	src/mmoptionmodel.h \
+	src/mmoptionmodel.cpp \
+	src/mmoptionswrapper.h \
+	src/mmoptionswrapper.cpp \
+	src/battleroommmoptionstab.h \
+	src/battleroommmoptionstab.cpp \
+	src/thingdef.h \
+	src/spinctld.h \
+	src/spinctld.cpp
 
 
 # TODO keep only a single list instead of duplicating the lists below
