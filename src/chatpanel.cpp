@@ -757,7 +757,7 @@ void ChatPanel::Say( const wxString& message )
   }
   while ( lines.HasMoreTokens() ) {
     wxString line = lines.GetNextToken();
-    wxLogMessage(_T("line: ") + line );
+    wxLogMessage(_T("line: %s"), line.c_str() );
 
     if ( line.Find('/') == 0 ) {
       if ( m_ui.ExecuteSayCommand( line ) ) return;

@@ -62,7 +62,7 @@ bool Spring::Run( Battle& battle )
 
   wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
 
-  wxLogMessage( _T("Path to script: ") + path + _T("script.txt") );
+  wxLogMessage( _T("Path to script: %sscript.txt"), path.c_str() );
 
   try {
 
@@ -80,7 +80,7 @@ bool Spring::Run( Battle& battle )
   }
 
   wxString cmd =  _T("\"") + WX_STRING(sett().GetSpringUsedLoc()) + _T("\" ") + path + _T("script.txt");
-  wxLogMessage( _T("cmd: ") + cmd );
+  wxLogMessage( _T("cmd: %s"), cmd.c_str() );
   wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
   if ( sett().UseOldSpringLaunchMethod() ) {
     if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
@@ -197,7 +197,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   std::vector<int> TeamConv, AllyConv, AllyRevConv;
   /// AllyRevConv.size() gives number of allies
 
-  wxLogMessage(_T("1 numusers: ") + WX_STRING(i2s(battle.GetNumUsers())) );
+  wxLogMessage(_T("1 numusers: %d") + battle.GetNumUsers() );
 
   /// Fill ordered_users and sort it
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ){
@@ -210,7 +210,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
   /// process ordered users, convert teams and allys
   for(int i=0;i<int(ordered_users.size());++i){
-    wxLogMessage(_T("2 order ") + WX_STRING(i2s(ordered_users[i].order))+_T(" index ")+ WX_STRING(i2s(ordered_users[i].index)));
+    wxLogMessage(_T("2 order %d index %d"), ordered_users[i].order, ordered_users[i].index);
     User &user = battle.GetUser(ordered_users[i].index);
 
     if ( &user == &battle.GetMe() ) MyPlayerNum = i;
@@ -345,7 +345,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
            (double)(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().color_b/255.0)
          );
     std::setlocale(LC_NUMERIC, old_locale);
-    wxLogMessage( WX_STRING( i2s(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side) ) );
+    wxLogMessage( _T("%d"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side );
     s += WX_STRING(("\t\tSide=" + usync()->GetSideName( STD_STRING(battle.GetModName()), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side ) + ";\n"));
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().handicap );
     s +=  _T("\t}\n");
@@ -542,7 +542,7 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   if ( usync()->VersionSupports( GF_XYStartPos ) && battle.GetStartType() == ST_Fixed ) battle.SetStartType( ST_Pick );
 
-  wxLogMessage( _T("StartPosType=") + WX_STRING( i2s( battle.GetStartType() ) ) );
+  wxLogMessage( _T("StartPosType=%d"), battle.GetStartType() );
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot;

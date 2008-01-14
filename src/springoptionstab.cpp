@@ -19,6 +19,7 @@
 #include <wx/dir.h>
 #include <wx/file.h>
 #include <wx/stdpaths.h>
+#include <wx/scrolbar.h>        // added for scroll bar powers
 
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
@@ -56,7 +57,7 @@ BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
 END_EVENT_TABLE()
 
 
-    SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
+    SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),m_ui(ui)
 {
   m_dir_text = new wxStaticText( this, -1, _("Spring directory") );
   m_dir_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringDir()) );
@@ -168,6 +169,9 @@ END_EVENT_TABLE()
   m_main_sizer->AddStretchSpacer();
 
   SetSizer( m_main_sizer );
+
+  SetScrollRate( 3, 3 );
+
   Layout();
 
   DoRestore();
@@ -558,3 +562,4 @@ wxString SpringOptionsTab::AutoFindChatLogDir( const wxString& def )
 {
   return  AutoFindSpringDir( m_chatlog_edit->GetValue() )+_("logs");
 }
+
