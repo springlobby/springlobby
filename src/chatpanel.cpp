@@ -88,14 +88,14 @@ BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
   EVT_MENU        ( CHAT_MENU_US_MODERATOR_MUTE_1440, ChatPanel::OnUserMenuModeratorMute1440 )
   EVT_MENU        ( CHAT_MENU_US_MODERATOR_UNMUTE, ChatPanel::OnUserMenuModeratorUnmute )
   EVT_MENU        ( CHAT_MENU_US_MODERATOR_RING, ChatPanel::OnUserMenuModeratorRing )
- 
+
   EVT_KILL_FOCUS  ( ChatPanel::OnFocusLost )
 
 END_EVENT_TABLE()
 
 void ChatPanel::nop(wxMouseEvent& eve)
 {
-	
+
 }
 
 void ChatPanel::OnMouseDown( wxMouseEvent& event )
@@ -208,7 +208,7 @@ void ChatPanel::CreateControls( )
   // Creating ui elements
   m_chatlog_text = new customRichTextCtrl( m_chat_panel, CHAT_LOG, _T(""), wxDefaultPosition, wxDefaultSize,
                              wxRE_MULTILINE | wxRE_READONLY );
-  
+
   m_say_text = new customRichTextCtrl( m_chat_panel, CHAT_TEXT, _T(""), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), wxTE_PROCESS_ENTER );
   m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _("Send"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
@@ -1356,11 +1356,11 @@ void ChatPanel::OnFocusLost( wxFocusEvent& event)
 	wxColour col;
 	col.Set( 240,0,0 );
 	wxString message = _T("----------------------------------------------------------------------------------------");
-	
+
 	if ( draw_focus_lost_seperation && !m_chatlog_text->GetValue().EndsWith( (message + _T("\n") ) ) )
-		OutputLine( message, col );
+		OutputLine( message, col, sett().GetChatFont());
 	// m_chatlog_text->OnFocusGained(event);
-	 
+
 	 wxWindow* window = event.GetWindow();
 	 if (window != 0)
 	 {
@@ -1368,9 +1368,9 @@ void ChatPanel::OnFocusLost( wxFocusEvent& event)
 	 }
 	 else {
 		 this->GetParent()->SetFocus();
-		//event.Skip(); 
+		//event.Skip();
 	 }
-	 
-	 event.Skip(); 
+
+	 event.Skip();
 }
 
