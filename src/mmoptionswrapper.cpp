@@ -70,7 +70,6 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag,wxString mapname)
 			try
 			{
 				count = susynclib()->GetModOptionCount();
-				customMessageBox(SL_MAIN_ICON,wxString::Format(_T("%d"),count),_T("Mod option count"),wxOK);
 			}
 			catch(...)
 			{
@@ -382,7 +381,7 @@ bool mmOptionsWrapper::reloadMapOptions(wxString mapname)
 
 wxString mmOptionsWrapper::GetNameListOptValue(wxString key, GameOption flag)
 {
-	OptionType optType; 
+	OptionType optType;
 	if (flag < ModOption || flag > LastOption - 1)
 		return wxEmptyString;
 	else if ( keyExists(key,flag,false,&optType) )
@@ -392,14 +391,14 @@ wxString mmOptionsWrapper::GetNameListOptValue(wxString key, GameOption flag)
 			return ( (*m_listMaps[flag])[key].cbx_choices[ (*m_listMaps[flag])[key].cur_choice_index ] );
 		}
 	}
-	
+
 	// at this point retrieval failed
 	return wxEmptyString;
 }
 
 wxString mmOptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag)
 {
-	OptionType optType; 
+	OptionType optType;
 	if (flag < ModOption || flag > LastOption - 1)
 		return wxEmptyString;
 	else if ( keyExists(optkey,flag,false,&optType) )
@@ -413,7 +412,7 @@ wxString mmOptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemn
 			}
 		}
 	}
-	
+
 	// at this point retrieval failed
 	return wxEmptyString;
 }

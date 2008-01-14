@@ -42,15 +42,15 @@ Differences to wxSpinCtrl:
 #include <wx/spinctrl.h> // for EVT_SPINCTRL
 #include "thingdef.h"
 
-class WXDLLEXPORT wxTextCtrl;
-class WXDLLIMPEXP_THINGS wxSpinCtrlDblTextCtrl;
+class wxTextCtrl;
+class wxSpinCtrlDblTextCtrl;
 
 enum
 {
     wxSPINCTRLDBL_AUTODIGITS = -1  // try to autocalc the # of digits
 };
 
-class WXDLLIMPEXP_THINGS wxSpinCtrlDbl: public wxControl
+class wxSpinCtrlDbl: public wxControl
 {
 public:
     wxSpinCtrlDbl() : wxControl() { Init(); }
