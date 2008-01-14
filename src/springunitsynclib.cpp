@@ -40,11 +40,11 @@ void SpringUnitSyncLib::Load( const wxString& path )
   m_path = path;
 
   // Load the library.
-  wxLogMessage( _T("Loading from: ") + path );
+  wxLogMessage( _T("Loading from: %s"), path.mb_str());
 
   // Check if library exists
   if ( !wxFileName::FileExists( path ) ) {
-    wxLogError( _T("File not found: ") + path );
+    wxLogError( _T("File not found: %s"), path.mb_str() );
     return;
   }
 
@@ -218,10 +218,10 @@ void* SpringUnitSyncLib::_GetLibFuncPtr( const wxString& name )
   ASSERT_LOGIC( m_libhandle != 0, _T("Unitsync not loaded") );
   if ( m_libhandle->HasSymbol( name ) ){
     void* ptr = m_libhandle->GetSymbol( name );
-    if ( !ptr ) wxLogMessage( _T("Couldn't load ") + name + _T(" from unitsync library") );
+    if ( !ptr ) wxLogMessage( _T("Couldn't load %s from unitsync library"),name.mb_str() );
     return ptr;
   }
-  wxLogMessage( _T("Couldn't load ") + name + _T(" from unitsync library") );
+  wxLogMessage( _T("Couldn't load %s from unitsync library"), name.mb_str() );
   return 0;
 }
 
@@ -333,7 +333,7 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
   const int width = 1024;
   //wxImage ret( height, width );
 
-  wxLogMessage( mapFileName );
+  wxLogMessage( _T("%s"), mapFileName.mb_str() );
 
   unsigned short* colours = (unsigned short*)m_get_minimap( STD_STRING(mapFileName).c_str(), 0 ); // miplevel should not be 10 ffs
   ASSERT_RUNTIME( colours, _T("Get minimap failed") );
