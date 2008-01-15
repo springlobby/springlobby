@@ -14,11 +14,11 @@ class wxPoint;
 class wxString;
 class wxTextCtrl;
 
-#define SL_MAIN_WINDOW_PTR CustomMessageBox::getLobbypointer() 
+#define SL_MAIN_WINDOW_PTR CustomMessageBox::getLobbypointer()
 #define SE_FRAME_PTR CustomMessageBox::getSettingspointer()
 
 int customMessageBox(int whichIcon , const wxString& message,
-        const wxString& caption = wxMessageBoxCaptionStr, 
+        const wxString& caption = wxMessageBoxCaptionStr,
         long style = wxOK|wxCENTRE,  const int x = -1, const int y = -1 );
 
 class CustomMessageBox : public wxMessageDialog
@@ -32,7 +32,7 @@ public:
 	static void setSettingspointer(wxWindow*);
 	static wxWindow* getLobbypointer();
 	static wxWindow* getSettingspointer();
-	
+
 protected:
 	static wxWindow* m_settingsWindow;
 	static wxWindow* m_lobbyWindow;
@@ -44,7 +44,7 @@ public:
 	CreditsDialog(wxWindow* parent,wxString title, int whichIcon);
 	virtual ~CreditsDialog();
 	void AddCredit(wxString,wxString);
-	
+
 private:
 	wxTextCtrl* text_ctrl;
 };
