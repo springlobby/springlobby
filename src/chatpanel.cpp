@@ -31,11 +31,6 @@
 #include "chatlog.h"
 #include "settings.h"
 
-
-
-//could be read from config, so user gets to decide
-const bool draw_focus_lost_seperation = true;
-
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 
   EVT_TEXT_ENTER  ( CHAT_TEXT, ChatPanel::OnSay   )

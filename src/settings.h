@@ -16,7 +16,6 @@
 #define DEFSETT_SPRING_PORT 8452
 
 class wxConfigBase;
-typedef int SoundType;
 class wxFont;
 
 
