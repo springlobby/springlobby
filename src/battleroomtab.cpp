@@ -369,7 +369,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
     bs.order = 0;
     bs.handicap = 0;
     m_battle.GetFreeColour( bs.color_r, bs.color_g, bs.color_b, false );
-    m_ui.GetServer().AddBot( m_battle.GetBattleId(), STD_STRING(dlg.GetNick()), m_battle.GetMe().GetNick(), bs, STD_STRING(dlg.GetAI().BeforeLast('.').AfterLast('/') ));
+    m_ui.GetServer().AddBot( m_battle.GetBattleId(), STD_STRING(dlg.GetNick()), m_battle.GetMe().GetNick(), bs, STD_STRING(dlg.GetAI() ));
   }
 }
 
