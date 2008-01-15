@@ -285,6 +285,8 @@ wxString mmOptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag)
 			return  (*m_stringMaps[modmapFlag])[key].value ;
 		case opt_list:
 			return (*m_listMaps[modmapFlag])[key].value;
+        case opt_undefined:
+            return wxEmptyString;
 		}
 	}
 
