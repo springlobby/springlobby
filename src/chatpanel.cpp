@@ -89,14 +89,8 @@ BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
   EVT_MENU        ( CHAT_MENU_US_MODERATOR_UNMUTE, ChatPanel::OnUserMenuModeratorUnmute )
   EVT_MENU        ( CHAT_MENU_US_MODERATOR_RING, ChatPanel::OnUserMenuModeratorRing )
 
-  EVT_KILL_FOCUS  ( ChatPanel::OnFocusLost )
-
 END_EVENT_TABLE()
 
-void ChatPanel::nop(wxMouseEvent& eve)
-{
-
-}
 
 void ChatPanel::OnMouseDown( wxMouseEvent& event )
 {
@@ -206,10 +200,10 @@ void ChatPanel::CreateControls( )
   }
 
   // Creating ui elements
-  m_chatlog_text = new customRichTextCtrl( m_chat_panel, CHAT_LOG, _T(""), wxDefaultPosition, wxDefaultSize,
-                             wxRE_MULTILINE | wxRE_READONLY );
+  m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T(""), wxDefaultPosition, wxDefaultSize,
+                                wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL);
 
-  m_say_text = new customRichTextCtrl( m_chat_panel, CHAT_TEXT, _T(""), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), wxTE_PROCESS_ENTER );
+  m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T(""), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), wxTE_PROCESS_ENTER );
   m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _("Send"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
 
   // Adding elements to sizers
@@ -1348,33 +1342,5 @@ void ChatPanel::OnUserMenuModeratorUnmute( wxCommandEvent& event )
 void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event )
 {
   m_ui.GetServer().Ring( GetSelectedUser()->GetNick() );
-}
-
-void ChatPanel::OnFocusLost( wxFocusEvent& event)
-{
-	//maybe differentiate the origin
-    wxWindow* window = event.GetWindow();
-	 if (window ==  this->GetParent())
-	 {
-		 event.Skip();
-	 }
-	 else {
-        wxString message = _T("----------------------------------------------------------------------------------------");
-
-        if ( draw_focus_lost_seperation && !m_chatlog_text->GetValue().EndsWith( (message + _T("\n") ) ) )
-            OutputLine( message, sett().GetChatColorHighlight(), sett().GetChatFont());
-        // m_chatlog_text->OnFocusGained(event);
-
-         wxWindow* window = event.GetWindow();
-         if (window != 0)
-         {
-             window->SetFocus();
-         }
-         else {
-             this->GetParent()->SetFocus();
-            //event.Skip();
-         }
-	 }
-
 }
 

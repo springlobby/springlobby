@@ -11,7 +11,6 @@ class wxSizeEvent;
 class wxBoxSizer;
 class wxSplitterWindow;
 class wxTextCtrl;
-class customRichTextCtrl;
 class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
@@ -24,8 +23,6 @@ class Battle;
 class Ui;
 class wxMenu;
 class wxMouseEvent;
-class wxFocusEvent;
-class wxRichTextCtrl;
 
 enum ChatPanelType {
   CPT_Channel,
@@ -144,7 +141,6 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorMute1440( wxCommandEvent& event );
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
-    void OnFocusLost( wxFocusEvent& event );
 
   protected:
     void _SetChannel( Channel* channel );
@@ -163,8 +159,8 @@ class ChatPanel : public wxPanel
     wxPanel* m_chat_panel;      //!< Panel containing the chat. Only used when nicklist is visible.
     wxPanel* m_nick_panel;      //!< Panel containing the nicklist.
 
-    customRichTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
-    customRichTextCtrl* m_say_text;     //!< The say textcontrol.
+    wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
+    wxTextCtrl* m_say_text;     //!< The say textcontrol.
 
     NickListCtrl* m_nicklist;   //!< The nicklist.
     wxComboBox* m_nick_filter;  //!< The filter combo.
@@ -191,7 +187,7 @@ class ChatPanel : public wxPanel
     void CreateControls( );
     void CreatePopup();
     wxMenu* CreateNickListMenu();
-    void nop(wxMouseEvent& eve);
+
     DECLARE_EVENT_TABLE();
 };
 
