@@ -31,18 +31,6 @@
 #include "server.h"
 #include "iconimagelist.h"
 
-#define Opt_Pos_Size 0
-#define Opt_Pos_Windspeed 1
-#define Opt_Pos_Tidal 2
-
-#define Opt_Pos_Startpos 4
-#define Opt_Pos_Gameend 5
-#define Opt_Pos_LimitDgun 6
-#define Opt_Pos_Startmetal 7
-#define Opt_Pos_Startenergy 8
-#define Opt_Pos_Maxunits 9
-#define Opt_Pos_Restrictions 10
-
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
   EVT_BUTTON ( BROOM_START, BattleRoomTab::OnStart )
@@ -132,19 +120,49 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_opts_list->SetColumnWidth( 0, 85 );
   m_opts_list->SetColumnWidth( 1, 60 );
 
-  m_opts_list->InsertItem( Opt_Pos_Size, _("Size") );
-  m_opts_list->InsertItem( Opt_Pos_Windspeed, _("Windspeed") );
-  m_opts_list->InsertItem( Opt_Pos_Tidal, _("Tidal strength") );
+  long pos = 0;
 
-  m_opts_list->InsertItem( 3, wxEmptyString );
+  m_opts_list->InsertItem( pos, _("Size") );
+  m_opt_list_map[ _("Size") ] = pos++;
+  m_opts_list->InsertItem( pos , _("Windspeed") );
+  m_opt_list_map[ _("Windspeed") ] = pos++;
+  m_opts_list->InsertItem( pos, _("Tidal strength") );
+  m_opt_list_map[ _("Tidal strength") ] = pos++;
 
-  m_opts_list->InsertItem( Opt_Pos_Startpos, _("Startpos") );
-  m_opts_list->InsertItem( Opt_Pos_Gameend, _("Game end") );
-  m_opts_list->InsertItem( Opt_Pos_LimitDgun, _("Limit D-gun") );
-  m_opts_list->InsertItem( Opt_Pos_Startmetal, _("Start metal") );
-  m_opts_list->InsertItem( Opt_Pos_Startenergy, _("Start energy") );
-  m_opts_list->InsertItem( Opt_Pos_Maxunits, _("Max units") );
-  m_opts_list->InsertItem( Opt_Pos_Restrictions, _("Restrictions") );
+  m_opts_list->InsertItem( pos++, wxEmptyString );
+
+  m_opts_list->InsertItem( pos, _("Startpos") );
+  m_opt_list_map[ _T("startpostype") ] = pos++;
+  UpdateBattleInfo( wxString::Format(_T("%d_startpostype"), EngineOption ) );
+  m_opts_list->InsertItem( pos, _("Game end") );
+  m_opt_list_map[  _T("gamemode") ] = pos++;
+  UpdateBattleInfo( wxString::Format(_T("%d_gamemode"), EngineOption ) );
+  m_opts_list->InsertItem( pos, _("Limit D-gun") );
+  m_opt_list_map[ _T("limitdgun") ] = pos++;
+  UpdateBattleInfo( wxString::Format(_T("%d_limitdgun"), EngineOption ) );
+  m_opts_list->InsertItem( pos, _("Start metal") );
+  m_opt_list_map[ _T("startmetal") ] = pos++;
+  UpdateBattleInfo( wxString::Format(_T("%d_startmetal"), EngineOption ) );
+  m_opts_list->InsertItem( pos, _("Start energy") );
+  m_opt_list_map[ _T("startenergy") ] = pos++;
+  UpdateBattleInfo( wxString::Format(_T("%d_startenergy"), EngineOption ) );
+  m_opts_list->InsertItem( pos, _("Max units") );
+  m_opt_list_map[ _T("maxunits") ] = pos++;
+  UpdateBattleInfo( wxString::Format(_T("%d_maxunits"), EngineOption ) );
+  m_opts_list->InsertItem( pos, _("Restrictions") );
+  m_opt_list_map[ _T("restrictions") ] = pos++;
+  UpdateBattleInfo( wxString::Format(_T("%d_restrictions"), EngineOption ) );
+
+  // add map/mod options to the list
+  m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetModName() );
+  m_battle.CustomBattleOptions()->loadOptions( MapOption, m_battle.GetMapName() );
+
+  m_opts_list->InsertItem( pos++, wxEmptyString );
+  pos = AddMMOptionsToList( pos, ModOption );
+  m_opts_list->InsertItem( pos++, wxEmptyString );
+  m_map_opts_index = pos;
+  pos = AddMMOptionsToList( pos, MapOption );
+
 
   // Create Sizers
   m_players_sizer = new wxBoxSizer( wxVERTICAL );
@@ -200,7 +218,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   SetSizer( m_main_sizer );
   Layout();
 
-  UpdateBattleInfo();
+  UpdateBattleInfo( true );
 
   m_splitter->SetMinimumPaneSize( 240 );
 
@@ -253,35 +271,69 @@ wxString _GetGameTypeStr( GameType t )
 }
 
 
-void BattleRoomTab::UpdateBattleInfo()
+void BattleRoomTab::UpdateBattleInfo( bool MapChanged )
 {
-  try {
-    ASSERT_RUNTIME( m_battle.MapExists(), _T("Map does not exist.") );
-    UnitSyncMap map = m_battle.Map();
-    m_map_lbl->SetLabel( RefineMapname( WX_STRING(map.name) ) );
-    m_opts_list->SetItem( Opt_Pos_Size, 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
-    m_opts_list->SetItem( Opt_Pos_Windspeed, 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind) );
-    m_opts_list->SetItem( Opt_Pos_Tidal, 1, wxString::Format( _T("%d"), map.info.tidalStrength) );
-    //    m_opts_list->SetItem( 0, 1,  );
-  } catch (...) {
-    m_map_lbl->SetLabel( m_battle.GetMapName() );
-    m_opts_list->SetItem( Opt_Pos_Size, 1, _T("?x?") );
-    m_opts_list->SetItem( Opt_Pos_Windspeed, 1, _T("?-?") );
-    m_opts_list->SetItem( Opt_Pos_Tidal, 1, _T("?") );
-  }
+  if ( MapChanged ) /// the map has been changed
+  {
+    try { /// updates map info summary
+      ASSERT_RUNTIME( m_battle.MapExists(), _T("Map does not exist.") );
+      UnitSyncMap map = m_battle.Map();
+      m_map_lbl->SetLabel( RefineMapname( WX_STRING(map.name) ) );
+      m_opts_list->SetItem( m_opt_list_map[ _("Size") ] , 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
+      m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind) );
+      m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, wxString::Format( _T("%d"), map.info.tidalStrength) );
+      //    m_opts_list->SetItem( 0, 1,  );
+    } catch (...) {
+      m_map_lbl->SetLabel( RefineMapname( m_battle.GetMapName() ) );
+      m_opts_list->SetItem( m_opt_list_map[ _("Size") ], 1, _T("?x?") );
+      m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, _T("?-?") );
+      m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, _T("?") );
+    }
+  ///delete any eventual map option from the list and add options of the new map
+  for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
+  m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetModName() );
+  AddMMOptionsToList( m_map_opts_index, MapOption );
 
-  m_opts_list->SetItem( Opt_Pos_Startpos, 1, _GetStartPosStr( m_battle.GetStartType() ) );
-  m_opts_list->SetItem( Opt_Pos_Gameend, 1, _GetGameTypeStr( m_battle.GetGameType() ) );
-  m_opts_list->SetItem( Opt_Pos_LimitDgun, 1, bool2yn( m_battle.LimitDGun() ) );
-  m_opts_list->SetItem( Opt_Pos_Startmetal, 1, wxString::Format( _T("%d"), m_battle.GetStartMetal() ) );
-  m_opts_list->SetItem( Opt_Pos_Startenergy, 1, wxString::Format( _T("%d"), m_battle.GetStartEnergy() ) );
-  m_opts_list->SetItem( Opt_Pos_Maxunits, 1, wxString::Format( _T("%d"), m_battle.GetMaxUnits() ) );
-  m_opts_list->SetItem( Opt_Pos_Restrictions, 1, bool2yn( m_battle.GetNumDisabledUnits() > 0 ) );
+  }
 
   m_lock_chk->SetValue( m_battle.IsLocked() );
   m_minimap->UpdateMinimap();
 }
 
+
+void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
+{
+  long type;
+  Tag.BeforeFirst( '_' ).ToLong( &type );
+  wxString key = Tag.AfterFirst( '_' );
+  long index = m_opt_list_map[ key ];
+  wxString value;
+  if ( type == EngineOption )
+  {
+    if ( key == _T("startpostype") ) value = _GetStartPosStr( m_battle.GetStartType() );
+    if ( key == _T("gamemode") ) value = _GetGameTypeStr( m_battle.GetGameType() );
+    if ( key == _T("limitdgun") ) value = bool2yn( m_battle.LimitDGun() );
+    if ( key == _T("startmetal") ) value = wxString::Format( _T("%d"), m_battle.GetStartMetal() );
+    if ( key == _T("startenergy") ) value =  wxString::Format( _T("%d"), m_battle.GetStartEnergy() );
+    if ( key == _T("maxunits") ) value = wxString::Format( _T("%d"), m_battle.GetMaxUnits() );
+    if ( key == _T("restrictions") ) value = bool2yn( m_battle.GetNumDisabledUnits() > 0 );
+    if ( !value.IsEmpty() ) m_opts_list->SetItem( index, 1, value );
+  }
+  if ( type == MapOption || type == ModOption )
+  {
+    OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( key );
+    if ( DataType == opt_bool )
+    {
+      long boolval;
+      m_battle.CustomBattleOptions()->getSingleValue( key, type ).ToLong( &boolval );
+      m_opts_list->SetItem( index, 1, bool2yn( boolval ) );
+    }
+    else if ( DataType == opt_float || DataType == opt_list || DataType == opt_string )
+    {
+      m_opts_list->SetItem( index, 1, m_battle.CustomBattleOptions()->getSingleValue( key, type ) );
+    }
+  }
+}
 
 BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
 {
@@ -486,3 +538,26 @@ void BattleRoomTab::OnUnitSyncReloaded()
   m_battle.SendMyBattleStatus(); // This should reset sync status.
 }
 
+long BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
+{
+  wxStringTripleVec optlist;
+  m_battle.CustomBattleOptions()->getOptions( &optlist, optFlag );
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    m_opts_list->InsertItem( pos, it->second.first );
+    m_opt_list_map[ it->first ] = pos;
+    OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( it->first );
+    wxString value;
+    if ( DataType == opt_bool )
+    {
+      long boolval;
+      it->second.second.ToLong( &boolval );
+      value = bool2yn( boolval );
+    }
+    else if ( DataType == opt_float || DataType == opt_list || DataType == opt_string )
+      value = it->second.second;
+    m_opts_list->SetItem( pos, 1, value );
+    pos++;
+  }
+  return pos;
+}

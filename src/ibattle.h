@@ -9,6 +9,9 @@
 #include "iunitsync.h"
 #include "user.h"
 
+
+class mmOptionsWrapper;
+
 typedef int HostInfo;
 
 typedef int StartType;
@@ -117,6 +120,7 @@ class IBattle
     virtual bool GhostedBuildings() { return m_ghostedbuildings; }
 
     virtual void SendHostInfo( HostInfo update ) = 0;
+    virtual void SendHostInfo( const wxString& Tag ) = 0;
 
     virtual BattleBot* GetBotByStartPosition( unsigned int startpos ) { return 0; };
     virtual BattleBot* GetBot( unsigned int index ) = 0;
@@ -138,6 +142,10 @@ class IBattle
 
     virtual std::vector<BattleStartRect*>::size_type GetNumRects() =0;
 
+    virtual mmOptionsWrapper* CustomBattleOptions() =0;
+
+    wxArrayString ChangedOptions;
+
   protected:
 
     bool m_map_loaded;
@@ -149,7 +157,7 @@ class IBattle
     wxString m_map_name;
     wxString m_mod_name;
 
-    int m_startmetal;
+        int m_startmetal;
     int m_startenergy;
     int m_maxunits;
 

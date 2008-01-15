@@ -5,6 +5,8 @@
 #include <wx/bmpbuttn.h>
 
 #include "iunitsync.h"
+#include "mmoptionswrapper.h"
+#include <map>
 
 class Ui;
 class Battle;
@@ -23,6 +25,7 @@ class wxCheckBox;
 class wxListCtrl;
 class MapCtrl;
 
+typedef std::map<wxString,long> OptionListMap;
 
 class BattleRoomTab : public wxPanel
 {
@@ -39,7 +42,8 @@ class BattleRoomTab : public wxPanel
 
     bool IsHosted();
 
-    void UpdateBattleInfo();
+    void UpdateBattleInfo( bool MapChanged = false );
+    void UpdateBattleInfo( const wxString& Tag );
 
     void OnStart( wxCommandEvent& event );
     void OnLeave( wxCommandEvent& event );
@@ -61,10 +65,18 @@ class BattleRoomTab : public wxPanel
 
     void OnUnitSyncReloaded();
 
+
   protected:
+
+    long AddMMOptionsToList( long pos, GameOption optFlag );
+
     Ui& m_ui;
     Battle& m_battle;
     UnitSyncMap m_map;
+
+    long m_map_opts_index;
+
+    OptionListMap m_opt_list_map;
 
     wxBoxSizer* m_players_sizer;
     wxBoxSizer* m_player_sett_sizer;
