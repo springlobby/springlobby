@@ -476,8 +476,6 @@ springlobby_SOURCES = \
 	src/images/empty.xpm \
 	src/customlistctrl.h \
 	src/customlistctrl.cpp \
-	src/customrichtextctrl.h \
-	src/customrichtextctrl.cpp \
 	src/mmoptionmodel.h \
 	src/mmoptionmodel.cpp \
 	src/mmoptionswrapper.h \

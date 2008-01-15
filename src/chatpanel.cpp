@@ -16,7 +16,6 @@
 #include <wx/menu.h>
 #include <wx/utils.h>
 #include <wx/event.h>
-#include "customrichtextctrl.h"
 #include <wx/notebook.h>
 
 
@@ -32,7 +31,7 @@
 #include "chatlog.h"
 #include "settings.h"
 
-#include <wx/richtext/richtextctrl.h>
+
 
 //could be read from config, so user gets to decide
 const bool draw_focus_lost_seperation = true;

@@ -131,12 +131,6 @@ class Settings
 
     void SetDisplayJoinLeave( bool display, const wxString& channel  );
     bool GetDisplayJoinLeave( const wxString& channel );
-    
-    void SetEnableSounds(bool enable);
-    bool GetEnableSounds();
-    void SetSoundFilename (wxString& filename, SoundType soundtype);
-    wxString GetSoundFilename ( SoundType soundtype );
-    void SetDefaultSounds();
 
     wxColour GetChatColorNormal();
     void SetChatColorNormal( wxColour value );
