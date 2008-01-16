@@ -5,7 +5,7 @@
 #include <wx/log.h>
 
 #ifndef __WXDEBUG__
-#define wxLogDebugFunc( params ) wxLogVerbose( wxString(__FUNCTION__, wxConvUTF8 ) + _T(" ( ") + wxString(params) + _T(" )") )
+#define wxLogDebugFunc( params ) wxLogVerbose( _T("%s"), wxString(wxString(__FUNCTION__, wxConvUTF8 ) + _T(" ( ") + wxString(params) + _T(" )")).c_str() )
 #else
 #define wxLogDebugFunc( params ) wxLogTrace(_T("function calls"), params )
 #endif
@@ -31,8 +31,8 @@
 #define STD_STRING(v) std::string((const char*)(v).mb_str(wxConvUTF8))
 
 
-#define ASSERT_LOGIC(cond,msg) if(!(cond)){wxLogError(_T("logic error: ")+ wxString(msg) ); throw std::logic_error(std::string(wxString(msg).mb_str()));}
-#define ASSERT_RUNTIME(cond,msg) if(!(cond)){wxLogMessage(_T("runtime error: ")+ wxString(msg) );throw std::runtime_error(std::string(wxString(msg).mb_str()));}
+#define ASSERT_LOGIC(cond,msg) if(!(cond)){wxLogError(_T("logic error: %s"), wxString(msg).c_str() ); throw std::logic_error(std::string(wxString(msg).mb_str()));}
+#define ASSERT_RUNTIME(cond,msg) if(!(cond)){wxLogMessage(_T("runtime error: %s"), wxString(msg).c_str() );throw std::runtime_error(std::string(wxString(msg).mb_str()));}
 
 std::string i2s( int x );
 

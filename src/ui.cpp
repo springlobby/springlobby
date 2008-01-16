@@ -321,7 +321,7 @@ void Ui::OpenWebBrowser( const wxString& url )
   {
     if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
     {
-      wxLogWarning( _T("can't launch browser: ") + sett().GetWebBrowserPath() );
+      wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().c_str() );
       customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
     }
 
@@ -789,6 +789,14 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
   }
 }
 
+void Ui::OnBattleInfoUpdated( Battle& battle, const wxString& Tag )
+{
+  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
+    mw().GetJoinTab().UpdateCurrentBattle( Tag );
+  }
+}
+
 
 void Ui::OnJoinedBattle( Battle& battle )
 {
@@ -874,7 +882,18 @@ void Ui::OnSpringTerminated( bool success )
 
 void Ui::OnBattleStartRectsUpdated( Battle& battle )
 {
-  mw().GetJoinTab().UpdateCurrentBattle();
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
+}
+
+
+void Ui::OnBattleMapChanged( Battle& battle )
+{
+  mw().GetJoinTab().UpdateCurrentBattle( true );
+  if (battle.IsFounderMe())
+  {
+	  battle.CustomBattleOptions()->loadMapOptions(battle.GetMapName());
+	  mw().GetJoinTab().ReloadMMoptTab();
+  }
 }
 
 
@@ -886,7 +905,7 @@ void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
     br->GetChatPanel().StatusMessage( WX_STRING( unitname ) + _T(" disabled.") );
   }
   //mw().GetJoinTab().UpdateCurrentBattle();
-  mw().GetJoinTab().UpdateCurrentBattle(true);
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
@@ -897,7 +916,7 @@ void Ui::OnBattleEnableUnit( Battle& battle, const std::string& unitname )
     br->GetChatPanel().StatusMessage( WX_STRING(unitname) + _T(" disabled.") );
   }
   //mw().GetJoinTab().UpdateCurrentBattle();
-  mw().GetJoinTab().UpdateCurrentBattle(true);
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
@@ -907,7 +926,7 @@ void Ui::OnBattleEnableAllUnits( Battle& battle )
   if ( br != 0 ) {
     br->GetChatPanel().StatusMessage( _T("All units enabled.") );
   }
-  mw().GetJoinTab().UpdateCurrentBattle(true);
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 

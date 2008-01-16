@@ -100,7 +100,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   Layout();
 
   ReloadMaplist();
-  UpdateMap();
+  Update();
 
   //m_map_combo->Enable( m_battle.IsFounderMe() );
   m_start_radios->Enable( m_battle.IsFounderMe() );
@@ -114,10 +114,8 @@ BattleMapTab::~BattleMapTab()
 }
 
 
-void BattleMapTab::UpdateMap()
+void BattleMapTab::Update()
 {
-  m_start_radios->SetSelection( m_battle.GetStartType() );
-
   m_minimap->UpdateMinimap();
 
   if ( !m_battle.MapExists() ) return;
@@ -134,6 +132,23 @@ void BattleMapTab::UpdateMap()
   int index = m_map_combo->FindString( RefineMapname( WX_STRING(map.name) ) );
   m_map_combo->SetSelection( index );
 }
+
+
+void BattleMapTab::Update( const wxString& Tag )
+{
+  long type;
+  Tag.BeforeFirst( '_' ).ToLong( &type );
+  wxString key = Tag.AfterFirst( '_' );
+  if ( type == EngineOption )
+  {
+    if ( key == _T("startpostype") )
+    {
+     m_start_radios->SetSelection( m_battle.GetStartType() );
+     Update();
+    }
+  }
+}
+
 
 void BattleMapTab::ReloadMaplist()
 {
@@ -158,6 +173,7 @@ void BattleMapTab::UpdateUser( User& user )
 
 void BattleMapTab::OnMapSelect( wxCommandEvent& event )
 {
+	
   if ( !m_battle.IsFounderMe() ) {
     m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetMapName() ) ) );
     return;
@@ -169,7 +185,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
     m_battle.SetMap( map );
   } catch (...) {}
 //  m_battle.SetMapHash( map.hash );
-
+  m_ui.OnBattleMapChanged(m_battle);
   m_battle.SendHostInfo( HI_Map );
 }
 
@@ -181,9 +197,10 @@ void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
     case 0: m_battle.SetStartType( ST_Fixed ); break;
     case 1: m_battle.SetStartType( ST_Random ); break;
     case 2: m_battle.SetStartType( ST_Choose ); break;
+    case 3: m_battle.SetStartType( ST_Pick ); break;
     default: ASSERT_LOGIC( false, _T("invalid pos") );
   };
-  m_battle.SendHostInfo( HI_StartType );
+  m_battle.SendHostInfo( wxString::Format(_T("%d_startpostype"), EngineOption ) );
 }
 
 
