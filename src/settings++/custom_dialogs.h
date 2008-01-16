@@ -20,6 +20,9 @@ class wxTextCtrl;
 int customMessageBox(int whichIcon , const wxString& message,
         const wxString& caption = wxMessageBoxCaptionStr,
         long style = wxOK|wxCENTRE,  const int x = -1, const int y = -1 );
+void customMessageBoxNoModal(int whichIcon , const wxString& message,
+        const wxString& caption = wxMessageBoxCaptionStr,
+        long style = wxOK|wxCENTRE,  const int x = -1, const int y = -1 );
 
 class CustomMessageBox : public wxMessageDialog
 {
@@ -34,6 +37,24 @@ public:
 	static wxWindow* getSettingspointer();
 
 protected:
+	static wxWindow* m_settingsWindow;
+	static wxWindow* m_lobbyWindow;
+};
+
+class CustomNonBlockingMessageBox : public wxDialog
+{
+public:
+	CustomNonBlockingMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
+	        const wxString& caption = wxMessageBoxCaptionStr,
+	        long style = wxOK|wxCENTRE, const wxPoint& pos = wxDefaultPosition);
+	virtual ~CustomNonBlockingMessageBox();
+	static void setLobbypointer(wxWindow*);
+	static void setSettingspointer(wxWindow*);
+	static wxWindow* getLobbypointer();
+	static wxWindow* getSettingspointer();
+
+protected:
+    wxDialog* m_box;
 	static wxWindow* m_settingsWindow;
 	static wxWindow* m_lobbyWindow;
 };

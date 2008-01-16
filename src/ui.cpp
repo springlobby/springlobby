@@ -41,6 +41,7 @@ Ui::Ui() :
 
   m_main_win = new MainWindow( *this );
   CustomMessageBox::setLobbypointer(m_main_win);
+  CustomNonBlockingMessageBox::setLobbypointer(m_main_win);
   m_spring = new Spring(*this);
   m_thread = new UnitSyncThread( *this );
   m_thread->Init();
@@ -732,8 +733,8 @@ void Ui::OnBattleClosed( Battle& battle )
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle )
 	{
-	    //if (!battle.IsFounderMe() )
-          //  customMessage(SL_MAIN_ICON,_T("The current battle was closed by the host."),_T("Battle closed"));
+	    if (!battle.IsFounderMe() )
+            customMessageBoxNoModal(SL_MAIN_ICON,_T("The current battle was closed by the host."),_T("Battle closed"));
 		mw().GetJoinTab().LeaveCurrentBattle();
 	}
   }
