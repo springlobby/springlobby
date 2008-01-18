@@ -475,7 +475,16 @@ springlobby_SOURCES = \
 	src/images/flags/ZW.xpm \
 	src/images/empty.xpm \
 	src/customlistctrl.h \
-	src/customlistctrl.cpp 
+	src/customlistctrl.cpp \
+	src/mmoptionmodel.h \
+	src/mmoptionmodel.cpp \
+	src/mmoptionswrapper.h \
+	src/mmoptionswrapper.cpp \
+	src/battleroommmoptionstab.h \
+	src/battleroommmoptionstab.cpp \
+	src/thingdef.h \
+	src/spinctld.h \
+	src/spinctld.cpp
 
 
 # TODO keep only a single list instead of duplicating the lists below

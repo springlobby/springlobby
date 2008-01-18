@@ -613,7 +613,7 @@ wxString SpringUnitSyncLib::GetLuaAIDesc( int aiIndex )
 int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
 {
   InitLib( m_get_map_option_count );
-
+  ASSERT_RUNTIME( !name.IsEmpty(), _T("passing void mapname to unitsync") );
   return m_get_map_option_count( name.mb_str( wxConvUTF8 ) );
 }
 

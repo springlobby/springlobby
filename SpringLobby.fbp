@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <wxFormBuilder_Project>
-    <FileVersion major="1" minor="8" />
+    <FileVersion major="1" minor="9" />
     <object class="Project" expanded="1">
         <property name="bitmaps"></property>
         <property name="class_decoration"></property>
@@ -19,7 +19,7 @@
         <property name="relative_path">1</property>
         <property name="use_enum">1</property>
         <property name="use_microsoft_bom">0</property>
-        <object class="Dialog" expanded="1">
+        <object class="Dialog" expanded="0">
             <property name="bg"></property>
             <property name="center"></property>
             <property name="context_help"></property>
@@ -271,6 +271,7 @@
                                 <property name="name">m_mod_pic</property>
                                 <property name="permission">protected</property>
                                 <property name="pos"></property>
+                                <property name="selection">0</property>
                                 <property name="size"></property>
                                 <property name="subclass"></property>
                                 <property name="tooltip">Select the mod to play with.</property>
@@ -564,11 +565,13 @@
                     <property name="flag">wxALL|wxEXPAND</property>
                     <property name="proportion">0</property>
                     <object class="wxStaticBoxSizer" expanded="0">
+                        <property name="id">wxID_ANY</property>
                         <property name="label">Number of players</property>
                         <property name="minimum_size">-1,60</property>
                         <property name="name">m_players_box</property>
                         <property name="orient">wxVERTICAL</property>
                         <property name="permission">none</property>
+                        <event name="OnUpdateUI"></event>
                         <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
                             <property name="flag">wxALL|wxEXPAND</property>
@@ -658,7 +661,7 @@
                             <property name="proportion">1</property>
                             <object class="wxRadioBox" expanded="1">
                                 <property name="bg"></property>
-                                <property name="choices">&apos;None&apos; &apos;Hole punching&apos; &apos;Fixed source ports&apos;</property>
+                                <property name="choices">&quot;None&quot; &quot;Hole punching&quot; &quot;Fixed source ports&quot;</property>
                                 <property name="context_help"></property>
                                 <property name="enabled">0</property>
                                 <property name="fg"></property>
@@ -711,11 +714,13 @@
                             <property name="flag">wxALL|wxEXPAND</property>
                             <property name="proportion">1</property>
                             <object class="wxStaticBoxSizer" expanded="1">
+                                <property name="id">wxID_ANY</property>
                                 <property name="label">Minimum Rank needed</property>
                                 <property name="minimum_size"></property>
                                 <property name="name">m_rank_box</property>
                                 <property name="orient">wxVERTICAL</property>
                                 <property name="permission">none</property>
+                                <event name="OnUpdateUI"></event>
                                 <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND</property>
@@ -1631,7 +1636,7 @@
                 </object>
             </object>
         </object>
-        <object class="Panel" expanded="0">
+        <object class="Panel" expanded="1">
             <property name="bg"></property>
             <property name="context_help"></property>
             <property name="enabled">1</property>
@@ -1682,7 +1687,7 @@
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">0</property>
-                    <object class="wxBoxSizer" expanded="1">
+                    <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
                         <property name="name">m_main_options_sizer</property>
                         <property name="orient">wxVERTICAL</property>
@@ -1693,7 +1698,7 @@
                             <property name="proportion">0</property>
                             <object class="wxRadioBox" expanded="1">
                                 <property name="bg"></property>
-                                <property name="choices">&apos;Continue if commander dies&apos; &apos;End if commander dies&apos; &apos;Linage mode&apos;</property>
+                                <property name="choices">&quot;Continue if commander dies&quot; &quot;End if commander dies&quot; &quot;Linage mode&quot;</property>
                                 <property name="context_help"></property>
                                 <property name="enabled">1</property>
                                 <property name="fg"></property>
@@ -1746,11 +1751,13 @@
                             <property name="flag">wxALL|wxEXPAND</property>
                             <property name="proportion">1</property>
                             <object class="wxStaticBoxSizer" expanded="1">
+                                <property name="id">wxID_ANY</property>
                                 <property name="label">Resources</property>
                                 <property name="minimum_size"></property>
                                 <property name="name">m_resources_box</property>
                                 <property name="orient">wxHORIZONTAL</property>
                                 <property name="permission">none</property>
+                                <event name="OnUpdateUI"></event>
                                 <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND</property>
@@ -2258,18 +2265,20 @@
                             <property name="flag">wxALL|wxEXPAND</property>
                             <property name="proportion">0</property>
                             <object class="wxStaticBoxSizer" expanded="1">
+                                <property name="id">wxID_ANY</property>
                                 <property name="label">Options</property>
                                 <property name="minimum_size"></property>
                                 <property name="name">m_options_box</property>
                                 <property name="orient">wxVERTICAL</property>
                                 <property name="permission">none</property>
+                                <event name="OnUpdateUI"></event>
                                 <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxALL|wxEXPAND</property>
                                     <property name="proportion">0</property>
                                     <object class="wxCheckListBox" expanded="1">
                                         <property name="bg"></property>
-                                        <property name="choices">&apos;Limit d-gun&apos; &apos;Ghosted buildning&apos; &apos;Diminishing metal makers&apos; &apos;Lock game speed&apos;</property>
+                                        <property name="choices">&quot;Limit d-gun&quot; &quot;Ghosted buildning&quot; &quot;Diminishing metal makers&quot; &quot;Lock game speed&quot;</property>
                                         <property name="context_help"></property>
                                         <property name="enabled">1</property>
                                         <property name="fg"></property>
@@ -2324,12 +2333,14 @@
                     <property name="border">5</property>
                     <property name="flag">wxALL|wxEXPAND</property>
                     <property name="proportion">1</property>
-                    <object class="wxStaticBoxSizer" expanded="1">
+                    <object class="wxStaticBoxSizer" expanded="0">
+                        <property name="id">wxID_ANY</property>
                         <property name="label">Unit restrictions</property>
                         <property name="minimum_size"></property>
                         <property name="name">m_restr_box</property>
                         <property name="orient">wxVERTICAL</property>
                         <property name="permission">none</property>
+                        <event name="OnUpdateUI"></event>
                         <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
                             <property name="flag">wxEXPAND</property>
@@ -2909,7 +2920,7 @@
                 </object>
             </object>
         </object>
-        <object class="Panel" expanded="0">
+        <object class="Panel" expanded="1">
             <property name="bg"></property>
             <property name="context_help"></property>
             <property name="enabled">1</property>
@@ -2951,7 +2962,7 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxBoxSizer" expanded="1">
+            <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
                 <property name="name">m_main_sizer</property>
                 <property name="orient">wxVERTICAL</property>
@@ -3029,7 +3040,7 @@
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">0</property>
-                    <object class="wxBoxSizer" expanded="1">
+                    <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
                         <property name="name">m_info_sizer</property>
                         <property name="orient">wxHORIZONTAL</property>
@@ -3633,7 +3644,7 @@
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">0</property>
-                    <object class="wxBoxSizer" expanded="1">
+                    <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
                         <property name="name">m_buttons_sizer</property>
                         <property name="orient">wxHORIZONTAL</property>
@@ -3695,7 +3706,7 @@
                             <property name="proportion">0</property>
                             <object class="wxComboBox" expanded="1">
                                 <property name="bg"></property>
-                                <property name="choices">&apos;All&apos; &apos;Open only&apos;</property>
+                                <property name="choices">&quot;All&quot; &quot;Open only&quot;</property>
                                 <property name="context_help"></property>
                                 <property name="enabled">1</property>
                                 <property name="fg"></property>
@@ -4605,6 +4616,7 @@
                                 <property name="name">m_map_pick</property>
                                 <property name="permission">protected</property>
                                 <property name="pos"></property>
+                                <property name="selection">0</property>
                                 <property name="size"></property>
                                 <property name="subclass"></property>
                                 <property name="tooltip"></property>
@@ -4981,11 +4993,13 @@
                     <property name="flag">wxEXPAND|wxALIGN_CENTER_HORIZONTAL</property>
                     <property name="proportion">1</property>
                     <object class="wxStaticBoxSizer" expanded="1">
+                        <property name="id">wxID_ANY</property>
                         <property name="label"></property>
                         <property name="minimum_size">-1,-1</property>
                         <property name="name">m_filter_body_sizer</property>
                         <property name="orient">wxVERTICAL</property>
                         <property name="permission">none</property>
+                        <event name="OnUpdateUI"></event>
                         <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
                             <property name="flag">wxEXPAND</property>
@@ -5356,6 +5370,7 @@
                                                 <property name="name">m_filter_rank_choice</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
+                                                <property name="selection">0</property>
                                                 <property name="size">-1,-1</property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
@@ -5866,6 +5881,7 @@
                                                 <property name="name">m_filter_player_choice</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
+                                                <property name="selection">0</property>
                                                 <property name="size">-1,-1</property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
@@ -6221,6 +6237,7 @@
                                                 <property name="name">m_filter_maxplayer_choice</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
+                                                <property name="selection">0</property>
                                                 <property name="size">-1,-1</property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
@@ -6576,6 +6593,7 @@
                                                 <property name="name">m_filter_spectator_choice</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
+                                                <property name="selection">0</property>
                                                 <property name="size">-1,-1</property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
@@ -6893,6 +6911,129 @@
                         <event name="OnOKButtonClick"></event>
                         <event name="OnSaveButtonClick"></event>
                         <event name="OnYesButtonClick"></event>
+                    </object>
+                </object>
+            </object>
+        </object>
+        <object class="Panel" expanded="1">
+            <property name="bg"></property>
+            <property name="context_help"></property>
+            <property name="enabled">1</property>
+            <property name="fg"></property>
+            <property name="font"></property>
+            <property name="hidden">0</property>
+            <property name="id">wxID_ANY</property>
+            <property name="maximum_size"></property>
+            <property name="minimum_size"></property>
+            <property name="name">BattleroomMMOptionsTab</property>
+            <property name="pos"></property>
+            <property name="size">500,300</property>
+            <property name="subclass"></property>
+            <property name="tooltip"></property>
+            <property name="window_extra_style"></property>
+            <property name="window_name"></property>
+            <property name="window_style">wxTAB_TRAVERSAL</property>
+            <event name="OnChar"></event>
+            <event name="OnEnterWindow"></event>
+            <event name="OnEraseBackground"></event>
+            <event name="OnInitDialog"></event>
+            <event name="OnKeyDown"></event>
+            <event name="OnKeyUp"></event>
+            <event name="OnKillFocus"></event>
+            <event name="OnLeaveWindow"></event>
+            <event name="OnLeftDClick"></event>
+            <event name="OnLeftDown"></event>
+            <event name="OnLeftUp"></event>
+            <event name="OnMiddleDClick"></event>
+            <event name="OnMiddleDown"></event>
+            <event name="OnMiddleUp"></event>
+            <event name="OnMotion"></event>
+            <event name="OnMouseEvents"></event>
+            <event name="OnMouseWheel"></event>
+            <event name="OnPaint"></event>
+            <event name="OnRightDClick"></event>
+            <event name="OnRightDown"></event>
+            <event name="OnRightUp"></event>
+            <event name="OnSetFocus"></event>
+            <event name="OnSize"></event>
+            <event name="OnUpdateUI"></event>
+            <object class="wxBoxSizer" expanded="1">
+                <property name="minimum_size"></property>
+                <property name="name">m_main_sizer</property>
+                <property name="orient">wxVERTICAL</property>
+                <property name="permission">none</property>
+                <object class="sizeritem" expanded="1">
+                    <property name="border">5</property>
+                    <property name="flag">wxEXPAND</property>
+                    <property name="proportion">1</property>
+                    <object class="wxStaticBoxSizer" expanded="1">
+                        <property name="id">wxID_ANY</property>
+                        <property name="label">Mod Options</property>
+                        <property name="minimum_size"></property>
+                        <property name="name">m_mod_options_sizer</property>
+                        <property name="orient">wxVERTICAL</property>
+                        <property name="permission">none</property>
+                        <event name="OnUpdateUI"></event>
+                        <object class="sizeritem" expanded="1">
+                            <property name="border">5</property>
+                            <property name="flag">wxEXPAND</property>
+                            <property name="proportion">1</property>
+                            <object class="wxFlexGridSizer" expanded="1">
+                                <property name="cols">2</property>
+                                <property name="flexible_direction">wxBOTH</property>
+                                <property name="growablecols"></property>
+                                <property name="growablerows"></property>
+                                <property name="hgap">0</property>
+                                <property name="minimum_size"></property>
+                                <property name="name">m_mod_layout</property>
+                                <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
+                                <property name="permission">none</property>
+                                <property name="rows">2</property>
+                                <property name="vgap">0</property>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+                <object class="sizeritem" expanded="1">
+                    <property name="border">5</property>
+                    <property name="flag">wxEXPAND</property>
+                    <property name="proportion">1</property>
+                    <object class="spacer" expanded="1">
+                        <property name="height">5</property>
+                        <property name="permission">protected</property>
+                        <property name="width">0</property>
+                    </object>
+                </object>
+                <object class="sizeritem" expanded="1">
+                    <property name="border">5</property>
+                    <property name="flag">wxEXPAND</property>
+                    <property name="proportion">1</property>
+                    <object class="wxStaticBoxSizer" expanded="1">
+                        <property name="id">wxID_ANY</property>
+                        <property name="label">Map Options</property>
+                        <property name="minimum_size"></property>
+                        <property name="name">m_map_options_sizer</property>
+                        <property name="orient">wxVERTICAL</property>
+                        <property name="permission">none</property>
+                        <event name="OnUpdateUI"></event>
+                        <object class="sizeritem" expanded="1">
+                            <property name="border">5</property>
+                            <property name="flag">wxEXPAND</property>
+                            <property name="proportion">1</property>
+                            <object class="wxFlexGridSizer" expanded="1">
+                                <property name="cols">2</property>
+                                <property name="flexible_direction">wxBOTH</property>
+                                <property name="growablecols"></property>
+                                <property name="growablerows"></property>
+                                <property name="hgap">0</property>
+                                <property name="minimum_size"></property>
+                                <property name="name">m_map_layout</property>
+                                <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
+                                <property name="permission">none</property>
+                                <property name="rows">2</property>
+                                <property name="vgap">0</property>
+                            </object>
+                        </object>
                     </object>
                 </object>
             </object>

@@ -13,6 +13,7 @@ class BattleOptionsTab;
 class wxBoxSizer;
 class wxImageList;
 class wxNotebook;
+class BattleroomMMOptionsTab;
 
 class MainJoinBattleTab : public wxPanel
 {
@@ -25,7 +26,8 @@ class MainJoinBattleTab : public wxPanel
     void HostBattle( Battle& battle );
     void JoinBattle( Battle& battle );
     //void UpdateCurrentBattle();
-    void UpdateCurrentBattle( bool updateRestrictions = false );
+    void UpdateCurrentBattle( bool MapChanged = false,  bool UpdateRestrictions = true );
+    void UpdateCurrentBattle( const wxString& Tag );
     void LeaveCurrentBattle();
     Battle* GetCurrentBattle();
     ChatPanel* GetActiveChatPanel();
@@ -35,7 +37,9 @@ class MainJoinBattleTab : public wxPanel
     BattleMapTab* GetBattleMapTab() { return m_map_tab; }
 
     void OnUnitSyncReloaded();
-
+    
+    void ReloadMMoptTab();
+    
   protected:
     wxBoxSizer* m_main_sizer;
 
@@ -47,8 +51,10 @@ class MainJoinBattleTab : public wxPanel
     BattleRoomTab* m_battle_tab;
     BattleMapTab* m_map_tab;
     BattleOptionsTab* m_opts_tab;
-
+    BattleroomMMOptionsTab* m_mm_opts_tab;
     Ui& m_ui;
+    
+    
 };
 
 enum
