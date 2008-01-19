@@ -15,7 +15,9 @@
 #include <wx/msgdlg.h>
 #include <wx/menu.h>
 #include <wx/utils.h>
+#include <wx/event.h>
 #include <wx/notebook.h>
+
 
 #include "channel.h"
 #include "chatpanel.h"
@@ -28,7 +30,6 @@
 #include "mainwindow.h"
 #include "chatlog.h"
 #include "settings.h"
-
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 
@@ -194,7 +195,7 @@ void ChatPanel::CreateControls( )
 
   // Creating ui elements
   m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T(""), wxDefaultPosition, wxDefaultSize,
-                             wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+                                wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL);
 
   m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T(""), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), wxTE_PROCESS_ENTER );
   m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _("Send"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
@@ -1336,5 +1337,4 @@ void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event )
 {
   m_ui.GetServer().Ring( GetSelectedUser()->GetNick() );
 }
-
 

@@ -730,7 +730,12 @@ void Ui::OnBattleClosed( Battle& battle )
   mw().GetJoinTab().GetBattleListTab().RemoveBattle( battle );
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
-    if ( &br->GetBattle() == &battle ) mw().GetJoinTab().LeaveCurrentBattle();
+    if ( &br->GetBattle() == &battle )
+	{
+	    //if (!battle.IsFounderMe() )
+          //  customMessage(SL_MAIN_ICON,_T("The current battle was closed by the host."),_T("Battle closed"));
+		mw().GetJoinTab().LeaveCurrentBattle();
+	}
   }
   for ( unsigned int b = 0; b < battle.GetNumUsers(); b++ ) {
     User& user = battle.GetUser( b );
@@ -1005,4 +1010,13 @@ void Ui::OnCachedThreadTerminated()
 void Ui::OnMainWindowDestruct()
 {
 	m_main_win = 0;
+}
+
+bool Ui::IsThisMe(User& other)
+{
+	//if i'm not connected i have no identity
+	if (!IsConnected() || m_serv==0)
+		return false;
+	else
+		return ( other.GetNick()==m_serv->GetMe().GetNick() );
 }

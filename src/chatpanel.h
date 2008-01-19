@@ -166,7 +166,7 @@ class ChatPanel : public wxPanel
     wxComboBox* m_nick_filter;  //!< The filter combo.
 
     wxButton* m_say_button;     //!< The say button.
-
+    wxNotebook* m_chat_tabs;
     Ui& m_ui;
     Channel* m_channel;         //!< Channel object.
     Server* m_server;           //!< Server object.
@@ -177,7 +177,7 @@ class ChatPanel : public wxPanel
 
     wxString m_chan_pass;
 
-    wxNotebook* m_chat_tabs;
+
     wxMenu* m_popup_menu;
     wxMenuItem* m_autorejoin;
     ChatLog* m_chat_log;
