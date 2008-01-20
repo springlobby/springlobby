@@ -520,11 +520,12 @@ springlobby_SOURCES += \
 	src/settings++/custom_dialogs.h \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
-	src/settings++/helpmenufunctions.cpp 
+	src/settings++/helpmenufunctions.cpp
 
 if USE_WINDRES
 	springlobby_SOURCES += \
-		src/springlobby.rc
+		src/springlobby.rc \
+		src/settings++/settings.rc
 endif
 
 
@@ -573,11 +574,11 @@ springsettings_SOURCES = \
 	src/settings++/custom_dialogs.h \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
-	src/settings++/helpmenufunctions.cpp 
+	src/settings++/helpmenufunctions.cpp
 
 
 if USE_WINDRES
 	springsettings_SOURCES += \
-		src/springlobby.rc
+		src/settings++/settings.rc
 endif
 
