@@ -2,21 +2,23 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+# TODO add debug use flag
+
 inherit eutils
 
 DESCRIPTION="lobby client for spring rts engine"
 HOMEPAGE="http://springlobby.info"
-SRC_URI="${P}.tar.gz"
+SRC_URI="http://www.springlobby.info/tarballs/${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
-RESTRICT="fetch nomirror"
+RESTRICT="nomirror"
 
 RDEPEND="
 	!virtual/springlobby
-	>=x11-libs/wxGTK-2.6.0
+	>=x11-libs/wxGTK-2.6.3
 "
 DEPEND="${RDEPEND}
 "
@@ -28,10 +30,6 @@ my_depend_with_use () {
 		eerror "Please run 'echo \"$*\" >> /etc/portage/package.use' and re-emerge '$1'."
 		MY_DEPEND_WITH_USE=false
 	fi
-}
-
-pkg_nofetch() {
-	einfo "Please download ${SRC_URI} from ${HOMEPAGE} and move it to ${DISTDIR} and retry."
 }
 
 pkg_setup() {
