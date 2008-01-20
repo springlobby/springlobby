@@ -9,7 +9,7 @@ if [ $# -ne 1 ] ; then
 fi
 
 if [ x$(hostname) = xDelenn ] ; then
-	cd springlobby/gentoo/overlay/games-util/springlobby
+	cd ~/springlobby/gentoo/overlay/games-util/springlobby
 	git-pull
 	cp springlobby-template $1
 	ebuild $1 digest
