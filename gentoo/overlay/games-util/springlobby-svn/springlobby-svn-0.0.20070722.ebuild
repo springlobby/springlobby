@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+# todo remove this ebuild altogether
+
 inherit subversion
 
 DESCRIPTION="lobby client for spring rts engine"
@@ -16,7 +18,7 @@ IUSE=""
 
 RDEPEND="
 	!virtual/springlobby
-	>=x11-libs/wxGTK-2.6.0
+	>=x11-libs/wxGTK-2.6.3
 "
 DEPEND="${RDEPEND}
 	>=sys-devel/autoconf-2.59
