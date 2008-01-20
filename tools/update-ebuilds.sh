@@ -17,6 +17,6 @@ if [ x$(hostname) = xDelenn ] ; then
 	git-commit -m "automatic update of springlobby ebuild for automated tarball release"
 	git-push my-public
 else
-	ssh zi.fi ~/springlobby/tools/update-ebuilds.sh $*
+	ssh zi.fi sh ~/springlobby/tools/update-ebuilds.sh $*
 fi
 
