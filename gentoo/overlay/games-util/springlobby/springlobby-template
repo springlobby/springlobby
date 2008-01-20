@@ -17,6 +17,7 @@ IUSE=""
 RESTRICT="nomirror"
 
 RDEPEND="
+	!games-util/springlobby-svn
 	!virtual/springlobby
 	>=x11-libs/wxGTK-2.6.3
 "
