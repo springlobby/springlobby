@@ -94,6 +94,8 @@ class ServerEvents
     void OnHostUdpPortChange(const int& udpport);
 
     void OnUdpSourcePort(int udpport);
+    
+    void OnKickedFromBattle();
 
   protected:
     Server& m_serv;

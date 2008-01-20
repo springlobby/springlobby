@@ -17,7 +17,7 @@ wxWindow* CustomMessageBox::m_lobbyWindow = 0;
 
 CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
         const wxString& caption ,
-        long style, const wxPoint& pos ) 
+        long style, const wxPoint& pos )
 			: wxMessageDialog(parent,message,caption,style|wxFRAME_FLOAT_ON_PARENT,pos)
 {
 	SetIcon(*icon);
@@ -58,19 +58,19 @@ int customMessageBox( int whichIcon , const wxString& message,const wxString& ca
 		wxIcon* icon;
 		switch (whichIcon)
 		{
-			case SL_MAIN_ICON: 
-				icon = new wxIcon(springlobby_xpm); 
+			case SL_MAIN_ICON:
+				icon = new wxIcon(springlobby_xpm);
 				parent = CustomMessageBox::getLobbypointer();
 				break;
-			case SS_MAIN_ICON: 
+			case SS_MAIN_ICON:
 				icon = new wxIcon(springsettings_xpm);
 				parent = CustomMessageBox::getSettingspointer();
 				break;
-			default: 
-				icon = new wxIcon(wxNullIcon); 
+			default:
+				icon = new wxIcon(wxNullIcon);
 				parent = 0;
 				break;
-					
+
 		}
 		CustomMessageBox dlg(icon,parent,message,caption,style,wxPoint(x,y));
 		int re = dlg.ShowModal();
@@ -91,22 +91,22 @@ CreditsDialog::CreditsDialog(wxWindow* parent,wxString title,int whichIcon) : wx
 	text_ctrl = new wxTextCtrl(this,-1,wxT(""),wxDefaultPosition,wxDefaultSize,wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH);
 	container->Add(text_ctrl,1,wxEXPAND);
 	//container->Add(new wxButton(this,wxID_CLOSE),0);
-	
+
 	 container->Add(wxDialog::CreateButtonSizer(wxOK));
 	SetSizer(container);
 	wxIcon* icon;
 	switch (whichIcon)
 	{
-		case SL_MAIN_ICON: 
-			icon = new wxIcon(springlobby_xpm); 
+		case SL_MAIN_ICON:
+			icon = new wxIcon(springlobby_xpm);
 			break;
-		case SS_MAIN_ICON: 
+		case SS_MAIN_ICON:
 			icon = new wxIcon(springsettings_xpm);
 			break;
-		default: 
-			icon = new wxIcon(wxNullIcon); 
+		default:
+			icon = new wxIcon(wxNullIcon);
 			break;
-				
+
 	}
 	SetIcon(*icon);
 }

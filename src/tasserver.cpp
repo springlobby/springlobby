@@ -693,6 +693,8 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
     }
     m_se->OnBattleInfoUpdated( m_battle_id );
     // !! Command: "SETSCRIPTTAGS" params: "game/startpostype=0	game/maxunits=1000	game/limitdgun=0	game/startmetal=1000	game/gamemode=0	game/ghostedbuildings=-1	game/startenergy=1000	game/diminishingmms=0"
+  } else if ( cmd == "FORCEQUITBATTLE") {
+	  m_se->OnKickedFromBattle();
   } else {
     wxLogMessage( _T("??? Cmd: %s params: %s"), WX_STRING(cmd).c_str(), WX_STRING(params).c_str() );
     m_se->OnUnknownCommand( cmd, params );

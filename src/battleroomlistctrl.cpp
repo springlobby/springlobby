@@ -421,6 +421,8 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     m_popup->Check( item, m_sel_user->BattleStatus().spectator );
     m_popup->Enable( item, true );
     m_popup->Enable( m_popup->FindItem( _("Ring") ), true );
+    bool isSelUserMe =  ( m_ui.IsThisMe(*m_sel_user) );
+    m_popup->Enable( m_popup->FindItem( _("Kick") ),!isSelUserMe);
   }
 
   wxLogMessage(_T("Popup"));

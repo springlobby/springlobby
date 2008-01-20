@@ -15,6 +15,7 @@
 #include "server.h"
 #include "battle.h"
 #include "settings.h"
+#include "settings++/custom_dialogs.h"
 
 void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported, const std::string server_spring_ver, const int udpport, bool lanmode )
 {
@@ -540,4 +541,9 @@ void ServerEvents::OnHostUdpPortChange( const int& udpport )
 void ServerEvents::OnUdpSourcePort(int udpport){
   if ( !m_serv.GetCurrentBattle() ) return;
   m_serv.GetCurrentBattle()->SetExternalUdpSourcePort(udpport);
+}
+
+void ServerEvents::OnKickedFromBattle()
+{
+	customMessageBox(SL_MAIN_ICON,_T("You were kicked from the battle!"),_T("Kicked by Host"));
 }
