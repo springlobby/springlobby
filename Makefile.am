@@ -524,8 +524,7 @@ springlobby_SOURCES += \
 
 if USE_WINDRES
 	springlobby_SOURCES += \
-		src/springlobby.rc \
-		src/settings++/settings.rc
+		src/springlobby.rc
 endif
 
 
