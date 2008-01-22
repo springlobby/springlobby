@@ -122,6 +122,8 @@ springlobby_SOURCES = \
 	src/chatpanel.h \
 	src/connectwindow.cpp \
 	src/connectwindow.h \
+	src/countrycode.cpp \
+	src/countrycode.h \
 	src/flagimagedata.h \
 	src/flagimages.cpp \
 	src/flagimages.h \
@@ -520,7 +522,7 @@ springlobby_SOURCES += \
 	src/settings++/custom_dialogs.h \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
-	src/settings++/helpmenufunctions.cpp 
+	src/settings++/helpmenufunctions.cpp
 
 if USE_WINDRES
 	springlobby_SOURCES += \
@@ -573,7 +575,7 @@ springsettings_SOURCES = \
 	src/settings++/custom_dialogs.h \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
-	src/settings++/helpmenufunctions.cpp 
+	src/settings++/helpmenufunctions.cpp
 
 
 if USE_WINDRES

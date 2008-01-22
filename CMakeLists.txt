@@ -49,6 +49,7 @@ IF(wxWidgets_FOUND)
 		src/chatoptionstab.cpp
 		src/chatpanel.cpp
 		src/connectwindow.cpp
+		src/countrycode.cpp
 		src/customlistctrl.cpp
 		src/flagimages.cpp
 		src/hostbattledialog.cpp
