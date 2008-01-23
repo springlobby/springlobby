@@ -10,7 +10,7 @@
 #include <wx/stdpaths.h>
 #include <wx/dir.h>
 #include <wx/file.h>
-
+#include <wx/dialup.h>
 
 #include "crashreport.h"
 #include "utils.h"
@@ -46,26 +46,33 @@ void CrashReport::GenerateReport(wxDebugReport::Context ctx)
 {
   wxSetWorkingDirectory( wxFileName::GetTempDir() );
 
-  wxDebugReportCompress *report = true          ? new NetDebugReport /// TODO (cloud#1#): check if online
-                                                 : new wxDebugReportCompress;
+  wxDialUpManager* network;
+  bool online = network->IsAlwaysOnline() || network->IsOnline();
+  delete network;
+
+  wxDebugReportCompress *report = online   ? new NetDebugReport
+                                           : new wxDebugReportCompress;
 
   // add all standard files: currently this means just a minidump and an
   // XML file with system info and stack trace
   report->AddAll(ctx);
 
-wxString dir = report->GetDirectory();
+  wxString dir = report->GetDirectory();
 
+  wxString SystemInfos;
 #ifdef VERSION
-  report->AddText( _T("AppVersion.txt"), WX_STRING( GetSpringLobbyVersion() ), _("build version") );
+  SystemInfos += _T("SpringLobby version ") + WX_STRING( GetSpringLobbyVersion() ) +_T("\n") ;
 #endif
+  SystemInfos += _T("Built from ") + wxString(wxVERSION_STRING) + _T("\n") ;
 
+  report->AddText( _T("SystemInfos.txt"), SystemInfos, _("System informations") );
 
   // calling Show() is not mandatory, but is more polite
   if ( wxDebugReportPreviewStd().Show(*report) )
   {
     if ( report->Process() )
     {
-      if ( true ) /// TODO (BrainDamage#1#): check if the network works
+      if ( online )
       {
         wxLogMessage(_T("Report successfully uploaded."));
       }

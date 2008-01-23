@@ -64,8 +64,6 @@ bool SpringLobbyApp::OnInit()
 
   m_ui->ShowMainWindow();
 
-//  int* i =0;
-//  *i = 10;
 
   if ( sett().IsFirstRun() ) {
     #ifdef __WXMSW__
@@ -109,7 +107,7 @@ int SpringLobbyApp::OnExit()
 
 void SpringLobbyApp::OnFatalException()
 {
-  CrashReport().GenerateReport(wxDebugReport::Context_Exception);
+  crashreport().GenerateReport(wxDebugReport::Context_Exception);
 }
 
 

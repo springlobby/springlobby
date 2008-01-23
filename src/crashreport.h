@@ -8,7 +8,7 @@
 class NetDebugReport : public wxDebugReportUpload
 {
   public:
-      NetDebugReport(); /// FIXME (BrainDamage#1#): this fails
+      NetDebugReport();
 
   protected:
       bool OnServerReply(const wxArrayString& reply);
