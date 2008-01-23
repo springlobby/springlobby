@@ -124,6 +124,8 @@ springlobby_SOURCES = \
 	src/connectwindow.h \
 	src/crashreport.cpp \
 	src/crashreport.h \
+	src/countrycodes.cpp \
+	src/countrycodes.h \
 	src/flagimagedata.h \
 	src/flagimages.cpp \
 	src/flagimages.h \

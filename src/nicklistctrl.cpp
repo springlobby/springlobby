@@ -15,6 +15,7 @@
 #include "user.h"
 #include "ui.h"
 #include "mainwindow.h"
+#include "countrycodes.h"
 
 #define TOOLTIP_DELAY 1000
 
@@ -344,7 +345,7 @@ void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
 	wxPoint position = event.GetPosition();
 
 	int flag = wxLIST_HITTEST_ONITEM;
-	
+
 
 	try{
 #ifdef HAVE_WX28
@@ -358,7 +359,7 @@ void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
 		if (item_hit != wxNOT_FOUND)
 		{
 			User* user = (User*) GetItemData(item_hit);
-			
+
 			if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
 			{
 				m_tiptext = _T("");
@@ -375,28 +376,28 @@ void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
 						m_tiptext << _T("moderator ");
 					else
 						m_tiptext << _T("player ");
-					
+
 					if (user->GetStatus().in_game)
 						m_tiptext <<  _T("is ingame");
 					else if (user->GetStatus().away)
 						m_tiptext <<  _T("is away");
-					else 
-						m_tiptext << _T("is available");					
+					else
+						m_tiptext << _T("is available");
 					break;
-					
+
 				case 1: // country
-					m_tiptext =  WX_STRING(user->GetCountry()).MakeUpper();
+					m_tiptext =  GetFlagNameFromCountryCode(WX_STRING(user->GetCountry()).MakeUpper());
 					break;
 
 				case 2: // rank
 					m_tiptext = user->GetRankName(user->GetStatus().rank);
-					break;	
-					
+					break;
+
 				case 3: // nickname
 					m_tiptext = WX_STRING(user->GetNick());
-					break;	
+					break;
 
-				default: 
+				default:
 					m_tiptext = m_colinfovec[coloumn].first;
 					break;
 				}

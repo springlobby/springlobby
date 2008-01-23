@@ -12,6 +12,7 @@
 #include "uiutils.h"
 #include "ui.h"
 #include "server.h"
+#include "countrycodes.h"
 
 #define TOOLTIP_DELAY 1000
 
@@ -606,7 +607,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 			m_tiptext = IconImageList::GetBattleStatus(battle);
 				break;
 			case 1: // country
-				m_tiptext = WX_STRING(battle.GetFounder().GetCountry());
+				m_tiptext = GetFlagNameFromCountryCode(WX_STRING(battle.GetFounder().GetCountry()));
 				break;
 			case 2: // rank_min
 				m_tiptext = WX_STRING(m_colinfovec[coloumn].first);
