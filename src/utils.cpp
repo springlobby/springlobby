@@ -9,6 +9,7 @@
 
 #include "utils.h"
 #include "revision.h"
+#include "crashreport.h"
 
 #include "settings++/custom_dialogs.h"
 
@@ -31,20 +32,32 @@ wxString GetLibExtension()
 
 
 //! @brief Initializes the logging functions.
-///initializes logging in both std::cout and gui messages
+///initializes logging in an hidden stream and std::cout/gui messages
 void InitializeLoggingTargets()
 
 {
 	#if wxUSE_STD_IOSTREAM
+	///std::cout logging
   wxLog *loggerconsole = new wxLogStream( &std::cout );
   wxLogChain *logChain = new wxLogChain( loggerconsole );
+  logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+  logChain->SetLogLevel( wxLOG_Warning );
+  logChain->SetVerbose( true );
+  ///hidden stream logging for crash reports
+  #if wxUSE_DEBUGREPORT
+  wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
+  wxLogChain *logCrashChain = new wxLogChain( loggercrash );
+  logCrashChain->SetLogLevel( wxLOG_Trace );
+  logCrashChain->SetVerbose( true );
+  #endif
   #else
+  ///gui window fallback logging if console/stream output not available
   wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
   wxLogChain *logChain = new wxLogChain( loggerwin );
-  #endif
   logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
   logChain->SetLogLevel( wxLOG_Trace );
   logChain->SetVerbose( true );
+  #endif
 }
 
 std::string i2s( int x )

@@ -1,21 +1,20 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 //
-// Classes: NetDebugReport CrashReport StackTrace
+// Classes: NetDebugReport CrashReport
 //
 
+#include "crashreport.h"
 
-#include <wx/msgdlg.h>
+#if wxUSE_DEBUGREPORT
+
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 #include <wx/dir.h>
 #include <wx/file.h>
-#include <wx/dialup.h>
 
-#include "crashreport.h"
 #include "utils.h"
 
-#if wxUSE_DEBUGREPORT
 
 NetDebugReport::NetDebugReport() : wxDebugReportUpload ( _T("http://trac.springlobby.info/attachment/ticket/236"), _T("attachment"), _T("?action=new") )
 {
@@ -46,10 +45,7 @@ void CrashReport::GenerateReport(wxDebugReport::Context ctx)
 {
   wxSetWorkingDirectory( wxFileName::GetTempDir() );
 
-  wxDialUpManager* network;
-  bool online = network->IsAlwaysOnline() || network->IsOnline();
-  delete network;
-
+  bool online = true; /// TODO (BrainDamage#1#): check if being online
   wxDebugReportCompress *report = online   ? new NetDebugReport
                                            : new wxDebugReportCompress;
 
@@ -66,6 +62,10 @@ void CrashReport::GenerateReport(wxDebugReport::Context ctx)
   SystemInfos += _T("Built from ") + wxString(wxVERSION_STRING) + _T("\n") ;
 
   report->AddText( _T("SystemInfos.txt"), SystemInfos, _("System informations") );
+#if wxUSE_STD_IOSTREAM
+  report->AddText( _T("AppLog.txt"), WX_STRING( crashlog.str() ), _("Application verbose log") );
+#endif
+  report->AddFile( wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("scrip_debugt.txt"), _("Last generated spring launching script") );
 
   // calling Show() is not mandatory, but is more polite
   if ( wxDebugReportPreviewStd().Show(*report) )
@@ -89,17 +89,10 @@ void CrashReport::GenerateReport(wxDebugReport::Context ctx)
   delete report;
 }
 
-#else // wxUSE_DEBUGREPORT
-
-void CrashReport::GenerateReport(wxDebugReport::Context ctx)
-{
-  wxLogError( _("The application has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR );
-}
-
-#endif// !wxUSE_DEBUGREPORT
-
 CrashReport& crashreport()
 {
   static CrashReport c;
   return c;
 }
+
+#endif // wxUSE_DEBUGREPORT
