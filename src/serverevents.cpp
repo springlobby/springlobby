@@ -15,6 +15,7 @@
 #include "server.h"
 #include "battle.h"
 #include "settings.h"
+#include "settings++/custom_dialogs.h"
 
 void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported, const std::string server_spring_ver, const int udpport, bool lanmode )
 {
@@ -189,6 +190,9 @@ void ServerEvents::OnJoinedBattle( int battleid )
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.spectator = false;
 
+  battle.CustomBattleOptions()->loadOptions( MapOption, battle.GetMapName() );
+  battle.CustomBattleOptions()->loadOptions( ModOption, battle.GetModName() );
+
   m_ui.OnJoinedBattle( battle );
 }
 
@@ -255,25 +259,6 @@ void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
 }
 
 
-void ServerEvents::OnBattleInfoUpdated( int battleid, int metal, int energy, int units, StartType
-                    start, GameType gt, bool dgun, bool dim, bool ghost, std::string hash )
-{
-  wxLogDebugFunc( _T("") );
-  Battle& battle = m_serv.GetBattle( battleid );
-
-  battle.SetStartMetal( metal );
-  battle.SetStartEnergy( energy );
-  battle.SetMaxUnits( units );
-  battle.SetStartType( start );
-  battle.SetGameType( gt );
-  battle.SetLimitDGun( dgun );
-  battle.SetDimMMs( dim );
-  battle.SetGhostedBuildings( ghost );
-//  battle.SetH( hash );
-  m_ui.OnBattleInfoUpdated( battle );
-}
-
-
 void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, std::string maphash, const std::string& map )
 {
   wxLogDebugFunc( _T("") );
@@ -286,29 +271,52 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
 
   battle.SetMap( WX_STRING(map), WX_STRING(maphash) );
 
-  if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) ) battle.SendMyBattleStatus();
+  if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) )
+  {
+    battle.SendMyBattleStatus();
+    battle.CustomBattleOptions()->loadOptions( MapOption, WX_STRING( map ) );
+    m_ui.OnBattleMapChanged( battle );
+  }
 
   m_ui.OnBattleInfoUpdated( battle );
 }
 
-
-void ServerEvents::OnSetBattleInfo( int battleid, const std::string& param, const std::string& value )
+void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const wxString& value )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( param + _T(", ") + value );
   Battle& battle = m_serv.GetBattle( battleid );
 
-  std::string val = value;
-
-  // TODO: This is a temporary solution until we can dump tasserver < 0.35 support
-  if      ( param == "game/startpostype"     ) battle.SetStartType( GetIntParam(val) );
-  else if ( param == "game/maxunits"         ) battle.SetMaxUnits( GetIntParam(val) );
-  else if ( param == "game/limitdgun"        ) battle.SetLimitDGun( GetIntParam(val) );
-  else if ( param == "game/startmetal"       ) battle.SetStartMetal( GetIntParam(val) );
-  else if ( param == "game/gamemode"         ) battle.SetGameType( GetIntParam(val) );
-  else if ( param == "game/ghostedbuildings" ) battle.SetGhostedBuildings( GetIntParam(val) );
-  else if ( param == "game/startenergy"      ) battle.SetStartEnergy( GetIntParam(val) );
-  else if ( param == "game/diminishingmms"   ) battle.SetDimMMs( GetIntParam(val) );
-
+  std::string val = STD_STRING(value);
+  wxString key = param;
+  if ( key.Left( 5 ) == _T("game/") )/// FIXME (BrainDamage#1#): change the slash type when the new spring version gets out
+  {/// TODO (BrainDamage#1#): remove all the engine hardcoded static containers/parsing code and move them to the new dynamic
+    key = key.AfterFirst( '/' );
+    if      ( key == _T("startpostype")     ) battle.SetStartType( GetIntParam(val) );
+    else if ( key == _T("maxunits")         ) battle.SetMaxUnits( GetIntParam(val) );
+    else if ( key == _T("limitdgun")        ) battle.SetLimitDGun( GetIntParam(val) );
+    else if ( key == _T("startmetal")       ) battle.SetStartMetal( GetIntParam(val) );
+    else if ( key == _T("gamemode")         ) battle.SetGameType( GetIntParam(val) );
+    else if ( key == _T("ghostedbuildings") ) battle.SetGhostedBuildings( GetIntParam(val) );
+    else if ( key == _T("startenergy")      ) battle.SetStartEnergy( GetIntParam(val) );
+    else if ( key == _T("diminishingmms")   ) battle.SetDimMMs( GetIntParam(val) );
+    battle.Update( wxString::Format(_T("%d_"), EngineOption ) + key );
+  }
+  else if ( key.Left( 5 ) == _T("game\\") )
+  {
+    key = key.AfterFirst( '\\' );
+     if ( key.Left( 11 ) == _T( "mapoptions\\" ) )
+    {
+      key = key.AfterFirst( '\\' );
+      if (  battle.CustomBattleOptions()->setSingleOption( key,  value, MapOption ) )  // m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+        battle.Update( wxString::Format(_T("%d_"), MapOption ) + key );
+    }
+    else if ( key.Left( 11 ) == _T( "modoptions\\" ) )
+    {
+      key = key.AfterFirst( '\\' );
+      if (  battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) );//m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+        battle.Update(  wxString::Format(_T("%d_"), ModOption ) + key );
+    }
+  }
 }
 
 
@@ -533,4 +541,9 @@ void ServerEvents::OnHostUdpPortChange( const int& udpport )
 void ServerEvents::OnUdpSourcePort(int udpport){
   if ( !m_serv.GetCurrentBattle() ) return;
   m_serv.GetCurrentBattle()->SetExternalUdpSourcePort(udpport);
+}
+
+void ServerEvents::OnKickedFromBattle()
+{
+	customMessageBox(SL_MAIN_ICON,_T("You were kicked from the battle!"),_T("Kicked by Host"));
 }

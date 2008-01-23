@@ -15,7 +15,9 @@
 #include <wx/msgdlg.h>
 #include <wx/menu.h>
 #include <wx/utils.h>
+#include <wx/event.h>
 #include <wx/notebook.h>
+
 
 #include "channel.h"
 #include "chatpanel.h"
@@ -28,7 +30,6 @@
 #include "mainwindow.h"
 #include "chatlog.h"
 #include "settings.h"
-
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 
@@ -194,7 +195,7 @@ void ChatPanel::CreateControls( )
 
   // Creating ui elements
   m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T(""), wxDefaultPosition, wxDefaultSize,
-                             wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+                                wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL);
 
   m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T(""), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), wxTE_PROCESS_ENTER );
   m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _("Send"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
@@ -462,7 +463,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
   // change the image of the tab to show new events
   if ( m_channel != 0 && m_ui.GetActiveChatPanel() != this )
-    for ( int i=0; i < m_chat_tabs->GetPageCount( ); ++i )
+    for ( int i=0; i < int(m_chat_tabs->GetPageCount( )); ++i )
       if ( m_chat_tabs->GetPage( i ) == this )
       {
         if ( m_type == CPT_Channel ) m_chat_tabs->SetPageImage( i, 4 );
@@ -757,7 +758,7 @@ void ChatPanel::Say( const wxString& message )
   }
   while ( lines.HasMoreTokens() ) {
     wxString line = lines.GetNextToken();
-    wxLogMessage(_T("line: ") + line );
+    wxLogMessage(_T("line: %s"), line.c_str() );
 
     if ( line.Find('/') == 0 ) {
       if ( m_ui.ExecuteSayCommand( line ) ) return;
@@ -1336,5 +1337,4 @@ void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event )
 {
   m_ui.GetServer().Ring( GetSelectedUser()->GetNick() );
 }
-
 

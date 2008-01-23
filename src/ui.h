@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_UI_H
 
 #include <string>
+#include <wx/string.h>
 #include <wx/thread.h>
 
 class Server;
@@ -117,8 +118,10 @@ class Ui
     void OnUserJoinedBattle( Battle& battle, User& user );
     void OnUserLeftBattle( Battle& battle, User& user );
     void OnBattleInfoUpdated( Battle& battle );
+    void OnBattleInfoUpdated( Battle& battle, const wxString& Tag );
     void OnBattleStarted( Battle& battle );
     void OnBattleStartRectsUpdated( Battle& battle );
+    void OnBattleMapChanged( Battle& battle );
 
     void OnBattleBotAdded( Battle& battle, BattleBot& bot );
     void OnBattleBotRemoved( Battle& battle, BattleBot& bot );
@@ -149,6 +152,8 @@ class Ui
     void OnModUnitsCached( const wxString& modname );
     void OnCachedThreadTerminated();
     void OnCachedThreadStarted();
+    
+    bool IsThisMe(User& other);
 
   protected:
     Spring* m_spring;

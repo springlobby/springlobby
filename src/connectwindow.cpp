@@ -270,7 +270,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
        customMessageBox(SL_MAIN_ICON, _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
     } else {
        Show();
-       wxLogWarning( _T("registration failed, reason: ")+(*reason)  );
+       wxLogWarning( _T("registration failed, reason: %s"), (*reason).c_str()  );
        customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\n")+(*reason) , _("Registration failed."), wxOK );
     }
 

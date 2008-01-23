@@ -34,6 +34,13 @@
 #include "images/download_map.xpm"
 #include "images/reload_map.xpm"
 
+// i think this is ok as temp measure to avoid warnings
+// until we drop support for wx26
+#ifdef HAVE_WX28
+    #define CONTAINS Contains
+#else
+    #define CONTAINS Inside
+#endif
 
 BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
   EVT_PAINT( MapCtrl::OnPaint )
@@ -470,7 +477,7 @@ void MapCtrl::DrawBackground( wxDC& dc )
 
 void MapCtrl::DrawStartRects( wxDC& dc )
 {
-  for ( int i = 0; i < m_battle->GetNumRects(); i++ ) {
+  for ( int i = 0; i < int(m_battle->GetNumRects()); i++ ) {
     wxRect sr = GetStartRect( i );
     if ( sr.IsEmpty() ) continue;
     wxColour col;
@@ -552,22 +559,25 @@ RectArea MapCtrl::GetBotRectArea( const wxRect& botrect, int x, int y )
   x = x - botrect.x;
   y = y - botrect.y;
   wxRect close = GetBotCloseRect();
-  if ( close.Inside( x, y ) ) return RA_Close;
-  wxRect side = GetBotSideRect();
-  if ( side.Inside( x, y ) ) return RA_Side;
-  wxRect AllyUp = GetBotUpAllyButtonRect();
-  if ( AllyUp.Inside( x, y ) ) return RA_UpAllyButton;
-  wxRect AllyDown = GetBotDownAllyButtonRect();
-  if ( AllyDown.Inside( x, y ) ) return RA_DownAllyButton;
-  wxRect handicap = GetBotHandicapRect();
-  if ( handicap.Inside( x, y ) ) return RA_Handicap;
-  wxRect HandicapUp = GetBotUpHandicapButtonRect();
-  if ( HandicapUp.Inside( x, y ) ) return RA_UpHandicapButton;
-  wxRect HandicapDown = GetBotDownHandicapButtonRect();
-  if ( HandicapDown.Inside( x, y ) ) return RA_DownHandicapButton;
 
-  wxRect bot( 0, 0, 16, 16 );
-  if ( bot.Inside( x, y ) ) return RA_Move;
+//TODO when wx26 support dropped remove macros
+  if ( close.CONTAINS( x, y ) ) return RA_Close;
+  wxRect side = GetBotSideRect();
+  if ( side.CONTAINS( x, y ) ) return RA_Side;
+  wxRect AllyUp = GetBotUpAllyButtonRect();
+  if ( AllyUp.CONTAINS( x, y ) ) return RA_UpAllyButton;
+  wxRect AllyDown = GetBotDownAllyButtonRect();
+  if ( AllyDown.CONTAINS( x, y ) ) return RA_DownAllyButton;
+  wxRect handicap = GetBotHandicapRect();
+  if ( handicap.CONTAINS( x, y ) ) return RA_Handicap;
+  wxRect HandicapUp = GetBotUpHandicapButtonRect();
+  if ( HandicapUp.CONTAINS( x, y ) ) return RA_UpHandicapButton;
+  wxRect HandicapDown = GetBotDownHandicapButtonRect();
+  if ( HandicapDown.CONTAINS( x, y ) ) return RA_DownHandicapButton;
+
+   wxRect bot( 0, 0, 16, 16 );
+  if ( bot.CONTAINS( x, y ) ) return RA_Move;
+
   return RA_Main;
 }
 
@@ -803,7 +813,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
       BattleBot* bot = m_battle->GetBot( m_bot_expanded );
       ASSERT_LOGIC( bot != 0, _T("MapCtrl::OnMouseMove(): bot = 0") );
       wxRect r = GetBotRect( *bot, true );
-      if ( r.Inside( event.GetX(), event.GetY() )  ) {
+      if ( r.CONTAINS( event.GetX(), event.GetY() )  ) {
         RectArea last = m_rect_area;
         m_rect_area = GetBotRectArea( r, event.GetX(), event.GetY() );
         if ( last != m_rect_area ) RefreshRect( r, false );
@@ -816,7 +826,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
         BattleBot* bot = m_battle->GetBot(i);
         if ( bot == 0 ) continue;
         wxRect r = GetBotRect( *bot, false );
-        if ( r.Inside( event.GetX(), event.GetY() )  ) {
+        if ( r.CONTAINS( event.GetX(), event.GetY() )  ) {
           m_rect_area = GetBotRectArea( r, event.GetX(), event.GetY() );
           m_bot_expanded = i;
           RefreshRect( GetBotRect( *bot, true ), false );
@@ -831,9 +841,9 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     wxRect r = GetRefreshRect();
     wxRect d = GetDownloadRect();
     RectArea old = m_rect_area;
-    if ( r.Inside( event.GetX(), event.GetY() ) ) {
+    if ( r.CONTAINS( event.GetX(), event.GetY() ) ) {
       m_rect_area = RA_Refresh;
-    } else if ( d.Inside( event.GetX(), event.GetY() ) ) {
+    } else if ( d.CONTAINS( event.GetX(), event.GetY() ) ) {
       m_rect_area = RA_Download;
     } else {
       m_rect_area = RA_Main;
@@ -891,7 +901,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   }
 
   // Make sure point is inside minimap
-  if ( GetMinimapRect().Inside( p ) ) {
+  if ( GetMinimapRect().CONTAINS( p ) ) {
 
     // Check if point is in a startrect.
     for ( int i = m_battle->GetNumRects(); i >= 0; i-- ) {
@@ -899,13 +909,13 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
       wxRect r = GetStartRect( i );
       if ( r.IsEmpty() ) continue;
 
-      if ( r.Inside( p ) ) {
+      if ( r.CONTAINS( p ) ) {
 
         if ( !m_ro ) {
-          if      ( (wxRect( r.x + r.width - m_close_img->GetWidth(), r.y + 1, m_close_img->GetWidth(), m_close_img->GetWidth() )).Inside( p ) ) m_rect_area = RA_UpRight;
-          else if ( (wxRect( r.x, r.y, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_UpLeft;
-          else if ( (wxRect( r.x + r.width - boxsize, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownRight;
-          //else if ( (wxRect( r.x, r.y + r.height - boxsize, boxsize, boxsize )).Inside( p ) ) m_rect_area = RA_DownLeft;
+          if      ( (wxRect( r.x + r.width - m_close_img->GetWidth(), r.y + 1, m_close_img->GetWidth(), m_close_img->GetWidth() )).CONTAINS( p ) ) m_rect_area = RA_UpRight;
+          else if ( (wxRect( r.x, r.y, boxsize, boxsize )).CONTAINS( p ) ) m_rect_area = RA_UpLeft;
+          else if ( (wxRect( r.x + r.width - boxsize, r.y + r.height - boxsize, boxsize, boxsize )).CONTAINS( p ) ) m_rect_area = RA_DownRight;
+          //else if ( (wxRect( r.x, r.y + r.height - boxsize, boxsize, boxsize )).CONTAINS( p ) ) m_rect_area = RA_DownLeft;
           else m_rect_area = RA_Main;
         }
         SetMouseOverRect( i );

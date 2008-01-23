@@ -321,7 +321,7 @@ void Ui::OpenWebBrowser( const wxString& url )
   {
     if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
     {
-      wxLogWarning( _T("can't launch browser: ") + sett().GetWebBrowserPath() );
+      wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().c_str() );
       customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
     }
 
@@ -730,7 +730,12 @@ void Ui::OnBattleClosed( Battle& battle )
   mw().GetJoinTab().GetBattleListTab().RemoveBattle( battle );
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
-    if ( &br->GetBattle() == &battle ) mw().GetJoinTab().LeaveCurrentBattle();
+    if ( &br->GetBattle() == &battle )
+	{
+	    //if (!battle.IsFounderMe() )
+          //  customMessage(SL_MAIN_ICON,_T("The current battle was closed by the host."),_T("Battle closed"));
+		mw().GetJoinTab().LeaveCurrentBattle();
+	}
   }
   for ( unsigned int b = 0; b < battle.GetNumUsers(); b++ ) {
     User& user = battle.GetUser( b );
@@ -786,6 +791,14 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
   m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
   if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
     mw().GetJoinTab().UpdateCurrentBattle();
+  }
+}
+
+void Ui::OnBattleInfoUpdated( Battle& battle, const wxString& Tag )
+{
+  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
+    mw().GetJoinTab().UpdateCurrentBattle( Tag );
   }
 }
 
@@ -874,7 +887,18 @@ void Ui::OnSpringTerminated( bool success )
 
 void Ui::OnBattleStartRectsUpdated( Battle& battle )
 {
-  mw().GetJoinTab().UpdateCurrentBattle();
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
+}
+
+
+void Ui::OnBattleMapChanged( Battle& battle )
+{
+  mw().GetJoinTab().UpdateCurrentBattle( true );
+  if (battle.IsFounderMe())
+  {
+	  battle.CustomBattleOptions()->loadMapOptions(battle.GetMapName());
+	  mw().GetJoinTab().ReloadMMoptTab();
+  }
 }
 
 
@@ -886,7 +910,7 @@ void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
     br->GetChatPanel().StatusMessage( WX_STRING( unitname ) + _T(" disabled.") );
   }
   //mw().GetJoinTab().UpdateCurrentBattle();
-  mw().GetJoinTab().UpdateCurrentBattle(true);
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
@@ -897,7 +921,7 @@ void Ui::OnBattleEnableUnit( Battle& battle, const std::string& unitname )
     br->GetChatPanel().StatusMessage( WX_STRING(unitname) + _T(" disabled.") );
   }
   //mw().GetJoinTab().UpdateCurrentBattle();
-  mw().GetJoinTab().UpdateCurrentBattle(true);
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
@@ -907,7 +931,7 @@ void Ui::OnBattleEnableAllUnits( Battle& battle )
   if ( br != 0 ) {
     br->GetChatPanel().StatusMessage( _T("All units enabled.") );
   }
-  mw().GetJoinTab().UpdateCurrentBattle(true);
+  mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
@@ -986,4 +1010,13 @@ void Ui::OnCachedThreadTerminated()
 void Ui::OnMainWindowDestruct()
 {
 	m_main_win = 0;
+}
+
+bool Ui::IsThisMe(User& other)
+{
+	//if i'm not connected i have no identity
+	if (!IsConnected() || m_serv==0)
+		return false;
+	else
+		return ( other.GetNick()==m_serv->GetMe().GetNick() );
 }
