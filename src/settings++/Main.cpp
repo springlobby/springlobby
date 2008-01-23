@@ -50,7 +50,12 @@ int Springsettings::OnExit()
 	return 0;
 }
 
+//! @brief is called when the app crashes
 void Springsettings::OnFatalException()
 {
-  CrashReport().GenerateReport(wxDebugReport::Context_Exception);
+  #if wxUSE_DEBUGREPORT
+  crashreport().GenerateReport(wxDebugReport::Context_Exception);
+  #else
+  wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease enable wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR );
+  #endif
 }
