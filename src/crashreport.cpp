@@ -16,7 +16,7 @@
 #include "utils.h"
 
 
-NetDebugReport::NetDebugReport() : wxDebugReportUpload ( _T("http://trac.springlobby.info/attachment/ticket/236"), _T("attachment"), _T("?action=new") )
+NetDebugReport::NetDebugReport() : wxDebugReportUpload ( _T(" http://www.hd.chalmers.se/~tc/trace/"), _T("trace"), _T("uploadtrace.php") )
 {
 }
 
@@ -71,7 +71,7 @@ void CrashReport::GenerateReport(wxDebugReport::Context ctx)
 #if wxUSE_STD_IOSTREAM
   report->AddText( _T("AppLog.txt"), WX_STRING( crashlog.str() ), _("Application verbose log") );
 #endif
-  report->AddFile( wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("scrip_debugt.txt"), _("Last generated spring launching script") );
+  report->AddFile( wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("script_debug.txt"), _("Last generated spring launching script") );
 
   // calling Show() is not mandatory, but is more polite
   if ( wxDebugReportPreviewStd().Show(*report) )

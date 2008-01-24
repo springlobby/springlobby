@@ -42,7 +42,6 @@ void InitializeLoggingTargets()
   wxLogChain *logChain = new wxLogChain( loggerconsole );
   logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
   logChain->SetLogLevel( wxLOG_Warning );
-  logChain->SetVerbose( true );
   ///hidden stream logging for crash reports
   #if wxUSE_DEBUGREPORT
   wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
