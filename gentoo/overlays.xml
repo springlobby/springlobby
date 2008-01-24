@@ -9,7 +9,7 @@
       http://springlobby.info
     </link>
     <description>
-      SpringLobby ebuilds.
+      spring, springlobby, maps, mods, lua scripts
     </description>
   </overlay>
   <overlay
@@ -21,7 +21,7 @@
       http://springrts.com
     </link>
     <description>
-      High quality unofficial ebuilds for spring.
+      Please use the springlobby overlay instead, for any spring content.
     </description>
   </overlay>
 </layman>

@@ -21,6 +21,7 @@
 #include "server.h"
 #include "utils.h"
 #include "uiutils.h"
+#include "countrycodes.h"
 
 #include "settings++/custom_dialogs.h"
 
@@ -50,7 +51,7 @@ END_EVENT_TABLE()
 
 Ui* BattleroomListCtrl::m_ui_for_sort = 0;
 
-BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui ) : 
+BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui ) :
 	customListCtrl(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL ),
 	m_battle(battle),
   m_sel_user(0), m_sel_bot(0),
@@ -123,13 +124,13 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );
   SetColumnWidth( 3, 20 );
-  SetColumnWidth( 4, 20 ); 
+  SetColumnWidth( 4, 20 );
   SetColumnWidth( 6, 26 );
   SetColumnWidth( 7, 26 );
 #endif
-  
+
   SetColumnWidth( 5, 170 );
- 
+
   SetColumnWidth( 8, 80 );
   SetColumnWidth( 9, 130 );
 
@@ -993,7 +994,7 @@ void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 		int coloumn = getColoumnFromPosition(position);
 
 		if (item_hit != wxNOT_FOUND)
-		{				
+		{
 			long item = GetItemData(item_hit);
 			item_content content = this->items[(size_t)item];
 
@@ -1012,26 +1013,26 @@ void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 						m_tiptext = _T("Spectator");
 					else
 						m_tiptext =  _T("Human Player");
-					break;	
+					break;
 				case 1: // icon
 					if ( content.is_bot )
-						m_tiptext = WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()),  
+						m_tiptext = WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()),
 								((BattleBot*)content.data)->bs.side ));
 					else if ( ((User*)content.data)->BattleStatus().spectator )
 						m_tiptext = _T("Spectators have no side");
 					else
-						m_tiptext =  WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), 
+						m_tiptext =  WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()),
 								((User*)content.data)->BattleStatus().side ));
 					break;
 
 				case 3: // country
-					m_tiptext = (content.is_bot ? _T("This bot is from nowhere particluar") 
-							: WX_STRING(((User*)content.data)->GetCountry()).MakeUpper());
-					break;	
+					m_tiptext = (content.is_bot ? _T("This bot is from nowhere particluar")
+							: GetFlagNameFromCountryCode(WX_STRING(((User*)content.data)->GetCountry()).MakeUpper()));
+					break;
 				case 4: // rank
-					m_tiptext = (content.is_bot ? _T("This bot has no rank") 
+					m_tiptext = (content.is_bot ? _T("This bot has no rank")
 							: ((User*)content.data)->GetRankName(((User*)content.data)->GetStatus().rank));
-					break;	
+					break;
 
 				case 5: //name
 					m_tiptext = WX_STRING( (content.is_bot ?((BattleBot*)content.data)->name
@@ -1041,9 +1042,9 @@ void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 				case 8: // cpu
 					m_tiptext = (content.is_bot ? WX_STRING (((BattleBot*)content.data)->aidll)
 							: m_colinfovec[coloumn].first);
-					break;	
+					break;
 
-				default: 
+				default:
 					m_tiptext =m_colinfovec[coloumn].first;
 					break;
 				}

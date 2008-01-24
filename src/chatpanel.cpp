@@ -453,9 +453,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 {
   if (! m_chatlog_text ) return;
   LogTime();
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(col));
-  m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
-  m_chatlog_text->SetFont( fon );
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(col, sett().GetChatColorBackground(), fon ));
   #ifdef __WXMSW__
   m_chatlog_text->Freeze();
   #endif

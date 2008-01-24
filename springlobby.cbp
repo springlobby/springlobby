@@ -186,6 +186,8 @@
 		<Unit filename="src/chatpanel.h" />
 		<Unit filename="src/connectwindow.cpp" />
 		<Unit filename="src/connectwindow.h" />
+		<Unit filename="src/countrycodes.cpp" />
+		<Unit filename="src/countrycodes.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
 		<Unit filename="src/flagimagedata.h" />
