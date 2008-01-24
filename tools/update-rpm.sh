@@ -20,7 +20,7 @@ tarball=springlobby-${version}.tar.bz2
 cd rpm/home:accAgon/SpringLobby
 osc up
 osc rm springlobby-0.0.1.*.tar.bz2
-sed -i 's/^%define upstream_build_number/\& '${buildnumber}'/' springlobby_tarball.spec
+sed -i 's/^%define upstream_build_number.*/& '${buildnumber}'/' springlobby_tarball.spec
 cp /srv/www/springlobby/tarballs/${tarball} .
 osc add ${tarball}
 osc ci -m "autobuild ${version}"
