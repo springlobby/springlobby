@@ -367,7 +367,7 @@ wxString ConvertToTASServerBuggedChecksum( const wxString& csum )
 
 void TASServer::ExecuteCommand( const std::string& in )
 {
-  wxLogMessage( _T("s"), WX_STRING(in).c_str()  );
+  wxLogMessage( _T("%s"), WX_STRING(in).c_str()  );
   std::string cmd;
   std::string params = in;
   std::string::size_type pos = 0;
@@ -742,7 +742,7 @@ void TASServer::UDPPing(){/// used for nat travelsal
   wxaddr.Hostname(WX_STRING(m_addr));
   wxaddr.Service(m_udp_port);
 
-  char *message="ipv4 sux!";
+  const char *message="ipv4 sux!";
   if(udp_socket.IsOk()){
     udp_socket.SendTo(wxaddr,message,strlen(message)+1);
   }else{
