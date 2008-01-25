@@ -20,9 +20,7 @@ IBattle::IBattle():
   m_ghostedbuildings(true),
 
   m_gametype(GT_ComContinue),
-  m_starttype(ST_Fixed),
-
-  m_units_num(0)
+  m_starttype(ST_Fixed)
 {
 }
 
@@ -176,31 +174,25 @@ bool IBattle::ModExists()
 
 void IBattle::DisableUnit( const std::string& unitname )
 {
-  std::string::size_type i = m_units.find( unitname, 0 );
-  if ( i != std::string::npos ) return;
-  m_units += unitname;
-  m_units += " ";
-  m_units_num++;
+  if ( m_units.Index( WX_STRING(unitname) ) == wxNOT_FOUND ) m_units.Add( WX_STRING( unitname ) );
 }
 
 
 void IBattle::EnableUnit( const std::string& unitname )
 {
-  std::string::size_type i = m_units.find( unitname, 0 );
-  if ( i == std::string::npos ) return;
-  m_units.replace( i, unitname.length()+1, "" );
-  m_units_num--;
+  int pos = m_units.Index( WX_STRING(unitname) );
+  if ( pos == wxNOT_FOUND ) return;
+  m_units.RemoveAt( pos );
 }
 
 
 void IBattle::EnableAllUnits()
 {
-  m_units = "";
-  m_units_num = 0;
+  m_units.Empty();
 }
 
 
-std::string IBattle::DisabledUnits()
+wxArrayString IBattle::DisabledUnits()
 {
   return m_units;
 }

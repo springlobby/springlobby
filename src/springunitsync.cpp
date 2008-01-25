@@ -454,8 +454,8 @@ wxArrayString SpringUnitSync::GetUnitsList( const std::string& modname )
   susynclib()->AddAllArchives( (susynclib()->GetPrimaryModArchive( susynclib()->GetModIndex( WX_STRING(modname) ) )) );
   while ( susynclib()->ProcessUnitsNoChecksum() );
   for ( int i = 0; i < susynclib()->GetUnitCount(); i++ ) {
-    wxString tmp = susynclib()->GetUnitName(i) + _T("(");
-    tmp += susynclib()->GetFullUnitName(i) + _T(")");
+    wxString tmp = susynclib()->GetFullUnitName(i) + _T("(");
+    tmp += susynclib()->GetUnitName(i) + _T(")");
     ret.Add( tmp );
   }
 

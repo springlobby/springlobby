@@ -144,8 +144,8 @@ void SinglePlayerBattle::GetFreePosition( int& x, int& y )
       }
     }
     if ( !taken ) {
-      x = map.info.positions[i].x;
-      y = map.info.positions[i].y;
+      x = boundry(map.info.positions[i].x, 0, map.info.width);
+      y = boundry(map.info.positions[i].y, 0, map.info.height);
       return;
     }
   }

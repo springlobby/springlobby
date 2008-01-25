@@ -12,7 +12,8 @@
 #include "../images/springlobby.xpm"
 wxWindow* CustomMessageBox::m_settingsWindow = 0;
 wxWindow* CustomMessageBox::m_lobbyWindow = 0;
-
+wxWindow* CustomNonBlockingMessageBox::m_settingsWindow = 0;
+wxWindow* CustomNonBlockingMessageBox::m_lobbyWindow = 0;
 
 
 CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
@@ -82,6 +83,67 @@ int customMessageBox( int whichIcon , const wxString& message,const wxString& ca
 			case wxID_NO: return wxNO;
 		}
 		return -1;
+}
+
+CustomNonBlockingMessageBox::CustomNonBlockingMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
+        const wxString& caption ,
+        long style, const wxPoint& pos )
+			: wxDialog(parent,wxID_ANY,caption,pos,wxDefaultSize,style|wxFRAME_FLOAT_ON_PARENT)
+{
+	SetIcon(*icon);
+}
+
+CustomNonBlockingMessageBox::~CustomNonBlockingMessageBox()
+{
+}
+
+void CustomNonBlockingMessageBox::setLobbypointer(wxWindow* arg)
+{
+	m_lobbyWindow = arg;
+}
+
+ void CustomNonBlockingMessageBox::setSettingspointer(wxWindow* arg)
+{
+	m_settingsWindow = arg;
+}
+
+ wxWindow* CustomNonBlockingMessageBox::getLobbypointer()
+{
+//	 if (m_lobbyWindow==0)
+//			 wxLogWarning(_T("null parent window in custom message dialog"));
+	return m_lobbyWindow;
+}
+
+ wxWindow* CustomNonBlockingMessageBox::getSettingspointer()
+{
+//	 if (m_settingsWindow==0)
+//		 wxLogWarning(_T("null parent window in custom message dialog"));
+	return m_settingsWindow;
+}
+
+void customMessageBoxNoModal( int whichIcon , const wxString& message,const wxString& caption,
+		long style , int x, int y )
+{
+		wxWindow* parent;
+		wxIcon* icon;
+		switch (whichIcon)
+		{
+			case SL_MAIN_ICON:
+				icon = new wxIcon(springlobby_xpm);
+				parent = CustomMessageBox::getLobbypointer();
+				break;
+			case SS_MAIN_ICON:
+				icon = new wxIcon(springsettings_xpm);
+				parent = CustomMessageBox::getSettingspointer();
+				break;
+			default:
+				icon = new wxIcon(wxNullIcon);
+				parent = 0;
+				break;
+
+		}
+		CustomNonBlockingMessageBox dlg(icon,parent,message,caption,style,wxPoint(x,y));
+		dlg.Show(true);
 }
 
 CreditsDialog::CreditsDialog(wxWindow* parent,wxString title,int whichIcon) : wxDialog(parent,-1,title,wxDefaultPosition,

@@ -135,8 +135,7 @@ class IBattle
     virtual void DisableUnit( const std::string& unitname );
     virtual void EnableUnit( const std::string& unitname );
     virtual void EnableAllUnits();
-    virtual int GetNumDisabledUnits() { return m_units_num; }
-    virtual std::string DisabledUnits();
+    virtual wxArrayString DisabledUnits();
 
     virtual void OnUnitSyncReloaded();
 
@@ -168,8 +167,7 @@ class IBattle
     GameType m_gametype;
     StartType m_starttype;
 
-    std::string m_units;
-    int m_units_num;
+    wxArrayString m_units;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IBATTLE_H

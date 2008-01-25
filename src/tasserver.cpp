@@ -367,7 +367,7 @@ wxString ConvertToTASServerBuggedChecksum( const wxString& csum )
 
 void TASServer::ExecuteCommand( const std::string& in )
 {
-  wxLogMessage( _T("s"), WX_STRING(in).c_str()  );
+  wxLogMessage( _T("%s"), WX_STRING(in).c_str()  );
   std::string cmd;
   std::string params = in;
   std::string::size_type pos = 0;
@@ -742,7 +742,7 @@ void TASServer::UDPPing(){/// used for nat travelsal
   wxaddr.Hostname(WX_STRING(m_addr));
   wxaddr.Service(m_udp_port);
 
-  char *message="ipv4 sux!";
+  const char *message="ipv4 sux!";
   if(udp_socket.IsOk()){
     udp_socket.SendTo(wxaddr,message,strlen(message)+1);
   }else{
@@ -1064,7 +1064,7 @@ void TASServer::SendHostInfo( HostInfo update )
 
     m_sock->Send( STD_STRING(cmd) );
   }
-  if ( ( update & (HI_Send_All_opts) ) > 0 ) {
+  if ( ( update & HI_Send_All_opts ) > 0 ) {
     wxString cmd;
 
     cmd = _T("SETSCRIPTTAGS ");
@@ -1124,9 +1124,14 @@ void TASServer::SendHostInfo( HostInfo update )
 
   }
   if ( (update & HI_Restrictions) > 0 ) {
-    std::string units = battle.DisabledUnits();
+    wxArrayString units = battle.DisabledUnits();
     m_sock->Send( "ENABLEALLUNITS\n");
-    if ( units.length() > 0 ) m_sock->Send( "DISABLEUNITS " + units + "\n");
+    if ( units.GetCount() > 0 )
+    {
+      wxString msg = _T("DISABLEUNITS ");
+      for ( unsigned int i = 0; i < units.GetCount(); i++ ) msg += units[i] + _T(" ");
+      m_sock->Send( STD_STRING( msg ) + "\n");
+    }
   }
 }
 
@@ -1433,10 +1438,10 @@ void TASServer::RemoveBot( int battleid, const std::string& nick )
   BattleBot* bot = battle.GetBot( nick );
   ASSERT_LOGIC( bot != 0, _T("Bot does not exist.") );
 
-/*  if (!( battle.IsFounderMe() || ( bot->owner == GetMe().GetNick() ) )) {
+  if (!( battle.IsFounderMe() || ( bot->owner == GetMe().GetNick() ) )) {
     DoActionBattle( battleid, "thinks the bot " + nick + " should be removed." );
     return;
-  }*/
+  }
 
   //REMOVEBOT name
   m_sock->Send( "REMOVEBOT " + nick + "\n" );
