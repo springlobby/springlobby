@@ -580,6 +580,6 @@ springsettings_SOURCES = \
 
 if USE_WINDRES
 	springsettings_SOURCES += \
-		src/springlobby.rc
+		src/settings++/settings.rc
 endif
 

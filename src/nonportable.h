@@ -7,7 +7,7 @@
   #define USYNC_CALL_CONV __stdcall
   #define SPRING_BIN _T("spring.exe")
   #define DOS_TXT true
-#elif defined(__WXGTK__)
+#elif defined(__WXGTK__) || defined(__WXX11__)
   #define SPRING_VERSION_PARAM _T("-V")
   #define CHOOSE_EXE _("Any file (*)|*")
   #define USYNC_CALL_CONV

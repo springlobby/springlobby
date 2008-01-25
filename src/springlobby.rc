@@ -1,2 +1,2 @@
 springlobby ICON "images/SpringLobby.ico"
-#include "wx/msw/wx.rc"
+#include <wx/msw/wx.rc>
