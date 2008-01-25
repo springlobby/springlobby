@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 
 set -e
+cd $(dirname $0)/..
 
-cd ~/checkouts/git/springlobby/
+if [ $# -ne 1 ] ; then
+    echo "Usage: damage-my-brain who"
+    exit
+fi
+
+who=$1
+
 git-checkout master
-git-fetch $1
-git-merge $1/master
-git-svn -i trunk set-tree HEAD
-git-tag $(git-svn log --limit 1 --oneline | cut -d' ' -f1)
-git-push --tags my-public
-
+git-fetch ${who}
+git-merge ${who}/master
+#git-svn -i trunk set-tree HEAD
+#git-tag $(git-svn log --limit 1 --oneline | cut -d' ' -f1)
+#git-push --tags my-public
+git-push
