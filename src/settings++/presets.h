@@ -27,19 +27,19 @@
 #include <string>
 #include <wx/string.h>
 /**** Presets for tab_simple go here
- * 
- * 
+ *
+ *
  */
-template <typename T, int valueCount> class presetValues 
+template <typename T, int valueCount> class presetValues
 {
 
-public: 
+public:
 	std::map<wxString,T> values;
 		wxString key;
-	
+
 	//levelLabels and values_arg MUST have same length
 		presetValues ( wxString key_arg,const wxString* levelLabels,const T* values_arg);
-	
+
 };
 const int levels_low_To_High_size = 3;
 const int levels_vlow_To_vHigh_size =5;
@@ -83,19 +83,19 @@ const int vl_DynamicSky[5] = {0,0,0,1,1};//dynamic clouds
 const int vl_SmoothPoints[5] = {0,1,1,1,1};
 const int vl_SmoothLines[5] = {0,0,1,1,1};
 const int vl_FSAA[5] = {0,1,1,1,1};//fullscreen aa enable/disable
-const int vl_FSAALevel[5] = {0,1,2,8,16};//fullscreen aa samples
+const int vl_FSAALevel[5] = {0,0,0,0,1};//fullscreen aa samples
 const int vl_AdvUnitShading[5] = {0,0,0,1,1}; //refl. units
 
 const presetValues<int, 5> pr_DepthBufferBits = presetValues<int, 5>(wxT("DepthBufferBits"),levels_vlow_To_vHigh,vl_DepthBufferBits);
 const presetValues<int, 5> pr_ReflectiveWater = presetValues<int, 5>(wxT("ReflectiveWater"),levels_vlow_To_vHigh,vl_ReflectiveWater);
 const presetValues<int, 5> pr_Shadows = presetValues<int, 5>(wxT("Shadows"),levels_vlow_To_vHigh,vl_Shadows);
 const presetValues<int, 5> pr_3DTrees = presetValues<int, 5>(wxT("3DTrees"),levels_vlow_To_vHigh,vl_3DTrees);
-const presetValues<int, 5> pr_AdvSky = presetValues<int, 5>(wxT("AdvSky"),levels_vlow_To_vHigh,vl_AdvSky); 
-const presetValues<int, 5> pr_DynamicSky = presetValues<int, 5>(wxT("DynamicSky"),levels_vlow_To_vHigh,vl_DynamicSky); 
+const presetValues<int, 5> pr_AdvSky = presetValues<int, 5>(wxT("AdvSky"),levels_vlow_To_vHigh,vl_AdvSky);
+const presetValues<int, 5> pr_DynamicSky = presetValues<int, 5>(wxT("DynamicSky"),levels_vlow_To_vHigh,vl_DynamicSky);
 const presetValues<int, 5> pr_SmoothPoints = presetValues<int, 5>(wxT("SmoothPoints"),levels_vlow_To_vHigh,vl_SmoothPoints);
 const presetValues<int, 5> pr_SmoothLines = presetValues<int, 5>(wxT("SmoothLines"),levels_vlow_To_vHigh,vl_SmoothLines);
-const presetValues<int, 5> pr_FSAA = presetValues<int, 5>(wxT("FSAA"),levels_vlow_To_vHigh,vl_FSAA); 
-const presetValues<int, 5> pr_FSAALevel = presetValues<int, 5>(wxT("FSAALevel"),levels_vlow_To_vHigh,vl_FSAALevel); 
+const presetValues<int, 5> pr_FSAA = presetValues<int, 5>(wxT("FSAA"),levels_vlow_To_vHigh,vl_FSAA);
+const presetValues<int, 5> pr_FSAALevel = presetValues<int, 5>(wxT("FSAALevel"),levels_vlow_To_vHigh,vl_FSAALevel);
 const presetValues<int, 5> pr_AdvUnitShading = presetValues<int, 5>(wxT("AdvUnitShading"),levels_vlow_To_vHigh,vl_AdvUnitShading);
 
 const int prVal_RenderQuality_size = 11;
@@ -109,7 +109,7 @@ const int vl_Resolution_X[vl_Resolution_Str_size] = { 800, 1024, 1152, 1280, 128
 const int vl_Resolution_Y[vl_Resolution_Str_size] = { 600,  768,  864,  960, 1024, 1200,  800,  900, 1050, 1200,  768, 1024, 1200};
 const int vl_Resolution_startOfDualScreenRes = 10;
 //must be same order
-const wxString vl_Resolution_Str[vl_Resolution_Str_size] = 
+const wxString vl_Resolution_Str[vl_Resolution_Str_size] =
 { 		wxT("800 x 600"), wxT("1024 x 768"), wxT("1152 x 864"), wxT("1280 x 960"), wxT("1280 x 1024"),
 		wxT("1600 x 1200"), wxT("1280 x 800 (widescreen)"), wxT("1440 x 900 (widescreen)"), wxT("1680 x 1050 (widescreen)") ,
 							wxT("1920 x 1200 (widescreen)"),
