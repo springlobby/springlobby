@@ -286,20 +286,12 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
   wxLogDebugFunc( param + _T(", ") + value );
   Battle& battle = m_serv.GetBattle( battleid );
 
-  std::string val = STD_STRING(value);
   wxString key = param;
   if ( key.Left( 5 ) == _T("game/") )/// FIXME (BrainDamage#1#): change the slash type when the new spring version gets out
   {/// TODO (BrainDamage#1#): remove all the engine hardcoded static containers/parsing code and move them to the new dynamic
     key = key.AfterFirst( '/' );
-    if      ( key == _T("startpostype")     ) battle.SetStartType( GetIntParam(val) );
-    else if ( key == _T("maxunits")         ) battle.SetMaxUnits( GetIntParam(val) );
-    else if ( key == _T("limitdgun")        ) battle.SetLimitDGun( GetIntParam(val) );
-    else if ( key == _T("startmetal")       ) battle.SetStartMetal( GetIntParam(val) );
-    else if ( key == _T("gamemode")         ) battle.SetGameType( GetIntParam(val) );
-    else if ( key == _T("ghostedbuildings") ) battle.SetGhostedBuildings( GetIntParam(val) );
-    else if ( key == _T("startenergy")      ) battle.SetStartEnergy( GetIntParam(val) );
-    else if ( key == _T("diminishingmms")   ) battle.SetDimMMs( GetIntParam(val) );
-    battle.Update( wxString::Format(_T("%d_"), EngineOption ) + key );
+    if (  battle.CustomBattleOptions()->setSingleOption( key,  value, EngineOption ) )
+      battle.Update( wxString::Format(_T("%d_"), EngineOption ) + key );
   }
   else if ( key.Left( 5 ) == _T("game\\") )
   {

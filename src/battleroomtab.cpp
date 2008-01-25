@@ -130,34 +130,12 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_opts_list->InsertItem( pos, _("Tidal strength") );
   m_opt_list_map[ _("Tidal strength") ] = pos++;
 
-  m_opts_list->InsertItem( pos++, wxEmptyString );
-
-  m_opts_list->InsertItem( pos, _("Startpos") );
-  m_opt_list_map[ _T("startpostype") ] = pos++;
-  UpdateBattleInfo( wxString::Format(_T("%d_startpostype"), EngineOption ) );
-  m_opts_list->InsertItem( pos, _("Game end") );
-  m_opt_list_map[  _T("gamemode") ] = pos++;
-  UpdateBattleInfo( wxString::Format(_T("%d_gamemode"), EngineOption ) );
-  m_opts_list->InsertItem( pos, _("Limit D-gun") );
-  m_opt_list_map[ _T("limitdgun") ] = pos++;
-  UpdateBattleInfo( wxString::Format(_T("%d_limitdgun"), EngineOption ) );
-  m_opts_list->InsertItem( pos, _("Start metal") );
-  m_opt_list_map[ _T("startmetal") ] = pos++;
-  UpdateBattleInfo( wxString::Format(_T("%d_startmetal"), EngineOption ) );
-  m_opts_list->InsertItem( pos, _("Start energy") );
-  m_opt_list_map[ _T("startenergy") ] = pos++;
-  UpdateBattleInfo( wxString::Format(_T("%d_startenergy"), EngineOption ) );
-  m_opts_list->InsertItem( pos, _("Max units") );
-  m_opt_list_map[ _T("maxunits") ] = pos++;
-  UpdateBattleInfo( wxString::Format(_T("%d_maxunits"), EngineOption ) );
-  m_opts_list->InsertItem( pos, _("Restrictions") );
-  m_opt_list_map[ _T("restrictions") ] = pos++;
-  UpdateBattleInfo( wxString::Format(_T("%d_restrictions"), EngineOption ) );
-
-  // add map/mod options to the list
+  // add engine/map/mod options to the list
   m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetModName() );
   m_battle.CustomBattleOptions()->loadOptions( MapOption, m_battle.GetMapName() );
 
+  m_opts_list->InsertItem( pos++, wxEmptyString );
+  pos = AddMMOptionsToList( pos++, EngineOption );
   m_opts_list->InsertItem( pos++, wxEmptyString );
   pos = AddMMOptionsToList( pos, ModOption );
   m_opts_list->InsertItem( pos++, wxEmptyString );
@@ -309,18 +287,9 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
   wxString key = Tag.AfterFirst( '_' );
   long index = m_opt_list_map[ key ];
   wxString value;
-  if ( type == EngineOption )
-  {
-    if ( key == _T("startpostype") ) value = _GetStartPosStr( m_battle.GetStartType() );
-    if ( key == _T("gamemode") ) value = _GetGameTypeStr( m_battle.GetGameType() );
-    if ( key == _T("limitdgun") ) value = bool2yn( m_battle.LimitDGun() );
-    if ( key == _T("startmetal") ) value = wxString::Format( _T("%d"), m_battle.GetStartMetal() );
-    if ( key == _T("startenergy") ) value =  wxString::Format( _T("%d"), m_battle.GetStartEnergy() );
-    if ( key == _T("maxunits") ) value = wxString::Format( _T("%d"), m_battle.GetMaxUnits() );
-    if ( key == _T("restrictions") ) value = bool2yn( m_battle.DisabledUnits().GetCount() > 0 );
-    if ( !value.IsEmpty() ) m_opts_list->SetItem( index, 1, value );
-  }
-  if ( type == MapOption || type == ModOption )
+  if ( type == EngineOption && key == _T("restrictions") )
+    m_opts_list->SetItem( index, 1, bool2yn( m_battle.DisabledUnits().GetCount() > 0 ) );
+  else if ( type == MapOption || type == ModOption || EngineOption )
   {
     OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( key );
     if ( DataType == opt_bool )

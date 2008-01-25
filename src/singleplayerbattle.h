@@ -8,7 +8,6 @@
 
 #include "iunitsync.h"
 #include "ibattle.h"
-#include "mmoptionswrapper.h"
 
 class Ui;
 
@@ -42,9 +41,9 @@ class SinglePlayerBot
 
     bool IsPlayer() { return m_dll.IsEmpty(); }
     bool IsBot() { return !m_dll.IsEmpty(); }
-    
+
   private:
-	
+
     int m_ally;
     unsigned int m_pos_x;
     unsigned int m_pos_y;
@@ -103,13 +102,13 @@ class SinglePlayerBattle: public IBattle
 
     std::vector<BattleStartRect*>::size_type GetNumRects() { return 0; }
     mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
-    
+
   protected:
 
     Ui& m_ui;
     MainSinglePlayerTab& m_sptab;
     std::vector<BattleBot*> m_bots;
-    
+
     mmOptionsWrapper m_opt_wrap;
 
 };

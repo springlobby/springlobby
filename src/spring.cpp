@@ -274,22 +274,8 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
   //s += wxString::Format( _T("\tMapname=%s;\n"), bo.mapname.c_str() );
   s += _T("\tMapname=") + battle.GetMapName() + _T(";\n");
-  s += wxString::Format( _T("\tStartMetal=%d;\n"), battle.GetStartMetal() );
-  s += wxString::Format( _T("\tStartEnergy=%d;\n"), battle.GetStartEnergy() );
-  s += wxString::Format( _T("\tMaxUnits=%d;\n"), battle.GetMaxUnits() );
-  s += wxString::Format( _T("\tStartPosType=%d;\n"), battle.GetStartType() );
-  s += wxString::Format( _T("\tGameMode=%d;\n"), battle.GetGameType() );
   s += WX_STRING(("\tGameType=" + usync()->GetModArchive(usync()->GetModIndex(STD_STRING(battle.GetModName()))) + ";\n"));
-  s += wxString::Format( _T("\tLimitDGun=%d;\n"), battle.LimitDGun()?1:0 );
-  s += wxString::Format( _T("\tDiminishingMMs=%d;\n"), battle.DimMMs()?1:0 );
-  s += wxString::Format( _T("\tGhostedBuildings=%d;\n\n"), battle.GhostedBuildings()?1:0 );
-
-  battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
-  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
-  {
-    s += _T("\t") + it->first + _T("=") + it->second.second + _T(";\n");
-  }
-  battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
+  battle.CustomBattleOptions()->getOptions( &optlist, EngineOption );
   for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
     s += _T("\t") + it->first + _T("=") + it->second.second + _T(";\n");
@@ -413,14 +399,15 @@ wxString Spring::GetScriptTxt( Battle& battle )
   }
   wxLogMessage( _T("13") );
 
-
+  long startpostype;
+  battle.CustomBattleOptions()->getSingleValue( _T("startpostype"), EngineOption ).ToLong( &startpostype );
   for ( int i = 0; i < NumAllys; i++ ) {
     s += wxString::Format( _T("\t[ALLYTEAM%d]\n\t{\n"), i );
 
     int NumInAlly = 0;
     s += wxString::Format( _T("\t\tNumAllies=%d;\n"), NumInAlly );
 
-   if ( (battle.GetStartRect(AllyRevConv[i]) != 0) && (battle.GetStartType() == ST_Choose) ) {
+   if ( (battle.GetStartRect(AllyRevConv[i]) != 0) && (startpostype == ST_Choose) ) {
       BattleStartRect* sr = (BattleStartRect*)battle.GetStartRect(AllyRevConv[i]);
       const char* old_locale = std::setlocale(LC_NUMERIC, "C");
       s += wxString::Format( _T("\t\tStartRectLeft=%.3f;\n"), sr->left / 200.0 );
@@ -571,11 +558,12 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   int NumAllys = 0;
   int PlayerTeam = -1;
 
-  if ( usync()->VersionSupports( GF_XYStartPos ) && battle.GetStartType() == ST_Fixed ) battle.SetStartType( ST_Pick );
-
   wxStringTripleVec optlist;
 
-  wxLogMessage( _T("StartPosType=") + WX_STRING( i2s( battle.GetStartType() ) ) );
+  long startpostype;
+  battle.CustomBattleOptions()->getSingleValue( _T("startpostype"), EngineOption ).ToLong( &startpostype );
+
+  wxLogMessage( _T("StartPosType=%ld"), startpostype );
 
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
@@ -596,15 +584,12 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   //s += wxString::Format( _T("\tMapname=%s;\n"), bo.mapname.c_str() );
   s += _T("\tMapname=") + battle.GetMapName() + _T(";\n");
-  s += wxString::Format( _T("\tStartMetal=%d;\n"), battle.GetStartMetal() );
-  s += wxString::Format( _T("\tStartEnergy=%d;\n"), battle.GetStartEnergy() );
-  s += wxString::Format( _T("\tMaxUnits=%d;\n"), battle.GetMaxUnits() );
-  s += wxString::Format( _T("\tStartPosType=%d;\n"), battle.GetStartType() );
-  s += wxString::Format( _T("\tGameMode=%d;\n"), battle.GetGameType() );
   s += WX_STRING(("\tGameType=" + usync()->GetModArchive(usync()->GetModIndex(STD_STRING(battle.GetModName()))) + ";\n"));
-  s += wxString::Format( _T("\tLimitDGun=%d;\n"), battle.LimitDGun()?1:0 );
-  s += wxString::Format( _T("\tDiminishingMMs=%d;\n"), battle.DimMMs()?1:0 );
-  s += wxString::Format( _T("\tGhostedBuildings=%d;\n\n"), battle.GhostedBuildings()?1:0 );
+  battle.CustomBattleOptions()->getOptions( &optlist, EngineOption );
+  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  {
+    s += _T("\t") + it->first + _T("=") + it->second.second + _T(";\n");
+  }
 
   s += _T("\tHostIP=localhost;\n");
 
@@ -625,11 +610,11 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) { // TODO fix this when new Spring comes.
     BattleBot* bot;
-    if ( battle.GetStartType() == 3) bot = battle.GetBot( i );
+    if ( startpostype == 3) bot = battle.GetBot( i );
     else bot = battle.GetBotByStartPosition( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i );
-    if ( battle.GetStartType() == 3 ){
+    if ( startpostype == 3 ){
       s += wxString::Format( _T("\t\tStartPosX=%d;\n"), bot->posx );
       s += wxString::Format( _T("\t\tStartPosZ=%d;\n"), bot->posy );
     }
