@@ -10,10 +10,12 @@
 #define wxLogDebugFunc( params ) wxLogTrace(_T("function calls"), params )
 #endif
 
+#if ( !defined(HAVE_WX26) && !defined(HAVE_WX28) )
 #if( wxMAJOR_VERSION==2 && wxMINOR_VERSION == 6 )
 #define HAVE_WX26
 #elif( wxMAJOR_VERSION==2 && wxMINOR_VERSION == 8 )
 #define HAVE_WX28
+#endif
 #endif
 
 #if( (wxMAJOR_VERSION==2 && wxMINOR_VERSION >= 8) || wxMAJOR_VERSION>2 )
