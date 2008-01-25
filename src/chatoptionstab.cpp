@@ -76,7 +76,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   bColorsVSizer->Add( m_use_sys_colors, 0, wxALL, 5 );
 
   m_custom_colors = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-  m_custom_colors->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWFRAME ) );
+  m_custom_colors->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
 
   wxBoxSizer* bCustomColorsSizer;
   bCustomColorsSizer = new wxBoxSizer( wxHORIZONTAL );
