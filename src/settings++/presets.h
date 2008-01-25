@@ -82,7 +82,7 @@ const int vl_AdvSky[5] = {0,0,1,1,1};//high-res clouds
 const int vl_DynamicSky[5] = {0,0,0,1,1};//dynamic clouds
 const int vl_SmoothPoints[5] = {0,1,1,1,1};
 const int vl_SmoothLines[5] = {0,0,1,1,1};
-const int vl_FSAA[5] = {0,1,1,1,1};//fullscreen aa enable/disable
+const int vl_FSAA[5] = {0,0,0,0,1};//fullscreen aa enable/disable
 const int vl_FSAALevel[5] = {0,0,0,0,1};//fullscreen aa samples
 const int vl_AdvUnitShading[5] = {0,0,0,1,1}; //refl. units
 
