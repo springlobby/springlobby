@@ -1064,7 +1064,7 @@ void TASServer::SendHostInfo( HostInfo update )
 
     m_sock->Send( STD_STRING(cmd) );
   }
-  if ( ( update & (HI_Send_All_opts) ) > 0 ) {
+  if ( ( update & HI_Send_All_opts ) > 0 ) {
     wxString cmd;
 
     cmd = _T("SETSCRIPTTAGS ");

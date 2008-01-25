@@ -26,7 +26,7 @@ class MainJoinBattleTab : public wxPanel
     void HostBattle( Battle& battle );
     void JoinBattle( Battle& battle );
     //void UpdateCurrentBattle();
-    void UpdateCurrentBattle( bool MapChanged = false,  bool UpdateRestrictions = true );
+    void UpdateCurrentBattle( bool MapChanged = false,  bool UpdateRestrictions = false );
     void UpdateCurrentBattle( const wxString& Tag );
     void LeaveCurrentBattle();
     Battle* GetCurrentBattle();
@@ -37,9 +37,9 @@ class MainJoinBattleTab : public wxPanel
     BattleMapTab* GetBattleMapTab() { return m_map_tab; }
 
     void OnUnitSyncReloaded();
-    
+
     void ReloadMMoptTab();
-    
+
   protected:
     wxBoxSizer* m_main_sizer;
 
@@ -53,8 +53,8 @@ class MainJoinBattleTab : public wxPanel
     BattleOptionsTab* m_opts_tab;
     BattleroomMMOptionsTab* m_mm_opts_tab;
     Ui& m_ui;
-    
-    
+
+
 };
 
 enum
