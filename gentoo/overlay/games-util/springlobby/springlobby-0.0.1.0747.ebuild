@@ -2,25 +2,26 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit subversion
+# TODO add debug use flag
+
+inherit eutils
 
 DESCRIPTION="lobby client for spring rts engine"
 HOMEPAGE="http://springlobby.info"
-ESVN_REPO_URI="http://svn.springlobby.info/trunk"
-ESVN_BOOTSTRAP="./autogen.sh"
+SRC_URI="http://www.springlobby.info/tarballs/${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
+RESTRICT="nomirror"
 
 RDEPEND="
+	!games-util/springlobby-svn
 	!virtual/springlobby
-	>=x11-libs/wxGTK-2.6.0
+	>=x11-libs/wxGTK-2.6.3
 "
 DEPEND="${RDEPEND}
-	>=sys-devel/autoconf-2.59
-	>=sys-devel/automake-1.10
 "
 
 PROVIDE="virtual/springlobby"
@@ -38,14 +39,13 @@ pkg_setup() {
 }
 
 src_compile() {
-	ewarn "This ebuild installs directly from a development repository."
-	ewarn "The code might not even compile some times."
-	einfo "If anything is weird, please file a bug report at ${HOMEPAGE}."
 	econf || die "econf failed"
 	emake || die "emake failed"
 }
 
 src_install() {
 	emake install DESTDIR=${D}
+	newicon "${FILESDIR}/logo.png" ${PN}.png
+	make_desktop_entry ${PN} "Springlobby" ${PN}.png
 }
 
