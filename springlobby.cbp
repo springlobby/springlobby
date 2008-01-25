@@ -223,7 +223,7 @@
 		<Unit filename="src/images/exists.xpm" />
 		<Unit filename="src/images/ingame.xpm" />
 		<Unit filename="src/images/join_icon.xpm" />
-		<Unit filename="src/images/logo.svg" />
+		<Unit filename="src/images/springlobby.svg" />
 		<Unit filename="src/images/not_found_icon.xpm" />
 		<Unit filename="src/images/nready_q.xpm" />
 		<Unit filename="src/images/nready_unsync.xpm" />
