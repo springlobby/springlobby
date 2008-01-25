@@ -435,18 +435,15 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
   wxLogMessage( _T("14") );
 
-  s += wxString::Format( _T("\tNumRestrictions=%d;\n"), battle.GetNumDisabledUnits() );
+  wxArrayString units = battle.DisabledUnits();
+
+  s += wxString::Format( _T("\tNumRestrictions=%d;\n"), units.GetCount() );
   s += _T("\t[RESTRICT]\n");
   s += _T("\t{\n");
 
-  std::string units = battle.DisabledUnits();
-  std::string unit;
-  int i = 0;
-
-  while ( (unit = GetWord( units )) != "" ) {
-    s += WX_STRING(("\t\tUnit" + i2s(i) + "=" + unit + ";\n"));
+  for ( unsigned int i = 0; i < units.GetCount(); i++) {
+    s += wxString::Format(_T("\t\tUnit%d=%s:\n"), i, units[i].c_str() );
     s += wxString::Format( _T("\t\tLimit%d=0;\n"), i );
-    i++;
   }
   s += _T("\t}\n");
   wxLogMessage( _T("15") );
@@ -667,18 +664,15 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   }
 
 
-  s += wxString::Format( _T("\tNumRestrictions=%d;\n"), battle.GetNumDisabledUnits() );
+  wxArrayString units = battle.DisabledUnits();
+
+  s += wxString::Format( _T("\tNumRestrictions=%d;\n"), units.GetCount() );
   s += _T("\t[RESTRICT]\n");
   s += _T("\t{\n");
 
-  std::string units = battle.DisabledUnits();
-  std::string unit;
-  int i = 0;
-
-  while ( (unit = GetWord( units )) != "" ) {
-    s += WX_STRING(("\t\tUnit" + i2s(i) + "=" + unit + ";\n"));
+  for ( unsigned int i = 0; i < units.GetCount(); i++) {
+    s += wxString::Format(_T("\t\tUnit%d=%s:\n"), i, units[i].c_str() );
     s += wxString::Format( _T("\t\tLimit%d=0;\n"), i );
-    i++;
   }
   s += _T("\t}\n");
 

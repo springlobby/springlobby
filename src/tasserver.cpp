@@ -1124,9 +1124,14 @@ void TASServer::SendHostInfo( HostInfo update )
 
   }
   if ( (update & HI_Restrictions) > 0 ) {
-    std::string units = battle.DisabledUnits();
+    wxArrayString units = battle.DisabledUnits();
     m_sock->Send( "ENABLEALLUNITS\n");
-    if ( units.length() > 0 ) m_sock->Send( "DISABLEUNITS " + units + "\n");
+    if ( units.GetCount() > 0 )
+    {
+      wxString msg = _T("DISABLEUNITS ");
+      for ( unsigned int i = 0; i < units.GetCount(); i++ ) msg += units[i] + _T(" ");
+      m_sock->Send( STD_STRING( msg ) + "\n");
+    }
   }
 }
 
