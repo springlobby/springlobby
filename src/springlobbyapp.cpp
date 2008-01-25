@@ -57,6 +57,20 @@ bool SpringLobbyApp::OnInit()
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
 
+  if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
+  {
+    if ( wxDirExists( sett().GetCachePath() )  )
+    {
+      wxLogMessage( _T("erasing old cache ver %d (app cache ver %d)"), sett().GetCacheVersion(), CACHE_VERSION );
+      wxString file = wxFindFirstFile( sett().GetCachePath() + wxFILE_SEP_PATH + _T("*") );
+      while ( !file.empty() )
+      {
+        wxRemoveFile( file );
+        file = wxFindNextFile();
+      }
+    }
+  }
+
   InitDirs();
 
   m_ui = new Ui();
