@@ -11,11 +11,13 @@ typedef std::map<wxString,mmOptionBool> optionMapBool;
 typedef std::map<wxString,mmOptionFloat> optionMapFloat;
 typedef std::map<wxString,mmOptionString> optionMapString;
 typedef std::map<wxString,mmOptionList> optionMapList;
+typedef std::map<wxString,mmOptionInt> optionMapInt;
 
 typedef std::map<wxString,mmOptionBool>::iterator optionMapBoolIter;
 typedef std::map<wxString,mmOptionFloat>::iterator optionMapFloatIter;
 typedef std::map<wxString,mmOptionString>::iterator optionMapStringIter;
 typedef std::map<wxString,mmOptionList>::iterator optionMapListIter;
+typedef std::map<wxString,mmOptionInt>::iterator optionMapIntIter;
 
 typedef std::pair < wxString,wxString> wxStringPair;
 typedef std::pair < wxString, wxStringPair> wxStringTriple;
@@ -30,7 +32,7 @@ enum {
   EngineOption = 2,
 	MapOption    = 1,
 	ModOption    = 0,
-	LastOption = 2
+	LastOption = 3
 };// should reflect: optionCategoriesCount
 
 class mmOptionsWrapper
@@ -109,11 +111,12 @@ public:
 	wxString GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag);
 
 //private:
-	const static int optionCategoriesCount = 2;
+	const static int optionCategoriesCount = 3;
 	optionMapBool* m_boolMaps[optionCategoriesCount];
 	optionMapFloat* m_floatMaps[optionCategoriesCount];
 	optionMapString* m_stringMaps[optionCategoriesCount];
 	optionMapList* m_listMaps[optionCategoriesCount];
+  optionMapInt* m_intMaps[optionCategoriesCount];
 protected:
 	//! used for code clarity in setOptions()
 	bool setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType);

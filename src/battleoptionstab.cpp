@@ -225,6 +225,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   UpdateBattle(  wxString::Format(_T("%d_startenergy"), EngineOption ) );
   UpdateBattle(  wxString::Format(_T("%d_maxunits"), EngineOption ) );
   UpdateBattle(  wxString::Format(_T("%d_ghostedbuildings"), EngineOption ) );
+  UpdateBattle(  wxString::Format(_T("%d_diminishingmms"), EngineOption ) );
 
   ReloadRestrictions();
 
@@ -261,24 +262,25 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
   {
 
     if ( key == _T("gamemode") ) m_end_radios->SetSelection( longval );
-    if ( key == _T("limitdgun") ) m_options_checks->Check( LIMIT_DGUN_INDEX, longval );
-    if ( key == _T("startmetal") )
+    else if ( key == _T("limitdgun") ) m_options_checks->Check( LIMIT_DGUN_INDEX, longval );
+    else if ( key == _T("startmetal") )
     {
       m_metal_slider->SetValue( longval );
       m_last_metal = longval;
 
     }
-    if ( key == _T("startenergy") )
+    else if ( key == _T("startenergy") )
     {
       m_energy_slider->SetValue( longval );
       m_last_energy = longval;
     }
-    if ( key == _T("maxunits") )
+    else if ( key == _T("maxunits") )
     {
       m_units_slider->SetValue( longval );
       m_last_units = longval;
     }
-    if ( key == _T("ghostedbuildings") ) m_options_checks->Check( longval );
+    else if ( key == _T("ghostedbuildings") ) m_options_checks->Check( GHOUSTED_INDEX, longval );
+    else if ( key == _T("diminishingmms") ) m_options_checks->Check( DIM_MMS_INDEX, longval );
   }
 }
 
