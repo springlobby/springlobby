@@ -301,13 +301,9 @@ void BattleOptionsTab::ReloadRestrictions()
   try {
     m_allowed_list->InsertItems( usync()->GetUnitsList( STD_STRING(m_battle.GetModName()) ), 0 );
   } catch (...) {}
-  wxString units( m_battle.DisabledUnits().c_str(), wxConvUTF8 );
+  wxArrayString units = m_battle.DisabledUnits();
 
-  wxStringTokenizer list( units, _T(" ") );
-  while ( list.HasMoreTokens() ) {
-    wxString unit = list.GetNextToken();
-    Restrict( unit );
-  }
+  for (int i = 0; i < units.GetCount(); i++) Restrict( units[i] );
 }
 
 

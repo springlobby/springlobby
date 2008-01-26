@@ -37,6 +37,7 @@ Settings::~Settings()
 void Settings::SaveSettings()
 {
   m_config->Write( _T("/General/firstrun"), false );
+  SetCacheVersion();
   m_config->Flush();
 }
 
@@ -88,6 +89,20 @@ wxString Settings::GetCachePath()
 void Settings::SetCachePath( const wxString path )
 {
   m_config->Write( _T("/General/CachePath"), path );
+}
+
+
+//! @brief sets version number for the cache, needed to nuke it in case it becomes obsolete & incompatible with new versions
+void Settings::SetCacheVersion()
+{
+  m_config->Write( _T("/General/CacheVersion"), CACHE_VERSION );
+}
+
+
+//! @brief returns the cache versioning number, do decide whenever to delete if becomes obsolete & incompatible with new versions
+int Settings::GetCacheVersion()
+{
+  return m_config->Read( _T("/General/CacheVersion"), 0l );
 }
 
 

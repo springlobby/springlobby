@@ -905,33 +905,18 @@ void Ui::OnBattleMapChanged( Battle& battle )
 
 void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
 {
-  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != 0 ) {
-    //std::string fullname = usync()->GetFullUnitName( battle.opts().modname, usync()->GetUnitIndex( battle.opts().modname, unitname ) );
-    br->GetChatPanel().StatusMessage( WX_STRING( unitname ) + _T(" disabled.") );
-  }
-  //mw().GetJoinTab().UpdateCurrentBattle();
   mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
 void Ui::OnBattleEnableUnit( Battle& battle, const std::string& unitname )
 {
-  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != 0 ) {
-    br->GetChatPanel().StatusMessage( WX_STRING(unitname) + _T(" disabled.") );
-  }
-  //mw().GetJoinTab().UpdateCurrentBattle();
   mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
 void Ui::OnBattleEnableAllUnits( Battle& battle )
 {
-  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != 0 ) {
-    br->GetChatPanel().StatusMessage( _T("All units enabled.") );
-  }
   mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
