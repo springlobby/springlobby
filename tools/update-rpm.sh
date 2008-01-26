@@ -5,12 +5,11 @@ set -e
 cd $(dirname $0)/..
 
 if [ $# -ne 1 ] ; then
-	echo "Usage: update-rpm buildnumber"
+	echo "Usage: update-rpm version"
 	exit
 fi
 
-buildnumber=$1
-version=0.0.1.1${buildnumber}
+version=$1
 tarball=springlobby-${version}.tar.bz2
 
 # first time stuff:
@@ -20,7 +19,7 @@ tarball=springlobby-${version}.tar.bz2
 cd rpm/home:accAgon/SpringLobby
 osc up
 osc rm springlobby-0.0.1.*.tar.bz2
-sed -i 's/^\(%define upstream_build_number\) .*/\1 '${buildnumber}'/' springlobby_tarball.spec
+sed -i 's/^\(%define app_version\) .*/\1 '${version}'/' springlobby_tarball.spec
 cp /srv/www/springlobby/tarballs/${tarball} .
 osc add ${tarball}
 osc ci -m "autobuild ${version}"
