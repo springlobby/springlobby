@@ -15,5 +15,5 @@ git-fetch ${who}
 git-merge ${who}/master
 #git-svn -i trunk set-tree HEAD
 #git-tag $(git-svn log --limit 1 --oneline | cut -d' ' -f1)
-#git-push --tags my-public
+#git-push --tags
 git-push
