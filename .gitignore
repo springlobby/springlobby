@@ -5,7 +5,6 @@ autotools-aux
 build-*
 config.h.in
 configure
-doc
 bin
 obj
 springlobby.layout
