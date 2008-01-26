@@ -23,5 +23,6 @@ else
 	ssh zi.fi sh ~/springlobby/tools/update-ebuilds.sh $*
 	git-fetch zifi
 	git-merge zifi/master
+	git-svn -i trunk set-tree HEAD
 fi
 
