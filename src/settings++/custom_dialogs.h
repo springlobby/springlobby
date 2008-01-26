@@ -13,6 +13,9 @@ class wxWindow;
 class wxPoint;
 class wxString;
 class wxTextCtrl;
+class wxCommandEvent;
+class wxCloseEvent;
+class wxFocusEvent;
 
 #define SL_MAIN_WINDOW_PTR CustomMessageBox::getLobbypointer()
 #define SE_FRAME_PTR CustomMessageBox::getSettingspointer()
@@ -23,6 +26,8 @@ int customMessageBox(int whichIcon , const wxString& message,
 void customMessageBoxNoModal(int whichIcon , const wxString& message,
         const wxString& caption = wxMessageBoxCaptionStr,
         long style = wxOK|wxCENTRE,  const int x = -1, const int y = -1 );
+
+
 
 class CustomMessageBox : public wxMessageDialog
 {
@@ -35,28 +40,16 @@ public:
 	static void setSettingspointer(wxWindow*);
 	static wxWindow* getLobbypointer();
 	static wxWindow* getSettingspointer();
+    bool Show(bool show);
+    void OnButton2(wxCommandEvent& event);
+    void OnButton3(wxFocusEvent& event);
+    void OnCloseWindow(wxCloseEvent& event);
 
 protected:
 	static wxWindow* m_settingsWindow;
 	static wxWindow* m_lobbyWindow;
-};
 
-class CustomNonBlockingMessageBox : public wxDialog
-{
-public:
-	CustomNonBlockingMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
-	        const wxString& caption = wxMessageBoxCaptionStr,
-	        long style = wxOK|wxCENTRE, const wxPoint& pos = wxDefaultPosition);
-	virtual ~CustomNonBlockingMessageBox();
-	static void setLobbypointer(wxWindow*);
-	static void setSettingspointer(wxWindow*);
-	static wxWindow* getLobbypointer();
-	static wxWindow* getSettingspointer();
 
-protected:
-    wxDialog* m_box;
-	static wxWindow* m_settingsWindow;
-	static wxWindow* m_lobbyWindow;
 };
 
 class CreditsDialog: public wxDialog

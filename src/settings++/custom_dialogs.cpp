@@ -7,14 +7,21 @@
 #include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/font.h>
+#include <wx/event.h>
 
 #include "../images/springsettings.xpm"
 #include "../images/springlobby.xpm"
+
+
+
+
 wxWindow* CustomMessageBox::m_settingsWindow = 0;
 wxWindow* CustomMessageBox::m_lobbyWindow = 0;
-wxWindow* CustomNonBlockingMessageBox::m_settingsWindow = 0;
-wxWindow* CustomNonBlockingMessageBox::m_lobbyWindow = 0;
 
+//CustomMessageBox* GetNonModalMsgBox()
+//{
+//
+//}
 
 CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
         const wxString& caption ,
@@ -26,6 +33,22 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
 
 CustomMessageBox::~CustomMessageBox()
 {
+}
+
+ void CustomMessageBox::OnButton2(wxCommandEvent& event)
+ {
+    wxDialogBase::AcceptAndClose();
+    int* p = 0; *p=0;
+ }
+void CustomMessageBox::OnButton3(wxFocusEvent& event)
+ {
+    wxDialogBase::AcceptAndClose();
+    int* p = 0; *p=0;
+ }
+
+void CustomMessageBox::OnCloseWindow(wxCloseEvent& event)
+{
+    wxDialogBase::AcceptAndClose();
 }
 
 void CustomMessageBox::setLobbypointer(wxWindow* arg)
@@ -50,6 +73,11 @@ void CustomMessageBox::setLobbypointer(wxWindow* arg)
 //	 if (m_settingsWindow==0)
 //		 wxLogWarning(_T("null parent window in custom message dialog"));
 	return m_settingsWindow;
+}
+
+bool CustomMessageBox::Show(bool show)
+{
+    return wxDialog::Show(show);
 }
 
 int customMessageBox( int whichIcon , const wxString& message,const wxString& caption,
@@ -85,42 +113,6 @@ int customMessageBox( int whichIcon , const wxString& message,const wxString& ca
 		return -1;
 }
 
-CustomNonBlockingMessageBox::CustomNonBlockingMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
-        const wxString& caption ,
-        long style, const wxPoint& pos )
-			: wxDialog(parent,wxID_ANY,caption,pos,wxDefaultSize,style|wxFRAME_FLOAT_ON_PARENT)
-{
-	SetIcon(*icon);
-}
-
-CustomNonBlockingMessageBox::~CustomNonBlockingMessageBox()
-{
-}
-
-void CustomNonBlockingMessageBox::setLobbypointer(wxWindow* arg)
-{
-	m_lobbyWindow = arg;
-}
-
- void CustomNonBlockingMessageBox::setSettingspointer(wxWindow* arg)
-{
-	m_settingsWindow = arg;
-}
-
- wxWindow* CustomNonBlockingMessageBox::getLobbypointer()
-{
-//	 if (m_lobbyWindow==0)
-//			 wxLogWarning(_T("null parent window in custom message dialog"));
-	return m_lobbyWindow;
-}
-
- wxWindow* CustomNonBlockingMessageBox::getSettingspointer()
-{
-//	 if (m_settingsWindow==0)
-//		 wxLogWarning(_T("null parent window in custom message dialog"));
-	return m_settingsWindow;
-}
-
 void customMessageBoxNoModal( int whichIcon , const wxString& message,const wxString& caption,
 		long style , int x, int y )
 {
@@ -142,8 +134,13 @@ void customMessageBoxNoModal( int whichIcon , const wxString& message,const wxSt
 				break;
 
 		}
-		CustomNonBlockingMessageBox dlg(icon,parent,message,caption,style,wxPoint(x,y));
-		dlg.Show(true);
+		static CustomMessageBox* s_nonModalMsgBox;
+		s_nonModalMsgBox = new  CustomMessageBox(icon,parent,message,caption,style,wxPoint(x,y));
+		s_nonModalMsgBox->Connect(-1,50000,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)
+                (wxEventFunction)
+                (wxCommandEventFunction)&CustomMessageBox::OnButton2);
+		s_nonModalMsgBox->Connect(wxID_ANY,wxEVT_KILL_FOCUS,wxFocusEventHandler(CustomMessageBox::OnButton3));
+		s_nonModalMsgBox->Show(true);
 }
 
 CreditsDialog::CreditsDialog(wxWindow* parent,wxString title,int whichIcon) : wxDialog(parent,-1,title,wxDefaultPosition,

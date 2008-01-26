@@ -545,5 +545,5 @@ void ServerEvents::OnUdpSourcePort(int udpport){
 
 void ServerEvents::OnKickedFromBattle()
 {
-	customMessageBox(SL_MAIN_ICON,_T("You were kicked from the battle!"),_T("Kicked by Host"));
+	customMessageBoxNoModal(SL_MAIN_ICON,_T("You were kicked from the battle!"),_T("Kicked by Host"));
 }
