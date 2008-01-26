@@ -3,6 +3,7 @@ aclocal.m4
 autom4te.cache
 autotools-aux
 build-*
+build
 config.h.in
 configure
 bin
@@ -13,3 +14,5 @@ springlobby.depend
 .cproject
 .project
 unitsync.log
+doc/.gitignore
+rpm/.gitignore
