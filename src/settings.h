@@ -4,6 +4,8 @@
 #include <string>
 #include <wx/colour.h>
 
+#define CACHE_VERSION 1
+
 #define DEFSETT_DEFAULT_SERVER "TAS Server"
 #define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"
 #define DEFSETT_DEFAULT_SERVER_PORT 8200
@@ -39,6 +41,9 @@ class Settings
 
     wxString GetCachePath();
     void SetCachePath( const wxString path );
+
+    void SetCacheVersion();
+    int GetCacheVersion();
 
     std::string GetDefaultServer();
     void SetDefaultServer( const std::string& server_name );

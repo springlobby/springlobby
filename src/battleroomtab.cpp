@@ -317,7 +317,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
     if ( key == _T("startmetal") ) value = wxString::Format( _T("%d"), m_battle.GetStartMetal() );
     if ( key == _T("startenergy") ) value =  wxString::Format( _T("%d"), m_battle.GetStartEnergy() );
     if ( key == _T("maxunits") ) value = wxString::Format( _T("%d"), m_battle.GetMaxUnits() );
-    if ( key == _T("restrictions") ) value = bool2yn( m_battle.GetNumDisabledUnits() > 0 );
+    if ( key == _T("restrictions") ) value = bool2yn( m_battle.DisabledUnits().GetCount() > 0 );
     if ( !value.IsEmpty() ) m_opts_list->SetItem( index, 1, value );
   }
   if ( type == MapOption || type == ModOption )

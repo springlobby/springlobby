@@ -414,6 +414,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     m_popup->Enable( item, false );
     m_popup->Check( item, false );
     m_popup->Enable( m_popup->FindItem( _("Ring") ), false );
+    m_popup->Enable( m_popup->FindItem( _("Kick") ),true);
   } else {
     wxLogMessage(_T("User"));
     m_sel_bot = 0;

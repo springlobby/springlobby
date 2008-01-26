@@ -97,17 +97,15 @@ void MainJoinBattleTab::UpdateCurrentBattle( bool MapChanged, bool UpdateRestric
   if ( m_map_tab ) {
     m_map_tab->Update();
   }
-  if ( m_opts_tab && UpdateRestrictions ) {
-    m_opts_tab->ReloadRestrictions();
-  }
+  if ( m_opts_tab )
+    if ( UpdateRestrictions )
+        m_opts_tab->ReloadRestrictions();
   if ( m_mm_opts_tab ){
 	 if ( !m_battle_tab->GetBattle().IsFounderMe() )
 	  {
 	    if ( MapChanged )
 	    {
 	      m_mm_opts_tab->OnRefreshControls(MapOption);
-	    	//wuick and dirty?
-	    	//ReloadMMoptTab();
 	    }
 	  }
   }

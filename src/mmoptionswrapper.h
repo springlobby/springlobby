@@ -11,16 +11,8 @@ typedef std::map<wxString,mmOptionBool> optionMapBool;
 typedef std::map<wxString,mmOptionFloat> optionMapFloat;
 typedef std::map<wxString,mmOptionString> optionMapString;
 typedef std::map<wxString,mmOptionList> optionMapList;
-typedef std::map<wxString,mmOptionBool> optionMapBool;
-typedef std::map<wxString,mmOptionFloat> optionMapFloat;
-typedef std::map<wxString,mmOptionString> optionMapString;
-typedef std::map<wxString,mmOptionList> optionMapList;
 
 typedef std::map<wxString,mmOptionBool>::iterator optionMapBoolIter;
-typedef std::map<wxString,mmOptionFloat>::iterator optionMapFloatIter;
-typedef std::map<wxString,mmOptionString>::iterator optionMapStringIter;
-typedef std::map<wxString,mmOptionList>::iterator optionMapListIter;
-typedef std::map<wxString,mmOptionBool>::iterator optionMapBoolIteIterr;
 typedef std::map<wxString,mmOptionFloat>::iterator optionMapFloatIter;
 typedef std::map<wxString,mmOptionString>::iterator optionMapStringIter;
 typedef std::map<wxString,mmOptionList>::iterator optionMapListIter;
@@ -60,7 +52,7 @@ public:
 	 */
 	bool loadOptions(GameOption flag, wxString mapname = _T(""));
 	//! checks if given key can be found in specified container
-	/*!	
+	/*!
 	 * \param key the key that should be checked for existance in containers
 	 * \param flag which GameOption conatiner should be searched
 	 * \param showError if true displays a messagebox if duplicate key is found
@@ -78,7 +70,7 @@ public:
 	bool setOptions(wxStringPairVec* values,GameOption flag);
 	//! get all options of one GameOption
 	/*! the output has the following format: < wxString , Pair < wxString , wxString > >
-	 * meaning < key , < name , value > > 
+	 * meaning < key , < name , value > >
 	 * \param triples this will contain the options after the function
 	 * \param flag which OptionType is to be processed
 	 */
@@ -100,19 +92,19 @@ public:
 	 * \return value of key if key found, "" otherwise
 	 */
 	wxString getSingleValue(wxString key, GameOption flag);
-	
+
 	//! sets a single option in specified container
 	/*! \return true if success, false otherwise */
 	bool setSingleOption(wxString key, wxString value, GameOption modmapFlag);
 	//! same as before, but tries all containers
 	bool setSingleOption(wxString key, wxString value);
-	
+
 	//! returns the option type of specified key (all containers are tried)
 	OptionType GetSingleOptionType (wxString key);
-	
+
 	//!returns the cbx_choice associated w current listoption
 	wxString GetNameListOptValue(wxString key, GameOption flag);
-	
+
 	//! returns the listitem key associated with listitem name
 	wxString GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag);
 

@@ -41,6 +41,7 @@ Ui::Ui() :
 
   m_main_win = new MainWindow( *this );
   CustomMessageBox::setLobbypointer(m_main_win);
+  CustomNonBlockingMessageBox::setLobbypointer(m_main_win);
   m_spring = new Spring(*this);
   m_thread = new UnitSyncThread( *this );
   m_thread->Init();
@@ -732,8 +733,8 @@ void Ui::OnBattleClosed( Battle& battle )
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle )
 	{
-	    //if (!battle.IsFounderMe() )
-          //  customMessage(SL_MAIN_ICON,_T("The current battle was closed by the host."),_T("Battle closed"));
+//	    if (!battle.IsFounderMe() )
+//            customMessageBox(SL_MAIN_ICON,_T("The current battle was closed by the host."),_T("Battle closed"));
 		mw().GetJoinTab().LeaveCurrentBattle();
 	}
   }
@@ -904,33 +905,18 @@ void Ui::OnBattleMapChanged( Battle& battle )
 
 void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
 {
-  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != 0 ) {
-    //std::string fullname = usync()->GetFullUnitName( battle.opts().modname, usync()->GetUnitIndex( battle.opts().modname, unitname ) );
-    br->GetChatPanel().StatusMessage( WX_STRING( unitname ) + _T(" disabled.") );
-  }
-  //mw().GetJoinTab().UpdateCurrentBattle();
   mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
 void Ui::OnBattleEnableUnit( Battle& battle, const std::string& unitname )
 {
-  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != 0 ) {
-    br->GetChatPanel().StatusMessage( WX_STRING(unitname) + _T(" disabled.") );
-  }
-  //mw().GetJoinTab().UpdateCurrentBattle();
   mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
 void Ui::OnBattleEnableAllUnits( Battle& battle )
 {
-  BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
-  if ( br != 0 ) {
-    br->GetChatPanel().StatusMessage( _T("All units enabled.") );
-  }
   mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
