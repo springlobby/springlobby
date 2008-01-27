@@ -16,7 +16,7 @@
 #include "utils.h"
 
 
-NetDebugReport::NetDebugReport() : wxDebugReportUpload ( _T(" http://www.hd.chalmers.se/~tc/trace/"), _T("trace"), _T("uploadtrace.php") )
+NetDebugReport::NetDebugReport() : wxDebugReportUpload ( _T("http://www.hd.chalmers.se/~tc/trace/"), _T("trace"), _T("upload.php") )
 {
 }
 
