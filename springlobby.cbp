@@ -18,6 +18,7 @@
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
 					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
+					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
@@ -36,6 +37,7 @@
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
 					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
+					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
@@ -60,6 +62,7 @@
 					<Add option="-DUSE_PCH" />
 					<Add option="-D__DEBUG__" />
 					<Add option="-D__WXDEBUG__" />
+					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 					<Add directory="$(WX_DIR)/include" />
 					<Add directory="$(WX_DIR)/lib/gcc_dll/mswd" />
 					<Add directory="$(WX_DIR)/contrib/include" />
@@ -110,6 +113,7 @@
 					<Add option="-DUSE_PCH" />
 					<Add option="-D__DEBUG__" />
 					<Add option="-D__WXDEBUG__" />
+					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 					<Add directory="$(WX_DIR)/include" />
 					<Add directory="$(WX_DIR)/lib/gcc_dll/mswd" />
 					<Add directory="$(WX_DIR)/contrib/include" />
@@ -186,10 +190,10 @@
 		<Unit filename="src/chatpanel.h" />
 		<Unit filename="src/connectwindow.cpp" />
 		<Unit filename="src/connectwindow.h" />
-		<Unit filename="src/crashreport.cpp" />
-		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/countrycodes.cpp" />
 		<Unit filename="src/countrycodes.h" />
+		<Unit filename="src/crashreport.cpp" />
+		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
 		<Unit filename="src/flagimagedata.h" />
@@ -225,7 +229,6 @@
 		<Unit filename="src/images/exists.xpm" />
 		<Unit filename="src/images/ingame.xpm" />
 		<Unit filename="src/images/join_icon.xpm" />
-		<Unit filename="src/images/springlobby.svg" />
 		<Unit filename="src/images/not_found_icon.xpm" />
 		<Unit filename="src/images/nready_q.xpm" />
 		<Unit filename="src/images/nready_unsync.xpm" />
@@ -244,6 +247,7 @@
 		<Unit filename="src/images/singleplayer_icon.xpm" />
 		<Unit filename="src/images/spectator.xpm" />
 		<Unit filename="src/images/spring.xpm" />
+		<Unit filename="src/images/springlobby.svg" />
 		<Unit filename="src/images/springlobby.xpm" />
 		<Unit filename="src/images/start_ally.xpm" />
 		<Unit filename="src/images/start_enemy.xpm" />
