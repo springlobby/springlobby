@@ -49,7 +49,7 @@ SpringLobbyApp::~SpringLobbyApp()
 bool SpringLobbyApp::OnInit()
 {
 
-  if ( !ParseCmdLine() ) return 1; ///command line parsing failed, close the app
+  if ( !ParseCmdLine() ) return false; ///command line parsing failed, close the app
 
 #if wxUSE_ON_FATAL_EXCEPTION
   if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
@@ -166,7 +166,7 @@ bool SpringLobbyApp::ParseCmdLine()
 
     wxCmdLineParser parser( cmdLineDesc, argc, argv );
 
-    if ( parser.Parse(true) )
+    if ( !parser.Parse(true) )
     {
       m_log_console = parser.Found(_T("console-logging"));
       m_log_window_show = parser.Found(_T("gui-logging"));
