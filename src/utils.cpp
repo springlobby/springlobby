@@ -43,7 +43,7 @@ void InitializeLoggingTargets()
       wxLogChain *logCrashChain = new wxLogChain( loggercrash );
       logCrashChain->SetLogLevel( wxLOG_Trace );
       logCrashChain->SetVerbose( true );
-      //logCrashChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+      logCrashChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
     #else
       ///std::cout logging
       wxLog *loggerconsole = new wxLogStream( &std::cout );
