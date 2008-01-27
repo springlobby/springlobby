@@ -54,7 +54,7 @@ std::string i2s( int x );
 #endif
 
 wxString GetLibExtension();
-void InitializeLoggingTargets();
+void InitializeLoggingTargets( bool console = false, bool showgui = false, bool logcrash = true, int verbosity = 3 );
 std::string GetWordParam( std::string& params );
 std::string GetSentenceParam( std::string& params );
 std::string GetChatLineParam( std::string& params );

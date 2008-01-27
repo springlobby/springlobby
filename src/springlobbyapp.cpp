@@ -9,6 +9,7 @@
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <wx/image.h>
+#include <wx/cmdline.h>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -41,18 +42,22 @@ SpringLobbyApp::~SpringLobbyApp()
   delete m_timer;
 }
 
+
 //! @brief Initializes the application.
 //!
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
 
+  if ( !ParseCmdLine() ) return 1; ///command line parsing failed, close the app
+
 #if wxUSE_ON_FATAL_EXCEPTION
-  wxHandleFatalExceptions( true );
+  if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
 #endif
 
   //initialize all loggers
-  InitializeLoggingTargets();
+  if ( m_force_log_verbosity ) InitializeLoggingTargets( m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
+  else InitializeLoggingTargets( m_log_console, m_log_window_show );
 
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
@@ -144,3 +149,37 @@ void SpringLobbyApp::InitDirs()
   if ( !wxDirExists( path ) ) wxMkdir( path );
 }
 
+
+//! @brief parses the command line and sets global app options like log verbosity or log target
+bool SpringLobbyApp::ParseCmdLine()
+{
+  #if wxUSE_CMDLINE_PARSER
+
+    wxCmdLineEntryDesc cmdLineDesc[] =
+    {
+      { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+      { wxCMD_LINE_SWITCH, _T("nc"), _T("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+      { wxCMD_LINE_SWITCH, _T("cl"), _T("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+      { wxCMD_LINE_SWITCH, _T("sl"), _T("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+      { wxCMD_LINE_SWITCH, _T("l"), _T("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+    };
+
+    wxCmdLineParser parser( cmdLineDesc, argc, argv );
+
+    if ( parser.Parse(true) )
+    {
+      m_log_console = parser.Found(_T("console-logging"));
+      m_log_window_show = parser.Found(_T("gui-logging"));
+      m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
+      m_force_log_verbosity =  parser.Found(_T("log-verbosity"), &m_log_verbosity );
+      if ( parser.Found(_T("help")) ) return false; // not a syntax error, but program should stop if user asked for command line usage
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  #else // wxUSE_CMDLINE_PARSER
+  return true;
+  #endif
+}
