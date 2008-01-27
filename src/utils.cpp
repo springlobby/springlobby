@@ -37,25 +37,28 @@ void InitializeLoggingTargets()
 
 {
 	#if wxUSE_STD_IOSTREAM
-	///std::cout logging
-  wxLog *loggerconsole = new wxLogStream( &std::cout );
-  wxLogChain *logChain = new wxLogChain( loggerconsole );
-  logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
-  logChain->SetLogLevel( wxLOG_Warning );
-  ///hidden stream logging for crash reports
-  #if wxUSE_DEBUGREPORT
-  wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
-  wxLogChain *logCrashChain = new wxLogChain( loggercrash );
-  logCrashChain->SetLogLevel( wxLOG_Trace );
-  logCrashChain->SetVerbose( true );
-  #endif
+    #if wxUSE_DEBUGREPORT
+      ///hidden stream logging for crash reports
+      wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
+      wxLogChain *logCrashChain = new wxLogChain( loggercrash );
+      logCrashChain->SetLogLevel( wxLOG_Trace );
+      logCrashChain->SetVerbose( true );
+      //logCrashChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+    #else
+      ///std::cout logging
+      wxLog *loggerconsole = new wxLogStream( &std::cout );
+      wxLogChain *logChain = new wxLogChain( loggerconsole );
+      logChain->SetLogLevel( wxLOG_Trace );
+      logChain->SetVerbose( true );
+      logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+    #endif
   #else
-  ///gui window fallback logging if console/stream output not available
-  wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
-  wxLogChain *logChain = new wxLogChain( loggerwin );
-  logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
-  logChain->SetLogLevel( wxLOG_Trace );
-  logChain->SetVerbose( true );
+    ///gui window fallback logging if console/stream output not available
+    wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
+    wxLogChain *logChain = new wxLogChain( loggerwin );
+    logChain->SetLogLevel( wxLOG_Trace );
+    logChain->SetVerbose( true );
+    logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
   #endif
 }
 
