@@ -1017,20 +1017,17 @@ void Ui::OnModUnitsCached( const wxString& modname )
 
 void Ui::OnCachedThreadStarted()
 {
-  if ( m_main_win == 0 ) return;
   m_thread_wait.Enter();
 }
 
 
 void Ui::OnCachedThreadTerminated()
 {
-  if ( m_main_win == 0 ) return;
   m_thread_wait.Leave();
 }
 
 void Ui::OnMainWindowDestruct()
 {
-  if ( m_main_win == 0 ) return;
 	m_main_win = 0;
 }
 
