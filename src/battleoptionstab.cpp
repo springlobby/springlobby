@@ -303,7 +303,7 @@ void BattleOptionsTab::ReloadRestrictions()
   } catch (...) {}
   wxArrayString units = m_battle.DisabledUnits();
 
-  for (int i = 0; i < int(units.GetCount()); i++) Restrict( units[i] );
+  for (unsigned int i = 0; i < units.GetCount(); i++) Restrict( units[i] );
 }
 
 
