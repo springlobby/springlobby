@@ -7,6 +7,7 @@
 mmOptionsWrapper::mmOptionsWrapper()
 {
 	unLoadOptions();
+	loadOptions( EngineOption );
 }
 
 void mmOptionsWrapper::unLoadOptions()
@@ -23,6 +24,8 @@ void mmOptionsWrapper::unLoadOptions(GameOption i)
 	m_floatMaps[i]	= new optionMapFloat;
 	m_stringMaps[i] = new optionMapString;
 	m_listMaps[i]	= new optionMapList;
+	m_intMaps[i]	= new optionMapInt;
+
 }
 
 mmOptionsWrapper::~mmOptionsWrapper()
@@ -78,6 +81,29 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag,wxString mapname)
 			}
 			singleError = _T("Cannot load mod-option #");
 			break;
+    case EngineOption:
+        (*m_boolMaps[modmapFlag])[_T("limitdgun")] = mmOptionBool(_("Limit D-Gun"),_T("limitdgun"),
+        _("Disables commander's D-gun when being too far away from the starting point"),false);
+        (*m_boolMaps[modmapFlag])[_T("ghostedbuildings")] = mmOptionBool(_("Ghosted Buildings"),_T("ghostedbuildings"),
+        _("Enemy buildings will leave a ghost image on the map after losing LoS on them"),true);
+        (*m_boolMaps[modmapFlag])[_T("diminishingmms")] = mmOptionBool(_("Diminishing MM"),_T("diminishingmms"),
+        _("Efficiency of MetalMakers will progressively reduce as much as you build them"),false);
+        (*m_intMaps[modmapFlag])[_T("startpostype")] = mmOptionInt( _("Start Position Type"),_T("startpostype"),
+        _("How players will select where to be spawned in the map\n0: fixed map positions\n1: random map positions\n2: chose in game\n3: chose in the lobby before starting"),
+        0, 1, 0, 3);
+        (*m_intMaps[modmapFlag])[_T("gamemode")] = mmOptionInt( _("Game Ending condition"),_T("gamemode"),
+        _("The condition that will end the game\n0: when all units will be destroyed\n1: when the commander will be destroyed\n2: lineage mode (see option 1, but given away units will still die"),
+        0, 1, 0, 2);
+        (*m_intMaps[modmapFlag])[_T("startmetal")] = mmOptionInt( _("Start Metal"),_T("startmetal"),
+        _("Sets the amount of metal that players will start with"),
+        1000, 1, 0, 10000);
+        (*m_intMaps[modmapFlag])[_T("startenergy")] = mmOptionInt( _("Start Energy"),_T("startenergy"),
+        _("Sets the amount of energy that players will start with"),
+        1000, 1, 0, 10000);
+        (*m_intMaps[modmapFlag])[_T("maxunits")] = mmOptionInt( _("Max Units Allowed"),_T("maxunits"),
+        _("Sets the maximum amount of units that a player will be allowed to build"),
+        500, 1, 0, 10000);
+        return true;
 	}
 
 	mmOptionList* templist;
@@ -159,7 +185,11 @@ bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showE
 		*optType = opt_float;
 		exists = true;
 	}
-
+	else if ( m_intMaps[modmapFlag]->find(key)!=  m_intMaps[modmapFlag]->end())
+	{
+		*optType = opt_int;
+		exists = true;
+	}
 	if (exists && showError)
 	{
 		customMessageBox(SL_MAIN_ICON,duplicateKeyError,_T("Mod/map option error"),wxOK);
@@ -215,6 +245,11 @@ void  mmOptionsWrapper::getOptions(wxStringTripleVec* list, GameOption modmapFla
 	{																					//TODO fixme
 		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, (*it).second.value) ) );
 	}
+
+	for (optionMapIntIter it = m_intMaps[modmapFlag]->begin(); it != m_intMaps[modmapFlag]->end(); ++it)
+	{
+		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, wxString::Format(_T("%ld"),(*it).second.value) ) ) );
+	}
 }
 
 void mmOptionsWrapper::getOptionsMap(wxStringMap* map, GameOption modmapFlag)
@@ -237,6 +272,11 @@ void mmOptionsWrapper::getOptionsMap(wxStringMap* map, GameOption modmapFlag)
 	for (optionMapListIter it = m_listMaps[modmapFlag]->begin(); it != m_listMaps[modmapFlag]->end(); ++it)
 	{
 		(*map)[(*it).first] = (*it).second.value;
+	}
+
+	for (optionMapIntIter it = m_intMaps[modmapFlag]->begin(); it != m_intMaps[modmapFlag]->end(); ++it)
+	{
+		(*map)[(*it).first] =  wxString::Format(_T("%ld"),(*it).second.value);
 	}
 }
 
@@ -281,6 +321,8 @@ wxString mmOptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag)
 			return wxString::Format( _T("%f"),(*m_floatMaps[modmapFlag])[key].value );
 		case opt_bool:
 			return wxString::Format(_T("%d"), (*m_boolMaps[modmapFlag])[key].value );
+		case opt_int:
+			return wxString::Format(_T("%ld"), (*m_intMaps[modmapFlag])[key].value );
 		case opt_string:
 			return  (*m_stringMaps[modmapFlag])[key].value ;
 		case opt_list:
@@ -310,6 +352,21 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 			}
 			else
 				(*m_floatMaps[modmapFlag])[key].value = fl_value;
+			break;
+		}
+		case opt_int :
+		{
+			//test if min < val < max
+			long* l_val = new long;
+			bool l_conv_ok = value.ToLong(l_val);
+			long int_value = long(*l_val);
+			if( !l_conv_ok || int_value < (*m_intMaps[modmapFlag])[key].min || int_value > (*m_intMaps[modmapFlag])[key].max )
+			{
+				wxLogWarning(_T("recieved number option exceeds boundaries"));
+				return false;
+			}
+			else
+				(*m_intMaps[modmapFlag])[key].value = int_value;
 			break;
 		}
 		case opt_bool :
@@ -377,6 +434,7 @@ bool mmOptionsWrapper::reloadMapOptions(wxString mapname)
 	m_floatMaps[MapOption]	= new optionMapFloat;
 	m_stringMaps[MapOption] = new optionMapString;
 	m_listMaps[MapOption]	= new optionMapList;
+	m_intMaps[MapOption] 	= new optionMapInt;
 
 	return loadMapOptions(mapname);
 }

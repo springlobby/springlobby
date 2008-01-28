@@ -362,6 +362,8 @@ bool Ui::AskText( const wxString& heading, const wxString& question, wxString& a
 
 void Ui::ShowMessage( const wxString& heading, const wxString& message )
 {
+
+  if ( m_main_win == 0 ) return;
   wxMessageDialog msg( &mw(), message, heading, wxOK);
   msg.ShowModal();
 }
@@ -507,12 +509,14 @@ bool Ui::IsSpringCompatible( )
 
 void Ui::OnLoggedIn( )
 {
+  if ( m_main_win == 0 ) return;
   mw().GetChatTab().RejoinChannels();
 }
 
 
 void Ui::OnDisconnected( Server& server )
 {
+  if ( m_main_win == 0 ) return;
   wxLogDebugFunc( _T("") );
   if ( m_main_win == 0 ) return;
 
@@ -535,6 +539,7 @@ void Ui::OnDisconnected( Server& server )
 //! @todo Check if a pannel allready exists for this channel
 void Ui::OnJoinedChannelSuccessful( Channel& chan )
 {
+  if ( m_main_win == 0 ) return;
   wxLogDebugFunc( _T("") );
 
   chan.uidata.panel = 0;
@@ -645,6 +650,7 @@ void Ui::OnChannelList( const std::string& channel, const int& numusers )
 
 void Ui::OnUserOnline( User& user )
 {
+  if ( m_main_win == 0 ) return;
 /*  UiUserData* data = new UiUserData();
   data->panel = 0;
 
@@ -656,6 +662,7 @@ void Ui::OnUserOnline( User& user )
 
 void Ui::OnUserOffline( User& user )
 {
+  if ( m_main_win == 0 ) return;
   m_main_win->GetChatTab().OnUserDisconnected( user );
   if ( user.uidata.panel ) {
     user.uidata.panel->SetUser( 0 );
@@ -670,6 +677,7 @@ void Ui::OnUserOffline( User& user )
 
 void Ui::OnUserStatusChanged( User& user )
 {
+  if ( m_main_win == 0 ) return;
   for ( int i = 0; i < m_serv->GetNumChannels(); i++ ) {
     Channel& chan = m_serv->GetChannel( i );
     if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) ) {
@@ -705,6 +713,7 @@ void Ui::OnServerMessage( Server& server, const std::string& message )
 
 void Ui::OnUserSaid( User& user, const std::string message, bool fromme )
 {
+  if ( m_main_win == 0 ) return;
   if ( user.uidata.panel == 0 ) {
     m_main_win->OpenPrivateChat( user );
   }
@@ -715,6 +724,7 @@ void Ui::OnUserSaid( User& user, const std::string message, bool fromme )
 
 void Ui::OnBattleOpened( Battle& battle )
 {
+  if ( m_main_win == 0 ) return;
   mw().GetJoinTab().GetBattleListTab().AddBattle( battle );
   User& user = battle.GetFounder();
   for ( int i = 0; i < m_serv->GetNumChannels(); i++ ) {
@@ -728,6 +738,7 @@ void Ui::OnBattleOpened( Battle& battle )
 
 void Ui::OnBattleClosed( Battle& battle )
 {
+  if ( m_main_win == 0 ) return;
   mw().GetJoinTab().GetBattleListTab().RemoveBattle( battle );
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
@@ -753,6 +764,7 @@ void Ui::OnBattleClosed( Battle& battle )
 
 void Ui::OnUserJoinedBattle( Battle& battle, User& user )
 {
+  if ( m_main_win == 0 ) return;
   mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
 
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
@@ -770,6 +782,7 @@ void Ui::OnUserJoinedBattle( Battle& battle, User& user )
 
 void Ui::OnUserLeftBattle( Battle& battle, User& user )
 {
+  if ( m_main_win == 0 ) return;
   mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
@@ -789,6 +802,7 @@ void Ui::OnUserLeftBattle( Battle& battle, User& user )
 
 void Ui::OnBattleInfoUpdated( Battle& battle )
 {
+  if ( m_main_win == 0 ) return;
   m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
   if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
     mw().GetJoinTab().UpdateCurrentBattle();
@@ -797,6 +811,7 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
 
 void Ui::OnBattleInfoUpdated( Battle& battle, const wxString& Tag )
 {
+  if ( m_main_win == 0 ) return;
   m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
   if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
     mw().GetJoinTab().UpdateCurrentBattle( Tag );
@@ -806,6 +821,7 @@ void Ui::OnBattleInfoUpdated( Battle& battle, const wxString& Tag )
 
 void Ui::OnJoinedBattle( Battle& battle )
 {
+  if ( m_main_win == 0 ) return;
   mw().GetJoinTab().JoinBattle( battle );
   if ( !Spring::TestSpringBinary() ) {
     customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
@@ -821,18 +837,21 @@ void Ui::OnJoinedBattle( Battle& battle )
 
 void Ui::OnHostedBattle( Battle& battle )
 {
+  if ( m_main_win == 0 ) return;
   mw().GetJoinTab().HostBattle( battle );
 }
 
 
 void Ui::OnUserBattleStatus( Battle& battle, User& user )
 {
+  if ( m_main_win == 0 ) return;
   mw().GetJoinTab().BattleUserUpdated( user );
 }
 
 
 void Ui::OnRequestBattleStatus( Battle& battle )
 {
+  if ( m_main_win == 0 ) return;
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) {
@@ -844,6 +863,7 @@ void Ui::OnRequestBattleStatus( Battle& battle )
 
 void Ui::OnBattleStarted( Battle& battle )
 {
+  if ( m_main_win == 0 ) return;
   wxLogDebugFunc( _T("") );
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
@@ -861,6 +881,7 @@ void Ui::OnBattleStarted( Battle& battle )
 
 void Ui::OnSaidBattle( Battle& battle, const std::string& nick, const std::string& msg )
 {
+  if ( m_main_win == 0 ) return;
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     br->GetChatPanel().Said( WX_STRING(nick), WX_STRING(msg) );
@@ -870,6 +891,7 @@ void Ui::OnSaidBattle( Battle& battle, const std::string& nick, const std::strin
 
 void Ui::OnBattleAction( Battle& battle, const std::string& nick, const std::string& msg )
 {
+  if ( m_main_win == 0 ) return;
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     br->GetChatPanel().DidAction( WX_STRING(nick), WX_STRING(msg) );
@@ -888,12 +910,14 @@ void Ui::OnSpringTerminated( bool success )
 
 void Ui::OnBattleStartRectsUpdated( Battle& battle )
 {
+  if ( m_main_win == 0 ) return;
   mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
 void Ui::OnBattleMapChanged( Battle& battle )
 {
+  if ( m_main_win == 0 ) return;
   mw().GetJoinTab().UpdateCurrentBattle( true );
   if (battle.IsFounderMe())
   {
@@ -905,18 +929,21 @@ void Ui::OnBattleMapChanged( Battle& battle )
 
 void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
 {
+  if ( m_main_win == 0 ) return;
   mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
 void Ui::OnBattleEnableUnit( Battle& battle, const std::string& unitname )
 {
+  if ( m_main_win == 0 ) return;
   mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
 void Ui::OnBattleEnableAllUnits( Battle& battle )
 {
+  if ( m_main_win == 0 ) return;
   mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
@@ -933,6 +960,7 @@ void Ui::OnAcceptAgreement( const std::string& agreement )
 
 void Ui::OnBattleBotAdded( Battle& battle, BattleBot& bot )
 {
+  if ( m_main_win == 0 ) return;
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) br->OnBotAdded( bot );
@@ -942,6 +970,7 @@ void Ui::OnBattleBotAdded( Battle& battle, BattleBot& bot )
 
 void Ui::OnBattleBotRemoved( Battle& battle, BattleBot& bot )
 {
+  if ( m_main_win == 0 ) return;
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) br->OnBotRemoved( bot );
@@ -951,6 +980,7 @@ void Ui::OnBattleBotRemoved( Battle& battle, BattleBot& bot )
 
 void Ui::OnBattleBotUpdated( Battle& battle, BattleBot& bot )
 {
+  if ( m_main_win == 0 ) return;
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) br->OnBotUpdated( bot );
@@ -960,6 +990,7 @@ void Ui::OnBattleBotUpdated( Battle& battle, BattleBot& bot )
 
 void Ui::OnRing( const std::string& from )
 {
+  if ( m_main_win == 0 ) return;
   m_main_win->RequestUserAttention();
   wxBell();
 }
@@ -967,12 +998,14 @@ void Ui::OnRing( const std::string& from )
 
 void Ui::OnMapInfoCached( const wxString& mapname )
 {
+  if ( m_main_win == 0 ) return;
   mw().OnUnitSyncReloaded();
 }
 
 
 void Ui::OnMinimapCached( const wxString& mapname )
 {
+  if ( m_main_win == 0 ) return;
   mw().OnUnitSyncReloaded();
 }
 

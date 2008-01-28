@@ -1069,25 +1069,27 @@ void TASServer::SendHostInfo( HostInfo update )
 
     cmd = _T("SETSCRIPTTAGS ");
 
-    wxStringTripleVec optlist;
-    battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
-    for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+    wxStringTripleVec optlistMap;
+    battle.CustomBattleOptions()->getOptions( &optlistMap, MapOption );
+    for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
     {
       cmd += _T("game\\mapoptions\\") + it->first + _T("=") + it->second.second + _T("\t");
     }
-    battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
-    for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+    wxStringTripleVec optlistMod;
+    battle.CustomBattleOptions()->getOptions( &optlistMod, ModOption );
+    for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
     {
       cmd += _T("game\\modoptions\\") + it->first + _T("=") + it->second.second + _T("\t");
     }
-
 /// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
-    cmd += wxString::Format( _T("game/startpostype=%d\tgame/maxunits=%d\tgame/limitdgun %d\tgame/startmetal=%d\tgame/gamemode=%d\tgame/ghostedbuildings=%d\tgame/startenergy=%d\tgame/diminishingmms=%d\n"),
-      battle.GetStartType(), battle.GetMaxUnits(), battle.LimitDGun(), battle.GetStartMetal(),
-      battle.GetGameType(), battle.GhostedBuildings(), battle.GetStartEnergy(), battle.DimMMs()
-    );
+    wxStringTripleVec optlistEng;
+    battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
+    for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+    {
+      cmd += _T("game/") + it->first + _T("=") + it->second.second + _T("\t");
+    }
 
-    m_sock->Send( STD_STRING(cmd) );
+    m_sock->Send( STD_STRING(cmd) + "\n" );
   }
 
   if ( (update & HI_StartRects) > 0 ) { // Startrects should be updated.
@@ -1155,28 +1157,13 @@ void TASServer::SendHostInfo( const wxString& Tag )
   {
     cmd += _T("game\\mapoptions\\") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, MapOption ) + _T("\n");
   }
-  if ( type == ModOption )
+  else if ( type == ModOption )
   {
     cmd += _T("game\\modoptions\\") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, ModOption ) + _T("\n");
   }
-  if ( type == EngineOption )
+  else if ( type == EngineOption )
   {
-    if ( key == _T("startpostype") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.GetStartType() ) + _T("\n");
-    if ( key == _T("maxunits") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.GetMaxUnits() ) + _T("\n");
-    if ( key == _T("limitdgun") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.LimitDGun() ) + _T("\n");
-    if ( key == _T("startmetal") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.GetStartMetal() ) + _T("\n");
-    if ( key == _T("gamemode") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.GetGameType() ) + _T("\n");
-    if ( key == _T("ghostedbuildings") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.GhostedBuildings() ) + _T("\n");
-    if ( key == _T("startenergy") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.GetStartEnergy() ) + _T("\n");
-    if ( key == _T("diminishingmms") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.DimMMs() ) + _T("\n");
+    cmd += _T("game/") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, EngineOption ) + _T("\n");
   }
   m_sock->Send( STD_STRING(cmd) );
 }

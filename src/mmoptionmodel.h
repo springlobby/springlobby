@@ -13,7 +13,8 @@ enum OptionType {
 	opt_bool       = 1,
 	opt_list       = 2,
 	opt_float      = 3,
-	opt_string     = 4
+	opt_string     = 4,
+	opt_int        = 5
 };
 
 //! used to hold an item in an option list
@@ -33,7 +34,7 @@ struct listItem
 typedef std::vector<listItem> ListItemVec;
 
 //! The base class for all option types
-/*! All members and functions are public (also in derived classes). 
+/*! All members and functions are public (also in derived classes).
  * Therefore no sanity checks whatsoever are performed when changing a member.
  * Default constructors are mostly provided for compability with stl containers.
  */
@@ -55,7 +56,7 @@ struct mmOptionBool : public mmOptionModel
 {
 	//! sets members accordingly
 	mmOptionBool(wxString name_, wxString key_, wxString description_, bool def_);
-	//! sets wxstring member to "" and bool members to false 
+	//! sets wxstring member to "" and bool members to false
 	mmOptionBool();
 	bool def;
 	//! this will always represent the current value, also the only member that should change after creation
@@ -67,13 +68,13 @@ struct mmOptionFloat : public mmOptionModel
 {
 	//! sets members accordingly
 	mmOptionFloat(wxString name_, wxString key_, wxString description_, float def_, float stepping_, float min_, float max_);
-	//! sets wxstring member to "" and float members to 0.0 
+	//! sets wxstring member to "" and float members to 0.0
 	mmOptionFloat();
 
 	float def;
 	//! this will always represent the current value, also the only member that should change after creation
 	float value;
-	
+
 	//! the increment with that value may change in min,max boundaries
 	float stepping;
 	float min, max;
@@ -109,7 +110,7 @@ struct mmOptionList : public mmOptionModel
 
 	//! creates a new listitem from params, pushes it on the vector and adds name_ to cbx_choices
 	void addItem(wxString key_, wxString name_, wxString desc_);
-	
+
 	wxString def;
 	//! will always reflect the name of the currently "selected" listitem
 	wxString value;
@@ -120,6 +121,23 @@ struct mmOptionList : public mmOptionModel
 	//! for easy mapping to a combobox
 	wxArrayString cbx_choices;
 
+};
+
+//! Holds a long integer option
+struct mmOptionInt : public mmOptionModel
+{
+	//! sets members accordingly
+	mmOptionInt(wxString name_, wxString key_, wxString description_, long def_, long stepping_, long min_, long max_);
+	//! sets wxstring member to "" and int members to 0
+	mmOptionInt();
+
+	long def;
+	//! this will always represent the current value, also the only member that should change after creation
+	long value;
+
+	//! the increment with that value may change in min,max boundaries
+	long stepping;
+	long min, max;
 };
 
 #endif /*MMOPTIONMODEL_H_*/
