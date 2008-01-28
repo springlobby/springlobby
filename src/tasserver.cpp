@@ -198,7 +198,7 @@ m_command_alias[_T("|")] = _T("TESTLOGIN");
 m_command_alias[_T("}")] = _T("TESTLOGINACCEPT");
 m_command_alias[_T("~")] = _T("TESTLOGINDENY");
 m_command_alias[_T("")] = _T("ACQUIREUSERID");
-m_command_alias[_T("€")] = _T("USERID");
+m_command_alias[_T("Â€")] = _T("USERID");
 }
 
 bool TASServer::ExecuteSayCommand( const wxString& cmd )
@@ -501,9 +501,8 @@ void TASServer::ExecuteCommand( const std::string& in )
     cmd = params.substr( 0, pos );
     params = params.substr( pos + 1 );
   }
-   std::map<wxString,wxString>::iterator it;
-   it = m_command_alias.find( WX_STRING(cmd) );
-  if ( it != m_command_alias.end() ) cmd = STD_STRING( m_command_alias[ WX_STRING(cmd) ]);
+   std::map<wxString,wxString>::iterator it = m_command_alias.find( WX_STRING(cmd) );
+  if ( it != m_command_alias.end() ) cmd = STD_STRING( (*it).second );
   ExecuteCommand( cmd, params );
 }
 
