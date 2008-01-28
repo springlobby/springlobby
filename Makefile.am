@@ -1,4 +1,4 @@
-c## the following clause may NOT be split, b/c of autoreconf 2.61 and older
+## the following clause may NOT be split, b/c of autoreconf 2.61 and older
 ## the --install requires automake 1.10 which was released in 2006
 ## the --install can be edited out to use older automake
 ACLOCAL_AMFLAGS = -I m4 --install
