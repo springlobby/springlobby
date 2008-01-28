@@ -288,7 +288,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 
   wxString key = param;
   if ( key.Left( 5 ) == _T("game/") )/// FIXME (BrainDamage#1#): change the slash type when the new spring version gets out
-  {/// TODO (BrainDamage#1#): remove all the engine hardcoded static containers/parsing code and move them to the new dynamic
+  {
     key = key.AfterFirst( '/' );
     if (  battle.CustomBattleOptions()->setSingleOption( key,  value, EngineOption ) )
       battle.Update( wxString::Format(_T("%d_"), EngineOption ) + key );
