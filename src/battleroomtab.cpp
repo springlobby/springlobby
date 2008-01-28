@@ -282,10 +282,10 @@ void BattleRoomTab::UpdateBattleInfo( bool MapChanged )
 
 void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 {
+  long index = m_opt_list_map[ Tag ];
   long type;
   Tag.BeforeFirst( '_' ).ToLong( &type );
   wxString key = Tag.AfterFirst( '_' );
-  long index = m_opt_list_map[ key ];
   wxString value;
   if ( type == EngineOption && key == _T("restrictions") )
     m_opts_list->SetItem( index, 1, bool2yn( m_battle.DisabledUnits().GetCount() > 0 ) );
@@ -515,7 +515,7 @@ long BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
   for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
     m_opts_list->InsertItem( pos, it->second.first );
-    m_opt_list_map[ it->first ] = pos;
+    m_opt_list_map[ wxString::Format(_T("%d_"), optFlag ) + it->first ] = pos;
     OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( it->first );
     wxString value;
     if ( DataType == opt_bool )
