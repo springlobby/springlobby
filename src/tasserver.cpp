@@ -5,6 +5,8 @@
 #include <wx/intl.h>
 #include <stdexcept>
 
+#include <map>
+
 #include "base64.h"
 #include "boost/md5.hpp"
 #include "tasserver.h"
@@ -91,10 +93,135 @@ StartType IntToStartType( int start );
 NatType IntToNatType( int nat );
 GameType IntToGameType( int gt );
 
-TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(SER_VER_UNKNOWN), m_connected(false), m_online(false), m_buffer(""), m_last_ping(0), m_ping_id(1000),m_battle_id(-1) { m_se = new ServerEvents( *this, ui); }
+TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(SER_VER_UNKNOWN), m_connected(false), m_online(false), m_buffer(""), m_last_ping(0), m_ping_id(1000),m_battle_id(-1)
+{
+  m_se = new ServerEvents( *this, ui);
+  FillAliasMap();
+}
 
 TASServer::~TASServer() { delete m_se; }
 
+static std::map<wxString,wxString> m_command_alias;
+
+void TASServer::FillAliasMap()
+{
+m_command_alias[_T("#")] = _T("PING");
+m_command_alias[_T("$")] = _T("PONG");
+m_command_alias[_T("%")] = _T("TASSERVER");
+m_command_alias[_T("&")] = _T("REQUESTUPDATEFILE");
+m_command_alias[_T("'")] = _T("REGISTER");
+m_command_alias[_T("(")] = _T("REGISTRATIONDENIED");
+m_command_alias[_T(")")] = _T("REGISTRATIONACCEPTED");
+m_command_alias[_T("*")] = _T("RENAMEACCOUNT");
+m_command_alias[_T("+")] = _T("CHANGEPASSWORD");
+m_command_alias[_T(",")] = _T("LOGIN");
+m_command_alias[_T("-")] = _T("ACCEPTED");
+m_command_alias[_T(".")] = _T("DENIED");
+m_command_alias[_T("/")] = _T("LOGININFOEND");
+m_command_alias[_T("0")] = _T("AGREEMENT");
+m_command_alias[_T("1")] = _T("AGREEMENTEND");
+m_command_alias[_T("2")] = _T("CONFIRMAGREEMENT");
+m_command_alias[_T("3")] = _T("MOTD");
+m_command_alias[_T("4")] = _T("OFFERFILE");
+m_command_alias[_T("5")] = _T("UDPSOURCEPORT");
+m_command_alias[_T("6")] = _T("CLIENTIPPORT");
+m_command_alias[_T("7")] = _T("HOSTPORT");
+m_command_alias[_T("8")] = _T("SERVERMSG");
+m_command_alias[_T("9")] = _T("SERVERMSGBOX");
+m_command_alias[_T(":")] = _T("ADDUSER");
+m_command_alias[_T(";")] = _T("REMOVEUSER");
+m_command_alias[_T("<")] = _T("JOIN");
+m_command_alias[_T("=")] = _T("JOIN");
+m_command_alias[_T(">")] = _T("JOINFAILED");
+m_command_alias[_T("?")] = _T("CHANNELS");
+m_command_alias[_T("@")] = _T("CHANNEL");
+m_command_alias[_T("A")] = _T("ENDOFCHANNELS");
+m_command_alias[_T("B")] = _T("MUTELIST");
+m_command_alias[_T("C")] = _T("MUTELISTBEGIN");
+m_command_alias[_T("D")] = _T("MUTELIST");
+m_command_alias[_T("E")] = _T("MUTELISTEND");
+m_command_alias[_T("F")] = _T("CHANNELTOPIC");
+m_command_alias[_T("G")] = _T("CHANNELTOPIC");
+m_command_alias[_T("H")] = _T("CLIENTS");
+m_command_alias[_T("I")] = _T("JOINED");
+m_command_alias[_T("J")] = _T("LEAVE");
+m_command_alias[_T("K")] = _T("LEFT");
+m_command_alias[_T("L")] = _T("FORCELEAVECHANNEL");
+m_command_alias[_T("M")] = _T("FORCELEAVECHANNEL");
+m_command_alias[_T("N")] = _T("CHANNELMESSAGE");
+m_command_alias[_T("O")] = _T("SAY");
+m_command_alias[_T("P")] = _T("SAID");
+m_command_alias[_T("Q")] = _T("SAYEX");
+m_command_alias[_T("R")] = _T("SAIDEX");
+m_command_alias[_T("S")] = _T("SAYPRIVATE");
+m_command_alias[_T("T")] = _T("SAYPRIVATE");
+m_command_alias[_T("U")] = _T("SAIDPRIVATE");
+m_command_alias[_T("V")] = _T("OPENBATTLE");
+m_command_alias[_T("W")] = _T("OPENBATTLE");
+m_command_alias[_T("X")] = _T("BATTLEOPENED");
+m_command_alias[_T("Y")] = _T("BATTLECLOSED");
+m_command_alias[_T("Z")] = _T("JOINBATTLE");
+m_command_alias[_T("[")] = _T("JOINBATTLE");
+m_command_alias[_T("\\")] = _T("JOINEDBATTLE");
+m_command_alias[_T("]")] = _T("LEFTBATTLE");
+m_command_alias[_T("^")] = _T("LEAVEBATTLE");
+m_command_alias[_T("_")] = _T("JOINBATTLEFAILED");
+m_command_alias[_T("`")] = _T("OPENBATTLEFAILED");
+m_command_alias[_T("a")] = _T("UPDATEBATTLEINFO");
+m_command_alias[_T("b")] = _T("UPDATEBATTLEINFO");
+m_command_alias[_T("c")] = _T("SAYBATTLE");
+m_command_alias[_T("d")] = _T("SAIDBATTLE");
+m_command_alias[_T("e")] = _T("SAYBATTLEEX");
+m_command_alias[_T("f")] = _T("SAIDBATTLEEX");
+m_command_alias[_T("g")] = _T("MYSTATUS");
+m_command_alias[_T("h")] = _T("CLIENTSTATUS");
+m_command_alias[_T("i")] = _T("MYBATTLESTATUS");
+m_command_alias[_T("j")] = _T("CLIENTBATTLESTATUS");
+m_command_alias[_T("k")] = _T("REQUESTBATTLESTATUS");
+m_command_alias[_T("l")] = _T("HANDICAP");
+m_command_alias[_T("m")] = _T("KICKFROMBATTLE");
+m_command_alias[_T("n")] = _T("FORCEQUITBATTLE");
+m_command_alias[_T("o")] = _T("FORCETEAMNO");
+m_command_alias[_T("p")] = _T("FORCEALLYNO");
+m_command_alias[_T("q")] = _T("FORCETEAMCOLOR");
+m_command_alias[_T("r")] = _T("FORCESPECTATORMODE");
+m_command_alias[_T("s")] = _T("DISABLEUNITS");
+m_command_alias[_T("t")] = _T("DISABLEUNITS");
+m_command_alias[_T("u")] = _T("ENABLEUNITS");
+m_command_alias[_T("v")] = _T("ENABLEUNITS");
+m_command_alias[_T("w")] = _T("ENABLEALLUNITS");
+m_command_alias[_T("x")] = _T("ENABLEALLUNITS");
+m_command_alias[_T("y")] = _T("RING");
+m_command_alias[_T("z")] = _T("RING");
+m_command_alias[_T("{")] = _T("REDIRECT");
+m_command_alias[_T("|")] = _T("BROADCAST");
+m_command_alias[_T("}")] = _T("ADDBOT");
+m_command_alias[_T("~")] = _T("ADDBOT");
+m_command_alias[_T("")] = _T("REMOVEBOT");
+m_command_alias[_T("Ä")] = _T("REMOVEBOT");
+m_command_alias[_T("Å")] = _T("UPDATEBOT");
+m_command_alias[_T("Ç")] = _T("UPDATEBOT");
+m_command_alias[_T("É")] = _T("ADDSTARTRECT");
+m_command_alias[_T("Ñ")] = _T("ADDSTARTRECT");
+m_command_alias[_T("Ö")] = _T("REMOVESTARTRECT");
+m_command_alias[_T("Ü")] = _T("REMOVESTARTRECT");
+m_command_alias[_T("á")] = _T("MAPGRADES");
+m_command_alias[_T("à")] = _T("MAPGRADES");
+m_command_alias[_T("â")] = _T("MAPGRADESFAILED");
+m_command_alias[_T("ä")] = _T("SCRIPTSTART");
+m_command_alias[_T("ã")] = _T("SCRIPTSTART");
+m_command_alias[_T("å")] = _T("SCRIPT");
+m_command_alias[_T("ç")] = _T("SCRIPT");
+m_command_alias[_T("é")] = _T("SCRIPTEND");
+m_command_alias[_T("è")] = _T("SCRIPTEND");
+m_command_alias[_T("ê")] = _T("SETSCRIPTTAGS");
+m_command_alias[_T("ë")] = _T("SETSCRIPTTAGS");
+m_command_alias[_T("í")] = _T("TESTLOGIN");
+m_command_alias[_T("ì")] = _T("TESTLOGINACCEPT");
+m_command_alias[_T("î")] = _T("TESTLOGINDENY");
+m_command_alias[_T("ï")] = _T("ACQUIREUSERID");
+m_command_alias[_T("ñ")] = _T("USERID");
+}
 
 bool TASServer::ExecuteSayCommand( const wxString& cmd )
 {
@@ -396,7 +523,7 @@ void TASServer::ExecuteCommand( const std::string& in )
     cmd = params.substr( 0, pos );
     params = params.substr( pos + 1 );
   }
-
+  cmd = STD_STRING( m_command_alias[ WX_STRING(cmd) ]);
   ExecuteCommand( cmd, params );
 }
 
@@ -417,7 +544,6 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
   UTASBattleStatus tasbstatus;
   UserBattleStatus bstatus;
   UTASColor color;
-
   if ( cmd == "TASServer") {
     mod = GetWordParam( params );
     if ( mod == "0.32" )
