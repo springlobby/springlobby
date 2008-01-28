@@ -4,14 +4,12 @@
 //
 
 #include <sstream>
-#include <wx/intl.h>
-#include <wx/msgdlg.h>
 #include <wx/dynlib.h>
 #include <iostream>
 
 #include "utils.h"
 #include "revision.h"
-#include "stacktrace.h"
+#include "crashreport.h"
 
 #include "settings++/custom_dialogs.h"
 
@@ -26,49 +24,42 @@
 #include "config.h"
 #endif
 
+
 wxString GetLibExtension()
 {
   return wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
 }
 
 
-void DumpStackTraceToLog()
-{
-  #if wxUSE_STACKWALKER
-
-  wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
-
-  DebugInfo += _T("StackTraceID: ") + stacktrace().GetStackTraceHash() + _T("\n");
-
-  stacktrace().Walk();
-  DebugInfo += stacktrace().GetStackTrace();
-
-  DebugInfo += _T("-------- End StackTrace --------");
-
-  wxLogMessage( DebugInfo );
-
-  customMessageBox(SL_MAIN_ICON, _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"),_("Critical error"), wxICON_ERROR );
-
-  #else
-  customMessageBox(SL_MAIN_ICON, _("SpringLobby has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker"),_("Critical error"), wxICON_ERROR );
-  #endif
-}
-
 //! @brief Initializes the logging functions.
-///initializes logging in both std::cout and gui messages
+///initializes logging in an hidden stream and std::cout/gui messages
 void InitializeLoggingTargets()
 
 {
 	#if wxUSE_STD_IOSTREAM
-  wxLog *loggerconsole = new wxLogStream( &std::cout );
-  wxLogChain *logChain = new wxLogChain( loggerconsole );
+    #if wxUSE_DEBUGREPORT
+      ///hidden stream logging for crash reports
+      wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
+      wxLogChain *logCrashChain = new wxLogChain( loggercrash );
+      logCrashChain->SetLogLevel( wxLOG_Trace );
+      logCrashChain->SetVerbose( true );
+      logCrashChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+    #else
+      ///std::cout logging
+      wxLog *loggerconsole = new wxLogStream( &std::cout );
+      wxLogChain *logChain = new wxLogChain( loggerconsole );
+      logChain->SetLogLevel( wxLOG_Trace );
+      logChain->SetVerbose( true );
+      logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+    #endif
   #else
-  wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
-  wxLogChain *logChain = new wxLogChain( loggerwin );
+    ///gui window fallback logging if console/stream output not available
+    wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
+    wxLogChain *logChain = new wxLogChain( loggerwin );
+    logChain->SetLogLevel( wxLOG_Trace );
+    logChain->SetVerbose( true );
+    logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
   #endif
-  logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
-  logChain->SetLogLevel( wxLOG_Trace );
-  logChain->SetVerbose( true );
 }
 
 std::string i2s( int x )

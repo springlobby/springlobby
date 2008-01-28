@@ -1,4 +1,4 @@
-## the following clause may NOT be split, b/c of autoreconf 2.61 and older
+c## the following clause may NOT be split, b/c of autoreconf 2.61 and older
 ## the --install requires automake 1.10 which was released in 2006
 ## the --install can be edited out to use older automake
 ACLOCAL_AMFLAGS = -I m4 --install
@@ -10,6 +10,14 @@ AM_CPPFLAGS = \
 AM_CXXFLAGS = \
 	-Wall \
 	-Wno-strict-aliasing
+
+desktopdir = $(datadir)/applications
+dist_desktop_DATA = \
+	src/springlobby.desktop
+
+pixmapdir = $(datadir)/pixmaps
+dist_pixmap_DATA = \
+	src/images/springlobby.svg
 
 ## if you don't have the required version of autoconf, comment out the
 ## following clause, in which case you may NOT distribute the result!
@@ -122,6 +130,8 @@ springlobby_SOURCES = \
 	src/chatpanel.h \
 	src/connectwindow.cpp \
 	src/connectwindow.h \
+	src/crashreport.cpp \
+	src/crashreport.h \
 	src/countrycodes.cpp \
 	src/countrycodes.h \
 	src/flagimagedata.h \
@@ -168,8 +178,6 @@ springlobby_SOURCES = \
 	src/springprocess.h \
 	src/springunitsync.cpp \
 	src/springunitsync.h \
-	src/stacktrace.cpp \
-	src/stacktrace.h \
 	src/tasserver.cpp \
 	src/tasserver.h \
 	src/ui.cpp \
@@ -534,14 +542,10 @@ springsettings_SOURCES = \
 	revision.cpp \
 	src/revision.cpp.in \
 	src/revision.h \
-	src/base64.cpp \
-	src/base64.h \
 	src/utils.cpp \
 	src/utils.h \
-	src/stacktrace.cpp \
-	src/stacktrace.h \
-	src/boost/md5.cpp \
-	src/boost/md5.hpp \
+	src/crashreport.cpp \
+	src/crashreport.h \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
 	src/settings++/se_utils.cpp \

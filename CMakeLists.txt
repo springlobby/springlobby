@@ -50,6 +50,7 @@ IF(wxWidgets_FOUND)
 		src/chatpanel.cpp
 		src/connectwindow.cpp
 		src/countrycodes.cpp
+		src/crashreport.cpp
 		src/customlistctrl.cpp
 		src/flagimages.cpp
 		src/hostbattledialog.cpp
@@ -77,7 +78,6 @@ IF(wxWidgets_FOUND)
 		src/springprocess.cpp
 		src/springunitsync.cpp
 		src/springunitsynclib.cpp
-		src/stacktrace.cpp
 		src/tasserver.cpp
 		src/ui.cpp
 		src/uiutils.cpp
@@ -106,10 +106,8 @@ IF(wxWidgets_FOUND)
 		src/settings++/Main.cpp
 	)
 	SET(SLSharedWithSettings
-		src/boost/md5.cpp
-		src/base64.cpp
+		src/crashreport.cpp
 		src/springunitsynclib.cpp
-		src/stacktrace.cpp
 		src/utils.cpp
 	)
 

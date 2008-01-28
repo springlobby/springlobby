@@ -22,7 +22,7 @@
 #include "main.h"
 #include "frame.h"
 
-#include "../stacktrace.h"
+#include "../crashreport.h"
 #include "../utils.h"
 
 #include <iostream>
@@ -50,24 +50,12 @@ int Springsettings::OnExit()
 	return 0;
 }
 
+//! @brief is called when the app crashes
 void Springsettings::OnFatalException()
 {
-		#if wxUSE_STACKWALKER
-
-		wxMessageBox( _T("SpringSettings has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"), _T("Critical error"), wxICON_ERROR  );
-
-		wxLogError( _T("uncaught exception") );
-		wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
-
-		DebugInfo += _T("StackTraceID: ") + stacktrace().GetStackTraceHash() + _T("\n");
-
-		stacktrace().WalkFromException();
-		DebugInfo += stacktrace().GetStackTrace();
-
-		DebugInfo += _T("-------- End StackTrace --------");
-
-		wxLogMessage( DebugInfo );
-		#else
-		wxMessageBox( _("SpringSettings has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker"), _("Critical error"), wxICON_ERROR  );
-		#endif
+  #if wxUSE_DEBUGREPORT
+  crashreport().GenerateReport(wxDebugReport::Context_Exception);
+  #else
+  wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease enable wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR );
+  #endif
 }
