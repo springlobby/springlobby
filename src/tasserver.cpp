@@ -1155,11 +1155,11 @@ void TASServer::SendHostInfo( const wxString& Tag )
   {
     cmd += _T("game\\mapoptions\\") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, MapOption ) + _T("\n");
   }
-  if ( type == ModOption )
+  else if ( type == ModOption )
   {
     cmd += _T("game\\modoptions\\") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, ModOption ) + _T("\n");
   }
-  if ( type == EngineOption )
+  else if ( type == EngineOption )
   {
     cmd += _T("game/") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, EngineOption ) + _T("\n");
   }
