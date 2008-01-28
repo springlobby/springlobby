@@ -5,7 +5,7 @@
 
 #include "crashreport.h"
 
-#if wxUSE_DEBUGREPORT && HAVE_WX28
+#if wxUSE_DEBUGREPORT && !defined(HAVE_WX26)
 #include <wx/intl.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>

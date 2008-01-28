@@ -1,10 +1,10 @@
 #ifndef CRASHREPORT_H_INCLUDED
 #define CRASHREPORT_H_INCLUDED
 
+
+
+#if wxUSE_DEBUGREPORT && !defined(HAVE_WX26)
 #include <wx/debugrpt.h>
-
-#if wxUSE_DEBUGREPORT && HAVE_WX28
-
 #include <sstream>
 #include <wx/arrstr.h>
 //! @brief uploads zipped stacktraces using curl
