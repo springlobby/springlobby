@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "settings++/custom_dialogs.h"
 #include <stdexcept>
+#include <wx/intl.h>
 mmOptionsWrapper::mmOptionsWrapper()
 {
 	unLoadOptions();
