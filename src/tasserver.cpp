@@ -1087,7 +1087,7 @@ void TASServer::SendHostInfo( HostInfo update )
       cmd += _T("game/") + it->first + _T("=") + it->second.second + _T("\t");
     }
 
-    m_sock->Send( STD_STRING(cmd) );
+    m_sock->Send( STD_STRING(cmd) + "\n" );
   }
 
   if ( (update & HI_StartRects) > 0 ) { // Startrects should be updated.
