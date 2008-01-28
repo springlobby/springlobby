@@ -23,7 +23,7 @@ create-build-dir ()
 	else
 		# regenerate Makefile with current config options
 		./config.status
-		echo skipped
+		echo regen done
 	fi
 	)
 }
