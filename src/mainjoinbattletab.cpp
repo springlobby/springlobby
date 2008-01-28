@@ -117,6 +117,10 @@ void MainJoinBattleTab::UpdateCurrentBattle( const wxString& Tag )
     m_battle_tab->UpdateBattleInfo( Tag );
   }
 
+  if ( m_map_tab ) {
+    m_map_tab->Update( Tag );
+  }
+
   if ( m_opts_tab ) {
     m_opts_tab->UpdateBattle( Tag );
   }
