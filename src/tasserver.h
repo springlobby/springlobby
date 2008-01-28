@@ -46,6 +46,8 @@ class TASServer : public Server
 
     void Ping();
 
+    void ListCommands();
+
     void UDPPing();/// used for nat travelsal
 
     User& GetMe();

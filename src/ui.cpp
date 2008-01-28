@@ -401,6 +401,9 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     wxString msg = cmd.AfterFirst(' ').AfterFirst(' ');
     m_serv->SayPrivate( STD_STRING( user ), STD_STRING( msg ) );
     return true;
+  } else if ( cmd.BeforeFirst(' ').Lower() == _T("/sendcmdlist") ) {
+    m_serv->ListCommands();
+    return true;
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/channels") ) {
     ChatPanel* panel = GetActiveChatPanel();
     if ( panel == 0 ) {

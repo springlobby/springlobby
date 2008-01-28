@@ -501,8 +501,17 @@ void TASServer::ExecuteCommand( const std::string& in )
     cmd = params.substr( 0, pos );
     params = params.substr( pos + 1 );
   }
-  cmd = STD_STRING( m_command_alias[ WX_STRING(cmd) ]);
+   std::map<wxString,wxString>::iterator it;
+   it = m_command_alias.find( WX_STRING(cmd) );
+  if ( it != m_command_alias.end() ) cmd = STD_STRING( m_command_alias[ WX_STRING(cmd) ]);
   ExecuteCommand( cmd, params );
+}
+
+void TASServer::ListCommands()
+{
+  std::map<wxString,wxString>::iterator it;
+  for ( it=m_command_alias.begin() ; it != m_command_alias.end(); it++ )
+   m_sock->Send( "SAY main " + STD_STRING((*it).first) + " " + STD_STRING((*it).second) + "\n" );
 }
 
 
