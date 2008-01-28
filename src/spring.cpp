@@ -197,8 +197,6 @@ wxString Spring::GetScriptTxt( Battle& battle )
   std::vector<int> TeamConv, AllyConv, AllyRevConv;
   /// AllyRevConv.size() gives number of allies
 
-  wxStringTripleVec optlist;
-
   wxLogMessage(_T("1 numusers: ") + WX_STRING(i2s(battle.GetNumUsers())) );
 
   /// Fill ordered_users and sort it
@@ -275,8 +273,9 @@ wxString Spring::GetScriptTxt( Battle& battle )
   //s += wxString::Format( _T("\tMapname=%s;\n"), bo.mapname.c_str() );
   s += _T("\tMapname=") + battle.GetMapName() + _T(";\n");
   s += WX_STRING(("\tGameType=" + usync()->GetModArchive(usync()->GetModIndex(STD_STRING(battle.GetModName()))) + ";\n"));
-  battle.CustomBattleOptions()->getOptions( &optlist, EngineOption );
-  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  wxStringTripleVec optlistEng;
+  battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
+  for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
   {
     s += _T("\t") + it->first + _T("=") + it->second.second + _T(";\n");
   }
@@ -437,8 +436,9 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
   s += _T("\t[mapoptions]\n");
   s += _T("\t{\n");
-  battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
-  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  wxStringTripleVec optlistMap;
+  battle.CustomBattleOptions()->getOptions( &optlistMap, MapOption );
+  for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
   {
     s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
   }
@@ -448,8 +448,9 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
   s += _T("\t[modoptions]");
   s += _T("\t{\n");
-  battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
-  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+    wxStringTripleVec optlistMod;
+  battle.CustomBattleOptions()->getOptions( &optlistMod, ModOption );
+  for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
   {
     s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
   }
@@ -558,8 +559,6 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   int NumAllys = 0;
   int PlayerTeam = -1;
 
-  wxStringTripleVec optlist;
-
   long startpostype;
   battle.CustomBattleOptions()->getSingleValue( _T("startpostype"), EngineOption ).ToLong( &startpostype );
 
@@ -585,8 +584,9 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   //s += wxString::Format( _T("\tMapname=%s;\n"), bo.mapname.c_str() );
   s += _T("\tMapname=") + battle.GetMapName() + _T(";\n");
   s += WX_STRING(("\tGameType=" + usync()->GetModArchive(usync()->GetModIndex(STD_STRING(battle.GetModName()))) + ";\n"));
-  battle.CustomBattleOptions()->getOptions( &optlist, EngineOption );
-  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  wxStringTripleVec optlistEng;
+  battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
+  for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
   {
     s += _T("\t") + it->first + _T("=") + it->second.second + _T(";\n");
   }
@@ -663,8 +663,9 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   s += _T("\t[mapoptions]\n");
   s += _T("\t{\n");
-  battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
-  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+  wxStringTripleVec optlistMap;
+  battle.CustomBattleOptions()->getOptions( &optlistMap, MapOption );
+  for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
   {
     s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
   }
@@ -672,8 +673,9 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   s += _T("\t[modoptions]");
   s += _T("\t{\n");
-  battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
-  for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+    wxStringTripleVec optlistMod;
+  battle.CustomBattleOptions()->getOptions( &optlistMod, ModOption );
+  for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
   {
     s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
   }
