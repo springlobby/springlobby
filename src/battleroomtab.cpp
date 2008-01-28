@@ -298,7 +298,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
       m_battle.CustomBattleOptions()->getSingleValue( key, type ).ToLong( &boolval );
       m_opts_list->SetItem( index, 1, bool2yn( boolval ) );
     }
-    else if ( DataType == opt_float || DataType == opt_list || DataType == opt_string )
+    else
     {
       m_opts_list->SetItem( index, 1, m_battle.CustomBattleOptions()->getSingleValue( key, type ) );
     }
@@ -524,7 +524,7 @@ long BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
       it->second.second.ToLong( &boolval );
       value = bool2yn( boolval );
     }
-    else if ( DataType == opt_float || DataType == opt_list || DataType == opt_string )
+    else
       value = it->second.second;
     m_opts_list->SetItem( pos, 1, value );
     pos++;
