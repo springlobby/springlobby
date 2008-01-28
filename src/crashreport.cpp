@@ -3,9 +3,10 @@
 // Classes: NetDebugReport CrashReport
 //
 
-#include "crashreport.h"
 
-#if wxUSE_DEBUGREPORT && !defined(HAVE_WX26)
+#include "utils.h"
+#if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
+#include "crashreport.h"
 #include <wx/intl.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
@@ -13,7 +14,7 @@
 #include <wx/dir.h>
 #include <wx/file.h>
 
-#include "utils.h"
+
 
 
 NetDebugReport::NetDebugReport() : wxDebugReportUpload ( _T("http://www.hd.chalmers.se/~tc/trace/"), _T("trace"), _T("upload.php") )
