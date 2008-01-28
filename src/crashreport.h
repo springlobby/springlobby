@@ -3,10 +3,10 @@
 
 #include <wx/debugrpt.h>
 
-#if wxUSE_DEBUGREPORT
+#if wxUSE_DEBUGREPORT && HAVE_WX28
 
 #include <sstream>
-
+#include <wx/arrstr.h>
 //! @brief uploads zipped stacktraces using curl
 class NetDebugReport : public wxDebugReportUpload
 {
