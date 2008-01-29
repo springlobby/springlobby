@@ -38,7 +38,7 @@ m_ui(ui)
   m_tabs->InsertPage( 1, m_opts_tab, _("Options"), false, 1 );
   /*TODO reenable
   m_mm_opts_tab = new BattleroomMMOptionsTab( m_sp_tab->GetBattle(), m_tabs);
-  m_tabs->InsertPage( 2, m_mm_opts_tab, _("Map/Mod Options"), false );*/
+  m_tabs->InsertPage( 2, m_mm_opts_tab, _("Map/Mod Options"), false, 1 );*/
 
   m_main_sizer->Add( m_tabs, 1, wxEXPAND );
 
