@@ -48,8 +48,12 @@ Socket::Socket( Server& serv, bool blocking ):
 
   m_sock = 0;
   m_events = 0;
+
+  //resetting the ping state vars.
   m_ping_msg = wxEmptyString;
-  m_ping_int = -1;
+  m_ping_int = 0;
+  m_udp_ping_adr = wxEmptyString;
+  m_udp_ping_int = 0;
   m_ping_t = 0;
 
 }
@@ -68,6 +72,7 @@ Socket::~Socket()
 }
 
 
+//! @brief Creates an TCP socket and sets it up.
 wxSocketClient* Socket::_CreateSocket()
 {
   wxSocketClient* sock = new wxSocketClient();
@@ -89,11 +94,12 @@ wxSocketClient* Socket::_CreateSocket()
   return sock;
 }
 
-//! @brief Connect to remote host
+//! @brief Connect to remote host.
+//! @note This turns off the ping thread.
 void Socket::Connect( const std::string& addr, const int port )
 {
   LOCK_SOCKET;
-  _SetPingInfo( wxEmptyString ); // Turn off ping thread.
+  _EnablePingThread( false ); // Turn off ping thread.
 
   wxIPV4address wxaddr;
   m_connecting = true;
@@ -106,6 +112,9 @@ void Socket::Connect( const std::string& addr, const int port )
   m_sock->Connect( wxaddr, m_block );
 }
 
+
+//! @brief Disconnect from remote host if connected.
+//! @note This turns off the ping thread.
 void Socket::Disconnect( )
 {
   if ( m_sock == 0 ) return;
@@ -113,15 +122,17 @@ void Socket::Disconnect( )
   LOCK_SOCKET;
   m_sock->Destroy();
   m_sock = 0;
-  _SetPingInfo( wxEmptyString );
+  _EnablePingThread( false );
 }
 
-//! @brief Send data over connection
+
+//! @brief Send data over connection.
 bool Socket::Send( const std::string& data )
 {
   LOCK_SOCKET;
   return _Send( data );
 }
+
 
 bool Socket::_Send( const std::string& data )
 {
@@ -202,7 +213,6 @@ Sockstate Socket::State( )
 
 
 //! @brief Get socket error code
-//!
 //! @todo Implement
 Sockerror Socket::Error( )
 {
@@ -210,26 +220,44 @@ Sockerror Socket::Error( )
 }
 
 
+//! @brief Set ping info to be used by the ping thread.
+//! @note Set msg to an empty string to turn off the ping thread.
+//! @note This has to be set every time the socket connects.
 void Socket::SetPingInfo( const wxString& msg, unsigned int interval )
 {
   LOCK_SOCKET;
-  _SetPingInfo( msg, interval );
+  m_ping_msg = msg;
+  m_ping_int = interval;
+  _EnablePingThread( _ShouldEnablePingThread() );
 }
 
 
-//! @brief Set ping info to be used by the ping thread.
-//!
-//! @note Set msg to an empty string to turn off the ping thread.
-//! @note This has to be set every time the socket connects.
-void Socket::_SetPingInfo( const wxString& msg, unsigned int interval )
+//! @brief Set udp ping info.
+//! @see Socket::SetPingInfo
+void Socket::SetUdpPingInfo( const wxString& addr, unsigned int port, unsigned int interval )
 {
-  m_ping_msg = msg;
-  m_ping_int = interval;
-  if ( msg == wxEmptyString ) {
+  LOCK_SOCKET;
+  m_udp_ping_adr = addr;
+  m_udp_ping_int = interval;
+  m_udp_ping_port = port;
+  _EnablePingThread( _ShouldEnablePingThread() );
+}
+
+
+void Socket::_EnablePingThread( bool enable )
+{
+  if ( !enable ) {
     if ( m_ping_t != 0 ) {
       m_ping_t->Delete();
       m_ping_thread_wait.Enter();
       m_ping_t = 0;
+
+      // Reset values to be sure.
+      m_ping_int = 0;
+      m_ping_msg = wxEmptyString;
+      m_udp_ping_port = 0;
+      m_udp_ping_int = 0;
+      m_udp_ping_adr = wxEmptyString;
     }
   } else {
     if ( m_ping_t == 0 ) {
@@ -237,6 +265,14 @@ void Socket::_SetPingInfo( const wxString& msg, unsigned int interval )
       m_ping_t->Init();
     }
   }
+}
+
+
+//! @brief Check if we should enable or dsable the ping htread.
+//! @see Socket::_EnablePingThread
+bool Socket::_ShouldEnablePingThread()
+{
+  return ( (m_ping_msg != wxEmptyString) || (m_udp_ping_adr != wxEmptyString) );
 }
 
 
@@ -252,6 +288,49 @@ void Socket::Ping()
 {
   wxLogMessage( _T("Sent ping.") );
   if ( m_ping_msg != wxEmptyString ) Send( STD_STRING(m_ping_msg) );
+}
+
+
+/*
+ling m_ui.OnUserStatusChanged( user )
+20.01.04: updating battles
+20.01.04: Sent udp ping.
+20.01.04: UDPPing address taspringmaster.clan-sy.com port 12345
+20.01.04: socket's IsOk() is false, no UDP ping done.
+20.01.05: Sent ping.
+20.01.05: OnBattleOpened (  )
+20.01.05: MapExists (  )
+*/
+
+//! @brief Send udp ping.
+//! @note used for nat travelsal.
+//! @todo Use m_udp_ping_msg variable as message.
+void Socket::UDPPing(){
+#if(NAT_TRAVERSAL_SUPPORT)
+  if ( m_ping_msg == wxEmptyString ) return;
+
+  wxLogMessage( _T("Sent udp ping.") );
+
+  wxLogMessage( _T("UDPPing address %s port %d"), m_udp_ping_adr.c_str(), m_udp_ping_port );
+
+  wxIPV4address local_addr;
+  local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
+  local_addr.Service(12345);
+
+  wxDatagramSocket udp_socket(local_addr,/* wxSOCKET_WAITALL*/wxSOCKET_NONE);
+
+  wxIPV4address wxaddr;
+  wxaddr.Hostname(m_udp_ping_adr);
+  wxaddr.Service(m_udp_ping_port);
+
+  char *message="ipv4 sux!";
+  if(udp_socket.IsOk()){
+    udp_socket.SendTo(wxaddr,message,strlen(message)+1);
+  }else{
+    wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));
+  }
+  if(udp_socket.Error())wxLogMessage(_T("Error=%d"),udp_socket.LastError());
+#endif
 }
 
 
@@ -284,6 +363,8 @@ void Socket::OnPingThreadStopped()
 PingThread::PingThread( Socket& sock ):
   m_sock(sock)
 {
+  m_next_ping = 0;
+  m_next_udp_ping = 0;
 }
 
 
@@ -298,9 +379,44 @@ void PingThread::Init()
 void* PingThread::Entry()
 {
   m_sock.OnPingThreadStarted();
+  m_next_ping = -1;
+  m_next_udp_ping = -1;
+
   while ( !TestDestroy() ) {
-    Sleep( m_sock.GetPingInterval() );
-    m_sock.Ping();
+
+    if ( (m_next_ping < 0) && (m_sock.GetPingEnabled()) ) m_next_ping = m_sock.GetPingInterval();
+    if ( (m_next_udp_ping < 0) && (m_sock.GetUDPPingEnabled()) ) m_next_udp_ping = m_sock.GetUDPPingInterval();
+
+    if ( (m_next_ping >= 0) && (m_next_udp_ping >= 0) ) {
+      // Both normal and udp ping enabled.
+
+      if ( m_next_ping < m_next_udp_ping ) {
+        // Normal ping next in line
+        Sleep( m_next_ping );
+        m_next_udp_ping -= m_next_ping;
+        m_next_ping = -1;
+        m_sock.Ping();
+      } else {
+        // UDP ping next in line.
+        Sleep( m_next_udp_ping );
+        m_next_ping -= m_next_udp_ping;
+        m_next_udp_ping = -1;
+        m_sock.UDPPing();
+      }
+
+    } else if (m_next_ping >= 0) {
+      // Normal ping.
+      Sleep( m_next_ping );
+      m_sock.Ping();
+    } else if (m_next_udp_ping >= 0) {
+      // UDP ping.
+      Sleep( m_next_udp_ping );
+      m_sock.UDPPing();
+    } else {
+      // No ping enabled.
+      Sleep( 100 );
+    }
+
   }
   return 0;
 }
