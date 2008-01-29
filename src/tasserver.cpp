@@ -176,7 +176,7 @@ void TASServer::Connect( const std::string& addr, const int port )
     m_last_ping = time( 0 );
     m_connected = true;
   }
-  m_sock->SetPingInfo( _T("PING\n"), 1000 );
+  m_sock->SetPingInfo( _T("PING\n"), 10000 );
   m_online = false;
   m_agreement = "";
 }
