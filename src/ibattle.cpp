@@ -9,18 +9,7 @@ IBattle::IBattle():
   m_map_loaded(false),
   m_mod_loaded(false),
   m_map_exists(false),
-  m_mod_exists(false),
-
-  m_startmetal(1000),
-  m_startenergy(1000),
-  m_maxunits(500),
-
-  m_limitdgun(false),
-  m_dimmms(false),
-  m_ghostedbuildings(true),
-
-  m_gametype(GT_ComContinue),
-  m_starttype(ST_Fixed)
+  m_mod_exists(false)
 {
 }
 
@@ -130,30 +119,6 @@ wxString IBattle::GetModName()
 wxString IBattle::GetModHash()
 {
   return WX_STRING(m_mod.hash);
-}
-
-
-void IBattle::SetGameType(GameType gt)
-{
-  m_gametype = gt;
-}
-
-
-GameType IBattle::GetGameType()
-{
-  return m_gametype;
-}
-
-
-void IBattle::SetStartType(StartType st)
-{
-  m_starttype = st;
-}
-
-
-StartType IBattle::GetStartType()
-{
-  return m_starttype;
 }
 
 

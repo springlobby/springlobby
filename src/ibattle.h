@@ -8,9 +8,8 @@
 
 #include "iunitsync.h"
 #include "user.h"
+#include "mmoptionswrapper.h"
 
-
-class mmOptionsWrapper;
 
 typedef int HostInfo;
 
@@ -85,11 +84,6 @@ class IBattle
     virtual wxString GetModName();
     virtual wxString GetModHash();
 
-    virtual void SetGameType( GameType gt );
-    virtual GameType GetGameType();
-    virtual void SetStartType( StartType st );
-    virtual StartType GetStartType();
-
     virtual bool MapExists();
     virtual bool ModExists();
 
@@ -104,20 +98,6 @@ class IBattle
     virtual void SetMyAlly( int ally ) = 0;
 
     virtual bool IsFounderMe() =0;
-
-    virtual void SetStartMetal( const int& smetal ) { m_startmetal = smetal; }
-    virtual int GetStartMetal() { return m_startmetal; }
-    virtual void SetStartEnergy( const int& senergy ) { m_startenergy = senergy; }
-    virtual int GetStartEnergy() { return m_startenergy; }
-    virtual void SetMaxUnits( const int& maxunits ) { m_maxunits = maxunits; }
-    virtual int GetMaxUnits() { return m_maxunits; }
-
-    virtual void SetLimitDGun( const bool& limdgun ) { m_limitdgun = limdgun; }
-    virtual bool LimitDGun() { return m_limitdgun; }
-    virtual void SetDimMMs( const bool& dimmm ) { m_dimmms = dimmm; }
-    virtual bool DimMMs() { return m_dimmms; }
-    virtual void SetGhostedBuildings( const bool& gbuilds ) { m_ghostedbuildings = gbuilds; }
-    virtual bool GhostedBuildings() { return m_ghostedbuildings; }
 
     virtual void SendHostInfo( HostInfo update ) = 0;
     virtual void SendHostInfo( const wxString& Tag ) = 0;
@@ -143,8 +123,6 @@ class IBattle
 
     virtual mmOptionsWrapper* CustomBattleOptions() =0;
 
-    wxArrayString ChangedOptions;
-
   protected:
 
     bool m_map_loaded;
@@ -155,17 +133,6 @@ class IBattle
     UnitSyncMod m_mod;
     wxString m_map_name;
     wxString m_mod_name;
-
-        int m_startmetal;
-    int m_startenergy;
-    int m_maxunits;
-
-    bool m_limitdgun;
-    bool m_dimmms;
-    bool m_ghostedbuildings;
-
-    GameType m_gametype;
-    StartType m_starttype;
 
     wxArrayString m_units;
 };

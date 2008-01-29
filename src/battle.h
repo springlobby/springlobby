@@ -7,7 +7,6 @@
 #include "userlist.h"
 #include "user.h"
 #include "ibattle.h"
-#include "mmoptionswrapper.h"
 
 class Ui;
 class Server;
@@ -64,7 +63,7 @@ struct BattleOptions
   std::string description;
   std::string mapname;
   std::string modname;
-  
+
   bool guilistactiv;
 };
 
@@ -220,7 +219,7 @@ class Battle : public UserList, public IBattle
     void SetMyAlly( int ally ) { GetMe().BattleStatus().ally = ally; SendMyBattleStatus(); }
 
     std::vector<BattleStartRect*>::size_type GetNumRects();
-    
+
     mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
 
   protected:
@@ -239,9 +238,9 @@ class Battle : public UserList, public IBattle
 
     std::list<BattleBot*>::iterator m_bot_seek;
     std::list<BattleBot*>::size_type m_bot_pos;
-    
+
     mmOptionsWrapper m_opt_wrap;
-    
+
     void RemoveUser( std::string const& user ) {}
 };
 

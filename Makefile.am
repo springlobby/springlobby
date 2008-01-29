@@ -130,6 +130,8 @@ springlobby_SOURCES = \
 	src/chatpanel.h \
 	src/connectwindow.cpp \
 	src/connectwindow.h \
+	src/crashreport.cpp \
+	src/crashreport.h \
 	src/countrycodes.cpp \
 	src/countrycodes.h \
 	src/flagimagedata.h \
@@ -176,8 +178,6 @@ springlobby_SOURCES = \
 	src/springprocess.h \
 	src/springunitsync.cpp \
 	src/springunitsync.h \
-	src/stacktrace.cpp \
-	src/stacktrace.h \
 	src/tasserver.cpp \
 	src/tasserver.h \
 	src/ui.cpp \
@@ -542,14 +542,10 @@ springsettings_SOURCES = \
 	revision.cpp \
 	src/revision.cpp.in \
 	src/revision.h \
-	src/base64.cpp \
-	src/base64.h \
 	src/utils.cpp \
 	src/utils.h \
-	src/stacktrace.cpp \
-	src/stacktrace.h \
-	src/boost/md5.cpp \
-	src/boost/md5.hpp \
+	src/crashreport.cpp \
+	src/crashreport.h \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
 	src/settings++/se_utils.cpp \

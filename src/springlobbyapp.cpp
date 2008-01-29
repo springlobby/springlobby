@@ -13,7 +13,7 @@
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
-#include "stacktrace.h"
+#include "crashreport.h"
 #include "utils.h"
 #include "ui.h"
 #include "iunitsync.h"
@@ -78,13 +78,14 @@ bool SpringLobbyApp::OnInit()
 
   m_ui->ShowMainWindow();
 
+
   if ( sett().IsFirstRun() ) {
     #ifdef __WXMSW__
       sett().SetOldSpringLaunchMethod( true );
     #endif
     sett().AddChannelJoin( "newbies", "" );
     wxLogMessage( _T("first time startup"));
-    wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nLooks like this is the first time you use SpringLobby. I have guessed a configuration that I think will work for you but you should review it, expecially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
+    wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
       wxOK | wxICON_INFORMATION, &m_ui->mw() );
     #ifdef HAVE_WX26
     wxMessageBox(_("You're using a wxwidgets library of the 2.6.x series\n battle filtering, advanced gui and joining/hosting games using nat traversal\n won't be available"), _("Missing Functionality"), wxICON_INFORMATION, &m_ui->mw() );
@@ -117,28 +118,14 @@ int SpringLobbyApp::OnExit()
   return 0;
 }
 
-
+//! @brief is called when the app crashes
 void SpringLobbyApp::OnFatalException()
 {
-
-#if wxUSE_STACKWALKER
-
-  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"), _("Critical error"), wxICON_ERROR  );
-
-  wxLogError( _T("uncaught exception") );
-  wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
-
-  DebugInfo += _T("StackTraceID: ") + stacktrace().GetStackTraceHash() + _T("\n");
-
-  stacktrace().WalkFromException();
-  DebugInfo += stacktrace().GetStackTrace();
-
-  DebugInfo += _T("-------- End StackTrace --------");
-
-  wxLogMessage( DebugInfo );
-#else
-  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker"), _("Critical error"), wxICON_ERROR  );
-#endif
+  #if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
+  crashreport().GenerateReport(wxDebugReport::Context_Exception);
+  #else
+  wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease enable wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR );
+  #endif
 }
 
 
