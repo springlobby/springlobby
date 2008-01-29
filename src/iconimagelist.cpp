@@ -123,8 +123,6 @@ IconImageList::IconImageList() : wxImageList(16,16)
   Add( wxBitmap(arm_xpm) );
   Add( wxBitmap(core_xpm) );
 
-  for ( int i = 0; i < NUM_COLOUR_ICONS; i++ ) Add( wxBitmap(colourbox_xpm) );
-
   SetColourIcon( 0, wxColour( 255,   0,   0 ) );
   SetColourIcon( 1, wxColour(   0, 255,   0 ) );
   SetColourIcon( 2, wxColour(   0,   0, 255 ) );
@@ -238,10 +236,14 @@ wxString IconImageList::GetBattleStatus( Battle& battle )
 }
 
 
-int IconImageList::GetColourIcon( const int& num )
+unsigned int IconImageList::GetColourIcon( const int& num )
 {
-  ASSERT_LOGIC( num < NUM_COLOUR_ICONS, _T("Colour index too high") );
-  return ICON_COLOURS_START + num;
+  if ( m_player_colour_icons.count(num) != 0 ) return m_player_colour_icons[num];
+  else
+  {
+    SetColourIcon( num, wxColour(0,0,0) );
+    return m_player_colour_icons[num];
+  }
 }
 
 
@@ -253,7 +255,6 @@ int IconImageList::GetHostIcon( const bool& spectator )
 
 void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 {
-  int index = GetColourIcon( num );
   wxImage img( colourbox_xpm );
 
   img.Replace( 1, 1, 1, colour.Red(), colour.Green(), colour.Blue() );
@@ -264,8 +265,8 @@ void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 
   /*r = colour.Red()-60; g = colour.Green()-60; b = colour.Blue()-60;
   img.Replace( 200, 200, 200, r<0?0:r, g<0?0:g, b<0?0:b );*/
-
-  Replace( index, wxBitmap( img ) );
+  if ( m_player_colour_icons.count(num) != 0 ) Replace( m_player_colour_icons[num], wxBitmap( img ) );
+  else m_player_colour_icons[num] = Add( wxBitmap( img ) );
 }
 
 
@@ -275,13 +276,13 @@ int IconImageList::GetSideIcon( const std::string& modname, const std::string& s
   sn = sn.Lower();
   if ( sn  == _T("arm") ) return ICON_ARM;
   else if (  sn == _T("core") ) return ICON_CORE;
-  else if (CachedSideIcons[side] == 0){
+  else if (m_cached_side_icons[side] == 0){
     try {
       int IconPosition = Add(wxBitmap( usync()->GetSidePicture( modname , side ) ), wxNullBitmap);
-      CachedSideIcons[side] = IconPosition;
+      m_cached_side_icons[side] = IconPosition;
       return IconPosition;
     } catch (...) {};
-  } else return CachedSideIcons[side];
+  } else return m_cached_side_icons[side];
   return -1;
 }
 
