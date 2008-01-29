@@ -120,9 +120,9 @@ void Socket::Disconnect( )
   if ( m_sock == 0 ) return;
   m_serv.OnDisconnected( this );
   LOCK_SOCKET;
+  _EnablePingThread( false );
   m_sock->Destroy();
   m_sock = 0;
-  _EnablePingThread( false );
 }
 
 
@@ -248,9 +248,6 @@ void Socket::_EnablePingThread( bool enable )
 {
   if ( !enable ) {
     if ( m_ping_t != 0 ) {
-      m_ping_t->Delete();
-      m_ping_thread_wait.Enter();
-      m_ping_t = 0;
 
       // Reset values to be sure.
       m_ping_int = 0;
@@ -258,6 +255,10 @@ void Socket::_EnablePingThread( bool enable )
       m_udp_ping_port = 0;
       m_udp_ping_int = 0;
       m_udp_ping_adr = wxEmptyString;
+
+      m_ping_t->Delete();
+      m_ping_thread_wait.Enter();
+      m_ping_t = 0;
     }
   } else {
     if ( m_ping_t == 0 ) {
@@ -418,12 +419,13 @@ void* PingThread::Entry()
     }
 
   }
+  m_sock.OnPingThreadStopped();
   return 0;
 }
 
 
 void PingThread::OnExit()
 {
-  m_sock.OnPingThreadStopped();
+
 }
 

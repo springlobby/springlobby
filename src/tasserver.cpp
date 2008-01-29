@@ -1001,7 +1001,7 @@ void TASServer::JoinBattle( const int& battleid, const std::string& password )
   if(BattleExists(battleid)){
     Battle *battle=&GetBattle(battleid);
     if(battle){
-      m_sock->SetUdpPingInfo( WX_STRING(m_addr), 12345, 10000 );
+      m_sock->SetUdpPingInfo( WX_STRING(m_addr), m_udp_port, 10000 );
       //if((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))UDPPing();
     }
   }else{
