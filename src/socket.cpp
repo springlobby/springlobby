@@ -430,6 +430,7 @@ void PingThread::OnExit()
 
 }
 
+
 //! @brief used to check if the NAT is done properly when hosting
 bool Socket::TestOpenPort( PacketType type, unsigned int port )
 {
@@ -445,7 +446,8 @@ bool Socket::TestOpenPort( PacketType type, unsigned int port )
     wxHTTP connect_to_server;
     connect_to_server.SetTimeout( 10 );
 
-    if ( !connect_to_server.Connect( wxString::Format( _T("http://zjt3.com/porttest.php?port=%d"), port ) ) ) return false;
+    if ( !connect_to_server.Connect( _T("zjt3.com") ) ) return false;
+    connect_to_server.GetInputStream(wxString::Format( _T("/porttest.php?port=%d"), port));
 
     if(udp_socket.IsOk()){
       if ( !udp_socket.Wait( 10 ) ) return false;
