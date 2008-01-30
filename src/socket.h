@@ -9,6 +9,9 @@ class Server;
 class Socket;
 class wxSocketEvent;
 class wxSocketClient;
+class wxCriticalSection;
+
+class PingThread;
 
 typedef int Sockstate;
 
@@ -37,6 +40,7 @@ class SocketEvents: public wxEvtHandler
 
 typedef void (*socket_callback)(Socket*);
 
+
 //! @brief Class that implements a TCP client socket.
 class Socket
 {
@@ -53,16 +57,42 @@ class Socket
     bool Send( const std::string& data );
     bool Receive( std::string& data );
 
+
+    void Ping();
+    void UDPPing();
+    void SetPingInfo( const wxString& msg = wxEmptyString, unsigned int interval = 10000 );
+    void SetUdpPingInfo( const wxString& addr = wxEmptyString, unsigned int port = 0, unsigned int interval = 10000 );
+    unsigned int GetUDPPingPort() { return m_udp_ping_port; }
+    unsigned int GetPingInterval() { return m_ping_int; }
+    unsigned int GetUDPPingInterval() { return m_udp_ping_int; }
+    bool GetPingEnabled() { return m_ping_msg != wxEmptyString; }
+    bool GetUDPPingEnabled() { return m_udp_ping_adr != wxEmptyString; }
+
     Sockstate State( );
     Sockerror Error( );
 
     void SetSendRateLimit( int Bps = -1 );
     void OnTimer( int mselapsed );
 
+    void OnPingThreadStarted();
+    void OnPingThreadStopped();
+
   protected:
+
   // Socket variables
+
     wxSocketClient* m_sock;
     SocketEvents* m_events;
+
+    wxCriticalSection m_lock;
+    wxCriticalSection m_ping_thread_wait;
+
+    wxString m_ping_msg;
+    wxString m_udp_ping_adr;
+    unsigned int m_ping_int;
+    unsigned int m_udp_ping_port;
+    unsigned int m_udp_ping_int;
+    PingThread* m_ping_t;
 
     bool m_connecting;
     bool m_block;
@@ -73,6 +103,27 @@ class Socket
     std::string m_buffer;
 
     wxSocketClient* _CreateSocket();
+
+    bool _Send( const std::string& data );
+    void _EnablePingThread( bool enable = true );
+    bool _ShouldEnablePingThread();
 };
+
+
+
+class PingThread: public wxThread
+{
+  public:
+    PingThread( Socket& sock );
+    void Init();
+    void* Entry();
+    void OnExit();
+  private:
+    Socket& m_sock;
+    int m_next_ping;
+    int m_next_udp_ping;
+
+};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_SOCKET_H
