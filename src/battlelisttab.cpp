@@ -337,7 +337,15 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     bo.description = sett().GetLastHostDescription();
     bo.port = sett().GetLastHostPort();
 
-
+    if ( bo.nattype == NAT_None )
+    {
+      if ( !m_ui.TestHostPort( bo.port ) )
+      {
+        wxLogWarning(_T("hosting port %d: test unsuccessful, closing battle"),bo.port  );
+        customMessageBox( SL_MAIN_ICON, _("Battle not started because the port you selected (%d) is unable to recieve incoming packets\n checks your router & firewall configuration again or change port in the dialog") );
+        return;
+      }
+    }
 
     // Get selected mod from unitsync.
     UnitSyncMod mod;
@@ -374,18 +382,6 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     bo.rankneeded = sett().GetLastRankLimit();
 
     bo.maxplayers = sett().GetLastHostPlayerNum();
-
-/*
-    bo.nattype,
-    bo.startmetal,
-    bo.startenergy,
-    bo.maxunits,
-    bo.starttype,
-    bo.gametype,
-    bo.limitdgun,
-    bo.dimmms,
-    bo.ghostedbuildings,
-)*/
 
     m_ui.GetServer().HostBattle( bo, sett().GetLastHostPassword() );
   }

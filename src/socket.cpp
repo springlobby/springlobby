@@ -2,6 +2,7 @@
 
 #include <wx/socket.h>
 #include <wx/thread.h>
+#include <wx/protocol/http.h>
 #include <stdexcept>
 
 #include "socket.h"
@@ -429,3 +430,36 @@ void PingThread::OnExit()
 
 }
 
+//! @brief used to check if the NAT is done properly when hosting
+bool Socket::TestOpenPort( PacketType type, unsigned int port )
+{
+  if ( type == Udp )
+  {
+    #ifndef HAVE_WX26
+    wxIPV4address local_addr;
+    local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
+    local_addr.Service(port);
+
+    wxDatagramSocket udp_socket(local_addr, wxSOCKET_NONE);
+
+    wxHTTP connect_to_server;
+    connect_to_server.SetTimeout( 10 );
+
+    if ( connect_to_server.Connect( wxString::Format( _T("http://zjt3.com/porttest.php?port=%d"), port ) ) ) return false;
+
+    if(udp_socket.IsOk()){
+      if ( !udp_socket.Wait( 10 ) ) return false;
+    }else{
+      wxLogMessage(_T("socket's IsOk() is false, no UDP packets can be checked"));
+      return false;
+    }
+    if(udp_socket.Error())
+    {
+      wxLogMessage(_T("Error=%d"),udp_socket.LastError());
+      return false;
+    }
+    return true;
+    #endif
+  }
+  return false;
+}

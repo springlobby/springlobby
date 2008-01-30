@@ -28,6 +28,12 @@ typedef int Sockerror;
 
 #define SOCKET_ID 100
 
+enum PacketType
+{
+  Tcp,
+  Udp
+};
+
 class SocketEvents: public wxEvtHandler
 {
   public:
@@ -67,6 +73,8 @@ class Socket
     unsigned int GetUDPPingInterval() { return m_udp_ping_int; }
     bool GetPingEnabled() { return m_ping_msg != wxEmptyString; }
     bool GetUDPPingEnabled() { return m_udp_ping_adr != wxEmptyString; }
+
+    bool TestOpenPort( PacketType type, unsigned int port );
 
     Sockstate State( );
     Sockerror Error( );

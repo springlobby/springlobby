@@ -97,23 +97,6 @@ class Battle : public UserList, public IBattle
     void SetSpectators( const int& spectators ) { m_opts.spectators = spectators; }
     int GetSpectators() const { return m_opts.spectators; }
 
-/*    void SetStartMetal( const int& smetal ) { m_opts.startmetal = smetal; }
-    int GetStartMetal() { return m_opts.startmetal; }
-    void SetStartEnergy( const int& senergy ) { m_opts.startenergy = senergy; }
-    int GetStartEnergy() { return m_opts.startenergy; }
-    void SetMaxUnits( const int& maxunits ) { m_opts.maxunits = maxunits; }
-    int GetMaxUnits() { return m_opts.maxunits; }
-    //void SetStartType( const StartType& starttype ) { m_opts.starttype = starttype; }
-
-    //void SetGameType( const GameType& gt ) { m_opts.gametype = gt; }
-    void SetLimitDGun( const bool& limdgun ) { m_opts.limitdgun = limdgun; }
-    bool LimitDGun() { return m_opts.limitdgun; }
-    void SetDimMMs( const bool& dimmm ) { m_opts.dimmms = dimmm; }
-    bool DimMMs() { return m_opts.dimmms; }
-    void SetGhostedBuildings( const bool& gbuilds ) { m_opts.ghostedbuildings = gbuilds; }
-    bool GhostedBuildings() { return m_opts.ghostedbuildings; }
-*/
-
     void SendHostInfo( HostInfo update );
     void SendHostInfo( const wxString& Tag );
 

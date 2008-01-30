@@ -126,6 +126,8 @@ class TASServer : public Server
     bool IsPasswordHash( const std::string& pass );
     std::string GetPasswordHash( const std::string& pass );
 
+    bool TestOpenPort( unsigned int port );
+
   protected:
     Ui& m_ui;
     ServerEvents* m_se;

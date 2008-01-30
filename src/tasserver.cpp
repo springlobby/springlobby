@@ -1483,6 +1483,10 @@ void TASServer::OnDataReceived( Socket* sock )
   ReceiveAndExecute();
 }
 
+bool TASServer::TestOpenPort( unsigned int port )
+{
+  return m_sock->TestOpenPort( Udp, port );
+}
 
 ////////////////////////
 // Utility functions
