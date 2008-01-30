@@ -441,7 +441,7 @@ bool Socket::TestOpenPort( PacketType type, unsigned int port )
     local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
     local_addr.Service(port);
 
-    wxDatagramSocket udp_socket(local_addr, wxSOCKET_NONE);
+    wxSocketServer udp_socket(local_addr, wxSOCKET_NONE);
 
     wxHTTP connect_to_server;
     connect_to_server.SetTimeout( 10 );
@@ -450,7 +450,7 @@ bool Socket::TestOpenPort( PacketType type, unsigned int port )
     connect_to_server.GetInputStream(wxString::Format( _T("/porttest.php?port=%d"), port));
 
     if(udp_socket.IsOk()){
-      if ( !udp_socket.Wait( 10 ) ) return false;
+      if ( !udp_socket.WaitForAccept( 10 ) ) return false;
     }else{
       wxLogMessage(_T("socket's IsOk() is false, no UDP packets can be checked"));
       return false;

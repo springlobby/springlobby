@@ -342,7 +342,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
       if ( !m_ui.TestHostPort( bo.port ) )
       {
         wxLogWarning(_T("hosting port %d: test unsuccessful, closing battle"),bo.port  );
-        customMessageBox( SL_MAIN_ICON, _("Battle not started because the port you selected (%d) is unable to recieve incoming packets\n checks your router & firewall configuration again or change port in the dialog") );
+        customMessageBox( SL_MAIN_ICON, wxString::Format( _("Battle not started because the port you selected (%d) is unable to recieve incoming packets\n checks your router & firewall configuration again or change port in the dialog"), bo.port ) );
         return;
       }
     }
