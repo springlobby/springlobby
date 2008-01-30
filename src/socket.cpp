@@ -445,7 +445,7 @@ bool Socket::TestOpenPort( PacketType type, unsigned int port )
     wxHTTP connect_to_server;
     connect_to_server.SetTimeout( 10 );
 
-    if ( connect_to_server.Connect( wxString::Format( _T("http://zjt3.com/porttest.php?port=%d"), port ) ) ) return false;
+    if ( !connect_to_server.Connect( wxString::Format( _T("http://zjt3.com/porttest.php?port=%d"), port ) ) ) return false;
 
     if(udp_socket.IsOk()){
       if ( !udp_socket.Wait( 10 ) ) return false;
