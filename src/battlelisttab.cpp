@@ -46,7 +46,7 @@ BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 #else
   EVT_CHECKBOX            ( BATTLE_LIST_FILTER_BUTTON , BattleListTab::OnFilter )
 #endif
- 
+
 
 END_EVENT_TABLE()
 
@@ -55,7 +55,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxPanel( parent, -1 ),
   m_ui(ui),
   m_sel_battle(0)
-{	
+{
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -120,7 +120,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
   wxBoxSizer* m_buttons_sizer;
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
-  
+
 #if  wxUSE_TOGGLEBTN
 	m_filter_show = new wxToggleButton( this, BATTLE_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
 #else
@@ -337,6 +337,8 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     bo.description = sett().GetLastHostDescription();
     bo.port = sett().GetLastHostPort();
 
+
+
     // Get selected mod from unitsync.
     UnitSyncMod mod;
     try {
@@ -352,7 +354,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     UnitSyncMap map;
     std::string mname = sett().GetLastHostMap();
     try {
-      if ( usync()->MapExists(mname) ) 
+      if ( usync()->MapExists(mname) )
     	  map = usync()->GetMap( mname );
       else if ( usync()->GetNumMaps() <= 0 ) {
         wxLogWarning( _T("no maps found") );

@@ -28,8 +28,6 @@ struct BattleOptions
   BattleOptions() :
     battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),
     nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
-    startmetal(1000),startenergy(1000),maxunits(500),starttype(ST_Fixed),
-    gametype(GT_ComContinue),limitdgun(false),dimmms(false),ghostedbuildings(true),
     guilistactiv(false) {}
 
   int battleid;
@@ -46,16 +44,6 @@ struct BattleOptions
 
   unsigned int maxplayers;
   unsigned int spectators;
-
-  int startmetal;
-  int startenergy;
-  int maxunits;
-  StartType starttype;
-
-  GameType gametype;
-  bool limitdgun;
-  bool dimmms;
-  bool ghostedbuildings;
 
   std::string maphash;
   std::string modhash;
