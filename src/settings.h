@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SETTINGS_H
 #define SPRINGLOBBY_HEADERGUARD_SETTINGS_H
 
-#include <string>
+#include <wx/string.h>
 #include <wx/colour.h>
 
 #define CACHE_VERSION 1
@@ -45,39 +45,39 @@ class Settings
     void SetCacheVersion();
     int GetCacheVersion();
 
-    std::string GetDefaultServer();
-    void SetDefaultServer( const std::string& server_name );
+    wxString GetDefaultServer();
+    void SetDefaultServer( const wxString& server_name );
 
-    bool ServerExists( const std::string& server_name );
+    bool ServerExists( const wxString& server_name );
 
-    std::string GetServerHost( const std::string& server_name );
-    void SetServerHost( const std::string& server_name, const std::string& value );
+    wxString GetServerHost( const wxString& server_name );
+    void SetServerHost( const wxString& server_name, const wxString& value );
 
-    int GetServerPort( const std::string& server_name );
-    void SetServerPort( const std::string& server_name, const int value );
+    int GetServerPort( const wxString& server_name );
+    void SetServerPort( const wxString& server_name, const int value );
 
     int GetNumServers();
     void SetNumServers( int num );
-    void AddServer( const std::string& server_name );
-    int GetServerIndex( const std::string& server_name );
+    void AddServer( const wxString& server_name );
+    int GetServerIndex( const wxString& server_name );
 
     int GetNumChannelsJoin();
     void SetNumChannelsJoin( int num );
-    void AddChannelJoin( const std::string& channel , const std::string& key );
-    void RemoveChannelJoin( const std::string& channel );
-    int GetChannelJoinIndex( const std::string& channel );
-    std::string GetChannelJoinName( int index );
+    void AddChannelJoin( const wxString& channel , const wxString& key );
+    void RemoveChannelJoin( const wxString& channel );
+    int GetChannelJoinIndex( const wxString& channel );
+    wxString GetChannelJoinName( int index );
 
-    std::string GetServerName( int index );
+    wxString GetServerName( int index );
 
-    std::string GetServerAccountNick( const std::string& server_name );
-    void   SetServerAccountNick( const std::string& server_name, const std::string& value );
+    wxString GetServerAccountNick( const wxString& server_name );
+    void   SetServerAccountNick( const wxString& server_name, const wxString& value );
 
-    std::string GetServerAccountPass( const std::string& server_name );
-    void   SetServerAccountPass( const std::string& server_name, const std::string& value );
+    wxString GetServerAccountPass( const wxString& server_name );
+    void   SetServerAccountPass( const wxString& server_name, const wxString& value );
 
-    bool   GetServerAccountSavePass( const std::string& server_name );
-    void   SetServerAccountSavePass( const std::string& server_name, const bool value );
+    bool   GetServerAccountSavePass( const wxString& server_name );
+    void   SetServerAccountSavePass( const wxString& server_name, const bool value );
 
     int    GetMainWindowWidth();
     void   SetMainWindowWidth( const int value );
@@ -91,47 +91,47 @@ class Settings
     int    GetMainWindowLeft();
     void   SetMainWindowLeft( const int value );
 
-    std::string GetSpringDir();
-    void   SetSpringDir( const std::string& pring_dir );
+    wxString GetSpringDir();
+    void   SetSpringDir( const wxString& pring_dir );
 
     bool   GetUnitSyncUseDefLoc();
     void   SetUnitSyncUseDefLoc( const bool usedefloc );
-    std::string GetUnitSyncLoc();
-    void   SetUnitSyncLoc( const std::string& loc );
-    std::string GetUnitSyncUsedLoc( bool force = false, bool defloc = false );
+    wxString GetUnitSyncLoc();
+    void   SetUnitSyncLoc( const wxString& loc );
+    wxString GetUnitSyncUsedLoc( bool force = false, bool defloc = false );
 
     bool   GetSpringUseDefLoc();
     void   SetSpringUseDefLoc( const bool usedefloc );
-    std::string GetSpringLoc();
-    void   SetSpringLoc( const std::string& loc );
-    std::string GetSpringUsedLoc( bool force = false, bool defloc = false );
+    wxString GetSpringLoc();
+    void   SetSpringLoc( const wxString& loc );
+    wxString GetSpringUsedLoc( bool force = false, bool defloc = false );
 
     bool GetChatLogEnable();
     void SetChatLogEnable( const bool value );
     wxString GetChatLogLoc();
     void   SetChatLogLoc( const wxString& loc );
 
-    std::string GetLastHostDescription();
-    std::string GetLastHostMod();
-    std::string GetLastHostPassword();
+    wxString GetLastHostDescription();
+    wxString GetLastHostMod();
+    wxString GetLastHostPassword();
     int GetLastHostPort();
     int GetLastHostPlayerNum();
     int GetLastHostNATSetting();
-    std::string GetLastHostMap();
+    wxString GetLastHostMap();
     int GetLastRankLimit();
 
-    void SetLastHostDescription( const std::string& value );
-    void SetLastHostMod( const std::string& value );
-    void SetLastHostPassword( const std::string& value );
+    void SetLastHostDescription( const wxString& value );
+    void SetLastHostMod( const wxString& value );
+    void SetLastHostPassword( const wxString& value );
     void SetLastHostPort( int value );
     void SetLastHostPlayerNum( int value );
     void SetLastHostNATSetting( int value );
-    void SetLastHostMap( const std::string& value );
+    void SetLastHostMap( const wxString& value );
     void SetLastRankLimit( int rank );
 
 
-    void SetLastAI( const std::string& ai );
-    std::string GetLastAI();
+    void SetLastAI( const wxString& ai );
+    wxString GetLastAI();
 
     void SetDisplayJoinLeave( bool display, const wxString& channel  );
     bool GetDisplayJoinLeave( const wxString& channel );

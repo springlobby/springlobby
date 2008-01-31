@@ -232,9 +232,9 @@ void HostBattleDialog::OnOk( wxCommandEvent& event )
     return;
   }
 
-  sett().SetLastHostDescription( STD_STRING(m_desc_text->GetValue()) );
-  sett().SetLastHostMod( STD_STRING(m_mod_pic->GetString(m_mod_pic->GetSelection())) );
-  sett().SetLastHostPassword( STD_STRING(m_pwd_text->GetValue()) );
+  sett().SetLastHostDescription( m_desc_text->GetValue() );
+  sett().SetLastHostMod( m_mod_pic->GetString(m_mod_pic->GetSelection()) );
+  sett().SetLastHostPassword( m_pwd_text->GetValue() );
   long tmp = DEFSETT_SPRING_PORT;
   m_port_text->GetValue().ToLong( &tmp );
   sett().SetLastHostPort( tmp );

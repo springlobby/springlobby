@@ -41,19 +41,19 @@ void Server::SetSocket( Socket* sock )
   m_sock = sock;
 }
 
-User& Server::GetUser( const std::string& nickname )
+User& Server::GetUser( const wxString& nickname )
 {
   return m_users.GetUser( nickname );
 }
 
 
-bool Server::UserExists( const std::string& nickname )
+bool Server::UserExists( const wxString& nickname )
 {
   return m_users.UserExists( nickname );
 }
 
 
-Channel& Server::GetChannel( const std::string& name )
+Channel& Server::GetChannel( const wxString& name )
 {
   return m_channels.GetChannel( name );
 }
@@ -71,7 +71,7 @@ Channel& Server::GetChannel( const int& index )
 }
 
 
-bool Server::ChannelExists( const std::string& name )
+bool Server::ChannelExists( const wxString& name )
 {
   return m_channels.ChannelExists( name );
 }
@@ -90,7 +90,7 @@ bool Server::BattleExists( const int& battleid )
 
 
 
-User& Server::_AddUser( const std::string& user )
+User& Server::_AddUser( const wxString& user )
 {
   if ( m_users.UserExists( user ) ) return m_users.GetUser( user );
   User* u = new User( user, *this );
@@ -99,16 +99,16 @@ User& Server::_AddUser( const std::string& user )
 }
 
 
-void Server::_RemoveUser( const std::string& nickname )
+void Server::_RemoveUser( const wxString& nickname )
 {
   User* u = &m_users.GetUser( nickname );
   m_users.RemoveUser( nickname );
-  if ( u == 0 ) throw std::logic_error("Server::_RemoveUser(\"" + nickname + "\"): GetUser returned NULL pointer");
+  ASSERT_LOGIC( u != 0 , _T("Server::_RemoveUser(\"") + nickname + _T("\"): GetUser returned NULL pointer"));
   delete u;
 }
 
 
-Channel& Server::_AddChannel( const std::string& chan )
+Channel& Server::_AddChannel( const wxString& chan )
 {
   if ( m_channels.ChannelExists( chan ) ) return m_channels.GetChannel( chan );
   Channel* c = new Channel( *this, m_ui );
@@ -119,11 +119,11 @@ Channel& Server::_AddChannel( const std::string& chan )
 }
 
 
-void Server::_RemoveChannel( const std::string& name )
+void Server::_RemoveChannel( const wxString& name )
 {
   Channel* c = &m_channels.GetChannel( name );
   m_channels.RemoveChannel( name );
-  if ( c == 0 ) throw std::logic_error("Server::_RemoveChannel(\"" + name + "\"): GetChannel returned NULL pointer");
+  ASSERT_LOGIC( c != 0, _T("Server::_RemoveChannel(\"") + name + _T("\"): GetChannel returned NULL pointer"));
   delete c;
 }
 
@@ -141,7 +141,7 @@ void Server::_RemoveBattle( const int& id )
 {
   Battle* b = &battles_iter->GetBattle( id );
   m_battles.RemoveBattle( id );
-  if ( b == 0 ) throw std::logic_error("Server::_RemoveBattle(): GetBattle returned NULL pointer");
+  ASSERT_LOGIC( b != 0, _T("Server::_RemoveBattle(): GetBattle returned NULL pointer"));
   delete b;
 }
 

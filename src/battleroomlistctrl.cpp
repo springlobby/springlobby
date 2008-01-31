@@ -155,8 +155,8 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
 
   m_sides = new wxMenu();
   try {
-    for ( int i = 0; i < usync()->GetSideCount( STD_STRING(m_battle.GetModName()) ); i++ ) {
-      wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), i )), wxEmptyString, wxITEM_NORMAL );
+    for ( int i = 0; i < usync()->GetSideCount( m_battle.GetModName() ); i++ ) {
+      wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, usync()->GetSideName( m_battle.GetModName(), i ), wxEmptyString, wxITEM_NORMAL );
       m_sides->Append( side );
       Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
     }
@@ -255,9 +255,9 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   if ( !user.BattleStatus().spectator ) {
 
     try {
-      int sideimg = icons().GetSideIcon( STD_STRING(m_battle.GetModName()), usync()->GetSideName( STD_STRING(m_battle.GetModName()), user.BattleStatus().side ) );
+      int sideimg = icons().GetSideIcon( m_battle.GetModName(), usync()->GetSideName( m_battle.GetModName(), user.BattleStatus().side ) );
       if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
-      else SetItem( index, 1, WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), user.BattleStatus().side )) );
+      else SetItem( index, 1, usync()->GetSideName( m_battle.GetModName(), user.BattleStatus().side ));
     } catch ( ... ) {
       SetItem( index, 1, wxString::Format( _T("s%d"), user.BattleStatus().side + 1 ) );
     }
@@ -357,9 +357,9 @@ void BattleroomListCtrl::UpdateBot( const int& index )
   SetItemColumnImage( index, 1, -1 );
 
   try {
-    int sideimg = icons().GetSideIcon( STD_STRING(m_battle.GetModName()), usync()->GetSideName( STD_STRING(m_battle.GetModName()), bot.bs.side ) );
+    int sideimg = icons().GetSideIcon( m_battle.GetModName(), usync()->GetSideName( m_battle.GetModName(), bot.bs.side ) );
     if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
-    else SetItem( index, 1, WX_STRING( usync()->GetSideName( STD_STRING(m_battle.GetModName()), bot.bs.side )) );
+    else SetItem( index, 1,  usync()->GetSideName( m_battle.GetModName(), bot.bs.side) );
   } catch ( ... ) {
     SetItem( index, 1, wxString::Format( _T("s%d"), bot.bs.side + 1 ) );
   }
@@ -1017,18 +1017,18 @@ void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 					break;
 				case 1: // icon
 					if ( content.is_bot )
-						m_tiptext = WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()),
-								((BattleBot*)content.data)->bs.side ));
+						m_tiptext = usync()->GetSideName( m_battle.GetModName(),
+								((BattleBot*)content.data)->bs.side );
 					else if ( ((User*)content.data)->BattleStatus().spectator )
 						m_tiptext = _T("Spectators have no side");
 					else
-						m_tiptext =  WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()),
-								((User*)content.data)->BattleStatus().side ));
+						m_tiptext =  usync()->GetSideName( m_battle.GetModName(),
+								((User*)content.data)->BattleStatus().side );
 					break;
 
 				case 3: // country
 					m_tiptext = (content.is_bot ? _T("This bot is from nowhere particluar")
-							: GetFlagNameFromCountryCode(WX_STRING(((User*)content.data)->GetCountry()).MakeUpper()));
+							: GetFlagNameFromCountryCode(((User*)content.data)->GetCountry().MakeUpper()));
 					break;
 				case 4: // rank
 					m_tiptext = (content.is_bot ? _T("This bot has no rank")
@@ -1036,12 +1036,12 @@ void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 					break;
 
 				case 5: //name
-					m_tiptext = WX_STRING( (content.is_bot ?((BattleBot*)content.data)->name
-							: ((User*)content.data)->GetNick() ));
+					m_tiptext = (content.is_bot ?((BattleBot*)content.data)->name
+							: ((User*)content.data)->GetNick() );
 					break;
 
 				case 8: // cpu
-					m_tiptext = (content.is_bot ? WX_STRING (((BattleBot*)content.data)->aidll)
+					m_tiptext = (content.is_bot ? ((BattleBot*)content.data)->aidll
 							: m_colinfovec[coloumn].first);
 					break;
 

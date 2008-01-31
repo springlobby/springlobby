@@ -21,10 +21,10 @@ IBattle::~IBattle()
 
 void IBattle::SetMap(const wxString& mapname, const wxString& hash)
 {
-  if ( mapname != WX_STRING(m_map.name) ) {
+  if ( mapname != m_map.name ) {
     m_map_loaded = false;
-    m_map_exists = usync()->MapExists( STD_STRING(mapname), STD_STRING(hash) );
-    m_map.hash = STD_STRING(hash);
+    m_map_exists = usync()->MapExists( mapname, hash );
+    m_map.hash = hash;
     m_map_name = mapname;
   }
 }
@@ -34,9 +34,9 @@ void IBattle::SetMap(const UnitSyncMap& map)
 {
   if ( map.name != m_map.name ) {
     m_map = map;
-    m_map_name = WX_STRING(map.name);
+    m_map_name = map.name;
     m_map_loaded = true;
-    m_map_exists = usync()->MapExists( STD_STRING(m_map_name), m_map.hash );
+    m_map_exists = usync()->MapExists( m_map_name, m_map.hash );
   }
 }
 
@@ -48,9 +48,9 @@ const UnitSyncMap& IBattle::Map()
   if ( !m_map_loaded ) {
     try {
 
-      m_map = usync()->GetMapEx( STD_STRING(m_map_name) );
+      m_map = usync()->GetMapEx( m_map_name );
       m_map_loaded = true;
-      m_map_name = WX_STRING(m_map.name);
+      m_map_name = m_map.name;
 
     } catch (...) {}
   }
@@ -66,12 +66,12 @@ wxString IBattle::GetMapName()
 
 wxString IBattle::GetMapHash()
 {
-  if ( m_map.hash == "" ) {
+  if ( m_map.hash == _T("") ) {
     try {
       m_map.hash = usync()->GetMap( m_map.name ).hash;
     } catch (...) { wxLogWarning( _T("Couldn't get map hash from unitsync.") ); }
   }
-  return WX_STRING(m_map.hash);
+  return m_map.hash;
 }
 
 
@@ -79,7 +79,7 @@ void IBattle::SetMod( const wxString& modname, const wxString& hash )
 {
   if ( m_mod_name != modname ){
     m_mod_loaded = false;
-    m_mod_exists = usync()->ModExists( STD_STRING(modname) );
+    m_mod_exists = usync()->ModExists( modname );
     m_mod_name = modname;
   }
 }
@@ -89,9 +89,9 @@ void IBattle::SetMod( const UnitSyncMod& mod )
 {
   if ( mod.name != m_mod.name ) {
     m_mod = mod;
-    m_mod_name = WX_STRING(mod.name);
+    m_mod_name = mod.name;
     m_mod_loaded = true;
-    m_mod_exists = usync()->ModExists( STD_STRING(m_mod_name) );
+    m_mod_exists = usync()->ModExists( m_mod_name );
   }
 }
 
@@ -101,9 +101,9 @@ const UnitSyncMod& IBattle::Mod()
   ASSERT_LOGIC( m_mod_exists, _T("Mod does not exist.") );
   if ( !m_mod_loaded ) {
     try {
-      m_mod = usync()->GetMod( STD_STRING(m_mod_name) );
+      m_mod = usync()->GetMod( m_mod_name );
       m_mod_loaded = true;
-      m_mod_name = WX_STRING(m_mod.name);
+      m_mod_name = m_mod.name;
     } catch (...) {}
   }
   return m_mod;
@@ -118,7 +118,7 @@ wxString IBattle::GetModName()
 
 wxString IBattle::GetModHash()
 {
-  return WX_STRING(m_mod.hash);
+  return m_mod.hash;
 }
 
 
@@ -137,15 +137,15 @@ bool IBattle::ModExists()
 
 
 
-void IBattle::DisableUnit( const std::string& unitname )
+void IBattle::DisableUnit( const wxString& unitname )
 {
-  if ( m_units.Index( WX_STRING(unitname) ) == wxNOT_FOUND ) m_units.Add( WX_STRING( unitname ) );
+  if ( m_units.Index( unitname ) == wxNOT_FOUND ) m_units.Add( unitname );
 }
 
 
-void IBattle::EnableUnit( const std::string& unitname )
+void IBattle::EnableUnit( const wxString& unitname )
 {
-  int pos = m_units.Index( WX_STRING(unitname) );
+  int pos = m_units.Index( unitname );
   if ( pos == wxNOT_FOUND ) return;
   m_units.RemoveAt( pos );
 }
@@ -165,8 +165,8 @@ wxArrayString IBattle::DisabledUnits()
 
 void IBattle::OnUnitSyncReloaded()
 {
-  m_mod_exists = usync()->ModExists( STD_STRING(m_mod_name) );
-  m_map_exists = usync()->MapExists( STD_STRING(m_map_name) );
+  m_mod_exists = usync()->ModExists( m_mod_name );
+  m_map_exists = usync()->MapExists( m_map_name );
 }
 
 unsigned int IBattle::AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll ) {

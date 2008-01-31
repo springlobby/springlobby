@@ -496,9 +496,9 @@ void SpringOptionsTab::OnBrowseWeb( wxCommandEvent& event )
 
 void SpringOptionsTab::OnApply( wxCommandEvent& event )
 {
-  sett().SetSpringDir( STD_STRING(m_dir_edit->GetValue()) );
-  if ( !m_sync_def_radio->GetValue() ) sett().SetUnitSyncLoc( STD_STRING( m_sync_edit->GetValue() ) );
-  if ( !m_exec_def_radio->GetValue() ) sett().SetSpringLoc( STD_STRING( m_exec_edit->GetValue() ) );
+  sett().SetSpringDir( m_dir_edit->GetValue() );
+  if ( !m_sync_def_radio->GetValue() ) sett().SetUnitSyncLoc(  m_sync_edit->GetValue() );
+  if ( !m_exec_def_radio->GetValue() ) sett().SetSpringLoc(  m_exec_edit->GetValue() );
   if ( !m_web_def_radio->GetValue() ) sett().SetWebBrowserPath( m_web_edit->GetValue() );
   sett().SetSpringUseDefLoc( m_exec_def_radio->GetValue() );
   sett().SetUnitSyncUseDefLoc( m_sync_def_radio->GetValue() );
@@ -506,7 +506,7 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
   if ( sett().IsFirstRun() ) return;
 
   usync()->FreeUnitSyncLib();
-  if ( !usync()->LoadUnitSyncLib( WX_STRING(sett().GetSpringDir()), WX_STRING(sett().GetUnitSyncUsedLoc()) ) ) {
+  if ( !usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() ) ) {
     wxLogWarning( _T("can't load unitsync") );
     customMessageBox( SL_MAIN_ICON, _("SpringLobby is unable to load you unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
   } else {
@@ -554,7 +554,7 @@ void SpringOptionsTab::OnFindChatLog( wxCommandEvent& event )
 
 void SpringOptionsTab::OnBrowseChatLog( wxCommandEvent& event )
 {
-  wxDirDialog dirpic( this, _("Choose a directory"), WX_STRING(sett().GetSpringDir()), wxDD_DEFAULT_STYLE );
+  wxDirDialog dirpic( this, _("Choose a directory"), sett().GetSpringDir(), wxDD_DEFAULT_STYLE );
   if ( dirpic.ShowModal() == wxID_OK ) m_chatlog_edit->SetValue( dirpic.GetPath() );
 }
 

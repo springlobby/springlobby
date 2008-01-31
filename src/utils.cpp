@@ -3,7 +3,6 @@
 // File: utils.h
 //
 
-#include <sstream>
 #include <wx/dynlib.h>
 #include <iostream>
 
@@ -59,97 +58,76 @@ void InitializeLoggingTargets()
   #endif
 }
 
-std::string i2s( int x )
+
+wxString GetWordParam( wxString& params )
 {
-  std::ostringstream o;
-  o << x;
-  return o.str();
-}
+  wxString param;
 
-
-std::string GetWordParam( std::string& params )
-{
-  std::string::size_type pos;
-  std::string param;
-
-  pos = params.find( " ", 0 );
-  if ( pos == std::string::npos ) {
+  param = params.BeforeFirst( ' ' );
+  if ( param.IsEmpty() )
+  {
     param = params;
-    params = "";
+    params = _T("");
     return param;
-  } else {
-    param = params.substr( 0, pos );
-    params = params.substr( pos + 1 );
+  }
+  else
+  {
+    params = params.AfterFirst( ' ' );
     return param;
   }
 }
 
 
-std::string GetSentenceParam( std::string& params )
+wxString GetSentenceParam( wxString& params )
 {
-  std::string::size_type pos;
-  std::string param;
+  wxString param;
 
-  pos = params.find( "\t", 0 );
-  if ( pos == std::string::npos ) {
+  param = params.BeforeFirst( '\t' );
+  if ( param.IsEmpty() )
+  {
     param = params;
-    params = "";
+    params = _T("");
     return param;
-  } else {
-    param = params.substr( 0, pos );
-    params = params.substr( pos + 1 );
+  }
+  else
+  {
+    params = params.AfterFirst( '\t' );
     return param;
   }
 }
 
 
-std::string GetChatLineParam( std::string& params )
+long GetIntParam( wxString& params )
 {
-  std::string::size_type pos;
-  std::string param;
+  wxString param;
+  long ret;
 
-  pos = params.find( "\n", 0 );
-  if ( pos == std::string::npos ) {
-    param = params;
-    params = "";
-    return param;
-  } else {
-    param = params.substr( 0, pos );
-    params = params.substr( pos + 1 );
-    return param;
+  param = params.BeforeFirst( ' ' );
+  if ( param.IsEmpty() )
+  {
+    params.ToLong( &ret );
+    params = _T("");
   }
+  else
+  {
+    params = params.AfterFirst( ' ' );
+    param.ToLong( &ret );
+  }
+  return ret;
 }
 
 
-int GetIntParam( std::string& params )
-{
-  std::string::size_type pos;
-  std::string param;
-
-  pos = params.find( " ", 0 );
-  if ( pos == std::string::npos ) {
-    param = params;
-    params = "";
-    return atoi( param.c_str() );
-  } else {
-    param = params.substr( 0, pos );
-    params = params.substr( pos + 1 );
-    return atoi( param.c_str() );
-  }
-}
-
-
-bool GetBoolParam( std::string& params )
+bool GetBoolParam( wxString& params )
 {
   return (bool)GetIntParam( params );
 }
 
 
-std::string GetSpringLobbyVersion()
+wxString GetSpringLobbyVersion()
 {
 #ifdef VERSION
-  return std::string(VERSION) + " built from " + revision();
+  return WX_STRINGC(VERSION) + _T(" built from ") + WX_STRINGC(revision());
 #else
-  return std::string("Unknown built from ") + revision();
+  return _T("Unknown built from ") + WX_STRINGC(revision());
 #endif
 }

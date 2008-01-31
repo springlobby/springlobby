@@ -296,8 +296,8 @@ void MainWindow::OnMenuChat( wxCommandEvent& event )
   if ( !m_ui.IsConnected() ) return;
   wxString answer;
   if ( m_ui.AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
-    if (m_ui.GetServer().UserExists( STD_STRING(answer) ) ) {
-      OpenPrivateChat( m_ui.GetServer().GetUser( STD_STRING(answer) ) );
+    if (m_ui.GetServer().UserExists( answer ) ) {
+      OpenPrivateChat( m_ui.GetServer().GetUser( answer ) );
     }
   }
 

@@ -360,7 +360,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     }
 
     UnitSyncMap map;
-    std::string mname = sett().GetLastHostMap();
+    wxString mname = sett().GetLastHostMap();
     try {
       if ( usync()->MapExists(mname) )
     	  map = usync()->GetMap( mname );
@@ -472,7 +472,7 @@ void BattleListTab::DoJoin( Battle& battle )
 
   if ( battle.IsPassworded() ) {
     wxPasswordEntryDialog pw( this, _("Battle password"), _("Enter password") );
-    if ( pw.ShowModal() == wxID_OK ) battle.Join( STD_STRING(pw.GetValue()) );
+    if ( pw.ShowModal() == wxID_OK ) battle.Join( pw.GetValue() );
   } else {
     battle.Join();
   }

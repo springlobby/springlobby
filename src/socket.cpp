@@ -97,7 +97,7 @@ wxSocketClient* Socket::_CreateSocket()
 
 //! @brief Connect to remote host.
 //! @note This turns off the ping thread.
-void Socket::Connect( const std::string& addr, const int port )
+void Socket::Connect( const wxString& addr, const int port )
 {
   LOCK_SOCKET;
   _EnablePingThread( false ); // Turn off ping thread.
@@ -105,7 +105,7 @@ void Socket::Connect( const std::string& addr, const int port )
   wxIPV4address wxaddr;
   m_connecting = true;
 
-  wxaddr.Hostname( WX_STRING( addr ) );
+  wxaddr.Hostname( addr );
   wxaddr.Service( port );
 
   if ( m_sock != 0 ) m_sock->Destroy();
@@ -128,14 +128,14 @@ void Socket::Disconnect( )
 
 
 //! @brief Send data over connection.
-bool Socket::Send( const std::string& data )
+bool Socket::Send( const wxString& data )
 {
   LOCK_SOCKET;
   return _Send( data );
 }
 
 
-bool Socket::_Send( const std::string& data )
+bool Socket::_Send( const wxString& data )
 {
   if ( m_sock == 0 ) {
     wxLogError( _T("Socket NULL") );
@@ -146,7 +146,7 @@ bool Socket::_Send( const std::string& data )
     m_buffer += data;
     int max = m_rate - m_sent;
     if ( max > 0 ) {
-      std::string send = m_buffer.substr( 0, max );
+      wxString send = m_buffer.substr( 0, max );
       m_buffer.erase( 0, max );
       //wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
       m_sock->Write( (void*)send.c_str(), send.length() );
@@ -161,7 +161,7 @@ bool Socket::_Send( const std::string& data )
 
 
 //! @brief Receive data from connection
-bool Socket::Receive( std::string& data )
+bool Socket::Receive( wxString& data )
 {
   if ( m_sock == 0 ) {
     wxLogError( _T("Socket NULL") );
@@ -170,7 +170,7 @@ bool Socket::Receive( std::string& data )
 
   LOCK_SOCKET;
 
-  char buff[2];
+  wxChar buff[2];
   int readnum;
   int readbytes = 0;
 
@@ -289,7 +289,7 @@ void Socket::SetSendRateLimit( int Bps )
 void Socket::Ping()
 {
   wxLogMessage( _T("Sent ping.") );
-  if ( m_ping_msg != wxEmptyString ) Send( STD_STRING(m_ping_msg) );
+  if ( m_ping_msg != wxEmptyString ) Send( m_ping_msg );
 }
 
 
@@ -343,7 +343,7 @@ void Socket::OnTimer( int mselapsed )
   if ( m_rate > 0 ) {
     m_sent -= int( ( mselapsed / 1000.0 ) * m_rate );
     if ( m_sent < 0 ) m_sent = 0;
-    if ( m_buffer.length() > 0 ) _Send("");
+    if ( m_buffer.length() > 0 ) _Send(_T(""));
   } else {
     m_sent = 0;
   }

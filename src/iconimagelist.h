@@ -86,17 +86,17 @@ class IconImageList : public wxImageList
     static int GetUserBattleStateIcon( const UserStatus& us );
 
     static int GetRankIcon( const int& rank, const bool& showlowest = true );
-    static int GetFlagIcon( const std::string& flagname );
+    static int GetFlagIcon( const wxString& flagname );
     static int GetBattleStatusIcon( Battle& battle );
     static wxString GetBattleStatus(Battle& battle);
     static int GetHostIcon( const bool& spectator = false );
     static int GetColourIcon( const int& num );
     void SetColourIcon( const int& num, const wxColour& colour );
-    int GetSideIcon( const std::string& modname, const std::string& side );
+    int GetSideIcon( const wxString& modname, const wxString& side );
     static int GetReadyIcon( const bool& ready, const int& sync = 1 );
 
   protected:
-    std::map<std::string, int> CachedSideIcons;
+    std::map<wxString, int> CachedSideIcons;
 };
 
 IconImageList& icons();

@@ -228,8 +228,8 @@ void* SpringUnitSyncLib::_GetLibFuncPtr( const wxString& name )
 
 void SpringUnitSyncLib::_ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out )
 {
-  out.author = in.author;
-  out.description = in.description;
+  out.author = WX_STRINGC(in.author);
+  out.description = WX_STRINGC(in.description);
 
   out.extractorRadius = in.extractorRadius;
   out.gravity = in.gravity;

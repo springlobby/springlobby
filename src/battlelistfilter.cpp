@@ -15,7 +15,6 @@
 #include <wx/panel.h>
 #include <wx/statbox.h>
 #include <wx/event.h>
-#include <string>
 
 #include "battlelistfilter.h"
 #include "battlelistctrl.h"

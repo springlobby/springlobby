@@ -1,11 +1,11 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_FLAGIMAGES_H
 #define SPRINGLOBBY_HEADERGUARD_FLAGIMAGES_H
 
-#include <string>
+#include <wx/string.h>
 
 class wxImageList;
 
-int GetFlagIndex( const std::string& flag );
+int GetFlagIndex( const wxString& flag );
 void AddFlagImages( wxImageList& imgs );
 
 enum {

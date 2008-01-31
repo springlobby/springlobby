@@ -155,13 +155,13 @@ void MainChatTab::RejoinChannels()
     if ( tmp->GetPanelType() == CPT_Channel ) {
 
       // TODO: This will not rejoin passworded channels.
-      std::string name = STD_STRING(m_chat_tabs->GetPageText(i));
+      wxString name = m_chat_tabs->GetPageText(i);
       // #springlobby is joined automatically
-      if ( name != "springlobby" ) m_ui.GetServer().JoinChannel( name, "" );
+      if ( name != _T("springlobby") ) m_ui.GetServer().JoinChannel( name, _T("") );
 
     } else if (tmp->GetPanelType() == CPT_User ) {
 
-      std::string name = STD_STRING(m_chat_tabs->GetPageText(i));
+      wxString name = m_chat_tabs->GetPageText(i);
       if ( m_ui.GetServer().UserExists( name ) ) tmp->SetUser( &m_ui.GetServer().GetUser( name ) );
 
     }
@@ -173,7 +173,7 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
 {
 
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-    if ( m_chat_tabs->GetPageText(i) == WX_STRING(channel.GetName()) ) {
+    if ( m_chat_tabs->GetPageText(i) == channel.GetName() ) {
       ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
       if ( tmp->GetPanelType() == CPT_Channel ) {
         m_chat_tabs->SetSelection( i );
@@ -184,7 +184,7 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
   }
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, channel );
-  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(channel.GetName()), true, 2 );
+  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), true, 2 );
   return chat;
 }
 
@@ -210,7 +210,7 @@ ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
 ChatPanel* MainChatTab::AddChatPannel( User& user )
 {
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-    if ( m_chat_tabs->GetPageText(i) == WX_STRING(user.GetNick()) ) {
+    if ( m_chat_tabs->GetPageText(i) == user.GetNick() ) {
       ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
       if ( tmp->GetPanelType() == CPT_User ) {
         m_chat_tabs->SetSelection( i );
@@ -221,7 +221,7 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
   }
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, user );
-  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(user.GetNick()), true, 3 );
+  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, 3 );
   return chat;
 }
 
