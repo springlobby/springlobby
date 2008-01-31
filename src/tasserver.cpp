@@ -365,9 +365,9 @@ void TASServer::ExecuteCommand( const wxString& in )
     params = params.substr( pos + 1 );
   }
 
-  pos = params.find( _T("\n"), 0 );
+  pos = params.Find( _T(" ") );
 
-  if ( pos == -1 )
+  if ( pos == wxNOT_FOUND )
   {
     // Must be command without parameters.
     cmd = params;
@@ -387,8 +387,6 @@ void TASServer::ExecuteCommand( const wxString& in )
 
 void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, int replyid )
 {
-	//TODO use or not?
- // wxLogDebugFunc( /* _T("cmd=%s inparams=%s"), WX_STRING(cmd), WX_STRING(inparams) */ );
 
   wxString params = inparams;
   int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally, udpport;
