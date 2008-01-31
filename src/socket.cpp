@@ -149,12 +149,12 @@ bool Socket::_Send( const wxString& data )
       wxString send = m_buffer.substr( 0, max );
       m_buffer.erase( 0, max );
       //wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
-      m_sock->Write( (void*)send.c_str(), send.length() );
+      m_sock->Write( send.mb_str(wxConvUTF8), send.length() );
       m_sent += send.length();
     }
   } else {
     if ( data.length() <= 0) return true;
-    m_sock->Write( (void*)data.c_str(), data.length() );
+    m_sock->Write( data.mb_str(wxConvUTF8), data.length() );
   }
   return !m_sock->Error();
 }

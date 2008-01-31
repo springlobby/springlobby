@@ -478,7 +478,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
   } else if ( cmd == _T("SAIDEX") ) {
     channel = GetWordParam( params );
     nick = GetWordParam( params );
-    m_se->OnChannelAction( channel, params, msg );
+    m_se->OnChannelAction( channel, nick, params );
   } else if ( cmd == _T("CLIENTS") ) {
     channel = GetWordParam( params );
     while ( (nick = GetWordParam( params )) != _T("") ) {
@@ -724,7 +724,7 @@ void TASServer::JoinChannel( const wxString& channel, const wxString& key )
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
-  SendCmd ( _T("JOIN"), key );
+  SendCmd ( _T("JOIN"), channel + _T(" ") + key );
 }
 
 
