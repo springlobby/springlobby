@@ -319,13 +319,13 @@ void TASServer::ReceiveAndExecute()
     data = _T("");
     if ( m_sock->Receive( data ) ) {
       m_buffer += data;
-      if ( m_buffer.Find( _T("\n") ) != -1 ) {
-        wxString cmd = m_buffer.substr( 0, m_buffer.find( _T("\n"), 0 ) );
-        m_buffer = m_buffer.substr( m_buffer.find( _T("\n"), 0 )+1, m_buffer.length() );
+      wxString cmd;
+      if ( ( cmd = m_buffer.BeforeFirst( '\n' ) ) != _T("") )
+      {
+        m_buffer = m_buffer.AfterFirst( '\n' );
         ExecuteCommand( cmd );
       }
     }
-
   } while ( !data.empty() ); // Go on until recive stops providing data.
 }
 
@@ -357,7 +357,7 @@ void TASServer::ExecuteCommand( const wxString& in )
 
   if ( in.empty() ) return;
 
-  ASSERT_LOGIC( params.BeforeLast( '\n' ).IsEmpty(), _T("losing data") );
+  ASSERT_LOGIC( params.AfterFirst( '\n' ).IsEmpty(), _T("losing data") );
   cmd = params.BeforeFirst( ' ' );
    if ( params[0] == '#' )
   {
