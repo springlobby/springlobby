@@ -373,7 +373,6 @@ void TASServer::ExecuteCommand( const wxString& in )
 
 void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, int replyid )
 {
-  wxLogMessage( _T("'%s' '%s'"), cmd.c_str(), inparams.c_str() );
   wxString params = inparams;
   int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally, udpport;
   bool replay, haspass,lanmode = false;
