@@ -354,32 +354,18 @@ void TASServer::ExecuteCommand( const wxString& in )
   wxString cmd;
   wxString params = in;
   long replyid;
-  long pos;
 
   if ( in.empty() ) return;
 
-  if ( params[0] == '#' )
+  ASSERT_LOGIC( params.BeforeLast( '\n' ).IsEmpty(), _T("losing data") );
+  cmd = params.BeforeFirst( ' ' );
+   if ( params[0] == '#' )
   {
-    cmd = params.substr( 1, params.find( _T(" "), 0 ) );
+    params = params.AfterFirst( ' ' );
     params.ToLong( &replyid );
-    params = params.substr( pos + 1 );
-  }
-
-  pos = params.Find( _T(" ") );
-
-  if ( pos == wxNOT_FOUND )
-  {
-    // Must be command without parameters.
-    cmd = params;
-    params = _T("");
   }
   else
-  {
-    cmd = params.substr( 0, pos );
-    params = params.substr( pos + 1 );
-    ASSERT_LOGIC( pos < params.length(), _T("losing data") ); // We might be throwing away a second command following this one.
-    params.replace( pos, params.length() - pos, _T("") );
-  }
+    params = params.AfterFirst( ' ' );
 
   ExecuteCommand( cmd, params, replyid );
 }
@@ -387,7 +373,7 @@ void TASServer::ExecuteCommand( const wxString& in )
 
 void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, int replyid )
 {
-
+  wxLogMessage( _T("'%s' '%s'"), cmd.c_str(), inparams.c_str() );
   wxString params = inparams;
   int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally, udpport;
   bool replay, haspass,lanmode = false;
