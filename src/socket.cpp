@@ -3,7 +3,6 @@
 #include <wx/socket.h>
 #include <wx/thread.h>
 #include <wx/protocol/http.h>
-#include <wx/convauto.h>
 #include <stdexcept>
 
 #include "socket.h"
@@ -182,7 +181,7 @@ bool Socket::Receive( wxString& data )
     readnum = m_sock->LastCount();
 
     if ( readnum > 0 ) {
-      data += wxString( &buff[0], wxConvAuto() );
+      data += &buff[0];
       readbytes++;
     }
   } while ( (readnum > 0) && (buff[0] != '\n') );
