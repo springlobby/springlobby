@@ -152,8 +152,10 @@ class Ui
     void OnModUnitsCached( const wxString& modname );
     void OnCachedThreadTerminated();
     void OnCachedThreadStarted();
-    
+
     bool IsThisMe(User& other);
+
+    bool TestHostPort( unsigned int port );
 
   protected:
     Spring* m_spring;

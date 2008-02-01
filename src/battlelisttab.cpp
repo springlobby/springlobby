@@ -46,7 +46,7 @@ BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 #else
   EVT_CHECKBOX            ( BATTLE_LIST_FILTER_BUTTON , BattleListTab::OnFilter )
 #endif
- 
+
 
 END_EVENT_TABLE()
 
@@ -55,7 +55,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxPanel( parent, -1 ),
   m_ui(ui),
   m_sel_battle(0)
-{	
+{
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -120,7 +120,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
   wxBoxSizer* m_buttons_sizer;
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
-  
+
 #if  wxUSE_TOGGLEBTN
 	m_filter_show = new wxToggleButton( this, BATTLE_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
 #else
@@ -337,6 +337,16 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     bo.description = sett().GetLastHostDescription();
     bo.port = sett().GetLastHostPort();
 
+    if ( bo.nattype == NAT_None )
+    {
+      if ( !m_ui.TestHostPort( bo.port ) )
+      {
+        wxLogWarning(_T("hosting port %d: test unsuccessful, closing battle"),bo.port  );
+        customMessageBox( SL_MAIN_ICON, wxString::Format( _("Battle not started because the port you selected (%d) is unable to recieve incoming packets\n checks your router & firewall configuration again or change port in the dialog"), bo.port ) );
+        return;
+      }
+    }
+
     // Get selected mod from unitsync.
     UnitSyncMod mod;
     try {
@@ -352,7 +362,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     UnitSyncMap map;
     std::string mname = sett().GetLastHostMap();
     try {
-      if ( usync()->MapExists(mname) ) 
+      if ( usync()->MapExists(mname) )
     	  map = usync()->GetMap( mname );
       else if ( usync()->GetNumMaps() <= 0 ) {
         wxLogWarning( _T("no maps found") );
@@ -372,18 +382,6 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     bo.rankneeded = sett().GetLastRankLimit();
 
     bo.maxplayers = sett().GetLastHostPlayerNum();
-
-/*
-    bo.nattype,
-    bo.startmetal,
-    bo.startenergy,
-    bo.maxunits,
-    bo.starttype,
-    bo.gametype,
-    bo.limitdgun,
-    bo.dimmms,
-    bo.ghostedbuildings,
-)*/
 
     m_ui.GetServer().HostBattle( bo, sett().GetLastHostPassword() );
   }
