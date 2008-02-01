@@ -170,7 +170,7 @@ bool Socket::Receive( wxString& data )
 
   LOCK_SOCKET;
 
-  wxChar buff[2];
+  char buff[2];
   int readnum;
   int readbytes = 0;
 
@@ -181,7 +181,7 @@ bool Socket::Receive( wxString& data )
     readnum = m_sock->LastCount();
 
     if ( readnum > 0 ) {
-      data += &buff[0];
+      data += wxString( &buff[0], wxConvUTF8 );
       readbytes++;
     }
   } while ( (readnum > 0) && (buff[0] != '\n') );
