@@ -43,15 +43,12 @@ void InitializeLoggingTargets()
       wxLogChain *logCrashChain = new wxLogChain( loggercrash );
       logCrashChain->SetLogLevel( wxLOG_Trace );
       logCrashChain->SetVerbose( true );
-      logCrashChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
-    #else
-      ///std::cout logging
-      wxLog *loggerconsole = new wxLogStream( &std::cout );
-      wxLogChain *logChain = new wxLogChain( loggerconsole );
-      logChain->SetLogLevel( wxLOG_Trace );
-      logChain->SetVerbose( true );
-      logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
     #endif
+    ///std::cout logging
+    wxLog *loggerconsole = new wxLogStream( &std::cout );
+    wxLogChain *logChain = new wxLogChain( loggerconsole );
+    logChain->SetLogLevel( wxLOG_Trace );
+    logChain->SetVerbose( true );
   #else
     ///gui window fallback logging if console/stream output not available
     wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );

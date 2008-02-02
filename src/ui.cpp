@@ -1039,3 +1039,8 @@ bool Ui::IsThisMe(User& other)
 	else
 		return ( other.GetNick()==m_serv->GetMe().GetNick() );
 }
+
+bool Ui::TestHostPort( unsigned int port )
+{
+  return m_serv->TestOpenPort( port );
+}
