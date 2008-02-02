@@ -77,6 +77,7 @@
 					<Add library="libwxjpegd.a" />
 					<Add library="libwxtiffd.a" />
 					<Add library="libwxexpatd.a" />
+					<Add library="libwxmsw28d.a" />
 					<Add library="libwxbase28d.a" />
 					<Add library="libwxbase28d_net.a" />
 					<Add library="libwxmsw28d_core.a" />
@@ -130,6 +131,7 @@
 					<Add library="libwxjpegd.a" />
 					<Add library="libwxtiffd.a" />
 					<Add library="libwxexpatd.a" />
+					<Add library="libwxmsw28d.a" />
 					<Add library="libwxbase28d.a" />
 					<Add library="libwxbase28d_net.a" />
 					<Add library="libwxmsw28d_core.a" />

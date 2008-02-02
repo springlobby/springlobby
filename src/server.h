@@ -174,6 +174,8 @@ class Server
     Battle& GetBattle( const int& battleid );
     bool BattleExists( const int& battleid );
 
+    virtual bool TestOpenPort( unsigned int port ) = 0;
+
   protected:
     Socket* m_sock;
     Ui& m_ui;

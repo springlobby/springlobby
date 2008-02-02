@@ -15,7 +15,7 @@
 #include "serverevents.h"
 #include "socket.h"
 
-#include <wx/socket.h>
+//#include <wx/socket.h>
 
 #define SER_VER_BAD -1
 #define SER_VER_UNKNOWN 0
@@ -176,6 +176,7 @@ void TASServer::Connect( const std::string& addr, const int port )
     m_last_ping = time( 0 );
     m_connected = true;
   }
+  m_sock->SetPingInfo( _T("PING\n"), 10000 );
   m_online = false;
   m_agreement = "";
 }
@@ -302,7 +303,7 @@ void TASServer::Update( int mselapsed )
       return;
     }
 
-    time_t now = time( 0 );
+    /*time_t now = time( 0 );
     if ( m_last_ping + m_keepalive < now ) { // Is it time for a keepalive PING?
       Ping();
       /// Nat travelsal "ping"
@@ -318,7 +319,7 @@ void TASServer::Update( int mselapsed )
       }else{
         //wxLogMessage( _T("pinging: No current battle set") );
       }
-    }
+    }*/
     HandlePinglist();
   }
 
@@ -728,30 +729,6 @@ void TASServer::Ping()
 }
 
 
-void TASServer::UDPPing(){/// used for nat travelsal
-#if(NAT_TRAVERSAL_SUPPORT)
-  wxLogMessage(_T("UDPPing address %s port %d"), WX_STRING(m_addr).c_str(), m_udp_port);
-
-  wxIPV4address local_addr;
-  local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
-  local_addr.Service(12345);
-
-  wxDatagramSocket udp_socket(local_addr,/* wxSOCKET_WAITALL*/wxSOCKET_NONE);
-
-  wxIPV4address wxaddr;
-  wxaddr.Hostname(WX_STRING(m_addr));
-  wxaddr.Service(m_udp_port);
-
-  const char *message="ipv4 sux!";
-  if(udp_socket.IsOk()){
-    udp_socket.SendTo(wxaddr,message,strlen(message)+1);
-  }else{
-    wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));
-  }
-  if(udp_socket.Error())wxLogMessage(_T("Error=%d"),udp_socket.LastError());
-#endif
-}
-
 void TASServer::HandlePong( int replyid )
 {
   std::list<TASPingListItem>::iterator it;
@@ -1004,7 +981,7 @@ void TASServer::HostBattle( BattleOptions bo, const std::string& password )
   cmd += WX_STRING( bo.mapname ) + _T("\t");
   cmd += WX_STRING( bo.description ) + _T("\t");
   cmd += WX_STRING( bo.modname ) + _T("\n");
-  wxLogMessage( _T("%s"), cmd.c_str() );
+  //wxLogMessage( _T("%s"), cmd.c_str() );
   m_sock->Send( STD_STRING(cmd) );
 
   // OPENBATTLE type natType password port maxplayers startingmetal startingenergy maxunits startpos
@@ -1023,7 +1000,8 @@ void TASServer::JoinBattle( const int& battleid, const std::string& password )
   if(BattleExists(battleid)){
     Battle *battle=&GetBattle(battleid);
     if(battle){
-      if((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))UDPPing();
+      m_sock->SetUdpPingInfo( WX_STRING(m_addr), m_udp_port, 10000 );
+      //if((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))UDPPing();
     }
   }else{
     wxLogMessage( _T("battle doesnt exist") );
@@ -1040,6 +1018,7 @@ void TASServer::LeaveBattle( const int& battleid )
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
+  m_sock->SetUdpPingInfo();
   m_sock->Send( "LEAVEBATTLE\n" );
 }
 
@@ -1069,25 +1048,27 @@ void TASServer::SendHostInfo( HostInfo update )
 
     cmd = _T("SETSCRIPTTAGS ");
 
-    wxStringTripleVec optlist;
-    battle.CustomBattleOptions()->getOptions( &optlist, MapOption );
-    for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+    wxStringTripleVec optlistMap;
+    battle.CustomBattleOptions()->getOptions( &optlistMap, MapOption );
+    for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
     {
       cmd += _T("game\\mapoptions\\") + it->first + _T("=") + it->second.second + _T("\t");
     }
-    battle.CustomBattleOptions()->getOptions( &optlist, ModOption );
-    for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
+    wxStringTripleVec optlistMod;
+    battle.CustomBattleOptions()->getOptions( &optlistMod, ModOption );
+    for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
     {
       cmd += _T("game\\modoptions\\") + it->first + _T("=") + it->second.second + _T("\t");
     }
-
 /// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
-    cmd += wxString::Format( _T("game/startpostype=%d\tgame/maxunits=%d\tgame/limitdgun %d\tgame/startmetal=%d\tgame/gamemode=%d\tgame/ghostedbuildings=%d\tgame/startenergy=%d\tgame/diminishingmms=%d\n"),
-      battle.GetStartType(), battle.GetMaxUnits(), battle.LimitDGun(), battle.GetStartMetal(),
-      battle.GetGameType(), battle.GhostedBuildings(), battle.GetStartEnergy(), battle.DimMMs()
-    );
+    wxStringTripleVec optlistEng;
+    battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
+    for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+    {
+      cmd += _T("game/") + it->first + _T("=") + it->second.second + _T("\t");
+    }
 
-    m_sock->Send( STD_STRING(cmd) );
+    m_sock->Send( STD_STRING(cmd) + "\n" );
   }
 
   if ( (update & HI_StartRects) > 0 ) { // Startrects should be updated.
@@ -1155,28 +1136,13 @@ void TASServer::SendHostInfo( const wxString& Tag )
   {
     cmd += _T("game\\mapoptions\\") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, MapOption ) + _T("\n");
   }
-  if ( type == ModOption )
+  else if ( type == ModOption )
   {
     cmd += _T("game\\modoptions\\") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, ModOption ) + _T("\n");
   }
-  if ( type == EngineOption )
+  else if ( type == EngineOption )
   {
-    if ( key == _T("startpostype") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.GetStartType() ) + _T("\n");
-    if ( key == _T("maxunits") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.GetMaxUnits() ) + _T("\n");
-    if ( key == _T("limitdgun") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.LimitDGun() ) + _T("\n");
-    if ( key == _T("startmetal") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.GetStartMetal() ) + _T("\n");
-    if ( key == _T("gamemode") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.GetGameType() ) + _T("\n");
-    if ( key == _T("ghostedbuildings") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.GhostedBuildings() ) + _T("\n");
-    if ( key == _T("startenergy") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.GetStartEnergy() ) + _T("\n");
-    if ( key == _T("diminishingmms") )
-      cmd += _T("game/") + key + _T("=") + wxString::Format( _T("%d"), battle.DimMMs() ) + _T("\n");
+    cmd += _T("game/") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, EngineOption ) + _T("\n");
   }
   m_sock->Send( STD_STRING(cmd) );
 }
@@ -1517,6 +1483,10 @@ void TASServer::OnDataReceived( Socket* sock )
   ReceiveAndExecute();
 }
 
+bool TASServer::TestOpenPort( unsigned int port )
+{
+  return m_sock->TestOpenPort( Udp, port );
+}
 
 ////////////////////////
 // Utility functions

@@ -7,7 +7,6 @@
 #include "userlist.h"
 #include "user.h"
 #include "ibattle.h"
-#include "mmoptionswrapper.h"
 
 class Ui;
 class Server;
@@ -29,8 +28,6 @@ struct BattleOptions
   BattleOptions() :
     battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),
     nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
-    startmetal(1000),startenergy(1000),maxunits(500),starttype(ST_Fixed),
-    gametype(GT_ComContinue),limitdgun(false),dimmms(false),ghostedbuildings(true),
     guilistactiv(false) {}
 
   int battleid;
@@ -48,23 +45,13 @@ struct BattleOptions
   unsigned int maxplayers;
   unsigned int spectators;
 
-  int startmetal;
-  int startenergy;
-  int maxunits;
-  StartType starttype;
-
-  GameType gametype;
-  bool limitdgun;
-  bool dimmms;
-  bool ghostedbuildings;
-
   std::string maphash;
   std::string modhash;
 
   std::string description;
   std::string mapname;
   std::string modname;
-  
+
   bool guilistactiv;
 };
 
@@ -109,23 +96,6 @@ class Battle : public UserList, public IBattle
     unsigned int GetMaxPlayers() const { return m_opts.maxplayers; }
     void SetSpectators( const int& spectators ) { m_opts.spectators = spectators; }
     int GetSpectators() const { return m_opts.spectators; }
-
-/*    void SetStartMetal( const int& smetal ) { m_opts.startmetal = smetal; }
-    int GetStartMetal() { return m_opts.startmetal; }
-    void SetStartEnergy( const int& senergy ) { m_opts.startenergy = senergy; }
-    int GetStartEnergy() { return m_opts.startenergy; }
-    void SetMaxUnits( const int& maxunits ) { m_opts.maxunits = maxunits; }
-    int GetMaxUnits() { return m_opts.maxunits; }
-    //void SetStartType( const StartType& starttype ) { m_opts.starttype = starttype; }
-
-    //void SetGameType( const GameType& gt ) { m_opts.gametype = gt; }
-    void SetLimitDGun( const bool& limdgun ) { m_opts.limitdgun = limdgun; }
-    bool LimitDGun() { return m_opts.limitdgun; }
-    void SetDimMMs( const bool& dimmm ) { m_opts.dimmms = dimmm; }
-    bool DimMMs() { return m_opts.dimmms; }
-    void SetGhostedBuildings( const bool& gbuilds ) { m_opts.ghostedbuildings = gbuilds; }
-    bool GhostedBuildings() { return m_opts.ghostedbuildings; }
-*/
 
     void SendHostInfo( HostInfo update );
     void SendHostInfo( const wxString& Tag );
@@ -220,7 +190,7 @@ class Battle : public UserList, public IBattle
     void SetMyAlly( int ally ) { GetMe().BattleStatus().ally = ally; SendMyBattleStatus(); }
 
     std::vector<BattleStartRect*>::size_type GetNumRects();
-    
+
     mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
 
   protected:
@@ -239,9 +209,9 @@ class Battle : public UserList, public IBattle
 
     std::list<BattleBot*>::iterator m_bot_seek;
     std::list<BattleBot*>::size_type m_bot_pos;
-    
+
     mmOptionsWrapper m_opt_wrap;
-    
+
     void RemoveUser( std::string const& user ) {}
 };
 

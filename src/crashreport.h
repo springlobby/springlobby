@@ -1,12 +1,13 @@
 #ifndef CRASHREPORT_H_INCLUDED
 #define CRASHREPORT_H_INCLUDED
 
+#include <wx/intl.h>
 #include <wx/debugrpt.h>
-
-#if wxUSE_DEBUGREPORT
+#include "utils.h"
+#if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
 
 #include <sstream>
-
+#include <wx/arrstr.h>
 //! @brief uploads zipped stacktraces using curl
 class NetDebugReport : public wxDebugReportUpload
 {
