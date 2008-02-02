@@ -14,6 +14,7 @@ SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_ui(ui),
   m_sptab(msptab)
 {
+  CustomBattleOptions()->setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), 3), EngineOption );
   int r,g,b;
   GetFreeColour( r, g, b, false );
   int i = AddBot( 0, 0, 0, 0, _T("") );
