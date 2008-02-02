@@ -125,14 +125,14 @@ wxString IBattle::GetModHash()
 bool IBattle::MapExists()
 {
   return m_map_exists;
-  //return usync()->MapExists( STD_STRING(m_map_name), m_map.hash );
+  //return usync()->MapExists( m_map_name, m_map.hash );
 }
 
 
 bool IBattle::ModExists()
 {
   return m_mod_exists;
-  //return usync()->ModExists( STD_STRING(m_mod_name) );
+  //return usync()->ModExists( m_mod_name );
 }
 
 

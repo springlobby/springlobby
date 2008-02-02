@@ -390,7 +390,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
       ai += _T(".so");
     }*/
 
-    //s += ("\t\tAIDLL=AI/Bot-libs/" + STD_STRING(ai) + ";\n");
+    //s += ("\t\tAIDLL=AI/Bot-libs/" + ai + ";\n");
     s += _T("\t\tAIDLL=") + ai + _T(";\n");
     s +=  _T("\t}\n");
   }

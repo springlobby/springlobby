@@ -153,7 +153,7 @@ int SpringUnitSync::_GetModIndex( const wxString& name )
   try {
     int count = susynclib()->GetPrimaryModCount();
     for ( int i = 0; i < count; i++ ) {
-      wxString cmp = STD_STRING(susynclib()->GetPrimaryModName( i ));
+      wxString cmp = susynclib()->GetPrimaryModName( i );
       if ( name == cmp ) return i;
     }
   } catch (...) {}

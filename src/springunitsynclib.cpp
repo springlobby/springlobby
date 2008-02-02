@@ -335,7 +335,7 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
 
   wxLogMessage( _T("%s"), mapFileName.c_str() );
 
-  unsigned short* colours = (unsigned short*)m_get_minimap( STD_STRING(mapFileName).c_str(), 0 ); // miplevel should not be 10 ffs
+  unsigned short* colours = (unsigned short*)m_get_minimap( mapFileName.mb_str(wxConvUTF8), 0 ); // miplevel should not be 10 ffs
   ASSERT_RUNTIME( colours, _T("Get minimap failed") );
 
   typedef unsigned char uchar;
@@ -533,7 +533,7 @@ int SpringUnitSyncLib::InitFindVFS( const wxString& pattern )
 {
   InitLib( m_proc_units_nocheck );
 
-  return m_init_find_vfs( STD_STRING(pattern).c_str() );
+  return m_init_find_vfs( pattern.mb_str(wxConvUTF8) );
 }
 
 
