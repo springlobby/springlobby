@@ -558,6 +558,11 @@ int Settings::GetLastRankLimit()
   return m_config->Read( _T("/Hosting/LastRank"), 0l );
 }
 
+bool Settings::GetTestHostPort()
+{
+  return m_config->Read( _T("/Hosting/TestHostPort"), 1 );
+}
+
 void Settings::SetLastHostDescription( const wxString& value )
 {
   m_config->Write( _T("/Hosting/LastDescription"), value );
@@ -609,6 +614,10 @@ void Settings::SetLastAI( const wxString& ai )
   m_config->Write( _T("/SinglePlayer/LastAI"), ai );
 }
 
+void Settings::SetTestHostPort( bool value )
+{
+  m_config->Write( _T("/Hosting/TestHostPort"), value );
+}
 
 wxString Settings::GetLastAI()
 {

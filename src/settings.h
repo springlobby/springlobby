@@ -119,6 +119,7 @@ class Settings
     int GetLastHostNATSetting();
     wxString GetLastHostMap();
     int GetLastRankLimit();
+    bool GetTestHostPort();
 
     void SetLastHostDescription( const wxString& value );
     void SetLastHostMod( const wxString& value );
@@ -128,6 +129,7 @@ class Settings
     void SetLastHostNATSetting( int value );
     void SetLastHostMap( const wxString& value );
     void SetLastRankLimit( int rank );
+    void SetTestHostPort( bool value );
 
 
     void SetLastAI( const wxString& ai );

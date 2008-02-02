@@ -17,6 +17,7 @@
 #include <wx/radiobut.h>
 #include <wx/textctrl.h>
 #include <wx/statbmp.h>
+#include <wx/checkbox.h>
 
 #include "hostbattledialog.h"
 #include "settings.h"
@@ -104,7 +105,11 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_port_text->SetToolTip( _("UDP port to host game on. Default is 8452.") );
 
 	m_port_sizer->Add( m_port_text, 1, wxALL, 5 );
-	m_port_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+
+	m_port_test_check = new wxCheckBox( this, wxID_ANY, _("Test firewall"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_port_test_check->SetValue( sett().GetTestHostPort() );
+
+	m_port_sizer->Add( m_port_test_check, 1, wxALL|wxEXPAND, 5 );
 
 	m_main_sizer->Add( m_port_sizer, 0, wxEXPAND, 5 );
 
@@ -238,6 +243,7 @@ void HostBattleDialog::OnOk( wxCommandEvent& event )
   long tmp = DEFSETT_SPRING_PORT;
   m_port_text->GetValue().ToLong( &tmp );
   sett().SetLastHostPort( tmp );
+  sett().SetTestHostPort( m_port_test_check->GetValue() );
   sett().SetLastHostPlayerNum( m_players_slide->GetValue() );
   sett().SetLastHostNATSetting( m_nat_radios->GetSelection() );
   sett().SetLastRankLimit( GetSelectedRank() );
