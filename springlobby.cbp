@@ -89,7 +89,6 @@
 					<Add library="libwxmsw28d_aui.a" />
 					<Add library="libwxmsw28d_richtext.a" />
 					<Add library="gmon" />
-					<Add library="libwxmsw28d.a" />
 					<Add directory="$(WX_DIR)\lib\gcc_dll" />
 				</Linker>
 				<Environment>
@@ -349,6 +348,8 @@
 		<Unit filename="src\uiutils.h" />
 		<Unit filename="src\unitsyncthread.cpp" />
 		<Unit filename="src\unitsyncthread.h" />
+		<Unit filename="src\updater\versionchecker.cpp" />
+		<Unit filename="src\updater\versionchecker.h" />
 		<Unit filename="src\user.cpp" />
 		<Unit filename="src\user.h" />
 		<Unit filename="src\userlist.cpp" />

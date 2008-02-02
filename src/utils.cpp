@@ -147,9 +147,8 @@ bool GetBoolParam( std::string& params )
 
 std::string GetSpringLobbyVersion()
 {
-#ifdef VERSION
-  return std::string(VERSION) + " built from " + revision();
-#else
-  return std::string("Unknown built from ") + revision();
+#ifndef VERSION
+#define VERSION "Unknown"
 #endif
+  return std::string(VERSION);
 }
