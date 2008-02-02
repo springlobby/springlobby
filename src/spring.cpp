@@ -159,23 +159,6 @@ void Spring::OnTerminated( wxCommandEvent& event )
 }
 
 
-std::string GetWord( std::string& params )
-{
-  std::string::size_type pos;
-  std::string param;
-
-  pos = params.find( " ", 0 );
-  if ( pos == std::string::npos ) {
-    param = params;
-    params = "";
-    return param;
-  } else {
-    param = params.substr( 0, pos );
-    params = params.substr( pos + 1 );
-    return param;
-  }
-}
-
   struct UserOrder{
     int index;/// user number for GetUser
     int order;/// user order (we'll sort by it)
