@@ -102,7 +102,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
   CreateControls( );
   _SetChannel( &chan );
   m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, this );
-  m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),WX_STRING(chan.GetName()));
+  m_chat_log = new ChatLog(sett().GetDefaultServer(),chan.GetName());
 }
 
 
@@ -111,7 +111,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user )
 {
   CreateControls( );
   user.uidata.panel = this;
-  m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),WX_STRING(user.GetNick()));
+  m_chat_log = new ChatLog(sett().GetDefaultServer(),user.GetNick());
 }
 
 
@@ -121,7 +121,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
   wxLogDebugFunc( _T("wxWindow* parent, Server& serv") );
   CreateControls( );
   serv.uidata.panel = this;
-  m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),_("_SERVER"));
+  m_chat_log = new ChatLog(sett().GetDefaultServer(),_("_SERVER"));
   m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, this );
 }
 
@@ -132,7 +132,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
   wxLogDebugFunc( _T("wxWindow* parent, Battle& battle") );
   CreateControls( );
   wxDateTime now = wxDateTime::Now();
-  m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),_("_BATTLE_")+WX_STRING(now.Format( _T("%Y_%m_%d__%H_%M_%S"))));
+  m_chat_log = new ChatLog(sett().GetDefaultServer(),_("_BATTLE_")+now.Format( _T("%Y_%m_%d__%H_%M_%S")));
 }
 
 
@@ -256,7 +256,7 @@ void ChatPanel::CreatePopup()
     if ( m_type == CPT_Channel )
     {
       m_popup_menu->Append( displayjoinitem );
-      displayjoinitem->Check( sett().GetDisplayJoinLeave( WX_STRING( m_channel->GetName() ) ) );
+      displayjoinitem->Check( sett().GetDisplayJoinLeave( m_channel->GetName() ) );
     }
 
     m_popup_menu->AppendSeparator();
@@ -508,7 +508,7 @@ void ChatPanel::OnSay( wxCommandEvent& event )
 //! @param message the message to be outputted.
 void ChatPanel::Said( const wxString& who, const wxString& message )
 {
-  wxString me = WX_STRING(GetMe().GetNick());
+  wxString me = GetMe().GetNick();
   wxColour col;
   bool req_user = false;
   if ( m_type == CPT_User ) req_user = true;
@@ -593,7 +593,7 @@ void ChatPanel::Joined( User& who )
 {
   if ( m_type == CPT_Channel )
   {
-    if( sett().GetDisplayJoinLeave( WX_STRING( m_channel->GetName() ) ) ) { OutputLine( _T(" ** ") + WX_STRING(who.GetNick()) + _(" joined the ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
+    if( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) { OutputLine( _T(" ** ") + who.GetNick() + _(" joined the ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
     if ( m_show_nick_list ) m_nicklist->AddUser( who );
   }
 }
@@ -608,7 +608,7 @@ void ChatPanel::OnChannelJoin( User& who )
 void ChatPanel::Parted( User& who, const wxString& message )
 {
   if ( m_type == CPT_Channel ) {
-    if( sett().GetDisplayJoinLeave( WX_STRING( m_channel->GetName() ) ) ) { OutputLine( _T(" ** ")+ WX_STRING(who.GetNick()) + _(" left the channel ( ") + message + _T(" )."), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
+    if( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) { OutputLine( _T(" ** ")+ who.GetNick() + _(" left the channel ( ") + message + _T(" )."), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
     if ( m_show_nick_list ) m_nicklist->RemoveUser( who );
 
     if ( m_channel == 0 ) return;
@@ -667,7 +667,7 @@ void ChatPanel::SetChannel( Channel* chan )
   } else if ( chan != 0 ) {
     chan->uidata.panel = this;
     delete m_chat_log;
-    m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),WX_STRING(chan->GetName()));
+    m_chat_log = new ChatLog(sett().GetDefaultServer(),chan->GetName());
   }
   m_channel = chan;
 }
@@ -686,7 +686,7 @@ void ChatPanel::SetServer( Server* serv )
   else if ( serv != 0 ) serv->uidata.panel = this;
   m_server = serv;
   delete m_chat_log;
-  if ( m_server ) m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),_("_SERVER"));
+  if ( m_server ) m_chat_log = new ChatLog(sett().GetDefaultServer(),_("_SERVER"));
   else m_chat_log = 0;
 }
 
@@ -707,7 +707,7 @@ void ChatPanel::SetUser( User* usr )
   m_user = usr;
 
   delete m_chat_log;
-  if ( m_user ) m_chat_log = new ChatLog(WX_STRING(sett().GetDefaultServer()),WX_STRING(usr->GetNick()));
+  if ( m_user ) m_chat_log = new ChatLog(sett().GetDefaultServer(),usr->GetNick());
   else m_chat_log = 0;
 }
 
@@ -763,7 +763,7 @@ void ChatPanel::Say( const wxString& message )
     }
 
     if ( line == _T("/ver") ) {
-      OutputLine( _(" You have SpringLobby v") + WX_STRING( GetSpringLobbyVersion() ), sett().GetChatColorNormal() , sett().GetChatFont() );
+      OutputLine( _(" You have SpringLobby v") + GetSpringLobbyVersion(), sett().GetChatColorNormal() , sett().GetChatFont() );
       return;
     }
 
@@ -891,11 +891,11 @@ void ChatPanel::OnChannelMenuDisplayJoinLeave( wxCommandEvent& event )
 {
     if ( m_channel == 0 ) return;
     if(!displayjoinitem->IsChecked()) {
-        sett().SetDisplayJoinLeave( false, WX_STRING( m_channel->GetName() ) );
+        sett().SetDisplayJoinLeave( false, m_channel->GetName() );
         displayjoinitem->Check( false );
     }
     else {
-        sett().SetDisplayJoinLeave( true, WX_STRING( m_channel->GetName() ) );
+        sett().SetDisplayJoinLeave( true, m_channel->GetName() );
         displayjoinitem->Check( true );
    }
 }
@@ -1008,7 +1008,7 @@ void ChatPanel::OnChannelMenuRegister( wxCommandEvent& event )
   }
   User& cs = m_channel->GetServer().GetUser( _T("ChanServ") );
 
-  wxString text = WX_STRING(m_channel->GetMe().GetNick());
+  wxString text = m_channel->GetMe().GetNick();
   if ( !m_ui.AskText( _("Register Channel"), _("Who should be appointed founder of this channel?"), text ) ) return;
 
   cs.Say( _T("!REGISTER #") + m_channel->GetName() + _T(" ") + text );

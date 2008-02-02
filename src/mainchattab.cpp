@@ -116,7 +116,7 @@ ChatPanel* MainChatTab::GetUserChatPanel( const wxString& user )
 
 void MainChatTab::OnUserConnected( User& user )
 {
-  ChatPanel* panel = GetUserChatPanel( WX_STRING(user.GetNick()) );
+  ChatPanel* panel = GetUserChatPanel( user.GetNick() );
   if ( panel != 0 ) {
     panel->SetUser( &user );
     panel->OnUserConnected();
@@ -126,7 +126,7 @@ void MainChatTab::OnUserConnected( User& user )
 
 void MainChatTab::OnUserDisconnected( User& user )
 {
-  ChatPanel* panel = GetUserChatPanel( WX_STRING(user.GetNick()) );
+  ChatPanel* panel = GetUserChatPanel( user.GetNick() );
   if ( panel != 0 ) {
     panel->OnUserDisconnected();
     panel->SetUser( 0 );

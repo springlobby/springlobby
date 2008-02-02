@@ -109,7 +109,7 @@ void SinglePlayerTab::ReloadMaplist()
   m_map_pick->Clear();
   try {
     for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-      m_map_pick->Insert( RefineMapname( WX_STRING(usync()->GetMap( i ).name) ), i );
+      m_map_pick->Insert( RefineMapname( usync()->GetMap( i ).name ), i );
     }
   } catch(...) {}
   m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
@@ -128,7 +128,7 @@ void SinglePlayerTab::ReloadModlist()
   m_mod_pick->Clear();
   try {
     for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
-      m_mod_pick->Insert( RefineModname( WX_STRING(usync()->GetMod( i ).name) ), i );
+      m_mod_pick->Insert( RefineModname( usync()->GetMod( i ).name ), i );
     }
   } catch (...) {}
 

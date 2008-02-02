@@ -104,7 +104,7 @@ wxString SpringUnitSync::GetSpringVersion()
 
 bool SpringUnitSync::VersionSupports( GameFeature feature )
 {
-  wxString ver = WX_STRING( GetSpringVersion() );
+  wxString ver = GetSpringVersion();
   double nver = 0;
   ver = ver.BeforeFirst('b') + ver.AfterFirst('b'); //remove the beta flag
 
@@ -256,7 +256,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
   tm.description = &tmpdesc[0];
   tm.author = &tmpauth[0];
 
-  tm = susynclib()->GetMapInfoEx( WX_STRING(mapname), 0 );
+  tm = susynclib()->GetMapInfoEx( mapname, 0 );
 
   MapInfo info;
   _ConvertSpringMapInfo( tm, info );

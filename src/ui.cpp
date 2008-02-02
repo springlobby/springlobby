@@ -493,7 +493,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
   }
   server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
 
-  //server.uidata.panel = m_main_win->GetChatTab().AddChatPannel( server, WX_STRING(server_name) );
+  //server.uidata.panel = m_main_win->GetChatTab().AddChatPannel( server, server_name );
 }
 
 

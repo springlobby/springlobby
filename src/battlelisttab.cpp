@@ -165,8 +165,8 @@ void BattleListTab::SelectBattle( Battle* battle )
   m_minimap->SetBattle( m_sel_battle );
   m_players->ClearUsers();
   if ( m_sel_battle != 0 ) {
-    m_map_text->SetLabel( RefineMapname( WX_STRING(m_sel_battle->GetMapName()) ) );
-    m_mod_text->SetLabel( WX_STRING(m_sel_battle->GetModName()) );
+    m_map_text->SetLabel( RefineMapname( m_sel_battle->GetMapName() ) );
+    m_mod_text->SetLabel( m_sel_battle->GetModName() );
     m_players_text->SetLabel( wxString::Format( _T("%d / %d"), m_sel_battle->GetNumUsers() - m_sel_battle->GetSpectators(), m_sel_battle->GetMaxPlayers() ) );
     m_spec_text->SetLabel( wxString::Format( _T("%d"), m_sel_battle->GetSpectators() ) );
     for ( unsigned int i = 0; i < m_sel_battle->GetNumUsers(); i++ ) {
@@ -199,10 +199,10 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
   m_battle_list->SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
   m_battle_list->SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
-  m_battle_list->SetItem( index, 3, WX_STRING(battle.GetDescription()) );
+  m_battle_list->SetItem( index, 3, battle.GetDescription() );
   m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?ICON_EXISTS:ICON_NEXISTS );
   m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?ICON_EXISTS:ICON_NEXISTS );
-  m_battle_list->SetItem( index, 6, WX_STRING(battle.GetFounder().GetNick()) );
+  m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
@@ -262,10 +262,10 @@ void BattleListTab::UpdateBattle( Battle& battle )
   m_battle_list->SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
   m_battle_list->SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
   m_battle_list->SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
-  m_battle_list->SetItem( index, 3, WX_STRING(battle.GetDescription()) );
+  m_battle_list->SetItem( index, 3, battle.GetDescription() );
   m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?ICON_EXISTS:ICON_NEXISTS );
   m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?ICON_EXISTS:ICON_NEXISTS );
-  m_battle_list->SetItem( index, 6, WX_STRING(battle.GetFounder().GetNick()) );
+  m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );

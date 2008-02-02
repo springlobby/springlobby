@@ -57,7 +57,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_desc_lbl->Wrap( -1 );
 	m_desc_sizer->Add( m_desc_lbl, 1, wxALL, 5 );
 
-	m_desc_text = new wxTextCtrl( this, wxID_ANY, WX_STRING( sett().GetLastHostDescription() ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_desc_text = new wxTextCtrl( this, wxID_ANY, sett().GetLastHostDescription(), wxDefaultPosition, wxDefaultSize, 0 );
 	m_desc_text->SetToolTip( _("A short description of the game, this will show up in the battle list.") );
 
 	m_desc_sizer->Add( m_desc_text, 2, wxALL, 5 );
@@ -86,7 +86,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_pwd_lbl->Wrap( -1 );
 	m_pwd_sizer->Add( m_pwd_lbl, 1, wxALL, 5 );
 
-	m_pwd_text = new wxTextCtrl( this, wxID_ANY, WX_STRING( sett().GetLastHostPassword() ), wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
+	m_pwd_text = new wxTextCtrl( this, wxID_ANY, sett().GetLastHostPassword(), wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
 	m_pwd_text->SetToolTip( _("Password needed to join game. Keep empty for no password") );
 
 	m_pwd_sizer->Add( m_pwd_text, 1, wxALL, 5 );
@@ -221,10 +221,10 @@ void HostBattleDialog::ReloadModList()
   try {
     for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
       const UnitSyncMod& m = usync()->GetMod( i );
-      m_mod_pic->Insert( WX_STRING(m.name), i );
+      m_mod_pic->Insert( m.name, i );
     }
   } catch (...) {}
-  wxString last = WX_STRING( sett().GetLastHostMod() );
+  wxString last = sett().GetLastHostMod();
   if ( last != wxEmptyString ) m_mod_pic->SetSelection( m_mod_pic->FindString( last ) );
 }
 

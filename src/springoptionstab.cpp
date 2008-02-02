@@ -60,7 +60,7 @@ END_EVENT_TABLE()
     SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),m_ui(ui)
 {
   m_dir_text = new wxStaticText( this, -1, _("Spring directory") );
-  m_dir_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringDir()) );
+  m_dir_edit = new wxTextCtrl( this, -1, sett().GetSpringDir() );
   m_dir_browse_btn = new wxButton( this, SPRING_DIRBROWSE, _("Browse") );
   m_dir_find_btn = new wxButton( this, SPRING_DIRFIND, _("Find") );
 
@@ -68,14 +68,14 @@ END_EVENT_TABLE()
   m_exec_def_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
   m_exec_spec_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Specify:") );
   m_exec_loc_text = new wxStaticText( this, -1, _("Location") );
-  m_exec_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetSpringLoc()) );
+  m_exec_edit = new wxTextCtrl( this, -1, sett().GetSpringLoc() );
   m_exec_browse_btn = new wxButton( this, SPRING_EXECBROWSE, _("Browse") );
   m_exec_find_btn = new wxButton( this, SPRING_EXECFIND, _("Find") );
 
   m_sync_box = new wxStaticBox( this, -1, _("UnitSync library") );
   m_sync_def_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
   m_sync_spec_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Specify:") );
-  m_sync_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetUnitSyncLoc()) );
+  m_sync_edit = new wxTextCtrl( this, -1, sett().GetUnitSyncLoc() );
   m_sync_loc_text = new wxStaticText( this, -1, _("Location") );
   m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _("Browse") );
   m_sync_find_btn = new wxButton( this, SPRING_SYNCFIND, _("Find") );
@@ -93,7 +93,7 @@ END_EVENT_TABLE()
   m_chatlog_find_btn = new wxButton( this, CHATLOG_FIND, _("Find") );
   m_chatlog_enable_chk = new wxCheckBox( this, CHATLOG_ENABLE, _ ("Enable logging Chat."), wxDefaultPosition, wxDefaultSize,0);
   m_chatlog_enable_chk->SetValue( sett().GetChatLogEnable() );
-  m_chatlog_edit = new wxTextCtrl( this, -1, WX_STRING(sett().GetChatLogLoc()) );
+  m_chatlog_edit = new wxTextCtrl( this, -1, sett().GetChatLogLoc() );
 
   m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _("Auto Configure") );
 
@@ -192,9 +192,9 @@ SpringOptionsTab::~SpringOptionsTab()
 
 void SpringOptionsTab::DoRestore()
 {
-  m_dir_edit->SetValue( WX_STRING(sett().GetSpringDir()) );
-  m_sync_edit->SetValue( WX_STRING(sett().GetUnitSyncLoc()) );
-  m_exec_edit->SetValue( WX_STRING(sett().GetSpringLoc()) );
+  m_dir_edit->SetValue( sett().GetSpringDir() );
+  m_sync_edit->SetValue( sett().GetUnitSyncLoc() );
+  m_exec_edit->SetValue( sett().GetSpringLoc() );
   m_exec_def_radio->SetValue( sett().GetSpringUseDefLoc() );
   m_sync_def_radio->SetValue( sett().GetUnitSyncUseDefLoc() );
   m_exec_spec_radio->SetValue( !sett().GetSpringUseDefLoc() );
@@ -204,7 +204,7 @@ void SpringOptionsTab::DoRestore()
 
   //Chat Log
   m_chatlog_enable_chk->SetValue(  sett().GetChatLogEnable() );
-  m_chatlog_edit->SetValue(  WX_STRING(sett().GetChatLogLoc()) );
+  m_chatlog_edit->SetValue(  sett().GetChatLogLoc() );
 }
 
 
@@ -216,12 +216,12 @@ void SpringOptionsTab::HandleExeloc( bool defloc )
     m_exec_edit->Enable( false );
     m_exec_browse_btn->Enable( false );
     //m_exec_find_btn->Enable( false );
-    m_exec_edit->SetValue( WX_STRING(sett().GetSpringUsedLoc( true, true )) );
+    m_exec_edit->SetValue( sett().GetSpringUsedLoc( true, true ) );
   } else {
     m_exec_edit->Enable( true );
     m_exec_browse_btn->Enable( true );
     //m_exec_find_btn->Enable( true );
-    m_exec_edit->SetValue( WX_STRING(sett().GetSpringLoc()) );
+    m_exec_edit->SetValue( sett().GetSpringLoc() );
   }
 }
 
@@ -234,12 +234,12 @@ void SpringOptionsTab::HandleUsyncloc( bool defloc )
     m_sync_edit->Enable( false );
     m_sync_browse_btn->Enable( false );
     //m_sync_find_btn->Enable( false );
-    m_sync_edit->SetValue( WX_STRING(sett().GetUnitSyncUsedLoc( true, true )) );
+    m_sync_edit->SetValue( sett().GetUnitSyncUsedLoc( true, true ) );
   } else {
     m_sync_edit->Enable( true );
     m_sync_browse_btn->Enable( true );
     //m_sync_find_btn->Enable( true );
-    m_sync_edit->SetValue( WX_STRING(sett().GetUnitSyncLoc()) );
+    m_sync_edit->SetValue( sett().GetUnitSyncLoc() );
   }
 }
 
@@ -469,27 +469,27 @@ void SpringOptionsTab::OnFindSync( wxCommandEvent& event )
 
 void SpringOptionsTab::OnBrowseDir( wxCommandEvent& event )
 {
-  wxDirDialog dirpic( this, _("Choose a directory"), WX_STRING(sett().GetSpringDir()), wxDD_DEFAULT_STYLE );
+  wxDirDialog dirpic( this, _("Choose a directory"), sett().GetSpringDir(), wxDD_DEFAULT_STYLE );
   if ( dirpic.ShowModal() == wxID_OK ) m_dir_edit->SetValue( dirpic.GetPath() );
 }
 
 
 void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
 {
-  wxFileDialog pic( this, _("Choose a Spring executable"), WX_STRING(sett().GetSpringDir()), wxString(SPRING_BIN), CHOOSE_EXE );
+  wxFileDialog pic( this, _("Choose a Spring executable"), sett().GetSpringDir(), wxString(SPRING_BIN), CHOOSE_EXE );
   if ( pic.ShowModal() == wxID_OK ) m_exec_edit->SetValue( pic.GetPath() );
 }
 
 void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
 {
-  wxFileDialog pic( this, _("Choose an unitsync library"), WX_STRING(sett().GetSpringDir()), _T("unitsync") + GetLibExtension(), wxString(_("Library")) + _T("(*") + GetLibExtension() + _T(")|*") + GetLibExtension() + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
+  wxFileDialog pic( this, _("Choose an unitsync library"), sett().GetSpringDir(), _T("unitsync") + GetLibExtension(), wxString(_("Library")) + _T("(*") + GetLibExtension() + _T(")|*") + GetLibExtension() + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
   if ( pic.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pic.GetPath() );
 }
 
 
 void SpringOptionsTab::OnBrowseWeb( wxCommandEvent& event )
 {
-  wxFileDialog pic( this, _("Choose a web browser executable"), WX_STRING(sett().GetSpringDir()), _T("*"), CHOOSE_EXE );
+  wxFileDialog pic( this, _("Choose a web browser executable"), sett().GetSpringDir(), _T("*"), CHOOSE_EXE );
   if ( pic.ShowModal() == wxID_OK ) m_web_edit->SetValue( pic.GetPath() );
 }
 

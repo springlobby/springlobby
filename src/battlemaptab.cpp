@@ -129,7 +129,7 @@ void BattleMapTab::Update()
   m_map_opts_list->SetItem( 4, 1, wxString::Format( _T("%d"), map.info.extractorRadius ) );
   m_map_opts_list->SetItem( 5, 1, wxString::Format( _T("%.3f"), map.info.maxMetal ) );
 
-  int index = m_map_combo->FindString( RefineMapname( WX_STRING(map.name) ) );
+  int index = m_map_combo->FindString( RefineMapname( map.name ) );
   m_map_combo->SetSelection( index );
 }
 
@@ -158,7 +158,7 @@ void BattleMapTab::ReloadMaplist()
   m_map_combo->Clear();
   try {
     for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-      m_map_combo->Insert( RefineMapname( WX_STRING(usync()->GetMap( i ).name) ), i );
+      m_map_combo->Insert( RefineMapname( usync()->GetMap( i ).name ), i );
     }
   } catch(...){}
 }

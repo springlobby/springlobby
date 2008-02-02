@@ -79,9 +79,9 @@ bool Spring::Run( Battle& battle )
     return false;
   }
 
-  wxString cmd =  _T("\"") + WX_STRING(sett().GetSpringUsedLoc()) + _T("\" ") + path + _T("script.txt");
+  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + path + _T("script.txt");
   wxLogMessage( _T("cmd: %s"), cmd.c_str() );
-  wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
+  wxSetWorkingDirectory( sett().GetSpringDir() );
   if ( sett().UseOldSpringLaunchMethod() ) {
     if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
     if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
@@ -124,8 +124,8 @@ bool Spring::Run( SinglePlayerBattle& battle )
     return false;
   }
 
-  wxString cmd =  _T("\"") + WX_STRING(sett().GetSpringUsedLoc()) + _T("\" ") + path + _T("script.txt");
-  wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
+  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + path + _T("script.txt");
+  wxSetWorkingDirectory( sett().GetSpringDir() );
   if ( sett().UseOldSpringLaunchMethod() ) {
     if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
     if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
@@ -295,9 +295,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s += wxString::Format( _T("\t[PLAYER%d]\n"), i );
     s += wxString::Format( _T("\t{\n") );
     s += _T("\t\tname=") + battle.GetUser( ordered_users[i].index ).GetNick() + _T(";\n");
-    wxString cc = WX_STRING( battle.GetUser( ordered_users[i].index ).GetCountry() );
-    cc.MakeLower();
-    s += _T("\t\tcountryCode=") + cc + _T(";\n");
+    s += _T("\t\tcountryCode=") + battle.GetUser( ordered_users[i].index ).GetCountry() + _T(";\n");
     s += wxString::Format( _T("\t\tSpectator=%d;\n"), battle.GetUser( ordered_users[i].index ).BattleStatus().spectator?1:0 );
     if ( !(battle.GetUser( ordered_users[i].index ).BattleStatus().spectator) ) {
       s += wxString::Format( _T("\t\tteam=%d;\n"), TeamConv[battle.GetUser( ordered_users[i].index ).BattleStatus().team] );
@@ -386,13 +384,13 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), bot.bs.handicap );
 
     wxString ai = WX_STRING( bot.aidll );
-/*    if ( wxFileName::FileExists( WX_STRING( sett().GetSpringDir() ) + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
+/*    if ( wxFileName::FileExists( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
       ai += _T(".dll");
     } else {
       ai += _T(".so");
     }*/
 
-    //s += WX_STRING(("\t\tAIDLL=AI/Bot-libs/" + STD_STRING(ai) + ";\n"));
+    //s += ("\t\tAIDLL=AI/Bot-libs/" + STD_STRING(ai) + ";\n");
     s += _T("\t\tAIDLL=") + ai + _T(";\n");
     s +=  _T("\t}\n");
   }
@@ -467,7 +465,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   wxString ds = _T("[Script End]\n\n----------------------[ Debug info ]-----------------------------\nUsers:\n\n");
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     User& tmpu = battle.GetUser( i );
-    ds += WX_STRING( tmpu.GetNick() );
+    ds += tmpu.GetNick();
     ds += wxString::Format( _T(":\n  team: %d ally: %d spec: %d order: %d side: %d hand: %d sync: %d ready: %d col: %d,%d,%d\n\n"),
       tmpu.BattleStatus().team,
       tmpu.BattleStatus().ally,
@@ -491,7 +489,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
       ds += _T( "NULL" );
       continue;
     }
-    ds += WX_STRING( bot->name ) + _T(" (") + WX_STRING( bot->owner ) + _T(")");
+    ds += bot->name + _T(" (") + bot->owner + _T(")");
     ds += wxString::Format( _T(":\n  team: %d ally: %d spec: %d order: %d side: %d hand: %d sync: %d ready: %d col: %d,%d,%d\n\n"),
       bot->bs.team,
       bot->bs.ally,
@@ -631,7 +629,7 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), bot->bs.handicap );
     if ( bot->aidll != _T("") ) {
       wxString ai = bot->aidll;
-      /*if ( wxFileName::FileExists( WX_STRING( sett().GetSpringDir() ) + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
+      /*if ( wxFileName::FileExists( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
         ai += _T(".dll");
       } else {
         ai += _T(".so");

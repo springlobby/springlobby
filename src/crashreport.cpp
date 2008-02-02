@@ -64,7 +64,7 @@ void CrashReport::GenerateReport(wxDebugReport::Context ctx)
 
   wxString SystemInfos;
 #ifdef VERSION
-  SystemInfos += _T("SpringLobby version ") + WX_STRING( GetSpringLobbyVersion() ) +_T("\n") ;
+  SystemInfos += _T("SpringLobby version ") + GetSpringLobbyVersion() +_T("\n") ;
 #endif
   SystemInfos += _T("Built from ") + wxString(wxVERSION_STRING) + _T("\n") ;
 

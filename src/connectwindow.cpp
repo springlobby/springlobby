@@ -47,9 +47,9 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 
   SetIcon( wxIcon(connect_xpm) );
 
-  server = WX_STRING( sett().GetDefaultServer() );
-  username = WX_STRING( sett().GetServerAccountNick( sett().GetDefaultServer() ) );
-  password = WX_STRING( sett().GetServerAccountPass( sett().GetDefaultServer() ) );
+  server = sett().GetDefaultServer();
+  username = sett().GetServerAccountNick( sett().GetDefaultServer() );
+  password = sett().GetServerAccountPass( sett().GetDefaultServer() );
   savepass = sett().GetServerAccountSavePass( sett().GetDefaultServer() );
   // Create all UI elements.
   m_tabs =         new wxNotebook( this  , -1 );
@@ -194,9 +194,9 @@ void ConnectWindow::ReloadServerList()
 {
   m_server_combo->Clear();
   for ( int i = 0; i < sett().GetNumServers(); i++ ) {
-    m_server_combo->AppendString( WX_STRING(sett().GetServerName( i )) );
+    m_server_combo->AppendString( sett().GetServerName( i ) );
   }
-  m_server_combo->SetValue( WX_STRING(sett().GetDefaultServer()) );
+  m_server_combo->SetValue( sett().GetDefaultServer() );
 }
 
 void ConnectWindow::OnServerChange( wxCommandEvent& event )

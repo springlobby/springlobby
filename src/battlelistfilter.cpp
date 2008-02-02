@@ -406,16 +406,16 @@ bool BattleListFilter::FilterBattle(Battle& battle)
   if (m_filter_mod_show->GetValue() && !battle.ModExists()) return false;
 
   //Description:
-  if ( !WX_STRING( battle.GetDescription() ).Upper().Contains( m_filter_description_edit->GetValue().Upper() ) ) return false;
+  if ( !battle.GetDescription().Upper().Contains( m_filter_description_edit->GetValue().Upper() ) ) return false;
 
   //Host:
-  if ( !WX_STRING( battle.GetFounder().GetNick() ).Upper().Contains( m_filter_host_edit->GetValue().Upper() ) ) return false;
+  if ( !battle.GetFounder().GetNick().Upper().Contains( m_filter_host_edit->GetValue().Upper() ) ) return false;
 
   //Map:
-  if ( !WX_STRING( RefineMapname(battle.GetMapName() ) ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) ) return false;
+  if ( !RefineMapname(battle.GetMapName() ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) ) return false;
 
   //Mod:
-  if ( !WX_STRING( battle.GetModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !WX_STRING( RefineModname( battle.GetModName() ) ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) ) return false;
+  if ( !battle.GetModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !RefineModname( battle.GetModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) ) return false;
 
   return true;
 }

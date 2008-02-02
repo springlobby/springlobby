@@ -230,7 +230,7 @@ wxString Settings::GetServerName( int index )
 //! @param server_name the server name/alias
 wxString Settings::GetServerAccountNick( const wxString& server_name )
 {
-  return m_config->Read( _T("/Server/")+WX_STRING(server_name)+_T("/nick"), _T("") ) ;
+  return m_config->Read( _T("/Server/")+ server_name +_T("/nick"), _T("") ) ;
 }
 
 

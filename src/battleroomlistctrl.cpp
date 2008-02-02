@@ -271,7 +271,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   SetItemColumnImage( index, 3, IconImageList::GetFlagIcon( user.GetCountry() ) );
   SetItemColumnImage( index, 4, IconImageList::GetRankIcon( user.GetStatus().rank ) );
 
-  SetItem( index, 5, WX_STRING( user.GetNick() ) );
+  SetItem( index, 5,  user.GetNick() );
   if ( !user.Status().bot ) SetItemColumnImage( index, 5, -1 );
   else SetItemColumnImage( index, 5, ICON_BOT );
 
@@ -368,13 +368,13 @@ void BattleroomListCtrl::UpdateBot( const int& index )
 
   SetItemColumnImage( index, 3, ICON_NONE );
   SetItemColumnImage( index, 4, ICON_NONE );
-  SetItem( index, 5, WX_STRING( bot.name ) + _T(" (") + WX_STRING( bot.owner) + _T(")") );
+  SetItem( index, 5, bot.name + _T(" (") + bot.owner + _T(")") );
 
   SetItem( index, 6, wxString::Format( _T("%d"), bot.bs.team + 1 ) );
   SetItem( index, 7, wxString::Format( _T("%d"), bot.bs.ally + 1 ) );
   SetItem( index, 9, wxString::Format( _T("%d%%"), bot.bs.handicap ) );
 
-  SetItem( index, 8, WX_STRING( bot.aidll ) );
+  SetItem( index, 8, bot.aidll );
   Sort();
 }
 
@@ -739,13 +739,13 @@ int wxCALLBACK BattleroomListCtrl::CompareCountryUP(long item1, long item2, long
   if ( content1.is_bot )
     country1 = _T("");
   else
-    country1 = WX_STRING(((User*)content1.data)->GetCountry()).MakeUpper();
+    country1 = ((User*)content1.data)->GetCountry().MakeUpper();
 
   wxString country2;
   if ( content2.is_bot )
     country2 = _T("");
   else
-    country2 = WX_STRING(((User*)content2.data)->GetCountry()).MakeUpper();
+    country2 = ((User*)content2.data)->GetCountry().MakeUpper();
 
   if ( country1 < country2 )
       return -1;
@@ -803,15 +803,15 @@ int wxCALLBACK BattleroomListCtrl::CompareNicknameUP(long item1, long item2, lon
 
   wxString name1;
   if ( content1.is_bot )
-    name1 = WX_STRING(((BattleBot*)content1.data)->name ).MakeUpper();
+    name1 = ((BattleBot*)content1.data)->name.MakeUpper();
   else
-    name1 = WX_STRING(((User*)content1.data)->GetNick()).MakeUpper();
+    name1 = ((User*)content1.data)->GetNick().MakeUpper();
 
   wxString name2;
   if ( content2.is_bot )
-    name2 = WX_STRING(((BattleBot*)content2.data)->name ).MakeUpper();
+    name2 = ((BattleBot*)content2.data)->name.MakeUpper();
   else
-    name2 = WX_STRING(((User*)content2.data)->GetNick()).MakeUpper();
+    name2 = ((User*)content2.data)->GetNick().MakeUpper();
 
   if ( name1 < name2 )
       return -1;
@@ -909,9 +909,9 @@ int wxCALLBACK BattleroomListCtrl::CompareCpuUP(long item1, long item2, long sor
   item_content content2 = bl.items[(size_t)item2];
 
   if ( content1.is_bot ) {
-    wxString aidll1 = WX_STRING(((BattleBot*)content1.data)->aidll).MakeUpper();
+    wxString aidll1 = ((BattleBot*)content1.data)->aidll.MakeUpper();
     if ( content2.is_bot ) {
-      wxString aidll2 = WX_STRING(((BattleBot*)content2.data)->aidll).MakeUpper();
+      wxString aidll2 = ((BattleBot*)content2.data)->aidll.MakeUpper();
       if ( aidll1 < aidll2 )
         return -1;
       if ( aidll1 > aidll2 )
