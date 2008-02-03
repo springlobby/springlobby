@@ -581,10 +581,6 @@ void SpringUnitSyncLib::CloseFileVFS( int handle )
   m_close_file_vfs( handle );
 }
 
-bool SpringUnitSyncLib::HasLuaAI()
-{
-  return m_get_luaai_count&&m_get_luaai_name&&m_get_luaai_desc;
-}
 
 int SpringUnitSyncLib::GetLuaAICount()
 {
