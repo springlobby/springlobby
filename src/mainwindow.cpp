@@ -332,17 +332,17 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
 {
   wxString latestVersion = GetLatestVersion();
   // Need to replace crap chars or versions will always be inequal
-  latestVersion.Replace(" ", "", true);
-  latestVersion.Replace("\n", "", true);
-  latestVersion.Replace("\t", "", true);
-  if (latestVersion == "-1")
+  latestVersion.Replace(_T(" "), _T("")), true);
+  latestVersion.Replace(_T("\n"), _T(""), true);
+  latestVersion.Replace('\t', _T(""), true);
+  if (latestVersion == _T("-1"))
   {
     customMessageBox(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
     return;
   }
   wxString myVersion = GetSpringLobbyVersion();
 
-  wxString msg = _("Your Version: ") + myVersion + "\n" + _("Latest Verison: ") + latestVersion;
+  wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
 
   if (latestVersion.IsSameAs(myVersion, false))
   {
