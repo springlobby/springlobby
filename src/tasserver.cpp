@@ -642,6 +642,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     // !! Command: "SETSCRIPTTAGS" params: "game/startpostype=0	game/maxunits=1000	game/limitdgun=0	game/startmetal=1000	game/gamemode=0	game/ghostedbuildings=-1	game/startenergy=1000	game/diminishingmms=0"
   } else if ( cmd == _T("FORCEQUITBATTLE")) {
 	  m_se->OnKickedFromBattle();
+  } else if ( cmd == _T("BROADCAST")) {
+    m_se->OnServerMessage( params );
   } else {
     wxLogMessage( _T("??? Cmd: %s params: %s"), cmd.c_str(), params.c_str() );
     m_se->OnUnknownCommand( cmd, params );
