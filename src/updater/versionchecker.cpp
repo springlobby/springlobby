@@ -3,8 +3,8 @@
 #include <wx/sstream.h>
 #include <wx/protocol/http.h>
 
-#include "utils.h"
-#include "settings++/custom_dialogs.h"
+#include "../utils.h"
+#include "../settings++/custom_dialogs.h"
 
 
 //! @brief gets latest version from version.springlobby.info via HTTP
@@ -61,7 +61,7 @@ wxString GetLatestVersion()
 
     wxLogDebugFunc(_T("Error connecting! Error is: ") + err);
 
-    return "-1";
+    return _T("-1");
   }
 
   wxDELETE(stream);
