@@ -392,6 +392,12 @@ void* PingThread::Entry()
 
   while ( !TestDestroy() ) {
 
+    if ( !m_sock.GetPingEnabled() || !m_sock.GetUDPPingEnabled() )
+    {
+      m_next_udp_ping = -1;
+      m_next_ping = -1;
+    }
+
     if ( (m_next_ping < 0) && (m_sock.GetPingEnabled()) ) m_next_ping = m_sock.GetPingInterval();
     if ( (m_next_udp_ping < 0) && (m_sock.GetUDPPingEnabled()) ) m_next_udp_ping = m_sock.GetUDPPingInterval();
 
