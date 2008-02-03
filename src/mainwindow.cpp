@@ -332,7 +332,7 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
 {
   wxString latestVersion = GetLatestVersion();
   // Need to replace crap chars or versions will always be inequal
-  latestVersion.Replace(_T(" "), _T("")), true);
+  latestVersion.Replace(_T(" "), _T(""), true);
   latestVersion.Replace(_T("\n"), _T(""), true);
   latestVersion.Replace('\t', _T(""), true);
   if (latestVersion == _T("-1"))
