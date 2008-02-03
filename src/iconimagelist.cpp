@@ -203,7 +203,7 @@ int IconImageList::GetRankIcon( const int& rank, const bool& showlowest )
 
 int IconImageList::GetFlagIcon( const std::string& flagname )
 {
-  return ICON_FLAGS_BASE + GetFlagIndex( flagname );
+  return ICON_FLAGS_BASE + GetFlagIndex( flagname ) + 3;
 }
 
 
