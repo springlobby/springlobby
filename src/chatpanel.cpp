@@ -836,7 +836,7 @@ void ChatPanel::LogTime()
   m_chatlog_text->SetDefaultStyle(wxTextAttr( sett().GetChatColorTime() ));
   m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
   m_chatlog_text->SetFont( sett().GetChatFont() );
-  m_chatlog_text->AppendText( _T("[") + now.Format( _T("%H:%M") ) + _T("]") );
+  m_chatlog_text->AppendText( _T("[") + now.Format( _T("%H:%M:%S") ) + _T("]") );
 }
 
 
