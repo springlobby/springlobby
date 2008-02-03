@@ -939,8 +939,8 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
   if(BattleExists(battleid)){
     Battle *battle=&GetBattle(battleid);
     if(battle){
-      m_sock->SetUdpPingInfo( m_addr, m_udp_port, 10000 );
-      //if((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))UDPPing();
+      if((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))
+        m_sock->SetUdpPingInfo( m_addr, m_udp_port, 10000 );
     }
   }else{
     wxLogMessage( _T("battle doesnt exist") );
