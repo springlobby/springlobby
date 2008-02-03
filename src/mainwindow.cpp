@@ -334,7 +334,7 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
   // Need to replace crap chars or versions will always be inequal
   latestVersion.Replace(_T(" "), _T(""), true);
   latestVersion.Replace(_T("\n"), _T(""), true);
-  latestVersion.Replace('\t', _T(""), true);
+  latestVersion.Replace(_T("\t"), _T(""), true);
   if (latestVersion == _T("-1"))
   {
     customMessageBox(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
