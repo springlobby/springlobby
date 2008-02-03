@@ -18,10 +18,8 @@
 #endif
 #endif
 
-#if( (wxMAJOR_VERSION==2 && wxMINOR_VERSION >= 8) || wxMAJOR_VERSION>2 )
-#define NAT_TRAVERSAL_SUPPORT 1
-#else
-#define NAT_TRAVERSAL_SUPPORT 0
+#ifndef VERSION
+#define VERSION "Unknown"
 #endif
 
 //! Converts an std::string to a wxString

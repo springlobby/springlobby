@@ -241,7 +241,7 @@ void ChatPanel::CreatePopup()
     m_popup_menu = new wxMenu();
     m_autorejoin = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_AUTOJOIN, _("Auto join this channel"), wxEmptyString, wxITEM_CHECK );
     m_popup_menu->Append( m_autorejoin );
-    if ( m_channel->GetName() != _T("springlobby") ) {
+    if ( m_channel && m_channel->GetName() != _T("springlobby") ) {
       bool isautojoin = sett().GetChannelJoinIndex( m_channel->GetName() ) >= 0;
       m_autorejoin->Check( isautojoin );
     } else {
@@ -253,7 +253,7 @@ void ChatPanel::CreatePopup()
     m_popup_menu->Append( leaveitem );
 
     displayjoinitem = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_DISPLAYJOIN, _("Display Join/Leave Messages"), wxEmptyString, wxITEM_CHECK );
-    if ( m_type == CPT_Channel )
+    if ( m_channel && m_type == CPT_Channel )
     {
       m_popup_menu->Append( displayjoinitem );
       displayjoinitem->Check( sett().GetDisplayJoinLeave( m_channel->GetName() ) );
@@ -836,7 +836,7 @@ void ChatPanel::LogTime()
   m_chatlog_text->SetDefaultStyle(wxTextAttr( sett().GetChatColorTime() ));
   m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
   m_chatlog_text->SetFont( sett().GetChatFont() );
-  m_chatlog_text->AppendText( _T("[") + now.Format( _T("%H:%M") ) + _T("]") );
+  m_chatlog_text->AppendText( _T("[") + now.Format( _T("%H:%M:%S") ) + _T("]") );
 }
 
 

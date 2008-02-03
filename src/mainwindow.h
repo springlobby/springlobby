@@ -52,6 +52,7 @@ class MainWindow : public wxFrame
     void OnMenuConnect( wxCommandEvent& event );
     void OnMenuDisconnect( wxCommandEvent& event );
     void OnMenuQuit( wxCommandEvent& event );
+    void OnMenuVersion ( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
@@ -116,7 +117,8 @@ enum
     MENU_TRAC,
     MENU_DOC,
     MENU_CHAT,
-    MAIN_TABS
+    MAIN_TABS,
+    MENU_VERSION
 
 };
 

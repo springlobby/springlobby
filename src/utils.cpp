@@ -125,9 +125,5 @@ bool GetBoolParam( wxString& params )
 
 wxString GetSpringLobbyVersion()
 {
-#ifdef VERSION
-  return WX_STRINGC(VERSION) + _T(" built from ") + WX_STRINGC(revision());
-#else
-  return _T("Unknown built from ") + WX_STRINGC(revision());
-#endif
+  return WX_STRINGC(VERSION);
 }

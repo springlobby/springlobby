@@ -309,7 +309,7 @@ void Socket::Ping()
 //! @note used for nat travelsal.
 //! @todo Use m_udp_ping_msg variable as message.
 void Socket::UDPPing(){
-#if(NAT_TRAVERSAL_SUPPORT)
+#ifndef HAVE_WX26
   if ( m_ping_msg == wxEmptyString ) return;
 
   wxLogMessage( _T("Sent udp ping.") );
