@@ -504,7 +504,7 @@ void Settings::SetChatLogEnable( const bool value )
 
 wxString Settings::GetChatLogLoc()
 {
-  return m_config->Read( _T("/ChatLog/chatlog_loc"), _T("") );
+  return m_config->Read( _T("/ChatLog/chatlog_loc"), GetSpringDir() + _T("/logs") );
 }
 
 void Settings::SetChatLogLoc( const wxString& loc )

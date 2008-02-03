@@ -50,12 +50,6 @@ class SpringOptionsTab : public wxScrolledWindow
     void OnFindExec( wxCommandEvent& event );
     void OnFindSync( wxCommandEvent& event );
 
-    //Chat Log
-    //Note Chat Log will be Configurated in the "OnAutoConf"
-    void OnFindChatLog( wxCommandEvent& event );
-    void OnBrowseChatLog( wxCommandEvent& event );
-    wxString AutoFindChatLogDir( const wxString& def = _T("") );
-
   protected:
 
     wxStaticText* m_dir_text;
@@ -101,16 +95,6 @@ class SpringOptionsTab : public wxScrolledWindow
     wxBoxSizer* m_sync_loc_sizer;
     wxBoxSizer* m_web_loc_sizer;
 
-    //Chat Log
-    wxStaticText* m_chatlog_loc_text;
-    wxButton* m_chatlog_browse_btn;
-    wxButton* m_chatlog_find_btn;
-    wxCheckBox* m_chatlog_enable_chk;
-    wxTextCtrl* m_chatlog_edit;
-    wxStaticBox* m_chatlog_box;
-    wxStaticBoxSizer* m_chatlog_box_sizer;
-    wxBoxSizer* m_chatlog_loc_sizer;
-  
     Ui& m_ui;
 
     DECLARE_EVENT_TABLE()
@@ -129,12 +113,6 @@ enum
     SPRING_DIRFIND,
     SPRING_EXECFIND,
     SPRING_SYNCFIND,
-
-    //Chat Log
-    CHATLOG_FIND,
-    CHATLOG_BROWSE,
-    CHATLOG_ENABLE,
-
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGOPTIONSTAB_H
