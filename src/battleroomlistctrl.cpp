@@ -89,11 +89,11 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
 
   col.SetText( _("t") );
   col.SetImage(nonIcon );
-  InsertColumn( 6, col, _T("Team number"), false );
+  InsertColumn( 6, col, _T("Team number"), true );
 
   col.SetText( _("a") );
   col.SetImage( nonIcon );
-  InsertColumn( 7, col, _T("Ally number"), false );
+  InsertColumn( 7, col, _T("Ally number"), true );
 
   col.SetText( _("cpu") );
   col.SetImage( nonIcon );
@@ -125,8 +125,8 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   SetColumnWidth( 2, 20 );
   SetColumnWidth( 3, 20 );
   SetColumnWidth( 4, 20 );
-  SetColumnWidth( 6, 26 );
-  SetColumnWidth( 7, 26 );
+  SetColumnWidth( 6, 29 );
+  SetColumnWidth( 7, 29 );
 #endif
 
   SetColumnWidth( 5, 170 );
