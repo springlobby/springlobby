@@ -31,7 +31,7 @@ IF(wxWidgets_FOUND)
 	INCLUDE_DIRECTORIES(${SpringLobbySrc_SOURCE_DIR} ${SettingsSrc_SOURCE_DIR}  ${wxWidgets_INCLUDE_DIRS} )
 	SET(SpringLobbySrc
 		src/boost/md5.cpp
-		src/versionchecker.cpp
+		src/updater/versionchecker.cpp
 		src/addbotdialog.cpp
 		src/agreementdialog.cpp
 		src/base64.cpp
@@ -111,7 +111,7 @@ IF(wxWidgets_FOUND)
 		src/settings++/Main.cpp
 	)
 	SET(SLSharedWithSettings
-		src/versionchecker.cpp
+		src/updater/versionchecker.cpp
 		src/crashreport.cpp
 		src/springunitsynclib.cpp
 		src/utils.cpp
