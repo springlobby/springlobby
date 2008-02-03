@@ -36,8 +36,8 @@ c    This file is part of springsettings,
 #include "Defs.hpp"
 
 void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
-	
-	
+
+
 	// i < "sizeof"(VO_CBOX)
 	for (int i = 0; i < ctrl_vo_Boxes_size; i++) {
 		ctrl_vo_Boxes[i] = new wxCheckBox(this, VO_CBOX[i].id, (VO_CBOX[i].lbl));
@@ -52,13 +52,13 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 
 
 	wxSizer* subSizer = new wxBoxSizer(wxHORIZONTAL);
-	
+
 	subSizer->Add(ctrl_x_res, 0, wxALIGN_LEFT, 10);
 	subSizer->Add(5, 0, 0);
 	subSizer->Add(new wxStaticText(this, -1, wxT("x")), 0, wxTOP | wxBOTTOM, 0);
 	subSizer->Add(5, 0, 0);
 	subSizer->Add(ctrl_y_res, 0, wxALIGN_RIGHT, 10);
-	
+
 	wxSizer* subSizer2 = new wxBoxSizer(wxVERTICAL);
 	subSizer2->Add(new wxStaticText(this, -1, wxT("Screen Resolution")), 1, wxTOP|wxEXPAND , 15);
 	subSizer2->Add(subSizer);
@@ -75,19 +75,16 @@ void tab_quality_video::updateControls(int what_to_update)
 			for (int i = 5; i < 7; i++) {
 						ctrl_qa_Boxes[i]->SetValue(intSettings[QA_CBOX[i].key]);
 			}
-			
+
 			for (int i = 0; i < ctrl_vo_Boxes_size; i++) {
 				ctrl_vo_Boxes[i]->SetValue(intSettings[VO_CBOX[i].key]);
 			}
 		}
-	
+
 	if (what_to_update == UPDATE_VIDEO_MODE || what_to_update == UPDATE_ALL)
 	{
-		std::string s;
-		toString(s,intSettings[RC_TEXT[0].key]); 
-		ctrl_x_res->SetValue(_S(s));
-		toString(s,intSettings[RC_TEXT[1].key]); 
-		ctrl_y_res->SetValue(_S(s));
+		ctrl_x_res->SetValue(wxString::Format( _("%d"),intSettings[RC_TEXT[0].key]));
+		ctrl_y_res->SetValue(wxString::Format( _("%d"),intSettings[RC_TEXT[1].key]));
 	}
 	if (what_to_update == UPDATE_QA_BOXES || what_to_update == UPDATE_ALL)
 	{
@@ -100,7 +97,7 @@ void tab_quality_video::updateControls(int what_to_update)
 		}
 
 		int waterOptIndex = 0;
-		int waterSetting = intSettings[WR_COMBOX[0].key]; 
+		int waterSetting = intSettings[WR_COMBOX[0].key];
 		switch (waterSetting)
 		{
 		case 0:
@@ -119,15 +116,15 @@ void tab_quality_video::updateControls(int what_to_update)
 		case 24: { ctrl_z_radio2->SetValue(1); } break;
 		}
 	}
-	
-	
+
+
 }
 
-void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer) 
+void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer)
 {
 	sizer->Add(new wxStaticText(this, -1, wxT("If an option needs special hardware to work\n"
 												"it will be mentioned in the tooltip.")), 1, wxTOP|wxEXPAND , 10);
-	
+
 	// i < 8 with High resolution LOS textures
 	// i < 7 without
 	for (int i = 0; i < ctrl_qa_Boxes_size-3; i++) {
@@ -139,13 +136,13 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer)
 
 	wxSizer* subSizer = new wxBoxSizer(wxVERTICAL);
 	subSizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP| wxEXPAND, 10);
-	ctrl_waterQ_CBox = new wxComboBox(this, ID_WINDOWP_WR_COMBOX, WR_COMBOX_CHOICES[0], wxDefaultPosition, wxSize(220,21), 
+	ctrl_waterQ_CBox = new wxComboBox(this, ID_WINDOWP_WR_COMBOX, WR_COMBOX_CHOICES[0], wxDefaultPosition, wxSize(220,21),
 			4,WR_COMBOX_CHOICES,wxCB_DROPDOWN|wxCB_READONLY);
 	ctrl_waterQ_CBox->SetToolTip(WR_COMBOX[0].tTip[0]);
 	subSizer->Add(ctrl_waterQ_CBox, 0, wxBOTTOM, 5);
-	
+
 	sizer->Add(subSizer,0, wxBOTTOM, 5);
-	
+
 }
 
 void tab_quality_video::initAASizer(wxFlexGridSizer* sizer){
@@ -175,18 +172,18 @@ void tab_quality_video::initZBufferSizer(wxFlexGridSizer* sizer)
 
 	ctrl_z_radio1->SetToolTip(VO_RBUT[0].tTip[0]);
 	ctrl_z_radio2->SetToolTip(VO_RBUT[1].tTip[0]);
-	
+
 	sizer->Add(ctrl_z_radio1, 0, wxTOP, 0);
 	sizer->Add(ctrl_z_radio2, 0, wxBOTTOM,  10);
 
 }
 
-tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , 
+tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos ,
 		const wxSize& size, long style)
 : abstract_panel(parent, id , title , pos , size, style) {
 	ctrl_qa_Boxes = new wxCheckBox*[ctrl_qa_Boxes_size];
 	ctrl_vo_Boxes = new wxCheckBox*[ctrl_vo_Boxes_size];
-	 parentSizer = new wxFlexGridSizer(3,0,0);	
+	 parentSizer = new wxFlexGridSizer(3,0,0);
 	 leftSizer = new wxFlexGridSizer(1,15,0);
 	 middleSizer = new wxFlexGridSizer(1,15,0);
 	 rightSizer = new wxFlexGridSizer(1,15,0);//for info
@@ -207,7 +204,7 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
 	initZBufferSizer(SizerD);
 	initQualitySizer(SizerA);
 	initAASizer(SizerC);
-	
+
 	SizerA->Fit(this);
 	SizerA->SetSizeHints(this);
 	SizerB->Fit(this);
@@ -230,10 +227,10 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
 	parentSizer->Add(rightSizer,0,wxALL|wxEXPAND,10);
 
 	updateControls(UPDATE_ALL);
-	
+
 	SetSizer(parentSizer, true); // true --> delete old sizer if present
-	
-		
+
+
 }
 
 tab_quality_video::~tab_quality_video(void) {

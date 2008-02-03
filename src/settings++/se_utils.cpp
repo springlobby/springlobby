@@ -9,25 +9,21 @@
 #include "se_settings.h"
 #include "../springunitsynclib.h"
 
-void toString(std::string& s, int t) {
-			std::stringstream ss;
-			ss << t;
-			ss >> s;
+void toString(wxString& s, int t) {
+
 }
 
-int fromString(const std::string& s) {
-        std::stringstream ss;
-        ss << s;
-        int r;
-        ss >> r;
-        return r;
+int fromString(const wxString& s) {
+        long temp = 0;
+        s.ToLong(&temp);
+        return int(temp);
 }
 
 void loadUnitsync()
 {
 	//should be done in susynclib()->Load
 	//wxSetWorkingDirectory(OptionsHandler.getUsyncLoc().BeforeLast('\\'));
-	
+
 	try
 	{
 		wxCriticalSection m_lock;
