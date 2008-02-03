@@ -135,6 +135,8 @@ bool Socket::Send( const wxString& data )
 }
 
 
+//! @brief Internal send function.
+//! @note Does not lock the criticalsection.
 bool Socket::_Send( const wxString& data )
 {
   if ( m_sock == 0 ) {
@@ -149,12 +151,14 @@ bool Socket::_Send( const wxString& data )
       wxString send = m_buffer.substr( 0, max );
       m_buffer.erase( 0, max );
       //wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
-      m_sock->Write( send.mb_str(wxConvUTF8), send.length() );
-      m_sent += send.length();
+      std::string s = (const char*)send.mb_str(wxConvUTF8);
+      m_sock->Write( s.c_str(), s.length() );
+      m_sent += s.length();
     }
   } else {
     if ( data.length() <= 0) return true;
-    m_sock->Write( data.mb_str(wxConvUTF8), data.length() );
+    std::string s = (const char*)data.mb_str(wxConvUTF8);
+    m_sock->Write( s.c_str(), s.length() );
   }
   return !m_sock->Error();
 }
@@ -170,23 +174,31 @@ bool Socket::Receive( wxString& data )
 
   LOCK_SOCKET;
 
-  wxChar buff[2] = { 0 };
+  const int buff_size = 1337;
+
+  char buff[buff_size+2] = { 0 };
   int readnum;
   int readbytes = 0;
 
-  buff[1] = '\0';
+  buff[buff_size+1] = '\0';
 
   do {
-    m_sock->Read( (void*)&buff[0], 1 );
+    m_sock->Read( &buff[0], buff_size );
     readnum = m_sock->LastCount();
+    buff[readnum] = '\0';
 
     if ( readnum > 0 ) {
-      data += wxString( &buff[0] );
-      readbytes++;
+      wxString d = wxString( &buff[0], wxConvUTF8 );
+      if ( d.IsEmpty() ) d = wxString( &buff[0], wxConvLocal );
+      if ( d.IsEmpty() ) d = wxString( &buff[0], wxCSConv(_T("latin-1")) );
+      m_rcv_buffer += d;
+      readbytes += readnum;
     }
-  } while ( (readnum > 0) && (buff[0] != '\n') );
+  } while ( (readnum > 0) );
 
-  if ( readbytes > 0 ) {
+  if ( m_rcv_buffer.Contains(_T("\n")) ) {
+    data = m_rcv_buffer.BeforeFirst('\n');
+    m_rcv_buffer = m_rcv_buffer.AfterFirst('\n');
     return true;
   } else {
     return false;
@@ -292,17 +304,6 @@ void Socket::Ping()
   if ( m_ping_msg != wxEmptyString ) Send( m_ping_msg );
 }
 
-
-/*
-ling m_ui.OnUserStatusChanged( user )
-20.01.04: updating battles
-20.01.04: Sent udp ping.
-20.01.04: UDPPing address taspringmaster.clan-sy.com port 12345
-20.01.04: socket's IsOk() is false, no UDP ping done.
-20.01.05: Sent ping.
-20.01.05: OnBattleOpened (  )
-20.01.05: MapExists (  )
-*/
 
 //! @brief Send udp ping.
 //! @note used for nat travelsal.

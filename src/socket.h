@@ -109,6 +109,7 @@ class Socket
     int m_rate;
     int m_sent;
     wxString m_buffer;
+    wxString m_rcv_buffer;
 
     wxSocketClient* _CreateSocket();
 
