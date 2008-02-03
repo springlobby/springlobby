@@ -189,8 +189,11 @@ bool Socket::Receive( wxString& data )
 
     if ( readnum > 0 ) {
       wxString d = wxString( &buff[0], wxConvUTF8 );
-      if ( d.IsEmpty() ) d = wxString( &buff[0], wxConvLocal );
-      if ( d.IsEmpty() ) d = wxString( &buff[0], wxCSConv(_T("latin-1")) );
+      if ( d.IsEmpty() )
+      {
+        d = wxString( &buff[0], wxConvLocal );
+        if ( d.IsEmpty() ) d = wxString( &buff[0], wxCSConv(_T("latin-1")) );
+      }
       m_rcv_buffer += d;
       readbytes += readnum;
     }
