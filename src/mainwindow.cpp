@@ -340,7 +340,7 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
     customMessageBox(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
     return;
   }
-  wxString myVersion = WX_STRING(GetSpringLobbyVersion());
+  wxString myVersion = GetSpringLobbyVersion();
 
   wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
 
