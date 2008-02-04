@@ -975,7 +975,7 @@ void TASServer::SendHostInfo( HostInfo update )
 
   if ( ( update & ( HI_Map | HI_Locked | HI_Spectators ) ) > 0 ) {
     // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
-    wxString cmd = wxString::Format( _T(" %d %d "), battle.GetSpectators(), battle.IsLocked() );
+    wxString cmd = wxString::Format( _T("%d %d "), battle.GetSpectators(), battle.IsLocked() );
     cmd += ConvertToTASServerBuggedChecksum( battle.GetMapHash() ) + _T(" ");
     cmd += battle.GetMapName();
 
