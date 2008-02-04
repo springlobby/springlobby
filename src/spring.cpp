@@ -427,7 +427,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
   wxLogMessage( _T("16") );
 
-  s += _T("\t[modoptions]");
+  s += _T("\t[modoptions]\n");
   s += _T("\t{\n");
     wxStringTripleVec optlistMod;
   battle.CustomBattleOptions()->getOptions( &optlistMod, ModOption );
