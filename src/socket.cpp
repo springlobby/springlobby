@@ -246,7 +246,6 @@ void Socket::SetPingInfo( const wxString& msg, unsigned int interval )
   LOCK_SOCKET;
   m_ping_msg = msg;
   m_ping_int = interval;
-  if ( !msg.IsEmpty() ) Ping();
   _EnablePingThread( _ShouldEnablePingThread() );
 }
 
@@ -259,7 +258,6 @@ void Socket::SetUdpPingInfo( const wxString& addr, unsigned int port, unsigned i
   m_udp_ping_adr = addr;
   m_udp_ping_int = interval;
   m_udp_ping_port = port;
-  if ( !m_udp_ping_adr.IsEmpty() && m_udp_ping_port != 0 ) UDPPing();
   _EnablePingThread( _ShouldEnablePingThread() );
 }
 
