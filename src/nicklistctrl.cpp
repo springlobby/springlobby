@@ -124,7 +124,7 @@ void NickListCtrl::UserUpdated( const int& index )
   SetItemImage( index, IconImageList::GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
   SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( user.GetCountry() ) );
   SetItemColumnImage( index, 2, IconImageList::GetRankIcon( user.GetStatus().rank ) );
-  SetItem( index, 3, WX_STRING(user.GetNick()) );
+  SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
   Sort();
 
@@ -206,9 +206,9 @@ int wxCALLBACK NickListCtrl::ComparePlayernameUP(long item1, long item2, long so
 {
     // inverse the order
 
-    if ( WX_STRING(((User*)item1)->GetNick()).MakeUpper() < WX_STRING(((User*)item2)->GetNick()).MakeUpper() )
+    if ( ((User*)item1)->GetNick().MakeUpper() < ((User*)item2)->GetNick().MakeUpper() )
         return -1;
-    if ( WX_STRING(((User*)item1)->GetNick()).MakeUpper() > WX_STRING(((User*)item2)->GetNick()).MakeUpper() )
+    if ( ((User*)item1)->GetNick().MakeUpper() > ((User*)item2)->GetNick().MakeUpper() )
         return 1;
 
     return 0;
@@ -218,9 +218,9 @@ int wxCALLBACK NickListCtrl::ComparePlayernameUP(long item1, long item2, long so
 int wxCALLBACK NickListCtrl::ComparePlayernameDOWN(long item1, long item2, long sortData )
 {
     // inverse the order
-    if ( WX_STRING(((User*)item1)->GetNick()).MakeUpper() < WX_STRING(((User*)item2)->GetNick()).MakeUpper() )
+    if ( ((User*)item1)->GetNick().MakeUpper() < ((User*)item2)->GetNick().MakeUpper() )
         return 1;
-    if ( WX_STRING(((User*)item1)->GetNick()).MakeUpper() > WX_STRING(((User*)item2)->GetNick()).MakeUpper() )
+    if ( ((User*)item1)->GetNick().MakeUpper() > ((User*)item2)->GetNick().MakeUpper() )
         return -1;
 
     return 0;
@@ -319,9 +319,9 @@ int wxCALLBACK NickListCtrl::ComparePlayercountryUP(long item1, long item2, long
 {
     // inverse the order
 
-    if ( WX_STRING(((User*)item1)->GetCountry()).MakeUpper() < WX_STRING(((User*)item2)->GetCountry()).MakeUpper() )
+    if ( ((User*)item1)->GetCountry().MakeUpper() < ((User*)item2)->GetCountry().MakeUpper() )
         return -1;
-    if ( WX_STRING(((User*)item1)->GetCountry()).MakeUpper() > WX_STRING(((User*)item2)->GetCountry()).MakeUpper() )
+    if ( ((User*)item1)->GetCountry().MakeUpper() > ((User*)item2)->GetCountry().MakeUpper() )
         return 1;
 
     return 0;
@@ -330,9 +330,9 @@ int wxCALLBACK NickListCtrl::ComparePlayercountryUP(long item1, long item2, long
 int wxCALLBACK NickListCtrl::ComparePlayercountryDOWN(long item1, long item2, long sortData )
 {
     // inverse the order
-    if ( WX_STRING(((User*)item1)->GetCountry()).MakeUpper() < WX_STRING(((User*)item2)->GetCountry()).MakeUpper() )
+    if ( ((User*)item1)->GetCountry().MakeUpper() < ((User*)item2)->GetCountry().MakeUpper() )
         return 1;
-    if ( WX_STRING(((User*)item1)->GetCountry()).MakeUpper() > WX_STRING(((User*)item2)->GetCountry()).MakeUpper() )
+    if ( ((User*)item1)->GetCountry().MakeUpper() > ((User*)item2)->GetCountry().MakeUpper() )
         return -1;
 
     return 0;
@@ -386,7 +386,7 @@ void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
 					break;
 
 				case 1: // country
-					m_tiptext =  GetFlagNameFromCountryCode(WX_STRING(user->GetCountry()).MakeUpper());
+					m_tiptext =  GetFlagNameFromCountryCode(user->GetCountry().MakeUpper());
 					break;
 
 				case 2: // rank
@@ -394,7 +394,7 @@ void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
 					break;
 
 				case 3: // nickname
-					m_tiptext = WX_STRING(user->GetNick());
+					m_tiptext = user->GetNick();
 					break;
 
 				default:

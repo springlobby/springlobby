@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SOCKET_H
 #define SPRINGLOBBY_HEADERGUARD_SOCKET_H
 
-#include <string>
+#include <wx/string.h>
 
 #include <wx/event.h>
 
@@ -57,11 +57,11 @@ class Socket
 
     // Socket interface
 
-    void Connect( const std::string& addr, const int port );
+    void Connect( const wxString& addr, const int port );
     void Disconnect( );
 
-    bool Send( const std::string& data );
-    bool Receive( std::string& data );
+    bool Send( const wxString& data );
+    bool Receive( wxString& data );
 
 
     void Ping();
@@ -108,11 +108,12 @@ class Socket
 
     int m_rate;
     int m_sent;
-    std::string m_buffer;
+    wxString m_buffer;
+    wxString m_rcv_buffer;
 
     wxSocketClient* _CreateSocket();
 
-    bool _Send( const std::string& data );
+    bool _Send( const wxString& data );
     void _EnablePingThread( bool enable = true );
     bool _ShouldEnablePingThread();
 };

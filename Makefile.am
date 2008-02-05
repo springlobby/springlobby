@@ -62,6 +62,8 @@ clean-local:
 # the following line is searched for in a script to add filenames under it
 springlobby_SOURCES = \
 	revision.cpp \
+	src/updater/versionchecker.cpp \
+	src/updater/versionchecker.h \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
 	src/revision.cpp.in \

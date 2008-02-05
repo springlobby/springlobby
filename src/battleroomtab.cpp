@@ -69,8 +69,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_side_sel->SetToolTip(_T("Select your faction"));
 
   try {
-    for ( int i = 0; i < usync()->GetSideCount( STD_STRING(m_battle.GetModName()) ); i++ ) {
-      m_side_sel->Append( WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), i )) );
+    for ( int i = 0; i < usync()->GetSideCount( m_battle.GetModName() ); i++ ) {
+      m_side_sel->Append( usync()->GetSideName( m_battle.GetModName(), i ) );
     }
   } catch (...) {}
 
@@ -257,7 +257,7 @@ void BattleRoomTab::UpdateBattleInfo( bool MapChanged )
     try { /// updates map info summary
       ASSERT_RUNTIME( m_battle.MapExists(), _T("Map does not exist.") );
       UnitSyncMap map = m_battle.Map();
-      m_map_lbl->SetLabel( RefineMapname( WX_STRING(map.name) ) );
+      m_map_lbl->SetLabel( RefineMapname( map.name ) );
       m_opts_list->SetItem( m_opt_list_map[ _("Size") ] , 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
       m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind) );
       m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, wxString::Format( _T("%d"), map.info.tidalStrength) );
@@ -391,7 +391,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
     bs.order = 0;
     bs.handicap = 0;
     m_battle.GetFreeColour( bs.color_r, bs.color_g, bs.color_b, false );
-    m_ui.GetServer().AddBot( m_battle.GetBattleId(), STD_STRING(dlg.GetNick()), m_battle.GetMe().GetNick(), bs, STD_STRING(dlg.GetAI() ));
+    m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), m_battle.GetMe().GetNick(), bs, dlg.GetAI() );
   }
 }
 

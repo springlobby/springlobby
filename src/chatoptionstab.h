@@ -63,7 +63,6 @@ class ChatOptionsTab : public wxPanel
       ID_TIMESTAMP,
       ID_SAVELOGS,
       ID_BROWSE_LOGS,
-      ID_FINDLOGS,
       ID_HIWORDS,
     };
 
@@ -100,7 +99,6 @@ class ChatOptionsTab : public wxPanel
     wxStaticText* m_chat_save_label;
     wxTextCtrl* m_log_save;
     wxButton* m_browse_log;
-    wxButton* m_log_save_find;
     wxStaticText* m_hilight_words_label;
 
     wxTextCtrl* m_highlight_words;

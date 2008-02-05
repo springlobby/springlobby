@@ -58,9 +58,9 @@ struct BattleBot {
   int posx;
   int posy;
   int handicap;
-  std::string name;
-  std::string owner;
-  std::string aidll;
+  wxString name;
+  wxString owner;
+  wxString aidll;
 
 };
 
@@ -104,7 +104,7 @@ class IBattle
 
     virtual BattleBot* GetBotByStartPosition( unsigned int startpos ) { return 0; };
     virtual BattleBot* GetBot( unsigned int index ) = 0;
-    virtual BattleBot* GetBot( const std::string& name ) { return 0; };
+    virtual BattleBot* GetBot( const wxString& name ) { return 0; };
     virtual unsigned int GetNumBots() = 0;
     virtual unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
     virtual void RemoveBot( unsigned int index ) {};
@@ -112,8 +112,8 @@ class IBattle
     virtual void GetFreePosition( int& x, int& y ) {}
     virtual int GetFreeAlly() { return 0; }
 
-    virtual void DisableUnit( const std::string& unitname );
-    virtual void EnableUnit( const std::string& unitname );
+    virtual void DisableUnit( const wxString& unitname );
+    virtual void EnableUnit( const wxString& unitname );
     virtual void EnableAllUnits();
     virtual wxArrayString DisabledUnits();
 

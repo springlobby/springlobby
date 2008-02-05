@@ -47,9 +47,9 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 
   SetIcon( wxIcon(connect_xpm) );
 
-  server = WX_STRING( sett().GetDefaultServer() );
-  username = WX_STRING( sett().GetServerAccountNick( sett().GetDefaultServer() ) );
-  password = WX_STRING( sett().GetServerAccountPass( sett().GetDefaultServer() ) );
+  server = sett().GetDefaultServer();
+  username = sett().GetServerAccountNick( sett().GetDefaultServer() );
+  password = sett().GetServerAccountPass( sett().GetDefaultServer() );
   savepass = sett().GetServerAccountSavePass( sett().GetDefaultServer() );
   // Create all UI elements.
   m_tabs =         new wxNotebook( this  , -1 );
@@ -194,17 +194,17 @@ void ConnectWindow::ReloadServerList()
 {
   m_server_combo->Clear();
   for ( int i = 0; i < sett().GetNumServers(); i++ ) {
-    m_server_combo->AppendString( WX_STRING(sett().GetServerName( i )) );
+    m_server_combo->AppendString( sett().GetServerName( i ) );
   }
-  m_server_combo->SetValue( WX_STRING(sett().GetDefaultServer()) );
+  m_server_combo->SetValue( sett().GetDefaultServer() );
 }
 
 void ConnectWindow::OnServerChange( wxCommandEvent& event )
 {
   wxString HostAddress = m_server_combo->GetValue();
   if (!HostAddress.Contains(_T(":")) && HostAddress != wxString(DEFSETT_DEFAULT_SERVER, wxConvUTF8) ) HostAddress+= _T(":") + wxString::Format(_T("%d"), DEFSETT_DEFAULT_SERVER_PORT );
-  m_nick_text->SetValue( WX_STRING( sett().GetServerAccountNick( STD_STRING( HostAddress ) ) ) );
-  if ( sett().GetServerAccountSavePass( STD_STRING( HostAddress ) ) ) m_pass_text->SetValue ( WX_STRING ( sett().GetServerAccountPass ( STD_STRING ( HostAddress ) ) ) );
+  m_nick_text->SetValue(  sett().GetServerAccountNick( HostAddress ) );
+  if ( sett().GetServerAccountSavePass( HostAddress ) ) m_pass_text->SetValue( sett().GetServerAccountPass( HostAddress ) );
 }
 
 
@@ -214,9 +214,9 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
   wxString HostAddress = m_server_combo->GetValue();
   if (!HostAddress.Contains(_T(":")) && HostAddress != wxString(DEFSETT_DEFAULT_SERVER, wxConvUTF8) ) HostAddress+= _T(":") + wxString::Format(_T("%d"), DEFSETT_DEFAULT_SERVER_PORT ) ;
   if ( m_tabs->GetSelection() <= 0 ) {
-    sett().SetDefaultServer( STD_STRING( HostAddress ) );
-    sett().SetServerAccountNick( STD_STRING( HostAddress ), STD_STRING(m_nick_text->GetValue()) );
-    sett().SetServerAccountSavePass( STD_STRING( HostAddress ), m_rpass_check->GetValue() );
+    sett().SetDefaultServer( HostAddress );
+    sett().SetServerAccountNick( HostAddress,m_nick_text->GetValue() );
+    sett().SetServerAccountSavePass( HostAddress, m_rpass_check->GetValue() );
 
     // We assume that the server is given as : "host:port" so we split based on ":"
     wxArrayString serverString = wxStringTokenize( HostAddress ,_T(":") );
@@ -239,9 +239,9 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
         customMessageBox(SL_MAIN_ICON, _("Port number out of range.\n\nIt must be an integer between 1 and 65535"), _("Invalid port"), wxOK );
         return;
       }
-      sett().AddServer( STD_STRING( HostAddress ) );
-      sett().SetServerHost( STD_STRING( HostAddress ),STD_STRING(serverString[0]) );
-      sett().SetServerPort( STD_STRING( HostAddress ), (int)port );
+      sett().AddServer( HostAddress );
+      sett().SetServerHost( HostAddress, serverString[0] );
+      sett().SetServerPort( HostAddress, (int)port );
     }
 
     if ( serverString.GetCount() != 1 && serverString.GetCount() != 2 ) {

@@ -201,7 +201,7 @@ int IconImageList::GetRankIcon( const int& rank, const bool& showlowest )
 }
 
 
-int IconImageList::GetFlagIcon( const std::string& flagname )
+int IconImageList::GetFlagIcon( const wxString& flagname )
 {
   return ICON_FLAGS_BASE + GetFlagIndex( flagname ) + 3;
 }
@@ -270,9 +270,9 @@ void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 }
 
 
-int IconImageList::GetSideIcon( const std::string& modname, const std::string& side )
+int IconImageList::GetSideIcon( const wxString& modname, const wxString& side )
 {
-  wxString sn = WX_STRING( side );
+  wxString sn = side;
   sn = sn.Lower();
   if ( sn  == _T("arm") ) return ICON_ARM;
   else if (  sn == _T("core") ) return ICON_CORE;

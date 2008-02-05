@@ -179,11 +179,11 @@ void abstract_panel::loadDefaults()
 	//	const Control RC_TEXT[2]
 	for (int i = 0;i< 2; ++i)
 		intSettings[RC_TEXT[i].key] = fromString( RC_TEXT[i].def);
-	
+
 	//	const Control UI_ZOOM[1]
 	for (int i = 0;i< 1; ++i)
 		intSettings[UI_ZOOM[i].key] = fromString( UI_ZOOM[i].def);
-	
+
 }
 
 void abstract_panel::OnSliderMove(wxCommandEvent& event) {
@@ -237,24 +237,24 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 
 		case ID_DO_SLI_0: { (intSettings)[DO_SLI[0].key]= value; } break;
 
-		case ID_MO_SLI_0: { 
-			(intSettings)[MO_SLI[0].key]= value; 
+		case ID_MO_SLI_0: {
+			(intSettings)[MO_SLI[0].key]= value;
 			(intSettings)[MO_SLI_EXT[0].key]= ( value > 0 ? 1 : 0);
 			} break;
-        case ID_MO_SLI_1:  { 
-			(intSettings)[MO_SLI[1].key]= value; 
+        case ID_MO_SLI_1:  {
+			(intSettings)[MO_SLI[1].key]= value;
 			(intSettings)[MO_SLI_EXT[1].key]= ( value > 0 ? 1 : 0);
 			} break;
-        case ID_MO_SLI_2:  { 
-			(intSettings)[MO_SLI[2].key]= value; 
+        case ID_MO_SLI_2:  {
+			(intSettings)[MO_SLI[2].key]= value;
 			(intSettings)[MO_SLI_EXT[2].key]= ( value > 0 ? 1 : 0);
 			} break;
-        case ID_MO_SLI_3:  { 
-			(intSettings)[MO_SLI[3].key]= value; 
+        case ID_MO_SLI_3:  {
+			(intSettings)[MO_SLI[3].key]= value;
 			(intSettings)[MO_SLI_EXT[3].key]= ( value > 0 ? 1 : 0);
 			} break;
-        case ID_MO_SLI_4:  { 
-			(intSettings)[MO_SLI[4].key]= value; 
+        case ID_MO_SLI_4:  {
+			(intSettings)[MO_SLI[4].key]= value;
 			(intSettings)[MO_SLI_EXT[4].key]= ( value > 0 ? 1 : 0);
 			} break;
 
@@ -396,7 +396,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 			}
 			break;
 		}
-		//TODO save choices in option handler in 
+		//TODO save choices in option handler in
 		case ID_SIMPLE_QUAL_CBX:
 		{
 			for (int i=0; i<prVal_RenderQuality_size;++i)

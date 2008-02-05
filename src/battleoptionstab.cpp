@@ -291,7 +291,7 @@ void BattleOptionsTab::ReloadRestrictions()
   if ( m_battle.GetModName() == wxEmptyString ) return;
 
   try {
-    m_allowed_list->InsertItems( usync()->GetUnitsList( STD_STRING(m_battle.GetModName()) ), 0 );
+    m_allowed_list->InsertItems( usync()->GetUnitsList( m_battle.GetModName() ), 0 );
   } catch (...) {}
   wxArrayString units = m_battle.DisabledUnits();
 
@@ -351,7 +351,7 @@ void BattleOptionsTab::Restrict( int index )
     m_allowed_list->Delete( index );
     unit = unit.AfterLast( '(' );
     unit = unit.BeforeLast( ')' );
-    m_battle.DisableUnit( STD_STRING(unit) );
+    m_battle.DisableUnit( unit );
   }
 }
 
@@ -364,7 +364,7 @@ void BattleOptionsTab::Allow( int index)
     m_restrict_list->Delete( index );
     unit = unit.AfterLast( '(' );
     unit = unit.BeforeLast( ')' );
-    m_battle.EnableUnit( STD_STRING(unit) );
+    m_battle.EnableUnit( unit );
   }
 }
 

@@ -45,7 +45,7 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
     m_nick_sizer->Add( m_nick_lbl, 1, wxALL, 5 );
 
     int bot = 1;
-    while ( m_battle.GetBot( "Bot" + i2s(bot) ) != 0 ) {
+    while ( m_battle.GetBot( wxString::Format( _T("Bot%d"), bot) ) != 0 ) {
       bot++;
     }
 
@@ -131,7 +131,7 @@ void AddBotDialog::ReloadAIList()
   for ( unsigned int i = 0; i < m_ais.GetCount(); i++ ) m_ai->Append( RefineAIName(m_ais[i]) );
 
   if ( m_ais.GetCount() > 0 ) {
-    m_ai->SetStringSelection( WX_STRING(sett().GetLastAI()) );
+    m_ai->SetStringSelection( sett().GetLastAI() );
     if ( m_ai->GetStringSelection() == wxEmptyString ) m_ai->SetSelection( 0 );
   } else {
     customMessageBox(SL_MAIN_ICON, _("No AI bots found in your Spring installation."), _("No bot-libs found"), wxOK );
@@ -148,7 +148,7 @@ void AddBotDialog::OnClose( wxCommandEvent& event )
 
 void AddBotDialog::OnAddBot( wxCommandEvent& event )
 {
-  sett().SetLastAI( STD_STRING( m_ai->GetStringSelection() ) );
+  sett().SetLastAI(  m_ai->GetStringSelection() );
   EndModal( wxID_OK );
 }
 

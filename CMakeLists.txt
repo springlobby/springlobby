@@ -15,7 +15,7 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here;
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-SET(wxWidgets_USE_LIBS base core gl net adv)
+SET(wxWidgets_USE_LIBS base core gl net adv qa)
 
 # We need the Find package for wxWidgets to work
 FIND_PACKAGE(wxWidgets)
@@ -31,6 +31,7 @@ IF(wxWidgets_FOUND)
 	INCLUDE_DIRECTORIES(${SpringLobbySrc_SOURCE_DIR} ${SettingsSrc_SOURCE_DIR}  ${wxWidgets_INCLUDE_DIRS} )
 	SET(SpringLobbySrc
 		src/boost/md5.cpp
+		src/updater/versionchecker.cpp
 		src/addbotdialog.cpp
 		src/agreementdialog.cpp
 		src/base64.cpp
@@ -110,6 +111,7 @@ IF(wxWidgets_FOUND)
 		src/settings++/Main.cpp
 	)
 	SET(SLSharedWithSettings
+		src/updater/versionchecker.cpp
 		src/crashreport.cpp
 		src/springunitsynclib.cpp
 		src/utils.cpp

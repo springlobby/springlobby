@@ -9,13 +9,13 @@
 #include "user.h"
 #include "utils.h"
 
-void Channel::SetName( const std::string& name )
+void Channel::SetName( const wxString& name )
 {
   m_name = name;
 }
 
 
-std::string Channel::GetName()
+wxString Channel::GetName()
 {
   return m_name;
 }
@@ -27,33 +27,33 @@ User& Channel::GetMe()
 }
 
 
-void Channel::Said( User& who, const std::string& message )
+void Channel::Said( User& who, const wxString& message )
 {
   m_ui.OnChannelSaid( *this , who, message );
 }
 
 
-void Channel::Say( const std::string& message )
+void Channel::Say( const wxString& message )
 {
   wxLogDebugFunc( _T("") );
   m_serv.SayChannel( m_name, message );
 }
 
 
-void Channel::DidAction( User& who, const std::string& action )
+void Channel::DidAction( User& who, const wxString& action )
 {
   m_ui.OnChannelDidAction( *this, who, action );
 }
 
 
-void Channel::DoAction( const std::string& action )
+void Channel::DoAction( const wxString& action )
 {
   wxLogDebugFunc( _T("") );
   m_serv.DoActionChannel( m_name, action );
 }
 
 
-void Channel::Left( User& who, const std::string& reason )
+void Channel::Left( User& who, const wxString& reason )
 {
   RemoveUser( who.GetNick() );
   m_ui.OnUserLeftChannel( *this, who, reason );
@@ -81,7 +81,7 @@ void Channel::OnChannelJoin( User& who )
 }
 
 
-void Channel::SetTopic( const std::string& topic, const std::string& who )
+void Channel::SetTopic( const wxString& topic, const wxString& who )
 {
   m_topic = topic;
   m_topic_nick = who;
@@ -89,13 +89,13 @@ void Channel::SetTopic( const std::string& topic, const std::string& who )
   m_ui.OnChannelTopic( *this, who, topic );
 }
 
-std::string Channel::GetTopicSetBy()
+wxString Channel::GetTopicSetBy()
 {
   return m_topic_nick;
 }
 
 
-std::string Channel::GetTopic()
+wxString Channel::GetTopic()
 {
   return m_topic;
 }
@@ -107,25 +107,25 @@ void Channel::AddUser( User& user )
 }
 
 
-void Channel::RemoveUser( const std::string& nick )
+void Channel::RemoveUser( const wxString& nick )
 {
   UserList::RemoveUser( nick );
 }
 
 
-bool Channel::ExecuteSayCommand( const std::string& in )
+bool Channel::ExecuteSayCommand( const wxString& in )
 {
   if ( in.length() == 0 ) return true;
 
   if ( in[0] != '/' ) return false;
 
-  std::string cmdline = in;
-  std::string param = GetWordParam( cmdline );
-  if ( param == "/me" ) {
+  wxString cmdline = in;
+  wxString param = GetWordParam( cmdline );
+  if ( param == _T("/me") ) {
     DoAction( cmdline );
     return true;
-  } else if ( param == "/sayver" ) {
-    DoAction( "is using SpringLobby v" + GetSpringLobbyVersion() );
+  } else if ( param == _T("/sayver") ) {
+    DoAction( _T("is using SpringLobby v") + GetSpringLobbyVersion() );
     return true;
   }
 
