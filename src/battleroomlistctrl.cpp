@@ -211,7 +211,7 @@ void BattleroomListCtrl::AddUser( User& user )
 
   SetItemData(index, (wxUIntPtr)(items.size()-1) );
 
-  UpdateUser( index );
+  UpdateUser( index +1 );
 }
 
 
