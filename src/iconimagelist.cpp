@@ -236,14 +236,10 @@ wxString IconImageList::GetBattleStatus( Battle& battle )
 }
 
 
-unsigned int IconImageList::GetColourIcon( const int& num )
+int IconImageList::GetColourIcon( const int& num )
 {
-  if ( m_player_colour_icons.count(num) != 0 ) return m_player_colour_icons[num];
-  else
-  {
-    SetColourIcon( num, wxColour(0,0,0) );
-    return m_player_colour_icons[num];
-  }
+  if ( m_player_colour_icons[num] != 0 ) return m_player_colour_icons[num];
+  else return -1;
 }
 
 
@@ -265,7 +261,7 @@ void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 
   /*r = colour.Red()-60; g = colour.Green()-60; b = colour.Blue()-60;
   img.Replace( 200, 200, 200, r<0?0:r, g<0?0:g, b<0?0:b );*/
-  if ( m_player_colour_icons.count(num) != 0 ) Replace( m_player_colour_icons[num], wxBitmap( img ) );
+  if ( m_player_colour_icons[num] != 0 ) Replace( m_player_colour_icons[num], wxBitmap( img ) );
   else m_player_colour_icons[num] = Add( wxBitmap( img ) );
 }
 

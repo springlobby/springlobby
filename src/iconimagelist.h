@@ -87,7 +87,7 @@ class IconImageList : public wxImageList
     static int GetBattleStatusIcon( Battle& battle );
     static wxString GetBattleStatus(Battle& battle);
     static int GetHostIcon( const bool& spectator = false );
-    unsigned int GetColourIcon( const int& num );
+    int GetColourIcon( const int& num );
     void SetColourIcon( const int& num, const wxColour& colour );
     int GetSideIcon( const wxString& modname, const wxString& side );
     static int GetReadyIcon( const bool& ready, const int& sync = 1 );
