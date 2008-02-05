@@ -591,10 +591,14 @@ wxString ChatPanel::GetChatTypeStr()
 
 void ChatPanel::Joined( User& who )
 {
-  if ( m_type == CPT_Channel )
+  if ( m_type == CPT_Channel  )
   {
     if( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) { OutputLine( _T(" ** ") + who.GetNick() + _(" joined the ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
     if ( m_show_nick_list ) m_nicklist->AddUser( who );
+  }
+  else if ( m_type == CPT_Battle )
+  {
+    if( sett().GetDisplayJoinLeave( _T("game/battle") ) ) { OutputLine( _T(" ** ") + who.GetNick() + _(" joined the ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
   }
 }
 
@@ -608,7 +612,7 @@ void ChatPanel::OnChannelJoin( User& who )
 void ChatPanel::Parted( User& who, const wxString& message )
 {
   if ( m_type == CPT_Channel ) {
-    if( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) { OutputLine( _T(" ** ")+ who.GetNick() + _(" left the channel ( ") + message + _T(" )."), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
+    if( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) { OutputLine( _T(" ** ")+ who.GetNick() + _(" left the ") + GetChatTypeStr() + _T( "( ") + message + _T(" )."), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
     if ( m_show_nick_list ) m_nicklist->RemoveUser( who );
 
     if ( m_channel == 0 ) return;
@@ -616,6 +620,10 @@ void ChatPanel::Parted( User& who, const wxString& message )
       m_channel->uidata.panel = 0;
       SetChannel( 0 );
     }
+  }
+  else if ( m_type == CPT_Battle )
+  {
+    if( sett().GetDisplayJoinLeave( _T("game/battle") ) )  { OutputLine( _T(" ** ")+ who.GetNick() + _(" left the ") + GetChatTypeStr() + _T( "( ") + message + _T(" )."), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
   }
 
 }
