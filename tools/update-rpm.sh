@@ -13,8 +13,7 @@ version=$1
 tarball=springlobby-${version}.tar.bz2
 
 if [ ! -d rpm/home:accAgon/SpringLobby ] ; then
-    cd rpm
-    osc co home:accAgon SpringLobby
+    ( cd rpm ; osc co home:accAgon SpringLobby )
 fi
 
 cd rpm/home:accAgon/SpringLobby
