@@ -12,9 +12,10 @@ fi
 version=$1
 tarball=springlobby-${version}.tar.bz2
 
-# first time stuff:
-# cd rpm
-# osc co home:accAgon SpringLobby
+if [ ! -d rpm/home:accAgon/SpringLobby ] ; then
+    cd rpm
+    osc co home:accAgon SpringLobby
+fi
 
 cd rpm/home:accAgon/SpringLobby
 osc up
