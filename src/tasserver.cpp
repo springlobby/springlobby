@@ -200,7 +200,7 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
   m_sock->Receive( data );
   if ( GetWordParam( data ) != _T("TASServer") ) return false;
 
-  SendCmd ( _T("REGISTER "), nick + _T(" ") + GetPasswordHash( password ) );
+  SendCmd ( _T("REGISTER"), nick + _T(" ") + GetPasswordHash( password ) );
 
   wxString data2;
   m_sock->Receive( data2 );
@@ -326,7 +326,7 @@ void TASServer::ReceiveAndExecute()
         ExecuteCommand( cmd );
       }
     }
-  } while ( !data.empty() ); // Go on until recive stops providing data.
+  } while ( !data.IsEmpty() ); // Go on until recive stops providing data.
 }
 
 
