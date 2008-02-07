@@ -9,14 +9,17 @@ if [ $# -ne 0 ] ; then
 	exit
 fi
 
+origin=git://springlobby.info/git/buildbot/springlobby.git
+
 publicrepodir=/var/lib/buildbot/git/springlobby.git
 if [ ! -d ${publicrepodir} ] ; then
     git-clone --bare . ${publicrepodir}
     ( cd ${publicrepodir} ; git-gc --prune --aggressive )
     git-remote add -f my-public ${publicrepodir}
-    git-remote add -f origin git://springlobby.info/git/buildbot/springlobby.git
+    git-remote add -f origin ${origin}
 fi
 
+git-remote add -f origin ${origin}
 git-pull
 version=$(git-describe --tags | sed 's/-.*//')
 cd gentoo/overlay/games-util/springlobby
