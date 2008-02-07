@@ -19,7 +19,9 @@ if [ ! -d ${publicrepodir} ] ; then
     git-remote add -f origin ${origin}
 fi
 
-git-remote add -f origin ${origin}
+if ! $(git-remote show origin > /dev/null) ; then
+    git-remote add -f origin ${origin}
+fi
 git-fetch
 git-merge origin/master
 version=$(git-describe --tags | sed 's/-.*//')
