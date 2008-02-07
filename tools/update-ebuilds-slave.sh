@@ -14,8 +14,10 @@ if [ ! -d ${publicrepodir} ] ; then
     git-clone --bare . ${publicrepodir}
     ( cd ${publicrepodir} ; git-gc --prune --aggressive )
     git-remote add -f my-public ${publicrepodir}
+    git-remote add -f origin git://springlobby.info/git/buildbot/springlobby.git
 fi
 
+git-pull
 version=$(git-describe --tags | sed 's/-.*//')
 cd gentoo/overlay/games-util/springlobby
 cp springlobby-template springlobby-${version}.ebuild
