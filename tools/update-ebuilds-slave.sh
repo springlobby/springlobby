@@ -20,7 +20,8 @@ if [ ! -d ${publicrepodir} ] ; then
 fi
 
 git-remote add -f origin ${origin}
-git-pull
+git-fetch
+git-merge origin/master
 version=$(git-describe --tags | sed 's/-.*//')
 cd gentoo/overlay/games-util/springlobby
 cp springlobby-template springlobby-${version}.ebuild
