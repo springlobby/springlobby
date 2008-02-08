@@ -609,6 +609,7 @@ int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
 int SpringUnitSyncLib::GetModOptionCount( const wxString& name )
 {
   InitLib( m_get_Mod_option_count );
+  ASSERT_RUNTIME( !name.IsEmpty(), _T("passing void modname to unitsync") );
   _SetCurrentMod( name );
   return m_get_Mod_option_count();
 }

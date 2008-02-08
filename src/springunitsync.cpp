@@ -250,12 +250,12 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
   try
   {
     count = susynclib()->GetMapOptionCount(name);
-  } catch (...){}
+  } catch (...){wxLogError(_T("Could not load map Options"));}
 	for (int i = 0; i < count; ++i)
 	{
-		wxString key = susynclib()->GetOptionKey(i);
     try
     {
+      wxString key = susynclib()->GetOptionKey(i);
       switch (susynclib()->GetOptionType(i))
       {
       case opt_float:
@@ -282,7 +282,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
       }
 
     }
-    catch(...){}
+    catch(...){wxLogError(_T("Could not load map Options"));}
 	}
 	return ret;
 }
@@ -324,34 +324,41 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
   GameOptions ret;
-  int count = susynclib()->GetModOptionCount(name);
+  int count;
+  try
+  {
+    count = susynclib()->GetModOptionCount(name);
+  } catch (...){wxLogError(_T("Could not load mod Options"));}
 	for (int i = 0; i < count; ++i)
 	{
-		wxString key = susynclib()->GetOptionKey(i);
-    switch (susynclib()->GetOptionType(i))
-    {
-    case opt_float:
-      ret.float_map[key] = mmOptionFloat(susynclib()->GetOptionName(i),key,
-          susynclib()->GetOptionDesc(i),susynclib()->GetOptionNumberDef(i), susynclib()->GetOptionNumberStep(i),
-          susynclib()->GetOptionNumberMin(i),susynclib()->GetOptionNumberMax(i));
-      break;
-    case opt_bool:
-      ret.bool_map[key] = mmOptionBool(susynclib()->GetOptionName(i),key,
-          susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i));
-      break;
-    case opt_string:
-      ret.string_map[key] = mmOptionString(susynclib()->GetOptionName(i),key,
-          susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i));
-      break;
-    case opt_list:
-       ret.list_map[key] = mmOptionList(susynclib()->GetOptionName(i),key,
-          susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
-       for (int j = 0; j < susynclib()->GetOptionListCount(i); ++j)
-       {
-         ret.list_map[key].addItem(susynclib()->GetOptionListItemKey(i,j),susynclib()->GetOptionListItemName(i,j),
-                            susynclib()->GetOptionListItemDesc(i,j));
-       }
-    }
+	  try
+	  {
+      wxString key = susynclib()->GetOptionKey(i);
+      switch (susynclib()->GetOptionType(i))
+      {
+      case opt_float:
+        ret.float_map[key] = mmOptionFloat(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionNumberDef(i), susynclib()->GetOptionNumberStep(i),
+            susynclib()->GetOptionNumberMin(i),susynclib()->GetOptionNumberMax(i));
+        break;
+      case opt_bool:
+        ret.bool_map[key] = mmOptionBool(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i));
+        break;
+      case opt_string:
+        ret.string_map[key] = mmOptionString(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i));
+        break;
+      case opt_list:
+         ret.list_map[key] = mmOptionList(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
+         for (int j = 0; j < susynclib()->GetOptionListCount(i); ++j)
+         {
+           ret.list_map[key].addItem(susynclib()->GetOptionListItemKey(i,j),susynclib()->GetOptionListItemName(i,j),
+                              susynclib()->GetOptionListItemDesc(i,j));
+         }
+      }
+	  } catch(...){wxLogError(_T("Could not load mod Options"));}
 	}
 	return ret;
 }
