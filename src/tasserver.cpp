@@ -644,6 +644,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 	  m_se->OnKickedFromBattle();
   } else if ( cmd == _T("BROADCAST")) {
     m_se->OnServerMessage( params );
+  } else if ( cmd == _T("SERVERMSGBOX")) {
+    m_se->OnServerMessageBox( params );
   } else {
     wxLogMessage( _T("??? Cmd: %s params: %s"), cmd.c_str(), params.c_str() );
     m_se->OnUnknownCommand( cmd, params );
