@@ -622,6 +622,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
   } else if ( cmd == _T("DENIED") ) {
     msg = GetSentenceParam( params );
     m_se->OnServerMessage( msg );
+    Disconnect();
     //Command: "DENIED" params: "Already logged in".
   } else if ( cmd == _T("HOSTPORT") ) {
     int tmp_port = GetIntParam( params );
