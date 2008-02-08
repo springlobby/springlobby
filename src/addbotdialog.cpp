@@ -45,7 +45,7 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
     m_nick_sizer->Add( m_nick_lbl, 1, wxALL, 5 );
 
     int bot = 1;
-    while ( m_battle.GetBot( wxString::Format( _T("Bot%d"), bot) ) != 0 ) {
+    while ( m_battle.GetBot( wxString::Format( _("Bot%d"), bot) ) != 0 ) {
       bot++;
     }
 
