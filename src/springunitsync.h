@@ -28,6 +28,7 @@ class SpringUnitSync : public IUnitSync
     UnitSyncMod GetMod( int index );
     int GetModIndex( const wxString& name );
     wxString GetModArchive( int index );
+    GameOptions GetModOptions( const wxString& name );
 
     int GetNumMaps();
     bool MapExists( const wxString& mapname );
@@ -37,6 +38,7 @@ class SpringUnitSync : public IUnitSync
     UnitSyncMap GetMap( int index );
     UnitSyncMap GetMapEx( const wxString& mapname );
     UnitSyncMap GetMapEx( int index );
+    GameOptions GetMapOptions( const wxString& name );
 
     int GetMapIndex( const wxString& name );
 

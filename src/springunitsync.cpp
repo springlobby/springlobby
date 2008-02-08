@@ -147,19 +147,6 @@ int SpringUnitSync::GetModIndex( const wxString& name )
   return -1;
 }
 
-/*
-int SpringUnitSync::_GetModIndex( const wxString& name )
-{
-  try {
-    int count = susynclib()->GetPrimaryModCount();
-    for ( int i = 0; i < count; i++ ) {
-      wxString cmp = susynclib()->GetPrimaryModName( i );
-      if ( name == cmp ) return i;
-    }
-  } catch (...) {}
-  return -1;
-}
-*/
 
 bool SpringUnitSync::ModExists( const wxString& modname )
 {
@@ -233,42 +220,6 @@ UnitSyncMap SpringUnitSync::GetMap( const wxString& mapname )
   return GetMap( i );
 }
 
-/*
->>>>>>> usync_refac:src/springunitsync.cpp
-MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
-{
-  wxLogDebugFunc( _T("") );
-  MapCacheType::iterator i = m_mapinfo.find(mapname);
-  if ( i != m_mapinfo.end() ) {
-    wxLogMessage( _T("GetMapInfoEx cache lookup.") );
-    MapInfo info;
-    CachedMapInfo cinfo = i->second;
-    _ConvertSpringMapInfo( cinfo, info );
-    return info;
-  }
-
-  wxLogMessage( _T("GetMapInfoEx cache lookup failed.") );
-
-  char tmpdesc[256];
-  char tmpauth[256];
-
-  SpringMapInfo tm;
-  tm.description = &tmpdesc[0];
-  tm.author = &tmpauth[0];
-
-  tm = susynclib()->GetMapInfoEx( mapname, 0 );
-
-  MapInfo info;
-  _ConvertSpringMapInfo( tm, info );
-
-  CachedMapInfo cinfo;
-  _ConvertSpringMapInfo( tm, cinfo, mapname );
-  m_mapinfo[mapname] = cinfo;
-
-  return info;
-}
-*/
-
 UnitSyncMap SpringUnitSync::GetMap( int index )
 {
   wxLogDebugFunc( _T("") );
@@ -289,6 +240,51 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
   m.info = susynclib()->GetMapInfoEx( m.name, 1 );
 
   return m;
+}
+
+GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
+{
+  wxLogDebugFunc( name );
+  GameOptions ret;
+  int count;
+  try
+  {
+    count = susynclib()->GetMapOptionCount(name);
+  } catch (...){}
+	for (int i = 0; i < count; ++i)
+	{
+		wxString key = susynclib()->GetOptionKey(i);
+    try
+    {
+      switch (susynclib()->GetOptionType(i))
+      {
+      case opt_float:
+        ret.float_map[key] = mmOptionFloat(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionNumberDef(i), susynclib()->GetOptionNumberStep(i),
+            susynclib()->GetOptionNumberMin(i),susynclib()->GetOptionNumberMax(i));
+        break;
+      case opt_bool:
+        ret.bool_map[key] = mmOptionBool(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i));
+        break;
+      case opt_string:
+        ret.string_map[key] = mmOptionString(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i));
+        break;
+      case opt_list:
+         ret.list_map[key] = mmOptionList(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
+         for (int j = 0; j < susynclib()->GetOptionListCount(i); ++j)
+         {
+           ret.list_map[key].addItem(susynclib()->GetOptionListItemKey(i,j),susynclib()->GetOptionListItemName(i,j),
+                              susynclib()->GetOptionListItemDesc(i,j));
+         }
+      }
+
+    }
+    catch(...){}
+	}
+	return ret;
 }
 
 
@@ -321,6 +317,43 @@ wxString SpringUnitSync::GetModArchive( int index )
   LOCK_UNITSYNC;
 
   return _GetModArchive( index );
+}
+
+
+GameOptions SpringUnitSync::GetModOptions( const wxString& name )
+{
+  wxLogDebugFunc( name );
+  GameOptions ret;
+  int count = susynclib()->GetModOptionCount(name);
+	for (int i = 0; i < count; ++i)
+	{
+		wxString key = susynclib()->GetOptionKey(i);
+    switch (susynclib()->GetOptionType(i))
+    {
+    case opt_float:
+      ret.float_map[key] = mmOptionFloat(susynclib()->GetOptionName(i),key,
+          susynclib()->GetOptionDesc(i),susynclib()->GetOptionNumberDef(i), susynclib()->GetOptionNumberStep(i),
+          susynclib()->GetOptionNumberMin(i),susynclib()->GetOptionNumberMax(i));
+      break;
+    case opt_bool:
+      ret.bool_map[key] = mmOptionBool(susynclib()->GetOptionName(i),key,
+          susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i));
+      break;
+    case opt_string:
+      ret.string_map[key] = mmOptionString(susynclib()->GetOptionName(i),key,
+          susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i));
+      break;
+    case opt_list:
+       ret.list_map[key] = mmOptionList(susynclib()->GetOptionName(i),key,
+          susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
+       for (int j = 0; j < susynclib()->GetOptionListCount(i); ++j)
+       {
+         ret.list_map[key].addItem(susynclib()->GetOptionListItemKey(i,j),susynclib()->GetOptionListItemName(i,j),
+                            susynclib()->GetOptionListItemDesc(i,j));
+       }
+    }
+	}
+	return ret;
 }
 
 
@@ -529,28 +562,8 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int max_w, int max_
 
 MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname, bool force )
 {
-  //debug_func("");
-  /*MapCacheType::iterator i = m_mapinfo.find(mapname);
-  if ( i != m_mapinfo.end() ) {
-    if ( i->second.is_info_cached ) {
-      debug("GetMapInfoEx cache lookup.");
-      MapInfo info;
-      MapCacheItem cinfo = i->second;
-      _ConvertSpringMapInfo( cinfo, info );
-      return info;
->>>>>>> usync_refac:src/springunitsync.cpp
-    }
-  }*/
-
-  //ASSERT_RUNTIME( force, "GetMapInfoEx cache lookup failed." );
   wxLogMessage( _T("GetMapInfoEx cache lookup failed.") );
-
   MapInfo info = susynclib()->GetMapInfoEx( mapname, 0 );
-
-  //CachedMapInfo cinfo;
-  //_ConvertSpringMapInfo( tm, cinfo, mapname, i2s(susynclib()->GetMapChecksum( _GetMapIndex( mapname ) )) );
-  //_AddMapCacheInfo( cinfo, mapname );
-
   return info;
 }
 
