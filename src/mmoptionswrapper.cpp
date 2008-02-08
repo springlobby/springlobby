@@ -57,7 +57,7 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
 		case MapOption:
 			try
 			{
-        opt = usync()->GetModOptions(name);
+        opt = usync()->GetMapOptions(name);
 			}
 			catch(...)
 			{
