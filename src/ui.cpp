@@ -257,6 +257,7 @@ void Ui::Quit()
   sett().SaveSettings();
   m_main_win->forceSettingsFrameClose();
   m_main_win->Close();
+  m_thread->Kill();
 }
 
 
