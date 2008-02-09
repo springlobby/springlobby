@@ -1,20 +1,23 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR The SpringLobby team
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Swedish translations for SpringLobby package.
+# Copyright (C) 2008 The SpringLobby team
+# This file is distributed under the same license as the SpringLobby package.
+# Tommy Carlsson <tc@springlobby.info>, 2008.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: SpringLobby 0.0.1-svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-02-09 22:04+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2008-02-09 21:27+0100\n"
+"Last-Translator: Tommy Carlsson <tc@springlobby.info>\n"
+"Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Country: SWEDEN\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: ..\n"
 
 #: src/addbotdialog.cpp:30
 msgid "Add bot"
@@ -199,7 +202,7 @@ msgstr ""
 
 #: src/battlelisttab.cpp:139
 msgid "Host new..."
-msgstr ""
+msgstr "fhjfhfhkvvhjvjjbn"
 
 #: src/battlelisttab.cpp:142
 msgid "Join"
@@ -2410,7 +2413,7 @@ msgstr ""
 
 #: src/mainwindow.cpp:90
 msgid "&File"
-msgstr ""
+msgstr "&Arkiv"
 
 #: src/mainwindow.cpp:91
 msgid "&Edit"
