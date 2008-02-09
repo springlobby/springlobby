@@ -425,7 +425,7 @@ void Ui::ConsoleHelp( const wxString& topic )
   }
   if ( topic == wxEmptyString ) {
     panel->ClientMessage( _("SpringLobby commands help.") );
-    panel->ClientMessage( _("") );
+    panel->ClientMessage( _T("") );
     panel->ClientMessage( _("Global commands:") );
     panel->ClientMessage( _("  \"/away\" - Sets your status to away.") );
     panel->ClientMessage( _("  \"/back\" - Resets your away status.") );
@@ -437,10 +437,10 @@ void Ui::ConsoleHelp( const wxString& topic )
     panel->ClientMessage( _("  \"/rename newalias\" - Changes your nickname to newalias.") );
     panel->ClientMessage( _("  \"/sayver\" - Say what version of springlobby you have in chat.") );
     panel->ClientMessage( _("  \"/ver\" - Display what version of SpringLobby you have.") );
-    panel->ClientMessage( _("") );
+    panel->ClientMessage( _T("") );
     panel->ClientMessage( _("Chat commands:") );
     panel->ClientMessage( _("  \"/me action\" - Say IRC style action message.") );
-    panel->ClientMessage( _("") );
+    panel->ClientMessage( _T("") );
     panel->ClientMessage( _("If you are missing any commands, go to #springlobby and try to type it there :)") );
 //    panel->ClientMessage( _("  \"/\" - .") );
   } else if ( topic == _T("topics") ) {
