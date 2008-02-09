@@ -31,7 +31,7 @@
 void tab_ui::initScrollSpeedSizer(wxStaticBoxSizer* sizer) {
 	// i < "sizeof"(MO_SLI)
 	sizer->Add(5,10,0);
-	sizer->Add(new wxStaticText(this, -1, _T("Setting a slider to 0 will exclude that\n"
+	sizer->Add(new wxStaticText(this, -1, _("Setting a slider to 0 will exclude that\n"
 											"mode from being cycled through ingame.")) , 0,wxBOTTOM,15);
 	for (int i = 0; i < ctrl_scroll_slider_size; i++) {
 		//set to dummy value
@@ -51,14 +51,14 @@ void tab_ui::initCameraSizer(wxStaticBoxSizer* sizer) {
 	ctrl_cam_radio2 = new wxRadioButton(this, MO_RBUT[2].id, (MO_RBUT[2].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
 	ctrl_cam_radio3 = new wxRadioButton(this, MO_RBUT[3].id, (MO_RBUT[3].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
 	ctrl_cam_radio4 = new wxRadioButton(this, MO_RBUT[4].id, (MO_RBUT[4].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
-	
+
 	ctrl_cam_radio0->SetToolTip(MO_RBUT[0].tTip[0]);
 	ctrl_cam_radio1->SetToolTip(MO_RBUT[1].tTip[0]);
 	ctrl_cam_radio2->SetToolTip(MO_RBUT[2].tTip[0]);
 	ctrl_cam_radio3->SetToolTip(MO_RBUT[3].tTip[0]);
 	ctrl_cam_radio4->SetToolTip(MO_RBUT[4].tTip[0]);
-	
-	
+
+
 	sizer->Add(ctrl_cam_radio0, 0, wxTOP, 10);
 	sizer->Add(ctrl_cam_radio1, 0, wxTOP, 5);
 	sizer->Add(ctrl_cam_radio2, 0, wxTOP, 5);
@@ -94,7 +94,7 @@ void tab_ui::updateControls(int what_to_update)
 	for (int i = 0; i < ctrl_ui_chkb_size; i++) {
 				ctrl_ui_chkb[i]->SetValue(intSettings[UI_CBOX[i].key]);
 	}
-	
+
 	switch (intSettings[MO_RBUT[0].key]) {
 		case 0: { ctrl_cam_radio3->SetValue(1); } break;	// CamMode 0: FPS
 		case 1: { ctrl_cam_radio0->SetValue(1); } break;	// CamMode 1: OH
@@ -102,11 +102,11 @@ void tab_ui::updateControls(int what_to_update)
 		case 3: { ctrl_cam_radio2->SetValue(1); } break;	// CamMode 3: TW
 		case 4: { ctrl_cam_radio4->SetValue(1); } break;	// CamMode 4: FC
 	}
-	
+
 	for (int i = 0; i < ctrl_scroll_slider_size; i++) {
 			ctrl_scroll_slider[i]->SetValue(intSettings[MO_SLI[i].key]);
 		}
-	
+
 	ctrl_zoom_spin->SetValue(intSettings[UI_ZOOM[0].key]);
 }
 
@@ -119,40 +119,40 @@ tab_ui::tab_ui(wxWindow *parent, wxWindowID id , const wxString &title , const w
 	 cSizerR = new wxFlexGridSizer(1,10,10);
 	 cSizerM = new wxFlexGridSizer(1,10,10);
 
-	 scrollSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Scroll Speeds (mouse + keyboard)"),
+	 scrollSpeedSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, _("Scroll Speeds (mouse + keyboard)"),
 			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
-	
 
-	 cameraSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Default Camera Mode"),
+
+	 cameraSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, _("Default Camera Mode"),
 			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
-	 uiOptSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Misc. UI Options"), 
+	 uiOptSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, _("Misc. UI Options"),
 			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
-	 zoomSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Zoom"), 
+	 zoomSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, _("Zoom"),
 	 			WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
-	 
+
 	initScrollSpeedSizer(scrollSpeedSizer);
 	initUiOptSizer(uiOptSizer);
 	initCameraSizer(cameraSizer);
 	initZoomSizer(zoomSizer);
-	
+
 
 	cSizerM->Add(uiOptSizer,0,wxALL,5);
 	cSizerL->Add(scrollSpeedSizer,0,wxALL,5);
 	cSizerR->Add(cameraSizer,0,wxALL,5);
 	cSizerR->Add(zoomSizer,1,wxALL|wxEXPAND,5);
-	
+
 	cSizerL->Fit(this);
 	cSizerL->SetSizeHints(this);
 	cSizerM->Fit(this);
 	cSizerM->SetSizeHints(this);
 	cSizerR->Fit(this);
 	cSizerR->SetSizeHints(this);
-				
-	
+
+
 	pSizer->Add(cSizerL,0,wxALL|wxEXPAND,10);
 	pSizer->Add(cSizerM,0,wxALL|wxEXPAND,10);
 	pSizer->Add(cSizerR,0,wxALL|wxEXPAND,10);
-	
+
 	updateControls(UPDATE_ALL);
 	SetSizer(pSizer); // true --> delete old sizer if present
 

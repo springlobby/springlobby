@@ -106,7 +106,7 @@ bool abstract_panel::loadValuesIntoMap()
 	}
 	catch (...)
 	{
-		customMessageBox(SS_MAIN_ICON,_T("Could not access your settings.\n"), wxT("Error"), wxOK|wxICON_HAND, 0);
+		customMessageBox(SS_MAIN_ICON,_("Could not access your settings.\n"), _("Error"), wxOK|wxICON_HAND, 0);
 		abstract_panel::settingsChanged = false;
 		return false;
 	}
@@ -429,12 +429,12 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 			}
 			if (modeIndex!=-1)
 			{
-				(intSettings)[wxT("XResolution")] = vl_Resolution_X[modeIndex];
-				(intSettings)[wxT("YResolution")] = vl_Resolution_Y[modeIndex];
+				(intSettings)[_T("XResolution")] = vl_Resolution_X[modeIndex];
+				(intSettings)[_T("YResolution")] = vl_Resolution_Y[modeIndex];
 				if (modeIndex > vl_Resolution_startOfDualScreenRes)
-					(intSettings)[wxT("DualScreenMode")] = 1;
+					(intSettings)[_T("DualScreenMode")] = 1;
 				else
-					(intSettings)[wxT("DualScreenMode")] = 0;
+					(intSettings)[_T("DualScreenMode")] = 0;
 			}
 			break;
 		}
@@ -468,7 +468,7 @@ bool abstract_panel::saveSettings() {
 //	        //configHandler->SetSpringConfigFloat(f->first,f->second);
 //	    }
     } catch (...) {
-    	customMessageBox(SS_MAIN_ICON,_T("Could not save, unitsync not properly loaded"), wxT("SpringSettings Error"), wxOK|wxICON_HAND, 0);
+    	customMessageBox(SS_MAIN_ICON,_("Could not save, unitsync not properly loaded"), _("SpringSettings Error"), wxOK|wxICON_HAND, 0);
     	return false;
     }
 

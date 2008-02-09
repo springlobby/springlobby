@@ -45,8 +45,8 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 		sizer->Add(ctrl_vo_Boxes[i], 0, wxTOP, (i == 0)? 10: 0);
 	}
 
-	ctrl_x_res = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_X, wxT(""), WX_DEF_P, wxSize(60, 20), 0);
-	ctrl_y_res = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_Y, wxT(""), WX_DEF_P, wxSize(60, 20), 0);
+	ctrl_x_res = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_X,_T(""), WX_DEF_P, wxSize(60, 20), 0);
+	ctrl_y_res = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_Y, _T(""), WX_DEF_P, wxSize(60, 20), 0);
 	ctrl_x_res->SetToolTip(RC_TEXT[0].tTip[0]);
 	ctrl_y_res->SetToolTip(RC_TEXT[1].tTip[0]);
 
@@ -60,7 +60,7 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 	subSizer->Add(ctrl_y_res, 0, wxALIGN_RIGHT, 10);
 
 	wxSizer* subSizer2 = new wxBoxSizer(wxVERTICAL);
-	subSizer2->Add(new wxStaticText(this, -1, wxT("Screen Resolution")), 1, wxTOP|wxEXPAND , 15);
+	subSizer2->Add(new wxStaticText(this, -1, _("Screen Resolution")), 1, wxTOP|wxEXPAND , 15);
 	subSizer2->Add(subSizer);
 	sizer->Add(subSizer2);
 	sizer->Add(0,5,0);
@@ -122,7 +122,7 @@ void tab_quality_video::updateControls(int what_to_update)
 
 void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer)
 {
-	sizer->Add(new wxStaticText(this, -1, wxT("If an option needs special hardware to work\n"
+	sizer->Add(new wxStaticText(this, -1, _("If an option needs special hardware to work\n"
 												"it will be mentioned in the tooltip.")), 1, wxTOP|wxEXPAND , 10);
 
 	// i < 8 with High resolution LOS textures
@@ -135,7 +135,7 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer)
 	}
 
 	wxSizer* subSizer = new wxBoxSizer(wxVERTICAL);
-	subSizer->Add(new wxStaticText(this, -1, wxT("Water Quality")), 0, wxTOP| wxEXPAND, 10);
+	subSizer->Add(new wxStaticText(this, -1, _("Water Quality")), 0, wxTOP| wxEXPAND, 10);
 	ctrl_waterQ_CBox = new wxComboBox(this, ID_WINDOWP_WR_COMBOX, WR_COMBOX_CHOICES[0], wxDefaultPosition, wxSize(220,21),
 			4,WR_COMBOX_CHOICES,wxCB_DROPDOWN|wxCB_READONLY);
 	ctrl_waterQ_CBox->SetToolTip(WR_COMBOX[0].tTip[0]);
@@ -165,7 +165,7 @@ void tab_quality_video::initZBufferSizer(wxFlexGridSizer* sizer)
 {
 	//z-buffer
 
-	sizer->Add(new wxStaticText(this, -1, wxT("Resolution in bit")), 0, wxTOP ,15);
+	sizer->Add(new wxStaticText(this, -1, _("Resolution in bit")), 0, wxTOP ,15);
 
 	ctrl_z_radio1 = new wxRadioButton(this, VO_RBUT[0].id, (VO_RBUT[0].lbl), WX_DEF_P, WX_DEF_S, wxRB_GROUP, WX_DEF_V);
 	ctrl_z_radio2 = new wxRadioButton(this, VO_RBUT[1].id, (VO_RBUT[1].lbl), WX_DEF_P, WX_DEF_S, 0, WX_DEF_V);
@@ -191,10 +191,10 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
 	 SizerB = new wxFlexGridSizer(1,15,10);
 	 SizerC = new wxFlexGridSizer(1,15,10);
 	 SizerD = new wxFlexGridSizer(1,5,10);
-	 boxA = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Render Quality Options"));
-	 boxB = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Video Mode Options"));
-	 boxC = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Anti-Aliasing Options"));
-	 boxD = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Z-/Depth-Buffer"));
+	 boxA = new wxStaticBoxSizer(wxVERTICAL ,this,_("Render Quality Options"));
+	 boxB = new wxStaticBoxSizer(wxVERTICAL ,this,_("Video Mode Options"));
+	 boxC = new wxStaticBoxSizer(wxVERTICAL ,this,_("Anti-Aliasing Options"));
+	 boxD = new wxStaticBoxSizer(wxVERTICAL ,this,_("Z-/Depth-Buffer"));
 	SizerA->AddGrowableCol(0);
 	SizerB->AddGrowableCol(0);
 	SizerC->AddGrowableCol(0);
