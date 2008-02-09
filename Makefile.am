@@ -19,7 +19,7 @@ pixmapdir = $(datadir)/pixmaps
 dist_pixmap_DATA = \
 	src/images/springlobby.svg
 
-SUBDIRS =
+SUBDIRS = po
 
 ## if you don't have the required version of autoconf, comment out the
 ## following clause, in which case you may NOT distribute the result!
