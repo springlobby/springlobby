@@ -211,6 +211,7 @@ void ChatPanel::CreateControls( )
     m_chat_panel->SetSizer( m_chat_sizer );
 
     m_splitter->SplitVertically( m_chat_panel, m_nick_panel, 100 );
+    m_splitter->SetMinimumPaneSize(30);
 
     m_main_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
 
