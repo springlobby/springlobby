@@ -325,6 +325,8 @@ void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
 			setupOptionsSizer(m_map_layout,MapOption);
 			m_map_options_sizer->Add( m_map_layout, 1, wxEXPAND, 5 );
 			break;
+        default:
+            break;
 	}
 
 
