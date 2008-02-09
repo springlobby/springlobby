@@ -36,6 +36,7 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
   EVT_BUTTON ( BROOM_START, BattleRoomTab::OnStart )
   EVT_BUTTON ( BROOM_LEAVE, BattleRoomTab::OnLeave )
   EVT_BUTTON ( BROOM_ADDBOT, BattleRoomTab::OnAddBot )
+  EVT_BUTTON ( BROOM_AUTOBALANCE, BattleRoomTab::OnAutoBalance )
 
   EVT_CHECKBOX( BROOM_IMREADY, BattleRoomTab::OnImReady )
   EVT_CHECKBOX( BROOM_LOCK, BattleRoomTab::OnLock )
@@ -100,7 +101,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_start_btn = new wxButton( this, BROOM_START, _("Start"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_start_btn->SetToolTip(_T("Only the host can do this if all players are ready."));
   m_addbot_btn = new wxButton( this, BROOM_ADDBOT, _("Add Bot..."), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_addbot_btn->SetToolTip(_T("Gives you a selection of available bots you can add"));
+  m_autobalance_btn = new wxButton( this, BROOM_AUTOBALANCE, _("Balance Teams"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
 
   m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_ready_chk->SetToolTip(_T("Click this if you are content with the battle settings"));
@@ -185,9 +186,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_buttons_sizer->Add( m_leave_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->AddStretchSpacer();
-  m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
-  m_buttons_sizer->Add( m_lock_chk, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
+  m_buttons_sizer->Add( m_lock_chk, 0, wxEXPAND | wxALL, 2 );
+  m_buttons_sizer->Add( m_autobalance_btn, 0, wxEXPAND | wxALL, 2 );
+  m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_start_btn, 0, wxEXPAND | wxALL, 2 );
 
   m_main_sizer->Add( m_top_sizer, 1, wxEXPAND );
@@ -208,6 +210,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   if ( !IsHosted() ) {
     m_start_btn->Disable();
     m_lock_chk->Disable();
+    m_addbot_btn->Disable();
+    m_autobalance_btn->Disable();
   } else {
     m_battle.SetImReady ( true );
     m_ready_chk->Disable();
@@ -376,6 +380,171 @@ void BattleRoomTab::OnLeave( wxCommandEvent& event )
   m_battle.Leave();
 }
 
+void BattleRoomTab::OnAutoBalance( wxCommandEvent& event )
+{
+  unsigned int numBots = m_battle.GetNumBots();
+  unsigned int numUsers = m_battle.GetNumUsers();
+
+  int team1Players = 0;
+  int team1Rank = 0;
+  int team1Ranks[7] = {0,0,0,0,0,0,0};
+
+  int team2Players = 0;
+  int team2Rank = 0;
+  int team2Ranks[7] = {0,0,0,0,0,0,0};
+
+  // Randomly assign teams
+  for (user_map_t::size_type i = 0; i < numUsers; i++ )
+  {
+    int rank = m_battle.GetUser(i).GetStatus().rank;
+    int wholeRank = rank/100 + 1;
+    if(team1Players<=team2Players)
+    {
+      team1Players++;
+      team1Rank += wholeRank;
+      team1Ranks[wholeRank-1]++;
+    } else {
+      team2Players++;
+      team2Rank += wholeRank;
+      team2Ranks[wholeRank-1]++;
+    }
+  }
+
+  for (user_map_t::size_type i = 0; i < numBots; i++ )
+  {
+    int wholeRank = 1;
+    if(team1Players<=team2Players)
+    {
+      team1Players++;
+      team1Rank += wholeRank;
+      team1Ranks[wholeRank-1]++;
+    } else {
+      team2Players++;
+      team2Rank += wholeRank;
+      team2Ranks[wholeRank-1]++;
+    }
+  }
+
+  // Now try to equalize teams by rank...
+  // We know they have the right amount of players, just not rank
+  int* lowerRank = team1Rank <= team2Rank ? &team1Rank : &team2Rank;
+  int* lowerRankTeam = team1Rank <= team2Rank ? team1Ranks : team2Ranks;
+  int* higherRank = team1Rank > team2Rank ? &team1Rank : &team2Rank;
+  int* higherRankTeam = team1Rank > team2Rank ? team1Ranks : team2Ranks;
+
+  // The easiest case that the teams are "done" is that they have equal ranks
+  while(*lowerRank != *higherRank)
+  {
+    // find out the deficit between the two teams
+    int rankDifference = *higherRank - *lowerRank;
+
+    // start with the largest possible trade
+    int highestTrade = 7;
+    int lowestTrade = 1;
+
+    // The largest possible change in difference of team rank from a trade is 12 or (7-1)*2
+
+    // Now we search for the best trade the higher rank team can make...
+    bool bestHighestTradeFound = false;
+    int bestHighestTrade = highestTrade;
+    while(bestHighestTrade > 1)
+    {
+      if(higherRankTeam[bestHighestTrade-1]>0)
+      {
+        bestHighestTradeFound = true;
+        break;
+      }
+      bestHighestTrade--;
+    }
+
+    // If we didn't find anything (this will often be the case in a small game) we are done
+    if(!bestHighestTradeFound)
+      break;
+
+    // Now we search for the best trade the lower rank team can make...
+    bool bestLowestTradeFound = false;
+    int bestLowestTrade = lowestTrade;
+    while(bestLowestTrade < bestHighestTrade)
+    {
+      if(higherRankTeam[bestLowestTrade-1]>0)
+      {
+        bestLowestTradeFound = true;
+        break;
+      }
+      bestLowestTrade++;
+    }
+
+    // If we didn't find anything (this will often be the case in a small game) we are done
+    if(!bestLowestTradeFound)
+      break;
+
+    // While the trade is too big, lets narrow down our results...
+    bool foundActualTrade = false;
+    int actualHighTrade = bestHighestTrade;
+    int actualLowTrade = bestLowestTrade;
+    for(;actualHighTrade > bestLowestTrade; actualHighTrade--)
+    {
+      if(higherRankTeam[actualHighTrade-1]==0) // check whether there is actually a player with this rank
+        continue;
+
+      for(actualLowTrade = bestLowestTrade; actualLowTrade < actualHighTrade; actualLowTrade++)
+      {
+        if(lowerRankTeam[actualLowTrade-1]==0) // check whether there is actually a player with this rank
+          continue;
+
+        if(actualHighTrade*2 - actualLowTrade*2 <= rankDifference) // if our trade's value is less than our rank difference, we can make the trade
+        {
+          foundActualTrade = true;
+          break;
+        }
+      }
+
+      if(foundActualTrade) // If we've found a good trade, quit the loop
+        break;
+    }
+
+    // If we found a trade, make it
+    if(foundActualTrade)
+    {
+      lowerRankTeam[actualLowTrade-1]--;
+      higherRankTeam[actualLowTrade-1]++;
+      lowerRankTeam[actualHighTrade-1]++;
+      higherRankTeam[actualHighTrade-1]--;
+      *lowerRank += actualHighTrade-actualLowTrade;
+      *higherRank -= actualHighTrade-actualLowTrade;
+    } else { // otherwise, since there were no good trades, we are done
+      break;
+    }
+  }
+
+  // Divy out the players...
+  for (user_map_t::size_type i = 0; i < numUsers; i++ )
+  {
+    User user = m_battle.GetUser(i);
+    int rank = user.GetStatus().rank;
+    int wholeRank = rank/100 + 1;
+    if(team1Ranks[wholeRank-1]>0)
+    {
+      team1Ranks[wholeRank-1]--;
+      m_battle.ForceAlly(user,0);
+    } else {
+      m_battle.ForceAlly(user,1);
+    }
+  }
+
+  for (user_map_t::size_type i = 0; i < numBots; i++ )
+  {
+    BattleBot* bot = m_battle.GetBot(i);
+    int wholeRank = 1;
+    if(team1Ranks[wholeRank-1]>0)
+    {
+      team1Ranks[wholeRank-1]--;
+      m_battle.SetBotAlly(bot->name,0);
+    } else {
+      m_battle.SetBotAlly(bot->name,1);
+    }
+  }
+}
 
 void BattleRoomTab::OnAddBot( wxCommandEvent& event )
 {
@@ -394,7 +563,6 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
     m_ui.GetServer().AddBot( m_battle.GetBattleId(), STD_STRING(dlg.GetNick()), m_battle.GetMe().GetNick(), bs, STD_STRING(dlg.GetAI() ));
   }
 }
-
 
 void BattleRoomTab::OnImReady( wxCommandEvent& event )
 {

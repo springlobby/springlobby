@@ -59,6 +59,8 @@ class BattleRoomTab : public wxPanel
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
 
+    void OnAutoBalance( wxCommandEvent& event );
+
     void OnBotAdded( BattleBot& bot );
     void OnBotRemoved( BattleBot& bot );
     void OnBotUpdated( BattleBot& bot );
@@ -114,6 +116,7 @@ class BattleRoomTab : public wxPanel
     wxButton* m_leave_btn;
     wxButton* m_start_btn;
     wxButton* m_addbot_btn;
+    wxButton* m_autobalance_btn;
 
     wxCheckBox* m_ready_chk;
     wxCheckBox* m_spec_chk;
@@ -134,7 +137,8 @@ enum
     BROOM_COLOURSEL,
     BROOM_SIDESEL,
     BROOM_START,
-    BROOM_ADDBOT
+    BROOM_ADDBOT,
+    BROOM_AUTOBALANCE
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H

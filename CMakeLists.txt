@@ -117,6 +117,14 @@ IF(wxWidgets_FOUND)
 		src/utils.cpp
 	)
 
+
+##################################################
+# Translation Section
+##################################################
+FIND_PACKAGE( Gettext )
+GETTEXT_CREATE_TRANSLATIONS ( po/springlobby.pot ALL po/de.po )
+
+
 # Make sure the compiler can find include files from our Hello library.
 # include_directories (${HELLO_SOURCE_DIR}/Hello)
 
