@@ -4,7 +4,8 @@
 ACLOCAL_AMFLAGS = -I m4 --install
 
 AM_CPPFLAGS = \
-	$(WX_CPPFLAGS)
+	$(WX_CPPFLAGS) \
+	-DLOCALEDIR=\"$(localedir)\"
 
 # strict aliasing check is disabled, because wxWidgets headers have problems
 AM_CXXFLAGS = \
