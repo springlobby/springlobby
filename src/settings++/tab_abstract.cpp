@@ -364,8 +364,8 @@ void abstract_panel::OnRadioButtonToggle(wxCommandEvent& event) {
 		case ID_WINDOWP_VO_RBUT_1: { (intSettings)[VO_RBUT[0].key]= 24; } break;
 
 		case ID_WINDOWC_MO_RBUT_0: { (intSettings)[MO_RBUT[0].key]= 1; } break;	// OH button (CamMode 1)
-		case ID_WINDOWC_MO_RBUT_1: { (intSettings)[MO_RBUT[1].key]= 2; } break;	// ROH button (CamMode 2)
-		case ID_WINDOWC_MO_RBUT_2: { (intSettings)[MO_RBUT[2].key]= 3; } break;	// TW button (CamMode 3)
+		case ID_WINDOWC_MO_RBUT_1: { (intSettings)[MO_RBUT[1].key]= 3; } break;	// ROH button (CamMode 2)
+		case ID_WINDOWC_MO_RBUT_2: { (intSettings)[MO_RBUT[2].key]= 2; } break;	// TW button (CamMode 3)
 		case ID_WINDOWC_MO_RBUT_3: { (intSettings)[MO_RBUT[3].key]= 0; } break;	// FPS button (CamMode 0)
 		case ID_WINDOWC_MO_RBUT_4: { (intSettings)[MO_RBUT[4].key]= 4; } break;	// FC button (CamMode 4)
 	}

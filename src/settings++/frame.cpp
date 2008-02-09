@@ -135,7 +135,7 @@ void settings_frame::handleExit() {
         case wxYES:
         	if (abstract_panel::saveSettings())
         				 (abstract_panel::settingsChanged) = false;
-        	if (simpleTab)
+        	if (simpleTab!=0)
         			simpleTab->saveCbxChoices();
         case wxNO:
 	        	OptionsHandler.save();

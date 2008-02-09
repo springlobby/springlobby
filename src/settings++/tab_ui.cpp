@@ -98,8 +98,8 @@ void tab_ui::updateControls(int what_to_update)
 	switch (intSettings[MO_RBUT[0].key]) {
 		case 0: { ctrl_cam_radio3->SetValue(1); } break;	// CamMode 0: FPS
 		case 1: { ctrl_cam_radio0->SetValue(1); } break;	// CamMode 1: OH
-		case 2: { ctrl_cam_radio1->SetValue(1); } break;	// CamMode 2: ROH
-		case 3: { ctrl_cam_radio2->SetValue(1); } break;	// CamMode 3: TW
+		case 3: { ctrl_cam_radio1->SetValue(1); } break;	// CamMode 2: ROH
+		case 2: { ctrl_cam_radio2->SetValue(1); } break;	// CamMode 3: TW
 		case 4: { ctrl_cam_radio4->SetValue(1); } break;	// CamMode 4: FC
 	}
 
