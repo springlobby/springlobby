@@ -188,7 +188,7 @@ bool TASServer::IsConnected()
 }
 
 
-bool TASServer::Register( const wxString& addr, const int port, const wxString& nick, const wxString& password, wxString* reason )
+bool TASServer::Register( const wxString& addr, const int port, const wxString& nick, const wxString& password, wxString& reason )
 {
   wxLogDebugFunc( _T("") );
 
@@ -200,17 +200,26 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
   m_sock->Receive( data );
   if ( GetWordParam( data ) != _T("TASServer") ) return false;
 
-  SendCmd ( _T("REGISTER"), nick + _T(" ") + GetPasswordHash( password ) );
+  SendCmd( _T("REGISTER"), nick + _T(" ") + GetPasswordHash( password ) );
 
-  wxString data2;
-  m_sock->Receive( data2 );
-  if ( data2 != _T("REGISTRATIONACCEPTED\n"))
+  m_sock->Receive( data );
+  if ( data.IsEmpty() )
   {
-	  *reason = data2.substr(19,data2.size());
+    reason = _("Connection timed out");
+    return false;
+  }
+  wxString cmd = GetWordParam( data );
+  if ( cmd == _T("REGISTRATIONACCEPTED"))
+  {
+    return true;
+  }
+  else if ( cmd == _T("REGISTRATIONDENIED") )
+  {
+    reason = data;
 	  return false;
   }
-
-  return true;
+  reason = _("Unknown answer from server");
+  return false;
 }
 
 
@@ -656,8 +665,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 
 void TASServer::SendCmd( const wxString& command, const wxString& param )
 {
-  if ( param.IsEmpty() ) m_sock->Send( command + _T("\n"));
-  else m_sock->Send( command + _T(" ") + param + _T("\n") );
+  wxString msg;
+  if ( param.IsEmpty() ) msg = ( command + _T("\n"));
+  else msg = ( command + _T(" ") + param + _T("\n") );
+  m_sock->Send( msg );
 }
 
 
