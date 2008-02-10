@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-09 22:04+0100\n"
+"POT-Creation-Date: 2008-02-10 01:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,33 +24,33 @@ msgstr ""
 msgid "Nickname:"
 msgstr ""
 
-#: src/addbotdialog.cpp:52
+#: src/addbotdialog.cpp:49
 #, c-format
 msgid "Bot%d"
 msgstr ""
 
-#: src/addbotdialog.cpp:61
+#: src/addbotdialog.cpp:58
 msgid "AI:"
 msgstr ""
 
-#: src/addbotdialog.cpp:65
+#: src/addbotdialog.cpp:62
 msgid "Choose the AI library to use with this bot."
 msgstr ""
 
-#: src/addbotdialog.cpp:79 src/connectwindow.cpp:78
+#: src/addbotdialog.cpp:76 src/connectwindow.cpp:78
 #: src/hostbattledialog.cpp:200
 msgid "Cancel"
 msgstr ""
 
-#: src/addbotdialog.cpp:84
+#: src/addbotdialog.cpp:81
 msgid "Add Bot"
 msgstr ""
 
-#: src/addbotdialog.cpp:137
+#: src/addbotdialog.cpp:134
 msgid "No AI bots found in your Spring installation."
 msgstr ""
 
-#: src/addbotdialog.cpp:137
+#: src/addbotdialog.cpp:134
 msgid "No bot-libs found"
 msgstr ""
 
@@ -221,7 +221,7 @@ msgstr ""
 #: src/battlelisttab.cpp:316 src/battlelisttab.cpp:321
 #: src/battlelisttab.cpp:438 src/battlelisttab.cpp:454
 #: src/singleplayertab.cpp:263 src/springoptionstab.cpp:480
-#: src/springoptionstab.cpp:485 src/ui.cpp:488 src/ui.cpp:491
+#: src/springoptionstab.cpp:485 src/ui.cpp:491 src/ui.cpp:494
 msgid "Spring error"
 msgstr ""
 
@@ -310,7 +310,7 @@ msgstr ""
 msgid "Map not available"
 msgstr ""
 
-#: src/battlelisttab.cpp:474 src/chatpanel.cpp:1147
+#: src/battlelisttab.cpp:474 src/chatpanel.cpp:1148
 msgid "Battle password"
 msgstr ""
 
@@ -393,7 +393,7 @@ msgstr ""
 msgid "Resources"
 msgstr ""
 
-#: src/battleoptionstab.cpp:86 src/mmoptionswrapper.cpp:98
+#: src/battleoptionstab.cpp:86 src/mmoptionswrapper.cpp:94
 msgid "Start Metal"
 msgstr ""
 
@@ -401,7 +401,7 @@ msgstr ""
 msgid "The amount of metal each player starts with."
 msgstr ""
 
-#: src/battleoptionstab.cpp:102 src/mmoptionswrapper.cpp:101
+#: src/battleoptionstab.cpp:102 src/mmoptionswrapper.cpp:97
 msgid "Start Energy"
 msgstr ""
 
@@ -534,7 +534,7 @@ msgid "Kick"
 msgstr ""
 
 #: src/battleroomlistctrl.cpp:185 src/battleroomlistctrl.cpp:416
-#: src/battleroomlistctrl.cpp:425 src/chatpanel.cpp:395
+#: src/battleroomlistctrl.cpp:425 src/chatpanel.cpp:396
 msgid "Ring"
 msgstr ""
 
@@ -568,7 +568,7 @@ msgstr ""
 msgid "Color"
 msgstr ""
 
-#: src/battleroomtab.cpp:99 src/chatpanel.cpp:252
+#: src/battleroomtab.cpp:99 src/chatpanel.cpp:253
 msgid "Leave"
 msgstr ""
 
@@ -714,8 +714,8 @@ msgstr ""
 msgid "Client"
 msgstr ""
 
-#: src/chatoptionstab.cpp:214 src/chatpanel.cpp:1117 src/chatpanel.cpp:1285
-#: src/chatpanel.cpp:1291 src/mainwindow.cpp:340
+#: src/chatoptionstab.cpp:214 src/chatpanel.cpp:1118 src/chatpanel.cpp:1286
+#: src/chatpanel.cpp:1292 src/mainwindow.cpp:340
 msgid "Error"
 msgstr ""
 
@@ -777,7 +777,7 @@ msgstr ""
 msgid "Choose a directory"
 msgstr ""
 
-#: src/chatpanel.cpp:124 src/chatpanel.cpp:697
+#: src/chatpanel.cpp:124 src/chatpanel.cpp:698
 msgid "_SERVER"
 msgstr ""
 
@@ -793,388 +793,388 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: src/chatpanel.cpp:242
+#: src/chatpanel.cpp:243
 msgid "Auto join this channel"
 msgstr ""
 
-#: src/chatpanel.cpp:255
+#: src/chatpanel.cpp:256
 msgid "Display Join/Leave Messages"
 msgstr ""
 
-#: src/chatpanel.cpp:263 src/chatpanel.cpp:317
+#: src/chatpanel.cpp:264 src/chatpanel.cpp:318
 msgid "Select all"
 msgstr ""
 
-#: src/chatpanel.cpp:265 src/chatpanel.cpp:319
+#: src/chatpanel.cpp:266 src/chatpanel.cpp:320
 msgid "Copy"
 msgstr ""
 
-#: src/chatpanel.cpp:271
+#: src/chatpanel.cpp:272
 msgid "Channel info"
 msgstr ""
 
-#: src/chatpanel.cpp:275 src/chatpanel.cpp:953
+#: src/chatpanel.cpp:276 src/chatpanel.cpp:954
 msgid "Set topic..."
 msgstr ""
 
-#: src/chatpanel.cpp:277 src/chatpanel.cpp:970
+#: src/chatpanel.cpp:278 src/chatpanel.cpp:971
 msgid "Channel message..."
 msgstr ""
 
-#: src/chatpanel.cpp:281
+#: src/chatpanel.cpp:282
 msgid "Lock..."
 msgstr ""
 
-#: src/chatpanel.cpp:283
+#: src/chatpanel.cpp:284
 msgid "Unlock"
 msgstr ""
 
-#: src/chatpanel.cpp:287
+#: src/chatpanel.cpp:288
 msgid "Register..."
 msgstr ""
 
-#: src/chatpanel.cpp:289
+#: src/chatpanel.cpp:290
 msgid "Unregister"
 msgstr ""
 
-#: src/chatpanel.cpp:295
+#: src/chatpanel.cpp:296
 msgid "On"
 msgstr ""
 
-#: src/chatpanel.cpp:297
+#: src/chatpanel.cpp:298
 msgid "Off"
 msgstr ""
 
-#: src/chatpanel.cpp:301
+#: src/chatpanel.cpp:302
 msgid "Is on?"
 msgstr ""
 
-#: src/chatpanel.cpp:303
+#: src/chatpanel.cpp:304
 msgid "Spam protection"
 msgstr ""
 
-#: src/chatpanel.cpp:304 src/chatpanel.cpp:419
+#: src/chatpanel.cpp:305 src/chatpanel.cpp:420
 msgid "ChanServ"
 msgstr ""
 
-#: src/chatpanel.cpp:311
+#: src/chatpanel.cpp:312
 msgid "Disconnect"
 msgstr ""
 
-#: src/chatpanel.cpp:313
+#: src/chatpanel.cpp:314
 msgid "Reconnect"
 msgstr ""
 
-#: src/chatpanel.cpp:328
+#: src/chatpanel.cpp:329
 msgid "Remove..."
 msgstr ""
 
-#: src/chatpanel.cpp:330
+#: src/chatpanel.cpp:331
 msgid "Change password..."
 msgstr ""
 
-#: src/chatpanel.cpp:332
+#: src/chatpanel.cpp:333
 msgid "Set access..."
 msgstr ""
 
-#: src/chatpanel.cpp:334
+#: src/chatpanel.cpp:335
 msgid "Accounts"
 msgstr ""
 
-#: src/chatpanel.cpp:337
+#: src/chatpanel.cpp:338
 msgid "Broadcast..."
 msgstr ""
 
-#: src/chatpanel.cpp:339
+#: src/chatpanel.cpp:340
 msgid "Admin"
 msgstr ""
 
-#: src/chatpanel.cpp:351
+#: src/chatpanel.cpp:352
 msgid "Open Chat"
 msgstr ""
 
-#: src/chatpanel.cpp:353
+#: src/chatpanel.cpp:354
 msgid "Join same battle"
 msgstr ""
 
-#: src/chatpanel.cpp:359
+#: src/chatpanel.cpp:360
 msgid "Ingame time"
 msgstr ""
 
-#: src/chatpanel.cpp:361
+#: src/chatpanel.cpp:362
 msgid "IP and Smurfs"
 msgstr ""
 
-#: src/chatpanel.cpp:368 src/chatpanel.cpp:406
+#: src/chatpanel.cpp:369 src/chatpanel.cpp:407
 msgid "Mute..."
 msgstr ""
 
-#: src/chatpanel.cpp:370
+#: src/chatpanel.cpp:371
 msgid "Mute for 5 minutes"
 msgstr ""
 
-#: src/chatpanel.cpp:372
+#: src/chatpanel.cpp:373
 msgid "Mute for 10 minutes"
 msgstr ""
 
-#: src/chatpanel.cpp:374
+#: src/chatpanel.cpp:375
 msgid "Mute for 30 minutes"
 msgstr ""
 
-#: src/chatpanel.cpp:376
+#: src/chatpanel.cpp:377
 msgid "Mute for 2 hours"
 msgstr ""
 
-#: src/chatpanel.cpp:378
+#: src/chatpanel.cpp:379
 msgid "Mute for 1 day"
 msgstr ""
 
-#: src/chatpanel.cpp:381 src/chatpanel.cpp:408
+#: src/chatpanel.cpp:382 src/chatpanel.cpp:409
 msgid "Unmute"
 msgstr ""
 
-#: src/chatpanel.cpp:383
+#: src/chatpanel.cpp:384
 msgid "Mute"
 msgstr ""
 
-#: src/chatpanel.cpp:385 src/chatpanel.cpp:411
+#: src/chatpanel.cpp:386 src/chatpanel.cpp:412
 msgid "Kick..."
 msgstr ""
 
-#: src/chatpanel.cpp:389
+#: src/chatpanel.cpp:390
 msgid "Ban..."
 msgstr ""
 
-#: src/chatpanel.cpp:391
+#: src/chatpanel.cpp:392
 msgid "Unban"
 msgstr ""
 
-#: src/chatpanel.cpp:399
+#: src/chatpanel.cpp:400
 msgid "Slap!"
 msgstr ""
 
-#: src/chatpanel.cpp:415
+#: src/chatpanel.cpp:416
 msgid "Op"
 msgstr ""
 
-#: src/chatpanel.cpp:417
+#: src/chatpanel.cpp:418
 msgid "DeOp"
 msgstr ""
 
-#: src/chatpanel.cpp:578
+#: src/chatpanel.cpp:579
 msgid " !! Command: \""
 msgstr ""
 
-#: src/chatpanel.cpp:578
+#: src/chatpanel.cpp:579
 msgid "\" params: \""
 msgstr ""
 
-#: src/chatpanel.cpp:584
+#: src/chatpanel.cpp:585
 msgid "channel"
 msgstr ""
 
-#: src/chatpanel.cpp:585
+#: src/chatpanel.cpp:586
 msgid "battle"
 msgstr ""
 
-#: src/chatpanel.cpp:586
+#: src/chatpanel.cpp:587
 msgid "server"
 msgstr ""
 
-#: src/chatpanel.cpp:596 src/chatpanel.cpp:601
+#: src/chatpanel.cpp:597 src/chatpanel.cpp:602
 msgid " joined the "
 msgstr ""
 
-#: src/chatpanel.cpp:615 src/chatpanel.cpp:626
+#: src/chatpanel.cpp:616 src/chatpanel.cpp:627
 msgid " left the "
 msgstr ""
 
-#: src/chatpanel.cpp:647
+#: src/chatpanel.cpp:648
 msgid ""
 "\n"
 " * Set by "
 msgstr ""
 
-#: src/chatpanel.cpp:670
+#: src/chatpanel.cpp:671
 msgid "Chat closed."
 msgstr ""
 
-#: src/chatpanel.cpp:762
+#: src/chatpanel.cpp:763
 #, c-format
 msgid "Are you sure you want to paste %d lines?"
 msgstr ""
 
-#: src/chatpanel.cpp:762
+#: src/chatpanel.cpp:763
 msgid "Flood warning"
 msgstr ""
 
-#: src/chatpanel.cpp:774
+#: src/chatpanel.cpp:775
 msgid " You have SpringLobby v"
 msgstr ""
 
-#: src/chatpanel.cpp:781
+#: src/chatpanel.cpp:782
 msgid " You are not in channel or channel does not exist."
 msgstr ""
 
-#: src/chatpanel.cpp:793
+#: src/chatpanel.cpp:794
 msgid " You are not in battle or battle does not exist."
 msgstr ""
 
-#: src/chatpanel.cpp:805
+#: src/chatpanel.cpp:806
 msgid " User is offline."
 msgstr ""
 
-#: src/chatpanel.cpp:822
+#: src/chatpanel.cpp:823
 msgid " Sent: \""
 msgstr ""
 
-#: src/chatpanel.cpp:822
+#: src/chatpanel.cpp:823
 msgid "\""
 msgstr ""
 
-#: src/chatpanel.cpp:918
+#: src/chatpanel.cpp:919
 msgid "Auto join channel"
 msgstr ""
 
-#: src/chatpanel.cpp:918
+#: src/chatpanel.cpp:919
 msgid ""
 "Please enter password needed to join this channel, leave blank for no "
 "passwrd."
 msgstr ""
 
-#: src/chatpanel.cpp:933 src/chatpanel.cpp:947 src/chatpanel.cpp:964
-#: src/chatpanel.cpp:981 src/chatpanel.cpp:998 src/chatpanel.cpp:1014
-#: src/chatpanel.cpp:1031 src/chatpanel.cpp:1047 src/chatpanel.cpp:1061
-#: src/chatpanel.cpp:1075 src/chatpanel.cpp:1172 src/chatpanel.cpp:1194
-#: src/chatpanel.cpp:1211 src/chatpanel.cpp:1233 src/chatpanel.cpp:1250
+#: src/chatpanel.cpp:934 src/chatpanel.cpp:948 src/chatpanel.cpp:965
+#: src/chatpanel.cpp:982 src/chatpanel.cpp:999 src/chatpanel.cpp:1015
+#: src/chatpanel.cpp:1032 src/chatpanel.cpp:1048 src/chatpanel.cpp:1062
+#: src/chatpanel.cpp:1076 src/chatpanel.cpp:1173 src/chatpanel.cpp:1195
+#: src/chatpanel.cpp:1212 src/chatpanel.cpp:1234 src/chatpanel.cpp:1251
 msgid "ChanServ error"
 msgstr ""
 
-#: src/chatpanel.cpp:933 src/chatpanel.cpp:947 src/chatpanel.cpp:964
-#: src/chatpanel.cpp:981 src/chatpanel.cpp:998 src/chatpanel.cpp:1047
-#: src/chatpanel.cpp:1061 src/chatpanel.cpp:1075 src/chatpanel.cpp:1172
-#: src/chatpanel.cpp:1194 src/chatpanel.cpp:1211 src/chatpanel.cpp:1233
-#: src/chatpanel.cpp:1250
+#: src/chatpanel.cpp:934 src/chatpanel.cpp:948 src/chatpanel.cpp:965
+#: src/chatpanel.cpp:982 src/chatpanel.cpp:999 src/chatpanel.cpp:1048
+#: src/chatpanel.cpp:1062 src/chatpanel.cpp:1076 src/chatpanel.cpp:1173
+#: src/chatpanel.cpp:1195 src/chatpanel.cpp:1212 src/chatpanel.cpp:1234
+#: src/chatpanel.cpp:1251
 msgid "ChanServ is not in this channel."
 msgstr ""
 
-#: src/chatpanel.cpp:953
+#: src/chatpanel.cpp:954
 msgid "What should be the new topic?"
 msgstr ""
 
-#: src/chatpanel.cpp:970
+#: src/chatpanel.cpp:971
 msgid "Message:"
 msgstr ""
 
-#: src/chatpanel.cpp:987
+#: src/chatpanel.cpp:988
 msgid "Lock channel..."
 msgstr ""
 
-#: src/chatpanel.cpp:987
+#: src/chatpanel.cpp:988
 msgid "What should the new password be?"
 msgstr ""
 
-#: src/chatpanel.cpp:1003
+#: src/chatpanel.cpp:1004
 msgid "Unlock Channel"
 msgstr ""
 
-#: src/chatpanel.cpp:1003
+#: src/chatpanel.cpp:1004
 msgid "Are you sure you want to unlock this channel?"
 msgstr ""
 
-#: src/chatpanel.cpp:1014 src/chatpanel.cpp:1031
+#: src/chatpanel.cpp:1015 src/chatpanel.cpp:1032
 msgid "ChanServ is not on this server."
 msgstr ""
 
-#: src/chatpanel.cpp:1020
+#: src/chatpanel.cpp:1021
 msgid "Register Channel"
 msgstr ""
 
-#: src/chatpanel.cpp:1020
+#: src/chatpanel.cpp:1021
 msgid "Who should be appointed founder of this channel?"
 msgstr ""
 
-#: src/chatpanel.cpp:1036
+#: src/chatpanel.cpp:1037
 msgid "Unregister Channel"
 msgstr ""
 
-#: src/chatpanel.cpp:1036
+#: src/chatpanel.cpp:1037
 msgid "Are you sure you want to unregister this channel?"
 msgstr ""
 
-#: src/chatpanel.cpp:1100
+#: src/chatpanel.cpp:1101
 msgid "Remove User Acount"
 msgstr ""
 
-#: src/chatpanel.cpp:1100
+#: src/chatpanel.cpp:1101
 msgid "What user account do you want to remove today?"
 msgstr ""
 
-#: src/chatpanel.cpp:1101
+#: src/chatpanel.cpp:1102
 msgid "Remove Account"
 msgstr ""
 
-#: src/chatpanel.cpp:1101
+#: src/chatpanel.cpp:1102
 msgid "Are you sure you want to remove the account "
 msgstr ""
 
-#: src/chatpanel.cpp:1101
+#: src/chatpanel.cpp:1102
 msgid "?"
 msgstr ""
 
-#: src/chatpanel.cpp:1109 src/chatpanel.cpp:1110
+#: src/chatpanel.cpp:1110 src/chatpanel.cpp:1111
 msgid "Change User Acount Password"
 msgstr ""
 
-#: src/chatpanel.cpp:1109
+#: src/chatpanel.cpp:1110
 msgid "What user account do you want to change the password for?"
 msgstr ""
 
-#: src/chatpanel.cpp:1110
+#: src/chatpanel.cpp:1111
 msgid "What would be the new password?"
 msgstr ""
 
-#: src/chatpanel.cpp:1117 src/chatpanel.cpp:1285 src/chatpanel.cpp:1291
+#: src/chatpanel.cpp:1118 src/chatpanel.cpp:1286 src/chatpanel.cpp:1292
 msgid "Not Implemented"
 msgstr ""
 
-#: src/chatpanel.cpp:1124
+#: src/chatpanel.cpp:1125
 msgid "Broadcast Message"
 msgstr ""
 
-#: src/chatpanel.cpp:1124
+#: src/chatpanel.cpp:1125
 msgid "Message to be broadcasted:"
 msgstr ""
 
-#: src/chatpanel.cpp:1147
+#: src/chatpanel.cpp:1148
 msgid "This battle is password protected, enter the password."
 msgstr ""
 
-#: src/chatpanel.cpp:1177
+#: src/chatpanel.cpp:1178
 msgid "Mute User"
 msgstr ""
 
-#: src/chatpanel.cpp:1177
+#: src/chatpanel.cpp:1178
 msgid "For how many minutes should the user be muted?"
 msgstr ""
 
-#: src/chatpanel.cpp:1219
+#: src/chatpanel.cpp:1220
 msgid "Kick User"
 msgstr ""
 
-#: src/chatpanel.cpp:1219 src/chatpanel.cpp:1278
+#: src/chatpanel.cpp:1220 src/chatpanel.cpp:1279
 msgid "Reason:"
 msgstr ""
 
-#: src/chatpanel.cpp:1278
+#: src/chatpanel.cpp:1279
 msgid "Kick user"
 msgstr ""
 
-#: src/chatpanel.cpp:1298
+#: src/chatpanel.cpp:1299
 msgid "Mute user"
 msgstr ""
 
-#: src/chatpanel.cpp:1298
+#: src/chatpanel.cpp:1299
 msgid "Duration:"
 msgstr ""
 
@@ -2303,7 +2303,7 @@ msgstr ""
 msgid "Fixed source ports"
 msgstr ""
 
-#: src/hostbattledialog.cpp:131 src/ui.cpp:831
+#: src/hostbattledialog.cpp:131 src/ui.cpp:834
 msgid "NAT traversal"
 msgstr ""
 
@@ -2333,6 +2333,7 @@ msgid "Battle list"
 msgstr ""
 
 #: src/mainjoinbattletab.cpp:85 src/mainjoinbattletab.cpp:153
+#: src/mainsingleplayertab.cpp:40
 msgid "Map/Mod Options"
 msgstr ""
 
@@ -2505,38 +2506,38 @@ msgstr ""
 msgid "bonus: %d%%"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:86
+#: src/mmoptionswrapper.cpp:82
 msgid "Limit D-Gun"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:87
+#: src/mmoptionswrapper.cpp:83
 msgid ""
 "Disables commander's D-gun when being too far away from the starting point"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:88
+#: src/mmoptionswrapper.cpp:84
 msgid "Ghosted Buildings"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:89
+#: src/mmoptionswrapper.cpp:85
 msgid ""
 "Enemy buildings will leave a ghost image on the map after losing LoS on them"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:90
+#: src/mmoptionswrapper.cpp:86
 msgid "Diminishing MM"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:91
+#: src/mmoptionswrapper.cpp:87
 msgid ""
 "Efficiency of MetalMakers will progressively reduce as much as you build them"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:92
+#: src/mmoptionswrapper.cpp:88
 msgid "Start Position Type"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:93
+#: src/mmoptionswrapper.cpp:89
 msgid ""
 "How players will select where to be spawned in the map\n"
 "0: fixed map positions\n"
@@ -2545,11 +2546,11 @@ msgid ""
 "3: chose in the lobby before starting"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:95
+#: src/mmoptionswrapper.cpp:91
 msgid "Game Ending condition"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:96
+#: src/mmoptionswrapper.cpp:92
 msgid ""
 "The condition that will end the game\n"
 "0: when all units will be destroyed\n"
@@ -2557,19 +2558,19 @@ msgid ""
 "2: lineage mode (see option 1, but given away units will still die"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:99
+#: src/mmoptionswrapper.cpp:95
 msgid "Sets the amount of metal that players will start with"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:102
+#: src/mmoptionswrapper.cpp:98
 msgid "Sets the amount of energy that players will start with"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:104
+#: src/mmoptionswrapper.cpp:100
 msgid "Max Units Allowed"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:105
+#: src/mmoptionswrapper.cpp:101
 msgid "Sets the maximum amount of units that a player will be allowed to build"
 msgstr ""
 
@@ -2613,11 +2614,15 @@ msgstr ""
 msgid " because: "
 msgstr ""
 
-#: src/serverevents.cpp:540
+#: src/serverevents.cpp:523
+msgid "Server Message"
+msgstr ""
+
+#: src/serverevents.cpp:546
 msgid "You were kicked from the battle!"
 msgstr ""
 
-#: src/serverevents.cpp:540
+#: src/serverevents.cpp:546
 msgid "Kicked by Host"
 msgstr ""
 
@@ -2672,11 +2677,11 @@ msgstr ""
 msgid "You cannot start a spring instance while another is already running"
 msgstr ""
 
-#: src/springlobbyapp.cpp:96
+#: src/springlobbyapp.cpp:92
 msgid "Hi "
 msgstr ""
 
-#: src/springlobbyapp.cpp:96
+#: src/springlobbyapp.cpp:92
 msgid ""
 ",\n"
 "It looks like this is your first time using SpringLobby. I have guessed a "
@@ -2687,11 +2692,11 @@ msgid ""
 "enjoy a nice game of Spring :)"
 msgstr ""
 
-#: src/springlobbyapp.cpp:96
+#: src/springlobbyapp.cpp:92
 msgid "Welcome"
 msgstr ""
 
-#: src/springlobbyapp.cpp:99
+#: src/springlobbyapp.cpp:95
 msgid ""
 "You're using a wxwidgets library of the 2.6.x series\n"
 " battle filtering, advanced gui and joining/hosting games using nat "
@@ -2699,11 +2704,11 @@ msgid ""
 " won't be available"
 msgstr ""
 
-#: src/springlobbyapp.cpp:99
+#: src/springlobbyapp.cpp:95
 msgid "Missing Functionality"
 msgstr ""
 
-#: src/springlobbyapp.cpp:135
+#: src/springlobbyapp.cpp:131
 msgid ""
 "The application has generated a fatal error and will be terminated\n"
 "Generating a bug report is not possible\n"
@@ -2711,7 +2716,7 @@ msgid ""
 "please get a wxWidgets library that supports wxUSE_DEBUGREPORT"
 msgstr ""
 
-#: src/springlobbyapp.cpp:135
+#: src/springlobbyapp.cpp:131
 msgid "Critical error"
 msgstr ""
 
@@ -2797,7 +2802,7 @@ msgid ""
 "You might want to take another look at your settings."
 msgstr ""
 
-#: src/springunitsync.cpp:400
+#: src/springunitsync.cpp:424
 msgid "LuaAI"
 msgstr ""
 
@@ -2813,163 +2818,163 @@ msgstr ""
 msgid "Server password"
 msgstr ""
 
-#: src/ui.cpp:318 src/ui.cpp:326
+#: src/ui.cpp:321 src/ui.cpp:329
 msgid "Couldn't launch browser. URL is: "
 msgstr ""
 
-#: src/ui.cpp:318 src/ui.cpp:326
+#: src/ui.cpp:321 src/ui.cpp:329
 msgid "Couldn't launch browser."
 msgstr ""
 
-#: src/ui.cpp:326
+#: src/ui.cpp:329
 msgid ""
 "\n"
 "Broser path is: "
 msgstr ""
 
-#: src/ui.cpp:408 src/ui.cpp:643
+#: src/ui.cpp:411 src/ui.cpp:646
 msgid "error"
 msgstr ""
 
-#: src/ui.cpp:408 src/ui.cpp:643
+#: src/ui.cpp:411 src/ui.cpp:646
 msgid "no active chat panels open."
 msgstr ""
 
-#: src/ui.cpp:411
+#: src/ui.cpp:414
 msgid "Active chat channels:"
 msgstr ""
 
-#: src/ui.cpp:423
+#: src/ui.cpp:426
 msgid "Help error"
 msgstr ""
 
-#: src/ui.cpp:423
+#: src/ui.cpp:426
 msgid "Type /help in a chat box."
 msgstr ""
 
-#: src/ui.cpp:427
+#: src/ui.cpp:430
 msgid "SpringLobby commands help."
 msgstr ""
 
-#: src/ui.cpp:429
+#: src/ui.cpp:432
 msgid "Global commands:"
 msgstr ""
 
-#: src/ui.cpp:430
+#: src/ui.cpp:433
 msgid "  \"/away\" - Sets your status to away."
 msgstr ""
 
-#: src/ui.cpp:431
+#: src/ui.cpp:434
 msgid "  \"/back\" - Resets your away status."
 msgstr ""
 
-#: src/ui.cpp:432
+#: src/ui.cpp:435
 msgid "  \"/channels\" - Lists currently active channels."
 msgstr ""
 
-#: src/ui.cpp:433
+#: src/ui.cpp:436
 msgid ""
 "  \"/help [topic]\" - Put topic if you want to know more specific "
 "information about a command."
 msgstr ""
 
-#: src/ui.cpp:434
+#: src/ui.cpp:437
 msgid ""
 "  \"/join channel [password] [,channel2 [password2]]\" - Join a channel."
 msgstr ""
 
-#: src/ui.cpp:435
+#: src/ui.cpp:438
 msgid "  \"/j\" - Alias to /join."
 msgstr ""
 
-#: src/ui.cpp:436
+#: src/ui.cpp:439
 msgid "  \"/ingame\" - Show how much time you have in game."
 msgstr ""
 
-#: src/ui.cpp:437
+#: src/ui.cpp:440
 msgid "  \"/rename newalias\" - Changes your nickname to newalias."
 msgstr ""
 
-#: src/ui.cpp:438
+#: src/ui.cpp:441
 msgid "  \"/sayver\" - Say what version of springlobby you have in chat."
 msgstr ""
 
-#: src/ui.cpp:439
+#: src/ui.cpp:442
 msgid "  \"/ver\" - Display what version of SpringLobby you have."
 msgstr ""
 
-#: src/ui.cpp:441
+#: src/ui.cpp:444
 msgid "Chat commands:"
 msgstr ""
 
-#: src/ui.cpp:442
+#: src/ui.cpp:445
 msgid "  \"/me action\" - Say IRC style action message."
 msgstr ""
 
-#: src/ui.cpp:444
+#: src/ui.cpp:447
 msgid ""
 "If you are missing any commands, go to #springlobby and try to type it "
 "there :)"
 msgstr ""
 
-#: src/ui.cpp:447
+#: src/ui.cpp:450
 msgid "No topics written yet."
 msgstr ""
 
-#: src/ui.cpp:449
+#: src/ui.cpp:452
 msgid "The topic \""
 msgstr ""
 
-#: src/ui.cpp:449
+#: src/ui.cpp:452
 msgid "\" was not found. Type \"/help topics\" only for available topics."
 msgstr ""
 
-#: src/ui.cpp:482
+#: src/ui.cpp:485
 msgid "Your spring version"
 msgstr ""
 
-#: src/ui.cpp:484
+#: src/ui.cpp:487
 msgid "is not supported by the lobby server that requires version"
 msgstr ""
 
-#: src/ui.cpp:486
+#: src/ui.cpp:489
 msgid "Online play will be disabled."
 msgstr ""
 
-#: src/ui.cpp:491
+#: src/ui.cpp:494
 msgid ""
 "Couldn't get your spring version from the unitsync library.\n"
 "\n"
 "Online play will be disabled."
 msgstr ""
 
-#: src/ui.cpp:548
+#: src/ui.cpp:551
 msgid ""
 "This is the SpringLobby channel, please report any problems you are having "
 "with SpringLobby here and the friendly developers will help you."
 msgstr ""
 
-#: src/ui.cpp:646
+#: src/ui.cpp:649
 #, c-format
 msgid "(%d users)"
 msgstr ""
 
-#: src/ui.cpp:708
+#: src/ui.cpp:711
 msgid "Server message"
 msgstr ""
 
-#: src/ui.cpp:826
+#: src/ui.cpp:829
 msgid ""
 "Your spring settings are probably not configured correctly,\n"
 "you should take another look at your settings before trying\n"
 "to play online."
 msgstr ""
 
-#: src/ui.cpp:826
+#: src/ui.cpp:829
 msgid "Spring settings error"
 msgstr ""
 
-#: src/ui.cpp:831
+#: src/ui.cpp:834
 msgid ""
 "This game uses NAT traversal that is not supported by wx 2.6 build of "
 "springlobby. \n"
