@@ -54,6 +54,8 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
 	GameOptions opt;
 	switch (modmapFlag)
 	{
+	    default:
+            break;
 		case MapOption:
 			try
 			{
