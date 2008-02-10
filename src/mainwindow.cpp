@@ -142,6 +142,7 @@ MainWindow::~MainWindow()
   sett().SetMainWindowTop( y );
   sett().SetMainWindowLeft( x );
   sett().SaveSettings();
+  m_ui.Quit();
   m_ui.OnMainWindowDestruct();
 
   delete m_chat_icon;
