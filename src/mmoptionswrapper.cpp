@@ -38,11 +38,11 @@ bool mmOptionsWrapper::loadMapOptions(wxString mapname)
 
 OptionType mmOptionsWrapper::GetSingleOptionType (wxString key)
 {
-	OptionType* type = new OptionType(opt_undefined);
+	OptionType type = opt_undefined;
 	for ( int g = 0; g < optionCategoriesCount; g++ )
 	{
 		if (keyExists(key,(GameOption)g,false,type))
-			return *type;
+			return type;
 	}
 	return opt_undefined;
 }
@@ -105,37 +105,37 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
 	return true;
 }
 
-bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showError, OptionType* optType)
+bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showError, OptionType& optType)
 {
 	wxString duplicateKeyError = _T("Please contact the mod's author and tell him\n"
 										"to use unique keys in his ModOptions.lua");
 	bool exists = false;
-	*optType = opt_undefined;
+	optType = opt_undefined;
 	if ( modmapFlag < ModOption || modmapFlag > LastOption -1 )
 		return false;//, wxString::Format(_T("%d"),modmapFlag));
 	if (  opts[modmapFlag].list_map.find(key) !=  opts[modmapFlag].list_map.end())
 	{
-		*optType = opt_list;
+		optType = opt_list;
 		exists = true;
 	}
 	else if ( opts[modmapFlag].string_map.find(key) !=  opts[modmapFlag].string_map.end())
 	{
-		*optType = opt_string;
+		optType = opt_string;
 		exists = true;
 	}
 	else if ( opts[modmapFlag].bool_map.find(key) !=  opts[modmapFlag].bool_map.end())
 	{
-		*optType = opt_bool;
+		optType = opt_bool;
 		exists = true;
 	}
 	else if ( opts[modmapFlag].float_map.find(key)!=  opts[modmapFlag].float_map.end())
 	{
-		*optType = opt_float;
+		optType = opt_float;
 		exists = true;
 	}
 	else if ( opts[modmapFlag].int_map.find(key)!=  opts[modmapFlag].int_map.end())
 	{
-		*optType = opt_int;
+		optType = opt_int;
 		exists = true;
 	}
 	if (exists && showError)
@@ -160,12 +160,12 @@ bool  mmOptionsWrapper::setOptions(wxStringPairVec* options, GameOption modmapFl
 		wxString value = it->second;
 
 		//we don't want to add a key that doesn't already exists
-		OptionType* optType = new OptionType(opt_undefined);
+		OptionType optType = opt_undefined;
 		if(!keyExists(key,modmapFlag,false,optType))
 			return false;
 		else
 		{
-			if ( !setSingleOptionTypeSwitch( key, value, modmapFlag,  *optType) )
+			if ( !setSingleOptionTypeSwitch( key, value, modmapFlag, optType) )
 				return false;
 		}
 	}
@@ -230,18 +230,18 @@ void mmOptionsWrapper::getOptionsMap(wxStringMap* map, GameOption modmapFlag)
 
 bool mmOptionsWrapper::setSingleOption(wxString key,wxString value,GameOption modmapFlag)
 {
-	OptionType* optType = new OptionType(opt_undefined);
+	OptionType optType = opt_undefined;
 	keyExists( key, modmapFlag, false, optType );
-	return setSingleOptionTypeSwitch(key,value,modmapFlag,*optType);
+	return setSingleOptionTypeSwitch(key,value,modmapFlag,optType);
 }
 
 bool mmOptionsWrapper::setSingleOption(wxString key,wxString value)
 {
-	OptionType* optType = new OptionType(opt_undefined);
+	OptionType optType = opt_undefined;
 	if (keyExists(key,ModOption,false,optType))
-		return setSingleOptionTypeSwitch(key,value,ModOption,*optType);
+		return setSingleOptionTypeSwitch(key,value,ModOption,optType);
 	else if (keyExists(key,MapOption,false,optType))
-		return setSingleOptionTypeSwitch(key,value,MapOption,*optType);
+		return setSingleOptionTypeSwitch(key,value,MapOption,optType);
 	else
 		return false;
 }
@@ -259,11 +259,11 @@ wxString mmOptionsWrapper::getSingleValue(wxString key)
 
 wxString mmOptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag)
 {
-	OptionType* optType = new OptionType(opt_undefined);
+	OptionType optType = opt_undefined;
 
 	if ( keyExists(key,modmapFlag,false,optType) )
 	{
-		switch (*optType)
+		switch (optType)
 		{
 		case opt_float:
 			return wxString::Format( _T("%f"),(opts[modmapFlag].float_map)[key].value );
@@ -290,44 +290,42 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 		case opt_float :
 		{
 			//test if min < val < max
-			double* d_val = new double;
-			bool d_conv_ok = value.ToDouble(d_val);
-			float fl_value = float(*d_val);
-			if( !d_conv_ok || fl_value < (opts[modmapFlag].float_map)[key].min || fl_value > (opts[modmapFlag].float_map)[key].max )
+			double d_val;
+			bool d_conv_ok = value.ToDouble(&d_val);
+			if( !d_conv_ok || d_val < (opts[modmapFlag].float_map)[key].min || d_val > (opts[modmapFlag].float_map)[key].max )
 			{
 				wxLogWarning(_T("recieved number option exceeds boundaries"));
 				return false;
 			}
 			else
-				(opts[modmapFlag].float_map)[key].value = fl_value;
+				(opts[modmapFlag].float_map)[key].value = d_val;
 			break;
 		}
 		case opt_int :
 		{
 			//test if min < val < max
-			long* l_val = new long;
-			bool l_conv_ok = value.ToLong(l_val);
-			long int_value = long(*l_val);
-			if( !l_conv_ok || int_value < (opts[modmapFlag].int_map)[key].min || int_value > (opts[modmapFlag].int_map)[key].max )
+			long l_val = 0;
+			bool l_conv_ok = value.ToLong(&l_val);
+			if( !l_conv_ok || l_val < (opts[modmapFlag].int_map)[key].min || l_val > (opts[modmapFlag].int_map)[key].max )
 			{
 				wxLogWarning(_T("recieved number option exceeds boundaries"));
 				return false;
 			}
 			else
-				(opts[modmapFlag].int_map)[key].value = int_value;
+				(opts[modmapFlag].int_map)[key].value = l_val;
 			break;
 		}
 		case opt_bool :
 		{
-			long* l_val = new long;
-			bool l_conv_ok = value.ToLong(l_val);
-			if( !l_conv_ok || ( *l_val != 1 && *l_val != 0 ) )
+			long l_val;
+			bool l_conv_ok = value.ToLong(&l_val);
+			if( !l_conv_ok || ( l_val != 1 && l_val != 0 ) )
 			{
 				wxLogWarning(_T("recieved bool option that is neither 0 or 1"));
 				return false;
 			}
 			else
-				(opts[modmapFlag].bool_map)[key].value = bool(*l_val);
+				(opts[modmapFlag].bool_map)[key].value = bool(l_val);
 			break;
 		}
 		case opt_string :
@@ -389,7 +387,7 @@ wxString mmOptionsWrapper::GetNameListOptValue(wxString key, GameOption flag)
 	OptionType optType;
 	if (flag < ModOption || flag > LastOption - 1)
 		return wxEmptyString;
-	else if ( keyExists(key,flag,false,&optType) )
+	else if ( keyExists(key,flag,false, optType) )
 	{
 		if ( optType == opt_list)
 		{
@@ -406,7 +404,7 @@ wxString mmOptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemn
 	OptionType optType;
 	if (flag < ModOption || flag > LastOption - 1)
 		return wxEmptyString;
-	else if ( keyExists(optkey,flag,false,&optType) )
+	else if ( keyExists(optkey,flag,false, optType) )
 	{
 		if ( optType == opt_list)
 		{
