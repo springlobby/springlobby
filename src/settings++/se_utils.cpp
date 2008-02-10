@@ -2,7 +2,7 @@
 
 #include <string>
 #include <sstream>
-#include <wx/string.h>
+#include <wx/intl.h>
 #include "custom_dialogs.h"
 #include <wx/utils.h>
 #include <wx/log.h>
