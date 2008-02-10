@@ -193,7 +193,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 }
 
 
-bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password,wxString* reason)
+bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password,wxString& reason)
 {
   wxString host;
   int port;
