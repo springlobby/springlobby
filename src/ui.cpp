@@ -259,7 +259,7 @@ void Ui::Quit()
 
 //fixes for non-termination on win
   m_main_win->Close();
-  m_thread->Destroy();
+  m_thread->Delete();
   m_con_win->Close();
 
   m_serv->Disconnect();
