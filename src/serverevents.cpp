@@ -518,6 +518,12 @@ void ServerEvents::OnServerMessage( const wxString& message )
 }
 
 
+void ServerEvents::OnServerMessageBox( const wxString& message )
+{
+  m_ui.ShowMessage( _("Server Message"), message );
+}
+
+
 void ServerEvents::OnChannelMessage( const wxString& channel, const wxString& msg )
 {
   m_ui.OnChannelMessage( channel, msg );

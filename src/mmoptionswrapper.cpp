@@ -1,10 +1,12 @@
 #include "mmoptionswrapper.h"
 
-#include "springunitsynclib.h"
+#include "iunitsync.h"
 #include "utils.h"
 #include "settings++/custom_dialogs.h"
+
 #include <stdexcept>
 #include <wx/intl.h>
+
 mmOptionsWrapper::mmOptionsWrapper()
 {
 	unLoadOptions();
@@ -13,20 +15,16 @@ mmOptionsWrapper::mmOptionsWrapper()
 
 void mmOptionsWrapper::unLoadOptions()
 {
-	for (GameOption i = 0; i < optionCategoriesCount; ++i)
+	for (int i = 0; i < optionCategoriesCount; ++i)
 	{
-		unLoadOptions( i );
+		unLoadOptions( (GameOption)i );
 	}
 }
 
 void mmOptionsWrapper::unLoadOptions(GameOption i)
 {
-	m_boolMaps[i] 	= new optionMapBool;
-	m_floatMaps[i]	= new optionMapFloat;
-	m_stringMaps[i] = new optionMapString;
-	m_listMaps[i]	= new optionMapList;
-	m_intMaps[i]	= new optionMapInt;
-
+  GameOptions empty;
+  opts[i] = empty;
 }
 
 mmOptionsWrapper::~mmOptionsWrapper()
@@ -41,120 +39,69 @@ bool mmOptionsWrapper::loadMapOptions(wxString mapname)
 OptionType mmOptionsWrapper::GetSingleOptionType (wxString key)
 {
 	OptionType* type = new OptionType(opt_undefined);
-	for ( GameOption g = 0; g < optionCategoriesCount; g++ )
+	for ( int g = 0; g < optionCategoriesCount; g++ )
 	{
-		if (keyExists(key,g,false,type))
+		if (keyExists(key,(GameOption)g,false,type))
 			return *type;
 	}
 	return opt_undefined;
 }
 
 
-bool mmOptionsWrapper::loadOptions(GameOption modmapFlag,wxString mapname)
+bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
 {
-	int count = 0;
-	wxString singleError;
 	unLoadOptions(modmapFlag);
+	GameOptions opt;
 	switch (modmapFlag)
 	{
+	    default:
+            break;
 		case MapOption:
 			try
 			{
-				count = susynclib()->GetMapOptionCount(mapname);
-
+        opt = usync()->GetMapOptions(name);
 			}
 			catch(...)
 			{
 				wxLogError(_T("Could not load map Options"));
 				return false;
 			}
-			singleError = _T("Cannot load map-option #");
 			break;
 		case ModOption:
 			try
 			{
-				count = susynclib()->GetModOptionCount();
+        opt = usync()->GetModOptions(name);
 			}
 			catch(...)
 			{
 				wxLogError(_T("Could not load mod Options"));
 				return false;
 			}
-			singleError = _T("Cannot load mod-option #");
 			break;
     case EngineOption:
-        (*m_boolMaps[modmapFlag])[_T("limitdgun")] = mmOptionBool(_("Limit D-Gun"),_T("limitdgun"),
+        opt.bool_map[_T("limitdgun")] = mmOptionBool(_("Limit D-Gun"),_T("limitdgun"),
         _("Disables commander's D-gun when being too far away from the starting point"),false);
-        (*m_boolMaps[modmapFlag])[_T("ghostedbuildings")] = mmOptionBool(_("Ghosted Buildings"),_T("ghostedbuildings"),
+        opt.bool_map[_T("ghostedbuildings")] = mmOptionBool(_("Ghosted Buildings"),_T("ghostedbuildings"),
         _("Enemy buildings will leave a ghost image on the map after losing LoS on them"),true);
-        (*m_boolMaps[modmapFlag])[_T("diminishingmms")] = mmOptionBool(_("Diminishing MM"),_T("diminishingmms"),
+        opt.bool_map[_T("diminishingmms")] = mmOptionBool(_("Diminishing MM"),_T("diminishingmms"),
         _("Efficiency of MetalMakers will progressively reduce as much as you build them"),false);
-        (*m_intMaps[modmapFlag])[_T("startpostype")] = mmOptionInt( _("Start Position Type"),_T("startpostype"),
+        opt.int_map[_T("startpostype")] = mmOptionInt( _("Start Position Type"),_T("startpostype"),
         _("How players will select where to be spawned in the map\n0: fixed map positions\n1: random map positions\n2: chose in game\n3: chose in the lobby before starting"),
         0, 1, 0, 3);
-        (*m_intMaps[modmapFlag])[_T("gamemode")] = mmOptionInt( _("Game Ending condition"),_T("gamemode"),
+        opt.int_map[_T("gamemode")] = mmOptionInt( _("Game Ending condition"),_T("gamemode"),
         _("The condition that will end the game\n0: when all units will be destroyed\n1: when the commander will be destroyed\n2: lineage mode (see option 1, but given away units will still die"),
         0, 1, 0, 2);
-        (*m_intMaps[modmapFlag])[_T("startmetal")] = mmOptionInt( _("Start Metal"),_T("startmetal"),
+        opt.int_map[_T("startmetal")] = mmOptionInt( _("Start Metal"),_T("startmetal"),
         _("Sets the amount of metal that players will start with"),
         1000, 1, 0, 10000);
-        (*m_intMaps[modmapFlag])[_T("startenergy")] = mmOptionInt( _("Start Energy"),_T("startenergy"),
+        opt.int_map[_T("startenergy")] = mmOptionInt( _("Start Energy"),_T("startenergy"),
         _("Sets the amount of energy that players will start with"),
         1000, 1, 0, 10000);
-        (*m_intMaps[modmapFlag])[_T("maxunits")] = mmOptionInt( _("Max Units Allowed"),_T("maxunits"),
+        opt.int_map[_T("maxunits")] = mmOptionInt( _("Max Units Allowed"),_T("maxunits"),
         _("Sets the maximum amount of units that a player will be allowed to build"),
         500, 1, 0, 10000);
-        return true;
 	}
-
-	mmOptionList* templist;
-	for (int i = 0; i < count; ++i)
-	{
-		wxString key = susynclib()->GetOptionKey(i);
-		OptionType* dummy = new OptionType(opt_undefined);
-		if (keyExists(key,modmapFlag,true,dummy))
-		{
-			return false;
-		}
-		else
-		{
-			try
-			{
-				switch (susynclib()->GetOptionType(i))
-				{
-				case opt_float:
-					(*m_floatMaps[modmapFlag])[key] = mmOptionFloat(susynclib()->GetOptionName(i),key,
-							susynclib()->GetOptionDesc(i),susynclib()->GetOptionNumberDef(i), susynclib()->GetOptionNumberStep(i),
-							susynclib()->GetOptionNumberMin(i),susynclib()->GetOptionNumberMax(i));
-					break;
-				case opt_bool:
-					(*m_boolMaps[modmapFlag])[key] = mmOptionBool(susynclib()->GetOptionName(i),key,
-							susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i));
-					break;
-				case opt_string:
-					(*m_stringMaps[modmapFlag])[key] = mmOptionString(susynclib()->GetOptionName(i),key,
-							susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i));
-					break;
-				case opt_list:
-					 templist = new mmOptionList(susynclib()->GetOptionName(i),key,
-							susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
-					 int listitemcount = susynclib()->GetOptionListCount(i);
-					 for (int j = 0; j < listitemcount; ++j)
-					 {
-						 templist->addItem(susynclib()->GetOptionListItemKey(i,j),susynclib()->GetOptionListItemName(i,j),
-								 								susynclib()->GetOptionListItemDesc(i,j));
-					 }
-					 (*m_listMaps[modmapFlag])[key] = (*templist);
-				}
-
-			}
-			catch(...)
-			{
-				wxLogWarning( singleError << i );
-				return false;
-			}
-		}
-	}
+	opts[modmapFlag] = opt;
 	return true;
 }
 
@@ -166,27 +113,27 @@ bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showE
 	*optType = opt_undefined;
 	if ( modmapFlag < ModOption || modmapFlag > LastOption -1 )
 		return false;//, wxString::Format(_T("%d"),modmapFlag));
-	if ( m_listMaps[modmapFlag]->find(key) !=  m_listMaps[modmapFlag]->end())
+	if (  opts[modmapFlag].list_map.find(key) !=  opts[modmapFlag].list_map.end())
 	{
 		*optType = opt_list;
 		exists = true;
 	}
-	else if ( m_stringMaps[modmapFlag]->find(key) !=  m_stringMaps[modmapFlag]->end())
+	else if ( opts[modmapFlag].string_map.find(key) !=  opts[modmapFlag].string_map.end())
 	{
 		*optType = opt_string;
 		exists = true;
 	}
-	else if ( m_boolMaps[modmapFlag]->find(key) !=  m_boolMaps[modmapFlag]->end())
+	else if ( opts[modmapFlag].bool_map.find(key) !=  opts[modmapFlag].bool_map.end())
 	{
 		*optType = opt_bool;
 		exists = true;
 	}
-	else if ( m_floatMaps[modmapFlag]->find(key)!=  m_floatMaps[modmapFlag]->end())
+	else if ( opts[modmapFlag].float_map.find(key)!=  opts[modmapFlag].float_map.end())
 	{
 		*optType = opt_float;
 		exists = true;
 	}
-	else if ( m_intMaps[modmapFlag]->find(key)!=  m_intMaps[modmapFlag]->end())
+	else if ( opts[modmapFlag].int_map.find(key)!=  opts[modmapFlag].int_map.end())
 	{
 		*optType = opt_int;
 		exists = true;
@@ -227,27 +174,27 @@ bool  mmOptionsWrapper::setOptions(wxStringPairVec* options, GameOption modmapFl
 
 void  mmOptionsWrapper::getOptions(wxStringTripleVec* list, GameOption modmapFlag)
 {
-	for (optionMapBoolIter it = m_boolMaps[modmapFlag]->begin(); it != m_boolMaps[modmapFlag]->end(); ++it)
+	for (optionMapBoolIter it = opts[modmapFlag].bool_map.begin(); it != opts[modmapFlag].bool_map.end(); ++it)
 	{
 		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name , wxString::Format(_T("%d"),(*it).second.value) ) ) );
 	}
 
-	for (optionMapStringIter it = m_stringMaps[modmapFlag]->begin(); it != m_stringMaps[modmapFlag]->end(); ++it)
+	for (optionMapStringIter it = opts[modmapFlag].string_map.begin(); it != opts[modmapFlag].string_map.end(); ++it)
 	{
 		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, (*it).second.value) ) );
 	}
 
-	for (optionMapFloatIter it = m_floatMaps[modmapFlag]->begin(); it != m_floatMaps[modmapFlag]->end(); ++it)
+	for (optionMapFloatIter it = opts[modmapFlag].float_map.begin(); it != opts[modmapFlag].float_map.end(); ++it)
 	{
 		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, wxString::Format(_T("%f"),(*it).second.value) ) ) );
 	}
 
-	for (optionMapListIter it = m_listMaps[modmapFlag]->begin(); it != m_listMaps[modmapFlag]->end(); ++it)
-	{																					//TODO fixme
+	for (optionMapListIter it = opts[modmapFlag].list_map.begin(); it != opts[modmapFlag].list_map.end(); ++it)
+	{
 		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, (*it).second.value) ) );
 	}
 
-	for (optionMapIntIter it = m_intMaps[modmapFlag]->begin(); it != m_intMaps[modmapFlag]->end(); ++it)
+	for (optionMapIntIter it = opts[modmapFlag].int_map.begin(); it != opts[modmapFlag].int_map.end(); ++it)
 	{
 		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, wxString::Format(_T("%ld"),(*it).second.value) ) ) );
 	}
@@ -255,27 +202,27 @@ void  mmOptionsWrapper::getOptions(wxStringTripleVec* list, GameOption modmapFla
 
 void mmOptionsWrapper::getOptionsMap(wxStringMap* map, GameOption modmapFlag)
 {
-	for (optionMapBoolIter it = m_boolMaps[modmapFlag]->begin(); it != m_boolMaps[modmapFlag]->end(); ++it)
+	for (optionMapBoolIter it = opts[modmapFlag].bool_map.begin(); it != opts[modmapFlag].bool_map.end(); ++it)
 	{
 		(*map)[(*it).first] =  wxString::Format(_T("%d"),(*it).second.value);
 	}
 
-	for (optionMapStringIter it = m_stringMaps[modmapFlag]->begin(); it != m_stringMaps[modmapFlag]->end(); ++it)
+	for (optionMapStringIter it = opts[modmapFlag].string_map.begin(); it != opts[modmapFlag].string_map.end(); ++it)
 	{
 		(*map)[(*it).first] = (*it).second.value;
 	}
 
-	for (optionMapFloatIter it = m_floatMaps[modmapFlag]->begin(); it != m_floatMaps[modmapFlag]->end(); ++it)
+	for (optionMapFloatIter it = opts[modmapFlag].float_map.begin(); it != opts[modmapFlag].float_map.end(); ++it)
 	{
 		(*map)[(*it).first] = wxString::Format(_T("%f"),(*it).second.value);
 	}
 
-	for (optionMapListIter it = m_listMaps[modmapFlag]->begin(); it != m_listMaps[modmapFlag]->end(); ++it)
+	for (optionMapListIter it = opts[modmapFlag].list_map.begin(); it != opts[modmapFlag].list_map.end(); ++it)
 	{
 		(*map)[(*it).first] = (*it).second.value;
 	}
 
-	for (optionMapIntIter it = m_intMaps[modmapFlag]->begin(); it != m_intMaps[modmapFlag]->end(); ++it)
+	for (optionMapIntIter it = opts[modmapFlag].int_map.begin(); it != opts[modmapFlag].int_map.end(); ++it)
 	{
 		(*map)[(*it).first] =  wxString::Format(_T("%ld"),(*it).second.value);
 	}
@@ -301,9 +248,9 @@ bool mmOptionsWrapper::setSingleOption(wxString key,wxString value)
 
 wxString mmOptionsWrapper::getSingleValue(wxString key)
 {
-	for ( GameOption g = 0; g < optionCategoriesCount; g++ )
+	for ( int g = 0; g < optionCategoriesCount; g++ )
 	{
-		wxString tmp = getSingleValue(key,g);
+		wxString tmp = getSingleValue(key, (GameOption)g);
 		if (tmp != wxEmptyString)
 			return tmp;
 	}
@@ -319,15 +266,15 @@ wxString mmOptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag)
 		switch (*optType)
 		{
 		case opt_float:
-			return wxString::Format( _T("%f"),(*m_floatMaps[modmapFlag])[key].value );
+			return wxString::Format( _T("%f"),(opts[modmapFlag].float_map)[key].value );
 		case opt_bool:
-			return wxString::Format(_T("%d"), (*m_boolMaps[modmapFlag])[key].value );
+			return wxString::Format(_T("%d"), (opts[modmapFlag].bool_map)[key].value );
 		case opt_int:
-			return wxString::Format(_T("%ld"), (*m_intMaps[modmapFlag])[key].value );
+			return wxString::Format(_T("%ld"), (opts[modmapFlag].int_map)[key].value );
 		case opt_string:
-			return  (*m_stringMaps[modmapFlag])[key].value ;
+			return  (opts[modmapFlag].string_map)[key].value ;
 		case opt_list:
-			return (*m_listMaps[modmapFlag])[key].value;
+			return (opts[modmapFlag].list_map)[key].value;
         case opt_undefined:
             return wxEmptyString;
 		}
@@ -346,13 +293,13 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 			double* d_val = new double;
 			bool d_conv_ok = value.ToDouble(d_val);
 			float fl_value = float(*d_val);
-			if( !d_conv_ok || fl_value < (*m_floatMaps[modmapFlag])[key].min || fl_value > (*m_floatMaps[modmapFlag])[key].max )
+			if( !d_conv_ok || fl_value < (opts[modmapFlag].float_map)[key].min || fl_value > (opts[modmapFlag].float_map)[key].max )
 			{
 				wxLogWarning(_T("recieved number option exceeds boundaries"));
 				return false;
 			}
 			else
-				(*m_floatMaps[modmapFlag])[key].value = fl_value;
+				(opts[modmapFlag].float_map)[key].value = fl_value;
 			break;
 		}
 		case opt_int :
@@ -361,13 +308,13 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 			long* l_val = new long;
 			bool l_conv_ok = value.ToLong(l_val);
 			long int_value = long(*l_val);
-			if( !l_conv_ok || int_value < (*m_intMaps[modmapFlag])[key].min || int_value > (*m_intMaps[modmapFlag])[key].max )
+			if( !l_conv_ok || int_value < (opts[modmapFlag].int_map)[key].min || int_value > (opts[modmapFlag].int_map)[key].max )
 			{
 				wxLogWarning(_T("recieved number option exceeds boundaries"));
 				return false;
 			}
 			else
-				(*m_intMaps[modmapFlag])[key].value = int_value;
+				(opts[modmapFlag].int_map)[key].value = int_value;
 			break;
 		}
 		case opt_bool :
@@ -380,30 +327,30 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 				return false;
 			}
 			else
-				(*m_boolMaps[modmapFlag])[key].value = bool(*l_val);
+				(opts[modmapFlag].bool_map)[key].value = bool(*l_val);
 			break;
 		}
 		case opt_string :
 		{
 			// test if maxlength isn't exceeded
-			if ( int(value.Len())> (*m_stringMaps[modmapFlag])[key].max_len )
+			if ( int(value.Len())> (opts[modmapFlag].string_map)[key].max_len )
 			{
 				wxLogWarning(_T("recieved string option exceeds max_len"));
 				return false;
 			}
 			else
-				(*m_stringMaps[modmapFlag])[key].value = value;
+				(opts[modmapFlag].string_map)[key].value = value;
 			break;
 		}
 		case opt_list :
 		{
 			// test if valid value, aka is in list
-			int listitemcount = (*m_listMaps[modmapFlag])[key].listitems.size();
+			int listitemcount = (opts[modmapFlag].list_map)[key].listitems.size();
 			bool valid_string = false;
 			int j = 0;
 			for (; j < listitemcount; ++j)
 			{
-				if ( (*m_listMaps[modmapFlag])[key].listitems[j].key == value)
+				if ( (opts[modmapFlag].list_map)[key].listitems[j].key == value)
 				{
 					valid_string = true;
 					break;
@@ -412,8 +359,8 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 
 			if (valid_string)
 			{
-				(*m_listMaps[modmapFlag])[key].value = (*m_listMaps[modmapFlag])[key].listitems[j].key;
-				(*m_listMaps[modmapFlag])[key].cur_choice_index = j;
+				(opts[modmapFlag].list_map)[key].value = (opts[modmapFlag].list_map)[key].listitems[j].key;
+				(opts[modmapFlag].list_map)[key].cur_choice_index = j;
 			}
 			else
 			{
@@ -431,11 +378,8 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 
 bool mmOptionsWrapper::reloadMapOptions(wxString mapname)
 {
-	m_boolMaps[MapOption] 	= new optionMapBool;
-	m_floatMaps[MapOption]	= new optionMapFloat;
-	m_stringMaps[MapOption] = new optionMapString;
-	m_listMaps[MapOption]	= new optionMapList;
-	m_intMaps[MapOption] 	= new optionMapInt;
+  GameOptions empty;
+	opts[MapOption] = empty;
 
 	return loadMapOptions(mapname);
 }
@@ -449,7 +393,7 @@ wxString mmOptionsWrapper::GetNameListOptValue(wxString key, GameOption flag)
 	{
 		if ( optType == opt_list)
 		{
-			return ( (*m_listMaps[flag])[key].cbx_choices[ (*m_listMaps[flag])[key].cur_choice_index ] );
+			return ( (opts[flag].list_map)[key].cbx_choices[ (opts[flag].list_map)[key].cur_choice_index ] );
 		}
 	}
 
@@ -466,7 +410,7 @@ wxString mmOptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemn
 	{
 		if ( optType == opt_list)
 		{
-			for (ListItemVec::iterator it = (*m_listMaps[flag])[optkey].listitems.begin(); it != (*m_listMaps[flag])[optkey].listitems.end(); ++it)
+			for (ListItemVec::iterator it = (opts[flag].list_map)[optkey].listitems.begin(); it != (opts[flag].list_map)[optkey].listitems.end(); ++it)
 			{
 				if (it->name == itemname)
 					return it->key;

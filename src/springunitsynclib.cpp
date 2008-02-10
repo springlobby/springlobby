@@ -346,14 +346,6 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
     true_colours[(i*3)+1] = uchar( (( (colours[i] >> 5) & 63 )/63.0)*255.0 );;
     true_colours[(i*3)+2] = uchar( (( colours[i] & 31 )/31.0)*255.0 );
   }
-  /*for ( int y = 0; y < height; y++ )
-  {
-    for ( int x = 0; x < width; x++ )
-    {
-      int pos = y*width + x;
-      ret.SetRGB( x, y, uchar( colours[pos].r/31.0*255.0 ), uchar( colours[pos].g/63.0*255.0 ), uchar( colours[pos].b/31.0*255.0 ) );
-    }
-  }*/
 
   return wxImage( width, height, true_colours, false );
 }
@@ -614,10 +606,11 @@ int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
 }
 
 
-int SpringUnitSyncLib::GetModOptionCount()
+int SpringUnitSyncLib::GetModOptionCount( const wxString& name )
 {
   InitLib( m_get_Mod_option_count );
-
+  ASSERT_RUNTIME( !name.IsEmpty(), _T("passing void modname to unitsync") );
+  _SetCurrentMod( name );
   return m_get_Mod_option_count();
 }
 

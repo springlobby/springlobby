@@ -622,6 +622,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
   } else if ( cmd == _T("DENIED") ) {
     msg = GetSentenceParam( params );
     m_se->OnServerMessage( msg );
+    Disconnect();
     //Command: "DENIED" params: "Already logged in".
   } else if ( cmd == _T("HOSTPORT") ) {
     int tmp_port = GetIntParam( params );
@@ -644,6 +645,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 	  m_se->OnKickedFromBattle();
   } else if ( cmd == _T("BROADCAST")) {
     m_se->OnServerMessage( params );
+  } else if ( cmd == _T("SERVERMSGBOX")) {
+    m_se->OnServerMessageBox( params );
   } else {
     wxLogMessage( _T("??? Cmd: %s params: %s"), cmd.c_str(), params.c_str() );
     m_se->OnUnknownCommand( cmd, params );

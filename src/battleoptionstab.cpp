@@ -255,7 +255,7 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
   long type;
   Tag.BeforeFirst( '_' ).ToLong( &type );
   wxString key = Tag.AfterFirst( '_' );
-  wxString value = m_battle.CustomBattleOptions()->getSingleValue( key, type);
+  wxString value = m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type);
   long longval;
   value.ToLong( &longval );
   if ( type == EngineOption )
