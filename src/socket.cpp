@@ -197,7 +197,7 @@ bool Socket::Receive( wxString& data )
       }
       m_rcv_buffer += d;
     }
-  } while ( readnum > buff_size );
+  } while ( readnum >= buff_size );
 
   if ( m_rcv_buffer.Contains(_T("\n")) ) {
     data = m_rcv_buffer.BeforeFirst('\n');
