@@ -127,3 +127,5 @@ wxString GetSpringLobbyVersion()
 {
   return WX_STRINGC(VERSION);
 }
+
+

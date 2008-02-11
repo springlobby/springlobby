@@ -262,7 +262,8 @@ void Ui::Quit()
   m_thread->Kill();
   m_con_win->Close();
 
-  m_serv->Disconnect();
+  if ( m_serv != 0 )
+    m_serv->Disconnect();
 }
 
 

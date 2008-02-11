@@ -21,6 +21,7 @@
 #include "utils.h"
 #include "settings.h"
 #include "springunitsynclib.h"
+#include "settings++/custom_dialogs.h"
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -58,9 +59,18 @@ IUnitSync* usync()
 
 bool SpringUnitSync::LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc )
 {
-  wxLogDebugFunc( _T("") );
-  LOCK_UNITSYNC;
-  return _LoadUnitSyncLib( springdir, unitsyncloc );
+  if ( wxFileName::IsDirWritable( sett().GetSpringDir() ) )
+  {
+      wxLogDebugFunc( _T("") );
+      LOCK_UNITSYNC;
+      return _LoadUnitSyncLib( springdir, unitsyncloc );
+  }
+  else
+  {
+     customMessageBox(SL_MAIN_ICON,_("Unitsync loading was aborted because your spring data directory is not writable. Please check."),_("Unitsync Problem"),wxOK);
+     wxLogDebugFunc( _T("sprindatadir not writable") );
+     return false;
+  }
 }
 
 
