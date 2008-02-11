@@ -178,7 +178,6 @@ bool Socket::Receive( wxString& data )
 
   char buff[buff_size+2] = { 0 };
   int readnum;
-  int readbytes = 0;
 
   buff[buff_size+1] = '\0';
 
@@ -197,9 +196,8 @@ bool Socket::Receive( wxString& data )
         #endif
       }
       m_rcv_buffer += d;
-      readbytes += readnum;
     }
-  } while ( (readnum > 0) );
+  } while ( readnum >= buff_size );
 
   if ( m_rcv_buffer.Contains(_T("\n")) ) {
     data = m_rcv_buffer.BeforeFirst('\n');
