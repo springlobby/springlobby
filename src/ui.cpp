@@ -193,7 +193,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 }
 
 
-bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password,wxString* reason)
+bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password,wxString& reason)
 {
   wxString host;
   int port;
@@ -257,6 +257,9 @@ void Ui::Quit()
   sett().SaveSettings();
   m_main_win->forceSettingsFrameClose();
   m_main_win->Close();
+  m_thread->Kill();
+  m_con_win->Close();
+  m_serv->Disconnect();
 }
 
 

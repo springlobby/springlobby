@@ -255,7 +255,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
 
     m_ui.DoConnect( HostAddress, m_nick_text->GetValue(), m_pass_text->GetValue() );
   } else {
-	  wxString* reason = new wxString();
+	  wxString reason;
 	  if (m_regpass2_text->GetValue()!= m_regpass1_text->GetValue())
 	  {
 		  Show();
@@ -270,8 +270,8 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
        customMessageBox(SL_MAIN_ICON, _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
     } else {
        Show();
-       wxLogWarning( _T("registration failed, reason: %s"), (*reason).c_str()  );
-       customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\n")+(*reason) , _("Registration failed."), wxOK );
+       wxLogWarning( _T("registration failed, reason: %s"), reason.c_str()  );
+       customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\n")+ reason , _("Registration failed."), wxOK );
     }
 
   }

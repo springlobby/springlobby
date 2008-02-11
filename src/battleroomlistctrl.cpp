@@ -211,7 +211,7 @@ void BattleroomListCtrl::AddUser( User& user )
 
   SetItemData(index, (wxUIntPtr)(items.size()-1) );
 
-  UpdateUser( index );
+  UpdateUser( index +1 );
 }
 
 
@@ -262,7 +262,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
       SetItem( index, 1, wxString::Format( _T("s%d"), user.BattleStatus().side + 1 ) );
     }
 
-    SetItemColumnImage( index, 2, IconImageList::GetColourIcon( user.BattleStatus().team ) );
+    SetItemColumnImage( index, 2, icons().GetColourIcon( user.BattleStatus().team ) );
 
   } else {
     SetItemColumnImage( index, 2, -1 );
@@ -364,7 +364,7 @@ void BattleroomListCtrl::UpdateBot( const int& index )
     SetItem( index, 1, wxString::Format( _T("s%d"), bot.bs.side + 1 ) );
   }
 
-  SetItemColumnImage( index, 2, IconImageList::GetColourIcon( bot.bs.team ) );
+  SetItemColumnImage( index, 2, icons().GetColourIcon( bot.bs.team ) );
 
   SetItemColumnImage( index, 3, ICON_NONE );
   SetItemColumnImage( index, 4, ICON_NONE );

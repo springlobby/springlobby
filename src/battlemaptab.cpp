@@ -139,7 +139,7 @@ void BattleMapTab::Update( const wxString& Tag )
   long type;
   Tag.BeforeFirst( '_' ).ToLong( &type );
   wxString key = Tag.AfterFirst( '_' );
-  wxString value = m_battle.CustomBattleOptions()->getSingleValue( key, type);
+  wxString value = m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type);
   long longval;
   value.ToLong( &longval );
   if ( type == EngineOption )
@@ -187,7 +187,6 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
     UnitSyncMap map = usync()->GetMapEx( index );
     m_battle.SetMap( map );
   } catch (...) {}
-//  m_battle.SetMapHash( map.hash );
   m_ui.OnBattleMapChanged(m_battle);
   m_battle.SendHostInfo( HI_Map );
 }

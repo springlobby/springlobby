@@ -3,8 +3,24 @@
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
+#include <map>
+
+#include "mmoptionmodel.h"
 
 class wxImage;
+
+typedef std::map<wxString,mmOptionBool> optionMapBool;
+typedef std::map<wxString,mmOptionFloat> optionMapFloat;
+typedef std::map<wxString,mmOptionString> optionMapString;
+typedef std::map<wxString,mmOptionList> optionMapList;
+typedef std::map<wxString,mmOptionInt> optionMapInt;
+
+typedef std::map<wxString,mmOptionBool>::iterator optionMapBoolIter;
+typedef std::map<wxString,mmOptionFloat>::iterator optionMapFloatIter;
+typedef std::map<wxString,mmOptionString>::iterator optionMapStringIter;
+typedef std::map<wxString,mmOptionList>::iterator optionMapListIter;
+typedef std::map<wxString,mmOptionInt>::iterator optionMapIntIter;
+
 
 struct UnitSyncMod
 {
@@ -51,6 +67,15 @@ enum {
   USYNC_Sett_Handler = 2
 };
 
+struct GameOptions
+{
+  optionMapBool bool_map;
+  optionMapFloat float_map;
+  optionMapString string_map;
+  optionMapList list_map;
+  optionMapInt int_map;
+};
+
 class IUnitSync
 {
   public:
@@ -62,6 +87,7 @@ class IUnitSync
     virtual UnitSyncMod GetMod( int index ) = 0;
     virtual int GetModIndex( const wxString& name ) = 0;
     virtual wxString GetModArchive( int index ) = 0;
+    virtual GameOptions GetModOptions( const wxString& name ) = 0;
 
     virtual int GetNumMaps() = 0;
     virtual bool MapExists( const wxString& mapname ) = 0;
@@ -71,6 +97,7 @@ class IUnitSync
     virtual UnitSyncMap GetMap( int index ) = 0;
     virtual UnitSyncMap GetMapEx( const wxString& mapname ) = 0;
     virtual UnitSyncMap GetMapEx( int index ) = 0;
+    virtual GameOptions GetMapOptions( const wxString& name ) = 0;
 
     virtual int GetMapIndex( const wxString& name ) = 0;
     virtual wxImage GetMinimap( const wxString& mapname, int max_w, int max_h, bool store_size = false ) = 0;

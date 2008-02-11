@@ -188,7 +188,7 @@ bool TASServer::IsConnected()
 }
 
 
-bool TASServer::Register( const wxString& addr, const int port, const wxString& nick, const wxString& password, wxString* reason )
+bool TASServer::Register( const wxString& addr, const int port, const wxString& nick, const wxString& password, wxString& reason )
 {
   wxLogDebugFunc( _T("") );
 
@@ -200,17 +200,26 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
   m_sock->Receive( data );
   if ( GetWordParam( data ) != _T("TASServer") ) return false;
 
-  SendCmd ( _T("REGISTER "), nick + _T(" ") + GetPasswordHash( password ) );
+  SendCmd( _T("REGISTER"), nick + _T(" ") + GetPasswordHash( password ) );
 
-  wxString data2;
-  m_sock->Receive( data2 );
-  if ( data2 != _T("REGISTRATIONACCEPTED\n"))
+  m_sock->Receive( data );
+  if ( data.IsEmpty() )
   {
-	  *reason = data2.substr(19,data2.size());
+    reason = _("Connection timed out");
+    return false;
+  }
+  wxString cmd = GetWordParam( data );
+  if ( cmd == _T("REGISTRATIONACCEPTED"))
+  {
+    return true;
+  }
+  else if ( cmd == _T("REGISTRATIONDENIED") )
+  {
+    reason = data;
 	  return false;
   }
-
-  return true;
+  reason = _("Unknown answer from server");
+  return false;
 }
 
 
@@ -326,7 +335,7 @@ void TASServer::ReceiveAndExecute()
         ExecuteCommand( cmd );
       }
     }
-  } while ( !data.empty() ); // Go on until recive stops providing data.
+  } while ( !data.IsEmpty() ); // Go on until recive stops providing data.
 }
 
 
@@ -622,6 +631,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
   } else if ( cmd == _T("DENIED") ) {
     msg = GetSentenceParam( params );
     m_se->OnServerMessage( msg );
+    Disconnect();
     //Command: "DENIED" params: "Already logged in".
   } else if ( cmd == _T("HOSTPORT") ) {
     int tmp_port = GetIntParam( params );
@@ -644,6 +654,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 	  m_se->OnKickedFromBattle();
   } else if ( cmd == _T("BROADCAST")) {
     m_se->OnServerMessage( params );
+  } else if ( cmd == _T("SERVERMSGBOX")) {
+    m_se->OnServerMessageBox( params );
   } else {
     wxLogMessage( _T("??? Cmd: %s params: %s"), cmd.c_str(), params.c_str() );
     m_se->OnUnknownCommand( cmd, params );
@@ -653,8 +665,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 
 void TASServer::SendCmd( const wxString& command, const wxString& param )
 {
-  if ( param.IsEmpty() ) m_sock->Send( command + _T("\n"));
-  else m_sock->Send( command + _T(" ") + param + _T("\n") );
+  wxString msg;
+  if ( param.IsEmpty() ) msg = ( command + _T("\n"));
+  else msg = ( command + _T(" ") + param + _T("\n") );
+  m_sock->Send( msg );
 }
 
 
@@ -975,7 +989,7 @@ void TASServer::SendHostInfo( HostInfo update )
 
   if ( ( update & ( HI_Map | HI_Locked | HI_Spectators ) ) > 0 ) {
     // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
-    wxString cmd = wxString::Format( _T(" %d %d "), battle.GetSpectators(), battle.IsLocked() );
+    wxString cmd = wxString::Format( _T("%d %d "), battle.GetSpectators(), battle.IsLocked() );
     cmd += ConvertToTASServerBuggedChecksum( battle.GetMapHash() ) + _T(" ");
     cmd += battle.GetMapName();
 

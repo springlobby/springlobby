@@ -58,7 +58,7 @@ audio_panel::audio_panel(wxWindow *parent, wxWindowID id , const wxString &title
 	 childLSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
 
 	// sizers for static boxes containing sliders, checkboxes, radiobuttons
-   audioSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Audio Options"),
+   audioSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, _("Audio Options"),
     		WX_DEF_P, wxSize(230, 100), 0, wxEmptyString), wxVERTICAL);
 	initAudioSizer(audioSizer);
 

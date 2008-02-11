@@ -30,6 +30,7 @@
 #include "addbotdialog.h"
 #include "server.h"
 #include "iconimagelist.h"
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -295,12 +296,12 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
     if ( DataType == opt_bool )
     {
       long boolval;
-      m_battle.CustomBattleOptions()->getSingleValue( key, type ).ToLong( &boolval );
+      m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type ).ToLong( &boolval );
       m_opts_list->SetItem( index, 1, bool2yn( boolval ) );
     }
     else
     {
-      m_opts_list->SetItem( index, 1, m_battle.CustomBattleOptions()->getSingleValue( key, type ) );
+      m_opts_list->SetItem( index, 1, m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type ) );
     }
   }
 }
@@ -329,7 +330,7 @@ void BattleRoomTab::UpdateUser( User& user )
     if ( !IsHosted() ) m_ready_chk->Enable();
     m_ready_chk->SetValue( bs.ready );
   }
-
+  icons().SetColourIcon( bs.team, wxColour( user.BattleStatus().color_r, user.BattleStatus().color_g, user.BattleStatus().color_b ) );
   m_color_sel->SetBitmapLabel( icons().GetBitmap( icons().GetColourIcon( bs.team ) ) );
 
   m_minimap->UpdateMinimap();
@@ -379,20 +380,26 @@ void BattleRoomTab::OnLeave( wxCommandEvent& event )
 
 void BattleRoomTab::OnAddBot( wxCommandEvent& event )
 {
-  AddBotDialog dlg( this, m_battle );
-  if ( dlg.ShowModal() == wxID_OK ) {
-    UserBattleStatus bs;
-    bs.team = m_battle.GetFreeTeamNum( false );
-    bs.ally = bs.team;
-    bs.sync = SYNC_SYNCED;
-    bs.spectator = false;
-    bs.side = 0;
-    bs.ready = true;
-    bs.order = 0;
-    bs.handicap = 0;
-    m_battle.GetFreeColour( bs.color_r, bs.color_g, bs.color_b, false );
-    m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), m_battle.GetMe().GetNick(), bs, dlg.GetAI() );
+    //customMessageBox(SL_MAIN_ICON,_T("Max players reached"),_T("Cannot add bot, maximum number of players already reached.") );
+  if ( m_battle.GetNumBots() + m_battle.GetNumUsers() < m_battle.GetMaxPlayers() )
+  {
+      AddBotDialog dlg( this, m_battle );
+      if ( dlg.ShowModal() == wxID_OK ) {
+        UserBattleStatus bs;
+        bs.team = m_battle.GetFreeTeamNum( false );
+        bs.ally = bs.team;
+        bs.sync = SYNC_SYNCED;
+        bs.spectator = false;
+        bs.side = 0;
+        bs.ready = true;
+        bs.order = 0;
+        bs.handicap = 0;
+        m_battle.GetFreeColour( bs.color_r, bs.color_g, bs.color_b, false );
+        m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), m_battle.GetMe().GetNick(), bs, dlg.GetAI() );
+      }
   }
+  else
+    customMessageBox(SL_MAIN_ICON,_T("Cannot add bot, maximum number of players already reached."),_T("Max players reached") );
 }
 
 

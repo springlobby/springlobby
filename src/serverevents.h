@@ -89,6 +89,7 @@ class ServerEvents
     void OnRing( const wxString& from );
 
     void OnServerMessage( const wxString& message );
+    void OnServerMessageBox( const wxString& message );
     void OnChannelMessage( const wxString& channel, const wxString& msg );
 
     void OnHostUdpPortChange(const int& udpport);

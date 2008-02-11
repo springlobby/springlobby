@@ -66,7 +66,7 @@ class Server
     virtual void SetSocket( Socket* sock );
     virtual Socket* GetSocket( ) { return m_sock; }
 
-    virtual bool Register( const wxString& addr, const int port, const wxString& nick, const wxString& password,wxString* reason ) = 0;
+    virtual bool Register( const wxString& addr, const int port, const wxString& nick, const wxString& password,wxString& reason ) = 0;
     virtual void AcceptAgreement() = 0;
 
     virtual void Connect( const wxString& addr, const int port ) = 0;

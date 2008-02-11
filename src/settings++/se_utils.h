@@ -3,8 +3,6 @@
 
 #include <wx/string.h>
 
-#define _S(v) wxString(v.c_str(),wxConvUTF8)
-
 void loadUnitsync();
 
 //void toString(wxString& s, int t);

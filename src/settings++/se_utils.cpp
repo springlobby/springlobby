@@ -2,7 +2,7 @@
 
 #include <string>
 #include <sstream>
-#include <wx/string.h>
+#include <wx/intl.h>
 #include "custom_dialogs.h"
 #include <wx/utils.h>
 #include <wx/log.h>
@@ -40,8 +40,8 @@ void openUrl(const wxString& url)
 {
     if ( !wxLaunchDefaultBrowser( url ) )
     {
-      wxLogWarning( _T("can't launch default browser") );
-      customMessageBox(SL_MAIN_ICON, _T("Couldn't launch browser. URL is: ") + url, _T("Couldn't launch browser.")  );
+      wxLogWarning( _("can't launch default browser") );
+      customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
     }
 }
 
