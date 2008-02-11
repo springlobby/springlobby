@@ -59,17 +59,19 @@ IUnitSync* usync()
 
 bool SpringUnitSync::LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc )
 {
-  if ( wxFileName::IsDirWritable( sett().GetSpringDir() ) )
+#ifndef HAVE_WX26
+  if ( !wxFileName::IsDirWritable( sett().GetSpringDir() ) )
   {
-      wxLogDebugFunc( _T("") );
-      LOCK_UNITSYNC;
-      return _LoadUnitSyncLib( springdir, unitsyncloc );
+      customMessageBox(SL_MAIN_ICON,_("Unitsync loading was aborted because your spring data directory is not writable. Please check."),_("Unitsync Problem"),wxOK);
+      wxLogDebugFunc( _T("sprindatadir not writable") );
+      return false;
   }
   else
+#endif
   {
-     customMessageBox(SL_MAIN_ICON,_("Unitsync loading was aborted because your spring data directory is not writable. Please check."),_("Unitsync Problem"),wxOK);
-     wxLogDebugFunc( _T("sprindatadir not writable") );
-     return false;
+     wxLogDebugFunc( _T("") );
+     LOCK_UNITSYNC;
+     return _LoadUnitSyncLib( springdir, unitsyncloc );
   }
 }
 
