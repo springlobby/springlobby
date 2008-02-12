@@ -14,6 +14,7 @@ SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_ui(ui),
   m_sptab(msptab)
 {
+  CustomBattleOptions()->setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), 3), EngineOption );
   int r,g,b;
   GetFreeColour( r, g, b, false );
   int i = AddBot( 0, 0, 0, 0, _T("") );
@@ -67,7 +68,7 @@ void SinglePlayerBattle::UpdateBot(unsigned int index, int ally, int posx, int p
 void SinglePlayerBattle::RemoveBot(unsigned int index)
 {
   if ( m_bots[index] != 0 ) {
-    if ( m_bots[index]->aidll == "" ) return;
+    if ( m_bots[index]->aidll == _T("") ) return;
   }
   delete m_bots[index];
   m_bots[index] = 0;
@@ -85,7 +86,7 @@ unsigned int SinglePlayerBattle::AddBot(int ally, int posx, int posy, int handic
   bot->posx = posx;
   bot->posy = posy;
   bot->handicap = handicap;
-  bot->aidll = STD_STRING(aidll);
+  bot->aidll = aidll;
 
   m_bots.push_back( bot );
   return m_bots.size() - 1;
@@ -98,14 +99,12 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   if ( (update && HI_Restrictions) != 0 ) m_sptab.ReloadRestrictions();
   if ( (update && HI_Map_Changed) != 0 )
   {
-	// m_ui.ReloadUnitSync();
-    CustomBattleOptions()->loadOptions( MapOption, WX_STRING(m_map.name) );
+    CustomBattleOptions()->loadOptions( MapOption, m_map.name );
     m_sptab.ReloadMapOptContrls();
   }
   if ( (update && HI_Mod_Changed) != 0 )
   {
-	//m_ui.ReloadUnitSync();
-    //CustomBattleOptions()->loadOptions( ModOption );
+    CustomBattleOptions()->loadOptions( ModOption, m_mod_name );
     m_sptab.ReloadModOptContrls();
   }
 }

@@ -29,27 +29,27 @@
 
 PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxPanel(parent,-1),origin(_origin)
 {
-	usync_loc_lbl = new wxStaticText (this, -1 , _T("Path to unitsync shared library"));
-	explanation_text = new wxStaticText (this, -1 , _T("There was a problem retrieving your settings.\n"
+	usync_loc_lbl = new wxStaticText (this, -1 , _("Path to unitsync shared library"));
+	explanation_text = new wxStaticText (this, -1 , _("There was a problem retrieving your settings.\n"
 														"Please check that the path below is correct.\n"
 														"When you have corrected it, click\n"
 														"the \"Use this Path\" button to try again."),
 														wxDefaultPosition,wxSize(450,-1));
 
 
-	paths_ok_btn = new wxButton(this,ID_PATH_OK_BTN,_T("Use this path"),wxDefaultPosition ,wxSize(-1,-1), wxBU_EXACTFIT);
-	usync_browse_btn = new wxButton(this, ID_PATH_USYNC_BTN, _T("Browse") );
+	paths_ok_btn = new wxButton(this,ID_PATH_OK_BTN,_("Use this path"),wxDefaultPosition ,wxSize(-1,-1), wxBU_EXACTFIT);
+	usync_browse_btn = new wxButton(this, ID_PATH_USYNC_BTN, _("Browse") );
 
 
 
 	usync_ctrl = new wxTextCtrl(this,-1,OptionsHandler.getUsyncLoc(), wxDefaultPosition,wxSize(400,-1));
-	usync_ctrl->SetToolTip(_T("unitsync.so on linux, unitsync.dll on windows"));
+	usync_ctrl->SetToolTip(_("unitsync.so on linux, unitsync.dll on windows"));
 
 	usync_sizer =  new wxFlexGridSizer(1,5,5);
 
 	parentSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* subSizerB = new wxBoxSizer(wxHORIZONTAL);
-	main_sizer = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Path settings")) ;
+	main_sizer = new wxStaticBoxSizer(wxVERTICAL ,this,_("Path settings")) ;
 
 	usync_sizer->Add(usync_loc_lbl,1,wxEXPAND);
 
@@ -71,7 +71,7 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 
 void PathOptionPanel::SetUsyncPath(wxCommandEvent& event)
 {
-  wxFileDialog pic( this, _("Choose an unitsync library"), OptionsHandler.getSpringDir(), _T("unitsync") + GetLibExtension(), wxString(_("Library")) + _T("(*") + GetLibExtension() + _T(")|*") + GetLibExtension() + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
+  wxFileDialog pic( this, _("Choose an unitsync library"), OptionsHandler.getSpringDir(), _T("unitsync") + GetLibExtension(), wxString(_T("Library")) + _T("(*") + GetLibExtension() + _T(")|*") + GetLibExtension() + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
 	  if ( pic.ShowModal() == wxID_OK )
 		  usync_ctrl->SetValue( pic.GetPath() );
 }

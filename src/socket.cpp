@@ -97,7 +97,7 @@ wxSocketClient* Socket::_CreateSocket()
 
 //! @brief Connect to remote host.
 //! @note This turns off the ping thread.
-void Socket::Connect( const std::string& addr, const int port )
+void Socket::Connect( const wxString& addr, const int port )
 {
   LOCK_SOCKET;
   _EnablePingThread( false ); // Turn off ping thread.
@@ -105,7 +105,7 @@ void Socket::Connect( const std::string& addr, const int port )
   wxIPV4address wxaddr;
   m_connecting = true;
 
-  wxaddr.Hostname( WX_STRING( addr ) );
+  wxaddr.Hostname( addr );
   wxaddr.Service( port );
 
   if ( m_sock != 0 ) m_sock->Destroy();
@@ -128,14 +128,16 @@ void Socket::Disconnect( )
 
 
 //! @brief Send data over connection.
-bool Socket::Send( const std::string& data )
+bool Socket::Send( const wxString& data )
 {
   LOCK_SOCKET;
   return _Send( data );
 }
 
 
-bool Socket::_Send( const std::string& data )
+//! @brief Internal send function.
+//! @note Does not lock the criticalsection.
+bool Socket::_Send( const wxString& data )
 {
   if ( m_sock == 0 ) {
     wxLogError( _T("Socket NULL") );
@@ -146,22 +148,24 @@ bool Socket::_Send( const std::string& data )
     m_buffer += data;
     int max = m_rate - m_sent;
     if ( max > 0 ) {
-      std::string send = m_buffer.substr( 0, max );
+      wxString send = m_buffer.substr( 0, max );
       m_buffer.erase( 0, max );
       //wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
-      m_sock->Write( (void*)send.c_str(), send.length() );
-      m_sent += send.length();
+      std::string s = (const char*)send.mb_str(wxConvUTF8);
+      m_sock->Write( s.c_str(), s.length() );
+      m_sent += s.length();
     }
   } else {
     if ( data.length() <= 0) return true;
-    m_sock->Write( (void*)data.c_str(), data.length() );
+    std::string s = (const char*)data.mb_str(wxConvUTF8);
+    m_sock->Write( s.c_str(), s.length() );
   }
   return !m_sock->Error();
 }
 
 
 //! @brief Receive data from connection
-bool Socket::Receive( std::string& data )
+bool Socket::Receive( wxString& data )
 {
   if ( m_sock == 0 ) {
     wxLogError( _T("Socket NULL") );
@@ -170,23 +174,34 @@ bool Socket::Receive( std::string& data )
 
   LOCK_SOCKET;
 
-  char buff[2];
-  int readnum;
-  int readbytes = 0;
+  const int buff_size = 1337;
 
-  buff[1] = '\0';
+  char buff[buff_size+2] = { 0 };
+  int readnum;
+
+  buff[buff_size+1] = '\0';
 
   do {
-    m_sock->Read( (void*)&buff[0], 1 );
+    m_sock->Read( &buff[0], buff_size );
     readnum = m_sock->LastCount();
+    buff[readnum] = '\0';
 
     if ( readnum > 0 ) {
-      data += &buff[0];
-      readbytes++;
+      wxString d = wxString( &buff[0], wxConvUTF8 );
+      if ( d.IsEmpty() )
+      {
+        d = wxString( &buff[0], wxConvLocal );
+        #ifndef HAVE_WX26
+        if ( d.IsEmpty() ) d = wxString( &buff[0], wxCSConv(_T("latin-1")) );
+        #endif
+      }
+      m_rcv_buffer += d;
     }
-  } while ( (readnum > 0) && (buff[0] != '\n') );
+  } while ( readnum >= buff_size );
 
-  if ( readbytes > 0 ) {
+  if ( m_rcv_buffer.Contains(_T("\n")) ) {
+    data = m_rcv_buffer.BeforeFirst('\n');
+    m_rcv_buffer = m_rcv_buffer.AfterFirst('\n');
     return true;
   } else {
     return false;
@@ -289,26 +304,15 @@ void Socket::SetSendRateLimit( int Bps )
 void Socket::Ping()
 {
   wxLogMessage( _T("Sent ping.") );
-  if ( m_ping_msg != wxEmptyString ) Send( STD_STRING(m_ping_msg) );
+  if ( m_ping_msg != wxEmptyString ) Send( m_ping_msg );
 }
 
-
-/*
-ling m_ui.OnUserStatusChanged( user )
-20.01.04: updating battles
-20.01.04: Sent udp ping.
-20.01.04: UDPPing address taspringmaster.clan-sy.com port 12345
-20.01.04: socket's IsOk() is false, no UDP ping done.
-20.01.05: Sent ping.
-20.01.05: OnBattleOpened (  )
-20.01.05: MapExists (  )
-*/
 
 //! @brief Send udp ping.
 //! @note used for nat travelsal.
 //! @todo Use m_udp_ping_msg variable as message.
 void Socket::UDPPing(){
-#if(NAT_TRAVERSAL_SUPPORT)
+#ifndef HAVE_WX26
   if ( m_ping_msg == wxEmptyString ) return;
 
   wxLogMessage( _T("Sent udp ping.") );
@@ -343,7 +347,7 @@ void Socket::OnTimer( int mselapsed )
   if ( m_rate > 0 ) {
     m_sent -= int( ( mselapsed / 1000.0 ) * m_rate );
     if ( m_sent < 0 ) m_sent = 0;
-    if ( m_buffer.length() > 0 ) _Send("");
+    if ( m_buffer.length() > 0 ) _Send(_T(""));
   } else {
     m_sent = 0;
   }
@@ -385,6 +389,12 @@ void* PingThread::Entry()
   m_next_udp_ping = -1;
 
   while ( !TestDestroy() ) {
+
+    if ( !m_sock.GetPingEnabled() || !m_sock.GetUDPPingEnabled() )
+    {
+      m_next_udp_ping = -1;
+      m_next_ping = -1;
+    }
 
     if ( (m_next_ping < 0) && (m_sock.GetPingEnabled()) ) m_next_ping = m_sock.GetPingInterval();
     if ( (m_next_udp_ping < 0) && (m_sock.GetUDPPingEnabled()) ) m_next_udp_ping = m_sock.GetUDPPingInterval();

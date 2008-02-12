@@ -142,6 +142,7 @@ MainWindow::~MainWindow()
   sett().SetMainWindowTop( y );
   sett().SetMainWindowLeft( x );
   sett().SaveSettings();
+  m_ui.Quit();
   m_ui.OnMainWindowDestruct();
 
   delete m_chat_icon;
@@ -302,8 +303,8 @@ void MainWindow::OnMenuChat( wxCommandEvent& event )
   if ( !m_ui.IsConnected() ) return;
   wxString answer;
   if ( m_ui.AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
-    if (m_ui.GetServer().UserExists( STD_STRING(answer) ) ) {
-      OpenPrivateChat( m_ui.GetServer().GetUser( STD_STRING(answer) ) );
+    if (m_ui.GetServer().UserExists( answer ) ) {
+      OpenPrivateChat( m_ui.GetServer().GetUser( answer ) );
     }
   }
 
@@ -340,7 +341,7 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
     customMessageBox(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
     return;
   }
-  wxString myVersion = WX_STRING(GetSpringLobbyVersion());
+  wxString myVersion = GetSpringLobbyVersion();
 
   wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
 

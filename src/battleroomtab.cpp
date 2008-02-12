@@ -30,6 +30,7 @@
 #include "addbotdialog.h"
 #include "server.h"
 #include "iconimagelist.h"
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -70,8 +71,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_side_sel->SetToolTip(_T("Select your faction"));
 
   try {
-    for ( int i = 0; i < usync()->GetSideCount( STD_STRING(m_battle.GetModName()) ); i++ ) {
-      m_side_sel->Append( WX_STRING(usync()->GetSideName( STD_STRING(m_battle.GetModName()), i )) );
+    for ( int i = 0; i < usync()->GetSideCount( m_battle.GetModName() ); i++ ) {
+      m_side_sel->Append( usync()->GetSideName( m_battle.GetModName(), i ) );
     }
   } catch (...) {}
 
@@ -261,7 +262,7 @@ void BattleRoomTab::UpdateBattleInfo( bool MapChanged )
     try { /// updates map info summary
       ASSERT_RUNTIME( m_battle.MapExists(), _T("Map does not exist.") );
       UnitSyncMap map = m_battle.Map();
-      m_map_lbl->SetLabel( RefineMapname( WX_STRING(map.name) ) );
+      m_map_lbl->SetLabel( RefineMapname( map.name ) );
       m_opts_list->SetItem( m_opt_list_map[ _("Size") ] , 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
       m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind) );
       m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, wxString::Format( _T("%d"), map.info.tidalStrength) );
@@ -299,12 +300,12 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
     if ( DataType == opt_bool )
     {
       long boolval;
-      m_battle.CustomBattleOptions()->getSingleValue( key, type ).ToLong( &boolval );
+      m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type ).ToLong( &boolval );
       m_opts_list->SetItem( index, 1, bool2yn( boolval ) );
     }
     else
     {
-      m_opts_list->SetItem( index, 1, m_battle.CustomBattleOptions()->getSingleValue( key, type ) );
+      m_opts_list->SetItem( index, 1, m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type ) );
     }
   }
 }
@@ -333,7 +334,7 @@ void BattleRoomTab::UpdateUser( User& user )
     if ( !IsHosted() ) m_ready_chk->Enable();
     m_ready_chk->SetValue( bs.ready );
   }
-
+  icons().SetColourIcon( bs.team, wxColour( user.BattleStatus().color_r, user.BattleStatus().color_g, user.BattleStatus().color_b ) );
   m_color_sel->SetBitmapLabel( icons().GetBitmap( icons().GetColourIcon( bs.team ) ) );
 
   m_minimap->UpdateMinimap();
@@ -548,20 +549,26 @@ void BattleRoomTab::OnAutoBalance( wxCommandEvent& event )
 
 void BattleRoomTab::OnAddBot( wxCommandEvent& event )
 {
-  AddBotDialog dlg( this, m_battle );
-  if ( dlg.ShowModal() == wxID_OK ) {
-    UserBattleStatus bs;
-    bs.team = m_battle.GetFreeTeamNum( false );
-    bs.ally = bs.team;
-    bs.sync = SYNC_SYNCED;
-    bs.spectator = false;
-    bs.side = 0;
-    bs.ready = true;
-    bs.order = 0;
-    bs.handicap = 0;
-    m_battle.GetFreeColour( bs.color_r, bs.color_g, bs.color_b, false );
-    m_ui.GetServer().AddBot( m_battle.GetBattleId(), STD_STRING(dlg.GetNick()), m_battle.GetMe().GetNick(), bs, STD_STRING(dlg.GetAI() ));
+    //customMessageBox(SL_MAIN_ICON,_T("Max players reached"),_T("Cannot add bot, maximum number of players already reached.") );
+  if ( m_battle.GetNumBots() + m_battle.GetNumUsers() < m_battle.GetMaxPlayers() )
+  {
+      AddBotDialog dlg( this, m_battle );
+      if ( dlg.ShowModal() == wxID_OK ) {
+        UserBattleStatus bs;
+        bs.team = m_battle.GetFreeTeamNum( false );
+        bs.ally = bs.team;
+        bs.sync = SYNC_SYNCED;
+        bs.spectator = false;
+        bs.side = 0;
+        bs.ready = true;
+        bs.order = 0;
+        bs.handicap = 0;
+        m_battle.GetFreeColour( bs.color_r, bs.color_g, bs.color_b, false );
+        m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), m_battle.GetMe().GetNick(), bs, dlg.GetAI() );
+      }
   }
+  else
+    customMessageBox(SL_MAIN_ICON,_T("Cannot add bot, maximum number of players already reached."),_T("Max players reached") );
 }
 
 void BattleRoomTab::OnImReady( wxCommandEvent& event )

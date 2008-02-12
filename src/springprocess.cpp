@@ -38,7 +38,7 @@ void SpringProcess::OnExit()
 void* SpringProcess::Entry()
 {
   wxLogDebugFunc( _T("") );
-  system( STD_STRING(m_cmd).c_str() );
+  system( m_cmd.mb_str(wxConvUTF8) );
   wxLogMessage(_T("Spring closed."));
   return 0;
 }

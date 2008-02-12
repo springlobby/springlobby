@@ -341,9 +341,9 @@ int wxCALLBACK BattleListCtrl::CompareCountryUP(long item1, long item2, long sor
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( WX_STRING(battle1.GetFounder().GetCountry()).MakeUpper() < WX_STRING(battle2.GetFounder().GetCountry()).MakeUpper() )
+  if ( battle1.GetFounder().GetCountry().MakeUpper() < battle2.GetFounder().GetCountry().MakeUpper() )
       return -1;
-  if ( WX_STRING(battle1.GetFounder().GetCountry()).MakeUpper() > WX_STRING(battle2.GetFounder().GetCountry()).MakeUpper() )
+  if ( battle1.GetFounder().GetCountry().MakeUpper() > battle2.GetFounder().GetCountry().MakeUpper() )
       return 1;
 
   return 0;
@@ -357,9 +357,9 @@ int wxCALLBACK BattleListCtrl::CompareCountryDOWN(long item1, long item2, long s
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( WX_STRING(battle1.GetFounder().GetCountry()).MakeUpper() < WX_STRING(battle2.GetFounder().GetCountry()).MakeUpper() )
+  if ( battle1.GetFounder().GetCountry().MakeUpper() < battle2.GetFounder().GetCountry().MakeUpper() )
       return 1;
-  if ( WX_STRING(battle1.GetFounder().GetCountry()).MakeUpper() > WX_STRING(battle2.GetFounder().GetCountry()).MakeUpper() )
+  if ( battle1.GetFounder().GetCountry().MakeUpper() > battle2.GetFounder().GetCountry().MakeUpper() )
       return -1;
 
   return 0;
@@ -372,9 +372,9 @@ int wxCALLBACK BattleListCtrl::CompareDescriptionUP(long item1, long item2, long
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( WX_STRING(battle1.GetDescription()).MakeUpper() < WX_STRING(battle2.GetDescription()).MakeUpper() )
+  if ( battle1.GetDescription().MakeUpper() < battle2.GetDescription().MakeUpper() )
       return -1;
-  if ( WX_STRING(battle1.GetDescription()).MakeUpper() > WX_STRING(battle2.GetDescription()).MakeUpper() )
+  if ( battle1.GetDescription().MakeUpper() > battle2.GetDescription().MakeUpper() )
       return 1;
 
   return 0;
@@ -387,11 +387,11 @@ int wxCALLBACK BattleListCtrl::CompareDescriptionDOWN(long item1, long item2, lo
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( (WX_STRING(battle1.GetDescription()).MakeUpper()) < (WX_STRING(battle2.GetDescription()).MakeUpper()) )
+  if ( battle1.GetDescription().MakeUpper() <  battle2.GetDescription().MakeUpper() )
    {
       return 1;
    }
-  if ( (WX_STRING(battle1.GetDescription()).MakeUpper()) > (WX_STRING(battle2.GetDescription()).MakeUpper()) )
+  if ( battle1.GetDescription().MakeUpper() > battle2.GetDescription().MakeUpper() )
     {
       return -1;
     }
@@ -466,9 +466,9 @@ int wxCALLBACK BattleListCtrl::CompareHostUP(long item1, long item2, long sortDa
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( WX_STRING(battle1.GetFounder().GetNick()).MakeUpper() < WX_STRING(battle2.GetFounder().GetNick()).MakeUpper() )
+  if ( battle1.GetFounder().GetNick().MakeUpper() < battle2.GetFounder().GetNick().MakeUpper() )
       return -1;
-  if ( WX_STRING(battle1.GetFounder().GetNick()).MakeUpper() > WX_STRING(battle2.GetFounder().GetNick()).MakeUpper() )
+  if ( battle1.GetFounder().GetNick().MakeUpper() > battle2.GetFounder().GetNick().MakeUpper() )
       return 1;
 
   return 0;
@@ -481,9 +481,9 @@ int wxCALLBACK BattleListCtrl::CompareHostDOWN(long item1, long item2, long sort
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( WX_STRING(battle1.GetFounder().GetNick()).MakeUpper() < WX_STRING(battle2.GetFounder().GetNick()).MakeUpper() )
+  if ( battle1.GetFounder().GetNick().MakeUpper() < battle2.GetFounder().GetNick().MakeUpper() )
       return 1;
-  if ( WX_STRING(battle1.GetFounder().GetNick()).MakeUpper() > WX_STRING(battle2.GetFounder().GetNick()).MakeUpper() )
+  if ( battle1.GetFounder().GetNick().MakeUpper() > battle2.GetFounder().GetNick().MakeUpper() )
       return -1;
 
   return 0;
@@ -607,22 +607,22 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 			m_tiptext = IconImageList::GetBattleStatus(battle);
 				break;
 			case 1: // country
-				m_tiptext = GetFlagNameFromCountryCode(WX_STRING(battle.GetFounder().GetCountry()));
+				m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());
 				break;
 			case 2: // rank_min
-				m_tiptext = WX_STRING(m_colinfovec[coloumn].first);
+				m_tiptext = m_colinfovec[coloumn].first;
 				break;
 			case 3: // descrp
-				m_tiptext = WX_STRING(battle.GetDescription());
+				m_tiptext = battle.GetDescription();
 				break;
 			case 4: //map
-				m_tiptext = RefineMapname(WX_STRING(battle.GetMapName()));
+				m_tiptext = RefineMapname(battle.GetMapName());
 				break;
 			case 5: //mod
-				m_tiptext = RefineModname(WX_STRING(battle.GetModName()));
+				m_tiptext = RefineModname(battle.GetModName());
 				break;
 			case 6: // host
-				m_tiptext = WX_STRING(battle.GetFounder().GetNick());
+				m_tiptext = battle.GetFounder().GetNick();
 				break;
 			case 7: // specs
 				m_tiptext = _T("Spectators:\n");
@@ -630,7 +630,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 				{
 					if (i < battle.GetNumUsers()-1)
 						m_tiptext << _T("\n");
-					m_tiptext << WX_STRING(battle.GetUser(i).GetNick()) ;
+					m_tiptext << battle.GetUser(i).GetNick() ;
 				}
 				break;
 			case 8: // player
@@ -639,7 +639,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 				{
 					if ( i> 0)
 						m_tiptext << _T("\n");
-					m_tiptext << WX_STRING(battle.GetUser(i).GetNick());
+					m_tiptext << battle.GetUser(i).GetNick();
 				}
 				break;
 			case 9: //may player

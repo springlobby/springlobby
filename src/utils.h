@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UTILS_H
 #define SPRINGLOBBY_HEADERGUARD_UTILS_H
 
-#include <string>
+#include <wx/string.h>
 #include <wx/log.h>
 
 #ifndef __WXDEBUG__
@@ -18,10 +18,8 @@
 #endif
 #endif
 
-#if( (wxMAJOR_VERSION==2 && wxMINOR_VERSION >= 8) || wxMAJOR_VERSION>2 )
-#define NAT_TRAVERSAL_SUPPORT 1
-#else
-#define NAT_TRAVERSAL_SUPPORT 0
+#ifndef VERSION
+#define VERSION "Unknown"
 #endif
 
 //! Converts an std::string to a wxString
@@ -35,8 +33,6 @@
 
 #define ASSERT_LOGIC(cond,msg) if(!(cond)){wxLogError(_T("logic error: %s"), wxString(msg).c_str() ); throw std::logic_error(std::string(wxString(msg).mb_str()));}
 #define ASSERT_RUNTIME(cond,msg) if(!(cond)){wxLogMessage(_T("runtime error: %s"), wxString(msg).c_str() );throw std::runtime_error(std::string(wxString(msg).mb_str()));}
-
-std::string i2s( int x );
 
 
 #define boundry(var,min,max) var=(var<(min))?(min):(var>(max))?(max):var
@@ -55,11 +51,10 @@ std::string i2s( int x );
 
 wxString GetLibExtension();
 void InitializeLoggingTargets();
-std::string GetWordParam( std::string& params );
-std::string GetSentenceParam( std::string& params );
-std::string GetChatLineParam( std::string& params );
-int GetIntParam( std::string& params );
-bool GetBoolParam( std::string& params );
-std::string GetSpringLobbyVersion();
+wxString GetWordParam( wxString& params );
+wxString GetSentenceParam( wxString& params );
+long GetIntParam( wxString& params );
+bool GetBoolParam( wxString& params );
+wxString GetSpringLobbyVersion();
 
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H
