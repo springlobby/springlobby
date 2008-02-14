@@ -6,18 +6,27 @@ SET(CMAKE_VERBOSE_MAKEFILE ON)
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
 ADD_DEFINITIONS(-Wall -g3)
 
-#----------------------------------------------------------------------------------------------------
-# Konfiguration of wxWidgets Configuration
-#----------------------------------------------------------------------------------------------------
-
 SET(CMAKE_FIND_LIBRARY_PREFIXES "")
 SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
+
+############################################################
+# wxWidgets
+############################################################
 
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here;
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
 SET(wxWidgets_USE_LIBS base core gl net adv qa)
 
-# We need the Find package for wxWidgets to work
+# Under Windows the wx-config Tools is missing, so you need to manually specify the Location of wxWidgets
+IF(WIN32)
+	# Base wxWidgets Directory (e.g., C:/wxWidgets-2.6.3).
+	wxWidgets_ROOT_DIR=""
+	# Path to wxWidgets Libraries e.g., C:/wxWidgets-2.6.3/lib/vc_lib).
+	wxWidgets_LIB_DIR=""
+	# Configuration to use (e.g., msw, mswd, mswu, mswunivud, etc.)
+	wxWidgets_CONFIGURATION=""
+ENDIF(WIN32)
+
 FIND_PACKAGE(wxWidgets)
 
 # Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
