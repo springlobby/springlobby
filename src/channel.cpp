@@ -104,7 +104,14 @@ wxString Channel::GetTopic()
 void Channel::AddUser( User& user )
 {
   UserList::AddUser( user );
+  CheckBanned(user.GetNick());
 }
+
+void Channel::CheckBanned(const wxString& name){
+  if(banned_users.count(name)>0){
+    m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+GetName()+_T(" ")+name);
+  }
+};
 
 
 void Channel::RemoveUser( const wxString& nick )
@@ -119,6 +126,9 @@ bool Channel::ExecuteSayCommand( const wxString& in )
 
   if ( in[0] != '/' ) return false;
 
+  wxString subcmd = in.BeforeFirst(' ').Lower();
+  wxString params = in.AfterFirst( ' ' );
+
   wxString cmdline = in;
   wxString param = GetWordParam( cmdline );
   if ( param == _T("/me") ) {
@@ -126,6 +136,13 @@ bool Channel::ExecuteSayCommand( const wxString& in )
     return true;
   } else if ( param == _T("/sayver") ) {
     DoAction( _T("is using SpringLobby v") + GetSpringLobbyVersion() );
+    return true;
+  } else if(subcmd==_T("/ban")){
+    banned_users.insert(params);
+    m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+GetName()+_T(" ")+params);
+    return true;
+  } else if(subcmd==_T("/unban")){
+    banned_users.erase(params);
     return true;
   }
 

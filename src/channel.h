@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_CHANNEL_H
 
 #include "userlist.h"
+#include <set>
 
 class Channel;
 class Server;
@@ -34,6 +35,9 @@ class Channel : public UserList
     wxString GetName();
     User& GetMe();
 
+    // filtering functions
+    void CheckBanned(const wxString& name);
+
     // Channel Functions
     void Say( const wxString& message );
     void DoAction( const wxString& action );
@@ -55,6 +59,8 @@ class Channel : public UserList
     bool ExecuteSayCommand( const wxString& in );
 
   protected:
+    std::set<wxString> banned_users;
+
     wxString m_topic;
     wxString m_topic_nick;
     wxString m_name;
