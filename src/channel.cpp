@@ -137,11 +137,11 @@ bool Channel::ExecuteSayCommand( const wxString& in )
   } else if ( param == _T("/sayver") ) {
     DoAction( _T("is using SpringLobby v") + GetSpringLobbyVersion() );
     return true;
-  } else if(subcmd==_T("/ban")){
+  } else if(subcmd==_T("/userban")){
     banned_users.insert(params);
     m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+GetName()+_T(" ")+params);
     return true;
-  } else if(subcmd==_T("/unban")){
+  } else if(subcmd==_T("/userunban")){
     banned_users.erase(params);
     return true;
   }
