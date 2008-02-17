@@ -81,9 +81,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_side_lbl = new wxStaticText( m_player_panel, -1, _("Side") );
 
   m_map_lbl = new wxStaticText( this, -1, RefineMapname( battle.GetMapName() ) );
-  m_size_lbl = new wxStaticText( this, -1, _("") );
-  m_wind_lbl = new wxStaticText( this, -1, _("") );
-  m_tidal_lbl = new wxStaticText( this, -1, _("") );
+  m_size_lbl = new wxStaticText( this, -1, _T("") );
+  m_wind_lbl = new wxStaticText( this, -1, _T("") );
+  m_tidal_lbl = new wxStaticText( this, -1, _T("") );
 
   m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true, false );
   m_minimap->SetToolTip(_T("A small version of the selected map.\n "
