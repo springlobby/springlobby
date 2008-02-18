@@ -366,14 +366,14 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     	  map = usync()->GetMap( mname );
       else if ( usync()->GetNumMaps() <= 0 ) {
         wxLogWarning( _T("no maps found") );
-        customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
+        customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
         return;
       } else {
         map = usync()->GetMap( 0 );
       }
     } catch ( ... ) {
       wxLogWarning( _T("no maps found") );
-      customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
+      customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
       return;
     }
     bo.maphash = map.hash;
