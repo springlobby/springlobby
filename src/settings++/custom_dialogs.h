@@ -15,7 +15,7 @@ class wxString;
 class wxTextCtrl;
 class wxCommandEvent;
 class wxCloseEvent;
-class wxFocusEvent;
+class wxEvent;
 
 #define SL_MAIN_WINDOW_PTR CustomMessageBox::getLobbypointer()
 #define SE_FRAME_PTR CustomMessageBox::getSettingspointer()
@@ -29,6 +29,8 @@ void customMessageBoxNoModal(int whichIcon , const wxString& message,
 
 void freeStaticBox();
 
+
+
 class CustomMessageBox : public wxDialog
 {
 public:
@@ -40,12 +42,12 @@ public:
 	static void setSettingspointer(wxWindow*);
 	static wxWindow* getLobbypointer();
 	static wxWindow* getSettingspointer();
-    void OnCloseWindow(wxCloseEvent& event);
+    void OnOptionsOk(wxCommandEvent& event);
 
 protected:
 	static wxWindow* m_settingsWindow;
 	static wxWindow* m_lobbyWindow;
-
+     DECLARE_EVENT_TABLE()
 
 };
 

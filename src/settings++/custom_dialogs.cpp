@@ -16,6 +16,10 @@
 #include "../images/springsettings.xpm"
 #include "../images/springlobby.xpm"
 
+BEGIN_EVENT_TABLE(CustomMessageBox ,wxDialog)
+ // EVT_MENU(ID_OPTIONS_BUT, MyDialog::OnOptionsSubmit)
+  EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsOk)
+END_EVENT_TABLE()
 
 wxWindow* CustomMessageBox::m_settingsWindow = 0;
 wxWindow* CustomMessageBox::m_lobbyWindow = 0;
@@ -101,9 +105,9 @@ CustomMessageBox::~CustomMessageBox()
 }
 
 
-void CustomMessageBox::OnCloseWindow(wxCloseEvent& event)
+void CustomMessageBox::OnOptionsOk(wxCommandEvent& event)
 {
-    Destroy();
+   EndModal(wxID_NO);
 }
 
 void CustomMessageBox::setLobbypointer(wxWindow* arg)
