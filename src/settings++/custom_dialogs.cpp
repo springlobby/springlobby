@@ -78,18 +78,15 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
         wxStaticBitmap *icon = new wxStaticBitmap(this, wxID_ANY, bitmap);
         icon_text->Add( icon, 0, wxCENTER );
     }
-         wxBitmap bitmap = wxArtProvider::GetIcon(wxART_ERROR, wxART_MESSAGE_BOX);
-
-        wxStaticBitmap *icon = new wxStaticBitmap(this, wxID_ANY, bitmap);
-        icon_text->Add( icon, 0, wxCENTER );
 
 
-#if wxUSE_STATTEXT
+
+
     // 2) text
     icon_text->Add( CreateTextSizer( message ), 0, wxALIGN_CENTER | wxLEFT, 10 );
 
     topsizer->Add( icon_text, 1, wxCENTER | wxLEFT|wxRIGHT|wxTOP, 10 );
-#endif // wxUSE_STATTEXT
+
 
     // 3) buttons
     int center_flag = wxEXPAND;

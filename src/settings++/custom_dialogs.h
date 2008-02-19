@@ -22,10 +22,10 @@ class wxFocusEvent;
 
 int customMessageBox(int whichIcon , const wxString& message,
         const wxString& caption = wxMessageBoxCaptionStr,
-        long style = wxOK|wxCENTRE,  const int x = -1, const int y = -1 );
+        long style = wxOK,  const int x = -1, const int y = -1 );
 void customMessageBoxNoModal(int whichIcon , const wxString& message,
         const wxString& caption = wxMessageBoxCaptionStr,
-        long style = wxOK|wxCENTRE,  const int x = -1, const int y = -1 );
+        long style = wxOK,  const int x = -1, const int y = -1 );
 
 
 
