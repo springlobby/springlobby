@@ -78,6 +78,7 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menuTools->AppendSeparator();
   m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
   m_settings_menu = new wxMenuItem( m_menuTools, MENU_SETTINGSPP, _("SpringSettings"), wxEmptyString, wxITEM_NORMAL );
+  m_menuTools->Append (m_settings_menu);
 
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _("&About"));
