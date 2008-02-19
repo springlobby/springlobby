@@ -123,7 +123,7 @@ MainWindow::MainWindow( Ui& ui ) :
   Layout();
 
   se_frame_active = false;
-
+    serverMessageBox(SL_MAIN_ICON,_("NÖLDKNSVLVNDLSNLKDNSÖVNDÖSNVDSÖNVDÖNSÖVNDÖSNQPWKDOWEJFNHEWLNHFJBEJKBCSDJKBVCJKSDBBVCJKWEBKBDKBEW"),_("JKBKB"));
 }
 
 void MainWindow::forceSettingsFrameClose()
@@ -339,7 +339,7 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
   latestVersion.Replace(_T("\t"), _T(""), true);
   if (latestVersion == _T("-1"))
   {
-    customMessageBox(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
+    customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
     return;
   }
   wxString myVersion = GetSpringLobbyVersion();
@@ -348,7 +348,7 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
 
   if (latestVersion.IsSameAs(myVersion, false))
   {
-    customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is up to date!\n\n") + msg, _("Up to Date"));
+    customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date!\n\n") + msg, _("Up to Date"));
   }
   else
   {

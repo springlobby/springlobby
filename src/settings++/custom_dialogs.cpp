@@ -12,18 +12,19 @@
 #include "utils.h"
 #include <wx/artprov.h>
 #include <wx/statbmp.h>
+#include <wx/listctrl.h>
 
 #include "../images/springsettings.xpm"
 #include "../images/springlobby.xpm"
 
 BEGIN_EVENT_TABLE(CustomMessageBox ,wxDialog)
- // EVT_MENU(ID_OPTIONS_BUT, MyDialog::OnOptionsSubmit)
-  EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsOk)
+  EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)
 END_EVENT_TABLE()
 
-wxWindow* CustomMessageBox::m_settingsWindow = 0;
-wxWindow* CustomMessageBox::m_lobbyWindow = 0;
+wxWindow* CustomMessageBoxBase::m_settingsWindow = 0;
+wxWindow* CustomMessageBoxBase::m_lobbyWindow = 0;
 static CustomMessageBox* s_nonmodbox = 0;
+static ServerMessageBox* s_serverMsgBox = 0;
 
 CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
         const wxString& caption ,
@@ -105,29 +106,29 @@ CustomMessageBox::~CustomMessageBox()
 }
 
 
-void CustomMessageBox::OnOptionsOk(wxCommandEvent& event)
+void CustomMessageBox::OnOptionsNo(wxCommandEvent& event)
 {
    EndModal(wxID_NO);
 }
 
-void CustomMessageBox::setLobbypointer(wxWindow* arg)
+void CustomMessageBoxBase::setLobbypointer(wxWindow* arg)
 {
 	m_lobbyWindow = arg;
 }
 
- void CustomMessageBox::setSettingspointer(wxWindow* arg)
+ void CustomMessageBoxBase::setSettingspointer(wxWindow* arg)
 {
 	m_settingsWindow = arg;
 }
 
- wxWindow* CustomMessageBox::getLobbypointer()
+ wxWindow* CustomMessageBoxBase::getLobbypointer()
 {
 //	 if (m_lobbyWindow==0)
 //			 wxLogWarning(_T("null parent window in custom message dialog"));
 	return m_lobbyWindow;
 }
 
- wxWindow* CustomMessageBox::getSettingspointer()
+ wxWindow* CustomMessageBoxBase::getSettingspointer()
 {
 //	 if (m_settingsWindow==0)
 //		 wxLogWarning(_T("null parent window in custom message dialog"));
@@ -143,11 +144,11 @@ int customMessageBox( int whichIcon , const wxString& message,const wxString& ca
 		{
 			case SL_MAIN_ICON:
 				icon = new wxIcon(springlobby_xpm);
-				parent = CustomMessageBox::getLobbypointer();
+				parent = CustomMessageBoxBase::getLobbypointer();
 				break;
 			case SS_MAIN_ICON:
 				icon = new wxIcon(springsettings_xpm);
-				parent = CustomMessageBox::getSettingspointer();
+				parent = CustomMessageBoxBase::getSettingspointer();
 				break;
 			default:
 				icon = new wxIcon(wxNullIcon);
@@ -176,11 +177,11 @@ void customMessageBoxNoModal( int whichIcon , const wxString& message,const wxSt
 		{
 			case SL_MAIN_ICON:
 				icon = new wxIcon(springlobby_xpm);
-				parent = CustomMessageBox::getLobbypointer();
+				parent = CustomMessageBoxBase::getLobbypointer();
 				break;
 			case SS_MAIN_ICON:
 				icon = new wxIcon(springsettings_xpm);
-				parent = CustomMessageBox::getSettingspointer();
+				parent = CustomMessageBoxBase::getSettingspointer();
 				break;
 			default:
 				icon = new wxIcon(wxNullIcon);
@@ -200,6 +201,12 @@ void freeStaticBox()
         s_nonmodbox->Show(false);
          s_nonmodbox->Destroy();
          s_nonmodbox = 0;
+    }
+    if (s_serverMsgBox!=0)
+    {
+        s_serverMsgBox->Show(false);
+         s_serverMsgBox->Destroy();
+         s_serverMsgBox = 0;
     }
 
 }
@@ -242,5 +249,85 @@ void CreditsDialog::AddCredit(wxString person,wxString message)
 
 CreditsDialog::~CreditsDialog()
 {
+}
+
+ServerMessageBox::~ServerMessageBox()
+{
+}
+
+ServerMessageBox::ServerMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
+        const wxString& caption ,
+        long style, const wxPoint& pos )
+			: wxDialog(parent,-1,caption,pos,wxDefaultSize,style|wxFRAME_FLOAT_ON_PARENT|wxDEFAULT_DIALOG_STYLE)
+{
+	SetIcon(*icon);
+
+    m_messages = new wxListCtrl(this,-1,wxDefaultPosition,wxDefaultSize,wxLC_NO_HEADER|wxLC_REPORT);
+    m_messages->InsertColumn(0,_T(""));
+    topsizer = new wxBoxSizer( wxVERTICAL );
+
+    AppendMessage(message);
+
+    topsizer->Add( m_messages, 1, wxALL|wxEXPAND, 10 );
+
+
+    topsizer->Add(0,10);
+
+
+    wxSizer *sizerBtn = CreateButtonSizer(wxOK);
+    topsizer->Add(sizerBtn, 0,  wxALL, 10 );
+
+
+    SetAutoLayout( true );
+    SetSizer( topsizer );
+
+    topsizer->SetSizeHints( this );
+    topsizer->Fit( this );
+
+
+    Centre( wxBOTH | wxCENTER_FRAME);
+
+}
+
+void ServerMessageBox::AppendMessage(const wxString& message)
+{
+    m_messages->InsertItem(0,message);
+    m_messages->SetColumnWidth(0, wxLIST_AUTOSIZE);
+
+    SetSize(m_messages->GetColumnWidth(0),-1);
+    Layout();
+
+}
+
+void serverMessageBox( int whichIcon , const wxString& message,const wxString& caption,
+		long style , int x, int y )
+{
+		wxWindow* parent;
+		wxIcon* icon;
+		switch (whichIcon)
+		{
+			case SL_MAIN_ICON:
+				icon = new wxIcon(springlobby_xpm);
+				parent = CustomMessageBoxBase::getLobbypointer();
+				break;
+			case SS_MAIN_ICON:
+				icon = new wxIcon(springsettings_xpm);
+				parent = CustomMessageBoxBase::getSettingspointer();
+				break;
+			default:
+				icon = new wxIcon(wxNullIcon);
+				parent = 0;
+				break;
+
+		}
+		if ( s_serverMsgBox != 0 && s_serverMsgBox->IsShown() )
+		{
+		    s_serverMsgBox->AppendMessage(message);
+		}
+		else
+		{
+            s_serverMsgBox = new ServerMessageBox (icon,parent,message,caption,style,wxPoint(x,y));
+            s_serverMsgBox->Show(true);
+		}
 }
 

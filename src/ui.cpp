@@ -40,7 +40,7 @@ Ui::Ui() :
    ReloadUnitSync();
 
   m_main_win = new MainWindow( *this );
-  CustomMessageBox::setLobbypointer(m_main_win);
+  CustomMessageBoxBase::setLobbypointer(m_main_win);
   m_spring = new Spring(*this);
   m_thread = new UnitSyncThread( *this );
   m_thread->Init();
@@ -370,8 +370,8 @@ void Ui::ShowMessage( const wxString& heading, const wxString& message )
 {
 
   if ( m_main_win == 0 ) return;
-  wxMessageDialog msg( &mw(), message, heading, wxOK);
-  msg.ShowModal();
+  serverMessageBox( SL_MAIN_ICON, message, heading, wxOK);
+
 }
 
 
@@ -750,7 +750,7 @@ void Ui::OnBattleClosed( Battle& battle )
     if ( &br->GetBattle() == &battle )
 	{
 	    if (!battle.IsFounderMe() )
-            customMessageBoxNoModal(SL_MAIN_ICON,_T("The current battle was closed by the host."),_T("Battle closed"));
+            customMessageBoxNoModal(SL_MAIN_ICON,_("The current battle was closed by the host."),_("Battle closed"));
 		mw().GetJoinTab().LeaveCurrentBattle();
 	}
   }
