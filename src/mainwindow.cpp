@@ -124,8 +124,6 @@ MainWindow::MainWindow( Ui& ui ) :
 
   se_frame_active = false;
 
-    customMessageBox(SL_MAIN_ICON, _("There was an error checking for the latest version.\n \
-    Please try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"),wxICON_QUESTION|wxOK);
 }
 
 void MainWindow::forceSettingsFrameClose()
@@ -146,6 +144,7 @@ MainWindow::~MainWindow()
   sett().SaveSettings();
   m_ui.Quit();
   m_ui.OnMainWindowDestruct();
+  freeStaticBox();
 
   delete m_chat_icon;
   delete m_battle_icon;

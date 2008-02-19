@@ -19,11 +19,7 @@
 
 wxWindow* CustomMessageBox::m_settingsWindow = 0;
 wxWindow* CustomMessageBox::m_lobbyWindow = 0;
-
-//CustomMessageBox* GetNonModalMsgBox()
-//{
-//
-//}
+static CustomMessageBox* s_nonmodbox = 0;
 
 CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
         const wxString& caption ,
@@ -31,70 +27,58 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
 			: wxDialog(parent,-1,caption,pos,wxDefaultSize,style|wxFRAME_FLOAT_ON_PARENT|wxDEFAULT_DIALOG_STYLE)
 {
 	SetIcon(*icon);
-	/*wxBoxSizer* box = new wxBoxSizer(wxVERTICAL);
-	box->Add(0,15,1,wxEXPAND|wxALL);
-	box->Add(new wxStaticText(this, -1, message), 0, wxALL| wxEXPAND, 20);
-	box->Add(0,15,1,wxEXPAND|wxALL);
-	box->Add(CreateButtonSizer(style));
-
-	SetSizer(box);
-    box->SetSizeHints( this );*/
 
 //******** copied from wxsource/generic/msgdlgg.cpp with small modifications***********************************************************
-//    SetMessageDialogStyle(style);
 
-        wxBoxSizer *topsizer = new wxBoxSizer( wxVERTICAL );
+
+    wxBoxSizer *topsizer = new wxBoxSizer( wxVERTICAL );
 
     wxBoxSizer *icon_text = new wxBoxSizer( wxHORIZONTAL );
 
 
     // 1) icon
-    if (style & wxICON_MASK)
+
+    wxBitmap bitmap;
+    switch ( style & wxICON_MASK )
     {
-        wxBitmap bitmap;
-        switch ( style & wxICON_MASK )
-        {
-            default:
-                wxLogError(_T("wrong icon in msgbox specified"));
-                // fall through
+        default:
+            bitmap = wxArtProvider::GetIcon(wxART_INFORMATION, wxART_MESSAGE_BOX);
+            break;
 
-            case wxICON_ERROR:
-                bitmap = wxArtProvider::GetIcon(wxART_ERROR, wxART_MESSAGE_BOX);
-                break;
+        case wxICON_ERROR:
+            bitmap = wxArtProvider::GetIcon(wxART_ERROR, wxART_MESSAGE_BOX);
+            break;
 
-            case wxICON_INFORMATION:
-                bitmap = wxArtProvider::GetIcon(wxART_INFORMATION, wxART_MESSAGE_BOX);
-                break;
+        case wxICON_INFORMATION:
+            bitmap = wxArtProvider::GetIcon(wxART_INFORMATION, wxART_MESSAGE_BOX);
+            break;
 
-            case wxICON_WARNING:
-                bitmap = wxArtProvider::GetIcon(wxART_WARNING, wxART_MESSAGE_BOX);
-                break;
+        case wxICON_WARNING:
+            bitmap = wxArtProvider::GetIcon(wxART_WARNING, wxART_MESSAGE_BOX);
+            break;
 
-            case wxICON_QUESTION:
-                bitmap = wxArtProvider::GetIcon(wxART_QUESTION, wxART_MESSAGE_BOX);
-                break;
-        }
-
-        wxStaticBitmap *icon = new wxStaticBitmap(this, wxID_ANY, bitmap);
-        icon_text->Add( icon, 0, wxCENTER );
+        case wxICON_QUESTION:
+            bitmap = wxArtProvider::GetIcon(wxART_QUESTION, wxART_MESSAGE_BOX);
+            break;
     }
 
-
-
+    wxStaticBitmap *info_icon = new wxStaticBitmap(this, wxID_ANY, bitmap);
+    icon_text->Add( info_icon, 0, wxCENTER );
 
     // 2) text
-    icon_text->Add( CreateTextSizer( message ), 0, wxALIGN_CENTER | wxLEFT, 10 );
+    icon_text->Add( CreateTextSizer( message ), 0, wxALIGN_TOP| wxLEFT, 10 );
 
     topsizer->Add( icon_text, 1, wxCENTER | wxLEFT|wxRIGHT|wxTOP, 10 );
-
+    topsizer->Add(0,10);
 
     // 3) buttons
     int center_flag = wxEXPAND;
     if (style & wxYES_NO)
         center_flag = wxALIGN_CENTRE;
-    wxSizer *sizerBtn = CreateSeparatedButtonSizer(style & ButtonSizerFlags);
+    wxSizer *sizerBtn = CreateButtonSizer(style & ButtonSizerFlags);
     if ( sizerBtn )
         topsizer->Add(sizerBtn, 0, center_flag | wxALL, 10 );
+
 
     SetAutoLayout( true );
     SetSizer( topsizer );
@@ -102,7 +86,7 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
     topsizer->SetSizeHints( this );
     topsizer->Fit( this );
     wxSize size( GetSize() );
-    if (size.x < size.y*3/2)
+    if (size.x > size.y*3/2)
     {
         size.x = size.y*3/2;
         SetSize( size );
@@ -119,7 +103,7 @@ CustomMessageBox::~CustomMessageBox()
 
 void CustomMessageBox::OnCloseWindow(wxCloseEvent& event)
 {
-    //wxDialogBase::AcceptAndClose();
+    Destroy();
 }
 
 void CustomMessageBox::setLobbypointer(wxWindow* arg)
@@ -200,10 +184,20 @@ void customMessageBoxNoModal( int whichIcon , const wxString& message,const wxSt
 				break;
 
 		}
-		static CustomMessageBox* s_nonModalMsgBox;
-		s_nonModalMsgBox = new  CustomMessageBox(icon,parent,message,caption,style,wxPoint(x,y));
+		s_nonmodbox = new CustomMessageBox (icon,parent,message,caption,style,wxPoint(x,y));
 
-		s_nonModalMsgBox->Show(true);
+		s_nonmodbox->Show(true);
+}
+
+void freeStaticBox()
+{
+    if (s_nonmodbox!=0)
+    {
+        s_nonmodbox->Show(false);
+         s_nonmodbox->Destroy();
+         s_nonmodbox = 0;
+    }
+
 }
 
 CreditsDialog::CreditsDialog(wxWindow* parent,wxString title,int whichIcon) : wxDialog(parent,-1,title,wxDefaultPosition,

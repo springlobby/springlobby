@@ -22,19 +22,19 @@ class wxFocusEvent;
 
 int customMessageBox(int whichIcon , const wxString& message,
         const wxString& caption = wxMessageBoxCaptionStr,
-        long style = wxOK,  const int x = -1, const int y = -1 );
+        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 void customMessageBoxNoModal(int whichIcon , const wxString& message,
         const wxString& caption = wxMessageBoxCaptionStr,
-        long style = wxOK,  const int x = -1, const int y = -1 );
+        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 
-
+void freeStaticBox();
 
 class CustomMessageBox : public wxDialog
 {
 public:
 	CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
 	        const wxString& caption = wxMessageBoxCaptionStr,
-	        long style = wxOK|wxCENTRE, const wxPoint& pos = wxDefaultPosition);
+	        long style = wxOK|wxICON_INFORMATION, const wxPoint& pos = wxDefaultPosition);
 	virtual ~CustomMessageBox();
 	static void setLobbypointer(wxWindow*);
 	static void setSettingspointer(wxWindow*);
