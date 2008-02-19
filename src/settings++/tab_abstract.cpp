@@ -106,7 +106,7 @@ bool abstract_panel::loadValuesIntoMap()
 	}
 	catch (...)
 	{
-		customMessageBox(SS_MAIN_ICON,_T("Could not access your settings.\n"), wxT("Error"), wxOK|wxICON_HAND, 0);
+		customMessageBox(SS_MAIN_ICON,_("Could not access your settings.\n"), _("Error"), wxOK|wxICON_HAND, 0);
 		abstract_panel::settingsChanged = false;
 		return false;
 	}
@@ -179,11 +179,11 @@ void abstract_panel::loadDefaults()
 	//	const Control RC_TEXT[2]
 	for (int i = 0;i< 2; ++i)
 		intSettings[RC_TEXT[i].key] = fromString( RC_TEXT[i].def);
-	
+
 	//	const Control UI_ZOOM[1]
 	for (int i = 0;i< 1; ++i)
 		intSettings[UI_ZOOM[i].key] = fromString( UI_ZOOM[i].def);
-	
+
 }
 
 void abstract_panel::OnSliderMove(wxCommandEvent& event) {
@@ -237,24 +237,24 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 
 		case ID_DO_SLI_0: { (intSettings)[DO_SLI[0].key]= value; } break;
 
-		case ID_MO_SLI_0: { 
-			(intSettings)[MO_SLI[0].key]= value; 
+		case ID_MO_SLI_0: {
+			(intSettings)[MO_SLI[0].key]= value;
 			(intSettings)[MO_SLI_EXT[0].key]= ( value > 0 ? 1 : 0);
 			} break;
-        case ID_MO_SLI_1:  { 
-			(intSettings)[MO_SLI[1].key]= value; 
+        case ID_MO_SLI_1:  {
+			(intSettings)[MO_SLI[1].key]= value;
 			(intSettings)[MO_SLI_EXT[1].key]= ( value > 0 ? 1 : 0);
 			} break;
-        case ID_MO_SLI_2:  { 
-			(intSettings)[MO_SLI[2].key]= value; 
+        case ID_MO_SLI_2:  {
+			(intSettings)[MO_SLI[2].key]= value;
 			(intSettings)[MO_SLI_EXT[2].key]= ( value > 0 ? 1 : 0);
 			} break;
-        case ID_MO_SLI_3:  { 
-			(intSettings)[MO_SLI[3].key]= value; 
+        case ID_MO_SLI_3:  {
+			(intSettings)[MO_SLI[3].key]= value;
 			(intSettings)[MO_SLI_EXT[3].key]= ( value > 0 ? 1 : 0);
 			} break;
-        case ID_MO_SLI_4:  { 
-			(intSettings)[MO_SLI[4].key]= value; 
+        case ID_MO_SLI_4:  {
+			(intSettings)[MO_SLI[4].key]= value;
 			(intSettings)[MO_SLI_EXT[4].key]= ( value > 0 ? 1 : 0);
 			} break;
 
@@ -364,8 +364,8 @@ void abstract_panel::OnRadioButtonToggle(wxCommandEvent& event) {
 		case ID_WINDOWP_VO_RBUT_1: { (intSettings)[VO_RBUT[0].key]= 24; } break;
 
 		case ID_WINDOWC_MO_RBUT_0: { (intSettings)[MO_RBUT[0].key]= 1; } break;	// OH button (CamMode 1)
-		case ID_WINDOWC_MO_RBUT_1: { (intSettings)[MO_RBUT[1].key]= 2; } break;	// ROH button (CamMode 2)
-		case ID_WINDOWC_MO_RBUT_2: { (intSettings)[MO_RBUT[2].key]= 3; } break;	// TW button (CamMode 3)
+		case ID_WINDOWC_MO_RBUT_1: { (intSettings)[MO_RBUT[1].key]= 3; } break;	// ROH button (CamMode 2)
+		case ID_WINDOWC_MO_RBUT_2: { (intSettings)[MO_RBUT[2].key]= 2; } break;	// TW button (CamMode 3)
 		case ID_WINDOWC_MO_RBUT_3: { (intSettings)[MO_RBUT[3].key]= 0; } break;	// FPS button (CamMode 0)
 		case ID_WINDOWC_MO_RBUT_4: { (intSettings)[MO_RBUT[4].key]= 4; } break;	// FC button (CamMode 4)
 	}
@@ -396,7 +396,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 			}
 			break;
 		}
-		//TODO save choices in option handler in 
+		//TODO save choices in option handler in
 		case ID_SIMPLE_QUAL_CBX:
 		{
 			for (int i=0; i<prVal_RenderQuality_size;++i)
@@ -429,12 +429,12 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 			}
 			if (modeIndex!=-1)
 			{
-				(intSettings)[wxT("XResolution")] = vl_Resolution_X[modeIndex];
-				(intSettings)[wxT("YResolution")] = vl_Resolution_Y[modeIndex];
+				(intSettings)[_T("XResolution")] = vl_Resolution_X[modeIndex];
+				(intSettings)[_T("YResolution")] = vl_Resolution_Y[modeIndex];
 				if (modeIndex > vl_Resolution_startOfDualScreenRes)
-					(intSettings)[wxT("DualScreenMode")] = 1;
+					(intSettings)[_T("DualScreenMode")] = 1;
 				else
-					(intSettings)[wxT("DualScreenMode")] = 0;
+					(intSettings)[_T("DualScreenMode")] = 0;
 			}
 			break;
 		}
@@ -468,7 +468,7 @@ bool abstract_panel::saveSettings() {
 //	        //configHandler->SetSpringConfigFloat(f->first,f->second);
 //	    }
     } catch (...) {
-    	customMessageBox(SS_MAIN_ICON,_T("Could not save, unitsync not properly loaded"), wxT("SpringSettings Error"), wxOK|wxICON_HAND, 0);
+    	customMessageBox(SS_MAIN_ICON,_("Could not save, unitsync not properly loaded"), _("SpringSettings Error"), wxOK|wxICON_HAND, 0);
     	return false;
     }
 

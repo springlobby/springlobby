@@ -29,7 +29,7 @@ void customMessageBoxNoModal(int whichIcon , const wxString& message,
 
 
 
-class CustomMessageBox : public wxMessageDialog
+class CustomMessageBox : public wxDialog
 {
 public:
 	CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
@@ -40,9 +40,6 @@ public:
 	static void setSettingspointer(wxWindow*);
 	static wxWindow* getLobbypointer();
 	static wxWindow* getSettingspointer();
-    bool Show(bool show);
-    void OnButton2(wxCommandEvent& event);
-    void OnButton3(wxFocusEvent& event);
     void OnCloseWindow(wxCloseEvent& event);
 
 protected:

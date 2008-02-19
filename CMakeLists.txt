@@ -15,7 +15,7 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here;
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-SET(wxWidgets_USE_LIBS base core gl net adv)
+SET(wxWidgets_USE_LIBS base core gl net adv qa)
 
 # We need the Find package for wxWidgets to work
 FIND_PACKAGE(wxWidgets)
@@ -31,6 +31,7 @@ IF(wxWidgets_FOUND)
 	INCLUDE_DIRECTORIES(${SpringLobbySrc_SOURCE_DIR} ${SettingsSrc_SOURCE_DIR}  ${wxWidgets_INCLUDE_DIRS} )
 	SET(SpringLobbySrc
 		src/boost/md5.cpp
+		src/updater/versionchecker.cpp
 		src/addbotdialog.cpp
 		src/agreementdialog.cpp
 		src/base64.cpp
@@ -43,6 +44,7 @@ IF(wxWidgets_FOUND)
 		src/battleoptionstab.cpp
 		src/battleroomlistctrl.cpp
 		src/battleroomtab.cpp
+		src/battleroommmoptionstab.cpp
 		src/channel.cpp
 		src/channellist.cpp
 		src/chatlog.cpp
@@ -50,6 +52,7 @@ IF(wxWidgets_FOUND)
 		src/chatpanel.cpp
 		src/connectwindow.cpp
 		src/countrycodes.cpp
+		src/crashreport.cpp
 		src/customlistctrl.cpp
 		src/flagimages.cpp
 		src/hostbattledialog.cpp
@@ -63,6 +66,8 @@ IF(wxWidgets_FOUND)
 		src/mapctrl.cpp
 		src/maplistctrl.cpp
 		src/mapselectdialog.cpp
+		src/mmoptionmodel.cpp
+		src/mmoptionswrapper.cpp
 		src/nicklistctrl.cpp
 		src/nonautotools.cpp
 		src/server.cpp
@@ -71,13 +76,13 @@ IF(wxWidgets_FOUND)
 		src/singleplayerbattle.cpp
 		src/singleplayertab.cpp
 		src/socket.cpp
+		src/spinctld.cpp
 		src/spring.cpp
 		src/springlobbyapp.cpp
 		src/springoptionstab.cpp
 		src/springprocess.cpp
 		src/springunitsync.cpp
 		src/springunitsynclib.cpp
-		src/stacktrace.cpp
 		src/tasserver.cpp
 		src/ui.cpp
 		src/uiutils.cpp
@@ -106,10 +111,9 @@ IF(wxWidgets_FOUND)
 		src/settings++/Main.cpp
 	)
 	SET(SLSharedWithSettings
-		src/boost/md5.cpp
-		src/base64.cpp
+		src/updater/versionchecker.cpp
+		src/crashreport.cpp
 		src/springunitsynclib.cpp
-		src/stacktrace.cpp
 		src/utils.cpp
 	)
 

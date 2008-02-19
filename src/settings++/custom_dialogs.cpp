@@ -8,11 +8,10 @@
 #include <wx/button.h>
 #include <wx/font.h>
 #include <wx/event.h>
+#include <wx/stattext.h>
 
 #include "../images/springsettings.xpm"
 #include "../images/springlobby.xpm"
-
-
 
 
 wxWindow* CustomMessageBox::m_settingsWindow = 0;
@@ -26,29 +25,27 @@ wxWindow* CustomMessageBox::m_lobbyWindow = 0;
 CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
         const wxString& caption ,
         long style, const wxPoint& pos )
-			: wxMessageDialog(parent,message,caption,style|wxFRAME_FLOAT_ON_PARENT,pos)
+			: wxDialog(parent,-1,caption,pos,wxDefaultSize,style|wxFRAME_FLOAT_ON_PARENT|wxDEFAULT_DIALOG_STYLE)
 {
 	SetIcon(*icon);
+	wxBoxSizer* box = new wxBoxSizer(wxVERTICAL);
+	box->Add(0,15,1,wxEXPAND|wxALL);
+	box->Add(new wxStaticText(this, -1, message), 0, wxALL| wxEXPAND, 20);
+	box->Add(0,15,1,wxEXPAND|wxALL);
+	box->Add(CreateButtonSizer(style));
+
+	SetSizer(box);
+    box->SetSizeHints( this );
 }
 
 CustomMessageBox::~CustomMessageBox()
 {
 }
 
- void CustomMessageBox::OnButton2(wxCommandEvent& event)
- {
-    wxDialogBase::AcceptAndClose();
-    int* p = 0; *p=0;
- }
-void CustomMessageBox::OnButton3(wxFocusEvent& event)
- {
-    wxDialogBase::AcceptAndClose();
-    int* p = 0; *p=0;
- }
 
 void CustomMessageBox::OnCloseWindow(wxCloseEvent& event)
 {
-    wxDialogBase::AcceptAndClose();
+    //wxDialogBase::AcceptAndClose();
 }
 
 void CustomMessageBox::setLobbypointer(wxWindow* arg)
@@ -73,11 +70,6 @@ void CustomMessageBox::setLobbypointer(wxWindow* arg)
 //	 if (m_settingsWindow==0)
 //		 wxLogWarning(_T("null parent window in custom message dialog"));
 	return m_settingsWindow;
-}
-
-bool CustomMessageBox::Show(bool show)
-{
-    return wxDialog::Show(show);
 }
 
 int customMessageBox( int whichIcon , const wxString& message,const wxString& caption,
@@ -136,10 +128,7 @@ void customMessageBoxNoModal( int whichIcon , const wxString& message,const wxSt
 		}
 		static CustomMessageBox* s_nonModalMsgBox;
 		s_nonModalMsgBox = new  CustomMessageBox(icon,parent,message,caption,style,wxPoint(x,y));
-		s_nonModalMsgBox->Connect(-1,50000,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)
-                (wxEventFunction)
-                (wxCommandEventFunction)&CustomMessageBox::OnButton2);
-		s_nonModalMsgBox->Connect(wxID_ANY,wxEVT_KILL_FOCUS,wxFocusEventHandler(CustomMessageBox::OnButton3));
+
 		s_nonModalMsgBox->Show(true);
 }
 

@@ -51,7 +51,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_map_pick = new wxChoice( this, SP_MAP_PICK );
   m_ctrl_sizer->Add( m_map_pick, 1, wxALL, 5 );
 
-  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
   m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
   m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
@@ -109,7 +109,7 @@ void SinglePlayerTab::ReloadMaplist()
   m_map_pick->Clear();
   try {
     for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-      m_map_pick->Insert( RefineMapname( WX_STRING(usync()->GetMap( i ).name) ), i );
+      m_map_pick->Insert( RefineMapname( usync()->GetMap( i ).name ), i );
     }
   } catch(...) {}
   m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
@@ -128,7 +128,7 @@ void SinglePlayerTab::ReloadModlist()
   m_mod_pick->Clear();
   try {
     for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
-      m_mod_pick->Insert( RefineModname( WX_STRING(usync()->GetMod( i ).name) ), i );
+      m_mod_pick->Insert( RefineModname( usync()->GetMod( i ).name ), i );
     }
   } catch (...) {}
 

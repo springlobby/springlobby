@@ -53,7 +53,6 @@ BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
   EVT_BUTTON( ID_TIMESTAMP, ChatOptionsTab::OnTimestampSelect )
   EVT_CHECKBOX( ID_SAVELOGS, ChatOptionsTab::OnSaveLogs )
   EVT_BUTTON( ID_BROWSE_LOGS, ChatOptionsTab::OnBrowseLog )
-  EVT_BUTTON( ID_FINDLOGS, ChatOptionsTab::OnFindLog )
 END_EVENT_TABLE()
 
 
@@ -76,7 +75,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   bColorsVSizer->Add( m_use_sys_colors, 0, wxALL, 5 );
 
   m_custom_colors = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-  m_custom_colors->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWFRAME ) );
+  m_custom_colors->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
 
   wxBoxSizer* bCustomColorsSizer;
   bCustomColorsSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -285,8 +284,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   sbChatLogSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Chat logs") ), wxVERTICAL );
 
   m_save_logs = new wxCheckBox( this, ID_SAVELOGS, _("Save chat logs"), wxDefaultPosition, wxDefaultSize, 0 );
-
-  m_save_logs->Enable( false );
+  m_save_logs->SetValue( sett().GetChatLogEnable() );
 
   sbChatLogSizer->Add( m_save_logs, 0, wxALL, 5 );
 
@@ -295,24 +293,19 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   m_chat_save_label = new wxStaticText( this, wxID_ANY, _("Save to:"), wxDefaultPosition, wxDefaultSize, 0 );
   m_chat_save_label->Wrap( -1 );
-  m_chat_save_label->Enable( false );
+  m_chat_save_label->Enable( sett().GetChatLogEnable() );
 
   bSaveToSizer->Add( m_chat_save_label, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
   m_log_save = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-  m_log_save->Enable( false );
+  m_log_save->Enable( sett().GetChatLogEnable() );
 
   bSaveToSizer->Add( m_log_save, 1, wxALL, 5 );
 
   m_browse_log = new wxButton( this, ID_BROWSE_LOGS, _("Browse..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  m_browse_log->Enable( false );
+  m_browse_log->Enable( sett().GetChatLogEnable() );
 
   bSaveToSizer->Add( m_browse_log, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
-
-  m_log_save_find = new wxButton( this, ID_FINDLOGS, _("Find"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  m_log_save_find->Enable( false );
-
-  bSaveToSizer->Add( m_log_save_find, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
 
   sbChatLogSizer->Add( bSaveToSizer, 0, wxEXPAND, 5 );
 
@@ -425,6 +418,8 @@ void ChatOptionsTab::DoRestore()
   m_ts_color->SetBackgroundColour( sett().GetChatColorTime() );
   m_chat_font = sett().GetChatFont();
   m_fontname->SetLabel( m_chat_font.GetFaceName() );
+  m_save_logs->SetValue(  sett().GetChatLogEnable() );
+  m_log_save->SetValue(  sett().GetChatLogLoc() );
 }
 
 void ChatOptionsTab::OnApply( wxCommandEvent& event )
@@ -443,6 +438,10 @@ void ChatOptionsTab::OnApply( wxCommandEvent& event )
   sett().SetChatFont( m_chat_font );
   //m_ui.mw().GetChatTab().ChangeUnreadChannelColour( m_note_color->GetBackgroundColour() );
   //m_ui.mw().GetChatTab().ChangeUnreadPMColour( m_note_color->GetBackgroundColour() );
+
+  //Chat Log
+  sett().SetChatLogEnable( m_save_logs->GetValue());
+  sett().SetChatLogLoc( m_log_save->GetValue() );
 }
 
 
@@ -460,6 +459,7 @@ void ChatOptionsTab::OnSelectFont( wxCommandEvent& event )
   if ( dlg.ShowModal() == wxID_OK ) {
     m_chat_font = dlg.GetFontData().GetChosenFont();
     m_fontname->SetLabel( m_chat_font.GetFaceName() );
+    this->Layout();
     UpdateTextSample();
   }
 }
@@ -594,18 +594,16 @@ void ChatOptionsTab::OnTimestampSelect( wxCommandEvent& event )
 
 void ChatOptionsTab::OnSaveLogs( wxCommandEvent& event )
 {
+  m_log_save->Enable( m_save_logs->GetValue() );
+  m_browse_log->Enable( m_save_logs->GetValue() );
+  m_chat_save_label->Enable( m_save_logs->GetValue() );
 }
 
 
 
 void ChatOptionsTab::OnBrowseLog( wxCommandEvent& event )
 {
+  wxDirDialog dirpic( this, _("Choose a directory"), sett().GetSpringDir(), wxDD_DEFAULT_STYLE );
+  if ( dirpic.ShowModal() == wxID_OK ) m_log_save->SetValue( dirpic.GetPath() );
 }
-
-
-
-void ChatOptionsTab::OnFindLog( wxCommandEvent& event )
-{
-}
-
 

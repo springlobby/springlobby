@@ -12,13 +12,13 @@ fi
 version=$1
 tarball=springlobby-${version}.tar.bz2
 
-# first time stuff:
-# cd rpm
-# osc co home:accAgon SpringLobby
+if [ ! -d rpm/home:accAgon/SpringLobby ] ; then
+    ( cd rpm ; osc co home:accAgon SpringLobby )
+fi
 
 cd rpm/home:accAgon/SpringLobby
 osc up
-osc rm springlobby-0.0.1.*.tar.bz2
+find . -name springlobby-0.0.1.\*.tar.bz2 -exec osc rm {} \;
 sed -i 's/^\(%define app_version\) .*/\1 '${version}'/' springlobby_tarball.spec
 cp /srv/www/springlobby/tarballs/${tarball} .
 osc add ${tarball}

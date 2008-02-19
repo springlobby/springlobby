@@ -11,18 +11,18 @@
 #include <wx/string.h>
 #include <wx/intl.h>
 
-void User::Said( const std::string& message )
+void User::Said( const wxString& message )
 {
 }
 
 
-void User::Say( const std::string& message )
+void User::Say( const wxString& message )
 {
   m_serv.SayPrivate( m_nick, message );
 }
 
 
-void User::DoAction( const std::string& message )
+void User::DoAction( const wxString& message )
 {
   m_serv.DoActionPrivate( m_nick, message );
 }
@@ -69,7 +69,7 @@ void User::SendMyUserStatus()
 bool User::ExecuteSayCommand( const wxString& cmd )
 {
   if ( cmd.BeforeFirst(' ').Lower() == _T("/me") ) {
-    m_serv.DoActionPrivate( m_nick, STD_STRING( cmd.AfterFirst(' ') )  );
+    m_serv.DoActionPrivate( m_nick, cmd.AfterFirst(' ') );
     return true;
   }  else return false;
 }

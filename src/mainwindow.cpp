@@ -34,6 +34,9 @@
 #include "images/select_icon.xpm"
 
 #include "settings++/frame.h"
+#include "settings++/custom_dialogs.h"
+
+#include "updater/versionchecker.h"
 
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -47,6 +50,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_TRAC, MainWindow::OnReportBug )
   EVT_MENU( MENU_DOC, MainWindow::OnShowDocs )
   EVT_MENU( MENU_SETTINGSPP, MainWindow::OnShowSettingsPP )
+  EVT_MENU( MENU_VERSION, MainWindow::OnMenuVersion )
 
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
 
@@ -68,11 +72,13 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
-  m_menuTools->Append(MENU_CHAT, _("Open &chat..."));
+  m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
   m_menuTools->AppendSeparator();
   m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
+  m_menuTools->AppendSeparator();
+  m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
   m_settings_menu = new wxMenuItem( m_menuTools, MENU_SETTINGSPP, _("SpringSettings"), wxEmptyString, wxITEM_NORMAL );
-  
+
   //m_settings_menu->Enable( false ); /// disable the spring settings tool until we have unitsync loaded, so we know for sure it's working
 
   wxMenu *menuHelp = new wxMenu;
@@ -118,6 +124,8 @@ MainWindow::MainWindow( Ui& ui ) :
   Layout();
 
   se_frame_active = false;
+
+    customMessageBox(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
 }
 
 void MainWindow::forceSettingsFrameClose()
@@ -136,6 +144,7 @@ MainWindow::~MainWindow()
   sett().SetMainWindowTop( y );
   sett().SetMainWindowLeft( x );
   sett().SaveSettings();
+  m_ui.Quit();
   m_ui.OnMainWindowDestruct();
 
   delete m_chat_icon;
@@ -296,8 +305,8 @@ void MainWindow::OnMenuChat( wxCommandEvent& event )
   if ( !m_ui.IsConnected() ) return;
   wxString answer;
   if ( m_ui.AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
-    if (m_ui.GetServer().UserExists( STD_STRING(answer) ) ) {
-      OpenPrivateChat( m_ui.GetServer().GetUser( STD_STRING(answer) ) );
+    if (m_ui.GetServer().UserExists( answer ) ) {
+      OpenPrivateChat( m_ui.GetServer().GetUser( answer ) );
     }
   }
 
@@ -319,6 +328,37 @@ void MainWindow::OnMenuDisconnect( wxCommandEvent& event )
 void MainWindow::OnMenuQuit( wxCommandEvent& event )
 {
   m_ui.Quit();
+}
+
+//! @brief checks for latest version of SpringLobby via HTTP, and compares it with users current version.
+void MainWindow::OnMenuVersion( wxCommandEvent& event )
+{
+  wxString latestVersion = GetLatestVersion();
+  // Need to replace crap chars or versions will always be inequal
+  latestVersion.Replace(_T(" "), _T(""), true);
+  latestVersion.Replace(_T("\n"), _T(""), true);
+  latestVersion.Replace(_T("\t"), _T(""), true);
+  if (latestVersion == _T("-1"))
+  {
+    customMessageBox(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
+    return;
+  }
+  wxString myVersion = GetSpringLobbyVersion();
+
+  wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
+
+  if (latestVersion.IsSameAs(myVersion, false))
+  {
+    customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is up to date!\n\n") + msg, _("Up to Date"));
+  }
+  else
+  {
+    int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like to visit a page with instructions on how to download the newest version?"), _("Not up to Date"), wxYES_NO);
+    if (answer == wxYES)
+    {
+      m_ui.OpenWebBrowser(_T("http://trac.springlobby.info/wiki/Install"));
+    }
+  }
 }
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
