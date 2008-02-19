@@ -278,11 +278,11 @@ ServerMessageBox::ServerMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
     topsizer->Add(sizerBtn, 0,  wxALL, 10 );
 
 
-    SetAutoLayout( true );
-    SetSizer( topsizer );
-
-    topsizer->SetSizeHints( this );
-    topsizer->Fit( this );
+//    SetAutoLayout( true );
+   SetSizer( topsizer );
+//
+//    topsizer->SetSizeHints( this );
+//    topsizer->Fit( this );
 
 
     Centre( wxBOTH | wxCENTER_FRAME);
@@ -294,7 +294,7 @@ void ServerMessageBox::AppendMessage(const wxString& message)
     m_messages->InsertItem(0,message);
     m_messages->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
-    SetSize(m_messages->GetColumnWidth(0),-1);
+    SetSize(m_messages->GetColumnWidth(0)+25,-1);
     Layout();
 
 }
