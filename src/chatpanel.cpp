@@ -359,7 +359,7 @@ wxMenu* ChatPanel::CreateNickListMenu()
   if( m_ui.GetServer().GetMe().GetStatus().moderator ) {
     wxMenuItem* modingameitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_MODERATOR_INGAME, _("Ingame time"), wxEmptyString, wxITEM_NORMAL );
     m_user_menu->Append( modingameitem );
-    wxMenuItem* modipitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_MODERATOR_CURIP, _("IP and Smurfs"), wxEmptyString, wxITEM_NORMAL );
+    wxMenuItem* modipitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_MODERATOR_CURIP, _("Retrieve IP and Smurfs"), wxEmptyString, wxITEM_NORMAL );
     m_user_menu->Append( modipitem );
 
     m_user_menu->AppendSeparator();
