@@ -96,10 +96,10 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
   if ( subcmd == _T("/ingame") ) {
     SendCmd( _T("GETINGAMETIME"), params );
     return true;
-  } else if ( subcmd == _("/kick") ) {
+  } else if ( subcmd == _T("/kick") ) {
     SendCmd( _T("KICKUSER"), params );
     return true;
-  } else if ( subcmd == _("/ban") ) {
+  } else if ( subcmd == _T("/ban") ) {
     SendCmd( _T("BANLISTADD"), params );
     return true;
   } else if ( subcmd == _T("/unban") ) {

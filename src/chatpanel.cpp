@@ -121,7 +121,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
   wxLogDebugFunc( _T("wxWindow* parent, Server& serv") );
   CreateControls( );
   serv.uidata.panel = this;
-  m_chat_log = new ChatLog(sett().GetDefaultServer(),_("_SERVER"));
+  m_chat_log = new ChatLog(sett().GetDefaultServer(),_T("_SERVER"));
   m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, this );
 }
 
@@ -132,7 +132,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
   wxLogDebugFunc( _T("wxWindow* parent, Battle& battle") );
   CreateControls( );
   wxDateTime now = wxDateTime::Now();
-  m_chat_log = new ChatLog(sett().GetDefaultServer(),_("_BATTLE_")+now.Format( _T("%Y_%m_%d__%H_%M_%S")));
+  m_chat_log = new ChatLog(sett().GetDefaultServer(),_T("_BATTLE_")+now.Format( _T("%Y_%m_%d__%H_%M_%S")));
 }
 
 
@@ -1099,7 +1099,7 @@ void ChatPanel::OnServerMenuRemove( wxCommandEvent& event )
 {
   wxString user;
   if ( !m_ui.AskText( _("Remove User Acount"), _("What user account do you want to remove today?"), user ) ) return;
-  if ( !m_ui.Ask( _("Remove Account"), _("Are you sure you want to remove the account ") + user + _("?") ) ) return;
+  if ( !m_ui.Ask( _("Remove Account"), _("Are you sure you want to remove the account ") + user + _T("?") ) ) return;
   Say( _T("removeaccount ") + user );
 }
 
