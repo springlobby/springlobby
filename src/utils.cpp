@@ -33,9 +33,9 @@ wxString GetLibExtension()
 //! @brief Initializes the logging functions.
 ///initializes logging in an hidden stream and std::cout/gui messages
 void InitializeLoggingTargets( bool console, bool showgui, bool logcrash, int verbosity )
-
 {
   wxLog::SetLogLevel( wxLOG_Warning );
+  wxLogChain *lastlog;
 	#if wxUSE_STD_IOSTREAM
     #if wxUSE_DEBUGREPORT
       if ( logcrash )
@@ -46,53 +46,42 @@ void InitializeLoggingTargets( bool console, bool showgui, bool logcrash, int ve
         logCrashChain->SetLogLevel( wxLOG_Warning );
       }
     #endif
-    if ( verbosity != 0 && console )
+    if (  console && verbosity != 0 )
     {
       ///std::cout logging
       wxLog *loggerconsole = new wxLogStream( &std::cout );
       wxLogChain *logConsoleChain = new wxLogChain( loggerconsole );
-      switch (verbosity)
-      {
-        case 1:
-          logConsoleChain->SetLogLevel( wxLOG_FatalError );
-        case 2:
-          logConsoleChain->SetLogLevel( wxLOG_Error );
-        case 3:
-          logConsoleChain->SetLogLevel( wxLOG_Warning );
-        case 4:
-          logConsoleChain->SetLogLevel( wxLOG_Message );
-        case 5:
-          logConsoleChain->SetLogLevel( wxLOG_Trace );
-          logConsoleChain->SetVerbose( true );
-        default:
-          logConsoleChain->SetLogLevel( wxLOG_Warning );
-      }
+      lastlog = logConsoleChain;
     }
   #endif
-  if ( verbosity != 0 )
+  if ( showgui && verbosity != 0 )
     {
       ///gui window logging
       wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console"), showgui );
       wxLogChain *logGuiChain = new wxLogChain( loggerwin );
-      switch (verbosity)
-      {
-        case 1:
-          logGuiChain->SetLogLevel( wxLOG_FatalError );
-        case 2:
-          logGuiChain->SetLogLevel( wxLOG_Error );
-        case 3:
-          logGuiChain->SetLogLevel( wxLOG_Warning );
-        case 4:
-          logGuiChain->SetLogLevel( wxLOG_Message );
-        case 5:
-          logGuiChain->SetLogLevel( wxLOG_Trace );
-          logGuiChain->SetVerbose( true );
-        default:
-          logGuiChain->SetLogLevel( wxLOG_Warning );
-      }
+      lastlog = logGuiChain;
     }
-    else if ( verbosity == 0 )
-      wxLogNull noLog;
+  if ( lastlog != 0 )
+  {
+    wxMessageBox( wxString::Format(_T("%d"), verbosity));
+    switch (verbosity)
+    {
+      case 1:
+        lastlog->SetLogLevel( wxLOG_FatalError );
+      case 2:
+        lastlog->SetLogLevel( wxLOG_Error );
+      case 3:
+        lastlog->SetLogLevel( wxLOG_Warning );
+      case 4:
+        lastlog->SetLogLevel( wxLOG_Message );
+      case 5:
+        lastlog->SetLogLevel( wxLOG_Trace );
+        lastlog->SetVerbose( true );
+      default:
+        lastlog->SetLogLevel( wxLOG_Warning );
+    }
+  }
+  else if ( verbosity == 0 ) wxLogNull NoLog;
 }
 
 

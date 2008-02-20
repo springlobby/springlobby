@@ -50,7 +50,7 @@
 #endif
 
 wxString GetLibExtension();
-void InitializeLoggingTargets( bool console = false, bool showgui = false, bool logcrash = true, int verbosity = 3 );
+void InitializeLoggingTargets( bool console, bool showgui, bool logcrash, int verbosity );
 wxString GetWordParam( wxString& params );
 wxString GetSentenceParam( wxString& params );
 long GetIntParam( wxString& params );

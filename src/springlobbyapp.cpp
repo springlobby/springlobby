@@ -56,8 +56,7 @@ bool SpringLobbyApp::OnInit()
 #endif
 
   //initialize all loggers
-  if ( m_force_log_verbosity ) InitializeLoggingTargets( m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
-  else InitializeLoggingTargets( m_log_console, m_log_window_show );
+  InitializeLoggingTargets( m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
 
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
@@ -175,7 +174,7 @@ bool SpringLobbyApp::ParseCmdLine()
       m_log_console = parser.Found(_T("console-logging"));
       m_log_window_show = parser.Found(_T("gui-logging"));
       m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
-      m_force_log_verbosity =  parser.Found(_T("log-verbosity"), &m_log_verbosity );
+      if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) ) m_log_verbosity = 3;
       if ( parser.Found(_T("help")) ) return false; // not a syntax error, but program should stop if user asked for command line usage
       return true;
     }
