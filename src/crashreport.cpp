@@ -3,17 +3,18 @@
 // Classes: NetDebugReport CrashReport
 //
 
+
+#include "utils.h"
+#if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
 #include "crashreport.h"
-
-#if wxUSE_DEBUGREPORT
-
+#include <wx/intl.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 #include <wx/dir.h>
 #include <wx/file.h>
 
-#include "utils.h"
+
 
 
 NetDebugReport::NetDebugReport() : wxDebugReportUpload ( _T("http://www.hd.chalmers.se/~tc/trace/"), _T("trace"), _T("upload.php") )
@@ -58,7 +59,7 @@ void CrashReport::GenerateReport(wxDebugReport::Context ctx)
 
   wxString SystemInfos;
 #ifdef VERSION
-  SystemInfos += _T("SpringLobby version ") + WX_STRING( GetSpringLobbyVersion() ) +_T("\n") ;
+  SystemInfos += _T("SpringLobby version ") + GetSpringLobbyVersion() +_T("\n") ;
 #endif
   SystemInfos += _T("Built from ") + wxString(wxVERSION_STRING) + _T("\n") ;
 

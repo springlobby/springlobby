@@ -46,7 +46,7 @@ BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 #else
   EVT_CHECKBOX            ( BATTLE_LIST_FILTER_BUTTON , BattleListTab::OnFilter )
 #endif
- 
+
 
 END_EVENT_TABLE()
 
@@ -55,7 +55,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxPanel( parent, -1 ),
   m_ui(ui),
   m_sel_battle(0)
-{	
+{
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -120,7 +120,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
   wxBoxSizer* m_buttons_sizer;
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
-  
+
 #if  wxUSE_TOGGLEBTN
 	m_filter_show = new wxToggleButton( this, BATTLE_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
 #else
@@ -165,8 +165,8 @@ void BattleListTab::SelectBattle( Battle* battle )
   m_minimap->SetBattle( m_sel_battle );
   m_players->ClearUsers();
   if ( m_sel_battle != 0 ) {
-    m_map_text->SetLabel( RefineMapname( WX_STRING(m_sel_battle->GetMapName()) ) );
-    m_mod_text->SetLabel( WX_STRING(m_sel_battle->GetModName()) );
+    m_map_text->SetLabel( RefineMapname( m_sel_battle->GetMapName() ) );
+    m_mod_text->SetLabel( m_sel_battle->GetModName() );
     m_players_text->SetLabel( wxString::Format( _T("%d / %d"), m_sel_battle->GetNumUsers() - m_sel_battle->GetSpectators(), m_sel_battle->GetMaxPlayers() ) );
     m_spec_text->SetLabel( wxString::Format( _T("%d"), m_sel_battle->GetSpectators() ) );
     for ( unsigned int i = 0; i < m_sel_battle->GetNumUsers(); i++ ) {
@@ -199,10 +199,10 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
   m_battle_list->SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
   m_battle_list->SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
-  m_battle_list->SetItem( index, 3, WX_STRING(battle.GetDescription()) );
+  m_battle_list->SetItem( index, 3, battle.GetDescription() );
   m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?ICON_EXISTS:ICON_NEXISTS );
   m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?ICON_EXISTS:ICON_NEXISTS );
-  m_battle_list->SetItem( index, 6, WX_STRING(battle.GetFounder().GetNick()) );
+  m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
@@ -262,10 +262,10 @@ void BattleListTab::UpdateBattle( Battle& battle )
   m_battle_list->SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
   m_battle_list->SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
   m_battle_list->SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
-  m_battle_list->SetItem( index, 3, WX_STRING(battle.GetDescription()) );
+  m_battle_list->SetItem( index, 3, battle.GetDescription() );
   m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?ICON_EXISTS:ICON_NEXISTS );
   m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?ICON_EXISTS:ICON_NEXISTS );
-  m_battle_list->SetItem( index, 6, WX_STRING(battle.GetFounder().GetNick()) );
+  m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
@@ -337,6 +337,16 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     bo.description = sett().GetLastHostDescription();
     bo.port = sett().GetLastHostPort();
 
+    if ( bo.nattype == NAT_None && sett().GetTestHostPort() )
+    {
+      if ( !m_ui.TestHostPort( bo.port ) )
+      {
+        wxLogWarning(_T("hosting port %d: test unsuccessful, closing battle"),bo.port  );
+        customMessageBox( SL_MAIN_ICON, wxString::Format( _("Battle not started because the port you selected (%d) is unable to recieve incoming packets\n checks your router & firewall configuration again or change port in the dialog"), bo.port ) );
+        return;
+      }
+    }
+
     // Get selected mod from unitsync.
     UnitSyncMod mod;
     try {
@@ -350,20 +360,20 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     }
 
     UnitSyncMap map;
-    std::string mname = sett().GetLastHostMap();
+    wxString mname = sett().GetLastHostMap();
     try {
-      if ( usync()->MapExists(mname) ) 
+      if ( usync()->MapExists(mname) )
     	  map = usync()->GetMap( mname );
       else if ( usync()->GetNumMaps() <= 0 ) {
         wxLogWarning( _T("no maps found") );
-        customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
+        customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
         return;
       } else {
         map = usync()->GetMap( 0 );
       }
     } catch ( ... ) {
       wxLogWarning( _T("no maps found") );
-      customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
+      customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
       return;
     }
     bo.maphash = map.hash;
@@ -372,18 +382,6 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     bo.rankneeded = sett().GetLastRankLimit();
 
     bo.maxplayers = sett().GetLastHostPlayerNum();
-
-/*
-    bo.nattype,
-    bo.startmetal,
-    bo.startenergy,
-    bo.maxunits,
-    bo.starttype,
-    bo.gametype,
-    bo.limitdgun,
-    bo.dimmms,
-    bo.ghostedbuildings,
-)*/
 
     m_ui.GetServer().HostBattle( bo, sett().GetLastHostPassword() );
   }
@@ -474,7 +472,7 @@ void BattleListTab::DoJoin( Battle& battle )
 
   if ( battle.IsPassworded() ) {
     wxPasswordEntryDialog pw( this, _("Battle password"), _("Enter password") );
-    if ( pw.ShowModal() == wxID_OK ) battle.Join( STD_STRING(pw.GetValue()) );
+    if ( pw.ShowModal() == wxID_OK ) battle.Join( pw.GetValue() );
   } else {
     battle.Join();
   }

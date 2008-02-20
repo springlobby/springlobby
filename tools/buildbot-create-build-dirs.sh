@@ -21,7 +21,9 @@ create-build-dir ()
 		../configure --config-cache $2
 		echo done
 	else
-		echo skipped
+		# regenerate Makefile with current config options
+		./config.status
+		echo regen done
 	fi
 	)
 }

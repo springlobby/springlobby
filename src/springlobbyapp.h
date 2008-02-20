@@ -6,6 +6,7 @@
 class Ui;
 class wxTimer;
 class wxIcon;
+class wxLocale;
 
 //! @brief SpringLobby wxApp
 class SpringLobbyApp : public wxApp
@@ -31,6 +32,8 @@ class SpringLobbyApp : public wxApp
     wxTimer* m_timer;
 
     Ui* m_ui;
+
+    wxLocale* m_locale;
 
     DECLARE_EVENT_TABLE()
 

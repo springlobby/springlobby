@@ -62,6 +62,10 @@ bool SpringLobbyApp::OnInit()
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
 
+  m_locale = new wxLocale( );
+  m_locale->Init();
+  m_locale->AddCatalog( _T("springlobby") );
+
   if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
   {
     if ( wxDirExists( sett().GetCachePath() )  )
@@ -88,7 +92,7 @@ bool SpringLobbyApp::OnInit()
     #ifdef __WXMSW__
       sett().SetOldSpringLaunchMethod( true );
     #endif
-    sett().AddChannelJoin( "newbies", "" );
+    sett().AddChannelJoin( _T("newbies"), _T("") );
     wxLogMessage( _T("first time startup"));
     wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
       wxOK | wxICON_INFORMATION, &m_ui->mw() );
@@ -100,7 +104,7 @@ bool SpringLobbyApp::OnInit()
     m_ui->Connect();
   }
 
-  m_ui->ReloadUnitSync();
+  //m_ui->ReloadUnitSync();
 
   m_timer->Start( TIMER_INTERVAL );
 
@@ -126,10 +130,10 @@ int SpringLobbyApp::OnExit()
 //! @brief is called when the app crashes
 void SpringLobbyApp::OnFatalException()
 {
-  #if wxUSE_DEBUGREPORT
+  #if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
   crashreport().GenerateReport(wxDebugReport::Context_Exception);
   #else
-  wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease enable wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR );
+  wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
   #endif
 }
 

@@ -119,7 +119,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_units_sizer->Add( m_units_lbl, 0, wxALL, 5 );
 
   m_units_slider = new wxSlider( this, SLI_UNITS_ID, 500, 10, 5000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
-  m_units_slider->SetToolTip( _("The maximun number of units allowed per player.") );
+  m_units_slider->SetToolTip( _("The maximum number of units allowed per player.") );
 
   m_units_sizer->Add( m_units_slider, 1, wxALL|wxEXPAND, 5 );
 
@@ -167,10 +167,10 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
   m_mid_btn_sizer->Add( 0, 50, 0, wxEXPAND, 0 );
 
-  m_restrict_btn = new wxButton( this, BOPTS_RESTRICT, _(">"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_restrict_btn = new wxButton( this, BOPTS_RESTRICT, _T(">"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
   m_mid_btn_sizer->Add( m_restrict_btn, 0, wxALL, 5 );
 
-  m_allow_btn = new wxButton( this, BOPTS_ALLOW, _("<"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_allow_btn = new wxButton( this, BOPTS_ALLOW, _T("<"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
   m_mid_btn_sizer->Add( m_allow_btn, 0, wxALL, 5 );
 
   m_top_restr_sizer->Add( m_mid_btn_sizer, 0, wxEXPAND, 5 );
@@ -255,7 +255,7 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
   long type;
   Tag.BeforeFirst( '_' ).ToLong( &type );
   wxString key = Tag.AfterFirst( '_' );
-  wxString value = m_battle.CustomBattleOptions()->getSingleValue( key, type);
+  wxString value = m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type);
   long longval;
   value.ToLong( &longval );
   if ( type == EngineOption )
@@ -291,7 +291,7 @@ void BattleOptionsTab::ReloadRestrictions()
   if ( m_battle.GetModName() == wxEmptyString ) return;
 
   try {
-    m_allowed_list->InsertItems( usync()->GetUnitsList( STD_STRING(m_battle.GetModName()) ), 0 );
+    m_allowed_list->InsertItems( usync()->GetUnitsList( m_battle.GetModName() ), 0 );
   } catch (...) {}
   wxArrayString units = m_battle.DisabledUnits();
 
@@ -351,7 +351,7 @@ void BattleOptionsTab::Restrict( int index )
     m_allowed_list->Delete( index );
     unit = unit.AfterLast( '(' );
     unit = unit.BeforeLast( ')' );
-    m_battle.DisableUnit( STD_STRING(unit) );
+    m_battle.DisableUnit( unit );
   }
 }
 
@@ -364,7 +364,7 @@ void BattleOptionsTab::Allow( int index)
     m_restrict_list->Delete( index );
     unit = unit.AfterLast( '(' );
     unit = unit.BeforeLast( ')' );
-    m_battle.EnableUnit( STD_STRING(unit) );
+    m_battle.EnableUnit( unit );
   }
 }
 

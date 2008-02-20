@@ -15,7 +15,6 @@
 #include <wx/panel.h>
 #include <wx/statbox.h>
 #include <wx/event.h>
-#include <string>
 
 #include "battlelistfilter.h"
 #include "battlelistctrl.h"
@@ -173,7 +172,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_player_text->Wrap( -1 );
 	m_filter_player_sizer->Add( m_filter_player_text, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_player_button = new wxButton( this, BATTLE_FILTER_PLAYER_BUTTON, _("="), wxDefaultPosition, wxSize( 25, 25 ), 0 );
+	m_filter_player_button = new wxButton( this, BATTLE_FILTER_PLAYER_BUTTON, _T("="), wxDefaultPosition, wxSize( 25, 25 ), 0 );
 	m_filter_player_sizer->Add( m_filter_player_button, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_filter_player_choiceChoices;
@@ -228,7 +227,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_maxplayer_text->Wrap( -1 );
 	m_filter_maxplayer_sizer->Add( m_filter_maxplayer_text, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_maxplayer_button = new wxButton( this, BATTLE_FILTER_MAXPLAYER_BUTTON, _("="), wxDefaultPosition, wxSize( 25, 25 ), 0 );
+	m_filter_maxplayer_button = new wxButton( this, BATTLE_FILTER_MAXPLAYER_BUTTON, _T("="), wxDefaultPosition, wxSize( 25, 25 ), 0 );
 	m_filter_maxplayer_sizer->Add( m_filter_maxplayer_button, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_filter_maxplayer_choiceChoices;
@@ -282,7 +281,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_spectator_text->Wrap( -1 );
 	m_filter_spectator_sizer->Add( m_filter_spectator_text, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-	m_filter_spectator_button = new wxButton( this, BATTLE_FILTER_SPECTATOR_BUTTON, _("="), wxDefaultPosition, wxSize( 25, 25 ), 0 );
+	m_filter_spectator_button = new wxButton( this, BATTLE_FILTER_SPECTATOR_BUTTON, _T("="), wxDefaultPosition, wxSize( 25, 25 ), 0 );
 	m_filter_spectator_sizer->Add( m_filter_spectator_button, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_filter_spectator_choiceChoices;
@@ -319,9 +318,9 @@ m_parent_battlelisttab( parentBattleListTab )
 wxString BattleListFilter::_GetButtonSign(m_button_mode value)
 {
   switch (value) {
-    case m_equal   : return _("=");
-    case m_smaller : return _("<");
-    default        : return _(">");
+    case m_equal   : return _T("=");
+    case m_smaller : return _T("<");
+    default        : return _T(">");
   }
 }
 
@@ -407,16 +406,16 @@ bool BattleListFilter::FilterBattle(Battle& battle)
   if (m_filter_mod_show->GetValue() && !battle.ModExists()) return false;
 
   //Description:
-  if ( !WX_STRING( battle.GetDescription() ).Upper().Contains( m_filter_description_edit->GetValue().Upper() ) ) return false;
+  if ( !battle.GetDescription().Upper().Contains( m_filter_description_edit->GetValue().Upper() ) ) return false;
 
   //Host:
-  if ( !WX_STRING( battle.GetFounder().GetNick() ).Upper().Contains( m_filter_host_edit->GetValue().Upper() ) ) return false;
+  if ( !battle.GetFounder().GetNick().Upper().Contains( m_filter_host_edit->GetValue().Upper() ) ) return false;
 
   //Map:
-  if ( !WX_STRING( RefineMapname(battle.GetMapName() ) ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) ) return false;
+  if ( !RefineMapname(battle.GetMapName() ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) ) return false;
 
   //Mod:
-  if ( !WX_STRING( battle.GetModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !WX_STRING( RefineModname( battle.GetModName() ) ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) ) return false;
+  if ( !battle.GetModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !RefineModname( battle.GetModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) ) return false;
 
   return true;
 }

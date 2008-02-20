@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SOCKET_H
 #define SPRINGLOBBY_HEADERGUARD_SOCKET_H
 
-#include <string>
+#include <wx/string.h>
 
 #include <wx/event.h>
 
@@ -9,6 +9,9 @@ class Server;
 class Socket;
 class wxSocketEvent;
 class wxSocketClient;
+class wxCriticalSection;
+
+class PingThread;
 
 typedef int Sockstate;
 
@@ -25,6 +28,12 @@ typedef int Sockerror;
 
 #define SOCKET_ID 100
 
+enum PacketType
+{
+  Tcp,
+  Udp
+};
+
 class SocketEvents: public wxEvtHandler
 {
   public:
@@ -37,6 +46,7 @@ class SocketEvents: public wxEvtHandler
 
 typedef void (*socket_callback)(Socket*);
 
+
 //! @brief Class that implements a TCP client socket.
 class Socket
 {
@@ -47,11 +57,24 @@ class Socket
 
     // Socket interface
 
-    void Connect( const std::string& addr, const int port );
+    void Connect( const wxString& addr, const int port );
     void Disconnect( );
 
-    bool Send( const std::string& data );
-    bool Receive( std::string& data );
+    bool Send( const wxString& data );
+    bool Receive( wxString& data );
+
+
+    void Ping();
+    void UDPPing();
+    void SetPingInfo( const wxString& msg = wxEmptyString, unsigned int interval = 10000 );
+    void SetUdpPingInfo( const wxString& addr = wxEmptyString, unsigned int port = 0, unsigned int interval = 10000 );
+    unsigned int GetUDPPingPort() { return m_udp_ping_port; }
+    unsigned int GetPingInterval() { return m_ping_int; }
+    unsigned int GetUDPPingInterval() { return m_udp_ping_int; }
+    bool GetPingEnabled() { return m_ping_msg != wxEmptyString; }
+    bool GetUDPPingEnabled() { return m_udp_ping_adr != wxEmptyString; }
+
+    bool TestOpenPort( PacketType type, unsigned int port );
 
     Sockstate State( );
     Sockerror Error( );
@@ -59,10 +82,25 @@ class Socket
     void SetSendRateLimit( int Bps = -1 );
     void OnTimer( int mselapsed );
 
+    void OnPingThreadStarted();
+    void OnPingThreadStopped();
+
   protected:
+
   // Socket variables
+
     wxSocketClient* m_sock;
     SocketEvents* m_events;
+
+    wxCriticalSection m_lock;
+    wxCriticalSection m_ping_thread_wait;
+
+    wxString m_ping_msg;
+    wxString m_udp_ping_adr;
+    unsigned int m_ping_int;
+    unsigned int m_udp_ping_port;
+    unsigned int m_udp_ping_int;
+    PingThread* m_ping_t;
 
     bool m_connecting;
     bool m_block;
@@ -70,9 +108,31 @@ class Socket
 
     int m_rate;
     int m_sent;
-    std::string m_buffer;
+    wxString m_buffer;
+    wxString m_rcv_buffer;
 
     wxSocketClient* _CreateSocket();
+
+    bool _Send( const wxString& data );
+    void _EnablePingThread( bool enable = true );
+    bool _ShouldEnablePingThread();
 };
+
+
+
+class PingThread: public wxThread
+{
+  public:
+    PingThread( Socket& sock );
+    void Init();
+    void* Entry();
+    void OnExit();
+  private:
+    Socket& m_sock;
+    int m_next_ping;
+    int m_next_udp_ping;
+
+};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_SOCKET_H

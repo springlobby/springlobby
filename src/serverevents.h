@@ -22,31 +22,31 @@ class ServerEvents
 
   // Uicontrol interface
 
-    void OnConnected( const std::string& server_name, const std::string& server_ver, bool supported, const std::string server_spring_ver, const int udpport, bool lanmode );
+    void OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, const int udpport, bool lanmode );
     void OnDisconnected();
 
     void OnLogin();
     void OnLoginInfoComplete();
     void OnLogout();
 
-    void OnUnknownCommand( const std::string& command, const std::string& params );
+    void OnUnknownCommand( const wxString& command, const wxString& params );
     void OnSocketError( const Sockerror& error );
     void OnProtocolError( const Protocolerror error );
-    void OnMotd( const std::string& msg );
+    void OnMotd( const wxString& msg );
     void OnPong( int ping_time );
 
-    void OnNewUser( const std::string& nick, const std::string& conutry, int cpu );
-    void OnUserStatus( const std::string& nick, UserStatus status );
-    void OnUserQuit( const std::string& nick );
+    void OnNewUser( const wxString& nick, const wxString& conutry, int cpu );
+    void OnUserStatus( const wxString& nick, UserStatus status );
+    void OnUserQuit( const wxString& nick );
 
-    void OnBattleOpened( int id, bool replay, NatType nat, const std::string& nick,
-                         const std::string& host, int port, int maxplayers,
-                         bool haspass, int rank, std::string maphash, const std::string& map,
-                         const std::string& title, const std::string& mod );
+    void OnBattleOpened( int id, bool replay, NatType nat, const wxString& nick,
+                         const wxString& host, int port, int maxplayers,
+                         bool haspass, int rank, const wxString& maphash, const wxString& map,
+                         const wxString& title, const wxString& mod );
 
-    void OnUserJoinedBattle( int battleid, const std::string& nick );
-    void OnUserLeftBattle( int battleid, const std::string& nick );
-    void OnBattleInfoUpdated( int battleid, int spectators, bool locked, std::string maphash, const std::string& map );
+    void OnUserJoinedBattle( int battleid, const wxString& nick );
+    void OnUserLeftBattle( int battleid, const wxString& nick );
+    void OnBattleInfoUpdated( int battleid, int spectators, bool locked, const wxString& maphash, const wxString& map );
     void OnSetBattleInfo( int battleid, const wxString& param, const wxString& value );
     void OnBattleInfoUpdated( int battleid );
     void OnBattleClosed( int battleid );
@@ -55,46 +55,47 @@ class ServerEvents
     void OnHostedBattle( int battleid );
 
     void OnStartHostedBattle( int battleid );
-    void OnClientBattleStatus( int battleid, const std::string& nick, UserBattleStatus status );
+    void OnClientBattleStatus( int battleid, const wxString& nick, UserBattleStatus status );
 
     void OnBattleStartRectAdd( int battleid, int allyno, int left, int top, int right, int bottom );
     void OnBattleStartRectRemove( int battleid, int allyno );
 
-    void OnBattleAddBot( int battleid, const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll );
-    void OnBattleUpdateBot( int battleid, const std::string& nick, UserBattleStatus status );
-    void OnBattleRemoveBot( int battleid, const std::string& nick );
+    void OnBattleAddBot( int battleid, const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll );
+    void OnBattleUpdateBot( int battleid, const wxString& nick, UserBattleStatus status );
+    void OnBattleRemoveBot( int battleid, const wxString& nick );
 
-    void OnBattleDisableUnit( int battleid, const std::string& unitname );
-    void OnBattleEnableUnit( int battleid, const std::string& unitname );
+    void OnBattleDisableUnit( int battleid, const wxString& unitname );
+    void OnBattleEnableUnit( int battleid, const wxString& unitname );
     void OnBattleEnableAllUnits( int battleid );
 
-    void OnJoinChannelResult( bool success, const std::string& channel, const std::string& reason );
+    void OnJoinChannelResult( bool success, const wxString& channel, const wxString& reason );
 
-    void OnChannelSaid( const std::string& channel, const std::string& who, const std::string& message );
-    void OnChannelJoin( const std::string& channel, const std::string& who );
-    void OnChannelPart( const std::string& channel, const std::string& who, const std::string& message );
-    void OnChannelTopic( const std::string& channel, const std::string& who, const std::string& message, int when );
-    void OnChannelAction( const std::string& channel, const std::string& who, const std::string& action );
-    void OnChannelList( const std::string& channel, const int& numusers );
-    void OnUserJoinChannel( const std::string& channel, const std::string& who );
+    void OnChannelSaid( const wxString& channel, const wxString& who, const wxString& message );
+    void OnChannelJoin( const wxString& channel, const wxString& who );
+    void OnChannelPart( const wxString& channel, const wxString& who, const wxString& message );
+    void OnChannelTopic( const wxString& channel, const wxString& who, const wxString& message, int when );
+    void OnChannelAction( const wxString& channel, const wxString& who, const wxString& action );
+    void OnChannelList( const wxString& channel, const int& numusers );
+    void OnUserJoinChannel( const wxString& channel, const wxString& who );
 
-    void OnPrivateMessage( const std::string& user, const std::string& message, bool fromme = false );
+    void OnPrivateMessage( const wxString& user, const wxString& message, bool fromme = false );
 
     void OnRequestBattleStatus( int battleid );
-    void OnSaidBattle( int battleid, const std::string& nick, const std::string& msg );
-    void OnBattleAction( int battleid, const std::string& nick, const std::string& msg );
+    void OnSaidBattle( int battleid, const wxString& nick, const wxString& msg );
+    void OnBattleAction( int battleid, const wxString& nick, const wxString& msg );
 
-    void OnAcceptAgreement( const std::string& agreement );
+    void OnAcceptAgreement( const wxString& agreement );
 
-    void OnRing( const std::string& from );
+    void OnRing( const wxString& from );
 
-    void OnServerMessage( const std::string& message );
-    void OnChannelMessage( const std::string& channel, const std::string& msg );
+    void OnServerMessage( const wxString& message );
+    void OnServerMessageBox( const wxString& message );
+    void OnChannelMessage( const wxString& channel, const wxString& msg );
 
     void OnHostUdpPortChange(const int& udpport);
 
     void OnUdpSourcePort(int udpport);
-    
+
     void OnKickedFromBattle();
 
   protected:

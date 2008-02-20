@@ -124,17 +124,17 @@ void Ui::Connect()
 
 void Ui::Reconnect()
 {
-  std::string servname = sett().GetDefaultServer();
+  wxString servname = sett().GetDefaultServer();
 
-  std::string pass  = sett().GetServerAccountPass(servname);
+  wxString pass  = sett().GetServerAccountPass(servname);
   if ( !sett().GetServerAccountSavePass(servname) ) {
-    wxString pass2 = WX_STRING(pass);
+    wxString pass2 = pass;
     if ( !AskPassword( _("Server password"), _("Password"), pass2 ) ) return;
-    pass = STD_STRING(pass2);
+    pass = pass2;
   }
 
   if ( IsConnected() ) Disconnect();
-  DoConnect( WX_STRING(servname), WX_STRING(sett().GetServerAccountNick(servname)), WX_STRING(pass) );
+  DoConnect( servname, sett().GetServerAccountNick(servname), pass );
 }
 
 
@@ -153,11 +153,11 @@ void Ui::Disconnect()
 //! @brief Opens the accutial connection to a server.
 void Ui::DoConnect( const wxString& servername, const wxString& username, const wxString& password )
 {
-  std::string host;
+  wxString host;
   int port;
   Socket* sock;
 
-  if ( !sett().ServerExists( STD_STRING(servername) ) ) {
+  if ( !sett().ServerExists( servername ) ) {
     ASSERT_LOGIC( false, _T("Server does not exist in settings") );
     return;
   }
@@ -170,19 +170,19 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
   m_serv->SetSocket( sock );
   //m_serv->SetServerEvents( &se() );
 
-  m_serv->SetUsername( STD_STRING(username) );
-  m_serv->SetPassword( STD_STRING(password) );
+  m_serv->SetUsername( username );
+  m_serv->SetPassword( password );
 
-  if ( sett().GetServerAccountSavePass( STD_STRING(servername) ) ) {
-    if ( m_serv->IsPasswordHash(STD_STRING(password)) ) sett().SetServerAccountPass( STD_STRING(servername), STD_STRING(password) );
-    else sett().SetServerAccountPass( STD_STRING(servername), m_serv->GetPasswordHash( STD_STRING(password) ) );
+  if ( sett().GetServerAccountSavePass( servername ) ) {
+    if ( m_serv->IsPasswordHash(password) ) sett().SetServerAccountPass( servername, password );
+    else sett().SetServerAccountPass( servername, m_serv->GetPasswordHash( password ) );
   } else {
-    sett().SetServerAccountPass( STD_STRING(servername), "" );
+    sett().SetServerAccountPass( servername, _T("") );
   }
   sett().SaveSettings();
 
-  host = sett().GetServerHost( STD_STRING(servername) );
-  port = sett().GetServerPort( STD_STRING(servername) );
+  host = sett().GetServerHost( servername );
+  port = sett().GetServerPort( servername );
 
   m_serv->uidata.panel = m_main_win->GetChatTab().AddChatPannel( *m_serv, servername );
   m_serv->uidata.panel->StatusMessage( _T("Connecting to server ") + servername + _T("...") );
@@ -193,12 +193,12 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 }
 
 
-bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password,wxString* reason)
+bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password,wxString& reason)
 {
-  std::string host;
+  wxString host;
   int port;
 
-  if ( !sett().ServerExists( STD_STRING(servername) ) ) {
+  if ( !sett().ServerExists( servername ) ) {
     ASSERT_LOGIC( false, _T("Server does not exist in settings") );
     return false;
   }
@@ -208,10 +208,10 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
   Socket* sock = new Socket( *serv, true );
   serv->SetSocket( sock );
 
-  host = sett().GetServerHost( STD_STRING(servername) );
-  port = sett().GetServerPort( STD_STRING(servername) );
+  host = sett().GetServerHost( servername );
+  port = sett().GetServerPort( servername );
 
-  return serv->Register( host, port, STD_STRING(username), STD_STRING(password),reason );
+  return serv->Register( host, port, username, password,reason );
 
 }
 
@@ -226,7 +226,7 @@ bool Ui::IsConnected() const
 void Ui::JoinChannel( const wxString& name, const wxString& password )
 {
   if ( m_serv != 0 )
-    m_serv->JoinChannel( STD_STRING(name), STD_STRING(password) );
+    m_serv->JoinChannel( name, password );
 }
 
 
@@ -234,7 +234,7 @@ void Ui::StartHostedBattle()
 {
   ASSERT_LOGIC( m_serv != 0, _T("m_serv = 0") );
   m_serv->StartHostedBattle();
-  sett().SetLastHostMap( STD_STRING(m_serv->GetCurrentBattle()->GetMapName()) );
+  sett().SetLastHostMap( m_serv->GetCurrentBattle()->GetMapName() );
 }
 
 
@@ -256,14 +256,21 @@ void Ui::Quit()
   ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   sett().SaveSettings();
   m_main_win->forceSettingsFrameClose();
+
+//fixes for non-termination on win
   m_main_win->Close();
+  m_thread->Kill();
+  m_con_win->Close();
+
+  if ( m_serv != 0 )
+    m_serv->Disconnect();
 }
 
 
 void Ui::ReloadUnitSync()
 {
   usync()->FreeUnitSyncLib();
-  usync()->LoadUnitSyncLib( WX_STRING(sett().GetSpringDir()), WX_STRING(sett().GetUnitSyncUsedLoc()) );
+  usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() );
   if ( m_main_win != 0 ) m_main_win->OnUnitSyncReloaded();
 }
 
@@ -378,8 +385,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     wxString pass = channel.AfterFirst(' ');
     if ( !pass.IsEmpty() ) channel = channel.BeforeFirst(' ');
     if ( channel.StartsWith(_T("#")) ) channel.Remove( 0, 1 );
-
-    m_serv->JoinChannel( STD_STRING(channel), STD_STRING(pass) );
+    m_serv->JoinChannel( channel, pass );
     return true;
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/away") ) {
     m_serv->GetMe().Status().away = true;
@@ -392,7 +398,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
       return true;
     }
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/ingame") ) {
-    m_serv->RequestInGameTime( "" );
+    m_serv->RequestInGameTime( _T("") );
     return true;
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/help") ) {
     wxString topic = cmd.AfterFirst(' ');
@@ -401,7 +407,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/msg") ) {
     wxString user = cmd.AfterFirst(' ').BeforeFirst(' ');
     wxString msg = cmd.AfterFirst(' ').AfterFirst(' ');
-    m_serv->SayPrivate( STD_STRING( user ), STD_STRING( msg ) );
+    m_serv->SayPrivate( user, msg );
     return true;
   } else if ( cmd.BeforeFirst(' ').Lower() == _T("/channels") ) {
     ChatPanel* panel = GetActiveChatPanel();
@@ -426,7 +432,7 @@ void Ui::ConsoleHelp( const wxString& topic )
   }
   if ( topic == wxEmptyString ) {
     panel->ClientMessage( _("SpringLobby commands help.") );
-    panel->ClientMessage( _("") );
+    panel->ClientMessage( _T("") );
     panel->ClientMessage( _("Global commands:") );
     panel->ClientMessage( _("  \"/away\" - Sets your status to away.") );
     panel->ClientMessage( _("  \"/back\" - Resets your away status.") );
@@ -438,10 +444,10 @@ void Ui::ConsoleHelp( const wxString& topic )
     panel->ClientMessage( _("  \"/rename newalias\" - Changes your nickname to newalias.") );
     panel->ClientMessage( _("  \"/sayver\" - Say what version of springlobby you have in chat.") );
     panel->ClientMessage( _("  \"/ver\" - Display what version of SpringLobby you have.") );
-    panel->ClientMessage( _("") );
+    panel->ClientMessage( _T("") );
     panel->ClientMessage( _("Chat commands:") );
     panel->ClientMessage( _("  \"/me action\" - Say IRC style action message.") );
-    panel->ClientMessage( _("") );
+    panel->ClientMessage( _T("") );
     panel->ClientMessage( _("If you are missing any commands, go to #springlobby and try to type it there :)") );
 //    panel->ClientMessage( _("  \"/\" - .") );
   } else if ( topic == _T("topics") ) {
@@ -474,16 +480,16 @@ void Ui::OnUpdate( int mselapsed )
 //! @brief Called when connected to a server
 //!
 //! @todo Display in servertab
-void Ui::OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported )
+void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& server_ver, bool supported )
 {
   wxLogDebugFunc( _T("") );
 
   if ( !IsSpringCompatible () ){
     if ( m_spring->TestSpringBinary() ) {
       wxString message = _("Your spring version");
-      message += _T(" (") + WX_STRING( usync()->GetSpringVersion() ) + _T(") ");
+      message += _T(" (") + usync()->GetSpringVersion() + _T(") ");
       message +=  _("is not supported by the lobby server that requires version");
-      message += _T(" (") +  WX_STRING( m_serv->GetRequiredSpring() ) + _T(").\n\n");
+      message += _T(" (") +  m_serv->GetRequiredSpring() + _T(").\n\n");
       message += _("Online play will be disabled.");
       wxLogWarning ( _T("server not supports current spring version") );
       customMessageBox (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
@@ -492,17 +498,17 @@ void Ui::OnConnected( Server& server, const std::string& server_name, const std:
       customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     }
   }
-  server.uidata.panel->StatusMessage( _T("Connected to ") + WX_STRING(server_name) + _T(".") );
+  server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
 
-  //server.uidata.panel = m_main_win->GetChatTab().AddChatPannel( server, WX_STRING(server_name) );
+  //server.uidata.panel = m_main_win->GetChatTab().AddChatPannel( server, server_name );
 }
 
 
 bool Ui::IsSpringCompatible( )
 {
   if ( !m_spring->TestSpringBinary() ) return false;
-  if ( m_serv->GetRequiredSpring() == "*" ) return true; // Server accepts any version.
-  if ( (usync()->GetSpringVersion() == m_serv->GetRequiredSpring() ) && ( m_serv->GetRequiredSpring() != "" ) ) return true;
+  if ( m_serv->GetRequiredSpring() == _T("*") ) return true; // Server accepts any version.
+  if ( (usync()->GetSpringVersion() == m_serv->GetRequiredSpring() ) && !m_serv->GetRequiredSpring().IsEmpty() ) return true;
   else return false;
 }
 
@@ -544,7 +550,7 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
 
   chan.uidata.panel = 0;
   m_main_win->OpenChannelChat( chan );
-  if ( chan.GetName() == "springlobby" ) {
+  if ( chan.GetName() == _T("springlobby") ) {
     chan.uidata.panel->ClientMessage( wxEmptyString );
     chan.uidata.panel->ClientMessage( _("This is the SpringLobby channel, please report any problems you are having with SpringLobby here and the friendly developers will help you.") );
     chan.uidata.panel->ClientMessage( wxEmptyString );
@@ -553,33 +559,33 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
 
 
 //! @brief Called when something is said in a channel
-void Ui::OnChannelSaid( Channel& channel, User& user, const std::string& message )
+void Ui::OnChannelSaid( Channel& channel, User& user, const wxString& message )
 {
   wxLogDebugFunc( _T("") );
   if ( channel.uidata.panel == 0 ) {
     wxLogError( _T("ud->panel NULL") );
     return;
   }
-  channel.uidata.panel->Said( WX_STRING(user.GetNick()), WX_STRING( message ) );
+  channel.uidata.panel->Said( user.GetNick(), message );
 }
 
 
-void Ui::OnChannelDidAction( Channel& channel , User& user, const std::string& action )
+void Ui::OnChannelDidAction( Channel& channel , User& user, const wxString& action )
 {
   wxLogDebugFunc( _T("") );
   if ( channel.uidata.panel == 0 ) {
     wxLogError( _T("ud->panel NULL") );
     return;
   }
-  channel.uidata.panel->DidAction( WX_STRING(user.GetNick()), WX_STRING( action ) );
+  channel.uidata.panel->DidAction( user.GetNick(), action );
 }
 
 
-void Ui::OnChannelMessage( const std::string& channel, const std::string& msg )
+void Ui::OnChannelMessage( const wxString& channel, const wxString& msg )
 {
-  ChatPanel* panel = GetChannelChatPanel( WX_STRING(channel) );
+  ChatPanel* panel = GetChannelChatPanel( channel );
   if ( panel != 0 ) {
-    panel->StatusMessage( WX_STRING(msg) );
+    panel->StatusMessage( msg );
   }
 }
 
@@ -615,36 +621,36 @@ void Ui::OnChannelJoin( Channel& chan, User& user )
 }
 
 
-void Ui::OnUserLeftChannel( Channel& chan, User& user, const std::string& reason )
+void Ui::OnUserLeftChannel( Channel& chan, User& user, const wxString& reason )
 {
   //wxLogDebugFunc( _T("") );
   if ( chan.uidata.panel == 0 ) {
     wxLogError( _T("ud->panel NULL") );
     return;
   }
-  chan.uidata.panel->Parted( user, WX_STRING(reason) );
+  chan.uidata.panel->Parted( user, reason );
 }
 
 
-void Ui::OnChannelTopic( Channel& channel , const std::string user, const std::string& topic )
+void Ui::OnChannelTopic( Channel& channel, const wxString& user, const wxString& topic )
 {
   wxLogDebugFunc( _T("") );
   if ( channel.uidata.panel == 0 ) {
     wxLogError( _T("ud->panel NULL") );
     return;
   }
-  channel.uidata.panel->SetTopic( WX_STRING(user), WX_STRING(topic) );
+  channel.uidata.panel->SetTopic( user, topic );
 }
 
 
-void Ui::OnChannelList( const std::string& channel, const int& numusers )
+void Ui::OnChannelList( const wxString& channel, const int& numusers )
 {
   ChatPanel* panel = GetActiveChatPanel();
   if ( panel == 0 ) {
     ShowMessage( _("error"), _("no active chat panels open.") );
     return;
   }
-  panel->StatusMessage( WX_STRING(channel)  + wxString::Format( _("(%d users)"), numusers) );
+  panel->StatusMessage( channel + wxString::Format( _("(%d users)"), numusers) );
 }
 
 
@@ -688,37 +694,37 @@ void Ui::OnUserStatusChanged( User& user )
 }
 
 
-void Ui::OnUnknownCommand( Server& server, const std::string& command, const std::string& params )
+void Ui::OnUnknownCommand( Server& server, const wxString& command, const wxString& params )
 {
-  if ( server.uidata.panel != 0 ) server.uidata.panel->UnknownCommand( WX_STRING(command), WX_STRING(params) );
+  if ( server.uidata.panel != 0 ) server.uidata.panel->UnknownCommand( command, params );
 }
 
 
-void Ui::OnMotd( Server& server, const std::string& message )
+void Ui::OnMotd( Server& server, const wxString& message )
 {
-  if ( server.uidata.panel != 0 ) server.uidata.panel->Motd( WX_STRING(message) );
+  if ( server.uidata.panel != 0 ) server.uidata.panel->Motd( message );
 }
 
 
-void Ui::OnServerMessage( Server& server, const std::string& message )
+void Ui::OnServerMessage( Server& server, const wxString& message )
 {
   ChatPanel* panel = GetActiveChatPanel();
   if ( panel != 0 ) {
-    panel->StatusMessage( WX_STRING(message) );
+    panel->StatusMessage( message );
   } else {
-    ShowMessage( _("Server message"), WX_STRING(message) );
+    ShowMessage( _("Server message"), message );
   }
 }
 
 
-void Ui::OnUserSaid( User& user, const std::string message, bool fromme )
+void Ui::OnUserSaid( User& user, const wxString& message, bool fromme )
 {
   if ( m_main_win == 0 ) return;
   if ( user.uidata.panel == 0 ) {
     m_main_win->OpenPrivateChat( user );
   }
-  if ( fromme ) user.uidata.panel->Said( WX_STRING(m_serv->GetMe().GetNick()), WX_STRING(message) );
-  else user.uidata.panel->Said( WX_STRING(user.GetNick()), WX_STRING(message) );
+  if ( fromme ) user.uidata.panel->Said( m_serv->GetMe().GetNick(), message );
+  else user.uidata.panel->Said( user.GetNick(), message );
 }
 
 
@@ -828,7 +834,7 @@ void Ui::OnJoinedBattle( Battle& battle )
   }
   if ( battle.GetNatType() != NAT_None ) {
     wxLogWarning( _T("joining game with NAT transversal") );
-#if(!NAT_TRAVERSAL_SUPPORT)
+#ifdef HAVE_WX26
     customMessageBox(SL_MAIN_ICON, _("This game uses NAT traversal that is not supported by wx 2.6 build of springlobby. \n\nYou will not be able to play in this battle. \nUpdate your wxwidgets to 2.8 or newer to enable NAT traversal support."), _("NAT traversal"), wxOK );
 #endif
   }
@@ -879,22 +885,22 @@ void Ui::OnBattleStarted( Battle& battle )
 }
 
 
-void Ui::OnSaidBattle( Battle& battle, const std::string& nick, const std::string& msg )
+void Ui::OnSaidBattle( Battle& battle, const wxString& nick, const wxString& msg )
 {
   if ( m_main_win == 0 ) return;
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
-    br->GetChatPanel().Said( WX_STRING(nick), WX_STRING(msg) );
+    br->GetChatPanel().Said( nick, msg );
   }
 }
 
 
-void Ui::OnBattleAction( Battle& battle, const std::string& nick, const std::string& msg )
+void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& msg )
 {
   if ( m_main_win == 0 ) return;
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
-    br->GetChatPanel().DidAction( WX_STRING(nick), WX_STRING(msg) );
+    br->GetChatPanel().DidAction( nick, msg );
   }
 }
 
@@ -927,14 +933,14 @@ void Ui::OnBattleMapChanged( Battle& battle )
 }
 
 
-void Ui::OnBattleDisableUnit( Battle& battle, const std::string& unitname )
+void Ui::OnBattleDisableUnit( Battle& battle, const wxString& unitname )
 {
   if ( m_main_win == 0 ) return;
   mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
-void Ui::OnBattleEnableUnit( Battle& battle, const std::string& unitname )
+void Ui::OnBattleEnableUnit( Battle& battle, const wxString& unitname )
 {
   if ( m_main_win == 0 ) return;
   mw().GetJoinTab().UpdateCurrentBattle( false, true );
@@ -948,9 +954,9 @@ void Ui::OnBattleEnableAllUnits( Battle& battle )
 }
 
 
-void Ui::OnAcceptAgreement( const std::string& agreement )
+void Ui::OnAcceptAgreement( const wxString& agreement )
 {
-  AgreementDialog dlg( m_main_win, WX_STRING(agreement) );
+  AgreementDialog dlg( m_main_win, agreement );
   if ( dlg.ShowModal() == 1 ) {
     m_serv->AcceptAgreement();
     m_serv->Login();
@@ -988,7 +994,7 @@ void Ui::OnBattleBotUpdated( Battle& battle, BattleBot& bot )
 }
 
 
-void Ui::OnRing( const std::string& from )
+void Ui::OnRing( const wxString& from )
 {
   if ( m_main_win == 0 ) return;
   m_main_win->RequestUserAttention();
@@ -1038,4 +1044,9 @@ bool Ui::IsThisMe(User& other)
 		return false;
 	else
 		return ( other.GetNick()==m_serv->GetMe().GetNick() );
+}
+
+bool Ui::TestHostPort( unsigned int port )
+{
+  return m_serv->TestOpenPort( port );
 }
