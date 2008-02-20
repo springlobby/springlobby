@@ -9,7 +9,7 @@
 #include <wx/font.h>
 #include <wx/event.h>
 #include <wx/stattext.h>
-#include "utils.h"
+#include "../utils.h"
 #include <wx/artprov.h>
 #include <wx/statbmp.h>
 #include <wx/listctrl.h>
