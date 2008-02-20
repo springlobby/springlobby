@@ -321,7 +321,7 @@ void Ui::OpenWebBrowser( const wxString& url )
       if ( !wxLaunchDefaultBrowser( url ) )
       {
         wxLogWarning( _T("can't launch default browser") );
-        customMessageBoxNonModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
       }
   }
   else
@@ -329,7 +329,7 @@ void Ui::OpenWebBrowser( const wxString& url )
     if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
     {
       wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().c_str() );
-      customMessageBoxNonModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
+      customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
     }
 
   }
