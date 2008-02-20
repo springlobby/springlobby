@@ -34,18 +34,15 @@ wxString GetLibExtension()
 ///initializes logging in an hidden stream and std::cout/gui messages
 void InitializeLoggingTargets( bool console, bool showgui, bool logcrash, int verbosity )
 {
-  wxLog::SetLogLevel( wxLOG_Warning );
   wxLogChain *lastlog;
+  if ( showgui && verbosity != 0 )
+  {
+    ///gui window logging
+    wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console"), showgui );
+    wxLogChain *logGuiChain = new wxLogChain( loggerwin );
+    lastlog = logGuiChain;
+  }
 	#if wxUSE_STD_IOSTREAM
-    #if wxUSE_DEBUGREPORT
-      if ( logcrash )
-      {
-        ///hidden stream logging for crash reports, verbosity ignores command line params
-        wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
-        wxLogChain *logCrashChain = new wxLogChain( loggercrash );
-        logCrashChain->SetLogLevel( wxLOG_Warning );
-      }
-    #endif
     if (  console && verbosity != 0 )
     {
       ///std::cout logging
@@ -53,17 +50,18 @@ void InitializeLoggingTargets( bool console, bool showgui, bool logcrash, int ve
       wxLogChain *logConsoleChain = new wxLogChain( loggerconsole );
       lastlog = logConsoleChain;
     }
+    #if wxUSE_DEBUGREPORT
+      if ( logcrash )
+      {
+        ///hidden stream logging for crash reports, verbosity ignores command line params
+        wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
+        wxLogChain *logCrashChain = new wxLogChain( loggercrash );
+        lastlog = logCrashChain;
+      }
+    #endif
   #endif
-  if ( showgui && verbosity != 0 )
-    {
-      ///gui window logging
-      wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console"), showgui );
-      wxLogChain *logGuiChain = new wxLogChain( loggerwin );
-      lastlog = logGuiChain;
-    }
   if ( lastlog != 0 )
   {
-    wxMessageBox( wxString::Format(_T("%d"), verbosity));
     switch (verbosity)
     {
       case 1:
