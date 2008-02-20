@@ -242,15 +242,13 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
   AddBotDialog dlg( this, m_battle, true );
   if ( dlg.ShowModal() == wxID_OK ) {
-    int x = 0, y = 0, handicap = 0, r, g, b;
+    int x = 0, y = 0, handicap = 0;
     m_battle.GetFreePosition( x, y );
-    m_battle.GetFreeColour( r, g, b, false );
+    wxColour col = m_battle.GetFreeColour( false );
     int i = m_battle.AddBot( m_battle.GetFreeAlly(), x, y, handicap, dlg.GetAI() );
     BattleBot* bot = m_battle.GetBot( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
-    bot->bs.color_r = r;
-    bot->bs.color_g = g;
-    bot->bs.color_b = b;
+    bot->bs.colour = col;
     m_minimap->UpdateMinimap();
   }
 }

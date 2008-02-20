@@ -2,8 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_USER_H
 
 #include <wx/string.h>
-#include <wx/intl.h>
-
+#include <wx/colour.h>
 
 class Server;
 
@@ -33,14 +32,14 @@ struct UserBattleStatus {
   int order;
   int team;
   int ally;
-  int color_r, color_g, color_b;
+  wxColour colour;
   int color_index;
   int handicap;
   int side;
   int sync;
   bool spectator;
   bool ready;
-  UserBattleStatus(): order(-1),team(0),ally(0),color_r(0), color_g(0),color_b(0),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),ready(false) {}
+  UserBattleStatus(): order(-1),team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),ready(false) {}
 };
 
 class ChatPanel;
@@ -99,21 +98,7 @@ class User
 
     bool ExecuteSayCommand( const wxString& cmd );
 
-
-    static wxString GetRankName(int rank) {
-    //TODO: better interface to ranks?
-        switch(rank) {
-            case RANK_0: return _("Newbie");
-            case RANK_1: return _("Beginner");
-            case RANK_2: return _("Average");
-            case RANK_3: return _("Above average");
-            case RANK_4: return _("Experienced");
-            case RANK_5: return _("Highly experienced");
-            case RANK_6: return _("Veteran");
-        }
-        return _("no rank");
-    }
-
+    static wxString GetRankName(int rank);
 
   protected:
     // User variables

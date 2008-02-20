@@ -20,6 +20,7 @@ class ChatPanel;
 struct BattleOptions;
 class wxString;
 typedef int ServerError;
+class wxColour;
 
 #define PE_NONE 0
 
@@ -117,7 +118,7 @@ class Server
     virtual void ForceSide( int battleid, const wxString& nick, int side ) = 0;
     virtual void ForceTeam( int battleid, const wxString& nick, int team ) = 0;
     virtual void ForceAlly( int battleid, const wxString& nick, int ally ) = 0;
-    virtual void ForceColour( int battleid, const wxString& nick, int r, int g, int b ) = 0;
+    virtual void ForceColour( int battleid, const wxString& nick, const wxColour& col ) = 0;
     virtual void ForceSpectator( int battleid, const wxString& nick, bool spectator ) = 0;
     virtual void BattleKickPlayer( int battleid, const wxString& nick ) = 0;
     virtual void SetHandicap( int battleid, const wxString& nick, int handicap) = 0;

@@ -509,9 +509,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     tasbstatus.data = GetIntParam( params );
     bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
     color.data = GetIntParam( params );
-    bstatus.color_r = color.color.red;
-    bstatus.color_g = color.color.green;
-    bstatus.color_b = color.color.blue;
+    bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
     m_se->OnClientBattleStatus( m_battle_id, nick, bstatus );
   } else if ( cmd == _T("ADDSTARTRECT") ) {
     //ADDSTARTRECT allyno left top right bottom
@@ -570,9 +568,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     tasbstatus.data = GetIntParam( params );
     bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
     color.data = GetIntParam( params );
-    bstatus.color_r = color.color.red;
-    bstatus.color_g = color.color.green;
-    bstatus.color_b = color.color.blue;
+    bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
     ai = GetSentenceParam( params );
     ai = ai.BeforeLast( '.' );
     m_se->OnBattleAddBot( id, nick, owner, bstatus, ai );
@@ -582,9 +578,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     tasbstatus.data = GetIntParam( params );
     bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
     color.data = GetIntParam( params );
-    bstatus.color_r = color.color.red;
-    bstatus.color_g = color.color.green;
-    bstatus.color_b = color.color.blue;
+    bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
     m_se->OnBattleUpdateBot( id, nick, bstatus );
     //UPDATEBOT BATTLE_ID name battlestatus teamcolor
   } else if ( cmd == _T("REMOVEBOT") ) {
@@ -1127,9 +1121,9 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
   UTASBattleStatus tasbs;
   tasbs.tasdata = ConvTasbattlestatus( bs );
   UTASColor tascl;
-  tascl.color.red = bs.color_r;
-  tascl.color.green = bs.color_g;
-  tascl.color.blue = bs.color_b;
+  tascl.color.red = bs.colour.Red();
+  tascl.color.green = bs.colour.Green();
+  tascl.color.blue = bs.colour.Blue();
   tascl.color.zero = 0;
   //MYBATTLESTATUS battlestatus myteamcolor
   SendCmd( _T("MYBATTLESTATUS"), wxString::Format( _T("%d %d"), tasbs.data, tascl.data ) );
@@ -1223,7 +1217,7 @@ void TASServer::ForceAlly( int battleid, const wxString& nick, int ally )
 }
 
 
-void TASServer::ForceColour( int battleid, const wxString& nick, int r, int g, int b )
+void TASServer::ForceColour( int battleid, const wxString& nick, const wxColour& col )
 {
   wxLogDebugFunc( _T("") );
   ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
@@ -1232,9 +1226,7 @@ void TASServer::ForceColour( int battleid, const wxString& nick, int r, int g, i
 
   if ( !GetBattle(battleid).IsFounderMe() ) {
     if ( nick == GetMe().GetNick() ) {
-      GetMe().BattleStatus().color_r = r;
-      GetMe().BattleStatus().color_g = g;
-      GetMe().BattleStatus().color_b = b;
+      GetMe().BattleStatus().colour = col;
       SendMyBattleStatus( GetMe().BattleStatus() );
     } else {
       DoActionBattle( battleid, _T("sugests that ") + nick + _T(" changes colour.") );
@@ -1243,9 +1235,9 @@ void TASServer::ForceColour( int battleid, const wxString& nick, int r, int g, i
   }
 
   UTASColor tascl;
-  tascl.color.red = r;
-  tascl.color.green = g;
-  tascl.color.blue = b;
+  tascl.color.red = col.Red();
+  tascl.color.green = col.Green();
+  tascl.color.blue = col.Blue();
   tascl.color.zero = 0;
   //FORCETEAMCOLOR username color
   SendCmd( _T("FORCETEAMCOLOR"), nick + _T(" ") + wxString::Format( _T("%d"), tascl.data ) );
@@ -1330,9 +1322,9 @@ void TASServer::AddBot( int battleid, const wxString& nick, const wxString& owne
   UTASBattleStatus tasbs;
   tasbs.tasdata = ConvTasbattlestatus( status );
   UTASColor tascl;
-  tascl.color.red = status.color_r;
-  tascl.color.green = status.color_g;
-  tascl.color.blue = status.color_b;
+  tascl.color.red = status.colour.Red();
+  tascl.color.green = status.colour.Green();
+  tascl.color.blue = status.colour.Blue();
   tascl.color.zero = 0;
   //ADDBOT name battlestatus teamcolor {AIDLL}
   SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + aidll + _T(".dll") );
@@ -1368,9 +1360,9 @@ void TASServer::UpdateBot( int battleid, const wxString& nick, UserBattleStatus 
   UTASBattleStatus tasbs;
   tasbs.tasdata = ConvTasbattlestatus( status );
   UTASColor tascl;
-  tascl.color.red = status.color_r;
-  tascl.color.green = status.color_g;
-  tascl.color.blue = status.color_b;
+  tascl.color.red = status.colour.Red();
+  tascl.color.green = status.colour.Green();
+  tascl.color.blue = status.colour.Blue();
   tascl.color.zero = 0;
   //UPDATEBOT name battlestatus teamcolor
   SendCmd( _T("UPDATEBOT"), nick + wxString::Format( _T(" %d %d"), tasbs.data, tascl.data ) );

@@ -15,14 +15,11 @@ SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_sptab(msptab)
 {
   CustomBattleOptions()->setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), 3), EngineOption );
-  int r,g,b;
-  GetFreeColour( r, g, b, false );
+  wxColour col = GetFreeColour( false );
   int i = AddBot( 0, 0, 0, 0, _T("") );
   BattleBot* bot = GetBot( i );
   ASSERT_LOGIC( bot != 0, _T("bot == 0") );
-  bot->bs.color_r = r;
-  bot->bs.color_g = g;
-  bot->bs.color_b = b;
+  bot->bs.colour = col;
 }
 
 
@@ -153,7 +150,7 @@ void SinglePlayerBattle::GetFreePosition( int& x, int& y )
 }
 
 
-void SinglePlayerBattle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
+wxColour SinglePlayerBattle::GetFreeColour( bool excludeme )
 {
   unsigned int lowest = 0;
   bool changed = true;
@@ -163,7 +160,7 @@ void SinglePlayerBattle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
     for( unsigned int i = 0; i < m_bots.size(); i++ ) {
       BattleBot* bot = GetBot( i );
       ASSERT_LOGIC( bot != 0, _T("bot == 0"));
-      if ( AreColoursSimilar( bot->bs.color_r, bot->bs.color_g, bot->bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
+      if ( AreColoursSimilar( bot->bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) ) {
         lowest++;
         changed = true;
         if ( lowest >= m_bots.size() ) break;
@@ -171,8 +168,6 @@ void SinglePlayerBattle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
     }
   }
 
-  r = colour_values[lowest][0];
-  g = colour_values[lowest][1];
-  b = colour_values[lowest][2];
+  return wxColour( colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] );
 }
 

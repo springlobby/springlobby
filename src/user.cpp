@@ -73,3 +73,18 @@ bool User::ExecuteSayCommand( const wxString& cmd )
     return true;
   }  else return false;
 }
+
+wxString User::GetRankName(int rank)
+{
+  //TODO: better interface to ranks?
+      switch(rank) {
+          case RANK_0: return _("Newbie");
+          case RANK_1: return _("Beginner");
+          case RANK_2: return _("Average");
+          case RANK_3: return _("Above average");
+          case RANK_4: return _("Experienced");
+          case RANK_5: return _("Highly experienced");
+          case RANK_6: return _("Veteran");
+      }
+      return _("no rank");
+}

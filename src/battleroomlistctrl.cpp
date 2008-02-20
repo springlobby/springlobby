@@ -240,7 +240,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   item_content user_content = items[(size_t)GetItemData( index )];
   User& user = *((User*) user_content.data);
 
-  icons().SetColourIcon( user.BattleStatus().team, wxColour( user.BattleStatus().color_r, user.BattleStatus().color_g, user.BattleStatus().color_b ) );
+  icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
 
   int statimg;
   if ( &m_battle.GetFounder() == &user ) {
@@ -350,7 +350,7 @@ void BattleroomListCtrl::UpdateBot( const int& index )
   item_content bot_content = items[(size_t)GetItemData( index )];
   BattleBot& bot = *((BattleBot*)bot_content.data);
 
-  icons().SetColourIcon( bot.bs.team, wxColour( bot.bs.color_r, bot.bs.color_g, bot.bs.color_b ) );
+  icons().SetColourIcon( bot.bs.team,  bot.bs.colour );
 
   SetItemImage( index, ICON_BOT );
 
@@ -462,17 +462,15 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
   wxLogDebugFunc( _T("") );
 
   if ( m_sel_bot != 0 ) {
-    wxColour CurrentColour;
-    CurrentColour.Set( m_sel_bot->bs.color_r, m_sel_bot->bs.color_g, m_sel_bot->bs.color_b );
+    wxColour CurrentColour = m_sel_bot->bs.colour;
     CurrentColour = wxGetColourFromUser(this, CurrentColour);
     if ( !CurrentColour.IsColourOk() ) return;
-    m_battle.SetBotColour( m_sel_bot->name, CurrentColour.Red(), CurrentColour.Green(), CurrentColour.Blue() );
+    m_battle.SetBotColour( m_sel_bot->name, CurrentColour );
   } else if ( m_sel_user != 0 ) {
-    wxColour CurrentColour;
-    CurrentColour.Set( m_sel_user->BattleStatus().color_r, m_sel_user->BattleStatus().color_g, m_sel_user->BattleStatus().color_b );
+    wxColour CurrentColour = m_sel_user->BattleStatus().colour;
     CurrentColour = wxGetColourFromUser(this, CurrentColour);
     if ( !CurrentColour.IsColourOk() ) return;
-    m_battle.ForceColour( *m_sel_user, CurrentColour.Red(), CurrentColour.Green(), CurrentColour.Blue() );
+    m_battle.ForceColour( *m_sel_user, CurrentColour );
   }
 
 }
@@ -686,32 +684,32 @@ int wxCALLBACK BattleroomListCtrl::CompareColorUP(long item1, long item2, long s
   if ( content1.is_bot )
     {
       if ( ((BattleBot*)content1.data)->bs.spectator ) return -1;
-      color1_r = ((BattleBot*)content1.data)->bs.color_r;
-      color1_g = ((BattleBot*)content1.data)->bs.color_g;
-      color1_b = ((BattleBot*)content1.data)->bs.color_b;
+      color1_r = ((BattleBot*)content1.data)->bs.colour.Red();
+      color1_g = ((BattleBot*)content1.data)->bs.colour.Green();
+      color1_b = ((BattleBot*)content1.data)->bs.colour.Blue();
     }
   else
     {
       if ( ((User*)content1.data)->BattleStatus().spectator ) return -1;
-      color1_r = ((User*)content1.data)->BattleStatus().color_r;
-      color1_g = ((User*)content1.data)->BattleStatus().color_g;
-      color1_b = ((User*)content1.data)->BattleStatus().color_b;
+      color1_r = ((User*)content1.data)->BattleStatus().colour.Red();
+      color1_g = ((User*)content1.data)->BattleStatus().colour.Green();
+      color1_b = ((User*)content1.data)->BattleStatus().colour.Blue();
     }
 
   int color2_r, color2_g, color2_b;
   if ( content2.is_bot )
     {
       if ( ((BattleBot*)content2.data)->bs.spectator ) return 1;
-      color2_r = ((BattleBot*)content2.data)->bs.color_r;
-      color2_g = ((BattleBot*)content2.data)->bs.color_g;
-      color2_b = ((BattleBot*)content2.data)->bs.color_b;
+      color2_r = ((BattleBot*)content2.data)->bs.colour.Red();
+      color2_g = ((BattleBot*)content2.data)->bs.colour.Green();
+      color2_b = ((BattleBot*)content2.data)->bs.colour.Blue();
     }
   else
     {
       if ( ((User*)content2.data)->BattleStatus().spectator ) return 1;
-      color2_r = ((User*)content2.data)->BattleStatus().color_r;
-      color2_g = ((User*)content2.data)->BattleStatus().color_g;
-      color2_b = ((User*)content2.data)->BattleStatus().color_b;
+      color2_r = ((User*)content2.data)->BattleStatus().colour.Red();
+      color2_g = ((User*)content2.data)->BattleStatus().colour.Green();
+      color2_b = ((User*)content2.data)->BattleStatus().colour.Blue();
     }
 
   if ( (color1_r + color1_g + color1_b)/3 < (color2_r + color2_g + color2_b)/3 )
