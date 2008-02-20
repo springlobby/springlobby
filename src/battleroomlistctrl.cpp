@@ -739,13 +739,13 @@ int wxCALLBACK BattleroomListCtrl::CompareCountryUP(long item1, long item2, long
   if ( content1.is_bot )
     country1 = _T("");
   else
-    country1 = ((User*)content1.data)->GetCountry().MakeUpper();
+    country1 = ((User*)content1.data)->GetCountry().Upper();
 
   wxString country2;
   if ( content2.is_bot )
     country2 = _T("");
   else
-    country2 = ((User*)content2.data)->GetCountry().MakeUpper();
+    country2 = ((User*)content2.data)->GetCountry().Upper();
 
   if ( country1 < country2 )
       return -1;
@@ -803,15 +803,15 @@ int wxCALLBACK BattleroomListCtrl::CompareNicknameUP(long item1, long item2, lon
 
   wxString name1;
   if ( content1.is_bot )
-    name1 = ((BattleBot*)content1.data)->name.MakeUpper();
+    name1 = ((BattleBot*)content1.data)->name.Upper();
   else
-    name1 = ((User*)content1.data)->GetNick().MakeUpper();
+    name1 = ((User*)content1.data)->GetNick().Upper();
 
   wxString name2;
   if ( content2.is_bot )
-    name2 = ((BattleBot*)content2.data)->name.MakeUpper();
+    name2 = ((BattleBot*)content2.data)->name.Upper();
   else
-    name2 = ((User*)content2.data)->GetNick().MakeUpper();
+    name2 = ((User*)content2.data)->GetNick().Upper();
 
   if ( name1 < name2 )
       return -1;
@@ -909,9 +909,9 @@ int wxCALLBACK BattleroomListCtrl::CompareCpuUP(long item1, long item2, long sor
   item_content content2 = bl.items[(size_t)item2];
 
   if ( content1.is_bot ) {
-    wxString aidll1 = ((BattleBot*)content1.data)->aidll.MakeUpper();
+    wxString aidll1 = ((BattleBot*)content1.data)->aidll.Upper();
     if ( content2.is_bot ) {
-      wxString aidll2 = ((BattleBot*)content2.data)->aidll.MakeUpper();
+      wxString aidll2 = ((BattleBot*)content2.data)->aidll.Upper();
       if ( aidll1 < aidll2 )
         return -1;
       if ( aidll1 > aidll2 )
@@ -1028,7 +1028,7 @@ void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 
 				case 3: // country
 					m_tiptext = (content.is_bot ? _T("This bot is from nowhere particluar")
-							: GetFlagNameFromCountryCode(((User*)content.data)->GetCountry().MakeUpper()));
+							: GetFlagNameFromCountryCode(((User*)content.data)->GetCountry().Upper()));
 					break;
 				case 4: // rank
 					m_tiptext = (content.is_bot ? _T("This bot has no rank")
