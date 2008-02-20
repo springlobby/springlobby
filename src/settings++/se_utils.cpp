@@ -9,10 +9,6 @@
 #include "se_settings.h"
 #include "../springunitsynclib.h"
 
-void toString(wxString& s, int t) {
-
-}
-
 int fromString(const wxString& s) {
         long temp = 0;
         s.ToLong(&temp);

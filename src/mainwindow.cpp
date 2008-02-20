@@ -78,8 +78,7 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menuTools->AppendSeparator();
   m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
   m_settings_menu = new wxMenuItem( m_menuTools, MENU_SETTINGSPP, _("SpringSettings"), wxEmptyString, wxITEM_NORMAL );
-
-  //m_settings_menu->Enable( false ); /// disable the spring settings tool until we have unitsync loaded, so we know for sure it's working
+  m_menuTools->Append (m_settings_menu);
 
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _("&About"));
@@ -397,22 +396,6 @@ void MainWindow::OnUnitSyncReloaded()
   wxLogMessage( _T("Reloading Singleplayer tab") );
   GetSPTab().OnUnitSyncReloaded();
   wxLogMessage( _T("Singleplayer tab updated") );
-  if ( usync()->VersionSupports( USYNC_Sett_Handler ) )
-  {
-	  if (m_menubar->FindItem(MENU_SETTINGSPP)==0)
-	  {
-		  m_menuTools->Append( m_settings_menu );
-		  wxLogMessage( _T("SpringSettingsTool Enabled") );
-	  }
-  }
-  else
-  {
-	  if (m_menubar->FindItem(MENU_SETTINGSPP)!=0)
-	  {
-	 	m_menuTools->Remove( m_settings_menu );
-	 	wxLogMessage( _T("SpringSettingsTool Disabled") );
-	  }
-  }
 }
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
