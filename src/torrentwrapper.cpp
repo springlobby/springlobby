@@ -53,16 +53,14 @@ void TorrentWrapper::JoinTorrent( const wxString& name, unsigned int hash, Media
     std::string crchash = wxString::Format( _T("%d"), (int)hash ).mb_str();
     sha1_hash shahash = crchash.c_str();
     torr->add_torrent( m_tracker_urls[0].mb_str(), shahash,boost::filesystem::path( path.mb_str() ), name.mb_str() );
-    m_open_torrents_number++;
   }
 }
 
 
-void TorrentWrapper::CreateTorrent( unsigned int hash )
+void TorrentWrapper::CreateTorrent( unsigned int hash, const wxString& name, MediaType type )
 {
   torrent_info newtorrent;
   add_files(newtorrent, );
-  newtorrent.set_piece_size(256 * 1024);
   for ( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
   {
     newtorrent.add_tracker( m_tracker_urls[i].mb_str() );
@@ -77,8 +75,7 @@ void TorrentWrapper::CreateTorrent( unsigned int hash )
           hasher h(&buf[0], newtorrent.piece_size(i));
           newtorrent.set_hash(i, h.final());
   }
-  m_torrents_infos[hash] = newtorrent; /// stores the newly created torrent in the vector
-  return newtorrent.create_torrent();
+  newtorrent.create_torrent();
 }
 
 
@@ -89,8 +86,8 @@ void ReceiveandExecute( const wxString& msg )
   {
     case _T("T+"):
       TorrentData newtorrent;
-      long hash;
-      data[1].ToLong(&hash);
+      long shash;
+      data[1].ToLong(&hsash);
       newtorrent.hash = (unsigned long)shash;
       newtorrent.name = data[2];
       if ( data[3] == _T("MAP") ) newtorrent.type = map;
@@ -98,17 +95,25 @@ void ReceiveandExecute( const wxString& msg )
       TorrentsIter iter = m_torrents_infos.begin();
       m_torrents_infos.insert(iter + (unsigned long)shash, newtorrent);
     case _T("T-"):
-      long hash;
-      data[1].ToLong(&hash);
+      long shash;
+      data[1].ToLong(&shash);
       TorrentsIter iter = m_torrents_infos.begin();
       m_torrents_infos.erase(iter + (unsigned long)shash);
     case _T("S+"):
-      long hash;
-      data[1].ToLong(&hash);
+      long shash;
+      data[1].ToLong(&shash);
       m_seed_request.push_back((unsigned long)shash);
+      if ( torr->get_torrents().size() <= 5 )
+      {
+        if ( m_local_files.find( m_seed_request.last() ) )
+        {
+          TorrentData info = m_torrents_infos[m_seed_request.last()];
+          JoinTorrent( info.hash, info.name, info.type );
+        }
+      }
     case _T("S-"):
-      long hash;
-      data[1].ToLong(&hash);
+      long shash;
+      data[1].ToLong(&shash);
       m_seed_request.remove((unsigned long)shash);
     else:
   }
