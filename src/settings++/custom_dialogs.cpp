@@ -258,7 +258,7 @@ ServerMessageBox::~ServerMessageBox()
 ServerMessageBox::ServerMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
         const wxString& caption ,
         long style, const wxPoint& pos )
-			: wxDialog(parent,-1,caption,pos,wxDefaultSize,style|wxFRAME_FLOAT_ON_PARENT|wxDEFAULT_DIALOG_STYLE)
+			: wxDialog(parent,-1,caption,pos,wxDefaultSize,style|wxFRAME_FLOAT_ON_PARENT|wxDEFAULT_DIALOG_STYLE|wxEXPAND)
 {
 	SetIcon(*icon);
 
@@ -268,14 +268,14 @@ ServerMessageBox::ServerMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
 
     AppendMessage(message);
 
-    topsizer->Add( m_messages, 1, wxALL|wxEXPAND, 10 );
+    topsizer->Add( m_messages, 1, wxALL|wxEXPAND|wxALIGN_CENTRE, 10 );
 
 
     topsizer->Add(0,10);
 
 
     wxSizer *sizerBtn = CreateButtonSizer(wxOK);
-    topsizer->Add(sizerBtn, 0,  wxALL, 10 );
+    topsizer->Add(sizerBtn, 0,  wxALL|wxALIGN_CENTRE, 10 );
 
 
 //    SetAutoLayout( true );
