@@ -34,7 +34,7 @@ class BattleList_Iter
     BattleList_Iter(BattleList* battlelist) : m_battlelist( battlelist ) {};
     ~BattleList_Iter() {};
     void IteratorBegin();
-    Battle& GetBattle();
+    Battle* GetBattle();
     bool EOL();
     Battle& GetBattle( battle_id_t const& id );
     //Battle& GetFirstBattle();

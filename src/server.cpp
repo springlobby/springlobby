@@ -17,9 +17,12 @@ Server::~Server()
 {
   while ( battles_iter->GetNumBattles() > 0 ) {
     battles_iter->IteratorBegin();
-    Battle* b = &battles_iter->GetBattle();
-    m_battles.RemoveBattle( b->GetBattleId() );
-    delete b;
+    Battle* b = battles_iter->GetBattle();
+    if (b!=0)
+    {
+        m_battles.RemoveBattle( b->GetBattleId() );
+        delete b;
+    }
   }
   while ( m_users.GetNumUsers() > 0 ) {
     User* u = &m_users.GetUser( 0 );

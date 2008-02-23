@@ -89,7 +89,7 @@ class TASServer : public Server
     void ForceSide( int battleid, const wxString& nick, int side );
     void ForceTeam( int battleid, const wxString& nick, int team );
     void ForceAlly( int battleid, const wxString& nick, int ally );
-    void ForceColour( int battleid, const wxString& nick, int r, int g, int b );
+    void ForceColour( int battleid, const wxString& nick, const wxColour& col );
     void ForceSpectator( int battleid, const wxString& nick, bool spectator );
     void BattleKickPlayer( int battleid, const wxString& nick );
     void SetHandicap( int battleid, const wxString& nick, int handicap);

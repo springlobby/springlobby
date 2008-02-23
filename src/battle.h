@@ -120,7 +120,7 @@ class Battle : public UserList, public IBattle
     int GetMyPlayerNum();
 
     int GetFreeTeamNum( bool excludeme = true );
-    void GetFreeColour( int& r, int& g, int& b, bool excludeme = true );
+    wxColour GetFreeColour( bool excludeme = true );
 
     void Update();
     void Update( const wxString& Tag );
@@ -158,7 +158,7 @@ class Battle : public UserList, public IBattle
     void SetBotTeam( const wxString& nick, int team );
     void SetBotAlly( const wxString& nick, int ally );
     void SetBotSide( const wxString& nick, int side );
-    void SetBotColour( const wxString& nick, int r, int g, int b );
+    void SetBotColour( const wxString& nick, const wxColour& col );
     void SetBotHandicap( const wxString& nick, int handicap );
 
     BattleBot* GetBot( const wxString& name );
@@ -174,7 +174,7 @@ class Battle : public UserList, public IBattle
     void ForceSide( User& user, int side );
     void ForceTeam( User& user, int team );
     void ForceAlly( User& user, int ally );
-    void ForceColour( User& user, int r, int g, int b );
+    void ForceColour( User& user, const wxColour& col );
     void ForceSpectator( User& user, bool spectator );
     void BattleKickPlayer( User& user );
     void SetHandicap( User& user, int handicap);

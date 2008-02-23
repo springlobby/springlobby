@@ -108,7 +108,7 @@ int Battle::GetFreeTeamNum( bool excludeme )
 }
 
 
-void Battle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
+wxColour Battle::GetFreeColour( bool excludeme )
 {
   int lowest = 0;
   bool changed = true;
@@ -118,7 +118,7 @@ void Battle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
       if ( (&GetUser( i ) == &GetMe()) && excludeme ) continue;
       //if ( GetUser( i ).BattleStatus().spectator ) continue;
       UserBattleStatus& bs = GetUser( i ).BattleStatus();
-      if ( AreColoursSimilar( bs.color_r, bs.color_g, bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
+      if ( AreColoursSimilar( bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) ) {
         lowest++;
         changed = true;
       }
@@ -127,16 +127,13 @@ void Battle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
     for( i = m_bots.begin(); i != m_bots.end(); ++i )
     {
       if ( *i == 0 ) continue;
-      if ( AreColoursSimilar( (*i)->bs.color_r, (*i)->bs.color_g, (*i)->bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
+      if ( AreColoursSimilar( (*i)->bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) ) {
         lowest++;
         changed = true;
       }
     }
   }
-
-  r = colour_values[lowest][0];
-  g = colour_values[lowest][1];
-  b = colour_values[lowest][2];
+  return wxColour( colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] );
 }
 
 
@@ -148,7 +145,7 @@ void Battle::OnRequestBattleStatus()
   bs.team = lowest;
   bs.ally = lowest;
   bs.spectator = false;
-  GetFreeColour( bs.color_r, bs.color_g, bs.color_b );
+  bs.colour = GetFreeColour();
 
   SendMyBattleStatus();
 }
@@ -407,13 +404,11 @@ void Battle::SetBotSide( const wxString& nick, int side )
 }
 
 
-void Battle::SetBotColour( const wxString& nick, int r, int g, int b )
+void Battle::SetBotColour( const wxString& nick, const wxColour& col )
 {
   BattleBot* bot = GetBot( nick );
   ASSERT_LOGIC( bot != 0, _T("Bot not found") );
-  bot->bs.color_r = r;
-  bot->bs.color_g = g;
-  bot->bs.color_b = b;
+  bot->bs.colour = col;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
 
@@ -524,9 +519,9 @@ void Battle::ForceAlly( User& user, int ally )
 }
 
 
-void Battle::ForceColour( User& user, int r, int g, int b )
+void Battle::ForceColour( User& user, const wxColour& col )
 {
-  m_serv.ForceColour( m_opts.battleid, user.GetNick(), r, g, b );
+  m_serv.ForceColour( m_opts.battleid, user.GetNick(), col );
 }
 
 

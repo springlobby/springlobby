@@ -59,17 +59,19 @@ IUnitSync* usync()
 
 bool SpringUnitSync::LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc )
 {
-  if ( wxFileName::IsDirWritable( sett().GetSpringDir() ) )
+#ifndef HAVE_WX26
+  if ( !wxFileName::IsDirWritable( sett().GetSpringDir() ) )
   {
-      wxLogDebugFunc( _T("") );
-      LOCK_UNITSYNC;
-      return _LoadUnitSyncLib( springdir, unitsyncloc );
+      customMessageBox(SL_MAIN_ICON,_("Unitsync loading was aborted because your spring data directory is not writable. Please check."),_("Unitsync Problem"),wxOK);
+      wxLogDebugFunc( _T("sprindatadir not writable") );
+      return false;
   }
   else
+#endif
   {
-     customMessageBox(SL_MAIN_ICON,_("Unitsync loading was aborted because your spring data directory is not writable. Please check."),_("Unitsync Problem"),wxOK);
-     wxLogDebugFunc( _T("sprindatadir not writable") );
-     return false;
+     wxLogDebugFunc( _T("") );
+     LOCK_UNITSYNC;
+     return _LoadUnitSyncLib( springdir, unitsyncloc );
   }
 }
 
@@ -479,10 +481,13 @@ wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
     wxString str;
     for ( str = f.GetFirstLine(); !f.Eof(); str = f.GetNextLine() ) ret.Add( str );
 
-    return ret;
+    //TODO fix for real
+    if (ret.Count() > 1 )
+        return ret;
 
   } catch(...) {}
 
+    ret.Empty();
   susynclib()->AddAllArchives( (susynclib()->GetPrimaryModArchive( susynclib()->GetModIndex( modname ) )) );
   while ( susynclib()->ProcessUnitsNoChecksum() );
   for ( int i = 0; i < susynclib()->GetUnitCount(); i++ ) {
@@ -500,7 +505,7 @@ wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
     for ( unsigned int i = 0; i < ret.GetCount(); i++ ) {
       wxString tmp =  ret.Item(i);
       tmp += _T("\n");
-      f.Write( tmp.c_str(), tmp.length() );
+      f.Write( tmp.mb_str(), tmp.length() );
     }
 
     f.Close();

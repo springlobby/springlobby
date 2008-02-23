@@ -610,7 +610,7 @@ void MapCtrl::DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
   dc.SetTextForeground( *wxWHITE );
 
   wxRect r = GetBotRect( bot, selected );
-  wxColour col = wxColour( bot.bs.color_r,bot.bs.color_g,bot.bs.color_b );
+  wxColour col = bot.bs.colour;
 
   if ( selected ) {
     wxRect siderect = GetBotSideRect();

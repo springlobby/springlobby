@@ -51,7 +51,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_map_pick = new wxChoice( this, SP_MAP_PICK );
   m_ctrl_sizer->Add( m_map_pick, 1, wxALL, 5 );
 
-  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
   m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
   m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
@@ -242,15 +242,13 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
   AddBotDialog dlg( this, m_battle, true );
   if ( dlg.ShowModal() == wxID_OK ) {
-    int x = 0, y = 0, handicap = 0, r, g, b;
+    int x = 0, y = 0, handicap = 0;
     m_battle.GetFreePosition( x, y );
-    m_battle.GetFreeColour( r, g, b, false );
+    wxColour col = m_battle.GetFreeColour( false );
     int i = m_battle.AddBot( m_battle.GetFreeAlly(), x, y, handicap, dlg.GetAI() );
     BattleBot* bot = m_battle.GetBot( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
-    bot->bs.color_r = r;
-    bot->bs.color_g = g;
-    bot->bs.color_b = b;
+    bot->bs.colour = col;
     m_minimap->UpdateMinimap();
   }
 }

@@ -4,7 +4,8 @@
 ACLOCAL_AMFLAGS = -I m4 --install
 
 AM_CPPFLAGS = \
-	$(WX_CPPFLAGS)
+	$(WX_CPPFLAGS) \
+	-DLOCALEDIR=\"$(localedir)\"
 
 # strict aliasing check is disabled, because wxWidgets headers have problems
 AM_CXXFLAGS = \
@@ -18,6 +19,8 @@ dist_desktop_DATA = \
 pixmapdir = $(datadir)/pixmaps
 dist_pixmap_DATA = \
 	src/images/springlobby.svg
+
+SUBDIRS = po
 
 ## if you don't have the required version of autoconf, comment out the
 ## following clause, in which case you may NOT distribute the result!

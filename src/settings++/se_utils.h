@@ -5,8 +5,6 @@
 
 void loadUnitsync();
 
-//void toString(wxString& s, int t);
-
 int fromString(const wxString& s);
 
 void openUrl(const wxString& url);
