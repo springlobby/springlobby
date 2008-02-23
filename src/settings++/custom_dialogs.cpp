@@ -1,4 +1,5 @@
 #include "custom_dialogs.h"
+
 #include <wx/icon.h>
 #include <wx/string.h>
 #include <wx/frame.h>
@@ -9,10 +10,12 @@
 #include <wx/font.h>
 #include <wx/event.h>
 #include <wx/stattext.h>
-#include "../utils.h"
 #include <wx/artprov.h>
 #include <wx/statbmp.h>
 #include <wx/listctrl.h>
+#include <wx/dialog.h>
+
+#include "../utils.h"
 
 #include "../images/springsettings.xpm"
 #include "../images/springlobby.xpm"

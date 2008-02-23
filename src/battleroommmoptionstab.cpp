@@ -1,3 +1,4 @@
+
 #include "battleroommmoptionstab.h"
 
 #include <wx/sizer.h>
@@ -7,14 +8,16 @@
 #include <wx/combobox.h>
 #include <wx/stattext.h>
 #include <wx/defs.h>
+#include <wx/intl.h>
+#include <map>
+#include <stdexcept>
+
 #include "utils.h"
 #include "mmoptionswrapper.h"
 #include "ibattle.h"
 #include "spinctld.h"
-#include <map>
 #include "settings++/custom_dialogs.h"
 #include "server.h"
-#include <stdexcept>
 
 const char sep = *("_");
 const wxString wxsep = _T("_");
