@@ -114,11 +114,11 @@ void settings_frame::handleExternExit()
 		alreadyCalled = true;
 		if (abstract_panel::settingsChanged)
 		{
-			int choice = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"), wxYES_NO |wxICON_QUESTION);
+			int choice = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"), wxYES|wxNO |wxICON_QUESTION);
 			if ( choice == wxYES)
 			{
 				abstract_panel::saveSettings();
-				if (simpleTab)
+				if (simpleTab!=0)
 					simpleTab->saveCbxChoices();
 			}
 		}
@@ -163,7 +163,7 @@ void settings_frame::CreateGUIControls()
 							    uiTab = new tab_ui(notebook,ID_UI);
 							    audioTab = new audio_panel(notebook,ID_AUDIO);
 							    debugTab = new debug_panel(notebook,ID_DEBUG);
-
+                                simpleTab = 0;
 								notebook->AddPage(uiTab, uiTabCap);
 								notebook->AddPage(qualityTab, qualityTabCap);
 								notebook->AddPage(detailTab, detailTabCap);
@@ -331,7 +331,7 @@ void settings_frame::updateAllControls()
 {
 	if (uiTab)
 		uiTab->updateControls(UPDATE_ALL);
-	if (simpleTab)
+	if (simpleTab!=0)
 		simpleTab->updateControls(UPDATE_ALL);
 	if (detailTab)
 		detailTab->updateControls(UPDATE_ALL);
