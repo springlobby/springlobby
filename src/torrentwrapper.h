@@ -14,7 +14,7 @@ enum MediaType
 
 struct TorrentData
 {
-  unsigned long hash;
+  wxString hash;
   wxString name;
   MediaType type;
 };
@@ -31,6 +31,8 @@ class TorrentWrapper
     void ChangeListeningPort( unsigned int port );
 
     void JoinTorrent( const wxString& name, unsigned int hash, MediaType type );
+
+    void ReloadLocalFileList();
   private:
 
     void CreateTorrent( unsigned int hash, const wxString& name, MediaType type );
@@ -40,10 +42,10 @@ class TorrentWrapper
 
     std::vector<TorrentData> m_torrents_infos;
     typedef std::vector<TorrentData>::iterator TorrentsIter;
-    std::list<unsigned int> m_seed_requests;
-    typedef std::list<unsigned int>::iterator SeedReqIter;
-    std::vector<unsigned int> m_local_files;
-    typedef std::vector<unsigned int>::iterator LocalFilesIter;
+    std::list<wxString> m_seed_requests;
+    typedef std::list<wxString>::iterator SeedReqIter;
+    std::vector<TorrentData> m_local_files;
+    typedef std::vector<TorrentData>::iterator LocalFilesIter;
     libtorrent::session* torr;
 }
 

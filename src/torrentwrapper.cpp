@@ -8,21 +8,51 @@
 #include "iunitsync.h"
 #include "settings.h"
 
-/*
+
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>
-*/
+
 
 TorrentWrapper::TorrentWrapper()
 {
   m_tracker_urls.Add( _T("http://tracker.caspring.org"));
   torr = new libtorrent::session();
+  ReloadLocalFileList();
+  for (  )
 }
 
 
 TorrentWrapper::~TorrentWrapper();
 {
   delete torr;
+}
+
+
+void TorrentWrapper::ReloadLocalFileList()
+{
+  m_local_files.clear();
+  for ( int i =0; i < usync()->GetNumMaps(); i++ )
+  {
+    UnitSyncMap mapinfo = usync()->GetMap( i );
+    Torrentinfo info;
+    info.type = map;
+    unsigned long uhash;
+    mapinfo.hash.ToLong(&uhash);
+    info.hash = wxString::Format( _T("%ld"), (long)uhash );
+    info.name = mapinfo.name;
+    m_local_files[(long)uhash] = info;
+  }
+  for ( int i =0; i < usync()->GetNumMods(); i++ )
+  {
+    UnitSyncMod modinfo = usync()->GetMod( i );
+    Torrentinfo info;
+    info.type = mod;
+    unsigned long uhash;
+    modinfo.hash.ToLong(&uhash);
+    info.hash = wxString::Format( _T("%ld"), (long)uhash );
+    info.name = mpdinfo.name;
+    m_local_files[(long)uhash] = info;
+  }
 }
 
 
@@ -38,7 +68,7 @@ void TorrentWrapper::ChangeListeningPort( unsigned int port )
 }
 
 
-void TorrentWrapper::JoinTorrent( const wxString& name, unsigned int hash, MediaType type )
+void TorrentWrapper::JoinTorrent( const wxString& name, const wxString& hash, MediaType type )
 {
   if ( m_torrents_infos.find( hash ) && m_open_torrents_number < 5 )
   {
@@ -50,14 +80,13 @@ void TorrentWrapper::JoinTorrent( const wxString& name, unsigned int hash, Media
       case mod:
         path = path + _T("/mods/");
     }
-    std::string crchash = wxString::Format( _T("%d"), (int)hash ).mb_str();
-    sha1_hash shahash = crchash.c_str();
-    torr->add_torrent( m_tracker_urls[0].mb_str(), shahash,boost::filesystem::path( path.mb_str() ), name.mb_str() );
+
+    torr->add_torrent( m_tracker_urls[0].mb_str(), hash.mb_str() , shahash,boost::filesystem::path( path.mb_str() ), name.mb_str() );
   }
 }
 
 
-void TorrentWrapper::CreateTorrent( unsigned int hash, const wxString& name, MediaType type )
+void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, MediaType type )
 {
   torrent_info newtorrent;
   add_files(newtorrent, );
@@ -87,8 +116,8 @@ void ReceiveandExecute( const wxString& msg )
     case _T("T+"):
       TorrentData newtorrent;
       long shash;
-      data[1].ToLong(&hsash);
-      newtorrent.hash = (unsigned long)shash;
+      data[1].ToLong(&shash);
+      newtorrent.hash = data[1];
       newtorrent.name = data[2];
       if ( data[3] == _T("MAP") ) newtorrent.type = map;
       else if ( data[3] == _T("MOD") ) newtorrent.type = mod;
@@ -100,21 +129,19 @@ void ReceiveandExecute( const wxString& msg )
       TorrentsIter iter = m_torrents_infos.begin();
       m_torrents_infos.erase(iter + (unsigned long)shash);
     case _T("S+"):
+      m_seed_request.push_back(data[1]);
       long shash;
       data[1].ToLong(&shash);
-      m_seed_request.push_back((unsigned long)shash);
       if ( torr->get_torrents().size() <= 5 )
       {
-        if ( m_local_files.find( m_seed_request.last() ) )
+        if ( !m_local_files[shash].hash.IsEmpty() )
         {
-          TorrentData info = m_torrents_infos[m_seed_request.last()];
+          TorrentData info = m_torrents_infos[shash];
           JoinTorrent( info.hash, info.name, info.type );
         }
       }
     case _T("S-"):
-      long shash;
-      data[1].ToLong(&shash);
-      m_seed_request.remove((unsigned long)shash);
+      m_seed_request.remove(data[1]);
     else:
   }
 }
