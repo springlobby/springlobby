@@ -92,9 +92,10 @@ class ServerEvents
     void OnServerMessageBox( const wxString& message );
     void OnChannelMessage( const wxString& channel, const wxString& msg );
 
-    void OnHostUdpPortChange(const int& udpport);
+    void OnHostExternalUdpPort( const unsigned int udpport );
 
-    void OnUdpSourcePort(int udpport);
+    void OnMyExternalUdpSourcePort( const unsigned int udpport );
+    void OnMyInternalUdpSourcePort( const unsigned int udpport );
 
     void OnKickedFromBattle();
 

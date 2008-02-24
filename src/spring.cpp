@@ -31,6 +31,8 @@ BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
 
 END_EVENT_TABLE();
 
+#define FIRST_UDP_SOURCEPORT 8300
+
 
 Spring::Spring( Ui& ui ) :
   m_ui(ui),
@@ -245,6 +247,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   int NumAllys=AllyRevConv.size();
   int NumBots=ordered_bots.size();
 
+
   wxLogMessage(_T("7"));
 
 
@@ -265,7 +268,23 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
   if ( battle.IsFounderMe() ) s += wxString::Format( _T("\tHostIP=localhost;\n") );
   else s += _T("\tHostIP=") + battle.GetHostIp() + _T(";\n");
-  s += wxString::Format( _T("\tHostPort=%d;\n\n"), battle.GetHostPort() );
+
+  if ( battle.IsFounderMe() && battle.GetNatType() == NAT_Hole_punching ) s += wxString::Format( _T("\tHostPort=%d;\n"), battle.GetMyInternalUdpSourcePort() );
+  else s += wxString::Format( _T("\tHostPort=%d;\n"), battle.GetHostPort() );
+
+  if ( !battle.IsFounderMe() )
+  {
+    if ( battle.GetNatType() == NAT_Fixed_source_ports )
+    {
+      s += wxString::Format( _T("\tSourcePort=%d;\n"), FIRST_UDP_SOURCEPORT + MyPlayerNum -1 );
+    }
+    else if ( battle.GetNatType() == NAT_Hole_punching )
+    {
+      s += wxString::Format( _T("\tSourcePort=%d;\n"), battle.GetMyInternalUdpSourcePort() );
+    }
+  }
+
+  s += _T("\n");
 
   s += wxString::Format( _T("\tMyPlayerNum=%d;\n\n"), MyPlayerNum );
 
