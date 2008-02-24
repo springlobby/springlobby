@@ -31,7 +31,7 @@ void showAbout()
 
 void showCredits()
 {
-	CreditsDialog dlg(CustomMessageBox::getSettingspointer(),_T("Credits"),SS_MAIN_ICON);
+	CreditsDialog dlg(CustomMessageBoxBase::getSettingspointer(),_T("Credits"),SS_MAIN_ICON);
 	dlg.AddCredit(_("Kloot"),_T("wrote Settings++ from which SpringSettings originated"));
 	dlg.AddCredit(_("The SpringLobby team"),_("thanks for inviting me in, code to re-use, infrastructure and help in general"));
 	dlg.AddCredit(_("everyone reporting bugs/suggestions"),_T(""));

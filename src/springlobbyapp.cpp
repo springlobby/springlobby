@@ -57,6 +57,10 @@ bool SpringLobbyApp::OnInit()
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
 
+  m_locale = new wxLocale( );
+  m_locale->Init();
+  m_locale->AddCatalog( _T("springlobby") );
+
   if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
   {
     if ( wxDirExists( sett().GetCachePath() )  )

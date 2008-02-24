@@ -34,6 +34,7 @@
 #include "uiutils.h"
 #include "server.h"
 #include "mmoptionswrapper.h"
+#include "springunitsynclib.h"
 
 #define LIMIT_DGUN_INDEX 0
 #define GHOUSTED_INDEX  1
@@ -119,7 +120,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_units_sizer->Add( m_units_lbl, 0, wxALL, 5 );
 
   m_units_slider = new wxSlider( this, SLI_UNITS_ID, 500, 10, 5000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
-  m_units_slider->SetToolTip( _("The maximun number of units allowed per player.") );
+  m_units_slider->SetToolTip( _("The maximum number of units allowed per player.") );
 
   m_units_sizer->Add( m_units_slider, 1, wxALL|wxEXPAND, 5 );
 
@@ -167,10 +168,10 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
   m_mid_btn_sizer->Add( 0, 50, 0, wxEXPAND, 0 );
 
-  m_restrict_btn = new wxButton( this, BOPTS_RESTRICT, _(">"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_restrict_btn = new wxButton( this, BOPTS_RESTRICT, _T(">"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
   m_mid_btn_sizer->Add( m_restrict_btn, 0, wxALL, 5 );
 
-  m_allow_btn = new wxButton( this, BOPTS_ALLOW, _("<"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_allow_btn = new wxButton( this, BOPTS_ALLOW, _T("<"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
   m_mid_btn_sizer->Add( m_allow_btn, 0, wxALL, 5 );
 
   m_top_restr_sizer->Add( m_mid_btn_sizer, 0, wxEXPAND, 5 );
@@ -288,14 +289,22 @@ void BattleOptionsTab::ReloadRestrictions()
 {
   m_allowed_list->Clear();
   m_restrict_list->Clear();
-  if ( m_battle.GetModName() == wxEmptyString ) return;
+    wxString mname = m_battle.GetModName() ;
+  if ( mname == wxEmptyString ) return;
+
+    try{
+  susynclib()->Reload();
+  } catch (...) {}
+  usync()->GetSideCount( mname );
+  usync()->GetMod( mname);
 
   try {
-    m_allowed_list->InsertItems( usync()->GetUnitsList( m_battle.GetModName() ), 0 );
-  } catch (...) {}
+    m_allowed_list->InsertItems( usync()->GetUnitsList( mname ), 0 );
+  } catch (...) {wxLogMessage(_T("unit-restr load failed"));}
   wxArrayString units = m_battle.DisabledUnits();
 
-  for ( unsigned int i = 0; i < units.GetCount(); i++) Restrict( units[i] );
+  for ( unsigned int i = 0; i < units.GetCount(); i++)
+    Restrict( units[i] );
 }
 
 
@@ -305,7 +314,8 @@ int BattleOptionsTab::GetAllowedUnitIndex( const wxString& name )
     wxString tmp = m_allowed_list->GetString( i );
     tmp = tmp.AfterLast( '(' );
     tmp = tmp.BeforeLast( ')' );
-    if ( name == tmp ) return i;
+    if ( name == tmp )
+    return i;
   }
   return -1;
 }

@@ -40,8 +40,7 @@ Ui::Ui() :
    ReloadUnitSync();
 
   m_main_win = new MainWindow( *this );
-  CustomMessageBox::setLobbypointer(m_main_win);
-  CustomNonBlockingMessageBox::setLobbypointer(m_main_win);
+  CustomMessageBoxBase::setLobbypointer(m_main_win);
   m_spring = new Spring(*this);
   m_thread = new UnitSyncThread( *this );
   m_thread->Init();
@@ -322,7 +321,7 @@ void Ui::OpenWebBrowser( const wxString& url )
       if ( !wxLaunchDefaultBrowser( url ) )
       {
         wxLogWarning( _T("can't launch default browser") );
-        customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
       }
   }
   else
@@ -330,7 +329,7 @@ void Ui::OpenWebBrowser( const wxString& url )
     if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
     {
       wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().c_str() );
-      customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
+      customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
     }
 
   }
@@ -371,8 +370,8 @@ void Ui::ShowMessage( const wxString& heading, const wxString& message )
 {
 
   if ( m_main_win == 0 ) return;
-  wxMessageDialog msg( &mw(), message, heading, wxOK);
-  msg.ShowModal();
+  serverMessageBox( SL_MAIN_ICON, message, heading, wxOK);
+
 }
 
 
@@ -432,7 +431,7 @@ void Ui::ConsoleHelp( const wxString& topic )
   }
   if ( topic == wxEmptyString ) {
     panel->ClientMessage( _("SpringLobby commands help.") );
-    panel->ClientMessage( _("") );
+    panel->ClientMessage( _T("") );
     panel->ClientMessage( _("Global commands:") );
     panel->ClientMessage( _("  \"/away\" - Sets your status to away.") );
     panel->ClientMessage( _("  \"/back\" - Resets your away status.") );
@@ -444,10 +443,10 @@ void Ui::ConsoleHelp( const wxString& topic )
     panel->ClientMessage( _("  \"/rename newalias\" - Changes your nickname to newalias.") );
     panel->ClientMessage( _("  \"/sayver\" - Say what version of springlobby you have in chat.") );
     panel->ClientMessage( _("  \"/ver\" - Display what version of SpringLobby you have.") );
-    panel->ClientMessage( _("") );
+    panel->ClientMessage( _T("") );
     panel->ClientMessage( _("Chat commands:") );
     panel->ClientMessage( _("  \"/me action\" - Say IRC style action message.") );
-    panel->ClientMessage( _("") );
+    panel->ClientMessage( _T("") );
     panel->ClientMessage( _("If you are missing any commands, go to #springlobby and try to type it there :)") );
 //    panel->ClientMessage( _("  \"/\" - .") );
   } else if ( topic == _T("topics") ) {
@@ -750,8 +749,8 @@ void Ui::OnBattleClosed( Battle& battle )
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle )
 	{
-//	    if (!battle.IsFounderMe() )
-//            customMessageBox(SL_MAIN_ICON,_T("The current battle was closed by the host."),_T("Battle closed"));
+	    if (!battle.IsFounderMe() )
+            customMessageBoxNoModal(SL_MAIN_ICON,_("The current battle was closed by the host."),_("Battle closed"));
 		mw().GetJoinTab().LeaveCurrentBattle();
 	}
   }

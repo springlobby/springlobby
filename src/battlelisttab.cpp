@@ -281,7 +281,9 @@ void BattleListTab::RemoveAllBattles() {
   SelectBattle( 0 );
   m_ui.GetServer().battles_iter->IteratorBegin();
   while (! m_ui.GetServer().battles_iter->EOL() ) {
-    m_ui.GetServer().battles_iter->GetBattle().SetGUIListActiv( false );
+    Battle* temp_battle = m_ui.GetServer().battles_iter->GetBattle();
+    if (temp_battle != 0)
+        temp_battle->SetGUIListActiv( false );
   }
   m_battle_list->DeleteAllItems();
 }
@@ -290,8 +292,9 @@ void BattleListTab::RemoveAllBattles() {
 void BattleListTab::UpdateList() {
   m_ui.GetServer().battles_iter->IteratorBegin();
   while (! m_ui.GetServer().battles_iter->EOL() ) {
-    Battle& b = m_ui.GetServer().battles_iter->GetBattle();
-    UpdateBattle(b);
+    Battle* b = m_ui.GetServer().battles_iter->GetBattle();
+    if (b!=0)
+    UpdateBattle(*b);
   }
 }
 
@@ -366,14 +369,14 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     	  map = usync()->GetMap( mname );
       else if ( usync()->GetNumMaps() <= 0 ) {
         wxLogWarning( _T("no maps found") );
-        customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
+        customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
         return;
       } else {
         map = usync()->GetMap( 0 );
       }
     } catch ( ... ) {
       wxLogWarning( _T("no maps found") );
-      customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in you spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
+      customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
       return;
     }
     bo.maphash = map.hash;
@@ -496,8 +499,9 @@ void BattleListTab::OnUnitSyncReloaded()
 
   m_ui.GetServer().battles_iter->IteratorBegin();
   while (! m_ui.GetServer().battles_iter->EOL() ) {
-    Battle& b = m_ui.GetServer().battles_iter->GetBattle();
-    b.OnUnitSyncReloaded();
+    Battle* b = m_ui.GetServer().battles_iter->GetBattle();
+    if (b!=0)
+        b->OnUnitSyncReloaded();
   }
   UpdateList();
   m_minimap->UpdateMinimap();

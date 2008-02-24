@@ -56,5 +56,8 @@ else
   AC_MSG_RESULT([no])
 fi
 
-AC_CONFIG_FILES([Makefile])
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.14])
+
+AC_CONFIG_FILES([Makefile po/Makefile.in])
 AC_OUTPUT
