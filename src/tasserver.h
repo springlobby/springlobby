@@ -128,6 +128,9 @@ class TASServer : public Server
 
     bool TestOpenPort( unsigned int port );
 
+    void EnableUdpPing();
+    void DisableUdpPing();
+
   protected:
     Ui& m_ui;
     ServerEvents* m_se;

@@ -628,13 +628,14 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     Disconnect();
     //Command: "DENIED" params: "Already logged in".
   } else if ( cmd == _T("HOSTPORT") ) {
-    int tmp_port = GetIntParam( params );
-    m_se->OnHostUdpPortChange( tmp_port );
+    unsigned int tmp_port = (unsigned int)GetIntParam( params );
+    m_se->OnHostExternalUdpPort( tmp_port );
+    m_se->OnMyInternalUdpSourcePort( m_sock->GetPrivateUDPPort() ); ///we'll also set our private udp port to write in the script
     //HOSTPORT port
   } else if ( cmd == _T("UDPSOURCEPORT") ) {
-    int tmp_port = GetIntParam( params );
-    m_se->OnUdpSourcePort( tmp_port );
-    //HOSTPORT port
+    unsigned int tmp_port = (unsigned int)GetIntParam( params );
+    m_se->OnMyExternalUdpSourcePort( tmp_port );
+    //UDPSOURCEPORT port
   } else if ( cmd == _T("SETSCRIPTTAGS") ) {
     wxString command;
     while ( (command = GetSentenceParam( params )) != _T("") ) {
@@ -948,7 +949,9 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
     Battle *battle=&GetBattle(battleid);
     if(battle){
       if((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))
-        m_sock->SetUdpPingInfo( m_addr, m_udp_port, 10000 );
+      {
+        EnableUdpPing();
+      }
     }
   }else{
     wxLogMessage( _T("battle doesnt exist") );
@@ -965,7 +968,7 @@ void TASServer::LeaveBattle( const int& battleid )
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
-  m_sock->SetUdpPingInfo();
+  DisableUdpPing();
   SendCmd( _T("LEAVEBATTLE") );
 }
 
@@ -1398,6 +1401,20 @@ bool TASServer::TestOpenPort( unsigned int port )
 {
   return m_sock->TestOpenPort( Udp, port );
 }
+
+
+void TASServer::EnableUdpPing()
+{
+  m_sock->SetUdpPingInfo( m_addr, m_udp_port, 10000, m_user );
+  m_sock->UDPPing();
+}
+
+
+void TASServer::DisableUdpPing()
+{
+  m_sock->SetUdpPingInfo();
+}
+
 
 ////////////////////////
 // Utility functions

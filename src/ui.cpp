@@ -873,6 +873,7 @@ void Ui::OnBattleStarted( Battle& battle )
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) {
+      if ( m_serv != 0 ) m_serv->DisableUdpPing();
       battle.GetMe().BattleStatus().ready = false;
       battle.SendMyBattleStatus();
       battle.GetMe().Status().in_game = true;
@@ -907,7 +908,7 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
 void Ui::OnSpringTerminated( bool success )
 {
   if ( m_serv == 0 ) return;
-
+  m_serv->EnableUdpPing();
   m_serv->GetMe().Status().in_game = false;
   m_serv->GetMe().SendMyUserStatus();
 }

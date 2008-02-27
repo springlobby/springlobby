@@ -177,6 +177,9 @@ class Server
 
     virtual bool TestOpenPort( unsigned int port ) = 0;
 
+    virtual void EnableUdpPing() = 0;
+    virtual void DisableUdpPing() = 0;
+
   protected:
     Socket* m_sock;
     Ui& m_ui;
