@@ -17,6 +17,7 @@ struct TorrentData
   wxString hash;
   wxString name;
   MediaType type;
+  wxArrayString mirrorlist;
 };
 
 class libtorrent::session;
@@ -30,12 +31,13 @@ class TorrentWrapper
 
     void ChangeListeningPort( unsigned int port );
 
-    void JoinTorrent( const wxString& name, unsigned int hash, MediaType type );
-
     void ReloadLocalFileList();
+
+    bool TorrentWrapper::RequestFile( const wxString& hash, MediaType type )
   private:
 
     void CreateTorrent( unsigned int hash, const wxString& name, MediaType type );
+    void JoinTorrent( const wxString& name );
 
     wxArrayString m_tracker_urls;
     unsigned int m_open_torrents_number;

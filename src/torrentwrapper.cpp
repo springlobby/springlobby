@@ -16,6 +16,8 @@
 TorrentWrapper::TorrentWrapper()
 {
   m_tracker_urls.Add( _T("http://tracker.caspring.org"));
+  m_tracker_urls.Add( _T("tracker2.caspring.org"));
+  m_tracker_urls.Add( _T("backup-tracker.licho.eu"));
   torr = new libtorrent::session();
   ReloadLocalFileList();
   for (  )
@@ -68,8 +70,10 @@ void TorrentWrapper::ChangeListeningPort( unsigned int port )
 }
 
 
-void TorrentWrapper::JoinTorrent( const wxString& name, const wxString& hash, MediaType type )
+void TorrentWrapper::JoinTorrent( const wxString& uhash )
 {
+  unsigned long hash;
+  uhahs.ToULong( &hash );
   if ( m_torrents_infos.find( hash ) && m_open_torrents_number < 5 )
   {
     wxString path = sett().GetSpringDir.mb_str();
@@ -81,7 +85,9 @@ void TorrentWrapper::JoinTorrent( const wxString& name, const wxString& hash, Me
         path = path + _T("/mods/");
     }
 
-    torr->add_torrent( m_tracker_urls[0].mb_str(), hash.mb_str() , shahash,boost::filesystem::path( path.mb_str() ), name.mb_str() );
+    torrent_handle JoinedTorrent =  torr->add_torrent( STD_STRING(m_tracker_urls[0])  , shahash,boost::filesystem::path( STD_STRING(path) ), STD_STRING(m_torrents_infos[hash].name) ); /// TODO (BrainDamage#1#): add proper sha1 hash of the torrent file
+    /// add url seeds
+    for ( unsigned int i=0; i < seedurls.GetCount(); i++ ) JoinedTorrent.add_url_seed( STD_STRING(seedurls[1]) );
   }
 }
 
@@ -108,7 +114,19 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 }
 
 
-void ReceiveandExecute( const wxString& msg )
+bool TorrentWrapper::RequestFile( const wxString& uhash )
+{
+  unsigned long hash;
+  uhash.ToULong( &hash );
+  if ( !m_torrents_infos.find( hash ) ) return false; /// the file is not present in the system
+  SocketSend( wxString::Format( _T("N+|%ld\n"), (long)hash ) ); /// request for seeders for the file
+
+  JoinTorrent( uhash );
+  return true;
+}
+
+
+void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 {
   wxArrayString data = wxStringTokenizer::wxStringTokenizer( msg, '|' );
   switch( data[0] )
@@ -142,6 +160,12 @@ void ReceiveandExecute( const wxString& msg )
       }
     case _T("S-"):
       m_seed_request.remove(data[1]);
+    case _T("M+"):
+      long shash;
+      data[1].ToLong(&shash);
+      m_torrents_infos[(unsigned long)shash].mirrorlist.add( data[2] );
+    case _T("PING"):
+      SocketSend( _T("PING\n") );
     else:
   }
 }
