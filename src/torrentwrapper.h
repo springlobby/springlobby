@@ -20,7 +20,7 @@ struct TorrentData
   wxArrayString seedurls;
 };
 
-class libtorrent::session;
+namespace libtorrent{ class session; };
 
 class TorrentWrapper
 {
@@ -33,11 +33,14 @@ class TorrentWrapper
 
     void ReloadLocalFileList();
 
-    bool TorrentWrapper::RequestFile( const wxString& hash, MediaType type )
+    bool RequestFile( const wxString& hash );
   private:
 
-    void CreateTorrent( unsigned int hash, const wxString& name, MediaType type );
+    void CreateTorrent( const wxString& hash, const wxString& name, MediaType type );
     void JoinTorrent( const wxString& name );
+    void SocketSend( const wxString& msg );
+
+    void ReceiveandExecute( const wxString& msg );
 
     wxArrayString m_tracker_urls;
     unsigned int m_open_torrents_number;
@@ -49,6 +52,6 @@ class TorrentWrapper
     std::vector<TorrentData> m_local_files;
     typedef std::vector<TorrentData>::iterator LocalFilesIter;
     libtorrent::session* torr;
-}
+};
 
 #endif // SPRINGLOBBY_HEADERGUARD_TORRENTWRAPPER_H
