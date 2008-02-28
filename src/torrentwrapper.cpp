@@ -77,7 +77,7 @@ void TorrentWrapper::JoinTorrent( const wxString& uhash )
   if ( m_torrents_infos.find( hash ) && m_open_torrents_number < 5 )
   {
     wxString path = sett().GetSpringDir.mb_str();
-    switch (type)
+    switch (m_torrents_infos[hash].type)
     {
       case map:
         path = path + _T("/maps/");
@@ -85,9 +85,11 @@ void TorrentWrapper::JoinTorrent( const wxString& uhash )
         path = path + _T("/mods/");
     }
 
-    torrent_handle JoinedTorrent =  torr->add_torrent( STD_STRING(m_tracker_urls[0])  , shahash,boost::filesystem::path( STD_STRING(path) ), STD_STRING(m_torrents_infos[hash].name) ); /// TODO (BrainDamage#1#): add proper sha1 hash of the torrent file
+    torrent_handle JoinedTorrent =  torr->add_torrent( STD_STRING(m_tracker_urls[0]),  , shahash,boost::filesystem::path( STD_STRING(path) ), STD_STRING(m_torrents_infos[hash].name) ); /// TODO (BrainDamage#1#): add proper sha1 hash of the torrent file
     /// add url seeds
-    for ( unsigned int i=0; i < seedurls.GetCount(); i++ ) JoinedTorrent.add_url_seed( STD_STRING(seedurls[1]) );
+    for ( unsigned int i=0; i < m_torrents_infos[hash].seedurls.GetCount(); i++ ) JoinedTorrent.add_url_seed( STD_STRING(seedurls[i]), i );
+    /// add alternate trackers
+    for ( unsigned int i=0; i < m_tracker_urls.GetCount(); i++ ) JoinedTorrent.add_tracker( STD_STRING(m_tracker_urls[i]) );
   }
 }
 
@@ -106,9 +108,9 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
   std::vector<char> buf(piece_size);
   for (int i = 0; i < num; ++i)
   {
-          st.read(&buf[0], i, 0, newtorrent.piece_size(i));
-          hasher h(&buf[0], newtorrent.piece_size(i));
-          newtorrent.set_hash(i, h.final());
+    st.read(&buf[0], i, 0, newtorrent.piece_size(i));
+    hasher h(&buf[0], newtorrent.piece_size(i));
+    newtorrent.set_hash(i, h.final());
   }
   newtorrent.create_torrent();
 }
@@ -120,7 +122,6 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
   uhash.ToULong( &hash );
   if ( !m_torrents_infos.find( hash ) ) return false; /// the file is not present in the system
   SocketSend( wxString::Format( _T("N+|%ld\n"), (long)hash ) ); /// request for seeders for the file
-
   JoinTorrent( uhash );
   return true;
 }
@@ -163,7 +164,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     case _T("M+"):
       long shash;
       data[1].ToLong(&shash);
-      m_torrents_infos[(unsigned long)shash].mirrorlist.add( data[2] );
+      m_torrents_infos[(unsigned long)shash].seedurls.add( data[2] );
     case _T("PING"):
       SocketSend( _T("PING\n") );
     else:

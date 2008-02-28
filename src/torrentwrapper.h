@@ -17,7 +17,7 @@ struct TorrentData
   wxString hash;
   wxString name;
   MediaType type;
-  wxArrayString mirrorlist;
+  wxArrayString seedurls;
 };
 
 class libtorrent::session;
