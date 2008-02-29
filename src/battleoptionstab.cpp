@@ -34,7 +34,6 @@
 #include "uiutils.h"
 #include "server.h"
 #include "mmoptionswrapper.h"
-#include "springunitsynclib.h"
 
 #define LIMIT_DGUN_INDEX 0
 #define GHOUSTED_INDEX  1
@@ -289,22 +288,14 @@ void BattleOptionsTab::ReloadRestrictions()
 {
   m_allowed_list->Clear();
   m_restrict_list->Clear();
-    wxString mname = m_battle.GetModName() ;
-  if ( mname == wxEmptyString ) return;
-
-    try{
-  susynclib()->Reload();
-  } catch (...) {}
-  usync()->GetSideCount( mname );
-  usync()->GetMod( mname);
+  if ( m_battle.GetModName() == wxEmptyString ) return;
 
   try {
-    m_allowed_list->InsertItems( usync()->GetUnitsList( mname ), 0 );
-  } catch (...) {wxLogMessage(_T("unit-restr load failed"));}
+    m_allowed_list->InsertItems( usync()->GetUnitsList( m_battle.GetModName() ), 0 );
+  } catch (...) {}
   wxArrayString units = m_battle.DisabledUnits();
 
-  for ( unsigned int i = 0; i < units.GetCount(); i++)
-    Restrict( units[i] );
+  for ( unsigned int i = 0; i < units.GetCount(); i++) Restrict( units[i] );
 }
 
 
@@ -314,8 +305,7 @@ int BattleOptionsTab::GetAllowedUnitIndex( const wxString& name )
     wxString tmp = m_allowed_list->GetString( i );
     tmp = tmp.AfterLast( '(' );
     tmp = tmp.BeforeLast( ')' );
-    if ( name == tmp )
-    return i;
+    if ( name == tmp ) return i;
   }
   return -1;
 }

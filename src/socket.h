@@ -67,10 +67,11 @@ class Socket
     void Ping();
     void UDPPing();
     void SetPingInfo( const wxString& msg = wxEmptyString, unsigned int interval = 10000 );
-    void SetUdpPingInfo( const wxString& addr = wxEmptyString, unsigned int port = 0, unsigned int interval = 10000 );
+    void SetUdpPingInfo( const wxString& addr = wxEmptyString, unsigned int port = 0, unsigned int interval = 10000, wxString msg = _T("") );
     unsigned int GetUDPPingPort() { return m_udp_ping_port; }
     unsigned int GetPingInterval() { return m_ping_int; }
     unsigned int GetUDPPingInterval() { return m_udp_ping_int; }
+    unsigned int GetPrivateUDPPort() { return m_udp_private_port; }
     bool GetPingEnabled() { return m_ping_msg != wxEmptyString; }
     bool GetUDPPingEnabled() { return m_udp_ping_adr != wxEmptyString; }
 
@@ -100,6 +101,8 @@ class Socket
     unsigned int m_ping_int;
     unsigned int m_udp_ping_port;
     unsigned int m_udp_ping_int;
+    unsigned int m_udp_private_port;
+    wxString m_udp_msg;
     PingThread* m_ping_t;
 
     bool m_connecting;

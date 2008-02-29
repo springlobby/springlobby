@@ -3,6 +3,7 @@
 #include <wx/socket.h>
 #include <wx/thread.h>
 #include <wx/protocol/http.h>
+#include <wx/string.h>
 #include <stdexcept>
 
 #include "socket.h"
@@ -43,6 +44,7 @@ Socket::Socket( Server& serv, bool blocking ):
   m_block(blocking),
   m_serv(serv),
   m_rate(-1),
+  m_udp_private_port(12345),
   m_sent(0)
 {
   m_connecting = false;
@@ -250,12 +252,13 @@ void Socket::SetPingInfo( const wxString& msg, unsigned int interval )
 
 //! @brief Set udp ping info.
 //! @see Socket::SetPingInfo
-void Socket::SetUdpPingInfo( const wxString& addr, unsigned int port, unsigned int interval )
+void Socket::SetUdpPingInfo( const wxString& addr, unsigned int port, unsigned int interval, wxString msg )
 {
   LOCK_SOCKET;
   m_udp_ping_adr = addr;
   m_udp_ping_int = interval;
   m_udp_ping_port = port;
+  m_udp_msg = msg;
   _EnablePingThread( _ShouldEnablePingThread() );
 }
 
@@ -321,7 +324,7 @@ void Socket::UDPPing(){
 
   wxIPV4address local_addr;
   local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
-  local_addr.Service(12345);
+  local_addr.Service(m_udp_private_port);
 
   wxDatagramSocket udp_socket(local_addr,/* wxSOCKET_WAITALL*/wxSOCKET_NONE);
 
@@ -329,9 +332,9 @@ void Socket::UDPPing(){
   wxaddr.Hostname(m_udp_ping_adr);
   wxaddr.Service(m_udp_ping_port);
 
-  char *message="ipv4 sux!";
   if(udp_socket.IsOk()){
-    udp_socket.SendTo(wxaddr,message,strlen(message)+1);
+    std::string m = (const char*)m_udp_msg.mb_str(wxConvUTF8);
+    udp_socket.SendTo( wxaddr, m.c_str(), m.length() );
   }else{
     wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));
   }

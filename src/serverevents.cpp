@@ -305,7 +305,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     else if ( key.Left( 11 ) == _T( "modoptions\\" ) )
     {
       key = key.AfterFirst( '\\' );
-      if (  battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) )//m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+      if (  battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) );//m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
         battle.Update(  wxString::Format(_T("%d_"), ModOption ) + key );
     }
   }
@@ -530,16 +530,26 @@ void ServerEvents::OnChannelMessage( const wxString& channel, const wxString& ms
 }
 
 
-void ServerEvents::OnHostUdpPortChange( const int& udpport )
+void ServerEvents::OnHostExternalUdpPort( const unsigned int udpport )
 {
   if ( !m_serv.GetCurrentBattle() ) return;
   if ( m_serv.GetCurrentBattle()->GetNatType() == NAT_Hole_punching || m_serv.GetCurrentBattle()->GetNatType() == NAT_Fixed_source_ports ) m_serv.GetCurrentBattle()->SetHostPort( udpport );
 }
 
-void ServerEvents::OnUdpSourcePort(int udpport){
+
+void ServerEvents::OnMyInternalUdpSourcePort( const unsigned int udpport )
+{
   if ( !m_serv.GetCurrentBattle() ) return;
-  m_serv.GetCurrentBattle()->SetExternalUdpSourcePort(udpport);
+  m_serv.GetCurrentBattle()->SetMyInternalUdpSourcePort(udpport);
 }
+
+
+void ServerEvents::OnMyExternalUdpSourcePort( const unsigned int udpport )
+{
+  if ( !m_serv.GetCurrentBattle() ) return;
+  m_serv.GetCurrentBattle()->SetMyExternalUdpSourcePort(udpport);
+}
+
 
 void ServerEvents::OnKickedFromBattle()
 {

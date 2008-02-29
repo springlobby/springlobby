@@ -38,9 +38,10 @@ struct BattleOptions
   wxString founder;
 
   NatType nattype;
-  int port;
+  unsigned int port;
   wxString ip;
-  int externaludpsourceport;
+  unsigned int externaludpsourceport;
+  unsigned int internaludpsourceport;
 
   unsigned int maxplayers;
   unsigned int spectators;
@@ -82,10 +83,13 @@ class Battle : public UserList, public IBattle
 
     void SetNatType( const NatType nattype ) { m_opts.nattype = nattype; }
     NatType GetNatType() const { return m_opts.nattype; }
-    void SetHostPort( int port) { m_opts.port = port; }
+    void SetHostPort( unsigned int port) { m_opts.port = port; }
 
-    void SetExternalUdpSourcePort(int port){m_opts.externaludpsourceport=port;}
-    int GetExternalUdpSourcePort(){return m_opts.externaludpsourceport;}
+    void SetMyExternalUdpSourcePort(unsigned int port){m_opts.externaludpsourceport=port;}
+    unsigned int GetMyExternalUdpSourcePort(){return m_opts.externaludpsourceport;}
+
+    void SetMyInternalUdpSourcePort(unsigned int port){m_opts.internaludpsourceport=port;}
+    unsigned int GetMyInternalUdpSourcePort(){return m_opts.internaludpsourceport;}
 
     int GetHostPort() const { return m_opts.port; }
     void SetFounder( const wxString& nick ) { m_opts.founder = nick; }

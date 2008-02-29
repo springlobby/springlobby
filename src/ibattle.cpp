@@ -139,8 +139,7 @@ bool IBattle::ModExists()
 
 void IBattle::DisableUnit( const wxString& unitname )
 {
-  if ( m_units.Index( unitname ) == wxNOT_FOUND )
-    m_units.Add( unitname );
+  if ( m_units.Index( unitname ) == wxNOT_FOUND ) m_units.Add( unitname );
 }
 
 

@@ -107,7 +107,7 @@ const presetValues<int, 5> prVal_RenderQuality[prVal_RenderQuality_size] = { pr_
 const int vl_Resolution_Str_size = 13;
 const int vl_Resolution_X[vl_Resolution_Str_size] = { 800, 1024, 1152, 1280, 1280, 1600, 1280, 1440, 1680, 1920, 2048, 2560, 3200};
 const int vl_Resolution_Y[vl_Resolution_Str_size] = { 600,  768,  864,  960, 1024, 1200,  800,  900, 1050, 1200,  768, 1024, 1200};
-const int vl_Resolution_startOfDualScreenRes = 10;
+const int vl_Resolution_startOfDualScreenRes = 9;
 //must be same order
 const wxString vl_Resolution_Str[vl_Resolution_Str_size] =
 { 		_T("800 x 600"), _T("1024 x 768"), _T("1152 x 864"), _T("1280 x 960"), _T("1280 x 1024"),
