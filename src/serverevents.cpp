@@ -305,7 +305,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     else if ( key.Left( 11 ) == _T( "modoptions\\" ) )
     {
       key = key.AfterFirst( '\\' );
-      if (  battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) )//m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+      if (  battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) );//m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
         battle.Update(  wxString::Format(_T("%d_"), ModOption ) + key );
     }
   }
