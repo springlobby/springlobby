@@ -10,6 +10,8 @@
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>
 
+#include <fstream>
+
 #include <wx/tokenzr.h>
 
 #include "torrentwrapper.h"
@@ -75,7 +77,7 @@ void TorrentWrapper::JoinTorrent( const wxString& uhash )
 {
   unsigned long hash;
   uhash.ToULong( &hash );
-  if ( m_torrents_infos.find( hash ) && m_open_torrents_number < 5 )
+  if ( !m_torrents_infos[ hash ].hash.IsEmpty() && m_open_torrents_number < 5 )
   {
     wxString path = sett().GetSpringDir();
     switch (m_torrents_infos[hash].type)
@@ -130,7 +132,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
   }
   libtorrent::entry e = newtorrent.create_torrent();
 
-  std::ofstream TorrentFile(boost::filesystem::complete(boost::filesystem::path(), std::ios_base::binary) );
+  std::ofstream TorrentFile( boost::filesystem:: (boost::filesystem::path(), std::ios_base::binary) );
   libtorrent::bencode(std::ostream_iterator<char>(TorrentFile), e);
 }
 
@@ -139,7 +141,7 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
 {
   unsigned long hash;
   uhash.ToULong( &hash );
-  if ( !m_torrents_infos.find( hash ) ) return false; /// the file is not present in the system
+  if ( m_torrents_infos[hash].hash.IsEmpty() ) return false; /// the file is not present in the system
   SocketSend( wxString::Format( _T("N+|%ld\n"), (long)hash ) ); /// request for seeders for the file
   JoinTorrent( uhash );
   return true;
@@ -148,7 +150,12 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
 
 void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 {
-  wxArrayString data = wxStringTokenizer::wxStringTokenizer( msg, '|' );
+  wxStringTokenizer tkz( msg, '|' );
+  wxArrayString data;
+  for( unsigned int pos = 0; tkz.HasMoreTokens(); pos++ )
+  {
+      data[pos] = tkz.GetNextToken(); /// fill the array with the message
+  }
   if ( data[0] == _T("T+") ) {
     TorrentData newtorrent;
     long shash;
