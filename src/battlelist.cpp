@@ -41,12 +41,12 @@ void BattleList_Iter::IteratorBegin()
   if (m_battlelist) m_iterator = m_battlelist->m_battles.begin();
 }
 
-Battle* BattleList_Iter::GetBattle()
+Battle& BattleList_Iter::GetBattle()
 {
 
   Battle* battle = m_iterator->second;
   if ( m_battlelist && m_iterator != m_battlelist->m_battles.end() ) ++m_iterator;
-  return battle;
+  return *battle;
 }
 
 bool BattleList_Iter::EOL()

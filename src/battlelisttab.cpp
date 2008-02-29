@@ -281,9 +281,7 @@ void BattleListTab::RemoveAllBattles() {
   SelectBattle( 0 );
   m_ui.GetServer().battles_iter->IteratorBegin();
   while (! m_ui.GetServer().battles_iter->EOL() ) {
-    Battle* temp_battle = m_ui.GetServer().battles_iter->GetBattle();
-    if (temp_battle != 0)
-        temp_battle->SetGUIListActiv( false );
+    m_ui.GetServer().battles_iter->GetBattle().SetGUIListActiv( false );
   }
   m_battle_list->DeleteAllItems();
 }
@@ -292,9 +290,8 @@ void BattleListTab::RemoveAllBattles() {
 void BattleListTab::UpdateList() {
   m_ui.GetServer().battles_iter->IteratorBegin();
   while (! m_ui.GetServer().battles_iter->EOL() ) {
-    Battle* b = m_ui.GetServer().battles_iter->GetBattle();
-    if (b!=0)
-    UpdateBattle(*b);
+    Battle& b = m_ui.GetServer().battles_iter->GetBattle();
+    UpdateBattle(b);
   }
 }
 
@@ -499,9 +496,8 @@ void BattleListTab::OnUnitSyncReloaded()
 
   m_ui.GetServer().battles_iter->IteratorBegin();
   while (! m_ui.GetServer().battles_iter->EOL() ) {
-    Battle* b = m_ui.GetServer().battles_iter->GetBattle();
-    if (b!=0)
-        b->OnUnitSyncReloaded();
+    Battle& b = m_ui.GetServer().battles_iter->GetBattle();
+    b.OnUnitSyncReloaded();
   }
   UpdateList();
   m_minimap->UpdateMinimap();
