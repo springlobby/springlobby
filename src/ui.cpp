@@ -907,8 +907,13 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
 
 void Ui::OnSpringTerminated( bool success )
 {
-  if ( m_serv == 0 ) return;
-  m_serv->EnableUdpPing();
+  if ( !m_serv ) return;
+
+  Battle *battle=mw().GetJoinTab().GetCurrentBattle();
+
+  if(battle&&(battle->GetNatType() != NAT_None))m_serv->EnableUdpPing();
+
+
   m_serv->GetMe().Status().in_game = false;
   m_serv->GetMe().SendMyUserStatus();
 }
