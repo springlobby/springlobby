@@ -8,6 +8,7 @@
 #include "server.h"
 #include "user.h"
 #include "utils.h"
+#include <wx/regex.h>
 
 void Channel::SetName( const wxString& name )
 {
@@ -108,9 +109,24 @@ void Channel::AddUser( User& user )
 }
 
 void Channel::CheckBanned(const wxString& name){
-  if(banned_users.count(name)>0){
+  if(name==_T("ChanServ"))return;
+  if(m_banned_users.count(name)>0){
     m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+GetName()+_T(" ")+name);
   }
+  if(m_do_ban_regex&&m_ban_regex.IsValid()){
+    if(m_ban_regex.Matches(name)&&!(m_do_unban_regex&&m_unban_regex.IsValid()&&m_unban_regex.Matches(name))){
+      m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+GetName()+_T(" ")+name);
+      if(!m_ban_regex_msg.empty())m_serv.SayPrivate(name,m_ban_regex_msg);
+    }
+  }
+};
+bool Channel::IsBanned(const wxString& name){
+  if(name==_T("ChanServ"))return false;
+  if(m_banned_users.count(name)>0)return true;
+  if(m_do_ban_regex&&m_ban_regex.IsValid()){
+    if(m_ban_regex.Matches(name)&&!(m_do_unban_regex&&m_unban_regex.IsValid()&&m_unban_regex.Matches(name)))return true;
+  }
+  return false;
 };
 
 
@@ -138,11 +154,41 @@ bool Channel::ExecuteSayCommand( const wxString& in )
     DoAction( _T("is using SpringLobby v") + GetSpringLobbyVersion() );
     return true;
   } else if(subcmd==_T("/userban")){
-    banned_users.insert(params);
+    m_banned_users.insert(params);
     m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+GetName()+_T(" ")+params);
     return true;
   } else if(subcmd==_T("/userunban")){
-    banned_users.erase(params);
+    m_banned_users.erase(params);
+    return true;
+  } else if(subcmd==_T("/banregex")){
+    m_ui.OnChannelMessage(m_name,_T("/banregex ")+params);
+    m_do_ban_regex=!params.empty();
+    if(m_do_ban_regex){
+      m_ban_regex.Compile(params, wxRE_ADVANCED);
+      if(!m_ban_regex.IsValid())m_ui.OnChannelMessage(m_name,_T("Invalid regular expression"));
+    }
+    return true;
+  } else if(subcmd==_T("/unbanregex")){
+    m_ui.OnChannelMessage(m_name,_T("/unbanregex ")+params);
+    m_do_unban_regex=!params.empty();
+    if(m_do_unban_regex){
+      m_unban_regex.Compile(params, wxRE_ADVANCED);
+      if(!m_unban_regex.IsValid())m_ui.OnChannelMessage(m_name,_T("Invalid regular expression"));
+    }
+    return true;
+  }else if(subcmd==_T("/checkban")){
+    if(IsBanned(params)){
+      m_ui.OnChannelMessage(m_name,params+_T(" is banned"));
+    }else{
+      m_ui.OnChannelMessage(m_name,params+_T(" is not banned"));
+    }
+    return true;
+  }
+
+
+  else if(subcmd==_T("/banregexmsg")){
+    m_ui.OnChannelMessage(m_name,_T("/banregexmsg ")+params);
+    m_ban_regex_msg=params;
     return true;
   }
 

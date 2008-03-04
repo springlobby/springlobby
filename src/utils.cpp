@@ -23,7 +23,8 @@
 #include "config.h"
 #endif
 
-#include <crashreport.h>
+#include <exception>
+#include <stdexcept>
 
 
 wxString GetLibExtension()
@@ -132,6 +133,7 @@ wxString GetSpringLobbyVersion()
 
 void Crash(){
   crashreport().GenerateReport(wxDebugReport::Context_Exception);
+  throw std::logic_error(std::string(""));
 }
 
 
