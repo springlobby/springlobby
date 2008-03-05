@@ -444,7 +444,7 @@ void Ui::ConsoleHelp( const wxString& topic )
     panel->ClientMessage( _("  \"/msg username [text]\" - sends a private message containing text to username.") );
     panel->ClientMessage( _("  \"/rename newalias\" - Changes your nickname to newalias.") );
     panel->ClientMessage( _("  \"/sayver\" - Say what version of springlobby you have in chat.") );
-    panel->ClientMessage( _("  \"/testmd5\ text\" - Returns md5-b64 hash of given text.") );
+    panel->ClientMessage( _("  \"/testmd5 text\" - Returns md5-b64 hash of given text.") );
     panel->ClientMessage( _("  \"/ver\" - Display what version of SpringLobby you have.") );
     panel->ClientMessage( _T("") );
     panel->ClientMessage( _("Chat commands:") );
