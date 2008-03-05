@@ -23,7 +23,7 @@ Settings& sett()
 
 Settings::Settings()
 {
-  m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
+  m_config = new wxFileConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
 }
 
