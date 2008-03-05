@@ -17,7 +17,7 @@
 #define DEFSETT_SPRING_DIR wxGetCwd()
 #define DEFSETT_SPRING_PORT 8452
 
-class wxConfigBase;
+class wxFileConfig;
 class wxFont;
 
 
@@ -165,7 +165,7 @@ class Settings
 
   protected:
 
-    wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
+    wxFileConfig* m_config; //!< wxConfig object to store and restore  all settings in.
 
 };
 

@@ -3,7 +3,7 @@
 // Class: Settings
 //
 
-#include <wx/config.h>
+#include <wx/fileconf.h>
 #include <wx/filefn.h>
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
