@@ -33,6 +33,7 @@ TorrentWrapper::~TorrentWrapper()
 }
 
 
+
 void TorrentWrapper::ReloadLocalFileList()
 {
   m_local_files.clear();
@@ -87,17 +88,24 @@ void TorrentWrapper::JoinTorrent( const wxString& uhash )
       case mod:
         path = path + _T("/mods/");
     }
-    libtorrent::sha1_hash torrenthash;
-    libtorrent::torrent_handle JoinedTorrent =  torr->add_torrent( STD_STRING(m_tracker_urls[0]), torrenthash,boost::filesystem::path( STD_STRING(path) ), STD_STRING(m_torrents_infos[hash].name) ); /// TODO (BrainDamage#1#): add proper sha1 hash of the torrent file
+
+    /// read torrent from file
+    std::ifstream in( wxString( sett().GetSpringDir() + wxString::Format( _T("/torrents/%ld") ,(long)hash ) ).mb_str(), std::ios_base::binary);
+    in.unsetf(std::ios_base::skipws);
+    libtorrent::entry e = bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
+    libtorrent::torrent_handle JoinedTorrent =  torr->add_torrent(libtorrent::torrent_info(e), boost::filesystem::path( STD_STRING( path ) ) );
     /// add url seeds
     for( unsigned int i=0; i < m_torrents_infos[hash].seedurls.GetCount(); i++ )
-      JoinedTorrent.add_url_seed( STD_STRING(m_torrents_infos[hash]seedurls[i]), i );
+      JoinedTorrent.add_url_seed( STD_STRING( m_torrents_infos[hash].seedurls[i] ) );
   }
 }
 
 
-void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, MediaType type )
+void TorrentWrapper::CreateTorrent( const wxString& uhash, const wxString& name, MediaType type )
 {
+  unsigned long hash;
+  uhash.ToULong( &hash );
+
   libtorrent::torrent_info newtorrent;
 
   wxString StringFilePath = sett().GetSpringDir();
@@ -109,19 +117,19 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
       StringFilePath += _T("/mods/");
   }
   StringFilePath += name;
-  boost::filesystem::path InputFilePath = boost::filesystem::complete(boost::filesystem::path( STD_STRING( StringFilePath ) ) );
+  boost::filesystem::path InputFilePath = complete(boost::filesystem::path( STD_STRING( StringFilePath ) ) );
 
-  libtorrent::add_files(newtorrent, InputFilePath.branch_path(), InputFilePath.leaf() );
+  newtorrent.add_file( InputFilePath.branch_path(), boost::filesystem::file_size( InputFilePath ) );
 
   for ( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
   {
     newtorrent.add_tracker( STD_STRING(m_tracker_urls[i] ) );
   }
 
-  libtorrent::file_pool fp;
-  libtorrent::storage st(newtorrent, InputFilePath.branch_path(), fp);
+  boost::filesystem::file_pool fp;
+  storage st(newtorrent, InputFilePath.branch_path(), fp);
 
-  // calculate the hash for all pieces
+  /// calculate the hash for all pieces
   int num = newtorrent.num_pieces();
   std::vector<char> buf(newtorrent.piece_size(0));
   for (int i = 0; i < num; ++i)
@@ -132,8 +140,9 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
   }
   libtorrent::entry e = newtorrent.create_torrent();
 
-  std::ofstream TorrentFile( boost::filesystem:: (boost::filesystem::path(), std::ios_base::binary) );
-  libtorrent::bencode(std::ostream_iterator<char>(TorrentFile), e);
+  /// write the torrent to a file
+  std::ofstream TorrentFile( complete(boost::filesystem::path( wxString( sett().GetSpringDir() + wxString::Format( _T("/torrents/%ld") ,(long)hash ).mb_str() ) ), std::ios_base::binary) );
+  bencode(std::ostream_iterator<char>(TorrentFile), e);
 }
 
 

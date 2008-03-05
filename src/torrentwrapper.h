@@ -36,7 +36,7 @@ class TorrentWrapper
     bool RequestFile( const wxString& hash );
   private:
 
-    void CreateTorrent( const wxString& hash, const wxString& name, MediaType type );
+    void CreateTorrent( const wxString& uhash, const wxString& name, MediaType type );
     void JoinTorrent( const wxString& name );
     void SocketSend( const wxString& msg );
 
