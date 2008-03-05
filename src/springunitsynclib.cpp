@@ -245,7 +245,7 @@ void SpringUnitSyncLib::_ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo&
 }
 
 
-void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
+void SpringUnitSyncLib::SetCurrentMod( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
   if ( m_current_mod != modname ) {
@@ -467,7 +467,7 @@ int SpringUnitSyncLib::GetSideCount( const wxString& modName )
 {
   InitLib( m_get_side_count );
 
-  _SetCurrentMod( modName );
+  SetCurrentMod( modName );
   return m_get_side_count();
 }
 
@@ -476,7 +476,7 @@ wxString SpringUnitSyncLib::GetSideName( const wxString& modName, int index )
 {
   InitLib( m_get_side_name );
 
-  _SetCurrentMod( modName );
+  SetCurrentMod( modName );
   return WX_STRINGC( m_get_side_name( index ) );
 }
 
@@ -610,7 +610,7 @@ int SpringUnitSyncLib::GetModOptionCount( const wxString& name )
 {
   InitLib( m_get_Mod_option_count );
   ASSERT_RUNTIME( !name.IsEmpty(), _T("passing void modname to unitsync") );
-  _SetCurrentMod( name );
+  SetCurrentMod( name );
   return m_get_Mod_option_count();
 }
 
