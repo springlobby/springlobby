@@ -2,6 +2,8 @@
 #define SPRINGLOBBY_HEADERGUARD_CHANNEL_H
 
 #include "userlist.h"
+#include <set>
+#include <wx/regex.h>
 
 class Channel;
 class Server;
@@ -25,7 +27,7 @@ class Channel : public UserList
     UiChannelData uidata;
 
     //Channel(): m_serv(0),m_userdata(0) {}
-    Channel( Server& serv, Ui& ui ): m_serv(serv),m_ui(ui) {}
+    Channel( Server& serv, Ui& ui ): m_serv(serv),m_ui(ui),m_do_ban_regex(false), m_do_unban_regex(false) {}
     virtual ~Channel() {}
 
     Server& GetServer() { return m_serv; }
@@ -33,6 +35,10 @@ class Channel : public UserList
     void SetName( const wxString& name );
     wxString GetName();
     User& GetMe();
+
+    // filtering functions
+    void CheckBanned(const wxString& name);
+    bool IsBanned(const wxString& name);
 
     // Channel Functions
     void Say( const wxString& message );
@@ -55,6 +61,16 @@ class Channel : public UserList
     bool ExecuteSayCommand( const wxString& in );
 
   protected:
+    std::set<wxString> m_banned_users;
+    //std::string ban_regex;
+    bool m_do_ban_regex;
+    wxRegEx m_ban_regex;
+
+    bool m_do_unban_regex;
+    wxRegEx m_unban_regex;
+
+    wxString m_ban_regex_msg;
+
     wxString m_topic;
     wxString m_topic_nick;
     wxString m_name;
