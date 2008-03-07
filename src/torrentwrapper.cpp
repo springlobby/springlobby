@@ -6,6 +6,7 @@
 #include "iunitsync.h"
 #include "settings.h"
 #include "utils.h"
+#include "socket.h"
 
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>
@@ -27,20 +28,31 @@
 
 #include "torrentwrapper.h"
 
-
-TorrentWrapper::TorrentWrapper()
+TorrentWrapper* torrent()
 {
-  m_tracker_urls.Add( _T("http://tracker.caspring.org"));
+  static TorrentWrapper* m_torr_wrap = 0;
+  if (!m_torr_wrap)
+    m_torr_wrap = new TorrentWrapper;
+  return m_torr_wrap;
+}
+
+
+TorrentWrapper::TorrentWrapper():
+m_connected(false)
+{
+  m_tracker_urls.Add( _T("tracker.caspring.org"));
   m_tracker_urls.Add( _T("tracker2.caspring.org"));
   m_tracker_urls.Add( _T("backup-tracker.licho.eu"));
-  torr = new libtorrent::session();
+  m_torr = new libtorrent::session();
+  m_socket_class = new Socket( *this );
   ReloadLocalFileList();
 }
 
 
 TorrentWrapper::~TorrentWrapper()
 {
-  delete torr;
+  delete m_torr;
+  delete m_socket_class;
 }
 
 
@@ -73,11 +85,27 @@ void TorrentWrapper::ReloadLocalFileList()
 }
 
 
+void TorrentWrapper::ConnectToP2PSystem()
+{
+  for( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
+  {
+    m_socket_class->Connect( m_tracker_urls[i], DEFAULT_P2P_COORDINATOR_PORT );
+    if ( m_connected ) return;
+  }
+}
+
+
+void TorrentWrapper::DisconnectToP2PSystem()
+{
+  m_socket_class->Disconnect();
+}
+
+
 void TorrentWrapper::ChangeListeningPort( unsigned int port )
 {
   try
   {
-    torr->listen_on(std::make_pair(port, port));
+    m_torr->listen_on(std::make_pair(port, port));
   } catch (std::exception& e)
   {
     e.what(); /// TODO (BrainDamage#1#): add message on failure
@@ -104,7 +132,7 @@ void TorrentWrapper::JoinTorrent( const wxString& uhash )
     std::ifstream in( wxString( sett().GetSpringDir() + wxString::Format( _T("/torrents/%ld") ,(long)hash ) ).mb_str(), std::ios_base::binary);
     in.unsetf(std::ios_base::skipws);
     libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
-    libtorrent::torrent_handle JoinedTorrent =  torr->add_torrent(libtorrent::torrent_info(e), boost::filesystem::path( STD_STRING( path ) ) );
+    libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent(libtorrent::torrent_info(e), boost::filesystem::path( STD_STRING( path ) ) );
     /// add url seeds
     for( unsigned int i=0; i < m_torrents_infos[hash].seedurls.GetCount(); i++ )
       JoinedTorrent.add_url_seed( STD_STRING( m_torrents_infos[hash].seedurls[i] ) );
@@ -162,7 +190,7 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
   unsigned long hash;
   uhash.ToULong( &hash );
   if ( m_torrents_infos[hash].hash.IsEmpty() ) return false; /// the file is not present in the system
-  SocketSend( wxString::Format( _T("N+|%ld\n"), (long)hash ) ); /// request for seeders for the file
+  m_socket_class->Send( wxString::Format( _T("N+|%ld\n"), (long)hash ) ); /// request for seeders for the file
   JoinTorrent( uhash );
   return true;
 }
@@ -176,6 +204,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
   {
       data[pos] = tkz.GetNextToken(); /// fill the array with the message
   }
+  // T+|hash|name|type 	 informs client that new torrent was added to server (type is either MOD or MAP)
   if ( data[0] == _T("T+") ) {
     TorrentData newtorrent;
     long shash;
@@ -186,16 +215,18 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     else if ( data[3] == _T("MOD") ) newtorrent.type = mod;
     TorrentsIter iter = m_torrents_infos.begin();
     m_torrents_infos.insert(iter + (unsigned long)shash, newtorrent);
+  // T-|hash 	 informs client that torrent was removed from server
   } else if ( data[0] == _T("T-") ) {
     long shash;
     data[1].ToLong(&shash);
     TorrentsIter iter = m_torrents_infos.begin();
     m_torrents_infos.erase(iter + (unsigned long)shash);
+  // S+|hash|seeders|leechers 	 tells client that seed is needed for this torrent
   } else if ( data[0] == _T("S+") ) {
     m_seed_requests.push_back(data[1]);
     long shash;
     data[1].ToLong(&shash);
-    if ( torr->get_torrents().size() <= 5 )
+    if ( m_torr->get_torrents().size() <= 5 )
     {
       if ( !m_local_files[shash].hash.IsEmpty() )
       {
@@ -203,18 +234,40 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
         JoinTorrent( info.hash );
       }
     }
+  // S-|hash 	 tells client that seed is no longer neede for this torrent
   } else if ( data[0] == _T("S-") ) {
     m_seed_requests.remove(data[1]);
+  // M+|hash|url 	 It tells the client if url is given that http mirror exists for given hash, else there are no mirrors.
   } else if ( data[0] == _T("M+") ) {
     long shash;
     data[1].ToLong(&shash);
     m_torrents_infos[(unsigned long)shash].seedurls.Add( data[2] );
+  // PING 	 every minute - client must respond with its own "PING"
   } else if ( data[0] == _T("PING") ) {
-    SocketSend( _T("PING\n") );
+    m_socket_class->Send( _T("PING\n") );
   }
 }
 
 
-void TorrentWrapper::SocketSend( const wxString& msg )
+void TorrentWrapper::OnConnected( Socket* sock )
 {
+  m_connected = true;
 }
+
+
+void TorrentWrapper::OnDisconnected( Socket* sock )
+{
+  m_connected = false;
+  m_torrents_infos.empty();
+  m_seed_requests.empty();
+}
+
+
+void TorrentWrapper::OnDataReceived( Socket* sock )
+{
+  if ( sock == 0 ) return;
+
+  wxString data;
+  if ( sock->Receive( data ) ) ReceiveandExecute( data );
+}
+

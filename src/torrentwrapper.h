@@ -3,8 +3,14 @@
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
+
 #include <vector>
 #include <list>
+
+#include "inetclass.h"
+
+#define DEFAULT_P2P_COORDINATOR_PORT 8202
+#define DEFAULT_P2P_TRACKER_PORT 8201
 
 enum MediaType
 {
@@ -21,14 +27,17 @@ struct TorrentData
 };
 
 namespace libtorrent{ class session; };
+class Socket;
 
-class TorrentWrapper
+class TorrentWrapper : public iNetClass
 {
   public:
 
     TorrentWrapper();
     ~TorrentWrapper();
 
+    void ConnectToP2PSystem();
+    void DisconnectToP2PSystem();
     void ChangeListeningPort( unsigned int port );
 
     void ReloadLocalFileList();
@@ -38,9 +47,14 @@ class TorrentWrapper
 
     void CreateTorrent( const wxString& uhash, const wxString& name, MediaType type );
     void JoinTorrent( const wxString& name );
-    void SocketSend( const wxString& msg );
 
     void ReceiveandExecute( const wxString& msg );
+    void OnConnected( Socket* sock );
+    void OnDisconnected( Socket* sock );
+    void OnDataReceived( Socket* sock );
+
+    wxString m_buffer;
+    bool m_connected;
 
     wxArrayString m_tracker_urls;
     unsigned int m_open_torrents_number;
@@ -51,7 +65,11 @@ class TorrentWrapper
     typedef std::list<wxString>::iterator SeedReqIter;
     std::vector<TorrentData> m_local_files;
     typedef std::vector<TorrentData>::iterator LocalFilesIter;
-    libtorrent::session* torr;
+
+    libtorrent::session* m_torr;
+    Socket* m_socket_class;
 };
+
+TorrentWrapper* torrent();
 
 #endif // SPRINGLOBBY_HEADERGUARD_TORRENTWRAPPER_H

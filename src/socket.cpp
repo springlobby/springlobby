@@ -27,11 +27,11 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
   ASSERT_LOGIC( sock != 0, _T("sock = 0") );
 
   if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
-    m_serv.OnDataReceived( sock );
+    m_net_class.OnDataReceived( sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_LOST ) {
-    m_serv.OnDisconnected( sock );
+    m_net_class.OnDisconnected( sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
-    m_serv.OnConnected( sock );
+    m_net_class.OnConnected( sock );
   } else {
     ASSERT_LOGIC( false, _T("Unknown socket event."));
   }
@@ -39,9 +39,9 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 
 
 //! @brief Constructor
-Socket::Socket( Server& serv, bool blocking ):
+Socket::Socket( iNetClass& netclass, bool blocking ):
   m_block(blocking),
-  m_serv(serv),
+  m_net_class(netclass),
   m_rate(-1),
   m_sent(0)
 {
@@ -80,7 +80,7 @@ wxSocketClient* Socket::_CreateSocket()
 
   sock->SetClientData( (void*)this );
   if ( !m_block ) {
-    if ( m_events == 0 ) m_events = new SocketEvents( m_serv );
+    if ( m_events == 0 ) m_events = new SocketEvents( m_net_class );
     sock->SetFlags( wxSOCKET_NOWAIT );
 
     sock->SetEventHandler(*m_events, SOCKET_ID);
@@ -119,7 +119,7 @@ void Socket::Connect( const wxString& addr, const int port )
 void Socket::Disconnect( )
 {
   if ( m_sock == 0 ) return;
-  m_serv.OnDisconnected( this );
+  m_net_class.OnDisconnected( this );
   LOCK_SOCKET;
   _EnablePingThread( false );
   m_sock->Destroy();
@@ -210,19 +210,19 @@ bool Socket::Receive( wxString& data )
 
 
 //! @brief Get curent socket state
-Sockstate Socket::State( )
+SockState Socket::State( )
 {
-  if ( m_sock == 0 ) return SS_CLOSED;
+  if ( m_sock == 0 ) return SS_Closed;
 
   LOCK_SOCKET;
   if ( m_sock->IsConnected() ) {
     m_connecting = false;
-    return SS_OPEN;
+    return SS_Open;
   } else {
     if ( m_connecting ) {
-      return SS_CONNECTING;
+      return SS_Connecting;
     } else {
-      return SS_CLOSED;
+      return SS_Closed;
     }
   }
 }
@@ -230,9 +230,9 @@ Sockstate Socket::State( )
 
 //! @brief Get socket error code
 //! @todo Implement
-Sockerror Socket::Error( )
+SockError Socket::Error( )
 {
-  return -1;
+  return (SockError)-1;
 }
 
 

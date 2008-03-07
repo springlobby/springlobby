@@ -5,7 +5,7 @@
 
 #include <wx/event.h>
 
-class Server;
+class iNetClass;
 class Socket;
 class wxSocketEvent;
 class wxSocketClient;
@@ -13,18 +13,20 @@ class wxCriticalSection;
 
 class PingThread;
 
-typedef int Sockstate;
+enum SockState
+{
+  SS_Closed,
+  SS_Connecting,
+  SS_Open
+};
 
-#define SS_CLOSED 0
-#define SS_CONNECTING 1
-#define SS_OPEN 2
-
-typedef int Sockerror;
-
-#define SE_NO_ERROR 0
-#define SE_NOT_CONNECTED 1
-#define SE_RESOLVE_HOST_FAILED 2
-#define SE_CONNECT_TO_HOST_FAILED 3
+enum SockError
+{
+  SE_No_Error,
+  SE_NotConnected,
+  SE_Resolve_Host_Failed,
+  SE_Connect_Host_Failed
+};
 
 #define SOCKET_ID 100
 
@@ -37,10 +39,10 @@ enum PacketType
 class SocketEvents: public wxEvtHandler
 {
   public:
-    SocketEvents( Server& serv ): m_serv(serv) {}
+    SocketEvents( iNetClass& netclass ): m_net_class(netclass) {}
     void OnSocketEvent(wxSocketEvent& event);
   protected:
-    Server& m_serv;
+    iNetClass& m_net_class;
   DECLARE_EVENT_TABLE()
 };
 
@@ -52,7 +54,7 @@ class Socket
 {
   public:
 
-    Socket( Server& serv, bool blocking = false );
+    Socket( iNetClass& netclass, bool blocking = false );
     ~Socket();
 
     // Socket interface
@@ -76,8 +78,8 @@ class Socket
 
     bool TestOpenPort( PacketType type, unsigned int port );
 
-    Sockstate State( );
-    Sockerror Error( );
+    SockState State( );
+    SockError Error( );
 
     void SetSendRateLimit( int Bps = -1 );
     void OnTimer( int mselapsed );
@@ -104,7 +106,7 @@ class Socket
 
     bool m_connecting;
     bool m_block;
-    Server& m_serv;
+    iNetClass& m_net_class;
 
     int m_rate;
     int m_sent;
