@@ -9,6 +9,17 @@
 
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>
+#include <libtorrent/bencode.hpp>
+#include <libtorrent/storage.hpp>
+#include <libtorrent/hasher.hpp>
+#include <libtorrent/file_pool.hpp>
+#include <libtorrent/torrent_info.hpp>
+#include <libtorrent/file.hpp>
+
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/fstream.hpp>
+#include <boost/format.hpp>
 
 #include <fstream>
 
@@ -92,7 +103,7 @@ void TorrentWrapper::JoinTorrent( const wxString& uhash )
     /// read torrent from file
     std::ifstream in( wxString( sett().GetSpringDir() + wxString::Format( _T("/torrents/%ld") ,(long)hash ) ).mb_str(), std::ios_base::binary);
     in.unsetf(std::ios_base::skipws);
-    libtorrent::entry e = bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
+    libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
     libtorrent::torrent_handle JoinedTorrent =  torr->add_torrent(libtorrent::torrent_info(e), boost::filesystem::path( STD_STRING( path ) ) );
     /// add url seeds
     for( unsigned int i=0; i < m_torrents_infos[hash].seedurls.GetCount(); i++ )
@@ -126,8 +137,8 @@ void TorrentWrapper::CreateTorrent( const wxString& uhash, const wxString& name,
     newtorrent.add_tracker( STD_STRING(m_tracker_urls[i] ) );
   }
 
-  boost::filesystem::file_pool fp;
-  storage st(newtorrent, InputFilePath.branch_path(), fp);
+  libtorrent::file_pool fp;
+  libtorrent::storage st(newtorrent, InputFilePath.branch_path(), fp);
 
   /// calculate the hash for all pieces
   int num = newtorrent.num_pieces();
@@ -141,7 +152,7 @@ void TorrentWrapper::CreateTorrent( const wxString& uhash, const wxString& name,
   libtorrent::entry e = newtorrent.create_torrent();
 
   /// write the torrent to a file
-  std::ofstream TorrentFile( complete(boost::filesystem::path( wxString( sett().GetSpringDir() + wxString::Format( _T("/torrents/%ld") ,(long)hash ).mb_str() ) ), std::ios_base::binary) );
+  std::ofstream TorrentFile( wxString( sett().GetSpringDir() + wxString::Format( _T("/torrents/%ld") ,(long)hash ) ).mb_str(), std::ios_base::binary );
   bencode(std::ostream_iterator<char>(TorrentFile), e);
 }
 
