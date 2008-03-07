@@ -213,3 +213,8 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     SocketSend( _T("PING\n") );
   }
 }
+
+
+void TorrentWrapper::SocketSend( const wxString& msg )
+{
+}
