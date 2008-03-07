@@ -162,7 +162,7 @@ void TorrentWrapper::CreateTorrent( const wxString& uhash, const wxString& name,
 
   for ( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
   {
-    newtorrent.add_tracker( STD_STRING(m_tracker_urls[i] ) );
+    newtorrent.add_tracker( STD_STRING(m_tracker_urls[i] +  _T(":DEFAULT_P2P_TRACKER_PORT/announce") ) );
   }
 
   libtorrent::file_pool fp;
@@ -187,10 +187,11 @@ void TorrentWrapper::CreateTorrent( const wxString& uhash, const wxString& name,
 
 bool TorrentWrapper::RequestFile( const wxString& uhash )
 {
+  if ( m_connected ) return false;
   unsigned long hash;
   uhash.ToULong( &hash );
   if ( m_torrents_infos[hash].hash.IsEmpty() ) return false; /// the file is not present in the system
-  m_socket_class->Send( wxString::Format( _T("N+|%ld\n"), (long)hash ) ); /// request for seeders for the file
+  if ( m_socket_class->Send( wxString::Format( _T("N+|%ld\n"), (long)hash ) ) ) return false; /// request for seeders for the file
   JoinTorrent( uhash );
   return true;
 }
