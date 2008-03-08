@@ -508,6 +508,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 
 bool Ui::IsSpringCompatible( )
 {
+  if ( sett().GetDisableSpringVersionCheck() ) return true;
   if ( !m_spring->TestSpringBinary() ) return false;
   if ( m_serv->GetRequiredSpring() == _T("*") ) return true; // Server accepts any version.
   if ( (usync()->GetSpringVersion() == m_serv->GetRequiredSpring() ) && !m_serv->GetRequiredSpring().IsEmpty() ) return true;

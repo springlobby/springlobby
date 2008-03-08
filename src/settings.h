@@ -166,6 +166,8 @@ class Settings
     wxFont GetChatFont();
     void SetChatFont( wxFont value );
 
+	bool GetDisableSpringVersionCheck();
+
   protected:
 
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
