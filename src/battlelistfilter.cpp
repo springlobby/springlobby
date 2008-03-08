@@ -17,11 +17,12 @@
 #include <wx/event.h>
 
 #include "battlelistfilter.h"
+#include "battlelistfiltervalues.h"
 #include "battlelistctrl.h"
 #include "battle.h"
 #include "uiutils.h"
 #include "utils.h"
-
+#include "settings.h"
 ///////////////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(BattleListFilter, wxPanel)
@@ -459,3 +460,30 @@ bool BattleListFilter::GetActiv() const
 {
   return m_activ;
 }
+
+void  BattleListFilter::SaveFilterValues()
+{
+    BattleListFilterValues filtervalues;
+    filtervalues.description = m_filter_description_edit->GetValue() ;
+    filtervalues.host = m_filter_host_edit->GetValue();
+    filtervalues.map = m_filter_host_edit->GetValue();
+    filtervalues.map_show = m_filter_map_show->GetValue();
+    filtervalues.map = m_filter_map_edit->GetValue();
+    filtervalues.maxplayer = wxString::Format(_("%d%"),m_filter_maxplayer_choice_value);
+    filtervalues.maxplayer_mode = _GetButtonSign(m_filter_maxplayer_mode);
+    filtervalues.mod = m_filter_mod_edit->GetValue();
+    filtervalues.mod_show = m_filter_mod_show->GetValue();
+    filtervalues.player_mode = _GetButtonSign(m_filter_player_mode);
+    filtervalues.player_num = wxString::Format(_("%d%"),m_filter_player_choice_value);
+    filtervalues.rank = wxString::Format(_("%d%"),m_filter_rank_choice_value);
+    filtervalues.spectator = wxString::Format(_("%d%"),m_filter_spectator_choice_value);
+    filtervalues.spectator_mode = _GetButtonSign(m_filter_spectator_mode);
+    filtervalues.status_full = m_filter_status_full;
+    filtervalues.status_locked = m_filter_status_locked;
+    filtervalues.status_open = m_filter_status_open;
+    filtervalues.status_passworded = m_filter_status_pass;
+    filtervalues.status_start = m_filter_status_start;
+    sett().SetBattleFilterValues(filtervalues);
+}
+
+
