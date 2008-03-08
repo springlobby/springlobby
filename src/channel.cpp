@@ -164,7 +164,11 @@ bool Channel::ExecuteSayCommand( const wxString& in )
     m_ui.OnChannelMessage(m_name,_T("/banregex ")+params);
     m_do_ban_regex=!params.empty();
     if(m_do_ban_regex){
+      #ifdef wxHAS_REGEX_ADVANCED
       m_ban_regex.Compile(params, wxRE_ADVANCED);
+      #else
+      m_ban_regex.Compile(params, wxRE_EXTENDED);
+      #endif
       if(!m_ban_regex.IsValid())m_ui.OnChannelMessage(m_name,_T("Invalid regular expression"));
     }
     return true;
@@ -172,7 +176,11 @@ bool Channel::ExecuteSayCommand( const wxString& in )
     m_ui.OnChannelMessage(m_name,_T("/unbanregex ")+params);
     m_do_unban_regex=!params.empty();
     if(m_do_unban_regex){
+      #ifdef wxHAS_REGEX_ADVANCED
       m_unban_regex.Compile(params, wxRE_ADVANCED);
+      #else
+      m_unban_regex.Compile(params, wxRE_EXTENDED);
+      #endif
       if(!m_unban_regex.IsValid())m_ui.OnChannelMessage(m_name,_T("Invalid regular expression"));
     }
     return true;
