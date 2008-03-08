@@ -301,7 +301,9 @@ void TASServer::Update( int mselapsed )
     }
 
     time_t now = time( 0 );
-    if ( m_last_ping + m_keepalive < now ) { // Is it time for a nat traversal PING?
+    if ( m_last_ping + m_keepalive < now )
+    { // Is it time for a nat traversal PING?
+      m_last_ping = now;
       /// Nat travelsal "ping"
       Battle *battle=GetCurrentBattle();
       if(battle){
