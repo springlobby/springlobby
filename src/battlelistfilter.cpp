@@ -52,6 +52,8 @@ END_EVENT_TABLE()
 BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListTab* parentBattleListTab, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style ),
 m_parent_battlelisttab( parentBattleListTab )
 {
+    BattleListFilterValues f_values = sett().GetBattleFilterValues( sett().GetLastFilterProfileName() );
+
 	wxBoxSizer* m_filter_sizer;
 	m_filter_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -70,7 +72,7 @@ m_parent_battlelisttab( parentBattleListTab )
 
 	m_filter_column_1->Add( m_filter_host_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_host_edit = new wxTextCtrl( this, BATTLE_FILTER_HOST_EDIT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_host_edit = new wxTextCtrl( this, BATTLE_FILTER_HOST_EDIT, f_values.host, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_host_edit->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 	m_filter_host_edit->SetMinSize( wxSize( 220,-1 ) );
 
@@ -86,12 +88,12 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_status_sizer1->Add( m_filter_status_text, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_filter_status_locked = new wxCheckBox( this, BATTLE_FILTER_LOCKED, _("Locked"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_filter_status_locked->SetValue(true);
+	m_filter_status_locked->SetValue(f_values.status_locked);
 
 	m_filter_status_sizer1->Add( m_filter_status_locked, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 
 	m_filter_status_pass = new wxCheckBox( this, BATTLE_FILTER_PASSWORDED, _("Passworded"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_filter_status_pass->SetValue(true);
+	m_filter_status_pass->SetValue(f_values.status_passworded);
 
 	m_filter_status_sizer1->Add( m_filter_status_pass, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 
@@ -114,7 +116,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_rank_choiceChoices.Add( _T("5") );
 
 	m_filter_rank_choice = new wxChoice( this, BATTLE_FILTER_RANK_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_rank_choiceChoices, wxSIMPLE_BORDER );
-	m_filter_rank_choice->SetSelection( 0 );
+	m_filter_rank_choice->SetSelection( f_values.rank == _T("All") ? 0 : GetIntParam( f_values.rank) );
 	m_filter_rank_choice->SetMinSize( wxSize( 40,-1 ) );
 
 	m_filter_rank_sizer->Add( m_filter_rank_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -135,7 +137,7 @@ m_parent_battlelisttab( parentBattleListTab )
 
 	m_filter_description_sizer->Add( m_filter_description_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_description_edit = new wxTextCtrl( this, BATTLE_FILTER_DESCRIPTION_EDIT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_description_edit = new wxTextCtrl( this, BATTLE_FILTER_DESCRIPTION_EDIT, f_values.description, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_description_edit->SetMinSize( wxSize( 220,-1 ) );
 
 	m_filter_description_sizer->Add( m_filter_description_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -150,17 +152,17 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_sizer2->Add( m_filter_status_text1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_filter_status_start = new wxCheckBox( this, BATTLE_FILTER_STARTED, _("Started"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_filter_status_start->SetValue(true);
+	m_filter_status_start->SetValue(f_values.status_start);
 
 	m_filter_sizer2->Add( m_filter_status_start, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 
 	m_filter_status_full = new wxCheckBox( this, BATTLE_FILTER_FULL, _("Full"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_filter_status_full->SetValue(true);
+	m_filter_status_full->SetValue(f_values.status_full);
 
 	m_filter_sizer2->Add( m_filter_status_full, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 
 	m_filter_status_open = new wxCheckBox( this, BATTLE_FILTER_OPEN, _("Open"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_filter_status_open->SetValue(true);
+	m_filter_status_open->SetValue(f_values.status_open);
 
 	m_filter_sizer2->Add( m_filter_status_open, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 
@@ -173,7 +175,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_player_text->Wrap( -1 );
 	m_filter_player_sizer->Add( m_filter_player_text, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_player_button = new wxButton( this, BATTLE_FILTER_PLAYER_BUTTON, _T("="), wxDefaultPosition, wxSize( 25, 25 ), 0 );
+	m_filter_player_button = new wxButton( this, BATTLE_FILTER_PLAYER_BUTTON, f_values.player_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
 	m_filter_player_sizer->Add( m_filter_player_button, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_filter_player_choiceChoices;
@@ -182,7 +184,7 @@ m_parent_battlelisttab( parentBattleListTab )
   for (wxLongLong i = 0;i <= 32;i++) m_filter_player_choiceChoices.Add( i.ToString() );
 
 	m_filter_player_choice = new wxChoice( this, BATTLE_FILTER_PLAYER_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_player_choiceChoices, 0 );
-	m_filter_player_choice->SetSelection( 0 );
+	m_filter_player_choice->SetSelection( f_values.player_num == _T("All") ? 0 : GetIntParam( f_values.player_num) );
 	m_filter_player_choice->SetMinSize( wxSize( 40,-1 ) );
 
 	m_filter_player_sizer->Add( m_filter_player_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -203,7 +205,7 @@ m_parent_battlelisttab( parentBattleListTab )
 
 	m_filter_map_sizer->Add( m_filter_map_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_map_edit = new wxTextCtrl( this, BATTLE_FILTER_MAP_EDIT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_map_edit = new wxTextCtrl( this, BATTLE_FILTER_MAP_EDIT, f_values.map, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_map_edit->SetMinSize( wxSize( 140,-1 ) );
 
 	m_filter_map_sizer->Add( m_filter_map_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -214,7 +216,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_only_map_sizer = new wxBoxSizer( wxHORIZONTAL );
 
 	m_filter_map_show = new wxCheckBox( this, BATTLE_FILTER_MAP_SHOW, _("Only maps i have"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
-
+    m_filter_map_show->SetValue(f_values.map_show);
 	m_filter_map_show->SetMinSize( wxSize( 140,-1 ) );
 
 	m_filter_only_map_sizer->Add( m_filter_map_show, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -228,7 +230,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_maxplayer_text->Wrap( -1 );
 	m_filter_maxplayer_sizer->Add( m_filter_maxplayer_text, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_maxplayer_button = new wxButton( this, BATTLE_FILTER_MAXPLAYER_BUTTON, _T("="), wxDefaultPosition, wxSize( 25, 25 ), 0 );
+	m_filter_maxplayer_button = new wxButton( this, BATTLE_FILTER_MAXPLAYER_BUTTON, f_values.maxplayer_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
 	m_filter_maxplayer_sizer->Add( m_filter_maxplayer_button, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_filter_maxplayer_choiceChoices;
@@ -236,7 +238,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	for (wxLongLong i = 0;i <= 32;i++) m_filter_maxplayer_choiceChoices.Add( i.ToString() );
 
 	m_filter_maxplayer_choice = new wxChoice( this, BATTLE_FILTER_MAXPLAYER_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_maxplayer_choiceChoices, 0 );
-	m_filter_maxplayer_choice->SetSelection( 0 );
+	m_filter_maxplayer_choice->SetSelection( f_values.maxplayer == _T("All") ? 0 : GetIntParam( f_values.maxplayer)  );
 	m_filter_maxplayer_choice->SetMinSize( wxSize( 40,-1 ) );
 
 	m_filter_maxplayer_sizer->Add( m_filter_maxplayer_choice, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -257,7 +259,7 @@ m_parent_battlelisttab( parentBattleListTab )
 
 	m_filter_mod_sizer->Add( m_filter_mod_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_mod_edit = new wxTextCtrl( this, BATTLE_FILTER_MOD_EDIT, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_mod_edit = new wxTextCtrl( this, BATTLE_FILTER_MOD_EDIT, f_values.mod, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_mod_edit->SetMinSize( wxSize( 140,-1 ) );
 
 	m_filter_mod_sizer->Add( m_filter_mod_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -268,7 +270,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_only_mod_sizer = new wxBoxSizer( wxHORIZONTAL );
 
 	m_filter_mod_show = new wxCheckBox( this, BATTLE_FILTER_MOD_SHOW, _("Only mods i have"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
-
+    m_filter_mod_show->SetValue(f_values.mod_show);
 	m_filter_mod_show->SetMinSize( wxSize( 140,-1 ) );
 
 	m_filter_only_mod_sizer->Add( m_filter_mod_show, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
@@ -282,15 +284,15 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_spectator_text->Wrap( -1 );
 	m_filter_spectator_sizer->Add( m_filter_spectator_text, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-	m_filter_spectator_button = new wxButton( this, BATTLE_FILTER_SPECTATOR_BUTTON, _T("="), wxDefaultPosition, wxSize( 25, 25 ), 0 );
+	m_filter_spectator_button = new wxButton( this, BATTLE_FILTER_SPECTATOR_BUTTON, f_values.spectator_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
 	m_filter_spectator_sizer->Add( m_filter_spectator_button, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_filter_spectator_choiceChoices;
-  m_filter_spectator_choiceChoices.Add( _T("All") );
+    m_filter_spectator_choiceChoices.Add( _T("All") );
 	for (wxLongLong i = 0;i <= 32;i++) m_filter_spectator_choiceChoices.Add( i.ToString() );
 
 	m_filter_spectator_choice = new wxChoice( this, BATTLE_FILTER_SPECTATOR_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_spectator_choiceChoices, 0 );
-	m_filter_spectator_choice->SetSelection( 0 );
+	m_filter_spectator_choice->SetSelection( f_values.spectator == _T("All") ? 0 : GetIntParam( f_values.spectator)  );
 	m_filter_spectator_choice->SetMinSize( wxSize( 40,-1 ) );
 
 	m_filter_spectator_sizer->Add( m_filter_spectator_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -302,9 +304,9 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_sizer->Add( m_filter_body_sizer, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
 
   m_activ = false;
-  m_filter_player_mode = m_equal;
-  m_filter_maxplayer_mode = m_equal;
-  m_filter_spectator_mode = m_equal;
+  m_filter_player_mode = _GetButtonMode(f_values.player_mode);
+  m_filter_maxplayer_mode = _GetButtonMode(f_values.maxplayer_mode);
+  m_filter_spectator_mode = _GetButtonMode(f_values.spectator_mode);
   m_filter_rank_choice_value = -1;
   m_filter_player_choice_value = -1;
   m_filter_maxplayer_choice_value = -1;
@@ -315,6 +317,14 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_sizer->Fit( this );
 }
 
+BattleListFilter::m_button_mode BattleListFilter::_GetButtonMode(wxString sign)
+{
+    if ( sign == _T("<") )
+        return m_smaller;
+    if ( sign == _T(">") )
+        return m_bigger;
+    return m_equal;
+}
 
 wxString BattleListFilter::_GetButtonSign(m_button_mode value)
 {
@@ -424,6 +434,7 @@ bool BattleListFilter::FilterBattle(Battle& battle)
 void BattleListFilter::OnChange   ( wxCommandEvent& event )
 {
   if (!m_activ) return;
+  SaveFilterValues();
   m_parent_battlelisttab->UpdateList();
 }
 
@@ -478,11 +489,11 @@ void  BattleListFilter::SaveFilterValues()
     filtervalues.rank = wxString::Format(_("%d%"),m_filter_rank_choice_value);
     filtervalues.spectator = wxString::Format(_("%d%"),m_filter_spectator_choice_value);
     filtervalues.spectator_mode = _GetButtonSign(m_filter_spectator_mode);
-    filtervalues.status_full = m_filter_status_full;
-    filtervalues.status_locked = m_filter_status_locked;
-    filtervalues.status_open = m_filter_status_open;
-    filtervalues.status_passworded = m_filter_status_pass;
-    filtervalues.status_start = m_filter_status_start;
+    filtervalues.status_full = m_filter_status_full->IsChecked();
+    filtervalues.status_locked = m_filter_status_locked->IsChecked();
+    filtervalues.status_open = m_filter_status_open->IsChecked();
+    filtervalues.status_passworded = m_filter_status_pass->IsChecked();
+    filtervalues.status_start = m_filter_status_start->IsChecked();
     sett().SetBattleFilterValues(filtervalues);
 }
 

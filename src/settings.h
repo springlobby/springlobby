@@ -165,6 +165,7 @@ class Settings
 
     BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
     void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
+    wxString GetLastFilterProfileName();
 
   protected:
 

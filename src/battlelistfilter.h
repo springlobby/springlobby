@@ -53,6 +53,7 @@ class BattleListFilter : public wxPanel
 
     wxString _GetButtonSign(m_button_mode value);
 		m_button_mode _GetNextMode(m_button_mode value);
+		m_button_mode _GetButtonMode(wxString sign);
 		bool _IntCompare(int a,int b,m_button_mode mode);
 
     bool m_activ;

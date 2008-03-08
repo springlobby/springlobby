@@ -802,4 +802,11 @@ void Settings::SetBattleFilterValues(const BattleListFilterValues& filtervalues,
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_open"),filtervalues.status_open );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_passworded"),filtervalues.status_passworded );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_start"),filtervalues.status_start );
+    m_config->Write( _T("/BattleFilter/lastprofile"),profile_name);
 }
+
+wxString Settings::GetLastFilterProfileName()
+{
+    return  m_config->Read( _T("/BattleFilter/lastprofile"), _T("default") );
+}
+
