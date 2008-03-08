@@ -128,8 +128,7 @@ class TASServer : public Server
 
     bool TestOpenPort( unsigned int port );
 
-    void EnableUdpPing();
-    void DisableUdpPing();
+    void UdpPing();
 
   protected:
     Ui& m_ui;
@@ -142,6 +141,9 @@ class TASServer : public Server
     time_t m_last_ping;
     int m_ping_id;
     std::list<TASPingListItem> m_pinglist;
+
+    unsigned long m_udp_private_port;
+    unsigned long m_nat_helper_port;
 
     int m_battle_id;
 

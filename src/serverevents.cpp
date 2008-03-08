@@ -17,11 +17,10 @@
 #include "settings.h"
 #include "settings++/custom_dialogs.h"
 
-void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, const int udpport, bool lanmode )
+void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode )
 {
   wxLogDebugFunc( server_ver + _T(" ") + server_spring_ver );
   m_serv.SetRequiredSpring( server_spring_ver );
-  m_serv.SetUdpPort( udpport );
   m_ui.OnConnected( m_serv, server_name, server_ver, supported );
   m_serv.Login();
 }
@@ -31,7 +30,6 @@ void ServerEvents::OnDisconnected()
 {
   wxLogDebugFunc( _T("") );
   m_serv.SetRequiredSpring (_T(""));
-  m_serv.SetUdpPort( 0 );
   m_ui.OnDisconnected( m_serv );
 }
 
