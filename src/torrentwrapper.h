@@ -39,6 +39,8 @@ class TorrentWrapper : public iNetClass
     void ConnectToP2PSystem();
     void DisconnectToP2PSystem();
     void ChangeListeningPort( unsigned int port );
+    void ChangeUploadSpeedLimit( unsigned int speed );
+    void ChangeDownloadSpeedLimit( unsigned int speed );
 
     void ReloadLocalFileList();
 
@@ -53,18 +55,20 @@ class TorrentWrapper : public iNetClass
     void OnDisconnected( Socket* sock );
     void OnDataReceived( Socket* sock );
 
-    wxString m_buffer;
     bool m_connected;
 
     wxArrayString m_tracker_urls;
-    unsigned int m_open_torrents_number;
 
-    std::vector<TorrentData> m_torrents_infos;
-    typedef std::vector<TorrentData>::iterator TorrentsIter;
+    std::map<wxString,TorrentData> m_torrents_infos;
+    typedef std::map<wxString,TorrentData>::iterator TorrentsIter;
     std::list<wxString> m_seed_requests;
     typedef std::list<wxString>::iterator SeedReqIter;
-    std::vector<TorrentData> m_local_files;
-    typedef std::vector<TorrentData>::iterator LocalFilesIter;
+    std::map<wxString,TorrentData> m_local_files;
+    typedef std::map<wxString,TorrentData>::iterator LocalFilesIter;
+    std::map<wxString,long> m_seed_joined;
+    typedef std::map<wxString,bool>::iterator SeedOpenIter;
+    std::map<wxString,long> m_leech_joined;
+    typedef std::map<wxString,bool>::iterator LeechOpenIter;
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;
