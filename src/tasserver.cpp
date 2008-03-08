@@ -1410,10 +1410,6 @@ void TASServer::UdpPing()
 {
 #ifndef HAVE_WX26
 
-  //wxLogMessage( _T("Sent udp ping.") );
-
-  //wxLogMessage( _T("UDPPing address %s port %d"), m_udp_ping_adr.c_str(), m_udp_ping_port );
-
   wxIPV4address local_addr;
   local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
   local_addr.Service(m_udp_private_port);
@@ -1431,6 +1427,7 @@ void TASServer::UdpPing()
       m="ipv4 sux";
     }
     udp_socket.SendTo( wxaddr, m.c_str(), m.length() );
+    wxLogDebugFunc( _T("") );
     m_se->OnMyInternalUdpSourcePort( m_udp_private_port );
   }else{
     wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));
