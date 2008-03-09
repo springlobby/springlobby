@@ -558,9 +558,13 @@ void ChatPanel::Motd( const wxString& message )
 
 void ChatPanel::StatusMessage( const wxString& message )
 {
-  wxFont f = m_chatlog_text->GetFont();
-  f.SetFamily( wxFONTFAMILY_MODERN );
-  OutputLine( _T(" ** Server ** ")+ message, sett().GetChatColorServer(), f );
+  if(!m_chatlog_text){
+    wxLogMessage(_T("m_chatlog_text is NULL"));
+  }else{
+    wxFont f = m_chatlog_text->GetFont();
+    f.SetFamily( wxFONTFAMILY_MODERN );
+    OutputLine( _T(" ** Server ** ")+ message, sett().GetChatColorServer(), f );
+  }
 }
 
 
@@ -666,9 +670,13 @@ Channel& ChatPanel::GetChannel()
 
 void ChatPanel::SetChannel( Channel* chan )
 {
+  ASSERT_LOGIC(this, _T("this==null") );
   ASSERT_LOGIC(m_type == CPT_Channel, _T("Not of type channel") );
+
   if ( (chan == 0) && (m_channel != 0) ) {
+    /// causes weird crash.
     StatusMessage( _("Chat closed.") );
+
     m_channel->uidata.panel = 0;
     if ( m_show_nick_list ) {
       m_nicklist->ClearUsers();

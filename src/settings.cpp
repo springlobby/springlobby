@@ -58,10 +58,22 @@ bool Settings::UseOldSpringLaunchMethod()
   return old;
 }
 
+bool Settings::GetNoUDP()
+{
+  bool tmp;
+  m_config->Read( _T("/General/NoUDP"), &tmp, false );
+  return tmp;
+}
+
+void Settings::SetNoUDP(bool value)
+{
+  m_config->Write( _T("/General/NoUDP"), value );
+}
+
 
 void Settings::SetOldSpringLaunchMethod( bool value )
 {
-  m_config->Read( _T("/Spring/UseOldLaunchMethod"), value );
+  m_config->Write( _T("/Spring/UseOldLaunchMethod"), value );
 }
 
 
@@ -783,7 +795,6 @@ BattleListFilterValues Settings::GetBattleFilterValues(const wxString& profile_n
 
 void Settings::SetBattleFilterValues(const BattleListFilterValues& filtervalues, const wxString& profile_name)
 {
-
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/description"),filtervalues.description);
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/host"),filtervalues.host );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/map"),filtervalues.map );
@@ -805,8 +816,16 @@ void Settings::SetBattleFilterValues(const BattleListFilterValues& filtervalues,
     m_config->Write( _T("/BattleFilter/lastprofile"),profile_name);
 }
 
+bool Settings::GetDisableSpringVersionCheck()
+{
+  bool ret;
+  m_config->Read( _T("/Spring/DisableVersionCheck"), &ret, false );
+  return ret;
+}
+
 wxString Settings::GetLastFilterProfileName()
 {
     return  m_config->Read( _T("/BattleFilter/lastprofile"), _T("default") );
 }
+
 

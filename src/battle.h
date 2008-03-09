@@ -20,14 +20,14 @@ enum NatType {
 
 
 #define DEFAULT_SERVER_PORT 8034
-#define DEFAULT_EXTERNAL_UDP_SOURCE_PORT 12345
+#define DEFAULT_EXTERNAL_UDP_SOURCE_PORT 16941
 
 
 struct BattleOptions
 {
   BattleOptions() :
     battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),
-    nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
+    nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
     guilistactiv(false) {}
 
   int battleid;

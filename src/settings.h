@@ -36,6 +36,9 @@ class Settings
     bool UseOldSpringLaunchMethod();
     void SetOldSpringLaunchMethod( bool value );
 
+    bool GetNoUDP();
+    void SetNoUDP(bool value);
+
     wxString GetWebBrowserPath();
     void SetWebBrowserPath( const wxString path );
 
@@ -163,9 +166,13 @@ class Settings
     wxFont GetChatFont();
     void SetChatFont( wxFont value );
 
+
     BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
     void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
     wxString GetLastFilterProfileName();
+
+	bool GetDisableSpringVersionCheck();
+
 
   protected:
 

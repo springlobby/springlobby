@@ -269,8 +269,12 @@ wxString Spring::GetScriptTxt( Battle& battle )
   if ( battle.IsFounderMe() ) s += wxString::Format( _T("\tHostIP=localhost;\n") );
   else s += _T("\tHostIP=") + battle.GetHostIp() + _T(";\n");
 
-  if ( battle.IsFounderMe() && battle.GetNatType() == NAT_Hole_punching ) s += wxString::Format( _T("\tHostPort=%d;\n"), battle.GetMyInternalUdpSourcePort() );
-  else s += wxString::Format( _T("\tHostPort=%d;\n"), battle.GetHostPort() );
+  if ( battle.IsFounderMe() && battle.GetNatType() == NAT_Hole_punching ) {
+    s += wxString::Format( _T("\tHostPort=%d;\n"), battle.GetMyInternalUdpSourcePort() );
+  }
+  else {
+    s += wxString::Format( _T("\tHostPort=%d;\n"), battle.GetHostPort() );
+    }
 
   if ( !battle.IsFounderMe() )
   {

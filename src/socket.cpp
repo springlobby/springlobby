@@ -10,6 +10,8 @@
 #include "server.h"
 #include "utils.h"
 
+#include "settings.h"
+
 
 #define LOCK_SOCKET wxCriticalSectionLocker criticalsection_lock(m_lock)
 
@@ -44,7 +46,7 @@ Socket::Socket( Server& serv, bool blocking ):
   m_block(blocking),
   m_serv(serv),
   m_rate(-1),
-  m_udp_private_port(12345),
+  m_udp_private_port(16941),
   m_sent(0)
 {
   m_connecting = false;
@@ -265,6 +267,7 @@ void Socket::SetUdpPingInfo( const wxString& addr, unsigned int port, unsigned i
 
 void Socket::_EnablePingThread( bool enable )
 {
+
   if ( !enable ) {
     if ( m_ping_t != 0 ) {
 
@@ -306,7 +309,8 @@ void Socket::SetSendRateLimit( int Bps )
 //! @brief Ping remote host with custom protocol message.
 void Socket::Ping()
 {
-  wxLogMessage( _T("Sent ping.") );
+  // wxLogMessage( _T("Sent ping.") );
+
   if ( m_ping_msg != wxEmptyString ) Send( m_ping_msg );
 }
 
@@ -315,12 +319,20 @@ void Socket::Ping()
 //! @note used for nat travelsal.
 //! @todo Use m_udp_ping_msg variable as message.
 void Socket::UDPPing(){
+  if( m_ping_msg == wxEmptyString ) return;
+  if(m_udp_ping_adr.empty())return;
+  if(!m_udp_ping_port)return;
+
+
+
 #ifndef HAVE_WX26
-  if ( m_ping_msg == wxEmptyString ) return;
 
-  wxLogMessage( _T("Sent udp ping.") );
+  if(!sett().GetNoUDP()){
 
-  wxLogMessage( _T("UDPPing address %s port %d"), m_udp_ping_adr.c_str(), m_udp_ping_port );
+
+  //wxLogMessage( _T("Sent udp ping.") );
+
+  //wxLogMessage( _T("UDPPing address %s port %d"), m_udp_ping_adr.c_str(), m_udp_ping_port );
 
   wxIPV4address local_addr;
   local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
@@ -332,13 +344,20 @@ void Socket::UDPPing(){
   wxaddr.Hostname(m_udp_ping_adr);
   wxaddr.Service(m_udp_ping_port);
 
-  if(udp_socket.IsOk()){
+  if(udp_socket.IsOk()&&!udp_socket.Error()){
     std::string m = (const char*)m_udp_msg.mb_str(wxConvUTF8);
+    if(m.empty()){
+      //wxLogMessage(_T("empty udp message string"));
+      m="ipv4 sux";
+    }
     udp_socket.SendTo( wxaddr, m.c_str(), m.length() );
   }else{
-    wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));
+    //wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));
   }
   if(udp_socket.Error())wxLogMessage(_T("Error=%d"),udp_socket.LastError());
+  }else{
+    //wxLogMessage(_T("UDP pings disabled via config. No UDP ping done."));
+  }
 #endif
 }
 
