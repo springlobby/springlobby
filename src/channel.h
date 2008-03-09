@@ -61,6 +61,10 @@ class Channel : public UserList
     bool ExecuteSayCommand( const wxString& in );
 
   protected:
+    Server& m_serv;
+
+    Ui& m_ui;
+
     std::set<wxString> m_banned_users;
     //std::string ban_regex;
     bool m_do_ban_regex;
@@ -74,9 +78,6 @@ class Channel : public UserList
     wxString m_topic;
     wxString m_topic_nick;
     wxString m_name;
-
-    Server& m_serv;
-    Ui& m_ui;
 
     void* m_userdata;
 

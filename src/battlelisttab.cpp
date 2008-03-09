@@ -62,11 +62,6 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxBoxSizer* m_filter_sizer;
   m_filter_sizer = new wxBoxSizer( wxVERTICAL );
 
-  m_filter = new BattleListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
-  m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
-
-  m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
-
   wxBoxSizer* m_battlelist_sizer;
   m_battlelist_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -115,6 +110,12 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
   m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
 
+
+  m_filter = new BattleListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
+  m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
+
+  m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
+
   m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
   m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND, 5 );
 
@@ -155,7 +156,8 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
 BattleListTab::~BattleListTab()
 {
-
+    if (m_filter != 0)
+        m_filter->SaveFilterValues();
 }
 
 

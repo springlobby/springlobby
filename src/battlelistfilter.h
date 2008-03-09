@@ -20,6 +20,7 @@
 
 class BattleListTab;
 
+
 ///////////////////////////////////////////////////////////////////////////////
 /// Class BattleListFilter
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,11 +46,14 @@ class BattleListFilter : public wxPanel
     bool FilterBattle(Battle& battle);
     bool GetActiv() const;
 
+    void SaveFilterValues();
+
 	protected:
-	  enum m_button_mode {m_equal,m_bigger,m_smaller};
+        enum m_button_mode {m_equal,m_bigger,m_smaller};
 
     wxString _GetButtonSign(m_button_mode value);
 		m_button_mode _GetNextMode(m_button_mode value);
+		m_button_mode _GetButtonMode(wxString sign);
 		bool _IntCompare(int a,int b,m_button_mode mode);
 
     bool m_activ;

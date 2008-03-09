@@ -101,7 +101,7 @@ class Socket
     unsigned int m_ping_int;
     unsigned int m_udp_ping_port;
     unsigned int m_udp_ping_int;
-    unsigned int m_udp_private_port;
+
     wxString m_udp_msg;
     PingThread* m_ping_t;
 
@@ -109,6 +109,7 @@ class Socket
     bool m_block;
     Server& m_serv;
 
+    unsigned int m_udp_private_port;
     int m_rate;
     int m_sent;
     wxString m_buffer;

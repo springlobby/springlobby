@@ -45,8 +45,8 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 Socket::Socket( Server& serv, bool blocking ):
   m_block(blocking),
   m_serv(serv),
-  m_rate(-1),
   m_udp_private_port(16941),
+  m_rate(-1),
   m_sent(0)
 {
   m_connecting = false;
