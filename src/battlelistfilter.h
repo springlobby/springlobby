@@ -29,6 +29,7 @@ class BattleListFilter : public wxPanel
 	public:
     BattleListFilter( wxWindow* parent, wxWindowID id, BattleListTab* parentBattleListTab, const wxPoint& pos, const wxSize& size, long style );
 
+    void OnRankButton     ( wxCommandEvent& event );
     void OnPlayerButton   ( wxCommandEvent& event );
     void OnMaxPlayerButton( wxCommandEvent& event );
     void OnSpectatorButton( wxCommandEvent& event );
@@ -79,6 +80,8 @@ class BattleListFilter : public wxPanel
 		wxCheckBox* m_filter_status_open;
 
 		wxStaticText* m_filter_rank_text;
+		m_button_mode m_filter_rank_mode;
+		wxButton* m_filter_rank_button;
 		wxChoice* m_filter_rank_choice;
 		int m_filter_rank_choice_value;
 		wxStaticText* m_filter_description_text;
@@ -124,6 +127,7 @@ enum
     BATTLE_FILTER_FULL,
     BATTLE_FILTER_STARTED,
     BATTLE_FILTER_RANK_CHOICE,
+    BATTLE_FILTER_RANK_BUTTON,
     BATTLE_FILTER_PLAYER_CHOICE,
     BATTLE_FILTER_MAXPLAYER_CHOICE,
     BATTLE_FILTER_SPECTATOR_CHOICE,

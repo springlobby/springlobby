@@ -27,6 +27,7 @@
 
 BEGIN_EVENT_TABLE(BattleListFilter, wxPanel)
 
+  EVT_BUTTON              ( BATTLE_FILTER_RANK_BUTTON     , BattleListFilter::OnRankButton      )
   EVT_BUTTON              ( BATTLE_FILTER_PLAYER_BUTTON   , BattleListFilter::OnPlayerButton    )
   EVT_BUTTON              ( BATTLE_FILTER_MAXPLAYER_BUTTON, BattleListFilter::OnMaxPlayerButton )
   EVT_BUTTON              ( BATTLE_FILTER_SPECTATOR_BUTTON, BattleListFilter::OnSpectatorButton )
@@ -105,6 +106,9 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_rank_text = new wxStaticText( this, wxID_ANY, _("Rank Limit:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_filter_rank_text->Wrap( -1 );
 	m_filter_rank_sizer->Add( m_filter_rank_text, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+    m_filter_rank_button = new wxButton( this, BATTLE_FILTER_RANK_BUTTON, f_values.rank_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
+	m_filter_rank_sizer->Add( m_filter_rank_button, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_filter_rank_choiceChoices;
 
@@ -304,6 +308,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_sizer->Add( m_filter_body_sizer, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
 
   m_activ = false;
+  m_filter_rank_mode = _GetButtonMode(f_values.rank_mode);
   m_filter_player_mode = _GetButtonMode(f_values.player_mode);
   m_filter_maxplayer_mode = _GetButtonMode(f_values.maxplayer_mode);
   m_filter_spectator_mode = _GetButtonMode(f_values.spectator_mode);
@@ -343,6 +348,13 @@ BattleListFilter::m_button_mode BattleListFilter::_GetNextMode(m_button_mode val
     case m_smaller : return m_bigger;
     default        : return m_equal;
   }
+}
+
+void BattleListFilter::OnRankButton   ( wxCommandEvent& event )
+{
+  m_filter_rank_mode = _GetNextMode(m_filter_rank_mode);
+  m_filter_rank_button->SetLabel( _GetButtonSign( m_filter_rank_mode ) );
+  OnChange(event);
 }
 
 void BattleListFilter::OnPlayerButton   ( wxCommandEvent& event )
@@ -399,7 +411,7 @@ bool BattleListFilter::FilterBattle(Battle& battle)
   if ( !m_filter_status_open->GetValue() && !battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull() ) return false;
 
   //Rank Check
-  if ( (m_filter_rank_choice_value != -1) && (m_filter_rank_choice_value+1)*100 != battle.GetRankNeeded()) return false;
+  if ( (m_filter_rank_choice_value != -1) && !_IntCompare( battle.GetRankNeeded(), m_filter_rank_choice_value, m_filter_rank_mode ) ) return false;
 
   //Player Check
   if ( (m_filter_player_choice_value != -1) && !_IntCompare( battle.GetNumUsers() - battle.GetSpectators() , m_filter_player_choice_value , m_filter_player_mode ) ) return false;

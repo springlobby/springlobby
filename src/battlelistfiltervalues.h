@@ -21,6 +21,7 @@ struct BattleListFilterValues
         wxString maxplayer;
         wxString spectator;
     //modifiers
+        wxString rank_mode;
         wxString player_mode;
         wxString maxplayer_mode;
         wxString spectator_mode;
