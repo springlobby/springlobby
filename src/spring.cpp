@@ -31,6 +31,8 @@ BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
 
 END_EVENT_TABLE();
 
+#define FIRST_UDP_SOURCEPORT 8300
+
 
 Spring::Spring( Ui& ui ) :
   m_ui(ui),
@@ -245,6 +247,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   int NumAllys=AllyRevConv.size();
   int NumBots=ordered_bots.size();
 
+
   wxLogMessage(_T("7"));
 
 
@@ -265,7 +268,27 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
   if ( battle.IsFounderMe() ) s += wxString::Format( _T("\tHostIP=localhost;\n") );
   else s += _T("\tHostIP=") + battle.GetHostIp() + _T(";\n");
-  s += wxString::Format( _T("\tHostPort=%d;\n\n"), battle.GetHostPort() );
+
+  if ( battle.IsFounderMe() && battle.GetNatType() == NAT_Hole_punching ) {
+    s += wxString::Format( _T("\tHostPort=%d;\n"), battle.GetMyInternalUdpSourcePort() );
+  }
+  else {
+    s += wxString::Format( _T("\tHostPort=%d;\n"), battle.GetHostPort() );
+    }
+
+  if ( !battle.IsFounderMe() )
+  {
+    if ( battle.GetNatType() == NAT_Fixed_source_ports )
+    {
+      s += wxString::Format( _T("\tSourcePort=%d;\n"), FIRST_UDP_SOURCEPORT + MyPlayerNum -1 );
+    }
+    else if ( battle.GetNatType() == NAT_Hole_punching )
+    {
+      s += wxString::Format( _T("\tSourcePort=%d;\n"), battle.GetMyInternalUdpSourcePort() );
+    }
+  }
+
+  s += _T("\n");
 
   s += wxString::Format( _T("\tMyPlayerNum=%d;\n\n"), MyPlayerNum );
 
@@ -319,9 +342,9 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().ally] );
     const char* old_locale = std::setlocale(LC_NUMERIC, "C");
     s += wxString::Format( _T("\t\tRGBColor=%.5f %.5f %.5f;\n"),
-           (double)(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().color_r/255.0),
-           (double)(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().color_g/255.0),
-           (double)(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().color_b/255.0)
+           (double)(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Red()/255.0),
+           (double)(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Green()/255.0),
+           (double)(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Blue()/255.0)
          );
     std::setlocale(LC_NUMERIC, old_locale);
     wxLogMessage( _T("%d"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side );
@@ -357,9 +380,9 @@ wxString Spring::GetScriptTxt( Battle& battle )
     const char* old_locale = std::setlocale(LC_NUMERIC, "C");
     s += wxString::Format(
       _T("\t\tRGBColor=%.5f %.5f %.5f;\n"),
-      (double)(bot.bs.color_r/255.0),
-      (double)(bot.bs.color_g/255.0),
-      (double)(bot.bs.color_b/255.0)
+      (double)(bot.bs.colour.Red()/255.0),
+      (double)(bot.bs.colour.Green()/255.0),
+      (double)(bot.bs.colour.Blue()/255.0)
     );
 
     std::setlocale(LC_NUMERIC, old_locale);
@@ -458,9 +481,9 @@ wxString Spring::GetScriptTxt( Battle& battle )
       tmpu.BattleStatus().handicap,
       tmpu.BattleStatus().sync,
       tmpu.BattleStatus().ready,
-      tmpu.BattleStatus().color_r,
-      tmpu.BattleStatus().color_g,
-      tmpu.BattleStatus().color_b
+      tmpu.BattleStatus().colour.Red(),
+      tmpu.BattleStatus().colour.Green(),
+      tmpu.BattleStatus().colour.Blue()
     );
   }
 
@@ -482,9 +505,9 @@ wxString Spring::GetScriptTxt( Battle& battle )
       bot->bs.handicap,
       bot->bs.sync,
       bot->bs.ready,
-      bot->bs.color_r,
-      bot->bs.color_g,
-      bot->bs.color_b
+      bot->bs.colour.Red(),
+      bot->bs.colour.Green(),
+      bot->bs.colour.Blue()
     );
   }
   wxLogMessage( _T("19") );
@@ -603,9 +626,9 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
     s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[bot->bs.ally] );
     const char* old_locale = std::setlocale(LC_NUMERIC, "C");
     s += wxString::Format( _T("\t\tRGBColor=%.5f %.5f %.5f;\n"),
-           (double)(bot->bs.color_r/255.0),
-           (double)(bot->bs.color_g/255.0),
-           (double)(bot->bs.color_b/255.0)
+           (double)(bot->bs.colour.Red()/255.0),
+           (double)(bot->bs.colour.Green()/255.0),
+           (double)(bot->bs.colour.Blue()/255.0)
          );
     std::setlocale(LC_NUMERIC, old_locale);
     s += _T("\t\tSide=") + usync()->GetSideName( battle.GetModName(), bot->bs.side ) + _T(";\n");

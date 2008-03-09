@@ -57,10 +57,22 @@ bool Settings::UseOldSpringLaunchMethod()
   return old;
 }
 
+bool Settings::GetNoUDP()
+{
+  bool tmp;
+  m_config->Read( _T("/General/NoUDP"), &tmp, false );
+  return tmp;
+}
+
+void Settings::SetNoUDP(bool value)
+{
+  m_config->Write( _T("/General/NoUDP"), value );
+}
+
 
 void Settings::SetOldSpringLaunchMethod( bool value )
 {
-  m_config->Read( _T("/Spring/UseOldLaunchMethod"), value );
+  m_config->Write( _T("/Spring/UseOldLaunchMethod"), value );
 }
 
 

@@ -87,7 +87,7 @@ class IBattle
     virtual bool MapExists();
     virtual bool ModExists();
 
-    virtual void GetFreeColour( int& r, int& g, int& b, bool excludeme = true ) = 0;
+    virtual wxColour GetFreeColour( bool excludeme = true ) = 0;
 
     virtual BattleStartRect* GetStartRect( int allyno ) { return 0; };
     virtual void AddStartRect( int allyno, int left, int top, int right, int bottom ) {};

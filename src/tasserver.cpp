@@ -3,6 +3,9 @@
 #include <wx/string.h>
 #include <wx/regex.h>
 #include <wx/intl.h>
+#include <wx/protocol/http.h>
+#include <wx/socket.h>
+
 #include <stdexcept>
 
 #include "base64.h"
@@ -15,7 +18,6 @@
 #include "serverevents.h"
 #include "socket.h"
 
-//#include <wx/socket.h>
 
 //! @brief Struct used internally by the TASServer class to get client status information.
 struct TASClientstatus {
@@ -83,7 +85,7 @@ StartType IntToStartType( int start );
 NatType IntToNatType( int nat );
 GameType IntToGameType( int gt );
 
-TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(false), m_online(false), m_buffer(_T("")), m_last_ping(0), m_ping_id(1000),m_battle_id(-1) { m_se = new ServerEvents( *this, ui); }
+TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(false), m_online(false), m_buffer(_T("")), m_last_ping(0), m_ping_id(10000), m_udp_private_port(16941),m_battle_id(-1) { m_se = new ServerEvents( *this, ui); }
 
 TASServer::~TASServer() { delete m_se; }
 
@@ -96,10 +98,10 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
   if ( subcmd == _T("/ingame") ) {
     SendCmd( _T("GETINGAMETIME"), params );
     return true;
-  } else if ( subcmd == _("/kick") ) {
+  } else if ( subcmd == _T("/kick") ) {
     SendCmd( _T("KICKUSER"), params );
     return true;
-  } else if ( subcmd == _("/ban") ) {
+  } else if ( subcmd == _T("/ban") ) {
     SendCmd( _T("BANLISTADD"), params );
     return true;
   } else if ( subcmd == _T("/unban") ) {
@@ -144,8 +146,12 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
   } else if ( subcmd == _T("/testmd5") ) {
     ExecuteCommand( _T("SERVERMSG"), GetPasswordHash(params) );
     return true;
+  } else if ( subcmd == _T("/changepassword") ) {
+    wxString oldpassword = GetPasswordHash( cmd.AfterFirst(' ').BeforeFirst(' ') );
+    wxString newpassword = GetPasswordHash( cmd.AfterFirst(' ').AfterFirst(' ') );
+    ExecuteCommand( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
+    return true;
   }
-
   return false;
 }
 
@@ -294,14 +300,15 @@ void TASServer::Update( int mselapsed )
       return;
     }
 
-    /*time_t now = time( 0 );
-    if ( m_last_ping + m_keepalive < now ) { // Is it time for a keepalive PING?
-      Ping();
+    time_t now = time( 0 );
+    if ( m_last_ping + m_keepalive < now )
+    { // Is it time for a nat traversal PING?
+      m_last_ping = now;
       /// Nat travelsal "ping"
       Battle *battle=GetCurrentBattle();
       if(battle){
-        if((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports)) && !battle->GetInGame()){
-          UDPPing();
+        if((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports) ) && !battle->GetInGame()){
+          UdpPing();
         }else{
           /// old logging for debug
           //if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
@@ -310,7 +317,7 @@ void TASServer::Update( int mselapsed )
       }else{
         //wxLogMessage( _T("pinging: No current battle set") );
       }
-    }*/
+    }
     HandlePinglist();
   }
 
@@ -383,7 +390,7 @@ void TASServer::ExecuteCommand( const wxString& in )
 void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, int replyid )
 {
   wxString params = inparams;
-  int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally, udpport;
+  int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally;
   bool replay, haspass,lanmode = false;
   wxString hash;
   wxString nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version;
@@ -398,9 +405,9 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     mod = GetWordParam( params );
     mod.ToDouble( &m_ser_ver );
     supported_spring_version = GetWordParam( params );
-    udpport = GetIntParam( params );
+    m_nat_helper_port = (unsigned long)GetIntParam( params );
     lanmode = GetBoolParam( params );
-    m_se->OnConnected( _T("TAS Server"), mod, (m_ser_ver > 0), supported_spring_version, udpport, lanmode );
+    m_se->OnConnected( _T("TAS Server"), mod, (m_ser_ver > 0), supported_spring_version, lanmode );
 
   } else if ( cmd == _T("ACCEPTED") ) {
     m_online = true;
@@ -509,9 +516,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     tasbstatus.data = GetIntParam( params );
     bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
     color.data = GetIntParam( params );
-    bstatus.color_r = color.color.red;
-    bstatus.color_g = color.color.green;
-    bstatus.color_b = color.color.blue;
+    bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
     m_se->OnClientBattleStatus( m_battle_id, nick, bstatus );
   } else if ( cmd == _T("ADDSTARTRECT") ) {
     //ADDSTARTRECT allyno left top right bottom
@@ -570,9 +575,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     tasbstatus.data = GetIntParam( params );
     bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
     color.data = GetIntParam( params );
-    bstatus.color_r = color.color.red;
-    bstatus.color_g = color.color.green;
-    bstatus.color_b = color.color.blue;
+    bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
     ai = GetSentenceParam( params );
     ai = ai.BeforeLast( '.' );
     m_se->OnBattleAddBot( id, nick, owner, bstatus, ai );
@@ -582,9 +585,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     tasbstatus.data = GetIntParam( params );
     bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
     color.data = GetIntParam( params );
-    bstatus.color_r = color.color.red;
-    bstatus.color_g = color.color.green;
-    bstatus.color_b = color.color.blue;
+    bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
     m_se->OnBattleUpdateBot( id, nick, bstatus );
     //UPDATEBOT BATTLE_ID name battlestatus teamcolor
   } else if ( cmd == _T("REMOVEBOT") ) {
@@ -634,13 +635,13 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     Disconnect();
     //Command: "DENIED" params: "Already logged in".
   } else if ( cmd == _T("HOSTPORT") ) {
-    int tmp_port = GetIntParam( params );
-    m_se->OnHostUdpPortChange( tmp_port );
+    unsigned int tmp_port = (unsigned int)GetIntParam( params );
+    m_se->OnHostExternalUdpPort( tmp_port );
     //HOSTPORT port
   } else if ( cmd == _T("UDPSOURCEPORT") ) {
-    int tmp_port = GetIntParam( params );
-    m_se->OnUdpSourcePort( tmp_port );
-    //HOSTPORT port
+    unsigned int tmp_port = (unsigned int)GetIntParam( params );
+    m_se->OnMyExternalUdpSourcePort( tmp_port );
+    //UDPSOURCEPORT port
   } else if ( cmd == _T("SETSCRIPTTAGS") ) {
     wxString command;
     while ( (command = GetSentenceParam( params )) != _T("") ) {
@@ -950,13 +951,18 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
   //UDPPing();
-  if(BattleExists(battleid)){
+  if(BattleExists(battleid))
+  {
     Battle *battle=&GetBattle(battleid);
     if(battle){
       if((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))
-        m_sock->SetUdpPingInfo( m_addr, m_udp_port, 10000 );
+      {
+        UdpPing();
+      }
     }
-  }else{
+  }
+  else
+  {
     wxLogMessage( _T("battle doesnt exist") );
   }
 
@@ -971,7 +977,6 @@ void TASServer::LeaveBattle( const int& battleid )
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
-  m_sock->SetUdpPingInfo();
   SendCmd( _T("LEAVEBATTLE") );
 }
 
@@ -1127,9 +1132,9 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
   UTASBattleStatus tasbs;
   tasbs.tasdata = ConvTasbattlestatus( bs );
   UTASColor tascl;
-  tascl.color.red = bs.color_r;
-  tascl.color.green = bs.color_g;
-  tascl.color.blue = bs.color_b;
+  tascl.color.red = bs.colour.Red();
+  tascl.color.green = bs.colour.Green();
+  tascl.color.blue = bs.colour.Blue();
   tascl.color.zero = 0;
   //MYBATTLESTATUS battlestatus myteamcolor
   SendCmd( _T("MYBATTLESTATUS"), wxString::Format( _T("%d %d"), tasbs.data, tascl.data ) );
@@ -1223,7 +1228,7 @@ void TASServer::ForceAlly( int battleid, const wxString& nick, int ally )
 }
 
 
-void TASServer::ForceColour( int battleid, const wxString& nick, int r, int g, int b )
+void TASServer::ForceColour( int battleid, const wxString& nick, const wxColour& col )
 {
   wxLogDebugFunc( _T("") );
   ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
@@ -1232,9 +1237,7 @@ void TASServer::ForceColour( int battleid, const wxString& nick, int r, int g, i
 
   if ( !GetBattle(battleid).IsFounderMe() ) {
     if ( nick == GetMe().GetNick() ) {
-      GetMe().BattleStatus().color_r = r;
-      GetMe().BattleStatus().color_g = g;
-      GetMe().BattleStatus().color_b = b;
+      GetMe().BattleStatus().colour = col;
       SendMyBattleStatus( GetMe().BattleStatus() );
     } else {
       DoActionBattle( battleid, _T("sugests that ") + nick + _T(" changes colour.") );
@@ -1243,9 +1246,9 @@ void TASServer::ForceColour( int battleid, const wxString& nick, int r, int g, i
   }
 
   UTASColor tascl;
-  tascl.color.red = r;
-  tascl.color.green = g;
-  tascl.color.blue = b;
+  tascl.color.red = col.Red();
+  tascl.color.green = col.Green();
+  tascl.color.blue = col.Blue();
   tascl.color.zero = 0;
   //FORCETEAMCOLOR username color
   SendCmd( _T("FORCETEAMCOLOR"), nick + _T(" ") + wxString::Format( _T("%d"), tascl.data ) );
@@ -1330,9 +1333,9 @@ void TASServer::AddBot( int battleid, const wxString& nick, const wxString& owne
   UTASBattleStatus tasbs;
   tasbs.tasdata = ConvTasbattlestatus( status );
   UTASColor tascl;
-  tascl.color.red = status.color_r;
-  tascl.color.green = status.color_g;
-  tascl.color.blue = status.color_b;
+  tascl.color.red = status.colour.Red();
+  tascl.color.green = status.colour.Green();
+  tascl.color.blue = status.colour.Blue();
   tascl.color.zero = 0;
   //ADDBOT name battlestatus teamcolor {AIDLL}
   SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + aidll + _T(".dll") );
@@ -1368,9 +1371,9 @@ void TASServer::UpdateBot( int battleid, const wxString& nick, UserBattleStatus 
   UTASBattleStatus tasbs;
   tasbs.tasdata = ConvTasbattlestatus( status );
   UTASColor tascl;
-  tascl.color.red = status.color_r;
-  tascl.color.green = status.color_g;
-  tascl.color.blue = status.color_b;
+  tascl.color.red = status.colour.Red();
+  tascl.color.green = status.colour.Green();
+  tascl.color.blue = status.colour.Blue();
   tascl.color.zero = 0;
   //UPDATEBOT name battlestatus teamcolor
   SendCmd( _T("UPDATEBOT"), nick + wxString::Format( _T(" %d %d"), tasbs.data, tascl.data ) );
@@ -1402,10 +1405,72 @@ void TASServer::OnDataReceived( Socket* sock )
   ReceiveAndExecute();
 }
 
+
+//! @brief Send udp ping.
+//! @note used for nat travelsal.
+void TASServer::UdpPing()
+{
+#ifndef HAVE_WX26
+
+  wxIPV4address local_addr;
+  local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
+  local_addr.Service(m_udp_private_port);
+
+  wxDatagramSocket udp_socket(local_addr,/* wxSOCKET_WAITALL*/wxSOCKET_NONE);
+
+  wxIPV4address wxaddr;
+  wxaddr.Hostname(m_addr);
+  wxaddr.Service(m_nat_helper_port);
+
+  if(udp_socket.IsOk()&&!udp_socket.Error()){
+    std::string m = (const char*)m_user.mb_str(wxConvUTF8);
+    if(m.empty()){
+      //wxLogMessage(_T("empty udp message string"));
+      m="ipv4 sux";
+    }
+    udp_socket.SendTo( wxaddr, m.c_str(), m.length() );
+    wxLogDebugFunc( _T("") );
+    m_se->OnMyInternalUdpSourcePort( m_udp_private_port );
+  }else{
+    wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));
+  }
+  if(udp_socket.Error())wxLogMessage(_T("Error=%d"),udp_socket.LastError());
+
+#endif
+}
+
+//! @brief used to check if the NAT is done properly when hosting
 bool TASServer::TestOpenPort( unsigned int port )
 {
-  return m_sock->TestOpenPort( Udp, port );
+  #ifndef HAVE_WX26
+    wxIPV4address local_addr;
+    local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
+    local_addr.Service(port);
+
+    wxSocketServer udp_socket(local_addr, wxSOCKET_NONE);
+
+    wxHTTP connect_to_server;
+    connect_to_server.SetTimeout( 10 );
+
+    if ( !connect_to_server.Connect( _T("zjt3.com") ) ) return false;
+    connect_to_server.GetInputStream(wxString::Format( _T("/porttest.php?port=%d"), port));
+
+    if(udp_socket.IsOk()){
+      if ( !udp_socket.WaitForAccept( 10 ) ) return false;
+    }else{
+      wxLogMessage(_T("socket's IsOk() is false, no UDP packets can be checked"));
+      return false;
+    }
+    if(udp_socket.Error())
+    {
+      wxLogMessage(_T("Error=%d"),udp_socket.LastError());
+      return false;
+    }
+    return true;
+  #endif
+  return true;
 }
+
 
 ////////////////////////
 // Utility functions

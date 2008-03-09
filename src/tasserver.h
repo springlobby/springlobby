@@ -89,7 +89,7 @@ class TASServer : public Server
     void ForceSide( int battleid, const wxString& nick, int side );
     void ForceTeam( int battleid, const wxString& nick, int team );
     void ForceAlly( int battleid, const wxString& nick, int ally );
-    void ForceColour( int battleid, const wxString& nick, int r, int g, int b );
+    void ForceColour( int battleid, const wxString& nick, const wxColour& col );
     void ForceSpectator( int battleid, const wxString& nick, bool spectator );
     void BattleKickPlayer( int battleid, const wxString& nick );
     void SetHandicap( int battleid, const wxString& nick, int handicap);
@@ -128,6 +128,8 @@ class TASServer : public Server
 
     bool TestOpenPort( unsigned int port );
 
+    void UdpPing();
+
   protected:
     Ui& m_ui;
     ServerEvents* m_se;
@@ -139,6 +141,9 @@ class TASServer : public Server
     time_t m_last_ping;
     int m_ping_id;
     std::list<TASPingListItem> m_pinglist;
+
+    unsigned long m_udp_private_port;
+    unsigned long m_nat_helper_port;
 
     int m_battle_id;
 

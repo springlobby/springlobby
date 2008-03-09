@@ -30,11 +30,6 @@ enum SockError
 
 #define SOCKET_ID 100
 
-enum PacketType
-{
-  Tcp,
-  Udp
-};
 
 class SocketEvents: public wxEvtHandler
 {
@@ -67,16 +62,9 @@ class Socket
 
 
     void Ping();
-    void UDPPing();
     void SetPingInfo( const wxString& msg = wxEmptyString, unsigned int interval = 10000 );
-    void SetUdpPingInfo( const wxString& addr = wxEmptyString, unsigned int port = 0, unsigned int interval = 10000 );
-    unsigned int GetUDPPingPort() { return m_udp_ping_port; }
     unsigned int GetPingInterval() { return m_ping_int; }
-    unsigned int GetUDPPingInterval() { return m_udp_ping_int; }
     bool GetPingEnabled() { return m_ping_msg != wxEmptyString; }
-    bool GetUDPPingEnabled() { return m_udp_ping_adr != wxEmptyString; }
-
-    bool TestOpenPort( PacketType type, unsigned int port );
 
     SockState State( );
     SockError Error( );
@@ -98,10 +86,7 @@ class Socket
     wxCriticalSection m_ping_thread_wait;
 
     wxString m_ping_msg;
-    wxString m_udp_ping_adr;
     unsigned int m_ping_int;
-    unsigned int m_udp_ping_port;
-    unsigned int m_udp_ping_int;
     PingThread* m_ping_t;
 
     bool m_connecting;
@@ -132,7 +117,6 @@ class PingThread: public wxThread
   private:
     Socket& m_sock;
     int m_next_ping;
-    int m_next_udp_ping;
 
 };
 

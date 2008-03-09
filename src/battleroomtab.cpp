@@ -330,7 +330,7 @@ void BattleRoomTab::UpdateUser( User& user )
     if ( !IsHosted() ) m_ready_chk->Enable();
     m_ready_chk->SetValue( bs.ready );
   }
-  icons().SetColourIcon( bs.team, wxColour( user.BattleStatus().color_r, user.BattleStatus().color_g, user.BattleStatus().color_b ) );
+  icons().SetColourIcon( bs.team, user.BattleStatus().colour );
   m_color_sel->SetBitmapLabel( icons().GetBitmap( icons().GetColourIcon( bs.team ) ) );
 
   m_minimap->UpdateMinimap();
@@ -353,7 +353,7 @@ ChatPanel& BattleRoomTab::GetChatPanel()
 void BattleRoomTab::OnStart( wxCommandEvent& event )
 {
   if ( m_battle.HaveMultipleBotsInSameTeam() ) {
-    wxMessageDialog dlg( this, _("You have one or more bots shring team, this is not possible."), _("Bot team sharing."), wxOK );
+    wxMessageDialog dlg( this, _("You have one or more bots sharing team, this is not possible."), _("Bot team sharing."), wxOK );
     dlg.ShowModal();
     return;
   }
@@ -394,7 +394,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
         bs.ready = true;
         bs.order = 0;
         bs.handicap = 0;
-        m_battle.GetFreeColour( bs.color_r, bs.color_g, bs.color_b, false );
+        bs.colour = m_battle.GetFreeColour( false );
         m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), m_battle.GetMe().GetNick(), bs, dlg.GetAI() );
       }
   }
@@ -451,13 +451,10 @@ void BattleRoomTab::OnColourSel( wxCommandEvent& event )
 {
   User& u = m_battle.GetMe();
   UserBattleStatus& bs = u.BattleStatus();
-  wxColour CurrentColour;
-  CurrentColour.Set( bs.color_r, bs.color_g, bs.color_b );
+  wxColour CurrentColour = bs.colour;
   CurrentColour = wxGetColourFromUser(this, CurrentColour);
   if ( !CurrentColour.IsColourOk() ) return;
-  bs.color_r = CurrentColour.Red();
-  bs.color_g = CurrentColour.Green();
-  bs.color_b = CurrentColour.Blue();
+  bs.colour = CurrentColour;
   //u.SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
 }

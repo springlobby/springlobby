@@ -224,6 +224,8 @@ class SpringUnitSyncLib
      */
     void AddAllArchives( const wxString& root );
 
+    void SetCurrentMod( const wxString& modname );
+
     wxString GetFullUnitName( int index );
     wxString GetUnitName( int index );
     int GetUnitCount();
@@ -323,8 +325,6 @@ class SpringUnitSyncLib
     bool _IsLoaded();
 
     void _ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
-
-    void _SetCurrentMod( const wxString& modname );
 
     /**
      * \defgroup DllFuncPointers Pointers to the functions in unitsync.

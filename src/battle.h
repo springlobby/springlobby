@@ -20,14 +20,14 @@ enum NatType {
 
 
 #define DEFAULT_SERVER_PORT 8034
-#define DEFAULT_EXTERNAL_UDP_SOURCE_PORT 12345
+#define DEFAULT_EXTERNAL_UDP_SOURCE_PORT 16941
 
 
 struct BattleOptions
 {
   BattleOptions() :
     battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),
-    nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
+    nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
     guilistactiv(false) {}
 
   int battleid;
@@ -38,9 +38,10 @@ struct BattleOptions
   wxString founder;
 
   NatType nattype;
-  int port;
+  unsigned int port;
   wxString ip;
-  int externaludpsourceport;
+  unsigned int externaludpsourceport;
+  unsigned int internaludpsourceport;
 
   unsigned int maxplayers;
   unsigned int spectators;
@@ -82,10 +83,13 @@ class Battle : public UserList, public IBattle
 
     void SetNatType( const NatType nattype ) { m_opts.nattype = nattype; }
     NatType GetNatType() const { return m_opts.nattype; }
-    void SetHostPort( int port) { m_opts.port = port; }
+    void SetHostPort( unsigned int port) { m_opts.port = port; }
 
-    void SetExternalUdpSourcePort(int port){m_opts.externaludpsourceport=port;}
-    int GetExternalUdpSourcePort(){return m_opts.externaludpsourceport;}
+    void SetMyExternalUdpSourcePort(unsigned int port){m_opts.externaludpsourceport=port;}
+    unsigned int GetMyExternalUdpSourcePort(){return m_opts.externaludpsourceport;}
+
+    void SetMyInternalUdpSourcePort(unsigned int port){m_opts.internaludpsourceport=port;}
+    unsigned int GetMyInternalUdpSourcePort(){return m_opts.internaludpsourceport;}
 
     int GetHostPort() const { return m_opts.port; }
     void SetFounder( const wxString& nick ) { m_opts.founder = nick; }
@@ -120,7 +124,7 @@ class Battle : public UserList, public IBattle
     int GetMyPlayerNum();
 
     int GetFreeTeamNum( bool excludeme = true );
-    void GetFreeColour( int& r, int& g, int& b, bool excludeme = true );
+    wxColour GetFreeColour( bool excludeme = true );
 
     void Update();
     void Update( const wxString& Tag );
@@ -158,7 +162,7 @@ class Battle : public UserList, public IBattle
     void SetBotTeam( const wxString& nick, int team );
     void SetBotAlly( const wxString& nick, int ally );
     void SetBotSide( const wxString& nick, int side );
-    void SetBotColour( const wxString& nick, int r, int g, int b );
+    void SetBotColour( const wxString& nick, const wxColour& col );
     void SetBotHandicap( const wxString& nick, int handicap );
 
     BattleBot* GetBot( const wxString& name );
@@ -174,7 +178,7 @@ class Battle : public UserList, public IBattle
     void ForceSide( User& user, int side );
     void ForceTeam( User& user, int team );
     void ForceAlly( User& user, int ally );
-    void ForceColour( User& user, int r, int g, int b );
+    void ForceColour( User& user, const wxColour& col );
     void ForceSpectator( User& user, bool spectator );
     void BattleKickPlayer( User& user );
     void SetHandicap( User& user, int handicap);

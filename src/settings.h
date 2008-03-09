@@ -36,6 +36,9 @@ class Settings
     bool UseOldSpringLaunchMethod();
     void SetOldSpringLaunchMethod( bool value );
 
+    bool GetNoUDP();
+    void SetNoUDP(bool value);
+
     wxString GetWebBrowserPath();
     void SetWebBrowserPath( const wxString path );
 

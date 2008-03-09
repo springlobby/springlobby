@@ -17,14 +17,20 @@ Server::~Server()
 {
   while ( battles_iter->GetNumBattles() > 0 ) {
     battles_iter->IteratorBegin();
-    Battle* b = &battles_iter->GetBattle();
-    m_battles.RemoveBattle( b->GetBattleId() );
-    delete b;
+    Battle* b = battles_iter->GetBattle();
+    if (b!=0)
+    {
+        m_battles.RemoveBattle( b->GetBattleId() );
+        delete b;
+    }
   }
   while ( m_users.GetNumUsers() > 0 ) {
+    try{
     User* u = &m_users.GetUser( 0 );
     m_users.RemoveUser( u->GetNick() );
     delete u;
+    }catch(std::runtime_error){
+    }
   }
   while ( m_channels.GetNumChannels() > 0 ) {
     Channel* c = &m_channels.GetChannel( 0 );
@@ -101,10 +107,12 @@ User& Server::_AddUser( const wxString& user )
 
 void Server::_RemoveUser( const wxString& nickname )
 {
-  User* u = &m_users.GetUser( nickname );
-  m_users.RemoveUser( nickname );
-  ASSERT_LOGIC( u != 0 , _T("Server::_RemoveUser(\"") + nickname + _T("\"): GetUser returned NULL pointer"));
-  delete u;
+  try{
+    User* u = &m_users.GetUser( nickname );
+    m_users.RemoveUser( nickname );
+    delete u;
+  }catch(std::runtime_error){
+  }
 }
 
 

@@ -20,6 +20,7 @@ class ChatPanel;
 struct BattleOptions;
 class wxString;
 typedef int ServerError;
+class wxColour;
 
 #define PE_NONE 0
 
@@ -117,7 +118,7 @@ class Server : public iNetClass
     virtual void ForceSide( int battleid, const wxString& nick, int side ) = 0;
     virtual void ForceTeam( int battleid, const wxString& nick, int team ) = 0;
     virtual void ForceAlly( int battleid, const wxString& nick, int ally ) = 0;
-    virtual void ForceColour( int battleid, const wxString& nick, int r, int g, int b ) = 0;
+    virtual void ForceColour( int battleid, const wxString& nick, const wxColour& col ) = 0;
     virtual void ForceSpectator( int battleid, const wxString& nick, bool spectator ) = 0;
     virtual void BattleKickPlayer( int battleid, const wxString& nick ) = 0;
     virtual void SetHandicap( int battleid, const wxString& nick, int handicap) = 0;
@@ -149,10 +150,8 @@ class Server : public iNetClass
     virtual wxString GetPasswordHash( const wxString& pass ) = 0;
 
     wxString GetRequiredSpring() { return m_required_spring_ver; }
-    int GetUdpPort() { return m_udp_port; }
 
     void SetRequiredSpring( const wxString& version ) { m_required_spring_ver = version; }
-    void SetUdpPort( const int port ) { m_udp_port = port; }
 
     virtual void Ping() = 0;
 
@@ -184,8 +183,6 @@ class Server : public iNetClass
     wxString m_pass;
     bool m_pass_hash;
     wxString m_required_spring_ver;
-    int m_udp_port;
-
 
     ChannelList m_channels;
     UserList m_users;

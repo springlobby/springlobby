@@ -140,7 +140,7 @@ bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showE
 	}
 	if (exists && showError)
 	{
-		customMessageBox(SL_MAIN_ICON,duplicateKeyError,_T("Mod/map option error"),wxOK);
+		customMessageBoxNoModal(SL_MAIN_ICON,duplicateKeyError,_T("Mod/map option error"),wxOK);
 		wxLogWarning(_T("duplicate key in mapmodoptions"));
 		return false;
 	}

@@ -40,8 +40,7 @@ Ui::Ui() :
    ReloadUnitSync();
 
   m_main_win = new MainWindow( *this );
-  CustomMessageBox::setLobbypointer(m_main_win);
-  CustomNonBlockingMessageBox::setLobbypointer(m_main_win);
+  CustomMessageBoxBase::setLobbypointer(m_main_win);
   m_spring = new Spring(*this);
   m_thread = new UnitSyncThread( *this );
   m_thread->Init();
@@ -322,7 +321,7 @@ void Ui::OpenWebBrowser( const wxString& url )
       if ( !wxLaunchDefaultBrowser( url ) )
       {
         wxLogWarning( _T("can't launch default browser") );
-        customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
       }
   }
   else
@@ -330,7 +329,7 @@ void Ui::OpenWebBrowser( const wxString& url )
     if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
     {
       wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().c_str() );
-      customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
+      customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
     }
 
   }
@@ -371,8 +370,8 @@ void Ui::ShowMessage( const wxString& heading, const wxString& message )
 {
 
   if ( m_main_win == 0 ) return;
-  wxMessageDialog msg( &mw(), message, heading, wxOK);
-  msg.ShowModal();
+  serverMessageBox( SL_MAIN_ICON, message, heading, wxOK);
+
 }
 
 
@@ -436,13 +435,16 @@ void Ui::ConsoleHelp( const wxString& topic )
     panel->ClientMessage( _("Global commands:") );
     panel->ClientMessage( _("  \"/away\" - Sets your status to away.") );
     panel->ClientMessage( _("  \"/back\" - Resets your away status.") );
+    panel->ClientMessage( _("  \"/changepassword oldpassword newpassword\" - Changes the current active account's password.") );
     panel->ClientMessage( _("  \"/channels\" - Lists currently active channels.") );
     panel->ClientMessage( _("  \"/help [topic]\" - Put topic if you want to know more specific information about a command.") );
     panel->ClientMessage( _("  \"/join channel [password] [,channel2 [password2]]\" - Join a channel.") );
     panel->ClientMessage( _("  \"/j\" - Alias to /join.") );
     panel->ClientMessage( _("  \"/ingame\" - Show how much time you have in game.") );
+    panel->ClientMessage( _("  \"/msg username [text]\" - sends a private message containing text to username.") );
     panel->ClientMessage( _("  \"/rename newalias\" - Changes your nickname to newalias.") );
     panel->ClientMessage( _("  \"/sayver\" - Say what version of springlobby you have in chat.") );
+    panel->ClientMessage( _("  \"/testmd5 text\" - Returns md5-b64 hash of given text.") );
     panel->ClientMessage( _("  \"/ver\" - Display what version of SpringLobby you have.") );
     panel->ClientMessage( _T("") );
     panel->ClientMessage( _("Chat commands:") );
@@ -750,8 +752,8 @@ void Ui::OnBattleClosed( Battle& battle )
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle )
 	{
-//	    if (!battle.IsFounderMe() )
-//            customMessageBox(SL_MAIN_ICON,_T("The current battle was closed by the host."),_T("Battle closed"));
+	    if (!battle.IsFounderMe() )
+            customMessageBoxNoModal(SL_MAIN_ICON,_("The current battle was closed by the host."),_("Battle closed"));
 		mw().GetJoinTab().LeaveCurrentBattle();
 	}
   }
@@ -907,7 +909,9 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
 
 void Ui::OnSpringTerminated( bool success )
 {
-  if ( m_serv == 0 ) return;
+  if ( !m_serv ) return;
+
+  Battle *battle=mw().GetJoinTab().GetCurrentBattle();
 
   m_serv->GetMe().Status().in_game = false;
   m_serv->GetMe().SendMyUserStatus();

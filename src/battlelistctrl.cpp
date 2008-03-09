@@ -127,6 +127,7 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   SetColumnWidth( 6, 110 );
 
   m_popup = new wxMenu( _T("") );
+  // &m enables shortcout "alt + m" and underlines m
   m_popup->Append( BLIST_DLMAP, _("Download &map") );
   m_popup->Append( BLIST_DLMOD, _("Download m&od") );
 }
