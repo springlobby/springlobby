@@ -259,6 +259,9 @@ wxString Spring::GetScriptTxt( Battle& battle )
   //s += wxString::Format( _T("\tMapname=%s;\n"), bo.mapname.c_str() );
   s += _T("\tMapname=") + battle.GetMapName() + _T(";\n");
   s += _T("\tGameType=") + usync()->GetModArchive(usync()->GetModIndex(battle.GetModName())) + _T(";\n");
+  unsigned long uhash;
+  battle.GetModHash().ToULong(&uhash);
+  s += wxString::Format( _T("\tModHash=%ld;\n"), (long)uhash );
   wxStringTripleVec optlistEng;
   battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
   for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
@@ -588,6 +591,9 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   //s += wxString::Format( _T("\tMapname=%s;\n"), bo.mapname.c_str() );
   s += _T("\tMapname=") + battle.GetMapName() + _T(";\n");
   s += _T("\tGameType=" )+ usync()->GetModArchive(usync()->GetModIndex(battle.GetModName())) + _T(";\n");
+  unsigned long uhash;
+  battle.GetModHash().ToULong(&uhash);
+  s += wxString::Format( _T("\tModHash=%ld;\n"), (long)uhash );
   wxStringTripleVec optlistEng;
   battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
   for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
