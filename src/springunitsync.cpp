@@ -390,7 +390,7 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
 {
   wxLogDebugFunc( _T("") );
 
-  susynclib()->AddAllArchives( _GetModArchive( susynclib()->GetModIndex( modname ) )  );
+  susynclib()->SetCurrentMod( modname );
   wxLogDebugFunc( _T("SideName = \"") + SideName + _T("\"") );
   wxString ImgName = _T("SidePics");
   ImgName += _T("/");
@@ -485,7 +485,7 @@ wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
 
   } catch(...) {}
 
-  susynclib()->AddAllArchives( (susynclib()->GetPrimaryModArchive( susynclib()->GetModIndex( modname ) )) );
+  susynclib()->SetCurrentMod( modname );
   while ( susynclib()->ProcessUnitsNoChecksum() );
   for ( int i = 0; i < susynclib()->GetUnitCount(); i++ ) {
     wxString tmp = susynclib()->GetFullUnitName(i) + _T("(");

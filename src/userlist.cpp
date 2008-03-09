@@ -26,7 +26,8 @@ void UserList::RemoveUser( const wxString& nick )
 User& UserList::GetUser( const wxString& nick )
 {
   user_iter_t u = m_users.find(nick);
-  ASSERT_LOGIC( u != m_users.end(), _T("UserList::GetUser(\"") + nick + _T("\"): no such user") );
+  ASSERT_RUNTIME( u != m_users.end(), _T("UserList::GetUser(\"") + nick + _T("\"): no such user") );
+  //ASSERT_LOGIC( u != m_users.end(), _T("UserList::GetUser(\"") + nick + _T("\"): no such user") );
   return *u->second;
 }
 

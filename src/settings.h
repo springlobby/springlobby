@@ -36,6 +36,9 @@ class Settings
     bool UseOldSpringLaunchMethod();
     void SetOldSpringLaunchMethod( bool value );
 
+    bool GetNoUDP();
+    void SetNoUDP(bool value);
+
     wxString GetWebBrowserPath();
     void SetWebBrowserPath( const wxString path );
 
@@ -162,6 +165,8 @@ class Settings
     void SetChatColorTime( wxColour value );
     wxFont GetChatFont();
     void SetChatFont( wxFont value );
+
+	bool GetDisableSpringVersionCheck();
 
   protected:
 
