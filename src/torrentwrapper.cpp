@@ -61,34 +61,9 @@ TorrentWrapper::~TorrentWrapper()
 }
 
 
-
-void TorrentWrapper::ReloadLocalFileList()
-{
-  m_local_files.clear();
-  for ( int i =0; i < usync()->GetNumMaps(); i++ )
-  {
-    UnitSyncMap mapinfo = usync()->GetMap( i );
-    TorrentData info;
-    info.type = map;
-    unsigned long uhash;
-    mapinfo.hash.ToULong(&uhash);
-    info.hash = wxString::Format( _T("%ld"), (long)uhash );
-    info.name = mapinfo.name;
-    m_local_files[info.hash] = info;
-  }
-  for ( int i =0; i < usync()->GetNumMods(); i++ )
-  {
-    UnitSyncMod modinfo = usync()->GetMod( i );
-    TorrentData info;
-    info.type = mod;
-    unsigned long uhash;
-    modinfo.hash.ToULong(&uhash);
-    info.hash = wxString::Format( _T("%ld"), (long)uhash );
-    info.name = modinfo.name;
-    m_local_files[info.hash] = info;
-  }
-}
-
+////////////////////////////////////////////////////////
+////                gui interface                   ////
+////////////////////////////////////////////////////////
 
 void TorrentWrapper::ConnectToP2PSystem()
 {
@@ -118,8 +93,92 @@ void TorrentWrapper::ChangeListeningPort( unsigned int port )
 }
 
 
+void TorrentWrapper::ChangeUploadSpeedLimit( unsigned int speed )
+{
+  m_torr->set_upload_rate_limit(speed);
+}
+
+
+void TorrentWrapper::ChangeDownloadSpeedLimit( unsigned int speed )
+{
+  m_torr->set_download_rate_limit(speed);
+}
+
+
+////////////////////////////////////////////////////////
+////               lobby interface                  ////
+////////////////////////////////////////////////////////
+
+
+void TorrentWrapper::ReloadLocalFileList()
+{
+  if (ingame) return;
+  m_local_files.clear();
+  for ( int i =0; i < usync()->GetNumMaps(); i++ )
+  {
+    UnitSyncMap mapinfo = usync()->GetMap( i );
+    TorrentData info;
+    info.type = map;
+    unsigned long uhash;
+    mapinfo.hash.ToULong(&uhash);
+    info.hash = wxString::Format( _T("%ld"), (long)uhash );
+    info.name = mapinfo.name;
+    m_local_files[info.hash] = info;
+  }
+  for ( int i =0; i < usync()->GetNumMods(); i++ )
+  {
+    UnitSyncMod modinfo = usync()->GetMod( i );
+    TorrentData info;
+    info.type = mod;
+    unsigned long uhash;
+    modinfo.hash.ToULong(&uhash);
+    info.hash = wxString::Format( _T("%ld"), (long)uhash );
+    info.name = modinfo.name;
+    m_local_files[info.hash] = info;
+  }
+}
+
+
+bool TorrentWrapper::RequestFile( const wxString& uhash )
+{
+  if (ingame) return;
+  if ( m_connected ) return false;
+  unsigned long hash;
+  uhash.ToULong( &hash );
+  wxString shash = wxString::Format( _T("%ld"), (long)hash );
+  if ( m_torrents_infos[shash].hash.IsEmpty() ) return false; /// the file is not present in the system
+  m_socket_class->Send( wxString::Format( _T("N+|%ld\n"), (long)hash ) ); /// request for seeders for the file
+  JoinTorrent( shash );
+  m_leech_joined[shash] = 1;
+  return true;
+}
+
+
+void TorrentWrapper::SetIngameStatus( bool status )
+{
+  if ( status == ingame ) return; /// no change needed
+  ingame = status;
+  std::vector<torrent_handle> TorrentList = m_torr->get_torrents();
+  if ( ingame ) /// going ingame, pause all torrents
+  {
+    for ( unsigned int i = 0; i < TorrentList.count(); i++) TorrentList[i]->pause();
+  }
+  else/// game closed, resume all torrents
+  {
+    for ( unsigned int i = 0; i < TorrentList.count(); i++) TorrentList[i]->resume();
+  }
+
+}
+
+
+////////////////////////////////////////////////////////
+//// private functions to interface with the system ////
+////////////////////////////////////////////////////////
+
+
 void TorrentWrapper::JoinTorrent( const wxString& hash )
 {
+  if (ingame) return;
   if ( !m_torrents_infos[ hash ].hash.IsEmpty() )
   {
     wxString path = sett().GetSpringDir();
@@ -145,6 +204,7 @@ void TorrentWrapper::JoinTorrent( const wxString& hash )
 
 void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, MediaType type )
 {
+  if (ingame) return;
   libtorrent::torrent_info newtorrent;
 
   wxString StringFilePath = sett().GetSpringDir();
@@ -194,20 +254,6 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 }
 
 
-bool TorrentWrapper::RequestFile( const wxString& uhash )
-{
-  if ( m_connected ) return false;
-  unsigned long hash;
-  uhash.ToULong( &hash );
-  wxString shash = wxString::Format( _T("%ld"), (long)hash );
-  if ( m_torrents_infos[shash].hash.IsEmpty() ) return false; /// the file is not present in the system
-  m_socket_class->Send( wxString::Format( _T("N+|%ld\n"), (long)hash ) ); /// request for seeders for the file
-  JoinTorrent( shash );
-  m_leech_joined[shash] = 1;
-  return true;
-}
-
-
 void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 {
   wxStringTokenizer tkz( msg, '|' );
@@ -234,7 +280,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     unsigned long leechers;
     data[2].ToULong(&seeders);
     data[3].ToULong(&leechers);
-    if ( m_seed_joined.size() <= 10 )
+    if ( m_seed_joined.size() <= 10 && !ingame )
     {
       if ( !m_local_files[data[1]].hash.IsEmpty() )
       {

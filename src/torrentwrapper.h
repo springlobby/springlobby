@@ -12,6 +12,9 @@
 #define DEFAULT_P2P_COORDINATOR_PORT 8202
 #define DEFAULT_P2P_TRACKER_PORT 8201
 
+namespace libtorrent{ class session; };
+class Socket;
+
 enum MediaType
 {
   map,
@@ -26,9 +29,6 @@ struct TorrentData
   wxArrayString seedurls;
 };
 
-namespace libtorrent{ class session; };
-class Socket;
-
 class TorrentWrapper : public iNetClass
 {
   public:
@@ -36,15 +36,19 @@ class TorrentWrapper : public iNetClass
     TorrentWrapper();
     ~TorrentWrapper();
 
+    /// gui interface
+
     void ConnectToP2PSystem();
     void DisconnectToP2PSystem();
     void ChangeListeningPort( unsigned int port );
     void ChangeUploadSpeedLimit( unsigned int speed );
     void ChangeDownloadSpeedLimit( unsigned int speed );
 
+    /// lobby interface
+    void SetIngameStatus( bool status );
     void ReloadLocalFileList();
-
     bool RequestFile( const wxString& hash );
+
   private:
 
     void CreateTorrent( const wxString& uhash, const wxString& name, MediaType type );
@@ -56,6 +60,8 @@ class TorrentWrapper : public iNetClass
     void OnDataReceived( Socket* sock );
 
     bool m_connected;
+
+    bool ingame;
 
     wxArrayString m_tracker_urls;
 
