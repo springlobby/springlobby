@@ -141,7 +141,7 @@ void TorrentWrapper::ReloadLocalFileList()
 
 bool TorrentWrapper::RequestFile( const wxString& uhash )
 {
-  if (ingame) return;
+  if (ingame) return false;
   if ( m_connected ) return false;
   unsigned long hash;
   uhash.ToULong( &hash );
@@ -158,14 +158,14 @@ void TorrentWrapper::SetIngameStatus( bool status )
 {
   if ( status == ingame ) return; /// no change needed
   ingame = status;
-  std::vector<torrent_handle> TorrentList = m_torr->get_torrents();
+  std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
   if ( ingame ) /// going ingame, pause all torrents
   {
-    for ( unsigned int i = 0; i < TorrentList.count(); i++) TorrentList[i]->pause();
+    for ( unsigned int i = 0; i < TorrentList.count(); i++) TorrentList[i].pause();
   }
   else/// game closed, resume all torrents
   {
-    for ( unsigned int i = 0; i < TorrentList.count(); i++) TorrentList[i]->resume();
+    for ( unsigned int i = 0; i < TorrentList.count(); i++) TorrentList[i].resume();
   }
 
 }
