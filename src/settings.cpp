@@ -767,3 +767,11 @@ void Settings::SetChatFont( wxFont value )
 {
   m_config->Write( _T("/Chat/Font"), value.GetNativeFontInfoDesc() );
 }
+
+
+bool Settings::GetDisableSpringVersionCheck()
+{
+  bool ret;
+  m_config->Read( _T("/Spring/DisableVersionCheck"), &ret, false );
+  return ret;
+}

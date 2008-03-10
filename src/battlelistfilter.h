@@ -1,17 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLELISTFILTER_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLELISTFILTER_H
 
-#if wxUSE_TOGGLEBTN
-#include <wx/tglbtn.h>
-#endif
-#include <wx/stattext.h>
-#include <wx/checkbox.h>
-#include <wx/sizer.h>
-#include <wx/textctrl.h>
-#include <wx/choice.h>
-#include <wx/button.h>
-#include <wx/statbox.h>
-#include <wx/dialog.h>
+#include <wx/panel.h>
 
 #include "battlelisttab.h"
 #include "battle.h"
@@ -19,6 +9,14 @@
 ///////////////////////////////////////////////////////////////////////////
 
 class BattleListTab;
+class wxToggleButton;
+class wxCheckBox;
+class wxStaticText;
+class wxTextCtrl;
+class wxChoice;
+class wxButton;
+class wxRegEx;
+class wxStaticText;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class BattleListFilter
@@ -36,6 +34,10 @@ class BattleListFilter : public wxPanel
     void SetActiv         ( bool state );
 
     void OnChange            ( wxCommandEvent& event );
+    void OnChangeMap         ( wxCommandEvent& event );
+    void OnChangeMod         ( wxCommandEvent& event );
+    void OnChangeDescription ( wxCommandEvent& event );
+    void OnChangeHost        ( wxCommandEvent& event );
 
     void OnRankChange        ( wxCommandEvent& event );
     void OnPlayerChange      ( wxCommandEvent& event );
@@ -63,9 +65,13 @@ class BattleListFilter : public wxPanel
 		wxStaticText* m_filter_text;
 
 		wxCheckBox* m_filter_activ;
-		wxStaticText* m_filter_host_text;
-		wxTextCtrl* m_filter_host_edit;
 
+        //Host
+		wxStaticText* m_filter_host_text;
+		wxTextCtrl*   m_filter_host_edit;
+        wxRegEx*      m_filter_host_expression;
+
+        //Status
 		wxStaticText* m_filter_status_text;
 		wxStaticText* m_filter_status_text1;
 		wxCheckBox* m_filter_status_locked;
@@ -74,30 +80,43 @@ class BattleListFilter : public wxPanel
 		wxCheckBox* m_filter_status_full;
 		wxCheckBox* m_filter_status_open;
 
+        //Rank
 		wxStaticText* m_filter_rank_text;
 		wxChoice* m_filter_rank_choice;
 		int m_filter_rank_choice_value;
+
+        //Description
 		wxStaticText* m_filter_description_text;
 		wxTextCtrl* m_filter_description_edit;
+        wxRegEx*      m_filter_description_expression;
 
+        //Player
 		wxStaticText* m_filter_player_text;
 		wxButton* m_filter_player_button;
 		m_button_mode m_filter_player_mode;
 		wxChoice* m_filter_player_choice;
 		int m_filter_player_choice_value;
+
+        //Map
 		wxStaticText* m_filter_map_text;
 		wxTextCtrl* m_filter_map_edit;
 		wxCheckBox* m_filter_map_show;
+        wxRegEx*    m_filter_map_expression;
 
+        //Max Player
 		wxStaticText* m_filter_maxplayer_text;
 		wxButton* m_filter_maxplayer_button;
 		m_button_mode m_filter_maxplayer_mode;
 		wxChoice* m_filter_maxplayer_choice;
 		int m_filter_maxplayer_choice_value;
+
+        //Mod
 		wxStaticText* m_filter_mod_text;
 		wxTextCtrl* m_filter_mod_edit;
 		wxCheckBox* m_filter_mod_show;
+        wxRegEx*    m_filter_mod_expression;
 
+        //Spectator
 		wxStaticText* m_filter_spectator_text;
 		wxButton* m_filter_spectator_button;
 		m_button_mode m_filter_spectator_mode;
