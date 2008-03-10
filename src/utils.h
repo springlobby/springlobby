@@ -30,13 +30,11 @@
 //! Converts a wxString to an std::string
 #define STD_STRING(v) std::string((const char*)(v).mb_str(wxConvUTF8))
 
-void Crash();
-
 #if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
 #define ASSERT_LOGIC(cond,msg) if(!(cond))\
 {\
   wxLogError(_T("logic error: %s"), wxString(msg).c_str() );\
-  Crash();\
+  throw std::logic_error(std::string(wxString(msg).mb_str()));\
 }
 #else
 #define ASSERT_LOGIC(cond,msg) if(!(cond))\

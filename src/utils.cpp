@@ -131,10 +131,5 @@ wxString GetSpringLobbyVersion()
   return WX_STRINGC(VERSION);
 }
 
-void Crash(){
-  crashreport().GenerateReport(wxDebugReport::Context_Exception);
-  throw std::logic_error(std::string(""));
-}
-
 
 
