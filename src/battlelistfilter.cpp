@@ -320,6 +320,21 @@ m_parent_battlelisttab( parentBattleListTab )
 	this->SetSizer( m_filter_sizer );
 	this->Layout();
 	m_filter_sizer->Fit( this );
+
+	/* uncomment after regex merge
+
+if (m_filter_map_expression != NULL) { delete m_filter_map_expression; }
+m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(),wxRE_ICASE);
+if (m_filter_mod_expression != NULL) { delete m_filter_mod_expression; }
+m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(),wxRE_ICASE);
+if (m_filter_description_expression != NULL) { delete m_filter_description_expression; }
+m_filter_description_expression = new wxRegEx(m_filter_description_edit->GetValue(),wxRE_ICASE);
+if (m_filter_host_expression != NULL) { delete m_filter_host_expression; }
+m_filter_host_expression = new wxRegEx(m_filter_host_edit->GetValue(),wxRE_ICASE);
+OnChange(event);
+
+
+	*/
 }
 
 BattleListFilter::m_button_mode BattleListFilter::_GetButtonMode(wxString sign)
@@ -411,7 +426,7 @@ bool BattleListFilter::FilterBattle(Battle& battle)
   if ( !m_filter_status_open->GetValue() && !battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull() ) return false;
 
   //Rank Check
-  if ( (m_filter_rank_choice_value != -1) && !_IntCompare( battle.GetRankNeeded(), m_filter_rank_choice_value, m_filter_rank_mode ) ) return false;
+  if ( (m_filter_rank_choice_value != -1) && _IntCompare( battle.GetRankNeeded(), m_filter_rank_choice_value, m_filter_rank_mode ) ) return false;
 
   //Player Check
   if ( (m_filter_player_choice_value != -1) && !_IntCompare( battle.GetNumUsers() - battle.GetSpectators() , m_filter_player_choice_value , m_filter_player_mode ) ) return false;
