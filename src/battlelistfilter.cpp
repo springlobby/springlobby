@@ -120,7 +120,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_rank_choiceChoices.Add( _T("5") );
 
 	m_filter_rank_choice = new wxChoice( this, BATTLE_FILTER_RANK_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_rank_choiceChoices, wxSIMPLE_BORDER );
-	m_filter_rank_choice->SetSelection( ( f_values.rank == _T("All") ? 0 : GetIntParam( f_values.rank) ) + 1);
+	m_filter_rank_choice->SetSelection( ( f_values.rank == _T("All") ? 0 : GetIntParam( f_values.rank) )  );
 	m_filter_rank_choice->SetMinSize( wxSize( 40,-1 ) );
 
 	m_filter_rank_sizer->Add( m_filter_rank_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -188,7 +188,7 @@ m_parent_battlelisttab( parentBattleListTab )
   for (wxLongLong i = 0;i <= 32;i++) m_filter_player_choiceChoices.Add( i.ToString() );
 
 	m_filter_player_choice = new wxChoice( this, BATTLE_FILTER_PLAYER_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_player_choiceChoices, 0 );
-	m_filter_player_choice->SetSelection( ( f_values.player_num == _T("All") ? 0 : GetIntParam( f_values.player_num) ) + 1);
+	m_filter_player_choice->SetSelection( ( f_values.player_num == _T("All") ? 0 : GetIntParam( f_values.player_num) )    );
 	m_filter_player_choice->SetMinSize( wxSize( 40,-1 ) );
 
 	m_filter_player_sizer->Add( m_filter_player_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -242,7 +242,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	for (wxLongLong i = 0;i <= 32;i++) m_filter_maxplayer_choiceChoices.Add( i.ToString() );
 
 	m_filter_maxplayer_choice = new wxChoice( this, BATTLE_FILTER_MAXPLAYER_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_maxplayer_choiceChoices, 0 );
-	m_filter_maxplayer_choice->SetSelection( ( f_values.maxplayer == _T("All") ? 0 : GetIntParam( f_values.maxplayer) ) + 1 );
+	m_filter_maxplayer_choice->SetSelection( ( f_values.maxplayer == _T("All") ? 0 : GetIntParam( f_values.maxplayer) )   );
 	m_filter_maxplayer_choice->SetMinSize( wxSize( 40,-1 ) );
 
 	m_filter_maxplayer_sizer->Add( m_filter_maxplayer_choice, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -296,7 +296,7 @@ m_parent_battlelisttab( parentBattleListTab )
 	for (wxLongLong i = 0;i <= 32;i++) m_filter_spectator_choiceChoices.Add( i.ToString() );
 
 	m_filter_spectator_choice = new wxChoice( this, BATTLE_FILTER_SPECTATOR_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_spectator_choiceChoices, 0 );
-	m_filter_spectator_choice->SetSelection( ( f_values.spectator == _T("All") ? 0 : GetIntParam( f_values.spectator) ) + 1 );
+	m_filter_spectator_choice->SetSelection( ( f_values.spectator == _T("All") ? 0 : GetIntParam( f_values.spectator) )     );
 	m_filter_spectator_choice->SetMinSize( wxSize( 40,-1 ) );
 
 	m_filter_spectator_sizer->Add( m_filter_spectator_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -312,10 +312,10 @@ m_parent_battlelisttab( parentBattleListTab )
   m_filter_player_mode = _GetButtonMode(f_values.player_mode);
   m_filter_maxplayer_mode = _GetButtonMode(f_values.maxplayer_mode);
   m_filter_spectator_mode = _GetButtonMode(f_values.spectator_mode);
-  m_filter_rank_choice_value = ( f_values.rank == _T("All") ? 0 : GetIntParam( f_values.rank) ) - 1;
-  m_filter_player_choice_value = ( f_values.player_num == _T("All") ? 0 : GetIntParam( f_values.player_num) ) - 1;
-  m_filter_maxplayer_choice_value = ( f_values.maxplayer == _T("All") ? 0 : GetIntParam( f_values.maxplayer) ) - 1;
-  m_filter_spectator_choice_value = ( f_values.spectator == _T("All") ? 0 : GetIntParam( f_values.spectator) ) - 1;
+  m_filter_rank_choice_value = ( f_values.rank == _T("All") ? -1 : GetIntParam( f_values.rank) ) ;
+  m_filter_player_choice_value = ( f_values.player_num == _T("All") ? -1 : GetIntParam( f_values.player_num) ) ;
+  m_filter_maxplayer_choice_value = ( f_values.maxplayer == _T("All") ? -1 : GetIntParam( f_values.maxplayer) ) ;
+  m_filter_spectator_choice_value = ( f_values.spectator == _T("All") ? -1 : GetIntParam( f_values.spectator) ) ;
 
 	this->SetSizer( m_filter_sizer );
 	this->Layout();
@@ -398,7 +398,7 @@ void BattleListFilter::OnSpectatorButton( wxCommandEvent& event )
 void BattleListFilter::SetActiv( bool state )
 {
   m_activ = state;
-  if (m_parent_battlelisttab) {
+  if (m_parent_battlelisttab != 0) {
     m_parent_battlelisttab->UpdateList();
   }
 }
@@ -426,7 +426,7 @@ bool BattleListFilter::FilterBattle(Battle& battle)
   if ( !m_filter_status_open->GetValue() && !battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull() ) return false;
 
   //Rank Check
-  if ( (m_filter_rank_choice_value != -1) && _IntCompare( battle.GetRankNeeded(), m_filter_rank_choice_value, m_filter_rank_mode ) ) return false;
+  if ( (m_filter_rank_choice_value != -1) && !_IntCompare( battle.GetRankNeeded(), m_filter_rank_choice_value, m_filter_rank_mode ) ) return false;
 
   //Player Check
   if ( (m_filter_player_choice_value != -1) && !_IntCompare( battle.GetNumUsers() - battle.GetSpectators() , m_filter_player_choice_value , m_filter_player_mode ) ) return false;
@@ -506,14 +506,15 @@ void  BattleListFilter::SaveFilterValues()
     filtervalues.map = m_filter_host_edit->GetValue();
     filtervalues.map_show = m_filter_map_show->GetValue();
     filtervalues.map = m_filter_map_edit->GetValue();
-    filtervalues.maxplayer = wxString::Format(_("%d%"),m_filter_maxplayer_choice_value);
+    filtervalues.maxplayer = wxString::Format(_("%d%"),m_filter_maxplayer_choice->GetSelection());
     filtervalues.maxplayer_mode = _GetButtonSign(m_filter_maxplayer_mode);
     filtervalues.mod = m_filter_mod_edit->GetValue();
     filtervalues.mod_show = m_filter_mod_show->GetValue();
     filtervalues.player_mode = _GetButtonSign(m_filter_player_mode);
-    filtervalues.player_num = wxString::Format(_("%d%"),m_filter_player_choice_value);
-    filtervalues.rank = wxString::Format(_("%d%"),m_filter_rank_choice_value);
-    filtervalues.spectator = wxString::Format(_("%d%"),m_filter_spectator_choice_value);
+    filtervalues.player_num = wxString::Format(_("%d%"),m_filter_player_choice->GetSelection());
+    filtervalues.rank = wxString::Format(_("%d%"),m_filter_rank_choice->GetSelection());
+    filtervalues.rank_mode = _GetButtonSign(m_filter_rank_mode);
+    filtervalues.spectator = wxString::Format(_("%d%"),m_filter_spectator_choice->GetSelection());
     filtervalues.spectator_mode = _GetButtonSign(m_filter_spectator_mode);
     filtervalues.status_full = m_filter_status_full->IsChecked();
     filtervalues.status_locked = m_filter_status_locked->IsChecked();
