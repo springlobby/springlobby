@@ -426,7 +426,7 @@ bool BattleListFilter::FilterBattle(Battle& battle)
   if ( !m_filter_status_open->GetValue() && !battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull() ) return false;
 
   //Rank Check
-  if ( (m_filter_rank_choice_value != -1) && !_IntCompare( battle.GetRankNeeded(), m_filter_rank_choice_value, m_filter_rank_mode ) ) return false;
+  if ( (m_filter_rank_choice_value != -1) && !_IntCompare( int( battle.GetRankNeeded()*0.01), m_filter_rank_choice_value +1, m_filter_rank_mode ) ) return false;
 
   //Player Check
   if ( (m_filter_player_choice_value != -1) && !_IntCompare( battle.GetNumUsers() - battle.GetSpectators() , m_filter_player_choice_value , m_filter_player_mode ) ) return false;
