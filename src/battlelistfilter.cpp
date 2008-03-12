@@ -3,7 +3,10 @@
 // Class: BattleOptionsTab
 //
 
+
+#if wxUSE_TOGGLEBTN
 #include <wx/tglbtn.h>
+#endif
 #include <wx/stattext.h>
 #include <wx/checkbox.h>
 #include <wx/sizer.h>
@@ -12,9 +15,9 @@
 #include <wx/choice.h>
 #include <wx/button.h>
 #include <wx/string.h>
-#include <wx/panel.h>
 #include <wx/statbox.h>
 #include <wx/event.h>
+#include <wx/regex.h>
 
 #include "battlelistfilter.h"
 #include "battlelistfiltervalues.h"
@@ -27,25 +30,25 @@
 
 BEGIN_EVENT_TABLE(BattleListFilter, wxPanel)
 
-  EVT_BUTTON              ( BATTLE_FILTER_RANK_BUTTON     , BattleListFilter::OnRankButton      )
-  EVT_BUTTON              ( BATTLE_FILTER_PLAYER_BUTTON   , BattleListFilter::OnPlayerButton    )
-  EVT_BUTTON              ( BATTLE_FILTER_MAXPLAYER_BUTTON, BattleListFilter::OnMaxPlayerButton )
-  EVT_BUTTON              ( BATTLE_FILTER_SPECTATOR_BUTTON, BattleListFilter::OnSpectatorButton )
-  EVT_CHOICE              ( BATTLE_FILTER_SPECTATOR_CHOICE, BattleListFilter::OnSpectatorChange )
-  EVT_CHOICE              ( BATTLE_FILTER_MAXPLAYER_CHOICE, BattleListFilter::OnMaxPlayerChange )
-  EVT_CHOICE              ( BATTLE_FILTER_PLAYER_CHOICE   , BattleListFilter::OnPlayerChange    )
-  EVT_CHOICE              ( BATTLE_FILTER_RANK_CHOICE     , BattleListFilter::OnRankChange      )
-  EVT_CHECKBOX            ( BATTLE_FILTER_LOCKED          , BattleListFilter::OnChange          )
-  EVT_CHECKBOX            ( BATTLE_FILTER_OPEN            , BattleListFilter::OnChange          )
-  EVT_CHECKBOX            ( BATTLE_FILTER_PASSWORDED      , BattleListFilter::OnChange          )
-  EVT_CHECKBOX            ( BATTLE_FILTER_FULL            , BattleListFilter::OnChange          )
-  EVT_CHECKBOX            ( BATTLE_FILTER_STARTED         , BattleListFilter::OnChange          )
-  EVT_TEXT                ( BATTLE_FILTER_HOST_EDIT       , BattleListFilter::OnChange          )
-  EVT_TEXT                ( BATTLE_FILTER_DESCRIPTION_EDIT, BattleListFilter::OnChange          )
-  EVT_TEXT                ( BATTLE_FILTER_MAP_EDIT        , BattleListFilter::OnChange          )
-  EVT_TEXT                ( BATTLE_FILTER_MOD_EDIT        , BattleListFilter::OnChange          )
-  EVT_CHECKBOX            ( BATTLE_FILTER_MAP_SHOW        , BattleListFilter::OnChange          )
-  EVT_CHECKBOX            ( BATTLE_FILTER_MOD_SHOW        , BattleListFilter::OnChange          )
+  EVT_BUTTON              ( BATTLE_FILTER_RANK_BUTTON     , BattleListFilter::OnRankButton        )
+  EVT_BUTTON              ( BATTLE_FILTER_PLAYER_BUTTON   , BattleListFilter::OnPlayerButton      )
+  EVT_BUTTON              ( BATTLE_FILTER_MAXPLAYER_BUTTON, BattleListFilter::OnMaxPlayerButton   )
+  EVT_BUTTON              ( BATTLE_FILTER_SPECTATOR_BUTTON, BattleListFilter::OnSpectatorButton   )
+  EVT_CHOICE              ( BATTLE_FILTER_SPECTATOR_CHOICE, BattleListFilter::OnSpectatorChange   )
+  EVT_CHOICE              ( BATTLE_FILTER_MAXPLAYER_CHOICE, BattleListFilter::OnMaxPlayerChange   )
+  EVT_CHOICE              ( BATTLE_FILTER_PLAYER_CHOICE   , BattleListFilter::OnPlayerChange      )
+  EVT_CHOICE              ( BATTLE_FILTER_RANK_CHOICE     , BattleListFilter::OnRankChange        )
+  EVT_CHECKBOX            ( BATTLE_FILTER_LOCKED          , BattleListFilter::OnChange            )
+  EVT_CHECKBOX            ( BATTLE_FILTER_OPEN            , BattleListFilter::OnChange            )
+  EVT_CHECKBOX            ( BATTLE_FILTER_PASSWORDED      , BattleListFilter::OnChange            )
+  EVT_CHECKBOX            ( BATTLE_FILTER_FULL            , BattleListFilter::OnChange            )
+  EVT_CHECKBOX            ( BATTLE_FILTER_STARTED         , BattleListFilter::OnChange            )
+  EVT_TEXT                ( BATTLE_FILTER_HOST_EDIT       , BattleListFilter::OnChangeHost        )
+  EVT_TEXT                ( BATTLE_FILTER_DESCRIPTION_EDIT, BattleListFilter::OnChangeDescription )
+  EVT_TEXT                ( BATTLE_FILTER_MAP_EDIT        , BattleListFilter::OnChangeMap         )
+  EVT_TEXT                ( BATTLE_FILTER_MOD_EDIT        , BattleListFilter::OnChangeMod         )
+  EVT_CHECKBOX            ( BATTLE_FILTER_MAP_SHOW        , BattleListFilter::OnChange            )
+  EVT_CHECKBOX            ( BATTLE_FILTER_MOD_SHOW        , BattleListFilter::OnChange            )
 
 END_EVENT_TABLE()
 
@@ -71,11 +74,13 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_host_text->Wrap( -1 );
 	m_filter_host_text->SetMinSize( wxSize( 90,-1 ) );
 
+
 	m_filter_column_1->Add( m_filter_host_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_filter_host_edit = new wxTextCtrl( this, BATTLE_FILTER_HOST_EDIT, f_values.host, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_host_edit->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 	m_filter_host_edit->SetMinSize( wxSize( 220,-1 ) );
+    m_filter_host_expression = new wxRegEx(m_filter_host_edit->GetValue(),wxRE_ICASE);
 
 	m_filter_column_1->Add( m_filter_host_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -145,6 +150,7 @@ m_parent_battlelisttab( parentBattleListTab )
 
 	m_filter_description_edit = new wxTextCtrl( this, BATTLE_FILTER_DESCRIPTION_EDIT, f_values.description, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_description_edit->SetMinSize( wxSize( 220,-1 ) );
+    m_filter_description_expression = new wxRegEx(m_filter_description_edit->GetValue(),wxRE_ICASE);
 
 	m_filter_description_sizer->Add( m_filter_description_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -213,6 +219,7 @@ m_parent_battlelisttab( parentBattleListTab )
 
 	m_filter_map_edit = new wxTextCtrl( this, BATTLE_FILTER_MAP_EDIT, f_values.map, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_map_edit->SetMinSize( wxSize( 140,-1 ) );
+    m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(),wxRE_ICASE);
 
 	m_filter_map_sizer->Add( m_filter_map_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -267,6 +274,7 @@ m_parent_battlelisttab( parentBattleListTab )
 
 	m_filter_mod_edit = new wxTextCtrl( this, BATTLE_FILTER_MOD_EDIT, f_values.mod, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_mod_edit->SetMinSize( wxSize( 140,-1 ) );
+    m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(),4);
 
 	m_filter_mod_sizer->Add( m_filter_mod_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -323,20 +331,21 @@ m_parent_battlelisttab( parentBattleListTab )
 	this->Layout();
 	m_filter_sizer->Fit( this );
 
-	/* uncomment after regex merge
-
-if (m_filter_map_expression != NULL) { delete m_filter_map_expression; }
-m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(),wxRE_ICASE);
-if (m_filter_mod_expression != NULL) { delete m_filter_mod_expression; }
-m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(),wxRE_ICASE);
-if (m_filter_description_expression != NULL) { delete m_filter_description_expression; }
-m_filter_description_expression = new wxRegEx(m_filter_description_edit->GetValue(),wxRE_ICASE);
-if (m_filter_host_expression != NULL) { delete m_filter_host_expression; }
-m_filter_host_expression = new wxRegEx(m_filter_host_edit->GetValue(),wxRE_ICASE);
-OnChange(event);
 
 
-	*/
+    if (m_filter_map_expression != NULL) { delete m_filter_map_expression; }
+    m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(),wxRE_ICASE);
+    if (m_filter_mod_expression != NULL) { delete m_filter_mod_expression; }
+    m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(),wxRE_ICASE);
+    if (m_filter_description_expression != NULL) { delete m_filter_description_expression; }
+    m_filter_description_expression = new wxRegEx(m_filter_description_edit->GetValue(),wxRE_ICASE);
+    if (m_filter_host_expression != NULL) { delete m_filter_host_expression; }
+    m_filter_host_expression = new wxRegEx(m_filter_host_edit->GetValue(),wxRE_ICASE);
+    wxCommandEvent dummy;
+    OnChange(dummy);
+
+
+
 }
 
 BattleListFilter::m_button_mode BattleListFilter::_GetButtonMode(wxString sign)
@@ -447,17 +456,19 @@ bool BattleListFilter::FilterBattle(Battle& battle)
   //Only Mods i have Check
   if (m_filter_mod_show->GetValue() && !battle.ModExists()) return false;
 
+  //Strings Plain Text & RegEx Check (Case insensitiv)
+
   //Description:
-  if ( !battle.GetDescription().Upper().Contains( m_filter_description_edit->GetValue().Upper() ) ) return false;
+  if ( !battle.GetDescription().Upper().Contains( m_filter_description_edit->GetValue().Upper() ) && !m_filter_description_expression->Matches(battle.GetDescription(),wxRE_ICASE) ) return false;
 
   //Host:
-  if ( !battle.GetFounder().GetNick().Upper().Contains( m_filter_host_edit->GetValue().Upper() ) ) return false;
+  if ( !battle.GetFounder().GetNick().Upper().Contains( m_filter_host_edit->GetValue().Upper() ) && !m_filter_host_expression->Matches(battle.GetFounder().GetNick(),wxRE_ICASE) ) return false;
 
   //Map:
-  if ( !RefineMapname(battle.GetMapName() ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) ) return false;
+  if ( !RefineMapname(battle.GetMapName() ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) && !m_filter_map_expression->Matches(RefineMapname(battle.GetMapName() ),wxRE_ICASE) ) return false;
 
   //Mod:
-  if ( !battle.GetModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !RefineModname( battle.GetModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) ) return false;
+  if ( !battle.GetModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !RefineModname( battle.GetModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) && !m_filter_mod_expression->Matches(RefineModname(battle.GetModName()),wxRE_ICASE) ) return false;
 
   return true;
 }
@@ -466,6 +477,34 @@ void BattleListFilter::OnChange   ( wxCommandEvent& event )
 {
   if (!m_activ) return;
   m_parent_battlelisttab->UpdateList();
+}
+
+void BattleListFilter::OnChangeMap ( wxCommandEvent& event )
+{
+  if (m_filter_map_expression != NULL) { delete m_filter_map_expression; }
+  m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(),wxRE_ICASE);
+  OnChange(event);
+}
+
+void BattleListFilter::OnChangeMod ( wxCommandEvent& event )
+{
+  if (m_filter_mod_expression != NULL) { delete m_filter_mod_expression; }
+  m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(),wxRE_ICASE);
+  OnChange(event);
+}
+
+void BattleListFilter::OnChangeDescription ( wxCommandEvent& event )
+{
+  if (m_filter_description_expression != NULL) { delete m_filter_description_expression; }
+  m_filter_description_expression = new wxRegEx(m_filter_description_edit->GetValue(),wxRE_ICASE);
+  OnChange(event);
+}
+
+void BattleListFilter::OnChangeHost ( wxCommandEvent& event )
+{
+  if (m_filter_host_expression != NULL) { delete m_filter_host_expression; }
+  m_filter_host_expression = new wxRegEx(m_filter_host_edit->GetValue(),wxRE_ICASE);
+  OnChange(event);
 }
 
 

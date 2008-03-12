@@ -9,6 +9,9 @@
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <stdexcept>
+#if wxUSE_TOGGLEBTN
+#include <wx/tglbtn.h>
+#endif
 
 #include "battlelisttab.h"
 #include "battlelistctrl.h"
