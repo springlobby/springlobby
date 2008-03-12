@@ -118,6 +118,8 @@ m_parent_battlelisttab( parentBattleListTab )
 	m_filter_rank_choiceChoices.Add( _T("3") );
 	m_filter_rank_choiceChoices.Add( _T("4") );
 	m_filter_rank_choiceChoices.Add( _T("5") );
+	m_filter_rank_choiceChoices.Add( _T("6") );
+	m_filter_rank_choiceChoices.Add( _T("7") );
 
 	m_filter_rank_choice = new wxChoice( this, BATTLE_FILTER_RANK_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_rank_choiceChoices, wxSIMPLE_BORDER );
 	m_filter_rank_choice->SetSelection( ( f_values.rank == _T("All") ? 0 : GetIntParam( f_values.rank) )  );
@@ -426,7 +428,9 @@ bool BattleListFilter::FilterBattle(Battle& battle)
   if ( !m_filter_status_open->GetValue() && !battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull() ) return false;
 
   //Rank Check
-  if ( (m_filter_rank_choice_value != -1) && !_IntCompare( int( battle.GetRankNeeded()*0.01), m_filter_rank_choice_value +1, m_filter_rank_mode ) ) return false;
+  bool nonsenserank = ( m_filter_rank_mode == m_smaller ) && ( battle.GetRankNeeded() == 100) ;
+  if ( (m_filter_rank_choice_value != -1) && !nonsenserank &&
+            !_IntCompare( int( battle.GetRankNeeded()*0.01), m_filter_rank_choice_value +1, m_filter_rank_mode ) ) return false;
 
   //Player Check
   if ( (m_filter_player_choice_value != -1) && !_IntCompare( battle.GetNumUsers() - battle.GetSpectators() , m_filter_player_choice_value , m_filter_player_mode ) ) return false;
