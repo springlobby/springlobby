@@ -336,7 +336,7 @@ void MainWindow::OnMenuAbout( wxCommandEvent& event )
 	wxAboutBox(info);
 
 #else
-    customMessageBoxNoModal(SE_MAIN_ICON,_T("SpringLobby version: ")+GetSpringLobbyVersion(),_T("About"));
+    customMessageBoxNoModal(SL_MAIN_ICON,_T("SpringLobby version: ")+GetSpringLobbyVersion(),_T("About"));
 #endif
 }
 
