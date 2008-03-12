@@ -37,7 +37,11 @@ ChatLog::~ChatLog()
     WriteLine( _T(" \n \n \n") );
     if ( m_logfile->IsOpened() ) m_logfile->Close();
   }
-  delete m_logfile;
+  if (m_logfile != 0)
+  {
+  	delete m_logfile;
+	m_logfile = 0;
+  }
 }
 
 
