@@ -957,7 +957,7 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
     if(battle){
       if((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))
       {
-        UdpPing();
+        UdpPing( m_user );
       }
     }
   }
@@ -1408,10 +1408,10 @@ void TASServer::OnDataReceived( Socket* sock )
 
 //! @brief Send udp ping.
 //! @note used for nat travelsal.
-void TASServer::UdpPing()
+void TASServer::UdpPing(const wxString &message)
 {
 #ifndef HAVE_WX26
-
+  wxLogMessage(_T("UdpPing src. port=%i , dest. port=%i , dest. hostname='%s' message='%s'"),m_udp_private_port,m_nat_helper_port,m_addr,message);
   wxIPV4address local_addr;
   local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
   local_addr.Service(m_udp_private_port);
@@ -1423,11 +1423,7 @@ void TASServer::UdpPing()
   wxaddr.Service(m_nat_helper_port);
 
   if(udp_socket.IsOk()&&!udp_socket.Error()){
-    std::string m = (const char*)m_user.mb_str(wxConvUTF8);
-    if(m.empty()){
-      //wxLogMessage(_T("empty udp message string"));
-      m="ipv4 sux";
-    }
+    std::string m=(const char*)message.mb_str(wxConvUTF8);
     udp_socket.SendTo( wxaddr, m.c_str(), m.length() );
     wxLogDebugFunc( _T("") );
     m_se->OnMyInternalUdpSourcePort( m_udp_private_port );

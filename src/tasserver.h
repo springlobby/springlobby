@@ -46,7 +46,7 @@ class TASServer : public Server
 
     void Ping();
 
-    void UDPPing();/// used for nat travelsal
+    void UdpPing(const wxString &message=_T("ipv4 sux!"));/// used for nat travelsal
 
     User& GetMe();
 
@@ -127,8 +127,6 @@ class TASServer : public Server
     wxString GetPasswordHash( const wxString& pass );
 
     bool TestOpenPort( unsigned int port );
-
-    void UdpPing();
 
   protected:
     Ui& m_ui;
