@@ -18,6 +18,11 @@
 #include "serverevents.h"
 #include "socket.h"
 
+/// for SL_MAIN_ICON
+#include "settings++/custom_dialogs.h"
+
+const int udp_reply_timeout=10;
+
 
 //! @brief Struct used internally by the TASServer class to get client status information.
 struct TASClientstatus {
@@ -85,7 +90,7 @@ StartType IntToStartType( int start );
 NatType IntToNatType( int nat );
 GameType IntToGameType( int gt );
 
-TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(false), m_online(false), m_buffer(_T("")), m_last_ping(0), m_ping_id(10000), m_udp_private_port(16941),m_battle_id(-1) { m_se = new ServerEvents( *this, ui); }
+TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(false), m_online(false), m_buffer(_T("")), m_last_udp_ping(0), m_ping_id(10000), m_udp_private_port(16941),m_battle_id(-1), m_do_finalize_join_battle(false), m_finalize_join_battle_id(-1) { m_se = new ServerEvents( *this, ui); }
 
 TASServer::~TASServer() { delete m_se; }
 
@@ -171,7 +176,7 @@ void TASServer::Connect( const wxString& addr, const int port )
 
   m_sock->Connect( addr, port );
   if ( IsConnected() ) {
-    m_last_ping = time( 0 );
+    m_last_udp_ping = time( 0 );
     m_connected = true;
   }
   m_sock->SetPingInfo( _T("PING\n"), 10000 );
@@ -288,7 +293,7 @@ void TASServer::Update( int mselapsed )
 
   if ( !m_connected ) { // We are not formally connected yet, but might be.
     if ( IsConnected() ) {
-      m_last_ping = time( 0 );
+      m_last_udp_ping = time( 0 );
       m_connected = true;
     }
     return;
@@ -301,9 +306,19 @@ void TASServer::Update( int mselapsed )
     }
 
     time_t now = time( 0 );
-    if ( ( m_last_ping + m_keepalive ) < now )
+
+    if(m_do_finalize_join_battle&&(m_last_udp_ping+udp_reply_timeout<now)){
+      //customMessageBoxNoModal(SL_MAIN_ICON,_("NAT Traversal has failed when joining battle. You might be unable to play in this battle."),_("Warning"));
+      //wxMessageBox()
+      wxMessageBox(_("Failed to punch through NAT"), _("Error"), wxICON_INFORMATION, NULL/* m_ui.mw()*/ );
+      FinalizeJoinBattle();
+    };
+
+
+
+    if ( ( m_last_udp_ping + m_keepalive ) < now )
     { // Is it time for a nat traversal PING?
-      m_last_ping = now;
+      m_last_udp_ping = now;
       /// Nat travelsal "ping"
       Battle *battle=GetCurrentBattle();
       if(battle){
@@ -641,6 +656,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
   } else if ( cmd == _T("UDPSOURCEPORT") ) {
     unsigned int tmp_port = (unsigned int)GetIntParam( params );
     m_se->OnMyExternalUdpSourcePort( tmp_port );
+    if(m_do_finalize_join_battle)FinalizeJoinBattle();
     //UDPSOURCEPORT port
   } else if ( cmd == _T("SETSCRIPTTAGS") ) {
     wxString command;
@@ -688,7 +704,7 @@ void TASServer::Ping()
   pli.id = m_ping_id;
   pli.t = time( 0 );
   m_pinglist.push_back ( pli );
-  m_last_ping = time( 0 );
+  m_last_udp_ping = time( 0 );
 }
 
 
@@ -950,23 +966,47 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
+  m_finalize_join_battle_pw=password;
+  m_finalize_join_battle_id=battleid;
+  m_do_finalize_join_battle=true;
+
+  ///m_finalize_join_battle_msg=_T("JOINBATTLE ")+wxString::Format( _T("%d"), battleid )+ _T(" ") + password;
+
   //UDPPing();
   if(BattleExists(battleid))
   {
     Battle *battle=&GetBattle(battleid);
+
     if(battle){
       if((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))
       {
-        UdpPing( m_user );
+        m_last_udp_ping = time(0);
+        for(int n=0;n<5;++n){/// do 5 udp pings with interval 0.1 second
+          UdpPing( m_user );
+          sleep(0);
+        }
+        m_last_udp_ping = time(0);
+      }else{
+        /// if not using nat, finalize now.
+        FinalizeJoinBattle();
       }
+    }else{
+      wxLogMessage( _T("battle doesnt exist (null)") );
     }
   }
   else
   {
     wxLogMessage( _T("battle doesnt exist") );
   }
+  //SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d"), battleid ) + _T(" ") + password );
+}
 
-  SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d"), battleid ) + _T(" ") + password );
+
+void TASServer::FinalizeJoinBattle(){
+  if(m_do_finalize_join_battle){
+    SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d"), m_finalize_join_battle_id ) + _T(" ") + m_finalize_join_battle_pw);
+    m_do_finalize_join_battle=false;
+  }
 }
 
 
@@ -1384,7 +1424,7 @@ void TASServer::OnConnected( Socket* sock )
 {
   wxLogDebugFunc( _T("") );
   //TASServer* serv = (TASServer*)sock->GetUserdata();
-  m_last_ping = time( 0 );
+  m_last_udp_ping = time( 0 );
   m_connected = true;
   m_online = false;
 }
@@ -1411,7 +1451,7 @@ void TASServer::OnDataReceived( Socket* sock )
 void TASServer::UdpPing(const wxString &message)
 {
 #ifndef HAVE_WX26
-  wxLogMessage(_T("UdpPing src. port=%i , dest. port=%i , dest. hostname='%s' message='%s'"),m_udp_private_port,m_nat_helper_port,m_addr,message);
+  wxLogMessage(_T("UdpPing src. port=%i , dest. port=%i, message='%s'"),m_udp_private_port,m_nat_helper_port, message.c_str());
   wxIPV4address local_addr;
   local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
   local_addr.Service(m_udp_private_port);
@@ -1423,9 +1463,9 @@ void TASServer::UdpPing(const wxString &message)
   wxaddr.Service(m_nat_helper_port);
 
   if(udp_socket.IsOk()&&!udp_socket.Error()){
-    std::string m=(const char*)message.mb_str(wxConvUTF8);
+    std::string m=STD_STRING(message);
     udp_socket.SendTo( wxaddr, m.c_str(), m.length() );
-    wxLogDebugFunc( _T("") );
+    //wxLogDebugFunc( _T("") );
     m_se->OnMyInternalUdpSourcePort( m_udp_private_port );
   }else{
     wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));

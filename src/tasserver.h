@@ -136,7 +136,7 @@ class TASServer : public Server
     bool m_connected;
     bool m_online;
     wxString m_buffer;
-    time_t m_last_ping;
+    time_t m_last_udp_ping;
     int m_ping_id;
     std::list<TASPingListItem> m_pinglist;
 
@@ -148,6 +148,11 @@ class TASServer : public Server
     wxString m_agreement;
 
     wxString m_addr;
+
+    int m_finalize_join_battle_id;
+    wxString m_finalize_join_battle_pw;
+    bool m_do_finalize_join_battle;
+    void FinalizeJoinBattle();
 
     void ReceiveAndExecute();
     void SendCmd( const wxString& command, const wxString& param = _T("") );
