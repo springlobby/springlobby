@@ -307,14 +307,17 @@ void TASServer::Update( int mselapsed )
 
     time_t now = time( 0 );
 
+    /// joining battle with nat traversal:
+    /// if we havent finalized joining yet, and udp_reply_timeout seconds has passed since
+    /// we did UdpPing(our name) , join battle anyway, but with warning message that nat failed.
+    /// (if we'd receive reply from server, we'd finalize already)
+    ///
     if(m_do_finalize_join_battle&&(m_last_udp_ping+udp_reply_timeout<now)){
       //customMessageBoxNoModal(SL_MAIN_ICON,_("NAT Traversal has failed when joining battle. You might be unable to play in this battle."),_("Warning"));
       //wxMessageBox()
       wxMessageBox(_("Failed to punch through NAT"), _("Error"), wxICON_INFORMATION, NULL/* m_ui.mw()*/ );
       FinalizeJoinBattle();
     };
-
-
 
     if ( ( m_last_udp_ping + m_keepalive ) < now )
     { // Is it time for a nat traversal PING?
@@ -968,11 +971,7 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
 
   m_finalize_join_battle_pw=password;
   m_finalize_join_battle_id=battleid;
-  m_do_finalize_join_battle=true;
 
-  ///m_finalize_join_battle_msg=_T("JOINBATTLE ")+wxString::Format( _T("%d"), battleid )+ _T(" ") + password;
-
-  //UDPPing();
   if(BattleExists(battleid))
   {
     Battle *battle=&GetBattle(battleid);
@@ -980,14 +979,19 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
     if(battle){
       if((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))
       {
-        m_last_udp_ping = time(0);
-        for(int n=0;n<5;++n){/// do 5 udp pings with interval 0.1 second
+        m_last_udp_ping = time(0);/// The messages received from server, and Update function run in different thread. (Which is total WTF)
+        /// Hence its important to set time now, to prevent Update()
+        /// from calling FinalizeJoinBattle() on timeout.
+        /// m_do_finalize_join_battle must be set to true after setting time, not before.
+        m_do_finalize_join_battle=true;
+        for(int n=0;n<5;++n){/// do 5 udp pings with tiny interval
           UdpPing( m_user );
-          sleep(0);
+          sleep(0);/// sleep until end of timeslice.
         }
-        m_last_udp_ping = time(0);
+        m_last_udp_ping = time(0);/// set time again
       }else{
         /// if not using nat, finalize now.
+        m_do_finalize_join_battle=true;
         FinalizeJoinBattle();
       }
     }else{
