@@ -435,7 +435,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += _T("\t{\n");
 
   for ( unsigned int i = 0; i < units.GetCount(); i++) {
-    s += wxString::Format(_T("\t\tUnit%d=%s:\n"), i, units[i].c_str() );
+    s += wxString::Format(_T("\t\tUnit%d=%s;\n"), i, units[i].c_str() );
     s += wxString::Format( _T("\t\tLimit%d=0;\n"), i );
   }
   s += _T("\t}\n");
