@@ -21,6 +21,8 @@
 /// for SL_MAIN_ICON
 #include "settings++/custom_dialogs.h"
 
+#include "settings.h"
+
 const int udp_reply_timeout=10;
 
 
@@ -326,7 +328,12 @@ void TASServer::Update( int mselapsed )
       Battle *battle=GetCurrentBattle();
       if(battle){
         if((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports) ) && !battle->GetInGame()){
-          UdpPing();
+          if(battle->IsFounderMe()){
+            UdpPing(m_user);
+            UdpPingAllClients();
+          }else{
+            UdpPing();
+          }
         }else{
           /// old logging for debug
           //if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
@@ -661,6 +668,12 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     m_se->OnMyExternalUdpSourcePort( tmp_port );
     if(m_do_finalize_join_battle)FinalizeJoinBattle();
     //UDPSOURCEPORT port
+  } else if(cmd == _T("CLIENTIPPORT")){
+    // clientipport username ip port
+    nick=GetWordParam( params );
+    wxString ip=GetWordParam(params);
+    unsigned int port=(unsigned int)GetIntParam( params );
+    m_se->OnClientIPPort(nick, ip, port);
   } else if ( cmd == _T("SETSCRIPTTAGS") ) {
     wxString command;
     while ( (command = GetSentenceParam( params )) != _T("") ) {
@@ -943,7 +956,15 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
-  wxString cmd = wxString::Format( _T("0 %d "), bo.nattype );
+  /// to see ip addresses of users as they join (in the log), pretend you're hosting with NAT.
+  int nat_type=bo.nattype;
+  /*
+  if(nat_type==0 && sett().GetShowIPAddresses()){
+    nat_type=1;
+  }*/
+  wxLogMessage(_T("hosting with nat type %d"),nat_type);
+
+  wxString cmd = wxString::Format( _T("0 %d "), nat_type );
   cmd += (password.IsEmpty())?_T("*"):password;
   cmd += wxString::Format( _T(" %d %d "),
     bo.port,
@@ -957,6 +978,8 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
   cmd += bo.modname;
   //wxLogMessage( _T("%s"), cmd.c_str() );
   SendCmd( _T("OPENBATTLE"), cmd );
+
+  if(bo.nattype>0)UdpPing(m_user);
 
   // OPENBATTLE type natType password port maphash {map} {title} {modname}
 }
@@ -1171,7 +1194,7 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
-  GetMe().SetBattleStatus( bs );
+  GetMe().UpdateBattleStatus( bs );
 
   UTASBattleStatus tasbs;
   tasbs.tasdata = ConvTasbattlestatus( bs );
@@ -1452,31 +1475,90 @@ void TASServer::OnDataReceived( Socket* sock )
 
 //! @brief Send udp ping.
 //! @note used for nat travelsal.
-void TASServer::UdpPing(const wxString &message)
+
+void TASServer::UdpPing(unsigned int src_port, const wxString &target, unsigned int target_port, const wxString &message)/// full parameters version, used to ping all clients when hosting.
 {
 #ifndef HAVE_WX26
-  wxLogMessage(_T("UdpPing src. port=%i , dest. port=%i, message='%s'"),m_udp_private_port,m_nat_helper_port, message.c_str());
+  wxLogMessage(_T("UdpPing src_port=%d , target='%s' , target_port=%d , message='%s'"),src_port,target.c_str(),target_port, message.c_str());
   wxIPV4address local_addr;
   local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
-  local_addr.Service(m_udp_private_port);
+  local_addr.Service(src_port);
 
   wxDatagramSocket udp_socket(local_addr,/* wxSOCKET_WAITALL*/wxSOCKET_NONE);
 
   wxIPV4address wxaddr;
-  wxaddr.Hostname(m_addr);
-  wxaddr.Service(m_nat_helper_port);
+  wxaddr.Hostname(target);
+  wxaddr.Service(target_port);
 
   if(udp_socket.IsOk()&&!udp_socket.Error()){
     std::string m=STD_STRING(message);
     udp_socket.SendTo( wxaddr, m.c_str(), m.length() );
-    //wxLogDebugFunc( _T("") );
-    m_se->OnMyInternalUdpSourcePort( m_udp_private_port );
   }else{
     wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));
   }
   if(udp_socket.Error())wxLogMessage(_T("Error=%d"),udp_socket.LastError());
 
 #endif
+}
+
+void TASServer::UdpPing(const wxString &message){
+  m_se->OnMyInternalUdpSourcePort( m_udp_private_port );
+  UdpPing(m_udp_private_port,m_addr,m_nat_helper_port,message);
+}
+
+
+/// copypasta from spring.cpp , to get users ordered same way as in tasclient.
+struct UserOrder{
+    int index;/// user number for GetUser
+    int order;/// user order (we'll sort by it)
+    bool operator<(UserOrder b) const {/// comparison function for sorting
+      return order<b.order;
+    }
+};
+
+
+void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching
+{
+  Battle *battle=GetCurrentBattle();
+  if(!battle)return;
+  if(!battle->IsFounderMe())return;
+  wxLogMessage(_T("UdpPingAllClients()"));
+
+  /// I'm gonna mimic tasclient's behavior.
+  /// It of course doesnt matter in which order pings are sent,
+  /// but the source ports in tasclient are set like
+  /// FIRST_UDP_SOURCEPORT + index of user excluding myself
+  /// so users must be reindexed in same way as in tasclient
+  /// to get same source ports for pings.
+
+  /// copypasta from spring.cpp
+  std::vector<UserOrder> ordered_users;
+
+
+  for ( user_map_t::size_type i = 0; i < battle->GetNumUsers(); i++ ){
+    User &user=battle->GetUser(i);
+    if(&user == &(battle->GetMe()))continue;/// dont include myself (change in copypasta)
+
+    UserOrder tmp;
+    tmp.index=i;
+    tmp.order=user.BattleStatus().order;
+    ordered_users.push_back(tmp);
+  }
+  std::sort(ordered_users.begin(),ordered_users.end());
+
+
+  for(int i=0;i<int(ordered_users.size());++i){
+    User &user=battle->GetUser(ordered_users[i].index);
+
+    wxString ip=user.BattleStatus().ip;
+    unsigned int port=user.BattleStatus().udpport;
+    unsigned int src_port=FIRST_UDP_SOURCEPORT+i;
+    wxLogMessage(_T(" pinging nick=%s , ip=%s , port=%d"),user.GetNick().c_str(),ip.c_str(),port);
+
+    if(port!=0 && !ip.empty()){
+      UdpPing(src_port,ip,port,_T("hai!"));
+    }
+  }
 }
 
 //! @brief used to check if the NAT is done properly when hosting

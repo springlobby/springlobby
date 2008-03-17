@@ -231,7 +231,10 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
     User& user = m_serv.GetUser( nick );
     Battle& battle = m_serv.GetBattle( battleid );
     status.color_index = user.BattleStatus().color_index;
-    user.SetBattleStatus( status );
+
+
+    user.UpdateBattleStatus( status );
+
     m_ui.OnUserBattleStatus( battle, user );
   }
   catch(std::runtime_error &except){
@@ -584,6 +587,32 @@ void ServerEvents::OnMyExternalUdpSourcePort( const unsigned int udpport )
 {
   if ( !m_serv.GetCurrentBattle() ) return;
   m_serv.GetCurrentBattle()->SetMyExternalUdpSourcePort(udpport);
+}
+
+void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip, unsigned int udpport )
+{
+  wxLogMessage(_T("OnClientIPPort(%s,%s,%d)"),username.c_str(),ip.c_str(),udpport);
+  if ( !m_serv.GetCurrentBattle() ){
+    wxLogMessage(_T("GetCurrentBattle() returned null"));
+    return;
+  }
+  try{
+    User &user=m_serv.GetCurrentBattle()->GetUser( username );
+
+    user.BattleStatus().ip=ip;
+    user.BattleStatus().udpport=udpport;
+    wxLogMessage(_T("set to %s %d "),user.BattleStatus().ip.c_str(),user.BattleStatus().udpport);
+
+    if(sett().GetShowIPAddresses())m_ui.OnBattleAction(*m_serv.GetCurrentBattle(),username,wxString::Format(_(" has ip=%s"),ip.c_str()));
+
+    if(m_serv.GetCurrentBattle()->GetNatType()!=NAT_None && (udpport==0)){
+      /// todo: better warning message
+      ///something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+      m_ui.OnBattleAction(*m_serv.GetCurrentBattle(),username,_(" does not really support nat traversal"));
+    }
+  }catch(std::runtime_error){
+    wxLogMessage(_T("runtime_error inside OnClientIPPort()"));
+  }
 }
 
 

@@ -6,6 +6,8 @@
 
 #include "server.h"
 
+#define FIRST_UDP_SOURCEPORT 8300
+
 //! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
 struct TASPingListItem {
   int id;
@@ -46,7 +48,9 @@ class TASServer : public Server
 
     void Ping();
 
-    void UdpPing(const wxString &message=_T("ipv4 sux!"));/// used for nat travelsal
+    void UdpPing(unsigned int src_port, const wxString &target, unsigned int target_port, const wxString &message);/// full parameters version, used to ping all clients when hosting.
+    void UdpPing(const wxString &message=_T("ipv4 sux!"));/// used for nat travelsal. pings the server.
+    void UdpPingAllClients();/// used when hosting with nat holepunching
 
     User& GetMe();
 
