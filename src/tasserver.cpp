@@ -1229,6 +1229,12 @@ void TASServer::SendMyUserStatus()
 void TASServer::StartHostedBattle()
 {
   ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
+
+  Battle *battle=GetCurrentBattle();
+  if(battle){
+    if((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports)))UdpPingAllClients();
+  }
+
   m_se->OnStartHostedBattle( m_battle_id );
 }
 
