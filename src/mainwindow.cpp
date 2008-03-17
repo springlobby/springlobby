@@ -32,6 +32,7 @@
 #include "images/singleplayer_icon.xpm"
 #include "images/options_icon.xpm"
 #include "images/select_icon.xpm"
+#include "images/downloads_icon.xpm"
 
 #include "settings++/frame.h"
 #include "settings++/custom_dialogs.h"
@@ -104,6 +105,7 @@ MainWindow::MainWindow( Ui& ui ) :
   m_battle_icon = new wxBitmap( join_icon_xpm );
   m_sp_icon = new wxBitmap( singleplayer_icon_xpm );
   m_options_icon = new wxBitmap( options_icon_xpm );
+  m_downloads_icon = new wxBitmap( downloads_icon_xpm );
   m_select_image = new wxBitmap( select_icon_xpm );
 
   m_func_tab_images = new wxImageList( 64, 64 );
@@ -119,6 +121,8 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
+  //TODO insert real downloads panel
+  m_func_tabs->AddPage( m_opts_tab, _T(""), false, 4 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -201,6 +205,8 @@ void MainWindow::MakeImages()
     m_func_tab_images->Add( img );
   } else {*/
     m_func_tab_images->Add( *m_options_icon );
+
+    m_func_tab_images->Add( *m_downloads_icon );
   //}
 
 }
