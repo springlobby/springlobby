@@ -1517,7 +1517,7 @@ struct UserOrder{
 };
 
 
-void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching
+void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. has some rudimentary support for fixed source ports.
 {
   Battle *battle=GetCurrentBattle();
   if(!battle)return;
@@ -1526,10 +1526,11 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching
 
   /// I'm gonna mimic tasclient's behavior.
   /// It of course doesnt matter in which order pings are sent,
-  /// but the source ports in tasclient are set like
+  /// but when doing "fixed source ports", the port must be
   /// FIRST_UDP_SOURCEPORT + index of user excluding myself
   /// so users must be reindexed in same way as in tasclient
   /// to get same source ports for pings.
+
 
   /// copypasta from spring.cpp
   std::vector<UserOrder> ordered_users;
@@ -1552,7 +1553,12 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching
 
     wxString ip=user.BattleStatus().ip;
     unsigned int port=user.BattleStatus().udpport;
-    unsigned int src_port=FIRST_UDP_SOURCEPORT+i;
+
+    unsigned int src_port=m_udp_private_port;
+    if(battle->GetNatType()==NAT_Fixed_source_ports){
+      port=FIRST_UDP_SOURCEPORT+i;
+    }
+
     wxLogMessage(_T(" pinging nick=%s , ip=%s , port=%d"),user.GetNick().c_str(),ip.c_str(),port);
 
     if(port!=0 && !ip.empty()){
