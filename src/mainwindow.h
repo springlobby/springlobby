@@ -47,6 +47,7 @@ class MainWindow : public wxFrame
 
     void ShowConfigure();
 
+    void OnMenuAbout( wxCommandEvent& event );
     void OnMenuJoin( wxCommandEvent& event );
     void OnMenuChat( wxCommandEvent& event );
     void OnMenuConnect( wxCommandEvent& event );

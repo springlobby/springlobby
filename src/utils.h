@@ -30,8 +30,20 @@
 //! Converts a wxString to an std::string
 #define STD_STRING(v) std::string((const char*)(v).mb_str(wxConvUTF8))
 
+#if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
+#define ASSERT_LOGIC(cond,msg) if(!(cond))\
+{\
+  wxLogError(_T("logic error: %s"), wxString(msg).c_str() );\
+  throw std::logic_error(std::string(wxString(msg).mb_str()));\
+}
+#else
+#define ASSERT_LOGIC(cond,msg) if(!(cond))\
+{\
+  wxLogError(_T("logic error: %s"), wxString(msg).c_str() );\
+  throw std::logic_error(std::string(wxString(msg).mb_str()));\
+}
+#endif
 
-#define ASSERT_LOGIC(cond,msg) if(!(cond)){wxLogError(_T("logic error: %s"), wxString(msg).c_str() ); throw std::logic_error(std::string(wxString(msg).mb_str()));}
 #define ASSERT_RUNTIME(cond,msg) if(!(cond)){wxLogMessage(_T("runtime error: %s"), wxString(msg).c_str() );throw std::runtime_error(std::string(wxString(msg).mb_str()));}
 
 

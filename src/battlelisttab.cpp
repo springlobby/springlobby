@@ -9,6 +9,9 @@
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <stdexcept>
+#if wxUSE_TOGGLEBTN
+#include <wx/tglbtn.h>
+#endif
 
 #include "battlelisttab.h"
 #include "battlelistctrl.h"
@@ -62,11 +65,6 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxBoxSizer* m_filter_sizer;
   m_filter_sizer = new wxBoxSizer( wxVERTICAL );
 
-  m_filter = new BattleListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
-  m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
-
-  m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
-
   wxBoxSizer* m_battlelist_sizer;
   m_battlelist_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -115,6 +113,12 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
   m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
 
+
+  m_filter = new BattleListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
+  m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
+
+  m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
+
   m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
   m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND, 5 );
 
@@ -155,7 +159,8 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
 BattleListTab::~BattleListTab()
 {
-
+    if (m_filter != 0)
+        m_filter->SaveFilterValues();
 }
 
 
@@ -185,7 +190,7 @@ void BattleListTab::AddBattle( Battle& battle ) {
   if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     return;
   }
-  int index = m_battle_list->InsertItem( 0, IconImageList::GetBattleStatusIcon( battle ) );
+  int index = m_battle_list->InsertItem( 0, icons().GetBattleStatusIcon( battle ) );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
   m_battle_list->SetItemData(index, (long)battle.GetBattleId() );
   battle.SetGUIListActiv( true );
@@ -196,12 +201,12 @@ void BattleListTab::AddBattle( Battle& battle ) {
 
  // ASSERT_LOGIC( m_battle_list->GetItem( item ), _T("!GetItem") );
 
-  m_battle_list->SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
-  m_battle_list->SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
-  m_battle_list->SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
+  m_battle_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
+  m_battle_list->SetItemColumnImage( index, 2, icons().GetRankIcon( battle.GetRankNeeded(), false ) );
+  m_battle_list->SetItemColumnImage( index, 1, icons().GetFlagIcon( battle.GetFounder().GetCountry() ) );
   m_battle_list->SetItem( index, 3, battle.GetDescription() );
-  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?ICON_EXISTS:ICON_NEXISTS );
-  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?ICON_EXISTS:ICON_NEXISTS );
+  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
+  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
   m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
@@ -259,12 +264,12 @@ void BattleListTab::UpdateBattle( Battle& battle )
 
   //Battle& battle = m_ui.GetServer().battles_iter.GetBattle( m_battle_list->GetItemData( index ) );
 
-  m_battle_list->SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
-  m_battle_list->SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
-  m_battle_list->SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
+  m_battle_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
+  m_battle_list->SetItemColumnImage( index, 2, icons().GetRankIcon( battle.GetRankNeeded(), false ) );
+  m_battle_list->SetItemColumnImage( index, 1, icons().GetFlagIcon( battle.GetFounder().GetCountry() ) );
   m_battle_list->SetItem( index, 3, battle.GetDescription() );
-  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?ICON_EXISTS:ICON_NEXISTS );
-  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?ICON_EXISTS:ICON_NEXISTS );
+  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
+  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
   m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
@@ -281,7 +286,9 @@ void BattleListTab::RemoveAllBattles() {
   SelectBattle( 0 );
   m_ui.GetServer().battles_iter->IteratorBegin();
   while (! m_ui.GetServer().battles_iter->EOL() ) {
-    m_ui.GetServer().battles_iter->GetBattle().SetGUIListActiv( false );
+    Battle* temp_battle = m_ui.GetServer().battles_iter->GetBattle();
+    if (temp_battle != 0)
+        temp_battle->SetGUIListActiv( false );
   }
   m_battle_list->DeleteAllItems();
 }
@@ -290,8 +297,9 @@ void BattleListTab::RemoveAllBattles() {
 void BattleListTab::UpdateList() {
   m_ui.GetServer().battles_iter->IteratorBegin();
   while (! m_ui.GetServer().battles_iter->EOL() ) {
-    Battle& b = m_ui.GetServer().battles_iter->GetBattle();
-    UpdateBattle(b);
+    Battle* b = m_ui.GetServer().battles_iter->GetBattle();
+    if (b!=0)
+    UpdateBattle(*b);
   }
 }
 
@@ -336,6 +344,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     BattleOptions bo;
     bo.description = sett().GetLastHostDescription();
     bo.port = sett().GetLastHostPort();
+    bo.nattype = NatType(sett().GetLastHostNATSetting());
 
     if ( bo.nattype == NAT_None && sett().GetTestHostPort() )
     {
@@ -496,8 +505,9 @@ void BattleListTab::OnUnitSyncReloaded()
 
   m_ui.GetServer().battles_iter->IteratorBegin();
   while (! m_ui.GetServer().battles_iter->EOL() ) {
-    Battle& b = m_ui.GetServer().battles_iter->GetBattle();
-    b.OnUnitSyncReloaded();
+    Battle* b = m_ui.GetServer().battles_iter->GetBattle();
+    if (b!=0)
+        b->OnUnitSyncReloaded();
   }
   UpdateList();
   m_minimap->UpdateMinimap();

@@ -23,6 +23,9 @@
 #include "config.h"
 #endif
 
+#include <exception>
+#include <stdexcept>
+
 
 wxString GetLibExtension()
 {
@@ -127,5 +130,6 @@ wxString GetSpringLobbyVersion()
 {
   return WX_STRINGC(VERSION);
 }
+
 
 
