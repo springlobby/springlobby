@@ -24,7 +24,7 @@ Settings& sett()
 
 Settings::Settings()
 {
-  m_config = new wxFileConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
+  m_config = new wxFileConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE );
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
 }
 
@@ -37,6 +37,7 @@ Settings::~Settings()
 //! @brief Saves the settings to file
 void Settings::SaveSettings()
 {
+
   m_config->Write( _T("/General/firstrun"), false );
   SetCacheVersion();
   m_config->Flush();
