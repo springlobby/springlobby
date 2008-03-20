@@ -599,7 +599,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 			switch (coloumn)
 			{
 			case 0: // status
-			m_tiptext = IconImageList().GetBattleStatus(battle);
+			m_tiptext = icons().GetBattleStatus(battle);
 				break;
 			case 1: // country
 				m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());
