@@ -242,7 +242,7 @@ void Battle::OnUserAdded( User& user )
   UserList::AddUser( user );
   UserBattleStatus bs;
   bs.order = m_order++;
-  user.SetBattleStatus( bs, true );
+  user.UpdateBattleStatus( bs, true );
 }
 
 

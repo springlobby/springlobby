@@ -150,10 +150,8 @@ class Server
     virtual wxString GetPasswordHash( const wxString& pass ) = 0;
 
     wxString GetRequiredSpring() { return m_required_spring_ver; }
-    int GetUdpPort() { return m_udp_port; }
 
     void SetRequiredSpring( const wxString& version ) { m_required_spring_ver = version; }
-    void SetUdpPort( const int port ) { m_udp_port = port; }
 
     virtual void Ping() = 0;
 
@@ -177,9 +175,6 @@ class Server
 
     virtual bool TestOpenPort( unsigned int port ) = 0;
 
-    virtual void EnableUdpPing() = 0;
-    virtual void DisableUdpPing() = 0;
-
   protected:
     Socket* m_sock;
     Ui& m_ui;
@@ -188,8 +183,6 @@ class Server
     wxString m_pass;
     bool m_pass_hash;
     wxString m_required_spring_ver;
-    int m_udp_port;
-
 
     ChannelList m_channels;
     UserList m_users;

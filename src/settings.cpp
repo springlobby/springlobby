@@ -70,6 +70,18 @@ void Settings::SetNoUDP(bool value)
 }
 
 
+bool Settings::GetShowIPAddresses()
+{
+  bool tmp;
+  m_config->Read( _T("/General/ShowIP"), &tmp, false );
+  return tmp;
+}
+
+
+void Settings::SetShowIPAddresses(bool value){
+  m_config->Write( _T("/General/ShowIP"), value );
+}
+
 void Settings::SetOldSpringLaunchMethod( bool value )
 {
   m_config->Write( _T("/Spring/UseOldLaunchMethod"), value );

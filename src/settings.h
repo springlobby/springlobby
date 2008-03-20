@@ -39,6 +39,9 @@ class Settings
     bool GetNoUDP();
     void SetNoUDP(bool value);
 
+    bool GetShowIPAddresses();
+    void SetShowIPAddresses(bool value);
+
     wxString GetWebBrowserPath();
     void SetWebBrowserPath( const wxString path );
 

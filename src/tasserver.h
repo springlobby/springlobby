@@ -6,6 +6,8 @@
 
 #include "server.h"
 
+#define FIRST_UDP_SOURCEPORT 8300
+
 //! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
 struct TASPingListItem {
   int id;
@@ -46,7 +48,9 @@ class TASServer : public Server
 
     void Ping();
 
-    void UDPPing();/// used for nat travelsal
+    void UdpPing(unsigned int src_port, const wxString &target, unsigned int target_port, const wxString &message);/// full parameters version, used to ping all clients when hosting.
+    void UdpPing(const wxString &message=_T("ipv4 sux!"));/// used for nat travelsal. pings the server.
+    void UdpPingAllClients();/// used when hosting with nat holepunching
 
     User& GetMe();
 
@@ -128,9 +132,6 @@ class TASServer : public Server
 
     bool TestOpenPort( unsigned int port );
 
-    void EnableUdpPing();
-    void DisableUdpPing();
-
   protected:
     Ui& m_ui;
     ServerEvents* m_se;
@@ -139,15 +140,23 @@ class TASServer : public Server
     bool m_connected;
     bool m_online;
     wxString m_buffer;
-    time_t m_last_ping;
+    time_t m_last_udp_ping;
     int m_ping_id;
     std::list<TASPingListItem> m_pinglist;
+
+    unsigned long m_udp_private_port;
+    unsigned long m_nat_helper_port;
 
     int m_battle_id;
 
     wxString m_agreement;
 
     wxString m_addr;
+
+    int m_finalize_join_battle_id;
+    wxString m_finalize_join_battle_pw;
+    bool m_do_finalize_join_battle;
+    void FinalizeJoinBattle();
 
     void ReceiveAndExecute();
     void SendCmd( const wxString& command, const wxString& param = _T("") );
