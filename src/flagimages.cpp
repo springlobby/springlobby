@@ -16,10 +16,14 @@ int GetFlagIndex( const wxString& flag )
   return FLAG_NONE;
 }
 
-void AddFlagImages( wxImageList& imgs )
+int AddFlagImages( wxImageList& imgs )
 {
-  for (int i = 0; flag_xpm[i]; ++i) {
-    imgs.Add( wxBitmap( const_cast<const char**>(flag_xpm[i])) );
+  int index, poszero;
+  for (int i = 0; flag_xpm[i]; ++i)
+  {
+    index = imgs.Add( wxBitmap( const_cast<const char**>(flag_xpm[i])) );
+    if ( i == 0 ) poszero = index;
   }
+  return poszero;
 }
 
