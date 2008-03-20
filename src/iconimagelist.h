@@ -6,70 +6,6 @@
 
 #include <map>
 
-#define ICON_NONE -1
-
-#define ICON_ADMIN 0
-#define ICON_ADMIN_AWAY ICON_ADMIN+1
-#define ICON_ADMIN_BROOM ICON_ADMIN+2
-#define ICON_ADMIN_INGAME ICON_ADMIN+3
-
-#define ICON_BOT ICON_ADMIN+4
-#define ICON_BOT_BROOM ICON_BOT+1
-#define ICON_BOT_INGAME ICON_BOT+2
-
-#define ICON_NOSTATE -1
-#define ICON_AWAY ICON_BOT+3
-#define ICON_BROOM ICON_AWAY+1
-#define ICON_INGAME ICON_AWAY+2
-
-#define ICON_OP ICON_AWAY+3
-#define ICON_OP_AWAY ICON_OP+1
-#define ICON_OP_BROOM ICON_OP+2
-#define ICON_OP_INGAME ICON_OP+3
-
-#define ICON_UP ICON_OP+4
-#define ICON_DOWN ICON_UP+1
-
-#define ICON_RANK_NONE -1
-#define ICON_RANK0 ICON_UP+2
-#define ICON_RANK1 ICON_RANK0+1
-#define ICON_RANK2 ICON_RANK0+2
-#define ICON_RANK3 ICON_RANK0+3
-#define ICON_RANK4 ICON_RANK0+4
-#define ICON_RANK5 ICON_RANK0+5
-#define ICON_RANK6 ICON_RANK0+6
-
-#define ICON_GAME_UNKNOWN -1
-#define ICON_OPEN_GAME ICON_RANK0+7
-#define ICON_OPEN_PW_GAME ICON_OPEN_GAME+1
-#define ICON_CLOSED_GAME ICON_OPEN_GAME+2
-#define ICON_CLOSED_PW_GAME ICON_OPEN_GAME+3
-#define ICON_STARTED_GAME ICON_OPEN_GAME+4
-
-#define ICON_READY_UNSYNC ICON_OPEN_GAME+5
-#define ICON_NREADY_UNSYNC ICON_READY_UNSYNC+1
-#define ICON_READY_QSYNC ICON_READY_UNSYNC+2
-#define ICON_NREADY_QSYNC ICON_READY_UNSYNC+3
-
-#define ICON_NEXISTS ICON_READY_UNSYNC+4
-#define ICON_EXISTS ICON_NEXISTS+1
-
-#define ICON_SPECTATOR ICON_NEXISTS+2
-#define ICON_HOST ICON_SPECTATOR+1
-#define ICON_HOST_SPECTATOR ICON_SPECTATOR+2
-
-#define ICON_ARM ICON_SPECTATOR+3
-#define ICON_CORE ICON_ARM+1
-
-#define ICON_UNK_FLAG ICON_CORE +1
-#define ICON_FLAGS_BASE ICON_UNK_FLAG+1
-
-#define ICON_EMPTY ICON_FLAGS_BASE+243+1
-
-// Icon Aliases
-#define ICON_READY ICON_OPEN_GAME
-#define ICON_NREADY ICON_CLOSED_GAME
-
 
 class Battle;
 struct UserStatus;
@@ -91,6 +27,68 @@ class IconImageList : public wxImageList
     void SetColourIcon( const int& num, const wxColour& colour );
     int GetSideIcon( const wxString& modname, const wxString& side );
     static int GetReadyIcon( const bool& ready, const int& sync = 1 );
+
+    static int ICON_NONE;
+
+    static int ICON_ADMIN;
+    static int ICON_ADMIN_AWAY;
+    static int ICON_ADMIN_BROOM;
+    static int ICON_ADMIN_INGAME;
+
+    static int ICON_BOT;
+    static int ICON_BOT_BROOM;
+    static int ICON_BOT_INGAME;
+
+    static int ICON_NOSTATE;
+    static int ICON_AWAY;
+    static int ICON_BROOM;
+    static int ICON_INGAME;
+
+    static int ICON_OP;
+    static int ICON_OP_AWAY;
+    static int ICON_OP_BROOM;
+    static int ICON_OP_INGAME;
+
+    static int ICON_UP;
+    static int ICON_DOWN;
+
+    static int ICON_RANK_NONE;
+    static int ICON_RANK0;
+    static int ICON_RANK1;
+    static int ICON_RANK2;
+    static int ICON_RANK3;
+    static int ICON_RANK4;
+    static int ICON_RANK5;
+    static int ICON_RANK6;
+
+    static int ICON_GAME_UNKNOWN;
+    static int ICON_OPEN_GAME;
+    static int ICON_OPEN_PW_GAME;
+    static int ICON_CLOSED_GAME;
+    static int ICON_CLOSED_PW_GAME;
+    static int ICON_STARTED_GAME;
+
+    static int ICON_READY_UNSYNC;
+    static int ICON_NREADY_UNSYNC;
+    static int ICON_READY_QSYNC;
+    static int ICON_NREADY_QSYNC;
+    static int ICON_NREADY;
+    static int ICON_READY;
+
+    static int ICON_NEXISTS;
+    static int ICON_EXISTS;
+
+    static int ICON_SPECTATOR;
+    static int ICON_HOST;
+    static int ICON_HOST_SPECTATOR;
+
+    static int ICON_ARM;
+    static int ICON_CORE;
+
+    static int ICON_UNK_FLAG;
+    static int ICON_FLAGS_BASE;
+
+    static int ICON_EMPTY;
 
   protected:
     std::map<wxString, int> m_cached_side_icons;

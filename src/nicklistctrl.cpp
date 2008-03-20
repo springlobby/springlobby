@@ -50,7 +50,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* p
   col.SetImage( -1 );
   InsertColumn( 2, col, _T("Rank") );
   col.SetText( _("Nickname") );
-  col.SetImage( ICON_DOWN );
+  col.SetImage( IconImageList().ICON_DOWN );
   InsertColumn( 3, col, _T("Nickname") );
 
   m_sortorder[0].col = 0;
@@ -86,7 +86,7 @@ NickListCtrl::~NickListCtrl()
 
 void NickListCtrl::AddUser( User& user )
 {
-  int index = InsertItem( 0, IconImageList::GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+  int index = InsertItem( 0, IconImageList().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
   SetItemData( index, (wxUIntPtr)&user );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
   UserUpdated( index );
@@ -121,9 +121,9 @@ void NickListCtrl::UserUpdated( User& user )
 void NickListCtrl::UserUpdated( const int& index )
 {
   User& user = *((User*)GetItemData( index ));
-  SetItemImage( index, IconImageList::GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
-  SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( user.GetCountry() ) );
-  SetItemColumnImage( index, 2, IconImageList::GetRankIcon( user.GetStatus().rank ) );
+  SetItemImage( index, IconImageList().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+  SetItemColumnImage( index, 1, IconImageList().GetFlagIcon( user.GetCountry() ) );
+  SetItemColumnImage( index, 2, IconImageList().GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
   Sort();
@@ -182,7 +182,7 @@ void NickListCtrl::OnColClick( wxListEvent& event )
 
 
   GetColumn( m_sortorder[0].col, col );
-  col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
+  col.SetImage( ( m_sortorder[0].direction )?IconImageList().ICON_UP:IconImageList().ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
   Sort();

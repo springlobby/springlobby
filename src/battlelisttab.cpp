@@ -190,7 +190,7 @@ void BattleListTab::AddBattle( Battle& battle ) {
   if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     return;
   }
-  int index = m_battle_list->InsertItem( 0, IconImageList::GetBattleStatusIcon( battle ) );
+  int index = m_battle_list->InsertItem( 0, IconImageList().GetBattleStatusIcon( battle ) );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
   m_battle_list->SetItemData(index, (long)battle.GetBattleId() );
   battle.SetGUIListActiv( true );
@@ -201,12 +201,12 @@ void BattleListTab::AddBattle( Battle& battle ) {
 
  // ASSERT_LOGIC( m_battle_list->GetItem( item ), _T("!GetItem") );
 
-  m_battle_list->SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
-  m_battle_list->SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
-  m_battle_list->SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
+  m_battle_list->SetItemImage( index, IconImageList().GetBattleStatusIcon( battle ) );
+  m_battle_list->SetItemColumnImage( index, 2, IconImageList().GetRankIcon( battle.GetRankNeeded(), false ) );
+  m_battle_list->SetItemColumnImage( index, 1, IconImageList().GetFlagIcon( battle.GetFounder().GetCountry() ) );
   m_battle_list->SetItem( index, 3, battle.GetDescription() );
-  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?ICON_EXISTS:ICON_NEXISTS );
-  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?ICON_EXISTS:ICON_NEXISTS );
+  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?IconImageList().ICON_EXISTS:IconImageList().ICON_NEXISTS );
+  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?IconImageList().ICON_EXISTS:IconImageList().ICON_NEXISTS );
   m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
@@ -264,12 +264,12 @@ void BattleListTab::UpdateBattle( Battle& battle )
 
   //Battle& battle = m_ui.GetServer().battles_iter.GetBattle( m_battle_list->GetItemData( index ) );
 
-  m_battle_list->SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
-  m_battle_list->SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
-  m_battle_list->SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
+  m_battle_list->SetItemImage( index, IconImageList().GetBattleStatusIcon( battle ) );
+  m_battle_list->SetItemColumnImage( index, 2, IconImageList().GetRankIcon( battle.GetRankNeeded(), false ) );
+  m_battle_list->SetItemColumnImage( index, 1, IconImageList().GetFlagIcon( battle.GetFounder().GetCountry() ) );
   m_battle_list->SetItem( index, 3, battle.GetDescription() );
-  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?ICON_EXISTS:ICON_NEXISTS );
-  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?ICON_EXISTS:ICON_NEXISTS );
+  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?IconImageList().ICON_EXISTS:IconImageList().ICON_NEXISTS );
+  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?IconImageList().ICON_EXISTS:IconImageList().ICON_NEXISTS );
   m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );

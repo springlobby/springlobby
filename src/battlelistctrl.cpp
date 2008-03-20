@@ -33,7 +33,7 @@ BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 END_EVENT_TABLE()
 
 #ifdef __WXMSW__
-	#define nonIcon ICON_EMPTY
+	#define nonIcon IconImageList().ICON_EMPTY
 #else
 	#define nonIcon -1
 #endif
@@ -605,7 +605,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 			switch (coloumn)
 			{
 			case 0: // status
-			m_tiptext = IconImageList::GetBattleStatus(battle);
+			m_tiptext = IconImageList().GetBattleStatus(battle);
 				break;
 			case 1: // country
 				m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());

@@ -44,7 +44,7 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  customListCtrl)
 END_EVENT_TABLE()
 
 #ifdef __WXMSW__
-	#define nonIcon ICON_EMPTY
+	#define nonIcon IconImageList().ICON_EMPTY
 #else
 	#define nonIcon -1
 #endif
@@ -201,7 +201,7 @@ void BattleroomListCtrl::UpdateList()
 
 void BattleroomListCtrl::AddUser( User& user )
 {
-  int index = InsertItem( 0, ICON_NREADY );
+  int index = InsertItem( 0, IconImageList().ICON_NREADY );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
 
   item_content new_content;
@@ -244,9 +244,9 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 
   int statimg;
   if ( &m_battle.GetFounder() == &user ) {
-    statimg = IconImageList::GetHostIcon( user.BattleStatus().spectator );
+    statimg = IconImageList().GetHostIcon( user.BattleStatus().spectator );
   } else {
-    statimg = user.BattleStatus().spectator?ICON_SPECTATOR:IconImageList::GetReadyIcon( user.BattleStatus().ready, user.BattleStatus().sync );
+    statimg = user.BattleStatus().spectator?IconImageList().ICON_SPECTATOR:IconImageList().GetReadyIcon( user.BattleStatus().ready, user.BattleStatus().sync );
   }
   SetItemImage( index, statimg );
 
@@ -268,12 +268,12 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     SetItemColumnImage( index, 2, -1 );
   }
 
-  SetItemColumnImage( index, 3, IconImageList::GetFlagIcon( user.GetCountry() ) );
-  SetItemColumnImage( index, 4, IconImageList::GetRankIcon( user.GetStatus().rank ) );
+  SetItemColumnImage( index, 3, IconImageList().GetFlagIcon( user.GetCountry() ) );
+  SetItemColumnImage( index, 4, IconImageList().GetRankIcon( user.GetStatus().rank ) );
 
   SetItem( index, 5,  user.GetNick() );
   if ( !user.Status().bot ) SetItemColumnImage( index, 5, -1 );
-  else SetItemColumnImage( index, 5, ICON_BOT );
+  else SetItemColumnImage( index, 5, IconImageList().ICON_BOT );
 
   if ( !user.BattleStatus().spectator ) {
     SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
@@ -311,7 +311,7 @@ int BattleroomListCtrl::GetUserIndex( User& user )
 
 void BattleroomListCtrl::AddBot( BattleBot& bot )
 {
-  int index = InsertItem( 0, ICON_BOT );
+  int index = InsertItem( 0, IconImageList().ICON_BOT );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
 
   item_content new_content;
@@ -352,7 +352,7 @@ void BattleroomListCtrl::UpdateBot( const int& index )
 
   icons().SetColourIcon( bot.bs.team,  bot.bs.colour );
 
-  SetItemImage( index, ICON_BOT );
+  SetItemImage( index, IconImageList().ICON_BOT );
 
   SetItemColumnImage( index, 1, -1 );
 
@@ -366,8 +366,8 @@ void BattleroomListCtrl::UpdateBot( const int& index )
 
   SetItemColumnImage( index, 2, icons().GetColourIcon( bot.bs.team ) );
 
-  SetItemColumnImage( index, 3, ICON_NONE );
-  SetItemColumnImage( index, 4, ICON_NONE );
+  SetItemColumnImage( index, 3, IconImageList().ICON_NONE );
+  SetItemColumnImage( index, 4, IconImageList().ICON_NONE );
   SetItem( index, 5, bot.name + _T(" (") + bot.owner + _T(")") );
 
   SetItem( index, 6, wxString::Format( _T("%d"), bot.bs.team + 1 ) );
