@@ -58,43 +58,43 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   wxListItem col;
 
   col.SetText( _T("r") );
-  col.SetImage(icons().ICON_EMPTY );
+  col.SetImage(icons().ICON_NONE );
   InsertColumn( 0, col, _T("Player/Bot"), false);
 
   col.SetText( _T("s") );
-  col.SetImage( icons().ICON_EMPTY );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 1, col,_T("Faction icon"), false );
 
   col.SetText( _T("c") );
-  col.SetImage(  icons().ICON_EMPTY);
+  col.SetImage(  icons().ICON_NONE);
   InsertColumn( 2, col, _T("Teamcolour"), false );
 
   col.SetText( _T("f") );
-  col.SetImage( icons().ICON_EMPTY );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 3, col, _T("Country"), false );
 
   col.SetText( _T("r") );
-  col.SetImage( icons().ICON_EMPTY );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 4, col, _T("Rank"), false );
 
   col.SetText( _("Nickname") );
-  col.SetImage( icons().ICON_EMPTY );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 5, col, _T("Ingame name"));
 
   col.SetText( _("t") );
-  col.SetImage(icons().ICON_EMPTY );
+  col.SetImage(icons().ICON_NONE );
   InsertColumn( 6, col, _T("Team number"), true );
 
   col.SetText( _("a") );
-  col.SetImage( icons().ICON_EMPTY );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 7, col, _T("Ally number"), true );
 
   col.SetText( _("cpu") );
-  col.SetImage( icons().ICON_EMPTY );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 8, col, _T("CPU speed (might not be accurate)") );
 
   col.SetText( _("Resource Bonus") );
-  col.SetImage( icons().ICON_EMPTY );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 9, col, _T("Resource Bonus") );
 
   m_sortorder[0].col = 7;
