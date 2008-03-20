@@ -9,6 +9,7 @@
 #include <wx/sizer.h>
 #include <wx/notebook.h>
 #include <wx/listbook.h>
+#include <wx/image.h>
 
 #include "mainchattab.h"
 #include "utils.h"
@@ -18,6 +19,7 @@
 #include "chatpanel.h"
 #include "ui.h"
 #include "server.h"
+#include "settings.h"
 
 #include "images/close.xpm"
 #include "images/server.xpm"
@@ -47,6 +49,11 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
   m_imagelist->Add( wxBitmap(server_xpm) );
   m_imagelist->Add( wxBitmap(channel_xpm) );
   m_imagelist->Add( wxBitmap(userchat_xpm) );
+  m_imagelist->Add( wxBitmap(channel_xpm) );
+  m_imagelist->Add( wxBitmap(userchat_xpm) );
+
+  ChangeUnreadChannelColour( sett().GetChatColorNotification() );
+  ChangeUnreadPMColour( sett().GetChatColorNotification() );
 
   m_chat_tabs->AssignImageList( m_imagelist );
 
@@ -70,7 +77,7 @@ MainChatTab::~MainChatTab()
 
 ChatPanel& MainChatTab::ServerChat()
 {
-  ASSERT_LOGIC( m_server_chat != 0, "m_server_chat = 0" );
+  ASSERT_LOGIC( m_server_chat != 0, _T("m_server_chat = 0") );
   return *m_server_chat;
 }
 
@@ -109,7 +116,7 @@ ChatPanel* MainChatTab::GetUserChatPanel( const wxString& user )
 
 void MainChatTab::OnUserConnected( User& user )
 {
-  ChatPanel* panel = GetUserChatPanel( WX_STRING(user.GetNick()) );
+  ChatPanel* panel = GetUserChatPanel( user.GetNick() );
   if ( panel != 0 ) {
     panel->SetUser( &user );
     panel->OnUserConnected();
@@ -119,7 +126,7 @@ void MainChatTab::OnUserConnected( User& user )
 
 void MainChatTab::OnUserDisconnected( User& user )
 {
-  ChatPanel* panel = GetUserChatPanel( WX_STRING(user.GetNick()) );
+  ChatPanel* panel = GetUserChatPanel( user.GetNick() );
   if ( panel != 0 ) {
     panel->OnUserDisconnected();
     panel->SetUser( 0 );
@@ -148,13 +155,13 @@ void MainChatTab::RejoinChannels()
     if ( tmp->GetPanelType() == CPT_Channel ) {
 
       // TODO: This will not rejoin passworded channels.
-      std::string name = STD_STRING(m_chat_tabs->GetPageText(i));
+      wxString name = m_chat_tabs->GetPageText(i);
       // #springlobby is joined automatically
-      if ( name != "springlobby" ) m_ui.GetServer().JoinChannel( name, "" );
+      if ( name != _T("springlobby") ) m_ui.GetServer().JoinChannel( name, _T("") );
 
     } else if (tmp->GetPanelType() == CPT_User ) {
 
-      std::string name = STD_STRING(m_chat_tabs->GetPageText(i));
+      wxString name = m_chat_tabs->GetPageText(i);
       if ( m_ui.GetServer().UserExists( name ) ) tmp->SetUser( &m_ui.GetServer().GetUser( name ) );
 
     }
@@ -166,7 +173,7 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
 {
 
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-    if ( m_chat_tabs->GetPageText(i) == WX_STRING(channel.GetName()) ) {
+    if ( m_chat_tabs->GetPageText(i) == channel.GetName() ) {
       ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
       if ( tmp->GetPanelType() == CPT_Channel ) {
         m_chat_tabs->SetSelection( i );
@@ -177,7 +184,7 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
   }
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, channel );
-  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(channel.GetName()), true, 2 );
+  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), true, 2 );
   return chat;
 }
 
@@ -197,14 +204,13 @@ ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, server );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, 1 );
-
   return chat;
 }
 
 ChatPanel* MainChatTab::AddChatPannel( User& user )
 {
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-    if ( m_chat_tabs->GetPageText(i) == WX_STRING(user.GetNick()) ) {
+    if ( m_chat_tabs->GetPageText(i) == user.GetNick() ) {
       ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
       if ( tmp->GetPanelType() == CPT_User ) {
         m_chat_tabs->SetSelection( i );
@@ -215,29 +221,33 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
   }
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, user );
-  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, WX_STRING(user.GetNick()), true, 3 );
+  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, 3 );
   return chat;
 }
 
 
 void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
 
   int oldsel = event.GetOldSelection();
   if ( oldsel < 0 ) return;
   int newsel = event.GetSelection();
   if ( newsel < 0 ) return;
 
+  // change icon to default the icon to show that no new events happened
+  if ( m_chat_tabs->GetPageImage( newsel ) == 4 ) m_chat_tabs->SetPageImage( newsel, 2);
+  if ( m_chat_tabs->GetPageImage( newsel ) == 5 ) m_chat_tabs->SetPageImage( newsel, 3);
+
   wxWindow* newpage = m_chat_tabs->GetPage( newsel );
   if ( newpage == 0 ) { // Not sure what to do here
-    debug_error( "Newpage NULL." );
+    wxLogError( _T("Newpage NULL.") );
     return;
   }
 
   if ( newsel >= (int)m_chat_tabs->GetPageCount() - 1 ) { // We are going to remove page
     ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
-    ASSERT_LOGIC( delpage != 0 , "MainChatTab::OnTabsChanged(): delpage NULL" );
+    ASSERT_LOGIC( delpage != 0 , _T("MainChatTab::OnTabsChanged(): delpage NULL") );
 
     if ( !delpage->IsServerPanel() ) {
       delpage->Part();
@@ -250,4 +260,34 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
   }
 
 }
+
+void MainChatTab::ChangeUnreadChannelColour( const wxColour& colour )
+{
+  wxImage img( channel_xpm );
+  m_imagelist->Replace( 4, wxBitmap ( ReplaceChannelStatusColour( img, colour ) ) );
+}
+
+
+void MainChatTab::ChangeUnreadPMColour( const wxColour& colour )
+{
+  wxImage img( userchat_xpm );
+  m_imagelist->Replace( 5, wxBitmap ( ReplaceChannelStatusColour( img, colour ) ) );
+}
+
+
+wxImage MainChatTab::ReplaceChannelStatusColour( wxImage& img, const wxColour& colour )
+{
+  img.Replace( 255, 253, 234, colour.Red(), colour.Green(), colour.Blue() );
+
+  int r,g,b;
+  r = colour.Red(); g = colour.Green()-25; b = colour.Blue()-234;
+  img.Replace( 255, 228, 0, r>255?255:r, g>255?255:g, b>255?255:b );
+
+  r = colour.Red()-91; g = colour.Green()-106; b = colour.Blue()-234;
+  img.Replace( 164, 147, 0, r>255?255:r, g>255?255:g, b>255?255:b );
+
+  return img;
+}
+
+
 

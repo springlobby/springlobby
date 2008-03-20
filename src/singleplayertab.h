@@ -18,7 +18,6 @@ class wxChoice;
 class wxStaticText;
 class wxCommandEvent;
 
-
 class SinglePlayerTab: public wxPanel
 {
   public:
@@ -40,6 +39,9 @@ class SinglePlayerTab: public wxPanel
     void OnStart( wxCommandEvent& event );
 
     void OnUnitSyncReloaded();
+
+    void SetMap( unsigned int index );
+    void SetMod( unsigned int index );
 
   protected:
 

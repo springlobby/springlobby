@@ -9,6 +9,7 @@ class wxBoxSizer;
 class wxImageList;
 class wxNotebook;
 class SpringOptionsTab;
+class ChatOptionsTab;
 class wxButton;
 class wxBoxSizer;
 
@@ -29,6 +30,7 @@ class MainOptionsTab : public wxPanel
     wxNotebook* m_tabs;
 
     SpringOptionsTab* m_spring_opts;
+    ChatOptionsTab* m_chat_opts;
 
     wxButton* m_restore_btn;
     wxButton* m_apply_btn;

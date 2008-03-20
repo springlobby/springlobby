@@ -2,12 +2,12 @@
 #define SPRINGLOBBY_HEADERGUARD_CHANNELLIST_H
 
 #include <map>
-#include <string>
+#include <wx/string.h>
 
 class Channel;
 
 //! @brief mapping from channel name to channel object
-typedef std::map<std::string, Channel*> channel_map_t;
+typedef std::map<wxString, Channel*> channel_map_t;
 //! @brief iterator for channel map
 typedef channel_map_t::iterator channel_iter_t;
 
@@ -17,10 +17,10 @@ class ChannelList
   public:
     ChannelList();
     void AddChannel( Channel& channel );
-    void RemoveChannel( const std::string& name );
-    Channel& GetChannel( const std::string& name );
+    void RemoveChannel( const wxString& name );
+    Channel& GetChannel( const wxString& name );
     Channel& GetChannel( channel_map_t::size_type index );
-    bool ChannelExists( const std::string& name );
+    bool ChannelExists( const wxString& name );
     channel_map_t::size_type GetNumChannels();
 
   private:

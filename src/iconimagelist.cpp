@@ -68,6 +68,8 @@
 
 #include "flagimages.h"
 
+#include "images/empty.xpm"
+
 IconImageList::IconImageList() : wxImageList(16,16)
 {
 
@@ -121,8 +123,6 @@ IconImageList::IconImageList() : wxImageList(16,16)
   Add( wxBitmap(arm_xpm) );
   Add( wxBitmap(core_xpm) );
 
-  for ( int i = 0; i < NUM_COLOUR_ICONS; i++ ) Add( wxBitmap(colourbox_xpm) );
-
   SetColourIcon( 0, wxColour( 255,   0,   0 ) );
   SetColourIcon( 1, wxColour(   0, 255,   0 ) );
   SetColourIcon( 2, wxColour(   0,   0, 255 ) );
@@ -131,6 +131,7 @@ IconImageList::IconImageList() : wxImageList(16,16)
 
   AddFlagImages( *this );
 
+  Add( wxBitmap(empty_xpm) );
 }
 
 
@@ -200,9 +201,9 @@ int IconImageList::GetRankIcon( const int& rank, const bool& showlowest )
 }
 
 
-int IconImageList::GetFlagIcon( const std::string& flagname )
+int IconImageList::GetFlagIcon( const wxString& flagname )
 {
-  return ICON_FLAGS_BASE + GetFlagIndex( flagname );
+  return ICON_FLAGS_BASE + GetFlagIndex( flagname ) + 3;
 }
 
 
@@ -220,11 +221,25 @@ int IconImageList::GetBattleStatusIcon( Battle& battle )
   return ICON_GAME_UNKNOWN;
 }
 
+wxString IconImageList::GetBattleStatus( Battle& battle )
+{
+  if ( battle.GetInGame() ) return _T("Game has already started");
+  if ( !battle.IsLocked() ) {
+    if ( !battle.IsPassworded() ) return _T("Game is open for players");
+    else return _T("You need a password to join");
+  } else {
+    if ( !battle.IsPassworded() ) return _T("Game is closed");
+    else return _T("Game is closed (and passworded)");
+  }
+
+  return _T("Game has unknown status");
+}
+
 
 int IconImageList::GetColourIcon( const int& num )
 {
-  ASSERT_LOGIC( num < NUM_COLOUR_ICONS, "Colour index too high" );
-  return ICON_COLOURS_START + num;
+  if ( m_player_colour_icons[num] != 0 ) return m_player_colour_icons[num];
+  else return -1;
 }
 
 
@@ -236,7 +251,6 @@ int IconImageList::GetHostIcon( const bool& spectator )
 
 void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 {
-  int index = GetColourIcon( num );
   wxImage img( colourbox_xpm );
 
   img.Replace( 1, 1, 1, colour.Red(), colour.Green(), colour.Blue() );
@@ -247,23 +261,24 @@ void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 
   /*r = colour.Red()-60; g = colour.Green()-60; b = colour.Blue()-60;
   img.Replace( 200, 200, 200, r<0?0:r, g<0?0:g, b<0?0:b );*/
-
-  Replace( index, wxBitmap( img ) );
+  if ( m_player_colour_icons[num] != 0 ) Replace( m_player_colour_icons[num], wxBitmap( img ) );
+  else m_player_colour_icons[num] = Add( wxBitmap( img ) );
 }
 
 
-int IconImageList::GetSideIcon( const std::string& side )
+int IconImageList::GetSideIcon( const wxString& modname, const wxString& side )
 {
-  wxString sn = WX_STRING( side );
+  wxString sn = side;
   sn = sn.Lower();
   if ( sn  == _T("arm") ) return ICON_ARM;
   else if (  sn == _T("core") ) return ICON_CORE;
-  else if (CachedSideIcons[side] == 0){
-      int IconPosition = Add(wxBitmap( usync()->GetSidePicture(side) ), wxNullBitmap);
-      CachedSideIcons[side] = IconPosition;
+  else if (m_cached_side_icons[side] == 0){
+    try {
+      int IconPosition = Add(wxBitmap( usync()->GetSidePicture( modname , side ) ), wxNullBitmap);
+      m_cached_side_icons[side] = IconPosition;
       return IconPosition;
-  }
-  else return CachedSideIcons[side];
+    } catch (...) {};
+  } else return m_cached_side_icons[side];
   return -1;
 }
 

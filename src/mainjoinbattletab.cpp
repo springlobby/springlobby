@@ -18,11 +18,14 @@
 #include "battlemaptab.h"
 #include "battleoptionstab.h"
 #include "utils.h"
+#include "battleroommmoptionstab.h"
 
 #include "images/battle_list.xpm"
 #include "images/battle.xpm"
 #include "images/battle_map.xpm"
 #include "images/battle_settings.xpm"
+
+#include "ui.h"
 
 
 MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_battle_tab(0),m_map_tab(0),m_opts_tab(0),m_ui(ui)
@@ -71,26 +74,67 @@ ChatPanel* MainJoinBattleTab::GetActiveChatPanel()
   return 0;
 }
 
+void MainJoinBattleTab::ReloadMMoptTab()
+{
+	int curPage = m_tabs->GetSelection();
+	m_tabs->DeletePage (4);
+	m_mm_opts_tab = 0;
+	m_battle_tab->GetBattle().CustomBattleOptions()->loadMapOptions(m_battle_tab->GetBattle().GetMapName());
+	m_mm_opts_tab = new BattleroomMMOptionsTab(m_battle_tab->GetBattle(), m_tabs);
+	//m_mm_opts_tab.
+	m_tabs->InsertPage( 4, m_mm_opts_tab, _("Map/Mod Options"), false );
+	if (curPage == 4)
+		m_tabs->SetSelection(curPage);
+}
 
 //void MainJoinBattleTab::UpdateCurrentBattle()
-void MainJoinBattleTab::UpdateCurrentBattle(bool updateRestrictions)
+void MainJoinBattleTab::UpdateCurrentBattle( bool MapChanged, bool UpdateRestrictions )
 {
   if ( m_battle_tab ) {
-    m_battle_tab->UpdateBattleInfo();
+    m_battle_tab->UpdateBattleInfo( MapChanged );
+    if ( UpdateRestrictions ) m_battle_tab->UpdateBattleInfo( wxString::Format(_T("%d_restrictions"), EngineOption ) );
   }
   if ( m_map_tab ) {
-    m_map_tab->UpdateMap();
+    m_map_tab->Update();
   }
+  if ( m_opts_tab )
+    if ( UpdateRestrictions )
+        m_opts_tab->ReloadRestrictions();
+  if ( m_mm_opts_tab ){
+	 if ( !m_battle_tab->GetBattle().IsFounderMe() )
+	  {
+	    if ( MapChanged )
+	    {
+	      m_mm_opts_tab->OnRefreshControls(MapOption);
+	    }
+	  }
+  }
+}
+
+void MainJoinBattleTab::UpdateCurrentBattle( const wxString& Tag )
+{
+  if ( m_battle_tab ) {
+    m_battle_tab->UpdateBattleInfo( Tag );
+  }
+
+  if ( m_map_tab ) {
+    m_map_tab->Update( Tag );
+  }
+
   if ( m_opts_tab ) {
-    m_opts_tab->UpdateBattle();
-    if ( updateRestrictions ) m_opts_tab->ReloadRestrictions();
+    m_opts_tab->UpdateBattle( Tag );
+  }
+
+  if ( m_mm_opts_tab ){
+	  if ( !m_battle_tab->GetBattle().IsFounderMe() )
+      m_mm_opts_tab->UpdateOptControls( Tag );
   }
 }
 
 
 BattleListTab& MainJoinBattleTab::GetBattleListTab()
 {
-  ASSERT_LOGIC( m_list_tab != 0, "m_list_tab = 0" );
+  ASSERT_LOGIC( m_list_tab != 0, _T("m_list_tab = 0") );
   return *m_list_tab;
 }
 
@@ -98,15 +142,15 @@ BattleListTab& MainJoinBattleTab::GetBattleListTab()
 void MainJoinBattleTab::JoinBattle( Battle& battle )
 {
   LeaveCurrentBattle();
+
   m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
   m_map_tab = new BattleMapTab( m_tabs, m_ui, battle );
   m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle, false );
+  m_mm_opts_tab = new BattleroomMMOptionsTab( battle, m_tabs);
   m_tabs->InsertPage( 1, m_battle_tab, _("Battleroom"), true, 1 );
   m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, 2 );
   m_tabs->InsertPage( 3, m_opts_tab, _("Options"), false, 3 );
-
-  m_list_tab->DisableHostButton();
-  m_list_tab->DisableJoinButton();
+  m_tabs->InsertPage( 4, m_mm_opts_tab, _("Map/Mod Options"), false, 3 );
 
 }
 
@@ -114,15 +158,16 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
 void MainJoinBattleTab::HostBattle( Battle& battle )
 {
   JoinBattle( battle );
-
-  m_list_tab->DisableHostButton();
-  m_list_tab->DisableJoinButton();
 }
 
 
 void MainJoinBattleTab::LeaveCurrentBattle()
 {
-  if ( m_opts_tab ) {
+	if ( m_mm_opts_tab ) {
+	    m_tabs->DeletePage( 4 );
+	    m_mm_opts_tab = 0;
+	  }
+if ( m_opts_tab ) {
     m_tabs->DeletePage( 3 );
     m_opts_tab = 0;
   }
@@ -135,16 +180,14 @@ void MainJoinBattleTab::LeaveCurrentBattle()
     m_battle_tab = 0;
   }
 
-  m_list_tab->EnableHostButton();
-  m_list_tab->EnableJoinButton();
 
 }
 
 
 void MainJoinBattleTab::BattleUserUpdated( User& user )
 {
-  ASSERT_LOGIC( m_battle_tab != 0, "m_battle_tab = 0" );
-  ASSERT_LOGIC( m_map_tab != 0, "m_map_tab = 0" );
+  ASSERT_LOGIC( m_battle_tab != 0, _T("m_battle_tab = 0") );
+  ASSERT_LOGIC( m_map_tab != 0, _T("m_map_tab = 0") );
   m_battle_tab->UpdateUser( user );
   m_map_tab->UpdateUser( user );
 }
@@ -152,18 +195,18 @@ void MainJoinBattleTab::BattleUserUpdated( User& user )
 
 void MainJoinBattleTab::OnUnitSyncReloaded()
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   GetBattleListTab().OnUnitSyncReloaded();
-  debug("Battle list tab reloaded");
+  wxLogMessage( _T("Battle list tab reloaded") );
   if ( GetBattleRoomTab() ) {
-    debug("Reloading battleroom");
+    wxLogMessage( _T("Reloading battleroom") );
     GetBattleRoomTab()->OnUnitSyncReloaded();
-    debug("Battleroom reloaded");
+    wxLogMessage( _T("Battleroom reloaded") );
   }
   if ( GetBattleMapTab() ) {
-    debug("Reloading battlemap");
+    wxLogMessage( _T("Reloading battlemap") );
     GetBattleMapTab()->OnUnitSyncReloaded();
-    debug("Battlemap reloaded");
+    wxLogMessage( _T("Battlemap reloaded") );
   }
 }
 

@@ -1,7 +1,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UI_H
 #define SPRINGLOBBY_HEADERGUARD_UI_H
 
-#include <string>
+#include <wx/string.h>
+#include <wx/thread.h>
 
 class Server;
 class TASServer;
@@ -15,6 +16,7 @@ class Battle;
 class SinglePlayerBattle;
 class BattleBot;
 class ChatPanel;
+class UnitSyncThread;
 
 typedef int HostInfo;
 
@@ -51,12 +53,10 @@ class Ui
     void Reconnect();
     void DoConnect( const wxString& servername, const wxString& username, const wxString& password );
 
-    bool DoRegister( const wxString& servername, const wxString& username, const wxString& password );
+    bool DoRegister( const wxString& servername, const wxString& username, const wxString& password, wxString& reason );
 
     bool IsConnected() const;
     void JoinChannel( const wxString& name, const wxString& password );
-
-    void SetSupportedSpring(std::string spring_version) { m_server_spring_ver = spring_version; }
 
     bool IsSpringCompatible();
 
@@ -83,46 +83,51 @@ class Ui
 
     MainWindow& mw();
 
+    bool IsMainWindowCreated();
+
     void OnUpdate( int mselapsed );
 
-    void OnConnected( Server& server, const std::string& server_name, const std::string& server_ver, bool supported);
+    void OnConnected( Server& server, const wxString& server_name, const wxString& server_ver, bool supported );
     void OnLoggedIn( );
     void OnDisconnected( Server& server );
 
     void OnJoinedChannelSuccessful( Channel& chan );
     void OnUserJoinedChannel( Channel& chan, User& user );
-    void OnUserLeftChannel( Channel& chan, User& user, const std::string& reason );
+    void OnChannelJoin( Channel& chan, User& user );
+    void OnUserLeftChannel( Channel& chan, User& user, const wxString& reason );
 
-    void OnChannelTopic( Channel& channel , const std::string user, const std::string& topic );
-    void OnChannelSaid( Channel& channel , User& user, const std::string& message );
-    void OnChannelDidAction( Channel& channel , User& user, const std::string& action );
-    void OnChannelMessage( const std::string& channel, const std::string& msg );
+    void OnChannelTopic( Channel& channel , const wxString& user, const wxString& topic );
+    void OnChannelSaid( Channel& channel , User& user, const wxString& message );
+    void OnChannelDidAction( Channel& channel , User& user, const wxString& action );
+    void OnChannelMessage( const wxString& channel, const wxString& msg );
 
     void OnLeaveChannel( Channel& channel );
-    void OnChannelList( const std::string& channel, const int& numusers );
+    void OnChannelList( const wxString& channel, const int& numusers );
     void OnUserOnline( User& user );
     void OnUserOffline( User& user );
     void OnUserStatusChanged( User& user );
-    void OnUserSaid( User& user, const std::string message, bool me = false );
+    void OnUserSaid( User& user, const wxString& message, bool me = false );
 
-    void OnUnknownCommand( Server& server, const std::string& command, const std::string& params );
-    void OnMotd( Server& server, const std::string& message );
-    void OnServerMessage( Server& server, const std::string& message );
+    void OnUnknownCommand( Server& server, const wxString& command, const wxString& params );
+    void OnMotd( Server& server, const wxString& message );
+    void OnServerMessage( Server& server, const wxString& message );
 
     void OnBattleOpened( Battle& battle );
     void OnBattleClosed( Battle& battle );
     void OnUserJoinedBattle( Battle& battle, User& user );
     void OnUserLeftBattle( Battle& battle, User& user );
     void OnBattleInfoUpdated( Battle& battle );
+    void OnBattleInfoUpdated( Battle& battle, const wxString& Tag );
     void OnBattleStarted( Battle& battle );
     void OnBattleStartRectsUpdated( Battle& battle );
+    void OnBattleMapChanged( Battle& battle );
 
     void OnBattleBotAdded( Battle& battle, BattleBot& bot );
     void OnBattleBotRemoved( Battle& battle, BattleBot& bot );
     void OnBattleBotUpdated( Battle& battle, BattleBot& bot );
 
-    void OnBattleDisableUnit( Battle& battle, const std::string& unitname );
-    void OnBattleEnableUnit( Battle& battle, const std::string& unitname );
+    void OnBattleDisableUnit( Battle& battle, const wxString& unitname );
+    void OnBattleEnableUnit( Battle& battle, const wxString& unitname );
     void OnBattleEnableAllUnits( Battle& battle );
 
     void OnJoinedBattle( Battle& battle );
@@ -130,25 +135,37 @@ class Ui
     void OnUserBattleStatus( Battle& battle, User& user );
     void OnRequestBattleStatus( Battle& battle );
 
-    void OnSaidBattle( Battle& battle, const std::string& nick, const std::string& msg );
-    void OnBattleAction( Battle& battle, const std::string& nick, const std::string& msg );
+    void OnSaidBattle( Battle& battle, const wxString& nick, const wxString& msg );
+    void OnBattleAction( Battle& battle, const wxString& nick, const wxString& msg );
 
     void OnSpringTerminated( bool success );
 
-    void OnAcceptAgreement( const std::string& agreement );
+    void OnAcceptAgreement( const wxString& agreement );
 
-    void OnMainWindowDestruct() { m_main_win = 0; }
+    void OnMainWindowDestruct();
 
-    void OnRing( const std::string& from );
+    void OnRing( const wxString& from );
+
+    void OnMapInfoCached( const wxString& mapname );
+    void OnMinimapCached( const wxString& mapname );
+    void OnModUnitsCached( const wxString& modname );
+    void OnCachedThreadTerminated();
+    void OnCachedThreadStarted();
+
+    bool IsThisMe(User& other);
+
+    bool TestHostPort( unsigned int port );
 
   protected:
     Spring* m_spring;
 
-    std::string m_server_spring_ver;
+    UnitSyncThread* m_thread;
+    wxCriticalSection m_thread_wait;
 
     Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
+
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_UI_H

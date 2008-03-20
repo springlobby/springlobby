@@ -33,6 +33,14 @@
 #include "images/options_icon.xpm"
 #include "images/select_icon.xpm"
 
+#include "settings++/frame.h"
+#include "settings++/custom_dialogs.h"
+
+#include "updater/versionchecker.h"
+
+#ifdef HAVE_WX28
+#include <wx/aboutdlg.h>
+#endif
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
@@ -44,6 +52,10 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_USYNC, MainWindow::OnUnitSyncReload )
   EVT_MENU( MENU_TRAC, MainWindow::OnReportBug )
   EVT_MENU( MENU_DOC, MainWindow::OnShowDocs )
+  EVT_MENU( MENU_SETTINGSPP, MainWindow::OnShowSettingsPP )
+  EVT_MENU( MENU_VERSION, MainWindow::OnMenuVersion )
+  EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
+
 
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
 
@@ -51,7 +63,7 @@ END_EVENT_TABLE()
 
 
 MainWindow::MainWindow( Ui& ui ) :
-  wxFrame( (wxFrame*)0, -1, _("Spring Lobby"), wxPoint(50, 50), wxSize(450, 340) ),
+  wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
   m_ui(ui)
 {
   SetIcon( wxIcon(springlobby_xpm) );
@@ -63,23 +75,27 @@ MainWindow::MainWindow( Ui& ui ) :
 
   wxMenu *menuEdit = new wxMenu;
 
-  wxMenu *menuTools = new wxMenu;
-  menuTools->Append(MENU_JOIN, _("&Join channel..."));
-  menuTools->Append(MENU_CHAT, _("Open &chat..."));
-  menuTools->AppendSeparator();
-  menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
+  m_menuTools = new wxMenu;
+  m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
+  m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
+  m_menuTools->AppendSeparator();
+  m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
+  m_menuTools->AppendSeparator();
+  m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
+  m_settings_menu = new wxMenuItem( m_menuTools, MENU_SETTINGSPP, _("SpringSettings"), wxEmptyString, wxITEM_NORMAL );
+  m_menuTools->Append (m_settings_menu);
 
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _("&About"));
   menuHelp->Append(MENU_TRAC, _("&Report a bug..."));
   menuHelp->Append(MENU_DOC, _("&Documentation"));
 
-  wxMenuBar *menubar = new wxMenuBar;
-  menubar->Append(menuFile, _("&File"));
-  menubar->Append(menuEdit, _("&Edit"));
-  menubar->Append(menuTools, _("&Tools"));
-  menubar->Append(menuHelp, _("&Help"));
-  SetMenuBar(menubar);
+  m_menubar = new wxMenuBar;
+  m_menubar->Append(menuFile, _("&File"));
+  m_menubar->Append(menuEdit, _("&Edit"));
+  m_menubar->Append(m_menuTools, _("&Tools"));
+  m_menubar->Append(menuHelp, _("&Help"));
+  SetMenuBar(m_menubar);
 
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
@@ -104,17 +120,21 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
 
-  m_chat_tab->Disable();
-  m_join_tab->Disable();
-
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
   SetSizer( m_main_sizer );
 
   SetSize( sett().GetMainWindowLeft(), sett().GetMainWindowTop(), sett().GetMainWindowWidth(), sett().GetMainWindowHeight() );
   Layout();
+
+  se_frame_active = false;
 }
 
+void MainWindow::forceSettingsFrameClose()
+{
+	if (se_frame_active && se_frame != 0)
+		se_frame->handleExternExit();
+}
 
 MainWindow::~MainWindow()
 {
@@ -126,7 +146,9 @@ MainWindow::~MainWindow()
   sett().SetMainWindowTop( y );
   sett().SetMainWindowLeft( x );
   sett().SaveSettings();
+  m_ui.Quit();
   m_ui.OnMainWindowDestruct();
+  freeStaticBox();
 
   delete m_chat_icon;
   delete m_battle_icon;
@@ -195,20 +217,20 @@ ChatPanel& servwin()
 //! @brief Returns the curent MainChatTab object
 MainChatTab& MainWindow::GetChatTab()
 {
-  ASSERT_LOGIC( m_chat_tab != 0, "m_chat_tab = 0" );
+  ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab = 0") );
   return *m_chat_tab;
 }
 
 MainJoinBattleTab& MainWindow::GetJoinTab()
 {
-  ASSERT_LOGIC( m_join_tab != 0, "m_join_tab = 0" );
+  ASSERT_LOGIC( m_join_tab != 0, _T("m_join_tab = 0") );
   return *m_join_tab;
 }
 
 
 MainSinglePlayerTab& MainWindow::GetSPTab()
 {
-  ASSERT_LOGIC( m_sp_tab != 0, "m_sp_tab = 0" );
+  ASSERT_LOGIC( m_sp_tab != 0, _T("m_sp_tab = 0") );
   return *m_sp_tab;
 }
 
@@ -235,7 +257,7 @@ ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
 //! @sa Server::JoinChannel OpenPrivateChat
 void MainWindow::OpenChannelChat( Channel& channel )
 {
-  ASSERT_LOGIC( m_chat_tab != 0, "m_chat_tab" );
+  ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
   m_func_tabs->SetSelection( 0 );
   m_chat_tab->AddChatPannel( channel );
 }
@@ -246,7 +268,7 @@ void MainWindow::OpenChannelChat( Channel& channel )
 //! @param nick The user to whom the chatwindow should be opened to
 void MainWindow::OpenPrivateChat( User& user )
 {
-  ASSERT_LOGIC( m_chat_tab != 0, "m_chat_tab" );
+  ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
   m_func_tabs->SetSelection( 0 );
   m_chat_tab->AddChatPannel( user );
 }
@@ -286,13 +308,37 @@ void MainWindow::OnMenuChat( wxCommandEvent& event )
   if ( !m_ui.IsConnected() ) return;
   wxString answer;
   if ( m_ui.AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
-    if (m_ui.GetServer().UserExists( STD_STRING(answer) ) ) {
-      OpenPrivateChat( m_ui.GetServer().GetUser( STD_STRING(answer) ) );
+    if (m_ui.GetServer().UserExists( answer ) ) {
+      OpenPrivateChat( m_ui.GetServer().GetUser( answer ) );
     }
   }
 
 }
 
+void MainWindow::OnMenuAbout( wxCommandEvent& event )
+{
+#ifdef HAVE_WX28
+    wxAboutDialogInfo info;
+	info.SetName(_T("SpringLobby"));
+	info.SetVersion (GetSpringLobbyVersion());
+	info.SetDescription(_("SpringLobby is a cross-plattform lobby client for the RTS Spring engine"));
+	//info.SetCopyright(_T("");
+	info.SetLicence(_T("GPL"));
+	info.AddDeveloper(_T("BrainDamage"));
+	info.AddDeveloper(_T("koshi"));
+	info.AddDeveloper(_T("semi_"));
+	info.AddDeveloper(_T("tc-"));
+    info.AddTranslator(_T("chaosch (simplified chinese)"));
+	info.AddTranslator(_T("lejocelyn (french)"));
+	info.AddTranslator(_T("Suprano (german)"));
+    info.AddTranslator(_T("tc- (swedish)"));
+	info.SetIcon(wxIcon(springlobby_xpm));
+	wxAboutBox(info);
+
+#else
+    customMessageBoxNoModal(SL_MAIN_ICON,_T("SpringLobby version: ")+GetSpringLobbyVersion(),_T("About"));
+#endif
+}
 
 void MainWindow::OnMenuConnect( wxCommandEvent& event )
 {
@@ -309,6 +355,37 @@ void MainWindow::OnMenuDisconnect( wxCommandEvent& event )
 void MainWindow::OnMenuQuit( wxCommandEvent& event )
 {
   m_ui.Quit();
+}
+
+//! @brief checks for latest version of SpringLobby via HTTP, and compares it with users current version.
+void MainWindow::OnMenuVersion( wxCommandEvent& event )
+{
+  wxString latestVersion = GetLatestVersion();
+  // Need to replace crap chars or versions will always be inequal
+  latestVersion.Replace(_T(" "), _T(""), true);
+  latestVersion.Replace(_T("\n"), _T(""), true);
+  latestVersion.Replace(_T("\t"), _T(""), true);
+  if (latestVersion == _T("-1"))
+  {
+    customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
+    return;
+  }
+  wxString myVersion = GetSpringLobbyVersion();
+
+  wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
+
+  if (latestVersion.IsSameAs(myVersion, false))
+  {
+    customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date!\n\n") + msg, _("Up to Date"));
+  }
+  else
+  {
+    int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like to visit a page with instructions on how to download the newest version?"), _("Not up to Date"), wxYES_NO);
+    if (answer == wxYES)
+    {
+      m_ui.OpenWebBrowser(_T("http://trac.springlobby.info/wiki/Install"));
+    }
+  }
 }
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
@@ -328,55 +405,33 @@ void MainWindow::OnShowDocs( wxCommandEvent& event )
   m_ui.OpenWebBrowser( _T("http://springlobby.info") );
 }
 
-
 void MainWindow::OnTabsChanged( wxListbookEvent& event )
 {
   MakeImages();
-}
 
+  int newsel = event.GetSelection();
+
+  if ( newsel == 0 || newsel == 1 )
+  {
+    if ( !m_ui.IsConnected() && m_ui.IsMainWindowCreated() ) m_ui.Connect();
+  }
+}
 
 void MainWindow::OnUnitSyncReloaded()
 {
-  debug_func("");
-  debug("Reloading join tab");
+  wxLogDebugFunc( _T("") );
+  wxLogMessage( _T("Reloading join tab") );
   GetJoinTab().OnUnitSyncReloaded();
-  debug("Join tab updated");
-  debug("Reloading Singleplayer tab");
+  wxLogMessage( _T("Join tab updated") );
+  wxLogMessage( _T("Reloading Singleplayer tab") );
   GetSPTab().OnUnitSyncReloaded();
-  debug("Singleplayer tab updated");
+  wxLogMessage( _T("Singleplayer tab updated") );
 }
 
-
-void MainWindow::DisableChatTab()
+void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 {
-  m_chat_tab->Disable();
-}
-
-
-void MainWindow::EnableChatTab()
-{
-  m_chat_tab->Enable();
-}
-
-
-void MainWindow::DisableMultiplayerTab()
-{
-  m_join_tab->Disable();
-}
-
-
-void MainWindow::EnableMultiplayerTab()
-{
-  m_join_tab->Enable();
-}
-
-void MainWindow::DisableSingleplayerTab()
-{
-  m_sp_tab->Disable();
-}
-
-
-void MainWindow::EnableSingleplayerTab()
-{
-  m_sp_tab->Enable();
+	se_frame = new settings_frame(this,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
+	  	    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+	se_frame_active = true;
+	se_frame->Show();
 }

@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_TASSERVER_H
 #define SPRINGLOBBY_HEADERGUARD_TASSERVER_H
 
-#include <string>
+#include <wx/string.h>
 #include <list>
 
 #include "server.h"
@@ -17,6 +17,7 @@ class Socket;
 class User;
 struct UserBattleStatus;
 class ServerEvents;
+class wxString;
 
 //! @brief TASServer protocol implementation.
 class TASServer : public Server
@@ -30,10 +31,10 @@ class TASServer : public Server
 
     void SetSocket( Socket* sock );
 
-    bool Register( const std::string& addr, const int port, const std::string& nick, const std::string& password );
+    bool Register( const wxString& addr, const int port, const wxString& nick, const wxString& password,wxString& reason );
     void AcceptAgreement();
 
-    void Connect( const std::string& addr, const int port );
+    void Connect( const wxString& addr, const int port );
     void Disconnect();
     bool IsConnected();
 
@@ -45,80 +46,111 @@ class TASServer : public Server
 
     void Ping();
 
+    void UDPPing();/// used for nat travelsal
+
     User& GetMe();
 
-    void JoinChannel( const std::string& channel, const std::string& key );
-    void PartChannel( const std::string& channel );
+    void JoinChannel( const wxString& channel, const wxString& key );
+    void PartChannel( const wxString& channel );
 
-    void DoActionChannel( const std::string& channel, const std::string& msg );
-    void SayChannel( const std::string& channel, const std::string& msg );
+    void DoActionChannel( const wxString& channel, const wxString& msg );
+    void SayChannel( const wxString& channel, const wxString& msg );
 
-    void DoActionPrivate( const std::string& nick, const std::string& msg );
-    void SayPrivate( const std::string& nick, const std::string& msg );
+    void DoActionPrivate( const wxString& nick, const wxString& msg );
+    void SayPrivate( const wxString& nick, const wxString& msg );
 
-    void SayBattle( int battleid, const std::string& msg );
-    void DoActionBattle( int battleid, const std::string& msg );
+    void SayBattle( int battleid, const wxString& msg );
+    void DoActionBattle( int battleid, const wxString& msg );
 
-    void Ring( const std::string& nick );
+    void Ring( const wxString& nick );
 
-    void HostBattle( BattleOptions bo, const std::string& password = "" );
-    void JoinBattle( const int& battleid, const std::string& password = "" );
+    void ModeratorSetChannelTopic( const wxString& channel, const wxString& topic );
+    void ModeratorSetChannelKey( const wxString& channel, const wxString& key );
+    void ModeratorMute( const wxString& channel, const wxString& nick, int duration, bool byip );
+    void ModeratorUnmute( const wxString& channel, const wxString& nick );
+    void ModeratorKick( const wxString& channel, const wxString& reason );
+    void ModeratorBan( const wxString& nick, bool byip );
+    void ModeratorUnban( const wxString& nick );
+    void ModeratorGetIP( const wxString& nick );
+    void ModeratorGetLastLogin( const wxString& nick );
+    void ModeratorGetLastIP( const wxString& nick );
+    void ModeratorFindByIP( const wxString& ipadress );
+
+    void AdminGetAccountAccess( const wxString& nick );
+    void AdminChangeAccountAccess( const wxString& nick, const wxString& accesscode );
+    void AdminSetBotMode( const wxString& nick, bool isbot );
+
+    void HostBattle( BattleOptions bo, const wxString& password = _T("") );
+    void JoinBattle( const int& battleid, const wxString& password = _T("") );
     void LeaveBattle( const int& battleid );
     void SendMyBattleStatus( UserBattleStatus& bs );
     void SendMyUserStatus();
 
-    void ForceSide( int battleid, const std::string& nick, int side );
-    void ForceTeam( int battleid, const std::string& nick, int team );
-    void ForceAlly( int battleid, const std::string& nick, int ally );
-    void ForceColour( int battleid, const std::string& nick, int r, int g, int b );
-    void ForceSpectator( int battleid, const std::string& nick, bool spectator );
-    void BattleKickPlayer( int battleid, const std::string& nick );
-    void SetHandicap( int battleid, const std::string& nick, int handicap);
+    void ForceSide( int battleid, const wxString& nick, int side );
+    void ForceTeam( int battleid, const wxString& nick, int team );
+    void ForceAlly( int battleid, const wxString& nick, int ally );
+    void ForceColour( int battleid, const wxString& nick, const wxColour& col );
+    void ForceSpectator( int battleid, const wxString& nick, bool spectator );
+    void BattleKickPlayer( int battleid, const wxString& nick );
+    void SetHandicap( int battleid, const wxString& nick, int handicap);
 
-    void AddBot( int battleid, const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll );
-    void RemoveBot( int battleid, const std::string& nick );
-    void UpdateBot( int battleid, const std::string& nick, UserBattleStatus status );
+    void AddBot( int battleid, const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll );
+    void RemoveBot( int battleid, const wxString& nick );
+    void UpdateBot( int battleid, const wxString& nick, UserBattleStatus status );
 
     void StartHostedBattle();
     void SendHostInfo( HostInfo update );
-    void SendRaw( const std::string& raw );
+    void SendHostInfo( const wxString& Tag );
 
-    void RequestInGameTime();
+    void SendRaw( const wxString& raw );
+
+    void RequestInGameTime( const wxString& nick );
+
+    void SendUdpSourcePort( int udpport );
+    void SendNATHelperInfos( const wxString& username, const wxString& ip, int port );
 
     Battle* GetCurrentBattle();
 
     void RequestChannels();
     // TASServer specific functions
-    void ExecuteCommand( const std::string& in );
-    void ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid = -1 );
+    void ExecuteCommand( const wxString& in );
+    void ExecuteCommand( const wxString& cmd, const wxString& inparams, int replyid = -1 );
 
     void HandlePong( int replyid );
     void HandlePinglist();
 
     void OnConnected( Socket* sock );
     void OnDisconnected( Socket* sock );
-    void OnDataRecived( Socket* sock );
+    void OnDataReceived( Socket* sock );
 
-    bool IsPasswordHash( const std::string& pass );
-    std::string GetPasswordHash( const std::string& pass );
+    bool IsPasswordHash( const wxString& pass );
+    wxString GetPasswordHash( const wxString& pass );
+
+    bool TestOpenPort( unsigned int port );
+
+    void EnableUdpPing();
+    void DisableUdpPing();
 
   protected:
     Ui& m_ui;
     ServerEvents* m_se;
-    int m_ser_ver;
+    double m_ser_ver;
 
     bool m_connected;
     bool m_online;
-    std::string m_buffer;
+    wxString m_buffer;
     time_t m_last_ping;
     int m_ping_id;
     std::list<TASPingListItem> m_pinglist;
 
     int m_battle_id;
 
-    std::string m_agreement;
+    wxString m_agreement;
 
-    void _ReciveAndExecute();
+    wxString m_addr;
+
+    void ReceiveAndExecute();
+    void SendCmd( const wxString& command, const wxString& param = _T("") );
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H

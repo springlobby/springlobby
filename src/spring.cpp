@@ -10,6 +10,8 @@
 #include <wx/stdpaths.h>
 #include <clocale>
 #include <stdexcept>
+#include <vector>
+#include <algorithm>
 
 #include "spring.h"
 #include "springprocess.h"
@@ -28,6 +30,8 @@ BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
     EVT_COMMAND ( PROC_SPRING, wxEVT_SPRING_EXIT, Spring::OnTerminated )
 
 END_EVENT_TABLE();
+
+#define FIRST_UDP_SOURCEPORT 8300
 
 
 Spring::Spring( Ui& ui ) :
@@ -54,18 +58,18 @@ bool Spring::IsRunning()
 bool Spring::Run( Battle& battle )
 {
   if ( m_running ) {
-    debug_error( "Spring already running!" );
+    wxLogError( _T("Spring already running!") );
     return false;
   }
 
   wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
 
-  debug( "Path to script: " + STD_STRING(path) + "script.txt" );
+  wxLogMessage( _T("Path to script: %sscript.txt"), path.c_str() );
 
   try {
 
     if ( !wxFile::Access( path + _T("script.txt"), wxFile::write ) ) {
-      debug_error( "Access denied to script.txt." );
+      wxLogError( _T("Access denied to script.txt.") );
     }
 
     wxFile f( path + _T("script.txt"), wxFile::write );
@@ -73,27 +77,27 @@ bool Spring::Run( Battle& battle )
     f.Close();
 
   } catch (...) {
-    debug_error( "Couldn't write script.txt" ); //!@todo Some message to user.
+    wxLogError( _T("Couldn't write script.txt") );
     return false;
   }
 
-  wxString cmd =  _T("\"") + WX_STRING(sett().GetSpringUsedLoc()) + _T("\" ") + path + _T("script.txt");
-  debug( "cmd: " + STD_STRING(cmd) );
-  wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
+  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + path + _T("script.txt");
+  wxLogMessage( _T("cmd: %s"), cmd.c_str() );
+  wxSetWorkingDirectory( sett().GetSpringDir() );
   if ( sett().UseOldSpringLaunchMethod() ) {
     if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
     if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
   } else {
     if ( m_process == 0 ) m_process = new SpringProcess( *this );
-    debug( "m_process->Create();" );
+    wxLogMessage( _T("m_process->Create();") );
     m_process->Create();
-    debug( "m_process->SetCommand( cmd );" );
+    wxLogMessage( _T("m_process->SetCommand( cmd );") );
     m_process->SetCommand( cmd );
-    debug( "m_process->Run();" );
+    wxLogMessage( _T("m_process->Run();") );
     m_process->Run();
   }
   m_running = true;
-  debug( "Done running = true" );
+  wxLogMessage( _T("Done running = true") );
   return true;
 }
 
@@ -101,7 +105,7 @@ bool Spring::Run( Battle& battle )
 bool Spring::Run( SinglePlayerBattle& battle )
 {
   if ( m_running ) {
-    debug_error( "Spring already running!" );
+    wxLogError( _T("Spring already running!") );
     return false;
   }
 
@@ -110,7 +114,7 @@ bool Spring::Run( SinglePlayerBattle& battle )
   try {
 
     if ( !wxFile::Access( path + _T("script.txt"), wxFile::write ) ) {
-      debug_error( "Access denied to script.txt." );
+      wxLogError( _T("Access denied to script.txt.") );
     }
 
     wxFile f( path + _T("script.txt"), wxFile::write );
@@ -118,12 +122,12 @@ bool Spring::Run( SinglePlayerBattle& battle )
     f.Close();
 
   } catch (...) {
-    debug_error( "Couldn't write script.txt" ); //!@todo Some message to user.
+    wxLogError( _T("Couldn't write script.txt") );
     return false;
   }
 
-  wxString cmd =  _T("\"") + WX_STRING(sett().GetSpringUsedLoc()) + _T("\" ") + path + _T("script.txt");
-  wxSetWorkingDirectory( WX_STRING(sett().GetSpringDir()) );
+  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + path + _T("script.txt");
+  wxSetWorkingDirectory( sett().GetSpringDir() );
   if ( sett().UseOldSpringLaunchMethod() ) {
     if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
     if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
@@ -141,15 +145,15 @@ bool Spring::Run( SinglePlayerBattle& battle )
 
 bool Spring::TestSpringBinary()
 {
-  if ( !wxFileName::FileExists( WX_STRING(sett().GetSpringUsedLoc()) ) ) return false;
-  if ( usync()->GetSpringVersion() != "") return true;
+  if ( !wxFileName::FileExists( sett().GetSpringUsedLoc() ) ) return false;
+  if ( usync()->GetSpringVersion() != _T("")) return true;
   else return false;
 }
 
 
 void Spring::OnTerminated( wxCommandEvent& event )
 {
-  debug_func("");
+  wxLogDebugFunc( _T("") );
   m_running = false;
   m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
   m_wx_process = 0;
@@ -157,96 +161,94 @@ void Spring::OnTerminated( wxCommandEvent& event )
 }
 
 
-std::string GetWord( std::string& params )
-{
-  std::string::size_type pos;
-  std::string param;
-
-  pos = params.find( " ", 0 );
-  if ( pos == std::string::npos ) {
-    param = params;
-    params = "";
-    return param;
-  } else {
-    param = params.substr( 0, pos );
-    params = params.substr( pos + 1 );
-    return param;
-  }
-}
+  struct UserOrder{
+    int index;/// user number for GetUser
+    int order;/// user order (we'll sort by it)
+    bool operator<(UserOrder b) const {/// comparison function for sorting
+      return order<b.order;
+    }
+  };
 
 
 wxString Spring::GetScriptTxt( Battle& battle )
 {
+  wxLogMessage(_T("0 GetScriptTxt called "));
   wxString s;
 
-  int NumTeams=0, NumBots = 0, NumAllys=0, LastOrder=-1,Lowest=-1,MyPlayerNum=-1;
-  int PlayerOrder[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-  int BotOrder[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-  int TeamConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-  int AllyConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-  int AllyRevConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+  int  NumTeams=0, MyPlayerNum=-1;
 
-  debug("1 numusers: " + i2s(battle.GetNumUsers()) );
-  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
-    Lowest = -1;
-    // Find next player in the order they were sent from the server.
-    debug("2 i: " + i2s(i) );
-    for ( user_map_t::size_type gl = 0; gl < battle.GetNumUsers(); gl++ ) {
-      User& ou = battle.GetUser(gl);
-      debug("2.1 order: " + i2s(ou.BattleStatus().order) );
-      if ( (ou.BattleStatus().order <= LastOrder) && (LastOrder != -1) ) continue;
-      if ( Lowest == -1 ) Lowest = gl;
-      else if ( ou.BattleStatus().order < battle.GetUser(Lowest).BattleStatus().order ) Lowest = gl;
+  std::vector<UserOrder> ordered_users;
+  std::vector<UserOrder> ordered_bots;
+  std::vector<int> TeamConv, AllyConv, AllyRevConv;
+  /// AllyRevConv.size() gives number of allies
+
+  wxLogMessage(_T("1 numusers: %d"),battle.GetNumUsers() );
+
+  /// Fill ordered_users and sort it
+  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ){
+    UserOrder tmp;
+    tmp.index=i;
+    tmp.order=battle.GetUser(i).BattleStatus().order;
+    ordered_users.push_back(tmp);
+  }
+  std::sort(ordered_users.begin(),ordered_users.end());
+
+  /// process ordered users, convert teams and allys
+  for(int i=0;i<int(ordered_users.size());++i){
+    wxLogMessage(_T("2 order %d index %d"), ordered_users[i].order, ordered_users[i].index);
+    User &user = battle.GetUser(ordered_users[i].index);
+
+    if ( &user == &battle.GetMe() ) MyPlayerNum = i;
+
+    UserBattleStatus status = user.BattleStatus();
+    if ( status.spectator ) continue;
+
+    if(status.team>int(TeamConv.size())-1){
+      TeamConv.resize(status.team+1,-1);
     }
-    debug("3 Lowest: " + i2s(Lowest) );
-    LastOrder = battle.GetUser(Lowest).BattleStatus().order;
-    User& u = battle.GetUser( Lowest );
+    if ( TeamConv[status.team] == -1 ) TeamConv[status.team] = NumTeams++;
 
-    PlayerOrder[i] = Lowest;
-    if ( &u == &battle.GetMe() ) MyPlayerNum = i;
-
-    UserBattleStatus bs = u.BattleStatus();
-    if ( bs.spectator ) continue;
-
-    // Transform team numbers.
-    if ( TeamConv[bs.team] == -1 ) TeamConv[bs.team] = NumTeams++;
-
-    // Transform ally numbers.
-    if ( AllyConv[bs.ally] == -1 ) {
-      AllyConv[bs.ally] = NumAllys;
-      AllyRevConv[NumAllys] = bs.ally;
-      NumAllys++;
+    if(status.ally>int(AllyConv.size())-1){
+      AllyConv.resize(status.ally+1,-1);
+    }
+    if ( AllyConv[status.ally] == -1 ) {
+      AllyConv[status.ally] = AllyRevConv.size();
+      AllyRevConv.push_back(status.ally);
     }
 
   }
-  debug("4");
+  wxLogMessage(_T("3"));
 
-  // Get bot order
-  LastOrder = -1;
+  /// sort and process bots now
+
   for ( std::list<BattleBot*>::size_type i = 0; i < battle.GetNumBots(); i++ ) {
-
-    Lowest = -1;
-
-    debug("5");
-    for ( std::list<BattleBot*>::size_type gl = 0; gl < battle.GetNumBots(); gl++ ) {
-      if ( (battle.GetBot(gl)->bs.order <= LastOrder) && (LastOrder != -1) ) continue;
-      if ( Lowest == -1 ) Lowest = gl;
-      else if ( battle.GetBot(gl)->bs.order < battle.GetBot(Lowest)->bs.order ) Lowest = gl;
-    }
-    debug("6");
-
-    LastOrder = battle.GetBot(Lowest)->bs.order;
-    BotOrder[i] = Lowest;
-
-    if ( AllyConv[battle.GetBot(Lowest)->bs.ally] == -1 ) {
-      AllyConv[battle.GetBot(Lowest)->bs.ally] = NumAllys;
-      AllyRevConv[NumAllys] = battle.GetBot(Lowest)->bs.ally;
-      NumAllys++;
-    }
-
-    NumBots++;
+    UserOrder tmp;
+    tmp.index=i;
+    tmp.order=battle.GetBot(i)->bs.order;
+    ordered_bots.push_back(tmp);
   }
-  debug("7");
+  std::sort(ordered_bots.begin(),ordered_bots.end());
+
+  for(int i=0;i<int(ordered_bots.size());++i){
+
+    BattleBot &bot=*battle.GetBot(ordered_bots[i].index);
+
+    if(bot.bs.ally>int(AllyConv.size())-1){
+      AllyConv.resize(bot.bs.ally+1,-1);
+    }
+    if(AllyConv[bot.bs.ally]==-1){
+      AllyConv[bot.bs.ally]=AllyRevConv.size();
+      AllyRevConv.push_back(bot.bs.ally);
+    }
+  }
+
+  ///(dmytry aka dizekat) i don't want to change code below, so these vars for compatibility. If you want, refactor it.
+
+  int NumAllys=AllyRevConv.size();
+  int NumBots=ordered_bots.size();
+
+
+  wxLogMessage(_T("7"));
 
 
   //BattleOptions bo = battle.opts();
@@ -256,19 +258,40 @@ wxString Spring::GetScriptTxt( Battle& battle )
 
   //s += wxString::Format( _T("\tMapname=%s;\n"), bo.mapname.c_str() );
   s += _T("\tMapname=") + battle.GetMapName() + _T(";\n");
-  s += wxString::Format( _T("\tStartMetal=%d;\n"), battle.GetStartMetal() );
-  s += wxString::Format( _T("\tStartEnergy=%d;\n"), battle.GetStartEnergy() );
-  s += wxString::Format( _T("\tMaxUnits=%d;\n"), battle.GetMaxUnits() );
-  s += wxString::Format( _T("\tStartPosType=%d;\n"), battle.GetStartType() );
-  s += wxString::Format( _T("\tGameMode=%d;\n"), battle.GetGameType() );
-  s += WX_STRING(("\tGameType=" + usync()->GetModArchive(usync()->GetModIndex(STD_STRING(battle.GetModName()))) + ";\n"));
-  s += wxString::Format( _T("\tLimitDGun=%d;\n"), battle.LimitDGun()?1:0 );
-  s += wxString::Format( _T("\tDiminishingMMs=%d;\n"), battle.DimMMs()?1:0 );
-  s += wxString::Format( _T("\tGhostedBuildings=%d;\n\n"), battle.GhostedBuildings()?1:0 );
+  s += _T("\tGameType=") + usync()->GetModArchive(usync()->GetModIndex(battle.GetModName())) + _T(";\n");
+  unsigned long uhash;
+  battle.GetModHash().ToULong(&uhash);
+  s += wxString::Format( _T("\tModHash=%ld;\n"), (long)uhash );
+  wxStringTripleVec optlistEng;
+  battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
+  for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+  {
+    s += _T("\t") + it->first + _T("=") + it->second.second + _T(";\n");
+  }
 
   if ( battle.IsFounderMe() ) s += wxString::Format( _T("\tHostIP=localhost;\n") );
-  else s += WX_STRING(("\tHostIP=" + battle.GetHostIp() + ";\n"));
-  s += wxString::Format( _T("\tHostPort=%d;\n\n"), battle.GetHostPort() );
+  else s += _T("\tHostIP=") + battle.GetHostIp() + _T(";\n");
+
+  if ( battle.IsFounderMe() && battle.GetNatType() == NAT_Hole_punching ) {
+    s += wxString::Format( _T("\tHostPort=%d;\n"), battle.GetMyInternalUdpSourcePort() );
+  }
+  else {
+    s += wxString::Format( _T("\tHostPort=%d;\n"), battle.GetHostPort() );
+    }
+
+  if ( !battle.IsFounderMe() )
+  {
+    if ( battle.GetNatType() == NAT_Fixed_source_ports )
+    {
+      s += wxString::Format( _T("\tSourcePort=%d;\n"), FIRST_UDP_SOURCEPORT + MyPlayerNum -1 );
+    }
+    else if ( battle.GetNatType() == NAT_Hole_punching )
+    {
+      s += wxString::Format( _T("\tSourcePort=%d;\n"), battle.GetMyInternalUdpSourcePort() );
+    }
+  }
+
+  s += _T("\n");
 
   s += wxString::Format( _T("\tMyPlayerNum=%d;\n\n"), MyPlayerNum );
 
@@ -276,21 +299,19 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += wxString::Format( _T("\tNumTeams=%d;\n"), NumTeams + NumBots );
   s += wxString::Format( _T("\tNumAllyTeams=%d;\n\n"), NumAllys );
 
-  debug("8");
+  wxLogMessage(_T("8"));
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     s += wxString::Format( _T("\t[PLAYER%d]\n"), i );
     s += wxString::Format( _T("\t{\n") );
-    s += WX_STRING(("\t\tname=" + battle.GetUser( PlayerOrder[i] ).GetNick() + ";\n"));
-    wxString cc = WX_STRING( battle.GetUser( PlayerOrder[i] ).GetCountry() );
-    cc.MakeLower();
-    s += _T("\t\tcountryCode=") + cc + _T(";\n");
-    s += wxString::Format( _T("\t\tSpectator=%d;\n"), battle.GetUser( PlayerOrder[i] ).BattleStatus().spectator?1:0 );
-    if ( !(battle.GetUser( PlayerOrder[i] ).BattleStatus().spectator) ) {
-      s += wxString::Format( _T("\t\tteam=%d;\n"), TeamConv[battle.GetUser( PlayerOrder[i] ).BattleStatus().team] );
+    s += _T("\t\tname=") + battle.GetUser( ordered_users[i].index ).GetNick() + _T(";\n");
+    s += _T("\t\tcountryCode=") + battle.GetUser( ordered_users[i].index ).GetCountry().Lower() + _T(";\n");
+    s += wxString::Format( _T("\t\tSpectator=%d;\n"), battle.GetUser( ordered_users[i].index ).BattleStatus().spectator?1:0 );
+    if ( !(battle.GetUser( ordered_users[i].index ).BattleStatus().spectator) ) {
+      s += wxString::Format( _T("\t\tteam=%d;\n"), TeamConv[battle.GetUser( ordered_users[i].index ).BattleStatus().team] );
     }
     s += wxString::Format( _T("\t}\n") );
   }
-  debug("9");
+  wxLogMessage(_T("9"));
 
   s += _T("\n");
 
@@ -301,13 +322,16 @@ wxString Spring::GetScriptTxt( Battle& battle )
     // Find Team Leader.
     int TeamLeader = -1;
 
-    debug("10");
-    for( user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {
-      // First Player That Is In The Team Is Leader.
-      if ( TeamConv[battle.GetUser( PlayerOrder[tlf] ).BattleStatus().team] == i ) {
+    wxLogMessage(_T("10"));
+    for( user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {/// change: moved check if spectator above use of TeamConv array, coz TeamConv array does not include spectators.
 
-        // Make sure player is not spectator.
-        if ( battle.GetUser( PlayerOrder[tlf] ).BattleStatus().spectator ) continue;
+      // Make sure player is not spectator.
+      if ( battle.GetUser( ordered_users[tlf].index ).BattleStatus().spectator ) continue;
+
+      // First Player That Is In The Team Is Leader.
+      if ( TeamConv[battle.GetUser( ordered_users[tlf].index ).BattleStatus().team] == i ) {
+
+
 
         // Assign as team leader.
         TeamLeader = tlf;
@@ -315,70 +339,81 @@ wxString Spring::GetScriptTxt( Battle& battle )
       }
 
     }
-    debug("11");
+    wxLogMessage(_T("11"));
 
     s += wxString::Format( _T("\t\tTeamLeader=%d;\n") ,TeamLeader );
-    s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().ally] );
+    s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().ally] );
     const char* old_locale = std::setlocale(LC_NUMERIC, "C");
     s += wxString::Format( _T("\t\tRGBColor=%.5f %.5f %.5f;\n"),
-           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().color_r/255.0),
-           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().color_g/255.0),
-           (double)(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().color_b/255.0)
+           (double)(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Red()/255.0),
+           (double)(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Green()/255.0),
+           (double)(battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Blue()/255.0)
          );
     std::setlocale(LC_NUMERIC, old_locale);
-    debug( i2s(battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side) );
-    usync()->SetCurrentMod( STD_STRING(battle.GetModName()) );
-    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().side ) + ";\n"));
-    s += wxString::Format( _T("\t\tHandicap=%d;\n"), battle.GetUser( PlayerOrder[TeamLeader] ).BattleStatus().handicap );
+    wxLogMessage( _T("%d"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side );
+    s += _T("\t\tSide=") + usync()->GetSideName( battle.GetModName(), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side ) + _T(";\n");
+    s += wxString::Format( _T("\t\tHandicap=%d;\n"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().handicap );
     s +=  _T("\t}\n");
   }
-  debug("12");
+  wxLogMessage( _T("12") );
 
   for ( int i = 0; i < NumBots; i++ ) {
 
     s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i + NumTeams );
 
-    BattleBot& bot = *battle.GetBot( BotOrder[i] );
+    BattleBot& bot = *battle.GetBot( ordered_bots[i].index );
 
     // Find Team Leader.
-    int TeamLeader = TeamConv[ battle.GetUser( bot.owner ).BattleStatus().team ];
+    int TeamLeader;
+    for(TeamLeader=0;TeamLeader<int(ordered_users.size());TeamLeader++){
+      if(&battle.GetUser(ordered_users[TeamLeader].index)==&battle.GetUser(bot.owner))goto leader_found;
+    }
+    TeamLeader=0;
+    wxLogMessage( _T("Internal error: team leader not found for bot! Using 0") );
+    leader_found:
+    /*
+    if(battle.GetUser( bot.owner ).BattleStatus().spectator){
+      TeamLeader=battle.GetUser( bot.owner ).BattleStatus().team;
+    }else{
+      TeamLeader = TeamConv[ battle.GetUser( bot.owner ).BattleStatus().team ];
+    }*/
 
     s += wxString::Format( _T("\t\tTeamLeader=%d;\n") ,TeamLeader );
     s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[bot.bs.ally] );
     const char* old_locale = std::setlocale(LC_NUMERIC, "C");
     s += wxString::Format(
       _T("\t\tRGBColor=%.5f %.5f %.5f;\n"),
-      (double)(bot.bs.color_r/255.0),
-      (double)(bot.bs.color_g/255.0),
-      (double)(bot.bs.color_b/255.0)
+      (double)(bot.bs.colour.Red()/255.0),
+      (double)(bot.bs.colour.Green()/255.0),
+      (double)(bot.bs.colour.Blue()/255.0)
     );
 
     std::setlocale(LC_NUMERIC, old_locale);
-    usync()->SetCurrentMod(STD_STRING(battle.GetModName()) );
-    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( bot.bs.side ) + ";\n"));
+    s += _T("\t\tSide=") + usync()->GetSideName( battle.GetModName(), bot.bs.side ) + _T(";\n");
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), bot.bs.handicap );
 
     wxString ai = WX_STRING( bot.aidll );
-/*    if ( wxFileName::FileExists( WX_STRING( sett().GetSpringDir() ) + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
+/*    if ( wxFileName::FileExists( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
       ai += _T(".dll");
     } else {
       ai += _T(".so");
     }*/
 
-    //s += WX_STRING(("\t\tAIDLL=AI/Bot-libs/" + STD_STRING(ai) + ";\n"));
-    s += _T("\t\tAIDLL=") + usync()->GetBotLibPath( ai ) + _T(";\n");
+    //s += ("\t\tAIDLL=AI/Bot-libs/" + ai + ";\n");
+    s += _T("\t\tAIDLL=") + ai + _T(";\n");
     s +=  _T("\t}\n");
   }
-  debug("13");
+  wxLogMessage( _T("13") );
 
-
+  long startpostype;
+  battle.CustomBattleOptions()->getSingleValue( _T("startpostype"), EngineOption ).ToLong( &startpostype );
   for ( int i = 0; i < NumAllys; i++ ) {
     s += wxString::Format( _T("\t[ALLYTEAM%d]\n\t{\n"), i );
 
     int NumInAlly = 0;
     s += wxString::Format( _T("\t\tNumAllies=%d;\n"), NumInAlly );
 
-   if ( (battle.GetStartRect(AllyRevConv[i]) != 0) && (battle.GetStartType() == ST_Choose) ) {
+   if ( (battle.GetStartRect(AllyRevConv[i]) != 0) && (startpostype == ST_Choose) ) {
       BattleStartRect* sr = (BattleStartRect*)battle.GetStartRect(AllyRevConv[i]);
       const char* old_locale = std::setlocale(LC_NUMERIC, "C");
       s += wxString::Format( _T("\t\tStartRectLeft=%.3f;\n"), sr->left / 200.0 );
@@ -391,25 +426,45 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s +=  _T("\t}\n");
   }
 
-  debug("14");
+  wxLogMessage( _T("14") );
 
-  s += wxString::Format( _T("\tNumRestrictions=%d;\n"), battle.GetNumDisabledUnits() );
+  wxArrayString units = battle.DisabledUnits();
+
+  s += wxString::Format( _T("\tNumRestrictions=%d;\n"), units.GetCount() );
   s += _T("\t[RESTRICT]\n");
   s += _T("\t{\n");
 
-  std::string units = battle.DisabledUnits();
-  std::string unit;
-  int i = 0;
-
-  while ( (unit = GetWord( units )) != "" ) {
-    s += WX_STRING(("\t\tUnit" + i2s(i) + "=" + unit + ";\n"));
+  for ( unsigned int i = 0; i < units.GetCount(); i++) {
+    s += wxString::Format(_T("\t\tUnit%d=%s;\n"), i, units[i].c_str() );
     s += wxString::Format( _T("\t\tLimit%d=0;\n"), i );
-    i++;
   }
-
-  debug("15");
-
   s += _T("\t}\n");
+  wxLogMessage( _T("15") );
+
+  s += _T("\t[mapoptions]\n");
+  s += _T("\t{\n");
+  wxStringTripleVec optlistMap;
+  battle.CustomBattleOptions()->getOptions( &optlistMap, MapOption );
+  for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+  {
+    s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
+  }
+  s += _T("\t}\n");
+
+  wxLogMessage( _T("16") );
+
+  s += _T("\t[modoptions]\n");
+  s += _T("\t{\n");
+    wxStringTripleVec optlistMod;
+  battle.CustomBattleOptions()->getOptions( &optlistMod, ModOption );
+  for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+  {
+    s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
+  }
+  s += _T("\t}\n");
+
+  wxLogMessage( _T("17") );
+
   s += _T("}\n");
 
   if ( DOS_TXT ) {
@@ -419,7 +474,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   wxString ds = _T("[Script End]\n\n----------------------[ Debug info ]-----------------------------\nUsers:\n\n");
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     User& tmpu = battle.GetUser( i );
-    ds += WX_STRING( tmpu.GetNick() );
+    ds += tmpu.GetNick();
     ds += wxString::Format( _T(":\n  team: %d ally: %d spec: %d order: %d side: %d hand: %d sync: %d ready: %d col: %d,%d,%d\n\n"),
       tmpu.BattleStatus().team,
       tmpu.BattleStatus().ally,
@@ -429,13 +484,13 @@ wxString Spring::GetScriptTxt( Battle& battle )
       tmpu.BattleStatus().handicap,
       tmpu.BattleStatus().sync,
       tmpu.BattleStatus().ready,
-      tmpu.BattleStatus().color_r,
-      tmpu.BattleStatus().color_g,
-      tmpu.BattleStatus().color_b
+      tmpu.BattleStatus().colour.Red(),
+      tmpu.BattleStatus().colour.Green(),
+      tmpu.BattleStatus().colour.Blue()
     );
   }
 
-  debug("16");
+  wxLogMessage( _T("18") );
   ds += _T("\n\nBots: \n\n");
   for ( std::list<BattleBot*>::size_type i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot = battle.GetBot(i);
@@ -443,7 +498,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
       ds += _T( "NULL" );
       continue;
     }
-    ds += WX_STRING( bot->name ) + _T(" (") + WX_STRING( bot->owner ) + _T(")");
+    ds += bot->name + _T(" (") + bot->owner + _T(")");
     ds += wxString::Format( _T(":\n  team: %d ally: %d spec: %d order: %d side: %d hand: %d sync: %d ready: %d col: %d,%d,%d\n\n"),
       bot->bs.team,
       bot->bs.ally,
@@ -453,33 +508,33 @@ wxString Spring::GetScriptTxt( Battle& battle )
       bot->bs.handicap,
       bot->bs.sync,
       bot->bs.ready,
-      bot->bs.color_r,
-      bot->bs.color_g,
-      bot->bs.color_b
+      bot->bs.colour.Red(),
+      bot->bs.colour.Green(),
+      bot->bs.colour.Blue()
     );
   }
-  debug("17");
+  wxLogMessage( _T("19") );
 
   ds += _T("\n\nPlayerOrder: { ");
-  for ( int i = 0; i < 16; i++ ) {
-    ds += wxString::Format( _T(" %d,"), PlayerOrder[i] );
+  for ( std::vector<UserOrder>::size_type i = 0; i < ordered_users.size(); i++ ) {
+    ds += wxString::Format( _T(" %d,"), ordered_users[i].index );
   }
   ds += _T(" }\n\n");
 
   ds += _T("TeamConv: { ");
-  for ( int i = 0; i < 16; i++ ) {
+  for ( std::vector<int>::size_type i = 0; i < TeamConv.size(); i++ ) {
     ds += wxString::Format( _T(" %d,"), TeamConv[i] );
   }
   ds += _T(" }\n\n");
 
   ds += _T("AllyConv: { ");
-  for ( int i = 0; i < 16; i++ ) {
+  for ( std::vector<int>::size_type i = 0; i < AllyConv.size(); i++ ) {
     ds += wxString::Format( _T(" %d,"), AllyConv[i] );
   }
   ds += _T(" }\n\n");
 
   ds += _T("AllyRevConv: { ");
-  for ( int i = 0; i < 16; i++ ) {
+  for ( std::vector<int>::size_type i = 0; i < AllyRevConv.size(); i++ ) {
     ds += wxString::Format( _T(" %d,"), AllyRevConv[i] );
   }
   ds += _T(" }\n\n\n");
@@ -489,7 +544,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   if ( DOS_TXT ) {
     ds.Replace( _T("\n"), _T("\r\n"), true );
   }
-  debug("18");
+  wxLogMessage( _T("20") );
 
   wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
 
@@ -497,7 +552,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   f.Write( _T("[Script Start]") + s );
   f.Write( ds );
   f.Close();
-  debug("19");
+  wxLogMessage( _T("21") );
 
   return s;
 }
@@ -506,33 +561,45 @@ wxString Spring::GetScriptTxt( Battle& battle )
 wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 {
   wxString s;
-  int AllyConv[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+  std::vector<int> AllyConv;
+
   int NumAllys = 0;
   int PlayerTeam = -1;
 
+  long startpostype;
+  battle.CustomBattleOptions()->getSingleValue( _T("startpostype"), EngineOption ).ToLong( &startpostype );
+
+  wxLogMessage( _T("StartPosType=%ld"), startpostype );
+
+
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
-    BattleBot* bot = battle.GetBotByStartPosition( i );
-    ASSERT_LOGIC( bot != 0, "bot == 0" );
-    if ( bot->aidll == "" ) PlayerTeam = i;
-    if ( AllyConv[bot->bs.ally] == -1 ) AllyConv[bot->bs.ally] = NumAllys++;
+    BattleBot* bot;
+    bot = battle.GetBot( i );
+    ASSERT_LOGIC( bot != 0, _T("bot == 0") );
+    if ( bot->aidll == _T("") ) PlayerTeam = i;
+    if(bot->bs.ally>int(AllyConv.size())-1){
+      AllyConv.resize(bot->bs.ally+1,-1);
+    }
+    if( AllyConv[bot->bs.ally] == -1 ) AllyConv[bot->bs.ally] = NumAllys++;
   }
 
-  ASSERT_LOGIC( PlayerTeam != -1, "no player found" );
+  ASSERT_LOGIC( PlayerTeam != -1, _T("no player found") );
 
   // Start generating the script.
   s  = wxString::Format( _T("[GAME]\n{\n") );
 
   //s += wxString::Format( _T("\tMapname=%s;\n"), bo.mapname.c_str() );
   s += _T("\tMapname=") + battle.GetMapName() + _T(";\n");
-  s += wxString::Format( _T("\tStartMetal=%d;\n"), battle.GetStartMetal() );
-  s += wxString::Format( _T("\tStartEnergy=%d;\n"), battle.GetStartEnergy() );
-  s += wxString::Format( _T("\tMaxUnits=%d;\n"), battle.GetMaxUnits() );
-  s += wxString::Format( _T("\tStartPosType=%d;\n"), battle.GetStartType() );
-  s += wxString::Format( _T("\tGameMode=%d;\n"), battle.GetGameType() );
-  s += WX_STRING(("\tGameType=" + usync()->GetModArchive(usync()->GetModIndex(STD_STRING(battle.GetModName()))) + ";\n"));
-  s += wxString::Format( _T("\tLimitDGun=%d;\n"), battle.LimitDGun()?1:0 );
-  s += wxString::Format( _T("\tDiminishingMMs=%d;\n"), battle.DimMMs()?1:0 );
-  s += wxString::Format( _T("\tGhostedBuildings=%d;\n\n"), battle.GhostedBuildings()?1:0 );
+  s += _T("\tGameType=" )+ usync()->GetModArchive(usync()->GetModIndex(battle.GetModName())) + _T(";\n");
+  unsigned long uhash;
+  battle.GetModHash().ToULong(&uhash);
+  s += wxString::Format( _T("\tModHash=%ld;\n"), (long)uhash );
+  wxStringTripleVec optlistEng;
+  battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
+  for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+  {
+    s += _T("\t") + it->first + _T("=") + it->second.second + _T(";\n");
+  }
 
   s += _T("\tHostIP=localhost;\n");
 
@@ -551,32 +618,35 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
     s += wxString::Format( _T("\t\tteam=%d;\n"), PlayerTeam );
   s += _T("\t}\n\n");
 
-
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) { // TODO fix this when new Spring comes.
-    BattleBot* bot = battle.GetBotByStartPosition( i );
-    ASSERT_LOGIC( bot != 0, "bot == 0" );
+    BattleBot* bot;
+    if ( startpostype == 3) bot = battle.GetBot( i );
+    else bot = battle.GetBotByStartPosition( i );
+    ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i );
-
+    if ( startpostype == 3 ){
+      s += wxString::Format( _T("\t\tStartPosX=%d;\n"), bot->posx );
+      s += wxString::Format( _T("\t\tStartPosZ=%d;\n"), bot->posy );
+    }
     s += _T("\t\tTeamLeader=0;\n");
     s += wxString::Format( _T("\t\tAllyTeam=%d;\n"), AllyConv[bot->bs.ally] );
     const char* old_locale = std::setlocale(LC_NUMERIC, "C");
     s += wxString::Format( _T("\t\tRGBColor=%.5f %.5f %.5f;\n"),
-           (double)(bot->bs.color_r/255.0),
-           (double)(bot->bs.color_g/255.0),
-           (double)(bot->bs.color_b/255.0)
+           (double)(bot->bs.colour.Red()/255.0),
+           (double)(bot->bs.colour.Green()/255.0),
+           (double)(bot->bs.colour.Blue()/255.0)
          );
     std::setlocale(LC_NUMERIC, old_locale);
-    usync()->SetCurrentMod( STD_STRING(battle.GetModName()) );
-    s += WX_STRING(("\t\tSide=" + usync()->GetSideName( bot->bs.side ) + ";\n"));
+    s += _T("\t\tSide=") + usync()->GetSideName( battle.GetModName(), bot->bs.side ) + _T(";\n");
     s += wxString::Format( _T("\t\tHandicap=%d;\n"), bot->bs.handicap );
-    if ( bot->aidll != "" ) {
-      wxString ai = WX_STRING( bot->aidll );
-      /*if ( wxFileName::FileExists( WX_STRING( sett().GetSpringDir() ) + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
+    if ( bot->aidll != _T("") ) {
+      wxString ai = bot->aidll;
+      /*if ( wxFileName::FileExists( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("AI") + wxFileName::GetPathSeparator() + _T("Bot-libs") + wxFileName::GetPathSeparator() + ai + _T(".dll") ) ) {
         ai += _T(".dll");
       } else {
         ai += _T(".so");
       }*/
-      s += _T("\t\tAIDLL=") + usync()->GetBotLibPath( ai ) + _T(";\n");
+      s += _T("\t\tAIDLL=") + ai + _T(";\n");
       //s += _T("\t\tAIDLL=AI/Bot-libs/") + ai + _T(";\n");
     }
     s +=  _T("\t}\n");
@@ -589,22 +659,38 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   }
 
 
-  s += wxString::Format( _T("\tNumRestrictions=%d;\n"), battle.GetNumDisabledUnits() );
+  wxArrayString units = battle.DisabledUnits();
+
+  s += wxString::Format( _T("\tNumRestrictions=%d;\n"), units.GetCount() );
   s += _T("\t[RESTRICT]\n");
   s += _T("\t{\n");
 
-  std::string units = battle.DisabledUnits();
-  std::string unit;
-  int i = 0;
-
-  while ( (unit = GetWord( units )) != "" ) {
-    s += WX_STRING(("\t\tUnit" + i2s(i) + "=" + unit + ";\n"));
+  for ( unsigned int i = 0; i < units.GetCount(); i++) {
+    s += wxString::Format(_T("\t\tUnit%d=%s:\n"), i, units[i].c_str() );
     s += wxString::Format( _T("\t\tLimit%d=0;\n"), i );
-    i++;
   }
-
-
   s += _T("\t}\n");
+
+  s += _T("\t[mapoptions]\n");
+  s += _T("\t{\n");
+  wxStringTripleVec optlistMap;
+  battle.CustomBattleOptions()->getOptions( &optlistMap, MapOption );
+  for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+  {
+    s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
+  }
+  s += _T("\t}\n");
+
+  s += _T("\t[modoptions]");
+  s += _T("\t{\n");
+    wxStringTripleVec optlistMod;
+  battle.CustomBattleOptions()->getOptions( &optlistMod, ModOption );
+  for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+  {
+    s += _T("\t\t") + it->first + _T("=") + it->second.second + _T(";\n");
+  }
+  s += _T("\t}\n");
+
   s += _T("}\n");
 
   if ( DOS_TXT ) {
@@ -613,4 +699,3 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   return s;
 }
-

@@ -6,20 +6,23 @@
 #include "user.h"
 #include "battle.h"
 #include "server.h"
+#include "utils.h"
 
+#include <wx/string.h>
+#include <wx/intl.h>
 
-void User::Said( const std::string& message )
+void User::Said( const wxString& message )
 {
 }
 
 
-void User::Say( const std::string& message )
+void User::Say( const wxString& message )
 {
   m_serv.SayPrivate( m_nick, message );
 }
 
 
-void User::DoAction( const std::string& message )
+void User::DoAction( const wxString& message )
 {
   m_serv.DoActionPrivate( m_nick, message );
 }
@@ -62,3 +65,26 @@ void User::SendMyUserStatus()
   m_serv.SendMyUserStatus();
 }
 
+
+bool User::ExecuteSayCommand( const wxString& cmd )
+{
+  if ( cmd.BeforeFirst(' ').Lower() == _T("/me") ) {
+    m_serv.DoActionPrivate( m_nick, cmd.AfterFirst(' ') );
+    return true;
+  }  else return false;
+}
+
+wxString User::GetRankName(int rank)
+{
+  //TODO: better interface to ranks?
+      switch(rank) {
+          case RANK_0: return _("Newbie");
+          case RANK_1: return _("Beginner");
+          case RANK_2: return _("Average");
+          case RANK_3: return _("Above average");
+          case RANK_4: return _("Experienced");
+          case RANK_5: return _("Highly experienced");
+          case RANK_6: return _("Veteran");
+      }
+      return _("no rank");
+}

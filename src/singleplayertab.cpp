@@ -8,7 +8,6 @@
 #include <wx/panel.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
-#include <wx/msgdlg.h>
 #include <stdexcept>
 
 #include "singleplayertab.h"
@@ -20,6 +19,9 @@
 #include "addbotdialog.h"
 #include "server.h"
 
+#include "settings++/custom_dialogs.h"
+
+#include "springunitsynclib.h"
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
@@ -36,10 +38,6 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_ui( ui ),
   m_battle( ui, msptab )
 {
-  /*try {
-    if ( usync()->GetNumMods() > 0 ) m_battle.SetMod( usync()->GetMod( 0 ) ); // TODO load latest used mod.
-  } catch (...) {}*/
-
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );
@@ -53,7 +51,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_map_pick = new wxChoice( this, SP_MAP_PICK );
   m_ctrl_sizer->Add( m_map_pick, 1, wxALL, 5 );
 
-  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
   m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
   m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
@@ -109,16 +107,18 @@ void SinglePlayerTab::UpdateMinimap()
 void SinglePlayerTab::ReloadMaplist()
 {
   m_map_pick->Clear();
-  for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-    try {
-      m_map_pick->Insert( RefineMapname( WX_STRING(usync()->GetMap( i, false ).name) ), i );
-    } catch(...) {}
-  }
+  try {
+    for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
+      m_map_pick->Insert( RefineMapname( usync()->GetMap( i ).name ), i );
+    }
+  } catch(...) {}
   m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
   if ( m_battle.GetMapName() != wxEmptyString ) {
-    m_map_pick->SetStringSelection( m_battle.GetMapName() );
+    m_map_pick->SetStringSelection( RefineMapname( m_battle.GetMapName() ) );
+    if ( m_map_pick->GetStringSelection() == wxEmptyString ) SetMap( m_mod_pick->GetCount()-1 );
   } else {
     m_map_pick->SetSelection( m_map_pick->GetCount()-1 );
+    m_addbot_btn->Enable(false);
   }
 }
 
@@ -126,32 +126,75 @@ void SinglePlayerTab::ReloadMaplist()
 void SinglePlayerTab::ReloadModlist()
 {
   m_mod_pick->Clear();
-  for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
-    try {
-      m_mod_pick->Insert( RefineModname( WX_STRING(usync()->GetMod( i ).name) ), i );
-    } catch(...) {}
-  }
+  try {
+    for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
+      m_mod_pick->Insert( RefineModname( usync()->GetMod( i ).name ), i );
+    }
+  } catch (...) {}
 
   m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
+
   if ( m_battle.GetModName() != wxEmptyString ) {
-    m_mod_pick->SetStringSelection( m_battle.GetModName() );
+    m_mod_pick->SetStringSelection( RefineModname( m_battle.GetModName() ) );
+    if ( m_mod_pick->GetStringSelection() == wxEmptyString ) SetMod( m_mod_pick->GetCount()-1 );
   } else {
     m_mod_pick->SetSelection( m_mod_pick->GetCount()-1 );
   }
 }
 
 
+void SinglePlayerTab::SetMap( unsigned int index )
+{
+	//m_ui.ReloadUnitSync();
+  m_addbot_btn->Enable( false );
+  if ( index >= m_map_pick->GetCount()-1 ) {
+    m_battle.SetMap( wxEmptyString, wxEmptyString );
+  } else {
+    try {
+      UnitSyncMap map = usync()->GetMapEx( index );
+      m_battle.SetMap( map );
+      m_addbot_btn->Enable( true );
+    } catch (...) {}
+  }
+  m_minimap->UpdateMinimap();
+  m_battle.SendHostInfo( HI_Map_Changed ); // reload map options
+  m_map_pick->SetSelection( index );
+}
+
+
+void SinglePlayerTab::SetMod( unsigned int index )
+{
+	//m_ui.ReloadUnitSync();
+  if ( index >= m_mod_pick->GetCount()-1 ) {
+    m_battle.SetMod( wxEmptyString, wxEmptyString );
+  } else {
+    try {
+      UnitSyncMod mod = usync()->GetMod( index );
+      m_battle.SetMod( mod );
+    } catch (...) {}
+  }
+  m_minimap->UpdateMinimap();
+  m_battle.SendHostInfo( HI_Restrictions ); // Update restrictions in options.
+  m_battle.SendHostInfo( HI_Mod_Changed ); // reload mod options
+  m_mod_pick->SetSelection( index );
+}
+
+
 bool SinglePlayerTab::ValidSetup()
 {
   if ( (unsigned int)m_mod_pick->GetSelection() >= m_mod_pick->GetCount()-1 ) {
-    wxMessageBox( _("You have to select a mod first."), _("Gamesetup error") );
+    wxLogWarning( _T("no mod selected") );
+    customMessageBox(SL_MAIN_ICON, _("You have to select a mod first."), _("Gamesetup error") );
     return false;
   }
 
   if ( (unsigned int)m_map_pick->GetSelection() >= m_map_pick->GetCount()-1 ) {
-    wxMessageBox( _("You have to select a map first."), _("Gamesetup error") );
+    wxLogWarning( _T("no map selected") );
+    customMessageBox(SL_MAIN_ICON, _("You have to select a map first."), _("Gamesetup error") );
     return false;
   }
+
+  if ( usync()->VersionSupports( GF_XYStartPos ) ) return true;
 
   int numBots = 0;
   int first = -1;
@@ -169,9 +212,11 @@ bool SinglePlayerTab::ValidSetup()
 
   if ( ( numBots < (int)m_battle.GetNumBots() ) || ( ( first != (int)m_battle.GetNumBots() ) && ( first != -1 ) ) ) {
     if ( numBots < (int)m_battle.GetNumBots() ) {
-      wxMessageBox( _("You have bots that are not assingled to startpositions. In the current version of spring you are only allowed to use start positions positioning them freely is not allowed.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
+      wxLogWarning( _T("players in non canonical startpositions unsupported by this spring version") );
+      customMessageBox(SL_MAIN_ICON, _("You have bots that are not assingled to startpositions. In the current version of spring you are only allowed to use start positions positioning them freely is not allowed.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
     } else {
-      wxMessageBox( _("You are not using consecutive start position numbers.\n\nIn the current version of spring you are not allowed to skip any startpositions. You have to use all consecutive position.\n\nExample: if you have 2 bots + yourself you have to use start positions 1,2,3 not 1,3,4 or 2,3,4.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
+      wxLogWarning( _T("players in non-consegutive startpositions") );
+      customMessageBox(SL_MAIN_ICON, _("You are not using consecutive start position numbers.\n\nIn the current version of spring you are not allowed to skip any startpositions. You have to use all consecutive position.\n\nExample: if you have 2 bots + yourself you have to use start positions 1,2,3 not 1,3,4 or 2,3,4.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
     }
     return false;
   }
@@ -182,27 +227,14 @@ bool SinglePlayerTab::ValidSetup()
 void SinglePlayerTab::OnMapSelect( wxCommandEvent& event )
 {
   unsigned int index = (unsigned int)m_map_pick->GetCurrentSelection();
-  if ( index >= m_map_pick->GetCount()-1 ) {
-    m_battle.SetMap( wxEmptyString, wxEmptyString );
-  } else {
-    UnitSyncMap map = usync()->GetMap( index, true );
-    m_battle.SetMap( map );
-  }
-  m_minimap->UpdateMinimap();
+  SetMap( index );
 }
 
 
 void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 {
   unsigned int index = (unsigned int)m_mod_pick->GetCurrentSelection();
-  if ( index >= m_mod_pick->GetCount()-1 ) {
-    m_battle.SetMod( wxEmptyString, wxEmptyString );
-  } else {
-    UnitSyncMod mod = usync()->GetMod( index );
-    m_battle.SetMod( mod );
-  }
-  m_minimap->UpdateMinimap();
-  m_battle.SendHostInfo( HI_Restrictions );
+  SetMod( index );
 }
 
 
@@ -210,15 +242,13 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
   AddBotDialog dlg( this, m_battle, true );
   if ( dlg.ShowModal() == wxID_OK ) {
-    int x = 0, y = 0, handicap = 0, r, g, b;
+    int x = 0, y = 0, handicap = 0;
     m_battle.GetFreePosition( x, y );
-    m_battle.GetFreeColour( r, g, b, false );
+    wxColour col = m_battle.GetFreeColour( false );
     int i = m_battle.AddBot( m_battle.GetFreeAlly(), x, y, handicap, dlg.GetAI() );
     BattleBot* bot = m_battle.GetBot( i );
-    ASSERT_LOGIC( bot != 0, "bot == 0" );
-    bot->bs.color_r = r;
-    bot->bs.color_g = g;
-    bot->bs.color_b = b;
+    ASSERT_LOGIC( bot != 0, _T("bot == 0") );
+    bot->bs.colour = col;
     m_minimap->UpdateMinimap();
   }
 }
@@ -227,7 +257,8 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 void SinglePlayerTab::OnStart( wxCommandEvent& event )
 {
   if ( m_ui.IsSpringRunning() ) {
-    wxMessageBox(_("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
+    wxLogWarning(_T("trying to start spring while another instance is running") );
+    customMessageBox(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
     return;
   }
   if ( ValidSetup() ) m_ui.StartSinglePlayerGame( m_battle );

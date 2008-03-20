@@ -1,16 +1,32 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_IUNITSYNC_H
 #define SPRINGLOBBY_HEADERGUARD_IUNITSYNC_H
 
-#include <string>
+#include <wx/string.h>
 #include <wx/arrstr.h>
+#include <map>
+
+#include "mmoptionmodel.h"
 
 class wxImage;
 
+typedef std::map<wxString,mmOptionBool> optionMapBool;
+typedef std::map<wxString,mmOptionFloat> optionMapFloat;
+typedef std::map<wxString,mmOptionString> optionMapString;
+typedef std::map<wxString,mmOptionList> optionMapList;
+typedef std::map<wxString,mmOptionInt> optionMapInt;
+
+typedef std::map<wxString,mmOptionBool>::iterator optionMapBoolIter;
+typedef std::map<wxString,mmOptionFloat>::iterator optionMapFloatIter;
+typedef std::map<wxString,mmOptionString>::iterator optionMapStringIter;
+typedef std::map<wxString,mmOptionList>::iterator optionMapListIter;
+typedef std::map<wxString,mmOptionInt>::iterator optionMapIntIter;
+
+
 struct UnitSyncMod
 {
-  UnitSyncMod() : name(""),hash("NULL") { }
-  std::string name;
-  std::string hash;
+  UnitSyncMod() : name(_T("")),hash(_T("NULL")) { }
+  wxString name;
+  wxString hash;
 };
 
 struct StartPos
@@ -21,7 +37,7 @@ struct StartPos
 
 struct MapInfo
 {
-  std::string description;
+  wxString description;
   int tidalStrength;
   int gravity;
   float maxMetal;
@@ -34,15 +50,30 @@ struct MapInfo
   int posCount;
   StartPos positions[16];
 
-  std::string author;
+  wxString author;
 };
 
 struct UnitSyncMap
 {
-  UnitSyncMap() : name(""),hash("NULL") { }
-  std::string name;
-  std::string hash;
+  UnitSyncMap() : name(_T("")),hash(_T("NULL")) { }
+  wxString name;
+  wxString hash;
   MapInfo info;
+};
+
+typedef int GameFeature;
+enum {
+  GF_XYStartPos = 1,
+  USYNC_Sett_Handler = 2
+};
+
+struct GameOptions
+{
+  optionMapBool bool_map;
+  optionMapFloat float_map;
+  optionMapString string_map;
+  optionMapList list_map;
+  optionMapInt int_map;
 };
 
 class IUnitSync
@@ -51,39 +82,47 @@ class IUnitSync
     virtual ~IUnitSync() { }
 
     virtual int GetNumMods() = 0;
-    virtual bool ModExists( const std::string& modname ) = 0;
-    virtual UnitSyncMod GetMod( const std::string& modname ) = 0;
+    virtual bool ModExists( const wxString& modname ) = 0;
+    virtual UnitSyncMod GetMod( const wxString& modname ) = 0;
     virtual UnitSyncMod GetMod( int index ) = 0;
-    virtual int GetModIndex( const std::string& name ) = 0;
-    virtual std::string GetModArchive( int index ) = 0;
+    virtual int GetModIndex( const wxString& name ) = 0;
+    virtual wxString GetModArchive( int index ) = 0;
+    virtual GameOptions GetModOptions( const wxString& name ) = 0;
 
     virtual int GetNumMaps() = 0;
-    virtual bool MapExists( const std::string& mapname ) = 0;
-    virtual bool MapExists( const std::string& mapname, const std::string hash ) = 0;
-    virtual UnitSyncMap GetMap( const std::string& mapname, bool getmapinfo = false ) = 0;
-    virtual UnitSyncMap GetMap( int index, bool getmapinfo = false ) = 0;
-    virtual int GetMapIndex( const std::string& name ) = 0;
-    virtual wxImage GetMinimap( const std::string& mapname, int max_w, int max_h, bool store_size = false ) = 0;
+    virtual bool MapExists( const wxString& mapname ) = 0;
+    virtual bool MapExists( const wxString& mapname, const wxString hash ) = 0;
 
-    virtual void SetCurrentMod( const std::string& modname ) = 0;
-    virtual int GetSideCount() = 0;
-    virtual std::string GetSideName( int index ) = 0;
-    virtual wxImage GetSidePicture( const std::string& SideName ) =0;
+    virtual UnitSyncMap GetMap( const wxString& mapname ) = 0;
+    virtual UnitSyncMap GetMap( int index ) = 0;
+    virtual UnitSyncMap GetMapEx( const wxString& mapname ) = 0;
+    virtual UnitSyncMap GetMapEx( int index ) = 0;
+    virtual GameOptions GetMapOptions( const wxString& name ) = 0;
 
-    virtual int GetNumUnits() = 0;
-    //virtual int GetUnitIndex( const std::string& name ) = 0;
-    //virtual std::string GetFullUnitName( int index ) = 0;
-    virtual wxArrayString GetUnitsList() = 0;
+    virtual int GetMapIndex( const wxString& name ) = 0;
+    virtual wxImage GetMinimap( const wxString& mapname, int max_w, int max_h, bool store_size = false ) = 0;
+
+    virtual int GetSideCount( const wxString& modname ) = 0;
+    virtual wxString GetSideName( const wxString& modname, int index ) = 0;
+    virtual wxImage GetSidePicture( const wxString& modname, const wxString& SideName ) =0;
+
+    virtual int GetNumUnits( const wxString& modname ) = 0;
+    virtual wxArrayString GetUnitsList( const wxString& modname ) = 0;
 
     virtual bool LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc ) = 0;
     virtual void FreeUnitSyncLib() = 0;
 
     virtual bool IsLoaded() = 0;
 
-    virtual std::string GetSpringVersion() = 0;
+    virtual wxString GetSpringVersion() = 0;
+    virtual bool VersionSupports( GameFeature feature ) = 0;
 
     virtual wxArrayString GetAIList() = 0;
-    virtual wxString GetBotLibPath( const wxString& botlibname ) = 0;
+
+    virtual bool CacheMapInfo( const wxString& map ) = 0;
+    virtual bool CacheMinimap( const wxString& map ) = 0;
+    virtual bool CacheModUnits( const wxString& mod ) = 0;
+    virtual bool ReloadUnitSyncLib() = 0;
 
 };
 

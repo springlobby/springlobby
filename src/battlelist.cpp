@@ -41,24 +41,24 @@ void BattleList_Iter::IteratorBegin()
   if (m_battlelist) m_iterator = m_battlelist->m_battles.begin();
 }
 
-Battle& BattleList_Iter::GetBattle()
+Battle* BattleList_Iter::GetBattle()
 {
 
   Battle* battle = m_iterator->second;
-  if ( m_battlelist and m_iterator != m_battlelist->m_battles.end() ) ++m_iterator;
-  return *battle;
+  if ( m_battlelist && m_iterator != m_battlelist->m_battles.end() ) ++m_iterator;
+  return battle;
 }
 
 bool BattleList_Iter::EOL()
 {
-  return ( m_battlelist and m_iterator == m_battlelist->m_battles.end() )?true:false;
+  return ( m_battlelist && m_iterator == m_battlelist->m_battles.end() )?true:false;
 }
 
 
 Battle& BattleList_Iter::GetBattle( battle_id_t const& id ) {
   if (!m_battlelist) throw std::logic_error("BattleList_Iter::GetBattle(): no battlelist");
   battle_iter_t b = m_battlelist->m_battles.find(id);
-  if (b == m_battlelist->m_battles.end()) throw std::logic_error("BattleList_Iter::GetBattle(): no such battle");
+  if (b == m_battlelist->m_battles.end()) throw std::runtime_error("BattleList_Iter::GetBattle(): no such battle");
   return *b->second;
 }
 

@@ -66,8 +66,9 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   wxBoxSizer* m_opts_sizer = new wxBoxSizer( wxVERTICAL );
 
   //m_opts_sizer->SetMinSize(wxSize( 200,-1 ));
-  m_map_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 150,240 ), wxLC_NO_HEADER|wxLC_REPORT );
-//m_map_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
+  m_map_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 150,160 ), wxLC_NO_HEADER|wxLC_REPORT );
+  m_map_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
+  m_map_opts_list->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
 
   wxListItem col;
 
@@ -89,6 +90,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
   wxString m_start_radiosChoices[] = { _("Fixed"),_("Random"), _("Choose in game") };
   int m_start_radiosNChoices = sizeof( m_start_radiosChoices ) / sizeof( wxString );
+  //TODO these need to be tooltipped, no idea how yet
   m_start_radios = new wxRadioBox( this, BMAP_START_TYPE, _("Startpositions"), wxDefaultPosition, wxSize( 150,-1 ), m_start_radiosNChoices, m_start_radiosChoices, 1, wxRA_SPECIFY_COLS );
   m_opts_sizer->Add( m_start_radios, 0, wxALL, 2 );
 
@@ -98,7 +100,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   Layout();
 
   ReloadMaplist();
-  UpdateMap();
+  Update();
 
   //m_map_combo->Enable( m_battle.IsFounderMe() );
   m_start_radios->Enable( m_battle.IsFounderMe() );
@@ -112,10 +114,8 @@ BattleMapTab::~BattleMapTab()
 }
 
 
-void BattleMapTab::UpdateMap()
+void BattleMapTab::Update()
 {
-  m_start_radios->SetSelection( m_battle.GetStartType() );
-
   m_minimap->UpdateMinimap();
 
   if ( !m_battle.MapExists() ) return;
@@ -129,16 +129,38 @@ void BattleMapTab::UpdateMap()
   m_map_opts_list->SetItem( 4, 1, wxString::Format( _T("%d"), map.info.extractorRadius ) );
   m_map_opts_list->SetItem( 5, 1, wxString::Format( _T("%.3f"), map.info.maxMetal ) );
 
-  int index = m_map_combo->FindString( RefineMapname( WX_STRING(map.name) ) );
+  int index = m_map_combo->FindString( RefineMapname( map.name ) );
   m_map_combo->SetSelection( index );
 }
+
+
+void BattleMapTab::Update( const wxString& Tag )
+{
+  long type;
+  Tag.BeforeFirst( '_' ).ToLong( &type );
+  wxString key = Tag.AfterFirst( '_' );
+  wxString value = m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type);
+  long longval;
+  value.ToLong( &longval );
+  if ( type == EngineOption )
+  {
+    if ( key == _T("startpostype") )
+    {
+     m_start_radios->SetSelection( longval );
+     Update();
+    }
+  }
+}
+
 
 void BattleMapTab::ReloadMaplist()
 {
   m_map_combo->Clear();
-  for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-    m_map_combo->Insert( RefineMapname( WX_STRING(usync()->GetMap( i, false ).name) ), i );
-  }
+  try {
+    for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
+      m_map_combo->Insert( RefineMapname( usync()->GetMap( i ).name ), i );
+    }
+  } catch(...){}
 }
 
 
@@ -154,31 +176,27 @@ void BattleMapTab::UpdateUser( User& user )
 
 void BattleMapTab::OnMapSelect( wxCommandEvent& event )
 {
+
   if ( !m_battle.IsFounderMe() ) {
     m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetMapName() ) ) );
     return;
   }
   int index = m_map_combo->GetCurrentSelection();
   //wxString name = m_map_combo->GetString( index );
-
-  UnitSyncMap map = usync()->GetMap( index, true );
-  m_battle.SetMap( map );
-//  m_battle.SetMapHash( map.hash );
-
+  try {
+    UnitSyncMap map = usync()->GetMapEx( index );
+    m_battle.SetMap( map );
+  } catch (...) {}
+  m_ui.OnBattleMapChanged(m_battle);
   m_battle.SendHostInfo( HI_Map );
 }
 
 
 void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
 {
-  int pos = m_start_radios->GetSelection();
-  switch ( pos ) {
-    case 0: m_battle.SetStartType( ST_Fixed ); break;
-    case 1: m_battle.SetStartType( ST_Random ); break;
-    case 2: m_battle.SetStartType( ST_Choose ); break;
-    default: ASSERT_LOGIC( false, "invalid pos" );
-  };
-  m_battle.SendHostInfo( HI_StartType );
+  wxString pos = wxString::Format( _T("%d"), m_start_radios->GetSelection());
+  m_battle.CustomBattleOptions()->setSingleOption( _T("startpostype"), pos, EngineOption );
+  m_battle.SendHostInfo( wxString::Format(_T("%d_startpostype"), EngineOption ) );
 }
 
 

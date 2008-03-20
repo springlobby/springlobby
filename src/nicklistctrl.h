@@ -1,8 +1,9 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
 
-#include <wx/listctrl.h>
+//#include <wx/listctrl.h>
 #include <wx/event.h>
+#include "customlistctrl.h"
 
 class User;
 class UserList;
@@ -12,7 +13,7 @@ class wxMenu;
 
 
 
-class NickListCtrl : public wxListCtrl
+class NickListCtrl : public customListCtrl
 {
   public:
     NickListCtrl( wxWindow* parent, Ui& ui, bool show_header = true, wxMenu* popup = 0  );
@@ -31,6 +32,8 @@ class NickListCtrl : public wxListCtrl
     void OnActivateItem( wxListEvent& event );
     void OnColClick( wxListEvent& event );
     void OnShowMenu( wxContextMenuEvent& event );
+    void OnMouseMotion(wxMouseEvent& event);
+    
   protected:
     static int wxCALLBACK ComparePlayernameUP(long item1, long item2, long sortData);
     static int wxCALLBACK ComparePlayernameDOWN(long item1, long item2, long sortData);

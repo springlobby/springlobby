@@ -7,62 +7,65 @@
 #include "utils.h"
 
 
-wxString RefineMapname( wxString mapname )
+wxString RefineMapname( const wxString& mapname )
 {
-  mapname = mapname.SubString(0, mapname.Find( '.', true ) - 1 );
-  mapname.Replace(_T("_"), _T(" ") );
-  mapname.Replace(_T("-"), _T(" ") );
-  return mapname;
+  wxString ret = mapname;
+  ret = ret.BeforeLast( '.' );
+  ret.Replace(_T("_"), _T(" ") );
+  ret.Replace(_T("-"), _T(" ") );
+  return ret;
 }
 
 
-wxString RefineModname( wxString modname )
+wxString RefineModname( const wxString& modname )
 {
-  modname.Replace(_T("Absolute Annihilation"), _T("AA") );
-  modname.Replace(_T("Complete Annihilation"), _T("CA") );
-  modname.Replace(_T("Balanced Annihilation"), _T("BA") );
-  modname.Replace(_T("Expand and Exterminate"), _T("EE") );
-  modname.Replace(_T("War Evolution"), _T("WarEv") );
-  modname.Replace(_T("TinyComm"), _T("TC") );
-  modname.Replace(_T("BETA"), _T("b") );
-  modname.Replace(_T("Public Alpha"), _T("pa") );
-  modname.Replace(_T("Public Beta"), _T("pb") );
-  modname.Replace(_T("Public"), _T("p") );
-  modname.Replace(_T("Alpha"), _T("a") );
-  modname.Replace(_T("Beta"), _T("b") );
-  return modname;
+  wxString ret = modname;
+  ret.Replace(_T("Absolute Annihilation"), _T("AA") );
+  ret.Replace(_T("Complete Annihilation"), _T("CA") );
+  ret.Replace(_T("Balanced Annihilation"), _T("BA") );
+  ret.Replace(_T("Expand and Exterminate"), _T("EE") );
+  ret.Replace(_T("War Evolution"), _T("WarEv") );
+  ret.Replace(_T("TinyComm"), _T("TC") );
+  ret.Replace(_T("BETA"), _T("b") );
+  ret.Replace(_T("Public Alpha"), _T("pa") );
+  ret.Replace(_T("Public Beta"), _T("pb") );
+  ret.Replace(_T("Public"), _T("p") );
+  ret.Replace(_T("Alpha"), _T("a") );
+  ret.Replace(_T("Beta"), _T("b") );
+  return ret;
 }
 
 
-wxString RTFtoText( wxString rtfinput )
+wxString RTFtoText( const wxString& rtfinput )
 {
-  rtfinput = rtfinput.AfterFirst( '{' ).BeforeLast( '}' );
+  wxString ret = rtfinput;
+  ret = ret.AfterFirst( '{' ).BeforeLast( '}' );
 
-  rtfinput.Replace( _T("\\pard"), _T("") ); // remove a ambiguus char
+  ret.Replace( _T("\\pard"), _T("") ); // remove a ambiguus char
 
-  rtfinput.Replace( _T("\\par"), _T(" \n") ); // convert the end of lines
+  ret.Replace( _T("\\par"), _T(" \n") ); // convert the end of lines
 
-  wxString BeforeBrack = rtfinput.BeforeFirst( '{' );
-  wxString AfterBrack = rtfinput.AfterLast( '}' );
-  rtfinput = BeforeBrack + AfterBrack; // remove everyhting that matches { text }
+  wxString BeforeBrack = ret.BeforeFirst( '{' );
+  wxString AfterBrack = ret.AfterLast( '}' );
+  ret = BeforeBrack + AfterBrack; // remove everyhting that matches { text }
 
   wxString out;
-  while ( rtfinput.Find('\\') >= 0 ) //remove anything in the form \please\ignore\this
+  while ( ret.Find('\\') >= 0 ) //remove anything in the form \please\ignore\this
   {
-    out += rtfinput.BeforeFirst( '\\' );
-    rtfinput = rtfinput.AfterFirst ( '\\' );
-    rtfinput = rtfinput.AfterFirst ( ' ' );
+    out += ret.BeforeFirst( '\\' );
+    ret = ret.AfterFirst ( '\\' );
+    ret = ret.AfterFirst ( ' ' );
   } ;
 
   return out;
 }
 
-bool AreColoursSimilar( int r1, int g1, int b1, int r2, int g2, int b2, int mindiff )
+bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff )
 {
   int r,g,b;
-  r = r1 - r2;
-  g = g1 - g2;
-  b = b1 - b2;
+  r = col1.Red() - col2.Red();
+  g = col1.Green() - col2.Green();
+  b = col1.Blue() - col2.Blue();
   r = r>0?r:-r;
   g = g>0?g:-g;
   b = b>0?b:-b;
@@ -117,14 +120,18 @@ wxColour ColourDelta( const wxColour& colour, const int& delta )
   return wxColour( r, g, b );
 }
 
+wxString GetColorString( const wxColour& color )
+{
+  return wxString::Format( _T("%d %d %d"), color.Red(), color.Green(), color.Blue() );
+}
 
 ReplayData GetReplayInfos ( wxString& ReplayPath )
 {
-  debug_func( STD_STRING( ReplayPath ) );
+//TODO wut?  debug_func( STD_STRING( ReplayPath ) );
   ReplayData ret;
   wxString FileName = ReplayPath.BeforeLast( '/' ); // strips file path
   FileName = FileName.Left( FileName.Find( _T(".sdf") ) ); //strips the file extension
-  wxStringTokenizer args ( FileName, '-' ); // chunks by '-' separator
+  wxStringTokenizer args ( FileName, _T("-")); // chunks by '-' separator
   if ( args.CountTokens() != 3 || args.CountTokens() != 4 ) // not a spring standard replay filename
   {
     ret.ReplayName = FileName;
@@ -139,4 +146,19 @@ ReplayData GetReplayInfos ( wxString& ReplayPath )
   ret.ReplayName = args.GetNextToken(); // void string if multiple replays wich share previous paramteres aren't present
   return ret;
 }
+
+
+wxColour GetColorFromStrng( const wxString color )
+{
+  wxString c = color;
+  long r = 0, g = 0, b = 0;
+  c.BeforeFirst( ' ' ).ToLong( &r );
+  c = c.AfterFirst( ' ' );
+  c.BeforeFirst( ' ' ).ToLong( &g );
+  c = c.AfterFirst( ' ' );
+  c.BeforeFirst( ' ' ).ToLong( &b );
+  return wxColour( r%256, g%256, b%256 );
+}
+
+
 

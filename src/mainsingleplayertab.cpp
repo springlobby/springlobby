@@ -11,6 +11,7 @@
 #include "singleplayertab.h"
 #include "battleoptionstab.h"
 #include "mainsingleplayertab.h"
+#include "battleroommmoptionstab.h"
 #include "ui.h"
 #include "utils.h"
 
@@ -35,6 +36,8 @@ m_ui(ui)
   m_tabs->AddPage( m_sp_tab, _("Game"), true, 0 );
   m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, m_sp_tab->GetBattle(), true );
   m_tabs->InsertPage( 1, m_opts_tab, _("Options"), false, 1 );
+  m_mm_opts_tab = new BattleroomMMOptionsTab( m_sp_tab->GetBattle(), m_tabs);
+  m_tabs->InsertPage( 2, m_mm_opts_tab, _("Map/Mod Options"), false, 1 );
 
   m_main_sizer->Add( m_tabs, 1, wxEXPAND );
 
@@ -57,13 +60,13 @@ void MainSinglePlayerTab::UpdateMinimap()
 
 void MainSinglePlayerTab::OnUnitSyncReloaded()
 {
-  debug_func("");
-  ASSERT_LOGIC( m_sp_tab != 0, "m_sp_tab = 0" );
-  debug("Reloading map list");
+  wxLogDebugFunc( _T("") );
+  ASSERT_LOGIC( m_sp_tab != 0, _T("m_sp_tab = 0") );
+  wxLogMessage( _T("Reloading map list") );
   m_sp_tab->ReloadMaplist();
-  debug("Reloading mod list");
+  wxLogMessage( _T("Reloading mod list") );
   m_sp_tab->ReloadModlist();
-  debug("Reloading minimap");
+  wxLogMessage( _T("Reloading minimap") );
   m_sp_tab->UpdateMinimap();
 }
 
@@ -73,3 +76,17 @@ void MainSinglePlayerTab::ReloadRestrictions()
   m_opts_tab->ReloadRestrictions();
 }
 
+
+void MainSinglePlayerTab::ReloadMapOptContrls()
+{
+  if (m_mm_opts_tab != 0)
+		m_mm_opts_tab->OnRefreshControls( MapOption );
+}
+
+
+void MainSinglePlayerTab::ReloadModOptContrls()
+{
+	if (m_mm_opts_tab != 0)
+		m_mm_opts_tab->OnRefreshControls( ModOption );
+
+}

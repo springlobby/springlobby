@@ -13,7 +13,7 @@
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
-#include "stacktrace.h"
+#include "crashreport.h"
 #include "utils.h"
 #include "ui.h"
 #include "iunitsync.h"
@@ -46,29 +46,60 @@ SpringLobbyApp::~SpringLobbyApp()
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
+
 #if wxUSE_ON_FATAL_EXCEPTION
   wxHandleFatalExceptions( true );
 #endif
 
-  debug_func( "" );
+  //initialize all loggers
+  InitializeLoggingTargets();
+
+  wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
+
+  m_locale = new wxLocale( );
+  m_locale->Init();
+  m_locale->AddCatalog( _T("springlobby") );
+
+  if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
+  {
+    if ( wxDirExists( sett().GetCachePath() )  )
+    {
+      wxLogWarning( _T("erasing old cache ver %d (app cache ver %d)"), sett().GetCacheVersion(), CACHE_VERSION );
+      wxString file = wxFindFirstFile( sett().GetCachePath() + wxFILE_SEP_PATH + _T("*") );
+      while ( !file.empty() )
+      {
+        wxRemoveFile( file );
+        file = wxFindNextFile();
+      }
+    }
+  }
 
   InitDirs();
 
   m_ui = new Ui();
-  debug("Ui created");
+  wxLogMessage( _T("Ui created") );
 
   m_ui->ShowMainWindow();
 
+
   if ( sett().IsFirstRun() ) {
-    wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nLooks like this is the first time you use SpringLobby. I have guessed a configuration that I think will work for you but you should review it, ecpecially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
+    #ifdef __WXMSW__
+      sett().SetOldSpringLaunchMethod( true );
+    #endif
+    sett().AddChannelJoin( _T("newbies"), _T("") );
+    wxLogMessage( _T("first time startup"));
+    wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
       wxOK | wxICON_INFORMATION, &m_ui->mw() );
+    #ifdef HAVE_WX26
+    wxMessageBox(_("You're using a wxwidgets library of the 2.6.x series\n battle filtering, advanced gui and joining/hosting games using nat traversal\n won't be available"), _("Missing Functionality"), wxICON_INFORMATION, &m_ui->mw() );
+    #endif
     m_ui->mw().ShowConfigure();
   } else {
     m_ui->Connect();
   }
 
-  m_ui->ReloadUnitSync();
+  //m_ui->ReloadUnitSync();
 
   m_timer->Start( TIMER_INTERVAL );
 
@@ -79,7 +110,7 @@ bool SpringLobbyApp::OnInit()
 //! @brief Finalizes the application
 int SpringLobbyApp::OnExit()
 {
-  debug_func( "" );
+  wxLogDebugFunc( _T("") );
 
   m_timer->Stop();
   delete m_ui;
@@ -91,25 +122,14 @@ int SpringLobbyApp::OnExit()
   return 0;
 }
 
-
+//! @brief is called when the app crashes
 void SpringLobbyApp::OnFatalException()
 {
-
-#if wxUSE_STACKWALKER
-
-  wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
-
-  DebugInfo += _T("StackTraceID: ") + stacktrace().GetStackTraceHash() + _T("\n");
-
-  stacktrace().WalkFromException();
-  DebugInfo += stacktrace().GetStackTrace();
-
-  DebugInfo += _T("-------- End StackTrace --------");
-
-  debug_error( STD_STRING(DebugInfo) );
-#else
-  debug_error( "Stacktrace not possible, please enable wxStackWalker" );
-#endif
+  #if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
+  crashreport().GenerateReport(wxDebugReport::Context_Exception);
+  #else
+  wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
+  #endif
 }
 
 

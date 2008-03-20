@@ -2,13 +2,15 @@
 #define SPRINGLOBBY_HEADERGUARD_CHANNEL_H
 
 #include "userlist.h"
+#include <set>
+#include <wx/regex.h>
 
 class Channel;
 class Server;
 class Ui;
 class ChatPanel;
 
-typedef void(*channel_msg_callback)(Channel&,User&,const std::string&);
+typedef void(*channel_msg_callback)(Channel&,User&,const wxString&);
 typedef void(*channel_cmd_callback)(Channel&);
 typedef void(*channel_whocmd_callback)(Channel&,User&);
 
@@ -25,45 +27,62 @@ class Channel : public UserList
     UiChannelData uidata;
 
     //Channel(): m_serv(0),m_userdata(0) {}
-    Channel( Server& serv, Ui& ui ): m_serv(serv),m_ui(ui) {}
+    Channel( Server& serv, Ui& ui ): m_serv(serv),m_ui(ui),m_do_ban_regex(false), m_do_unban_regex(false) {}
     virtual ~Channel() {}
 
     Server& GetServer() { return m_serv; }
 
-    void SetName( const std::string& name );
-    std::string GetName();
+    void SetName( const wxString& name );
+    wxString GetName();
     User& GetMe();
 
+    // filtering functions
+    void CheckBanned(const wxString& name);
+    bool IsBanned(const wxString& name);
+
     // Channel Functions
-    void Say( const std::string& message );
-    void DoAction( const std::string& action );
+    void Say( const wxString& message );
+    void DoAction( const wxString& action );
     void Leave();
 
-    void Said( User& who, const std::string& message );
+    void Said( User& who, const wxString& message );
 
-    void DidAction( User& who, const std::string& action );
+    void DidAction( User& who, const wxString& action );
 
-    void Left( User& who, const std::string& reason );
+    void Left( User& who, const wxString& reason );
     void Joined( User& who );
 
-    void SetTopic( const std::string& topic, const std::string& who );
-    std::string GetTopic();
-    std::string GetTopicSetBy();
+    void OnChannelJoin( User& who );
 
-    bool ExecuteSayCommand( const std::string& in );
+    void SetTopic( const wxString& topic, const wxString& who );
+    wxString GetTopic();
+    wxString GetTopicSetBy();
+
+    bool ExecuteSayCommand( const wxString& in );
 
   protected:
-    std::string m_topic;
-    std::string m_topic_nick;
-    std::string m_name;
-
     Server& m_serv;
+
     Ui& m_ui;
+
+    std::set<wxString> m_banned_users;
+    //std::string ban_regex;
+    bool m_do_ban_regex;
+    wxRegEx m_ban_regex;
+
+    bool m_do_unban_regex;
+    wxRegEx m_unban_regex;
+
+    wxString m_ban_regex_msg;
+
+    wxString m_topic;
+    wxString m_topic_nick;
+    wxString m_name;
 
     void* m_userdata;
 
     void AddUser( User& user );
-    void RemoveUser( const std::string& nick );
+    void RemoveUser( const wxString& nick );
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHANNEL_H

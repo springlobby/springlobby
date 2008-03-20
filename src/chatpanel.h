@@ -4,7 +4,7 @@
 #include <wx/panel.h>
 #include <wx/string.h>
 
- #include "chatlog.h"
+#include "chatlog.h"
 
 class wxCommandEvent;
 class wxSizeEvent;
@@ -14,6 +14,7 @@ class wxTextCtrl;
 class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
+class wxNotebook;
 class NickListCtrl;
 class Channel;
 class User;
@@ -61,6 +62,7 @@ class ChatPanel : public wxPanel
     void Parted( User& who, const wxString& message );
     void SetTopic( const wxString& who, const wxString& message );
     void UserStatusUpdated( User& who );
+    void OnChannelJoin( User& who );
 
     Channel& GetChannel();
     void SetChannel( Channel* chan );
@@ -98,6 +100,7 @@ class ChatPanel : public wxPanel
     void OnMenuCopy( wxCommandEvent& event );
 
     void OnChannelMenuLeave( wxCommandEvent& event );
+    void OnChannelMenuDisplayJoinLeave( wxCommandEvent& event );
     void OnChannelAutoJoin( wxCommandEvent& event );
     void OnChannelMenuInfo( wxCommandEvent& event );
     void OnChannelMenuTopic( wxCommandEvent& event );
@@ -125,22 +128,25 @@ class ChatPanel : public wxPanel
     void OnUserMenuKick( wxCommandEvent& event );
     void OnUserMenuOp( wxCommandEvent& event );
     void OnUserMenuDeop( wxCommandEvent& event );
-    void OnUserMenuAdminIngame( wxCommandEvent& event );
-    void OnUserMenuAdminLastLogin( wxCommandEvent& event );
-    void OnUserMenuAdminCurrentIP( wxCommandEvent& event );
-    void OnUserMenuAdminFindIP( wxCommandEvent& event );
-    void OnUserMenuAdminKick( wxCommandEvent& event );
-    void OnUserMenuAdminBan( wxCommandEvent& event );
-    void OnUserMenuAdminUnban( wxCommandEvent& event );
-    void OnUserMenuAdminMute( wxCommandEvent& event );
-    void OnUserMenuAdminUnmute( wxCommandEvent& event );
-    void OnUserMenuAdminRing( wxCommandEvent& event );
+    void OnUserMenuModeratorIngame( wxCommandEvent& event );
+    void OnUserMenuModeratorCurrentIP( wxCommandEvent& event );
+    void OnUserMenuModeratorKick( wxCommandEvent& event );
+    void OnUserMenuModeratorBan( wxCommandEvent& event );
+    void OnUserMenuModeratorUnban( wxCommandEvent& event );
+    void OnUserMenuModeratorMute( wxCommandEvent& event );
+    void OnUserMenuModeratorMute5( wxCommandEvent& event );
+    void OnUserMenuModeratorMute10( wxCommandEvent& event );
+    void OnUserMenuModeratorMute30( wxCommandEvent& event );
+    void OnUserMenuModeratorMute120( wxCommandEvent& event );
+    void OnUserMenuModeratorMute1440( wxCommandEvent& event );
+    void OnUserMenuModeratorUnmute( wxCommandEvent& event );
+    void OnUserMenuModeratorRing( wxCommandEvent& event );
 
   protected:
     void _SetChannel( Channel* channel );
-    void _OutputLine( const wxString& message, const wxColour& col );
+    void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
 
-    User* _GetSelectedUser();
+    User* GetSelectedUser();
 
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.
 
@@ -160,7 +166,7 @@ class ChatPanel : public wxPanel
     wxComboBox* m_nick_filter;  //!< The filter combo.
 
     wxButton* m_say_button;     //!< The say button.
-
+    wxNotebook* m_chat_tabs;
     Ui& m_ui;
     Channel* m_channel;         //!< Channel object.
     Server* m_server;           //!< Server object.
@@ -171,14 +177,16 @@ class ChatPanel : public wxPanel
 
     wxString m_chan_pass;
 
+
     wxMenu* m_popup_menu;
     wxMenuItem* m_autorejoin;
     ChatLog* m_chat_log;
+    wxMenuItem* displayjoinitem;
 
     void LogTime();
-    void _CreateControls( );
-    void _CreatePopup();
-    wxMenu* _CreateNickListMenu();
+    void CreateControls( );
+    void CreatePopup();
+    wxMenu* CreateNickListMenu();
 
     DECLARE_EVENT_TABLE();
 };
@@ -190,6 +198,7 @@ enum
     CHAT_LOG,
 
     CHAT_MENU_CH_LEAVE,
+    CHAT_MENU_CH_DISPLAYJOIN,
     CHAT_MENU_CH_AUTOJOIN,
     CHAT_MENU_CH_INFO,
     CHAT_MENU_CH_TOPIC,
@@ -217,16 +226,19 @@ enum
     CHAT_MENU_US_KICK,
     CHAT_MENU_US_OP,
     CHAT_MENU_US_DEOP,
-    CHAT_MENU_US_ADMIN_INGAME,
-    CHAT_MENU_US_ADMIN_LASTLOGIN,
-    CHAT_MENU_US_ADMIN_CURIP,
-    CHAT_MENU_US_ADMIN_FINDIP,
-    CHAT_MENU_US_ADMIN_KICK,
-    CHAT_MENU_US_ADMIN_BAN,
-    CHAT_MENU_US_ADMIN_UNBAN,
-    CHAT_MENU_US_ADMIN_MUTE,
-    CHAT_MENU_US_ADMIN_UNMUTE,
-    CHAT_MENU_US_ADMIN_RING
+    CHAT_MENU_US_MODERATOR_INGAME,
+    CHAT_MENU_US_MODERATOR_CURIP,
+    CHAT_MENU_US_MODERATOR_KICK,
+    CHAT_MENU_US_MODERATOR_BAN,
+    CHAT_MENU_US_MODERATOR_UNBAN,
+    CHAT_MENU_US_MODERATOR_MUTE,
+    CHAT_MENU_US_MODERATOR_MUTE_5,
+    CHAT_MENU_US_MODERATOR_MUTE_10,
+    CHAT_MENU_US_MODERATOR_MUTE_30,
+    CHAT_MENU_US_MODERATOR_MUTE_120,
+    CHAT_MENU_US_MODERATOR_MUTE_1440,
+    CHAT_MENU_US_MODERATOR_UNMUTE,
+    CHAT_MENU_US_MODERATOR_RING
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H

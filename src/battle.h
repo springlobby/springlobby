@@ -8,7 +8,6 @@
 #include "user.h"
 #include "ibattle.h"
 
-
 class Ui;
 class Server;
 
@@ -21,15 +20,14 @@ enum NatType {
 
 
 #define DEFAULT_SERVER_PORT 8034
+#define DEFAULT_EXTERNAL_UDP_SOURCE_PORT 16941
 
 
 struct BattleOptions
 {
   BattleOptions() :
     battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),
-    nattype(NAT_None),port(DEFAULT_SERVER_PORT),maxplayers(0),spectators(0),
-    startmetal(1000),startenergy(1000),maxunits(500),starttype(ST_Fixed),
-    gametype(GT_ComContinue),limitdgun(false),dimmms(false),ghostedbuildings(true),
+    nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
     guilistactiv(false) {}
 
   int battleid;
@@ -37,31 +35,23 @@ struct BattleOptions
   bool isreplay;
   bool ispassworded;
   int rankneeded;
-  std::string founder;
+  wxString founder;
 
   NatType nattype;
-  int port;
-  std::string ip;
+  unsigned int port;
+  wxString ip;
+  unsigned int externaludpsourceport;
+  unsigned int internaludpsourceport;
 
   unsigned int maxplayers;
   unsigned int spectators;
 
-  int startmetal;
-  int startenergy;
-  int maxunits;
-  StartType starttype;
+  wxString maphash;
+  wxString modhash;
 
-  GameType gametype;
-  bool limitdgun;
-  bool dimmms;
-  bool ghostedbuildings;
-
-  std::string maphash;
-  std::string modhash;
-
-  std::string description;
-  std::string mapname;
-  std::string modname;
+  wxString description;
+  wxString mapname;
+  wxString modname;
 
   bool guilistactiv;
 };
@@ -93,61 +83,53 @@ class Battle : public UserList, public IBattle
 
     void SetNatType( const NatType nattype ) { m_opts.nattype = nattype; }
     NatType GetNatType() const { return m_opts.nattype; }
-    void SetHostPort( int port) { m_opts.port = port; }
+    void SetHostPort( unsigned int port) { m_opts.port = port; }
+
+    void SetMyExternalUdpSourcePort(unsigned int port){m_opts.externaludpsourceport=port;}
+    unsigned int GetMyExternalUdpSourcePort(){return m_opts.externaludpsourceport;}
+
+    void SetMyInternalUdpSourcePort(unsigned int port){m_opts.internaludpsourceport=port;}
+    unsigned int GetMyInternalUdpSourcePort(){return m_opts.internaludpsourceport;}
+
     int GetHostPort() const { return m_opts.port; }
-    void SetFounder( const std::string& nick ) { m_opts.founder = nick; }
-    void SetHostIp( const std::string& ip ) { m_opts.ip = ip; }
-    std::string GetHostIp() const { return m_opts.ip; }
+    void SetFounder( const wxString& nick ) { m_opts.founder = nick; }
+    void SetHostIp( const wxString& ip ) { m_opts.ip = ip; }
+    wxString GetHostIp() const { return m_opts.ip; }
 
     void SetMaxPlayers( const int& maxplayers ) { m_opts.maxplayers = maxplayers; }
     unsigned int GetMaxPlayers() const { return m_opts.maxplayers; }
     void SetSpectators( const int& spectators ) { m_opts.spectators = spectators; }
     int GetSpectators() const { return m_opts.spectators; }
 
-/*    void SetStartMetal( const int& smetal ) { m_opts.startmetal = smetal; }
-    int GetStartMetal() { return m_opts.startmetal; }
-    void SetStartEnergy( const int& senergy ) { m_opts.startenergy = senergy; }
-    int GetStartEnergy() { return m_opts.startenergy; }
-    void SetMaxUnits( const int& maxunits ) { m_opts.maxunits = maxunits; }
-    int GetMaxUnits() { return m_opts.maxunits; }
-    //void SetStartType( const StartType& starttype ) { m_opts.starttype = starttype; }
-
-    //void SetGameType( const GameType& gt ) { m_opts.gametype = gt; }
-    void SetLimitDGun( const bool& limdgun ) { m_opts.limitdgun = limdgun; }
-    bool LimitDGun() { return m_opts.limitdgun; }
-    void SetDimMMs( const bool& dimmm ) { m_opts.dimmms = dimmm; }
-    bool DimMMs() { return m_opts.dimmms; }
-    void SetGhostedBuildings( const bool& gbuilds ) { m_opts.ghostedbuildings = gbuilds; }
-    bool GhostedBuildings() { return m_opts.ghostedbuildings; }
-*/
-
     void SendHostInfo( HostInfo update );
+    void SendHostInfo( const wxString& Tag );
 
     void SetRankNeeded( const int& rankneeded ) { m_opts.rankneeded = rankneeded; }
     int GetRankNeeded() const { return m_opts.rankneeded; }
 
-    //void SetMapHash( const std::string& maphash ) { m_opts.maphash = maphash; }
-    //void SetMapname( const std::string& map ) { m_opts.mapname = map; }
-    void SetDescription( const std::string& desc ) { m_opts.description = desc; }
-    std::string GetDescription() const { return m_opts.description; }
-    //void SetModname( const std::string& mod ) { m_opts.modname = mod; }
+    //void SetMapHash( const wxString& maphash ) { m_opts.maphash = maphash; }
+    //void SetMapname( const wxString& map ) { m_opts.mapname = map; }
+    void SetDescription( const wxString& desc ) { m_opts.description = desc; }
+    wxString GetDescription() const { return m_opts.description; }
+    //void SetModname( const wxString& mod ) { m_opts.modname = mod; }
 
     void SetImReady( bool ready );
 
     User& GetFounder() { return GetUser( m_opts.founder ); }
     User& GetMe();
-    bool IsFounderMe() const;
+    bool IsFounderMe();
 
     bool IsFull() { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
 
     int GetMyPlayerNum();
 
     int GetFreeTeamNum( bool excludeme = true );
-    void GetFreeColour( int& r, int& g, int& b, bool excludeme = true );
+    wxColour GetFreeColour( bool excludeme = true );
 
     void Update();
+    void Update( const wxString& Tag );
 
-    void Join( const std::string& password = "" );
+    void Join( const wxString& password = _T("") );
     void Leave();
 
     void KickPlayer( User& user );
@@ -155,8 +137,8 @@ class Battle : public UserList, public IBattle
     bool IsEveryoneReady();
     void RingNotReadyPlayers();
 
-    void Say( const std::string& msg );
-    void DoAction( const std::string& msg );
+    void Say( const wxString& msg );
+    void DoAction( const wxString& msg );
 
     /*bool IsMapAvailable();
     bool IsModAvailable();*/
@@ -169,21 +151,21 @@ class Battle : public UserList, public IBattle
     bool IsSynced();
     //bool HasMod();
 
-    bool ExecuteSayCommand( const std::string& cmd ) { return false; }
+    bool ExecuteSayCommand( const wxString& cmd );
 
     void AddStartRect( int allyno, int left, int top, int right, int bottom );
     void RemoveStartRect( int allyno );
     void UpdateStartRect( int allyno );
 
-    void AddBot( const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll );
-    void RemoveBot( const std::string& nick );
-    void SetBotTeam( const std::string& nick, int team );
-    void SetBotAlly( const std::string& nick, int ally );
-    void SetBotSide( const std::string& nick, int side );
-    void SetBotColour( const std::string& nick, int r, int g, int b );
-    void SetBotHandicap( const std::string& nick, int handicap );
+    void AddBot( const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll );
+    void RemoveBot( const wxString& nick );
+    void SetBotTeam( const wxString& nick, int team );
+    void SetBotAlly( const wxString& nick, int ally );
+    void SetBotSide( const wxString& nick, int side );
+    void SetBotColour( const wxString& nick, const wxColour& col );
+    void SetBotHandicap( const wxString& nick, int handicap );
 
-    BattleBot* GetBot( const std::string& name );
+    BattleBot* GetBot( const wxString& name );
     BattleBot* GetBot( unsigned int index );
     unsigned int GetNumBots();
 
@@ -196,7 +178,7 @@ class Battle : public UserList, public IBattle
     void ForceSide( User& user, int side );
     void ForceTeam( User& user, int team );
     void ForceAlly( User& user, int ally );
-    void ForceColour( User& user, int r, int g, int b );
+    void ForceColour( User& user, const wxColour& col );
     void ForceSpectator( User& user, bool spectator );
     void BattleKickPlayer( User& user );
     void SetHandicap( User& user, int handicap);
@@ -204,12 +186,16 @@ class Battle : public UserList, public IBattle
     void OnUserAdded( User& user );
     void OnUserRemoved( User& user );
 
-    void OnBotAdded( const std::string& nick, const std::string& owner, const UserBattleStatus& bs, const std::string& aidll );
-    void OnBotRemoved( const std::string& nick );
-    void OnBotUpdated( const std::string& name, const UserBattleStatus& bs );
+    void OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll );
+    void OnBotRemoved( const wxString& nick );
+    void OnBotUpdated( const wxString& name, const UserBattleStatus& bs );
 
     int GetMyAlly() { return GetMe().BattleStatus().ally; }
     void SetMyAlly( int ally ) { GetMe().BattleStatus().ally = ally; SendMyBattleStatus(); }
+
+    std::vector<BattleStartRect*>::size_type GetNumRects();
+
+    mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
 
   protected:
     // Battle variables
@@ -228,7 +214,9 @@ class Battle : public UserList, public IBattle
     std::list<BattleBot*>::iterator m_bot_seek;
     std::list<BattleBot*>::size_type m_bot_pos;
 
-    void RemoveUser( std::string const& user ) {}
+    mmOptionsWrapper m_opt_wrap;
+
+    void RemoveUser( wxString const& user ) {}
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLE_H

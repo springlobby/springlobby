@@ -9,6 +9,7 @@
 #include <wx/statline.h>
 #include <wx/filename.h>
 #include <wx/dir.h>
+#include <stdexcept>
 
 #include "addbotdialog.h"
 #include "settings.h"
@@ -16,10 +17,12 @@
 #include "battle.h"
 #include "iunitsync.h"
 
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE( AddBotDialog, wxDialog )
     EVT_BUTTON( ADDBOT_CANCEL, AddBotDialog::OnClose )
     EVT_BUTTON( ADDBOT_ADD, AddBotDialog::OnAddBot )
+    EVT_CHOICE( ADDBOT_AI, AddBotDialog::OnSelectBot )
 END_EVENT_TABLE()
 
 
@@ -28,6 +31,7 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
   m_battle( battle ),
   m_sp(singleplayer)
 {
+
   this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
   wxBoxSizer* m_main_sizer;
@@ -40,12 +44,9 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
     m_nick_lbl = new wxStaticText( this, wxID_ANY, _("Nickname:"), wxDefaultPosition, wxDefaultSize, 0 );
     m_nick_sizer->Add( m_nick_lbl, 1, wxALL, 5 );
 
-    int bot = 1;
-    while ( m_battle.GetBot( "Bot" + i2s(bot) ) != 0 ) {
-      bot++;
-    }
+    int bot = m_battle.GetNumBots()+1;
 
-    m_nick = new wxTextCtrl( this, wxID_ANY, wxString::Format( _("Bot%d"), bot ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_nick = new wxTextCtrl( this, wxID_ANY, wxString::Format( _T("Bot%d"), bot ), wxDefaultPosition, wxDefaultSize, 0 );
     m_nick_sizer->Add( m_nick, 2, wxALL, 5 );
 
     m_main_sizer->Add( m_nick_sizer, 0, wxEXPAND, 5 );
@@ -57,7 +58,7 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
   m_ai_lbl = new wxStaticText( this, wxID_ANY, _("AI:"), wxDefaultPosition, wxDefaultSize, 0 );
   m_ai_sizer->Add( m_ai_lbl, 1, wxALL, 5 );
 
-  m_ai = new wxChoice( this, wxID_ANY );
+  m_ai = new wxChoice( this, ADDBOT_AI );
   m_ai->SetToolTip( _("Choose the AI library to use with this bot.") );
 
   m_ai_sizer->Add( m_ai, 2, wxALL, 5 );
@@ -99,29 +100,40 @@ wxString AddBotDialog::GetNick()
 
 wxString AddBotDialog::GetAI()
 {
-  return m_ai->GetStringSelection();
+  return m_ais[ m_ai->GetSelection() ];
+}
+
+
+wxString AddBotDialog::RefineAIName( const wxString& name )
+{
+  wxString ret = name.BeforeLast('.').AfterLast('/');
+  if ( m_ai->FindString( ret ) == wxNOT_FOUND ) return ret;
+  wxString ret2;
+  int i = 2;
+  do {
+    ret2 = ret + wxString::Format( _T(" (%d)"), i );
+    i++;
+  } while ( m_ai->FindString( ret2 ) != wxNOT_FOUND );
+  return ret2;
 }
 
 
 void AddBotDialog::ReloadAIList()
 {
-  wxArrayString AIList;
   try {
-    AIList = usync()->GetAIList();
+    m_ais = usync()->GetAIList();
   } catch (...) {}
 
   m_ai->Clear();
-  if ( AIList.GetCount() == 0 )
-  {
-    return;
-  }
-  for (unsigned int i =0; i < AIList.GetCount(); i++) m_ai->Append( AIList[i] );
+  for ( unsigned int i = 0; i < m_ais.GetCount(); i++ ) m_ai->Append( RefineAIName(m_ais[i]) );
 
-  if ( m_ai->GetCount() > 0 ) {
-    wxString ai = WX_STRING(sett().GetLastAI());
-    if ( ai == wxEmptyString ) ai = m_ai->GetString( 0 );
-    m_ai->SetStringSelection( ai );
+  if ( m_ais.GetCount() > 0 ) {
+    m_ai->SetStringSelection( sett().GetLastAI() );
+    if ( m_ai->GetStringSelection() == wxEmptyString ) m_ai->SetSelection( 0 );
+  } else {
+    customMessageBox(SL_MAIN_ICON, _("No AI bots found in your Spring installation."), _("No bot-libs found"), wxOK );
   }
+  m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
 }
 
 
@@ -133,7 +145,12 @@ void AddBotDialog::OnClose( wxCommandEvent& event )
 
 void AddBotDialog::OnAddBot( wxCommandEvent& event )
 {
-  sett().SetLastAI( STD_STRING( GetAI() ) );
+  sett().SetLastAI(  m_ai->GetStringSelection() );
   EndModal( wxID_OK );
 }
 
+
+void AddBotDialog::OnSelectBot( wxCommandEvent& event )
+{
+  m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
+}

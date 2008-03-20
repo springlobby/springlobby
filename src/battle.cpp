@@ -14,7 +14,7 @@
 #include "uiutils.h"
 
 
-const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = -1;
+const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBot*>::size_type)(-1);
 
 
 Battle::Battle( Server& serv, Ui& ui, int id ) :
@@ -27,6 +27,7 @@ Battle::Battle( Server& serv, Ui& ui, int id ) :
   m_bot_pos(BOT_SEEKPOS_INVALID)
 {
   m_opts.battleid = id;
+
 }
 
 
@@ -37,7 +38,7 @@ Battle::~Battle() {
 }
 
 
-Server& Battle::Battle::GetServer()
+Server& Battle::GetServer()
 {
   return m_serv;
 }
@@ -49,13 +50,25 @@ void Battle::SendHostInfo( HostInfo update )
 }
 
 
+void Battle::SendHostInfo( const wxString& Tag )
+{
+  m_serv.SendHostInfo( Tag );
+}
+
+
 void Battle::Update()
 {
   m_ui.OnBattleInfoUpdated( *this );
 }
 
 
-void Battle::Join( const std::string& password )
+void Battle::Update( const wxString& Tag )
+{
+  m_ui.OnBattleInfoUpdated( *this, Tag );
+}
+
+
+void Battle::Join( const wxString& password )
 {
   m_serv.JoinBattle( m_opts.battleid, password );
 }
@@ -95,39 +108,32 @@ int Battle::GetFreeTeamNum( bool excludeme )
 }
 
 
-void Battle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
+wxColour Battle::GetFreeColour( bool excludeme )
 {
   int lowest = 0;
   bool changed = true;
-  while ( (changed) && (lowest < 16) ) {
+  while ( changed ) {
     changed = false;
     for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ ) {
       if ( (&GetUser( i ) == &GetMe()) && excludeme ) continue;
       //if ( GetUser( i ).BattleStatus().spectator ) continue;
       UserBattleStatus& bs = GetUser( i ).BattleStatus();
-      if ( AreColoursSimilar( bs.color_r, bs.color_g, bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
+      if ( AreColoursSimilar( bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) ) {
         lowest++;
         changed = true;
-        if ( lowest >= 16 ) break;
       }
     }
-    if ( lowest >= 16 ) break;
     std::list<BattleBot*>::const_iterator i;
     for( i = m_bots.begin(); i != m_bots.end(); ++i )
     {
       if ( *i == 0 ) continue;
-      if ( AreColoursSimilar( (*i)->bs.color_r, (*i)->bs.color_g, (*i)->bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
+      if ( AreColoursSimilar( (*i)->bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) ) {
         lowest++;
         changed = true;
-        if ( lowest >= 16 ) break;
       }
     }
   }
-  if ( lowest >= 16 ) lowest = 0;
-
-  r = colour_values[lowest][0];
-  g = colour_values[lowest][1];
-  b = colour_values[lowest][2];
+  return wxColour( colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] );
 }
 
 
@@ -139,7 +145,7 @@ void Battle::OnRequestBattleStatus()
   bs.team = lowest;
   bs.ally = lowest;
   bs.spectator = false;
-  GetFreeColour( bs.color_r, bs.color_g, bs.color_b );
+  bs.colour = GetFreeColour();
 
   SendMyBattleStatus();
 }
@@ -181,13 +187,13 @@ bool Battle::IsSynced()
 }*/
 
 
-void Battle::Say( const std::string& msg )
+void Battle::Say( const wxString& msg )
 {
   m_serv.SayBattle( m_opts.battleid, msg );
 }
 
 
-void Battle::DoAction( const std::string& msg )
+void Battle::DoAction( const wxString& msg )
 {
   m_serv.DoActionBattle( m_opts.battleid, msg );
 }
@@ -196,9 +202,9 @@ void Battle::DoAction( const std::string& msg )
 bool Battle::HaveMultipleBotsInSameTeam() const
 {
   std::list<BattleBot*>::const_iterator i;
-  debug_func("");
+  wxLogDebugFunc(_T(""));
 
-  int teams[16] = { -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1 };
+  std::vector<int> teams ( GetMaxPlayers(), -1 );
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
   {
     if ( *i == 0 ) continue;
@@ -215,7 +221,7 @@ User& Battle::GetMe()
 }
 
 
-bool Battle::IsFounderMe() const
+bool Battle::IsFounderMe()
 {
   return (m_opts.founder == m_serv.GetMe().GetNick());
 }
@@ -225,7 +231,7 @@ int Battle::GetMyPlayerNum()
   for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
     if ( &GetUser(i) == &m_serv.GetMe() ) return i;
   }
-  ASSERT_LOGIC(false, "You are not in this game.");
+  ASSERT_LOGIC(false, _T("You are not in this game.") );
   return -1;
 }
 
@@ -273,11 +279,21 @@ void Battle::RingNotReadyPlayers()
 }
 
 
+bool Battle::ExecuteSayCommand( const wxString& cmd )
+{
+  if ( cmd.BeforeFirst(' ').Lower() == _T("/me") ) {
+    m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
+    return true;
+  }  else return false;
+}
+
+
 void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom )
 {
-  ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), "Allyno out of bounds." );
+  ASSERT_LOGIC( (allyno >= 0 || allyno < int(GetMaxPlayers()) ), _T("Allyno out of bounds.") );
   BattleStartRect* sr;
   bool local;
+  if ( allyno >= int(m_rects.size()) ) m_rects.push_back(0); // add new element is it exceeds the vector bounds
   if ( m_rects[allyno] == 0 ) {
     sr = new BattleStartRect();
     local = true;
@@ -300,6 +316,7 @@ void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom 
 
 void Battle::RemoveStartRect( int allyno )
 {
+  if ( allyno >= int(m_rects.size() )) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   sr->deleted = true;
@@ -308,6 +325,7 @@ void Battle::RemoveStartRect( int allyno )
 
 void Battle::UpdateStartRect( int allyno )
 {
+  if ( allyno >= int(m_rects.size()) ) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   sr->updated = true;
@@ -316,6 +334,7 @@ void Battle::UpdateStartRect( int allyno )
 
 void Battle::StartRectRemoved( int allyno )
 {
+  if ( allyno >= int(m_rects.size()) ) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   m_rects[allyno] = 0;
@@ -325,6 +344,7 @@ void Battle::StartRectRemoved( int allyno )
 
 void Battle::StartRectUpdated( int allyno )
 {
+  if ( allyno >= int(m_rects.size()) ) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
   sr->updated = false;
@@ -334,73 +354,72 @@ void Battle::StartRectUpdated( int allyno )
 
 BattleStartRect* Battle::GetStartRect( int allyno )
 {
-  ASSERT_LOGIC( (allyno >= 0) && (allyno < 16), "Allyno out of bounds." );
+  ASSERT_LOGIC( (allyno >= 0 || allyno < int(GetMaxPlayers()) ), _T("Allyno out of bounds.") );
+  if ( allyno >= int(m_rects.size() )) return 0;
   return m_rects[allyno];
 }
 
 void Battle::ClearStartRects()
 {
-  for ( int i = 0; i < 16; i++ ) RemoveStartRect( i );
+  for ( std::vector<BattleStartRect*>::size_type i = 0; i < GetNumRects(); i++ ) RemoveStartRect( i );
 }
 
 
-void Battle::AddBot( const std::string& nick, const std::string& owner, UserBattleStatus status, const std::string& aidll )
+void Battle::AddBot( const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll )
 {
   m_serv.AddBot( m_opts.battleid, nick, owner, status, aidll );
 }
 
 
-void Battle::RemoveBot( const std::string& nick )
+void Battle::RemoveBot( const wxString& nick )
 {
   m_serv.RemoveBot( m_opts.battleid, nick );
 }
 
 
-void Battle::SetBotTeam( const std::string& nick, int team )
+void Battle::SetBotTeam( const wxString& nick, int team )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, "Bot not found" );
+  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
   bot->bs.team = team;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
 
 
-void Battle::SetBotAlly( const std::string& nick, int ally )
+void Battle::SetBotAlly( const wxString& nick, int ally )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, "Bot not found" );
+  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
   bot->bs.ally = ally;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
 
 
-void Battle::SetBotSide( const std::string& nick, int side )
+void Battle::SetBotSide( const wxString& nick, int side )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, "Bot not found" );
+  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
   bot->bs.side = side;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
 
 
-void Battle::SetBotColour( const std::string& nick, int r, int g, int b )
+void Battle::SetBotColour( const wxString& nick, const wxColour& col )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, "Bot not found" );
-  bot->bs.color_r = r;
-  bot->bs.color_g = g;
-  bot->bs.color_b = b;
+  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  bot->bs.colour = col;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
 
 
-void Battle::SetBotHandicap( const std::string& nick, int handicap )
+void Battle::SetBotHandicap( const wxString& nick, int handicap )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, "Bot not found" );
+  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
   if ( bot->owner != GetMe().GetNick() && !IsFounderMe() )
   {
-    m_serv.DoActionBattle( m_opts.battleid, "thinks " + nick + " should get a " + i2s( handicap ) + "% resource bonus" );
+    m_serv.DoActionBattle( m_opts.battleid, _T("thinks ") + nick + _T(" should get a ") + wxString::Format( _T("%d"),  handicap ) + _T("% resource bonus") );
     return;
   }
   bot->bs.handicap = handicap;
@@ -408,14 +427,14 @@ void Battle::SetBotHandicap( const std::string& nick, int handicap )
 }
 
 
-void Battle::OnBotAdded( const std::string& nick, const std::string& owner, const UserBattleStatus& bs, const std::string& aidll )
+void Battle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
 {
   BattleBot* bot = GetBot(nick);
   bool created = true;
   if ( bot == 0 ) bot = new BattleBot();
   else created = false;
 
-  debug_func("created: " + i2s(created) );
+  wxLogDebugFunc( wxString::Format( _T("created: %d"), created) );
 
   bot->name = nick;
   bot->bs = bs;
@@ -430,7 +449,7 @@ void Battle::OnBotAdded( const std::string& nick, const std::string& owner, cons
 }
 
 
-void Battle::OnBotRemoved( const std::string& nick )
+void Battle::OnBotRemoved( const wxString& nick )
 {
   BattleBot* bot = GetBot( nick );
   m_bots.remove( bot );
@@ -439,24 +458,24 @@ void Battle::OnBotRemoved( const std::string& nick )
 }
 
 
-void Battle::OnBotUpdated( const std::string& name, const UserBattleStatus& bs )
+void Battle::OnBotUpdated( const wxString& name, const UserBattleStatus& bs )
 {
   BattleBot* bot = GetBot( name );
-  ASSERT_LOGIC( bot != 0, "Bad bot name" );
+  ASSERT_LOGIC( bot != 0, _T("Bad bot name") );
   int order = bot->bs.order;
   bot->bs = bs;
   bot->bs.order = order;
 }
 
 
-BattleBot* Battle::GetBot( const std::string& name )
+BattleBot* Battle::GetBot( const wxString& name )
 {
   std::list<BattleBot*>::const_iterator i;
 
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
   {
     if ( *i == 0 ) continue;
-    debug( (*i)->name );
+    wxLogMessage( _T("%s"), ((*i)->name).c_str ());
     if ( (*i)->name == name ) {
       return *i;
     }
@@ -500,9 +519,9 @@ void Battle::ForceAlly( User& user, int ally )
 }
 
 
-void Battle::ForceColour( User& user, int r, int g, int b )
+void Battle::ForceColour( User& user, const wxColour& col )
 {
-  m_serv.ForceColour( m_opts.battleid, user.GetNick(), r, g, b );
+  m_serv.ForceColour( m_opts.battleid, user.GetNick(), col );
 }
 
 
@@ -520,5 +539,11 @@ void Battle::BattleKickPlayer( User& user )
 void Battle::SetHandicap( User& user, int handicap)
 {
   m_serv.SetHandicap ( m_opts.battleid, user.GetNick(), handicap );
+}
+
+
+std::vector<BattleStartRect*>::size_type Battle::GetNumRects()
+{
+  return m_rects.size();
 }
 
