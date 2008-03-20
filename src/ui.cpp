@@ -912,8 +912,6 @@ void Ui::OnSpringTerminated( bool success )
 {
   if ( !m_serv ) return;
 
-  Battle *battle=mw().GetJoinTab().GetCurrentBattle();
-
   m_serv->GetMe().Status().in_game = false;
   m_serv->GetMe().SendMyUserStatus();
 }

@@ -18,6 +18,13 @@
 #include "serverevents.h"
 #include "socket.h"
 
+/// for SL_MAIN_ICON
+#include "settings++/custom_dialogs.h"
+
+#include "settings.h"
+
+const int udp_reply_timeout=10;
+
 
 //! @brief Struct used internally by the TASServer class to get client status information.
 struct TASClientstatus {
@@ -85,7 +92,7 @@ StartType IntToStartType( int start );
 NatType IntToNatType( int nat );
 GameType IntToGameType( int gt );
 
-TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(false), m_online(false), m_buffer(_T("")), m_last_ping(0), m_ping_id(10000), m_udp_private_port(16941),m_battle_id(-1) { m_se = new ServerEvents( *this, ui); }
+TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(false), m_online(false), m_buffer(_T("")), m_last_udp_ping(0), m_ping_id(10000), m_udp_private_port(16941),m_battle_id(-1), m_do_finalize_join_battle(false), m_finalize_join_battle_id(-1) { m_se = new ServerEvents( *this, ui); }
 
 TASServer::~TASServer() { delete m_se; }
 
@@ -171,7 +178,7 @@ void TASServer::Connect( const wxString& addr, const int port )
 
   m_sock->Connect( addr, port );
   if ( IsConnected() ) {
-    m_last_ping = time( 0 );
+    m_last_udp_ping = time( 0 );
     m_connected = true;
   }
   m_sock->SetPingInfo( _T("PING\n"), 10000 );
@@ -288,7 +295,7 @@ void TASServer::Update( int mselapsed )
 
   if ( !m_connected ) { // We are not formally connected yet, but might be.
     if ( IsConnected() ) {
-      m_last_ping = time( 0 );
+      m_last_udp_ping = time( 0 );
       m_connected = true;
     }
     return;
@@ -301,14 +308,32 @@ void TASServer::Update( int mselapsed )
     }
 
     time_t now = time( 0 );
-    if ( ( m_last_ping + m_keepalive ) < now )
+
+    /// joining battle with nat traversal:
+    /// if we havent finalized joining yet, and udp_reply_timeout seconds has passed since
+    /// we did UdpPing(our name) , join battle anyway, but with warning message that nat failed.
+    /// (if we'd receive reply from server, we'd finalize already)
+    ///
+    if(m_do_finalize_join_battle&&(m_last_udp_ping+udp_reply_timeout<now)){
+      //customMessageBoxNoModal(SL_MAIN_ICON,_("NAT Traversal has failed when joining battle. You might be unable to play in this battle."),_("Warning"));
+      //wxMessageBox()
+      wxMessageBox(_("Failed to punch through NAT"), _("Error"), wxICON_INFORMATION, NULL/* m_ui.mw()*/ );
+      FinalizeJoinBattle();
+    };
+
+    if ( ( m_last_udp_ping + m_keepalive ) < now )
     { // Is it time for a nat traversal PING?
-      m_last_ping = now;
+      m_last_udp_ping = now;
       /// Nat travelsal "ping"
       Battle *battle=GetCurrentBattle();
       if(battle){
         if((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports) ) && !battle->GetInGame()){
-          UdpPing();
+          if(battle->IsFounderMe()){
+            UdpPing(m_user);
+            UdpPingAllClients();
+          }else{
+            UdpPing();
+          }
         }else{
           /// old logging for debug
           //if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
@@ -641,7 +666,14 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
   } else if ( cmd == _T("UDPSOURCEPORT") ) {
     unsigned int tmp_port = (unsigned int)GetIntParam( params );
     m_se->OnMyExternalUdpSourcePort( tmp_port );
+    if(m_do_finalize_join_battle)FinalizeJoinBattle();
     //UDPSOURCEPORT port
+  } else if(cmd == _T("CLIENTIPPORT")){
+    // clientipport username ip port
+    nick=GetWordParam( params );
+    wxString ip=GetWordParam(params);
+    unsigned int port=(unsigned int)GetIntParam( params );
+    m_se->OnClientIPPort(nick, ip, port);
   } else if ( cmd == _T("SETSCRIPTTAGS") ) {
     wxString command;
     while ( (command = GetSentenceParam( params )) != _T("") ) {
@@ -688,7 +720,7 @@ void TASServer::Ping()
   pli.id = m_ping_id;
   pli.t = time( 0 );
   m_pinglist.push_back ( pli );
-  m_last_ping = time( 0 );
+  m_last_udp_ping = time( 0 );
 }
 
 
@@ -924,7 +956,15 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
-  wxString cmd = wxString::Format( _T("0 %d "), bo.nattype );
+  /// to see ip addresses of users as they join (in the log), pretend you're hosting with NAT.
+  int nat_type=bo.nattype;
+  /*
+  if(nat_type==0 && sett().GetShowIPAddresses()){
+    nat_type=1;
+  }*/
+  wxLogMessage(_T("hosting with nat type %d"),nat_type);
+
+  wxString cmd = wxString::Format( _T("0 %d "), nat_type );
   cmd += (password.IsEmpty())?_T("*"):password;
   cmd += wxString::Format( _T(" %d %d "),
     bo.port,
@@ -939,6 +979,8 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
   //wxLogMessage( _T("%s"), cmd.c_str() );
   SendCmd( _T("OPENBATTLE"), cmd );
 
+  if(bo.nattype>0)UdpPing(m_user);
+
   // OPENBATTLE type natType password port maphash {map} {title} {modname}
 }
 
@@ -950,23 +992,48 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
-  //UDPPing();
+  m_finalize_join_battle_pw=password;
+  m_finalize_join_battle_id=battleid;
+
   if(BattleExists(battleid))
   {
     Battle *battle=&GetBattle(battleid);
+
     if(battle){
       if((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))
       {
-        UdpPing();
+        m_last_udp_ping = time(0);/// The messages received from server, and Update function run in different thread. (Which is total WTF)
+        /// Hence its important to set time now, to prevent Update()
+        /// from calling FinalizeJoinBattle() on timeout.
+        /// m_do_finalize_join_battle must be set to true after setting time, not before.
+        m_do_finalize_join_battle=true;
+        for(int n=0;n<5;++n){/// do 5 udp pings with tiny interval
+          UdpPing( m_user );
+         // sleep(0);/// sleep until end of timeslice.
+        }
+        m_last_udp_ping = time(0);/// set time again
+      }else{
+        /// if not using nat, finalize now.
+        m_do_finalize_join_battle=true;
+        FinalizeJoinBattle();
       }
+    }else{
+      wxLogMessage( _T("battle doesnt exist (null)") );
     }
   }
   else
   {
     wxLogMessage( _T("battle doesnt exist") );
   }
+  //SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d"), battleid ) + _T(" ") + password );
+}
 
-  SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d"), battleid ) + _T(" ") + password );
+
+void TASServer::FinalizeJoinBattle(){
+  if(m_do_finalize_join_battle){
+    SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d"), m_finalize_join_battle_id ) + _T(" ") + m_finalize_join_battle_pw);
+    m_do_finalize_join_battle=false;
+  }
 }
 
 
@@ -1127,7 +1194,7 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
   ASSERT_LOGIC( IsOnline(), _T("Not online") );
   ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
 
-  GetMe().SetBattleStatus( bs );
+  GetMe().UpdateBattleStatus( bs );
 
   UTASBattleStatus tasbs;
   tasbs.tasdata = ConvTasbattlestatus( bs );
@@ -1162,6 +1229,12 @@ void TASServer::SendMyUserStatus()
 void TASServer::StartHostedBattle()
 {
   ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
+
+  Battle *battle=GetCurrentBattle();
+  if(battle){
+    if((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports)))UdpPingAllClients();
+  }
+
   m_se->OnStartHostedBattle( m_battle_id );
 }
 
@@ -1384,7 +1457,7 @@ void TASServer::OnConnected( Socket* sock )
 {
   wxLogDebugFunc( _T("") );
   //TASServer* serv = (TASServer*)sock->GetUserdata();
-  m_last_ping = time( 0 );
+  m_last_udp_ping = time( 0 );
   m_connected = true;
   m_online = false;
 }
@@ -1408,35 +1481,96 @@ void TASServer::OnDataReceived( Socket* sock )
 
 //! @brief Send udp ping.
 //! @note used for nat travelsal.
-void TASServer::UdpPing()
+
+void TASServer::UdpPing(unsigned int src_port, const wxString &target, unsigned int target_port, const wxString &message)/// full parameters version, used to ping all clients when hosting.
 {
 #ifndef HAVE_WX26
-
+  wxLogMessage(_T("UdpPing src_port=%d , target='%s' , target_port=%d , message='%s'"),src_port,target.c_str(),target_port, message.c_str());
   wxIPV4address local_addr;
   local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
-  local_addr.Service(m_udp_private_port);
+  local_addr.Service(src_port);
 
   wxDatagramSocket udp_socket(local_addr,/* wxSOCKET_WAITALL*/wxSOCKET_NONE);
 
   wxIPV4address wxaddr;
-  wxaddr.Hostname(m_addr);
-  wxaddr.Service(m_nat_helper_port);
+  wxaddr.Hostname(target);
+  wxaddr.Service(target_port);
 
   if(udp_socket.IsOk()&&!udp_socket.Error()){
-    std::string m = (const char*)m_user.mb_str(wxConvUTF8);
-    if(m.empty()){
-      //wxLogMessage(_T("empty udp message string"));
-      m="ipv4 sux";
-    }
+    std::string m=STD_STRING(message);
     udp_socket.SendTo( wxaddr, m.c_str(), m.length() );
-    wxLogDebugFunc( _T("") );
-    m_se->OnMyInternalUdpSourcePort( m_udp_private_port );
   }else{
     wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));
   }
   if(udp_socket.Error())wxLogMessage(_T("Error=%d"),udp_socket.LastError());
 
 #endif
+}
+
+void TASServer::UdpPing(const wxString &message){
+  m_se->OnMyInternalUdpSourcePort( m_udp_private_port );
+  UdpPing(m_udp_private_port,m_addr,m_nat_helper_port,message);
+}
+
+
+/// copypasta from spring.cpp , to get users ordered same way as in tasclient.
+struct UserOrder{
+    int index;/// user number for GetUser
+    int order;/// user order (we'll sort by it)
+    bool operator<(UserOrder b) const {/// comparison function for sorting
+      return order<b.order;
+    }
+};
+
+
+void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. has some rudimentary support for fixed source ports.
+{
+  Battle *battle=GetCurrentBattle();
+  if(!battle)return;
+  if(!battle->IsFounderMe())return;
+  wxLogMessage(_T("UdpPingAllClients()"));
+
+  /// I'm gonna mimic tasclient's behavior.
+  /// It of course doesnt matter in which order pings are sent,
+  /// but when doing "fixed source ports", the port must be
+  /// FIRST_UDP_SOURCEPORT + index of user excluding myself
+  /// so users must be reindexed in same way as in tasclient
+  /// to get same source ports for pings.
+
+
+  /// copypasta from spring.cpp
+  std::vector<UserOrder> ordered_users;
+
+
+  for ( user_map_t::size_type i = 0; i < battle->GetNumUsers(); i++ ){
+    User &user=battle->GetUser(i);
+    if(&user == &(battle->GetMe()))continue;/// dont include myself (change in copypasta)
+
+    UserOrder tmp;
+    tmp.index=i;
+    tmp.order=user.BattleStatus().order;
+    ordered_users.push_back(tmp);
+  }
+  std::sort(ordered_users.begin(),ordered_users.end());
+
+
+  for(int i=0;i<int(ordered_users.size());++i){
+    User &user=battle->GetUser(ordered_users[i].index);
+
+    wxString ip=user.BattleStatus().ip;
+    unsigned int port=user.BattleStatus().udpport;
+
+    unsigned int src_port=m_udp_private_port;
+    if(battle->GetNatType()==NAT_Fixed_source_ports){
+      port=FIRST_UDP_SOURCEPORT+i;
+    }
+
+    wxLogMessage(_T(" pinging nick=%s , ip=%s , port=%d"),user.GetNick().c_str(),ip.c_str(),port);
+
+    if(port!=0 && !ip.empty()){
+      UdpPing(src_port,ip,port,_T("hai!"));
+    }
+  }
 }
 
 //! @brief used to check if the NAT is done properly when hosting

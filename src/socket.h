@@ -87,12 +87,14 @@ class Socket
 
     wxString m_ping_msg;
     unsigned int m_ping_int;
+
     PingThread* m_ping_t;
 
     bool m_connecting;
     bool m_block;
     iNetClass& m_net_class;
 
+    unsigned int m_udp_private_port;
     int m_rate;
     int m_sent;
     wxString m_buffer;

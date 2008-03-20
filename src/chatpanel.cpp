@@ -558,7 +558,7 @@ void ChatPanel::Motd( const wxString& message )
 
 void ChatPanel::StatusMessage( const wxString& message )
 {
-  if(!m_chatlog_text){
+  if(m_chatlog_text != 0){
     wxLogMessage(_T("m_chatlog_text is NULL"));
   }else{
     wxFont f = m_chatlog_text->GetFont();
@@ -762,11 +762,7 @@ void ChatPanel::_SetChannel( Channel* channel )
 void ChatPanel::Say( const wxString& message )
 {
   wxLogDebugFunc( _T("") );
-#ifdef __WXMSW__
   wxStringTokenizer lines( message, _T("\n") );
-#else
-  wxStringTokenizer lines( message, _T("\r\n") );
-#endif
   if ( lines.CountTokens() > 5 ) {
     wxMessageDialog dlg( &m_ui.mw(), wxString::Format( _("Are you sure you want to paste %d lines?"), lines.CountTokens() ), _("Flood warning"), wxYES_NO );
     if ( dlg.ShowModal() == wxID_NO ) return;

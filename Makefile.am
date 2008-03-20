@@ -111,6 +111,7 @@ springlobby_SOURCES = \
 	src/battlelistctrl.h \
 	src/battlelistfilter.cpp \
 	src/battlelistfilter.h \
+	src/battlelistfiltervalues.h \
 	src/battlelist.cpp \
 	src/battlelist.h \
 	src/battlelisttab.cpp \

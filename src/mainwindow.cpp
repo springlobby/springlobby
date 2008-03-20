@@ -38,6 +38,9 @@
 
 #include "updater/versionchecker.h"
 
+#ifdef HAVE_WX28
+#include <wx/aboutdlg.h>
+#endif
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
@@ -51,6 +54,8 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_DOC, MainWindow::OnShowDocs )
   EVT_MENU( MENU_SETTINGSPP, MainWindow::OnShowSettingsPP )
   EVT_MENU( MENU_VERSION, MainWindow::OnMenuVersion )
+  EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
+
 
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
 
@@ -310,6 +315,30 @@ void MainWindow::OnMenuChat( wxCommandEvent& event )
 
 }
 
+void MainWindow::OnMenuAbout( wxCommandEvent& event )
+{
+#ifdef HAVE_WX28
+    wxAboutDialogInfo info;
+	info.SetName(_T("SpringLobby"));
+	info.SetVersion (GetSpringLobbyVersion());
+	info.SetDescription(_("SpringLobby is a cross-plattform lobby client for the RTS Spring engine"));
+	//info.SetCopyright(_T("");
+	info.SetLicence(_T("GPL"));
+	info.AddDeveloper(_T("BrainDamage"));
+	info.AddDeveloper(_T("koshi"));
+	info.AddDeveloper(_T("semi_"));
+	info.AddDeveloper(_T("tc-"));
+    info.AddTranslator(_T("chaosch (simplified chinese)"));
+	info.AddTranslator(_T("lejocelyn (french)"));
+	info.AddTranslator(_T("Suprano (german)"));
+    info.AddTranslator(_T("tc- (swedish)"));
+	info.SetIcon(wxIcon(springlobby_xpm));
+	wxAboutBox(info);
+
+#else
+    customMessageBoxNoModal(SL_MAIN_ICON,_T("SpringLobby version: ")+GetSpringLobbyVersion(),_T("About"));
+#endif
+}
 
 void MainWindow::OnMenuConnect( wxCommandEvent& event )
 {

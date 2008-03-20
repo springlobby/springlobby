@@ -97,6 +97,8 @@ class ServerEvents
     void OnMyExternalUdpSourcePort( const unsigned int udpport );
     void OnMyInternalUdpSourcePort( const unsigned int udpport );
 
+    void OnClientIPPort( const wxString &username, const wxString &ip, unsigned int udpport );
+
     void OnKickedFromBattle();
 
   protected:
