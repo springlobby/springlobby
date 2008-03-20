@@ -209,7 +209,7 @@ int IconImageList::GetRankIcon( const int& rank, const bool& showlowest )
 
 int IconImageList::GetFlagIcon( const wxString& flagname )
 {
-  return ICON_FLAGS_BASE + GetFlagIndex( flagname ) + 3;
+  return ICON_FLAGS_BASE + GetFlagIndex( flagname );
 }
 
 
