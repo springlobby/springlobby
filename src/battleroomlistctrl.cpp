@@ -235,7 +235,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   wxListItem item;
   item.SetId( index );
 
-  ASSERT_LOGIC( GetItem( item ), _T("!GetItem") );
+  if( !GetItem( item ) ) return;
 
   item_content user_content = items[(size_t)GetItemData( index )];
   User& user = *((User*) user_content.data);
@@ -345,7 +345,7 @@ void BattleroomListCtrl::UpdateBot( const int& index )
   wxListItem item;
   item.SetId( index );
 
-  ASSERT_LOGIC( GetItem( item ), _T("!GetItem") );
+  if( !GetItem( item ) ) return;
 
   item_content bot_content = items[(size_t)GetItemData( index )];
   BattleBot& bot = *((BattleBot*)bot_content.data);
