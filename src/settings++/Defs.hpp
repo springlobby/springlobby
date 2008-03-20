@@ -107,6 +107,7 @@
 #define ID_WINDOWP_UI_CBOX_14 373
 #define ID_WINDOWP_UI_CBOX_15 374
 #define ID_WINDOWP_UI_CBOX_16 375
+#define ID_WINDOWP_UI_CBOX_17 376
 
 //Zoom opt
 #define ID_WINDOWP_UI_MW_SPD  385
@@ -259,32 +260,34 @@ const Control QA_CBOX[10] = {
 };
 
 //TODO add scroll wheel speed
-const Control UI_CBOX[16] = {
+const Control UI_CBOX[17] = {
 	{_("Enable LuaUI widgets"),                            _T("LuaUI"),               ID_WINDOWP_UI_CBOX_1,	_T("1"), {_("mark to be able to use")}},
 
-	{_("Draw commands on mini-map"),                       _T("MiniMapDrawCommands"), ID_WINDOWP_UI_CBOX_2,	_T("1"), {_("default value is \"on\"")}},
-	{_("Draw icons on mini-map"),                          _T("MiniMapIcons"),        ID_WINDOWP_UI_CBOX_3,	_T("1"), {_("default value is \"on\"")}},
-	{_("Draw markers on mini-map"),                        _T("MiniMapMarker"),       ID_WINDOWP_UI_CBOX_4,	_T("1"), {_("default value is \"on\"")}},
-	{_("Mini-map on left (single screen)"), 				_T("MinimapOnLeft"),       ID_WINDOWP_UI_CBOX_5,	_T("1"), {_("left is the default")}},
-	{_("Mini-map on left (dual screen)"),   				_T("DualScreenMiniMapOnLeft"), ID_WINDOWP_UI_CBOX_6,_T("1"), {_("left is the default")}},
-	{_("Simplified mini-map colors"),                      _T("SimpleMiniMapColors"), ID_WINDOWP_UI_CBOX_7,	_T("0"), {_("Use less colors")}},
+    {_("Issue commands on mini-map"),                       _T("MiniMapFullProxy"), ID_WINDOWP_UI_CBOX_2, _T("1"), {_("Issue orders on the mini-map like you would ")}},
+	{_("Show commands on mini-map"),                       _T("MiniMapDrawCommands"), ID_WINDOWP_UI_CBOX_3,	_T("1"), {_("default value is \"on\"")}},
+	{_("Draw icons on mini-map"),                          _T("MiniMapIcons"),        ID_WINDOWP_UI_CBOX_4,	_T("1"), {_("default value is \"on\"")}},
+	{_("Draw markers on mini-map"),                        _T("MiniMapMarker"),       ID_WINDOWP_UI_CBOX_5,	_T("1"), {_("default value is \"on\"")}},
+	{_("Mini-map on left (single screen)"), 				_T("MinimapOnLeft"),       ID_WINDOWP_UI_CBOX_6,	_T("1"), {_("left is the default")}},
+	{_("Mini-map on left (dual screen)"),   				_T("DualScreenMiniMapOnLeft"), ID_WINDOWP_UI_CBOX_7,_T("1"), {_("left is the default")}},
+	{_("Simplified mini-map colors"),                      _T("SimpleMiniMapColors"), ID_WINDOWP_UI_CBOX_8,	_T("0"), {_("Use less colors")}},
 
-	{_("Team-colored nanospray"),                          _T("TeamNanoSpray"),       ID_WINDOWP_UI_CBOX_8,	_T("1"),
+	{_("Team-colored nanospray"),                          _T("TeamNanoSpray"),       ID_WINDOWP_UI_CBOX_9,	_T("1"),
 																				{_("Should nano particels be the color of your team?")}},
-	{_("Colorized elevation map"),                         _T("ColorElev"),           ID_WINDOWP_UI_CBOX_9,	_T("1"), {_("makes differences in height clearer")}},
+	{_("Colorized elevation map"),                         _T("ColorElev"),           ID_WINDOWP_UI_CBOX_10,	_T("1"), {_("makes differences in height clearer")}},
 
-	{_("Show in-game clock"),                              _T("ShowClock"),           ID_WINDOWP_UI_CBOX_10,	_T("1"),
+	{_("Show in-game clock"),                              _T("ShowClock"),           ID_WINDOWP_UI_CBOX_11,	_T("1"),
 										{_("requires \"Enable LuaWidgets\" to be set.\nWill be displayed in the bottom right corner")}},
-	{_("Show in-game player information"),                 _T("ShowPlayerInfo"),      ID_WINDOWP_UI_CBOX_11,	_T("1"),
+	{_("Show in-game player information"),                 _T("ShowPlayerInfo"),      ID_WINDOWP_UI_CBOX_12,	_T("1"),
 										{_("requires \"Enable LuaWidgets\" to be set.\nWill be displayed in the bottom right corner")}},
-	{_("Show in-game framerate"),                          _T("ShowFPS"),             ID_WINDOWP_UI_CBOX_12,	_T("0"),
+	{_("Show in-game framerate"),                          _T("ShowFPS"),             ID_WINDOWP_UI_CBOX_13,	_T("0"),
 										{_("requires \"Enable LuaWidgets\" to be set.\nWill be displayed in the bottom right corner")}},
 //TODO is there even a reason that it should be disabled?
-	{_("Fix rendering on alt-tab"),                        _T("FixAltTab"),           ID_WINDOWP_UI_CBOX_13,	_T("1"), {_("Do not change if not needed")}},
-	{_("Disallow helper AI's"),                            _T("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_14,	_T("0"), {_("Disables Economy AI, etc.\n"
+	{_("Fix rendering on alt-tab"),                        _T("FixAltTab"),           ID_WINDOWP_UI_CBOX_14,	_T("1"), {_("Do not change if not needed")}},
+	{_("Disallow helper AI's"),                            _T("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_15,	_T("0"), {_("Disables Economy AI, etc.\n"
 																														"If enabled might screw with LuaUi.")}},
-	{_("Enable scroll on window edge"),					_T("WindowedEdgeMove"),	ID_WINDOWP_UI_CBOX_15,	_T("1"), {_("Scroll the screen when mouse reaches the screen's edge.")}},
-	{_("Invert Mouse"),									_T("InvertMouse"),			ID_WINDOWP_UI_CBOX_16,	_T("0"), {_("Inverts the Mouse Y-axis in FPS mode")}},
+	{_("Enable scroll on window edge"),					_T("WindowedEdgeMove"),	ID_WINDOWP_UI_CBOX_16,	_T("1"), {_("Scroll the screen when mouse reaches the screen's edge.")}},
+	{_("Invert Mouse"),									_T("InvertMouse"),			ID_WINDOWP_UI_CBOX_17,	_T("0"), {_("Inverts the Mouse Y-axis in FPS mode")}},
+
 
 };
 

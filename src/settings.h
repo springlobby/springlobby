@@ -19,7 +19,7 @@
 
 class wxConfigBase;
 class wxFont;
-
+struct BattleListFilterValues;
 
 //! @brief Class used to store and restore application settings.
 class Settings
@@ -169,7 +169,13 @@ class Settings
     wxFont GetChatFont();
     void SetChatFont( wxFont value );
 
+
+    BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
+    void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
+    wxString GetLastFilterProfileName();
+
 	bool GetDisableSpringVersionCheck();
+
 
   protected:
 
