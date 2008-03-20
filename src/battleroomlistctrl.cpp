@@ -43,12 +43,6 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  customListCtrl)
 #endif
 END_EVENT_TABLE()
 
-#ifdef __WXMSW__
-	#define nonIconicons().ICON_EMPTY
-#else
-	#define nonIcon -1
-#endif
-
 Ui* BattleroomListCtrl::m_ui_for_sort = 0;
 
 BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui ) :
@@ -64,43 +58,43 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   wxListItem col;
 
   col.SetText( _T("r") );
-  col.SetImage(nonIcon );
+  col.SetImage(icons().ICON_EMPTY );
   InsertColumn( 0, col, _T("Player/Bot"), false);
 
   col.SetText( _T("s") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_EMPTY );
   InsertColumn( 1, col,_T("Faction icon"), false );
 
   col.SetText( _T("c") );
-  col.SetImage(  nonIcon);
+  col.SetImage(  icons().ICON_EMPTY);
   InsertColumn( 2, col, _T("Teamcolour"), false );
 
   col.SetText( _T("f") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_EMPTY );
   InsertColumn( 3, col, _T("Country"), false );
 
   col.SetText( _T("r") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_EMPTY );
   InsertColumn( 4, col, _T("Rank"), false );
 
   col.SetText( _("Nickname") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_EMPTY );
   InsertColumn( 5, col, _T("Ingame name"));
 
   col.SetText( _("t") );
-  col.SetImage(nonIcon );
+  col.SetImage(icons().ICON_EMPTY );
   InsertColumn( 6, col, _T("Team number"), true );
 
   col.SetText( _("a") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_EMPTY );
   InsertColumn( 7, col, _T("Ally number"), true );
 
   col.SetText( _("cpu") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_EMPTY );
   InsertColumn( 8, col, _T("CPU speed (might not be accurate)") );
 
   col.SetText( _("Resource Bonus") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_EMPTY );
   InsertColumn( 9, col, _T("Resource Bonus") );
 
   m_sortorder[0].col = 7;
