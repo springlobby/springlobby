@@ -315,18 +315,18 @@ void BattleListTab::OnHost( wxCommandEvent& event )
 {
   if ( !m_ui.IsConnected() ) {
     wxLogWarning( _T("Trying to host while offline") );
-    customMessageBox(SL_MAIN_ICON, _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK );
+    customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK );
     m_ui.ShowConnectWindow();
     return;
   }
   if ( !m_ui.IsSpringCompatible() ){
     wxLogWarning(_T("Hosting is disabled due to the incompatible version ") );
-    customMessageBox(SL_MAIN_ICON,_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION|wxOK);
+    customMessageBoxNoModal(SL_MAIN_ICON,_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION|wxOK);
     return;
   }
   if ( m_ui.IsSpringRunning() ) {
     wxLogWarning(_T("trying to host while spring is running") );
-    customMessageBox(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to host a new game"), _("Spring error"), wxICON_EXCLAMATION|wxOK );
+    customMessageBoxNoModal(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to host a new game"), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     return;
   }
   Battle* battle = m_ui.mw().GetJoinTab().GetCurrentBattle();
@@ -351,7 +351,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
       if ( !m_ui.TestHostPort( bo.port ) )
       {
         wxLogWarning(_T("hosting port %d: test unsuccessful, closing battle"),bo.port  );
-        customMessageBox( SL_MAIN_ICON, wxString::Format( _("Battle not started because the port you selected (%d) is unable to recieve incoming packets\n checks your router & firewall configuration again or change port in the dialog.\n\nIf everything else fails, enable the Hole Punching NAT Traversal\n option in the hosting settings."), bo.port ) );
+        customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("Battle not started because the port you selected (%d) is unable to recieve incoming packets\n checks your router & firewall configuration again or change port in the dialog.\n\nIf everything else fails, enable the Hole Punching NAT Traversal\n option in the hosting settings."), bo.port ) );
         return;
       }
     }
@@ -364,7 +364,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
       bo.modname = mod.name;
     } catch ( ... ) {
       wxLogWarning( _T("can't host: mod not found") );
-      customMessageBox( SL_MAIN_ICON,_("Battle not started beacuse the mod you selected could not be found. "), _("Error starting battle."), wxOK );
+      customMessageBoxNoModal( SL_MAIN_ICON,_("Battle not started beacuse the mod you selected could not be found. "), _("Error starting battle."), wxOK );
       return;
     }
 
@@ -375,14 +375,14 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     	  map = usync()->GetMap( mname );
       else if ( usync()->GetNumMaps() <= 0 ) {
         wxLogWarning( _T("no maps found") );
-        customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
         return;
       } else {
         map = usync()->GetMap( 0 );
       }
     } catch ( ... ) {
       wxLogWarning( _T("no maps found") );
-      customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
+      customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
       return;
     }
     bo.maphash = map.hash;
