@@ -151,7 +151,9 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
   m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, 2 );
   m_tabs->InsertPage( 3, m_opts_tab, _("Options"), false, 3 );
   m_tabs->InsertPage( 4, m_mm_opts_tab, _("Map/Mod Options"), false, 3 );
-  this->Refresh(); /// this is needed to avoid a weird frame overlay glitch in windows
+  #ifdef __WXMSW__
+    Refresh(); /// this is needed to avoid a weird frame overlay glitch in windows
+  #endif
 }
 
 
