@@ -63,12 +63,11 @@
 					<Add option="-D__DEBUG__" />
 					<Add option="-D__WXDEBUG__" />
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
-					<Add directory="$(WX_DIR)\include" />
-					<Add directory="$(WX_DIR)\lib\gcc_dll\mswd" />
-					<Add directory="$(WX_DIR)\contrib\include" />
+					<Add directory="$(#wx.include)" />
+					<Add directory="$(#wx.lib)\mswd" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="$(WX_DIR)\include" />
+					<Add directory="$(#wx.include)" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="libwxregexd.a" />
@@ -89,7 +88,7 @@
 					<Add library="libwxmsw28d_aui.a" />
 					<Add library="libwxmsw28d_richtext.a" />
 					<Add library="gmon" />
-					<Add directory="$(WX_DIR)\lib\gcc_dll" />
+					<Add directory="$(#wx.lib)" />
 				</Linker>
 				<Environment>
 					<Variable name="WX_DIR" value="C:\wxWidgets-2.8.4" />
