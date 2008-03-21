@@ -29,12 +29,12 @@
 #include "iunitsync.h"
 
 #include "images/springlobby.xpm"
-#include "images/chat_icon2u.png.h"
-#include "images/join_icon.xpm"
-#include "images/singleplayer_icon.xpm"
+#include "images/chat_icon.png.h"
+#include "images/join_icon.png.h"
+#include "images/single_player_icon.png.h"
 #include "images/options_icon.png.h"
 #include "images/select_icon.xpm"
-#include "images/downloads_icon.xpm"
+#include "images/downloads_icon.png.h"
 
 #include "settings++/frame.h"
 #include "settings++/custom_dialogs.h"
@@ -64,9 +64,9 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
 END_EVENT_TABLE()
 
-wxBitmap* MainWindow::charArr2Image(const unsigned char * arg)
+wxBitmap* MainWindow::charArr2Image(const unsigned char * arg, int size)
 {
-    wxMemoryInputStream istream( arg, sizeof( arg ) );
+    wxMemoryInputStream istream( arg, size );
     return new wxBitmap( wxImage ( istream, wxBITMAP_TYPE_PNG ) );
 }
 
@@ -108,14 +108,11 @@ MainWindow::MainWindow( Ui& ui ) :
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
 
-  wxMemoryInputStream istream(chat_icon2u_png, sizeof chat_icon2u_png);
-  wxImage myimage_img(istream, wxBITMAP_TYPE_PNG);
-
-  m_chat_icon =  charArr2Image( chat_icon2u_png ) ;
-  m_battle_icon = new wxBitmap( join_icon_xpm );
-  m_sp_icon = new wxBitmap( singleplayer_icon_xpm );
-  m_options_icon =   new wxBitmap ( myimage_img );
-  m_downloads_icon = new wxBitmap( downloads_icon_xpm );
+  m_chat_icon =  charArr2Image( chat_icon_png , sizeof (chat_icon_png) ) ;
+  m_battle_icon = charArr2Image( join_icon_png , sizeof (join_icon_png) ) ;
+  m_sp_icon = charArr2Image( single_player_icon_png , sizeof (single_player_icon_png) ) ;
+  m_options_icon =   charArr2Image( options_icon_png , sizeof (options_icon_png) ) ;
+  m_downloads_icon = charArr2Image( downloads_icon_png , sizeof (downloads_icon_png) ) ;
   m_select_image = new wxBitmap( select_icon_xpm );
 
   m_func_tab_images = new wxImageList( 64, 64 );
