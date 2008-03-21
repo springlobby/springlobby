@@ -7,11 +7,13 @@
 #include <wx/intl.h>
 #include <wx/textdlg.h>
 #include <wx/imaglist.h>
+#include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/sizer.h>
 #include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
+#include <wx/mstream.h>
 #include <stdexcept>
 
 #include "mainwindow.h"
@@ -27,10 +29,10 @@
 #include "iunitsync.h"
 
 #include "images/springlobby.xpm"
-#include "images/chat_icon.xpm"
+#include "images/chat_icon2u.png.h"
 #include "images/join_icon.xpm"
 #include "images/singleplayer_icon.xpm"
-#include "images/options_icon.xpm"
+#include "images/options_icon.png.h"
 #include "images/select_icon.xpm"
 #include "images/downloads_icon.xpm"
 
@@ -62,6 +64,11 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
 END_EVENT_TABLE()
 
+wxBitmap* MainWindow::charArr2Image(const unsigned char * arg)
+{
+    wxMemoryInputStream istream( arg, sizeof( arg ) );
+    return new wxBitmap( wxImage ( istream, wxBITMAP_TYPE_PNG ) );
+}
 
 MainWindow::MainWindow( Ui& ui ) :
   wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
@@ -101,10 +108,13 @@ MainWindow::MainWindow( Ui& ui ) :
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
 
-  m_chat_icon = new wxBitmap( chat_icon_xpm );
+  wxMemoryInputStream istream(chat_icon2u_png, sizeof chat_icon2u_png);
+  wxImage myimage_img(istream, wxBITMAP_TYPE_PNG);
+
+  m_chat_icon =  charArr2Image( chat_icon2u_png ) ;
   m_battle_icon = new wxBitmap( join_icon_xpm );
   m_sp_icon = new wxBitmap( singleplayer_icon_xpm );
-  m_options_icon = new wxBitmap( options_icon_xpm );
+  m_options_icon =   new wxBitmap ( myimage_img );
   m_downloads_icon = new wxBitmap( downloads_icon_xpm );
   m_select_image = new wxBitmap( select_icon_xpm );
 
