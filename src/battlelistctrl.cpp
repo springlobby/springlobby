@@ -48,43 +48,43 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   wxListItem col;
 
   col.SetText( _T("s") );
-  col.SetImage( icons().ICON_NONE );
+  //col.SetImage( icons().ICON_NONE );
   InsertColumn( 0, col, _T("Status"), false );
 
   col.SetText( _T("c") );
-  col.SetImage( icons().ICON_NONE );
+  //col.SetImage( icons().ICON_NONE );
   InsertColumn( 1, col, _T("Country"), false);
 
   col.SetText( _T("r") );
-  col.SetImage(  icons().ICON_NONE);
+  //col.SetImage(  icons().ICON_NONE);
   InsertColumn( 2, col, _T("Minimum rank to join"), false );
 
   col.SetText( _("Description") );
-  col.SetImage( icons().ICON_NONE );
+  //col.SetImage( icons().ICON_NONE );
   InsertColumn( 3, col, _T("Game description") );
 
   col.SetText( _("Map") );
-  col.SetImage( icons().ICON_NONE );
+  //col.SetImage( icons().ICON_NONE );
   InsertColumn( 4, col, _T("Mapname") );
 
   col.SetText( _("Mod") );
-  col.SetImage( icons().ICON_NONE );
+  //col.SetImage( icons().ICON_NONE );
   InsertColumn( 5, col, _T("Modname") );
 
   col.SetText( _("Host") );
-  col.SetImage( icons().ICON_NONE);
+  //col.SetImage( icons().ICON_NONE);
   InsertColumn( 6, col, _T("Name of the Host") );
 
   col.SetText( _("s") );
-  col.SetImage( icons().ICON_NONE );
+  //col.SetImage( icons().ICON_NONE );
   InsertColumn( 7, col, _T("Number of Spectators"), false );
 
   col.SetText( _("p") );
-  col.SetImage( icons().ICON_NONE );
+  //col.SetImage( icons().ICON_NONE );
   InsertColumn( 8, col, _T("Number of Players joined"), false );
 
   col.SetText( _("m") );
-  col.SetImage(  icons().ICON_NONE);
+  //col.SetImage(  icons().ICON_NONE);
   InsertColumn( 9, col, _T("Maximum number of Players that can join"), false );
 
   m_sortorder[0].col = 0;
