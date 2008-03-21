@@ -129,7 +129,7 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
   //TODO insert real downloads panel
-  m_func_tabs->AddPage( m_opts_tab, _T(""), false, 4 );
+  //m_func_tabs->AddPage( m_opts_tab, _T(""), false, 4 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -213,7 +213,7 @@ void MainWindow::MakeImages()
   } else {*/
     m_func_tab_images->Add( *m_options_icon );
 
-    m_func_tab_images->Add( *m_downloads_icon );
+   // m_func_tab_images->Add( *m_downloads_icon );
   //}
 
 }
