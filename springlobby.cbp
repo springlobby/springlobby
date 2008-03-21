@@ -46,7 +46,7 @@
 			</Target>
 			<Target title="Win32 | Debug">
 				<Option output="bin\Win32\Debug\springlobby" prefix_auto="0" extension_auto="1" />
-				<Option working_dir="$(WX_DIR)\lib\gcc_lib" />
+				<Option working_dir="C:\wxWidgets2.8\lib\gcc_dll" />
 				<Option object_output="obj\Win32\Debug\" />
 				<Option type="0" />
 				<Option compiler="gcc" />
