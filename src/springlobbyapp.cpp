@@ -57,6 +57,9 @@ bool SpringLobbyApp::OnInit()
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
 
+  //TODO needed?
+  wxImage::AddHandler(new wxPNGHandler);
+
   m_locale = new wxLocale( );
   m_locale->Init();
   m_locale->AddCatalog( _T("springlobby") );
