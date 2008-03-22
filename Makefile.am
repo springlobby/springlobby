@@ -537,8 +537,8 @@ springlobby_SOURCES += \
 	src/settings++/custom_dialogs.h \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
-	src/settings++/helpmenufunctions.cpp \
-	src/springlobby.rc 
+	src/settings++/helpmenufunctions.cpp 
+	
 		
 if USE_WINDRES
 	springlobby_SOURCES += \
