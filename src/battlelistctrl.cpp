@@ -32,12 +32,6 @@ BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 #endif
 END_EVENT_TABLE()
 
-#ifdef __WXMSW__
-	#define nonIcon IconImageList().ICON_EMPTY
-#else
-	#define nonIcon -1
-#endif
-
 Ui* BattleListCtrl::m_ui_for_sort = 0;
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
@@ -54,43 +48,43 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   wxListItem col;
 
   col.SetText( _T("s") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 0, col, _T("Status"), false );
 
   col.SetText( _T("c") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 1, col, _T("Country"), false);
 
   col.SetText( _T("r") );
-  col.SetImage(  nonIcon);
+  col.SetImage(  icons().ICON_NONE);
   InsertColumn( 2, col, _T("Minimum rank to join"), false );
 
   col.SetText( _("Description") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 3, col, _T("Game description") );
 
   col.SetText( _("Map") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 4, col, _T("Mapname") );
 
   col.SetText( _("Mod") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 5, col, _T("Modname") );
 
   col.SetText( _("Host") );
-  col.SetImage( nonIcon);
+  col.SetImage( icons().ICON_NONE);
   InsertColumn( 6, col, _T("Name of the Host") );
 
   col.SetText( _("s") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 7, col, _T("Number of Spectators"), false );
 
   col.SetText( _("p") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 8, col, _T("Number of Players joined"), false );
 
   col.SetText( _("m") );
-  col.SetImage(  nonIcon);
+  col.SetImage(  icons().ICON_NONE);
   InsertColumn( 9, col, _T("Maximum number of Players that can join"), false );
 
   m_sortorder[0].col = 0;
@@ -190,7 +184,7 @@ void BattleListCtrl::OnColClick( wxListEvent& event )
   if ( event.GetColumn() == -1 ) return;
   wxListItem col;
   GetColumn( m_sortorder[0].col, col );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   SetColumn( m_sortorder[0].col, col );
 
   int i;
@@ -605,7 +599,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 			switch (coloumn)
 			{
 			case 0: // status
-			m_tiptext = IconImageList().GetBattleStatus(battle);
+			m_tiptext = icons().GetBattleStatus(battle);
 				break;
 			case 1: // country
 				m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());

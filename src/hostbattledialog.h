@@ -27,6 +27,7 @@ class HostBattleDialog : public wxDialog
 
     void OnOk( wxCommandEvent& event );
     void OnCancel( wxCommandEvent& event );
+    void OnNatChange( wxCommandEvent& event  );
 
     int GetSelectedRank();
 
@@ -68,7 +69,8 @@ class HostBattleDialog : public wxDialog
 enum
 {
 	HOST_CANCEL = wxID_HIGHEST,
-	HOST_OK
+	HOST_OK,
+	CHOSE_NAT
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_HOSTBATTLEDIALOG_H

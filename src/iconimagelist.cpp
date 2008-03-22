@@ -72,8 +72,6 @@
 
 IconImageList::IconImageList() : wxImageList(16,16)
 {
-
-  ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = ICON_GAME_UNKNOWN = -1;
   ICON_ADMIN = Add( wxBitmap(admin_xpm) );
   ICON_ADMIN_AWAY = Add( wxBitmap(admin_away_xpm) );
   ICON_ADMIN_BROOM = Add( wxBitmap(admin_broom_xpm) );
@@ -133,6 +131,13 @@ IconImageList::IconImageList() : wxImageList(16,16)
   ICON_FLAGS_BASE = AddFlagImages( *this );
 
   ICON_EMPTY = Add( wxBitmap(empty_xpm) );
+
+  #ifdef __WXMSW__
+	ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = ICON_GAME_UNKNOWN = ICON_EMPTY;
+  #else
+	ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = ICON_GAME_UNKNOWN = -1;
+  #endif
+
 }
 
 
@@ -204,7 +209,7 @@ int IconImageList::GetRankIcon( const int& rank, const bool& showlowest )
 
 int IconImageList::GetFlagIcon( const wxString& flagname )
 {
-  return ICON_FLAGS_BASE + GetFlagIndex( flagname ) + 3;
+  return ICON_FLAGS_BASE + GetFlagIndex( flagname );
 }
 
 
