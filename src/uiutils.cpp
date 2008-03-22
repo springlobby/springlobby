@@ -166,20 +166,21 @@ void BlendImage(wxImage& source, wxImage& dest, int img_dim)
         int i_a = 0;//
         for ( unsigned int i = 0; i < pixel_count * 3;  )
         {
-            if ( source_alpha[i_a] > 0 )
+            int al_s = source_alpha[i_a] ;
+            int al_d = dest_alpha[i_a] ;
             {
-                new_data[i] = source_data[i];
-                new_data[i+1] = source_data[i+1];
-                new_data[i+2] = source_data[i+2];
-                new_alpha[i_a] = source_alpha[i_a];
+                new_data[i] = source_data[i] * al_d + dest_data[i] * ( 1 - al_d );
+                new_data[i+1] = source_data[i+1] * al_d + dest_data[i+1] * ( 1 - al_d );
+                new_data[i+2] = source_data[i+2] * al_d + dest_data[i+2] * ( 1 - al_d );
+                new_alpha[i_a] = al_d ;
             }
-            else
-            {
-                new_data[i] = dest_data[i];
-                new_data[i+1] = dest_data[i+1];
-                new_data[i+2] = dest_data[i+2];
-                new_alpha[i_a] = dest_alpha[i_a];
-            }
+//            else
+//            {
+//                new_data[i] = dest_data[i];
+//                new_data[i+1] = dest_data[i+1];
+//                new_data[i+2] = dest_data[i+2];
+//                new_alpha[i_a] = dest_alpha[i_a];
+//            }
             i_a++;
             i+=3;
         }
