@@ -3,6 +3,8 @@
 
 class wxString;
 class wxColour;
+class wxImage;
+class wxBitmap;
 
 struct ReplayData
 {
@@ -32,5 +34,9 @@ wxColour ColourDelta( const wxColour& colour, const int& delta );
 ReplayData GetReplayInfos ( wxString& ReplayPath );
 wxString GetColorString( const wxColour& color );
 wxColour GetColorFromStrng( const wxString color );
+
+void BlendImage(wxImage& source, wxImage& dest,int img_dim);
+wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size);
+wxBitmap* charArr2wxBitmapAddText(const unsigned char * arg, int size, const unsigned char * text, int text_size, unsigned int img_dim);
 
 #endif // SPRINGLOBBY_HEADERGUARD_UIUTILS_H

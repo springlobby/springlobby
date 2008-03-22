@@ -195,11 +195,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_main_sizer->Add( m_command_line, 0, wxEXPAND );
   m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
 
-  SetSizer( m_main_sizer );
-  Layout();
-
-  UpdateBattleInfo( true );
-
   m_splitter->SetMinimumPaneSize( 240 );
 
   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
@@ -213,6 +208,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
     m_battle.SetImReady ( true );
     m_ready_chk->Disable();
   }
+
+  UpdateBattleInfo( true );
+
+  SetSizer( m_main_sizer );
+  Layout();
 
 }
 

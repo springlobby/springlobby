@@ -72,7 +72,6 @@ class MainWindow : public wxFrame
 
   protected:
     // MainWindow variables
-
     Ui& m_ui;
 
     wxMenuItem* m_settings_menu;
@@ -92,6 +91,7 @@ class MainWindow : public wxFrame
     wxBitmap* m_battle_icon;
     wxBitmap* m_options_icon;
     wxBitmap* m_sp_icon;
+    wxBitmap* m_downloads_icon;
     wxBitmap* m_select_image;
 
     wxImageList* m_func_tab_images;

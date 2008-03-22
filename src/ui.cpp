@@ -255,14 +255,6 @@ void Ui::Quit()
   ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   sett().SaveSettings();
   m_main_win->forceSettingsFrameClose();
-
-//fixes for non-termination on win
-  m_main_win->Close();
-  m_thread->Kill();
-  m_con_win->Close();
-
-  if ( m_serv != 0 )
-    m_serv->Disconnect();
 }
 
 
@@ -877,7 +869,6 @@ void Ui::OnBattleStarted( Battle& battle )
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle ) {
-      if ( m_serv != 0 ) m_serv->DisableUdpPing();
       battle.GetMe().BattleStatus().ready = false;
       battle.SendMyBattleStatus();
       battle.GetMe().Status().in_game = true;
@@ -912,11 +903,6 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
 void Ui::OnSpringTerminated( bool success )
 {
   if ( !m_serv ) return;
-
-  Battle *battle=mw().GetJoinTab().GetCurrentBattle();
-
-  if(battle&&(battle->GetNatType() != NAT_None))m_serv->EnableUdpPing();
-
 
   m_serv->GetMe().Status().in_game = false;
   m_serv->GetMe().SendMyUserStatus();
