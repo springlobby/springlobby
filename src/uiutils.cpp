@@ -143,49 +143,43 @@ wxColour GetColorFromStrng( const wxString color )
   return wxColour( r%256, g%256, b%256 );
 }
 
-void BlendImage(wxImage& source, wxImage& dest, int img_dim)
+void BlendImage(wxImage& foreground, wxImage&  background, int img_dim)
 {
-    unsigned char* source_data = source.GetData();
-    unsigned char* dest_data = dest.GetData();
+    unsigned char* background_data = background.GetData();
+    unsigned char* foreground_data = foreground.GetData();
 
-
-    if ( sizeof (source_data) < sizeof (dest_data) )
+    if ( sizeof (background_data) != sizeof (foreground_data) )
     {
         wxLogDebugFunc(_T("size mismatch while blending"));
         return;
     }
 
-    if ( source.HasAlpha() && dest.HasAlpha() )
+    if ( background.HasAlpha() && foreground.HasAlpha() )
     {
-        unsigned char* source_alpha = source.GetAlpha();
-        unsigned char* dest_alpha = dest.GetAlpha();
+        unsigned char* background_alpha = background.GetAlpha();
+        unsigned char* foreground_alpha = foreground.GetAlpha();
         unsigned int pixel_count = img_dim*img_dim;
+
+        //SetData/Alpha needs these to be allocated with malloc
         unsigned char* new_data = (unsigned char*) malloc( pixel_count * 3 * sizeof(unsigned char) );
         unsigned char* new_alpha = (unsigned char*) malloc( pixel_count * sizeof(unsigned char) );
 
-        int i_a = 0;//
-        for ( unsigned int i = 0; i < pixel_count * 3;  )
+        for ( unsigned int i = 0, i_a = 0; i < pixel_count * 3; i+=3,  i_a++ )
         {
-            int al_s = source_alpha[i_a] ;
-            int al_d = dest_alpha[i_a] ;
-            {
-                new_data[i] = source_data[i] * al_d + dest_data[i] * ( 1 - al_d );
-                new_data[i+1] = source_data[i+1] * al_d + dest_data[i+1] * ( 1 - al_d );
-                new_data[i+2] = source_data[i+2] * al_d + dest_data[i+2] * ( 1 - al_d );
-                new_alpha[i_a] = al_d ;
-            }
-//            else
-//            {
-//                new_data[i] = dest_data[i];
-//                new_data[i+1] = dest_data[i+1];
-//                new_data[i+2] = dest_data[i+2];
-//                new_alpha[i_a] = dest_alpha[i_a];
-//            }
-            i_a++;
-            i+=3;
+            unsigned char back_alpha = background_alpha[i_a] ;
+            unsigned char fore_alpha = foreground_alpha[i_a] ;
+            float back_blend_fac = ( 255 - fore_alpha)/255.0;
+            float fore_blend_fac = fore_alpha/255.0 ;
+
+            new_data[i] =   foreground_data[i]   * fore_blend_fac + background_data[i]   * back_blend_fac ;
+            new_data[i+1] = foreground_data[i+1] * fore_blend_fac + background_data[i+1] * back_blend_fac ;
+            new_data[i+2] = foreground_data[i+2] * fore_blend_fac + background_data[i+2] * back_blend_fac ;
+            new_alpha[i_a]= fore_alpha           * fore_blend_fac + back_alpha           * back_blend_fac ;
         }
-        dest.SetData(new_data);
-        dest.SetAlpha(new_alpha);
+
+        //write data back
+        background.SetData(new_data);
+        background.SetAlpha(new_alpha);
     }
     else
     {
