@@ -255,14 +255,6 @@ void Ui::Quit()
   ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   sett().SaveSettings();
   m_main_win->forceSettingsFrameClose();
-
-//fixes for non-termination on win
-  m_main_win->Close();
-  m_thread->Kill();
-  m_con_win->Close();
-
-  if ( m_serv != 0 )
-    m_serv->Disconnect();
 }
 
 
