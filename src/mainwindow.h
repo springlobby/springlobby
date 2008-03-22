@@ -72,7 +72,6 @@ class MainWindow : public wxFrame
 
   protected:
     // MainWindow variables
-    wxBitmap* charArr2Image(const unsigned char * arg, int);
     Ui& m_ui;
 
     wxMenuItem* m_settings_menu;
