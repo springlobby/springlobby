@@ -70,6 +70,16 @@ void Settings::SetNoUDP(bool value)
   m_config->Write( _T("/General/NoUDP"), value );
 }
 
+int Settings::GetClientPort(){
+  int tmp;
+  m_config->Read( _T("/General/ClientPort"), &tmp, 0 );
+  return tmp;
+}
+
+void Settings::SetClientPort(int value){
+  m_config->Write( _T("/General/ClientPort"), value );
+}
+
 
 bool Settings::GetShowIPAddresses()
 {

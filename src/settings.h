@@ -39,6 +39,9 @@ class Settings
     bool GetNoUDP();
     void SetNoUDP(bool value);
 
+    int GetClientPort();
+    void SetClientPort(int value);
+
     bool GetShowIPAddresses();
     void SetShowIPAddresses(bool value);
 
