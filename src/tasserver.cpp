@@ -153,6 +153,12 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
   } else if ( subcmd == _T("/testmd5") ) {
     ExecuteCommand( _T("SERVERMSG"), GetPasswordHash(params) );
     return true;
+  } else if ( subcmd == _T("/hook") ) {
+    ExecuteCommand( _T("HOOK"), params );
+    return true;
+  } else if ( subcmd == _T("/quit") ) {
+    ExecuteCommand( _T("EXIT"), params );
+    return true;
   } else if ( subcmd == _T("/changepassword") ) {
     wxString oldpassword = GetPasswordHash( cmd.AfterFirst(' ').BeforeFirst(' ') );
     wxString newpassword = GetPasswordHash( cmd.AfterFirst(' ').AfterFirst(' ') );
