@@ -44,7 +44,7 @@ fi
 AC_ARG_VAR([SVNVERSION], [Produce a compact version number for a working copy.])
 AC_CHECK_PROGS([SVNVERSION], [svnversion false])
 
-AM_CONDITIONAL([USE_WINDRES], [test x$host_os = xmingw32msvc])
+AM_CONDITIONAL([USE_WINDRES], test x$host_os = xmingw32msvc)
 
 AC_MSG_CHECKING([if we can enable extra features that need wxWidgets-2.8])
 dnl we probably aren't supposed to use the function below, but it is the simplest way
@@ -58,6 +58,6 @@ fi
 
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.14])
-
+AC_MSG_CHECKING([hiihidhwihidhwih $host_os])
 AC_CONFIG_FILES([Makefile po/Makefile.in])
 AC_OUTPUT

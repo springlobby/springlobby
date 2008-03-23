@@ -210,7 +210,7 @@ springlobby_SOURCES = \
 	src/images/battle.xpm \
 	src/images/bot.xpm \
 	src/images/channel.xpm \
-	src/images/chat_icon.xpm \
+	src/images/chat_icon.png.h \
 	src/images/closed_game.xpm \
 	src/images/closed_pw_game.xpm \
 	src/images/close_hi.xpm \
@@ -221,13 +221,13 @@ springlobby_SOURCES = \
 	src/images/down.xpm \
 	src/images/exists.xpm \
 	src/images/ingame.xpm \
-	src/images/join_icon.xpm \
+	src/images/join_icon.png.h \
 	src/images/nexists.xpm \
 	src/images/nready_q.xpm \
 	src/images/nready_unsync.xpm \
 	src/images/open_game.xpm \
 	src/images/open_pw_game.xpm \
-	src/images/options_icon.xpm \
+	src/images/options_icon.png.h \
 	src/images/rank0.xpm \
 	src/images/rank1.xpm \
 	src/images/rank2.xpm \
@@ -237,7 +237,8 @@ springlobby_SOURCES = \
 	src/images/rank6.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
-	src/images/singleplayer_icon.xpm \
+	src/images/downloads_icon.png.h \
+	src/images/single_player_icon.png.h \
 	src/images/select_icon.xpm \
 	src/images/server.xpm \
 	src/images/spectator.xpm \
@@ -536,8 +537,9 @@ springlobby_SOURCES += \
 	src/settings++/custom_dialogs.h \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
-	src/settings++/helpmenufunctions.cpp
-
+	src/settings++/helpmenufunctions.cpp 
+	
+		
 if USE_WINDRES
 	springlobby_SOURCES += \
 		src/springlobby.rc
