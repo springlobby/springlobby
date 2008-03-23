@@ -558,7 +558,7 @@ void ChatPanel::Motd( const wxString& message )
 
 void ChatPanel::StatusMessage( const wxString& message )
 {
-  if(m_chatlog_text != 0){
+  if(m_chatlog_text == 0){
     wxLogMessage(_T("m_chatlog_text is NULL"));
   }else{
     wxFont f = m_chatlog_text->GetFont();

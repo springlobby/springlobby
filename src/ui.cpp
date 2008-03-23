@@ -704,7 +704,8 @@ void Ui::OnMotd( Server& server, const wxString& message )
 void Ui::OnServerMessage( Server& server, const wxString& message )
 {
   ChatPanel* panel = GetActiveChatPanel();
-  if ( panel != 0 ) {
+  if ( panel != 0 )
+  {
     panel->StatusMessage( message );
   } else {
     ShowMessage( _("Server message"), message );
