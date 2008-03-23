@@ -116,3 +116,16 @@ wxString User::GetRankName(int rank)
       }
       return _("no rank");
 }
+
+int User::GetBalanceRank(){
+  return GetStatus().rank;
+}
+
+wxString User::GetClan(){
+  wxString tmp=m_nick.AfterFirst('[');
+  if(tmp!=m_nick){
+    wxString clan=tmp.BeforeFirst(']');
+    if(clan!=tmp)return clan;
+  }
+  return wxString();
+}

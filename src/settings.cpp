@@ -80,14 +80,12 @@ void Settings::SetClientPort(int value){
   m_config->Write( _T("/General/ClientPort"), value );
 }
 
-
 bool Settings::GetShowIPAddresses()
 {
   bool tmp;
   m_config->Read( _T("/General/ShowIP"), &tmp, false );
   return tmp;
 }
-
 
 void Settings::SetShowIPAddresses(bool value){
   m_config->Write( _T("/General/ShowIP"), value );
