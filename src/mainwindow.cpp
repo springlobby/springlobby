@@ -7,11 +7,13 @@
 #include <wx/intl.h>
 #include <wx/textdlg.h>
 #include <wx/imaglist.h>
+#include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/sizer.h>
 #include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
+
 #include <stdexcept>
 
 #include "mainwindow.h"
@@ -25,16 +27,29 @@
 #include "mainsingleplayertab.h"
 #include "mainoptionstab.h"
 #include "iunitsync.h"
+#include "uiutils.h"
 
 #include "images/springlobby.xpm"
-#include "images/chat_icon.xpm"
-#include "images/join_icon.xpm"
-#include "images/singleplayer_icon.xpm"
-#include "images/options_icon.xpm"
+#include "images/chat_icon.png.h"
+#include "images/chat_icon_text.png.h"
+#include "images/join_icon.png.h"
+#include "images/join_icon_text.png.h"
+#include "images/single_player_icon.png.h"
+#include "images/single_player_icon_text.png.h"
+#include "images/options_icon.png.h"
+#include "images/options_icon_text.png.h"
 #include "images/select_icon.xpm"
+#include "images/downloads_icon.png.h"
+#include "images/downloads_icon_text.png.h"
 
 #include "settings++/frame.h"
+#include "settings++/custom_dialogs.h"
 
+#include "updater/versionchecker.h"
+
+#ifdef HAVE_WX28
+#include <wx/aboutdlg.h>
+#endif
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
@@ -47,10 +62,14 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_TRAC, MainWindow::OnReportBug )
   EVT_MENU( MENU_DOC, MainWindow::OnShowDocs )
   EVT_MENU( MENU_SETTINGSPP, MainWindow::OnShowSettingsPP )
+  EVT_MENU( MENU_VERSION, MainWindow::OnMenuVersion )
+  EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
+
 
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
 
 END_EVENT_TABLE()
+
 
 
 MainWindow::MainWindow( Ui& ui ) :
@@ -68,12 +87,13 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
-  m_menuTools->Append(MENU_CHAT, _("Open &chat..."));
+  m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
   m_menuTools->AppendSeparator();
   m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
+  m_menuTools->AppendSeparator();
+  m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
   m_settings_menu = new wxMenuItem( m_menuTools, MENU_SETTINGSPP, _("SpringSettings"), wxEmptyString, wxITEM_NORMAL );
-  
-  //m_settings_menu->Enable( false ); /// disable the spring settings tool until we have unitsync loaded, so we know for sure it's working
+  m_menuTools->Append (m_settings_menu);
 
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _("&About"));
@@ -90,10 +110,11 @@ MainWindow::MainWindow( Ui& ui ) :
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
 
-  m_chat_icon = new wxBitmap( chat_icon_xpm );
-  m_battle_icon = new wxBitmap( join_icon_xpm );
-  m_sp_icon = new wxBitmap( singleplayer_icon_xpm );
-  m_options_icon = new wxBitmap( options_icon_xpm );
+  m_chat_icon =  charArr2wxBitmapAddText( chat_icon_png , sizeof (chat_icon_png) , chat_icon_text_png, sizeof(chat_icon_text_png), 64 ) ;
+  m_battle_icon = charArr2wxBitmapAddText( join_icon_png , sizeof (join_icon_png), join_icon_text_png , sizeof (join_icon_text_png), 64 ) ;
+  m_sp_icon = charArr2wxBitmapAddText( single_player_icon_png , sizeof (single_player_icon_png), single_player_icon_text_png , sizeof (single_player_icon_text_png), 64 ) ;
+  m_options_icon =   charArr2wxBitmapAddText( options_icon_png , sizeof (options_icon_png), options_icon_text_png , sizeof (options_icon_text_png), 64 ) ;
+  m_downloads_icon = charArr2wxBitmapAddText( downloads_icon_png , sizeof (downloads_icon_png), downloads_icon_text_png , sizeof (downloads_icon_text_png), 64 ) ;
   m_select_image = new wxBitmap( select_icon_xpm );
 
   m_func_tab_images = new wxImageList( 64, 64 );
@@ -109,6 +130,8 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
+  //TODO insert real downloads panel
+  //m_func_tabs->AddPage( m_opts_tab, _T(""), false, 4 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -136,7 +159,9 @@ MainWindow::~MainWindow()
   sett().SetMainWindowTop( y );
   sett().SetMainWindowLeft( x );
   sett().SaveSettings();
+  m_ui.Quit();
   m_ui.OnMainWindowDestruct();
+  freeStaticBox();
 
   delete m_chat_icon;
   delete m_battle_icon;
@@ -154,6 +179,14 @@ void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
   dc.SelectObject( wxNullBitmap );
 }
 
+//void MainWindow::DrawTxtOnBmp( wxBitmap& canvas, wxString text, int x, int y )
+//{
+//  wxMemoryDC dc;
+//  dc.SelectObject( canvas );
+//
+//  dc.DrawText( text, x, y);
+//  dc.SelectObject( wxNullBitmap );
+//}
 
 void MainWindow::MakeImages()
 {
@@ -164,6 +197,7 @@ void MainWindow::MakeImages()
     DrawBmpOnBmp( img, *m_chat_icon, 0, 0 );
     m_func_tab_images->Add( img );
   } else {*/
+ // DrawTxtOnBmp( *m_battle_icon, _("Test"), 1,1);
     m_func_tab_images->Add( *m_chat_icon );
   //}
 
@@ -189,6 +223,8 @@ void MainWindow::MakeImages()
     m_func_tab_images->Add( img );
   } else {*/
     m_func_tab_images->Add( *m_options_icon );
+
+   // m_func_tab_images->Add( *m_downloads_icon );
   //}
 
 }
@@ -296,13 +332,37 @@ void MainWindow::OnMenuChat( wxCommandEvent& event )
   if ( !m_ui.IsConnected() ) return;
   wxString answer;
   if ( m_ui.AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
-    if (m_ui.GetServer().UserExists( STD_STRING(answer) ) ) {
-      OpenPrivateChat( m_ui.GetServer().GetUser( STD_STRING(answer) ) );
+    if (m_ui.GetServer().UserExists( answer ) ) {
+      OpenPrivateChat( m_ui.GetServer().GetUser( answer ) );
     }
   }
 
 }
 
+void MainWindow::OnMenuAbout( wxCommandEvent& event )
+{
+#ifdef HAVE_WX28
+    wxAboutDialogInfo info;
+	info.SetName(_T("SpringLobby"));
+	info.SetVersion (GetSpringLobbyVersion());
+	info.SetDescription(_("SpringLobby is a cross-plattform lobby client for the RTS Spring engine"));
+	//info.SetCopyright(_T("");
+	info.SetLicence(_T("GPL"));
+	info.AddDeveloper(_T("BrainDamage"));
+	info.AddDeveloper(_T("koshi"));
+	info.AddDeveloper(_T("semi_"));
+	info.AddDeveloper(_T("tc-"));
+    info.AddTranslator(_T("chaosch (simplified chinese)"));
+	info.AddTranslator(_T("lejocelyn (french)"));
+	info.AddTranslator(_T("Suprano (german)"));
+    info.AddTranslator(_T("tc- (swedish)"));
+	info.SetIcon(wxIcon(springlobby_xpm));
+	wxAboutBox(info);
+
+#else
+    customMessageBoxNoModal(SL_MAIN_ICON,_T("SpringLobby version: ")+GetSpringLobbyVersion(),_T("About"));
+#endif
+}
 
 void MainWindow::OnMenuConnect( wxCommandEvent& event )
 {
@@ -319,6 +379,37 @@ void MainWindow::OnMenuDisconnect( wxCommandEvent& event )
 void MainWindow::OnMenuQuit( wxCommandEvent& event )
 {
   m_ui.Quit();
+}
+
+//! @brief checks for latest version of SpringLobby via HTTP, and compares it with users current version.
+void MainWindow::OnMenuVersion( wxCommandEvent& event )
+{
+  wxString latestVersion = GetLatestVersion();
+  // Need to replace crap chars or versions will always be inequal
+  latestVersion.Replace(_T(" "), _T(""), true);
+  latestVersion.Replace(_T("\n"), _T(""), true);
+  latestVersion.Replace(_T("\t"), _T(""), true);
+  if (latestVersion == _T("-1"))
+  {
+    customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
+    return;
+  }
+  wxString myVersion = GetSpringLobbyVersion();
+
+  wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
+
+  if (latestVersion.IsSameAs(myVersion, false))
+  {
+    customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date!\n\n") + msg, _("Up to Date"));
+  }
+  else
+  {
+    int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like to visit a page with instructions on how to download the newest version?"), _("Not up to Date"), wxYES_NO);
+    if (answer == wxYES)
+    {
+      m_ui.OpenWebBrowser(_T("http://trac.springlobby.info/wiki/Install"));
+    }
+  }
 }
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
@@ -359,22 +450,6 @@ void MainWindow::OnUnitSyncReloaded()
   wxLogMessage( _T("Reloading Singleplayer tab") );
   GetSPTab().OnUnitSyncReloaded();
   wxLogMessage( _T("Singleplayer tab updated") );
-  if ( usync()->VersionSupports( USYNC_Sett_Handler ) )
-  {
-	  if (m_menubar->FindItem(MENU_SETTINGSPP)==0)
-	  {
-		  m_menuTools->Append( m_settings_menu );
-		  wxLogMessage( _T("SpringSettingsTool Enabled") );
-	  }
-  }
-  else
-  {
-	  if (m_menubar->FindItem(MENU_SETTINGSPP)!=0)
-	  {
-	 	m_menuTools->Remove( m_settings_menu );
-	 	wxLogMessage( _T("SpringSettingsTool Disabled") );
-	  }
-  }
 }
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent& event )

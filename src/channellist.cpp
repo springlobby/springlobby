@@ -4,6 +4,7 @@
 
 #include "channellist.h"
 #include "channel.h"
+#include "utils.h"
 
 const user_map_t::size_type SEEKPOS_INVALID = -1;
 
@@ -16,17 +17,16 @@ void ChannelList::AddChannel( Channel& channel )
   m_seekpos = SEEKPOS_INVALID;
 }
 
-void ChannelList::RemoveChannel( const std::string& name )
+void ChannelList::RemoveChannel( const wxString& name )
 {
   m_chans.erase( name );
   m_seekpos = SEEKPOS_INVALID;
 }
 
-Channel& ChannelList::GetChannel( const std::string& name )
+Channel& ChannelList::GetChannel( const wxString& name )
 {
   channel_iter_t u = m_chans.find(name);
-  if (u == m_chans.end())
-    throw std::logic_error("ChannelList::GetChannel(\"" + name + "\"): no such channel");
+  ASSERT_LOGIC( u != m_chans.end(), _T("ChannelList::GetChannel(\"") + name + _T("\"): no such channel"));
   return *u->second;
 }
 
@@ -41,7 +41,7 @@ Channel& ChannelList::GetChannel( channel_map_t::size_type index )
   return *m_seek->second;
 }
 
-bool ChannelList::ChannelExists( const std::string& name )
+bool ChannelList::ChannelExists( const wxString& name )
 {
   return m_chans.find( name ) != m_chans.end();
 }

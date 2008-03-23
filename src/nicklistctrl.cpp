@@ -50,7 +50,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* p
   col.SetImage( -1 );
   InsertColumn( 2, col, _T("Rank") );
   col.SetText( _("Nickname") );
-  col.SetImage( ICON_DOWN );
+  col.SetImage( icons().ICON_DOWN );
   InsertColumn( 3, col, _T("Nickname") );
 
   m_sortorder[0].col = 0;
@@ -86,7 +86,7 @@ NickListCtrl::~NickListCtrl()
 
 void NickListCtrl::AddUser( User& user )
 {
-  int index = InsertItem( 0, IconImageList::GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+  int index = InsertItem( 0, icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
   SetItemData( index, (wxUIntPtr)&user );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
   UserUpdated( index );
@@ -121,10 +121,10 @@ void NickListCtrl::UserUpdated( User& user )
 void NickListCtrl::UserUpdated( const int& index )
 {
   User& user = *((User*)GetItemData( index ));
-  SetItemImage( index, IconImageList::GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
-  SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( user.GetCountry() ) );
-  SetItemColumnImage( index, 2, IconImageList::GetRankIcon( user.GetStatus().rank ) );
-  SetItem( index, 3, WX_STRING(user.GetNick()) );
+  SetItemImage( index, icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+  SetItemColumnImage( index, 1, icons().GetFlagIcon( user.GetCountry() ) );
+  SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
+  SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
   Sort();
 
@@ -182,7 +182,7 @@ void NickListCtrl::OnColClick( wxListEvent& event )
 
 
   GetColumn( m_sortorder[0].col, col );
-  col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
+  col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
   Sort();
@@ -206,9 +206,9 @@ int wxCALLBACK NickListCtrl::ComparePlayernameUP(long item1, long item2, long so
 {
     // inverse the order
 
-    if ( WX_STRING(((User*)item1)->GetNick()).MakeUpper() < WX_STRING(((User*)item2)->GetNick()).MakeUpper() )
+    if ( ((User*)item1)->GetNick().MakeUpper() < ((User*)item2)->GetNick().MakeUpper() )
         return -1;
-    if ( WX_STRING(((User*)item1)->GetNick()).MakeUpper() > WX_STRING(((User*)item2)->GetNick()).MakeUpper() )
+    if ( ((User*)item1)->GetNick().MakeUpper() > ((User*)item2)->GetNick().MakeUpper() )
         return 1;
 
     return 0;
@@ -218,9 +218,9 @@ int wxCALLBACK NickListCtrl::ComparePlayernameUP(long item1, long item2, long so
 int wxCALLBACK NickListCtrl::ComparePlayernameDOWN(long item1, long item2, long sortData )
 {
     // inverse the order
-    if ( WX_STRING(((User*)item1)->GetNick()).MakeUpper() < WX_STRING(((User*)item2)->GetNick()).MakeUpper() )
+    if ( ((User*)item1)->GetNick().MakeUpper() < ((User*)item2)->GetNick().MakeUpper() )
         return 1;
-    if ( WX_STRING(((User*)item1)->GetNick()).MakeUpper() > WX_STRING(((User*)item2)->GetNick()).MakeUpper() )
+    if ( ((User*)item1)->GetNick().MakeUpper() > ((User*)item2)->GetNick().MakeUpper() )
         return -1;
 
     return 0;
@@ -319,9 +319,9 @@ int wxCALLBACK NickListCtrl::ComparePlayercountryUP(long item1, long item2, long
 {
     // inverse the order
 
-    if ( WX_STRING(((User*)item1)->GetCountry()).MakeUpper() < WX_STRING(((User*)item2)->GetCountry()).MakeUpper() )
+    if ( ((User*)item1)->GetCountry().MakeUpper() < ((User*)item2)->GetCountry().MakeUpper() )
         return -1;
-    if ( WX_STRING(((User*)item1)->GetCountry()).MakeUpper() > WX_STRING(((User*)item2)->GetCountry()).MakeUpper() )
+    if ( ((User*)item1)->GetCountry().MakeUpper() > ((User*)item2)->GetCountry().MakeUpper() )
         return 1;
 
     return 0;
@@ -330,9 +330,9 @@ int wxCALLBACK NickListCtrl::ComparePlayercountryUP(long item1, long item2, long
 int wxCALLBACK NickListCtrl::ComparePlayercountryDOWN(long item1, long item2, long sortData )
 {
     // inverse the order
-    if ( WX_STRING(((User*)item1)->GetCountry()).MakeUpper() < WX_STRING(((User*)item2)->GetCountry()).MakeUpper() )
+    if ( ((User*)item1)->GetCountry().MakeUpper() < ((User*)item2)->GetCountry().MakeUpper() )
         return 1;
-    if ( WX_STRING(((User*)item1)->GetCountry()).MakeUpper() > WX_STRING(((User*)item2)->GetCountry()).MakeUpper() )
+    if ( ((User*)item1)->GetCountry().MakeUpper() > ((User*)item2)->GetCountry().MakeUpper() )
         return -1;
 
     return 0;
@@ -386,7 +386,7 @@ void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
 					break;
 
 				case 1: // country
-					m_tiptext =  GetFlagNameFromCountryCode(WX_STRING(user->GetCountry()).MakeUpper());
+					m_tiptext =  GetFlagNameFromCountryCode(user->GetCountry().MakeUpper());
 					break;
 
 				case 2: // rank
@@ -394,7 +394,7 @@ void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
 					break;
 
 				case 3: // nickname
-					m_tiptext = WX_STRING(user->GetNick());
+					m_tiptext = user->GetNick();
 					break;
 
 				default:

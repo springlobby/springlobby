@@ -1,21 +1,11 @@
 #ifndef MMOPTIONSORAPPER_H_
 #define MMOPTIONSORAPPER_H_
 
-#include "mmoptionmodel.h"
-#include <map>
+#include "iunitsync.h"
+
 #include <vector>
 #include <utility>
 #include <wx/string.h>
-
-typedef std::map<wxString,mmOptionBool> optionMapBool;
-typedef std::map<wxString,mmOptionFloat> optionMapFloat;
-typedef std::map<wxString,mmOptionString> optionMapString;
-typedef std::map<wxString,mmOptionList> optionMapList;
-
-typedef std::map<wxString,mmOptionBool>::iterator optionMapBoolIter;
-typedef std::map<wxString,mmOptionFloat>::iterator optionMapFloatIter;
-typedef std::map<wxString,mmOptionString>::iterator optionMapStringIter;
-typedef std::map<wxString,mmOptionList>::iterator optionMapListIter;
 
 typedef std::pair < wxString,wxString> wxStringPair;
 typedef std::pair < wxString, wxStringPair> wxStringTriple;
@@ -23,14 +13,14 @@ typedef std::vector<wxStringPair> wxStringPairVec;
 typedef std::vector<wxStringTriple> wxStringTripleVec;
 typedef std::map<wxString,wxString> wxStringMap;
 
-typedef int GameOption;
+class GameOptions;
 
 //! enum to differentiate option category easily at runtime
-enum {
+enum GameOption{
   EngineOption = 2,
 	MapOption    = 1,
 	ModOption    = 0,
-	LastOption = 2
+	LastOption = 3
 };// should reflect: optionCategoriesCount
 
 class mmOptionsWrapper
@@ -50,7 +40,7 @@ public:
 	 * \param flag decides which type of option to load
 	 * \return true if load successful, false otherwise
 	 */
-	bool loadOptions(GameOption flag, wxString mapname = _T(""));
+	bool loadOptions(GameOption flag, wxString name = _T(""));
 	//! checks if given key can be found in specified container
 	/*!
 	 * \param key the key that should be checked for existance in containers
@@ -59,7 +49,7 @@ public:
 	 * \param optType will contain the corresponding OptionType if key is found, opt_undefined otherwise
 	 * \return true if key is found, false otherwise
 	 */
-	bool keyExists(wxString key,GameOption flag,bool showError, OptionType* optType);
+	bool keyExists(wxString key,GameOption flag,bool showError, OptionType& optType);
 	//! given a vector of key/value pairs sets the appropiate options to new values
 	/*!	Every new value is tested for meeting boundary conditions, type, etc.
 	 * If test fails error is logged and false is returned.
@@ -109,11 +99,8 @@ public:
 	wxString GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag);
 
 //private:
-	const static int optionCategoriesCount = 2;
-	optionMapBool* m_boolMaps[optionCategoriesCount];
-	optionMapFloat* m_floatMaps[optionCategoriesCount];
-	optionMapString* m_stringMaps[optionCategoriesCount];
-	optionMapList* m_listMaps[optionCategoriesCount];
+	const static int optionCategoriesCount = 3;
+	GameOptions opts[optionCategoriesCount];
 protected:
 	//! used for code clarity in setOptions()
 	bool setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType);

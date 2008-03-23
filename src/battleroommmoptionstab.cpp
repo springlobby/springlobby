@@ -1,3 +1,4 @@
+
 #include "battleroommmoptionstab.h"
 
 #include <wx/sizer.h>
@@ -7,14 +8,16 @@
 #include <wx/combobox.h>
 #include <wx/stattext.h>
 #include <wx/defs.h>
+#include <wx/intl.h>
+#include <map>
+#include <stdexcept>
+
 #include "utils.h"
 #include "mmoptionswrapper.h"
 #include "ibattle.h"
 #include "spinctld.h"
-#include <map>
 #include "settings++/custom_dialogs.h"
 #include "server.h"
-#include <stdexcept>
 
 const char sep = *("_");
 const wxString wxsep = _T("_");
@@ -58,7 +61,7 @@ BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
 void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag)
 {
 	wxString pref = wxString::Format( _T("%d"),optFlag) + wxsep;
-	mmOptionsWrapper* optWrap = m_battle.CustomBattleOptions();
+	mmOptionsWrapper optWrap = *m_battle.CustomBattleOptions();
 	bool enable = m_battle.IsFounderMe();
 	wxFlexGridSizer* cbxSizer =  new wxFlexGridSizer( 2, 2, 10, 10 );
 	wxFlexGridSizer* spinSizer =  new wxFlexGridSizer( 2, 2, 10, 10 );
@@ -66,7 +69,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 	wxFlexGridSizer* chkSizer = new wxFlexGridSizer( 2, 2, 10, 10 );
 
 	int ctrl_count = 0;
-	for (optionMapBoolIter i = optWrap->m_boolMaps[optFlag]->begin(); i != optWrap->m_boolMaps[optFlag]->end();++i)
+	for (optionMapBoolIter i = optWrap.opts[optFlag].bool_map.begin(); i != optWrap.opts[optFlag].bool_map.end();++i)
 		{
 			mmOptionBool current = i->second;
 			wxCheckBox* temp = new wxCheckBox(this,BOOL_START_ID+ctrl_count,current.name);
@@ -80,7 +83,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		}
 
 	ctrl_count = 0;
-	for ( optionMapFloatIter it = (*optWrap->m_floatMaps[optFlag]).begin(); it != (*optWrap->m_floatMaps[optFlag]).end(); ++it)
+	for ( optionMapFloatIter it = optWrap.opts[optFlag].float_map.begin(); it != optWrap.opts[optFlag].float_map.end(); ++it)
 	{
 			mmOptionFloat current = it->second;
 			wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
@@ -101,7 +104,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 	}
 
 	ctrl_count = 0;
-	for ( optionMapListIter it = (*optWrap->m_listMaps[optFlag]).begin(); it != (*optWrap->m_listMaps[optFlag]).end(); ++it)
+	for ( optionMapListIter it = optWrap.opts[optFlag].list_map.begin(); it != optWrap.opts[optFlag].list_map.end(); ++it)
 	{
 		mmOptionList current = it->second;
 		wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
@@ -125,7 +128,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 	}
 
 	ctrl_count = 0;
-	for ( optionMapStringIter it = (*optWrap->m_stringMaps[optFlag]).begin(); it != (*optWrap->m_stringMaps[optFlag]).end(); ++it)
+	for ( optionMapStringIter it = optWrap.opts[optFlag].string_map.begin(); it != optWrap.opts[optFlag].string_map.end(); ++it)
 	{
 		mmOptionString current = it->second;
 		wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
@@ -160,7 +163,7 @@ void BattleroomMMOptionsTab::OnChkBoxChange(wxCommandEvent& event)
 	long gameoption ;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
 
-	if( optWrap->setSingleOption( key , (box->GetValue() ? _T("1") : _T("0")) , int(gameoption) ) );
+	if( optWrap->setSingleOption( key , (box->GetValue() ? _T("1") : _T("0")) , (GameOption)gameoption ) );
 	{
         if (m_battle.IsFounderMe())
         {
@@ -177,9 +180,9 @@ void BattleroomMMOptionsTab::OnComBoxChange(wxCommandEvent& event)
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
-	wxString itemKey = optWrap->GetNameListOptItemKey(key,  box->GetValue(), int(gameoption) );
+	wxString itemKey = optWrap->GetNameListOptItemKey(key,  box->GetValue(), (GameOption)gameoption );
 
-	if(optWrap->setSingleOption( key, itemKey, int(gameoption) ) )
+	if(optWrap->setSingleOption( key, itemKey, (GameOption)gameoption ) )
 	{
         if (m_battle.IsFounderMe())
         {
@@ -195,7 +198,7 @@ void BattleroomMMOptionsTab::OnTextCtrlChange(wxCommandEvent& event)
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
-	if(optWrap->setSingleOption( key, box->GetValue(), int(gameoption) ) )
+	if(optWrap->setSingleOption( key, box->GetValue(), (GameOption)gameoption ) )
 	{
 		if (m_battle.IsFounderMe())
 		{
@@ -212,7 +215,7 @@ void BattleroomMMOptionsTab::OnSpinCtrlChange(wxSpinEvent& event)
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
-	if(optWrap->setSingleOption( key,wxString::Format( _T("%f"),box->GetValue() ), int(gameoption) ) )
+	if(optWrap->setSingleOption( key,wxString::Format( _T("%f"),box->GetValue() ), (GameOption)gameoption ) )
 	{
 		if (m_battle.IsFounderMe())
 		{
@@ -227,7 +230,7 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 	long gameoption;
 	controlName.BeforeFirst(sep).ToLong(&gameoption);
 	wxString optKey = controlName.AfterFirst(sep);
-	wxString value = optWrap->getSingleValue( optKey, int(gameoption) );
+	wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
 	if ( m_chkbox_map.find(controlName) != m_chkbox_map.end() )
 	{
 		wxCheckBox* cur = m_chkbox_map[controlName] ;
@@ -239,7 +242,7 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 	 if ( m_combox_map.find(controlName) != m_combox_map.end() )
 	{
 		wxComboBox* cur = m_combox_map[controlName];
-		cur->SetValue(optWrap->GetNameListOptValue( optKey,  gameoption));
+		cur->SetValue(optWrap->GetNameListOptValue( optKey, (GameOption)gameoption));
 	}
 
 	 if ( m_textctrl_map.find(controlName) != m_textctrl_map.end() )
@@ -325,6 +328,8 @@ void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
 			setupOptionsSizer(m_map_layout,MapOption);
 			m_map_options_sizer->Add( m_map_layout, 1, wxEXPAND, 5 );
 			break;
+        default:
+            break;
 	}
 
 

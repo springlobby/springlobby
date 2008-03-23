@@ -33,11 +33,15 @@ ChatLog::~ChatLog()
 {
   if ( m_active && m_logfile ) {
     wxDateTime now = wxDateTime::Now();
-    WriteLine( _("### Session Closed at [") + now.Format( _("%Y-%m-%d %H:%M") ) + _("]") );
-    WriteLine( _(" \n \n \n") );
+    WriteLine( _("### Session Closed at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _("]") );
+    WriteLine( _T(" \n \n \n") );
     if ( m_logfile->IsOpened() ) m_logfile->Close();
   }
-  delete m_logfile;
+  if (m_logfile != 0)
+  {
+  	delete m_logfile;
+	m_logfile = 0;
+  }
 }
 
 
@@ -49,7 +53,7 @@ bool ChatLog::AddMessage(const wxString& text)
   else if ( !m_logfile) {
     m_active = OpenLogFile(m_server,m_room);
   }
-  return (m_active)? WriteLine(LogTime()+_(" ")+text+_("\n")) : false;
+  return (m_active)? WriteLine(LogTime()+_T(" ")+text+_T("\n")) : false;
 }
 
 
@@ -123,6 +127,6 @@ bool ChatLog::OpenLogFile(const wxString& server,const wxString& room)
 wxString ChatLog::LogTime()
 {
   wxDateTime now = wxDateTime::Now();
-  return  _("[") + now.Format( _("%H:%M") ) + _("]");
+  return  _T("[") + now.Format( _T("%H:%M") ) + _T("]");
 }
 

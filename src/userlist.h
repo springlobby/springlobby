@@ -2,12 +2,12 @@
 #define SPRINGLOBBY_HEADERGUARD_USERLIST_H
 
 #include <map>
-#include <string>
+#include <wx/string.h>
 
 class User;
 
 //! @brief mapping from nick to user object
-typedef std::map<std::string, User*> user_map_t;
+typedef std::map<wxString, User*> user_map_t;
 //! @brief iterator for user map
 typedef user_map_t::iterator user_iter_t;
 
@@ -16,10 +16,10 @@ class UserList
   public:
     UserList();
     void AddUser( User& user );
-    void RemoveUser( std::string const& nick );
-    User& GetUser( std::string const& nick );
+    void RemoveUser( wxString const& nick );
+    User& GetUser( wxString const& nick );
     User& GetUser( user_map_t::size_type index );
-    bool UserExists( std::string const& nick );
+    bool UserExists( wxString const& nick );
     user_map_t::size_type GetNumUsers();
 
   private:

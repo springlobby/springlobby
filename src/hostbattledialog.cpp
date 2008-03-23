@@ -17,6 +17,7 @@
 #include <wx/radiobut.h>
 #include <wx/textctrl.h>
 #include <wx/statbmp.h>
+#include <wx/checkbox.h>
 
 #include "hostbattledialog.h"
 #include "settings.h"
@@ -36,8 +37,9 @@
 
 BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
 
-  EVT_BUTTON              ( HOST_CANCEL, HostBattleDialog::OnCancel )
-  EVT_BUTTON              ( HOST_OK,     HostBattleDialog::OnOk     )
+  EVT_BUTTON              ( HOST_CANCEL, HostBattleDialog::OnCancel    )
+  EVT_BUTTON              ( HOST_OK,     HostBattleDialog::OnOk        )
+  EVT_RADIOBOX            ( CHOSE_NAT,   HostBattleDialog::OnNatChange )
 
 END_EVENT_TABLE()
 
@@ -56,7 +58,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_desc_lbl->Wrap( -1 );
 	m_desc_sizer->Add( m_desc_lbl, 1, wxALL, 5 );
 
-	m_desc_text = new wxTextCtrl( this, wxID_ANY, WX_STRING( sett().GetLastHostDescription() ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_desc_text = new wxTextCtrl( this, wxID_ANY, sett().GetLastHostDescription(), wxDefaultPosition, wxDefaultSize, 0 );
 	m_desc_text->SetToolTip( _("A short description of the game, this will show up in the battle list.") );
 
 	m_desc_sizer->Add( m_desc_text, 2, wxALL, 5 );
@@ -85,7 +87,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_pwd_lbl->Wrap( -1 );
 	m_pwd_sizer->Add( m_pwd_lbl, 1, wxALL, 5 );
 
-	m_pwd_text = new wxTextCtrl( this, wxID_ANY, WX_STRING( sett().GetLastHostPassword() ), wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
+	m_pwd_text = new wxTextCtrl( this, wxID_ANY, sett().GetLastHostPassword(), wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
 	m_pwd_text->SetToolTip( _("Password needed to join game. Keep empty for no password") );
 
 	m_pwd_sizer->Add( m_pwd_text, 1, wxALL, 5 );
@@ -104,7 +106,11 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_port_text->SetToolTip( _("UDP port to host game on. Default is 8452.") );
 
 	m_port_sizer->Add( m_port_text, 1, wxALL, 5 );
-	m_port_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+
+	m_port_test_check = new wxCheckBox( this, wxID_ANY, _("Test firewall"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_port_test_check->SetValue( sett().GetTestHostPort() );
+
+	m_port_sizer->Add( m_port_test_check, 1, wxALL|wxEXPAND, 5 );
 
 	m_main_sizer->Add( m_port_sizer, 0, wxEXPAND, 5 );
 
@@ -121,12 +127,15 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	wxBoxSizer* m_pl_nat_sizer;
 	m_pl_nat_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	wxString m_nat_radiosChoices[] = { _("None"), _("Hole punching"), _("Fixed source ports") };
+	wxString m_nat_radiosChoices[] = { _("None"), _("Hole punching")/*, _("Fixed source ports")*/ };
 	int m_nat_radiosNChoices = sizeof( m_nat_radiosChoices ) / sizeof( wxString );
-	m_nat_radios = new wxRadioBox( this, wxID_ANY, _("NAT traversal"), wxDefaultPosition, wxDefaultSize, m_nat_radiosNChoices, m_nat_radiosChoices, 1, wxRA_SPECIFY_COLS );
-	m_nat_radios->SetSelection( 0 );
-	m_nat_radios->Enable( false );
-	m_nat_radios->SetToolTip( _("NAT traversal to use, currently this feature is not supported by SpringLobby.") );
+	m_nat_radios = new wxRadioBox( this, CHOSE_NAT, _("NAT traversal"), wxDefaultPosition, wxDefaultSize, m_nat_radiosNChoices, m_nat_radiosChoices, 1, wxRA_SPECIFY_COLS );
+	m_nat_radios->SetSelection(sett().GetLastHostNATSetting());
+
+	//m_nat_radios->Enable( false );
+  m_nat_radios->Enable( true );
+
+	m_nat_radios->SetToolTip( _("NAT traversal to use. Experimental support.") );
 
 	m_pl_nat_sizer->Add( m_nat_radios, 1, wxALL|wxEXPAND, 5 );
 
@@ -203,6 +212,8 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 
 	m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
+	m_port_test_check->Enable( m_nat_radios->GetSelection() == 0 );
+
 	this->SetSizer( m_main_sizer );
 	this->Layout();
 
@@ -216,10 +227,10 @@ void HostBattleDialog::ReloadModList()
   try {
     for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
       const UnitSyncMod& m = usync()->GetMod( i );
-      m_mod_pic->Insert( WX_STRING(m.name), i );
+      m_mod_pic->Insert( m.name, i );
     }
   } catch (...) {}
-  wxString last = WX_STRING( sett().GetLastHostMod() );
+  wxString last = sett().GetLastHostMod();
   if ( last != wxEmptyString ) m_mod_pic->SetSelection( m_mod_pic->FindString( last ) );
 }
 
@@ -232,12 +243,13 @@ void HostBattleDialog::OnOk( wxCommandEvent& event )
     return;
   }
 
-  sett().SetLastHostDescription( STD_STRING(m_desc_text->GetValue()) );
-  sett().SetLastHostMod( STD_STRING(m_mod_pic->GetString(m_mod_pic->GetSelection())) );
-  sett().SetLastHostPassword( STD_STRING(m_pwd_text->GetValue()) );
+  sett().SetLastHostDescription( m_desc_text->GetValue() );
+  sett().SetLastHostMod( m_mod_pic->GetString(m_mod_pic->GetSelection()) );
+  sett().SetLastHostPassword( m_pwd_text->GetValue() );
   long tmp = DEFSETT_SPRING_PORT;
   m_port_text->GetValue().ToLong( &tmp );
   sett().SetLastHostPort( tmp );
+  sett().SetTestHostPort( m_port_test_check->GetValue() );
   sett().SetLastHostPlayerNum( m_players_slide->GetValue() );
   sett().SetLastHostNATSetting( m_nat_radios->GetSelection() );
   sett().SetLastRankLimit( GetSelectedRank() );
@@ -262,4 +274,9 @@ int HostBattleDialog::GetSelectedRank()
   if ( m_rank5_radio->GetValue() ) return 500;
   if ( m_rank6_radio->GetValue() ) return 600;
   return 000;
+}
+
+void HostBattleDialog::OnNatChange( wxCommandEvent& event  )
+{
+  m_port_test_check->Enable( m_nat_radios->GetSelection() == 0 );
 }

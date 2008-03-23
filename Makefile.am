@@ -1,10 +1,11 @@
-c## the following clause may NOT be split, b/c of autoreconf 2.61 and older
+## the following clause may NOT be split, b/c of autoreconf 2.61 and older
 ## the --install requires automake 1.10 which was released in 2006
 ## the --install can be edited out to use older automake
 ACLOCAL_AMFLAGS = -I m4 --install
 
 AM_CPPFLAGS = \
-	$(WX_CPPFLAGS)
+	$(WX_CPPFLAGS) \
+	-DLOCALEDIR=\"$(localedir)\"
 
 # strict aliasing check is disabled, because wxWidgets headers have problems
 AM_CXXFLAGS = \
@@ -18,6 +19,8 @@ dist_desktop_DATA = \
 pixmapdir = $(datadir)/pixmaps
 dist_pixmap_DATA = \
 	src/images/springlobby.svg
+
+SUBDIRS = po
 
 ## if you don't have the required version of autoconf, comment out the
 ## following clause, in which case you may NOT distribute the result!
@@ -62,6 +65,8 @@ clean-local:
 # the following line is searched for in a script to add filenames under it
 springlobby_SOURCES = \
 	revision.cpp \
+	src/updater/versionchecker.cpp \
+	src/updater/versionchecker.h \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
 	src/revision.cpp.in \
@@ -106,6 +111,7 @@ springlobby_SOURCES = \
 	src/battlelistctrl.h \
 	src/battlelistfilter.cpp \
 	src/battlelistfilter.h \
+	src/battlelistfiltervalues.h \
 	src/battlelist.cpp \
 	src/battlelist.h \
 	src/battlelisttab.cpp \
@@ -204,7 +210,7 @@ springlobby_SOURCES = \
 	src/images/battle.xpm \
 	src/images/bot.xpm \
 	src/images/channel.xpm \
-	src/images/chat_icon.xpm \
+	src/images/chat_icon.png.h \
 	src/images/closed_game.xpm \
 	src/images/closed_pw_game.xpm \
 	src/images/close_hi.xpm \
@@ -215,13 +221,13 @@ springlobby_SOURCES = \
 	src/images/down.xpm \
 	src/images/exists.xpm \
 	src/images/ingame.xpm \
-	src/images/join_icon.xpm \
+	src/images/join_icon.png.h \
 	src/images/nexists.xpm \
 	src/images/nready_q.xpm \
 	src/images/nready_unsync.xpm \
 	src/images/open_game.xpm \
 	src/images/open_pw_game.xpm \
-	src/images/options_icon.xpm \
+	src/images/options_icon.png.h \
 	src/images/rank0.xpm \
 	src/images/rank1.xpm \
 	src/images/rank2.xpm \
@@ -231,7 +237,8 @@ springlobby_SOURCES = \
 	src/images/rank6.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
-	src/images/singleplayer_icon.xpm \
+	src/images/downloads_icon.png.h \
+	src/images/single_player_icon.png.h \
 	src/images/select_icon.xpm \
 	src/images/server.xpm \
 	src/images/spectator.xpm \
@@ -530,8 +537,9 @@ springlobby_SOURCES += \
 	src/settings++/custom_dialogs.h \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
-	src/settings++/helpmenufunctions.cpp
-
+	src/settings++/helpmenufunctions.cpp 
+	
+		
 if USE_WINDRES
 	springlobby_SOURCES += \
 		src/springlobby.rc

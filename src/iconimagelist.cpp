@@ -72,68 +72,72 @@
 
 IconImageList::IconImageList() : wxImageList(16,16)
 {
+  ICON_ADMIN = Add( wxBitmap(admin_xpm) );
+  ICON_ADMIN_AWAY = Add( wxBitmap(admin_away_xpm) );
+  ICON_ADMIN_BROOM = Add( wxBitmap(admin_broom_xpm) );
+  ICON_ADMIN_INGAME = Add( wxBitmap(admin_ingame_xpm) );
 
-  Add( wxBitmap(admin_xpm) );
-  Add( wxBitmap(admin_away_xpm) );
-  Add( wxBitmap(admin_broom_xpm) );
-  Add( wxBitmap(admin_ingame_xpm) );
+  ICON_BOT = Add( wxBitmap(bot_xpm) );
+  ICON_BOT_BROOM = Add( wxBitmap(bot_broom_xpm) );
+  ICON_BOT_INGAME = Add( wxBitmap(bot_ingame_xpm) );
 
-  Add( wxBitmap(bot_xpm) );
-  Add( wxBitmap(bot_broom_xpm) );
-  Add( wxBitmap(bot_ingame_xpm) );
+  ICON_AWAY = Add( wxBitmap(away_xpm) );
+  ICON_BROOM = Add( wxBitmap(broom_xpm) );
+  ICON_INGAME = Add( wxBitmap(ingame_xpm) );
 
-  Add( wxBitmap(away_xpm) );
-  Add( wxBitmap(broom_xpm) );
-  Add( wxBitmap(ingame_xpm) );
+  ICON_OP = Add( wxBitmap(chanop_xpm) );
+  ICON_OP_AWAY = Add( wxBitmap(chanop_away_xpm) );
+  ICON_OP_BROOM = Add( wxBitmap(chanop_broom_xpm) );
+  ICON_OP_INGAME = Add( wxBitmap(chanop_ingame_xpm) );
 
-  Add( wxBitmap(chanop_xpm) );
-  Add( wxBitmap(chanop_away_xpm) );
-  Add( wxBitmap(chanop_broom_xpm) );
-  Add( wxBitmap(chanop_ingame_xpm) );
+  ICON_UP = Add( wxBitmap(up_xpm) );
+  ICON_DOWN = Add( wxBitmap(down_xpm) );
 
-  Add( wxBitmap(up_xpm) );
-  Add( wxBitmap(down_xpm) );
+  ICON_RANK0 = Add( wxBitmap(rank0_xpm) );
+  ICON_RANK1 = Add( wxBitmap(rank1_xpm) );
+  ICON_RANK2 = Add( wxBitmap(rank2_xpm) );
+  ICON_RANK3 = Add( wxBitmap(rank3_xpm) );
+  ICON_RANK4 = Add( wxBitmap(rank4_xpm) );
+  ICON_RANK5 = Add( wxBitmap(rank5_xpm) );
+  ICON_RANK6 = Add( wxBitmap(rank6_xpm) );
 
-  Add( wxBitmap(rank0_xpm) );
-  Add( wxBitmap(rank1_xpm) );
-  Add( wxBitmap(rank2_xpm) );
-  Add( wxBitmap(rank3_xpm) );
-  Add( wxBitmap(rank4_xpm) );
-  Add( wxBitmap(rank5_xpm) );
-  Add( wxBitmap(rank6_xpm) );
+  ICON_READY = ICON_OPEN_GAME = Add( wxBitmap(open_game_xpm) );
+  ICON_OPEN_PW_GAME = Add( wxBitmap(open_pw_game_xpm) );
+  ICON_NREADY = ICON_CLOSED_GAME = Add( wxBitmap(closed_game_xpm) );
+  ICON_CLOSED_PW_GAME = Add( wxBitmap(closed_pw_game_xpm) );
+  ICON_STARTED_GAME = Add( wxBitmap(started_game_xpm) );
 
-  Add( wxBitmap(open_game_xpm) );
-  Add( wxBitmap(open_pw_game_xpm) );
-  Add( wxBitmap(closed_game_xpm) );
-  Add( wxBitmap(closed_pw_game_xpm) );
-  Add( wxBitmap(started_game_xpm) );
+  ICON_READY_UNSYNC = Add( wxBitmap(ready_unsync_xpm) );
+  ICON_NREADY_UNSYNC = Add( wxBitmap(nready_unsync_xpm) );
+  ICON_READY_QSYNC = Add( wxBitmap(ready_q_xpm) );
+  ICON_NREADY_QSYNC = Add( wxBitmap(nready_q_xpm) );
 
-  Add( wxBitmap(ready_unsync_xpm) );
-  Add( wxBitmap(nready_unsync_xpm) );
-  Add( wxBitmap(ready_q_xpm) );
-  Add( wxBitmap(nready_q_xpm) );
+  ICON_NEXISTS = Add( wxBitmap(nexists_xpm) );
+  ICON_EXISTS = Add( wxBitmap(exists_xpm) );
 
-  Add( wxBitmap(nexists_xpm) );
-  Add( wxBitmap(exists_xpm) );
+  ICON_SPECTATOR = Add( wxBitmap(spectator_xpm) );
+  ICON_HOST = Add( wxBitmap(host_xpm) );
+  ICON_HOST_SPECTATOR = Add( wxBitmap(host_spectator_xpm) );
 
-  Add( wxBitmap(spectator_xpm) );
-  Add( wxBitmap(host_xpm) );
-  Add( wxBitmap(host_spectator_xpm) );
-
-  Add( wxBitmap(arm_xpm) );
-  Add( wxBitmap(core_xpm) );
-
-  for ( int i = 0; i < NUM_COLOUR_ICONS; i++ ) Add( wxBitmap(colourbox_xpm) );
+  ICON_ARM = Add( wxBitmap(arm_xpm) );
+  ICON_CORE = Add( wxBitmap(core_xpm) );
 
   SetColourIcon( 0, wxColour( 255,   0,   0 ) );
   SetColourIcon( 1, wxColour(   0, 255,   0 ) );
   SetColourIcon( 2, wxColour(   0,   0, 255 ) );
 
-  Add( wxBitmap(unknown_flag_xpm) );
+  ICON_UNK_FLAG = Add( wxBitmap(unknown_flag_xpm) );
 
-  AddFlagImages( *this );
+  ICON_FLAGS_BASE = AddFlagImages( *this );
 
-  Add( wxBitmap(empty_xpm) );
+  ICON_EMPTY = Add( wxBitmap(empty_xpm) );
+
+  #ifdef __WXMSW__
+	ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = ICON_GAME_UNKNOWN = ICON_EMPTY;
+  #else
+	ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = ICON_GAME_UNKNOWN = -1;
+  #endif
+
 }
 
 
@@ -203,7 +207,7 @@ int IconImageList::GetRankIcon( const int& rank, const bool& showlowest )
 }
 
 
-int IconImageList::GetFlagIcon( const std::string& flagname )
+int IconImageList::GetFlagIcon( const wxString& flagname )
 {
   return ICON_FLAGS_BASE + GetFlagIndex( flagname );
 }
@@ -240,8 +244,8 @@ wxString IconImageList::GetBattleStatus( Battle& battle )
 
 int IconImageList::GetColourIcon( const int& num )
 {
-  ASSERT_LOGIC( num < NUM_COLOUR_ICONS, _T("Colour index too high") );
-  return ICON_COLOURS_START + num;
+  if ( m_player_colour_icons[num] != 0 ) return m_player_colour_icons[num];
+  else return -1;
 }
 
 
@@ -253,7 +257,6 @@ int IconImageList::GetHostIcon( const bool& spectator )
 
 void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 {
-  int index = GetColourIcon( num );
   wxImage img( colourbox_xpm );
 
   img.Replace( 1, 1, 1, colour.Red(), colour.Green(), colour.Blue() );
@@ -264,24 +267,24 @@ void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 
   /*r = colour.Red()-60; g = colour.Green()-60; b = colour.Blue()-60;
   img.Replace( 200, 200, 200, r<0?0:r, g<0?0:g, b<0?0:b );*/
-
-  Replace( index, wxBitmap( img ) );
+  if ( m_player_colour_icons[num] != 0 ) Replace( m_player_colour_icons[num], wxBitmap( img ) );
+  else m_player_colour_icons[num] = Add( wxBitmap( img ) );
 }
 
 
-int IconImageList::GetSideIcon( const std::string& modname, const std::string& side )
+int IconImageList::GetSideIcon( const wxString& modname, const wxString& side )
 {
-  wxString sn = WX_STRING( side );
+  wxString sn = side;
   sn = sn.Lower();
   if ( sn  == _T("arm") ) return ICON_ARM;
   else if (  sn == _T("core") ) return ICON_CORE;
-  else if (CachedSideIcons[side] == 0){
+  else if (m_cached_side_icons[side] == 0){
     try {
       int IconPosition = Add(wxBitmap( usync()->GetSidePicture( modname , side ) ), wxNullBitmap);
-      CachedSideIcons[side] = IconPosition;
+      m_cached_side_icons[side] = IconPosition;
       return IconPosition;
     } catch (...) {};
-  } else return CachedSideIcons[side];
+  } else return m_cached_side_icons[side];
   return -1;
 }
 
