@@ -48,14 +48,9 @@ class TASServer : public Server
 
     void Ping();
 
-<<<<<<< HEAD:src/tasserver.h
     void ListCommands();
-=======
->>>>>>> master:src/tasserver.h
 
-<<<<<<< HEAD:src/tasserver.h
     void UDPPing();/// used for nat travelsal
-=======
     /// generic udp "ping" function
     /// return value: actual source port which was used. May differ from src_port
     /// 0 if udp ping failed
@@ -63,7 +58,6 @@ class TASServer : public Server
     /// specialized udp ping functions
     void UdpPingTheServer(const wxString &message=_T("ipv4 sux!"));/// used for nat travelsal. pings the server.
     void UdpPingAllClients();/// used when hosting with nat holepunching
->>>>>>> master:src/tasserver.h
 
     User& GetMe();
 
