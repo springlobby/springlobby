@@ -63,12 +63,7 @@
 					<Add option="-D__DEBUG__" />
 					<Add option="-D__WXDEBUG__" />
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
-					<Add directory="$(#wx.include)" />
-					<Add directory="$(#wx.lib)\mswd" />
 				</Compiler>
-				<ResourceCompiler>
-					<Add directory="$(#wx.include)" />
-				</ResourceCompiler>
 				<Linker>
 					<Add library="libwxregexd.a" />
 					<Add library="libwxzlibd.a" />
@@ -88,11 +83,7 @@
 					<Add library="libwxmsw28d_aui.a" />
 					<Add library="libwxmsw28d_richtext.a" />
 					<Add library="gmon" />
-					<Add directory="$(#wx.lib)" />
 				</Linker>
-				<Environment>
-					<Variable name="WX_DIR" value="C:\wxWidgets-2.8.4" />
-				</Environment>
 			</Target>
 			<Target title="Win32 | Profile">
 				<Option output="bin\Win32\Profile\springlobby" prefix_auto="0" extension_auto="1" />
