@@ -459,16 +459,22 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
   m_chatlog_text->Freeze();
   #endif
 
+  int sizex, sizey;
+  m_chatlog_text->GetClientSize( &sizex, &sizey);
 
   long pos = m_chatlog_text->GetScrollPos(wxVERTICAL);
   long thumb =  m_chatlog_text->GetScrollThumb(wxVERTICAL); /// save current view position
   long lastpos = m_chatlog_text->GetScrollRange(wxVERTICAL);///save last position before appending text
   long totallines = m_chatlog_text->GetNumberOfLines();
-  long jumpto = m_chatlog_text->XYToPosition( 0, lastpos * totallines / pos  );
+  long totalchars = m_chatlog_text->GetLastPosition();
+  long jumpto = 0;
+  if ( pos != 0 ) jumpto = m_chatlog_text->XYToPosition( 1, lastpos * totallines / pos  );
+
+  wxLogWarning( _T(" line info: pos:%ld thumb:%ld end:%ld chatlines:%ld jumpto:%ld totalchars:%ld"), pos, thumb, lastpos, totallines, jumpto, totalchars);
 
   m_chatlog_text->AppendText( message + _T("\n") );
 
-  if ( pos < lastpos ) /// view not at the bottom = disable autoscroll
+   if(pos + sizey + 1>=lastpos)  /// view not at the bottom = disable autoscroll
   {
     m_chatlog_text->ShowPosition(jumpto); /// restore position that the scrollbar had appending the text
   }
