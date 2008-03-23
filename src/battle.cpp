@@ -585,7 +585,7 @@ int my_random(int range){
   return rand()%range;
 }
 
-void shuffle(std::vector<User *> players){/// proper shuffle.
+void shuffle(std::vector<User *> &players){/// proper shuffle.
   for(int i=0;i<players.size();++i){/// the players below i are shuffled, the players above arent
     int rn=i+my_random(players.size()-i);/// the top of shuffled part becomes random card from unshuffled part
     User *tmp=players[i];
@@ -611,17 +611,17 @@ struct ClannersRemovalPredicate{
 }*/
 
 void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans){
-  wxLogMessage(_T("Autobalancing players"));
-  DoAction(_T("is balancing allies"));
+  wxLogMessage(_T("Autobalancing players, type=%d, clans=%d, strong_clans=%d"),balance_type,int(support_clans),int(strong_clans));
+  DoAction(_T("is balancing alliances"));
   int tmp=GetNumRects();
   size_t i;
   int num_alliances=0;
   for(i=0;i<tmp;++i){
     BattleStartRect* sr = m_rects[i];
-    if ( sr == 0 ) break;
+    if (!sr) break;
     if(sr->deleted)break;
-    num_alliances=i;
   }
+  num_alliances=i;
 
   if(num_alliances<2)num_alliances=2;
 
@@ -666,7 +666,7 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
       float lowestrank=alliances[0].ranksum;
       int rnd_k=1;// number of alliances with rank equal to lowestrank
       while(rnd_k<alliances.size()){
-        if(fabs(alliances[my_random(rnd_k)].ranksum-lowestrank)>0.01){
+        if(fabs(alliances[rnd_k].ranksum-lowestrank)>0.01){
           break;
         }
         rnd_k++;
@@ -678,7 +678,7 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
 
   for(i=0;i<players_sorted.size();++i){
     /// skip clanners, those have been added already.
-    if(clan_alliances.count(players_sorted[i]->GetClan())>0)continue;
+    if(support_clans&&(clan_alliances.count(players_sorted[i]->GetClan())>0))continue;
 
     /// find alliances with lowest ranksum
     /// insert current user into random one out of them
@@ -693,7 +693,7 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
     float lowestrank=alliances[0].ranksum;
     int rnd_k=1;// number of alliances with rank equal to lowestrank
     while(rnd_k<alliances.size()){
-      if(fabs(alliances[my_random(rnd_k)].ranksum-lowestrank)>0.01){
+      if(fabs(alliances[rnd_k].ranksum-lowestrank)>0.01){
         break;
       }
       rnd_k++;
