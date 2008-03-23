@@ -611,8 +611,8 @@ struct ClannersRemovalPredicate{
 }*/
 
 void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans){
-  wxLogMessage(_T("Autobalancing players, type=%d, clans=%d, strong_clans=%d"),balance_type,int(support_clans),int(strong_clans));
-  DoAction(_T("is balancing alliances"));
+  wxLogMessage(_T("Autobalancing, type=%d, clans=%d, strong_clans=%d"),balance_type,int(support_clans),int(strong_clans));
+  DoAction(_T("is auto-balancing alliances ..."));
   int tmp=GetNumRects();
   size_t i;
   int num_alliances=0;

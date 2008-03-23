@@ -672,8 +672,9 @@ bool Settings::GetBalanceClans(){
 void Settings::SetBalanceStrongClans(bool value){
   m_config->Write( _T("/Hosting/BalanceStrongClans"), value );
 }
+
 bool Settings::GetBalanceStrongClans(){
-  return m_config->Read( _T("/Hosting/BalanceStrongClans"), true);
+  return m_config->Read( _T("/Hosting/BalanceStrongClans"), 0l);
 }
 
 
