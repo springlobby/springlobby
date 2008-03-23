@@ -6,16 +6,6 @@ class wxColour;
 class wxImage;
 class wxBitmap;
 
-struct ReplayData
-{
-  long int day;
-  long int month;
-  long int year;
-  wxString MapName;
-  wxString SpringVersion;
-  wxString ReplayName;
-};
-
 #define bool2yn(b) ((b)?_("Yes"):_("No"))
 
 const int colour_values[][3] = { {240,210,0}, {128, 128, 128}, {0, 0, 128}, {0, 0, 255},
@@ -31,7 +21,6 @@ bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff 
 void ColourDelta( int& r, int& g, int& b, const int& delta );
 wxColour ColourDelta( const wxColour& colour, const int& delta );
 
-ReplayData GetReplayInfos ( wxString& ReplayPath );
 wxString GetColorString( const wxColour& color );
 wxColour GetColorFromStrng( const wxString color );
 

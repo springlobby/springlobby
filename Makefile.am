@@ -64,6 +64,12 @@ clean-local:
 
 # the following line is searched for in a script to add filenames under it
 springlobby_SOURCES = \
+	src/replaylist.h \
+	src/replaylist.cpp \
+	src/replaylistctrl.h \
+	src/replaylistctrl.cpp \
+	src/replaytab.h \
+	src/replaytab.cpp \
 	revision.cpp \
 	src/updater/versionchecker.cpp \
 	src/updater/versionchecker.h \
