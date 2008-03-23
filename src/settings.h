@@ -147,6 +147,10 @@ class Settings
     void SetDisplayJoinLeave( bool display, const wxString& channel  );
     bool GetDisplayJoinLeave( const wxString& channel );
 
+    //!@brief sets how many lines can stay in a chat panel before the old will start getting erased, 0 to disable
+    void SetChatHistoryLenght( unsigned int historylines );
+    unsigned int GetChatHistoryLenght();
+
     wxColour GetChatColorNormal();
     void SetChatColorNormal( wxColour value );
     wxColour GetChatColorBackground();

@@ -436,7 +436,7 @@ User* ChatPanel::GetSelectedUser()
 
 void ChatPanel::CheckLength()
 {
-  if ( m_chatlog_text->GetNumberOfLines() > 1000 ) {
+  if ( m_chatlog_text->GetNumberOfLines() > sett().GetChatHistoryLenght() && sett().GetChatHistoryLenght() > 0 ) {
     int end = 0;
     for ( int i = 0; i < 20; i++ ) end += m_chatlog_text->GetLineLength( i ) + 1;
     m_chatlog_text->Remove( 0, end );
@@ -458,7 +458,27 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
   #ifdef __WXMSW__
   m_chatlog_text->Freeze();
   #endif
+
+
+  long pos = m_chatlog_text->GetScrollPos(wxVERTICAL);
+  long thumb =  m_chatlog_text->GetScrollThumb(wxVERTICAL); /// save current view position
+  long lastpos = m_chatlog_text->GetScrollRange(wxVERTICAL);///save last position before appending text
+  long totallines = m_chatlog_text->GetNumberOfLines();
+  long jumpto = m_chatlog_text->XYToPosition( 0, lastpos * totallines / pos  );
+
   m_chatlog_text->AppendText( message + _T("\n") );
+
+  if ( pos < lastpos ) /// view not at the bottom = disable autoscroll
+  {
+    m_chatlog_text->ShowPosition(jumpto); /// restore position that the scrollbar had appending the text
+  }
+  else
+  {
+    m_chatlog_text->ScrollLines( 2 ); /// to prevent for weird empty space appended
+    m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
+  }
+
+  CheckLength(); /// crop lines from history that exceeds limit
 
   // change the image of the tab to show new events
   if ( m_channel != 0 && m_ui.GetActiveChatPanel() != this )
@@ -470,9 +490,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
       }
 
   if ( m_chat_log ) m_chat_log->AddMessage(message);
-  CheckLength();
-  m_chatlog_text->ScrollLines( 10 );
-  m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
+
   #ifdef __WXMSW__
   m_chatlog_text->Thaw();
   #endif
@@ -558,7 +576,8 @@ void ChatPanel::Motd( const wxString& message )
 
 void ChatPanel::StatusMessage( const wxString& message )
 {
-  if(m_chatlog_text == 0){
+  if(m_chatlog_text == 0)
+  {
     wxLogMessage(_T("m_chatlog_text is NULL"));
   }else{
     wxFont f = m_chatlog_text->GetFont();

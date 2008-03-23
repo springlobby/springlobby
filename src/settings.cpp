@@ -669,6 +669,19 @@ bool Settings::GetDisplayJoinLeave( const wxString& channel  )
   return m_config->Read( _T("/Channels/DisplayJoinLeave/") +  channel, true);
 }
 
+
+void Settings::SetChatHistoryLenght( unsigned int historylines )
+{
+  m_config->Write( _T("/Chat/HistoryLinesLenght/"), (int)historylines);
+}
+
+
+unsigned int Settings::GetChatHistoryLenght()
+{
+  return (unsigned int)m_config->Read( _T("/Chat/HistoryLinesLenght/"), 1000);
+}
+
+
 wxColour Settings::GetChatColorNormal()
 {
   return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Normal"), _T( "0 0 0" ) ) ) );
