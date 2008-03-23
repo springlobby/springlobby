@@ -94,15 +94,12 @@ StartType IntToStartType( int start );
 NatType IntToNatType( int nat );
 GameType IntToGameType( int gt );
 
-<<<<<<< HEAD:src/tasserver.cpp
-TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(SER_VER_UNKNOWN), m_connected(false), m_online(false), m_buffer(""), m_last_ping(0), m_ping_id(1000),m_battle_id(-1)
+
+TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(false), m_online(false), m_buffer(_T("")), m_last_udp_ping(0), m_ping_id(10000), m_udp_private_port(16941),m_battle_id(-1), m_do_finalize_join_battle(false), m_finalize_join_battle_id(-1)
 {
   m_se = new ServerEvents( *this, ui);
   FillAliasMap();
 }
-=======
-TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(false), m_online(false), m_buffer(_T("")), m_last_udp_ping(0), m_ping_id(10000), m_udp_private_port(16941),m_battle_id(-1), m_do_finalize_join_battle(false), m_finalize_join_battle_id(-1) { m_se = new ServerEvents( *this, ui); }
->>>>>>> master:src/tasserver.cpp
 
 TASServer::~TASServer() { delete m_se; }
 
@@ -520,16 +517,9 @@ void TASServer::ExecuteCommand( const wxString& in )
     params = params.AfterFirst( ' ' );
     params.ToLong( &replyid );
   }
-<<<<<<< HEAD:src/tasserver.cpp
-   std::map<wxString,wxString>::iterator it = m_command_alias.find( WX_STRING(cmd) );
+  std::map<wxString,wxString>::iterator it = m_command_alias.find( WX_STRING(cmd) );
   if ( it != m_command_alias.end() ) cmd = STD_STRING( (*it).second );
   ExecuteCommand( cmd, params );
-=======
-  else
-    params = params.AfterFirst( ' ' );
-
-  ExecuteCommand( cmd, params, replyid );
->>>>>>> master:src/tasserver.cpp
 }
 
 void TASServer::ListCommands()
@@ -553,12 +543,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
   UTASBattleStatus tasbstatus;
   UserBattleStatus bstatus;
   UTASColor color;
-<<<<<<< HEAD:src/tasserver.cpp
-  if ( cmd == "TASServer") {
-=======
 
   if ( cmd == _T("TASServer")) {
->>>>>>> master:src/tasserver.cpp
     mod = GetWordParam( params );
     mod.ToDouble( &m_ser_ver );
     supported_spring_version = GetWordParam( params );
