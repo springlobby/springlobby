@@ -652,6 +652,32 @@ void Settings::SetTestHostPort( bool value )
   m_config->Write( _T("/Hosting/TestHostPort"), value );
 }
 
+
+
+
+void Settings::SetBalanceMethod(int value){
+  m_config->Write( _T("/Hosting/BalanceMethod"), value );
+}
+int Settings::GetBalanceMethod(){
+  return m_config->Read( _T("/Hosting/BalanceMethod"), 0l);
+}
+
+void Settings::SetBalanceClans(bool value){
+  m_config->Write( _T("/Hosting/BalanceClans"), value );
+}
+bool Settings::GetBalanceClans(){
+  return m_config->Read( _T("/Hosting/BalanceClans"), true);
+}
+
+void Settings::SetBalanceStrongClans(bool value){
+  m_config->Write( _T("/Hosting/BalanceStrongClans"), value );
+}
+bool Settings::GetBalanceStrongClans(){
+  return m_config->Read( _T("/Hosting/BalanceStrongClans"), true);
+}
+
+
+
 wxString Settings::GetLastAI()
 {
   return m_config->Read( _T("/SinglePlayer/LastAI"), wxEmptyString );

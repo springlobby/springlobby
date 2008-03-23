@@ -106,7 +106,7 @@ class User
 
     static wxString GetRankName(int rank);
 
-    int GetBalanceRank();
+    float GetBalanceRank();
 
     wxString GetClan();
 

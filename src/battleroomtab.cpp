@@ -31,6 +31,8 @@
 #include "server.h"
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"
+#include "autobalancedialog.h"
+#include "settings.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -389,8 +391,12 @@ void BattleRoomTab::OnLeave( wxCommandEvent& event )
 void BattleRoomTab::OnBalance( wxCommandEvent& event ){
   wxLogMessage(_T(""));
   if(!IsHosted()){/// if not hosted, say !cbalance . Works with autohosts, and human hosts knows what it mean.
-    if(m_battle)m_battle->Say("!cbalance");
+    m_battle.Say(_T("!cbalance"));
     return;
+  }
+  AutoBalanceDialog dlg( this );
+  if ( dlg.ShowModal() == wxID_OK ) {
+    m_battle.Autobalance(sett().GetBalanceMethod(),sett().GetBalanceClans(),sett().GetBalanceStrongClans());
   }
   /// balance players.
 }
