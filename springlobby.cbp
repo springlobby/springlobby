@@ -150,6 +150,7 @@
 			<Add option="-Wall" />
 			<Add directory="src" />
 		</Compiler>
+		<Unit filename="replaylist.h" />
 		<Unit filename="src/addbotdialog.cpp" />
 		<Unit filename="src/addbotdialog.h" />
 		<Unit filename="src/agreementdialog.cpp" />
@@ -277,6 +278,11 @@
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonautotools.cpp" />
 		<Unit filename="src/nonportable.h" />
+		<Unit filename="src/replayfilter.cpp" />
+		<Unit filename="src/replayfilter.h" />
+		<Unit filename="src/replaylist.cpp" />
+		<Unit filename="src/replaylistctrl.cpp" />
+		<Unit filename="src/replaylistctrl.h" />
 		<Unit filename="src/replaytab.cpp" />
 		<Unit filename="src/replaytab.h" />
 		<Unit filename="src/revision.h" />
@@ -356,26 +362,6 @@
 		<Unit filename="src/userlist.h" />
 		<Unit filename="src/utils.cpp" />
 		<Unit filename="src/utils.h" />
-		<Extensions>
-			<code_completion />
-			<envvars />
-			<wxsmith version="1">
-				<gui name="wxWidgets" src="" main="" init_handlers="necessary" language="CPP" />
-			</wxsmith>
-			<debugger />
-		</Extensions>
-	</Project>
-</CodeBlocks_project_file>
-		<Extensions>
-			<code_completion />
-			<envvars />
-			<wxsmith version="1">
-				<gui name="wxWidgets" src="" main="" init_handlers="necessary" language="CPP" />
-			</wxsmith>
-			<debugger />
-		</Extensions>
-	</Project>
-</CodeBlocks_project_file>
 		<Extensions>
 			<code_completion />
 			<envvars />
