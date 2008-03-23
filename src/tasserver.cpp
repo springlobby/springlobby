@@ -517,8 +517,8 @@ void TASServer::ExecuteCommand( const wxString& in )
     params = params.AfterFirst( ' ' );
     params.ToLong( &replyid );
   }
-  std::map<wxString,wxString>::iterator it = m_command_alias.find( WX_STRING(cmd) );
-  if ( it != m_command_alias.end() ) cmd = STD_STRING( (*it).second );
+  std::map<wxString,wxString>::iterator it = m_command_alias.find( cmd );
+  if ( it != m_command_alias.end() ) cmd =(*it).second;
   ExecuteCommand( cmd, params );
 }
 
