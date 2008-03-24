@@ -661,11 +661,16 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
   if(balance_type!=balance_random)std::sort(players_sorted.begin(),players_sorted.end(),PlayerRankCompareFunction);
 
   if(support_clans){
-    for(std::map<wxString, Alliance>::iterator clan_it=clan_alliances.begin();clan_it!=clan_alliances.end();++clan_it){
+    std::map<wxString, Alliance>::iterator clan_it=clan_alliances.begin();
+    while(clan_it!=clan_alliances.end()){
       Alliance &clan=(*clan_it).second;
       /// if clan is too small (only 1 clan member in battle) or too big, dont count it as clan
-      if(clan.players.size()<2 || (!strong_clans) && (clan.players.size()>(players_sorted.size()+alliances.size()-1)/alliances.size())){
+      if(clan.players.size()<2 || ((!strong_clans) && (clan.players.size()>(players_sorted.size()+alliances.size()-1)/alliances.size()))){
+        wxLogMessage(_T("removing clan %s"),(*clan_it).first.c_str());
+        std::map<wxString, Alliance>::iterator next=clan_it;
+        ++next;
         clan_alliances.erase(clan_it);
+        clan_it=next;
         continue;
       }
       wxLogMessage(_T("Inserting clan %s"),(*clan_it).first.c_str());
@@ -680,12 +685,16 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
       }
       wxLogMessage(_T("number of lowestrank alliances with same rank=%d"),rnd_k);
       alliances[my_random(rnd_k)].AddAlliance(clan);
+      ++clan_it;
     }
   }
 
   for(size_t i=0;i<players_sorted.size();++i){
     /// skip clanners, those have been added already.
-    if(support_clans&&(clan_alliances.count(players_sorted[i]->GetClan())>0))continue;
+    if(clan_alliances.count(players_sorted[i]->GetClan())>0){
+      wxLogMessage(_T("clanner already added, nick=%s"),players_sorted[i]->GetNick().c_str());
+      continue;
+    }
 
     /// find alliances with lowest ranksum
     /// insert current user into random one out of them
@@ -712,7 +721,9 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
   for(size_t i=0;i<alliances.size();++i){
     for(size_t j=0;j<alliances[i].players.size();++j){
       ASSERT_LOGIC(alliances[i].players[j],_T("fail in Autobalance, NULL player"));
-      wxLogMessage(_T("setting player %s to alliance %d"),alliances[i].players[j]->GetNick().c_str(),i);
+      wxString msg=wxString::Format(_T("setting player %s to alliance %d"),alliances[i].players[j]->GetNick().c_str(),i);
+      wxLogMessage(_T("%s"),msg.c_str());
+      m_ui.OnBattleAction(*this,wxString(_T(" ")),msg);
       ForceAlly(*alliances[i].players[j],alliances[i].allynum);
     }
   }
