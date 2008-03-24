@@ -80,14 +80,12 @@ void Settings::SetClientPort(int value){
   m_config->Write( _T("/General/ClientPort"), value );
 }
 
-
 bool Settings::GetShowIPAddresses()
 {
   bool tmp;
   m_config->Read( _T("/General/ShowIP"), &tmp, false );
   return tmp;
 }
-
 
 void Settings::SetShowIPAddresses(bool value){
   m_config->Write( _T("/General/ShowIP"), value );
@@ -653,6 +651,33 @@ void Settings::SetTestHostPort( bool value )
 {
   m_config->Write( _T("/Hosting/TestHostPort"), value );
 }
+
+
+
+
+void Settings::SetBalanceMethod(int value){
+  m_config->Write( _T("/Hosting/BalanceMethod"), value );
+}
+int Settings::GetBalanceMethod(){
+  return m_config->Read( _T("/Hosting/BalanceMethod"), 0l);
+}
+
+void Settings::SetBalanceClans(bool value){
+  m_config->Write( _T("/Hosting/BalanceClans"), value );
+}
+bool Settings::GetBalanceClans(){
+  return m_config->Read( _T("/Hosting/BalanceClans"), true);
+}
+
+void Settings::SetBalanceStrongClans(bool value){
+  m_config->Write( _T("/Hosting/BalanceStrongClans"), value );
+}
+
+bool Settings::GetBalanceStrongClans(){
+  return m_config->Read( _T("/Hosting/BalanceStrongClans"), 0l);
+}
+
+
 
 wxString Settings::GetLastAI()
 {

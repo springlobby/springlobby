@@ -144,6 +144,16 @@ class Settings
     void SetLastAI( const wxString& ai );
     wxString GetLastAI();
 
+    void SetBalanceMethod(int value);
+    int GetBalanceMethod();
+
+    void SetBalanceClans(bool value);
+    bool GetBalanceClans();
+
+    void SetBalanceStrongClans(bool value);
+    bool GetBalanceStrongClans();
+
+
     void SetDisplayJoinLeave( bool display, const wxString& channel  );
     bool GetDisplayJoinLeave( const wxString& channel );
 
