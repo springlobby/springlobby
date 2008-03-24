@@ -154,6 +154,8 @@ class TASServer : public Server
     unsigned long m_udp_private_port;
     unsigned long m_nat_helper_port;
 
+    bool m_token_transmission;
+
     int m_battle_id;
 
     wxString m_agreement;
@@ -167,7 +169,7 @@ class TASServer : public Server
 
     void ReceiveAndExecute();
     void FillAliasMap();
-    void SendCmd( const wxString& command, const wxString& param = _T("") );
+    void SendCmd( wxString command, const wxString& param = _T("") );
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H

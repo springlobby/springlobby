@@ -552,6 +552,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     supported_spring_version = GetWordParam( params );
     m_nat_helper_port = (unsigned long)GetIntParam( params );
     lanmode = GetBoolParam( params );
+    SendCmd( _T("TOKENIZE") );
     m_se->OnConnected( _T("TAS Server"), mod, (m_ser_ver > 0), supported_spring_version, lanmode );
 
   } else if ( cmd == _T("ACCEPTED") ) {
@@ -809,6 +810,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     m_se->OnServerMessage( params );
   } else if ( cmd == _T("SERVERMSGBOX")) {
     m_se->OnServerMessageBox( params );
+  } else if ( cmd == _T("TOKENIZED")) { /// server enabled tokenized transmission
+    m_token_transmission = true;
   } else {
     wxLogMessage( _T("??? Cmd: %s params: %s"), cmd.c_str(), params.c_str() );
     m_se->OnUnknownCommand( cmd, params );
@@ -816,14 +819,16 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 }
 
 
-void TASServer::SendCmd( const wxString& command, const wxString& param )
+void TASServer::SendCmd( wxString command, const wxString& param )
 {
   wxString cmd, msg;
-  std::map<wxString,wxString>::iterator it = m_send_command_alias.find( command );
-  if ( it != m_send_command_alias.end() ) cmd = it->second;
-  else cmd = command;
-  if ( param.IsEmpty() ) msg = ( cmd + _T("\n"));
-  else msg = ( cmd + _T(" ") + param + _T("\n") );
+  if ( m_token_transmission )
+  {
+    std::map<wxString,wxString>::iterator it = m_send_command_alias.find( command );
+    if ( it != m_send_command_alias.end() ) command = it->second;
+  }
+  if ( param.IsEmpty() ) msg = ( command + _T("\n"));
+  else msg = ( command + _T(" ") + param + _T("\n") );
   m_sock->Send( msg );
 }
 
@@ -1591,12 +1596,14 @@ void TASServer::OnConnected( Socket* sock )
   m_last_udp_ping = time( 0 );
   m_connected = true;
   m_online = false;
+  m_token_transmission = false;
 }
 
 
 void TASServer::OnDisconnected( Socket* sock )
 {
   wxLogDebugFunc( _T("") );
+  m_token_transmission = false;
   m_connected = false;
   m_online = false;
   m_se->OnDisconnected();
