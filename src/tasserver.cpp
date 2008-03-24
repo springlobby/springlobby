@@ -104,6 +104,7 @@ TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(
 TASServer::~TASServer() { delete m_se; }
 
 static std::map<wxString,wxString> m_command_alias;
+static std::map<wxString,wxString> m_send_command_alias;
 
 void TASServer::FillAliasMap()
 {
@@ -201,6 +202,7 @@ m_command_alias[_T("}")] = _T("TESTLOGINACCEPT");
 m_command_alias[_T("~")] = _T("TESTLOGINDENY");
 m_command_alias[_T("")] = _T("ACQUIREUSERID");
 m_command_alias[_T("")] = _T("USERID");
+for ( std::map<wxString,wxString>::iterator i ; i != m_command_alias.end(); i++) m_send_command_alias[i->second] = i->first; ///swap content for second map
 }
 
 bool TASServer::ExecuteSayCommand( const wxString& cmd )
@@ -816,9 +818,12 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 
 void TASServer::SendCmd( const wxString& command, const wxString& param )
 {
-  wxString msg;
-  if ( param.IsEmpty() ) msg = ( command + _T("\n"));
-  else msg = ( command + _T(" ") + param + _T("\n") );
+  wxString cmd, msg;
+  std::map<wxString,wxString>::iterator it = m_send_command_alias.find( command );
+  if ( it != m_send_command_alias.end() ) cmd = it->second;
+  else cmd = command;
+  if ( param.IsEmpty() ) msg = ( cmd + _T("\n"));
+  else msg = ( cmd + _T(" ") + param + _T("\n") );
   m_sock->Send( msg );
 }
 
