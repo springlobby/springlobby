@@ -624,6 +624,7 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
     if(sr && !sr->deleted){
       ally=i;
       alliances.push_back(Alliance(ally));
+      ally++;
     }
   }
   /// make at least two alliances
