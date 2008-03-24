@@ -829,6 +829,14 @@ void Settings::SetChatFont( wxFont value )
   m_config->Write( _T("/Chat/Font"), value.GetNativeFontInfoDesc() );
 }
 
+
+bool Settings::GetSmartScrollEnabled(){
+  return m_config->Read( _T("/Chat/SmartScrollEnabled"), true);
+}
+void Settings::SetSmartScrollEnabled(bool value){
+  m_config->Write( _T("/Chat/SmartScrollEnabled"), value);
+}
+
 BattleListFilterValues Settings::GetBattleFilterValues(const wxString& profile_name)
 {
     BattleListFilterValues filtervalues;

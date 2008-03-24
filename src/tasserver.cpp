@@ -92,7 +92,13 @@ StartType IntToStartType( int start );
 NatType IntToNatType( int nat );
 GameType IntToGameType( int gt );
 
-TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(false), m_online(false), m_buffer(_T("")), m_last_udp_ping(0), m_ping_id(10000), m_udp_private_port(16941),m_battle_id(-1), m_do_finalize_join_battle(false), m_finalize_join_battle_id(-1) { m_se = new ServerEvents( *this, ui); }
+TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(false), m_online(false),
+m_buffer(_T("")), m_last_udp_ping(0), m_ping_id(10000), m_udp_private_port(16941),m_battle_id(-1),
+m_do_finalize_join_battle(false),
+m_finalize_join_battle_id(-1)
+{
+  m_se = new ServerEvents( *this, ui);
+}
 
 TASServer::~TASServer() { delete m_se; }
 

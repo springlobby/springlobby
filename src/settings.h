@@ -186,6 +186,9 @@ class Settings
     wxFont GetChatFont();
     void SetChatFont( wxFont value );
 
+    bool GetSmartScrollEnabled();
+    void SetSmartScrollEnabled(bool value);
+
 
     BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
     void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
