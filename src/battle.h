@@ -19,8 +19,8 @@ enum NatType {
 };
 
 enum BalanceType {
-  balance_divide=0,
-  balance_random
+  balance_random=0,
+  balance_divide
 };
 
 

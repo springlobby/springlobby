@@ -19,10 +19,10 @@
 					<object class="sizeritem">
 						<object class="wxChoice" name="ID_METHOD" variable="m_method_choice" member="yes">
 							<content>
-								<item>Divide ranks evenly</item>
 								<item>Random</item>
+								<item>Divide ranks evenly</item>
 							</content>
-							<selection>0</selection>
+							<selection>1</selection>
 						</object>
 						<flag>wxALL|wxEXPAND|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
 					</object>

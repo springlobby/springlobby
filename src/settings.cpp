@@ -659,7 +659,7 @@ void Settings::SetBalanceMethod(int value){
   m_config->Write( _T("/Hosting/BalanceMethod"), value );
 }
 int Settings::GetBalanceMethod(){
-  return m_config->Read( _T("/Hosting/BalanceMethod"), 0l);
+  return m_config->Read( _T("/Hosting/BalanceMethod"), 1l);
 }
 
 void Settings::SetBalanceClans(bool value){

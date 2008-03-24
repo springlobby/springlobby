@@ -37,8 +37,8 @@ AutoBalanceDialog::AutoBalanceDialog(wxWindow* parent)
 	m_method_label = new wxStaticText(this, ID_STATICTEXT1, _("Method"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT1"));
 	m_choices_sizer->Add(m_method_label, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
 	m_method_choice = new wxChoice(this, ID_METHOD, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_METHOD"));
-	m_method_choice->SetSelection( m_method_choice->Append(_("Divide ranks evenly")) );
 	m_method_choice->Append(_("Random"));
+	m_method_choice->SetSelection( m_method_choice->Append(_("Divide ranks evenly")) );
 	m_choices_sizer->Add(m_method_choice, 0, wxALL|wxEXPAND|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
 	StaticText1 = new wxStaticText(this, ID_STATICTEXT2, _("Clans"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT2"));
 	m_choices_sizer->Add(StaticText1, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
