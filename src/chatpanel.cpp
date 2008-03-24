@@ -467,16 +467,22 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
   long lastpos = m_chatlog_text->GetScrollRange(wxVERTICAL);///save last position before appending text
   long totallines = m_chatlog_text->GetNumberOfLines();
   long totalchars = m_chatlog_text->GetLastPosition();
+  //long scroll_ppu=m_chatlog_text->GetScrollPixelsPerUnit();
   long jumpto = 0;
-  if ( pos != 0 ) jumpto = m_chatlog_text->XYToPosition( 1, lastpos * totallines / pos  );
+  //if ( pos != 0 ) jumpto = m_chatlog_text->XYToPosition( 1, pos  );
+  jumpto = m_chatlog_text->XYToPosition( 1, double(totallines*pos)/double(lastpos)  );/// pos can be quite large. make sure no overflow here.
 
-  wxLogWarning( _T(" line info: pos:%ld thumb:%ld end:%ld chatlines:%ld jumpto:%ld totalchars:%ld"), pos, thumb, lastpos, totallines, jumpto, totalchars);
+  wxLogWarning( _T(" line info: pos:%ld thumb:%ld lastpos:%ld totallines:%ld jumpto:%ld totalchars:%ld sizex:%ld sizey:%ld "), pos, thumb, lastpos, totallines, jumpto, totalchars, sizex, sizey);
 
   m_chatlog_text->AppendText( message + _T("\n") );
+  bool override_scroll=false;
 
-   if(pos + sizey + 1>=lastpos)  /// view not at the bottom = disable autoscroll
+   if(override_scroll||(pos + (thumb>0?thumb:sizey) <lastpos))  /// view not at the bottom = disable autoscroll
   {
+    wxLogMessage( _T("not scrolling"));
+    /// non-scrolling works correctly now.
     m_chatlog_text->ShowPosition(jumpto); /// restore position that the scrollbar had appending the text
+    //m_chatlog_text->SetScrollbar(wxVERTICAL, pos, thumb, m_chatlog_text->GetScrollRange(wxVERTICAL));
   }
   else
   {
