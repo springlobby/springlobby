@@ -449,6 +449,33 @@ User& ChatPanel::GetMe()
   return m_ui.GetServer().GetMe();
 }
 
+/// So ugly, its even beautiful in a perverted way.
+/// Doesnt work yet though, the GetScrollPos is not updated.
+void UglySetScrollPos(wxTextCtrl *text, int pos){
+  int first=0;
+  int last_s=text->GetLastPosition();
+  int last=last_s;
+
+  while(last>first+1){
+    int cur=(first+last)/2;
+    text->ShowPosition(last_s);/// need to scroll to the end before going up.
+    text->ShowPosition(cur);
+    //wxRect rect(0,0,0,0);
+    text->Refresh();
+    //text->RefreshRect(wxRect(0, 0, 1, 1),false);
+    text->Update();
+    int p=text->GetScrollPos(wxVERTICAL);
+
+    wxLogWarning( _T(" line info: scrollpos:%d first:%d last:%d desired pos:%d"), p, first, last, pos);
+    if(p==pos)return;
+
+    if(p>pos){
+      last=cur;
+    }else{
+      first=cur;
+    }
+  }
+}
 
 void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const wxFont& fon )
 {
@@ -456,10 +483,6 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
   if (! m_chatlog_text ) return;
   LogTime();
-  m_chatlog_text->SetDefaultStyle(wxTextAttr(col, sett().GetChatColorBackground(), fon ));
-  #ifdef __WXMSW__
-  m_chatlog_text->Freeze();
-  #endif
 
   int sizex, sizey;
   m_chatlog_text->GetClientSize( &sizex, &sizey);
@@ -468,29 +491,54 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
   long lastpos = m_chatlog_text->GetScrollRange(wxVERTICAL); /// position of end
   long totallines = m_chatlog_text->GetNumberOfLines();
   long totalchars = m_chatlog_text->GetLastPosition();
-  //long scroll_ppu=m_chatlog_text->GetScrollPixelsPerUnit();
-  long jumpto = 0;
-  //if ( scrollpos != 0 ) jumpto = m_chatlog_text->XYToPosition( 1, scrollpos  );
-  if(never_scroll||sett().GetSmartScrollEnabled()){
-    jumpto = m_chatlog_text->XYToPosition( 1, int(double(totallines)*double(scrollpos)/double(lastpos))  );/// scrollpos can be quite large, up to 13*totallines*totallines. Integer multiply *might* overflow if there's tens thousands lines.
-    wxLogWarning( _T(" line info: scrollpos:%ld thumb:%ld lastpos:%ld totallines:%ld jumpto:%ld totalchars:%ld sizex:%ld sizey:%ld "), scrollpos, thumb, lastpos, totallines, jumpto, totalchars, sizex, sizey);
+  long totalrows;
+  long tmp;
+  m_chatlog_text->PositionToXY(totalchars,&tmp,&totalrows);
+
+  long top_col=0,top_row=0;
+
+  /// in hit test, first column, then row (x,y)
+  if(m_chatlog_text->HitTest(wxPoint(2,2),&top_col,&top_row)==wxTE_HT_UNKNOWN){
+    wxLogWarning(_T("HitTest failed for top of visible page"));
+  }
+  long bottom_col=0,bottom_row=0;
+
+  if(m_chatlog_text->HitTest(wxPoint(2,sizey-4),&bottom_col,&bottom_row)==wxTE_HT_UNKNOWN){
+    wxLogWarning(_T("HitTest failed for bottom of visible page"));
   }
 
+  long jumpto = 0;
+  if(never_scroll||sett().GetSmartScrollEnabled()){
+    jumpto=m_chatlog_text->XYToPosition(top_col,top_row);/// column, row format
+    wxLogWarning( _T(" line info: scrollpos:%ld thumb:%ld lastpos:%ld totallines:%ld totalrows:%ld jumpto:%ld totalchars:%ld sizex:%ld sizey:%ld top_row:%ld top_col:%ld bottom_row:%ld bottom_column:%ld"), scrollpos, thumb, lastpos, totallines, totalrows, jumpto, totalchars, sizex, sizey, top_row, top_col, bottom_row, bottom_col);
+  }
 
-  m_chatlog_text->AppendText( message + _T("\n") );
+  //bool at_bottom=scrollpos + (thumb>0?thumb:sizey) >=lastpos;
+  bool at_bottom = bottom_row>=totalrows-1;
 
-  if(never_scroll||(sett().GetSmartScrollEnabled()&&(scrollpos + (thumb>0?thumb:sizey) <lastpos)))  /// view not at the bottom = disable autoscroll
+
+  m_chatlog_text->SetDefaultStyle(wxTextAttr(col, sett().GetChatColorBackground(), fon ));
+  #ifdef __WXMSW__
+  m_chatlog_text->Freeze();
+  #endif
+
+  //m_chatlog_text->AppendText( message + _T("\n") );
+  m_chatlog_text->WriteText( message  + _T("\n") );
+
+  if(never_scroll||(sett().GetSmartScrollEnabled()&&!at_bottom))  /// view not at the bottom = disable autoscroll
   {
     wxLogMessage( _T("not scrolling"));
-    /// non-scrolling works correctly now.
+    // doesnt work right with multiline messages
     m_chatlog_text->ShowPosition(jumpto); /// restore position that the scrollbar had appending the text
 
-    // following might work too
+    // following didnt work either
     //m_chatlog_text->SetScrollbar(wxVERTICAL, scrollpos, thumb, m_chatlog_text->GetScrollRange(wxVERTICAL));
+
+    //UglySetScrollPos(m_chatlog_text,scrollpos);
   }
   else
   {
-    m_chatlog_text->ScrollLines( 2 ); /// to prevent for weird empty space appended
+    m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
     m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
   }
 

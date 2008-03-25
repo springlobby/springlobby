@@ -988,7 +988,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
   cmd += bo.mapname + _T("\t");
   cmd += bo.description + _T("\t");
   cmd += bo.modname;
-  //wxLogMessage( _T("%s"), cmd.c_str() );
+  wxLogMessage( _T("OPENBATTLE %s"), cmd.c_str() );
   SendCmd( _T("OPENBATTLE"), cmd );
 
 
@@ -1251,7 +1251,7 @@ void TASServer::StartHostedBattle()
   if(battle){
     if((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports))){
       UdpPingTheServer();
-      UdpPingAllClients();
+      for(int i=0;i<5;++i)UdpPingAllClients();
     }
   }
 
