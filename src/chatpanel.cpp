@@ -127,7 +127,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
-: wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(0),m_server(0),m_user(0),m_battle(&battle),m_type(CPT_Battle),m_popup_menu(0)
+: wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(0),m_server(0),m_user(0),m_battle(&battle),m_type(CPT_Battle),m_popup_menu(0),m_nicklist(NULL)
 {
   wxLogDebugFunc( _T("wxWindow* parent, Battle& battle") );
   CreateControls( );
@@ -717,7 +717,7 @@ void ChatPanel::SetChannel( Channel* chan )
     StatusMessage( _("Chat closed.") );
 
     m_channel->uidata.panel = 0;
-    if ( m_show_nick_list ) {
+    if ( m_show_nick_list && m_nicklist ) {
       m_nicklist->ClearUsers();
     }
   } else if ( chan != 0 ) {
