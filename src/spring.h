@@ -19,7 +19,13 @@ class Spring: public wxEvtHandler
     bool IsRunning();
     bool Run( Battle& battle );
     bool Run( SinglePlayerBattle& battle );
+
+    //! executes spring with replay as parameter
+    /*!
+     * \param filename the full path for the replayfile
+     */
     bool RunReplay ( wxString& filename );
+
     static bool TestSpringBinary();
 
     wxString GetScriptTxt( Battle& battle );

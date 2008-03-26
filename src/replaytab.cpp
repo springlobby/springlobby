@@ -33,7 +33,7 @@
 BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
 
   EVT_BUTTON              ( REPLAY_WATCH             , ReplayTab::OnWatch        )
-//  EVT_LIST_ITEM_ACTIVATED ( REPLAY_JOIN              , ReplayTab::OnListJoin    )
+//  EVT_LIST_ITEM_ACTIVATED ( REPLAY_DELETE            , ReplayTab::OnDelete    )
   EVT_LIST_ITEM_SELECTED  ( REPLAY_LIST               , ReplayTab::OnSelect      )
   EVT_CHECKBOX            ( REPLAY_LIST_FILTER_ACTIV , ReplayTab::OnFilterActiv )
 #if  wxUSE_TOGGLEBTN
@@ -62,7 +62,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
   wxBoxSizer* m_replaylist_sizer;
   m_replaylist_sizer = new wxBoxSizer( wxVERTICAL );
 
-  m_replay_listctrl = new ReplayListCtrl( this, *m_replays );
+  m_replay_listctrl = new ReplayListCtrl( this, ui, *m_replays );
   m_replaylist_sizer->Add( m_replay_listctrl, 1, wxALL|wxEXPAND, 5 );
 
   m_main_sizer->Add( m_replaylist_sizer, 1, wxEXPAND, 5 );;
@@ -139,7 +139,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
   this->Layout();
 
   AddAllReplays();
-  SelectReplay(0);
+
 }
 
 
@@ -159,26 +159,6 @@ void ReplayTab::AddAllReplays()
     }
 }
 
-void ReplayTab::SelectReplay( Replay* replay )
-{
-//  m_sel_replay = replay;
-////  m_minimap->SetReplay( m_sel_replay );
-//  //m_players->ClearUsers();
-//  if ( m_sel_replay != 0 ) {
-//    m_map_text->SetLabel( m_sel_replay->MapName );
-//    m_mod_text->SetLabel( m_sel_replay->ModName );
-//    m_players_text->SetLabel( wxString::Format( _T("%d"), m_sel_replay->playernum ) );
-//
-////    for ( unsigned int i = 0; i < m_sel_replay->playernum; i++ ) {
-////      m_players->AddUser( m_sel_replay->playernames[ i ] );
-////    }
-//  } else {
-//    m_map_text->SetLabel( wxEmptyString );
-//    m_mod_text->SetLabel( wxEmptyString );
-//    m_players_text->SetLabel(  _T("0") );
-//  }
-}
-
 void ReplayTab::AddReplay( Replay& replay ) {
 
 //  if ( m_filter->GetActiv() && !m_filter->Filterreplay( replay ) ) {
@@ -189,10 +169,8 @@ void ReplayTab::AddReplay( Replay& replay ) {
   //TODO WUT
   m_replay_listctrl->SetItemData(index, (long)replay.id );
 
-// doesnt have it?? !
-  //replay.SetGUIListActiv( true );
-
   ASSERT_LOGIC( index != -1, _T("index = -1") );
+
   //wxListItem item;
   //item.SetId( index );
 
@@ -265,7 +243,7 @@ void ReplayTab::UpdateReplay( Replay& replay )
 
 
 void ReplayTab::RemoveAllReplays() {
-  SelectReplay( 0 );
+  m_sel_replay_id = 0;
 
   //TODO what's the use of this?
 //  m_replays_iter->IteratorBegin();
@@ -332,24 +310,9 @@ void ReplayTab::OnSelect( wxListEvent& event )
 {
   wxLogDebugFunc( _T("") );
   if ( event.GetIndex() == -1 ) {
-    SelectReplay( 0 );
+    m_sel_replay_id = 0;
   } else {
-    //SelectReplay( &m_replays->GetReplay( m_replay_listctrl->GetItemData( event.GetIndex() ) ) );
     m_sel_replay_id = m_replays->GetReplay( m_replay_listctrl->GetItemData( event.GetIndex() ) ).id;
   }
 }
 
-
-void ReplayTab::OnUnitSyncReloaded()
-{
-//  if ( ! m_ui.GetServerStatus() ) { return; }
-//
-//  m_replays_iter->IteratorBegin();
-//  while (! m_replays_iter->EOL() ) {
-//    Replay* b = m_replays_iter->GetReplay();
-//    if (b!=0)
-//        b->OnUnitSyncReloaded();
-//  }
-//  UpdateList();
-//  m_minimap->UpdateMinimap();
-}

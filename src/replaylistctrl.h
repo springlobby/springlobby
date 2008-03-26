@@ -10,14 +10,14 @@ class wxMenu;
 class Replay;
 class wxListEvent;
 class wxCommandEvent;
-//class Ui;
+class Ui;
 class ReplayList_Iter;
 
 
 class ReplayListCtrl : public customListCtrl
 {
   public:
-    ReplayListCtrl( wxWindow* parent, ReplayList& replaylist );
+    ReplayListCtrl( wxWindow* parent, Ui& ui, ReplayList& replaylist );
     ~ReplayListCtrl();
 
 
@@ -53,6 +53,7 @@ class ReplayListCtrl : public customListCtrl
 
     int m_selected;
     wxMenu* m_popup;
+    Ui& m_ui;
    // ReplayList_Iter& m_replaylist_iter;
     ReplayList& m_replaylist;
     static ReplayList* m_replaylist_sort;

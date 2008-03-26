@@ -32,9 +32,10 @@ END_EVENT_TABLE()
 
 ReplayList* ReplayListCtrl::m_replaylist_sort = 0;
 
-ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList& replaylist  ):
+ReplayListCtrl::ReplayListCtrl( wxWindow* parent, Ui& ui, ReplayList& replaylist  ):
   customListCtrl(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT),
   m_selected(-1),
+  m_ui(ui),
   m_replaylist(replaylist)
 {
 
@@ -136,11 +137,11 @@ void ReplayListCtrl::OnListRightClick( wxListEvent& event )
 
 void ReplayListCtrl::OnDLMap( wxCommandEvent& event )
 {
-//  if ( m_selected != -1 ) {
-//    if ( m_ui.GetServer().replays_iter->ReplayExists(m_selected) ) {
-//      m_ui.DownloadMap( m_ui.GetServer().replays_iter->GetReplay(m_selected).MapName );
-//    }
-//  }
+  if ( m_selected != -1 ) {
+    if ( m_replaylist.ReplayExists(m_selected) ) {
+      m_ui.DownloadMap( m_replaylist.GetReplay(m_selected).MapName );
+    }
+  }
 }
 
 
@@ -171,7 +172,7 @@ void ReplayListCtrl::OnColClick( wxListEvent& event )
 
 
   GetColumn( m_sortorder[0].col, col );
-  //col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
+//  col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
   Sort();

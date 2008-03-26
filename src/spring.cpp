@@ -62,9 +62,6 @@ bool Spring::RunReplay ( wxString& filename )
         return false;
     }
 
-    wxString sep = wxFileName::GetPathSeparator();
-    //  wxString path = sett().GetSpringDir() + sep + _T("demos") + sep + filename;
-
   wxLogMessage( _T("launching spring with replay: ") + filename );
 
   wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + filename ;

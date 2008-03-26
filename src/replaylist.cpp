@@ -81,7 +81,7 @@ bool ReplayList::ReplayExists( replay_id_t const& id )
 Replay GetReplayInfos ( wxString& ReplayPath )
 {
   //wxLOG_Info  ( STD_STRING( ReplayPath ) );
-//TODO extract modname
+//TODO extract moar info
   static long r_id = 0;
   Replay ret;
   ret.Filename = ReplayPath;

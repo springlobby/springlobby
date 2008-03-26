@@ -20,37 +20,43 @@ class ReplayList_Iter;
 class Replay;
 class ReplayList;
 class ReplayListFilter;
+
 class ReplayListCtrl;
 
 class ReplayTab : public wxPanel
 {
   friend class BattleListFilter;
   public:
+    //! loads all replays into list and adds them to listctrl
     ReplayTab( wxWindow* parent, Ui& ui );
      ~ReplayTab();
 
+    //! adds a single replay to listctrl
     void AddReplay( Replay& Replay );
     void RemoveReplay( Replay& Replay );
     void UpdateReplay( Replay& Replay );
 
+    //! add all replays in m_replays to listctrl
+    void AddAllReplays();
     void RemoveAllReplays();
 
     void UpdateList();
 
-    void SelectReplay( Replay* Replay );
-
+    //! calls ui::watch which executes spring
     void OnWatch( wxCommandEvent& event );
+    //! does nothing yet
     void OnDelete( wxCommandEvent& event );
+        //! does nothing yet
     void OnFilter( wxCommandEvent& event );
+        //! does nothing yet
     void OnFilterActiv( wxCommandEvent& event );
+
+    //! sets m_sel_replay_id according to selected listitem
+    void OnSelect( wxListEvent& event );
+        //! does nothing yet
     void SetFilterActiv(bool activ);
 
-    void OnSelect( wxListEvent& event );
-    void OnUnitSyncReloaded();
-    void AddAllReplays();
-
   protected:
-    ReplayList_Iter* m_replays_iter;
     ReplayList* m_replays;
     ReplayListFilter* m_filter;
     ReplayListCtrl* m_replay_listctrl;
