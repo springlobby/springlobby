@@ -30,6 +30,45 @@
 #include "mainwindow.h"
 #include "chatlog.h"
 #include "settings.h"
+/*
+BEGIN_EVENT_TABLE(MyTextCtrl, wxTextCtrl)
+EVT_PAINT(MyTextCtrl::OnPaint)
+END_EVENT_TABLE()
+*/
+
+MyTextCtrl::MyTextCtrl(wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, const wxSize& size, long style, const wxValidator& validator, const wxString& name):
+wxTextCtrl(parent, id, value, pos, size, style, validator, name),
+my_m_dirty(false),
+m_must_scroll(true)
+{
+  //Connect(wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&AutoBalanceDialog::OnCancel);
+  Connect(wxEVT_PAINT, (wxObjectEventFunction)&MyTextCtrl::OnPaint);
+  Connect(wxEVT_UPDATE_UI , (wxObjectEventFunction)&MyTextCtrl::OnUpdateUI);
+
+}
+void MyTextCtrl::OnPaint(wxPaintEvent& event){
+  //wxLogMessage(_T("MyTextCtrl::OnPaint"));
+  my_m_dirty=false;
+  event.Skip();
+}
+void MyTextCtrl::OnUpdateUI(wxUpdateUIEvent &event){
+  //wxLogMessage(_T("MyTextCtrl::OnUpdateUI"));
+  my_m_dirty=false;
+  event.Skip();
+}
+bool MyTextCtrl::GetDirty(){
+  return my_m_dirty;
+}
+
+void MyTextCtrl::MakeDirty(){
+  my_m_dirty=true;
+}
+
+void MyTextCtrl::WriteText(const wxString&  text){
+  //MakeDirty();
+  wxTextCtrl::WriteText(text);
+}
+
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 
@@ -127,7 +166,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
-: wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(0),m_server(0),m_user(0),m_battle(&battle),m_type(CPT_Battle),m_popup_menu(0),m_nicklist(NULL)
+: wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(0),m_server(0),m_user(0),m_battle(&battle),m_type(CPT_Battle),m_nicklist(NULL),m_popup_menu(0)
 {
   wxLogDebugFunc( _T("wxWindow* parent, Battle& battle") );
   CreateControls( );
@@ -194,7 +233,7 @@ void ChatPanel::CreateControls( )
   }
 
   // Creating ui elements
-  m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T(""), wxDefaultPosition, wxDefaultSize,
+  m_chatlog_text = new MyTextCtrl( m_chat_panel, CHAT_LOG, _T(""), wxDefaultPosition, wxDefaultSize,
                                 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL);
 
   m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T(""), wxDefaultPosition, wxSize(100,CONTROL_HEIGHT), wxTE_PROCESS_ENTER );
@@ -477,7 +516,12 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
   long jumpto = 0;
   jumpto=m_chatlog_text->XYToPosition(top_col,top_row);/// column, row format
 
-  bool at_bottom = bottom_row>=totalrows-1;/// true if we're on bottom of page and must scroll
+  int dirty=m_chatlog_text->GetDirty();
+  int mustscroll=m_chatlog_text->GetMustScroll();
+  wxLogWarning(_T(" dirty: %d mustscroll: %d"),dirty,mustscroll);
+  bool at_bottom = (bottom_row>=totalrows-1)||(m_chatlog_text->GetDirty()&&m_chatlog_text->GetMustScroll());/// true if we're on bottom of page and must scroll
+  m_chatlog_text->SetMustScroll(at_bottom);
+
 
 
   m_chatlog_text->SetDefaultStyle(wxTextAttr(col, sett().GetChatColorBackground(), fon ));
@@ -514,6 +558,8 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
   #ifdef __WXMSW__
   m_chatlog_text->Thaw();
   #endif
+
+  m_chatlog_text->MakeDirty();
 }
 
 
