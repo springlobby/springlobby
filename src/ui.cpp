@@ -801,6 +801,11 @@ void Ui::OnUserLeftBattle( Battle& battle, User& user )
   }
 }
 
+void Ui::OnBattleMapRefresh()
+{
+    if ( m_main_win == 0 ) return;
+        mw().GetJoinTab().GetBattleRoomTab()->UpdateBattleInfo( true, false );
+}
 
 void Ui::OnBattleInfoUpdated( Battle& battle )
 {

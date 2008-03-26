@@ -251,7 +251,7 @@ wxString _GetGameTypeStr( GameType t )
 }
 
 
-void BattleRoomTab::UpdateBattleInfo( bool MapChanged )
+void BattleRoomTab::UpdateBattleInfo( bool MapChanged, bool reloadMapOptions )
 {
   if ( MapChanged ) /// the map has been changed
   {
@@ -269,11 +269,14 @@ void BattleRoomTab::UpdateBattleInfo( bool MapChanged )
       m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, _T("?-?") );
       m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, _T("?") );
     }
-  ///delete any eventual map option from the list and add options of the new map
-  for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
-  m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetModName() );
-  AddMMOptionsToList( m_map_opts_index, MapOption );
 
+    if ( reloadMapOptions )
+    {
+      ///delete any eventual map option from the list and add options of the new map
+      for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
+      m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetModName() );
+      AddMMOptionsToList( m_map_opts_index, MapOption );
+    }
   }
 
   m_lock_chk->SetValue( m_battle.IsLocked() );
