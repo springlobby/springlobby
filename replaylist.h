@@ -36,6 +36,14 @@ class ReplayList
     ReplayList();
     void AddReplay( Replay replay );
     void RemoveReplay( replay_id_t const& id );
+//    void IteratorBegin();
+//    Replay GetReplay();
+//    bool EOL();
+    Replay GetReplayById( replay_id_t const& id );
+    Replay GetReplay( int const index ) ;
+    //Replay& GetFirstReplay();
+    bool ReplayExists( replay_id_t const& id );
+    replay_map_t::size_type GetNumReplays();
   private:
     replay_map_t m_replays;
 };
@@ -44,22 +52,16 @@ class ReplayList
 //ReplayList Iter gives us the posibility to get Replays out of the list without
 //the rights to change the list
 
-class ReplayList_Iter
-{
-  public:
-    ReplayList_Iter(ReplayList* replaylist) : m_replaylist( replaylist ) {};
-    ~ReplayList_Iter() {};
-    void IteratorBegin();
-    Replay GetReplay();
-    bool EOL();
-    Replay& GetReplay( replay_id_t const& id );
-    //Replay& GetFirstReplay();
-    bool ReplayExists( replay_id_t const& id );
-    replay_map_t::size_type GetNumReplays();
-  private:
-    replay_iter_t m_iterator;
-    ReplayList* m_replaylist;
-};
+//class ReplayList_Iter
+//{
+//  public:
+//    ReplayList_Iter(ReplayList* replaylist) : m_replaylist( replaylist ) {};
+//    ~ReplayList_Iter() {};
+//
+//  private:
+//    replay_iter_t m_iterator;
+//    ReplayList* m_replaylist;
+//};
 
 
 Replay GetReplayInfos ( wxString& ReplayPath );

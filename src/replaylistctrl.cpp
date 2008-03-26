@@ -30,12 +30,12 @@ BEGIN_EVENT_TABLE(ReplayListCtrl, customListCtrl)
 #endif
 END_EVENT_TABLE()
 
-ReplayList_Iter* ReplayListCtrl::m_replaylist_iter_sort = 0;
+ReplayList* ReplayListCtrl::m_replaylist_sort = 0;
 
-ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList_Iter& replaylist_iter  ):
+ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList& replaylist  ):
   customListCtrl(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT),
   m_selected(-1),
-  m_replaylist_iter(replaylist_iter)
+  m_replaylist(replaylist)
 {
 
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
@@ -180,8 +180,8 @@ void ReplayListCtrl::OnColClick( wxListEvent& event )
 
 void ReplayListCtrl::Sort()
 {
-  ReplayListCtrl::m_replaylist_iter_sort = &m_replaylist_iter;
-  if (m_replaylist_iter_sort == 0 ) return;
+  ReplayListCtrl::m_replaylist_sort = &m_replaylist;
+  if (m_replaylist_sort == 0 ) return;
   for (int i = 3; i >= 0; i--) {
     switch ( m_sortorder[ i ].col ) {
       case 0 : SortItems( ( m_sortorder[ i ].direction )?&CompareDateUP:&CompareDateDOWN , 0 ); break;
@@ -197,8 +197,8 @@ void ReplayListCtrl::Sort()
 int wxCALLBACK ReplayListCtrl::CompareMapUP(long item1, long item2, long sortData)
 {
 
-  Replay& replay1 = m_replaylist_iter_sort->GetReplay(item1);
-  Replay& replay2 = m_replaylist_iter_sort->GetReplay(item2);
+  Replay replay1 = m_replaylist_sort->GetReplay(item1);
+  Replay replay2 = m_replaylist_sort->GetReplay(item2);
 
   if ( RefineMapname( replay1.MapName ).MakeUpper() < RefineMapname( replay2.MapName ).MakeUpper() )
       return -1;
@@ -210,8 +210,8 @@ int wxCALLBACK ReplayListCtrl::CompareMapUP(long item1, long item2, long sortDat
 
 int wxCALLBACK ReplayListCtrl::CompareMapDOWN(long item1, long item2, long sortData)
 {
-  Replay& replay1 = m_replaylist_iter_sort->GetReplay(item1);
-  Replay& replay2 = m_replaylist_iter_sort->GetReplay(item2);
+  Replay replay1 = m_replaylist_sort->GetReplay(item1);
+  Replay replay2 = m_replaylist_sort->GetReplay(item2);
 
   if ( RefineMapname( replay1.MapName ).MakeUpper() < RefineMapname( replay2.MapName ).MakeUpper() )
       return 1;
@@ -224,8 +224,8 @@ int wxCALLBACK ReplayListCtrl::CompareMapDOWN(long item1, long item2, long sortD
 int wxCALLBACK ReplayListCtrl::CompareModUP(long item1, long item2, long sortData)
 {
 
-  Replay& replay1 = m_replaylist_iter_sort->GetReplay(item1);
-  Replay& replay2 = m_replaylist_iter_sort->GetReplay(item2);
+  Replay replay1 = m_replaylist_sort->GetReplay(item1);
+  Replay replay2 = m_replaylist_sort->GetReplay(item2);
 
   if ( RefineModname( replay1.ModName ).MakeUpper() < RefineModname( replay2.ModName ).MakeUpper() )
       return -1;
@@ -239,8 +239,8 @@ int wxCALLBACK ReplayListCtrl::CompareModUP(long item1, long item2, long sortDat
 int wxCALLBACK ReplayListCtrl::CompareModDOWN(long item1, long item2, long sortData)
 {
 
-  Replay& replay1 = m_replaylist_iter_sort->GetReplay(item1);
-  Replay& replay2 = m_replaylist_iter_sort->GetReplay(item2);
+  Replay replay1 = m_replaylist_sort->GetReplay(item1);
+  Replay replay2 = m_replaylist_sort->GetReplay(item2);
 
   if ( RefineModname( replay1.ModName ).MakeUpper() < RefineModname( replay2.ModName ).MakeUpper() )
       return 1;
@@ -253,8 +253,8 @@ int wxCALLBACK ReplayListCtrl::CompareModDOWN(long item1, long item2, long sortD
 int wxCALLBACK ReplayListCtrl::ComparePlayerUP(long item1, long item2, long sortData)
 {
 
-  Replay& replay1 = m_replaylist_iter_sort->GetReplay(item1);
-  Replay& replay2 = m_replaylist_iter_sort->GetReplay(item2);
+  Replay replay1 = m_replaylist_sort->GetReplay(item1);
+  Replay replay2 = m_replaylist_sort->GetReplay(item2);
 
   if ( replay1.playernum < replay2.playernum )
       return -1;
@@ -267,8 +267,8 @@ int wxCALLBACK ReplayListCtrl::ComparePlayerUP(long item1, long item2, long sort
 int wxCALLBACK ReplayListCtrl::ComparePlayerDOWN(long item1, long item2, long sortData)
 {
 
-  Replay& replay1 = m_replaylist_iter_sort->GetReplay(item1);
-  Replay& replay2 = m_replaylist_iter_sort->GetReplay(item2);
+  Replay replay1 = m_replaylist_sort->GetReplay(item1);
+  Replay replay2 = m_replaylist_sort->GetReplay(item2);
 
   if ( replay1.playernum  < replay2.playernum  )
       return 1;
@@ -327,7 +327,7 @@ void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)
 		{
 			long item = GetItemData(item_hit);
 
-			Replay& replay = m_replaylist_iter_sort->GetReplay(item);
+			Replay replay = m_replaylist_sort->GetReplay(item);
 			int coloumn = getColoumnFromPosition(position);
 			switch (coloumn)
 			{

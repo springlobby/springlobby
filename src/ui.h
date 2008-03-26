@@ -62,6 +62,8 @@ class Ui
 
     bool IsSpringRunning();
 
+    void WatchReplay ( wxString& filename );
+
     void StartHostedBattle();
     void StartSinglePlayerGame( SinglePlayerBattle& battle );
     //void SendHostInfo( HostInfo update );

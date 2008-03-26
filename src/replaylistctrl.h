@@ -17,7 +17,7 @@ class ReplayList_Iter;
 class ReplayListCtrl : public customListCtrl
 {
   public:
-    ReplayListCtrl( wxWindow* parent, ReplayList_Iter& replaylist_iter );
+    ReplayListCtrl( wxWindow* parent, ReplayList& replaylist );
     ~ReplayListCtrl();
 
 
@@ -53,8 +53,9 @@ class ReplayListCtrl : public customListCtrl
 
     int m_selected;
     wxMenu* m_popup;
-    ReplayList_Iter& m_replaylist_iter;
-    static ReplayList_Iter* m_replaylist_iter_sort;
+   // ReplayList_Iter& m_replaylist_iter;
+    ReplayList& m_replaylist;
+    static ReplayList* m_replaylist_sort;
 
     DECLARE_EVENT_TABLE()
 };

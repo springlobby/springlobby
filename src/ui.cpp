@@ -1045,3 +1045,8 @@ bool Ui::TestHostPort( unsigned int port )
 {
   return m_serv->TestOpenPort( port );
 }
+
+void Ui::WatchReplay ( wxString& filename )
+{
+    m_spring->RunReplay( filename );
+}

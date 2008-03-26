@@ -34,7 +34,7 @@ BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
 
   EVT_BUTTON              ( REPLAY_WATCH             , ReplayTab::OnWatch        )
 //  EVT_LIST_ITEM_ACTIVATED ( REPLAY_JOIN              , ReplayTab::OnListJoin    )
-//  EVT_LIST_ITEM_SELECTED  ( BLIST_LIST               , ReplayTab::OnSelect      )
+  EVT_LIST_ITEM_SELECTED  ( REPLAY_LIST               , ReplayTab::OnSelect      )
   EVT_CHECKBOX            ( REPLAY_LIST_FILTER_ACTIV , ReplayTab::OnFilterActiv )
 #if  wxUSE_TOGGLEBTN
   EVT_TOGGLEBUTTON        ( REPLAY_LIST_FILTER_BUTTON, ReplayTab::OnFilter  )
@@ -49,10 +49,9 @@ END_EVENT_TABLE()
 ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
   wxPanel( parent, -1 ),
   m_ui(ui),
-  m_sel_replay(0)
+  m_sel_replay_id(0)
 {
   m_replays = new ReplayList ();
-  m_replays_iter = new ReplayList_Iter( m_replays );
 
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
@@ -63,7 +62,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
   wxBoxSizer* m_replaylist_sizer;
   m_replaylist_sizer = new wxBoxSizer( wxVERTICAL );
 
-  m_replay_listctrl = new ReplayListCtrl( this, *m_replays_iter );
+  m_replay_listctrl = new ReplayListCtrl( this, *m_replays );
   m_replaylist_sizer->Add( m_replay_listctrl, 1, wxALL|wxEXPAND, 5 );
 
   m_main_sizer->Add( m_replaylist_sizer, 1, wxEXPAND, 5 );;
@@ -139,6 +138,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
   this->SetSizer( m_main_sizer );
   this->Layout();
 
+  AddAllReplays();
   SelectReplay(0);
 }
 
@@ -149,25 +149,34 @@ ReplayTab::~ReplayTab()
         m_filter->SaveFilterValues();
 }
 
+void ReplayTab::AddAllReplays()
+{
+
+    for (int i = 0; i < m_replays->GetNumReplays(); ++i)
+    {
+        Replay r = m_replays->GetReplay(i);
+        AddReplay( r );
+    }
+}
 
 void ReplayTab::SelectReplay( Replay* replay )
 {
-  m_sel_replay = replay;
-//  m_minimap->SetReplay( m_sel_replay );
-  //m_players->ClearUsers();
-  if ( m_sel_replay != 0 ) {
-    m_map_text->SetLabel( m_sel_replay->MapName );
-    m_mod_text->SetLabel( m_sel_replay->ModName );
-    m_players_text->SetLabel( wxString::Format( _T("%d"), m_sel_replay->playernum ) );
-
-//    for ( unsigned int i = 0; i < m_sel_replay->playernum; i++ ) {
-//      m_players->AddUser( m_sel_replay->playernames[ i ] );
-//    }
-  } else {
-    m_map_text->SetLabel( wxEmptyString );
-    m_mod_text->SetLabel( wxEmptyString );
-    m_players_text->SetLabel(  _T("0") );
-  }
+//  m_sel_replay = replay;
+////  m_minimap->SetReplay( m_sel_replay );
+//  //m_players->ClearUsers();
+//  if ( m_sel_replay != 0 ) {
+//    m_map_text->SetLabel( m_sel_replay->MapName );
+//    m_mod_text->SetLabel( m_sel_replay->ModName );
+//    m_players_text->SetLabel( wxString::Format( _T("%d"), m_sel_replay->playernum ) );
+//
+////    for ( unsigned int i = 0; i < m_sel_replay->playernum; i++ ) {
+////      m_players->AddUser( m_sel_replay->playernames[ i ] );
+////    }
+//  } else {
+//    m_map_text->SetLabel( wxEmptyString );
+//    m_mod_text->SetLabel( wxEmptyString );
+//    m_players_text->SetLabel(  _T("0") );
+//  }
 }
 
 void ReplayTab::AddReplay( Replay& replay ) {
@@ -188,8 +197,8 @@ void ReplayTab::AddReplay( Replay& replay ) {
   //item.SetId( index );
 
  // ASSERT_LOGIC( m_replay_listctrl->GetItem( item ), _T("!GetItem") );
-
-  m_replay_listctrl->SetItem( index, 0, replay.date  );
+  wxString sep = _T("-");
+  m_replay_listctrl->SetItem( index, 0, wxString::Format(_T("%02d - %02d - %02d"), replay.year, replay.month, replay.day ) );
   m_replay_listctrl->SetItem( index, 1, replay.ModName );
   m_replay_listctrl->SetItem( index, 2, replay.MapName );
   m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.playernum ) );
@@ -201,13 +210,13 @@ void ReplayTab::AddReplay( Replay& replay ) {
 
 
 void ReplayTab::RemoveReplay( Replay& replay ) {
-  if ( &replay == m_sel_replay ) SelectReplay( 0 );
-  for (int i = 0; i < m_replay_listctrl->GetItemCount() ; i++ ) {
-    if ( replay.id == (int)m_replay_listctrl->GetItemData( i ) ) {
-      m_replay_listctrl->DeleteItem( i );
-      break;
-    }
-  }
+//  if ( &replay == m_sel_replay ) SelectReplay( 0 );
+//  for (int i = 0; i < m_replay_listctrl->GetItemCount() ; i++ ) {
+//    if ( replay.id == (int)m_replay_listctrl->GetItemData( i ) ) {
+//      m_replay_listctrl->DeleteItem( i );
+//      break;
+//    }
+//  }
   // TODOD
   //replay.SetGUIListActiv( false );
   m_replay_listctrl->Sort();
@@ -249,28 +258,30 @@ void ReplayTab::UpdateReplay( Replay& replay )
   m_replay_listctrl->SetItem( index, 4, replay.SpringVersion );
   m_replay_listctrl->SetItem( index, 5, replay.Filename );
 
-  if ( &replay == m_sel_replay ) SelectReplay( m_sel_replay );
-  m_replay_listctrl->Sort();
+//  if ( &replay == m_sel_replay ) SelectReplay( m_sel_replay );
+//  m_replay_listctrl->Sort();
 
 }
 
 
 void ReplayTab::RemoveAllReplays() {
   SelectReplay( 0 );
-  m_replays_iter->IteratorBegin();
-  while (! m_replays_iter->EOL() ) {
-    Replay temp_Replay = m_replays_iter->GetReplay();
+
+  //TODO what's the use of this?
+//  m_replays_iter->IteratorBegin();
+//  while (! m_replays_iter->EOL() ) {
+//    Replay temp_Replay = m_replays_iter->GetReplay();
 //    if (temp_Replay != 0)
 //        temp_Replay->SetGUIListActiv( false );
-  }
+//  }
   m_replay_listctrl->DeleteAllItems();
 }
 
 
 void ReplayTab::UpdateList() {
- m_replays_iter->IteratorBegin();
-  while (!m_replays_iter->EOL() ) {
-    Replay b = m_replays_iter->GetReplay();
+
+  for (int i = 0; i < m_replays->GetNumReplays(); ++i) {
+    Replay b = m_replays->GetReplay(i);
 
     UpdateReplay(b);
   }
@@ -297,7 +308,9 @@ void ReplayTab::OnFilter( wxCommandEvent& event )
 
 void ReplayTab::OnWatch( wxCommandEvent& event )
 {
-
+    //if ( m_sel_replay_id != 0 )
+    wxString filename = m_replays->GetReplayById(m_sel_replay_id).Filename;
+    m_ui.WatchReplay(filename);
 }
 
 void ReplayTab::OnDelete( wxCommandEvent& event )
@@ -321,7 +334,8 @@ void ReplayTab::OnSelect( wxListEvent& event )
   if ( event.GetIndex() == -1 ) {
     SelectReplay( 0 );
   } else {
-    SelectReplay( &m_replays_iter->GetReplay( m_replay_listctrl->GetItemData( event.GetIndex() ) ) );
+    //SelectReplay( &m_replays->GetReplay( m_replay_listctrl->GetItemData( event.GetIndex() ) ) );
+    m_sel_replay_id = m_replays->GetReplay( m_replay_listctrl->GetItemData( event.GetIndex() ) ).id;
   }
 }
 

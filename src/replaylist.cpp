@@ -1,5 +1,6 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 #include <stdexcept>
+#include <iterator>
 
 #include "replaylist.h"
 
@@ -29,42 +30,51 @@ void ReplayList::RemoveReplay( replay_id_t const& id ) {
   m_replays.erase(id);
 }
 
-replay_map_t::size_type ReplayList_Iter::GetNumReplays()
+replay_map_t::size_type ReplayList::GetNumReplays()
 {
-  return (m_replaylist)?(m_replaylist->m_replays.size()):0;
+  return m_replays.size();
 }
 
 
-void ReplayList_Iter::IteratorBegin()
-{
-  if (m_replaylist) m_iterator = m_replaylist->m_replays.begin();
-}
+//void ReplayList_Iter::IteratorBegin()
+//{
+//  if (m_replaylist) m_iterator = m_replaylist->m_replays.begin();
+//}
+//
+//Replay ReplayList_Iter::GetReplay()
+//{
+//
+//  Replay replay = m_iterator->second;
+//  if ( m_replaylist && m_iterator != m_replaylist->m_replays.end() ) ++m_iterator;
+//  return replay;
+//}
+//
+//bool ReplayList_Iter::EOL()
+//{
+//  return ( m_replaylist && m_iterator == m_replaylist->m_replays.end() )?true:false;
+//}
 
-Replay ReplayList_Iter::GetReplay()
-{
 
-  Replay replay = m_iterator->second;
-  if ( m_replaylist && m_iterator != m_replaylist->m_replays.end() ) ++m_iterator;
-  return replay;
-}
-
-bool ReplayList_Iter::EOL()
-{
-  return ( m_replaylist && m_iterator == m_replaylist->m_replays.end() )?true:false;
-}
-
-
-Replay& ReplayList_Iter::GetReplay( replay_id_t const& id ) {
-  if (!m_replaylist) throw std::logic_error("ReplayList_Iter::GetReplay(): no replaylist");
-  replay_iter_t b = m_replaylist->m_replays.find(id);
-  if (b == m_replaylist->m_replays.end()) throw std::runtime_error("ReplayList_Iter::GetReplay(): no such replay");
+Replay ReplayList::GetReplayById( replay_id_t const& id ) {
+//TODO catch
+  replay_iter_t b = m_replays.find(id);
+  if (b == m_replays.end())
+    throw std::runtime_error("ReplayList_Iter::GetReplay(): no such replay");
   return b->second;
 }
 
+Replay ReplayList::GetReplay( int const index ) {
+//TODO secure index
+  replay_iter_t b = m_replays.begin();
+  std::advance(b,index);
+//  if (b == m_replays.end())
+//    throw std::runtime_error("ReplayList_Iter::GetReplay(): no such replay");
+  return b->second;
+}
 
-bool ReplayList_Iter::ReplayExists( replay_id_t const& id ) {
-  if (!m_replaylist) throw std::logic_error("ReplayList_Iter::ReplayExists(): no replaylist");
-  return m_replaylist->m_replays.find(id) != m_replaylist->m_replays.end();
+bool ReplayList::ReplayExists( replay_id_t const& id )
+{
+  return m_replays.find(id) != m_replays.end();
 }
 
 
@@ -72,15 +82,17 @@ Replay GetReplayInfos ( wxString& ReplayPath )
 {
   //wxLOG_Info  ( STD_STRING( ReplayPath ) );
 //TODO extract modname
+  static long r_id = 0;
   Replay ret;
-  wxString FileName = ReplayPath.BeforeLast( '/' ); // strips file path
+  ret.Filename = ReplayPath;
+  wxString FileName = ReplayPath.AfterLast( '/' ); // strips file path
   FileName = FileName.Left( FileName.Find( _T(".sdf") ) ); //strips the file extension
   wxStringTokenizer args ( FileName, _T("-")); // chunks by '-' separator
-  if ( args.CountTokens() != 3 || args.CountTokens() != 4 ) // not a spring standard replay filename
-  {
-    ret.ReplayName = FileName;
-    return ret;
-  }
+//  if ( args.CountTokens() != 3 || args.CountTokens() != 4 ) // not a spring standard replay filename
+//  {
+//    ret.ReplayName = FileName;
+//    return ret;
+//  }
   wxString date = args.GetNextToken(); // date format YYMMDD
   ret.date = date;
   date.Left( 2 ).ToLong( &ret.year );
@@ -89,6 +101,8 @@ Replay GetReplayInfos ( wxString& ReplayPath )
   ret.MapName = args.GetNextToken();
   ret.SpringVersion = args.GetNextToken();
   ret.ReplayName = args.GetNextToken(); // void string if multiple replays wich share previous paramteres aren't present
+  ret.id = r_id;
+  r_id++;
   return ret;
 }
 

@@ -47,6 +47,7 @@ class ReplayTab : public wxPanel
 
     void OnSelect( wxListEvent& event );
     void OnUnitSyncReloaded();
+    void AddAllReplays();
 
   protected:
     ReplayList_Iter* m_replays_iter;
@@ -74,7 +75,7 @@ class ReplayTab : public wxPanel
 
     Ui& m_ui;
 
-    Replay* m_sel_replay;
+    int m_sel_replay_id;
 
     DECLARE_EVENT_TABLE();
 };
