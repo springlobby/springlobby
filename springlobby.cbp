@@ -46,7 +46,7 @@
 			</Target>
 			<Target title="Win32 | Debug">
 				<Option output="bin/Win32/Debug/springlobby" prefix_auto="0" extension_auto="1" />
-				<Option working_dir="../../../wxWidgets2.8/lib/gcc_dll" />
+				<Option working_dir="C:/wxWidgets2.8/lib/gcc_dll" />
 				<Option object_output="obj/Win32/Debug/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
@@ -84,6 +84,9 @@
 					<Add library="libwxmsw28d_richtext.a" />
 					<Add library="gmon" />
 				</Linker>
+				<Environment>
+					<Variable name="WX_DIR" value="C:/wxWidgets-2.8.4" />
+				</Environment>
 			</Target>
 			<Target title="Win32 | Profile">
 				<Option output="bin/Win32/Profile/springlobby" prefix_auto="0" extension_auto="1" />
@@ -140,10 +143,13 @@
 			<Add option="-Wall" />
 			<Add directory="src" />
 		</Compiler>
+
 		<Unit filename="src/addbotdialog.cpp" />
 		<Unit filename="src/addbotdialog.h" />
 		<Unit filename="src/agreementdialog.cpp" />
 		<Unit filename="src/agreementdialog.h" />
+		<Unit filename="src/autobalancedialog.cpp" />
+		<Unit filename="src/autobalancedialog.h" />
 		<Unit filename="src/base64.cpp" />
 		<Unit filename="src/base64.h" />
 		<Unit filename="src/battle.cpp" />
@@ -344,11 +350,15 @@
 		<Unit filename="src/userlist.h" />
 		<Unit filename="src/utils.cpp" />
 		<Unit filename="src/utils.h" />
+		<Unit filename="wxsmith/AutoBalanceDialog.wxs" />
 		<Extensions>
 			<code_completion />
 			<envvars />
 			<wxsmith version="1">
 				<gui name="wxWidgets" src="" main="" init_handlers="necessary" language="CPP" />
+				<resources>
+					<wxDialog wxs="wxsmith/AutoBalanceDialog.wxs" src="src/autobalancedialog.cpp" hdr="src/autobalancedialog.h" name="AutoBalanceDialog" language="CPP" />
+				</resources>
 			</wxsmith>
 			<debugger />
 		</Extensions>

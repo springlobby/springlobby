@@ -158,9 +158,10 @@ class TASServer : public Server
 
     wxString m_addr;
 
+    bool m_do_finalize_join_battle;
     int m_finalize_join_battle_id;
     wxString m_finalize_join_battle_pw;
-    bool m_do_finalize_join_battle;
+
     void FinalizeJoinBattle();
 
     void ReceiveAndExecute();

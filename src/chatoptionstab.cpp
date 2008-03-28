@@ -277,6 +277,21 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   bMainSizerV->Add( sbColorsSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 
+
+
+  wxStaticBoxSizer* sbBehaviorSizer;
+  sbBehaviorSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Behavior") ), wxHORIZONTAL );
+
+  m_smart_scroll = new wxCheckBox( this, ID_SYSCOLS, _("Use smart scrolling"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_smart_scroll->SetValue( sett().GetSmartScrollEnabled() );
+
+  sbBehaviorSizer->Add( m_smart_scroll, 0, wxALL, 5 );
+
+  //m_smart_scroll
+
+  bMainSizerV->Add( sbBehaviorSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+
+
   wxBoxSizer* bBotomSizer;
   bBotomSizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -420,6 +435,7 @@ void ChatOptionsTab::DoRestore()
   m_fontname->SetLabel( m_chat_font.GetFaceName() );
   m_save_logs->SetValue(  sett().GetChatLogEnable() );
   m_log_save->SetValue(  sett().GetChatLogLoc() );
+  m_smart_scroll->SetValue(sett().GetSmartScrollEnabled());
 }
 
 void ChatOptionsTab::OnApply( wxCommandEvent& event )
@@ -442,6 +458,9 @@ void ChatOptionsTab::OnApply( wxCommandEvent& event )
   //Chat Log
   sett().SetChatLogEnable( m_save_logs->GetValue());
   sett().SetChatLogLoc( m_log_save->GetValue() );
+
+  // Behavior
+  sett().SetSmartScrollEnabled(m_smart_scroll->GetValue());
 }
 
 

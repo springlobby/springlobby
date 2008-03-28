@@ -144,8 +144,22 @@ class Settings
     void SetLastAI( const wxString& ai );
     wxString GetLastAI();
 
+    void SetBalanceMethod(int value);
+    int GetBalanceMethod();
+
+    void SetBalanceClans(bool value);
+    bool GetBalanceClans();
+
+    void SetBalanceStrongClans(bool value);
+    bool GetBalanceStrongClans();
+
+
     void SetDisplayJoinLeave( bool display, const wxString& channel  );
     bool GetDisplayJoinLeave( const wxString& channel );
+
+    //!@brief sets how many lines can stay in a chat panel before the old will start getting erased, 0 to disable
+    void SetChatHistoryLenght( unsigned int historylines );
+    unsigned int GetChatHistoryLenght();
 
     wxColour GetChatColorNormal();
     void SetChatColorNormal( wxColour value );
@@ -171,6 +185,9 @@ class Settings
     void SetChatColorTime( wxColour value );
     wxFont GetChatFont();
     void SetChatFont( wxFont value );
+
+    bool GetSmartScrollEnabled();
+    void SetSmartScrollEnabled(bool value);
 
 
     BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));

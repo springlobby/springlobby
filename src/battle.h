@@ -18,6 +18,11 @@ enum NatType {
   NAT_Fixed_source_ports
 };
 
+enum BalanceType {
+  balance_random=0,
+  balance_divide
+};
+
 
 #define DEFAULT_SERVER_PORT 8034
 #define DEFAULT_EXTERNAL_UDP_SOURCE_PORT 16941
@@ -196,6 +201,8 @@ class Battle : public UserList, public IBattle
     std::vector<BattleStartRect*>::size_type GetNumRects();
 
     mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
+
+    void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true);
 
   protected:
     // Battle variables

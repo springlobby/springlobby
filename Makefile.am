@@ -501,7 +501,9 @@ springlobby_SOURCES = \
 	src/battleroommmoptionstab.cpp \
 	src/thingdef.h \
 	src/spinctld.h \
-	src/spinctld.cpp
+	src/spinctld.cpp \
+	src/autobalancedialog.cpp \
+	src/autobalancedialog.h
 
 
 # TODO keep only a single list instead of duplicating the lists below
