@@ -268,19 +268,19 @@ void Ui::ReloadUnitSync()
 
 void Ui::DownloadMap( const wxString& map )
 {
-  wxString mapname = map;
-  mapname = mapname.SubString(0, mapname.Find( '.', true ) - 1 );
-  mapname.Replace(_T(" "), _T("*") );
-  mapname.Replace(_T("-"), _T("*") );
-  mapname.Replace(_T("_"), _T("*") );
-  wxString url = _T("http://www.unknown-files.net/spring/search/") + mapname + _T("/filename/");
+//  wxString mapname = map;
+//  mapname = mapname.SubString(0, mapname.Find( '.', true ) - 1 );
+//  mapname.Replace(_T(" "), _T("+") );
+//  mapname.Replace(_T("-"), _T("*") );
+//  mapname.Replace(_T("_"), _T("*") );
+  wxString url = _T("http://www.darkstars.co.uk/downloads/search.php")  ;
   OpenWebBrowser ( url );
 }
 
 
 void Ui::DownloadMod( const wxString& mod )
 {
-  wxString modname = mod;
+ /* wxString modname = mod;
   //all the following manipulation is necessary because the publish name on UF doesn't necessary reflect the file name
   //and the mod filename isn't accessible trought unitsync
   modname.Replace(_T(" "), _T("*") );
@@ -300,8 +300,8 @@ void Ui::DownloadMod( const wxString& mod )
   modname.Replace(_T("alpha"), _T("*") );
   modname.Replace(_T("BETA"), _T("*") );
   modname.Replace(_T("Beta"), _T("*") );
-  modname.Replace(_T("beta"), _T("*") );
-  wxString url = _T("http://www.unknown-files.net/spring/search/") + modname + _T("/");
+  modname.Replace(_T("beta"), _T("*") );*/
+  wxString url = _T("http://spring-portal.com/index.php/docman/cat_view/36-mods") ;
   OpenWebBrowser ( url );
 }
 
@@ -704,7 +704,8 @@ void Ui::OnMotd( Server& server, const wxString& message )
 void Ui::OnServerMessage( Server& server, const wxString& message )
 {
   ChatPanel* panel = GetActiveChatPanel();
-  if ( panel != 0 ) {
+  if ( panel != 0 )
+  {
     panel->StatusMessage( message );
   } else {
     ShowMessage( _("Server message"), message );
@@ -800,6 +801,11 @@ void Ui::OnUserLeftBattle( Battle& battle, User& user )
   }
 }
 
+void Ui::OnBattleMapRefresh()
+{
+    if ( m_main_win == 0 ) return;
+        mw().GetJoinTab().GetBattleRoomTab()->UpdateBattleInfo( true, false );
+}
 
 void Ui::OnBattleInfoUpdated( Battle& battle )
 {
