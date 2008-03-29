@@ -19,6 +19,7 @@ struct Replay
   wxString Filename;
   wxString date;
   wxArrayString playernames;
+
 };
 
 typedef unsigned int replay_id_t;
@@ -48,5 +49,6 @@ class ReplayList
 };
 
 Replay GetReplayInfos ( wxString& ReplayPath );
+wxString GetScriptFromReplay ( wxString& ReplayPath );
 
 #endif // SPRINGLOBBY_REPLAYLIST_H_INCLUDED

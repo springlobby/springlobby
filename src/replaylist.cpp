@@ -1,6 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 #include <stdexcept>
 #include <iterator>
+#include <wx/file.h>
 
 #include "replaylist.h"
 
@@ -8,11 +9,12 @@
 #include <wx/intl.h>
 #include <wx/arrstr.h>
 #include "iunitsync.h"
+#include "settings++/custom_dialogs.h"
 
 ReplayList::ReplayList()
 {
     wxArrayString filenames = usync()->GetReplayList();
-    for (int i = 0; i < filenames.GetCount(); ++i)
+    for (unsigned int i = 0; i < filenames.GetCount(); ++i)
     {
         AddReplay( GetReplayInfos( filenames[i] ) );
     }
@@ -34,26 +36,6 @@ replay_map_t::size_type ReplayList::GetNumReplays()
 {
   return m_replays.size();
 }
-
-
-//void ReplayList_Iter::IteratorBegin()
-//{
-//  if (m_replaylist) m_iterator = m_replaylist->m_replays.begin();
-//}
-//
-//Replay ReplayList_Iter::GetReplay()
-//{
-//
-//  Replay replay = m_iterator->second;
-//  if ( m_replaylist && m_iterator != m_replaylist->m_replays.end() ) ++m_iterator;
-//  return replay;
-//}
-//
-//bool ReplayList_Iter::EOL()
-//{
-//  return ( m_replaylist && m_iterator == m_replaylist->m_replays.end() )?true:false;
-//}
-
 
 Replay ReplayList::GetReplayById( replay_id_t const& id ) {
 //TODO catch
@@ -103,7 +85,34 @@ Replay GetReplayInfos ( wxString& ReplayPath )
   ret.ReplayName = args.GetNextToken(); // void string if multiple replays wich share previous paramteres aren't present
   ret.id = r_id;
   r_id++;
+
+  GetScriptFromReplay(ReplayPath);
   return ret;
 }
 
+wxString GetScriptFromReplay ( wxString& ReplayPath )
+{
+    wxString script;
 
+    try
+    {
+        wxFile replay( ReplayPath, wxFile::read );
+        replay.Seek( 20 );
+        int headerSize ;
+        replay.Read( &headerSize, 4);
+        replay.Seek( 64 );
+        int scriptSize;// = 120;
+        replay.Read( &scriptSize, 4);
+        replay.Seek( headerSize );
+        wxChar* script_a = new wxChar[scriptSize];
+        replay.Read( script_a, scriptSize );
+        wxString script (script_a,scriptSize);
+        serverMessageBox(SL_MAIN_ICON,script,_("GG") );
+        return script;
+    }
+    catch (...)
+    {
+        return wxEmptyString;
+    }
+
+}

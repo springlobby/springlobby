@@ -152,7 +152,7 @@ ReplayTab::~ReplayTab()
 void ReplayTab::AddAllReplays()
 {
 
-    for (int i = 0; i < m_replays->GetNumReplays(); ++i)
+    for (unsigned int i = 0; i < m_replays->GetNumReplays(); ++i)
     {
         Replay r = m_replays->GetReplay(i);
         AddReplay( r );
@@ -258,7 +258,7 @@ void ReplayTab::RemoveAllReplays() {
 
 void ReplayTab::UpdateList() {
 
-  for (int i = 0; i < m_replays->GetNumReplays(); ++i) {
+  for (unsigned int i = 0; i < m_replays->GetNumReplays(); ++i) {
     Replay b = m_replays->GetReplay(i);
 
     UpdateReplay(b);
