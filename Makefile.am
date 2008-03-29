@@ -168,6 +168,14 @@ springlobby_SOURCES = \
 	src/mapctrl.h \
 	src/nicklistctrl.cpp \
 	src/nicklistctrl.h \
+	src/replaytab.h \
+	src/replaytab.cpp \	
+	src/replayfilter.h \
+	src/replayfilter.cpp \
+	src/replaylist.cpp \
+	src/replaylist.h \
+	src/replaylistctrl.h \
+	src/replaylistctrl.cpp \
 	src/server.cpp \
 	src/serverevents.cpp \
 	src/serverevents.h \

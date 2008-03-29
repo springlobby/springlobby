@@ -9,6 +9,7 @@
 #include <wx/intl.h>
 #include <wx/arrstr.h>
 #include "iunitsync.h"
+#include "utils.h"
 #include "settings++/custom_dialogs.h"
 
 ReplayList::ReplayList()
@@ -101,12 +102,12 @@ wxString GetScriptFromReplay ( wxString& ReplayPath )
         int headerSize ;
         replay.Read( &headerSize, 4);
         replay.Seek( 64 );
-        int scriptSize;// = 120;
+        int scriptSize;
         replay.Read( &scriptSize, 4);
         replay.Seek( headerSize );
-        wxChar* script_a = new wxChar[scriptSize];
+        char* script_a = new char[scriptSize];
         replay.Read( script_a, scriptSize );
-        wxString script (script_a,scriptSize);
+        wxString script = WX_STRINGC( script_a ) ;//(script_a,scriptSize);
         serverMessageBox(SL_MAIN_ICON,script,_("GG") );
         return script;
     }
