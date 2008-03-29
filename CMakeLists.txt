@@ -20,11 +20,11 @@ SET(wxWidgets_USE_LIBS base core gl net adv qa)
 # Under Windows the wx-config Tools is missing, so you need to manually specify the Location of wxWidgets
 IF(WIN32)
 	# Base wxWidgets Directory (e.g., C:/wxWidgets-2.6.3).
-	wxWidgets_ROOT_DIR=""
+	SET( wxWidgets_ROOT_DIR  )
 	# Path to wxWidgets Libraries e.g., C:/wxWidgets-2.6.3/lib/vc_lib).
-	wxWidgets_LIB_DIR=""
+	SET( wxWidgets_LIB_DIR  )
 	# Configuration to use (e.g., msw, mswd, mswu, mswunivud, etc.)
-	wxWidgets_CONFIGURATION=""
+	SET( wxWidgets_CONFIGURATION  )
 ENDIF(WIN32)
 
 FIND_PACKAGE(wxWidgets)
@@ -131,7 +131,7 @@ IF(wxWidgets_FOUND)
 # Translation Section
 ##################################################
 FIND_PACKAGE( Gettext )
-GETTEXT_CREATE_TRANSLATIONS ( po/springlobby.pot ALL po/de.po )
+GETTEXT_CREATE_TRANSLATIONS ( po/springlobby.pot ALL po/sv.po )
 
 
 # Make sure the compiler can find include files from our Hello library.
