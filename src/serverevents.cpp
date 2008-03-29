@@ -232,8 +232,8 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
     Battle& battle = m_serv.GetBattle( battleid );
     status.color_index = user.BattleStatus().color_index;
 
-
     user.UpdateBattleStatus( status );
+    battle.OnUserBattleStatusUpdated(user);
 
     m_ui.OnUserBattleStatus( battle, user );
   }
@@ -610,6 +610,7 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
       ///something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
       m_ui.OnBattleAction(*m_serv.GetCurrentBattle(),username,_(" does not really support nat traversal"));
     }
+    m_serv.GetCurrentBattle()->CheckBan(user);
   }catch(std::runtime_error){
     wxLogMessage(_T("runtime_error inside OnClientIPPort()"));
   }

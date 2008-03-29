@@ -246,6 +246,46 @@ void Battle::OnUserAdded( User& user )
   UserBattleStatus bs;
   bs.order = m_order++;
   user.UpdateBattleStatus( bs, true );
+  if(IsFounderMe()){
+    CheckBan(user);
+    if(user.GetStatus().rank<m_opts.rankneeded){
+      switch(m_opts.ranklimittype){
+        case rank_limit_none:
+        break;
+        case rank_limit_autospec:
+        if(!user.BattleStatus().spectator){
+          DoAction(_T("Rank limit autospec: ")+user.GetNick());
+          ForceSpectator(user,true);
+        }
+        break;
+        case rank_limit_autokick:
+        DoAction(_T("Rank limit autokick: ")+user.GetNick());
+        BattleKickPlayer(user);
+        break;
+      }
+    }
+  }
+}
+
+void Battle::OnUserBattleStatusUpdated( User &user ){
+  if(IsFounderMe()){
+    if(user.GetStatus().rank<m_opts.rankneeded){
+      switch(m_opts.ranklimittype){
+        case rank_limit_none:
+        break;
+        case rank_limit_autospec:
+        if(!user.BattleStatus().spectator){
+          DoAction(_T("Rank limit autospec: ")+user.GetNick());
+          ForceSpectator(user,true);
+        }
+        break;
+        case rank_limit_autokick:
+        DoAction(_T("Rank limit autokick: ")+user.GetNick());
+        BattleKickPlayer(user);
+        break;
+      }
+    }
+  }
 }
 
 
@@ -284,11 +324,83 @@ void Battle::RingNotReadyPlayers()
 
 bool Battle::ExecuteSayCommand( const wxString& cmd )
 {
-  if ( cmd.BeforeFirst(' ').Lower() == _T("/me") ) {
+  wxString cmd_name=cmd.BeforeFirst(' ').Lower();
+  if ( cmd_name == _T("/me") ) {
     m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
     return true;
-  }  else return false;
+  }
+  ///< quick hotfix for bans
+  if(IsFounderMe()){
+    if ( cmd_name == _T("/ban") ) {
+      wxString nick=cmd.AfterFirst(' ');
+      m_banned_users.insert(nick);
+      m_serv.BattleKickPlayer( m_opts.battleid, nick );
+      m_ui.OnBattleAction(*this,wxString(_T(" ")),nick+_T(" banned"));
+      //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
+      return true;
+    }
+    if ( cmd_name == _T("/unban") ) {
+      wxString nick=cmd.AfterFirst(' ');
+      m_banned_users.erase(nick);
+      m_ui.OnBattleAction(*this,wxString(_T(" ")),nick+_T(" unbanned"));
+      //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
+      return true;
+    }
+    if ( cmd_name == _T("/banlist") ) {
+      m_ui.OnBattleAction(*this,wxString(_T(" ")),_T("banlist:"));
+      for(std::set<wxString>::iterator i=m_banned_users.begin();i!=m_banned_users.end();++i){
+        m_ui.OnBattleAction(*this,wxString(_T("  ")), *i);
+      }
+      for(std::set<wxString>::iterator i=m_banned_ips.begin();i!=m_banned_ips.end();++i){
+        m_ui.OnBattleAction(*this,wxString(_T("  ")), *i);
+      }
+      return true;
+    }
+    if ( cmd_name == _T("/unban") ) {
+      wxString nick=cmd.AfterFirst(' ');
+      m_banned_users.erase(nick);
+      m_banned_ips.erase(nick);
+      m_ui.OnBattleAction(*this,wxString(_T(" ")),nick+_T(" unbanned"));
+      //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
+      return true;
+    }
+    if ( cmd_name == _T("/ipban") ) {
+      wxString nick=cmd.AfterFirst(' ');
+      m_banned_users.insert(nick);
+      m_ui.OnBattleAction(*this,wxString(_T(" ")),nick+_T(" banned"));
+      if(UserExists(nick)){
+        User &user=GetUser(nick);
+        if(!user.BattleStatus().ip.empty()){
+          m_banned_ips.insert(user.BattleStatus().ip);
+          m_ui.OnBattleAction(*this,wxString(_T(" ")),user.BattleStatus().ip+_T(" banned"));
+        }
+        m_serv.BattleKickPlayer( m_opts.battleid, nick );
+      }
+      //m_banned_ips.erase(nick);
+
+      //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
+      return true;
+    }
+  }
+  ///>
+  return false;
 }
+///< quick hotfix for bans
+void Battle::CheckBan(User &user){
+  if(IsFounderMe()){
+    if(m_banned_users.count(user.GetNick())>0){
+      BattleKickPlayer(user);
+      m_ui.OnBattleAction(*this,wxString(_T(" ")),user.GetNick()+_T(" is banned, kicking"));
+    }else
+    if(m_banned_ips.count(user.BattleStatus().ip)>0){
+      m_ui.OnBattleAction(*this,wxString(_T(" ")),user.BattleStatus().ip+_T(" is banned, kicking"));
+      BattleKickPlayer(user);
+    }
+  }
+}
+///>
+
+
 
 
 void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom )
