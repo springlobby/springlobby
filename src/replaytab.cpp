@@ -176,7 +176,7 @@ void ReplayTab::AddReplay( Replay& replay ) {
 
  // ASSERT_LOGIC( m_replay_listctrl->GetItem( item ), _T("!GetItem") );
   wxString sep = _T("-");
-  m_replay_listctrl->SetItem( index, 0, wxString::Format(_T("%02d - %02d - %02d"), replay.year, replay.month, replay.day ) );
+  m_replay_listctrl->SetItem( index, 0, wxString::Format(_T("%02ld - %02ld - %02ld"), replay.year, replay.month, replay.day ) );
   m_replay_listctrl->SetItem( index, 1, replay.ModName );
   m_replay_listctrl->SetItem( index, 2, replay.MapName );
   m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.playernum ) );
