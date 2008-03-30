@@ -620,11 +620,11 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) { // TODO fix this when new Spring comes.
     BattleBot* bot;
-    if ( startpostype == 3) bot = battle.GetBot( i );
+    if ( startpostype == ST_Pick) bot = battle.GetBot( i );
     else bot = battle.GetBotByStartPosition( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i );
-    if ( startpostype == 3 ){
+    if ( startpostype == ST_Pick ){
       s += wxString::Format( _T("\t\tStartPosX=%d;\n"), bot->posx );
       s += wxString::Format( _T("\t\tStartPosZ=%d;\n"), bot->posy );
     }
