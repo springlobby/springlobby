@@ -43,12 +43,12 @@ springlobby_LDADD = \
 springsettings_LDADD = \
 	$(WX_LIBS)
 
-if USE_WINDRES
+#if USE_WINDRES
 RESOURCECOMPILE = $(WINDRES) -I $(srcdir)/src $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
     $(AM_CPPFLAGS) $(CPPFLAGS) # $(AM_CXXFLAGS) $(CXXFLAGS)
 .rc.o:
 	$(RESOURCECOMPILE) -o $@ -i $<
-endif
+#endif
 
 # filter-out is a GNU make extension, so we get a warning from automake
 # and we can not use -Werror in AM_INIT_AUTOMAKE because of this either
@@ -508,7 +508,8 @@ springlobby_SOURCES = \
 	src/spinctld.h \
 	src/spinctld.cpp \
 	src/autobalancedialog.cpp \
-	src/autobalancedialog.h
+	src/autobalancedialog.h \
+	src/springlobby.rc
 
 
 # TODO keep only a single list instead of duplicating the lists below
@@ -547,10 +548,10 @@ springlobby_SOURCES += \
 	src/settings++/helpmenufunctions.cpp 
 	
 		
-if USE_WINDRES
+#if USE_WINDRES
 	springlobby_SOURCES += \
 		src/springlobby.rc
-endif
+#endif
 
 
 springsettings_SOURCES = \
@@ -597,8 +598,8 @@ springsettings_SOURCES = \
 	src/settings++/helpmenufunctions.cpp
 
 
-if USE_WINDRES
+#if USE_WINDRES
 	springsettings_SOURCES += \
 		src/settings++/settings.rc
-endif
+#endif
 
