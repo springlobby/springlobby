@@ -176,7 +176,7 @@ void  mmOptionsWrapper::getOptions(wxStringTripleVec* list, GameOption modmapFla
 {
 	for (optionMapBoolIter it = opts[modmapFlag].bool_map.begin(); it != opts[modmapFlag].bool_map.end(); ++it)
 	{
-		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name , wxString::Format(_T("%d"),(*it).second.value) ) ) );
+		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name , wxString() << int(((*it).second.value)) ) ) );
 	}
 
 	for (optionMapStringIter it = opts[modmapFlag].string_map.begin(); it != opts[modmapFlag].string_map.end(); ++it)
@@ -196,7 +196,7 @@ void  mmOptionsWrapper::getOptions(wxStringTripleVec* list, GameOption modmapFla
 
 	for (optionMapIntIter it = opts[modmapFlag].int_map.begin(); it != opts[modmapFlag].int_map.end(); ++it)
 	{
-		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, wxString::Format(_T("%ld"),(*it).second.value) ) ) );
+		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, wxString()<<(*it).second.value ) ) );
 	}
 }
 
@@ -204,7 +204,7 @@ void mmOptionsWrapper::getOptionsMap(wxStringMap* map, GameOption modmapFlag)
 {
 	for (optionMapBoolIter it = opts[modmapFlag].bool_map.begin(); it != opts[modmapFlag].bool_map.end(); ++it)
 	{
-		(*map)[(*it).first] =  wxString::Format(_T("%d"),(*it).second.value);
+		(*map)[(*it).first] = wxString()<<int((*it).second.value);
 	}
 
 	for (optionMapStringIter it = opts[modmapFlag].string_map.begin(); it != opts[modmapFlag].string_map.end(); ++it)
@@ -224,7 +224,7 @@ void mmOptionsWrapper::getOptionsMap(wxStringMap* map, GameOption modmapFlag)
 
 	for (optionMapIntIter it = opts[modmapFlag].int_map.begin(); it != opts[modmapFlag].int_map.end(); ++it)
 	{
-		(*map)[(*it).first] =  wxString::Format(_T("%ld"),(*it).second.value);
+		(*map)[(*it).first] = wxString()<<(*it).second.value;
 	}
 }
 
@@ -266,15 +266,15 @@ wxString mmOptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag)
 		switch (optType)
 		{
 		case opt_float:
-			return wxString::Format( _T("%f"),(opts[modmapFlag].float_map)[key].value );
+			return wxString::Format( _T("%f"),opts[modmapFlag].float_map[key].value );
 		case opt_bool:
-			return wxString::Format(_T("%d"), (opts[modmapFlag].bool_map)[key].value );
+			return wxString()<<int(opts[modmapFlag].bool_map[key].value);
 		case opt_int:
-			return wxString::Format(_T("%ld"), (opts[modmapFlag].int_map)[key].value );
+			return wxString()<<opts[modmapFlag].int_map[key].value ;
 		case opt_string:
-			return  (opts[modmapFlag].string_map)[key].value ;
+			return  opts[modmapFlag].string_map[key].value ;
 		case opt_list:
-			return (opts[modmapFlag].list_map)[key].value;
+			return opts[modmapFlag].list_map[key].value;
         case opt_undefined:
             return wxEmptyString;
 		}

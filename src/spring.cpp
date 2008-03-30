@@ -261,7 +261,8 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += _T("\tGameType=") + usync()->GetModArchive(usync()->GetModIndex(battle.GetModName())) + _T(";\n");
   unsigned long uhash;
   battle.GetModHash().ToULong(&uhash);
-  s += wxString::Format( _T("\tModHash=%ld;\n"), (long)uhash );
+  //s += wxString::Format( _T("\tModHash=%ld;\n"), (long)uhash );
+  s << _T("\tModHash=") << (long)uhash << _T(";\n");
   wxStringTripleVec optlistEng;
   battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
   for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
@@ -269,7 +270,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
     s += _T("\t") + it->first + _T("=") + it->second.second + _T(";\n");
   }
 
-  if ( battle.IsFounderMe() ) s += wxString::Format( _T("\tHostIP=localhost;\n") );
+  if ( battle.IsFounderMe() ) s += _T("\tHostIP=localhost;\n");
   else s += _T("\tHostIP=") + battle.GetHostIp() + _T(";\n");
 
   if ( battle.IsFounderMe() && battle.GetNatType() == NAT_Hole_punching ) {
@@ -569,7 +570,7 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   long startpostype;
   battle.CustomBattleOptions()->getSingleValue( _T("startpostype"), EngineOption ).ToLong( &startpostype );
 
-  wxLogMessage( _T("StartPosType=%ld"), startpostype );
+  wxLogMessage( _T("StartPosType=%d"), (int)startpostype );
 
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
@@ -593,7 +594,10 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   s += _T("\tGameType=" )+ usync()->GetModArchive(usync()->GetModIndex(battle.GetModName())) + _T(";\n");
   unsigned long uhash;
   battle.GetModHash().ToULong(&uhash);
-  s += wxString::Format( _T("\tModHash=%ld;\n"), (long)uhash );
+
+  //s += wxString::Format( _T("\tModHash=%ld;\n"), (long)uhash );
+  s << _T("\tModHash=") << (long)uhash << _T(";\n");
+
   wxStringTripleVec optlistEng;
   battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
   for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
