@@ -211,6 +211,7 @@ springlobby_SOURCES = \
 	src/images/bot.xpm \
 	src/images/channel.xpm \
 	src/images/chat_icon.png.h \
+	src/images/chat_icon_text.png.h \
 	src/images/closed_game.xpm \
 	src/images/closed_pw_game.xpm \
 	src/images/close_hi.xpm \
@@ -222,12 +223,14 @@ springlobby_SOURCES = \
 	src/images/exists.xpm \
 	src/images/ingame.xpm \
 	src/images/join_icon.png.h \
+	src/images/join_icon_text.png.h \
 	src/images/nexists.xpm \
 	src/images/nready_q.xpm \
 	src/images/nready_unsync.xpm \
 	src/images/open_game.xpm \
 	src/images/open_pw_game.xpm \
 	src/images/options_icon.png.h \
+	src/images/options_icon_text.png.h \
 	src/images/rank0.xpm \
 	src/images/rank1.xpm \
 	src/images/rank2.xpm \
@@ -239,6 +242,8 @@ springlobby_SOURCES = \
 	src/images/ready_unsync.xpm \
 	src/images/downloads_icon.png.h \
 	src/images/single_player_icon.png.h \
+	src/images/downloads_icon_text.png.h \
+	src/images/single_player_icon_text.png.h \
 	src/images/select_icon.xpm \
 	src/images/server.xpm \
 	src/images/spectator.xpm \

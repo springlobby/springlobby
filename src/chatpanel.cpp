@@ -29,6 +29,7 @@
 #include "nicklistctrl.h"
 #include "mainwindow.h"
 #include "chatlog.h"
+#include "settings++/custom_dialogs.h"
 #include "settings.h"
 /*
 BEGIN_EVENT_TABLE(MyTextCtrl, wxTextCtrl)
@@ -1231,6 +1232,13 @@ void ChatPanel::OnUserMenuJoinSame( wxCommandEvent& event )
   if ( user == 0 ) return;
   Battle* battle = user->GetBattle();
   if ( battle == 0 ) return;
+
+  if ( !usync()->ModExists( battle->GetModName() ) )
+  {
+    customMessageBoxNoModal(SL_MAIN_ICON, _("You don't have the mod ") + battle->GetModName()
+            + _(" . Please download it first"), _("Mod unavailable") );
+    return;
+  }
 
   wxString password;
   if ( battle->IsPassworded() ) {
