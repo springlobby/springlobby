@@ -81,6 +81,8 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
     case EngineOption:
         opt.bool_map[_T("limitdgun")] = mmOptionBool(_("Limit D-Gun"),_T("limitdgun"),
         _("Disables commander's D-gun when being too far away from the starting point"),false);
+        opt.bool_map[_T("FixedAllies")] = mmOptionBool(_("Fixed Alliances"),_T("FixedAllies"),
+        _("Disables possibility to dynamically ally/unally ingame"),true);
         opt.bool_map[_T("ghostedbuildings")] = mmOptionBool(_("Ghosted Buildings"),_T("ghostedbuildings"),
         _("Enemy buildings will leave a ghost image on the map after losing LoS on them"),true);
         opt.bool_map[_T("diminishingmms")] = mmOptionBool(_("Diminishing MM"),_T("diminishingmms"),
