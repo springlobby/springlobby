@@ -61,6 +61,14 @@
 #define IsColourOk() IsOk()
 #endif
 
+//!@brief converts integers to wxString
+wxString i2s( int arg );
+//!@brief converts unsigned int to wxString
+wxString u2s( unsigned int arg );
+//!@brief converts floating point numbers to wxString without problem of WTF decimal separator different in every locale
+wxString f2s( float arg );
+
+
 wxString GetLibExtension();
 void InitializeLoggingTargets();
 wxString GetWordParam( wxString& params );

@@ -62,6 +62,30 @@ void InitializeLoggingTargets()
 }
 
 
+wxString i2s( int arg )
+{
+  std::stringstream s;
+  s << arg;
+  return WX_STRING( s.str() );
+}
+
+
+wxString u2s( unsigned int arg )
+{
+  std::stringstream s;
+  s << arg;
+  return WX_STRING( s.str() );
+}
+
+
+wxString f2s( float arg )
+{
+  std::stringstream s;
+  s << arg;
+  return WX_STRING( s.str() );
+}
+
+
 wxString GetWordParam( wxString& params )
 {
   wxString param;
