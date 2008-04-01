@@ -3,7 +3,7 @@
 
 #include <wx/string.h>
 #include <list>
-
+#include <algorithm>
 #include "server.h"
 
 #define FIRST_UDP_SOURCEPORT 8300
