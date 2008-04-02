@@ -508,7 +508,9 @@ springlobby_SOURCES = \
 	src/spinctld.h \
 	src/spinctld.cpp \
 	src/autobalancedialog.cpp \
-	src/autobalancedialog.h
+	src/autobalancedialog.h \
+	src/tdfcontainer.cpp \
+	src/tdfcontainer.h
 
 
 # TODO keep only a single list instead of duplicating the lists below

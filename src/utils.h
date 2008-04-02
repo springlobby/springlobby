@@ -78,6 +78,9 @@ wxString TowxString(T arg){
 inline wxString TowxString(wxString arg){
   return arg;
 }
+inline wxString TowxString(const wxChar *arg){
+  return wxString(arg);
+}
 inline wxString TowxString(std::string arg){
   return WX_STRING(arg);
 }

@@ -183,7 +183,7 @@ void Spring::OnTerminated( wxCommandEvent& event )
 void Spring::WriteScriptTxt(std::ostream &output, Battle& battle )
 {
   wxLogMessage(_T("0 WriteScriptTxt called "));
-  //wxString s;
+
   TDFWriter tdf(output);
 
   int  NumTeams=0, MyPlayerNum=-1;
@@ -267,7 +267,6 @@ void Spring::WriteScriptTxt(std::ostream &output, Battle& battle )
   // Start generating the script.
   tdf.EnterSection(_T("GAME"));
 
-  //s += wxString::Format( _T("\tMapname=%s;\n"), bo.mapname.c_str() );
   tdf.Append(_T("Mapname"),battle.GetMapName());
   tdf.Append(_T("GameType"),usync()->GetModArchive(usync()->GetModIndex(battle.GetModName())));
 
@@ -292,11 +291,12 @@ void Spring::WriteScriptTxt(std::ostream &output, Battle& battle )
   }
 
   if ( battle.IsFounderMe() && battle.GetNatType() == NAT_Hole_punching ) {
-    //s += wxString::Format( _T("\tHostPort=%d;\n"), battle.GetMyInternalUdpSourcePort() );
     tdf.Append(_T("HostPort"),battle.GetMyInternalUdpSourcePort());
   } else {
     tdf.Append(_T("HostPort"),battle.GetHostPort());
   }
+
+  tdf.AppendLineBreak();
 
   if ( !battle.IsFounderMe() )
   {
