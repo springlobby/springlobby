@@ -273,7 +273,7 @@ void Ui::DownloadMap( const wxString& map )
 //  mapname.Replace(_T(" "), _T("+") );
 //  mapname.Replace(_T("-"), _T("*") );
 //  mapname.Replace(_T("_"), _T("*") );
-  wxString url = _T("http://www.darkstars.co.uk/downloads/search.php")  ;
+  wxString url = _T("http://spring.jobjol.nl/search.php")  ;
   OpenWebBrowser ( url );
 }
 
@@ -301,7 +301,7 @@ void Ui::DownloadMod( const wxString& mod )
   modname.Replace(_T("BETA"), _T("*") );
   modname.Replace(_T("Beta"), _T("*") );
   modname.Replace(_T("beta"), _T("*") );*/
-  wxString url = _T("http://spring-portal.com/index.php/docman/cat_view/36-mods") ;
+  wxString url = _T("http://spring.jobjol.nl/files.php?subcategory_id=5") ;
   OpenWebBrowser ( url );
 }
 
