@@ -13,6 +13,9 @@
 #include "utils.h"
 #include "uiutils.h"
 
+#include <algorithm>
+#include <math.h>
+
 
 const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBot*>::size_type)(-1);
 
@@ -231,7 +234,7 @@ int Battle::GetMyPlayerNum()
   for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
     if ( &GetUser(i) == &m_serv.GetMe() ) return i;
   }
-  ASSERT_LOGIC(false, _T("You are not in this game.") );
+  ASSERT_RUNTIME(false, _T("You are not in this game.") );
   return -1;
 }
 
@@ -242,7 +245,7 @@ void Battle::OnUserAdded( User& user )
   UserList::AddUser( user );
   UserBattleStatus bs;
   bs.order = m_order++;
-  user.SetBattleStatus( bs, true );
+  user.UpdateBattleStatus( bs, true );
 }
 
 
@@ -515,7 +518,11 @@ void Battle::ForceTeam( User& user, int team )
 
 void Battle::ForceAlly( User& user, int ally )
 {
-  m_serv.ForceAlly( m_opts.battleid, user.GetNick(), ally );
+  if(&user==&GetMe()){
+    SetMyAlly(ally);
+  }else{
+    m_serv.ForceAlly( m_opts.battleid, user.GetNick(), ally );
+  }
 }
 
 
@@ -545,5 +552,181 @@ void Battle::SetHandicap( User& user, int handicap)
 std::vector<BattleStartRect*>::size_type Battle::GetNumRects()
 {
   return m_rects.size();
+}
+
+
+bool PlayerRankCompareFunction(User *a, User *b){/// should never operate on nulls. Hence, ASSERT_LOGIC is appropriate here.
+  ASSERT_LOGIC(a,_T("fail in Autobalance, NULL player"));
+  ASSERT_LOGIC(b,_T("fail in Autobalance, NULL player"));
+  return a->GetBalanceRank() > b->GetBalanceRank();
+}
+
+struct Alliance{
+  std::vector<User *>players;
+  float ranksum;
+  int allynum;
+  Alliance():ranksum(0){}
+  Alliance(int i):ranksum(0), allynum(i){}
+  void AddPlayer(User *player){
+    if(player){
+      players.push_back(player);
+      ranksum+=player->GetBalanceRank();
+    }
+  }
+  void AddAlliance(Alliance &other){
+    for(std::vector<User *>::iterator i=other.players.begin();i!=other.players.end();++i)AddPlayer(*i);
+  }
+  bool operator <(const Alliance &other) const
+  {
+    return ranksum<other.ranksum;
+  }
+};
+
+int my_random(int range){
+  return rand()%range;
+}
+
+void shuffle(std::vector<User *> &players){/// proper shuffle.
+  for(size_t i=0;i<players.size();++i){/// the players below i are shuffled, the players above arent
+    int rn=i+my_random(players.size()-i);/// the top of shuffled part becomes random card from unshuffled part
+    User *tmp=players[i];
+    players[i]=players[rn];
+    players[rn]=tmp;
+  }
+}
+
+/*
+bool ClanRemovalFunction(const std::map<wxString, Alliance>::value_type &v){
+  return v.second.players.size()<2;
+}
+*/
+/*
+struct ClannersRemovalPredicate{
+  std::map<wxString, Alliance> &clans;
+  PlayerRemovalPredicate(std::map<wxString, Alliance> &clans_):clans(clans_)
+  {
+  }
+  bool operator()(User *u) const{
+    return clans.find(u->GetClan());
+  }
+}*/
+
+void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans){
+  wxLogMessage(_T("Autobalancing, type=%d, clans=%d, strong_clans=%d"),balance_type,int(support_clans),int(strong_clans));
+  DoAction(_T("is auto-balancing alliances ..."));
+  int tmp=GetNumRects();
+  //size_t i;
+  //int num_alliances;
+  std::vector<Alliance>alliances;
+  int ally=0;
+  for(int i=0;i<tmp;++i){
+    BattleStartRect* sr = m_rects[i];
+    if(sr && !sr->deleted){
+      ally=i;
+      alliances.push_back(Alliance(ally));
+      ally++;
+    }
+  }
+  /// make at least two alliances
+  while(alliances.size()<2){
+    alliances.push_back(Alliance(ally));
+    ally++;
+  }
+
+  //for(i=0;i<alliances.size();++i)alliances[i].allynum=i;
+
+  wxLogMessage(_T("number of alliances: %d"),int(alliances.size()));
+
+  std::vector<User*> players_sorted;
+  players_sorted.reserve(GetNumUsers());
+
+
+
+  for(size_t i=0;i<GetNumUsers();++i){
+    if(!GetUser(i).BattleStatus().spectator)players_sorted.push_back(&GetUser(i));
+  }
+
+  shuffle(players_sorted);
+
+  std::map<wxString, Alliance> clan_alliances;
+  if(support_clans){
+    for(size_t i=0;i<players_sorted.size();++i){
+      wxString clan=players_sorted[i]->GetClan();
+      if(!clan.empty()){
+        clan_alliances[clan].AddPlayer(players_sorted[i]);
+      }
+    }
+  };
+
+  if(balance_type!=balance_random)std::sort(players_sorted.begin(),players_sorted.end(),PlayerRankCompareFunction);
+
+  if(support_clans){
+    std::map<wxString, Alliance>::iterator clan_it=clan_alliances.begin();
+    while(clan_it!=clan_alliances.end()){
+      Alliance &clan=(*clan_it).second;
+      /// if clan is too small (only 1 clan member in battle) or too big, dont count it as clan
+      if(clan.players.size()<2 || ((!strong_clans) && (clan.players.size()>(players_sorted.size()+alliances.size()-1)/alliances.size()))){
+        wxLogMessage(_T("removing clan %s"),(*clan_it).first.c_str());
+        std::map<wxString, Alliance>::iterator next=clan_it;
+        ++next;
+        clan_alliances.erase(clan_it);
+        clan_it=next;
+        continue;
+      }
+      wxLogMessage(_T("Inserting clan %s"),(*clan_it).first.c_str());
+      std::sort(alliances.begin(),alliances.end());
+      float lowestrank=alliances[0].ranksum;
+      int rnd_k=1;// number of alliances with rank equal to lowestrank
+      while(size_t(rnd_k)<alliances.size()){
+        if(fabs(alliances[rnd_k].ranksum-lowestrank)>0.01){
+          break;
+        }
+        rnd_k++;
+      }
+      wxLogMessage(_T("number of lowestrank alliances with same rank=%d"),rnd_k);
+      alliances[my_random(rnd_k)].AddAlliance(clan);
+      ++clan_it;
+    }
+  }
+
+  for(size_t i=0;i<players_sorted.size();++i){
+    /// skip clanners, those have been added already.
+    if(clan_alliances.count(players_sorted[i]->GetClan())>0){
+      wxLogMessage(_T("clanner already added, nick=%s"),players_sorted[i]->GetNick().c_str());
+      continue;
+    }
+
+    /// find alliances with lowest ranksum
+    /// insert current user into random one out of them
+    /// since performance doesnt matter here, i simply sort alliances,
+    /// then find how many alliances in beginning have lowest ranksum
+    /// note that balance player ranks range from 1 to 1.1 now
+    /// i.e. them are quasi equal
+    /// so we're essentially adding to alliance with smallest number of players,
+    /// the one with smallest ranksum.
+
+    std::sort(alliances.begin(),alliances.end());
+    float lowestrank=alliances[0].ranksum;
+    int rnd_k=1;// number of alliances with rank equal to lowestrank
+    while(size_t(rnd_k)<alliances.size()){
+      if(fabs(alliances[rnd_k].ranksum-lowestrank)>0.01){
+        break;
+      }
+      rnd_k++;
+    }
+    wxLogMessage(_T("number of lowestrank alliances with same rank=%d"),rnd_k);
+    alliances[my_random(rnd_k)].AddPlayer(players_sorted[i]);
+  }
+
+  for(size_t i=0;i<alliances.size();++i){
+    for(size_t j=0;j<alliances[i].players.size();++j){
+      ASSERT_LOGIC(alliances[i].players[j],_T("fail in Autobalance, NULL player"));
+      wxString msg=wxString::Format(_T("setting player %s to alliance %d"),alliances[i].players[j]->GetNick().c_str(),i);
+      wxLogMessage(_T("%s"),msg.c_str());
+      m_ui.OnBattleAction(*this,wxString(_T(" ")),msg);
+      ForceAlly(*alliances[i].players[j],alliances[i].allynum);
+    }
+  }
+  Update();
 }
 

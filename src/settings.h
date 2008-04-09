@@ -19,7 +19,7 @@
 
 class wxConfigBase;
 class wxFont;
-
+struct BattleListFilterValues;
 
 //! @brief Class used to store and restore application settings.
 class Settings
@@ -38,6 +38,12 @@ class Settings
 
     bool GetNoUDP();
     void SetNoUDP(bool value);
+
+    int GetClientPort();
+    void SetClientPort(int value);
+
+    bool GetShowIPAddresses();
+    void SetShowIPAddresses(bool value);
 
     wxString GetWebBrowserPath();
     void SetWebBrowserPath( const wxString path );
@@ -138,8 +144,22 @@ class Settings
     void SetLastAI( const wxString& ai );
     wxString GetLastAI();
 
+    void SetBalanceMethod(int value);
+    int GetBalanceMethod();
+
+    void SetBalanceClans(bool value);
+    bool GetBalanceClans();
+
+    void SetBalanceStrongClans(bool value);
+    bool GetBalanceStrongClans();
+
+
     void SetDisplayJoinLeave( bool display, const wxString& channel  );
     bool GetDisplayJoinLeave( const wxString& channel );
+
+    //!@brief sets how many lines can stay in a chat panel before the old will start getting erased, 0 to disable
+    void SetChatHistoryLenght( unsigned int historylines );
+    unsigned int GetChatHistoryLenght();
 
     wxColour GetChatColorNormal();
     void SetChatColorNormal( wxColour value );
@@ -166,7 +186,16 @@ class Settings
     wxFont GetChatFont();
     void SetChatFont( wxFont value );
 
+    bool GetSmartScrollEnabled();
+    void SetSmartScrollEnabled(bool value);
+
+
+    BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
+    void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
+    wxString GetLastFilterProfileName();
+
 	bool GetDisableSpringVersionCheck();
+
 
   protected:
 

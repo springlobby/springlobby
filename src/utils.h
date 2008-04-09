@@ -30,13 +30,11 @@
 //! Converts a wxString to an std::string
 #define STD_STRING(v) std::string((const char*)(v).mb_str(wxConvUTF8))
 
-void Crash();
-
 #if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
 #define ASSERT_LOGIC(cond,msg) if(!(cond))\
 {\
   wxLogError(_T("logic error: %s"), wxString(msg).c_str() );\
-  Crash();\
+  throw std::logic_error(std::string(wxString(msg).mb_str()));\
 }
 #else
 #define ASSERT_LOGIC(cond,msg) if(!(cond))\
@@ -62,6 +60,14 @@ void Crash();
 #else
 #define IsColourOk() IsOk()
 #endif
+
+//!@brief converts integers to wxString
+wxString i2s( int arg );
+//!@brief converts unsigned int to wxString
+wxString u2s( unsigned int arg );
+//!@brief converts floating point numbers to wxString without problem of WTF decimal separator different in every locale
+wxString f2s( float arg );
+
 
 wxString GetLibExtension();
 void InitializeLoggingTargets();

@@ -261,7 +261,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += _T("\tGameType=") + usync()->GetModArchive(usync()->GetModIndex(battle.GetModName())) + _T(";\n");
   unsigned long uhash;
   battle.GetModHash().ToULong(&uhash);
-  s += wxString::Format( _T("\tModHash=%ld;\n"), (long)uhash );
+  s += wxString::Format( _T("\tModHash=%d;\n"), (int)uhash );
   wxStringTripleVec optlistEng;
   battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
   for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
@@ -435,7 +435,7 @@ wxString Spring::GetScriptTxt( Battle& battle )
   s += _T("\t{\n");
 
   for ( unsigned int i = 0; i < units.GetCount(); i++) {
-    s += wxString::Format(_T("\t\tUnit%d=%s:\n"), i, units[i].c_str() );
+    s += wxString::Format(_T("\t\tUnit%d=%s;\n"), i, units[i].c_str() );
     s += wxString::Format( _T("\t\tLimit%d=0;\n"), i );
   }
   s += _T("\t}\n");
@@ -593,7 +593,7 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
   s += _T("\tGameType=" )+ usync()->GetModArchive(usync()->GetModIndex(battle.GetModName())) + _T(";\n");
   unsigned long uhash;
   battle.GetModHash().ToULong(&uhash);
-  s += wxString::Format( _T("\tModHash=%ld;\n"), (long)uhash );
+  s += wxString::Format( _T("\tModHash=%ld;\n"), (int)uhash );
   wxStringTripleVec optlistEng;
   battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
   for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
@@ -620,11 +620,11 @@ wxString Spring::GetSPScriptTxt( SinglePlayerBattle& battle )
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) { // TODO fix this when new Spring comes.
     BattleBot* bot;
-    if ( startpostype == 3) bot = battle.GetBot( i );
+    if ( startpostype == ST_Pick) bot = battle.GetBot( i );
     else bot = battle.GetBotByStartPosition( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     s += wxString::Format( _T("\t[TEAM%d]\n\t{\n"), i );
-    if ( startpostype == 3 ){
+    if ( startpostype == ST_Pick ){
       s += wxString::Format( _T("\t\tStartPosX=%d;\n"), bot->posx );
       s += wxString::Format( _T("\t\tStartPosZ=%d;\n"), bot->posy );
     }

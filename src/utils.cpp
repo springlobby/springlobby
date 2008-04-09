@@ -62,6 +62,30 @@ void InitializeLoggingTargets()
 }
 
 
+wxString i2s( int arg )
+{
+  std::stringstream s;
+  s << arg;
+  return WX_STRING( s.str() );
+}
+
+
+wxString u2s( unsigned int arg )
+{
+  std::stringstream s;
+  s << arg;
+  return WX_STRING( s.str() );
+}
+
+
+wxString f2s( float arg )
+{
+  std::stringstream s;
+  s << arg;
+  return WX_STRING( s.str() );
+}
+
+
 wxString GetWordParam( wxString& params )
 {
   wxString param;
@@ -129,11 +153,6 @@ bool GetBoolParam( wxString& params )
 wxString GetSpringLobbyVersion()
 {
   return WX_STRINGC(VERSION);
-}
-
-void Crash(){
-  crashreport().GenerateReport(wxDebugReport::Context_Exception);
-  throw std::logic_error(std::string(""));
 }
 
 

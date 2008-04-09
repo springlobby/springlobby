@@ -9,6 +9,9 @@
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <stdexcept>
+#if wxUSE_TOGGLEBTN
+#include <wx/tglbtn.h>
+#endif
 
 #include "battlelisttab.h"
 #include "battlelistctrl.h"
@@ -62,11 +65,6 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxBoxSizer* m_filter_sizer;
   m_filter_sizer = new wxBoxSizer( wxVERTICAL );
 
-  m_filter = new BattleListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
-  m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
-
-  m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
-
   wxBoxSizer* m_battlelist_sizer;
   m_battlelist_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -115,6 +113,12 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
   m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
 
+
+  m_filter = new BattleListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
+  m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
+
+  m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
+
   m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
   m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND, 5 );
 
@@ -155,7 +159,8 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
 BattleListTab::~BattleListTab()
 {
-
+    if (m_filter != 0)
+        m_filter->SaveFilterValues();
 }
 
 
@@ -185,7 +190,7 @@ void BattleListTab::AddBattle( Battle& battle ) {
   if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     return;
   }
-  int index = m_battle_list->InsertItem( 0, IconImageList::GetBattleStatusIcon( battle ) );
+  int index = m_battle_list->InsertItem( 0, icons().GetBattleStatusIcon( battle ) );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
   m_battle_list->SetItemData(index, (long)battle.GetBattleId() );
   battle.SetGUIListActiv( true );
@@ -196,12 +201,12 @@ void BattleListTab::AddBattle( Battle& battle ) {
 
  // ASSERT_LOGIC( m_battle_list->GetItem( item ), _T("!GetItem") );
 
-  m_battle_list->SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
-  m_battle_list->SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
-  m_battle_list->SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
+  m_battle_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
+  m_battle_list->SetItemColumnImage( index, 2, icons().GetRankIcon( battle.GetRankNeeded(), false ) );
+  m_battle_list->SetItemColumnImage( index, 1, icons().GetFlagIcon( battle.GetFounder().GetCountry() ) );
   m_battle_list->SetItem( index, 3, battle.GetDescription() );
-  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?ICON_EXISTS:ICON_NEXISTS );
-  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?ICON_EXISTS:ICON_NEXISTS );
+  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
+  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
   m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
@@ -259,12 +264,12 @@ void BattleListTab::UpdateBattle( Battle& battle )
 
   //Battle& battle = m_ui.GetServer().battles_iter.GetBattle( m_battle_list->GetItemData( index ) );
 
-  m_battle_list->SetItemImage( index, IconImageList::GetBattleStatusIcon( battle ) );
-  m_battle_list->SetItemColumnImage( index, 2, IconImageList::GetRankIcon( battle.GetRankNeeded(), false ) );
-  m_battle_list->SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( battle.GetFounder().GetCountry() ) );
+  m_battle_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
+  m_battle_list->SetItemColumnImage( index, 2, icons().GetRankIcon( battle.GetRankNeeded(), false ) );
+  m_battle_list->SetItemColumnImage( index, 1, icons().GetFlagIcon( battle.GetFounder().GetCountry() ) );
   m_battle_list->SetItem( index, 3, battle.GetDescription() );
-  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?ICON_EXISTS:ICON_NEXISTS );
-  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?ICON_EXISTS:ICON_NEXISTS );
+  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
+  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
   m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
@@ -310,18 +315,18 @@ void BattleListTab::OnHost( wxCommandEvent& event )
 {
   if ( !m_ui.IsConnected() ) {
     wxLogWarning( _T("Trying to host while offline") );
-    customMessageBox(SL_MAIN_ICON, _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK );
+    customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK );
     m_ui.ShowConnectWindow();
     return;
   }
   if ( !m_ui.IsSpringCompatible() ){
     wxLogWarning(_T("Hosting is disabled due to the incompatible version ") );
-    customMessageBox(SL_MAIN_ICON,_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION|wxOK);
+    customMessageBoxNoModal(SL_MAIN_ICON,_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION|wxOK);
     return;
   }
   if ( m_ui.IsSpringRunning() ) {
     wxLogWarning(_T("trying to host while spring is running") );
-    customMessageBox(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to host a new game"), _("Spring error"), wxICON_EXCLAMATION|wxOK );
+    customMessageBoxNoModal(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to host a new game"), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     return;
   }
   Battle* battle = m_ui.mw().GetJoinTab().GetCurrentBattle();
@@ -339,13 +344,14 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     BattleOptions bo;
     bo.description = sett().GetLastHostDescription();
     bo.port = sett().GetLastHostPort();
+    bo.nattype = NatType(sett().GetLastHostNATSetting());
 
     if ( bo.nattype == NAT_None && sett().GetTestHostPort() )
     {
       if ( !m_ui.TestHostPort( bo.port ) )
       {
         wxLogWarning(_T("hosting port %d: test unsuccessful, closing battle"),bo.port  );
-        customMessageBox( SL_MAIN_ICON, wxString::Format( _("Battle not started because the port you selected (%d) is unable to recieve incoming packets\n checks your router & firewall configuration again or change port in the dialog"), bo.port ) );
+        customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("Battle not started because the port you selected (%d) is unable to recieve incoming packets\n checks your router & firewall configuration again or change port in the dialog.\n\nIf everything else fails, enable the Hole Punching NAT Traversal\n option in the hosting settings."), bo.port ) );
         return;
       }
     }
@@ -358,7 +364,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
       bo.modname = mod.name;
     } catch ( ... ) {
       wxLogWarning( _T("can't host: mod not found") );
-      customMessageBox( SL_MAIN_ICON,_("Battle not started beacuse the mod you selected could not be found. "), _("Error starting battle."), wxOK );
+      customMessageBoxNoModal( SL_MAIN_ICON,_("Battle not started beacuse the mod you selected could not be found. "), _("Error starting battle."), wxOK );
       return;
     }
 
@@ -369,14 +375,14 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     	  map = usync()->GetMap( mname );
       else if ( usync()->GetNumMaps() <= 0 ) {
         wxLogWarning( _T("no maps found") );
-        customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
         return;
       } else {
         map = usync()->GetMap( 0 );
       }
     } catch ( ... ) {
       wxLogWarning( _T("no maps found") );
-      customMessageBox(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
+      customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
       return;
     }
     bo.maphash = map.hash;

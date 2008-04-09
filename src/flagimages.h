@@ -6,7 +6,7 @@
 class wxImageList;
 
 int GetFlagIndex( const wxString& flag );
-void AddFlagImages( wxImageList& imgs );
+int AddFlagImages( wxImageList& imgs );
 
 enum {
   FLAG_NONE = -1
