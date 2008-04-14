@@ -7,6 +7,7 @@
 #include <wx/socket.h>
 
 #include <stdexcept>
+#include <algorithm>
 
 #include "base64.h"
 #include "boost/md5.hpp"
