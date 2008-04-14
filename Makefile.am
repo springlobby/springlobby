@@ -508,8 +508,7 @@ springlobby_SOURCES = \
 	src/spinctld.h \
 	src/spinctld.cpp \
 	src/autobalancedialog.cpp \
-	src/autobalancedialog.h \
-	src/springlobby.rc
+	src/autobalancedialog.h 
 
 
 # TODO keep only a single list instead of duplicating the lists below
@@ -548,10 +547,10 @@ springlobby_SOURCES += \
 	src/settings++/helpmenufunctions.cpp 
 	
 		
-#if USE_WINDRES
+if USE_WINDRES
 	springlobby_SOURCES += \
 		src/springlobby.rc
-#endif
+endif
 
 
 springsettings_SOURCES = \
@@ -598,8 +597,8 @@ springsettings_SOURCES = \
 	src/settings++/helpmenufunctions.cpp
 
 
-#if USE_WINDRES
+if USE_WINDRES
 	springsettings_SOURCES += \
 		src/settings++/settings.rc
-#endif
+endif
 

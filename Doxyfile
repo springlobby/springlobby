@@ -11,9 +11,9 @@ CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
 BRIEF_MEMBER_DESC      = YES
 REPEAT_BRIEF           = YES
-ABBREVIATE_BRIEF       = "The $name class " \
-                         "The $name widget " \
-                         "The $name file " \
+ABBREVIATE_BRIEF       = "The $name class  " \
+                         "The $name widget  " \
+                         "The $name file  " \
                          is \
                          provides \
                          specifies \
@@ -80,7 +80,7 @@ WARNINGS               = YES
 WARN_IF_UNDOCUMENTED   = YES
 WARN_IF_DOC_ERROR      = YES
 WARN_NO_PARAMDOC       = NO
-WARN_FORMAT            = "$file:$line: $text "
+WARN_FORMAT            = "$file:$line: $text  "
 WARN_LOGFILE           = 
 #---------------------------------------------------------------------------
 # configuration options related to the input files
@@ -182,7 +182,7 @@ BINARY_TOC             = NO
 TOC_EXPAND             = YES
 DISABLE_INDEX          = NO
 ENUM_VALUES_PER_LINE   = 4
-GENERATE_TREEVIEW      = YES
+GENERATE_TREEVIEW      = NO
 TREEVIEW_WIDTH         = 250
 #---------------------------------------------------------------------------
 # configuration options related to the LaTeX output
@@ -195,8 +195,8 @@ COMPACT_LATEX          = NO
 PAPER_TYPE             = a4wide
 EXTRA_PACKAGES         = 
 LATEX_HEADER           = 
-PDF_HYPERLINKS         = NO
-USE_PDFLATEX           = NO
+PDF_HYPERLINKS         = YES
+USE_PDFLATEX           = YES
 LATEX_BATCHMODE        = NO
 LATEX_HIDE_INDICES     = NO
 #---------------------------------------------------------------------------
@@ -218,7 +218,7 @@ MAN_LINKS              = NO
 #---------------------------------------------------------------------------
 # configuration options related to the XML output
 #---------------------------------------------------------------------------
-GENERATE_XML           = NO
+GENERATE_XML           = YES
 XML_OUTPUT             = xml
 XML_SCHEMA             = 
 XML_DTD                = 
