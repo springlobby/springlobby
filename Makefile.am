@@ -43,12 +43,12 @@ springlobby_LDADD = \
 springsettings_LDADD = \
 	$(WX_LIBS)
 
-#if USE_WINDRES
+if USE_WINDRES
 RESOURCECOMPILE = $(WINDRES) -I $(srcdir)/src $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
     $(AM_CPPFLAGS) $(CPPFLAGS) # $(AM_CXXFLAGS) $(CXXFLAGS)
 .rc.o:
 	$(RESOURCECOMPILE) -o $@ -i $<
-#endif
+endif
 
 # filter-out is a GNU make extension, so we get a warning from automake
 # and we can not use -Werror in AM_INIT_AUTOMAKE because of this either
@@ -596,7 +596,7 @@ springsettings_SOURCES = \
 
 
 if USE_WINDRES
-	springsettings_SOURCES += \
-		src/settings++/settings.rc
+springsettings_SOURCES += \
+	src/settings++/settings.rc
 endif
 
