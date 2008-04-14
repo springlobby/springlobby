@@ -1083,6 +1083,7 @@ void TASServer::SendHostInfo( HostInfo update )
     cmd += battle.GetMapName();
 
     SendCmd( _T("UPDATEBATTLEINFO"), cmd );
+    wxLogMessage(_T("UPDATEBATTLEINFO %s"),cmd.c_str());
   }
   if ( ( update & HI_Send_All_opts ) > 0 ) {
     wxString cmd;

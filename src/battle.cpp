@@ -247,6 +247,9 @@ void Battle::OnUserAdded( User& user )
   bs.order = m_order++;
   user.UpdateBattleStatus( bs, true );
   if(IsFounderMe()){
+
+    m_opts.spectators+=user.BattleStatus().spectator?1:0;
+
     CheckBan(user);
     if(user.GetStatus().rank<m_opts.rankneeded){
       switch(m_opts.ranklimittype){
@@ -269,6 +272,13 @@ void Battle::OnUserAdded( User& user )
 
 void Battle::OnUserBattleStatusUpdated( User &user ){
   if(IsFounderMe()){
+
+    m_opts.spectators=0;
+    for(size_t i=0;i<GetNumUsers();++i){
+      if(GetUser(i).BattleStatus().spectator)m_opts.spectators++;
+    }
+
+
     if(user.GetStatus().rank<m_opts.rankneeded){
       switch(m_opts.ranklimittype){
         case rank_limit_none:
@@ -285,12 +295,17 @@ void Battle::OnUserBattleStatusUpdated( User &user ){
         break;
       }
     }
+
+    SendHostInfo(HI_Spectators);
   }
 }
 
 
 void Battle::OnUserRemoved( User& user )
 {
+  if(IsFounderMe()){
+    m_opts.spectators-=user.BattleStatus().spectator?1:0;
+  }
   user.SetBattle( 0 );
   UserList::RemoveUser( user.GetNick() );
 }
