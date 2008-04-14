@@ -45,7 +45,7 @@ fi
 AC_ARG_VAR([SVNVERSION], [Produce a compact version number for a working copy.])
 AC_CHECK_PROGS([SVNVERSION], [svnversion false])
 
-AM_CONDITIONAL([USE_WINDRES], test "$fubar" = 0)
+AM_CONDITIONAL([USE_WINDRES], test "$fubar" = 1)
 
 AC_MSG_CHECKING([if we can enable extra features that need wxWidgets-2.8])
 dnl we probably aren't supposed to use the function below, but it is the simplest way
