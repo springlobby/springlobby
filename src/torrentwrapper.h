@@ -53,7 +53,7 @@ class TorrentWrapper : public iNetClass
 
     void CreateTorrent( const wxString& uhash, const wxString& name, MediaType type );
     void JoinTorrent( const wxString& name );
-    bool DownloadTorrentFileFromTracker( const wxString& shash )
+    bool DownloadTorrentFileFromTracker( const wxString& shash );
 
     void ReceiveandExecute( const wxString& msg );
     void OnConnected( Socket* sock );

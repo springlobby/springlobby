@@ -28,6 +28,7 @@
 #include <fstream>
 
 #include <wx/tokenzr.h>
+#include <wx/protocol/http.h>
 
 #include "torrentwrapper.h"
 
