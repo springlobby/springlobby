@@ -256,7 +256,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
 void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 {
-  wxStringTokenizer tkz( msg, '|' );
+  wxStringTokenizer tkz( msg, _T('|') );
   wxArrayString data;
   for( unsigned int pos = 0; tkz.HasMoreTokens(); pos++ )
   {
