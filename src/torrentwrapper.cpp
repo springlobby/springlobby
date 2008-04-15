@@ -71,7 +71,11 @@ void TorrentWrapper::ConnectToP2PSystem()
   for( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
   {
     m_socket_class->Connect( m_tracker_urls[i], DEFAULT_P2P_COORDINATOR_PORT );
-    if ( m_connected ) return;
+    if ( m_connected )
+    {
+       m_connected_server_index = i;
+       return;
+    }
   }
 }
 
@@ -303,7 +307,7 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& shash )
   //versionRequest.SetHeader(_T("Content-type"), _T(""));
   /// normal timeout is 10 minutes.. set to 10 secs.
   fileRequest.SetTimeout(10);
-  fileRequest.Connect( m_tracker_urls[0], DEFAULT_P2P_COORDINATOR_PORT);
+  fileRequest.Connect( m_tracker_urls[m_connected_server_index], DEFAULT_P2P_COORDINATOR_PORT);
   wxInputStream *stream = fileRequest.GetInputStream( _T("/") + shash + _T(".torrent") );
 
   if (fileRequest.GetError() == wxPROTO_NOERR)

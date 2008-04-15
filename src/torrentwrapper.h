@@ -105,6 +105,7 @@ class TorrentWrapper : public iNetClass
     libtorrent::session* m_torr;
     Socket* m_socket_class;
     TorrentGuiThread m_gui_thread;
+    unsigned int m_connected_server_index;
 };
 
 
