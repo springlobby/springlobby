@@ -29,6 +29,7 @@
 
 #include <wx/tokenzr.h>
 #include <wx/protocol/http.h>
+#include <wx/filename.h>
 
 #include "torrentwrapper.h"
 
