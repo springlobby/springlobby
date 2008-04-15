@@ -226,7 +226,10 @@ void TorrentWrapper::JoinTorrent( const wxString& hash )
       case mod:
         path = path + _T("/mods/");
     }
-
+    if ( !wxFileName::IsFileReadable( path ) ) /// file descriptor not present, download it
+    {
+      DownloadTorrentFileFromTracker( hash );
+    }
     /// read torrent from file
     std::ifstream in( wxString( sett().GetSpringDir() + _T("/torrents/") + hash ).mb_str(), std::ios_base::binary);
     in.unsetf(std::ios_base::skipws);
