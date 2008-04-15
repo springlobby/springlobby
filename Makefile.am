@@ -509,12 +509,16 @@ springlobby_SOURCES = \
 	src/spinctld.h \
 	src/spinctld.cpp \
 	src/autobalancedialog.cpp \
-	src/autobalancedialog.h 
-	
+	src/autobalancedialog.h \
+	src/tdfcontainer.cpp \
+	src/tdfcontainer.h
+
+
 if USE_WINDRES	
 springlobby_SOURCES += \ 
 		src/springlobby.rc 
 endif
+
 
 # TODO keep only a single list instead of duplicating the lists below
 # note, integrated has everything but main.cpp
