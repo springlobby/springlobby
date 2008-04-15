@@ -106,6 +106,26 @@ void TorrentWrapper::ChangeDownloadSpeedLimit( unsigned int speed )
 }
 
 
+void TorrentGuiThread::Init()
+{
+  Create();
+  //SetPriority( WXTHREAD_MAX_PRIORITY );
+  Run();
+}
+
+
+void* TorrentGuiThread::Entry()
+{
+  while ( !TestDestroy() )
+  {
+    std::map<int,TorrentInfos> GuiData = torrent()->CollectGuiInfos();
+
+    ///TODO: to propagate changes in main thread
+    Sleep( 2 );
+  }
+}
+
+
 ////////////////////////////////////////////////////////
 ////               lobby interface                  ////
 ////////////////////////////////////////////////////////
@@ -122,7 +142,7 @@ void TorrentWrapper::ReloadLocalFileList()
     info.type = map;
     unsigned long uhash;
     mapinfo.hash.ToULong(&uhash);
-    info.hash = wxString::Format( _T("%ld"), (long)uhash );
+    info.hash = wxString::Format( _T("%d"), (int)uhash );
     info.name = mapinfo.name;
     m_local_files[info.hash] = info;
   }
@@ -133,7 +153,7 @@ void TorrentWrapper::ReloadLocalFileList()
     info.type = mod;
     unsigned long uhash;
     modinfo.hash.ToULong(&uhash);
-    info.hash = wxString::Format( _T("%ld"), (long)uhash );
+    info.hash = wxString::Format( _T("%d"), (int)uhash );
     info.name = modinfo.name;
     m_local_files[info.hash] = info;
   }
@@ -146,9 +166,9 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
   if ( m_connected ) return false;
   unsigned long hash;
   uhash.ToULong( &hash );
-  wxString shash = wxString::Format( _T("%ld"), (long)hash );
+  wxString shash = wxString::Format( _T("%d"), (int)hash );
   if ( m_torrents_infos[shash].hash.IsEmpty() ) return false; /// the file is not present in the system
-  m_socket_class->Send( wxString::Format( _T("N+|%ld\n"), (long)hash ) ); /// request for seeders for the file
+  m_socket_class->Send( wxString::Format( _T("N+|%d\n"), (int)hash ) ); /// request for seeders for the file
   JoinTorrent( shash );
   m_leech_joined[shash] = 1;
   return true;
@@ -175,6 +195,28 @@ void TorrentWrapper::SetIngameStatus( bool status )
 ////////////////////////////////////////////////////////
 //// private functions to interface with the system ////
 ////////////////////////////////////////////////////////
+
+
+std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
+{
+  std::map<int,TorrentInfos> ret;
+  std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
+  int count = 0;
+  for( std::vector<libtorrent::torrent_handle>::iterator i; i != TorrentList.end(); i++)
+  {
+    TorrentInfos CurrentTorrent;
+    CurrentTorrent.name = WX_STRING(i->name());
+    CurrentTorrent.leeching = !i->is_seed();
+    CurrentTorrent.progress = i->status().progress;
+    CurrentTorrent.downloaded = i->status().total_payload_download;
+    CurrentTorrent.uploaded = i->status().total_payload_upload;
+    CurrentTorrent.inspeed = i->status().total_payload_download;
+    CurrentTorrent.outspeed = i->status().total_payload_upload;
+    CurrentTorrent.numcopies = i->status().distributed_copies;
+    ret[count++] = CurrentTorrent;
+  }
+  return ret;
+}
 
 
 void TorrentWrapper::JoinTorrent( const wxString& hash )

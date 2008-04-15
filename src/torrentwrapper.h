@@ -21,6 +21,18 @@ enum MediaType
   mod
 };
 
+struct TorrentInfos
+{
+  float numcopies;
+  wxString name;
+  unsigned int downloaded;
+  unsigned int uploaded;
+  bool leeching;
+  float progress;
+  float inspeed;
+  float outspeed;
+};
+
 struct TorrentData
 {
   wxString hash;
@@ -28,6 +40,18 @@ struct TorrentData
   MediaType type;
   wxArrayString seedurls;
 };
+
+
+class TorrentGuiThread : public wxThread
+{
+  public:
+    TorrentGuiThread(){}
+  private:
+    void Init();
+    void* Entry();
+    void OnExit(){}
+};
+
 
 class TorrentWrapper : public iNetClass
 {
@@ -43,6 +67,7 @@ class TorrentWrapper : public iNetClass
     void ChangeListeningPort( unsigned int port );
     void ChangeUploadSpeedLimit( unsigned int speed );
     void ChangeDownloadSpeedLimit( unsigned int speed );
+    std::map<int,TorrentInfos> CollectGuiInfos();
 
     /// lobby interface
     void SetIngameStatus( bool status );
@@ -72,14 +97,16 @@ class TorrentWrapper : public iNetClass
     typedef std::list<wxString>::iterator SeedReqIter;
     std::map<wxString,TorrentData> m_local_files;
     typedef std::map<wxString,TorrentData>::iterator LocalFilesIter;
-    std::map<wxString,long> m_seed_joined;
+    std::map<wxString,int> m_seed_joined;
     typedef std::map<wxString,bool>::iterator SeedOpenIter;
-    std::map<wxString,long> m_leech_joined;
+    std::map<wxString,int> m_leech_joined;
     typedef std::map<wxString,bool>::iterator LeechOpenIter;
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;
+    TorrentGuiThread m_gui_thread;
 };
+
 
 TorrentWrapper* torrent();
 
