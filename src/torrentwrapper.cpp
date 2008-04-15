@@ -303,7 +303,7 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& shash )
   //versionRequest.SetHeader(_T("Content-type"), _T(""));
   /// normal timeout is 10 minutes.. set to 10 secs.
   fileRequest.SetTimeout(10);
-  fileRequest.Connect( m_tracker_urls[0], 80);
+  fileRequest.Connect( m_tracker_urls[0], DEFAULT_P2P_COORDINATOR_PORT);
   wxInputStream *stream = fileRequest.GetInputStream( _T("/") + shash + _T(".torrent") );
 
   if (fileRequest.GetError() == wxPROTO_NOERR)
