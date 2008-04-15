@@ -64,15 +64,13 @@ class TorrentWrapper : public iNetClass
 
     void ConnectToP2PSystem();
     void DisconnectToP2PSystem();
-    void ChangeListeningPort( unsigned int port );
-    void ChangeUploadSpeedLimit( unsigned int speed );
-    void ChangeDownloadSpeedLimit( unsigned int speed );
     std::map<int,TorrentInfos> CollectGuiInfos();
 
     /// lobby interface
     void SetIngameStatus( bool status );
     void ReloadLocalFileList();
     bool RequestFile( const wxString& hash );
+    void UpdateSettings();
 
   private:
 

@@ -194,8 +194,14 @@ class Settings
     void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
     wxString GetLastFilterProfileName();
 
-	bool GetDisableSpringVersionCheck();
+	  bool GetDisableSpringVersionCheck();
 
+    unsigned int GetTorrentPort();
+    void SetTorrentPort( unsigned int port );
+    int GetTorrentUploadRate();
+    void SetTorrentUploadRate( int speed );
+    int GetTorrentDownloadRate();
+    void SetTorrentDownloadRate( int speed );
 
   protected:
 

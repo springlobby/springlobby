@@ -86,27 +86,17 @@ void TorrentWrapper::DisconnectToP2PSystem()
 }
 
 
-void TorrentWrapper::ChangeListeningPort( unsigned int port )
+void TorrentWrapper::UpdateSettings()
 {
+  m_torr->set_upload_rate_limit(sett().GetTorrentUploadRate());
+  m_torr->set_download_rate_limit(sett().GetTorrentDownloadRate());
   try
   {
-    m_torr->listen_on(std::make_pair(port, port));
+    m_torr->listen_on(std::make_pair(sett().GetTorrentPort(), sett().GetTorrentPort()));
   } catch (std::exception& e)
   {
     e.what(); /// TODO (BrainDamage#1#): add message on failure
   }
-}
-
-
-void TorrentWrapper::ChangeUploadSpeedLimit( unsigned int speed )
-{
-  m_torr->set_upload_rate_limit(speed);
-}
-
-
-void TorrentWrapper::ChangeDownloadSpeedLimit( unsigned int speed )
-{
-  m_torr->set_download_rate_limit(speed);
 }
 
 
