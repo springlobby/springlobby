@@ -30,7 +30,7 @@ AutoBalanceDialog::AutoBalanceDialog(wxWindow* parent)
 	wxFlexGridSizer* m_choices_sizer;
 	wxBoxSizer* m_buttons_sizer;
 	wxBoxSizer* m_main_sizer;
-
+	
 	Create(parent, wxID_ANY, _("Autobalance players into teams"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 	m_choices_sizer = new wxFlexGridSizer(0, 2, wxDLG_UNIT(this,wxSize(4,0)).GetWidth(), wxDLG_UNIT(this,wxSize(10,0)).GetWidth());
@@ -63,7 +63,7 @@ AutoBalanceDialog::AutoBalanceDialog(wxWindow* parent)
 	SetSizer(m_main_sizer);
 	m_main_sizer->Fit(this);
 	m_main_sizer->SetSizeHints(this);
-
+	
 	Connect(ID_CANCEL,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&AutoBalanceDialog::OnCancel);
 	Connect(ID_OK,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&AutoBalanceDialog::OnOk);
 	//*)

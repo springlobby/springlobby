@@ -147,6 +147,8 @@
 			<Add option="-Wall" />
 			<Add directory="src" />
 		</Compiler>
+		<Unit filename="MainTorrentTab.cpp" />
+		<Unit filename="MainTorrentTab.h" />
 		<Unit filename="src/addbotdialog.cpp" />
 		<Unit filename="src/addbotdialog.h" />
 		<Unit filename="src/agreementdialog.cpp" />
@@ -340,10 +342,10 @@
 		<Unit filename="src/springunitsynclib.h" />
 		<Unit filename="src/tasserver.cpp" />
 		<Unit filename="src/tasserver.h" />
-		<Unit filename="src/torrentwrapper.cpp" />
-		<Unit filename="src/torrentwrapper.h" />
 		<Unit filename="src/tdfcontainer.cpp" />
 		<Unit filename="src/tdfcontainer.h" />
+		<Unit filename="src/torrentwrapper.cpp" />
+		<Unit filename="src/torrentwrapper.h" />
 		<Unit filename="src/ui.cpp" />
 		<Unit filename="src/ui.h" />
 		<Unit filename="src/uiutils.cpp" />
@@ -366,6 +368,7 @@
 				<gui name="wxWidgets" src="" main="" init_handlers="necessary" language="CPP" />
 				<resources>
 					<wxDialog wxs="wxsmith/AutoBalanceDialog.wxs" src="src/autobalancedialog.cpp" hdr="src/autobalancedialog.h" name="AutoBalanceDialog" language="CPP" />
+					<wxFrame wxs="wxsmith/MainTorrentTab.wxs" src="MainTorrentTab.cpp" hdr="MainTorrentTab.h" name="MainTorrentTab" language="CPP" />
 				</resources>
 			</wxsmith>
 			<debugger />
