@@ -71,6 +71,7 @@ class TorrentWrapper : public iNetClass
     void ReloadLocalFileList();
     bool RequestFile( const wxString& hash );
     void UpdateSettings();
+    void PurgeTorrentList();
 
   private:
 
@@ -96,9 +97,9 @@ class TorrentWrapper : public iNetClass
     std::map<wxString,TorrentData> m_local_files;
     typedef std::map<wxString,TorrentData>::iterator LocalFilesIter;
     std::map<wxString,int> m_seed_joined;
-    typedef std::map<wxString,bool>::iterator SeedOpenIter;
+    typedef std::map<wxString,int>::iterator SeedOpenIter;
     std::map<wxString,int> m_leech_joined;
-    typedef std::map<wxString,bool>::iterator LeechOpenIter;
+    typedef std::map<wxString,int>::iterator LeechOpenIter;
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;

@@ -116,6 +116,8 @@ void* TorrentGuiThread::Entry()
     std::map<int,TorrentInfos> GuiData = torrent()->CollectGuiInfos();
 
     ///TODO: to propagate changes in main thread
+
+    torrent()->PurgeTorrentList();
     Sleep( 2 );
   }
 }
@@ -197,7 +199,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
   std::map<int,TorrentInfos> ret;
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
   int count = 0;
-  for( std::vector<libtorrent::torrent_handle>::iterator i; i != TorrentList.end(); i++)
+  for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
   {
     TorrentInfos CurrentTorrent;
     CurrentTorrent.name = WX_STRING(i->name());
@@ -322,6 +324,23 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& shash )
   return false;
 }
 
+
+void TorrentWrapper::PurgeTorrentList()
+{
+  std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
+  for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
+  {
+    bool found = false;
+    for(  SeedOpenIter itor = m_seed_joined.begin(); itor != m_seed_joined.end(); itor++ )
+    {
+      if ( ( m_torrents_infos[itor->first].name == WX_STRING(i->name()).BeforeFirst(_T('|')) )  ) found = true;
+    }
+    if ( !found && i->is_seed() ) m_torr->remove_torrent( *i );
+  }
+}
+
+
+
 void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 {
   wxStringTokenizer tkz( msg, _T('|') );
@@ -362,7 +381,6 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     if ( m_seed_joined.count( data[1] ) > 0 )
     {
       m_seed_joined.erase( data[1] );
-      ///TODO: leave the torrent
     }
   // M+|hash|url 	 It tells the client if url is given that http mirror exists for given hash, else there are no mirrors.
   } else if ( data[0] == _T("M+") ) {
