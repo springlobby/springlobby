@@ -63,6 +63,7 @@ clean-local:
 	rm -f revision.cpp
 
 # the following line is searched for in a script to add filenames under it
+
 springlobby_SOURCES = \
 	revision.cpp \
 	src/updater/versionchecker.cpp \
@@ -210,7 +211,8 @@ springlobby_SOURCES = \
 	src/images/battle.xpm \
 	src/images/bot.xpm \
 	src/images/channel.xpm \
-	src/images/chat_icon.xpm \
+	src/images/chat_icon.png.h \
+	src/images/chat_icon_text.png.h \
 	src/images/closed_game.xpm \
 	src/images/closed_pw_game.xpm \
 	src/images/close_hi.xpm \
@@ -221,13 +223,15 @@ springlobby_SOURCES = \
 	src/images/down.xpm \
 	src/images/exists.xpm \
 	src/images/ingame.xpm \
-	src/images/join_icon.xpm \
+	src/images/join_icon.png.h \
+	src/images/join_icon_text.png.h \
 	src/images/nexists.xpm \
 	src/images/nready_q.xpm \
 	src/images/nready_unsync.xpm \
 	src/images/open_game.xpm \
 	src/images/open_pw_game.xpm \
-	src/images/options_icon.xpm \
+	src/images/options_icon.png.h \
+	src/images/options_icon_text.png.h \
 	src/images/rank0.xpm \
 	src/images/rank1.xpm \
 	src/images/rank2.xpm \
@@ -237,7 +241,10 @@ springlobby_SOURCES = \
 	src/images/rank6.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
-	src/images/singleplayer_icon.xpm \
+	src/images/downloads_icon.png.h \
+	src/images/single_player_icon.png.h \
+	src/images/downloads_icon_text.png.h \
+	src/images/single_player_icon_text.png.h \
 	src/images/select_icon.xpm \
 	src/images/server.xpm \
 	src/images/spectator.xpm \
@@ -502,7 +509,17 @@ springlobby_SOURCES = \
 	src/torrentwrapper.h \
 	src/thingdef.h \
 	src/spinctld.h \
-	src/spinctld.cpp
+	src/spinctld.cpp \
+	src/autobalancedialog.cpp \
+	src/autobalancedialog.h \
+	src/tdfcontainer.cpp \
+	src/tdfcontainer.h
+
+
+if USE_WINDRES	
+springlobby_SOURCES += \ 
+		src/springlobby.rc 
+endif
 
 
 # TODO keep only a single list instead of duplicating the lists below
@@ -538,13 +555,7 @@ springlobby_SOURCES += \
 	src/settings++/custom_dialogs.h \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
-	src/settings++/helpmenufunctions.cpp
-
-if USE_WINDRES
-	springlobby_SOURCES += \
-		src/springlobby.rc
-endif
-
+	src/settings++/helpmenufunctions.cpp 
 
 springsettings_SOURCES = \
 	revision.cpp \
@@ -591,7 +602,7 @@ springsettings_SOURCES = \
 
 
 if USE_WINDRES
-	springsettings_SOURCES += \
-		src/settings++/settings.rc
+springsettings_SOURCES += \
+	src/settings++/settings.rc
 endif
 

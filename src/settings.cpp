@@ -70,6 +70,15 @@ void Settings::SetNoUDP(bool value)
   m_config->Write( _T("/General/NoUDP"), value );
 }
 
+int Settings::GetClientPort(){
+  int tmp;
+  m_config->Read( _T("/General/ClientPort"), &tmp, 0 );
+  return tmp;
+}
+
+void Settings::SetClientPort(int value){
+  m_config->Write( _T("/General/ClientPort"), value );
+}
 
 bool Settings::GetShowIPAddresses()
 {
@@ -77,7 +86,6 @@ bool Settings::GetShowIPAddresses()
   m_config->Read( _T("/General/ShowIP"), &tmp, false );
   return tmp;
 }
-
 
 void Settings::SetShowIPAddresses(bool value){
   m_config->Write( _T("/General/ShowIP"), value );
@@ -644,6 +652,33 @@ void Settings::SetTestHostPort( bool value )
   m_config->Write( _T("/Hosting/TestHostPort"), value );
 }
 
+
+
+
+void Settings::SetBalanceMethod(int value){
+  m_config->Write( _T("/Hosting/BalanceMethod"), value );
+}
+int Settings::GetBalanceMethod(){
+  return m_config->Read( _T("/Hosting/BalanceMethod"), 1l);
+}
+
+void Settings::SetBalanceClans(bool value){
+  m_config->Write( _T("/Hosting/BalanceClans"), value );
+}
+bool Settings::GetBalanceClans(){
+  return m_config->Read( _T("/Hosting/BalanceClans"), true);
+}
+
+void Settings::SetBalanceStrongClans(bool value){
+  m_config->Write( _T("/Hosting/BalanceStrongClans"), value );
+}
+
+bool Settings::GetBalanceStrongClans(){
+  return m_config->Read( _T("/Hosting/BalanceStrongClans"), 0l);
+}
+
+
+
 wxString Settings::GetLastAI()
 {
   return m_config->Read( _T("/SinglePlayer/LastAI"), wxEmptyString );
@@ -658,6 +693,19 @@ bool Settings::GetDisplayJoinLeave( const wxString& channel  )
 {
   return m_config->Read( _T("/Channels/DisplayJoinLeave/") +  channel, true);
 }
+
+
+void Settings::SetChatHistoryLenght( unsigned int historylines )
+{
+  m_config->Write( _T("/Chat/HistoryLinesLenght/"), (int)historylines);
+}
+
+
+unsigned int Settings::GetChatHistoryLenght()
+{
+  return (unsigned int)m_config->Read( _T("/Chat/HistoryLinesLenght/"), 1000);
+}
+
 
 wxColour Settings::GetChatColorNormal()
 {
@@ -779,6 +827,14 @@ wxFont Settings::GetChatFont()
 void Settings::SetChatFont( wxFont value )
 {
   m_config->Write( _T("/Chat/Font"), value.GetNativeFontInfoDesc() );
+}
+
+
+bool Settings::GetSmartScrollEnabled(){
+  return m_config->Read( _T("/Chat/SmartScrollEnabled"), true);
+}
+void Settings::SetSmartScrollEnabled(bool value){
+  m_config->Write( _T("/Chat/SmartScrollEnabled"), value);
 }
 
 BattleListFilterValues Settings::GetBattleFilterValues(const wxString& profile_name)

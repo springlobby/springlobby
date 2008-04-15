@@ -7,11 +7,13 @@
 #include <wx/intl.h>
 #include <wx/textdlg.h>
 #include <wx/imaglist.h>
+#include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/sizer.h>
 #include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
+
 #include <stdexcept>
 
 #include "mainwindow.h"
@@ -25,13 +27,20 @@
 #include "mainsingleplayertab.h"
 #include "mainoptionstab.h"
 #include "iunitsync.h"
+#include "uiutils.h"
 
 #include "images/springlobby.xpm"
-#include "images/chat_icon.xpm"
-#include "images/join_icon.xpm"
-#include "images/singleplayer_icon.xpm"
-#include "images/options_icon.xpm"
+#include "images/chat_icon.png.h"
+#include "images/chat_icon_text.png.h"
+#include "images/join_icon.png.h"
+#include "images/join_icon_text.png.h"
+#include "images/single_player_icon.png.h"
+#include "images/single_player_icon_text.png.h"
+#include "images/options_icon.png.h"
+#include "images/options_icon_text.png.h"
 #include "images/select_icon.xpm"
+#include "images/downloads_icon.png.h"
+#include "images/downloads_icon_text.png.h"
 
 #include "settings++/frame.h"
 #include "settings++/custom_dialogs.h"
@@ -60,6 +69,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
 
 END_EVENT_TABLE()
+
 
 
 MainWindow::MainWindow( Ui& ui ) :
@@ -100,10 +110,11 @@ MainWindow::MainWindow( Ui& ui ) :
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
 
-  m_chat_icon = new wxBitmap( chat_icon_xpm );
-  m_battle_icon = new wxBitmap( join_icon_xpm );
-  m_sp_icon = new wxBitmap( singleplayer_icon_xpm );
-  m_options_icon = new wxBitmap( options_icon_xpm );
+  m_chat_icon =  charArr2wxBitmapAddText( chat_icon_png , sizeof (chat_icon_png) , chat_icon_text_png, sizeof(chat_icon_text_png), 64 ) ;
+  m_battle_icon = charArr2wxBitmapAddText( join_icon_png , sizeof (join_icon_png), join_icon_text_png , sizeof (join_icon_text_png), 64 ) ;
+  m_sp_icon = charArr2wxBitmapAddText( single_player_icon_png , sizeof (single_player_icon_png), single_player_icon_text_png , sizeof (single_player_icon_text_png), 64 ) ;
+  m_options_icon =   charArr2wxBitmapAddText( options_icon_png , sizeof (options_icon_png), options_icon_text_png , sizeof (options_icon_text_png), 64 ) ;
+  m_downloads_icon = charArr2wxBitmapAddText( downloads_icon_png , sizeof (downloads_icon_png), downloads_icon_text_png , sizeof (downloads_icon_text_png), 64 ) ;
   m_select_image = new wxBitmap( select_icon_xpm );
 
   m_func_tab_images = new wxImageList( 64, 64 );
@@ -119,6 +130,8 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
+  //TODO insert real downloads panel
+  //m_func_tabs->AddPage( m_opts_tab, _T(""), false, 4 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -166,6 +179,14 @@ void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
   dc.SelectObject( wxNullBitmap );
 }
 
+//void MainWindow::DrawTxtOnBmp( wxBitmap& canvas, wxString text, int x, int y )
+//{
+//  wxMemoryDC dc;
+//  dc.SelectObject( canvas );
+//
+//  dc.DrawText( text, x, y);
+//  dc.SelectObject( wxNullBitmap );
+//}
 
 void MainWindow::MakeImages()
 {
@@ -176,6 +197,7 @@ void MainWindow::MakeImages()
     DrawBmpOnBmp( img, *m_chat_icon, 0, 0 );
     m_func_tab_images->Add( img );
   } else {*/
+ // DrawTxtOnBmp( *m_battle_icon, _("Test"), 1,1);
     m_func_tab_images->Add( *m_chat_icon );
   //}
 
@@ -201,6 +223,8 @@ void MainWindow::MakeImages()
     m_func_tab_images->Add( img );
   } else {*/
     m_func_tab_images->Add( *m_options_icon );
+
+   // m_func_tab_images->Add( *m_downloads_icon );
   //}
 
 }

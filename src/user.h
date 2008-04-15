@@ -106,6 +106,10 @@ class User
 
     static wxString GetRankName(int rank);
 
+    float GetBalanceRank();
+
+    wxString GetClan();
+
   protected:
     // User variables
 
