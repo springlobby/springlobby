@@ -254,6 +254,33 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 }
 
 
+bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& shash )
+{
+  wxHTTP fileRequest;
+  //versionRequest.SetHeader(_T("Content-type"), _T(""));
+  /// normal timeout is 10 minutes.. set to 10 secs.
+  fileRequest.SetTimeout(10);
+  fileRequest.Connect( m_tracker_urls[0], 80);
+  wxInputStream *stream = fileRequest.GetInputStream( _T("/") + shash + _T(".torrent") );
+
+  if (fileRequest.GetError() == wxPROTO_NOERR)
+  {
+   // stream->Read(output);
+
+  ///TODO: write file from stream
+
+  wxDELETE(stream);
+  fileRequest.Close();
+
+  return true;
+  }
+
+  wxDELETE(stream);
+  fileRequest.Close();
+
+  return false;
+}
+
 void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 {
   wxStringTokenizer tkz( msg, _T('|') );
