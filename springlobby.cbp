@@ -147,8 +147,6 @@
 			<Add option="-Wall" />
 			<Add directory="src" />
 		</Compiler>
-		<Unit filename="MainTorrentTab.cpp" />
-		<Unit filename="MainTorrentTab.h" />
 		<Unit filename="src/addbotdialog.cpp" />
 		<Unit filename="src/addbotdialog.h" />
 		<Unit filename="src/agreementdialog.cpp" />
@@ -267,6 +265,8 @@
 		<Unit filename="src/mainoptionstab.h" />
 		<Unit filename="src/mainsingleplayertab.cpp" />
 		<Unit filename="src/mainsingleplayertab.h" />
+		<Unit filename="src/maintorrenttab.cpp" />
+		<Unit filename="src/maintorrenttab.h" />
 		<Unit filename="src/mainwindow.cpp" />
 		<Unit filename="src/mainwindow.h" />
 		<Unit filename="src/mapctrl.cpp" />
