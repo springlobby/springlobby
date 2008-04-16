@@ -1,9 +1,14 @@
-#include "MainTorrentTab.h"
+#include "maintorrenttab.h"
 
 //(*InternalHeaders(MainTorrentTab)
 #include <wx/intl.h>
 #include <wx/string.h>
 //*)
+
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/listbox.h>
+#include <wx/button.h>
 
 //(*IdInit(MainTorrentTab)
 const long MainTorrentTab::ID_STATICTEXT2 = wxNewId();
@@ -27,7 +32,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent,wxWindowID id)
 	wxGridSizer* GridSizer1;
 	wxGridSizer* GridSizer3;
 	wxGridSizer* GridSizer2;
-	
+
 	Create(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("id"));
 	SetClientSize(wxSize(1092,262));
 	GridSizer1 = new wxGridSizer(2, 1, 0, 0);
