@@ -339,23 +339,24 @@ void TorrentWrapper::FixTorrentList()
       m_leech_count++;
       break;
     }
-    if ( !m_open_torrents[WX_STRING(i->name())] ) ///torrent has finished download, refresh unitsync and remove file from list
+    wxString StrippedName = WX_STRING(i->name()).BeforeFirst( _T('|') );
+    if ( !m_open_torrents[StrippedName] ) ///torrent has finished download, refresh unitsync and remove file from list
     {
       usync()->ReloadUnitSyncLib();
       m_torr->remove_torrent( *i );
-      m_open_torrents.erase(m_open_torrents.find(WX_STRING(i->name())));
+      m_open_torrents.erase(m_open_torrents.find(StrippedName));
       continue;
     }
-    if ( InvertedSeedRequests.find( WX_STRING(i->name()) ) == InvertedSeedRequests.end() )/// if torrent not in request list but still seeding then remove
+    if ( InvertedSeedRequests.find( StrippedName ) == InvertedSeedRequests.end() )/// if torrent not in request list but still seeding then remove
     {
       m_torr->remove_torrent( *i );
-      m_open_torrents.erase(m_open_torrents.find(WX_STRING(i->name())));
+      m_open_torrents.erase(m_open_torrents.find( StrippedName ));
     }
   }
   for ( SeedReqIter i = m_seed_requests.begin(); i != m_seed_requests.end(); i++ )
   {
     if( m_seed_count > 9 ) return;
-    if ( m_open_torrents.find( i->first ) == m_open_torrents.end() && m_local_files.find(i->second) != m_local_files.end() ) /// torrent is requested and present, but not joined yet
+    if ( (m_open_torrents.find( i->first ) == m_open_torrents.end()) && (m_local_files.find(i->second) != m_local_files.end()) ) /// torrent is requested and present, but not joined yet
     {
       JoinTorrent( i->second );
       m_seed_count++;

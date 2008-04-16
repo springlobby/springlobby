@@ -5,7 +5,6 @@
 #include <wx/arrstr.h>
 
 #include <vector>
-#include <list>
 
 #include "inetclass.h"
 
