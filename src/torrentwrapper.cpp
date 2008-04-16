@@ -101,28 +101,6 @@ void TorrentWrapper::UpdateSettings()
 }
 
 
-void TorrentGuiThread::Init()
-{
-  Create();
-  //SetPriority( WXTHREAD_MAX_PRIORITY );
-  Run();
-}
-
-
-void* TorrentGuiThread::Entry()
-{
-  while ( !TestDestroy() )
-  {
-    std::map<int,TorrentInfos> GuiData = torrent()->CollectGuiInfos();
-
-    ///TODO: to propagate changes in main thread
-
-    torrent()->PurgeTorrentList();
-    Sleep( 2 );
-  }
-}
-
-
 ////////////////////////////////////////////////////////
 ////               lobby interface                  ////
 ////////////////////////////////////////////////////////
@@ -167,7 +145,8 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
   if ( m_torrents_infos[shash].hash.IsEmpty() ) return false; /// the file is not present in the system
   m_socket_class->Send( wxString::Format( _T("N+|%d\n"), (int)hash ) ); /// request for seeders for the file
   JoinTorrent( shash );
-  m_leech_joined[shash] = 1;
+  m_leech_count++;
+  m_open_torrents[m_torrents_infos[shash].name] = false; /// not seeding when just joined
   return true;
 }
 
@@ -185,6 +164,18 @@ void TorrentWrapper::SetIngameStatus( bool status )
   {
     for ( unsigned int i = 0; i < TorrentList.size(); i++) TorrentList[i].resume();
   }
+
+}
+
+
+void TorrentWrapper::UpdateFromTimer( int mselapsed )
+{
+  m_timer_count++;
+  if ( m_timer_count < 20 ) return;////update every 2 sec
+  m_timer_count = 0;
+  ///TODO: send collected gui infos
+  CollectGuiInfos();
+
 
 }
 
@@ -325,20 +316,45 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& shash )
 }
 
 
-void TorrentWrapper::PurgeTorrentList()
+void TorrentWrapper::FixTorrentList()
 {
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
+  std::map<wxString,wxString> InvertedSeedRequests;
+  InvertedSeedRequests.swap(m_seed_requests);
+  m_seed_count = 0;
+  m_leech_count = 0;
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
   {
-    bool found = false;
-    for(  SeedOpenIter itor = m_seed_joined.begin(); itor != m_seed_joined.end(); itor++ )
+    if ( i->is_seed() ) m_seed_count++;
+    else
     {
-      if ( ( m_torrents_infos[itor->first].name == WX_STRING(i->name()).BeforeFirst(_T('|')) )  ) found = true;
+      m_leech_count++;
+      break;
     }
-    if ( !found && i->is_seed() ) m_torr->remove_torrent( *i );
+    if ( !m_open_torrents[WX_STRING(i->name())] ) ///torrent has finished download, refresh unitsync and remove file from list
+    {
+      usync()->ReloadUnitSyncLib();
+      m_torr->remove_torrent( *i );
+      m_open_torrents.erase(m_open_torrents.find(WX_STRING(i->name())));
+      continue;
+    }
+    if ( InvertedSeedRequests.find( WX_STRING(i->name()) ) == InvertedSeedRequests.end() )/// if torrent not in request list but still seeding then remove
+    {
+      m_torr->remove_torrent( *i );
+      m_open_torrents.erase(m_open_torrents.find(WX_STRING(i->name())));
+    }
+  }
+  for ( SeedReqIter i = m_seed_requests.begin(); i != m_seed_requests.end(); i++ )
+  {
+    if( m_seed_count > 9 ) return;
+    if ( m_open_torrents.find( i->first ) == m_open_torrents.end() && m_local_files.find(i->second) != m_local_files.end() ) /// torrent is requested and present, but not joined yet
+    {
+      JoinTorrent( i->second );
+      m_seed_count++;
+      m_open_torrents[i->first] = true;
+    }
   }
 }
-
 
 
 void TorrentWrapper::ReceiveandExecute( const wxString& msg )
@@ -362,26 +378,14 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     m_torrents_infos.erase(data[1]);
   // S+|hash|seeders|leechers 	 tells client that seed is needed for this torrent
   } else if ( data[0] == _T("S+") ) {
-    m_seed_requests.push_back(data[1]);
+    m_seed_requests[m_torrents_infos[data[1]].name] = data[1];
     unsigned long seeders;
     unsigned long leechers;
     data[2].ToULong(&seeders);
     data[3].ToULong(&leechers);
-    if ( m_seed_joined.size() <= 10 && !ingame )
-    {
-      if ( !m_local_files[data[1]].hash.IsEmpty() )
-      {
-        JoinTorrent( data[1] );
-        m_seed_joined[data[1]] = seeders-leechers;
-      }
-    }
   // S-|hash 	 tells client that seed is no longer neede for this torrent
   } else if ( data[0] == _T("S-") ) {
-    m_seed_requests.remove(data[1]);
-    if ( m_seed_joined.count( data[1] ) > 0 )
-    {
-      m_seed_joined.erase( data[1] );
-    }
+    m_seed_requests.erase(m_torrents_infos[data[1]].name);
   // M+|hash|url 	 It tells the client if url is given that http mirror exists for given hash, else there are no mirrors.
   } else if ( data[0] == _T("M+") ) {
     wxArrayString urllist = m_torrents_infos[data[1]].seedurls;
@@ -397,6 +401,11 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 void TorrentWrapper::OnConnected( Socket* sock )
 {
   m_connected = true;
+  m_torrents_infos.clear();
+  m_seed_requests.clear();
+  m_open_torrents.clear();
+  m_seed_count = 0;
+  m_leech_count = 0;
 }
 
 
@@ -405,8 +414,10 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
   m_connected = false;
   m_torrents_infos.clear();
   m_seed_requests.clear();
-  m_leech_joined.clear();
-  m_seed_joined.clear();
+  m_open_torrents.clear();
+  m_seed_count = 0;
+  m_leech_count = 0;
+
 }
 
 

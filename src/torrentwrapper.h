@@ -42,17 +42,6 @@ struct TorrentData
 };
 
 
-class TorrentGuiThread : public wxThread
-{
-  public:
-    TorrentGuiThread(){}
-  private:
-    void Init();
-    void* Entry();
-    void OnExit(){}
-};
-
-
 class TorrentWrapper : public iNetClass
 {
   public:
@@ -71,13 +60,14 @@ class TorrentWrapper : public iNetClass
     void ReloadLocalFileList();
     bool RequestFile( const wxString& hash );
     void UpdateSettings();
-    void PurgeTorrentList();
+    void UpdateFromTimer( int mselapsed );
 
   private:
 
     void CreateTorrent( const wxString& uhash, const wxString& name, MediaType type );
     void JoinTorrent( const wxString& name );
     bool DownloadTorrentFileFromTracker( const wxString& shash );
+    void FixTorrentList();
 
     void ReceiveandExecute( const wxString& msg );
     void OnConnected( Socket* sock );
@@ -87,23 +77,23 @@ class TorrentWrapper : public iNetClass
     bool m_connected;
 
     bool ingame;
+    unsigned int m_seed_count;
+    unsigned int m_leech_count;
+    unsigned int m_timer_count;
 
     wxArrayString m_tracker_urls;
 
-    std::map<wxString,TorrentData> m_torrents_infos;
+    std::map<wxString,TorrentData> m_torrents_infos; /// shash -> torr infos
     typedef std::map<wxString,TorrentData>::iterator TorrentsIter;
-    std::list<wxString> m_seed_requests;
-    typedef std::list<wxString>::iterator SeedReqIter;
-    std::map<wxString,TorrentData> m_local_files;
+    std::map<wxString,wxString> m_seed_requests; ///name -> hash
+    typedef std::map<wxString,wxString>::iterator SeedReqIter;
+    std::map<wxString,TorrentData> m_local_files; /// shash -> torrent data
     typedef std::map<wxString,TorrentData>::iterator LocalFilesIter;
-    std::map<wxString,int> m_seed_joined;
-    typedef std::map<wxString,int>::iterator SeedOpenIter;
-    std::map<wxString,int> m_leech_joined;
-    typedef std::map<wxString,int>::iterator LeechOpenIter;
+    std::map<wxString,bool> m_open_torrents; /// name -> is seed
+    typedef std::map<wxString,bool>::iterator OpenIter;
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;
-    TorrentGuiThread m_gui_thread;
     unsigned int m_connected_server_index;
 };
 
