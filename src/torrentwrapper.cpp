@@ -30,6 +30,8 @@
 #include <wx/tokenzr.h>
 #include <wx/protocol/http.h>
 #include <wx/filename.h>
+#include <wx/file.h>
+#include <wx/sstream.h>
 
 #include "torrentwrapper.h"
 
@@ -220,7 +222,7 @@ void TorrentWrapper::JoinTorrent( const wxString& hash )
       case mod:
         path = path + _T("/mods/");
     }
-    if ( !wxFileName::IsFileReadable( path ) ) /// file descriptor not present, download it
+    if ( !wxFileName::IsFileReadable( sett().GetSpringDir() + _T("/torrents/") + hash ) ) /// file descriptor not present, download it
     {
       DownloadTorrentFileFromTracker( hash );
     }
@@ -299,14 +301,20 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& shash )
 
   if (fileRequest.GetError() == wxPROTO_NOERR)
   {
-   // stream->Read(output);
+   wxFile FileDescriptor( sett().GetSpringDir() +  _T("/torrents/") + shash, wxFile::write );
+   if ( FileDescriptor.IsOpened() )
+   {
+    wxString buffer;
+    wxStringOutputStream output(&buffer);
+    stream->Read(output);
+    FileDescriptor.Write( buffer );
+    FileDescriptor.Close();
+   }
 
-  ///TODO: write file from stream
+   wxDELETE(stream);
+   fileRequest.Close();
 
-  wxDELETE(stream);
-  fileRequest.Close();
-
-  return true;
+   return true;
   }
 
   wxDELETE(stream);
