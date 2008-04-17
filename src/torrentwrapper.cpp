@@ -240,7 +240,7 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
        while (!DownloadTorrentFileFromTracker( hash ) );
        {
          m_connected_tracker_index++;
-         if ( m_connected_server_index -1 > m_tracker_urls.Count() ) return false;
+         if ( m_connected_tracker_index > m_tracker_urls.Count() -1 ) return false;
        }
     }
     /// read torrent from file
