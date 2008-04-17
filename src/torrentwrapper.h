@@ -38,6 +38,7 @@ struct TorrentData
   wxString name;
   MediaType type;
   wxArrayString seedurls;
+  wxString infohash;
 };
 
 
@@ -94,7 +95,7 @@ class TorrentWrapper : public iNetClass
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;
-    unsigned int m_connected_server_index;
+    unsigned int m_connected_tracker_index;
 };
 
 
