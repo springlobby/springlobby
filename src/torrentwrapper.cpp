@@ -107,7 +107,7 @@ bool TorrentWrapper::IsFileInSystem( const wxString& uhash )
 {
   unsigned long ulong;
   uhash.ToULong( &ulong );
-  return m_torrents_infos.find(u2s(ulong)) != m_torrents_infos.end();
+  return m_torrents_infos.find(u2s((int)ulong)) != m_torrents_infos.end();
 }
 
 ////////////////////////////////////////////////////////
