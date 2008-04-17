@@ -423,7 +423,7 @@ void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom 
   ASSERT_LOGIC( (allyno >= 0 || allyno < int(GetMaxPlayers()) ), _T("Allyno out of bounds.") );
   BattleStartRect* sr;
   bool local;
-  if ( allyno >= int(m_rects.size()) ) m_rects.push_back(0); // add new element is it exceeds the vector bounds
+  while ( allyno >= int(m_rects.size()) ) m_rects.push_back(0); // add new element is it exceeds the vector bounds
   if ( m_rects[allyno] == 0 ) {
     sr = new BattleStartRect();
     local = true;
@@ -438,7 +438,7 @@ void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom 
   sr->right = right;
   sr->bottom = bottom;
   sr->local = local;
-  sr->updated = local;
+  sr->updated = true;//local;
   sr->deleted = false;
   m_rects[allyno] = sr;
 }
@@ -446,6 +446,7 @@ void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom 
 
 void Battle::RemoveStartRect( int allyno )
 {
+  if ( allyno <0 ) return;
   if ( allyno >= int(m_rects.size() )) return;
   BattleStartRect* sr = m_rects[allyno];
   if ( sr == 0 ) return;
@@ -845,6 +846,8 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
     alliances[my_random(rnd_k)].AddPlayer(players_sorted[i]);
   }
 
+  int player_team_counter=0;
+
   for(size_t i=0;i<alliances.size();++i){
     for(size_t j=0;j<alliances[i].players.size();++j){
       ASSERT_LOGIC(alliances[i].players[j],_T("fail in Autobalance, NULL player"));
@@ -852,6 +855,9 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
       wxLogMessage(_T("%s"),msg.c_str());
       m_ui.OnBattleAction(*this,wxString(_T(" ")),msg);
       ForceAlly(*alliances[i].players[j],alliances[i].allynum);
+
+      ForceTeam(*alliances[i].players[j],player_team_counter);
+      player_team_counter++;
     }
   }
   Update();

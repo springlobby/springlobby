@@ -20,6 +20,7 @@
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
+class IBattle;
 
 //! @brief Class used to store and restore application settings.
 class Settings
@@ -194,7 +195,18 @@ class Settings
     void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
     wxString GetLastFilterProfileName();
 
-	bool GetDisableSpringVersionCheck();
+    bool GetDisableSpringVersionCheck();
+
+    /// not get/set naming because set may refer to battle or to options, thatd be ambiguous
+    void SaveBattleMapOptions(IBattle *battle);
+    void LoadBattleMapOptions(IBattle *battle);
+
+
+/*
+    void wxConfigBase* Config(){/// shouldnt really be used but is sometimes necessary.
+      return m_config
+    };
+*/
 
 
   protected:

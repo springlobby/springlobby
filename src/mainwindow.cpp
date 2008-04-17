@@ -349,13 +349,14 @@ void MainWindow::OnMenuAbout( wxCommandEvent& event )
 	//info.SetCopyright(_T("");
 	info.SetLicence(_T("GPL"));
 	info.AddDeveloper(_T("BrainDamage"));
+	info.AddDeveloper(_T("dizekat"));
 	info.AddDeveloper(_T("koshi"));
 	info.AddDeveloper(_T("semi_"));
 	info.AddDeveloper(_T("tc-"));
-    info.AddTranslator(_T("chaosch (simplified chinese)"));
+  info.AddTranslator(_T("chaosch (simplified chinese)"));
 	info.AddTranslator(_T("lejocelyn (french)"));
 	info.AddTranslator(_T("Suprano (german)"));
-    info.AddTranslator(_T("tc- (swedish)"));
+  info.AddTranslator(_T("tc- (swedish)"));
 	info.SetIcon(wxIcon(springlobby_xpm));
 	wxAboutBox(info);
 

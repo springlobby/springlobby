@@ -234,6 +234,8 @@ void Ui::StartHostedBattle()
   ASSERT_LOGIC( m_serv != 0, _T("m_serv = 0") );
   m_serv->StartHostedBattle();
   sett().SetLastHostMap( m_serv->GetCurrentBattle()->GetMapName() );
+  sett().SaveBattleMapOptions(m_serv->GetCurrentBattle());
+  sett().SaveSettings();
 }
 
 
