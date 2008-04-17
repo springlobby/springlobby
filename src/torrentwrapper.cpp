@@ -53,6 +53,9 @@ m_connected(false)
   m_torr = new libtorrent::session();
   m_torr->add_extension(&libtorrent::create_metadata_plugin);
   m_torr->add_extension(&libtorrent::create_ut_pex_plugin);
+  m_torr->start_upnp();
+  m_torr->start_natpmp();
+  m_torr->start_lsd();
   m_socket_class = new Socket( *this );
   ReloadLocalFileList();
 }
@@ -76,7 +79,7 @@ void TorrentWrapper::ConnectToP2PSystem()
     m_socket_class->Connect( m_tracker_urls[i], DEFAULT_P2P_COORDINATOR_PORT );
     if ( m_connected )
     {
-       m_connected_server_index = i;
+       m_connected_tracker_index = i;
        return;
     }
   }
@@ -222,18 +225,21 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
   if ( !m_torrents_infos[ hash ].hash.IsEmpty() )
   {
     wxString path = sett().GetSpringDir();
+    wxString name;
     switch (m_torrents_infos[hash].type)
     {
       case map:
         path = path + _T("/maps/");
+        name = m_torrents_infos[ hash ].name + _T("|MAP");
       case mod:
         path = path + _T("/mods/");
+        name = m_torrents_infos[ hash ].name + _T("|MOD");
     }
     if ( !wxFileName::IsFileReadable( sett().GetSpringDir() + _T("/torrents/") + hash ) ) /// file descriptor not present, download it
     {
        while (!DownloadTorrentFileFromTracker( hash ) );
        {
-         m_connected_server_index++;
+         m_connected_tracker_index++;
          if ( m_connected_server_index -1 > m_tracker_urls.Count() ) return false;
        }
     }
@@ -242,6 +248,8 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
     in.unsetf(std::ios_base::skipws);
     libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
     libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent(libtorrent::torrent_info(e), boost::filesystem::path( STD_STRING( path ) ) );
+    libtorrent::sha1_hash infohash( STD_STRING( m_torrents_infos[hash].infohash ) );
+    // libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent( m_tracker_urls[m_connected_tracker_index].mb_str(), infohash, STD_STRING(name), boost::filesystem::path( STD_STRING( path ) ) );
     /// add url seeds
     for( unsigned int i=0; i < m_torrents_infos[hash].seedurls.GetCount(); i++ )
       JoinedTorrent.add_url_seed( STD_STRING( m_torrents_infos[hash].seedurls[i] ) );
@@ -309,7 +317,7 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& shash )
   //versionRequest.SetHeader(_T("Content-type"), _T(""));
   /// normal timeout is 10 minutes.. set to 10 secs.
   fileRequest.SetTimeout(10);
-  fileRequest.Connect( m_tracker_urls[m_connected_server_index], DEFAULT_P2P_COORDINATOR_PORT);
+  fileRequest.Connect( m_tracker_urls[m_connected_tracker_index], DEFAULT_P2P_COORDINATOR_PORT);
   wxInputStream *stream = fileRequest.GetInputStream( _T("/") + shash + _T(".torrent") );
 
   if (fileRequest.GetError() == wxPROTO_NOERR)

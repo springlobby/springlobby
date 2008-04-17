@@ -38,6 +38,7 @@ struct TorrentData
   wxString name;
   MediaType type;
   wxArrayString seedurls;
+  wxString infohash;
 };
 
 
@@ -52,7 +53,6 @@ class TorrentWrapper : public iNetClass
 
     void ConnectToP2PSystem();
     void DisconnectToP2PSystem();
-    std::map<int,TorrentInfos> CollectGuiInfos();
     bool IsFileInSystem( const wxString& uhash );
 
     /// lobby interface
@@ -68,6 +68,7 @@ class TorrentWrapper : public iNetClass
     bool JoinTorrent( const wxString& name );
     bool DownloadTorrentFileFromTracker( const wxString& shash );
     void FixTorrentList();
+    std::map<int,TorrentInfos> CollectGuiInfos();
 
     void ReceiveandExecute( const wxString& msg );
     void OnConnected( Socket* sock );
@@ -94,7 +95,7 @@ class TorrentWrapper : public iNetClass
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;
-    unsigned int m_connected_server_index;
+    unsigned int m_connected_tracker_index;
 };
 
 
