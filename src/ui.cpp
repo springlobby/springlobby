@@ -265,8 +265,7 @@ void Ui::Quit()
 
 void Ui::ReloadUnitSync()
 {
-  usync()->FreeUnitSyncLib();
-  usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() );
+  usync()->ReloadUnitSyncLib();
   if ( m_main_win != 0 ) m_main_win->OnUnitSyncReloaded();
 }
 

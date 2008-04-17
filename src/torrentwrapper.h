@@ -53,6 +53,7 @@ class TorrentWrapper : public iNetClass
     void ConnectToP2PSystem();
     void DisconnectToP2PSystem();
     std::map<int,TorrentInfos> CollectGuiInfos();
+    bool IsFileInSystem( const wxString& uhash );
 
     /// lobby interface
     void SetIngameStatus( bool status );
@@ -64,7 +65,7 @@ class TorrentWrapper : public iNetClass
   private:
 
     void CreateTorrent( const wxString& uhash, const wxString& name, MediaType type );
-    void JoinTorrent( const wxString& name );
+    bool JoinTorrent( const wxString& name );
     bool DownloadTorrentFileFromTracker( const wxString& shash );
     void FixTorrentList();
 
