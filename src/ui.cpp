@@ -29,6 +29,7 @@
 #include "mainjoinbattletab.h"
 #include "agreementdialog.h"
 #include "unitsyncthread.h"
+#include "torrentwrapper.h"
 
 #include "settings++/custom_dialogs.h"
 
@@ -270,43 +271,15 @@ void Ui::ReloadUnitSync()
 }
 
 
-void Ui::DownloadMap( const wxString& map )
+void Ui::DownloadMap( const wxString& hash )
 {
-//  wxString mapname = map;
-//  mapname = mapname.SubString(0, mapname.Find( '.', true ) - 1 );
-//  mapname.Replace(_T(" "), _T("+") );
-//  mapname.Replace(_T("-"), _T("*") );
-//  mapname.Replace(_T("_"), _T("*") );
-  wxString url = _T("http://spring.jobjol.nl/search.php")  ;
-  OpenWebBrowser ( url );
+  torrent()->RequestFile( hash );
 }
 
 
-void Ui::DownloadMod( const wxString& mod )
+void Ui::DownloadMod( const wxString& hash )
 {
- /* wxString modname = mod;
-  //all the following manipulation is necessary because the publish name on UF doesn't necessary reflect the file name
-  //and the mod filename isn't accessible trought unitsync
-  modname.Replace(_T(" "), _T("*") );
-  modname.Replace(_T("-"), _T("*") );
-  modname.Replace(_T("_"), _T("*") );
-  modname.Replace(_T("VERSION"), _T("*") );
-  modname.Replace(_T("Version"), _T("*") );
-  modname.Replace(_T("version"), _T("*") );
-  modname.Replace(_T("VER"), _T("*") );
-  modname.Replace(_T("Ver"), _T("*") );
-  modname.Replace(_T("ver"), _T("*") );
-  modname.Replace(_T("V"), _T("*") );
-  modname.Replace(_T("v"), _T("*") );
-  modname.Replace(_T("."), _T("*") );
-  modname.Replace(_T("ALPHA"), _T("*") );
-  modname.Replace(_T("Alpha"), _T("*") );
-  modname.Replace(_T("alpha"), _T("*") );
-  modname.Replace(_T("BETA"), _T("*") );
-  modname.Replace(_T("Beta"), _T("*") );
-  modname.Replace(_T("beta"), _T("*") );*/
-  wxString url = _T("http://spring.jobjol.nl/files.php?subcategory_id=5") ;
-  OpenWebBrowser ( url );
+  torrent()->RequestFile( hash );
 }
 
 
