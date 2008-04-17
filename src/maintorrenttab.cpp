@@ -1,4 +1,4 @@
-#include "MainTorrentTab.h"
+#include "maintorrenttab.h"
 
 //(*InternalHeaders(MainTorrentTab)
 #include <wx/intl.h>
@@ -27,7 +27,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent,wxWindowID id)
 	wxGridSizer* GridSizer1;
 	wxGridSizer* GridSizer3;
 	wxGridSizer* GridSizer2;
-	
+
 	Create(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("id"));
 	SetClientSize(wxSize(1092,262));
 	GridSizer1 = new wxGridSizer(2, 1, 0, 0);
