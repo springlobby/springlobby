@@ -103,6 +103,13 @@ void TorrentWrapper::UpdateSettings()
 }
 
 
+bool TorrentWrapper::IsFileInSystem( const wxString& uhash )
+{
+  unsigned long ulong;
+  uhash.ToULong( &ulong );
+  return m_torrents_infos.find(u2s((int)ulong)) != m_torrents_infos.end();
+}
+
 ////////////////////////////////////////////////////////
 ////               lobby interface                  ////
 ////////////////////////////////////////////////////////
@@ -146,7 +153,7 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
   wxString shash = wxString::Format( _T("%d"), (int)hash );
   if ( m_torrents_infos[shash].hash.IsEmpty() ) return false; /// the file is not present in the system
   m_socket_class->Send( wxString::Format( _T("N+|%d\n"), (int)hash ) ); /// request for seeders for the file
-  JoinTorrent( shash );
+  if ( !JoinTorrent( shash ) ) return false;
   m_leech_count++;
   m_open_torrents[m_torrents_infos[shash].name] = false; /// not seeding when just joined
   return true;
@@ -172,12 +179,12 @@ void TorrentWrapper::SetIngameStatus( bool status )
 
 void TorrentWrapper::UpdateFromTimer( int mselapsed )
 {
+  if (ingame) return;
   m_timer_count++;
   if ( m_timer_count < 20 ) return;////update every 2 sec
   m_timer_count = 0;
   ///TODO: send collected gui infos
   CollectGuiInfos();
-
 
 }
 
@@ -209,9 +216,9 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 }
 
 
-void TorrentWrapper::JoinTorrent( const wxString& hash )
+bool TorrentWrapper::JoinTorrent( const wxString& hash )
 {
-  if (ingame) return;
+  if (ingame) return false;
   if ( !m_torrents_infos[ hash ].hash.IsEmpty() )
   {
     wxString path = sett().GetSpringDir();
@@ -224,7 +231,11 @@ void TorrentWrapper::JoinTorrent( const wxString& hash )
     }
     if ( !wxFileName::IsFileReadable( sett().GetSpringDir() + _T("/torrents/") + hash ) ) /// file descriptor not present, download it
     {
-      DownloadTorrentFileFromTracker( hash );
+       while (!DownloadTorrentFileFromTracker( hash ) );
+       {
+         m_connected_server_index++;
+         if ( m_connected_server_index -1 > m_tracker_urls.Count() ) return false;
+       }
     }
     /// read torrent from file
     std::ifstream in( wxString( sett().GetSpringDir() + _T("/torrents/") + hash ).mb_str(), std::ios_base::binary);
@@ -234,7 +245,9 @@ void TorrentWrapper::JoinTorrent( const wxString& hash )
     /// add url seeds
     for( unsigned int i=0; i < m_torrents_infos[hash].seedurls.GetCount(); i++ )
       JoinedTorrent.add_url_seed( STD_STRING( m_torrents_infos[hash].seedurls[i] ) );
+    return true;
   }
+  return false;
 }
 
 

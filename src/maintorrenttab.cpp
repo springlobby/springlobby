@@ -5,6 +5,11 @@
 #include <wx/string.h>
 //*)
 
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/listbox.h>
+#include <wx/button.h>
+
 //(*IdInit(MainTorrentTab)
 const long MainTorrentTab::ID_STATICTEXT2 = wxNewId();
 const long MainTorrentTab::ID_STATICTEXT1 = wxNewId();

@@ -22,6 +22,7 @@
 #include "settings.h"
 #include "springunitsynclib.h"
 #include "settings++/custom_dialogs.h"
+#include "torrentwrapper.h"
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -636,7 +637,10 @@ bool SpringUnitSync::CacheModUnits( const wxString& mod )
 
 bool SpringUnitSync::ReloadUnitSyncLib()
 {
-  return false;
+  usync()->FreeUnitSyncLib();
+  usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() );
+  torrent()->ReloadLocalFileList();
+  return true;
 }
 
 

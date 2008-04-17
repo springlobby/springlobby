@@ -2,12 +2,12 @@
 #define MAINTORRENTTAB_H
 
 //(*Headers(MainTorrentTab)
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/listbox.h>
-#include <wx/button.h>
 #include <wx/frame.h>
 //*)
+
+class wxStaticText;
+class wxButton;
+class wxListBox;
 
 class MainTorrentTab: public wxFrame
 {
