@@ -53,6 +53,9 @@ m_connected(false)
   m_torr = new libtorrent::session();
   m_torr->add_extension(&libtorrent::create_metadata_plugin);
   m_torr->add_extension(&libtorrent::create_ut_pex_plugin);
+  m_torr->start_upnp();
+  m_torr->start_natpmp();
+  m_torr->start_lsd();
   m_socket_class = new Socket( *this );
   ReloadLocalFileList();
 }
