@@ -210,7 +210,7 @@ void TASServer::Disconnect()
 bool TASServer::IsConnected()
 {
   if ( m_sock == 0 ) return false;
-  return (m_sock->State() == SS_OPEN);
+  return (m_sock->State() == SS_Open);
 }
 
 

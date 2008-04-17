@@ -505,6 +505,8 @@ springlobby_SOURCES = \
 	src/mmoptionswrapper.cpp \
 	src/battleroommmoptionstab.h \
 	src/battleroommmoptionstab.cpp \
+	src/torrentwrapper.cpp \
+	src/torrentwrapper.h \
 	src/thingdef.h \
 	src/spinctld.h \
 	src/spinctld.cpp \
