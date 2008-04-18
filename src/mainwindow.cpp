@@ -28,6 +28,7 @@
 #include "mainoptionstab.h"
 #include "iunitsync.h"
 #include "uiutils.h"
+#include "maintorrenttab.h"
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.png.h"
@@ -125,11 +126,13 @@ MainWindow::MainWindow( Ui& ui ) :
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
+  m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
 
   m_func_tabs->AddPage( m_chat_tab, _T(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
+  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 4 );
   //TODO insert real downloads panel
   //m_func_tabs->AddPage( m_opts_tab, _T(""), false, 4 );
 
@@ -223,7 +226,7 @@ void MainWindow::MakeImages()
     m_func_tab_images->Add( img );
   } else {*/
     m_func_tab_images->Add( *m_options_icon );
-
+     m_func_tab_images->Add( *m_options_icon );
    // m_func_tab_images->Add( *m_downloads_icon );
   //}
 

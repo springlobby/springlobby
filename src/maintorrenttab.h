@@ -2,37 +2,49 @@
 #define MAINTORRENTTAB_H
 
 //(*Headers(MainTorrentTab)
-#include <wx/frame.h>
+#include <wx/panel.h>
 //*)
 
 class wxStaticText;
 class wxButton;
-class wxListBox;
+class TorrentListCtrl;
+class Ui;
+class TorrentInfos;
 
-class MainTorrentTab: public wxFrame
+class MainTorrentTab: public wxPanel
 {
 	public:
 
-		MainTorrentTab(wxWindow* parent,wxWindowID id=wxID_ANY);
-		virtual ~MainTorrentTab();
+		MainTorrentTab(wxWindow* parent,Ui& ui);
+		~MainTorrentTab();
 
-		//(*Declarations(MainTorrentTab)
-		wxStaticText* StaticText2;
-		wxButton* Button1;
-		wxStaticText* StaticText1;
-		wxButton* Button2;
-		wxListBox* ListBox1;
-		//*)
+		wxStaticText* m_incoming;
+		wxStaticText* m_outgoing;
+		wxStaticText* m_incoming_lbl;
+		wxStaticText* m_outgoing_lbl;
+
+		wxButton* m_but_cancel;
+		wxButton* m_but_publish;
+		TorrentListCtrl* m_torrent_list;
+
+		Ui& m_ui;
+        void OnUpdate();
 
 	protected:
 
-		//(*Identifiers(MainTorrentTab)
-		static const long ID_STATICTEXT2;
-		static const long ID_STATICTEXT1;
-		static const long ID_LISTBOX1;
-		static const long ID_BUTTON1;
-		static const long ID_BUTTON2;
-		//*)
+		enum
+		{
+            ID_LIST = wxID_HIGHEST,
+            ID_BUTTON_CANCEL,
+            ID_BUTTON_PUB,
+            ID_OUTGOING,
+            ID_INCOMING,
+            ID_OUTGOING_LBL,
+            ID_INCOMING_LBL,
+
+        };
+
+        void AddTorrentInfo( TorrentInfos& info );
 
 	private:
 

@@ -11,6 +11,7 @@ class wxListbookEvent;
 class MainChatTab;
 class MainJoinBattleTab;
 class MainSinglePlayerTab;
+class MainTorrentTab;
 class wxBoxSizer;
 class wxListbook;
 class MainOptionsTab;
@@ -86,6 +87,7 @@ class MainWindow : public wxFrame
     MainJoinBattleTab* m_join_tab;
     MainSinglePlayerTab* m_sp_tab;
     MainOptionsTab* m_opts_tab;
+    MainTorrentTab* m_torrent_tab;
 
     wxBitmap* m_chat_icon;
     wxBitmap* m_battle_icon;
