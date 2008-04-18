@@ -25,9 +25,10 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
 {
     wxBoxSizer* mainboxsizer = new wxBoxSizer( wxVERTICAL );
 
+    wxBoxSizer* enable_siter = new wxBoxSizer( wxHORIZONTAL );
     m_enableP2P = new wxCheckBox( this, ID_ENABLEP2P, _("Enable peer to peer download system"));
     m_enableP2P->SetValue( sett().GetTorrentSystemEnabled() );
-    mainboxsizer->Add( 0, wxALL, 5 );
+    mainboxsizer->Add( m_enableP2P, 0, wxALL, 5 );
 
     wxBoxSizer* up_siter = new wxBoxSizer( wxHORIZONTAL );
     m_maxUp = new wxTextCtrl( this, ID_MAXUP, i2s( sett().GetTorrentUploadRate() ) );
@@ -96,6 +97,8 @@ void TorrentOptionsPanel::OnApply( wxCommandEvent& event )
     sett().SetTorrentMaxConnections( s2l( m_maxConnections->GetValue() ) );
     if (!torrent()->IsConnectedToP2PSystem() && m_enableP2P->IsChecked() && m_ui.IsConnected() )
         torrent()->ConnectToP2PSystem();
+    else if ( torrent()->IsConnectedToP2PSystem() && !m_enableP2P->IsChecked() )
+        torrent()->DisconnectToP2PSystem();
     torrent()->UpdateSettings();
 }
 
