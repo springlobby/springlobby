@@ -63,33 +63,40 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 
     info_map = torrent()->CollectGuiInfos();
     m_torrent_list->SetInfoMap( &info_map );
-	//*)
+
+	for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
+    {
+        AddTorrentInfo(iter->second);
+    }
 }
 
 MainTorrentTab::~MainTorrentTab()
 {
-	//(*Destroy(MainTorrentTab)
-	//*)
+
 }
 
 void MainTorrentTab::UpdateInfo( const TorrentInfos& info )
 {
-
-}
-
-void MainTorrentTab::AddTorrentInfo( const TorrentInfos& info )
-{
-  int index = m_torrent_list->InsertItem( 0, info.name );
-//  ASSERT_LOGIC( index != -1, _T("index = -1") );
-  m_torrent_list->SetItemData(index, (long)info.filehash );
-
+ int index = -1;
+  for (int i = 0; i < m_torrent_list->GetItemCount() ; i++ ) {
+    if ( info.filehash == (int)m_torrent_list->GetItemData( i ) ) {
+      index = i;
+      break;
+    }
+  }
 
   //ASSERT_LOGIC( index != -1, _T("index = -1") );
+    if ( index > 0 )
+        SetInfo(index, info );
+    else
+        AddTorrentInfo( info );
+}
 
- // ASSERT_LOGIC( m_torrent_list->GetItem( item ), _T("!GetItem") );
+void MainTorrentTab::SetInfo(int index, const TorrentInfos& info )
+{
  int eta_seconds = -1;
  if ( info.progress > 0 && info.inspeed > 0)
-    int eta_seconds = int ( ( info.downloaded / info.progress ) / info.inspeed );
+    eta_seconds = int ( ( info.downloaded / info.progress ) / info.inspeed );
 
  // m_torrent_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
   m_torrent_list->SetItem( index, 0, info.name );
@@ -103,6 +110,19 @@ void MainTorrentTab::AddTorrentInfo( const TorrentInfos& info )
   m_torrent_list->SetItem( index, 8, (eta_seconds > -1 ? i2s(eta_seconds) : _T("inf.") ) );
 
   m_torrent_list->Sort();
+}
+
+void MainTorrentTab::AddTorrentInfo( const TorrentInfos& info )
+{
+  int index = m_torrent_list->InsertItem( 0, info.name );
+//  ASSERT_LOGIC( index != -1, _T("index = -1") );
+  m_torrent_list->SetItemData(index, (long)info.filehash );
+
+
+  //ASSERT_LOGIC( index != -1, _T("index = -1") );
+
+ // ASSERT_LOGIC( m_torrent_list->GetItem( item ), _T("!GetItem") );
+    SetInfo(index, info );
 }
 
 void MainTorrentTab::OnUpdate()

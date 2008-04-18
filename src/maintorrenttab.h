@@ -50,6 +50,7 @@ class MainTorrentTab: public wxPanel
         map_infos info_map;
         void AddTorrentInfo( const TorrentInfos& info );
         void UpdateInfo( const TorrentInfos& info );
+        void SetInfo(int index, const TorrentInfos& info );
 
 	private:
 

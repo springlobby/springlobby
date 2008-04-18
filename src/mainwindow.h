@@ -67,6 +67,7 @@ class MainWindow : public wxFrame
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab();
     MainSinglePlayerTab& GetSPTab();
+    MainTorrentTab& GetTorrentTab();
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
     void MakeImages();

@@ -27,6 +27,7 @@
 #include "battle.h"
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
+#include "maintorrenttab.h"
 #include "agreementdialog.h"
 #include "unitsyncthread.h"
 #include "torrentwrapper.h"
@@ -40,6 +41,7 @@ Ui::Ui() :
 {
    ReloadUnitSync();
 
+  m_upd_intv_counter = 0;
   m_main_win = new MainWindow( *this );
   CustomMessageBoxBase::setLobbypointer(m_main_win);
   m_spring = new Spring(*this);
@@ -446,7 +448,14 @@ void Ui::OnUpdate( int mselapsed )
   if ( m_serv != 0 ) {
     m_serv->Update( mselapsed );
   }
+
+  if (m_upd_intv_counter % 20 == 0 )
+  {
+      m_main_win->GetTorrentTab().OnUpdate();
+
+  }
   torrent()->UpdateFromTimer( mselapsed );
+  m_upd_intv_counter++;
 }
 
 

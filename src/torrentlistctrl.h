@@ -60,7 +60,7 @@ class TorrentListCtrl : public customListCtrl
     } m_sortorder[4];
 
     int m_selected;
-    wxMenu* m_popup;
+    //wxMenu* m_popup;
 
     DECLARE_EVENT_TABLE()
 };

@@ -261,6 +261,11 @@ MainSinglePlayerTab& MainWindow::GetSPTab()
   return *m_sp_tab;
 }
 
+MainTorrentTab& MainWindow::GetTorrentTab()
+{
+  ASSERT_LOGIC( m_torrent_tab  != 0, _T("m_torrent_tab = 0") );
+  return *m_torrent_tab ;
+}
 
 ChatPanel* MainWindow::GetActiveChatPanel()
 {

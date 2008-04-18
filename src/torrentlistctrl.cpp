@@ -139,7 +139,7 @@ void TorrentListCtrl::SetInfoMap( map_infos* map)
 
 TorrentListCtrl::~TorrentListCtrl()
 {
-  delete m_popup;
+//  delete m_popup;
 }
 
 
@@ -165,7 +165,7 @@ int TorrentListCtrl::GetSelectedIndex()
 
 void TorrentListCtrl::OnListRightClick( wxListEvent& event )
 {
-  PopupMenu( m_popup );
+//  PopupMenu( m_popup );
 }
 
 
