@@ -5,12 +5,13 @@
 
 class wxCheckBox;
 class wxTextCtrl;
+class Ui;
 
 
 class TorrentOptionsPanel: public wxPanel
 {
     public:
-        TorrentOptionsPanel( wxWindow* parent);
+        TorrentOptionsPanel( wxWindow* parent, Ui& ui);
         ~TorrentOptionsPanel();
         void OnEnableP2P( wxCommandEvent& event );
         void OnMaxUp( wxCommandEvent& event );
@@ -26,6 +27,8 @@ class TorrentOptionsPanel: public wxPanel
         wxTextCtrl* m_maxDown;
         wxTextCtrl* m_p2pport;
         wxTextCtrl* m_maxConnections;
+
+        Ui& m_ui;
 
         void EnableSettings( bool enable);
 

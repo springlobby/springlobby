@@ -8,6 +8,7 @@
 #include <wx/intl.h>
 
 #include "settings.h"
+#include "ui.h"
 #include "torrentwrapper.h"
 #include "utils.h"
 
@@ -19,8 +20,8 @@ BEGIN_EVENT_TABLE( TorrentOptionsPanel, wxPanel )
 END_EVENT_TABLE()
 
 
-TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent)
-    : wxPanel( parent, -1)
+TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
+    : wxPanel( parent, -1), m_ui(ui)
 {
     wxBoxSizer* mainboxsizer = new wxBoxSizer( wxVERTICAL );
 
@@ -80,7 +81,7 @@ void TorrentOptionsPanel::OnEnableP2P( wxCommandEvent& event )
 
 }
 
-
+//TODO wtf did i add these
 void TorrentOptionsPanel::OnMaxUp( wxCommandEvent& event ){}
 void TorrentOptionsPanel::OnMaxDown( wxCommandEvent& event ){}
 void TorrentOptionsPanel::OnP2PPort( wxCommandEvent& event ){}
@@ -93,10 +94,9 @@ void TorrentOptionsPanel::OnApply( wxCommandEvent& event )
     sett().SetTorrentDownloadRate( s2l( m_maxDown->GetValue() ) );
     sett().SetTorrentPort( s2l( m_p2pport->GetValue() ) );
     sett().SetTorrentMaxConnections( s2l( m_maxConnections->GetValue() ) );
-    if (!torrent()->IsConnectedToP2PSystem() && m_enableP2P->IsChecked() ) //TODO add server connection test
+    if (!torrent()->IsConnectedToP2PSystem() && m_enableP2P->IsChecked() && m_ui.IsConnected() )
         torrent()->ConnectToP2PSystem();
     torrent()->UpdateSettings();
-    sett().SaveSettings();
 }
 
 void TorrentOptionsPanel::OnRestore( wxCommandEvent& event )
