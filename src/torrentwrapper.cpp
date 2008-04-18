@@ -56,6 +56,7 @@ m_connected(false)
   m_torr->start_upnp();
   m_torr->start_natpmp();
   m_torr->start_lsd();
+  m_torr->start_start_dht();
   m_socket_class = new Socket( *this );
   ReloadLocalFileList();
 }
@@ -63,6 +64,10 @@ m_connected(false)
 
 TorrentWrapper::~TorrentWrapper()
 {
+  m_torr->stop_upnp();
+  m_torr->stop_natpmp();
+  m_torr->stop_lsd();
+  m_torr->stop_start_dht();
   delete m_torr;
   delete m_socket_class;
 }
@@ -88,7 +93,13 @@ void TorrentWrapper::ConnectToP2PSystem()
 
 void TorrentWrapper::DisconnectToP2PSystem()
 {
-  m_socket_class->Disconnect();
+  if ( m_connected ) m_socket_class->Disconnect();
+}
+
+
+bool TorrentWrapper::IsConnectedToP2PSystem()
+{
+  return m_connected;
 }
 
 
@@ -440,13 +451,14 @@ void TorrentWrapper::OnConnected( Socket* sock )
 
 void TorrentWrapper::OnDisconnected( Socket* sock )
 {
+  std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
+  for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++) m_torr->remove_torrent(*i); ///remove all torrents upon disconnect
   m_connected = false;
   m_torrents_infos.clear();
   m_seed_requests.clear();
   m_open_torrents.clear();
   m_seed_count = 0;
   m_leech_count = 0;
-
 }
 
 

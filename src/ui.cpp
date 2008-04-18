@@ -240,6 +240,7 @@ void Ui::StartHostedBattle()
 
 void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
 {
+  torrent()->SetIngameStatus(true);
   m_spring->Run( battle );
 }
 
@@ -445,6 +446,7 @@ void Ui::OnUpdate( int mselapsed )
   if ( m_serv != 0 ) {
     m_serv->Update( mselapsed );
   }
+  torrent()->UpdateFromTimer( mselapsed );
 }
 
 
@@ -847,6 +849,7 @@ void Ui::OnRequestBattleStatus( Battle& battle )
 
 void Ui::OnBattleStarted( Battle& battle )
 {
+  torrent()->SetIngameStatus(true);
   if ( m_main_win == 0 ) return;
   wxLogDebugFunc( _T("") );
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
@@ -885,6 +888,7 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
 
 void Ui::OnSpringTerminated( bool success )
 {
+  torrent()->SetIngameStatus(false);
   if ( !m_serv ) return;
 
   m_serv->GetMe().Status().in_game = false;
