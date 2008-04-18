@@ -12,7 +12,6 @@
 #include <wx/choicdlg.h>
 #include <wx/filename.h>
 #include <wx/dirdlg.h>
-#include <wx/file.h>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -186,21 +185,6 @@ void SpringLobbyApp::SetupUserFolders()
        {
          if ( dir.IsEmpty() || ( !wxFileName::Mkdir( dir ) || ( !wxFileName::Mkdir( dir + _T("/mods") ) || !wxFileName::Mkdir( dir + _T("/maps") ) || !wxFileName::Mkdir( dir + _T("/base") ) ) ) )
           wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + _T("/mods\n") + dir + _T("/maps\n") + dir + _T("/base\n") );
-       }
-
-       if ( !dir.IsEmpty() )
-       {
-         wxFile springrc( wxFileName::GetHomeDir() + _T("/.springrc"), wxFile::write_append );
-         if ( !springrc.IsOpened() )
-           wxMessageBox( _("Failed to write to your ~/.sprirgrc file please append the following line manually to it:") + wxString(_T("\nSpringData=")) + dir );
-         else
-         {
-          springrc.Write( _T("\nSpringData=") + dir );
-          springrc.Close();
-         }
-
-         sett().SetSpringDir(dir);
-
        }
 
      }
