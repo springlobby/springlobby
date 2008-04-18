@@ -4,6 +4,7 @@
 #include <wx/checkbox.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
+#include <wx/stattext.h>
 #include <wx/intl.h>
 
 #include "settings.h"
@@ -27,19 +28,37 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent)
     m_enableP2P->SetValue( sett().GetTorrentSystemEnabled() );
     mainboxsizer->Add( 0, wxALL, 5 );
 
+    wxBoxSizer* up_siter = new wxBoxSizer( wxHORIZONTAL );
     m_maxUp = new wxTextCtrl( this, ID_MAXUP, i2s( sett().GetTorrentUploadRate() ) );
-    mainboxsizer->Add( m_maxUp, 0, wxALL, 5 );
+    wxStaticText* m_maxUp_lbl = new wxStaticText( this, wxID_ANY, _("maximum upload ") );
+    up_siter->Add( m_maxUp, 0, wxALL, 5 );
+    up_siter->Add( m_maxUp_lbl, 0, wxALL, 5 );
+    mainboxsizer->Add( up_siter, 0, wxALL, 5 );
 
+    wxBoxSizer* down_siter = new wxBoxSizer( wxHORIZONTAL );
     m_maxDown = new wxTextCtrl( this, ID_MAXDOWN, i2s( sett().GetTorrentDownloadRate() ) );
-    mainboxsizer->Add( m_maxDown, 0, wxALL, 5 );
+    wxStaticText* m_maxDown_lbl = new wxStaticText( this, wxID_ANY, _("maximum download") );
+    down_siter->Add( m_maxDown, 0, wxALL, 5 );
+    down_siter->Add( m_maxDown_lbl, 0, wxALL, 5 );
+    mainboxsizer->Add( down_siter, 0, wxALL, 5 );
 
+    wxBoxSizer* port_siter = new wxBoxSizer( wxHORIZONTAL );
     m_p2pport = new wxTextCtrl( this, ID_P2PPORT, i2s( sett().GetTorrentPort() ) );
-    mainboxsizer->Add( m_p2pport, 0, wxALL, 5 );
+    wxStaticText* m_p2pport_lbl = new wxStaticText( this, wxID_ANY, _("port used for torrent connections") );
+    port_siter->Add( m_p2pport, 0, wxALL, 5 );
+    port_siter->Add( m_p2pport_lbl, 0, wxALL, 5 );
+    mainboxsizer->Add( port_siter, 0, wxALL, 5 );
 
+    wxBoxSizer* con_siter = new wxBoxSizer( wxHORIZONTAL );
     m_maxConnections = new wxTextCtrl( this, ID_MAXUP, i2s( sett().GetTorrentMaxConnections() ) );
-    mainboxsizer->Add( m_maxConnections, 0, wxALL, 5 );
+    wxStaticText* m_maxConnections_lbl = new wxStaticText( this, wxID_ANY, _("maximum number of concurrent connections") );
+    con_siter->Add( m_maxConnections, 0, wxALL, 5 );
+    con_siter->Add( m_maxConnections_lbl, 0, wxALL, 5 );
+    mainboxsizer->Add( con_siter, 0, wxALL, 5 );
 
     EnableSettings( sett().GetTorrentSystemEnabled() );
+
+    SetSizer( mainboxsizer );
 }
 
 TorrentOptionsPanel::~TorrentOptionsPanel()
@@ -77,6 +96,7 @@ void TorrentOptionsPanel::OnApply( wxCommandEvent& event )
     if (!torrent()->IsConnectedToP2PSystem() && m_enableP2P->IsChecked() ) //TODO add server connection test
         torrent()->ConnectToP2PSystem();
     torrent()->UpdateSettings();
+    sett().SaveSettings();
 }
 
 void TorrentOptionsPanel::OnRestore( wxCommandEvent& event )

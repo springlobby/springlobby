@@ -12,6 +12,7 @@ class SpringOptionsTab;
 class ChatOptionsTab;
 class wxButton;
 class wxBoxSizer;
+class TorrentOptionsPanel;
 
 class MainOptionsTab : public wxPanel
 {
@@ -31,6 +32,7 @@ class MainOptionsTab : public wxPanel
 
     SpringOptionsTab* m_spring_opts;
     ChatOptionsTab* m_chat_opts;
+    TorrentOptionsPanel* m_torrent_opts;
 
     wxButton* m_restore_btn;
     wxButton* m_apply_btn;

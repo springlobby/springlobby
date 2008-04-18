@@ -16,6 +16,7 @@
 #include "springoptionstab.h"
 #include "chatoptionstab.h"
 #include "settings.h"
+#include "torrentoptionspanel.h"
 
 #include "images/spring.xpm"
 #include "images/userchat.xpm"
@@ -40,6 +41,9 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   m_spring_opts = new SpringOptionsTab( m_tabs, m_ui );
   m_tabs->AddPage( m_spring_opts, _("Spring"), true, 0 );
+
+  m_torrent_opts = new TorrentOptionsPanel( m_tabs );
+  m_tabs->AddPage( m_torrent_opts, _("P2P"), true, 0 );
 
   m_chat_opts = new ChatOptionsTab( m_tabs, m_ui );
   m_tabs->AddPage( m_chat_opts, _("Chat"), true, 1 );
