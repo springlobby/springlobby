@@ -88,7 +88,7 @@ void TorrentWrapper::ConnectToP2PSystem()
 
 void TorrentWrapper::DisconnectToP2PSystem()
 {
-  m_socket_class->Disconnect();
+  if ( m_connected ) m_socket_class->Disconnect();
 }
 
 
@@ -440,13 +440,14 @@ void TorrentWrapper::OnConnected( Socket* sock )
 
 void TorrentWrapper::OnDisconnected( Socket* sock )
 {
+  std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
+  for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++) m_torr->remove_torrent(*i); ///remove all torrents upon disconnect
   m_connected = false;
   m_torrents_infos.clear();
   m_seed_requests.clear();
   m_open_torrents.clear();
   m_seed_count = 0;
   m_leech_count = 0;
-
 }
 
 
