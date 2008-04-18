@@ -240,7 +240,7 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
        while (!DownloadTorrentFileFromTracker( hash ) );
        {
          m_connected_tracker_index++;
-         if ( m_connected_server_index -1 > m_tracker_urls.Count() ) return false;
+         if ( m_connected_tracker_index > m_tracker_urls.Count() -1 ) return false;
        }
     }
     /// read torrent from file
@@ -282,15 +282,14 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
     newtorrent.add_tracker( STD_STRING(m_tracker_urls[i] +  _T(":DEFAULT_P2P_TRACKER_PORT/announce") ) );
   }
 
-  libtorrent::file_pool fp;
-  libtorrent::storage st(newtorrent, InputFilePath.branch_path(), fp);
-
+  wxFile torrentfile( StringFilePath );
+  if ( !torrentfile.IsOpened() ) return;
   /// calculate the hash for all pieces
   int num = newtorrent.num_pieces();
   std::vector<char> buf(newtorrent.piece_size(0));
-  for (int i = 0; i < num; ++i)
+  for ( int i = 0; i < num; ++i)
   {
-    st.read(&buf[0], i, 0, newtorrent.piece_size(i));
+    torrentfile.Read(&buf[0], newtorrent.piece_size(i));
     libtorrent::hasher h(&buf[0], newtorrent.piece_size(i));
     newtorrent.set_hash(i, h.final());
   }
