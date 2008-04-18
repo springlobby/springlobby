@@ -242,7 +242,7 @@ void HostBattleDialog::OnOk( wxCommandEvent& event )
     customMessageBox(SL_MAIN_ICON, _("You have to select a mod first."), _("No mod selected."), wxOK );
     return;
   }
-  if ( m_desc_text->GetValue().IsEmpty() ) m_desc_text->SetValue(_T(" "));
+  if ( m_desc_text->GetValue().IsEmpty() ) m_desc_text->SetValue(_T("(none)"));
   sett().SetLastHostDescription( m_desc_text->GetValue() );
   sett().SetLastHostMod( m_mod_pic->GetString(m_mod_pic->GetSelection()) );
   sett().SetLastHostPassword( m_pwd_text->GetValue() );
