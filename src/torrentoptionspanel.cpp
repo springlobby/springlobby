@@ -81,9 +81,9 @@ void TorrentOptionsPanel::OnApply( wxCommandEvent& event )
 
 void TorrentOptionsPanel::OnRestore( wxCommandEvent& event )
 {
-    m_maxConnections->SetValue( sett().GetTorrentMaxConnections() );
-    m_p2pport->SetValue( sett().GetTorrentPort() );
-    m_maxDown->SetValue( sett().GetTorrentDownloadRate() ):
-    m_maxUp->SetValue( sett().GetTorrentUploadRate() );
-    m_enableP2P->SetChecked( sett().GetTorrentSystemEnabled() );
+    m_maxConnections->SetValue( i2s( sett().GetTorrentMaxConnections() ) );
+    m_p2pport->SetValue( i2s( sett().GetTorrentPort() ) );
+    m_maxDown->SetValue( i2s( sett().GetTorrentDownloadRate() ) );
+    m_maxUp->SetValue( i2s( sett().GetTorrentUploadRate() ) );
+    m_enableP2P->SetValue( sett().GetTorrentSystemEnabled() );
 }
