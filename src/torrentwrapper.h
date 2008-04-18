@@ -53,6 +53,7 @@ class TorrentWrapper : public iNetClass
 
     void ConnectToP2PSystem();
     void DisconnectToP2PSystem();
+    bool IsConnectedToP2PSystem() { return m_connected; }
     bool IsFileInSystem( const wxString& uhash );
 
     /// lobby interface

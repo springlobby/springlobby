@@ -92,6 +92,12 @@ void TorrentWrapper::DisconnectToP2PSystem()
 }
 
 
+bool TorrentWrapper::IsConnectedToP2PSystem()
+{
+  return m_connected;
+}
+
+
 void TorrentWrapper::UpdateSettings()
 {
   m_torr->set_upload_rate_limit(sett().GetTorrentUploadRate());
