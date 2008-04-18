@@ -644,6 +644,18 @@ bool SpringUnitSync::ReloadUnitSyncLib()
 }
 
 
+void SpringUnitSync::SetSpringDataPath( const wxString& path )
+{
+  susynclib()->SetSpringConfigString( _T("SpringData"), path );
+}
+
+
+wxString SpringUnitSync::GetSpringDataPath()
+{
+  return susynclib()->GetSpringConfigString( _T("SpringData"), sett().GetSpringDir() );
+}
+
+
 void SpringUnitSync::_ConvertSpringMapInfo( const CachedMapInfo& in, MapInfo& out )
 {
   out.author = WX_STRINGC(in.author);

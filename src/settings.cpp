@@ -15,6 +15,7 @@
 #include "utils.h"
 #include "uiutils.h"
 #include "battlelistfiltervalues.h"
+#include "iunitsync.h"
 
 Settings& sett()
 {
@@ -37,9 +38,10 @@ Settings::~Settings()
 //! @brief Saves the settings to file
 void Settings::SaveSettings()
 {
-    m_config->Write( _T("/General/firstrun"), false );
-    SetCacheVersion();
-    m_config->Flush();
+  m_config->Write( _T("/General/firstrun"), false );
+  SetCacheVersion();
+  m_config->Flush();
+  usync()->SetSpringDataPath( GetSpringDir() );
 }
 
 

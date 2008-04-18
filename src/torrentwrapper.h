@@ -63,6 +63,7 @@ class TorrentWrapper : public iNetClass
     bool RequestFile( const wxString& hash );
     void UpdateSettings();
     void UpdateFromTimer( int mselapsed );
+    std::map<int,TorrentInfos> CollectGuiInfos();
 
   private:
 
@@ -70,7 +71,6 @@ class TorrentWrapper : public iNetClass
     bool JoinTorrent( const wxString& name );
     bool DownloadTorrentFileFromTracker( const wxString& shash );
     void FixTorrentList();
-    std::map<int,TorrentInfos> CollectGuiInfos();
 
     void ReceiveandExecute( const wxString& msg );
     void OnConnected( Socket* sock );
