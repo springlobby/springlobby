@@ -4,7 +4,7 @@
 #include <wx/string.h>
 #include <wx/arrstr.h>
 
-#include <vector>
+#include <map>
 
 #include "inetclass.h"
 

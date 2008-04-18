@@ -203,6 +203,12 @@ class Settings
     int GetTorrentDownloadRate();
     void SetTorrentDownloadRate( int speed );
 
+    bool GetTorrentSystemEnabled();
+    void SetTorrentSystemEnabled( bool enabled );
+
+    void SetTorrentMaxConnections( int connections );
+    int GetTorrentMaxConnections();
+
   protected:
 
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.

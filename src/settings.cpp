@@ -920,7 +920,7 @@ wxString Settings::GetLastFilterProfileName()
 
 unsigned int Settings::GetTorrentPort()
 {
-    return  (unsigned int)m_config->Read( _T("/Torrent/Port"), 0l );
+    return  (unsigned int)m_config->Read( _T("/Torrent/Port"), GetLastHostPort() );
 }
 
 
@@ -951,4 +951,26 @@ int Settings::GetTorrentDownloadRate()
 void Settings::SetTorrentDownloadRate( int speed )
 {
   m_config->Write( _T("/Torrent/DownloadRate"), speed );
+}
+
+bool Settings::GetTorrentSystemEnabled()
+{
+    return  m_config->Read( _T("/Torrent/SystemEnabled"), true );
+}
+
+
+void Settings::SetTorrentSystemEnabled( bool enabled )
+{
+  m_config->Write( _T("/Torrent/SystemEnabled"), enabled );
+}
+
+void Settings::SetTorrentMaxConnections( int connections )
+{
+  m_config->Write( _T("/Torrent/MaxConnections"), connections );
+}
+
+
+int Settings::GetTorrentMaxConnections()
+{
+    return  m_config->Read( _T("/Torrent/MaxConnections"), 250 );
 }
