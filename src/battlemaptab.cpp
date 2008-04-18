@@ -203,5 +203,6 @@ void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
 void BattleMapTab::OnUnitSyncReloaded()
 {
   m_minimap->UpdateMinimap();
+  ReloadMaplist();
 }
 
