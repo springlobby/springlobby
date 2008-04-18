@@ -70,11 +70,11 @@ void TorrentOptionsPanel::OnMaxConnections( wxCommandEvent& event ){}
 void TorrentOptionsPanel::OnApply( wxCommandEvent& event )
 {
     sett().SetTorrentSystemEnabled( m_enableP2P->IsChecked() );
-    sett().SetTorrentUploadRate( m_maxUp->GetValue() );
-    sett().SetTorrentDownloadRate( m_maxDown->GetValue() );
-    sett().SetTorrentPort( m_p2pport->GetValue() );
-    sett().SetTorrentMaxConnections( m_maxConnections->GetValue() );
-    if (!torrent()->IsConnectedToP2PSystem() && m_enableP2P->IsChecked() &&
+    sett().SetTorrentUploadRate( s2l( m_maxUp->GetValue() ) );
+    sett().SetTorrentDownloadRate( s2l( m_maxDown->GetValue() ) );
+    sett().SetTorrentPort( s2l( m_p2pport->GetValue() ) );
+    sett().SetTorrentMaxConnections( s2l( m_maxConnections->GetValue() ) );
+    if (!torrent()->IsConnectedToP2PSystem() && m_enableP2P->IsChecked() ) //TODO add server connection test
         torrent()->ConnectToP2PSystem();
     torrent()->UpdateSettings();
 }

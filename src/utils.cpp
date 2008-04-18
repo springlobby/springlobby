@@ -86,6 +86,20 @@ wxString f2s( float arg )
 }
 
 
+long s2l( const wxString& arg )
+{
+    long ret;
+    arg.ToLong(&ret);
+    return ret;
+}
+
+double s2d( const wxString& arg )
+{
+    double ret;
+    arg.ToDouble(&ret);
+    return ret;
+}
+
 wxString GetWordParam( wxString& params )
 {
   wxString param;
