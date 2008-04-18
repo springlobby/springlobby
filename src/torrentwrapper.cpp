@@ -214,11 +214,10 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 {
   std::map<int,TorrentInfos> ret;
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
-  int count = 0;
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
   {
     TorrentInfos CurrentTorrent;
-    CurrentTorrent.name = WX_STRING(i->name());
+    CurrentTorrent.name = WX_STRING(i->name()).BeforeFirst(_T('|'));
     CurrentTorrent.leeching = !i->is_seed();
     CurrentTorrent.progress = i->status().progress;
     CurrentTorrent.downloaded = i->status().total_payload_download;
@@ -226,7 +225,8 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     CurrentTorrent.inspeed = i->status().total_payload_download;
     CurrentTorrent.outspeed = i->status().total_payload_upload;
     CurrentTorrent.numcopies = i->status().distributed_copies;
-    ret[count++] = CurrentTorrent;
+    CurrentTorrent.filehash = s2l(m_torrents_infos[CurrentTorrent.name].hash);
+    ret[CurrentTorrent.filehash] = CurrentTorrent;
   }
   return ret;
 }

@@ -30,6 +30,7 @@ struct TorrentInfos
   float progress;
   float inspeed;
   float outspeed;
+  int filehash;
 };
 
 struct TorrentData
