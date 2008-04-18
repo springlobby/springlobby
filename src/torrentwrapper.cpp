@@ -195,13 +195,10 @@ void TorrentWrapper::SetIngameStatus( bool status )
 
 void TorrentWrapper::UpdateFromTimer( int mselapsed )
 {
-  if (ingame) return;
   m_timer_count++;
   if ( m_timer_count < 20 ) return;////update every 2 sec
   m_timer_count = 0;
-  ///TODO: send collected gui infos
-  CollectGuiInfos();
-
+  if (!ingame) FixTorrentList();
 }
 
 
