@@ -58,6 +58,7 @@ m_connected(false)
   m_torr->start_lsd();
   m_torr->start_dht();
   m_socket_class = new Socket( *this );
+  UpdateSettings();
   ReloadLocalFileList();
 }
 
@@ -107,6 +108,7 @@ void TorrentWrapper::UpdateSettings()
 {
   m_torr->set_upload_rate_limit(sett().GetTorrentUploadRate());
   m_torr->set_download_rate_limit(sett().GetTorrentDownloadRate());
+  m_torr->set_max_connections(sett().GetTorrentMaxConnections());
   try
   {
     m_torr->listen_on(std::make_pair(sett().GetTorrentPort(), sett().GetTorrentPort()));
