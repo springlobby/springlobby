@@ -23,9 +23,10 @@ class SpringLobbyApp : public wxApp
     // System Events
     void OnTimer( wxTimerEvent& event );
 
-    void InitDirs();
-
   protected:
+
+    void SetupUserFolders();
+    void InitDirs();
 
     wxTimer* m_timer;
 

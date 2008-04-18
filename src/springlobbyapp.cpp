@@ -9,6 +9,10 @@
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <wx/image.h>
+#include <wx/choicdlg.h>
+#include <wx/filename.h>
+#include <wx/dirdlg.h>
+#include <wx/file.h>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -97,6 +101,7 @@ bool SpringLobbyApp::OnInit()
     #ifdef HAVE_WX26
     wxMessageBox(_("You're using a wxwidgets library of the 2.6.x series\n battle filtering, advanced gui and joining/hosting games using nat traversal\n won't be available"), _("Missing Functionality"), wxICON_INFORMATION, &m_ui->mw() );
     #endif
+    SetupUserFolders();
     m_ui->mw().ShowConfigure();
   } else {
     m_ui->Connect();
@@ -149,5 +154,57 @@ void SpringLobbyApp::InitDirs()
   if ( !wxDirExists( path ) ) wxMkdir( path );
   path += wxFILE_SEP_PATH; path += _T("cache"); path += wxFILE_SEP_PATH;
   if ( !wxDirExists( path ) ) wxMkdir( path );
+}
+
+
+void SpringLobbyApp::SetupUserFolders()
+{
+  #ifdef __WXGTK__
+    #ifndef HAVE_WX26
+     if ( !wxFileName::DirExists( wxFileName::GetHomeDir() + _("/.spring") ) )
+     {
+       wxArrayString choices;
+       choices.Add( _("Create a .spring folder in the home directory (reccomended)") );
+       choices.Add( _("Create a folder in a custom path (you'll get prompted for the path)") );
+       choices.Add( _("I have already a SpringData folder, i want to browse manually for it") );
+       choices.Add( _("Do nothing (use this only if you know what you're doing)") );
+
+       int result = wxGetSingleChoiceIndex(
+          _("Looks like you don't have yet a user SpringData folder structure\nWhat would you like to do? (leave default choice if you don't know what is this for)"),
+          _("Chose an action"),
+          choices );
+
+       wxString dir;
+       bool createdirs = true;
+       if ( result == 2 ) createdirs = false;
+       else if ( result == 3 ) return;
+
+       if ( result == 0 ) dir = wxFileName::GetHomeDir() + _("/.spring");
+       else if ( result == 1 || result == 2 ) dir = wxDirSelector( _("Choose a folder"), wxFileName::GetHomeDir() + _T("/.spring") );
+
+       if ( createdirs )
+       {
+         if ( dir.IsEmpty() || ( !wxFileName::Mkdir( dir ) || ( !wxFileName::Mkdir( dir + _T("/mods") ) || !wxFileName::Mkdir( dir + _T("/maps") ) || !wxFileName::Mkdir( dir + _T("/base") ) ) ) )
+          wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + _T("/mods\n") + dir + _T("/maps\n") + dir + _T("/base\n") );
+       }
+
+       if ( !dir.IsEmpty() )
+       {
+         wxFile springrc( wxFileName::GetHomeDir() + _T("/.springrc"), wxFile::write_append );
+         if ( !springrc.IsOpened() )
+           wxMessageBox( _("Failed to write to your ~/.sprirgrc file please append the following line manually to it:") + wxString(_T("\nSpringData=")) + dir );
+         else
+         {
+          springrc.Write( _T("\nSpringData=") + dir );
+          springrc.Close();
+         }
+
+         sett().SetSpringDir(dir);
+
+       }
+
+     }
+    #endif
+  #endif
 }
 
