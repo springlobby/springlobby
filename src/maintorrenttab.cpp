@@ -9,6 +9,7 @@
 #include "torrentlistctrl.h"
 #include "torrentwrapper.h"
 #include "ui.h"
+#include "utils.h"
 
 //const long MainTorrentTab::ID_STATICTEXT2 = wxNewId();
 //const long MainTorrentTab::ID_STATICTEXT1 = wxNewId();
@@ -61,6 +62,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	GridSizer1->SetSizeHints(this);
 
     info_map = torrent()->CollectGuiInfos();
+    m_torrent_list->SetInfoMap( &info_map );
 	//*)
 }
 
@@ -70,16 +72,19 @@ MainTorrentTab::~MainTorrentTab()
 	//*)
 }
 
-void MainTorrentTab::AddTorrentInfo( TorrentInfos& info )
+void MainTorrentTab::UpdateInfo( const TorrentInfos& info )
+{
+
+}
+
+void MainTorrentTab::AddTorrentInfo( const TorrentInfos& info )
 {
   int index = m_torrent_list->InsertItem( 0, info.name );
-  ASSERT_LOGIC( index != -1, _T("index = -1") );
+//  ASSERT_LOGIC( index != -1, _T("index = -1") );
   m_torrent_list->SetItemData(index, (long)info.filehash );
-  battle.SetGUIListActiv( true );
 
-  ASSERT_LOGIC( index != -1, _T("index = -1") );
-  //wxListItem item;
-  //item.SetId( index );
+
+  //ASSERT_LOGIC( index != -1, _T("index = -1") );
 
  // ASSERT_LOGIC( m_torrent_list->GetItem( item ), _T("!GetItem") );
  int eta_seconds = -1;
@@ -87,7 +92,7 @@ void MainTorrentTab::AddTorrentInfo( TorrentInfos& info )
     int eta_seconds = int ( ( info.downloaded / info.progress ) / info.inspeed );
 
  // m_torrent_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
-  m_torrent_list->SetItem( index, 0, i2s( info.name ) );
+  m_torrent_list->SetItem( index, 0, info.name );
   m_torrent_list->SetItem( index, 1, i2s( info.numcopies ) );
   m_torrent_list->SetItem( index, 2, i2s( info.downloaded ) );
   m_torrent_list->SetItem( index, 3, i2s( info.uploaded ) );
@@ -95,17 +100,17 @@ void MainTorrentTab::AddTorrentInfo( TorrentInfos& info )
   m_torrent_list->SetItem( index, 5, i2s( info.progress ) );
   m_torrent_list->SetItem( index, 6, i2s( info.outspeed ) );
   m_torrent_list->SetItem( index, 7, i2s( info.inspeed ) );
-  m_torrent_list->SetItem( index, 8, (eta_seconds > -1 ? i2s(eta_seconds) : _("inf.") ) );
+  m_torrent_list->SetItem( index, 8, (eta_seconds > -1 ? i2s(eta_seconds) : _T("inf.") ) );
 
   m_torrent_list->Sort();
 }
 
-void OnUpdate()
+void MainTorrentTab::OnUpdate()
 {
     info_map = torrent()->CollectGuiInfos();
     for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
     {
-        UpdateInfo(*iter);
+        UpdateInfo(iter->second);
 
     }
 }
