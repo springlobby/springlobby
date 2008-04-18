@@ -446,6 +446,7 @@ void Ui::OnUpdate( int mselapsed )
   if ( m_serv != 0 ) {
     m_serv->Update( mselapsed );
   }
+  torrent()->UpdateFromTimer( mselapsed );
 }
 
 
