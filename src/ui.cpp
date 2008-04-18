@@ -858,7 +858,6 @@ void Ui::OnRequestBattleStatus( Battle& battle )
 
 void Ui::OnBattleStarted( Battle& battle )
 {
-  torrent()->SetIngameStatus(true);
   if ( m_main_win == 0 ) return;
   wxLogDebugFunc( _T("") );
   BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
@@ -868,6 +867,7 @@ void Ui::OnBattleStarted( Battle& battle )
       battle.SendMyBattleStatus();
       battle.GetMe().Status().in_game = true;
       battle.GetMe().SendMyUserStatus();
+      torrent()->SetIngameStatus(true);
       m_spring->Run( battle );
     }
   }

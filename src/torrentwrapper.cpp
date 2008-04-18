@@ -45,7 +45,8 @@ TorrentWrapper* torrent()
 
 
 TorrentWrapper::TorrentWrapper():
-m_connected(false)
+m_connected(false),
+ingame(false)
 {
   m_tracker_urls.Add( _T("tracker.caspring.org"));
   m_tracker_urls.Add( _T("tracker2.caspring.org"));
@@ -80,6 +81,9 @@ TorrentWrapper::~TorrentWrapper()
 
 void TorrentWrapper::ConnectToP2PSystem()
 {
+  m_socket_class->Connect( m_tracker_urls[0], DEFAULT_P2P_COORDINATOR_PORT );
+  m_connected_tracker_index= 0;
+  return;
   for( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
   {
     m_socket_class->Connect( m_tracker_urls[i], DEFAULT_P2P_COORDINATOR_PORT );
@@ -163,7 +167,7 @@ void TorrentWrapper::ReloadLocalFileList()
 bool TorrentWrapper::RequestFile( const wxString& uhash )
 {
   if (ingame) return false;
-  if ( m_connected ) return false;
+  if ( !m_connected ) return false;
   unsigned long hash;
   uhash.ToULong( &hash );
   wxString shash = wxString::Format( _T("%d"), (int)hash );
@@ -402,7 +406,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
   wxArrayString data;
   for( unsigned int pos = 0; tkz.HasMoreTokens(); pos++ )
   {
-      data[pos] = tkz.GetNextToken(); /// fill the array with the message
+      data.Add( tkz.GetNextToken() ); /// fill the array with the message
   }
   // T+|hash|name|type 	 informs client that new torrent was added to server (type is either MOD or MAP)
   if ( data[0] == _T("T+") ) {
