@@ -1,9 +1,12 @@
 #ifndef MAINTORRENTTAB_H
 #define MAINTORRENTTAB_H
 
-//(*Headers(MainTorrentTab)
+
 #include <wx/panel.h>
-//*)
+#include <map>
+#include "torrentwrapper.h"
+typedef std::map<int,TorrentInfos> map_infos;
+typedef map_infos::const_iterator map_infos_iter;
 
 class wxStaticText;
 class wxButton;
@@ -44,6 +47,7 @@ class MainTorrentTab: public wxPanel
 
         };
 
+        map_infos info_map;
         void AddTorrentInfo( TorrentInfos& info );
 
 	private:

@@ -59,6 +59,8 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	GridSizer1->Add(GridSizer2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	SetSizer(GridSizer1);
 	GridSizer1->SetSizeHints(this);
+
+    info_map = torrent()->CollectGuiInfos();
 	//*)
 }
 
@@ -72,25 +74,38 @@ void MainTorrentTab::AddTorrentInfo( TorrentInfos& info )
 {
   int index = m_torrent_list->InsertItem( 0, info.name );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
-  m_battle_list->SetItemData(index, (long)battle.GetBattleId() );
+  m_torrent_list->SetItemData(index, (long)info.filehash );
   battle.SetGUIListActiv( true );
 
   ASSERT_LOGIC( index != -1, _T("index = -1") );
   //wxListItem item;
   //item.SetId( index );
 
- // ASSERT_LOGIC( m_battle_list->GetItem( item ), _T("!GetItem") );
+ // ASSERT_LOGIC( m_torrent_list->GetItem( item ), _T("!GetItem") );
+ int eta_seconds = -1;
+ if ( info.progress > 0 && info.inspeed > 0)
+    int eta_seconds = int ( ( info.downloaded / info.progress ) / info.inspeed );
 
-  m_battle_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
-  m_battle_list->SetItemColumnImage( index, 2, icons().GetRankIcon( battle.GetRankNeeded(), false ) );
-  m_battle_list->SetItemColumnImage( index, 1, icons().GetFlagIcon( battle.GetFounder().GetCountry() ) );
-  m_battle_list->SetItem( index, 3, battle.GetDescription() );
-  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
-  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
-  m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
-  m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
-  m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
-  m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
+ // m_torrent_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
+  m_torrent_list->SetItem( index, 0, i2s( info.name ) );
+  m_torrent_list->SetItem( index, 1, i2s( info.numcopies ) );
+  m_torrent_list->SetItem( index, 2, i2s( info.downloaded ) );
+  m_torrent_list->SetItem( index, 3, i2s( info.uploaded ) );
+  m_torrent_list->SetItem( index, 4, i2s( info.leeching ) );
+  m_torrent_list->SetItem( index, 5, i2s( info.progress ) );
+  m_torrent_list->SetItem( index, 6, i2s( info.outspeed ) );
+  m_torrent_list->SetItem( index, 7, i2s( info.inspeed ) );
+  m_torrent_list->SetItem( index, 8, (eta_seconds > -1 ? i2s(eta_seconds) : _("inf.") ) );
 
-  m_battle_list->Sort();
+  m_torrent_list->Sort();
+}
+
+void OnUpdate()
+{
+    info_map = torrent()->CollectGuiInfos();
+    for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
+    {
+        UpdateInfo(*iter);
+
+    }
 }
