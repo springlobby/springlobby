@@ -56,6 +56,7 @@ m_connected(false)
   m_torr->start_upnp();
   m_torr->start_natpmp();
   m_torr->start_lsd();
+  m_torr->start_start_dht();
   m_socket_class = new Socket( *this );
   ReloadLocalFileList();
 }
@@ -63,6 +64,10 @@ m_connected(false)
 
 TorrentWrapper::~TorrentWrapper()
 {
+  m_torr->stop_upnp();
+  m_torr->stop_natpmp();
+  m_torr->stop_lsd();
+  m_torr->stop_start_dht();
   delete m_torr;
   delete m_socket_class;
 }
