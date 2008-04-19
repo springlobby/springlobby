@@ -370,6 +370,16 @@ void TorrentWrapper::FixTorrentList()
   InvertedSeedRequests.swap(m_seed_requests);
   m_seed_count = 0;
   m_leech_count = 0;
+  for ( SeedReqIter i = m_seed_requests.begin(); i != m_seed_requests.end(); i++ )
+  {
+    if( m_seed_count > 9 ) return;
+    if ( (m_open_torrents.find( i->first ) == m_open_torrents.end()) && (m_local_files.find(i->second) != m_local_files.end()) ) /// torrent is requested and present, but not joined yet
+    {
+      JoinTorrent( i->second );
+      m_seed_count++;
+      m_open_torrents[i->first] = true;
+    }
+  }
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
   {
     if ( i->is_seed() ) m_seed_count++;
@@ -391,16 +401,6 @@ void TorrentWrapper::FixTorrentList()
     {
       m_torr->remove_torrent( *i );
       m_open_torrents.erase(m_open_torrents.find( StrippedName ));
-    }
-  }
-  for ( SeedReqIter i = m_seed_requests.begin(); i != m_seed_requests.end(); i++ )
-  {
-    if( m_seed_count > 9 ) return;
-    if ( (m_open_torrents.find( i->first ) == m_open_torrents.end()) && (m_local_files.find(i->second) != m_local_files.end()) ) /// torrent is requested and present, but not joined yet
-    {
-      JoinTorrent( i->second );
-      m_seed_count++;
-      m_open_torrents[i->first] = true;
     }
   }
 }
