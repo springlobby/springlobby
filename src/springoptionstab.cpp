@@ -263,7 +263,7 @@ wxString SpringOptionsTab::AutoFindSpringDir( const wxString& def )
   wxPathList pl;
   wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
-  pl.Add( usync()->GetSpringDataPath() );
+  if (usync()->IsLoaded()) pl.Add( usync()->GetSpringDataPath() );
   pl.Add( wxFileName::GetCwd() );
 #ifdef HAVE_WX28
   pl.Add( sp.GetExecutablePath() );

@@ -41,7 +41,7 @@ void Settings::SaveSettings()
   m_config->Write( _T("/General/firstrun"), false );
   SetCacheVersion();
   m_config->Flush();
-  usync()->SetSpringDataPath( GetSpringDir() );
+  if (usync()->IsLoaded()) usync()->SetSpringDataPath( GetSpringDir() );
 }
 
 
