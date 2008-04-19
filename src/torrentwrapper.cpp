@@ -372,7 +372,7 @@ void TorrentWrapper::FixTorrentList()
   m_leech_count = 0;
   for ( SeedReqIter i = m_seed_requests.begin(); i != m_seed_requests.end(); i++ )
   {
-    if( m_seed_count > 9 ) return;
+    if( m_seed_count > 9 ) break;
     if ( (m_open_torrents.find( i->first ) == m_open_torrents.end()) && (m_local_files.find(i->second) != m_local_files.end()) ) /// torrent is requested and present, but not joined yet
     {
       JoinTorrent( i->second );
