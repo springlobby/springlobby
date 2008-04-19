@@ -187,12 +187,14 @@ void TorrentWrapper::SetIngameStatus( bool status )
   if ( status == ingame ) return; /// no change needed
   ingame = status;
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
-  if ( ingame ) /// going ingame, pause all torrents
+  if ( ingame ) /// going ingame, pause all torrents and disable dht
   {
     for ( unsigned int i = 0; i < TorrentList.size(); i++) TorrentList[i].pause();
+    m_torr->stop_dht();
   }
-  else/// game closed, resume all torrents
+  else/// game closed, resume all torrents and reactivate dht
   {
+    m_torr->start_dht();
     for ( unsigned int i = 0; i < TorrentList.size(); i++) TorrentList[i].resume();
   }
 
