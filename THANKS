@@ -1,4 +1,4 @@
-Brain Damage for rpm scripts, side pic loading and other stuff.
+BrainDamage for rpm scripts, side pic loading and other stuff.
 accAgon for suse open build service maintenance for several rpm-based distros
 MelTrax for windows installer, news reporter, in-battle table sorting and fixed various windows-only bugs
 dizekat for help on wxwidgets logging functions and unicode
@@ -6,4 +6,7 @@ tombom for adding channel automatic joining, option to disable join/part message
 heze for apache and zonefile consultation
 AF for consultation on generating TASClient compatible scripts
 www.famfamfam.com for the flag icons
+tango.freedesktop.org for sidebar icons
+curved for current rank icons
+everybody who has put in an effort translating
 
