@@ -171,6 +171,7 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
   if ( !m_connected ) return false;
   unsigned long hash;
   uhash.ToULong( &hash );
+  int singedver = (int)hash;
   wxString shash = wxString::Format( _T("%d"), (int)hash );
   if ( m_torrents_infos[shash].hash.IsEmpty() ) return false; /// the file is not present in the system
   if ( !JoinTorrent( shash ) ) return false;
@@ -242,15 +243,17 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
     m_socket_class->Send(  _T("IH|") + hash + _T("\n") ); /// request for infohash
     wxString path = sett().GetSpringDir();
     wxString name;
-    switch (m_torrents_infos[hash].type)
+    if ( m_torrents_infos[hash].type == map )
     {
-      case map:
-        path = path + _T("/maps/");
-        name = m_torrents_infos[ hash ].name + _T("|MAP");
-      case mod:
-        path = path + _T("/mods/");
-        name = m_torrents_infos[ hash ].name + _T("|MOD");
+      path = path + _T("/maps/");
+      name = m_torrents_infos[ hash ].name + _T("|MAP");
     }
+    else
+    {
+      path = path + _T("/mods/");
+      name = m_torrents_infos[ hash ].name + _T("|MOD");
+    }
+    /*
     if ( !wxFileName::IsFileReadable( sett().GetSpringDir() + _T("/torrents/") + hash ) ) /// file descriptor not present, download it
     {
        while (!DownloadTorrentFileFromTracker( hash ) );
@@ -264,8 +267,9 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
     in.unsetf(std::ios_base::skipws);
     libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
     libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent(libtorrent::torrent_info(e), boost::filesystem::path( STD_STRING( path ) ) );
+    */
     libtorrent::sha1_hash infohash( STD_STRING( m_torrents_infos[hash].infohash ) );
-    // libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent( m_tracker_urls[m_connected_tracker_index].mb_str(), infohash, STD_STRING(name), boost::filesystem::path( STD_STRING( path ) ) );
+    libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent( m_tracker_urls[m_connected_tracker_index].mb_str(), infohash, name.mb_str(), boost::filesystem::path( STD_STRING( path ) ) );
     return true;
   }
   return false;
@@ -419,6 +423,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     if ( data[3] == _T("MAP") ) newtorrent.type = map;
     else if ( data[3] == _T("MOD") ) newtorrent.type = mod;
     m_torrents_infos[data[1]] = newtorrent;
+    m_socket_class->Send(  _T("IH|") + data[1] + _T("\n") );
   // T-|hash 	 informs client that torrent was removed from server
   } else if ( data[0] == _T("T-") ) {
     m_torrents_infos.erase(data[1]);
