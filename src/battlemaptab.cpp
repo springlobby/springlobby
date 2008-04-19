@@ -29,6 +29,7 @@
 #include "mapctrl.h"
 #include "uiutils.h"
 #include "server.h"
+#include "settings.h"
 
 BEGIN_EVENT_TABLE(BattleMapTab, wxPanel)
 
@@ -99,6 +100,10 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   SetSizer( m_main_sizer );
   Layout();
 
+  if(battle.IsFounderMe()){
+    sett().LoadBattleMapOptions(&m_battle);
+    m_battle.SendHostInfo( HI_StartRects );
+  }
   ReloadMaplist();
   Update();
 
@@ -111,11 +116,17 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 BattleMapTab::~BattleMapTab()
 {
 
+  sett().SaveBattleMapOptions(&m_battle);
 }
 
 
 void BattleMapTab::Update()
 {
+  wxString value = m_battle.CustomBattleOptions()->getSingleValue( _T("startpostype"), EngineOption);
+  long longval;
+  value.ToLong( &longval );
+  m_start_radios->SetSelection( longval );
+
   m_minimap->UpdateMinimap();
 
   if ( !m_battle.MapExists() ) return;
@@ -181,11 +192,18 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
     m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetMapName() ) ) );
     return;
   }
+
+  sett().SaveBattleMapOptions(&m_battle);
+
   int index = m_map_combo->GetCurrentSelection();
   //wxString name = m_map_combo->GetString( index );
   try {
     UnitSyncMap map = usync()->GetMapEx( index );
     m_battle.SetMap( map );
+
+    sett().LoadBattleMapOptions(&m_battle);
+    m_battle.SendHostInfo( HI_StartRects );
+
   } catch (...) {}
   m_ui.OnBattleMapChanged(m_battle);
   m_battle.SendHostInfo( HI_Map );
