@@ -70,6 +70,7 @@ TorrentWrapper::~TorrentWrapper()
   m_torr->stop_natpmp();
   m_torr->stop_lsd();
   m_torr->stop_dht();
+  DisconnectToP2PSystem();
   delete m_torr;
   delete m_socket_class;
 }
@@ -172,8 +173,8 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
   uhash.ToULong( &hash );
   wxString shash = wxString::Format( _T("%d"), (int)hash );
   if ( m_torrents_infos[shash].hash.IsEmpty() ) return false; /// the file is not present in the system
-  m_socket_class->Send( wxString::Format( _T("N+|%d\n"), (int)hash ) ); /// request for seeders for the file
   if ( !JoinTorrent( shash ) ) return false;
+  m_socket_class->Send( wxString::Format( _T("N+|%d\n"), (int)hash ) ); /// request for seeders for the file
   m_leech_count++;
   m_open_torrents[m_torrents_infos[shash].name] = false; /// not seeding when just joined
   return true;
@@ -238,6 +239,7 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
   if (ingame) return false;
   if ( !m_torrents_infos[ hash ].hash.IsEmpty() )
   {
+    m_socket_class->Send(  _T("IH|") + hash + _T("\n") ); /// request for infohash
     wxString path = sett().GetSpringDir();
     wxString name;
     switch (m_torrents_infos[hash].type)
@@ -264,9 +266,6 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
     libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent(libtorrent::torrent_info(e), boost::filesystem::path( STD_STRING( path ) ) );
     libtorrent::sha1_hash infohash( STD_STRING( m_torrents_infos[hash].infohash ) );
     // libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent( m_tracker_urls[m_connected_tracker_index].mb_str(), infohash, STD_STRING(name), boost::filesystem::path( STD_STRING( path ) ) );
-    /// add url seeds
-    for( unsigned int i=0; i < m_torrents_infos[hash].seedurls.GetCount(); i++ )
-      JoinedTorrent.add_url_seed( STD_STRING( m_torrents_infos[hash].seedurls[i] ) );
     return true;
   }
   return false;
@@ -326,6 +325,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
 bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& shash )
 {
+  wxLogMessage(_T("torrent system downloading torrent info %s"), shash.c_str() );
   wxHTTP fileRequest;
   //versionRequest.SetHeader(_T("Content-type"), _T(""));
   /// normal timeout is 10 minutes.. set to 10 secs.
@@ -347,19 +347,20 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& shash )
 
    wxDELETE(stream);
    fileRequest.Close();
-
+  wxLogMessage(_T("torrent system downloading torrent info %s successful"), shash.c_str() );
    return true;
   }
 
   wxDELETE(stream);
   fileRequest.Close();
-
+  wxLogMessage(_T("torrent system downloading torrent info %s failed"), shash.c_str() );
   return false;
 }
 
 
 void TorrentWrapper::FixTorrentList()
 {
+  wxLogMessage(_T("torrent system doing maintenance") );
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
   std::map<wxString,wxString> InvertedSeedRequests;
   InvertedSeedRequests.swap(m_seed_requests);
@@ -376,6 +377,7 @@ void TorrentWrapper::FixTorrentList()
     wxString StrippedName = WX_STRING(i->name()).BeforeFirst( _T('|') );
     if ( !m_open_torrents[StrippedName] ) ///torrent has finished download, refresh unitsync and remove file from list
     {
+      m_socket_class->Send( _T("N-|") + m_seed_requests[StrippedName] + _T("\n") ); ///notify the system we don't need the file anymore
       usync()->ReloadUnitSyncLib();
       m_torr->remove_torrent( *i );
       m_open_torrents.erase(m_open_torrents.find(StrippedName));
@@ -402,6 +404,7 @@ void TorrentWrapper::FixTorrentList()
 
 void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 {
+  wxLogMessage(_T("torrent: %s"), msg.c_str() );
   wxStringTokenizer tkz( msg, _T('|') );
   wxArrayString data;
   for( unsigned int pos = 0; tkz.HasMoreTokens(); pos++ )
@@ -431,18 +434,29 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     m_seed_requests.erase(m_torrents_infos[data[1]].name);
   // M+|hash|url 	 It tells the client if url is given that http mirror exists for given hash, else there are no mirrors.
   } else if ( data[0] == _T("M+") ) {
-    wxArrayString urllist = m_torrents_infos[data[1]].seedurls;
-    urllist.Add( data[2] );
-    m_torrents_infos[data[1]].seedurls = urllist;
+    std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
+    for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
+    {
+      wxString StrippedName = WX_STRING(i->name()).BeforeFirst( _T('|') );
+      if ( m_seed_requests[StrippedName] = data[1] )
+      {
+        i->add_url_seed( STD_STRING( data[2] ) );
+        return;
+      }
+    }
   // PING 	 every minute - client must respond with its own "PING"
   } else if ( data[0] == _T("PING") ) {
     m_socket_class->Send( _T("PING\n") );
+  //IH|hash|infohash infos the client about torrent's infohash b64 encoded
+  } else if ( data[0] == _T("IH") ) {
+    m_torrents_infos[data[1]].infohash = data[2];
   }
 }
 
 
 void TorrentWrapper::OnConnected( Socket* sock )
 {
+  wxLogMessage(_T("torrent system connected") );
   m_connected = true;
   m_torrents_infos.clear();
   m_seed_requests.clear();
@@ -454,6 +468,7 @@ void TorrentWrapper::OnConnected( Socket* sock )
 
 void TorrentWrapper::OnDisconnected( Socket* sock )
 {
+  wxLogMessage(_T("torrent system disconnected") );
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++) m_torr->remove_torrent(*i); ///remove all torrents upon disconnect
   m_connected = false;

@@ -38,7 +38,6 @@ struct TorrentData
   wxString hash;
   wxString name;
   MediaType type;
-  wxArrayString seedurls;
   wxString infohash;
 };
 
