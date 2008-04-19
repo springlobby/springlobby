@@ -1013,7 +1013,8 @@ void Settings::SetTorrentMaxConnections( int connections )
 int Settings::GetTorrentMaxConnections()
 {
     return  m_config->Read( _T("/Torrent/MaxConnections"), 250 );
-=======
+}
+
 void Settings::LoadBattleMapOptions(IBattle *battle){
   if ( !battle ){
         wxLogError(_T("Settings::LoadBattleMapOptions called with null argument"));
@@ -1046,5 +1047,4 @@ void Settings::LoadBattleMapOptions(IBattle *battle){
       }
     }
   }
->>>>>>> master:src/settings.cpp
 }
