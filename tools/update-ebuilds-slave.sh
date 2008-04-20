@@ -11,7 +11,7 @@ fi
 
 origin=git://springlobby.info/git/buildbot/springlobby.git
 
-publicrepodir=/var/lib/buildbot/git/springlobby.git
+publicrepodir=/home/git/repositories/git/buildbot/springlobby.git
 if [ ! -d ${publicrepodir} ] ; then
     git-clone --bare . ${publicrepodir}
     ( cd ${publicrepodir} ; git-gc --prune --aggressive ; touch 'git-daemon-export-ok' )
