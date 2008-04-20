@@ -170,7 +170,7 @@ void SpringLobbyApp::SetupUserFolders()
 
        int result = wxGetSingleChoiceIndex(
           _("Looks like you don't have yet a user SpringData folder structure\nWhat would you like to do? (leave default choice if you don't know what is this for)"),
-          _("Chose an action"),
+          _("First time wizard"),
           choices );
 
        wxString dir;
