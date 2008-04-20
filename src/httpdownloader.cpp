@@ -23,7 +23,6 @@ m_progress(0)
   FileDownloading.SetTimeout(10);
   FileDownloading.Connect( FileUrl.BeforeFirst(_T('/')), 80);
   m_httpstream = FileDownloading.GetInputStream( FileUrl.AfterFirst(_T('/')) );
-  m_file_size = m_httpstream->GetSize();
   if (FileDownloading.GetError() == wxPROTO_NOERR)
   {
     m_dialog = new wxProgressDialog( _("Download progress"), _("Downloading the requested file, please stand by"), 100, NULL, wxPD_AUTO_HIDE | wxPD_SMOOTH | wxPD_CAN_ABORT | wxPD_ESTIMATED_TIME );
@@ -42,8 +41,8 @@ HttpDownloader::~HttpDownloader()
 
 void HttpDownloader::OnThreadUpdate()
 {
-  char * buff = new char [ m_file_size / 100 ];
-  m_httpstream->Read( buff, m_file_size / 100 );
+  char * buff = new char [ m_httpstream->GetSize() / 100 ];
+  m_httpstream->Read( buff, m_httpstream->GetSize() / 100 );
 /// NOTE (BrainDamage#1#):  wtf i need to do encoding conversion on a buffer???
   m_stringbuffer += wxString ( buff, wxCSConv(_T("ascii-8")) );
   delete []buff;
