@@ -41,10 +41,10 @@
 #include "images/rank5.xpm"
 #include "images/rank6.xpm"
 
-#include "images/open_game.xpm"
-#include "images/open_pw_game.xpm"
-#include "images/closed_game.xpm"
-#include "images/closed_pw_game.xpm"
+#include "images/open_game.png.h"
+#include "images/open_pw_game.png.h"
+#include "images/closed_game.png.h"
+#include "images/closed_pw_game.png.h"
 #include "images/started_game.xpm"
 
 #include "images/nexists.xpm"
@@ -69,6 +69,7 @@
 #include "flagimages.h"
 
 #include "images/empty.xpm"
+#include "uiutils.h"
 
 IconImageList::IconImageList() : wxImageList(16,16)
 {
@@ -101,10 +102,10 @@ IconImageList::IconImageList() : wxImageList(16,16)
   ICON_RANK5 = Add( wxBitmap(rank5_xpm) );
   ICON_RANK6 = Add( wxBitmap(rank6_xpm) );
 
-  ICON_READY = ICON_OPEN_GAME = Add( wxBitmap(open_game_xpm) );
-  ICON_OPEN_PW_GAME = Add( wxBitmap(open_pw_game_xpm) );
-  ICON_NREADY = ICON_CLOSED_GAME = Add( wxBitmap(closed_game_xpm) );
-  ICON_CLOSED_PW_GAME = Add( wxBitmap(closed_pw_game_xpm) );
+  ICON_READY = ICON_OPEN_GAME = Add( *charArr2wxBitmap(open_game_png, sizeof(open_game_png) ) );
+  ICON_OPEN_PW_GAME = Add( *charArr2wxBitmap(open_pw_game_png, sizeof(open_pw_game_png) ) );
+  ICON_NREADY = ICON_CLOSED_GAME = Add( *charArr2wxBitmap(closed_game_png, sizeof(closed_game_png) ) );
+  ICON_CLOSED_PW_GAME = Add( *charArr2wxBitmap(closed_pw_game_png, sizeof(closed_pw_game_png) ) );
   ICON_STARTED_GAME = Add( wxBitmap(started_game_xpm) );
 
   ICON_READY_UNSYNC = Add( wxBitmap(ready_unsync_xpm) );
