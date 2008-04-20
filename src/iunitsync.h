@@ -124,6 +124,8 @@ class IUnitSync
     virtual bool CacheModUnits( const wxString& mod ) = 0;
     virtual bool ReloadUnitSyncLib() = 0;
 
+    virtual void SetSpringDataPath( const wxString& path ) = 0;
+    virtual wxString GetSpringDataPath() = 0;
 };
 
 IUnitSync* usync();
