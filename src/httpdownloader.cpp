@@ -22,7 +22,7 @@ m_progress(0)
   /// normal timeout is 10 minutes.. set to 10 secs.
   FileDownloading.SetTimeout(10);
   FileDownloading.Connect( FileUrl.BeforeFirst(_T('/')), 80);
-  m_httpstream = FileDownloading.GetInputStream( FileUrl.AfterFirst(_T('/')) );
+  m_httpstream = FileDownloading.GetInputStream( _T("/") + FileUrl.AfterFirst(_T('/')) );
   if (FileDownloading.GetError() == wxPROTO_NOERR)
   {
     m_dialog = new wxProgressDialog( _("Download progress"), _("Downloading the requested file, please stand by"), 100, NULL, wxPD_AUTO_HIDE | wxPD_SMOOTH | wxPD_CAN_ABORT | wxPD_ESTIMATED_TIME );
