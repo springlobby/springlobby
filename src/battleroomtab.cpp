@@ -31,6 +31,8 @@
 #include "server.h"
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"
+#include "autobalancedialog.h"
+#include "settings.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -45,6 +47,8 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
   EVT_COMBOBOX( BROOM_ALLYSEL, BattleRoomTab::OnAllySel )
   EVT_BUTTON( BROOM_COLOURSEL, BattleRoomTab::OnColourSel )
   EVT_COMBOBOX( BROOM_SIDESEL, BattleRoomTab::OnSideSel )
+
+  EVT_BUTTON ( BROOM_BALANCE, BattleRoomTab::OnBalance )
 
 END_EVENT_TABLE()
 
@@ -102,6 +106,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_start_btn->SetToolTip(_T("Only the host can do this if all players are ready."));
   m_addbot_btn = new wxButton( this, BROOM_ADDBOT, _("Add Bot..."), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_addbot_btn->SetToolTip(_T("Gives you a selection of available bots you can add"));
+
+  m_balance_btn = new wxButton( this, BROOM_BALANCE, _("Balance"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+  m_balance_btn->SetToolTip(_T("Automatically banalce players into two or more teams."));
 
   m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_ready_chk->SetToolTip(_T("Click this if you are content with the battle settings"));
@@ -189,16 +196,12 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_lock_chk, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
+  m_buttons_sizer->Add( m_balance_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_start_btn, 0, wxEXPAND | wxALL, 2 );
 
   m_main_sizer->Add( m_top_sizer, 1, wxEXPAND );
   m_main_sizer->Add( m_command_line, 0, wxEXPAND );
   m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
-
-  SetSizer( m_main_sizer );
-  Layout();
-
-  UpdateBattleInfo( true );
 
   m_splitter->SetMinimumPaneSize( 240 );
 
@@ -208,11 +211,17 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   if ( !IsHosted() ) {
     m_start_btn->Disable();
+    m_balance_btn->Disable();
     m_lock_chk->Disable();
   } else {
     m_battle.SetImReady ( true );
     m_ready_chk->Disable();
   }
+
+  UpdateBattleInfo( true );
+
+  SetSizer( m_main_sizer );
+  Layout();
 
 }
 
@@ -251,7 +260,7 @@ wxString _GetGameTypeStr( GameType t )
 }
 
 
-void BattleRoomTab::UpdateBattleInfo( bool MapChanged )
+void BattleRoomTab::UpdateBattleInfo( bool MapChanged, bool reloadMapOptions )
 {
   if ( MapChanged ) /// the map has been changed
   {
@@ -269,11 +278,14 @@ void BattleRoomTab::UpdateBattleInfo( bool MapChanged )
       m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, _T("?-?") );
       m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, _T("?") );
     }
-  ///delete any eventual map option from the list and add options of the new map
-  for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
-  m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetModName() );
-  AddMMOptionsToList( m_map_opts_index, MapOption );
 
+    if ( reloadMapOptions )
+    {
+      ///delete any eventual map option from the list and add options of the new map
+      for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
+      m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetModName() );
+      AddMMOptionsToList( m_map_opts_index, MapOption );
+    }
   }
 
   m_lock_chk->SetValue( m_battle.IsLocked() );
@@ -378,10 +390,25 @@ void BattleRoomTab::OnLeave( wxCommandEvent& event )
 }
 
 
+
+void BattleRoomTab::OnBalance( wxCommandEvent& event ){
+  wxLogMessage(_T(""));
+  if(!IsHosted()){/// if not hosted, say !cbalance . Works with autohosts, and human hosts knows what it mean.
+    m_battle.Say(_T("!cbalance"));
+    return;
+  }
+  AutoBalanceDialog dlg( this );
+  if ( dlg.ShowModal() == wxID_OK ) {
+    m_battle.Autobalance(sett().GetBalanceMethod(),sett().GetBalanceClans(),sett().GetBalanceStrongClans());
+  }
+  /// balance players.
+}
+
+
 void BattleRoomTab::OnAddBot( wxCommandEvent& event )
 {
     //customMessageBox(SL_MAIN_ICON,_T("Max players reached"),_T("Cannot add bot, maximum number of players already reached.") );
-  if ( m_battle.GetNumBots() + m_battle.GetNumUsers() < m_battle.GetMaxPlayers() )
+  if ( m_battle.GetNumBots() + m_battle.GetNumUsers() - m_battle.GetSpectators()  < m_battle.GetMaxPlayers() )
   {
       AddBotDialog dlg( this, m_battle );
       if ( dlg.ShowModal() == wxID_OK ) {

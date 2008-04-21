@@ -43,12 +43,6 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  customListCtrl)
 #endif
 END_EVENT_TABLE()
 
-#ifdef __WXMSW__
-	#define nonIcon ICON_EMPTY
-#else
-	#define nonIcon -1
-#endif
-
 Ui* BattleroomListCtrl::m_ui_for_sort = 0;
 
 BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui ) :
@@ -64,43 +58,43 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   wxListItem col;
 
   col.SetText( _T("r") );
-  col.SetImage(nonIcon );
+  col.SetImage(icons().ICON_NONE );
   InsertColumn( 0, col, _T("Player/Bot"), false);
 
   col.SetText( _T("s") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 1, col,_T("Faction icon"), false );
 
   col.SetText( _T("c") );
-  col.SetImage(  nonIcon);
+  col.SetImage(  icons().ICON_NONE);
   InsertColumn( 2, col, _T("Teamcolour"), false );
 
   col.SetText( _T("f") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 3, col, _T("Country"), false );
 
   col.SetText( _T("r") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 4, col, _T("Rank"), false );
 
   col.SetText( _("Nickname") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 5, col, _T("Ingame name"));
 
   col.SetText( _("t") );
-  col.SetImage(nonIcon );
+  col.SetImage(icons().ICON_NONE );
   InsertColumn( 6, col, _T("Team number"), true );
 
   col.SetText( _("a") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 7, col, _T("Ally number"), true );
 
   col.SetText( _("cpu") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 8, col, _T("CPU speed (might not be accurate)") );
 
   col.SetText( _("Resource Bonus") );
-  col.SetImage( nonIcon );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 9, col, _T("Resource Bonus") );
 
   m_sortorder[0].col = 7;
@@ -201,7 +195,7 @@ void BattleroomListCtrl::UpdateList()
 
 void BattleroomListCtrl::AddUser( User& user )
 {
-  int index = InsertItem( 0, ICON_NREADY );
+  int index = InsertItem( 0,icons().ICON_NREADY );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
 
   item_content new_content;
@@ -211,7 +205,7 @@ void BattleroomListCtrl::AddUser( User& user )
 
   SetItemData(index, (wxUIntPtr)(items.size()-1) );
 
-  UpdateUser( index +1 );
+  UpdateUser( index );
 }
 
 
@@ -235,7 +229,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   wxListItem item;
   item.SetId( index );
 
-  ASSERT_LOGIC( GetItem( item ), _T("!GetItem") );
+  if( !GetItem( item ) ) return;
 
   item_content user_content = items[(size_t)GetItemData( index )];
   User& user = *((User*) user_content.data);
@@ -244,9 +238,9 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 
   int statimg;
   if ( &m_battle.GetFounder() == &user ) {
-    statimg = IconImageList::GetHostIcon( user.BattleStatus().spectator );
+    statimg =icons().GetHostIcon( user.BattleStatus().spectator );
   } else {
-    statimg = user.BattleStatus().spectator?ICON_SPECTATOR:IconImageList::GetReadyIcon( user.BattleStatus().ready, user.BattleStatus().sync );
+    statimg = user.BattleStatus().spectator?icons().ICON_SPECTATOR:icons().GetReadyIcon( user.BattleStatus().ready, user.BattleStatus().sync );
   }
   SetItemImage( index, statimg );
 
@@ -268,12 +262,12 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     SetItemColumnImage( index, 2, -1 );
   }
 
-  SetItemColumnImage( index, 3, IconImageList::GetFlagIcon( user.GetCountry() ) );
-  SetItemColumnImage( index, 4, IconImageList::GetRankIcon( user.GetStatus().rank ) );
+  SetItemColumnImage( index, 3,icons().GetFlagIcon( user.GetCountry() ) );
+  SetItemColumnImage( index, 4,icons().GetRankIcon( user.GetStatus().rank ) );
 
   SetItem( index, 5,  user.GetNick() );
   if ( !user.Status().bot ) SetItemColumnImage( index, 5, -1 );
-  else SetItemColumnImage( index, 5, ICON_BOT );
+  else SetItemColumnImage( index, 5,icons().ICON_BOT );
 
   if ( !user.BattleStatus().spectator ) {
     SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
@@ -311,7 +305,7 @@ int BattleroomListCtrl::GetUserIndex( User& user )
 
 void BattleroomListCtrl::AddBot( BattleBot& bot )
 {
-  int index = InsertItem( 0, ICON_BOT );
+  int index = InsertItem( 0,icons().ICON_BOT );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
 
   item_content new_content;
@@ -345,14 +339,14 @@ void BattleroomListCtrl::UpdateBot( const int& index )
   wxListItem item;
   item.SetId( index );
 
-  ASSERT_LOGIC( GetItem( item ), _T("!GetItem") );
+  if( !GetItem( item ) ) return;
 
   item_content bot_content = items[(size_t)GetItemData( index )];
   BattleBot& bot = *((BattleBot*)bot_content.data);
 
   icons().SetColourIcon( bot.bs.team,  bot.bs.colour );
 
-  SetItemImage( index, ICON_BOT );
+  SetItemImage( index,icons().ICON_BOT );
 
   SetItemColumnImage( index, 1, -1 );
 
@@ -366,8 +360,8 @@ void BattleroomListCtrl::UpdateBot( const int& index )
 
   SetItemColumnImage( index, 2, icons().GetColourIcon( bot.bs.team ) );
 
-  SetItemColumnImage( index, 3, ICON_NONE );
-  SetItemColumnImage( index, 4, ICON_NONE );
+  SetItemColumnImage( index, 3,icons().ICON_NONE );
+  SetItemColumnImage( index, 4,icons().ICON_NONE );
   SetItem( index, 5, bot.name + _T(" (") + bot.owner + _T(")") );
 
   SetItem( index, 6, wxString::Format( _T("%d"), bot.bs.team + 1 ) );

@@ -31,11 +31,12 @@ AM_PATH_WXCONFIG([2.6.3], [],
            where wxWidgets libraries are installed (returned by
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
            equivalent variable and wxWidgets version is 2.6.3 or above.
-   ])])
-
+   ])], [core,net,adv,qa])
+win_build=0
 AC_ARG_VAR([WINDRES], [Windows resource file compiler command])
 if test x$host_os = xmingw32msvc ; then
   AC_CHECK_TOOL([WINDRES], [windres], [:])
+  win_build=1
   if test x$WINDRES = x: ; then
     AC_MSG_ERROR([missing required windres windows resource compiler.])
   fi
@@ -44,7 +45,7 @@ fi
 AC_ARG_VAR([SVNVERSION], [Produce a compact version number for a working copy.])
 AC_CHECK_PROGS([SVNVERSION], [svnversion false])
 
-AM_CONDITIONAL([USE_WINDRES], [test x$host_os = xmingw32msvc])
+AM_CONDITIONAL([USE_WINDRES], test "$win_build" = 1)
 
 AC_MSG_CHECKING([if we can enable extra features that need wxWidgets-2.8])
 dnl we probably aren't supposed to use the function below, but it is the simplest way

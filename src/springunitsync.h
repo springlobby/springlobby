@@ -67,6 +67,9 @@ class SpringUnitSync : public IUnitSync
     bool CacheModUnits( const wxString& mod );
     bool ReloadUnitSyncLib();
 
+    void SetSpringDataPath( const wxString& path );
+    wxString GetSpringDataPath();
+
   private:
 
     static wxString _GetCachedMinimapFileName( const wxString& mapname, int width = -1, int height = -1 );

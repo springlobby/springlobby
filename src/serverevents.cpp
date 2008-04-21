@@ -17,11 +17,10 @@
 #include "settings.h"
 #include "settings++/custom_dialogs.h"
 
-void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, const int udpport, bool lanmode )
+void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode )
 {
   wxLogDebugFunc( server_ver + _T(" ") + server_spring_ver );
   m_serv.SetRequiredSpring( server_spring_ver );
-  m_serv.SetUdpPort( udpport );
   m_ui.OnConnected( m_serv, server_name, server_ver, supported );
   m_serv.Login();
 }
@@ -31,7 +30,6 @@ void ServerEvents::OnDisconnected()
 {
   wxLogDebugFunc( _T("") );
   m_serv.SetRequiredSpring (_T(""));
-  m_serv.SetUdpPort( 0 );
   m_ui.OnDisconnected( m_serv );
 }
 
@@ -233,7 +231,10 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
     User& user = m_serv.GetUser( nick );
     Battle& battle = m_serv.GetBattle( battleid );
     status.color_index = user.BattleStatus().color_index;
-    user.SetBattleStatus( status );
+
+    user.UpdateBattleStatus( status );
+    battle.OnUserBattleStatusUpdated(user);
+
     m_ui.OnUserBattleStatus( battle, user );
   }
   catch(std::runtime_error &except){
@@ -586,6 +587,33 @@ void ServerEvents::OnMyExternalUdpSourcePort( const unsigned int udpport )
 {
   if ( !m_serv.GetCurrentBattle() ) return;
   m_serv.GetCurrentBattle()->SetMyExternalUdpSourcePort(udpport);
+}
+
+void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip, unsigned int udpport )
+{
+  wxLogMessage(_T("OnClientIPPort(%s,%s,%d)"),username.c_str(),ip.c_str(),udpport);
+  if ( !m_serv.GetCurrentBattle() ){
+    wxLogMessage(_T("GetCurrentBattle() returned null"));
+    return;
+  }
+  try{
+    User &user=m_serv.GetCurrentBattle()->GetUser( username );
+
+    user.BattleStatus().ip=ip;
+    user.BattleStatus().udpport=udpport;
+    wxLogMessage(_T("set to %s %d "),user.BattleStatus().ip.c_str(),user.BattleStatus().udpport);
+
+    if(sett().GetShowIPAddresses())m_ui.OnBattleAction(*m_serv.GetCurrentBattle(),username,wxString::Format(_(" has ip=%s"),ip.c_str()));
+
+    if(m_serv.GetCurrentBattle()->GetNatType()!=NAT_None && (udpport==0)){
+      /// todo: better warning message
+      ///something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+      m_ui.OnBattleAction(*m_serv.GetCurrentBattle(),username,_(" does not really support nat traversal"));
+    }
+    m_serv.GetCurrentBattle()->CheckBan(user);
+  }catch(std::runtime_error){
+    wxLogMessage(_T("runtime_error inside OnClientIPPort()"));
+  }
 }
 
 

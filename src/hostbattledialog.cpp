@@ -37,8 +37,9 @@
 
 BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
 
-  EVT_BUTTON              ( HOST_CANCEL, HostBattleDialog::OnCancel )
-  EVT_BUTTON              ( HOST_OK,     HostBattleDialog::OnOk     )
+  EVT_BUTTON              ( HOST_CANCEL, HostBattleDialog::OnCancel    )
+  EVT_BUTTON              ( HOST_OK,     HostBattleDialog::OnOk        )
+  EVT_RADIOBOX            ( CHOSE_NAT,   HostBattleDialog::OnNatChange )
 
 END_EVENT_TABLE()
 
@@ -126,12 +127,15 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	wxBoxSizer* m_pl_nat_sizer;
 	m_pl_nat_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	wxString m_nat_radiosChoices[] = { _("None"), _("Hole punching"), _("Fixed source ports") };
+	wxString m_nat_radiosChoices[] = { _("None"), _("Hole punching")/*, _("Fixed source ports")*/ };
 	int m_nat_radiosNChoices = sizeof( m_nat_radiosChoices ) / sizeof( wxString );
-	m_nat_radios = new wxRadioBox( this, wxID_ANY, _("NAT traversal"), wxDefaultPosition, wxDefaultSize, m_nat_radiosNChoices, m_nat_radiosChoices, 1, wxRA_SPECIFY_COLS );
-	m_nat_radios->SetSelection( 0 );
-	m_nat_radios->Enable( false );
-	m_nat_radios->SetToolTip( _("NAT traversal to use, currently this feature is not supported by SpringLobby.") );
+	m_nat_radios = new wxRadioBox( this, CHOSE_NAT, _("NAT traversal"), wxDefaultPosition, wxDefaultSize, m_nat_radiosNChoices, m_nat_radiosChoices, 1, wxRA_SPECIFY_COLS );
+	m_nat_radios->SetSelection(sett().GetLastHostNATSetting());
+
+	//m_nat_radios->Enable( false );
+  m_nat_radios->Enable( true );
+
+	m_nat_radios->SetToolTip( _("NAT traversal to use. Experimental support.") );
 
 	m_pl_nat_sizer->Add( m_nat_radios, 1, wxALL|wxEXPAND, 5 );
 
@@ -208,6 +212,8 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 
 	m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
+	m_port_test_check->Enable( m_nat_radios->GetSelection() == 0 );
+
 	this->SetSizer( m_main_sizer );
 	this->Layout();
 
@@ -236,7 +242,7 @@ void HostBattleDialog::OnOk( wxCommandEvent& event )
     customMessageBox(SL_MAIN_ICON, _("You have to select a mod first."), _("No mod selected."), wxOK );
     return;
   }
-
+  if ( m_desc_text->GetValue().IsEmpty() ) m_desc_text->SetValue(_T("(none)"));
   sett().SetLastHostDescription( m_desc_text->GetValue() );
   sett().SetLastHostMod( m_mod_pic->GetString(m_mod_pic->GetSelection()) );
   sett().SetLastHostPassword( m_pwd_text->GetValue() );
@@ -268,4 +274,9 @@ int HostBattleDialog::GetSelectedRank()
   if ( m_rank5_radio->GetValue() ) return 500;
   if ( m_rank6_radio->GetValue() ) return 600;
   return 000;
+}
+
+void HostBattleDialog::OnNatChange( wxCommandEvent& event  )
+{
+  m_port_test_check->Enable( m_nat_radios->GetSelection() == 0 );
 }
