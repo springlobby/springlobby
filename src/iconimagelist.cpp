@@ -46,6 +46,7 @@
 #include "images/closed_game.png.h"
 #include "images/closed_pw_game.png.h"
 #include "images/started_game.xpm"
+#include "images/full_game.xpm"
 
 #include "images/nexists.xpm"
 #include "images/exists.xpm"
@@ -107,6 +108,7 @@ IconImageList::IconImageList() : wxImageList(16,16)
   ICON_NREADY = ICON_CLOSED_GAME = Add( *charArr2wxBitmap(closed_game_png, sizeof(closed_game_png) ) );
   ICON_CLOSED_PW_GAME = Add( *charArr2wxBitmap(closed_pw_game_png, sizeof(closed_pw_game_png) ) );
   ICON_STARTED_GAME = Add( wxBitmap(started_game_xpm) );
+  ICON_FULL_GAME = Add( wxBitmap(full_game_xpm) );
 
   ICON_READY_UNSYNC = Add( wxBitmap(ready_unsync_xpm) );
   ICON_NREADY_UNSYNC = Add( wxBitmap(nready_unsync_xpm) );
@@ -217,13 +219,20 @@ int IconImageList::GetFlagIcon( const wxString& flagname )
 int IconImageList::GetBattleStatusIcon( Battle& battle )
 {
   if ( battle.GetInGame() ) return ICON_STARTED_GAME;
-  if ( !battle.IsLocked() ) {
+  if ( !battle.IsLocked() )
+  {
+      //TODO FIXME order
+      if ( battle.IsFull() ) return ICON_FULL_GAME;
     if ( !battle.IsPassworded() ) return ICON_OPEN_GAME;
     else return ICON_OPEN_PW_GAME;
-  } else {
+  }
+  else
+  {
+       if ( battle.IsFull() ) return ICON_FULL_GAME;
     if ( !battle.IsPassworded() ) return ICON_CLOSED_GAME;
     else return ICON_CLOSED_PW_GAME;
   }
+
 
   return ICON_GAME_UNKNOWN;
 }
