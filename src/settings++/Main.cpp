@@ -37,8 +37,8 @@ bool Springsettings::OnInit()
 	//initialize all loggers
     InitializeLoggingTargets();
 
-    settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("springsettings"),wxDefaultPosition,
-    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+    settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
+    		wxDefaultSize);
     SetTopWindow(frame);
     frame->Show();
     return true;

@@ -58,8 +58,8 @@ BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_MENU(wxID_ANY,settings_frame::OnMenuChoice)
 END_EVENT_TABLE()
 
-settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
-: wxFrame(parent, id, title, position, size, style)
+settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size)
+: wxFrame(parent, id, title, position, size)
 {
 	alreadyCalled = false;
 	parentWindow = parent;
@@ -83,7 +83,8 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 		SetTitle(_T("SpringSettings"));
 	}
 	 SetIcon(*settingsIcon);
-	 SetSize(8,8,760,550);
+	 SetSize( OptionsHandler.GetSettingsWindowLeft(), OptionsHandler.GetSettingsWindowTop(), OptionsHandler.GetSettingsWindowWidth(), OptionsHandler.GetSettingsWindowHeight() );
+     Layout();
 	 Center();
 }
 
@@ -122,8 +123,8 @@ void settings_frame::handleExternExit()
 					simpleTab->saveCbxChoices();
 			}
 		}
-
 	}
+
 	OptionsHandler.save();
 }
 
@@ -345,6 +346,14 @@ void settings_frame::updateAllControls()
 void settings_frame::OnClose(wxCloseEvent& event)
 {
 	if ( !alreadyCalled){
+	     int x, y, w, h;
+          GetSize( &w, &h );
+          OptionsHandler.SetSettingsWindowHeight( h );
+          OptionsHandler.SetSettingsWindowWidth( w );
+          GetPosition( &x, &y );
+          OptionsHandler.SetSettingsWindowTop( y );
+          OptionsHandler.SetSettingsWindowLeft( x );
+          OptionsHandler.save();
 		handleExit();
 	}
 }
