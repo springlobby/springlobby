@@ -59,7 +59,6 @@ m_destpath(DestPath),
 m_fileurl(FileUrl),
 m_progress(0)
 {
-  m_dialog = new wxProgressDialog( _("Download progress"), _("Downloading the requested file, please stand by"), m_httpstream->GetSize(), NULL, wxPD_AUTO_HIDE | wxPD_SMOOTH | wxPD_CAN_ABORT | wxPD_ESTIMATED_TIME );
   Init();
 }
 
@@ -78,6 +77,7 @@ void UpdateProgressbar::Init()
   m_httpstream = FileDownloading.GetInputStream( _T("/") + m_fileurl.AfterFirst(_T('/')) );
   if (FileDownloading.GetError() == wxPROTO_NOERR)
   {
+    m_dialog = new wxProgressDialog( _("Download progress"), _("Downloading the requested file, please stand by"), m_httpstream->GetSize(), NULL, wxPD_AUTO_HIDE | wxPD_SMOOTH | wxPD_CAN_ABORT | wxPD_ESTIMATED_TIME );
     Create();
     Run();
   }
