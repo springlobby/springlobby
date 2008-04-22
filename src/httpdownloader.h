@@ -9,6 +9,8 @@ class HttpDownloader
   public:
     HttpDownloader( const wxString& FileUrl, const wxString& DestPath, bool deflatezipstream = true );
     ~HttpDownloader();
+  private:
+    UpdateProgressbar* m_thread_updater;
 };
 
 class UpdateProgressbar : public wxThread
@@ -27,7 +29,6 @@ class UpdateProgressbar : public wxThread
     void DeflateFiles();
 
     wxProgressDialog* m_dialog;
-    UpdateProgressbar* m_thread_updater;
     size_t m_file_size;
     std::string m_stringbuffer;
     wxString m_destpath;
