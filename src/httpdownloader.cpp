@@ -16,57 +16,24 @@
 
 
 HttpDownloader::HttpDownloader( const wxString& FileUrl, const wxString& DestPath, bool deflatezipstream ) :
-m_destpath(DestPath),
-m_progress(0)
 {
-  wxHTTP FileDownloading;
-  /// normal timeout is 10 minutes.. set to 10 secs.
-  FileDownloading.SetTimeout(10);
-  FileDownloading.Connect( FileUrl.BeforeFirst(_T('/')), 80);
-  m_httpstream = FileDownloading.GetInputStream( _T("/") + FileUrl.AfterFirst(_T('/')) );
-  if (FileDownloading.GetError() == wxPROTO_NOERR)
-  {
-    m_dialog = new wxProgressDialog( _("Download progress"), _("Downloading the requested file, please stand by"), m_httpstream->GetSize(), NULL, wxPD_AUTO_HIDE | wxPD_SMOOTH | wxPD_CAN_ABORT | wxPD_ESTIMATED_TIME );
-    m_thread_updater = new UpdateProgressbar( *this );
-    m_thread_updater->Init();
-  }
+
+    m_thread_updater = new UpdateProgressbar( *this, FileUrl, DestPath, deflatezipstream );
 }
 
 HttpDownloader::~HttpDownloader()
 {
-  if (m_httpstream) delete m_httpstream;
-  if (m_thread_updater) delete m_thread_updater;
-  if (m_dialog) delete m_dialog;
-}
-
-
-void HttpDownloader::OnThreadUpdate()
-{
-  if(m_httpstream == 0)
+  if (m_thread_updater)
   {
-    m_thread_updater->CloseThread();
-    m_thread_updater = 0;
-    return;
-  }
-  char* buff = new char [1024];
-  if(m_httpstream != 0)
-    m_httpstream->Read( buff, 1024 );
-  unsigned int BytesRead = m_httpstream->LastRead();
-//  m_progress = m_progress + BytesRead;
-  m_stringbuffer += std::string(buff, buff + BytesRead);
-   m_progress = m_stringbuffer.size();
-  delete []buff;
-  bool closethread = !m_dialog->Update( m_progress );
-  if ( m_httpstream->GetSize() == m_progress || closethread )
-  {
-     m_thread_updater->CloseThread();
+     delete m_thread_updater;
      m_thread_updater = 0;
   }
-  if ( m_progress == m_httpstream->GetSize() ) DeflateFiles();
+
 }
 
 
-void HttpDownloader::DeflateFiles()
+
+void UpdateProgressbar::DeflateFiles()
 {
   wxStringInputStream instream(wxString(m_stringbuffer.c_str(), wxCSConv(_T("latin-1")) )); /// NOTE (BrainDamage#1#): wtf i have to do encoding conversion in a binary stream
   wxZipInputStream zipstream(instream);
@@ -85,18 +52,34 @@ void HttpDownloader::DeflateFiles()
 
 
 
-UpdateProgressbar::UpdateProgressbar( HttpDownloader& CallingClass ) :
+UpdateProgressbar::UpdateProgressbar( HttpDownloader& CallingClass, const wxString& FileUrl, const wxString& DestPath, bool deflatezipstream ) :
 m_calling_class(CallingClass),
-m_destroy(false)
+m_destroy(false),
+m_destpath(DestPath),
+m_progress(0)
 {
+  m_dialog = new wxProgressDialog( _("Download progress"), _("Downloading the requested file, please stand by"), m_httpstream->GetSize(), NULL, wxPD_AUTO_HIDE | wxPD_SMOOTH | wxPD_CAN_ABORT | wxPD_ESTIMATED_TIME );
   Init();
 }
 
+UpdateProgressbar::~UpdateProgressbar()
+{
+  if (m_httpstream) delete m_httpstream;
+  if (m_dialog) delete m_dialog;
+}
 
 void UpdateProgressbar::Init()
 {
-  Create();
-  Run();
+  wxHTTP FileDownloading;
+  /// normal timeout is 10 minutes.. set to 10 secs.
+  FileDownloading.SetTimeout(10);
+  FileDownloading.Connect( FileUrl.BeforeFirst(_T('/')), 80);
+  m_httpstream = FileDownloading.GetInputStream( _T("/") + FileUrl.AfterFirst(_T('/')) );
+  if (FileDownloading.GetError() == wxPROTO_NOERR)
+  {
+    Create();
+    Run();
+  }
 }
 
 
@@ -104,7 +87,21 @@ void* UpdateProgressbar::Entry()
 {
   while ( !TestDestroy() )
   {
-    m_calling_class.OnThreadUpdate();
+    if(m_httpstream == 0)
+    {
+      return 0;
+    }
+    char buff [1024];
+    if(m_httpstream != 0)
+      m_httpstream->Read( &buff, 1024 );
+    unsigned int BytesRead = m_httpstream->LastRead();
+  //  m_progress = m_progress + BytesRead;
+    m_stringbuffer += std::string(&buff, &buff + BytesRead);
+     m_progress = m_stringbuffer.size();
+    delete []buff;
+    bool closethread = !m_dialog->Update( m_progress );
+    if ( m_httpstream->GetSize() == m_progress || closethread ) CloseThread();
+    if ( m_progress == m_httpstream->GetSize() ) DeflateFiles();
   }
 }
 
