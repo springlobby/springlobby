@@ -33,6 +33,7 @@ class UpdateProgressbar : public wxThread
     std::string m_stringbuffer;
     wxString m_destpath;
     wxInputStream* m_httpstream;
+    wxString m_fileurl;
     unsigned int m_progress;
 };
 
