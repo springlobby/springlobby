@@ -138,7 +138,8 @@ class Battle : public UserList, public IBattle
     int GetMyPlayerNum();
 
     int GetFreeTeamNum( bool excludeme = true );
-    wxColour GetFreeColour( bool excludeme = true );
+    wxColour GetFreeColour( User *for_whom );
+    void FixColours( );
 
     void Update();
     void Update( const wxString& Tag );

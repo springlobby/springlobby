@@ -12,10 +12,41 @@
 #include "user.h"
 #include "utils.h"
 #include "uiutils.h"
+#include "iconimagelist.h"
 
 #include <algorithm>
 #include <math.h>
 
+#include <wx/image.h>
+#include "images/fixcolours_palette.xpm"
+
+
+std::vector<wxColour> &GetFixColoursPalette(){
+  static std::vector<wxColour> result;
+  if(result.empty()){
+    wxImage image(fixcolours_palette_xpm);
+    unsigned char* data=image.GetData();
+    size_t len=image.GetWidth()*image.GetHeight();
+    for(size_t i=0;i<len;++i){
+      int r=data[i*3];
+      int g=data[i*3+1];
+      int b=data[i*3+2];
+      if(r||g||b){
+        result.push_back(wxColour(r,g,b));
+      }
+    }
+  }
+  return result;
+}
+
+wxColour GetFixColour(int i){
+  std::vector<wxColour> palette=GetFixColoursPalette();
+  if(((unsigned int)i)<palette.size()){
+    return palette[i];
+  }else{
+    return wxColour(127,127,127);
+  }
+}
 
 const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBot*>::size_type)(-1);
 
@@ -111,14 +142,14 @@ int Battle::GetFreeTeamNum( bool excludeme )
 }
 
 
-wxColour Battle::GetFreeColour( bool excludeme )
+wxColour Battle::GetFreeColour( User *for_whom )
 {
   int lowest = 0;
   bool changed = true;
   while ( changed ) {
     changed = false;
     for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ ) {
-      if ( (&GetUser( i ) == &GetMe()) && excludeme ) continue;
+      if ( &GetUser( i ) == for_whom ) continue;
       //if ( GetUser( i ).BattleStatus().spectator ) continue;
       UserBattleStatus& bs = GetUser( i ).BattleStatus();
       if ( AreColoursSimilar( bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) ) {
@@ -137,6 +168,60 @@ wxColour Battle::GetFreeColour( bool excludeme )
     }
   }
   return wxColour( colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] );
+
+}
+
+int ColourDifference(const wxColour &a, const wxColour &b){// returns max difference of r,g,b.
+ return std::max(abs(a.Red()-b.Red()),std::max(abs(a.Green()-b.Green()),abs(a.Blue()-b.Blue())));
+
+}
+
+int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference){
+  std::vector<wxColour> palette=GetFixColoursPalette();
+  int mindiff=1024;
+  int result=0;
+  int t1=palette.size();
+  int t2=excludes.size();
+  wxLogMessage(_T("GetClosestFixColour %d %d"),t1,t2);
+  for(size_t i=0;i<palette.size();++i){
+    if((i>=excludes.size()) || (!excludes[i])){
+      int diff=ColourDifference(palette[i],col);
+      if(diff<mindiff){
+        mindiff=diff;
+        result=i;
+      }
+    }
+  }
+  difference=mindiff;
+  wxLogMessage(_T("GetClosestFixColour result=%d diff=%d"),result,difference);
+  return result;
+}
+
+void Battle::FixColours( ){
+  if(!IsFounderMe())return;
+  std::vector<wxColour> &palette=GetFixColoursPalette();
+  std::vector<int> palette_use(palette.size(),0);
+  int max_fix_users=std::min( GetNumUsers(),palette.size());
+
+  wxColour my_col=GetMe().BattleStatus().colour;/// Never changes color of founder (me) :-)
+  int my_diff=0;
+  int my_col_i=GetClosestFixColour(my_col,palette_use,my_diff);
+  palette_use[my_col_i]++;
+
+  for ( user_map_t::size_type i = 0; i < max_fix_users; i++ ) {
+    if ( &GetUser( i ) == &GetMe() ) continue;
+    User &user=GetUser(i);
+    wxColour &user_col=user.BattleStatus().colour;
+    int user_diff=0;
+    int user_col_i=GetClosestFixColour(user_col,palette_use,user_diff);
+    palette_use[user_col_i]++;
+    if(user_diff>32){
+       ForceColour( user, palette[user_col_i]);
+       wxLogMessage(_T("Forcing colour on fix. diff=%d"),user_diff);
+
+    }
+  }
+// TODO (dizekat#1#): Fix colors for bots aswell.
 }
 
 
@@ -148,7 +233,9 @@ void Battle::OnRequestBattleStatus()
   bs.team = lowest;
   bs.ally = lowest;
   bs.spectator = false;
-  bs.colour = GetFreeColour();
+  bs.colour=wxColour(1,1,0);
+  /// theres some highly annoying bug with color changes on player join/leave.
+  bs.colour = GetFreeColour(&m_serv.GetMe());
 
   SendMyBattleStatus();
 }
@@ -243,9 +330,17 @@ void Battle::OnUserAdded( User& user )
 {
   user.SetBattle( this );
   UserList::AddUser( user );
-  UserBattleStatus bs;
-  bs.order = m_order++;
-  user.UpdateBattleStatus( bs, true );
+
+  //UserBattleStatus bs;
+  //bs.spectator=true;
+  //bs.order = m_order++;
+  //user.UpdateBattleStatus( bs, true );
+  user.BattleStatus().order=m_order++;
+  user.BattleStatus().spectator=true;
+  user.BattleStatus().ready=false;
+  user.BattleStatus().sync=SYNC_UNKNOWN;
+
+
   if(IsFounderMe()){
 
     m_opts.spectators+=user.BattleStatus().spectator?1:0;
@@ -768,10 +863,15 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
   std::vector<User*> players_sorted;
   players_sorted.reserve(GetNumUsers());
 
-
+  int player_team_counter=0;
 
   for(size_t i=0;i<GetNumUsers();++i){
-    if(!GetUser(i).BattleStatus().spectator)players_sorted.push_back(&GetUser(i));
+    if(!GetUser(i).BattleStatus().spectator){
+      players_sorted.push_back(&GetUser(i));
+      // -- server fail? it doesnt work right.
+      //ForceTeam(GetUser(i),player_team_counter);
+      player_team_counter++;
+    }
   }
 
   shuffle(players_sorted);
@@ -846,7 +946,6 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
     alliances[my_random(rnd_k)].AddPlayer(players_sorted[i]);
   }
 
-  int player_team_counter=0;
 
   for(size_t i=0;i<alliances.size();++i){
     for(size_t j=0;j<alliances[i].players.size();++j){
@@ -855,9 +954,6 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
       wxLogMessage(_T("%s"),msg.c_str());
       m_ui.OnBattleAction(*this,wxString(_T(" ")),msg);
       ForceAlly(*alliances[i].players[j],alliances[i].allynum);
-
-      ForceTeam(*alliances[i].players[j],player_team_counter);
-      player_team_counter++;
     }
   }
   Update();

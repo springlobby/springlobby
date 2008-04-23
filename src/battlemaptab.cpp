@@ -115,8 +115,9 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
 BattleMapTab::~BattleMapTab()
 {
-
-  sett().SaveBattleMapOptions(&m_battle);
+  if(m_battle.IsFounderMe()){
+    sett().SaveBattleMapOptions(&m_battle);
+  }
 }
 
 
