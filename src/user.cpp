@@ -82,8 +82,6 @@ void User::UpdateBattleStatus( const UserBattleStatus& status, bool setorder )
   if(!status.ip.empty())m_bstatus.ip=status.ip;
   if(status.udpport!=0)m_bstatus.udpport=status.udpport;/// 12
 
-
-
   //if ( !setorder ) m_bstatus.order = order;
 }
 

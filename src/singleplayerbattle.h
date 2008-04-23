@@ -87,7 +87,7 @@ class SinglePlayerBattle: public IBattle
     BattleBot* GetBotByStartPosition( unsigned int startpos );
     unsigned int GetNumBots();
 
-    wxColour GetFreeColour( bool excludeme = true );
+    wxColour GetFreeColour( User *for_whom );
 
     int GetMyAlly() { return -1; }
     void SetMyAlly( int ally ) {}

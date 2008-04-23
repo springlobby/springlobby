@@ -18,7 +18,7 @@
 					<Add option="-g" />
 					<Add option="`pkg-config --cflags libtorrent`" />
 					<Add option="`wx-config --cflags`" />
-					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
+					<Add option='-DVERSION=\\&quot;0.0.1.0.whatever-Debug-Linux\\&quot;' />
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 				</Compiler>
 				<Linker>
