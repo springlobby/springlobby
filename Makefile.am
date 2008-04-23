@@ -511,7 +511,9 @@ springlobby_SOURCES = \
 	src/autobalancedialog.cpp \
 	src/autobalancedialog.h \
 	src/tdfcontainer.cpp \
-	src/tdfcontainer.h
+	src/tdfcontainer.h \
+	src/httpdownloader.h \
+	src/httpdownloader.cpp
 
 
 if USE_WINDRES	

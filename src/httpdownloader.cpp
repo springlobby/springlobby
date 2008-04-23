@@ -28,7 +28,7 @@ m_progress(0)
   {
     m_dialog = new wxProgressDialog( _("Download progress"), _("Downloading the requested file, please stand by"), m_httpstream->GetSize(), NULL, wxPD_AUTO_HIDE | wxPD_SMOOTH | wxPD_CAN_ABORT | wxPD_ESTIMATED_TIME );
     m_thread_updater = new UpdateProgressbar( *this );
-
+    m_thread_updater->Init();
   }
 }
 
@@ -49,7 +49,7 @@ void HttpDownloader::OnThreadUpdate()
     return;
   }
   char* buff = new char [1024];
-  m_httpstream->Read( buff, 1024 );
+  m_httpstream->Read( buff, sizeof(buff) );
   unsigned int BytesRead = m_httpstream->LastRead();
   m_progress = m_progress + BytesRead;
   m_stringbuffer += std::string(buff, buff + BytesRead);

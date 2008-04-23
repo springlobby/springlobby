@@ -21,6 +21,7 @@
 #include "ui.h"
 #include "iunitsync.h"
 #include "channel.h"
+#include "httpdownloader.h"
 
 #define TIMER_ID 101
 #define TIMER_INTERVAL 100
@@ -59,7 +60,8 @@ bool SpringLobbyApp::OnInit()
 
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
-
+//HttpDownloader* ht = new HttpDownloader(_T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip"), _T("/tmp"));
+HttpDownloader* ht = new HttpDownloader(_T("version.springlobby.info/latest.txt"), _T("/tmp"));
   //TODO needed?
   wxImage::AddHandler(new wxPNGHandler);
 
