@@ -1,5 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#ifndef NO_TORRENT_SYSTEM
+
 #include <wx/intl.h>
 #include <wx/menu.h>
 #include <wx/string.h>
@@ -561,4 +563,4 @@ void TorrentListCtrl::OnMouseMotion(wxMouseEvent& event)
 #endif
 }
 
-
+#endif

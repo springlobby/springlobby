@@ -27,10 +27,12 @@
 #include "battle.h"
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
+#ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
+#include "torrentwrapper.h"
+#endif
 #include "agreementdialog.h"
 #include "unitsyncthread.h"
-#include "torrentwrapper.h"
 
 #include "settings++/custom_dialogs.h"
 
@@ -242,7 +244,9 @@ void Ui::StartHostedBattle()
 
 void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
 {
+  #ifndef NO_TORRENT_SYSTEM
   torrent()->SetIngameStatus(true);
+  #endif
   m_spring->Run( battle );
 }
 
@@ -276,13 +280,23 @@ void Ui::ReloadUnitSync()
 
 void Ui::DownloadMap( const wxString& hash )
 {
+  #ifndef NO_TORRENT_SYSTEM
   torrent()->RequestFile( hash );
+  #else
+  wxString url = _T("http://spring.jobjol.nl/search.php");
+  OpenWebBrowser ( url );
+  #endif
 }
 
 
 void Ui::DownloadMod( const wxString& hash )
 {
+  #ifndef NO_TORRENT_SYSTEM
   torrent()->RequestFile( hash );
+  #else
+  wxString url = _T("http://spring.jobjol.nl/search.php");
+  OpenWebBrowser ( url );
+  #endif
 }
 
 
@@ -448,7 +462,7 @@ void Ui::OnUpdate( int mselapsed )
   if ( m_serv != 0 ) {
     m_serv->Update( mselapsed );
   }
-
+  #ifndef NO_TORRENT_SYSTEM
   if (m_upd_intv_counter % 20 == 0 )
   {
       m_main_win->GetTorrentTab().OnUpdate();
@@ -456,6 +470,7 @@ void Ui::OnUpdate( int mselapsed )
   }
   torrent()->UpdateFromTimer( mselapsed );
   m_upd_intv_counter++;
+  #endif
 }
 
 
@@ -867,7 +882,9 @@ void Ui::OnBattleStarted( Battle& battle )
       battle.SendMyBattleStatus();
       battle.GetMe().Status().in_game = true;
       battle.GetMe().SendMyUserStatus();
+      #ifndef NO_TORRENT_SYSTEM
       torrent()->SetIngameStatus(true);
+      #endif
       m_spring->Run( battle );
     }
   }
@@ -897,7 +914,9 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
 
 void Ui::OnSpringTerminated( bool success )
 {
+  #ifndef NO_TORRENT_SYSTEM
   torrent()->SetIngameStatus(false);
+  #endif
   if ( !m_serv ) return;
 
   m_serv->GetMe().Status().in_game = false;

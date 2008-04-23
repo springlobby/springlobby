@@ -11,7 +11,9 @@ class wxListbookEvent;
 class MainChatTab;
 class MainJoinBattleTab;
 class MainSinglePlayerTab;
+#ifndef NO_TORRENT_SYSTEM
 class MainTorrentTab;
+#endif
 class wxBoxSizer;
 class wxListbook;
 class MainOptionsTab;
@@ -67,7 +69,9 @@ class MainWindow : public wxFrame
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab();
     MainSinglePlayerTab& GetSPTab();
+    #ifndef NO_TORRENT_SYSTEM
     MainTorrentTab& GetTorrentTab();
+    #endif
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
     void MakeImages();
@@ -88,7 +92,9 @@ class MainWindow : public wxFrame
     MainJoinBattleTab* m_join_tab;
     MainSinglePlayerTab* m_sp_tab;
     MainOptionsTab* m_opts_tab;
+    #ifndef NO_TORRENT_SYSTEM
     MainTorrentTab* m_torrent_tab;
+    #endif
 
     wxBitmap* m_chat_icon;
     wxBitmap* m_battle_icon;

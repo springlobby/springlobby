@@ -3,6 +3,8 @@
 // Class: TorrentWrapper
 //
 
+#ifndef NO_TORRENT_SYSTEM
+
 #include "iunitsync.h"
 #include "settings.h"
 #include "utils.h"
@@ -495,3 +497,4 @@ void TorrentWrapper::OnDataReceived( Socket* sock )
   if ( sock->Receive( data ) ) ReceiveandExecute( data );
 }
 
+#endif

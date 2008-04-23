@@ -1,6 +1,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_TORRENTLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_TORRENTLISTCTRL_H
 
+#ifndef NO_TORRENT_SYSTEM
+
 #include "customlistctrl.h"
 
 #include <map>
@@ -71,5 +73,7 @@ enum
     BLIST_DLMOD,
     BLIST_DLMAP
 };
+
+#endif
 
 #endif // SPRINGLOBBY_HEADERGUARD_TORRENTLISTCTRL_H

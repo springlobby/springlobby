@@ -1,6 +1,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_TORRENTWRAPPER_H
 #define SPRINGLOBBY_HEADERGUARD_TORRENTWRAPPER_H
 
+#ifndef NO_TORRENT_SYSTEM
+
 #include <wx/string.h>
 #include <wx/arrstr.h>
 
@@ -101,5 +103,7 @@ class TorrentWrapper : public iNetClass
 
 
 TorrentWrapper* torrent();
+
+#endif
 
 #endif // SPRINGLOBBY_HEADERGUARD_TORRENTWRAPPER_H

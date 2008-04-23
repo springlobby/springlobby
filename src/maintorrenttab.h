@@ -1,6 +1,7 @@
 #ifndef MAINTORRENTTAB_H
 #define MAINTORRENTTAB_H
 
+#ifndef NO_TORRENT_SYSTEM
 
 #include <wx/panel.h>
 #include <map>
@@ -59,5 +60,7 @@ class MainTorrentTab: public wxPanel
 
 		DECLARE_EVENT_TABLE()
 };
+
+#endif
 
 #endif

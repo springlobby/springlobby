@@ -16,7 +16,9 @@
 #include "battle.h"
 #include "settings.h"
 #include "settings++/custom_dialogs.h"
+#ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
+#endif
 
 void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode )
 {
@@ -32,7 +34,9 @@ void ServerEvents::OnDisconnected()
   wxLogDebugFunc( _T("") );
   m_serv.SetRequiredSpring (_T(""));
   m_ui.OnDisconnected( m_serv );
+  #ifndef NO_TORRENT_SYSTEM
   torrent()->DisconnectToP2PSystem();
+  #endif
 }
 
 
@@ -54,7 +58,9 @@ void ServerEvents::OnLoginInfoComplete()
     if ( !pass.IsEmpty() ) channel = channel.BeforeFirst(' ');
     m_serv.JoinChannel( channel, pass );
   }
+  #ifndef NO_TORRENT_SYSTEM
   if( sett().GetTorrentSystemEnabled() ) torrent()->ConnectToP2PSystem();
+  #endif
   m_ui.OnLoggedIn( );
 }
 
