@@ -4,7 +4,10 @@ import os
 import os.path
 import re
 import array
- 
+
+## no need to call this manually, use make_header_from_png.sh instead
+## 
+
 USAGE = """png2c - Embed a PNG in a C header file (like XPM)
 Usage: png2c [file ..] Convert all the file <file.png> to <file.png.h>"""
  

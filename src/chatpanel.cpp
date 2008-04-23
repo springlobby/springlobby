@@ -506,14 +506,14 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
   /// HitTest has column,row order  (x,y)
 
-  //if(m_chatlog_text->HitTest(wxPoint(2,2),&top_col,&top_row)==wxTE_HT_UNKNOWN){
+  if(m_chatlog_text->HitTest(wxPoint(2,2),&top_col,&top_row)==wxTE_HT_UNKNOWN){
   //  wxLogWarning(_T("HitTest failed for top of visible page"));
-  //}
+  }
   long bottom_col=0,bottom_row=0;
 
-  //if(m_chatlog_text->HitTest(wxPoint(2,sizey-4),&bottom_col,&bottom_row)==wxTE_HT_UNKNOWN){
+  if(m_chatlog_text->HitTest(wxPoint(2,sizey-4),&bottom_col,&bottom_row)==wxTE_HT_UNKNOWN){
   //  wxLogWarning(_T("HitTest failed for bottom of visible page"));
-  //}
+  }
 
   long jumpto = 0;
   jumpto=m_chatlog_text->XYToPosition(top_col,top_row);/// column, row format

@@ -226,8 +226,8 @@ void MainWindow::MakeImages()
     m_func_tab_images->Add( img );
   } else {*/
     m_func_tab_images->Add( *m_options_icon );
-     m_func_tab_images->Add( *m_options_icon );
-   // m_func_tab_images->Add( *m_downloads_icon );
+
+    m_func_tab_images->Add( *m_downloads_icon );
   //}
 
 }

@@ -187,12 +187,14 @@ void TorrentWrapper::SetIngameStatus( bool status )
   if ( status == ingame ) return; /// no change needed
   ingame = status;
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
-  if ( ingame ) /// going ingame, pause all torrents
+  if ( ingame ) /// going ingame, pause all torrents and disable dht
   {
     for ( unsigned int i = 0; i < TorrentList.size(); i++) TorrentList[i].pause();
+    m_torr->stop_dht();
   }
-  else/// game closed, resume all torrents
+  else/// game closed, resume all torrents and reactivate dht
   {
+    m_torr->start_dht();
     for ( unsigned int i = 0; i < TorrentList.size(); i++) TorrentList[i].resume();
   }
 
@@ -372,7 +374,7 @@ void TorrentWrapper::FixTorrentList()
   m_leech_count = 0;
   for ( SeedReqIter i = m_seed_requests.begin(); i != m_seed_requests.end(); i++ )
   {
-    if( m_seed_count > 9 ) return;
+    if( m_seed_count > 9 ) break;
     if ( (m_open_torrents.find( i->first ) == m_open_torrents.end()) && (m_local_files.find(i->second) != m_local_files.end()) ) /// torrent is requested and present, but not joined yet
     {
       JoinTorrent( i->second );
