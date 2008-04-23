@@ -12,6 +12,7 @@
 #include <wx/sstream.h>
 
 #include "httpdownloader.h"
+#include "utils.h"
 
 
 HttpDownloader::HttpDownloader( const wxString& FileUrl, const wxString& DestPath, bool deflatezipstream ) :
@@ -25,7 +26,7 @@ m_progress(0)
   m_httpstream = FileDownloading.GetInputStream( _T("/") + FileUrl.AfterFirst(_T('/')) );
   if (FileDownloading.GetError() == wxPROTO_NOERR)
   {
-    m_dialog = new wxProgressDialog( _("Download progress"), _("Downloading the requested file, please stand by"), 100, NULL, wxPD_AUTO_HIDE | wxPD_SMOOTH | wxPD_CAN_ABORT | wxPD_ESTIMATED_TIME );
+    m_dialog = new wxProgressDialog( _("Download progress"), _("Downloading the requested file, please stand by"), m_httpstream->GetSize(), NULL, wxPD_AUTO_HIDE | wxPD_SMOOTH | wxPD_CAN_ABORT | wxPD_ESTIMATED_TIME );
     m_thread_updater = new UpdateProgressbar( *this );
 
   }
@@ -41,21 +42,31 @@ HttpDownloader::~HttpDownloader()
 
 void HttpDownloader::OnThreadUpdate()
 {
-  char * buff = new char [ m_httpstream->GetSize() / 100 ];
-  m_httpstream->Read( buff, m_httpstream->GetSize() / 100 );
-/// NOTE (BrainDamage#1#):  wtf i need to do encoding conversion on a buffer???
-  m_stringbuffer += wxString ( buff, wxCSConv(_T("ascii-8")) );
+  if(m_httpstream == 0)
+  {
+    m_thread_updater->CloseThread();
+    m_thread_updater = 0;
+    return;
+  }
+  char* buff = new char [1024];
+  m_httpstream->Read( buff, 1024 );
+  unsigned int BytesRead = m_httpstream->LastRead();
+  m_progress = m_progress + BytesRead;
+  m_stringbuffer += std::string(buff, buff + BytesRead);
   delete []buff;
-  m_progress++;
-  bool closethread = m_dialog->Update( m_progress );
-  if ( m_progress == 100 || closethread ) m_thread_updater->CloseThread();
-  if ( m_progress == 100 ) DeflateFiles();
+  bool closethread = !m_dialog->Update( m_progress );
+  if ( m_httpstream->GetSize() == m_progress || closethread )
+  {
+     m_thread_updater->CloseThread();
+     m_thread_updater = 0;
+  }
+  if ( m_progress == m_httpstream->GetSize() ) DeflateFiles();
 }
 
 
 void HttpDownloader::DeflateFiles()
 {
-  wxStringInputStream instream(m_stringbuffer);
+  wxStringInputStream instream(wxString(m_stringbuffer.c_str(), wxCSConv(_T("latin-1")) )); /// NOTE (BrainDamage#1#): wtf i have to do encoding conversion in a binary stream
   wxZipInputStream zipstream(instream);
   wxZipEntry* CurrentFileInfo = zipstream.GetNextEntry();
   while ( CurrentFileInfo != NULL )
@@ -76,6 +87,7 @@ UpdateProgressbar::UpdateProgressbar( HttpDownloader& CallingClass ) :
 m_calling_class(CallingClass),
 m_destroy(false)
 {
+  Init();
 }
 
 

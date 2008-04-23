@@ -18,7 +18,7 @@ class HttpDownloader
     wxProgressDialog* m_dialog;
     UpdateProgressbar* m_thread_updater;
     size_t m_file_size;
-    wxString m_stringbuffer;
+    std::string m_stringbuffer;
     wxString m_destpath;
     wxInputStream* m_httpstream;
     unsigned int m_progress;
