@@ -49,10 +49,12 @@ void HttpDownloader::OnThreadUpdate()
     return;
   }
   char* buff = new char [1024];
-  m_httpstream->Read( buff, sizeof(buff) );
+  if(m_httpstream != 0)
+    m_httpstream->Read( buff, 1024 );
   unsigned int BytesRead = m_httpstream->LastRead();
-  m_progress = m_progress + BytesRead;
+//  m_progress = m_progress + BytesRead;
   m_stringbuffer += std::string(buff, buff + BytesRead);
+   m_progress = m_stringbuffer.size();
   delete []buff;
   bool closethread = !m_dialog->Update( m_progress );
   if ( m_httpstream->GetSize() == m_progress || closethread )

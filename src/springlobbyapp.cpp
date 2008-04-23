@@ -61,7 +61,7 @@ bool SpringLobbyApp::OnInit()
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
 //HttpDownloader* ht = new HttpDownloader(_T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip"), _T("/tmp"));
-HttpDownloader* ht = new HttpDownloader(_T("version.springlobby.info/latest.txt"), _T("/tmp"));
+
   //TODO needed?
   wxImage::AddHandler(new wxPNGHandler);
 
@@ -111,7 +111,7 @@ HttpDownloader* ht = new HttpDownloader(_T("version.springlobby.info/latest.txt"
   //m_ui->ReloadUnitSync();
 
   m_timer->Start( TIMER_INTERVAL );
-
+HttpDownloader* ht = new HttpDownloader(_T("version.springlobby.info/latest.txt"), _T("/tmp"));
   return true;
 }
 
