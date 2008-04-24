@@ -1,5 +1,6 @@
 #include "maintorrenttab.h"
 
+#ifndef NO_TORRENT_SYSTEM
 
 #include <wx/intl.h>
 #include <wx/sizer.h>
@@ -134,3 +135,5 @@ void MainTorrentTab::OnUpdate()
 
     }
 }
+
+#endif

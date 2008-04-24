@@ -28,7 +28,9 @@
 #include "mainoptionstab.h"
 #include "iunitsync.h"
 #include "uiutils.h"
+#ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
+#endif
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.png.h"
@@ -126,13 +128,17 @@ MainWindow::MainWindow( Ui& ui ) :
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
+#ifndef NO_TORRENT_SYSTEM
   m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
+#endif
 
   m_func_tabs->AddPage( m_chat_tab, _T(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
+#ifndef NO_TORRENT_SYSTEM
   m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 4 );
+#endif
   //TODO insert real downloads panel
   //m_func_tabs->AddPage( m_opts_tab, _T(""), false, 4 );
 
@@ -260,13 +266,13 @@ MainSinglePlayerTab& MainWindow::GetSPTab()
   ASSERT_LOGIC( m_sp_tab != 0, _T("m_sp_tab = 0") );
   return *m_sp_tab;
 }
-
+#ifndef NO_TORRENT_SYSTEM
 MainTorrentTab& MainWindow::GetTorrentTab()
 {
   ASSERT_LOGIC( m_torrent_tab  != 0, _T("m_torrent_tab = 0") );
   return *m_torrent_tab ;
 }
-
+#endif
 ChatPanel* MainWindow::GetActiveChatPanel()
 {
   int index = m_func_tabs->GetSelection();

@@ -1,3 +1,5 @@
+#ifndef NO_TORRENT_SYSTEM
+
 #include "torrentoptionspanel.h"
 
 #include <wx/textctrl.h>
@@ -110,3 +112,5 @@ void TorrentOptionsPanel::OnRestore( wxCommandEvent& event )
     m_maxUp->SetValue( i2s( sett().GetTorrentUploadRate() ) );
     m_enableP2P->SetValue( sett().GetTorrentSystemEnabled() );
 }
+
+#endif

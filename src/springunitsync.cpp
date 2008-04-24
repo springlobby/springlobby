@@ -639,7 +639,9 @@ bool SpringUnitSync::ReloadUnitSyncLib()
 {
   usync()->FreeUnitSyncLib();
   usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() );
+  #ifndef NO_TORRENT_SYSTEM
   torrent()->ReloadLocalFileList();
+  #endif
   return true;
 }
 
