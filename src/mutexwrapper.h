@@ -8,7 +8,7 @@ class MutexWrapper;
 
 class AbstractMutexWrapper{
   public:
-  virtual ~AbstractMutexWrapper()=0;
+  virtual ~AbstractMutexWrapper(){};
   virtual void Lock()=0;
   virtual void UnLock()=0;
 };
@@ -17,18 +17,18 @@ template<class T>
 class ScopedLocker
 {
   private:
-  MutexWrapper<T> *mw;
+  MutexWrapper<T> &mw;
   ScopedLocker(const ScopedLocker<T> &other){}/// prevent copying
   ScopedLocker&  operator= (const ScopedLocker& other){}/// and assignment
   public:
-  explicit ScopedLocker(MutexWrapper<T> &mw_):mw(*mw_){
+  explicit ScopedLocker(MutexWrapper<T> &mw_):mw(mw_){
     mw.Lock();
   }
   ~ScopedLocker(){
     mw.UnLock();
   }
   T &Get(){
-    return mw->GetData();
+    return mw.GetData();
   }
 };
 /*

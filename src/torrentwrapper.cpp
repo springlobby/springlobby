@@ -409,20 +409,31 @@ void TorrentWrapper::FixTorrentList()
 
   m_seed_count = 0;
   m_leech_count = 0;
-  ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
-  ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
-  ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
 
-  for ( SeedRequests::iterator i = seed_requests_l.Get().begin(); i != seed_requests_l.Get().end(); i++ )
-  {
-    if( m_seed_count > 9 ) break;
-    if ( (open_torrents_l.Get().find( i->first ) == open_torrents_l.Get().end()) && (torrent_infos_l.Get().find(i->second) != torrent_infos_l.Get().end()) ) /// torrent is requested and present, but not joined yet
+  std::vector<wxString> torrents_to_join;/// threads rule 4
+
+  {/// threads rule 1,5,6 with JoinTorrent() call
+    ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);/// threads rule 8
+    ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
+    ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
+
+    for ( SeedRequests::iterator i = seed_requests_l.Get().begin(); i != seed_requests_l.Get().end(); i++ )
     {
-      JoinTorrent( i->second );
-      m_seed_count++;
-      open_torrents_l.Get()[i->first] = true;
+      if( m_seed_count > 9 ) break;
+      if ( (open_torrents_l.Get().find( i->first ) == open_torrents_l.Get().end()) && (torrent_infos_l.Get().find(i->second) != torrent_infos_l.Get().end()) ) /// torrent is requested and present, but not joined yet
+      {
+        torrents_to_join.push_back(i->second);
+        m_seed_count++;
+        open_torrents_l.Get()[i->first] = true;
+      }
     }
   }
+  for(std::vector<wxString>::iterator i=torrents_to_join.begin();i!=torrents_to_join.end();++i){
+    JoinTorrent( *i );
+  }
+
+  bool do_reload_unitsync=false;
+
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
   {
     if ( i->is_seed() ) m_seed_count++;
@@ -432,20 +443,37 @@ void TorrentWrapper::FixTorrentList()
       break;
     }
     wxString StrippedName = WX_STRING(i->name()).BeforeFirst( _T('|') );
-    if ( !(open_torrents_l.Get()[StrippedName]) ) ///torrent has finished download, refresh unitsync and remove file from list
-    {
-      m_socket_class->Send( _T("N-|") + seed_requests_l.Get().from[StrippedName] + _T("\n") ); ///notify the system we don't need the file anymore
-      usync()->ReloadUnitSyncLib();
-      m_torr->remove_torrent( *i );
-      open_torrents_l.Get().erase(open_torrents_l.Get().find(StrippedName));
-      continue;
+
+    bool do_remove_torrent=false;/// threads rule 4
+    wxString notify_message;
+    {/// threads rule 1, 3, 6
+      ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);/// threads rule 8
+      ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
+
+      OpenTorrents::iterator open_torrent_i=open_torrents_l.Get().find(StrippedName);
+
+      bool is_ok=true;
+      if(open_torrent_i==open_torrents_l.Get().end()){
+        is_ok=false;
+      }
+      if ( is_ok && !(open_torrent_i->second) ) ///torrent has finished download, refresh unitsync and remove file from list
+      {
+        notify_message= _T("N-|")  + seed_requests_l.Get().from[StrippedName] + _T("\n"); ///notify the system we don't need the file anymore
+        open_torrents_l.Get().erase(open_torrent_i);
+        do_reload_unitsync=true;
+        do_remove_torrent=true;
+      }else
+      if ( seed_requests_l.Get().to.find( StrippedName ) == seed_requests_l.Get().to.end() )/// if torrent not in request list but still seeding then remove
+      {
+        do_remove_torrent=true;
+        if(is_ok)open_torrents_l.Get().erase(open_torrent_i);
+      }
     }
-    if ( seed_requests_l.Get().to.find( StrippedName ) == seed_requests_l.Get().to.end() )/// if torrent not in request list but still seeding then remove
-    {
-      m_torr->remove_torrent( *i );
-      open_torrents_l.Get().erase(open_torrents_l.Get().find( StrippedName ));
-    }
+    if(do_remove_torrent)m_torr->remove_torrent( *i );
+    if(!notify_message.empty())m_socket_class->Send(notify_message);
   }
+
+  if(do_reload_unitsync)usync()->ReloadUnitSyncLib();
 }
 
 
@@ -465,8 +493,11 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     newtorrent.name = data[2];
     if ( data[3] == _T("MAP") ) newtorrent.type = map;
     else if ( data[3] == _T("MOD") ) newtorrent.type = mod;
+
+    {/// threads rule 3
       ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
-    torrent_infos_l.Get()[data[1]] = newtorrent;
+      torrent_infos_l.Get()[data[1]] = newtorrent;
+    }
     m_socket_class->Send(  _T("IH|") + data[1] + _T("\n") );
   // T-|hash 	 informs client that torrent was removed from server
   } else if ( data[0] == _T("T-") ) {
@@ -474,9 +505,11 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     torrent_infos_l.Get().erase(data[1]);
   // S+|hash|seeders|leechers 	 tells client that seed is needed for this torrent
   } else if ( data[0] == _T("S+") ) {
-    ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
-    ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
-    seed_requests_l.Get().from[(torrent_infos_l.Get()[data[1]].name)] = data[1];
+    {
+      ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
+      ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
+      seed_requests_l.Get().from[(torrent_infos_l.Get()[data[1]].name)] = data[1];
+    }
     unsigned long seeders;
     unsigned long leechers;
     data[2].ToULong(&seeders);
@@ -491,9 +524,13 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
     for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
     {
-      ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
-      wxString StrippedName = WX_STRING(i->name()).BeforeFirst( _T('|') );
-      if ( (seed_requests_l.Get().from[StrippedName]) == data[1] )
+      bool do_add_seed;/// threads rule 4
+      {/// threads rule 1,5,6
+        ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
+        wxString StrippedName = WX_STRING(i->name()).BeforeFirst( _T('|') );
+        do_add_seed=(seed_requests_l.Get().from[StrippedName]) == data[1];
+      }
+      if ( do_add_seed )
       {
         i->add_url_seed( STD_STRING( data[2] ) );
         return;
@@ -514,12 +551,16 @@ void TorrentWrapper::OnConnected( Socket* sock )
 {
   wxLogMessage(_T("torrent system connected") );
   m_connected = true;
+
+  /// threads rule 8 plus here we want to lock it all so that other thread wont get inconsistent data
+  ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
   ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
   ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
-  ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
+
+  torrent_infos_l.Get().clear();
   seed_requests_l.Get().clear();
   open_torrents_l.Get().clear();
-  torrent_infos_l.Get().clear();
+
   m_seed_count = 0;
   m_leech_count = 0;
 }
@@ -531,12 +572,18 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++) m_torr->remove_torrent(*i); ///remove all torrents upon disconnect
   m_connected = false;
+
+
+  /// threads rule 8 plus here we want to lock it all so that other thread wont get inconsistent data
+  ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
   ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
   ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
-  ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
+
+  torrent_infos_l.Get().clear();
   seed_requests_l.Get().clear();
   open_torrents_l.Get().clear();
-  torrent_infos_l.Get().clear();
+
+
   m_seed_count = 0;
   m_leech_count = 0;
 }
