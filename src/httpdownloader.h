@@ -7,6 +7,11 @@ class wxProgressDialog;
 class UpdateProgressbar;
 class wxCommandEvent;
 
+BEGIN_DECLARE_EVENT_TYPES()
+    DECLARE_EVENT_TYPE(httpDownloadEvt, value)
+END_DECLARE_EVENT_TYPES()
+
+
 class HttpDownloader : public wxEvtHandler
 {
   public:
@@ -16,6 +21,7 @@ class HttpDownloader : public wxEvtHandler
 
   protected:
     UpdateProgressbar* m_thread_updater;
+
 
     DECLARE_EVENT_TABLE()
 };

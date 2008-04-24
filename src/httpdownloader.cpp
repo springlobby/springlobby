@@ -18,10 +18,13 @@
 #include "utils.h"
 #include "settings++/custom_dialogs.h"
 
+
+DEFINE_EVENT_TYPE(httpDownloadEvt)
+
 BEGIN_EVENT_TABLE(HttpDownloader, wxEvtHandler)
 
     //EVT_TIMER(TIMER_ID, SpringLobbyApp::OnTimer)
-    EVT_COMMAND(1234, 1234, HttpDownloader::OnComplete)
+    EVT_COMMAND(wxID_ANY, httpDownloadEvt, HttpDownloader::OnComplete)
 
 END_EVENT_TABLE()
 
@@ -73,7 +76,7 @@ void* UpdateProgressbar::Entry()
     FileDownloading.SetTimeout(10);
     FileDownloading.Connect( m_fileurl.BeforeFirst(_T('/')), 80);
     wxInputStream* m_httpstream = FileDownloading.GetInputStream( _T("/") + m_fileurl.AfterFirst(_T('/')) );
-    wxCommandEvent notice(1234,1234);
+    wxCommandEvent notice(httpDownloadEvt,1234);
     if ( m_httpstream )
     {
         try
