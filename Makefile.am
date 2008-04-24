@@ -97,6 +97,7 @@ springlobby_SOURCES = \
 	src/images/upsel_down.xpm \
 	src/images/up_down.xpm \
 	src/images/player.xpm \
+	src/images/fixcolours_palette.xpm \
 	src/ibattle.cpp \
 	src/ibattle.h \
 	src/nonportable.h \

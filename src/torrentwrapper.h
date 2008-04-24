@@ -9,6 +9,7 @@
 #include <map>
 
 #include "inetclass.h"
+#include "mutexwrapper.h"
 
 #define DEFAULT_P2P_COORDINATOR_PORT 8202
 #define DEFAULT_P2P_TRACKER_PORT 8201
@@ -87,14 +88,18 @@ class TorrentWrapper : public iNetClass
 
     wxArrayString m_tracker_urls;
 
-    std::map<wxString,TorrentData> m_torrents_infos; /// shash -> torr infos
-    typedef std::map<wxString,TorrentData>::iterator TorrentsIter;
-    std::map<wxString,wxString> m_seed_requests; ///name -> hash
-    typedef std::map<wxString,wxString>::iterator SeedReqIter;
-    std::map<wxString,TorrentData> m_local_files; /// shash -> torrent data
-    typedef std::map<wxString,TorrentData>::iterator LocalFilesIter;
-    std::map<wxString,bool> m_open_torrents; /// name -> is seed
-    typedef std::map<wxString,bool>::iterator OpenIter;
+    typedef std::map<wxString,TorrentData> HashToTorrentData;/// shash -> torr data
+    MutexWrapper<HashToTorrentData> m_torrents_infos;
+
+    typedef std::map<wxString,wxString> SeedRequests;
+    MutexWrapper<SeedRequests> m_seed_requests; ///name -> hash
+
+    MutexWrapper<HashToTorrentData> m_local_files; /// shash -> torrent data
+
+
+    typedef std::map<wxString,bool> OpenTorrents;
+    MutexWrapper<OpenTorrents> m_open_torrents; /// name -> is seed
+
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;

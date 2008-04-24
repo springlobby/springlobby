@@ -9,7 +9,7 @@ class iNetClass
   public:
 
     iNetClass(){}
-    ~iNetClass(){}
+    virtual ~iNetClass(){}
 
     virtual void OnConnected( Socket* sock ) = 0;
     virtual void OnDisconnected( Socket* sock ) = 0;

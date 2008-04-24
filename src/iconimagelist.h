@@ -85,8 +85,12 @@ class IconImageList : public wxImageList
     int ICON_ARM;
     int ICON_CORE;
 
+    //int ICON_FIXCOLOURS_PALETTE;
+
     int ICON_UNK_FLAG;
     int ICON_FLAGS_BASE;
+
+
 
     int ICON_EMPTY;
 

@@ -63,6 +63,7 @@
 #include "images/core.xpm"
 
 #include "images/colourbox.xpm"
+//#include "images/fixcolours_palette.xpm"
 
 #include "images/unknown_flag.xpm"
 
@@ -125,6 +126,8 @@ IconImageList::IconImageList() : wxImageList(16,16)
   SetColourIcon( 0, wxColour( 255,   0,   0 ) );
   SetColourIcon( 1, wxColour(   0, 255,   0 ) );
   SetColourIcon( 2, wxColour(   0,   0, 255 ) );
+
+  //ICON_FIXCOLOURS_PALETTE = Add( wxBitmap(fixcolours_palette_xpm) );
 
   ICON_UNK_FLAG = Add( wxBitmap(unknown_flag_xpm) );
 
