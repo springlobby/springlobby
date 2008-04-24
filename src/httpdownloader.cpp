@@ -19,27 +19,13 @@
 
 
 HttpDownloader::HttpDownloader( const wxString& FileUrl, const wxString& DestPath )
+    : m_thread_updater ( *this, FileUrl, DestPath )
 {
-
-    m_thread_updater ( *this, FileUrl, DestPath );
 }
 
 HttpDownloader::~HttpDownloader()
 {
-//    if (m_thread_updater !=0)
-//    {
-//        delete m_thread_updater;
-//        m_thread_updater = 0;
-//    }
-
 }
-
-void HttpDownloader::SetPointer(UpdateProgressbar* up)
-{
-    m_thread_updater = up;
-}
-
-
 
 UpdateProgressbar::UpdateProgressbar( HttpDownloader& CallingClass, const wxString& FileUrl, const wxString& DestPath ) :
         m_calling_class(CallingClass),
@@ -105,5 +91,4 @@ bool UpdateProgressbar::TestDestroy()
 void UpdateProgressbar::CloseThread()
 {
     m_destroy = true;
-    //m_calling_class.SetPointer(this);
 }

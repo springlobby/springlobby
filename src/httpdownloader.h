@@ -3,21 +3,7 @@
 
 class wxProgressDialog;
 class UpdateProgressbar;
-
-class HttpDownloader
-{
-  public:
-    HttpDownloader( const wxString& FileUrl, const wxString& DestPath );
-    ~HttpDownloader();
-    void OnComplete(wxCommandEvent& event);
-    void SetPointer(UpdateProgressbar* up);
-
-  protected:
-    UpdateProgressbar* m_thread_updater;
-
-
-
-};
+class HttpDownloader;
 
 class UpdateProgressbar : public wxThread
 {
@@ -35,5 +21,21 @@ class UpdateProgressbar : public wxThread
     wxString m_destpath;
     wxString m_fileurl;
 };
+
+class HttpDownloader
+{
+  public:
+    HttpDownloader( const wxString& FileUrl, const wxString& DestPath );
+    ~HttpDownloader();
+    void OnComplete(wxCommandEvent& event);
+
+  protected:
+    UpdateProgressbar m_thread_updater;
+
+
+
+};
+
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_HTTPDOWNLOADER
