@@ -7,9 +7,10 @@ template<class T>
 class MutexWrapper;
 
 class AbstractMutexWrapper{
-  virtual ~AbstractMutexWrapper()=0;
   virtual void Lock()=0;
   virtual void UnLock()=0;
+  public:
+    virtual ~AbstractMutexWrapper()=0;
 };
 
 template<class T>

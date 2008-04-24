@@ -7,6 +7,7 @@
 #include <wx/arrstr.h>
 
 #include <map>
+#include "bimap.h"
 
 #include "inetclass.h"
 #include "mutexwrapper.h"
@@ -91,7 +92,7 @@ class TorrentWrapper : public iNetClass
     typedef std::map<wxString,TorrentData> HashToTorrentData;/// shash -> torr data
     MutexWrapper<HashToTorrentData> m_torrents_infos;
 
-    typedef std::map<wxString,wxString> SeedRequests;
+    typedef codeproject::bimap<wxString,wxString> SeedRequests;
     MutexWrapper<SeedRequests> m_seed_requests; ///name -> hash
 
     MutexWrapper<HashToTorrentData> m_local_files; /// shash -> torrent data
