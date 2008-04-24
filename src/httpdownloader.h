@@ -1,11 +1,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_HTTPDOWNLOADER
 #define SPRINGLOBBY_HEADERGUARD_HTTPDOWNLOADER
 
-#include <wx/event.h>
-
 class wxProgressDialog;
 class UpdateProgressbar;
-
 
 class HttpDownloader
 {
@@ -13,6 +10,7 @@ class HttpDownloader
     HttpDownloader( const wxString& FileUrl, const wxString& DestPath );
     ~HttpDownloader();
     void OnComplete(wxCommandEvent& event);
+    void SetPointer(UpdateProgressbar* up);
 
   protected:
     UpdateProgressbar* m_thread_updater;

@@ -208,24 +208,4 @@ wxBitmap* charArr2wxBitmapAddText(const unsigned char * dest, int dest_size, con
 
 }
 
-DEFINE_EVENT_TYPE(httpDownloadEvt)
-
-BEGIN_EVENT_TABLE(SL_GlobalEvtHandler, wxEvtHandler)
-    EVT_COMMAND(wxID_ANY, httpDownloadEvt, SL_GlobalEvtHandler::OnHttpDownLoadComplete)
-END_EVENT_TABLE()
-
-SL_GlobalEvtHandler& SL_GlobalEvtHandler::GetSL_GlobalEvtHandler()
-{
-    static SL_GlobalEvtHandler slGlobalEvtHandler;
-    return slGlobalEvtHandler;
-}
-
-SL_GlobalEvtHandler::SL_GlobalEvtHandler()
-{
-}
-
-void SL_GlobalEvtHandler::OnHttpDownLoadComplete(wxCommandEvent& event)
-{
-    customMessageBoxNoModal(SL_MAIN_ICON,_("Download of File xyz complete"),_("Download complete") );
-}
 

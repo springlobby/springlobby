@@ -29,26 +29,5 @@ void BlendImage(wxImage& source, wxImage& dest,int img_dim);
 wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size);
 wxBitmap* charArr2wxBitmapAddText(const unsigned char * arg, int size, const unsigned char * text, int text_size, unsigned int img_dim);
 
-#include <wx/event.h>
-class wxCommandEvent;
-
-BEGIN_DECLARE_EVENT_TYPES()
-    DECLARE_EVENT_TYPE(httpDownloadEvt, 42)
-END_DECLARE_EVENT_TYPES()
-
-
-class SL_GlobalEvtHandler : public wxEvtHandler
-{
-
-    SL_GlobalEvtHandler();
-
-    DECLARE_EVENT_TABLE()
-
-    public:
-    static SL_GlobalEvtHandler& GetSL_GlobalEvtHandler();
-     void OnHttpDownLoadComplete(wxCommandEvent& event);
-
-};
-
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H
