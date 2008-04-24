@@ -16,17 +16,11 @@
 
 #include "httpdownloader.h"
 #include "utils.h"
+#include "uiutils.h"
 #include "settings++/custom_dialogs.h"
 
 
-DEFINE_EVENT_TYPE(httpDownloadEvt)
 
-BEGIN_EVENT_TABLE(HttpDownloader, wxEvtHandler)
-
-    //EVT_TIMER(TIMER_ID, SpringLobbyApp::OnTimer)
-    EVT_COMMAND(wxID_ANY, httpDownloadEvt, HttpDownloader::OnComplete)
-
-END_EVENT_TABLE()
 
 HttpDownloader::HttpDownloader( const wxString& FileUrl, const wxString& DestPath )
 {
@@ -44,10 +38,6 @@ HttpDownloader::~HttpDownloader()
 
 }
 
-void HttpDownloader::OnComplete(wxCommandEvent& event)
-{
-    customMessageBox(SL_MAIN_ICON,_("Download of File xyz complete"),_("Download complete") );
-}
 
 UpdateProgressbar::UpdateProgressbar( HttpDownloader& CallingClass, const wxString& FileUrl, const wxString& DestPath ) :
         m_calling_class(CallingClass),
@@ -86,7 +76,7 @@ void* UpdateProgressbar::Entry()
             outs.Close();
             delete m_httpstream;
             notice.SetString(_("Download of File xyz complete"));
-            int k = !m_calling_class.ProcessEvent(notice) ;
+            int k = SL_GlobalEvtHandler::GetSL_GlobalEvtHandler().ProcessEvent(notice) ;
             wxLogMessage (_T("fail?: ") + i2s(k)) ;
             //customMessageBox(SL_MAIN_ICON,_("Download of File xyz complete"),_("Download complete") );
         }

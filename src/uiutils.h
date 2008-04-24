@@ -8,6 +8,7 @@ class wxBitmap;
 
 #define bool2yn(b) ((b)?_("Yes"):_("No"))
 
+
 const int colour_values[][3] = { {240,210,0}, {128, 128, 128}, {0, 0, 128}, {0, 0, 255},
       {0, 128, 0}, {0, 255, 0}, {0, 128, 128}, {0, 255, 255}, {128, 0, 0}, {255, 0, 0},
       {128, 0, 128}, {255, 0, 255}, {128, 128, 0}, {255, 255, 0}, {192, 192, 192}, {0, 220, 250}
@@ -28,4 +29,26 @@ void BlendImage(wxImage& source, wxImage& dest,int img_dim);
 wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size);
 wxBitmap* charArr2wxBitmapAddText(const unsigned char * arg, int size, const unsigned char * text, int text_size, unsigned int img_dim);
 
-#endif // SPRINGLOBBY_HEADERGUARD_UIUTILS_H
+#include <wx/event.h>
+class wxCommandEvent;
+
+BEGIN_DECLARE_EVENT_TYPES()
+    DECLARE_EVENT_TYPE(httpDownloadEvt, 42)
+END_DECLARE_EVENT_TYPES()
+
+
+class SL_GlobalEvtHandler : public wxEvtHandler
+{
+
+    SL_GlobalEvtHandler();
+
+    DECLARE_EVENT_TABLE()
+
+    public:
+    static SL_GlobalEvtHandler& GetSL_GlobalEvtHandler();
+     void OnHttpDownLoadComplete(wxCommandEvent& event);
+
+};
+
+#endif
+// SPRINGLOBBY_HEADERGUARD_UIUTILS_H
