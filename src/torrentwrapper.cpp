@@ -128,7 +128,8 @@ bool TorrentWrapper::IsFileInSystem( const wxString& uhash )
 {
   unsigned long ulong;
   uhash.ToULong( &ulong );
-  return m_torrents_infos.find(u2s((int)ulong)) != m_torrents_infos.end();
+  ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
+  return torrents_infos_l.Get().find(u2s((int)ulong)) != torrents_infos_l.Get().end();
 }
 
 ////////////////////////////////////////////////////////
@@ -139,7 +140,10 @@ bool TorrentWrapper::IsFileInSystem( const wxString& uhash )
 void TorrentWrapper::ReloadLocalFileList()
 {
   if (ingame) return;
-  m_local_files.clear();
+  {
+    ScopedLocker<HashToTorrentData> local_files_l(m_local_files);
+    local_files_l.Get().clear();
+  }
   for ( int i =0; i < usync()->GetNumMaps(); i++ )
   {
     UnitSyncMap mapinfo = usync()->GetMap( i );
@@ -149,7 +153,10 @@ void TorrentWrapper::ReloadLocalFileList()
     mapinfo.hash.ToULong(&uhash);
     info.hash = wxString::Format( _T("%d"), (int)uhash );
     info.name = mapinfo.name;
-    m_local_files[info.hash] = info;
+    {
+      ScopedLocker<HashToTorrentData> local_files_l(m_local_files);
+      local_files_l.Get()[info.hash] = info;
+    }
   }
   for ( int i =0; i < usync()->GetNumMods(); i++ )
   {
@@ -160,7 +167,10 @@ void TorrentWrapper::ReloadLocalFileList()
     modinfo.hash.ToULong(&uhash);
     info.hash = wxString::Format( _T("%d"), (int)uhash );
     info.name = modinfo.name;
-    m_local_files[info.hash] = info;
+    {
+      ScopedLocker<HashToTorrentData> local_files_l(m_local_files);
+      local_files_l.Get()[info.hash] = info;
+    }
   }
 }
 
@@ -172,12 +182,24 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
   unsigned long hash;
   uhash.ToULong( &hash );
   int singedver = (int)hash;
-  wxString shash = wxString::Format( _T("%d"), (int)hash );
-  if ( m_torrents_infos[shash].hash.IsEmpty() ) return false; /// the file is not present in the system
+  wxString shash = i2s(singedver);//wxString::Format( _T("%d"), (int)hash );
+
+  wxString name;
+  {
+    ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
+    HashToTorrentData::iterator it=torrents_infos_l.Get().find(shash);
+    if (it==torrents_infos_l.Get().end()) return false;
+    if ( it->second.hash.IsEmpty() ) return false; /// the file is not present in the system
+    name=it->second.name;
+  }
+
   if ( !JoinTorrent( shash ) ) return false;
   m_socket_class->Send( wxString::Format( _T("N+|%d\n"), (int)hash ) ); /// request for seeders for the file
   m_leech_count++;
-  m_open_torrents[m_torrents_infos[shash].name] = false; /// not seeding when just joined
+  {
+    ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
+    open_torrents_l.Get()[name] = false; /// not seeding when just joined
+  }
   return true;
 }
 
@@ -230,7 +252,11 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     CurrentTorrent.inspeed = i->status().total_payload_download;
     CurrentTorrent.outspeed = i->status().total_payload_upload;
     CurrentTorrent.numcopies = i->status().distributed_copies;
-    CurrentTorrent.filehash = s2l(m_torrents_infos[CurrentTorrent.name].hash);
+    {
+      ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
+      CurrentTorrent.filehash = s2l(torrents_infos_l.Get()[CurrentTorrent.name].hash);
+    }
+
     ret[CurrentTorrent.filehash] = CurrentTorrent;
   }
   return ret;
@@ -240,41 +266,49 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 bool TorrentWrapper::JoinTorrent( const wxString& hash )
 {
   if (ingame) return false;
-  if ( !m_torrents_infos[ hash ].hash.IsEmpty() )
+
+  MediaType type;
+  wxString torrent_name;
+  wxString torrent_infohash;
   {
-    m_socket_class->Send(  _T("IH|") + hash + _T("\n") ); /// request for infohash
-    wxString path = sett().GetSpringDir();
-    wxString name;
-    if ( m_torrents_infos[hash].type == map )
-    {
-      path = path + _T("/maps/");
-      name = m_torrents_infos[ hash ].name + _T("|MAP");
-    }
-    else
-    {
-      path = path + _T("/mods/");
-      name = m_torrents_infos[ hash ].name + _T("|MOD");
-    }
-    /*
-    if ( !wxFileName::IsFileReadable( sett().GetSpringDir() + _T("/torrents/") + hash ) ) /// file descriptor not present, download it
-    {
-       while (!DownloadTorrentFileFromTracker( hash ) );
-       {
-         m_connected_tracker_index++;
-         if ( m_connected_tracker_index > m_tracker_urls.Count() -1 ) return false;
-       }
-    }
-    /// read torrent from file
-    std::ifstream in( wxString( sett().GetSpringDir() + _T("/torrents/") + hash ).mb_str(), std::ios_base::binary);
-    in.unsetf(std::ios_base::skipws);
-    libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
-    libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent(libtorrent::torrent_info(e), boost::filesystem::path( STD_STRING( path ) ) );
-    */
-    libtorrent::sha1_hash infohash( STD_STRING( m_torrents_infos[hash].infohash ) );
-    libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent( m_tracker_urls[m_connected_tracker_index].mb_str(), infohash, name.mb_str(), boost::filesystem::path( STD_STRING( path ) ) );
-    return true;
+    ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
+    HashToTorrentData::iterator it=torrents_infos_l.Get().find(hash);
+    if(it==torrents_infos_l.Get().end())return false;
+    type=it->second.type;
+    torrent_name=it->second.name;
+    torrent_infohash=it->second.infohash;
   }
-  return false;
+  m_socket_class->Send(  _T("IH|") + hash + _T("\n") ); /// request for infohash
+  wxString path = sett().GetSpringDir();
+  wxString name;
+  if ( type == map )
+  {
+    path = path + _T("/maps/");
+    name = torrent_name + _T("|MAP");
+  }
+  else
+  {
+    path = path + _T("/mods/");
+    name = torrent_name + _T("|MOD");
+  }
+  /*
+  if ( !wxFileName::IsFileReadable( sett().GetSpringDir() + _T("/torrents/") + hash ) ) /// file descriptor not present, download it
+  {
+     while (!DownloadTorrentFileFromTracker( hash ) );
+     {
+       m_connected_tracker_index++;
+       if ( m_connected_tracker_index > m_tracker_urls.Count() -1 ) return false;
+     }
+  }
+  /// read torrent from file
+  std::ifstream in( wxString( sett().GetSpringDir() + _T("/torrents/") + hash ).mb_str(), std::ios_base::binary);
+  in.unsetf(std::ios_base::skipws);
+  libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
+  libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent(libtorrent::torrent_info(e), boost::filesystem::path( STD_STRING( path ) ) );
+  */
+  libtorrent::sha1_hash infohash( STD_STRING( torrent_infohash ) );
+  libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent( m_tracker_urls[m_connected_tracker_index].mb_str(), infohash, name.mb_str(), boost::filesystem::path( STD_STRING( path ) ) );
+  return true;
 }
 
 
@@ -368,11 +402,12 @@ void TorrentWrapper::FixTorrentList()
 {
   wxLogMessage(_T("torrent system doing maintenance") );
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
-  std::map<wxString,wxString> InvertedSeedRequests;
-  InvertedSeedRequests.swap(m_seed_requests);
+  //std::map<wxString,wxString> InvertedSeedRequests;
+  //InvertedSeedRequests.swap(m_seed_requests);
+
   m_seed_count = 0;
   m_leech_count = 0;
-  for ( SeedReqIter i = m_seed_requests.begin(); i != m_seed_requests.end(); i++ )
+  for ( SeedRequests::iterator i = m_seed_requests.begin(); i != m_seed_requests.end(); i++ )
   {
     if( m_seed_count > 9 ) break;
     if ( (m_open_torrents.find( i->first ) == m_open_torrents.end()) && (m_local_files.find(i->second) != m_local_files.end()) ) /// torrent is requested and present, but not joined yet
