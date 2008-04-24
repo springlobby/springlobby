@@ -1,16 +1,23 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_HTTPDOWNLOADER
 #define SPRINGLOBBY_HEADERGUARD_HTTPDOWNLOADER
 
+#include <wx/event.h>
+
 class wxProgressDialog;
 class UpdateProgressbar;
+class wxCommandEvent;
 
-class HttpDownloader
+class HttpDownloader : public wxEvtHandler
 {
   public:
     HttpDownloader( const wxString& FileUrl, const wxString& DestPath );
     ~HttpDownloader();
-  private:
+    void OnComplete(wxCommandEvent& event);
+
+  protected:
     UpdateProgressbar* m_thread_updater;
+
+    DECLARE_EVENT_TABLE()
 };
 
 class UpdateProgressbar : public wxThread

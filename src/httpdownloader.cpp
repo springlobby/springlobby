@@ -11,10 +11,19 @@
 #include <wx/zipstrm.h>
 #include <wx/sstream.h>
 #include <wx/wfstream.h>
+#include <wx/app.h>
+//#include
 
 #include "httpdownloader.h"
 #include "utils.h"
 #include "settings++/custom_dialogs.h"
+
+BEGIN_EVENT_TABLE(HttpDownloader, wxEvtHandler)
+
+    //EVT_TIMER(TIMER_ID, SpringLobbyApp::OnTimer)
+    EVT_COMMAND(1234, 1234, HttpDownloader::OnComplete)
+
+END_EVENT_TABLE()
 
 HttpDownloader::HttpDownloader( const wxString& FileUrl, const wxString& DestPath )
 {
@@ -30,6 +39,11 @@ HttpDownloader::~HttpDownloader()
         m_thread_updater = 0;
     }
 
+}
+
+void HttpDownloader::OnComplete(wxCommandEvent& event)
+{
+    customMessageBox(SL_MAIN_ICON,_("Download of File xyz complete"),_("Download complete") );
 }
 
 UpdateProgressbar::UpdateProgressbar( HttpDownloader& CallingClass, const wxString& FileUrl, const wxString& DestPath ) :
@@ -59,6 +73,7 @@ void* UpdateProgressbar::Entry()
     FileDownloading.SetTimeout(10);
     FileDownloading.Connect( m_fileurl.BeforeFirst(_T('/')), 80);
     wxInputStream* m_httpstream = FileDownloading.GetInputStream( _T("/") + m_fileurl.AfterFirst(_T('/')) );
+    wxCommandEvent notice(1234,1234);
     if ( m_httpstream )
     {
         try
@@ -67,11 +82,15 @@ void* UpdateProgressbar::Entry()
             m_httpstream->Read(outs);
             outs.Close();
             delete m_httpstream;
-//            customMessageBoxNoModal(SL_MAIN_ICON,_("Download of File xyz complete"),_("Download complete") );
+            notice.SetString(_("Download of File xyz complete"));
+            int k = !m_calling_class.ProcessEvent(notice) ;
+            wxLogMessage (_T("fail?: ") + i2s(k)) ;
+            //customMessageBox(SL_MAIN_ICON,_("Download of File xyz complete"),_("Download complete") );
         }
         catch (...)
         {
             wxLogMessage(_("download of _SOMEFILE_ failed"));
+
   //          customMessageBoxNoModal(SL_MAIN_ICON,_("Download of File xyz failed"),_("Download failed") );
         }
     }

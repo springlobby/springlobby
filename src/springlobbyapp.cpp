@@ -113,8 +113,8 @@ bool SpringLobbyApp::OnInit()
   } else {
     m_ui->Connect();
   }
-
-      wxString url = _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
+    wxString url= _T("version.springlobby.info/latest.txt");
+//      wxString url = _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
     wxString destFilename = _T("/tmp/h.txt");
     if ( customMessageBox(SL_MAIN_ICON, _("message describing ota content"),_("TITLE"),wxYES_NO) == wxYES
         && true ) // ! destFile.exists )
