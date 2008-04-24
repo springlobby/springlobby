@@ -22,6 +22,7 @@
 #include "iunitsync.h"
 #include "channel.h"
 #include "httpdownloader.h"
+#include "settings++/custom_dialogs.h"
 
 #define TIMER_ID 101
 #define TIMER_INTERVAL 100
@@ -103,15 +104,25 @@ bool SpringLobbyApp::OnInit()
     wxMessageBox(_("You're using a wxwidgets library of the 2.6.x series\n battle filtering, advanced gui and joining/hosting games using nat traversal\n won't be available"), _("Missing Functionality"), wxICON_INFORMATION, &m_ui->mw() );
     #endif
     SetupUserFolders();
+//    wxString url("version.springlobby.info/latest.txt");
+//    wxString destFilename ("/tmp/h.txt");
+//    if ( customMessageBox(SL_MAIN_ICON, _("message describing ota content"),_("TITLE")) == wxYES
+//        && true ) // ! destFile.exists )
+//        HttpDownloader* ht = new HttpDownloader( url, destFilename );
     m_ui->mw().ShowConfigure();
   } else {
     m_ui->Connect();
   }
 
-  //m_ui->ReloadUnitSync();
+      wxString url = _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
+    wxString destFilename = _T("/tmp/h.txt");
+    if ( customMessageBox(SL_MAIN_ICON, _("message describing ota content"),_("TITLE"),wxYES_NO) == wxYES
+        && true ) // ! destFile.exists )
+        m_otadownloader = new HttpDownloader( url, destFilename );
+
 
   m_timer->Start( TIMER_INTERVAL );
-HttpDownloader* ht = new HttpDownloader(_T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip"), _T("/tmp"));
+
   return true;
 }
 
@@ -120,6 +131,9 @@ HttpDownloader* ht = new HttpDownloader(_T("ipxserver.dyndns.org/games/spring/mo
 int SpringLobbyApp::OnExit()
 {
   wxLogDebugFunc( _T("") );
+
+  if ( m_otadownloader != 0 )
+    delete m_otadownloader ;
 
   m_timer->Stop();
   delete m_ui;

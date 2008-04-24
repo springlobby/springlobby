@@ -7,7 +7,7 @@ class UpdateProgressbar;
 class HttpDownloader
 {
   public:
-    HttpDownloader( const wxString& FileUrl, const wxString& DestPath, bool deflatezipstream = true );
+    HttpDownloader( const wxString& FileUrl, const wxString& DestPath );
     ~HttpDownloader();
   private:
     UpdateProgressbar* m_thread_updater;
@@ -16,7 +16,7 @@ class HttpDownloader
 class UpdateProgressbar : public wxThread
 {
   public:
-    UpdateProgressbar( HttpDownloader& CallingClass, const wxString& FileUrl, const wxString& DestPath, bool deflatezipstream = true );
+    UpdateProgressbar( HttpDownloader& CallingClass, const wxString& FileUrl, const wxString& DestPath );
     ~UpdateProgressbar();
     void Init();
     void* Entry();
@@ -26,15 +26,8 @@ class UpdateProgressbar : public wxThread
     HttpDownloader& m_calling_class;
     bool m_destroy;
 
-    void DeflateFiles();
-
-    wxProgressDialog* m_dialog;
-    size_t m_file_size;
-    std::string m_stringbuffer;
     wxString m_destpath;
-    wxInputStream* m_httpstream;
     wxString m_fileurl;
-    unsigned int m_progress;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_HTTPDOWNLOADER
