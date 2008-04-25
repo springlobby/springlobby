@@ -502,13 +502,21 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
   // T-|hash 	 informs client that torrent was removed from server
   } else if ( data[0] == _T("T-") ) {
     ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
-    torrent_infos_l.Get().erase(data[1]);
+    HashToTorrentData::iterator itor = torrent_infos_l.Get().find(data[1]);
+    if( itor == torrent_infos_l.Get().end() ) return;
+    torrent_infos_l.Get().erase( itor );
   // S+|hash|seeders|leechers 	 tells client that seed is needed for this torrent
   } else if ( data[0] == _T("S+") ) {
+    wxString name;
     {
       ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
+      HashToTorrentData::iterator itor = torrent_infos_l.Get().find(data[1]);
+      if ( itor == torrent_infos_l.Get().end() ) return;
+      name =  itor->second.name;
+    }
+    {
       ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
-      seed_requests_l.Get().from[(torrent_infos_l.Get()[data[1]].name)] = data[1];
+      seed_requests_l.Get().from[name] = data[1];
     }
     unsigned long seeders;
     unsigned long leechers;
@@ -516,9 +524,19 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     data[3].ToULong(&leechers);
   // S-|hash 	 tells client that seed is no longer neede for this torrent
   } else if ( data[0] == _T("S-") ) {
-    ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
-    ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
-    seed_requests_l.Get().from.erase(torrent_infos_l.Get()[data[1]].name);
+    wxString name;
+    {
+      ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
+      HashToTorrentData::iterator itor = torrent_infos_l.Get().find(data[1]);
+      if ( itor == torrent_infos_l.Get().end() ) return;
+      name =  itor->second.name;
+    }
+    {
+      ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
+      SeedRequests::iterator iter = seed_requests_l.Get().find(name);
+      if ( iter == seed_requests_l.Get().end() ) return;
+      seed_requests_l.Get().from.erase(iter);
+    }
   // M+|hash|url 	 It tells the client if url is given that http mirror exists for given hash, else there are no mirrors.
   } else if ( data[0] == _T("M+") ) {
     std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
@@ -526,9 +544,11 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     {
       bool do_add_seed;/// threads rule 4
       {/// threads rule 1,5,6
-        ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
         wxString StrippedName = WX_STRING(i->name()).BeforeFirst( _T('|') );
-        do_add_seed=(seed_requests_l.Get().from[StrippedName]) == data[1];
+        ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
+        SeedRequests::iterator itor = seed_requests_l.Get().from.find(StrippedName);
+        if ( itor == seed_requests_l.Get().end() ) continue;
+        do_add_seed=(itor->second == data[1]);
       }
       if ( do_add_seed )
       {
@@ -542,7 +562,9 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
   //IH|hash|infohash infos the client about torrent's infohash b64 encoded
   } else if ( data[0] == _T("IH") ) {
     ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
-    torrent_infos_l.Get()[data[1]].infohash = data[2];
+    HashToTorrentData::iterator itor = torrent_infos_l.Get().find(data[1]);
+    if ( itor == torrent_infos_l.Get().end() ) return;
+    itor->second.infohash = data[2];
   }
 }
 
