@@ -230,7 +230,7 @@ void TorrentWrapper::UpdateFromTimer( int mselapsed )
   m_timer_count++;
   if ( m_timer_count < 20 ) return;////update every 2 sec
   m_timer_count = 0;
-  if (!ingame) FixTorrentList();
+  if (!ingame && m_connected) FixTorrentList();
 }
 
 
