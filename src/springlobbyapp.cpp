@@ -12,6 +12,7 @@
 #include <wx/choicdlg.h>
 #include <wx/filename.h>
 #include <wx/dirdlg.h>
+#include <wx/file.h>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -103,23 +104,30 @@ bool SpringLobbyApp::OnInit()
     #ifdef HAVE_WX26
     wxMessageBox(_("You're using a wxwidgets library of the 2.6.x series\n battle filtering, advanced gui and joining/hosting games using nat traversal\n won't be available"), _("Missing Functionality"), wxICON_INFORMATION, &m_ui->mw() );
     #endif
+
     SetupUserFolders();
-//    wxString url("version.springlobby.info/latest.txt");
-//    wxString destFilename ("/tmp/h.txt");
-//    if ( customMessageBox(SL_MAIN_ICON, _("message describing ota content"),_("TITLE")) == wxYES
-//        && true ) // ! destFile.exists )
-//        HttpDownloader* ht = new HttpDownloader( url, destFilename );
+
+     #ifdef __WXGTK__
+
+
+     #endif
+
     m_ui->mw().ShowConfigure();
   } else {
     m_ui->Connect();
   }
-    wxString url= _T("version.springlobby.info/latest.txt");
-//      wxString url = _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
-    wxString destFilename = _T("/tmp/h.txt");
-    if ( customMessageBox(SL_MAIN_ICON, _("message describing ota content"),_("TITLE"),wxYES_NO) == wxYES
-        && true ) // ! destFile.exists )
-        m_otadownloader = new HttpDownloader( url, destFilename );
 
+  /******** should go above **/
+    wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
+    wxString destFilename = sett().GetSpringDir()+_T("base/base-ota-content.zip");
+
+    wxFile destFile (destFilename);
+    if ( !wxFile::Exists(destFilename) &&
+            customMessageBox(SL_MAIN_ICON, _("message describing ota content"),_("Download OTA content?"),wxYES_NO) == wxYES )
+    {
+        m_otadownloader = new HttpDownloader( url, destFilename );
+    }
+/******/
 
   m_timer->Start( TIMER_INTERVAL );
 
