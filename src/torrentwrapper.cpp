@@ -9,6 +9,7 @@
 #include "settings.h"
 #include "utils.h"
 #include "socket.h"
+#include "base64.h"
 
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>
@@ -282,7 +283,6 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
     torrent_name=it->second.name;
     torrent_infohash=it->second.infohash;
   }
-  m_socket_class->Send(  _T("IH|") + hash + _T("\n") ); /// request for infohash
   wxString path = sett().GetSpringDir();
   wxString name;
   if ( type == map )
@@ -310,8 +310,8 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
   libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
   libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent(libtorrent::torrent_info(e), boost::filesystem::path( STD_STRING( path ) ) );
   */
-  libtorrent::sha1_hash infohash( STD_STRING( torrent_infohash ) );
-  libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent( m_tracker_urls[m_connected_tracker_index].mb_str(), infohash, name.mb_str(), boost::filesystem::path( STD_STRING( path ) ) );
+  libtorrent::sha1_hash infohash( base64_decode(STD_STRING( torrent_infohash )) );
+  m_torr->add_torrent( m_tracker_urls[m_connected_tracker_index].mb_str(), infohash, name.mb_str(), boost::filesystem::path( STD_STRING( path ) ) );
   return true;
 }
 
@@ -359,11 +359,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
       newtorrent.set_comment( wxString( name + _T("|MOD") ).mb_str() );
   }
 
-  libtorrent::entry e = newtorrent.create_torrent();
-
-  /// write the torrent to a file
-  std::ofstream TorrentFile( wxString( sett().GetSpringDir() +  _T("/torrents/") + hash ).mb_str(), std::ios_base::binary );
-  bencode(std::ostream_iterator<char>(TorrentFile), e);
+  newtorrent.create_torrent(); /// creates the torrent and publishes on the tracker
 }
 
 
@@ -513,6 +509,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     torrent_infos_l.Get().erase( itor );
   // S+|hash|seeders|leechers 	 tells client that seed is needed for this torrent
   } else if ( data[0] == _T("S+") ) {
+    return;
     wxString name;
     {
       ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
@@ -558,7 +555,8 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
       }
       if ( do_add_seed )
       {
-        i->add_url_seed( STD_STRING( data[2] ) );
+        for( unsigned int index = 2; index < data.GetCount(); index++ )
+          i->add_url_seed( STD_STRING( data[index] ) );
         return;
       }
     }
