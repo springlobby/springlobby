@@ -8,6 +8,9 @@ AC_INIT([SpringLobby], [0.0.1-svn], [FIXME_our_bugs_email_address])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/springlobbyapp.cpp])
 AC_CONFIG_AUX_DIR([autotools-aux])
+PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13)
+AC_SUBST(LIBTORRENT_CFLAGS)
+AC_SUBST(LIBTORRENT_LIBS)
 dnl if you have too old automake, delete the version number from below AND edit Makefile.am
 dnl we use filter-out GNU make extension in Makefile.am so we can't use -Werror below
 dnl we can't use -Wall either because we don't want to see the filter-out warning
