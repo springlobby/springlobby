@@ -81,6 +81,7 @@ class TorrentWrapper : public iNetClass
     void OnDataReceived( Socket* sock );
 
     bool m_connected;
+    wxString m_buffer;
 
     bool ingame;
     unsigned int m_seed_count;

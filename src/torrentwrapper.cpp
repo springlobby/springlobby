@@ -622,7 +622,21 @@ void TorrentWrapper::OnDataReceived( Socket* sock )
   if ( sock == 0 ) return;
 
   wxString data;
-  if ( sock->Receive( data ) ) ReceiveandExecute( data );
+
+
+  do {
+
+    data = _T("");
+    if ( sock->Receive( data ) ) {
+      m_buffer += data;
+      wxString cmd;
+      if ( ( cmd = m_buffer.BeforeFirst( '\n' ) ) != _T("") )
+      {
+        m_buffer = m_buffer.AfterFirst( '\n' );
+        ReceiveandExecute( cmd );
+      }
+    }
+  } while ( !data.IsEmpty() );
 }
 
 #endif
