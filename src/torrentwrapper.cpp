@@ -181,6 +181,8 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
 {
   if (ingame) return false;
   if ( !m_connected ) return false;
+  if ( m_leech_count > 4 ) return false;
+
   unsigned long hash;
   uhash.ToULong( &hash );
   int singedver = (int)hash;
@@ -469,7 +471,11 @@ void TorrentWrapper::FixTorrentList()
         if(is_ok)open_torrents_l.Get().erase(open_torrent_i);
       }
     }
-    if(do_remove_torrent)m_torr->remove_torrent( *i );
+    if(do_remove_torrent)
+    {
+      m_torr->remove_torrent( *i );
+      m_leech_count--;
+    }
     if(!notify_message.empty())m_socket_class->Send(notify_message);
   }
 
