@@ -34,14 +34,14 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
 
     wxBoxSizer* up_siter = new wxBoxSizer( wxHORIZONTAL );
     m_maxUp = new wxTextCtrl( this, ID_MAXUP, i2s( sett().GetTorrentUploadRate() ) );
-    wxStaticText* m_maxUp_lbl = new wxStaticText( this, wxID_ANY, _("maximum upload ") );
+    wxStaticText* m_maxUp_lbl = new wxStaticText( this, wxID_ANY, _("maximum upload speed in KB/sec(-1 for infinite)") );
     up_siter->Add( m_maxUp, 0, wxALL, 5 );
     up_siter->Add( m_maxUp_lbl, 0, wxALL, 5 );
     mainboxsizer->Add( up_siter, 0, wxALL, 5 );
 
     wxBoxSizer* down_siter = new wxBoxSizer( wxHORIZONTAL );
     m_maxDown = new wxTextCtrl( this, ID_MAXDOWN, i2s( sett().GetTorrentDownloadRate() ) );
-    wxStaticText* m_maxDown_lbl = new wxStaticText( this, wxID_ANY, _("maximum download") );
+    wxStaticText* m_maxDown_lbl = new wxStaticText( this, wxID_ANY, _("maximum download speed in KB/sec (-1 for infinite)") );
     down_siter->Add( m_maxDown, 0, wxALL, 5 );
     down_siter->Add( m_maxDown_lbl, 0, wxALL, 5 );
     mainboxsizer->Add( down_siter, 0, wxALL, 5 );
