@@ -61,15 +61,15 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 
   col.SetText( _T("Name") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 0, col, _T("Name"), false );
+  InsertColumn( 0, col, _T("Name"), true );
 
   col.SetText( _T("numcopies") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 1, col, _T("complete numcopies"), false);
+  InsertColumn( 1, col, _T("complete numcopies"), true);
 
   col.SetText( _T("MB downloaded") );
   col.SetImage(  icons().ICON_NONE);
-  InsertColumn( 2, col, _T("MB downloaded"), false );
+  InsertColumn( 2, col, _T("MB downloaded"), true );
 
   col.SetText( _("MB uploaded") );
   col.SetImage( icons().ICON_NONE );
@@ -89,11 +89,11 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 
   col.SetText( _("KB/s down") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 7, col, _T("KB/s download"), false );
+  InsertColumn( 7, col, _T("KB/s download"), true );
 
   col.SetText( _("ETA") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 8, col, _T("Estimated time of arrival"), false );
+  InsertColumn( 8, col, _T("Estimated time of arrival"), true );
 
 
 
