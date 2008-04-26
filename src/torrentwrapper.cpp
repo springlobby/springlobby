@@ -114,8 +114,8 @@ bool TorrentWrapper::IsConnectedToP2PSystem()
 
 void TorrentWrapper::UpdateSettings()
 {
-  m_torr->set_upload_rate_limit(sett().GetTorrentUploadRate());
-  m_torr->set_download_rate_limit(sett().GetTorrentDownloadRate());
+  m_torr->set_upload_rate_limit(sett().GetTorrentUploadRate() * 1024);
+  m_torr->set_download_rate_limit(sett().GetTorrentDownloadRate() *1024 );
   m_torr->set_max_connections(sett().GetTorrentMaxConnections());
   try
   {
