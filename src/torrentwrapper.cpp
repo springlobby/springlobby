@@ -493,8 +493,9 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
   {
       data.Add( tkz.GetNextToken() ); /// fill the array with the message
   }
+  if ( data.GetCount() == 0 ) return;
   // T+|hash|name|type 	 informs client that new torrent was added to server (type is either MOD or MAP)
-  if ( data[0] == _T("T+") ) {
+  else if ( data[0] == _T("T+") && data.GetCount() > 3 ) {
     TorrentData newtorrent;
     newtorrent.hash = data[1];
     newtorrent.name = data[2];
@@ -507,13 +508,13 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     }
     m_socket_class->Send(  _T("IH|") + data[1] + _T("\n") );
   // T-|hash 	 informs client that torrent was removed from server
-  } else if ( data[0] == _T("T-") ) {
+  } else if ( data[0] == _T("T-") && data.GetCount() > 1 ) {
     ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
     HashToTorrentData::iterator itor = torrent_infos_l.Get().find(data[1]);
     if( itor == torrent_infos_l.Get().end() ) return;
     torrent_infos_l.Get().erase( itor );
   // S+|hash|seeders|leechers 	 tells client that seed is needed for this torrent
-  } else if ( data[0] == _T("S+") ) {
+  } else if ( data[0] == _T("S+") && data.GetCount() > 3 ) {
     wxString name;
     {
       ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
@@ -530,7 +531,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     data[2].ToULong(&seeders);
     data[3].ToULong(&leechers);
   // S-|hash 	 tells client that seed is no longer neede for this torrent
-  } else if ( data[0] == _T("S-") ) {
+  } else if ( data[0] == _T("S-") && data.GetCount() > 1 ) {
     wxString name;
     {
       ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
@@ -545,7 +546,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
       seed_requests_l.Get().from.erase(iter);
     }
   // M+|hash|url 	 It tells the client if url is given that http mirror exists for given hash, else there are no mirrors.
-  } else if ( data[0] == _T("M+") ) {
+  } else if ( data[0] == _T("M+") && data.GetCount() > 2 ) {
     std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
     for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
     {
@@ -568,7 +569,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
   } else if ( data[0] == _T("PING") ) {
     m_socket_class->Send( _T("PING\n") );
   //IH|hash|infohash infos the client about torrent's infohash b64 encoded
-  } else if ( data[0] == _T("IH") ) {
+  } else if ( data[0] == _T("IH") && data.GetCount() == 3 ) {
     ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
     HashToTorrentData::iterator itor = torrent_infos_l.Get().find(data[1]);
     if ( itor == torrent_infos_l.Get().end() ) return;
