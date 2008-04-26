@@ -109,20 +109,12 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 //  m_sortorder[3].direction = true;
   Sort( );
 
-#ifdef __WXMSW__
   SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 7, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 8, wxLIST_AUTOSIZE_USEHEADER );
-#else
-  SetColumnWidth( 0, 20 );
-  SetColumnWidth( 1, 20 );
-  SetColumnWidth( 2, 20 );
 
-  SetColumnWidth( 7, 28 ); // alittle more than before for dual digets
-  SetColumnWidth( 8, 28 );
-#endif
 
   SetColumnWidth( 3, 170 );
   SetColumnWidth( 4, 140 );

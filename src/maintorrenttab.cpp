@@ -128,10 +128,11 @@ void MainTorrentTab::AddTorrentInfo( const TorrentInfos& info )
 
 void MainTorrentTab::OnUpdate()
 {
+    m_torrent_list->DeleteAllItems();
     info_map = torrent()->CollectGuiInfos();
     for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
     {
-        UpdateInfo(iter->second);
+        AddTorrentInfo(iter->second);
 
     }
 }
