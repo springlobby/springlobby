@@ -245,6 +245,11 @@ void TorrentWrapper::UpdateFromTimer( int mselapsed )
 std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 {
   std::map<int,TorrentInfos> ret;
+  TorrentInfos globalinfos;
+  globalinfos.outspeed = m_torr->status().upload_rate;
+  globalinfos.inspeed = m_torr->status().download_rate;
+  ret[0] = globalinfos;
+  if ( ingame || !m_connected ) return ret; /// stop updating the gui if disconneted
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
   {
@@ -509,7 +514,6 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     torrent_infos_l.Get().erase( itor );
   // S+|hash|seeders|leechers 	 tells client that seed is needed for this torrent
   } else if ( data[0] == _T("S+") ) {
-    return;
     wxString name;
     {
       ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);

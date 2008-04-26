@@ -128,11 +128,14 @@ void MainTorrentTab::AddTorrentInfo( const TorrentInfos& info )
 
 void MainTorrentTab::OnUpdate()
 {
-    m_torrent_list->DeleteAllItems();
     info_map = torrent()->CollectGuiInfos();
+    m_outgoing_lbl->SetLabel( _("Total Outgoing: ") + u2s(info_map[0].outspeed/1024) );
+    m_incoming_lbl->SetLabel( _("Total Incoming: ") + u2s(info_map[0].inspeed/1024) );
+    m_torrent_list->DeleteAllItems();
     for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
     {
-        AddTorrentInfo(iter->second);
+      if (iter->first == 0) continue; ///skip global torrent stats
+      AddTorrentInfo(iter->second);
 
     }
 }
