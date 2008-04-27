@@ -100,7 +100,7 @@ void MainTorrentTab::SetInfo(int index, const TorrentInfos& info )
 
  int eta_seconds = -1;
  if ( info.progress > 0 && info.inspeed > 0)
-    eta_seconds = int ( ( info.downloaded*mfactor / info.progress ) / ( info.inspeed * kfactor) );
+    eta_seconds = int (  (info.filesize - info.downloaded ) * 1024 / info.inspeed * kfactor  );
 
  // m_torrent_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
   m_torrent_list->SetItem( index, 0, info.name );
