@@ -191,12 +191,6 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
   int singedver = (int)hash;
   wxString shash = i2s(singedver);//wxString::Format( _T("%d"), (int)hash );
 
-  {
-    ScopedLocker<HashToTorrentData> local_files_l(m_local_files);
-    HashToTorrentData::iterator iter = local_files_l.Get().find(shash);
-    if ( iter != local_files_l.Get().end() ) return true; /// we already have the file
-  }
-
   wxString name;
   {
     ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
@@ -274,8 +268,8 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     CurrentTorrent.progress = i->status().progress;
     CurrentTorrent.downloaded = i->status().total_payload_download;
     CurrentTorrent.uploaded = i->status().total_payload_upload;
-    CurrentTorrent.inspeed = i->status().total_payload_download;
-    CurrentTorrent.outspeed = i->status().total_payload_upload;
+    CurrentTorrent.inspeed = i->status().download_payload_rate;;
+    CurrentTorrent.outspeed = i->status().upload_payload_rate;;
     CurrentTorrent.numcopies = i->status().distributed_copies;
     CurrentTorrent.filesize = i->get_torrent_info().total_size();
     {
