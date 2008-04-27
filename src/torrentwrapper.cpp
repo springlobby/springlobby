@@ -277,7 +277,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     CurrentTorrent.inspeed = i->status().total_payload_download;
     CurrentTorrent.outspeed = i->status().total_payload_upload;
     CurrentTorrent.numcopies = i->status().distributed_copies;
-    CurrentTorrent.filesize = i->get_torrent_info().total_size()
+    CurrentTorrent.filesize = i->get_torrent_info().total_size();
     {
       ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
       TorrentHandleToHash::iterator itor = torrent_handles_l.Get().from.find(*i);
