@@ -191,12 +191,6 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
   int singedver = (int)hash;
   wxString shash = i2s(singedver);//wxString::Format( _T("%d"), (int)hash );
 
-  {
-    ScopedLocker<HashToTorrentData> local_files_l(m_local_files);
-    HashToTorrentData::iterator iter = local_files_l.Get().find(shash);
-    if ( iter != local_files_l.Get().end() ) return true; /// we already have the file
-  }
-
   wxString name;
   {
     ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
