@@ -35,6 +35,7 @@
 #include <wx/filename.h>
 #include <wx/file.h>
 #include <wx/sstream.h>
+#include <wx/msgdlg.h>
 
 #include "torrentwrapper.h"
 
@@ -315,7 +316,10 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
   libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
   libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent(libtorrent::torrent_info(e), boost::filesystem::path( STD_STRING( path ) ) );
   */
-  libtorrent::sha1_hash infohash( base64_decode(STD_STRING( torrent_infohash )) );
+  wxLogMessage(_T("torrent b64 infohash: %s"), torrent_infohash.c_str() );
+  std::string stringhash = wxBase64::Decode(torrent_infohash );
+  wxLogMessage( _T("torrent decoded infohash: %s"), stringhash.c_str() );
+  libtorrent::sha1_hash infohash( stringhash );
   m_torr->add_torrent( m_tracker_urls[m_connected_tracker_index].mb_str(), infohash, name.mb_str(), boost::filesystem::path( STD_STRING( path ) ) );
   return true;
 }
@@ -569,7 +573,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
   } else if ( data[0] == _T("PING") ) {
     m_socket_class->Send( _T("PING\n") );
   //IH|hash|infohash infos the client about torrent's infohash b64 encoded
-  } else if ( data[0] == _T("IH") && data.GetCount() == 3 ) {
+  } else if ( data[0] == _T("IH") && data.GetCount() > 2 ) {
     ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
     HashToTorrentData::iterator itor = torrent_infos_l.Get().find(data[1]);
     if ( itor == torrent_infos_l.Get().end() ) return;
