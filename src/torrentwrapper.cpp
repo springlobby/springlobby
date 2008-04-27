@@ -268,8 +268,8 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     CurrentTorrent.progress = i->status().progress;
     CurrentTorrent.downloaded = i->status().total_payload_download;
     CurrentTorrent.uploaded = i->status().total_payload_upload;
-    CurrentTorrent.inspeed = i->status().total_payload_download;
-    CurrentTorrent.outspeed = i->status().total_payload_upload;
+    CurrentTorrent.inspeed = i->status().download_payload_rate;;
+    CurrentTorrent.outspeed = i->status().upload_payload_rate;;
     CurrentTorrent.numcopies = i->status().distributed_copies;
     CurrentTorrent.filesize = i->get_torrent_info().total_size();
     {
