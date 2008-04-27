@@ -65,9 +65,11 @@ class IconImageList : public wxImageList
     int ICON_OPEN_GAME;
     int ICON_OPEN_PW_GAME;
     int ICON_OPEN_FULL_PW_GAME;
+    int ICON_OPEN_FULL_GAME;
     int ICON_CLOSED_GAME;
     int ICON_CLOSED_PW_GAME;
     int ICON_CLOSED_FULL_PW_GAME;
+    int ICON_CLOSED_FULL_GAME;
     int ICON_STARTED_GAME;
 
     int ICON_READY_UNSYNC;
