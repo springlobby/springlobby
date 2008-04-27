@@ -330,8 +330,8 @@ void TASServer::Update( int mselapsed )
     if(m_do_finalize_join_battle&&(m_last_udp_ping+udp_reply_timeout<now)){
       //customMessageBoxNoModal(SL_MAIN_ICON,_("NAT Traversal has failed when joining battle. You might be unable to play in this battle."),_("Warning"));
       //wxMessageBox()
-      wxMessageBox(_("Failed to punch through NAT"), _("Error"), wxICON_INFORMATION, NULL/* m_ui.mw()*/ );
       FinalizeJoinBattle();
+      wxMessageBox(_("Failed to punch through NAT"), _("Error"), wxICON_INFORMATION, NULL/* m_ui.mw()*/ );
     };
 
     if ( ( m_last_udp_ping + m_keepalive ) < now )

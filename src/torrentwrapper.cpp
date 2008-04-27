@@ -10,6 +10,7 @@
 #include "utils.h"
 #include "socket.h"
 #include "base64.h"
+#include "base16.h"
 
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>
@@ -254,6 +255,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
   {
+    wxLogMessage(_T("CollectGuiInfos for %s"),WX_STRING(i->name()).c_str());
     TorrentInfos CurrentTorrent;
     CurrentTorrent.name = WX_STRING(i->name()).BeforeFirst(_T('|'));
     CurrentTorrent.leeching = !i->is_seed();
@@ -263,11 +265,21 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     CurrentTorrent.inspeed = i->status().total_payload_download;
     CurrentTorrent.outspeed = i->status().total_payload_upload;
     CurrentTorrent.numcopies = i->status().distributed_copies;
+    wxString filehash_string;
     {
-      ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
-      CurrentTorrent.filehash = s2l(torrents_infos_l.Get()[CurrentTorrent.name].hash);
+      ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
+      //ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
+      try{
+        filehash_string=seed_requests_l.Get().from[CurrentTorrent.name];//torrents_infos_l.Get()[CurrentTorrent.name].hash;
+      }catch(codeproject::bimap_base::value_not_found){
+        wxLogMessage(_T("- name not found"));
+      }
+      CurrentTorrent.filehash = s2l(filehash_string);
     }
 
+    //m_seed_requests
+    wxLogMessage(_T("- string filehash=%s"),filehash_string.c_str());
+    wxLogMessage(_T("- int filehash=%d"),CurrentTorrent.filehash);
     ret[CurrentTorrent.filehash] = CurrentTorrent;
   }
   return ret;
@@ -276,29 +288,35 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 
 bool TorrentWrapper::JoinTorrent( const wxString& hash )
 {
+  wxLogMessage(_T("(1) Joining torrent, hash=%s"),hash.c_str());
   if (ingame) return false;
+  wxLogMessage(_T("(2) Joining torrent."));
 
   MediaType type;
   wxString torrent_name;
-  wxString torrent_infohash;
+  wxString torrent_infohash_b64;
   {
     ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
     HashToTorrentData::iterator it=torrents_infos_l.Get().find(hash);
-    if(it==torrents_infos_l.Get().end())return false;
+    if(it==torrents_infos_l.Get().end()){
+      wxLogMessage(_T("(3) Joining torrent: hash not found"));
+      return false;
+    }
     type=it->second.type;
     torrent_name=it->second.name;
-    torrent_infohash=it->second.infohash;
+    torrent_infohash_b64=it->second.infohash;
   }
   wxString path = sett().GetSpringDir();
   wxString name;
+  if(path.size()>0&&(path.Last()!=wxChar('/')))path+=wxChar('/');
   if ( type == map )
   {
-    path = path + _T("/maps/");
+    path = path + _T("maps/");
     name = torrent_name + _T("|MAP");
   }
   else
   {
-    path = path + _T("/mods/");
+    path = path + _T("mods/");
     name = torrent_name + _T("|MOD");
   }
   /*
@@ -316,11 +334,25 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
   libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
   libtorrent::torrent_handle JoinedTorrent =  m_torr->add_torrent(libtorrent::torrent_info(e), boost::filesystem::path( STD_STRING( path ) ) );
   */
-  wxLogMessage(_T("torrent b64 infohash: %s"), torrent_infohash.c_str() );
-  std::string stringhash = wxBase64::Decode(torrent_infohash );
-  wxLogMessage( _T("torrent decoded infohash: %s"), stringhash.c_str() );
-  libtorrent::sha1_hash infohash( stringhash );
+  wxLogMessage(_T("torrent b64 infohash: %s"), torrent_infohash_b64.c_str() );
+  std::string torrent_infohash_binary = wxBase64::Decode(torrent_infohash_b64 );
+
+  wxString torrent_infohash_reencoded=wxBase64::Encode(reinterpret_cast<const wxUint8*>(torrent_infohash_binary.c_str()),torrent_infohash_binary.size());
+
+  if(torrent_infohash_reencoded!=torrent_infohash_b64){
+    wxLogMessage(_T("Base64 decoding phailed!"));
+  }
+
+  wxString torrent_infohash_b16=ToBase16((unsigned char *)&torrent_infohash_binary[0],torrent_infohash_binary.size());
+
+  wxLogMessage( _T("torrent b16 infohash: %s"),torrent_infohash_b16.c_str());
+
+  libtorrent::sha1_hash infohash( torrent_infohash_binary );
+
+  wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_reencoded.c_str(),name.c_str(),path.c_str());
+
   m_torr->add_torrent( m_tracker_urls[m_connected_tracker_index].mb_str(), infohash, name.mb_str(), boost::filesystem::path( STD_STRING( path ) ) );
+  wxLogMessage(_T("(5) Joining torrent: done"));
   return true;
 }
 
@@ -443,12 +475,15 @@ void TorrentWrapper::FixTorrentList()
 
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
   {
+    wxLogMessage(_T("Fixing torrent list entry for %s"), WX_STRING(i->name()).c_str());
     if ( i->is_seed() ) m_seed_count++;
     else
     {
       m_leech_count++;
       break;
     }
+
+
     wxString StrippedName = WX_STRING(i->name()).BeforeFirst( _T('|') );
 
     bool do_remove_torrent=false;/// threads rule 4
@@ -499,17 +534,22 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
   }
   if ( data.GetCount() == 0 ) return;
   // T+|hash|name|type 	 informs client that new torrent was added to server (type is either MOD or MAP)
-  else if ( data[0] == _T("T+") && data.GetCount() > 3 ) {
+  else if ( data.GetCount() > 3 && data[0] == _T("T+") ) {
     TorrentData newtorrent;
     newtorrent.hash = data[1];
     newtorrent.name = data[2];
     if ( data[3] == _T("MAP") ) newtorrent.type = map;
     else if ( data[3] == _T("MOD") ) newtorrent.type = mod;
 
+    int tmp_type=newtorrent.type;
+    wxLogMessage(_T("m_torrent_infos[%s] = {hash=%s, name=%s, type=%d}"),data[1].c_str(),newtorrent.hash.c_str(),newtorrent.name.c_str(),tmp_type);
+
     {/// threads rule 3
       ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
       torrent_infos_l.Get()[data[1]] = newtorrent;
     }
+
+
     m_socket_class->Send(  _T("IH|") + data[1] + _T("\n") );
   // T-|hash 	 informs client that torrent was removed from server
   } else if ( data[0] == _T("T-") && data.GetCount() > 1 ) {
@@ -518,7 +558,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     if( itor == torrent_infos_l.Get().end() ) return;
     torrent_infos_l.Get().erase( itor );
   // S+|hash|seeders|leechers 	 tells client that seed is needed for this torrent
-  } else if ( data[0] == _T("S+") && data.GetCount() > 3 ) {
+  } else if ( data.GetCount() > 1 && data[0] == _T("S+") ) {
     wxString name;
     {
       ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
@@ -530,12 +570,12 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
       ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
       seed_requests_l.Get().from[name] = data[1];
     }
-    unsigned long seeders;
-    unsigned long leechers;
-    data[2].ToULong(&seeders);
-    data[3].ToULong(&leechers);
+    unsigned long seeders=0;
+    unsigned long leechers=0;
+    if(data.GetCount() > 2)data[2].ToULong(&seeders);
+    if(data.GetCount() > 3)data[3].ToULong(&leechers);
   // S-|hash 	 tells client that seed is no longer neede for this torrent
-  } else if ( data[0] == _T("S-") && data.GetCount() > 1 ) {
+  } else if ( data.GetCount() > 1 && data[0] == _T("S-") ) {
     wxString name;
     {
       ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
@@ -573,7 +613,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
   } else if ( data[0] == _T("PING") ) {
     m_socket_class->Send( _T("PING\n") );
   //IH|hash|infohash infos the client about torrent's infohash b64 encoded
-  } else if ( data[0] == _T("IH") && data.GetCount() > 2 ) {
+  } else if ( data.GetCount() > 2 && data[0] == _T("IH") ) {
     ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
     HashToTorrentData::iterator itor = torrent_infos_l.Get().find(data[1]);
     if ( itor == torrent_infos_l.Get().end() ) return;
