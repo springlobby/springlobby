@@ -16,6 +16,7 @@
 #define DEFAULT_P2P_TRACKER_PORT 8201
 
 namespace libtorrent{ class session; };
+namespace libtorrent { class torrent_handle; };
 class Socket;
 
 enum MediaType
@@ -118,6 +119,8 @@ class TorrentWrapper : public iNetClass
     typedef std::map<wxString,bool> OpenTorrents;
     MutexWrapper<OpenTorrents> m_open_torrents; /// name -> is seed
 
+    typedef codeproject::bimap<libtorrent::torrent_handle,wxString> TorrentHandleToHash; /// torrent handle -> hash
+    MutexWrapper<TorrentHandleToHash> m_torrent_handles;
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;
