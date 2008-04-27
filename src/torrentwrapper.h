@@ -35,7 +35,8 @@ struct TorrentInfos
   float progress;
   float inspeed;
   float outspeed;
-  int filehash;
+  unsigned int filesize;
+  wxString hash;
 };
 
 struct TorrentData

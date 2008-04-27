@@ -265,10 +265,8 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
   ret[0] = globalinfos;
   if ( ingame || !m_connected ) return ret; /// stop updating the gui if disconneted
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
-  int count = 1;
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
   {
-    count++;
     wxLogMessage(_T("CollectGuiInfos for %s"),WX_STRING(i->name()).c_str());
     TorrentInfos CurrentTorrent;
     CurrentTorrent.name = WX_STRING(i->name()).BeforeFirst(_T('|'));
@@ -279,7 +277,14 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     CurrentTorrent.inspeed = i->status().total_payload_download;
     CurrentTorrent.outspeed = i->status().total_payload_upload;
     CurrentTorrent.numcopies = i->status().distributed_copies;
-    ret[count] = CurrentTorrent;
+    CurrentTorrent.filesize = i->get_torrent_info().total_size()
+    {
+      ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
+      TorrentHandleToHash::iterator itor = torrent_handles_l.Get().from.find(*i);
+      if ( itor == torrent_handles_l.Get().end() ) continue;
+      CurrentTorrent.hash = itor->second;
+    }
+    ret[s2l(CurrentTorrent.hash)] = CurrentTorrent;
   }
   return ret;
 }
