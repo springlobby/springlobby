@@ -191,6 +191,12 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
   int singedver = (int)hash;
   wxString shash = i2s(singedver);//wxString::Format( _T("%d"), (int)hash );
 
+  {
+    ScopedLocker<HashToTorrentData> local_files_l(m_local_files);
+    HashToTorrentData::iterator iter = local_files_l.Get().find(shash);
+    if ( iter != local_files_l.Get().end() ) return true; /// we already have the file
+  }
+
   wxString name;
   {
     ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
@@ -198,6 +204,12 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
     if (it==torrents_infos_l.Get().end()) return false;
     if ( it->second.hash.IsEmpty() ) return false; /// the file is not present in the system
     name=it->second.name;
+  }
+
+  {
+    ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
+    OpenTorrents::iterator itor = open_torrents_l.Get().find(name);
+    if ( itor != open_torrents_l.Get().end() ) return true; /// don't request twice the same file
   }
 
   if ( !JoinTorrent( shash ) ) return false;
