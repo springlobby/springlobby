@@ -95,13 +95,14 @@ void MainTorrentTab::UpdateInfo( const TorrentInfos& info )
 
 void MainTorrentTab::SetInfo(int index, const TorrentInfos& info )
 {
+    float kfactor = 1/float(1024);
+ float mfactor = 1/float(1024*1024);
+
  int eta_seconds = -1;
  if ( info.progress > 0 && info.inspeed > 0)
-    eta_seconds = int ( ( info.downloaded / info.progress ) / info.inspeed );
+    eta_seconds = int ( ( info.downloaded*mfactor / info.progress ) / ( info.inspeed * kfactor) );
 
  // m_torrent_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
- float kfactor = 1/float(1024*8);
- float mfactor = 1/float(1024*1024);
   m_torrent_list->SetItem( index, 0, info.name );
   m_torrent_list->SetItem( index, 1, info.numcopies > 0 ? i2s( info.numcopies ) : _T("http only"));
   m_torrent_list->SetItem( index, 2, f2s( info.downloaded*mfactor ) );
