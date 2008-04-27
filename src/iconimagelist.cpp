@@ -27,7 +27,7 @@
 #include "images/chanop_broom.xpm"
 #include "images/chanop_ingame.xpm"
 
-#include "images/away.xpm"
+#include "images/away.png.h"
 #include "images/broom.xpm"
 #include "images/ingame.xpm"
 
@@ -43,10 +43,12 @@
 
 #include "images/open_game.png.h"
 #include "images/open_pw_game.png.h"
+#include "images/open_full_pw_game.png.h"
 #include "images/closed_game.png.h"
 #include "images/closed_pw_game.png.h"
+#include "images/closed_full_pw_game.png.h"
 #include "images/started_game.xpm"
-#include "images/full_game.xpm"
+
 
 #include "images/nexists.xpm"
 #include "images/exists.xpm"
@@ -83,7 +85,7 @@ IconImageList::IconImageList() : wxImageList(16,16)
   ICON_BOT_BROOM = Add( wxBitmap(bot_broom_xpm) );
   ICON_BOT_INGAME = Add( wxBitmap(bot_ingame_xpm) );
 
-  ICON_AWAY = Add( wxBitmap(away_xpm) );
+  ICON_AWAY = Add( *charArr2wxBitmap( away_png, sizeof( away_png ) ) );
   ICON_BROOM = Add( wxBitmap(broom_xpm) );
   ICON_INGAME = Add( wxBitmap(ingame_xpm) );
 
@@ -105,10 +107,12 @@ IconImageList::IconImageList() : wxImageList(16,16)
 
   ICON_READY = ICON_OPEN_GAME = Add( *charArr2wxBitmap(open_game_png, sizeof(open_game_png) ) );
   ICON_OPEN_PW_GAME = Add( *charArr2wxBitmap(open_pw_game_png, sizeof(open_pw_game_png) ) );
+  ICON_OPEN_FULL_PW_GAME = Add( *charArr2wxBitmap(open_full_pw_game_png, sizeof(open_full_pw_game_png) ) );
   ICON_NREADY = ICON_CLOSED_GAME = Add( *charArr2wxBitmap(closed_game_png, sizeof(closed_game_png) ) );
   ICON_CLOSED_PW_GAME = Add( *charArr2wxBitmap(closed_pw_game_png, sizeof(closed_pw_game_png) ) );
+  ICON_CLOSED_FULL_PW_GAME = Add( *charArr2wxBitmap(closed_full_pw_game_png, sizeof(closed_full_pw_game_png) ) );
   ICON_STARTED_GAME = Add( wxBitmap(started_game_xpm) );
-  ICON_FULL_GAME = Add( wxBitmap(full_game_xpm) );
+
 
   ICON_READY_UNSYNC = Add( wxBitmap(ready_unsync_xpm) );
   ICON_NREADY_UNSYNC = Add( wxBitmap(nready_unsync_xpm) );
@@ -222,13 +226,13 @@ int IconImageList::GetBattleStatusIcon( Battle& battle )
   if ( !battle.IsLocked() )
   {
       //TODO FIXME order
-      if ( battle.IsFull() ) return ICON_FULL_GAME;
+      if ( battle.IsFull() ) return ICON_OPEN_FULL_PW_GAME;
     if ( !battle.IsPassworded() ) return ICON_OPEN_GAME;
     else return ICON_OPEN_PW_GAME;
   }
   else
   {
-       if ( battle.IsFull() ) return ICON_FULL_GAME;
+       if ( battle.IsFull() ) return ICON_CLOSED_FULL_PW_GAME;
     if ( !battle.IsPassworded() ) return ICON_CLOSED_GAME;
     else return ICON_CLOSED_PW_GAME;
   }
