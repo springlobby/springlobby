@@ -80,7 +80,7 @@ void MainTorrentTab::UpdateInfo( const TorrentInfos& info )
 {
  int index = -1;
   for (int i = 0; i < m_torrent_list->GetItemCount() ; i++ ) {
-    if ( info.filehash == (int)m_torrent_list->GetItemData( i ) ) {
+    if ( info.hash == i2s((int)m_torrent_list->GetItemData( i ) ) ) {
       index = i;
       break;
     }
@@ -117,7 +117,7 @@ void MainTorrentTab::AddTorrentInfo( const TorrentInfos& info )
 {
   int index = m_torrent_list->InsertItem( 0, info.name );
 //  ASSERT_LOGIC( index != -1, _T("index = -1") );
-  m_torrent_list->SetItemData(index, (long)info.filehash );
+  m_torrent_list->SetItemData(index, s2l(info.hash) );
 
 
   //ASSERT_LOGIC( index != -1, _T("index = -1") );
