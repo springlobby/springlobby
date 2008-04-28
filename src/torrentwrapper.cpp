@@ -137,6 +137,33 @@ bool TorrentWrapper::IsFileInSystem( const wxString& uhash )
   return torrents_infos_l.Get().find(u2s((int)ulong)) != torrents_infos_l.Get().end();
 }
 
+
+void TorrentWrapper::RemoveFile( const wxString& hash )
+{
+  wxString name;
+  {
+    ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
+    HashToTorrentData::iterator it=torrents_infos_l.Get().find(hash);
+    if (it==torrents_infos_l.Get().end()) return; /// file not in system
+    name = it->second.name;
+  }
+  {
+    ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
+    TorrentHandleToHash::to::iterator iter = torrent_handles_l.Get().to.find(hash);
+    if ( iter == torrent_handles_l.Get().to.end() ) return; /// torrent handler not found
+    if ( iter->second.is_seed() ) m_seed_count--;
+    else m_leech_count--;
+    m_torr->remove_torrent( iter->second );
+  }
+  {
+    ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
+    OpenTorrents::iterator itor = open_torrents_l.Get().find(name);
+    if ( itor == open_torrents_l.Get().end() ) return; /// bad hash request
+    open_torrents_l.Get().erase(itor);
+  }
+}
+
+
 ////////////////////////////////////////////////////////
 ////               lobby interface                  ////
 ////////////////////////////////////////////////////////
