@@ -291,7 +291,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     wxLogMessage(_T("CollectGuiInfos for %s"),WX_STRING(i->name()).c_str());
     TorrentInfos CurrentTorrent;
     CurrentTorrent.name = WX_STRING(i->name()).BeforeFirst(_T('|'));
-    CurrentTorrent.leeching = !i->is_seed();
+    CurrentTorrent.seeding = i->is_seed();
     CurrentTorrent.progress = i->status().progress;
     CurrentTorrent.downloaded = i->status().total_payload_download;
     CurrentTorrent.uploaded = i->status().total_payload_upload;
@@ -654,10 +654,12 @@ void TorrentWrapper::OnConnected( Socket* sock )
   ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
   ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
   ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
+  ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
 
   torrent_infos_l.Get().clear();
   seed_requests_l.Get().clear();
   open_torrents_l.Get().clear();
+  torrent_handles_l.Get().clear();
 
   m_seed_count = 0;
   m_leech_count = 0;
@@ -676,10 +678,13 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
   ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
   ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
   ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
+  ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
+
 
   torrent_infos_l.Get().clear();
   seed_requests_l.Get().clear();
   open_torrents_l.Get().clear();
+  torrent_handles_l.Get().clear();
 
 
   m_seed_count = 0;

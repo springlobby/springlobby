@@ -31,7 +31,7 @@ struct TorrentInfos
   wxString name;
   unsigned int downloaded;
   unsigned int uploaded;
-  bool leeching;
+  bool seeding;
   float progress;
   float inspeed;
   float outspeed;

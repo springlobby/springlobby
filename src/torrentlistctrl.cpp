@@ -49,43 +49,43 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 
   col.SetText( _T("Name") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 0, col, _T("Name"), true );
+  InsertColumn( 0, col, _("Name"), true );
 
   col.SetText( _T("numcopies") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 1, col, _T("complete numcopies"), true);
+  InsertColumn( 1, col, _("complete numcopies"), true);
 
   col.SetText( _T("MB downloaded") );
   col.SetImage(  icons().ICON_NONE);
-  InsertColumn( 2, col, _T("MB downloaded"), true );
+  InsertColumn( 2, col, _("MB downloaded"), true );
 
   col.SetText( _("MB uploaded") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 3, col, _T("MB uploaded") );
+  InsertColumn( 3, col, _("MB uploaded") );
 
   col.SetText( _("leeching") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 4, col, _T("leeching") );
+  InsertColumn( 4, col, _("seeding") );
 
   col.SetText( _("% complete") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 5, col, _T("% complete") );
+  InsertColumn( 5, col, _("% complete") );
 
   col.SetText( _("KB/s up") );
   col.SetImage( icons().ICON_NONE);
-  InsertColumn( 6, col, _T("KB/s upload") );
+  InsertColumn( 6, col, _("KB/s upload") );
 
   col.SetText( _("KB/s down") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 7, col, _T("KB/s download"), true );
+  InsertColumn( 7, col, _("KB/s download"), true );
 
   col.SetText( _("ETA (s)") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 8, col, _T("Estimated time of arrival"), true );
+  InsertColumn( 8, col, _("Estimated time of arrival"), true );
 
   col.SetText( _("Filesize (MB)") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 9, col, _T("Filesize"), true );
+  InsertColumn( 9, col, _("Filesize"), true );
 
   m_sortorder[0].col = 0;
   m_sortorder[0].direction = true;
@@ -328,9 +328,9 @@ int wxCALLBACK TorrentListCtrl::CompareLeechUP(long item1, long item2, long sort
   TorrentInfos& info1 = info_map[item1];
   TorrentInfos& info2 = info_map[item2];
 
-  if (  info1.leeching <  info2.leeching )
+  if (  info1.seeding <  info2.seeding )
       return -1;
-  if (  info1.leeching >  info2.leeching )
+  if (  info1.seeding >  info2.seeding )
       return 1;
 
   return 0;
@@ -343,9 +343,9 @@ int wxCALLBACK TorrentListCtrl::CompareLeechDOWN(long item1, long item2, long so
   TorrentInfos& info1 = info_map[item1];
   TorrentInfos& info2 = info_map[item2];
 
-  if (  info1.leeching <  info2.leeching )
+  if (  info1.seeding <  info2.seeding )
       return 1;
-  if (  info1.leeching >  info2.leeching )
+  if (  info1.seeding >  info2.seeding )
       return -1;
 
   return 0;

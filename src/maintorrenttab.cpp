@@ -100,10 +100,10 @@ void MainTorrentTab::SetInfo(int index, const TorrentInfos& info )
 
  // m_torrent_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
   m_torrent_list->SetItem( index, 0, info.name );
-  m_torrent_list->SetItem( index, 1, info.numcopies > 0 ? f2s( info.numcopies ) : _T("http only"));
+  m_torrent_list->SetItem( index, 1, info.numcopies > 0 ? f2s( info.numcopies ) : wxString(_("not available")));
   m_torrent_list->SetItem( index, 2, f2s( info.downloaded*mfactor ) );
   m_torrent_list->SetItem( index, 3, f2s( info.uploaded*mfactor ) );
-  m_torrent_list->SetItem( index, 4, info.leeching == 0 ? _("no") : _("yes") );
+  m_torrent_list->SetItem( index, 4, info.seeding == 0 ? _("no") : _("yes") );
   m_torrent_list->SetItem( index, 5, f2s( info.progress * 100 ) );
   m_torrent_list->SetItem( index, 6, f2s( info.outspeed*kfactor ) );
   m_torrent_list->SetItem( index, 7, f2s( info.inspeed*kfactor ) );
