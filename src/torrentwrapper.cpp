@@ -481,7 +481,7 @@ void TorrentWrapper::FixTorrentList()
     for ( SeedRequests::iterator i = seed_requests_l.Get().begin(); i != seed_requests_l.Get().end(); i++ )
     {
       if( m_seed_count > 9 ) break;
-      if (  ( local_files_l.Get().find( i->first ) != local_files_l.Get().end() ) && (open_torrents_l.Get().find( i->first ) == open_torrents_l.Get().end()) && (torrent_infos_l.Get().find(i->second) != torrent_infos_l.Get().end()) ) /// torrent is requested and present, but not joined yet
+      if (  ( local_files_l.Get().find( i->second ) != local_files_l.Get().end() ) && (open_torrents_l.Get().find( i->first ) == open_torrents_l.Get().end()) && (torrent_infos_l.Get().find(i->second) != torrent_infos_l.Get().end()) ) /// torrent is requested and present, but not joined yet
       {
         torrents_to_join.push_back(i->second);
         m_seed_count++;
@@ -535,7 +535,7 @@ void TorrentWrapper::FixTorrentList()
         do_reload_unitsync=true;
         do_remove_torrent=true;
       }else
-      if ( seed_requests_l.Get().to.find( StrippedName ) == seed_requests_l.Get().to.end() )/// if torrent not in request list but still seeding then remove
+      if ( seed_requests_l.Get().from.find( StrippedName ) == seed_requests_l.Get().from.end() )/// if torrent not in request list but still seeding then remove
       {
         do_remove_torrent=true;
         if(is_ok)open_torrents_l.Get().erase(open_torrent_i);
