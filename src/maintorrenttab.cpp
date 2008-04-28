@@ -27,43 +27,39 @@ END_EVENT_TABLE()
 MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
     : wxPanel(parent), m_ui(ui)
 {
-	//(*Initialize(MainTorrentTab)
-	wxGridSizer* GridSizer4;
-	wxGridSizer* GridSizer5;
-	wxGridSizer* GridSizer6;
-	wxGridSizer* GridSizer1;
-	wxGridSizer* GridSizer3;
-	wxGridSizer* GridSizer2;
+	m_mainbox = new wxBoxSizer (wxVERTICAL);
 
-	GridSizer1 = new wxGridSizer(2, 1, 0, 0);
-	GridSizer3 = new wxGridSizer(0, 3, 0, 0);
-	GridSizer5 = new wxGridSizer(0, 3, 0, 0);
-	m_outgoing_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Total Outgoing: ") );
+	wxBoxSizer* m_listbox = new wxBoxSizer (wxVERTICAL);
+	wxBoxSizer* m_totalbox = new wxBoxSizer (wxHORIZONTAL);
+	wxBoxSizer* m_buttonbox = new wxBoxSizer (wxHORIZONTAL);
 
-	GridSizer5->Add(m_outgoing_lbl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	GridSizer3->Add(GridSizer5, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	GridSizer6 = new wxGridSizer(0, 3, 0, 0);
-	m_incoming_lbl = new wxStaticText( this, ID_INCOMING_LBL, _("Total Incoming: ") );
-	GridSizer6->Add(m_incoming_lbl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	GridSizer3->Add(GridSizer6, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	GridSizer1->Add(GridSizer3, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	GridSizer4 = new wxGridSizer(1, 1, 0, 0);
+    wxStaticText* m_list_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Tranfers in progress: ") );
+    m_listbox->Add(m_list_lbl, 0, wxBOTTOM, 5);
 	m_torrent_list = new TorrentListCtrl(this, m_ui);
-	GridSizer4->Add( m_torrent_list, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	GridSizer1->Add(GridSizer4, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	GridSizer2 = new wxGridSizer(0, 3, 0, 0);
+	m_listbox->Add( m_torrent_list, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
+	m_mainbox->Add(m_listbox, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
+
+	m_outgoing_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Total Outgoing: ") );
+    m_incoming_lbl = new wxStaticText( this, ID_INCOMING_LBL, _("Total Incoming: ") );
+	m_totalbox->Add(m_outgoing_lbl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, 10);
+	m_totalbox->Add(m_incoming_lbl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, 10);
+	m_mainbox->Add(m_totalbox, 1, wxALL, 5);
+
 	m_but_cancel= new wxButton(this, ID_BUTTON_CANCEL, _("Cancel Download") );
 	m_but_cancel->Disable();
-	GridSizer2->Add(m_but_cancel, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	GridSizer2->Add(0,0,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	m_buttonbox->Add(m_but_cancel, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
 	m_but_publish = new wxButton(this, ID_BUTTON_PUB, _("Publish new file") );
-	GridSizer2->Add( m_but_publish, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	GridSizer1->Add(GridSizer2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	SetSizer(GridSizer1);
-	GridSizer1->SetSizeHints(this);
+	m_buttonbox->Add( m_but_publish, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
+	m_mainbox->Add(m_buttonbox, 1, wxALL, 5);
+
+	SetSizer(m_mainbox);
+	m_mainbox->SetSizeHints(this);
+    Layout();
 
     info_map = torrent()->CollectGuiInfos();
     m_torrent_list->SetInfoMap( &info_map );
+//    m_torrent_list->SetSizeHints(this);
+    m_torrent_list->Layout();
 
 	for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
     {

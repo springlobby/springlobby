@@ -14,6 +14,7 @@ class wxButton;
 class TorrentListCtrl;
 class Ui;
 class TorrentInfos;
+class wxBoxSizer;
 
 class MainTorrentTab: public wxPanel
 {
@@ -52,6 +53,8 @@ class MainTorrentTab: public wxPanel
         void AddTorrentInfo( const TorrentInfos& info );
         void UpdateInfo( const TorrentInfos& info );
         void SetInfo(int index, const TorrentInfos& info );
+
+        wxBoxSizer* m_mainbox;
 
 	private:
 

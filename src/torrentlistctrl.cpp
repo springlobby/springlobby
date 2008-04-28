@@ -45,18 +45,6 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
   SetImageList( &icons(), wxIMAGE_LIST_STATE );
 
-//struct TorrentInfos
-//{
-//  float numnumcopies;
-//  wxString name;
-//  unsigned int downloaded;
-//  unsigned int uploaded;
-//  bool leeching;
-//  float progress;
-//  float inspeed;
-//  float outspeed;
-//};
-
   wxListItem col;
 
   col.SetText( _T("Name") );
@@ -79,7 +67,7 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 4, col, _T("leeching") );
 
-  col.SetText( _("% completed") );
+  col.SetText( _("% complete") );
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 5, col, _T("% complete") );
 
@@ -111,18 +99,19 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 //  m_sortorder[3].direction = true;
   Sort( );
 
-  SetColumnWidth( 0, 200 );
+    //TODO this'll need fixing on win i assume [koshi]
+  SetColumnWidth( 0, 250 );
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 7, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 7, 80 );
   SetColumnWidth( 8, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 9, wxLIST_AUTOSIZE_USEHEADER );
 
 
-  SetColumnWidth( 3, 170 );
-  SetColumnWidth( 4, 140 );
-  SetColumnWidth( 5, 130 );
-  SetColumnWidth( 6, 110 );
+  SetColumnWidth( 3, 100 );
+  SetColumnWidth( 4, 70 );
+  SetColumnWidth( 5, 100 );
+  SetColumnWidth( 6, 70 );
 
 //  m_popup = new wxMenu( _T("") );
 //  // &m enables shortcout "alt + m" and underlines m
