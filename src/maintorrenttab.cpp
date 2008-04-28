@@ -86,7 +86,7 @@ void MainTorrentTab::UpdateInfo( const TorrentInfos& info )
     }
   }
 
-  //ASSERT_LOGIC( index != -1, _T("index = -1") );
+  ASSERT_LOGIC( index != -1, _T("index = -1") );
     if ( index > 0 )
         SetInfo(index, info );
     else
@@ -100,15 +100,15 @@ void MainTorrentTab::SetInfo(int index, const TorrentInfos& info )
 
  int eta_seconds = -1;
  if ( info.progress > 0 && info.inspeed > 0)
-    eta_seconds = int (  (info.filesize - info.downloaded ) * 1024 / info.inspeed * kfactor  );
+    eta_seconds = int (  (info.filesize - info.downloaded ) / info.inspeed );
 
  // m_torrent_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
   m_torrent_list->SetItem( index, 0, info.name );
-  m_torrent_list->SetItem( index, 1, info.numcopies > 0 ? i2s( info.numcopies ) : _T("http only"));
+  m_torrent_list->SetItem( index, 1, info.numcopies > 0 ? f2s( info.numcopies ) : _T("http only"));
   m_torrent_list->SetItem( index, 2, f2s( info.downloaded*mfactor ) );
   m_torrent_list->SetItem( index, 3, f2s( info.uploaded*mfactor ) );
   m_torrent_list->SetItem( index, 4, i2s( info.leeching ) );
-  m_torrent_list->SetItem( index, 5, f2s( info.progress ) );
+  m_torrent_list->SetItem( index, 5, f2s( info.progress * 100 ) );
   m_torrent_list->SetItem( index, 6, f2s( info.outspeed*kfactor ) );
   m_torrent_list->SetItem( index, 7, f2s( info.inspeed*kfactor ) );
   m_torrent_list->SetItem( index, 8, (eta_seconds > -1 ? i2s(eta_seconds) : _T("inf.") ) );
