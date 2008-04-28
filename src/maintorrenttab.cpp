@@ -107,11 +107,12 @@ void MainTorrentTab::SetInfo(int index, const TorrentInfos& info )
   m_torrent_list->SetItem( index, 1, info.numcopies > 0 ? f2s( info.numcopies ) : _T("http only"));
   m_torrent_list->SetItem( index, 2, f2s( info.downloaded*mfactor ) );
   m_torrent_list->SetItem( index, 3, f2s( info.uploaded*mfactor ) );
-  m_torrent_list->SetItem( index, 4, i2s( info.leeching ) );
+  m_torrent_list->SetItem( index, 4, info.leeching == 0 ? _("no") : _("yes") );
   m_torrent_list->SetItem( index, 5, f2s( info.progress * 100 ) );
   m_torrent_list->SetItem( index, 6, f2s( info.outspeed*kfactor ) );
   m_torrent_list->SetItem( index, 7, f2s( info.inspeed*kfactor ) );
-  m_torrent_list->SetItem( index, 8, (eta_seconds > -1 ? i2s(eta_seconds) : _T("inf.") ) );
+  m_torrent_list->SetItem( index, 8, (eta_seconds > -1 ? i2s(eta_seconds) : _T("inf.") ) + _T(" s") );
+  m_torrent_list->SetItem( index, 9, wxString::Format(_T("%.3f"),info.filesize*mfactor) );
 
   m_torrent_list->Sort();
 }
@@ -132,8 +133,8 @@ void MainTorrentTab::AddTorrentInfo( const TorrentInfos& info )
 void MainTorrentTab::OnUpdate()
 {
     info_map = torrent()->CollectGuiInfos();
-    m_outgoing_lbl->SetLabel( _("Total Outgoing: ") + u2s(info_map[0].outspeed/1024) );
-    m_incoming_lbl->SetLabel( _("Total Incoming: ") + u2s(info_map[0].inspeed/1024) );
+    m_outgoing_lbl->SetLabel( wxString::Format(_("Total Outgoing: %.2f KB/s"), (info_map[0].outspeed/float(1024)) ) );
+    m_incoming_lbl->SetLabel( wxString::Format(_("Total Incoming: %.2f KB/s"), (info_map[0].inspeed/ float(1024)) ) );
     m_torrent_list->DeleteAllItems();
     for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
     {
@@ -141,6 +142,7 @@ void MainTorrentTab::OnUpdate()
       AddTorrentInfo(iter->second);
 
     }
+    Layout();
 }
 
 #endif

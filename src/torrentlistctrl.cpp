@@ -79,7 +79,7 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 4, col, _T("leeching") );
 
-  col.SetText( _("%") );
+  col.SetText( _("% completed") );
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 5, col, _T("% complete") );
 
@@ -91,11 +91,13 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 7, col, _T("KB/s download"), true );
 
-  col.SetText( _("ETA") );
+  col.SetText( _("ETA (s)") );
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 8, col, _T("Estimated time of arrival"), true );
 
-
+  col.SetText( _("Filesize (MB)") );
+  col.SetImage( icons().ICON_NONE );
+  InsertColumn( 9, col, _T("Filesize"), true );
 
   m_sortorder[0].col = 0;
   m_sortorder[0].direction = true;
@@ -109,11 +111,12 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 //  m_sortorder[3].direction = true;
   Sort( );
 
-  SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 0, 200 );
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 7, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 8, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 9, wxLIST_AUTOSIZE_USEHEADER );
 
 
   SetColumnWidth( 3, 170 );
