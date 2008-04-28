@@ -467,7 +467,6 @@ void TorrentWrapper::FixTorrentList()
   }
 
   bool do_reload_unitsync=false;
-
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
   {
     wxLogMessage(_T("Fixing torrent list entry for %s"), WX_STRING(i->name()).c_str());
@@ -488,7 +487,7 @@ void TorrentWrapper::FixTorrentList()
       StrippedName = iter->second.name;
     }
 
-
+    bool decrease_leech_count=false;
     bool do_remove_torrent=false;/// threads rule 4
     wxString notify_message;
     {/// threads rule 1, 3, 6
@@ -504,6 +503,7 @@ void TorrentWrapper::FixTorrentList()
       if ( is_ok && !(open_torrent_i->second) ) ///torrent has finished download, refresh unitsync and remove file from list
       {
         notify_message= _T("N-|")  + seed_requests_l.Get().from[StrippedName] + _T("\n"); ///notify the system we don't need the file anymore
+        decrease_leech_count = true;
         open_torrents_l.Get().erase(open_torrent_i);
         do_reload_unitsync=true;
         do_remove_torrent=true;
@@ -521,9 +521,9 @@ void TorrentWrapper::FixTorrentList()
         ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
         torrent_handles_l.Get().erase( torrent_handles_l.Get().from.find(*i) );
       }
-      m_leech_count--;
     }
     if(!notify_message.empty())m_socket_class->Send(notify_message);
+    if(decrease_leech_count)m_leech_count--;
   }
 
   if(do_reload_unitsync)usync()->ReloadUnitSyncLib();
