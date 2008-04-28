@@ -37,7 +37,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
     m_listbox->Add(m_list_lbl, 0, wxBOTTOM, 5);
 	m_torrent_list = new TorrentListCtrl(this, m_ui);
 	m_listbox->Add( m_torrent_list, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
-	m_mainbox->Add(m_listbox, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
+	m_mainbox->Add(m_listbox, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
 
 	m_outgoing_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Total Outgoing: ") );
     m_incoming_lbl = new wxStaticText( this, ID_INCOMING_LBL, _("Total Incoming: ") );
@@ -82,7 +82,7 @@ void MainTorrentTab::UpdateInfo( const TorrentInfos& info )
     }
   }
 
-  ASSERT_LOGIC( index != -1, _T("index = -1") );
+  //ASSERT_LOGIC( index != -1, _T("index = -1") );
     if ( index > 0 )
         SetInfo(index, info );
     else
