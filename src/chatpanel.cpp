@@ -875,18 +875,22 @@ void ChatPanel::Say( const wxString& message )
       if ( line.StartsWith( _T("/") ) ) {
         if ( m_channel->ExecuteSayCommand( line ) ) return;
         if ( m_channel->GetServer().ExecuteSayCommand( line ) ) return;
+        OutputLine( wxString::Format( _(" Error: Command (%s) does not exist, use /help for a list of available commands."), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
+        return;
       }
       m_channel->Say( line );
 
     } else if ( m_type == CPT_Battle ) {
 
       if ( m_battle == 0 ) {
-        OutputLine( _(" You are not in battle or battle does not exist."), sett().GetChatColorError(), sett().GetChatFont() );
+        OutputLine( _(" You are not in battle or battle does not exist, use /help for a list of available commands."), sett().GetChatColorError(), sett().GetChatFont() );
         return;
       }
       if ( line.StartsWith(_T("/")) ) {
         if ( m_battle->ExecuteSayCommand( line ) ) return;
         if ( m_battle->GetServer().ExecuteSayCommand( line ) ) return;
+        OutputLine( wxString::Format( _(" Error: Command (%s) does not exist, use /help for a list of available commands."), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
+        return;
       }
       m_battle->Say( line );
 
@@ -899,6 +903,8 @@ void ChatPanel::Say( const wxString& message )
       if ( line.StartsWith(_T("/")) ) {
         if ( m_user->ExecuteSayCommand( line ) ) return;
         if ( m_user->GetServer().ExecuteSayCommand( line ) ) return;
+        OutputLine( wxString::Format( _(" Error: Command (%s) does not exist, use /help for a list of available commands."), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
+        return;
       }
       m_user->Say( line );
 
@@ -907,6 +913,8 @@ void ChatPanel::Say( const wxString& message )
 
       if ( line.StartsWith(_T("/")) ) {
         if ( m_server->ExecuteSayCommand( line ) ) return;
+        OutputLine( wxString::Format( _(" Error: Command (%s) does not exist, use /help for a list of available commands."), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
+        return;
       }
 
       m_server->SendRaw( line );
