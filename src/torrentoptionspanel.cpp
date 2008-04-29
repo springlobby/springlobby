@@ -18,12 +18,6 @@
 
 
 BEGIN_EVENT_TABLE( TorrentOptionsPanel, wxPanel )
-  EVT_BUTTON( ID_APPLY, TorrentOptionsPanel::OnApply )
-<<<<<<< HEAD:src/torrentoptionspanel.cpp
-//  EVT_CHECKBOX( ID_ENABLEP2P, TorrentOptionsPanel::OnEnableP2P)
-=======
->>>>>>> bd/torrent:src/torrentoptionspanel.cpp
-  EVT_BUTTON( ID_RESTORE, TorrentOptionsPanel::OnRestore )
   EVT_BUTTON( ID_MAN_START, TorrentOptionsPanel::OnManStart )
   EVT_BUTTON( ID_MAN_STOP, TorrentOptionsPanel::OnManStop )
 END_EVENT_TABLE()
@@ -33,14 +27,6 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
     : wxPanel( parent, -1), m_ui(ui)
 {
     wxBoxSizer* mainboxsizer = new wxBoxSizer( wxVERTICAL );
-
-<<<<<<< HEAD:src/torrentoptionspanel.cpp
-=======
-    wxBoxSizer* enable_siter = new wxBoxSizer( wxHORIZONTAL );
-    m_enableP2P = new wxCheckBox( this, ID_ENABLEP2P, _("Enable peer to peer download system"));
-    m_enableP2P->SetValue( true );
-    mainboxsizer->Add( m_enableP2P, 0, wxALL, 5 );
->>>>>>> bd/torrent:src/torrentoptionspanel.cpp
 
     wxBoxSizer* up_siter = new wxBoxSizer( wxHORIZONTAL );
     m_maxUp = new wxTextCtrl( this, ID_MAXUP, i2s( sett().GetTorrentUploadRate() ) );
@@ -110,7 +96,8 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
     m_gamestart_box_sizer->Add(m_gamestart_input_box2);
     mainboxsizer->Add( m_gamestart_box_sizer, 0, wxALL, 5 );
 
-    EnableSettings( sett().GetTorrentSystemEnabled() );
+    //is there even need for the input boxes to be disabled?
+    EnableSettings( true );
     EnableStartStopButtons( torrent()->IsConnectedToP2PSystem() );
     wxCommandEvent dummy;
     OnRestore(dummy);
@@ -132,12 +119,6 @@ void TorrentOptionsPanel::EnableSettings( bool enable)
     m_maxConnections->Enable( enable );
 }
 
-//void TorrentOptionsPanel::OnEnableP2P( wxCommandEvent& event )
-//{
-//    EnableSettings( m_enableP2P->IsChecked() );
-//
-//}
-
 //TODO wtf did i add these for
 void TorrentOptionsPanel::OnMaxUp( wxCommandEvent& event ){}
 void TorrentOptionsPanel::OnMaxDown( wxCommandEvent& event ){}
@@ -153,10 +134,26 @@ void TorrentOptionsPanel::OnApply( wxCommandEvent& event )
     sett().SetTorrentDownloadRate( s2l( m_maxDown->GetValue() ) );
     sett().SetTorrentPort( s2l( m_p2pport->GetValue() ) );
     sett().SetTorrentMaxConnections( s2l( m_maxConnections->GetValue() ) );
+    sett().SetTorrentThrottledUploadRate( s2l( m_gamestart_throttle_up->GetValue() ) );
+    sett().SetTorrentThrottledDownloadRate( s2l( m_gamestart_throttle_down->GetValue() ) );
+
+    //last radio box value, will be changed if other box is pressed
+    int autostart_mode = 2;
+    if ( m_autostart_logon->GetValue() )
+        autostart_mode = 0;
+    else if ( m_autostart_start->GetValue() )
+        autostart_mode = 1;
+    sett().SetTorrentSystemAutoStartMode( autostart_mode );
+
+    // if mode == pause selected --> m_gamestart_throttle->GetValue() == 0
+    sett().SetTorrentSystemSuspendMode( m_gamestart_throttle->GetValue() );
+
+//TODO what about this??
 //    if (!torrent()->IsConnectedToP2PSystem() && m_enableP2P->IsChecked() && m_ui.IsConnected() )
 //        torrent()->ConnectToP2PSystem();
 //    else if ( torrent()->IsConnectedToP2PSystem() && !m_enableP2P->IsChecked() )
 //        torrent()->DisconnectToP2PSystem();
+
     torrent()->UpdateSettings();
 }
 
@@ -166,6 +163,20 @@ void TorrentOptionsPanel::OnRestore( wxCommandEvent& event )
     m_p2pport->SetValue( i2s( sett().GetTorrentPort() ) );
     m_maxDown->SetValue( i2s( sett().GetTorrentDownloadRate() ) );
     m_maxUp->SetValue( i2s( sett().GetTorrentUploadRate() ) );
+    m_gamestart_throttle_up->SetValue( i2s( sett().GetTorrentThrottledUploadRate() ) );
+    m_gamestart_throttle_down->SetValue( i2s( sett().GetTorrentThrottledDownloadRate( ) ) );
+    switch ( sett().GetTorrentSystemAutoStartMode() )
+    {
+        case 1:
+            m_autostart_logon->SetValue( true );
+            break;
+        case 2:
+            m_autostart_manual->SetValue( true );
+            break;
+        default:
+            m_autostart_logon->SetValue( true );
+    }
+    m_gamestart_throttle->SetValue( sett().GetTorrentSystemSuspendMode() );
 
 }
 

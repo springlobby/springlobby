@@ -16,14 +16,14 @@ class TorrentOptionsPanel;
 
 class MainOptionsTab : public wxPanel
 {
-  public:
+public:
     MainOptionsTab( wxWindow* parent, Ui& ui );
     ~MainOptionsTab();
 
     void OnApply( wxCommandEvent& event );
     void OnRestore( wxCommandEvent& event );
 
-  protected:
+protected:
     wxBoxSizer* m_main_sizer;
 
     wxImageList* m_imagelist;
