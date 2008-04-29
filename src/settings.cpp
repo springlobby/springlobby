@@ -993,16 +993,17 @@ void Settings::SetTorrentDownloadRate( int speed )
   m_config->Write( _T("/Torrent/DownloadRate"), speed );
 }
 
-bool Settings::GetTorrentSystemEnabled()
+int Settings::GetTorrentSystemAutoStartMode()
 {
-    return  m_config->Read( _T("/Torrent/SystemEnabled"), true );
+    return  m_config->Read( _T("/Torrent/StartMode"), 0l );
 }
 
 
-void Settings::SetTorrentSystemEnabled( bool enabled )
+void Settings::SetTorrentSystemAutoStartMode( int mode )
 {
-  m_config->Write( _T("/Torrent/SystemEnabled"), enabled );
+  m_config->Write( _T("/Torrent/StartMode"), mode );
 }
+
 
 void Settings::SetTorrentMaxConnections( int connections )
 {

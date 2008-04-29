@@ -62,6 +62,7 @@ class TorrentWrapper : public iNetClass
     bool IsConnectedToP2PSystem();
     bool IsFileInSystem( const wxString& uhash );
     void RemoveFile( const wxString& hash );
+    int GetTorrentSystemStatus();
 
     /// lobby interface
     void SetIngameStatus( bool status );

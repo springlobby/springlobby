@@ -15,11 +15,6 @@ class TorrentOptionsPanel: public wxPanel
     public:
         TorrentOptionsPanel( wxWindow* parent, Ui& ui);
         ~TorrentOptionsPanel();
-        void OnEnableP2P( wxCommandEvent& event );
-        void OnMaxUp( wxCommandEvent& event );
-        void OnMaxDown( wxCommandEvent& event );
-        void OnP2PPort( wxCommandEvent& event );
-        void OnMaxConnections( wxCommandEvent& event );
         void OnApply( wxCommandEvent& event );
         void OnRestore( wxCommandEvent& event );
 
@@ -31,8 +26,6 @@ class TorrentOptionsPanel: public wxPanel
         wxTextCtrl* m_maxConnections;
 
         Ui& m_ui;
-
-        void EnableSettings( bool enable);
 
 
         enum

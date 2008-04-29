@@ -164,6 +164,14 @@ void TorrentWrapper::RemoveFile( const wxString& hash )
 }
 
 
+int TorrentWrapper::GetTorrentSystemStatus()
+{
+  if (!m_connected) return 0;
+  if (ingame) return 2;
+  return 1;
+}
+
+
 ////////////////////////////////////////////////////////
 ////               lobby interface                  ////
 ////////////////////////////////////////////////////////
