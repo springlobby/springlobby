@@ -28,7 +28,7 @@ HttpDownloader::~HttpDownloader()
 {
 }
 
-HttpDownloaderThread::HttpDownloaderThread( HttpDownloader& CallingClass, const wxString& FileUrl, const wxString& DestPath,
+HttpDownloader::HttpDownloaderThread::HttpDownloaderThread( HttpDownloader& CallingClass, const wxString& FileUrl, const wxString& DestPath,
                 const bool notify, const wxString& noticeErr, const wxString& noticeOk   ) :
         m_calling_class(CallingClass),
         m_destroy(false),
@@ -42,18 +42,18 @@ HttpDownloaderThread::HttpDownloaderThread( HttpDownloader& CallingClass, const 
     Init();
 }
 
-HttpDownloaderThread::~HttpDownloaderThread()
+HttpDownloader::HttpDownloaderThread::~HttpDownloaderThread()
 {
 }
 
-void HttpDownloaderThread::Init()
+void HttpDownloader::HttpDownloaderThread::Init()
 {
     Create();
     Run();
 }
 
 
-void* HttpDownloaderThread::Entry()
+void* HttpDownloader::HttpDownloaderThread::Entry()
 {
     wxHTTP FileDownloading;
     /// normal timeout is 10 minutes.. set to 10 secs.
@@ -101,13 +101,13 @@ void* HttpDownloaderThread::Entry()
 }
 
 
-bool HttpDownloaderThread::TestDestroy()
+bool HttpDownloader::HttpDownloaderThread::TestDestroy()
 {
     return m_destroy;
 }
 
 
-void HttpDownloaderThread::CloseThread()
+void HttpDownloader::HttpDownloaderThread::CloseThread()
 {
     m_destroy = true;
 }
