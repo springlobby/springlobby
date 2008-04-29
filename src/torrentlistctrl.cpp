@@ -63,7 +63,7 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 3, col, _("MB uploaded") );
 
-  col.SetText( _("leeching") );
+  col.SetText( _("seeding") );
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 4, col, _("seeding") );
 
