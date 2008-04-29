@@ -116,8 +116,16 @@ bool TorrentWrapper::IsConnectedToP2PSystem()
 
 void TorrentWrapper::UpdateSettings()
 {
-  m_torr->set_upload_rate_limit(sett().GetTorrentUploadRate() * 1024);
-  m_torr->set_download_rate_limit(sett().GetTorrentDownloadRate() *1024 );
+  if ( !ingame || sett().GetTorrentSystemSuspendMode() == 0 )
+  {
+    m_torr->set_upload_rate_limit(sett().GetTorrentUploadRate() * 1024);
+    m_torr->set_download_rate_limit(sett().GetTorrentDownloadRate() *1024 );
+  }
+  else
+  {
+    m_torr->set_upload_rate_limit(sett().GetTorrentThrottledUploadRate() * 1024);
+    m_torr->set_download_rate_limit(sett().GetTorrentThrottledDownloadRate() *1024 );
+  }
   m_torr->set_max_connections(sett().GetTorrentMaxConnections());
   try
   {
@@ -257,15 +265,25 @@ void TorrentWrapper::SetIngameStatus( bool status )
   if ( status == ingame ) return; /// no change needed
   ingame = status;
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
-  if ( ingame ) /// going ingame, pause all torrents and disable dht
+  if ( ingame ) /// going ingame, pause all torrents (or throttle speeds) and disable dht
   {
-    for ( unsigned int i = 0; i < TorrentList.size(); i++) TorrentList[i].pause();
+    if ( sett().GetTorrentSystemSuspendMode() == 0 ) for ( unsigned int i = 0; i < TorrentList.size(); i++) TorrentList[i].pause();
+    else
+    {
+      m_torr->set_upload_rate_limit(sett().GetTorrentThrottledUploadRate() * 1024);
+      m_torr->set_download_rate_limit(sett().GetTorrentThrottledDownloadRate() *1024 );
+    }
     m_torr->stop_dht();
   }
-  else/// game closed, resume all torrents and reactivate dht
+  else/// game closed, resume all torrents (or reset normal speed) and reactivate dht
   {
     m_torr->start_dht();
-    for ( unsigned int i = 0; i < TorrentList.size(); i++) TorrentList[i].resume();
+    if ( sett().GetTorrentSystemSuspendMode() == 0 ) for ( unsigned int i = 0; i < TorrentList.size(); i++) TorrentList[i].resume();
+    else
+    {
+      m_torr->set_upload_rate_limit(sett().GetTorrentUploadRate() * 1024);
+      m_torr->set_download_rate_limit(sett().GetTorrentDownloadRate() *1024 );
+    }
   }
 
 }

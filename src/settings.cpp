@@ -937,7 +937,7 @@ void Settings::SetTorrentPort( unsigned int port )
 
 int Settings::GetTorrentUploadRate()
 {
-    return  m_config->Read( _T("/Torrent/UploadRate"), 0l );
+    return  m_config->Read( _T("/Torrent/UploadRate"), -1 );
 }
 
 
@@ -946,10 +946,80 @@ void Settings::SetTorrentUploadRate( int speed )
   m_config->Write( _T("/Torrent/UploadRate"), speed );
 }
 
+
 int Settings::GetTorrentDownloadRate()
 {
-    return  m_config->Read( _T("/Torrent/DownloadRate"), 0l );
+    return  m_config->Read( _T("/Torrent/DownloadRate"), -1 );
 }
+
+
+
+void Settings::SetTorrentDownloadRate( int speed )
+{
+  m_config->Write( _T("/Torrent/DownloadRate"), speed );
+}
+
+
+int Settings::GetTorrentSystemSuspendMode()
+{
+    return  m_config->Read( _T("/Torrent/SuspendMode"), 0l );
+}
+
+
+
+void Settings::SetTorrentSystemSuspendMode( int mode )
+{
+  m_config->Write( _T("/Torrent/SuspendMode"), mode );
+}
+
+
+int Settings::GetTorrentThrottledUploadRate()
+{
+    return  m_config->Read( _T("/Torrent/ThrottledUploadRate"), 0l );
+}
+
+
+void Settings::SetTorrentThrottledUploadRate( int speed )
+{
+  m_config->Write( _T("/Torrent/ThrottledUploadRate"), speed );
+}
+
+
+int Settings::GetTorrentThrottledDownloadRate()
+{
+    return  m_config->Read( _T("/Torrent/ThrottledDownloadRate"), 0l );
+}
+
+
+void Settings::SetTorrentThrottledDownloadRate( int speed )
+{
+  m_config->Write( _T("/Torrent/ThrottledDownloadRate"), speed );
+}
+
+
+int Settings::GetTorrentSystemAutoStartMode()
+{
+    return  m_config->Read( _T("/Torrent/AutoStartMode"), 0l );
+}
+
+
+void Settings::SetTorrentSystemAutoStartMode( int mode )
+{
+  m_config->Write( _T("/Torrent/AutoStartMode"), mode );
+}
+
+
+void Settings::SetTorrentMaxConnections( int connections )
+{
+  m_config->Write( _T("/Torrent/MaxConnections"), connections );
+}
+
+
+int Settings::GetTorrentMaxConnections()
+{
+    return  m_config->Read( _T("/Torrent/MaxConnections"), 250 );
+}
+
 
 void Settings::SaveBattleMapOptions(IBattle *battle){
   if ( !battle ){
@@ -986,34 +1056,6 @@ void Settings::SaveBattleMapOptions(IBattle *battle){
       }
     }
   }
-}
-
-void Settings::SetTorrentDownloadRate( int speed )
-{
-  m_config->Write( _T("/Torrent/DownloadRate"), speed );
-}
-
-int Settings::GetTorrentSystemAutoStartMode()
-{
-    return  m_config->Read( _T("/Torrent/StartMode"), 0l );
-}
-
-
-void Settings::SetTorrentSystemAutoStartMode( int mode )
-{
-  m_config->Write( _T("/Torrent/StartMode"), mode );
-}
-
-
-void Settings::SetTorrentMaxConnections( int connections )
-{
-  m_config->Write( _T("/Torrent/MaxConnections"), connections );
-}
-
-
-int Settings::GetTorrentMaxConnections()
-{
-    return  m_config->Read( _T("/Torrent/MaxConnections"), 250 );
 }
 
 void Settings::LoadBattleMapOptions(IBattle *battle){
