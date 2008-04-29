@@ -63,6 +63,7 @@ clean-local:
 	rm -f revision.cpp
 
 # the following line is searched for in a script to add filenames under it
+
 springlobby_SOURCES = \
 	revision.cpp \
 	src/updater/versionchecker.cpp \
@@ -508,7 +509,15 @@ springlobby_SOURCES = \
 	src/spinctld.h \
 	src/spinctld.cpp \
 	src/autobalancedialog.cpp \
-	src/autobalancedialog.h
+	src/autobalancedialog.h \
+	src/tdfcontainer.cpp \
+	src/tdfcontainer.h
+
+
+if USE_WINDRES	
+springlobby_SOURCES += \ 
+		src/springlobby.rc 
+endif
 
 
 # TODO keep only a single list instead of duplicating the lists below
@@ -545,13 +554,6 @@ springlobby_SOURCES += \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
 	src/settings++/helpmenufunctions.cpp 
-	
-		
-if USE_WINDRES
-	springlobby_SOURCES += \
-		src/springlobby.rc
-endif
-
 
 springsettings_SOURCES = \
 	revision.cpp \
@@ -598,7 +600,7 @@ springsettings_SOURCES = \
 
 
 if USE_WINDRES
-	springsettings_SOURCES += \
-		src/settings++/settings.rc
+springsettings_SOURCES += \
+	src/settings++/settings.rc
 endif
 

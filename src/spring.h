@@ -3,6 +3,7 @@
 
 #include <wx/string.h>
 #include <wx/event.h>
+#include <iostream>
 
 class SinglePlayerBattle;
 class Battle;
@@ -22,8 +23,8 @@ class Spring: public wxEvtHandler
     bool Run( SinglePlayerBattle& battle );
     static bool TestSpringBinary();
 
-    wxString GetScriptTxt( Battle& battle );
-    wxString GetSPScriptTxt( SinglePlayerBattle& battle );
+    void WriteScriptTxt(std::ostream &output, Battle& battle );
+    void WriteSPScriptTxt(std::ostream &output, SinglePlayerBattle& battle );
     void OnTerminated( wxCommandEvent& event );
 
   protected:

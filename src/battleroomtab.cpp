@@ -408,7 +408,7 @@ void BattleRoomTab::OnBalance( wxCommandEvent& event ){
 void BattleRoomTab::OnAddBot( wxCommandEvent& event )
 {
     //customMessageBox(SL_MAIN_ICON,_T("Max players reached"),_T("Cannot add bot, maximum number of players already reached.") );
-  if ( m_battle.GetNumBots() + m_battle.GetNumUsers() < m_battle.GetMaxPlayers() )
+  if ( m_battle.GetNumBots() + m_battle.GetNumUsers() - m_battle.GetSpectators()  < m_battle.GetMaxPlayers() )
   {
       AddBotDialog dlg( this, m_battle );
       if ( dlg.ShowModal() == wxID_OK ) {

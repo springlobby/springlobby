@@ -3,6 +3,7 @@
 
 #include <wx/string.h>
 #include <wx/log.h>
+#include <sstream>
 
 #ifndef __WXDEBUG__
 #define wxLogDebugFunc( params ) wxLogVerbose( _T("%s"), wxString(wxString(__FUNCTION__, wxConvUTF8 ) + _T(" ( ") + wxString(params) + _T(" )")).c_str() )
@@ -67,6 +68,23 @@ wxString i2s( int arg );
 wxString u2s( unsigned int arg );
 //!@brief converts floating point numbers to wxString without problem of WTF decimal separator different in every locale
 wxString f2s( float arg );
+/// new, much improved way to convert stuff to wxString.
+template<class T>
+wxString TowxString(T arg){
+  std::stringstream s;
+  s << arg;
+  return WX_STRING( s.str() );
+}
+inline wxString TowxString(wxString arg){
+  return arg;
+}
+inline wxString TowxString(const wxChar *arg){
+  return wxString(arg);
+}
+inline wxString TowxString(std::string arg){
+  return WX_STRING(arg);
+}
+
 
 
 wxString GetLibExtension();
