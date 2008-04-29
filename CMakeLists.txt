@@ -85,6 +85,7 @@ IF(wxWidgets_FOUND)
 		src/springunitsync.cpp
 		src/springunitsynclib.cpp
 		src/tasserver.cpp
+		src/tdfcontainer.cpp
 		src/ui.cpp
 		src/uiutils.cpp
 		src/unitsyncthread.cpp
