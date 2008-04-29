@@ -53,6 +53,7 @@ class MainTorrentTab: public wxPanel
         void AddTorrentInfo( const TorrentInfos& info );
         void UpdateInfo( const TorrentInfos& info );
         void SetInfo(int index, const TorrentInfos& info );
+        void OnCancelButton( wxCommandEvent& event );
 
         wxBoxSizer* m_mainbox;
 
