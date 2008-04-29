@@ -129,7 +129,7 @@ void MainTorrentTab::AddTorrentInfo( const TorrentInfos& info )
 
 void MainTorrentTab::OnUpdate()
 {
-    long currentselection = m_torrent_list->GetSelectedIndex();
+//    long currentselection = m_torrent_list->GetSelectedIndex();
     info_map = torrent()->CollectGuiInfos();
     m_outgoing_lbl->SetLabel( wxString::Format(_("Total Outgoing: %.2f KB/s"), (info_map[0].outspeed/float(1024)) ) );
     m_incoming_lbl->SetLabel( wxString::Format(_("Total Incoming: %.2f KB/s"), (info_map[0].inspeed/ float(1024)) ) );
@@ -141,7 +141,7 @@ void MainTorrentTab::OnUpdate()
 
     }
     Layout();
-    m_torrent_list->SetItemState( currentselection, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+    //m_torrent_list->SetItemState( currentselection, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
 }
 
 
