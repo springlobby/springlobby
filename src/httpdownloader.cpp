@@ -5,7 +5,6 @@
 
 #include <wx/file.h>
 #include <wx/intl.h>
-#include <wx/progdlg.h>
 #include <wx/protocol/http.h>
 #include <wx/string.h>
 #include <wx/zipstrm.h>
@@ -18,8 +17,10 @@
 #include "globalevents.h"
 
 
-HttpDownloader::HttpDownloader( const wxString& FileUrl, const wxString& DestPath )
-    : m_thread_updater ( *this, FileUrl, DestPath )
+HttpDownloader::HttpDownloader( const wxString& FileUrl, const wxString& DestPath,
+                                const bool notify, const wxString& noticeErr, const wxString& noticeOk  )
+    : m_thread_updater ( *this, FileUrl, DestPath, notify, noticeErr, noticeOk   )
+
 {
 }
 
@@ -27,27 +28,32 @@ HttpDownloader::~HttpDownloader()
 {
 }
 
-UpdateProgressbar::UpdateProgressbar( HttpDownloader& CallingClass, const wxString& FileUrl, const wxString& DestPath ) :
+HttpDownloaderThread::HttpDownloaderThread( HttpDownloader& CallingClass, const wxString& FileUrl, const wxString& DestPath,
+                const bool notify, const wxString& noticeErr, const wxString& noticeOk   ) :
         m_calling_class(CallingClass),
         m_destroy(false),
         m_destpath(DestPath),
-        m_fileurl(FileUrl)
+        m_fileurl(FileUrl),
+        m_notifyOnDownloadEvent( notify),
+        m_noticeErr(noticeErr),
+        m_noticeOk(noticeOk)
+
 {
     Init();
 }
 
-UpdateProgressbar::~UpdateProgressbar()
+HttpDownloaderThread::~HttpDownloaderThread()
 {
 }
 
-void UpdateProgressbar::Init()
+void HttpDownloaderThread::Init()
 {
     Create();
     Run();
 }
 
 
-void* UpdateProgressbar::Entry()
+void* HttpDownloaderThread::Entry()
 {
     wxHTTP FileDownloading;
     /// normal timeout is 10 minutes.. set to 10 secs.
@@ -62,9 +68,16 @@ void* UpdateProgressbar::Entry()
             m_httpstream->Read(outs);
             outs.Close();
             delete m_httpstream;
-            wxCommandEvent notice(httpDownloadEvtComplete,GetId());
-            notice.SetString(m_fileurl + _("\nsuccessfully saved to:\n") + m_destpath);
-            wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), notice );
+            //download success
+            if (m_notifyOnDownloadEvent)
+            {
+                wxCommandEvent notice(httpDownloadEvtComplete,GetId());
+                if (m_noticeOk == wxEmptyString)
+                    notice.SetString(m_fileurl + _("\nsuccessfully saved to:\n") + m_destpath);
+                else
+                    notice.SetString(m_noticeOk);
+                wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), notice );
+            }
             return NULL;
         }
         catch (...)
@@ -74,21 +87,27 @@ void* UpdateProgressbar::Entry()
     }
 
     //download failed
-    wxCommandEvent notice(httpDownloadEvtFailed,GetId());
-    notice.SetString(_("Could not save\n") + m_fileurl + _("\nto:\n") + m_destpath);
-    wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), notice );
+    if (m_notifyOnDownloadEvent)
+    {
+        wxCommandEvent notice(httpDownloadEvtFailed,GetId());
+        if (m_noticeErr == wxEmptyString)
+            notice.SetString(_("Could not save\n") + m_fileurl + _("\nto:\n") + m_destpath);
+        else
+            notice.SetString(m_noticeErr);
+        wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), notice );
+    }
 
     return NULL;
 }
 
 
-bool UpdateProgressbar::TestDestroy()
+bool HttpDownloaderThread::TestDestroy()
 {
     return m_destroy;
 }
 
 
-void UpdateProgressbar::CloseThread()
+void HttpDownloaderThread::CloseThread()
 {
     m_destroy = true;
 }
