@@ -35,7 +35,7 @@ void ServerEvents::OnDisconnected()
   m_serv.SetRequiredSpring (_T(""));
   m_ui.OnDisconnected( m_serv );
   #ifndef NO_TORRENT_SYSTEM
-  torrent()->DisconnectToP2PSystem();
+  if( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->DisconnectToP2PSystem();
   #endif
 }
 
@@ -59,7 +59,7 @@ void ServerEvents::OnLoginInfoComplete()
     m_serv.JoinChannel( channel, pass );
   }
   #ifndef NO_TORRENT_SYSTEM
-  if( sett().GetTorrentSystemEnabled() ) torrent()->ConnectToP2PSystem();
+  if( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->ConnectToP2PSystem();
   #endif
   m_ui.OnLoggedIn( );
 }

@@ -19,7 +19,10 @@
 
 BEGIN_EVENT_TABLE( TorrentOptionsPanel, wxPanel )
   EVT_BUTTON( ID_APPLY, TorrentOptionsPanel::OnApply )
+<<<<<<< HEAD:src/torrentoptionspanel.cpp
 //  EVT_CHECKBOX( ID_ENABLEP2P, TorrentOptionsPanel::OnEnableP2P)
+=======
+>>>>>>> bd/torrent:src/torrentoptionspanel.cpp
   EVT_BUTTON( ID_RESTORE, TorrentOptionsPanel::OnRestore )
   EVT_BUTTON( ID_MAN_START, TorrentOptionsPanel::OnManStart )
   EVT_BUTTON( ID_MAN_STOP, TorrentOptionsPanel::OnManStop )
@@ -31,6 +34,13 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
 {
     wxBoxSizer* mainboxsizer = new wxBoxSizer( wxVERTICAL );
 
+<<<<<<< HEAD:src/torrentoptionspanel.cpp
+=======
+    wxBoxSizer* enable_siter = new wxBoxSizer( wxHORIZONTAL );
+    m_enableP2P = new wxCheckBox( this, ID_ENABLEP2P, _("Enable peer to peer download system"));
+    m_enableP2P->SetValue( true );
+    mainboxsizer->Add( m_enableP2P, 0, wxALL, 5 );
+>>>>>>> bd/torrent:src/torrentoptionspanel.cpp
 
     wxBoxSizer* up_siter = new wxBoxSizer( wxHORIZONTAL );
     m_maxUp = new wxTextCtrl( this, ID_MAXUP, i2s( sett().GetTorrentUploadRate() ) );
@@ -59,6 +69,7 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
     con_siter->Add( m_maxConnections, 0, wxALL, 5 );
     con_siter->Add( m_maxConnections_lbl, 0, wxALL, 5 );
     mainboxsizer->Add( con_siter, 0, wxALL, 5 );
+
 
     wxBoxSizer* m_sys_ctrl_box = new wxBoxSizer( wxHORIZONTAL );
     m_sys_start = new wxButton( this, ID_MAN_START, _("Start system") );
@@ -103,6 +114,7 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
     EnableStartStopButtons( torrent()->IsConnectedToP2PSystem() );
     wxCommandEvent dummy;
     OnRestore(dummy);
+
     SetSizer( mainboxsizer );
 }
 
@@ -110,6 +122,7 @@ TorrentOptionsPanel::~TorrentOptionsPanel()
 {
 
 }
+
 
 void TorrentOptionsPanel::EnableSettings( bool enable)
 {
@@ -131,8 +144,11 @@ void TorrentOptionsPanel::OnMaxDown( wxCommandEvent& event ){}
 void TorrentOptionsPanel::OnP2PPort( wxCommandEvent& event ){}
 void TorrentOptionsPanel::OnMaxConnections( wxCommandEvent& event ){}
 
+
 void TorrentOptionsPanel::OnApply( wxCommandEvent& event )
 {
+
+    sett().SetTorrentSystemAutoStartMode( 0 );
     sett().SetTorrentUploadRate( s2l( m_maxUp->GetValue() ) );
     sett().SetTorrentDownloadRate( s2l( m_maxDown->GetValue() ) );
     sett().SetTorrentPort( s2l( m_p2pport->GetValue() ) );

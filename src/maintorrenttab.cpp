@@ -22,6 +22,7 @@
 BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
 	//(*EventTable(MainTorrentTab)
 	//*)
+  EVT_BUTTON      ( ID_BUTTON_CANCEL, MainTorrentTab::OnCancelButton )
 END_EVENT_TABLE()
 
 MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
@@ -46,7 +47,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	m_mainbox->Add(m_totalbox, 1, wxALL, 5);
 
 	m_but_cancel= new wxButton(this, ID_BUTTON_CANCEL, _("Cancel Download") );
-	m_but_cancel->Disable();
+	//m_but_cancel->Disable();
 	m_buttonbox->Add(m_but_cancel, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
 	m_but_publish = new wxButton(this, ID_BUTTON_PUB, _("Publish new file") );
 	m_buttonbox->Add( m_but_publish, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
@@ -128,6 +129,7 @@ void MainTorrentTab::AddTorrentInfo( const TorrentInfos& info )
 
 void MainTorrentTab::OnUpdate()
 {
+//    long currentselection = m_torrent_list->GetSelectedIndex();
     info_map = torrent()->CollectGuiInfos();
     m_outgoing_lbl->SetLabel( wxString::Format(_("Total Outgoing: %.2f KB/s"), (info_map[0].outspeed/float(1024)) ) );
     m_incoming_lbl->SetLabel( wxString::Format(_("Total Incoming: %.2f KB/s"), (info_map[0].inspeed/ float(1024)) ) );
@@ -139,6 +141,13 @@ void MainTorrentTab::OnUpdate()
 
     }
     Layout();
+    //m_torrent_list->SetItemState( currentselection, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+}
+
+
+void MainTorrentTab::OnCancelButton( wxCommandEvent& event )
+{
+  torrent()->RemoveFile( info_map[m_torrent_list->GetSelectedIndex()].hash );
 }
 
 #endif

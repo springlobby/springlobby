@@ -18,6 +18,7 @@ class TorrentOptionsPanel: public wxPanel
     public:
         TorrentOptionsPanel( wxWindow* parent, Ui& ui);
         ~TorrentOptionsPanel();
+
         //void OnEnableP2P( wxCommandEvent& event );
         void OnMaxUp( wxCommandEvent& event );
         void OnMaxDown( wxCommandEvent& event );
@@ -48,6 +49,7 @@ class TorrentOptionsPanel: public wxPanel
         wxStaticText* m_gamestart_throttle_down_lbl;
 
         Ui& m_ui;
+
 
         void EnableSettings( bool enable);
         void EnableStartStopButtons( bool system_is_running);
