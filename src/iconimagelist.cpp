@@ -65,6 +65,8 @@
 
 #include "images/arm.xpm"
 #include "images/core.xpm"
+#include "images/no1_icon.png.h"
+#include "images/no2_icon.png.h"
 
 #include "images/colourbox.xpm"
 
@@ -129,8 +131,8 @@ IconImageList::IconImageList() : wxImageList(16,16)
     ICON_HOST = Add( wxBitmap(host_xpm) );
     ICON_HOST_SPECTATOR = Add( wxBitmap(host_spectator_xpm) );
 
-    ICON_ARM = Add( wxBitmap(arm_xpm) );
-    ICON_CORE = Add( wxBitmap(core_xpm) );
+    ICON_ARM = Add( *charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ));
+    ICON_CORE = Add( *charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ));
 
     SetColourIcon( 0, wxColour( 255,   0,   0 ) );
     SetColourIcon( 1, wxColour(   0, 255,   0 ) );
