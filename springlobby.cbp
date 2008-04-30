@@ -18,6 +18,7 @@
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
 					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
+					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
@@ -36,6 +37,7 @@
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
 					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
+					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
@@ -44,7 +46,7 @@
 			</Target>
 			<Target title="Win32 | Debug">
 				<Option output="bin/Win32/Debug/springlobby" prefix_auto="0" extension_auto="1" />
-				<Option working_dir="$(WX_DIR)/lib/gcc_lib" />
+				<Option working_dir="C:/wxWidgets2.8/lib/gcc_dll" />
 				<Option object_output="obj/Win32/Debug/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
@@ -60,13 +62,8 @@
 					<Add option="-DUSE_PCH" />
 					<Add option="-D__DEBUG__" />
 					<Add option="-D__WXDEBUG__" />
-					<Add directory="$(WX_DIR)/include" />
-					<Add directory="$(WX_DIR)/lib/gcc_dll/mswd" />
-					<Add directory="$(WX_DIR)/contrib/include" />
+					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 				</Compiler>
-				<ResourceCompiler>
-					<Add directory="$(WX_DIR)/include" />
-				</ResourceCompiler>
 				<Linker>
 					<Add library="libwxregexd.a" />
 					<Add library="libwxzlibd.a" />
@@ -74,6 +71,7 @@
 					<Add library="libwxjpegd.a" />
 					<Add library="libwxtiffd.a" />
 					<Add library="libwxexpatd.a" />
+					<Add library="libwxmsw28d.a" />
 					<Add library="libwxbase28d.a" />
 					<Add library="libwxbase28d_net.a" />
 					<Add library="libwxmsw28d_core.a" />
@@ -85,7 +83,6 @@
 					<Add library="libwxmsw28d_aui.a" />
 					<Add library="libwxmsw28d_richtext.a" />
 					<Add library="gmon" />
-					<Add directory="$(WX_DIR)/lib/gcc_dll" />
 				</Linker>
 				<Environment>
 					<Variable name="WX_DIR" value="C:/wxWidgets-2.8.4" />
@@ -99,8 +96,6 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-Wall" />
-					<Add option="-pg" />
-					<Add option="-g" />
 					<Add option="-pipe" />
 					<Add option="-mthreads" />
 					<Add option="-Winvalid-pch" />
@@ -110,6 +105,7 @@
 					<Add option="-DUSE_PCH" />
 					<Add option="-D__DEBUG__" />
 					<Add option="-D__WXDEBUG__" />
+					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 					<Add directory="$(WX_DIR)/include" />
 					<Add directory="$(WX_DIR)/lib/gcc_dll/mswd" />
 					<Add directory="$(WX_DIR)/contrib/include" />
@@ -125,6 +121,7 @@
 					<Add library="libwxjpegd.a" />
 					<Add library="libwxtiffd.a" />
 					<Add library="libwxexpatd.a" />
+					<Add library="libwxmsw28d.a" />
 					<Add library="libwxbase28d.a" />
 					<Add library="libwxbase28d_net.a" />
 					<Add library="libwxmsw28d_core.a" />
@@ -150,6 +147,8 @@
 		<Unit filename="src/addbotdialog.h" />
 		<Unit filename="src/agreementdialog.cpp" />
 		<Unit filename="src/agreementdialog.h" />
+		<Unit filename="src/autobalancedialog.cpp" />
+		<Unit filename="src/autobalancedialog.h" />
 		<Unit filename="src/base64.cpp" />
 		<Unit filename="src/base64.h" />
 		<Unit filename="src/battle.cpp" />
@@ -168,6 +167,8 @@
 		<Unit filename="src/battleoptionstab.h" />
 		<Unit filename="src/battleroomlistctrl.cpp" />
 		<Unit filename="src/battleroomlistctrl.h" />
+		<Unit filename="src/battleroommmoptionstab.cpp" />
+		<Unit filename="src/battleroommmoptionstab.h" />
 		<Unit filename="src/battleroomtab.cpp" />
 		<Unit filename="src/battleroomtab.h" />
 		<Unit filename="src/boost/md5.cpp" />
@@ -184,6 +185,10 @@
 		<Unit filename="src/chatpanel.h" />
 		<Unit filename="src/connectwindow.cpp" />
 		<Unit filename="src/connectwindow.h" />
+		<Unit filename="src/countrycodes.cpp" />
+		<Unit filename="src/countrycodes.h" />
+		<Unit filename="src/crashreport.cpp" />
+		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
 		<Unit filename="src/flagimagedata.h" />
@@ -219,7 +224,6 @@
 		<Unit filename="src/images/exists.xpm" />
 		<Unit filename="src/images/ingame.xpm" />
 		<Unit filename="src/images/join_icon.xpm" />
-		<Unit filename="src/images/logo.svg" />
 		<Unit filename="src/images/not_found_icon.xpm" />
 		<Unit filename="src/images/nready_q.xpm" />
 		<Unit filename="src/images/nready_unsync.xpm" />
@@ -238,6 +242,7 @@
 		<Unit filename="src/images/singleplayer_icon.xpm" />
 		<Unit filename="src/images/spectator.xpm" />
 		<Unit filename="src/images/spring.xpm" />
+		<Unit filename="src/images/springlobby.svg" />
 		<Unit filename="src/images/springlobby.xpm" />
 		<Unit filename="src/images/start_ally.xpm" />
 		<Unit filename="src/images/start_enemy.xpm" />
@@ -259,6 +264,10 @@
 		<Unit filename="src/mainwindow.h" />
 		<Unit filename="src/mapctrl.cpp" />
 		<Unit filename="src/mapctrl.h" />
+		<Unit filename="src/mmoptionmodel.cpp" />
+		<Unit filename="src/mmoptionmodel.h" />
+		<Unit filename="src/mmoptionswrapper.cpp" />
+		<Unit filename="src/mmoptionswrapper.h" />
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonautotools.cpp" />
@@ -305,9 +314,12 @@
 		<Unit filename="src/singleplayertab.h" />
 		<Unit filename="src/socket.cpp" />
 		<Unit filename="src/socket.h" />
+		<Unit filename="src/spinctld.cpp" />
+		<Unit filename="src/spinctld.h" />
 		<Unit filename="src/spring.cpp" />
 		<Unit filename="src/spring.h" />
 		<Unit filename="src/springlobby.rc">
+			<Option compilerVar="WINDRES" />
 			<Option target="Win32 | Debug" />
 			<Option target="Win32 | Profile" />
 		</Unit>
@@ -321,27 +333,33 @@
 		<Unit filename="src/springunitsync.h" />
 		<Unit filename="src/springunitsynclib.cpp" />
 		<Unit filename="src/springunitsynclib.h" />
-		<Unit filename="src/stacktrace.cpp" />
-		<Unit filename="src/stacktrace.h" />
 		<Unit filename="src/tasserver.cpp" />
 		<Unit filename="src/tasserver.h" />
+		<Unit filename="src/tdfcontainer.cpp" />
+		<Unit filename="src/tdfcontainer.h" />
 		<Unit filename="src/ui.cpp" />
 		<Unit filename="src/ui.h" />
 		<Unit filename="src/uiutils.cpp" />
 		<Unit filename="src/uiutils.h" />
 		<Unit filename="src/unitsyncthread.cpp" />
 		<Unit filename="src/unitsyncthread.h" />
+		<Unit filename="src/updater/versionchecker.cpp" />
+		<Unit filename="src/updater/versionchecker.h" />
 		<Unit filename="src/user.cpp" />
 		<Unit filename="src/user.h" />
 		<Unit filename="src/userlist.cpp" />
 		<Unit filename="src/userlist.h" />
 		<Unit filename="src/utils.cpp" />
 		<Unit filename="src/utils.h" />
+		<Unit filename="wxsmith/AutoBalanceDialog.wxs" />
 		<Extensions>
 			<code_completion />
 			<envvars />
 			<wxsmith version="1">
 				<gui name="wxWidgets" src="" main="" init_handlers="necessary" language="CPP" />
+				<resources>
+					<wxDialog wxs="wxsmith/AutoBalanceDialog.wxs" src="src/autobalancedialog.cpp" hdr="src/autobalancedialog.h" name="AutoBalanceDialog" language="CPP" />
+				</resources>
 			</wxsmith>
 			<debugger />
 		</Extensions>

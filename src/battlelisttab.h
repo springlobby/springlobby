@@ -22,6 +22,9 @@ class wxButton;
 class wxBoxSizer;
 class wxStaticText;
 class wxStaticLine;
+class wxCheckBox;
+class wxToggleButton;
+
 
 class BattleListTab : public wxPanel
 {
@@ -72,12 +75,16 @@ class BattleListTab : public wxPanel
     wxButton* m_join_btn;
 
     wxCheckBox* m_filter_activ;
-    wxToggleButton* m_filter_show;
+#if wxUSE_TOGGLEBTN
+		wxToggleButton* m_filter_show;
+#else
+		wxCheckBox* m_filter_show;
+#endif
 
     Ui& m_ui;
 
     Battle* m_sel_battle;
-    
+
     DECLARE_EVENT_TABLE();
 };
 

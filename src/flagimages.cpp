@@ -5,21 +5,25 @@
 
 #include <wx/imaglist.h>
 
-int GetFlagIndex( const std::string& flag )
+int GetFlagIndex( const wxString& flag )
 {
   for (int i = 0; flag_str[i]; ++i) {
-    if ( flag == flag_str[i] ) {
+    if ( flag == WX_STRINGC(flag_str[i]) ) {
       return i;
     }
   }
-  wxLogMessage( WX_STRING(flag) + _T(" flag not found!") );
+  wxLogMessage( _T("%s flag not found!"), flag.c_str() );
   return FLAG_NONE;
 }
 
-void AddFlagImages( wxImageList& imgs )
+int AddFlagImages( wxImageList& imgs )
 {
-  for (int i = 0; flag_xpm[i]; ++i) {
-    imgs.Add( wxBitmap( const_cast<const char**>(flag_xpm[i])) );
+  int index, poszero;
+  for (int i = 0; flag_xpm[i]; ++i)
+  {
+    index = imgs.Add( wxBitmap( const_cast<const char**>(flag_xpm[i])) );
+    if ( i == 0 ) poszero = index;
   }
+  return poszero;
 }
 

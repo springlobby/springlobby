@@ -87,7 +87,7 @@ class SinglePlayerBattle: public IBattle
     BattleBot* GetBotByStartPosition( unsigned int startpos );
     unsigned int GetNumBots();
 
-    void GetFreeColour( int& r, int& g, int& b, bool excludeme = true );
+    wxColour GetFreeColour( bool excludeme = true );
 
     int GetMyAlly() { return -1; }
     void SetMyAlly( int ally ) {}
@@ -98,14 +98,18 @@ class SinglePlayerBattle: public IBattle
     void GetFreePosition( int& x, int& y );
 
     void SendHostInfo( HostInfo update );
+    void SendHostInfo( const wxString& Tag ){}
 
     std::vector<BattleStartRect*>::size_type GetNumRects() { return 0; }
+    mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
 
   protected:
 
     Ui& m_ui;
     MainSinglePlayerTab& m_sptab;
     std::vector<BattleBot*> m_bots;
+
+    mmOptionsWrapper m_opt_wrap;
 
 };
 

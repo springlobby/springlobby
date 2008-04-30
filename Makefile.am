@@ -4,12 +4,23 @@
 ACLOCAL_AMFLAGS = -I m4 --install
 
 AM_CPPFLAGS = \
-	$(WX_CPPFLAGS)
+	$(WX_CPPFLAGS) \
+	-DLOCALEDIR=\"$(localedir)\"
 
 # strict aliasing check is disabled, because wxWidgets headers have problems
 AM_CXXFLAGS = \
 	-Wall \
 	-Wno-strict-aliasing
+
+desktopdir = $(datadir)/applications
+dist_desktop_DATA = \
+	src/springlobby.desktop
+
+pixmapdir = $(datadir)/pixmaps
+dist_pixmap_DATA = \
+	src/images/springlobby.svg
+
+SUBDIRS = po
 
 ## if you don't have the required version of autoconf, comment out the
 ## following clause, in which case you may NOT distribute the result!
@@ -52,8 +63,11 @@ clean-local:
 	rm -f revision.cpp
 
 # the following line is searched for in a script to add filenames under it
+
 springlobby_SOURCES = \
 	revision.cpp \
+	src/updater/versionchecker.cpp \
+	src/updater/versionchecker.h \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
 	src/revision.cpp.in \
@@ -98,6 +112,7 @@ springlobby_SOURCES = \
 	src/battlelistctrl.h \
 	src/battlelistfilter.cpp \
 	src/battlelistfilter.h \
+	src/battlelistfiltervalues.h \
 	src/battlelist.cpp \
 	src/battlelist.h \
 	src/battlelisttab.cpp \
@@ -122,6 +137,10 @@ springlobby_SOURCES = \
 	src/chatpanel.h \
 	src/connectwindow.cpp \
 	src/connectwindow.h \
+	src/crashreport.cpp \
+	src/crashreport.h \
+	src/countrycodes.cpp \
+	src/countrycodes.h \
 	src/flagimagedata.h \
 	src/flagimages.cpp \
 	src/flagimages.h \
@@ -166,8 +185,6 @@ springlobby_SOURCES = \
 	src/springprocess.h \
 	src/springunitsync.cpp \
 	src/springunitsync.h \
-	src/stacktrace.cpp \
-	src/stacktrace.h \
 	src/tasserver.cpp \
 	src/tasserver.h \
 	src/ui.cpp \
@@ -194,7 +211,8 @@ springlobby_SOURCES = \
 	src/images/battle.xpm \
 	src/images/bot.xpm \
 	src/images/channel.xpm \
-	src/images/chat_icon.xpm \
+	src/images/chat_icon.png.h \
+	src/images/chat_icon_text.png.h \
 	src/images/closed_game.xpm \
 	src/images/closed_pw_game.xpm \
 	src/images/close_hi.xpm \
@@ -205,23 +223,28 @@ springlobby_SOURCES = \
 	src/images/down.xpm \
 	src/images/exists.xpm \
 	src/images/ingame.xpm \
-	src/images/join_icon.xpm \
+	src/images/join_icon.png.h \
+	src/images/join_icon_text.png.h \
 	src/images/nexists.xpm \
 	src/images/nready_q.xpm \
 	src/images/nready_unsync.xpm \
 	src/images/open_game.xpm \
 	src/images/open_pw_game.xpm \
-	src/images/options_icon.xpm \
+	src/images/options_icon.png.h \
+	src/images/options_icon_text.png.h \
 	src/images/rank0.xpm \
 	src/images/rank1.xpm \
 	src/images/rank2.xpm \
 	src/images/rank3.xpm \
 	src/images/rank4.xpm \
-        src/images/rank5.xpm \
-        src/images/rank6.xpm \
+	src/images/rank5.xpm \
+	src/images/rank6.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
-	src/images/singleplayer_icon.xpm \
+	src/images/downloads_icon.png.h \
+	src/images/single_player_icon.png.h \
+	src/images/downloads_icon_text.png.h \
+	src/images/single_player_icon_text.png.h \
 	src/images/select_icon.xpm \
 	src/images/server.xpm \
 	src/images/spectator.xpm \
@@ -473,8 +496,28 @@ springlobby_SOURCES = \
 	src/images/flags/ZA.xpm \
 	src/images/flags/ZM.xpm \
 	src/images/flags/ZW.xpm \
+	src/images/empty.xpm \
 	src/customlistctrl.h \
-	src/customlistctrl.cpp 
+	src/customlistctrl.cpp \
+	src/mmoptionmodel.h \
+	src/mmoptionmodel.cpp \
+	src/mmoptionswrapper.h \
+	src/mmoptionswrapper.cpp \
+	src/battleroommmoptionstab.h \
+	src/battleroommmoptionstab.cpp \
+	src/thingdef.h \
+	src/spinctld.h \
+	src/spinctld.cpp \
+	src/autobalancedialog.cpp \
+	src/autobalancedialog.h \
+	src/tdfcontainer.cpp \
+	src/tdfcontainer.h
+
+
+if USE_WINDRES	
+springlobby_SOURCES += \ 
+		src/springlobby.rc 
+endif
 
 
 # TODO keep only a single list instead of duplicating the lists below
@@ -512,24 +555,14 @@ springlobby_SOURCES += \
 	src/settings++/helpmenufunctions.h \
 	src/settings++/helpmenufunctions.cpp 
 
-if USE_WINDRES
-	springlobby_SOURCES += \
-		src/springlobby.rc
-endif
-
-
 springsettings_SOURCES = \
 	revision.cpp \
 	src/revision.cpp.in \
 	src/revision.h \
-	src/base64.cpp \
-	src/base64.h \
 	src/utils.cpp \
 	src/utils.h \
-	src/stacktrace.cpp \
-	src/stacktrace.h \
-	src/boost/md5.cpp \
-	src/boost/md5.hpp \
+	src/crashreport.cpp \
+	src/crashreport.h \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
 	src/settings++/se_utils.cpp \
@@ -563,11 +596,11 @@ springsettings_SOURCES = \
 	src/settings++/custom_dialogs.h \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
-	src/settings++/helpmenufunctions.cpp 
+	src/settings++/helpmenufunctions.cpp
 
 
 if USE_WINDRES
-	springsettings_SOURCES += \
-		src/springlobby.rc
+springsettings_SOURCES += \
+	src/settings++/settings.rc
 endif
 

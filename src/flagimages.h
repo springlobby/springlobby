@@ -1,12 +1,12 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_FLAGIMAGES_H
 #define SPRINGLOBBY_HEADERGUARD_FLAGIMAGES_H
 
-#include <string>
+#include <wx/string.h>
 
 class wxImageList;
 
-int GetFlagIndex( const std::string& flag );
-void AddFlagImages( wxImageList& imgs );
+int GetFlagIndex( const wxString& flag );
+int AddFlagImages( wxImageList& imgs );
 
 enum {
   FLAG_NONE = -1

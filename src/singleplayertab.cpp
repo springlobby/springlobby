@@ -21,6 +21,8 @@
 
 #include "settings++/custom_dialogs.h"
 
+#include "springunitsynclib.h"
+
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
   EVT_CHOICE( SP_MAP_PICK, SinglePlayerTab::OnMapSelect )
@@ -49,7 +51,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_map_pick = new wxChoice( this, SP_MAP_PICK );
   m_ctrl_sizer->Add( m_map_pick, 1, wxALL, 5 );
 
-  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
   m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
   m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
@@ -107,7 +109,7 @@ void SinglePlayerTab::ReloadMaplist()
   m_map_pick->Clear();
   try {
     for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-      m_map_pick->Insert( RefineMapname( WX_STRING(usync()->GetMap( i ).name) ), i );
+      m_map_pick->Insert( RefineMapname( usync()->GetMap( i ).name ), i );
     }
   } catch(...) {}
   m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
@@ -126,7 +128,7 @@ void SinglePlayerTab::ReloadModlist()
   m_mod_pick->Clear();
   try {
     for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
-      m_mod_pick->Insert( RefineModname( WX_STRING(usync()->GetMod( i ).name) ), i );
+      m_mod_pick->Insert( RefineModname( usync()->GetMod( i ).name ), i );
     }
   } catch (...) {}
 
@@ -143,6 +145,7 @@ void SinglePlayerTab::ReloadModlist()
 
 void SinglePlayerTab::SetMap( unsigned int index )
 {
+	//m_ui.ReloadUnitSync();
   m_addbot_btn->Enable( false );
   if ( index >= m_map_pick->GetCount()-1 ) {
     m_battle.SetMap( wxEmptyString, wxEmptyString );
@@ -154,12 +157,14 @@ void SinglePlayerTab::SetMap( unsigned int index )
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
+  m_battle.SendHostInfo( HI_Map_Changed ); // reload map options
   m_map_pick->SetSelection( index );
 }
 
 
 void SinglePlayerTab::SetMod( unsigned int index )
 {
+	//m_ui.ReloadUnitSync();
   if ( index >= m_mod_pick->GetCount()-1 ) {
     m_battle.SetMod( wxEmptyString, wxEmptyString );
   } else {
@@ -170,6 +175,7 @@ void SinglePlayerTab::SetMod( unsigned int index )
   }
   m_minimap->UpdateMinimap();
   m_battle.SendHostInfo( HI_Restrictions ); // Update restrictions in options.
+  m_battle.SendHostInfo( HI_Mod_Changed ); // reload mod options
   m_mod_pick->SetSelection( index );
 }
 
@@ -236,15 +242,13 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
   AddBotDialog dlg( this, m_battle, true );
   if ( dlg.ShowModal() == wxID_OK ) {
-    int x = 0, y = 0, handicap = 0, r, g, b;
+    int x = 0, y = 0, handicap = 0;
     m_battle.GetFreePosition( x, y );
-    m_battle.GetFreeColour( r, g, b, false );
+    wxColour col = m_battle.GetFreeColour( false );
     int i = m_battle.AddBot( m_battle.GetFreeAlly(), x, y, handicap, dlg.GetAI() );
     BattleBot* bot = m_battle.GetBot( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
-    bot->bs.color_r = r;
-    bot->bs.color_g = g;
-    bot->bs.color_b = b;
+    bot->bs.colour = col;
     m_minimap->UpdateMinimap();
   }
 }

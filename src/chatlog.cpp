@@ -33,11 +33,15 @@ ChatLog::~ChatLog()
 {
   if ( m_active && m_logfile ) {
     wxDateTime now = wxDateTime::Now();
-    WriteLine( _("### Session Closed at [") + now.Format( _("%Y-%m-%d %H:%M") ) + _("]") );
-    WriteLine( _(" \n \n \n") );
+    WriteLine( _("### Session Closed at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _("]") );
+    WriteLine( _T(" \n \n \n") );
     if ( m_logfile->IsOpened() ) m_logfile->Close();
   }
-  delete m_logfile;
+  if (m_logfile != 0)
+  {
+  	delete m_logfile;
+	m_logfile = 0;
+  }
 }
 
 
@@ -49,7 +53,7 @@ bool ChatLog::AddMessage(const wxString& text)
   else if ( !m_logfile) {
     m_active = OpenLogFile(m_server,m_room);
   }
-  return (m_active)? WriteLine(LogTime()+_(" ")+text+_("\n")) : false;
+  return (m_active)? WriteLine(LogTime()+_T(" ")+text+_T("\n")) : false;
 }
 
 
@@ -68,13 +72,13 @@ wxString ChatLog::_GetPath()
 bool ChatLog::CreateFolder(const wxString& server)
 {
   if ( !( wxDirExists( _GetPath() ) || wxMkdir( _GetPath(), 0777) ) ) {
-    wxLogWarning( _T("can't create logging folder: ") + _GetPath() );
+    wxLogWarning( _T("can't create logging folder: %s"), _GetPath().c_str() );
     customMessageBox(SL_MAIN_ICON, _("Couldn't create folder. \nBe sure that there isn't a write protection.\n") + _GetPath()+ _("Log function is disabled until restart SpringLobby."), _("Log Warning") );
     m_parent_dir_exists = false;
     return false;
   }
   if ( !( wxDirExists( _GetPath() + wxFileName::GetPathSeparator() + server ) || wxMkdir( _GetPath() + wxFileName::GetPathSeparator() + server, 0777 ) ) ) {
-    wxLogWarning( _T("can't create logging folder: ") + _GetPath() + wxFileName::GetPathSeparator() + server );
+    wxLogWarning( _T("can't create logging folder: %s"), wxString(_GetPath() + wxFileName::GetPathSeparator() + server).c_str() );
     customMessageBox(SL_MAIN_ICON, _("Couldn't create folder. \nBe sure that there isn't a write protection.\n") + _GetPath() + wxFileName::GetPathSeparator() + server + _("Log function is disabled until restart SpringLobby."), _T("Log Warning") );
     m_parent_dir_exists = false;
     return false;
@@ -88,7 +92,7 @@ bool ChatLog::WriteLine(const wxString& text)
   ASSERT_LOGIC( m_logfile, _T("m_logfile = 0") );
   if ( !m_logfile->Write( text, wxConvUTF8 ) ) {
     m_active = false;
-    wxLogWarning( _T("can't write message to log ") + m_server + _T("::") + m_room );
+    wxLogWarning( _T("can't write message to log (%s)"),  wxString(m_server + _T("::") + m_room).c_str() );
     customMessageBox(SL_MAIN_ICON, _("Couldn't write message to log.\nLogging will be disabled for room ") + m_server + _T("::") + m_room + _(".\n\nRejoin room to reactivate logging."), _("Log Warning") );
     return false;
   }
@@ -105,7 +109,7 @@ bool ChatLog::OpenLogFile(const wxString& server,const wxString& room)
       m_logfile = new wxFile( path, wxFile::write );
     }
     if ( !m_logfile->IsOpened() ) {
-      wxLogWarning( _T("Can't open log file ") + path ) ;
+      wxLogWarning( _T("Can't open log file %s"), path.c_str() ) ;
       customMessageBox(SL_MAIN_ICON, _("Can't open log file. \nBe sure that there isn't a write protection.\n") + path, _("Log Warning") ) ;
       delete m_logfile;
       m_logfile = 0;
@@ -123,6 +127,6 @@ bool ChatLog::OpenLogFile(const wxString& server,const wxString& room)
 wxString ChatLog::LogTime()
 {
   wxDateTime now = wxDateTime::Now();
-  return  _("[") + now.Format( _("%H:%M") ) + _("]");
+  return  _T("[") + now.Format( _T("%H:%M") ) + _T("]");
 }
 

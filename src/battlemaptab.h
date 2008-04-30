@@ -30,7 +30,8 @@ class BattleMapTab : public wxPanel
 
      void UpdateUser( User& user );
 
-     void UpdateMap();
+     void Update();
+     void Update( const wxString& Tag );
      void ReloadMaplist();
 
      void OnMapSelect( wxCommandEvent& event );

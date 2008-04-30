@@ -224,6 +224,8 @@ class SpringUnitSyncLib
      */
     void AddAllArchives( const wxString& root );
 
+    void SetCurrentMod( const wxString& modname );
+
     wxString GetFullUnitName( int index );
     wxString GetUnitName( int index );
     int GetUnitCount();
@@ -247,13 +249,12 @@ class SpringUnitSyncLib
     int ReadFileVFS( int handle, void* buffer, int bufferLength );
     void CloseFileVFS( int handle );
 
-    bool HasLuaAI();
     int GetLuaAICount();
     wxString GetLuaAIName( int aiIndex );
     wxString GetLuaAIDesc( int aiIndex );
 
     int GetMapOptionCount( const wxString& name );
-    int GetModOptionCount();
+    int GetModOptionCount( const wxString& name );
     wxString GetOptionKey( int optIndex );
     wxString GetOptionName( int optIndex );
     wxString GetOptionDesc( int optIndex );
@@ -300,7 +301,7 @@ class SpringUnitSyncLib
     //! Path to unitsync.
     wxString m_path;
 
-    //! Last used mod.
+    //! the current loaded mod.
     wxString m_current_mod;
 
     //! Macro that checks if a function is present/loaded, unitsync is loaded, and locks it on call.
@@ -324,8 +325,6 @@ class SpringUnitSyncLib
     bool _IsLoaded();
 
     void _ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
-
-    void _SetCurrentMod( const wxString& modname );
 
     /**
      * \defgroup DllFuncPointers Pointers to the functions in unitsync.

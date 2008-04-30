@@ -33,7 +33,7 @@
 #include "mapctrl.h"
 #include "uiutils.h"
 #include "server.h"
-
+#include "mmoptionswrapper.h"
 
 #define LIMIT_DGUN_INDEX 0
 #define GHOUSTED_INDEX  1
@@ -50,8 +50,8 @@ BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
 
   EVT_RADIOBOX( BOPTS_END, BattleOptionsTab::OnEndSelect )
   EVT_CHECKLISTBOX( BOPTS_OPTS, BattleOptionsTab::OnOptsCheck )
-  EVT_COMMAND_SCROLL_THUMBRELEASE( BOPTS_SLIDE, BattleOptionsTab::OnSlideChanged )
-  EVT_COMMAND_SCROLL_CHANGED( BOPTS_SLIDE, BattleOptionsTab::OnSlideChanged )
+  EVT_COMMAND_SCROLL_THUMBRELEASE( wxID_ANY, BattleOptionsTab::OnSlideChanged )
+  EVT_COMMAND_SCROLL_CHANGED( wxID_ANY, BattleOptionsTab::OnSlideChanged )
 
   EVT_BUTTON( BOPTS_RESTRICT, BattleOptionsTab::OnRestrict )
   EVT_BUTTON( BOPTS_ALLOW, BattleOptionsTab::OnAllow )
@@ -119,7 +119,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_units_sizer->Add( m_units_lbl, 0, wxALL, 5 );
 
   m_units_slider = new wxSlider( this, SLI_UNITS_ID, 500, 10, 5000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
-  m_units_slider->SetToolTip( _("The maximun number of units allowed per player.") );
+  m_units_slider->SetToolTip( _("The maximum number of units allowed per player.") );
 
   m_units_sizer->Add( m_units_slider, 1, wxALL|wxEXPAND, 5 );
 
@@ -129,7 +129,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
   wxStaticBoxSizer* m_options_box;
   m_options_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Options") ), wxVERTICAL );
-  
+
   //TODO these need to be tooltipped, no idea how yet
   m_options_checks = new wxCheckListBox( this, BOPTS_OPTS );
   m_options_checks->Append( _("Limit d-gun") );
@@ -167,10 +167,10 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
   m_mid_btn_sizer->Add( 0, 50, 0, wxEXPAND, 0 );
 
-  m_restrict_btn = new wxButton( this, BOPTS_RESTRICT, _(">"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_restrict_btn = new wxButton( this, BOPTS_RESTRICT, _T(">"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
   m_mid_btn_sizer->Add( m_restrict_btn, 0, wxALL, 5 );
 
-  m_allow_btn = new wxButton( this, BOPTS_ALLOW, _("<"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_allow_btn = new wxButton( this, BOPTS_ALLOW, _T("<"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
   m_mid_btn_sizer->Add( m_allow_btn, 0, wxALL, 5 );
 
   m_top_restr_sizer->Add( m_mid_btn_sizer, 0, wxEXPAND, 5 );
@@ -219,7 +219,14 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   this->SetSizer( m_main_sizer );
   this->Layout();
 
-  UpdateBattle();
+  UpdateBattle(  wxString::Format(_T("%d_gamemode"), EngineOption ) );
+  UpdateBattle(  wxString::Format(_T("%d_limitdgun"), EngineOption ) );
+  UpdateBattle(  wxString::Format(_T("%d_startmetal"), EngineOption ) );
+  UpdateBattle(  wxString::Format(_T("%d_startenergy"), EngineOption ) );
+  UpdateBattle(  wxString::Format(_T("%d_maxunits"), EngineOption ) );
+  UpdateBattle(  wxString::Format(_T("%d_ghostedbuildings"), EngineOption ) );
+  UpdateBattle(  wxString::Format(_T("%d_diminishingmms"), EngineOption ) );
+
   ReloadRestrictions();
 
   if ( !m_battle.IsFounderMe() ) {
@@ -231,6 +238,8 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
     m_restrict_btn->Disable();
     m_allow_btn->Disable();
     m_clear_btn->Disable();
+    m_restrict_btn->Disable();
+    m_allow_btn->Disable();
   }
 }
 
@@ -241,25 +250,39 @@ BattleOptionsTab::~BattleOptionsTab()
 }
 
 
-void BattleOptionsTab::UpdateBattle()
+void BattleOptionsTab::UpdateBattle( const wxString& Tag )
 {
-  m_end_radios->SetSelection( m_battle.GetGameType() );
+  long type;
+  Tag.BeforeFirst( '_' ).ToLong( &type );
+  wxString key = Tag.AfterFirst( '_' );
+  wxString value = m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type);
+  long longval;
+  value.ToLong( &longval );
+  if ( type == EngineOption )
+  {
 
-  m_metal_slider->SetValue( m_battle.GetStartMetal() );
-  m_energy_slider->SetValue( m_battle.GetStartEnergy() );
-  m_units_slider->SetValue( m_battle.GetMaxUnits() );
+    if ( key == _T("gamemode") ) m_end_radios->SetSelection( longval );
+    else if ( key == _T("limitdgun") ) m_options_checks->Check( LIMIT_DGUN_INDEX, longval );
+    else if ( key == _T("startmetal") )
+    {
+      m_metal_slider->SetValue( longval );
+      m_last_metal = longval;
 
-  m_last_metal = m_battle.GetStartMetal();
-  m_last_energy = m_battle.GetStartEnergy();
-  m_last_units = m_battle.GetMaxUnits();
-
-  m_options_checks->Check( LIMIT_DGUN_INDEX, m_battle.LimitDGun() );
-  m_options_checks->Check( GHOUSTED_INDEX, m_battle.GhostedBuildings() );
-  m_options_checks->Check( DIM_MMS_INDEX, m_battle.DimMMs() );
-
-  //ReloadRestrictions();
+    }
+    else if ( key == _T("startenergy") )
+    {
+      m_energy_slider->SetValue( longval );
+      m_last_energy = longval;
+    }
+    else if ( key == _T("maxunits") )
+    {
+      m_units_slider->SetValue( longval );
+      m_last_units = longval;
+    }
+    else if ( key == _T("ghostedbuildings") ) m_options_checks->Check( GHOUSTED_INDEX, longval );
+    else if ( key == _T("diminishingmms") ) m_options_checks->Check( DIM_MMS_INDEX, longval );
+  }
 }
-
 
 void BattleOptionsTab::ReloadRestrictions()
 {
@@ -268,15 +291,11 @@ void BattleOptionsTab::ReloadRestrictions()
   if ( m_battle.GetModName() == wxEmptyString ) return;
 
   try {
-    m_allowed_list->InsertItems( usync()->GetUnitsList( STD_STRING(m_battle.GetModName()) ), 0 );
+    m_allowed_list->InsertItems( usync()->GetUnitsList( m_battle.GetModName() ), 0 );
   } catch (...) {}
-  wxString units( m_battle.DisabledUnits().c_str(), wxConvUTF8 );
+  wxArrayString units = m_battle.DisabledUnits();
 
-  wxStringTokenizer list( units, _T(" ") );
-  while ( list.HasMoreTokens() ) {
-    wxString unit = list.GetNextToken();
-    Restrict( unit );
-  }
+  for ( unsigned int i = 0; i < units.GetCount(); i++) Restrict( units[i] );
 }
 
 
@@ -332,7 +351,7 @@ void BattleOptionsTab::Restrict( int index )
     m_allowed_list->Delete( index );
     unit = unit.AfterLast( '(' );
     unit = unit.BeforeLast( ')' );
-    m_battle.DisableUnit( STD_STRING(unit) );
+    m_battle.DisableUnit( unit );
   }
 }
 
@@ -345,7 +364,7 @@ void BattleOptionsTab::Allow( int index)
     m_restrict_list->Delete( index );
     unit = unit.AfterLast( '(' );
     unit = unit.BeforeLast( ')' );
-    m_battle.EnableUnit( STD_STRING(unit) );
+    m_battle.EnableUnit( unit );
   }
 }
 
@@ -356,37 +375,29 @@ void BattleOptionsTab::Allow( int index)
 
 void BattleOptionsTab::OnEndSelect( wxCommandEvent& event )
 {
-
-  if ( m_end_radios->GetSelection() != m_battle.GetGameType() ) {
-
-    switch ( m_end_radios->GetSelection() ) {
-      case 0: m_battle.SetGameType( GT_ComContinue ); break;
-      case 1: m_battle.SetGameType( GT_ComEnds ); break;
-      case 2: m_battle.SetGameType( GT_Lineage ); break;
-      default: ASSERT_LOGIC( false, _T("invalid selection") );
-    }
-
-    m_battle.SendHostInfo( HI_GameType );
-
-  }
-
+  m_battle.CustomBattleOptions()->setSingleOption( _T("gamemode"), i2s(m_end_radios->GetSelection()), EngineOption );
+  m_battle.SendHostInfo( wxString::Format(_T("%d_gamemode"), EngineOption ) );
 }
 
 
 void BattleOptionsTab::OnOptsCheck( wxCommandEvent& event )
 {
-  m_battle.SetLimitDGun( m_options_checks->IsChecked( LIMIT_DGUN_INDEX ) );
-  m_battle.SetGhostedBuildings( m_options_checks->IsChecked( GHOUSTED_INDEX ) );
-  m_battle.SetDimMMs( m_options_checks->IsChecked( DIM_MMS_INDEX ) );
+  m_battle.CustomBattleOptions()->setSingleOption( _T("limitdgun"), i2s(m_options_checks->IsChecked( LIMIT_DGUN_INDEX )), EngineOption );
+  m_battle.SendHostInfo( wxString::Format(_T("%d_limitdgun"), EngineOption ) );
+
+  m_battle.CustomBattleOptions()->setSingleOption( _T("ghostedbuildings"), i2s(m_options_checks->IsChecked( GHOUSTED_INDEX )), EngineOption );
+  m_battle.SendHostInfo( wxString::Format(_T("%d_ghostedbuildings"), EngineOption ) );
+
+  m_battle.CustomBattleOptions()->setSingleOption( _T("diminishingmms"), i2s(m_options_checks->IsChecked( DIM_MMS_INDEX )), EngineOption );
+  m_battle.SendHostInfo( wxString::Format(_T("%d_diminishingmms"), EngineOption ) );
 
   if ( m_sp ) {
-    if ( m_options_checks->IsChecked( RANDOM_START_INDEX ) ) m_battle.SetStartType( ST_Random );
-    else m_battle.SetStartType( ST_Fixed ); // TODO should be ST_Pick next spring release
-    m_battle.SendHostInfo( HI_Options|HI_StartType );
-  } else {
-    m_battle.SendHostInfo( HI_Options );
+    if ( m_options_checks->IsChecked( RANDOM_START_INDEX ) )
+      m_battle.CustomBattleOptions()->setSingleOption( _T("startpostype"), i2s(ST_Random), EngineOption );
+    else
+      m_battle.CustomBattleOptions()->setSingleOption( _T("startpostype"), i2s(ST_Pick), EngineOption );
+    m_battle.SendHostInfo( HI_StartType );
   }
-
 
 }
 
@@ -408,22 +419,24 @@ void BattleOptionsTab::OnSlideChanged( wxScrollEvent& event )
     m_battle.SetMaxUnits( m_last_units );
     changed |= HI_MaxUnits;
   }*/
+  wxString val;
+
   switch (event.GetId())
   {
   case SLI_METAL_ID:
 	  m_last_metal = m_metal_slider->GetValue();
-	      m_battle.SetStartMetal( m_last_metal );
-	      m_battle.SendHostInfo(HI_StartResources);
+    m_battle.CustomBattleOptions()->setSingleOption( _T("startmetal"), i2s(m_last_metal), EngineOption );
+    m_battle.SendHostInfo( wxString::Format(_T("%d_startmetal"), EngineOption ) );
 	  break;
   case SLI_ENERGY_ID:
 	  m_last_energy = m_energy_slider->GetValue();
-	      m_battle.SetStartEnergy( m_last_energy );
-	      m_battle.SendHostInfo(HI_StartResources);
+    m_battle.CustomBattleOptions()->setSingleOption( _T("startenergy"), i2s(m_last_energy), EngineOption );
+    m_battle.SendHostInfo( wxString::Format(_T("%d_startenergy"), EngineOption ) );
 	  break;
   case SLI_UNITS_ID:
 	  m_last_units = m_units_slider->GetValue();
-	     m_battle.SetMaxUnits( m_last_units );
-	     m_battle.SendHostInfo(HI_MaxUnits);
+    m_battle.CustomBattleOptions()->setSingleOption( _T("maxunits"), i2s(m_last_units), EngineOption );
+    m_battle.SendHostInfo( wxString::Format(_T("%d_maxunits"), EngineOption ) );
 	  break;
   }
 }

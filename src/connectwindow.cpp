@@ -47,9 +47,9 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 
   SetIcon( wxIcon(connect_xpm) );
 
-  server = WX_STRING( sett().GetDefaultServer() );
-  username = WX_STRING( sett().GetServerAccountNick( sett().GetDefaultServer() ) );
-  password = WX_STRING( sett().GetServerAccountPass( sett().GetDefaultServer() ) );
+  server = sett().GetDefaultServer();
+  username = sett().GetServerAccountNick( sett().GetDefaultServer() );
+  password = sett().GetServerAccountPass( sett().GetDefaultServer() );
   savepass = sett().GetServerAccountSavePass( sett().GetDefaultServer() );
   // Create all UI elements.
   m_tabs =         new wxNotebook( this  , -1 );
@@ -167,12 +167,13 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   SetSizer( m_main_sizer );
 
   if ( !username.empty() ) {
-    m_pass_text->SetFocus();
+    m_ok_btn->SetFocus();
   } else {
     m_nick_text->SetFocus();
   }
 
   m_ok_btn->SetDefault();
+
   Layout();
   m_main_sizer->SetSizeHints( this );
 #ifdef __WXMSW__
@@ -194,17 +195,17 @@ void ConnectWindow::ReloadServerList()
 {
   m_server_combo->Clear();
   for ( int i = 0; i < sett().GetNumServers(); i++ ) {
-    m_server_combo->AppendString( WX_STRING(sett().GetServerName( i )) );
+    m_server_combo->AppendString( sett().GetServerName( i ) );
   }
-  m_server_combo->SetValue( WX_STRING(sett().GetDefaultServer()) );
+  m_server_combo->SetValue( sett().GetDefaultServer() );
 }
 
 void ConnectWindow::OnServerChange( wxCommandEvent& event )
 {
   wxString HostAddress = m_server_combo->GetValue();
   if (!HostAddress.Contains(_T(":")) && HostAddress != wxString(DEFSETT_DEFAULT_SERVER, wxConvUTF8) ) HostAddress+= _T(":") + wxString::Format(_T("%d"), DEFSETT_DEFAULT_SERVER_PORT );
-  m_nick_text->SetValue( WX_STRING( sett().GetServerAccountNick( STD_STRING( HostAddress ) ) ) );
-  if ( sett().GetServerAccountSavePass( STD_STRING( HostAddress ) ) ) m_pass_text->SetValue ( WX_STRING ( sett().GetServerAccountPass ( STD_STRING ( HostAddress ) ) ) );
+  m_nick_text->SetValue(  sett().GetServerAccountNick( HostAddress ) );
+  if ( sett().GetServerAccountSavePass( HostAddress ) ) m_pass_text->SetValue( sett().GetServerAccountPass( HostAddress ) );
 }
 
 
@@ -214,9 +215,9 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
   wxString HostAddress = m_server_combo->GetValue();
   if (!HostAddress.Contains(_T(":")) && HostAddress != wxString(DEFSETT_DEFAULT_SERVER, wxConvUTF8) ) HostAddress+= _T(":") + wxString::Format(_T("%d"), DEFSETT_DEFAULT_SERVER_PORT ) ;
   if ( m_tabs->GetSelection() <= 0 ) {
-    sett().SetDefaultServer( STD_STRING( HostAddress ) );
-    sett().SetServerAccountNick( STD_STRING( HostAddress ), STD_STRING(m_nick_text->GetValue()) );
-    sett().SetServerAccountSavePass( STD_STRING( HostAddress ), m_rpass_check->GetValue() );
+    sett().SetDefaultServer( HostAddress );
+    sett().SetServerAccountNick( HostAddress,m_nick_text->GetValue() );
+    sett().SetServerAccountSavePass( HostAddress, m_rpass_check->GetValue() );
 
     // We assume that the server is given as : "host:port" so we split based on ":"
     wxArrayString serverString = wxStringTokenize( HostAddress ,_T(":") );
@@ -239,9 +240,9 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
         customMessageBox(SL_MAIN_ICON, _("Port number out of range.\n\nIt must be an integer between 1 and 65535"), _("Invalid port"), wxOK );
         return;
       }
-      sett().AddServer( STD_STRING( HostAddress ) );
-      sett().SetServerHost( STD_STRING( HostAddress ),STD_STRING(serverString[0]) );
-      sett().SetServerPort( STD_STRING( HostAddress ), (int)port );
+      sett().AddServer( HostAddress );
+      sett().SetServerHost( HostAddress, serverString[0] );
+      sett().SetServerPort( HostAddress, (int)port );
     }
 
     if ( serverString.GetCount() != 1 && serverString.GetCount() != 2 ) {
@@ -255,7 +256,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
 
     m_ui.DoConnect( HostAddress, m_nick_text->GetValue(), m_pass_text->GetValue() );
   } else {
-	  wxString* reason = new wxString();
+	  wxString reason;
 	  if (m_regpass2_text->GetValue()!= m_regpass1_text->GetValue())
 	  {
 		  Show();
@@ -270,8 +271,8 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
        customMessageBox(SL_MAIN_ICON, _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
     } else {
        Show();
-       wxLogWarning( _T("registration failed, reason: ")+(*reason)  );
-       customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\n")+(*reason) , _("Registration failed."), wxOK );
+       wxLogWarning( _T("registration failed, reason: %s"), reason.c_str()  );
+       customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\n")+ reason , _("Registration failed."), wxOK );
     }
 
   }

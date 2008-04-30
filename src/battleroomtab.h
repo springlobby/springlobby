@@ -5,6 +5,8 @@
 #include <wx/bmpbuttn.h>
 
 #include "iunitsync.h"
+#include "mmoptionswrapper.h"
+#include <map>
 
 class Ui;
 class Battle;
@@ -23,6 +25,7 @@ class wxCheckBox;
 class wxListCtrl;
 class MapCtrl;
 
+typedef std::map<wxString,long> OptionListMap;
 
 class BattleRoomTab : public wxPanel
 {
@@ -39,10 +42,12 @@ class BattleRoomTab : public wxPanel
 
     bool IsHosted();
 
-    void UpdateBattleInfo();
+    void UpdateBattleInfo( bool MapChanged = false, bool reloadMapOptions = true );
+    void UpdateBattleInfo( const wxString& Tag );
 
     void OnStart( wxCommandEvent& event );
     void OnLeave( wxCommandEvent& event );
+    void OnBalance( wxCommandEvent& event );
     void OnAddBot( wxCommandEvent& event );
     void OnImReady( wxCommandEvent& event );
     void OnLock( wxCommandEvent& event );
@@ -61,10 +66,18 @@ class BattleRoomTab : public wxPanel
 
     void OnUnitSyncReloaded();
 
+
   protected:
+
+    long AddMMOptionsToList( long pos, GameOption optFlag );
+
     Ui& m_ui;
     Battle& m_battle;
     UnitSyncMap m_map;
+
+    long m_map_opts_index;
+
+    OptionListMap m_opt_list_map;
 
     wxBoxSizer* m_players_sizer;
     wxBoxSizer* m_player_sett_sizer;
@@ -102,6 +115,7 @@ class BattleRoomTab : public wxPanel
     wxButton* m_leave_btn;
     wxButton* m_start_btn;
     wxButton* m_addbot_btn;
+    wxButton* m_balance_btn;
 
     wxCheckBox* m_ready_chk;
     wxCheckBox* m_spec_chk;
@@ -122,7 +136,8 @@ enum
     BROOM_COLOURSEL,
     BROOM_SIDESEL,
     BROOM_START,
-    BROOM_ADDBOT
+    BROOM_ADDBOT,
+    BROOM_BALANCE
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H

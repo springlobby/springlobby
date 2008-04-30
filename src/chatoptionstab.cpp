@@ -22,6 +22,7 @@
 #include <wx/stdpaths.h>
 #include <wx/settings.h>
 #include <wx/colordlg.h>
+#include <wx/fontdlg.h>
 
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
@@ -52,7 +53,6 @@ BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
   EVT_BUTTON( ID_TIMESTAMP, ChatOptionsTab::OnTimestampSelect )
   EVT_CHECKBOX( ID_SAVELOGS, ChatOptionsTab::OnSaveLogs )
   EVT_BUTTON( ID_BROWSE_LOGS, ChatOptionsTab::OnBrowseLog )
-  EVT_BUTTON( ID_FINDLOGS, ChatOptionsTab::OnFindLog )
 END_EVENT_TABLE()
 
 
@@ -62,35 +62,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   wxBoxSizer* bMainSizerV;
   bMainSizerV = new wxBoxSizer( wxVERTICAL );
 
-  wxStaticBoxSizer* sbFontSizer;
-  sbFontSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Font") ), wxVERTICAL );
-
-  m_text_sample = new wxStaticText( this, wxID_ANY, _("The quick brown weasel jumps over the lazy fido."), wxDefaultPosition, wxDefaultSize, 0 );
-  m_text_sample->Wrap( -1 );
-  m_text_sample->Enable( false );
-
-  sbFontSizer->Add( m_text_sample, 0, wxALL, 5 );
-
-  wxBoxSizer* bFontNameSizer;
-  bFontNameSizer = new wxBoxSizer( wxHORIZONTAL );
-
-  m_fontname = new wxStaticText( this, wxID_ANY, _("Fontname"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_fontname->Wrap( -1 );
-  m_fontname->Enable( false );
-
-  bFontNameSizer->Add( m_fontname, 0, wxALL, 10 );
-
-  m_select_font = new wxButton( this, ID_SELFONT, _("Select..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  m_select_font->Enable( false );
-
-  bFontNameSizer->Add( m_select_font, 0, wxALL, 5 );
-
-  sbFontSizer->Add( bFontNameSizer, 1, wxEXPAND, 5 );
-
-  bMainSizerV->Add( sbFontSizer, 0, wxEXPAND|wxALL, 5 );
-
   wxStaticBoxSizer* sbColorsSizer;
-  sbColorsSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Colors") ), wxHORIZONTAL );
+  sbColorsSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Colors and font") ), wxHORIZONTAL );
 
   wxBoxSizer* bColorsVSizer;
   bColorsVSizer = new wxBoxSizer( wxVERTICAL );
@@ -102,7 +75,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   bColorsVSizer->Add( m_use_sys_colors, 0, wxALL, 5 );
 
   m_custom_colors = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-  m_custom_colors->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWFRAME ) );
+  m_custom_colors->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
 
   wxBoxSizer* bCustomColorsSizer;
   bCustomColorsSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -183,20 +156,6 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   bColorsSizer1->Add( bJoinLeaveColorSizer, 0, wxEXPAND, 5 );
 
-  wxBoxSizer* bNoteColorSizer;
-  bNoteColorSizer = new wxBoxSizer( wxHORIZONTAL );
-
-  m_note_color = new wxButton( m_custom_colors, ID_NOTIFICATION, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_note_color->SetBackgroundColour( wxColour( 255, 191, 0 ) );
-
-  bNoteColorSizer->Add( m_note_color, 0, wxALL, 5 );
-
-  m_note_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Notification"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_note_label->Wrap( -1 );
-  bNoteColorSizer->Add( m_note_label, 1, wxALL, 5 );
-
-  bColorsSizer1->Add( bNoteColorSizer, 0, wxEXPAND, 5 );
-
   wxBoxSizer* bMyColorSizer;
   bMyColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -272,11 +231,25 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   bColorSizer2->Add( bTSColorSizer, 0, wxEXPAND, 5 );
 
+  wxBoxSizer* bNoteColorSizer;
+  bNoteColorSizer = new wxBoxSizer( wxHORIZONTAL );
+
+  m_note_color = new wxButton( m_custom_colors, ID_NOTIFICATION, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
+  m_note_color->SetBackgroundColour( wxColour( 255, 191, 0 ) );
+
+  bNoteColorSizer->Add( m_note_color, 0, wxALL, 5 );
+
+  m_note_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Notification"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_note_label->Wrap( -1 );
+  bNoteColorSizer->Add( m_note_label, 1, wxALL, 5 );
+
+  bColorSizer2->Add( bNoteColorSizer, 0, wxEXPAND, 5 );
+
   bColorSizer->Add( bColorSizer2, 1, wxEXPAND, 5 );
 
   bCustomColorsSizer->Add( bColorSizer, 1, wxEXPAND, 5 );
 
-  m_test_text = new wxTextCtrl( m_custom_colors, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH );
+  m_test_text = new wxTextCtrl( m_custom_colors, wxID_ANY, _("[19:35] ** Server ** Connected to TAS Server.\n[22:30] <Dude> hi everyone\n[22:30] ** Dude2 joined the channel.\n[22:30] * Dude2 thinks his colors looks nice\n[22:45] <Dude> Dude2: orl?\n[22:46] <Dude2> But could be better, should tweak them some more...\n"), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH );
   bCustomColorsSizer->Add( m_test_text, 1, wxALL|wxEXPAND, 5 );
 
   m_custom_colors->SetSizer( bCustomColorsSizer );
@@ -284,9 +257,40 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   bCustomColorsSizer->Fit( m_custom_colors );
   bColorsVSizer->Add( m_custom_colors, 1, wxEXPAND | wxALL, 0 );
 
+  wxBoxSizer* bFontNameSizer;
+  bFontNameSizer = new wxBoxSizer( wxHORIZONTAL );
+
+  m_font_label = new wxStaticText( this, wxID_ANY, _("Font:"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_font_label->Wrap( -1 );
+  bFontNameSizer->Add( m_font_label, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+  m_fontname = new wxStaticText( this, wxID_ANY, _("default"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_fontname->Wrap( -1 );
+  bFontNameSizer->Add( m_fontname, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+  m_select_font = new wxButton( this, ID_SELFONT, _("Select..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  bFontNameSizer->Add( m_select_font, 0, wxALL, 5 );
+
+  bColorsVSizer->Add( bFontNameSizer, 0, wxEXPAND, 5 );
+
   sbColorsSizer->Add( bColorsVSizer, 1, wxEXPAND, 5 );
 
-  bMainSizerV->Add( sbColorsSizer, 1, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+  bMainSizerV->Add( sbColorsSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+
+
+
+  wxStaticBoxSizer* sbBehaviorSizer;
+  sbBehaviorSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Behavior") ), wxHORIZONTAL );
+
+  m_smart_scroll = new wxCheckBox( this, ID_SYSCOLS, _("Use smart scrolling"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_smart_scroll->SetValue( sett().GetSmartScrollEnabled() );
+
+  sbBehaviorSizer->Add( m_smart_scroll, 0, wxALL, 5 );
+
+  //m_smart_scroll
+
+  bMainSizerV->Add( sbBehaviorSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+
 
   wxBoxSizer* bBotomSizer;
   bBotomSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -295,8 +299,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   sbChatLogSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Chat logs") ), wxVERTICAL );
 
   m_save_logs = new wxCheckBox( this, ID_SAVELOGS, _("Save chat logs"), wxDefaultPosition, wxDefaultSize, 0 );
-
-  m_save_logs->Enable( false );
+  m_save_logs->SetValue( sett().GetChatLogEnable() );
 
   sbChatLogSizer->Add( m_save_logs, 0, wxALL, 5 );
 
@@ -305,24 +308,19 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   m_chat_save_label = new wxStaticText( this, wxID_ANY, _("Save to:"), wxDefaultPosition, wxDefaultSize, 0 );
   m_chat_save_label->Wrap( -1 );
-  m_chat_save_label->Enable( false );
+  m_chat_save_label->Enable( sett().GetChatLogEnable() );
 
   bSaveToSizer->Add( m_chat_save_label, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
   m_log_save = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-  m_log_save->Enable( false );
+  m_log_save->Enable( sett().GetChatLogEnable() );
 
   bSaveToSizer->Add( m_log_save, 1, wxALL, 5 );
 
   m_browse_log = new wxButton( this, ID_BROWSE_LOGS, _("Browse..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  m_browse_log->Enable( false );
+  m_browse_log->Enable( sett().GetChatLogEnable() );
 
   bSaveToSizer->Add( m_browse_log, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
-
-  m_log_save_find = new wxButton( this, ID_FINDLOGS, _("Find"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  m_log_save_find->Enable( false );
-
-  bSaveToSizer->Add( m_log_save_find, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
 
   sbChatLogSizer->Add( bSaveToSizer, 0, wxEXPAND, 5 );
 
@@ -349,6 +347,9 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   bMainSizerV->Add( bBotomSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 
+
+  bMainSizerV->Add( 0, 0, 1, wxEXPAND, 5 );
+
   this->SetSizer( bMainSizerV );
   this->Layout();
 
@@ -365,8 +366,8 @@ ChatOptionsTab::~ChatOptionsTab()
 
 void ChatOptionsTab::UpdateTextSample()
 {
+  m_test_text->SetFont( m_chat_font );
   m_test_text->SetBackgroundColour( m_bg_color->GetBackgroundColour() );
-
   m_test_text->Clear();
 
   m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetBackgroundColour() ));
@@ -412,7 +413,7 @@ void ChatOptionsTab::UpdateTextSample()
   m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetBackgroundColour() ));
   m_test_text->AppendText( _T("[22:33]") );
   m_test_text->SetDefaultStyle(wxTextAttr( m_client_color->GetBackgroundColour() ));
-  m_test_text->AppendText( _T(" ** Client message.\n") );
+  m_test_text->AppendText( _T(" ** Client message.") );
 
 }
 
@@ -430,6 +431,11 @@ void ChatOptionsTab::DoRestore()
   m_client_color->SetBackgroundColour( sett().GetChatColorClient() );
   m_error_color->SetBackgroundColour( sett().GetChatColorError() );
   m_ts_color->SetBackgroundColour( sett().GetChatColorTime() );
+  m_chat_font = sett().GetChatFont();
+  m_fontname->SetLabel( m_chat_font.GetFaceName() );
+  m_save_logs->SetValue(  sett().GetChatLogEnable() );
+  m_log_save->SetValue(  sett().GetChatLogLoc() );
+  m_smart_scroll->SetValue(sett().GetSmartScrollEnabled());
 }
 
 void ChatOptionsTab::OnApply( wxCommandEvent& event )
@@ -445,6 +451,16 @@ void ChatOptionsTab::OnApply( wxCommandEvent& event )
   sett().SetChatColorClient( m_client_color->GetBackgroundColour() );
   sett().SetChatColorError( m_error_color->GetBackgroundColour() );
   sett().SetChatColorTime( m_ts_color->GetBackgroundColour() );
+  sett().SetChatFont( m_chat_font );
+  //m_ui.mw().GetChatTab().ChangeUnreadChannelColour( m_note_color->GetBackgroundColour() );
+  //m_ui.mw().GetChatTab().ChangeUnreadPMColour( m_note_color->GetBackgroundColour() );
+
+  //Chat Log
+  sett().SetChatLogEnable( m_save_logs->GetValue());
+  sett().SetChatLogLoc( m_log_save->GetValue() );
+
+  // Behavior
+  sett().SetSmartScrollEnabled(m_smart_scroll->GetValue());
 }
 
 
@@ -456,6 +472,15 @@ void ChatOptionsTab::OnRestore( wxCommandEvent& event )
 
 void ChatOptionsTab::OnSelectFont( wxCommandEvent& event )
 {
+  wxFontData data;
+  data.SetChosenFont( m_chat_font );
+  wxFontDialog dlg( 0, data );
+  if ( dlg.ShowModal() == wxID_OK ) {
+    m_chat_font = dlg.GetFontData().GetChosenFont();
+    m_fontname->SetLabel( m_chat_font.GetFaceName() );
+    this->Layout();
+    UpdateTextSample();
+  }
 }
 
 
@@ -588,18 +613,16 @@ void ChatOptionsTab::OnTimestampSelect( wxCommandEvent& event )
 
 void ChatOptionsTab::OnSaveLogs( wxCommandEvent& event )
 {
+  m_log_save->Enable( m_save_logs->GetValue() );
+  m_browse_log->Enable( m_save_logs->GetValue() );
+  m_chat_save_label->Enable( m_save_logs->GetValue() );
 }
 
 
 
 void ChatOptionsTab::OnBrowseLog( wxCommandEvent& event )
 {
+  wxDirDialog dirpic( this, _("Choose a directory"), sett().GetSpringDir(), wxDD_DEFAULT_STYLE );
+  if ( dirpic.ShowModal() == wxID_OK ) m_log_save->SetValue( dirpic.GetPath() );
 }
-
-
-
-void ChatOptionsTab::OnFindLog( wxCommandEvent& event )
-{
-}
-
 

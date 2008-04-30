@@ -13,6 +13,7 @@ class wxRadioButton;
 class wxStaticBitmap;
 class wxStaticLine;
 class wxButton;
+class wxCheckBox;
 
 class HostBattleDialog : public wxDialog
 {
@@ -26,6 +27,7 @@ class HostBattleDialog : public wxDialog
 
     void OnOk( wxCommandEvent& event );
     void OnCancel( wxCommandEvent& event );
+    void OnNatChange( wxCommandEvent& event  );
 
     int GetSelectedRank();
 
@@ -38,7 +40,7 @@ class HostBattleDialog : public wxDialog
 
 		wxStaticText* m_port_lbl;
 		wxTextCtrl* m_port_text;
-
+    wxCheckBox* m_port_test_check;
 		wxSlider* m_players_slide;
 		wxRadioBox* m_nat_radios;
 		wxRadioButton* m_rank0_radio;
@@ -60,14 +62,15 @@ class HostBattleDialog : public wxDialog
 		wxButton* m_cancel_btn;
 
 		wxButton* m_host_btn;
-		
+
     DECLARE_EVENT_TABLE()
 };
 
 enum
 {
 	HOST_CANCEL = wxID_HIGHEST,
-	HOST_OK
+	HOST_OK,
+	CHOSE_NAT
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_HOSTBATTLEDIALOG_H

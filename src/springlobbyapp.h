@@ -6,6 +6,7 @@
 class Ui;
 class wxTimer;
 class wxIcon;
+class wxLocale;
 
 //! @brief SpringLobby wxApp
 class SpringLobbyApp : public wxApp
@@ -22,13 +23,16 @@ class SpringLobbyApp : public wxApp
     // System Events
     void OnTimer( wxTimerEvent& event );
 
-    void InitDirs();
-
   protected:
+
+    void SetupUserFolders();
+    void InitDirs();
 
     wxTimer* m_timer;
 
     Ui* m_ui;
+
+    wxLocale* m_locale;
 
     DECLARE_EVENT_TABLE()
 };

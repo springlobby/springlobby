@@ -9,12 +9,14 @@
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <wx/image.h>
-#include <iostream>
+#include <wx/choicdlg.h>
+#include <wx/filename.h>
+#include <wx/dirdlg.h>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
-#include "stacktrace.h"
+#include "crashreport.h"
 #include "utils.h"
 #include "ui.h"
 #include "iunitsync.h"
@@ -52,19 +54,32 @@ bool SpringLobbyApp::OnInit()
   wxHandleFatalExceptions( true );
 #endif
 
-  //initializes logging in both std::cout and gui messages
-  #if wxUSE_STD_IOSTREAM
-  wxLog *loggerconsole = new wxLogStream( &std::cout );
-  wxLogChain *logChain = new wxLogChain( loggerconsole );
-  logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
-  logChain->SetLogLevel( wxLOG_Trace );
-  logChain->SetVerbose( true );
-  #else
-  wxLog::SetLogLevel( wxLOG_Warning );
-  #endif
+  //initialize all loggers
+  InitializeLoggingTargets();
 
   wxLogDebugFunc( _T("") );
   wxInitAllImageHandlers();
+
+  //TODO needed?
+  wxImage::AddHandler(new wxPNGHandler);
+
+  m_locale = new wxLocale( );
+  m_locale->Init();
+  m_locale->AddCatalog( _T("springlobby") );
+
+  if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
+  {
+    if ( wxDirExists( sett().GetCachePath() )  )
+    {
+      wxLogWarning( _T("erasing old cache ver %d (app cache ver %d)"), sett().GetCacheVersion(), CACHE_VERSION );
+      wxString file = wxFindFirstFile( sett().GetCachePath() + wxFILE_SEP_PATH + _T("*") );
+      while ( !file.empty() )
+      {
+        wxRemoveFile( file );
+        file = wxFindNextFile();
+      }
+    }
+  }
 
   InitDirs();
 
@@ -73,20 +88,25 @@ bool SpringLobbyApp::OnInit()
 
   m_ui->ShowMainWindow();
 
+
   if ( sett().IsFirstRun() ) {
     #ifdef __WXMSW__
       sett().SetOldSpringLaunchMethod( true );
     #endif
+    sett().AddChannelJoin( _T("newbies"), _T("") );
     wxLogMessage( _T("first time startup"));
-    wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nLooks like this is the first time you use SpringLobby. I have guessed a configuration that I think will work for you but you should review it, expecially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
+    wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
       wxOK | wxICON_INFORMATION, &m_ui->mw() );
+    #ifdef HAVE_WX26
     wxMessageBox(_("You're using a wxwidgets library of the 2.6.x series\n battle filtering, advanced gui and joining/hosting games using nat traversal\n won't be available"), _("Missing Functionality"), wxICON_INFORMATION, &m_ui->mw() );
+    #endif
+    SetupUserFolders();
     m_ui->mw().ShowConfigure();
   } else {
     m_ui->Connect();
   }
 
-  m_ui->ReloadUnitSync();
+  //m_ui->ReloadUnitSync();
 
   m_timer->Start( TIMER_INTERVAL );
 
@@ -109,28 +129,14 @@ int SpringLobbyApp::OnExit()
   return 0;
 }
 
-
+//! @brief is called when the app crashes
 void SpringLobbyApp::OnFatalException()
 {
-
-#if wxUSE_STACKWALKER
-
-  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nA stacktrace will be dumped to the application's console output"), _("Critical error"), wxICON_ERROR  );
-
-  wxLogError( _T("uncaught exception") );
-  wxString DebugInfo = _T("\n-------- Begin StackTrace --------\n");
-
-  DebugInfo += _T("StackTraceID: ") + stacktrace().GetStackTraceHash() + _T("\n");
-
-  stacktrace().WalkFromException();
-  DebugInfo += stacktrace().GetStackTrace();
-
-  DebugInfo += _T("-------- End StackTrace --------");
-
-  wxLogMessage( DebugInfo );
-#else
-  wxMessageBox( _("SpringLobby has generated a fatal error and will be terminated\nGenerating a stacktrace is not possible\n\nplease enable wxStackWalker"), _("Critical error"), wxICON_ERROR  );
-#endif
+  #if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
+  crashreport().GenerateReport(wxDebugReport::Context_Exception);
+  #else
+  wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
+  #endif
 }
 
 
@@ -147,5 +153,45 @@ void SpringLobbyApp::InitDirs()
   if ( !wxDirExists( path ) ) wxMkdir( path );
   path += wxFILE_SEP_PATH; path += _T("cache"); path += wxFILE_SEP_PATH;
   if ( !wxDirExists( path ) ) wxMkdir( path );
+}
+
+
+void SpringLobbyApp::SetupUserFolders()
+{
+  #ifdef __WXGTK__
+    #ifndef HAVE_WX26
+     if ( !wxFileName::DirExists( wxFileName::GetHomeDir() + _("/.spring") ) )
+     {
+       wxArrayString choices;
+       choices.Add( _("Create a .spring folder in the home directory (reccomended)") );
+       choices.Add( _("Create a folder in a custom path (you'll get prompted for the path)") );
+       choices.Add( _("I have already a SpringData folder, i want to browse manually for it") );
+       choices.Add( _("Do nothing (use this only if you know what you're doing)") );
+
+       int result = wxGetSingleChoiceIndex(
+          _("Looks like you don't have yet a user SpringData folder structure\nWhat would you like to do? (leave default choice if you don't know what is this for)"),
+          _("First time wizard"),
+          choices );
+
+       wxString dir;
+       bool createdirs = true;
+       if ( result == 2 ) createdirs = false;
+       else if ( result == 3 ) return;
+
+       if ( result == 0 ) dir = wxFileName::GetHomeDir() + _T("/.spring");
+       else if ( result == 1 || result == 2 ) dir = wxDirSelector( _("Choose a folder"), wxFileName::GetHomeDir() + _T("/.spring") );
+
+       if ( createdirs )
+       {
+         if ( dir.IsEmpty() || ( !wxFileName::Mkdir( dir ) || ( !wxFileName::Mkdir( dir + _T("/mods") ) || !wxFileName::Mkdir( dir + _T("/maps") ) || !wxFileName::Mkdir( dir + _T("/base") ) || !wxFileName::Mkdir( dir + _T("/demos") ) || !wxFileName::Mkdir( dir + _T("/screenshots")  ) ) ) )
+         {
+           if ( dir.IsEmpty() ) dir = wxFileName::GetHomeDir() + _T("/.spring");
+          wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + _T("/mods\n") + dir + _T("/maps\n") + dir + _T("/base\n") );
+         }
+       }
+
+     }
+    #endif
+  #endif
 }
 

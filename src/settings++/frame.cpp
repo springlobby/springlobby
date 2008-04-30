@@ -41,13 +41,13 @@
 #include "helpmenufunctions.h"
 #include "se_utils.h"
 
-const wxString simpleTabCap= _T("Combined Options");
-const wxString qualityTabCap= _T("Render quality / Video mode");
-const wxString detailTabCap = _T("Render detail");
-const wxString debugTabCap = _T("Debug");
-const wxString uiTabCap= _T("UI options");
-const wxString audioTabCap = _T("Audio");
-const wxString expertModeWarning = _T("Changes made on Quality/Detail tab in expert mode"
+const wxString simpleTabCap= _("Combined Options");
+const wxString qualityTabCap= _("Render quality / Video mode");
+const wxString detailTabCap = _("Render detail");
+const wxString debugTabCap = _("Debug");
+const wxString uiTabCap= _("UI options");
+const wxString audioTabCap = _("Audio");
+const wxString expertModeWarning = _("Changes made on Quality/Detail tab in expert mode"
 									"\n will be lost if you change simple options again.\n"
 									"Also these changes WILL NOT be reflected by the \n"
 									"selected choices on the Combined options tab.\n"
@@ -64,14 +64,14 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	alreadyCalled = false;
 	parentWindow = parent;
 	OptionsHandler.reload();
-	
+
 	loadUnitsync();
-		
+
 	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
-	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
-	
+	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, _T("Tahoma")));
+
 	settingsIcon  = new wxIcon(springsettings_xpm);
-			
+
 	 if (abstract_panel::loadValuesIntoMap())
 	{
 		CreateGUIControls();
@@ -79,8 +79,8 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	}
 	else
 	{
-		notebook->AddPage(new PathOptionPanel(notebook,this),_T("Error!"));
-		SetTitle(wxT("SpringSettings"));
+		notebook->AddPage(new PathOptionPanel(notebook,this),_("Error!"));
+		SetTitle(_T("SpringSettings"));
 	}
 	 SetIcon(*settingsIcon);
 	 SetSize(8,8,760,550);
@@ -90,7 +90,7 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 void settings_frame::buildGuiFromErrorPanel()
 {
 	notebook->DeletePage(0);
-	
+
 	//to be safe we'll try again
 	if (abstract_panel::loadValuesIntoMap())
 	{
@@ -99,13 +99,13 @@ void settings_frame::buildGuiFromErrorPanel()
 	}
 	else
 	{
-		notebook->AddPage(new PathOptionPanel(notebook,this),_T("Error!"));
+		notebook->AddPage(new PathOptionPanel(notebook,this),_("Error!"));
 	}
 }
 
 settings_frame::~settings_frame()
 {
-	
+
 }
 
 void settings_frame::handleExternExit()
@@ -113,103 +113,103 @@ void settings_frame::handleExternExit()
 	if ( !alreadyCalled){
 		alreadyCalled = true;
 		if (abstract_panel::settingsChanged)
-		{	
-			int choice = customMessageBox(SS_MAIN_ICON,wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"), wxYES_NO |wxICON_QUESTION);	
+		{
+			int choice = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"), wxYES|wxNO |wxICON_QUESTION);
 			if ( choice == wxYES)
 			{
 				abstract_panel::saveSettings();
-				if (simpleTab)
+				if (simpleTab!=0)
 					simpleTab->saveCbxChoices();
 			}
 		}
-		
+
 	}
 	OptionsHandler.save();
 }
 
 void settings_frame::handleExit() {
-    if (abstract_panel::settingsChanged) 
+    if (abstract_panel::settingsChanged)
     {
-    	int action = customMessageBox(SS_MAIN_ICON,wxT("Save Spring settings before exiting?"), wxT("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION );
+    	int action = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION );
         switch (action) {
         case wxYES:
         	if (abstract_panel::saveSettings())
         				 (abstract_panel::settingsChanged) = false;
-        	if (simpleTab)
+        	if (simpleTab!=0)
         			simpleTab->saveCbxChoices();
         case wxNO:
 	        	OptionsHandler.save();
         	    Destroy();
         	break;
-        	
+
         case wxCANCEL:
         	break;
         }
     }
     else
-    {		
+    {
     	OptionsHandler.save();
-    	Destroy();		
+    	Destroy();
     }
 }
 
 void settings_frame::CreateGUIControls()
 {
 	switch(OptionsHandler.getMode()){
-					case SET_MODE_EXPERT: 
-						
+					case SET_MODE_EXPERT:
+
 								qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
 							    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
 							    uiTab = new tab_ui(notebook,ID_UI);
 							    audioTab = new audio_panel(notebook,ID_AUDIO);
 							    debugTab = new debug_panel(notebook,ID_DEBUG);
-							    
+                                simpleTab = 0;
 								notebook->AddPage(uiTab, uiTabCap);
 								notebook->AddPage(qualityTab, qualityTabCap);
-								notebook->AddPage(detailTab, detailTabCap);					
+								notebook->AddPage(detailTab, detailTabCap);
 								notebook->AddPage(audioTab,audioTabCap);
 								notebook->AddPage(debugTab, debugTabCap);
-					
+
 						break;
 					case SET_MODE_SIMPLE:
 						simpleTab = new tab_simple(this,notebook,ID_SIMPLE);
 						 uiTab = new tab_ui(notebook,ID_UI);
 						notebook->AddPage(simpleTab,simpleTabCap);
-						notebook->AddPage(uiTab, uiTabCap);					
+						notebook->AddPage(uiTab, uiTabCap);
 					break;
 			}
 			notebook->SetSelection(0);
-		
+
 	if (OptionsHandler.getMode()==SET_MODE_EXPERT)
-		SetTitle(wxT("SpringSettings (expert mode)"));
+		SetTitle(_("SpringSettings (expert mode)"));
 	else
-		SetTitle(wxT("SpringSettings (simple mode)"));
-	
-	abstract_panel::settingsChanged = false; 
+		SetTitle(_("SpringSettings (simple mode)"));
+
+	abstract_panel::settingsChanged = false;
 
 }
 
 void settings_frame::initMenuBar() {
 	menuFile = new wxMenu();
 
-	menuFile->Append(ID_MENUITEM_SAVE, wxT("Save settings"));
-	menuFile->Append(ID_MENUITEM_RESET, wxT("Reset settings to default values"));
-	menuFile->AppendCheckItem(ID_MENUITEM_DISABLE_WARN, wxT("Disable expert mode warning"));
+	menuFile->Append(ID_MENUITEM_SAVE, _("Save settings"));
+	menuFile->Append(ID_MENUITEM_RESET, _("Reset settings to default values"));
+	menuFile->AppendCheckItem(ID_MENUITEM_DISABLE_WARN, _("Disable expert mode warning"));
 	menuFile->AppendSeparator();
-	menuFile->Append(ID_MENUITEM_QUIT, wxT("Quit"));
+	menuFile->Append(ID_MENUITEM_QUIT, _("Quit"));
 
 	menuFile->Check(ID_MENUITEM_DISABLE_WARN,OptionsHandler.getDisableWarning());
-	
+
 	menuMode = new wxMenu();
-	menuMode->AppendRadioItem(ID_MENUITEM_SIMPLE,wxT("Simple (few options)"));
-	menuMode->AppendRadioItem(ID_MENUITEM_EXPERT,wxT("Expert (all options"));
-	
+	menuMode->AppendRadioItem(ID_MENUITEM_SIMPLE,_("Simple (few options)"));
+	menuMode->AppendRadioItem(ID_MENUITEM_EXPERT,_("Expert (all options"));
+
 	menuHelp = new wxMenu();
-	menuHelp->Append(ID_MENUITEM_ABOUT, wxT("About"));
-	menuHelp->Append(ID_MENUITEM_CONTACT, wxT("Contact"));
-	menuHelp->Append(ID_MENUITEM_CREDITS, wxT("Credits"));
-	menuHelp->Append(ID_MENUITEM_BUGREPORT, wxT("Report a bug"));
-	
+	menuHelp->Append(ID_MENUITEM_ABOUT,_("About"));
+	menuHelp->Append(ID_MENUITEM_CONTACT, _("Contact"));
+	menuHelp->Append(ID_MENUITEM_CREDITS, _("Credits"));
+	menuHelp->Append(ID_MENUITEM_BUGREPORT, _("Report a bug"));
+
 	switch(OptionsHandler.getMode()){
 	case SET_MODE_EXPERT: {
 			menuMode->Check(ID_MENUITEM_EXPERT,true);
@@ -221,44 +221,44 @@ void settings_frame::initMenuBar() {
 		break;
 	}
 	wxMenuBar* menuBar = new wxMenuBar();
-	menuBar->Append(menuFile, wxT("File"));
-	menuBar->Append(menuMode, wxT("Mode"));
-	menuBar->Append(menuHelp, wxT("Info/Help"));
-	
+	menuBar->Append(menuFile, _("File"));
+	menuBar->Append(menuMode, _("Mode"));
+	menuBar->Append(menuHelp, _("Info/Help"));
+
 	//TODO PROFILES!!!
-	
+
 	SetMenuBar(menuBar);
 }
 
 void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 	switch (event.GetId()) {
-		case ID_MENUITEM_SAVE: 
+		case ID_MENUITEM_SAVE:
 			if (abstract_panel::saveSettings())
 			 (abstract_panel::settingsChanged) = false;
 		 break;
 
-		case ID_MENUITEM_QUIT: 
+		case ID_MENUITEM_QUIT:
 				handleExit();
 		 break;
 
-		case ID_MENUITEM_RESET: 
-			if ((customMessageBox(SS_MAIN_ICON,wxT("Reset ALL settings to default values?"), wxT("Confirmation needed"), wxYES_NO)) == wxYES) {
+		case ID_MENUITEM_RESET:
+			if ((customMessageBox(SS_MAIN_ICON,_("Reset ALL settings to default values?"), _("Confirmation needed"), wxYES_NO)) == wxYES) {
 						resetSettings();
 			}
 		 break;
-		 
-		case ID_MENUITEM_SIMPLE: 
-			if (OptionsHandler.getMode()==SET_MODE_EXPERT) 
+
+		case ID_MENUITEM_SIMPLE:
+			if (OptionsHandler.getMode()==SET_MODE_EXPERT)
 				OptionsHandler.setMode(SET_MODE_SIMPLE);
-				
+
 				simpleTab = new tab_simple(this,notebook,ID_SIMPLE);
 				notebook->InsertPage(0,simpleTab,simpleTabCap);
 				simpleTab->updateControls(UPDATE_ALL);
-				
+
 				//if not on ui page goto simple
 				if (notebook->GetSelection()!=1)
 					notebook->SetSelection(0);
-				
+
 				notebook->DeletePage(5);
 				notebook->DeletePage(4);
 				notebook->DeletePage(3);
@@ -267,14 +267,14 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				detailTab = 0;
 				audioTab = 0;
 				debugTab = 0;
-				
-				SetTitle(wxT("SpringSettings (simple mode)"));
+
+				SetTitle(_("SpringSettings (simple mode)"));
 				if (!OptionsHandler.getDisableWarning()){
-					customMessageBox(SS_MAIN_ICON,expertModeWarning, wxT("Hint"), wxOK);
-				}	
+					customMessageBox(SS_MAIN_ICON,expertModeWarning, _("Hint"), wxOK);
+				}
 		  break;
-		  
-		case ID_MENUITEM_EXPERT: 
+
+		case ID_MENUITEM_EXPERT:
 			if (OptionsHandler.getMode()==SET_MODE_SIMPLE) {
 				switchToExpertMode();
 			}
@@ -282,7 +282,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		case ID_MENUITEM_DISABLE_WARN:
 			OptionsHandler.setDisableWarning(menuFile->IsChecked(ID_MENUITEM_DISABLE_WARN));
 			break;
-			
+
 		case ID_MENUITEM_ABOUT:
 			showAbout();
 			break;
@@ -307,7 +307,7 @@ void settings_frame::switchToExpertMode()
 {
 	OptionsHandler.setMode(SET_MODE_EXPERT);
 	menuMode->Check(ID_MENUITEM_EXPERT,true);
-	
+
 	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
     detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
     audioTab = new audio_panel(notebook,ID_AUDIO);
@@ -316,10 +316,10 @@ void settings_frame::switchToExpertMode()
 	notebook->AddPage(detailTab, detailTabCap);
 	notebook->AddPage(audioTab,audioTabCap);
 	notebook->AddPage(debugTab, debugTabCap);
-	
+
 	notebook->DeletePage(0);
 	simpleTab = 0;
-	SetTitle(wxT("SpringSettings (expert mode)"));
+	SetTitle(_("SpringSettings (expert mode)"));
 	uiTab->updateControls(UPDATE_ALL);
 	detailTab->updateControls(UPDATE_ALL);
 	qualityTab->updateControls(UPDATE_ALL);
@@ -331,7 +331,7 @@ void settings_frame::updateAllControls()
 {
 	if (uiTab)
 		uiTab->updateControls(UPDATE_ALL);
-	if (simpleTab)
+	if (simpleTab!=0)
 		simpleTab->updateControls(UPDATE_ALL);
 	if (detailTab)
 		detailTab->updateControls(UPDATE_ALL);

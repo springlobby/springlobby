@@ -7,20 +7,19 @@
 #include "server.h"
 #include "utils.h"
 #include "uiutils.h"
+#include "ui.h"
 
 
 SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_ui(ui),
   m_sptab(msptab)
 {
-  int r,g,b;
-  GetFreeColour( r, g, b, false );
+  CustomBattleOptions()->setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), 3), EngineOption );
+  wxColour col = GetFreeColour( false );
   int i = AddBot( 0, 0, 0, 0, _T("") );
   BattleBot* bot = GetBot( i );
   ASSERT_LOGIC( bot != 0, _T("bot == 0") );
-  bot->bs.color_r = r;
-  bot->bs.color_g = g;
-  bot->bs.color_b = b;
+  bot->bs.colour = col;
 }
 
 
@@ -66,7 +65,7 @@ void SinglePlayerBattle::UpdateBot(unsigned int index, int ally, int posx, int p
 void SinglePlayerBattle::RemoveBot(unsigned int index)
 {
   if ( m_bots[index] != 0 ) {
-    if ( m_bots[index]->aidll == "" ) return;
+    if ( m_bots[index]->aidll == _T("") ) return;
   }
   delete m_bots[index];
   m_bots[index] = 0;
@@ -84,7 +83,7 @@ unsigned int SinglePlayerBattle::AddBot(int ally, int posx, int posy, int handic
   bot->posx = posx;
   bot->posy = posy;
   bot->handicap = handicap;
-  bot->aidll = STD_STRING(aidll);
+  bot->aidll = aidll;
 
   m_bots.push_back( bot );
   return m_bots.size() - 1;
@@ -95,6 +94,16 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
 {
   if ( (update && HI_StartType) != 0 ) m_sptab.UpdateMinimap();
   if ( (update && HI_Restrictions) != 0 ) m_sptab.ReloadRestrictions();
+  if ( (update && HI_Map_Changed) != 0 )
+  {
+    CustomBattleOptions()->loadOptions( MapOption, m_map.name );
+    m_sptab.ReloadMapOptContrls();
+  }
+  if ( (update && HI_Mod_Changed) != 0 )
+  {
+    CustomBattleOptions()->loadOptions( ModOption, m_mod_name );
+    m_sptab.ReloadModOptContrls();
+  }
 }
 
 
@@ -131,8 +140,8 @@ void SinglePlayerBattle::GetFreePosition( int& x, int& y )
       }
     }
     if ( !taken ) {
-      x = map.info.positions[i].x;
-      y = map.info.positions[i].y;
+      x = boundry(map.info.positions[i].x, 0, map.info.width);
+      y = boundry(map.info.positions[i].y, 0, map.info.height);
       return;
     }
   }
@@ -141,7 +150,7 @@ void SinglePlayerBattle::GetFreePosition( int& x, int& y )
 }
 
 
-void SinglePlayerBattle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
+wxColour SinglePlayerBattle::GetFreeColour( bool excludeme )
 {
   unsigned int lowest = 0;
   bool changed = true;
@@ -151,7 +160,7 @@ void SinglePlayerBattle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
     for( unsigned int i = 0; i < m_bots.size(); i++ ) {
       BattleBot* bot = GetBot( i );
       ASSERT_LOGIC( bot != 0, _T("bot == 0"));
-      if ( AreColoursSimilar( bot->bs.color_r, bot->bs.color_g, bot->bs.color_b, colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] ) ) {
+      if ( AreColoursSimilar( bot->bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) ) {
         lowest++;
         changed = true;
         if ( lowest >= m_bots.size() ) break;
@@ -159,8 +168,6 @@ void SinglePlayerBattle::GetFreeColour( int& r, int& g, int& b, bool excludeme )
     }
   }
 
-  r = colour_values[lowest][0];
-  g = colour_values[lowest][1];
-  b = colour_values[lowest][2];
+  return wxColour( colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] );
 }
 

@@ -40,11 +40,11 @@ void SpringUnitSyncLib::Load( const wxString& path )
   m_path = path;
 
   // Load the library.
-  wxLogMessage( _T("Loading from: ") + path );
+  wxLogMessage( _T("Loading from: %s"), path.c_str());
 
   // Check if library exists
   if ( !wxFileName::FileExists( path ) ) {
-    wxLogError( _T("File not found: ") + path );
+    wxLogError( _T("File not found: %s"), path.c_str() );
     return;
   }
 
@@ -218,18 +218,18 @@ void* SpringUnitSyncLib::_GetLibFuncPtr( const wxString& name )
   ASSERT_LOGIC( m_libhandle != 0, _T("Unitsync not loaded") );
   if ( m_libhandle->HasSymbol( name ) ){
     void* ptr = m_libhandle->GetSymbol( name );
-    if ( !ptr ) wxLogMessage( _T("Couldn't load ") + name + _T(" from unitsync library") );
+    if ( !ptr ) wxLogMessage( _T("Couldn't load %s from unitsync library"),name.c_str() );
     return ptr;
   }
-  wxLogMessage( _T("Couldn't load ") + name + _T(" from unitsync library") );
+  wxLogMessage( _T("Couldn't load %s from unitsync library"), name.c_str() );
   return 0;
 }
 
 
 void SpringUnitSyncLib::_ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out )
 {
-  out.author = in.author;
-  out.description = in.description;
+  out.author = WX_STRINGC(in.author);
+  out.description = WX_STRINGC(in.description);
 
   out.extractorRadius = in.extractorRadius;
   out.gravity = in.gravity;
@@ -245,7 +245,7 @@ void SpringUnitSyncLib::_ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo&
 }
 
 
-void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
+void SpringUnitSyncLib::SetCurrentMod( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
   if ( m_current_mod != modname ) {
@@ -333,9 +333,9 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
   const int width = 1024;
   //wxImage ret( height, width );
 
-  wxLogMessage( mapFileName );
+  wxLogMessage( _T("%s"), mapFileName.c_str() );
 
-  unsigned short* colours = (unsigned short*)m_get_minimap( STD_STRING(mapFileName).c_str(), 0 ); // miplevel should not be 10 ffs
+  unsigned short* colours = (unsigned short*)m_get_minimap( mapFileName.mb_str(wxConvUTF8), 0 ); // miplevel should not be 10 ffs
   ASSERT_RUNTIME( colours, _T("Get minimap failed") );
 
   typedef unsigned char uchar;
@@ -346,14 +346,6 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
     true_colours[(i*3)+1] = uchar( (( (colours[i] >> 5) & 63 )/63.0)*255.0 );;
     true_colours[(i*3)+2] = uchar( (( colours[i] & 31 )/31.0)*255.0 );
   }
-  /*for ( int y = 0; y < height; y++ )
-  {
-    for ( int x = 0; x < width; x++ )
-    {
-      int pos = y*width + x;
-      ret.SetRGB( x, y, uchar( colours[pos].r/31.0*255.0 ), uchar( colours[pos].g/63.0*255.0 ), uchar( colours[pos].b/31.0*255.0 ) );
-    }
-  }*/
 
   return wxImage( width, height, true_colours, false );
 }
@@ -475,7 +467,7 @@ int SpringUnitSyncLib::GetSideCount( const wxString& modName )
 {
   InitLib( m_get_side_count );
 
-  _SetCurrentMod( modName );
+  SetCurrentMod( modName );
   return m_get_side_count();
 }
 
@@ -484,7 +476,7 @@ wxString SpringUnitSyncLib::GetSideName( const wxString& modName, int index )
 {
   InitLib( m_get_side_name );
 
-  _SetCurrentMod( modName );
+  SetCurrentMod( modName );
   return WX_STRINGC( m_get_side_name( index ) );
 }
 
@@ -533,7 +525,7 @@ int SpringUnitSyncLib::InitFindVFS( const wxString& pattern )
 {
   InitLib( m_proc_units_nocheck );
 
-  return m_init_find_vfs( STD_STRING(pattern).c_str() );
+  return m_init_find_vfs( pattern.mb_str(wxConvUTF8) );
 }
 
 
@@ -581,10 +573,6 @@ void SpringUnitSyncLib::CloseFileVFS( int handle )
   m_close_file_vfs( handle );
 }
 
-bool SpringUnitSyncLib::HasLuaAI()
-{
-  return m_get_luaai_count&&m_get_luaai_name&&m_get_luaai_desc;
-}
 
 int SpringUnitSyncLib::GetLuaAICount()
 {
@@ -613,15 +601,16 @@ wxString SpringUnitSyncLib::GetLuaAIDesc( int aiIndex )
 int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
 {
   InitLib( m_get_map_option_count );
-
+  ASSERT_RUNTIME( !name.IsEmpty(), _T("passing void mapname to unitsync") );
   return m_get_map_option_count( name.mb_str( wxConvUTF8 ) );
 }
 
 
-int SpringUnitSyncLib::GetModOptionCount()
+int SpringUnitSyncLib::GetModOptionCount( const wxString& name )
 {
   InitLib( m_get_Mod_option_count );
-
+  ASSERT_RUNTIME( !name.IsEmpty(), _T("passing void modname to unitsync") );
+  SetCurrentMod( name );
   return m_get_Mod_option_count();
 }
 

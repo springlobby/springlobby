@@ -44,12 +44,9 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
     m_nick_lbl = new wxStaticText( this, wxID_ANY, _("Nickname:"), wxDefaultPosition, wxDefaultSize, 0 );
     m_nick_sizer->Add( m_nick_lbl, 1, wxALL, 5 );
 
-    int bot = 1;
-    while ( m_battle.GetBot( "Bot" + i2s(bot) ) != 0 ) {
-      bot++;
-    }
+    int bot = m_battle.GetNumBots()+1;
 
-    m_nick = new wxTextCtrl( this, wxID_ANY, wxString::Format( _("Bot%d"), bot ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_nick = new wxTextCtrl( this, wxID_ANY, wxString::Format( _T("Bot%d"), bot ), wxDefaultPosition, wxDefaultSize, 0 );
     m_nick_sizer->Add( m_nick, 2, wxALL, 5 );
 
     m_main_sizer->Add( m_nick_sizer, 0, wxEXPAND, 5 );
@@ -107,7 +104,7 @@ wxString AddBotDialog::GetAI()
 }
 
 
-wxString AddBotDialog::_RefineAIName( const wxString& name )
+wxString AddBotDialog::RefineAIName( const wxString& name )
 {
   wxString ret = name.BeforeLast('.').AfterLast('/');
   if ( m_ai->FindString( ret ) == wxNOT_FOUND ) return ret;
@@ -128,10 +125,10 @@ void AddBotDialog::ReloadAIList()
   } catch (...) {}
 
   m_ai->Clear();
-  for ( unsigned int i = 0; i < m_ais.GetCount(); i++ ) m_ai->Append( _RefineAIName(m_ais[i]) );
+  for ( unsigned int i = 0; i < m_ais.GetCount(); i++ ) m_ai->Append( RefineAIName(m_ais[i]) );
 
   if ( m_ais.GetCount() > 0 ) {
-    m_ai->SetStringSelection( WX_STRING(sett().GetLastAI()) );
+    m_ai->SetStringSelection( sett().GetLastAI() );
     if ( m_ai->GetStringSelection() == wxEmptyString ) m_ai->SetSelection( 0 );
   } else {
     customMessageBox(SL_MAIN_ICON, _("No AI bots found in your Spring installation."), _("No bot-libs found"), wxOK );
@@ -148,7 +145,7 @@ void AddBotDialog::OnClose( wxCommandEvent& event )
 
 void AddBotDialog::OnAddBot( wxCommandEvent& event )
 {
-  sett().SetLastAI( STD_STRING( m_ai->GetStringSelection() ) );
+  sett().SetLastAI(  m_ai->GetStringSelection() );
   EndModal( wxID_OK );
 }
 

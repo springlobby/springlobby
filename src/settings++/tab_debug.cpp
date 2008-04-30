@@ -58,7 +58,7 @@ debug_panel::debug_panel(wxWindow *parent, wxWindowID id , const wxString &title
 	 childLSizer = new wxBoxSizer(wxVERTICAL);		// main window left column sizer
 
 	// sizers for static boxes containing sliders, checkboxes, radiobuttons
-	 debugSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, wxT("Debug Options"), WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
+	 debugSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, _("Debug Options"), WX_DEF_P, wxSize(-1, -1), 0, wxEmptyString), wxVERTICAL);
 
 	initDebugSizer(debugSizer);
 

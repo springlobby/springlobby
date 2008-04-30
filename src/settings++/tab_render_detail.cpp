@@ -33,9 +33,9 @@
 
 void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSizer* sizerR ) {
 	const int extrema[] = {
-		1024, 8192,   600, 3000,   20, 120,   100, 600,   0, 10,   0, 100,   100, 1000,   1000, 20000,   1, 20
+		1024, 8192,   600, 3000,   20, 120,   100, 600,   0, 10,   0, 1,   100, 1000,   1000, 20000,   1, 20
 	};
-	
+
 	for (int i = 0; i < ctrl_detail_sliders_size/2; i++) {
 		ctrl_detail_sliders[i] = new wxSlider(
 			this, RO_SLI[i].id, 0, extrema[i * 2],  extrema[(i * 2) + 1], WX_DEF_P, wxSize(180, -1), SLI_STYLE, WX_DEF_V		);
@@ -61,7 +61,7 @@ tab_render_detail::tab_render_detail(wxWindow *parent, wxWindowID id , const wxS
 	parentSizer = new wxGridSizer(1,0,0);
 	rendererSizerA = new wxFlexGridSizer(2,35,10);
 	rendererSizerB = new wxFlexGridSizer(2,35,10);
-	box = new wxStaticBoxSizer(wxVERTICAL ,this,wxT("Rendering detail levels"));
+	box = new wxStaticBoxSizer(wxVERTICAL ,this,_("Rendering detail levels"));
 	rendererSizerA->AddGrowableCol(0);
 	rendererSizerA->AddGrowableCol(1);
 	rendererSizerB->AddGrowableCol(0);
@@ -80,7 +80,7 @@ tab_render_detail::tab_render_detail(wxWindow *parent, wxWindowID id , const wxS
 
 	updateControls(UPDATE_ALL);
 	SetSizer(parentSizer); // true --> delete old sizer if present
-	
+
 }
 
 void tab_render_detail::updateControls(int what_to_update)
@@ -88,11 +88,11 @@ void tab_render_detail::updateControls(int what_to_update)
 	for (int i = 0; i < ctrl_detail_sliders_size; i++) {
 		ctrl_detail_sliders[i]->SetValue(intSettings[RO_SLI[i].key]);
 	}
-	
+
 }
 
 tab_render_detail::~tab_render_detail(void) {
-	
+
 }
 
 BEGIN_EVENT_TABLE(tab_render_detail, abstract_panel)

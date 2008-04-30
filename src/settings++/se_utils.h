@@ -3,13 +3,9 @@
 
 #include <wx/string.h>
 
-#define _S(v) wxString(v.c_str(),wxConvUTF8)
-
 void loadUnitsync();
 
-void toString(std::string& s, int t);
-
-int fromString(const std::string& s);
+int fromString(const wxString& s);
 
 void openUrl(const wxString& url);
 
