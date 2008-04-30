@@ -14,13 +14,13 @@
 #include "iunitsync.h"
 
 #include "images/bot.xpm"
-#include "images/bot_broom.xpm"
-#include "images/bot_ingame.xpm"
+#include "images/bot_broom.png.h"
+#include "images/bot_ingame.png.h"
 
-#include "images/admin.xpm"
-#include "images/admin_away.xpm"
-#include "images/admin_broom.xpm"
-#include "images/admin_ingame.xpm"
+#include "images/admin.png.h"
+#include "images/admin_away.png.h"
+#include "images/admin_broom.png.h"
+#include "images/admin_ingame.png.h"
 
 #include "images/chanop.xpm"
 #include "images/chanop_away.xpm"
@@ -49,7 +49,6 @@
 #include "images/closed_pw_game.png.h"
 #include "images/closed_full_pw_game.png.h"
 #include "images/closed_full_game.png.h"
-#include "images/started_game.xpm"
 
 
 #include "images/nexists.xpm"
@@ -78,14 +77,14 @@
 
 IconImageList::IconImageList() : wxImageList(16,16)
 {
-    ICON_ADMIN = Add( wxBitmap(admin_xpm) );
-    ICON_ADMIN_AWAY = Add( wxBitmap(admin_away_xpm) );
-    ICON_ADMIN_BROOM = Add( wxBitmap(admin_broom_xpm) );
-    ICON_ADMIN_INGAME = Add( wxBitmap(admin_ingame_xpm) );
+    ICON_ADMIN = Add( *charArr2wxBitmap( admin_png, sizeof(admin_png) ) );
+    ICON_ADMIN_AWAY = Add( *charArr2wxBitmap( admin_away_png, sizeof(admin_away_png) ) );
+    ICON_ADMIN_BROOM = Add( *charArr2wxBitmap( admin_broom_png, sizeof(admin_broom_png) ) );
+    ICON_ADMIN_INGAME = Add( *charArr2wxBitmap( admin_ingame_png, sizeof(admin_ingame_png) ) );
 
     ICON_BOT = Add( wxBitmap(bot_xpm) );
-    ICON_BOT_BROOM = Add( wxBitmap(bot_broom_xpm) );
-    ICON_BOT_INGAME = Add( wxBitmap(bot_ingame_xpm) );
+    ICON_BOT_BROOM = Add( *charArr2wxBitmap( bot_broom_png, sizeof( bot_broom_png ) )  );
+    ICON_BOT_INGAME = Add( *charArr2wxBitmap( bot_ingame_png, sizeof( bot_ingame_png ) ) );
 
     ICON_AWAY = Add( *charArr2wxBitmap( away_png, sizeof( away_png ) ) );
     ICON_BROOM = Add( *charArr2wxBitmap(broom_png, sizeof(broom_png) ) );
@@ -115,7 +114,7 @@ IconImageList::IconImageList() : wxImageList(16,16)
     ICON_CLOSED_PW_GAME = Add( *charArr2wxBitmap(closed_pw_game_png, sizeof(closed_pw_game_png) ) );
     ICON_CLOSED_FULL_PW_GAME = Add( *charArr2wxBitmap(closed_full_pw_game_png, sizeof(closed_full_pw_game_png) ) );
     ICON_CLOSED_FULL_GAME = Add( *charArr2wxBitmap(closed_full_game_png, sizeof(closed_full_game_png) ) );
-    ICON_STARTED_GAME = Add( wxBitmap(started_game_xpm) );
+    ICON_STARTED_GAME = Add(  *charArr2wxBitmap(ingame_png, sizeof(ingame_png) ) );
 
 
     ICON_READY_UNSYNC = Add( wxBitmap(ready_unsync_xpm) );

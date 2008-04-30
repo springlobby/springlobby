@@ -16,9 +16,11 @@
 #include "springoptionstab.h"
 #include "chatoptionstab.h"
 #include "settings.h"
+#include "uiutils.h"
 
 #include "images/spring.xpm"
 #include "images/userchat.xpm"
+#include "images/torrentoptionspanel_icon.png.h"
 
 BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 
@@ -34,6 +36,8 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   m_imagelist = new wxImageList( 12, 12 );
   m_imagelist->Add( wxIcon(spring_xpm) );
+  //TODO when torrent merged, enable again
+  //m_imagelist->Add( *charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
   m_imagelist->Add( wxIcon(userchat_xpm) );
 
   m_tabs->AssignImageList( m_imagelist );
