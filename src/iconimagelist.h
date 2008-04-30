@@ -64,8 +64,12 @@ class IconImageList : public wxImageList
     int ICON_GAME_UNKNOWN;
     int ICON_OPEN_GAME;
     int ICON_OPEN_PW_GAME;
+    int ICON_OPEN_FULL_PW_GAME;
+    int ICON_OPEN_FULL_GAME;
     int ICON_CLOSED_GAME;
     int ICON_CLOSED_PW_GAME;
+    int ICON_CLOSED_FULL_PW_GAME;
+    int ICON_CLOSED_FULL_GAME;
     int ICON_STARTED_GAME;
 
     int ICON_READY_UNSYNC;
@@ -81,6 +85,9 @@ class IconImageList : public wxImageList
     int ICON_SPECTATOR;
     int ICON_HOST;
     int ICON_HOST_SPECTATOR;
+
+    int ICON_SIDEPIC_0;
+    int ICON_SIDEPIC_1;
 
     int ICON_UNK_FLAG;
     int ICON_FLAGS_BASE;

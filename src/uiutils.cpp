@@ -192,8 +192,16 @@ void BlendImage(wxImage& foreground, wxImage&  background, int img_dim)
 wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size)
 {
     wxMemoryInputStream istream( arg, size );
-    return new wxBitmap( wxImage ( istream, wxBITMAP_TYPE_PNG ) );
+     wxImage temp( istream, wxBITMAP_TYPE_PNG );
+    return new wxBitmap(temp );
 }
+
+//wxBitmap charArr2wxBitmap(const unsigned char * arg, int size)
+//{
+//    wxMemoryInputStream istream( arg, size );
+//     wxImage temp( istream, wxBITMAP_TYPE_PNG );
+//    return wxBitmap(temp );
+//}
 
 wxBitmap* charArr2wxBitmapAddText(const unsigned char * dest, int dest_size, const unsigned char * text, int text_size, unsigned int img_dim)
 {

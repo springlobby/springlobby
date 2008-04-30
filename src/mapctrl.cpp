@@ -25,8 +25,8 @@
 #include "images/start_unused.xpm"
 #include "images/player.xpm"
 #include "images/bot.xpm"
-#include "images/arm.xpm"
-#include "images/core.xpm"
+#include "images/no1_icon.png.h"
+#include "images/no2_icon.png.h"
 #include "images/up_down.xpm"
 #include "images/upsel_down.xpm"
 #include "images/up_downsel.xpm"
@@ -630,8 +630,8 @@ void MapCtrl::DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
       bmp = new wxBitmap( usync()->GetSidePicture( mod, side ) );
     } catch (...) {
       delete bmp;
-      if ( bot.bs.side == 0 ) bmp = new wxBitmap(  );
-      else bmp = new wxBitmap(  );
+      if ( bot.bs.side == 0 ) bmp = new wxBitmap( *charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
+      else bmp = new wxBitmap( *charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ) );
     }
 
     dc.DrawBitmap( *bmp, r.x+siderect.x, r.y+siderect.y, true );
