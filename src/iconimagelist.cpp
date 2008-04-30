@@ -28,8 +28,8 @@
 #include "images/chanop_ingame.xpm"
 
 #include "images/away.png.h"
-#include "images/broom.xpm"
-#include "images/ingame.xpm"
+#include "images/broom.png.h"
+#include "images/ingame.png.h"
 
 #include "images/up.xpm"
 #include "images/down.xpm"
@@ -88,8 +88,8 @@ IconImageList::IconImageList() : wxImageList(16,16)
     ICON_BOT_INGAME = Add( wxBitmap(bot_ingame_xpm) );
 
     ICON_AWAY = Add( *charArr2wxBitmap( away_png, sizeof( away_png ) ) );
-    ICON_BROOM = Add( wxBitmap(broom_xpm) );
-    ICON_INGAME = Add( wxBitmap(ingame_xpm) );
+    ICON_BROOM = Add( *charArr2wxBitmap(broom_png, sizeof(broom_png) ) );
+    ICON_INGAME = Add( *charArr2wxBitmap(ingame_png, sizeof(ingame_png) ) );
 
     ICON_OP = Add( wxBitmap(chanop_xpm) );
     ICON_OP_AWAY = Add( wxBitmap(chanop_away_xpm) );
