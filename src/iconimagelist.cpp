@@ -59,9 +59,6 @@
 #include "images/host.xpm"
 #include "images/host_spectator.xpm"
 
-#include "images/arm.xpm"
-#include "images/core.xpm"
-
 #include "images/colourbox.xpm"
 
 #include "images/unknown_flag.xpm"
@@ -118,9 +115,6 @@ IconImageList::IconImageList() : wxImageList(16,16)
   ICON_SPECTATOR = Add( wxBitmap(spectator_xpm) );
   ICON_HOST = Add( wxBitmap(host_xpm) );
   ICON_HOST_SPECTATOR = Add( wxBitmap(host_spectator_xpm) );
-
-  ICON_ARM = Add( wxBitmap(arm_xpm) );
-  ICON_CORE = Add( wxBitmap(core_xpm) );
 
   SetColourIcon( 0, wxColour( 255,   0,   0 ) );
   SetColourIcon( 1, wxColour(   0, 255,   0 ) );
@@ -272,19 +266,22 @@ void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 }
 
 
-int IconImageList::GetSideIcon( const wxString& modname, const wxString& side )
+int IconImageList::GetSideIcon( const wxString& modname, int side )
 {
-  wxString sn = side;
-  sn = sn.Lower();
-  if ( sn  == _T("arm") ) return ICON_ARM;
-  else if (  sn == _T("core") ) return ICON_CORE;
-  else if (m_cached_side_icons[side] == 0){
-    try {
-      int IconPosition = Add(wxBitmap( usync()->GetSidePicture( modname , side ) ), wxNullBitmap);
-      m_cached_side_icons[side] = IconPosition;
+  wxString sidename = usync()->GetSideName( modname, side ).Lower();
+
+  if (m_cached_side_icons[sidename] == 0){
+    try
+    {
+      int IconPosition = Add(wxBitmap( usync()->GetSidePicture( modname , sidename ) ), wxNullBitmap);
+      m_cached_side_icons[sidename] = IconPosition;
       return IconPosition;
-    } catch (...) {};
-  } else return m_cached_side_icons[side];
+    } catch (...)
+    {
+      if ( side == 0 ) m_cached_side_icons[sidename] = ICON_EMPTY;
+      else if ( side == 1 ) m_cached_side_icons[sidename] = ICON_EMPTY;
+    }
+  } else return m_cached_side_icons[sidename];
   return -1;
 }
 

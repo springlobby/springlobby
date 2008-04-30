@@ -630,8 +630,8 @@ void MapCtrl::DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
       bmp = new wxBitmap( usync()->GetSidePicture( mod, side ) );
     } catch (...) {
       delete bmp;
-      if ( bot.bs.side == 0 ) bmp = new wxBitmap( arm_xpm );
-      else bmp = new wxBitmap( core_xpm );
+      if ( bot.bs.side == 0 ) bmp = new wxBitmap(  );
+      else bmp = new wxBitmap(  );
     }
 
     dc.DrawBitmap( *bmp, r.x+siderect.x, r.y+siderect.y, true );

@@ -25,7 +25,7 @@ class IconImageList : public wxImageList
     int GetHostIcon( const bool& spectator = false );
     int GetColourIcon( const int& num );
     void SetColourIcon( const int& num, const wxColour& colour );
-    int GetSideIcon( const wxString& modname, const wxString& side );
+    int GetSideIcon( const wxString& modname, int side );
     int GetReadyIcon( const bool& ready, const int& sync = 1 );
 
     int ICON_NONE;
@@ -81,9 +81,6 @@ class IconImageList : public wxImageList
     int ICON_SPECTATOR;
     int ICON_HOST;
     int ICON_HOST_SPECTATOR;
-
-    int ICON_ARM;
-    int ICON_CORE;
 
     int ICON_UNK_FLAG;
     int ICON_FLAGS_BASE;
