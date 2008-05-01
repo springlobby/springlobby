@@ -9,7 +9,7 @@
 #include <wx/string.h>
 
 #include "chatlog.h"
-#include <Helper/TextCompletionDatabase.hpp>
+#include "Helper/TextCompletionDatabase.hpp"
 
 class wxCommandEvent;
 class wxSizeEvent;
