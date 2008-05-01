@@ -37,19 +37,21 @@ EVT_PAINT(MyTextCtrl::OnPaint)
 END_EVENT_TABLE()
 */
 
-MyTextCtrl::MyTextCtrl( wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, const wxSize& size, long style, const wxValidator& validator, const wxString& name ):
-		wxTextCtrl( parent, id, value, pos, size, style, validator, name ),
-		my_m_dirty( false ),
-		m_must_scroll( true ) {
-	//Connect(wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&AutoBalanceDialog::OnCancel);
-	Connect( wxEVT_PAINT, ( wxObjectEventFunction )&MyTextCtrl::OnPaint );
-	Connect( wxEVT_UPDATE_UI , ( wxObjectEventFunction )&MyTextCtrl::OnUpdateUI );
+
+MyTextCtrl::MyTextCtrl(wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, const wxSize& size, long style, const wxValidator& validator, const wxString& name):
+wxTextCtrl(parent, id, value, pos, size, style, validator, name),
+my_m_dirty(false),
+m_must_scroll(true)
+{
+  //Connect(wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&AutoBalanceDialog::OnCancel);
+  Connect(wxEVT_PAINT, (wxObjectEventFunction)&MyTextCtrl::OnPaint);
+  Connect(wxEVT_UPDATE_UI , (wxObjectEventFunction)&MyTextCtrl::OnUpdateUI);
 
 }
-void MyTextCtrl::OnPaint( wxPaintEvent& event ) {
-	//wxLogMessage(_T("MyTextCtrl::OnPaint"));
-	my_m_dirty = false;
-	event.Skip();
+void MyTextCtrl::OnPaint(wxPaintEvent& event){
+  //wxLogMessage(_T("MyTextCtrl::OnPaint"));
+  my_m_dirty=false;
+  event.Skip();
 }
 void MyTextCtrl::OnUpdateUI( wxUpdateUIEvent &event ) {
 	//wxLogMessage(_T("MyTextCtrl::OnUpdateUI"));
@@ -59,7 +61,6 @@ void MyTextCtrl::OnUpdateUI( wxUpdateUIEvent &event ) {
 bool MyTextCtrl::GetDirty() {
 	return my_m_dirty;
 }
-
 void MyTextCtrl::MakeDirty() {
 	my_m_dirty = true;
 }
@@ -205,15 +206,15 @@ void ChatPanel::CreateControls( ) {
 		m_nick_panel = new wxPanel( m_splitter, -1 );
 		m_chat_panel = new wxPanel( m_splitter, -1 );
 
-		m_nick_sizer = new wxBoxSizer( wxVERTICAL );
+    m_nick_sizer = new wxBoxSizer( wxVERTICAL );
 
 		m_nicklist = new NickListCtrl( m_nick_panel, m_ui, true, CreateNickListMenu() );
 
-		m_nick_filter = new wxComboBox( m_nick_panel, -1, _( "Show all" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ), 0, 0, wxCB_READONLY );
-		m_nick_filter->Disable();
+   // m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
+   // m_nick_filter->Disable();
 
-		m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
-		m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
+    m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
+   // m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
 
 		m_nick_panel->SetSizer( m_nick_sizer );
 
@@ -238,18 +239,13 @@ void ChatPanel::CreateControls( ) {
 	// Adding elements to sizers
 	m_say_sizer->Add( m_say_text, 1, wxEXPAND );
 	m_say_sizer->Add( m_say_button );
-
 	m_chat_sizer->Add( m_chatlog_text, 1, wxEXPAND );
 	m_chat_sizer->Add( m_say_sizer, 0, wxEXPAND | wxTOP, 2 );
-
 	if ( m_show_nick_list ) {
 		m_chat_panel->SetSizer( m_chat_sizer );
-
 		m_splitter->SplitVertically( m_chat_panel, m_nick_panel, 100 );
 		m_splitter->SetMinimumPaneSize( 30 );
-
 		m_main_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
-
 	} else {
 		m_main_sizer->Add( m_chat_sizer, 4, wxEXPAND | wxALL, 2 );
 	}
@@ -571,7 +567,6 @@ void ChatPanel::OnLinkEvent( wxTextUrlEvent& event ) {
 	wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd() );
 	m_ui.OpenWebBrowser( url );
 }
-
 
 void ChatPanel::OnSay( wxCommandEvent& event ) {
 	Say( m_say_text->GetValue() );

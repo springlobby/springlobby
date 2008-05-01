@@ -102,7 +102,7 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_menubar = new wxMenuBar;
   m_menubar->Append(menuFile, _("&File"));
-  m_menubar->Append(menuEdit, _("&Edit"));
+ // m_menubar->Append(menuEdit, _("&Edit"));
   m_menubar->Append(m_menuTools, _("&Tools"));
   m_menubar->Append(menuHelp, _("&Help"));
   SetMenuBar(m_menubar);
