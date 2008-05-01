@@ -4,7 +4,7 @@ dnl you really should just upgrade your autotools instead
 
 dnl if you have too old autoconf, comment out the following prereq AND edit Makefile.am
 AC_PREREQ([2.59c])
-AC_INIT([SpringLobby], [0.0.1-svn], [FIXME_our_bugs_email_address])
+AC_INIT([SpringLobby], [0.0.1-svn], [devel@www.springlobby.info])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/springlobbyapp.cpp])
 AC_CONFIG_AUX_DIR([autotools-aux])
@@ -34,7 +34,7 @@ AM_PATH_WXCONFIG([2.6.3], [],
            where wxWidgets libraries are installed (returned by
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
            equivalent variable and wxWidgets version is 2.6.3 or above.
-   ])])
+   ])], [core,net,adv,qa])
 win_build=0
 AC_ARG_VAR([WINDRES], [Windows resource file compiler command])
 if test x$host_os = xmingw32msvc ; then

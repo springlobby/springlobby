@@ -136,7 +136,8 @@ void ChatPanel::OnMouseDown( wxMouseEvent& event )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
-: wxPanel( parent, -1),m_show_nick_list(true),m_chat_tabs((wxNotebook*)parent),m_ui(ui),m_channel(&chan),m_server(0),m_user(0),m_battle(0),m_type(CPT_Channel),m_popup_menu(0)
+: wxPanel( parent, -1),m_show_nick_list(true),m_chat_tabs((wxNotebook*)parent),m_ui(ui),m_channel(&chan),
+                        m_server(0),m_user(0),m_battle(0),m_type(CPT_Channel),m_popup_menu(0)
 {
   wxLogDebugFunc( _T("wxWindow* parent, Channel& chan") );
   CreateControls( );
@@ -167,7 +168,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
-: wxPanel( parent, -1),m_show_nick_list(false),m_ui(ui),m_channel(0),m_server(0),m_user(0),m_nicklist(NULL),m_battle(&battle),m_type(CPT_Battle),m_popup_menu(0)
+: wxPanel( parent, -1),m_show_nick_list(false),m_nicklist(NULL),m_ui(ui),m_channel(0),m_server(0),m_user(0),m_battle(&battle),m_type(CPT_Battle),m_popup_menu(0)
 {
   wxLogDebugFunc( _T("wxWindow* parent, Battle& battle") );
   CreateControls( );
@@ -876,18 +877,22 @@ void ChatPanel::Say( const wxString& message )
       if ( line.StartsWith( _T("/") ) ) {
         if ( m_channel->ExecuteSayCommand( line ) ) return;
         if ( m_channel->GetServer().ExecuteSayCommand( line ) ) return;
+        OutputLine( wxString::Format( _(" Error: Command (%s) does not exist, use /help for a list of available commands."), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
+        return;
       }
       m_channel->Say( line );
 
     } else if ( m_type == CPT_Battle ) {
 
       if ( m_battle == 0 ) {
-        OutputLine( _(" You are not in battle or battle does not exist."), sett().GetChatColorError(), sett().GetChatFont() );
+        OutputLine( _(" You are not in battle or battle does not exist, use /help for a list of available commands."), sett().GetChatColorError(), sett().GetChatFont() );
         return;
       }
       if ( line.StartsWith(_T("/")) ) {
         if ( m_battle->ExecuteSayCommand( line ) ) return;
         if ( m_battle->GetServer().ExecuteSayCommand( line ) ) return;
+        OutputLine( wxString::Format( _(" Error: Command (%s) does not exist, use /help for a list of available commands."), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
+        return;
       }
       m_battle->Say( line );
 
@@ -900,6 +905,8 @@ void ChatPanel::Say( const wxString& message )
       if ( line.StartsWith(_T("/")) ) {
         if ( m_user->ExecuteSayCommand( line ) ) return;
         if ( m_user->GetServer().ExecuteSayCommand( line ) ) return;
+        OutputLine( wxString::Format( _(" Error: Command (%s) does not exist, use /help for a list of available commands."), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
+        return;
       }
       m_user->Say( line );
 
@@ -908,6 +915,8 @@ void ChatPanel::Say( const wxString& message )
 
       if ( line.StartsWith(_T("/")) ) {
         if ( m_server->ExecuteSayCommand( line ) ) return;
+        OutputLine( wxString::Format( _(" Error: Command (%s) does not exist, use /help for a list of available commands."), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
+        return;
       }
 
       m_server->SendRaw( line );

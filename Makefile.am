@@ -84,14 +84,14 @@ springlobby_SOURCES = \
 	src/mapselectdialog.h \
 	src/chatlog.h \
 	src/chatlog.cpp \
-	src/images/broom.xpm \
-	src/images/bot_ingame.xpm \
-	src/images/bot_broom.xpm \
+	src/images/broom.png.h \
+	src/images/bot_ingame.png.h \
+	src/images/bot_broom.png.h \
 	src/images/chanop_ingame.xpm \
 	src/images/chanop_away.xpm \
 	src/images/chanop_broom.xpm \
 	src/images/chanop.xpm \
-	src/images/admin_broom.xpm \
+	src/images/admin_broom.png.h \
 	src/images/host_spectator.xpm \
 	src/images/host.xpm \
 	src/images/not_found_icon.xpm \
@@ -210,11 +210,12 @@ springlobby_SOURCES = \
 	src/images/start_ally.xpm \
 	src/images/start_enemy.xpm \
 	src/images/start_unused.xpm \
-	src/images/admin_away.xpm \
-	src/images/admin_ingame.xpm \
-	src/images/admin.xpm \
-	src/images/arm.xpm \
-	src/images/away.xpm \
+	src/images/admin_away.png.h \
+	src/images/admin_ingame.png.h \
+	src/images/admin.png.h \
+	src/images/no1_icon.png.h \
+	src/images/no2_icon.png.h \
+	src/images/away.png.h \
 	src/images/battle_list.xpm \
 	src/images/battle_map.xpm \
 	src/images/battle_settings.xpm \
@@ -223,23 +224,27 @@ springlobby_SOURCES = \
 	src/images/channel.xpm \
 	src/images/chat_icon.png.h \
 	src/images/chat_icon_text.png.h \
-	src/images/closed_game.xpm \
-	src/images/closed_pw_game.xpm \
+	src/images/closed_game.png.h \
+	src/images/closed_full_game.png.h \
+	src/images/closed_pw_game.png.h \
+	src/images/closed_full_pw_game.png.h \
+	src/images/torrentoptionspanel_icon.png.h \
 	src/images/close_hi.xpm \
 	src/images/close.xpm \
 	src/images/colourbox.xpm \
 	src/images/connect.xpm \
-	src/images/core.xpm \
 	src/images/down.xpm \
 	src/images/exists.xpm \
-	src/images/ingame.xpm \
+	src/images/ingame.png.h \
 	src/images/join_icon.png.h \
 	src/images/join_icon_text.png.h \
 	src/images/nexists.xpm \
 	src/images/nready_q.xpm \
 	src/images/nready_unsync.xpm \
-	src/images/open_game.xpm \
-	src/images/open_pw_game.xpm \
+	src/images/open_game.png.h \
+	src/images/open_full_game.png.h \
+	src/images/open_pw_game.png.h \
+	src/images/open_full_pw_game.png.h \
 	src/images/options_icon.png.h \
 	src/images/options_icon_text.png.h \
 	src/images/rank0.xpm \

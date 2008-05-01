@@ -257,7 +257,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
 
     try {
-      int sideimg = icons().GetSideIcon( m_battle.GetModName(), usync()->GetSideName( m_battle.GetModName(), user.BattleStatus().side ) );
+      int sideimg = icons().GetSideIcon( m_battle.GetModName(), user.BattleStatus().side );
       if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
       else SetItem( index, 1, usync()->GetSideName( m_battle.GetModName(), user.BattleStatus().side ));
     } catch ( ... ) {
@@ -359,7 +359,7 @@ void BattleroomListCtrl::UpdateBot( const int& index )
   SetItemColumnImage( index, 1, -1 );
 
   try {
-    int sideimg = icons().GetSideIcon( m_battle.GetModName(), usync()->GetSideName( m_battle.GetModName(), bot.bs.side ) );
+    int sideimg = icons().GetSideIcon( m_battle.GetModName(), bot.bs.side );
     if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
     else SetItem( index, 1,  usync()->GetSideName( m_battle.GetModName(), bot.bs.side) );
   } catch ( ... ) {

@@ -16,6 +16,7 @@
 #include "springoptionstab.h"
 #include "chatoptionstab.h"
 #include "settings.h"
+#include "uiutils.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentoptionspanel.h"
@@ -23,6 +24,7 @@
 
 #include "images/spring.xpm"
 #include "images/userchat.xpm"
+#include "images/torrentoptionspanel_icon.png.h"
 
 BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 
@@ -36,11 +38,11 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 {
     m_tabs = new wxNotebook( this, OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
 
-    m_imagelist = new wxImageList( 12, 12 );
-    m_imagelist->Add( wxIcon(spring_xpm) );
-    m_imagelist->Add( wxIcon(userchat_xpm) );
-
-    m_tabs->AssignImageList( m_imagelist );
+  m_imagelist = new wxImageList( 12, 12 );
+  m_imagelist->Add( wxIcon(spring_xpm) );
+  //TODO when torrent merged, enable again
+  //m_imagelist->Add( *charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
+  m_imagelist->Add( wxIcon(userchat_xpm) );
 
     m_spring_opts = new SpringOptionsTab( m_tabs, m_ui );
     m_tabs->AddPage( m_spring_opts, _("Spring"), true, 0 );
@@ -91,7 +93,9 @@ void MainOptionsTab::OnRestore( wxCommandEvent& event )
 {
     m_spring_opts->OnRestore( event );
     m_chat_opts->OnRestore( event );
+#ifndef NO_TORRENT_SYSTEM
     m_torrent_opts->OnRestore( event );
+#endif
 }
 
 
