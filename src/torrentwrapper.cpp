@@ -65,7 +65,6 @@ ingame(false)
   m_torr->start_dht();
   m_socket_class = new Socket( *this );
   UpdateSettings();
-  ReloadLocalFileList();
 }
 
 
@@ -137,12 +136,10 @@ void TorrentWrapper::UpdateSettings()
 }
 
 
-bool TorrentWrapper::IsFileInSystem( const wxString& uhash )
+bool TorrentWrapper::IsFileInSystem( const wxString& hash )
 {
-  unsigned long ulong;
-  uhash.ToULong( &ulong );
   ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
-  return torrents_infos_l.Get().find(u2s((int)ulong)) != torrents_infos_l.Get().end();
+  return torrents_infos_l.Get().find(hash) != torrents_infos_l.Get().end();
 }
 
 
@@ -185,59 +182,16 @@ int TorrentWrapper::GetTorrentSystemStatus()
 ////////////////////////////////////////////////////////
 
 
-void TorrentWrapper::ReloadLocalFileList()
-{
-  if (ingame) return;
-  {
-    ScopedLocker<HashToTorrentData> local_files_l(m_local_files);
-    local_files_l.Get().clear();
-  }
-  for ( int i =0; i < usync()->GetNumMaps(); i++ )
-  {
-    UnitSyncMap mapinfo = usync()->GetMap( i );
-    TorrentData info;
-    info.type = map;
-    unsigned long uhash;
-    mapinfo.hash.ToULong(&uhash);
-    info.hash = wxString::Format( _T("%d"), (int)uhash );
-    info.name = mapinfo.name;
-    {
-      ScopedLocker<HashToTorrentData> local_files_l(m_local_files);
-      local_files_l.Get()[info.hash] = info;
-    }
-  }
-  for ( int i =0; i < usync()->GetNumMods(); i++ )
-  {
-    UnitSyncMod modinfo = usync()->GetMod( i );
-    TorrentData info;
-    info.type = mod;
-    unsigned long uhash;
-    modinfo.hash.ToULong(&uhash);
-    info.hash = wxString::Format( _T("%d"), (int)uhash );
-    info.name = modinfo.name;
-    {
-      ScopedLocker<HashToTorrentData> local_files_l(m_local_files);
-      local_files_l.Get()[info.hash] = info;
-    }
-  }
-}
-
-
-bool TorrentWrapper::RequestFile( const wxString& uhash )
+bool TorrentWrapper::RequestFile( const wxString& hash )
 {
   if (ingame) return false;
   if ( !m_connected ) return false;
   if ( m_leech_count > 4 ) return false;
 
-  unsigned long hash;
-  uhash.ToULong( &hash );
-  int singedver = (int)hash;
-  wxString shash = i2s(singedver);//wxString::Format( _T("%d"), (int)hash );
-
   wxString name;
   {
     ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
-    HashToTorrentData::iterator it=torrents_infos_l.Get().find(shash);
+    HashToTorrentData::iterator it=torrents_infos_l.Get().find(hash);
     if (it==torrents_infos_l.Get().end()) return false;
     if ( it->second.hash.IsEmpty() ) return false; /// the file is not present in the system
     name=it->second.name;
@@ -249,8 +203,8 @@ bool TorrentWrapper::RequestFile( const wxString& uhash )
     if ( itor != open_torrents_l.Get().end() ) return true; /// don't request twice the same file
   }
 
-  if ( !JoinTorrent( shash ) ) return false;
-  m_socket_class->Send( wxString::Format( _T("N+|%d\n"), (int)hash ) ); /// request for seeders for the file
+  if ( !JoinTorrent( hash ) ) return false;
+  m_socket_class->Send( wxString::Format( _T("N+|%s\n"), hash.c_str() ) ); /// request for seeders for the file
   m_leech_count++;
   {
     ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
@@ -456,20 +410,20 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 }
 
 
-bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& shash )
+bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
 {
-  wxLogMessage(_T("torrent system downloading torrent info %s"), shash.c_str() );
+  wxLogMessage(_T("torrent system downloading torrent info %s"), hash.c_str() );
   wxHTTP fileRequest;
   //versionRequest.SetHeader(_T("Content-type"), _T(""));
   /// normal timeout is 10 minutes.. set to 10 secs.
   fileRequest.SetTimeout(10);
   fileRequest.Connect( m_tracker_urls[m_connected_tracker_index], 80);
-  wxInputStream *stream = fileRequest.GetInputStream( _T("/torrents/") + shash + _T(".torrent") );
+  wxInputStream *stream = fileRequest.GetInputStream( _T("/torrents/") + hash + _T(".torrent") );
   bool ret = false;
   if (fileRequest.GetError() == wxPROTO_NOERR)
   {
 
-    wxFileOutputStream output(sett().GetSpringDir() +  _T("/torrents/") + shash + _T(".torrent") );
+    wxFileOutputStream output(sett().GetSpringDir() +  _T("/torrents/") + hash + _T(".torrent") );
     if ( output.Ok() )
     {
       stream->Read(output);
@@ -480,8 +434,8 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& shash )
 
   wxDELETE(stream);
   fileRequest.Close();
-  if (ret) wxLogMessage(_T("torrent system downloading torrent info %s successful"), shash.c_str() );
-  else wxLogMessage(_T("torrent system downloading torrent info %s failed"), shash.c_str() );
+  if (ret) wxLogMessage(_T("torrent system downloading torrent info %s successful"), hash.c_str() );
+  else wxLogMessage(_T("torrent system downloading torrent info %s failed"), hash.c_str() );
   return ret;
 }
 
@@ -502,12 +456,11 @@ void TorrentWrapper::FixTorrentList()
     ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);/// threads rule 8
     ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
     ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
-    ScopedLocker<HashToTorrentData> local_files_l(m_local_files);
 
     for ( SeedRequests::iterator i = seed_requests_l.Get().begin(); i != seed_requests_l.Get().end(); i++ )
     {
       if( m_seed_count > 9 ) break;
-      if (  ( local_files_l.Get().find( i->second ) != local_files_l.Get().end() ) && (open_torrents_l.Get().find( i->first ) == open_torrents_l.Get().end()) && (torrent_infos_l.Get().find(i->second) != torrent_infos_l.Get().end()) ) /// torrent is requested and present, but not joined yet
+      if (  ( usync()->MapExists( i->first, i->second ) || usync()->ModExists( i->first ) ) && (open_torrents_l.Get().find( i->first ) == open_torrents_l.Get().end()) && (torrent_infos_l.Get().find(i->second) != torrent_infos_l.Get().end()) ) /// torrent is requested and present, but not joined yet
       {
         torrents_to_join.push_back(i->second);
         m_seed_count++;

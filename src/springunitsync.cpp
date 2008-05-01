@@ -72,9 +72,28 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& springdir, const wxString&
   {
      wxLogDebugFunc( _T("") );
      LOCK_UNITSYNC;
-     return _LoadUnitSyncLib( springdir, unitsyncloc );
+     bool ret = _LoadUnitSyncLib( springdir, unitsyncloc );
+     if (ret) PopulateArchiveList();
+     return ret;
   }
 }
+
+
+void SpringUnitSync::PopulateArchiveList()
+{
+  m_maps_list.empty();
+  m_mods_list.empty();
+
+  for ( int i =0; i < GetNumMaps(); i++ )
+  {
+    m_maps_list.from[susynclib()->GetMapChecksum( i )] = susynclib()->GetMapName( i );
+  }
+  for ( int i =0; i < GetNumMods(); i++ )
+  {
+    m_mods_list.from[i2s(susynclib()->GetPrimaryModChecksum( i ))] = susynclib()->GetPrimaryModName( i );
+  }
+}
+
 
 
 bool SpringUnitSync::_LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc )
@@ -163,11 +182,7 @@ int SpringUnitSync::GetModIndex( const wxString& name )
 
 bool SpringUnitSync::ModExists( const wxString& modname )
 {
-  wxLogDebugFunc( _T("modname = \"") + modname + _T("\"") );
-  try {
-    return GetModIndex( modname ) >=0;
-  } catch (...) {}
-  return false;
+  return (m_mods_list.to.find(modname) != m_mods_list.to.end());
 }
 
 
@@ -187,7 +202,7 @@ UnitSyncMod SpringUnitSync::GetMod( int index )
   UnitSyncMod m;
 
   m.name = susynclib()->GetPrimaryModName( index );
-  m.hash = wxString::Format( _T("%d"), susynclib()->GetPrimaryModChecksum( index ) );
+  m.hash = i2s( susynclib()->GetPrimaryModChecksum( index ) );
 
   return m;
 }
@@ -202,27 +217,15 @@ int SpringUnitSync::GetNumMaps()
 
 bool SpringUnitSync::MapExists( const wxString& mapname )
 {
-  wxLogDebugFunc( _T("") );
-  try {
-    return GetMapIndex( mapname ) >= 0;
-  } catch (...) {}
-  return false;
+  return (m_maps_list.to.find(mapname) != m_maps_list.to.end());
 }
 
 
 bool SpringUnitSync::MapExists( const wxString& mapname, const wxString hash )
 {
-  wxLogDebugFunc( _T("") );
-  int index;
-  wxString usynchash;
-  try {
-    index = GetMapIndex( mapname );
-    if ( index >= 0 ) {
-      usynchash =  susynclib()->GetMapChecksum( index );
-      return ( usynchash == hash );
-    }
-  } catch (...) {}
-  return false;
+  LocalArchivesVector::iterator itor = m_maps_list.from.find(hash);
+  if ( itor == m_maps_list.from.end() ) return false;
+  return itor->second == mapname;
 }
 
 
@@ -639,9 +642,6 @@ bool SpringUnitSync::ReloadUnitSyncLib()
 {
   usync()->FreeUnitSyncLib();
   usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() );
-  #ifndef NO_TORRENT_SYSTEM
-  torrent()->ReloadLocalFileList();
-  #endif
   return true;
 }
 

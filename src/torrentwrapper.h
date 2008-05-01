@@ -60,7 +60,7 @@ class TorrentWrapper : public iNetClass
     void ConnectToP2PSystem();
     void DisconnectToP2PSystem();
     bool IsConnectedToP2PSystem();
-    bool IsFileInSystem( const wxString& uhash );
+    bool IsFileInSystem( const wxString& hash );
     void RemoveFile( const wxString& hash );
     int GetTorrentSystemStatus();
 
@@ -76,7 +76,7 @@ class TorrentWrapper : public iNetClass
 
     void CreateTorrent( const wxString& uhash, const wxString& name, MediaType type );
     bool JoinTorrent( const wxString& name );
-    bool DownloadTorrentFileFromTracker( const wxString& shash );
+    bool DownloadTorrentFileFromTracker( const wxString& hash );
     void FixTorrentList();
 
     void ReceiveandExecute( const wxString& msg );
@@ -111,13 +111,11 @@ class TorrentWrapper : public iNetClass
 
 /// there probably are some more rules i dont know of, or which i forgot.
 
-    typedef std::map<wxString,TorrentData> HashToTorrentData;/// shash -> torr data
+    typedef std::map<wxString,TorrentData> HashToTorrentData;/// hash -> torr data
     MutexWrapper<HashToTorrentData> m_torrents_infos;
 
     typedef codeproject::bimap<wxString,wxString> SeedRequests;
     MutexWrapper<SeedRequests> m_seed_requests; ///name -> hash
-
-    MutexWrapper<HashToTorrentData> m_local_files; /// shash -> torrent data
 
     typedef std::map<wxString,bool> OpenTorrents;
     MutexWrapper<OpenTorrents> m_open_torrents; /// name -> is seed
