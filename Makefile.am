@@ -215,7 +215,10 @@ springlobby_SOURCES = \
 	src/images/chat_icon.png.h \
 	src/images/chat_icon_text.png.h \
 	src/images/closed_game.png.h \
+	src/images/closed_full_game.png.h \
 	src/images/closed_pw_game.png.h \
+	src/images/closed_full_pw_game.png.h \
+	src/images/torrentoptionspanel_icon.png.h \
 	src/images/close_hi.xpm \
 	src/images/close.xpm \
 	src/images/colourbox.xpm \
@@ -229,7 +232,9 @@ springlobby_SOURCES = \
 	src/images/nready_q.xpm \
 	src/images/nready_unsync.xpm \
 	src/images/open_game.png.h \
+	src/images/open_full_game.png.h \
 	src/images/open_pw_game.png.h \
+	src/images/open_full_pw_game.png.h \
 	src/images/options_icon.png.h \
 	src/images/options_icon_text.png.h \
 	src/images/rank0.xpm \
