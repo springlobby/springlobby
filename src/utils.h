@@ -95,4 +95,6 @@ long GetIntParam( wxString& params );
 bool GetBoolParam( wxString& params );
 wxString GetSpringLobbyVersion();
 
+wxString GetHostCPUSpeed();
+
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H

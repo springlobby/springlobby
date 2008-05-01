@@ -349,6 +349,7 @@ void MainWindow::OnMenuAbout( wxCommandEvent& event )
 	//info.SetCopyright(_T("");
 	info.SetLicence(_T("GPL"));
 	info.AddDeveloper(_T("BrainDamage"));
+	info.AddDeveloper(_T("dizekat"));
 	info.AddDeveloper(_T("koshi"));
 	info.AddDeveloper(_T("semi_"));
 	info.AddDeveloper(_T("tc-"));
