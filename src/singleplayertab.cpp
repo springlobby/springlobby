@@ -194,6 +194,13 @@ bool SinglePlayerTab::ValidSetup()
     return false;
   }
 
+  if ( m_battle.GetNumBots() == 1 )
+  {
+      wxLogWarning(_T("trying to start sp game without bot"));
+      customMessageBoxNoModal(SL_MAIN_ICON, _("You should add a bot before starting a game.\nIf you don't want an opponent add TestGlobalAi"), _("No Bot added"));
+      return false;
+  }
+
   if ( usync()->VersionSupports( GF_XYStartPos ) ) return true;
 
   int numBots = 0;
@@ -258,9 +265,10 @@ void SinglePlayerTab::OnStart( wxCommandEvent& event )
 {
   if ( m_ui.IsSpringRunning() ) {
     wxLogWarning(_T("trying to start spring while another instance is running") );
-    customMessageBox(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
+    customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
     return;
   }
+
   if ( ValidSetup() ) m_ui.StartSinglePlayerGame( m_battle );
 }
 
