@@ -122,6 +122,7 @@ class ChatPanel : public wxPanel
 
     void OnMenuSelectAll( wxCommandEvent& event );
     void OnMenuCopy( wxCommandEvent& event );
+    void OnChannelMenuClear ( wxCommandEvent& event );
 
     void OnChannelMenuLeave( wxCommandEvent& event );
     void OnChannelMenuDisplayJoinLeave( wxCommandEvent& event );
@@ -221,6 +222,7 @@ enum
     CHAT_TEXT,
     CHAT_LOG,
 
+    CHAT_MENU_CH_CLEAR,
     CHAT_MENU_CH_LEAVE,
     CHAT_MENU_CH_DISPLAYJOIN,
     CHAT_MENU_CH_AUTOJOIN,

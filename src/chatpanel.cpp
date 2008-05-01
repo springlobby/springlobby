@@ -78,6 +78,7 @@ BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
   EVT_SIZE        (            ChatPanel::OnResize)
   EVT_TEXT_URL    ( CHAT_LOG,  ChatPanel::OnLinkEvent )
 
+  EVT_MENU        ( CHAT_MENU_CH_CLEAR, ChatPanel::OnChannelMenuClear )
   EVT_MENU        ( CHAT_MENU_CH_LEAVE, ChatPanel::OnChannelMenuLeave )
   EVT_MENU        ( CHAT_MENU_CH_DISPLAYJOIN, ChatPanel::OnChannelMenuDisplayJoinLeave )
   EVT_MENU        ( CHAT_MENU_CH_AUTOJOIN, ChatPanel::OnChannelAutoJoin )
@@ -304,7 +305,8 @@ void ChatPanel::CreatePopup()
     wxMenuItem* selectitem = new wxMenuItem( m_popup_menu, wxID_SELECTALL, _("Select all"), wxEmptyString, wxITEM_NORMAL );
     m_popup_menu->Append( selectitem );
     wxMenuItem* copyitem = new wxMenuItem( m_popup_menu, wxID_COPY, _("Copy"), wxEmptyString, wxITEM_NORMAL );
-    m_popup_menu->Append( copyitem );
+    wxMenuItem* clearitem = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_CLEAR, _("Clear all text"), wxEmptyString, wxITEM_NORMAL );
+    m_popup_menu->Append( clearitem );
 
     m_popup_menu->AppendSeparator();
     wxMenu* m_chanserv;
@@ -572,6 +574,11 @@ void ChatPanel::OnResize( wxSizeEvent& event )
     wxSize s = m_splitter->GetSize();
     m_splitter->SetSashPosition( s.GetWidth() - 238, true );
   }
+}
+
+void ChatPanel::OnChannelMenuClear( wxCommandEvent& event )
+{
+    m_chatlog_text->Clear();
 }
 
 void ChatPanel::OnLinkEvent( wxTextUrlEvent& event )
