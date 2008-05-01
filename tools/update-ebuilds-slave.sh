@@ -9,9 +9,9 @@ if [ $# -ne 0 ] ; then
 	exit
 fi
 
-origin=git://springlobby.info/git/buildbot/springlobby.git
+origin=git@springlobby.info:git/buildbot/springlobby.git
 
-publicrepodir=/home/git/repositories/git/buildbot/springlobby.git
+publicrepodir=/home/kosh/buildbot/springlobby
 if [ ! -d ${publicrepodir} ] ; then
     git-clone --bare . ${publicrepodir}
     ( cd ${publicrepodir} ; git-gc --prune --aggressive ; touch 'git-daemon-export-ok' )
