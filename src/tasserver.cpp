@@ -278,7 +278,7 @@ void TASServer::Disconnect()
 bool TASServer::IsConnected()
 {
     if ( m_sock == 0 ) return false;
-    return (m_sock->State() == SS_OPEN);
+    return (m_sock->State() == SS_Open);
 }
 
 
@@ -326,7 +326,7 @@ bool TASServer::IsPasswordHash( const wxString& pass )
 wxString TASServer::GetPasswordHash( const wxString& pass )
 {
     if ( IsPasswordHash(pass) ) return pass;
-    return WX_STRING(base64_encode(boost::md5(pass.mb_str()).digest().value(), 16));
+        return wxBase64::Encode(boost::md5(pass.mb_str()).digest().value(), 16);
 }
 
 
