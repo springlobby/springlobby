@@ -516,7 +516,9 @@ springlobby_SOURCES = \
 	src/autobalancedialog.cpp \
 	src/autobalancedialog.h \
 	src/tdfcontainer.cpp \
-	src/tdfcontainer.h
+	src/tdfcontainer.h \
+	src/Helper/TextCompletionDatabase.hpp \
+	src/Helper/TextCompletionDatabase.cpp 
 
 
 if USE_WINDRES	

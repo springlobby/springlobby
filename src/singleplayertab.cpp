@@ -51,8 +51,8 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_map_pick = new wxChoice( this, SP_MAP_PICK );
   m_ctrl_sizer->Add( m_map_pick, 1, wxALL, 5 );
 
-  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
+//  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+//  m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
   m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
   m_ctrl_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
@@ -194,6 +194,13 @@ bool SinglePlayerTab::ValidSetup()
     return false;
   }
 
+  if ( m_battle.GetNumBots() == 1 )
+  {
+      wxLogWarning(_T("trying to start sp game without bot"));
+      customMessageBoxNoModal(SL_MAIN_ICON, _("You should add a bot before starting a game.\nIf you don't want an opponent add TestGlobalAi"), _("No Bot added"));
+      return false;
+  }
+
   if ( usync()->VersionSupports( GF_XYStartPos ) ) return true;
 
   int numBots = 0;
@@ -258,9 +265,10 @@ void SinglePlayerTab::OnStart( wxCommandEvent& event )
 {
   if ( m_ui.IsSpringRunning() ) {
     wxLogWarning(_T("trying to start spring while another instance is running") );
-    customMessageBox(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
+    customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
     return;
   }
+
   if ( ValidSetup() ) m_ui.StartSinglePlayerGame( m_battle );
 }
 
