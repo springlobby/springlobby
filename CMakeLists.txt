@@ -37,6 +37,7 @@ IF(wxWidgets_FOUND)
 	SET(SpringLobbySrc
 		src/boost/md5.cpp
 		src/updater/versionchecker.cpp
+		src/Helper/TextCompletionDatabase.cpp
 		src/autobalancedialog.cpp
 		src/addbotdialog.cpp
 		src/agreementdialog.cpp
