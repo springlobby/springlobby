@@ -67,7 +67,8 @@ class TorrentWrapper : public iNetClass
     /// lobby interface
     void SetIngameStatus( bool status );
     void ReloadLocalFileList();
-    bool RequestFile( const wxString& hash );
+    bool RequestFileByHash( const wxString& hash );
+    bool RequestFileByName( const wxString& name );
     void UpdateSettings();
     void UpdateFromTimer( int mselapsed );
     std::map<int,TorrentInfos> CollectGuiInfos();

@@ -466,16 +466,18 @@ void BattleListTab::DoJoin( Battle& battle )
 
   if ( !battle.ModExists() ) {
     if (customMessageBox( SL_MAIN_ICON,_("You need to download the mod before you can join this game.\n\nDo you want me to take you to the download page?"), _("Mod not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-      wxString mod = battle.GetModHash();
-      m_ui.DownloadMod ( mod );
+      wxString modhash = battle.GetModHash();
+      wxString modname = battle.GetModName();
+      m_ui.DownloadMod ( modhash, modname );
     }
     return;
   }
 
   if ( !battle.MapExists() ) {
     if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to play in this game.\n\nDo you want me to take you to the download page?"), _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-      wxString map = battle.GetMapHash();
-      m_ui.DownloadMap ( map );
+      wxString maphash = battle.GetMapHash();
+      wxString mapname = battle.GetMapName();
+      m_ui.DownloadMap ( maphash, mapname );
     }
   }
 

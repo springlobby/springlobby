@@ -70,8 +70,8 @@ class Ui
 
     void ReloadUnitSync();
 
-    void DownloadMap( const wxString& hash );
-    void DownloadMod( const wxString& hash );
+    void DownloadMap( const wxString& hash, const wxString& name );
+    void DownloadMod( const wxString& hash, const wxString& name );
 
     void OpenWebBrowser( const wxString& url );
 

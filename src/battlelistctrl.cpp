@@ -163,7 +163,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 {
   if ( m_selected != -1 ) {
     if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
-      m_ui.DownloadMap( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetMapHash() );
+      m_ui.DownloadMap( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetMapHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetMapName() );
     }
   }
 }
@@ -173,7 +173,7 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
 {
   if ( m_selected != -1 ) {
     if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
-      m_ui.DownloadMod( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetModHash() );
+      m_ui.DownloadMod( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetModHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetModName() );
     }
   }
 }

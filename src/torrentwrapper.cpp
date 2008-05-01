@@ -182,7 +182,7 @@ int TorrentWrapper::GetTorrentSystemStatus()
 ////////////////////////////////////////////////////////
 
 
-bool TorrentWrapper::RequestFile( const wxString& hash )
+bool TorrentWrapper::RequestFileByHash( const wxString& hash )
 {
   if (ingame) return false;
   if ( !m_connected ) return false;
@@ -211,6 +211,13 @@ bool TorrentWrapper::RequestFile( const wxString& hash )
     open_torrents_l.Get()[name] = false; /// not seeding when just joined
   }
   return true;
+}
+
+
+bool TorrentWrapper::RequestFileByName( const wxString& name )
+{
+  return false;
+/// TODO (BrainDamage#1#): implement
 }
 
 

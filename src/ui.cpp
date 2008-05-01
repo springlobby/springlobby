@@ -280,10 +280,11 @@ void Ui::ReloadUnitSync()
 }
 
 
-void Ui::DownloadMap( const wxString& hash )
+void Ui::DownloadMap( const wxString& hash, const wxString& name )
 {
   #ifndef NO_TORRENT_SYSTEM
-  torrent()->RequestFile( hash );
+  if ( !hash.IsEmpty() ) torrent()->RequestFileByHash( hash );
+  else if ( !name.IsEmpty() ) torrent()->RequestFileByName( name );
   #else
   wxString url = _T("http://spring.jobjol.nl/search.php");
   OpenWebBrowser ( url );
@@ -291,10 +292,11 @@ void Ui::DownloadMap( const wxString& hash )
 }
 
 
-void Ui::DownloadMod( const wxString& hash )
+void Ui::DownloadMod( const wxString& hash, const wxString& name )
 {
   #ifndef NO_TORRENT_SYSTEM
-  torrent()->RequestFile( hash );
+  if ( !hash.IsEmpty() ) torrent()->RequestFileByHash( hash );
+  else if ( !name.IsEmpty() ) torrent()->RequestFileByName( name );
   #else
   wxString url = _T("http://spring.jobjol.nl/search.php");
   OpenWebBrowser ( url );
