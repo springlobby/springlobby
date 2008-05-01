@@ -71,7 +71,6 @@ NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* p
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
   SetImageList( &icons(), wxIMAGE_LIST_STATE );
-
 }
 
 
@@ -87,6 +86,7 @@ void NickListCtrl::AddUser( User& user )
   ASSERT_LOGIC( index != -1, _T("index = -1") );
   UserUpdated( index );
   Sort();
+  SetColumnWidth( 3, wxLIST_AUTOSIZE );
 }
 
 void NickListCtrl::RemoveUser( const User& user )
@@ -95,6 +95,7 @@ void NickListCtrl::RemoveUser( const User& user )
     if ( &user == (User*)GetItemData( i ) ) {
       DeleteItem( i );
       Sort();
+      SetColumnWidth( 3, wxLIST_AUTOSIZE );
       return;
     }
   }

@@ -196,6 +196,7 @@ void BattleroomListCtrl::AddUser( User& user )
   SetItemData(index, (wxUIntPtr)(items.size()-1) );
 
   UpdateUser( index );
+  SetColumnWidth( 5, wxLIST_AUTOSIZE );
 }
 
 
@@ -203,6 +204,7 @@ void BattleroomListCtrl::RemoveUser( User& user )
 {
   if ( &user == m_sel_user ) m_sel_user = 0;
   DeleteItem( GetUserIndex( user ) );
+  SetColumnWidth( 5, wxLIST_AUTOSIZE );
 }
 
 

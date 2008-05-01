@@ -75,7 +75,7 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   col.SetImage( icons().ICON_NONE);
   InsertColumn( 6, col, _T("Name of the Host") );
 
-  col.SetText( _("s") );
+  col.SetText( _("a") );
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 7, col, _T("Number of Spectators") );
 
