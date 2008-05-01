@@ -219,7 +219,7 @@ void ChatPanel::CreateControls( )
     m_nick_filter->Disable();
 
     m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
-    m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
+   // m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
 
     m_nick_panel->SetSizer( m_nick_sizer );
 

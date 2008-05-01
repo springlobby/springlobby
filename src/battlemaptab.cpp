@@ -57,7 +57,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
   m_browse_btn = new wxButton( this, wxID_ANY, _("Select"), wxDefaultPosition, wxDefaultSize, 0 );
 
-  m_selmap_sizer->Add( m_browse_btn, 0, wxALL, 2 );
+  //m_selmap_sizer->Add( m_browse_btn, 0, wxALL, 2 );
 
   m_map_sizer->Add( m_selmap_sizer, 0, wxEXPAND, 5 );
 
