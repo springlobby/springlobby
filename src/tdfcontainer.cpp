@@ -2,7 +2,7 @@
 
 
 
-TDFWriter::TDFWriter(std::ostream &s):
+TDFWriter::TDFWriter(wxString &s):
 m_stream(s),
 m_depth(0)
 {
@@ -14,23 +14,23 @@ TDFWriter::~TDFWriter(){
 }
 void TDFWriter::EnterSection(const wxString &name){
   Indent();
-  m_stream<<"["<<STD_STRING(name).c_str()<<"]\n";
+  m_stream<<_T("[")<<name<<_T("]\n");
   Indent();
-  m_stream<<"{\n";
+  m_stream<<_T("{\n");
   m_depth++;
 }
 void TDFWriter::LeaveSection(){
   m_depth--;
   Indent();
-  m_stream<<"}\n";
+  m_stream<<_T("}\n");
 }
 void TDFWriter::Indent(){
-  for(int i=0;i<m_depth;++i)m_stream<<"\t";
+  for(int i=0;i<m_depth;++i)m_stream<<_T("\t");
 }
     //wxString GetCurrentPath();
 void TDFWriter::Append(const wxString &name, wxString value){
   Indent();
-  m_stream<<STD_STRING(name).c_str()<<"="<<STD_STRING(value).c_str()<<";\n";
+  m_stream<<name<<_T("=")<<value<<_T(";\n");
 }
 
 void TDFWriter::Close(){
@@ -39,5 +39,5 @@ void TDFWriter::Close(){
 }
 
 void TDFWriter::AppendLineBreak(){
-  m_stream<<"\n";
+  m_stream<<_T("\n");
 }
