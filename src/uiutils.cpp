@@ -11,11 +11,6 @@
 #include "uiutils.h"
 #include "utils.h"
 
-#ifdef __WXMSW__
-#include <wx/msw/registry.h>
-#endif
-
-
 wxString RefineMapname( const wxString& mapname )
 {
     wxString ret = mapname;

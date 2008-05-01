@@ -31,6 +31,9 @@
 #include <string>
 #include <fstream>
 #include <wx/regex.h>
+#ifdef __WXMSW__
+#include <wx/msw/registry.h>
+#endif
 
 
 wxString GetLibExtension()
@@ -193,7 +196,7 @@ wxString GetHostCPUSpeed()
     }
 
 #else
-#ifdef __UNICODE__
+#ifdef wxHAS_REGEX_ADVANCED
 
     // Create an Inputstream from /proc/cpuinfo
     std::ifstream fin( "/proc/cpuinfo" );
