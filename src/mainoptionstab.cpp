@@ -44,6 +44,8 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   //m_imagelist->Add( *charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
   m_imagelist->Add( wxIcon(userchat_xpm) );
 
+    m_tabs->AssignImageList( m_imagelist );
+
     m_spring_opts = new SpringOptionsTab( m_tabs, m_ui );
     m_tabs->AddPage( m_spring_opts, _("Spring"), true, 0 );
 
