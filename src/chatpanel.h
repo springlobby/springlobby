@@ -1,12 +1,15 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 #define SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 
+#include <iostream>
+
 #include <wx/panel.h>
 #include <wx/event.h>
 #include <wx/textctrl.h>
 #include <wx/string.h>
 
 #include "chatlog.h"
+#include <Helper/TextCompletionDatabase.hpp>
 
 class wxCommandEvent;
 class wxSizeEvent;
@@ -116,6 +119,8 @@ class ChatPanel : public wxPanel
 
     void OnSay( wxCommandEvent& event );
     void OnResize( wxSizeEvent& event );
+	void OnTextChanged_Say_Text( wxCommandEvent& event );
+	void OnChar( wxKeyEvent& event );
 
     void OnLinkEvent( wxTextUrlEvent& event );
     void OnMouseDown( wxMouseEvent& event );
@@ -211,6 +216,9 @@ class ChatPanel : public wxPanel
     void CreateControls( );
     void CreatePopup();
     wxMenu* CreateNickListMenu();
+
+
+	TextCompletionDatabase textcompletiondatabase;
 
     DECLARE_EVENT_TABLE();
 };
