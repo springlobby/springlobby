@@ -413,8 +413,8 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
   wxImage ret( FileContentStream, wxBITMAP_TYPE_ANY, -1);
   delete[] FileContent;
   ret.InitAlpha();
-  for ( unsigned int x = 0; x < ret.GetWidth(); x++ )
-    for ( unsigned int y = 0; y < ret.GetHeight(); y++ )
+  for ( int x = 0; x < ret.GetWidth(); x++ )
+    for ( int y = 0; y < ret.GetHeight(); y++ )
       if ( ret.GetBlue( x, y ) == 255 && ret.GetGreen( x, y ) == 255 && ret.GetRed( x, y ) == 255 ) ret.SetAlpha( x, y, 0 ); /// set pixel to be transparent
   return ret;
 }
