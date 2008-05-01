@@ -93,16 +93,26 @@ TextCompletionDatabase::GetMapping( wxString abbreviation ) {
 	wxRegEx regex_Abbreviations;
 
 	// We build the regular Expression:
+
+	// We need to escape all regular Expression Characters, that have a special Meaning
+	abbreviation.Replace( _T("["), _T("\\[") );
+	abbreviation.Replace( _T("]"), _T("\\]") );
+
 	wxString regex_Text;
 	regex_Text.append( abbreviation );
-	regex_Text.append( wxT( ".*?" ) );
+	regex_Text.append( wxT( ".*" ) );
 
 	// We compile the regular Expression and if it's correct, we store it in the Regex Container
 	regex_Abbreviations.Compile( regex_Text, wxRE_ADVANCED );
 
 	// Now we iterate over all stored Abbreviations and search for Abbreviations containing the provided Abbreviation
+
+	// std::cout << "Abbr: (" << abbreviation.char_str() << ")" << std::endl;
+
 	for ( HashMap_String_String::iterator iter = hm.begin() ; iter != hm.end() ; ++iter ) {
+		// std::cout << "iter->first: (" << iter->first.char_str() << ")" << std::endl;
 		if ( regex_Abbreviations.Matches( iter->first ) ) {
+			// std::cout << "Match found!" << std::endl;
 			hashmap[ iter->first ] = iter->second;
 		}
 	}
