@@ -83,7 +83,8 @@ MainWindow::MainWindow( Ui& ui ) :
   menuFile->AppendSeparator();
   menuFile->Append(MENU_QUIT, _("&Quit"));
 
-  wxMenu *menuEdit = new wxMenu;
+//TODO re-enable when actually needed
+//  wxMenu *menuEdit = new wxMenu;
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));

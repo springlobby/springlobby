@@ -36,7 +36,7 @@ ChatLog::~ChatLog()
     WriteLine( _("### Session Closed at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _("]") );
     WriteLine( _T(" \n \n \n") );
     if ( m_logfile->IsOpened() ) m_logfile->Close();
-    m_logfile == 0;
+    m_logfile = 0;
   }
   if (m_logfile != 0)
   {

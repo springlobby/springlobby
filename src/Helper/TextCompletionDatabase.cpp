@@ -1,4 +1,4 @@
-#include "Helper/TextCompletionDatabase.hpp"
+#include "TextCompletionDatabase.hpp"
 
 //--------------------------------------------------------------------------------
 ///
