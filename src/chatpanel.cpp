@@ -74,7 +74,6 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
 	EVT_TEXT_ENTER( CHAT_TEXT, ChatPanel::OnSay )
 	EVT_TEXT( CHAT_TEXT, ChatPanel::OnTextChanged_Say_Text )
-	EVT_CHAR( ChatPanel::OnChar )
 	EVT_BUTTON( CHAT_SEND, ChatPanel::OnSay )
 	EVT_SIZE( ChatPanel::OnResize )
 	EVT_TEXT_URL( CHAT_LOG,  ChatPanel::OnLinkEvent )
@@ -594,10 +593,10 @@ ChatPanel::OnTextChanged_Say_Text( wxCommandEvent& event ) {
 	wxString character_before_current_Insertionpoint = m_say_text->GetRange( pos_Cursor-1, pos_Cursor );
 
 	// std::cout << "#########: " << pos_Cursor << " (" << character_before_current_Insertionpoint.char_str() << ")" << std::endl;
+	// std::cout << "#########: Linelength(" << m_say_text->GetLastPosition() << ")" << std::endl;
 
 	if( character_before_current_Insertionpoint == _T("\t") ) {
 		// std::cout << "#########: TAB" << std::endl;
-
 		wxString selection_Begin_InsertPos = m_say_text->GetRange( 0, pos_Cursor-1 );
 		wxString selection_InsertPos_End = m_say_text->GetRange( pos_Cursor, m_say_text->GetLastPosition() );
 		// std::cout << "#########: Begin to InsertionPoint: (" << selection_Begin_InsertPos.char_str() << ")" << std::endl;
@@ -606,7 +605,7 @@ ChatPanel::OnTextChanged_Say_Text( wxCommandEvent& event ) {
 		// Search for the shortest Match, starting from the Insertionpoint to the left, until we find a "\ "
 		// Special Characters according to regular Expression Syntax needs to be escaped: [,]
 		wxRegEx regex_currentWord;
-		regex_currentWord.Compile( wxT("(\\w+|-|\\[|\\]|_)+$"), wxRE_ADVANCED );
+		regex_currentWord.Compile( wxT("(_|\\[|\\]|\\w)+$"), wxRE_ADVANCED );
 
 		if ( regex_currentWord.Matches( selection_Begin_InsertPos ) ) {
 			wxString currentWord = regex_currentWord.GetMatch( selection_Begin_InsertPos );
@@ -639,30 +638,16 @@ ChatPanel::OnTextChanged_Say_Text( wxCommandEvent& event ) {
 			// if nothing was found remove the typed TAB, so that the User stays comfortable not to remove the TAB by himself.
 			m_say_text->ChangeValue( completed_Text );
 			m_say_text->SetInsertionPoint( new_Cursor_Pos );
+		} else {
+			wxString old_Text;
+			old_Text.append( selection_Begin_InsertPos );
+			old_Text.append( selection_InsertPos_End );
+			m_say_text->ChangeValue( old_Text );
+			m_say_text->SetInsertionPoint( selection_Begin_InsertPos.length() );
+			wxBell();
 		}
-
 	}
-
 }
-
-//--------------------------------------------------------------------------------
-///
-/// Triggered, if the TAB Key is pressed
-///
-/// \parem event
-///		The event Structur with Inforamtions about this Event
-///
-//--------------------------------------------------------------------------------
-void
-ChatPanel::OnChar( wxKeyEvent& event ) {
-
-	if( event.GetKeyCode() == WXK_TAB ) {
-		std::cout << "#########: TAB" << std::endl;
-	}
-
-	std::cout << "####################################: " << event.GetKeyCode() << std::endl;
-}
-
 
 //! @brief Output a message said in the channel.
 //!
