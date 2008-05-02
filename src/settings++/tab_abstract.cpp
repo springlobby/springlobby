@@ -399,7 +399,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 			}
 			break;
 		}
-		//TODO (koshi) save choices in option handler in
+		//TODO (koshi save choices in option handler in
 		case ID_SIMPLE_QUAL_CBX:
 		{
 			for (int i=0; i<prVal_RenderQuality_size;++i)
