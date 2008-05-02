@@ -44,7 +44,7 @@ struct UserBattleStatus {
   /// for nat holepunching
   wxString ip;
   unsigned int udpport;
-  UserBattleStatus(): order(-1),team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),ready(false),udpport(0) {}
+  UserBattleStatus(): order(-1),team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(true),ready(false),udpport(0) {}
 };
 
 class ChatPanel;

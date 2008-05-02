@@ -69,6 +69,10 @@ wxString u2s( unsigned int arg );
 //!@brief converts floating point numbers to wxString without problem of WTF decimal separator different in every locale
 wxString f2s( float arg );
 /// new, much improved way to convert stuff to wxString.
+
+long s2l( const wxString& arg );
+double s2d( const wxString& arg );
+
 template<class T>
 wxString TowxString(T arg){
   std::stringstream s;
