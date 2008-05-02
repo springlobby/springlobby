@@ -179,9 +179,10 @@
 #define UPDATE_ALL			2000
 #define UPDATE_EXPERTMODE_WARNING_ON_SIMPLETAB 2003
 
-#include <wx/string.h>
+//#include <wx/string.h>
 #include <wx/intl.h>
-#include <string>
+//#include <string>
+#include <map>
 
 struct Control {
     const wxString lbl;
@@ -191,6 +192,11 @@ struct Control {
     const wxString tTip [1];
 };
 
+const int Control_size = sizeof(Control);
+
+typedef std::map<const wxString,const int> category_sizes_map ;
+typedef category_sizes_map::value_type category_sizes_map_type;
+
 const Control UI_ZOOM[] = {
 	{_("Scrollwheel speed"),           _T("ScrollWheelSpeed"),      ID_WINDOWP_UI_MW_SPD,	_T("25"),
 			{_("Higher values mean faster zoom with mouse wheel.\n"
@@ -198,6 +204,9 @@ const Control UI_ZOOM[] = {
 				"Results may vary depending on camera mode!")}	}
 
 };
+
+const category_sizes_map_type UI_ZOOM_entry ( _T("UI_ZOOM"), sizeof(UI_ZOOM) / Control_size );
+
 //TODO is max_texture stages obsolte?
 const Control RO_SLI[] = {
 	{_("Shadow-map size"),              _T("ShadowMapSize"),       ID_RO_SLI_0,	_T("2048"), {_("higher value = better looking shadows\n"
@@ -214,28 +223,37 @@ const Control RO_SLI[] = {
 	// not needed atm																				"increase if sm3 maps look ugly.")}}
 };
 
-const Control VO_CBOX[3] = {
+const category_sizes_map_type RO_SLI_entry ( _T("RO_SLI"), sizeof(RO_SLI) / Control_size );
+
+const Control VO_CBOX[] = {
 	{_("Run full-screen"),                _T("Fullscreen"),              ID_WINDOWP_VO_CBOX_0,	_T("1"), {_("run fullscreen or in a window?")}},
 	{_("Dual-screen mode"),               _T("DualScreenMode"),          ID_WINDOWP_VO_CBOX_1,	_T("0"), {_("if you have two monitors you can use both")}},
 	{_("Enable v-sync"),                  _T("VSync"),                   ID_WINDOWP_VO_CBOX_2,	_T("1"), {_("V-Sync on/off")}},
 };
 
-const Control VO_RBUT[2] = {
+const category_sizes_map_type VO_CBOX_entry ( _T("VO_BOX"), sizeof(VO_CBOX) / Control_size );
+
+const Control VO_RBUT[] = {
 	{_("16-bit Z-buffer"), _T("DepthBufferBits"), ID_WINDOWP_VO_RBUT_0,	_T("16"), {_("placeholder")}},
 	{_("24-bit Z-buffer"), _T("DepthBufferBits"), ID_WINDOWP_VO_RBUT_1,	_T("16"), {_("placeholder")}}
 };
 
+const category_sizes_map_type VO_RBUT_entry ( _T("VO_RBUT"), sizeof(VO_RBUT) / Control_size );
 
-const Control VO_SLI[1] = {
+
+const Control VO_SLI[] = {
 	{_("Full-screen anti-aliasing samples"), _T("FSAALevel"), ID_VO_SLI_0,	_T("0"), {_("how much anti-aliasing should be applied")}}
 };
 
-const Control VO_SLI_EXT[1] = {
+const category_sizes_map_type VO_SLI_entry ( _T("VO_SLI"), sizeof(VO_SLI) / Control_size );
+
+const Control VO_SLI_EXT[] = {
 	{_(""), _T("FSAA"), -1, _T("0")}
 };
 
+const category_sizes_map_type VO_SLI_EXT_entry ( _T("VO_SLI_EXT"), sizeof(VO_SLI_EXT) / Control_size );
 
-const Control AO_SLI[3] = {
+const Control AO_SLI[] = {
 	{_("Maximum simultaneous sounds"), _T("MaxSounds"),            ID_AO_SLI_0,	_T("8") , {_("maximum different sounds played at the same time\n"
 																								"Set this to zero to disable sound completely.")}},
 	{_("Global sound volume"),   _T("SoundVolume"),                ID_AO_SLI_1,	_T("100"), {_("overall sound volume")}},
@@ -243,7 +261,9 @@ const Control AO_SLI[3] = {
 
 };
 
-const Control QA_CBOX[10] = {
+const category_sizes_map_type AO_SLI_entry ( _T("AO_SLI"), sizeof(AO_SLI) / Control_size );
+
+const Control QA_CBOX[] = {
     {_("Shadows (slow)"),                                  _T("Shadows"),             ID_WINDOWP_QA_CBOX_0,	_T("0"), {_("enable shadows?")}},
 	{_("3D trees"),                 _T("3DTrees"),             ID_WINDOWP_QA_CBOX_1,	_T("1"), {_("want better looking trees?\n"
 														"needs Geforce 2/Radeon 8500/Intel 830 or later class graphic card")}},
@@ -259,8 +279,10 @@ const Control QA_CBOX[10] = {
 	{_("Draw smooth lines"),                               _T("SmoothLines"),         ID_WINDOWP_QA_CBOX_9,	_T("0"), {_("should lines be anti-aliased")}},
 };
 
+const category_sizes_map_type QA_CBOX_entry ( _T("QA_CBOX"), sizeof(QA_CBOX) / Control_size );
+
 //TODO add scroll wheel speed
-const Control UI_CBOX[17] = {
+const Control UI_CBOX[] = {
 	{_("Enable LuaUI widgets"),                            _T("LuaUI"),               ID_WINDOWP_UI_CBOX_1,	_T("1"), {_("mark to be able to use")}},
 
     {_("Issue commands on mini-map"),                       _T("MiniMapFullProxy"), ID_WINDOWP_UI_CBOX_2, _T("1"), {_("Issue orders on the mini-map like you would ")}},
@@ -291,8 +313,9 @@ const Control UI_CBOX[17] = {
 
 };
 
+const category_sizes_map_type UI_CBOX_entry ( _T("UI_CBOX"), sizeof(UI_CBOX) / Control_size );
 
-const Control MO_SLI[5] = {
+const Control MO_SLI[] = {
 	{_("Overhead camera"),    _T("OverheadScrollSpeed"),    ID_MO_SLI_0,	_T("10"), {_("set the scroll speed (mouse + keyboard) for this mode")}},
 	{_("Rotatable overhead camera"), _T("RotOverheadScrollSpeed"), ID_MO_SLI_1,	_T("10") , {_("set the scroll speed (mouse + keyboard) for this mode")}},
 	{_("Total war camera"),          _T("TWScrollSpeed"),          ID_MO_SLI_2,	_T("10") , {_("set the scroll speed (mouse + keyboard) for this mode")}},
@@ -300,7 +323,9 @@ const Control MO_SLI[5] = {
 	{_("Free camera"),          _T("CamFreeScrollSpeed"),     ID_MO_SLI_4,	_T("10") , {_("set the scroll speed (mouse + keyboard) for this mode")}}
 };
 
-const Control MO_SLI_EXT[5] = {
+const category_sizes_map_type MO_SLI_entry ( _T("MO_SLI"), sizeof(MO_SLI) / Control_size );
+
+const Control MO_SLI_EXT[] = {
 	{_(""), _T("OverheadEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
 													"Can be changed ingame.")}},
 	{_(""), _T("RotOverheadEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
@@ -313,18 +338,22 @@ const Control MO_SLI_EXT[5] = {
 												"Can be changed ingame.")}},
 };
 
+const category_sizes_map_type MO_SLI_EXT_entry ( _T("MO_SLI_EXT"), sizeof(MO_SLI_EXT) / Control_size );
 
-const Control DO_SLI[1] = {
+const Control DO_SLI[] = {
 	{_("Console verbose level (0=min,10=max)"), _T("VerboseLevel"), ID_DO_SLI_0,	_T("0"), {_("How much information should be outputted?")}}
 };
 
-const Control DO_CBOX[2] = {
+const category_sizes_map_type DO_SLI_entry ( _T("DO_SLI"), sizeof(DO_SLI) / Control_size );
+
+const Control DO_CBOX[] = {
 	{_("Catch AI exceptions"),        _T("CatchAIExceptions"), ID_WINDOWP_DO_CBOX_0,	_T("1"), {_("disable for AI debugging")}},
 	{_("Send debug info to console"), _T("StdoutDebug"),       ID_WINDOWP_DO_CBOX_1,	_T("0"), {_("if disabled these will only be logged")}}
 };
 
+const category_sizes_map_type DO_CBOX_entry ( _T("DO_CBOX"), sizeof(DO_CBOX) / Control_size );
 
-const Control WR_COMBOX[1] = {
+const Control WR_COMBOX[] = {
 		{_("Basic"),                  _T("ReflectiveWater"), ID_WINDOWP_WR_COMBOX,	_T("1"), {_("Depending on the power of your graphics card,\n"
 																								"selecting higher quality than basic can have a\n"
 																								"major impact on Spring's performance.\n")}}
@@ -333,16 +362,20 @@ const Control WR_COMBOX[1] = {
 	{_("dynamic",                 "ReflectiveWater", ID_WINDOWP_WR_COMBOX_3,	"1"}*/
 };
 
-const wxString WR_COMBOX_CHOICES[4] = {
+const category_sizes_map_type WR_COMBOX_entry ( _T("WR_COMBOX"), sizeof(WR_COMBOX) / Control_size );
+
+const wxString WR_COMBOX_CHOICES[] = {
 	_("Basic"), _("Reflective"), _("Reflective + refractive"), _("Dynamic")
 };
 
-const Control MO_CBOX[2] = {
+const Control MO_CBOX[] = {
 	{_("Invert mouse y-axis"),             _T("InvertMouse"),      ID_WINDOWC_MO_CBOX_0,	_T("1"), {_("swap up/down with down/up")}},
 	{_("Mini-map 3-button mouse support"), _T("MiniMapFullProxy"), ID_WINDOWC_MO_CBOX_1,	_T("1"), {_("if you don't want to able to use that button, disable it here")}}
 };
 
-const Control MO_RBUT[5] = {
+const category_sizes_map_type MO_CBOX_entry ( _T("MO_CBOX"), sizeof(MO_CBOX) / Control_size );
+
+const Control MO_RBUT[] = {
 	{_("Overhead"),            _T("CamMode"), ID_WINDOWC_MO_RBUT_0,	_T("1"), {_("Static bird's eye view")}},
 	{_("Rotatable overhead"), _T("CamMode"), ID_WINDOWC_MO_RBUT_1,	_T("1"), {_("Same as overhead, but you can rotate around the z-axis")}},
 	{_("Total war"),           _T("CamMode"), ID_WINDOWC_MO_RBUT_2,	_T("1"), {_("top-view camera, which can be tilted on the X axis")}},
@@ -350,10 +383,20 @@ const Control MO_RBUT[5] = {
 	{_("Free camera"),         _T("CamMode"), ID_WINDOWC_MO_RBUT_4,	_T("1"), {_("Modify the view anyway you want")}}
 };
 
-const Control RC_TEXT[2] = {
+const category_sizes_map_type MO_RBUT_entry ( _T("MO_RBUT"), sizeof(MO_RBUT) / Control_size );
+
+const Control RC_TEXT[] = {
 	{_(""), _T("XResolution"), -1,	_T("1024"), {_("screen width")}},
 	{_(""), _T("YResolution"), -1,	_T("768") , {_("screen height")}}
 };
+
+const category_sizes_map_type RC_TEXT_entry ( _T("RC_TEXT"), sizeof(RC_TEXT) / Control_size );
+
+const category_sizes_map_type entries_[] = { RC_TEXT_entry, MO_RBUT_entry, MO_CBOX_entry, WR_COMBOX_entry, DO_CBOX_entry, DO_SLI_entry, MO_SLI_EXT_entry,
+                                            MO_SLI_entry, UI_CBOX_entry, QA_CBOX_entry, AO_SLI_entry, AO_SLI_entry, VO_SLI_EXT_entry, VO_SLI_entry,
+                                            VO_RBUT_entry, VO_CBOX_entry, RO_SLI_entry, UI_ZOOM_entry};
+
+static category_sizes_map s_category_sizes ( entries_ , entries_ + sizeof(entries_[0]) );
 
 /** not used
 #define NUM_DEFAULTS 88

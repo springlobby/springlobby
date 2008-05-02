@@ -457,7 +457,7 @@ void MainWindow::OnUnitSyncReloaded()
 void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 {
 	se_frame = new settings_frame(this,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
-	  	    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+	  	    		wxDefaultSize);
 	se_frame_active = true;
 	se_frame->Show();
 }
