@@ -104,7 +104,15 @@ void TorrentWrapper::ConnectToP2PSystem()
 
 void TorrentWrapper::DisconnectToP2PSystem()
 {
-  if ( m_connected ) m_socket_class->Disconnect();
+  if ( m_connected )
+  {
+     {
+       ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
+       for ( TorrentHandleToHash::from::iterator itor = torrent_handles_l.Get().from.begin(); itor != torrent_handles_l.Get().from.end(); itor++ )
+        m_socket_class->Send( wxString::Format( _T("N-|%s\n"), itor->second.c_str() ) ); /// release all files requests
+     }
+     m_socket_class->Disconnect();
+  }
 }
 
 
