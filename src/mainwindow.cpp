@@ -131,8 +131,6 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
-  //TODO insert real downloads panel
-  //m_func_tabs->AddPage( m_opts_tab, _T(""), false, 4 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -457,7 +455,7 @@ void MainWindow::OnUnitSyncReloaded()
 void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 {
 	se_frame = new settings_frame(this,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
-	  	    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+	  	    		wxDefaultSize);
 	se_frame_active = true;
 	se_frame->Show();
 }
