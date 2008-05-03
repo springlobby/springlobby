@@ -395,6 +395,7 @@ void TASServer::Update( int mselapsed )
         }
 
         time_t now = time( 0 );
+
         /// joining battle with nat traversal:
         /// if we havent finalized joining yet, and udp_reply_timeout seconds has passed since
         /// we did UdpPing(our name) , join battle anyway, but with warning message that nat failed.
@@ -407,6 +408,7 @@ void TASServer::Update( int mselapsed )
             wxMessageBox(_("Failed to punch through NAT"), _("Error"), wxICON_INFORMATION, NULL/* m_ui.mw()*/ );
             FinalizeJoinBattle();
         };
+
         if ( ( m_last_udp_ping + m_keepalive ) < now )
         {
             // Is it time for a nat traversal PING?

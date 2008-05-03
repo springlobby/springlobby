@@ -41,6 +41,8 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
     m_imagelist = new wxImageList( 12, 12 );
     m_imagelist->Add( wxIcon(spring_xpm) );
     m_imagelist->Add( wxIcon(userchat_xpm) );
+    //TODO when torrent merged, enable again
+    //m_imagelist->Add( *charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
 
     m_tabs->AssignImageList( m_imagelist );
 
@@ -93,7 +95,9 @@ void MainOptionsTab::OnRestore( wxCommandEvent& event )
 {
     m_spring_opts->OnRestore( event );
     m_chat_opts->OnRestore( event );
+#ifndef NO_TORRENT_SYSTEM
     m_torrent_opts->OnRestore( event );
+#endif
 }
 
 
