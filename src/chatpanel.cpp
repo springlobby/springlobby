@@ -774,12 +774,18 @@ void ChatPanel::Joined( User& who )
   {
     if( sett().GetDisplayJoinLeave( _T("game/battle") ) ) { OutputLine( _T(" ** ") + who.GetNick() + _(" joined the ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
   }
+
+	// Also add the User to the TextCompletionDatabase
+	textcompletiondatabase.Insert_Mapping( who.GetNick(), who.GetNick() );
 }
 
 
 void ChatPanel::OnChannelJoin( User& who )
 {
     if ( m_type == CPT_Channel && m_show_nick_list ) m_nicklist->AddUser( who );
+
+	// Also add the User to the TextCompletionDatabase
+	textcompletiondatabase.Insert_Mapping( who.GetNick(), who.GetNick() );
 }
 
 
@@ -800,6 +806,8 @@ void ChatPanel::Parted( User& who, const wxString& message )
     if( sett().GetDisplayJoinLeave( _T("game/battle") ) )  { OutputLine( _T(" ** ")+ who.GetNick() + _(" left the ") + GetChatTypeStr() + _T( "( ") + message + _T(" )."), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
   }
 
+	// Also add the User to the TextCompletionDatabase
+	textcompletiondatabase.Delete_Mapping( who.GetNick() );
 }
 
 
