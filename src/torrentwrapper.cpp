@@ -86,6 +86,7 @@ TorrentWrapper::~TorrentWrapper()
 
 void TorrentWrapper::ConnectToP2PSystem()
 {
+  if ( m_connected ) return;
   m_socket_class->Connect( m_tracker_urls[0], DEFAULT_P2P_COORDINATOR_PORT );
   m_connected_tracker_index= 0;
   return;
