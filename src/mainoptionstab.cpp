@@ -16,6 +16,7 @@
 #include "springoptionstab.h"
 #include "chatoptionstab.h"
 #include "settings.h"
+#include "uiutils.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentoptionspanel.h"
@@ -23,6 +24,7 @@
 
 #include "images/spring.xpm"
 #include "images/userchat.xpm"
+#include "images/torrentoptionspanel_icon.png.h"
 
 BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 

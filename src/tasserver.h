@@ -5,6 +5,7 @@
 #include <list>
 
 #include "server.h"
+#include "uiutils.h"
 
 #define FIRST_UDP_SOURCEPORT 8300
 

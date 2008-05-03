@@ -213,6 +213,9 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
 
   m_battle_list->Sort();
+  m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
+  m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
+  m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
 }
 
 
@@ -226,6 +229,9 @@ void BattleListTab::RemoveBattle( Battle& battle ) {
   }
   battle.SetGUIListActiv( false );
   m_battle_list->Sort();
+  m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
+  m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
+  m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
 }
 
 
@@ -278,7 +284,7 @@ void BattleListTab::UpdateBattle( Battle& battle )
 
   if ( &battle == m_sel_battle ) SelectBattle( m_sel_battle );
   m_battle_list->Sort();
-
+  m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
 }
 
 

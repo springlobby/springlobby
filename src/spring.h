@@ -23,8 +23,8 @@ class Spring: public wxEvtHandler
     bool Run( SinglePlayerBattle& battle );
     static bool TestSpringBinary();
 
-    void WriteScriptTxt(std::ostream &output, Battle& battle );
-    void WriteSPScriptTxt(std::ostream &output, SinglePlayerBattle& battle );
+    wxString WriteScriptTxt( Battle& battle );
+    wxString WriteSPScriptTxt( SinglePlayerBattle& battle );
     void OnTerminated( wxCommandEvent& event );
 
   protected:

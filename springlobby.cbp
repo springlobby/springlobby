@@ -148,6 +148,8 @@
 			<Add option="-Wall" />
 			<Add directory="src" />
 		</Compiler>
+		<Unit filename="src/Helper/TextCompletionDatabase.cpp" />
+		<Unit filename="src/Helper/TextCompletionDatabase.hpp" />
 		<Unit filename="src/addbotdialog.cpp" />
 		<Unit filename="src/addbotdialog.h" />
 		<Unit filename="src/agreementdialog.cpp" />

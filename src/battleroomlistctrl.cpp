@@ -59,23 +59,23 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
 
   col.SetText( _T("r") );
   col.SetImage(icons().ICON_NONE );
-  InsertColumn( 0, col, _T("Player/Bot"), false);
+  InsertColumn( 0, col, _T("Player/Bot") );
 
   col.SetText( _T("s") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 1, col,_T("Faction icon"), false );
+  InsertColumn( 1, col,_T("Faction icon") );
 
   col.SetText( _T("c") );
   col.SetImage(  icons().ICON_NONE);
-  InsertColumn( 2, col, _T("Teamcolour"), false );
+  InsertColumn( 2, col, _T("Teamcolour") );
 
   col.SetText( _T("f") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 3, col, _T("Country"), false );
+  InsertColumn( 3, col, _T("Country") );
 
   col.SetText( _T("r") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 4, col, _T("Rank"), false );
+  InsertColumn( 4, col, _T("Rank") );
 
   col.SetText( _("Nickname") );
   col.SetImage( icons().ICON_NONE );
@@ -83,11 +83,11 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
 
   col.SetText( _("t") );
   col.SetImage(icons().ICON_NONE );
-  InsertColumn( 6, col, _T("Team number"), true );
+  InsertColumn( 6, col, _T("Team number") );
 
   col.SetText( _("a") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 7, col, _T("Ally number"), true );
+  InsertColumn( 7, col, _T("Ally number") );
 
   col.SetText( _("cpu") );
   col.SetImage( icons().ICON_NONE );
@@ -105,23 +105,13 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   m_sortorder[2].direction = true;
   Sort( );
 
-#ifdef __WXMSW__
   SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
-   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
-   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
-    SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
-    SetColumnWidth( 4, wxLIST_AUTOSIZE_USEHEADER );
-    SetColumnWidth( 6, wxLIST_AUTOSIZE_USEHEADER );
-    SetColumnWidth( 7, wxLIST_AUTOSIZE_USEHEADER );
-#else
-  SetColumnWidth( 0, 20 );
-  SetColumnWidth( 1, 20 );
-  SetColumnWidth( 2, 20 );
-  SetColumnWidth( 3, 20 );
-  SetColumnWidth( 4, 20 );
-  SetColumnWidth( 6, 29 );
-  SetColumnWidth( 7, 29 );
-#endif
+  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 4, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 6, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 7, wxLIST_AUTOSIZE_USEHEADER );
 
   SetColumnWidth( 5, 170 );
 
@@ -207,6 +197,7 @@ void BattleroomListCtrl::AddUser( User& user )
   SetItemData(index, (wxUIntPtr)(items.size()-1) );
 
   UpdateUser( index );
+  SetColumnWidth( 5, wxLIST_AUTOSIZE );
 }
 
 
@@ -214,6 +205,7 @@ void BattleroomListCtrl::RemoveUser( User& user )
 {
   if ( &user == m_sel_user ) m_sel_user = 0;
   DeleteItem( GetUserIndex( user ) );
+  SetColumnWidth( 5, wxLIST_AUTOSIZE );
 }
 
 
@@ -257,7 +249,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
 
     try {
-      int sideimg = icons().GetSideIcon( m_battle.GetModName(), usync()->GetSideName( m_battle.GetModName(), user.BattleStatus().side ) );
+      int sideimg = icons().GetSideIcon( m_battle.GetModName(), user.BattleStatus().side );
       if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
       else SetItem( index, 1, usync()->GetSideName( m_battle.GetModName(), user.BattleStatus().side ));
     } catch ( ... ) {
@@ -359,7 +351,7 @@ void BattleroomListCtrl::UpdateBot( const int& index )
   SetItemColumnImage( index, 1, -1 );
 
   try {
-    int sideimg = icons().GetSideIcon( m_battle.GetModName(), usync()->GetSideName( m_battle.GetModName(), bot.bs.side ) );
+    int sideimg = icons().GetSideIcon( m_battle.GetModName(), bot.bs.side );
     if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
     else SetItem( index, 1,  usync()->GetSideName( m_battle.GetModName(), bot.bs.side) );
   } catch ( ... ) {
