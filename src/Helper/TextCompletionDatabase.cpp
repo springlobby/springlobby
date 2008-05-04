@@ -103,7 +103,12 @@ TextCompletionDatabase::GetMapping( wxString abbreviation ) {
 	regex_Text.append( wxT( ".*" ) );
 
 	// We compile the regular Expression and if it's correct, we store it in the Regex Container
-	regex_Abbreviations.Compile( regex_Text, wxRE_ADVANCED );
+	#ifdef wxHAS_REGEX_ADVANCED
+        regex_Abbreviations.Compile( regex_Text, wxRE_ADVANCED );
+    #else
+        regex_Abbreviations.Compile( regex_Text, wxRE_EXTENDED );
+    #endif
+
 
 	// Now we iterate over all stored Abbreviations and search for Abbreviations containing the provided Abbreviation
 

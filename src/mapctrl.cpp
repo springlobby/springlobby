@@ -799,8 +799,8 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 
       bot->posx = (int)( ( (double)(event.GetX() - mr.x) / (double)mr.width ) * (double)m_map.info.width );
       bot->posy = (int)( ( (double)(event.GetY() - mr.y) / (double)mr.height ) * (double)m_map.info.height );
-      boundry( bot->posx, 0, m_map.info.width );
-      boundry( bot->posy, 0, m_map.info.height );
+      CLAMP( bot->posx, 0, m_map.info.width );
+      CLAMP( bot->posy, 0, m_map.info.height );
 
       int x, y, index, range;
       GetClosestStartPos( bot->posx, bot->posy, index, x, y, range );
