@@ -57,7 +57,7 @@ if test x$usetorrent = xyes ; then
 	AC_SUBST(LIBTORRENT_CFLAGS)
 	AC_SUBST(LIBTORRENT_LIBS)
 else
-	AC_DEFINE([NO_TORRENT_SYSTEM], [] , [disables torrent system])
+	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
 fi
 
 AC_ARG_VAR([SVNVERSION], [Produce a compact version number for a working copy.])
