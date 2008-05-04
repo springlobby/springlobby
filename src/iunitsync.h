@@ -117,7 +117,7 @@ class IUnitSync
     virtual wxString GetSpringVersion() = 0;
     virtual bool VersionSupports( GameFeature feature ) = 0;
 
-    virtual wxArrayString GetAIList() = 0;
+    virtual wxArrayString GetAIList( const wxString& modname ) = 0;
 
     virtual bool CacheMapInfo( const wxString& map ) = 0;
     virtual bool CacheMinimap( const wxString& map ) = 0;

@@ -211,7 +211,7 @@ wxString GetHostCPUSpeed()
     }
 
 #else
-#ifdef wxHAS_REGEX_ADVANCED
+
 
     // Create an Inputstream from /proc/cpuinfo
     std::ifstream fin( "/proc/cpuinfo" );
@@ -232,7 +232,11 @@ wxString GetHostCPUSpeed()
         wxString content = wxString::FromAscii( content_str.c_str() );
 
         // Building a RegEx to match one Block of CPU Info
+        #ifdef wxHAS_REGEX_ADVANCED
         wxRegEx regex_CPUSection( wxT( "processor.*?(cpu MHz.*?:.*?(\\d+\\.\\d+)).*?\n\n" ), wxRE_ADVANCED );
+        #else
+        wxRegEx regex_CPUSection( wxT( "processor.*?(cpu MHz.*?:.*?(\\d+\\.\\d+)).*?\n\n" ), wxRE_EXTENDED );
+        #endif
         // Replace each Block of CPU Info with only the CPU Speed in MHz
         regex_CPUSection.Replace( &content, _T( "\\2\n" ) );
 
@@ -250,7 +254,6 @@ wxString GetHostCPUSpeed()
             cpu_count++;
         }
     }
-#endif
 #endif
     totalcpuspeed = cpu_count > 0 ? totalcpuspeed / cpu_count : 2100;
     return i2s(totalcpuspeed);

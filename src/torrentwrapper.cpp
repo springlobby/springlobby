@@ -343,7 +343,7 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
   wxLogMessage(_T("(3) Joining torrent: downloading info file"));
   if ( !wxFileName::IsFileReadable( sett().GetSpringDir() + _T("/torrents/") + hash + _T(".torrent") ) ) /// file descriptor not present, download it
   {
-     DownloadTorrentFileFromTracker( hash );
+     if (!DownloadTorrentFileFromTracker( hash )) return false;
   }
   /// read torrent from file
   std::ifstream in( wxString( sett().GetSpringDir() + _T("/torrents/") + hash + _T(".torrent") ).mb_str(), std::ios_base::binary);
@@ -382,6 +382,13 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
 void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, MediaType type )
 {
   if (ingame) return;
+
+
+  if ( sett().GetSpringDir().IsEmpty() ) return; /// no good things can happend if you don't know which folder to r/w files from
+  bool creationsuccess = true;
+  if ( !wxFileName::DirExists( sett().GetSpringDir() + _T("/torrents/")  ) ) creationsuccess = wxFileName::Mkdir(  sett().GetSpringDir() + _T("/torrents/")  );
+  if (!creationsuccess) return;
+
   libtorrent::torrent_info newtorrent;
 
   wxString StringFilePath = sett().GetSpringDir();
@@ -429,6 +436,11 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
 {
   wxLogMessage(_T("torrent system downloading torrent info %s"), hash.c_str() );
+
+  if ( sett().GetSpringDir().IsEmpty() ) return false; /// no good things can happend if you don't know which folder to r/w files from
+  bool creationsuccess = true;
+  if ( !wxFileName::DirExists(  sett().GetSpringDir() + _T("/torrents/")  ) ) creationsuccess = wxFileName::Mkdir(  sett().GetSpringDir() + _T("/torrents/")  );
+  if (!creationsuccess) return false;
   wxHTTP fileRequest;
   //versionRequest.SetHeader(_T("Content-type"), _T(""));
   /// normal timeout is 10 minutes.. set to 10 secs.
