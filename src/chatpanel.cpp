@@ -592,7 +592,11 @@ ChatPanel::OnTextChanged_Say_Text( wxCommandEvent& event ) {
 		// Search for the shortest Match, starting from the Insertionpoint to the left, until we find a "\ "
 		// Special Characters according to regular Expression Syntax needs to be escaped: [,]
 		wxRegEx regex_currentWord;
+		#ifdef wxHAS_REGEX_ADVANCED
 		regex_currentWord.Compile( wxT("(_|\\[|\\]|\\w)+$"), wxRE_ADVANCED );
+		#else
+        regex_currentWord.Compile( wxT("(_|\\[|\\]|\\w)+$"), wxRE_EXTENDED );
+        #endif
 
 		if ( regex_currentWord.Matches( selection_Begin_InsertPos ) ) {
 			wxString currentWord = regex_currentWord.GetMatch( selection_Begin_InsertPos );
