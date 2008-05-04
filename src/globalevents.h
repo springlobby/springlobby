@@ -4,6 +4,9 @@
 #include <wx/event.h>
 class wxCommandEvent;
 
+DEFINE_EVENT_TYPE(httpDownloadEvtComplete)
+DEFINE_EVENT_TYPE(httpDownloadEvtFailed)
+
 BEGIN_DECLARE_EVENT_TYPES()
 DECLARE_EVENT_TYPE(httpDownloadEvtComplete, 42) // second argument is required for wx 2.0.x compability only
 DECLARE_EVENT_TYPE(httpDownloadEvtFailed, 42)

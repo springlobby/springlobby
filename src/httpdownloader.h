@@ -2,7 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_HTTPDOWNLOADER
 
 class HttpDownloader;
-#include <wx/intl.h>
+#include <wx/string.h>
 
 
 class HttpDownloader
