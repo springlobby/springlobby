@@ -154,6 +154,7 @@ springlobby_SOURCES = \
 	src/hostbattledialog.cpp \
 	src/iconimagelist.cpp \
 	src/iconimagelist.h \
+	src/inetclass.h \
 	src/iunitsync.h \
 	src/mainchattab.cpp \
 	src/mainchattab.h \
@@ -235,6 +236,7 @@ springlobby_SOURCES = \
 	src/images/connect.xpm \
 	src/images/down.xpm \
 	src/images/exists.xpm \
+	src/images/fixcolours_palette.xpm \
 	src/images/ingame.png.h \
 	src/images/join_icon.png.h \
 	src/images/join_icon_text.png.h \
