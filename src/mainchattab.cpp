@@ -49,11 +49,17 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
   m_imagelist->Add( wxBitmap(server_xpm) );
   m_imagelist->Add( wxBitmap(channel_xpm) );
   m_imagelist->Add( wxBitmap(userchat_xpm) );
-  m_imagelist->Add( wxBitmap(channel_xpm) );
-  m_imagelist->Add( wxBitmap(userchat_xpm) );
 
-  ChangeUnreadChannelColour( sett().GetChatColorNotification() );
-  ChangeUnreadPMColour( sett().GetChatColorNotification() );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorJoinPart() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap(userchat_xpm ), sett().GetChatColorJoinPart() ) ) );
+
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorMine() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( userchat_xpm ), sett().GetChatColorMine() ) ) );
+
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorHighlight() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( userchat_xpm ), sett().GetChatColorHighlight() ) ) );
+
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( server_xpm ), sett().GetChatColorError() ) ) );
 
   m_chat_tabs->AssignImageList( m_imagelist );
 
@@ -236,8 +242,10 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
   if ( newsel < 0 ) return;
 
   // change icon to default the icon to show that no new events happened
-  if ( m_chat_tabs->GetPageImage( newsel ) == 4 ) m_chat_tabs->SetPageImage( newsel, 2);
-  if ( m_chat_tabs->GetPageImage( newsel ) == 5 ) m_chat_tabs->SetPageImage( newsel, 3);
+  unsigned int ImageIndex = m_chat_tabs->GetPageImage( newsel );
+  if ( ImageIndex == 4 || ImageIndex == 6 || ImageIndex == 8 ) m_chat_tabs->SetPageImage( newsel, 2);
+  else if ( ImageIndex == 5 || ImageIndex == 7 || ImageIndex == 9 ) m_chat_tabs->SetPageImage( newsel, 3);
+  else if ( ImageIndex == 10 ) m_chat_tabs->SetPageImage( newsel, 1);
 
   wxWindow* newpage = m_chat_tabs->GetPage( newsel );
   if ( newpage == 0 ) { // Not sure what to do here
@@ -261,32 +269,22 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
 
 }
 
-void MainChatTab::ChangeUnreadChannelColour( const wxColour& colour )
+
+wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
 {
-  wxImage img( channel_xpm );
-  m_imagelist->Replace( 4, wxBitmap ( ReplaceChannelStatusColour( img, colour ) ) );
-}
-
-
-void MainChatTab::ChangeUnreadPMColour( const wxColour& colour )
-{
-  wxImage img( userchat_xpm );
-  m_imagelist->Replace( 5, wxBitmap ( ReplaceChannelStatusColour( img, colour ) ) );
-}
-
-
-wxImage MainChatTab::ReplaceChannelStatusColour( wxImage& img, const wxColour& colour )
-{
-  img.Replace( 255, 253, 234, colour.Red(), colour.Green(), colour.Blue() );
+  wxImage ret = img.ConvertToImage();
+  ret.Replace( 164, 147, 0, colour.Red(), colour.Green(), colour.Blue() );
 
   int r,g,b;
-  r = colour.Red(); g = colour.Green()-25; b = colour.Blue()-234;
-  img.Replace( 255, 228, 0, r>255?255:r, g>255?255:g, b>255?255:b );
+  r = colour.Red(); g = colour.Green()-25; b = colour.Blue()-25;
+  ret.Replace( 255, 228, 0, r>255?255:r, g>255?255:g, b>255?255:b );
 
-  r = colour.Red()-91; g = colour.Green()-106; b = colour.Blue()-234;
-  img.Replace( 164, 147, 0, r>255?255:r, g>255?255:g, b>255?255:b );
+  r = colour.Red()-91; g = colour.Green()-100; b = colour.Blue()-100;
+  ret.Replace( 255, 253, 234, r>255?255:r, g>255?255:g, b>255?255:b );
 
-  return img;
+
+
+  return ret;
 }
 
 
