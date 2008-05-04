@@ -146,7 +146,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( &user ), m_battle( 0 ), m_type( CPT_User ), m_popup_menu( 0 ) {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( &user ), m_battle( 0 ), m_type( CPT_User ), m_popup_menu( 0 ) {
 	CreateControls( );
 	user.uidata.panel = this;
 	m_chat_log = new ChatLog( sett().GetDefaultServer(), user.GetNick() );
@@ -534,14 +534,6 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
 	CheckLength(); /// crop lines from history that exceeds limit
 
-	// change the image of the tab to show new events
-	if ( m_channel != 0 && m_ui.GetActiveChatPanel() != this )
-		for ( int i = 0; i < int( m_chat_tabs->GetPageCount( ) ); ++i )
-			if ( m_chat_tabs->GetPage( i ) == this ) {
-				if ( m_type == CPT_Channel ) m_chat_tabs->SetPageImage( i, 4 );
-				if ( m_type == CPT_User ) m_chat_tabs->SetPageImage( i, 5 );
-			}
-
 	if ( m_chat_log ) m_chat_log->AddMessage( message );
 
 #ifdef __WXMSW__
@@ -655,10 +647,37 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 	if ( m_type == CPT_User ) req_user = true;
 	if ( who.Upper() == me.Upper() ) {
 		col = sett().GetChatColorMine();
+    // change the image of the tab to show new events
+    if (  m_ui.GetActiveChatPanel() != this )
+    {
+      for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+        if ( m_chat_tabs->GetPage( i ) == this ) {
+          if ( m_type == CPT_Channel && m_chat_tabs->GetPageImage( i ) < 6 ) m_chat_tabs->SetPageImage( i, 6 );
+          if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 7 ) m_chat_tabs->SetPageImage( i, 7 );
+        }
+    }
 	} else if ( message.Upper().Contains( me.Upper() ) ) {
+    // change the image of the tab to show new events
+    if (  m_ui.GetActiveChatPanel() != this )
+    {
+      for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+        if ( m_chat_tabs->GetPage( i ) == this ) {
+          if ( m_type == CPT_Channel && m_chat_tabs->GetPageImage( i ) < 8 ) m_chat_tabs->SetPageImage( i, 8 );
+          if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 9 ) m_chat_tabs->SetPageImage( i, 9 );
+        }
+    }
 		col = sett().GetChatColorNotification();
 		req_user = true;
 	} else {
+    // change the image of the tab to show new events
+    if (  m_ui.GetActiveChatPanel() != this )
+    {
+      for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+        if ( m_chat_tabs->GetPage( i ) == this ) {
+          if ( m_type == CPT_Channel && m_chat_tabs->GetPageImage( i ) < 6 ) m_chat_tabs->SetPageImage( i, 6 );
+          if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 7 ) m_chat_tabs->SetPageImage( i, 7 );
+        }
+    }
 		col = sett().GetChatColorNormal();
 	}
 
@@ -680,6 +699,15 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 
 
 void ChatPanel::DidAction( const wxString& who, const wxString& action ) {
+  // change the image of the tab to show new events
+	if (  m_ui.GetActiveChatPanel() != this )
+	{
+		for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+			if ( m_chat_tabs->GetPage( i ) == this ) {
+				if ( m_type == CPT_Channel && m_chat_tabs->GetPageImage( i ) < 6 ) m_chat_tabs->SetPageImage( i, 6 );
+				if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 7 ) m_chat_tabs->SetPageImage( i, 7 );
+			}
+	}
 	OutputLine( _T( " * " ) + who + _T( " " ) + action, sett().GetChatColorAction(), sett().GetChatFont() );
 }
 
@@ -690,6 +718,15 @@ void ChatPanel::DidAction( const wxString& who, const wxString& action ) {
 void ChatPanel::Motd( const wxString& message ) {
 	wxFont f = m_chatlog_text->GetFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
+  // change the image of the tab to show new events
+	if (  m_ui.GetActiveChatPanel() != this )
+	{
+		for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+			if ( m_chat_tabs->GetPage( i ) == this ) {
+				if ( m_type == CPT_Channel && m_chat_tabs->GetPageImage( i ) < 6 ) m_chat_tabs->SetPageImage( i, 6 );
+				if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 7 ) m_chat_tabs->SetPageImage( i, 7 );
+			}
+	}
 	OutputLine( _T( " ** motd ** " ) + message, sett().GetChatColorServer(), f );
 }
 
@@ -715,6 +752,14 @@ void ChatPanel::ClientMessage( const wxString& message ) {
 void ChatPanel::UnknownCommand( const wxString& command, const wxString& params ) {
 	wxFont f = m_chatlog_text->GetFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
+  // change the image of the tab to show new events
+	if (  m_ui.GetActiveChatPanel() != this )
+	{
+		for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+			if ( m_chat_tabs->GetPage( i ) == this ) {
+				if ( m_type == CPT_Server && m_chat_tabs->GetPageImage( i ) != 10 ) m_chat_tabs->SetPageImage( i, 10 );
+			}
+	}
 	OutputLine( _( " !! Command: \"" ) + command + _( "\" params: \"" ) + params + _T( "\"." ), sett().GetChatColorError(), f );
 }
 
@@ -731,7 +776,19 @@ wxString ChatPanel::GetChatTypeStr() {
 
 void ChatPanel::Joined( User& who ) {
 	if ( m_type == CPT_Channel ) {
-		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) { OutputLine( _T( " ** " ) + who.GetNick() + _( " joined the " ) + GetChatTypeStr() + _T( "." ), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
+		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) {
+      // change the image of the tab to show new events
+      if (  m_ui.GetActiveChatPanel() != this )
+      {
+        for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+          if ( m_chat_tabs->GetPage( i ) == this ) {
+            if ( m_type == CPT_Channel && m_chat_tabs->GetPageImage( i ) < 4 ) m_chat_tabs->SetPageImage( i, 4 );
+            if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 5 ) m_chat_tabs->SetPageImage( i, 5 );
+          }
+      }
+      OutputLine( _T( " ** " ) + who.GetNick() + _( " joined the " ) + GetChatTypeStr() + _T( "." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+
+    }
 		if ( m_show_nick_list ) m_nicklist->AddUser( who );
 	} else if ( m_type == CPT_Battle ) {
 		if ( sett().GetDisplayJoinLeave( _T( "game/battle" ) ) ) { OutputLine( _T( " ** " ) + who.GetNick() + _( " joined the " ) + GetChatTypeStr() + _T( "." ), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
@@ -752,7 +809,18 @@ void ChatPanel::OnChannelJoin( User& who ) {
 
 void ChatPanel::Parted( User& who, const wxString& message ) {
 	if ( m_type == CPT_Channel ) {
-		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) { OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
+		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) {
+      // change the image of the tab to show new events
+      if (  m_ui.GetActiveChatPanel() != this )
+      {
+        for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+          if ( m_chat_tabs->GetPage( i ) == this ) {
+            if ( m_type == CPT_Channel && m_chat_tabs->GetPageImage( i ) < 4 ) m_chat_tabs->SetPageImage( i, 4 );
+            if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 5 ) m_chat_tabs->SetPageImage( i, 5 );
+          }
+      }
+		  OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+    }
 		if ( m_show_nick_list ) m_nicklist->RemoveUser( who );
 
 		if ( m_channel == 0 ) return;
@@ -783,6 +851,15 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message ) {
 	*/
 	wxFont f = m_chatlog_text->GetFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
+  // change the image of the tab to show new events
+  if (  m_ui.GetActiveChatPanel() != this )
+  {
+    for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+      if ( m_chat_tabs->GetPage( i ) == this ) {
+        if ( m_type == CPT_Channel && m_chat_tabs->GetPageImage( i ) < 6 ) m_chat_tabs->SetPageImage( i, 6 );
+        if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 7 ) m_chat_tabs->SetPageImage( i, 7 );
+      }
+  }
 	OutputLine( _T( " ** Channel topic: " ) + refined + _( "\n * Set by " ) + who, sett().GetChatColorServer(), f );
 }
 
@@ -993,11 +1070,29 @@ bool ChatPanel::IsOk() {
 
 
 void ChatPanel::OnUserDisconnected() {
+  // change the image of the tab to show new events
+  if (  m_ui.GetActiveChatPanel() != this )
+  {
+    for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+      if ( m_chat_tabs->GetPage( i ) == this ) {
+        if ( m_type == CPT_Channel && m_chat_tabs->GetPageImage( i ) < 4 ) m_chat_tabs->SetPageImage( i, 4 );
+        if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 5 ) m_chat_tabs->SetPageImage( i, 5 );
+      }
+  }
 	OutputLine( _T( " ** User is now offline." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 }
 
 
 void ChatPanel::OnUserConnected() {
+  // change the image of the tab to show new events
+  if (  m_ui.GetActiveChatPanel() != this )
+  {
+    for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+      if ( m_chat_tabs->GetPage( i ) == this ) {
+        if ( m_type == CPT_Channel && m_chat_tabs->GetPageImage( i ) < 4 ) m_chat_tabs->SetPageImage( i, 4 );
+        if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 5 ) m_chat_tabs->SetPageImage( i, 5 );
+      }
+  }
 	OutputLine( _T( " ** User just got online." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 }
 

@@ -243,3 +243,58 @@ bool se_settings::IsDataDir( const wxString& dir )
   if ( wxDir::Exists( dir + wxFileName::GetPathSeparator() + _T("maps") ) ) return true;
   return false;
 }
+
+/************* SPRINGSETTINGS WINDOW POS/SIZE   ******************/
+//! @brief Get left position of MainWindow.
+int se_settings::GetSettingsWindowLeft()
+{
+  return se_config->Read( _T("/Settwin/left"), DEFSETT_SW_LEFT );
+}
+
+//! @brief Set left position of SettingsWindow
+void se_settings::SetSettingsWindowLeft( const int value )
+{
+  se_config->Write( _T("/Settwin/left"), value );
+}
+
+//! @brief Get height of SettingsWindow.
+int se_settings::GetSettingsWindowHeight()
+{
+  return se_config->Read( _T("/Settwin/height"), DEFSETT_SW_HEIGHT );
+}
+
+
+//! @brief Set height position of SettingsWindow
+void se_settings::SetSettingsWindowHeight( const int value )
+{
+  se_config->Write( _T("/Settwin/height"), value );
+}
+
+
+//! @brief Get top position of SettingsWindow.
+int se_settings::GetSettingsWindowTop()
+{
+  return se_config->Read( _T("/Settwin/top"), DEFSETT_SW_TOP );
+}
+
+
+//! @brief Set top position of SettingsWindow
+void se_settings::SetSettingsWindowTop( const int value )
+{
+  se_config->Write( _T("/Settwin/top"), value );
+}
+
+//! @brief Get width of MainWindow.
+int se_settings::GetSettingsWindowWidth()
+{
+  return se_config->Read( _T("/Settwin/width"), DEFSETT_SW_WIDTH );
+}
+
+
+//! @brief Set width position of MainWindow
+void se_settings::SetSettingsWindowWidth( const int value )
+{
+  se_config->Write( _T("/Settwin/width"), value );
+}
+
+/*********** WINDOW SIZE/POS END *****************/

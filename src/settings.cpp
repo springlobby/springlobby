@@ -378,7 +378,7 @@ wxString Settings::GetChannelJoinName( int index )
 {
     return m_config->Read( wxString::Format( _T("/Channels/Channel%d"), index ), _T("") );
 }
-
+/************* SPRINGLOBBY WINDOW POS/SIZE   ******************/
 //! @brief Get width of MainWindow.
 int Settings::GetMainWindowWidth()
 {
@@ -427,13 +427,11 @@ int Settings::GetMainWindowLeft()
     return m_config->Read( _T("/Mainwin/left"), DEFSETT_MW_LEFT );
 }
 
-
 //! @brief Set left position of MainWindow
 void Settings::SetMainWindowLeft( const int value )
 {
     m_config->Write( _T("/Mainwin/left"), value );
 }
-
 
 wxString Settings::GetSpringDir()
 {

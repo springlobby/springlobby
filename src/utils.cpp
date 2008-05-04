@@ -205,8 +205,9 @@ wxString GetHostCPUSpeed()
         if ( programreg.QueryValue( _T("~MHz"), tmp ) )
         {
             totalcpuspeed += (*tmp);
+            cpu_count++;
         }
-        cpu_count++;
+
     }
 
 #else

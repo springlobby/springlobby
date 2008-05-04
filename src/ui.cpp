@@ -369,6 +369,8 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
 {
 
   if ( !IsConnected() ) return false;
+  //TODO insert logic for joining multiple channels at once
+  //or remove that from "/help"
   if ( (cmd.BeforeFirst(' ').Lower() == _T("/join")) || (cmd.BeforeFirst(' ').Lower() == _T("/j")) ) {
     wxString channel = cmd.AfterFirst(' ');
     wxString pass = channel.AfterFirst(' ');

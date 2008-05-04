@@ -237,7 +237,6 @@ int IconImageList::GetBattleStatusIcon( Battle& battle )
     if ( battle.GetInGame() ) return ICON_STARTED_GAME;
     if ( !battle.IsLocked() )
     {
-        //TODO FIXME order
         if ( battle.IsFull() )
         {
             if ( battle.IsPassworded() )
