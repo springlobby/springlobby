@@ -52,8 +52,11 @@ fi
 #check if configure option present, if yes check for lib
 if test x$usetorrent = xyes ; then
 	AC_MSG_CHECKING([checking for libtorrent])
-	PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], AC_MSG_RESULT(["http://www.rasterbar.com/products/libtorrent/"]) )
-#		 ]) )
+	PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
+	if test x$usetorrent = xfail ; then
+		echo "get it at http://www.rasterbar.com/products/libtorrent/";
+		exit
+	fi
 	AC_SUBST(LIBTORRENT_CFLAGS)
 	AC_SUBST(LIBTORRENT_LIBS)
 else

@@ -1,8 +1,9 @@
 #include "globalevents.h"
 #include "settings++/custom_dialogs.h"
 
-DEFINE_EVENT_TYPE(httpDownloadEvtComplete)
-DEFINE_EVENT_TYPE(httpDownloadEvtFailed)
+const wxEventType httpDownloadEvtComplete = wxNewEventType();
+const wxEventType httpDownloadEvtFailed = wxNewEventType();
+
 
 BEGIN_EVENT_TABLE(SL_GlobalEvtHandler, wxEvtHandler)
     EVT_COMMAND(wxID_ANY, httpDownloadEvtComplete,  SL_GlobalEvtHandler::OnHttpDownLoadComplete)
