@@ -1070,7 +1070,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
         m_ui.OnBattleMapRefresh();
         UpdateMinimap();
       } else if ( m_mdown_area == RA_Download ) {
-        m_ui.DownloadMap( m_battle->GetMapName() );
+        m_ui.DownloadMap( m_battle->GetMapHash(),  m_battle->GetMapName() );
       }
     }
     m_mdown_area = RA_Main;

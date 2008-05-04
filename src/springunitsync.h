@@ -5,6 +5,7 @@
 
 #include "iunitsync.h"
 #include "nonportable.h"
+#include "bimap.h"
 
 class wxImage;
 class wxDynamicLibrary;
@@ -14,6 +15,7 @@ class wxCriticalSection;
 
 
 typedef std::map<wxString,CachedMapInfo> MapCacheType;
+typedef codeproject::bimap<wxString,wxString> LocalArchivesVector;
 
 
 class SpringUnitSync : public IUnitSync
@@ -77,6 +79,10 @@ class SpringUnitSync : public IUnitSync
 
     UnitSyncMap m_map;
 
+    LocalArchivesVector m_maps_list; /// maphash -> mapname
+    LocalArchivesVector m_mods_list; /// modhash -> modname
+
+
     wxArrayString m_mod_units;
 
     int m_map_count;
@@ -110,6 +116,8 @@ class SpringUnitSync : public IUnitSync
 
     void _ConvertSpringMapInfo( const CachedMapInfo& in, MapInfo& out );
     void _ConvertSpringMapInfo( const SpringMapInfo& in, CachedMapInfo& out, const wxString& mapname );
+
+    void PopulateArchiveList();
 
 };
 

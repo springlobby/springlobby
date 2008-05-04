@@ -291,8 +291,7 @@ wxString SpringUnitSyncLib::GetMapChecksum( int index )
 {
   InitLib( m_get_map_checksum );
 
-  unsigned int csum = m_get_map_checksum( index );
-  return wxString::Format( _T("%u"), csum );
+  return i2s( (int)m_get_map_checksum( index ) );
 }
 
 
@@ -351,11 +350,11 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
 }
 
 
-unsigned int SpringUnitSyncLib::GetPrimaryModChecksum( int index )
+int SpringUnitSyncLib::GetPrimaryModChecksum( int index )
 {
   InitLib( m_get_mod_checksum );
 
-  return m_get_mod_checksum( index );
+  return (int)m_get_mod_checksum( index );
 }
 
 
@@ -455,11 +454,11 @@ wxString SpringUnitSyncLib::GetPrimaryModArchiveList( int arnr )
 }
 
 
-unsigned int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
+int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
 {
   InitLib( m_get_primary_mod_checksum_from_name );
 
-  return m_get_primary_mod_checksum_from_name( name.mb_str( wxConvUTF8 ) );
+  return (int)m_get_primary_mod_checksum_from_name( name.mb_str( wxConvUTF8 ) );
 }
 
 

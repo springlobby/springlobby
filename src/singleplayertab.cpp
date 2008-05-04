@@ -251,7 +251,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
   if ( dlg.ShowModal() == wxID_OK ) {
     int x = 0, y = 0, handicap = 0;
     m_battle.GetFreePosition( x, y );
-    wxColour col = m_battle.GetFreeColour( false );
+    wxColour col = m_battle.GetFreeColour( NULL );
     int i = m_battle.AddBot( m_battle.GetFreeAlly(), x, y, handicap, dlg.GetAI() );
     BattleBot* bot = m_battle.GetBot( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );

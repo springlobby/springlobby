@@ -24,6 +24,9 @@
 #include "channel.h"
 #include "httpdownloader.h"
 #include "settings++/custom_dialogs.h"
+#ifndef NO_TORRENT_SYSTEM
+#include "torrentwrapper.h"
+#endif
 
 #define TIMER_ID 101
 #define TIMER_INTERVAL 100
@@ -136,7 +139,11 @@ bool SpringLobbyApp::OnInit()
         m_ui->Connect();
     }
 
-    m_timer->Start( TIMER_INTERVAL );
+  #ifndef NO_TORRENT_SYSTEM
+  if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent()->ConnectToP2PSystem();
+  #endif
+
+  m_timer->Start( TIMER_INTERVAL );
 
     return true;
 }
@@ -150,8 +157,12 @@ int SpringLobbyApp::OnExit()
     if ( m_otadownloader != 0 )
         delete m_otadownloader ;
 
-    m_timer->Stop();
-    delete m_ui;
+  #ifndef NO_TORRENT_SYSTEM
+  if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent()->DisconnectToP2PSystem();
+  #endif
+
+  m_timer->Stop();
+  delete m_ui;
 
     usync()->FreeUnitSyncLib();
 

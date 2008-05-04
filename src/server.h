@@ -6,11 +6,11 @@
 #include "channellist.h"
 #include "userlist.h"
 #include "battlelist.h"
+#include "inetclass.h"
 
 #define PING_TIMEOUT 30
 
 class ServerEvents;
-class Socket;
 class Channel;
 class Ui;
 class Battle;
@@ -48,7 +48,7 @@ struct UiServerData {
 };
 
 //! @brief Abstract baseclass that is used to implement a server protocol.
-class Server
+class Server : public iNetClass
 {
   public:
     friend class ServerEvents;
