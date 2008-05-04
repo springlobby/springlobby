@@ -1,7 +1,7 @@
-# Swedish translations for SpringLobby package.
-# Copyright (C) 2008 The SpringLobby team
-# This file is distributed under the same license as the SpringLobby package.
-# Tommy Carlsson <tc@springlobby.info>, 2008.
+# Italian translation for springlobby
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the springlobby package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 #: src/settings++/Defs.hpp:251 src/settings++/Defs.hpp:328
 #: src/settings++/Defs.hpp:330 src/settings++/Defs.hpp:332
@@ -9,77 +9,74 @@
 #: src/settings++/Defs.hpp:388 src/settings++/Defs.hpp:389
 msgid ""
 msgstr ""
-"Project-Id-Version: SpringLobby 0.0.1-svn\n"
+"Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-05-04 17:04+0200\n"
-"PO-Revision-Date: 2008-03-30 21:44+0000\n"
-"Last-Translator: Daniel Nylander <yeager@ubuntu.com>\n"
-"Language-Team: Swedish\n"
+"PO-Revision-Date: 2008-04-29 17:48+0000\n"
+"Last-Translator: Daedalus <osd_daedalus@hotmail.com>\n"
+"Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2008-05-02 15:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-"X-Poedit-Country: SWEDEN\n"
-"X-Poedit-SourceCharset: utf-8\n"
-"X-Poedit-Basepath: ..\n"
 
 #: src/addbotdialog.cpp:30
 msgid "Add bot"
-msgstr "Lägg till bot"
+msgstr "Aggiungi bot"
 
 #: src/addbotdialog.cpp:44
 msgid "Nickname:"
-msgstr "Smeknamn:"
+msgstr "Nickname:"
 
 #: src/addbotdialog.cpp:58
 msgid "AI:"
-msgstr "AI:"
+msgstr "IA"
 
 #: src/addbotdialog.cpp:62
 msgid "Choose the AI library to use with this bot."
-msgstr "Välj vilket AI du vill använda med den här boten."
+msgstr "Scegli la libreria IA da utilizzare con questo bot"
 
 #: src/addbotdialog.cpp:76 src/connectwindow.cpp:78
 #: src/hostbattledialog.cpp:204
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr "Annulla"
 
 #: src/addbotdialog.cpp:81
 msgid "Add Bot"
-msgstr "Lägg till bot"
+msgstr "Aggiungi Bot"
 
 #: src/addbotdialog.cpp:134
 msgid "No AI bots found in your Spring installation."
-msgstr "Hittade inga AI bibliotek i din Spring installation."
+msgstr "Nessuna IA trovata nella tua installazione di Spring"
 
 #: src/addbotdialog.cpp:134
 msgid "No bot-libs found"
-msgstr "Inga AI bibliotek funna"
+msgstr "Nessuna libreria bot è stata trovata"
 
 #: src/agreementdialog.cpp:26
 msgid "Accept Agreement"
-msgstr "Acceptera avtal"
+msgstr "Accetta i termini"
 
 #: src/agreementdialog.cpp:35
 msgid "Do you accept the terms of this agreement?"
-msgstr "Accepterar du avtalet?"
+msgstr "Accetti i termini di questa licenza?"
 
 #: src/agreementdialog.cpp:43 src/uiutils.h:11
 msgid "Yes"
-msgstr "Ja"
+msgstr "Sì"
 
 #: src/agreementdialog.cpp:48 src/uiutils.h:11
 msgid "No"
-msgstr "Nej"
+msgstr "No"
 
 #: src/battlelistctrl.cpp:62 src/hostbattledialog.cpp:57
 msgid "Description"
-msgstr "Beskrivning"
+msgstr "Descrizione"
 
 #: src/battlelistctrl.cpp:66 src/mainjoinbattletab.cpp:151
 msgid "Map"
-msgstr "Karta"
+msgstr "Mappa"
 
 #: src/battlelistctrl.cpp:70 src/hostbattledialog.cpp:71
 msgid "Mod"
@@ -87,7 +84,7 @@ msgstr "Mod"
 
 #: src/battlelistctrl.cpp:74 src/hostbattledialog.cpp:208
 msgid "Host"
-msgstr "Värd"
+msgstr "Host"
 
 #: src/battlelistctrl.cpp:78 src/battleroomlistctrl.cpp:88
 msgid "a"
@@ -95,7 +92,7 @@ msgstr "a"
 
 #: src/battlelistctrl.cpp:82
 msgid "p"
-msgstr "p"
+msgstr "g"
 
 #: src/battlelistctrl.cpp:86
 msgid "m"
@@ -103,68 +100,69 @@ msgstr "m"
 
 #: src/battlelistctrl.cpp:115
 msgid "Download &map"
-msgstr "Ladda ner &karta"
+msgstr "Scarica &mappa"
 
 #: src/battlelistctrl.cpp:116
 msgid "Download m&od"
-msgstr "Ladda ner &mod"
+msgstr "Scarica m&od"
 
 #: src/battlelistfilter.cpp:73
 msgid "Host:"
-msgstr "Värd:"
+msgstr "Host:"
 
 #: src/battlelistfilter.cpp:92 src/battlelistfilter.cpp:162
 msgid "Status:"
-msgstr "Status:"
+msgstr "Stato:"
 
 #: src/battlelistfilter.cpp:96 src/battleroomtab.cpp:115
 msgid "Locked"
-msgstr "Låst"
+msgstr "Bloccata"
 
 #: src/battlelistfilter.cpp:101
 msgid "Passworded"
-msgstr "Lösenords skyddade"
+msgstr "Privata con password"
 
 #: src/battlelistfilter.cpp:111
 msgid "Rank Limit:"
-msgstr "Rang begränsning:"
+msgstr "Limite di grado"
 
 #: src/battlelistfilter.cpp:145
 msgid "Description:"
-msgstr "Beskrivning:"
+msgstr "Descrizione:"
 
 #: src/battlelistfilter.cpp:166
 msgid "Started"
-msgstr "Startade"
+msgstr "Avviata"
 
 #: src/battlelistfilter.cpp:171
 msgid "Full"
-msgstr "Fulla"
+msgstr "Piena"
 
 #: src/battlelistfilter.cpp:176
 msgid "Open"
-msgstr "Öppna"
+msgstr "Aperta"
 
 #: src/battlelistfilter.cpp:186
 msgid "Player:"
-msgstr "Spelare:"
+msgstr "Giocatore:"
 
 #: src/battlelistfilter.cpp:195
 msgid "All"
-msgstr "Alla"
+msgstr "Tutte"
 
 #: src/battlelistfilter.cpp:214 src/battlelisttab.cpp:85
 #: src/singleplayertab.cpp:48
 msgid "Map:"
-msgstr "Karta:"
+msgstr "Mappa:"
 
 #: src/battlelistfilter.cpp:231
 msgid "Only maps i have"
-msgstr "Enbart kartor som jag har"
+msgstr "Solo mappe che possiedo"
 
 #: src/battlelistfilter.cpp:242
+#, fuzzy
 msgid "Max.Player:"
-msgstr "Max.Spelare:"
+msgstr "Massimo giocatori"
 
 #: src/battlelistfilter.cpp:269 src/battlelisttab.cpp:91
 #: src/singleplayertab.cpp:57
@@ -173,48 +171,50 @@ msgstr "Mod:"
 
 #: src/battlelistfilter.cpp:286
 msgid "Only mods i have"
-msgstr "Bara moddar som jag har"
+msgstr "Solo mod che possiedo"
 
 #: src/battlelistfilter.cpp:297
 msgid "    Spectator:"
-msgstr "    Spektator:"
+msgstr "    Spettatore:"
 
 #: src/battlelistfilter.cpp:552 src/battlelistfilter.cpp:557
 #: src/battlelistfilter.cpp:558 src/battlelistfilter.cpp:560
+#, fuzzy
 msgid "%d%"
-msgstr ""
+msgstr "%d"
 
 #: src/battlelisttab.cpp:97
 msgid "Players:"
-msgstr "Spelare:"
+msgstr "Giocatori"
 
 #: src/battlelisttab.cpp:103
 msgid "Spectators:"
-msgstr "Spektatorer:"
+msgstr "Spettatori:"
 
 #: src/battlelisttab.cpp:143
 msgid "Host new..."
-msgstr "Hosta nytt.."
+msgstr "Nuova partita"
 
 #: src/battlelisttab.cpp:146
 msgid "Join"
-msgstr "Gå med"
+msgstr "Partecipa"
 
 #: src/battlelisttab.cpp:324
 msgid ""
 "You cannot host a game while being offline. Please connect to a lobby server."
 msgstr ""
-"Du kan inte skapa ett spel när du är nerkopplad. Var god koppla upp dig mot "
-"lobby serven."
+"Tu non puoi hostare una partita mentre sei offline. Connettiti prima a una "
+"lobby server."
 
 #: src/battlelisttab.cpp:324
 msgid "Not Online."
-msgstr "Inte uppkopplad."
+msgstr "Non online"
 
 #: src/battlelisttab.cpp:330
 msgid "Hosting is disabled due to the incompatible version you're using"
 msgstr ""
-"Du kan inte skapa spel eftersom din version av Spring inte är kompatibel."
+"L'host e' disabilitato a causa dell'icompatibilità della versione di Spring "
+"che stai usando"
 
 #: src/battlelisttab.cpp:330 src/battlelisttab.cpp:335
 #: src/battlelisttab.cpp:453 src/battlelisttab.cpp:469
@@ -222,17 +222,20 @@ msgstr ""
 #: src/springoptionstab.cpp:481 src/springoptionstab.cpp:486 src/ui.cpp:496
 #: src/ui.cpp:499
 msgid "Spring error"
-msgstr "Spring fel"
+msgstr "Spring error"
 
 #: src/battlelisttab.cpp:335
+#, fuzzy
 msgid ""
 "You already are running a Spring instance, close it first in order to be "
 "able to host a new game"
-msgstr "Spring körs redan, stäng det innan du försöker starta ett nytt spel."
+msgstr ""
+"Tu sei già all'interno di una stanza, chiudila per essere in grado di "
+"hostare una nuova partita."
 
 #: src/battlelisttab.cpp:340 src/battlelisttab.cpp:459
 msgid "Already in a battle"
-msgstr "Du är redan inne i ett spel"
+msgstr "Già in battaglia"
 
 #: src/battlelisttab.cpp:340
 msgid ""
@@ -240,9 +243,8 @@ msgid ""
 "\n"
 "Do you want to leave current battle to start a new?"
 msgstr ""
-"Du är redan inne i ett spel.\n"
-"\n"
-"Vill du gå ur detta och starta ett nytt?"
+"Sei già in battaglia.\n"
+"Vuoi lasciare la partita corrente per far partire una nuova?"
 
 #: src/battlelisttab.cpp:360
 #, fuzzy, c-format
@@ -255,37 +257,38 @@ msgid ""
 "If everything else fails, enable the Hole Punching NAT Traversal\n"
 " option in the hosting settings."
 msgstr ""
-"Kunde inte skapa ett spel eftersom porten du valt (%d) inte kan ta emot "
-"inkommande paket. Kolla din router & firewall konfiguration eller ändra port"
+"La battaglia non è iniziata perchè la porta (%d) è incapace di ricevere "
+"pacchetti in arrivo"
 
 #: src/battlelisttab.cpp:373
 msgid "Battle not started beacuse the mod you selected could not be found. "
-msgstr "Spelet kunde inte startas eftersom modden du valt inte kunde hittas. "
+msgstr ""
+"La battaglia non è iniziata perchè il mod che hai selezionato non e' stato "
+"rilevato "
 
 #: src/battlelisttab.cpp:373
 msgid "Error starting battle."
-msgstr "Kunde inte starta spel."
+msgstr "Errore all'apertura della partita."
 
 #: src/battlelisttab.cpp:384 src/battlelisttab.cpp:391
-#, fuzzy
 msgid ""
 "Couldn't find any maps in your spring installation. This could happen when "
 "you set the Spring settings incorrectly."
 msgstr ""
-"Kunde inte hitta några kartor i din Spring installation. Detta kan hända när "
-"du inte har ställt in inställningarna fr Spring korrekt."
+"Non posso trovare nessuna mappa nella directory di Spring. Questo puo' "
+"succedere se Spring non è settato correttamente."
 
 #: src/battlelisttab.cpp:384 src/battlelisttab.cpp:391
 msgid "No maps found"
-msgstr "Inga kartor funna"
+msgstr "Nessuna mappa trovata"
 
 #: src/battlelisttab.cpp:453
 msgid ""
 "Joining battles is disabled due to the incompatible spring version you're "
 "using."
 msgstr ""
-"Du kan inte gå med i nätverks spel eftersom din Spring version är "
-"inkompatibel."
+"La partecipazione alla battaglia è disabilitato a causa dell'incopatibilità "
+"della versione di spring che stai usando."
 
 #: src/battlelisttab.cpp:459
 msgid ""
@@ -293,15 +296,16 @@ msgid ""
 "\n"
 "Do you want to leave current battle to and join this one?"
 msgstr ""
-"Du är redan inne i ett spel.\n"
-"\n"
-"Vill du gå ur detta och starta ett nytt?"
+"Tu sei già in battaglia.\n"
+"Vuoi lasciare la battaglia corrente e partecipare ad un'altra?"
 
 #: src/battlelisttab.cpp:469
 msgid ""
 "You already are running a Spring instance, close it first in order to be "
 "able to join another battle."
-msgstr "Spring körs redan, stäng det innan du försöker starta ett nytt spel."
+msgstr ""
+"Sei già all'interno di una stanza, chiudila prima di essere in grado di "
+"unirti a un'altra partita."
 
 #: src/battlelisttab.cpp:474
 msgid ""
@@ -309,13 +313,12 @@ msgid ""
 "\n"
 "Do you want me to take you to the download page?"
 msgstr ""
-"Du måste ladda ner modden innan du kan gå med i detta spelet.\n"
-"\n"
-"Vill du att jag ska ta dig till nerladdnings sidan?"
+"Prima di partecipare a questo gioco devi scaricare prima il mod.\n"
+"Vuoi che lo scarichi dalla pagina di download?"
 
 #: src/battlelisttab.cpp:474
 msgid "Mod not available"
-msgstr "Modden inte tillgänlig"
+msgstr "Nessun mod disponibile"
 
 #: src/battlelisttab.cpp:482
 msgid ""
@@ -323,187 +326,185 @@ msgid ""
 "\n"
 "Do you want me to take you to the download page?"
 msgstr ""
-"Du måste ladda ner kartan för att kunna gå med i detta spelet.\n"
-"\n"
-"Vill du att jag ska ta dig till nerladdnings sidan?"
+"Devi scaricare la mappa per poter partecipare alla partita.\n"
+"Vuoi prenderla dalla pagina di download?"
 
 #: src/battlelisttab.cpp:482
 msgid "Map not available"
-msgstr "Kartan inte tillgänglig"
+msgstr "Mappa non disponibile"
 
 #: src/battlelisttab.cpp:489 src/chatpanel.cpp:1358
 msgid "Battle password"
-msgstr "Spelets lösenord"
+msgstr "Password della partita"
 
 #: src/battlelisttab.cpp:489
 msgid "Enter password"
-msgstr "Skriv in lösenord"
+msgstr "Inserire password"
 
 #: src/battlemaptab.cpp:75 src/battleroomtab.cpp:125
 msgid "Option"
-msgstr "Alternativ"
+msgstr "Opzione"
 
 #: src/battlemaptab.cpp:77 src/battleroomtab.cpp:127
 msgid "Value"
-msgstr "Värde"
+msgstr "Valore"
 
 #: src/battlemaptab.cpp:82 src/battleroomtab.cpp:134 src/battleroomtab.cpp:135
 #: src/battleroomtab.cpp:271 src/battleroomtab.cpp:277
 msgid "Size"
-msgstr "Storlek"
+msgstr "Dimensione"
 
 #: src/battlemaptab.cpp:83 src/battleroomtab.cpp:136 src/battleroomtab.cpp:137
 #: src/battleroomtab.cpp:272 src/battleroomtab.cpp:278
 msgid "Windspeed"
-msgstr "Vindhastighet"
+msgstr "Velocità del vento"
 
 #: src/battlemaptab.cpp:84 src/battleroomtab.cpp:138 src/battleroomtab.cpp:139
 #: src/battleroomtab.cpp:273 src/battleroomtab.cpp:279
 msgid "Tidal strength"
-msgstr "Strömstyrka"
+msgstr "Forza delle maree"
 
 #: src/battlemaptab.cpp:85
 msgid "Gravity"
-msgstr "Gravitation"
+msgstr "Gravità"
 
 #: src/battlemaptab.cpp:86
 msgid "Extractor radius"
-msgstr "Extractor radie"
+msgstr "Raggio degli estrattori"
 
 #: src/battlemaptab.cpp:87
 msgid "Max metal"
-msgstr "Max metal"
+msgstr "Metallo massimo"
 
 #: src/battlemaptab.cpp:91
 msgid "Fixed"
-msgstr "Fasta"
+msgstr "Fisso"
 
 #: src/battlemaptab.cpp:91
 msgid "Random"
-msgstr "Slumpmässiga"
+msgstr "Casuale"
 
 #: src/battlemaptab.cpp:91
 msgid "Choose in game"
-msgstr "Välj i spelet"
+msgstr "Scegli in gioco"
 
 #: src/battlemaptab.cpp:94
 msgid "Startpositions"
-msgstr "Start positioner"
+msgstr "Posizioni di partenza"
 
 #: src/battleoptionstab.cpp:74
 msgid "Continue if commander dies"
-msgstr "Fortsätt on din commander dör"
+msgstr "Continua se il commander muore"
 
 #: src/battleoptionstab.cpp:74
 msgid "End if commander dies"
-msgstr "Avsluta don din commander dör"
+msgstr "Termina se il commander muore"
 
 #: src/battleoptionstab.cpp:74
 msgid "Linage mode"
-msgstr "Linage läge"
+msgstr ""
 
 #: src/battleoptionstab.cpp:77
 msgid "End condition"
-msgstr "Spelets avslutning"
+msgstr "Condizioni finali"
 
 #: src/battleoptionstab.cpp:81
 msgid "Resources"
-msgstr "Resurser"
+msgstr "Risorse"
 
 #: src/battleoptionstab.cpp:86 src/mmoptionswrapper.cpp:94
 msgid "Start Metal"
-msgstr "Start metall"
+msgstr "Metallo di partenza"
 
 #: src/battleoptionstab.cpp:90
 msgid "The amount of metal each player starts with."
-msgstr "Hur mycket metall varje spelare startar med."
+msgstr "Ammontare di metallo per ogni giocatore alla partenza."
 
 #: src/battleoptionstab.cpp:102 src/mmoptionswrapper.cpp:97
 msgid "Start Energy"
-msgstr "Start energi"
+msgstr "Energia di partenza"
 
 #: src/battleoptionstab.cpp:106
 msgid "The amount of energy each player starts with."
-msgstr "Hur mycket energi varje spelare startar med."
+msgstr "Ammontare di energia per ogni giocatore alla partenza."
 
 #: src/battleoptionstab.cpp:118
 msgid "Max units"
-msgstr "Max enheter"
+msgstr "Unità massime"
 
 #: src/battleoptionstab.cpp:122
-#, fuzzy
 msgid "The maximum number of units allowed per player."
-msgstr "Det maximala antalet enheter en spelare kan äga."
+msgstr "Numero massimo di unità permesse per giocatore."
 
 #: src/battleoptionstab.cpp:131 src/mainjoinbattletab.cpp:152
 #: src/mainsingleplayertab.cpp:38 src/settings++/tab_simple.cpp:134
 msgid "Options"
-msgstr "Alternativ"
+msgstr "Opzioni"
 
 #: src/battleoptionstab.cpp:135
 msgid "Limit d-gun"
-msgstr "Begränsa d-gun"
+msgstr "D-gun limitato"
 
 #: src/battleoptionstab.cpp:136
 msgid "Ghosted buildings"
-msgstr "Spök byggnader"
+msgstr "Edifici fantasma"
 
 #: src/battleoptionstab.cpp:137
 msgid "Diminishing metal makers"
-msgstr "Av tagande metall skapare"
+msgstr ""
 
 #: src/battleoptionstab.cpp:138
 msgid "Random start postisions"
-msgstr "Slumpmässiga start positioner"
+msgstr "Posizioni random delle posizioni di partenza"
 
 #: src/battleoptionstab.cpp:147
 msgid "Unit restrictions"
-msgstr "Enhets begränsningar"
+msgstr "Restrizioni unità"
 
 #: src/battleoptionstab.cpp:155
 msgid "Allowed units"
-msgstr "Tillåtna enheter"
+msgstr "Unità permesse"
 
 #: src/battleoptionstab.cpp:159
 msgid "Units in this list will be available in the game."
-msgstr "Enheter i den här listan kan användas i spelet."
+msgstr "Le unità in questa lista saranno disponibili in gioco."
 
 #: src/battleoptionstab.cpp:181
 msgid "Restricted units"
-msgstr "Begränsade enheter"
+msgstr "Restrizioni unità"
 
 #: src/battleoptionstab.cpp:185
 msgid "Units in this list will not be available in the game."
-msgstr "Enheter i den här listan kan inte användas i spelet."
+msgstr "Le unità in questa lista non saranno disponibili in gioco."
 
 #: src/battleoptionstab.cpp:196
 msgid "Load..."
-msgstr "Ladda..."
+msgstr "Caricamento..."
 
 #: src/battleoptionstab.cpp:197
 msgid "Load a saved set of restrictions."
-msgstr "Ladda lista från fil."
+msgstr "Carica un set di restrizioni."
 
 #: src/battleoptionstab.cpp:202
 msgid "Save..."
-msgstr "Spara..."
+msgstr "Salva..."
 
 #: src/battleoptionstab.cpp:203
 msgid "Save a set of restrictions."
-msgstr "Spara lista till fil."
+msgstr "Salva un set di restrizioni."
 
 #: src/battleoptionstab.cpp:210
 msgid "Clear"
-msgstr "Rensa"
+msgstr "Pulisci"
 
 #: src/battleoptionstab.cpp:211
 msgid "Enable all units."
-msgstr "Tillåt alla enheter."
+msgstr "Abilita tutte le unità."
 
 #: src/battleroomlistctrl.cpp:80 src/connectwindow.cpp:65
 #: src/nicklistctrl.cpp:52
 msgid "Nickname"
-msgstr "Smeknamn"
+msgstr "Nickname"
 
 #: src/battleroomlistctrl.cpp:84
 msgid "t"
@@ -515,200 +516,204 @@ msgstr "cpu"
 
 #: src/battleroomlistctrl.cpp:96
 msgid "Resource Bonus"
-msgstr "Resurs bonus"
+msgstr "Bonus risorse"
 
 #: src/battleroomlistctrl.cpp:130 src/battleroomtab.cpp:82
 msgid "Team"
-msgstr "Team"
+msgstr "Squadra"
 
 #: src/battleroomlistctrl.cpp:138 src/battleroomtab.cpp:83
 msgid "Ally"
-msgstr "Allians"
+msgstr "Allineamento"
 
 #: src/battleroomlistctrl.cpp:148 src/battleroomtab.cpp:85
 msgid "Side"
-msgstr "Sida"
+msgstr "Fazione"
 
 #: src/battleroomlistctrl.cpp:152
 msgid "Set color"
-msgstr "Välj färg"
+msgstr "Settaggio colori"
 
 #: src/battleroomlistctrl.cpp:157 src/battleroomlistctrl.cpp:480
 msgid "Set Resource Bonus"
-msgstr "Sätt resurs bonus"
+msgstr "Settaggio Risorse Bonus"
 
 #: src/battleroomlistctrl.cpp:162 src/battleroomlistctrl.cpp:399
 #: src/battleroomlistctrl.cpp:408 src/battleroomtab.cpp:117
 msgid "Spectator"
-msgstr "Spektator"
+msgstr "Spettatore"
 
 #: src/battleroomlistctrl.cpp:167 src/battleroomlistctrl.cpp:403
 #: src/battleroomlistctrl.cpp:413
 msgid "Kick"
-msgstr "Släng ut"
+msgstr "Kick"
 
 #: src/battleroomlistctrl.cpp:169 src/battleroomlistctrl.cpp:402
 #: src/battleroomlistctrl.cpp:411 src/chatpanel.cpp:432
 msgid "Ring"
-msgstr "Ring"
+msgstr "Fai uno squillo"
 
 #: src/battleroomlistctrl.cpp:480
 msgid "Please enter a value between 0 and 100"
-msgstr "Var god välj ett nummer mellan 0 och 100"
+msgstr "Inserisci a valore tra 0 e 100"
 
 #: src/battleroomlistctrl.cpp:485
 msgid "Not a number"
-msgstr "Inget nummer"
+msgstr "Non è un numero"
 
 #: src/battleroomlistctrl.cpp:485 src/battleroomlistctrl.cpp:490
 msgid "Invalid number"
-msgstr "Felaktigt nummer"
+msgstr "Numero non valido."
 
 #: src/battleroomlistctrl.cpp:490
 msgid ""
 "Value out of range.\n"
 " Enter an integer between 0 & 100."
-msgstr "Numret ligger utanför intervallet 0 och 100."
+msgstr ""
+"Valore fuori dal range.\n"
+"Inserisci un valore intero tra 0 e 100."
 
 #: src/battleroommmoptionstab.cpp:38
 msgid "Mod Options"
-msgstr "Mod alternativ"
+msgstr "Opzioni del mod"
 
 #: src/battleroommmoptionstab.cpp:43
 msgid "Map Options"
-msgstr "Kart alternativ"
+msgstr "Opzioni della mappa"
 
 #: src/battleroomtab.cpp:84
 msgid "Color"
-msgstr "Färg"
+msgstr "Colore"
 
 #: src/battleroomtab.cpp:103 src/chatpanel.cpp:291
 msgid "Leave"
-msgstr "Lämna"
+msgstr "Esci"
 
 #: src/battleroomtab.cpp:105 src/singleplayertab.cpp:81
 msgid "Start"
-msgstr "Starta"
+msgstr "Avvio"
 
 #: src/battleroomtab.cpp:107
 msgid "Add Bot..."
-msgstr "Lägg till bot..."
+msgstr "Aggiungi bot..."
 
 #: src/battleroomtab.cpp:110
 #, fuzzy
 msgid "Balance"
-msgstr "Avbryt"
+msgstr "Annulla"
 
 #: src/battleroomtab.cpp:113
 msgid "I'm ready"
-msgstr "Redo"
+msgstr "Sono pronto"
 
 #: src/battleroomtab.cpp:368
 #, fuzzy
 msgid "You have one or more bots sharing team, this is not possible."
-msgstr "Du har en eller flera botar som delat team, detta går inte."
+msgstr "Tu hai 1 o più bot in sharing team, questo non è possibile."
 
 #: src/battleroomtab.cpp:368
 msgid "Bot team sharing."
-msgstr "Bot team delning."
+msgstr ""
 
 #: src/battleroomtab.cpp:375
 msgid ""
 "Some players are not ready yet.\n"
 "Ring these players?"
 msgstr ""
-"Några av spelarna är inte redo.\n"
-"Ska jag ringa dessa?"
+"Alcuni giocatori non sono pronti.\n"
+"Vuoi fare uno squillo a questi giocatori."
 
 #: src/battleroomtab.cpp:375 src/battleroomtab.cpp:380
 msgid "Not ready"
-msgstr "Inte redo"
+msgstr "Non pronto"
 
 #: src/battleroomtab.cpp:380
+#, fuzzy
 msgid "Force start?"
-msgstr "Påtvinga start?"
+msgstr "Vuoi forzare la partenza"
 
 #: src/chatlog.cpp:36
 msgid "### Session Closed at ["
-msgstr "### Sessionen avslutad ["
+msgstr "### Sessione chiusa a ["
 
 #: src/chatlog.cpp:36
 msgid "]"
 msgstr "]"
 
 #: src/chatlog.cpp:77 src/chatlog.cpp:83
+#, fuzzy
 msgid ""
 "Couldn't create folder. \n"
 "Be sure that there isn't a write protection.\n"
 msgstr ""
-"Kunde inte skapa katalog.\n"
-"Kontrollera att den inte är skrivskyddad.\n"
+"Non hai potuto creare directory.\n"
+"Assicurati che non ci sia una protezione in scrittura.\n"
 
 #: src/chatlog.cpp:77 src/chatlog.cpp:83
+#, fuzzy
 msgid "Log function is disabled until restart SpringLobby."
-msgstr "Log funktionen är avstängd tills du startar om SpringLobby."
+msgstr "La funzionne di log è disabilitata fino ak rivvio di SpringLobby."
 
 #: src/chatlog.cpp:77 src/chatlog.cpp:97 src/chatlog.cpp:114
 msgid "Log Warning"
-msgstr "Log varning"
+msgstr ""
 
 #: src/chatlog.cpp:97
+#, fuzzy
 msgid ""
 "Couldn't write message to log.\n"
 "Logging will be disabled for room "
 msgstr ""
-"Kunde inte skriva log meddelandet till loggen.\n"
-"Loggningen kommer att stängas av för kanalen "
+"Non posso scrivere i messaggi in log.\n"
+"La scrittura sara' percio disabilitata per questa stanza "
 
 #: src/chatlog.cpp:97
+#, fuzzy
 msgid ""
 ".\n"
 "\n"
 "Rejoin room to reactivate logging."
-msgstr ""
-".\n"
-"\n"
-"Gå in i kanalen igen för att aktivera loggning."
+msgstr "Rientra nella stanza per riattivare la scrittura del log."
 
 #: src/chatlog.cpp:114
 msgid ""
 "Can't open log file. \n"
 "Be sure that there isn't a write protection.\n"
 msgstr ""
-"Kunde inte skapa log filen.\n"
-"Kontrollera att den inte är skrivskyddad.\n"
+"Non posso aprire il file di log.\n"
+"Assicurati che non ci sia una protezione in scrittura.\n"
 
 #: src/chatoptionstab.cpp:66
 msgid "Colors and font"
-msgstr "Färger och font"
+msgstr "Colori e fonts"
 
 #: src/chatoptionstab.cpp:71
 msgid "Use system colors"
-msgstr "Använd systemfärger"
+msgstr "Usa colori di sistema"
 
 #: src/chatoptionstab.cpp:97
 msgid "Normal"
-msgstr "Normal"
+msgstr "Normale"
 
 #: src/chatoptionstab.cpp:111
 msgid "Background"
-msgstr "Bakgrund"
+msgstr "Sfondo"
 
 #: src/chatoptionstab.cpp:125
 msgid "Action"
-msgstr "Händelse"
+msgstr "Azione"
 
 #: src/chatoptionstab.cpp:139
 msgid "Highlight"
-msgstr "Markering"
+msgstr "Evidenzia"
 
 #: src/chatoptionstab.cpp:153
 msgid "Join/Leave"
-msgstr "Gå med/Lämna"
+msgstr "Partecipa/Lascia"
 
 #: src/chatoptionstab.cpp:167
 msgid "My messages"
-msgstr "Mina medelanden"
+msgstr "I miei messaggi"
 
 #: src/chatoptionstab.cpp:186 src/connectwindow.cpp:59
 msgid "Server"
@@ -716,21 +721,21 @@ msgstr "Server"
 
 #: src/chatoptionstab.cpp:200
 msgid "Client"
-msgstr "Klient"
+msgstr "Client"
 
 #: src/chatoptionstab.cpp:214 src/chatpanel.cpp:1325 src/chatpanel.cpp:1486
 #: src/chatpanel.cpp:1491 src/mainwindow.cpp:394
 #: src/settings++/tab_abstract.cpp:111 src/tasserver.cpp:408
 msgid "Error"
-msgstr "Felmedelanden"
+msgstr "Errore"
 
 #: src/chatoptionstab.cpp:228
 msgid "Timestamp"
-msgstr "Tids stämpel"
+msgstr "Marcatempo"
 
 #: src/chatoptionstab.cpp:242
 msgid "Notification"
-msgstr "Påminnelse"
+msgstr "Notifica"
 
 #: src/chatoptionstab.cpp:252
 msgid ""
@@ -741,12 +746,12 @@ msgid ""
 "[22:45] <Dude> Dude2: orl?\n"
 "[22:46] <Dude2> But could be better, should tweak them some more...\n"
 msgstr ""
-"[19:35] ** Server ** Ansluten till TAS Server.\n"
-"[22:30] <Kompis> hi everyone\n"
-"[22:30] ** Kompis2 kom in i kanalen.\n"
-"[22:30] * Kompis2 thinks his colors looks nice\n"
-"[22:45] <Kompis> Kompis2: orl?\n"
-"[22:46] <Kompis2> But could be better, should tweak them some more...\n"
+"[19:35] ** Server ** Connected to TAS Server.\n"
+"[22:30] <Dude> hi everyone\n"
+"[22:30] ** Dude2 joined the channel.\n"
+"[22:30] * Dude2 thinks his colors looks nice\n"
+"[22:45] <Dude> Dude2: orl?\n"
+"[22:46] <Dude2> But could be better, should tweak them some more...\n"
 
 #: src/chatoptionstab.cpp:263
 msgid "Font:"
@@ -754,11 +759,11 @@ msgstr "Font:"
 
 #: src/chatoptionstab.cpp:267
 msgid "default"
-msgstr "standard"
+msgstr "default"
 
 #: src/chatoptionstab.cpp:271
 msgid "Select..."
-msgstr "Välj..."
+msgstr "Seleziona..."
 
 #: src/chatoptionstab.cpp:283
 msgid "Behavior"
@@ -770,95 +775,97 @@ msgstr ""
 
 #: src/chatoptionstab.cpp:299
 msgid "Chat logs"
-msgstr "Chat loggar"
+msgstr "Chat logs"
 
 #: src/chatoptionstab.cpp:301
 msgid "Save chat logs"
-msgstr "Spara chat loggar"
+msgstr "Salva i chat logs"
 
 #: src/chatoptionstab.cpp:309
 msgid "Save to:"
-msgstr "Spara till:"
+msgstr "Salva in:"
 
 #: src/chatoptionstab.cpp:320
 msgid "Browse..."
-msgstr "Bläddra..."
+msgstr "Sfoglia..."
 
 #: src/chatoptionstab.cpp:330
 msgid "Highlight words"
-msgstr "Markera ord"
+msgstr "Evidenzia parole"
 
 #: src/chatoptionstab.cpp:332
 msgid "Words to highlight in chat:"
-msgstr "Ord som ska bli markerade"
+msgstr "Parole da evidenziare nella chat:"
 
 #: src/chatoptionstab.cpp:625 src/springoptionstab.cpp:442
 msgid "Choose a directory"
-msgstr "Välj en katalog"
+msgstr "Scegli una directory"
 
 #: src/chatpanel.cpp:235
 msgid "Send"
-msgstr "Skicka"
+msgstr "Invia"
 
 #: src/chatpanel.cpp:281
+#, fuzzy
 msgid "Auto join this channel"
-msgstr "Gå med denna kanalen automatiskt"
+msgstr "Entra in automatico in questo canale"
 
 #: src/chatpanel.cpp:294
+#, fuzzy
 msgid "Display Join/Leave Messages"
-msgstr "Visa gå med/lämna medelanden"
+msgstr "Mostra i messaggi di entrata e uscita"
 
 #: src/chatpanel.cpp:301 src/chatpanel.cpp:355
 msgid "Select all"
-msgstr "Markera allt"
+msgstr "Seleziona tutto"
 
 #: src/chatpanel.cpp:303 src/chatpanel.cpp:357
 msgid "Copy"
-msgstr "Kopiera"
+msgstr "Copia"
 
 #: src/chatpanel.cpp:309
 msgid "Channel info"
-msgstr "Kanal information"
+msgstr "Informazioni del canale"
 
 #: src/chatpanel.cpp:313 src/chatpanel.cpp:1174
 msgid "Set topic..."
-msgstr "Sätt ämne..."
+msgstr "Setta il topic..."
 
 #: src/chatpanel.cpp:315 src/chatpanel.cpp:1190
 msgid "Channel message..."
-msgstr "Kanal medelande..."
+msgstr "Messaggio sul canale..."
 
 #: src/chatpanel.cpp:319
 msgid "Lock..."
-msgstr "Lås..."
+msgstr "Chiudi..."
 
 #: src/chatpanel.cpp:321
 msgid "Unlock"
-msgstr "Lås upp..."
+msgstr "Sblocca"
 
 #: src/chatpanel.cpp:325
 msgid "Register..."
-msgstr "Registrera..."
+msgstr "Registra..."
 
 #: src/chatpanel.cpp:327
 msgid "Unregister"
-msgstr "Avregistrera"
+msgstr "Annulla registrazione"
 
 #: src/chatpanel.cpp:333
 msgid "On"
-msgstr "På"
+msgstr "Acceso"
 
 #: src/chatpanel.cpp:335
 msgid "Off"
-msgstr "Av"
+msgstr "Disattivato"
 
 #: src/chatpanel.cpp:339
 msgid "Is on?"
-msgstr "Är på?"
+msgstr "è attivato?"
 
 #: src/chatpanel.cpp:341
 msgid "Spam protection"
-msgstr "Spam skydd"
+msgstr "Protezione contro lo spam"
 
 #: src/chatpanel.cpp:342 src/chatpanel.cpp:456
 msgid "ChanServ"
@@ -866,88 +873,87 @@ msgstr "ChanServ"
 
 #: src/chatpanel.cpp:349
 msgid "Disconnect"
-msgstr "Koppla ned"
+msgstr "Disconnetti"
 
 #: src/chatpanel.cpp:351
 msgid "Reconnect"
-msgstr "Återanslut"
+msgstr "Riconnetti"
 
 #: src/chatpanel.cpp:366
 msgid "Remove..."
-msgstr "Ta bort..."
+msgstr "Rimuovi..."
 
 #: src/chatpanel.cpp:368
 msgid "Change password..."
-msgstr "Ändra lösenord..."
+msgstr "Cambia password..."
 
 #: src/chatpanel.cpp:370
 msgid "Set access..."
-msgstr "Sätt åtkomst..."
+msgstr "Setta l'accesso..."
 
 #: src/chatpanel.cpp:372
 msgid "Accounts"
-msgstr "Konton"
+msgstr "Accounts"
 
 #: src/chatpanel.cpp:375
 msgid "Broadcast..."
-msgstr "Broadcasta..."
+msgstr ""
 
 #: src/chatpanel.cpp:377
 msgid "Admin"
-msgstr "Administrering"
+msgstr "Amministratore"
 
 #: src/chatpanel.cpp:388
 msgid "Open Chat"
-msgstr "Öppna chat"
+msgstr "Chat aperta"
 
 #: src/chatpanel.cpp:390
 msgid "Join same battle"
-msgstr "Gå med samma spel"
+msgstr "Partecipa alla stessa battaglia"
 
 #: src/chatpanel.cpp:396
 msgid "Ingame time"
-msgstr "Spel tid"
+msgstr "Tempo all'interno del gioco"
 
 #: src/chatpanel.cpp:398
-#, fuzzy
 msgid "Retrieve IP and Smurfs"
-msgstr "IP och smurfar"
+msgstr "Recupera IP e Smurfs"
 
 #: src/chatpanel.cpp:405 src/chatpanel.cpp:443
 msgid "Mute..."
-msgstr "Tysta..."
+msgstr "Zittisci..."
 
 #: src/chatpanel.cpp:407
 msgid "Mute for 5 minutes"
-msgstr "Tysta i 5 minuter"
+msgstr "Zittisci per 5 minuti"
 
 #: src/chatpanel.cpp:409
 msgid "Mute for 10 minutes"
-msgstr "Tysta i 10 minuter"
+msgstr "Zittisci per 10minuti"
 
 #: src/chatpanel.cpp:411
 msgid "Mute for 30 minutes"
-msgstr "Tysta i 30 minuter"
+msgstr "Zittisci per 30 minuti"
 
 #: src/chatpanel.cpp:413
 msgid "Mute for 2 hours"
-msgstr "Tysta i 2 timmar"
+msgstr "Zittisci per 2 ore"
 
 #: src/chatpanel.cpp:415
 msgid "Mute for 1 day"
-msgstr "Tysta i en dag"
+msgstr "Zittisci per 1 giorno"
 
 #: src/chatpanel.cpp:418 src/chatpanel.cpp:445
 msgid "Unmute"
-msgstr "Avtysta"
+msgstr "Togli il mute"
 
 #: src/chatpanel.cpp:420
 msgid "Mute"
-msgstr "Tysta"
+msgstr "Mute"
 
 #: src/chatpanel.cpp:422 src/chatpanel.cpp:448
 msgid "Kick..."
-msgstr "Sparka..."
+msgstr "Kick..."
 
 #: src/chatpanel.cpp:426
 msgid "Ban..."
@@ -955,11 +961,11 @@ msgstr "Banna..."
 
 #: src/chatpanel.cpp:428
 msgid "Unban"
-msgstr "Avbanna"
+msgstr "Togli il ban"
 
 #: src/chatpanel.cpp:436
 msgid "Slap!"
-msgstr "Slap!"
+msgstr ""
 
 #: src/chatpanel.cpp:452
 msgid "Op"
@@ -971,7 +977,7 @@ msgstr "DeOp"
 
 #: src/chatpanel.cpp:767
 msgid " !! Command: \""
-msgstr ""
+msgstr " !! Comando: \""
 
 #: src/chatpanel.cpp:767
 msgid "\" params: \""
@@ -979,11 +985,11 @@ msgstr ""
 
 #: src/chatpanel.cpp:772
 msgid "channel"
-msgstr "kanal"
+msgstr "canale"
 
 #: src/chatpanel.cpp:773
 msgid "battle"
-msgstr "spel"
+msgstr "battaglia"
 
 #: src/chatpanel.cpp:774
 msgid "server"
@@ -991,11 +997,11 @@ msgstr "server"
 
 #: src/chatpanel.cpp:792 src/chatpanel.cpp:797
 msgid " joined the "
-msgstr " gick med i "
+msgstr ""
 
 #: src/chatpanel.cpp:825 src/chatpanel.cpp:835
 msgid " left the "
-msgstr " gick ur "
+msgstr " lasciato il "
 
 #: src/chatpanel.cpp:866
 msgid ""
@@ -1003,32 +1009,32 @@ msgid ""
 " * Set by "
 msgstr ""
 "\n"
-" * Satt av "
+" * Settato da "
 
 #: src/chatpanel.cpp:889
 msgid "Chat closed."
-msgstr "Chat stängd."
+msgstr "Chat chiusa."
 
 #: src/chatpanel.cpp:915
 msgid "_SERVER"
-msgstr ""
+msgstr "_SERVER"
 
 #: src/chatpanel.cpp:970
 #, c-format
 msgid "Are you sure you want to paste %d lines?"
-msgstr "Är du säker på att du vill klistra in %d rader?"
+msgstr "Sei sicuro di voler incollare %d linee?"
 
 #: src/chatpanel.cpp:970
 msgid "Flood warning"
-msgstr "Flood varning"
+msgstr ""
 
 #: src/chatpanel.cpp:982
 msgid " You have SpringLobby v"
-msgstr " Du har SpringLobby v"
+msgstr " Tu hai springlobby v"
 
 #: src/chatpanel.cpp:989
 msgid " You are not in channel or channel does not exist."
-msgstr " Du är inte i kanalen eller så finns den inte."
+msgstr " Tu non sei nel canale o il canale non esiste."
 
 #: src/chatpanel.cpp:995 src/chatpanel.cpp:1009 src/chatpanel.cpp:1023
 #: src/chatpanel.cpp:1033
@@ -1043,31 +1049,33 @@ msgstr ""
 msgid ""
 " You are not in battle or battle does not exist, use /help for a list of "
 "available commands."
-msgstr " Du är inte i spelet eller så finns det inte."
+msgstr " Tu non sei in battaglia o la battaglia non esiste."
 
 #: src/chatpanel.cpp:1017
 msgid " User is offline."
-msgstr " Användaren är ner kopplad."
+msgstr " Utente non in linea."
 
 #: src/chatpanel.cpp:1038
 msgid " Sent: \""
-msgstr " Skickade: \""
+msgstr " Inviato: \""
 
 #: src/chatpanel.cpp:1038
+#, fuzzy
 msgid "\""
-msgstr "\""
+msgstr "''"
 
 #: src/chatpanel.cpp:1141
+#, fuzzy
 msgid "Auto join channel"
-msgstr "Gå med i kanalen automatiskt"
+msgstr "Entrare in automatico nel canale"
 
 #: src/chatpanel.cpp:1141
 msgid ""
 "Please enter password needed to join this channel, leave blank for no "
 "passwrd."
 msgstr ""
-"Var vänlig skriv in kanalen lösenord om detta behövs, annars lämnar du det "
-"tomt."
+"Inserisci una password necessaria per questo canale, lascia in bianco se non "
+"esiste."
 
 #: src/chatpanel.cpp:1155 src/chatpanel.cpp:1168 src/chatpanel.cpp:1184
 #: src/chatpanel.cpp:1200 src/chatpanel.cpp:1216 src/chatpanel.cpp:1231
@@ -1075,7 +1083,7 @@ msgstr ""
 #: src/chatpanel.cpp:1288 src/chatpanel.cpp:1381 src/chatpanel.cpp:1402
 #: src/chatpanel.cpp:1418 src/chatpanel.cpp:1439 src/chatpanel.cpp:1455
 msgid "ChanServ error"
-msgstr "ChanServ fel"
+msgstr "ChanServ error"
 
 #: src/chatpanel.cpp:1155 src/chatpanel.cpp:1168 src/chatpanel.cpp:1184
 #: src/chatpanel.cpp:1200 src/chatpanel.cpp:1216 src/chatpanel.cpp:1262
@@ -1083,91 +1091,93 @@ msgstr "ChanServ fel"
 #: src/chatpanel.cpp:1402 src/chatpanel.cpp:1418 src/chatpanel.cpp:1439
 #: src/chatpanel.cpp:1455
 msgid "ChanServ is not in this channel."
-msgstr "ChanServ är inte i kanalen"
+msgstr "ChanServ non è in questo canale."
 
 #: src/chatpanel.cpp:1174
 msgid "What should be the new topic?"
-msgstr "Vad ska det nya ämnet vara?"
+msgstr "Cosa dovrebbe essere il nuovo topic?"
 
 #: src/chatpanel.cpp:1190
 msgid "Message:"
-msgstr "Medelande:"
+msgstr "Messaggio:"
 
 #: src/chatpanel.cpp:1206
 msgid "Lock channel..."
-msgstr "Lås kanalen..."
+msgstr "Chiudi il canale..."
 
 #: src/chatpanel.cpp:1206
 msgid "What should the new password be?"
-msgstr "Ange lösenord"
+msgstr "Quale dovrebbe essere la nuova password?"
 
 #: src/chatpanel.cpp:1221
 msgid "Unlock Channel"
-msgstr "Lås upp kanalen"
+msgstr "Sblocca il canale"
 
 #: src/chatpanel.cpp:1221
 msgid "Are you sure you want to unlock this channel?"
-msgstr "Är du säker på att du vill låsa kanalen?"
+msgstr "Sei sicuro di voler sbloccare questo canale?"
 
 #: src/chatpanel.cpp:1231 src/chatpanel.cpp:1247
 msgid "ChanServ is not on this server."
-msgstr "ChanServ finns inte på servern."
+msgstr "ChanServ non è su questo server."
 
 #: src/chatpanel.cpp:1237
 msgid "Register Channel"
-msgstr "Registrera kanalen"
+msgstr "Registra il canale"
 
 #: src/chatpanel.cpp:1237
 msgid "Who should be appointed founder of this channel?"
-msgstr "Vem skall vara grundare till den här kanalen?"
+msgstr ""
 
 #: src/chatpanel.cpp:1252
+#, fuzzy
 msgid "Unregister Channel"
-msgstr "Avregistrera kanalen"
+msgstr "Togli la registrazione del canale"
 
 #: src/chatpanel.cpp:1252
 msgid "Are you sure you want to unregister this channel?"
-msgstr "Är du säker på att du vill avregistrera kanalen?"
+msgstr "Sei sicuro di volere eliminare la registrazione di questo canale?"
 
 #: src/chatpanel.cpp:1310
 msgid "Remove User Acount"
-msgstr "Ta bort användarkonto"
+msgstr "Rimuovi l'account dell'utente"
 
 #: src/chatpanel.cpp:1310
 msgid "What user account do you want to remove today?"
-msgstr "Vilket användar konto vill du ta bort idag?"
+msgstr "Quale user accaunt vuoi rimuovere?"
 
 #: src/chatpanel.cpp:1311
 msgid "Remove Account"
-msgstr "Ta bort konto"
+msgstr "Rimuovi account"
 
 #: src/chatpanel.cpp:1311
 msgid "Are you sure you want to remove the account "
-msgstr "Är du säker på att du vill ta bort kontot "
+msgstr "Sei sicuro di rimuovere l'accaunt "
 
 #: src/chatpanel.cpp:1318 src/chatpanel.cpp:1319
 msgid "Change User Acount Password"
-msgstr "Ändra användar lösenord"
+msgstr "Cambia la password"
 
 #: src/chatpanel.cpp:1318
 msgid "What user account do you want to change the password for?"
-msgstr "Vilken användare vill du byta lösenord för?"
+msgstr "Di quale account utente vuoi cambiare la password?"
 
 #: src/chatpanel.cpp:1319
+#, fuzzy
 msgid "What would be the new password?"
-msgstr "Vad ska det nya lösenordet bli?"
+msgstr "Quale è la nuova password?"
 
 #: src/chatpanel.cpp:1325 src/chatpanel.cpp:1486 src/chatpanel.cpp:1491
 msgid "Not Implemented"
-msgstr "Inte implementerad"
+msgstr "Non Implementato"
 
 #: src/chatpanel.cpp:1331
 msgid "Broadcast Message"
-msgstr "Broadcasta medelande"
+msgstr "Messaggio trasmesso in broadcast"
 
 #: src/chatpanel.cpp:1331
 msgid "Message to be broadcasted:"
-msgstr "Medelande att broadcasta:"
+msgstr "Messaggio da trasmettere in broadcast"
 
 #: src/chatpanel.cpp:1351
 msgid "You don't have the mod "
@@ -1180,56 +1190,57 @@ msgstr ""
 #: src/chatpanel.cpp:1352
 #, fuzzy
 msgid "Mod unavailable"
-msgstr "Modden inte tillgänlig"
+msgstr "Nessun mod disponibile"
 
 #: src/chatpanel.cpp:1358
 msgid "This battle is password protected, enter the password."
-msgstr "Detta spelet är lösenords skyddat skriv in lösenordet."
+msgstr "La partita è protetta da password, per entrare inseriscila."
 
 #: src/chatpanel.cpp:1386
 msgid "Mute User"
-msgstr "Tysta användare"
+msgstr "Zittisci utente"
 
 #: src/chatpanel.cpp:1386
 msgid "For how many minutes should the user be muted?"
-msgstr "I hur många minuter skall han bli tystad?"
+msgstr "Per quanti minuti questo utente deve essere zittito?"
 
 #: src/chatpanel.cpp:1426
+#, fuzzy
 msgid "Kick User"
-msgstr "Sparka ut användare"
+msgstr "Kick l'utente"
 
 #: src/chatpanel.cpp:1426 src/chatpanel.cpp:1480
 msgid "Reason:"
-msgstr "Anledning:"
+msgstr "Motivo:"
 
 #: src/chatpanel.cpp:1480
 msgid "Kick user"
-msgstr "Sparka ut användare"
+msgstr "Kick l'utente"
 
 #: src/chatpanel.cpp:1497
 msgid "Mute user"
-msgstr "Tysta användare"
+msgstr "Mute l'utente"
 
 #: src/chatpanel.cpp:1497
 msgid "Duration:"
-msgstr "Hur länge?"
+msgstr "Durata:"
 
 #: src/connectwindow.cpp:40
 msgid "Connect to lobby server"
-msgstr "Anslut till lobby server"
+msgstr "Connesso a lobby server"
 
 #: src/connectwindow.cpp:61
 msgid ""
 "Server to connect to. You can connect to any server you like by typing in "
 "hostaddress:port format."
 msgstr ""
-"Servern du vill ansluta till. Du kan skriva in vilken adress du vill med "
-"formatet host:port."
+"Server al quale connettersi. Puoi connetterti a qualsiasi server indicato "
+"nel formato indirizzo:porta"
 
 #: src/connectwindow.cpp:67 src/connectwindow.cpp:143
 #: src/hostbattledialog.cpp:86 src/ui.cpp:131
 msgid "Password"
-msgstr "Lösenord"
+msgstr "Password"
 
 #: src/connectwindow.cpp:75
 msgid ""
@@ -1237,9 +1248,6 @@ msgid ""
 " can register one for free under the\n"
 "\"Register\" tab."
 msgstr ""
-"Notera: Om du inte har något konto\n"
-"ännu kan du skapa ett under \"Registrering\"\n"
-"fliken."
 
 #: src/connectwindow.cpp:77
 msgid "Ok"
@@ -1247,31 +1255,31 @@ msgstr "Ok"
 
 #: src/connectwindow.cpp:81
 msgid "Login"
-msgstr "Login"
+msgstr "Accesso"
 
 #: src/connectwindow.cpp:82
 msgid "Register"
-msgstr "Registrering"
+msgstr "Registrati"
 
 #: src/connectwindow.cpp:130
 msgid "Nick"
-msgstr "Smeknamn"
+msgstr "Nick"
 
 #: src/connectwindow.cpp:227
 msgid "Invalid host/port or servername."
-msgstr "Felaktigt host/port eller servernamn."
+msgstr "Indirizzo/porta o nome del server non valido."
 
 #: src/connectwindow.cpp:227 src/connectwindow.cpp:250
 msgid "Invalid host"
-msgstr "Felaktig host"
+msgstr "Indirizzo non valido"
 
 #: src/connectwindow.cpp:235
 msgid "Invalid port."
-msgstr "Felaktig port."
+msgstr "Porta non valida."
 
 #: src/connectwindow.cpp:235 src/connectwindow.cpp:240
 msgid "Invalid port"
-msgstr "Felaktig port"
+msgstr "Porta non valida"
 
 #: src/connectwindow.cpp:240
 msgid ""
@@ -1279,183 +1287,185 @@ msgid ""
 "\n"
 "It must be an integer between 1 and 65535"
 msgstr ""
-"Portnumret är utanför tillåtet intervall.\n"
+"Numero di porta fuori limite.\n"
 "\n"
-"Det måste liga inom 1 till 65535"
+"Deve essere un numero intero tra 1 e 65535"
 
 #: src/connectwindow.cpp:250
 msgid "Invalid host/port."
-msgstr "Felaktig host/port"
+msgstr ""
 
 #: src/connectwindow.cpp:264
 msgid ""
 "Registration failed, the reason was:\n"
 "Password / confirmation mismatch"
-msgstr "Registreringen misslyckades på grund av att lösenorden inte matchade."
+msgstr ""
+"Registrazione non riuscita. Il motivo è stato:\n"
+"Le password non coincidono tra loro"
 
 #: src/connectwindow.cpp:264 src/connectwindow.cpp:275
 msgid "Registration failed."
-msgstr "Registreringen misslyckades."
+msgstr "Registrazione non riuscita."
 
 #: src/connectwindow.cpp:271
 msgid ""
 "Registration successful,\n"
 "you should now be able to login."
 msgstr ""
-"Registreringen lyckades,\n"
-"du ska nu kunna logga in."
+"Registrazione avvenuta con successo,\n"
+"ora dovresti riuscire ad autenticarti."
 
 #: src/connectwindow.cpp:271
 msgid "Registration successful"
-msgstr "Registreringen lyckades"
+msgstr "Registrazione avvenuta con successo."
 
 #: src/connectwindow.cpp:275
 msgid "Registration failed, the reason was:\n"
-msgstr "Registreringen misslyckades med meddelandet:\n"
+msgstr "Registrazione non riuscita. Il motivo è stato:\n"
 
 #: src/countrycodes.cpp:11
 msgid " Andorra"
-msgstr ""
+msgstr " Andorra"
 
 #: src/countrycodes.cpp:12
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "Emirati Arabi Uniti"
 
 #: src/countrycodes.cpp:13
 msgid "Afghanistan"
-msgstr ""
+msgstr "Afghanistan"
 
 #: src/countrycodes.cpp:14
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "Antigua e Barbuda"
 
 #: src/countrycodes.cpp:15
 msgid "Anguilla"
-msgstr ""
+msgstr "Anguilla"
 
 #: src/countrycodes.cpp:16
 msgid "Albania"
-msgstr ""
+msgstr "Albania"
 
 #: src/countrycodes.cpp:17
 msgid "Armenia"
-msgstr ""
+msgstr "Armenia"
 
 #: src/countrycodes.cpp:18
 msgid "Netherlands Antilles"
-msgstr ""
+msgstr "Antille Olandesi"
 
 #: src/countrycodes.cpp:19
 msgid "Angola"
-msgstr ""
+msgstr "Angola"
 
 #: src/countrycodes.cpp:20
 msgid "Antarctica"
-msgstr ""
+msgstr "Antartide"
 
 #: src/countrycodes.cpp:21
 msgid "Argentina"
-msgstr ""
+msgstr "Argentina"
 
 #: src/countrycodes.cpp:22
 msgid "American Samoa"
-msgstr ""
+msgstr "Samoa Americane"
 
 #: src/countrycodes.cpp:23
 msgid "Austria"
-msgstr ""
+msgstr "Austria"
 
 #: src/countrycodes.cpp:24
 msgid "Australia"
-msgstr ""
+msgstr "Australia"
 
 #: src/countrycodes.cpp:25
 msgid "Aruba"
-msgstr ""
+msgstr "Aruba"
 
 #: src/countrycodes.cpp:26
 msgid "Azerbaijan"
-msgstr ""
+msgstr "Azerbaijan"
 
 #: src/countrycodes.cpp:27
 msgid "Bosnia and Herzegovina"
-msgstr ""
+msgstr "Bosnia-Herzegovina"
 
 #: src/countrycodes.cpp:28
 msgid "Barbados"
-msgstr ""
+msgstr "Barbados"
 
 #: src/countrycodes.cpp:29
 msgid "Bangladesh"
-msgstr ""
+msgstr "Bangladesh"
 
 #: src/countrycodes.cpp:30
 msgid "Belgium"
-msgstr ""
+msgstr "Belgio"
 
 #: src/countrycodes.cpp:31
 msgid "Burkina Faso"
-msgstr ""
+msgstr "Burkina Faso"
 
 #: src/countrycodes.cpp:32
 msgid "Bulgaria"
-msgstr ""
+msgstr "Bulgaria"
 
 #: src/countrycodes.cpp:33
 msgid "Bahrain"
-msgstr ""
+msgstr "Bahrain"
 
 #: src/countrycodes.cpp:34
 msgid "Burundi"
-msgstr ""
+msgstr "Burundi"
 
 #: src/countrycodes.cpp:35
 msgid "Benin"
-msgstr ""
+msgstr "Benin"
 
 #: src/countrycodes.cpp:36
 msgid "Bermuda"
-msgstr ""
+msgstr "Bermuda"
 
 #: src/countrycodes.cpp:37
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "Brunei"
 
 #: src/countrycodes.cpp:38
 msgid "Bolivia"
-msgstr ""
+msgstr "Bolivia"
 
 #: src/countrycodes.cpp:39
 msgid "Brazil"
-msgstr ""
+msgstr "Brasile"
 
 #: src/countrycodes.cpp:40
 msgid "Bahamas"
-msgstr ""
+msgstr "Bahamas"
 
 #: src/countrycodes.cpp:41
 msgid "Bhutan"
-msgstr ""
+msgstr "Bhutan"
 
 #: src/countrycodes.cpp:42
 msgid "Bouvet Island"
-msgstr ""
+msgstr "Isole Bouvet"
 
 #: src/countrycodes.cpp:43
 msgid "Botswana"
-msgstr ""
+msgstr "Botswana"
 
 #: src/countrycodes.cpp:44
 msgid "Belarus"
-msgstr ""
+msgstr "Bielorussia"
 
 #: src/countrycodes.cpp:45
 msgid "Belize"
-msgstr ""
+msgstr "Belize"
 
 #: src/countrycodes.cpp:46
 msgid "Canada"
-msgstr ""
+msgstr "Canada"
 
 #: src/countrycodes.cpp:47
 msgid "Cocos (Keeling Islands)"
@@ -1463,191 +1473,191 @@ msgstr ""
 
 #: src/countrycodes.cpp:48
 msgid "Central African Republic"
-msgstr ""
+msgstr "Repubblica Centroafricana"
 
 #: src/countrycodes.cpp:49
 msgid "Congo"
-msgstr ""
+msgstr "Congo"
 
 #: src/countrycodes.cpp:50
 msgid "Switzerland"
-msgstr ""
+msgstr "Svizzera"
 
 #: src/countrycodes.cpp:51
 msgid "Cote D'Ivoire (Ivory Coast)"
-msgstr ""
+msgstr "Costa D'Avorio"
 
 #: src/countrycodes.cpp:52
 msgid "Cook Islands"
-msgstr ""
+msgstr "Isole Cook"
 
 #: src/countrycodes.cpp:53
 msgid "Chile"
-msgstr ""
+msgstr "Cile"
 
 #: src/countrycodes.cpp:54
 msgid "Cameroon"
-msgstr ""
+msgstr "Camerun"
 
 #: src/countrycodes.cpp:55
 msgid "China"
-msgstr ""
+msgstr "Cina"
 
 #: src/countrycodes.cpp:56
 msgid "Colombia"
-msgstr ""
+msgstr "Colombia"
 
 #: src/countrycodes.cpp:57
 msgid "Costa Rica"
-msgstr ""
+msgstr "Costa Rica"
 
 #: src/countrycodes.cpp:58
 msgid "Cuba"
-msgstr ""
+msgstr "Cuba"
 
 #: src/countrycodes.cpp:59
 msgid "Cape Verde"
-msgstr ""
+msgstr "Capo Verde"
 
 #: src/countrycodes.cpp:60
 msgid "Christmas Island"
-msgstr ""
+msgstr "Isola di Natale"
 
 #: src/countrycodes.cpp:61
 msgid "Cyprus"
-msgstr ""
+msgstr "Cipro"
 
 #: src/countrycodes.cpp:62
 msgid "Czech Republic"
-msgstr ""
+msgstr "Repubblica Ceca"
 
 #: src/countrycodes.cpp:63
 msgid "Germany"
-msgstr ""
+msgstr "Germania"
 
 #: src/countrycodes.cpp:64
 msgid "Djibouti"
-msgstr ""
+msgstr "Gibuti"
 
 #: src/countrycodes.cpp:65
 msgid "Denmark"
-msgstr ""
+msgstr "Danimarca"
 
 #: src/countrycodes.cpp:66
 msgid "Dominica"
-msgstr ""
+msgstr "Dominica"
 
 #: src/countrycodes.cpp:67
 msgid "Dominican Republic"
-msgstr ""
+msgstr "Repubblica Dominicana"
 
 #: src/countrycodes.cpp:68
 msgid "Algeria"
-msgstr ""
+msgstr "Algeria"
 
 #: src/countrycodes.cpp:69
 msgid "Ecuador"
-msgstr ""
+msgstr "Ecuador"
 
 #: src/countrycodes.cpp:70
 msgid "Estonia"
-msgstr ""
+msgstr "Estonia"
 
 #: src/countrycodes.cpp:71
 msgid "Egypt"
-msgstr ""
+msgstr "Egitto"
 
 #: src/countrycodes.cpp:72
 msgid "Western Sahara"
-msgstr ""
+msgstr "Sahara occidentale"
 
 #: src/countrycodes.cpp:73
 msgid "Eritrea"
-msgstr ""
+msgstr "Eritrea"
 
 #: src/countrycodes.cpp:74
 msgid "Spain"
-msgstr ""
+msgstr "Spagna"
 
 #: src/countrycodes.cpp:75
 msgid "Ethiopia"
-msgstr ""
+msgstr "Etiopia"
 
 #: src/countrycodes.cpp:76
 msgid "Finland"
-msgstr ""
+msgstr "Finlandia"
 
 #: src/countrycodes.cpp:77
 msgid "Fiji"
-msgstr ""
+msgstr "Fiji"
 
 #: src/countrycodes.cpp:78
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "Isole Falkland (Malvine)"
 
 #: src/countrycodes.cpp:79
 msgid "Micronesia"
-msgstr ""
+msgstr "Micronesia"
 
 #: src/countrycodes.cpp:80
 msgid "Faroe Islands"
-msgstr ""
+msgstr "Isole Fær Øer"
 
 #: src/countrycodes.cpp:81
 msgid "France"
-msgstr ""
+msgstr "Francia"
 
 #: src/countrycodes.cpp:82
 msgid "France, Metropolitan"
-msgstr ""
+msgstr "Francia Metropolitana"
 
 #: src/countrycodes.cpp:83
 msgid "Gabon"
-msgstr ""
+msgstr "Gabon"
 
 #: src/countrycodes.cpp:84
 msgid "Grenada"
-msgstr ""
+msgstr "Grenada"
 
 #: src/countrycodes.cpp:85
 msgid "Georgia"
-msgstr ""
+msgstr "Georgia"
 
 #: src/countrycodes.cpp:86
 msgid "French Guiana"
-msgstr ""
+msgstr "Guiana Francese"
 
 #: src/countrycodes.cpp:87
 msgid "Ghana"
-msgstr ""
+msgstr "Ghana"
 
 #: src/countrycodes.cpp:88
 msgid "Gibraltar"
-msgstr ""
+msgstr "Gibilterra"
 
 #: src/countrycodes.cpp:89
 msgid "Greenland"
-msgstr ""
+msgstr "Groenlandia"
 
 #: src/countrycodes.cpp:90
 msgid "Gambia"
-msgstr ""
+msgstr "Gambia"
 
 #: src/countrycodes.cpp:91
 msgid "Guinea"
-msgstr ""
+msgstr "Guinea"
 
 #: src/countrycodes.cpp:92
 msgid "Guadeloupe"
-msgstr ""
+msgstr "Guadalupe"
 
 #: src/countrycodes.cpp:93
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "Guinea Equatoriale"
 
 #: src/countrycodes.cpp:94
 msgid "Greece"
-msgstr ""
+msgstr "Grecia"
 
 #: src/countrycodes.cpp:95
 msgid "S. Georgia and S. Sandwich Isls."
@@ -1655,95 +1665,95 @@ msgstr ""
 
 #: src/countrycodes.cpp:96
 msgid "Guatemala"
-msgstr ""
+msgstr "Guatemala"
 
 #: src/countrycodes.cpp:97
 msgid "Guam"
-msgstr ""
+msgstr "Guam"
 
 #: src/countrycodes.cpp:98
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "Guinea Bissau"
 
 #: src/countrycodes.cpp:99
 msgid "Guyana"
-msgstr ""
+msgstr "Guyana"
 
 #: src/countrycodes.cpp:100
 msgid "Hong Kong"
-msgstr ""
+msgstr "Hong Kong"
 
 #: src/countrycodes.cpp:101
 msgid "Heard and McDonald Islands"
-msgstr ""
+msgstr "Isole Heard e McDonald"
 
 #: src/countrycodes.cpp:102
 msgid "Honduras"
-msgstr ""
+msgstr "Honduras"
 
 #: src/countrycodes.cpp:103
 msgid "Croatia (Hrvatska)"
-msgstr ""
+msgstr "Croazia (Hrvatska)"
 
 #: src/countrycodes.cpp:104
 msgid "Haiti"
-msgstr ""
+msgstr "Haiti"
 
 #: src/countrycodes.cpp:105
 msgid "Hungary"
-msgstr ""
+msgstr "Ungheria"
 
 #: src/countrycodes.cpp:106
 msgid "Indonesia"
-msgstr ""
+msgstr "Indonesia"
 
 #: src/countrycodes.cpp:107
 msgid "Ireland"
-msgstr ""
+msgstr "Irlanda"
 
 #: src/countrycodes.cpp:108
 msgid "Israel"
-msgstr ""
+msgstr "Israele"
 
 #: src/countrycodes.cpp:109
 msgid "India"
-msgstr ""
+msgstr "India"
 
 #: src/countrycodes.cpp:110
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "Territorio Britannico dell'Oceano Indiano"
 
 #: src/countrycodes.cpp:111
 msgid "Iraq"
-msgstr ""
+msgstr "Iraq"
 
 #: src/countrycodes.cpp:112
 msgid "Iran"
-msgstr ""
+msgstr "Iran"
 
 #: src/countrycodes.cpp:113
 msgid "Iceland"
-msgstr ""
+msgstr "Islanda"
 
 #: src/countrycodes.cpp:114
 msgid "Italy"
-msgstr ""
+msgstr "Italia"
 
 #: src/countrycodes.cpp:115
 msgid "Jamaica"
-msgstr ""
+msgstr "Giamaica"
 
 #: src/countrycodes.cpp:116
 msgid "Jordan"
-msgstr ""
+msgstr "Giordania"
 
 #: src/countrycodes.cpp:117
 msgid "Japan"
-msgstr ""
+msgstr "Giappone"
 
 #: src/countrycodes.cpp:118
 msgid "Kenya"
-msgstr ""
+msgstr "Kenya"
 
 #: src/countrycodes.cpp:119
 msgid "Kyrgyzstan (Kyrgyz Republic)"
@@ -1751,11 +1761,11 @@ msgstr ""
 
 #: src/countrycodes.cpp:120
 msgid "Cambodia"
-msgstr ""
+msgstr "Cambogia"
 
 #: src/countrycodes.cpp:121
 msgid "Kiribati"
-msgstr ""
+msgstr "Kiribati"
 
 #: src/countrycodes.cpp:122
 msgid "Comoros"
@@ -1763,103 +1773,103 @@ msgstr ""
 
 #: src/countrycodes.cpp:123
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "San Kitts e Nevis"
 
 #: src/countrycodes.cpp:124
 msgid "Korea (North) (People's Republic)"
-msgstr ""
+msgstr "Corea del Nord (Repubblica Popolare)"
 
 #: src/countrycodes.cpp:125
 msgid "Korea (South) (Republic)"
-msgstr ""
+msgstr "Corea del Sud (Repubblica)"
 
 #: src/countrycodes.cpp:126
 msgid "Kuwait"
-msgstr ""
+msgstr "Kuwait"
 
 #: src/countrycodes.cpp:127
 msgid "Cayman Islands"
-msgstr ""
+msgstr "Isole Cayman"
 
 #: src/countrycodes.cpp:128
 msgid "Kazakhstan"
-msgstr ""
+msgstr "Kazakistan"
 
 #: src/countrycodes.cpp:129
 msgid "Laos"
-msgstr ""
+msgstr "Laos"
 
 #: src/countrycodes.cpp:130
 msgid "Lebanon"
-msgstr ""
+msgstr "Libano"
 
 #: src/countrycodes.cpp:131
 msgid "Saint Lucia"
-msgstr ""
+msgstr "Santa Lucia"
 
 #: src/countrycodes.cpp:132
 msgid "Liechtenstein"
-msgstr ""
+msgstr "Liechtenstein"
 
 #: src/countrycodes.cpp:133
 msgid "Sri Lanka"
-msgstr ""
+msgstr "Sri Lanka"
 
 #: src/countrycodes.cpp:134
 msgid "Liberia"
-msgstr ""
+msgstr "Liberia"
 
 #: src/countrycodes.cpp:135
 msgid "Lesotho"
-msgstr ""
+msgstr "Lesotho"
 
 #: src/countrycodes.cpp:136
 msgid "Lithuania"
-msgstr ""
+msgstr "Lituania"
 
 #: src/countrycodes.cpp:137
 msgid "Luxembourg"
-msgstr ""
+msgstr "Lussemburgo"
 
 #: src/countrycodes.cpp:138
 msgid "Latvia"
-msgstr ""
+msgstr "Lettonia"
 
 #: src/countrycodes.cpp:139
 msgid "Libya"
-msgstr ""
+msgstr "Libia"
 
 #: src/countrycodes.cpp:140
 msgid "Morocco"
-msgstr ""
+msgstr "Marocco"
 
 #: src/countrycodes.cpp:141
 msgid "Monaco"
-msgstr ""
+msgstr "Monaco"
 
 #: src/countrycodes.cpp:142
 msgid "Moldova"
-msgstr ""
+msgstr "Moldavia"
 
 #: src/countrycodes.cpp:143
 msgid "Montenegro"
-msgstr ""
+msgstr "Montenegro"
 
 #: src/countrycodes.cpp:144
 msgid "Madagascar"
-msgstr ""
+msgstr "Madagascar"
 
 #: src/countrycodes.cpp:145
 msgid "Marshall Islands"
-msgstr ""
+msgstr "Isole Marshall"
 
 #: src/countrycodes.cpp:146
 msgid "Macedonia"
-msgstr ""
+msgstr "Macedonia"
 
 #: src/countrycodes.cpp:147
 msgid "Mali"
-msgstr ""
+msgstr "Mali"
 
 #: src/countrycodes.cpp:148
 msgid "Myanmar"
@@ -1867,23 +1877,23 @@ msgstr ""
 
 #: src/countrycodes.cpp:149
 msgid "Mongolia"
-msgstr ""
+msgstr "Mongolia"
 
 #: src/countrycodes.cpp:150
 msgid "Macau"
-msgstr ""
+msgstr "Macao"
 
 #: src/countrycodes.cpp:151
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "Isole Marianne Settentrionali"
 
 #: src/countrycodes.cpp:152
 msgid "Martinique"
-msgstr ""
+msgstr "Martinica"
 
 #: src/countrycodes.cpp:153
 msgid "Mauritania"
-msgstr ""
+msgstr "Mauritania"
 
 #: src/countrycodes.cpp:154
 msgid "Montserrat"
@@ -1891,75 +1901,75 @@ msgstr ""
 
 #: src/countrycodes.cpp:155
 msgid "Malta"
-msgstr ""
+msgstr "Malta"
 
 #: src/countrycodes.cpp:156
 msgid "Mauritius"
-msgstr ""
+msgstr "Mauritius"
 
 #: src/countrycodes.cpp:157
 msgid "Maldives"
-msgstr ""
+msgstr "Maldive"
 
 #: src/countrycodes.cpp:158
 msgid "Malawi"
-msgstr ""
+msgstr "Malawi"
 
 #: src/countrycodes.cpp:159
 msgid "Mexico"
-msgstr ""
+msgstr "Messico"
 
 #: src/countrycodes.cpp:160
 msgid "Malaysia"
-msgstr ""
+msgstr "Malesia"
 
 #: src/countrycodes.cpp:161
 msgid "Mozambique"
-msgstr ""
+msgstr "Mozambico"
 
 #: src/countrycodes.cpp:162
 msgid "Namibia"
-msgstr ""
+msgstr "Namibia"
 
 #: src/countrycodes.cpp:163
 msgid "New Caledonia"
-msgstr ""
+msgstr "Nuova Caledonia"
 
 #: src/countrycodes.cpp:164
 msgid "Niger"
-msgstr ""
+msgstr "Niger"
 
 #: src/countrycodes.cpp:165
 msgid "Norfolk Island"
-msgstr ""
+msgstr "Isole Norfolk"
 
 #: src/countrycodes.cpp:166
 msgid "Nigeria"
-msgstr ""
+msgstr "Nigeria"
 
 #: src/countrycodes.cpp:167
 msgid "Nicaragua"
-msgstr ""
+msgstr "Nicaragua"
 
 #: src/countrycodes.cpp:168
 msgid "Netherlands"
-msgstr ""
+msgstr "Olanda"
 
 #: src/countrycodes.cpp:169
 msgid "Norway"
-msgstr ""
+msgstr "Norvegia"
 
 #: src/countrycodes.cpp:170
 msgid "Nepal"
-msgstr ""
+msgstr "Nepal"
 
 #: src/countrycodes.cpp:171
 msgid "Nauru"
-msgstr ""
+msgstr "Nauru"
 
 #: src/countrycodes.cpp:172
 msgid "Neutral Zone (Saudia Arabia/Iraq)"
-msgstr ""
+msgstr "Zona Neutrale (Arabia Saudita/Iraq)"
 
 #: src/countrycodes.cpp:173
 msgid "Niue"
@@ -1967,43 +1977,43 @@ msgstr ""
 
 #: src/countrycodes.cpp:174
 msgid "New Zealand"
-msgstr ""
+msgstr "Nuova Zelanda"
 
 #: src/countrycodes.cpp:175
 msgid "Oman"
-msgstr ""
+msgstr "Oman"
 
 #: src/countrycodes.cpp:176
 msgid "Panama"
-msgstr ""
+msgstr "Panama"
 
 #: src/countrycodes.cpp:177
 msgid "Peru"
-msgstr ""
+msgstr "Perù"
 
 #: src/countrycodes.cpp:178
 msgid "French Polynesia"
-msgstr ""
+msgstr "Polinesia francese"
 
 #: src/countrycodes.cpp:179
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "Papua Nuova Guinea"
 
 #: src/countrycodes.cpp:180
 msgid "Philippines"
-msgstr ""
+msgstr "Filippine"
 
 #: src/countrycodes.cpp:181
 msgid "Pakistan"
-msgstr ""
+msgstr "Pakistan"
 
 #: src/countrycodes.cpp:182
 msgid "Poland"
-msgstr ""
+msgstr "Polonia"
 
 #: src/countrycodes.cpp:183
 msgid "St. Pierre and Miquelon"
-msgstr ""
+msgstr "St. Pierre e Miquelon"
 
 #: src/countrycodes.cpp:184
 msgid "Pitcairn"
@@ -2011,11 +2021,11 @@ msgstr ""
 
 #: src/countrycodes.cpp:185
 msgid "Puerto Rico"
-msgstr ""
+msgstr "Porto Rico"
 
 #: src/countrycodes.cpp:186
 msgid "Portugal"
-msgstr ""
+msgstr "Portogallo"
 
 #: src/countrycodes.cpp:187
 msgid "Palau"
@@ -2023,11 +2033,11 @@ msgstr ""
 
 #: src/countrycodes.cpp:188
 msgid "Paraguay"
-msgstr ""
+msgstr "Paraguay"
 
 #: src/countrycodes.cpp:189
 msgid "Qatar"
-msgstr ""
+msgstr "Qatar"
 
 #: src/countrycodes.cpp:190
 msgid "Reunion"
@@ -2035,79 +2045,79 @@ msgstr ""
 
 #: src/countrycodes.cpp:191
 msgid "Romania"
-msgstr ""
+msgstr "Romania"
 
 #: src/countrycodes.cpp:192
 msgid "Serbia"
-msgstr ""
+msgstr "Serbia"
 
 #: src/countrycodes.cpp:193
 msgid "Russian Federation"
-msgstr ""
+msgstr "Federazione Russa"
 
 #: src/countrycodes.cpp:194
 msgid "Rwanda"
-msgstr ""
+msgstr "Ruanda"
 
 #: src/countrycodes.cpp:195
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "Arabia Saudita"
 
 #: src/countrycodes.cpp:196
 msgid "Solomon Islands"
-msgstr ""
+msgstr "Isole Solomon"
 
 #: src/countrycodes.cpp:197
 msgid "Seychelles"
-msgstr ""
+msgstr "Seychelles"
 
 #: src/countrycodes.cpp:198
 msgid "Sudan"
-msgstr ""
+msgstr "Sudan"
 
 #: src/countrycodes.cpp:199
 msgid "Sweden"
-msgstr ""
+msgstr "Svezia"
 
 #: src/countrycodes.cpp:200
 msgid "Singapore"
-msgstr ""
+msgstr "Singapore"
 
 #: src/countrycodes.cpp:201
 msgid "St. Helena"
-msgstr ""
+msgstr "Sant'Elena"
 
 #: src/countrycodes.cpp:202
 msgid "Slovenia"
-msgstr ""
+msgstr "Slovenia"
 
 #: src/countrycodes.cpp:203
 msgid "Svalbard and Jan Mayen Islands"
-msgstr ""
+msgstr "Isole Svalbard e Jan Mayen"
 
 #: src/countrycodes.cpp:204
 msgid "Slovakia (Slovak Republic)"
-msgstr ""
+msgstr "Slovacchia"
 
 #: src/countrycodes.cpp:205
 msgid "Sierra Leone"
-msgstr ""
+msgstr "Sierra Leone"
 
 #: src/countrycodes.cpp:206
 msgid "San Marino"
-msgstr ""
+msgstr "San Marino"
 
 #: src/countrycodes.cpp:207
 msgid "Senegal"
-msgstr ""
+msgstr "Senegal"
 
 #: src/countrycodes.cpp:208
 msgid "Somalia"
-msgstr ""
+msgstr "Somalia"
 
 #: src/countrycodes.cpp:209
 msgid "Suriname"
-msgstr ""
+msgstr "Suriname"
 
 #: src/countrycodes.cpp:210
 msgid "Sao Tome and Principe"
@@ -2119,15 +2129,15 @@ msgstr ""
 
 #: src/countrycodes.cpp:212
 msgid "El Salvador"
-msgstr ""
+msgstr "El Salvador"
 
 #: src/countrycodes.cpp:213
 msgid "Syria"
-msgstr ""
+msgstr "Siria"
 
 #: src/countrycodes.cpp:214
 msgid "Swaziland"
-msgstr ""
+msgstr "Swaziland"
 
 #: src/countrycodes.cpp:215
 msgid "Turks and Caicos Islands"
@@ -2135,95 +2145,95 @@ msgstr ""
 
 #: src/countrycodes.cpp:216
 msgid "Chad"
-msgstr ""
+msgstr "Ciad"
 
 #: src/countrycodes.cpp:217
 msgid "French Southern Territories"
-msgstr ""
+msgstr "Territori Francesi Meridionali"
 
 #: src/countrycodes.cpp:218
 msgid "Togo"
-msgstr ""
+msgstr "Togo"
 
 #: src/countrycodes.cpp:219
 msgid "Thailand"
-msgstr ""
+msgstr "Thailandia"
 
 #: src/countrycodes.cpp:220
 msgid "Tajikistan"
-msgstr ""
+msgstr "Tagikistan"
 
 #: src/countrycodes.cpp:221
 msgid "Tokelau"
-msgstr ""
+msgstr "Tokelau"
 
 #: src/countrycodes.cpp:222
 msgid "Turkmenistan"
-msgstr ""
+msgstr "Turkmenistan"
 
 #: src/countrycodes.cpp:223
 msgid "Tunisia"
-msgstr ""
+msgstr "Tunisia"
 
 #: src/countrycodes.cpp:224
 msgid "Tonga"
-msgstr ""
+msgstr "Tonga"
 
 #: src/countrycodes.cpp:225
 msgid "East Timor"
-msgstr ""
+msgstr "Timor Est"
 
 #: src/countrycodes.cpp:226
 msgid "Turkey"
-msgstr ""
+msgstr "Turchia"
 
 #: src/countrycodes.cpp:227
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "Trinidad e Tobago"
 
 #: src/countrycodes.cpp:228
 msgid "Tuvalu"
-msgstr ""
+msgstr "Tuvalu"
 
 #: src/countrycodes.cpp:229
 msgid "Taiwan"
-msgstr ""
+msgstr "Taiwan"
 
 #: src/countrycodes.cpp:230
 msgid "Tanzania"
-msgstr ""
+msgstr "Tanzania"
 
 #: src/countrycodes.cpp:231
 msgid "Ukraine"
-msgstr ""
+msgstr "Ucraina"
 
 #: src/countrycodes.cpp:232
 msgid "Uganda"
-msgstr ""
+msgstr "Uganda"
 
 #: src/countrycodes.cpp:233
 msgid "United Kingdom (Great Britain)"
-msgstr ""
+msgstr "Regno Unito (Gran Bretagna)"
 
 #: src/countrycodes.cpp:234
 msgid "US Minor Outlying Islands"
-msgstr ""
+msgstr "Isole esterne minori americane"
 
 #: src/countrycodes.cpp:235
 msgid "United States"
-msgstr ""
+msgstr "Stati Uniti"
 
 #: src/countrycodes.cpp:236
 msgid "Uruguay"
-msgstr ""
+msgstr "Uruguay"
 
 #: src/countrycodes.cpp:237
 msgid "Uzbekistan"
-msgstr ""
+msgstr "Uzbekistan"
 
 #: src/countrycodes.cpp:238
 msgid "Vatican City State (Holy See)"
-msgstr ""
+msgstr "Stato della Città del Vaticano (Santa Sede)"
 
 #: src/countrycodes.cpp:239
 msgid "Saint Vincent and The Grenadines"
@@ -2231,123 +2241,125 @@ msgstr ""
 
 #: src/countrycodes.cpp:240
 msgid "Venezuela"
-msgstr ""
+msgstr "Venezuela"
 
 #: src/countrycodes.cpp:241
 msgid "Virgin Islands (British)"
-msgstr ""
+msgstr "Isole Vergini (UK)"
 
 #: src/countrycodes.cpp:242
 msgid "Virgin Islands (US)"
-msgstr ""
+msgstr "Isole Vergini (US)"
 
 #: src/countrycodes.cpp:243
 msgid "Viet Nam"
-msgstr ""
+msgstr "Vietnam"
 
 #: src/countrycodes.cpp:244
 msgid "Vanuatu"
-msgstr ""
+msgstr "Vanuatu"
 
 #: src/countrycodes.cpp:245
 msgid "Wallis and Futuna Islands"
-msgstr ""
+msgstr "Isole Wallis e Fortuna"
 
 #: src/countrycodes.cpp:246
 msgid "Samoa"
-msgstr ""
+msgstr "Samoa"
 
 #: src/countrycodes.cpp:247
 msgid "Yemen"
-msgstr ""
+msgstr "Yemen"
 
 #: src/countrycodes.cpp:248
 msgid "Mayotte"
-msgstr ""
+msgstr "Mayotte"
 
 #: src/countrycodes.cpp:249
 msgid "Yugoslavia"
-msgstr ""
+msgstr "Yugoslavia"
 
 #: src/countrycodes.cpp:250
 msgid "South Africa"
-msgstr ""
+msgstr "Sud Africa"
 
 #: src/countrycodes.cpp:251
 msgid "Zambia"
-msgstr ""
+msgstr "Zambia"
 
 #: src/countrycodes.cpp:252
 msgid "Zaire"
-msgstr ""
+msgstr "Zaire"
 
 #: src/countrycodes.cpp:253
 msgid "Zimbabwe"
-msgstr ""
+msgstr "Zimbabwe"
 
 #: src/countrycodes.cpp:260
 msgid "(Full country name not found)"
-msgstr "(Helt landsnamn ej funnet)"
+msgstr "(Nome completo della nazione non trovato)"
 
 #: src/crashreport.cpp:71
 msgid "System informations"
-msgstr "System information"
+msgstr "Informazioni di sistema"
 
 #: src/crashreport.cpp:73
 msgid "Application verbose log"
-msgstr "Programmets utförliga logg"
+msgstr ""
 
 #: src/crashreport.cpp:75
 msgid "Last generated spring launching script"
-msgstr "Det senast skapade start skriptet"
+msgstr ""
 
 #: src/hostbattledialog.cpp:46
 msgid "Host new battle"
-msgstr "Starta nytt spel"
+msgstr "Crea nuova battaglia"
 
 #: src/hostbattledialog.cpp:62
 msgid "A short description of the game, this will show up in the battle list."
-msgstr "En kort beskrivning, denna kommer visas i spel listan."
+msgstr ""
 
 #: src/hostbattledialog.cpp:77
 msgid "Select the mod to play with."
-msgstr "Välj den mod som ska användas."
+msgstr "Seleziona il mod con il quale giocare."
 
 #: src/hostbattledialog.cpp:91
 msgid "Password needed to join game. Keep empty for no password"
-msgstr "Lösenordet som behövs för spelet. Behåll tomt för att inte ha lösenord"
+msgstr ""
+"E' richiesta una password per partecipare. Lascia vuoto per non inserire "
+"password."
 
 #: src/hostbattledialog.cpp:101
 msgid "Port"
-msgstr "Port"
+msgstr "Porta"
 
 #: src/hostbattledialog.cpp:106
 msgid "UDP port to host game on. Default is 8452."
-msgstr "UDP porten att spela spelet på. Standard är 8452."
+msgstr "Porta UDP sulla quale ospitare la partita. La predefinita è 8452."
 
 #: src/hostbattledialog.cpp:110
 msgid "Test firewall"
-msgstr "Testa firewallen"
+msgstr "Prova firewall"
 
 #: src/hostbattledialog.cpp:118
 msgid "Number of players"
-msgstr "Antal spelare"
+msgstr "Numero di giocatori"
 
 #: src/hostbattledialog.cpp:122
 msgid "The maximum number of players to allow in the battle."
-msgstr "Maximala antalet spelare tillåtna i spelet."
+msgstr "Il numero massimo di giocatori permessi in battaglia."
 
 #: src/hostbattledialog.cpp:130
 msgid "None"
-msgstr "Ingen"
+msgstr "Nessuno"
 
 #: src/hostbattledialog.cpp:130
 msgid "Hole punching"
-msgstr "Hole punching"
+msgstr ""
 
 #: src/hostbattledialog.cpp:132 src/ui.cpp:847
 msgid "NAT traversal"
-msgstr "NAT traversal"
+msgstr ""
 
 #: src/hostbattledialog.cpp:138
 msgid "NAT traversal to use. Experimental support."
@@ -2355,36 +2367,36 @@ msgstr ""
 
 #: src/hostbattledialog.cpp:143
 msgid "Minimum Rank needed"
-msgstr "Minsta rang som behövs"
+msgstr "Grado minimo richiesto"
 
 #: src/hostbattledialog.cpp:209
 msgid "Start hosting the battle."
-msgstr "Starta spel lobbyn."
+msgstr ""
 
 #: src/hostbattledialog.cpp:242 src/singleplayertab.cpp:187
 msgid "You have to select a mod first."
-msgstr "Du måste välja en mod först."
+msgstr "Devi prima selezionare un mod."
 
 #: src/hostbattledialog.cpp:242
 msgid "No mod selected."
-msgstr "Ingen mod vald."
+msgstr "Nessun mod selezionato."
 
 #: src/mainjoinbattletab.cpp:45
 msgid "Battle list"
-msgstr "Spel lista"
+msgstr ""
 
 #: src/mainjoinbattletab.cpp:85 src/mainjoinbattletab.cpp:153
 #: src/mainsingleplayertab.cpp:40
 msgid "Map/Mod Options"
-msgstr "Kart/mod alternativ"
+msgstr "Opzioni mappa/mod"
 
 #: src/mainjoinbattletab.cpp:150
 msgid "Battleroom"
-msgstr "Spel lobby"
+msgstr ""
 
 #: src/mainoptionstab.cpp:46
 msgid "Spring"
-msgstr "Spring"
+msgstr ""
 
 #: src/mainoptionstab.cpp:49
 msgid "Chat"
@@ -2392,15 +2404,15 @@ msgstr "Chat"
 
 #: src/mainoptionstab.cpp:51
 msgid "Restore"
-msgstr "Återställ"
+msgstr "Ripristina"
 
 #: src/mainoptionstab.cpp:52
 msgid "Apply"
-msgstr "Spara"
+msgstr "Applica"
 
 #: src/mainsingleplayertab.cpp:36
 msgid "Game"
-msgstr "Spel"
+msgstr ""
 
 #: src/mainwindow.cpp:76
 msgid "SpringLobby"
@@ -2408,75 +2420,75 @@ msgstr "SpringLobby"
 
 #: src/mainwindow.cpp:81
 msgid "&Connect..."
-msgstr "&Koppla upp..."
+msgstr "&Connetti..."
 
 #: src/mainwindow.cpp:82
 msgid "&Disconnect"
-msgstr "Koppla &ner..."
+msgstr "&Disconnetti"
 
 #: src/mainwindow.cpp:84
 msgid "&Quit"
-msgstr "&Avsluta"
+msgstr "&Esci"
 
 #: src/mainwindow.cpp:90
 msgid "&Join channel..."
-msgstr "&Gå med kanal..."
+msgstr "&Entra nel canale..."
 
 #: src/mainwindow.cpp:91
 msgid "Open private &chat..."
-msgstr "Öppna privat &chat fönster..."
+msgstr "Apri &chat privata"
 
 #: src/mainwindow.cpp:93
 msgid "&Reload maps/mods"
-msgstr "&Ladda om kartor/moddar"
+msgstr "&Ricarica mappe/mods"
 
 #: src/mainwindow.cpp:95
 msgid "Check for new Version"
-msgstr "Kolla efter ny &version"
+msgstr "Controlla nuove Versioni"
 
 #: src/mainwindow.cpp:96
 msgid "SpringSettings"
-msgstr "Spring inställningar"
+msgstr ""
 
 #: src/mainwindow.cpp:100
 msgid "&About"
-msgstr "&Om"
+msgstr "&Informazioni su"
 
 #: src/mainwindow.cpp:101
 msgid "&Report a bug..."
-msgstr "&Rapportera bugg..."
+msgstr "&Segnala Bug..."
 
 #: src/mainwindow.cpp:102
 msgid "&Documentation"
-msgstr "&Dokumentation"
+msgstr "&Documentazione"
 
 #: src/mainwindow.cpp:105
 msgid "&File"
-msgstr "&Arkiv"
+msgstr "&File"
 
 #: src/mainwindow.cpp:107
 msgid "&Tools"
-msgstr "&Verktyg"
+msgstr "&Strumenti"
 
 #: src/mainwindow.cpp:108
 msgid "&Help"
-msgstr "&Hjälp"
+msgstr "&Aiuto"
 
 #: src/mainwindow.cpp:321
 msgid "Join channel..."
-msgstr "Gå med i kanal..."
+msgstr "&Entra nel canale..."
 
 #: src/mainwindow.cpp:321
 msgid "Name of channel to join"
-msgstr "Namn på kanalen"
+msgstr "Nome del canale in cui entrare"
 
 #: src/mainwindow.cpp:333
 msgid "Open Private Chat..."
-msgstr "Öppna privat chat..."
+msgstr "Apri Chat Privata..."
 
 #: src/mainwindow.cpp:333
 msgid "Name of user"
-msgstr "Namn på användaren"
+msgstr "Nome dell'utente"
 
 #: src/mainwindow.cpp:347
 msgid "SpringLobby is a cross-plattform lobby client for the RTS Spring engine"
@@ -2488,36 +2500,36 @@ msgid ""
 "Please try again later.\n"
 "If the problem persists, please use Help->Report Bug to report this bug."
 msgstr ""
-"Ett fel uppstod under kontrollen för ny version.\n"
-"Försök igen senare.\n"
-"Om problemet kvarstår var god rapportera detta."
+"C'è stato un errore nel cercare l'ultima versione.\n"
+"Per favore riprova più tardi.\n"
+"Se il problema persiste, vai su Aiuto->Segnala Bug per segnalare questo bug."
 
 #: src/mainwindow.cpp:399
 msgid "Your Version: "
-msgstr "Er version: "
+msgstr "La tua versione: "
 
 #: src/mainwindow.cpp:399
 msgid "Latest Version: "
-msgstr "Senaste versionen: "
+msgstr "Ultima Versione: "
 
 #: src/mainwindow.cpp:403
 msgid ""
 "Your SpringLobby version is up to date!\n"
 "\n"
 msgstr ""
-"Din SpringLobby version är redan uppdaterad.\n"
+"La tua versione di SpringLobby è aggiornata!\n"
 "\n"
 
 #: src/mainwindow.cpp:403
 msgid "Up to Date"
-msgstr "Uppdaterad"
+msgstr "Aggiornato"
 
 #: src/mainwindow.cpp:407
 msgid ""
 "Your SpringLobby version is not up to date.\n"
 "\n"
 msgstr ""
-"Du har en äldre version av SpringLobby.\n"
+"La tua versione di SpringLobby non è aggiornata.\n"
 "\n"
 
 #: src/mainwindow.cpp:407
@@ -2529,28 +2541,29 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Vill du gå till sidan som beskriver hur du uppdaterar?"
+"Vorresti visitare una pagina Internet con le istruzioni per scaricare la "
+"versione più recente?"
 
 #: src/mainwindow.cpp:407
 msgid "Not up to Date"
-msgstr "Inte uppdaterad"
+msgstr "Non aggiornato"
 
 #: src/mapctrl.cpp:454 src/mapctrl.cpp:455
 msgid "Refresh"
-msgstr "Läs om"
+msgstr "Aggiorna"
 
 #: src/mapctrl.cpp:456 src/mapctrl.cpp:457
 msgid "Download"
-msgstr "Ladda ner"
+msgstr "Scarica"
 
 #: src/mapctrl.cpp:618
 msgid "side:"
-msgstr "sida:"
+msgstr "Fazione:"
 
 #: src/mapctrl.cpp:641
 #, c-format
 msgid "ally:   %d"
-msgstr "ally:   %d"
+msgstr ""
 
 #: src/mapctrl.cpp:651
 #, c-format
@@ -2559,39 +2572,43 @@ msgstr "bonus: %d%%"
 
 #: src/mmoptionswrapper.cpp:82
 msgid "Limit D-Gun"
-msgstr "Begränsa d-gun"
+msgstr "Limita D-Gun"
 
 #: src/mmoptionswrapper.cpp:83
 msgid ""
 "Disables commander's D-gun when being too far away from the starting point"
 msgstr ""
-"Stänger av en commanders D-gun nät han går för långt från sin start position"
+"Disabilita il D-Gun del comandante quando si allontana troppo dal punto di "
+"partenza"
 
 #: src/mmoptionswrapper.cpp:84
 msgid "Ghosted Buildings"
-msgstr "Spök byggnader"
+msgstr "Costruzioni Fantasma"
 
 #: src/mmoptionswrapper.cpp:85
 msgid ""
 "Enemy buildings will leave a ghost image on the map after losing LoS on them"
 msgstr ""
-"Fientliga byggnader lämna en spökbild på kartan efter att de kommit utom "
-"synhåll"
+"Le costruzioni nemiche lasceranno un'immagine fantasma sulla mappa quando si "
+"perderà il contatto visivo su di esse"
 
 #: src/mmoptionswrapper.cpp:86
 msgid "Diminishing MM"
-msgstr "Avtagande MM"
+msgstr ""
 
 #: src/mmoptionswrapper.cpp:87
 msgid ""
 "Efficiency of MetalMakers will progressively reduce as much as you build them"
-msgstr "Effektiviteten av dina metall skapare sjunker ju fler du bygger"
+msgstr ""
+"L'efficienza dei Metal Makers si ridurrà progressivamente man mano che li "
+"costruisci"
 
 #: src/mmoptionswrapper.cpp:88
 msgid "Start Position Type"
-msgstr "Start positioner"
+msgstr ""
 
 #: src/mmoptionswrapper.cpp:89
+#, fuzzy
 msgid ""
 "How players will select where to be spawned in the map\n"
 "0: fixed map positions\n"
@@ -2599,15 +2616,15 @@ msgid ""
 "2: chose in game\n"
 "3: chose in the lobby before starting"
 msgstr ""
-"Hur spelare väljer vart de vill starta på kartan\n"
-"0: fixerade kart positioner\n"
-"1: Slumpmässiga kart positioner\n"
-"2: Välja inne i spelet\n"
-"3: Välja i spel lobbyn"
+"Il modo in cui i giocatori potranno scegliere dove comparire nella mappa\n"
+"0: posizioni sulla mappa fisse\n"
+"1: posizioni sulla mappa casuali\n"
+"2: posizioni scelte durante la partita\n"
+"3: posizioni scelte nella lobby prima di cominciare"
 
 #: src/mmoptionswrapper.cpp:91
 msgid "Game Ending condition"
-msgstr "Spelets avslutning"
+msgstr "Condizioni di Fine Partita"
 
 #: src/mmoptionswrapper.cpp:92
 msgid ""
@@ -2616,26 +2633,22 @@ msgid ""
 "1: when the commander will be destroyed\n"
 "2: lineage mode (see option 1, but given away units will still die"
 msgstr ""
-"Spelet avlutnings villkor\n"
-"0: Alla enheter döda\n"
-"1: När commandern dör\n"
-"2: lineage mode"
 
 #: src/mmoptionswrapper.cpp:95
 msgid "Sets the amount of metal that players will start with"
-msgstr "Hur mycket metall en spelare startar med"
+msgstr "Imposta la quantità di metallo con la quale i giocatori inizieranno"
 
 #: src/mmoptionswrapper.cpp:98
 msgid "Sets the amount of energy that players will start with"
-msgstr "Hur mycket energi en spelare startar med"
+msgstr "Imposta la quantità di energia con la quale i giocatori inizieranno"
 
 #: src/mmoptionswrapper.cpp:100
 msgid "Max Units Allowed"
-msgstr "Max antal enheter"
+msgstr ""
 
 #: src/mmoptionswrapper.cpp:101
 msgid "Sets the maximum amount of units that a player will be allowed to build"
-msgstr "Maximalt antal enheter en spelare kan ha"
+msgstr ""
 
 #: src/nicklistctrl.cpp:43
 msgid "s"
@@ -2643,23 +2656,23 @@ msgstr "s"
 
 #: src/nicklistctrl.cpp:46
 msgid "c"
-msgstr "c"
+msgstr ""
 
 #: src/nicklistctrl.cpp:49
 msgid "r"
-msgstr "r"
+msgstr ""
 
 #: src/nonportable.h:6
 msgid "Executables (*.exe)|*.exe|Any File (*.*)|*.*"
-msgstr "Exekverbara filer (*.exe)|*.exe|Any File (*.*)|*.*"
+msgstr ""
 
 #: src/nonportable.h:12
 msgid "Any file (*)|*"
-msgstr "Alla filer (*)|*"
+msgstr ""
 
 #: src/nonportable.h:18
 msgid "App Bundles (*.app)|*.app|Any File (*.*)|*.*"
-msgstr "Program paket (*.app)|*.app|Alla filer (*.*)|*.*"
+msgstr ""
 
 #: src/serverevents.cpp:94
 msgid "Ping Timeout!"
@@ -2671,19 +2684,19 @@ msgstr ""
 
 #: src/serverevents.cpp:395
 msgid "Join channel failed"
-msgstr "Kunde inte gå med  kanal"
+msgstr ""
 
 #: src/serverevents.cpp:395
 msgid "Could not join channel "
-msgstr "Kunde inte gå med i kanal "
+msgstr ""
 
 #: src/serverevents.cpp:395
 msgid " because: "
-msgstr " anledning: "
+msgstr ""
 
 #: src/serverevents.cpp:562
 msgid "Server Message"
-msgstr "Server medelande"
+msgstr ""
 
 #: src/serverevents.cpp:606
 #, c-format
@@ -2696,11 +2709,11 @@ msgstr ""
 
 #: src/serverevents.cpp:622
 msgid "You were kicked from the battle!"
-msgstr "Du blev ut sparkad från spelet."
+msgstr ""
 
 #: src/serverevents.cpp:622
 msgid "Kicked by Host"
-msgstr "Ut sparkad ur spelet"
+msgstr ""
 
 #: src/settings++/Defs.hpp:201
 msgid "Scrollwheel speed"
@@ -2733,7 +2746,7 @@ msgstr ""
 
 #: src/settings++/Defs.hpp:215
 msgid "Terrain detail"
-msgstr ""
+msgstr "Dettaglio del terreno"
 
 #: src/settings++/Defs.hpp:215
 msgid "higher value = more terrain details"
@@ -2741,7 +2754,7 @@ msgstr ""
 
 #: src/settings++/Defs.hpp:216
 msgid "Unit detail"
-msgstr ""
+msgstr "Dettaglio delle unità"
 
 #: src/settings++/Defs.hpp:216
 msgid "higher value = more detailed units"
@@ -2749,7 +2762,7 @@ msgstr ""
 
 #: src/settings++/Defs.hpp:217
 msgid "Grass detail"
-msgstr ""
+msgstr "Dettaglio erba"
 
 #: src/settings++/Defs.hpp:217
 msgid "higher value = more detailed graas"
@@ -2783,7 +2796,7 @@ msgstr ""
 
 #: src/settings++/Defs.hpp:229
 msgid "Run full-screen"
-msgstr ""
+msgstr "Schermo intero"
 
 #: src/settings++/Defs.hpp:229
 msgid "run fullscreen or in a window?"
@@ -2888,9 +2901,8 @@ msgid "want moving clouds in the sky?"
 msgstr ""
 
 #: src/settings++/Defs.hpp:273
-#, fuzzy
 msgid "Reflective units"
-msgstr "Begränsade enheter"
+msgstr ""
 
 #: src/settings++/Defs.hpp:273
 msgid ""
@@ -2939,9 +2951,8 @@ msgid "should lines be anti-aliased"
 msgstr ""
 
 #: src/settings++/Defs.hpp:285
-#, fuzzy
 msgid "Enable LuaUI widgets"
-msgstr "Tillåt alla enheter."
+msgstr ""
 
 #: src/settings++/Defs.hpp:285
 msgid "mark to be able to use"
@@ -2977,9 +2988,8 @@ msgid "Mini-map on left (single screen)"
 msgstr ""
 
 #: src/settings++/Defs.hpp:291 src/settings++/Defs.hpp:292
-#, fuzzy
 msgid "left is the default"
-msgstr "gick ur"
+msgstr ""
 
 #: src/settings++/Defs.hpp:292
 msgid "Mini-map on left (dual screen)"
@@ -2990,9 +3000,8 @@ msgid "Simplified mini-map colors"
 msgstr ""
 
 #: src/settings++/Defs.hpp:293
-#, fuzzy
 msgid "Use less colors"
-msgstr "Använd systemfärger"
+msgstr ""
 
 #: src/settings++/Defs.hpp:295
 msgid "Team-colored nanospray"
@@ -3022,9 +3031,8 @@ msgid ""
 msgstr ""
 
 #: src/settings++/Defs.hpp:301
-#, fuzzy
 msgid "Show in-game player information"
-msgstr "System information"
+msgstr ""
 
 #: src/settings++/Defs.hpp:303
 msgid "Show in-game framerate"
@@ -3134,9 +3142,8 @@ msgid ""
 msgstr ""
 
 #: src/settings++/Defs.hpp:367
-#, fuzzy
 msgid "Reflective"
-msgstr "Välj"
+msgstr ""
 
 #: src/settings++/Defs.hpp:367
 msgid "Reflective + refractive"
@@ -3200,16 +3207,15 @@ msgstr ""
 
 #: src/settings++/Defs.hpp:388
 msgid "screen width"
-msgstr ""
+msgstr "larghezza dello schermo"
 
 #: src/settings++/Defs.hpp:389
 msgid "screen height"
-msgstr ""
+msgstr "altezza dello schermo"
 
 #: src/settings++/frame.cpp:44
-#, fuzzy
 msgid "Combined Options"
-msgstr "Mod alternativ"
+msgstr ""
 
 #: src/settings++/frame.cpp:45
 msgid "Render quality / Video mode"
@@ -3221,17 +3227,15 @@ msgstr ""
 
 #: src/settings++/frame.cpp:47
 msgid "Debug"
-msgstr ""
+msgstr "Debug"
 
 #: src/settings++/frame.cpp:48
-#, fuzzy
 msgid "UI options"
-msgstr "Alternativ"
+msgstr ""
 
 #: src/settings++/frame.cpp:49
-#, fuzzy
 msgid "Audio"
-msgstr "Administrering"
+msgstr "Audio"
 
 #: src/settings++/frame.cpp:50
 msgid ""
@@ -3243,35 +3247,29 @@ msgid ""
 msgstr ""
 
 #: src/settings++/frame.cpp:82 src/settings++/frame.cpp:103
-#, fuzzy
 msgid "Error!"
-msgstr "Felmedelanden"
+msgstr "Errore!"
 
 #: src/settings++/frame.cpp:118 src/settings++/frame.cpp:134
-#, fuzzy
 msgid "Save Spring settings before exiting?"
-msgstr "Spring inställnings fel"
+msgstr ""
 
 #: src/settings++/frame.cpp:118 src/settings++/frame.cpp:134
 #: src/settings++/frame.cpp:246
-#, fuzzy
 msgid "Confirmation needed"
-msgstr "Minsta rang som behövs"
+msgstr ""
 
 #: src/settings++/frame.cpp:185 src/settings++/frame.cpp:323
-#, fuzzy
 msgid "SpringSettings (expert mode)"
-msgstr "Spring inställnings fel"
+msgstr ""
 
 #: src/settings++/frame.cpp:187 src/settings++/frame.cpp:272
-#, fuzzy
 msgid "SpringSettings (simple mode)"
-msgstr "Spring inställningar"
+msgstr ""
 
 #: src/settings++/frame.cpp:196
-#, fuzzy
 msgid "Save settings"
-msgstr "Spara lista till fil."
+msgstr "Salva impostazioni"
 
 #: src/settings++/frame.cpp:197
 msgid "Reset settings to default values"
@@ -3282,9 +3280,8 @@ msgid "Disable expert mode warning"
 msgstr ""
 
 #: src/settings++/frame.cpp:200
-#, fuzzy
 msgid "Quit"
-msgstr "&Avsluta"
+msgstr "Esci"
 
 #: src/settings++/frame.cpp:205
 msgid "Simple (few options)"
@@ -3295,32 +3292,28 @@ msgid "Expert (all options"
 msgstr ""
 
 #: src/settings++/frame.cpp:209
-#, fuzzy
 msgid "About"
-msgstr "&Om"
+msgstr "Informazioni su"
 
 #: src/settings++/frame.cpp:210
 msgid "Contact"
-msgstr ""
+msgstr "Contatta"
 
 #: src/settings++/frame.cpp:211
 msgid "Credits"
-msgstr ""
+msgstr "Riconoscimenti"
 
 #: src/settings++/frame.cpp:212
-#, fuzzy
 msgid "Report a bug"
-msgstr "&Rapportera bugg..."
+msgstr "Segnala un bug"
 
 #: src/settings++/frame.cpp:225
-#, fuzzy
 msgid "File"
-msgstr "&Arkiv"
+msgstr "File"
 
 #: src/settings++/frame.cpp:226
-#, fuzzy
 msgid "Mode"
-msgstr "Mod"
+msgstr "Modalità"
 
 #: src/settings++/frame.cpp:227
 msgid "Info/Help"
@@ -3331,9 +3324,8 @@ msgid "Reset ALL settings to default values?"
 msgstr ""
 
 #: src/settings++/frame.cpp:274
-#, fuzzy
 msgid "Hint"
-msgstr "Klient"
+msgstr "Suggerimento"
 
 #: src/settings++/helpmenufunctions.cpp:24
 msgid ""
@@ -3345,9 +3337,8 @@ msgid "Kloot"
 msgstr ""
 
 #: src/settings++/helpmenufunctions.cpp:36
-#, fuzzy
 msgid "The SpringLobby team"
-msgstr "SpringLobby"
+msgstr ""
 
 #: src/settings++/helpmenufunctions.cpp:36
 msgid ""
@@ -3359,26 +3350,20 @@ msgid "everyone reporting bugs/suggestions"
 msgstr ""
 
 #: src/settings++/Main.cpp:59
-#, fuzzy
 msgid ""
 "The application has generated a fatal error and will be terminated\n"
 "Generating a bug report is not possible\n"
 "\n"
 "please enable wxUSE_DEBUGREPORT"
 msgstr ""
-"Programmet har genererat ett allvarligt fel och kommer att avslutas.\n"
-"Kan inte generera en bugg rapport.\n"
-"\n"
-"Var god fixa en wxWidgets version som har stöd för wxUSE_DEBUGREPORT"
 
 #: src/settings++/Main.cpp:59 src/springlobbyapp.cpp:138
 msgid "Critical error"
-msgstr "Kritiskt fel"
+msgstr "Errore critico"
 
 #: src/settings++/panel_pathoption.cpp:32
-#, fuzzy
 msgid "Path to unitsync shared library"
-msgstr "Ange unitsync bibliotek"
+msgstr ""
 
 #: src/settings++/panel_pathoption.cpp:33
 msgid ""
@@ -3396,7 +3381,7 @@ msgstr ""
 #: src/springoptionstab.cpp:67 src/springoptionstab.cpp:75
 #: src/springoptionstab.cpp:83
 msgid "Browse"
-msgstr "Bläddra"
+msgstr "Sfoglia"
 
 #: src/settings++/panel_pathoption.cpp:46
 msgid "unitsync.so on linux, unitsync.dll on windows"
@@ -3408,36 +3393,31 @@ msgstr ""
 
 #: src/settings++/panel_pathoption.cpp:74 src/springoptionstab.cpp:455
 msgid "Choose an unitsync library"
-msgstr "Ange unitsync bibliotek"
+msgstr ""
 
 #: src/settings++/panel_pathoption.cpp:74 src/springoptionstab.cpp:455
 msgid "Any File"
-msgstr "Alla filer"
+msgstr ""
 
 #: src/settings++/panel_pathoption.cpp:87
-#, fuzzy
 msgid ""
 "SpringSettings is unable to load your unitsync library.\n"
 "You might want to take another look at your unitsync setting.\n"
 "Your Spring version has to be 0.76 or newer, otherwise \n"
 "this will fail in any case."
 msgstr ""
-"SpringLobby lyckades nte ladda unitsync biblioteket.\n"
-"\n"
-"Du bör kolla över din unitsync inställning."
 
 #: src/settings++/presets.h:46 src/settings++/presets.h:47
 msgid "low"
-msgstr ""
+msgstr "basso"
 
 #: src/settings++/presets.h:46 src/settings++/presets.h:47
 msgid "medium"
-msgstr ""
+msgstr "Medio"
 
 #: src/settings++/presets.h:46 src/settings++/presets.h:47
-#, fuzzy
 msgid "high"
-msgstr "Markering"
+msgstr "alto"
 
 #: src/settings++/presets.h:47
 msgid "very low"
@@ -3448,17 +3428,16 @@ msgid "very high"
 msgstr ""
 
 #: src/settings++/se_utils.cpp:39
-#, fuzzy
 msgid "can't launch default browser"
-msgstr "Kunde inte starta webbläsaren."
+msgstr ""
 
 #: src/settings++/se_utils.cpp:40 src/ui.cpp:321 src/ui.cpp:329
 msgid "Couldn't launch browser. URL is: "
-msgstr "Kunde inte starta webläsaren. URL: "
+msgstr ""
 
 #: src/settings++/se_utils.cpp:40 src/ui.cpp:321 src/ui.cpp:329
 msgid "Couldn't launch browser."
-msgstr "Kunde inte starta webbläsaren."
+msgstr ""
 
 #: src/settings++/tab_abstract.cpp:111
 msgid "Could not access your settings.\n"
@@ -3469,19 +3448,16 @@ msgid "Could not save, unitsync not properly loaded"
 msgstr ""
 
 #: src/settings++/tab_abstract.cpp:474
-#, fuzzy
 msgid "SpringSettings Error"
-msgstr "Spring inställnings fel"
+msgstr ""
 
 #: src/settings++/tab_audio.cpp:61
-#, fuzzy
 msgid "Audio Options"
-msgstr "Mod alternativ"
+msgstr "Opzioni Audio"
 
 #: src/settings++/tab_debug.cpp:61
-#, fuzzy
 msgid "Debug Options"
-msgstr "Alternativ"
+msgstr ""
 
 #: src/settings++/tab_quality_video.cpp:63
 msgid "Screen Resolution"
@@ -3491,7 +3467,7 @@ msgstr ""
 #: src/settings++/tab_quality_video.cpp:87
 #, c-format
 msgid "%d"
-msgstr ""
+msgstr "%d"
 
 #: src/settings++/tab_quality_video.cpp:125
 msgid ""
@@ -3512,13 +3488,12 @@ msgid "Render Quality Options"
 msgstr ""
 
 #: src/settings++/tab_quality_video.cpp:195
-#, fuzzy
 msgid "Video Mode Options"
-msgstr "Mod alternativ"
+msgstr ""
 
 #: src/settings++/tab_quality_video.cpp:196
 msgid "Anti-Aliasing Options"
-msgstr ""
+msgstr "Opzioni di Anti-Aliasing"
 
 #: src/settings++/tab_quality_video.cpp:197
 msgid "Z-/Depth-Buffer"
@@ -3595,14 +3570,12 @@ msgid "Scroll Speeds (mouse + keyboard)"
 msgstr ""
 
 #: src/settings++/tab_ui.cpp:126
-#, fuzzy
 msgid "Default Camera Mode"
-msgstr "Standard webbläsare"
+msgstr ""
 
 #: src/settings++/tab_ui.cpp:128
-#, fuzzy
 msgid "Misc. UI Options"
-msgstr "Mod alternativ"
+msgstr ""
 
 #: src/settings++/tab_ui.cpp:130
 msgid "Zoom"
@@ -3610,24 +3583,24 @@ msgstr ""
 
 #: src/singleplayertab.cpp:66
 msgid "Add bot..."
-msgstr "Lägg till bot..."
+msgstr ""
 
 #: src/singleplayertab.cpp:76
 msgid "Reset"
-msgstr "Återställ"
+msgstr "Ripristina"
 
 #: src/singleplayertab.cpp:115 src/singleplayertab.cpp:135
 msgid "-- Select one --"
-msgstr "-- Välj en --"
+msgstr ""
 
 #: src/singleplayertab.cpp:187 src/singleplayertab.cpp:193
 #: src/singleplayertab.cpp:223 src/singleplayertab.cpp:226
 msgid "Gamesetup error"
-msgstr "Kunde inte start spel"
+msgstr ""
 
 #: src/singleplayertab.cpp:193
 msgid "You have to select a map first."
-msgstr "Du måste välja en karta först."
+msgstr "Devi prima selezionare una mappa."
 
 #: src/singleplayertab.cpp:200
 msgid ""
@@ -3647,8 +3620,6 @@ msgid ""
 "\n"
 "This will be fixed in next version of Spring."
 msgstr ""
-"Du har botar som inte är knutna till någon startposition. I denna versionen "
-"av Spring är detta inte tillåtet."
 
 #: src/singleplayertab.cpp:226
 msgid ""
@@ -3662,16 +3633,16 @@ msgid ""
 "\n"
 "This will be fixed in next version of Spring."
 msgstr ""
-"Du använder inte konsekutiva startpositions nummer, detta krävs i den här "
-"versionen av Spring."
 
 #: src/singleplayertab.cpp:268
 msgid "You cannot start a spring instance while another is already running"
-msgstr "Spring körs redan stäng av det innan du startar ett nytt spel"
+msgstr ""
+"Non puoi avviare una istanza di Spring mentre ce n'è un'altra già in "
+"esecuzione."
 
 #: src/springlobbyapp.cpp:98
 msgid "Hi "
-msgstr "Hej "
+msgstr "Ciao "
 
 #: src/springlobbyapp.cpp:98
 msgid ""
@@ -3683,14 +3654,10 @@ msgid ""
 "When you are done you can go to the File menu, connect to a server, and "
 "enjoy a nice game of Spring :)"
 msgstr ""
-"Det ser ut som om detta är den första gången du använder SpringLobby. Jag "
-"har gissat mig till en konfiguration som jag tror skall fungera men du borde "
-"kolla igenom den för säkerhets skull.\n"
-"När du är klar är det bara att börja spel Spring :)"
 
 #: src/springlobbyapp.cpp:98
 msgid "Welcome"
-msgstr "Välkommen"
+msgstr "Benvenuto"
 
 #: src/springlobbyapp.cpp:101
 msgid ""
@@ -3699,13 +3666,10 @@ msgid ""
 "traversal\n"
 " won't be available"
 msgstr ""
-"Du använder en wxWidgets version i 2.6.x serien\n"
-"vissa funktioner kommer att bli avstängda. Skaffa\n"
-"en nyare version för att få full funktionalitet."
 
 #: src/springlobbyapp.cpp:101
 msgid "Missing Functionality"
-msgstr "Saknad funktionalitet"
+msgstr "Funzionalità Mancanti"
 
 #: src/springlobbyapp.cpp:138
 msgid ""
@@ -3714,15 +3678,10 @@ msgid ""
 "\n"
 "please get a wxWidgets library that supports wxUSE_DEBUGREPORT"
 msgstr ""
-"Programmet har genererat ett allvarligt fel och kommer att avslutas.\n"
-"Kan inte generera en bugg rapport.\n"
-"\n"
-"Var god fixa en wxWidgets version som har stöd för wxUSE_DEBUGREPORT"
 
 #: src/springlobbyapp.cpp:163
-#, fuzzy
 msgid "/.spring"
-msgstr "Spring"
+msgstr ""
 
 #: src/springlobbyapp.cpp:166
 msgid "Create a .spring folder in the home directory (reccomended)"
@@ -3754,7 +3713,7 @@ msgstr ""
 #: src/springlobbyapp.cpp:182
 #, fuzzy
 msgid "Choose a folder"
-msgstr "Välj en katalog"
+msgstr "Scegli una directory"
 
 #: src/springlobbyapp.cpp:189
 msgid ""
@@ -3764,57 +3723,57 @@ msgstr ""
 
 #: src/springoptionstab.cpp:57
 msgid "Spring directory"
-msgstr "Spring katalogen"
+msgstr "Directory Spring"
 
 #: src/springoptionstab.cpp:60 src/springoptionstab.cpp:68
 #: src/springoptionstab.cpp:76
 msgid "Find"
-msgstr "Hitta"
+msgstr "Cerca"
 
 #: src/springoptionstab.cpp:62
 msgid "Spring executable"
-msgstr "Spring exekverbar"
+msgstr "Eseguibile Spring"
 
 #: src/springoptionstab.cpp:63 src/springoptionstab.cpp:71
 msgid "Default location."
-msgstr "Standard plats"
+msgstr "Posizione predefinita."
 
 #: src/springoptionstab.cpp:64 src/springoptionstab.cpp:72
 #: src/springoptionstab.cpp:81
 msgid "Specify:"
-msgstr "Ange:"
+msgstr ""
 
 #: src/springoptionstab.cpp:65 src/springoptionstab.cpp:74
 msgid "Location"
-msgstr "Plats"
+msgstr "Posizione"
 
 #: src/springoptionstab.cpp:70
 msgid "UnitSync library"
-msgstr "Unitsync bibliotek"
+msgstr ""
 
 #: src/springoptionstab.cpp:78 src/springoptionstab.cpp:79
 msgid "Web Browser"
-msgstr "Webbläsare"
+msgstr "Browser web"
 
 #: src/springoptionstab.cpp:80
 msgid "Default Browser."
-msgstr "Standard webbläsare"
+msgstr "Browser predefinito."
 
 #: src/springoptionstab.cpp:85
 msgid "Auto Configure"
-msgstr "Automatisk konfiguration"
+msgstr "Configurazione automatica"
 
 #: src/springoptionstab.cpp:449
 msgid "Choose a Spring executable"
-msgstr "Ange Spring exekverbar"
+msgstr ""
 
 #: src/springoptionstab.cpp:455
 msgid "Library"
-msgstr "Bibliotek"
+msgstr "Libreria"
 
 #: src/springoptionstab.cpp:462
 msgid "Choose a web browser executable"
-msgstr "Ange en webbläsar exekverbar"
+msgstr ""
 
 #: src/springoptionstab.cpp:481
 msgid ""
@@ -3822,9 +3781,6 @@ msgid ""
 "\n"
 "You might want to take another look at your unitsync setting."
 msgstr ""
-"SpringLobby lyckades nte ladda unitsync biblioteket.\n"
-"\n"
-"Du bör kolla över din unitsync inställning."
 
 #: src/springoptionstab.cpp:486
 msgid ""
@@ -3833,9 +3789,6 @@ msgid ""
 "\n"
 "You might want to take another look at your settings."
 msgstr ""
-"SpringLobby kan inte läsa din Spring version från unitsync biblioteket.\n"
-"\n"
-"Du bör ta en titt på dina inställningar igen."
 
 #: src/springunitsync.cpp:65
 msgid ""
@@ -3853,11 +3806,11 @@ msgstr "LuaAI"
 
 #: src/tasserver.cpp:302
 msgid "Connection timed out"
-msgstr ""
+msgstr "Connessione scaduta"
 
 #: src/tasserver.cpp:315
 msgid "Unknown answer from server"
-msgstr ""
+msgstr "Risposta sconosciuta dal server"
 
 #: src/tasserver.cpp:408
 msgid "Failed to punch through NAT"
@@ -3865,51 +3818,49 @@ msgstr ""
 
 #: src/ui.cpp:131
 msgid "Server password"
-msgstr "Lösenord"
+msgstr "Password del server"
 
 #: src/ui.cpp:329
 msgid ""
 "\n"
 "Broser path is: "
 msgstr ""
-"\n"
-"Webbläsarens plats är: "
 
 #: src/ui.cpp:413 src/ui.cpp:652
 msgid "error"
-msgstr "fel"
+msgstr "errore"
 
 #: src/ui.cpp:413 src/ui.cpp:652
 msgid "no active chat panels open."
-msgstr "inga aktiva chat paneler öppna."
+msgstr ""
 
 #: src/ui.cpp:416
 msgid "Active chat channels:"
-msgstr "Aktiva chat kanaler:"
+msgstr ""
 
 #: src/ui.cpp:428
 msgid "Help error"
-msgstr "Hjälp fel"
+msgstr ""
 
 #: src/ui.cpp:428
 msgid "Type /help in a chat box."
-msgstr "Skriv /help i chatten."
+msgstr ""
 
 #: src/ui.cpp:432
 msgid "SpringLobby commands help."
-msgstr "SpringLobby kommando hjälp."
+msgstr ""
 
 #: src/ui.cpp:434
 msgid "Global commands:"
-msgstr "Globala kommandon:"
+msgstr ""
 
 #: src/ui.cpp:435
 msgid "  \"/away\" - Sets your status to away."
-msgstr "  \"/away\" - Sätter din status till borta."
+msgstr "  \"/away\" - Imposta il tuo stato come \"non al computer\"."
 
 #: src/ui.cpp:436
 msgid "  \"/back\" - Resets your away status."
-msgstr "  \"/back\" - Sätter din status till närvarande."
+msgstr ""
 
 #: src/ui.cpp:437
 msgid ""
@@ -3919,28 +3870,28 @@ msgstr ""
 
 #: src/ui.cpp:438
 msgid "  \"/channels\" - Lists currently active channels."
-msgstr "  \"/channels\" - Listar alla aktiva kanaler."
+msgstr "  \"/channels\" - Elenca i canali al momento attivi"
 
 #: src/ui.cpp:439
 msgid ""
 "  \"/help [topic]\" - Put topic if you want to know more specific "
 "information about a command."
-msgstr "  \"/help [ämne]\" - Visar hjälp om ett visst ämne."
+msgstr ""
+"  \"/help [comando]\" - Scrivi un comando se vuoi avere informazioni più "
+"specifiche su di esso."
 
 #: src/ui.cpp:440
 msgid ""
 "  \"/join channel [password] [,channel2 [password2]]\" - Join a channel."
 msgstr ""
-"  \"/join kanal [lösenord] [,kanal2 [lösenord22]]\" - Gå med i en kanal "
-"eller flera."
 
 #: src/ui.cpp:441
 msgid "  \"/j\" - Alias to /join."
-msgstr "  \"/j\" - Alias till /join."
+msgstr "  \"/j\" - Sinonimo di /join"
 
 #: src/ui.cpp:442
 msgid "  \"/ingame\" - Show how much time you have in game."
-msgstr "  \"/ingame\" - Visar hur mycket spel tid du har."
+msgstr ""
 
 #: src/ui.cpp:443
 msgid ""
@@ -3950,11 +3901,12 @@ msgstr ""
 
 #: src/ui.cpp:444
 msgid "  \"/rename newalias\" - Changes your nickname to newalias."
-msgstr "  \"/rename nyttsmeknamn\" - Ändrar ditt smeknamn."
+msgstr ""
 
 #: src/ui.cpp:445
 msgid "  \"/sayver\" - Say what version of springlobby you have in chat."
-msgstr "  \"/sayver\" - Säger vilken version av SpringLobby du har i chatten."
+msgstr ""
+"  \"/sayver\" - Comunica in chat la versione di springlobby che stai usando."
 
 #: src/ui.cpp:446
 msgid "  \"/testmd5 text\" - Returns md5-b64 hash of given text."
@@ -3962,45 +3914,46 @@ msgstr ""
 
 #: src/ui.cpp:447
 msgid "  \"/ver\" - Display what version of SpringLobby you have."
-msgstr "  \"/ver\" - Visar vilken version av SpringLobby du har."
+msgstr "  \"/ver\" - Mostra la versione di SpringLobby in uso"
 
 #: src/ui.cpp:449
 msgid "Chat commands:"
-msgstr "Chat kommandon:"
+msgstr "Comandi di chat:"
 
 #: src/ui.cpp:450
 msgid "  \"/me action\" - Say IRC style action message."
-msgstr "  \"/me action\" - Aktions medelande a la IRC."
+msgstr "  \"/me azione\" - Manda un messaggio di azione in stile IRC"
 
 #: src/ui.cpp:452
 msgid ""
 "If you are missing any commands, go to #springlobby and try to type it "
 "there :)"
-msgstr "Om du saknar något kommando, gå till #springlobby och skriv det där :)"
+msgstr ""
 
 #: src/ui.cpp:455
 msgid "No topics written yet."
-msgstr "Det finns inga ämnen ännu."
+msgstr "Nessun topic scritto finora."
 
 #: src/ui.cpp:457
 msgid "The topic \""
-msgstr "Ämnet \""
+msgstr "il topic \""
 
 #: src/ui.cpp:457
 msgid "\" was not found. Type \"/help topics\" only for available topics."
-msgstr "\" hittades inte. Skriv \"/help\" för att se vilka som finns."
+msgstr ""
+"\" non è stato trovato. Digita \"/help topics\" solo per i topic disponibili"
 
 #: src/ui.cpp:490
 msgid "Your spring version"
-msgstr "Din Spring version"
+msgstr "La tua versione di Spring"
 
 #: src/ui.cpp:492
 msgid "is not supported by the lobby server that requires version"
-msgstr "supportras inte av lobby servern som kräver version"
+msgstr "non e' supportata dalla lobby server."
 
 #: src/ui.cpp:494
 msgid "Online play will be disabled."
-msgstr "Multiplayer spel kommer att inaktiveras."
+msgstr "Il gioco onlie sarà disabilitato."
 
 #: src/ui.cpp:499
 msgid ""
@@ -4008,35 +3961,33 @@ msgid ""
 "\n"
 "Online play will be disabled."
 msgstr ""
-"Kunde inte läsa din Spring version från unitsync biblioteket.\n"
-"\n"
-"Multiplayer spel kommer att inaktiveras."
+"Non posso prendere dalla tua versione di spring la libreria unitssync.\n"
+"Il gioco online sarà disabilitato."
 
 #: src/ui.cpp:557
 msgid ""
 "This is the SpringLobby channel, please report any problems you are having "
 "with SpringLobby here and the friendly developers will help you."
 msgstr ""
-"Det här är SpringLobby kanalen, var god rapportera alla problem du har i "
-"denna kanalen, så hjälper de välliga utvecklarna dig."
+"Questo è il canale di Springlobby, riportaci qualsiasi problema che hai "
+"avuto e i tuoi amici sviluppatori ti daranno un aiuto."
 
 #: src/ui.cpp:655
-#, c-format
+#, fuzzy, c-format
 msgid "(%d users)"
-msgstr "(%d användare)"
+msgstr "(%d utenti)"
 
 #: src/ui.cpp:718
 msgid "Server message"
-msgstr "Server medelanden"
+msgstr "Messaggio del server"
 
 #: src/ui.cpp:757
 msgid "The current battle was closed by the host."
-msgstr ""
+msgstr "La battaglia attuale è stata chiusa dall'host."
 
 #: src/ui.cpp:757
-#, fuzzy
 msgid "Battle closed"
-msgstr "Spel lista"
+msgstr "Battaglia chiusa"
 
 #: src/ui.cpp:842
 msgid ""
@@ -4044,12 +3995,14 @@ msgid ""
 "you should take another look at your settings before trying\n"
 "to play online."
 msgstr ""
-"Dina Spring inställningar är förmodligen inte korrekt inställda,\n"
-"du bör ta en titt på dem innan du spelar multiplayer."
+"Probabilmente le tue impostazioni di Spring non sono configurate "
+"correttamente,\n"
+"dovresti controllare meglio le tue impostazioni prima di provare\n"
+"a giocare online."
 
 #: src/ui.cpp:842
 msgid "Spring settings error"
-msgstr "Spring inställnings fel"
+msgstr "Errore nelle impostazioni di Spring"
 
 #: src/ui.cpp:847
 msgid ""
@@ -4059,64 +4012,12 @@ msgid ""
 "You will not be able to play in this battle. \n"
 "Update your wxwidgets to 2.8 or newer to enable NAT traversal support."
 msgstr ""
-"Det här spelet använder NAT traversal som inte stödjs för wxWidgets 2.6.x."
-
-#~ msgid "Bot%d"
-#~ msgstr "Bot%d"
-
-#~ msgid "%Y-%m-%d %H:%M"
-#~ msgstr "%Y-%m-%d %H:%M"
-
-#~ msgid "["
-#~ msgstr "["
-
-#~ msgid "%H:%M"
-#~ msgstr "%H:%M"
-
-#~ msgid "?"
-#~ msgstr "?"
-
-#~ msgid "..."
-#~ msgstr "..."
-
-#~ msgid "Newbie"
-#~ msgstr "Ny nybörjare"
-
-#~ msgid "Beginner"
-#~ msgstr "Nybörjare"
-
-#~ msgid "Average"
-#~ msgstr "Medelmåttig"
-
-#~ msgid "Above average"
-#~ msgstr "Duktig"
-
-#~ msgid "Experienced"
-#~ msgstr "Erfaren"
-
-#~ msgid "Highly experienced"
-#~ msgstr "Mycket erfaren"
-
-#~ msgid "Veteran"
-#~ msgstr "Veteran"
-
-#~ msgid "no rank"
-#~ msgstr "ingen rank"
 
 #~ msgid "Select"
-#~ msgstr "Välj"
+#~ msgstr "Seleziona"
 
 #~ msgid "Show all"
-#~ msgstr "Visa alla"
-
-#~ msgid "Fixed source ports"
-#~ msgstr "Fixed source ports"
-
-#~ msgid ""
-#~ "NAT traversal to use, currently this feature is not supported by "
-#~ "SpringLobby."
-#~ msgstr ""
-#~ "NAT traversal att använda, detta stöds för tillfället inte av SpringLobby."
+#~ msgstr "Mostra tutto"
 
 #~ msgid "&Edit"
-#~ msgstr "&Redigera"
+#~ msgstr "&Modifica"
