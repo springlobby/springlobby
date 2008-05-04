@@ -55,7 +55,7 @@ class SpringUnitSync : public IUnitSync
     //! function wich checks if the version returned from unitsync matches a table of supported feature
     bool VersionSupports( GameFeature feature );
 
-    wxArrayString GetAIList();
+    wxArrayString GetAIList( const wxString& modname );
 
     int GetNumUnits( const wxString& modname );
     wxArrayString GetUnitsList( const wxString& modname );

@@ -574,10 +574,10 @@ void SpringUnitSyncLib::CloseFileVFS( int handle )
 }
 
 
-int SpringUnitSyncLib::GetLuaAICount()
+int SpringUnitSyncLib::GetLuaAICount( const wxString& modname )
 {
   InitLib( m_get_luaai_count );
-
+  SetCurrentMod( modname );
   return m_get_luaai_count();
 }
 
