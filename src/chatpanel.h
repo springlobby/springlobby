@@ -1,12 +1,15 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 #define SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 
+#include <iostream>
+
 #include <wx/panel.h>
 #include <wx/event.h>
 #include <wx/textctrl.h>
 #include <wx/string.h>
 
 #include "chatlog.h"
+#include "Helper/TextCompletionDatabase.hpp"
 
 class wxCommandEvent;
 class wxSizeEvent;
@@ -116,12 +119,14 @@ class ChatPanel : public wxPanel
 
     void OnSay( wxCommandEvent& event );
     void OnResize( wxSizeEvent& event );
+	void OnTextChanged_Say_Text( wxCommandEvent& event );
 
     void OnLinkEvent( wxTextUrlEvent& event );
     void OnMouseDown( wxMouseEvent& event );
 
     void OnMenuSelectAll( wxCommandEvent& event );
     void OnMenuCopy( wxCommandEvent& event );
+    void OnChannelMenuClear ( wxCommandEvent& event );
 
     void OnChannelMenuLeave( wxCommandEvent& event );
     void OnChannelMenuDisplayJoinLeave( wxCommandEvent& event );
@@ -212,6 +217,9 @@ class ChatPanel : public wxPanel
     void CreatePopup();
     wxMenu* CreateNickListMenu();
 
+
+	TextCompletionDatabase textcompletiondatabase;
+
     DECLARE_EVENT_TABLE();
 };
 
@@ -221,6 +229,7 @@ enum
     CHAT_TEXT,
     CHAT_LOG,
 
+    CHAT_MENU_CH_CLEAR,
     CHAT_MENU_CH_LEAVE,
     CHAT_MENU_CH_DISPLAYJOIN,
     CHAT_MENU_CH_AUTOJOIN,

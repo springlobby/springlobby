@@ -44,9 +44,9 @@ intMap abstract_panel::intSettings;
 //floatMap abstract_panel::floatSettings;
 
 bool abstract_panel::settingsChanged = false;
+//const category_sizes_map s_category_sizes ( entries_ , entries_ + sizeof(entries_[0]) );
 
-const int allControls_size = 64;
-const Control allControls[allControls_size] = {
+const Control allControls[] = {
 		// RO_SLI[8]
 		RO_SLI[0],RO_SLI[1],RO_SLI[2],RO_SLI[3],RO_SLI[4],RO_SLI[5],RO_SLI[6],RO_SLI[7],
 		// VO_CBOX[3]
@@ -85,6 +85,8 @@ const Control allControls[allControls_size] = {
 		UI_ZOOM[0]
 };
 
+const int allControls_size = sizeof(allControls) / sizeof(allControls[0] ) ;
+
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title) {
 //	abstract_panel::expertModeEnadbled = false;
@@ -117,71 +119,71 @@ bool abstract_panel::loadValuesIntoMap()
 void abstract_panel::loadDefaults()
 {
 	//const Control RO_SLI[9]
-	for (int i = 0;i< 8; ++i)
+ 	for (int i = 0;i< s_category_sizes[_T("RO_SLI")]; ++i)
 		intSettings[RO_SLI[i].key] = fromString( RO_SLI[i].def);
 
 	//const Control VO_CBOX[3]
-	for (int i = 0;i< 3; ++i)
+	for (int i = 0;i< s_category_sizes[_T("VO_CBOX")]; ++i)
 		intSettings[VO_CBOX[i].key] = fromString( VO_CBOX[i].def);
 
 	//const Control VO_RBUT[2]
-	for (int i = 0;i< 2; ++i)
+	for (int i = 0;i< s_category_sizes[_T("VO_RBUT")]; ++i)
 		intSettings[VO_RBUT[i].key] = fromString( VO_RBUT[i].def);
 
 	//	const Control VO_SLI[1]
-	for (int i = 0;i< 1; ++i)
+	for (int i = 0;i< s_category_sizes[_T("VO_SLI")]; ++i)
 		intSettings[VO_SLI[i].key] = fromString( VO_SLI[i].def);
 
 	//	const Control VO_SLI_EXT[1]
-	for (int i = 0;i< 1; ++i)
+	for (int i = 0;i< s_category_sizes[_T("VO_SLI_EXT")]; ++i)
 		intSettings[VO_SLI_EXT[i].key] = fromString( VO_SLI_EXT[i].def);
 
 //	const Control AO_SLI[3]
-	for (int i = 0;i< 3; ++i)
+	for (int i = 0;i< s_category_sizes[_T("AO_SLI")]; ++i)
 		intSettings[AO_SLI[i].key] = fromString( AO_SLI[i].def);
 
 	//	const Control QA_CBOX[10]
-	for (int i = 0;i< 10; ++i)
+	for (int i = 0;i< s_category_sizes[_T("QA_CBOX")]; ++i)
 		intSettings[QA_CBOX[i].key] = fromString( QA_CBOX[i].def);
 
 	//	const Control UI_CBOX[17]
-	for (int i = 0;i< 17; ++i)
+	for (int i = 0;i< s_category_sizes[_T("UI_CBOX")]; ++i)
 		intSettings[UI_CBOX[i].key] = fromString(UI_CBOX [i].def);
 
 	//	const Control MO_SLI[5]
-	for (int i = 0;i< 5; ++i)
+	for (int i = 0;i< s_category_sizes[_T("MO_SLI")]; ++i)
 		intSettings[MO_SLI[i].key] = fromString( MO_SLI[i].def);
 
 	//	const Control MO_SLI_EXT[5]
-	for (int i = 0;i< 5; ++i)
+	for (int i = 0;i< s_category_sizes[_T("MO_SLI_EXT")]; ++i)
 		intSettings[MO_SLI_EXT[i].key] = fromString( MO_SLI_EXT[i].def);
 
 	//	const Control DO_SLI[1]
-	for (int i = 0;i< 1; ++i)
+	for (int i = 0;i< s_category_sizes[_T("DO_SLI")]; ++i)
 		intSettings[DO_SLI[i].key] = fromString( DO_SLI[i].def);
 
 	//	const Control DO_CBOX[2]
-	for (int i = 0;i< 2; ++i)
+	for (int i = 0;i< s_category_sizes[_T("DO_CBOX")]; ++i)
 		intSettings[DO_CBOX[i].key] = fromString( DO_CBOX[i].def);
 
 	//	const Control WR_COMBOX[4]
-	for (int i = 0;i< 1; ++i)
+	for (int i = 0;i< s_category_sizes[_T("WR_COMBOX")]; ++i)
 		intSettings[WR_COMBOX[i].key] = fromString( WR_COMBOX[i].def);
 
 	//	const Control MO_CBOX[2]
-	for (int i = 0;i< 2; ++i)
+	for (int i = 0;i< s_category_sizes[_T("MO_CBOX")]; ++i)
 		intSettings[MO_CBOX[i].key] = fromString( MO_CBOX[i].def);
 
 	//	const Control MO_RBUT[5]
-	for (int i = 0;i< 5; ++i)
+	for (int i = 0;i< s_category_sizes[_T("MO_RBUT")]; ++i)
 		intSettings[MO_RBUT[i].key] = fromString(MO_RBUT [i].def);
 
 	//	const Control RC_TEXT[2]
-	for (int i = 0;i< 2; ++i)
+	for (int i = 0;i< s_category_sizes[_T("RC_TEXT")]; ++i)
 		intSettings[RC_TEXT[i].key] = fromString( RC_TEXT[i].def);
 
 	//	const Control UI_ZOOM[1]
-	for (int i = 0;i< 1; ++i)
+	for (int i = 0;i< s_category_sizes[_T("UI_ZOOM ")]; ++i)
 		intSettings[UI_ZOOM[i].key] = fromString( UI_ZOOM[i].def);
 
 }
@@ -397,7 +399,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 			}
 			break;
 		}
-		//TODO save choices in option handler in
+		//TODO (koshi save choices in option handler in
 		case ID_SIMPLE_QUAL_CBX:
 		{
 			for (int i=0; i<prVal_RenderQuality_size;++i)

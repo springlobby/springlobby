@@ -55,7 +55,7 @@ class SpringUnitSync : public IUnitSync
     //! function wich checks if the version returned from unitsync matches a table of supported feature
     bool VersionSupports( GameFeature feature );
 
-    wxArrayString GetAIList();
+    wxArrayString GetAIList( const wxString& modname );
 
     int GetNumUnits( const wxString& modname );
     wxArrayString GetUnitsList( const wxString& modname );
@@ -70,6 +70,7 @@ class SpringUnitSync : public IUnitSync
     void SetSpringDataPath( const wxString& path );
     wxString GetSpringDataPath();
 
+    bool FileExists( const wxString& name );
   private:
 
     static wxString _GetCachedMinimapFileName( const wxString& mapname, int width = -1, int height = -1 );

@@ -1,3 +1,5 @@
+/// \file uiutils.h
+
 #ifndef SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 #define SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 
@@ -27,7 +29,10 @@ wxColour GetColorFromStrng( const wxString color );
 
 void BlendImage(wxImage& source, wxImage& dest,int img_dim);
 wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size);
+//wxBitmap charArr2wxBitmap(const unsigned char * arg, int size);
 wxBitmap* charArr2wxBitmapAddText(const unsigned char * arg, int size, const unsigned char * text, int text_size, unsigned int img_dim);
 
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H
+
+

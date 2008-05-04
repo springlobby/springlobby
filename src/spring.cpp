@@ -74,14 +74,11 @@ bool Spring::Run( Battle& battle )
       wxLogError( _T("Access denied to script.txt.") );
     }
 
-    /*
+
 
     wxFile f( path + _T("script.txt"), wxFile::write );
-    f.Write( GetScriptTxt(battle) );
+    f.Write( WriteScriptTxt(battle) );
     f.Close();
-    */
-    std::ofstream f(STD_STRING(path + _T("script.txt")).c_str());
-    WriteScriptTxt(f,battle);
 
   } catch (...) {
     wxLogError( _T("Couldn't write script.txt") );
@@ -124,12 +121,9 @@ bool Spring::Run( SinglePlayerBattle& battle )
       wxLogError( _T("Access denied to script.txt.") );
     }
 
-    /*wxFile f( path + _T("script.txt"), wxFile::write );
-    f.Write( GetSPScriptTxt(battle) );
+    wxFile f( path + _T("script.txt"), wxFile::write );
+    f.Write( WriteSPScriptTxt(battle) );
     f.Close();
-    */
-     std::ofstream f(STD_STRING(path + _T("script.txt")).c_str());
-    WriteSPScriptTxt(f,battle);
 
   } catch (...) {
     wxLogError( _T("Couldn't write script.txt") );
@@ -180,11 +174,13 @@ void Spring::OnTerminated( wxCommandEvent& event )
   };
 
 
-void Spring::WriteScriptTxt(std::ostream &output, Battle& battle )
+wxString Spring::WriteScriptTxt( Battle& battle )
 {
   wxLogMessage(_T("0 WriteScriptTxt called "));
 
-  TDFWriter tdf(output);
+  wxString ret;
+
+  TDFWriter tdf(ret);
 
   int  NumTeams=0, MyPlayerNum=-1;
 
@@ -504,6 +500,8 @@ void Spring::WriteScriptTxt(std::ostream &output, Battle& battle )
   //s += _T("}\n");
   tdf.LeaveSection();
 
+  return ret;
+
   /// TODO: make TDFWriter handle it all right.
 /*
   if ( DOS_TXT ) {
@@ -604,10 +602,10 @@ void Spring::WriteScriptTxt(std::ostream &output, Battle& battle )
 }
 
 
-void Spring::WriteSPScriptTxt(std::ostream &output, SinglePlayerBattle& battle )
+wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
 {
-  //wxString s;
-  TDFWriter tdf(output);
+  wxString ret;
+  TDFWriter tdf(ret);
   std::vector<int> AllyConv;
 
   int NumAllys = 0;
@@ -750,6 +748,8 @@ void Spring::WriteSPScriptTxt(std::ostream &output, SinglePlayerBattle& battle )
   tdf.LeaveSection();
 
   tdf.LeaveSection();
+
+  return ret;
 /*
   if ( DOS_TXT ) {
     s.Replace( _T("\n"), _T("\r\n"), true );

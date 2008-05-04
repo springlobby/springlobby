@@ -48,7 +48,7 @@
 #define ASSERT_RUNTIME(cond,msg) if(!(cond)){wxLogMessage(_T("runtime error: %s"), wxString(msg).c_str() );throw std::runtime_error(std::string(wxString(msg).mb_str()));}
 
 
-#define boundry(var,min,max) var=(var<(min))?(min):(var>(max))?(max):var
+#define CLAMP(var,min,max) ((var)=((var)<(min))?(min):((var)>(max))?(max):(var))
 
 #ifdef __WXMSW__
 #define CONTROL_HEIGHT 22
@@ -94,5 +94,7 @@ wxString GetSentenceParam( wxString& params );
 long GetIntParam( wxString& params );
 bool GetBoolParam( wxString& params );
 wxString GetSpringLobbyVersion();
+
+wxString GetHostCPUSpeed();
 
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H

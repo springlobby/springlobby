@@ -112,9 +112,17 @@ bool SpringLobbyApp::OnInit()
         //! ask for downloading ota content if archive not found, start downloader in background
         wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
         wxString destFilename = sett().GetSpringDir()+_T("base/base-ota-content.zip");
+        bool contentExists = false;
+        if ( usync()->IsLoaded() )
+        {
+            contentExists = usync()->FileExists(_T("base-ota-content.zip"));
+        }
+        else
+        {
+            contentExists = wxFile::Exists(destFilename);
+        }
 
-        wxFile destFile (destFilename);
-        if ( !wxFile::Exists(destFilename) &&
+        if ( !contentExists &&
                 customMessageBox(SL_MAIN_ICON, _("Do you want to download OTA conent?\n"
                                                  "You need this to be able to play TA based mods.\n"
                                                  "You need to own a copy of Total Annihilation do legally download it."),_("Download OTA content?"),wxYES_NO) == wxYES )
