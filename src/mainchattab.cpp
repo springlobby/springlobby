@@ -273,21 +273,24 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
 wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
 {
   wxImage ret = img.ConvertToImage();
-  ret.Replace( 164, 147, 0, colour.Red(), colour.Green(), colour.Blue() );
+  wxImage::HSVValue::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Red(), colour.Blue() ) );
 
-  int r,g,b;
-  r = colour.Red(); g = colour.Green()-25; b = colour.Blue()-25;
-  CLAMP(r,0,255);
-  CLAMP(g,0,255);
-  CLAMP(b,0,255);
+  double bright = origcolour.value - 0.1*origcolour.value;
+  CLAMP(bright,0,1);
+  wxImage::HSVValue::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
+  bright = origcolour.value - 0.5*origcolour.value;
+  CLAMP(bright,0,1);
+  wxImage::HSVValue::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
 
-  ret.Replace( 255, 228, 0, r, g, b );
+  wxImage::RGBValue::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
+  wxImage::RGBValue::RGBValue rgbdarker2 = wxImage::HSVtoRGB( hsvdarker2 );
 
-  r = colour.Red()-91; g = colour.Green()-100; b = colour.Blue()-100;
-  CLAMP(r,0,255);
-  CLAMP(g,0,255);
-  CLAMP(b,0,255);
-  ret.Replace( 255, 253, 234, r, g, b );
+
+  ret.Replace( 164, 147, 0, rgbdarker2.red, rgbdarker2.green, rgbdarker2.blue );
+
+  ret.Replace( 255, 228, 0, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
+
+  ret.Replace( 255, 253, 234, colour.Red(), colour.Green(), colour.Blue() );
 
 
 
