@@ -82,6 +82,7 @@ springlobby_SOURCES = \
 	src/maplistctrl.h \
 	src/mapselectdialog.cpp \
 	src/mapselectdialog.h \
+	src/bimap.h \
 	src/chatlog.h \
 	src/chatlog.cpp \
 	src/images/broom.png.h \
