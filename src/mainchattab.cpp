@@ -277,16 +277,16 @@ wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& c
 
   int r,g,b;
   r = colour.Red(); g = colour.Green()-25; b = colour.Blue()-25;
-  boundry(r,0,255);
-  boundry(g,0,255);
-  boundry(b,0,255);
+  CLAMP(r,0,255);
+  CLAMP(g,0,255);
+  CLAMP(b,0,255);
 
   ret.Replace( 255, 228, 0, r, g, b );
 
   r = colour.Red()-91; g = colour.Green()-100; b = colour.Blue()-100;
-  boundry(r,0,255);
-  boundry(g,0,255);
-  boundry(b,0,255);
+  CLAMP(r,0,255);
+  CLAMP(g,0,255);
+  CLAMP(b,0,255);
   ret.Replace( 255, 253, 234, r, g, b );
 
 
