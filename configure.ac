@@ -8,14 +8,18 @@ AC_INIT([SpringLobby], [0.0.1-svn], [devel@www.springlobby.info])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/springlobbyapp.cpp])
 AC_CONFIG_AUX_DIR([autotools-aux])
-PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13)
-AC_SUBST(LIBTORRENT_CFLAGS)
-AC_SUBST(LIBTORRENT_LIBS)
 dnl if you have too old automake, delete the version number from below AND edit Makefile.am
 dnl we use filter-out GNU make extension in Makefile.am so we can't use -Werror below
 dnl we can't use -Wall either because we don't want to see the filter-out warning
 dnl FIXME add at least some warning categories. obviously we can't use -Wportability
 AM_INIT_AUTOMAKE([1.10 -Wnone])
+
+usetorrent=no
+AC_ARG_ENABLE(torrent-system,
+ [  --enable-torrent-system  Enable automatic content downloads via torrent, needs libtorrent],
+ [ usetorrent=yes
+ ])
+
 
 AC_CANONICAL_HOST
 
@@ -43,6 +47,17 @@ if test x$host_os = xmingw32msvc ; then
   if test x$WINDRES = x: ; then
     AC_MSG_ERROR([missing required windres windows resource compiler.])
   fi
+fi
+
+#check if configure option present, if yes check for lib
+if test x$usetorrent = xyes ; then
+	AC_MSG_CHECKING([checking for libtorrent])
+	PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], AC_MSG_RESULT(["http://www.rasterbar.com/products/libtorrent/"]) )
+#		 ]) )
+	AC_SUBST(LIBTORRENT_CFLAGS)
+	AC_SUBST(LIBTORRENT_LIBS)
+else
+	AC_DEFINE([NO_TORRENT_SYSTEM], [] , [disables torrent system])
 fi
 
 AC_ARG_VAR([SVNVERSION], [Produce a compact version number for a working copy.])
