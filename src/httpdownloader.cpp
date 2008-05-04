@@ -16,10 +16,6 @@
 #include "utils.h"
 #include "globalevents.h"
 
-//const wxEventType httpDownloadEvtComplete = wxNewEventType();
-//const wxEventType httpDownloadEvtFailed = wxNewEventType();
-
-
 HttpDownloader::HttpDownloader( const wxString& FileUrl, const wxString& DestPath,
                                 const bool notify, const wxString& noticeErr, const wxString& noticeOk  )
     : m_thread_updater ( *this, FileUrl, DestPath, notify, noticeErr, noticeOk   )
