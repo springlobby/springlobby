@@ -420,7 +420,7 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
 }
 
 
-wxArrayString SpringUnitSync::GetAIList()
+wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
 
@@ -436,7 +436,7 @@ wxArrayString SpringUnitSync::GetAIList()
   }
 
   try { // Older versions of unitsync does not have these functions.
-    const int LuaAICount = susynclib()->GetLuaAICount();
+    const int LuaAICount = susynclib()->GetLuaAICount( modname );
     for ( int i = 0; i < LuaAICount; i++ ) ret.Add( _( "LuaAI" ) +  susynclib()->GetLuaAIName( i ) );
   } catch (...) {}
 
