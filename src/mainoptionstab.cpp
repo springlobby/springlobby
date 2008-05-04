@@ -40,9 +40,8 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
     m_imagelist = new wxImageList( 12, 12 );
     m_imagelist->Add( wxIcon(spring_xpm) );
+    m_imagelist->Add( *charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
     m_imagelist->Add( wxIcon(userchat_xpm) );
-    //TODO when torrent merged, enable again
-    //m_imagelist->Add( *charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
 
     m_tabs->AssignImageList( m_imagelist );
 
@@ -51,11 +50,11 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
 #ifndef NO_TORRENT_SYSTEM
     m_torrent_opts = new TorrentOptionsPanel( m_tabs, m_ui );
-    m_tabs->AddPage( m_torrent_opts, _("P2P"), true, 0 );
+    m_tabs->AddPage( m_torrent_opts, _("P2P"), true, 1 );
 #endif
 
     m_chat_opts = new ChatOptionsTab( m_tabs, m_ui );
-    m_tabs->AddPage( m_chat_opts, _("Chat"), true, 1 );
+    m_tabs->AddPage( m_chat_opts, _("Chat"), true, 2 );
 
     m_restore_btn = new wxButton( this, wxID_REVERT, _("Restore") );
     m_apply_btn = new wxButton( this, wxID_APPLY, _("Apply") );
