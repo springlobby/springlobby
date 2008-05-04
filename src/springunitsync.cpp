@@ -749,5 +749,8 @@ void SpringUnitSync::_SaveMapInfoExCache()
 
 bool SpringUnitSync::FileExists( const wxString& name )
 {
-    return ( susynclib()->OpenFileVFS(name) != 0 );
+  int handle = susynclib()->OpenFileVFS(name);
+  if ( handle == 0 ) return false;
+  susynclib()->CloseFileVFS(handle);
+  return true;
 }
