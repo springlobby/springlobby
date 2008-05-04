@@ -5,6 +5,7 @@
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
+#include <wx/event.h>
 
 #include <map>
 #include "bimap.h"

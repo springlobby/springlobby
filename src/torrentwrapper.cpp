@@ -37,6 +37,8 @@
 #include <wx/file.h>
 #include <wx/wfstream.h>
 #include <wx/msgdlg.h>
+#include <wx/app.h>
+#include <wx/event.h>
 
 #include "torrentwrapper.h"
 
@@ -89,7 +91,7 @@ void TorrentWrapper::ConnectToP2PSystem()
   if ( m_connected ) return;
   m_socket_class->Connect( m_tracker_urls[0], DEFAULT_P2P_COORDINATOR_PORT );
   m_connected_tracker_index= 0;
-  return;
+  return; //TODO (BrainDamage #1#) what's this??
   for( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
   {
     m_socket_class->Connect( m_tracker_urls[i], DEFAULT_P2P_COORDINATOR_PORT );
@@ -670,6 +672,7 @@ void TorrentWrapper::OnConnected( Socket* sock )
 
   m_seed_count = 0;
   m_leech_count = 0;
+
 }
 
 

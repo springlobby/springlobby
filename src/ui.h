@@ -3,6 +3,7 @@
 
 #include <wx/string.h>
 #include <wx/thread.h>
+#include <wx/event.h>
 
 class Server;
 class TASServer;
@@ -18,9 +19,12 @@ class BattleBot;
 class ChatPanel;
 class UnitSyncThread;
 
+
 typedef int HostInfo;
 
 typedef int AlertEventType;
+
+extern const wxEventType torrentSystemStatusUpdateEvt;
 
 #define AE_MESSAGE 1
 #define AE_HIGHLIGHT_MESSAGE 2
