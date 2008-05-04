@@ -108,19 +108,7 @@ bool SpringLobbyApp::OnInit()
 
         SetupUserFolders();
 
-#ifdef __WXGTK__
-
-
-#endif
-
-        m_ui->mw().ShowConfigure();
-    }
-    else
-    {
-        m_ui->Connect();
-    }
-/****needs to be put above again ****/
-            //! ask for downloading ota content if archive not found, start downloader in background
+        //! ask for downloading ota content if archive not found, start downloader in background
         wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
         wxString destFilename = sett().GetSpringDir()+_T("base/base-ota-content.zip");
         bool contentExists = false;
@@ -140,7 +128,13 @@ bool SpringLobbyApp::OnInit()
         {
             m_otadownloader = new HttpDownloader( url, destFilename );
         }
-/********************************/
+
+        m_ui->mw().ShowConfigure();
+    }
+    else
+    {
+        m_ui->Connect();
+    }
 
     m_timer->Start( TIMER_INTERVAL );
 
