@@ -49,6 +49,7 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
   EVT_COMBOBOX( BROOM_SIDESEL, BattleRoomTab::OnSideSel )
 
   EVT_BUTTON ( BROOM_BALANCE, BattleRoomTab::OnBalance )
+  EVT_BUTTON ( BROOM_FIXCOLOURS, BattleRoomTab::OnFixColours )
 
 END_EVENT_TABLE()
 
@@ -107,8 +108,12 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_addbot_btn = new wxButton( this, BROOM_ADDBOT, _("Add Bot..."), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_addbot_btn->SetToolTip(_T("Gives you a selection of available bots you can add"));
 
+
+  m_fix_colours_btn = new wxButton( this, BROOM_FIXCOLOURS, _("Fix colours"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+  m_fix_colours_btn->SetToolTip(_T("Automatically makes player colors be different"));
+
   m_balance_btn = new wxButton( this, BROOM_BALANCE, _("Balance"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_balance_btn->SetToolTip(_T("Automatically banalce players into two or more teams."));
+  m_balance_btn->SetToolTip(_T("Automatically banalce players into two or more alliances."));
 
   m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_ready_chk->SetToolTip(_T("Click this if you are content with the battle settings"));
@@ -196,6 +201,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_lock_chk, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
+  m_buttons_sizer->Add( m_fix_colours_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_balance_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_start_btn, 0, wxEXPAND | wxALL, 2 );
 
@@ -211,7 +217,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   if ( !IsHosted() ) {
     m_start_btn->Disable();
+
     m_balance_btn->Disable();
+    m_fix_colours_btn->Disable();
+
     m_lock_chk->Disable();
   } else {
     m_battle.SetImReady ( true );
@@ -404,6 +413,16 @@ void BattleRoomTab::OnBalance( wxCommandEvent& event ){
   /// balance players.
 }
 
+void BattleRoomTab::OnFixColours( wxCommandEvent& event ){
+  wxLogMessage(_T(""));
+  if(!IsHosted()){/// Works with autohosts, and human hosts knows what it mean.
+    m_battle.Say(_T("!fixcolors"));
+    return;
+  }
+  //m_battle.Say(_T("fixing colours"));
+  m_battle.FixColours();
+}
+
 
 void BattleRoomTab::OnAddBot( wxCommandEvent& event )
 {
@@ -421,7 +440,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
         bs.ready = true;
         bs.order = 0;
         bs.handicap = 0;
-        bs.colour = m_battle.GetFreeColour( false );
+        bs.colour = m_battle.GetFreeColour( NULL );
         m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), m_battle.GetMe().GetNick(), bs, dlg.GetAI() );
       }
   }

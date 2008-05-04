@@ -62,6 +62,8 @@ IF(wxWidgets_FOUND)
 		src/crashreport.cpp
 		src/customlistctrl.cpp
 		src/flagimages.cpp
+		src/globalevents.cpp
+		src/httpdownloader.cpp
 		src/hostbattledialog.cpp
 		src/ibattle.cpp
 		src/iconimagelist.cpp

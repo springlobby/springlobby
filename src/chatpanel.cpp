@@ -498,12 +498,12 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
 	/// HitTest has column,row order  (x,y)
 	if ( m_chatlog_text->HitTest( wxPoint( 2, 2 ), &top_col, &top_row ) == wxTE_HT_UNKNOWN ) {
-		wxLogWarning( _T( "HitTest failed for top of visible page" ) );
+	//	wxLogWarning( _T( "HitTest failed for top of visible page" ) );
 	}
 	long bottom_col = 0, bottom_row = 0;
 
 	if ( m_chatlog_text->HitTest( wxPoint( 2, sizey - 4 ), &bottom_col, &bottom_row ) == wxTE_HT_UNKNOWN ) {
-		wxLogWarning( _T( "HitTest failed for bottom of visible page" ) );
+	//	wxLogWarning( _T( "HitTest failed for bottom of visible page" ) );
 	}
 
 	long jumpto = 0;
@@ -511,7 +511,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
 	int dirty = m_chatlog_text->GetDirty();
 	int mustscroll = m_chatlog_text->GetMustScroll();
-	wxLogWarning( _T( " dirty: %d mustscroll: %d" ), dirty, mustscroll );
+	//wxLogWarning( _T( " dirty: %d mustscroll: %d" ), dirty, mustscroll );
 	bool at_bottom = ( bottom_row >= totalrows - 1 ) || ( m_chatlog_text->GetDirty() && m_chatlog_text->GetMustScroll() );/// true if we're on bottom of page and must scroll
 	m_chatlog_text->SetMustScroll( at_bottom );
 
@@ -525,7 +525,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 	m_chatlog_text->WriteText( message  + _T( "\n" ) );
 
 	if ( never_scroll || ( sett().GetSmartScrollEnabled() && !at_bottom ) ) { /// view not at the bottom = disable autoscroll
-		wxLogMessage( _T( "not scrolling" ) );
+		//wxLogMessage( _T( "not scrolling" ) );
 		m_chatlog_text->ShowPosition( jumpto ); /// restore position that the scrollbar had before appending the text
 	} else {
 		m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
@@ -772,6 +772,7 @@ wxString ChatPanel::GetChatTypeStr() {
 	if ( m_type == CPT_Channel ) return _( "channel" );
 	else if ( m_type == CPT_Battle ) return _( "battle" );
 	else if ( m_type == CPT_Server ) return _( "server" );
+
 
 	return _T( "ROOMTYPE FIXME" );
 }

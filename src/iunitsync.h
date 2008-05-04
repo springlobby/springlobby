@@ -126,6 +126,8 @@ class IUnitSync
 
     virtual void SetSpringDataPath( const wxString& path ) = 0;
     virtual wxString GetSpringDataPath() = 0;
+
+    virtual bool FileExists( const wxString& name ) = 0;
 };
 
 IUnitSync* usync();

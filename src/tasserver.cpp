@@ -278,7 +278,7 @@ void TASServer::Disconnect()
 bool TASServer::IsConnected()
 {
     if ( m_sock == 0 ) return false;
-    return (m_sock->State() == SS_OPEN);
+    return (m_sock->State() == SS_Open);
 }
 
 
@@ -326,7 +326,7 @@ bool TASServer::IsPasswordHash( const wxString& pass )
 wxString TASServer::GetPasswordHash( const wxString& pass )
 {
     if ( IsPasswordHash(pass) ) return pass;
-    return WX_STRING(base64_encode(boost::md5(pass.mb_str()).digest().value(), 16));
+    return wxBase64::Encode(boost::md5(pass.mb_str()).digest().value(), 16);
 }
 
 
@@ -472,24 +472,6 @@ void TASServer::ReceiveAndExecute()
 }
 
 
-wxString ConvertTASServerPhailChecksum( const wxString& buggedcsum )
-{
-    signed long temp;
-    buggedcsum.ToLong( &temp );
-    unsigned int temp2 = (unsigned int)temp;
-    return wxString::Format( _T("%u"), temp2 );
-}
-
-
-wxString ConvertToTASServerBuggedChecksum( const wxString& csum )
-{
-    unsigned long temp;
-    csum.ToULong( &temp );
-    int temp2 = (int)temp;
-    return wxString::Format( _T("%d"), temp2 );
-}
-
-
 void TASServer::ExecuteCommand( const wxString& in )
 {
     wxLogMessage( _T("%s"), in.c_str()  );
@@ -535,7 +517,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         m_nat_helper_port = (unsigned long)GetIntParam( params );
         lanmode = GetBoolParam( params );
         m_se->OnConnected( _T("TAS Server"), mod, (m_ser_ver > 0), supported_spring_version, lanmode );
-
     }
     else if ( cmd == _T("ACCEPTED") )
     {
@@ -571,7 +552,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         maxplayers = GetIntParam( params );
         haspass = GetBoolParam( params );
         rank = GetIntParam( params );
-        hash = ConvertTASServerPhailChecksum( GetWordParam( params ) );
+        hash = GetWordParam( params );
         map = GetSentenceParam( params );
         title = GetSentenceParam( params );
         mod = GetSentenceParam( params );
@@ -589,7 +570,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         id = GetIntParam( params );
         specs = GetIntParam( params );
         haspass = GetBoolParam( params );
-        hash = ConvertTASServerPhailChecksum( GetWordParam( params ) );
+        hash = GetWordParam( params );
         map = GetSentenceParam( params );
         m_se->OnBattleInfoUpdated( id, specs, haspass, hash, map );
     }
@@ -681,7 +662,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("JOINBATTLE") )
     {
         id = GetIntParam( params );
-        hash = ConvertTASServerPhailChecksum( GetWordParam( params ) );
+        hash = GetWordParam( params );
         m_battle_id = id;
         m_se->OnJoinedBattle( id );
         m_se->OnBattleInfoUpdated( m_battle_id );
@@ -1203,9 +1184,9 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
                              bo.port,
                              bo.maxplayers
                            );
-    cmd += ConvertToTASServerBuggedChecksum ( bo.modhash );
+    cmd +=  bo.modhash;
     cmd += wxString::Format( _T(" %d "), bo.rankneeded/100 );
-    cmd += ConvertToTASServerBuggedChecksum(  bo.maphash ) + _T(" ");
+    cmd += bo.maphash + _T(" ");
     cmd += bo.mapname + _T("\t");
     cmd += bo.description + _T("\t");
     cmd += bo.modname;
@@ -1309,7 +1290,7 @@ void TASServer::SendHostInfo( HostInfo update )
     {
         // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
         wxString cmd = wxString::Format( _T("%d %d "), battle.GetSpectators(), battle.IsLocked() );
-        cmd += ConvertToTASServerBuggedChecksum( battle.GetMapHash() ) + _T(" ");
+        cmd += battle.GetMapHash() + _T(" ");
         cmd += battle.GetMapName();
 
         SendCmd( _T("UPDATEBATTLEINFO"), cmd );

@@ -187,6 +187,7 @@ void BattleroomListCtrl::AddUser( User& user )
 {
   int index = InsertItem( 0,icons().ICON_NREADY );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
+  wxLogMessage(_T("BattleroomListCtrl::AddUser index=%d name=%s"),index,user.GetNick().c_str());
 
   item_content new_content;
   new_content.is_bot = false;
@@ -210,13 +211,17 @@ void BattleroomListCtrl::RemoveUser( User& user )
 
 void BattleroomListCtrl::UpdateUser( User& user )
 {
-  UpdateUser( GetUserIndex( user ) );
+  int index=GetUserIndex( user );
+  UpdateUser( index );
+  wxLogMessage(_T("BattleroomListCtrl::UpdateUser(User&) index=%d name=%s"),index,user.GetNick().c_str());
 }
 
 
 void BattleroomListCtrl::UpdateUser( const int& index )
 {
   ASSERT_LOGIC( index != -1, _T("index = -1") );
+
+
 
   wxListItem item;
   item.SetId( index );
@@ -226,7 +231,9 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   item_content user_content = items[(size_t)GetItemData( index )];
   User& user = *((User*) user_content.data);
 
-  icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
+  wxLogMessage(_T("BattleroomListCtrl::UpdateUser(int) index=%d name=%s"),index,user.GetNick().c_str());
+
+
 
   int statimg;
   if ( &m_battle.GetFounder() == &user ) {
@@ -239,6 +246,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   SetItemColumnImage( index, 1, -1 );
 
   if ( !user.BattleStatus().spectator ) {
+    icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
 
     try {
       int sideimg = icons().GetSideIcon( m_battle.GetModName(), user.BattleStatus().side );

@@ -5,9 +5,11 @@ ACLOCAL_AMFLAGS = -I m4 --install
 
 AM_CPPFLAGS = \
 	$(WX_CPPFLAGS) \
+	$(LIBTORRENT_CFLAGS) \
 	-DLOCALEDIR=\"$(localedir)\"
 
 # strict aliasing check is disabled, because wxWidgets headers have problems
+TORRFLAGS = `pkg-config  libtorrent --libs`
 AM_CXXFLAGS = \
 	-Wall \
 	-Wno-strict-aliasing
@@ -38,7 +40,9 @@ bin_PROGRAMS = \
 	springsettings
 
 springlobby_LDADD = \
-	$(WX_LIBS)
+	$(WX_LIBS)\
+	$(LIBTORRENT_LIBS)
+
 
 springsettings_LDADD = \
 	$(WX_LIBS)
@@ -108,6 +112,8 @@ springlobby_SOURCES = \
 	src/base64.h \
 	src/battle.cpp \
 	src/battle.h \
+	src/maintorrenttab.cpp \
+	src/maintorrenttab.h \
 	src/battlelistctrl.cpp \
 	src/battlelistctrl.h \
 	src/battlelistfilter.cpp \
@@ -197,6 +203,10 @@ springlobby_SOURCES = \
 	src/userlist.h \
 	src/utils.cpp \
 	src/utils.h \
+	src/torrentlistctrl.cpp \
+	src/torrentlistctrl.h \
+	src/torrentoptionspanel.cpp \
+	src/torrentoptionspanel.h \
 	src/images/start_ally.xpm \
 	src/images/start_enemy.xpm \
 	src/images/start_unused.xpm \
@@ -510,6 +520,8 @@ springlobby_SOURCES = \
 	src/mmoptionswrapper.cpp \
 	src/battleroommmoptionstab.h \
 	src/battleroommmoptionstab.cpp \
+	src/torrentwrapper.cpp \
+	src/torrentwrapper.h \
 	src/thingdef.h \
 	src/spinctld.h \
 	src/spinctld.cpp \
@@ -517,8 +529,11 @@ springlobby_SOURCES = \
 	src/autobalancedialog.h \
 	src/tdfcontainer.cpp \
 	src/tdfcontainer.h \
+	src/httpdownloader.h \
+	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
 	src/Helper/TextCompletionDatabase.cpp 
+
 
 
 if USE_WINDRES	
