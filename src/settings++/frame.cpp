@@ -236,6 +236,8 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		case ID_MENUITEM_SAVE:
 			if (abstract_panel::saveSettings())
 			 (abstract_panel::settingsChanged) = false;
+			if (simpleTab!=0)
+        			simpleTab->saveCbxChoices();
 		 break;
 
 		case ID_MENUITEM_QUIT:
@@ -310,9 +312,9 @@ void settings_frame::switchToExpertMode()
 	menuMode->Check(ID_MENUITEM_EXPERT,true);
 
 	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
-    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
-    audioTab = new audio_panel(notebook,ID_AUDIO);
-    debugTab = new debug_panel(notebook,ID_DEBUG);
+    	detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
+    	audioTab = new audio_panel(notebook,ID_AUDIO);
+    	debugTab = new debug_panel(notebook,ID_DEBUG);
 	notebook->AddPage(qualityTab, qualityTabCap);
 	notebook->AddPage(detailTab, detailTabCap);
 	notebook->AddPage(audioTab,audioTabCap);
