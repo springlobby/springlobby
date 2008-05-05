@@ -58,8 +58,8 @@ BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_MENU(wxID_ANY,settings_frame::OnMenuChoice)
 END_EVENT_TABLE()
 
-settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
-: wxFrame(parent, id, title, position, size, style)
+settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size)
+: wxFrame(parent, id, title, position, size)
 {
 	alreadyCalled = false;
 	parentWindow = parent;
@@ -83,7 +83,8 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 		SetTitle(_T("SpringSettings"));
 	}
 	 SetIcon(*settingsIcon);
-	 SetSize(8,8,760,550);
+	 SetSize( OptionsHandler.GetSettingsWindowLeft(), OptionsHandler.GetSettingsWindowTop(), OptionsHandler.GetSettingsWindowWidth(), OptionsHandler.GetSettingsWindowHeight() );
+     Layout();
 	 Center();
 }
 
@@ -114,16 +115,16 @@ void settings_frame::handleExternExit()
 		alreadyCalled = true;
 		if (abstract_panel::settingsChanged)
 		{
-			int choice = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"), wxYES_NO |wxICON_QUESTION);
+			int choice = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"), wxYES|wxNO |wxICON_QUESTION);
 			if ( choice == wxYES)
 			{
 				abstract_panel::saveSettings();
-				if (simpleTab)
+				if (simpleTab!=0)
 					simpleTab->saveCbxChoices();
 			}
 		}
-
 	}
+
 	OptionsHandler.save();
 }
 
@@ -163,7 +164,7 @@ void settings_frame::CreateGUIControls()
 							    uiTab = new tab_ui(notebook,ID_UI);
 							    audioTab = new audio_panel(notebook,ID_AUDIO);
 							    debugTab = new debug_panel(notebook,ID_DEBUG);
-
+                                simpleTab = 0;
 								notebook->AddPage(uiTab, uiTabCap);
 								notebook->AddPage(qualityTab, qualityTabCap);
 								notebook->AddPage(detailTab, detailTabCap);
@@ -331,7 +332,7 @@ void settings_frame::updateAllControls()
 {
 	if (uiTab)
 		uiTab->updateControls(UPDATE_ALL);
-	if (simpleTab)
+	if (simpleTab!=0)
 		simpleTab->updateControls(UPDATE_ALL);
 	if (detailTab)
 		detailTab->updateControls(UPDATE_ALL);
@@ -345,6 +346,14 @@ void settings_frame::updateAllControls()
 void settings_frame::OnClose(wxCloseEvent& event)
 {
 	if ( !alreadyCalled){
+	     int x, y, w, h;
+          GetSize( &w, &h );
+          OptionsHandler.SetSettingsWindowHeight( h );
+          OptionsHandler.SetSettingsWindowWidth( w );
+          GetPosition( &x, &y );
+          OptionsHandler.SetSettingsWindowTop( y );
+          OptionsHandler.SetSettingsWindowLeft( x );
+          OptionsHandler.save();
 		handleExit();
 	}
 }

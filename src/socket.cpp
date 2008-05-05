@@ -2,7 +2,7 @@
 
 #include <wx/socket.h>
 #include <wx/thread.h>
-#include <wx/protocol/http.h>
+#include <wx/string.h>
 #include <stdexcept>
 
 #include "socket.h"
@@ -27,11 +27,11 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
   ASSERT_LOGIC( sock != 0, _T("sock = 0") );
 
   if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
-    m_serv.OnDataReceived( sock );
+    m_net_class.OnDataReceived( sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_LOST ) {
-    m_serv.OnDisconnected( sock );
+    m_net_class.OnDisconnected( sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
-    m_serv.OnConnected( sock );
+    m_net_class.OnConnected( sock );
   } else {
     ASSERT_LOGIC( false, _T("Unknown socket event."));
   }
@@ -39,9 +39,9 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 
 
 //! @brief Constructor
-Socket::Socket( Server& serv, bool blocking ):
+Socket::Socket( iNetClass& netclass, bool blocking ):
   m_block(blocking),
-  m_serv(serv),
+  m_net_class(netclass),
   m_rate(-1),
   m_sent(0)
 {
@@ -53,8 +53,6 @@ Socket::Socket( Server& serv, bool blocking ):
   //resetting the ping state vars.
   m_ping_msg = wxEmptyString;
   m_ping_int = 0;
-  m_udp_ping_adr = wxEmptyString;
-  m_udp_ping_int = 0;
   m_ping_t = 0;
 
 }
@@ -80,7 +78,7 @@ wxSocketClient* Socket::_CreateSocket()
 
   sock->SetClientData( (void*)this );
   if ( !m_block ) {
-    if ( m_events == 0 ) m_events = new SocketEvents( m_serv );
+    if ( m_events == 0 ) m_events = new SocketEvents( m_net_class );
     sock->SetFlags( wxSOCKET_NOWAIT );
 
     sock->SetEventHandler(*m_events, SOCKET_ID);
@@ -119,7 +117,7 @@ void Socket::Connect( const wxString& addr, const int port )
 void Socket::Disconnect( )
 {
   if ( m_sock == 0 ) return;
-  m_serv.OnDisconnected( this );
+  m_net_class.OnDisconnected( this );
   LOCK_SOCKET;
   _EnablePingThread( false );
   m_sock->Destroy();
@@ -210,19 +208,19 @@ bool Socket::Receive( wxString& data )
 
 
 //! @brief Get curent socket state
-Sockstate Socket::State( )
+SockState Socket::State( )
 {
-  if ( m_sock == 0 ) return SS_CLOSED;
+  if ( m_sock == 0 ) return SS_Closed;
 
   LOCK_SOCKET;
   if ( m_sock->IsConnected() ) {
     m_connecting = false;
-    return SS_OPEN;
+    return SS_Open;
   } else {
     if ( m_connecting ) {
-      return SS_CONNECTING;
+      return SS_Connecting;
     } else {
-      return SS_CLOSED;
+      return SS_Closed;
     }
   }
 }
@@ -230,9 +228,9 @@ Sockstate Socket::State( )
 
 //! @brief Get socket error code
 //! @todo Implement
-Sockerror Socket::Error( )
+SockError Socket::Error( )
 {
-  return -1;
+  return (SockError)-1;
 }
 
 
@@ -248,29 +246,15 @@ void Socket::SetPingInfo( const wxString& msg, unsigned int interval )
 }
 
 
-//! @brief Set udp ping info.
-//! @see Socket::SetPingInfo
-void Socket::SetUdpPingInfo( const wxString& addr, unsigned int port, unsigned int interval )
-{
-  LOCK_SOCKET;
-  m_udp_ping_adr = addr;
-  m_udp_ping_int = interval;
-  m_udp_ping_port = port;
-  _EnablePingThread( _ShouldEnablePingThread() );
-}
-
-
 void Socket::_EnablePingThread( bool enable )
 {
+
   if ( !enable ) {
     if ( m_ping_t != 0 ) {
 
       // Reset values to be sure.
       m_ping_int = 0;
       m_ping_msg = wxEmptyString;
-      m_udp_ping_port = 0;
-      m_udp_ping_int = 0;
-      m_udp_ping_adr = wxEmptyString;
 
       m_ping_t->Delete();
       m_ping_thread_wait.Enter();
@@ -289,7 +273,7 @@ void Socket::_EnablePingThread( bool enable )
 //! @see Socket::_EnablePingThread
 bool Socket::_ShouldEnablePingThread()
 {
-  return ( (m_ping_msg != wxEmptyString) || (m_udp_ping_adr != wxEmptyString) );
+  return ( (m_ping_msg != wxEmptyString) );
 }
 
 
@@ -303,41 +287,11 @@ void Socket::SetSendRateLimit( int Bps )
 //! @brief Ping remote host with custom protocol message.
 void Socket::Ping()
 {
-  wxLogMessage( _T("Sent ping.") );
+  // wxLogMessage( _T("Sent ping.") );
+
   if ( m_ping_msg != wxEmptyString ) Send( m_ping_msg );
 }
 
-
-//! @brief Send udp ping.
-//! @note used for nat travelsal.
-//! @todo Use m_udp_ping_msg variable as message.
-void Socket::UDPPing(){
-#ifndef HAVE_WX26
-  if ( m_ping_msg == wxEmptyString ) return;
-
-  wxLogMessage( _T("Sent udp ping.") );
-
-  wxLogMessage( _T("UDPPing address %s port %d"), m_udp_ping_adr.c_str(), m_udp_ping_port );
-
-  wxIPV4address local_addr;
-  local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
-  local_addr.Service(12345);
-
-  wxDatagramSocket udp_socket(local_addr,/* wxSOCKET_WAITALL*/wxSOCKET_NONE);
-
-  wxIPV4address wxaddr;
-  wxaddr.Hostname(m_udp_ping_adr);
-  wxaddr.Service(m_udp_ping_port);
-
-  char *message="ipv4 sux!";
-  if(udp_socket.IsOk()){
-    udp_socket.SendTo(wxaddr,message,strlen(message)+1);
-  }else{
-    wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));
-  }
-  if(udp_socket.Error())wxLogMessage(_T("Error=%d"),udp_socket.LastError());
-#endif
-}
 
 
 void Socket::OnTimer( int mselapsed )
@@ -370,7 +324,6 @@ PingThread::PingThread( Socket& sock ):
   m_sock(sock)
 {
   m_next_ping = 0;
-  m_next_udp_ping = 0;
 }
 
 
@@ -385,49 +338,15 @@ void PingThread::Init()
 void* PingThread::Entry()
 {
   m_sock.OnPingThreadStarted();
-  m_next_ping = -1;
-  m_next_udp_ping = -1;
+  m_next_ping = m_next_ping = m_sock.GetPingInterval();
 
-  while ( !TestDestroy() ) {
+  while ( !TestDestroy() )
+  {
 
-    if ( !m_sock.GetPingEnabled() || !m_sock.GetUDPPingEnabled() )
-    {
-      m_next_udp_ping = -1;
-      m_next_ping = -1;
-    }
+    if ( !m_sock.GetPingEnabled() ) break;
 
-    if ( (m_next_ping < 0) && (m_sock.GetPingEnabled()) ) m_next_ping = m_sock.GetPingInterval();
-    if ( (m_next_udp_ping < 0) && (m_sock.GetUDPPingEnabled()) ) m_next_udp_ping = m_sock.GetUDPPingInterval();
-
-    if ( (m_next_ping >= 0) && (m_next_udp_ping >= 0) ) {
-      // Both normal and udp ping enabled.
-
-      if ( m_next_ping < m_next_udp_ping ) {
-        // Normal ping next in line
-        Sleep( m_next_ping );
-        m_next_udp_ping -= m_next_ping;
-        m_next_ping = -1;
-        m_sock.Ping();
-      } else {
-        // UDP ping next in line.
-        Sleep( m_next_udp_ping );
-        m_next_ping -= m_next_udp_ping;
-        m_next_udp_ping = -1;
-        m_sock.UDPPing();
-      }
-
-    } else if (m_next_ping >= 0) {
-      // Normal ping.
-      Sleep( m_next_ping );
-      m_sock.Ping();
-    } else if (m_next_udp_ping >= 0) {
-      // UDP ping.
-      Sleep( m_next_udp_ping );
-      m_sock.UDPPing();
-    } else {
-      // No ping enabled.
-      Sleep( 100 );
-    }
+    m_sock.Ping();
+    Sleep( m_next_ping );
 
   }
   m_sock.OnPingThreadStopped();
@@ -438,40 +357,4 @@ void* PingThread::Entry()
 void PingThread::OnExit()
 {
 
-}
-
-
-//! @brief used to check if the NAT is done properly when hosting
-bool Socket::TestOpenPort( PacketType type, unsigned int port )
-{
-  if ( type == Udp )
-  {
-    #ifndef HAVE_WX26
-    wxIPV4address local_addr;
-    local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
-    local_addr.Service(port);
-
-    wxSocketServer udp_socket(local_addr, wxSOCKET_NONE);
-
-    wxHTTP connect_to_server;
-    connect_to_server.SetTimeout( 10 );
-
-    if ( !connect_to_server.Connect( _T("zjt3.com") ) ) return false;
-    connect_to_server.GetInputStream(wxString::Format( _T("/porttest.php?port=%d"), port));
-
-    if(udp_socket.IsOk()){
-      if ( !udp_socket.WaitForAccept( 10 ) ) return false;
-    }else{
-      wxLogMessage(_T("socket's IsOk() is false, no UDP packets can be checked"));
-      return false;
-    }
-    if(udp_socket.Error())
-    {
-      wxLogMessage(_T("Error=%d"),udp_socket.LastError());
-      return false;
-    }
-    return true;
-    #endif
-  }
-  return false;
 }

@@ -29,6 +29,8 @@ struct UserStatus {
 };
 
 struct UserBattleStatus {
+  /// when adding something to this struct, also modify User::UpdateBattleStatus()
+  /// total 12 members here
   int order;
   int team;
   int ally;
@@ -39,7 +41,10 @@ struct UserBattleStatus {
   int sync;
   bool spectator;
   bool ready;
-  UserBattleStatus(): order(-1),team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),ready(false) {}
+  /// for nat holepunching
+  wxString ip;
+  unsigned int udpport;
+  UserBattleStatus(): order(-1),team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(true),ready(false),udpport(0) {}
 };
 
 class ChatPanel;
@@ -82,7 +87,8 @@ class User
     void SetStatus( const UserStatus& status );
 
     UserBattleStatus& BattleStatus() { return m_bstatus; }
-    void SetBattleStatus( const UserBattleStatus& status, bool setorder = false );
+    //void SetBattleStatus( const UserBattleStatus& status, bool setorder = false );/// dont use this to avoid overwriting data like ip and port, use following method.
+    void UpdateBattleStatus( const UserBattleStatus& status, bool setorder = false );
 
 /*    void SetUserData( void* userdata ) { m_data = userdata; }
     void* GetUserData() { return m_data; }*/
@@ -99,6 +105,10 @@ class User
     bool ExecuteSayCommand( const wxString& cmd );
 
     static wxString GetRankName(int rank);
+
+    float GetBalanceRank();
+
+    wxString GetClan();
 
   protected:
     // User variables

@@ -50,7 +50,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* p
   col.SetImage( -1 );
   InsertColumn( 2, col, _T("Rank") );
   col.SetText( _("Nickname") );
-  col.SetImage( ICON_DOWN );
+  col.SetImage( icons().ICON_DOWN );
   InsertColumn( 3, col, _T("Nickname") );
 
   m_sortorder[0].col = 0;
@@ -63,19 +63,14 @@ NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* p
   m_sortorder[3].direction = true;
   Sort( );
 
-#ifdef __WXMSW__
-  SetColumnWidth( 0, 45 );
-#else
-  SetColumnWidth( 0, 20 );
-#endif
-  SetColumnWidth( 1, 20 );
-  SetColumnWidth( 2, 20 );
-  SetColumnWidth( 3, 128 );
+  SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
 
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
   SetImageList( &icons(), wxIMAGE_LIST_STATE );
-
 }
 
 
@@ -86,11 +81,12 @@ NickListCtrl::~NickListCtrl()
 
 void NickListCtrl::AddUser( User& user )
 {
-  int index = InsertItem( 0, IconImageList::GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+  int index = InsertItem( 0, icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
   SetItemData( index, (wxUIntPtr)&user );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
   UserUpdated( index );
   Sort();
+  SetColumnWidth( 3, wxLIST_AUTOSIZE );
 }
 
 void NickListCtrl::RemoveUser( const User& user )
@@ -99,6 +95,7 @@ void NickListCtrl::RemoveUser( const User& user )
     if ( &user == (User*)GetItemData( i ) ) {
       DeleteItem( i );
       Sort();
+      SetColumnWidth( 3, wxLIST_AUTOSIZE );
       return;
     }
   }
@@ -121,9 +118,9 @@ void NickListCtrl::UserUpdated( User& user )
 void NickListCtrl::UserUpdated( const int& index )
 {
   User& user = *((User*)GetItemData( index ));
-  SetItemImage( index, IconImageList::GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
-  SetItemColumnImage( index, 1, IconImageList::GetFlagIcon( user.GetCountry() ) );
-  SetItemColumnImage( index, 2, IconImageList::GetRankIcon( user.GetStatus().rank ) );
+  SetItemImage( index, icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+  SetItemColumnImage( index, 1, icons().GetFlagIcon( user.GetCountry() ) );
+  SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
   Sort();
@@ -182,7 +179,7 @@ void NickListCtrl::OnColClick( wxListEvent& event )
 
 
   GetColumn( m_sortorder[0].col, col );
-  col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
+  col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
   Sort();

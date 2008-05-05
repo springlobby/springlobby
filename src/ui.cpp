@@ -27,6 +27,10 @@
 #include "battle.h"
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
+#ifndef NO_TORRENT_SYSTEM
+#include "maintorrenttab.h"
+#include "torrentwrapper.h"
+#endif
 #include "agreementdialog.h"
 #include "unitsyncthread.h"
 
@@ -39,9 +43,9 @@ Ui::Ui() :
 {
    ReloadUnitSync();
 
+  m_upd_intv_counter = 0;
   m_main_win = new MainWindow( *this );
-  CustomMessageBox::setLobbypointer(m_main_win);
-  CustomNonBlockingMessageBox::setLobbypointer(m_main_win);
+  CustomMessageBoxBase::setLobbypointer(m_main_win);
   m_spring = new Spring(*this);
   m_thread = new UnitSyncThread( *this );
   m_thread->Init();
@@ -235,11 +239,16 @@ void Ui::StartHostedBattle()
   ASSERT_LOGIC( m_serv != 0, _T("m_serv = 0") );
   m_serv->StartHostedBattle();
   sett().SetLastHostMap( m_serv->GetCurrentBattle()->GetMapName() );
+  sett().SaveBattleMapOptions(m_serv->GetCurrentBattle());
+  sett().SaveSettings();
 }
 
 
 void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
 {
+  #ifndef NO_TORRENT_SYSTEM
+  torrent()->SetIngameStatus(true);
+  #endif
   m_spring->Run( battle );
 }
 
@@ -257,61 +266,41 @@ void Ui::Quit()
   sett().SaveSettings();
   m_main_win->forceSettingsFrameClose();
 
-//fixes for non-termination on win
   m_main_win->Close();
   m_thread->Kill();
   m_con_win->Close();
-
-  if ( m_serv != 0 )
-    m_serv->Disconnect();
+  if (m_serv != 0 ) m_serv->Disconnect();
 }
 
 
 void Ui::ReloadUnitSync()
 {
-  usync()->FreeUnitSyncLib();
-  usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() );
+  usync()->ReloadUnitSyncLib();
   if ( m_main_win != 0 ) m_main_win->OnUnitSyncReloaded();
 }
 
 
-void Ui::DownloadMap( const wxString& map )
+void Ui::DownloadMap( const wxString& hash, const wxString& name )
 {
-  wxString mapname = map;
-  mapname = mapname.SubString(0, mapname.Find( '.', true ) - 1 );
-  mapname.Replace(_T(" "), _T("*") );
-  mapname.Replace(_T("-"), _T("*") );
-  mapname.Replace(_T("_"), _T("*") );
-  wxString url = _T("http://www.unknown-files.net/spring/search/") + mapname + _T("/filename/");
+  #ifndef NO_TORRENT_SYSTEM
+  if ( !hash.IsEmpty() ) torrent()->RequestFileByHash( hash );
+  else if ( !name.IsEmpty() ) torrent()->RequestFileByName( name );
+  #else
+  wxString url = _T("http://spring.jobjol.nl/search.php");
   OpenWebBrowser ( url );
+  #endif
 }
 
 
-void Ui::DownloadMod( const wxString& mod )
+void Ui::DownloadMod( const wxString& hash, const wxString& name )
 {
-  wxString modname = mod;
-  //all the following manipulation is necessary because the publish name on UF doesn't necessary reflect the file name
-  //and the mod filename isn't accessible trought unitsync
-  modname.Replace(_T(" "), _T("*") );
-  modname.Replace(_T("-"), _T("*") );
-  modname.Replace(_T("_"), _T("*") );
-  modname.Replace(_T("VERSION"), _T("*") );
-  modname.Replace(_T("Version"), _T("*") );
-  modname.Replace(_T("version"), _T("*") );
-  modname.Replace(_T("VER"), _T("*") );
-  modname.Replace(_T("Ver"), _T("*") );
-  modname.Replace(_T("ver"), _T("*") );
-  modname.Replace(_T("V"), _T("*") );
-  modname.Replace(_T("v"), _T("*") );
-  modname.Replace(_T("."), _T("*") );
-  modname.Replace(_T("ALPHA"), _T("*") );
-  modname.Replace(_T("Alpha"), _T("*") );
-  modname.Replace(_T("alpha"), _T("*") );
-  modname.Replace(_T("BETA"), _T("*") );
-  modname.Replace(_T("Beta"), _T("*") );
-  modname.Replace(_T("beta"), _T("*") );
-  wxString url = _T("http://www.unknown-files.net/spring/search/") + modname + _T("/");
+  #ifndef NO_TORRENT_SYSTEM
+  if ( !hash.IsEmpty() ) torrent()->RequestFileByHash( hash );
+  else if ( !name.IsEmpty() ) torrent()->RequestFileByName( name );
+  #else
+  wxString url = _T("http://spring.jobjol.nl/search.php");
   OpenWebBrowser ( url );
+  #endif
 }
 
 
@@ -322,7 +311,7 @@ void Ui::OpenWebBrowser( const wxString& url )
       if ( !wxLaunchDefaultBrowser( url ) )
       {
         wxLogWarning( _T("can't launch default browser") );
-        customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
       }
   }
   else
@@ -330,7 +319,7 @@ void Ui::OpenWebBrowser( const wxString& url )
     if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
     {
       wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().c_str() );
-      customMessageBox(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
+      customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
     }
 
   }
@@ -371,8 +360,8 @@ void Ui::ShowMessage( const wxString& heading, const wxString& message )
 {
 
   if ( m_main_win == 0 ) return;
-  wxMessageDialog msg( &mw(), message, heading, wxOK);
-  msg.ShowModal();
+  serverMessageBox( SL_MAIN_ICON, message, heading, wxOK);
+
 }
 
 
@@ -380,6 +369,8 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
 {
 
   if ( !IsConnected() ) return false;
+  //TODO insert logic for joining multiple channels at once
+  //or remove that from "/help"
   if ( (cmd.BeforeFirst(' ').Lower() == _T("/join")) || (cmd.BeforeFirst(' ').Lower() == _T("/j")) ) {
     wxString channel = cmd.AfterFirst(' ');
     wxString pass = channel.AfterFirst(' ');
@@ -436,13 +427,16 @@ void Ui::ConsoleHelp( const wxString& topic )
     panel->ClientMessage( _("Global commands:") );
     panel->ClientMessage( _("  \"/away\" - Sets your status to away.") );
     panel->ClientMessage( _("  \"/back\" - Resets your away status.") );
+    panel->ClientMessage( _("  \"/changepassword oldpassword newpassword\" - Changes the current active account's password.") );
     panel->ClientMessage( _("  \"/channels\" - Lists currently active channels.") );
     panel->ClientMessage( _("  \"/help [topic]\" - Put topic if you want to know more specific information about a command.") );
     panel->ClientMessage( _("  \"/join channel [password] [,channel2 [password2]]\" - Join a channel.") );
     panel->ClientMessage( _("  \"/j\" - Alias to /join.") );
     panel->ClientMessage( _("  \"/ingame\" - Show how much time you have in game.") );
+    panel->ClientMessage( _("  \"/msg username [text]\" - sends a private message containing text to username.") );
     panel->ClientMessage( _("  \"/rename newalias\" - Changes your nickname to newalias.") );
     panel->ClientMessage( _("  \"/sayver\" - Say what version of springlobby you have in chat.") );
+    panel->ClientMessage( _("  \"/testmd5 text\" - Returns md5-b64 hash of given text.") );
     panel->ClientMessage( _("  \"/ver\" - Display what version of SpringLobby you have.") );
     panel->ClientMessage( _T("") );
     panel->ClientMessage( _("Chat commands:") );
@@ -474,6 +468,15 @@ void Ui::OnUpdate( int mselapsed )
   if ( m_serv != 0 ) {
     m_serv->Update( mselapsed );
   }
+  #ifndef NO_TORRENT_SYSTEM
+  if (m_upd_intv_counter % 20 == 0 )
+  {
+      m_main_win->GetTorrentTab().OnUpdate();
+
+  }
+  torrent()->UpdateFromTimer( mselapsed );
+  m_upd_intv_counter++;
+  #endif
 }
 
 
@@ -506,6 +509,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 
 bool Ui::IsSpringCompatible( )
 {
+  if ( sett().GetDisableSpringVersionCheck() ) return true;
   if ( !m_spring->TestSpringBinary() ) return false;
   if ( m_serv->GetRequiredSpring() == _T("*") ) return true; // Server accepts any version.
   if ( (usync()->GetSpringVersion() == m_serv->GetRequiredSpring() ) && !m_serv->GetRequiredSpring().IsEmpty() ) return true;
@@ -709,7 +713,8 @@ void Ui::OnMotd( Server& server, const wxString& message )
 void Ui::OnServerMessage( Server& server, const wxString& message )
 {
   ChatPanel* panel = GetActiveChatPanel();
-  if ( panel != 0 ) {
+  if ( panel != 0 )
+  {
     panel->StatusMessage( message );
   } else {
     ShowMessage( _("Server message"), message );
@@ -750,8 +755,8 @@ void Ui::OnBattleClosed( Battle& battle )
   if ( br != 0 ) {
     if ( &br->GetBattle() == &battle )
 	{
-//	    if (!battle.IsFounderMe() )
-//            customMessageBox(SL_MAIN_ICON,_T("The current battle was closed by the host."),_T("Battle closed"));
+	    if (!battle.IsFounderMe() )
+            customMessageBoxNoModal(SL_MAIN_ICON,_("The current battle was closed by the host."),_("Battle closed"));
 		mw().GetJoinTab().LeaveCurrentBattle();
 	}
   }
@@ -805,6 +810,12 @@ void Ui::OnUserLeftBattle( Battle& battle, User& user )
   }
 }
 
+void Ui::OnBattleMapRefresh()
+{
+    if ( m_main_win == 0 ) return;
+    BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+    if ( br != 0 ) br->UpdateBattleInfo( true, false );
+}
 
 void Ui::OnBattleInfoUpdated( Battle& battle )
 {
@@ -878,6 +889,9 @@ void Ui::OnBattleStarted( Battle& battle )
       battle.SendMyBattleStatus();
       battle.GetMe().Status().in_game = true;
       battle.GetMe().SendMyUserStatus();
+      #ifndef NO_TORRENT_SYSTEM
+      torrent()->SetIngameStatus(true);
+      #endif
       m_spring->Run( battle );
     }
   }
@@ -907,7 +921,10 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
 
 void Ui::OnSpringTerminated( bool success )
 {
-  if ( m_serv == 0 ) return;
+  #ifndef NO_TORRENT_SYSTEM
+  torrent()->SetIngameStatus(false);
+  #endif
+  if ( !m_serv ) return;
 
   m_serv->GetMe().Status().in_game = false;
   m_serv->GetMe().SendMyUserStatus();

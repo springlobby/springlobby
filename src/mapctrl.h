@@ -15,6 +15,7 @@ struct BattleStartRect;
 class SinglePlayerBattle;
 class Ui;
 struct UnitSyncMap;
+class BattleRoomTab;
 
 
 typedef int RectArea;

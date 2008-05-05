@@ -7,6 +7,7 @@ class Ui;
 class wxTimer;
 class wxIcon;
 class wxLocale;
+class HttpDownloader;
 
 //! @brief SpringLobby wxApp
 class SpringLobbyApp : public wxApp
@@ -23,17 +24,19 @@ class SpringLobbyApp : public wxApp
     // System Events
     void OnTimer( wxTimerEvent& event );
 
-    void InitDirs();
-
     bool ParseCmdLine();
 
   protected:
+
+    void SetupUserFolders();
+    void InitDirs();
 
     wxTimer* m_timer;
 
     Ui* m_ui;
 
     wxLocale* m_locale;
+    HttpDownloader* m_otadownloader ;
 
     DECLARE_EVENT_TABLE()
 

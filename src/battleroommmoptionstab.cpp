@@ -1,3 +1,4 @@
+
 #include "battleroommmoptionstab.h"
 
 #include <wx/sizer.h>
@@ -7,14 +8,16 @@
 #include <wx/combobox.h>
 #include <wx/stattext.h>
 #include <wx/defs.h>
+#include <wx/intl.h>
+#include <map>
+#include <stdexcept>
+
 #include "utils.h"
 #include "mmoptionswrapper.h"
 #include "ibattle.h"
 #include "spinctld.h"
-#include <map>
 #include "settings++/custom_dialogs.h"
 #include "server.h"
-#include <stdexcept>
 
 const char sep = *("_");
 const wxString wxsep = _T("_");
@@ -107,7 +110,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
 
 
-		int index = boundry(current.cur_choice_index,0,int(current.cbx_choices.GetCount()-1));
+		int index = CLAMP(current.cur_choice_index,0,int(current.cbx_choices.GetCount()-1));
 		wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[index], wxDefaultPosition,
 				wxDefaultSize, current.cbx_choices, 0, wxDefaultValidator);
 
@@ -164,7 +167,7 @@ void BattleroomMMOptionsTab::OnChkBoxChange(wxCommandEvent& event)
 	{
         if (m_battle.IsFounderMe())
         {
-          m_battle.SendHostInfo( wxString::Format(_T("%ld"), gameoption ) + wxsep + key );
+          m_battle.SendHostInfo( (wxString()<<gameoption) + wxsep + key );
         }
 	}
 }
@@ -183,7 +186,7 @@ void BattleroomMMOptionsTab::OnComBoxChange(wxCommandEvent& event)
 	{
         if (m_battle.IsFounderMe())
         {
-          m_battle.SendHostInfo( wxString::Format(_T("%ld"), gameoption ) + wxsep + key );
+          m_battle.SendHostInfo( (wxString()<< gameoption) + wxsep + key );
         }
 	}
 }
@@ -199,7 +202,7 @@ void BattleroomMMOptionsTab::OnTextCtrlChange(wxCommandEvent& event)
 	{
 		if (m_battle.IsFounderMe())
 		{
-		  m_battle.SendHostInfo( wxString::Format(_T("%ld"), gameoption ) + wxsep + key );
+		  m_battle.SendHostInfo(  (wxString()<< gameoption) + wxsep + key );
 		}
 
 	}
@@ -216,7 +219,7 @@ void BattleroomMMOptionsTab::OnSpinCtrlChange(wxSpinEvent& event)
 	{
 		if (m_battle.IsFounderMe())
 		{
-		  m_battle.SendHostInfo( wxString::Format(_T("%ld"), gameoption ) + wxsep + key );
+		  m_battle.SendHostInfo(  (wxString()<< gameoption) + wxsep + key );
 		}
 	}
 }
@@ -258,56 +261,33 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 
 }
 
+template<class T>
+void RemovePrefixed(T &v, wxString pref){
+  typename T::iterator it = v.begin();
+  while(it != v.end())
+  {
+    typename T::iterator next = it;
+    ++next;
+    wxString key = it->first;
+    if (key.StartsWith(pref))
+    {
+      delete it->second;
+      v.erase(it);
+    }
+    it=next;
+  }
+}
+
 void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
 {
 	wxString pref = wxString::Format( _T("%d"),flag) + wxsep;
 
 	//purgin existing keys from map
-	for (chkBoxMap::iterator it = m_chkbox_map.begin(); it != m_chkbox_map.end(); ++it)
-	{
-		wxString key = it->first;
-		if (key.StartsWith(pref))
-		{
-			delete it->second;
-			m_chkbox_map.erase(it);
-		}
-	}
-	for (spinCtrlMap::iterator it = m_spinctrl_map.begin(); it != m_spinctrl_map.end(); ++it)
-	{
-		wxString key = it->first;
-		if (key.StartsWith(pref))
-		{
-			delete it->second;
-			m_spinctrl_map.erase(it);
-		}
-	}
-	for (textCtrlMap::iterator it = m_textctrl_map.begin(); it != m_textctrl_map.end(); ++it)
-	{
-		wxString key = it->first;
-		if (key.StartsWith(pref))
-		{
-			delete it->second;
-			m_textctrl_map.erase(it);
-		}
-	}
-	for (comboBoxMap::iterator it = m_combox_map.begin(); it != m_combox_map.end(); ++it)
-	{
-		wxString key = it->first;
-		if (key.StartsWith(pref))
-		{
-			delete it->second;
-			m_combox_map.erase(it);
-		}
-	}
-	for (staticTextMap::iterator it = m_statictext_map.begin(); it != m_statictext_map.end(); ++it)
-	{
-		wxString key = it->first;
-		if (key.StartsWith(pref))
-		{
-			delete it->second;
-			m_statictext_map.erase(it);
-		}
-	}
+	RemovePrefixed(m_chkbox_map,pref);
+	RemovePrefixed(m_spinctrl_map,pref);
+	RemovePrefixed(m_textctrl_map,pref);
+	RemovePrefixed(m_combox_map,pref);
+	RemovePrefixed(m_statictext_map,pref);
 
 	//reloading the controls
 	switch (flag)

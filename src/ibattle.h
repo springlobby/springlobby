@@ -87,12 +87,13 @@ class IBattle
     virtual bool MapExists();
     virtual bool ModExists();
 
-    virtual wxColour GetFreeColour( bool excludeme = true ) = 0;
+    virtual wxColour GetFreeColour( User *for_whom ) = 0;
 
     virtual BattleStartRect* GetStartRect( int allyno ) { return 0; };
     virtual void AddStartRect( int allyno, int left, int top, int right, int bottom ) {};
     virtual void RemoveStartRect( int allyno ) {};
     virtual void UpdateStartRect( int allyno ) {};
+    virtual void ClearStartRects(){};
 
     virtual int GetMyAlly() = 0;
     virtual void SetMyAlly( int ally ) = 0;

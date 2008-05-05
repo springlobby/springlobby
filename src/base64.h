@@ -1,9 +1,19 @@
-#ifndef SPRINGLOBBY_HEADERGUARD_BASE64_H
-#define SPRINGLOBBY_HEADERGUARD_BASE64_H
+/*
+ * This file is part of the Code::Blocks IDE and licensed under the GNU Lesser General Public License, version 3
+ * http://www.gnu.org/licenses/lgpl-3.0.html
+ */
 
-#include <string>
+#ifndef CB_BASE64_H
+#define CB_BASE64_H
 
-std::string base64_encode(unsigned char const* , unsigned int len);
-std::string base64_decode(std::string const& s);
+#include <wx/defs.h>
+#include <wx/string.h>
 
-#endif // SPRINGLOBBY_HEADERGUARD_BASE64_H
+namespace wxBase64
+{
+    wxString Encode(const wxUint8* pData, size_t len);
+    wxString Encode(const wxString& data);
+    std::string Decode(const wxString& data);
+};
+
+#endif // CB_BASE64_H

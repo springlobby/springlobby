@@ -245,7 +245,7 @@ void SpringUnitSyncLib::_ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo&
 }
 
 
-void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
+void SpringUnitSyncLib::SetCurrentMod( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
   if ( m_current_mod != modname ) {
@@ -291,8 +291,7 @@ wxString SpringUnitSyncLib::GetMapChecksum( int index )
 {
   InitLib( m_get_map_checksum );
 
-  unsigned int csum = m_get_map_checksum( index );
-  return wxString::Format( _T("%u"), csum );
+  return i2s( (int)m_get_map_checksum( index ) );
 }
 
 
@@ -351,11 +350,11 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
 }
 
 
-unsigned int SpringUnitSyncLib::GetPrimaryModChecksum( int index )
+int SpringUnitSyncLib::GetPrimaryModChecksum( int index )
 {
   InitLib( m_get_mod_checksum );
 
-  return m_get_mod_checksum( index );
+  return (int)m_get_mod_checksum( index );
 }
 
 
@@ -455,11 +454,11 @@ wxString SpringUnitSyncLib::GetPrimaryModArchiveList( int arnr )
 }
 
 
-unsigned int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
+int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
 {
   InitLib( m_get_primary_mod_checksum_from_name );
 
-  return m_get_primary_mod_checksum_from_name( name.mb_str( wxConvUTF8 ) );
+  return (int)m_get_primary_mod_checksum_from_name( name.mb_str( wxConvUTF8 ) );
 }
 
 
@@ -467,7 +466,7 @@ int SpringUnitSyncLib::GetSideCount( const wxString& modName )
 {
   InitLib( m_get_side_count );
 
-  _SetCurrentMod( modName );
+  SetCurrentMod( modName );
   return m_get_side_count();
 }
 
@@ -476,7 +475,7 @@ wxString SpringUnitSyncLib::GetSideName( const wxString& modName, int index )
 {
   InitLib( m_get_side_name );
 
-  _SetCurrentMod( modName );
+  SetCurrentMod( modName );
   return WX_STRINGC( m_get_side_name( index ) );
 }
 
@@ -574,10 +573,10 @@ void SpringUnitSyncLib::CloseFileVFS( int handle )
 }
 
 
-int SpringUnitSyncLib::GetLuaAICount()
+int SpringUnitSyncLib::GetLuaAICount( const wxString& modname )
 {
   InitLib( m_get_luaai_count );
-
+  SetCurrentMod( modname );
   return m_get_luaai_count();
 }
 
@@ -610,7 +609,7 @@ int SpringUnitSyncLib::GetModOptionCount( const wxString& name )
 {
   InitLib( m_get_Mod_option_count );
   ASSERT_RUNTIME( !name.IsEmpty(), _T("passing void modname to unitsync") );
-  _SetCurrentMod( name );
+  SetCurrentMod( name );
   return m_get_Mod_option_count();
 }
 

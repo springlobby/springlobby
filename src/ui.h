@@ -70,8 +70,8 @@ class Ui
 
     void ReloadUnitSync();
 
-    void DownloadMap( const wxString& map );
-    void DownloadMod( const wxString& mod );
+    void DownloadMap( const wxString& hash, const wxString& name );
+    void DownloadMod( const wxString& hash, const wxString& name );
 
     void OpenWebBrowser( const wxString& url );
 
@@ -121,6 +121,7 @@ class Ui
     void OnBattleStarted( Battle& battle );
     void OnBattleStartRectsUpdated( Battle& battle );
     void OnBattleMapChanged( Battle& battle );
+    void OnBattleMapRefresh();
 
     void OnBattleBotAdded( Battle& battle, BattleBot& bot );
     void OnBattleBotRemoved( Battle& battle, BattleBot& bot );
@@ -165,6 +166,8 @@ class Ui
     Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
+
+    unsigned int m_upd_intv_counter;
 
 };
 

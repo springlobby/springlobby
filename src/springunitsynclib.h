@@ -200,7 +200,7 @@ class SpringUnitSyncLib
      */
     wxImage GetMinimap( const wxString& mapFileName );
 
-    unsigned int GetPrimaryModChecksum( int index );
+    int GetPrimaryModChecksum( int index );
     int GetPrimaryModIndex( const wxString& modName );
     wxString GetPrimaryModName( int index );
     int GetPrimaryModCount();
@@ -213,7 +213,7 @@ class SpringUnitSyncLib
     wxString GetPrimaryModDescription( int index );
     int GetPrimaryModArchiveCount( int index );
     wxString GetPrimaryModArchiveList( int arnr );
-    unsigned int GetPrimaryModChecksumFromName( const wxString& name );
+    int GetPrimaryModChecksumFromName( const wxString& name );
 
     int GetSideCount( const wxString& modName );
     wxString GetSideName( const wxString& modName, int index );
@@ -223,6 +223,8 @@ class SpringUnitSyncLib
      * @note Not sure what this does, but adding the mod archive path to this when setting new mod seems to work :)
      */
     void AddAllArchives( const wxString& root );
+
+    void SetCurrentMod( const wxString& modname );
 
     wxString GetFullUnitName( int index );
     wxString GetUnitName( int index );
@@ -247,7 +249,7 @@ class SpringUnitSyncLib
     int ReadFileVFS( int handle, void* buffer, int bufferLength );
     void CloseFileVFS( int handle );
 
-    int GetLuaAICount();
+    int GetLuaAICount( const wxString& modname );
     wxString GetLuaAIName( int aiIndex );
     wxString GetLuaAIDesc( int aiIndex );
 
@@ -323,8 +325,6 @@ class SpringUnitSyncLib
     bool _IsLoaded();
 
     void _ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
-
-    void _SetCurrentMod( const wxString& modname );
 
     /**
      * \defgroup DllFuncPointers Pointers to the functions in unitsync.

@@ -4,7 +4,7 @@
 #include <wx/string.h>
 #include <wx/colour.h>
 
-#define CACHE_VERSION 1
+#define CACHE_VERSION 2
 
 #define DEFSETT_DEFAULT_SERVER "TAS Server"
 #define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"
@@ -19,7 +19,8 @@
 
 class wxConfigBase;
 class wxFont;
-
+struct BattleListFilterValues;
+class IBattle;
 
 //! @brief Class used to store and restore application settings.
 class Settings
@@ -35,6 +36,15 @@ class Settings
 
     bool UseOldSpringLaunchMethod();
     void SetOldSpringLaunchMethod( bool value );
+
+    bool GetNoUDP();
+    void SetNoUDP(bool value);
+
+    int GetClientPort();
+    void SetClientPort(int value);
+
+    bool GetShowIPAddresses();
+    void SetShowIPAddresses(bool value);
 
     wxString GetWebBrowserPath();
     void SetWebBrowserPath( const wxString path );
@@ -135,8 +145,22 @@ class Settings
     void SetLastAI( const wxString& ai );
     wxString GetLastAI();
 
+    void SetBalanceMethod(int value);
+    int GetBalanceMethod();
+
+    void SetBalanceClans(bool value);
+    bool GetBalanceClans();
+
+    void SetBalanceStrongClans(bool value);
+    bool GetBalanceStrongClans();
+
+
     void SetDisplayJoinLeave( bool display, const wxString& channel  );
     bool GetDisplayJoinLeave( const wxString& channel );
+
+    //!@brief sets how many lines can stay in a chat panel before the old will start getting erased, 0 to disable
+    void SetChatHistoryLenght( unsigned int historylines );
+    unsigned int GetChatHistoryLenght();
 
     wxColour GetChatColorNormal();
     void SetChatColorNormal( wxColour value );
@@ -162,6 +186,44 @@ class Settings
     void SetChatColorTime( wxColour value );
     wxFont GetChatFont();
     void SetChatFont( wxFont value );
+
+    bool GetSmartScrollEnabled();
+    void SetSmartScrollEnabled(bool value);
+
+
+    BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
+    void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
+    wxString GetLastFilterProfileName();
+
+
+	  bool GetDisableSpringVersionCheck();
+
+    /// not get/set naming because set may refer to battle or to options, thatd be ambiguous
+    void SaveBattleMapOptions(IBattle *battle);
+    void LoadBattleMapOptions(IBattle *battle);
+
+
+
+
+    unsigned int GetTorrentPort();
+    void SetTorrentPort( unsigned int port );
+    int GetTorrentUploadRate();
+    void SetTorrentUploadRate( int speed );
+    int GetTorrentDownloadRate();
+    void SetTorrentDownloadRate( int speed );
+
+    int GetTorrentSystemSuspendMode();
+    void SetTorrentSystemSuspendMode( int mode );
+    int GetTorrentThrottledUploadRate();
+    void SetTorrentThrottledUploadRate( int speed );
+    int GetTorrentThrottledDownloadRate();
+    void SetTorrentThrottledDownloadRate( int speed );
+
+    int GetTorrentSystemAutoStartMode();
+    void SetTorrentSystemAutoStartMode( int mode );
+
+    void SetTorrentMaxConnections( int connections );
+    int GetTorrentMaxConnections();
 
   protected:
 

@@ -22,7 +22,7 @@ class ServerEvents
 
   // Uicontrol interface
 
-    void OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, const int udpport, bool lanmode );
+    void OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode );
     void OnDisconnected();
 
     void OnLogin();
@@ -92,9 +92,12 @@ class ServerEvents
     void OnServerMessageBox( const wxString& message );
     void OnChannelMessage( const wxString& channel, const wxString& msg );
 
-    void OnHostUdpPortChange(const int& udpport);
+    void OnHostExternalUdpPort( const unsigned int udpport );
 
-    void OnUdpSourcePort(int udpport);
+    void OnMyExternalUdpSourcePort( const unsigned int udpport );
+    void OnMyInternalUdpSourcePort( const unsigned int udpport );
+
+    void OnClientIPPort( const wxString &username, const wxString &ip, unsigned int udpport );
 
     void OnKickedFromBattle();
 

@@ -6,7 +6,7 @@
 #include "user.h"
 #include "utils.h"
 
-const user_map_t::size_type SEEKPOS_INVALID = -1;
+const user_map_t::size_type SEEKPOS_INVALID = user_map_t::size_type(-1);
 
 UserList::UserList(): m_seek(m_users.end()), m_seekpos(SEEKPOS_INVALID)
 { }
@@ -26,7 +26,8 @@ void UserList::RemoveUser( const wxString& nick )
 User& UserList::GetUser( const wxString& nick )
 {
   user_iter_t u = m_users.find(nick);
-  ASSERT_LOGIC( u != m_users.end(), _T("UserList::GetUser(\"") + nick + _T("\"): no such user") );
+  ASSERT_RUNTIME( u != m_users.end(), _T("UserList::GetUser(\"") + nick + _T("\"): no such user") );
+  //ASSERT_LOGIC( u != m_users.end(), _T("UserList::GetUser(\"") + nick + _T("\"): no such user") );
   return *u->second;
 }
 

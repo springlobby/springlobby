@@ -5,7 +5,7 @@
 
 #include <wx/event.h>
 
-class Server;
+class iNetClass;
 class Socket;
 class wxSocketEvent;
 class wxSocketClient;
@@ -13,34 +13,31 @@ class wxCriticalSection;
 
 class PingThread;
 
-typedef int Sockstate;
+enum SockState
+{
+  SS_Closed,
+  SS_Connecting,
+  SS_Open
+};
 
-#define SS_CLOSED 0
-#define SS_CONNECTING 1
-#define SS_OPEN 2
-
-typedef int Sockerror;
-
-#define SE_NO_ERROR 0
-#define SE_NOT_CONNECTED 1
-#define SE_RESOLVE_HOST_FAILED 2
-#define SE_CONNECT_TO_HOST_FAILED 3
+enum SockError
+{
+  SE_No_Error,
+  SE_NotConnected,
+  SE_Resolve_Host_Failed,
+  SE_Connect_Host_Failed
+};
 
 #define SOCKET_ID 100
 
-enum PacketType
-{
-  Tcp,
-  Udp
-};
 
 class SocketEvents: public wxEvtHandler
 {
   public:
-    SocketEvents( Server& serv ): m_serv(serv) {}
+    SocketEvents( iNetClass& netclass ): m_net_class(netclass) {}
     void OnSocketEvent(wxSocketEvent& event);
   protected:
-    Server& m_serv;
+    iNetClass& m_net_class;
   DECLARE_EVENT_TABLE()
 };
 
@@ -52,7 +49,7 @@ class Socket
 {
   public:
 
-    Socket( Server& serv, bool blocking = false );
+    Socket( iNetClass& netclass, bool blocking = false );
     ~Socket();
 
     // Socket interface
@@ -65,19 +62,12 @@ class Socket
 
 
     void Ping();
-    void UDPPing();
     void SetPingInfo( const wxString& msg = wxEmptyString, unsigned int interval = 10000 );
-    void SetUdpPingInfo( const wxString& addr = wxEmptyString, unsigned int port = 0, unsigned int interval = 10000 );
-    unsigned int GetUDPPingPort() { return m_udp_ping_port; }
     unsigned int GetPingInterval() { return m_ping_int; }
-    unsigned int GetUDPPingInterval() { return m_udp_ping_int; }
     bool GetPingEnabled() { return m_ping_msg != wxEmptyString; }
-    bool GetUDPPingEnabled() { return m_udp_ping_adr != wxEmptyString; }
 
-    bool TestOpenPort( PacketType type, unsigned int port );
-
-    Sockstate State( );
-    Sockerror Error( );
+    SockState State( );
+    SockError Error( );
 
     void SetSendRateLimit( int Bps = -1 );
     void OnTimer( int mselapsed );
@@ -96,16 +86,15 @@ class Socket
     wxCriticalSection m_ping_thread_wait;
 
     wxString m_ping_msg;
-    wxString m_udp_ping_adr;
     unsigned int m_ping_int;
-    unsigned int m_udp_ping_port;
-    unsigned int m_udp_ping_int;
+
     PingThread* m_ping_t;
 
     bool m_connecting;
     bool m_block;
-    Server& m_serv;
+    iNetClass& m_net_class;
 
+    unsigned int m_udp_private_port;
     int m_rate;
     int m_sent;
     wxString m_buffer;
@@ -130,7 +119,6 @@ class PingThread: public wxThread
   private:
     Socket& m_sock;
     int m_next_ping;
-    int m_next_udp_ping;
 
 };
 
