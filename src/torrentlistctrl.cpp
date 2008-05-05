@@ -87,16 +87,14 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 9, col, _T("Filesize"), true );
 
+// sortorder: name --> percent completed --> mb donwloaded
   m_sortorder[0].col = 0;
   m_sortorder[0].direction = true;
+  m_sortorder[1].col = 5;
+  m_sortorder[1].direction = true;
+  m_sortorder[2].col = 2;
+  m_sortorder[2].direction = true;
 
-  //TODO set def sort order
-//  m_sortorder[1].col = 5;
-//  m_sortorder[1].direction = true;
-//  m_sortorder[2].col = 9;
-//  m_sortorder[2].direction = true;
-//  m_sortorder[3].col = 4;
-//  m_sortorder[3].direction = true;
   Sort( );
 
     //TODO this'll need fixing on win i assume [koshi]
