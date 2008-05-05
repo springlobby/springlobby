@@ -81,21 +81,25 @@ NickListCtrl::~NickListCtrl()
 
 void NickListCtrl::AddUser( User& user )
 {
+  SetSelectionRestorePoint();
   int index = InsertItem( 0, icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
   SetItemData( index, (wxUIntPtr)&user );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
   UserUpdated( index );
   Sort();
   SetColumnWidth( 3, wxLIST_AUTOSIZE );
+  RestoreSelection();
 }
 
 void NickListCtrl::RemoveUser( const User& user )
 {
+  SetSelectionRestorePoint();
   for (int i = 0; i < GetItemCount() ; i++ ) {
     if ( &user == (User*)GetItemData( i ) ) {
       DeleteItem( i );
       Sort();
       SetColumnWidth( 3, wxLIST_AUTOSIZE );
+      RestoreSelection();
       return;
     }
   }
@@ -117,6 +121,7 @@ void NickListCtrl::UserUpdated( User& user )
 
 void NickListCtrl::UserUpdated( const int& index )
 {
+  SetSelectionRestorePoint();
   User& user = *((User*)GetItemData( index ));
   SetItemImage( index, icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
   SetItemColumnImage( index, 1, icons().GetFlagIcon( user.GetCountry() ) );
@@ -124,7 +129,7 @@ void NickListCtrl::UserUpdated( const int& index )
   SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
   Sort();
-
+  RestoreSelection();
 }
 
 
@@ -152,6 +157,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
   if ( index == -1 ) return;
   User* user = (User*)event.GetData();
   m_ui.mw().OpenPrivateChat( *user );
+  //FIXME why was this lfet here, what was it supposed to do?
   //m_ui.mw().OnTabsChanged( event2 );
 }
 

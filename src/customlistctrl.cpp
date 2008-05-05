@@ -2,9 +2,27 @@
 
 #define TOOLTIP_DELAY 1000
 
+
+BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
+#if wxUSE_TIPWINDOW
+	#ifndef __WXMSW__
+    	EVT_MOTION(customListCtrl::OnMouseMotion)
+    	EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)
+    #endif
+#endif
+    	EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, customListCtrl::OnStartResizeCol)
+    	EVT_LEAVE_WINDOW(customListCtrl::noOp)
+    	EVT_LIST_ITEM_SELECTED   ( wxID_ANY, customListCtrl::OnSelected )
+        EVT_LIST_ITEM_DESELECTED ( wxID_ANY, customListCtrl::OnDeselected )
+        EVT_LIST_DELETE_ITEM     ( wxID_ANY, customListCtrl::OnDeselected )
+END_EVENT_TABLE()
+
+
 customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style):
 					wxListCtrl (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER),
-					 m_selected(-1),m_selected_index(-1)
+					 m_selected(-1),m_selected_index(-1),m_prev_selected(-1),m_prev_selected_index(-1)
+
+
 {
 #if wxUSE_TIPWINDOW
 	m_tipwindow = NULL;
@@ -33,11 +51,18 @@ void customListCtrl::OnTimer(wxTimerEvent& event)
 
 #endif
 }
+
+void customListCtrl::SetSelectionRestorePoint()
+{
+    m_prev_selected = m_selected;
+    m_prev_selected_index = m_selected_index;
+}
+
 void customListCtrl::RestoreSelection()
 {
-    if ( m_selected_index > -1)
+    if ( m_prev_selected_index> -1)
     {
-        SetItemState( GetIndexFromData( m_selected ), wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+        SetItemState( GetIndexFromData( m_prev_selected ), wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
     }
 }
 
@@ -55,10 +80,8 @@ void customListCtrl::OnDeselected( wxListEvent& event )
   m_selected = m_selected_index = -1;
 }
 
-long customListCtrl::GetIndexFromData( const long data )
+long customListCtrl::GetIndexFromData( const unsigned long data )
 {
-    //potentially dangerous if data could really be neagtive
-  if ( data == -1 ) return -1;
   for (int i = 0; i < GetItemCount() ; i++ )
   {
     if ( data == GetItemData( i ) )
@@ -152,13 +175,3 @@ void customListCtrl::noOp(wxMouseEvent& event)
 	m_tiptext = _T("");
 }
 
-BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
-#if wxUSE_TIPWINDOW
-	#ifndef __WXMSW__
-    	EVT_MOTION(customListCtrl::OnMouseMotion)
-    	EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)
-    #endif
-#endif
-    	EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, customListCtrl::OnStartResizeCol)
-    	EVT_LEAVE_WINDOW(customListCtrl::noOp)
-END_EVENT_TABLE()

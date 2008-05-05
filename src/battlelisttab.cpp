@@ -186,6 +186,8 @@ void BattleListTab::SelectBattle( Battle* battle )
 }
 
 void BattleListTab::AddBattle( Battle& battle ) {
+
+  m_battle_list->SetSelectionRestorePoint();
   if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     return;
   }
@@ -222,6 +224,8 @@ void BattleListTab::AddBattle( Battle& battle ) {
 
 
 void BattleListTab::RemoveBattle( Battle& battle ) {
+
+  m_battle_list->SetSelectionRestorePoint();
 
   if ( &battle == m_sel_battle )
   {
@@ -265,6 +269,8 @@ void BattleListTab::UpdateBattle( Battle& battle )
     RemoveBattle( battle );
     return;
   }
+
+  m_battle_list->SetSelectionRestorePoint();
 
   int index = -1;
   for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {

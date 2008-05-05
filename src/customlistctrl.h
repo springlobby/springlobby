@@ -24,8 +24,10 @@ protected:
     wxTipWindow *m_tipwindow;
     #endif
     int coloumnCount;
-    int m_selected;
-    int m_selected_index;
+    long m_selected;
+    long m_selected_index;
+    long m_prev_selected;
+    long m_prev_selected_index;
 
     colInfoVec m_colinfovec;
     int getColoumnFromPosition(wxPoint pos);
@@ -38,7 +40,7 @@ public:
     long GetSelectedIndex();
     void SetSelectedIndex(const long newindex);
     long GetSelectedData();
-    long GetIndexFromData( const long data );
+    long GetIndexFromData( const unsigned long data );
 
 	void InsertColumn(long i, wxListItem item, wxString tip, bool = true);
     void OnTimer(wxTimerEvent& event);
@@ -47,6 +49,7 @@ public:
     void noOp(wxMouseEvent& event);
 
     void RestoreSelection();
+    void SetSelectionRestorePoint();
 
     DECLARE_EVENT_TABLE()
 };

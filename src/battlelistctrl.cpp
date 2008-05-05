@@ -18,9 +18,6 @@
 
 BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 
-  EVT_LIST_ITEM_SELECTED   ( BLIST_LIST, BattleListCtrl::OnSelected )
-  EVT_LIST_ITEM_DESELECTED ( BLIST_LIST, BattleListCtrl::OnDeselected )
-  EVT_LIST_DELETE_ITEM     ( BLIST_LIST, BattleListCtrl::OnDeselected )
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
   EVT_LIST_COL_CLICK       ( BLIST_LIST, BattleListCtrl::OnColClick )
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
