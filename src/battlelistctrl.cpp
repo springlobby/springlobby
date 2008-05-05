@@ -36,7 +36,6 @@ Ui* BattleListCtrl::m_ui_for_sort = 0;
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   customListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT),
-  m_selected(-1),m_selected_index(-1),
   m_ui(ui)
 {
 
@@ -122,48 +121,6 @@ BattleListCtrl::~BattleListCtrl()
   delete m_popup;
 }
 
-
-void BattleListCtrl::OnSelected( wxListEvent& event )
-{
-  m_selected = GetItemData( event.GetIndex() );
-  m_selected_index = event.GetIndex();
-  event.Skip();
-}
-
-
-void BattleListCtrl::OnDeselected( wxListEvent& event )
-{
-  if ( m_selected == (int)GetItemData( event.GetIndex() )  )
-  m_selected = m_selected_index = -1;
-}
-
-int BattleListCtrl::GetIndexFromData( const int data )
-{
-    //potentially dangerous if data could really be neagtive
-  if ( data == -1 ) return -1;
-  for (int i = 0; i < GetItemCount() ; i++ )
-  {
-    if ( data == GetItemData( i ) )
-      return i;
-  }
-  return -1;
-}
-
-int BattleListCtrl::GetSelectedIndex()
-{
-  return m_selected_index ;
-}
-
-void BattleListCtrl::SetSelectedIndex(const int newindex)
-{
-    m_selected_index = newindex;
-}
-
-int BattleListCtrl::GetSelectedData()
-{
-  return m_selected ;
-}
-
 void BattleListCtrl::OnListRightClick( wxListEvent& event )
 {
   PopupMenu( m_popup );
@@ -233,12 +190,6 @@ void BattleListCtrl::Sort()
       case 9 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareMaxPlayerUP:&CompareMaxPlayerDOWN , 0 ); break;
     }
   }
-  // WAY too slow to be used like that
-//  if ( changed )
-//  {
-//      int new_index = GetIndexFromData( m_selected );
-//      SetItemState( new_index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
-//  }
 }
 
 
