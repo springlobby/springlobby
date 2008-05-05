@@ -186,6 +186,7 @@ void BattleListTab::SelectBattle( Battle* battle )
 }
 
 void BattleListTab::AddBattle( Battle& battle ) {
+  int prev_selection = m_battle_list->GetSelectedIndex();
 
   if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     return;
@@ -200,6 +201,11 @@ void BattleListTab::AddBattle( Battle& battle ) {
   //item.SetId( index );
 
  // ASSERT_LOGIC( m_battle_list->GetItem( item ), _T("!GetItem") );
+
+   //we've deleted an item that was before selected in list
+  //so we need to decrement selected index
+  if ( prev_selection > index )
+     prev_selection++;
 
   m_battle_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
   m_battle_list->SetItemColumnImage( index, 2, icons().GetRankIcon( battle.GetRankNeeded(), false ) );
@@ -216,22 +222,44 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
+
+  if (prev_selection > -1 )
+  {
+    m_battle_list->SetItemState( prev_selection, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+  }
 }
 
 
 void BattleListTab::RemoveBattle( Battle& battle ) {
-  if ( &battle == m_sel_battle ) SelectBattle( 0 );
-  for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
+  int prev_selection = m_battle_list->GetSelectedIndex();
+  if ( &battle == m_sel_battle )
+  {
+      SelectBattle( 0 );
+      prev_selection = -1;
+  }
+  int i = 0;
+  for (; i < m_battle_list->GetItemCount() ; i++ ) {
     if ( battle.GetBattleId() == (int)m_battle_list->GetItemData( i ) ) {
       m_battle_list->DeleteItem( i );
       break;
     }
   }
+  //we've deleted an item that was before selected in list
+  //so we need to decrement selected index
+  if ( prev_selection > i )
+     prev_selection--;
+
   battle.SetGUIListActiv( false );
+
   m_battle_list->Sort();
   m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
+
+  if (prev_selection > -1 )
+  {
+    m_battle_list->SetItemState( prev_selection, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+  }
 }
 
 
@@ -247,6 +275,8 @@ void BattleListTab::UpdateBattle( Battle& battle )
     AddBattle( battle );
     return;
   }
+
+  int prev_selection = m_battle_list->GetSelectedIndex();
 
   if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     RemoveBattle( battle );
@@ -285,6 +315,12 @@ void BattleListTab::UpdateBattle( Battle& battle )
   if ( &battle == m_sel_battle ) SelectBattle( m_sel_battle );
   m_battle_list->Sort();
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
+
+   if (prev_selection > -1 )
+  {
+    m_battle_list->SetItemState( prev_selection, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+  }
+
 }
 
 
@@ -301,11 +337,23 @@ void BattleListTab::RemoveAllBattles() {
 
 
 void BattleListTab::UpdateList() {
+//  if ( !battle.GetGUIListActiv() ) {
+//    AddBattle( battle );
+//    return;
+//  }
+
+  int prev_selection = m_battle_list->GetSelectedIndex();
+
   m_ui.GetServer().battles_iter->IteratorBegin();
   while (! m_ui.GetServer().battles_iter->EOL() ) {
     Battle* b = m_ui.GetServer().battles_iter->GetBattle();
     if (b!=0)
     UpdateBattle(*b);
+  }
+
+  if (prev_selection > -1 )
+  {
+    m_battle_list->SetItemState( prev_selection, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
   }
 }
 
@@ -432,7 +480,7 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
   ASSERT_LOGIC( m_battle_list != 0, _T("m_battle_list = 0") );
   if ( m_battle_list->GetSelectedIndex() < 0 ) return;
 
-  DoJoin( m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetSelectedIndex() ) );
+  DoJoin( m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetSelectedData() ) );
 
 }
 
