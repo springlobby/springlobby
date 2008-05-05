@@ -220,7 +220,7 @@ void BattleListTab::AddBattle( Battle& battle ) {
 
  //we've deleted an item that was before selected in list
   //so we need to decrement selected index
-    if ( prev_selection > index )
+   // if ( prev_selection > index )
     {
         prev_selection = m_battle_list->GetIndexFromData( prev_data );
     }
@@ -258,7 +258,7 @@ void BattleListTab::RemoveBattle( Battle& battle ) {
   m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
 
     //we've deleted an item that was before selected in list
-    if ( prev_selection > i )
+  // if ( prev_selection > i )
     {
         prev_selection = m_battle_list->GetIndexFromData( prev_data );
     }
@@ -278,6 +278,8 @@ void BattleListTab::UserUpdate( User& user )
 
 void BattleListTab::UpdateBattle( Battle& battle )
 {
+  int prev_data = m_battle_list->GetSelectedData();
+
   if ( !battle.GetGUIListActiv() ) {
     AddBattle( battle );
     return;
@@ -322,6 +324,10 @@ void BattleListTab::UpdateBattle( Battle& battle )
   if ( &battle == m_sel_battle ) SelectBattle( m_sel_battle );
   m_battle_list->Sort();
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
+
+    {
+        prev_selection = m_battle_list->GetIndexFromData( prev_data );
+    }
 
    if (prev_selection > -1 )
   {
