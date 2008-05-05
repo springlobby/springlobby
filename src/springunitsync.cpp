@@ -22,6 +22,7 @@
 #include "settings.h"
 #include "springunitsynclib.h"
 #include "settings++/custom_dialogs.h"
+#include "torrentwrapper.h"
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -71,9 +72,28 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& springdir, const wxString&
   {
      wxLogDebugFunc( _T("") );
      LOCK_UNITSYNC;
-     return _LoadUnitSyncLib( springdir, unitsyncloc );
+     bool ret = _LoadUnitSyncLib( springdir, unitsyncloc );
+     if (ret) PopulateArchiveList();
+     return ret;
   }
 }
+
+
+void SpringUnitSync::PopulateArchiveList()
+{
+  m_maps_list.empty();
+  m_mods_list.empty();
+
+  for ( int i =0; i < GetNumMaps(); i++ )
+  {
+    m_maps_list.from[susynclib()->GetMapChecksum( i )] = susynclib()->GetMapName( i );
+  }
+  for ( int i =0; i < GetNumMods(); i++ )
+  {
+    m_mods_list.from[i2s(susynclib()->GetPrimaryModChecksum( i ))] = susynclib()->GetPrimaryModName( i );
+  }
+}
+
 
 
 bool SpringUnitSync::_LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc )
@@ -162,11 +182,7 @@ int SpringUnitSync::GetModIndex( const wxString& name )
 
 bool SpringUnitSync::ModExists( const wxString& modname )
 {
-  wxLogDebugFunc( _T("modname = \"") + modname + _T("\"") );
-  try {
-    return GetModIndex( modname ) >=0;
-  } catch (...) {}
-  return false;
+  return (m_mods_list.to.find(modname) != m_mods_list.to.end());
 }
 
 
@@ -186,7 +202,7 @@ UnitSyncMod SpringUnitSync::GetMod( int index )
   UnitSyncMod m;
 
   m.name = susynclib()->GetPrimaryModName( index );
-  m.hash = wxString::Format( _T("%d"), susynclib()->GetPrimaryModChecksum( index ) );
+  m.hash = i2s( susynclib()->GetPrimaryModChecksum( index ) );
 
   return m;
 }
@@ -201,27 +217,15 @@ int SpringUnitSync::GetNumMaps()
 
 bool SpringUnitSync::MapExists( const wxString& mapname )
 {
-  wxLogDebugFunc( _T("") );
-  try {
-    return GetMapIndex( mapname ) >= 0;
-  } catch (...) {}
-  return false;
+  return (m_maps_list.to.find(mapname) != m_maps_list.to.end());
 }
 
 
 bool SpringUnitSync::MapExists( const wxString& mapname, const wxString hash )
 {
-  wxLogDebugFunc( _T("") );
-  int index;
-  wxString usynchash;
-  try {
-    index = GetMapIndex( mapname );
-    if ( index >= 0 ) {
-      usynchash =  susynclib()->GetMapChecksum( index );
-      return ( usynchash == hash );
-    }
-  } catch (...) {}
-  return false;
+  LocalArchivesVector::iterator itor = m_maps_list.from.find(hash);
+  if ( itor == m_maps_list.from.end() ) return false;
+  return itor->second == mapname;
 }
 
 
@@ -412,11 +416,15 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
 
   wxImage ret( FileContentStream, wxBITMAP_TYPE_ANY, -1);
   delete[] FileContent;
+  ret.InitAlpha();
+  for ( int x = 0; x < ret.GetWidth(); x++ )
+    for ( int y = 0; y < ret.GetHeight(); y++ )
+      if ( ret.GetBlue( x, y ) == 255 && ret.GetGreen( x, y ) == 255 && ret.GetRed( x, y ) == 255 ) ret.SetAlpha( x, y, 0 ); /// set pixel to be transparent
   return ret;
 }
 
 
-wxArrayString SpringUnitSync::GetAIList()
+wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
 
@@ -432,7 +440,7 @@ wxArrayString SpringUnitSync::GetAIList()
   }
 
   try { // Older versions of unitsync does not have these functions.
-    const int LuaAICount = susynclib()->GetLuaAICount();
+    const int LuaAICount = susynclib()->GetLuaAICount( modname );
     for ( int i = 0; i < LuaAICount; i++ ) ret.Add( _( "LuaAI" ) +  susynclib()->GetLuaAIName( i ) );
   } catch (...) {}
 
@@ -636,7 +644,21 @@ bool SpringUnitSync::CacheModUnits( const wxString& mod )
 
 bool SpringUnitSync::ReloadUnitSyncLib()
 {
-  return false;
+  usync()->FreeUnitSyncLib();
+  usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() );
+  return true;
+}
+
+
+void SpringUnitSync::SetSpringDataPath( const wxString& path )
+{
+  susynclib()->SetSpringConfigString( _T("SpringData"), path );
+}
+
+
+wxString SpringUnitSync::GetSpringDataPath()
+{
+  return susynclib()->GetSpringConfigString( _T("SpringData"), sett().GetSpringDir() );
 }
 
 
@@ -731,7 +753,6 @@ void SpringUnitSync::_SaveMapInfoExCache()
   f.Close();
 }
 
-
 wxArrayString SpringUnitSync::GetReplayList()
 {
   wxLogDebug( _T("") );
@@ -753,5 +774,14 @@ wxArrayString SpringUnitSync::GetReplayList()
 
   return ret;
 }
+
+bool SpringUnitSync::FileExists( const wxString& name )
+{
+  int handle = susynclib()->OpenFileVFS(name);
+  if ( handle == 0 ) return false;
+  susynclib()->CloseFileVFS(handle);
+  return true;
+}
+
 
 

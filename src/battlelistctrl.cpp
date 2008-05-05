@@ -49,15 +49,15 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
 
   col.SetText( _T("s") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 0, col, _T("Status"), false );
+  InsertColumn( 0, col, _T("Status") );
 
   col.SetText( _T("c") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 1, col, _T("Country"), false);
+  InsertColumn( 1, col, _T("Country") );
 
   col.SetText( _T("r") );
   col.SetImage(  icons().ICON_NONE);
-  InsertColumn( 2, col, _T("Minimum rank to join"), false );
+  InsertColumn( 2, col, _T("Minimum rank to join") );
 
   col.SetText( _("Description") );
   col.SetImage( icons().ICON_NONE );
@@ -75,17 +75,17 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   col.SetImage( icons().ICON_NONE);
   InsertColumn( 6, col, _T("Name of the Host") );
 
-  col.SetText( _("s") );
+  col.SetText( _("a") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 7, col, _T("Number of Spectators"), false );
+  InsertColumn( 7, col, _T("Number of Spectators") );
 
   col.SetText( _("p") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 8, col, _T("Number of Players joined"), false );
+  InsertColumn( 8, col, _T("Number of Players joined") );
 
   col.SetText( _("m") );
   col.SetImage(  icons().ICON_NONE);
-  InsertColumn( 9, col, _T("Maximum number of Players that can join"), false );
+  InsertColumn( 9, col, _T("Maximum number of Players that can join") );
 
   m_sortorder[0].col = 0;
   m_sortorder[0].direction = true;
@@ -97,7 +97,6 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   m_sortorder[3].direction = true;
   Sort( );
 
-#ifdef __WXMSW__
   SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
@@ -105,15 +104,6 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   SetColumnWidth( 8, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 9, wxLIST_AUTOSIZE_USEHEADER );
 
-#else
-  SetColumnWidth( 0, 20 );
-  SetColumnWidth( 1, 20 );
-  SetColumnWidth( 2, 20 );
-
-  SetColumnWidth( 7, 28 ); // alittle more than before for dual digets
-  SetColumnWidth( 8, 28 );
-  SetColumnWidth( 9, 28 );
-#endif
 
   SetColumnWidth( 3, 170 );
   SetColumnWidth( 4, 140 );
@@ -163,7 +153,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 {
   if ( m_selected != -1 ) {
     if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
-      m_ui.DownloadMap( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetMapName() );
+      m_ui.DownloadMap( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetMapHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetMapName() );
     }
   }
 }
@@ -173,7 +163,7 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
 {
   if ( m_selected != -1 ) {
     if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
-      m_ui.DownloadMod( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetModName() );
+      m_ui.DownloadMod( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetModHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetModName() );
     }
   }
 }

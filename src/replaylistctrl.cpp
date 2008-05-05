@@ -139,7 +139,8 @@ void ReplayListCtrl::OnDLMap( wxCommandEvent& event )
 {
   if ( m_selected != -1 ) {
     if ( m_replaylist.ReplayExists(m_selected) ) {
-      m_ui.DownloadMap( m_replaylist.GetReplay(m_selected).MapName );
+        // TODO (koshi) call start torrent download from hash
+      //m_ui.DownloadMap( m_replaylist.GetReplay(m_selected).MapName );
     }
   }
 }

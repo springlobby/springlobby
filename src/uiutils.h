@@ -1,3 +1,5 @@
+/// \file uiutils.h
+
 #ifndef SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 #define SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 
@@ -7,6 +9,7 @@ class wxImage;
 class wxBitmap;
 
 #define bool2yn(b) ((b)?_("Yes"):_("No"))
+
 
 const int colour_values[][3] = { {240,210,0}, {128, 128, 128}, {0, 0, 128}, {0, 0, 255},
       {0, 128, 0}, {0, 255, 0}, {0, 128, 128}, {0, 255, 255}, {128, 0, 0}, {255, 0, 0},
@@ -26,6 +29,10 @@ wxColour GetColorFromStrng( const wxString color );
 
 void BlendImage(wxImage& source, wxImage& dest,int img_dim);
 wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size);
+//wxBitmap charArr2wxBitmap(const unsigned char * arg, int size);
 wxBitmap* charArr2wxBitmapAddText(const unsigned char * arg, int size, const unsigned char * text, int text_size, unsigned int img_dim);
 
-#endif // SPRINGLOBBY_HEADERGUARD_UIUTILS_H
+#endif
+// SPRINGLOBBY_HEADERGUARD_UIUTILS_H
+
+

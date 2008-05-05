@@ -27,6 +27,10 @@
 #include "battle.h"
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
+#ifndef NO_TORRENT_SYSTEM
+#include "maintorrenttab.h"
+#include "torrentwrapper.h"
+#endif
 #include "agreementdialog.h"
 #include "unitsyncthread.h"
 
@@ -39,6 +43,7 @@ Ui::Ui() :
 {
    ReloadUnitSync();
 
+  m_upd_intv_counter = 0;
   m_main_win = new MainWindow( *this );
   CustomMessageBoxBase::setLobbypointer(m_main_win);
   m_spring = new Spring(*this);
@@ -234,11 +239,16 @@ void Ui::StartHostedBattle()
   ASSERT_LOGIC( m_serv != 0, _T("m_serv = 0") );
   m_serv->StartHostedBattle();
   sett().SetLastHostMap( m_serv->GetCurrentBattle()->GetMapName() );
+  sett().SaveBattleMapOptions(m_serv->GetCurrentBattle());
+  sett().SaveSettings();
 }
 
 
 void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
 {
+  #ifndef NO_TORRENT_SYSTEM
+  torrent()->SetIngameStatus(true);
+  #endif
   m_spring->Run( battle );
 }
 
@@ -255,54 +265,42 @@ void Ui::Quit()
   ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   sett().SaveSettings();
   m_main_win->forceSettingsFrameClose();
+
+  m_main_win->Close();
+  m_thread->Kill();
+  m_con_win->Close();
+  if (m_serv != 0 ) m_serv->Disconnect();
 }
 
 
 void Ui::ReloadUnitSync()
 {
-  usync()->FreeUnitSyncLib();
-  usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() );
+  usync()->ReloadUnitSyncLib();
   if ( m_main_win != 0 ) m_main_win->OnUnitSyncReloaded();
 }
 
 
-void Ui::DownloadMap( const wxString& map )
+void Ui::DownloadMap( const wxString& hash, const wxString& name )
 {
-//  wxString mapname = map;
-//  mapname = mapname.SubString(0, mapname.Find( '.', true ) - 1 );
-//  mapname.Replace(_T(" "), _T("+") );
-//  mapname.Replace(_T("-"), _T("*") );
-//  mapname.Replace(_T("_"), _T("*") );
-  wxString url = _T("http://www.darkstars.co.uk/downloads/search.php")  ;
+  #ifndef NO_TORRENT_SYSTEM
+  if ( !hash.IsEmpty() ) torrent()->RequestFileByHash( hash );
+  else if ( !name.IsEmpty() ) torrent()->RequestFileByName( name );
+  #else
+  wxString url = _T("http://spring.jobjol.nl/search.php");
   OpenWebBrowser ( url );
+  #endif
 }
 
 
-void Ui::DownloadMod( const wxString& mod )
+void Ui::DownloadMod( const wxString& hash, const wxString& name )
 {
- /* wxString modname = mod;
-  //all the following manipulation is necessary because the publish name on UF doesn't necessary reflect the file name
-  //and the mod filename isn't accessible trought unitsync
-  modname.Replace(_T(" "), _T("*") );
-  modname.Replace(_T("-"), _T("*") );
-  modname.Replace(_T("_"), _T("*") );
-  modname.Replace(_T("VERSION"), _T("*") );
-  modname.Replace(_T("Version"), _T("*") );
-  modname.Replace(_T("version"), _T("*") );
-  modname.Replace(_T("VER"), _T("*") );
-  modname.Replace(_T("Ver"), _T("*") );
-  modname.Replace(_T("ver"), _T("*") );
-  modname.Replace(_T("V"), _T("*") );
-  modname.Replace(_T("v"), _T("*") );
-  modname.Replace(_T("."), _T("*") );
-  modname.Replace(_T("ALPHA"), _T("*") );
-  modname.Replace(_T("Alpha"), _T("*") );
-  modname.Replace(_T("alpha"), _T("*") );
-  modname.Replace(_T("BETA"), _T("*") );
-  modname.Replace(_T("Beta"), _T("*") );
-  modname.Replace(_T("beta"), _T("*") );*/
-  wxString url = _T("http://spring-portal.com/index.php/docman/cat_view/36-mods") ;
+  #ifndef NO_TORRENT_SYSTEM
+  if ( !hash.IsEmpty() ) torrent()->RequestFileByHash( hash );
+  else if ( !name.IsEmpty() ) torrent()->RequestFileByName( name );
+  #else
+  wxString url = _T("http://spring.jobjol.nl/search.php");
   OpenWebBrowser ( url );
+  #endif
 }
 
 
@@ -371,6 +369,8 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
 {
 
   if ( !IsConnected() ) return false;
+  //TODO insert logic for joining multiple channels at once
+  //or remove that from "/help"
   if ( (cmd.BeforeFirst(' ').Lower() == _T("/join")) || (cmd.BeforeFirst(' ').Lower() == _T("/j")) ) {
     wxString channel = cmd.AfterFirst(' ');
     wxString pass = channel.AfterFirst(' ');
@@ -468,6 +468,15 @@ void Ui::OnUpdate( int mselapsed )
   if ( m_serv != 0 ) {
     m_serv->Update( mselapsed );
   }
+  #ifndef NO_TORRENT_SYSTEM
+  if (m_upd_intv_counter % 20 == 0 )
+  {
+      m_main_win->GetTorrentTab().OnUpdate();
+
+  }
+  torrent()->UpdateFromTimer( mselapsed );
+  m_upd_intv_counter++;
+  #endif
 }
 
 
@@ -804,7 +813,8 @@ void Ui::OnUserLeftBattle( Battle& battle, User& user )
 void Ui::OnBattleMapRefresh()
 {
     if ( m_main_win == 0 ) return;
-        mw().GetJoinTab().GetBattleRoomTab()->UpdateBattleInfo( true, false );
+    BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+    if ( br != 0 ) br->UpdateBattleInfo( true, false );
 }
 
 void Ui::OnBattleInfoUpdated( Battle& battle )
@@ -879,6 +889,9 @@ void Ui::OnBattleStarted( Battle& battle )
       battle.SendMyBattleStatus();
       battle.GetMe().Status().in_game = true;
       battle.GetMe().SendMyUserStatus();
+      #ifndef NO_TORRENT_SYSTEM
+      torrent()->SetIngameStatus(true);
+      #endif
       m_spring->Run( battle );
     }
   }
@@ -908,6 +921,9 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
 
 void Ui::OnSpringTerminated( bool success )
 {
+  #ifndef NO_TORRENT_SYSTEM
+  torrent()->SetIngameStatus(false);
+  #endif
   if ( !m_serv ) return;
 
   m_serv->GetMe().Status().in_game = false;

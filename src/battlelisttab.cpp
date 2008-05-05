@@ -213,6 +213,9 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
 
   m_battle_list->Sort();
+  m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
+  m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
+  m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
 }
 
 
@@ -226,6 +229,9 @@ void BattleListTab::RemoveBattle( Battle& battle ) {
   }
   battle.SetGUIListActiv( false );
   m_battle_list->Sort();
+  m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
+  m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
+  m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
 }
 
 
@@ -278,7 +284,7 @@ void BattleListTab::UpdateBattle( Battle& battle )
 
   if ( &battle == m_sel_battle ) SelectBattle( m_sel_battle );
   m_battle_list->Sort();
-
+  m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
 }
 
 
@@ -466,16 +472,18 @@ void BattleListTab::DoJoin( Battle& battle )
 
   if ( !battle.ModExists() ) {
     if (customMessageBox( SL_MAIN_ICON,_("You need to download the mod before you can join this game.\n\nDo you want me to take you to the download page?"), _("Mod not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-      wxString mod = battle.GetModName();
-      m_ui.DownloadMod ( mod );
+      wxString modhash = battle.GetModHash();
+      wxString modname = battle.GetModName();
+      m_ui.DownloadMod ( modhash, modname );
     }
     return;
   }
 
   if ( !battle.MapExists() ) {
     if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to play in this game.\n\nDo you want me to take you to the download page?"), _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-      wxString map = battle.GetMapName();
-      m_ui.DownloadMap ( map );
+      wxString maphash = battle.GetMapHash();
+      wxString mapname = battle.GetMapName();
+      m_ui.DownloadMap ( maphash, mapname );
     }
   }
 

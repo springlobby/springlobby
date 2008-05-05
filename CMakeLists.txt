@@ -2,9 +2,15 @@ PROJECT(SpringLobby)
 
 #if you don't want the full Compiler-Output, remove the following Line
 SET(CMAKE_VERBOSE_MAKEFILE ON)
+SET(CMAKE_COLOR_MAKEFILE ON)
 
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
-ADD_DEFINITIONS(-Wall -g3)
+ADD_DEFINITIONS(-Wall)
+
+#----------------------------------------------------------------------------------------------------
+# General Settings
+#----------------------------------------------------------------------------------------------------
+# More to come
 
 #----------------------------------------------------------------------------------------------------
 # Konfiguration of wxWidgets Configuration
@@ -13,7 +19,7 @@ ADD_DEFINITIONS(-Wall -g3)
 SET(CMAKE_FIND_LIBRARY_PREFIXES "")
 SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 
-# Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here;
+# Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
 SET(wxWidgets_USE_LIBS base core gl net adv qa)
 
@@ -22,7 +28,6 @@ FIND_PACKAGE(wxWidgets)
 
 # Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
 IF(wxWidgets_FOUND)
-
 	# Include wxWidgets macros
 	INCLUDE(${wxWidgets_USE_FILE})
 
@@ -32,6 +37,8 @@ IF(wxWidgets_FOUND)
 	SET(SpringLobbySrc
 		src/boost/md5.cpp
 		src/updater/versionchecker.cpp
+		src/Helper/TextCompletionDatabase.cpp
+		src/autobalancedialog.cpp
 		src/addbotdialog.cpp
 		src/agreementdialog.cpp
 		src/base64.cpp
@@ -55,6 +62,8 @@ IF(wxWidgets_FOUND)
 		src/crashreport.cpp
 		src/customlistctrl.cpp
 		src/flagimages.cpp
+		src/globalevents.cpp
+		src/httpdownloader.cpp
 		src/hostbattledialog.cpp
 		src/ibattle.cpp
 		src/iconimagelist.cpp
@@ -84,6 +93,7 @@ IF(wxWidgets_FOUND)
 		src/springunitsync.cpp
 		src/springunitsynclib.cpp
 		src/tasserver.cpp
+		src/tdfcontainer.cpp
 		src/ui.cpp
 		src/uiutils.cpp
 		src/unitsyncthread.cpp

@@ -49,15 +49,15 @@ class settings_frame : public wxFrame
 {
 	private:
 		DECLARE_EVENT_TABLE();
-		
+
 	public:
-		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition, 
-				const wxSize& size = wxDefaultSize, long style =  wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX);
+		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition,
+				const wxSize& size = wxDefaultSize);
 		virtual ~settings_frame();
 		void handleExternExit();
 		void switchToExpertMode();
 		void buildGuiFromErrorPanel();
-		
+
 	private:
 		tab_simple* simpleTab;
 		tab_ui* uiTab;
@@ -65,7 +65,7 @@ class settings_frame : public wxFrame
 		debug_panel* debugTab;
 		tab_render_detail* detailTab;
 		tab_quality_video* qualityTab;
-									
+
 		wxMenu* menuFile;
 		wxMenu* menuMode;
 		wxMenu* menuHelp;
@@ -74,14 +74,14 @@ class settings_frame : public wxFrame
 		wxFlexGridSizer *book_sizer;
 		wxFlexGridSizer* book_sizer2;
 		PathOptionPanel* pathOpt_panel;
-		
+
 		wxIcon* settingsIcon;
-		
+
 		void OnNBchange(wxNotebookEvent&);
 		void initMenuBar();
 		void handleExit();
 		bool alreadyCalled;
-		
+
 		enum
 		{
 			////GUI Enum Control ID Start
@@ -104,7 +104,7 @@ class settings_frame : public wxFrame
 		void CreateGUIControls();
 		void resetSettings();
 		void updateAllControls();
-		
+
 };
 
 

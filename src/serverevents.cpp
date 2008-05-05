@@ -16,6 +16,9 @@
 #include "battle.h"
 #include "settings.h"
 #include "settings++/custom_dialogs.h"
+#ifndef NO_TORRENT_SYSTEM
+#include "torrentwrapper.h"
+#endif
 
 void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode )
 {
@@ -31,6 +34,9 @@ void ServerEvents::OnDisconnected()
   wxLogDebugFunc( _T("") );
   m_serv.SetRequiredSpring (_T(""));
   m_ui.OnDisconnected( m_serv );
+  #ifndef NO_TORRENT_SYSTEM
+  if( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->DisconnectToP2PSystem();
+  #endif
 }
 
 
@@ -52,6 +58,9 @@ void ServerEvents::OnLoginInfoComplete()
     if ( !pass.IsEmpty() ) channel = channel.BeforeFirst(' ');
     m_serv.JoinChannel( channel, pass );
   }
+  #ifndef NO_TORRENT_SYSTEM
+  if( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->ConnectToP2PSystem();
+  #endif
   m_ui.OnLoggedIn( );
 }
 
@@ -232,8 +241,8 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
     Battle& battle = m_serv.GetBattle( battleid );
     status.color_index = user.BattleStatus().color_index;
 
-
     user.UpdateBattleStatus( status );
+    battle.OnUserBattleStatusUpdated(user);
 
     m_ui.OnUserBattleStatus( battle, user );
   }
@@ -610,6 +619,7 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
       ///something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
       m_ui.OnBattleAction(*m_serv.GetCurrentBattle(),username,_(" does not really support nat traversal"));
     }
+    m_serv.GetCurrentBattle()->CheckBan(user);
   }catch(std::runtime_error){
     wxLogMessage(_T("runtime_error inside OnClientIPPort()"));
   }

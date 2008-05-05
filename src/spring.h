@@ -1,6 +1,9 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SPRING_H
 #define SPRINGLOBBY_HEADERGUARD_SPRING_H
 
+#include <wx/string.h>
+#include <wx/event.h>
+#include <iostream>
 
 class wxCommandEvent;
 class SinglePlayerBattle;
@@ -28,8 +31,8 @@ class Spring: public wxEvtHandler
 
     static bool TestSpringBinary();
 
-    wxString GetScriptTxt( Battle& battle );
-    wxString GetSPScriptTxt( SinglePlayerBattle& battle );
+    wxString WriteScriptTxt( Battle& battle );
+    wxString WriteSPScriptTxt( SinglePlayerBattle& battle );
     void OnTerminated( wxCommandEvent& event );
 
   protected:

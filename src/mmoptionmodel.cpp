@@ -72,7 +72,7 @@ listItem::listItem(wxString key_, wxString name_,wxString desc_):
 
 }
 
-mmOptionInt::mmOptionInt(wxString name_, wxString key_, wxString description_, long def_, long stepping_, long min_, long max_):
+mmOptionInt::mmOptionInt(wxString name_, wxString key_, wxString description_, int def_, int stepping_, int min_, int max_):
 	mmOptionModel(name_,key_,description_,opt_int),def(def_),value(def_),stepping(stepping_),min(min_),max(max_)
 {}
 
