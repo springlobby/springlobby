@@ -38,6 +38,7 @@ struct TorrentInfos
   float outspeed;
   unsigned int filesize;
   wxString hash;
+  int eta; //is set in update function of maintorrenttab
 };
 
 struct TorrentData

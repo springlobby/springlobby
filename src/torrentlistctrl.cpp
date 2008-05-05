@@ -172,7 +172,7 @@ void TorrentListCtrl::OnColClick( wxListEvent& event )
 
 
   GetColumn( m_sortorder[0].col, col );
-  //col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
+//  col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
   Sort();
@@ -447,11 +447,11 @@ int wxCALLBACK TorrentListCtrl::CompareEtaUP(long item1, long item2, long sortDa
   map_infos info_map = *m_info_map;
   TorrentInfos& info1 = info_map[item1];
   TorrentInfos& info2 = info_map[item2];
-//TODO FIXME
-//  if ( info1.GetNumUsers() - info1.inspeed < info2.GetNumUsers() - info2.inspeed )
-//      return -1;
-//  if ( info1.GetNumUsers() - info1.inspeed > info2.GetNumUsers() - info2.inspeed )
-//      return 1;
+
+  if ( info1.eta < info2.eta)
+      return -1;
+  if ( info1.eta > info2.eta )
+      return 1;
 
   return 0;
 }
@@ -463,11 +463,11 @@ int wxCALLBACK TorrentListCtrl::CompareEtaDOWN(long item1, long item2, long sort
   map_infos info_map = *m_info_map;
   TorrentInfos& info1 = info_map[item1];
   TorrentInfos& info2 = info_map[item2];
-//TODO FIXME
-//  if ( info1.GetNumUsers() - info1.inspeed < info2.GetNumUsers() - info2.inspeed )
-//      return 1;
-//  if ( info1.GetNumUsers() - info1.inspeed > info2.GetNumUsers() - info2.inspeed )
-//      return -1;
+
+  if ( info1.eta < info2.eta )
+      return 1;
+  if ( info1.eta > info2.eta )
+      return -1;
 
   return 0;
 }
