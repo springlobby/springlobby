@@ -21,9 +21,6 @@
 
 BEGIN_EVENT_TABLE(TorrentListCtrl, customListCtrl)
 
-  EVT_LIST_ITEM_SELECTED   ( BLIST_LIST, TorrentListCtrl::OnSelected )
-  EVT_LIST_ITEM_DESELECTED ( BLIST_LIST, TorrentListCtrl::OnDeselected )
-  EVT_LIST_DELETE_ITEM     ( BLIST_LIST, TorrentListCtrl::OnDeselected )
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, TorrentListCtrl::OnListRightClick )
   EVT_LIST_COL_CLICK       ( BLIST_LIST, TorrentListCtrl::OnColClick )
 #if wxUSE_TIPWINDOW
@@ -36,8 +33,7 @@ END_EVENT_TABLE()
 map_infos* TorrentListCtrl::m_info_map = 0;
 
 TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
-  customListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT),
-  m_selected(-1)
+  customListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT)
 
 {
 
@@ -129,24 +125,24 @@ TorrentListCtrl::~TorrentListCtrl()
 }
 
 
-void TorrentListCtrl::OnSelected( wxListEvent& event )
-{
-  m_selected = GetItemData( event.GetIndex() );
-  event.Skip();
-}
-
-
-void TorrentListCtrl::OnDeselected( wxListEvent& event )
-{
-  if ( m_selected == (int)GetItemData( event.GetIndex() )  )
-  m_selected = -1;
-}
-
-
-int TorrentListCtrl::GetSelectedIndex()
-{
-  return m_selected;
-}
+//void TorrentListCtrl::OnSelected( wxListEvent& event )
+//{
+//  m_selected = GetItemData( event.GetIndex() );
+//  event.Skip();
+//}
+//
+//
+//void TorrentListCtrl::OnDeselected( wxListEvent& event )
+//{
+//  if ( m_selected == (int)GetItemData( event.GetIndex() )  )
+//  m_selected = -1;
+//}
+//
+//
+//int TorrentListCtrl::GetSelectedIndex()
+//{
+//  return m_selected;
+//}
 
 
 void TorrentListCtrl::OnListRightClick( wxListEvent& event )
