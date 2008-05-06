@@ -70,7 +70,6 @@ void MyTextCtrl::WriteText(const wxString&  text){
   wxTextCtrl::WriteText(text);
 }
 
-
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 
 	EVT_TEXT_ENTER( CHAT_TEXT, ChatPanel::OnSay )
@@ -78,6 +77,9 @@ BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 	EVT_BUTTON( CHAT_SEND, ChatPanel::OnSay )
 	EVT_SIZE( ChatPanel::OnResize )
 	EVT_TEXT_URL( CHAT_LOG,  ChatPanel::OnLinkEvent )
+
+	EVT_KEY_DOWN( ChatPanel::OnKeyPressed )
+	EVT_KEY_UP( ChatPanel::OnKeyReleased )
 
   EVT_MENU        ( CHAT_MENU_CH_LEAVE, ChatPanel::OnChannelMenuLeave )
   EVT_MENU        ( CHAT_MENU_CH_DISPLAYJOIN, ChatPanel::OnChannelMenuDisplayJoinLeave )
@@ -1533,3 +1535,34 @@ void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event )
   m_ui.GetServer().Ring( GetSelectedUser()->GetNick() );
 }
 
+//--------------------------------------------------------------------------------
+///
+/// Slot for the Signal wxEVT_KEY_DOWN
+///
+/// \parem keyevent
+///		The Structure containing all related Infos about the Keyevent
+///
+//--------------------------------------------------------------------------------
+void
+ChatPanel::OnKeyPressed( wxKeyEvent& keyevent ) {
+
+	std::cout << "#########: Key pressed: " << std::endl
+	<< "Modifier(" << keyevent.GetModifiers() << ")" << std::endl
+	<< "Keycode(" << keyevent.GetKeyCode() << ")" << std::endl;
+}
+
+//--------------------------------------------------------------------------------
+///
+/// Slot for the Signal wxEVT_KEY_UP
+///
+/// \parem keyevent
+///		The Structure containing all related Infos about the Keyevent
+///
+//--------------------------------------------------------------------------------
+void
+ChatPanel::OnKeyReleased( wxKeyEvent& keyevent ) {
+
+	std::cout << "#########: Key released: " << std::endl
+	<< "Modifier(" << keyevent.GetModifiers() << ")" << std::endl
+	<< "Keycode(" << keyevent.GetKeyCode() << ")" << std::endl;
+}
