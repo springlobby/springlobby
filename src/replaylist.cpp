@@ -108,6 +108,7 @@ wxString GetScriptFromReplay ( wxString& ReplayPath )
         char* script_a = new char[scriptSize];
         replay.Read( script_a, scriptSize );
         wxString script = WX_STRINGC( script_a ) ;//(script_a,scriptSize);
+        //TODO (koshi) delete me after stable
         serverMessageBox(SL_MAIN_ICON,script,_("GG") );
         return script;
     }

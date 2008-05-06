@@ -20,12 +20,8 @@ class ReplayListCtrl : public customListCtrl
     ReplayListCtrl( wxWindow* parent, Ui& ui, ReplayList& replaylist );
     ~ReplayListCtrl();
 
-
-    int GetSelectedIndex();
     void Sort();
 
-    void OnSelected( wxListEvent& event );
-    void OnDeselected( wxListEvent& event );
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );
@@ -51,7 +47,6 @@ class ReplayListCtrl : public customListCtrl
       bool direction;
     } m_sortorder[4];
 
-    int m_selected;
     wxMenu* m_popup;
     Ui& m_ui;
    // ReplayList_Iter& m_replaylist_iter;

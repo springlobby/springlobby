@@ -16,9 +16,6 @@
 
 BEGIN_EVENT_TABLE(ReplayListCtrl, customListCtrl)
 
-  EVT_LIST_ITEM_SELECTED   ( RLIST_LIST, ReplayListCtrl::OnSelected )
-  EVT_LIST_ITEM_DESELECTED ( RLIST_LIST, ReplayListCtrl::OnDeselected )
-  EVT_LIST_DELETE_ITEM     ( RLIST_LIST, ReplayListCtrl::OnDeselected )
   EVT_LIST_ITEM_RIGHT_CLICK( RLIST_LIST, ReplayListCtrl::OnListRightClick )
   EVT_LIST_COL_CLICK       ( RLIST_LIST, ReplayListCtrl::OnColClick )
   EVT_MENU                 ( RLIST_DLMAP, ReplayListCtrl::OnDLMap )
@@ -34,7 +31,6 @@ ReplayList* ReplayListCtrl::m_replaylist_sort = 0;
 
 ReplayListCtrl::ReplayListCtrl( wxWindow* parent, Ui& ui, ReplayList& replaylist  ):
   customListCtrl(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT),
-  m_selected(-1),
   m_ui(ui),
   m_replaylist(replaylist)
 {
@@ -107,27 +103,6 @@ ReplayListCtrl::~ReplayListCtrl()
 {
   delete m_popup;
 }
-
-
-void ReplayListCtrl::OnSelected( wxListEvent& event )
-{
-  m_selected = GetItemData( event.GetIndex() );
-  event.Skip();
-}
-
-
-void ReplayListCtrl::OnDeselected( wxListEvent& event )
-{
-  if ( m_selected == (int)GetItemData( event.GetIndex() )  )
-  m_selected = -1;
-}
-
-
-int ReplayListCtrl::GetSelectedIndex()
-{
-  return m_selected;
-}
-
 
 void ReplayListCtrl::OnListRightClick( wxListEvent& event )
 {

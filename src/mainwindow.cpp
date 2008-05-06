@@ -147,7 +147,7 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_replay_tab, _T(""), false, 4 );
 
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 4 );
+  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 5 );
 #endif
 
   //TODO insert real downloads panel
