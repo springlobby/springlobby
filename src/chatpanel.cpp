@@ -154,7 +154,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_ui( ui ), m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ) {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Server& serv" ) );
 	CreateControls( );
 	serv.uidata.panel = this;
@@ -164,7 +164,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist( NULL ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( 0 ), m_battle( &battle ), m_type( CPT_Battle ), m_popup_menu( 0 ) {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_chat_tabs( 0 ), m_nicklist( NULL ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( 0 ), m_battle( &battle ), m_type( CPT_Battle ), m_popup_menu( 0 ) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Battle& battle" ) );
 	CreateControls( );
 	wxDateTime now = wxDateTime::Now();
@@ -652,7 +652,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 	if ( who.Upper() == me.Upper() ) {
 		col = sett().GetChatColorMine();
     // change the image of the tab to show new events
-    if (  m_ui.GetActiveChatPanel() != this )
+    if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
     {
       for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
         if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -662,7 +662,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
     }
 	} else if ( message.Upper().Contains( me.Upper() ) ) {
     // change the image of the tab to show new events
-    if (  m_ui.GetActiveChatPanel() != this )
+    if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
     {
       for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
         if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -674,7 +674,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 		req_user = true;
 	} else {
     // change the image of the tab to show new events
-    if (  m_ui.GetActiveChatPanel() != this )
+    if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
     {
       for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
         if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -704,7 +704,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 
 void ChatPanel::DidAction( const wxString& who, const wxString& action ) {
   // change the image of the tab to show new events
-	if (  m_ui.GetActiveChatPanel() != this )
+	if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
 	{
 		for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
 			if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -723,7 +723,7 @@ void ChatPanel::Motd( const wxString& message ) {
 	wxFont f = m_chatlog_text->GetFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
   // change the image of the tab to show new events
-	if (  m_ui.GetActiveChatPanel() != this )
+	if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
 	{
 		for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
 			if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -757,7 +757,7 @@ void ChatPanel::UnknownCommand( const wxString& command, const wxString& params 
 	wxFont f = m_chatlog_text->GetFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
   // change the image of the tab to show new events
-	if (  m_ui.GetActiveChatPanel() != this )
+	if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
 	{
 		for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
 			if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -782,7 +782,7 @@ void ChatPanel::Joined( User& who ) {
 	if ( m_type == CPT_Channel ) {
 		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) {
       // change the image of the tab to show new events
-      if (  m_ui.GetActiveChatPanel() != this )
+      if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
       {
         for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
           if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -815,7 +815,7 @@ void ChatPanel::Parted( User& who, const wxString& message ) {
 	if ( m_type == CPT_Channel ) {
 		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) {
       // change the image of the tab to show new events
-      if (  m_ui.GetActiveChatPanel() != this )
+      if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
       {
         for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
           if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -856,7 +856,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message ) {
 	wxFont f = m_chatlog_text->GetFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
   // change the image of the tab to show new events
-  if (  m_ui.GetActiveChatPanel() != this )
+  if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
   {
     for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
       if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -1075,7 +1075,7 @@ bool ChatPanel::IsOk() {
 
 void ChatPanel::OnUserDisconnected() {
   // change the image of the tab to show new events
-  if (  m_ui.GetActiveChatPanel() != this )
+  if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
   {
     for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
       if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -1089,7 +1089,7 @@ void ChatPanel::OnUserDisconnected() {
 
 void ChatPanel::OnUserConnected() {
   // change the image of the tab to show new events
-  if (  m_ui.GetActiveChatPanel() != this )
+  if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
   {
     for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
       if ( m_chat_tabs->GetPage( i ) == this ) {
