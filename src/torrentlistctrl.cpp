@@ -83,6 +83,8 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 9, col, _T("Filesize"), true );
 
+  memset(m_sortorder, 0, sizeof(m_sortorder));
+
   m_sortorder[0].col = 0;
   m_sortorder[0].direction = true;
 
