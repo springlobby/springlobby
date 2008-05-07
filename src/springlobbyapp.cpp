@@ -43,6 +43,9 @@ END_EVENT_TABLE()
 SpringLobbyApp::SpringLobbyApp()
 {
     m_timer = new wxTimer(this, TIMER_ID);
+    m_ui = NULL;
+    m_locale = NULL;
+    m_otadownloader = NULL;
 }
 
 SpringLobbyApp::~SpringLobbyApp()
