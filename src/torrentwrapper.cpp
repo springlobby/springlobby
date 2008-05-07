@@ -276,11 +276,20 @@ void TorrentWrapper::UpdateFromTimer( int mselapsed )
 std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 {
   std::map<int,TorrentInfos> ret;
+
   TorrentInfos globalinfos;
+  globalinfos.seeding = false;
+  globalinfos.progress = 0.0f;
+  globalinfos.downloaded = 0;
+  globalinfos.uploaded = 0;
   globalinfos.outspeed = m_torr->status().upload_rate;
   globalinfos.inspeed = m_torr->status().download_rate;
+  globalinfos.numcopies = 0.0f;
+  globalinfos.filesize = 0;
   ret[0] = globalinfos;
+
   if ( ingame || !m_connected ) return ret; /// stop updating the gui if disconneted
+
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
   {
