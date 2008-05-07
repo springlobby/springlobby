@@ -51,7 +51,10 @@ TorrentWrapper* torrent()
 
 TorrentWrapper::TorrentWrapper():
 m_connected(false),
-ingame(false)
+ingame(false),
+m_seed_count(0),
+m_leech_count(0),
+m_timer_count(0)
 {
   m_tracker_urls.Add( _T("tracker.caspring.org"));
   m_tracker_urls.Add( _T("tracker2.caspring.org"));
