@@ -84,11 +84,13 @@ void SpringUnitSync::PopulateArchiveList()
   m_maps_list.empty();
   m_mods_list.empty();
 
-  for ( int i =0; i < GetNumMaps(); i++ )
+  int numMaps = GetNumMaps();
+  for ( int i = 0; i < numMaps; i++ )
   {
     m_maps_list.from[susynclib()->GetMapChecksum( i )] = susynclib()->GetMapName( i );
   }
-  for ( int i =0; i < GetNumMods(); i++ )
+  int numMods = GetNumMods();
+  for ( int i = 0; i < numMods; i++ )
   {
     m_mods_list.from[i2s(susynclib()->GetPrimaryModChecksum( i ))] = susynclib()->GetPrimaryModName( i );
   }
