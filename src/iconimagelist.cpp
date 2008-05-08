@@ -137,6 +137,7 @@ IconImageList::IconImageList() : wxImageList(16,16)
     SetColourIcon( 1, wxColour(   0, 255,   0 ) );
     SetColourIcon( 2, wxColour(   0,   0, 255 ) );
 
+
   //ICON_FIXCOLOURS_PALETTE = Add( wxBitmap(fixcolours_palette_xpm) );
 
     ICON_UNK_FLAG = Add( wxBitmap(unknown_flag_xpm) );
@@ -236,7 +237,6 @@ int IconImageList::GetBattleStatusIcon( Battle& battle )
     if ( battle.GetInGame() ) return ICON_STARTED_GAME;
     if ( !battle.IsLocked() )
     {
-        //TODO FIXME order
         if ( battle.IsFull() )
         {
             if ( battle.IsPassworded() )

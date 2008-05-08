@@ -39,11 +39,18 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
     m_autostart_logon = new wxRadioButton (this, ID_AUTOSTART_RADIO, _("at lobby connection (default)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
     m_autostart_start = new wxRadioButton (this, ID_AUTOSTART_RADIO, _("at lobby start"));
     m_autostart_manual = new wxRadioButton (this, ID_AUTOSTART_RADIO, _("manual") );
+    wxBoxSizer* m_status_box = new wxBoxSizer( wxHORIZONTAL );
+    m_status_color = new wxButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
+    m_status_color_text = new wxStaticText( this, wxID_ANY, _("unknown") );
+    m_status_box->Add( m_status_color ,  0, wxALL, 5);
+    m_status_box->Add( m_status_color_text,  0, wxALL, 5);
+
     m_autostart_box_sizer->Add(m_autostart_logon,  0, wxALL, 5);
     m_autostart_box_sizer->Add(m_autostart_start,  0, wxALL, 5);
     m_autostart_box_sizer->Add(m_autostart_manual,  0, wxALL, 5);
 //    m_autostart_box_sizer->Add(NULL);
     m_autostart_box_sizer->Add(m_sys_ctrl_box,  0, wxALL, 5);
+    m_autostart_box_sizer->Add(m_status_box,  0, wxALL, 5);
     mainboxsizer->Add( m_autostart_box_sizer, 0, wxALL, 5 );
 
     m_gamestart_box = new wxStaticBox(this, -1, _("At game start suspend mode") );
@@ -105,7 +112,7 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
     EnableStartStopButtons( torrent()->IsConnectedToP2PSystem() );
     wxCommandEvent dummy;
     OnRestore(dummy);
-
+    SetStatusDisplay();
     SetSizer( mainboxsizer );
 }
 
@@ -114,6 +121,28 @@ TorrentOptionsPanel::~TorrentOptionsPanel()
 
 }
 
+void TorrentOptionsPanel::SetStatusDisplay()
+{
+    switch (torrent()->GetTorrentSystemStatus() )
+    {
+        case 0:
+            m_status_color->SetBackgroundColour( wxColor(255,0,0) ); //not connected
+            m_status_color_text->SetLabel(_("Status: not connected") );
+            break;
+        case 1:
+            m_status_color->SetBackgroundColour( wxColor(0,255,0) ); //connected
+            m_status_color_text->SetLabel(_("Status: connected") );
+            break;
+        case 2:
+            m_status_color->SetBackgroundColour( wxColor(0,0,255) ); //ingame
+            m_status_color_text->SetLabel(_("Status: throttled (ingame)") );
+            break;
+        default:
+            m_status_color->SetBackgroundColour( wxColor(255,255,255) ); //unknown
+            m_status_color_text->SetLabel(_("Status: unknown") );
+            break;
+    }
+}
 
 void TorrentOptionsPanel::EnableSettings( bool enable)
 {
@@ -157,7 +186,7 @@ void TorrentOptionsPanel::OnApply( wxCommandEvent& event )
 //        torrent()->ConnectToP2PSystem();
 //    else if ( torrent()->IsConnectedToP2PSystem() && !m_enableP2P->IsChecked() )
 //        torrent()->DisconnectToP2PSystem();
-
+    SetStatusDisplay();
     torrent()->UpdateSettings();
 }
 
@@ -181,7 +210,7 @@ void TorrentOptionsPanel::OnRestore( wxCommandEvent& event )
             m_autostart_logon->SetValue( true );
     }
     m_gamestart_throttle->SetValue( sett().GetTorrentSystemSuspendMode() );
-
+    SetStatusDisplay();
 }
 
 void TorrentOptionsPanel::OnManStart( wxCommandEvent& event )
@@ -194,6 +223,7 @@ void TorrentOptionsPanel::EnableStartStopButtons( bool system_is_running)
 {
     m_sys_start->Enable(!system_is_running);
     m_sys_stop->Enable(system_is_running);
+    SetStatusDisplay();
 }
 
 void TorrentOptionsPanel::OnManStop( wxCommandEvent& event )

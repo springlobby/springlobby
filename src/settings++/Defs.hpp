@@ -281,7 +281,6 @@ const Control QA_CBOX[] = {
 
 const category_sizes_map_type QA_CBOX_entry ( _T("QA_CBOX"), sizeof(QA_CBOX) / Control_size );
 
-//TODO add scroll wheel speed
 const Control UI_CBOX[] = {
 	{_("Enable LuaUI widgets"),                            _T("LuaUI"),               ID_WINDOWP_UI_CBOX_1,	_T("1"), {_("mark to be able to use")}},
 

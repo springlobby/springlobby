@@ -62,7 +62,6 @@ ingame(false)
   m_torr->start_upnp();
   m_torr->start_natpmp();
   m_torr->start_lsd();
-  m_torr->start_dht();
   m_socket_class = new Socket( *this );
   UpdateSettings();
 }
@@ -73,7 +72,6 @@ TorrentWrapper::~TorrentWrapper()
   m_torr->stop_upnp();
   m_torr->stop_natpmp();
   m_torr->stop_lsd();
-  m_torr->stop_dht();
   DisconnectToP2PSystem();
   delete m_torr;
   delete m_socket_class;
@@ -86,6 +84,7 @@ TorrentWrapper::~TorrentWrapper()
 
 void TorrentWrapper::ConnectToP2PSystem()
 {
+  if ( m_connected ) return;
   m_socket_class->Connect( m_tracker_urls[0], DEFAULT_P2P_COORDINATOR_PORT );
   m_connected_tracker_index= 0;
   return;
@@ -103,7 +102,15 @@ void TorrentWrapper::ConnectToP2PSystem()
 
 void TorrentWrapper::DisconnectToP2PSystem()
 {
-  if ( m_connected ) m_socket_class->Disconnect();
+  if ( m_connected )
+  {
+     {
+       ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
+       for ( TorrentHandleToHash::from::iterator itor = torrent_handles_l.Get().from.begin(); itor != torrent_handles_l.Get().from.end(); itor++ )
+        m_socket_class->Send( wxString::Format( _T("N-|%s\n"), itor->second.c_str() ) ); /// release all files requests
+     }
+     m_socket_class->Disconnect();
+  }
 }
 
 
@@ -334,7 +341,7 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
   wxLogMessage(_T("(3) Joining torrent: downloading info file"));
   if ( !wxFileName::IsFileReadable( sett().GetSpringDir() + _T("/torrents/") + hash + _T(".torrent") ) ) /// file descriptor not present, download it
   {
-     DownloadTorrentFileFromTracker( hash );
+     if (!DownloadTorrentFileFromTracker( hash )) return false;
   }
   /// read torrent from file
   std::ifstream in( wxString( sett().GetSpringDir() + _T("/torrents/") + hash + _T(".torrent") ).mb_str(), std::ios_base::binary);
@@ -373,6 +380,13 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
 void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, MediaType type )
 {
   if (ingame) return;
+
+
+  if ( sett().GetSpringDir().IsEmpty() ) return; /// no good things can happend if you don't know which folder to r/w files from
+  bool creationsuccess = true;
+  if ( !wxFileName::DirExists( sett().GetSpringDir() + _T("/torrents/")  ) ) creationsuccess = wxFileName::Mkdir(  sett().GetSpringDir() + _T("/torrents/")  );
+  if (!creationsuccess) return;
+
   libtorrent::torrent_info newtorrent;
 
   wxString StringFilePath = sett().GetSpringDir();
@@ -420,6 +434,11 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
 {
   wxLogMessage(_T("torrent system downloading torrent info %s"), hash.c_str() );
+
+  if ( sett().GetSpringDir().IsEmpty() ) return false; /// no good things can happend if you don't know which folder to r/w files from
+  bool creationsuccess = true;
+  if ( !wxFileName::DirExists(  sett().GetSpringDir() + _T("/torrents/")  ) ) creationsuccess = wxFileName::Mkdir(  sett().GetSpringDir() + _T("/torrents/")  );
+  if (!creationsuccess) return false;
   wxHTTP fileRequest;
   //versionRequest.SetHeader(_T("Content-type"), _T(""));
   /// normal timeout is 10 minutes.. set to 10 secs.
@@ -636,6 +655,8 @@ void TorrentWrapper::OnConnected( Socket* sock )
   wxLogMessage(_T("torrent system connected") );
   m_connected = true;
 
+  m_torr->start_dht();
+
   /// threads rule 8 plus here we want to lock it all so that other thread wont get inconsistent data
   ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
   ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
@@ -658,6 +679,8 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++) m_torr->remove_torrent(*i); ///remove all torrents upon disconnect
   m_connected = false;
+
+  m_torr->stop_dht();
 
 
   /// threads rule 8 plus here we want to lock it all so that other thread wont get inconsistent data

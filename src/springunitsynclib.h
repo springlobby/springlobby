@@ -249,7 +249,7 @@ class SpringUnitSyncLib
     int ReadFileVFS( int handle, void* buffer, int bufferLength );
     void CloseFileVFS( int handle );
 
-    int GetLuaAICount();
+    int GetLuaAICount( const wxString& modname );
     wxString GetLuaAIName( int aiIndex );
     wxString GetLuaAIDesc( int aiIndex );
 

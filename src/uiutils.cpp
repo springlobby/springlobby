@@ -10,6 +10,7 @@
 #include <cmath>
 #include "uiutils.h"
 #include "utils.h"
+#include "settings++/custom_dialogs.h"
 
 wxString RefineMapname( const wxString& mapname )
 {

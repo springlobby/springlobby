@@ -19,7 +19,7 @@
 					<Add option="-g" />
 					<Add option="`pkg-config --cflags libtorrent`" />
 					<Add option="`wx-config --cflags`" />
-					<Add option='-DVERSION=\\&quot;0.0.1.0.whatever-Debug-Linux\\&quot;' />
+					<Add option='-DVERSION=\\&quot;666_evil_edition\\&quot;' />
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 				</Compiler>
 				<Linker>
@@ -203,42 +203,32 @@
 		<Unit filename="src/flagimagedata.h" />
 		<Unit filename="src/flagimages.cpp" />
 		<Unit filename="src/flagimages.h" />
+		<Unit filename="src/globalevents.cpp" />
+		<Unit filename="src/globalevents.h" />
 		<Unit filename="src/hostbattledialog.cpp" />
 		<Unit filename="src/hostbattledialog.h" />
+		<Unit filename="src/httpdownloader.cpp" />
+		<Unit filename="src/httpdownloader.h" />
 		<Unit filename="src/ibattle.cpp" />
 		<Unit filename="src/ibattle.h" />
 		<Unit filename="src/iconimagelist.cpp" />
 		<Unit filename="src/iconimagelist.h" />
 		<Unit filename="src/images/SpringLobby.ico" />
-		<Unit filename="src/images/admin.xpm" />
-		<Unit filename="src/images/admin_away.xpm" />
-		<Unit filename="src/images/admin_ingame.xpm" />
-		<Unit filename="src/images/arm.xpm" />
-		<Unit filename="src/images/away.xpm" />
 		<Unit filename="src/images/battle.xpm" />
 		<Unit filename="src/images/battle_list.xpm" />
 		<Unit filename="src/images/battle_map.xpm" />
 		<Unit filename="src/images/battle_settings.xpm" />
 		<Unit filename="src/images/bot.xpm" />
 		<Unit filename="src/images/channel.xpm" />
-		<Unit filename="src/images/chat_icon.xpm" />
 		<Unit filename="src/images/close.xpm" />
 		<Unit filename="src/images/close_hi.xpm" />
-		<Unit filename="src/images/closed_game.xpm" />
-		<Unit filename="src/images/closed_pw_game.xpm" />
 		<Unit filename="src/images/colourbox.xpm" />
 		<Unit filename="src/images/connect.xpm" />
-		<Unit filename="src/images/core.xpm" />
 		<Unit filename="src/images/down.xpm" />
 		<Unit filename="src/images/exists.xpm" />
-		<Unit filename="src/images/ingame.xpm" />
-		<Unit filename="src/images/join_icon.xpm" />
 		<Unit filename="src/images/not_found_icon.xpm" />
 		<Unit filename="src/images/nready_q.xpm" />
 		<Unit filename="src/images/nready_unsync.xpm" />
-		<Unit filename="src/images/open_game.xpm" />
-		<Unit filename="src/images/open_pw_game.xpm" />
-		<Unit filename="src/images/options_icon.xpm" />
 		<Unit filename="src/images/rank0.xpm" />
 		<Unit filename="src/images/rank1.xpm" />
 		<Unit filename="src/images/rank2.xpm" />
@@ -248,7 +238,6 @@
 		<Unit filename="src/images/ready_unsync.xpm" />
 		<Unit filename="src/images/select_icon.xpm" />
 		<Unit filename="src/images/server.xpm" />
-		<Unit filename="src/images/singleplayer_icon.xpm" />
 		<Unit filename="src/images/spectator.xpm" />
 		<Unit filename="src/images/spring.xpm" />
 		<Unit filename="src/images/springlobby.svg" />

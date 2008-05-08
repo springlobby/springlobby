@@ -424,7 +424,7 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
 }
 
 
-wxArrayString SpringUnitSync::GetAIList()
+wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
 
@@ -440,8 +440,8 @@ wxArrayString SpringUnitSync::GetAIList()
   }
 
   try { // Older versions of unitsync does not have these functions.
-    const int LuaAICount = susynclib()->GetLuaAICount();
-    for ( int i = 0; i < LuaAICount; i++ ) ret.Add( _( "LuaAI" ) +  susynclib()->GetLuaAIName( i ) );
+    const int LuaAICount = susynclib()->GetLuaAICount( modname );
+    for ( int i = 0; i < LuaAICount; i++ ) ret.Add( _T( "LuaAI:" ) +  susynclib()->GetLuaAIName( i ) );
   } catch (...) {}
 
   return ret;
@@ -753,4 +753,10 @@ void SpringUnitSync::_SaveMapInfoExCache()
   f.Close();
 }
 
-
+bool SpringUnitSync::FileExists( const wxString& name )
+{
+  int handle = susynclib()->OpenFileVFS(name);
+  if ( handle == 0 ) return false;
+  susynclib()->CloseFileVFS(handle);
+  return true;
+}

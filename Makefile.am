@@ -82,6 +82,7 @@ springlobby_SOURCES = \
 	src/maplistctrl.h \
 	src/mapselectdialog.cpp \
 	src/mapselectdialog.h \
+	src/bimap.h \
 	src/chatlog.h \
 	src/chatlog.cpp \
 	src/images/broom.png.h \
@@ -154,6 +155,7 @@ springlobby_SOURCES = \
 	src/hostbattledialog.cpp \
 	src/iconimagelist.cpp \
 	src/iconimagelist.h \
+	src/inetclass.h \
 	src/iunitsync.h \
 	src/mainchattab.cpp \
 	src/mainchattab.h \
@@ -235,6 +237,7 @@ springlobby_SOURCES = \
 	src/images/connect.xpm \
 	src/images/down.xpm \
 	src/images/exists.xpm \
+	src/images/fixcolours_palette.xpm \
 	src/images/ingame.png.h \
 	src/images/join_icon.png.h \
 	src/images/join_icon_text.png.h \
@@ -529,8 +532,13 @@ springlobby_SOURCES = \
 	src/autobalancedialog.h \
 	src/tdfcontainer.cpp \
 	src/tdfcontainer.h \
+	src/globalevents.h \
+	src/globalevents.cpp \
+	src/httpdownloader.h \
+	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
 	src/Helper/TextCompletionDatabase.cpp 
+
 
 
 if USE_WINDRES	

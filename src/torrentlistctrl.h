@@ -23,12 +23,8 @@ class TorrentListCtrl : public customListCtrl
     TorrentListCtrl( wxWindow* parent, Ui& ui );
     ~TorrentListCtrl();
 
-
-    int GetSelectedIndex();
     void Sort();
 
-    void OnSelected( wxListEvent& event );
-    void OnDeselected( wxListEvent& event );
     void OnListRightClick( wxListEvent& event );
 
     void OnMouseMotion(wxMouseEvent& event);
@@ -61,7 +57,6 @@ class TorrentListCtrl : public customListCtrl
       bool direction;
     } m_sortorder[4];
 
-    int m_selected;
     //wxMenu* m_popup;
 
     DECLARE_EVENT_TABLE()

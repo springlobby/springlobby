@@ -45,15 +45,17 @@ class TorrentOptionsPanel: public wxPanel
         wxTextCtrl* m_gamestart_throttle_down;
         wxButton* m_sys_start;
         wxButton* m_sys_stop;
+        wxButton* m_status_color;
         wxStaticText* m_gamestart_throttle_up_lbl;
         wxStaticText* m_gamestart_throttle_down_lbl;
+        wxStaticText* m_status_color_text;
 
         Ui& m_ui;
 
 
         void EnableSettings( bool enable);
         void EnableStartStopButtons( bool system_is_running);
-
+        void SetStatusDisplay();
 
         enum
         {
