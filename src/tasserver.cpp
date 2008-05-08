@@ -764,7 +764,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         color.data = GetIntParam( params );
         bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
         ai = GetSentenceParam( params );
-        ai = ai.BeforeLast( '.' );
+        if ( ai.Contains( _T(".dll") ) )ai = ai.BeforeLast( '.' );
         m_se->OnBattleAddBot( id, nick, owner, bstatus, ai );
     }
     else if ( cmd == _T("UPDATEBOT") )
