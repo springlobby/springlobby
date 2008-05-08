@@ -62,8 +62,11 @@ NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* p
   m_sortorder[3].col = 1;
   m_sortorder[3].direction = true;
   Sort( );
-
+  #ifdef __WXMSW__
+  SetColumnWidth( 0, 55 );
+  #else
   SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
+  #endif
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
