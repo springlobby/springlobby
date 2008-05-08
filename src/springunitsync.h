@@ -40,6 +40,7 @@ class SpringUnitSync : public IUnitSync
     UnitSyncMap GetMap( int index );
     UnitSyncMap GetMapEx( const wxString& mapname );
     UnitSyncMap GetMapEx( int index );
+    wxString GetMapArchive( int index );
     GameOptions GetMapOptions( const wxString& name );
 
     int GetMapIndex( const wxString& name );
@@ -73,6 +74,9 @@ class SpringUnitSync : public IUnitSync
     wxString GetSpringDataPath();
 
     bool FileExists( const wxString& name );
+
+    wxString GetArchivePath( const wxString& name );
+
   private:
 
     static wxString _GetCachedMinimapFileName( const wxString& mapname, int width = -1, int height = -1 );

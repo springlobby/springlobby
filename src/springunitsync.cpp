@@ -260,13 +260,14 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
   return m;
 }
 
+
 GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
   GameOptions ret;
   int count = susynclib()->GetMapOptionCount(name);
-	for (int i = 0; i < count; ++i)
-	{
+  for (int i = 0; i < count; ++i)
+  {
     wxString key = susynclib()->GetOptionKey(i);
     switch (susynclib()->GetOptionType(i))
     {
@@ -292,8 +293,8 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
                             susynclib()->GetOptionListItemDesc(i,j));
        }
     }
-	}
-	return ret;
+  }
+  return ret;
 }
 
 
@@ -329,13 +330,33 @@ wxString SpringUnitSync::GetModArchive( int index )
 }
 
 
+wxString SpringUnitSync::_GetModArchive( int index )
+{
+  return susynclib()->GetPrimaryModArchive( index );
+}
+
+
+wxString SpringUnitSync::GetMapArchive( int index )
+{
+  wxLogDebugFunc( _T("") );
+  LOCK_UNITSYNC;
+
+  int count = susynclib()->GetMapArchiveCount( index );
+
+  if ( count > 0 )
+    return susynclib()->GetMapArchiveName( 0 );
+  else
+    return _T("");
+}
+
+
 GameOptions SpringUnitSync::GetModOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
   GameOptions ret;
   int count = susynclib()->GetModOptionCount(name);
-	for (int i = 0; i < count; ++i)
-	{
+  for (int i = 0; i < count; ++i)
+  {
     wxString key = susynclib()->GetOptionKey(i);
     switch (susynclib()->GetOptionType(i))
     {
@@ -361,14 +382,8 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
                             susynclib()->GetOptionListItemDesc(i,j));
        }
     }
-	}
-	return ret;
-}
-
-
-wxString SpringUnitSync::_GetModArchive( int index )
-{
-  return susynclib()->GetPrimaryModArchive( index );
+  }
+  return ret;
 }
 
 
@@ -755,10 +770,20 @@ void SpringUnitSync::_SaveMapInfoExCache()
   f.Close();
 }
 
+
 bool SpringUnitSync::FileExists( const wxString& name )
 {
   int handle = susynclib()->OpenFileVFS(name);
   if ( handle == 0 ) return false;
   susynclib()->CloseFileVFS(handle);
   return true;
+}
+
+
+wxString SpringUnitSync::GetArchivePath( const wxString& name )
+{
+  wxLogDebugFunc( _T("") );
+  LOCK_UNITSYNC;
+
+  return susynclib()->GetArchivePath( name );
 }
