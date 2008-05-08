@@ -353,7 +353,12 @@ void BattleroomListCtrl::UpdateBot( const int& index )
   try {
     int sideimg = icons().GetSideIcon( m_battle.GetModName(), bot.bs.side );
     if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
-    else SetItem( index, 1,  usync()->GetSideName( m_battle.GetModName(), bot.bs.side) );
+    wxString botname = m_battle.GetModName();
+    if ( botname.Contains(_T('.')) ) ret = botname.BeforeLast(_T('.'));
+    if ( botname.Contains(_T('/')) ) ret = botname.AfterLast(_T('/'));
+    if ( botname.Contains(_T('\\')) ) ret = botname.AfterLast(_T('\\'));
+    if ( botname.Contains(_T("LuaAI:")) ) botname = botname.AfterFirst(_T(':'));
+    else SetItem( index, 1,  usync()->GetSideName( botname, bot.bs.side) );
   } catch ( ... ) {
     SetItem( index, 1, wxString::Format( _T("s%d"), bot.bs.side + 1 ) );
   }

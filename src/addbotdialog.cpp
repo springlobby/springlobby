@@ -107,7 +107,7 @@ wxString AddBotDialog::GetAI()
 wxString AddBotDialog::RefineAIName( const wxString& name )
 {
   wxString ret = name;
-  if (ret.Contains(_T('.')) ) ret = name.BeforeLast(_T('.'));
+  if (ret.Contains(_T('.')) ) ret = ret.BeforeLast(_T('.'));
   if ( ret.Contains(_T('/')) ) ret = ret.AfterLast(_T('/'));
   if ( ret.Contains(_T('\\')) ) ret = ret.AfterLast(_T('\\'));
   if ( ret.Contains(_T("LuaAI:")) ) ret = ret.AfterFirst(_T(':'));
