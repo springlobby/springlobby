@@ -167,12 +167,13 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   SetSizer( m_main_sizer );
 
   if ( !username.empty() ) {
-    m_pass_text->SetFocus();
+    m_ok_btn->SetFocus();
   } else {
     m_nick_text->SetFocus();
   }
 
   m_ok_btn->SetDefault();
+
   Layout();
   m_main_sizer->SetSizeHints( this );
 #ifdef __WXMSW__

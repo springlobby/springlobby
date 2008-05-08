@@ -400,7 +400,7 @@ void wxSpinCtrlDbl::SetValue( double value )
     {
         double snap_value = (value - m_default_value) / m_increment;
 
-        if (wxFinite(snap_value)) // FIXME what to do about a failure?
+        if (wxFinite(snap_value))
         {
             if (snap_value - floor(snap_value) < ceil(snap_value) - snap_value)
                 value = m_default_value + floor(snap_value) * m_increment;
@@ -611,7 +611,7 @@ bool wxSpinCtrlDbl::SetBackgroundColour(const wxColour& colour)
     if (!m_textCtrl) return wxControl::SetBackgroundColour(colour);
     bool ret = false;
     ret = m_textCtrl->SetBackgroundColour(colour);
-    m_textCtrl->Refresh(); // FIXME is this necessary in GTK/OSX
+    m_textCtrl->Refresh();
     return ret;
 }
 wxColour wxSpinCtrlDbl::GetBackgroundColour() const

@@ -2,7 +2,6 @@
 #define TDFCONTAINER_H
 
 #include <wx/string.h>
-#include <iostream>
 #include "utils.h"
 /// Todo: add TDFContainer class.
 ///
@@ -10,7 +9,7 @@
 class TDFWriter
 {
   public:
-    TDFWriter(std::ostream &s);
+    TDFWriter(wxString &s);
     ~TDFWriter();
     void EnterSection(const wxString &name);
     void LeaveSection();
@@ -24,18 +23,18 @@ class TDFWriter
     template<class T>
     void Append(const wxString &name, T begin, T end){
       Indent();
-      m_stream<<STD_STRING(name).c_str()<<"=";
+      m_stream<<name<<_T("=");
       for(T it=begin;it!=end;++it){
-        if(it!=begin)m_stream<<" ";
+        if(it!=begin)m_stream<<_T(" ");
         m_stream<<(*it);
       }
-      m_stream<<";\n";
+      m_stream<<_T(";\n");
     }
     void AppendLineBreak();
     void Close();
   protected:
   private:
-  std::ostream &m_stream;
+  wxString &m_stream;
   int m_depth;
 };
 

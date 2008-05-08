@@ -187,6 +187,7 @@ void BattleListTab::SelectBattle( Battle* battle )
 
 void BattleListTab::AddBattle( Battle& battle ) {
 
+  m_battle_list->SetSelectionRestorePoint();
   if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     return;
   }
@@ -213,19 +214,41 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
 
   m_battle_list->Sort();
+  m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
+  m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
+  m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
+
+  m_battle_list->RestoreSelection();
+
 }
 
 
 void BattleListTab::RemoveBattle( Battle& battle ) {
-  if ( &battle == m_sel_battle ) SelectBattle( 0 );
+
+  m_battle_list->SetSelectionRestorePoint();
+
+  if ( &battle == m_sel_battle )
+  {
+      SelectBattle( 0 );
+  }
   for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
     if ( battle.GetBattleId() == (int)m_battle_list->GetItemData( i ) ) {
       m_battle_list->DeleteItem( i );
       break;
     }
   }
+
+
+
   battle.SetGUIListActiv( false );
+
   m_battle_list->Sort();
+  m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
+  m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
+  m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
+
+  m_battle_list->RestoreSelection( );
+
 }
 
 
@@ -237,15 +260,21 @@ void BattleListTab::UserUpdate( User& user )
 
 void BattleListTab::UpdateBattle( Battle& battle )
 {
+  int prev_data = m_battle_list->GetSelectedData();
+
   if ( !battle.GetGUIListActiv() ) {
     AddBattle( battle );
     return;
   }
 
+  int prev_selection = m_battle_list->GetSelectedIndex();
+
   if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     RemoveBattle( battle );
     return;
   }
+
+  m_battle_list->SetSelectionRestorePoint();
 
   int index = -1;
   for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
@@ -278,7 +307,9 @@ void BattleListTab::UpdateBattle( Battle& battle )
 
   if ( &battle == m_sel_battle ) SelectBattle( m_sel_battle );
   m_battle_list->Sort();
+  m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
 
+  m_battle_list->RestoreSelection();
 }
 
 
@@ -295,11 +326,23 @@ void BattleListTab::RemoveAllBattles() {
 
 
 void BattleListTab::UpdateList() {
+//  if ( !battle.GetGUIListActiv() ) {
+//    AddBattle( battle );
+//    return;
+//  }
+
+  int prev_selection = m_battle_list->GetSelectedIndex();
+
   m_ui.GetServer().battles_iter->IteratorBegin();
   while (! m_ui.GetServer().battles_iter->EOL() ) {
     Battle* b = m_ui.GetServer().battles_iter->GetBattle();
     if (b!=0)
     UpdateBattle(*b);
+  }
+
+  if (prev_selection > -1 )
+  {
+    m_battle_list->SetItemState( prev_selection, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
   }
 }
 
@@ -426,7 +469,7 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
   ASSERT_LOGIC( m_battle_list != 0, _T("m_battle_list = 0") );
   if ( m_battle_list->GetSelectedIndex() < 0 ) return;
 
-  DoJoin( m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetSelectedIndex() ) );
+  DoJoin( m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetSelectedData() ) );
 
 }
 
@@ -466,16 +509,18 @@ void BattleListTab::DoJoin( Battle& battle )
 
   if ( !battle.ModExists() ) {
     if (customMessageBox( SL_MAIN_ICON,_("You need to download the mod before you can join this game.\n\nDo you want me to take you to the download page?"), _("Mod not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-      wxString mod = battle.GetModName();
-      m_ui.DownloadMod ( mod );
+      wxString modhash = battle.GetModHash();
+      wxString modname = battle.GetModName();
+      m_ui.DownloadMod ( modhash, modname );
     }
     return;
   }
 
   if ( !battle.MapExists() ) {
     if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to play in this game.\n\nDo you want me to take you to the download page?"), _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-      wxString map = battle.GetMapName();
-      m_ui.DownloadMap ( map );
+      wxString maphash = battle.GetMapHash();
+      wxString mapname = battle.GetMapName();
+      m_ui.DownloadMap ( maphash, mapname );
     }
   }
 

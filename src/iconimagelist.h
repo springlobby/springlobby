@@ -25,7 +25,7 @@ class IconImageList : public wxImageList
     int GetHostIcon( const bool& spectator = false );
     int GetColourIcon( const int& num );
     void SetColourIcon( const int& num, const wxColour& colour );
-    int GetSideIcon( const wxString& modname, const wxString& side );
+    int GetSideIcon( const wxString& modname, int side );
     int GetReadyIcon( const bool& ready, const int& sync = 1 );
 
     int ICON_NONE;
@@ -64,8 +64,12 @@ class IconImageList : public wxImageList
     int ICON_GAME_UNKNOWN;
     int ICON_OPEN_GAME;
     int ICON_OPEN_PW_GAME;
+    int ICON_OPEN_FULL_PW_GAME;
+    int ICON_OPEN_FULL_GAME;
     int ICON_CLOSED_GAME;
     int ICON_CLOSED_PW_GAME;
+    int ICON_CLOSED_FULL_PW_GAME;
+    int ICON_CLOSED_FULL_GAME;
     int ICON_STARTED_GAME;
 
     int ICON_READY_UNSYNC;
@@ -82,11 +86,15 @@ class IconImageList : public wxImageList
     int ICON_HOST;
     int ICON_HOST_SPECTATOR;
 
-    int ICON_ARM;
-    int ICON_CORE;
+    int ICON_SIDEPIC_0;
+    int ICON_SIDEPIC_1;
+
+    //int ICON_FIXCOLOURS_PALETTE;
 
     int ICON_UNK_FLAG;
     int ICON_FLAGS_BASE;
+
+
 
     int ICON_EMPTY;
 

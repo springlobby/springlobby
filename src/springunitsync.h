@@ -5,6 +5,7 @@
 
 #include "iunitsync.h"
 #include "nonportable.h"
+#include "bimap.h"
 
 class wxImage;
 class wxDynamicLibrary;
@@ -14,6 +15,7 @@ class wxCriticalSection;
 
 
 typedef std::map<wxString,CachedMapInfo> MapCacheType;
+typedef codeproject::bimap<wxString,wxString> LocalArchivesVector;
 
 
 class SpringUnitSync : public IUnitSync
@@ -55,7 +57,7 @@ class SpringUnitSync : public IUnitSync
     //! function wich checks if the version returned from unitsync matches a table of supported feature
     bool VersionSupports( GameFeature feature );
 
-    wxArrayString GetAIList();
+    wxArrayString GetAIList( const wxString& modname );
 
     int GetNumUnits( const wxString& modname );
     wxArrayString GetUnitsList( const wxString& modname );
@@ -67,11 +69,19 @@ class SpringUnitSync : public IUnitSync
     bool CacheModUnits( const wxString& mod );
     bool ReloadUnitSyncLib();
 
+    void SetSpringDataPath( const wxString& path );
+    wxString GetSpringDataPath();
+
+    bool FileExists( const wxString& name );
   private:
 
     static wxString _GetCachedMinimapFileName( const wxString& mapname, int width = -1, int height = -1 );
 
     UnitSyncMap m_map;
+
+    LocalArchivesVector m_maps_list; /// maphash -> mapname
+    LocalArchivesVector m_mods_list; /// modhash -> modname
+
 
     wxArrayString m_mod_units;
 
@@ -106,6 +116,8 @@ class SpringUnitSync : public IUnitSync
 
     void _ConvertSpringMapInfo( const CachedMapInfo& in, MapInfo& out );
     void _ConvertSpringMapInfo( const SpringMapInfo& in, CachedMapInfo& out, const wxString& mapname );
+
+    void PopulateArchiveList();
 
 };
 

@@ -1,5 +1,6 @@
 src/addbotdialog.cpp
 src/agreementdialog.cpp
+src/autobalancedialog.cpp
 src/battlelistctrl.cpp
 src/battlelistfilter.cpp
 src/battlelisttab.cpp
@@ -14,11 +15,14 @@ src/chatpanel.cpp
 src/connectwindow.cpp
 src/countrycodes.cpp
 src/crashreport.cpp
+src/globalevents.cpp
 src/hostbattledialog.cpp
+src/httpdownloader.cpp
 src/mainchattab.cpp
 src/mainjoinbattletab.cpp
 src/mainoptionstab.cpp
 src/mainsingleplayertab.cpp
+src/maintorrenttab.cpp
 src/mainwindow.cpp
 src/mapctrl.cpp
 src/mmoptionswrapper.cpp
@@ -44,6 +48,8 @@ src/springlobbyapp.cpp
 src/springoptionstab.cpp
 src/springunitsync.cpp
 src/tasserver.cpp
+src/torrentlistctrl.cpp
+src/torrentoptionspanel.cpp
 src/ui.cpp
 src/uiutils.h
-src/user.h
+src/user.cpp

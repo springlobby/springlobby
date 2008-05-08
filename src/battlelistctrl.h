@@ -19,12 +19,8 @@ class BattleListCtrl : public customListCtrl
     BattleListCtrl( wxWindow* parent, Ui& ui );
     ~BattleListCtrl();
 
-
-    int GetSelectedIndex();
     void Sort();
-    
-    void OnSelected( wxListEvent& event );
-    void OnDeselected( wxListEvent& event );
+
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );
@@ -58,7 +54,6 @@ class BattleListCtrl : public customListCtrl
       bool direction;
     } m_sortorder[4];
 
-    int m_selected;
     wxMenu* m_popup;
     Ui& m_ui;
     static Ui* m_ui_for_sort;

@@ -20,6 +20,7 @@
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
+class IBattle;
 
 //! @brief Class used to store and restore application settings.
 class Settings
@@ -194,8 +195,35 @@ class Settings
     void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
     wxString GetLastFilterProfileName();
 
-	bool GetDisableSpringVersionCheck();
 
+	  bool GetDisableSpringVersionCheck();
+
+    /// not get/set naming because set may refer to battle or to options, thatd be ambiguous
+    void SaveBattleMapOptions(IBattle *battle);
+    void LoadBattleMapOptions(IBattle *battle);
+
+
+
+
+    unsigned int GetTorrentPort();
+    void SetTorrentPort( unsigned int port );
+    int GetTorrentUploadRate();
+    void SetTorrentUploadRate( int speed );
+    int GetTorrentDownloadRate();
+    void SetTorrentDownloadRate( int speed );
+
+    int GetTorrentSystemSuspendMode();
+    void SetTorrentSystemSuspendMode( int mode );
+    int GetTorrentThrottledUploadRate();
+    void SetTorrentThrottledUploadRate( int speed );
+    int GetTorrentThrottledDownloadRate();
+    void SetTorrentThrottledDownloadRate( int speed );
+
+    int GetTorrentSystemAutoStartMode();
+    void SetTorrentSystemAutoStartMode( int mode );
+
+    void SetTorrentMaxConnections( int connections );
+    int GetTorrentMaxConnections();
 
   protected:
 

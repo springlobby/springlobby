@@ -29,6 +29,7 @@
 #include "mapctrl.h"
 #include "uiutils.h"
 #include "server.h"
+#include "settings.h"
 
 BEGIN_EVENT_TABLE(BattleMapTab, wxPanel)
 
@@ -55,9 +56,9 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   m_map_combo = new wxChoice( this, BMAP_MAP_SEL, wxDefaultPosition, wxDefaultSize );
   m_selmap_sizer->Add( m_map_combo, 1, wxALL, 2 );
 
-  m_browse_btn = new wxButton( this, wxID_ANY, _("Select"), wxDefaultPosition, wxDefaultSize, 0 );
+ // m_browse_btn = new wxButton( this, wxID_ANY, _("Select"), wxDefaultPosition, wxDefaultSize, 0 );
 
-  m_selmap_sizer->Add( m_browse_btn, 0, wxALL, 2 );
+  //m_selmap_sizer->Add( m_browse_btn, 0, wxALL, 2 );
 
   m_map_sizer->Add( m_selmap_sizer, 0, wxEXPAND, 5 );
 
@@ -99,6 +100,10 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   SetSizer( m_main_sizer );
   Layout();
 
+  if(battle.IsFounderMe()){
+    sett().LoadBattleMapOptions(&m_battle);
+    m_battle.SendHostInfo( HI_StartRects );
+  }
   ReloadMaplist();
   Update();
 
@@ -110,12 +115,19 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
 BattleMapTab::~BattleMapTab()
 {
-
+  if(m_battle.IsFounderMe()){
+    sett().SaveBattleMapOptions(&m_battle);
+  }
 }
 
 
 void BattleMapTab::Update()
 {
+  wxString value = m_battle.CustomBattleOptions()->getSingleValue( _T("startpostype"), EngineOption);
+  long longval;
+  value.ToLong( &longval );
+  m_start_radios->SetSelection( longval );
+
   m_minimap->UpdateMinimap();
 
   if ( !m_battle.MapExists() ) return;
@@ -181,11 +193,18 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
     m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetMapName() ) ) );
     return;
   }
+
+  sett().SaveBattleMapOptions(&m_battle);
+
   int index = m_map_combo->GetCurrentSelection();
   //wxString name = m_map_combo->GetString( index );
   try {
     UnitSyncMap map = usync()->GetMapEx( index );
     m_battle.SetMap( map );
+
+    sett().LoadBattleMapOptions(&m_battle);
+    m_battle.SendHostInfo( HI_StartRects );
+
   } catch (...) {}
   m_ui.OnBattleMapChanged(m_battle);
   m_battle.SendHostInfo( HI_Map );
@@ -203,5 +222,6 @@ void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
 void BattleMapTab::OnUnitSyncReloaded()
 {
   m_minimap->UpdateMinimap();
+  ReloadMaplist();
 }
 
