@@ -13,10 +13,10 @@ ADD_DEFINITIONS(-Wall)
 SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
 
 #----------------------------------------------------------------------------------------------------
-# Helper Scripts
+# Load needed Modules
 #----------------------------------------------------------------------------------------------------
 # PKG-Config
-INCLUDE( /usr/share/cmake/Modules/FindPkgConfig.cmake )
+FIND_PACKAGE( PkgConfig )
 
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise SpringLobby
@@ -144,15 +144,22 @@ IF(wxWidgets_FOUND)
 # Torrent System
 #----------------------------------------------------------------------------------------------------
 IF( OPTION_USE_TORRENT_SYSTEM )
-	pkg_check_modules( LIBTORRENT libtorrent )
-	INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
-	LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
-	SET( SpringLobbySrc ${SpringLobbySrc}
-		src/maintorrenttab.cpp
-		src/torrentlistctrl.cpp
-		src/torrentoptionspanel.cpp
-		src/torrentwrapper.cpp
-	)
+	SET ( LIBTORRENT_MIN_VERSION 0.13 )
+	pkg_check_modules( LIBTORRENT libtorrent>=${LIBTORRENT_MIN_VERSION} )
+	IF( LIBTORRENT_FOUND )
+		INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
+		LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
+		SET( SpringLobbySrc ${SpringLobbySrc}
+			src/maintorrenttab.cpp
+			src/torrentlistctrl.cpp
+			src/torrentoptionspanel.cpp
+			src/torrentwrapper.cpp
+		)
+	ELSE()
+		MESSAGE("The Version of LibTorrent must be at least ${LIBTORRENT_MIN_VERSION}, disabling LibTorrent")
+		ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
+		SET( OPTION_USE_TORRENT_SYSTEM 0 CACHE BOOL "Enables the builtin Torrent System of SpringLobby" FORCE )
+	ENDIF()
 ELSE()
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
 ENDIF()
