@@ -62,7 +62,6 @@ ingame(false)
   m_torr->start_upnp();
   m_torr->start_natpmp();
   m_torr->start_lsd();
-  m_torr->start_dht();
   m_socket_class = new Socket( *this );
   UpdateSettings();
 }
@@ -73,7 +72,6 @@ TorrentWrapper::~TorrentWrapper()
   m_torr->stop_upnp();
   m_torr->stop_natpmp();
   m_torr->stop_lsd();
-  m_torr->stop_dht();
   DisconnectToP2PSystem();
   delete m_torr;
   delete m_socket_class;
@@ -657,6 +655,8 @@ void TorrentWrapper::OnConnected( Socket* sock )
   wxLogMessage(_T("torrent system connected") );
   m_connected = true;
 
+  m_torr->start_dht();
+
   /// threads rule 8 plus here we want to lock it all so that other thread wont get inconsistent data
   ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
   ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
@@ -679,6 +679,8 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++) m_torr->remove_torrent(*i); ///remove all torrents upon disconnect
   m_connected = false;
+
+  m_torr->stop_dht();
 
 
   /// threads rule 8 plus here we want to lock it all so that other thread wont get inconsistent data

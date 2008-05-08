@@ -764,7 +764,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         color.data = GetIntParam( params );
         bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
         ai = GetSentenceParam( params );
-        ai = ai.BeforeLast( '.' );
         m_se->OnBattleAddBot( id, nick, owner, bstatus, ai );
     }
     else if ( cmd == _T("UPDATEBOT") )
@@ -1684,7 +1683,7 @@ void TASServer::AddBot( int battleid, const wxString& nick, const wxString& owne
     tascl.color.blue = status.colour.Blue();
     tascl.color.zero = 0;
     //ADDBOT name battlestatus teamcolor {AIDLL}
-    SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + aidll + _T(".dll") );
+    SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + aidll );
 }
 
 

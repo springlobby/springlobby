@@ -106,7 +106,10 @@ wxString AddBotDialog::GetAI()
 
 wxString AddBotDialog::RefineAIName( const wxString& name )
 {
-  wxString ret = name.BeforeLast('.').AfterLast('/');
+  wxString ret = name;
+  if (ret.Contains(_T('.')) ) ret = name.BeforeLast(_T('.'));
+  if ( ret.Contains(_T('/')) ) ret = ret.AfterLast(_T('/'));
+  if ( ret.Contains(_T('\\')) ) ret = ret.AfterLast(_T('\\'));
   if ( m_ai->FindString( ret ) == wxNOT_FOUND ) return ret;
   wxString ret2;
   int i = 2;
