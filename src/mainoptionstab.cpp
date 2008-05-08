@@ -16,9 +16,11 @@
 #include "springoptionstab.h"
 #include "chatoptionstab.h"
 #include "settings.h"
+#include "uiutils.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentoptionspanel.h"
+#include "images/torrentoptionspanel_icon.png.h"
 #endif
 
 #include "images/spring.xpm"
@@ -38,7 +40,9 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
     m_imagelist = new wxImageList( 12, 12 );
     m_imagelist->Add( wxIcon(spring_xpm) );
+#ifndef NO_TORRENT_SYSTEM
     m_imagelist->Add( *charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
+#endif
     m_imagelist->Add( wxIcon(userchat_xpm) );
 
     m_tabs->AssignImageList( m_imagelist );

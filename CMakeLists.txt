@@ -10,7 +10,20 @@ ADD_DEFINITIONS(-Wall)
 #----------------------------------------------------------------------------------------------------
 # General Settings
 #----------------------------------------------------------------------------------------------------
-# More to come
+SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
+
+#----------------------------------------------------------------------------------------------------
+# Helper Scripts
+#----------------------------------------------------------------------------------------------------
+# PKG-Config
+INCLUDE( /usr/share/cmake/Modules/FindPkgConfig.cmake )
+
+#----------------------------------------------------------------------------------------------------
+# Options, that can be changed be the User in order to customise SpringLobby
+#----------------------------------------------------------------------------------------------------
+SET( OPTION_USE_TORRENT_SYSTEM
+	1 CACHE BOOL
+	"Enables the builtin Torrent System of SpringLobby" )
 
 #----------------------------------------------------------------------------------------------------
 # Konfiguration of wxWidgets Configuration
@@ -126,6 +139,23 @@ IF(wxWidgets_FOUND)
 		src/springunitsynclib.cpp
 		src/utils.cpp
 	)
+
+#----------------------------------------------------------------------------------------------------
+# Torrent System
+#----------------------------------------------------------------------------------------------------
+IF( OPTION_USE_TORRENT_SYSTEM )
+	pkg_check_modules( LIBTORRENT libtorrent )
+	INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
+	LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
+	SET( SpringLobbySrc ${SpringLobbySrc}
+		src/maintorrenttab.cpp
+		src/torrentlistctrl.cpp
+		src/torrentoptionspanel.cpp
+		src/torrentwrapper.cpp
+	)
+ELSE()
+	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
+ENDIF()
 
 # Make sure the compiler can find include files from our Hello library.
 # include_directories (${HELLO_SOURCE_DIR}/Hello)
