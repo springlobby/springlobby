@@ -353,12 +353,7 @@ void BattleroomListCtrl::UpdateBot( const int& index )
   try {
     int sideimg = icons().GetSideIcon( m_battle.GetModName(), bot.bs.side );
     if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
-    wxString botname = m_battle.GetModName();
-    if ( botname.Contains(_T('.')) ) botname = botname.BeforeLast(_T('.'));
-    if ( botname.Contains(_T('/')) ) botname = botname.AfterLast(_T('/'));
-    if ( botname.Contains(_T('\\')) ) botname = botname.AfterLast(_T('\\'));
-    if ( botname.Contains(_T("LuaAI:")) ) botname = botname.AfterFirst(_T(':'));
-    else SetItem( index, 1,  usync()->GetSideName( botname, bot.bs.side) );
+    else SetItem( index, 1,  usync()->GetSideName( m_battle.GetModName(), bot.bs.side) );
   } catch ( ... ) {
     SetItem( index, 1, wxString::Format( _T("s%d"), bot.bs.side + 1 ) );
   }
@@ -367,7 +362,14 @@ void BattleroomListCtrl::UpdateBot( const int& index )
 
   SetItemColumnImage( index, 3,icons().ICON_NONE );
   SetItemColumnImage( index, 4,icons().ICON_NONE );
-  SetItem( index, 5, bot.name + _T(" (") + bot.owner + _T(")") );
+
+  wxString botname =  bot.name;
+  if ( botname.Contains(_T('.')) ) botname = botname.BeforeLast(_T('.'));
+  if ( botname.Contains(_T('/')) ) botname = botname.AfterLast(_T('/'));
+  if ( botname.Contains(_T('\\')) ) botname = botname.AfterLast(_T('\\'));
+  if ( botname.Contains(_T("LuaAI:")) ) botname = botname.AfterFirst(_T(':'));
+
+  SetItem( index, 5, botname + _T(" (") + bot.owner + _T(")") );
 
   SetItem( index, 6, wxString::Format( _T("%d"), bot.bs.team + 1 ) );
   SetItem( index, 7, wxString::Format( _T("%d"), bot.bs.ally + 1 ) );
