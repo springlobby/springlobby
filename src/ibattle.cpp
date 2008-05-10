@@ -72,7 +72,7 @@ wxString IBattle::GetHostMapHash()
 
 void IBattle::SetHostMod( const wxString& modname, const wxString& hash )
 {
-  if ( m_host_mod_name != modname || m_host_mod_hash ){
+  if ( m_host_mod_name != modname || m_host_mod_hash != hash ){
     m_mod_loaded = false;
     m_host_mod_name = modname;
     m_host_mod_hash = hash;
