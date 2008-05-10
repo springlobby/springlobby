@@ -113,8 +113,8 @@ void SinglePlayerTab::ReloadMaplist()
     }
   } catch(...) {}
   m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
-  if ( m_battle.GetMapName() != wxEmptyString ) {
-    m_map_pick->SetStringSelection( RefineMapname( m_battle.GetMapName() ) );
+  if ( m_battle.GetHostMapName() != wxEmptyString ) {
+    m_map_pick->SetStringSelection( RefineMapname( m_battle.GetHostMapName() ) );
     if ( m_map_pick->GetStringSelection() == wxEmptyString ) SetMap( m_mod_pick->GetCount()-1 );
   } else {
     m_map_pick->SetSelection( m_map_pick->GetCount()-1 );
@@ -134,8 +134,8 @@ void SinglePlayerTab::ReloadModlist()
 
   m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
 
-  if ( m_battle.GetModName() != wxEmptyString ) {
-    m_mod_pick->SetStringSelection( RefineModname( m_battle.GetModName() ) );
+  if ( m_battle.GetHostModName() != wxEmptyString ) {
+    m_mod_pick->SetStringSelection( RefineModname( m_battle.GetHostModName() ) );
     if ( m_mod_pick->GetStringSelection() == wxEmptyString ) SetMod( m_mod_pick->GetCount()-1 );
   } else {
     m_mod_pick->SetSelection( m_mod_pick->GetCount()-1 );
@@ -148,11 +148,11 @@ void SinglePlayerTab::SetMap( unsigned int index )
 	//m_ui.ReloadUnitSync();
   m_addbot_btn->Enable( false );
   if ( index >= m_map_pick->GetCount()-1 ) {
-    m_battle.SetMap( wxEmptyString, wxEmptyString );
+    m_battle.SetHostMap( wxEmptyString, wxEmptyString );
   } else {
     try {
       UnitSyncMap map = usync()->GetMapEx( index );
-      m_battle.SetMap( map );
+      m_battle.SetLocalMap( map );
       m_addbot_btn->Enable( true );
     } catch (...) {}
   }
@@ -166,11 +166,11 @@ void SinglePlayerTab::SetMod( unsigned int index )
 {
 	//m_ui.ReloadUnitSync();
   if ( index >= m_mod_pick->GetCount()-1 ) {
-    m_battle.SetMod( wxEmptyString, wxEmptyString );
+    m_battle.SetHostMod( wxEmptyString, wxEmptyString );
   } else {
     try {
       UnitSyncMod mod = usync()->GetMod( index );
-      m_battle.SetMod( mod );
+      m_battle.SetLocalMod( mod );
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
@@ -205,7 +205,7 @@ bool SinglePlayerTab::ValidSetup()
 
   int numBots = 0;
   int first = -1;
-  for ( unsigned int i = 0; i < (unsigned int)m_battle.Map().info.posCount; i++ ) {
+  for ( unsigned int i = 0; i < (unsigned int)m_battle.LocalMap().info.posCount; i++ ) {
 
     BattleBot* bot = m_battle.GetBotByStartPosition( i );
 

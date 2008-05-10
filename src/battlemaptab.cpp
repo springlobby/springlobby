@@ -132,7 +132,7 @@ void BattleMapTab::Update()
 
   if ( !m_battle.MapExists() ) return;
 
-  UnitSyncMap map = m_battle.Map();
+  UnitSyncMap map = m_battle.LocalMap();
 
   m_map_opts_list->SetItem( 0, 1, wxString::Format( _T("%dx%d"), map.info.width/512, map.info.height/512 ) );
   m_map_opts_list->SetItem( 1, 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind ) );
@@ -190,7 +190,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
 {
 
   if ( !m_battle.IsFounderMe() ) {
-    m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetMapName() ) ) );
+    m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetHostMapName() ) ) );
     return;
   }
 
@@ -200,7 +200,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
   //wxString name = m_map_combo->GetString( index );
   try {
     UnitSyncMap map = usync()->GetMapEx( index );
-    m_battle.SetMap( map );
+    m_battle.SetLocalMap( map );
 
     sett().LoadBattleMapOptions(&m_battle);
     m_battle.SendHostInfo( HI_StartRects );

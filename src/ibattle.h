@@ -72,17 +72,17 @@ class IBattle
     IBattle();
     virtual ~IBattle();
 
-    virtual void SetMap( const wxString& mapname, const wxString& hash );
-    virtual void SetMap( const UnitSyncMap& map );
-    virtual const UnitSyncMap& Map();
-    virtual wxString GetMapName();
-    virtual wxString GetMapHash();
+    virtual void SetHostMap( const wxString& mapname, const wxString& hash );
+    virtual void SetLocalMap( const UnitSyncMap& map );
+    virtual const UnitSyncMap& LocalMap();
+    virtual wxString GetHostMapName();
+    virtual wxString GetHostMapHash();
 
-    virtual void SetMod( const wxString& modname, const wxString& hash );
-    virtual void SetMod( const UnitSyncMod& mod );
-    virtual const UnitSyncMod& Mod();
-    virtual wxString GetModName();
-    virtual wxString GetModHash();
+    virtual void SetHostMod( const wxString& modname, const wxString& hash );
+    virtual void SetLocalMod( const UnitSyncMod& mod );
+    virtual const UnitSyncMod& LocalMod();
+    virtual wxString GetHostModName();
+    virtual wxString GetHostModHash();
 
     virtual bool MapExists();
     virtual bool ModExists();
@@ -130,10 +130,12 @@ class IBattle
     bool m_mod_loaded;
     bool m_map_exists;
     bool m_mod_exists;
-    UnitSyncMap m_map;
-    UnitSyncMod m_mod;
-    wxString m_map_name;
-    wxString m_mod_name;
+    UnitSyncMap m_local_map;
+    UnitSyncMod m_local_mod;
+    wxString m_host_map_name;
+    wxString m_host_mod_name;
+    wxString m_host_map_hash;
+    wxString m_host_mod_hash;
 
     wxArrayString m_units;
 };

@@ -75,8 +75,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_side_sel->SetToolTip(_T("Select your faction"));
 
   try {
-    for ( int i = 0; i < usync()->GetSideCount( m_battle.GetModName() ); i++ ) {
-      m_side_sel->Append( usync()->GetSideName( m_battle.GetModName(), i ) );
+    for ( int i = 0; i < usync()->GetSideCount( m_battle.GetHostModName() ); i++ ) {
+      m_side_sel->Append( usync()->GetSideName( m_battle.GetHostModName(), i ) );
     }
   } catch (...) {}
 
@@ -85,7 +85,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_color_lbl = new wxStaticText( m_player_panel, -1, _("Color") );
   m_side_lbl = new wxStaticText( m_player_panel, -1, _("Side") );
 
-  m_map_lbl = new wxStaticText( this, -1, RefineMapname( battle.GetMapName() ) );
+  m_map_lbl = new wxStaticText( this, -1, RefineMapname( battle.GetHostMapName() ) );
   m_size_lbl = new wxStaticText( this, -1, _T("") );
   m_wind_lbl = new wxStaticText( this, -1, _T("") );
   m_tidal_lbl = new wxStaticText( this, -1, _T("") );
@@ -144,8 +144,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_opt_list_map[ _("Tidal strength") ] = pos++;
 
   // add engine/map/mod options to the list
-  m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetModName() );
-  m_battle.CustomBattleOptions()->loadOptions( MapOption, m_battle.GetMapName() );
+  m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetHostModName() );
+  m_battle.CustomBattleOptions()->loadOptions( MapOption, m_battle.GetHostMapName() );
 
   m_opts_list->InsertItem( pos++, wxEmptyString );
   pos = AddMMOptionsToList( pos++, EngineOption );
@@ -275,14 +275,14 @@ void BattleRoomTab::UpdateBattleInfo( bool MapChanged, bool reloadMapOptions )
   {
     try { /// updates map info summary
       ASSERT_RUNTIME( m_battle.MapExists(), _T("Map does not exist.") );
-      UnitSyncMap map = m_battle.Map();
+      UnitSyncMap map = m_battle.LocalMap();
       m_map_lbl->SetLabel( RefineMapname( map.name ) );
       m_opts_list->SetItem( m_opt_list_map[ _("Size") ] , 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
       m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind) );
       m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, wxString::Format( _T("%d"), map.info.tidalStrength) );
       //    m_opts_list->SetItem( 0, 1,  );
     } catch (...) {
-      m_map_lbl->SetLabel( RefineMapname( m_battle.GetMapName() ) );
+      m_map_lbl->SetLabel( RefineMapname( m_battle.GetHostMapName() ) );
       m_opts_list->SetItem( m_opt_list_map[ _("Size") ], 1, _T("?x?") );
       m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, _T("?-?") );
       m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, _T("?") );
@@ -292,7 +292,7 @@ void BattleRoomTab::UpdateBattleInfo( bool MapChanged, bool reloadMapOptions )
     {
       ///delete any eventual map option from the list and add options of the new map
       for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
-      m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetModName() );
+      m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetHostModName() );
       AddMMOptionsToList( m_map_opts_index, MapOption );
     }
   }

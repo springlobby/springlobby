@@ -139,8 +139,8 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
 
   m_sides = new wxMenu();
   try {
-    for ( int i = 0; i < usync()->GetSideCount( m_battle.GetModName() ); i++ ) {
-      wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, usync()->GetSideName( m_battle.GetModName(), i ), wxEmptyString, wxITEM_NORMAL );
+    for ( int i = 0; i < usync()->GetSideCount( m_battle.GetHostModName() ); i++ ) {
+      wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, usync()->GetSideName( m_battle.GetHostModName(), i ), wxEmptyString, wxITEM_NORMAL );
       m_sides->Append( side );
       Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
     }
@@ -249,9 +249,9 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
 
     try {
-      int sideimg = icons().GetSideIcon( m_battle.GetModName(), user.BattleStatus().side );
+      int sideimg = icons().GetSideIcon( m_battle.GetHostModName(), user.BattleStatus().side );
       if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
-      else SetItem( index, 1, usync()->GetSideName( m_battle.GetModName(), user.BattleStatus().side ));
+      else SetItem( index, 1, usync()->GetSideName( m_battle.GetHostModName(), user.BattleStatus().side ));
     } catch ( ... ) {
       SetItem( index, 1, wxString::Format( _T("s%d"), user.BattleStatus().side + 1 ) );
     }
@@ -351,9 +351,9 @@ void BattleroomListCtrl::UpdateBot( const int& index )
   SetItemColumnImage( index, 1, -1 );
 
   try {
-    int sideimg = icons().GetSideIcon( m_battle.GetModName(), bot.bs.side );
+    int sideimg = icons().GetSideIcon( m_battle.GetHostModName(), bot.bs.side );
     if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
-    else SetItem( index, 1,  usync()->GetSideName( m_battle.GetModName(), bot.bs.side) );
+    else SetItem( index, 1,  usync()->GetSideName( m_battle.GetHostModName(), bot.bs.side) );
   } catch ( ... ) {
     SetItem( index, 1, wxString::Format( _T("s%d"), bot.bs.side + 1 ) );
   }
@@ -1016,12 +1016,12 @@ void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 					break;
 				case 1: // icon
 					if ( content.is_bot )
-						m_tiptext = usync()->GetSideName( m_battle.GetModName(),
+						m_tiptext = usync()->GetSideName( m_battle.GetHostModName(),
 								((BattleBot*)content.data)->bs.side );
 					else if ( ((User*)content.data)->BattleStatus().spectator )
 						m_tiptext = _T("Spectators have no side");
 					else
-						m_tiptext =  usync()->GetSideName( m_battle.GetModName(),
+						m_tiptext =  usync()->GetSideName( m_battle.GetHostModName(),
 								((User*)content.data)->BattleStatus().side );
 					break;
 

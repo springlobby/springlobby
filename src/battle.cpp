@@ -263,11 +263,7 @@ void Battle::SetImReady( bool ready )
 
 bool Battle::IsSynced()
 {
-  if ( MapExists() && ModExists() ) {
-    return true;
-  } else {
-    return false;
-  }
+  return (m_local_map.hash == m_host_map_hash) && (m_local_map.name == m_host_map_name) && (m_local_mod.name == m_host_mod_name) && (m_local_mod.hash == m_host_mod_hash);
 }
 
 

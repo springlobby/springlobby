@@ -1024,7 +1024,7 @@ void Settings::SaveBattleMapOptions(IBattle *battle){
         wxLogError(_T("Settings::SaveBattleMapOptions called with null argument"));
         return;
       }
-  wxString map_name=battle->GetMapName();
+  wxString map_name=battle->GetHostMapName();
   //SetLastHostMap(map_name);
   wxString option_prefix=_T("/Hosting/Maps/")+map_name+_T("/");
   long longval;
@@ -1061,7 +1061,7 @@ void Settings::LoadBattleMapOptions(IBattle *battle){
         wxLogError(_T("Settings::LoadBattleMapOptions called with null argument"));
         return;
       }
-  wxString map_name=battle->GetMapName();
+  wxString map_name=battle->GetHostMapName();
   wxString option_prefix=_T("/Hosting/Maps/")+map_name+_T("/");
   int start_pos_type=m_config->Read(option_prefix+_T("startpostype") , 0L );
   battle->CustomBattleOptions()->setSingleOption( _T("startpostype"), TowxString(start_pos_type), EngineOption );
