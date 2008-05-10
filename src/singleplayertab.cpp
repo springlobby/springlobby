@@ -153,6 +153,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
     try {
       UnitSyncMap map = usync()->GetMapEx( index );
       m_battle.SetLocalMap( map );
+      m_battle.SetHostMap( map.name, map.hash );
       m_addbot_btn->Enable( true );
     } catch (...) {}
   }
@@ -171,6 +172,7 @@ void SinglePlayerTab::SetMod( unsigned int index )
     try {
       UnitSyncMod mod = usync()->GetMod( index );
       m_battle.SetLocalMod( mod );
+      m_battle.SetHostMod( mod.name, mod.hash );
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
