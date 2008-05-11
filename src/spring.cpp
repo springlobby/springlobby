@@ -26,6 +26,9 @@
 #include "iunitsync.h"
 #include "nonportable.h"
 #include "tdfcontainer.h"
+#ifndef NO_TORRENT_SYSTEM
+#include "torrentwrapper.h"
+#endif
 
 BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
 
@@ -179,6 +182,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   wxLogMessage(_T("0 WriteScriptTxt called "));
 
   wxString ret;
+  wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|");
 
   TDFWriter tdf(ret);
 
@@ -256,8 +260,32 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
 
   wxLogMessage(_T("7"));
+  #ifndef NO_TORRENT_SYSTEM
+   for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
+   {
+      if ( battle.GetUser( ordered_users[i].index ).BattleStatus().spectator ) continue; /// exclude sepctators
+      CommandForAutomaticTeamSpeak << battle.GetUser( ordered_users[i].index ).GetNick() << _T("|");
 
+      int TeamLeader = -1;
 
+      for( user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) /// change: moved check if spectator above use of TeamConv array, coz TeamConv array does not include spectators.
+      {
+        // Make sure player is not spectator.
+        if ( battle.GetUser( ordered_users[tlf].index ).BattleStatus().spectator ) continue;
+
+        // First Player That Is In The Team Is Leader.
+        if ( TeamConv[battle.GetUser( ordered_users[tlf].index ).BattleStatus().team] == i )
+        {
+          // Assign as team leader.
+          TeamLeader = tlf;
+          break;
+        }
+      }
+
+      CommandForAutomaticTeamSpeak << u2s(AllyConv[battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().ally]) << _T("|");
+   }
+  torrent()->SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
+  #endif
   //BattleOptions bo = battle.opts();
 
   // Start generating the script.
