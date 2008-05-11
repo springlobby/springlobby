@@ -1303,15 +1303,14 @@ void TASServer::SendHostInfo( HostInfo update )
         battle.CustomBattleOptions()->getOptions( &optlistMap, MapOption );
         for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
         {
-            cmd += _T("game\\mapoptions\\") + it->first + _T("=") + it->second.second + _T("\t");
+            cmd += _T("game/mapoptions/") + it->first + _T("=") + it->second.second + _T("\t");
         }
         wxStringTripleVec optlistMod;
         battle.CustomBattleOptions()->getOptions( &optlistMod, ModOption );
         for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
         {
-            cmd += _T("game\\modoptions\\") + it->first + _T("=") + it->second.second + _T("\t");
+            cmd += _T("game/modoptions/") + it->first + _T("=") + it->second.second + _T("\t");
         }
-/// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
         wxStringTripleVec optlistEng;
         battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
         for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
@@ -1390,11 +1389,11 @@ void TASServer::SendHostInfo( const wxString& Tag )
     wxString key = Tag.AfterFirst( '_' );
     if ( type == MapOption )
     {
-        cmd += _T("game\\mapoptions\\") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, MapOption ) + _T("\n");
+        cmd += _T("game/mapoptions/") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, MapOption ) + _T("\n");
     }
     else if ( type == ModOption )
     {
-        cmd += _T("game\\modoptions\\") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, ModOption ) + _T("\n");
+        cmd += _T("game/modoptions/") + key + _T("=") + battle.CustomBattleOptions()->getSingleValue( key, ModOption ) + _T("\n");
     }
     else if ( type == EngineOption )
     {

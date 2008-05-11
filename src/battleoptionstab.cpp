@@ -86,7 +86,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_metal_lbl = new wxStaticText( this, wxID_ANY, _("Start Metal"), wxDefaultPosition, wxDefaultSize, 0 );
   m_metal_sizer->Add( m_metal_lbl, 0, wxALL, 5 );
 
-  m_metal_slider = new wxSlider( this, SLI_METAL_ID, 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
+  m_metal_slider = new wxSlider( this, SLI_METAL_ID, 1000, 0, 100000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
   m_metal_slider->SetToolTip( _("The amount of metal each player starts with.") );
 
   m_metal_sizer->Add( m_metal_slider, 1, wxALL|wxEXPAND, 5 );
@@ -102,7 +102,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_energy_lbl = new wxStaticText( this, wxID_ANY, _("Start Energy"), wxDefaultPosition, wxDefaultSize, 0 );
   m_energy_sizer->Add( m_energy_lbl, 0, wxALL, 5 );
 
-  m_energy_slider = new wxSlider( this,SLI_ENERGY_ID , 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
+  m_energy_slider = new wxSlider( this,SLI_ENERGY_ID , 1000, 0, 100000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
   m_energy_slider->SetToolTip( _("The amount of energy each player starts with.") );
 
   m_energy_sizer->Add( m_energy_slider, 1, wxALL|wxEXPAND, 5 );
@@ -118,7 +118,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_units_lbl = new wxStaticText( this, wxID_ANY, _("Max units"), wxDefaultPosition, wxDefaultSize, 0 );
   m_units_sizer->Add( m_units_lbl, 0, wxALL, 5 );
 
-  m_units_slider = new wxSlider( this, SLI_UNITS_ID, 500, 10, 5000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
+  m_units_slider = new wxSlider( this, SLI_UNITS_ID, 500, 10, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
   m_units_slider->SetToolTip( _("The maximum number of units allowed per player.") );
 
   m_units_sizer->Add( m_units_slider, 1, wxALL|wxEXPAND, 5 );

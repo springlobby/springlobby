@@ -318,24 +318,24 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
   Battle& battle = m_serv.GetBattle( battleid );
 
   wxString key = param;
-  if ( key.Left( 5 ) == _T("game/") )/// FIXME (BrainDamage#1#): change the slash type when the new spring version gets out
+  if ( key.Left( 5 ) == _T("game/") )
   {
     key = key.AfterFirst( '/' );
     if (  battle.CustomBattleOptions()->setSingleOption( key,  value, EngineOption ) )
       battle.Update( wxString::Format(_T("%d_"), EngineOption ) + key );
   }
-  else if ( key.Left( 5 ) == _T("game\\") )
+  else if ( key.Left( 5 ) == _T("game/") )
   {
-    key = key.AfterFirst( '\\' );
-     if ( key.Left( 11 ) == _T( "mapoptions\\" ) )
+    key = key.AfterFirst( '/' );
+     if ( key.Left( 11 ) == _T( "mapoptions/" ) )
     {
-      key = key.AfterFirst( '\\' );
+      key = key.AfterFirst( '/' );
       if (  battle.CustomBattleOptions()->setSingleOption( key,  value, MapOption ) )  // m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
         battle.Update( wxString::Format(_T("%d_"), MapOption ) + key );
     }
-    else if ( key.Left( 11 ) == _T( "modoptions\\" ) )
+    else if ( key.Left( 11 ) == _T( "modoptions/" ) )
     {
-      key = key.AfterFirst( '\\' );
+      key = key.AfterFirst( '/' );
       if (  battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) );//m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
         battle.Update(  wxString::Format(_T("%d_"), ModOption ) + key );
     }
