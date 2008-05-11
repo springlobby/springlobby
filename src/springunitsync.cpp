@@ -428,18 +428,28 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
 
-  int ini = susynclib()->InitFindVFS(  wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
+  /// list dynamic link libraries
+  int dllini = susynclib()->InitFindVFS(  wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
 
   wxArrayString ret;
   wxString FileName;
 
-  ini = susynclib()->FindFilesVFS( ini, FileName );
-  while ( ini ) {
-    if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
-    ini = susynclib()->FindFilesVFS( ini, FileName );
+  dllini = susynclib()->FindFilesVFS( dllini, FileName );
+  while ( dllini ) {
+    if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); /// don't add duplicates
+    dllini = susynclib()->FindFilesVFS( dllini, FileName );
+  }
+  /// list jar files (java AIs)
+  int jarini = susynclib()->InitFindVFS(  _T("AI/Bot-libs/*.jar") );
+
+  jarini = susynclib()->FindFilesVFS( jarini, FileName );
+  while ( jarini ) {
+    if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); /// don't add duplicates
+    jarini = susynclib()->FindFilesVFS( jarini, FileName );
   }
 
-  try { // Older versions of unitsync does not have these functions.
+  /// list mod's LuaAI
+  try { /// Older versions of unitsync does not have these functions.
     const int LuaAICount = susynclib()->GetLuaAICount( modname );
     for ( int i = 0; i < LuaAICount; i++ ) ret.Add( _T( "LuaAI:" ) +  susynclib()->GetLuaAIName( i ) );
   } catch (...) {}
