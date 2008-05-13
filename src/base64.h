@@ -8,6 +8,7 @@
 
 #include <wx/defs.h>
 #include <wx/string.h>
+#include <string>
 
 namespace wxBase64
 {

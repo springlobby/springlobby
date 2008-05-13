@@ -305,6 +305,12 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 }
 
 
+void TorrentWrapper::SendMessageToCoordinator( const wxString& message )
+{
+  if ( m_connected ) m_socket_class->Send( message + _T("\n") );
+}
+
+
 bool TorrentWrapper::JoinTorrent( const wxString& hash )
 {
   wxLogMessage(_T("(1) Joining torrent, hash=%s"),hash.c_str());
