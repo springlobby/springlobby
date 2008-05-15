@@ -230,6 +230,7 @@ void ChatPanel::CreateControls( ) {
 	// Creating ui elements
 	m_chatlog_text = new MyTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
 																	 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+    m_chatlog_text->SetToolTip( _("right click for options (like autojoin)" ) );
 
 	m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
