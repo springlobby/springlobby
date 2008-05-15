@@ -108,8 +108,13 @@ void SinglePlayerTab::ReloadMaplist()
 {
   m_map_pick->Clear();
   try {
+    wxArrayString maps;
     for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-      m_map_pick->Insert( RefineMapname( usync()->GetMap( i ).name ), i );
+        maps.Add(  RefineMapname( usync()->GetMap( i ).name ) );
+    }
+    maps.Sort(CompareStringIgnoreCase);
+    for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
+        m_map_pick->Insert(maps[i], i );
     }
   } catch(...) {}
   m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
