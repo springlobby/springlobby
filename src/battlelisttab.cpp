@@ -401,12 +401,13 @@ void BattleListTab::OnHost( wxCommandEvent& event )
                 sett().SetTestHostPort(false); // no need to have it checked anymore
                 break;
 
-            case porttest_timeout :
             case porttest_unreachable :
                 wxLogWarning(_T("hosting port %d: test undetermined"),bo.port  );
                 customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("The server used for testing your port %d "
                     "is unreachable. \nHosting may or may not work with this setting."), bo.port ) );
                 break; //inconclusive test shouldn't hinder hosting imo (koshi)
+
+            case porttest_timeout :
             case porttest_socketNotOk :
             case porttest_socketError :
                 wxLogWarning(_T("hosting port %d: test unsuccessful, closing battle"),bo.port  );
