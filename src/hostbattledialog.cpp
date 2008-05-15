@@ -217,6 +217,8 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	this->SetSizer( m_main_sizer );
 	this->Layout();
 
+    m_host_btn->SetFocus();
+
 	ReloadModList();
 }
 
