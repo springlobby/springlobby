@@ -204,8 +204,9 @@ bool SinglePlayerTab::ValidSetup()
   if ( m_battle.GetNumBots() == 1 )
   {
       wxLogWarning(_T("trying to start sp game without bot"));
-      customMessageBoxNoModal(SL_MAIN_ICON, _("You should add a bot before starting a game.\nIf you don't want an opponent add TestGlobalAi"), _("No Bot added"));
-      return false;
+      if ( customMessageBox(SL_MAIN_ICON, _("Continue without adding a bot first?.\n The game will be over pretty fast.\n "),
+                _("No Bot added"), wxYES_NO) == wxNO )
+        return false;
   }
 
   if ( usync()->VersionSupports( GF_XYStartPos ) ) return true;
