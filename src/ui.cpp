@@ -122,7 +122,17 @@ void Ui::ShowConnectWindow()
 //! @see DoConnect
 void Ui::Connect()
 {
-  ShowConnectWindow();
+    if ( true )
+        ShowConnectWindow();
+    else
+    {
+        wxString server_name = sett().GetDefaultServer();
+        wxString nick = sett().GetServerAccountNick( server_name );
+        wxString pass = sett().GetServerAccountPass( server_name );
+        DoConnect( server_name, nick, pass);
+    }
+
+
 }
 
 
