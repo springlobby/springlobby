@@ -205,14 +205,14 @@ void ChatPanel::CreateControls( ) {
 		m_nick_panel = new wxPanel( m_splitter, -1 );
 		m_chat_panel = new wxPanel( m_splitter, -1 );
 
-    m_nick_sizer = new wxBoxSizer( wxVERTICAL );
+        m_nick_sizer = new wxBoxSizer( wxVERTICAL );
 
 		m_nicklist = new NickListCtrl( m_nick_panel, m_ui, true, CreateNickListMenu() );
 
    // m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
    // m_nick_filter->Disable();
 
-    m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
+        m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
    // m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
 
 		m_nick_panel->SetSizer( m_nick_sizer );
@@ -1537,3 +1537,7 @@ void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event ) {
 	m_ui.GetServer().Ring( GetSelectedUser()->GetNick() );
 }
 
+void ChatPanel::FocusInputBox()
+{
+    m_say_text->SetFocus();
+}

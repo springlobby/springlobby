@@ -105,6 +105,7 @@ class ChatPanel : public wxPanel
 
     void Say( const wxString& message );
     void Part();
+    void FocusInputBox();
 
     wxString GetChatTypeStr();
 
