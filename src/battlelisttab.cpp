@@ -391,6 +391,32 @@ void BattleListTab::OnHost( wxCommandEvent& event )
 
     if ( bo.nattype == NAT_None && sett().GetTestHostPort() )
     {
+        switch ( m_ui.TestHostPort( bo.port ) )
+        {
+            case porttest_pass : break; // success
+            case porttest_pass_WX26 :
+                wxLogWarning(_T("hosting port %d: test aborted (wx26)"),bo.port  );
+                customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("Your using wxWidgets prior to version 2.8,\n "
+                    "port testing is not supported.\n Hosting may or may not work."), bo.port ) );
+                sett().SetTestHostPort(false); // no need to have it checked anymore
+                break;
+
+            case porttest_timeout :
+            case porttest_unreachable :
+                wxLogWarning(_T("hosting port %d: test undetermined"),bo.port  );
+                customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("The server used for testing your port %d "
+                    "is unreachable. \nHosting may or may not work with this setting."), bo.port ) );
+                break; //inconclusive test shouldn't hinder hosting imo (koshi)
+            case porttest_socketNotOk :
+            case porttest_socketError :
+                wxLogWarning(_T("hosting port %d: test unsuccessful, closing battle"),bo.port  );
+                customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("Battle not started because the port you selected (%d) "
+                    "is unable to recieve incoming packets\n checks your router & firewall configuration again or change port "
+                    "in the dialog.\n\nIf everything else fails, enable the Hole Punching NAT Traversal\n "
+                    "option in the hosting settings."), bo.port ) );
+                return;
+
+        }
       if ( !m_ui.TestHostPort( bo.port ) )
       {
         wxLogWarning(_T("hosting port %d: test unsuccessful, closing battle"),bo.port  );
