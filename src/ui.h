@@ -155,7 +155,7 @@ class Ui
 
     bool IsThisMe(User& other);
 
-    bool TestHostPort( unsigned int port );
+    int TestHostPort( unsigned int port );
 
   protected:
     Spring* m_spring;

@@ -66,7 +66,9 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_nick_text =   new wxTextCtrl  ( m_login_tab, -1, username );
   m_pass_lbl =    new wxStaticText( m_login_tab, -1, _("Password") );
   m_pass_text =   new wxTextCtrl  ( m_login_tab, -1, password, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
-  m_rpass_check = new wxCheckBox  ( m_login_tab, -1, _T("Remember password") );
+  m_rpass_check = new wxCheckBox  ( m_login_tab, -1, _("Remember password") );
+  m_autoconnect_check = new wxCheckBox  ( m_login_tab, -1, _("Autoconnect next time") );
+  m_autoconnect_check->SetToolTip( _("remember connection details and automatically connect to server on next lobby startup") );
 
   m_rpass_check->SetValue( savepass );
 
@@ -87,7 +89,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_server_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_nick_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_pass_sizer = new wxBoxSizer( wxHORIZONTAL );
-  m_rpass_sizer = new wxBoxSizer( wxHORIZONTAL );
+  m_rpass_sizer = new wxBoxSizer( wxVERTICAL );
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
   // Add UI elements to sizers.
@@ -97,6 +99,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 
   m_rpass_sizer->AddStretchSpacer();
   m_rpass_sizer->Add( m_rpass_check, 2, wxEXPAND | wxALL, 4 );
+  m_rpass_sizer->Add( m_autoconnect_check, 2, wxEXPAND | wxALL, 4 );
 
   m_pass_sizer->Add( m_pass_lbl, 1, wxEXPAND | wxALL, 4 );
   m_pass_sizer->Add( m_pass_text, 2, wxEXPAND | wxALL, 4 );
@@ -250,7 +253,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
       customMessageBox(SL_MAIN_ICON, _("Invalid host/port."), _("Invalid host"), wxOK );
       return;
     }
-
+    sett().SetAutoConnect( m_autoconnect_check->IsChecked() );
     sett().SaveSettings();
     ReloadServerList();
 
