@@ -82,16 +82,22 @@ void SpringUnitSync::PopulateArchiveList()
 {
   m_maps_list.empty();
   m_mods_list.empty();
+  m_mod_array.Empty();
+  m_map_array.Empty();
 
   int numMaps = GetNumMaps();
   for ( int i = 0; i < numMaps; i++ )
   {
-    m_maps_list.from[susynclib()->GetMapChecksum( i )] = susynclib()->GetMapName( i );
+    wxString name = susynclib()->GetMapName( i );
+    m_maps_list.from[susynclib()->GetMapChecksum( i )] = name;
+    m_map_array.Add( name );
   }
   int numMods = GetNumMods();
   for ( int i = 0; i < numMods; i++ )
   {
-    m_mods_list.from[i2s(susynclib()->GetPrimaryModChecksum( i ))] = susynclib()->GetPrimaryModName( i );
+    wxString name = susynclib()->GetPrimaryModName( i );
+    m_mods_list.from[i2s(susynclib()->GetPrimaryModChecksum( i ))] = name;
+    m_mod_array.Add( name );
   }
 }
 
@@ -170,6 +176,12 @@ int SpringUnitSync::GetNumMods()
 }
 
 
+wxArrayString SpringUnitSync::GetModList()
+{
+  return m_mod_array;
+}
+
+
 int SpringUnitSync::GetModIndex( const wxString& name )
 {
   wxLogDebugFunc( _T("name = \"") + name + _T("\"") );
@@ -213,6 +225,12 @@ int SpringUnitSync::GetNumMaps()
 {
   wxLogDebugFunc( _T("") );
   return susynclib()->GetMapCount();
+}
+
+
+wxArrayString SpringUnitSync::GetMapList()
+{
+  return m_map_array;
 }
 
 

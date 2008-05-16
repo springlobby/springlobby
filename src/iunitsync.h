@@ -82,6 +82,7 @@ class IUnitSync
     virtual ~IUnitSync() { }
 
     virtual int GetNumMods() = 0;
+    virtual wxArrayString GetModList() = 0;
     virtual bool ModExists( const wxString& modname ) = 0;
     virtual UnitSyncMod GetMod( const wxString& modname ) = 0;
     virtual UnitSyncMod GetMod( int index ) = 0;
@@ -90,6 +91,7 @@ class IUnitSync
     virtual GameOptions GetModOptions( const wxString& name ) = 0;
 
     virtual int GetNumMaps() = 0;
+    virtual wxArrayString GetMapList() = 0;
     virtual bool MapExists( const wxString& mapname ) = 0;
     virtual bool MapExists( const wxString& mapname, const wxString hash ) = 0;
 

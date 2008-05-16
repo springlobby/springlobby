@@ -109,16 +109,13 @@ void SinglePlayerTab::UpdateMinimap()
 void SinglePlayerTab::ReloadMaplist()
 {
   m_map_pick->Clear();
-  try {
-    wxArrayString maps;
-    for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-        maps.Add(  RefineMapname( usync()->GetMap( i ).name ) );
-    }
-    maps.Sort(CompareStringIgnoreCase);
-    for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-        m_map_pick->Insert(maps[i], i );
-    }
-  } catch(...) {}
+
+  wxArrayString maplist= usync()->GetMapList();
+  maplist.Sort(CompareStringIgnoreCase);
+
+  size_t nummaps = maplist.Count();
+  for ( size_t i = 0; i < nummaps; i++ ) m_map_pick->Insert( RefineMapname(maplist[i]), i );
+
   m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
   if ( m_battle.GetMapName() != wxEmptyString ) {
     m_map_pick->SetStringSelection( RefineMapname( m_battle.GetMapName() ) );
@@ -133,17 +130,17 @@ void SinglePlayerTab::ReloadMaplist()
 void SinglePlayerTab::ReloadModlist()
 {
   m_mod_pick->Clear();
-  try {
-    int numMods = usync()->GetNumMods();
-    for ( int i = 0; i < numMods; i++ ) {
-      m_mod_pick->Insert( RefineModname( usync()->GetMod( i ).name ), i );
-    }
-  } catch (...) {}
+
+  wxArrayString modlist= usync()->GetModList();
+  modlist.Sort(CompareStringIgnoreCase);
+
+  size_t nummods = modlist.Count();
+  for ( size_t i = 0; i < nummods; i++ ) m_mod_pick->Insert( modlist[i], i );
 
   m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
 
   if ( m_battle.GetModName() != wxEmptyString ) {
-    m_mod_pick->SetStringSelection( RefineModname( m_battle.GetModName() ) );
+    m_mod_pick->SetStringSelection( m_battle.GetModName() );
     if ( m_mod_pick->GetStringSelection() == wxEmptyString ) SetMod( m_mod_pick->GetCount()-1 );
   } else {
     m_mod_pick->SetSelection( m_mod_pick->GetCount()-1 );

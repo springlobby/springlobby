@@ -226,12 +226,13 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 void HostBattleDialog::ReloadModList()
 {
   m_mod_pic->Clear();
-  try {
-    for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
-      const UnitSyncMod& m = usync()->GetMod( i );
-      m_mod_pic->Insert( m.name, i );
-    }
-  } catch (...) {}
+
+  wxArrayString modlist= usync()->GetModList();
+  modlist.Sort(CompareStringIgnoreCase);
+
+  size_t nummods = modlist.Count();
+  for ( size_t i = 0; i < nummods; i++ ) m_mod_pic->Insert( modlist[i], i );
+
   wxString last = sett().GetLastHostMod();
   if ( last != wxEmptyString ) m_mod_pic->SetSelection( m_mod_pic->FindString( last ) );
 }
