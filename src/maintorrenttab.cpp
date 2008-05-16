@@ -118,6 +118,7 @@ void MainTorrentTab::SetInfo(int index,  TorrentInfos& info )
 
 void MainTorrentTab::AddTorrentInfo(  TorrentInfos& info )
 {
+    m_torrent_list->SetSelectionRestorePoint();
   int index = m_torrent_list->InsertItem( 0, info.name );
 //  ASSERT_LOGIC( index != -1, _T("index = -1") );
   m_torrent_list->SetItemData(index, s2l(info.hash) );
@@ -127,11 +128,12 @@ void MainTorrentTab::AddTorrentInfo(  TorrentInfos& info )
 
  // ASSERT_LOGIC( m_torrent_list->GetItem( item ), _T("!GetItem") );
     SetInfo(index, info );
+    m_torrent_list->RestoreSelection();
 }
 
 void MainTorrentTab::OnUpdate()
 {
-//    long currentselection = m_torrent_list->GetSelectedIndex();
+    m_torrent_list->SetSelectionRestorePoint();
     info_map = torrent()->CollectGuiInfos();
     m_outgoing_lbl->SetLabel( wxString::Format(_("Total Outgoing: %.2f KB/s"), (info_map[0].outspeed/float(1024)) ) );
     m_incoming_lbl->SetLabel( wxString::Format(_("Total Incoming: %.2f KB/s"), (info_map[0].inspeed/ float(1024)) ) );
@@ -143,7 +145,8 @@ void MainTorrentTab::OnUpdate()
 
     }
     Layout();
-    //m_torrent_list->SetItemState( currentselection, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+    m_torrent_list->RestoreSelection();
+
 }
 
 
