@@ -1173,7 +1173,7 @@ void ChatPanel::OnChannelMenuTopic( wxCommandEvent& event ) {
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
 	wxString topic = m_channel->GetTopic();
-	if ( !m_ui.AskText( _( "Set topic..." ), _( "What should be the new topic?" ), topic ) ) return;
+	if ( !m_ui.AskText( _( "Set topic..." ), _( "What should be the new topic?" ), topic, wxOK | wxCANCEL | wxCENTRE | wxTE_MULTILINE ) ) return;
 
 	cs.Say( _T( "!TOPIC #" ) + m_channel->GetName() + _T( " " ) + topic );
 	//TOPIC /<channame>/ {topic}
