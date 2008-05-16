@@ -170,7 +170,7 @@ void BattleMapTab::ReloadMaplist()
   m_map_combo->Clear();
 
   wxArrayString maplist= usync()->GetMapList();
-  maplist.Sort(CompareStringIgnoreCase);
+ // maplist.Sort(CompareStringIgnoreCase);
 
   size_t nummaps = maplist.Count();
   for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( RefineMapname(maplist[i]), i );

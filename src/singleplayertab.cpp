@@ -111,7 +111,7 @@ void SinglePlayerTab::ReloadMaplist()
   m_map_pick->Clear();
 
   wxArrayString maplist= usync()->GetMapList();
-  maplist.Sort(CompareStringIgnoreCase);
+  //maplist.Sort(CompareStringIgnoreCase);
 
   size_t nummaps = maplist.Count();
   for ( size_t i = 0; i < nummaps; i++ ) m_map_pick->Insert( RefineMapname(maplist[i]), i );
@@ -132,7 +132,7 @@ void SinglePlayerTab::ReloadModlist()
   m_mod_pick->Clear();
 
   wxArrayString modlist= usync()->GetModList();
-  modlist.Sort(CompareStringIgnoreCase);
+  //modlist.Sort(CompareStringIgnoreCase);
 
   size_t nummods = modlist.Count();
   for ( size_t i = 0; i < nummods; i++ ) m_mod_pick->Insert( modlist[i], i );
