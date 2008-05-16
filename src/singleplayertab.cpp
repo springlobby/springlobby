@@ -41,6 +41,8 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );
+  m_minimap->SetToolTip( _("You can drag the sun/bot icon around to define start position.\n "
+                           "Hover over the icon for a popup that lets you change side, ally and bonus." ) );
   m_main_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 5 );
 
   wxBoxSizer* m_ctrl_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -108,8 +110,13 @@ void SinglePlayerTab::ReloadMaplist()
 {
   m_map_pick->Clear();
   try {
+    wxArrayString maps;
     for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-      m_map_pick->Insert( RefineMapname( usync()->GetMap( i ).name ), i );
+        maps.Add(  RefineMapname( usync()->GetMap( i ).name ) );
+    }
+    maps.Sort(CompareStringIgnoreCase);
+    for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
+        m_map_pick->Insert(maps[i], i );
     }
   } catch(...) {}
   m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
@@ -197,8 +204,9 @@ bool SinglePlayerTab::ValidSetup()
   if ( m_battle.GetNumBots() == 1 )
   {
       wxLogWarning(_T("trying to start sp game without bot"));
-      customMessageBoxNoModal(SL_MAIN_ICON, _("You should add a bot before starting a game.\nIf you don't want an opponent add TestGlobalAi"), _("No Bot added"));
-      return false;
+      if ( customMessageBox(SL_MAIN_ICON, _("Continue without adding a bot first?.\n The game will be over pretty fast.\n "),
+                _("No Bot added"), wxYES_NO) == wxNO )
+        return false;
   }
 
   if ( usync()->VersionSupports( GF_XYStartPos ) ) return true;

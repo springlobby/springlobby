@@ -45,7 +45,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
   // Check if library exists
   if ( !wxFileName::FileExists( path ) ) {
     wxLogError( _T("File not found: %s"), path.c_str() );
-    return;
+    ASSERT_RUNTIME( false, _T("Failed to load Unitsync lib.") );
   }
 
   try {

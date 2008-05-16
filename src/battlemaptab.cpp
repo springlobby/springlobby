@@ -169,8 +169,13 @@ void BattleMapTab::ReloadMaplist()
 {
   m_map_combo->Clear();
   try {
+         wxArrayString maps;
     for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-      m_map_combo->Insert( RefineMapname( usync()->GetMap( i ).name ), i );
+        maps.Add(  RefineMapname( usync()->GetMap( i ).name ) );
+    }
+    maps.Sort(CompareStringIgnoreCase);
+    for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
+        m_map_combo->Insert(maps[i], i );
     }
   } catch(...){}
 }

@@ -113,7 +113,7 @@ bool SpringLobbyApp::OnInit()
 
         //! ask for downloading ota content if archive not found, start downloader in background
         wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
-        wxString destFilename = sett().GetSpringDir()+_T("base/base-ota-content.zip");
+        wxString destFilename = sett().GetSpringDir()+_T("/base/base-ota-content.zip");
         bool contentExists = false;
         if ( usync()->IsLoaded() )
         {
@@ -233,7 +233,7 @@ void SpringLobbyApp::SetupUserFolders()
                 wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + _T("/mods\n") + dir + _T("/maps\n") + dir + _T("/base\n") );
             }
         }
-
+        sett().SetSpringDir(dir);
     }
 #endif
 #endif

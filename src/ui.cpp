@@ -122,7 +122,17 @@ void Ui::ShowConnectWindow()
 //! @see DoConnect
 void Ui::Connect()
 {
-  ShowConnectWindow();
+    bool doit = sett().GetAutoConnect();
+    if ( !doit )
+        ShowConnectWindow();
+    else
+    {
+        // do something when pw isn't remembered
+        wxString server_name = sett().GetDefaultServer();
+        wxString nick = sett().GetServerAccountNick( server_name );
+        wxString pass = sett().GetServerAccountPass( server_name );
+        DoConnect( server_name, nick, pass);
+    }
 }
 
 
@@ -346,9 +356,9 @@ bool Ui::AskPassword( const wxString& heading, const wxString& message, wxString
 }
 
 
-bool Ui::AskText( const wxString& heading, const wxString& question, wxString& answer )
+bool Ui::AskText( const wxString& heading, const wxString& question, wxString& answer, long style )
 {
-  wxTextEntryDialog name_dlg( &mw(), question, heading, answer, wxOK | wxCANCEL | wxCENTRE );
+  wxTextEntryDialog name_dlg( &mw(), question, heading, answer, style );
   int res = name_dlg.ShowModal();
   answer = name_dlg.GetValue();
 
@@ -1067,7 +1077,7 @@ bool Ui::IsThisMe(User& other)
 		return ( other.GetNick()==m_serv->GetMe().GetNick() );
 }
 
-bool Ui::TestHostPort( unsigned int port )
+int Ui::TestHostPort( unsigned int port )
 {
   return m_serv->TestOpenPort( port );
 }

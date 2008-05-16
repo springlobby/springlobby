@@ -74,6 +74,7 @@ class TorrentWrapper : public iNetClass
     void UpdateSettings();
     void UpdateFromTimer( int mselapsed );
     std::map<int,TorrentInfos> CollectGuiInfos();
+    void SendMessageToCoordinator( const wxString& message );
 
   private:
 

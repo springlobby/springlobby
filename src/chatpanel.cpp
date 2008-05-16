@@ -154,7 +154,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_ui( ui ), m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ) {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Server& serv" ) );
 	CreateControls( );
 	serv.uidata.panel = this;
@@ -164,7 +164,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist( NULL ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( 0 ), m_battle( &battle ), m_type( CPT_Battle ), m_popup_menu( 0 ) {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_chat_tabs( 0 ), m_nicklist( NULL ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( 0 ), m_battle( &battle ), m_type( CPT_Battle ), m_popup_menu( 0 ) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Battle& battle" ) );
 	CreateControls( );
 	wxDateTime now = wxDateTime::Now();
@@ -205,14 +205,14 @@ void ChatPanel::CreateControls( ) {
 		m_nick_panel = new wxPanel( m_splitter, -1 );
 		m_chat_panel = new wxPanel( m_splitter, -1 );
 
-    m_nick_sizer = new wxBoxSizer( wxVERTICAL );
+        m_nick_sizer = new wxBoxSizer( wxVERTICAL );
 
 		m_nicklist = new NickListCtrl( m_nick_panel, m_ui, true, CreateNickListMenu() );
 
    // m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
    // m_nick_filter->Disable();
 
-    m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
+        m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
    // m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
 
 		m_nick_panel->SetSizer( m_nick_sizer );
@@ -230,6 +230,7 @@ void ChatPanel::CreateControls( ) {
 	// Creating ui elements
 	m_chatlog_text = new MyTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
 																	 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+    m_chatlog_text->SetToolTip( _("right click for options (like autojoin)" ) );
 
 	m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
@@ -652,7 +653,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 	if ( who.Upper() == me.Upper() ) {
 		col = sett().GetChatColorMine();
     // change the image of the tab to show new events
-    if (  m_ui.GetActiveChatPanel() != this )
+    if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
     {
       for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
         if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -662,7 +663,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
     }
 	} else if ( message.Upper().Contains( me.Upper() ) ) {
     // change the image of the tab to show new events
-    if (  m_ui.GetActiveChatPanel() != this )
+    if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
     {
       for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
         if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -674,7 +675,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 		req_user = true;
 	} else {
     // change the image of the tab to show new events
-    if (  m_ui.GetActiveChatPanel() != this )
+    if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
     {
       for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
         if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -704,7 +705,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 
 void ChatPanel::DidAction( const wxString& who, const wxString& action ) {
   // change the image of the tab to show new events
-	if (  m_ui.GetActiveChatPanel() != this )
+	if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
 	{
 		for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
 			if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -723,7 +724,7 @@ void ChatPanel::Motd( const wxString& message ) {
 	wxFont f = m_chatlog_text->GetFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
   // change the image of the tab to show new events
-	if (  m_ui.GetActiveChatPanel() != this )
+	if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
 	{
 		for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
 			if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -757,7 +758,7 @@ void ChatPanel::UnknownCommand( const wxString& command, const wxString& params 
 	wxFont f = m_chatlog_text->GetFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
   // change the image of the tab to show new events
-	if (  m_ui.GetActiveChatPanel() != this )
+	if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
 	{
 		for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
 			if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -782,7 +783,7 @@ void ChatPanel::Joined( User& who ) {
 	if ( m_type == CPT_Channel ) {
 		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) {
       // change the image of the tab to show new events
-      if (  m_ui.GetActiveChatPanel() != this )
+      if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
       {
         for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
           if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -815,7 +816,7 @@ void ChatPanel::Parted( User& who, const wxString& message ) {
 	if ( m_type == CPT_Channel ) {
 		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) {
       // change the image of the tab to show new events
-      if (  m_ui.GetActiveChatPanel() != this )
+      if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
       {
         for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
           if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -856,7 +857,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message ) {
 	wxFont f = m_chatlog_text->GetFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
   // change the image of the tab to show new events
-  if (  m_ui.GetActiveChatPanel() != this )
+  if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
   {
     for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
       if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -1075,7 +1076,7 @@ bool ChatPanel::IsOk() {
 
 void ChatPanel::OnUserDisconnected() {
   // change the image of the tab to show new events
-  if (  m_ui.GetActiveChatPanel() != this )
+  if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
   {
     for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
       if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -1089,7 +1090,7 @@ void ChatPanel::OnUserDisconnected() {
 
 void ChatPanel::OnUserConnected() {
   // change the image of the tab to show new events
-  if (  m_ui.GetActiveChatPanel() != this )
+  if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
   {
     for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
       if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -1172,8 +1173,9 @@ void ChatPanel::OnChannelMenuTopic( wxCommandEvent& event ) {
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
 	wxString topic = m_channel->GetTopic();
-	if ( !m_ui.AskText( _( "Set topic..." ), _( "What should be the new topic?" ), topic ) ) return;
-
+	topic.Replace( _T("\\n"), _T("\n") );
+	if ( !m_ui.AskText( _( "Set topic..." ), _( "What should be the new topic?" ), topic, wxOK | wxCANCEL | wxCENTRE | wxTE_MULTILINE ) ) return;
+  topic.Replace( _T("\n"), _T("\\n") );
 	cs.Say( _T( "!TOPIC #" ) + m_channel->GetName() + _T( " " ) + topic );
 	//TOPIC /<channame>/ {topic}
 }
@@ -1537,3 +1539,7 @@ void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event ) {
 	m_ui.GetServer().Ring( GetSelectedUser()->GetNick() );
 }
 
+void ChatPanel::FocusInputBox()
+{
+    m_say_text->SetFocus();
+}

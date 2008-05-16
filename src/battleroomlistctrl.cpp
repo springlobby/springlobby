@@ -362,13 +362,20 @@ void BattleroomListCtrl::UpdateBot( const int& index )
 
   SetItemColumnImage( index, 3,icons().ICON_NONE );
   SetItemColumnImage( index, 4,icons().ICON_NONE );
+
   SetItem( index, 5, bot.name + _T(" (") + bot.owner + _T(")") );
 
   SetItem( index, 6, wxString::Format( _T("%d"), bot.bs.team + 1 ) );
   SetItem( index, 7, wxString::Format( _T("%d"), bot.bs.ally + 1 ) );
   SetItem( index, 9, wxString::Format( _T("%d%%"), bot.bs.handicap ) );
 
-  SetItem( index, 8, bot.aidll );
+  wxString botdll = bot.aidll;
+  if ( botdll.Contains(_T('.')) ) botdll = botdll.BeforeLast(_T('.'));
+  if ( botdll.Contains(_T('/')) ) botdll = botdll.AfterLast(_T('/'));
+  if ( botdll.Contains(_T('\\')) ) botdll = botdll.AfterLast(_T('\\'));
+  if ( botdll.Contains(_T("LuaAI:")) ) botdll = botdll.AfterFirst(_T(':'));
+
+  SetItem( index, 8, botdll );
   Sort();
 }
 
