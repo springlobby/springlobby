@@ -122,17 +122,17 @@ void Ui::ShowConnectWindow()
 //! @see DoConnect
 void Ui::Connect()
 {
-    if ( true )
+    bool doit = sett().GetAutoConnect();
+    if ( !doit )
         ShowConnectWindow();
     else
     {
+        // do something when pw isn't remembered
         wxString server_name = sett().GetDefaultServer();
         wxString nick = sett().GetServerAccountNick( server_name );
         wxString pass = sett().GetServerAccountPass( server_name );
         DoConnect( server_name, nick, pass);
     }
-
-
 }
 
 

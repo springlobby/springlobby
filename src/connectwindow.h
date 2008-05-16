@@ -47,6 +47,7 @@ class ConnectWindow : public wxDialog
     wxStaticText* m_pass_lbl;       //!< Label saying "Password"
     wxTextCtrl*   m_pass_text;      //!< Textbox where user can input password
     wxCheckBox*   m_rpass_check;    //!< Checkbox where user can chose if he wants his password to be saved.
+    wxCheckBox*   m_autoconnect_check;    //!< Checkbox where user can chose if he wants to autoconnect.
 
     wxStaticLine* m_acc_note_line;  //!< Line that separates the account settings from the note
 
@@ -72,7 +73,7 @@ class ConnectWindow : public wxDialog
     wxTextCtrl* m_regpass2_text;
 
     Ui& m_ui;
-  
+
     DECLARE_EVENT_TABLE()
 };
 
