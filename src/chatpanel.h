@@ -172,6 +172,10 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
 
+	void OnKeyPressed( wxKeyEvent& keyevent );
+	void OnKeyReleased( wxKeyEvent& keyevent );
+
+
   protected:
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );

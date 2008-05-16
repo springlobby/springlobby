@@ -356,9 +356,9 @@ bool Ui::AskPassword( const wxString& heading, const wxString& message, wxString
 }
 
 
-bool Ui::AskText( const wxString& heading, const wxString& question, wxString& answer )
+bool Ui::AskText( const wxString& heading, const wxString& question, wxString& answer, long style )
 {
-  wxTextEntryDialog name_dlg( &mw(), question, heading, answer, wxOK | wxCANCEL | wxCENTRE );
+  wxTextEntryDialog name_dlg( &mw(), question, heading, answer, style );
   int res = name_dlg.ShowModal();
   answer = name_dlg.GetValue();
 

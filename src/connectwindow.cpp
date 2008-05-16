@@ -44,6 +44,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   wxString username;
   wxString password;
   bool savepass;
+  bool autoconnect;
 
   SetIcon( wxIcon(connect_xpm) );
 
@@ -51,6 +52,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   username = sett().GetServerAccountNick( sett().GetDefaultServer() );
   password = sett().GetServerAccountPass( sett().GetDefaultServer() );
   savepass = sett().GetServerAccountSavePass( sett().GetDefaultServer() );
+  autoconnect = sett().GetAutoConnect();
   // Create all UI elements.
   m_tabs =         new wxNotebook( this  , -1 );
   m_login_tab =    new wxPanel   ( m_tabs, -1 );
@@ -71,6 +73,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_autoconnect_check->SetToolTip( _("remember connection details and automatically connect to server on next lobby startup") );
 
   m_rpass_check->SetValue( savepass );
+  m_autoconnect_check->SetValue( autoconnect );
 
   m_acc_note_line = new wxStaticLine( m_login_tab );
 
