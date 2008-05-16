@@ -134,7 +134,8 @@ void SinglePlayerTab::ReloadModlist()
 {
   m_mod_pick->Clear();
   try {
-    for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
+    int numMods = usync()->GetNumMods();
+    for ( int i = 0; i < numMods; i++ ) {
       m_mod_pick->Insert( RefineModname( usync()->GetMod( i ).name ), i );
     }
   } catch (...) {}

@@ -185,6 +185,8 @@ class SpringUnitSyncLib
     int GetMapCount();
     wxString GetMapChecksum( int index );
     wxString GetMapName( int index );
+    int GetMapArchiveCount( int index );
+    wxString GetMapArchiveName( int arnr );
 
     /**
      * Get information about a map.
@@ -279,6 +281,7 @@ class SpringUnitSyncLib
     int ReadArchiveFile( int archive, int handle, void* buffer, int numBytes) ;
     void CloseArchiveFile( int archive, int handle );
     int SizeArchiveFile( int archive, int handle );
+    wxString GetArchivePath( const wxString& name );
 
     int GetSpringConfigInt( const wxString& key, int defValue );
     wxString GetSpringConfigString( const wxString& key, const wxString& defValue );

@@ -97,6 +97,7 @@ class IUnitSync
     virtual UnitSyncMap GetMap( int index ) = 0;
     virtual UnitSyncMap GetMapEx( const wxString& mapname ) = 0;
     virtual UnitSyncMap GetMapEx( int index ) = 0;
+    virtual wxString GetMapArchive( int index ) = 0;
     virtual GameOptions GetMapOptions( const wxString& name ) = 0;
 
     virtual int GetMapIndex( const wxString& name ) = 0;
@@ -128,6 +129,8 @@ class IUnitSync
     virtual wxString GetSpringDataPath() = 0;
 
     virtual bool FileExists( const wxString& name ) = 0;
+
+    virtual wxString GetArchivePath( const wxString& name ) = 0;
 };
 
 IUnitSync* usync();
