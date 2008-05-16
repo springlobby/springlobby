@@ -260,14 +260,10 @@ void BattleListTab::UserUpdate( User& user )
 
 void BattleListTab::UpdateBattle( Battle& battle )
 {
-  int prev_data = m_battle_list->GetSelectedData();
-
   if ( !battle.GetGUIListActiv() ) {
     AddBattle( battle );
     return;
   }
-
-  int prev_selection = m_battle_list->GetSelectedIndex();
 
   if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     RemoveBattle( battle );
