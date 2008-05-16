@@ -259,6 +259,11 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
       return;
     }
     sett().SetAutoConnect( m_autoconnect_check->IsChecked() );
+
+    //if autoconnect enabled force saving of pw, actual saving is done in Ui::DoConnect
+    if ( m_autoconnect_check->IsChecked() )
+        sett().SetServerAccountSavePass( HostAddress, true );
+
     sett().SaveSettings();
     ReloadServerList();
 
