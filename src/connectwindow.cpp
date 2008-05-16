@@ -90,6 +90,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_nick_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_pass_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_rpass_sizer = new wxBoxSizer( wxVERTICAL );
+  wxBoxSizer* m_check_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
   // Add UI elements to sizers.
@@ -97,12 +98,16 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_buttons_sizer->AddStretchSpacer();
   m_buttons_sizer->Add( m_ok_btn, 0, wxALL, 4 );
 
-  m_rpass_sizer->AddStretchSpacer();
-  m_rpass_sizer->Add( m_rpass_check, 2, wxEXPAND | wxALL, 4 );
-  m_rpass_sizer->Add( m_autoconnect_check, 2, wxEXPAND | wxALL, 4 );
+  m_rpass_sizer->Add( m_rpass_check, 2, wxEXPAND | wxALL | wxALIGN_RIGHT, 4 );
+  m_rpass_sizer->Add( m_autoconnect_check, 2, wxEXPAND | wxALL | wxALIGN_RIGHT, 4 );
 
   m_pass_sizer->Add( m_pass_lbl, 1, wxEXPAND | wxALL, 4 );
   m_pass_sizer->Add( m_pass_text, 2, wxEXPAND | wxALL, 4 );
+
+  //FIXME was lazy, absoulte positioning isn't that nice
+  int pos1 = (m_pass_lbl->GetSize()).GetWidth() + 40;
+  m_check_sizer->Add(pos1,0,0);
+  m_check_sizer->Add( m_rpass_sizer, 0, wxEXPAND | wxALIGN_RIGHT);
 
   m_nick_sizer->Add( m_nick_lbl, 1, wxEXPAND | wxALL, 4 );
   m_nick_sizer->Add( m_nick_text, 2, wxEXPAND | wxALL, 4 );
@@ -113,8 +118,8 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_login_main_sizer->Add( m_server_sizer, 0, wxEXPAND );
   m_login_main_sizer->Add( m_ser_acc_line, 0, wxEXPAND | wxALL, 4 );
   m_login_main_sizer->Add( m_nick_sizer, 0, wxEXPAND );
-  m_login_main_sizer->Add( m_pass_sizer, 0, wxEXPAND );
-  m_login_main_sizer->Add( m_rpass_sizer, 0, wxEXPAND );
+  m_login_main_sizer->Add( m_pass_sizer, 0, wxEXPAND  );
+  m_login_main_sizer->Add( m_check_sizer, 0, wxEXPAND );
   m_login_main_sizer->Add( m_acc_note_line, 0, wxEXPAND | wxALL, 4 );
   m_login_main_sizer->Add( m_note_lbl, 0, wxEXPAND | wxALL, 4 );
   m_login_main_sizer->AddStretchSpacer();
