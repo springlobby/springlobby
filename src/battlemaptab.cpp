@@ -202,6 +202,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
   try {
     UnitSyncMap map = usync()->GetMapEx( index );
     m_battle.SetLocalMap( map );
+    m_battle.SetHostMap( map.name, map.hash );
 
     sett().LoadBattleMapOptions(&m_battle);
     m_battle.SendHostInfo( HI_StartRects );
