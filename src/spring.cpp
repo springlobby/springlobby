@@ -26,6 +26,9 @@
 #include "iunitsync.h"
 #include "nonportable.h"
 #include "tdfcontainer.h"
+#ifndef NO_TORRENT_SYSTEM
+#include "torrentwrapper.h"
+#endif
 
 BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
 
@@ -84,6 +87,15 @@ bool Spring::Run( Battle& battle )
     wxLogError( _T("Couldn't write script.txt") );
     return false;
   }
+
+  #ifndef NO_TORRENT_SYSTEM
+  wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|") + battle.GetMe().GetNick() + _T("|");
+  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
+  {
+    CommandForAutomaticTeamSpeak << battle.GetUser(i).GetNick() << _T("|") << u2s( battle.GetUser(i).BattleStatus().ally) << _T("|");
+  }
+  torrent()->SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
+  #endif
 
   wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + path + _T("script.txt");
   wxLogMessage( _T("cmd: %s"), cmd.c_str() );
@@ -256,7 +268,6 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
 
   wxLogMessage(_T("7"));
-
 
   //BattleOptions bo = battle.opts();
 

@@ -1875,7 +1875,7 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. 
 }
 
 //! @brief used to check if the NAT is done properly when hosting
-bool TASServer::TestOpenPort( unsigned int port )
+int TASServer::TestOpenPort( unsigned int port )
 {
 #ifndef HAVE_WX26
     wxIPV4address local_addr;
@@ -1887,26 +1887,27 @@ bool TASServer::TestOpenPort( unsigned int port )
     wxHTTP connect_to_server;
     connect_to_server.SetTimeout( 10 );
 
-    if ( !connect_to_server.Connect( _T("zjt3.com") ) ) return false;
+    if ( !connect_to_server.Connect( _T("zjt3.com") ) ) return porttest_unreachable;
     connect_to_server.GetInputStream(wxString::Format( _T("/porttest.php?port=%d"), port));
 
     if (udp_socket.IsOk())
     {
-        if ( !udp_socket.WaitForAccept( 10 ) ) return false;
+        if ( !udp_socket.WaitForAccept( 10 ) ) return porttest_timeout;
     }
     else
     {
         wxLogMessage(_T("socket's IsOk() is false, no UDP packets can be checked"));
-        return false;
+        return porttest_socketNotOk;
     }
     if (udp_socket.Error())
     {
         wxLogMessage(_T("Error=%d"),udp_socket.LastError());
-        return false;
+        return porttest_socketError;
     }
-    return true;
+    return porttest_pass;
 #endif
-    return true;
+    return porttest_pass_WX26;
+
 }
 
 

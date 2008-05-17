@@ -73,7 +73,7 @@ MainTorrentTab::~MainTorrentTab()
 
 }
 
-void MainTorrentTab::UpdateInfo( const TorrentInfos& info )
+void MainTorrentTab::UpdateInfo(  TorrentInfos& info )
 {
  int index = -1;
   for (int i = 0; i < m_torrent_list->GetItemCount() ; i++ ) {
@@ -90,7 +90,7 @@ void MainTorrentTab::UpdateInfo( const TorrentInfos& info )
         AddTorrentInfo( info );
 }
 
-void MainTorrentTab::SetInfo(int index, const TorrentInfos& info )
+void MainTorrentTab::SetInfo(int index,  TorrentInfos& info )
 {
     float kfactor = 1/float(1024);
  float mfactor = 1/float(1024*1024);
@@ -98,6 +98,8 @@ void MainTorrentTab::SetInfo(int index, const TorrentInfos& info )
  int eta_seconds = -1;
  if ( info.progress > 0 && info.inspeed > 0)
     eta_seconds = int (  (info.filesize - info.downloaded ) / info.inspeed );
+
+  info.eta = eta_seconds;
 
  // m_torrent_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
   m_torrent_list->SetItem( index, 0, info.name );
@@ -114,8 +116,9 @@ void MainTorrentTab::SetInfo(int index, const TorrentInfos& info )
   m_torrent_list->Sort();
 }
 
-void MainTorrentTab::AddTorrentInfo( const TorrentInfos& info )
+void MainTorrentTab::AddTorrentInfo(  TorrentInfos& info )
 {
+    m_torrent_list->SetSelectionRestorePoint();
   int index = m_torrent_list->InsertItem( 0, info.name );
 //  ASSERT_LOGIC( index != -1, _T("index = -1") );
   m_torrent_list->SetItemData(index, s2l(info.hash) );
@@ -125,11 +128,12 @@ void MainTorrentTab::AddTorrentInfo( const TorrentInfos& info )
 
  // ASSERT_LOGIC( m_torrent_list->GetItem( item ), _T("!GetItem") );
     SetInfo(index, info );
+    m_torrent_list->RestoreSelection();
 }
 
 void MainTorrentTab::OnUpdate()
 {
-//    long currentselection = m_torrent_list->GetSelectedIndex();
+    m_torrent_list->SetSelectionRestorePoint();
     info_map = torrent()->CollectGuiInfos();
     m_outgoing_lbl->SetLabel( wxString::Format(_("Total Outgoing: %.2f KB/s"), (info_map[0].outspeed/float(1024)) ) );
     m_incoming_lbl->SetLabel( wxString::Format(_("Total Incoming: %.2f KB/s"), (info_map[0].inspeed/ float(1024)) ) );
@@ -141,7 +145,8 @@ void MainTorrentTab::OnUpdate()
 
     }
     Layout();
-    //m_torrent_list->SetItemState( currentselection, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+    m_torrent_list->RestoreSelection();
+
 }
 
 

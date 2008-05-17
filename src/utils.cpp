@@ -259,3 +259,8 @@ wxString GetHostCPUSpeed()
     return i2s(totalcpuspeed);
 }
 
+
+//int CompareStringIgnoreCase(const wxString& first, const wxString& second)
+//{
+//    return (first.Upper() > second.Upper() );
+//}

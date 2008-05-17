@@ -357,7 +357,7 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 
 			if (valid_string)
 			{
-			    //TODO TEST/FIXME
+			    //LOOKATME (koshi) if there's a problem with list modoption look here first
 				(opts[modmapFlag].list_map)[key].value = (opts[modmapFlag].list_map)[key].listitems[j].key;
 				(opts[modmapFlag].list_map)[key].cur_choice_index = j;
 			}
