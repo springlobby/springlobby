@@ -12,12 +12,15 @@
 #include "user.h"
 #include "utils.h"
 #include "uiutils.h"
+
 #include "iconimagelist.h"
 
 #include <algorithm>
 #include <math.h>
 
 #include <wx/image.h>
+#include <wx/string.h>
+#include <wx/intl.h>
 #include "images/fixcolours_palette.xpm"
 
 
@@ -366,6 +369,12 @@ void Battle::OnUserAdded( User& user )
 }
 
 void Battle::OnUserBattleStatusUpdated( User &user ){
+
+  if(user.BattleStatus().handicap!=0){
+    m_ui.OnBattleAction(*this,wxString(_T(" ")),(_("Warning: user ")+user.GetNick()+_(" got bonus "))<<user.BattleStatus().handicap);
+  }
+
+
   if(IsFounderMe()){
 
     m_opts.spectators=0;
