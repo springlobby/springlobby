@@ -303,6 +303,22 @@ wxString SpringUnitSyncLib::GetMapName( int index )
 }
 
 
+int SpringUnitSyncLib::GetMapArchiveCount( int index )
+{
+  InitLib( m_get_map_archive_count );
+
+  return m_get_map_archive_count( m_get_map_name( index ) );
+}
+
+
+wxString SpringUnitSyncLib::GetMapArchiveName( int arnr )
+{
+  InitLib( m_get_map_archive_name );
+
+  return WX_STRINGC( m_get_map_archive_name( arnr ) );
+}
+
+
 MapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
 {
   InitLib( m_get_map_info_ex );
@@ -801,6 +817,14 @@ int SpringUnitSyncLib::SizeArchiveFile( int archive, int handle )
   InitLib( m_size_archive_file );
 
   return m_size_archive_file( archive, handle );
+}
+
+
+wxString SpringUnitSyncLib::GetArchivePath( const wxString& name )
+{
+  InitLib( m_get_archive_path );
+
+  return WX_STRINGC( m_get_archive_path( name.mb_str( wxConvUTF8 ) ) );
 }
 
 

@@ -28,6 +28,7 @@ class TorrentOptionsPanel: public wxPanel
         void OnManStart( wxCommandEvent& event );
         void OnManStop( wxCommandEvent& event );
         void OnRestore( wxCommandEvent& event );
+        void OnStatusUpdate( wxCommandEvent& event );
 
     private:
         wxTextCtrl* m_maxUp;
@@ -56,6 +57,7 @@ class TorrentOptionsPanel: public wxPanel
         void EnableSettings( bool enable);
         void EnableStartStopButtons( bool system_is_running);
         void SetStatusDisplay();
+
 
         enum
         {

@@ -57,6 +57,8 @@ class Settings
 
     wxString GetDefaultServer();
     void SetDefaultServer( const wxString& server_name );
+    void SetAutoConnect( bool do_autoconnect );
+    bool GetAutoConnect( );
 
     bool ServerExists( const wxString& server_name );
 

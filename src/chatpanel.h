@@ -105,6 +105,7 @@ class ChatPanel : public wxPanel
 
     void Say( const wxString& message );
     void Part();
+    void FocusInputBox();
 
     wxString GetChatTypeStr();
 
@@ -170,6 +171,10 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorMute1440( wxCommandEvent& event );
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
+
+	void OnKeyPressed( wxKeyEvent& keyevent );
+	void OnKeyReleased( wxKeyEvent& keyevent );
+
 
   protected:
     void _SetChannel( Channel* channel );

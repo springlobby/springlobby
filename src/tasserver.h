@@ -15,6 +15,7 @@ struct TASPingListItem {
   time_t t;
 };
 
+
 class Ui;
 class Socket;
 class User;
@@ -136,7 +137,7 @@ class TASServer : public Server
     bool IsPasswordHash( const wxString& pass );
     wxString GetPasswordHash( const wxString& pass );
 
-    bool TestOpenPort( unsigned int port );
+    int TestOpenPort( unsigned int port );
 
   protected:
     Ui& m_ui;

@@ -4,15 +4,9 @@
 #include <wx/event.h>
 class wxCommandEvent;
 
-//DEFINE_EVENT_TYPE(httpDownloadEvtComplete)
-//DEFINE_EVENT_TYPE(httpDownloadEvtFailed)
+
 extern const wxEventType httpDownloadEvtComplete;
 extern const wxEventType httpDownloadEvtFailed;
-
-//BEGIN_DECLARE_EVENT_TYPES()
-//DECLARE_EVENT_TYPE(httpDownloadEvtComplete, 42) // second argument is required for wx 2.0.x compability only
-//DECLARE_EVENT_TYPE(httpDownloadEvtFailed, 42)
-//END_DECLARE_EVENT_TYPES()
 
 
 class SL_GlobalEvtHandler : public wxEvtHandler

@@ -37,6 +37,8 @@
 #include <wx/file.h>
 #include <wx/wfstream.h>
 #include <wx/msgdlg.h>
+#include <wx/app.h>
+#include <wx/event.h>
 
 #include "torrentwrapper.h"
 
@@ -87,7 +89,7 @@ void TorrentWrapper::ConnectToP2PSystem()
   if ( m_connected ) return;
   m_socket_class->Connect( m_tracker_urls[0], DEFAULT_P2P_COORDINATOR_PORT );
   m_connected_tracker_index= 0;
-  return;
+  return; //TODO (BrainDamage #1#) what's this??
   for( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
   {
     m_socket_class->Connect( m_tracker_urls[i], DEFAULT_P2P_COORDINATOR_PORT );
@@ -223,8 +225,10 @@ bool TorrentWrapper::RequestFileByHash( const wxString& hash )
 
 bool TorrentWrapper::RequestFileByName( const wxString& name )
 {
-  return false;
-/// TODO (BrainDamage#1#): implement
+    ScopedLocker<NameToHash> name_to_hash_l(m_name_to_hash);
+    NameToHash::from::iterator iter = name_to_hash_l.Get().from.find(name);
+    if( iter == name_to_hash_l.Get().from.end() ) return false;
+    return RequestFileByHash( iter->second );
 }
 
 
@@ -302,6 +306,12 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     ret[s2l(CurrentTorrent.hash)] = CurrentTorrent;
   }
   return ret;
+}
+
+
+void TorrentWrapper::SendMessageToCoordinator( const wxString& message )
+{
+  if ( m_connected ) m_socket_class->Send( message + _T("\n") );
 }
 
 
@@ -586,6 +596,8 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     {/// threads rule 3
       ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
       torrent_infos_l.Get()[data[1]] = newtorrent;
+      ScopedLocker<NameToHash> name_to_hash_l(m_name_to_hash);
+      name_to_hash_l.Get().from[newtorrent.name] = newtorrent.hash;
     }
 
 
@@ -596,6 +608,10 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     HashToTorrentData::iterator itor = torrent_infos_l.Get().find(data[1]);
     if( itor == torrent_infos_l.Get().end() ) return;
     torrent_infos_l.Get().erase( itor );
+    ScopedLocker<NameToHash> name_to_hash_l(m_name_to_hash);
+    NameToHash::to::iterator iter = name_to_hash_l.Get().to.find(data[1]);
+    if( iter == name_to_hash_l.Get().to.end() ) return;
+    name_to_hash_l.Get().erase( iter );
   // S+|hash|seeders|leechers 	 tells client that seed is needed for this torrent
   } else if ( data.GetCount() > 1 && data[0] == _T("S+") ) {
     wxString name;
@@ -670,6 +686,7 @@ void TorrentWrapper::OnConnected( Socket* sock )
 
   m_seed_count = 0;
   m_leech_count = 0;
+
 }
 
 

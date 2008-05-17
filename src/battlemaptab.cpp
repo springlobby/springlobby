@@ -168,11 +168,12 @@ void BattleMapTab::Update( const wxString& Tag )
 void BattleMapTab::ReloadMaplist()
 {
   m_map_combo->Clear();
-  try {
-    for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-      m_map_combo->Insert( RefineMapname( usync()->GetMap( i ).name ), i );
-    }
-  } catch(...){}
+
+  wxArrayString maplist= usync()->GetMapList();
+ // maplist.Sort(CompareStringIgnoreCase);
+
+  size_t nummaps = maplist.Count();
+  for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( RefineMapname(maplist[i]), i );
 }
 
 

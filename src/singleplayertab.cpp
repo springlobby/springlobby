@@ -41,6 +41,8 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );
+  m_minimap->SetToolTip( _("You can drag the sun/bot icon around to define start position.\n "
+                           "Hover over the icon for a popup that lets you change side, ally and bonus." ) );
   m_main_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 5 );
 
   wxBoxSizer* m_ctrl_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -107,11 +109,13 @@ void SinglePlayerTab::UpdateMinimap()
 void SinglePlayerTab::ReloadMaplist()
 {
   m_map_pick->Clear();
-  try {
-    for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-      m_map_pick->Insert( RefineMapname( usync()->GetMap( i ).name ), i );
-    }
-  } catch(...) {}
+
+  wxArrayString maplist= usync()->GetMapList();
+  //maplist.Sort(CompareStringIgnoreCase);
+
+  size_t nummaps = maplist.Count();
+  for ( size_t i = 0; i < nummaps; i++ ) m_map_pick->Insert( RefineMapname(maplist[i]), i );
+
   m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
   if ( m_battle.GetMapName() != wxEmptyString ) {
     m_map_pick->SetStringSelection( RefineMapname( m_battle.GetMapName() ) );
@@ -126,16 +130,17 @@ void SinglePlayerTab::ReloadMaplist()
 void SinglePlayerTab::ReloadModlist()
 {
   m_mod_pick->Clear();
-  try {
-    for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
-      m_mod_pick->Insert( RefineModname( usync()->GetMod( i ).name ), i );
-    }
-  } catch (...) {}
+
+  wxArrayString modlist= usync()->GetModList();
+  //modlist.Sort(CompareStringIgnoreCase);
+
+  size_t nummods = modlist.Count();
+  for ( size_t i = 0; i < nummods; i++ ) m_mod_pick->Insert( modlist[i], i );
 
   m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
 
   if ( m_battle.GetModName() != wxEmptyString ) {
-    m_mod_pick->SetStringSelection( RefineModname( m_battle.GetModName() ) );
+    m_mod_pick->SetStringSelection( m_battle.GetModName() );
     if ( m_mod_pick->GetStringSelection() == wxEmptyString ) SetMod( m_mod_pick->GetCount()-1 );
   } else {
     m_mod_pick->SetSelection( m_mod_pick->GetCount()-1 );
@@ -197,8 +202,9 @@ bool SinglePlayerTab::ValidSetup()
   if ( m_battle.GetNumBots() == 1 )
   {
       wxLogWarning(_T("trying to start sp game without bot"));
-      customMessageBoxNoModal(SL_MAIN_ICON, _("You should add a bot before starting a game.\nIf you don't want an opponent add TestGlobalAi"), _("No Bot added"));
-      return false;
+      if ( customMessageBox(SL_MAIN_ICON, _("Continue without adding a bot first?.\n The game will be over pretty fast.\n "),
+                _("No Bot added"), wxYES_NO) == wxNO )
+        return false;
   }
 
   if ( usync()->VersionSupports( GF_XYStartPos ) ) return true;
