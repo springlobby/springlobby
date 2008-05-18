@@ -609,7 +609,10 @@ void Battle::RemoveBot( const wxString& nick )
 void Battle::SetBotTeam( const wxString& nick, int team )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
   bot->bs.team = team;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
@@ -618,7 +621,10 @@ void Battle::SetBotTeam( const wxString& nick, int team )
 void Battle::SetBotAlly( const wxString& nick, int ally )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
   bot->bs.ally = ally;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
@@ -627,7 +633,10 @@ void Battle::SetBotAlly( const wxString& nick, int ally )
 void Battle::SetBotSide( const wxString& nick, int side )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
   bot->bs.side = side;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
@@ -636,7 +645,10 @@ void Battle::SetBotSide( const wxString& nick, int side )
 void Battle::SetBotColour( const wxString& nick, const wxColour& col )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
   bot->bs.colour = col;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
@@ -645,7 +657,10 @@ void Battle::SetBotColour( const wxString& nick, const wxColour& col )
 void Battle::SetBotHandicap( const wxString& nick, int handicap )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
   if ( bot->owner != GetMe().GetNick() && !IsFounderMe() )
   {
     m_serv.DoActionBattle( m_opts.battleid, _T("thinks ") + nick + _T(" should get a ") + wxString::Format( _T("%d"),  handicap ) + _T("% resource bonus") );
@@ -690,7 +705,10 @@ void Battle::OnBotRemoved( const wxString& nick )
 void Battle::OnBotUpdated( const wxString& name, const UserBattleStatus& bs )
 {
   BattleBot* bot = GetBot( name );
-  ASSERT_LOGIC( bot != 0, _T("Bad bot name") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
   int order = bot->bs.order;
   bot->bs = bs;
   bot->bs.order = order;
