@@ -110,7 +110,10 @@ void ServerEvents::OnPong( int ping_time )
 void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int cpu )
 {
   wxLogDebugFunc( _T("") );
+  try
+  {
   ASSERT_LOGIC( !m_serv.UserExists( nick ), _T("New user from server, but already exists!") );
+  } catch (...) { return; }
   User& user = m_serv._AddUser( nick );
   user.SetCountry( country );
   user.SetCpu( cpu );
@@ -521,7 +524,10 @@ void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, const wxS
   Battle& battle = m_serv.GetBattle( battleid );
   battle.OnBotAdded( nick, owner, status, aidll );
   BattleBot* bot = battle.GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  } catch (...) { return; }
   m_ui.OnBattleBotAdded( battle, *bot );
 }
 
@@ -532,7 +538,10 @@ void ServerEvents::OnBattleUpdateBot( int battleid, const wxString& nick, UserBa
   Battle& battle = m_serv.GetBattle( battleid );
   battle.OnBotUpdated( nick, status );
   BattleBot* bot = battle.GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  } catch (...) { return; }
   m_ui.OnBattleBotUpdated( battle, *bot );
 }
 
@@ -542,7 +551,10 @@ void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   BattleBot* bot = battle.GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  } catch (...) { return; }
   m_ui.OnBattleBotRemoved( battle, *bot );
   battle.OnBotRemoved( nick );
 }
