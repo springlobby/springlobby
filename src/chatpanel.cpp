@@ -17,7 +17,7 @@
 #include <wx/utils.h>
 #include <wx/event.h>
 #include <wx/notebook.h>
-
+#include <wx/richtext/richtextctrl.h>
 
 #include "channel.h"
 #include "chatpanel.h"
@@ -36,39 +36,6 @@ BEGIN_EVENT_TABLE(MyTextCtrl, wxTextCtrl)
 EVT_PAINT(MyTextCtrl::OnPaint)
 END_EVENT_TABLE()
 */
-
-
-MyTextCtrl::MyTextCtrl(wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, const wxSize& size, long style, const wxValidator& validator, const wxString& name):
-wxTextCtrl(parent, id, value, pos, size, style, validator, name),
-my_m_dirty(false),
-m_must_scroll(true)
-{
-  //Connect(wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&AutoBalanceDialog::OnCancel);
-  Connect(wxEVT_PAINT, (wxObjectEventFunction)&MyTextCtrl::OnPaint);
-  Connect(wxEVT_UPDATE_UI , (wxObjectEventFunction)&MyTextCtrl::OnUpdateUI);
-
-}
-void MyTextCtrl::OnPaint(wxPaintEvent& event){
-  //wxLogMessage(_T("MyTextCtrl::OnPaint"));
-  my_m_dirty=false;
-  event.Skip();
-}
-void MyTextCtrl::OnUpdateUI( wxUpdateUIEvent &event ) {
-	//wxLogMessage(_T("MyTextCtrl::OnUpdateUI"));
-	my_m_dirty = false;
-	event.Skip();
-}
-bool MyTextCtrl::GetDirty() {
-	return my_m_dirty;
-}
-void MyTextCtrl::MakeDirty() {
-	my_m_dirty = true;
-}
-
-void MyTextCtrl::WriteText( const wxString&  text ) {
-	//MakeDirty();
-	wxTextCtrl::WriteText( text );
-}
 
 
 BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
@@ -228,7 +195,7 @@ void ChatPanel::CreateControls( ) {
 	}
 
 	// Creating ui elements
-	m_chatlog_text = new MyTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
+	m_chatlog_text = new wxRichTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
 																	 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
     m_chatlog_text->SetToolTip( _("right click for options (like autojoin)" ) );
 
@@ -491,31 +458,13 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 	int sizex, sizey;
 	m_chatlog_text->GetClientSize( &sizex, &sizey );
 	long totalchars = m_chatlog_text->GetLastPosition();
-	long totalrows;
-	long tmp;
-	m_chatlog_text->PositionToXY( totalchars, &tmp, &totalrows );
+	long totalrows = m_chatlog_text->GetNumberOfLines();
 
-	long top_col = 0, top_row = 0;
-
-	/// HitTest has column,row order  (x,y)
-	if ( m_chatlog_text->HitTest( wxPoint( 2, 2 ), &top_col, &top_row ) == wxTE_HT_UNKNOWN ) {
-	//	wxLogWarning( _T( "HitTest failed for top of visible page" ) );
-	}
-	long bottom_col = 0, bottom_row = 0;
-
-	if ( m_chatlog_text->HitTest( wxPoint( 2, sizey - 4 ), &bottom_col, &bottom_row ) == wxTE_HT_UNKNOWN ) {
-	//	wxLogWarning( _T( "HitTest failed for bottom of visible page" ) );
+  long bottom_col, bottom_row = 0;
+	if ( m_chatlog_text->HitTest( wxPoint( 0, sizey ), &bottom_col, &bottom_row ) == wxTE_HT_UNKNOWN ) {
 	}
 
-	long jumpto = 0;
-	jumpto = m_chatlog_text->XYToPosition( top_col, top_row );/// column, row format
-
-	int dirty = m_chatlog_text->GetDirty();
-	int mustscroll = m_chatlog_text->GetMustScroll();
-	//wxLogWarning( _T( " dirty: %d mustscroll: %d" ), dirty, mustscroll );
-	bool at_bottom = ( bottom_row >= totalrows - 1 ) || ( m_chatlog_text->GetDirty() && m_chatlog_text->GetMustScroll() );/// true if we're on bottom of page and must scroll
-	m_chatlog_text->SetMustScroll( at_bottom );
-
+	bool at_bottom = ( bottom_row >= totalrows - 3 );/// true if we're on bottom of page and must scroll
 
 
 	m_chatlog_text->SetDefaultStyle( wxTextAttr( col, sett().GetChatColorBackground(), fon ) );
@@ -525,10 +474,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 	//m_chatlog_text->AppendText( message + _T("\n") );
 	m_chatlog_text->WriteText( message  + _T( "\n" ) );
 
-	if ( never_scroll || ( sett().GetSmartScrollEnabled() && !at_bottom ) ) { /// view not at the bottom = disable autoscroll
-		//wxLogMessage( _T( "not scrolling" ) );
-		m_chatlog_text->ShowPosition( jumpto ); /// restore position that the scrollbar had before appending the text
-	} else {
+	if ( ( sett().GetSmartScrollEnabled() && at_bottom ) ) { /// view not at the bottom = disable autoscroll
 		m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
 		m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
 	}
@@ -541,7 +487,6 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 	m_chatlog_text->Thaw();
 #endif
 
-	m_chatlog_text->MakeDirty();
 }
 
 
