@@ -587,12 +587,9 @@ void TorrentWrapper::FixTorrentList()
 void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 {
   wxLogMessage(_T("torrent: %s"), msg.c_str() );
-  wxStringTokenizer tkz( msg, _T('|') );
-  wxArrayString data;
-  for( unsigned int pos = 0; tkz.HasMoreTokens(); pos++ )
-  {
-      data.Add( tkz.GetNextToken() ); /// fill the array with the message
-  }
+
+  wxArrayString data = wxStringTokenize( msg, _T('|') );
+
   if ( data.GetCount() == 0 ) return;
   // T+|hash|name|type 	 informs client that new torrent was added to server (type is either MOD or MAP)
   else if ( data.GetCount() > 3 && data[0] == _T("T+") ) {

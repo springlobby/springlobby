@@ -462,18 +462,18 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 #ifdef __WXMSW__
 	m_chatlog_text->Freeze();
 #endif
-	//m_chatlog_text->AppendText( message + _T("\n") );
-  wxStringTokenizer tkz( message, _T(' ') );
-  for( unsigned int pos = 0; tkz.HasMoreTokens(); pos++ )
+
+  wxArrayString wordarray =  wxStringTokenize( message, _T(' ') );
+  unsigned int wordcount = wordarray.GetCount();
+  for( unsigned int pos = 0; pos < wordcount; pos++ )
   {
-    wxString word = tkz.GetNextToken();
+    wxString word = wordarray[pos];
     bool isurl = word.Contains( _T("://") );
     if ( isurl ) m_chatlog_text->BeginURL(word);
-    m_chatlog_text->WriteText( word + _T(' ') );
+    m_chatlog_text->AppendText( word + _T(' ') );
     if ( isurl ) m_chatlog_text->EndURL();
   }
-
-	m_chatlog_text->WriteText( _T( "\n" ) );
+	m_chatlog_text->AppendText( _T( "\n" ) );
 
   bool enable_autoscroll = sett().GetAlwaysAutoScrollOnFocusLost() || (m_ui.GetActiveChatPanel() == this );
 
@@ -504,7 +504,6 @@ void ChatPanel::OnResize( wxSizeEvent& event ) {
 }
 
 void ChatPanel::OnLinkEvent( wxTextUrlEvent& event ) {
-	if ( !event.GetMouseEvent().LeftDown() ) return;
 	wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd() );
 	m_ui.OpenWebBrowser( url );
 }
