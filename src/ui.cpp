@@ -248,7 +248,7 @@ void Ui::StartHostedBattle()
 {
   ASSERT_LOGIC( m_serv != 0, _T("m_serv = 0") );
   m_serv->StartHostedBattle();
-  sett().SetLastHostMap( m_serv->GetCurrentBattle()->GetMapName() );
+  sett().SetLastHostMap( m_serv->GetCurrentBattle()->GetHostMapName() );
   sett().SaveBattleMapOptions(m_serv->GetCurrentBattle());
   sett().SaveSettings();
 }
@@ -305,7 +305,7 @@ void Ui::DownloadMap( const wxString& hash, const wxString& name )
 void Ui::DownloadMod( const wxString& hash, const wxString& name )
 {
   #ifndef NO_TORRENT_SYSTEM
-  if ( hash != _T("NULL") ) torrent()->RequestFileByHash( hash );
+  if ( !hash.IsEmpty() ) torrent()->RequestFileByHash( hash );
   else if ( !name.IsEmpty() ) torrent()->RequestFileByName( name );
   #else
   wxString url = _T("http://spring.jobjol.nl/search.php");
@@ -958,7 +958,7 @@ void Ui::OnBattleMapChanged( Battle& battle )
   mw().GetJoinTab().UpdateCurrentBattle( true );
   if (battle.IsFounderMe())
   {
-	  battle.CustomBattleOptions()->loadMapOptions(battle.GetMapName());
+	  battle.CustomBattleOptions()->loadMapOptions(battle.GetHostMapName());
 	  mw().GetJoinTab().ReloadMMoptTab();
   }
 }

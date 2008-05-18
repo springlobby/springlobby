@@ -181,9 +181,9 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
   battle.SetMaxPlayers( maxplayers );
   battle.SetIsPassworded( haspass );
   battle.SetRankNeeded( rank );
-  battle.SetMap( map, maphash );
+  battle.SetHostMap( map, maphash );
   battle.SetDescription( title );
-  battle.SetMod( mod, wxEmptyString );
+  battle.SetHostMod( mod, wxEmptyString );
 
   m_ui.OnBattleOpened( battle );
   if ( user.Status().in_game ) {
@@ -204,8 +204,8 @@ void ServerEvents::OnJoinedBattle( int battleid )
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.spectator = false;
 
-  battle.CustomBattleOptions()->loadOptions( MapOption, battle.GetMapName() );
-  battle.CustomBattleOptions()->loadOptions( ModOption, battle.GetModName() );
+  battle.CustomBattleOptions()->loadOptions( MapOption, battle.GetHostMapName() );
+  battle.CustomBattleOptions()->loadOptions( ModOption, battle.GetHostModName() );
 
   m_ui.OnJoinedBattle( battle );
   }catch(std::runtime_error &except){
@@ -298,9 +298,9 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   battle.SetSpectators( spectators );
   battle.SetIsLocked( locked );
 
-  wxString oldmap = battle.GetMapName();
+  wxString oldmap = battle.GetHostMapName();
 
-  battle.SetMap( map, maphash );
+  battle.SetHostMap( map, maphash );
 
   if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) )
   {

@@ -274,12 +274,12 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   // Start generating the script.
   tdf.EnterSection(_T("GAME"));
 
-  tdf.Append(_T("Mapname"),battle.GetMapName());
-  tdf.Append(_T("GameType"),usync()->GetModArchive(usync()->GetModIndex(battle.GetModName())));
+  tdf.Append(_T("Mapname"),battle.GetHostMapName());
+  tdf.Append(_T("GameType"),usync()->GetModArchive(usync()->GetModIndex(battle.GetHostModName())));
 
 
   unsigned long uhash;
-  battle.GetModHash().ToULong(&uhash);
+  battle.LoadMod().hash.ToULong(&uhash);
 
   tdf.Append(_T("ModHash"),int(uhash));
 
@@ -386,7 +386,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
     wxLogMessage( _T("%d"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side );
 
-    tdf.Append(_T("Side"),usync()->GetSideName( battle.GetModName(), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side ));
+    tdf.Append(_T("Side"),usync()->GetSideName( battle.GetHostModName(), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side ));
     tdf.Append(_T("Handicap"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().handicap);
 
     tdf.LeaveSection();
@@ -427,7 +427,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     tdf.Append(_T("RGBColor"),rgb,rgb+3);
     std::setlocale(LC_NUMERIC, old_locale);
 
-    tdf.Append(_T("Side"),usync()->GetSideName( battle.GetModName(), bot.bs.side ));
+    tdf.Append(_T("Side"),usync()->GetSideName( battle.GetHostModName(), bot.bs.side ));
 
 
     tdf.Append(_T("Handicap"),bot.bs.handicap);
@@ -645,12 +645,12 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
   //s  = wxString::Format( _T("[GAME]\n{\n") );
   tdf.EnterSection(_T("GAME"));
 
-  tdf.Append(_T("Mapname"),battle.GetMapName());
+  tdf.Append(_T("Mapname"),battle.GetHostMapName());
 
-  tdf.Append(_T("GameType"),usync()->GetModArchive(usync()->GetModIndex(battle.GetModName())));
+  tdf.Append(_T("GameType"),usync()->GetModArchive(usync()->GetModIndex(battle.GetHostModName())));
 
   unsigned long uhash;
-  battle.GetModHash().ToULong(&uhash);
+  battle.LoadMod().hash.ToULong(&uhash);
 
   tdf.Append(_T("ModHash"),int(uhash));
 
@@ -706,7 +706,7 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
 
     std::setlocale(LC_NUMERIC, old_locale);
 
-    tdf.Append(_T("Side"),usync()->GetSideName(battle.GetModName(), bot->bs.side));
+    tdf.Append(_T("Side"),usync()->GetSideName(battle.GetHostModName(), bot->bs.side));
 
     tdf.Append(_T("Handicap"),bot->bs.handicap);
 

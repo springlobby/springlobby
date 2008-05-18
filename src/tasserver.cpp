@@ -1289,8 +1289,8 @@ void TASServer::SendHostInfo( HostInfo update )
     {
         // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
         wxString cmd = wxString::Format( _T("%d %d "), battle.GetSpectators(), battle.IsLocked() );
-        cmd += battle.GetMapHash() + _T(" ");
-        cmd += battle.GetMapName();
+        cmd += battle.GetHostMapHash() + _T(" ");
+        cmd += battle.GetHostMapName();
 
         SendCmd( _T("UPDATEBATTLEINFO"), cmd );
         wxLogMessage(_T("UPDATEBATTLEINFO %s"),cmd.c_str());
@@ -1497,7 +1497,7 @@ void TASServer::ForceSide( int battleid, const wxString& nick, int side )
     {
         try
         {
-            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to ") + usync()->GetSideName( GetBattle(battleid).GetModName(), side ) + _T(" side.") );
+            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to ") + usync()->GetSideName( GetBattle(battleid).GetHostModName(), side ) + _T(" side.") );
         }
         catch (...) {}
     }

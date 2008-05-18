@@ -170,8 +170,8 @@ void BattleListTab::SelectBattle( Battle* battle )
   m_minimap->SetBattle( m_sel_battle );
   m_players->ClearUsers();
   if ( m_sel_battle != 0 ) {
-    m_map_text->SetLabel( RefineMapname( m_sel_battle->GetMapName() ) );
-    m_mod_text->SetLabel( m_sel_battle->GetModName() );
+    m_map_text->SetLabel( RefineMapname( m_sel_battle->GetHostMapName() ) );
+    m_mod_text->SetLabel( m_sel_battle->GetHostModName() );
     m_players_text->SetLabel( wxString::Format( _T("%d / %d"), m_sel_battle->GetNumUsers() - m_sel_battle->GetSpectators(), m_sel_battle->GetMaxPlayers() ) );
     m_spec_text->SetLabel( wxString::Format( _T("%d"), m_sel_battle->GetSpectators() ) );
     for ( unsigned int i = 0; i < m_sel_battle->GetNumUsers(); i++ ) {
@@ -206,8 +206,8 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItemColumnImage( index, 2, icons().GetRankIcon( battle.GetRankNeeded(), false ) );
   m_battle_list->SetItemColumnImage( index, 1, icons().GetFlagIcon( battle.GetFounder().GetCountry() ) );
   m_battle_list->SetItem( index, 3, battle.GetDescription() );
-  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
-  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
+  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetHostMapName() ), battle.MapExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
+  m_battle_list->SetItem( index, 5, RefineModname( battle.GetHostModName() ), battle.ModExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
   m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
@@ -293,8 +293,8 @@ void BattleListTab::UpdateBattle( Battle& battle )
   m_battle_list->SetItemColumnImage( index, 2, icons().GetRankIcon( battle.GetRankNeeded(), false ) );
   m_battle_list->SetItemColumnImage( index, 1, icons().GetFlagIcon( battle.GetFounder().GetCountry() ) );
   m_battle_list->SetItem( index, 3, battle.GetDescription() );
-  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetMapName() ), battle.MapExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
-  m_battle_list->SetItem( index, 5, RefineModname( battle.GetModName() ), battle.ModExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
+  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetHostMapName() ), battle.MapExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
+  m_battle_list->SetItem( index, 5, RefineModname( battle.GetHostModName() ), battle.ModExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
   m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
@@ -532,8 +532,8 @@ void BattleListTab::DoJoin( Battle& battle )
 
   if ( !battle.ModExists() ) {
     if (customMessageBox( SL_MAIN_ICON,_("You need to download the mod before you can join this game.\n\nDo you want me to take you to the download page?"), _("Mod not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-      wxString modhash = battle.GetModHash();
-      wxString modname = battle.GetModName();
+      wxString modhash = battle.GetHostModHash();
+      wxString modname = battle.GetHostModName();
       m_ui.DownloadMod ( modhash, modname );
     }
     return;
@@ -541,8 +541,8 @@ void BattleListTab::DoJoin( Battle& battle )
 
   if ( !battle.MapExists() ) {
     if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to play in this game.\n\nDo you want me to take you to the download page?"), _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-      wxString maphash = battle.GetMapHash();
-      wxString mapname = battle.GetMapName();
+      wxString maphash = battle.GetHostMapHash();
+      wxString mapname = battle.GetHostMapName();
       m_ui.DownloadMap ( maphash, mapname );
     }
   }

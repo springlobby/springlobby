@@ -199,6 +199,14 @@ bool SpringUnitSync::ModExists( const wxString& modname )
 }
 
 
+bool SpringUnitSync::ModExists( const wxString& modname, const wxString& hash )
+{
+  LocalArchivesVector::iterator itor = m_mods_list.from.find(hash);
+  if ( itor == m_mods_list.from.end() ) return false;
+  return itor->second == modname;
+}
+
+
 UnitSyncMod SpringUnitSync::GetMod( const wxString& modname )
 {
   wxLogDebugFunc( _T("modname = \"") + modname + _T("\"") );
@@ -240,7 +248,7 @@ bool SpringUnitSync::MapExists( const wxString& mapname )
 }
 
 
-bool SpringUnitSync::MapExists( const wxString& mapname, const wxString hash )
+bool SpringUnitSync::MapExists( const wxString& mapname, const wxString& hash )
 {
   LocalArchivesVector::iterator itor = m_maps_list.from.find(hash);
   if ( itor == m_maps_list.from.end() ) return false;
