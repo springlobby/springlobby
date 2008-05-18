@@ -18,6 +18,7 @@
 #define DEFSETT_SPRING_PORT 8452
 
 class wxFileConfig;
+class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
 class IBattle;
@@ -28,6 +29,8 @@ class Settings
   public:
     Settings();
     ~Settings();
+
+    bool IsPortableMode();
 
     void SetDefaultSettings();
     void SaveSettings();
@@ -228,8 +231,14 @@ class Settings
     int GetTorrentMaxConnections();
 
   protected:
-
+    #ifdef __WXMSW__
     wxFileConfig* m_config; //!< wxConfig object to store and restore  all settings in.
+    #else
+    wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
+    #endif
+
+    wxString m_chosed_path;
+    bool m_portable_mode;
 
 };
 

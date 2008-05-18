@@ -67,19 +67,19 @@ bool Spring::Run( Battle& battle )
     return false;
   }
 
-  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
+  wxString path = sett().GetSpringDir();
 
   wxLogMessage( _T("Path to script: %sscript.txt"), path.c_str() );
 
   try {
 
-    if ( !wxFile::Access( path + _T("script.txt"), wxFile::write ) ) {
+    if ( !wxFile::Access( path + _T("/script.txt"), wxFile::write ) ) {
       wxLogError( _T("Access denied to script.txt.") );
     }
 
 
 
-    wxFile f( path + _T("script.txt"), wxFile::write );
+    wxFile f( path + _T("/script.txt"), wxFile::write );
     f.Write( WriteScriptTxt(battle) );
     f.Close();
 
@@ -97,7 +97,7 @@ bool Spring::Run( Battle& battle )
   torrent()->SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
   #endif
 
-  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + path + _T("script.txt");
+  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + path + _T("/script.txt");
   wxLogMessage( _T("cmd: %s"), cmd.c_str() );
   wxSetWorkingDirectory( sett().GetSpringDir() );
   if ( sett().UseOldSpringLaunchMethod() ) {

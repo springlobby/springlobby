@@ -3,7 +3,11 @@
 // Class: Settings
 //
 
+#ifdef __WXMSW__
 #include <wx/fileconf.h>
+#else
+#include <wx/config.h>
+#endif
 #include <wx/filefn.h>
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
@@ -27,24 +31,56 @@ Settings& sett()
 
 Settings::Settings()
 {
-  m_config = new wxFileConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE );
+  #if defined(__WXMSW__) && !defined(HAVE_WX26)
+  wxString userfilepath = wxStandardPaths::GetUserDataDir() + _T("/springlobby.conf");
+  wxString globalfilepath =  wxStandardPathsBase::GetExecutablePath() + _T("/springlobby.conf");
+
+  if ( wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
+  {
+     m_chosed_path = userfilepath;
+     m_portable_mode = false;
+  }
+  else
+  {
+     m_chosed_path = globalfilepath; /// portable mode, use only current app paths
+     m_portable_mode = true;
+  }
+
+  wxFileInputStream instream( m_chosed_path );
+  m_config = new wxFileConfig( instream );
+
+  #else
+  m_config = new wxFileConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
+  #endif
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
 }
 
 Settings::~Settings()
 {
     m_config->Write( _T("/General/firstrun"), false );
+    #if defined(__WXMSW__) && !defined(HAVE_WX26)
+    SaveSettings();
+    #endif
     delete m_config;
 }
 
 //! @brief Saves the settings to file
 void Settings::SaveSettings()
 {
-
   m_config->Write( _T("/General/firstrun"), false );
   SetCacheVersion();
   m_config->Flush();
+  #if defined(__WXMSW__) && !defined(HAVE_WX26)
+  wxFileOutputStream outstream( m_chosed_path );
+  m_config->Save( outstream );
+  #endif
   if (usync()->IsLoaded()) usync()->SetSpringDataPath( GetSpringDir() );
+}
+
+
+bool Settings::IsPortableMode()
+{
+  return m_portable_mode;
 }
 
 
