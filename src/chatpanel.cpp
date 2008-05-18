@@ -455,17 +455,9 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 	if ( ! m_chatlog_text ) return;
 	LogTime();
 
-	int sizex, sizey;
-	m_chatlog_text->GetClientSize( &sizex, &sizey );
-	long totalchars = m_chatlog_text->GetLastPosition();
-	long totalrows = m_chatlog_text->GetNumberOfLines();
-
-  long bottom_col, bottom_row = 0;
-	if ( m_chatlog_text->HitTest( wxPoint( 0, sizey ), &bottom_col, &bottom_row ) == wxTE_HT_UNKNOWN ) {
-	}
-
-	bool at_bottom = ( bottom_row >= totalrows -1 );/// true if we're on bottom of page and must scroll
-
+  int p=m_chatlog_text->GetLastPosition()-1;
+  if(p<0)p=0;
+  bool at_bottom=m_chatlog_text->IsPositionVisible(p); /// true if we're on bottom of page and must scroll
 
 	m_chatlog_text->SetDefaultStyle( wxTextAttr( col, sett().GetChatColorBackground(), fon ) );
 #ifdef __WXMSW__
@@ -477,8 +469,9 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
   bool enable_autoscroll = sett().GetAlwaysAutoScrollOnFocusLost() || (m_ui.GetActiveChatPanel() == this );
 
 	if ( ( sett().GetSmartScrollEnabled() && at_bottom && enable_autoscroll ) ) { /// view not at the bottom or not focused = disable autoscroll
-		m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
+    m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
 		m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
+    m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
 	}
 
 	CheckLength(); /// crop lines from history that exceeds limit
