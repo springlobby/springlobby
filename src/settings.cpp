@@ -5,6 +5,8 @@
 
 #ifdef __WXMSW__
 #include <wx/fileconf.h>
+#include <wx/filename.h>
+#include <wx/wfstream.h>
 #else
 #include <wx/config.h>
 #endif
@@ -32,10 +34,10 @@ Settings& sett()
 Settings::Settings()
 {
   #if defined(__WXMSW__) && !defined(HAVE_WX26)
-  wxString userfilepath = wxStandardPaths::GetUserDataDir() + _T("/springlobby.conf");
-  wxString globalfilepath =  wxStandardPathsBase::GetExecutablePath() + _T("/springlobby.conf");
+  wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + _T("/springlobby.conf");
+  wxString globalfilepath =  wxStandardPathsBase::Get().GetExecutablePath() + _T("/springlobby.conf");
 
-  if ( wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
+  if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
   {
      m_chosed_path = userfilepath;
      m_portable_mode = false;
