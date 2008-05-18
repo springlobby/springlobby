@@ -24,7 +24,7 @@ typedef std::map<wxString,mmOptionInt>::iterator optionMapIntIter;
 
 struct UnitSyncMod
 {
-  UnitSyncMod() : name(_T("")),hash(_T("NULL")) { }
+  UnitSyncMod() : name(_T("")),hash(_T("")) { }
   wxString name;
   wxString hash;
 };
@@ -55,7 +55,7 @@ struct MapInfo
 
 struct UnitSyncMap
 {
-  UnitSyncMap() : name(_T("")),hash(_T("NULL")) { }
+  UnitSyncMap() : name(_T("")),hash(_T("")) { }
   wxString name;
   wxString hash;
   MapInfo info;

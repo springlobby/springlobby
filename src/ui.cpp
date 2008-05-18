@@ -305,7 +305,7 @@ void Ui::DownloadMap( const wxString& hash, const wxString& name )
 void Ui::DownloadMod( const wxString& hash, const wxString& name )
 {
   #ifndef NO_TORRENT_SYSTEM
-  if ( hash != _T("NULL") ) torrent()->RequestFileByHash( hash );
+  if ( !hash.IsEmpty() ) torrent()->RequestFileByHash( hash );
   else if ( !name.IsEmpty() ) torrent()->RequestFileByName( name );
   #else
   wxString url = _T("http://spring.jobjol.nl/search.php");

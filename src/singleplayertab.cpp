@@ -213,7 +213,7 @@ bool SinglePlayerTab::ValidSetup()
 
   int numBots = 0;
   int first = -1;
-  for ( unsigned int i = 0; i < (unsigned int)m_battle.LocalMap().info.posCount; i++ ) {
+  for ( unsigned int i = 0; i < (unsigned int)m_battle.LoadMap().info.posCount; i++ ) {
 
     BattleBot* bot = m_battle.GetBotByStartPosition( i );
 

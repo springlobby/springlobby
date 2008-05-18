@@ -275,7 +275,7 @@ void BattleRoomTab::UpdateBattleInfo( bool MapChanged, bool reloadMapOptions )
   {
     try { /// updates map info summary
       ASSERT_RUNTIME( m_battle.MapExists(), _T("Map does not exist.") );
-      UnitSyncMap map = m_battle.LocalMap();
+      UnitSyncMap map = m_battle.LoadMap();
       m_map_lbl->SetLabel( RefineMapname( map.name ) );
       m_opts_list->SetItem( m_opt_list_map[ _("Size") ] , 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
       m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind) );

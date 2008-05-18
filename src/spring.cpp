@@ -279,7 +279,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
 
   unsigned long uhash;
-  battle.LocalMod().hash.ToULong(&uhash);
+  battle.LoadMod().hash.ToULong(&uhash);
 
   tdf.Append(_T("ModHash"),int(uhash));
 
@@ -650,7 +650,7 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
   tdf.Append(_T("GameType"),usync()->GetModArchive(usync()->GetModIndex(battle.GetHostModName())));
 
   unsigned long uhash;
-  battle.LocalMod().hash.ToULong(&uhash);
+  battle.LoadMod().hash.ToULong(&uhash);
 
   tdf.Append(_T("ModHash"),int(uhash));
 

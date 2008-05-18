@@ -42,13 +42,12 @@ void IBattle::SetLocalMap(const UnitSyncMap& map)
 }
 
 
-const UnitSyncMap& IBattle::LocalMap()
+const UnitSyncMap& IBattle::LoadMap()
 {
-  ASSERT_LOGIC( m_map_exists, _T("Map does not exist.") );
 
   if ( !m_map_loaded ) {
     try {
-
+      ASSERT_LOGIC( m_map_exists, _T("Map does not exist.") );
       m_local_map = usync()->GetMapEx( m_host_map_name );
       m_map_loaded = true;
 
@@ -93,11 +92,11 @@ void IBattle::SetLocalMod( const UnitSyncMod& mod )
 }
 
 
-const UnitSyncMod& IBattle::LocalMod()
+const UnitSyncMod& IBattle::LoadMod()
 {
-  ASSERT_LOGIC( m_mod_exists, _T("Mod does not exist.") );
   if ( !m_mod_loaded ) {
     try {
+      ASSERT_LOGIC( m_mod_exists, _T("Mod does not exist.") );
       m_local_mod = usync()->GetMod( m_host_mod_name );
       m_mod_loaded = true;
     } catch (...) {}

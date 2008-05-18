@@ -74,13 +74,13 @@ class IBattle
 
     virtual void SetHostMap( const wxString& mapname, const wxString& hash );
     virtual void SetLocalMap( const UnitSyncMap& map );
-    virtual const UnitSyncMap& LocalMap();
+    virtual const UnitSyncMap& LoadMap();
     virtual wxString GetHostMapName();
     virtual wxString GetHostMapHash();
 
     virtual void SetHostMod( const wxString& modname, const wxString& hash );
     virtual void SetLocalMod( const UnitSyncMod& mod );
-    virtual const UnitSyncMod& LocalMod();
+    virtual const UnitSyncMod& LoadMod();
     virtual wxString GetHostModName();
     virtual wxString GetHostModHash();
 
