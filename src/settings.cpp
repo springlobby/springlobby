@@ -868,6 +868,15 @@ void Settings::SetSmartScrollEnabled(bool value){
   m_config->Write( _T("/Chat/SmartScrollEnabled"), value);
 }
 
+bool Settings::GetAlwaysAutoScrollOnFocusLost()
+{
+  return m_config->Read( _T("/Chat/AlwaysAutoScrollOnFocusLost"), 0l );
+}
+
+void Settings::SetAlwaysAutoScrollOnFocusLost(bool value)
+{
+  m_config->Write( _T("/Chat/AlwaysAutoScrollOnFocusLost"), value);
+}
 
 BattleListFilterValues Settings::GetBattleFilterValues(const wxString& profile_name)
 {

@@ -191,7 +191,8 @@ class Settings
 
     bool GetSmartScrollEnabled();
     void SetSmartScrollEnabled(bool value);
-
+    bool GetAlwaysAutoScrollOnFocusLost();
+    void SetAlwaysAutoScrollOnFocusLost(bool value);
 
     BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
     void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));

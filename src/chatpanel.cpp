@@ -474,7 +474,9 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 	//m_chatlog_text->AppendText( message + _T("\n") );
 	m_chatlog_text->WriteText( message  + _T( "\n" ) );
 
-	if ( ( sett().GetSmartScrollEnabled() && at_bottom ) ) { /// view not at the bottom = disable autoscroll
+  bool enable_autoscroll = sett().GetAlwaysAutoScrollOnFocusLost() || (m_ui.GetActiveChatPanel() == this );
+
+	if ( ( sett().GetSmartScrollEnabled() && at_bottom && enable_autoscroll ) ) { /// view not at the bottom or not focused = disable autoscroll
 		m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
 		m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
 	}
