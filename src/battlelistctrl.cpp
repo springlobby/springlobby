@@ -18,9 +18,6 @@
 
 BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 
-  EVT_LIST_ITEM_SELECTED   ( BLIST_LIST, BattleListCtrl::OnSelected )
-  EVT_LIST_ITEM_DESELECTED ( BLIST_LIST, BattleListCtrl::OnDeselected )
-  EVT_LIST_DELETE_ITEM     ( BLIST_LIST, BattleListCtrl::OnDeselected )
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
   EVT_LIST_COL_CLICK       ( BLIST_LIST, BattleListCtrl::OnColClick )
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
@@ -36,7 +33,6 @@ Ui* BattleListCtrl::m_ui_for_sort = 0;
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   customListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT),
-  m_selected(-1),
   m_ui(ui)
 {
 
@@ -48,44 +44,44 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   wxListItem col;
 
   col.SetText( _T("s") );
-  //col.SetImage( icons().ICON_NONE );
-  InsertColumn( 0, col, _T("Status"), false );
+  col.SetImage( icons().ICON_NONE );
+  InsertColumn( 0, col, _T("Status") );
 
   col.SetText( _T("c") );
-  //col.SetImage( icons().ICON_NONE );
-  InsertColumn( 1, col, _T("Country"), false);
+  col.SetImage( icons().ICON_NONE );
+  InsertColumn( 1, col, _T("Country") );
 
   col.SetText( _T("r") );
-  //col.SetImage(  icons().ICON_NONE);
-  InsertColumn( 2, col, _T("Minimum rank to join"), false );
+  col.SetImage(  icons().ICON_NONE);
+  InsertColumn( 2, col, _T("Minimum rank to join") );
 
   col.SetText( _("Description") );
-  //col.SetImage( icons().ICON_NONE );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 3, col, _T("Game description") );
 
   col.SetText( _("Map") );
-  //col.SetImage( icons().ICON_NONE );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 4, col, _T("Mapname") );
 
   col.SetText( _("Mod") );
-  //col.SetImage( icons().ICON_NONE );
+  col.SetImage( icons().ICON_NONE );
   InsertColumn( 5, col, _T("Modname") );
 
   col.SetText( _("Host") );
-  //col.SetImage( icons().ICON_NONE);
+  col.SetImage( icons().ICON_NONE);
   InsertColumn( 6, col, _T("Name of the Host") );
 
-  col.SetText( _("s") );
-  //col.SetImage( icons().ICON_NONE );
-  InsertColumn( 7, col, _T("Number of Spectators"), false );
+  col.SetText( _("a") );
+  col.SetImage( icons().ICON_NONE );
+  InsertColumn( 7, col, _T("Number of Spectators") );
 
   col.SetText( _("p") );
-  //col.SetImage( icons().ICON_NONE );
-  InsertColumn( 8, col, _T("Number of Players joined"), false );
+  col.SetImage( icons().ICON_NONE );
+  InsertColumn( 8, col, _T("Number of Players joined") );
 
   col.SetText( _("m") );
-  //col.SetImage(  icons().ICON_NONE);
-  InsertColumn( 9, col, _T("Maximum number of Players that can join"), false );
+  col.SetImage(  icons().ICON_NONE);
+  InsertColumn( 9, col, _T("Maximum number of Players that can join") );
 
   m_sortorder[0].col = 0;
   m_sortorder[0].direction = true;
@@ -97,7 +93,6 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   m_sortorder[3].direction = true;
   Sort( );
 
-#ifdef __WXMSW__
   SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
@@ -105,15 +100,6 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   SetColumnWidth( 8, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 9, wxLIST_AUTOSIZE_USEHEADER );
 
-#else
-  SetColumnWidth( 0, 20 );
-  SetColumnWidth( 1, 20 );
-  SetColumnWidth( 2, 20 );
-
-  SetColumnWidth( 7, 28 ); // alittle more than before for dual digets
-  SetColumnWidth( 8, 28 );
-  SetColumnWidth( 9, 28 );
-#endif
 
   SetColumnWidth( 3, 170 );
   SetColumnWidth( 4, 140 );
@@ -133,26 +119,6 @@ BattleListCtrl::~BattleListCtrl()
 }
 
 
-void BattleListCtrl::OnSelected( wxListEvent& event )
-{
-  m_selected = GetItemData( event.GetIndex() );
-  event.Skip();
-}
-
-
-void BattleListCtrl::OnDeselected( wxListEvent& event )
-{
-  if ( m_selected == (int)GetItemData( event.GetIndex() )  )
-  m_selected = -1;
-}
-
-
-int BattleListCtrl::GetSelectedIndex()
-{
-  return m_selected;
-}
-
-
 void BattleListCtrl::OnListRightClick( wxListEvent& event )
 {
   PopupMenu( m_popup );
@@ -163,7 +129,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 {
   if ( m_selected != -1 ) {
     if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
-      m_ui.DownloadMap( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetMapName() );
+      m_ui.DownloadMap( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostMapHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostMapName() );
     }
   }
 }
@@ -173,7 +139,7 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
 {
   if ( m_selected != -1 ) {
     if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
-      m_ui.DownloadMod( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetModName() );
+      m_ui.DownloadMod( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostModHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostModName() );
     }
   }
 }
@@ -205,22 +171,29 @@ void BattleListCtrl::OnColClick( wxListEvent& event )
 
 void BattleListCtrl::Sort()
 {
+  bool changed = false;
   BattleListCtrl::m_ui_for_sort = &m_ui;
   if (!m_ui_for_sort || !m_ui_for_sort->GetServerStatus()  ) return;
   for (int i = 3; i >= 0; i--) {
     switch ( m_sortorder[ i ].col ) {
-      case 0 : SortItems( ( m_sortorder[ i ].direction )?&CompareStatusUP:&CompareStatusDOWN , 0 ); break;
-      case 1 : SortItems( ( m_sortorder[ i ].direction )?&CompareCountryUP:&CompareCountryDOWN , 0 ); break;
-      case 2 : SortItems( ( m_sortorder[ i ].direction )?&CompareRankUP:&CompareRankDOWN , 0 ); break;
-      case 3 : SortItems( ( m_sortorder[ i ].direction )?&CompareDescriptionUP:&CompareDescriptionDOWN , 0 ); break;
-      case 4 : SortItems( ( m_sortorder[ i ].direction )?&CompareMapUP:&CompareMapDOWN , 0 ); break;
-      case 5 : SortItems( ( m_sortorder[ i ].direction )?&CompareModUP:&CompareModDOWN , 0 ); break;
-      case 6 : SortItems( ( m_sortorder[ i ].direction )?&CompareHostUP:&CompareHostDOWN , 0 ); break;
-      case 7 : SortItems( ( m_sortorder[ i ].direction )?&CompareSpectatorsUP:&CompareSpectatorsDOWN , 0 ); break;
-      case 8 : SortItems( ( m_sortorder[ i ].direction )?&ComparePlayerUP:&ComparePlayerDOWN , 0 ); break;
-      case 9 : SortItems( ( m_sortorder[ i ].direction )?&CompareMaxPlayerUP:&CompareMaxPlayerDOWN , 0 ); break;
+      case 0 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareStatusUP:&CompareStatusDOWN , 0 ); break;
+      case 1 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareCountryUP:&CompareCountryDOWN , 0 ); break;
+      case 2 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareRankUP:&CompareRankDOWN , 0 ); break;
+      case 3 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareDescriptionUP:&CompareDescriptionDOWN , 0 ); break;
+      case 4 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareMapUP:&CompareMapDOWN , 0 ); break;
+      case 5 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareModUP:&CompareModDOWN , 0 ); break;
+      case 6 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareHostUP:&CompareHostDOWN , 0 ); break;
+      case 7 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareSpectatorsUP:&CompareSpectatorsDOWN , 0 ); break;
+      case 8 : changed = SortItems( ( m_sortorder[ i ].direction )?&ComparePlayerUP:&ComparePlayerDOWN , 0 ); break;
+      case 9 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareMaxPlayerUP:&CompareMaxPlayerDOWN , 0 ); break;
     }
   }
+  // WAY too slow to be used like that
+//  if ( changed )
+//  {
+//      int new_index = GetIndexFromData( m_selected );
+//      SetItemState( new_index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+//  }
 }
 
 
@@ -401,9 +374,9 @@ int wxCALLBACK BattleListCtrl::CompareMapUP(long item1, long item2, long sortDat
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() < RefineMapname( battle2.GetMapName() ).MakeUpper() )
+  if ( RefineMapname( battle1.GetHostMapName() ).MakeUpper() < RefineMapname( battle2.GetHostMapName() ).MakeUpper() )
       return -1;
-  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() > RefineMapname( battle2.GetMapName() ).MakeUpper() )
+  if ( RefineMapname( battle1.GetHostMapName() ).MakeUpper() > RefineMapname( battle2.GetHostMapName() ).MakeUpper() )
       return 1;
 
   return 0;
@@ -416,9 +389,9 @@ int wxCALLBACK BattleListCtrl::CompareMapDOWN(long item1, long item2, long sortD
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() < RefineMapname( battle2.GetMapName() ).MakeUpper() )
+  if ( RefineMapname( battle1.GetHostMapName() ).MakeUpper() < RefineMapname( battle2.GetHostMapName() ).MakeUpper() )
       return 1;
-  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() > RefineMapname( battle2.GetMapName() ).MakeUpper() )
+  if ( RefineMapname( battle1.GetHostMapName() ).MakeUpper() > RefineMapname( battle2.GetHostMapName() ).MakeUpper() )
       return -1;
 
   return 0;
@@ -431,9 +404,9 @@ int wxCALLBACK BattleListCtrl::CompareModUP(long item1, long item2, long sortDat
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( RefineModname( battle1.GetModName() ).MakeUpper() < RefineModname( battle2.GetModName() ).MakeUpper() )
+  if ( RefineModname( battle1.GetHostModName() ).MakeUpper() < RefineModname( battle2.GetHostModName() ).MakeUpper() )
       return -1;
-  if ( RefineModname( battle1.GetModName() ).MakeUpper() > RefineModname( battle2.GetModName() ).MakeUpper() )
+  if ( RefineModname( battle1.GetHostModName() ).MakeUpper() > RefineModname( battle2.GetHostModName() ).MakeUpper() )
       return 1;
 
   return 0;
@@ -446,9 +419,9 @@ int wxCALLBACK BattleListCtrl::CompareModDOWN(long item1, long item2, long sortD
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( RefineModname( battle1.GetModName() ).MakeUpper() < RefineModname( battle2.GetModName() ).MakeUpper() )
+  if ( RefineModname( battle1.GetHostModName() ).MakeUpper() < RefineModname( battle2.GetHostModName() ).MakeUpper() )
       return 1;
-  if ( RefineModname( battle1.GetModName() ).MakeUpper() > RefineModname( battle2.GetModName() ).MakeUpper() )
+  if ( RefineModname( battle1.GetHostModName() ).MakeUpper() > RefineModname( battle2.GetHostModName() ).MakeUpper() )
       return -1;
 
   return 0;
@@ -611,10 +584,10 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 				m_tiptext = battle.GetDescription();
 				break;
 			case 4: //map
-				m_tiptext = RefineMapname(battle.GetMapName());
+				m_tiptext = RefineMapname(battle.GetHostMapName());
 				break;
 			case 5: //mod
-				m_tiptext = RefineModname(battle.GetModName());
+				m_tiptext = RefineModname(battle.GetHostModName());
 				break;
 			case 6: // host
 				m_tiptext = battle.GetFounder().GetNick();

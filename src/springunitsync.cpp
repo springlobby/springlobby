@@ -71,9 +71,36 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& springdir, const wxString&
   {
      wxLogDebugFunc( _T("") );
      LOCK_UNITSYNC;
-     return _LoadUnitSyncLib( springdir, unitsyncloc );
+     bool ret = _LoadUnitSyncLib( springdir, unitsyncloc );
+     if (ret) PopulateArchiveList();
+     return ret;
   }
 }
+
+
+void SpringUnitSync::PopulateArchiveList()
+{
+  m_maps_list.empty();
+  m_mods_list.empty();
+  m_mod_array.Empty();
+  m_map_array.Empty();
+
+  int numMaps = GetNumMaps();
+  for ( int i = 0; i < numMaps; i++ )
+  {
+    wxString name = susynclib()->GetMapName( i );
+    m_maps_list.from[susynclib()->GetMapChecksum( i )] = name;
+    m_map_array.Add( name );
+  }
+  int numMods = GetNumMods();
+  for ( int i = 0; i < numMods; i++ )
+  {
+    wxString name = susynclib()->GetPrimaryModName( i );
+    m_mods_list.from[i2s(susynclib()->GetPrimaryModChecksum( i ))] = name;
+    m_mod_array.Add( name );
+  }
+}
+
 
 
 bool SpringUnitSync::_LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc )
@@ -149,6 +176,12 @@ int SpringUnitSync::GetNumMods()
 }
 
 
+wxArrayString SpringUnitSync::GetModList()
+{
+  return m_mod_array;
+}
+
+
 int SpringUnitSync::GetModIndex( const wxString& name )
 {
   wxLogDebugFunc( _T("name = \"") + name + _T("\"") );
@@ -162,11 +195,15 @@ int SpringUnitSync::GetModIndex( const wxString& name )
 
 bool SpringUnitSync::ModExists( const wxString& modname )
 {
-  wxLogDebugFunc( _T("modname = \"") + modname + _T("\"") );
-  try {
-    return GetModIndex( modname ) >=0;
-  } catch (...) {}
-  return false;
+  return (m_mods_list.to.find(modname) != m_mods_list.to.end());
+}
+
+
+bool SpringUnitSync::ModExists( const wxString& modname, const wxString& hash )
+{
+  LocalArchivesVector::iterator itor = m_mods_list.from.find(hash);
+  if ( itor == m_mods_list.from.end() ) return false;
+  return itor->second == modname;
 }
 
 
@@ -186,7 +223,7 @@ UnitSyncMod SpringUnitSync::GetMod( int index )
   UnitSyncMod m;
 
   m.name = susynclib()->GetPrimaryModName( index );
-  m.hash = wxString::Format( _T("%d"), susynclib()->GetPrimaryModChecksum( index ) );
+  m.hash = i2s( susynclib()->GetPrimaryModChecksum( index ) );
 
   return m;
 }
@@ -199,29 +236,23 @@ int SpringUnitSync::GetNumMaps()
 }
 
 
-bool SpringUnitSync::MapExists( const wxString& mapname )
+wxArrayString SpringUnitSync::GetMapList()
 {
-  wxLogDebugFunc( _T("") );
-  try {
-    return GetMapIndex( mapname ) >= 0;
-  } catch (...) {}
-  return false;
+  return m_map_array;
 }
 
 
-bool SpringUnitSync::MapExists( const wxString& mapname, const wxString hash )
+bool SpringUnitSync::MapExists( const wxString& mapname )
 {
-  wxLogDebugFunc( _T("") );
-  int index;
-  wxString usynchash;
-  try {
-    index = GetMapIndex( mapname );
-    if ( index >= 0 ) {
-      usynchash =  susynclib()->GetMapChecksum( index );
-      return ( usynchash == hash );
-    }
-  } catch (...) {}
-  return false;
+  return (m_maps_list.to.find(mapname) != m_maps_list.to.end());
+}
+
+
+bool SpringUnitSync::MapExists( const wxString& mapname, const wxString& hash )
+{
+  LocalArchivesVector::iterator itor = m_maps_list.from.find(hash);
+  if ( itor == m_maps_list.from.end() ) return false;
+  return itor->second == mapname;
 }
 
 
@@ -254,13 +285,14 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
   return m;
 }
 
+
 GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
   GameOptions ret;
   int count = susynclib()->GetMapOptionCount(name);
-	for (int i = 0; i < count; ++i)
-	{
+  for (int i = 0; i < count; ++i)
+  {
     wxString key = susynclib()->GetOptionKey(i);
     switch (susynclib()->GetOptionType(i))
     {
@@ -286,8 +318,8 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
                             susynclib()->GetOptionListItemDesc(i,j));
        }
     }
-	}
-	return ret;
+  }
+  return ret;
 }
 
 
@@ -323,13 +355,33 @@ wxString SpringUnitSync::GetModArchive( int index )
 }
 
 
+wxString SpringUnitSync::_GetModArchive( int index )
+{
+  return susynclib()->GetPrimaryModArchive( index );
+}
+
+
+wxString SpringUnitSync::GetMapArchive( int index )
+{
+  wxLogDebugFunc( _T("") );
+  LOCK_UNITSYNC;
+
+  int count = susynclib()->GetMapArchiveCount( index );
+
+  if ( count > 0 )
+    return susynclib()->GetMapArchiveName( 0 );
+  else
+    return _T("");
+}
+
+
 GameOptions SpringUnitSync::GetModOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
   GameOptions ret;
   int count = susynclib()->GetModOptionCount(name);
-	for (int i = 0; i < count; ++i)
-	{
+  for (int i = 0; i < count; ++i)
+  {
     wxString key = susynclib()->GetOptionKey(i);
     switch (susynclib()->GetOptionType(i))
     {
@@ -355,14 +407,8 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
                             susynclib()->GetOptionListItemDesc(i,j));
        }
     }
-	}
-	return ret;
-}
-
-
-wxString SpringUnitSync::_GetModArchive( int index )
-{
-  return susynclib()->GetPrimaryModArchive( index );
+  }
+  return ret;
 }
 
 
@@ -412,28 +458,42 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
 
   wxImage ret( FileContentStream, wxBITMAP_TYPE_ANY, -1);
   delete[] FileContent;
+  ret.InitAlpha();
+  for ( int x = 0; x < ret.GetWidth(); x++ )
+    for ( int y = 0; y < ret.GetHeight(); y++ )
+      if ( ret.GetBlue( x, y ) == 255 && ret.GetGreen( x, y ) == 255 && ret.GetRed( x, y ) == 255 ) ret.SetAlpha( x, y, 0 ); /// set pixel to be transparent
   return ret;
 }
 
 
-wxArrayString SpringUnitSync::GetAIList()
+wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
 
-  int ini = susynclib()->InitFindVFS(  wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
+  /// list dynamic link libraries
+  int dllini = susynclib()->InitFindVFS(  wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
 
   wxArrayString ret;
   wxString FileName;
 
-  ini = susynclib()->FindFilesVFS( ini, FileName );
-  while ( ini ) {
-    if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
-    ini = susynclib()->FindFilesVFS( ini, FileName );
+  dllini = susynclib()->FindFilesVFS( dllini, FileName );
+  while ( dllini ) {
+    if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); /// don't add duplicates
+    dllini = susynclib()->FindFilesVFS( dllini, FileName );
+  }
+  /// list jar files (java AIs)
+  int jarini = susynclib()->InitFindVFS(  _T("AI/Bot-libs/*.jar") );
+
+  jarini = susynclib()->FindFilesVFS( jarini, FileName );
+  while ( jarini ) {
+    if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); /// don't add duplicates
+    jarini = susynclib()->FindFilesVFS( jarini, FileName );
   }
 
-  try { // Older versions of unitsync does not have these functions.
-    const int LuaAICount = susynclib()->GetLuaAICount();
-    for ( int i = 0; i < LuaAICount; i++ ) ret.Add( _( "LuaAI" ) +  susynclib()->GetLuaAIName( i ) );
+  /// list mod's LuaAI
+  try { /// Older versions of unitsync does not have these functions.
+    const int LuaAICount = susynclib()->GetLuaAICount( modname );
+    for ( int i = 0; i < LuaAICount; i++ ) ret.Add( _T( "LuaAI:" ) +  susynclib()->GetLuaAIName( i ) );
   } catch (...) {}
 
   return ret;
@@ -636,7 +696,21 @@ bool SpringUnitSync::CacheModUnits( const wxString& mod )
 
 bool SpringUnitSync::ReloadUnitSyncLib()
 {
-  return false;
+  usync()->FreeUnitSyncLib();
+  usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() );
+  return true;
+}
+
+
+void SpringUnitSync::SetSpringDataPath( const wxString& path )
+{
+  susynclib()->SetSpringConfigString( _T("SpringData"), path );
+}
+
+
+wxString SpringUnitSync::GetSpringDataPath()
+{
+  return susynclib()->GetSpringConfigString( _T("SpringData"), sett().GetSpringDir() );
 }
 
 
@@ -732,3 +806,19 @@ void SpringUnitSync::_SaveMapInfoExCache()
 }
 
 
+bool SpringUnitSync::FileExists( const wxString& name )
+{
+  int handle = susynclib()->OpenFileVFS(name);
+  if ( handle == 0 ) return false;
+  susynclib()->CloseFileVFS(handle);
+  return true;
+}
+
+
+wxString SpringUnitSync::GetArchivePath( const wxString& name )
+{
+  wxLogDebugFunc( _T("") );
+  LOCK_UNITSYNC;
+
+  return susynclib()->GetArchivePath( name );
+}

@@ -41,6 +41,8 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );
+  m_minimap->SetToolTip( _("You can drag the sun/bot icon around to define start position.\n "
+                           "Hover over the icon for a popup that lets you change side, ally and bonus." ) );
   m_main_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 5 );
 
   wxBoxSizer* m_ctrl_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -51,8 +53,8 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_map_pick = new wxChoice( this, SP_MAP_PICK );
   m_ctrl_sizer->Add( m_map_pick, 1, wxALL, 5 );
 
-  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
+//  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+//  m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
   m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
   m_ctrl_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
@@ -107,14 +109,16 @@ void SinglePlayerTab::UpdateMinimap()
 void SinglePlayerTab::ReloadMaplist()
 {
   m_map_pick->Clear();
-  try {
-    for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-      m_map_pick->Insert( RefineMapname( usync()->GetMap( i ).name ), i );
-    }
-  } catch(...) {}
+
+  wxArrayString maplist= usync()->GetMapList();
+  //maplist.Sort(CompareStringIgnoreCase);
+
+  size_t nummaps = maplist.Count();
+  for ( size_t i = 0; i < nummaps; i++ ) m_map_pick->Insert( RefineMapname(maplist[i]), i );
+
   m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
-  if ( m_battle.GetMapName() != wxEmptyString ) {
-    m_map_pick->SetStringSelection( RefineMapname( m_battle.GetMapName() ) );
+  if ( m_battle.GetHostMapName() != wxEmptyString ) {
+    m_map_pick->SetStringSelection( RefineMapname( m_battle.GetHostMapName() ) );
     if ( m_map_pick->GetStringSelection() == wxEmptyString ) SetMap( m_mod_pick->GetCount()-1 );
   } else {
     m_map_pick->SetSelection( m_map_pick->GetCount()-1 );
@@ -126,16 +130,17 @@ void SinglePlayerTab::ReloadMaplist()
 void SinglePlayerTab::ReloadModlist()
 {
   m_mod_pick->Clear();
-  try {
-    for ( int i = 0; i < usync()->GetNumMods(); i++ ) {
-      m_mod_pick->Insert( RefineModname( usync()->GetMod( i ).name ), i );
-    }
-  } catch (...) {}
+
+  wxArrayString modlist= usync()->GetModList();
+  //modlist.Sort(CompareStringIgnoreCase);
+
+  size_t nummods = modlist.Count();
+  for ( size_t i = 0; i < nummods; i++ ) m_mod_pick->Insert( modlist[i], i );
 
   m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
 
-  if ( m_battle.GetModName() != wxEmptyString ) {
-    m_mod_pick->SetStringSelection( RefineModname( m_battle.GetModName() ) );
+  if ( !m_battle.GetHostModName().IsEmpty() ) {
+    m_mod_pick->SetStringSelection( m_battle.GetHostModName() );
     if ( m_mod_pick->GetStringSelection() == wxEmptyString ) SetMod( m_mod_pick->GetCount()-1 );
   } else {
     m_mod_pick->SetSelection( m_mod_pick->GetCount()-1 );
@@ -148,11 +153,12 @@ void SinglePlayerTab::SetMap( unsigned int index )
 	//m_ui.ReloadUnitSync();
   m_addbot_btn->Enable( false );
   if ( index >= m_map_pick->GetCount()-1 ) {
-    m_battle.SetMap( wxEmptyString, wxEmptyString );
+    m_battle.SetHostMap( wxEmptyString, wxEmptyString );
   } else {
     try {
       UnitSyncMap map = usync()->GetMapEx( index );
-      m_battle.SetMap( map );
+      m_battle.SetLocalMap( map );
+      m_battle.SetHostMap( map.name, map.hash );
       m_addbot_btn->Enable( true );
     } catch (...) {}
   }
@@ -166,11 +172,12 @@ void SinglePlayerTab::SetMod( unsigned int index )
 {
 	//m_ui.ReloadUnitSync();
   if ( index >= m_mod_pick->GetCount()-1 ) {
-    m_battle.SetMod( wxEmptyString, wxEmptyString );
+    m_battle.SetHostMod( wxEmptyString, wxEmptyString );
   } else {
     try {
       UnitSyncMod mod = usync()->GetMod( index );
-      m_battle.SetMod( mod );
+      m_battle.SetLocalMod( mod );
+      m_battle.SetHostMod( mod.name, mod.hash );
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
@@ -194,11 +201,19 @@ bool SinglePlayerTab::ValidSetup()
     return false;
   }
 
+  if ( m_battle.GetNumBots() == 1 )
+  {
+      wxLogWarning(_T("trying to start sp game without bot"));
+      if ( customMessageBox(SL_MAIN_ICON, _("Continue without adding a bot first?.\n The game will be over pretty fast.\n "),
+                _("No Bot added"), wxYES_NO) == wxNO )
+        return false;
+  }
+
   if ( usync()->VersionSupports( GF_XYStartPos ) ) return true;
 
   int numBots = 0;
   int first = -1;
-  for ( unsigned int i = 0; i < (unsigned int)m_battle.Map().info.posCount; i++ ) {
+  for ( unsigned int i = 0; i < (unsigned int)m_battle.LoadMap().info.posCount; i++ ) {
 
     BattleBot* bot = m_battle.GetBotByStartPosition( i );
 
@@ -244,7 +259,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
   if ( dlg.ShowModal() == wxID_OK ) {
     int x = 0, y = 0, handicap = 0;
     m_battle.GetFreePosition( x, y );
-    wxColour col = m_battle.GetFreeColour( false );
+    wxColour col = m_battle.GetFreeColour( NULL );
     int i = m_battle.AddBot( m_battle.GetFreeAlly(), x, y, handicap, dlg.GetAI() );
     BattleBot* bot = m_battle.GetBot( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
@@ -258,9 +273,10 @@ void SinglePlayerTab::OnStart( wxCommandEvent& event )
 {
   if ( m_ui.IsSpringRunning() ) {
     wxLogWarning(_T("trying to start spring while another instance is running") );
-    customMessageBox(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
+    customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
     return;
   }
+
   if ( ValidSetup() ) m_ui.StartSinglePlayerGame( m_battle );
 }
 

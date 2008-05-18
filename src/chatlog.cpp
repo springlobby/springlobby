@@ -31,11 +31,12 @@ ChatLog::ChatLog(const wxString& server,const wxString& room):
 
 ChatLog::~ChatLog()
 {
-  if ( m_active && m_logfile ) {
+  if ( m_active && m_logfile != 0 && m_logfile->IsOpened() ) {
     wxDateTime now = wxDateTime::Now();
     WriteLine( _("### Session Closed at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _("]") );
     WriteLine( _T(" \n \n \n") );
     if ( m_logfile->IsOpened() ) m_logfile->Close();
+    m_logfile = 0;
   }
   if (m_logfile != 0)
   {
@@ -89,7 +90,10 @@ bool ChatLog::CreateFolder(const wxString& server)
 
 bool ChatLog::WriteLine(const wxString& text)
 {
-  ASSERT_LOGIC( m_logfile, _T("m_logfile = 0") );
+  try
+  {
+    ASSERT_LOGIC( m_logfile, _T("m_logfile = 0") );
+  } catch(...) {return false;}
   if ( !m_logfile->Write( text, wxConvUTF8 ) ) {
     m_active = false;
     wxLogWarning( _T("can't write message to log (%s)"),  wxString(m_server + _T("::") + m_room).c_str() );

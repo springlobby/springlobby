@@ -28,7 +28,7 @@ void loadUnitsync()
 	}
 	catch (...)
 	{
-		//TODO log that
+		wxLogError( _T("springsettings: couldn't load unitsync") );
 	}
 }
 

@@ -44,7 +44,7 @@ class MainChatTab : public wxPanel
 
   protected:
 
-    wxImage ReplaceChannelStatusColour( wxImage& img, const wxColour& colour );
+    wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
 
     Ui& m_ui;
 

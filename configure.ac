@@ -4,7 +4,7 @@ dnl you really should just upgrade your autotools instead
 
 dnl if you have too old autoconf, comment out the following prereq AND edit Makefile.am
 AC_PREREQ([2.59c])
-AC_INIT([SpringLobby], [0.0.1-svn], [FIXME_our_bugs_email_address])
+AC_INIT([SpringLobby], [0.0.1-svn], [devel@www.springlobby.info])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/springlobbyapp.cpp])
 AC_CONFIG_AUX_DIR([autotools-aux])
@@ -13,6 +13,13 @@ dnl we use filter-out GNU make extension in Makefile.am so we can't use -Werror 
 dnl we can't use -Wall either because we don't want to see the filter-out warning
 dnl FIXME add at least some warning categories. obviously we can't use -Wportability
 AM_INIT_AUTOMAKE([1.10 -Wnone])
+
+usetorrent=no
+AC_ARG_ENABLE(torrent-system,
+ [  --enable-torrent-system  Enable automatic content downloads via torrent, needs libtorrent],
+ [ usetorrent=yes
+ ])
+
 
 AC_CANONICAL_HOST
 
@@ -31,20 +38,35 @@ AM_PATH_WXCONFIG([2.6.3], [],
            where wxWidgets libraries are installed (returned by
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
            equivalent variable and wxWidgets version is 2.6.3 or above.
-   ])])
-
+   ])], [base,core,net,adv,qa])
+win_build=0
 AC_ARG_VAR([WINDRES], [Windows resource file compiler command])
 if test x$host_os = xmingw32msvc ; then
   AC_CHECK_TOOL([WINDRES], [windres], [:])
+  win_build=1
   if test x$WINDRES = x: ; then
     AC_MSG_ERROR([missing required windres windows resource compiler.])
   fi
 fi
 
+#check if configure option present, if yes check for lib
+if test x$usetorrent = xyes ; then
+	AC_MSG_CHECKING([checking for libtorrent])
+	PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
+	if test x$usetorrent = xfail ; then
+		AC_MSG_ERROR([missing required libtorrent library, get it at http://www.rasterbar.com/products/libtorrent/, please note that some distros name it rb-libtorrent, that is NOT libtorrent from rakshasa]);
+		exit
+	fi
+	AC_SUBST(LIBTORRENT_CFLAGS)
+	AC_SUBST(LIBTORRENT_LIBS)
+else
+	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
+fi
+
 AC_ARG_VAR([SVNVERSION], [Produce a compact version number for a working copy.])
 AC_CHECK_PROGS([SVNVERSION], [svnversion false])
 
-AM_CONDITIONAL([USE_WINDRES], [test x$host_os = xmingw32msvc])
+AM_CONDITIONAL([USE_WINDRES], test "$win_build" = 1)
 
 AC_MSG_CHECKING([if we can enable extra features that need wxWidgets-2.8])
 dnl we probably aren't supposed to use the function below, but it is the simplest way

@@ -82,8 +82,6 @@ void User::UpdateBattleStatus( const UserBattleStatus& status, bool setorder )
   if(!status.ip.empty())m_bstatus.ip=status.ip;
   if(status.udpport!=0)m_bstatus.udpport=status.udpport;/// 12
 
-
-
   //if ( !setorder ) m_bstatus.order = order;
 }
 
@@ -115,4 +113,17 @@ wxString User::GetRankName(int rank)
           case RANK_6: return _("Veteran");
       }
       return _("no rank");
+}
+
+float User::GetBalanceRank(){
+  return 1.0+0.1*float(GetStatus().rank-RANK_0)/float(RANK_6-RANK_0);
+}
+
+wxString User::GetClan(){
+  wxString tmp=m_nick.AfterFirst('[');
+  if(tmp!=m_nick){
+    wxString clan=tmp.BeforeFirst(']');
+    if(clan!=tmp)return clan;
+  }
+  return wxString();
 }

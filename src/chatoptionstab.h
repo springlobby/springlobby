@@ -103,6 +103,8 @@ class ChatOptionsTab : public wxPanel
 
     wxTextCtrl* m_highlight_words;
 
+    wxCheckBox* m_smart_scroll;
+
     wxFont m_chat_font;
 
     Ui& m_ui;

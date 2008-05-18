@@ -45,7 +45,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
   // Check if library exists
   if ( !wxFileName::FileExists( path ) ) {
     wxLogError( _T("File not found: %s"), path.c_str() );
-    return;
+    ASSERT_RUNTIME( false, _T("Failed to load Unitsync lib.") );
   }
 
   try {
@@ -291,8 +291,7 @@ wxString SpringUnitSyncLib::GetMapChecksum( int index )
 {
   InitLib( m_get_map_checksum );
 
-  unsigned int csum = m_get_map_checksum( index );
-  return wxString::Format( _T("%u"), csum );
+  return i2s( (int)m_get_map_checksum( index ) );
 }
 
 
@@ -301,6 +300,22 @@ wxString SpringUnitSyncLib::GetMapName( int index )
   InitLib( m_get_map_name );
 
   return WX_STRINGC( m_get_map_name( index ) );
+}
+
+
+int SpringUnitSyncLib::GetMapArchiveCount( int index )
+{
+  InitLib( m_get_map_archive_count );
+
+  return m_get_map_archive_count( m_get_map_name( index ) );
+}
+
+
+wxString SpringUnitSyncLib::GetMapArchiveName( int arnr )
+{
+  InitLib( m_get_map_archive_name );
+
+  return WX_STRINGC( m_get_map_archive_name( arnr ) );
 }
 
 
@@ -351,11 +366,11 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
 }
 
 
-unsigned int SpringUnitSyncLib::GetPrimaryModChecksum( int index )
+int SpringUnitSyncLib::GetPrimaryModChecksum( int index )
 {
   InitLib( m_get_mod_checksum );
 
-  return m_get_mod_checksum( index );
+  return (int)m_get_mod_checksum( index );
 }
 
 
@@ -455,11 +470,11 @@ wxString SpringUnitSyncLib::GetPrimaryModArchiveList( int arnr )
 }
 
 
-unsigned int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
+int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
 {
   InitLib( m_get_primary_mod_checksum_from_name );
 
-  return m_get_primary_mod_checksum_from_name( name.mb_str( wxConvUTF8 ) );
+  return (int)m_get_primary_mod_checksum_from_name( name.mb_str( wxConvUTF8 ) );
 }
 
 
@@ -574,10 +589,10 @@ void SpringUnitSyncLib::CloseFileVFS( int handle )
 }
 
 
-int SpringUnitSyncLib::GetLuaAICount()
+int SpringUnitSyncLib::GetLuaAICount( const wxString& modname )
 {
   InitLib( m_get_luaai_count );
-
+  SetCurrentMod( modname );
   return m_get_luaai_count();
 }
 
@@ -802,6 +817,14 @@ int SpringUnitSyncLib::SizeArchiveFile( int archive, int handle )
   InitLib( m_size_archive_file );
 
   return m_size_archive_file( archive, handle );
+}
+
+
+wxString SpringUnitSyncLib::GetArchivePath( const wxString& name )
+{
+  InitLib( m_get_archive_path );
+
+  return WX_STRINGC( m_get_archive_path( name.mb_str( wxConvUTF8 ) ) );
 }
 
 

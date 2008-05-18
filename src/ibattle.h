@@ -72,27 +72,28 @@ class IBattle
     IBattle();
     virtual ~IBattle();
 
-    virtual void SetMap( const wxString& mapname, const wxString& hash );
-    virtual void SetMap( const UnitSyncMap& map );
-    virtual const UnitSyncMap& Map();
-    virtual wxString GetMapName();
-    virtual wxString GetMapHash();
+    virtual void SetHostMap( const wxString& mapname, const wxString& hash );
+    virtual void SetLocalMap( const UnitSyncMap& map );
+    virtual const UnitSyncMap& LoadMap();
+    virtual wxString GetHostMapName();
+    virtual wxString GetHostMapHash();
 
-    virtual void SetMod( const wxString& modname, const wxString& hash );
-    virtual void SetMod( const UnitSyncMod& mod );
-    virtual const UnitSyncMod& Mod();
-    virtual wxString GetModName();
-    virtual wxString GetModHash();
+    virtual void SetHostMod( const wxString& modname, const wxString& hash );
+    virtual void SetLocalMod( const UnitSyncMod& mod );
+    virtual const UnitSyncMod& LoadMod();
+    virtual wxString GetHostModName();
+    virtual wxString GetHostModHash();
 
     virtual bool MapExists();
     virtual bool ModExists();
 
-    virtual wxColour GetFreeColour( bool excludeme = true ) = 0;
+    virtual wxColour GetFreeColour( User *for_whom ) = 0;
 
     virtual BattleStartRect* GetStartRect( int allyno ) { return 0; };
     virtual void AddStartRect( int allyno, int left, int top, int right, int bottom ) {};
     virtual void RemoveStartRect( int allyno ) {};
     virtual void UpdateStartRect( int allyno ) {};
+    virtual void ClearStartRects(){};
 
     virtual int GetMyAlly() = 0;
     virtual void SetMyAlly( int ally ) = 0;
@@ -129,10 +130,12 @@ class IBattle
     bool m_mod_loaded;
     bool m_map_exists;
     bool m_mod_exists;
-    UnitSyncMap m_map;
-    UnitSyncMod m_mod;
-    wxString m_map_name;
-    wxString m_mod_name;
+    UnitSyncMap m_local_map;
+    UnitSyncMod m_local_mod;
+    wxString m_host_map_name;
+    wxString m_host_mod_name;
+    wxString m_host_map_hash;
+    wxString m_host_mod_hash;
 
     wxArrayString m_units;
 };

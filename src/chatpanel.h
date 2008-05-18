@@ -1,10 +1,15 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 #define SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 
+#include <iostream>
+
 #include <wx/panel.h>
+#include <wx/event.h>
+#include <wx/textctrl.h>
 #include <wx/string.h>
 
 #include "chatlog.h"
+#include "Helper/TextCompletionDatabase.hpp"
 
 class wxCommandEvent;
 class wxSizeEvent;
@@ -29,6 +34,28 @@ enum ChatPanelType {
   CPT_Server,
   CPT_User,
   CPT_Battle
+};
+
+/// This class implements GetDirty for autoscroll
+/// Necessary to fix scrolling bug, when scrolling stops
+/// if several lines are added between ui updates
+/// GetDirty allows to detect this situation.
+class MyTextCtrl: public wxTextCtrl{
+  bool my_m_dirty;
+  bool m_must_scroll;
+  public:
+  MyTextCtrl(wxWindow* parent, wxWindowID id, const wxString& value = _T(""), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0, const wxValidator& validator = wxDefaultValidator, const wxString& name = wxTextCtrlNameStr);
+  void OnPaint(wxPaintEvent& event);
+  void OnUpdateUI(wxUpdateUIEvent &event);
+  void WriteText(const wxString&  text);
+  bool GetDirty();
+  void MakeDirty();
+  bool GetMustScroll(){
+    return m_must_scroll;
+  }
+  void SetMustScroll(bool v){
+    m_must_scroll=v;
+  }
 };
 
 
@@ -78,6 +105,7 @@ class ChatPanel : public wxPanel
 
     void Say( const wxString& message );
     void Part();
+    void FocusInputBox();
 
     wxString GetChatTypeStr();
 
@@ -92,12 +120,14 @@ class ChatPanel : public wxPanel
 
     void OnSay( wxCommandEvent& event );
     void OnResize( wxSizeEvent& event );
+	void OnTextChanged_Say_Text( wxCommandEvent& event );
 
     void OnLinkEvent( wxTextUrlEvent& event );
     void OnMouseDown( wxMouseEvent& event );
 
     void OnMenuSelectAll( wxCommandEvent& event );
     void OnMenuCopy( wxCommandEvent& event );
+    void OnChannelMenuClear ( wxCommandEvent& event );
 
     void OnChannelMenuLeave( wxCommandEvent& event );
     void OnChannelMenuDisplayJoinLeave( wxCommandEvent& event );
@@ -142,6 +172,10 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
 
+	void OnKeyPressed( wxKeyEvent& keyevent );
+	void OnKeyReleased( wxKeyEvent& keyevent );
+
+
   protected:
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
@@ -159,7 +193,7 @@ class ChatPanel : public wxPanel
     wxPanel* m_chat_panel;      //!< Panel containing the chat. Only used when nicklist is visible.
     wxPanel* m_nick_panel;      //!< Panel containing the nicklist.
 
-    wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
+    MyTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
     wxTextCtrl* m_say_text;     //!< The say textcontrol.
 
     NickListCtrl* m_nicklist;   //!< The nicklist.
@@ -188,6 +222,9 @@ class ChatPanel : public wxPanel
     void CreatePopup();
     wxMenu* CreateNickListMenu();
 
+
+	TextCompletionDatabase textcompletiondatabase;
+
     DECLARE_EVENT_TABLE();
 };
 
@@ -197,6 +234,7 @@ enum
     CHAT_TEXT,
     CHAT_LOG,
 
+    CHAT_MENU_CH_CLEAR,
     CHAT_MENU_CH_LEAVE,
     CHAT_MENU_CH_DISPLAYJOIN,
     CHAT_MENU_CH_AUTOJOIN,

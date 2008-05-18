@@ -3,6 +3,7 @@
 
 #include <wx/string.h>
 #include <wx/log.h>
+#include <sstream>
 
 #ifndef __WXDEBUG__
 #define wxLogDebugFunc( params ) wxLogVerbose( _T("%s"), wxString(wxString(__FUNCTION__, wxConvUTF8 ) + _T(" ( ") + wxString(params) + _T(" )")).c_str() )
@@ -47,7 +48,7 @@
 #define ASSERT_RUNTIME(cond,msg) if(!(cond)){wxLogMessage(_T("runtime error: %s"), wxString(msg).c_str() );throw std::runtime_error(std::string(wxString(msg).mb_str()));}
 
 
-#define boundry(var,min,max) var=(var<(min))?(min):(var>(max))?(max):var
+#define CLAMP(var,min,max) ((var)=((var)<(min))?(min):((var)>(max))?(max):(var))
 
 #ifdef __WXMSW__
 #define CONTROL_HEIGHT 22
@@ -61,6 +62,35 @@
 #define IsColourOk() IsOk()
 #endif
 
+//!@brief converts integers to wxString
+wxString i2s( int arg );
+//!@brief converts unsigned int to wxString
+wxString u2s( unsigned int arg );
+//!@brief converts floating point numbers to wxString without problem of WTF decimal separator different in every locale
+wxString f2s( float arg );
+/// new, much improved way to convert stuff to wxString.
+
+long s2l( const wxString& arg );
+double s2d( const wxString& arg );
+
+template<class T>
+wxString TowxString(T arg){
+  std::stringstream s;
+  s << arg;
+  return WX_STRING( s.str() );
+}
+inline wxString TowxString(wxString arg){
+  return arg;
+}
+inline wxString TowxString(const wxChar *arg){
+  return wxString(arg);
+}
+inline wxString TowxString(std::string arg){
+  return WX_STRING(arg);
+}
+
+
+
 wxString GetLibExtension();
 void InitializeLoggingTargets();
 wxString GetWordParam( wxString& params );
@@ -68,5 +98,12 @@ wxString GetSentenceParam( wxString& params );
 long GetIntParam( wxString& params );
 bool GetBoolParam( wxString& params );
 wxString GetSpringLobbyVersion();
+
+wxString GetHostCPUSpeed();
+
+static inline int CompareStringIgnoreCase(const wxString& first, const wxString& second)
+{
+    return (first.Upper() > second.Upper() );
+}
 
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H

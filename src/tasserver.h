@@ -5,6 +5,7 @@
 #include <list>
 
 #include "server.h"
+#include "uiutils.h"
 
 #define FIRST_UDP_SOURCEPORT 8300
 
@@ -13,6 +14,7 @@ struct TASPingListItem {
   int id;
   time_t t;
 };
+
 
 class Ui;
 class Socket;
@@ -48,8 +50,13 @@ class TASServer : public Server
 
     void Ping();
 
-    void UdpPing(unsigned int src_port, const wxString &target, unsigned int target_port, const wxString &message);/// full parameters version, used to ping all clients when hosting.
-    void UdpPing(const wxString &message=_T("ipv4 sux!"));/// used for nat travelsal. pings the server.
+
+    /// generic udp "ping" function
+    /// return value: actual source port which was used. May differ from src_port
+    /// 0 if udp ping failed
+    unsigned int UdpPing(unsigned int src_port, const wxString &target, unsigned int target_port, const wxString &message);
+    /// specialized udp ping functions
+    void UdpPingTheServer(const wxString &message=_T("ipv4 sux!"));/// used for nat travelsal. pings the server.
     void UdpPingAllClients();/// used when hosting with nat holepunching
 
     User& GetMe();
@@ -130,7 +137,7 @@ class TASServer : public Server
     bool IsPasswordHash( const wxString& pass );
     wxString GetPasswordHash( const wxString& pass );
 
-    bool TestOpenPort( unsigned int port );
+    int TestOpenPort( unsigned int port );
 
   protected:
     Ui& m_ui;
@@ -153,9 +160,10 @@ class TASServer : public Server
 
     wxString m_addr;
 
+    bool m_do_finalize_join_battle;
     int m_finalize_join_battle_id;
     wxString m_finalize_join_battle_pw;
-    bool m_do_finalize_join_battle;
+
     void FinalizeJoinBattle();
 
     void ReceiveAndExecute();

@@ -127,7 +127,7 @@ struct mmOptionList : public mmOptionModel
 struct mmOptionInt : public mmOptionModel
 {
 	//! sets members accordingly
-	mmOptionInt(wxString name_, wxString key_, wxString description_, long def_, long stepping_, long min_, long max_);
+	mmOptionInt(wxString name_, wxString key_, wxString description_, int def_, int stepping_, int min_, int max_);
 	//! sets wxstring member to "" and int members to 0
 	mmOptionInt();
 

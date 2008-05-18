@@ -7,11 +7,13 @@
 #include <wx/intl.h>
 #include <wx/textdlg.h>
 #include <wx/imaglist.h>
+#include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/sizer.h>
 #include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
+
 #include <stdexcept>
 
 #include "mainwindow.h"
@@ -25,13 +27,23 @@
 #include "mainsingleplayertab.h"
 #include "mainoptionstab.h"
 #include "iunitsync.h"
+#include "uiutils.h"
+#ifndef NO_TORRENT_SYSTEM
+#include "maintorrenttab.h"
+#endif
 
 #include "images/springlobby.xpm"
-#include "images/chat_icon.xpm"
-#include "images/join_icon.xpm"
-#include "images/singleplayer_icon.xpm"
-#include "images/options_icon.xpm"
+#include "images/chat_icon.png.h"
+#include "images/chat_icon_text.png.h"
+#include "images/join_icon.png.h"
+#include "images/join_icon_text.png.h"
+#include "images/single_player_icon.png.h"
+#include "images/single_player_icon_text.png.h"
+#include "images/options_icon.png.h"
+#include "images/options_icon_text.png.h"
 #include "images/select_icon.xpm"
+#include "images/downloads_icon.png.h"
+#include "images/downloads_icon_text.png.h"
 
 #include "settings++/frame.h"
 #include "settings++/custom_dialogs.h"
@@ -62,6 +74,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 END_EVENT_TABLE()
 
 
+
 MainWindow::MainWindow( Ui& ui ) :
   wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
   m_ui(ui)
@@ -73,7 +86,8 @@ MainWindow::MainWindow( Ui& ui ) :
   menuFile->AppendSeparator();
   menuFile->Append(MENU_QUIT, _("&Quit"));
 
-  wxMenu *menuEdit = new wxMenu;
+//TODO re-enable when actually needed
+//  wxMenu *menuEdit = new wxMenu;
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
@@ -92,7 +106,7 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_menubar = new wxMenuBar;
   m_menubar->Append(menuFile, _("&File"));
-  m_menubar->Append(menuEdit, _("&Edit"));
+ // m_menubar->Append(menuEdit, _("&Edit"));
   m_menubar->Append(m_menuTools, _("&Tools"));
   m_menubar->Append(menuHelp, _("&Help"));
   SetMenuBar(m_menubar);
@@ -100,10 +114,11 @@ MainWindow::MainWindow( Ui& ui ) :
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
 
-  m_chat_icon = new wxBitmap( chat_icon_xpm );
-  m_battle_icon = new wxBitmap( join_icon_xpm );
-  m_sp_icon = new wxBitmap( singleplayer_icon_xpm );
-  m_options_icon = new wxBitmap( options_icon_xpm );
+  m_chat_icon =  charArr2wxBitmapAddText( chat_icon_png , sizeof (chat_icon_png) , chat_icon_text_png, sizeof(chat_icon_text_png), 64 ) ;
+  m_battle_icon = charArr2wxBitmapAddText( join_icon_png , sizeof (join_icon_png), join_icon_text_png , sizeof (join_icon_text_png), 64 ) ;
+  m_sp_icon = charArr2wxBitmapAddText( single_player_icon_png , sizeof (single_player_icon_png), single_player_icon_text_png , sizeof (single_player_icon_text_png), 64 ) ;
+  m_options_icon =   charArr2wxBitmapAddText( options_icon_png , sizeof (options_icon_png), options_icon_text_png , sizeof (options_icon_text_png), 64 ) ;
+  m_downloads_icon = charArr2wxBitmapAddText( downloads_icon_png , sizeof (downloads_icon_png), downloads_icon_text_png , sizeof (downloads_icon_text_png), 64 ) ;
   m_select_image = new wxBitmap( select_icon_xpm );
 
   m_func_tab_images = new wxImageList( 64, 64 );
@@ -114,11 +129,19 @@ MainWindow::MainWindow( Ui& ui ) :
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
+#ifndef NO_TORRENT_SYSTEM
+  m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
+#endif
 
   m_func_tabs->AddPage( m_chat_tab, _T(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
+#ifndef NO_TORRENT_SYSTEM
+  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 4 );
+#endif
+  //TODO insert real downloads panel
+  //m_func_tabs->AddPage( m_opts_tab, _T(""), false, 4 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -166,6 +189,14 @@ void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
   dc.SelectObject( wxNullBitmap );
 }
 
+//void MainWindow::DrawTxtOnBmp( wxBitmap& canvas, wxString text, int x, int y )
+//{
+//  wxMemoryDC dc;
+//  dc.SelectObject( canvas );
+//
+//  dc.DrawText( text, x, y);
+//  dc.SelectObject( wxNullBitmap );
+//}
 
 void MainWindow::MakeImages()
 {
@@ -176,6 +207,7 @@ void MainWindow::MakeImages()
     DrawBmpOnBmp( img, *m_chat_icon, 0, 0 );
     m_func_tab_images->Add( img );
   } else {*/
+ // DrawTxtOnBmp( *m_battle_icon, _("Test"), 1,1);
     m_func_tab_images->Add( *m_chat_icon );
   //}
 
@@ -201,6 +233,8 @@ void MainWindow::MakeImages()
     m_func_tab_images->Add( img );
   } else {*/
     m_func_tab_images->Add( *m_options_icon );
+
+    m_func_tab_images->Add( *m_downloads_icon );
   //}
 
 }
@@ -233,8 +267,13 @@ MainSinglePlayerTab& MainWindow::GetSPTab()
   ASSERT_LOGIC( m_sp_tab != 0, _T("m_sp_tab = 0") );
   return *m_sp_tab;
 }
-
-
+#ifndef NO_TORRENT_SYSTEM
+MainTorrentTab& MainWindow::GetTorrentTab()
+{
+  ASSERT_LOGIC( m_torrent_tab  != 0, _T("m_torrent_tab = 0") );
+  return *m_torrent_tab ;
+}
+#endif
 ChatPanel* MainWindow::GetActiveChatPanel()
 {
   int index = m_func_tabs->GetSelection();
@@ -325,13 +364,14 @@ void MainWindow::OnMenuAbout( wxCommandEvent& event )
 	//info.SetCopyright(_T("");
 	info.SetLicence(_T("GPL"));
 	info.AddDeveloper(_T("BrainDamage"));
+	info.AddDeveloper(_T("dizekat"));
 	info.AddDeveloper(_T("koshi"));
 	info.AddDeveloper(_T("semi_"));
 	info.AddDeveloper(_T("tc-"));
-    info.AddTranslator(_T("chaosch (simplified chinese)"));
+  info.AddTranslator(_T("chaosch (simplified chinese)"));
 	info.AddTranslator(_T("lejocelyn (french)"));
 	info.AddTranslator(_T("Suprano (german)"));
-    info.AddTranslator(_T("tc- (swedish)"));
+  info.AddTranslator(_T("tc- (swedish)"));
 	info.SetIcon(wxIcon(springlobby_xpm));
 	wxAboutBox(info);
 
@@ -431,7 +471,7 @@ void MainWindow::OnUnitSyncReloaded()
 void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 {
 	se_frame = new settings_frame(this,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
-	  	    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+	  	    		wxDefaultSize);
 	se_frame_active = true;
 	se_frame->Show();
 }

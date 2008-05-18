@@ -5,9 +5,11 @@ ACLOCAL_AMFLAGS = -I m4 --install
 
 AM_CPPFLAGS = \
 	$(WX_CPPFLAGS) \
+	$(LIBTORRENT_CFLAGS) \
 	-DLOCALEDIR=\"$(localedir)\"
 
 # strict aliasing check is disabled, because wxWidgets headers have problems
+TORRFLAGS = `pkg-config  libtorrent --libs`
 AM_CXXFLAGS = \
 	-Wall \
 	-Wno-strict-aliasing
@@ -38,7 +40,9 @@ bin_PROGRAMS = \
 	springsettings
 
 springlobby_LDADD = \
-	$(WX_LIBS)
+	$(WX_LIBS)\
+	$(LIBTORRENT_LIBS)
+
 
 springsettings_LDADD = \
 	$(WX_LIBS)
@@ -63,6 +67,7 @@ clean-local:
 	rm -f revision.cpp
 
 # the following line is searched for in a script to add filenames under it
+
 springlobby_SOURCES = \
 	revision.cpp \
 	src/updater/versionchecker.cpp \
@@ -77,16 +82,17 @@ springlobby_SOURCES = \
 	src/maplistctrl.h \
 	src/mapselectdialog.cpp \
 	src/mapselectdialog.h \
+	src/bimap.h \
 	src/chatlog.h \
 	src/chatlog.cpp \
-	src/images/broom.xpm \
-	src/images/bot_ingame.xpm \
-	src/images/bot_broom.xpm \
+	src/images/broom.png.h \
+	src/images/bot_ingame.png.h \
+	src/images/bot_broom.png.h \
 	src/images/chanop_ingame.xpm \
 	src/images/chanop_away.xpm \
 	src/images/chanop_broom.xpm \
 	src/images/chanop.xpm \
-	src/images/admin_broom.xpm \
+	src/images/admin_broom.png.h \
 	src/images/host_spectator.xpm \
 	src/images/host.xpm \
 	src/images/not_found_icon.xpm \
@@ -107,6 +113,8 @@ springlobby_SOURCES = \
 	src/base64.h \
 	src/battle.cpp \
 	src/battle.h \
+	src/maintorrenttab.cpp \
+	src/maintorrenttab.h \
 	src/battlelistctrl.cpp \
 	src/battlelistctrl.h \
 	src/battlelistfilter.cpp \
@@ -147,6 +155,7 @@ springlobby_SOURCES = \
 	src/hostbattledialog.cpp \
 	src/iconimagelist.cpp \
 	src/iconimagelist.h \
+	src/inetclass.h \
 	src/iunitsync.h \
 	src/mainchattab.cpp \
 	src/mainchattab.h \
@@ -196,38 +205,51 @@ springlobby_SOURCES = \
 	src/userlist.h \
 	src/utils.cpp \
 	src/utils.h \
+	src/torrentlistctrl.cpp \
+	src/torrentlistctrl.h \
+	src/torrentoptionspanel.cpp \
+	src/torrentoptionspanel.h \
 	src/images/start_ally.xpm \
 	src/images/start_enemy.xpm \
 	src/images/start_unused.xpm \
-	src/images/admin_away.xpm \
-	src/images/admin_ingame.xpm \
-	src/images/admin.xpm \
-	src/images/arm.xpm \
-	src/images/away.xpm \
+	src/images/admin_away.png.h \
+	src/images/admin_ingame.png.h \
+	src/images/admin.png.h \
+	src/images/no1_icon.png.h \
+	src/images/no2_icon.png.h \
+	src/images/away.png.h \
 	src/images/battle_list.xpm \
 	src/images/battle_map.xpm \
 	src/images/battle_settings.xpm \
 	src/images/battle.xpm \
 	src/images/bot.xpm \
 	src/images/channel.xpm \
-	src/images/chat_icon.xpm \
-	src/images/closed_game.xpm \
-	src/images/closed_pw_game.xpm \
+	src/images/chat_icon.png.h \
+	src/images/chat_icon_text.png.h \
+	src/images/closed_game.png.h \
+	src/images/closed_full_game.png.h \
+	src/images/closed_pw_game.png.h \
+	src/images/closed_full_pw_game.png.h \
+	src/images/torrentoptionspanel_icon.png.h \
 	src/images/close_hi.xpm \
 	src/images/close.xpm \
 	src/images/colourbox.xpm \
 	src/images/connect.xpm \
-	src/images/core.xpm \
 	src/images/down.xpm \
 	src/images/exists.xpm \
-	src/images/ingame.xpm \
-	src/images/join_icon.xpm \
+	src/images/fixcolours_palette.xpm \
+	src/images/ingame.png.h \
+	src/images/join_icon.png.h \
+	src/images/join_icon_text.png.h \
 	src/images/nexists.xpm \
 	src/images/nready_q.xpm \
 	src/images/nready_unsync.xpm \
-	src/images/open_game.xpm \
-	src/images/open_pw_game.xpm \
-	src/images/options_icon.xpm \
+	src/images/open_game.png.h \
+	src/images/open_full_game.png.h \
+	src/images/open_pw_game.png.h \
+	src/images/open_full_pw_game.png.h \
+	src/images/options_icon.png.h \
+	src/images/options_icon_text.png.h \
 	src/images/rank0.xpm \
 	src/images/rank1.xpm \
 	src/images/rank2.xpm \
@@ -237,7 +259,10 @@ springlobby_SOURCES = \
 	src/images/rank6.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
-	src/images/singleplayer_icon.xpm \
+	src/images/downloads_icon.png.h \
+	src/images/single_player_icon.png.h \
+	src/images/downloads_icon_text.png.h \
+	src/images/single_player_icon_text.png.h \
 	src/images/select_icon.xpm \
 	src/images/server.xpm \
 	src/images/spectator.xpm \
@@ -498,9 +523,28 @@ springlobby_SOURCES = \
 	src/mmoptionswrapper.cpp \
 	src/battleroommmoptionstab.h \
 	src/battleroommmoptionstab.cpp \
+	src/torrentwrapper.cpp \
+	src/torrentwrapper.h \
 	src/thingdef.h \
 	src/spinctld.h \
-	src/spinctld.cpp
+	src/spinctld.cpp \
+	src/autobalancedialog.cpp \
+	src/autobalancedialog.h \
+	src/tdfcontainer.cpp \
+	src/tdfcontainer.h \
+	src/globalevents.h \
+	src/globalevents.cpp \
+	src/httpdownloader.h \
+	src/httpdownloader.cpp \
+	src/Helper/TextCompletionDatabase.hpp \
+	src/Helper/TextCompletionDatabase.cpp 
+
+
+
+if USE_WINDRES	
+springlobby_SOURCES += \ 
+		src/springlobby.rc 
+endif
 
 
 # TODO keep only a single list instead of duplicating the lists below
@@ -536,13 +580,7 @@ springlobby_SOURCES += \
 	src/settings++/custom_dialogs.h \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
-	src/settings++/helpmenufunctions.cpp
-
-if USE_WINDRES
-	springlobby_SOURCES += \
-		src/springlobby.rc
-endif
-
+	src/settings++/helpmenufunctions.cpp 
 
 springsettings_SOURCES = \
 	revision.cpp \
@@ -589,7 +627,7 @@ springsettings_SOURCES = \
 
 
 if USE_WINDRES
-	springsettings_SOURCES += \
-		src/settings++/settings.rc
+springsettings_SOURCES += \
+	src/settings++/settings.rc
 endif
 

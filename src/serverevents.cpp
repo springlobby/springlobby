@@ -16,6 +16,9 @@
 #include "battle.h"
 #include "settings.h"
 #include "settings++/custom_dialogs.h"
+#ifndef NO_TORRENT_SYSTEM
+#include "torrentwrapper.h"
+#endif
 
 void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode )
 {
@@ -31,6 +34,9 @@ void ServerEvents::OnDisconnected()
   wxLogDebugFunc( _T("") );
   m_serv.SetRequiredSpring (_T(""));
   m_ui.OnDisconnected( m_serv );
+  #ifndef NO_TORRENT_SYSTEM
+  if( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->DisconnectToP2PSystem();
+  #endif
 }
 
 
@@ -52,6 +58,9 @@ void ServerEvents::OnLoginInfoComplete()
     if ( !pass.IsEmpty() ) channel = channel.BeforeFirst(' ');
     m_serv.JoinChannel( channel, pass );
   }
+  #ifndef NO_TORRENT_SYSTEM
+  if( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->ConnectToP2PSystem();
+  #endif
   m_ui.OnLoggedIn( );
 }
 
@@ -101,7 +110,10 @@ void ServerEvents::OnPong( int ping_time )
 void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int cpu )
 {
   wxLogDebugFunc( _T("") );
+  try
+  {
   ASSERT_LOGIC( !m_serv.UserExists( nick ), _T("New user from server, but already exists!") );
+  } catch (...) { return; }
   User& user = m_serv._AddUser( nick );
   user.SetCountry( country );
   user.SetCpu( cpu );
@@ -172,9 +184,9 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
   battle.SetMaxPlayers( maxplayers );
   battle.SetIsPassworded( haspass );
   battle.SetRankNeeded( rank );
-  battle.SetMap( map, maphash );
+  battle.SetHostMap( map, maphash );
   battle.SetDescription( title );
-  battle.SetMod( mod, wxEmptyString );
+  battle.SetHostMod( mod, wxEmptyString );
 
   m_ui.OnBattleOpened( battle );
   if ( user.Status().in_game ) {
@@ -195,8 +207,8 @@ void ServerEvents::OnJoinedBattle( int battleid )
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.spectator = false;
 
-  battle.CustomBattleOptions()->loadOptions( MapOption, battle.GetMapName() );
-  battle.CustomBattleOptions()->loadOptions( ModOption, battle.GetModName() );
+  battle.CustomBattleOptions()->loadOptions( MapOption, battle.GetHostMapName() );
+  battle.CustomBattleOptions()->loadOptions( ModOption, battle.GetHostModName() );
 
   m_ui.OnJoinedBattle( battle );
   }catch(std::runtime_error &except){
@@ -232,8 +244,8 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
     Battle& battle = m_serv.GetBattle( battleid );
     status.color_index = user.BattleStatus().color_index;
 
-
     user.UpdateBattleStatus( status );
+    battle.OnUserBattleStatusUpdated(user);
 
     m_ui.OnUserBattleStatus( battle, user );
   }
@@ -289,9 +301,9 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   battle.SetSpectators( spectators );
   battle.SetIsLocked( locked );
 
-  wxString oldmap = battle.GetMapName();
+  wxString oldmap = battle.GetHostMapName();
 
-  battle.SetMap( map, maphash );
+  battle.SetHostMap( map, maphash );
 
   if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) )
   {
@@ -512,7 +524,10 @@ void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, const wxS
   Battle& battle = m_serv.GetBattle( battleid );
   battle.OnBotAdded( nick, owner, status, aidll );
   BattleBot* bot = battle.GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  } catch (...) { return; }
   m_ui.OnBattleBotAdded( battle, *bot );
 }
 
@@ -523,7 +538,10 @@ void ServerEvents::OnBattleUpdateBot( int battleid, const wxString& nick, UserBa
   Battle& battle = m_serv.GetBattle( battleid );
   battle.OnBotUpdated( nick, status );
   BattleBot* bot = battle.GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  } catch (...) { return; }
   m_ui.OnBattleBotUpdated( battle, *bot );
 }
 
@@ -533,7 +551,10 @@ void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   BattleBot* bot = battle.GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  } catch (...) { return; }
   m_ui.OnBattleBotRemoved( battle, *bot );
   battle.OnBotRemoved( nick );
 }
@@ -610,6 +631,7 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
       ///something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
       m_ui.OnBattleAction(*m_serv.GetCurrentBattle(),username,_(" does not really support nat traversal"));
     }
+    m_serv.GetCurrentBattle()->CheckBan(user);
   }catch(std::runtime_error){
     wxLogMessage(_T("runtime_error inside OnClientIPPort()"));
   }

@@ -3,6 +3,7 @@
 
 #include <wx/string.h>
 #include <wx/thread.h>
+#include <wx/event.h>
 
 class Server;
 class TASServer;
@@ -18,9 +19,12 @@ class BattleBot;
 class ChatPanel;
 class UnitSyncThread;
 
+
 typedef int HostInfo;
 
 typedef int AlertEventType;
+
+extern const wxEventType torrentSystemStatusUpdateEvt;
 
 #define AE_MESSAGE 1
 #define AE_HIGHLIGHT_MESSAGE 2
@@ -70,13 +74,13 @@ class Ui
 
     void ReloadUnitSync();
 
-    void DownloadMap( const wxString& map );
-    void DownloadMod( const wxString& mod );
+    void DownloadMap( const wxString& hash, const wxString& name );
+    void DownloadMod( const wxString& hash, const wxString& name );
 
     void OpenWebBrowser( const wxString& url );
 
     bool Ask( const wxString& heading, const wxString& question );
-    bool AskText( const wxString& heading, const wxString& question, wxString& answer );
+    bool AskText( const wxString& heading, const wxString& question, wxString& answer, long style = wxOK | wxCANCEL | wxCENTRE );
     bool AskPassword( const wxString& heading, const wxString& message, wxString& password );
     void ShowMessage( const wxString& heading, const wxString& message );
     //void OnAlertEvent( AlertEventType ); //TODO alert system
@@ -121,6 +125,7 @@ class Ui
     void OnBattleStarted( Battle& battle );
     void OnBattleStartRectsUpdated( Battle& battle );
     void OnBattleMapChanged( Battle& battle );
+    void OnBattleMapRefresh();
 
     void OnBattleBotAdded( Battle& battle, BattleBot& bot );
     void OnBattleBotRemoved( Battle& battle, BattleBot& bot );
@@ -154,7 +159,7 @@ class Ui
 
     bool IsThisMe(User& other);
 
-    bool TestHostPort( unsigned int port );
+    int TestHostPort( unsigned int port );
 
   protected:
     Spring* m_spring;
@@ -165,6 +170,8 @@ class Ui
     Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
+
+    unsigned int m_upd_intv_counter;
 
 };
 
