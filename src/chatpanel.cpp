@@ -450,7 +450,6 @@ User& ChatPanel::GetMe() {
 }
 
 void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const wxFont& fon ) {
-	const bool never_scroll = false;/// change to true for testing if non-scrolling works.
 
 	if ( ! m_chatlog_text ) return;
 	LogTime();
@@ -464,7 +463,17 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 	m_chatlog_text->Freeze();
 #endif
 	//m_chatlog_text->AppendText( message + _T("\n") );
-	m_chatlog_text->WriteText( message  + _T( "\n" ) );
+  wxStringTokenizer tkz( message, _T(' ') );
+  for( unsigned int pos = 0; tkz.HasMoreTokens(); pos++ )
+  {
+    wxString word = tkz.GetNextToken();
+    bool isurl = word.Contains( _T("://") );
+    if ( isurl ) m_chatlog_text->BeginURL(word);
+    m_chatlog_text->WriteText( word + _T(' ') );
+    if ( isurl ) m_chatlog_text->EndURL();
+  }
+
+	m_chatlog_text->WriteText( _T( "\n" ) );
 
   bool enable_autoscroll = sett().GetAlwaysAutoScrollOnFocusLost() || (m_ui.GetActiveChatPanel() == this );
 
