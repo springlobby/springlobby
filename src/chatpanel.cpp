@@ -464,7 +464,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 	if ( m_chatlog_text->HitTest( wxPoint( 0, sizey ), &bottom_col, &bottom_row ) == wxTE_HT_UNKNOWN ) {
 	}
 
-	bool at_bottom = ( bottom_row >= totalrows - 3 );/// true if we're on bottom of page and must scroll
+	bool at_bottom = ( bottom_row >= totalrows -1 );/// true if we're on bottom of page and must scroll
 
 
 	m_chatlog_text->SetDefaultStyle( wxTextAttr( col, sett().GetChatColorBackground(), fon ) );
