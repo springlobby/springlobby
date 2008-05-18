@@ -680,7 +680,7 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
     tdf.Append(_T("team"),PlayerTeam);
   tdf.LeaveSection();
 
-  for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) { // TODO fix this when new Spring comes.
+  for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot;
     if ( startpostype == ST_Pick) bot = battle.GetBot( i );
     else bot = battle.GetBotByStartPosition( i );

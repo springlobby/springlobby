@@ -87,7 +87,10 @@ void NickListCtrl::AddUser( User& user )
   SetSelectionRestorePoint();
   int index = InsertItem( 0, icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
   SetItemData( index, (wxUIntPtr)&user );
+  try
+  {
   ASSERT_LOGIC( index != -1, _T("index = -1") );
+  } catch (...) { return; }
   UserUpdated( index );
   Sort();
   SetColumnWidth( 3, wxLIST_AUTOSIZE );
