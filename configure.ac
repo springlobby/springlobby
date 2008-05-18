@@ -54,7 +54,7 @@ if test x$usetorrent = xyes ; then
 	AC_MSG_CHECKING([checking for libtorrent])
 	PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
 	if test x$usetorrent = xfail ; then
-		echo "get it at http://www.rasterbar.com/products/libtorrent/";
+		AC_MSG_ERROR([missing required libtorrent library, get it at http://www.rasterbar.com/products/libtorrent/, please note that some distros name it rb-libtorrent, that is NOT libtorrent from rakshasa]);
 		exit
 	fi
 	AC_SUBST(LIBTORRENT_CFLAGS)

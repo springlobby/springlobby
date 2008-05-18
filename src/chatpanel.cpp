@@ -820,8 +820,11 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message ) {
 
 void ChatPanel::UserStatusUpdated( User& who ) {
 	if ( m_show_nick_list ) {
+	  try
+	  {
 		ASSERT_LOGIC( m_nicklist != 0, _T( "m_nicklist = 0" ) );
 		m_nicklist->UserUpdated( who );
+	  } catch (...) { return; }
 	}
 }
 
@@ -1299,8 +1302,8 @@ void ChatPanel::OnUserMenuJoinSame( wxCommandEvent& event ) {
 	Battle* battle = user->GetBattle();
 	if ( battle == 0 ) return;
 
-	if ( !usync()->ModExists( battle->GetModName() ) ) {
-		customMessageBoxNoModal( SL_MAIN_ICON, _( "You don't have the mod " ) + battle->GetModName()
+	if ( !usync()->ModExists( battle->GetHostModName() ) ) {
+		customMessageBoxNoModal( SL_MAIN_ICON, _( "You don't have the mod " ) + battle->GetHostModName()
 														 + _( " . Please download it first" ), _( "Mod unavailable" ) );
 		return;
 	}

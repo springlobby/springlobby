@@ -23,8 +23,10 @@ END_EVENT_TABLE()
 void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 {
   Socket* sock = (Socket*)event.GetClientData();
-
+  try
+  {
   ASSERT_LOGIC( sock != 0, _T("sock = 0") );
+  } catch (...) { return; }
 
   if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
     m_net_class.OnDataReceived( sock );
@@ -33,7 +35,10 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
   } else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
     m_net_class.OnConnected( sock );
   } else {
+    try
+    {
     ASSERT_LOGIC( false, _T("Unknown socket event."));
+    } catch (...) { return; };
   }
 }
 

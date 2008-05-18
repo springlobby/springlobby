@@ -129,7 +129,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 {
   if ( m_selected != -1 ) {
     if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
-      m_ui.DownloadMap( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetMapHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetMapName() );
+      m_ui.DownloadMap( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostMapHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostMapName() );
     }
   }
 }
@@ -139,7 +139,7 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
 {
   if ( m_selected != -1 ) {
     if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
-      m_ui.DownloadMod( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetModHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetModName() );
+      m_ui.DownloadMod( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostModHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostModName() );
     }
   }
 }
@@ -374,9 +374,9 @@ int wxCALLBACK BattleListCtrl::CompareMapUP(long item1, long item2, long sortDat
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() < RefineMapname( battle2.GetMapName() ).MakeUpper() )
+  if ( RefineMapname( battle1.GetHostMapName() ).MakeUpper() < RefineMapname( battle2.GetHostMapName() ).MakeUpper() )
       return -1;
-  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() > RefineMapname( battle2.GetMapName() ).MakeUpper() )
+  if ( RefineMapname( battle1.GetHostMapName() ).MakeUpper() > RefineMapname( battle2.GetHostMapName() ).MakeUpper() )
       return 1;
 
   return 0;
@@ -389,9 +389,9 @@ int wxCALLBACK BattleListCtrl::CompareMapDOWN(long item1, long item2, long sortD
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() < RefineMapname( battle2.GetMapName() ).MakeUpper() )
+  if ( RefineMapname( battle1.GetHostMapName() ).MakeUpper() < RefineMapname( battle2.GetHostMapName() ).MakeUpper() )
       return 1;
-  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() > RefineMapname( battle2.GetMapName() ).MakeUpper() )
+  if ( RefineMapname( battle1.GetHostMapName() ).MakeUpper() > RefineMapname( battle2.GetHostMapName() ).MakeUpper() )
       return -1;
 
   return 0;
@@ -404,9 +404,9 @@ int wxCALLBACK BattleListCtrl::CompareModUP(long item1, long item2, long sortDat
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( RefineModname( battle1.GetModName() ).MakeUpper() < RefineModname( battle2.GetModName() ).MakeUpper() )
+  if ( RefineModname( battle1.GetHostModName() ).MakeUpper() < RefineModname( battle2.GetHostModName() ).MakeUpper() )
       return -1;
-  if ( RefineModname( battle1.GetModName() ).MakeUpper() > RefineModname( battle2.GetModName() ).MakeUpper() )
+  if ( RefineModname( battle1.GetHostModName() ).MakeUpper() > RefineModname( battle2.GetHostModName() ).MakeUpper() )
       return 1;
 
   return 0;
@@ -419,9 +419,9 @@ int wxCALLBACK BattleListCtrl::CompareModDOWN(long item1, long item2, long sortD
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( RefineModname( battle1.GetModName() ).MakeUpper() < RefineModname( battle2.GetModName() ).MakeUpper() )
+  if ( RefineModname( battle1.GetHostModName() ).MakeUpper() < RefineModname( battle2.GetHostModName() ).MakeUpper() )
       return 1;
-  if ( RefineModname( battle1.GetModName() ).MakeUpper() > RefineModname( battle2.GetModName() ).MakeUpper() )
+  if ( RefineModname( battle1.GetHostModName() ).MakeUpper() > RefineModname( battle2.GetHostModName() ).MakeUpper() )
       return -1;
 
   return 0;
@@ -584,10 +584,10 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 				m_tiptext = battle.GetDescription();
 				break;
 			case 4: //map
-				m_tiptext = RefineMapname(battle.GetMapName());
+				m_tiptext = RefineMapname(battle.GetHostMapName());
 				break;
 			case 5: //mod
-				m_tiptext = RefineModname(battle.GetModName());
+				m_tiptext = RefineModname(battle.GetHostModName());
 				break;
 			case 6: // host
 				m_tiptext = battle.GetFounder().GetNick();

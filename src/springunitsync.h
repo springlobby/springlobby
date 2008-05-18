@@ -27,6 +27,7 @@ class SpringUnitSync : public IUnitSync
     int GetNumMods();
     wxArrayString GetModList();
     bool ModExists( const wxString& modname );
+    bool ModExists( const wxString& modname, const wxString& hash );
     UnitSyncMod GetMod( const wxString& modname );
     UnitSyncMod GetMod( int index );
     int GetModIndex( const wxString& name );
@@ -36,7 +37,7 @@ class SpringUnitSync : public IUnitSync
     int GetNumMaps();
     wxArrayString GetMapList();
     bool MapExists( const wxString& mapname );
-    bool MapExists( const wxString& mapname, const wxString hash );
+    bool MapExists( const wxString& mapname, const wxString& hash );
 
     UnitSyncMap GetMap( const wxString& mapname );
     UnitSyncMap GetMap( int index );
