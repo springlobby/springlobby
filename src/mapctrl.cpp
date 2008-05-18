@@ -246,7 +246,10 @@ void MapCtrl::RelocateBots()
 
   for ( unsigned int i = 0; i < m_battle->GetNumBots(); i++ ) {
     BattleBot* bot = m_battle->GetBot( i );
+    try
+    {
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
+    } catch (...) { return; }
     m_battle->GetFreePosition( bot->posx, bot->posy );
     if ( bot->posx == -1 ) m_battle->RemoveBot( i );
   }
@@ -791,7 +794,10 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     if ( !m_battle->MapExists() ) return;
     if ( m_maction == MA_Move ) {
       BattleBot* bot = m_battle->GetBot( m_bot_expanded );
-      ASSERT_LOGIC( bot != 0, _T("MapCtrl::OnMouseMove(): bot = 0") );
+      try
+      {
+        ASSERT_LOGIC( bot != 0, _T("MapCtrl::OnMouseMove(): bot = 0") );
+      } catch (...) { return; }
       m_map = m_battle->LoadMap();
 
       wxRect mr = GetMinimapRect();
@@ -818,7 +824,10 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 
     if ( m_bot_expanded != -1 ) {
       BattleBot* bot = m_battle->GetBot( m_bot_expanded );
+      try
+      {
       ASSERT_LOGIC( bot != 0, _T("MapCtrl::OnMouseMove(): bot = 0") );
+      } catch (...) { return; }
       wxRect r = GetBotRect( *bot, true );
       if ( r.CONTAINS( event.GetX(), event.GetY() )  ) {
         RectArea last = m_rect_area;
@@ -954,7 +963,10 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
     if ( m_mdown_area == RA_Move ) m_maction = MA_Move;
     else m_maction = MA_None;
     BattleBot* bot = m_battle->GetBot( m_bot_expanded );
+    try
+    {
     ASSERT_LOGIC( bot != 0, _T("MapCtrl::OnLeftDown(): bot = 0") );
+    } catch (...) { return; }
     RefreshRect( GetBotRect( *bot, true ), false );
     return;
   }
@@ -1027,7 +1039,10 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     if ( m_bot_expanded == -1 ) return;
     if ( m_rect_area != m_mdown_area ) return;
     BattleBot* bot = m_battle->GetBot( m_bot_expanded );
+    try
+    {
     ASSERT_LOGIC( bot != 0, _T("MapCtrl::OnLeftUp(): bot == 0") );
+    } catch (...) { return; }
 
     if ( m_mdown_area == RA_UpAllyButton ) {
       bot->bs.ally = ( bot->bs.ally + 1 ) % 16;

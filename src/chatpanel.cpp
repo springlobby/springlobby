@@ -871,8 +871,11 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message ) {
 
 void ChatPanel::UserStatusUpdated( User& who ) {
 	if ( m_show_nick_list ) {
+	  try
+	  {
 		ASSERT_LOGIC( m_nicklist != 0, _T( "m_nicklist = 0" ) );
 		m_nicklist->UserUpdated( who );
+	  } catch (...) { return; }
 	}
 }
 

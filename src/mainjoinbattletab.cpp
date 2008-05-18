@@ -188,8 +188,11 @@ if ( m_opts_tab ) {
 
 void MainJoinBattleTab::BattleUserUpdated( User& user )
 {
+  try
+  {
   ASSERT_LOGIC( m_battle_tab != 0, _T("m_battle_tab = 0") );
   ASSERT_LOGIC( m_map_tab != 0, _T("m_map_tab = 0") );
+  } catch(...) {return;}
   m_battle_tab->UpdateUser( user );
   m_map_tab->UpdateUser( user );
 }
