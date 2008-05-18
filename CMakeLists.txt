@@ -34,7 +34,7 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-SET(wxWidgets_USE_LIBS base core gl net adv qa)
+SET(wxWidgets_USE_LIBS base core gl net adv qa richtext )
 
 # We need the Find package for wxWidgets to work
 FIND_PACKAGE(wxWidgets)
