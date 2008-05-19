@@ -259,13 +259,9 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
     ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
     ASSERT_LOGIC( delpage != 0 , _T("MainChatTab::OnTabsChanged(): delpage NULL") );
 
-    if ( !delpage->IsServerPanel() ) {
-      delpage->Part();
-      m_chat_tabs->DeletePage( oldsel );
-      m_chat_tabs->SetSelection( 0 );
-    } else {
-      m_chat_tabs->SetSelection( 0 );
-    }
+    delpage->Part();
+    m_chat_tabs->DeletePage( oldsel );
+    m_chat_tabs->SetSelection( 0 );
 
   }
 

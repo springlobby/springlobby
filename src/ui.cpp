@@ -248,7 +248,7 @@ void Ui::StartHostedBattle()
 {
   ASSERT_LOGIC( m_serv != 0, _T("m_serv = 0") );
   m_serv->StartHostedBattle();
-  sett().SetLastHostMap( m_serv->GetCurrentBattle()->GetMapName() );
+  sett().SetLastHostMap( m_serv->GetCurrentBattle()->GetHostMapName() );
   sett().SaveBattleMapOptions(m_serv->GetCurrentBattle());
   sett().SaveSettings();
 }
@@ -959,7 +959,7 @@ void Ui::OnBattleMapChanged( Battle& battle )
   mw().GetJoinTab().UpdateCurrentBattle( true );
   if (battle.IsFounderMe())
   {
-	  battle.CustomBattleOptions()->loadMapOptions(battle.GetMapName());
+	  battle.CustomBattleOptions()->loadMapOptions(battle.GetHostMapName());
 	  mw().GetJoinTab().ReloadMMoptTab();
   }
 }

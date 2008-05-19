@@ -3,7 +3,13 @@
 // Class: Settings
 //
 
+#ifdef __WXMSW__
+#include <wx/fileconf.h>
+#include <wx/filename.h>
+#include <wx/wfstream.h>
+#else
 #include <wx/config.h>
+#endif
 #include <wx/filefn.h>
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
@@ -27,13 +33,36 @@ Settings& sett()
 
 Settings::Settings()
 {
-    m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
-    if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
+  #if defined(__WXMSW__) && !defined(HAVE_WX26)
+  wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + _T("/springlobby.conf");
+  wxString globalfilepath =  wxStandardPathsBase::Get().GetExecutablePath() + _T("/springlobby.conf");
+
+  if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
+  {
+     m_chosed_path = userfilepath;
+     m_portable_mode = false;
+  }
+  else
+  {
+     m_chosed_path = globalfilepath; /// portable mode, use only current app paths
+     m_portable_mode = true;
+  }
+
+  wxFileInputStream instream( m_chosed_path );
+  m_config = new wxFileConfig( instream );
+
+  #else
+  m_config = new wxFileConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
+  #endif
+  if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
 }
 
 Settings::~Settings()
 {
     m_config->Write( _T("/General/firstrun"), false );
+    #if defined(__WXMSW__) && !defined(HAVE_WX26)
+    SaveSettings();
+    #endif
     delete m_config;
 }
 
@@ -43,7 +72,17 @@ void Settings::SaveSettings()
   m_config->Write( _T("/General/firstrun"), false );
   SetCacheVersion();
   m_config->Flush();
+  #if defined(__WXMSW__) && !defined(HAVE_WX26)
+  wxFileOutputStream outstream( m_chosed_path );
+  m_config->Save( outstream );
+  #endif
   if (usync()->IsLoaded()) usync()->SetSpringDataPath( GetSpringDir() );
+}
+
+
+bool Settings::IsPortableMode()
+{
+  return m_portable_mode;
 }
 
 
@@ -868,6 +907,15 @@ void Settings::SetSmartScrollEnabled(bool value){
   m_config->Write( _T("/Chat/SmartScrollEnabled"), value);
 }
 
+bool Settings::GetAlwaysAutoScrollOnFocusLost()
+{
+  return m_config->Read( _T("/Chat/AlwaysAutoScrollOnFocusLost"), 0l );
+}
+
+void Settings::SetAlwaysAutoScrollOnFocusLost(bool value)
+{
+  m_config->Write( _T("/Chat/AlwaysAutoScrollOnFocusLost"), value);
+}
 
 BattleListFilterValues Settings::GetBattleFilterValues(const wxString& profile_name)
 {
@@ -1034,7 +1082,7 @@ void Settings::SaveBattleMapOptions(IBattle *battle){
         wxLogError(_T("Settings::SaveBattleMapOptions called with null argument"));
         return;
       }
-  wxString map_name=battle->GetMapName();
+  wxString map_name=battle->GetHostMapName();
   //SetLastHostMap(map_name);
   wxString option_prefix=_T("/Hosting/Maps/")+map_name+_T("/");
   long longval;
@@ -1071,7 +1119,7 @@ void Settings::LoadBattleMapOptions(IBattle *battle){
         wxLogError(_T("Settings::LoadBattleMapOptions called with null argument"));
         return;
       }
-  wxString map_name=battle->GetMapName();
+  wxString map_name=battle->GetHostMapName();
   wxString option_prefix=_T("/Hosting/Maps/")+map_name+_T("/");
   int start_pos_type=m_config->Read(option_prefix+_T("startpostype") , 0L );
   battle->CustomBattleOptions()->setSingleOption( _T("startpostype"), TowxString(start_pos_type), EngineOption );
