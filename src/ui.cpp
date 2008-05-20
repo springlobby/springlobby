@@ -127,7 +127,7 @@ void Ui::Connect()
         ShowConnectWindow();
     else
     {
-        // do something when pw isn't remembered
+        m_con_win = 0;
         wxString server_name = sett().GetDefaultServer();
         wxString nick = sett().GetServerAccountNick( server_name );
         wxString pass = sett().GetServerAccountPass( server_name );
@@ -278,7 +278,8 @@ void Ui::Quit()
 
   m_main_win->Close();
   m_thread->Kill();
-  m_con_win->Close();
+  if ( m_con_win != 0 )
+    m_con_win->Close();
   if (m_serv != 0 ) m_serv->Disconnect();
 }
 
