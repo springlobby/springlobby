@@ -910,7 +910,7 @@ void Settings::SetSmartScrollEnabled(bool value){
 
 bool Settings::GetAlwaysAutoScrollOnFocusLost()
 {
-  return m_config->Read( _T("/Chat/AlwaysAutoScrollOnFocusLost"), false );
+  return m_config->Read( _T("/Chat/AlwaysAutoScrollOnFocusLost"), true );
 }
 
 void Settings::SetAlwaysAutoScrollOnFocusLost(bool value)
