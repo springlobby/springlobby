@@ -151,7 +151,7 @@ wxColour GetColorFromStrng( const wxString color )
     c.BeforeFirst( ' ' ).ToLong( &g );
     c = c.AfterFirst( ' ' );
     c.BeforeFirst( ' ' ).ToLong( &b );
-    return wxColour( r%256, g%256, b%256 );
+    return wxColour( (unsigned char)(r%256), (unsigned char)(g%256), (unsigned char)(b%256) );
 }
 
 void BlendImage(wxImage& foreground, wxImage&  background, int img_dim)

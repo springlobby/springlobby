@@ -89,58 +89,48 @@ bool Settings::IsPortableMode()
 
 bool Settings::IsFirstRun()
 {
-    bool first;
-    m_config->Read( _T("/General/firstrun"), &first, true );
-    return first;
+    return (bool)m_config->Read( _T("/General/firstrun"), (long)true );
 }
 
 
 bool Settings::UseOldSpringLaunchMethod()
 {
-    bool old;
-    m_config->Read( _T("/Spring/UseOldLaunchMethod"), &old, false );
-    return old;
+    return (bool)m_config->Read( _T("/Spring/UseOldLaunchMethod"), (long)false );
 }
 
 bool Settings::GetNoUDP()
 {
-    bool tmp;
-    m_config->Read( _T("/General/NoUDP"), &tmp, false );
-    return tmp;
+    return (bool)m_config->Read( _T("/General/NoUDP"), (long)false );
 }
 
 void Settings::SetNoUDP(bool value)
 {
-    m_config->Write( _T("/General/NoUDP"), value );
+    m_config->Write( _T("/General/NoUDP"), (long)value );
 }
 
 int Settings::GetClientPort()
 {
-    int tmp;
-    m_config->Read( _T("/General/ClientPort"), &tmp, 0 );
-    return tmp;
+    return (int)m_config->Read( _T("/General/ClientPort"), 0l );
 }
 
 void Settings::SetClientPort(int value)
 {
-    m_config->Write( _T("/General/ClientPort"), value );
+    m_config->Write( _T("/General/ClientPort"), (long)value );
 }
 
 bool Settings::GetShowIPAddresses()
 {
-    bool tmp;
-    m_config->Read( _T("/General/ShowIP"), &tmp, false );
-    return tmp;
+    return (bool)m_config->Read( _T("/General/ShowIP"), (long)false );
 }
 
 void Settings::SetShowIPAddresses(bool value)
 {
-    m_config->Write( _T("/General/ShowIP"), value );
+    m_config->Write( _T("/General/ShowIP"), (long)value );
 }
 
 void Settings::SetOldSpringLaunchMethod( bool value )
 {
-    m_config->Write( _T("/Spring/UseOldLaunchMethod"), value );
+    m_config->Write( _T("/Spring/UseOldLaunchMethod"), (long)value );
 }
 
 
@@ -175,14 +165,14 @@ void Settings::SetCachePath( const wxString path )
 //! @brief sets version number for the cache, needed to nuke it in case it becomes obsolete & incompatible with new versions
 void Settings::SetCacheVersion()
 {
-    m_config->Write( _T("/General/CacheVersion"), CACHE_VERSION );
+    m_config->Write( _T("/General/CacheVersion"), (long)CACHE_VERSION );
 }
 
 
 //! @brief returns the cache versioning number, do decide whenever to delete if becomes obsolete & incompatible with new versions
 int Settings::GetCacheVersion()
 {
-    return m_config->Read( _T("/General/CacheVersion"), 0l );
+    return (int)m_config->Read( _T("/General/CacheVersion"), 0l );
 }
 
 
@@ -214,12 +204,12 @@ wxString Settings::GetDefaultServer()
 
 void Settings::SetAutoConnect( bool do_autoconnect )
 {
-    m_config->Write( _T("/Server/Autoconnect"),  do_autoconnect );
+    m_config->Write( _T("/Server/Autoconnect"),  (long)do_autoconnect );
 }
 
 bool Settings::GetAutoConnect( )
 {
-    return m_config->Read( _T("/Server/Autoconnect"), 0l );
+    return (bool)m_config->Read( _T("/Server/Autoconnect"), 0l );
 }
 
 
@@ -268,7 +258,7 @@ int    Settings::GetServerPort( const wxString& server_name )
 //! @param value the vaule to be set
 void   Settings::SetServerPort( const wxString& server_name, const int value )
 {
-    m_config->Write( _T("/Server/")+ server_name +_T("/port"), value );
+    m_config->Write( _T("/Server/")+ server_name +_T("/port"), (long)value );
 }
 
 
@@ -285,14 +275,14 @@ void Settings::AddServer( const wxString& server_name )
 
 int Settings::GetNumServers()
 {
-    return m_config->Read( _T("/Servers/Count"), (long)0 );
+    return (int)m_config->Read( _T("/Servers/Count"), 0l );
 }
 
 
 
 void Settings::SetNumServers( int num )
 {
-    m_config->Write( _T("/Servers/Count"), num );
+    m_config->Write( _T("/Servers/Count"), (long)num );
 }
 
 
@@ -312,7 +302,7 @@ int Settings::GetServerIndex( const wxString& server_name )
 //! @param index the server index
 wxString Settings::GetServerName( int index )
 {
-    return m_config->Read( wxString::Format( _T("/Servers/Server%d"), index ), _T("") );
+    return m_config->Read( wxString::Format( _T("/Servers/Server%d"), (long)index ), _T("") );
 }
 
 
@@ -379,12 +369,12 @@ void Settings::SetServerAccountSavePass( const wxString& server_name, const bool
 
 int Settings::GetNumChannelsJoin()
 {
-    return m_config->Read( _T("/Channels/Count"), (long)0 );
+    return (int)m_config->Read( _T("/Channels/Count"), 0l );
 }
 
 void Settings::SetNumChannelsJoin( int num )
 {
-    m_config->Write( _T("/Channels/Count"), num );
+    m_config->Write( _T("/Channels/Count"), (long)num );
 }
 
 void Settings::AddChannelJoin( const wxString& channel , const wxString& key )
@@ -432,55 +422,55 @@ wxString Settings::GetChannelJoinName( int index )
 //! @brief Get width of MainWindow.
 int Settings::GetMainWindowWidth()
 {
-    return m_config->Read( _T("/Mainwin/width"), DEFSETT_MW_WIDTH );
+    return (int)m_config->Read( _T("/Mainwin/width"), (long)DEFSETT_MW_WIDTH );
 }
 
 
 //! @brief Set width position of MainWindow
 void Settings::SetMainWindowWidth( const int value )
 {
-    m_config->Write( _T("/Mainwin/width"), value );
+    m_config->Write( _T("/Mainwin/width"), (long)value );
 }
 
 
 //! @brief Get height of MainWindow.
 int Settings::GetMainWindowHeight()
 {
-    return m_config->Read( _T("/Mainwin/height"), DEFSETT_MW_HEIGHT );
+    return (int)m_config->Read( _T("/Mainwin/height"), (long)DEFSETT_MW_HEIGHT );
 }
 
 
 //! @brief Set height position of MainWindow
 void Settings::SetMainWindowHeight( const int value )
 {
-    m_config->Write( _T("/Mainwin/height"), value );
+    m_config->Write( _T("/Mainwin/height"), (long)value );
 }
 
 
 //! @brief Get top position of MainWindow.
 int Settings::GetMainWindowTop()
 {
-    return m_config->Read( _T("/Mainwin/top"), DEFSETT_MW_TOP );
+    return (int)m_config->Read( _T("/Mainwin/top"), (long)DEFSETT_MW_TOP );
 }
 
 
 //! @brief Set top position of MainWindow
 void Settings::SetMainWindowTop( const int value )
 {
-    m_config->Write( _T("/Mainwin/top"), value );
+    m_config->Write( _T("/Mainwin/top"), (long)value );
 }
 
 
 //! @brief Get left position of MainWindow.
 int Settings::GetMainWindowLeft()
 {
-    return m_config->Read( _T("/Mainwin/left"), DEFSETT_MW_LEFT );
+    return (int)m_config->Read( _T("/Mainwin/left"), (long)DEFSETT_MW_LEFT );
 }
 
 //! @brief Set left position of MainWindow
 void Settings::SetMainWindowLeft( const int value )
 {
-    m_config->Write( _T("/Mainwin/left"), value );
+    m_config->Write( _T("/Mainwin/left"), (long)value );
 }
 
 wxString Settings::GetSpringDir()
@@ -497,13 +487,13 @@ void Settings::SetSpringDir( const wxString& spring_dir )
 
 bool Settings::GetUnitSyncUseDefLoc()
 {
-    return m_config->Read( _T("/Spring/use_unitsync_def_loc"), true );
+    return (bool)m_config->Read( _T("/Spring/use_unitsync_def_loc"), (long)true );
 }
 
 
 void Settings::SetUnitSyncUseDefLoc( const bool usedefloc )
 {
-    m_config->Write( _T("/Spring/use_unitsync_def_loc"), usedefloc );
+    m_config->Write( _T("/Spring/use_unitsync_def_loc"), (long)usedefloc );
 }
 
 
@@ -524,14 +514,14 @@ void Settings::SetUnitSyncLoc( const wxString& loc )
 
 bool Settings::GetSpringUseDefLoc()
 {
-    return m_config->Read( _T("/Spring/use_spring_def_loc"), true );
+    return (bool)m_config->Read( _T("/Spring/use_spring_def_loc"), (long)true );
 }
 
 
 
 void Settings::SetSpringUseDefLoc( const bool usedefloc )
 {
-    m_config->Write( _T("/Spring/use_spring_def_loc"), usedefloc );
+    m_config->Write( _T("/Spring/use_spring_def_loc"), (long)usedefloc );
 }
 
 
@@ -590,12 +580,12 @@ wxString Settings::GetUnitSyncUsedLoc( bool force, bool defloc )
 bool Settings::GetChatLogEnable()
 {
     if (!m_config->Exists(_T("/ChatLog/chatlog_enable"))) SetChatLogEnable( false );
-    return m_config->Read( _T("/ChatLog/chatlog_enable"), true );
+    return (bool)m_config->Read( _T("/ChatLog/chatlog_enable"), (long)true );
 }
 
 void Settings::SetChatLogEnable( const bool value )
 {
-    m_config->Write( _T("/ChatLog/chatlog_enable"), value );
+    m_config->Write( _T("/ChatLog/chatlog_enable"), (long)value );
 }
 
 wxString Settings::GetChatLogLoc()
@@ -628,19 +618,19 @@ wxString Settings::GetLastHostPassword()
 
 int Settings::GetLastHostPort()
 {
-    return m_config->Read( _T("/Hosting/LastPort"), DEFSETT_SPRING_PORT );
+    return (int)m_config->Read( _T("/Hosting/LastPort"), (long)DEFSETT_SPRING_PORT );
 }
 
 
 int Settings::GetLastHostPlayerNum()
 {
-    return m_config->Read( _T("/Hosting/LastPlayerNum"), 4 );
+    return (int)m_config->Read( _T("/Hosting/LastPlayerNum"), 4l );
 }
 
 
 int Settings::GetLastHostNATSetting()
 {
-    return m_config->Read( _T("/Hosting/LastNATSetting"), (long)0 );
+    return (int)m_config->Read( _T("/Hosting/LastNATSetting"), 0l );
 }
 
 
@@ -651,12 +641,12 @@ wxString Settings::GetLastHostMap()
 
 int Settings::GetLastRankLimit()
 {
-    return m_config->Read( _T("/Hosting/LastRank"), 0l );
+    return (int)m_config->Read( _T("/Hosting/LastRank"), 0l );
 }
 
 bool Settings::GetTestHostPort()
 {
-    return m_config->Read( _T("/Hosting/TestHostPort"), 1 );
+    return (bool)m_config->Read( _T("/Hosting/TestHostPort"), (long)true );
 }
 
 void Settings::SetLastHostDescription( const wxString& value )
@@ -679,19 +669,19 @@ void Settings::SetLastHostPassword( const wxString& value )
 
 void Settings::SetLastHostPort( int value )
 {
-    m_config->Write( _T("/Hosting/LastPort"), value );
+    m_config->Write( _T("/Hosting/LastPort"), (long)value );
 }
 
 
 void Settings::SetLastHostPlayerNum( int value )
 {
-    m_config->Write( _T("/Hosting/LastPlayerNum"), value );
+    m_config->Write( _T("/Hosting/LastPlayerNum"), (long)value );
 }
 
 
 void Settings::SetLastHostNATSetting( int value )
 {
-    m_config->Write( _T("/Hosting/LastNATSetting"), value );
+    m_config->Write( _T("/Hosting/LastNATSetting"), (long)value );
 }
 
 
@@ -702,7 +692,7 @@ void Settings::SetLastHostMap( const wxString& value )
 
 void Settings::SetLastRankLimit( int rank )
 {
-    m_config->Write( _T("/Hosting/LastRank"), rank );
+    m_config->Write( _T("/Hosting/LastRank"), (long)rank );
 }
 
 void Settings::SetLastAI( const wxString& ai )
@@ -712,7 +702,7 @@ void Settings::SetLastAI( const wxString& ai )
 
 void Settings::SetTestHostPort( bool value )
 {
-    m_config->Write( _T("/Hosting/TestHostPort"), value );
+    m_config->Write( _T("/Hosting/TestHostPort"), (long)value );
 }
 
 
@@ -720,30 +710,30 @@ void Settings::SetTestHostPort( bool value )
 
 void Settings::SetBalanceMethod(int value)
 {
-    m_config->Write( _T("/Hosting/BalanceMethod"), value );
+    m_config->Write( _T("/Hosting/BalanceMethod"), (long)value );
 }
 int Settings::GetBalanceMethod()
 {
-    return m_config->Read( _T("/Hosting/BalanceMethod"), 1l);
+    return (int)m_config->Read( _T("/Hosting/BalanceMethod"), 1l);
 }
 
 void Settings::SetBalanceClans(bool value)
 {
-    m_config->Write( _T("/Hosting/BalanceClans"), value );
+    m_config->Write( _T("/Hosting/BalanceClans"), (long)value );
 }
 bool Settings::GetBalanceClans()
 {
-    return m_config->Read( _T("/Hosting/BalanceClans"), true);
+    return (bool)m_config->Read( _T("/Hosting/BalanceClans"), (long)true);
 }
 
 void Settings::SetBalanceStrongClans(bool value)
 {
-    m_config->Write( _T("/Hosting/BalanceStrongClans"), value );
+    m_config->Write( _T("/Hosting/BalanceStrongClans"), (long)value );
 }
 
 bool Settings::GetBalanceStrongClans()
 {
-    return m_config->Read( _T("/Hosting/BalanceStrongClans"), 0l);
+    return (bool)m_config->Read( _T("/Hosting/BalanceStrongClans"), 0l);
 }
 
 
@@ -755,7 +745,7 @@ wxString Settings::GetLastAI()
 
 void Settings::SetDisplayJoinLeave( bool display, const wxString& channel  )
 {
-    m_config->Write( _T("/Channels/DisplayJoinLeave/")  + channel, display);
+    m_config->Write( _T("/Channels/DisplayJoinLeave/")  + channel, (long)display);
 }
 
 bool Settings::GetDisplayJoinLeave( const wxString& channel  )
@@ -766,13 +756,13 @@ bool Settings::GetDisplayJoinLeave( const wxString& channel  )
 
 void Settings::SetChatHistoryLenght( unsigned int historylines )
 {
-    m_config->Write( _T("/Chat/HistoryLinesLenght/"), (int)historylines);
+    m_config->Write( _T("/Chat/HistoryLinesLenght/"), (long)historylines);
 }
 
 
 unsigned int Settings::GetChatHistoryLenght()
 {
-    return (unsigned int)m_config->Read( _T("/Chat/HistoryLinesLenght/"), 1000);
+    return (unsigned int)m_config->Read( _T("/Chat/HistoryLinesLenght/"), 1000l);
 }
 
 
@@ -901,45 +891,46 @@ void Settings::SetChatFont( wxFont value )
 
 bool Settings::GetSmartScrollEnabled()
 {
-    return m_config->Read( _T("/Chat/SmartScrollEnabled"), true);
+    return (bool)m_config->Read( _T("/Chat/SmartScrollEnabled"), (long)true);
 }
 
-void Settings::SetSmartScrollEnabled(bool value){
-  m_config->Write( _T("/Chat/SmartScrollEnabled"), value);
+void Settings::SetSmartScrollEnabled(bool value)
+{
+  m_config->Write( _T("/Chat/SmartScrollEnabled"), (long)value);
 }
 
 bool Settings::GetAlwaysAutoScrollOnFocusLost()
 {
-  return m_config->Read( _T("/Chat/AlwaysAutoScrollOnFocusLost"), true );
+  return (bool)m_config->Read( _T("/Chat/AlwaysAutoScrollOnFocusLost"),(long)true );
 }
 
 void Settings::SetAlwaysAutoScrollOnFocusLost(bool value)
 {
-  m_config->Write( _T("/Chat/AlwaysAutoScrollOnFocusLost"), value);
+  m_config->Write( _T("/Chat/AlwaysAutoScrollOnFocusLost"), (long)value);
 }
 
 BattleListFilterValues Settings::GetBattleFilterValues(const wxString& profile_name)
 {
     BattleListFilterValues filtervalues;
-    filtervalues.description =      m_config->Read( _T("/BattleFilter/")+profile_name + _T("/description"), _T("") );
-    filtervalues.host =             m_config->Read( _T("/BattleFilter/")+profile_name + _T("/host"), _T("") );
-    filtervalues.map=               m_config->Read( _T("/BattleFilter/")+profile_name + _T("/map"), _T("") );
-    filtervalues.map_show =         m_config->Read( _T("/BattleFilter/")+profile_name + _T("/map_show"), 0L );
-    filtervalues.maxplayer =        m_config->Read( _T("/BattleFilter/")+profile_name + _T("/maxplayer"), _T("All") );
-    filtervalues.maxplayer_mode =   m_config->Read( _T("/BattleFilter/")+profile_name + _T("/maxplayer_mode"), _T("=") );
-    filtervalues.mod =              m_config->Read( _T("/BattleFilter/")+profile_name + _T("/mod"), _T("") );
-    filtervalues.mod_show =         m_config->Read( _T("/BattleFilter/")+profile_name + _T("/mod_show"), 0L );
-    filtervalues.player_mode =      m_config->Read( _T("/BattleFilter/")+profile_name + _T("/player_mode"), _T("=") );
-    filtervalues.player_num  =      m_config->Read( _T("/BattleFilter/")+profile_name + _T("/player_num"), _T("All") );
-    filtervalues.rank =             m_config->Read( _T("/BattleFilter/")+profile_name + _T("/rank"), _T("All") );
-    filtervalues.rank_mode =        m_config->Read( _T("/BattleFilter/")+profile_name + _T("/rank_mode"), _T("<") );
-    filtervalues.spectator =        m_config->Read( _T("/BattleFilter/")+profile_name + _T("/spectator"), _T("All") );
-    filtervalues.spectator_mode =   m_config->Read( _T("/BattleFilter/")+profile_name + _T("/spectator_mode"), _T("=") );
-    filtervalues.status_full =      m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_full"), true );
-    filtervalues.status_locked =    m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_locked"),true );
-    filtervalues.status_open =      m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_open"), true );
-    filtervalues.status_passworded= m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_passworded"), true );
-    filtervalues.status_start =     m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_start"), true );
+    filtervalues.description =           m_config->Read( _T("/BattleFilter/")+profile_name + _T("/description"), _T("") );
+    filtervalues.host =                  m_config->Read( _T("/BattleFilter/")+profile_name + _T("/host"), _T("") );
+    filtervalues.map=                    m_config->Read( _T("/BattleFilter/")+profile_name + _T("/map"), _T("") );
+    filtervalues.map_show =        (bool)m_config->Read( _T("/BattleFilter/")+profile_name + _T("/map_show"), 0l );
+    filtervalues.maxplayer =             m_config->Read( _T("/BattleFilter/")+profile_name + _T("/maxplayer"), _T("All") );
+    filtervalues.maxplayer_mode =        m_config->Read( _T("/BattleFilter/")+profile_name + _T("/maxplayer_mode"), _T("=") );
+    filtervalues.mod =                   m_config->Read( _T("/BattleFilter/")+profile_name + _T("/mod"), _T("") );
+    filtervalues.mod_show =        (bool)m_config->Read( _T("/BattleFilter/")+profile_name + _T("/mod_show"), 0l );
+    filtervalues.player_mode =           m_config->Read( _T("/BattleFilter/")+profile_name + _T("/player_mode"), _T("=") );
+    filtervalues.player_num  =           m_config->Read( _T("/BattleFilter/")+profile_name + _T("/player_num"), _T("All") );
+    filtervalues.rank =                  m_config->Read( _T("/BattleFilter/")+profile_name + _T("/rank"), _T("All") );
+    filtervalues.rank_mode =             m_config->Read( _T("/BattleFilter/")+profile_name + _T("/rank_mode"), _T("<") );
+    filtervalues.spectator =             m_config->Read( _T("/BattleFilter/")+profile_name + _T("/spectator"), _T("All") );
+    filtervalues.spectator_mode =        m_config->Read( _T("/BattleFilter/")+profile_name + _T("/spectator_mode"), _T("=") );
+    filtervalues.status_full =     (bool)m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_full"), (long)true );
+    filtervalues.status_locked =   (bool)m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_locked"),(long)true );
+    filtervalues.status_open =     (bool)m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_open"), (long)true );
+    filtervalues.status_passworded=(bool)m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_passworded"), (long)true );
+    filtervalues.status_start =    (bool)m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_start"), (long)true );
     return filtervalues;
 }
 
@@ -948,30 +939,28 @@ void Settings::SetBattleFilterValues(const BattleListFilterValues& filtervalues,
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/description"),filtervalues.description);
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/host"),filtervalues.host );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/map"),filtervalues.map );
-    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/map_show"),filtervalues.map_show );
+    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/map_show"),(long)filtervalues.map_show );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/maxplayer"),filtervalues.maxplayer );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/maxplayer_mode"),filtervalues.maxplayer_mode);
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/mod"),filtervalues.mod );
-    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/mod_show"),filtervalues.mod_show );
+    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/mod_show"),(long)filtervalues.mod_show );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/player_mode"),filtervalues.player_mode );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/player_num"),filtervalues.player_num );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/rank"),filtervalues.rank );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/rank_mode"),filtervalues.rank_mode );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/spectator"),filtervalues.spectator );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/spectator_mode"),filtervalues.spectator_mode );
-    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_full"),filtervalues.status_full );
-    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_locked"),filtervalues.status_locked );
-    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_open"),filtervalues.status_open );
-    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_passworded"),filtervalues.status_passworded );
-    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_start"),filtervalues.status_start );
+    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_full"),(long)filtervalues.status_full );
+    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_locked"),(long)filtervalues.status_locked );
+    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_open"),(long)filtervalues.status_open );
+    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_passworded"),(long)filtervalues.status_passworded );
+    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_start"),(long)filtervalues.status_start );
     m_config->Write( _T("/BattleFilter/lastprofile"),profile_name);
 }
 
 bool Settings::GetDisableSpringVersionCheck()
 {
-    bool ret;
-    m_config->Read( _T("/Spring/DisableVersionCheck"), &ret, false );
-    return ret;
+    return (bool)m_config->Read( _T("/Spring/DisableVersionCheck"), (long)false );
 }
 
 wxString Settings::GetLastFilterProfileName()
@@ -982,99 +971,99 @@ wxString Settings::GetLastFilterProfileName()
 
 unsigned int Settings::GetTorrentPort()
 {
-    return  (unsigned int)m_config->Read( _T("/Torrent/Port"), GetLastHostPort() );
+    return  (unsigned int)m_config->Read( _T("/Torrent/Port"), (long)GetLastHostPort() );
 }
 
 
 void Settings::SetTorrentPort( unsigned int port )
 {
-  m_config->Write( _T("/Torrent/port"), (int)port );
+  m_config->Write( _T("/Torrent/port"), (long)port );
 }
 
 
 int Settings::GetTorrentUploadRate()
 {
-    return  m_config->Read( _T("/Torrent/UploadRate"), -1 );
+    return  (int)m_config->Read( _T("/Torrent/UploadRate"), -1l );
 }
 
 
 void Settings::SetTorrentUploadRate( int speed )
 {
-  m_config->Write( _T("/Torrent/UploadRate"), speed );
+  m_config->Write( _T("/Torrent/UploadRate"), (long)speed );
 }
 
 
 int Settings::GetTorrentDownloadRate()
 {
-    return  m_config->Read( _T("/Torrent/DownloadRate"), -1 );
+    return  (int)m_config->Read( _T("/Torrent/DownloadRate"), -1l );
 }
 
 
 
 void Settings::SetTorrentDownloadRate( int speed )
 {
-  m_config->Write( _T("/Torrent/DownloadRate"), speed );
+  m_config->Write( _T("/Torrent/DownloadRate"), (long)speed );
 }
 
 
 int Settings::GetTorrentSystemSuspendMode()
 {
-    return  m_config->Read( _T("/Torrent/SuspendMode"), 0l );
+    return  (int)m_config->Read( _T("/Torrent/SuspendMode"), 0l );
 }
 
 
 
 void Settings::SetTorrentSystemSuspendMode( int mode )
 {
-  m_config->Write( _T("/Torrent/SuspendMode"), mode );
+  m_config->Write( _T("/Torrent/SuspendMode"), (long)mode );
 }
 
 
 int Settings::GetTorrentThrottledUploadRate()
 {
-    return  m_config->Read( _T("/Torrent/ThrottledUploadRate"), 0l );
+    return  (int)m_config->Read( _T("/Torrent/ThrottledUploadRate"), 0l );
 }
 
 
 void Settings::SetTorrentThrottledUploadRate( int speed )
 {
-  m_config->Write( _T("/Torrent/ThrottledUploadRate"), speed );
+  m_config->Write( _T("/Torrent/ThrottledUploadRate"), (long)speed );
 }
 
 
 int Settings::GetTorrentThrottledDownloadRate()
 {
-    return  m_config->Read( _T("/Torrent/ThrottledDownloadRate"), 0l );
+    return  (int)m_config->Read( _T("/Torrent/ThrottledDownloadRate"), 0l );
 }
 
 
 void Settings::SetTorrentThrottledDownloadRate( int speed )
 {
-  m_config->Write( _T("/Torrent/ThrottledDownloadRate"), speed );
+  m_config->Write( _T("/Torrent/ThrottledDownloadRate"), (long)speed );
 }
 
 
 int Settings::GetTorrentSystemAutoStartMode()
 {
-    return  m_config->Read( _T("/Torrent/AutoStartMode"), 0l );
+    return  (int)m_config->Read( _T("/Torrent/AutoStartMode"), 0l );
 }
 
 
 void Settings::SetTorrentSystemAutoStartMode( int mode )
 {
-  m_config->Write( _T("/Torrent/AutoStartMode"), mode );
+  m_config->Write( _T("/Torrent/AutoStartMode"), (long)mode );
 }
 
 
 void Settings::SetTorrentMaxConnections( int connections )
 {
-  m_config->Write( _T("/Torrent/MaxConnections"), connections );
+  m_config->Write( _T("/Torrent/MaxConnections"), (long)connections );
 }
 
 
 int Settings::GetTorrentMaxConnections()
 {
-    return  m_config->Read( _T("/Torrent/MaxConnections"), 250 );
+    return  (int)m_config->Read( _T("/Torrent/MaxConnections"), 250l );
 }
 
 
@@ -1090,10 +1079,10 @@ void Settings::SaveBattleMapOptions(IBattle *battle){
   battle->CustomBattleOptions()->getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
   int start_pos_type=longval;
 
-  m_config->Write( option_prefix+_T("startpostype"), start_pos_type);
+  m_config->Write( option_prefix+_T("startpostype"), (long)start_pos_type);
   if(start_pos_type==ST_Choose){
     int n_rects=battle->GetNumRects();
-    m_config->Write( option_prefix+_T("n_rects"), n_rects);
+    m_config->Write( option_prefix+_T("n_rects"), (long)n_rects);
 
 
     for ( int i = 0; i < n_rects; ++i ) {
@@ -1105,11 +1094,11 @@ void Settings::SaveBattleMapOptions(IBattle *battle){
         m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_right"));
         m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"));
       }else{
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"), rect->ally);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_top"), rect->top);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_left"), rect->left);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_right"), rect->right);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"), rect->bottom);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"), (long)rect->ally);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_top"), (long)rect->top);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_left"), (long)rect->left);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_right"), (long)rect->right);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"), (long)rect->bottom);
       }
     }
   }
@@ -1122,24 +1111,24 @@ void Settings::LoadBattleMapOptions(IBattle *battle){
       }
   wxString map_name=battle->GetHostMapName();
   wxString option_prefix=_T("/Hosting/Maps/")+map_name+_T("/");
-  int start_pos_type=m_config->Read(option_prefix+_T("startpostype") , 0L );
+  int start_pos_type=(int)m_config->Read(option_prefix+_T("startpostype") , 0l );
   battle->CustomBattleOptions()->setSingleOption( _T("startpostype"), TowxString(start_pos_type), EngineOption );
   if(start_pos_type==ST_Choose){
 
     battle->ClearStartRects();
 
-    int n_rects=m_config->Read( option_prefix+_T("n_rects"), 0L);
+    int n_rects=(int)m_config->Read( option_prefix+_T("n_rects"), 0l);
 /*
     for(int i=n_rects;i<battle->GetNumRects();++i){
       battle->RemoveStartRect(i);
     }*/
 
     for(int i=0;i<n_rects;++i){
-      int ally=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"),-1L);
-      int top=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_top"),-1L);
-      int left=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_left"),-1L);
-      int right=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_right"),-1L);
-      int bottom=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"),-1L);
+      int ally=(int)m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"),-1l);
+      int top=(int)m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_top"),-1l);
+      int left=(int)m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_left"),-1l);
+      int right=(int)m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_right"),-1l);
+      int bottom=(int)m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"),-1l);
       if(ally>=0){
         battle->AddStartRect(ally,left,top,right,bottom);
       }else{
