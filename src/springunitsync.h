@@ -25,7 +25,9 @@ class SpringUnitSync : public IUnitSync
     ~SpringUnitSync() { FreeUnitSyncLib(); _SaveMapInfoExCache(); }
 
     int GetNumMods();
+    wxArrayString GetModList();
     bool ModExists( const wxString& modname );
+    bool ModExists( const wxString& modname, const wxString& hash );
     UnitSyncMod GetMod( const wxString& modname );
     UnitSyncMod GetMod( int index );
     int GetModIndex( const wxString& name );
@@ -33,13 +35,15 @@ class SpringUnitSync : public IUnitSync
     GameOptions GetModOptions( const wxString& name );
 
     int GetNumMaps();
+    wxArrayString GetMapList();
     bool MapExists( const wxString& mapname );
-    bool MapExists( const wxString& mapname, const wxString hash );
+    bool MapExists( const wxString& mapname, const wxString& hash );
 
     UnitSyncMap GetMap( const wxString& mapname );
     UnitSyncMap GetMap( int index );
     UnitSyncMap GetMapEx( const wxString& mapname );
     UnitSyncMap GetMapEx( int index );
+    wxString GetMapArchive( int index );
     GameOptions GetMapOptions( const wxString& name );
 
     int GetMapIndex( const wxString& name );
@@ -73,6 +77,9 @@ class SpringUnitSync : public IUnitSync
     wxString GetSpringDataPath();
 
     bool FileExists( const wxString& name );
+
+    wxString GetArchivePath( const wxString& name );
+
   private:
 
     static wxString _GetCachedMinimapFileName( const wxString& mapname, int width = -1, int height = -1 );
@@ -81,7 +88,8 @@ class SpringUnitSync : public IUnitSync
 
     LocalArchivesVector m_maps_list; /// maphash -> mapname
     LocalArchivesVector m_mods_list; /// modhash -> modname
-
+    wxArrayString m_map_array;
+    wxArrayString m_mod_array;
 
     wxArrayString m_mod_units;
 

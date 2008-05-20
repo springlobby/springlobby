@@ -7,7 +7,7 @@
 #include <map>
 #include "torrentwrapper.h"
 typedef std::map<int,TorrentInfos> map_infos;
-typedef map_infos::const_iterator map_infos_iter;
+typedef map_infos::iterator map_infos_iter;
 
 class wxStaticText;
 class wxButton;
@@ -50,9 +50,9 @@ class MainTorrentTab: public wxPanel
         };
 
         map_infos info_map;
-        void AddTorrentInfo( const TorrentInfos& info );
-        void UpdateInfo( const TorrentInfos& info );
-        void SetInfo(int index, const TorrentInfos& info );
+        void AddTorrentInfo(  TorrentInfos& info );
+        void UpdateInfo(  TorrentInfos& info );
+        void SetInfo(int index,  TorrentInfos& info );
         void OnCancelButton( wxCommandEvent& event );
 
         wxBoxSizer* m_mainbox;

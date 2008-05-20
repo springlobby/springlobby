@@ -17,6 +17,7 @@
 #define DEFSETT_SPRING_DIR wxGetCwd()
 #define DEFSETT_SPRING_PORT 8452
 
+class wxFileConfig;
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
@@ -28,6 +29,8 @@ class Settings
   public:
     Settings();
     ~Settings();
+
+    bool IsPortableMode();
 
     void SetDefaultSettings();
     void SaveSettings();
@@ -57,6 +60,8 @@ class Settings
 
     wxString GetDefaultServer();
     void SetDefaultServer( const wxString& server_name );
+    void SetAutoConnect( bool do_autoconnect );
+    bool GetAutoConnect( );
 
     bool ServerExists( const wxString& server_name );
 
@@ -189,7 +194,8 @@ class Settings
 
     bool GetSmartScrollEnabled();
     void SetSmartScrollEnabled(bool value);
-
+    bool GetAlwaysAutoScrollOnFocusLost();
+    void SetAlwaysAutoScrollOnFocusLost(bool value);
 
     BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
     void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
@@ -226,8 +232,14 @@ class Settings
     int GetTorrentMaxConnections();
 
   protected:
-
+    #ifdef __WXMSW__
+    wxFileConfig* m_config; //!< wxConfig object to store and restore  all settings in.
+    #else
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
+    #endif
+
+    wxString m_chosed_path;
+    bool m_portable_mode;
 
 };
 

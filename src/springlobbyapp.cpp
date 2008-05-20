@@ -43,6 +43,9 @@ END_EVENT_TABLE()
 SpringLobbyApp::SpringLobbyApp()
 {
     m_timer = new wxTimer(this, TIMER_ID);
+    m_ui = NULL;
+    m_locale = NULL;
+    m_otadownloader = NULL;
 }
 
 SpringLobbyApp::~SpringLobbyApp()
@@ -88,12 +91,23 @@ bool SpringLobbyApp::OnInit()
         }
     }
 
+    if ( !sett().IsFirstRun() && sett().IsPortableMode() ) /// rebase spring paths to current working dir in portable mode
+    {
+      wxString workingfolder = wxStandardPathsBase::Get().GetExecutablePath();
+      sett().SetSpringDir( workingfolder );
+      sett().SetSpringLoc( workingfolder + sett().GetSpringLoc().BeforeLast( wxFileName::GetPathSeparator() ) );
+      sett().SetUnitSyncLoc( workingfolder + sett().GetUnitSyncLoc().BeforeLast( wxFileName::GetPathSeparator() ) );
+      sett().SaveSettings();
+    }
+
     InitDirs();
 
     m_ui = new Ui();
     wxLogMessage( _T("Ui created") );
 
     m_ui->ShowMainWindow();
+
+    if ( !sett().IsFirstRun() && sett().IsPortableMode() && usync()->IsLoaded()) usync()->SetSpringDataPath( sett().GetSpringDir() ); /// update spring's current working dir trough unitsync
 
 
     if ( sett().IsFirstRun() )

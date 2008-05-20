@@ -101,4 +101,9 @@ wxString GetSpringLobbyVersion();
 
 wxString GetHostCPUSpeed();
 
+static inline int CompareStringIgnoreCase(const wxString& first, const wxString& second)
+{
+    return (first.Upper() > second.Upper() );
+}
+
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H

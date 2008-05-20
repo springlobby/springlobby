@@ -128,7 +128,17 @@ void Ui::ShowConnectWindow()
 //! @see DoConnect
 void Ui::Connect()
 {
-  ShowConnectWindow();
+    bool doit = sett().GetAutoConnect();
+    if ( !doit )
+        ShowConnectWindow();
+    else
+    {
+        m_con_win = 0;
+        wxString server_name = sett().GetDefaultServer();
+        wxString nick = sett().GetServerAccountNick( server_name );
+        wxString pass = sett().GetServerAccountPass( server_name );
+        DoConnect( server_name, nick, pass);
+    }
 }
 
 
@@ -244,7 +254,7 @@ void Ui::StartHostedBattle()
 {
   ASSERT_LOGIC( m_serv != 0, _T("m_serv = 0") );
   m_serv->StartHostedBattle();
-  sett().SetLastHostMap( m_serv->GetCurrentBattle()->GetMapName() );
+  sett().SetLastHostMap( m_serv->GetCurrentBattle()->GetHostMapName() );
   sett().SaveBattleMapOptions(m_serv->GetCurrentBattle());
   sett().SaveSettings();
 }
@@ -274,7 +284,8 @@ void Ui::Quit()
 
   m_main_win->Close();
   m_thread->Kill();
-  m_con_win->Close();
+  if ( m_con_win != 0 )
+    m_con_win->Close();
   if (m_serv != 0 ) m_serv->Disconnect();
 }
 
@@ -352,9 +363,9 @@ bool Ui::AskPassword( const wxString& heading, const wxString& message, wxString
 }
 
 
-bool Ui::AskText( const wxString& heading, const wxString& question, wxString& answer )
+bool Ui::AskText( const wxString& heading, const wxString& question, wxString& answer, long style )
 {
-  wxTextEntryDialog name_dlg( &mw(), question, heading, answer, wxOK | wxCANCEL | wxCENTRE );
+  wxTextEntryDialog name_dlg( &mw(), question, heading, answer, style );
   int res = name_dlg.ShowModal();
   answer = name_dlg.GetValue();
 
@@ -478,6 +489,10 @@ void Ui::OnUpdate( int mselapsed )
   if (m_upd_intv_counter % 20 == 0 )
   {
       m_main_win->GetTorrentTab().OnUpdate();
+
+      //would work if events get passed to children
+      wxCommandEvent tor_upd ( torrentSystemStatusUpdateEvt, wxID_ANY);
+      wxPostEvent(m_main_win, tor_upd);
 
   }
   torrent()->UpdateFromTimer( mselapsed );
@@ -950,7 +965,7 @@ void Ui::OnBattleMapChanged( Battle& battle )
   mw().GetJoinTab().UpdateCurrentBattle( true );
   if (battle.IsFounderMe())
   {
-	  battle.CustomBattleOptions()->loadMapOptions(battle.GetMapName());
+	  battle.CustomBattleOptions()->loadMapOptions(battle.GetHostMapName());
 	  mw().GetJoinTab().ReloadMMoptTab();
   }
 }
@@ -1072,7 +1087,7 @@ bool Ui::IsThisMe(User& other)
 		return ( other.GetNick()==m_serv->GetMe().GetNick() );
 }
 
-bool Ui::TestHostPort( unsigned int port )
+int Ui::TestHostPort( unsigned int port )
 {
   return m_serv->TestOpenPort( port );
 }

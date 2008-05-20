@@ -5,6 +5,7 @@
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
+#include <wx/event.h>
 
 #include <map>
 #include "bimap.h"
@@ -37,6 +38,7 @@ struct TorrentInfos
   float outspeed;
   unsigned int filesize;
   wxString hash;
+  int eta; //is set in update function of maintorrenttab
 };
 
 struct TorrentData
@@ -124,6 +126,9 @@ class TorrentWrapper : public iNetClass
 
     typedef codeproject::bimap<libtorrent::torrent_handle,wxString> TorrentHandleToHash; /// torrent handle -> hash
     MutexWrapper<TorrentHandleToHash> m_torrent_handles;
+
+    typedef codeproject::bimap<wxString,wxString> NameToHash;
+    MutexWrapper<NameToHash> m_name_to_hash; ///name -> hash
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;

@@ -191,6 +191,7 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, channel );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), true, 2 );
+  chat->FocusInputBox();
   return chat;
 }
 
@@ -228,6 +229,7 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, user );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, 3 );
+  chat->FocusInputBox();
   return chat;
 }
 
@@ -257,13 +259,9 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
     ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
     ASSERT_LOGIC( delpage != 0 , _T("MainChatTab::OnTabsChanged(): delpage NULL") );
 
-    if ( !delpage->IsServerPanel() ) {
-      delpage->Part();
-      m_chat_tabs->DeletePage( oldsel );
-      m_chat_tabs->SetSelection( 0 );
-    } else {
-      m_chat_tabs->SetSelection( 0 );
-    }
+    delpage->Part();
+    m_chat_tabs->DeletePage( oldsel );
+    m_chat_tabs->SetSelection( 0 );
 
   }
 

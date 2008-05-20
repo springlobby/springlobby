@@ -16,10 +16,12 @@
 #include "torrentwrapper.h"
 #include "utils.h"
 
+const wxEventType torrentSystemStatusUpdateEvt = wxNewEventType();
 
 BEGIN_EVENT_TABLE( TorrentOptionsPanel, wxPanel )
   EVT_BUTTON( ID_MAN_START, TorrentOptionsPanel::OnManStart )
   EVT_BUTTON( ID_MAN_STOP, TorrentOptionsPanel::OnManStop )
+  EVT_COMMAND(wxID_ANY, torrentSystemStatusUpdateEvt, TorrentOptionsPanel::OnStatusUpdate  )
 END_EVENT_TABLE()
 
 
@@ -119,6 +121,11 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
 TorrentOptionsPanel::~TorrentOptionsPanel()
 {
 
+}
+
+void TorrentOptionsPanel::OnStatusUpdate( wxCommandEvent& event )
+{
+    SetStatusDisplay();
 }
 
 void TorrentOptionsPanel::SetStatusDisplay()

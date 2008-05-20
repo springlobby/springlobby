@@ -22,9 +22,9 @@
 #include "torrentoptionspanel.h"
 #endif
 
+#include "images/torrentoptionspanel_icon.png.h"
 #include "images/spring.xpm"
 #include "images/userchat.xpm"
-#include "images/torrentoptionspanel_icon.png.h"
 
 BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 

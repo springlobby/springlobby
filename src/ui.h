@@ -3,6 +3,7 @@
 
 #include <wx/string.h>
 #include <wx/thread.h>
+#include <wx/event.h>
 
 #include "sdlring.h"
 
@@ -20,9 +21,12 @@ class BattleBot;
 class ChatPanel;
 class UnitSyncThread;
 
+
 typedef int HostInfo;
 
 typedef int AlertEventType;
+
+extern const wxEventType torrentSystemStatusUpdateEvt;
 
 #define AE_MESSAGE 1
 #define AE_HIGHLIGHT_MESSAGE 2
@@ -78,7 +82,7 @@ class Ui
     void OpenWebBrowser( const wxString& url );
 
     bool Ask( const wxString& heading, const wxString& question );
-    bool AskText( const wxString& heading, const wxString& question, wxString& answer );
+    bool AskText( const wxString& heading, const wxString& question, wxString& answer, long style = wxOK | wxCANCEL | wxCENTRE );
     bool AskPassword( const wxString& heading, const wxString& message, wxString& password );
     void ShowMessage( const wxString& heading, const wxString& message );
     //void OnAlertEvent( AlertEventType ); //TODO alert system
@@ -157,7 +161,7 @@ class Ui
 
     bool IsThisMe(User& other);
 
-    bool TestHostPort( unsigned int port );
+    int TestHostPort( unsigned int port );
 
   protected:
     Spring* m_spring;

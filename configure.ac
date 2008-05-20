@@ -43,7 +43,7 @@ AM_PATH_WXCONFIG([2.6.3], [],
            where wxWidgets libraries are installed (returned by
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
            equivalent variable and wxWidgets version is 2.6.3 or above.
-   ])], [base,core,net,adv,qa])
+   ])], [base,core,net,adv,qa,richtext])
 win_build=0
 AC_ARG_VAR([WINDRES], [Windows resource file compiler command])
 if test x$host_os = xmingw32msvc ; then
@@ -59,7 +59,7 @@ if test x$usetorrent = xyes ; then
 	AC_MSG_CHECKING([checking for libtorrent])
 	PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
 	if test x$usetorrent = xfail ; then
-		echo "get it at http://www.rasterbar.com/products/libtorrent/";
+		AC_MSG_ERROR([missing required libtorrent library, get it at http://www.rasterbar.com/products/libtorrent/, please note that some distros name it rb-libtorrent, that is NOT libtorrent from rakshasa]);
 		exit
 	fi
 	AC_SUBST(LIBTORRENT_CFLAGS)

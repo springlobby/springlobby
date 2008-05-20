@@ -37,6 +37,8 @@
 #include <wx/file.h>
 #include <wx/wfstream.h>
 #include <wx/msgdlg.h>
+#include <wx/app.h>
+#include <wx/event.h>
 
 #include "torrentwrapper.h"
 
@@ -51,7 +53,10 @@ TorrentWrapper* torrent()
 
 TorrentWrapper::TorrentWrapper():
 m_connected(false),
-ingame(false)
+ingame(false),
+m_seed_count(0),
+m_leech_count(0),
+m_timer_count(0)
 {
   m_tracker_urls.Add( _T("tracker.caspring.org"));
   m_tracker_urls.Add( _T("tracker2.caspring.org"));
@@ -87,7 +92,7 @@ void TorrentWrapper::ConnectToP2PSystem()
   if ( m_connected ) return;
   m_socket_class->Connect( m_tracker_urls[0], DEFAULT_P2P_COORDINATOR_PORT );
   m_connected_tracker_index= 0;
-  return;
+  return; //TODO (BrainDamage #1#) what's this??
   for( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
   {
     m_socket_class->Connect( m_tracker_urls[i], DEFAULT_P2P_COORDINATOR_PORT );
@@ -223,8 +228,10 @@ bool TorrentWrapper::RequestFileByHash( const wxString& hash )
 
 bool TorrentWrapper::RequestFileByName( const wxString& name )
 {
-  return false;
-/// TODO (BrainDamage#1#): implement
+    ScopedLocker<NameToHash> name_to_hash_l(m_name_to_hash);
+    NameToHash::from::iterator iter = name_to_hash_l.Get().from.find(name);
+    if( iter == name_to_hash_l.Get().from.end() ) return false;
+    return RequestFileByHash( iter->second );
 }
 
 
@@ -274,11 +281,20 @@ void TorrentWrapper::UpdateFromTimer( int mselapsed )
 std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 {
   std::map<int,TorrentInfos> ret;
+
   TorrentInfos globalinfos;
+  globalinfos.seeding = false;
+  globalinfos.progress = 0.0f;
+  globalinfos.downloaded = 0;
+  globalinfos.uploaded = 0;
   globalinfos.outspeed = m_torr->status().upload_rate;
   globalinfos.inspeed = m_torr->status().download_rate;
+  globalinfos.numcopies = 0.0f;
+  globalinfos.filesize = 0;
   ret[0] = globalinfos;
+
   if ( ingame || !m_connected ) return ret; /// stop updating the gui if disconneted
+
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
   {
@@ -571,12 +587,9 @@ void TorrentWrapper::FixTorrentList()
 void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 {
   wxLogMessage(_T("torrent: %s"), msg.c_str() );
-  wxStringTokenizer tkz( msg, _T('|') );
-  wxArrayString data;
-  for( unsigned int pos = 0; tkz.HasMoreTokens(); pos++ )
-  {
-      data.Add( tkz.GetNextToken() ); /// fill the array with the message
-  }
+
+  wxArrayString data = wxStringTokenize( msg, _T('|') );
+
   if ( data.GetCount() == 0 ) return;
   // T+|hash|name|type 	 informs client that new torrent was added to server (type is either MOD or MAP)
   else if ( data.GetCount() > 3 && data[0] == _T("T+") ) {
@@ -592,6 +605,8 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     {/// threads rule 3
       ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
       torrent_infos_l.Get()[data[1]] = newtorrent;
+      ScopedLocker<NameToHash> name_to_hash_l(m_name_to_hash);
+      name_to_hash_l.Get().from[newtorrent.name] = newtorrent.hash;
     }
 
 
@@ -602,6 +617,10 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     HashToTorrentData::iterator itor = torrent_infos_l.Get().find(data[1]);
     if( itor == torrent_infos_l.Get().end() ) return;
     torrent_infos_l.Get().erase( itor );
+    ScopedLocker<NameToHash> name_to_hash_l(m_name_to_hash);
+    NameToHash::to::iterator iter = name_to_hash_l.Get().to.find(data[1]);
+    if( iter == name_to_hash_l.Get().to.end() ) return;
+    name_to_hash_l.Get().erase( iter );
   // S+|hash|seeders|leechers 	 tells client that seed is needed for this torrent
   } else if ( data.GetCount() > 1 && data[0] == _T("S+") ) {
     wxString name;
@@ -676,6 +695,7 @@ void TorrentWrapper::OnConnected( Socket* sock )
 
   m_seed_count = 0;
   m_leech_count = 0;
+
 }
 
 
