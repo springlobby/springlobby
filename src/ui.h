@@ -4,6 +4,8 @@
 #include <wx/string.h>
 #include <wx/thread.h>
 
+#include "sdlring.h"
+
 class Server;
 class TASServer;
 class ConnectWindow;
@@ -169,6 +171,7 @@ class Ui
 
     unsigned int m_upd_intv_counter;
 
+    SDLRing* ring_sound;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_UI_H

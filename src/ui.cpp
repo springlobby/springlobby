@@ -36,6 +36,9 @@
 
 #include "settings++/custom_dialogs.h"
 
+#include "sdlring.h"
+
+
 Ui::Ui() :
   m_serv(0),
   m_main_win(0),
@@ -49,6 +52,9 @@ Ui::Ui() :
   m_spring = new Spring(*this);
   m_thread = new UnitSyncThread( *this );
   m_thread->Init();
+
+  ring_sound = new SDLRing();
+  ring_sound->ring();
 }
 
 Ui::~Ui() {
@@ -1015,6 +1021,9 @@ void Ui::OnRing( const wxString& from )
 {
   if ( m_main_win == 0 ) return;
   m_main_win->RequestUserAttention();
+
+  ring_sound->ring();
+  
   wxBell();
 }
 
