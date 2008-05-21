@@ -169,6 +169,7 @@ springlobby_SOURCES = \
 	src/mainwindow.h \
 	src/mapctrl.cpp \
 	src/mapctrl.h \
+	src/mutexwrapper.h \
 	src/nicklistctrl.cpp \
 	src/nicklistctrl.h \
 	src/server.cpp \
