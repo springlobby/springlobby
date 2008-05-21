@@ -53,6 +53,7 @@ Settings::Settings()
 
   #else
   m_config = new wxFileConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
+  m_portable_mode = false;
   #endif
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
 }
@@ -909,7 +910,7 @@ void Settings::SetSmartScrollEnabled(bool value){
 
 bool Settings::GetAlwaysAutoScrollOnFocusLost()
 {
-  return m_config->Read( _T("/Chat/AlwaysAutoScrollOnFocusLost"), 0l );
+  return m_config->Read( _T("/Chat/AlwaysAutoScrollOnFocusLost"), true );
 }
 
 void Settings::SetAlwaysAutoScrollOnFocusLost(bool value)
