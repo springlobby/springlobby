@@ -48,7 +48,7 @@ void InitializeLoggingTargets()
 
 {
 	#if wxUSE_STD_IOSTREAM
-    #if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
+    #if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
       ///hidden stream logging for crash reports
       wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
       wxLogChain *logCrashChain = new wxLogChain( loggercrash );

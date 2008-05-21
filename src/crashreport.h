@@ -1,6 +1,8 @@
 #ifndef CRASHREPORT_H_INCLUDED
 #define CRASHREPORT_H_INCLUDED
 
+#ifdef ENABLE_DEBUG_REPORT
+
 #include <wx/intl.h>
 #include <wx/debugrpt.h>
 #include "utils.h"
@@ -34,5 +36,7 @@ class CrashReport
 CrashReport& crashreport();
 
 #endif // wxUSE_DEBUGREPORT
+
+#endif
 
 #endif // SPRINGLOBBY_HEADERGUARD_CRASHREPORT_H_INCLUDED
