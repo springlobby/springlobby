@@ -49,7 +49,7 @@ Settings::Settings()
   }
 
   wxFileInputStream instream( m_chosed_path );
-  m_config = new wxFileConfig( instream );
+  m_config = new myconf( instream );
 
   #else
   m_config = new wxFileConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );

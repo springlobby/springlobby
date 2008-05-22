@@ -17,11 +17,44 @@
 #define DEFSETT_SPRING_DIR wxGetCwd()
 #define DEFSETT_SPRING_PORT 8452
 
-class wxFileConfig;
+#include <wx/fileconf.h>
+#include "utils.h"
+#include <wx/wfstream.h>
+
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
 class IBattle;
+class wxFileInputStream ;
+//class wxFileConfig;
+class myconf : public wxFileConfig
+{
+    public:
+    myconf (const wxString& appName, const wxString& vendorName,
+                           const wxString& strLocal, const wxString& strGlobal,
+                           long style,
+                           const wxMBConv& conv)
+            : wxFileConfig(appName, vendorName,
+                           strLocal, strGlobal,
+                           style)
+
+    {
+
+    }
+
+    myconf(wxFileInputStream& in) : wxFileConfig(in) {}
+
+    int Read(const wxString& key, int def)
+    {
+      return s2l(wxFileConfig::Read(key, TowxString<long>(def)));
+    }
+
+    bool Write(const wxString& key, const int lval)
+    {
+        return wxFileConfig::Write(key, TowxString<int>(lval) );
+    }
+};
+
 
 //! @brief Class used to store and restore application settings.
 class Settings
