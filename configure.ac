@@ -69,7 +69,7 @@ else
 fi
 
 #check if sound configure is enables, if yes check for SDL
-if test x$sound = xno ; then
+if test "$win_build" = 1 ; then
     CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND"
 else
     AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10") )
