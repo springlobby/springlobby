@@ -3,7 +3,8 @@
 
 #ifndef DISABLE_SOUND
 
-class Mix_Chunk;
+//struct Mix_Chunk;
+#include <SDL_mixer.h>
 
 class SDLSound
 {
