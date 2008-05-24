@@ -63,6 +63,7 @@ class MainWindow : public wxFrame
     void OnShowSettingsPP( wxCommandEvent& event );
     void OnMenuTooltips( wxCommandEvent& event );
     void OnMenuAutoConnect( wxCommandEvent& event );
+    void OnMenuSounds( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
 
@@ -133,7 +134,8 @@ enum
     MAIN_TABS,
     MENU_VERSION,
     MENU_TIPS,
-    MENU_AUTOCONNECT
+    MENU_AUTOCONNECT,
+    MENU_SOUNDS
 
 };
 

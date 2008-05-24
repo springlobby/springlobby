@@ -70,6 +70,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
   EVT_MENU( MENU_TIPS, MainWindow::OnMenuTooltips )
   EVT_MENU( MENU_AUTOCONNECT, MainWindow::OnMenuAutoConnect )
+  EVT_MENU( MENU_SOUNDS, MainWindow::OnMenuSounds )
 
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
 
@@ -94,6 +95,10 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menuEdit->Check( MENU_TIPS, sett().GetShowTooltips() );
   m_menuEdit->Check( MENU_AUTOCONNECT, sett().GetAutoConnect() );
 
+#ifndef DISABLE_SOUND
+  m_menuEdit->AppendCheckItem(MENU_SOUNDS, _("Play Sounds") );
+  m_menuEdit->Check( MENU_AUTOCONNECT, true ); //TODO insert sett().function
+#endif
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
@@ -495,3 +500,10 @@ void MainWindow::OnMenuAutoConnect( wxCommandEvent& event )
     sett().SetAutoConnect( show );
 }
 
+void MainWindow::OnMenuSounds( wxCommandEvent& event )
+{
+#ifndef DISABLE_SOUND
+    //TODO insert
+    //sett().SetSoundWhatever( m_menuEdit->IsChecked(MENU_SOUNDS) );
+#endif
+}
