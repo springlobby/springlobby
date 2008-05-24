@@ -1148,3 +1148,13 @@ void Settings::LoadBattleMapOptions(IBattle *battle){
     }
   }
 }
+
+void Settings::SetShowTooltips( bool show)
+{
+    m_config->Write(_T("GUI/ShowTooltips"), show );
+}
+
+bool Settings::GetShowTooltips()
+{
+    return m_config->Read(_T("GUI/ShowTooltips"), 1l);
+}

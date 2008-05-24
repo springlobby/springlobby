@@ -61,6 +61,8 @@ class MainWindow : public wxFrame
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
     void OnShowSettingsPP( wxCommandEvent& event );
+    void OnMenuTooltips( wxCommandEvent& event );
+    void OnMenuAutoConnect( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
 
@@ -83,6 +85,7 @@ class MainWindow : public wxFrame
     wxMenuItem* m_settings_menu;
     wxMenuBar* m_menubar;
     wxMenu* m_menuTools;
+    wxMenu* m_menuEdit;
 
     wxBoxSizer* m_main_sizer;
     wxListbook* m_func_tabs;
@@ -128,7 +131,9 @@ enum
     MENU_DOC,
     MENU_CHAT,
     MAIN_TABS,
-    MENU_VERSION
+    MENU_VERSION,
+    MENU_TIPS,
+    MENU_AUTOCONNECT
 
 };
 

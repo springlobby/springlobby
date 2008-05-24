@@ -10,6 +10,7 @@
 #include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/sizer.h>
+#include <wx/tooltip.h>
 #include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
@@ -67,7 +68,8 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SETTINGSPP, MainWindow::OnShowSettingsPP )
   EVT_MENU( MENU_VERSION, MainWindow::OnMenuVersion )
   EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
-
+  EVT_MENU( MENU_TIPS, MainWindow::OnMenuTooltips )
+  EVT_MENU( MENU_AUTOCONNECT, MainWindow::OnMenuAutoConnect )
 
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
 
@@ -86,8 +88,12 @@ MainWindow::MainWindow( Ui& ui ) :
   menuFile->AppendSeparator();
   menuFile->Append(MENU_QUIT, _("&Quit"));
 
-//TODO re-enable when actually needed
-//  wxMenu *menuEdit = new wxMenu;
+  m_menuEdit = new wxMenu;
+  m_menuEdit->AppendCheckItem(MENU_AUTOCONNECT, _("Autoconnect to server") );
+  m_menuEdit->AppendCheckItem(MENU_TIPS, _("Show tooltips") );
+  m_menuEdit->Check( MENU_TIPS, sett().GetShowTooltips() );
+  m_menuEdit->Check( MENU_AUTOCONNECT, sett().GetAutoConnect() );
+
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
@@ -106,7 +112,7 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_menubar = new wxMenuBar;
   m_menubar->Append(menuFile, _("&File"));
- // m_menubar->Append(menuEdit, _("&Edit"));
+  m_menubar->Append(m_menuEdit, _("&Edit"));
   m_menubar->Append(m_menuTools, _("&Tools"));
   m_menubar->Append(menuHelp, _("&Help"));
   SetMenuBar(m_menubar);
@@ -475,3 +481,17 @@ void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 	se_frame_active = true;
 	se_frame->Show();
 }
+
+void MainWindow::OnMenuTooltips( wxCommandEvent& event )
+{
+    bool show = m_menuEdit->IsChecked(MENU_TIPS);
+    sett().SetShowTooltips( show );
+    wxToolTip::Enable( show );
+}
+
+void MainWindow::OnMenuAutoConnect( wxCommandEvent& event )
+{
+    bool show = m_menuEdit->IsChecked(MENU_AUTOCONNECT);
+    sett().SetAutoConnect( show );
+}
+
