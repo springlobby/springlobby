@@ -70,7 +70,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* p
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
-#elseif defined(__WXMAC__)
+#elif defined(__WXMAC__)
 /// autosize is entirely broken on wxmac.
   SetColumnWidth( 0, 20 );
   SetColumnWidth( 1, 20 );
