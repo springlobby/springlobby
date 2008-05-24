@@ -6,6 +6,7 @@ ACLOCAL_AMFLAGS = -I m4 --install
 AM_CPPFLAGS = \
 	$(WX_CPPFLAGS) \
 	$(LIBTORRENT_CFLAGS) \
+	$(SDL_CFLAGS) \
 	-DLOCALEDIR=\"$(localedir)\"
 
 # strict aliasing check is disabled, because wxWidgets headers have problems
@@ -41,7 +42,8 @@ bin_PROGRAMS = \
 
 springlobby_LDADD = \
 	$(WX_LIBS)\
-	$(LIBTORRENT_LIBS)
+	$(LIBTORRENT_LIBS) \
+	$(SDL_LIBS)
 
 
 springsettings_LDADD = \
@@ -72,6 +74,8 @@ springlobby_SOURCES = \
 	revision.cpp \
 	src/updater/versionchecker.cpp \
 	src/updater/versionchecker.h \
+	src/sounds/ring_sound.h \
+	src/sounds/pm_sound.h \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
 	src/revision.cpp.in \
@@ -172,6 +176,8 @@ springlobby_SOURCES = \
 	src/mutexwrapper.h \
 	src/nicklistctrl.cpp \
 	src/nicklistctrl.h \
+	src/sdlsound.h \
+	src/sdlsound.cpp \
 	src/server.cpp \
 	src/serverevents.cpp \
 	src/serverevents.h \

@@ -172,7 +172,6 @@ class Ui
     ConnectWindow* m_con_win;
 
     unsigned int m_upd_intv_counter;
-
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_UI_H

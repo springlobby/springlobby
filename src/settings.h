@@ -212,6 +212,9 @@ class Settings
     void SetChatHistoryLenght( unsigned int historylines );
     unsigned int GetChatHistoryLenght();
 
+    void SetChatPMSoundNotificationEnabled( bool enabled );
+    bool GetChatPMSoundNotificationEnabled();
+
     wxColour GetChatColorNormal();
     void SetChatColorNormal( wxColour value );
     wxColour GetChatColorBackground();
