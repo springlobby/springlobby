@@ -776,6 +776,18 @@ unsigned int Settings::GetChatHistoryLenght()
 }
 
 
+void Settings::SetChatPMSoundNotificationEnabled( bool enabled )
+{
+  m_config->Write( _T("/Chat/PMSound"), enabled);
+}
+
+
+bool Settings::GetChatPMSoundNotificationEnabled()
+{
+  return m_config->Read( _T("/Chat/PMSound"), true);
+}
+
+
 wxColour Settings::GetChatColorNormal()
 {
     return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Normal"), _T( "0 0 0" ) ) ) );

@@ -653,7 +653,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 		{
 		   m_ui.mw().RequestUserAttention();
 		   #ifndef DISABLE_SOUND
-       sound().pm();
+       if ( sett().GetChatPMSoundNotificationEnabled() ) sound().pm();
        #endif
 		}
 	}
