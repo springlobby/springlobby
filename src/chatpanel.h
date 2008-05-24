@@ -171,7 +171,11 @@ class ChatPanel : public wxPanel
     wxPanel* m_chat_panel;      //!< Panel containing the chat. Only used when nicklist is visible.
     wxPanel* m_nick_panel;      //!< Panel containing the nicklist.
 
+    #ifndef NO_RICHTEXT_CHAT
     wxRichTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
+    #else
+    wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
+    #endif
     wxTextCtrl* m_say_text;     //!< The say textcontrol.
 
     NickListCtrl* m_nicklist;   //!< The nicklist.

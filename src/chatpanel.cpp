@@ -198,9 +198,14 @@ void ChatPanel::CreateControls( ) {
 	}
 
 	// Creating ui elements
+	#ifndef NO_RICHTEXT_CHAT
 	m_chatlog_text = new wxRichTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
 																	 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
-    m_chatlog_text->SetToolTip( _("right click for options (like autojoin)" ) );
+  #else
+	m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
+																	 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+  #endif
+  m_chatlog_text->SetToolTip( _("right click for options (like autojoin)" ) );
 
 	m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
@@ -456,16 +461,17 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
 	if ( ! m_chatlog_text ) return;
 	LogTime();
-
+  #ifndef NO_RICHTEXT_CHAT
   int p=m_chatlog_text->GetLastPosition()-1;
   if(p<0)p=0;
   bool at_bottom=m_chatlog_text->IsPositionVisible(p); /// true if we're on bottom of page and must scroll
-
+  #endif
 	m_chatlog_text->SetDefaultStyle( wxTextAttr( col, sett().GetChatColorBackground(), fon ) );
 #ifdef __WXMSW__
 	m_chatlog_text->Freeze();
 #endif
 
+  #ifndef NO_RICHTEXT_CHAT
   wxArrayString wordarray =  wxStringTokenize( message, _T(' ') );
   unsigned int wordcount = wordarray.GetCount();
   for( unsigned int pos = 0; pos < wordcount; pos++ )
@@ -485,6 +491,10 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 		m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
     m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
 	}
+
+	#else
+	m_chatlog_text->AppendText( message + _T( "\n" ) );
+	#endif
 
 	CheckLength(); /// crop lines from history that exceeds limit
 
