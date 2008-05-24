@@ -44,14 +44,26 @@ class myconf : public wxFileConfig
 
     myconf(wxFileInputStream& in) : wxFileConfig(in) {}
 
-    int Read(const wxString& key, int def)
-    {
-      return s2l(wxFileConfig::Read(key, TowxString<long>(def)));
-    }
+//    int Read(const wxString& key, int def)
+//    {
+//      return s2l(wxFileConfig::Read(key, TowxString<long>(def)));
+//    }
+//
+//    bool Write(const wxString& key, const int lval)
+//    {
+//        return wxFileConfig::Write(key, TowxString<int>(lval) );
+//    }
 
-    bool Write(const wxString& key, const int lval)
+    protected:
+
+//    bool DoReadLong(const wxString& key, long *pl) const
+//    {
+//        wxFileConfig::DoReadString(key,
+//    }
+
+    bool DoWriteLong(const wxString& key, long lValue)
     {
-        return wxFileConfig::Write(key, TowxString<int>(lval) );
+        return wxFileConfig::DoWriteString(key, TowxString<long>( lValue ) );
     }
 };
 
