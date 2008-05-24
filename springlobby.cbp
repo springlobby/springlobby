@@ -21,6 +21,7 @@
 					<Add option="`wx-config --cflags`" />
 					<Add option='-DVERSION=\\&quot;666_evil_edition\\&quot;' />
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
+					<Add option="-DNO_TORRENT_SYSTEM" />
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
