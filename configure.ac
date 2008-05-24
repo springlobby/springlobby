@@ -20,10 +20,10 @@ AC_ARG_ENABLE(torrent-system,
  [ usetorrent=yes
  ])
 
-sound=no
+sound=yes
 AC_ARG_ENABLE(sound,
- [  --enable-sound Enable sound using SDL, needs SDL],
- [ sound=yes
+ [  --disable-sound Enable sound using SDL, needs SDL],
+ [ sound=no
  ])
 
 AC_CANONICAL_HOST
@@ -69,11 +69,12 @@ else
 fi
 
 #check if sound configure is enables, if yes check for SDL
-if test x$sound = xyes ; then
-   AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10"))
+AM_PATH_SDL(1.2.10, true , if test x$sound = xno ; then
+  CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND"
 else
-   CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND"	
-fi
+  AC_ERROR("Sound requires SDL > 1.2.10")
+fi)
+
 
 AC_ARG_VAR([SVNVERSION], [Produce a compact version number for a working copy.])
 AC_CHECK_PROGS([SVNVERSION], [svnversion false])
