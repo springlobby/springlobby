@@ -69,11 +69,11 @@ else
 fi
 
 #check if sound configure is enables, if yes check for SDL
-AM_PATH_SDL(1.2.10, true , if test x$sound = xno ; then
-  CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND"
+if test x$sound = xno ; then
+    CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND"
 else
-  AC_ERROR("Sound requires SDL > 1.2.10")
-fi)
+    AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10") )
+fi
 
 
 AC_ARG_VAR([SVNVERSION], [Produce a compact version number for a working copy.])
