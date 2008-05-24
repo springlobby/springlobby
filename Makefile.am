@@ -74,6 +74,8 @@ springlobby_SOURCES = \
 	revision.cpp \
 	src/updater/versionchecker.cpp \
 	src/updater/versionchecker.h \
+	src/sounds/ring_sound.h \
+	src/sounds/pm_sound.h \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
 	src/revision.cpp.in \
@@ -173,9 +175,8 @@ springlobby_SOURCES = \
 	src/mapctrl.h \
 	src/nicklistctrl.cpp \
 	src/nicklistctrl.h \
-	src/sdlring.h \
-	src/sdlring.cpp \
-	src/ring_sound.h \
+	src/sdlsound.h \
+	src/sdlsound.cpp \
 	src/server.cpp \
 	src/serverevents.cpp \
 	src/serverevents.h \

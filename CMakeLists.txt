@@ -101,7 +101,7 @@ IF(wxWidgets_FOUND)
 		src/mmoptionswrapper.cpp
 		src/nicklistctrl.cpp
 		src/nonautotools.cpp
-		src/sdlring.cpp
+		src/sdlsound.cpp
 		src/server.cpp
 		src/serverevents.cpp
 		src/settings.cpp
