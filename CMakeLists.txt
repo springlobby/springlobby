@@ -1,5 +1,8 @@
 PROJECT(SpringLobby)
 
+#set minimum cmake version
+cmake_minimum_required(VERSION 2.4)
+
 #if you don't want the full Compiler-Output, remove the following Line
 SET(CMAKE_VERBOSE_MAKEFILE ON)
 SET(CMAKE_COLOR_MAKEFILE ON)
@@ -40,6 +43,7 @@ SET(wxWidgets_USE_LIBS base core gl net adv qa richtext )
 
 # We need the Find package for wxWidgets to work
 FIND_PACKAGE(wxWidgets)
+FIND_PACKAGE(SDL)
 FIND_PACKAGE(SDL_sound)
 
 # Throw an error to the user if SDL_sound is not found
