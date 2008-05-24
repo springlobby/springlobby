@@ -30,5 +30,6 @@ create-build-dir ()
 
 create-build-dir build
 create-build-dir build-linux-wx28 --with-wx-config=/var/lib/buildbot/lib/linux/wx/2.8/bin/wx-config
-create-build-dir build-mingw-wx28 "--build=i686-pc-linux-gnu --host=i586-mingw32msvc --with-wx-config=/var/lib/buildbot/lib/mingw/wx/2.8/bin/wx-config CXXFLAGS=-DDISABLE_SOUND"
+create-build-dir build-mingw-wx28 "--build=i686-pc-linux-gnu --host=i586-mingw32msvc 
+--with-wx-config=/var/lib/buildbot/lib/mingw/wx/2.8/bin/wx-config CXXFLAGS=\"-DDISABLE_SOUND\""
 
