@@ -649,13 +649,10 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 
 
 	if ( req_user ) {
-		if ( !m_ui.mw().IsActive() )
-		{
-		   m_ui.mw().RequestUserAttention();
-		   #ifndef DISABLE_SOUND
-       if ( sett().GetChatPMSoundNotificationEnabled() ) sound().pm();
-       #endif
-		}
+     m_ui.mw().RequestUserAttention();
+     #ifndef DISABLE_SOUND
+     if ( sett().GetChatPMSoundNotificationEnabled() && m_ui.GetActiveChatPanel() != this  ) sound().pm();
+     #endif
 	}
 }
 
