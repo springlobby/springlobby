@@ -63,14 +63,26 @@ NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* p
   m_sortorder[3].col = 1;
   m_sortorder[3].direction = true;
   Sort( );
-  #ifdef __WXMSW__
+
+#if defined(__WXMSW__)
+/// autosize is part-broken on msw.
   SetColumnWidth( 0, 55 );
-  #else
-  SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
-  #endif
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
+#elseif defined(__WXMAC__)
+/// autosize is entirely broken on wxmac.
+  SetColumnWidth( 0, 20 );
+  SetColumnWidth( 1, 20 );
+  SetColumnWidth( 2, 20 );
+  SetColumnWidth( 3, 128 );
+#else
+/// on wxGTK it works, sort of.
+  SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
+#endif
 
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );

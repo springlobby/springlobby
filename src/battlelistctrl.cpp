@@ -23,7 +23,7 @@ BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
   EVT_MENU                 ( BLIST_DLMOD, BattleListCtrl::OnDLMod )
 #if wxUSE_TIPWINDOW
-#ifndef __WXMSW__ //disables tooltips on win
+#if !defined(__WXMSW__) /* && !defined(__WXMAC__) */ //disables tooltips on msw /* and mac */
   EVT_MOTION(BattleListCtrl::OnMouseMotion)
 #endif
 #endif
@@ -93,14 +93,24 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   m_sortorder[3].direction = true;
   Sort( );
 
+#if defined(__WXMAC__)
+/// on mac, autosize does not work at all
+  SetColumnWidth( 0, 20 );
+  SetColumnWidth( 1, 20 );
+  SetColumnWidth( 2, 20 );
+
+  SetColumnWidth( 7, 28 ); // alittle more than before for dual digets
+  SetColumnWidth( 8, 28 );
+  SetColumnWidth( 9, 28 );
+#else
   SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
+
   SetColumnWidth( 7, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 8, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 9, wxLIST_AUTOSIZE_USEHEADER );
-
-
+#endif
   SetColumnWidth( 3, 170 );
   SetColumnWidth( 4, 140 );
   SetColumnWidth( 5, 130 );
@@ -563,7 +573,7 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 		long item_hit = HitTest(position, flag);
 #endif
 
-		if (item_hit != wxNOT_FOUND)
+		if (item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount() )
 		{
 			long item = GetItemData(item_hit);
 			Ui* ui = m_ui_for_sort;
