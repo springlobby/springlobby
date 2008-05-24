@@ -31,6 +31,9 @@
 #include "chatlog.h"
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
+#ifndef DISABLE_SOUND
+#include "sdlsound.h"
+#endif
 /*
 BEGIN_EVENT_TABLE(MyTextCtrl, wxTextCtrl)
 EVT_PAINT(MyTextCtrl::OnPaint)
@@ -646,7 +649,13 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 
 
 	if ( req_user ) {
-		if ( !m_ui.mw().IsActive() ) m_ui.mw().RequestUserAttention();
+		if ( !m_ui.mw().IsActive() )
+		{
+		   m_ui.mw().RequestUserAttention();
+		   #ifndef DISABLE_SOUND
+       sound().pm();
+       #endif
+		}
 	}
 }
 

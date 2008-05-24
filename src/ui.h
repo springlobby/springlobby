@@ -5,8 +5,6 @@
 #include <wx/thread.h>
 #include <wx/event.h>
 
-#include "sdlring.h"
-
 class Server;
 class TASServer;
 class ConnectWindow;
@@ -174,8 +172,6 @@ class Ui
     ConnectWindow* m_con_win;
 
     unsigned int m_upd_intv_counter;
-
-    SDLRing* ring_sound;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_UI_H

@@ -281,8 +281,8 @@
 		<Unit filename="src/nonportable.h" />
 		<Unit filename="src/revision.h" />
 		<Unit filename="src/ring_sound.h" />
-		<Unit filename="src/sdlring.cpp" />
-		<Unit filename="src/sdlring.h" />
+		<Unit filename="src/sdlsound.cpp" />
+		<Unit filename="src/sdlsound.h" />
 		<Unit filename="src/server.cpp" />
 		<Unit filename="src/server.h" />
 		<Unit filename="src/serverevents.cpp" />
@@ -324,6 +324,8 @@
 		<Unit filename="src/singleplayertab.h" />
 		<Unit filename="src/socket.cpp" />
 		<Unit filename="src/socket.h" />
+		<Unit filename="src/sounds/pm_sound.h" />
+		<Unit filename="src/sounds/ring_sound.h" />
 		<Unit filename="src/spinctld.cpp" />
 		<Unit filename="src/spinctld.h" />
 		<Unit filename="src/spring.cpp" />
