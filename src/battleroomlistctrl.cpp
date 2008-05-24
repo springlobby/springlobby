@@ -985,15 +985,15 @@ void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 
 	try{
 		int flag = wxLIST_HITTEST_ONITEM;
-		long *ptrSubItem = new long;
+		long subItem;
 #ifdef HAVE_WX28
-		long item_hit = HitTest(position, flag, ptrSubItem);
+		long item_hit = HitTest(position, flag, &subItem);
 #else
 		long item_hit = HitTest(position, flag);
 #endif
 		int coloumn = getColoumnFromPosition(position);
 
-		if (item_hit != wxNOT_FOUND)
+		if (item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount())
 		{
 			long item = GetItemData(item_hit);
 			item_content content = this->items[(size_t)item];

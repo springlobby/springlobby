@@ -70,8 +70,8 @@ NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* p
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
-#elseif defined(__WXMAC__)
- /// autosize is entirely broken on wxmac.
+#elif defined(__WXMAC__)
+/// autosize is entirely broken on wxmac.
   SetColumnWidth( 0, 20 );
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );
@@ -374,14 +374,14 @@ void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
 
 	try{
 #ifdef HAVE_WX28
-		long *ptrSubItem = new long;
-		long item_hit = HitTest(position, flag, ptrSubItem);
+		long subItem;
+		long item_hit = HitTest(position, flag, &subItem);
 #else
 		long item_hit = HitTest(position, flag);
 #endif
 		int coloumn = getColoumnFromPosition(position);
 
-		if (item_hit != wxNOT_FOUND)
+		if (item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount())
 		{
 			User* user = (User*) GetItemData(item_hit);
 
