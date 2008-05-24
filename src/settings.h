@@ -266,7 +266,7 @@ class Settings
 
   protected:
     #ifdef __WXMSW__
-    wxFileConfig* m_config; //!< wxConfig object to store and restore  all settings in.
+    myconf* m_config; //!< wxConfig object to store and restore  all settings in.
     #else
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
     #endif
