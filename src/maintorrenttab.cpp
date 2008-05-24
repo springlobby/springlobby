@@ -118,7 +118,7 @@ void MainTorrentTab::SetInfo(int index,  TorrentInfos& info )
 
 void MainTorrentTab::AddTorrentInfo(  TorrentInfos& info )
 {
-  int index = m_torrent_list->InsertItem( 0, info.name );
+  int index = m_torrent_list->InsertItem( m_torrent_list->GetItemCount(), info.name );
 //  ASSERT_LOGIC( index != -1, _T("index = -1") );
   m_torrent_list->SetItemData(index, s2l(info.hash) );
 

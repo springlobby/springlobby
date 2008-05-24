@@ -86,8 +86,16 @@ void NickListCtrl::AddUser( User& user )
 {
   SetSelectionRestorePoint();
   int index = InsertItem( 0, icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+
+  wxLogDebugFunc(_T(""));
+  assert(&user);
+  int index = InsertItem( GetItemCount(), icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+  if(index==-1){
+      wxLogMessage(_T("NickListCtrl::AddUser : index==-1"));
+      return;
+  }
+
   SetItemData( index, (wxUIntPtr)&user );
-  ASSERT_LOGIC( index != -1, _T("index = -1") );
   UserUpdated( index );
   Sort();
   SetColumnWidth( 3, wxLIST_AUTOSIZE );

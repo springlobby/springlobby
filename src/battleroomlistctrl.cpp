@@ -185,7 +185,7 @@ void BattleroomListCtrl::UpdateList()
 
 void BattleroomListCtrl::AddUser( User& user )
 {
-  int index = InsertItem( 0,icons().ICON_NREADY );
+  int index = InsertItem( GetItemCount(),icons().ICON_NREADY );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
   wxLogMessage(_T("BattleroomListCtrl::AddUser index=%d name=%s"),index,user.GetNick().c_str());
 
@@ -305,7 +305,7 @@ int BattleroomListCtrl::GetUserIndex( User& user )
 
 void BattleroomListCtrl::AddBot( BattleBot& bot )
 {
-  int index = InsertItem( 0,icons().ICON_BOT );
+  int index = InsertItem( GetItemCount(),icons().ICON_BOT );
   ASSERT_LOGIC( index != -1, _T("index = -1") );
 
   item_content new_content;

@@ -302,7 +302,7 @@ ServerMessageBox::ServerMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
 
 void ServerMessageBox::AppendMessage(const wxString& message)
 {
-    m_messages->InsertItem(0,message);
+    m_messages->InsertItem(m_messages->GetItemCount(),message);
     m_messages->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
     SetSize(m_messages->GetColumnWidth(0)+25,-1);
