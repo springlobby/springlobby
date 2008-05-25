@@ -100,7 +100,7 @@ void SpringUnitSync::PopulateArchiveList()
       m_map_array.Add( name );
     } catch (...)
     {
-      wxLogError( _("Found map with hash collision: ") + name + _T(" hash: ") + hash );
+      wxLogError( _T("Found map with hash collision: ") + name + _T(" hash: ") + hash );
     }
   }
   int numMods = GetNumMods();
@@ -118,7 +118,7 @@ void SpringUnitSync::PopulateArchiveList()
       m_mod_array.Add( name );
     } catch (...)
     {
-      wxLogError( _("Found mod with hash collision: ") + name + _T(" hash: ") + hash );
+      wxLogError( _T("Found mod with hash collision: ") + name + _T(" hash: ") + hash );
     }
   }
 }
