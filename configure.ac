@@ -70,7 +70,7 @@ fi
 
 #check if sound configure is enables, if yes check for SDL
 if test "$win_build" = 1 ; then
-    CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND"
+    CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND -DNO_RICHTEXT_CHAT"
 else
     AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10") )
 fi
