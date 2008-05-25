@@ -476,9 +476,9 @@ void TorrentListCtrl::OnMouseMotion(wxMouseEvent& event)
 //	try{
 //		tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 //		int flag = wxLIST_HITTEST_ONITEM;
-//		long *ptrSubItem = new long;
+//		long subItem;
 //#ifdef HAVE_WX28
-//		long item_hit = HitTest(position, flag, ptrSubItem);
+//		long item_hit = HitTest(position, flag, &subItem);
 //#else
 //		long item_hit = HitTest(position, flag);
 //#endif

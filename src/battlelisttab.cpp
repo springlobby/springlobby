@@ -191,7 +191,7 @@ void BattleListTab::AddBattle( Battle& battle ) {
   if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     return;
   }
-  int index = m_battle_list->InsertItem( 0, icons().GetBattleStatusIcon( battle ) );
+  int index = m_battle_list->InsertItem( m_battle_list->GetItemCount(), icons().GetBattleStatusIcon( battle ) );
   try
   {
     ASSERT_LOGIC( index != -1, _T("index = -1") );
