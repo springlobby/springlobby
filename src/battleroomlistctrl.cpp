@@ -185,11 +185,12 @@ void BattleroomListCtrl::UpdateList()
 
 void BattleroomListCtrl::AddUser( User& user )
 {
-  int index = InsertItem( 0,icons().ICON_NREADY );
+  int index = InsertItem( GetItemCount(),icons().ICON_NREADY );
   try
   {
     ASSERT_LOGIC( index != -1, _T("index = -1") );
   } catch (...) { return; }
+
   wxLogMessage(_T("BattleroomListCtrl::AddUser index=%d name=%s"),index,user.GetNick().c_str());
 
   item_content new_content;
@@ -311,7 +312,7 @@ int BattleroomListCtrl::GetUserIndex( User& user )
 
 void BattleroomListCtrl::AddBot( BattleBot& bot )
 {
-  int index = InsertItem( 0,icons().ICON_BOT );
+  int index = InsertItem( GetItemCount(),icons().ICON_BOT );
   try
   {
     ASSERT_LOGIC( index != -1, _T("index = -1") );
@@ -997,15 +998,15 @@ void BattleroomListCtrl::OnMouseMotion(wxMouseEvent& event)
 
 	try{
 		int flag = wxLIST_HITTEST_ONITEM;
-		long *ptrSubItem = new long;
+		long subItem;
 #ifdef HAVE_WX28
-		long item_hit = HitTest(position, flag, ptrSubItem);
+		long item_hit = HitTest(position, flag, &subItem);
 #else
 		long item_hit = HitTest(position, flag);
 #endif
 		int coloumn = getColoumnFromPosition(position);
 
-		if (item_hit != wxNOT_FOUND)
+		if (item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount())
 		{
 			long item = GetItemData(item_hit);
 			item_content content = this->items[(size_t)item];
