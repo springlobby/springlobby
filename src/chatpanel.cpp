@@ -518,7 +518,7 @@ void ChatPanel::OnResize( wxSizeEvent& event ) {
 
 void ChatPanel::OnLinkEvent( wxTextUrlEvent& event ) {
   #ifdef NO_RICHTEXT_CHAT
-  if ( !if ( !event.GetMouseEvent().LeftDown() ) return;
+  if ( !event.GetMouseEvent().LeftDown() ) return;
   #endif
 	wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd() );
 	m_ui.OpenWebBrowser( url );
