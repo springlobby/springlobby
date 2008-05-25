@@ -498,7 +498,6 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
   if ( sett().GetSmartScrollEnabled() ) {
     m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
 		m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
-    m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
 	}
 	#endif
 
