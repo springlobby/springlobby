@@ -88,16 +88,38 @@ void SpringUnitSync::PopulateArchiveList()
   int numMaps = GetNumMaps();
   for ( int i = 0; i < numMaps; i++ )
   {
-    wxString name = susynclib()->GetMapName( i );
-    m_maps_list.from[susynclib()->GetMapChecksum( i )] = name;
-    m_map_array.Add( name );
+    wxString name, hash;
+    try
+    {
+     name = susynclib()->GetMapName( i );
+     hash = susynclib()->GetMapChecksum( i );
+    } catch (...) { continue; }
+    try
+    {
+      m_maps_list.to[name] = hash;
+      m_map_array.Add( name );
+    } catch (...)
+    {
+      wxLogError( _("Found map with hash collision: ") + name + _T(" hash: ") + hash );
+    }
   }
   int numMods = GetNumMods();
   for ( int i = 0; i < numMods; i++ )
   {
-    wxString name = susynclib()->GetPrimaryModName( i );
-    m_mods_list.from[i2s(susynclib()->GetPrimaryModChecksum( i ))] = name;
-    m_mod_array.Add( name );
+    wxString name, hash;
+    try
+    {
+     name = susynclib()->GetPrimaryModName( i );
+     hash = i2s(susynclib()->GetPrimaryModChecksum( i ));
+    } catch (...) { continue; }
+    try
+    {
+      m_mods_list.to[name] = hash;
+      m_mod_array.Add( name );
+    } catch (...)
+    {
+      wxLogError( _("Found mod with hash collision: ") + name + _T(" hash: ") + hash );
+    }
   }
 }
 
