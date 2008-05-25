@@ -5,10 +5,8 @@
 
 BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
 #if wxUSE_TIPWINDOW
-	#ifndef __WXMSW__
     	EVT_MOTION(customListCtrl::OnMouseMotion)
     	EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)
-    #endif
 #endif
     	EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, customListCtrl::OnStartResizeCol)
     	EVT_LEAVE_WINDOW(customListCtrl::noOp)
