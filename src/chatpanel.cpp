@@ -467,7 +467,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
   bool at_bottom=m_chatlog_text->IsPositionVisible(p); /// true if we're on bottom of page and must scroll
   #endif
 	m_chatlog_text->SetDefaultStyle( wxTextAttr( col, sett().GetChatColorBackground(), fon ) );
-#ifdef __WXMSW__ && !defined(NO_RICHTEXT_CHAT)
+#if  defined(__WXMSW__) && !defined(NO_RICHTEXT_CHAT)
 	m_chatlog_text->Freeze();
 #endif
 
@@ -498,7 +498,6 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
   if ( sett().GetSmartScrollEnabled() ) {
     m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
 		m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
-    m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
 	}
 	#endif
 
@@ -506,7 +505,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
 	if ( m_chat_log ) m_chat_log->AddMessage( message );
 
-#ifdef __WXMSW__ && !defined(NO_RICHTEXT_CHAT)
+#if  defined(__WXMSW__) && !defined(NO_RICHTEXT_CHAT)
 	m_chatlog_text->Thaw();
 #endif
 
