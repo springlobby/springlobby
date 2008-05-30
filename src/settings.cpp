@@ -784,7 +784,7 @@ void Settings::SetChatPMSoundNotificationEnabled( bool enabled )
 
 bool Settings::GetChatPMSoundNotificationEnabled()
 {
-  return m_config->Read( _T("/Chat/PMSound"), true);
+  return m_config->Read( _T("/Chat/PMSound"), 1l);
 }
 
 

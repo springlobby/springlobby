@@ -18,6 +18,7 @@
 #include <wx/event.h>
 #include <wx/notebook.h>
 #include <wx/richtext/richtextctrl.h>
+#include <wx/app.h>
 
 #include "channel.h"
 #include "chatpanel.h"
@@ -669,7 +670,8 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 	if ( req_user ) {
      m_ui.mw().RequestUserAttention();
      #ifndef DISABLE_SOUND
-     if ( sett().GetChatPMSoundNotificationEnabled() && m_ui.GetActiveChatPanel() != this  ) sound().pm();
+     if ( sett().GetChatPMSoundNotificationEnabled() && ( m_ui.GetActiveChatPanel() != this  || !wxTheApp->IsActive() ) )
+        sound().pm();
      #endif
 	}
 }
