@@ -20,6 +20,11 @@ AC_ARG_ENABLE(torrent-system,
  [ usetorrent=yes
  ])
 
+sound=yes
+AC_ARG_ENABLE(sound,
+ [  --disable-sound Enable sound using SDL, needs SDL],
+ [ sound=no
+ ])
 
 AC_CANONICAL_HOST
 
@@ -63,6 +68,14 @@ else
 	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
 fi
 
+#check if sound configure is enables, if yes check for SDL
+if test "$win_build" = 1 ; then
+    CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND -DNO_RICHTEXT_CHAT"
+else
+    AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10") )
+fi
+
+
 AC_ARG_VAR([SVNVERSION], [Produce a compact version number for a working copy.])
 AC_CHECK_PROGS([SVNVERSION], [svnversion false])
 
@@ -80,6 +93,8 @@ fi
 
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.14])
+
+
 
 AC_CONFIG_FILES([Makefile po/Makefile.in])
 AC_OUTPUT

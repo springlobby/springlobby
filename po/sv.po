@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SpringLobby 0.0.1-svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-05 00:11+0200\n"
+"POT-Creation-Date: 2008-05-24 22:20+0200\n"
 "PO-Revision-Date: 2008-03-30 21:44+0000\n"
 "Last-Translator: Daniel Nylander <yeager@ubuntu.com>\n"
 "Language-Team: Swedish\n"
@@ -41,7 +41,7 @@ msgid "Choose the AI library to use with this bot."
 msgstr "Välj vilket AI du vill använda med den här boten."
 
 #: src/addbotdialog.cpp:76 src/autobalancedialog.cpp:57
-#: src/connectwindow.cpp:78 src/hostbattledialog.cpp:204
+#: src/connectwindow.cpp:83 src/hostbattledialog.cpp:204
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -49,11 +49,11 @@ msgstr "Avbryt"
 msgid "Add Bot"
 msgstr "Lägg till bot"
 
-#: src/addbotdialog.cpp:134
+#: src/addbotdialog.cpp:138
 msgid "No AI bots found in your Spring installation."
 msgstr "Hittade inga AI bibliotek i din Spring installation."
 
-#: src/addbotdialog.cpp:134
+#: src/addbotdialog.cpp:138
 msgid "No bot-libs found"
 msgstr "Inga AI bibliotek funna"
 
@@ -118,43 +118,43 @@ msgid ""
 "unfair."
 msgstr ""
 
-#: src/autobalancedialog.cpp:60 src/connectwindow.cpp:77
+#: src/autobalancedialog.cpp:60 src/connectwindow.cpp:82
 msgid "Ok"
 msgstr "Ok"
 
-#: src/battlelistctrl.cpp:62 src/hostbattledialog.cpp:57
+#: src/battlelistctrl.cpp:58 src/hostbattledialog.cpp:57
 msgid "Description"
 msgstr "Beskrivning"
 
-#: src/battlelistctrl.cpp:66 src/mainjoinbattletab.cpp:151
+#: src/battlelistctrl.cpp:62 src/mainjoinbattletab.cpp:151
 msgid "Map"
 msgstr "Karta"
 
-#: src/battlelistctrl.cpp:70 src/hostbattledialog.cpp:71
+#: src/battlelistctrl.cpp:66 src/hostbattledialog.cpp:71
 msgid "Mod"
 msgstr "Mod"
 
-#: src/battlelistctrl.cpp:74 src/hostbattledialog.cpp:208
+#: src/battlelistctrl.cpp:70 src/hostbattledialog.cpp:208
 msgid "Host"
 msgstr "Värd"
 
-#: src/battlelistctrl.cpp:78 src/battleroomlistctrl.cpp:88
+#: src/battlelistctrl.cpp:74 src/battleroomlistctrl.cpp:88
 msgid "a"
 msgstr "a"
 
-#: src/battlelistctrl.cpp:82
+#: src/battlelistctrl.cpp:78
 msgid "p"
 msgstr "p"
 
-#: src/battlelistctrl.cpp:86
+#: src/battlelistctrl.cpp:82
 msgid "m"
 msgstr "m"
 
-#: src/battlelistctrl.cpp:115
+#: src/battlelistctrl.cpp:111
 msgid "Download &map"
 msgstr "Ladda ner &karta"
 
-#: src/battlelistctrl.cpp:116
+#: src/battlelistctrl.cpp:112
 msgid "Download m&od"
 msgstr "Ladda ner &mod"
 
@@ -203,7 +203,7 @@ msgid "All"
 msgstr "Alla"
 
 #: src/battlelistfilter.cpp:214 src/battlelisttab.cpp:85
-#: src/singleplayertab.cpp:48
+#: src/singleplayertab.cpp:50
 msgid "Map:"
 msgstr "Karta:"
 
@@ -216,7 +216,7 @@ msgid "Max.Player:"
 msgstr "Max.Spelare:"
 
 #: src/battlelistfilter.cpp:269 src/battlelisttab.cpp:91
-#: src/singleplayertab.cpp:57
+#: src/singleplayertab.cpp:59
 msgid "Mod:"
 msgstr "Mod:"
 
@@ -249,41 +249,41 @@ msgstr "Hosta nytt.."
 msgid "Join"
 msgstr "Gå med"
 
-#: src/battlelisttab.cpp:324
+#: src/battlelisttab.cpp:366
 msgid ""
 "You cannot host a game while being offline. Please connect to a lobby server."
 msgstr ""
 "Du kan inte skapa ett spel när du är nerkopplad. Var god koppla upp dig mot "
 "lobby serven."
 
-#: src/battlelisttab.cpp:324
+#: src/battlelisttab.cpp:366
 msgid "Not Online."
 msgstr "Inte uppkopplad."
 
-#: src/battlelisttab.cpp:330
+#: src/battlelisttab.cpp:372
 msgid "Hosting is disabled due to the incompatible version you're using"
 msgstr ""
 "Du kan inte skapa spel eftersom din version av Spring inte är kompatibel."
 
-#: src/battlelisttab.cpp:330 src/battlelisttab.cpp:335
-#: src/battlelisttab.cpp:453 src/battlelisttab.cpp:469
-#: src/settings++/panel_pathoption.cpp:90 src/singleplayertab.cpp:268
-#: src/springoptionstab.cpp:481 src/springoptionstab.cpp:486 src/ui.cpp:498
-#: src/ui.cpp:501
+#: src/battlelisttab.cpp:372 src/battlelisttab.cpp:377
+#: src/battlelisttab.cpp:529 src/battlelisttab.cpp:545
+#: src/settings++/panel_pathoption.cpp:90 src/singleplayertab.cpp:276
+#: src/springoptionstab.cpp:481 src/springoptionstab.cpp:486 src/ui.cpp:516
+#: src/ui.cpp:519
 msgid "Spring error"
 msgstr "Spring fel"
 
-#: src/battlelisttab.cpp:335
+#: src/battlelisttab.cpp:377
 msgid ""
 "You already are running a Spring instance, close it first in order to be "
 "able to host a new game"
 msgstr "Spring körs redan, stäng det innan du försöker starta ett nytt spel."
 
-#: src/battlelisttab.cpp:340 src/battlelisttab.cpp:459
+#: src/battlelisttab.cpp:382 src/battlelisttab.cpp:535
 msgid "Already in a battle"
 msgstr "Du är redan inne i ett spel"
 
-#: src/battlelisttab.cpp:340
+#: src/battlelisttab.cpp:382
 msgid ""
 "You are already in a battle.\n"
 "\n"
@@ -293,7 +293,21 @@ msgstr ""
 "\n"
 "Vill du gå ur detta och starta ett nytt?"
 
-#: src/battlelisttab.cpp:360
+#: src/battlelisttab.cpp:404
+msgid ""
+"Your using wxWidgets prior to version 2.8,\n"
+" port testing is not supported.\n"
+" Hosting may or may not work."
+msgstr ""
+
+#: src/battlelisttab.cpp:411
+#, c-format
+msgid ""
+"The server used for testing your port %d is unreachable. \n"
+"Hosting may or may not work with this setting."
+msgstr ""
+
+#: src/battlelisttab.cpp:419 src/battlelisttab.cpp:429
 #, fuzzy, c-format
 msgid ""
 "Battle not started because the port you selected (%d) is unable to recieve "
@@ -307,15 +321,15 @@ msgstr ""
 "Kunde inte skapa ett spel eftersom porten du valt (%d) inte kan ta emot "
 "inkommande paket. Kolla din router & firewall konfiguration eller ändra port"
 
-#: src/battlelisttab.cpp:373
+#: src/battlelisttab.cpp:442
 msgid "Battle not started beacuse the mod you selected could not be found. "
 msgstr "Spelet kunde inte startas eftersom modden du valt inte kunde hittas. "
 
-#: src/battlelisttab.cpp:373
+#: src/battlelisttab.cpp:442
 msgid "Error starting battle."
 msgstr "Kunde inte starta spel."
 
-#: src/battlelisttab.cpp:384 src/battlelisttab.cpp:391
+#: src/battlelisttab.cpp:453 src/battlelisttab.cpp:460
 #, fuzzy
 msgid ""
 "Couldn't find any maps in your spring installation. This could happen when "
@@ -324,11 +338,11 @@ msgstr ""
 "Kunde inte hitta några kartor i din Spring installation. Detta kan hända när "
 "du inte har ställt in inställningarna fr Spring korrekt."
 
-#: src/battlelisttab.cpp:384 src/battlelisttab.cpp:391
+#: src/battlelisttab.cpp:453 src/battlelisttab.cpp:460
 msgid "No maps found"
 msgstr "Inga kartor funna"
 
-#: src/battlelisttab.cpp:453
+#: src/battlelisttab.cpp:529
 msgid ""
 "Joining battles is disabled due to the incompatible spring version you're "
 "using."
@@ -336,7 +350,7 @@ msgstr ""
 "Du kan inte gå med i nätverks spel eftersom din Spring version är "
 "inkompatibel."
 
-#: src/battlelisttab.cpp:459
+#: src/battlelisttab.cpp:535
 msgid ""
 "You are already in a battle.\n"
 "\n"
@@ -346,13 +360,13 @@ msgstr ""
 "\n"
 "Vill du gå ur detta och starta ett nytt?"
 
-#: src/battlelisttab.cpp:469
+#: src/battlelisttab.cpp:545
 msgid ""
 "You already are running a Spring instance, close it first in order to be "
 "able to join another battle."
 msgstr "Spring körs redan, stäng det innan du försöker starta ett nytt spel."
 
-#: src/battlelisttab.cpp:474
+#: src/battlelisttab.cpp:550
 msgid ""
 "You need to download the mod before you can join this game.\n"
 "\n"
@@ -362,11 +376,11 @@ msgstr ""
 "\n"
 "Vill du att jag ska ta dig till nerladdnings sidan?"
 
-#: src/battlelisttab.cpp:474
+#: src/battlelisttab.cpp:550
 msgid "Mod not available"
 msgstr "Modden inte tillgänlig"
 
-#: src/battlelisttab.cpp:483
+#: src/battlelisttab.cpp:559
 msgid ""
 "You need to download the map to be able to play in this game.\n"
 "\n"
@@ -376,15 +390,15 @@ msgstr ""
 "\n"
 "Vill du att jag ska ta dig till nerladdnings sidan?"
 
-#: src/battlelisttab.cpp:483
+#: src/battlelisttab.cpp:559
 msgid "Map not available"
 msgstr "Kartan inte tillgänglig"
 
-#: src/battlelisttab.cpp:491 src/chatpanel.cpp:1359
+#: src/battlelisttab.cpp:567 src/chatpanel.cpp:1318
 msgid "Battle password"
 msgstr "Spelets lösenord"
 
-#: src/battlelisttab.cpp:491
+#: src/battlelisttab.cpp:567
 msgid "Enter password"
 msgstr "Skriv in lösenord"
 
@@ -545,7 +559,7 @@ msgstr "Rensa"
 msgid "Enable all units."
 msgstr "Tillåt alla enheter."
 
-#: src/battleroomlistctrl.cpp:80 src/connectwindow.cpp:65
+#: src/battleroomlistctrl.cpp:80 src/connectwindow.cpp:67
 #: src/nicklistctrl.cpp:52
 msgid "Nickname"
 msgstr "Smeknamn"
@@ -578,38 +592,38 @@ msgstr "Sida"
 msgid "Set color"
 msgstr "Välj färg"
 
-#: src/battleroomlistctrl.cpp:157 src/battleroomlistctrl.cpp:488
+#: src/battleroomlistctrl.cpp:157 src/battleroomlistctrl.cpp:507
 msgid "Set Resource Bonus"
 msgstr "Sätt resurs bonus"
 
-#: src/battleroomlistctrl.cpp:162 src/battleroomlistctrl.cpp:407
-#: src/battleroomlistctrl.cpp:416 src/battleroomtab.cpp:122
+#: src/battleroomlistctrl.cpp:162 src/battleroomlistctrl.cpp:426
+#: src/battleroomlistctrl.cpp:435 src/battleroomtab.cpp:122
 msgid "Spectator"
 msgstr "Spektator"
 
-#: src/battleroomlistctrl.cpp:167 src/battleroomlistctrl.cpp:411
-#: src/battleroomlistctrl.cpp:421
+#: src/battleroomlistctrl.cpp:167 src/battleroomlistctrl.cpp:430
+#: src/battleroomlistctrl.cpp:440
 msgid "Kick"
 msgstr "Släng ut"
 
-#: src/battleroomlistctrl.cpp:169 src/battleroomlistctrl.cpp:410
-#: src/battleroomlistctrl.cpp:419 src/chatpanel.cpp:432
+#: src/battleroomlistctrl.cpp:169 src/battleroomlistctrl.cpp:429
+#: src/battleroomlistctrl.cpp:438 src/chatpanel.cpp:403
 msgid "Ring"
 msgstr "Ring"
 
-#: src/battleroomlistctrl.cpp:488
+#: src/battleroomlistctrl.cpp:507
 msgid "Please enter a value between 0 and 100"
 msgstr "Var god välj ett nummer mellan 0 och 100"
 
-#: src/battleroomlistctrl.cpp:493
+#: src/battleroomlistctrl.cpp:512
 msgid "Not a number"
 msgstr "Inget nummer"
 
-#: src/battleroomlistctrl.cpp:493 src/battleroomlistctrl.cpp:498
+#: src/battleroomlistctrl.cpp:512 src/battleroomlistctrl.cpp:517
 msgid "Invalid number"
 msgstr "Felaktigt nummer"
 
-#: src/battleroomlistctrl.cpp:498
+#: src/battleroomlistctrl.cpp:517
 msgid ""
 "Value out of range.\n"
 " Enter an integer between 0 & 100."
@@ -627,11 +641,11 @@ msgstr "Kart alternativ"
 msgid "Color"
 msgstr "Färg"
 
-#: src/battleroomtab.cpp:104 src/chatpanel.cpp:291
+#: src/battleroomtab.cpp:104 src/chatpanel.cpp:262
 msgid "Leave"
 msgstr "Lämna"
 
-#: src/battleroomtab.cpp:106 src/singleplayertab.cpp:81
+#: src/battleroomtab.cpp:106 src/singleplayertab.cpp:83
 msgid "Start"
 msgstr "Starta"
 
@@ -698,11 +712,11 @@ msgstr ""
 msgid "Log function is disabled until restart SpringLobby."
 msgstr "Log funktionen är avstängd tills du startar om SpringLobby."
 
-#: src/chatlog.cpp:77 src/chatlog.cpp:97 src/chatlog.cpp:114
+#: src/chatlog.cpp:77 src/chatlog.cpp:100 src/chatlog.cpp:117
 msgid "Log Warning"
 msgstr "Log varning"
 
-#: src/chatlog.cpp:97
+#: src/chatlog.cpp:100
 msgid ""
 "Couldn't write message to log.\n"
 "Logging will be disabled for room "
@@ -710,7 +724,7 @@ msgstr ""
 "Kunde inte skriva log meddelandet till loggen.\n"
 "Loggningen kommer att stängas av för kanalen "
 
-#: src/chatlog.cpp:97
+#: src/chatlog.cpp:100
 msgid ""
 ".\n"
 "\n"
@@ -720,7 +734,7 @@ msgstr ""
 "\n"
 "Gå in i kanalen igen för att aktivera loggning."
 
-#: src/chatlog.cpp:114
+#: src/chatlog.cpp:117
 msgid ""
 "Can't open log file. \n"
 "Be sure that there isn't a write protection.\n"
@@ -760,7 +774,7 @@ msgstr "Gå med/Lämna"
 msgid "My messages"
 msgstr "Mina medelanden"
 
-#: src/chatoptionstab.cpp:186 src/connectwindow.cpp:59
+#: src/chatoptionstab.cpp:186 src/connectwindow.cpp:61
 msgid "Server"
 msgstr "Server"
 
@@ -768,9 +782,9 @@ msgstr "Server"
 msgid "Client"
 msgstr "Klient"
 
-#: src/chatoptionstab.cpp:214 src/chatpanel.cpp:1326 src/chatpanel.cpp:1487
-#: src/chatpanel.cpp:1492 src/mainwindow.cpp:410
-#: src/settings++/tab_abstract.cpp:111 src/tasserver.cpp:408
+#: src/chatoptionstab.cpp:214 src/chatpanel.cpp:1285 src/chatpanel.cpp:1446
+#: src/chatpanel.cpp:1451 src/mainwindow.cpp:410
+#: src/settings++/tab_abstract.cpp:111 src/tasserver.cpp:420
 msgid "Error"
 msgstr "Felmedelanden"
 
@@ -846,208 +860,212 @@ msgstr "Ord som ska bli markerade"
 msgid "Choose a directory"
 msgstr "Välj en katalog"
 
-#: src/chatpanel.cpp:235
+#: src/chatpanel.cpp:203
+msgid "right click for options (like autojoin)"
+msgstr ""
+
+#: src/chatpanel.cpp:206
 msgid "Send"
 msgstr "Skicka"
 
-#: src/chatpanel.cpp:281
+#: src/chatpanel.cpp:252
 msgid "Auto join this channel"
 msgstr "Gå med denna kanalen automatiskt"
 
-#: src/chatpanel.cpp:294
+#: src/chatpanel.cpp:265
 msgid "Display Join/Leave Messages"
 msgstr "Visa gå med/lämna medelanden"
 
-#: src/chatpanel.cpp:301 src/chatpanel.cpp:355
+#: src/chatpanel.cpp:272 src/chatpanel.cpp:326
 msgid "Select all"
 msgstr "Markera allt"
 
-#: src/chatpanel.cpp:303 src/chatpanel.cpp:357
+#: src/chatpanel.cpp:274 src/chatpanel.cpp:328
 msgid "Copy"
 msgstr "Kopiera"
 
-#: src/chatpanel.cpp:309
+#: src/chatpanel.cpp:280
 msgid "Channel info"
 msgstr "Kanal information"
 
-#: src/chatpanel.cpp:313 src/chatpanel.cpp:1175
+#: src/chatpanel.cpp:284 src/chatpanel.cpp:1134
 msgid "Set topic..."
 msgstr "Sätt ämne..."
 
-#: src/chatpanel.cpp:315 src/chatpanel.cpp:1191
+#: src/chatpanel.cpp:286 src/chatpanel.cpp:1150
 msgid "Channel message..."
 msgstr "Kanal medelande..."
 
-#: src/chatpanel.cpp:319
+#: src/chatpanel.cpp:290
 msgid "Lock..."
 msgstr "Lås..."
 
-#: src/chatpanel.cpp:321
+#: src/chatpanel.cpp:292
 msgid "Unlock"
 msgstr "Lås upp..."
 
-#: src/chatpanel.cpp:325
+#: src/chatpanel.cpp:296
 msgid "Register..."
 msgstr "Registrera..."
 
-#: src/chatpanel.cpp:327
+#: src/chatpanel.cpp:298
 msgid "Unregister"
 msgstr "Avregistrera"
 
-#: src/chatpanel.cpp:333
+#: src/chatpanel.cpp:304
 msgid "On"
 msgstr "På"
 
-#: src/chatpanel.cpp:335
+#: src/chatpanel.cpp:306
 msgid "Off"
 msgstr "Av"
 
-#: src/chatpanel.cpp:339
+#: src/chatpanel.cpp:310
 msgid "Is on?"
 msgstr "Är på?"
 
-#: src/chatpanel.cpp:341
+#: src/chatpanel.cpp:312
 msgid "Spam protection"
 msgstr "Spam skydd"
 
-#: src/chatpanel.cpp:342 src/chatpanel.cpp:456
+#: src/chatpanel.cpp:313 src/chatpanel.cpp:427
 msgid "ChanServ"
 msgstr "ChanServ"
 
-#: src/chatpanel.cpp:349
+#: src/chatpanel.cpp:320
 msgid "Disconnect"
 msgstr "Koppla ned"
 
-#: src/chatpanel.cpp:351
+#: src/chatpanel.cpp:322
 msgid "Reconnect"
 msgstr "Återanslut"
 
-#: src/chatpanel.cpp:366
+#: src/chatpanel.cpp:337
 msgid "Remove..."
 msgstr "Ta bort..."
 
-#: src/chatpanel.cpp:368
+#: src/chatpanel.cpp:339
 msgid "Change password..."
 msgstr "Ändra lösenord..."
 
-#: src/chatpanel.cpp:370
+#: src/chatpanel.cpp:341
 msgid "Set access..."
 msgstr "Sätt åtkomst..."
 
-#: src/chatpanel.cpp:372
+#: src/chatpanel.cpp:343
 msgid "Accounts"
 msgstr "Konton"
 
-#: src/chatpanel.cpp:375
+#: src/chatpanel.cpp:346
 msgid "Broadcast..."
 msgstr "Broadcasta..."
 
-#: src/chatpanel.cpp:377
+#: src/chatpanel.cpp:348
 msgid "Admin"
 msgstr "Administrering"
 
-#: src/chatpanel.cpp:388
+#: src/chatpanel.cpp:359
 msgid "Open Chat"
 msgstr "Öppna chat"
 
-#: src/chatpanel.cpp:390
+#: src/chatpanel.cpp:361
 msgid "Join same battle"
 msgstr "Gå med samma spel"
 
-#: src/chatpanel.cpp:396
+#: src/chatpanel.cpp:367
 msgid "Ingame time"
 msgstr "Spel tid"
 
-#: src/chatpanel.cpp:398
+#: src/chatpanel.cpp:369
 #, fuzzy
 msgid "Retrieve IP and Smurfs"
 msgstr "IP och smurfar"
 
-#: src/chatpanel.cpp:405 src/chatpanel.cpp:443
+#: src/chatpanel.cpp:376 src/chatpanel.cpp:414
 msgid "Mute..."
 msgstr "Tysta..."
 
-#: src/chatpanel.cpp:407
+#: src/chatpanel.cpp:378
 msgid "Mute for 5 minutes"
 msgstr "Tysta i 5 minuter"
 
-#: src/chatpanel.cpp:409
+#: src/chatpanel.cpp:380
 msgid "Mute for 10 minutes"
 msgstr "Tysta i 10 minuter"
 
-#: src/chatpanel.cpp:411
+#: src/chatpanel.cpp:382
 msgid "Mute for 30 minutes"
 msgstr "Tysta i 30 minuter"
 
-#: src/chatpanel.cpp:413
+#: src/chatpanel.cpp:384
 msgid "Mute for 2 hours"
 msgstr "Tysta i 2 timmar"
 
-#: src/chatpanel.cpp:415
+#: src/chatpanel.cpp:386
 msgid "Mute for 1 day"
 msgstr "Tysta i en dag"
 
-#: src/chatpanel.cpp:418 src/chatpanel.cpp:445
+#: src/chatpanel.cpp:389 src/chatpanel.cpp:416
 msgid "Unmute"
 msgstr "Avtysta"
 
-#: src/chatpanel.cpp:420
+#: src/chatpanel.cpp:391
 msgid "Mute"
 msgstr "Tysta"
 
-#: src/chatpanel.cpp:422 src/chatpanel.cpp:448
+#: src/chatpanel.cpp:393 src/chatpanel.cpp:419
 msgid "Kick..."
 msgstr "Sparka..."
 
-#: src/chatpanel.cpp:426
+#: src/chatpanel.cpp:397
 msgid "Ban..."
 msgstr "Banna..."
 
-#: src/chatpanel.cpp:428
+#: src/chatpanel.cpp:399
 msgid "Unban"
 msgstr "Avbanna"
 
-#: src/chatpanel.cpp:436
+#: src/chatpanel.cpp:407
 msgid "Slap!"
 msgstr "Slap!"
 
-#: src/chatpanel.cpp:452
+#: src/chatpanel.cpp:423
 msgid "Op"
 msgstr "Op"
 
-#: src/chatpanel.cpp:454
+#: src/chatpanel.cpp:425
 msgid "DeOp"
 msgstr "DeOp"
 
-#: src/chatpanel.cpp:767
+#: src/chatpanel.cpp:722
 msgid " !! Command: \""
 msgstr ""
 
-#: src/chatpanel.cpp:767
+#: src/chatpanel.cpp:722
 msgid "\" params: \""
 msgstr ""
 
-#: src/chatpanel.cpp:772
+#: src/chatpanel.cpp:727
 msgid "channel"
 msgstr "kanal"
 
-#: src/chatpanel.cpp:773
+#: src/chatpanel.cpp:728
 msgid "battle"
 msgstr "spel"
 
-#: src/chatpanel.cpp:774
+#: src/chatpanel.cpp:729
 msgid "server"
 msgstr "server"
 
-#: src/chatpanel.cpp:793 src/chatpanel.cpp:798
+#: src/chatpanel.cpp:748 src/chatpanel.cpp:753
 msgid " joined the "
 msgstr " gick med i "
 
-#: src/chatpanel.cpp:826 src/chatpanel.cpp:836
+#: src/chatpanel.cpp:781 src/chatpanel.cpp:791
 msgid " left the "
 msgstr " gick ur "
 
-#: src/chatpanel.cpp:867
+#: src/chatpanel.cpp:822
 msgid ""
 "\n"
 " * Set by "
@@ -1055,63 +1073,63 @@ msgstr ""
 "\n"
 " * Satt av "
 
-#: src/chatpanel.cpp:890
+#: src/chatpanel.cpp:848
 msgid "Chat closed."
 msgstr "Chat stängd."
 
-#: src/chatpanel.cpp:916
+#: src/chatpanel.cpp:874
 msgid "_SERVER"
 msgstr ""
 
-#: src/chatpanel.cpp:971
+#: src/chatpanel.cpp:929
 #, c-format
 msgid "Are you sure you want to paste %d lines?"
 msgstr "Är du säker på att du vill klistra in %d rader?"
 
-#: src/chatpanel.cpp:971
+#: src/chatpanel.cpp:929
 msgid "Flood warning"
 msgstr "Flood varning"
 
-#: src/chatpanel.cpp:983
+#: src/chatpanel.cpp:941
 msgid " You have SpringLobby v"
 msgstr " Du har SpringLobby v"
 
-#: src/chatpanel.cpp:990
+#: src/chatpanel.cpp:948
 msgid " You are not in channel or channel does not exist."
 msgstr " Du är inte i kanalen eller så finns den inte."
 
-#: src/chatpanel.cpp:996 src/chatpanel.cpp:1010 src/chatpanel.cpp:1024
-#: src/chatpanel.cpp:1034
+#: src/chatpanel.cpp:954 src/chatpanel.cpp:968 src/chatpanel.cpp:982
+#: src/chatpanel.cpp:992
 #, c-format
 msgid ""
 " Error: Command (%s) does not exist, use /help for a list of available "
 "commands."
 msgstr ""
 
-#: src/chatpanel.cpp:1004
+#: src/chatpanel.cpp:962
 #, fuzzy
 msgid ""
 " You are not in battle or battle does not exist, use /help for a list of "
 "available commands."
 msgstr " Du är inte i spelet eller så finns det inte."
 
-#: src/chatpanel.cpp:1018
+#: src/chatpanel.cpp:976
 msgid " User is offline."
 msgstr " Användaren är ner kopplad."
 
-#: src/chatpanel.cpp:1039
+#: src/chatpanel.cpp:997
 msgid " Sent: \""
 msgstr " Skickade: \""
 
-#: src/chatpanel.cpp:1039
+#: src/chatpanel.cpp:997
 msgid "\""
 msgstr "\""
 
-#: src/chatpanel.cpp:1142
+#: src/chatpanel.cpp:1100
 msgid "Auto join channel"
 msgstr "Gå med i kanalen automatiskt"
 
-#: src/chatpanel.cpp:1142
+#: src/chatpanel.cpp:1100
 msgid ""
 "Please enter password needed to join this channel, leave blank for no "
 "passwrd."
@@ -1119,148 +1137,148 @@ msgstr ""
 "Var vänlig skriv in kanalen lösenord om detta behövs, annars lämnar du det "
 "tomt."
 
-#: src/chatpanel.cpp:1156 src/chatpanel.cpp:1169 src/chatpanel.cpp:1185
-#: src/chatpanel.cpp:1201 src/chatpanel.cpp:1217 src/chatpanel.cpp:1232
-#: src/chatpanel.cpp:1248 src/chatpanel.cpp:1263 src/chatpanel.cpp:1276
-#: src/chatpanel.cpp:1289 src/chatpanel.cpp:1382 src/chatpanel.cpp:1403
-#: src/chatpanel.cpp:1419 src/chatpanel.cpp:1440 src/chatpanel.cpp:1456
+#: src/chatpanel.cpp:1114 src/chatpanel.cpp:1127 src/chatpanel.cpp:1144
+#: src/chatpanel.cpp:1160 src/chatpanel.cpp:1176 src/chatpanel.cpp:1191
+#: src/chatpanel.cpp:1207 src/chatpanel.cpp:1222 src/chatpanel.cpp:1235
+#: src/chatpanel.cpp:1248 src/chatpanel.cpp:1341 src/chatpanel.cpp:1362
+#: src/chatpanel.cpp:1378 src/chatpanel.cpp:1399 src/chatpanel.cpp:1415
 msgid "ChanServ error"
 msgstr "ChanServ fel"
 
-#: src/chatpanel.cpp:1156 src/chatpanel.cpp:1169 src/chatpanel.cpp:1185
-#: src/chatpanel.cpp:1201 src/chatpanel.cpp:1217 src/chatpanel.cpp:1263
-#: src/chatpanel.cpp:1276 src/chatpanel.cpp:1289 src/chatpanel.cpp:1382
-#: src/chatpanel.cpp:1403 src/chatpanel.cpp:1419 src/chatpanel.cpp:1440
-#: src/chatpanel.cpp:1456
+#: src/chatpanel.cpp:1114 src/chatpanel.cpp:1127 src/chatpanel.cpp:1144
+#: src/chatpanel.cpp:1160 src/chatpanel.cpp:1176 src/chatpanel.cpp:1222
+#: src/chatpanel.cpp:1235 src/chatpanel.cpp:1248 src/chatpanel.cpp:1341
+#: src/chatpanel.cpp:1362 src/chatpanel.cpp:1378 src/chatpanel.cpp:1399
+#: src/chatpanel.cpp:1415
 msgid "ChanServ is not in this channel."
 msgstr "ChanServ är inte i kanalen"
 
-#: src/chatpanel.cpp:1175
+#: src/chatpanel.cpp:1134
 msgid "What should be the new topic?"
 msgstr "Vad ska det nya ämnet vara?"
 
-#: src/chatpanel.cpp:1191
+#: src/chatpanel.cpp:1150
 msgid "Message:"
 msgstr "Medelande:"
 
-#: src/chatpanel.cpp:1207
+#: src/chatpanel.cpp:1166
 msgid "Lock channel..."
 msgstr "Lås kanalen..."
 
-#: src/chatpanel.cpp:1207
+#: src/chatpanel.cpp:1166
 msgid "What should the new password be?"
 msgstr "Ange lösenord"
 
-#: src/chatpanel.cpp:1222
+#: src/chatpanel.cpp:1181
 msgid "Unlock Channel"
 msgstr "Lås upp kanalen"
 
-#: src/chatpanel.cpp:1222
+#: src/chatpanel.cpp:1181
 msgid "Are you sure you want to unlock this channel?"
 msgstr "Är du säker på att du vill låsa kanalen?"
 
-#: src/chatpanel.cpp:1232 src/chatpanel.cpp:1248
+#: src/chatpanel.cpp:1191 src/chatpanel.cpp:1207
 msgid "ChanServ is not on this server."
 msgstr "ChanServ finns inte på servern."
 
-#: src/chatpanel.cpp:1238
+#: src/chatpanel.cpp:1197
 msgid "Register Channel"
 msgstr "Registrera kanalen"
 
-#: src/chatpanel.cpp:1238
+#: src/chatpanel.cpp:1197
 msgid "Who should be appointed founder of this channel?"
 msgstr "Vem skall vara grundare till den här kanalen?"
 
-#: src/chatpanel.cpp:1253
+#: src/chatpanel.cpp:1212
 msgid "Unregister Channel"
 msgstr "Avregistrera kanalen"
 
-#: src/chatpanel.cpp:1253
+#: src/chatpanel.cpp:1212
 msgid "Are you sure you want to unregister this channel?"
 msgstr "Är du säker på att du vill avregistrera kanalen?"
 
-#: src/chatpanel.cpp:1311
+#: src/chatpanel.cpp:1270
 msgid "Remove User Acount"
 msgstr "Ta bort användarkonto"
 
-#: src/chatpanel.cpp:1311
+#: src/chatpanel.cpp:1270
 msgid "What user account do you want to remove today?"
 msgstr "Vilket användar konto vill du ta bort idag?"
 
-#: src/chatpanel.cpp:1312
+#: src/chatpanel.cpp:1271
 msgid "Remove Account"
 msgstr "Ta bort konto"
 
-#: src/chatpanel.cpp:1312
+#: src/chatpanel.cpp:1271
 msgid "Are you sure you want to remove the account "
 msgstr "Är du säker på att du vill ta bort kontot "
 
-#: src/chatpanel.cpp:1319 src/chatpanel.cpp:1320
+#: src/chatpanel.cpp:1278 src/chatpanel.cpp:1279
 msgid "Change User Acount Password"
 msgstr "Ändra användar lösenord"
 
-#: src/chatpanel.cpp:1319
+#: src/chatpanel.cpp:1278
 msgid "What user account do you want to change the password for?"
 msgstr "Vilken användare vill du byta lösenord för?"
 
-#: src/chatpanel.cpp:1320
+#: src/chatpanel.cpp:1279
 msgid "What would be the new password?"
 msgstr "Vad ska det nya lösenordet bli?"
 
-#: src/chatpanel.cpp:1326 src/chatpanel.cpp:1487 src/chatpanel.cpp:1492
+#: src/chatpanel.cpp:1285 src/chatpanel.cpp:1446 src/chatpanel.cpp:1451
 msgid "Not Implemented"
 msgstr "Inte implementerad"
 
-#: src/chatpanel.cpp:1332
+#: src/chatpanel.cpp:1291
 msgid "Broadcast Message"
 msgstr "Broadcasta medelande"
 
-#: src/chatpanel.cpp:1332
+#: src/chatpanel.cpp:1291
 msgid "Message to be broadcasted:"
 msgstr "Medelande att broadcasta:"
 
-#: src/chatpanel.cpp:1352
+#: src/chatpanel.cpp:1311
 msgid "You don't have the mod "
 msgstr ""
 
-#: src/chatpanel.cpp:1353
+#: src/chatpanel.cpp:1312
 msgid " . Please download it first"
 msgstr ""
 
-#: src/chatpanel.cpp:1353
+#: src/chatpanel.cpp:1312
 #, fuzzy
 msgid "Mod unavailable"
 msgstr "Modden inte tillgänlig"
 
-#: src/chatpanel.cpp:1359
+#: src/chatpanel.cpp:1318
 msgid "This battle is password protected, enter the password."
 msgstr "Detta spelet är lösenords skyddat skriv in lösenordet."
 
-#: src/chatpanel.cpp:1387
+#: src/chatpanel.cpp:1346
 msgid "Mute User"
 msgstr "Tysta användare"
 
-#: src/chatpanel.cpp:1387
+#: src/chatpanel.cpp:1346
 msgid "For how many minutes should the user be muted?"
 msgstr "I hur många minuter skall han bli tystad?"
 
-#: src/chatpanel.cpp:1427
+#: src/chatpanel.cpp:1386
 msgid "Kick User"
 msgstr "Sparka ut användare"
 
-#: src/chatpanel.cpp:1427 src/chatpanel.cpp:1481
+#: src/chatpanel.cpp:1386 src/chatpanel.cpp:1440
 msgid "Reason:"
 msgstr "Anledning:"
 
-#: src/chatpanel.cpp:1481
+#: src/chatpanel.cpp:1440
 msgid "Kick user"
 msgstr "Sparka ut användare"
 
-#: src/chatpanel.cpp:1498
+#: src/chatpanel.cpp:1457
 msgid "Mute user"
 msgstr "Tysta användare"
 
-#: src/chatpanel.cpp:1498
+#: src/chatpanel.cpp:1457
 msgid "Duration:"
 msgstr "Hur länge?"
 
@@ -1268,7 +1286,7 @@ msgstr "Hur länge?"
 msgid "Connect to lobby server"
 msgstr "Anslut till lobby server"
 
-#: src/connectwindow.cpp:61
+#: src/connectwindow.cpp:63
 msgid ""
 "Server to connect to. You can connect to any server you like by typing in "
 "hostaddress:port format."
@@ -1276,12 +1294,27 @@ msgstr ""
 "Servern du vill ansluta till. Du kan skriva in vilken adress du vill med "
 "formatet host:port."
 
-#: src/connectwindow.cpp:67 src/connectwindow.cpp:143
-#: src/hostbattledialog.cpp:86 src/ui.cpp:136
+#: src/connectwindow.cpp:69 src/connectwindow.cpp:154
+#: src/hostbattledialog.cpp:86 src/ui.cpp:149
 msgid "Password"
 msgstr "Lösenord"
 
-#: src/connectwindow.cpp:75
+#: src/connectwindow.cpp:71
+#, fuzzy
+msgid "Remember password"
+msgstr "Lösenord"
+
+#: src/connectwindow.cpp:72
+msgid "Autoconnect next time"
+msgstr ""
+
+#: src/connectwindow.cpp:73
+msgid ""
+"remember connection details and automatically connect to server on next "
+"lobby startup"
+msgstr ""
+
+#: src/connectwindow.cpp:80
 msgid ""
 "Note: If you do not have an account, you\n"
 " can register one for free under the\n"
@@ -1291,35 +1324,35 @@ msgstr ""
 "ännu kan du skapa ett under \"Registrering\"\n"
 "fliken."
 
-#: src/connectwindow.cpp:81
+#: src/connectwindow.cpp:86
 msgid "Login"
 msgstr "Login"
 
-#: src/connectwindow.cpp:82
+#: src/connectwindow.cpp:87
 msgid "Register"
 msgstr "Registrering"
 
-#: src/connectwindow.cpp:130
+#: src/connectwindow.cpp:141
 msgid "Nick"
 msgstr "Smeknamn"
 
-#: src/connectwindow.cpp:227
+#: src/connectwindow.cpp:238
 msgid "Invalid host/port or servername."
 msgstr "Felaktigt host/port eller servernamn."
 
-#: src/connectwindow.cpp:227 src/connectwindow.cpp:250
+#: src/connectwindow.cpp:238 src/connectwindow.cpp:261
 msgid "Invalid host"
 msgstr "Felaktig host"
 
-#: src/connectwindow.cpp:235
+#: src/connectwindow.cpp:246
 msgid "Invalid port."
 msgstr "Felaktig port."
 
-#: src/connectwindow.cpp:235 src/connectwindow.cpp:240
+#: src/connectwindow.cpp:246 src/connectwindow.cpp:251
 msgid "Invalid port"
 msgstr "Felaktig port"
 
-#: src/connectwindow.cpp:240
+#: src/connectwindow.cpp:251
 msgid ""
 "Port number out of range.\n"
 "\n"
@@ -1329,21 +1362,21 @@ msgstr ""
 "\n"
 "Det måste liga inom 1 till 65535"
 
-#: src/connectwindow.cpp:250
+#: src/connectwindow.cpp:261
 msgid "Invalid host/port."
 msgstr "Felaktig host/port"
 
-#: src/connectwindow.cpp:264
+#: src/connectwindow.cpp:280
 msgid ""
 "Registration failed, the reason was:\n"
 "Password / confirmation mismatch"
 msgstr "Registreringen misslyckades på grund av att lösenorden inte matchade."
 
-#: src/connectwindow.cpp:264 src/connectwindow.cpp:275
+#: src/connectwindow.cpp:280 src/connectwindow.cpp:291
 msgid "Registration failed."
 msgstr "Registreringen misslyckades."
 
-#: src/connectwindow.cpp:271
+#: src/connectwindow.cpp:287
 msgid ""
 "Registration successful,\n"
 "you should now be able to login."
@@ -1351,11 +1384,11 @@ msgstr ""
 "Registreringen lyckades,\n"
 "du ska nu kunna logga in."
 
-#: src/connectwindow.cpp:271
+#: src/connectwindow.cpp:287
 msgid "Registration successful"
 msgstr "Registreringen lyckades"
 
-#: src/connectwindow.cpp:275
+#: src/connectwindow.cpp:291
 msgid "Registration failed, the reason was:\n"
 msgstr "Registreringen misslyckades med meddelandet:\n"
 
@@ -2397,7 +2430,7 @@ msgstr "Maximala antalet spelare tillåtna i spelet."
 msgid "Hole punching"
 msgstr "Hole punching"
 
-#: src/hostbattledialog.cpp:132 src/ui.cpp:849
+#: src/hostbattledialog.cpp:132 src/ui.cpp:867
 msgid "NAT traversal"
 msgstr "NAT traversal"
 
@@ -2413,26 +2446,26 @@ msgstr "Minsta rang som behövs"
 msgid "Start hosting the battle."
 msgstr "Starta spel lobbyn."
 
-#: src/hostbattledialog.cpp:242 src/singleplayertab.cpp:187
+#: src/hostbattledialog.cpp:245 src/singleplayertab.cpp:194
 msgid "You have to select a mod first."
 msgstr "Du måste välja en mod först."
 
-#: src/hostbattledialog.cpp:242
+#: src/hostbattledialog.cpp:245
 msgid "No mod selected."
 msgstr "Ingen mod vald."
 
-#: src/httpdownloader.cpp:79
+#: src/httpdownloader.cpp:75
 msgid ""
 "\n"
 "successfully saved to:\n"
 msgstr ""
 
-#: src/httpdownloader.cpp:97
+#: src/httpdownloader.cpp:93
 #, fuzzy
 msgid "Could not save\n"
 msgstr "Kunde inte gå med i kanal "
 
-#: src/httpdownloader.cpp:97
+#: src/httpdownloader.cpp:93
 msgid ""
 "\n"
 "to:\n"
@@ -2496,26 +2529,26 @@ msgstr "Ladda ner"
 msgid "Publish new file"
 msgstr ""
 
-#: src/maintorrenttab.cpp:104
+#: src/maintorrenttab.cpp:106
 #, fuzzy
 msgid "not available"
 msgstr "Modden inte tillgänlig"
 
-#: src/maintorrenttab.cpp:107
+#: src/maintorrenttab.cpp:109
 msgid "no"
 msgstr ""
 
-#: src/maintorrenttab.cpp:107
+#: src/maintorrenttab.cpp:109
 #, fuzzy
 msgid "yes"
 msgstr "Ja"
 
-#: src/maintorrenttab.cpp:134
+#: src/maintorrenttab.cpp:138
 #, c-format
 msgid "Total Outgoing: %.2f KB/s"
 msgstr ""
 
-#: src/maintorrenttab.cpp:135
+#: src/maintorrenttab.cpp:139
 #, c-format
 msgid "Total Incoming: %.2f KB/s"
 msgstr ""
@@ -2653,24 +2686,24 @@ msgstr ""
 msgid "Not up to Date"
 msgstr "Inte uppdaterad"
 
-#: src/mapctrl.cpp:454 src/mapctrl.cpp:455
+#: src/mapctrl.cpp:457 src/mapctrl.cpp:458
 msgid "Refresh"
 msgstr "Läs om"
 
-#: src/mapctrl.cpp:456 src/mapctrl.cpp:457
+#: src/mapctrl.cpp:459 src/mapctrl.cpp:460
 msgid "Download"
 msgstr "Ladda ner"
 
-#: src/mapctrl.cpp:618
+#: src/mapctrl.cpp:621
 msgid "side:"
 msgstr "sida:"
 
-#: src/mapctrl.cpp:641
+#: src/mapctrl.cpp:644
 #, c-format
 msgid "ally:   %d"
 msgstr "ally:   %d"
 
-#: src/mapctrl.cpp:651
+#: src/mapctrl.cpp:654
 #, c-format
 msgid "bonus: %d%%"
 msgstr "bonus: %d%%"
@@ -2783,40 +2816,40 @@ msgstr "Program paket (*.app)|*.app|Alla filer (*.*)|*.*"
 msgid "Ping Timeout!"
 msgstr ""
 
-#: src/serverevents.cpp:146
+#: src/serverevents.cpp:149
 msgid "OnUserStatus() failed ! (exception)"
 msgstr ""
 
-#: src/serverevents.cpp:404
+#: src/serverevents.cpp:407
 msgid "Join channel failed"
 msgstr "Kunde inte gå med  kanal"
 
-#: src/serverevents.cpp:404
+#: src/serverevents.cpp:407
 msgid "Could not join channel "
 msgstr "Kunde inte gå med i kanal "
 
-#: src/serverevents.cpp:404
+#: src/serverevents.cpp:407
 msgid " because: "
 msgstr " anledning: "
 
-#: src/serverevents.cpp:571
+#: src/serverevents.cpp:583
 msgid "Server Message"
 msgstr "Server medelande"
 
-#: src/serverevents.cpp:615
+#: src/serverevents.cpp:627
 #, c-format
 msgid " has ip=%s"
 msgstr ""
 
-#: src/serverevents.cpp:620
+#: src/serverevents.cpp:632
 msgid " does not really support nat traversal"
 msgstr ""
 
-#: src/serverevents.cpp:631
+#: src/serverevents.cpp:643
 msgid "You were kicked from the battle!"
 msgstr "Du blev ut sparkad från spelet."
 
-#: src/serverevents.cpp:631
+#: src/serverevents.cpp:643
 msgid "Kicked by Host"
 msgstr "Ut sparkad ur spelet"
 
@@ -3371,17 +3404,17 @@ msgid "Save Spring settings before exiting?"
 msgstr "Spring inställnings fel"
 
 #: src/settings++/frame.cpp:118 src/settings++/frame.cpp:134
-#: src/settings++/frame.cpp:246
+#: src/settings++/frame.cpp:248
 #, fuzzy
 msgid "Confirmation needed"
 msgstr "Minsta rang som behövs"
 
-#: src/settings++/frame.cpp:185 src/settings++/frame.cpp:323
+#: src/settings++/frame.cpp:185 src/settings++/frame.cpp:325
 #, fuzzy
 msgid "SpringSettings (expert mode)"
 msgstr "Spring inställnings fel"
 
-#: src/settings++/frame.cpp:187 src/settings++/frame.cpp:272
+#: src/settings++/frame.cpp:187 src/settings++/frame.cpp:274
 #, fuzzy
 msgid "SpringSettings (simple mode)"
 msgstr "Spring inställningar"
@@ -3444,11 +3477,11 @@ msgstr "Mod"
 msgid "Info/Help"
 msgstr ""
 
-#: src/settings++/frame.cpp:246
+#: src/settings++/frame.cpp:248
 msgid "Reset ALL settings to default values?"
 msgstr ""
 
-#: src/settings++/frame.cpp:274
+#: src/settings++/frame.cpp:276
 #, fuzzy
 msgid "Hint"
 msgstr "Klient"
@@ -3489,7 +3522,7 @@ msgstr ""
 "\n"
 "Var god fixa en wxWidgets version som har stöd för wxUSE_DEBUGREPORT"
 
-#: src/settings++/Main.cpp:59 src/springlobbyapp.cpp:180
+#: src/settings++/Main.cpp:59 src/springlobbyapp.cpp:194
 msgid "Critical error"
 msgstr "Kritiskt fel"
 
@@ -3570,11 +3603,11 @@ msgstr ""
 msgid "can't launch default browser"
 msgstr "Kunde inte starta webbläsaren."
 
-#: src/settings++/se_utils.cpp:40 src/ui.cpp:314 src/ui.cpp:322
+#: src/settings++/se_utils.cpp:40 src/ui.cpp:328 src/ui.cpp:336
 msgid "Couldn't launch browser. URL is: "
 msgstr "Kunde inte starta webläsaren. URL: "
 
-#: src/settings++/se_utils.cpp:40 src/ui.cpp:314 src/ui.cpp:322
+#: src/settings++/se_utils.cpp:40 src/ui.cpp:328 src/ui.cpp:336
 msgid "Couldn't launch browser."
 msgstr "Kunde inte starta webbläsaren."
 
@@ -3582,11 +3615,11 @@ msgstr "Kunde inte starta webbläsaren."
 msgid "Could not access your settings.\n"
 msgstr ""
 
-#: src/settings++/tab_abstract.cpp:474
+#: src/settings++/tab_abstract.cpp:473
 msgid "Could not save, unitsync not properly loaded"
 msgstr ""
 
-#: src/settings++/tab_abstract.cpp:474
+#: src/settings++/tab_abstract.cpp:473
 #, fuzzy
 msgid "SpringSettings Error"
 msgstr "Spring inställnings fel"
@@ -3726,38 +3759,45 @@ msgstr "Mod alternativ"
 msgid "Zoom"
 msgstr ""
 
-#: src/singleplayertab.cpp:66
+#: src/singleplayertab.cpp:44
+msgid ""
+"You can drag the sun/bot icon around to define start position.\n"
+" Hover over the icon for a popup that lets you change side, ally and bonus."
+msgstr ""
+
+#: src/singleplayertab.cpp:68
 msgid "Add bot..."
 msgstr "Lägg till bot..."
 
-#: src/singleplayertab.cpp:76
+#: src/singleplayertab.cpp:78
 msgid "Reset"
 msgstr "Återställ"
 
-#: src/singleplayertab.cpp:115 src/singleplayertab.cpp:135
+#: src/singleplayertab.cpp:119 src/singleplayertab.cpp:140
 msgid "-- Select one --"
 msgstr "-- Välj en --"
 
-#: src/singleplayertab.cpp:187 src/singleplayertab.cpp:193
-#: src/singleplayertab.cpp:223 src/singleplayertab.cpp:226
+#: src/singleplayertab.cpp:194 src/singleplayertab.cpp:200
+#: src/singleplayertab.cpp:231 src/singleplayertab.cpp:234
 msgid "Gamesetup error"
 msgstr "Kunde inte start spel"
 
-#: src/singleplayertab.cpp:193
+#: src/singleplayertab.cpp:200
 msgid "You have to select a map first."
 msgstr "Du måste välja en karta först."
 
-#: src/singleplayertab.cpp:200
+#: src/singleplayertab.cpp:207
 msgid ""
-"You should add a bot before starting a game.\n"
-"If you don't want an opponent add TestGlobalAi"
+"Continue without adding a bot first?.\n"
+" The game will be over pretty fast.\n"
+" "
 msgstr ""
 
-#: src/singleplayertab.cpp:200
+#: src/singleplayertab.cpp:208
 msgid "No Bot added"
 msgstr ""
 
-#: src/singleplayertab.cpp:223
+#: src/singleplayertab.cpp:231
 msgid ""
 "You have bots that are not assingled to startpositions. In the current "
 "version of spring you are only allowed to use start positions positioning "
@@ -3768,7 +3808,7 @@ msgstr ""
 "Du har botar som inte är knutna till någon startposition. I denna versionen "
 "av Spring är detta inte tillåtet."
 
-#: src/singleplayertab.cpp:226
+#: src/singleplayertab.cpp:234
 msgid ""
 "You are not using consecutive start position numbers.\n"
 "\n"
@@ -3783,15 +3823,15 @@ msgstr ""
 "Du använder inte konsekutiva startpositions nummer, detta krävs i den här "
 "versionen av Spring."
 
-#: src/singleplayertab.cpp:268
+#: src/singleplayertab.cpp:276
 msgid "You cannot start a spring instance while another is already running"
 msgstr "Spring körs redan stäng av det innan du startar ett nytt spel"
 
-#: src/springlobbyapp.cpp:106
+#: src/springlobbyapp.cpp:120
 msgid "Hi "
 msgstr "Hej "
 
-#: src/springlobbyapp.cpp:106
+#: src/springlobbyapp.cpp:120
 msgid ""
 ",\n"
 "It looks like this is your first time using SpringLobby. I have guessed a "
@@ -3806,11 +3846,11 @@ msgstr ""
 "kolla igenom den för säkerhets skull.\n"
 "När du är klar är det bara att börja spel Spring :)"
 
-#: src/springlobbyapp.cpp:106
+#: src/springlobbyapp.cpp:120
 msgid "Welcome"
 msgstr "Välkommen"
 
-#: src/springlobbyapp.cpp:109
+#: src/springlobbyapp.cpp:123
 msgid ""
 "You're using a wxwidgets library of the 2.6.x series\n"
 " battle filtering, advanced gui and joining/hosting games using nat "
@@ -3821,22 +3861,22 @@ msgstr ""
 "vissa funktioner kommer att bli avstängda. Skaffa\n"
 "en nyare version för att få full funktionalitet."
 
-#: src/springlobbyapp.cpp:109
+#: src/springlobbyapp.cpp:123
 msgid "Missing Functionality"
 msgstr "Saknad funktionalitet"
 
-#: src/springlobbyapp.cpp:128
+#: src/springlobbyapp.cpp:142
 msgid ""
 "Do you want to download OTA conent?\n"
 "You need this to be able to play TA based mods.\n"
 "You need to own a copy of Total Annihilation do legally download it."
 msgstr ""
 
-#: src/springlobbyapp.cpp:130
+#: src/springlobbyapp.cpp:144
 msgid "Download OTA content?"
 msgstr ""
 
-#: src/springlobbyapp.cpp:180
+#: src/springlobbyapp.cpp:194
 msgid ""
 "The application has generated a fatal error and will be terminated\n"
 "Generating a bug report is not possible\n"
@@ -3848,44 +3888,44 @@ msgstr ""
 "\n"
 "Var god fixa en wxWidgets version som har stöd för wxUSE_DEBUGREPORT"
 
-#: src/springlobbyapp.cpp:207
+#: src/springlobbyapp.cpp:221
 #, fuzzy
 msgid "/.spring"
 msgstr "Spring"
 
-#: src/springlobbyapp.cpp:210
+#: src/springlobbyapp.cpp:224
 msgid "Create a .spring folder in the home directory (reccomended)"
 msgstr ""
 
-#: src/springlobbyapp.cpp:211
+#: src/springlobbyapp.cpp:225
 msgid "Create a folder in a custom path (you'll get prompted for the path)"
 msgstr ""
 
-#: src/springlobbyapp.cpp:212
+#: src/springlobbyapp.cpp:226
 msgid "I have already a SpringData folder, i want to browse manually for it"
 msgstr ""
 
-#: src/springlobbyapp.cpp:213
+#: src/springlobbyapp.cpp:227
 msgid "Do nothing (use this only if you know what you're doing)"
 msgstr ""
 
-#: src/springlobbyapp.cpp:216
+#: src/springlobbyapp.cpp:230
 msgid ""
 "Looks like you don't have yet a user SpringData folder structure\n"
 "What would you like to do? (leave default choice if you don't know what is "
 "this for)"
 msgstr ""
 
-#: src/springlobbyapp.cpp:217
+#: src/springlobbyapp.cpp:231
 msgid "First time wizard"
 msgstr ""
 
-#: src/springlobbyapp.cpp:226
+#: src/springlobbyapp.cpp:240
 #, fuzzy
 msgid "Choose a folder"
 msgstr "Välj en katalog"
 
-#: src/springlobbyapp.cpp:233
+#: src/springlobbyapp.cpp:247
 msgid ""
 "Something went wrong when creating the directories\n"
 "Please create manually the following folders:"
@@ -3966,154 +4006,150 @@ msgstr ""
 "\n"
 "Du bör ta en titt på dina inställningar igen."
 
-#: src/springunitsync.cpp:66
+#: src/springunitsync.cpp:65
 msgid ""
 "Unitsync loading was aborted because your spring data directory is not "
 "writable. Please check."
 msgstr ""
 
-#: src/springunitsync.cpp:66
+#: src/springunitsync.cpp:65
 msgid "Unitsync Problem"
 msgstr ""
 
-#: src/springunitsync.cpp:444
-msgid "LuaAI"
-msgstr "LuaAI"
-
-#: src/tasserver.cpp:302
+#: src/tasserver.cpp:311
 msgid "Connection timed out"
 msgstr ""
 
-#: src/tasserver.cpp:315
+#: src/tasserver.cpp:324
 msgid "Unknown answer from server"
 msgstr ""
 
-#: src/tasserver.cpp:408
+#: src/tasserver.cpp:420
 msgid "Failed to punch through NAT"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:62
+#: src/torrentlistctrl.cpp:58
 msgid "MB uploaded"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:66
+#: src/torrentlistctrl.cpp:62
 msgid "seeding"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:70
+#: src/torrentlistctrl.cpp:66
 #, c-format
 msgid "% complete"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:74
+#: src/torrentlistctrl.cpp:70
 msgid "KB/s up"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:78
+#: src/torrentlistctrl.cpp:74
 msgid "KB/s down"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:82
+#: src/torrentlistctrl.cpp:78
 msgid "ETA (s)"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:86
+#: src/torrentlistctrl.cpp:82
 msgid "Filesize (MB)"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:32
+#: src/torrentoptionspanel.cpp:34
 #, fuzzy
 msgid "Start system"
 msgstr "Startade"
 
-#: src/torrentoptionspanel.cpp:33
+#: src/torrentoptionspanel.cpp:35
 msgid "Stop system"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:37
+#: src/torrentoptionspanel.cpp:39
 msgid "Torrent system autostart"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:39
+#: src/torrentoptionspanel.cpp:41
 msgid "at lobby connection (default)"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:40
+#: src/torrentoptionspanel.cpp:42
 msgid "at lobby start"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:41
+#: src/torrentoptionspanel.cpp:43
 msgid "manual"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:44
+#: src/torrentoptionspanel.cpp:46
 msgid "unknown"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:56
+#: src/torrentoptionspanel.cpp:58
 msgid "At game start suspend mode"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:58
+#: src/torrentoptionspanel.cpp:60
 msgid "Pause all torrents"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:59
+#: src/torrentoptionspanel.cpp:61
 msgid "Throttle speeds:"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:62
+#: src/torrentoptionspanel.cpp:64
 msgid "upload (KB/s)"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:64
+#: src/torrentoptionspanel.cpp:66
 #, fuzzy
 msgid "download (KB/s)"
 msgstr "Ladda ner"
 
-#: src/torrentoptionspanel.cpp:77
+#: src/torrentoptionspanel.cpp:79
 #, fuzzy
 msgid "Numbers"
 msgstr "Inget nummer"
 
-#: src/torrentoptionspanel.cpp:81
+#: src/torrentoptionspanel.cpp:83
 msgid "maximum upload speed in KB/sec(-1 for infinite)"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:88
+#: src/torrentoptionspanel.cpp:90
 msgid "maximum download speed in KB/sec (-1 for infinite)"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:95
+#: src/torrentoptionspanel.cpp:97
 msgid "port used for torrent connections"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:102
+#: src/torrentoptionspanel.cpp:104
 msgid "maximum number of concurrent connections"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:130
+#: src/torrentoptionspanel.cpp:137
 msgid "Status: not connected"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:134
+#: src/torrentoptionspanel.cpp:141
 msgid "Status: connected"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:138
+#: src/torrentoptionspanel.cpp:145
 msgid "Status: throttled (ingame)"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:142
+#: src/torrentoptionspanel.cpp:149
 #, fuzzy
 msgid "Status: unknown"
 msgstr "Status:"
 
-#: src/ui.cpp:136
+#: src/ui.cpp:149
 msgid "Server password"
 msgstr "Lösenord"
 
-#: src/ui.cpp:322
+#: src/ui.cpp:336
 msgid ""
 "\n"
 "Broser path is: "
@@ -4121,134 +4157,134 @@ msgstr ""
 "\n"
 "Webbläsarens plats är: "
 
-#: src/ui.cpp:406 src/ui.cpp:654
+#: src/ui.cpp:420 src/ui.cpp:672
 msgid "error"
 msgstr "fel"
 
-#: src/ui.cpp:406 src/ui.cpp:654
+#: src/ui.cpp:420 src/ui.cpp:672
 msgid "no active chat panels open."
 msgstr "inga aktiva chat paneler öppna."
 
-#: src/ui.cpp:409
+#: src/ui.cpp:423
 msgid "Active chat channels:"
 msgstr "Aktiva chat kanaler:"
 
-#: src/ui.cpp:421
+#: src/ui.cpp:435
 msgid "Help error"
 msgstr "Hjälp fel"
 
-#: src/ui.cpp:421
+#: src/ui.cpp:435
 msgid "Type /help in a chat box."
 msgstr "Skriv /help i chatten."
 
-#: src/ui.cpp:425
+#: src/ui.cpp:439
 msgid "SpringLobby commands help."
 msgstr "SpringLobby kommando hjälp."
 
-#: src/ui.cpp:427
+#: src/ui.cpp:441
 msgid "Global commands:"
 msgstr "Globala kommandon:"
 
-#: src/ui.cpp:428
+#: src/ui.cpp:442
 msgid "  \"/away\" - Sets your status to away."
 msgstr "  \"/away\" - Sätter din status till borta."
 
-#: src/ui.cpp:429
+#: src/ui.cpp:443
 msgid "  \"/back\" - Resets your away status."
 msgstr "  \"/back\" - Sätter din status till närvarande."
 
-#: src/ui.cpp:430
+#: src/ui.cpp:444
 msgid ""
 "  \"/changepassword oldpassword newpassword\" - Changes the current active "
 "account's password."
 msgstr ""
 
-#: src/ui.cpp:431
+#: src/ui.cpp:445
 msgid "  \"/channels\" - Lists currently active channels."
 msgstr "  \"/channels\" - Listar alla aktiva kanaler."
 
-#: src/ui.cpp:432
+#: src/ui.cpp:446
 msgid ""
 "  \"/help [topic]\" - Put topic if you want to know more specific "
 "information about a command."
 msgstr "  \"/help [ämne]\" - Visar hjälp om ett visst ämne."
 
-#: src/ui.cpp:433
+#: src/ui.cpp:447
 msgid ""
 "  \"/join channel [password] [,channel2 [password2]]\" - Join a channel."
 msgstr ""
 "  \"/join kanal [lösenord] [,kanal2 [lösenord22]]\" - Gå med i en kanal "
 "eller flera."
 
-#: src/ui.cpp:434
+#: src/ui.cpp:448
 msgid "  \"/j\" - Alias to /join."
 msgstr "  \"/j\" - Alias till /join."
 
-#: src/ui.cpp:435
+#: src/ui.cpp:449
 msgid "  \"/ingame\" - Show how much time you have in game."
 msgstr "  \"/ingame\" - Visar hur mycket spel tid du har."
 
-#: src/ui.cpp:436
+#: src/ui.cpp:450
 msgid ""
 "  \"/msg username [text]\" - sends a private message containing text to "
 "username."
 msgstr ""
 
-#: src/ui.cpp:437
+#: src/ui.cpp:451
 msgid "  \"/rename newalias\" - Changes your nickname to newalias."
 msgstr "  \"/rename nyttsmeknamn\" - Ändrar ditt smeknamn."
 
-#: src/ui.cpp:438
+#: src/ui.cpp:452
 msgid "  \"/sayver\" - Say what version of springlobby you have in chat."
 msgstr "  \"/sayver\" - Säger vilken version av SpringLobby du har i chatten."
 
-#: src/ui.cpp:439
+#: src/ui.cpp:453
 msgid "  \"/testmd5 text\" - Returns md5-b64 hash of given text."
 msgstr ""
 
-#: src/ui.cpp:440
+#: src/ui.cpp:454
 msgid "  \"/ver\" - Display what version of SpringLobby you have."
 msgstr "  \"/ver\" - Visar vilken version av SpringLobby du har."
 
-#: src/ui.cpp:442
+#: src/ui.cpp:456
 msgid "Chat commands:"
 msgstr "Chat kommandon:"
 
-#: src/ui.cpp:443
+#: src/ui.cpp:457
 msgid "  \"/me action\" - Say IRC style action message."
 msgstr "  \"/me action\" - Aktions medelande a la IRC."
 
-#: src/ui.cpp:445
+#: src/ui.cpp:459
 msgid ""
 "If you are missing any commands, go to #springlobby and try to type it "
 "there :)"
 msgstr "Om du saknar något kommando, gå till #springlobby och skriv det där :)"
 
-#: src/ui.cpp:448
+#: src/ui.cpp:462
 msgid "No topics written yet."
 msgstr "Det finns inga ämnen ännu."
 
-#: src/ui.cpp:450
+#: src/ui.cpp:464
 msgid "The topic \""
 msgstr "Ämnet \""
 
-#: src/ui.cpp:450
+#: src/ui.cpp:464
 msgid "\" was not found. Type \"/help topics\" only for available topics."
 msgstr "\" hittades inte. Skriv \"/help\" för att se vilka som finns."
 
-#: src/ui.cpp:492
+#: src/ui.cpp:510
 msgid "Your spring version"
 msgstr "Din Spring version"
 
-#: src/ui.cpp:494
+#: src/ui.cpp:512
 msgid "is not supported by the lobby server that requires version"
 msgstr "supportras inte av lobby servern som kräver version"
 
-#: src/ui.cpp:496
+#: src/ui.cpp:514
 msgid "Online play will be disabled."
 msgstr "Multiplayer spel kommer att inaktiveras."
 
-#: src/ui.cpp:501
+#: src/ui.cpp:519
 msgid ""
 "Couldn't get your spring version from the unitsync library.\n"
 "\n"
@@ -4258,7 +4294,7 @@ msgstr ""
 "\n"
 "Multiplayer spel kommer att inaktiveras."
 
-#: src/ui.cpp:559
+#: src/ui.cpp:577
 msgid ""
 "This is the SpringLobby channel, please report any problems you are having "
 "with SpringLobby here and the friendly developers will help you."
@@ -4266,25 +4302,25 @@ msgstr ""
 "Det här är SpringLobby kanalen, var god rapportera alla problem du har i "
 "denna kanalen, så hjälper de välliga utvecklarna dig."
 
-#: src/ui.cpp:657
+#: src/ui.cpp:675
 #, c-format
 msgid "(%d users)"
 msgstr "(%d användare)"
 
-#: src/ui.cpp:720
+#: src/ui.cpp:738
 msgid "Server message"
 msgstr "Server medelanden"
 
-#: src/ui.cpp:759
+#: src/ui.cpp:777
 msgid "The current battle was closed by the host."
 msgstr ""
 
-#: src/ui.cpp:759
+#: src/ui.cpp:777
 #, fuzzy
 msgid "Battle closed"
 msgstr "Spel lista"
 
-#: src/ui.cpp:844
+#: src/ui.cpp:862
 msgid ""
 "Your spring settings are probably not configured correctly,\n"
 "you should take another look at your settings before trying\n"
@@ -4293,11 +4329,11 @@ msgstr ""
 "Dina Spring inställningar är förmodligen inte korrekt inställda,\n"
 "du bör ta en titt på dem innan du spelar multiplayer."
 
-#: src/ui.cpp:844
+#: src/ui.cpp:862
 msgid "Spring settings error"
 msgstr "Spring inställnings fel"
 
-#: src/ui.cpp:849
+#: src/ui.cpp:867
 msgid ""
 "This game uses NAT traversal that is not supported by wx 2.6 build of "
 "springlobby. \n"
@@ -4338,6 +4374,9 @@ msgstr "Veteran"
 #: src/user.cpp:115
 msgid "no rank"
 msgstr "ingen rank"
+
+#~ msgid "LuaAI"
+#~ msgstr "LuaAI"
 
 #~ msgid "Bot%d"
 #~ msgstr "Bot%d"

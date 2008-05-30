@@ -31,6 +31,9 @@
 #include "chatlog.h"
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
+#ifndef DISABLE_SOUND
+#include "sdlsound.h"
+#endif
 /*
 BEGIN_EVENT_TABLE(MyTextCtrl, wxTextCtrl)
 EVT_PAINT(MyTextCtrl::OnPaint)
@@ -195,9 +198,14 @@ void ChatPanel::CreateControls( ) {
 	}
 
 	// Creating ui elements
+	#ifndef NO_RICHTEXT_CHAT
 	m_chatlog_text = new wxRichTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
 																	 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
-    m_chatlog_text->SetToolTip( _("right click for options (like autojoin)" ) );
+  #else
+	m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
+																	 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+  #endif
+  m_chatlog_text->SetToolTip( _("right click for options (like autojoin)" ) );
 
 	m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
@@ -453,16 +461,17 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
 	if ( ! m_chatlog_text ) return;
 	LogTime();
-
+  #ifndef NO_RICHTEXT_CHAT
   int p=m_chatlog_text->GetLastPosition()-1;
   if(p<0)p=0;
   bool at_bottom=m_chatlog_text->IsPositionVisible(p); /// true if we're on bottom of page and must scroll
-
+  #endif
 	m_chatlog_text->SetDefaultStyle( wxTextAttr( col, sett().GetChatColorBackground(), fon ) );
-#ifdef __WXMSW__
+#if  defined(__WXMSW__) && !defined(NO_RICHTEXT_CHAT)
 	m_chatlog_text->Freeze();
 #endif
 
+  #ifndef NO_RICHTEXT_CHAT
   wxArrayString wordarray =  wxStringTokenize( message, _T(' ') );
   unsigned int wordcount = wordarray.GetCount();
   for( unsigned int pos = 0; pos < wordcount; pos++ )
@@ -483,11 +492,20 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
     m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
 	}
 
+	#else
+	m_chatlog_text->AppendText( message + _T( "\n" ) );
+
+  if ( sett().GetSmartScrollEnabled() ) {
+    m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
+		m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
+	}
+	#endif
+
 	CheckLength(); /// crop lines from history that exceeds limit
 
 	if ( m_chat_log ) m_chat_log->AddMessage( message );
 
-#ifdef __WXMSW__
+#if  defined(__WXMSW__) && !defined(NO_RICHTEXT_CHAT)
 	m_chatlog_text->Thaw();
 #endif
 
@@ -504,6 +522,9 @@ void ChatPanel::OnResize( wxSizeEvent& event ) {
 }
 
 void ChatPanel::OnLinkEvent( wxTextUrlEvent& event ) {
+  #ifdef NO_RICHTEXT_CHAT
+  if ( !event.GetMouseEvent().LeftDown() ) return;
+  #endif
 	wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd() );
 	m_ui.OpenWebBrowser( url );
 }
@@ -646,7 +667,10 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 
 
 	if ( req_user ) {
-		if ( !m_ui.mw().IsActive() ) m_ui.mw().RequestUserAttention();
+     m_ui.mw().RequestUserAttention();
+     #ifndef DISABLE_SOUND
+     if ( sett().GetChatPMSoundNotificationEnabled() && m_ui.GetActiveChatPanel() != this  ) sound().pm();
+     #endif
 	}
 }
 

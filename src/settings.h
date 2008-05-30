@@ -17,11 +17,56 @@
 #define DEFSETT_SPRING_DIR wxGetCwd()
 #define DEFSETT_SPRING_PORT 8452
 
-class wxFileConfig;
+#include <wx/fileconf.h>
+#include "utils.h"
+#include <wx/wfstream.h>
+
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
 class IBattle;
+class wxFileInputStream ;
+//class wxFileConfig;
+class myconf : public wxFileConfig
+{
+    public:
+    myconf (const wxString& appName, const wxString& vendorName,
+                           const wxString& strLocal, const wxString& strGlobal,
+                           long style,
+                           const wxMBConv& conv)
+            : wxFileConfig(appName, vendorName,
+                           strLocal, strGlobal,
+                           style)
+
+    {
+
+    }
+
+    myconf(wxFileInputStream& in) : wxFileConfig(in) {}
+
+//    int Read(const wxString& key, int def)
+//    {
+//      return s2l(wxFileConfig::Read(key, TowxString<long>(def)));
+//    }
+//
+//    bool Write(const wxString& key, const int lval)
+//    {
+//        return wxFileConfig::Write(key, TowxString<int>(lval) );
+//    }
+
+    protected:
+
+//    bool DoReadLong(const wxString& key, long *pl) const
+//    {
+//        wxFileConfig::DoReadString(key,
+//    }
+
+    bool DoWriteLong(const wxString& key, long lValue)
+    {
+        return wxFileConfig::DoWriteString(key, TowxString<long>( lValue ) );
+    }
+};
+
 
 //! @brief Class used to store and restore application settings.
 class Settings
@@ -167,6 +212,9 @@ class Settings
     void SetChatHistoryLenght( unsigned int historylines );
     unsigned int GetChatHistoryLenght();
 
+    void SetChatPMSoundNotificationEnabled( bool enabled );
+    bool GetChatPMSoundNotificationEnabled();
+
     wxColour GetChatColorNormal();
     void SetChatColorNormal( wxColour value );
     wxColour GetChatColorBackground();
@@ -233,7 +281,7 @@ class Settings
 
   protected:
     #ifdef __WXMSW__
-    wxFileConfig* m_config; //!< wxConfig object to store and restore  all settings in.
+    myconf* m_config; //!< wxConfig object to store and restore  all settings in.
     #else
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
     #endif

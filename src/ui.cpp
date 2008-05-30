@@ -36,6 +36,9 @@
 
 #include "settings++/custom_dialogs.h"
 
+#include "sdlsound.h"
+
+
 Ui::Ui() :
   m_serv(0),
   m_main_win(0),
@@ -1030,7 +1033,12 @@ void Ui::OnRing( const wxString& from )
 {
   if ( m_main_win == 0 ) return;
   m_main_win->RequestUserAttention();
+
+  #ifndef DISABLE_SOUND
+  sound().ring();
+  #else
   wxBell();
+  #endif
 }
 
 
