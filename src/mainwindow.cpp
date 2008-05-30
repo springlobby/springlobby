@@ -69,8 +69,6 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_VERSION, MainWindow::OnMenuVersion )
   EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
   EVT_MENU( MENU_TIPS, MainWindow::OnMenuTooltips )
-  EVT_MENU( MENU_AUTOCONNECT, MainWindow::OnMenuAutoConnect )
-  EVT_MENU( MENU_SOUNDS, MainWindow::OnMenuSounds )
 
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
 
@@ -89,16 +87,11 @@ MainWindow::MainWindow( Ui& ui ) :
   menuFile->AppendSeparator();
   menuFile->Append(MENU_QUIT, _("&Quit"));
 
-  m_menuEdit = new wxMenu;
-  m_menuEdit->AppendCheckItem(MENU_AUTOCONNECT, _("Autoconnect to server") );
-  m_menuEdit->AppendCheckItem(MENU_TIPS, _("Show tooltips") );
-  m_menuEdit->Check( MENU_TIPS, sett().GetShowTooltips() );
-  m_menuEdit->Check( MENU_AUTOCONNECT, sett().GetAutoConnect() );
+  //m_menuEdit = new wxMenu;
+  //TODO doesn't work atm
+  //m_menuEdit->AppendCheckItem(MENU_TIPS, _("Show tooltips") );
+  //m_menuEdit->Check( MENU_TIPS, sett().GetShowTooltips() );
 
-#ifndef DISABLE_SOUND
-  m_menuEdit->AppendCheckItem(MENU_SOUNDS, _("Play Sounds") );
-  m_menuEdit->Check( MENU_AUTOCONNECT, true ); //TODO insert sett().function
-#endif
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
@@ -117,7 +110,7 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_menubar = new wxMenuBar;
   m_menubar->Append(menuFile, _("&File"));
-  m_menubar->Append(m_menuEdit, _("&Edit"));
+  //m_menubar->Append(m_menuEdit, _("&Edit"));
   m_menubar->Append(m_menuTools, _("&Tools"));
   m_menubar->Append(menuHelp, _("&Help"));
   SetMenuBar(m_menubar);
@@ -151,8 +144,6 @@ MainWindow::MainWindow( Ui& ui ) :
 #ifndef NO_TORRENT_SYSTEM
   m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 4 );
 #endif
-  //TODO insert real downloads panel
-  //m_func_tabs->AddPage( m_opts_tab, _T(""), false, 4 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -489,21 +480,8 @@ void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 
 void MainWindow::OnMenuTooltips( wxCommandEvent& event )
 {
-    bool show = m_menuEdit->IsChecked(MENU_TIPS);
-    sett().SetShowTooltips( show );
-    wxToolTip::Enable( show );
+//    bool show = m_menuEdit->IsChecked(MENU_TIPS);
+//    sett().SetShowTooltips( show );
+//    wxToolTip::Enable( show );
 }
 
-void MainWindow::OnMenuAutoConnect( wxCommandEvent& event )
-{
-    bool show = m_menuEdit->IsChecked(MENU_AUTOCONNECT);
-    sett().SetAutoConnect( show );
-}
-
-void MainWindow::OnMenuSounds( wxCommandEvent& event )
-{
-#ifndef DISABLE_SOUND
-    //TODO insert
-    //sett().SetSoundWhatever( m_menuEdit->IsChecked(MENU_SOUNDS) );
-#endif
-}

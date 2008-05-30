@@ -286,8 +286,14 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   m_smart_scroll->SetValue( sett().GetSmartScrollEnabled() );
 
   sbBehaviorSizer->Add( m_smart_scroll, 0, wxALL, 5 );
-
-  //m_smart_scroll
+#ifndef DISABLE_SOUND
+  m_play_sounds = new wxCheckBox( this, ID_PLAY_SOUNDS, _("Play notification sounds"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_play_sounds->SetValue( sett().GetChatPMSoundNotificationEnabled() );
+  sbBehaviorSizer->Add( m_play_sounds, 0, wxALL, 5 );
+#endif
+  m_autojoin = new wxCheckBox( this, ID_AUTOJOIN, _("Autoconnect last server"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_autojoin->SetValue( sett().GetAutoConnect() );
+  sbBehaviorSizer->Add( m_autojoin, 0, wxALL, 5 );
 
   bMainSizerV->Add( sbBehaviorSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 
@@ -436,6 +442,10 @@ void ChatOptionsTab::DoRestore()
   m_save_logs->SetValue(  sett().GetChatLogEnable() );
   m_log_save->SetValue(  sett().GetChatLogLoc() );
   m_smart_scroll->SetValue(sett().GetSmartScrollEnabled());
+  m_autojoin->SetValue( sett().GetAutoConnect() );
+  #ifndef DISABLE_SOUND
+    m_play_sounds->SetValue( sett().GetChatPMSoundNotificationEnabled() );
+  #endif
 }
 
 void ChatOptionsTab::OnApply( wxCommandEvent& event )
@@ -461,6 +471,10 @@ void ChatOptionsTab::OnApply( wxCommandEvent& event )
 
   // Behavior
   sett().SetSmartScrollEnabled(m_smart_scroll->GetValue());
+  #ifndef DISABLE_SOUND
+    sett().SetChatPMSoundNotificationEnabled( m_play_sounds->IsChecked() );
+  #endif
+  sett().SetAutoConnect( m_autojoin->IsChecked() );
 }
 
 

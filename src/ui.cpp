@@ -1035,7 +1035,8 @@ void Ui::OnRing( const wxString& from )
   m_main_win->RequestUserAttention();
 
   #ifndef DISABLE_SOUND
-  sound().ring();
+  if ( sett().GetChatPMSoundNotificationEnabled() )
+    sound().ring();
   #else
   wxBell();
   #endif

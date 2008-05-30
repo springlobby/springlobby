@@ -62,8 +62,6 @@ class MainWindow : public wxFrame
     void OnShowDocs( wxCommandEvent& event );
     void OnShowSettingsPP( wxCommandEvent& event );
     void OnMenuTooltips( wxCommandEvent& event );
-    void OnMenuAutoConnect( wxCommandEvent& event );
-    void OnMenuSounds( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
 
