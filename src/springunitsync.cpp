@@ -520,15 +520,13 @@ wxString _GetCachedModUnitsFileName( const wxString& mod )
   fname.Replace( _T("."), _T("_") );
   fname.Replace( _T(" "), _T("_") );
   wxLogMessage( _T("%s"), path.c_str() );
-  return path + fname + _T(".units");
+  return path << fname << _T(".units");
 }
 
 
 wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
-
-  if ( m_mod_units.GetCount() > 0 ) return m_mod_units;
 
   wxArrayString ret;
 
@@ -577,13 +575,13 @@ wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
 
 wxString SpringUnitSync::_GetCachedMinimapFileName( const wxString& mapname, int width, int height )
 {
-  wxString path = sett().GetCachePath(); //wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator();
+  wxString path = sett().GetCachePath();
   wxString fname =  mapname;
   fname.Replace( _T("."), _T("_") );
   fname.Replace( _T(" "), _T("_") );
-  if ( width != -1 ) fname += wxString::Format( _T("%dx%d"), width, height );
-  fname += _T(".png");
-  return path + fname;
+  if ( width != -1 ) fname << wxString::Format( _T("%dx%d"), width, height );
+  fname << _T(".png");
+  return path << fname;
 }
 
 
@@ -738,7 +736,7 @@ MapInfo SpringUnitSync::_LoadMapInfoExCache( const wxString& mapname )
 {
   wxLogDebugFunc( _T("") );
 
-  wxString path = sett().GetCachePath() + mapname + _T(".infoexcache");
+  wxString path = sett().GetCachePath() + mapname + _T(".infoex");
 
   ASSERT_RUNTIME( wxFileName::FileExists( path ), _T("No map info ex cache file found.") );
 
@@ -753,24 +751,24 @@ MapInfo SpringUnitSync::_LoadMapInfoExCache( const wxString& mapname )
   wxArrayString data = wxStringTokenize( WX_STRING(tempstring), _T('\n') );
   MapInfo info;
 
-  ASSERT_RUNTIME( data.GetCount() > 0, _T("failed to parse the map info ex cache file") );
+  ASSERT_RUNTIME( data.GetCount() > 0, _T("no lines found in cache info ex") );
   info.description = data[0];
-  ASSERT_RUNTIME( data[1].ToLong( (long*)&info.tidalStrength ), _T("failed to parse the map info ex cache file") );
-  ASSERT_RUNTIME( data[2].ToLong( (long*)&info.gravity ), _T("failed to parse the map info ex cache file") );
-  ASSERT_RUNTIME( data[3].ToLong( (long*)&info.maxMetal ), _T("failed to parse the map info ex cache file") );
-  ASSERT_RUNTIME( data[4].ToDouble( (double*)&info.extractorRadius ), _T("failed to parse the map info ex cache file") );
-  ASSERT_RUNTIME( data[5].ToLong( (long*)&info.minWind ), _T("failed to parse the map info ex cache file") );
-  ASSERT_RUNTIME( data[6].ToLong( (long*)&info.maxWind ), _T("failed to parse the map info ex cache file") );
-  ASSERT_RUNTIME( data[7].ToLong( (long*)&info.width ), _T("failed to parse the map info ex cache file") );
-  ASSERT_RUNTIME( data[8].ToLong( (long*)&info.height ), _T("failed to parse the map info ex cache file") );
-  ASSERT_RUNTIME( data[9].ToLong( (long*)&info.posCount ), _T("failed to parse the map info ex cache file") );
+  ASSERT_RUNTIME( data[1].ToLong( (long*)&info.tidalStrength ), _T("failed to parse the tidal in map info ex cache file") );
+  ASSERT_RUNTIME( data[2].ToLong( (long*)&info.gravity ), _T("failed to parse the gravity in map info ex cache file") );
+  ASSERT_RUNTIME( data[3].ToLong( (long*)&info.maxMetal ), _T("failed to parse the extractor maxmetal in map info ex cache file") );
+  ASSERT_RUNTIME( data[4].ToDouble( (double*)&info.extractorRadius ), _T("failed to parse the mexradius in map info ex cache file") );
+  ASSERT_RUNTIME( data[5].ToLong( (long*)&info.minWind ), _T("failed to parse the minwind in map info ex cache file") );
+  ASSERT_RUNTIME( data[6].ToLong( (long*)&info.maxWind ), _T("failed to parse the maxwind in map info ex cache file") );
+  ASSERT_RUNTIME( data[7].ToLong( (long*)&info.width ), _T("failed to parse the width in map info ex cache file") );
+  ASSERT_RUNTIME( data[8].ToLong( (long*)&info.height ), _T("failed to parse the height in map info ex cache file") );
+  ASSERT_RUNTIME( data[9].ToLong( (long*)&info.posCount ), _T("failed to parse the poscount in map info ex cache file") );
 
   wxArrayString posinfo = wxStringTokenize( data[10], _T(' ') );
   for ( int i = 0; i < info.posCount; i++)
   {
      StartPos position;
-     ASSERT_RUNTIME( posinfo[i].BeforeFirst( _T('-') ).ToLong( (long*)&position.x ), _T("failed to parse the map info ex cache file") );
-     ASSERT_RUNTIME( posinfo[i].AfterFirst( _T('-') ).ToLong( (long*)&position.y ), _T("failed to parse the map info ex cache file") );
+     ASSERT_RUNTIME( posinfo[i].BeforeFirst( _T('-') ).ToLong( (long*)&position.x ), _T("failed to parse the x coordinate in map info ex cache file") );
+     ASSERT_RUNTIME( posinfo[i].AfterFirst( _T('-') ).ToLong( (long*)&position.y ), _T("failed to parse the y coordinate in map info ex cache file") );
      info.positions[i] = position;
   }
 
@@ -782,25 +780,25 @@ MapInfo SpringUnitSync::_LoadMapInfoExCache( const wxString& mapname )
 void SpringUnitSync::_SaveMapInfoExCache( const wxString& mapname, const MapInfo& info )
 {
   wxLogDebugFunc( _T("") );
-  wxString path = sett().GetCachePath() + mapname + _T(".infoexcache");
+  wxString path = sett().GetCachePath() + mapname + _T(".infoex");
 
   wxFile f( path.c_str(), wxFile::write );
   ASSERT_RUNTIME( f.IsOpened(), _T("failed to open map info ex cache file for writing.") );
 
   wxString buff;
-  buff << TowxString( info.description ) + _T('\n');
-  buff << TowxString( info.tidalStrength ) + _T('\n');
-  buff << TowxString( info.gravity ) + _T('\n');
-  buff << TowxString( info.maxMetal ) + _T('\n');
-  buff << TowxString( info.extractorRadius ) + _T('\n');
-  buff << TowxString( info.minWind ) + _T('\n');
-  buff << TowxString( info.maxWind ) + _T('\n');
-  buff << TowxString( info.width ) + _T('\n');
-  buff << TowxString( info.height ) + _T('\n');
-  buff << TowxString( info.posCount ) + _T('\n');
+  buff << TowxString( info.description ) << _T('\n');
+  buff << TowxString( info.tidalStrength ) << _T('\n');
+  buff << TowxString( info.gravity ) << _T('\n');
+  buff << TowxString( info.maxMetal ) << _T('\n');
+  buff << TowxString( info.extractorRadius ) << _T('\n');
+  buff << TowxString( info.minWind ) << _T('\n');
+  buff << TowxString( info.maxWind ) << _T('\n');
+  buff << TowxString( info.width ) << _T('\n');
+  buff << TowxString( info.height ) << _T('\n');
+  buff << TowxString( info.posCount ) << _T('\n');
   for ( int i = 0; i < info.posCount; i++)
   {
-     buff << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) + _T(' ');
+     buff << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
   }
   buff << _T('\n');
 
