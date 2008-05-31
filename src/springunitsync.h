@@ -5,7 +5,6 @@
 
 #include "iunitsync.h"
 #include "nonportable.h"
-#include "bimap.h"
 
 class wxImage;
 class wxDynamicLibrary;
@@ -13,7 +12,7 @@ struct SpringMapInfo;
 struct CachedMapInfo;
 class wxCriticalSection;
 
-typedef codeproject::bimap<wxString,wxString> LocalArchivesVector;
+typedef std::map<wxString,wxString> LocalArchivesVector;
 
 
 class SpringUnitSync : public IUnitSync

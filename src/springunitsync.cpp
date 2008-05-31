@@ -76,7 +76,7 @@ void SpringUnitSync::PopulateArchiveList()
     } catch (...) { continue; }
     try
     {
-      m_maps_list.to[name] = hash;
+      m_maps_list[name] = hash;
       m_map_array.Add( name );
     } catch (...)
     {
@@ -94,7 +94,7 @@ void SpringUnitSync::PopulateArchiveList()
     } catch (...) { continue; }
     try
     {
-      m_mods_list.to[name] = hash;
+      m_mods_list[name] = hash;
       m_mod_array.Add( name );
     } catch (...)
     {
@@ -197,15 +197,15 @@ int SpringUnitSync::GetModIndex( const wxString& name )
 
 bool SpringUnitSync::ModExists( const wxString& modname )
 {
-  return (m_mods_list.to.find(modname) != m_mods_list.to.end());
+  return (m_mods_list.find(modname) != m_mods_list.end());
 }
 
 
 bool SpringUnitSync::ModExists( const wxString& modname, const wxString& hash )
 {
-  LocalArchivesVector::iterator itor = m_mods_list.from.find(hash);
-  if ( itor == m_mods_list.from.end() ) return false;
-  return itor->second == modname;
+  LocalArchivesVector::iterator itor = m_mods_list.find(modname);
+  if ( itor == m_mods_list.end() ) return false;
+  return itor->second == hash;
 }
 
 
@@ -246,15 +246,15 @@ wxArrayString SpringUnitSync::GetMapList()
 
 bool SpringUnitSync::MapExists( const wxString& mapname )
 {
-  return (m_maps_list.to.find(mapname) != m_maps_list.to.end());
+  return (m_maps_list.find(mapname) != m_maps_list.end());
 }
 
 
 bool SpringUnitSync::MapExists( const wxString& mapname, const wxString& hash )
 {
-  LocalArchivesVector::iterator itor = m_maps_list.from.find(hash);
-  if ( itor == m_maps_list.from.end() ) return false;
-  return itor->second == mapname;
+  LocalArchivesVector::iterator itor = m_maps_list.find(mapname);
+  if ( itor == m_maps_list.end() ) return false;
+  return itor->second == hash;
 }
 
 
@@ -526,7 +526,7 @@ wxString _GetCachedModUnitsFileName( const wxString& mod )
 
 wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( modname );
 
   wxArrayString ret;
 
@@ -738,7 +738,7 @@ wxString SpringUnitSync::GetSpringDataPath()
 
 MapInfo SpringUnitSync::_LoadMapInfoExCache( const wxString& mapname )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( mapname );
 
   wxString path = sett().GetCachePath() + mapname + _T(".infoex");
 
