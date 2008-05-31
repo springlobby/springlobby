@@ -198,7 +198,7 @@ bool Socket::Receive( wxString& data )
         if ( d.IsEmpty() ) d = wxString( &buff[0], wxCSConv(_T("latin-1")) );
         #endif
       }
-      m_rcv_buffer += d;
+      m_rcv_buffer << d;
     }
   } while ( readnum >= buff_size );
 
