@@ -545,7 +545,7 @@ wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
     ASSERT_RUNTIME( tempstring.length() > 0, _T("mod unit list file is empty") );
     wxString stringbuff = WX_STRING(tempstring);
     ASSERT_RUNTIME( !stringbuff.IsEmpty(), _T("failed to convert to wxString the mod unit list cache file") );
-    ret = wxStringTokenize( stringbuff, _T('\n') );
+    ret = wxStringTokenize( stringbuff, _T('\n'), wxTOKEN_RET_EMPTY );
 
   } catch(...)
   {
@@ -755,7 +755,7 @@ MapInfo SpringUnitSync::_LoadMapInfoExCache( const wxString& mapname )
   ASSERT_RUNTIME( tempstring.length() > 0, _T("map info ex cache file is empty") );
   wxString stringbuff = WX_STRING(tempstring);
   ASSERT_RUNTIME( !stringbuff.IsEmpty(), _T("failed to convert to wxString the map info ex cache file") );
-  wxArrayString data = wxStringTokenize( stringbuff , _T('\t') );
+  wxArrayString data = wxStringTokenize( stringbuff , _T('\t'), wxTOKEN_RET_EMPTY );
   MapInfo info;
 
   ASSERT_RUNTIME( data.GetCount() > 0, _T("no lines found in cache info ex") );
@@ -770,7 +770,7 @@ MapInfo SpringUnitSync::_LoadMapInfoExCache( const wxString& mapname )
   ASSERT_RUNTIME( data[8].ToLong( (long*)&info.height ), _T("failed to parse the height in map info ex cache file") );
   ASSERT_RUNTIME( data[9].ToLong( (long*)&info.posCount ), _T("failed to parse the poscount in map info ex cache file") );
 
-  wxArrayString posinfo = wxStringTokenize( data[10], _T(' ') );
+  wxArrayString posinfo = wxStringTokenize( data[10], _T(' '), wxTOKEN_RET_EMPTY );
   for ( int i = 0; i < info.posCount; i++)
   {
      StartPos position;
@@ -778,7 +778,10 @@ MapInfo SpringUnitSync::_LoadMapInfoExCache( const wxString& mapname )
      ASSERT_RUNTIME( posinfo[i].AfterFirst( _T('-') ).ToLong( (long*)&position.y ), _T("failed to parse the y coordinate in map info ex cache file") );
      info.positions[i] = position;
   }
-  if ( data.GetCount() > 10 ) info.author = data[11];
+  if ( data.GetCount() > 11 )
+  {
+    info.author = data[11];
+  }
 
   f.Close();
   return info;
