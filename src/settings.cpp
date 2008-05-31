@@ -34,8 +34,8 @@ Settings& sett()
 Settings::Settings()
 {
   #if defined(__WXMSW__) && !defined(HAVE_WX26)
-  wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + _T("/springlobby.conf");
-  wxString globalfilepath =  wxStandardPathsBase::Get().GetExecutablePath() + _T("/springlobby.conf");
+  wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
+  wxString globalfilepath =  wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() + _T("springlobby.conf");
 
   if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
   {

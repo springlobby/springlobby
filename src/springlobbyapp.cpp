@@ -94,11 +94,11 @@ bool SpringLobbyApp::OnInit()
 
     if ( !sett().IsFirstRun() && sett().IsPortableMode() ) /// rebase spring paths to current working dir in portable mode
     {
-      wxString workingfolder = wxStandardPathsBase::Get().GetExecutablePath();
+      wxString workingfolder = wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator();
       sett().SetSpringDir( workingfolder );
-      sett().SetSpringLoc( workingfolder + sett().GetSpringLoc().BeforeLast( wxFileName::GetPathSeparator() ) );
-      sett().SetUnitSyncLoc( workingfolder + sett().GetUnitSyncLoc().BeforeLast( wxFileName::GetPathSeparator() ) );
-      sett().SetCachePath( workingfolder + sett().GetCachePath().BeforeLast( wxFileName::GetPathSeparator() ) );
+      sett().SetSpringLoc( workingfolder + sett().GetSpringLoc().AfterLast( wxFileName::GetPathSeparator() ) );
+      sett().SetUnitSyncLoc( workingfolder + sett().GetUnitSyncLoc().AfterLast( wxFileName::GetPathSeparator() ) );
+      sett().SetCachePath( workingfolder + sett().GetCachePath().AfterLast( wxFileName::GetPathSeparator() ) );
       sett().SaveSettings();
     }
 
