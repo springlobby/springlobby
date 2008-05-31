@@ -10,7 +10,6 @@
 #include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/sizer.h>
-#include <wx/tooltip.h>
 #include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
@@ -31,6 +30,7 @@
 #include "uiutils.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
+#include "torrentwrapper.h"
 #endif
 
 #include "images/springlobby.xpm"
@@ -68,10 +68,10 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SETTINGSPP, MainWindow::OnShowSettingsPP )
   EVT_MENU( MENU_VERSION, MainWindow::OnMenuVersion )
   EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
-  EVT_MENU( MENU_TIPS, MainWindow::OnMenuTooltips )
-
+  EVT_MENU( MENU_START_TORRENT, MainWindow::OnMenuStartTorrent )
+  EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
+  EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
-
 END_EVENT_TABLE()
 
 
@@ -99,6 +99,9 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menuTools->AppendSeparator();
   m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
   m_menuTools->AppendSeparator();
+  #ifndef NO_TORRENT_SYSTEM
+  m_menuTools->AppendSeparator();
+  #endif
   m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
   m_settings_menu = new wxMenuItem( m_menuTools, MENU_SETTINGSPP, _("SpringSettings"), wxEmptyString, wxITEM_NORMAL );
   m_menuTools->Append (m_settings_menu);
@@ -436,6 +439,39 @@ void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 }
 
 
+void MainWindow::OnMenuStartTorrent( wxCommandEvent& event )
+{
+  #ifndef NO_TORRENT_SYSTEM
+  torrent()->ConnectToP2PSystem();
+  #endif
+}
+
+
+void MainWindow::OnMenuStopTorrent( wxCommandEvent& event )
+{
+  #ifndef NO_TORRENT_SYSTEM
+  torrent()->DisconnectToP2PSystem();
+  #endif
+}
+
+
+void MainWindow::OnMenuOpen( wxMenuEvent& event )
+{
+  #ifndef NO_TORRENT_SYSTEM
+  m_menuTools->Delete(MENU_STOP_TORRENT);
+  m_menuTools->Delete(MENU_START_TORRENT);
+  if ( !torrent()->IsConnectedToP2PSystem() )
+  {
+    m_menuTools->Insert( 5, MENU_START_TORRENT, _("Manually &Start Torrent System") );
+  }
+  else
+  {
+    m_menuTools->Insert( 5, MENU_STOP_TORRENT, _("Manually &Stop Torrent System") );
+  }
+  #endif
+}
+
+
 void MainWindow::OnReportBug( wxCommandEvent& event )
 {
   m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") );
@@ -478,10 +514,5 @@ void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 	se_frame->Show();
 }
 
-void MainWindow::OnMenuTooltips( wxCommandEvent& event )
-{
-//    bool show = m_menuEdit->IsChecked(MENU_TIPS);
-//    sett().SetShowTooltips( show );
-//    wxToolTip::Enable( show );
-}
+
 

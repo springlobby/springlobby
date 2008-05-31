@@ -58,10 +58,12 @@ class MainWindow : public wxFrame
     void OnMenuQuit( wxCommandEvent& event );
     void OnMenuVersion ( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
+    void OnMenuStartTorrent( wxCommandEvent& event );
+    void OnMenuStopTorrent( wxCommandEvent& event );
+    void OnMenuOpen( wxMenuEvent& event );
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
     void OnShowSettingsPP( wxCommandEvent& event );
-    void OnMenuTooltips( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
 
@@ -84,7 +86,6 @@ class MainWindow : public wxFrame
     wxMenuItem* m_settings_menu;
     wxMenuBar* m_menubar;
     wxMenu* m_menuTools;
-    wxMenu* m_menuEdit;
 
     wxBoxSizer* m_main_sizer;
     wxListbook* m_func_tabs;
@@ -131,9 +132,9 @@ enum
     MENU_CHAT,
     MAIN_TABS,
     MENU_VERSION,
-    MENU_TIPS,
-    MENU_AUTOCONNECT,
-    MENU_SOUNDS
+    MENU_START_TORRENT,
+    MENU_STOP_TORRENT,
+
 
 };
 

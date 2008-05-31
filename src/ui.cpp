@@ -486,11 +486,6 @@ void Ui::OnUpdate( int mselapsed )
   if (m_upd_intv_counter % 20 == 0 )
   {
       m_main_win->GetTorrentTab().OnUpdate();
-
-      //would work if events get passed to children
-      wxCommandEvent tor_upd ( torrentSystemStatusUpdateEvt, wxID_ANY);
-      wxPostEvent(m_main_win, tor_upd);
-
   }
   torrent()->UpdateFromTimer( mselapsed );
   m_upd_intv_counter++;
