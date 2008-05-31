@@ -89,8 +89,6 @@ class SpringUnitSync : public IUnitSync
     wxArrayString m_map_array;
     wxArrayString m_mod_array;
 
-    wxArrayString m_mod_units;
-
     int m_map_count;
     int m_mod_count;
     int m_side_count;

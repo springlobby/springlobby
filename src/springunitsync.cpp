@@ -534,40 +534,42 @@ wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
   try {
 
     ASSERT_RUNTIME( wxFileName::FileExists( path ), _T("Cache file does not exist") );
-    wxTextFile f;
-    ASSERT_RUNTIME( f.Open(path), _T("Failed to open file") );
-    ASSERT_RUNTIME( f.GetLineCount() > 0, _T("File empty") );
+    wxFile f;
+    ASSERT_RUNTIME( f.Open(path), _T("Failed to open mod unit cache file") );
+    ASSERT_RUNTIME( f.Length() > 0, _T("mod unit cache file empty") );
 
     wxString str;
-    for ( str = f.GetFirstLine(); !f.Eof(); str = f.GetNextLine() ) ret.Add( str );
+    char* buff = new char[f.Length()];
+    f.Read( buff, f.Length() );
+    std::string tempstring = buff;
+    delete buff;
+    ret = wxStringTokenize( WX_STRING( tempstring ), _T('\n') );
 
-    return ret;
-
-  } catch(...) {}
-
-  susynclib()->SetCurrentMod( modname );
-  while ( susynclib()->ProcessUnitsNoChecksum() );
-  for ( int i = 0; i < susynclib()->GetUnitCount(); i++ ) {
-    wxString tmp = susynclib()->GetFullUnitName(i) + _T("(");
-    tmp += susynclib()->GetUnitName(i) + _T(")");
-    ret.Add( tmp );
-  }
-
-  m_mod_units = ret;
-  try {
-
-    wxFile f( path, wxFile::write );
-    ASSERT_RUNTIME( f.IsOpened(), _T("Couldn't create file") );
-
-    for ( unsigned int i = 0; i < ret.GetCount(); i++ ) {
-      wxString tmp =  ret.Item(i);
-      tmp += _T("\n");
-      f.Write( tmp.c_str(), tmp.length() );
+  } catch(...)
+  {
+    ret.Empty();
+    susynclib()->SetCurrentMod( modname );
+    while ( susynclib()->ProcessUnitsNoChecksum() );
+    unsigned int unitcount = susynclib()->GetUnitCount();
+    for ( unsigned int i = 0; i < unitcount; i++ )
+    {
+      ret.Add( susynclib()->GetFullUnitName(i) << _T("(") << susynclib()->GetUnitName(i) << _T(")") );
     }
 
-    f.Close();
+    try {
 
-  } catch(...) {}
+      wxFile f( path, wxFile::write );
+      ASSERT_RUNTIME( f.IsOpened(), _T("Couldn't create file") );
+
+      wxString tmp;
+
+      for ( unsigned int i = 0; i < ret.GetCount(); i++ ) tmp <<  ret[i] << _T('\n');
+
+      f.Write( tmp );
+      f.Close();
+
+    } catch(...) {}
+  }
 
   return ret;
 }
