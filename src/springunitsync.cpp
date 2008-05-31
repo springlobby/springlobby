@@ -778,6 +778,7 @@ MapInfo SpringUnitSync::_LoadMapInfoExCache( const wxString& mapname )
      ASSERT_RUNTIME( posinfo[i].AfterFirst( _T('-') ).ToLong( (long*)&position.y ), _T("failed to parse the y coordinate in map info ex cache file") );
      info.positions[i] = position;
   }
+  if ( data.GetCount() > 10 ) info.author = data[11];
 
   f.Close();
   return info;
@@ -793,7 +794,7 @@ void SpringUnitSync::_SaveMapInfoExCache( const wxString& mapname, const MapInfo
   ASSERT_RUNTIME( f.IsOpened(), _T("failed to open map info ex cache file for writing.") );
 
   wxString buff;
-  buff << TowxString( info.description ) << _T('\t');
+  buff << info.description << _T('\t');
   buff << TowxString( info.tidalStrength ) << _T('\t');
   buff << TowxString( info.gravity ) << _T('\t');
   buff << TowxString( info.maxMetal ) << _T('\t');
@@ -808,6 +809,7 @@ void SpringUnitSync::_SaveMapInfoExCache( const wxString& mapname, const MapInfo
      buff << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
   }
   buff << _T('\t');
+  buff << info.author << _T('\t');
 
   f.Write( buff );
   f.Close();

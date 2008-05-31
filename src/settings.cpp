@@ -64,6 +64,7 @@ Settings::~Settings()
     #if defined(__WXMSW__) && !defined(HAVE_WX26)
     SaveSettings();
     #endif
+    SetCacheVersion();
     delete m_config;
 }
 
