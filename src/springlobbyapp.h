@@ -27,7 +27,7 @@ class SpringLobbyApp : public wxApp
   protected:
 
     void SetupUserFolders();
-    void InitDirs();
+    void InitCacheDir();
 
     wxTimer* m_timer;
 
