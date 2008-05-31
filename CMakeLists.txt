@@ -44,13 +44,23 @@ SET(wxWidgets_USE_LIBS base core gl net adv qa richtext )
 # We need the Find package for wxWidgets to work
 FIND_PACKAGE(wxWidgets)
 FIND_PACKAGE(SDL)
+FIND_PACKAGE(SDL_mixer)
 FIND_PACKAGE(SDL_sound)
+
+# Throw an error to the user if SDL is not found
+if ( NOT SDL_FOUND AND NOT OPTION_NO_SOUND )
+   message ( FATAL_ERROR "SDL library not found! please install the package or use OPTION_NO_SOUND ON" )
+endif()
+
+# Throw an error to the user if SDL_mixer is not found
+if ( NOT SDL_MIXER_FOUND AND NOT OPTION_NO_SOUND )
+   message ( FATAL_ERROR "SDL_mixer library not found! please install the package or use OPTION_NO_SOUND ON" )
+endif()
 
 # Throw an error to the user if SDL_sound is not found
 if ( NOT SDL_SOUND_FOUND AND NOT OPTION_NO_SOUND )
-   message ( FATAL_ERROR "SDL_sound not found! please install the package or use OPTION_NO_SOUND ON" )
-endif ()
-
+   message ( FATAL_ERROR "SDL_sound library not found! please install the package or use OPTION_NO_SOUND ON" )
+endif()
 
 # Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
 IF(wxWidgets_FOUND)
