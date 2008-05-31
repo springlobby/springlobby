@@ -553,7 +553,7 @@ wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
     unsigned int unitcount = susynclib()->GetUnitCount();
     for ( unsigned int i = 0; i < unitcount; i++ )
     {
-      ret.Add( susynclib()->GetFullUnitName(i) << _T("(") << susynclib()->GetUnitName(i) << _T(")") );
+      ret.Add( susynclib()->GetFullUnitName(i) << _T(" (") << susynclib()->GetUnitName(i) << _T(")") );
     }
 
     try {
