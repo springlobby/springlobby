@@ -70,9 +70,7 @@ bool SpringLobbyApp::OnInit()
     wxLogDebugFunc( _T("") );
     wxInitAllImageHandlers();
 
-    wxToolTip::Enable( sett().GetShowTooltips()  );
-
-    //TODO needed?
+     //TODO needed?
     wxImage::AddHandler(new wxPNGHandler);
 
     m_locale = new wxLocale( );
