@@ -25,10 +25,7 @@ class TorrentOptionsPanel: public wxPanel
         void OnP2PPort( wxCommandEvent& event );
         void OnMaxConnections( wxCommandEvent& event );
         void OnApply( wxCommandEvent& event );
-        void OnManStart( wxCommandEvent& event );
-        void OnManStop( wxCommandEvent& event );
         void OnRestore( wxCommandEvent& event );
-        void OnStatusUpdate( wxCommandEvent& event );
 
     private:
         wxTextCtrl* m_maxUp;
@@ -44,9 +41,6 @@ class TorrentOptionsPanel: public wxPanel
         wxRadioButton* m_gamestart_throttle;
         wxTextCtrl* m_gamestart_throttle_up;
         wxTextCtrl* m_gamestart_throttle_down;
-        wxButton* m_sys_start;
-        wxButton* m_sys_stop;
-        wxButton* m_status_color;
         wxStaticText* m_gamestart_throttle_up_lbl;
         wxStaticText* m_gamestart_throttle_down_lbl;
         wxStaticText* m_status_color_text;
@@ -55,7 +49,6 @@ class TorrentOptionsPanel: public wxPanel
 
 
         void EnableSettings( bool enable);
-        void EnableStartStopButtons( bool system_is_running);
         void SetStatusDisplay();
 
 
@@ -70,8 +63,6 @@ class TorrentOptionsPanel: public wxPanel
             ID_RESTORE,
             ID_AUTOSTART_RADIO,
             ID_GAMESTART_RADIO,
-            ID_MAN_START,
-            ID_MAN_STOP,
             ID_INGAME_UP,
             ID_INGAME_DOWN
         };
