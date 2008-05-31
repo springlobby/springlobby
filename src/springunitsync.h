@@ -13,16 +13,14 @@ struct SpringMapInfo;
 struct CachedMapInfo;
 class wxCriticalSection;
 
-
-typedef std::map<wxString,CachedMapInfo> MapCacheType;
 typedef codeproject::bimap<wxString,wxString> LocalArchivesVector;
 
 
 class SpringUnitSync : public IUnitSync
 {
   public:
-    SpringUnitSync(): m_map_count(0),m_mod_count(0),m_side_count(0) { _LoadMapInfoExCache(); }
-    ~SpringUnitSync() { FreeUnitSyncLib(); _SaveMapInfoExCache(); }
+    SpringUnitSync(): m_map_count(0),m_mod_count(0),m_side_count(0) { }
+    ~SpringUnitSync() { FreeUnitSyncLib(); }
 
     int GetNumMods();
     wxArrayString GetModList();
@@ -68,7 +66,7 @@ class SpringUnitSync : public IUnitSync
 
     wxImage GetMinimap( const wxString& mapname, int max_w, int max_h, bool store_size = false );
 
-    bool CacheMapInfo( const wxString& map );
+    bool CacheMapInfo( const wxString& mapname );
     bool CacheMinimap( const wxString& map );
     bool CacheModUnits( const wxString& mod );
     bool ReloadUnitSyncLib();
@@ -97,16 +95,14 @@ class SpringUnitSync : public IUnitSync
     int m_mod_count;
     int m_side_count;
 
-    MapCacheType m_mapinfo;
-
     wxCriticalSection m_lock;
 
 
 //    void* _GetLibFuncPtr( const wxString& name );
     MapInfo _GetMapInfoEx( const wxString& mapname );
 
-    void _LoadMapInfoExCache();
-    void _SaveMapInfoExCache();
+    MapInfo _LoadMapInfoExCache( const wxString& mapname );
+    void _SaveMapInfoExCache( const wxString& mapname, const MapInfo& info );
 
     bool _LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc );
     void _FreeUnitSyncLib();
@@ -121,9 +117,6 @@ class SpringUnitSync : public IUnitSync
     UnitSyncMap _GetMapEx( const wxString& mapname, bool force = false );
     MapInfo _GetMapInfoEx( const wxString& mapname, bool force );
     wxImage _GetCachedMinimap( const wxString& mapname, int max_w, int max_h, bool store_size = false );
-
-    void _ConvertSpringMapInfo( const CachedMapInfo& in, MapInfo& out );
-    void _ConvertSpringMapInfo( const SpringMapInfo& in, CachedMapInfo& out, const wxString& mapname );
 
     void PopulateArchiveList();
 

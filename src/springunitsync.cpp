@@ -10,6 +10,7 @@
 #include <wx/stdpaths.h>
 #include <wx/string.h>
 #include <wx/file.h>
+#include <wx/tokenzr.h>
 //#include <wx/txtstrm.h>
 //#include <wx/wfstream.h>
 #include <wx/textfile.h>
@@ -25,27 +26,6 @@
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
-
-
-struct CachedMapInfo
-{
-  char name[256];
-  char author[256];
-  char description[256];
-
-  int tidalStrength;
-  int gravity;
-  float maxMetal;
-  int extractorRadius;
-  int minWind;
-  int maxWind;
-
-  int width;
-  int height;
-
-  int posCount;
-  StartPos positions[16];
-};
 
 
 IUnitSync* usync()
@@ -647,15 +627,41 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int max_w, int max_
 
 MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname, bool force )
 {
-  wxLogMessage( _T("GetMapInfoEx cache lookup failed.") );
-  MapInfo info = susynclib()->GetMapInfoEx( mapname, 0 );
+  MapInfo info;
+  if (!force)
+  try
+  {
+    info = _LoadMapInfoExCache( mapname );
+  }
+  catch (...)
+  {
+    try
+    {
+      info = susynclib()->GetMapInfoEx( mapname, 0 );
+      _SaveMapInfoExCache( mapname, info );
+    }
+    catch (...) {}
+  }
+  else
+  {
+    try
+    {
+      info = susynclib()->GetMapInfoEx( mapname, 0 );
+      _SaveMapInfoExCache( mapname, info );
+    } catch (...) {}
+  }
   return info;
 }
 
 
-bool SpringUnitSync::CacheMapInfo( const wxString& map )
+bool SpringUnitSync::CacheMapInfo( const wxString& mapname )
 {
-  return false;
+    try
+    {
+      _SaveMapInfoExCache( mapname, susynclib()->GetMapInfoEx( mapname, 0 ) );
+    }
+    catch (...) { return false; }
+    return true;
 }
 
 
@@ -736,94 +742,80 @@ wxString SpringUnitSync::GetSpringDataPath()
 }
 
 
-void SpringUnitSync::_ConvertSpringMapInfo( const CachedMapInfo& in, MapInfo& out )
-{
-  out.author = WX_STRINGC(in.author);
-  out.description = WX_STRINGC(in.description);
-
-  out.extractorRadius = in.extractorRadius;
-  out.gravity = in.gravity;
-  out.tidalStrength = in.tidalStrength;
-  out.maxMetal = in.maxMetal;
-  out.minWind = in.minWind;
-  out.maxWind = in.maxWind;
-
-  out.width = in.width;
-  out.height = in.height;
-  out.posCount = in.posCount;
-  for ( int i = 0; i < in.posCount; i++) out.positions[i] = in.positions[i];
-}
-
-
-void SpringUnitSync::_ConvertSpringMapInfo( const SpringMapInfo& in, CachedMapInfo& out, const wxString& mapname )
-{
-  strncpy( &out.name[0], mapname.mb_str(), 256 );
-  strncpy( &out.author[0], in.author, 256 );
-  strncpy( &out.description[0], in.description, 256 );
-
-  out.tidalStrength = in.tidalStrength;
-  out.gravity = in.gravity;
-  out.maxMetal = in.maxMetal;
-  out.extractorRadius = in.extractorRadius;
-  out.minWind = in.minWind;
-  out.maxWind = in.maxWind;
-
-  out.width = in.width;
-  out.height = in.height;
-
-  out.posCount = in.posCount;
-  for ( int i = 0; i < 16; i++ ) out.positions[i] = in.positions[i];
-}
-
-
-void SpringUnitSync::_LoadMapInfoExCache()
+MapInfo SpringUnitSync::_LoadMapInfoExCache( const wxString& mapname )
 {
   wxLogDebugFunc( _T("") );
 
-  wxString path = sett().GetCachePath() + _T("mapinfoex.cache"); //wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator() + _T("mapinfoex.cache");
+  wxString path = sett().GetCachePath() + mapname + _T(".infoexcache");
 
-  if ( !wxFileName::FileExists( path ) ) {
-    wxLogMessage( _T("No cache file found.") );
-    return;
-  }
+  ASSERT_RUNTIME( wxFileName::FileExists( path ), _T("No map info ex cache file found.") );
 
   wxFile f( path.c_str(), wxFile::read );
-  if ( !f.IsOpened() ) {
-    wxLogMessage( _T("failed to open file for reading.") );
-    return;
+
+  ASSERT_RUNTIME( f.IsOpened(), _T("failed to open map info ex cache file for reading.") )
+
+  wxString stringbuff;
+  char buff[10];
+  while( !f.Eof() )
+  {
+    f.Read( buff, 10 );
+    stringbuff << WX_STRINGC(buff);
   }
 
-  m_mapinfo.clear();
+  wxArrayString data = wxStringTokenize( stringbuff, _T('\n') );
+  MapInfo info;
 
-  CachedMapInfo cinfo;
-  while ( !f.Eof() ) {
-    if ( (unsigned int)f.Read( &cinfo, sizeof(CachedMapInfo) ) < sizeof(CachedMapInfo) ) {
-      wxLogError( _T("Cache file invalid") );
-      m_mapinfo.clear();
-      break;
-    }
-    m_mapinfo[ WX_STRINGC( &cinfo.name[0] ) ] = cinfo;
+  info.description = data[0];
+  ASSERT_RUNTIME( data[1].ToLong( (long*)&info.tidalStrength ), _T("failed to parse the map info ex cache file") );
+  ASSERT_RUNTIME( data[2].ToLong( (long*)&info.gravity ), _T("failed to parse the map info ex cache file") );
+  ASSERT_RUNTIME( data[3].ToLong( (long*)&info.maxMetal ), _T("failed to parse the map info ex cache file") );
+  ASSERT_RUNTIME( data[4].ToDouble( (double*)&info.extractorRadius ), _T("failed to parse the map info ex cache file") );
+  ASSERT_RUNTIME( data[5].ToLong( (long*)&info.minWind ), _T("failed to parse the map info ex cache file") );
+  ASSERT_RUNTIME( data[6].ToLong( (long*)&info.maxWind ), _T("failed to parse the map info ex cache file") );
+  ASSERT_RUNTIME( data[7].ToLong( (long*)&info.width ), _T("failed to parse the map info ex cache file") );
+  ASSERT_RUNTIME( data[8].ToLong( (long*)&info.height ), _T("failed to parse the map info ex cache file") );
+  ASSERT_RUNTIME( data[9].ToLong( (long*)&info.posCount ), _T("failed to parse the map info ex cache file") );
+
+  wxArrayString posinfo = wxStringTokenize( data[10], _T(' ') );
+  for ( int i = 0; i < info.posCount; i++)
+  {
+     StartPos position;
+     ASSERT_RUNTIME( posinfo[i].BeforeFirst( _T('-') ).ToLong( (long*)&position.x ), _T("failed to parse the map info ex cache file") );
+     ASSERT_RUNTIME( posinfo[i].AfterFirst( _T('-') ).ToLong( (long*)&position.y ), _T("failed to parse the map info ex cache file") );
+     info.positions[i] = position;
   }
+
   f.Close();
+  return info;
 }
 
 
-void SpringUnitSync::_SaveMapInfoExCache()
+void SpringUnitSync::_SaveMapInfoExCache( const wxString& mapname, const MapInfo& info )
 {
   wxLogDebugFunc( _T("") );
-  wxString path = sett().GetCachePath() + _T("mapinfoex.cache"); //wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator() + _T("mapinfoex.cache");
+  wxString path = sett().GetCachePath() + mapname + _T(".infoexcache");
 
   wxFile f( path.c_str(), wxFile::write );
-  if ( !f.IsOpened() ) {
-    wxLogMessage( _T("failed to open file for writing.") );
-    return;
-  }
+  ASSERT_RUNTIME( f.IsOpened(), _T("failed to open map info ex cache file for writing.") );
 
-  MapCacheType::iterator i = m_mapinfo.begin();
-  while ( i != m_mapinfo.end() ) {
-    f.Write( &i->second, sizeof(CachedMapInfo) );
-    i++;
+  wxString buff;
+  buff << TowxString( info.description ) + _T('\n');
+  buff << TowxString( info.tidalStrength ) + _T('\n');
+  buff << TowxString( info.gravity ) + _T('\n');
+  buff << TowxString( info.maxMetal ) + _T('\n');
+  buff << TowxString( info.extractorRadius ) + _T('\n');
+  buff << TowxString( info.minWind ) + _T('\n');
+  buff << TowxString( info.maxWind ) + _T('\n');
+  buff << TowxString( info.width ) + _T('\n');
+  buff << TowxString( info.height ) + _T('\n');
+  buff << TowxString( info.posCount ) + _T('\n');
+  for ( int i = 0; i < info.posCount; i++)
+  {
+     buff << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) + _T(' ');
   }
+  buff << _T('\n');
+
+  f.Write( buff );
   f.Close();
 }
 
