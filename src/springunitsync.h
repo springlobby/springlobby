@@ -99,7 +99,6 @@ class SpringUnitSync : public IUnitSync
 
 
 //    void* _GetLibFuncPtr( const wxString& name );
-    MapInfo _GetMapInfoEx( const wxString& mapname );
 
     MapInfo _LoadMapInfoExCache( const wxString& mapname );
     void _SaveMapInfoExCache( const wxString& mapname, const MapInfo& info );
@@ -115,7 +114,7 @@ class SpringUnitSync : public IUnitSync
     UnitSyncMap _GetMap( int index, bool getmapinfo = false );
     UnitSyncMap _GetMap( const wxString& mapname, bool getmapinfo = false );
     UnitSyncMap _GetMapEx( const wxString& mapname, bool force = false );
-    MapInfo _GetMapInfoEx( const wxString& mapname, bool force );
+    MapInfo _GetMapInfoEx( const wxString& mapname );
     wxImage _GetCachedMinimap( const wxString& mapname, int max_w, int max_h, bool store_size = false );
 
     void PopulateArchiveList();

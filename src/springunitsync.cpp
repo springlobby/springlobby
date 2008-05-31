@@ -282,7 +282,7 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
   m.name = susynclib()->GetMapName( index );
   m.hash = susynclib()->GetMapChecksum( index );
 
-  m.info = susynclib()->GetMapInfoEx( m.name, 1 );
+  m.info = _GetMapInfoEx( m.name );
 
   return m;
 }
@@ -625,31 +625,23 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int max_w, int max_
   return _GetCachedMinimap( mapname, max_w, max_h, store_size );
 }
 
-MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname, bool force )
+MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
 {
   MapInfo info;
-  if (!force)
   try
   {
     info = _LoadMapInfoExCache( mapname );
   }
   catch (...)
   {
+    info = susynclib()->GetMapInfoEx( mapname, 1 );
     try
     {
-      info = susynclib()->GetMapInfoEx( mapname, 0 );
       _SaveMapInfoExCache( mapname, info );
     }
     catch (...) {}
   }
-  else
-  {
-    try
-    {
-      info = susynclib()->GetMapInfoEx( mapname, 0 );
-      _SaveMapInfoExCache( mapname, info );
-    } catch (...) {}
-  }
+
   return info;
 }
 
@@ -658,7 +650,7 @@ bool SpringUnitSync::CacheMapInfo( const wxString& mapname )
 {
     try
     {
-      _SaveMapInfoExCache( mapname, susynclib()->GetMapInfoEx( mapname, 0 ) );
+      _SaveMapInfoExCache( mapname, susynclib()->GetMapInfoEx( mapname, 1 ) );
     }
     catch (...) { return false; }
     return true;
@@ -755,16 +747,13 @@ MapInfo SpringUnitSync::_LoadMapInfoExCache( const wxString& mapname )
   ASSERT_RUNTIME( f.IsOpened(), _T("failed to open map info ex cache file for reading.") )
 
   wxString stringbuff;
-  char buff[10];
-  while( !f.Eof() )
-  {
-    f.Read( buff, 10 );
-    stringbuff << WX_STRINGC(buff);
-  }
-
-  wxArrayString data = wxStringTokenize( stringbuff, _T('\n') );
+  char* buff = new char[f.Length()];
+  f.Read( buff, f.Length() );
+  std::string tempstring = buff;
+  wxArrayString data = wxStringTokenize( WX_STRING(tempstring), _T('\n') );
   MapInfo info;
 
+  ASSERT_RUNTIME( data.GetCount() > 0, _T("failed to parse the map info ex cache file") );
   info.description = data[0];
   ASSERT_RUNTIME( data[1].ToLong( (long*)&info.tidalStrength ), _T("failed to parse the map info ex cache file") );
   ASSERT_RUNTIME( data[2].ToLong( (long*)&info.gravity ), _T("failed to parse the map info ex cache file") );
