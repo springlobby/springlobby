@@ -305,7 +305,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
   tdf.AppendLineBreak();
 
-  if ( !battle.IsFounderMe() )
+  if ( !battle.IsFounderMe() && !sett().GetNoUDP() )
   {
     if ( battle.GetNatType() == NAT_Fixed_source_ports )
     {
