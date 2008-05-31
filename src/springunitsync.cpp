@@ -536,14 +536,16 @@ wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
     ASSERT_RUNTIME( wxFileName::FileExists( path ), _T("Cache file does not exist") );
     wxFile f;
     ASSERT_RUNTIME( f.Open(path), _T("Failed to open mod unit cache file") );
-    ASSERT_RUNTIME( f.Length() > 0, _T("mod unit cache file empty") );
+    ASSERT_RUNTIME( f.Length() > 0, _T("mod unit cache file has lenght 0") );
 
-    wxString str;
     char* buff = new char[f.Length()];
     f.Read( buff, f.Length() );
     std::string tempstring = buff;
     delete buff;
-    ret = wxStringTokenize( WX_STRING( tempstring ), _T('\n') );
+    ASSERT_RUNTIME( tempstring.length() > 0, _T("mod unit list file is empty") );
+    wxString stringbuff = WX_STRING(tempstring);
+    ASSERT_RUNTIME( !stringbuff.IsEmpty(), _T("failed to convert to wxString the mod unit list cache file") );
+    ret = wxStringTokenize( stringbuff, _T('\n') );
 
   } catch(...)
   {
@@ -742,16 +744,18 @@ MapInfo SpringUnitSync::_LoadMapInfoExCache( const wxString& mapname )
 
   ASSERT_RUNTIME( wxFileName::FileExists( path ), _T("No map info ex cache file found.") );
 
-  wxFile f( path.c_str(), wxFile::read );
+  wxFile f( path, wxFile::read );
 
-  ASSERT_RUNTIME( f.IsOpened(), _T("failed to open map info ex cache file for reading.") )
-
-  wxString stringbuff;
+  ASSERT_RUNTIME( f.IsOpened(), _T("failed to open map info ex cache file for reading.") );
+  ASSERT_RUNTIME( f.Length() > 0 , _T("map info ex cache file has lenght 0") );
   char* buff = new char[f.Length()];
   f.Read( buff, f.Length() );
   std::string tempstring = buff;
   delete buff;
-  wxArrayString data = wxStringTokenize( WX_STRING(tempstring), _T('\n') );
+  ASSERT_RUNTIME( tempstring.length() > 0, _T("map info ex cache file is empty") );
+  wxString stringbuff = WX_STRING(tempstring);
+  ASSERT_RUNTIME( !stringbuff.IsEmpty(), _T("failed to convert to wxString the map info ex cache file") );
+  wxArrayString data = wxStringTokenize( stringbuff , _T('\n') );
   MapInfo info;
 
   ASSERT_RUNTIME( data.GetCount() > 0, _T("no lines found in cache info ex") );
