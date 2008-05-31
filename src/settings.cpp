@@ -34,8 +34,8 @@ Settings& sett()
 Settings::Settings()
 {
   #if defined(__WXMSW__) && !defined(HAVE_WX26)
-  wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + _T("/springlobby.conf");
-  wxString globalfilepath =  wxStandardPathsBase::Get().GetExecutablePath() + _T("/springlobby.conf");
+  wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
+  wxString globalfilepath =  wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() + _T("springlobby.conf");
 
   if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
   {
@@ -64,6 +64,7 @@ Settings::~Settings()
     #if defined(__WXMSW__) && !defined(HAVE_WX26)
     SaveSettings();
     #endif
+    SetCacheVersion();
     delete m_config;
 }
 
@@ -89,24 +90,18 @@ bool Settings::IsPortableMode()
 
 bool Settings::IsFirstRun()
 {
-    bool first;
-    m_config->Read( _T("/General/firstrun"), &first, true );
-    return first;
+  return m_config->Read( _T("/General/firstrun"), true );
 }
 
 
 bool Settings::UseOldSpringLaunchMethod()
 {
-    bool old;
-    m_config->Read( _T("/Spring/UseOldLaunchMethod"), &old, false );
-    return old;
+    return m_config->Read( _T("/Spring/UseOldLaunchMethod"), 0l );
 }
 
 bool Settings::GetNoUDP()
 {
-    bool tmp;
-    m_config->Read( _T("/General/NoUDP"), &tmp, false );
-    return tmp;
+    return m_config->Read( _T("/General/NoUDP"), 0l );
 }
 
 void Settings::SetNoUDP(bool value)
@@ -116,9 +111,7 @@ void Settings::SetNoUDP(bool value)
 
 int Settings::GetClientPort()
 {
-    int tmp;
-    m_config->Read( _T("/General/ClientPort"), &tmp, 0 );
-    return tmp;
+    return m_config->Read( _T("/General/ClientPort"), 0l );
 }
 
 void Settings::SetClientPort(int value)
@@ -128,9 +121,7 @@ void Settings::SetClientPort(int value)
 
 bool Settings::GetShowIPAddresses()
 {
-    bool tmp;
-    m_config->Read( _T("/General/ShowIP"), &tmp, false );
-    return tmp;
+    return m_config->Read( _T("/General/ShowIP"), 0l );
 }
 
 void Settings::SetShowIPAddresses(bool value)
@@ -146,9 +137,7 @@ void Settings::SetOldSpringLaunchMethod( bool value )
 
 wxString Settings::GetWebBrowserPath()
 {
-    wxString path;
-    m_config->Read( _T("/General/WebBrowserPath"), &path, _T("use default") );
-    return path;
+    return m_config->Read( _T("/General/WebBrowserPath"), _T("use default") );
 }
 
 
@@ -160,15 +149,13 @@ void Settings::SetWebBrowserPath( const wxString path )
 
 wxString Settings::GetCachePath()
 {
-    wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache");
-    m_config->Read( _T("/General/CachePath"), &path, path );
-    return path + wxFileName::GetPathSeparator();
+    return m_config->Read( _T("/Spring/CachePath"), GetSpringDir() + wxFileName::GetPathSeparator() + _T("lobbycache") ) + wxFileName::GetPathSeparator();
 }
 
 
 void Settings::SetCachePath( const wxString path )
 {
-    m_config->Write( _T("/General/CachePath"), path );
+    m_config->Write( _T("/Spring/CachePath"), path );
 }
 
 

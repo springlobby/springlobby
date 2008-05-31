@@ -89,18 +89,18 @@ bool SpringLobbyApp::OnInit()
                 file = wxFindNextFile();
             }
         }
+        if ( sett().GetCacheVersion() < 3 ) InitCacheDir();
     }
 
     if ( !sett().IsFirstRun() && sett().IsPortableMode() ) /// rebase spring paths to current working dir in portable mode
     {
-      wxString workingfolder = wxStandardPathsBase::Get().GetExecutablePath();
+      wxString workingfolder = wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator();
       sett().SetSpringDir( workingfolder );
-      sett().SetSpringLoc( workingfolder + sett().GetSpringLoc().BeforeLast( wxFileName::GetPathSeparator() ) );
-      sett().SetUnitSyncLoc( workingfolder + sett().GetUnitSyncLoc().BeforeLast( wxFileName::GetPathSeparator() ) );
+      sett().SetSpringLoc( workingfolder + sett().GetSpringLoc().AfterLast( wxFileName::GetPathSeparator() ) );
+      sett().SetUnitSyncLoc( workingfolder + sett().GetUnitSyncLoc().AfterLast( wxFileName::GetPathSeparator() ) );
+      sett().SetCachePath( workingfolder + sett().GetCachePath().AfterLast( wxFileName::GetPathSeparator() ) );
       sett().SaveSettings();
     }
-
-    InitDirs();
 
     m_ui = new Ui();
     wxLogMessage( _T("Ui created") );
@@ -124,6 +124,8 @@ bool SpringLobbyApp::OnInit()
 #endif
 
         SetupUserFolders();
+
+        InitCacheDir();
 
         //! ask for downloading ota content if archive not found, start downloader in background
         wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
@@ -203,14 +205,14 @@ void SpringLobbyApp::OnTimer( wxTimerEvent& event )
 }
 
 
-void SpringLobbyApp::InitDirs()
+void SpringLobbyApp::InitCacheDir()
 {
-    wxString path = wxStandardPaths::Get().GetUserDataDir();
+    wxString path = sett().GetSpringDir();
     if ( !wxDirExists( path ) ) wxMkdir( path );
     path += wxFILE_SEP_PATH;
-    path += _T("cache");
-    path += wxFILE_SEP_PATH;
+    path += _T("lobbycache");
     if ( !wxDirExists( path ) ) wxMkdir( path );
+    sett().SetCachePath( path );
 }
 
 

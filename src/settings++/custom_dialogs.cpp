@@ -101,13 +101,14 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
 
     topsizer->SetSizeHints( this );
     topsizer->Fit( this );
+    /*
     wxSize size( GetSize() );
     if (size.x > size.y*3/2)
     {
         size.x = size.y*3/2;
         SetSize( size );
     }
-
+    */
     Centre( wxBOTH | wxCENTER_FRAME);
 /***************************************************************************************************/
 }

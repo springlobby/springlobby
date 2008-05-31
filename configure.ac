@@ -72,7 +72,7 @@ fi
 if test "$win_build" = 1 ; then
     CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND -DNO_RICHTEXT_CHAT"
 else
-    AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10") )
+    AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10, SDL_sound and SDL_mixer, use --disable-sound to skip the dependency (and the feature)") )
 fi
 
 

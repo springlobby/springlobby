@@ -433,11 +433,15 @@ void TASServer::Update( int mselapsed )
                 {
                     if (battle->IsFounderMe())
                     {
-                        UdpPingTheServer(m_user);
-                        UdpPingAllClients();
+                       if ( !sett().GetNoUDP() )
+                       {
+                         UdpPingTheServer(m_user);
+                         UdpPingAllClients();
+                       }
                     }
                     else
                     {
+                      if ( !sett().GetNoUDP() )
                         UdpPingTheServer();
                     }
                 }
@@ -1195,7 +1199,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
 
     m_udp_private_port=bo.port;
 
-    if (bo.nattype>0)UdpPingTheServer(m_user);
+    if (bo.nattype>0 && !sett().GetNoUDP() )UdpPingTheServer(m_user);
 
     // OPENBATTLE type natType password port maphash {map} {title} {modname}
 }
@@ -1224,10 +1228,13 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
                 /// from calling FinalizeJoinBattle() on timeout.
                 /// m_do_finalize_join_battle must be set to true after setting time, not before.
                 m_do_finalize_join_battle=true;
-                for (int n=0;n<5;++n) /// do 5 udp pings with tiny interval
+                if ( sett().GetNoUDP() )
                 {
-                    UdpPingTheServer( m_user );
-                    // sleep(0);/// sleep until end of timeslice.
+                  for (int n=0;n<5;++n) /// do 5 udp pings with tiny interval
+                  {
+                      UdpPingTheServer( m_user );
+                      // sleep(0);/// sleep until end of timeslice.
+                  }
                 }
                 m_last_udp_ping = time(0);/// set time again
             }
@@ -1486,7 +1493,7 @@ void TASServer::StartHostedBattle()
     Battle *battle=GetCurrentBattle();
     if (battle)
     {
-        if ((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports)))
+        if ( !sett().GetNoUDP() && (battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports)))
         {
             UdpPingTheServer();
             for (int i=0;i<5;++i)UdpPingAllClients();
