@@ -755,7 +755,7 @@ MapInfo SpringUnitSync::_LoadMapInfoExCache( const wxString& mapname )
   ASSERT_RUNTIME( tempstring.length() > 0, _T("map info ex cache file is empty") );
   wxString stringbuff = WX_STRING(tempstring);
   ASSERT_RUNTIME( !stringbuff.IsEmpty(), _T("failed to convert to wxString the map info ex cache file") );
-  wxArrayString data = wxStringTokenize( stringbuff , _T('\n') );
+  wxArrayString data = wxStringTokenize( stringbuff , _T('\t') );
   MapInfo info;
 
   ASSERT_RUNTIME( data.GetCount() > 0, _T("no lines found in cache info ex") );
@@ -793,21 +793,21 @@ void SpringUnitSync::_SaveMapInfoExCache( const wxString& mapname, const MapInfo
   ASSERT_RUNTIME( f.IsOpened(), _T("failed to open map info ex cache file for writing.") );
 
   wxString buff;
-  buff << TowxString( info.description ) << _T('\n');
-  buff << TowxString( info.tidalStrength ) << _T('\n');
-  buff << TowxString( info.gravity ) << _T('\n');
-  buff << TowxString( info.maxMetal ) << _T('\n');
-  buff << TowxString( info.extractorRadius ) << _T('\n');
-  buff << TowxString( info.minWind ) << _T('\n');
-  buff << TowxString( info.maxWind ) << _T('\n');
-  buff << TowxString( info.width ) << _T('\n');
-  buff << TowxString( info.height ) << _T('\n');
-  buff << TowxString( info.posCount ) << _T('\n');
+  buff << TowxString( info.description ) << _T('\t');
+  buff << TowxString( info.tidalStrength ) << _T('\t');
+  buff << TowxString( info.gravity ) << _T('\t');
+  buff << TowxString( info.maxMetal ) << _T('\t');
+  buff << TowxString( info.extractorRadius ) << _T('\t');
+  buff << TowxString( info.minWind ) << _T('\t');
+  buff << TowxString( info.maxWind ) << _T('\t');
+  buff << TowxString( info.width ) << _T('\t');
+  buff << TowxString( info.height ) << _T('\t');
+  buff << TowxString( info.posCount ) << _T('\t');
   for ( int i = 0; i < info.posCount; i++)
   {
      buff << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
   }
-  buff << _T('\n');
+  buff << _T('\t');
 
   f.Write( buff );
   f.Close();
