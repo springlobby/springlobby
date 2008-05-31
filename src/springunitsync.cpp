@@ -748,6 +748,7 @@ MapInfo SpringUnitSync::_LoadMapInfoExCache( const wxString& mapname )
   char* buff = new char[f.Length()];
   f.Read( buff, f.Length() );
   std::string tempstring = buff;
+  delete buff;
   wxArrayString data = wxStringTokenize( WX_STRING(tempstring), _T('\n') );
   MapInfo info;
 
