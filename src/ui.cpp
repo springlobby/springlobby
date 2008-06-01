@@ -478,6 +478,9 @@ void Ui::OnUpdate( int mselapsed )
   #ifndef NO_TORRENT_SYSTEM
   if (m_upd_intv_counter % 20 == 0 )
   {
+      if ( sett().GetTorrentSystemAutoStartMode() == 1 && !torrent()->IsConnectedToP2PSystem() ) torrent()->ConnectToP2PSystem();
+      else if ( m_serv && m_serv->IsOnline() && !torrent()->IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->ConnectToP2PSystem();
+      if ( ( !m_serv || !m_serv->IsOnline() ) && torrent()->IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->DisconnectToP2PSystem();
       m_main_win->GetTorrentTab().OnUpdate();
   }
   torrent()->UpdateFromTimer( mselapsed );
