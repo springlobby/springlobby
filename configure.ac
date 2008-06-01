@@ -14,10 +14,10 @@ dnl we can't use -Wall either because we don't want to see the filter-out warnin
 dnl FIXME add at least some warning categories. obviously we can't use -Wportability
 AM_INIT_AUTOMAKE([1.10 -Wnone])
 
-usetorrent=no
+usetorrent=yes
 AC_ARG_ENABLE(torrent-system,
- [  --enable-torrent-system  Enable automatic content downloads via torrent, needs libtorrent],
- [ usetorrent=yes
+ [  --disable-torrent-system  Disable automatic content downloads via torrent (avoids libtorrent dependency)],
+ [ usetorrent=no
  ])
 
 sound=yes
@@ -52,6 +52,11 @@ if test x$host_os = xmingw32msvc ; then
   if test x$WINDRES = x: ; then
     AC_MSG_ERROR([missing required windres windows resource compiler.])
   fi
+fi
+
+if test "$win_build" = 1 ; then
+    usetorrent = no
+    CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
 fi
 
 #check if configure option present, if yes check for lib

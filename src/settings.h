@@ -256,9 +256,6 @@ class Settings
     void SaveBattleMapOptions(IBattle *battle);
     void LoadBattleMapOptions(IBattle *battle);
 
-
-
-
     unsigned int GetTorrentPort();
     void SetTorrentPort( unsigned int port );
     int GetTorrentUploadRate();
@@ -278,6 +275,9 @@ class Settings
 
     void SetTorrentMaxConnections( int connections );
     int GetTorrentMaxConnections();
+
+    void SetShowTooltips( bool show);
+    bool GetShowTooltips();
 
   protected:
     #ifdef __WXMSW__

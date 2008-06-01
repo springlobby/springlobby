@@ -87,8 +87,11 @@ MainWindow::MainWindow( Ui& ui ) :
   menuFile->AppendSeparator();
   menuFile->Append(MENU_QUIT, _("&Quit"));
 
-//TODO re-enable when actually needed
-//  wxMenu *menuEdit = new wxMenu;
+  //m_menuEdit = new wxMenu;
+  //TODO doesn't work atm
+  //m_menuEdit->AppendCheckItem(MENU_TIPS, _("Show tooltips") );
+  //m_menuEdit->Check( MENU_TIPS, sett().GetShowTooltips() );
+
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
@@ -110,7 +113,7 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_menubar = new wxMenuBar;
   m_menubar->Append(menuFile, _("&File"));
- // m_menubar->Append(menuEdit, _("&Edit"));
+  //m_menubar->Append(m_menuEdit, _("&Edit"));
   m_menubar->Append(m_menuTools, _("&Tools"));
   m_menubar->Append(menuHelp, _("&Help"));
   SetMenuBar(m_menubar);
@@ -144,8 +147,6 @@ MainWindow::MainWindow( Ui& ui ) :
 #ifndef NO_TORRENT_SYSTEM
   m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 4 );
 #endif
-  //TODO insert real downloads panel
-  //m_func_tabs->AddPage( m_opts_tab, _T(""), false, 4 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -512,3 +513,6 @@ void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 	se_frame_active = true;
 	se_frame->Show();
 }
+
+
+

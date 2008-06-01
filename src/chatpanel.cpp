@@ -18,6 +18,7 @@
 #include <wx/event.h>
 #include <wx/notebook.h>
 #include <wx/richtext/richtextctrl.h>
+#include <wx/app.h>
 
 #include "channel.h"
 #include "chatpanel.h"
@@ -205,7 +206,8 @@ void ChatPanel::CreateControls( ) {
 	m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
 																	 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
   #endif
-  m_chatlog_text->SetToolTip( _("right click for options (like autojoin)" ) );
+	if ( m_type == CPT_Channel )
+  		m_chatlog_text->SetToolTip( _("right click for options (like autojoin)" ) );
 
 	m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
@@ -669,7 +671,8 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 	if ( req_user ) {
      m_ui.mw().RequestUserAttention();
      #ifndef DISABLE_SOUND
-     if ( sett().GetChatPMSoundNotificationEnabled() && m_ui.GetActiveChatPanel() != this  ) sound().pm();
+     if ( sett().GetChatPMSoundNotificationEnabled() && ( m_ui.GetActiveChatPanel() != this  || !wxTheApp->IsActive() ) )
+        sound().pm();
      #endif
 	}
 }

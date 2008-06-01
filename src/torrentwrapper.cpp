@@ -10,7 +10,6 @@
 #include "utils.h"
 #include "socket.h"
 #include "base64.h"
-#include "base16.h"
 
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>

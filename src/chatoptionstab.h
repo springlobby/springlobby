@@ -64,6 +64,8 @@ class ChatOptionsTab : public wxPanel
       ID_SAVELOGS,
       ID_BROWSE_LOGS,
       ID_HIWORDS,
+      ID_AUTOJOIN,
+      ID_PLAY_SOUNDS
     };
 
     wxStaticText* m_text_sample;
@@ -100,6 +102,8 @@ class ChatOptionsTab : public wxPanel
     wxTextCtrl* m_log_save;
     wxButton* m_browse_log;
     wxStaticText* m_hilight_words_label;
+    wxCheckBox* m_play_sounds;
+    wxCheckBox* m_autojoin;
 
     wxTextCtrl* m_highlight_words;
 

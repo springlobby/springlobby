@@ -12,6 +12,7 @@
 #include <wx/choicdlg.h>
 #include <wx/filename.h>
 #include <wx/dirdlg.h>
+#include <wx/tooltip.h>
 #include <wx/file.h>
 
 #include "springlobbyapp.h"
@@ -68,9 +69,8 @@ bool SpringLobbyApp::OnInit()
 
     wxLogDebugFunc( _T("") );
     wxInitAllImageHandlers();
-//HttpDownloader* ht = new HttpDownloader(_T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip"), _T("/tmp"));
 
-    //TODO needed?
+     //TODO needed?
     wxImage::AddHandler(new wxPNGHandler);
 
     m_locale = new wxLocale( );

@@ -771,7 +771,7 @@ void Settings::SetChatPMSoundNotificationEnabled( bool enabled )
 
 bool Settings::GetChatPMSoundNotificationEnabled()
 {
-  return m_config->Read( _T("/Chat/PMSound"), true);
+  return m_config->Read( _T("/Chat/PMSound"), 1l);
 }
 
 
@@ -1146,4 +1146,14 @@ void Settings::LoadBattleMapOptions(IBattle *battle){
       }
     }
   }
+}
+
+void Settings::SetShowTooltips( bool show)
+{
+    m_config->Write(_T("GUI/ShowTooltips"), show );
+}
+
+bool Settings::GetShowTooltips()
+{
+    return m_config->Read(_T("GUI/ShowTooltips"), 1l);
 }
