@@ -11,6 +11,10 @@
 #include <wx/listbook.h>
 #include <wx/image.h>
 
+#ifndef HAVE_WX26
+#include <wx/aui/auibook.h>
+#endif
+
 #include "mainchattab.h"
 #include "utils.h"
 #include "mainwindow.h"
@@ -20,6 +24,7 @@
 #include "ui.h"
 #include "server.h"
 #include "settings.h"
+#include "uiutils.h"
 
 #include "images/close.xpm"
 #include "images/server.xpm"
@@ -42,7 +47,11 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
+  #ifdef HAVE_WX26
   m_chat_tabs = new wxNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
+  #else
+  m_chat_tabs = new wxAuiNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
+  #endif
 
   m_imagelist = new wxImageList( 12, 12 );
   m_imagelist->Add( wxBitmap(close_xpm) );
@@ -61,13 +70,17 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
 
   m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( server_xpm ), sett().GetChatColorError() ) ) );
 
+  #ifdef HAVE_WX26
   m_chat_tabs->AssignImageList( m_imagelist );
+  #endif
 
 //  m_server_chat = new ChatPanel( m_chat_tabs, serv );
 //  m_chat_tabs->AddPage( m_server_chat, _("Server"), true, 1 );
 
   m_close_window = new wxWindow( m_chat_tabs, -1 );
+  #ifdef HAVE_WX26
   m_chat_tabs->AddPage( m_close_window, _T(""), false, 0 );
+  #endif
 
   m_main_sizer->Add( m_chat_tabs, 1, wxEXPAND );
 
@@ -90,7 +103,11 @@ ChatPanel& MainChatTab::ServerChat()
 
 ChatPanel* MainChatTab::GetActiveChatPanel()
 {
+  #ifdef HAVE_WX26
   return (ChatPanel*)m_chat_tabs->GetCurrentPage();
+  #else
+  return (ChatPanel*)m_chat_tabs->GetPage(m_chat_tabs->GetSelection());
+  #endif
 }
 
 
@@ -189,8 +206,12 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
     }
   }
 
-  ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, channel );
+  ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, channel, m_imagelist );
+  #ifdef HAVE_WX26
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), true, 2 );
+  #else
+  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), true, wxBitmap(channel_xpm) );
+  #endif
   chat->FocusInputBox();
   return chat;
 }
@@ -209,8 +230,12 @@ ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
     }
   }
 
-  ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, server );
+  ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, server, m_imagelist );
+  #ifdef HAVE_WX26
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, 1 );
+  #else
+  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, wxBitmap(server_xpm) );
+  #endif
   return chat;
 }
 
@@ -227,8 +252,12 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
     }
   }
 
-  ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, user );
+  ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, user, m_imagelist );
+  #ifdef HAVE_WX26
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, 3 );
+  #else
+  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, wxBitmap(userchat_xpm) );
+  #endif
   chat->FocusInputBox();
   return chat;
 }
@@ -244,10 +273,34 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
   if ( newsel < 0 ) return;
 
   // change icon to default the icon to show that no new events happened
-  unsigned int ImageIndex = m_chat_tabs->GetPageImage( newsel );
-  if ( ImageIndex == 4 || ImageIndex == 6 || ImageIndex == 8 ) m_chat_tabs->SetPageImage( newsel, 2);
-  else if ( ImageIndex == 5 || ImageIndex == 7 || ImageIndex == 9 ) m_chat_tabs->SetPageImage( newsel, 3);
-  else if ( ImageIndex == 10 ) m_chat_tabs->SetPageImage( newsel, 1);
+  size_t ImageIndex = GetActiveChatPanel()->GetIconIndex();
+  if ( ImageIndex == 4 || ImageIndex == 6 || ImageIndex == 8 )
+  {
+     GetActiveChatPanel()->SetIconIndex(2);
+     #ifdef HAVE_WX26
+     m_chat_tabs->SetPageImage( newsel, 2);
+     #else
+     m_chat_tabs->SetPageBitmap( newsel, wxBitmap(channel_xpm));
+     #endif
+  }
+  else if ( ImageIndex == 5 || ImageIndex == 7 || ImageIndex == 9 )
+  {
+     GetActiveChatPanel()->SetIconIndex(3);
+     #ifdef HAVE_WX26
+     m_chat_tabs->SetPageImage( newsel, 3);
+     #else
+     m_chat_tabs->SetPageBitmap( newsel, wxBitmap(userchat_xpm));
+     #endif
+  }
+  else if ( ImageIndex == 10 )
+  {
+     GetActiveChatPanel()->SetIconIndex(1);
+     #ifdef HAVE_WX26
+     m_chat_tabs->SetPageImage( newsel, 1);
+     #else
+     m_chat_tabs->SetPageBitmap( newsel, wxBitmap(server_xpm));
+     #endif
+  }
 
   wxWindow* newpage = m_chat_tabs->GetPage( newsel );
   if ( newpage == 0 ) { // Not sure what to do here
@@ -267,33 +320,6 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
 
 }
 
-
-wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
-{
-  wxImage ret = img.ConvertToImage();
-  wxImage::HSVValue::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
-
-  double bright = origcolour.value - 0.1*origcolour.value;
-  CLAMP(bright,0,1);
-  wxImage::HSVValue::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
-  bright = origcolour.value - 0.5*origcolour.value;
-  CLAMP(bright,0,1);
-  wxImage::HSVValue::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
-
-  wxImage::RGBValue::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
-  wxImage::RGBValue::RGBValue rgbdarker2 = wxImage::HSVtoRGB( hsvdarker2 );
-
-
-  ret.Replace( 164, 147, 0, rgbdarker2.red, rgbdarker2.green, rgbdarker2.blue );
-
-  ret.Replace( 255, 228, 0, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
-
-  ret.Replace( 255, 253, 234, colour.Red(), colour.Green(), colour.Blue() );
-
-
-
-  return ret;
-}
 
 
 

@@ -227,3 +227,29 @@ wxBitmap* charArr2wxBitmapAddText(const unsigned char * dest, int dest_size, con
 }
 
 
+wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
+{
+  wxImage ret = img.ConvertToImage();
+  wxImage::HSVValue::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
+
+  double bright = origcolour.value - 0.1*origcolour.value;
+  CLAMP(bright,0,1);
+  wxImage::HSVValue::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
+  bright = origcolour.value - 0.5*origcolour.value;
+  CLAMP(bright,0,1);
+  wxImage::HSVValue::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
+
+  wxImage::RGBValue::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
+  wxImage::RGBValue::RGBValue rgbdarker2 = wxImage::HSVtoRGB( hsvdarker2 );
+
+
+  ret.Replace( 164, 147, 0, rgbdarker2.red, rgbdarker2.green, rgbdarker2.blue );
+
+  ret.Replace( 255, 228, 0, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
+
+  ret.Replace( 255, 253, 234, colour.Red(), colour.Green(), colour.Blue() );
+
+
+
+  return ret;
+}

@@ -13,7 +13,9 @@
 #include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
-
+#ifndef HAVE_WX26
+#include <wx/aui/auibook.h>
+#endif
 #include <stdexcept>
 
 #include "mainwindow.h"
@@ -119,7 +121,11 @@ MainWindow::MainWindow( Ui& ui ) :
   SetMenuBar(m_menubar);
 
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
+  #ifndef HAVE_WX26
+  m_func_tabs = new wxAuiNotebook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
+  #else
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
+  #endif
 
   m_chat_icon =  charArr2wxBitmapAddText( chat_icon_png , sizeof (chat_icon_png) , chat_icon_text_png, sizeof(chat_icon_text_png), 64 ) ;
   m_battle_icon = charArr2wxBitmapAddText( join_icon_png , sizeof (join_icon_png), join_icon_text_png , sizeof (join_icon_text_png), 64 ) ;
@@ -131,7 +137,9 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tab_images = new wxImageList( 64, 64 );
   MakeImages();
 
+  #ifdef HAVE_WX26
   m_func_tabs->AssignImageList( m_func_tab_images );
+  #endif
   m_chat_tab = new MainChatTab( m_func_tabs, m_ui );
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
@@ -140,12 +148,22 @@ MainWindow::MainWindow( Ui& ui ) :
   m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
 #endif
 
+#ifdef HAVE_WX26
   m_func_tabs->AddPage( m_chat_tab, _T(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
 #ifndef NO_TORRENT_SYSTEM
   m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 4 );
+#endif
+#else
+  m_func_tabs->AddPage( m_chat_tab, _T(""), true, *m_chat_icon );
+  m_func_tabs->AddPage( m_join_tab, _T(""), false, *m_battle_icon );
+  m_func_tabs->AddPage( m_sp_tab, _T(""), false, *m_sp_icon );
+  m_func_tabs->AddPage( m_opts_tab, _T(""), false, *m_options_icon );
+#ifndef NO_TORRENT_SYSTEM
+  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, *m_downloads_icon );
+#endif
 #endif
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );

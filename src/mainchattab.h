@@ -11,6 +11,7 @@ class Channel;
 class User;
 class wxNotebookEvent;
 class wxNotebook;
+class wxAuiNotebook;
 class wxBoxSizer;
 class wxImageList;
 
@@ -44,12 +45,14 @@ class MainChatTab : public wxPanel
 
   protected:
 
-    wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
-
     Ui& m_ui;
 
     wxWindow* m_close_window;
+    #ifdef HAVE_WX26
     wxNotebook* m_chat_tabs;
+    #else
+    wxAuiNotebook* m_chat_tabs;
+    #endif
     wxBoxSizer* m_main_sizer;
     wxImageList* m_imagelist;
     ChatPanel* m_server_chat;

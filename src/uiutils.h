@@ -32,6 +32,8 @@ wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size);
 //wxBitmap charArr2wxBitmap(const unsigned char * arg, int size);
 wxBitmap* charArr2wxBitmapAddText(const unsigned char * arg, int size, const unsigned char * text, int text_size, unsigned int img_dim);
 
+wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
+
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 
