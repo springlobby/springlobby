@@ -60,7 +60,7 @@ SpringLobbyApp::~SpringLobbyApp()
 bool SpringLobbyApp::OnInit()
 {
 
-#if wxUSE_ON_FATAL_EXCEPTION
+#if wxUSE_ON_FATAL_EXCEPTION && wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
     wxHandleFatalExceptions( true );
 #endif
 
