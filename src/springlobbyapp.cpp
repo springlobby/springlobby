@@ -180,11 +180,9 @@ int SpringLobbyApp::OnExit()
   m_timer->Stop();
   delete m_ui;
 
-    usync()->FreeUnitSyncLib();
+  usync()->FreeUnitSyncLib();
 
-    delete usync();
-
-    return 0;
+  return 0;
 }
 
 //! @brief is called when the app crashes
