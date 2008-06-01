@@ -89,7 +89,6 @@ bool SpringLobbyApp::OnInit()
                 file = wxFindNextFile();
             }
         }
-        if ( sett().GetCacheVersion() < 3 ) InitCacheDir();
     }
 
     if ( !sett().IsFirstRun() && sett().IsPortableMode() ) /// rebase spring paths to current working dir in portable mode
@@ -109,6 +108,7 @@ bool SpringLobbyApp::OnInit()
 
     if ( !sett().IsFirstRun() && sett().IsPortableMode() && usync()->IsLoaded()) usync()->SetSpringDataPath( sett().GetSpringDir() ); /// update spring's current working dir trough unitsync
 
+    if ( !sett().IsFirstRun() ) InitCacheDir();
 
     if ( sett().IsFirstRun() )
     {
