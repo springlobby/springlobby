@@ -180,6 +180,8 @@ int SpringLobbyApp::OnExit()
   m_timer->Stop();
   delete m_ui;
 
+  sett().SaveSettings(); /// to make sure that cache path gets saved before destroying unitsync
+
   usync()->FreeUnitSyncLib();
 
   return 0;
@@ -209,8 +211,11 @@ void SpringLobbyApp::InitCacheDir()
     if ( !wxDirExists( path ) ) wxMkdir( path );
     path += wxFILE_SEP_PATH;
     path += _T("lobbycache");
-    if ( !wxDirExists( path ) ) wxMkdir( path );
-    sett().SetCachePath( path );
+    if ( !wxDirExists( path ) )
+    {
+       wxMkdir( path );
+       sett().SetCachePath( path );
+    }
 }
 
 
