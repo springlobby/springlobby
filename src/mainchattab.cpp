@@ -8,11 +8,12 @@
 #include <wx/imaglist.h>
 #include <wx/sizer.h>
 #include <wx/notebook.h>
-#include <wx/listbook.h>
 #include <wx/image.h>
 
 #ifndef HAVE_WX26
 #include <wx/aui/auibook.h>
+#else
+#include <wx/listbook.h>
 #endif
 
 #include "mainchattab.h"

@@ -8,11 +8,12 @@
 #include <wx/notebook.h>
 #include <wx/imaglist.h>
 #include <wx/sizer.h>
-#include <wx/listbook.h>
 #include <stdexcept>
 
 #ifndef HAVE_WX26
 #include <wx/aui/auibook.h>
+#else
+#include <wx/listbook.h>
 #endif
 
 #include "battle.h"
