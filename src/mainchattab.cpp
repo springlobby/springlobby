@@ -33,8 +33,11 @@
 
 BEGIN_EVENT_TABLE(MainChatTab, wxPanel)
 
-  EVT_NOTEBOOK_PAGE_CHANGED(CHAT_TABS, MainChatTab::OnTabsChanged)
-
+  #ifdef HAVE_WX26
+  EVT_NOTEBOOK_PAGE_CHANGED( CHAT_TABS, MainChatTab::OnTabsChanged )
+  #else
+  EVT_AUINOTEBOOK_PAGE_CHANGED( CHAT_TABS, MainChatTab::OnTabsChanged )
+  #endif
 END_EVENT_TABLE()
 
 
@@ -262,8 +265,11 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
   return chat;
 }
 
-
-void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
+#ifdef HAVE_WX26
+void MainChatTab::OnTabsChanged( wxListbookEvent& event )
+#else
+void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
+#endif
 {
   wxLogDebugFunc( _T("") );
 
@@ -273,7 +279,7 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
   if ( newsel < 0 ) return;
 
   // change icon to default the icon to show that no new events happened
-  size_t ImageIndex = GetActiveChatPanel()->GetIconIndex();
+  size_t ImageIndex = ((ChatPanel*)m_chat_tabs->GetPage(newsel))->GetIconIndex();
   if ( ImageIndex == 4 || ImageIndex == 6 || ImageIndex == 8 )
   {
      GetActiveChatPanel()->SetIconIndex(2);

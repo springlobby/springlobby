@@ -73,7 +73,11 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_START_TORRENT, MainWindow::OnMenuStartTorrent )
   EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
   EVT_MENU_OPEN( MainWindow::OnMenuOpen )
+  #ifdef HAVE_WX26
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
+  #else
+  EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
+  #endif
 END_EVENT_TABLE()
 
 
@@ -501,9 +505,15 @@ void MainWindow::OnShowDocs( wxCommandEvent& event )
   m_ui.OpenWebBrowser( _T("http://springlobby.info") );
 }
 
-void MainWindow::OnTabsChanged( wxListbookEvent& event )
+#ifdef HAVE_WX26
+void MainWindow::OnTabsChanged( wxNotebookEvent& event )
+#else
+void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
+#endif
 {
+  #ifdef HAVE_WX26
   MakeImages();
+  #endif
 
   int newsel = event.GetSelection();
 

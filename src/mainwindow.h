@@ -8,6 +8,7 @@ class Channel;
 class User;
 class wxCommandEvent;
 class wxListbookEvent;
+class wxAuiNotebookEvent;
 class MainChatTab;
 class MainJoinBattleTab;
 class MainSinglePlayerTab;
@@ -69,7 +70,11 @@ class MainWindow : public wxFrame
     void OnUnitSyncReloaded();
 
 
-    void OnTabsChanged( wxListbookEvent& event );
+    #ifdef HAVE_WX26
+    void OnTabsChanged( wxNotebookEvent& event );
+    #else
+    void OnTabsChanged( wxAuiNotebookEvent& event );
+    #endif
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab();
     MainSinglePlayerTab& GetSPTab();

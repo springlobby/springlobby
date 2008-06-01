@@ -36,7 +36,11 @@ class MainChatTab : public wxPanel
 
     void RejoinChannels();
 
-    void OnTabsChanged( wxNotebookEvent& event );
+    #ifdef HAVE_WX26
+    void OnTabsChanged( wxListbookEvent& event );
+    #else
+    void OnTabsChanged( wxAuiNotebookEvent& event );
+    #endif
     void OnUserConnected( User& user );
     void OnUserDisconnected( User& user );
 
