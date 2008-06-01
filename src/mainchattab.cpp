@@ -314,6 +314,7 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
     return;
   }
 
+  #ifndef HAVE_WX26
   if ( newsel >= (int)m_chat_tabs->GetPageCount() - 1 ) { // We are going to remove page
     ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
     ASSERT_LOGIC( delpage != 0 , _T("MainChatTab::OnTabsChanged(): delpage NULL") );
@@ -321,8 +322,8 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
     delpage->Part();
     m_chat_tabs->DeletePage( oldsel );
     m_chat_tabs->SetSelection( 0 );
-
   }
+  #endif
 
 }
 
