@@ -12,6 +12,7 @@ class BattleMapTab;
 class BattleOptionsTab;
 class wxBoxSizer;
 class wxImageList;
+class wxAuiNotebook;
 class wxNotebook;
 class BattleroomMMOptionsTab;
 
@@ -45,7 +46,11 @@ class MainJoinBattleTab : public wxPanel
 
     wxImageList* m_imagelist;
 
+    #ifdef HAVE_WX26
     wxNotebook* m_tabs;
+    #else
+    wxAuiNotebook* m_tabs;
+    #endif
     BattleListTab* m_list_tab;
 
     BattleRoomTab* m_battle_tab;

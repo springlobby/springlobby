@@ -10,11 +10,12 @@
 #include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/sizer.h>
-#include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
 #ifndef HAVE_WX26
 #include <wx/aui/auibook.h>
+#else
+#include <wx/listbook.h>
 #endif
 #include <stdexcept>
 

@@ -8,11 +8,12 @@
 #include <wx/imaglist.h>
 #include <wx/sizer.h>
 #include <wx/notebook.h>
-#include <wx/listbook.h>
 #include <wx/image.h>
 
 #ifndef HAVE_WX26
 #include <wx/aui/auibook.h>
+#else
+#include <wx/listbook.h>
 #endif
 
 #include "mainchattab.h"
@@ -314,6 +315,7 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
     return;
   }
 
+  #ifdef HAVE_WX26
   if ( newsel >= (int)m_chat_tabs->GetPageCount() - 1 ) { // We are going to remove page
     ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
     ASSERT_LOGIC( delpage != 0 , _T("MainChatTab::OnTabsChanged(): delpage NULL") );
@@ -321,8 +323,8 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
     delpage->Part();
     m_chat_tabs->DeletePage( oldsel );
     m_chat_tabs->SetSelection( 0 );
-
   }
+  #endif
 
 }
 

@@ -16,13 +16,17 @@
 #include <wx/menu.h>
 #include <wx/utils.h>
 #include <wx/event.h>
-#include <wx/notebook.h>
-#include <wx/richtext/richtextctrl.h>
 #include <wx/app.h>
+
+#ifndef NO_RICHTEXT_CHAT
+#include <wx/richtext/richtextctrl.h>
+#endif
 
 #ifndef HAVE_WX26
 #include <wx/aui/auibook.h>
 #include <wx/imaglist.h>
+#else
+#include <wx/notebook.h>
 #endif
 
 #include "channel.h"
