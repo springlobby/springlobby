@@ -202,7 +202,6 @@ void SpringUnitSyncLib::Reload()
 
 bool SpringUnitSyncLib::IsLoaded()
 {
-  LOCK_UNITSYNC;
   return m_loaded;
 }
 

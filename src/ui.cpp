@@ -50,8 +50,6 @@ Ui::Ui() :
   m_main_win = new MainWindow( *this );
   CustomMessageBoxBase::setLobbypointer(m_main_win);
   m_spring = new Spring(*this);
-  m_thread = new UnitSyncThread( *this );
-  m_thread->Init();
 }
 
 Ui::~Ui() {
@@ -59,10 +57,6 @@ Ui::~Ui() {
 
   delete m_main_win;
   delete m_spring;
-  m_thread->Delete();
-
-  m_thread_wait.Enter();
-  m_thread_wait.Leave();
 }
 
 Server& Ui::GetServer()
@@ -280,7 +274,6 @@ void Ui::Quit()
   m_main_win->forceSettingsFrameClose();
 
   m_main_win->Close();
-  m_thread->Kill();
   if ( m_con_win != 0 )
     m_con_win->Close();
   if (m_serv != 0 ) m_serv->Disconnect();
