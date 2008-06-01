@@ -9,7 +9,13 @@
 #include <wx/imaglist.h>
 #include <wx/button.h>
 #include <wx/sizer.h>
+
+#ifndef HAVE_WX26
+#include <wx/aui/auibook.h>
+#else
 #include <wx/listbook.h>
+#endif
+
 
 #include "mainoptionstab.h"
 #include "ui.h"
@@ -36,25 +42,38 @@ END_EVENT_TABLE()
 
 MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
 {
-    m_tabs = new wxNotebook( this, OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
-
+    #ifdef HAVE_WX26
+    m_tabs = new wxNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
+    #else
+    m_tabs = new wxAuiNotebook( this, OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
+    #endif
     m_imagelist = new wxImageList( 12, 12 );
     m_imagelist->Add( wxIcon(spring_xpm) );
     m_imagelist->Add( *charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
     m_imagelist->Add( wxIcon(userchat_xpm) );
 
+    #ifdef HAVE_WX26
     m_tabs->AssignImageList( m_imagelist );
+    #endif
 
     m_spring_opts = new SpringOptionsTab( m_tabs, m_ui );
     m_tabs->AddPage( m_spring_opts, _("Spring"), true, 0 );
 
 #ifndef NO_TORRENT_SYSTEM
     m_torrent_opts = new TorrentOptionsPanel( m_tabs, m_ui );
+    #ifdef HAVE_WX26
     m_tabs->AddPage( m_torrent_opts, _("P2P"), true, 1 );
+    #else
+    m_tabs->AddPage( m_torrent_opts, _("P2P"), true, *charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) ) );
+    #endif
 #endif
 
     m_chat_opts = new ChatOptionsTab( m_tabs, m_ui );
+    #ifdef HAVE_WX26
     m_tabs->AddPage( m_chat_opts, _("Chat"), true, 2 );
+    #else
+    m_tabs->AddPage( m_chat_opts, _("Chat"), true, wxIcon(userchat_xpm) );
+    #endif
 
     m_restore_btn = new wxButton( this, wxID_REVERT, _("Restore") );
     m_apply_btn = new wxButton( this, wxID_APPLY, _("Apply") );
