@@ -489,7 +489,7 @@ void TASServer::ExecuteCommand( const wxString& in )
     wxLogMessage( _T("%s"), in.c_str()  );
     wxString cmd;
     wxString params = in;
-    long replyid;
+    long replyid = 0;
 
     if ( in.empty() ) return;
     try
