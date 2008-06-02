@@ -66,7 +66,7 @@
 				AdditionalDependencies="wxmsw28d_html.lib wxmsw28d_adv.lib wxmsw28d_richtext.lib wxbase28d_net.lib wxmsw28d_core.lib wxbase28d.lib wxexpatd.lib kernel32.lib Advapi32.lib ws2_32.lib gdi32.lib ole32.lib oleaut32.lib ComDlg32.Lib rpcrt4.lib comctl32.lib shell32.lib advapi32.lib comdlg32.lib uuid.lib winmm.lib winspool.lib wsock32.lib wxjpegd.lib wxpngd.lib wxregexd.lib wxtiffd.lib wxzlibd.lib user32.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="C:\SourceCode\Libraries\wxWidgets2.8\lib\vc_dll"
-				IgnoreDefaultLibraryNames="LIBCMTD.lib"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
@@ -78,7 +78,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="false"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -141,7 +140,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib wxbase28.lib wxbase28_net.lib wxmsw28_core.lib wxexpat.lib wxmsw28_adv.lib wxmsw28_richtext.lib kernel32.lib Advapi32.lib ws2_32.lib gdi32.lib ole32.lib oleaut32.lib ComDlg32.Lib rpcrt4.lib comctl32.lib shell32.lib"
 				AdditionalLibraryDirectories="C:\SourceCode\Libraries\wxWidgets2.8\lib\vc_dll"
-				IgnoreDefaultLibraryNames="LIBCMT.lib"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -572,6 +571,7 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCResourceCompilerTool"
