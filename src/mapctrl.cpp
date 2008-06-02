@@ -266,8 +266,8 @@ void MapCtrl::GetClosestStartPos( int fromx, int fromy, int& index, int& x, int&
   index = -1;
 
   for ( int i = 0; i < map.info.posCount; i++ ) {
-    int dx = fromx - map.info.positions[i].x;
-    int dy = fromy - map.info.positions[i].y;
+    double dx = fromx - map.info.positions[i].x;
+    double dy = fromy - map.info.positions[i].y;
     newrange = (int)sqrt( dx*dx + dy*dy );
     if ( ( range == -1 ) || ( range > newrange )) {
       range = newrange;

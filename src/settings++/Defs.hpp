@@ -248,7 +248,7 @@ const Control VO_SLI[] = {
 const category_sizes_map_type VO_SLI_entry ( _T("VO_SLI"), sizeof(VO_SLI) / Control_size );
 
 const Control VO_SLI_EXT[] = {
-	{_(""), _T("FSAA"), -1, _T("0")}
+	{_(""), _T("FSAA"), -1, _T("0"), {_("")}}
 };
 
 const category_sizes_map_type VO_SLI_EXT_entry ( _T("VO_SLI_EXT"), sizeof(VO_SLI_EXT) / Control_size );

@@ -61,12 +61,12 @@ void InitializeLoggingTargets()
     logChain->SetLogLevel( wxLOG_Trace );
     logChain->SetVerbose( true );
   #else
-    ///gui window fallback logging if console/stream output not available
-    wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
-    wxLogChain *logChain = new wxLogChain( loggerwin );
-    logChain->SetLogLevel( wxLOG_Trace );
-    logChain->SetVerbose( true );
-    logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+    /////gui window fallback logging if console/stream output not available
+    //wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
+    //wxLogChain *logChain = new wxLogChain( loggerwin );
+    //logChain->SetLogLevel( wxLOG_Trace );
+    //logChain->SetVerbose( true );
+    //logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
   #endif
 }
 
