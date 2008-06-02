@@ -67,6 +67,7 @@ void InitializeLoggingTargets()
     //logChain->SetLogLevel( wxLOG_Trace );
     //logChain->SetVerbose( true );
     //logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+    new wxLogNull();
   #endif
 }
 
