@@ -887,9 +887,16 @@ void Settings::SetChatColorTime( wxColour value )
 
 wxFont Settings::GetChatFont()
 {
-    wxFont f;
-    f.SetNativeFontInfo( m_config->Read( _T("/Chat/Font"), wxEmptyString ) );
-    return f;
+    wxString info = m_config->Read( _T("/Chat/Font"), wxEmptyString );
+    if (info != wxEmptyString) {
+        wxFont f;
+        f.SetNativeFontInfo( info );
+        return f;
+    }
+    else {
+        wxFont f(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+        return f;
+    }
 }
 
 void Settings::SetChatFont( wxFont value )
