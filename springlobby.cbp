@@ -76,24 +76,12 @@
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 				</Compiler>
 				<Linker>
-					<Add library="libwxregexd.a" />
-					<Add library="libwxzlibd.a" />
-					<Add library="libwxpngd.a" />
-					<Add library="libwxjpegd.a" />
-					<Add library="libwxtiffd.a" />
-					<Add library="libwxexpatd.a" />
-					<Add library="libwxmsw28d.a" />
-					<Add library="libwxbase28d.a" />
-					<Add library="libwxbase28d_net.a" />
-					<Add library="libwxmsw28d_core.a" />
-					<Add library="libwxmsw28d_adv.a" />
-					<Add library="libwxmsw28d_media.a" />
-					<Add library="libwxmsw28d_html.a" />
-					<Add library="libwxbase28d_xml.a" />
-					<Add library="libwxmsw28d_xrc.a" />
-					<Add library="libwxmsw28d_aui.a" />
-					<Add library="libwxmsw28d_richtext.a" />
-					<Add library="gmon" />
+					<Add library="wx_based-2.8" />
+					<Add library="wx_mswd_core-2.8" />
+					<Add library="wx_mswd_richtext-2.8" />
+					<Add library="wx_based_net-2.8" />
+					<Add library="wx_mswd_adv-2.8" />
+					<Add library="wx_mswd_qa-2.8" />
 				</Linker>
 				<Environment>
 					<Variable name="WX_DIR" value="C:/wxWidgets-2.8.4" />
@@ -107,6 +95,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-Wall" />
+					<Add option="-pg" />
 					<Add option="-pipe" />
 					<Add option="-mthreads" />
 					<Add option="-Winvalid-pch" />
@@ -126,23 +115,12 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-pg" />
-					<Add library="libwxregexd.a" />
-					<Add library="libwxzlibd.a" />
-					<Add library="libwxpngd.a" />
-					<Add library="libwxjpegd.a" />
-					<Add library="libwxtiffd.a" />
-					<Add library="libwxexpatd.a" />
-					<Add library="libwxmsw28d.a" />
-					<Add library="libwxbase28d.a" />
-					<Add library="libwxbase28d_net.a" />
-					<Add library="libwxmsw28d_core.a" />
-					<Add library="libwxmsw28d_adv.a" />
-					<Add library="libwxmsw28d_media.a" />
-					<Add library="libwxmsw28d_html.a" />
-					<Add library="libwxbase28d_xml.a" />
-					<Add library="libwxmsw28d_xrc.a" />
-					<Add library="libwxmsw28d_aui.a" />
-					<Add library="libwxmsw28d_richtext.a" />
+					<Add library="wx_based-2.8" />
+					<Add library="wx_mswd_core-2.8" />
+					<Add library="wx_mswd_richtext-2.8" />
+					<Add library="wx_based_net-2.8" />
+					<Add library="wx_mswd_adv-2.8" />
+					<Add library="wx_mswd_qa-2.8" />
 					<Add directory="$(WX_DIR)/lib/gcc_dll" />
 				</Linker>
 				<Environment>
