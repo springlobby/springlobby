@@ -48,7 +48,28 @@ Settings::Settings()
      m_portable_mode = true;
   }
 
+  // if it doesn't exist, try to create it
+  if ( !wxFileName::FileExists( m_chosed_path ) )
+  {
+     // if directory doesn't exist, try to create it
+     if ( !m_portable_mode && !wxFileName::DirExists( wxStandardPaths::Get().GetUserDataDir() ) )
+         wxFileName::Mkdir( wxStandardPaths::Get().GetUserDataDir() );
+
+     wxFileOutputStream outstream( m_chosed_path );
+
+     if ( !outstream.IsOk() )
+     {
+         // TODO: error handling
+     }
+  }
+
   wxFileInputStream instream( m_chosed_path );
+
+  if ( !instream.IsOk() )
+  {
+      // TODO: error handling
+  }
+
   m_config = new myconf( instream );
 
   #else
@@ -76,6 +97,12 @@ void Settings::SaveSettings()
   m_config->Flush();
   #if defined(__WXMSW__) && !defined(HAVE_WX26)
   wxFileOutputStream outstream( m_chosed_path );
+
+  if ( !outstream.IsOk() )
+  {
+      // TODO: error handling
+  }
+
   m_config->Save( outstream );
   #endif
   if (usync()->IsLoaded()) usync()->SetSpringDataPath( GetSpringDir() );
@@ -887,9 +914,16 @@ void Settings::SetChatColorTime( wxColour value )
 
 wxFont Settings::GetChatFont()
 {
-    wxFont f;
-    f.SetNativeFontInfo( m_config->Read( _T("/Chat/Font"), wxEmptyString ) );
-    return f;
+    wxString info = m_config->Read( _T("/Chat/Font"), wxEmptyString );
+    if (info != wxEmptyString) {
+        wxFont f;
+        f.SetNativeFontInfo( info );
+        return f;
+    }
+    else {
+        wxFont f(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+        return f;
+    }
 }
 
 void Settings::SetChatFont( wxFont value )

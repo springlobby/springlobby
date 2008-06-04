@@ -266,8 +266,8 @@ void MapCtrl::GetClosestStartPos( int fromx, int fromy, int& index, int& x, int&
   index = -1;
 
   for ( int i = 0; i < map.info.posCount; i++ ) {
-    int dx = fromx - map.info.positions[i].x;
-    int dy = fromy - map.info.positions[i].y;
+    double dx = fromx - map.info.positions[i].x;
+    double dy = fromy - map.info.positions[i].y;
     newrange = (int)sqrt( dx*dx + dy*dy );
     if ( ( range == -1 ) || ( range > newrange )) {
       range = newrange;
@@ -360,7 +360,8 @@ void MapCtrl::DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxColo
   wxColour light;
   light.Set( col.Red()+100>200?200:col.Red()+100, col.Green()+100>200?200:col.Green()+100, col.Blue()+100>200?200:col.Blue()+100  );
   img.SetRGB( wxRect( 0, 0, sr.width, sr.height ), light.Red(), light.Green(), light.Blue() );
-  unsigned char *alpha = (unsigned char*)malloc( (sr.width)*(sr.height) );
+  img.InitAlpha();
+  unsigned char *alpha = img.GetAlpha();
   for ( int y = 0; y < sr.height; y++ ) {
     int a;
     if ( (y%3) == 0 ) a = alphalevel;
@@ -369,7 +370,6 @@ void MapCtrl::DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxColo
       alpha[y*(sr.width)+x] = a;
     }
   }
-  img.SetAlpha( alpha );
   wxBitmap bmpimg( img );
   dc.DrawBitmap( bmpimg, sr.x, sr.y, false );
 
