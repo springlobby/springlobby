@@ -221,9 +221,19 @@ void ChatPanel::CreateControls( ) {
 	}
 
 	// Creating ui elements
-	#ifndef NO_RICHTEXT_CHAT
+  #ifndef NO_RICHTEXT_CHAT
 	m_chatlog_text = new wxRichTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
-																	 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+	                                     wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+
+	// Accelerators
+	// copied from wxWidgets SVN revision 53442, so this can probably be removed for wx > 2.8.7
+	wxAcceleratorEntry entries[2];
+
+	entries[0].Set(wxACCEL_CMD,   (int) 'C',       wxID_COPY);
+	entries[1].Set(wxACCEL_CMD,   (int) 'A',       wxID_SELECTALL);
+
+	wxAcceleratorTable accel(2, entries);
+	m_chatlog_text->SetAcceleratorTable(accel);
   #else
 	m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
 																	 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );

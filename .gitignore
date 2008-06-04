@@ -16,3 +16,8 @@ springlobby.depend
 unitsync.log
 doc/.gitignore
 rpm/.gitignore
+*.vcproj.*.user
+*.suo
+*.ncb
+Debug
+Release

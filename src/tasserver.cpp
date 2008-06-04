@@ -415,10 +415,10 @@ void TASServer::Update( int mselapsed )
         ///
         if (m_do_finalize_join_battle&&(m_last_udp_ping+udp_reply_timeout<now))
         {
-            //customMessageBoxNoModal(SL_MAIN_ICON,_("NAT Traversal has failed when joining battle. You might be unable to play in this battle."),_("Warning"));
+            customMessageBoxNoModal(SL_MAIN_ICON,_("Failed to punch through NAT, playing this battle might not work for you or for other players."),_("Error"), wxICON_ERROR);
             //wxMessageBox()
-            wxMessageBox(_("Failed to punch through NAT"), _("Error"), wxICON_INFORMATION, NULL/* m_ui.mw()*/ );
             FinalizeJoinBattle();
+            //wxMessageBox(_("Failed to punch through NAT"), _("Error"), wxICON_INFORMATION, NULL/* m_ui.mw()*/ );
         };
 
         if ( ( m_last_udp_ping + m_keepalive ) < now )
@@ -433,15 +433,11 @@ void TASServer::Update( int mselapsed )
                 {
                     if (battle->IsFounderMe())
                     {
-                       if ( !sett().GetNoUDP() )
-                       {
-                         UdpPingTheServer(m_user);
-                         UdpPingAllClients();
-                       }
+                        UdpPingTheServer(m_user);
+                        UdpPingAllClients();
                     }
                     else
                     {
-                      if ( !sett().GetNoUDP() )
                         UdpPingTheServer();
                     }
                 }
@@ -493,7 +489,7 @@ void TASServer::ExecuteCommand( const wxString& in )
     wxLogMessage( _T("%s"), in.c_str()  );
     wxString cmd;
     wxString params = in;
-    long replyid;
+    long replyid = 0;
 
     if ( in.empty() ) return;
     try
@@ -1199,7 +1195,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
 
     m_udp_private_port=bo.port;
 
-    if (bo.nattype>0 && !sett().GetNoUDP() )UdpPingTheServer(m_user);
+    if (bo.nattype>0)UdpPingTheServer(m_user);
 
     // OPENBATTLE type natType password port maphash {map} {title} {modname}
 }
@@ -1228,13 +1224,10 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
                 /// from calling FinalizeJoinBattle() on timeout.
                 /// m_do_finalize_join_battle must be set to true after setting time, not before.
                 m_do_finalize_join_battle=true;
-                if ( sett().GetNoUDP() )
+                for (int n=0;n<5;++n) /// do 5 udp pings with tiny interval
                 {
-                  for (int n=0;n<5;++n) /// do 5 udp pings with tiny interval
-                  {
-                      UdpPingTheServer( m_user );
-                      // sleep(0);/// sleep until end of timeslice.
-                  }
+                    UdpPingTheServer( m_user );
+                    // sleep(0);/// sleep until end of timeslice.
                 }
                 m_last_udp_ping = time(0);/// set time again
             }
@@ -1493,7 +1486,7 @@ void TASServer::StartHostedBattle()
     Battle *battle=GetCurrentBattle();
     if (battle)
     {
-        if ( !sett().GetNoUDP() && (battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports)))
+        if ((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports)))
         {
             UdpPingTheServer();
             for (int i=0;i<5;++i)UdpPingAllClients();
