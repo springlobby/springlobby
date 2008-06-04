@@ -8,7 +8,6 @@
 #include <wx/arrstr.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
-#include <clocale>
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
@@ -375,14 +374,11 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     tdf.Append(_T("TeamLeader"),TeamLeader);
     tdf.Append(_T("AllyTeam"),AllyConv[battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().ally]);
 
-    const char* old_locale = std::setlocale(LC_NUMERIC, "C");
-    float rgb[3]={
-      battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Red()/255.0,
-      battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Green()/255.0,
-      battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Blue()/255.0
-      };
-    tdf.Append(_T("RGBColor"),rgb,rgb+3);
-    std::setlocale(LC_NUMERIC, old_locale);
+    wxString colourstring =
+      TowxString( battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Red()/255.0 ) + _T(' ') +
+      TowxString( battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Green()/255.0 ) + _T(' ') +
+      TowxString( battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Blue()/255.0 );
+    tdf.Append(_T("RGBColor"), colourstring);
 
     wxLogMessage( _T("%d"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side );
 
