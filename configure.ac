@@ -54,10 +54,7 @@ if test x$host_os = xmingw32msvc ; then
   fi
 fi
 
-if test "$win_build" = 1 ; then
-    usetorrent = no
-    CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
-fi
+
 
 #check if configure option present, if yes check for lib
 if test x$usetorrent = xyes ; then
@@ -76,6 +73,9 @@ fi
 #check if sound configure is enables, if yes check for SDL
 if test "$win_build" = 1 ; then
     CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND -DNO_RICHTEXT_CHAT"
+    LIBTORRENT_CFLAGS='-I/var/lib/buildbot/lib/mingw/include -I/var/lib/buildbot/lib/mingw/include/libtorrent  '
+    LIBTORRENT_LIBS='-L/var/lib/buildbot/lib/mingw/lib -ltorrent  '
+    LIBS='-lboost_filesystem '
 else
     AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10, SDL_sound and SDL_mixer, use --disable-sound to skip the dependency (and the feature)") )
 fi
