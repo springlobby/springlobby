@@ -3,6 +3,10 @@
 // Class: ChatPanel
 //
 
+#if defined(HAVE_WX26) && !defined(NO_RICHTEXT_CHAT)
+#define NO_RICHTEXT_CHAT
+#endif
+
 #include <stdexcept>
 #include <wx/intl.h>
 #include <wx/datetime.h>
@@ -17,7 +21,9 @@
 #include <wx/utils.h>
 #include <wx/event.h>
 #include <wx/notebook.h>
+#ifndef NO_RICHTEXT_CHAT
 #include <wx/richtext/richtextctrl.h>
+#endif
 #include <wx/app.h>
 
 #include "channel.h"
