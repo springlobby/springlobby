@@ -90,7 +90,7 @@ bool SpringLobbyApp::OnInit()
             }
         }
     }
-
+    #ifndef HAVE_WX26
     if ( !sett().IsFirstRun() && sett().IsPortableMode() ) /// rebase spring paths to current working dir in portable mode
     {
       wxString workingfolder = wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator();
@@ -100,7 +100,7 @@ bool SpringLobbyApp::OnInit()
       sett().SetCachePath( workingfolder + sett().GetCachePath().AfterLast( wxFileName::GetPathSeparator() ) );
       sett().SaveSettings();
     }
-
+    #endif
     m_ui = new Ui();
     wxLogMessage( _T("Ui created") );
 
