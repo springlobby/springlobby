@@ -22,6 +22,9 @@ dist_desktop_DATA = \
 pixmapdir = $(datadir)/pixmaps
 dist_pixmap_DATA = \
 	src/images/springlobby.svg
+	
+libt_dir = src/libtorrent
+libt_src_dir = $(libt_dir)/src
 
 SUBDIRS = po
 
@@ -69,6 +72,156 @@ clean-local:
 	rm -f revision.cpp
 
 # the following line is searched for in a script to add filenames under it
+
+
+libtorrent_sources = \
+	$(libt_src_dir)/entry.cpp \
+	$(libt_src_dir)/escape_string.cpp \
+	$(libt_src_dir)/assert.cpp \
+	$(libt_src_dir)/enum_net.cpp \
+	$(libt_src_dir)/broadcast_socket.cpp \
+	$(libt_src_dir)/peer_connection.cpp \
+	$(libt_src_dir)/bt_peer_connection.cpp \
+	$(libt_src_dir)/web_peer_connection.cpp \
+	$(libt_src_dir)/natpmp.cpp \
+	$(libt_src_dir)/piece_picker.cpp \
+	$(libt_src_dir)/policy.cpp \
+	$(libt_src_dir)/session.cpp \
+	$(libt_src_dir)/session_impl.cpp \
+	$(libt_src_dir)/sha1.cpp \
+	$(libt_src_dir)/stat.cpp \
+	$(libt_src_dir)/storage.cpp \
+	$(libt_src_dir)/torrent.cpp \
+	$(libt_src_dir)/torrent_handle.cpp \
+	$(libt_src_dir)/pe_crypto.cpp \
+	$(libt_src_dir)/torrent_info.cpp \
+	$(libt_src_dir)/tracker_manager.cpp \
+	$(libt_src_dir)/http_connection.cpp \
+	$(libt_src_dir)/http_tracker_connection.cpp \
+	$(libt_src_dir)/udp_tracker_connection.cpp \
+	$(libt_src_dir)/alert.cpp \
+	$(libt_src_dir)/identify_client.cpp \
+	$(libt_src_dir)/ip_filter.cpp \
+	$(libt_src_dir)/file.cpp \
+	$(libt_src_dir)/metadata_transfer.cpp \
+	$(libt_src_dir)/logger.cpp \
+	$(libt_src_dir)/file_pool.cpp \
+	$(libt_src_dir)/ut_pex.cpp \
+	$(libt_src_dir)/lsd.cpp \
+	$(libt_src_dir)/upnp.cpp \
+	$(libt_src_dir)/instantiate_connection.cpp \
+	$(libt_src_dir)/socks5_stream.cpp \
+	$(libt_src_dir)/socks4_stream.cpp \
+	$(libt_src_dir)/http_stream.cpp \
+	$(libt_src_dir)/connection_queue.cpp \
+	$(libt_src_dir)/disk_io_thread.cpp \
+	\
+	$(libt_src_dir)/kademlia/closest_nodes.cpp \
+	$(libt_src_dir)/kademlia/dht_tracker.cpp \
+	$(libt_src_dir)/kademlia/find_data.cpp \
+	$(libt_src_dir)/kademlia/node.cpp \
+	$(libt_src_dir)/kademlia/node_id.cpp \
+	$(libt_src_dir)/kademlia/refresh.cpp \
+	$(libt_src_dir)/kademlia/routing_table.cpp \
+	$(libt_src_dir)/kademlia/rpc_manager.cpp \
+	$(libt_src_dir)/kademlia/traversal_algorithm.cpp \
+	\
+	$(libt_dir)/zlib/adler32.c \
+	$(libt_dir)/zlib/compress.c \
+	$(libt_dir)/zlib/crc32.c \
+	$(libt_dir)/zlib/deflate.c \
+	$(libt_dir)/zlib/gzio.c \
+	$(libt_dir)/zlib/infback.c \
+	$(libt_dir)/zlib/inffast.c \
+	$(libt_dir)/zlib/inflate.c \
+	$(libt_dir)/zlib/inftrees.c \
+	$(libt_dir)/zlib/trees.c \
+	$(libt_dir)/zlib/uncompr.c \
+	$(libt_dir)/zlib/zutil.c 
+
+libtorrent_headers = \
+	$(libt_dir)/include/libtorrent/alert.hpp \
+	$(libt_dir)/include/libtorrent/alert_types.hpp \
+	$(libt_dir)/include/libtorrent/assert.hpp \
+	$(libt_dir)/include/libtorrent/aux_/session_impl.hpp \
+	$(libt_dir)/include/libtorrent/bandwidth_manager.hpp \
+	$(libt_dir)/include/libtorrent/bandwidth_limit.hpp \
+	$(libt_dir)/include/libtorrent/bandwidth_queue_entry.hpp \
+	$(libt_dir)/include/libtorrent/bencode.hpp \
+	$(libt_dir)/include/libtorrent/broadcast_socket.hpp \
+	$(libt_dir)/include/libtorrent/buffer.hpp \
+	$(libt_dir)/include/libtorrent/connection_queue.hpp \
+	$(libt_dir)/include/libtorrent/debug.hpp \
+	$(libt_dir)/include/libtorrent/disk_io_thread.hpp \
+	$(libt_dir)/include/libtorrent/entry.hpp \
+	$(libt_dir)/include/libtorrent/enum_net.hpp \
+	$(libt_dir)/include/libtorrent/escape_string.hpp \
+	$(libt_dir)/include/libtorrent/extensions.hpp \
+	$(libt_dir)/include/libtorrent/extensions/metadata_transfer.hpp \
+	$(libt_dir)/include/libtorrent/extensions/logger.hpp \
+	$(libt_dir)/include/libtorrent/extensions/ut_pex.hpp \
+	$(libt_dir)/include/libtorrent/file.hpp \
+	$(libt_dir)/include/libtorrent/file_pool.hpp \
+	$(libt_dir)/include/libtorrent/fingerprint.hpp \
+	$(libt_dir)/include/libtorrent/hasher.hpp \
+	$(libt_dir)/include/libtorrent/http_connection.hpp \
+	$(libt_dir)/include/libtorrent/http_stream.hpp \
+	$(libt_dir)/include/libtorrent/session_settings.hpp \
+	$(libt_dir)/include/libtorrent/http_tracker_connection.hpp \
+	$(libt_dir)/include/libtorrent/identify_client.hpp \
+	$(libt_dir)/include/libtorrent/instantiate_connection.hpp \
+	$(libt_dir)/include/libtorrent/intrusive_ptr_base.hpp \
+	$(libt_dir)/include/libtorrent/invariant_check.hpp \
+	$(libt_dir)/include/libtorrent/io.hpp \
+	$(libt_dir)/include/libtorrent/ip_filter.hpp \
+	$(libt_dir)/include/libtorrent/chained_buffer.hpp \
+	$(libt_dir)/include/libtorrent/lsd.hpp \
+	$(libt_dir)/include/libtorrent/peer.hpp \
+	$(libt_dir)/include/libtorrent/peer_connection.hpp \
+	$(libt_dir)/include/libtorrent/bt_peer_connection.hpp \
+	$(libt_dir)/include/libtorrent/web_peer_connection.hpp \
+	$(libt_dir)/include/libtorrent/pe_crypto.hpp \
+	$(libt_dir)/include/libtorrent/natpmp.hpp \
+	$(libt_dir)/include/libtorrent/pch.hpp \
+	$(libt_dir)/include/libtorrent/peer_id.hpp \
+	$(libt_dir)/include/libtorrent/peer_info.hpp \
+	$(libt_dir)/include/libtorrent/peer_request.hpp \
+	$(libt_dir)/include/libtorrent/piece_block_progress.hpp \
+	$(libt_dir)/include/libtorrent/piece_picker.hpp \
+	$(libt_dir)/include/libtorrent/policy.hpp \
+	$(libt_dir)/include/libtorrent/session.hpp \
+	$(libt_dir)/include/libtorrent/size_type.hpp \
+	$(libt_dir)/include/libtorrent/socket.hpp \
+	$(libt_dir)/include/libtorrent/socket_type.hpp \
+	$(libt_dir)/include/libtorrent/socks4_stream.hpp \
+	$(libt_dir)/include/libtorrent/socks5_stream.hpp \
+	$(libt_dir)/include/libtorrent/stat.hpp \
+	$(libt_dir)/include/libtorrent/storage.hpp \
+	$(libt_dir)/include/libtorrent/time.hpp \
+	$(libt_dir)/include/libtorrent/torrent.hpp \
+	$(libt_dir)/include/libtorrent/torrent_handle.hpp \
+	$(libt_dir)/include/libtorrent/torrent_info.hpp \
+	$(libt_dir)/include/libtorrent/tracker_manager.hpp \
+	$(libt_dir)/include/libtorrent/udp_tracker_connection.hpp \
+	$(libt_dir)/include/libtorrent/utf8.hpp \
+	$(libt_dir)/include/libtorrent/xml_parse.hpp \
+	$(libt_dir)/include/libtorrent/variant_stream.hpp \
+	$(libt_dir)/include/libtorrent/version.hpp \
+	\
+	$(libt_dir)/include/libtorrent/kademlia/closest_nodes.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/dht_tracker.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/find_data.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/logging.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/msg.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/node.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/node_entry.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/node_id.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/observer.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/packet_iterator.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/refresh.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/routing_table.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/rpc_manager.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/traversal_algorithm.hpp  
 
 springlobby_SOURCES = \
 	revision.cpp \
@@ -545,6 +698,10 @@ springlobby_SOURCES = \
 	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
 	src/Helper/TextCompletionDatabase.cpp 
+	
+springlobby_SOURCES += \ 
+	$(libtorrent_headers) \
+	$(libtorrent_sources) 
 
 
 
