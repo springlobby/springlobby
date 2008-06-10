@@ -698,11 +698,12 @@ springlobby_SOURCES = \
 	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
 	src/Helper/TextCompletionDatabase.cpp 
-	
+
+if USE_WINDRES	
 springlobby_SOURCES += \ 
 	$(libtorrent_headers) \
 	$(libtorrent_sources) 
-
+endif
 
 
 if USE_WINDRES	

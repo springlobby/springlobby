@@ -57,18 +57,19 @@ fi
 
 
 #check if configure option present, if yes check for lib
-#if test x$usetorrent = xyes ; then
-#	AC_MSG_CHECKING([checking for libtorrent])
-#	PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
-#	if test x$usetorrent = xfail ; then
-#		AC_MSG_ERROR([missing required libtorrent library, get it at http://www.rasterbar.com/products/libtorrent/, #please note that some distros name it rb-libtorrent, that is NOT libtorrent from rakshasa]);
-#		exit
-#	fi
-#	AC_SUBST(LIBTORRENT_CFLAGS)
-#	AC_SUBST(LIBTORRENT_LIBS)
+if test x$usetorrent = xyes ; then
+	AC_MSG_CHECKING([checking for libtorrent])
+	PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
+	if test x$usetorrent = xfail ; then
+		AC_MSG_ERROR([missing required libtorrent library, get it at http://www.rasterbar.com/products/libtorrent/, please note that some distros name it rb-libtorrent, that is NOT libtorrent from rakshasa]);
+		exit
+	fi
+	AC_SUBST(LIBTORRENT_CFLAGS)
+	AC_SUBST(LIBTORRENT_LIBS)
+	CXXFLAGS="$CXXFLAGS -DTORRENT_DISABLE_ENCRYPTION"
 #else
 #	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
-#fi
+fi
 
 #check if sound configure is enables, if yes check for SDL
 if test "$win_build" = 1 ; then
