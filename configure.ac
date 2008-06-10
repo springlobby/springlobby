@@ -57,6 +57,7 @@ fi
 
 
 #check if configure option present, if yes check for lib
+if test "$win_build" = 0 ; then
 if test x$usetorrent = xyes ; then
 	AC_MSG_CHECKING([checking for libtorrent])
 	PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
@@ -69,6 +70,7 @@ if test x$usetorrent = xyes ; then
 	CXXFLAGS="$CXXFLAGS -DTORRENT_DISABLE_ENCRYPTION"
 #else
 #	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
+fi
 fi
 
 #check if sound configure is enables, if yes check for SDL
