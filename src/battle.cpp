@@ -12,6 +12,7 @@
 #include "user.h"
 #include "utils.h"
 #include "uiutils.h"
+#include "settings.h"
 
 #include "iconimagelist.h"
 
@@ -236,7 +237,7 @@ void Battle::OnRequestBattleStatus()
   bs.team = lowest;
   bs.ally = lowest;
   bs.spectator = false;
-  bs.colour=wxColour(1,1,0);
+  bs.colour = sett().GetBattleLastColour();
   /// theres some highly annoying bug with color changes on player join/leave.
   bs.colour = GetFreeColour(&m_serv.GetMe());
 

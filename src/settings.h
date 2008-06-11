@@ -181,6 +181,9 @@ class Settings
     int GetLastRankLimit();
     bool GetTestHostPort();
 
+    wxColour GetBattleLastColour();
+    void SetBattleLastColour( const wxColour& col );
+
     void SetLastHostDescription( const wxString& value );
     void SetLastHostMod( const wxString& value );
     void SetLastHostPassword( const wxString& value );
