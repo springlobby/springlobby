@@ -510,7 +510,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
       customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     }
   }
-  server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
+  if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
 
   //server.uidata.panel = m_main_win->GetChatTab().AddChatPannel( server, server_name );
 }

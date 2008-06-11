@@ -348,9 +348,15 @@ User& TASServer::GetMe()
 void TASServer::Login()
 {
     wxLogDebugFunc( _T("") );
-
-    SendCmd ( _T("LOGIN"), m_user + _T(" ") + GetPasswordHash( m_pass ) + _T(" ") +
-        GetHostCPUSpeed() +_T(" * SpringLobby 0.1") );
+    wxString pass = GetPasswordHash( m_pass );
+    if ( m_server_lanmode ) pass = _T("Cock-a-doodle-doo");
+    wxString localaddr;
+    if ( m_sock ) localaddr = m_sock->GetLocalAddress();
+    if ( localaddr.IsEmpty() ) localaddr = _T("*");
+    wxLogMessage( m_user + _T(" ") + pass + _T(" ") +
+        GetHostCPUSpeed() + _T(" ") + localaddr +_T(" SpringLobby 0.1") );
+    SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
+        GetHostCPUSpeed() + _T(" ") + localaddr +_T(" SpringLobby 0.1") );
 }
 
 void TASServer::Logout()
@@ -530,6 +536,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         supported_spring_version = GetWordParam( params );
         m_nat_helper_port = (unsigned long)GetIntParam( params );
         lanmode = GetBoolParam( params );
+        m_server_lanmode = lanmode;
         m_se->OnConnected( _T("TAS Server"), mod, (m_ser_ver > 0), supported_spring_version, lanmode );
     }
     else if ( cmd == _T("ACCEPTED") )
