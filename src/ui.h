@@ -15,7 +15,7 @@ class Channel;
 class User;
 class Battle;
 class SinglePlayerBattle;
-class BattleBot;
+struct BattleBot;
 class ChatPanel;
 class UnitSyncThread;
 
