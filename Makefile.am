@@ -3,7 +3,7 @@
 ## the --install can be edited out to use older automake
 ACLOCAL_AMFLAGS = -I m4 --install
 
-libt_dir = /share/projekte/settings/src/libtorrent
+libt_dir = $(srcdir)/src/libtorrent
 libt_src_dir = $(libt_dir)/src
 
 #-I../src/libtorrent/include -I/var/lib/buildbot/lib/mingw/include -I../src/libtorrent/include/libtorrent -O3 #-I../src/libtorrent/zlib -I../src/libtorrent/ -I../src/libtorrent/asio
