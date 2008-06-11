@@ -1,5 +1,6 @@
 #include "globalevents.h"
 #include "settings++/custom_dialogs.h"
+#include <wx/intl.h>
 
 const wxEventType httpDownloadEvtComplete = wxNewEventType();
 const wxEventType httpDownloadEvtFailed = wxNewEventType();

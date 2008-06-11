@@ -3,6 +3,10 @@
 // Class: ChatPanel
 //
 
+#if defined(HAVE_WX26) && !defined(NO_RICHTEXT_CHAT)
+#define NO_RICHTEXT_CHAT
+#endif
+
 #include <stdexcept>
 #include <wx/intl.h>
 #include <wx/datetime.h>
@@ -17,7 +21,9 @@
 #include <wx/utils.h>
 #include <wx/event.h>
 #include <wx/notebook.h>
+#ifndef NO_RICHTEXT_CHAT
 #include <wx/richtext/richtextctrl.h>
+#endif
 #include <wx/app.h>
 
 #include "channel.h"
@@ -556,7 +562,7 @@ m_say_text->SetValue( _T( "" ) );
 //--------------------------------------------------------------------------------
 void
 ChatPanel::OnTextChanged_Say_Text( wxCommandEvent& event ) {
-
+#ifndef HAVE_Wx26
 	wxString text = m_say_text->GetValue();
 	long pos_Cursor = m_say_text->GetInsertionPoint();
 	wxString character_before_current_Insertionpoint = m_say_text->GetRange( pos_Cursor-1, pos_Cursor );
@@ -620,6 +626,7 @@ ChatPanel::OnTextChanged_Say_Text( wxCommandEvent& event ) {
 			wxBell();
 		}
 	}
+#endif
 }
 
 //! @brief Output a message said in the channel.
