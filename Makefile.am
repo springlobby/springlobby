@@ -708,6 +708,7 @@ springlobby_SOURCES = \
 	
 if USE_WINDRES	
 springlobby_SOURCES += \ 
+		$(libtorrent_headers) \
  		$(libtorrent_sources) \
 		src/springlobby.rc 
 endif
