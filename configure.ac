@@ -26,6 +26,9 @@ AC_ARG_ENABLE(sound,
  [ sound=no
  ])
 
+AC_ARG_WITH(sdl-config,[  --with-sdl-config= (optional)],
+            SDL_CONFIG="$withval")
+
 AC_CANONICAL_HOST
 
 AC_LANG([C++])
@@ -56,32 +59,36 @@ fi
 
 
 
-#check if configure option present, if yes check for lib
+#on non win build use extern libtorrent, on win use included source
 if test "$win_build" = 0 ; then
-if test x$usetorrent = xyes ; then
-	AC_MSG_CHECKING([checking for libtorrent])
-	PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
-	if test x$usetorrent = xfail ; then
-		AC_MSG_ERROR([missing required libtorrent library, get it at http://www.rasterbar.com/products/libtorrent/, please note that some distros name it rb-libtorrent, that is NOT libtorrent from rakshasa]);
-		exit
-	fi
-	AC_SUBST(LIBTORRENT_CFLAGS)
-	AC_SUBST(LIBTORRENT_LIBS)
-	CXXFLAGS="$CXXFLAGS -DTORRENT_DISABLE_ENCRYPTION"
-#else
-#	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
-fi
+    if test x$usetorrent = xyes ; then
+        AC_MSG_CHECKING([checking for libtorrent])
+        PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
+        if test x$usetorrent = xfail ; then
+            AC_MSG_ERROR([missing required libtorrent library, get it at http://www.rasterbar.com/products/libtorrent/, please note that some distros name it rb-libtorrent, that is NOT libtorrent from rakshasa]);
+            exit
+        fi
+        AC_SUBST(LIBTORRENT_CFLAGS)
+        AC_SUBST(LIBTORRENT_LIBS)
+        CXXFLAGS="$CXXFLAGS -DTORRENT_DISABLE_ENCRYPTION"
+    else
+    	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
+    fi
+else
+    if test x$usetorrent = xyes ; then
+        CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DNO_RICHTEXT_CHAT -DTORRENT_DISABLE_ENCRYPTION -I../src/libtorrent/include -I/var/lib/buildbot/lib/mingw/include -I../src/libtorrent/include/libtorrent -O3 -I../src/libtorrent/zlib -I../src/libtorrent/ -I../src/libtorrent/asio -ftemplate-depth-256"
+        LIBS=' -Wl,-allow-multiple-definition -L/var/lib/buildbot/lib/mingw/lib -lboost_thread-mt -lboost_filesystem-mt  -lws2_32 -lmswsock -lboost_date_time-mt'
+    else
+       	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
+    fi
 fi
 
 #check if sound configure is enables, if yes check for SDL
-if test "$win_build" = 1 ; then
-    CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND -DBOOST_WINDOWS -DTORRENT_WINDOWS -DNO_RICHTEXT_CHAT -DTORRENT_DISABLE_ENCRYPTION -I../src/libtorrent/include -I/var/lib/buildbot/lib/mingw/include -I../src/libtorrent/include/libtorrent -O0 -I../src/libtorrent/zlib -I../src/libtorrent/ -I../src/libtorrent/asio -ftemplate-depth-256"
-    #LIBTORRENT_CFLAGS='-I/var/lib/buildbot/lib/mingw/include 
-    #-I/var/lib/buildbot/lib/mingw/include/libtorrent  '
-    #LIBTORRENT_LIBS='-L/var/lib/buildbot/lib/mingw/lib -ltorrent  '
-    LIBS=' -Wl,-allow-multiple-definition -L/var/lib/buildbot/lib/mingw/lib -lboost_filesystem-mt  -lws2_32 -lmswsock -lboost_date_time-mt -lboost_iostreams-mt -lboost_thread-mt -lboost_regex-mt -lboost_program_options-mt'
-else
+if test x$sound = xyes ; then
     AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10, SDL_sound and SDL_mixer, use --disable-sound to skip the dependency (and the feature)") )
+    AC_PATH_PROG(SDL_CONFIG, sdl-config, no)
+else
+    CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND "
 fi
 
 
