@@ -3,18 +3,28 @@
 ## the --install can be edited out to use older automake
 ACLOCAL_AMFLAGS = -I m4 --install
 
+libt_dir = /share/projekte/settings/src/libtorrent
+libt_src_dir = $(libt_dir)/src
+
+#-I../src/libtorrent/include -I/var/lib/buildbot/lib/mingw/include -I../src/libtorrent/include/libtorrent -O3 #-I../src/libtorrent/zlib -I../src/libtorrent/ -I../src/libtorrent/asio
+
+SEARCHDIRS = \
+	-I$(srcdir)/src \
+	-I$(libt_dir)/include -I$(libt_dir)/include/libtorrent  \
+	-I$(libt_dir)/zlib -I$(libt_dir) -I $(libt_dir)/asio
+
 AM_CPPFLAGS = \
 	$(WX_CPPFLAGS) \
 	$(LIBTORRENT_CFLAGS) \
 	$(SDL_CFLAGS) \
-	-DLOCALEDIR=\"$(localedir)\"
+	-DLOCALEDIR=\"$(localedir)\" \
+ 	$(SEARCHDIRS)
 
 # strict aliasing check is disabled, because wxWidgets headers have problems
-TORRFLAGS = `pkg-config  libtorrent --libs`
 AM_CXXFLAGS = \
 	-Wall \
 	-Wno-strict-aliasing
-
+	
 desktopdir = $(datadir)/applications
 dist_desktop_DATA = \
 	src/springlobby.desktop
@@ -23,9 +33,6 @@ pixmapdir = $(datadir)/pixmaps
 dist_pixmap_DATA = \
 	src/images/springlobby.svg
 	
-libt_dir = src/libtorrent
-libt_src_dir = $(libt_dir)/src
-
 SUBDIRS = po
 
 ## if you don't have the required version of autoconf, comment out the
@@ -701,7 +708,6 @@ springlobby_SOURCES = \
 	
 if USE_WINDRES	
 springlobby_SOURCES += \ 
-		$(libtorrent_headers) \
  		$(libtorrent_sources) \
 		src/springlobby.rc 
 endif

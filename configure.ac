@@ -26,8 +26,11 @@ AC_ARG_ENABLE(sound,
  [ sound=no
  ])
 
-AC_ARG_WITH(sdl-config,[  --with-sdl-config= (optional)],
+AC_ARG_WITH(sdl-config,[  --with-sdl-config=/path/to/sdl-config (optional) for finding right sdl includes],
             SDL_CONFIG="$withval")
+
+AC_ARG_WITH(boost-prefix,[  --with-boost-prefix=/path/to/boost_topdir (optional) for finding right boost includes],
+      CXXFLAGS="$CXXFLAGS -I$withval ")
 
 AC_CANONICAL_HOST
 
@@ -76,7 +79,7 @@ if test "$win_build" = 0 ; then
     fi
 else
     if test x$usetorrent = xyes ; then
-        CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DNO_RICHTEXT_CHAT -DTORRENT_DISABLE_ENCRYPTION -I../src/libtorrent/include -I/var/lib/buildbot/lib/mingw/include -I../src/libtorrent/include/libtorrent -O3 -I../src/libtorrent/zlib -I../src/libtorrent/ -I../src/libtorrent/asio -ftemplate-depth-256"
+        CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DNO_RICHTEXT_CHAT -DTORRENT_DISABLE_ENCRYPTION  "
         LIBS=' -Wl,-allow-multiple-definition -L/var/lib/buildbot/lib/mingw/lib -lboost_thread-mt -lboost_filesystem-mt  -lws2_32 -lmswsock -lboost_date_time-mt'
     else
        	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
@@ -86,7 +89,6 @@ fi
 #check if sound configure is enables, if yes check for SDL
 if test x$sound = xyes ; then
     AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10, SDL_sound and SDL_mixer, use --disable-sound to skip the dependency (and the feature)") )
-    AC_PATH_PROG(SDL_CONFIG, sdl-config, no)
 else
     CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND "
 fi
