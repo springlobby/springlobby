@@ -21,7 +21,7 @@ AM_CPPFLAGS = \
 # strict aliasing check is disabled, because wxWidgets headers have problems
 AM_CXXFLAGS = \
 	-Wall \
-	-Wno-strict-aliasing
+	-Wno-strict-aliasing -DNDEBUG
 	
 desktopdir = $(datadir)/applications
 dist_desktop_DATA = \
