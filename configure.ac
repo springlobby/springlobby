@@ -73,7 +73,6 @@ if test "$win_build" = 0 ; then
         fi
         AC_SUBST(LIBTORRENT_CFLAGS)
         AC_SUBST(LIBTORRENT_LIBS)
-        CXXFLAGS="$CXXFLAGS -DTORRENT_DISABLE_ENCRYPTION"
     else
     	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
     fi
