@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_FILELISTDIALOG_H
 
 #include <wx/dialog.h>
+#include "../torrentwrapper.h"
 
 class wxBoxSizer;
 class wxButton;
@@ -16,10 +17,13 @@ class FileListDialog : public wxDialog
         ~FileListDialog();
 
         void UpdateList();
+        void SetData(HashToTorrentData& data);
 
     protected:
         wxBoxSizer* m_main_sizer;
         FileListCtrl* m_filelistctrl;
+        HashToTorrentData m_torrentdata;
+        void AddTorrentData( const TorrentData& data);
 
     private:
 };
