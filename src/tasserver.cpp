@@ -18,6 +18,7 @@
 #include "battle.h"
 #include "serverevents.h"
 #include "socket.h"
+#include "channel.h"
 
 /// for SL_MAIN_ICON
 #include "settings++/custom_dialogs.h"
@@ -910,6 +911,14 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         m_se->OnServerMessageBox( params );
     }
+    else if ( cmd == _T("REDIRECT") )
+    {
+      wxString address = GetWordParam( params );
+      unsigned int port = GetIntParam( params );
+      if ( address.IsEmpty() ) return;
+      if ( port == 0 ) port = DEFSETT_DEFAULT_SERVER_PORT;
+      m_se->OnRedirect( address, port, m_user, m_pass );
+    }
     else
     {
         wxLogMessage( _T("??? Cmd: %s params: %s"), cmd.c_str(), params.c_str() );
@@ -1009,6 +1018,8 @@ void TASServer::JoinChannel( const wxString& channel, const wxString& key )
 {
     //JOIN channame [key]
     wxLogDebugFunc( channel );
+
+    m_channel_pw[channel] = key;
 
     SendCmd ( _T("JOIN"), channel + _T(" ") + key );
 }

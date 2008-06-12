@@ -279,6 +279,9 @@ class Settings
     void SetTorrentMaxConnections( int connections );
     int GetTorrentMaxConnections();
 
+    void SetTorrentListToResume( const wxArrayString& list );
+    wxArrayString GetTorrentListToResume();
+
     void SetShowTooltips( bool show);
     bool GetShowTooltips();
 

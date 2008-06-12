@@ -3,6 +3,11 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
+#ifdef _MSC_VER
+// MSVC can not compile std::pair used in bimap with forward decl only.
+#include "libtorrent/torrent_handle.hpp"
+#endif
+
 #include <wx/string.h>
 #include <wx/arrstr.h>
 #include <wx/event.h>
@@ -17,8 +22,7 @@
 #define DEFAULT_P2P_TRACKER_PORT 8201
 
 namespace libtorrent{ class session; };
-namespace libtorrent { class torrent_handle; };
-class Socket;
+namespace libtorrent { struct torrent_handle; };
 
 enum MediaType
 {
@@ -49,6 +53,11 @@ struct TorrentData
   wxString infohash;
 };
 
+typedef std::map<wxString,TorrentData> HashToTorrentData;/// hash -> torr data
+typedef codeproject::bimap<wxString,wxString> SeedRequests; ///name -> hash
+typedef std::map<wxString,bool> OpenTorrents;/// name -> is seed
+typedef codeproject::bimap<libtorrent::torrent_handle,wxString> TorrentHandleToHash; /// torrent handle -> hash
+typedef codeproject::bimap<wxString,wxString> NameToHash;///name -> hash
 
 class TorrentWrapper : public iNetClass
 {
@@ -65,6 +74,7 @@ class TorrentWrapper : public iNetClass
     bool IsFileInSystem( const wxString& hash );
     void RemoveFile( const wxString& hash );
     int GetTorrentSystemStatus();
+    HashToTorrentData GetSystemFileList();
 
     /// lobby interface
     void SetIngameStatus( bool status );
@@ -115,20 +125,15 @@ class TorrentWrapper : public iNetClass
 
 /// there probably are some more rules i dont know of, or which i forgot.
 
-    typedef std::map<wxString,TorrentData> HashToTorrentData;/// hash -> torr data
     MutexWrapper<HashToTorrentData> m_torrents_infos;
 
-    typedef codeproject::bimap<wxString,wxString> SeedRequests;
-    MutexWrapper<SeedRequests> m_seed_requests; ///name -> hash
+    MutexWrapper<SeedRequests> m_seed_requests;
 
-    typedef std::map<wxString,bool> OpenTorrents;
-    MutexWrapper<OpenTorrents> m_open_torrents; /// name -> is seed
+    MutexWrapper<OpenTorrents> m_open_torrents;
 
-    typedef codeproject::bimap<libtorrent::torrent_handle,wxString> TorrentHandleToHash; /// torrent handle -> hash
     MutexWrapper<TorrentHandleToHash> m_torrent_handles;
 
-    typedef codeproject::bimap<wxString,wxString> NameToHash;
-    MutexWrapper<NameToHash> m_name_to_hash; ///name -> hash
+    MutexWrapper<NameToHash> m_name_to_hash;
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;

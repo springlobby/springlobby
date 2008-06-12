@@ -339,7 +339,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     else if ( key.Left( 11 ) == _T( "modoptions\\" ) )
     {
       key = key.AfterFirst( '\\' );
-      if (  battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) );//m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+      if (  battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) )  //m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
         battle.Update(  wxString::Format(_T("%d_"), ModOption ) + key );
     }
   }
@@ -398,6 +398,7 @@ void ServerEvents::OnJoinChannelResult( bool success, const wxString& channel, c
   if ( success ) {
 
     Channel& chan = m_serv._AddChannel( channel );
+    chan.SetPassword( m_serv.m_channel_pw[channel] );
     m_ui.OnJoinedChannelSuccessful( chan );
     if ( channel == _T("springlobby")) {
       m_serv.DoActionChannel( _T("springlobby"), _T("is using SpringLobby v") + GetSpringLobbyVersion() );
@@ -642,4 +643,13 @@ void ServerEvents::OnKickedFromBattle()
 {
 	customMessageBoxNoModal(SL_MAIN_ICON,_("You were kicked from the battle!"),_("Kicked by Host"));
 
+}
+
+
+void ServerEvents::OnRedirect( const wxString& address,  unsigned int port, const wxString& CurrentNick, const wxString& CurrentPassword )
+{
+    sett().AddServer( address );
+    sett().SetServerHost( address, address );
+    sett().SetServerPort( address, (int)port );
+    m_ui.DoConnect( address, CurrentNick, CurrentPassword );
 }
