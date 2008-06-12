@@ -29,5 +29,8 @@ void FileListDialog::SetData(HashToTorrentData& data )
 
 void FileListDialog::AddTorrentData( const TorrentData& data)
 {
-
+  int index = m_filelistctrl->InsertItem( m_filelistctrl->GetItemCount(), data.name);
+  m_filelistctrl->SetItem( index, 0, data.name );
+  m_filelistctrl->SetItem( index, 1, data.type == map ? _T("Map") : _T("Mod") );
+  m_filelistctrl->SetItem( index, 2, data.hash );
 }
