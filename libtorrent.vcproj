@@ -51,7 +51,7 @@
 				PrecompiledHeaderThrough="libtorrent/pch.hpp"
 				WarningLevel="3"
 				DebugInformationFormat="4"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4503;4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -118,7 +118,7 @@
 				PrecompiledHeaderThrough="libtorrent/pch.hpp"
 				WarningLevel="3"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4503;4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
