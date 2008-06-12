@@ -213,6 +213,71 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="Release with libtorrent|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="4"
+			CharacterSet="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
+				Optimization="0"
+				AdditionalIncludeDirectories=".\src\libtorrent\include;.\src\libtorrent;.\src\libtorrent\zlib;&quot;C:\Program Files\boost\boost_1_35_0&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;BOOST_BUILD_PCH_ENABLED;TORRENT_DISABLE_ENCRYPTION;WIN32_LEAN_AND_MEAN"
+				ExceptionHandling="2"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="libtorrent/pch.hpp"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+				DisableSpecificWarnings="4503;4996"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -253,6 +318,14 @@
 						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\libtorrent\src\broadcast_socket.cpp"
@@ -275,6 +348,14 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -313,6 +394,14 @@
 						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\libtorrent\src\disk_io_thread.cpp"
@@ -335,6 +424,14 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -373,6 +470,14 @@
 						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\libtorrent\src\escape_string.cpp"
@@ -405,6 +510,14 @@
 						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\libtorrent\src\file_pool.cpp"
@@ -431,6 +544,14 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -501,6 +622,14 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\libtorrent\src\pe_crypto.cpp"
@@ -523,6 +652,14 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -672,6 +809,14 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\libtorrent\zlib\compress.c"
@@ -694,6 +839,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -728,6 +881,14 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\libtorrent\zlib\deflate.c"
@@ -750,6 +911,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -784,6 +953,14 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\libtorrent\zlib\infback.c"
@@ -806,6 +983,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -840,6 +1025,14 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\libtorrent\zlib\inflate.c"
@@ -862,6 +1055,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -896,6 +1097,14 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\libtorrent\zlib\trees.c"
@@ -918,6 +1127,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -952,6 +1169,14 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\libtorrent\zlib\zutil.c"
@@ -974,6 +1199,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
