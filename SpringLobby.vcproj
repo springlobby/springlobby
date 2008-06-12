@@ -18,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
+			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)"
 			ConfigurationType="1"
 			>
 			<Tool
@@ -96,8 +96,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)"
 			ConfigurationType="1"
 			>
 			<Tool
@@ -172,8 +172,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug with libtorrent|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)"
 			ConfigurationType="1"
 			>
 			<Tool
@@ -251,8 +251,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release with libtorrent|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)"
 			ConfigurationType="1"
 			>
 			<Tool
@@ -273,6 +273,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
+				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="./src;C:\SourceCode\Libraries\wxWidgets2.8\include\msvc;C:\SourceCode\Libraries\wxWidgets2.8\include;.\src\libtorrent\include;.\src\libtorrent;.\src\libtorrent\zlib;&quot;C:\Program Files\boost\boost_1_35_0&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;__WXMSW__;WXUSINGDLL;DISABLE_SOUND"
 				ExceptionHandling="2"
@@ -300,6 +301,7 @@
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				LinkTimeCodeGeneration="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 				TargetMachine="1"
