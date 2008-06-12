@@ -644,3 +644,12 @@ void ServerEvents::OnKickedFromBattle()
 	customMessageBoxNoModal(SL_MAIN_ICON,_("You were kicked from the battle!"),_("Kicked by Host"));
 
 }
+
+
+void ServerEvents::OnRedirect( const wxString& address,  unsigned int port, const wxString& CurrentNick, const wxString& CurrentPassword )
+{
+    sett().AddServer( address );
+    sett().SetServerHost( address, address );
+    sett().SetServerPort( address, (int)port );
+    m_ui.DoConnect( address, CurrentNick, CurrentPassword );
+}

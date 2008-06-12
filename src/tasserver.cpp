@@ -917,8 +917,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
       unsigned int port = GetIntParam( params );
       if ( address.IsEmpty() ) return;
       if ( port == 0 ) port = DEFSETT_DEFAULT_SERVER_PORT;
-      Disconnect();
-      Connect( address, port );
+      m_se->OnRedirect( address, port, m_user, m_pass );
     }
     else
     {
