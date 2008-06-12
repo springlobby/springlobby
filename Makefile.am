@@ -544,8 +544,13 @@ springlobby_SOURCES = \
 	src/httpdownloader.h \
 	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
-	src/Helper/TextCompletionDatabase.cpp 
-
+	src/Helper/TextCompletionDatabase.cpp \
+	src/filelister/filelistctrl.h \
+	src/filelister/filelistdialog.h \
+	src/filelister/filelistfilter.h \
+	src/filelister/filelistctrl.cpp \
+	src/filelister/filelistdialog.cpp \
+	src/filelister/filelistfilter.cpp
 
 
 if USE_WINDRES	

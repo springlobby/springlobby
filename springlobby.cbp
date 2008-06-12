@@ -184,6 +184,15 @@
 		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
+		<Unit filename="src/filelistctrl.cpp" />
+		<Unit filename="src/filelistdialog.cpp" />
+		<Unit filename="src/filelister/filelistctrl.cpp" />
+		<Unit filename="src/filelister/filelistctrl.h" />
+		<Unit filename="src/filelister/filelistdialog.cpp" />
+		<Unit filename="src/filelister/filelistdialog.h" />
+		<Unit filename="src/filelister/filelistfilter.cpp" />
+		<Unit filename="src/filelister/filelistfilter.h" />
+		<Unit filename="src/filelistfilter.cpp" />
 		<Unit filename="src/flagimagedata.h" />
 		<Unit filename="src/flagimages.cpp" />
 		<Unit filename="src/flagimages.h" />
