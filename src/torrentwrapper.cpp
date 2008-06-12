@@ -10,6 +10,7 @@
 #include "utils.h"
 #include "socket.h"
 #include "base64.h"
+#include "globalevents.h"
 
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>
@@ -37,7 +38,6 @@
 #include <wx/wfstream.h>
 #include <wx/msgdlg.h>
 #include <wx/app.h>
-#include <wx/event.h>
 
 #include "torrentwrapper.h"
 
@@ -631,7 +631,11 @@ void TorrentWrapper::FixTorrentList()
       if(!notify_message.empty())m_socket_class->Send(notify_message);
       if(decrease_leech_count)m_leech_count--;
     }
-    if(do_reload_unitsync)usync()->ReloadUnitSyncLib();
+    if(do_reload_unitsync)
+    {
+       wxCommandEvent refreshevt(UnitSyncReloadRequest);
+       wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), refreshevt );
+    }
   } catch (std::exception& e) {wxLogError( WX_STRINGC( e.what() ) );}
 }
 

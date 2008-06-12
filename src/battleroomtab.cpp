@@ -66,13 +66,13 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_player_panel = new wxPanel( m_splitter , -1 );
   m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
-  m_team_sel->SetToolTip(_T("Players with the same teamnumber share control of their units"));
+  m_team_sel->SetToolTip(_("Players with the same teamnumber share control of their units"));
   m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
-  m_ally_sel->SetToolTip(_T("Players with same allynumber can achieve victory together"));
+  m_ally_sel->SetToolTip(_("Players with same allynumber can achieve victory together"));
   m_color_sel = new wxBitmapButton( m_player_panel, BROOM_COLOURSEL, icons().GetBitmap( icons().GetColourIcon( myself.team ) ) , wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_color_sel->SetToolTip(_T("You might want to select a color dissimilar to others'\n so you can tell you units apart ingame."));
+  m_color_sel->SetToolTip(_("You might want to select a color dissimilar to others'\n so you can tell you units apart ingame."));
   m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
-  m_side_sel->SetToolTip(_T("Select your faction"));
+  m_side_sel->SetToolTip(_("Select your faction"));
 
   try {
     for ( int i = 0; i < usync()->GetSideCount( m_battle.GetHostModName() ); i++ ) {
@@ -97,30 +97,30 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_players = new BattleroomListCtrl( m_player_panel, battle, m_ui );
   m_chat = new ChatPanel( m_splitter, m_ui, battle );
-  m_chat->SetToolTip(_T("This chat is exlusivly for participants of this battle"));
+  m_chat->SetToolTip(_("This chat is exlusivly for participants of this battle"));
 
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
   m_leave_btn = new wxButton( this, BROOM_LEAVE, _("Leave"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_leave_btn->SetToolTip(_T("Don't want to play? Click here"));
+  m_leave_btn->SetToolTip(_("Don't want to play? Click here"));
   m_start_btn = new wxButton( this, BROOM_START, _("Start"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_start_btn->SetToolTip(_T("Only the host can do this if all players are ready."));
+  m_start_btn->SetToolTip(_("Only the host can do this if all players are ready."));
   m_addbot_btn = new wxButton( this, BROOM_ADDBOT, _("Add Bot..."), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_addbot_btn->SetToolTip(_T("Gives you a selection of available bots you can add"));
+  m_addbot_btn->SetToolTip(_("Gives you a selection of available bots you can add"));
 
 
   m_fix_colours_btn = new wxButton( this, BROOM_FIXCOLOURS, _("Fix colours"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_fix_colours_btn->SetToolTip(_T("Automatically makes player colors be different"));
 
   m_balance_btn = new wxButton( this, BROOM_BALANCE, _("Balance"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_balance_btn->SetToolTip(_T("Automatically banalce players into two or more alliances."));
+  m_balance_btn->SetToolTip(_("Automatically balance players into two or more alliances."));
 
   m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_ready_chk->SetToolTip(_T("Click this if you are content with the battle settings"));
+  m_ready_chk->SetToolTip(_("Click this if you are content with the battle settings"));
   m_lock_chk = new wxCheckBox( this, BROOM_LOCK, _("Locked"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_lock_chk->SetToolTip(_T("When checked no more players may join this battle"));
+  m_lock_chk->SetToolTip(_("When checked no more players may join this battle"));
   m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_spec_chk->SetToolTip(_T("Check this if you just want to watch this battle"));
+  m_spec_chk->SetToolTip(_("Check this if you just want to watch this battle"));
 
   m_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_NO_HEADER|wxLC_REPORT );
   m_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
@@ -501,6 +501,7 @@ void BattleRoomTab::OnColourSel( wxCommandEvent& event )
   CurrentColour = wxGetColourFromUser(this, CurrentColour);
   if ( !CurrentColour.IsColourOk() ) return;
   bs.colour = CurrentColour;
+  sett().SetBattleLastColour( CurrentColour );
   //u.SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
 }

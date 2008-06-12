@@ -673,6 +673,17 @@ bool Settings::GetTestHostPort()
     return m_config->Read( _T("/Hosting/TestHostPort"), 1 );
 }
 
+wxColour Settings::GetBattleLastColour()
+{
+   return  GetColorFromStrng( m_config->Read( _T("/Hosting/MyLastColour"), _T("1 1 0") ) );
+}
+
+
+void Settings::SetBattleLastColour( const wxColour& col )
+{
+  m_config->Write( _T("/Hosting/MyLastColour"), GetColorString( col ) );
+}
+
 void Settings::SetLastHostDescription( const wxString& value )
 {
     m_config->Write( _T("/Hosting/LastDescription"), value );

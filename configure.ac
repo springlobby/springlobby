@@ -26,6 +26,12 @@ AC_ARG_ENABLE(sound,
  [ sound=no
  ])
 
+AC_ARG_WITH(sdl-config,[  --with-sdl-config=/path/to/sdl-config (optional) for finding right sdl includes],
+            SDL_CONFIG="$withval")
+
+AC_ARG_WITH(boost-prefix,[  --with-boost-prefix=/path/to/boost_topdir (optional) for finding right boost includes],
+      CXXFLAGS="$CXXFLAGS -I$withval ")
+
 AC_CANONICAL_HOST
 
 AC_LANG([C++])
@@ -54,30 +60,36 @@ if test x$host_os = xmingw32msvc ; then
   fi
 fi
 
-if test "$win_build" = 1 ; then
-    usetorrent = no
-    CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
-fi
 
-#check if configure option present, if yes check for lib
-if test x$usetorrent = xyes ; then
-	AC_MSG_CHECKING([checking for libtorrent])
-	PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
-	if test x$usetorrent = xfail ; then
-		AC_MSG_ERROR([missing required libtorrent library, get it at http://www.rasterbar.com/products/libtorrent/, please note that some distros name it rb-libtorrent, that is NOT libtorrent from rakshasa]);
-		exit
-	fi
-	AC_SUBST(LIBTORRENT_CFLAGS)
-	AC_SUBST(LIBTORRENT_LIBS)
+
+#on non win build use extern libtorrent, on win use included source
+if test "$win_build" = 0 ; then
+    if test x$usetorrent = xyes ; then
+        AC_MSG_CHECKING([checking for libtorrent])
+        PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
+        if test x$usetorrent = xfail ; then
+            AC_MSG_ERROR([missing required libtorrent library, get it at http://www.rasterbar.com/products/libtorrent/, please note that some distros name it rb-libtorrent, that is NOT libtorrent from rakshasa]);
+            exit
+        fi
+        AC_SUBST(LIBTORRENT_CFLAGS)
+        AC_SUBST(LIBTORRENT_LIBS)
+    else
+    	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
+    fi
 else
-	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
+    if test x$usetorrent = xyes ; then
+        CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DNO_RICHTEXT_CHAT -DTORRENT_DISABLE_ENCRYPTION  "
+        LIBS=' -Wl,-allow-multiple-definition -L/var/lib/buildbot/lib/mingw/lib -lboost_thread-mt -lboost_filesystem-mt  -lws2_32 -lmswsock -lboost_date_time-mt'
+    else
+       	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
+    fi
 fi
 
 #check if sound configure is enables, if yes check for SDL
-if test "$win_build" = 1 ; then
-    CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND -DNO_RICHTEXT_CHAT"
-else
+if test x$sound = xyes ; then
     AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10, SDL_sound and SDL_mixer, use --disable-sound to skip the dependency (and the feature)") )
+else
+    CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND "
 fi
 
 

@@ -15,7 +15,7 @@ class Channel;
 class User;
 class Battle;
 class SinglePlayerBattle;
-class BattleBot;
+struct BattleBot;
 class ChatPanel;
 class UnitSyncThread;
 
@@ -43,7 +43,7 @@ class Ui
     ~Ui();
 
     Server& GetServer();
-    bool    GetServerStatus() const;
+    bool    GetServerStatus();
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
 
@@ -173,5 +173,8 @@ class Ui
 
     unsigned int m_upd_intv_counter;
 };
+
+Ui& ui();
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_UI_H
