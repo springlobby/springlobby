@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MAINOPTIONSTAB_H
 #define SPRINGLOBBY_HEADERGUARD_MAINOPTIONSTAB_H
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 
 class Ui;
 class wxCommandEvent;
@@ -15,7 +15,7 @@ class wxButton;
 class wxBoxSizer;
 class TorrentOptionsPanel;
 
-class MainOptionsTab : public wxPanel
+class MainOptionsTab : public wxScrolledWindow
 {
 public:
     MainOptionsTab( wxWindow* parent, Ui& ui );

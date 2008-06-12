@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLEOPTIONSTAB_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLEOPTIONSTAB_H
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 
 #include "iunitsync.h"
 
@@ -24,7 +24,7 @@ class wxRadioBox;
 class wxCheckListBox;
 class wxSlider;
 
-class BattleOptionsTab : public wxPanel
+class BattleOptionsTab : public wxScrolledWindow
 {
   public:
     BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, bool singleplayer );

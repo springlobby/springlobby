@@ -1,9 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MAINSINGLEPLAYERTAB_H
 #define SPRINGLOBBY_HEADERGUARD_MAINSINGLEPLAYERTAB_H
 
-
-#include <wx/panel.h>
-
+#include <wx/scrolwin.h>
 
 class Ui;
 class wxNotebook;
@@ -15,7 +13,7 @@ class BattleOptionsTab;
 class BattleroomMMOptionsTab;
 
 
-class MainSinglePlayerTab : public wxPanel
+class MainSinglePlayerTab : public wxScrolledWindow
 {
   public:
     MainSinglePlayerTab( wxWindow* parent, Ui& ui );

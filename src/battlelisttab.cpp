@@ -55,7 +55,7 @@ END_EVENT_TABLE()
 
 
 BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
-  wxPanel( parent, -1 ),
+  wxScrolledWindow( parent, -1 ),
   m_ui(ui),
   m_sel_battle(0)
 {

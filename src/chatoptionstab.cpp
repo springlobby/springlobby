@@ -56,7 +56,7 @@ BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
 END_EVENT_TABLE()
 
 
-ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
+ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),m_ui(ui)
 {
 
   wxBoxSizer* bMainSizerV;
@@ -356,8 +356,10 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   bMainSizerV->Add( 0, 0, 1, wxEXPAND, 5 );
 
-  this->SetSizer( bMainSizerV );
-  this->Layout();
+  SetScrollRate( 3, 3 );
+
+  SetSizer( bMainSizerV );
+  Layout();
 
   DoRestore();
   UpdateTextSample();

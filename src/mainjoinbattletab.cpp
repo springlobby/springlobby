@@ -33,7 +33,8 @@
 #include "ui.h"
 
 
-MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_battle_tab(0),m_map_tab(0),m_opts_tab(0),m_mm_opts_tab(0),m_ui(ui)
+MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) :
+    wxScrolledWindow( parent, -1 ),m_battle_tab(0),m_map_tab(0),m_opts_tab(0),m_mm_opts_tab(0),m_ui(ui)
 {
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -61,6 +62,7 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( pare
 
   m_main_sizer->Add( m_tabs, 1, wxEXPAND );
 
+  SetScrollRate( 3, 3 );
   SetSizer( m_main_sizer );
   Layout();
 }

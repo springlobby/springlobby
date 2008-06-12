@@ -20,7 +20,7 @@ BEGIN_EVENT_TABLE( TorrentOptionsPanel, wxPanel )
 END_EVENT_TABLE()
 
 TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
-    : wxPanel( parent, -1), m_ui(ui)
+    : wxScrolledWindow( parent, -1), m_ui(ui)
 {
     wxBoxSizer* mainboxsizer = new wxBoxSizer( wxVERTICAL );
 
@@ -90,6 +90,8 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
     mainboxsizer->Add( m_numbers_box_sizer, 0, wxALL, 5 );
 
     SetSizer( mainboxsizer );
+    SetScrollRate( 3, 3 );
+    Layout();
 }
 
 TorrentOptionsPanel::~TorrentOptionsPanel()

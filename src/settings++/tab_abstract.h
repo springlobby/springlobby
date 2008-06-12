@@ -23,8 +23,6 @@
 #ifndef __TAB_ABSTRACT_h__
 #define __TAB_ABSTRACT_h__
 
-
-//#include <wx/frame.h>
 #include <wx/scrolwin.h>
 
 #include <map>
@@ -46,7 +44,7 @@ class abstract_panel : public wxScrolledWindow
 {
 
 	public:
-		abstract_panel(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), 
+		abstract_panel(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"),
 				const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
 		virtual ~abstract_panel();
 
@@ -69,10 +67,10 @@ class abstract_panel : public wxScrolledWindow
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
-				
+
     private:
-    	
-		
+
+
 		DECLARE_EVENT_TABLE()
 };
 

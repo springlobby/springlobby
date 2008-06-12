@@ -26,7 +26,7 @@ BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
 END_EVENT_TABLE()
 
 MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
-    : wxPanel(parent), m_ui(ui)
+    : wxScrolledWindow(parent), m_ui(ui)
 {
 	m_mainbox = new wxBoxSizer (wxVERTICAL);
 

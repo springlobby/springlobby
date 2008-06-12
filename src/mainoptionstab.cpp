@@ -40,7 +40,7 @@ BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 END_EVENT_TABLE()
 
 
-MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
+MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),m_ui(ui)
 {
     #ifdef HAVE_WX26
     m_tabs = new wxNotebook( this, OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
@@ -88,6 +88,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
     m_main_sizer->Add( m_button_sizer, 0, wxEXPAND );
 
     SetSizer( m_main_sizer );
+    SetScrollRate( 3, 3 );
     Layout();
 }
 

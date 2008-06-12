@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MAINCHATTAB_H
 #define SPRINGLOBBY_HEADERGUARD_MAINCHATTAB_H
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 #include <wx/string.h>
 
 class Ui;
@@ -16,7 +16,7 @@ class wxBoxSizer;
 class wxImageList;
 
 //! @brief The main chat tab.
-class MainChatTab : public wxPanel
+class MainChatTab : public wxScrolledWindow
 {
   public:
     MainChatTab( wxWindow* parent, Ui& ui );

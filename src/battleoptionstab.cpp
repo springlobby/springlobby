@@ -63,7 +63,7 @@ END_EVENT_TABLE()
 
 
 BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, bool singleplayer ):
-  wxPanel( parent, -1 ), m_ui(ui), m_battle(battle), m_sp(singleplayer)
+  wxScrolledWindow( parent, -1 ), m_ui(ui), m_battle(battle), m_sp(singleplayer)
 {
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );

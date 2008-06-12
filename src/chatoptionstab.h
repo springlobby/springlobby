@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CHATOPTIONSTAB_H
 #define SPRINGLOBBY_HEADERGUARD_CHATOPTIONSTAB_H
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 #include <wx/checkbox.h>
 
 class wxStaticBoxSizer;
@@ -14,7 +14,7 @@ class wxBoxSizer;
 class Ui;
 
 
-class ChatOptionsTab : public wxPanel
+class ChatOptionsTab : public wxScrolledWindow
 {
   public:
     ChatOptionsTab( wxWindow* parent, Ui& ui );

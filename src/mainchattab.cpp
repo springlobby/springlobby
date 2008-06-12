@@ -43,7 +43,7 @@ END_EVENT_TABLE()
 
 
 MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
-: wxPanel( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr ),m_ui(ui)
+: wxScrolledWindow( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr ),m_ui(ui)
 {
 
   m_newtab_sel = -1;
@@ -90,6 +90,8 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
 
   SetSizer( m_main_sizer );
   m_main_sizer->SetSizeHints( this );
+  SetScrollRate( 3, 3 );
+  Layout();
 }
 
 
