@@ -205,7 +205,7 @@ void Battle::FixColours( ){
   if(!IsFounderMe())return;
   std::vector<wxColour> &palette=GetFixColoursPalette();
   std::vector<int> palette_use(palette.size(),0);
-  int max_fix_users=std::min( GetNumUsers(),palette.size());
+  user_map_t::size_type max_fix_users=std::min( GetNumUsers(),palette.size());
 
   wxColour my_col=GetMe().BattleStatus().colour;/// Never changes color of founder (me) :-)
   int my_diff=0;

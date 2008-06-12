@@ -13,7 +13,7 @@ typedef std::vector<wxStringPair> wxStringPairVec;
 typedef std::vector<wxStringTriple> wxStringTripleVec;
 typedef std::map<wxString,wxString> wxStringMap;
 
-class GameOptions;
+struct GameOptions;
 
 //! enum to differentiate option category easily at runtime
 enum GameOption{
