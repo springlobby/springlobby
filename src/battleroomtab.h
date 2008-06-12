@@ -3,7 +3,6 @@
 
 #include <wx/scrolwin.h>
 
-
 #include "iunitsync.h"
 #include "mmoptionswrapper.h"
 #include <map>

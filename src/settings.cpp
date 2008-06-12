@@ -1202,3 +1202,13 @@ bool Settings::GetShowTooltips()
 {
     return m_config->Read(_T("GUI/ShowTooltips"), 1l);
 }
+
+void Settings::SaveLayout( wxString& layout_name, wxString& layout )
+{
+    m_config->Write( _T("/Layout/") + layout_name, layout );
+}
+
+wxString Settings::GetLayout( wxString& layout_name )
+{
+    return  m_config->Read( _T("/Layout/") + layout_name, _T("") );
+}
