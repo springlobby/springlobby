@@ -1,8 +1,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
 
-#include <wx/panel.h>
-#include <wx/bmpbuttn.h>
+#include <wx/scrolwin.h>
+
 
 #include "iunitsync.h"
 #include "mmoptionswrapper.h"
@@ -24,10 +24,11 @@ class wxButton;
 class wxCheckBox;
 class wxListCtrl;
 class MapCtrl;
+class wxBitmapButton;
 
 typedef std::map<wxString,long> OptionListMap;
 
-class BattleRoomTab : public wxPanel
+class BattleRoomTab : public wxScrolledWindow
 {
   public:
     BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle );

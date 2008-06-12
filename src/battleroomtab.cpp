@@ -10,6 +10,7 @@
 #include <wx/statline.h>
 #include <wx/checkbox.h>
 #include <wx/button.h>
+#include <wx/bmpbuttn.h>
 #include <wx/sizer.h>
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
@@ -57,7 +58,8 @@ END_EVENT_TABLE()
 const wxString team_choices[] = { _T("1"), _T("2"), _T("3"), _T("4"), _T("5"), _T("6"), _T("7"), _T("8"), _T("9"), _T("10"), _T("11"), _T("12"), _T("13"), _T("14"), _T("15"), _T("16") };
 
 
-BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPanel( parent, -1 ),m_ui(ui), m_battle(battle)
+BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
+    wxScrolledWindow( parent, -1 ),m_ui(ui), m_battle(battle)
 {
   // Create all widgets
   m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
@@ -229,6 +231,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   UpdateBattleInfo( true );
 
+  SetScrollRate( 3, 3 );
   SetSizer( m_main_sizer );
   Layout();
 

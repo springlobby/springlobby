@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLEMAPTAB_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLEMAPTAB_H
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 
 #include "iunitsync.h"
 
@@ -22,7 +22,7 @@ class wxListCtrl;
 class wxChoice;
 class wxRadioBox;
 
-class BattleMapTab : public wxPanel
+class BattleMapTab : public wxScrolledWindow
 {
   public:
     BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle );

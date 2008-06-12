@@ -40,7 +40,7 @@ END_EVENT_TABLE()
 
 
 BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
-  wxPanel( parent, -1 ), m_ui(ui), m_battle(battle)
+  wxScrolledWindow( parent, -1 ), m_ui(ui), m_battle(battle)
 {
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   wxBoxSizer* m_map_sizer = new wxBoxSizer( wxVERTICAL );
@@ -109,7 +109,8 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
   //m_map_combo->Enable( m_battle.IsFounderMe() );
   m_start_radios->Enable( m_battle.IsFounderMe() );
-
+  SetScrollRate( 3, 3);
+  Layout();
 }
 
 
