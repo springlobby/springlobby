@@ -911,6 +911,15 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         m_se->OnServerMessageBox( params );
     }
+    else if ( cmd == _T("REDIRECT") )
+    {
+      wxString address = GetWordParam( params );
+      unsigned int port = GetIntParam( params );
+      if ( address.IsEmpty() ) return;
+      if ( port == 0 ) port = DEFSETT_DEFAULT_SERVER_PORT;
+      Disconnect();
+      Connect( address, port );
+    }
     else
     {
         wxLogMessage( _T("??? Cmd: %s params: %s"), cmd.c_str(), params.c_str() );
