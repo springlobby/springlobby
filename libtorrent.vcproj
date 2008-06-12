@@ -219,6 +219,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="0"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -238,16 +239,17 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
-				Optimization="0"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories=".\src\libtorrent\include;.\src\libtorrent;.\src\libtorrent\zlib;&quot;C:\Program Files\boost\boost_1_35_0&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;BOOST_BUILD_PCH_ENABLED;TORRENT_DISABLE_ENCRYPTION;WIN32_LEAN_AND_MEAN"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;BOOST_BUILD_PCH_ENABLED;TORRENT_DISABLE_ENCRYPTION;WIN32_LEAN_AND_MEAN"
 				ExceptionHandling="2"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="libtorrent/pch.hpp"
 				WarningLevel="3"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 				DisableSpecificWarnings="4503;4996"
 			/>
 			<Tool

@@ -273,15 +273,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
-				Optimization="0"
-				AdditionalIncludeDirectories=".\src;C:\SourceCode\Libraries\wxWidgets2.8\include\msvc;C:\SourceCode\Libraries\wxWidgets2.8\include;.\src\libtorrent\include;.\src\libtorrent;.\src\libtorrent\zlib;&quot;C:\Program Files\boost\boost_1_35_0&quot;"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;__DEBUG__;__WXDEBUG__;__WXMSW__;WXUSINGDLL;DISABLE_SOUND"
+				AdditionalIncludeDirectories="./src;C:\SourceCode\Libraries\wxWidgets2.8\include\msvc;C:\SourceCode\Libraries\wxWidgets2.8\include;.\src\libtorrent\include;.\src\libtorrent;.\src\libtorrent\zlib;&quot;C:\Program Files\boost\boost_1_35_0&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;__WXMSW__;WXUSINGDLL;DISABLE_SOUND"
 				ExceptionHandling="2"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 				DisableSpecificWarnings="4800;4996"
 			/>
 			<Tool
@@ -289,19 +287,19 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories=""
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libtorrent.lib wxmsw28d_html.lib wxmsw28d_adv.lib wxmsw28d_richtext.lib wxbase28d_net.lib wxmsw28d_core.lib wxbase28d.lib wxexpatd.lib kernel32.lib Advapi32.lib ws2_32.lib gdi32.lib ole32.lib oleaut32.lib ComDlg32.Lib rpcrt4.lib comctl32.lib shell32.lib advapi32.lib comdlg32.lib uuid.lib winmm.lib winspool.lib wsock32.lib wxjpegd.lib wxpngd.lib wxregexd.lib wxtiffd.lib wxzlibd.lib user32.lib"
-				LinkIncremental="2"
+				AdditionalDependencies="libtorrent.lib user32.lib wxbase28.lib wxbase28_net.lib wxmsw28_core.lib wxexpat.lib wxmsw28_adv.lib wxmsw28_richtext.lib kernel32.lib Advapi32.lib ws2_32.lib gdi32.lib ole32.lib oleaut32.lib ComDlg32.Lib rpcrt4.lib comctl32.lib shell32.lib"
 				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;C:\SourceCode\Libraries\wxWidgets2.8\lib\vc_dll;&quot;C:\Program Files\boost\boost_1_35_0\lib&quot;"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 				TargetMachine="1"
@@ -754,7 +752,6 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release with libtorrent|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCResourceCompilerTool"
