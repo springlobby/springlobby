@@ -216,6 +216,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
   m_main_sizer->Add( m_restr_box, 1, wxALL|wxEXPAND, 5 );
 
+  SetScrollRate( 3, 3 );
   this->SetSizer( m_main_sizer );
   this->Layout();
 

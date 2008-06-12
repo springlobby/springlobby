@@ -48,6 +48,7 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 	m_main_sizer->Add( m_mod_options_sizer, 1, wxEXPAND, 5 );
 	m_main_sizer->Add( m_map_options_sizer, 1, wxEXPAND, 5 );
 
+    SetScrollRate( 3, 3 );
 	this->SetSizer( m_main_sizer );
 	this->Layout();
 }
