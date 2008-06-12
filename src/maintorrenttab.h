@@ -13,7 +13,7 @@ class wxStaticText;
 class wxButton;
 class TorrentListCtrl;
 class Ui;
-class TorrentInfos;
+struct TorrentInfos;
 class wxBoxSizer;
 
 class MainTorrentTab: public wxPanel

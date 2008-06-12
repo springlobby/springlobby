@@ -19,5 +19,5 @@ rpm/.gitignore
 *.vcproj.*.user
 *.suo
 *.ncb
-Debug
-Release
+Debug*
+Release*
