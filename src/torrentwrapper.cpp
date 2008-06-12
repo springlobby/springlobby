@@ -756,16 +756,32 @@ void TorrentWrapper::OnConnected( Socket* sock )
   m_seed_count = 0;
   m_leech_count = 0;
 
+  wxArrayString TorrentsToResume = sett().GetTorrentListToResume();
+  unsigned int ResumeCount = TorrentsToResume.GetCount();
+  for ( unsigned int i; i < ResumeCount; i++ ) RequestFileByHash( TorrentsToResume[i] ); /// resume all open leeched files when system as disconnected last time
+
+
 }
 
 
 void TorrentWrapper::OnDisconnected( Socket* sock )
 {
   wxLogMessage(_T("torrent system disconnected") );
+  wxArrayString TorrentsToResume;
   try
   {
     std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
-    for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++) m_torr->remove_torrent(*i); ///remove all torrents upon disconnect
+    for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
+    {
+       if ( !i->is_seed() ) /// save leeching torrents for resume on next connection
+       {
+          ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
+          TorrentHandleToHash::from::iterator iter = torrent_handles_l.Get().from.find(*i);
+          if ( iter == torrent_handles_l.Get().from.end() ) continue; /// torrent handler not found
+          TorrentsToResume.Add( iter->second );
+       }
+       m_torr->remove_torrent(*i); ///remove all torrents upon disconnect
+    }
   } catch (std::exception& e)
   {
     wxLogError( WX_STRINGC( e.what() ) ); /// TODO (BrainDamage#1#): add message to user on failure
@@ -793,6 +809,8 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
 
   m_seed_count = 0;
   m_leech_count = 0;
+
+  sett().SetTorrentListToResume( TorrentsToResume );
 }
 
 
