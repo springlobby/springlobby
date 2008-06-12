@@ -633,7 +633,7 @@ void TorrentWrapper::FixTorrentList()
     }
     if(do_reload_unitsync)
     {
-       wxCommandEvent refreshevt(UnitSyncReloadRequest,GetId());
+       wxCommandEvent refreshevt(UnitSyncReloadRequest);
        wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), refreshevt );
     }
   } catch (std::exception& e) {wxLogError( WX_STRINGC( e.what() ) );}
