@@ -18,6 +18,7 @@
 #include "battle.h"
 #include "serverevents.h"
 #include "socket.h"
+#include "channel.h"
 
 /// for SL_MAIN_ICON
 #include "settings++/custom_dialogs.h"
@@ -1009,6 +1010,8 @@ void TASServer::JoinChannel( const wxString& channel, const wxString& key )
 {
     //JOIN channame [key]
     wxLogDebugFunc( channel );
+
+    m_channel_pw[channel] = key;
 
     SendCmd ( _T("JOIN"), channel + _T(" ") + key );
 }

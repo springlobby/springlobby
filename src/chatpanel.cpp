@@ -1131,11 +1131,8 @@ void ChatPanel::OnChannelAutoJoin( wxCommandEvent& event ) {
 	if ( m_autorejoin == 0 ) return;
 
 	if ( m_autorejoin->IsChecked() ) {
-		wxString password;
-		if ( m_ui.AskPassword( _( "Auto join channel" ), _( "Please enter password needed to join this channel, leave blank for no passwrd." ), password ) ) {
-			sett().AddChannelJoin( m_channel->GetName(), password );
+			sett().AddChannelJoin( m_channel->GetName(), m_channel->GetPassword() );
 			m_autorejoin->Check( true );
-		}
 	} else {
 		sett().RemoveChannelJoin( m_channel->GetName() );
 		m_autorejoin->Check( false );
