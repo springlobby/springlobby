@@ -39,13 +39,17 @@
 #include "sdlsound.h"
 
 
+Ui& ui()
+{
+    static Ui m_ui;
+    return m_ui;
+}
+
 Ui::Ui() :
   m_serv(0),
   m_main_win(0),
   m_con_win(0)
 {
-   ReloadUnitSync();
-
   m_upd_intv_counter = 0;
   m_main_win = new MainWindow( *this );
   CustomMessageBoxBase::setLobbypointer(m_main_win);
@@ -65,7 +69,7 @@ Server& Ui::GetServer()
   return *m_serv;
 }
 
-bool Ui::GetServerStatus() const
+bool Ui::GetServerStatus()
 {
   return (bool)(m_serv);
 }
@@ -472,15 +476,15 @@ ChatPanel* Ui::GetChannelChatPanel( const wxString& channel )
 
 void Ui::OnUpdate( int mselapsed )
 {
-  if ( m_serv != 0 ) {
+  if ( GetServerStatus() ) {
     m_serv->Update( mselapsed );
   }
   #ifndef NO_TORRENT_SYSTEM
   if (m_upd_intv_counter % 20 == 0 )
   {
       if ( sett().GetTorrentSystemAutoStartMode() == 1 && !torrent()->IsConnectedToP2PSystem() ) torrent()->ConnectToP2PSystem();
-      else if ( m_serv && m_serv->IsOnline() && !torrent()->IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->ConnectToP2PSystem();
-      if ( ( !m_serv || !m_serv->IsOnline() ) && torrent()->IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->DisconnectToP2PSystem();
+      else if ( GetServerStatus() && m_serv->IsOnline() && !torrent()->IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->ConnectToP2PSystem();
+      if ( ( !GetServerStatus() || !m_serv->IsOnline() ) && torrent()->IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->DisconnectToP2PSystem();
       m_main_win->GetTorrentTab().OnUpdate();
   }
   torrent()->UpdateFromTimer( mselapsed );

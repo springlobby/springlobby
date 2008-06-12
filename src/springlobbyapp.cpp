@@ -44,7 +44,6 @@ END_EVENT_TABLE()
 SpringLobbyApp::SpringLobbyApp()
 {
     m_timer = new wxTimer(this, TIMER_ID);
-    m_ui = NULL;
     m_locale = NULL;
     m_otadownloader = NULL;
 }
@@ -101,10 +100,9 @@ bool SpringLobbyApp::OnInit()
       sett().SaveSettings();
     }
     #endif
-    m_ui = new Ui();
-    wxLogMessage( _T("Ui created") );
 
-    m_ui->ShowMainWindow();
+    ui().ReloadUnitSync(); /// first time load of unitsync
+    ui().ShowMainWindow();
 
     if ( !sett().IsFirstRun() && sett().IsPortableMode() && usync()->IsLoaded()) usync()->SetSpringDataPath( sett().GetSpringDir() ); /// update spring's current working dir trough unitsync
 
@@ -118,7 +116,7 @@ bool SpringLobbyApp::OnInit()
         sett().AddChannelJoin( _T("newbies"), _T("") );
         wxLogMessage( _T("first time startup"));
         wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
-                     wxOK | wxICON_INFORMATION, &m_ui->mw() );
+                     wxOK | wxICON_INFORMATION, &ui().mw() );
 #ifdef HAVE_WX26
         wxMessageBox(_("You're using a wxwidgets library of the 2.6.x series\n battle filtering, advanced gui and joining/hosting games using nat traversal\n won't be available"), _("Missing Functionality"), wxICON_INFORMATION, &m_ui->mw() );
 #endif
@@ -148,11 +146,11 @@ bool SpringLobbyApp::OnInit()
             m_otadownloader = new HttpDownloader( url, destFilename );
         }
 
-        m_ui->mw().ShowConfigure();
+        ui().mw().ShowConfigure();
     }
     else
     {
-        m_ui->Connect();
+        ui().Connect();
     }
 
   #ifndef NO_TORRENT_SYSTEM
@@ -178,7 +176,6 @@ int SpringLobbyApp::OnExit()
   #endif
 
   m_timer->Stop();
-  delete m_ui;
 
   sett().SaveSettings(); /// to make sure that cache path gets saved before destroying unitsync
 
@@ -201,7 +198,7 @@ void SpringLobbyApp::OnFatalException()
 //! @brief Is called every 1/10 seconds to update statuses
 void SpringLobbyApp::OnTimer( wxTimerEvent& event )
 {
-    m_ui->OnUpdate( event.GetInterval() );
+    ui().OnUpdate( event.GetInterval() );
 }
 
 
