@@ -3,6 +3,11 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
+#ifdef _MSC_VER
+// MSVC can not compile std::pair used in bimap with forward decl only.
+#include "libtorrent/torrent_handle.hpp"
+#endif
+
 #include <wx/string.h>
 #include <wx/arrstr.h>
 #include <wx/event.h>
@@ -17,7 +22,7 @@
 #define DEFAULT_P2P_TRACKER_PORT 8201
 
 namespace libtorrent{ class session; };
-namespace libtorrent { class torrent_handle; };
+namespace libtorrent { struct torrent_handle; };
 class Socket;
 
 enum MediaType
