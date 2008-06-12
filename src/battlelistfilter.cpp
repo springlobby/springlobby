@@ -54,7 +54,7 @@ END_EVENT_TABLE()
 
 
 BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListTab* parentBattleListTab, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style ),
-m_parent_battlelisttab( parentBattleListTab )
+m_parent_battlelisttab( parentBattleListTab ), m_filter_host_expression(0), m_filter_description_expression(0), m_filter_map_expression(0), m_filter_mod_expression(0)
 {
     BattleListFilterValues f_values = sett().GetBattleFilterValues( sett().GetLastFilterProfileName() );
 
