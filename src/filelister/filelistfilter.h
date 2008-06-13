@@ -26,7 +26,7 @@ class Battle;
 class FileListFilter : public wxPanel
 {
 	public:
-    FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog* parentBattleListTab, const wxPoint& pos, const wxSize& size, long style );
+    FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog* parentBattleListTab, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxEXPAND );
 
     void OnActivate       ( wxCommandEvent& event );
 

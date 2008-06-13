@@ -7,6 +7,8 @@
 class wxBoxSizer;
 class wxButton;
 class FileListCtrl;
+class FileListFilter;
+class wxStaticText;
 
 
 
@@ -23,6 +25,9 @@ class FileListDialog : public wxDialog
         wxBoxSizer* m_main_sizer;
         FileListCtrl* m_filelistctrl;
         HashToTorrentData m_torrentdata;
+        FileListFilter* m_filter;
+        wxStaticText* m_filecount;
+
         void AddTorrentData( const TorrentData& data);
 
     private:
