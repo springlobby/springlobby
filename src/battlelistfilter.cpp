@@ -54,7 +54,8 @@ END_EVENT_TABLE()
 
 
 BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListTab* parentBattleListTab, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style ),
-m_parent_battlelisttab( parentBattleListTab ), m_filter_host_expression(0), m_filter_description_expression(0), m_filter_map_expression(0), m_filter_mod_expression(0)
+m_parent_battlelisttab( parentBattleListTab ), m_filter_host_expression(0), m_filter_description_expression(0), m_filter_map_expression(0), m_filter_mod_expression(0),
+m_filter_host_edit(0), m_filter_description_edit(0), m_filter_map_edit(0), m_filter_mod_edit(0)
 {
     BattleListFilterValues f_values = sett().GetBattleFilterValues( sett().GetLastFilterProfileName() );
 
@@ -481,6 +482,7 @@ void BattleListFilter::OnChange   ( wxCommandEvent& event )
 
 void BattleListFilter::OnChangeMap ( wxCommandEvent& event )
 {
+  if ( m_filter_map_edit == NULL ) return;
   if (m_filter_map_expression != NULL) { delete m_filter_map_expression; }
   m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(),wxRE_ICASE);
   OnChange(event);
@@ -488,6 +490,7 @@ void BattleListFilter::OnChangeMap ( wxCommandEvent& event )
 
 void BattleListFilter::OnChangeMod ( wxCommandEvent& event )
 {
+  if ( m_filter_mod_edit == NULL ) return;
   if (m_filter_mod_expression != NULL) { delete m_filter_mod_expression; }
   m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(),wxRE_ICASE);
   OnChange(event);
@@ -495,6 +498,7 @@ void BattleListFilter::OnChangeMod ( wxCommandEvent& event )
 
 void BattleListFilter::OnChangeDescription ( wxCommandEvent& event )
 {
+  if ( m_filter_description_edit == NULL ) return;
   if (m_filter_description_expression != NULL) { delete m_filter_description_expression; }
   m_filter_description_expression = new wxRegEx(m_filter_description_edit->GetValue(),wxRE_ICASE);
   OnChange(event);
@@ -502,6 +506,7 @@ void BattleListFilter::OnChangeDescription ( wxCommandEvent& event )
 
 void BattleListFilter::OnChangeHost ( wxCommandEvent& event )
 {
+  if ( m_filter_host_edit == NULL ) return;
   if (m_filter_host_expression != NULL) { delete m_filter_host_expression; }
   m_filter_host_expression = new wxRegEx(m_filter_host_edit->GetValue(),wxRE_ICASE);
   OnChange(event);
