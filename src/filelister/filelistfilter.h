@@ -18,6 +18,7 @@ class wxButton;
 class wxRegEx;
 class wxStaticText;
 class Battle;
+struct TorrentData;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,7 +37,7 @@ class FileListFilter : public wxPanel
     void OnChangeName         ( wxCommandEvent& event );
     void OnChangeType         ( wxCommandEvent& event );
 
-    bool FilterBattle(Battle& battle);
+    bool FilterTorrentData(const TorrentData& data);
     bool GetActiv() const;
 
 	protected:

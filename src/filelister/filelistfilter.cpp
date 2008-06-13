@@ -15,6 +15,7 @@
 #include "filelistdialog.h"
 #include "../uiutils.h"
 #include "../utils.h"
+#include "../torrentwrapper.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -91,51 +92,17 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 
 }
 
-bool FileListFilter::FilterBattle(Battle& battle)
+bool FileListFilter::FilterTorrentData(const TorrentData& data)
 {
 
-//  if (!m_activ) return true;
-//
-//  //Battle Status Check
-//  if ( !m_filter_status_start->GetValue() && battle.GetInGame() ) return false;
-//  if ( !m_filter_status_locked->GetValue() && battle.IsLocked() ) return false;
-//  if ( !m_filter_status_pass->GetValue() && battle.IsPassworded() ) return false;
-//  if ( !m_filter_status_full->GetValue()  && battle.IsFull() ) return false;
-//  if ( !m_filter_status_open->GetValue() && !battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull() ) return false;
-//
-//  //Rank Check
-//  bool nonsenserank = ( m_filter_rank_mode == m_smaller ) && ( battle.GetRankNeeded() == 100) ;
-//  if ( (m_filter_rank_choice_value != -1) && !nonsenserank &&
-//            !_IntCompare( int( battle.GetRankNeeded()*0.01), m_filter_rank_choice_value +1, m_filter_rank_mode ) ) return false;
-//
-//  //Player Check
-//  if ( (m_filter_player_choice_value != -1) && !_IntCompare( battle.GetNumUsers() - battle.GetSpectators() , m_filter_player_choice_value , m_filter_player_mode ) ) return false;
-//
-//  //MaxPlayer Check
-//  if ( (m_filter_maxplayer_choice_value != -1) && !_IntCompare( battle.GetMaxPlayers() , m_filter_maxplayer_choice_value , m_filter_maxplayer_mode ) ) return false;
-//
-//  //Spectator Check
-//  if ( (m_filter_spectator_choice_value != -1) && !_IntCompare( battle.GetSpectators() , m_filter_spectator_choice_value , m_filter_spectator_mode ) ) return false;
-//
-//  //Only Maps i have Check
-//  if (m_filter_map_show->GetValue() && !battle.MapExists()) return false;
-//
-//  //Only Mods i have Check
-//  if (m_filter_mod_show->GetValue() && !battle.ModExists()) return false;
-//
-//  //Strings Plain Text & RegEx Check (Case insensitiv)
-//
-//  //Description:
-//  if ( !battle.GetDescription().Upper().Contains( m_filter_description_edit->GetValue().Upper() ) && !m_filter_description_expression->Matches(battle.GetDescription()) ) return false;
-//
-//  //Host:
-//  if ( !battle.GetFounder().GetNick().Upper().Contains( m_filter_host_edit->GetValue().Upper() ) && !m_filter_host_expression->Matches(battle.GetFounder().GetNick()) ) return false;
-//
-//  //Map:
-//  if ( !RefineMapname(battle.GetHostMapName() ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) && !m_filter_map_expression->Matches(RefineMapname(battle.GetHostMapName() )) ) return false;
-//
 //  //Mod:
-//  if ( !battle.GetHostModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !RefineModname( battle.GetHostModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) && !m_filter_mod_expression->Matches(RefineModname(battle.GetHostModName())) ) return false;
+////  if ( !battle.GetHostModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() )
+//&&  !RefineModname( battle.GetHostModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() )
+//&& !m_filter_mod_expression->Matches(RefineModname(battle.GetHostModName())) ) return false;
+
+    if ( !data.name.Upper().Contains( m_filter_name_edit->GetValue().Upper() )
+        && !m_filter_name_expression->Matches( data.name ) )
+        return false;
 
   return true;
 }

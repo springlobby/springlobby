@@ -39,12 +39,14 @@ FileListDialog::~FileListDialog()
 }
 void FileListDialog::UpdateList()
 {
+    m_filelistctrl->DeleteAllItems();
+    unsigned int count = 0;
     HashToTorrentData::const_iterator it = m_torrentdata.begin();
     for ( ; it != m_torrentdata.end(); ++it)
     {
-        AddTorrentData( it->second );
+        count += AddTorrentData( it->second );
     }
-    m_filecount->SetLabel( wxString::Format( _T("%u files displayed"), m_torrentdata.size() ) );
+    m_filecount->SetLabel( wxString::Format( _T("%u files displayed"), count ) );
 }
 
 void FileListDialog::SetData(HashToTorrentData& data )
@@ -52,10 +54,16 @@ void FileListDialog::SetData(HashToTorrentData& data )
     m_torrentdata = data;
 }
 
-void FileListDialog::AddTorrentData( const TorrentData& data)
+bool FileListDialog::AddTorrentData( const TorrentData& data)
 {
-  int index = m_filelistctrl->InsertItem( m_filelistctrl->GetItemCount(), data.name);
-  m_filelistctrl->SetItem( index, 0, data.name );
-  m_filelistctrl->SetItem( index, 1, data.type == map ? _T("Map") : _T("Mod") );
-  m_filelistctrl->SetItem( index, 2, data.hash );
+    if ( !m_filter->FilterTorrentData( data ) )
+        return false;
+    try
+    {
+        int index = m_filelistctrl->InsertItem( m_filelistctrl->GetItemCount(), data.name);
+        m_filelistctrl->SetItem( index, 0, data.name );
+        m_filelistctrl->SetItem( index, 1, data.type == map ? _T("Map") : _T("Mod") );
+        m_filelistctrl->SetItem( index, 2, data.hash );
+    } catch (...) { return false; }
+    return true;
 }

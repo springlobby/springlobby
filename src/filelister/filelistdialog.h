@@ -28,7 +28,7 @@ class FileListDialog : public wxDialog
         FileListFilter* m_filter;
         wxStaticText* m_filecount;
 
-        void AddTorrentData( const TorrentData& data);
+        bool AddTorrentData( const TorrentData& data);
 
     private:
 };
