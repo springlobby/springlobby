@@ -221,7 +221,7 @@ int TorrentWrapper::GetTorrentSystemStatus()
 }
 
 
-HashToTorrentData TorrentWrapper::GetSystemFileList()
+HashToTorrentData& TorrentWrapper::GetSystemFileList()
 {
     ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
     return torrents_infos_l.Get();

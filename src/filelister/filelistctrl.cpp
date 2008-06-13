@@ -28,7 +28,7 @@ END_EVENT_TABLE()
 //Ui* FileListCtrl::m_ui_for_sort = 0;
 
 FileListCtrl::FileListCtrl( wxWindow* parent  ):
-  customListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT)
+  customListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_ALIGN_LEFT)
 {
 
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
@@ -61,9 +61,9 @@ FileListCtrl::FileListCtrl( wxWindow* parent  ):
 
 #if defined(__WXMAC__)
 /// on mac, autosize does not work at all
-  SetColumnWidth( 0, 150 );
-  SetColumnWidth( 1, 30 );
-  SetColumnWidth( 2, 100 );
+  SetColumnWidth( 0, 250 );
+  SetColumnWidth( 1, 60 );
+  SetColumnWidth( 2, 150 );
 
 #else
   SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );

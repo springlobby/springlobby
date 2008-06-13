@@ -3,10 +3,12 @@
 
 
 FileListDialog::FileListDialog(wxWindow* parent) :
-    wxDialog(parent, -1, _("Filestufflistchangemeplease"), wxDefaultPosition, wxSize(300, 300),
-           wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN )
+    wxDialog(parent, -1, _("Filestufflistchangemeplease"), wxDefaultPosition, wxSize(800, 600),
+           wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxRESIZE_BORDER)
 {
     m_filelistctrl = new FileListCtrl( this );
+    SetData( torrent()->GetSystemFileList() );
+    UpdateList();
 }
 
 FileListDialog::~FileListDialog()

@@ -74,7 +74,7 @@ class TorrentWrapper : public iNetClass
     bool IsFileInSystem( const wxString& hash );
     void RemoveFile( const wxString& hash );
     int GetTorrentSystemStatus();
-    HashToTorrentData GetSystemFileList();
+    HashToTorrentData& GetSystemFileList();
 
     /// lobby interface
     void SetIngameStatus( bool status );
