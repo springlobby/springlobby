@@ -103,6 +103,7 @@ bool FileListFilter::FilterTorrentData(const TorrentData& data)
     if ( !data.name.Upper().Contains( m_filter_name_edit->GetValue().Upper() )
         && !m_filter_name_expression->Matches( data.name ) )
         return false;
+    if ( !data.type ==
 
   return true;
 }
