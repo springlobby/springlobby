@@ -86,7 +86,7 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 
     if (m_filter_name_expression != NULL) { delete m_filter_name_expression; }
     m_filter_name_expression = new wxRegEx(m_filter_name_edit->GetValue(),wxRE_ICASE);
-
+    m_filter_type_choice_value = -1;
     wxCommandEvent dummy;
     OnChange(dummy);
 
@@ -94,16 +94,12 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 
 bool FileListFilter::FilterTorrentData(const TorrentData& data)
 {
-
-//  //Mod:
-////  if ( !battle.GetHostModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() )
-//&&  !RefineModname( battle.GetHostModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() )
-//&& !m_filter_mod_expression->Matches(RefineModname(battle.GetHostModName())) ) return false;
-
     if ( !data.name.Upper().Contains( m_filter_name_edit->GetValue().Upper() )
         && !m_filter_name_expression->Matches( data.name ) )
         return false;
-    if ( !data.type ==
+    if ( m_filter_type_choice_value == 0 && data.type != map ) return false;
+
+    if ( m_filter_type_choice_value == 1 && data.type != mod ) return false;
 
   return true;
 }
