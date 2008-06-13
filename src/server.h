@@ -186,6 +186,8 @@ class Server : public iNetClass
 
     virtual int TestOpenPort( unsigned int port ) = 0;
 
+    std::map<wxString,wxString> m_channel_pw;  /// channel name -> password, filled on channel join
+
   protected:
     Socket* m_sock;
     Ui& m_ui;

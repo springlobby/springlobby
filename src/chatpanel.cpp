@@ -529,17 +529,14 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 		m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
     m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
 	}
-
+  CheckLength(); /// crop lines from history that exceeds limit
 	#else
 	m_chatlog_text->AppendText( message + _T( "\n" ) );
+  CheckLength(); /// crop lines from history that exceeds limit
 
-  if ( sett().GetSmartScrollEnabled() ) {
-    m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
-		m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
-	}
+  m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
+  m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
 	#endif
-
-	CheckLength(); /// crop lines from history that exceeds limit
 
 	if ( m_chat_log ) m_chat_log->AddMessage( message );
 
@@ -1322,11 +1319,8 @@ void ChatPanel::OnChannelAutoJoin( wxCommandEvent& event ) {
 	if ( m_autorejoin == 0 ) return;
 
 	if ( m_autorejoin->IsChecked() ) {
-		wxString password;
-		if ( m_ui.AskPassword( _( "Auto join channel" ), _( "Please enter password needed to join this channel, leave blank for no passwrd." ), password ) ) {
-			sett().AddChannelJoin( m_channel->GetName(), password );
+			sett().AddChannelJoin( m_channel->GetName(), m_channel->GetPassword() );
 			m_autorejoin->Check( true );
-		}
 	} else {
 		sett().RemoveChannelJoin( m_channel->GetName() );
 		m_autorejoin->Check( false );
