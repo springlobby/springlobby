@@ -25,7 +25,7 @@ class FileListCtrl : public customListCtrl
     void OnListRightClick( wxListEvent& event );
     void OnMouseMotion(wxMouseEvent& event);
     void OnColClick( wxListEvent& event );
-    HashVector GetSelectedHashes();
+    void GetSelectedHashes(HashVector&);
     void SetColumnWidths();
 
   protected:

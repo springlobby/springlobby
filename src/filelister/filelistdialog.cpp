@@ -74,7 +74,7 @@ bool FileListDialog::AddTorrentData( const TorrentData& data)
         return false;
     try
     {
-        int index = m_filelistctrl->InsertItem( m_filelistctrl->GetItemCount(), data.name);
+        int index = m_filelistctrl->InsertItem( m_filelistctrl->GetItemCount(), data.hash);
         //setting hash as item's data means we can retrieve it later for download
         m_filelistctrl->SetItemText( index, data.hash );
         m_filelistctrl->SetItem( index, 0, data.name );
@@ -87,10 +87,14 @@ bool FileListDialog::AddTorrentData( const TorrentData& data)
 void FileListDialog::OnDownload( wxCommandEvent& event )
 {
     typedef FileListCtrl::HashVector HashVector;
-    HashVector hashs = m_filelistctrl->GetSelectedHashes();
+    HashVector hashs;
+    m_filelistctrl->GetSelectedHashes(hashs);
     for ( HashVector::const_iterator it = hashs.begin(); it != hashs.end(); ++it)
     {
-        torrent()->RequestFileByHash(*it);
+        wxString hash = *it;
+        if (!torrent()->RequestFileByName(hash) )
+            wxLogError(_("unknown hash ") + hash );
+
     }
 
 }

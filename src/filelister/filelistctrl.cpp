@@ -114,9 +114,8 @@ void FileListCtrl::OnColClick( wxListEvent& event )
 	Sort();
 }
 
-FileListCtrl::HashVector FileListCtrl::GetSelectedHashes()
+void FileListCtrl::GetSelectedHashes(HashVector& hashes)
 {
-	HashVector hashes;
 	long index = -1;
 	for ( long i = 0; i < GetSelectedItemCount(); ++i )
 	{
