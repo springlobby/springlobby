@@ -52,7 +52,6 @@ TorrentWrapper* torrent()
 
 
 TorrentWrapper::TorrentWrapper():
-m_connected(false),
 ingame(false),
 m_seed_count(0),
 m_leech_count(0),
@@ -111,33 +110,32 @@ TorrentWrapper::~TorrentWrapper()
 ////                gui interface                   ////
 ////////////////////////////////////////////////////////
 
-void TorrentWrapper::ConnectToP2PSystem()
+bool TorrentWrapper::ConnectToP2PSystem()
 {
-  if ( m_connected ) return;
-  m_socket_class->Connect( m_tracker_urls[0], DEFAULT_P2P_COORDINATOR_PORT );
-  m_connected_tracker_index= 0;
-  return; //TODO (BrainDamage #1#) what's this??
+  if ( IsConnectedToP2PSystem() ) return true;
   for( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
   {
     m_socket_class->Connect( m_tracker_urls[i], DEFAULT_P2P_COORDINATOR_PORT );
-    if ( m_connected )
+    if ( IsConnectedToP2PSystem() )
     {
        m_connected_tracker_index = i;
-       return;
+       return true;
     }
   }
+  return false;
 }
 
 
 void TorrentWrapper::DisconnectToP2PSystem()
 {
-  if ( m_connected ) m_socket_class->Disconnect();
+  if ( IsConnectedToP2PSystem() ) m_socket_class->Disconnect();
 }
 
 
 bool TorrentWrapper::IsConnectedToP2PSystem()
 {
-  return m_connected;
+  if ( m_socket_class == 0 ) return false;
+  return  (m_socket_class->State() == SS_Open);
 }
 
 
@@ -207,7 +205,7 @@ void TorrentWrapper::RemoveFile( const wxString& hash )
 
 int TorrentWrapper::GetTorrentSystemStatus()
 {
-  if (!m_connected) return 0;
+  if (!IsConnectedToP2PSystem()) return 0;
   if (ingame) return 2;
   return 1;
 }
@@ -228,7 +226,7 @@ HashToTorrentData& TorrentWrapper::GetSystemFileList()
 DownloadRequestStatus TorrentWrapper::RequestFileByHash( const wxString& hash )
 {
   if (ingame) return paused_ingame;
-  if ( !m_connected ) return not_connected;
+  if ( !IsConnectedToP2PSystem()  ) return not_connected;
 
   wxString name;
   {
@@ -312,7 +310,7 @@ void TorrentWrapper::UpdateFromTimer( int mselapsed )
   m_timer_count++;
   if ( m_timer_count < 20 ) return;////update every 2 sec
   m_timer_count = 0;
-  if (!ingame && m_connected) FixTorrentList();
+  if (!ingame && IsConnectedToP2PSystem() ) FixTorrentList();
 }
 
 
@@ -337,7 +335,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     globalinfos.filesize = 0;
     ret[0] = globalinfos;
 
-    if ( ingame || !m_connected ) return ret; /// stop updating the gui if disconneted
+    if ( ingame || !IsConnectedToP2PSystem()  ) return ret; /// stop updating the gui if disconneted
 
     std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
     for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
@@ -395,7 +393,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 
 void TorrentWrapper::SendMessageToCoordinator( const wxString& message )
 {
-  if ( m_connected ) m_socket_class->Send( message + _T("\n") );
+  if ( IsConnectedToP2PSystem()  ) m_socket_class->Send( message + _T("\n") );
 }
 
 
@@ -784,7 +782,6 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 void TorrentWrapper::OnConnected( Socket* sock )
 {
   wxLogMessage(_T("torrent system connected") );
-  m_connected = true;
   try
   {
     m_torr->start_dht();
@@ -847,7 +844,6 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
   {
     wxLogError( WX_STRINGC( e.what() ) ); /// TODO (BrainDamage#1#): add message to user on failure
   }
-  m_connected = false;
   /// threads rule 8 plus here we want to lock it all so that other thread wont get inconsistent data
   ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
   ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);

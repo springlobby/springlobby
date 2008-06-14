@@ -86,7 +86,7 @@ class TorrentWrapper : public iNetClass
 
     /// gui interface
 
-    void ConnectToP2PSystem();
+    bool ConnectToP2PSystem();
     void DisconnectToP2PSystem();
     bool IsConnectedToP2PSystem();
     bool IsFileInSystem( const wxString& hash );
@@ -116,7 +116,6 @@ class TorrentWrapper : public iNetClass
     void OnDisconnected( Socket* sock );
     void OnDataReceived( Socket* sock );
 
-    bool m_connected;
     wxString m_buffer;
 
     bool ingame;
