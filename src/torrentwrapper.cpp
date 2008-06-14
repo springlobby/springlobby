@@ -113,6 +113,9 @@ TorrentWrapper::~TorrentWrapper()
 bool TorrentWrapper::ConnectToP2PSystem()
 {
   if ( IsConnectedToP2PSystem() ) return true;
+  m_socket_class->Connect( m_tracker_urls[0], DEFAULT_P2P_COORDINATOR_PORT );
+  m_connected_tracker_index= 0;
+  return IsConnectedToP2PSystem();
   for( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
   {
     m_socket_class->Connect( m_tracker_urls[i], DEFAULT_P2P_COORDINATOR_PORT );
@@ -121,6 +124,7 @@ bool TorrentWrapper::ConnectToP2PSystem()
        m_connected_tracker_index = i;
        return true;
     }
+    else m_socket_class->Disconnect();
   }
   return false;
 }
