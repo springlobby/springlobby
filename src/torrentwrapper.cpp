@@ -381,6 +381,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     TorrentInfos QueuedTorrent;
     QueuedTorrent.numcopies = -1;
     QueuedTorrent.hash = queuecopy[i];
+    QueuedTorrent.downloadstatus = queued;
     {
       ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
       HashToTorrentData::iterator it=torrents_infos_l.Get().find(QueuedTorrent.hash);
