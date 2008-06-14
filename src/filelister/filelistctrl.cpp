@@ -133,7 +133,7 @@ void FileListCtrl::Sort()
 		switch ( m_sortorder[ i ].col )
 		{
 			case 0 :
-				changed = SortItems(( m_sortorder[ i ].direction )?&CompareStatusUP:&CompareStatusDOWN , 0 );
+				changed = SortItems(( m_sortorder[ i ].direction )?&CompareNameUP:&CompareNameDOWN , 0 );
 				break;
 			case 1 :
 				changed = SortItems(( m_sortorder[ i ].direction )?&CompareCountryUP:&CompareCountryDOWN , 0 );
@@ -146,7 +146,7 @@ void FileListCtrl::Sort()
 }
 
 
-int wxCALLBACK FileListCtrl::CompareStatusUP( long item1, long item2, long sortData )
+int wxCALLBACK FileListCtrl::CompareNameUP( long item1, long item2, long sortData )
 {
 //  Ui* ui = m_ui_for_sort;
 //  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
@@ -184,7 +184,7 @@ int wxCALLBACK FileListCtrl::CompareStatusUP( long item1, long item2, long sortD
 }
 
 
-int wxCALLBACK FileListCtrl::CompareStatusDOWN( long item1, long item2, long sortData )
+int wxCALLBACK FileListCtrl::CompareNameDOWN( long item1, long item2, long sortData )
 {
 //  Ui* ui = m_ui_for_sort;
 //  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);

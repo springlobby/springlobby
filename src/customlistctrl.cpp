@@ -97,7 +97,7 @@ void customListCtrl::SelectAll()
 {
   for (long i = 0; i < GetItemCount() ; i++ )
   {
-    SetItemState( i, wxLIST_STATE_SELECTED, wxLIST_MASK_STATE  );
+    SetItemState( i, wxLIST_STATE_SELECTED, -1  );
   }
 }
 
@@ -105,13 +105,18 @@ void customListCtrl::SelectNone()
 {
   for (long i = 0; i < GetItemCount() ; i++ )
   {
-    SetItemState( i, 0, wxLIST_MASK_STATE  );
+    SetItemState( i, 0, -1 );
   }
 }
 
 void customListCtrl::SelectInverse()
 {
-
+  for (long i = 0; i < GetItemCount() ; i++ )
+  {
+    int state = GetItemState( i, -1 );
+    state = ( state == 0 ? wxLIST_STATE_SELECTED : 0 );
+    SetItemState( i, state, -1 );
+  }
 }
 
 void customListCtrl::SetSelectedIndex(const long newindex)
