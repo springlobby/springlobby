@@ -108,7 +108,7 @@ void FileListCtrl::OnColClick( wxListEvent& event )
 
 
 	GetColumn( m_sortorder[0].col, col );
-	//col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
+	col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
 	SetColumn( m_sortorder[0].col, col );
 
 	Sort();
@@ -130,21 +130,22 @@ void FileListCtrl::Sort()
 	bool changed = false;
     s_parent_dialog = m_parent_dialog;
 //  if (!m_ui_for_sort || !m_ui_for_sort->GetServerStatus()  ) return;
-	for ( int i = 3; i >= 0; i-- )
-	{
-		switch ( m_sortorder[ i ].col )
-		{
-			case 0 :
-				changed = SortItems(( m_sortorder[ i ].direction )?&CompareNameUP:&CompareNameDOWN , 0 );
-				break;
-			case 1 :
-				changed = SortItems(( m_sortorder[ i ].direction )?&CompareCountryUP:&CompareCountryDOWN , 0 );
-				break;
-			case 2 :
-				changed = SortItems(( m_sortorder[ i ].direction )?&CompareRankUP:&CompareRankDOWN , 0 );
-				break;
-		}
-	}
+SortItems(( m_sortorder[ 0 ].direction )?&CompareNameUP:&CompareNameDOWN , 0 );
+//	for ( int i = 3; i >= 0; i-- )
+//	{
+//		switch ( m_sortorder[ i ].col )
+//		{
+//			case 0 :
+//				changed = SortItems(( m_sortorder[ i ].direction )?&CompareNameUP:&CompareNameDOWN , 0 );
+//				break;
+//			case 1 :
+//				changed = SortItems(( m_sortorder[ i ].direction )?&CompareCountryUP:&CompareCountryDOWN , 0 );
+//				break;
+//			case 2 :
+//				changed = SortItems(( m_sortorder[ i ].direction )?&CompareRankUP:&CompareRankDOWN , 0 );
+//				break;
+//		}
+//	}
 }
 
 
@@ -153,7 +154,7 @@ int wxCALLBACK FileListCtrl::CompareNameUP( long item1, long item2, long sortDat
     FileListCtrl* list = s_parent_dialog->GetListCtrl();
     wxString name1 = list->GetItemText( item1 );
     wxString name2 = list->GetItemText( item2 );
-    return name1 > name2;
+    return name1.CompareTo(name2);
 }
 
 
@@ -162,7 +163,7 @@ int wxCALLBACK FileListCtrl::CompareNameDOWN( long item1, long item2, long sortD
     FileListCtrl* list = s_parent_dialog->GetListCtrl();
     wxString name1 = list->GetItemText( item1 );
     wxString name2 = list->GetItemText( item2 );
-    return name1 < name2;
+    return name2.CompareTo(name1);
 }
 
 
