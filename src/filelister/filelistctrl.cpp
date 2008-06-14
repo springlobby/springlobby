@@ -38,17 +38,17 @@ FileListCtrl::FileListCtrl( wxWindow* parent ):
 
 	wxListItem col;
 
-	col.SetText( _T( "Name" ) );
+	col.SetText( _( "Name" ) );
 	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 0, col, _T( "Name" ) );
+	InsertColumn( 0, col, _( "Name" ) );
 
-	col.SetText( _T( "Type" ) );
+	col.SetText( _( "Type" ) );
 	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 1, col, _T( "Type" ) );
+	InsertColumn( 1, col, _( "Type" ) );
 
-	col.SetText( _T( "Hash" ) );
+	col.SetText( _( "Hash" ) );
 	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 2, col, _T( "Hash" ) );
+	InsertColumn( 2, col, _( "Hash" ) );
 
 	m_sortorder[0].col = 0;
 	m_sortorder[0].direction = true;
