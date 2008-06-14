@@ -30,6 +30,7 @@ class MainTorrentTab: public wxPanel
 
 		wxButton* m_but_cancel;
 		wxButton* m_but_publish;
+		wxButton* m_but_download;
 		TorrentListCtrl* m_torrent_list;
 
 		Ui& m_ui;
@@ -46,6 +47,7 @@ class MainTorrentTab: public wxPanel
             ID_INCOMING,
             ID_OUTGOING_LBL,
             ID_INCOMING_LBL,
+            ID_DOWNLOAD_DIALOG
 
         };
 
