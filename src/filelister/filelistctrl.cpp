@@ -130,7 +130,7 @@ void FileListCtrl::Sort()
 	bool changed = false;
     s_parent_dialog = m_parent_dialog;
 //  if (!m_ui_for_sort || !m_ui_for_sort->GetServerStatus()  ) return;
-SortItems(( m_sortorder[ 0 ].direction )?&CompareNameUP:&CompareNameDOWN , 0 );
+SortItems(( true )?&CompareNameUP:&CompareNameDOWN , 0 );
 //	for ( int i = 3; i >= 0; i-- )
 //	{
 //		switch ( m_sortorder[ i ].col )
