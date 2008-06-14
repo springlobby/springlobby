@@ -131,7 +131,7 @@ bool SpringLobbyApp::OnInit()
         bool contentExists = false;
         if ( usync()->IsLoaded() )
         {
-            contentExists = usync()->FileExists(_T("base/base-ota-content.zip"));
+            contentExists = usync()->FileExists(_T("base/otacontent.sdz")) && usync()->FileExists(_T("base/tacontent_v2.sdz")) && usync()->FileExists(_T("base/tatextures_v062.sdz"));
         }
         else
         {
