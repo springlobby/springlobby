@@ -64,7 +64,7 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 	wxBoxSizer* m_filter_ondisk_sizer;
 	m_filter_ondisk_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_filter_ondisk = new wxCheckBox( this, FILE_FILTER_ONDISK, _T( "Filter files already on disk" ) );
-	m_filter_ondisk_sizer->Add( m_filter_ondisk );
+	m_filter_ondisk_sizer->Add( m_filter_ondisk, 0, wxALIGN_CENTER_VERTICAL );
 
 	wxString firstChoice = _T( "Any" );
 
@@ -74,13 +74,12 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 	m_filter_type_choiceChoices.Add( _T( "Map" ) );
 	m_filter_type_choiceChoices.Add( _T( "Mod" ) );
 
-	m_filter_type_choice = new wxChoice( this, FILE_FILTER_TYPE_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_type_choiceChoices, wxSIMPLE_BORDER );
-	m_filter_type_choice->SetMinSize( wxSize( 40,-1 ) );
+	m_filter_type_choice = new wxChoice( this, FILE_FILTER_TYPE_CHOICE, wxDefaultPosition, wxDefaultSize, m_filter_type_choiceChoices, wxSIMPLE_BORDER );
 
 	m_filter_type_sizer->Add( m_filter_type_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_filter_body_row1_sizer->Add( m_filter_type_sizer, 0, wxEXPAND, 5 );
-	m_filter_body_row1_sizer->Add( m_filter_ondisk_sizer, 0, wxEXPAND, 5 );
+	m_filter_body_row1_sizer->Add( m_filter_ondisk_sizer, 0, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_filter_body_sizer->Add( m_filter_body_row1_sizer, 1, wxEXPAND, 5 );
 
