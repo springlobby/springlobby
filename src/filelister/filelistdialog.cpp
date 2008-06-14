@@ -6,8 +6,12 @@
 
 BEGIN_EVENT_TABLE(FileListDialog, wxDialog)
 
-  EVT_BUTTON    ( BUTTON_DOWNLOAD   , FileListDialog::OnDownload        )
-  EVT_BUTTON    ( BUTTON_REFRESH    , FileListDialog::OnRefreshList        )
+  EVT_BUTTON    ( BUTTON_DOWNLOAD   , FileListDialog::OnDownload    )
+  EVT_BUTTON    ( BUTTON_REFRESH    , FileListDialog::OnRefreshList )
+  EVT_BUTTON    ( BUTTON_SELECT_ALL , FileListDialog::OnSelectAll   )
+  EVT_BUTTON    ( BUTTON_SELECT_NONE, FileListDialog::OnSelectNone  )
+  EVT_BUTTON    ( BUTTON_SELECT_INV , FileListDialog::OnSelectInv   )
+
 
 END_EVENT_TABLE()
 
@@ -23,6 +27,14 @@ FileListDialog::FileListDialog(wxWindow* parent) :
     m_list_sizer = new wxBoxSizer( wxVERTICAL );
     m_filelistctrl = new FileListCtrl( this );
     m_list_sizer->Add( m_filelistctrl, 1, wxALL|wxEXPAND, 5 );
+
+    wxBoxSizer* m_select_sizer = new wxBoxSizer( wxHORIZONTAL );
+    m_selectAll_button = new wxButton( this, BUTTON_SELECT_ALL, _T("Select all") );
+    m_selectNone_button = new wxButton( this, BUTTON_SELECT_NONE, _T("Select none") );
+    m_selectInv_button = new wxButton( this, BUTTON_SELECT_INV, _T("Invert selection") );
+    m_select_sizer->Add( m_selectAll_button );
+    m_select_sizer->Add( m_selectNone_button );
+    m_select_sizer->Add( m_selectInv_button );
 
     wxBoxSizer* m_filter_sizer;
     m_filter_sizer = new wxBoxSizer( wxVERTICAL );
@@ -40,6 +52,7 @@ FileListDialog::FileListDialog(wxWindow* parent) :
 
 
     m_main_sizer->Add( m_list_sizer,1, wxALL|wxEXPAND, 5 );
+    m_main_sizer->Add( m_select_sizer,0, wxALL|wxEXPAND, 5 );
     m_main_sizer->Add( m_filter_sizer,0, wxALL|wxEXPAND, 5 );
     m_main_sizer->Add( m_button_sizer,0, wxALL|wxEXPAND, 5 );
     m_main_sizer->Add( m_filecount,0, wxALL|wxEXPAND, 5 );
@@ -102,4 +115,19 @@ void FileListDialog::OnDownload( wxCommandEvent& event )
 void FileListDialog::OnRefreshList( wxCommandEvent& event )
 {
 
+}
+
+void FileListDialog::OnSelectAll( wxCommandEvent& event )
+{
+    m_filelistctrl->SelectAll();
+}
+
+void FileListDialog::OnSelectNone( wxCommandEvent& event )
+{
+    m_filelistctrl->SelectNone();
+}
+
+void FileListDialog::OnSelectInv( wxCommandEvent& event )
+{
+    m_filelistctrl->SelectInverse();
 }

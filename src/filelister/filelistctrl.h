@@ -29,8 +29,8 @@ class FileListCtrl : public customListCtrl
     void SetColumnWidths();
 
   protected:
-    static int wxCALLBACK CompareStatusUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareStatusDOWN(long item1, long item2, long sortData);
+    static int wxCALLBACK CompareNameUP(long item1, long item2, long sortData);
+    static int wxCALLBACK CompareNameDOWN(long item1, long item2, long sortData);
     static int wxCALLBACK CompareCountryUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareCountryDOWN(long item1, long item2, long sortData);
     static int wxCALLBACK CompareRankUP(long item1, long item2, long sortData);
