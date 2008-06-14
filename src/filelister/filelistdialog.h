@@ -28,14 +28,24 @@ class FileListDialog : public wxDialog
         FileListFilter* m_filter;
         wxStaticText* m_filecount;
         wxButton* m_download_button;
+        wxButton* m_selectAll_button;
+        wxButton* m_selectNone_button;
+        wxButton* m_selectInv_button;
 
         bool AddTorrentData( const TorrentData& data);
         void OnDownload( wxCommandEvent& event );
         void OnRefreshList( wxCommandEvent& event );
 
+        void OnSelectAll( wxCommandEvent& event );
+        void OnSelectNone( wxCommandEvent& event );
+        void OnSelectInv( wxCommandEvent& event );
+
         enum {
             BUTTON_DOWNLOAD = wxID_HIGHEST,
-            BUTTON_REFRESH
+            BUTTON_REFRESH,
+            BUTTON_SELECT_ALL,
+            BUTTON_SELECT_NONE,
+            BUTTON_SELECT_INV
         };
 
     private:

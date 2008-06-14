@@ -16,8 +16,6 @@ BEGIN_EVENT_TABLE( FileListCtrl, customListCtrl )
 
 	EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, FileListCtrl::OnListRightClick )
 	EVT_LIST_COL_CLICK( BLIST_LIST, FileListCtrl::OnColClick )
-	//  EVT_MENU                 ( BLIST_DLMAP, FileListCtrl::OnDLMap )
-	//  EVT_MENU                 ( BLIST_DLMOD, FileListCtrl::OnDLMod )
 	#if wxUSE_TIPWINDOW
 	#if !defined(__WXMSW__) /* && !defined(__WXMAC__) */ //disables tooltips on msw /* and mac */
 	EVT_MOTION( FileListCtrl::OnMouseMotion )

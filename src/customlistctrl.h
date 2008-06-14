@@ -31,6 +31,7 @@ protected:
 
     colInfoVec m_colinfovec;
     int getColoumnFromPosition(wxPoint pos);
+
 public:
 	customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
                     const wxSize& sz,long style);
@@ -50,6 +51,11 @@ public:
 
     void RestoreSelection();
     void SetSelectionRestorePoint();
+
+    void SelectAll();
+    void SelectNone();
+    void SelectInverse();
+
 
     DECLARE_EVENT_TABLE()
 };
