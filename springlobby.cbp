@@ -264,7 +264,6 @@
 		<Unit filename="src/nonautotools.cpp" />
 		<Unit filename="src/nonportable.h" />
 		<Unit filename="src/revision.h" />
-		<Unit filename="src/ring_sound.h" />
 		<Unit filename="src/sdlsound.cpp" />
 		<Unit filename="src/sdlsound.h" />
 		<Unit filename="src/server.cpp" />
