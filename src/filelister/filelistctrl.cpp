@@ -57,7 +57,7 @@ FileListCtrl::FileListCtrl( wxWindow* parent, FileListDialog* fld  ):
 	m_sortorder[2].col = 2;
 	m_sortorder[2].direction = true;
 
-	Sort( );
+	//Sort( );
 
 //  m_popup = new wxMenu( _T("") );
 //  // &m enables shortcout "alt + m" and underlines m
@@ -93,23 +93,23 @@ void FileListCtrl::OnListRightClick( wxListEvent& event )
 
 void FileListCtrl::OnColClick( wxListEvent& event )
 {
-	if ( event.GetColumn() == -1 ) return;
-	wxListItem col;
-	GetColumn( m_sortorder[0].col, col );
-	col.SetImage( icons().ICON_NONE );
-	SetColumn( m_sortorder[0].col, col );
-
-	int i;
-	for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 3; ++i ) {}
-	if ( i > 2 ) { i = 2; }
-	for ( ; i > 0; i-- ) { m_sortorder[i] = m_sortorder[i-1]; }
-	m_sortorder[0].col = event.GetColumn();
-	m_sortorder[0].direction = !m_sortorder[0].direction;
-
-
-	GetColumn( m_sortorder[0].col, col );
-	col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
-	SetColumn( m_sortorder[0].col, col );
+//	if ( event.GetColumn() == -1 ) return;
+//	wxListItem col;
+//	GetColumn( m_sortorder[0].col, col );
+//	col.SetImage( icons().ICON_NONE );
+//	SetColumn( m_sortorder[0].col, col );
+//
+//	int i;
+//	for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 3; ++i ) {}
+//	if ( i > 2 ) { i = 2; }
+//	for ( ; i > 0; i-- ) { m_sortorder[i] = m_sortorder[i-1]; }
+//	m_sortorder[0].col = event.GetColumn();
+//	m_sortorder[0].direction = !m_sortorder[0].direction;
+//
+//
+//	GetColumn( m_sortorder[0].col, col );
+//	col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
+//	SetColumn( m_sortorder[0].col, col );
 
 	Sort();
 }

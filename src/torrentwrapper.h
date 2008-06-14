@@ -61,6 +61,7 @@ struct TorrentInfos
   unsigned int filesize;
   wxString hash;
   int eta; //is set in update function of maintorrenttab
+  bool on_disk;
 };
 
 struct TorrentData

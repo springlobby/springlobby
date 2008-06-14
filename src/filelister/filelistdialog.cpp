@@ -93,12 +93,15 @@ bool FileListDialog::AddTorrentData( const TorrentData& data)
         return false;
     try
     {
+        bool islocal = torrent()->IsFileInSystem( data.hash );
         int index = m_filelistctrl->InsertItem( m_filelistctrl->GetItemCount(), data.hash);
         //setting hash as item's data means we can retrieve it later for download
         m_filelistctrl->SetItemText( index, data.hash );
         m_filelistctrl->SetItem( index, 0, data.name );
         m_filelistctrl->SetItem( index, 1, data.type == map ? _("Map") : _("Mod") );
         m_filelistctrl->SetItem( index, 2, data.hash );
+        if ( islocal )
+            m_filelistctrl->SetItemBackgroundColour( index, wxColor(127,255,255));
     } catch (...) { return false; }
     return true;
 }

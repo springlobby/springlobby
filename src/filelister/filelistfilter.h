@@ -55,6 +55,8 @@ class FileListFilter : public wxPanel
 		wxChoice* m_filter_type_choice;
 		int m_filter_type_choice_value;
 
+		wxCheckBox* m_filter_ondisk;
+
 
     DECLARE_EVENT_TABLE();
 };
@@ -63,7 +65,7 @@ enum
 {
     FILE_FILTER_NAME_EDIT,
     FILE_FILTER_TYPE_CHOICE,
-
+    FILE_FILTER_ONDISK
 };
 
 #endif //SPRINGLOBBY_HEADERGUARD_BATTLELISTFILTER_H

@@ -9,6 +9,7 @@
 #include <wx/statbox.h>
 #include <wx/event.h>
 #include <wx/regex.h>
+#include <wx/checkbox.h>
 
 #include "filelistfilter.h"
 #include "filelistctrl.h"
@@ -38,7 +39,7 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 	wxBoxSizer* m_filter_body_row1_sizer;
 	m_filter_body_row1_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_filter_name_text = new wxStaticText( this, wxID_ANY, _("Filename:"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	m_filter_name_text = new wxStaticText( this, wxID_ANY, _T("Filename:"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_filter_name_text->Wrap( -1 );
 	m_filter_name_text->SetMinSize( wxSize( 90,-1 ) );
 
@@ -55,9 +56,13 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 	wxBoxSizer* m_filter_type_sizer;
 	m_filter_type_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_filter_type_text = new wxStaticText( this, wxID_ANY, _("Filetype:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_filter_type_text = new wxStaticText( this, wxID_ANY, _T("Filetype:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_filter_type_text->Wrap( -1 );
 	m_filter_type_sizer->Add( m_filter_type_text, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	wxBoxSizer* m_filter_ondisk_sizer;
+	m_filter_ondisk = new wxCheckBox( this, FILE_FILTER_ONDISK, _T("Filter files already on disk") );
+    m_filter_ondisk_sizer->Add( m_filter_ondisk );
 
     wxString firstChoice = _T("Any");
 
@@ -73,6 +78,7 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 	m_filter_type_sizer->Add( m_filter_type_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_filter_body_row1_sizer->Add( m_filter_type_sizer, 0, wxEXPAND, 5 );
+	m_filter_body_row1_sizer->Add( m_filter_ondisk_sizer, 0, wxEXPAND, 5 );
 
 	m_filter_body_sizer->Add( m_filter_body_row1_sizer, 1, wxEXPAND, 5 );
 
