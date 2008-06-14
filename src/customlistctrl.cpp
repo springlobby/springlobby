@@ -75,7 +75,7 @@ void customListCtrl::OnSelected( wxListEvent& event )
 void customListCtrl::OnDeselected( wxListEvent& event )
 {
   if ( m_selected == (int)GetItemData( event.GetIndex() )  )
-  m_selected = m_selected_index = -1;
+    m_selected = m_selected_index = -1;
 }
 
 long customListCtrl::GetIndexFromData( const unsigned long data )
@@ -91,6 +91,32 @@ long customListCtrl::GetIndexFromData( const unsigned long data )
 long customListCtrl::GetSelectedIndex()
 {
   return m_selected_index ;
+}
+
+void customListCtrl::SelectAll()
+{
+  for (long i = 0; i < GetItemCount() ; i++ )
+  {
+    SetItemState( i, wxLIST_STATE_SELECTED, -1  );
+  }
+}
+
+void customListCtrl::SelectNone()
+{
+  for (long i = 0; i < GetItemCount() ; i++ )
+  {
+    SetItemState( i, wxLIST_STATE_DONTCARE, -1 );
+  }
+}
+
+void customListCtrl::SelectInverse()
+{
+  for (long i = 0; i < GetItemCount() ; i++ )
+  {
+    int state = GetItemState( i, -1 );
+    state = ( state == wxLIST_STATE_DONTCARE ? wxLIST_STATE_SELECTED : wxLIST_STATE_DONTCARE );
+    SetItemState( i, state, -1 );
+  }
 }
 
 void customListCtrl::SetSelectedIndex(const long newindex)
