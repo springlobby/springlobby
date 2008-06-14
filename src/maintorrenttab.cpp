@@ -34,6 +34,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	wxBoxSizer* m_listbox = new wxBoxSizer (wxVERTICAL);
 	wxBoxSizer* m_totalbox = new wxBoxSizer (wxHORIZONTAL);
 	wxBoxSizer* m_buttonbox = new wxBoxSizer (wxHORIZONTAL);
+	wxBoxSizer* m_status_box = new wxBoxSizer( wxHORIZONTAL );
 
     wxStaticText* m_list_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Tranfers in progress: ") );
     m_listbox->Add(m_list_lbl, 0, wxBOTTOM, 5);
@@ -54,6 +55,13 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	m_buttonbox->Add( m_but_publish, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
 	m_but_download = new wxButton(this, ID_DOWNLOAD_DIALOG, _("Search file") );
 	m_buttonbox->Add( m_but_download, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
+
+	m_status_color = new wxButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
+  m_status_color_text = new wxStaticText( this, wxID_ANY, _("unknown") );
+  m_status_box->Add( m_status_color ,  0, wxALL, 5);
+  m_status_box->Add( m_status_color_text,  0, wxALL, 5);
+  m_mainbox->Add( m_status_box, 1, wxALL, 5 );
+
 	m_mainbox->Add(m_buttonbox, 1, wxALL, 5);
 
 	SetSizer(m_mainbox);
@@ -142,18 +150,40 @@ void MainTorrentTab::AddTorrentInfo(  TorrentInfos& info )
 
 void MainTorrentTab::OnUpdate()
 {
-  if ( torrent()->IsConnectedToP2PSystem() )
-  {
-    m_but_cancel->Enable();
-    m_but_publish->Enable();
-    m_but_download->Enable();
-  }
-  else
-  {
-    m_but_cancel->Disable();
-    m_but_publish->Disable();
-    m_but_download->Disable();
-  }
+
+    if ( torrent()->IsConnectedToP2PSystem() )
+    {
+      m_but_cancel->Enable();
+      m_but_publish->Enable();
+      m_but_download->Enable();
+    }
+    else
+    {
+      m_but_cancel->Disable();
+      m_but_publish->Disable();
+      m_but_download->Disable();
+    }
+
+    switch (torrent()->GetTorrentSystemStatus() )
+    {
+        case 0:
+            m_status_color->SetBackgroundColour( wxColor(255,0,0) ); //not connected
+            m_status_color_text->SetLabel(_("Status: not connected") );
+            break;
+        case 1:
+            m_status_color->SetBackgroundColour( wxColor(0,255,0) ); //connected
+            m_status_color_text->SetLabel(_("Status: connected") );
+            break;
+        case 2:
+            m_status_color->SetBackgroundColour( wxColor(0,0,255) ); //ingame
+            m_status_color_text->SetLabel(_("Status: throttled or paused (ingame)") );
+            break;
+        default:
+            m_status_color->SetBackgroundColour( wxColor(255,255,255) ); //unknown
+            m_status_color_text->SetLabel(_("Status: unknown") );
+            break;
+    }
+
     m_torrent_list->SetSelectionRestorePoint();
     info_map = torrent()->CollectGuiInfos();
     m_outgoing_lbl->SetLabel( wxString::Format(_("Total Outgoing: %.2f KB/s"), (info_map[0].outspeed/float(1024)) ) );
