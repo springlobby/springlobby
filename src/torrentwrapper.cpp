@@ -131,15 +131,7 @@ void TorrentWrapper::ConnectToP2PSystem()
 
 void TorrentWrapper::DisconnectToP2PSystem()
 {
-  if ( m_connected )
-  {
-     {
-       ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
-       for ( TorrentHandleToHash::from::iterator itor = torrent_handles_l.Get().from.begin(); itor != torrent_handles_l.Get().from.end(); itor++ )
-        m_socket_class->Send( wxString::Format( _T("N-|%s\n"), itor->second.c_str() ) ); /// release all files requests
-     }
-     m_socket_class->Disconnect();
-  }
+  if ( m_connected ) m_socket_class->Disconnect();
 }
 
 
@@ -237,7 +229,6 @@ DownloadRequestStatus TorrentWrapper::RequestFileByHash( const wxString& hash )
 {
   if (ingame) return paused_ingame;
   if ( !m_connected ) return not_connected;
-  if ( m_leech_count > 4 ) return max_leech_exceeded;
 
   wxString name;
   {
@@ -252,6 +243,14 @@ DownloadRequestStatus TorrentWrapper::RequestFileByHash( const wxString& hash )
     ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
     OpenTorrents::iterator itor = open_torrents_l.Get().find(name);
     if ( itor != open_torrents_l.Get().end() ) return duplicate_request; /// don't request twice the same file
+  }
+
+  if ( m_leech_count > 4 )
+  {
+    ScopedLocker<wxArrayString> queued_request_l(m_queued_requests);
+    if ( queued_request_l.Get().Index( hash ) != wxNOT_FOUND ) return duplicate_request; /// don't request twice the same file
+    queued_request_l.Get().Add( hash );
+    return scheduled_in_cue;
   }
 
   if ( !JoinTorrent( hash ) ) return torrent_join_failed;
@@ -328,7 +327,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
   try
   {
     TorrentInfos globalinfos;
-    globalinfos.seeding = false;
+    globalinfos.downloadstatus = leeching;
     globalinfos.progress = 0.0f;
     globalinfos.downloaded = 0;
     globalinfos.uploaded = 0;
@@ -346,7 +345,8 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
       wxLogMessage(_T("CollectGuiInfos for %s"),WX_STRING(i->name()).c_str());
       TorrentInfos CurrentTorrent;
       CurrentTorrent.name = WX_STRING(i->name()).BeforeFirst(_T('|'));
-      CurrentTorrent.seeding = i->is_seed();
+      if ( i->is_seed() ) CurrentTorrent.downloadstatus = seeding;
+      else CurrentTorrent.downloadstatus = leeching;
       CurrentTorrent.progress = i->status().progress;
       CurrentTorrent.downloaded = i->status().total_payload_download;
       CurrentTorrent.uploaded = i->status().total_payload_upload;
@@ -364,8 +364,31 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     }
   } catch (std::exception& e)
   {
-    wxLogError( WX_STRINGC( e.what() ) ); /// TODO (BrainDamage#1#): add message to user on failure
+    wxLogError( WX_STRINGC( e.what() ) );
   }
+
+  /// display infos about queued torrents
+  wxArrayString queuecopy;
+  {
+    ScopedLocker<wxArrayString> queued_request_l(m_queued_requests);
+    queuecopy = queued_request_l.Get();
+  }
+  unsigned int RequestCount = queuecopy.GetCount();
+  for ( unsigned int i; i < RequestCount; i++ )
+  {
+    TorrentInfos QueuedTorrent;
+    QueuedTorrent.numcopies = -1;
+    QueuedTorrent.hash = queuecopy[i];
+    {
+      ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
+      HashToTorrentData::iterator it=torrents_infos_l.Get().find(QueuedTorrent.hash);
+      if (it==torrents_infos_l.Get().end()) continue; /// the file is not present in the system
+      if ( it->second.hash.IsEmpty() ) continue; /// the file is not present in the system
+      QueuedTorrent.name =it->second.name;
+    }
+    ret[s2l(QueuedTorrent.hash)] = QueuedTorrent;
+  }
+
   return ret;
 }
 
@@ -645,6 +668,25 @@ void TorrentWrapper::FixTorrentList()
        wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), refreshevt );
     }
   } catch (std::exception& e) {wxLogError( WX_STRINGC( e.what() ) );}
+
+  if ( m_leech_count < 5 )
+  { /// join queued files if there are available slots
+    wxArrayString queuecopy;
+    {
+      ScopedLocker<wxArrayString> queued_request_l(m_queued_requests);
+      queuecopy = queued_request_l.Get();
+    }
+    unsigned int RequestCount = queuecopy.GetCount();
+    for ( unsigned int i; ( ( i < RequestCount) || ( m_leech_count < 4 ) ); i++ )
+    {
+      if ( RequestFileByHash( queuecopy[i] ) == success ) queuecopy.RemoveAt( i );
+    }
+    {
+      ScopedLocker<wxArrayString> queued_request_l(m_queued_requests);
+      queued_request_l.Get().Empty();
+      for ( unsigned int i; i < RequestCount; i++ ) queued_request_l.Get().Add( queuecopy[i] );
+    }
+  }
 }
 
 
@@ -755,11 +797,13 @@ void TorrentWrapper::OnConnected( Socket* sock )
   ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
   ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
   ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
+  ScopedLocker<wxArrayString> queued_requests_l(m_queued_requests);
 
   torrent_infos_l.Get().clear();
   seed_requests_l.Get().clear();
   open_torrents_l.Get().clear();
   torrent_handles_l.Get().clear();
+  queued_requests_l.Get().Empty();
 
   m_seed_count = 0;
   m_leech_count = 0;
@@ -775,18 +819,20 @@ void TorrentWrapper::OnConnected( Socket* sock )
 void TorrentWrapper::OnDisconnected( Socket* sock )
 {
   wxLogMessage(_T("torrent system disconnected") );
-  wxArrayString TorrentsToResume;
+
+  ScopedLocker<wxArrayString> queued_requests_l(m_queued_requests);
+  wxArrayString TorrentsToResume = queued_requests_l.Get();
   try
   {
     std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
     for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
     {
-       if ( !i->is_seed() ) /// save leeching torrents for resume on next connection
        {
           ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
           TorrentHandleToHash::from::iterator iter = torrent_handles_l.Get().from.find(*i);
           if ( iter == torrent_handles_l.Get().from.end() ) continue; /// torrent handler not found
-          TorrentsToResume.Add( iter->second );
+          if ( !i->is_seed() ) TorrentsToResume.Add( iter->second ); /// save leeching torrents for resume on next connection
+          m_socket_class->Send( wxString::Format( _T("N-|%s\n"), iter->second.c_str() ) ); /// release all files requests
        }
        m_torr->remove_torrent(*i); ///remove all torrents upon disconnect
     }
@@ -808,12 +854,11 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
   ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
   ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
 
-
   torrent_infos_l.Get().clear();
   seed_requests_l.Get().clear();
   open_torrents_l.Get().clear();
   torrent_handles_l.Get().clear();
-
+  queued_requests_l.Get().clear();
 
   m_seed_count = 0;
   m_leech_count = 0;

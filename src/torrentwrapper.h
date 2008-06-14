@@ -35,10 +35,17 @@ enum DownloadRequestStatus
   success,
   not_connected,
   paused_ingame,
-  max_leech_exceeded,
   duplicate_request,
   file_not_found,
-  torrent_join_failed
+  torrent_join_failed,
+  scheduled_in_cue
+};
+
+enum FileStatus
+{
+  leeching,
+  seeding,
+  queued
 };
 
 struct TorrentInfos
@@ -47,7 +54,7 @@ struct TorrentInfos
   wxString name;
   unsigned int downloaded;
   unsigned int uploaded;
-  bool seeding;
+  FileStatus downloadstatus;
   float progress;
   float inspeed;
   float outspeed;
@@ -145,6 +152,8 @@ class TorrentWrapper : public iNetClass
     MutexWrapper<TorrentHandleToHash> m_torrent_handles;
 
     MutexWrapper<NameToHash> m_name_to_hash;
+
+    MutexWrapper<wxArrayString> m_queued_requests; /// contains hashes of pending requested files when already leeching > 4 files
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;

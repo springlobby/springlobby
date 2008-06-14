@@ -122,7 +122,15 @@ void MainTorrentTab::SetInfo(int index,  TorrentInfos& info )
   m_torrent_list->SetItem( index, 1, info.numcopies > 0 ? f2s( info.numcopies ) : wxString(_("not available")));
   m_torrent_list->SetItem( index, 2, f2s( info.downloaded*mfactor ) );
   m_torrent_list->SetItem( index, 3, f2s( info.uploaded*mfactor ) );
-  m_torrent_list->SetItem( index, 4, info.seeding == 0 ? _("no") : _("yes") );
+  switch ( info.downloadstatus )
+  {
+    case seeding:
+      m_torrent_list->SetItem( index, 4, _("seeding") );
+    case leeching:
+      m_torrent_list->SetItem( index, 4, _("leeching") );
+    case queued:
+      m_torrent_list->SetItem( index, 4, _("queued") );
+  }
   m_torrent_list->SetItem( index, 5, f2s( info.progress * 100 ) );
   m_torrent_list->SetItem( index, 6, f2s( info.outspeed*kfactor ) );
   m_torrent_list->SetItem( index, 7, f2s( info.inspeed*kfactor ) );
