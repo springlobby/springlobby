@@ -15,6 +15,7 @@ class TorrentListCtrl;
 class Ui;
 struct TorrentInfos;
 class wxBoxSizer;
+class FileListDialog;
 
 class MainTorrentTab: public wxPanel
 {
@@ -56,8 +57,10 @@ class MainTorrentTab: public wxPanel
         void UpdateInfo(  TorrentInfos& info );
         void SetInfo(int index,  TorrentInfos& info );
         void OnCancelButton( wxCommandEvent& event );
+        void OnDownloadDialog( wxCommandEvent& event );
 
         wxBoxSizer* m_mainbox;
+        FileListDialog* m_download_dialog;
 
 	private:
 

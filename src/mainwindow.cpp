@@ -13,7 +13,7 @@
 #include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
-#include "filelister/filelistdialog.h"
+
 
 #include <stdexcept>
 
@@ -385,8 +385,6 @@ void MainWindow::OnMenuAbout( wxCommandEvent& event )
     customMessageBoxNoModal(SL_MAIN_ICON,_T("SpringLobby version: ")+GetSpringLobbyVersion(),_T("About"));
 #endif
 
-    FileListDialog* t = new FileListDialog( this );
-    t->Show();
 }
 
 void MainWindow::OnMenuConnect( wxCommandEvent& event )

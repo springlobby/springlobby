@@ -11,7 +11,7 @@
 #include "torrentwrapper.h"
 #include "ui.h"
 #include "utils.h"
-
+#include "filelister/filelistdialog.h"
 //const long MainTorrentTab::ID_STATICTEXT2 = wxNewId();
 //const long MainTorrentTab::ID_STATICTEXT1 = wxNewId();
 //const long MainTorrentTab::ID_LISTBOX1 = wxNewId();
@@ -23,6 +23,7 @@ BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
 	//(*EventTable(MainTorrentTab)
 	//*)
   EVT_BUTTON      ( ID_BUTTON_CANCEL, MainTorrentTab::OnCancelButton )
+  EVT_BUTTON      ( ID_DOWNLOAD_DIALOG, MainTorrentTab::OnDownloadDialog )
 END_EVENT_TABLE()
 
 MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
@@ -51,6 +52,8 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	m_buttonbox->Add(m_but_cancel, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
 	m_but_publish = new wxButton(this, ID_BUTTON_PUB, _("Publish new file") );
 	m_buttonbox->Add( m_but_publish, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
+	m_but_download = new wxButton(this, ID_DOWNLOAD_DIALOG, _("Download any file") );
+	m_buttonbox->Add( m_but_download, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
 	m_mainbox->Add(m_buttonbox, 1, wxALL, 5);
 
 	SetSizer(m_mainbox);
@@ -66,11 +69,16 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
     {
         AddTorrentInfo(iter->second);
     }
+    m_download_dialog = 0;
 }
 
 MainTorrentTab::~MainTorrentTab()
 {
-
+    if (m_download_dialog)
+    {
+        delete m_download_dialog;
+        m_download_dialog = 0;
+    }
 }
 
 void MainTorrentTab::UpdateInfo(  TorrentInfos& info )
@@ -154,6 +162,12 @@ void MainTorrentTab::OnUpdate()
 void MainTorrentTab::OnCancelButton( wxCommandEvent& event )
 {
   torrent()->RemoveFile( info_map[m_torrent_list->GetSelectedIndex()].hash );
+}
+
+void MainTorrentTab::OnDownloadDialog( wxCommandEvent& event )
+{
+    m_download_dialog = new FileListDialog( this );
+    m_download_dialog->Show();
 }
 
 #endif
