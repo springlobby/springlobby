@@ -18,7 +18,7 @@ END_EVENT_TABLE()
 
 FileListDialog::FileListDialog(wxWindow* parent) :
     wxDialog(parent, -1, _("Search and download files"), wxDefaultPosition, wxSize(800, 600),
-           wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxRESIZE_BORDER)
+           wxDEFAULT_DIALOG_STYLE | wxCLIP_CHILDREN | wxRESIZE_BORDER)
 {
     m_filecount = new wxStaticText( this, wxID_ANY, _("Files displayed") );
 

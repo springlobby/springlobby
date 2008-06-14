@@ -35,6 +35,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	wxBoxSizer* m_totalbox = new wxBoxSizer (wxHORIZONTAL);
 	wxBoxSizer* m_buttonbox = new wxBoxSizer (wxHORIZONTAL);
 	wxBoxSizer* m_status_box = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* m_firstrow_box = new wxBoxSizer( wxHORIZONTAL );
 
     wxStaticText* m_list_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Tranfers in progress: ") );
     m_listbox->Add(m_list_lbl, 0, wxBOTTOM, 5);
@@ -46,7 +47,16 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
     m_incoming_lbl = new wxStaticText( this, ID_INCOMING_LBL, _("Total Incoming: ") );
 	m_totalbox->Add(m_outgoing_lbl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, 10);
 	m_totalbox->Add(m_incoming_lbl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, 10);
-	m_mainbox->Add(m_totalbox, 1, wxALL, 5);
+
+	m_firstrow_box->Add( m_totalbox,0, wxALL, 5  );
+
+    m_status_color = new wxButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
+    m_status_color_text = new wxStaticText( this, wxID_ANY, _("unknown") );
+    m_status_box->Add( m_status_color ,  0,wxEXPAND|wxALL|wxALIGN_CENTER_VERTICAL, 10);
+    m_status_box->Add( m_status_color_text,0,  wxALL|wxALIGN_CENTER_VERTICAL, 10);
+    m_firstrow_box->Add( m_status_box, 1, wxALL|wxEXPAND, 5);
+
+	m_mainbox->Add(m_firstrow_box, 0, wxALL, 5);
 
 	m_but_cancel= new wxButton(this, ID_BUTTON_CANCEL, _("Cancel Download") );
 	//m_but_cancel->Disable();
@@ -56,11 +66,6 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	m_but_download = new wxButton(this, ID_DOWNLOAD_DIALOG, _("Search file") );
 	m_buttonbox->Add( m_but_download, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
 
-	m_status_color = new wxButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_status_color_text = new wxStaticText( this, wxID_ANY, _("unknown") );
-  m_status_box->Add( m_status_color ,  wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, wxALL, 10);
-  m_status_box->Add( m_status_color_text,  wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, wxALL, 10);
-  m_totalbox->Add( m_status_box, 1, wxALL, 5 );
 
 	m_mainbox->Add(m_buttonbox, 1, wxALL, 5);
 
