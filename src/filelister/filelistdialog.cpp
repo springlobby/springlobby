@@ -31,7 +31,7 @@ FileListDialog::FileListDialog(wxWindow* parent) :
 
     wxBoxSizer* m_button_sizer;
     m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
-    m_download_button = new wxButton( this, BUTTON_DOWNLOAD, _T("Download selected"), wxDefaultPosition, wxSize( -1,28 ), 0 );
+    m_download_button = new wxButton( this, BUTTON_DOWNLOAD, _("Download selected"), wxDefaultPosition, wxSize( -1,28 ), 0 );
     m_button_sizer->Add( m_download_button );
 
     SetData( torrent()->GetSystemFileList() );
@@ -59,7 +59,7 @@ void FileListDialog::UpdateList()
     {
         count += AddTorrentData( it->second );
     }
-    m_filecount->SetLabel( wxString::Format( _T("%u files displayed"), count ) );
+    m_filecount->SetLabel( wxString::Format( _("%u files displayed"), count ) );
     m_filelistctrl->SetColumnWidths();
 }
 
@@ -78,7 +78,7 @@ bool FileListDialog::AddTorrentData( const TorrentData& data)
         //setting hash as item's data means we can retrieve it later for download
         m_filelistctrl->SetItemText( index, data.hash );
         m_filelistctrl->SetItem( index, 0, data.name );
-        m_filelistctrl->SetItem( index, 1, data.type == map ? _T("Map") : _T("Mod") );
+        m_filelistctrl->SetItem( index, 1, data.type == map ? _("Map") : _("Mod") );
         m_filelistctrl->SetItem( index, 2, data.hash );
     } catch (...) { return false; }
     return true;
@@ -88,8 +88,7 @@ void FileListDialog::OnDownload( wxCommandEvent& event )
 {
     typedef FileListCtrl::HashVector HashVector;
     HashVector hashs = m_filelistctrl->GetSelectedHashes();
-    HashVector::const_iterator it = hashs.begin();
-    for ( ; it != hashs.end(); ++it)
+    for ( HashVector::const_iterator it = hashs.begin(); it != hashs.end(); ++it)
     {
         torrent()->RequestFileByHash(*it);
     }
