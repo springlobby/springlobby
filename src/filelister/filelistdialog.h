@@ -19,6 +19,7 @@ class FileListDialog : public wxDialog
         ~FileListDialog();
 
         void UpdateList();
+        FileListCtrl* GetListCtrl();
         void SetData(HashToTorrentData& data);
 
     protected:

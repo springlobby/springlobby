@@ -25,7 +25,7 @@ FileListDialog::FileListDialog(wxWindow* parent) :
 
     wxBoxSizer* m_list_sizer;
     m_list_sizer = new wxBoxSizer( wxVERTICAL );
-    m_filelistctrl = new FileListCtrl( this );
+    m_filelistctrl = new FileListCtrl( this, this );
     m_list_sizer->Add( m_filelistctrl, 1, wxALL|wxEXPAND, 5 );
 
     wxBoxSizer* m_select_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -63,6 +63,12 @@ FileListDialog::~FileListDialog()
 {
 
 }
+
+FileListCtrl* FileListDialog::GetListCtrl()
+{
+    return m_filelistctrl;
+}
+
 void FileListDialog::UpdateList()
 {
     m_filelistctrl->DeleteAllItems();

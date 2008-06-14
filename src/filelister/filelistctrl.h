@@ -10,12 +10,13 @@
 class wxMenu;
 class wxListEvent;
 class wxCommandEvent;
+class FileListDialog;
 
 
 class FileListCtrl : public customListCtrl
 {
   public:
-    FileListCtrl( wxWindow* parent );
+    FileListCtrl( wxWindow* parent, FileListDialog* fld );
     ~FileListCtrl();
 
     typedef std::vector<wxString> HashVector;
@@ -45,6 +46,8 @@ class FileListCtrl : public customListCtrl
 //    Ui& m_ui;
 //    static Ui* m_ui_for_sort;
 
+    FileListDialog* m_parent_dialog;
+    static FileListDialog* s_parent_dialog;
 
     DECLARE_EVENT_TABLE()
 };
