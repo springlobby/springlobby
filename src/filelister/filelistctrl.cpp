@@ -5,6 +5,7 @@
 #include <wx/string.h>
 
 #include "filelistctrl.h"
+#include "filelistdialog.h"
 #include "../utils.h"
 #include "../iconimagelist.h"
 #include "../uiutils.h"
@@ -23,9 +24,10 @@ BEGIN_EVENT_TABLE( FileListCtrl, customListCtrl )
 	#endif
 END_EVENT_TABLE()
 
-//Ui* FileListCtrl::m_ui_for_sort = 0;
+FileListDialog* FileListCtrl::s_parent_dialog = 0;
 
-FileListCtrl::FileListCtrl( wxWindow* parent ):
+FileListCtrl::FileListCtrl( wxWindow* parent, FileListDialog* fld  ):
+        m_parent_dialog( fld ),
 		customListCtrl( parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_ALIGN_LEFT )
 {
 
@@ -55,7 +57,7 @@ FileListCtrl::FileListCtrl( wxWindow* parent ):
 	m_sortorder[2].col = 2;
 	m_sortorder[2].direction = true;
 
-	Sort( );
+	//Sort( );
 
 //  m_popup = new wxMenu( _T("") );
 //  // &m enables shortcout "alt + m" and underlines m
@@ -91,23 +93,23 @@ void FileListCtrl::OnListRightClick( wxListEvent& event )
 
 void FileListCtrl::OnColClick( wxListEvent& event )
 {
-	if ( event.GetColumn() == -1 ) return;
-	wxListItem col;
-	GetColumn( m_sortorder[0].col, col );
-	col.SetImage( icons().ICON_NONE );
-	SetColumn( m_sortorder[0].col, col );
-
-	int i;
-	for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 3; ++i ) {}
-	if ( i > 2 ) { i = 2; }
-	for ( ; i > 0; i-- ) { m_sortorder[i] = m_sortorder[i-1]; }
-	m_sortorder[0].col = event.GetColumn();
-	m_sortorder[0].direction = !m_sortorder[0].direction;
-
-
-	GetColumn( m_sortorder[0].col, col );
-	//col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
-	SetColumn( m_sortorder[0].col, col );
+//	if ( event.GetColumn() == -1 ) return;
+//	wxListItem col;
+//	GetColumn( m_sortorder[0].col, col );
+//	col.SetImage( icons().ICON_NONE );
+//	SetColumn( m_sortorder[0].col, col );
+//
+//	int i;
+//	for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 3; ++i ) {}
+//	if ( i > 2 ) { i = 2; }
+//	for ( ; i > 0; i-- ) { m_sortorder[i] = m_sortorder[i-1]; }
+//	m_sortorder[0].col = event.GetColumn();
+//	m_sortorder[0].direction = !m_sortorder[0].direction;
+//
+//
+//	GetColumn( m_sortorder[0].col, col );
+//	col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
+//	SetColumn( m_sortorder[0].col, col );
 
 	Sort();
 }
@@ -126,99 +128,42 @@ void FileListCtrl::GetSelectedHashes(HashVector& hashes)
 void FileListCtrl::Sort()
 {
 	bool changed = false;
-//  FileListCtrl::m_ui_for_sort = &m_ui;
+    s_parent_dialog = m_parent_dialog;
 //  if (!m_ui_for_sort || !m_ui_for_sort->GetServerStatus()  ) return;
-	for ( int i = 3; i >= 0; i-- )
-	{
-		switch ( m_sortorder[ i ].col )
-		{
-			case 0 :
-				changed = SortItems(( m_sortorder[ i ].direction )?&CompareNameUP:&CompareNameDOWN , 0 );
-				break;
-			case 1 :
-				changed = SortItems(( m_sortorder[ i ].direction )?&CompareCountryUP:&CompareCountryDOWN , 0 );
-				break;
-			case 2 :
-				changed = SortItems(( m_sortorder[ i ].direction )?&CompareRankUP:&CompareRankDOWN , 0 );
-				break;
-		}
-	}
+SortItems(( true )?&CompareNameUP:&CompareNameDOWN , 0 );
+//	for ( int i = 3; i >= 0; i-- )
+//	{
+//		switch ( m_sortorder[ i ].col )
+//		{
+//			case 0 :
+//				changed = SortItems(( m_sortorder[ i ].direction )?&CompareNameUP:&CompareNameDOWN , 0 );
+//				break;
+//			case 1 :
+//				changed = SortItems(( m_sortorder[ i ].direction )?&CompareCountryUP:&CompareCountryDOWN , 0 );
+//				break;
+//			case 2 :
+//				changed = SortItems(( m_sortorder[ i ].direction )?&CompareRankUP:&CompareRankDOWN , 0 );
+//				break;
+//		}
+//	}
 }
 
 
 int wxCALLBACK FileListCtrl::CompareNameUP( long item1, long item2, long sortData )
 {
-//  Ui* ui = m_ui_for_sort;
-//  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-//  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-//
-//  int b1 = 0, b2 = 0;
-//
-//  if ( battle1.GetInGame() )
-//    b1 += 1000;
-//  if ( battle2.GetInGame() )
-//    b2 += 1000;
-//  if ( battle1.IsLocked() )
-//    b1 += 100;
-//  if ( battle2.IsLocked() )
-//    b2 += 100;
-//  if ( battle1.IsPassworded() )
-//    b1 += 50;
-//  if ( battle2.IsPassworded() )
-//    b2 += 50;
-//  if ( battle1.IsFull() )
-//    b1 += 25;
-//  if ( battle2.IsFull() )
-//    b2 += 25;
-//
-//  if ( b1 > 1000 ) b1 = 1000;
-//  if ( b2 > 1000 ) b2 = 1000;
-//
-//  // inverse the order
-//  if ( b1 < b2 )
-//      return -1;
-//  if ( b1 > b2 )
-//      return 1;
-
-	return 0;
+    FileListCtrl* list = s_parent_dialog->GetListCtrl();
+    wxString name1 = list->GetItemText( item1 );
+    wxString name2 = list->GetItemText( item2 );
+    return name1.CompareTo(name2);
 }
 
 
 int wxCALLBACK FileListCtrl::CompareNameDOWN( long item1, long item2, long sortData )
 {
-//  Ui* ui = m_ui_for_sort;
-//  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-//  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-//
-//  int b1 = 0, b2 = 0;
-//
-//  if ( battle1.GetInGame() )
-//    b1 += 1000;
-//  if ( battle2.GetInGame() )
-//    b2 += 1000;
-//  if ( battle1.IsLocked() )
-//    b1 += 100;
-//  if ( battle2.IsLocked() )
-//    b2 += 100;
-//  if ( battle1.IsPassworded() )
-//    b1 += 50;
-//  if ( battle2.IsPassworded() )
-//    b2 += 50;
-//  if ( battle1.IsFull() )
-//    b1 += 25;
-//  if ( battle2.IsFull() )
-//    b2 += 25;
-//
-//  if ( b1 > 1000 ) b1 = 1000;
-//  if ( b2 > 1000 ) b2 = 1000;
-//
-//  // inverse the order
-//  if ( b1 < b2 )
-//      return 1;
-//  if ( b1 > b2 )
-//      return -1;
-
-	return 0;
+    FileListCtrl* list = s_parent_dialog->GetListCtrl();
+    wxString name1 = list->GetItemText( item1 );
+    wxString name2 = list->GetItemText( item2 );
+    return name2.CompareTo(name1);
 }
 
 

@@ -1,5 +1,6 @@
 #include "filelistdialog.h"
 #include "filelistctrl.h"
+#include "../springunitsync.h"
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
@@ -25,7 +26,7 @@ FileListDialog::FileListDialog(wxWindow* parent) :
 
     wxBoxSizer* m_list_sizer;
     m_list_sizer = new wxBoxSizer( wxVERTICAL );
-    m_filelistctrl = new FileListCtrl( this );
+    m_filelistctrl = new FileListCtrl( this, this );
     m_list_sizer->Add( m_filelistctrl, 1, wxALL|wxEXPAND, 5 );
 
     wxBoxSizer* m_select_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -64,13 +65,28 @@ FileListDialog::~FileListDialog()
 {
 
 }
+
+FileListCtrl* FileListDialog::GetListCtrl()
+{
+    return m_filelistctrl;
+}
+
 void FileListDialog::UpdateList()
 {
     m_filelistctrl->DeleteAllItems();
     unsigned int count = 0;
-    HashToTorrentData::const_iterator it = m_torrentdata.begin();
+    HashToTorrentData::iterator it = m_torrentdata.begin();
     for ( ; it != m_torrentdata.end(); ++it)
     {
+        switch (it->second.type)
+        {
+            case mod: it->second.ondisk = usync()->ModExists( it->second.name, it->second.hash );
+                break;
+            case map: it->second.ondisk = usync()->MapExists( it->second.name, it->second.hash );
+                break;
+            default:  it->second.ondisk = false;
+                break;
+        }
         count += AddTorrentData( it->second );
     }
     m_filecount->SetLabel( wxString::Format( _("%u files displayed"), count ) );
@@ -94,6 +110,7 @@ bool FileListDialog::AddTorrentData( const TorrentData& data)
         m_filelistctrl->SetItem( index, 0, data.name );
         m_filelistctrl->SetItem( index, 1, data.type == map ? _("Map") : _("Mod") );
         m_filelistctrl->SetItem( index, 2, data.hash );
+
     } catch (...) { return false; }
     return true;
 }

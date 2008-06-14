@@ -69,6 +69,7 @@ struct TorrentData
   wxString name;
   MediaType type;
   wxString infohash;
+  bool ondisk;
 };
 
 typedef std::map<wxString,TorrentData> HashToTorrentData;/// hash -> torr data
