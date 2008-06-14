@@ -30,13 +30,14 @@ FileListDialog::FileListDialog(wxWindow* parent) :
     m_list_sizer->Add( m_filelistctrl, 1, wxALL|wxEXPAND, 5 );
 
     wxBoxSizer* m_select_sizer = new wxBoxSizer( wxHORIZONTAL );
+/*
     m_selectAll_button = new wxButton( this, BUTTON_SELECT_ALL, _T("Select all") );
     m_selectNone_button = new wxButton( this, BUTTON_SELECT_NONE, _T("Select none") );
     m_selectInv_button = new wxButton( this, BUTTON_SELECT_INV, _T("Invert selection") );
     m_select_sizer->Add( m_selectAll_button );
     m_select_sizer->Add( m_selectNone_button );
     m_select_sizer->Add( m_selectInv_button );
-
+*/
     wxBoxSizer* m_filter_sizer;
     m_filter_sizer = new wxBoxSizer( wxVERTICAL );
     m_filter = new FileListFilter ( this, wxID_ANY, this );

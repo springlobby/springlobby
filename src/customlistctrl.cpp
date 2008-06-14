@@ -105,7 +105,7 @@ void customListCtrl::SelectNone()
 {
   for (long i = 0; i < GetItemCount() ; i++ )
   {
-    SetItemState( i, 0, -1 );
+    SetItemState( i, wxLIST_STATE_DONTCARE, -1 );
   }
 }
 
@@ -114,7 +114,7 @@ void customListCtrl::SelectInverse()
   for (long i = 0; i < GetItemCount() ; i++ )
   {
     int state = GetItemState( i, -1 );
-    state = ( state == 0 ? wxLIST_STATE_SELECTED : 0 );
+    state = ( state == wxLIST_STATE_DONTCARE ? wxLIST_STATE_SELECTED : wxLIST_STATE_DONTCARE );
     SetItemState( i, state, -1 );
   }
 }
