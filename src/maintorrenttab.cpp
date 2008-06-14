@@ -142,6 +142,18 @@ void MainTorrentTab::AddTorrentInfo(  TorrentInfos& info )
 
 void MainTorrentTab::OnUpdate()
 {
+  if ( torrent()->IsConnectedToP2PSystem() )
+  {
+    m_but_cancel->Enable();
+    m_but_publish->Enable();
+    m_but_download->Enable();
+  }
+  else
+  {
+    m_but_cancel->Disable();
+    m_but_publish->Disable();
+    m_but_download->Disable();
+  }
     m_torrent_list->SetSelectionRestorePoint();
     info_map = torrent()->CollectGuiInfos();
     m_outgoing_lbl->SetLabel( wxString::Format(_("Total Outgoing: %.2f KB/s"), (info_map[0].outspeed/float(1024)) ) );
