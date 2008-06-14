@@ -78,7 +78,7 @@ if test "$win_build" = 0 ; then
     fi
 else
     if test x$usetorrent = xyes ; then
-        CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DNO_RICHTEXT_CHAT -DTORRENT_DISABLE_ENCRYPTION  "
+        CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION  "
         LIBS=' -Wl,-allow-multiple-definition -L/var/lib/buildbot/lib/mingw/lib -lboost_thread-mt -lboost_filesystem-mt  -lws2_32 -lmswsock -lboost_date_time-mt'
     else
        	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
