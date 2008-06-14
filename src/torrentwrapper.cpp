@@ -677,7 +677,7 @@ void TorrentWrapper::FixTorrentList()
       queuecopy = queued_request_l.Get();
     }
     unsigned int RequestCount = queuecopy.GetCount();
-    for ( unsigned int i; ( ( i < RequestCount) || ( m_leech_count < 4 ) ); i++ )
+    for ( unsigned int i; ( ( i < RequestCount) && ( m_leech_count < 4 ) ); i++ )
     {
       if ( RequestFileByHash( queuecopy[i] ) == success ) queuecopy.RemoveAt( i );
     }
