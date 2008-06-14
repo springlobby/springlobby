@@ -4,6 +4,8 @@
 #include "filelistfilter.h"
 
 #include "../customlistctrl.h"
+#include <vector>
+#include <wx/intl.h>
 
 class wxMenu;
 class wxListEvent;
@@ -16,11 +18,16 @@ class FileListCtrl : public customListCtrl
     FileListCtrl( wxWindow* parent );
     ~FileListCtrl();
 
+    typedef std::vector<wxString> HashVector;
+
     void Sort();
 
     void OnListRightClick( wxListEvent& event );
     void OnMouseMotion(wxMouseEvent& event);
     void OnColClick( wxListEvent& event );
+    HashVector GetSelectedHashes();
+    void SetColumnWidths();
+
   protected:
     static int wxCALLBACK CompareStatusUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareStatusDOWN(long item1, long item2, long sortData);

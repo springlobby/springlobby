@@ -2,7 +2,14 @@
 #include "filelistctrl.h"
 #include <wx/sizer.h>
 #include <wx/stattext.h>
+#include <wx/button.h>
 
+BEGIN_EVENT_TABLE(FileListDialog, wxDialog)
+
+  EVT_BUTTON    ( BUTTON_DOWNLOAD   , FileListDialog::OnDownload        )
+  EVT_BUTTON    ( BUTTON_REFRESH    , FileListDialog::OnRefreshList        )
+
+END_EVENT_TABLE()
 
 FileListDialog::FileListDialog(wxWindow* parent) :
     wxDialog(parent, -1, _("Filestufflistchangemeplease"), wxDefaultPosition, wxSize(800, 600),
@@ -22,6 +29,11 @@ FileListDialog::FileListDialog(wxWindow* parent) :
     m_filter = new FileListFilter ( this, wxID_ANY, this );
     m_filter_sizer->Add( m_filter,0, wxALL|wxEXPAND, 5 );
 
+    wxBoxSizer* m_button_sizer;
+    m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
+    m_download_button = new wxButton( this, BUTTON_DOWNLOAD, _T("Download selected"), wxDefaultPosition, wxSize( -1,28 ), 0 );
+    m_button_sizer->Add( m_download_button );
+
     SetData( torrent()->GetSystemFileList() );
     UpdateList();
 
@@ -29,6 +41,7 @@ FileListDialog::FileListDialog(wxWindow* parent) :
 
     m_main_sizer->Add( m_list_sizer,1, wxALL|wxEXPAND, 5 );
     m_main_sizer->Add( m_filter_sizer,0, wxALL|wxEXPAND, 5 );
+    m_main_sizer->Add( m_button_sizer,0, wxALL|wxEXPAND, 5 );
     m_main_sizer->Add( m_filecount,0, wxALL|wxEXPAND, 5 );
     SetSizer( m_main_sizer );
 }
@@ -47,6 +60,7 @@ void FileListDialog::UpdateList()
         count += AddTorrentData( it->second );
     }
     m_filecount->SetLabel( wxString::Format( _T("%u files displayed"), count ) );
+    m_filelistctrl->SetColumnWidths();
 }
 
 void FileListDialog::SetData(HashToTorrentData& data )
@@ -61,9 +75,28 @@ bool FileListDialog::AddTorrentData( const TorrentData& data)
     try
     {
         int index = m_filelistctrl->InsertItem( m_filelistctrl->GetItemCount(), data.name);
+        //setting hash as item's data means we can retrieve it later for download
+        m_filelistctrl->SetItemText( index, data.hash );
         m_filelistctrl->SetItem( index, 0, data.name );
         m_filelistctrl->SetItem( index, 1, data.type == map ? _T("Map") : _T("Mod") );
         m_filelistctrl->SetItem( index, 2, data.hash );
     } catch (...) { return false; }
     return true;
+}
+
+void FileListDialog::OnDownload( wxCommandEvent& event )
+{
+    typedef FileListCtrl::HashVector HashVector;
+    HashVector hashs = m_filelistctrl->GetSelectedHashes();
+    HashVector::const_iterator it = hashs.begin();
+    for ( ; it != hashs.end(); ++it)
+    {
+        torrent()->RequestFileByHash(*it);
+    }
+
+}
+
+void FileListDialog::OnRefreshList( wxCommandEvent& event )
+{
+
 }
