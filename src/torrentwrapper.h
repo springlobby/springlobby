@@ -61,7 +61,6 @@ struct TorrentInfos
   unsigned int filesize;
   wxString hash;
   int eta; //is set in update function of maintorrenttab
-  bool on_disk;
 };
 
 struct TorrentData
@@ -70,6 +69,7 @@ struct TorrentData
   wxString name;
   MediaType type;
   wxString infohash;
+  bool ondisk;
 };
 
 typedef std::map<wxString,TorrentData> HashToTorrentData;/// hash -> torr data

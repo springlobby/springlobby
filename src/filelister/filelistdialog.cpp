@@ -1,5 +1,6 @@
 #include "filelistdialog.h"
 #include "filelistctrl.h"
+#include "../springunitsync.h"
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
@@ -73,9 +74,18 @@ void FileListDialog::UpdateList()
 {
     m_filelistctrl->DeleteAllItems();
     unsigned int count = 0;
-    HashToTorrentData::const_iterator it = m_torrentdata.begin();
+    HashToTorrentData::iterator it = m_torrentdata.begin();
     for ( ; it != m_torrentdata.end(); ++it)
     {
+        switch (it->second.type)
+        {
+            case mod: it->second.ondisk = usync()->ModExists( it->second.name, it->second.hash );
+                break;
+            case map: it->second.ondisk = usync()->MapExists( it->second.name, it->second.hash );
+                break;
+            default:  it->second.ondisk = false;
+                break;
+        }
         count += AddTorrentData( it->second );
     }
     m_filecount->SetLabel( wxString::Format( _("%u files displayed"), count ) );
@@ -93,15 +103,13 @@ bool FileListDialog::AddTorrentData( const TorrentData& data)
         return false;
     try
     {
-        bool islocal = torrent()->IsFileInSystem( data.hash );
         int index = m_filelistctrl->InsertItem( m_filelistctrl->GetItemCount(), data.hash);
         //setting hash as item's data means we can retrieve it later for download
         m_filelistctrl->SetItemText( index, data.hash );
         m_filelistctrl->SetItem( index, 0, data.name );
         m_filelistctrl->SetItem( index, 1, data.type == map ? _("Map") : _("Mod") );
         m_filelistctrl->SetItem( index, 2, data.hash );
-        if ( islocal )
-            m_filelistctrl->SetItemBackgroundColour( index, wxColor(127,255,255));
+
     } catch (...) { return false; }
     return true;
 }
