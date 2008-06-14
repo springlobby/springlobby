@@ -30,6 +30,17 @@ enum MediaType
   mod
 };
 
+enum DownloadRequestStatus
+{
+  success,
+  not_connected,
+  paused_ingame,
+  max_leech_exceeded,
+  duplicate_request,
+  file_not_found,
+  torrent_join_failed
+};
+
 struct TorrentInfos
 {
   float numcopies;
@@ -79,8 +90,8 @@ class TorrentWrapper : public iNetClass
     /// lobby interface
     void SetIngameStatus( bool status );
     void ReloadLocalFileList();
-    bool RequestFileByHash( const wxString& hash );
-    bool RequestFileByName( const wxString& name );
+    DownloadRequestStatus RequestFileByHash( const wxString& hash );
+    DownloadRequestStatus RequestFileByName( const wxString& name );
     void UpdateSettings();
     void UpdateFromTimer( int mselapsed );
     std::map<int,TorrentInfos> CollectGuiInfos();

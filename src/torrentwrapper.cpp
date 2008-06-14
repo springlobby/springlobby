@@ -233,43 +233,43 @@ HashToTorrentData& TorrentWrapper::GetSystemFileList()
 ////////////////////////////////////////////////////////
 
 
-bool TorrentWrapper::RequestFileByHash( const wxString& hash )
+DownloadRequestStatus TorrentWrapper::RequestFileByHash( const wxString& hash )
 {
-  if (ingame) return false;
-  if ( !m_connected ) return false;
-  if ( m_leech_count > 4 ) return false;
+  if (ingame) return paused_ingame;
+  if ( !m_connected ) return not_connected;
+  if ( m_leech_count > 4 ) return max_leech_exceeded;
 
   wxString name;
   {
     ScopedLocker<HashToTorrentData> torrents_infos_l(m_torrents_infos);
     HashToTorrentData::iterator it=torrents_infos_l.Get().find(hash);
-    if (it==torrents_infos_l.Get().end()) return false;
-    if ( it->second.hash.IsEmpty() ) return false; /// the file is not present in the system
+    if (it==torrents_infos_l.Get().end()) return file_not_found;
+    if ( it->second.hash.IsEmpty() ) return file_not_found; /// the file is not present in the system
     name=it->second.name;
   }
 
   {
     ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
     OpenTorrents::iterator itor = open_torrents_l.Get().find(name);
-    if ( itor != open_torrents_l.Get().end() ) return true; /// don't request twice the same file
+    if ( itor != open_torrents_l.Get().end() ) return duplicate_request; /// don't request twice the same file
   }
 
-  if ( !JoinTorrent( hash ) ) return false;
+  if ( !JoinTorrent( hash ) ) return torrent_join_failed;
   m_socket_class->Send( wxString::Format( _T("N+|%s\n"), hash.c_str() ) ); /// request for seeders for the file
   m_leech_count++;
   {
     ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
     open_torrents_l.Get()[name] = false; /// not seeding when just joined
   }
-  return true;
+  return success;
 }
 
 
-bool TorrentWrapper::RequestFileByName( const wxString& name )
+DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
 {
     ScopedLocker<NameToHash> name_to_hash_l(m_name_to_hash);
     NameToHash::from::iterator iter = name_to_hash_l.Get().from.find(name);
-    if( iter == name_to_hash_l.Get().from.end() ) return false;
+    if( iter == name_to_hash_l.Get().from.end() ) return file_not_found;
     return RequestFileByHash( iter->second );
 }
 
