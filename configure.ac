@@ -40,16 +40,32 @@ AC_PROG_CXX
 
 AM_OPTIONS_WXCONFIG
 
-AM_PATH_WXCONFIG([2.6.3], [],
-   [AC_MSG_ERROR([
-           wxWidgets must be installed on your system
-           but wx-config script couldn't be found.
+_WX_PRIVATE_CHECK_VERSION([2], [8], [0])
+if test -n "$wx_ver_ok"; then
+        AM_PATH_WXCONFIG([2.6.3], [],
+       [AC_MSG_ERROR([
+               wxWidgets must be installed on your system
+               but wx-config script couldn't be found.
 
-           Please check that wx-config is in path, the directory
-           where wxWidgets libraries are installed (returned by
-           'wx-config --libs' command) is in LD_LIBRARY_PATH or
-           equivalent variable and wxWidgets version is 2.6.3 or above.
-   ])], [base,core,net,adv,qa,richtext])
+               Please check that wx-config is in path, the directory
+               where wxWidgets libraries are installed (returned by
+               'wx-config --libs' command) is in LD_LIBRARY_PATH or
+               equivalent variable and wxWidgets version is 2.6.3 or above.
+       ])], [base,core,net,adv,qa,richtext,aui])
+else
+        AM_PATH_WXCONFIG([2.6.3], [],
+       [AC_MSG_ERROR([
+               wxWidgets must be installed on your system
+               but wx-config script couldn't be found.
+
+               Please check that wx-config is in path, the directory
+               where wxWidgets libraries are installed (returned by
+               'wx-config --libs' command) is in LD_LIBRARY_PATH or
+               equivalent variable and wxWidgets version is 2.6.3 or above.
+       ])], [base,core,net,adv,qa])
+    CXXFLAGS="$CXXFLAGS -DNO_RICHTEXT_CHAT"
+fi
+
 win_build=0
 AC_ARG_VAR([WINDRES], [Windows resource file compiler command])
 if test x$host_os = xmingw32msvc ; then
