@@ -50,6 +50,8 @@ class TDFWriter
 #include <map>
 #include <deque>
 
+#include <autopointers.h>
+
 class Node;
 typedef RefcountedPointer<Node> PNode;
 class DataList;
@@ -212,6 +214,7 @@ struct Token{
 };
 
 class Tokenizer{
+  /// todo: clean up, move to CPP file
   struct IncludeCacheEntry{// simple reference counted pointer to stream.
     mystring name;/// used for error reporting
     int line, column;
