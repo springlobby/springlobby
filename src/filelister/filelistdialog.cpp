@@ -1,3 +1,5 @@
+#ifndef NO_TORRENT_SYSTEM
+
 #include "filelistdialog.h"
 #include "filelistctrl.h"
 #include "../springunitsync.h"
@@ -149,3 +151,5 @@ void FileListDialog::OnSelectInv( wxCommandEvent& event )
 {
     m_filelistctrl->SelectInverse();
 }
+
+#endif

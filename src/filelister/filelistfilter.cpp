@@ -1,6 +1,8 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 //
 
+#ifndef NO_TORRENT_SYSTEM
+
 #include <wx/stattext.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
@@ -136,3 +138,5 @@ void FileListFilter::OnChangeOndisk( wxCommandEvent& event )
 {
 	OnChange( event );
 }
+
+#endif
