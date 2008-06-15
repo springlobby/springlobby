@@ -83,7 +83,7 @@ if test "$win_build" = 0 ; then
         AC_MSG_CHECKING([checking for libtorrent])
         PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
         if test x$usetorrent = xfail ; then
-            AC_MSG_ERROR([missing required libtorrent library, get it at http://www.rasterbar.com/products/libtorrent/, please note that some distros name it rb-libtorrent, that is NOT libtorrent from rakshasa]);
+            AC_MSG_ERROR([missing required libtorrent library get it at http://www.rasterbar.com/products/libtorrent/ please note that some distros name it rb-libtorrent that is NOT libtorrent from rakshasa  you can skip the dependency by using --disable-torrent-system]);
             exit
         fi
         AC_SUBST(LIBTORRENT_CFLAGS)
@@ -102,7 +102,7 @@ fi
 
 #check if sound configure is enables, if yes check for SDL
 if test x$sound = xyes ; then
-    AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10, SDL_sound and SDL_mixer, use --disable-sound to skip the dependency (and the feature)") )
+    AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10 SDL_sound and SDL_mixer use --disable-sound to skip the dependency and the feature") )
 else
     CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND "
 fi

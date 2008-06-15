@@ -1,6 +1,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_FILELISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_FILELISTCTRL_H
 
+#ifndef NO_TORRENT_SYSTEM
+
 #include "filelistfilter.h"
 
 #include "../customlistctrl.h"
@@ -58,5 +60,7 @@ enum
     BLIST_DLMOD,
     BLIST_DLMAP
 };
+
+#endif
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLELISTCTRL_H

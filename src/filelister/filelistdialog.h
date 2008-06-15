@@ -1,6 +1,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_FILELISTDIALOG_H
 #define SPRINGLOBBY_HEADERGUARD_FILELISTDIALOG_H
 
+#ifndef NO_TORRENT_SYSTEM
+
 #include <wx/dialog.h>
 #include "../torrentwrapper.h"
 
@@ -52,5 +54,7 @@ class FileListDialog : public wxDialog
     private:
         DECLARE_EVENT_TABLE();
 };
+
+#endif
 
 #endif // SPRINGLOBBY_HEADERGUARD_FILELISTDIALOG_H

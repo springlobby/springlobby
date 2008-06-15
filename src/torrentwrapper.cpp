@@ -547,14 +547,14 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
 
   if ( sett().GetSpringDir().IsEmpty() ) return false; /// no good things can happend if you don't know which folder to r/w files from
   bool creationsuccess = true;
-  if ( !wxFileName::DirExists(  sett().GetSpringDir() + _T("/torrents/")  ) ) creationsuccess = wxFileName::Mkdir(  sett().GetSpringDir() + _T("/torrents/")  );
+  if ( !wxFileName::DirExists(  sett().GetSpringDir() +  wxFileName::GetPathSeparator()  + _T("torrents") +  wxFileName::GetPathSeparator()   ) ) creationsuccess = wxFileName::Mkdir(  sett().GetSpringDir() +  wxFileName::GetPathSeparator() +  _T("torrents") +  wxFileName::GetPathSeparator()   );
   if (!creationsuccess) return false;
   wxHTTP fileRequest;
   //versionRequest.SetHeader(_T("Content-type"), _T(""));
   /// normal timeout is 10 minutes.. set to 10 secs.
   fileRequest.SetTimeout(10);
   fileRequest.Connect( m_tracker_urls[m_connected_tracker_index], 80);
-  wxInputStream *stream = fileRequest.GetInputStream(  wxFileName::GetPathSeparator() + _T("torrents") + wxFileName::GetPathSeparator() + hash + _T(".torrent") );
+  wxInputStream *stream = fileRequest.GetInputStream(  _T("/torrents/") + hash + _T(".torrent") );
   bool ret = false;
   if (fileRequest.GetError() == wxPROTO_NOERR)
   {
