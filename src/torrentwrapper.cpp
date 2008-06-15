@@ -437,10 +437,10 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
   wxLogMessage(_T("(3) Joining torrent: downloading info file"));
 
   #ifdef HAVE_WX26
-    wxFileName filename( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("torrents")  + wxFileName::GetPathSeparator() + hash + _T(".torrent") ) );
+    wxFileName filename( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("torrents")  + wxFileName::GetPathSeparator() + hash + _T(".torrent") ) ;
     bool readable = filename.IsOk();
   #else
-    bool readable = wxFileName::IsFileReadable( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("torrents")  + wxFileName::GetPathSeparator() + hash + _T(".torrent") ) );
+    bool readable = wxFileName::IsFileReadable( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("torrents")  + wxFileName::GetPathSeparator() + hash + _T(".torrent") ) ;
   #endif
 
   if ( !readable  ) /// file descriptor not present, download it
