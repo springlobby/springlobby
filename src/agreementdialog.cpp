@@ -23,7 +23,8 @@ BEGIN_EVENT_TABLE(AgreementDialog, wxDialog)
 END_EVENT_TABLE()
 
 
-AgreementDialog::AgreementDialog( wxWindow* parent, const wxString& agreement ): wxDialog( parent, -1, _("Accept Agreement"), wxDefaultPosition, wxDefaultSize )
+AgreementDialog::AgreementDialog( wxWindow* parent, const wxString& agreement ):
+    wxDialog( parent, -1, _("Accept Agreement"), wxDefaultPosition, wxDefaultSize )
 {
   SetSizeHints( wxDefaultSize, wxDefaultSize );
 
