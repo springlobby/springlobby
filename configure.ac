@@ -63,7 +63,6 @@ else
                'wx-config --libs' command) is in LD_LIBRARY_PATH or
                equivalent variable and wxWidgets version is 2.6.3 or above.
        ])], [base,core,net,adv,qa])
-    CXXFLAGS="$CXXFLAGS -DNO_RICHTEXT_CHAT"
 fi
 
 win_build=0
