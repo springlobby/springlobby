@@ -436,7 +436,14 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
     name = torrent_name + _T("|MOD");
   }
   wxLogMessage(_T("(3) Joining torrent: downloading info file"));
-  if ( !wxFileName::IsFileReadable( sett().GetSpringDir() + _T("/torrents/") + hash + _T(".torrent") ) ) /// file descriptor not present, download it
+  #ifdef HAVE_WX26
+    wxFileName filename( sett().GetSpringDir() + _T("/torrents/") + hash + _T(".torrent") );
+    bool readable = filename.IsOk();
+  #else
+    bool readable = wxFileName::IsFileReadable( sett().GetSpringDir() + _T("/torrents/") + hash + _T(".torrent") );
+  #endif
+
+  if ( !readable  ) /// file descriptor not present, download it
   {
      if (!DownloadTorrentFileFromTracker( hash )) return false;
   }
