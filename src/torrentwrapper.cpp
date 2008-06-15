@@ -422,25 +422,25 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
     torrent_name=it->second.name;
     torrent_infohash_b64=it->second.infohash;
   }
-  wxString path = sett().GetSpringDir();
+  wxString path = sett().GetSpringDir() + wxFileName::GetPathSeparator();
   wxString name;
-  if(path.size()>0&&(path.Last()!=wxChar('/')))path+=wxChar('/');
   if ( type == map )
   {
-    path = path + _T("maps/");
+    path = path + _T("maps") + wxFileName::GetPathSeparator();
     name = torrent_name + _T("|MAP");
   }
   else
   {
-    path = path + _T("mods/");
+    path = path + _T("mods") + wxFileName::GetPathSeparator();
     name = torrent_name + _T("|MOD");
   }
   wxLogMessage(_T("(3) Joining torrent: downloading info file"));
+
   #ifdef HAVE_WX26
-    wxFileName filename( sett().GetSpringDir() + _T("/torrents/") + hash + _T(".torrent") );
+    wxFileName filename( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("torrents")  + wxFileName::GetPathSeparator() + hash + _T(".torrent") ) );
     bool readable = filename.IsOk();
   #else
-    bool readable = wxFileName::IsFileReadable( sett().GetSpringDir() + _T("/torrents/") + hash + _T(".torrent") );
+    bool readable = wxFileName::IsFileReadable( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("torrents")  + wxFileName::GetPathSeparator() + hash + _T(".torrent") ) );
   #endif
 
   if ( !readable  ) /// file descriptor not present, download it
@@ -448,7 +448,7 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
      if (!DownloadTorrentFileFromTracker( hash )) return false;
   }
   /// read torrent from file
-  std::ifstream in( wxString( sett().GetSpringDir() + _T("/torrents/") + hash + _T(".torrent") ).mb_str(), std::ios_base::binary);
+  std::ifstream in( wxString( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("torrents") + wxFileName::GetPathSeparator() + hash + _T(".torrent") ).mb_str(), std::ios_base::binary);
   in.unsetf(std::ios_base::skipws);
   libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
   wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),name.c_str(),path.c_str());
@@ -494,18 +494,18 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
   if ( sett().GetSpringDir().IsEmpty() ) return; /// no good things can happend if you don't know which folder to r/w files from
   bool creationsuccess = true;
-  if ( !wxFileName::DirExists( sett().GetSpringDir() + _T("/torrents/")  ) ) creationsuccess = wxFileName::Mkdir(  sett().GetSpringDir() + _T("/torrents/")  );
+  if ( !wxFileName::DirExists( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("torrents") + wxFileName::GetPathSeparator()  ) ) creationsuccess = wxFileName::Mkdir(  sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("torrents") + wxFileName::GetPathSeparator()  );
   if (!creationsuccess) return;
 
   libtorrent::torrent_info newtorrent;
 
-  wxString StringFilePath = sett().GetSpringDir();
+  wxString StringFilePath = sett().GetSpringDir() + wxFileName::GetPathSeparator();
   switch (type)
   {
     case map:
-      StringFilePath += _T("/maps/");
+      StringFilePath += _T("maps") + wxFileName::GetPathSeparator();
     case mod:
-      StringFilePath += _T("/mods/");
+      StringFilePath += _T("mods") + wxFileName::GetPathSeparator();
   }
   StringFilePath += name;
   boost::filesystem::path InputFilePath = complete(boost::filesystem::path( STD_STRING( StringFilePath ) ) );
@@ -554,12 +554,12 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
   /// normal timeout is 10 minutes.. set to 10 secs.
   fileRequest.SetTimeout(10);
   fileRequest.Connect( m_tracker_urls[m_connected_tracker_index], 80);
-  wxInputStream *stream = fileRequest.GetInputStream( _T("/torrents/") + hash + _T(".torrent") );
+  wxInputStream *stream = fileRequest.GetInputStream(  wxFileName::GetPathSeparator() + _T("torrents") + wxFileName::GetPathSeparator() + hash + _T(".torrent") );
   bool ret = false;
   if (fileRequest.GetError() == wxPROTO_NOERR)
   {
 
-    wxFileOutputStream output(sett().GetSpringDir() +  _T("/torrents/") + hash + _T(".torrent") );
+    wxFileOutputStream output(sett().GetSpringDir() + wxFileName::GetPathSeparator() +  _T("torrents") + wxFileName::GetPathSeparator() + hash + _T(".torrent") );
     if ( output.Ok() )
     {
       stream->Read(output);
