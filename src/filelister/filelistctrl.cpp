@@ -90,7 +90,7 @@ FileListCtrl::~FileListCtrl()
 
 void FileListCtrl::OnListRightClick( wxListEvent& event )
 {
-	PopupMenu( m_popup );
+	//PopupMenu( m_popup );
 }
 
 void FileListCtrl::OnColClick( wxListEvent& event )
