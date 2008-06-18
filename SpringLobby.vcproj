@@ -717,6 +717,22 @@
 				RelativePath=".\src\updater\versionchecker.h"
 				>
 			</File>
+			<Filter
+				Name="filelister"
+				>
+				<File
+					RelativePath=".\src\filelister\filelistctrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\filelister\filelistdialog.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\filelister\filelistfilter.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -1251,6 +1267,70 @@
 				RelativePath=".\src\updater\versionchecker.cpp"
 				>
 			</File>
+			<Filter
+				Name="filelister"
+				>
+				<File
+					RelativePath=".\src\filelister\filelistctrl.cpp"
+					>
+					<FileConfiguration
+						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\src\filelister\filelistdialog.cpp"
+					>
+					<FileConfiguration
+						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\src\filelister\filelistfilter.cpp"
+					>
+					<FileConfiguration
+						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
