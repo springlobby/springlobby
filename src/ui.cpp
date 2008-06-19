@@ -317,7 +317,10 @@ void Ui::DownloadMod( const wxString& hash, const wxString& name )
 
 void Ui::OpenWebBrowser( const wxString& url )
 {
-  if ( sett().GetWebBrowserUseDefault() || sett().GetWebBrowserPath() == "use default" )
+  if ( sett().GetWebBrowserUseDefault()
+       // These shouldn't happen, but if they do we use the default browser anyway.
+       || sett().GetWebBrowserPath() == wxEmptyString
+       || sett().GetWebBrowserPath() == _T("use default") )
   {
       if ( !wxLaunchDefaultBrowser( url ) )
       {

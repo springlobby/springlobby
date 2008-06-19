@@ -177,6 +177,7 @@ void SpringOptionsTab::DoRestore()
   m_sync_spec_radio->SetValue( !sett().GetUnitSyncUseDefLoc() );
   HandleExeloc( sett().GetSpringUseDefLoc() );
   HandleUsyncloc( sett().GetUnitSyncUseDefLoc() );
+  HandleWebloc( sett().GetWebBrowserUseDefault() );
 }
 
 
