@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: Ui
 //
@@ -317,7 +317,7 @@ void Ui::DownloadMod( const wxString& hash, const wxString& name )
 
 void Ui::OpenWebBrowser( const wxString& url )
 {
-  if ( sett().GetWebBrowserPath() == _T("use default") || sett().GetWebBrowserPath().IsEmpty() )
+  if ( sett().GetWebBrowserUseDefault() || sett().GetWebBrowserPath() == "use default" )
   {
       if ( !wxLaunchDefaultBrowser( url ) )
       {
