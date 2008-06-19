@@ -376,7 +376,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     queuecopy = queued_request_l.Get();
   }
   unsigned int RequestCount = queuecopy.GetCount();
-  for ( unsigned int i; i < RequestCount; i++ )
+  for ( unsigned int i = 0; i < RequestCount; i++ )
   {
     TorrentInfos QueuedTorrent;
     QueuedTorrent.numcopies = -1;
@@ -687,14 +687,14 @@ void TorrentWrapper::FixTorrentList()
       queuecopy = queued_request_l.Get();
     }
     unsigned int RequestCount = queuecopy.GetCount();
-    for ( unsigned int i; ( ( i < RequestCount) && ( m_leech_count < 4 ) ); i++ )
+    for ( unsigned int i = 0; ( ( i < RequestCount) && ( m_leech_count < 4 ) ); i++ )
     {
       if ( RequestFileByHash( queuecopy[i] ) == success ) queuecopy.RemoveAt( i );
     }
     {
       ScopedLocker<wxArrayString> queued_request_l(m_queued_requests);
       queued_request_l.Get().Empty();
-      for ( unsigned int i; i < RequestCount; i++ ) queued_request_l.Get().Add( queuecopy[i] );
+      for ( unsigned int i = 0; i < RequestCount; i++ ) queued_request_l.Get().Add( queuecopy[i] );
     }
   }
 }
@@ -819,7 +819,7 @@ void TorrentWrapper::OnConnected( Socket* sock )
 
   wxArrayString TorrentsToResume = sett().GetTorrentListToResume();
   unsigned int ResumeCount = TorrentsToResume.GetCount();
-  for ( unsigned int i; i < ResumeCount; i++ ) RequestFileByHash( TorrentsToResume[i] ); /// resume all open leeched files when system as disconnected last time
+  for ( unsigned int i = 0; i < ResumeCount; i++ ) RequestFileByHash( TorrentsToResume[i] ); /// resume all open leeched files when system as disconnected last time
 
 
 }
