@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: Settings
 //
@@ -162,9 +162,22 @@ void Settings::SetOldSpringLaunchMethod( bool value )
 }
 
 
+bool Settings::GetWebBrowserUseDefault()
+{
+  // See note on ambiguities, in wx/confbase.h near line 180.
+  bool useDefault;
+  m_config->Read(_T("/General/WebBrowserUseDefault"), &useDefault, true);
+  return useDefault;
+}
+
+void Settings::SetWebBrowserUseDefault(bool useDefault)
+{
+  m_config->Write(_T("/General/WebBrowserUseDefault"), useDefault);
+}
+
 wxString Settings::GetWebBrowserPath()
 {
-    return m_config->Read( _T("/General/WebBrowserPath"), _T("use default") );
+  return m_config->Read( _T("/General/WebBrowserPath"), wxEmptyString);
 }
 
 

@@ -94,6 +94,21 @@ class Settings
     bool GetShowIPAddresses();
     void SetShowIPAddresses(bool value);
 
+    /** Fetch the "Use Default" setting for the web browser.
+     *
+     * @returns the current setting.
+     */
+    bool GetWebBrowserUseDefault();
+
+
+    /** Set the "Use Default" setting for the web browser.  If @c
+     * true, we use wxLaunchDefaultBrowser when we want to open a web
+     * browser.
+     *
+     * @sa Ui::OpenWebBrowser
+     */
+    void SetWebBrowserUseDefault(bool useDefault);
+
     wxString GetWebBrowserPath();
     void SetWebBrowserPath( const wxString path );
 
