@@ -218,7 +218,7 @@ const Control RO_SLI[] = {
 	{_("Ground decals"),                _T("GroundDecals"),        ID_RO_SLI_5,	_T("0"), {_("only on/off available at this time")}	},
 	{_("Unit icon distance"),           _T("UnitIconDist"),        ID_RO_SLI_6,	_T("350"), {_("determines at which range units are still fully rendered\n"
 																								"higher value = greater range = more units rendered at the same time")}	},
-	{_("Max simultaneous particles"),     _T("MaxParticles"),        ID_RO_SLI_7,	_T("5000")	, {_("limits how many particles are displayed at the same time")}},
+	{_("Max simultaneous particles"),     _T("MaxParticles"),        ID_RO_SLI_7,	_T("5000")	, {_("limits how many particles are displayed at the same time")}}
 	//{_("Max texture stages (SM3)"), _T("SM3MaxTextureStages"), ID_RO_SLI_8,	"6"	, {_("Decrease this if you are having bad perfomance on maps in sm3 format,\n"
 	// not needed atm																				"increase if sm3 maps look ugly.")}}
 };
@@ -228,7 +228,7 @@ const category_sizes_map_type RO_SLI_entry ( _T("RO_SLI"), sizeof(RO_SLI) / Cont
 const Control VO_CBOX[] = {
 	{_("Run full-screen"),                _T("Fullscreen"),              ID_WINDOWP_VO_CBOX_0,	_T("1"), {_("run fullscreen or in a window?")}},
 	{_("Dual-screen mode"),               _T("DualScreenMode"),          ID_WINDOWP_VO_CBOX_1,	_T("0"), {_("if you have two monitors you can use both")}},
-	{_("Enable v-sync"),                  _T("VSync"),                   ID_WINDOWP_VO_CBOX_2,	_T("1"), {_("V-Sync on/off")}},
+	{_("Enable v-sync"),                  _T("VSync"),                   ID_WINDOWP_VO_CBOX_2,	_T("1"), {_("V-Sync on/off")}}
 };
 
 const category_sizes_map_type VO_CBOX_entry ( _T("VO_BOX"), sizeof(VO_CBOX) / Control_size );
@@ -395,7 +395,7 @@ const category_sizes_map_type entries_[] = { RC_TEXT_entry, MO_RBUT_entry, MO_CB
                                             MO_SLI_entry, UI_CBOX_entry, QA_CBOX_entry, AO_SLI_entry, AO_SLI_entry, VO_SLI_EXT_entry, VO_SLI_entry,
                                             VO_RBUT_entry, VO_CBOX_entry, RO_SLI_entry, UI_ZOOM_entry};
 
-static category_sizes_map s_category_sizes ( entries_ , entries_ + sizeof(entries_[0]) );
+static category_sizes_map s_category_sizes ( entries_ , entries_ + sizeof(entries_) / sizeof(entries_[0]) );
 
 /** not used
 #define NUM_DEFAULTS 88
