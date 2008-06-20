@@ -166,7 +166,7 @@ bool Settings::GetWebBrowserUseDefault()
 {
   // See note on ambiguities, in wx/confbase.h near line 180.
   bool useDefault;
-  m_config->Read(_T("/General/WebBrowserUseDefault"), &useDefault, true);
+  m_config->Read(_T("/General/WebBrowserUseDefault"), &useDefault, DEFSETT_WEB_BROWSER_USE_DEFAULT);
   return useDefault;
 }
 
