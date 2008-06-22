@@ -17,6 +17,10 @@
 #define DEFSETT_SPRING_DIR wxGetCwd()
 #define DEFSETT_SPRING_PORT 8452
 
+/** Default value for config path /General/WebBrowserUseDefault.
+ */
+#define DEFSETT_WEB_BROWSER_USE_DEFAULT true
+
 #include <wx/fileconf.h>
 #include "utils.h"
 #include <wx/wfstream.h>
@@ -93,6 +97,24 @@ class Settings
 
     bool GetShowIPAddresses();
     void SetShowIPAddresses(bool value);
+
+    /** Fetch the "Use Default" setting for the web browser.
+     *
+     * @returns the current setting.
+     */
+    bool GetWebBrowserUseDefault();
+
+
+    /** Set the "Use Default" setting for the web browser.  If @c
+     * true, we use wxLaunchDefaultBrowser when we want to open a web
+     * browser.
+     *
+     * @param useDefault Whether or not to use the system-default
+     * browser.
+     *
+     * @sa Ui::OpenWebBrowser
+     */
+    void SetWebBrowserUseDefault(bool useDefault);
 
     wxString GetWebBrowserPath();
     void SetWebBrowserPath( const wxString path );

@@ -59,9 +59,9 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 3, col, _T("MB uploaded") );
 
-  col.SetText( _("seeding") );
+  col.SetText( _("status") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 4, col, _T("seeding") );
+  InsertColumn( 4, col, _T("status") );
 
   col.SetText( _("% complete") );
   col.SetImage( icons().ICON_NONE );
@@ -324,9 +324,9 @@ int wxCALLBACK TorrentListCtrl::CompareLeechUP(long item1, long item2, long sort
   TorrentInfos& info1 = info_map[item1];
   TorrentInfos& info2 = info_map[item2];
 
-  if (  info1.seeding <  info2.seeding )
+  if (  info1.downloadstatus <  info2.downloadstatus )
       return -1;
-  if (  info1.seeding >  info2.seeding )
+  if (  info1.downloadstatus >  info2.downloadstatus )
       return 1;
 
   return 0;
@@ -339,9 +339,9 @@ int wxCALLBACK TorrentListCtrl::CompareLeechDOWN(long item1, long item2, long so
   TorrentInfos& info1 = info_map[item1];
   TorrentInfos& info2 = info_map[item2];
 
-  if (  info1.seeding <  info2.seeding )
+  if (  info1.downloadstatus <  info2.downloadstatus )
       return 1;
-  if (  info1.seeding >  info2.seeding )
+  if (  info1.downloadstatus >  info2.downloadstatus )
       return -1;
 
   return 0;

@@ -40,8 +40,9 @@ AC_PROG_CXX
 
 AM_OPTIONS_WXCONFIG
 
+
 AM_PATH_WXCONFIG([2.6.3], [],
-   [AC_MSG_ERROR([
+    [AC_MSG_ERROR([
            wxWidgets must be installed on your system
            but wx-config script couldn't be found.
 
@@ -68,7 +69,7 @@ if test "$win_build" = 0 ; then
         AC_MSG_CHECKING([checking for libtorrent])
         PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
         if test x$usetorrent = xfail ; then
-            AC_MSG_ERROR([missing required libtorrent library, get it at http://www.rasterbar.com/products/libtorrent/, please note that some distros name it rb-libtorrent, that is NOT libtorrent from rakshasa]);
+            AC_MSG_ERROR([missing required libtorrent library get it at http://www.rasterbar.com/products/libtorrent/ please note that some distros name it rb-libtorrent that is NOT libtorrent from rakshasa  you can skip the dependency by using --disable-torrent-system]);
             exit
         fi
         AC_SUBST(LIBTORRENT_CFLAGS)
@@ -78,7 +79,7 @@ if test "$win_build" = 0 ; then
     fi
 else
     if test x$usetorrent = xyes ; then
-        CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DNO_RICHTEXT_CHAT -DTORRENT_DISABLE_ENCRYPTION  "
+        CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION  "
         LIBS=' -Wl,-allow-multiple-definition -L/var/lib/buildbot/lib/mingw/lib -lboost_thread-mt -lboost_filesystem-mt  -lws2_32 -lmswsock -lboost_date_time-mt'
     else
        	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
@@ -87,7 +88,7 @@ fi
 
 #check if sound configure is enables, if yes check for SDL
 if test x$sound = xyes ; then
-    AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10, SDL_sound and SDL_mixer, use --disable-sound to skip the dependency (and the feature)") )
+    AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10 SDL_sound and SDL_mixer use --disable-sound to skip the dependency and the feature") )
 else
     CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND "
 fi

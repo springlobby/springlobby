@@ -1473,7 +1473,7 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
     tascl.color.blue = bs.colour.Blue();
     tascl.color.zero = 0;
     //MYBATTLESTATUS battlestatus myteamcolor
-    SendCmd( _T("MYBATTLESTATUS"), wxString::Format( _T("%u %u"), tasbs.data, tascl.data ) );
+    SendCmd( _T("MYBATTLESTATUS"), wxString::Format( _T("%d %d"), tasbs.data, tascl.data ) );
 }
 
 
@@ -1490,7 +1490,7 @@ void TASServer::SendMyUserStatus()
     taus.tasdata.moderator = us.moderator;
     taus.tasdata.bot = us.bot;
 
-    SendCmd( _T("MYSTATUS"), wxString::Format( _T("%u"), taus.byte ) );
+    SendCmd( _T("MYSTATUS"), wxString::Format( _T("%d"), taus.byte ) );
 }
 
 
@@ -1561,13 +1561,13 @@ void TASServer::ForceTeam( int battleid, const wxString& nick, int team )
         }
         else
         {
-            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to team #") + wxString::Format( _T("%u"), team + 1 ) + _T(".") );
+            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to team #") + wxString::Format( _T("%d"), team + 1 ) + _T(".") );
         }
         return;
     }
 
     //FORCETEAMNO username teamno
-    SendCmd( _T("FORCETEAMNO"), nick + wxString::Format(_T(" %u"), team ) );
+    SendCmd( _T("FORCETEAMNO"), nick + wxString::Format(_T(" %d"), team ) );
 }
 
 
@@ -1590,13 +1590,13 @@ void TASServer::ForceAlly( int battleid, const wxString& nick, int ally )
         }
         else
         {
-            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to ally #") + wxString::Format( _T("%u"), ally + 1 ) + _T(".") );
+            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to ally #") + wxString::Format( _T("%d"), ally + 1 ) + _T(".") );
         }
         return;
     }
 
     //FORCEALLYNO username teamno
-    SendCmd( _T("FORCEALLYNO"), nick + wxString::Format( _T(" %u"), ally ) );
+    SendCmd( _T("FORCEALLYNO"), nick + wxString::Format( _T(" %d"), ally ) );
 }
 
 
@@ -1630,7 +1630,7 @@ void TASServer::ForceColour( int battleid, const wxString& nick, const wxColour&
     tascl.color.blue = col.Blue();
     tascl.color.zero = 0;
     //FORCETEAMCOLOR username color
-    SendCmd( _T("FORCETEAMCOLOR"), nick + _T(" ") + wxString::Format( _T("%u"), tascl.data ) );
+    SendCmd( _T("FORCETEAMCOLOR"), nick + _T(" ") + wxString::Format( _T("%d"), tascl.data ) );
 }
 
 
@@ -1716,12 +1716,12 @@ void TASServer::SetHandicap( int battleid, const wxString& nick, int handicap)
     } catch (...) { return; }
     if ( !GetBattle(battleid).IsFounderMe() )
     {
-        DoActionBattle( battleid, _T("thinks ") + nick + _T(" should get a ") + wxString::Format( _T("%u"), handicap) + _T("% resource bonus") );
+        DoActionBattle( battleid, _T("thinks ") + nick + _T(" should get a ") + wxString::Format( _T("%d"), handicap) + _T("% resource bonus") );
         return;
     }
 
     //HANDICAP username value
-    SendCmd( _T("HANDICAP"), nick + wxString::Format( _T(" %u"), handicap ) );
+    SendCmd( _T("HANDICAP"), nick + wxString::Format( _T(" %d"), handicap ) );
 }
 
 
@@ -1743,7 +1743,7 @@ void TASServer::AddBot( int battleid, const wxString& nick, const wxString& owne
     tascl.color.blue = status.colour.Blue();
     tascl.color.zero = 0;
     //ADDBOT name battlestatus teamcolor {AIDLL}
-    SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %u %u "), tasbs.data, tascl.data ) + aidll );
+    SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + aidll );
 }
 
 
@@ -1790,7 +1790,7 @@ void TASServer::UpdateBot( int battleid, const wxString& nick, UserBattleStatus 
     tascl.color.blue = status.colour.Blue();
     tascl.color.zero = 0;
     //UPDATEBOT name battlestatus teamcolor
-    SendCmd( _T("UPDATEBOT"), nick + wxString::Format( _T(" %u %u"), tasbs.data, tascl.data ) );
+    SendCmd( _T("UPDATEBOT"), nick + wxString::Format( _T(" %d %d"), tasbs.data, tascl.data ) );
 }
 
 
@@ -1933,7 +1933,7 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. 
             port=FIRST_UDP_SOURCEPORT+i;
         }
 
-        wxLogMessage(_T(" pinging nick=%s , ip=%s , port=%d"),user.GetNick().c_str(),ip.c_str(),port);
+        wxLogMessage(_T(" pinging nick=%s , ip=%s , port=%u"),user.GetNick().c_str(),ip.c_str(),port);
 
         if (port!=0 && !ip.empty())
         {

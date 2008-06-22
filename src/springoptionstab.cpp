@@ -1,5 +1,5 @@
 
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: SpringOptionsTab
 //
@@ -88,7 +88,7 @@ END_EVENT_TABLE()
   else m_exec_spec_radio->SetValue( true );
   if ( sett().GetUnitSyncUseDefLoc() ) m_sync_def_radio->SetValue( true );
   else m_sync_spec_radio->SetValue( true );
-  if ( sett().GetWebBrowserPath().IsEmpty() ) m_web_def_radio->SetValue( true );
+  if ( sett().GetWebBrowserUseDefault() ) m_web_def_radio->SetValue( true );
   else m_web_spec_radio->SetValue( true );
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
@@ -177,6 +177,7 @@ void SpringOptionsTab::DoRestore()
   m_sync_spec_radio->SetValue( !sett().GetUnitSyncUseDefLoc() );
   HandleExeloc( sett().GetSpringUseDefLoc() );
   HandleUsyncloc( sett().GetUnitSyncUseDefLoc() );
+  HandleWebloc( sett().GetWebBrowserUseDefault() );
 }
 
 
@@ -472,6 +473,7 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
   if ( !m_web_def_radio->GetValue() ) sett().SetWebBrowserPath( m_web_edit->GetValue() );
   sett().SetSpringUseDefLoc( m_exec_def_radio->GetValue() );
   sett().SetUnitSyncUseDefLoc( m_sync_def_radio->GetValue() );
+  sett().SetWebBrowserUseDefault( m_web_def_radio->GetValue() );
 
   if ( sett().IsFirstRun() ) return;
 

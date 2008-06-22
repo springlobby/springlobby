@@ -184,6 +184,12 @@
 		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
+		<Unit filename="src/filelister/filelistctrl.cpp" />
+		<Unit filename="src/filelister/filelistctrl.h" />
+		<Unit filename="src/filelister/filelistdialog.cpp" />
+		<Unit filename="src/filelister/filelistdialog.h" />
+		<Unit filename="src/filelister/filelistfilter.cpp" />
+		<Unit filename="src/filelister/filelistfilter.h" />
 		<Unit filename="src/flagimagedata.h" />
 		<Unit filename="src/flagimages.cpp" />
 		<Unit filename="src/flagimages.h" />
@@ -258,7 +264,6 @@
 		<Unit filename="src/nonautotools.cpp" />
 		<Unit filename="src/nonportable.h" />
 		<Unit filename="src/revision.h" />
-		<Unit filename="src/ring_sound.h" />
 		<Unit filename="src/sdlsound.cpp" />
 		<Unit filename="src/sdlsound.h" />
 		<Unit filename="src/server.cpp" />

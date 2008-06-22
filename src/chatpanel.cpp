@@ -505,7 +505,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
   bool at_bottom=m_chatlog_text->IsPositionVisible(p); /// true if we're on bottom of page and must scroll
   #endif
 	m_chatlog_text->SetDefaultStyle( wxTextAttr( col, sett().GetChatColorBackground(), fon ) );
-#if  defined(__WXMSW__) && !defined(NO_RICHTEXT_CHAT)
+#if  defined(__WXMSW__) && defined(NO_RICHTEXT_CHAT)
 	m_chatlog_text->Freeze();
 #endif
 
@@ -540,7 +540,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
 	if ( m_chat_log ) m_chat_log->AddMessage( message );
 
-#if  defined(__WXMSW__) && !defined(NO_RICHTEXT_CHAT)
+#if  defined(__WXMSW__) && defined(NO_RICHTEXT_CHAT)
 	m_chatlog_text->Thaw();
 #endif
 
@@ -579,7 +579,7 @@ m_say_text->SetValue( _T( "" ) );
 //--------------------------------------------------------------------------------
 void
 ChatPanel::OnTextChanged_Say_Text( wxCommandEvent& event ) {
-#ifndef HAVE_Wx26
+#ifndef HAVE_WX26
 	wxString text = m_say_text->GetValue();
 	long pos_Cursor = m_say_text->GetInsertionPoint();
 	wxString character_before_current_Insertionpoint = m_say_text->GetRange( pos_Cursor-1, pos_Cursor );

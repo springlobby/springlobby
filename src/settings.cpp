@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: Settings
 //
@@ -162,9 +162,22 @@ void Settings::SetOldSpringLaunchMethod( bool value )
 }
 
 
+bool Settings::GetWebBrowserUseDefault()
+{
+  // See note on ambiguities, in wx/confbase.h near line 180.
+  bool useDefault;
+  m_config->Read(_T("/General/WebBrowserUseDefault"), &useDefault, DEFSETT_WEB_BROWSER_USE_DEFAULT);
+  return useDefault;
+}
+
+void Settings::SetWebBrowserUseDefault(bool useDefault)
+{
+  m_config->Write(_T("/General/WebBrowserUseDefault"), useDefault);
+}
+
 wxString Settings::GetWebBrowserPath()
 {
-    return m_config->Read( _T("/General/WebBrowserPath"), _T("use default") );
+  return m_config->Read( _T("/General/WebBrowserPath"), wxEmptyString);
 }
 
 
@@ -1125,7 +1138,7 @@ void Settings::SetTorrentListToResume( const wxArrayString& list )
 {
   unsigned int TorrentCount = list.GetCount();
   m_config->DeleteGroup( _T("/Torrent/ResumeList") );
-  for ( unsigned int i; i < TorrentCount; i++ )
+  for ( unsigned int i = 0; i < TorrentCount; i++ )
   {
     m_config->Write( _T("/Torrent/ResumeList/") + TowxString(i), list[i] );
   }
@@ -1136,7 +1149,7 @@ wxArrayString Settings::GetTorrentListToResume()
 {
   wxArrayString list;
   unsigned int TorrentCount = m_config->GetNumberOfEntries( _T("/Torrent/ResumeList") );
-  for ( unsigned int i; i < TorrentCount; i++ )
+  for ( unsigned int i = 0; i < TorrentCount; i++ )
   {
     wxString ToAdd;
     if ( m_config->Read( _T("/Torrent/ResumeList/") + TowxString(i), &ToAdd ) ) list.Add( ToAdd );
