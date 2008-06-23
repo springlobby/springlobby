@@ -1,11 +1,7 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
-
-namespace {
-  const char* g_revision = "REV unset";
-}
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 
 const char* revision()
 {
-  return g_revision;
+  return "@SL_VERSION@";
 }
 

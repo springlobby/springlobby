@@ -73,6 +73,8 @@ if test "$win_build" = 0 ; then
             AC_MSG_ERROR([missing required libtorrent library get it at http://www.rasterbar.com/products/libtorrent/ please note that some distros name it rb-libtorrent that is NOT libtorrent from rakshasa  you can skip the dependency by using --disable-torrent-system]);
             exit
         fi
+	LIBTORRENT_CFLAGS=`pkg-config libtorrent --cflags`
+	LIBTORRENT_LIBS=`pkg-config libtorrent --libs`
         AC_SUBST(LIBTORRENT_CFLAGS)
         AC_SUBST(LIBTORRENT_LIBS)
     else
@@ -95,8 +97,12 @@ else
 fi
 
 
-AC_ARG_VAR([SVNVERSION], [Produce a compact version number for a working copy.])
-AC_CHECK_PROGS([SVNVERSION], [svnversion false])
+dnl We use this command in tools/get-revision.sh.
+AC_CHECK_PROG([HAVE_GIT_REV_LIST],[git-describe],[true])
+
+dnl Override the program version #define.
+AC_DEFINE_UNQUOTED([VERSION],"`tools/get-revision.sh`",[Source tree version])
+AC_DEFINE_UNQUOTED([PACKAGE_VERSION],"`tools/get-revision.sh`",[Source tree version])
 
 AM_CONDITIONAL([USE_WINDRES], test "$win_build" = 1)
 
