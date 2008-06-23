@@ -91,7 +91,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_tidal_lbl = new wxStaticText( this, -1, _T("") );
 
   m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true, false );
-  m_minimap->SetToolTip(_T("A preview of the selected map.  You can see the starting positions, or (if set) starting boxes."));
+  m_minimap->SetToolTip(_("A preview of the selected map.  You can see the starting positions, or (if set) starting boxes."));
 
   m_players = new BattleroomListCtrl( m_player_panel, battle, m_ui );
   m_chat = new ChatPanel( m_splitter, m_ui, battle );
@@ -108,7 +108,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
 
   m_fix_colours_btn = new wxButton( this, BROOM_FIXCOLOURS, _("Fix colours"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_fix_colours_btn->SetToolTip(_T("Make player colors unique"));
+  m_fix_colours_btn->SetToolTip(_("Make player colors unique"));
 
   m_balance_btn = new wxButton( this, BROOM_BALANCE, _("Balance"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_balance_btn->SetToolTip(_("Automatically balance players into two or more alliances"));
@@ -216,17 +216,17 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   if ( !IsHosted() )
     {
       m_start_btn->Disable();
-      m_start_btn->SetToolTip(_T("Only the host can start the battle."));
+      m_start_btn->SetToolTip(_("Only the host can start the battle."));
 
 
       m_balance_btn->Disable();
-      m_balance_btn->SetToolTip(_T("Only the host can balance alliances."));
+      m_balance_btn->SetToolTip(_("Only the host can balance alliances."));
 
       m_fix_colours_btn->Disable();
-      m_fix_colours_btn->SetToolTip(_T("Only the host can fix player colours."));
+      m_fix_colours_btn->SetToolTip(_("Only the host can fix player colours."));
 
       m_lock_chk->Disable();
-      m_lock_chk->SetToolTip(_T("Only the host can lock the game."));
+      m_lock_chk->SetToolTip(_("Only the host can lock the game."));
     }
   else
     {
@@ -256,10 +256,10 @@ bool BattleRoomTab::IsHosted()
 wxString _GetStartPosStr( StartType t )
 {
   switch ( t ) {
-    case ST_Fixed: return _T("Fixed");
-    case ST_Random: return _T("Random");
-    case ST_Choose: return _T("Boxes");
-    case ST_Pick: return _T("Pick");
+    case ST_Fixed: return _("Fixed");
+    case ST_Random: return _("Random");
+    case ST_Choose: return _("Boxes");
+    case ST_Pick: return _("Pick");
     default: return _T("?");
   };
 }
@@ -268,9 +268,9 @@ wxString _GetStartPosStr( StartType t )
 wxString _GetGameTypeStr( GameType t )
 {
   switch ( t ) {
-    case GT_ComContinue: return _T("Continue");
-    case GT_ComEnds: return _T("End");
-    case GT_Lineage: return _T("Lineage");
+    case GT_ComContinue: return _("Continue");
+    case GT_ComEnds: return _("End");
+    case GT_Lineage: return _("Lineage");
     default: return _T("?");
   };
 }
@@ -281,7 +281,7 @@ void BattleRoomTab::UpdateBattleInfo( bool MapChanged, bool reloadMapOptions )
   if ( MapChanged ) /// the map has been changed
   {
     try { /// updates map info summary
-      ASSERT_RUNTIME( m_battle.MapExists(), _T("Map does not exist.") );
+      ASSERT_RUNTIME( m_battle.MapExists(), _("Map does not exist.") );
       UnitSyncMap map = m_battle.LoadMap();
       m_map_lbl->SetLabel( RefineMapname( map.name ) );
       m_opts_list->SetItem( m_opt_list_map[ _("Size") ] , 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
@@ -316,7 +316,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
   Tag.BeforeFirst( '_' ).ToLong( &type );
   wxString key = Tag.AfterFirst( '_' );
   wxString value;
-  if ( type == EngineOption && key == _T("restrictions") )
+  if ( type == EngineOption && key == _("restrictions") )
     m_opts_list->SetItem( index, 1, bool2yn( m_battle.DisabledUnits().GetCount() > 0 ) );
   else if ( type == MapOption || type == ModOption || EngineOption )
   {
@@ -466,7 +466,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
       }
   }
   else
-    customMessageBox(SL_MAIN_ICON,_T("Cannot add bot, maximum number of players already reached."),_T("Max players reached") );
+    customMessageBox(SL_MAIN_ICON,_("Cannot add bot, maximum number of players already reached."),_("Max players reached") );
 }
 
 
