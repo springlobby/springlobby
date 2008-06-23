@@ -34,8 +34,8 @@ class FileListCtrl : public customListCtrl
   protected:
     static int wxCALLBACK CompareNameUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareNameDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCountryUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCountryDOWN(long item1, long item2, long sortData);
+    static int wxCALLBACK CompareHashUP(long item1, long item2, long sortData);
+    static int wxCALLBACK CompareHashDOWN(long item1, long item2, long sortData);
     static int wxCALLBACK CompareRankUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareRankDOWN(long item1, long item2, long sortData);
 
@@ -56,9 +56,8 @@ class FileListCtrl : public customListCtrl
 
 enum
 {
-    BLIST_LIST = wxID_HIGHEST,
-    BLIST_DLMOD,
-    BLIST_DLMAP
+    FILELIST_COL_CLICK = wxID_HIGHEST,
+
 };
 
 #endif

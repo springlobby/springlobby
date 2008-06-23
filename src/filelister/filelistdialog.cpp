@@ -3,6 +3,7 @@
 #include "filelistdialog.h"
 #include "filelistctrl.h"
 #include "../springunitsync.h"
+#include "../utils.h"
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
@@ -107,8 +108,12 @@ bool FileListDialog::AddTorrentData( const TorrentData& data)
     try
     {
         int index = m_filelistctrl->InsertItem( m_filelistctrl->GetItemCount(), data.hash);
+
+        //this enables me to later retrieve the index from itemtext (used in sort funcs)
+        m_filelistctrl->SetItemText( index, data.name );
+
         //setting hash as item's data means we can retrieve it later for download
-        m_filelistctrl->SetItemText( index, data.hash );
+        m_filelistctrl->SetItemData( index, s2l(data.hash) );
         m_filelistctrl->SetItem( index, 0, data.name );
         m_filelistctrl->SetItem( index, 1, data.type == map ? _("Map") : _("Mod") );
         m_filelistctrl->SetItem( index, 2, data.hash );
