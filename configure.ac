@@ -73,6 +73,8 @@ if test "$win_build" = 0 ; then
             AC_MSG_ERROR([missing required libtorrent library get it at http://www.rasterbar.com/products/libtorrent/ please note that some distros name it rb-libtorrent that is NOT libtorrent from rakshasa  you can skip the dependency by using --disable-torrent-system]);
             exit
         fi
+	LIBTORRENT_CFLAGS=`pkg-config libtorrent --cflags`
+	LIBTORRENT_LIBS=`pkg-config libtorrent --libs`
         AC_SUBST(LIBTORRENT_CFLAGS)
         AC_SUBST(LIBTORRENT_LIBS)
     else
