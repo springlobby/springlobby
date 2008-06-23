@@ -101,8 +101,8 @@ dnl We use this command in tools/get-revision.sh.
 AC_CHECK_PROG([HAVE_GIT_REV_LIST],[git-describe],[true])
 
 dnl Override the program version #define.
-AC_DEFINE_UNQUOTED([VERSION],"`tools/get-revision.sh`",[Source tree version])
-AC_DEFINE_UNQUOTED([PACKAGE_VERSION],"`tools/get-revision.sh`",[Source tree version])
+AC_DEFINE_UNQUOTED([VERSION],"`$(dirname $0)/tools/get-revision.sh`",[Source tree version])
+AC_DEFINE_UNQUOTED([PACKAGE_VERSION],"`$(dirname $0)/tools/get-revision.sh`",[Source tree version])
 
 AM_CONDITIONAL([USE_WINDRES], test "$win_build" = 1)
 
