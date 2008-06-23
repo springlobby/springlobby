@@ -73,7 +73,9 @@ Settings::Settings()
   m_config = new myconf( instream );
 
   #else
-  m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
+  //removed temporarily because it's suspected to cause a bug with userdir creation
+ // m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
+  m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
   m_portable_mode = false;
   #endif
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
