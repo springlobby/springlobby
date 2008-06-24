@@ -3,7 +3,7 @@ dnl but the developers will NOT support you if it fails
 dnl you really should just upgrade your autotools instead
 
 dnl if you have too old autoconf, comment out the following prereq AND edit Makefile.am
-AC_INIT([SpringLobby],[<<<esyscmd(./tools/get-revision.sh | tr -d '\n')>>>],[devel@www.springlobby.info])
+AC_INIT([SpringLobby],[<<<ifelse(esyscmd(/bin/echo -n "$VERSION"),>>><<<,esyscmd(./tools/get-revision.sh | tr -d '\n'),esyscmd(/bin/echo -n "$VERSION"))>>>],[devel@www.springlobby.info])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/springlobbyapp.cpp])
