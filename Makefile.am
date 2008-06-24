@@ -16,13 +16,13 @@ AM_CPPFLAGS = \
 	$(LIBTORRENT_CFLAGS) \
 	$(SDL_CFLAGS) \
 	-DLOCALEDIR=\"$(localedir)\" \
- 	$(SEARCHDIRS)
+	$(SEARCHDIRS)
 
 # strict aliasing check is disabled, because wxWidgets headers have problems
 AM_CXXFLAGS = \
 	-Wall \
 	-Wno-strict-aliasing -DNDEBUG
-	
+
 desktopdir = $(datadir)/applications
 dist_desktop_DATA = \
 	src/springlobby.desktop
@@ -30,7 +30,6 @@ dist_desktop_DATA = \
 pixmapdir = $(datadir)/pixmaps
 dist_pixmap_DATA = \
 	src/images/springlobby.svg
-	
 SUBDIRS = po
 
 ## if you don't have the required version of autoconf, comment out the
@@ -63,22 +62,6 @@ RESOURCECOMPILE = $(WINDRES) -I $(srcdir)/src $(DEFS) $(DEFAULT_INCLUDES) $(INCL
 .rc.o:
 	$(RESOURCECOMPILE) -o $@ -i $<
 endif
-
-SL_VERSION_CMD:=$(srcdir)/tools/get-revision.sh $(srcdir)
-
-
-# filter-out is a GNU make extension, so we get a warning from automake
-# and we can not use -Werror in AM_INIT_AUTOMAKE because of this either
-# but without this construct we would have a circular dependency and make
-# would whine about it on every invocation
-revision.cpp: src/revision.cpp.in $(filter-out revision.%, $(springlobby_SOURCES)) $(springlobby_DEPENDENCIES)
-	rm -f $@
-	sed "s/\@SL_VERSION\@/`LC_ALL=C $(SL_VERSION_CMD)`/" < $< > $@
-
-clean-local:
-	rm -f revision.cpp
-
-# the following line is searched for in a script to add filenames under it
 
 
 libtorrent_sources = \
@@ -395,15 +378,12 @@ libtorrent_headers = \
 
 
 springlobby_SOURCES = \
-	revision.cpp \
 	src/updater/versionchecker.cpp \
 	src/updater/versionchecker.h \
 	src/sounds/ring_sound.h \
 	src/sounds/pm_sound.h \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
-	src/revision.cpp.in \
-	src/revision.h \
 	src/unitsyncthread.cpp \
 	src/unitsyncthread.h \
 	src/maplistctrl.cpp \
@@ -874,7 +854,8 @@ springlobby_SOURCES = \
 	src/filelister/filelistfilter.h \
 	src/filelister/filelistctrl.cpp \
 	src/filelister/filelistdialog.cpp \
-	src/filelister/filelistfilter.cpp
+	src/filelister/filelistfilter.cpp \
+	configure.ac
 
 
 if USE_WINDRES	
@@ -921,9 +902,6 @@ springlobby_SOURCES += \
 	src/settings++/helpmenufunctions.cpp 
 
 springsettings_SOURCES = \
-	revision.cpp \
-	src/revision.cpp.in \
-	src/revision.h \
 	src/utils.cpp \
 	src/utils.h \
 	src/crashreport.cpp \

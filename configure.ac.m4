@@ -1,10 +1,10 @@
-dnl it is possible to make these work with older versions of autoconf+automake
+changequote(`>>>',`<<<')>>>dnl it is possible to make these work with older versions of autoconf+automake
 dnl but the developers will NOT support you if it fails
 dnl you really should just upgrade your autotools instead
 
 dnl if you have too old autoconf, comment out the following prereq AND edit Makefile.am
-AC_PREREQ([2.59c])
-AC_INIT([SpringLobby], [0.0.1-svn], [devel@www.springlobby.info])
+AC_INIT([SpringLobby],[<<<esyscmd(./tools/get-revision.sh | tr -d '\n')>>>],[devel@www.springlobby.info])
+
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/springlobbyapp.cpp])
 AC_CONFIG_AUX_DIR([autotools-aux])
@@ -64,7 +64,7 @@ fi
 
 
 
-#on non win build use extern libtorrent, on win use included source
+dnl on non win build use extern libtorrent, on win use included source
 if test "$win_build" = 0 ; then
     if test x$usetorrent = xyes ; then
         AC_MSG_CHECKING([checking for libtorrent])
@@ -73,9 +73,11 @@ if test "$win_build" = 0 ; then
             AC_MSG_ERROR([missing required libtorrent library get it at http://www.rasterbar.com/products/libtorrent/ please note that some distros name it rb-libtorrent that is NOT libtorrent from rakshasa  you can skip the dependency by using --disable-torrent-system]);
             exit
         fi
+
 	LIBTORRENT_CFLAGS=`pkg-config libtorrent --cflags`
-	LIBTORRENT_LIBS=`pkg-config libtorrent --libs`
-        AC_SUBST(LIBTORRENT_CFLAGS)
+ 	LIBTORRENT_LIBS=`pkg-config libtorrent --libs`
+
+       AC_SUBST(LIBTORRENT_CFLAGS)
         AC_SUBST(LIBTORRENT_LIBS)
     else
     	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
@@ -89,33 +91,12 @@ else
     fi
 fi
 
-#check if sound configure is enables, if yes check for SDL
+dnl check if sound configure is enables, if yes check for SDL
 if test x$sound = xyes ; then
     AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10 SDL_sound and SDL_mixer use --disable-sound to skip the dependency and the feature") )
 else
     CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND "
 fi
-
-
-dnl Version string paraphernalia.
-dnl No, the version string isn't a package, but it isn't a feature either. ;)
-AC_ARG_WITH([version],[  --with-version=VERSION  Force a particular version string for compilation.],
-            VERSION_STRING="$withval")
-
-if test x"$VERSION_STRING" != x; then
-    VERSION="$VERSION_STRING"
-else dnl No VERSION_STRING variable in environment, grab it directly from the repo.	
-    dnl We use this command in tools/get-revision.sh.
-    AC_CHECK_PROG([HAVE_GIT_DESCRIBE],[git-describe],[true])
-    SRCDIR="$(dirname $0)"
-    VERSION="`$SRCDIR/tools/get-revision.sh $SRCDIR`"
-fi
-
-PACKAGE_VERSION="$VERSION"
-AC_SUBST(VERSION)
-AC_SUBST(PACKAGE_VERSION)
-AC_DEFINE_UNQUOTED([VERSION],"$VERSION",[Source tree version])
-AC_DEFINE_UNQUOTED([PACKAGE_VERSION],"$PACKAGE_VERSION",[Source tree version])
 
 
 AM_CONDITIONAL([USE_WINDRES], test "$win_build" = 1)
@@ -137,3 +118,4 @@ AM_GNU_GETTEXT_VERSION([0.14])
 
 AC_CONFIG_FILES([Makefile po/Makefile.in])
 AC_OUTPUT
+<<<
