@@ -135,7 +135,7 @@ void FileListDialog::OnDownload( wxCommandEvent& event )
     for ( HashVector::const_iterator it = hashs.begin(); it != hashs.end(); ++it)
     {
         wxString hash = *it;
-        if (torrent()->RequestFileByName(hash) != success)
+        if (torrent()->RequestFileByHash(hash) != success)
             wxLogError(_("unknown hash ") + hash );
 
     }

@@ -124,8 +124,7 @@ void FileListCtrl::GetSelectedHashes(HashVector& hashes)
 		item = GetNextItem( item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
 		if ( item == -1 ) // means nothing was found
             return;
-            long temp = GetItemData(item);
-		hashes.push_back( TowxString<long>( temp ) );
+		hashes.push_back( TowxString<long>( GetItemData(item) ) );
 	}
 }
 
