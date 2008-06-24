@@ -96,26 +96,30 @@ else
     CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND "
 fi
 
+#temp. set his again
+AC_ARG_VAR([SVNVERSION], [Produce a compact version number for a working copy.])
+AC_CHECK_PROGS([SVNVERSION], [svnversion false])
 
-dnl Version string paraphernalia.
-dnl No, the version string isn't a package, but it isn't a feature either. ;)
-AC_ARG_WITH([version],[  --with-version=VERSION  Force a particular version string for compilation.],
-            VERSION_STRING="$withval")
+#temp disable all the new stuff
+#dnl Version string paraphernalia.
+#dnl No, the version string isn't a package, but it isn't a feature either. ;)
+#AC_ARG_WITH([version],[  --with-version=VERSION  Force a particular version string for compilation.],
+#            VERSION_STRING="$withval")
 
-if test x"$VERSION_STRING" != x; then
-    VERSION="$VERSION_STRING"
-else dnl No VERSION_STRING variable in environment, grab it directly from the repo.	
-    dnl We use this command in tools/get-revision.sh.
-    AC_CHECK_PROG([HAVE_GIT_DESCRIBE],[git-describe],[true])
-    SRCDIR="$(dirname $0)"
-    VERSION="`$SRCDIR/tools/get-revision.sh $SRCDIR`"
-fi
+#if test x"$VERSION_STRING" != x; then
+#    VERSION="$VERSION_STRING"
+#else dnl No VERSION_STRING variable in environment, grab it directly from the repo.
+#    dnl We use this command in tools/get-revision.sh.
+#    AC_CHECK_PROG([HAVE_GIT_DESCRIBE],[git-describe],[true])
+#    SRCDIR="$(dirname $0)"
+#    VERSION="`$SRCDIR/tools/get-revision.sh $SRCDIR`"
+#fi
 
-PACKAGE_VERSION="$VERSION"
-AC_SUBST(VERSION)
-AC_SUBST(PACKAGE_VERSION)
-AC_DEFINE_UNQUOTED([VERSION],"$VERSION",[Source tree version])
-AC_DEFINE_UNQUOTED([PACKAGE_VERSION],"$PACKAGE_VERSION",[Source tree version])
+#PACKAGE_VERSION="$VERSION"
+#AC_SUBST(VERSION)
+#AC_SUBST(PACKAGE_VERSION)
+#AC_DEFINE_UNQUOTED([VERSION],"$VERSION",[Source tree version])
+#AC_DEFINE_UNQUOTED([PACKAGE_VERSION],"$PACKAGE_VERSION",[Source tree version])
 
 
 AM_CONDITIONAL([USE_WINDRES], test "$win_build" = 1)
