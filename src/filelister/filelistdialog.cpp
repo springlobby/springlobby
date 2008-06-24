@@ -101,6 +101,11 @@ void FileListDialog::SetData(HashToTorrentData& data )
     m_torrentdata = data;
 }
 
+TorrentData FileListDialog::GetDataFromHash(const wxString& hash )
+{
+    return m_torrentdata[hash];
+}
+
 bool FileListDialog::AddTorrentData( const TorrentData& data)
 {
     if ( !m_filter->FilterTorrentData( data ) )

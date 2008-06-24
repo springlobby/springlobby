@@ -36,8 +36,8 @@ class FileListCtrl : public customListCtrl
     static int wxCALLBACK CompareNameDOWN(long item1, long item2, long sortData);
     static int wxCALLBACK CompareHashUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareHashDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareRankUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareRankDOWN(long item1, long item2, long sortData);
+    static int wxCALLBACK CompareTypeUP(long item1, long item2, long sortData);
+    static int wxCALLBACK CompareTypeDOWN(long item1, long item2, long sortData);
 
     struct {
       int col;

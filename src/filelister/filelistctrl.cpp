@@ -141,10 +141,10 @@ void FileListCtrl::Sort()
 				changed = SortItems(( m_sortorder[ i ].direction )?&CompareNameUP:&CompareNameDOWN , 0 );
 				break;
 			case 1 :
-				changed = SortItems(( m_sortorder[ i ].direction )?&CompareHashUP:&CompareHashDOWN , 0 );
+				changed = SortItems(( m_sortorder[ i ].direction )?&CompareTypeUP:&CompareTypeDOWN , 0 );
 				break;
 			case 2 :
-				changed = SortItems(( m_sortorder[ i ].direction )?&CompareRankUP:&CompareRankDOWN , 0 );
+				changed = SortItems(( m_sortorder[ i ].direction )?&CompareHashUP:&CompareHashDOWN , 0 );
 				break;
 		}
 	}
@@ -153,80 +153,58 @@ void FileListCtrl::Sort()
 
 int wxCALLBACK FileListCtrl::CompareNameUP( long item1, long item2, long sortData )
 {
-    FileListCtrl* list = s_parent_dialog->GetListCtrl();
-    wxString name1 = list->GetItemText( item1 );
-    wxString name2 = list->GetItemText( item2 );
+    //FileListCtrl* list = s_parent_dialog->GetListCtrl();
+    wxString name1 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item1) ).name.Upper();
+    wxString name2 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item2) ).name.Upper();
     return name1.CompareTo(name2);
 }
 
 
 int wxCALLBACK FileListCtrl::CompareNameDOWN( long item1, long item2, long sortData )
 {
-    FileListCtrl* list = s_parent_dialog->GetListCtrl();
-    wxString name1 = list->GetItemText( item1 );
-    wxString name2 = list->GetItemText( item2 );
+    wxString name1 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item1) ).name.Upper();
+    wxString name2 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item2) ).name.Upper();
     return name2.CompareTo(name1);
 }
 
 
-int wxCALLBACK FileListCtrl::CompareRankUP( long item1, long item2, long sortData )
+int wxCALLBACK FileListCtrl::CompareTypeUP( long item1, long item2, long sortData )
 {
-//  Ui* ui = m_ui_for_sort;
-//  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-//  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-//
-//  if ( battle1.GetRankNeeded() < battle2.GetRankNeeded() )
-//      return -1;
-//  if ( battle1.GetRankNeeded() > battle2.GetRankNeeded() )
-//      return 1;
-//
-	return 0;
+    wxString name1 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item1) ).type == map ? _("Map") : _("Mod");
+    wxString name2 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item2) ).type == map ? _("Map") : _("Mod");
+    return name1.CompareTo(name2);
+
 }
 
 
-int wxCALLBACK FileListCtrl::CompareRankDOWN( long item1, long item2, long sortData )
+int wxCALLBACK FileListCtrl::CompareTypeDOWN( long item1, long item2, long sortData )
 {
-//  Ui* ui = m_ui_for_sort;
-//  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-//  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-//
-//  if ( battle1.GetRankNeeded() < battle2.GetRankNeeded() )
-//      return 1;
-//  if ( battle1.GetRankNeeded() > battle2.GetRankNeeded() )
-//      return -1;
-//
-	return 0;
+    wxString name1 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item1) ).type == map ? _("Map") : _("Mod");
+    wxString name2 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item2) ).type == map ? _("Map") : _("Mod");
+    return name2.CompareTo(name1);
 }
 
 
 int wxCALLBACK FileListCtrl::CompareHashUP( long item1, long item2, long sortData )
 {
-    FileListCtrl* list = s_parent_dialog->GetListCtrl();
-    long hash1 = list->GetItemData( item1 );
-    long hash2 = list->GetItemData( item2 );
-    if ( hash1 < hash2 )
+    if ( item1 < item2 )
 		return -1;
-	if ( hash1 > hash2 )
+	if ( item1 > item2 )
 		return 1;
 
 	return 0;
-//
-	return 0;
+
 }
 
 
 
 int wxCALLBACK FileListCtrl::CompareHashDOWN( long item1, long item2, long sortData )
 {
-//  Ui* ui = m_ui_for_sort;
-//  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-//  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-//
-//  if ( battle1.GetFounder().GetCountry().MakeUpper() < battle2.GetFounder().GetCountry().MakeUpper() )
-//      return 1;
-//  if ( battle1.GetFounder().GetCountry().MakeUpper() > battle2.GetFounder().GetCountry().MakeUpper() )
-//      return -1;
-//
+    if ( item1 > item2 )
+		return -1;
+	if ( item1 < item2 )
+		return 1;
+
 	return 0;
 }
 
