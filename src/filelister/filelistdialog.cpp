@@ -3,6 +3,7 @@
 #include "filelistdialog.h"
 #include "filelistctrl.h"
 #include "../springunitsync.h"
+#include "../utils.h"
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
@@ -100,6 +101,11 @@ void FileListDialog::SetData(HashToTorrentData& data )
     m_torrentdata = data;
 }
 
+TorrentData FileListDialog::GetDataFromHash(const wxString& hash )
+{
+    return m_torrentdata[hash];
+}
+
 bool FileListDialog::AddTorrentData( const TorrentData& data)
 {
     if ( !m_filter->FilterTorrentData( data ) )
@@ -107,8 +113,12 @@ bool FileListDialog::AddTorrentData( const TorrentData& data)
     try
     {
         int index = m_filelistctrl->InsertItem( m_filelistctrl->GetItemCount(), data.hash);
+
+        //this enables me to later retrieve the index from itemtext (used in sort funcs)
+        m_filelistctrl->SetItemText( index, data.name );
+
         //setting hash as item's data means we can retrieve it later for download
-        m_filelistctrl->SetItemText( index, data.hash );
+        m_filelistctrl->SetItemData( index, s2l(data.hash) );
         m_filelistctrl->SetItem( index, 0, data.name );
         m_filelistctrl->SetItem( index, 1, data.type == map ? _("Map") : _("Mod") );
         m_filelistctrl->SetItem( index, 2, data.hash );
@@ -125,7 +135,7 @@ void FileListDialog::OnDownload( wxCommandEvent& event )
     for ( HashVector::const_iterator it = hashs.begin(); it != hashs.end(); ++it)
     {
         wxString hash = *it;
-        if (torrent()->RequestFileByName(hash) != success)
+        if (torrent()->RequestFileByHash(hash) != success)
             wxLogError(_("unknown hash ") + hash );
 
     }

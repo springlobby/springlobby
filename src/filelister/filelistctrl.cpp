@@ -17,8 +17,8 @@
 
 BEGIN_EVENT_TABLE( FileListCtrl, customListCtrl )
 
-	EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, FileListCtrl::OnListRightClick )
-	EVT_LIST_COL_CLICK( BLIST_LIST, FileListCtrl::OnColClick )
+	EVT_LIST_ITEM_RIGHT_CLICK( FILELIST_COL_CLICK, FileListCtrl::OnListRightClick )
+	EVT_LIST_COL_CLICK( FILELIST_COL_CLICK, FileListCtrl::OnColClick )
 	#if wxUSE_TIPWINDOW
 	#if !defined(__WXMSW__) /* && !defined(__WXMAC__) */ //disables tooltips on msw /* and mac */
 	EVT_MOTION( FileListCtrl::OnMouseMotion )
@@ -30,7 +30,7 @@ FileListDialog* FileListCtrl::s_parent_dialog = 0;
 
 FileListCtrl::FileListCtrl( wxWindow* parent, FileListDialog* fld  ):
         m_parent_dialog( fld ),
-		customListCtrl( parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_ALIGN_LEFT )
+		customListCtrl( parent, FILELIST_COL_CLICK, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_ALIGN_LEFT )
 {
 
 	SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
@@ -95,34 +95,36 @@ void FileListCtrl::OnListRightClick( wxListEvent& event )
 
 void FileListCtrl::OnColClick( wxListEvent& event )
 {
-//	if ( event.GetColumn() == -1 ) return;
-//	wxListItem col;
-//	GetColumn( m_sortorder[0].col, col );
-//	col.SetImage( icons().ICON_NONE );
-//	SetColumn( m_sortorder[0].col, col );
-//
-//	int i;
-//	for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 3; ++i ) {}
-//	if ( i > 2 ) { i = 2; }
-//	for ( ; i > 0; i-- ) { m_sortorder[i] = m_sortorder[i-1]; }
-//	m_sortorder[0].col = event.GetColumn();
-//	m_sortorder[0].direction = !m_sortorder[0].direction;
-//
-//
-//	GetColumn( m_sortorder[0].col, col );
-//	col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
-//	SetColumn( m_sortorder[0].col, col );
+	if ( event.GetColumn() == -1 ) return;
+	wxListItem col;
+	GetColumn( m_sortorder[0].col, col );
+	col.SetImage( icons().ICON_NONE );
+	SetColumn( m_sortorder[0].col, col );
+
+	int i;
+	for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 3; ++i ) {}
+	if ( i > 2 ) { i = 2; }
+	for ( ; i > 0; i-- ) { m_sortorder[i] = m_sortorder[i-1]; }
+	m_sortorder[0].col = event.GetColumn();
+	m_sortorder[0].direction = !m_sortorder[0].direction;
+
+
+	GetColumn( m_sortorder[0].col, col );
+	col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
+	SetColumn( m_sortorder[0].col, col );
 
 	Sort();
 }
 
 void FileListCtrl::GetSelectedHashes(HashVector& hashes)
 {
-	long index = -1;
+	long item = -1;
 	for ( long i = 0; i < GetSelectedItemCount(); ++i )
 	{
-		index = GetNextItem( index, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
-		hashes.push_back( GetItemText( index ) );
+		item = GetNextItem( item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
+		if ( item == -1 ) // means nothing was found
+            return;
+		hashes.push_back( TowxString<long>( GetItemData(item) ) );
 	}
 }
 
@@ -132,100 +134,78 @@ void FileListCtrl::Sort()
 	bool changed = false;
     s_parent_dialog = m_parent_dialog;
 //  if (!m_ui_for_sort || !m_ui_for_sort->GetServerStatus()  ) return;
-SortItems(( true )?&CompareNameUP:&CompareNameDOWN , 0 );
-//	for ( int i = 3; i >= 0; i-- )
-//	{
-//		switch ( m_sortorder[ i ].col )
-//		{
-//			case 0 :
-//				changed = SortItems(( m_sortorder[ i ].direction )?&CompareNameUP:&CompareNameDOWN , 0 );
-//				break;
-//			case 1 :
-//				changed = SortItems(( m_sortorder[ i ].direction )?&CompareCountryUP:&CompareCountryDOWN , 0 );
-//				break;
-//			case 2 :
-//				changed = SortItems(( m_sortorder[ i ].direction )?&CompareRankUP:&CompareRankDOWN , 0 );
-//				break;
-//		}
-//	}
+//SortItems(( true )?&CompareNameUP:&CompareNameDOWN , 0 );
+	for ( int i = 3; i >= 0; i-- )
+	{
+		switch ( m_sortorder[ i ].col )
+		{
+			case 0 :
+				changed = SortItems(( m_sortorder[ i ].direction )?&CompareNameUP:&CompareNameDOWN , 0 );
+				break;
+			case 1 :
+				changed = SortItems(( m_sortorder[ i ].direction )?&CompareTypeUP:&CompareTypeDOWN , 0 );
+				break;
+			case 2 :
+				changed = SortItems(( m_sortorder[ i ].direction )?&CompareHashUP:&CompareHashDOWN , 0 );
+				break;
+		}
+	}
 }
 
 
 int wxCALLBACK FileListCtrl::CompareNameUP( long item1, long item2, long sortData )
 {
-    FileListCtrl* list = s_parent_dialog->GetListCtrl();
-    wxString name1 = list->GetItemText( item1 );
-    wxString name2 = list->GetItemText( item2 );
+    wxString name1 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item1) ).name.Upper();
+    wxString name2 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item2) ).name.Upper();
     return name1.CompareTo(name2);
 }
 
 
 int wxCALLBACK FileListCtrl::CompareNameDOWN( long item1, long item2, long sortData )
 {
-    FileListCtrl* list = s_parent_dialog->GetListCtrl();
-    wxString name1 = list->GetItemText( item1 );
-    wxString name2 = list->GetItemText( item2 );
+    wxString name1 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item1) ).name.Upper();
+    wxString name2 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item2) ).name.Upper();
     return name2.CompareTo(name1);
 }
 
 
-int wxCALLBACK FileListCtrl::CompareRankUP( long item1, long item2, long sortData )
+int wxCALLBACK FileListCtrl::CompareTypeUP( long item1, long item2, long sortData )
 {
-//  Ui* ui = m_ui_for_sort;
-//  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-//  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-//
-//  if ( battle1.GetRankNeeded() < battle2.GetRankNeeded() )
-//      return -1;
-//  if ( battle1.GetRankNeeded() > battle2.GetRankNeeded() )
-//      return 1;
-//
-	return 0;
+    wxString name1 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item1) ).type == map ? _("Map") : _("Mod");
+    wxString name2 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item2) ).type == map ? _("Map") : _("Mod");
+    return name1.CompareTo(name2);
+
 }
 
 
-int wxCALLBACK FileListCtrl::CompareRankDOWN( long item1, long item2, long sortData )
+int wxCALLBACK FileListCtrl::CompareTypeDOWN( long item1, long item2, long sortData )
 {
-//  Ui* ui = m_ui_for_sort;
-//  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-//  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-//
-//  if ( battle1.GetRankNeeded() < battle2.GetRankNeeded() )
-//      return 1;
-//  if ( battle1.GetRankNeeded() > battle2.GetRankNeeded() )
-//      return -1;
-//
-	return 0;
+    wxString name1 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item1) ).type == map ? _("Map") : _("Mod");
+    wxString name2 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item2) ).type == map ? _("Map") : _("Mod");
+    return name2.CompareTo(name1);
 }
 
 
-int wxCALLBACK FileListCtrl::CompareCountryUP( long item1, long item2, long sortData )
+int wxCALLBACK FileListCtrl::CompareHashUP( long item1, long item2, long sortData )
 {
-//  Ui* ui = m_ui_for_sort;
-//  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-//  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-//
-//  if ( battle1.GetFounder().GetCountry().MakeUpper() < battle2.GetFounder().GetCountry().MakeUpper() )
-//      return -1;
-//  if ( battle1.GetFounder().GetCountry().MakeUpper() > battle2.GetFounder().GetCountry().MakeUpper() )
-//      return 1;
-//
+    if ( item1 < item2 )
+		return -1;
+	if ( item1 > item2 )
+		return 1;
+
 	return 0;
+
 }
 
 
 
-int wxCALLBACK FileListCtrl::CompareCountryDOWN( long item1, long item2, long sortData )
+int wxCALLBACK FileListCtrl::CompareHashDOWN( long item1, long item2, long sortData )
 {
-//  Ui* ui = m_ui_for_sort;
-//  Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
-//  Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
-//
-//  if ( battle1.GetFounder().GetCountry().MakeUpper() < battle2.GetFounder().GetCountry().MakeUpper() )
-//      return 1;
-//  if ( battle1.GetFounder().GetCountry().MakeUpper() > battle2.GetFounder().GetCountry().MakeUpper() )
-//      return -1;
-//
+    if ( item1 > item2 )
+		return -1;
+	if ( item1 < item2 )
+		return 1;
+
 	return 0;
 }
 
