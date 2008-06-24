@@ -118,11 +118,13 @@ void FileListCtrl::OnColClick( wxListEvent& event )
 
 void FileListCtrl::GetSelectedHashes(HashVector& hashes)
 {
-	long index = -1;
+	long item = -1;
 	for ( long i = 0; i < GetSelectedItemCount(); ++i )
 	{
-		index = GetNextItem( index, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
-		hashes.push_back( TowxString<long>( GetItemData( index ) ) );
+		item = GetNextItem( item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
+		if ( item == -1 ) // means nothing was found
+            return;
+		hashes.push_back( TowxString<long>(  GetItemData(item) ) );
 	}
 }
 
@@ -153,7 +155,6 @@ void FileListCtrl::Sort()
 
 int wxCALLBACK FileListCtrl::CompareNameUP( long item1, long item2, long sortData )
 {
-    //FileListCtrl* list = s_parent_dialog->GetListCtrl();
     wxString name1 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item1) ).name.Upper();
     wxString name2 = s_parent_dialog->GetDataFromHash( TowxString<long> ( item2) ).name.Upper();
     return name1.CompareTo(name2);
