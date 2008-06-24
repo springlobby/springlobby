@@ -111,6 +111,7 @@ class TorrentWrapper : public iNetClass
     bool JoinTorrent( const wxString& name );
     bool DownloadTorrentFileFromTracker( const wxString& hash );
     void FixTorrentList();
+    void ResumeFromList();
 
     void ReceiveandExecute( const wxString& msg );
     void OnConnected( Socket* sock );
