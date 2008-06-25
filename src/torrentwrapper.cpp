@@ -330,7 +330,7 @@ void TorrentWrapper::ResumeFromList()
         //request all hashes in list, remember successes
         std::vector<int> successfulIndices;
         for ( unsigned int i = 0; i < ResumeCount; i++ ) {
-            if (success == RequestFileByHash( TorrentsToResume[i] ) ); /// resume all open leeched files when system as disconnected last time
+            if (success == RequestFileByHash( TorrentsToResume[i] ) ) /// resume all open leeched files when system as disconnected last time
                 successfulIndices.push_back(i);
         }
         //remove successfully resumed torrents from list
