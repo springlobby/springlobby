@@ -14,6 +14,7 @@ find -type f \( -name missing -o -name install-sh -o -name mkinstalldirs \
 
 # If there's an argument to this script, use it as the version string.
 if test x"$1" != x; then
+    # configure.ac.m4 uses the VERSION envvar.
     export VERSION="$1"
 fi
 

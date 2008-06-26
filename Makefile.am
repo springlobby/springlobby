@@ -6,6 +6,12 @@ ACLOCAL_AMFLAGS = -I m4 --install
 SEARCHDIRS = \
 	-I$(srcdir)/src
 
+if USE_WINDRES
+SEARCHDIRS += \
+	-I$(libt_dir)/include -I$(libt_dir)/include/libtorrent  \
+	-I$(libt_dir)/zlib -I$(libt_dir) -I $(libt_dir)/asio
+endif
+
 AM_CPPFLAGS = \
 	$(WX_CPPFLAGS) \
 	$(LIBTORRENT_CFLAGS) \
