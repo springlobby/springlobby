@@ -77,7 +77,7 @@ if test "$win_build" = 0 ; then
 	LIBTORRENT_CFLAGS=`pkg-config libtorrent --cflags`
  	LIBTORRENT_LIBS=`pkg-config libtorrent --libs`
 
-       AC_SUBST(LIBTORRENT_CFLAGS)
+        AC_SUBST(LIBTORRENT_CFLAGS)
         AC_SUBST(LIBTORRENT_LIBS)
     else
     	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
