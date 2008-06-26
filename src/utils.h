@@ -11,14 +11,6 @@
 #define wxLogDebugFunc( params ) wxLogTrace(_T("function calls"), params )
 #endif
 
-#if ( !defined(HAVE_WX26) && !defined(HAVE_WX28) )
-#if( wxMAJOR_VERSION==2 && wxMINOR_VERSION == 6 )
-#define HAVE_WX26
-#elif( wxMAJOR_VERSION==2 && wxMINOR_VERSION == 8 )
-#define HAVE_WX28
-#endif
-#endif
-
 
 //! Converts an std::string to a wxString
 #define WX_STRING(v) wxString(v.c_str(),wxConvUTF8)
