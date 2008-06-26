@@ -7,9 +7,13 @@ libt_dir = $(srcdir)/src/libtorrent
 libt_src_dir = $(libt_dir)/src
 
 SEARCHDIRS = \
-	-I$(srcdir)/src \
+	-I$(srcdir)/src
+
+if USE_WINDRES
+SEARCHDIRS += \
 	-I$(libt_dir)/include -I$(libt_dir)/include/libtorrent  \
 	-I$(libt_dir)/zlib -I$(libt_dir) -I $(libt_dir)/asio
+endif
 
 AM_CPPFLAGS = \
 	$(WX_CPPFLAGS) \
