@@ -3,6 +3,10 @@
 ## the --install can be edited out to use older automake
 ACLOCAL_AMFLAGS = -I m4 --install
 
+
+libt_dir = $(srcdir)/src/libtorrent
+libt_src_dir = $(libt_dir)/src
+
 SEARCHDIRS = \
 	-I$(srcdir)/src
 
