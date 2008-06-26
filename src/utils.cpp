@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // File: utils.h
 //
@@ -7,7 +7,6 @@
 #include <iostream>
 
 #include "utils.h"
-#include "revision.h"
 #include "crashreport.h"
 
 #include "settings++/custom_dialogs.h"
