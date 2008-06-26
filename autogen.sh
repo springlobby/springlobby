@@ -19,7 +19,6 @@ if test x"$1" != x; then
 fi
 
 # Create configure.ac from configure.ac.m4
-echo Creating configure.ac...
 m4 configure.ac.m4 > configure.ac
 
 echo Running autoreconf...
