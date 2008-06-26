@@ -12,7 +12,14 @@ find -type f \( -name missing -o -name install-sh -o -name mkinstalldirs \
   -o -name config.guess -o -name Makefile.in -o -name config.h.in \
   -o -name config.h.in~ -o -name aclocal.m4 -o -name configure.ac \) -print0 | xargs -0 rm -f
 
+# If an argument was given, use it as the version string.
+if test x"$1" != x; then
+    # configure.ac.m4 uses the VERSION envvar.
+    export VERSION="$1"
+fi
+
 # Create configure.ac from configure.ac.m4
+echo Creating configure.ac...
 m4 configure.ac.m4 > configure.ac
 
 echo Running autoreconf...
