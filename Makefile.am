@@ -860,8 +860,8 @@ springlobby_SOURCES = \
 	src/filelister/filelistdialog.cpp \
 	src/filelister/filelistfilter.cpp \
 	configure.ac \
-	src/autojoinchannels.h \
-	src/autojoinchannels.cpp
+	src/autojoinchanneldialog.h \
+	src/autojoinchanneldialog.cpp
 
 
 if USE_WINDRES	
