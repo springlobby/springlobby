@@ -108,7 +108,7 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menuTools->AppendCheckItem(MENU_SHOW_TOOLTIPS, _("Show tooltips") );
   m_menuTools->Check( MENU_SHOW_TOOLTIPS, sett().GetShowTooltips() );
   #endif
-  m_menuTools->AppendSeparator();
+
   #ifndef NO_TORRENT_SYSTEM
   m_menuTools->AppendSeparator();
   #endif
