@@ -166,6 +166,9 @@ MainWindow::MainWindow( Ui& ui ) :
   Layout();
 
   se_frame_active = false;
+
+  wxToolTip::Enable(sett().GetShowTooltips());
+
 }
 
 void MainWindow::forceSettingsFrameClose()
