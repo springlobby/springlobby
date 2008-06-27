@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: BattleOptionsTab
 //
@@ -71,7 +71,12 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   wxBoxSizer* m_main_options_sizer;
   m_main_options_sizer = new wxBoxSizer( wxVERTICAL );
 
-  wxString m_end_radiosChoices[] = { _("Continue if commander dies"), _("End if commander dies"), _("Linage mode") };
+  wxString m_end_radiosChoices[] =
+    {
+      _("Continue if commander dies"),
+      _("End if commander dies"),
+      _("Lineage mode")
+    };
   int m_end_radiosNChoices = sizeof( m_end_radiosChoices ) / sizeof( wxString );
   //TODO these need to be tooltipped, no idea how yet
   m_end_radios = new wxRadioBox( this, BOPTS_END, _("End condition"), wxDefaultPosition, wxDefaultSize, m_end_radiosNChoices, m_end_radiosChoices, 1, wxRA_SPECIFY_COLS );

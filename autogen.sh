@@ -18,7 +18,14 @@ if test x"$1" != x; then
     export VERSION="$1"
 fi
 
+
+# Set the version string, if it isn't already set.
+if test x"$VERSION" = x; then
+    export VERSION=`./tools/get-revision.sh`
+fi
+
 # Create configure.ac from configure.ac.m4
+echo Creating configure.ac...
 m4 configure.ac.m4 > configure.ac
 
 echo Running autoreconf...
