@@ -24,6 +24,7 @@ class settings_frame;
 class wxMenuItem;
 class wxMenuBar;
 class wxMenu;
+class AutojoinChannelDialog;
 
 // FIXME shouldn't copy this here
 typedef wxWindow wxNotebookPage;
@@ -61,6 +62,7 @@ class MainWindow : public wxFrame
     void OnMenuStartTorrent( wxCommandEvent& event );
     void OnMenuStopTorrent( wxCommandEvent& event );
     void OnMenuOpen( wxMenuEvent& event );
+    void OnMenuAutojoinChannels( wxCommandEvent& event );
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
     void OnShowSettingsPP( wxCommandEvent& event );
@@ -108,7 +110,7 @@ class MainWindow : public wxFrame
     wxBitmap* m_select_image;
 
     wxImageList* m_func_tab_images;
-
+    AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;
     bool se_frame_active;
 
@@ -135,7 +137,8 @@ enum
     MENU_VERSION,
     MENU_START_TORRENT,
     MENU_STOP_TORRENT,
-    MENU_SHOW_TOOLTIPS
+    MENU_SHOW_TOOLTIPS,
+    MENU_AUTOJOIN_CHANNELS
 
 };
 
