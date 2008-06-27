@@ -377,6 +377,8 @@ void MainWindow::OnMenuAbout( wxCommandEvent& event )
 	info.SetLicence(_T("GPL"));
 	info.AddDeveloper(_T("BrainDamage"));
 	info.AddDeveloper(_T("dizekat"));
+	info.AddDeveloper(_T("insaneinside"));
+	info.AddDeveloper(_T("Kaot"));
 	info.AddDeveloper(_T("koshi"));
 	info.AddDeveloper(_T("semi_"));
 	info.AddDeveloper(_T("tc-"));
