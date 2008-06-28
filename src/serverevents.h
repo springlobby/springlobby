@@ -101,6 +101,8 @@ class ServerEvents
 
     void OnKickedFromBattle();
 
+    void OnRedirect( const wxString& address,  unsigned int port, const wxString& CurrentNick, const wxString& CurrentPassword );
+
   protected:
     Server& m_serv;
     Ui& m_ui;

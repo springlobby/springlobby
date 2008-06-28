@@ -23,7 +23,7 @@ BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
   EVT_MENU                 ( BLIST_DLMOD, BattleListCtrl::OnDLMod )
 #if wxUSE_TIPWINDOW
-#ifndef __WXMSW__ //disables tooltips on win
+#if !defined(__WXMSW__) /* && !defined(__WXMAC__) */ //disables tooltips on msw /* and mac */
   EVT_MOTION(BattleListCtrl::OnMouseMotion)
 #endif
 #endif
@@ -93,14 +93,24 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   m_sortorder[3].direction = true;
   Sort( );
 
+#if defined(__WXMAC__)
+/// on mac, autosize does not work at all
+  SetColumnWidth( 0, 20 );
+  SetColumnWidth( 1, 20 );
+  SetColumnWidth( 2, 20 );
+
+  SetColumnWidth( 7, 28 ); // alittle more than before for dual digets
+  SetColumnWidth( 8, 28 );
+  SetColumnWidth( 9, 28 );
+#else
   SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
+
   SetColumnWidth( 7, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 8, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 9, wxLIST_AUTOSIZE_USEHEADER );
-
-
+#endif
   SetColumnWidth( 3, 170 );
   SetColumnWidth( 4, 140 );
   SetColumnWidth( 5, 130 );
@@ -129,7 +139,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 {
   if ( m_selected != -1 ) {
     if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
-      m_ui.DownloadMap( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetMapHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetMapName() );
+      m_ui.DownloadMap( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostMapHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostMapName() );
     }
   }
 }
@@ -139,7 +149,7 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
 {
   if ( m_selected != -1 ) {
     if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
-      m_ui.DownloadMod( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetModHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetModName() );
+      m_ui.DownloadMod( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostModHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostModName() );
     }
   }
 }
@@ -374,9 +384,9 @@ int wxCALLBACK BattleListCtrl::CompareMapUP(long item1, long item2, long sortDat
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() < RefineMapname( battle2.GetMapName() ).MakeUpper() )
+  if ( RefineMapname( battle1.GetHostMapName() ).MakeUpper() < RefineMapname( battle2.GetHostMapName() ).MakeUpper() )
       return -1;
-  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() > RefineMapname( battle2.GetMapName() ).MakeUpper() )
+  if ( RefineMapname( battle1.GetHostMapName() ).MakeUpper() > RefineMapname( battle2.GetHostMapName() ).MakeUpper() )
       return 1;
 
   return 0;
@@ -389,9 +399,9 @@ int wxCALLBACK BattleListCtrl::CompareMapDOWN(long item1, long item2, long sortD
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() < RefineMapname( battle2.GetMapName() ).MakeUpper() )
+  if ( RefineMapname( battle1.GetHostMapName() ).MakeUpper() < RefineMapname( battle2.GetHostMapName() ).MakeUpper() )
       return 1;
-  if ( RefineMapname( battle1.GetMapName() ).MakeUpper() > RefineMapname( battle2.GetMapName() ).MakeUpper() )
+  if ( RefineMapname( battle1.GetHostMapName() ).MakeUpper() > RefineMapname( battle2.GetHostMapName() ).MakeUpper() )
       return -1;
 
   return 0;
@@ -404,9 +414,9 @@ int wxCALLBACK BattleListCtrl::CompareModUP(long item1, long item2, long sortDat
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( RefineModname( battle1.GetModName() ).MakeUpper() < RefineModname( battle2.GetModName() ).MakeUpper() )
+  if ( RefineModname( battle1.GetHostModName() ).MakeUpper() < RefineModname( battle2.GetHostModName() ).MakeUpper() )
       return -1;
-  if ( RefineModname( battle1.GetModName() ).MakeUpper() > RefineModname( battle2.GetModName() ).MakeUpper() )
+  if ( RefineModname( battle1.GetHostModName() ).MakeUpper() > RefineModname( battle2.GetHostModName() ).MakeUpper() )
       return 1;
 
   return 0;
@@ -419,9 +429,9 @@ int wxCALLBACK BattleListCtrl::CompareModDOWN(long item1, long item2, long sortD
   Battle& battle1 = ui->GetServer().battles_iter->GetBattle(item1);
   Battle& battle2 = ui->GetServer().battles_iter->GetBattle(item2);
 
-  if ( RefineModname( battle1.GetModName() ).MakeUpper() < RefineModname( battle2.GetModName() ).MakeUpper() )
+  if ( RefineModname( battle1.GetHostModName() ).MakeUpper() < RefineModname( battle2.GetHostModName() ).MakeUpper() )
       return 1;
-  if ( RefineModname( battle1.GetModName() ).MakeUpper() > RefineModname( battle2.GetModName() ).MakeUpper() )
+  if ( RefineModname( battle1.GetHostModName() ).MakeUpper() > RefineModname( battle2.GetHostModName() ).MakeUpper() )
       return -1;
 
   return 0;
@@ -556,14 +566,14 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 	try{
 		tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 		int flag = wxLIST_HITTEST_ONITEM;
-		long *ptrSubItem = new long;
+		long subItem;
 #ifdef HAVE_WX28
-		long item_hit = HitTest(position, flag, ptrSubItem);
+		long item_hit = HitTest(position, flag, &subItem);
 #else
 		long item_hit = HitTest(position, flag);
 #endif
 
-		if (item_hit != wxNOT_FOUND)
+		if (item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount() )
 		{
 			long item = GetItemData(item_hit);
 			Ui* ui = m_ui_for_sort;
@@ -584,10 +594,10 @@ void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
 				m_tiptext = battle.GetDescription();
 				break;
 			case 4: //map
-				m_tiptext = RefineMapname(battle.GetMapName());
+				m_tiptext = RefineMapname(battle.GetHostMapName());
 				break;
 			case 5: //mod
-				m_tiptext = RefineModname(battle.GetModName());
+				m_tiptext = RefineModname(battle.GetHostModName());
 				break;
 			case 6: // host
 				m_tiptext = battle.GetFounder().GetNick();

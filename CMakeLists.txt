@@ -1,5 +1,8 @@
 PROJECT(SpringLobby)
 
+#set minimum cmake version
+cmake_minimum_required(VERSION 2.4)
+
 #if you don't want the full Compiler-Output, remove the following Line
 SET(CMAKE_VERBOSE_MAKEFILE ON)
 SET(CMAKE_COLOR_MAKEFILE ON)
@@ -24,7 +27,9 @@ FIND_PACKAGE( PkgConfig )
 SET( OPTION_USE_TORRENT_SYSTEM
 	1 CACHE BOOL
 	"Enables the builtin Torrent System of SpringLobby" )
-
+SET( OPTION_NO_SOUND
+	0 CACHE BOOL
+	"Disable compilation of sound output module (and removes SDL_sound dependency)" )
 #----------------------------------------------------------------------------------------------------
 # Konfiguration of wxWidgets Configuration
 #----------------------------------------------------------------------------------------------------
@@ -34,10 +39,28 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-SET(wxWidgets_USE_LIBS base core gl net adv qa)
+SET(wxWidgets_USE_LIBS base core gl net adv qa richtext )
 
 # We need the Find package for wxWidgets to work
 FIND_PACKAGE(wxWidgets)
+FIND_PACKAGE(SDL)
+FIND_PACKAGE(SDL_mixer)
+FIND_PACKAGE(SDL_sound)
+
+# Throw an error to the user if SDL is not found
+if ( NOT SDL_FOUND AND NOT OPTION_NO_SOUND )
+   message ( FATAL_ERROR "SDL library not found! please install the package or use OPTION_NO_SOUND ON" )
+endif()
+
+# Throw an error to the user if SDL_mixer is not found
+if ( NOT SDL_MIXER_FOUND AND NOT OPTION_NO_SOUND )
+   message ( FATAL_ERROR "SDL_mixer library not found! please install the package or use OPTION_NO_SOUND ON" )
+endif()
+
+# Throw an error to the user if SDL_sound is not found
+if ( NOT SDL_SOUND_FOUND AND NOT OPTION_NO_SOUND )
+   message ( FATAL_ERROR "SDL_sound library not found! please install the package or use OPTION_NO_SOUND ON" )
+endif()
 
 # Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
 IF(wxWidgets_FOUND)
@@ -51,6 +74,9 @@ IF(wxWidgets_FOUND)
 		src/boost/md5.cpp
 		src/updater/versionchecker.cpp
 		src/Helper/TextCompletionDatabase.cpp
+		src/filelister/filelistctr.cpp
+		src/filelister/filelistdialog.cpp
+		src/filelister/filelistfilter.cpp
 		src/autobalancedialog.cpp
 		src/addbotdialog.cpp
 		src/agreementdialog.cpp
@@ -92,6 +118,7 @@ IF(wxWidgets_FOUND)
 		src/mmoptionswrapper.cpp
 		src/nicklistctrl.cpp
 		src/nonautotools.cpp
+		src/sdlsound.cpp
 		src/server.cpp
 		src/serverevents.cpp
 		src/settings.cpp
@@ -164,6 +191,19 @@ ELSE()
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
 ENDIF()
 
+#----------------------------------------------------------------------------------------------------
+# Sound System
+#----------------------------------------------------------------------------------------------------
+
+if ( SDL_SOUND_FOUND AND NOT OPTION_NO_SOUND )
+	INCLUDE_DIRECTORIES( ${SDLSOUND_INCLUDE_DIRS} )
+	LINK_LIBRARIES( ${SDLSOUND_LIBRARY} )	
+ENDIF()
+
+if ( OPTION_NO_SOUND )
+	ADD_DEFINITIONS( -DDISABLE_SOUND )
+ENDIF()
+
 # Make sure the compiler can find include files from our Hello library.
 # include_directories (${HELLO_SOURCE_DIR}/Hello)
 
@@ -175,8 +215,8 @@ ENDIF()
 
     # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
     IF(WIN32)
-        SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
-		SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
+      SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
+			SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
     ENDIF(WIN32)
 
     # Here we define the executable SpringLobby ( or on Windows SpringLobby.exe )

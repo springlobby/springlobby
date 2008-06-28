@@ -316,7 +316,7 @@ void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 
 int IconImageList::GetSideIcon( const wxString& modname, int side )
 {
-  wxString sidename = usync()->GetSideName( modname, side ).Lower();
+  wxString sidename = usync()->GetSideName( modname, side );
 
   if (m_cached_side_icons[sidename] == 0){
     try

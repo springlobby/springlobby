@@ -5,10 +5,8 @@
 
 BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
 #if wxUSE_TIPWINDOW
-	#ifndef __WXMSW__
     	EVT_MOTION(customListCtrl::OnMouseMotion)
     	EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)
-    #endif
 #endif
     	EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, customListCtrl::OnStartResizeCol)
     	EVT_LEAVE_WINDOW(customListCtrl::noOp)
@@ -77,7 +75,7 @@ void customListCtrl::OnSelected( wxListEvent& event )
 void customListCtrl::OnDeselected( wxListEvent& event )
 {
   if ( m_selected == (int)GetItemData( event.GetIndex() )  )
-  m_selected = m_selected_index = -1;
+    m_selected = m_selected_index = -1;
 }
 
 long customListCtrl::GetIndexFromData( const unsigned long data )
@@ -93,6 +91,32 @@ long customListCtrl::GetIndexFromData( const unsigned long data )
 long customListCtrl::GetSelectedIndex()
 {
   return m_selected_index ;
+}
+
+void customListCtrl::SelectAll()
+{
+  for (long i = 0; i < GetItemCount() ; i++ )
+  {
+    SetItemState( i, wxLIST_STATE_SELECTED, -1  );
+  }
+}
+
+void customListCtrl::SelectNone()
+{
+  for (long i = 0; i < GetItemCount() ; i++ )
+  {
+    SetItemState( i, wxLIST_STATE_DONTCARE, -1 );
+  }
+}
+
+void customListCtrl::SelectInverse()
+{
+  for (long i = 0; i < GetItemCount() ; i++ )
+  {
+    int state = GetItemState( i, -1 );
+    state = ( state == wxLIST_STATE_DONTCARE ? wxLIST_STATE_SELECTED : wxLIST_STATE_DONTCARE );
+    SetItemState( i, state, -1 );
+  }
 }
 
 void customListCtrl::SetSelectedIndex(const long newindex)
@@ -129,12 +153,12 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 	    int flag = wxLIST_HITTEST_ONITEM;
 
 #ifdef HAVE_WX28
-	    long *ptrSubItem = new long;
-		long item_hit = HitTest(position, flag, ptrSubItem);
+    long subItem;
+		long item_hit = HitTest(position, flag, &subItem);
 #else
 		long item_hit = HitTest(position, flag);
 #endif
-	    if (item_hit != wxNOT_FOUND)
+	    if (item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount())
 	    {
 
 	        int coloumn = getColoumnFromPosition(position);

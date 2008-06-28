@@ -60,6 +60,9 @@ class Channel : public UserList
 
     bool ExecuteSayCommand( const wxString& in );
 
+    wxString GetPassword();
+    void SetPassword( const wxString& pw );
+
   protected:
     Server& m_serv;
 
@@ -80,6 +83,8 @@ class Channel : public UserList
     wxString m_name;
 
     void* m_userdata;
+
+    wxString m_password;
 
     void AddUser( User& user );
     void RemoveUser( const wxString& nick );

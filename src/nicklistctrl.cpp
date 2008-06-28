@@ -3,6 +3,7 @@
 // Class: NickListCtrl
 //
 
+#include <wx/platform.h>
 #include <wx/imaglist.h>
 #include <wx/menu.h>
 #include <wx/string.h>
@@ -62,14 +63,26 @@ NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* p
   m_sortorder[3].col = 1;
   m_sortorder[3].direction = true;
   Sort( );
-  #ifdef __WXMSW__
+
+#if defined(__WXMSW__)
+ /// autosize is part-broken on msw.
   SetColumnWidth( 0, 55 );
-  #else
-  SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
-  #endif
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
+#elif defined(__WXMAC__)
+/// autosize is entirely broken on wxmac.
+  SetColumnWidth( 0, 20 );
+  SetColumnWidth( 1, 20 );
+  SetColumnWidth( 2, 20 );
+  SetColumnWidth( 3, 128 );
+#else
+ /// on wxGTK it works, sort of.
+  SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
+#endif
 
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
   SetImageList( &icons(), wxIMAGE_LIST_SMALL );
@@ -85,9 +98,20 @@ NickListCtrl::~NickListCtrl()
 void NickListCtrl::AddUser( User& user )
 {
   SetSelectionRestorePoint();
-  int index = InsertItem( 0, icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+  wxLogDebugFunc(_T(""));
+  assert(&user);
+  int index = InsertItem( GetItemCount(), icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+  if(index==-1){
+      wxLogMessage(_T("NickListCtrl::AddUser : index==-1"));
+      return;
+  }
+
   SetItemData( index, (wxUIntPtr)&user );
+  try
+  {
   ASSERT_LOGIC( index != -1, _T("index = -1") );
+  } catch (...) { return; }
+
   UserUpdated( index );
   Sort();
   SetColumnWidth( 3, wxLIST_AUTOSIZE );
@@ -355,14 +379,14 @@ void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
 
 	try{
 #ifdef HAVE_WX28
-		long *ptrSubItem = new long;
-		long item_hit = HitTest(position, flag, ptrSubItem);
+		long subItem;
+		long item_hit = HitTest(position, flag, &subItem);
 #else
 		long item_hit = HitTest(position, flag);
 #endif
 		int coloumn = getColoumnFromPosition(position);
 
-		if (item_hit != wxNOT_FOUND)
+		if (item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount())
 		{
 			User* user = (User*) GetItemData(item_hit);
 

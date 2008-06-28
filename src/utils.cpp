@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // File: utils.h
 //
@@ -7,7 +7,6 @@
 #include <iostream>
 
 #include "utils.h"
-#include "revision.h"
 #include "crashreport.h"
 
 #include "settings++/custom_dialogs.h"
@@ -48,7 +47,7 @@ void InitializeLoggingTargets()
 
 {
 	#if wxUSE_STD_IOSTREAM
-    #if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
+    #if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
       ///hidden stream logging for crash reports
       wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
       wxLogChain *logCrashChain = new wxLogChain( loggercrash );
@@ -60,13 +59,16 @@ void InitializeLoggingTargets()
     wxLogChain *logChain = new wxLogChain( loggerconsole );
     logChain->SetLogLevel( wxLOG_Trace );
     logChain->SetVerbose( true );
-  #else
+  #elif defined ( USE_LOG_WINDOW )
     ///gui window fallback logging if console/stream output not available
     wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
     wxLogChain *logChain = new wxLogChain( loggerwin );
     logChain->SetLogLevel( wxLOG_Trace );
     logChain->SetVerbose( true );
     logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+  #else
+    /// if all fails, no log is better than msg box spam :P
+    new wxLogNull();
   #endif
 }
 

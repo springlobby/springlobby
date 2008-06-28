@@ -156,6 +156,8 @@ class TASServer : public Server
 
     int m_battle_id;
 
+    bool m_server_lanmode;
+
     wxString m_agreement;
 
     wxString m_addr;

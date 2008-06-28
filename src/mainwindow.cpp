@@ -13,6 +13,8 @@
 #include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
+#include <wx/tooltip.h>
+
 
 #include <stdexcept>
 
@@ -30,6 +32,7 @@
 #include "uiutils.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
+#include "torrentwrapper.h"
 #endif
 
 #include "images/springlobby.xpm"
@@ -49,6 +52,7 @@
 #include "settings++/custom_dialogs.h"
 
 #include "updater/versionchecker.h"
+#include "autojoinchanneldialog.h"
 
 #ifdef HAVE_WX28
 #include <wx/aboutdlg.h>
@@ -67,10 +71,12 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SETTINGSPP, MainWindow::OnShowSettingsPP )
   EVT_MENU( MENU_VERSION, MainWindow::OnMenuVersion )
   EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
-
-
+  EVT_MENU( MENU_START_TORRENT, MainWindow::OnMenuStartTorrent )
+  EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
+  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
+  EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
+  EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
-
 END_EVENT_TABLE()
 
 
@@ -86,15 +92,26 @@ MainWindow::MainWindow( Ui& ui ) :
   menuFile->AppendSeparator();
   menuFile->Append(MENU_QUIT, _("&Quit"));
 
-//TODO re-enable when actually needed
-//  wxMenu *menuEdit = new wxMenu;
+  //m_menuEdit = new wxMenu;
+  //TODO doesn't work atm
+
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
   m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
+  m_menuTools->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels..."));
   m_menuTools->AppendSeparator();
   m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
+
+  #if defined(__WXMSW__)
   m_menuTools->AppendSeparator();
+  m_menuTools->AppendCheckItem(MENU_SHOW_TOOLTIPS, _("Show tooltips") );
+  m_menuTools->Check( MENU_SHOW_TOOLTIPS, sett().GetShowTooltips() );
+  #endif
+
+  #ifndef NO_TORRENT_SYSTEM
+  m_menuTools->AppendSeparator();
+  #endif
   m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
   m_settings_menu = new wxMenuItem( m_menuTools, MENU_SETTINGSPP, _("SpringSettings"), wxEmptyString, wxITEM_NORMAL );
   m_menuTools->Append (m_settings_menu);
@@ -106,7 +123,7 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_menubar = new wxMenuBar;
   m_menubar->Append(menuFile, _("&File"));
- // m_menubar->Append(menuEdit, _("&Edit"));
+  //m_menubar->Append(m_menuEdit, _("&Edit"));
   m_menubar->Append(m_menuTools, _("&Tools"));
   m_menubar->Append(menuHelp, _("&Help"));
   SetMenuBar(m_menubar);
@@ -140,8 +157,6 @@ MainWindow::MainWindow( Ui& ui ) :
 #ifndef NO_TORRENT_SYSTEM
   m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 4 );
 #endif
-  //TODO insert real downloads panel
-  //m_func_tabs->AddPage( m_opts_tab, _T(""), false, 4 );
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -151,6 +166,9 @@ MainWindow::MainWindow( Ui& ui ) :
   Layout();
 
   se_frame_active = false;
+
+  wxToolTip::Enable(sett().GetShowTooltips());
+
 }
 
 void MainWindow::forceSettingsFrameClose()
@@ -172,6 +190,9 @@ MainWindow::~MainWindow()
   m_ui.Quit();
   m_ui.OnMainWindowDestruct();
   freeStaticBox();
+
+  if ( m_autojoin_dialog  != 0 )
+    delete m_autojoin_dialog;
 
   delete m_chat_icon;
   delete m_battle_icon;
@@ -365,6 +386,8 @@ void MainWindow::OnMenuAbout( wxCommandEvent& event )
 	info.SetLicence(_T("GPL"));
 	info.AddDeveloper(_T("BrainDamage"));
 	info.AddDeveloper(_T("dizekat"));
+	info.AddDeveloper(_T("insaneinside"));
+	info.AddDeveloper(_T("Kaot"));
 	info.AddDeveloper(_T("koshi"));
 	info.AddDeveloper(_T("semi_"));
 	info.AddDeveloper(_T("tc-"));
@@ -378,6 +401,7 @@ void MainWindow::OnMenuAbout( wxCommandEvent& event )
 #else
     customMessageBoxNoModal(SL_MAIN_ICON,_T("SpringLobby version: ")+GetSpringLobbyVersion(),_T("About"));
 #endif
+
 }
 
 void MainWindow::OnMenuConnect( wxCommandEvent& event )
@@ -434,6 +458,39 @@ void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 }
 
 
+void MainWindow::OnMenuStartTorrent( wxCommandEvent& event )
+{
+  #ifndef NO_TORRENT_SYSTEM
+  torrent()->ConnectToP2PSystem();
+  #endif
+}
+
+
+void MainWindow::OnMenuStopTorrent( wxCommandEvent& event )
+{
+  #ifndef NO_TORRENT_SYSTEM
+  torrent()->DisconnectToP2PSystem();
+  #endif
+}
+
+
+void MainWindow::OnMenuOpen( wxMenuEvent& event )
+{
+  #ifndef NO_TORRENT_SYSTEM
+  m_menuTools->Delete(MENU_STOP_TORRENT);
+  m_menuTools->Delete(MENU_START_TORRENT);
+  if ( !torrent()->IsConnectedToP2PSystem() )
+  {
+    m_menuTools->Insert( 5, MENU_START_TORRENT, _("Manually &Start Torrent System") );
+  }
+  else
+  {
+    m_menuTools->Insert( 5, MENU_STOP_TORRENT, _("Manually &Stop Torrent System") );
+  }
+  #endif
+}
+
+
 void MainWindow::OnReportBug( wxCommandEvent& event )
 {
   m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") );
@@ -474,4 +531,17 @@ void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 	  	    		wxDefaultSize);
 	se_frame_active = true;
 	se_frame->Show();
+}
+
+void MainWindow::OnShowToolTips( wxCommandEvent& event )
+{
+    bool show = m_menuTools->IsChecked(MENU_SHOW_TOOLTIPS);
+    wxToolTip::Enable(show);
+    sett().SetShowTooltips(show);
+}
+
+void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& event )
+{
+    m_autojoin_dialog = new AutojoinChannelDialog (this);
+    m_autojoin_dialog->Show();
 }

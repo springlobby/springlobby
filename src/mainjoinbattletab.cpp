@@ -28,7 +28,7 @@
 #include "ui.h"
 
 
-MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_battle_tab(0),m_map_tab(0),m_opts_tab(0),m_ui(ui)
+MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_battle_tab(0),m_map_tab(0),m_opts_tab(0),m_mm_opts_tab(0),m_ui(ui)
 {
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   m_tabs = new wxNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
@@ -79,7 +79,7 @@ void MainJoinBattleTab::ReloadMMoptTab()
 	int curPage = m_tabs->GetSelection();
 	m_tabs->DeletePage (4);
 	m_mm_opts_tab = 0;
-	m_battle_tab->GetBattle().CustomBattleOptions()->loadMapOptions(m_battle_tab->GetBattle().GetMapName());
+	m_battle_tab->GetBattle().CustomBattleOptions()->loadMapOptions(m_battle_tab->GetBattle().GetHostMapName());
 	m_mm_opts_tab = new BattleroomMMOptionsTab(m_battle_tab->GetBattle(), m_tabs);
 	//m_mm_opts_tab.
 	m_tabs->InsertPage( 4, m_mm_opts_tab, _("Map/Mod Options"), false );
@@ -188,8 +188,11 @@ if ( m_opts_tab ) {
 
 void MainJoinBattleTab::BattleUserUpdated( User& user )
 {
+  try
+  {
   ASSERT_LOGIC( m_battle_tab != 0, _T("m_battle_tab = 0") );
   ASSERT_LOGIC( m_map_tab != 0, _T("m_map_tab = 0") );
+  } catch(...) {return;}
   m_battle_tab->UpdateUser( user );
   m_map_tab->UpdateUser( user );
 }

@@ -1,9 +1,15 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: Settings
 //
 
+#ifdef __WXMSW__
+#include <wx/fileconf.h>
+#include <wx/filename.h>
+#include <wx/wfstream.h>
+#else
 #include <wx/config.h>
+#endif
 #include <wx/filefn.h>
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
@@ -27,13 +33,61 @@ Settings& sett()
 
 Settings::Settings()
 {
-    m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
-    if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
+  #if defined(__WXMSW__) && !defined(HAVE_WX26)
+  wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
+  wxString globalfilepath =  wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() + _T("springlobby.conf");
+
+  if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
+  {
+     m_chosed_path = userfilepath;
+     m_portable_mode = false;
+  }
+  else
+  {
+     m_chosed_path = globalfilepath; /// portable mode, use only current app paths
+     m_portable_mode = true;
+  }
+
+  // if it doesn't exist, try to create it
+  if ( !wxFileName::FileExists( m_chosed_path ) )
+  {
+     // if directory doesn't exist, try to create it
+     if ( !m_portable_mode && !wxFileName::DirExists( wxStandardPaths::Get().GetUserDataDir() ) )
+         wxFileName::Mkdir( wxStandardPaths::Get().GetUserDataDir() );
+
+     wxFileOutputStream outstream( m_chosed_path );
+
+     if ( !outstream.IsOk() )
+     {
+         // TODO: error handling
+     }
+  }
+
+  wxFileInputStream instream( m_chosed_path );
+
+  if ( !instream.IsOk() )
+  {
+      // TODO: error handling
+  }
+
+  m_config = new myconf( instream );
+
+  #else
+  //removed temporarily because it's suspected to cause a bug with userdir creation
+ // m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
+  m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
+  m_portable_mode = false;
+  #endif
+  if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
 }
 
 Settings::~Settings()
 {
     m_config->Write( _T("/General/firstrun"), false );
+    #if defined(__WXMSW__) && !defined(HAVE_WX26)
+    SaveSettings();
+    #endif
+    SetCacheVersion();
     delete m_config;
 }
 
@@ -43,30 +97,40 @@ void Settings::SaveSettings()
   m_config->Write( _T("/General/firstrun"), false );
   SetCacheVersion();
   m_config->Flush();
+  #if defined(__WXMSW__) && !defined(HAVE_WX26)
+  wxFileOutputStream outstream( m_chosed_path );
+
+  if ( !outstream.IsOk() )
+  {
+      // TODO: error handling
+  }
+
+  m_config->Save( outstream );
+  #endif
   if (usync()->IsLoaded()) usync()->SetSpringDataPath( GetSpringDir() );
+}
+
+
+bool Settings::IsPortableMode()
+{
+  return m_portable_mode;
 }
 
 
 bool Settings::IsFirstRun()
 {
-    bool first;
-    m_config->Read( _T("/General/firstrun"), &first, true );
-    return first;
+  return m_config->Read( _T("/General/firstrun"), true );
 }
 
 
 bool Settings::UseOldSpringLaunchMethod()
 {
-    bool old;
-    m_config->Read( _T("/Spring/UseOldLaunchMethod"), &old, false );
-    return old;
+    return m_config->Read( _T("/Spring/UseOldLaunchMethod"), 0l );
 }
 
 bool Settings::GetNoUDP()
 {
-    bool tmp;
-    m_config->Read( _T("/General/NoUDP"), &tmp, false );
-    return tmp;
+    return m_config->Read( _T("/General/NoUDP"), 0l );
 }
 
 void Settings::SetNoUDP(bool value)
@@ -76,9 +140,7 @@ void Settings::SetNoUDP(bool value)
 
 int Settings::GetClientPort()
 {
-    int tmp;
-    m_config->Read( _T("/General/ClientPort"), &tmp, 0 );
-    return tmp;
+    return m_config->Read( _T("/General/ClientPort"), 0l );
 }
 
 void Settings::SetClientPort(int value)
@@ -88,9 +150,7 @@ void Settings::SetClientPort(int value)
 
 bool Settings::GetShowIPAddresses()
 {
-    bool tmp;
-    m_config->Read( _T("/General/ShowIP"), &tmp, false );
-    return tmp;
+    return m_config->Read( _T("/General/ShowIP"), 0l );
 }
 
 void Settings::SetShowIPAddresses(bool value)
@@ -104,11 +164,22 @@ void Settings::SetOldSpringLaunchMethod( bool value )
 }
 
 
+bool Settings::GetWebBrowserUseDefault()
+{
+  // See note on ambiguities, in wx/confbase.h near line 180.
+  bool useDefault;
+  m_config->Read(_T("/General/WebBrowserUseDefault"), &useDefault, DEFSETT_WEB_BROWSER_USE_DEFAULT);
+  return useDefault;
+}
+
+void Settings::SetWebBrowserUseDefault(bool useDefault)
+{
+  m_config->Write(_T("/General/WebBrowserUseDefault"), useDefault);
+}
+
 wxString Settings::GetWebBrowserPath()
 {
-    wxString path;
-    m_config->Read( _T("/General/WebBrowserPath"), &path, _T("use default") );
-    return path;
+  return m_config->Read( _T("/General/WebBrowserPath"), wxEmptyString);
 }
 
 
@@ -120,15 +191,13 @@ void Settings::SetWebBrowserPath( const wxString path )
 
 wxString Settings::GetCachePath()
 {
-    wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache");
-    m_config->Read( _T("/General/CachePath"), &path, path );
-    return path + wxFileName::GetPathSeparator();
+    return m_config->Read( _T("/Spring/CachePath"), GetSpringDir() + wxFileName::GetPathSeparator() + _T("lobbycache") ) + wxFileName::GetPathSeparator();
 }
 
 
 void Settings::SetCachePath( const wxString path )
 {
-    m_config->Write( _T("/General/CachePath"), path );
+    m_config->Write( _T("/Spring/CachePath"), path );
 }
 
 
@@ -619,6 +688,17 @@ bool Settings::GetTestHostPort()
     return m_config->Read( _T("/Hosting/TestHostPort"), 1 );
 }
 
+wxColour Settings::GetBattleLastColour()
+{
+   return  GetColorFromStrng( m_config->Read( _T("/Hosting/MyLastColour"), _T("1 1 0") ) );
+}
+
+
+void Settings::SetBattleLastColour( const wxColour& col )
+{
+  m_config->Write( _T("/Hosting/MyLastColour"), GetColorString( col ) );
+}
+
 void Settings::SetLastHostDescription( const wxString& value )
 {
     m_config->Write( _T("/Hosting/LastDescription"), value );
@@ -736,6 +816,18 @@ unsigned int Settings::GetChatHistoryLenght()
 }
 
 
+void Settings::SetChatPMSoundNotificationEnabled( bool enabled )
+{
+  m_config->Write( _T("/Chat/PMSound"), enabled);
+}
+
+
+bool Settings::GetChatPMSoundNotificationEnabled()
+{
+  return m_config->Read( _T("/Chat/PMSound"), 1l);
+}
+
+
 wxColour Settings::GetChatColorNormal()
 {
     return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Normal"), _T( "0 0 0" ) ) ) );
@@ -848,9 +940,16 @@ void Settings::SetChatColorTime( wxColour value )
 
 wxFont Settings::GetChatFont()
 {
-    wxFont f;
-    f.SetNativeFontInfo( m_config->Read( _T("/Chat/Font"), wxEmptyString ) );
-    return f;
+    wxString info = m_config->Read( _T("/Chat/Font"), wxEmptyString );
+    if (info != wxEmptyString) {
+        wxFont f;
+        f.SetNativeFontInfo( info );
+        return f;
+    }
+    else {
+        wxFont f(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+        return f;
+    }
 }
 
 void Settings::SetChatFont( wxFont value )
@@ -868,6 +967,15 @@ void Settings::SetSmartScrollEnabled(bool value){
   m_config->Write( _T("/Chat/SmartScrollEnabled"), value);
 }
 
+bool Settings::GetAlwaysAutoScrollOnFocusLost()
+{
+  return m_config->Read( _T("/Chat/AlwaysAutoScrollOnFocusLost"), true );
+}
+
+void Settings::SetAlwaysAutoScrollOnFocusLost(bool value)
+{
+  m_config->Write( _T("/Chat/AlwaysAutoScrollOnFocusLost"), value);
+}
 
 BattleListFilterValues Settings::GetBattleFilterValues(const wxString& profile_name)
 {
@@ -1028,13 +1136,36 @@ int Settings::GetTorrentMaxConnections()
     return  m_config->Read( _T("/Torrent/MaxConnections"), 250 );
 }
 
+void Settings::SetTorrentListToResume( const wxArrayString& list )
+{
+  unsigned int TorrentCount = list.GetCount();
+  m_config->DeleteGroup( _T("/Torrent/ResumeList") );
+  for ( unsigned int i = 0; i < TorrentCount; i++ )
+  {
+    m_config->Write( _T("/Torrent/ResumeList/") + TowxString(i), list[i] );
+  }
+}
+
+
+wxArrayString Settings::GetTorrentListToResume()
+{
+  wxArrayString list;
+  unsigned int TorrentCount = m_config->GetNumberOfEntries( _T("/Torrent/ResumeList") );
+  for ( unsigned int i = 0; i < TorrentCount; i++ )
+  {
+    wxString ToAdd;
+    if ( m_config->Read( _T("/Torrent/ResumeList/") + TowxString(i), &ToAdd ) ) list.Add( ToAdd );
+  }
+  return list;
+}
+
 
 void Settings::SaveBattleMapOptions(IBattle *battle){
   if ( !battle ){
         wxLogError(_T("Settings::SaveBattleMapOptions called with null argument"));
         return;
       }
-  wxString map_name=battle->GetMapName();
+  wxString map_name=battle->GetHostMapName();
   //SetLastHostMap(map_name);
   wxString option_prefix=_T("/Hosting/Maps/")+map_name+_T("/");
   long longval;
@@ -1071,7 +1202,7 @@ void Settings::LoadBattleMapOptions(IBattle *battle){
         wxLogError(_T("Settings::LoadBattleMapOptions called with null argument"));
         return;
       }
-  wxString map_name=battle->GetMapName();
+  wxString map_name=battle->GetHostMapName();
   wxString option_prefix=_T("/Hosting/Maps/")+map_name+_T("/");
   int start_pos_type=m_config->Read(option_prefix+_T("startpostype") , 0L );
   battle->CustomBattleOptions()->setSingleOption( _T("startpostype"), TowxString(start_pos_type), EngineOption );
@@ -1098,4 +1229,14 @@ void Settings::LoadBattleMapOptions(IBattle *battle){
       }
     }
   }
+}
+
+void Settings::SetShowTooltips( bool show)
+{
+    m_config->Write(_T("GUI/ShowTooltips"), show );
+}
+
+bool Settings::GetShowTooltips()
+{
+    return m_config->Read(_T("GUI/ShowTooltips"), 1l);
 }

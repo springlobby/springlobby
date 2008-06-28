@@ -6,6 +6,7 @@ build-*
 build
 config.h.in
 configure
+configure.ac
 bin
 obj
 springlobby.layout
@@ -16,3 +17,6 @@ springlobby.depend
 unitsync.log
 doc/.gitignore
 rpm/.gitignore
+*.vcproj.*.user
+*.suo
+*.ncb

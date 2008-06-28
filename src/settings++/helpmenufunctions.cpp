@@ -1,12 +1,15 @@
 #include "helpmenufunctions.h"
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "../images/springsettings.xpm"
 #include <wx/icon.h>
 #include "../utils.h"
 #include "custom_dialogs.h"
 #include <wx/intl.h>
 #include "se_utils.h"
-#include "../revision.h"
 #include <string>
 
 #ifdef HAVE_WX28
@@ -17,10 +20,10 @@ void showAbout()
 {
 #ifdef HAVE_WX28
 
-	std::string ver = std::string("0.1.2b revision ") + revision();
+	std::string ver = std::string("0.1.3 revision ") + VERSION;
 	 wxAboutDialogInfo info;
 	 info.SetName(_T("SpringSettings"));
-	 info.SetVersion(_T("0.1.2b"));//WX_STRING(ver));
+	 info.SetVersion(_T("0.1.3"));//WX_STRING(ver));
 	 info.SetDescription(_("SpringSettings is a graphical frontend to the Settings of the Spring engine"));
 	 info.SetCopyright(_T("(C) 2007 koshi <koshi@springlobby.info>"));
 	 info.SetIcon(wxIcon(springsettings_xpm));
