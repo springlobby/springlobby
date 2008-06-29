@@ -729,8 +729,8 @@ int SpringUnitSyncLib::GetOptionListCount( int optIndex )
 wxString SpringUnitSyncLib::GetOptionListDef( int optIndex )
 {
   InitLib( m_get_option_list_def );
-    wxString temp = WX_STRINGC( m_get_option_list_def( optIndex ) );
-  return temp;
+
+  return WX_STRINGC( m_get_option_list_def( optIndex ) );
 }
 
 
