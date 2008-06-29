@@ -109,8 +109,8 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		mmOptionList current = it->second;
 		wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
 
-
-		int index = CLAMP(current.cur_choice_index,0,int(current.cbx_choices.GetCount()-1));
+        int temp = int(current.cbx_choices.GetCount()-1);
+		int index = CLAMP(current.cur_choice_index,0,temp);
 		wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[index], wxDefaultPosition,
 				wxDefaultSize, current.cbx_choices, 0, wxDefaultValidator);
 

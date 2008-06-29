@@ -192,8 +192,10 @@ MainWindow::~MainWindow()
   freeStaticBox();
 
   if ( m_autojoin_dialog  != 0 )
+  {
     delete m_autojoin_dialog;
-
+    m_autojoin_dialog = 0;
+  }
   delete m_chat_icon;
   delete m_battle_icon;
   delete m_options_icon;
