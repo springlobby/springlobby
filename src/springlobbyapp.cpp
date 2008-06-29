@@ -76,6 +76,8 @@ bool SpringLobbyApp::OnInit()
     m_locale->Init();
     m_locale->AddCatalog( _T("springlobby") );
 
+    if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
+
     if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
     {
         if ( wxDirExists( sett().GetCachePath() )  )
