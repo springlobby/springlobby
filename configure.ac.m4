@@ -1,10 +1,10 @@
-dnl it is possible to make these work with older versions of autoconf+automake
+changequote(`>>>',`<<<')>>>dnl it is possible to make these work with older versions of autoconf+automake
 dnl but the developers will NOT support you if it fails
 dnl you really should just upgrade your autotools instead
 
 dnl if you have too old autoconf, comment out the following prereq AND edit Makefile.am
-AC_PREREQ([2.59c])
-AC_INIT([SpringLobby], [0.0.1-svn], [devel@www.springlobby.info])
+AC_INIT([SpringLobby],[<<<esyscmd(/bin/echo -n "$VERSION")>>>],[devel@www.springlobby.info])
+
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/springlobbyapp.cpp])
 AC_CONFIG_AUX_DIR([autotools-aux])
@@ -40,8 +40,9 @@ AC_PROG_CXX
 
 AM_OPTIONS_WXCONFIG
 
+
 AM_PATH_WXCONFIG([2.6.3], [],
-   [AC_MSG_ERROR([
+    [AC_MSG_ERROR([
            wxWidgets must be installed on your system
            but wx-config script couldn't be found.
 
@@ -49,7 +50,7 @@ AM_PATH_WXCONFIG([2.6.3], [],
            where wxWidgets libraries are installed (returned by
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
            equivalent variable and wxWidgets version is 2.6.3 or above.
-   ])], [base,core,net,adv,qa,richtext,aui])
+    ])], [base,core,net,adv,qa,richtext,aui])
 win_build=0
 AC_ARG_VAR([WINDRES], [Windows resource file compiler command])
 if test x$host_os = xmingw32msvc ; then
@@ -62,15 +63,19 @@ fi
 
 
 
-#on non win build use extern libtorrent, on win use included source
+dnl on non win build use extern libtorrent, on win use included source
 if test "$win_build" = 0 ; then
     if test x$usetorrent = xyes ; then
         AC_MSG_CHECKING([checking for libtorrent])
         PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
         if test x$usetorrent = xfail ; then
-            AC_MSG_ERROR([missing required libtorrent library, get it at http://www.rasterbar.com/products/libtorrent/, please note that some distros name it rb-libtorrent, that is NOT libtorrent from rakshasa]);
+            AC_MSG_ERROR([missing required libtorrent library get it at http://www.rasterbar.com/products/libtorrent/ please note that some distros name it rb-libtorrent that is NOT libtorrent from rakshasa  you can skip the dependency by using --disable-torrent-system]);
             exit
         fi
+
+	LIBTORRENT_CFLAGS=`pkg-config libtorrent --cflags`
+ 	LIBTORRENT_LIBS=`pkg-config libtorrent --libs`
+
         AC_SUBST(LIBTORRENT_CFLAGS)
         AC_SUBST(LIBTORRENT_LIBS)
     else
@@ -78,23 +83,20 @@ if test "$win_build" = 0 ; then
     fi
 else
     if test x$usetorrent = xyes ; then
-        CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DNO_RICHTEXT_CHAT -DTORRENT_DISABLE_ENCRYPTION  "
+        CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION  "
         LIBS=' -Wl,-allow-multiple-definition -L/var/lib/buildbot/lib/mingw/lib -lboost_thread-mt -lboost_filesystem-mt  -lws2_32 -lmswsock -lboost_date_time-mt'
     else
        	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
     fi
 fi
 
-#check if sound configure is enables, if yes check for SDL
+dnl check if sound configure is enables, if yes check for SDL
 if test x$sound = xyes ; then
-    AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10, SDL_sound and SDL_mixer, use --disable-sound to skip the dependency (and the feature)") )
+    AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10 SDL_sound and SDL_mixer use --disable-sound to skip the dependency and the feature") )
 else
     CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND "
 fi
 
-
-AC_ARG_VAR([SVNVERSION], [Produce a compact version number for a working copy.])
-AC_CHECK_PROGS([SVNVERSION], [svnversion false])
 
 AM_CONDITIONAL([USE_WINDRES], test "$win_build" = 1)
 
@@ -115,3 +117,4 @@ AM_GNU_GETTEXT_VERSION([0.14])
 
 AC_CONFIG_FILES([Makefile po/Makefile.in])
 AC_OUTPUT
+<<<

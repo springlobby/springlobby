@@ -30,13 +30,31 @@ enum MediaType
   mod
 };
 
+enum DownloadRequestStatus
+{
+  success,
+  not_connected,
+  paused_ingame,
+  duplicate_request,
+  file_not_found,
+  torrent_join_failed,
+  scheduled_in_cue
+};
+
+enum FileStatus
+{
+  leeching,
+  seeding,
+  queued
+};
+
 struct TorrentInfos
 {
   float numcopies;
   wxString name;
   unsigned int downloaded;
   unsigned int uploaded;
-  bool seeding;
+  FileStatus downloadstatus;
   float progress;
   float inspeed;
   float outspeed;
@@ -51,6 +69,7 @@ struct TorrentData
   wxString name;
   MediaType type;
   wxString infohash;
+  bool ondisk;
 };
 
 typedef std::map<wxString,TorrentData> HashToTorrentData;/// hash -> torr data
@@ -68,19 +87,19 @@ class TorrentWrapper : public iNetClass
 
     /// gui interface
 
-    void ConnectToP2PSystem();
+    bool ConnectToP2PSystem();
     void DisconnectToP2PSystem();
     bool IsConnectedToP2PSystem();
     bool IsFileInSystem( const wxString& hash );
     void RemoveFile( const wxString& hash );
     int GetTorrentSystemStatus();
-    HashToTorrentData GetSystemFileList();
+    HashToTorrentData& GetSystemFileList();
 
     /// lobby interface
     void SetIngameStatus( bool status );
     void ReloadLocalFileList();
-    bool RequestFileByHash( const wxString& hash );
-    bool RequestFileByName( const wxString& name );
+    DownloadRequestStatus RequestFileByHash( const wxString& hash );
+    DownloadRequestStatus RequestFileByName( const wxString& name );
     void UpdateSettings();
     void UpdateFromTimer( int mselapsed );
     std::map<int,TorrentInfos> CollectGuiInfos();
@@ -92,13 +111,13 @@ class TorrentWrapper : public iNetClass
     bool JoinTorrent( const wxString& name );
     bool DownloadTorrentFileFromTracker( const wxString& hash );
     void FixTorrentList();
+    void ResumeFromList();
 
     void ReceiveandExecute( const wxString& msg );
     void OnConnected( Socket* sock );
     void OnDisconnected( Socket* sock );
     void OnDataReceived( Socket* sock );
 
-    bool m_connected;
     wxString m_buffer;
 
     bool ingame;
@@ -134,6 +153,8 @@ class TorrentWrapper : public iNetClass
     MutexWrapper<TorrentHandleToHash> m_torrent_handles;
 
     MutexWrapper<NameToHash> m_name_to_hash;
+
+    MutexWrapper<wxArrayString> m_queued_requests; /// contains hashes of pending requested files when already leeching > 4 files
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;

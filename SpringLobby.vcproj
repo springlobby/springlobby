@@ -438,15 +438,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\custom_dialogs.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\customlistctrl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\Defs.hpp"
 				>
 			</File>
 			<File
@@ -458,15 +450,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\frame.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\globalevents.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\helpmenufunctions.h"
 				>
 			</File>
 			<File
@@ -491,10 +475,6 @@
 			</File>
 			<File
 				RelativePath=".\src\iunitsync.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\main.h"
 				>
 			</File>
 			<File
@@ -558,27 +538,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\panel_pathoption.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\presets.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\revision.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\sdlsound.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\se_settings.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\se_utils.h"
 				>
 			</File>
 			<File
@@ -634,43 +598,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\tab_abstract.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_audio.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_debug.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_quality_video.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_render_detail.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_simple.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_ui.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\tasserver.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\tdfcontainer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Helper\TextCompletionDatabase.hpp"
 				>
 			</File>
 			<File
@@ -713,10 +645,106 @@
 				RelativePath=".\src\utils.h"
 				>
 			</File>
-			<File
-				RelativePath=".\src\updater\versionchecker.h"
+			<Filter
+				Name="filelister"
 				>
-			</File>
+				<File
+					RelativePath=".\src\filelister\filelistctrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\filelister\filelistdialog.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\filelister\filelistfilter.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Helper"
+				>
+				<File
+					RelativePath=".\src\Helper\TextCompletionDatabase.hpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="settings++"
+				>
+				<File
+					RelativePath=".\src\settings++\custom_dialogs.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\Defs.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\frame.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\helpmenufunctions.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\main.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\panel_pathoption.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\presets.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\se_settings.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\se_utils.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_abstract.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_audio.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_debug.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_quality_video.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_render_detail.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_simple.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_ui.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="updater"
+				>
+				<File
+					RelativePath=".\src\updater\versionchecker.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -860,10 +888,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\custom_dialogs.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\customlistctrl.cpp"
 				>
 			</File>
@@ -872,15 +896,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\frame.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\globalevents.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\helpmenufunctions.cpp"
 				>
 			</File>
 			<File
@@ -988,23 +1004,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\panel_pathoption.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\presets.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\sdlsound.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\se_settings.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\se_utils.cpp"
 				>
 			</File>
 			<File
@@ -1108,43 +1108,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\tab_abstract.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_audio.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_debug.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_quality_video.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_render_detail.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_simple.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_ui.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\tasserver.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\tdfcontainer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Helper\TextCompletionDatabase.cpp"
 				>
 			</File>
 			<File
@@ -1247,10 +1215,146 @@
 				RelativePath=".\src\utils.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\src\updater\versionchecker.cpp"
+			<Filter
+				Name="filelister"
 				>
-			</File>
+				<File
+					RelativePath=".\src\filelister\filelistctrl.cpp"
+					>
+					<FileConfiguration
+						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\src\filelister\filelistdialog.cpp"
+					>
+					<FileConfiguration
+						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\src\filelister\filelistfilter.cpp"
+					>
+					<FileConfiguration
+						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
+			<Filter
+				Name="Helper"
+				>
+				<File
+					RelativePath=".\src\Helper\TextCompletionDatabase.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="settings++"
+				>
+				<File
+					RelativePath=".\src\settings++\custom_dialogs.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\frame.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\helpmenufunctions.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\panel_pathoption.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\presets.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\se_settings.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\se_utils.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_abstract.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_audio.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_debug.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_quality_video.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_render_detail.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_simple.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_ui.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="updater"
+				>
+				<File
+					RelativePath=".\src\updater\versionchecker.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

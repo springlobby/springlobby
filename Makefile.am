@@ -7,22 +7,26 @@ libt_dir = $(srcdir)/src/libtorrent
 libt_src_dir = $(libt_dir)/src
 
 SEARCHDIRS = \
-	-I$(srcdir)/src \
+	-I$(srcdir)/src
+
+if USE_WINDRES
+SEARCHDIRS += \
 	-I$(libt_dir)/include -I$(libt_dir)/include/libtorrent  \
 	-I$(libt_dir)/zlib -I$(libt_dir) -I $(libt_dir)/asio
+endif
 
 AM_CPPFLAGS = \
 	$(WX_CPPFLAGS) \
 	$(LIBTORRENT_CFLAGS) \
 	$(SDL_CFLAGS) \
 	-DLOCALEDIR=\"$(localedir)\" \
- 	$(SEARCHDIRS)
+	$(SEARCHDIRS)
 
 # strict aliasing check is disabled, because wxWidgets headers have problems
 AM_CXXFLAGS = \
 	-Wall \
 	-Wno-strict-aliasing -DNDEBUG
-	
+
 desktopdir = $(datadir)/applications
 dist_desktop_DATA = \
 	src/springlobby.desktop
@@ -30,7 +34,6 @@ dist_desktop_DATA = \
 pixmapdir = $(datadir)/pixmaps
 dist_pixmap_DATA = \
 	src/images/springlobby.svg
-	
 SUBDIRS = po
 
 ## if you don't have the required version of autoconf, comment out the
@@ -63,20 +66,6 @@ RESOURCECOMPILE = $(WINDRES) -I $(srcdir)/src $(DEFS) $(DEFAULT_INCLUDES) $(INCL
 .rc.o:
 	$(RESOURCECOMPILE) -o $@ -i $<
 endif
-
-# filter-out is a GNU make extension, so we get a warning from automake
-# and we can not use -Werror in AM_INIT_AUTOMAKE because of this either
-# but without this construct we would have a circular dependency and make
-# would whine about it on every invocation
-
-revision.cpp: src/revision.cpp.in $(filter-out revision.%, $(springlobby_SOURCES)) $(springlobby_DEPENDENCIES)
-	rm -f $@
-	sed "s/REV[^\"]*/REV SVN `LC_ALL=C $(SVNVERSION) $(top_srcdir) /trunk || echo svnversion failed or not found`/" < $< > $@
-
-clean-local:
-	rm -f revision.cpp
-
-# the following line is searched for in a script to add filenames under it
 
 
 libtorrent_sources = \
@@ -393,15 +382,12 @@ libtorrent_headers = \
 
 
 springlobby_SOURCES = \
-	revision.cpp \
 	src/updater/versionchecker.cpp \
 	src/updater/versionchecker.h \
 	src/sounds/ring_sound.h \
 	src/sounds/pm_sound.h \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
-	src/revision.cpp.in \
-	src/revision.h \
 	src/unitsyncthread.cpp \
 	src/unitsyncthread.h \
 	src/maplistctrl.cpp \
@@ -866,8 +852,18 @@ springlobby_SOURCES = \
 	src/httpdownloader.h \
 	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
-	src/Helper/TextCompletionDatabase.cpp 
-	
+	src/Helper/TextCompletionDatabase.cpp \
+	src/filelister/filelistctrl.h \
+	src/filelister/filelistdialog.h \
+	src/filelister/filelistfilter.h \
+	src/filelister/filelistctrl.cpp \
+	src/filelister/filelistdialog.cpp \
+	src/filelister/filelistfilter.cpp \
+	configure.ac \
+	src/autojoinchanneldialog.h \
+	src/autojoinchanneldialog.cpp
+
+
 if USE_WINDRES	
 springlobby_SOURCES += \ 
 		$(libtorrent_headers) \
@@ -912,9 +908,6 @@ springlobby_SOURCES += \
 	src/settings++/helpmenufunctions.cpp 
 
 springsettings_SOURCES = \
-	revision.cpp \
-	src/revision.cpp.in \
-	src/revision.h \
 	src/utils.cpp \
 	src/utils.h \
 	src/crashreport.cpp \
