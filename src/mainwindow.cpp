@@ -495,7 +495,10 @@ void MainWindow::OnMenuOpen( wxMenuEvent& event )
 
 void MainWindow::OnReportBug( wxCommandEvent& event )
 {
-  m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") );
+    wxString reporter = wxEmptyString;
+    if (m_ui.IsConnected() )
+        reporter = _T("?reporter=") + m_ui.GetServer().GetMe().GetNick();
+  m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") + reporter);
 }
 
 
