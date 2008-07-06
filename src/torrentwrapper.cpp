@@ -314,9 +314,33 @@ void TorrentWrapper::UpdateFromTimer( int mselapsed )
   m_timer_count++;
   if ( m_timer_count < 20 ) return;////update every 2 sec
   m_timer_count = 0;
-  if (!ingame && IsConnectedToP2PSystem() ) FixTorrentList();
+  if (!ingame && IsConnectedToP2PSystem() )
+  {
+      FixTorrentList();
+      ResumeFromList();
+  }
 }
 
+void TorrentWrapper::ResumeFromList()
+{
+    wxArrayString TorrentsToResume = sett().GetTorrentListToResume();
+    unsigned int ResumeCount = TorrentsToResume.GetCount();
+    if ( ResumeCount > 0 )
+    {
+        //request all hashes in list, remember successes
+        std::vector<int> successfulIndices;
+        for ( unsigned int i = 0; i < ResumeCount; i++ ) {
+            if (success == RequestFileByHash( TorrentsToResume[i] ) ) /// resume all open leeched files when system as disconnected last time
+                successfulIndices.push_back(i);
+        }
+        //remove successfully resumed torrents from list
+        std::vector<int>::const_iterator it = successfulIndices.begin();
+        for ( ; it != successfulIndices.end(); ++it )
+            TorrentsToResume.RemoveAt( *it );
+        //save new list (hopefully empty)
+        sett().SetTorrentListToResume( TorrentsToResume );
+    }
+}
 
 ////////////////////////////////////////////////////////
 //// private functions to interface with the system ////
@@ -801,25 +825,22 @@ void TorrentWrapper::OnConnected( Socket* sock )
   {
     wxLogError( WX_STRINGC( e.what() ) ); /// TODO (BrainDamage#1#): add message to user on failure
   }
-  /// threads rule 8 plus here we want to lock it all so that other thread wont get inconsistent data
-  ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
-  ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
-  ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
-  ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
-  ScopedLocker<wxArrayString> queued_requests_l(m_queued_requests);
+  {
+      /// threads rule 8 plus here we want to lock it all so that other thread wont get inconsistent data
+      ScopedLocker<HashToTorrentData> torrent_infos_l(m_torrents_infos);
+      ScopedLocker<SeedRequests> seed_requests_l(m_seed_requests);
+      ScopedLocker<OpenTorrents> open_torrents_l(m_open_torrents);
+      ScopedLocker<TorrentHandleToHash> torrent_handles_l(m_torrent_handles);
+      ScopedLocker<wxArrayString> queued_requests_l(m_queued_requests);
 
-  torrent_infos_l.Get().clear();
-  seed_requests_l.Get().clear();
-  open_torrents_l.Get().clear();
-  torrent_handles_l.Get().clear();
-  queued_requests_l.Get().Empty();
-
+      torrent_infos_l.Get().clear();
+      seed_requests_l.Get().clear();
+      open_torrents_l.Get().clear();
+      torrent_handles_l.Get().clear();
+      queued_requests_l.Get().Empty();
+  }
   m_seed_count = 0;
   m_leech_count = 0;
-
-  wxArrayString TorrentsToResume = sett().GetTorrentListToResume();
-  unsigned int ResumeCount = TorrentsToResume.GetCount();
-  for ( unsigned int i = 0; i < ResumeCount; i++ ) RequestFileByHash( TorrentsToResume[i] ); /// resume all open leeched files when system as disconnected last time
 
 
 }

@@ -76,19 +76,25 @@ class myconf : public wxFileConfig
 class Settings
 {
   public:
+
+  /** Default constructor.
+   */
     Settings();
     ~Settings();
-
+    
     bool IsPortableMode();
 
+    /** Initialize all settings to default.
+     */
     void SetDefaultSettings();
     void SaveSettings();
 
     bool IsFirstRun();
 
-    bool UseOldSpringLaunchMethod();
-    void SetOldSpringLaunchMethod( bool value );
-
+    /* ================================================================ */
+    /** @name Network
+     * @{
+     */
     bool GetNoUDP();
     void SetNoUDP(bool value);
 
@@ -97,6 +103,15 @@ class Settings
 
     bool GetShowIPAddresses();
     void SetShowIPAddresses(bool value);
+    /**@}*/
+
+    /* ================================================================ */
+    /** @name Web Browser
+     *
+     * Web browser preferences.
+     *
+     *@{
+     */
 
     /** Fetch the "Use Default" setting for the web browser.
      *
@@ -105,26 +120,50 @@ class Settings
     bool GetWebBrowserUseDefault();
 
 
-    /** Set the "Use Default" setting for the web browser.  If @c
-     * true, we use wxLaunchDefaultBrowser when we want to open a web
-     * browser.
+    /** Set the "Use Default" setting for the web browser.  If @c true, we use
+     * wxLaunchDefaultBrowser when we want to open a web browser.
      *
-     * @param useDefault Whether or not to use the system-default
-     * browser.
+     * @param useDefault Whether or not to use the system-default browser.
      *
      * @sa Ui::OpenWebBrowser
      */
     void SetWebBrowserUseDefault(bool useDefault);
 
+    /** Get the path to the user-configured browser.
+     *
+     * @returns The user-defined browser path, if set, otherwise an empty string
+     * (wxEmptyString).
+     */
     wxString GetWebBrowserPath();
+
+    /** Set the path to the user-configured browser.
+     *
+     * @param path A path to a web browser
+     */
     void SetWebBrowserPath( const wxString path );
 
+    /**@}*/
+
+    /* ================================================================ */
+    /** @name Cache
+     *
+     * Information about the directory tree used to cache infomation about maps
+     * and mods.
+     * 
+     * @{
+     */
     wxString GetCachePath();
     void SetCachePath( const wxString path );
 
     void SetCacheVersion();
     int GetCacheVersion();
 
+    /**@}*/
+
+    /* ================================================================ */
+    /** @name Servers
+     * @{
+     */
     wxString GetDefaultServer();
     void SetDefaultServer( const wxString& server_name );
     void SetAutoConnect( bool do_autoconnect );
@@ -143,15 +182,13 @@ class Settings
     void AddServer( const wxString& server_name );
     int GetServerIndex( const wxString& server_name );
 
-    int GetNumChannelsJoin();
-    void SetNumChannelsJoin( int num );
-    void AddChannelJoin( const wxString& channel , const wxString& key );
-    void RemoveChannelJoin( const wxString& channel );
-    int GetChannelJoinIndex( const wxString& channel );
-    wxString GetChannelJoinName( int index );
-
     wxString GetServerName( int index );
+    /**@}*/
 
+    /* ================================================================ */
+    /** @name Accounts
+     * @{
+     */
     wxString GetServerAccountNick( const wxString& server_name );
     void   SetServerAccountNick( const wxString& server_name, const wxString& value );
 
@@ -160,7 +197,68 @@ class Settings
 
     bool   GetServerAccountSavePass( const wxString& server_name );
     void   SetServerAccountSavePass( const wxString& server_name, const bool value );
+    /**@}*/
 
+    /* ================================================================ */
+    /** @name Automatic channel join list
+     *
+     * These functions are used to manipulate the list of channels that
+     * SpringLobby should join upon connecting to a server.
+     *
+     * @{
+     */
+
+    /** Fetch the number of channels in the autojoin list.
+     */
+    int GetNumChannelsJoin();
+
+
+    /** Set the number of channels currently in the autojoin list.  This
+     * function is not intended for direct use, and will probably go away soon.
+     *
+     * @internal
+     *
+     * @param num The new maximum number of channels we think are in the
+     * autojoin list.
+     */
+    void SetNumChannelsJoin( int num );
+
+
+    /** Add a channel to the autojoin list.
+     */
+    void AddChannelJoin( const wxString& channel , const wxString& key );
+
+    /** Remove a channel from the autojoin list.
+     *
+     * @param channel The name of the channel to remove
+     */
+    void RemoveChannelJoin( const wxString& channel );
+
+
+    /** Determine the index of a channel name in the autojoin list.
+     *
+     * @param channel A channel name
+     *
+     * @returns The channel's autojoin list index, or @c -1 if it was not found.
+     */
+    int GetChannelJoinIndex( const wxString& channel );
+
+
+    /** Fetch the name corresponding to the given index in the autojoin list.
+     *
+     * @param index A channel index
+     *
+     * @returns The name corresponding to @c index, or an empty string if it was
+     * not found.
+     */
+    wxString GetChannelJoinName( int index );
+    /**@}*/
+
+
+    /* ================================================================ */
+    /** @name UI
+     * @{
+     */
     int    GetMainWindowWidth();
     void   SetMainWindowWidth( const int value );
 
@@ -173,6 +271,17 @@ class Settings
     int    GetMainWindowLeft();
     void   SetMainWindowLeft( const int value );
 
+    bool UseOldSpringLaunchMethod();
+    void SetOldSpringLaunchMethod( bool value );
+
+    void SetShowTooltips( bool show);
+    bool GetShowTooltips();
+    /*@}*/
+
+    /* ================================================================ */
+    /** @name Spring locations
+     * @{
+     */
     wxString GetSpringDir();
     void   SetSpringDir( const wxString& pring_dir );
 
@@ -187,51 +296,17 @@ class Settings
     wxString GetSpringLoc();
     void   SetSpringLoc( const wxString& loc );
     wxString GetSpringUsedLoc( bool force = false, bool defloc = false );
+    /*@}*/
 
+
+    /* ================================================================ */
+    /** @name Chat
+     * @{
+     */
     bool GetChatLogEnable();
     void SetChatLogEnable( const bool value );
     wxString GetChatLogLoc();
     void   SetChatLogLoc( const wxString& loc );
-
-    wxString GetLastHostDescription();
-    wxString GetLastHostMod();
-    wxString GetLastHostPassword();
-    int GetLastHostPort();
-    int GetLastHostPlayerNum();
-    int GetLastHostNATSetting();
-    wxString GetLastHostMap();
-    int GetLastRankLimit();
-    bool GetTestHostPort();
-
-    wxColour GetBattleLastColour();
-    void SetBattleLastColour( const wxColour& col );
-
-    void SetLastHostDescription( const wxString& value );
-    void SetLastHostMod( const wxString& value );
-    void SetLastHostPassword( const wxString& value );
-    void SetLastHostPort( int value );
-    void SetLastHostPlayerNum( int value );
-    void SetLastHostNATSetting( int value );
-    void SetLastHostMap( const wxString& value );
-    void SetLastRankLimit( int rank );
-    void SetTestHostPort( bool value );
-
-
-    void SetLastAI( const wxString& ai );
-    wxString GetLastAI();
-
-    void SetBalanceMethod(int value);
-    int GetBalanceMethod();
-
-    void SetBalanceClans(bool value);
-    bool GetBalanceClans();
-
-    void SetBalanceStrongClans(bool value);
-    bool GetBalanceStrongClans();
-
-
-    void SetDisplayJoinLeave( bool display, const wxString& channel  );
-    bool GetDisplayJoinLeave( const wxString& channel );
 
     //!@brief sets how many lines can stay in a chat panel before the old will start getting erased, 0 to disable
     void SetChatHistoryLenght( unsigned int historylines );
@@ -265,22 +340,84 @@ class Settings
     wxFont GetChatFont();
     void SetChatFont( wxFont value );
 
+    void SetDisplayJoinLeave( bool display, const wxString& channel  );
+    bool GetDisplayJoinLeave( const wxString& channel );
+    /**@}*/
+
+    /* Do these go in Chat? */
     bool GetSmartScrollEnabled();
     void SetSmartScrollEnabled(bool value);
     bool GetAlwaysAutoScrollOnFocusLost();
     void SetAlwaysAutoScrollOnFocusLost(bool value);
 
+
+    /* ================================================================ */
+    /** @name Hosting
+     *
+     * Settings to use when hosting games.  Includes "sticky" settings from the
+     * last time a game was hosted.
+     *
+     * @{
+     */
+    wxString GetLastHostDescription();
+    wxString GetLastHostMod();
+    wxString GetLastHostPassword();
+    int GetLastHostPort();
+    int GetLastHostPlayerNum();
+    int GetLastHostNATSetting();
+    wxString GetLastHostMap();
+    int GetLastRankLimit();
+    bool GetTestHostPort();
+
+    void SetLastHostDescription( const wxString& value );
+    void SetLastHostMod( const wxString& value );
+    void SetLastHostPassword( const wxString& value );
+    void SetLastHostPort( int value );
+    void SetLastHostPlayerNum( int value );
+    void SetLastHostNATSetting( int value );
+    void SetLastHostMap( const wxString& value );
+    void SetLastRankLimit( int rank );
+    void SetTestHostPort( bool value );
+    /**@}*/
+
+
+    /* ================================================================ */
+    wxColour GetBattleLastColour();
+    void SetBattleLastColour( const wxColour& col );
+
+
+    void SetLastAI( const wxString& ai );
+    wxString GetLastAI();
+
+    void SetBalanceMethod(int value);
+    int GetBalanceMethod();
+
+    void SetBalanceClans(bool value);
+    bool GetBalanceClans();
+
+    void SetBalanceStrongClans(bool value);
+    bool GetBalanceStrongClans();
+
+
+
+    /** @name Battle filters
+     * @{
+     */
     BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
     void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
     wxString GetLastFilterProfileName();
+    /**@}*/
 
-
-	  bool GetDisableSpringVersionCheck();
+    bool GetDisableSpringVersionCheck();
 
     /// not get/set naming because set may refer to battle or to options, thatd be ambiguous
     void SaveBattleMapOptions(IBattle *battle);
     void LoadBattleMapOptions(IBattle *battle);
 
+    /* ================================================================ */
+    /** @name Torrent System
+     * @{
+     */
     unsigned int GetTorrentPort();
     void SetTorrentPort( unsigned int port );
     int GetTorrentUploadRate();
@@ -303,9 +440,7 @@ class Settings
 
     void SetTorrentListToResume( const wxArrayString& list );
     wxArrayString GetTorrentListToResume();
-
-    void SetShowTooltips( bool show);
-    bool GetShowTooltips();
+    /**@}*/
 
     void SaveLayout( wxString& layout_name, wxString& layout_string );
     wxString GetLayout( wxString& layout_name );

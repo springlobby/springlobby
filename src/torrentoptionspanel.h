@@ -49,6 +49,7 @@ class TorrentOptionsPanel: public wxScrolledWindow
 
         void EnableSettings( bool enable);
         void SetStatusDisplay();
+        void SetAutoStartRadio();
 
 
         enum

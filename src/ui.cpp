@@ -275,9 +275,9 @@ void Ui::Quit()
 {
   ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   sett().SaveSettings();
-  m_main_win->forceSettingsFrameClose();
+  mw().forceSettingsFrameClose();
 
-  m_main_win->Close();
+  mw().Close();
   if ( m_con_win != 0 )
     m_con_win->Close();
   if (m_serv != 0 ) m_serv->Disconnect();
@@ -287,7 +287,7 @@ void Ui::Quit()
 void Ui::ReloadUnitSync()
 {
   usync()->ReloadUnitSyncLib();
-  if ( m_main_win != 0 ) m_main_win->OnUnitSyncReloaded();
+  if ( m_main_win != 0 ) mw().OnUnitSyncReloaded();
 }
 
 
@@ -488,7 +488,7 @@ void Ui::OnUpdate( int mselapsed )
       if ( sett().GetTorrentSystemAutoStartMode() == 1 && !torrent()->IsConnectedToP2PSystem() ) torrent()->ConnectToP2PSystem();
       else if ( GetServerStatus() && m_serv->IsOnline() && !torrent()->IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->ConnectToP2PSystem();
       if ( ( !GetServerStatus() || !m_serv->IsOnline() ) && torrent()->IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->DisconnectToP2PSystem();
-      m_main_win->GetTorrentTab().OnUpdate();
+      mw().GetTorrentTab().OnUpdate();
   }
   torrent()->UpdateFromTimer( mselapsed );
   m_upd_intv_counter++;
@@ -569,7 +569,7 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
   wxLogDebugFunc( _T("") );
 
   chan.uidata.panel = 0;
-  m_main_win->OpenChannelChat( chan );
+  mw().OpenChannelChat( chan );
   if ( chan.GetName() == _T("springlobby") ) {
     chan.uidata.panel->ClientMessage( wxEmptyString );
     chan.uidata.panel->ClientMessage( _("This is the SpringLobby channel, please report any problems you are having with SpringLobby here and the friendly developers will help you.") );
@@ -682,14 +682,14 @@ void Ui::OnUserOnline( User& user )
 
   user.SetUserData( (void*)data );*/
 
-  m_main_win->GetChatTab().OnUserConnected( user );
+  mw().GetChatTab().OnUserConnected( user );
 }
 
 
 void Ui::OnUserOffline( User& user )
 {
   if ( m_main_win == 0 ) return;
-  m_main_win->GetChatTab().OnUserDisconnected( user );
+  mw().GetChatTab().OnUserDisconnected( user );
   if ( user.uidata.panel ) {
     user.uidata.panel->SetUser( 0 );
     user.uidata.panel = 0;
@@ -742,7 +742,7 @@ void Ui::OnUserSaid( User& user, const wxString& message, bool fromme )
 {
   if ( m_main_win == 0 ) return;
   if ( user.uidata.panel == 0 ) {
-    m_main_win->OpenPrivateChat( user );
+    mw().OpenPrivateChat( user );
   }
   if ( fromme ) user.uidata.panel->Said( m_serv->GetMe().GetNick(), message );
   else user.uidata.panel->Said( user.GetNick(), message );
@@ -836,8 +836,8 @@ void Ui::OnBattleMapRefresh()
 void Ui::OnBattleInfoUpdated( Battle& battle )
 {
   if ( m_main_win == 0 ) return;
-  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
-  if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
+  mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  if ( mw().GetJoinTab().GetCurrentBattle() == &battle ) {
     mw().GetJoinTab().UpdateCurrentBattle();
   }
 }
@@ -845,8 +845,8 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
 void Ui::OnBattleInfoUpdated( Battle& battle, const wxString& Tag )
 {
   if ( m_main_win == 0 ) return;
-  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
-  if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
+  mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  if ( mw().GetJoinTab().GetCurrentBattle() == &battle ) {
     mw().GetJoinTab().UpdateCurrentBattle( Tag );
   }
 }

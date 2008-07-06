@@ -23,6 +23,7 @@ class FileListDialog : public wxDialog
         void UpdateList();
         FileListCtrl* GetListCtrl();
         void SetData(HashToTorrentData& data);
+        TorrentData GetDataFromHash(const wxString& hash );
 
     protected:
         wxBoxSizer* m_main_sizer;
