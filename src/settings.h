@@ -346,6 +346,10 @@ class Settings
     //!@brief expects words to be a ; seperated list
     void SetHighlightedWords( const wxString& words );
     wxString GetHighlightedWords( );
+
+    //!\brief controls if user attention is requested when highlighting a line
+    void SetRequestAttOnHighlight( const bool req );
+    bool GetRequestAttOnHighlight( );
     /**@}*/
 
     /* Do these go in Chat? */

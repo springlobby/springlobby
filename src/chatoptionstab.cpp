@@ -446,6 +446,7 @@ void ChatOptionsTab::DoRestore()
   m_smart_scroll->SetValue(sett().GetSmartScrollEnabled());
   m_autojoin->SetValue( sett().GetAutoConnect() );
   m_highlight_words->SetValue( sett().GetHighlightedWords() );
+  m_highlight_req->SetValue( sett().GetRequestAttOnHighlight() );
   #ifndef DISABLE_SOUND
     m_play_sounds->SetValue( sett().GetChatPMSoundNotificationEnabled() );
   #endif
@@ -468,6 +469,7 @@ void ChatOptionsTab::OnApply( wxCommandEvent& event )
   //m_ui.mw().GetChatTab().ChangeUnreadChannelColour( m_note_color->GetBackgroundColour() );
   //m_ui.mw().GetChatTab().ChangeUnreadPMColour( m_note_color->GetBackgroundColour() );
   sett().SetHighlightedWords( m_highlight_words->GetValue() );
+  sett().SetRequestAttOnHighlight( m_highlight_req->IsChecked() );
 
   //Chat Log
   sett().SetChatLogEnable( m_save_logs->GetValue());

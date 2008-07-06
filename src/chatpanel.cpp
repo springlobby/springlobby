@@ -668,9 +668,12 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
           if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 7 ) m_chat_tabs->SetPageImage( i, 7 );
         }
     }
-        req_user = ContainsWordToHighlight( message );
-        if ( req_user )
-            col = sett().GetChatColorNotification();
+        //process logic for custom word highlights
+        if ( ContainsWordToHighlight( message ) )
+        {
+            req_user = sett().GetRequestAttOnHighlight();
+            col = sett().GetChatColorHighlight();
+        }
         else
             col = sett().GetChatColorNormal();
 	}
