@@ -348,6 +348,9 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   sbHighlightSizer->Add( m_highlight_words, 0, wxALL|wxEXPAND, 5 );
 
+  m_highlight_req = new wxCheckBox( this, ID_HL_REQ, _("Additionally play sound/flash titlebar "), wxDefaultPosition, wxDefaultSize, 0 );
+  sbHighlightSizer->Add( m_highlight_req , 0, wxALL|wxEXPAND, 5 );
+
   bBotomSizer->Add( sbHighlightSizer, 1, wxEXPAND, 5 );
 
   bMainSizerV->Add( bBotomSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
