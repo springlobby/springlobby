@@ -13,8 +13,9 @@ class wxStaticText;
 class wxButton;
 class TorrentListCtrl;
 class Ui;
-class TorrentInfos;
+struct TorrentInfos;
 class wxBoxSizer;
+class FileListDialog;
 
 class MainTorrentTab: public wxScrolledWindow
 {
@@ -27,9 +28,12 @@ class MainTorrentTab: public wxScrolledWindow
 		wxStaticText* m_outgoing;
 		wxStaticText* m_incoming_lbl;
 		wxStaticText* m_outgoing_lbl;
+		wxStaticText* m_status_color_text;
 
 		wxButton* m_but_cancel;
 		wxButton* m_but_publish;
+		wxButton* m_but_download;
+		wxButton* m_status_color;
 		TorrentListCtrl* m_torrent_list;
 
 		Ui& m_ui;
@@ -46,6 +50,7 @@ class MainTorrentTab: public wxScrolledWindow
             ID_INCOMING,
             ID_OUTGOING_LBL,
             ID_INCOMING_LBL,
+            ID_DOWNLOAD_DIALOG
 
         };
 
@@ -54,8 +59,10 @@ class MainTorrentTab: public wxScrolledWindow
         void UpdateInfo(  TorrentInfos& info );
         void SetInfo(int index,  TorrentInfos& info );
         void OnCancelButton( wxCommandEvent& event );
+        void OnDownloadDialog( wxCommandEvent& event );
 
         wxBoxSizer* m_mainbox;
+        FileListDialog* m_download_dialog;
 
 	private:
 

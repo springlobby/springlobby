@@ -18,6 +18,7 @@
 #include "battle.h"
 #include "serverevents.h"
 #include "socket.h"
+#include "channel.h"
 
 /// for SL_MAIN_ICON
 #include "settings++/custom_dialogs.h"
@@ -910,6 +911,14 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         m_se->OnServerMessageBox( params );
     }
+    else if ( cmd == _T("REDIRECT") )
+    {
+      wxString address = GetWordParam( params );
+      unsigned int port = GetIntParam( params );
+      if ( address.IsEmpty() ) return;
+      if ( port == 0 ) port = DEFSETT_DEFAULT_SERVER_PORT;
+      m_se->OnRedirect( address, port, m_user, m_pass );
+    }
     else
     {
         wxLogMessage( _T("??? Cmd: %s params: %s"), cmd.c_str(), params.c_str() );
@@ -929,6 +938,7 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
     wxString msg;
     if ( param.IsEmpty() ) msg = ( command + _T("\n"));
     else msg = ( command + _T(" ") + param + _T("\n") );
+    wxLogMessage( _T("%s"), msg.c_str() ); /// logs all outgoing messages to the server
     m_sock->Send( msg );
 }
 
@@ -1009,6 +1019,8 @@ void TASServer::JoinChannel( const wxString& channel, const wxString& key )
 {
     //JOIN channame [key]
     wxLogDebugFunc( channel );
+
+    m_channel_pw[channel] = key;
 
     SendCmd ( _T("JOIN"), channel + _T(" ") + key );
 }
@@ -1921,7 +1933,7 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. 
             port=FIRST_UDP_SOURCEPORT+i;
         }
 
-        wxLogMessage(_T(" pinging nick=%s , ip=%s , port=%d"),user.GetNick().c_str(),ip.c_str(),port);
+        wxLogMessage(_T(" pinging nick=%s , ip=%s , port=%u"),user.GetNick().c_str(),ip.c_str(),port);
 
         if (port!=0 && !ip.empty())
         {
@@ -1944,7 +1956,7 @@ int TASServer::TestOpenPort( unsigned int port )
     connect_to_server.SetTimeout( 10 );
 
     if ( !connect_to_server.Connect( _T("zjt3.com") ) ) return porttest_unreachable;
-    connect_to_server.GetInputStream(wxString::Format( _T("/porttest.php?port=%d"), port));
+    connect_to_server.GetInputStream(wxString::Format( _T("/porttest.php?port=%u"), port));
 
     if (udp_socket.IsOk())
     {

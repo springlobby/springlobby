@@ -6,6 +6,7 @@ build-*
 build
 config.h.in
 configure
+configure.ac
 bin
 obj
 springlobby.layout
@@ -19,5 +20,3 @@ rpm/.gitignore
 *.vcproj.*.user
 *.suo
 *.ncb
-Debug
-Release

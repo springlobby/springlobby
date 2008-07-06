@@ -17,6 +17,7 @@
 #else
 #include <wx/listbook.h>
 #endif
+#include <wx/tooltip.h>
 #include <stdexcept>
 
 #include "mainwindow.h"
@@ -53,6 +54,7 @@
 #include "settings++/custom_dialogs.h"
 
 #include "updater/versionchecker.h"
+#include "autojoinchanneldialog.h"
 
 #ifdef HAVE_WX28
 #include <wx/aboutdlg.h>
@@ -73,6 +75,8 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
   EVT_MENU( MENU_START_TORRENT, MainWindow::OnMenuStartTorrent )
   EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
+  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
+  EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
   EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   #ifdef HAVE_WX26
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
@@ -85,7 +89,7 @@ END_EVENT_TABLE()
 
 MainWindow::MainWindow( Ui& ui ) :
   wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
-  m_ui(ui)
+  m_ui(ui),m_autojoin_dialog(NULL)
 {
   SetIcon( wxIcon(springlobby_xpm) );
   wxMenu *menuFile = new wxMenu;
@@ -96,16 +100,21 @@ MainWindow::MainWindow( Ui& ui ) :
 
   //m_menuEdit = new wxMenu;
   //TODO doesn't work atm
-  //m_menuEdit->AppendCheckItem(MENU_TIPS, _("Show tooltips") );
-  //m_menuEdit->Check( MENU_TIPS, sett().GetShowTooltips() );
 
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
   m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
+  m_menuTools->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels..."));
   m_menuTools->AppendSeparator();
   m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
+
+  #if defined(__WXMSW__)
   m_menuTools->AppendSeparator();
+  m_menuTools->AppendCheckItem(MENU_SHOW_TOOLTIPS, _("Show tooltips") );
+  m_menuTools->Check( MENU_SHOW_TOOLTIPS, sett().GetShowTooltips() );
+  #endif
+
   #ifndef NO_TORRENT_SYSTEM
   m_menuTools->AppendSeparator();
   #endif
@@ -179,6 +188,9 @@ MainWindow::MainWindow( Ui& ui ) :
   Layout();
 
   se_frame_active = false;
+
+  wxToolTip::Enable(sett().GetShowTooltips());
+
 }
 
 void MainWindow::forceSettingsFrameClose()
@@ -201,6 +213,11 @@ MainWindow::~MainWindow()
   m_ui.OnMainWindowDestruct();
   freeStaticBox();
 
+  if ( m_autojoin_dialog  != 0 )
+  {
+    delete m_autojoin_dialog;
+    m_autojoin_dialog = 0;
+  }
   delete m_chat_icon;
   delete m_battle_icon;
   delete m_options_icon;
@@ -393,6 +410,8 @@ void MainWindow::OnMenuAbout( wxCommandEvent& event )
 	info.SetLicence(_T("GPL"));
 	info.AddDeveloper(_T("BrainDamage"));
 	info.AddDeveloper(_T("dizekat"));
+	info.AddDeveloper(_T("insaneinside"));
+	info.AddDeveloper(_T("Kaot"));
 	info.AddDeveloper(_T("koshi"));
 	info.AddDeveloper(_T("semi_"));
 	info.AddDeveloper(_T("tc-"));
@@ -406,6 +425,7 @@ void MainWindow::OnMenuAbout( wxCommandEvent& event )
 #else
     customMessageBoxNoModal(SL_MAIN_ICON,_T("SpringLobby version: ")+GetSpringLobbyVersion(),_T("About"));
 #endif
+
 }
 
 void MainWindow::OnMenuConnect( wxCommandEvent& event )
@@ -497,7 +517,10 @@ void MainWindow::OnMenuOpen( wxMenuEvent& event )
 
 void MainWindow::OnReportBug( wxCommandEvent& event )
 {
-  m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") );
+    wxString reporter = wxEmptyString;
+    if (m_ui.IsConnected() )
+        reporter = _T("?reporter=") + m_ui.GetServer().GetMe().GetNick();
+  m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") + reporter);
 }
 
 
@@ -543,5 +566,15 @@ void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 	se_frame->Show();
 }
 
+void MainWindow::OnShowToolTips( wxCommandEvent& event )
+{
+    bool show = m_menuTools->IsChecked(MENU_SHOW_TOOLTIPS);
+    wxToolTip::Enable(show);
+    sett().SetShowTooltips(show);
+}
 
-
+void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& event )
+{
+    m_autojoin_dialog = new AutojoinChannelDialog (this);
+    m_autojoin_dialog->Show();
+}

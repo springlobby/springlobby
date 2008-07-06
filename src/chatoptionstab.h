@@ -65,7 +65,8 @@ class ChatOptionsTab : public wxScrolledWindow
       ID_BROWSE_LOGS,
       ID_HIWORDS,
       ID_AUTOJOIN,
-      ID_PLAY_SOUNDS
+      ID_PLAY_SOUNDS,
+      ID_HL_REQ
     };
 
     wxStaticText* m_text_sample;
@@ -104,6 +105,7 @@ class ChatOptionsTab : public wxScrolledWindow
     wxStaticText* m_hilight_words_label;
     wxCheckBox* m_play_sounds;
     wxCheckBox* m_autojoin;
+    wxCheckBox* m_highlight_req;
 
     wxTextCtrl* m_highlight_words;
 

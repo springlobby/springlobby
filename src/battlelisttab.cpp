@@ -546,8 +546,14 @@ void BattleListTab::DoJoin( Battle& battle )
     return;
   }
 
+  #ifdef NO_TORRENT_SYSTEM
+      wxString downloadProc = _("Do you want me to take you to the download page?");
+  #else
+      wxString downloadProc = _("Should i try to downlaod it for you?\nYou can see the progress in the \"Download Manager\" tab.");
+  #endif
+
   if ( !battle.ModExists() ) {
-    if (customMessageBox( SL_MAIN_ICON,_("You need to download the mod before you can join this game.\n\nDo you want me to take you to the download page?"), _("Mod not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+    if (customMessageBox( SL_MAIN_ICON, _("You need to download the mod before you can join this game.\n\n") + downloadProc, _("Mod not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString modhash = battle.GetHostModHash();
       wxString modname = battle.GetHostModName();
       m_ui.DownloadMod ( modhash, modname );
@@ -556,7 +562,7 @@ void BattleListTab::DoJoin( Battle& battle )
   }
 
   if ( !battle.MapExists() ) {
-    if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to play in this game.\n\nDo you want me to take you to the download page?"), _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+    if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to play in this game.\n\n") + downloadProc, _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString maphash = battle.GetHostMapHash();
       wxString mapname = battle.GetHostMapName();
       m_ui.DownloadMap ( maphash, mapname );

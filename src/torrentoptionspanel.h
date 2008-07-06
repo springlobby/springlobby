@@ -43,13 +43,13 @@ class TorrentOptionsPanel: public wxScrolledWindow
         wxTextCtrl* m_gamestart_throttle_down;
         wxStaticText* m_gamestart_throttle_up_lbl;
         wxStaticText* m_gamestart_throttle_down_lbl;
-        wxStaticText* m_status_color_text;
 
         Ui& m_ui;
 
 
         void EnableSettings( bool enable);
         void SetStatusDisplay();
+        void SetAutoStartRadio();
 
 
         enum

@@ -3,6 +3,11 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
+#ifdef _MSC_VER
+// MSVC can not compile std::pair used in bimap with forward decl only.
+#include "libtorrent/torrent_handle.hpp"
+#endif
+
 #include <wx/string.h>
 #include <wx/arrstr.h>
 #include <wx/event.h>
@@ -17,13 +22,30 @@
 #define DEFAULT_P2P_TRACKER_PORT 8201
 
 namespace libtorrent{ class session; };
-namespace libtorrent { class torrent_handle; };
-class Socket;
+namespace libtorrent { struct torrent_handle; };
 
 enum MediaType
 {
   map,
   mod
+};
+
+enum DownloadRequestStatus
+{
+  success,
+  not_connected,
+  paused_ingame,
+  duplicate_request,
+  file_not_found,
+  torrent_join_failed,
+  scheduled_in_cue
+};
+
+enum FileStatus
+{
+  leeching,
+  seeding,
+  queued
 };
 
 struct TorrentInfos
@@ -32,7 +54,7 @@ struct TorrentInfos
   wxString name;
   unsigned int downloaded;
   unsigned int uploaded;
-  bool seeding;
+  FileStatus downloadstatus;
   float progress;
   float inspeed;
   float outspeed;
@@ -47,8 +69,14 @@ struct TorrentData
   wxString name;
   MediaType type;
   wxString infohash;
+  bool ondisk;
 };
 
+typedef std::map<wxString,TorrentData> HashToTorrentData;/// hash -> torr data
+typedef codeproject::bimap<wxString,wxString> SeedRequests; ///name -> hash
+typedef std::map<wxString,bool> OpenTorrents;/// name -> is seed
+typedef codeproject::bimap<libtorrent::torrent_handle,wxString> TorrentHandleToHash; /// torrent handle -> hash
+typedef codeproject::bimap<wxString,wxString> NameToHash;///name -> hash
 
 class TorrentWrapper : public iNetClass
 {
@@ -59,18 +87,19 @@ class TorrentWrapper : public iNetClass
 
     /// gui interface
 
-    void ConnectToP2PSystem();
+    bool ConnectToP2PSystem();
     void DisconnectToP2PSystem();
     bool IsConnectedToP2PSystem();
     bool IsFileInSystem( const wxString& hash );
     void RemoveFile( const wxString& hash );
     int GetTorrentSystemStatus();
+    HashToTorrentData& GetSystemFileList();
 
     /// lobby interface
     void SetIngameStatus( bool status );
     void ReloadLocalFileList();
-    bool RequestFileByHash( const wxString& hash );
-    bool RequestFileByName( const wxString& name );
+    DownloadRequestStatus RequestFileByHash( const wxString& hash );
+    DownloadRequestStatus RequestFileByName( const wxString& name );
     void UpdateSettings();
     void UpdateFromTimer( int mselapsed );
     std::map<int,TorrentInfos> CollectGuiInfos();
@@ -82,13 +111,13 @@ class TorrentWrapper : public iNetClass
     bool JoinTorrent( const wxString& name );
     bool DownloadTorrentFileFromTracker( const wxString& hash );
     void FixTorrentList();
+    void ResumeFromList();
 
     void ReceiveandExecute( const wxString& msg );
     void OnConnected( Socket* sock );
     void OnDisconnected( Socket* sock );
     void OnDataReceived( Socket* sock );
 
-    bool m_connected;
     wxString m_buffer;
 
     bool ingame;
@@ -115,20 +144,17 @@ class TorrentWrapper : public iNetClass
 
 /// there probably are some more rules i dont know of, or which i forgot.
 
-    typedef std::map<wxString,TorrentData> HashToTorrentData;/// hash -> torr data
     MutexWrapper<HashToTorrentData> m_torrents_infos;
 
-    typedef codeproject::bimap<wxString,wxString> SeedRequests;
-    MutexWrapper<SeedRequests> m_seed_requests; ///name -> hash
+    MutexWrapper<SeedRequests> m_seed_requests;
 
-    typedef std::map<wxString,bool> OpenTorrents;
-    MutexWrapper<OpenTorrents> m_open_torrents; /// name -> is seed
+    MutexWrapper<OpenTorrents> m_open_torrents;
 
-    typedef codeproject::bimap<libtorrent::torrent_handle,wxString> TorrentHandleToHash; /// torrent handle -> hash
     MutexWrapper<TorrentHandleToHash> m_torrent_handles;
 
-    typedef codeproject::bimap<wxString,wxString> NameToHash;
-    MutexWrapper<NameToHash> m_name_to_hash; ///name -> hash
+    MutexWrapper<NameToHash> m_name_to_hash;
+
+    MutexWrapper<wxArrayString> m_queued_requests; /// contains hashes of pending requested files when already leeching > 4 files
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;

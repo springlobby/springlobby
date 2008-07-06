@@ -18,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
+			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)"
 			ConfigurationType="1"
 			>
 			<Tool
@@ -47,7 +47,6 @@
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4800;4996"
 			/>
@@ -97,8 +96,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)"
 			ConfigurationType="1"
 			>
 			<Tool
@@ -124,7 +123,6 @@
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4800;4996"
 			/>
@@ -146,6 +144,164 @@
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug with libtorrent|Win32"
+			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)"
+			ConfigurationType="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
+				Optimization="0"
+				AdditionalIncludeDirectories=".\src;C:\SourceCode\Libraries\wxWidgets2.8\include\msvc;C:\SourceCode\Libraries\wxWidgets2.8\include;.\src\libtorrent\include;.\src\libtorrent;.\src\libtorrent\zlib;&quot;C:\Program Files\boost\boost_1_35_0&quot;"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;__DEBUG__;__WXDEBUG__;__WXMSW__;WXUSINGDLL;DISABLE_SOUND"
+				ExceptionHandling="2"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+				DisableSpecificWarnings="4800;4996"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories=""
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libtorrent.lib wxmsw28d_html.lib wxmsw28d_adv.lib wxmsw28d_richtext.lib wxbase28d_net.lib wxmsw28d_core.lib wxbase28d.lib wxexpatd.lib kernel32.lib Advapi32.lib ws2_32.lib gdi32.lib ole32.lib oleaut32.lib ComDlg32.Lib rpcrt4.lib comctl32.lib shell32.lib advapi32.lib comdlg32.lib uuid.lib winmm.lib winspool.lib wsock32.lib wxjpegd.lib wxpngd.lib wxregexd.lib wxtiffd.lib wxzlibd.lib user32.lib"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;C:\SourceCode\Libraries\wxWidgets2.8\lib\vc_dll;&quot;C:\Program Files\boost\boost_1_35_0\lib&quot;"
+				IgnoreDefaultLibraryNames=""
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release with libtorrent|Win32"
+			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)"
+			ConfigurationType="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
+				WholeProgramOptimization="true"
+				AdditionalIncludeDirectories="./src;C:\SourceCode\Libraries\wxWidgets2.8\include\msvc;C:\SourceCode\Libraries\wxWidgets2.8\include;.\src\libtorrent\include;.\src\libtorrent;.\src\libtorrent\zlib;&quot;C:\Program Files\boost\boost_1_35_0&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;__WXMSW__;WXUSINGDLL;DISABLE_SOUND"
+				ExceptionHandling="2"
+				RuntimeLibrary="2"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4800;4996"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libtorrent.lib user32.lib wxbase28.lib wxbase28_net.lib wxmsw28_core.lib wxexpat.lib wxmsw28_adv.lib wxmsw28_richtext.lib kernel32.lib Advapi32.lib ws2_32.lib gdi32.lib ole32.lib oleaut32.lib ComDlg32.Lib rpcrt4.lib comctl32.lib shell32.lib"
+				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;C:\SourceCode\Libraries\wxWidgets2.8\lib\vc_dll;&quot;C:\Program Files\boost\boost_1_35_0\lib&quot;"
+				IgnoreDefaultLibraryNames=""
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				LinkTimeCodeGeneration="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 				TargetMachine="1"
@@ -282,15 +438,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\custom_dialogs.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\customlistctrl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\Defs.hpp"
 				>
 			</File>
 			<File
@@ -302,15 +450,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\frame.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\globalevents.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\helpmenufunctions.h"
 				>
 			</File>
 			<File
@@ -335,10 +475,6 @@
 			</File>
 			<File
 				RelativePath=".\src\iunitsync.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\main.h"
 				>
 			</File>
 			<File
@@ -402,27 +538,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\panel_pathoption.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\presets.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\revision.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\sdlsound.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\se_settings.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\se_utils.h"
 				>
 			</File>
 			<File
@@ -478,43 +598,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\tab_abstract.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_audio.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_debug.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_quality_video.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_render_detail.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_simple.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_ui.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\tasserver.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\tdfcontainer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Helper\TextCompletionDatabase.hpp"
 				>
 			</File>
 			<File
@@ -557,10 +645,106 @@
 				RelativePath=".\src\utils.h"
 				>
 			</File>
-			<File
-				RelativePath=".\src\updater\versionchecker.h"
+			<Filter
+				Name="filelister"
 				>
-			</File>
+				<File
+					RelativePath=".\src\filelister\filelistctrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\filelister\filelistdialog.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\filelister\filelistfilter.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Helper"
+				>
+				<File
+					RelativePath=".\src\Helper\TextCompletionDatabase.hpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="settings++"
+				>
+				<File
+					RelativePath=".\src\settings++\custom_dialogs.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\Defs.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\frame.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\helpmenufunctions.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\main.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\panel_pathoption.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\presets.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\se_settings.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\se_utils.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_abstract.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_audio.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_debug.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_quality_video.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_render_detail.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_simple.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_ui.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="updater"
+				>
+				<File
+					RelativePath=".\src\updater\versionchecker.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -581,6 +765,23 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						AdditionalIncludeDirectories="C:\SourceCode\Libraries\wxWidgets2.8\include"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug with libtorrent|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						AdditionalIncludeDirectories="C:\SourceCode\Libraries\wxWidgets2.8\include"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
 					>
 					<Tool
 						Name="VCResourceCompilerTool"
@@ -687,10 +888,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\custom_dialogs.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\customlistctrl.cpp"
 				>
 			</File>
@@ -699,15 +896,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\frame.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\globalevents.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\helpmenufunctions.cpp"
 				>
 			</File>
 			<File
@@ -745,10 +934,42 @@
 			<File
 				RelativePath=".\src\maintorrenttab.cpp"
 				>
+				<FileConfiguration
+					Name="Debug with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\mainwindow.cpp"
 				>
+				<FileConfiguration
+					Name="Debug with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\mapctrl.cpp"
@@ -783,23 +1004,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\panel_pathoption.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\presets.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\sdlsound.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\se_settings.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\se_utils.cpp"
 				>
 			</File>
 			<File
@@ -809,6 +1014,22 @@
 			<File
 				RelativePath=".\src\serverevents.cpp"
 				>
+				<FileConfiguration
+					Name="Debug with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\settings.cpp"
@@ -833,10 +1054,42 @@
 			<File
 				RelativePath=".\src\spring.cpp"
 				>
+				<FileConfiguration
+					Name="Debug with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\springlobbyapp.cpp"
 				>
+				<FileConfiguration
+					Name="Debug with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\springoptionstab.cpp"
@@ -855,34 +1108,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\settings++\tab_abstract.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_audio.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_debug.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_quality_video.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_render_detail.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_simple.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\settings++\tab_ui.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\tasserver.cpp"
 				>
 			</File>
@@ -891,24 +1116,84 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Helper\TextCompletionDatabase.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\torrentlistctrl.cpp"
 				>
+				<FileConfiguration
+					Name="Debug with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\torrentoptionspanel.cpp"
 				>
+				<FileConfiguration
+					Name="Debug with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\torrentwrapper.cpp"
 				>
+				<FileConfiguration
+					Name="Debug with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\ui.cpp"
 				>
+				<FileConfiguration
+					Name="Debug with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\uiutils.cpp"
@@ -930,10 +1215,146 @@
 				RelativePath=".\src\utils.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\src\updater\versionchecker.cpp"
+			<Filter
+				Name="filelister"
 				>
-			</File>
+				<File
+					RelativePath=".\src\filelister\filelistctrl.cpp"
+					>
+					<FileConfiguration
+						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\src\filelister\filelistdialog.cpp"
+					>
+					<FileConfiguration
+						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\src\filelister\filelistfilter.cpp"
+					>
+					<FileConfiguration
+						Name="Debug with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release with libtorrent|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
+			<Filter
+				Name="Helper"
+				>
+				<File
+					RelativePath=".\src\Helper\TextCompletionDatabase.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="settings++"
+				>
+				<File
+					RelativePath=".\src\settings++\custom_dialogs.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\frame.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\helpmenufunctions.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\panel_pathoption.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\presets.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\se_settings.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\se_utils.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_abstract.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_audio.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_debug.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_quality_video.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_render_detail.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_simple.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\settings++\tab_ui.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="updater"
+				>
+				<File
+					RelativePath=".\src\updater\versionchecker.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
