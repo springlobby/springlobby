@@ -81,7 +81,7 @@ class Settings
    */
     Settings();
     ~Settings();
-    
+
     bool IsPortableMode();
 
     /** Initialize all settings to default.
@@ -149,7 +149,7 @@ class Settings
      *
      * Information about the directory tree used to cache infomation about maps
      * and mods.
-     * 
+     *
      * @{
      */
     wxString GetCachePath();
@@ -342,6 +342,10 @@ class Settings
 
     void SetDisplayJoinLeave( bool display, const wxString& channel  );
     bool GetDisplayJoinLeave( const wxString& channel );
+
+    //!@brief expects words to be a ; seperated list
+    void SetHighlightedWords( const wxString& words );
+    wxString GetHighlightedWords( );
     /**@}*/
 
     /* Do these go in Chat? */

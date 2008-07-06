@@ -668,7 +668,11 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
           if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 7 ) m_chat_tabs->SetPageImage( i, 7 );
         }
     }
-		col = sett().GetChatColorNormal();
+        req_user = ContainsWordToHighlight( message );
+        if ( req_user )
+            col = sett().GetChatColorNotification();
+        else
+            col = sett().GetChatColorNormal();
 	}
 
 	if ( who == _T( "MelBot" ) && message.StartsWith( _T( "<" ) ) && message.Contains( _T( ">" ) ) ) {
@@ -691,6 +695,18 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 	}
 }
 
+bool ChatPanel::ContainsWordToHighlight( const wxString& message )
+{
+    //get list of words to highlight
+    wxStringTokenizer words ( sett().GetHighlightedWords(), _T(";") );
+    while ( words.HasMoreTokens() )
+    {
+        if (message.Contains( words.GetNextToken() ) )
+            return true;
+    }
+    return false;
+
+}
 
 void ChatPanel::DidAction( const wxString& who, const wxString& action ) {
   // change the image of the tab to show new events
