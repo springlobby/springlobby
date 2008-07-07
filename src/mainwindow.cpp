@@ -83,7 +83,7 @@ END_EVENT_TABLE()
 
 MainWindow::MainWindow( Ui& ui ) :
   wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
-  m_ui(ui)
+  m_ui(ui),m_autojoin_dialog(NULL)
 {
   SetIcon( wxIcon(springlobby_xpm) );
   wxMenu *menuFile = new wxMenu;
@@ -495,7 +495,10 @@ void MainWindow::OnMenuOpen( wxMenuEvent& event )
 
 void MainWindow::OnReportBug( wxCommandEvent& event )
 {
-  m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") );
+    wxString reporter = wxEmptyString;
+    if (m_ui.IsConnected() )
+        reporter = _T("?reporter=") + m_ui.GetServer().GetMe().GetNick();
+  m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") + reporter);
 }
 
 

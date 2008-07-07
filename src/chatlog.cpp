@@ -22,10 +22,13 @@ bool ChatLog::m_parent_dir_exists = true;
 ChatLog::ChatLog(const wxString& server,const wxString& room):
   m_logfile( 0 ),
   m_server( server ),
-  m_room( room ),
-  m_active( OpenLogFile(server,room) )
-{
+  m_room( room )
 
+{
+    #ifdef __WXMSW__
+        m_server.Replace( wxT(":"), wxT("_") ) ;
+    #endif
+    m_active = OpenLogFile(m_server,m_room) ;
 }
 
 
