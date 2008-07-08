@@ -78,6 +78,33 @@ typedef std::map<wxString,bool> OpenTorrents;/// name -> is seed
 typedef codeproject::bimap<libtorrent::torrent_handle,wxString> TorrentHandleToHash; /// torrent handle -> hash
 typedef codeproject::bimap<wxString,wxString> NameToHash;///name -> hash
 
+
+class TorrentTable{
+  public:
+  enum TorrentStatus
+  {
+    not_stored=0, /// file is not on disk and not downloading
+    queued, /// file is not on disk and queued for download
+    leeching,/// file is being downloaded
+    stored,/// file is on disk
+    seeding/// file is on disk and being seeded
+
+  };
+  struct TorrentRow{
+    wxString hash;
+    wxString name;
+    MediaType type;
+    wxString infohash;
+    //bool ondisk;
+    TorrentStatus status;
+
+    libtorrent::torrent_handle handle;
+  };
+
+  ///std::vector<TorrentRow> torrents;
+  std::map<wxString,int> hash_index;
+};
+
 class TorrentWrapper : public iNetClass
 {
   public:
