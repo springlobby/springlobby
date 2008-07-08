@@ -42,6 +42,84 @@
 
 #include "torrentwrapper.h"
 
+
+bool TorrentTable::IsConsistent(){
+#ifdef TorrentTable_validate
+  for(std::set<TorrentTable::PRow>::iterator i=all_torrents.begin();i!=all_torrents.end();++i){
+    if(hash_index.count((*i)->hash)==0)return false;
+    if(name_index.count((*i)->name)==0)return false;
+    /// handle_index might not contain the torrent with invalid/null handle
+  }
+#endif
+  return true;
+}
+
+void TorrentTable::InsertRow(TorrentTable::PRow row){
+  if(!row.ok())return;
+#ifdef TorrentTable_validate
+  if(all_torrents.count(row)){
+    wxLogWarning(_T("TorrentTable: inserting the row twice!"));
+  }
+  all_torrents.insert(row);
+#endif
+  int duplicates=0;
+  if(hash_index.count(row->hash)){
+    wxLogWarning(_T("TorrentTable: inserting row with duplicate hash!"));
+    duplicates++;
+  }
+  if(name_index.count(row->name)){
+    wxLogWarning(_T("TorrentTable: inserting row with duplicate name!"));
+    duplicates++;
+  }
+  /// enforce all duplicates or no duplicates for now.
+  if(duplicates!=0 || duplicates!=2){
+    wxLogWarning(_T("TorrentTable: insert would cause inconsistency, not all keys are duplicated!"));
+    wxLogWarning(_T("TorrentTable: insert not done!"));
+    return;
+  }
+
+  /// duplicate handles are okay for the nill/invalid handles, but a message may be useful
+  if(handle_index.count(row->handle)){
+    wxLogMessage(_T("TorrentTable: inserting row with duplicate handle."));
+  }
+
+  hash_index[row->hash]=row;
+  name_index[row->name]=row;
+  handle_index[row->handle]=row;
+
+}
+
+void TorrentTable::RemoveRow(TorrentTable::PRow row){
+  if(!row.ok())return;
+  hash_index.erase(row->hash);
+  name_index.erase(row->name);
+  handle_index.erase(row->handle);
+  seed_requests.erase(row);
+}
+
+void TorrentTable::AddSeedRequest(TorrentTable::PRow row){
+  seed_requests.insert(row);
+}
+
+bool TorrentTable::IsSeedRequest(TorrentTable::PRow row){
+  return seed_requests.count(row)>0;
+}
+
+TorrentTable::PRow TorrentTable::RowByHash(const wxString &hash){
+  std::map<wxString,PRow>::iterator i=hash_index.find(hash);
+  return i!=hash_index.end() ? i->second : PRow(NULL);
+}
+
+TorrentTable::PRow TorrentTable::RowByName(const wxString &name){
+  std::map<wxString,PRow>::iterator i=name_index.find(name);
+  return i!=name_index.end() ? i->second : PRow(NULL);
+}
+
+TorrentTable::PRow TorrentTable::RowByHandle(libtorrent::torrent_handle handle){
+  std::map<libtorrent::torrent_handle,PRow>::iterator i=handle_index.find(handle);
+  return i!=handle_index.end() ? i->second : PRow(NULL);
+}
+
 TorrentWrapper* torrent()
 {
   static TorrentWrapper* m_torr_wrap = 0;

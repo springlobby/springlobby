@@ -3,10 +3,11 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
-#ifdef _MSC_VER
+//#ifdef _MSC_VER
 // MSVC can not compile std::pair used in bimap with forward decl only.
+/// GCC cant compile TorrentTable::Row either.
 #include "libtorrent/torrent_handle.hpp"
-#endif
+//#endif
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
@@ -18,12 +19,14 @@
 #include "inetclass.h"
 #include "mutexwrapper.h"
 
+#include "autopointers.h"
+
 #define DEFAULT_P2P_COORDINATOR_PORT 8202
 #define DEFAULT_P2P_TRACKER_PORT 8201
-
+/*
 namespace libtorrent{ class session; };
 namespace libtorrent { struct torrent_handle; };
-
+*/
 enum MediaType
 {
   map,
@@ -41,12 +44,14 @@ enum DownloadRequestStatus
   scheduled_in_cue
 };
 
+/*
 enum FileStatus
 {
   leeching,
   seeding,
   queued
 };
+*/
 
 struct TorrentInfos
 {
@@ -63,6 +68,7 @@ struct TorrentInfos
   int eta; //is set in update function of maintorrenttab
 };
 
+/*
 struct TorrentData
 {
   wxString hash;
@@ -71,39 +77,68 @@ struct TorrentData
   wxString infohash;
   bool ondisk;
 };
+*/
 
-typedef std::map<wxString,TorrentData> HashToTorrentData;/// hash -> torr data
-typedef codeproject::bimap<wxString,wxString> SeedRequests; ///name -> hash
-typedef std::map<wxString,bool> OpenTorrents;/// name -> is seed
-typedef codeproject::bimap<libtorrent::torrent_handle,wxString> TorrentHandleToHash; /// torrent handle -> hash
-typedef codeproject::bimap<wxString,wxString> NameToHash;///name -> hash
-
+#define TorrentTable_validate
 
 class TorrentTable{
   public:
-  enum TorrentStatus
+
+  bool IsConsistent();
+
+  enum Status
   {
     not_stored=0, /// file is not on disk and not downloading
     queued, /// file is not on disk and queued for download
     leeching,/// file is being downloaded
     stored,/// file is on disk
     seeding/// file is on disk and being seeded
-
   };
-  struct TorrentRow{
-    wxString hash;
-    wxString name;
+  class Row: public RefcountedContainer{
+    /// If you want to modify row's keys, you need to remove it from table first,
+    /// then re-insert
+    public:
+    wxString hash;/// key
+    wxString name;/// key
+    libtorrent::torrent_handle handle;/// key
     MediaType type;
     wxString infohash;
     //bool ondisk;
-    TorrentStatus status;
 
-    libtorrent::torrent_handle handle;
+    Status status;
+    bool is_open;
   };
+  typedef RefcountedPointer<Row> PRow;
 
-  ///std::vector<TorrentRow> torrents;
-  std::map<wxString,int> hash_index;
+
+  void InsertRow(PRow row);
+  void RemoveRow(PRow row);
+  void AddSeedRequest(PRow row);
+
+  bool IsSeedRequest(PRow row);
+
+/// Following methods return NULL if not found!
+  PRow RowByHash(const wxString &hash);
+  PRow RowByName(const wxString &name);
+  PRow RowByHandle(libtorrent::torrent_handle handle);
+
+  private:
+#ifdef TorrentTable_validate
+  std::set<PRow> all_torrents;
+#endif
+  std::map<wxString, PRow> hash_index;
+  std::map<wxString, PRow> name_index;
+  std::map<libtorrent::torrent_handle, PRow> handle_index;
+  std::set<PRow> seed_requests;
 };
+
+/*
+typedef std::map<wxString,TorrentData> HashToTorrentData;/// hash -> torr data
+typedef codeproject::bimap<wxString,wxString> SeedRequests; ///name -> hash
+typedef std::map<wxString,bool> OpenTorrents;/// name -> is seed
+typedef codeproject::bimap<libtorrent::torrent_handle,wxString> TorrentHandleToHash; /// torrent handle -> hash
+typedef codeproject::bimap<wxString,wxString> NameToHash;///name -> hash
+*/
 
 class TorrentWrapper : public iNetClass
 {
@@ -171,17 +206,15 @@ class TorrentWrapper : public iNetClass
 
 /// there probably are some more rules i dont know of, or which i forgot.
 
+/*
+    MutexWrapper<TorrentTable> m_torrent_table;
     MutexWrapper<HashToTorrentData> m_torrents_infos;
-
     MutexWrapper<SeedRequests> m_seed_requests;
-
     MutexWrapper<OpenTorrents> m_open_torrents;
-
     MutexWrapper<TorrentHandleToHash> m_torrent_handles;
-
     MutexWrapper<NameToHash> m_name_to_hash;
-
     MutexWrapper<wxArrayString> m_queued_requests; /// contains hashes of pending requested files when already leeching > 4 files
+*/
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;
