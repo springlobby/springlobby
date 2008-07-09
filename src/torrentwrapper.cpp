@@ -646,7 +646,10 @@ void TorrentWrapper::RemoveUnneededTorrents()
       try
       {
         m_torr->remove_torrent( *i );
-        m_torrent_handles.erase( m_torrent_handles.from.find(*i) );
+
+        TorrentHandleToHash::from::iterator handleiter= m_torrent_handles.from.find(*i);
+        if ( handleiter != m_torrent_handles.from.end() ) m_torrent_handles.erase( handleiter );
+
         if( open_torrent_i != m_open_torrents.end() ) m_open_torrents.erase(open_torrent_i);
       } catch (std::exception& e) {wxLogError( WX_STRINGC( e.what() ) );}
     }
