@@ -98,7 +98,6 @@ class TorrentWrapper : public iNetClass
 
     /// lobby interface
     void SetIngameStatus( bool status );
-    void ReloadLocalFileList();
     DownloadRequestStatus RequestFileByHash( const wxString& hash );
     DownloadRequestStatus RequestFileByName( const wxString& name );
     void UpdateSettings();
@@ -111,7 +110,9 @@ class TorrentWrapper : public iNetClass
     void CreateTorrent( const wxString& uhash, const wxString& name, MediaType type );
     bool JoinTorrent( const wxString& name );
     bool DownloadTorrentFileFromTracker( const wxString& hash );
-    void FixTorrentList();
+    void JoinRequestedTorrents();
+    void RemoveUnneededTorrents();
+    void TryToJoinQueuedTorrents();
     void ResumeFromList();
 
     void ReceiveandExecute( const wxString& msg );

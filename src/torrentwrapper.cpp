@@ -298,11 +298,17 @@ void TorrentWrapper::SetIngameStatus( bool status )
 void TorrentWrapper::UpdateFromTimer( int mselapsed )
 {
   m_timer_count++;
-  if ( m_timer_count < 20 ) return;////update every 2 sec
+  if ( m_timer_count < 20 ) return;///update every 2 sec
   m_timer_count = 0;
   if (!ingame && IsConnectedToP2PSystem() )
   {
-      FixTorrentList();
+      ///  DON'T alter function call order here or bad things may happend like locust, hearquakes or raptor attack
+      m_seed_count = 0;
+      m_leech_count = 0;
+
+      JoinRequestedTorrents();
+      RemoveUnneededTorrents();
+      TryToJoinQueuedTorrents();
       ResumeFromList();
   }
 }
@@ -310,21 +316,17 @@ void TorrentWrapper::UpdateFromTimer( int mselapsed )
 void TorrentWrapper::ResumeFromList()
 {
     wxArrayString TorrentsToResume = sett().GetTorrentListToResume();
+    wxArrayString ListDuplicate = TorrentsToResume;
     unsigned int ResumeCount = TorrentsToResume.GetCount();
     if ( ResumeCount > 0 )
     {
-        //request all hashes in list, remember successes
-        std::vector<int> successfulIndices;
+        //request all hashes in list, remove successes
         for ( unsigned int i = 0; i < ResumeCount; i++ ) {
             if (success == RequestFileByHash( TorrentsToResume[i] ) ) /// resume all open leeched files when system as disconnected last time
-                successfulIndices.push_back(i);
+                ListDuplicate.RemoveAt( i );
         }
-        //remove successfully resumed torrents from list
-        std::vector<int>::const_iterator it = successfulIndices.begin();
-        for ( ; it != successfulIndices.end(); ++it )
-            TorrentsToResume.RemoveAt( *it );
         //save new list (hopefully empty)
-        sett().SetTorrentListToResume( TorrentsToResume );
+        sett().SetTorrentListToResume( ListDuplicate );
     }
 }
 
@@ -579,12 +581,8 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
 }
 
 
-void TorrentWrapper::FixTorrentList()
+void TorrentWrapper::JoinRequestedTorrents()
 {
-
-  m_seed_count = 0;
-  m_leech_count = 0;
-
 
   for ( SeedRequests::iterator i = m_seed_requests.begin(); i != m_seed_requests.end(); i++ )
   {
@@ -597,6 +595,10 @@ void TorrentWrapper::FixTorrentList()
     }
   }
 
+}
+
+void TorrentWrapper::RemoveUnneededTorrents()
+{
 
   std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
   for( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
@@ -647,6 +649,12 @@ void TorrentWrapper::FixTorrentList()
     }
   }
 
+}
+
+
+void TorrentWrapper::TryToJoinQueuedTorrents()
+{
+
   if ( m_leech_count < 5 )
   { /// join queued files if there are available slots
     wxArrayString queuecopy = m_queued_requests;
@@ -656,8 +664,8 @@ void TorrentWrapper::FixTorrentList()
       if ( RequestFileByHash( queuecopy[i] ) == success ) m_queued_requests.RemoveAt( i );
     }
   }
-}
 
+}
 
 void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 {
