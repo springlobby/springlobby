@@ -316,17 +316,18 @@ void TorrentWrapper::UpdateFromTimer( int mselapsed )
 void TorrentWrapper::ResumeFromList()
 {
     wxArrayString TorrentsToResume = sett().GetTorrentListToResume();
-    wxArrayString ListDuplicate = TorrentsToResume;
     unsigned int ResumeCount = TorrentsToResume.GetCount();
     if ( ResumeCount > 0 )
     {
-        //request all hashes in list, remove successes
-        for ( unsigned int i = 0; i < ResumeCount; i++ ) {
-            if (success == RequestFileByHash( TorrentsToResume[i] ) ) /// resume all open leeched files when system as disconnected last time
-                ListDuplicate.RemoveAt( i );
-        }
-        //save new list (hopefully empty)
-        sett().SetTorrentListToResume( ListDuplicate );
+        //request all hashes in list, remember successes
+        std::vector<int> successfulIndices;
+         for ( unsigned int i = 0; i < ResumeCount; i++ ) {
+             if (success == RequestFileByHash( TorrentsToResume[i] ) ) /// resume all open leeched files when system as disconnected last time
+                successfulIndices.push_back(i);
+         }
+
+         //save new list (hopefully empty)
+        sett().SetTorrentListToResume( TorrentsToResume );
     }
 }
 
