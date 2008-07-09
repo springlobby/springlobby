@@ -326,7 +326,12 @@ void TorrentWrapper::ResumeFromList()
                 successfulIndices.push_back(i);
          }
 
-         //save new list (hopefully empty)
+
+      //remove successfully resumed torrents from list
+      std::vector<int>::const_iterator it = successfulIndices.begin();
+      for ( ; it != successfulIndices.end(); ++it )
+          TorrentsToResume.RemoveAt( *it );
+        //save new list (hopefully empty)
         sett().SetTorrentListToResume( TorrentsToResume );
     }
 }
