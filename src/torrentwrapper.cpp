@@ -262,9 +262,9 @@ DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
 
 void TorrentWrapper::SetIngameStatus( bool status )
 {
-  if ( !IsConnectedToP2PSystem() ) return;
   if ( status == ingame ) return; /// no change needed
   ingame = status;
+  if ( !IsConnectedToP2PSystem() ) return;
   try
   {
     std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
