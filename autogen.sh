@@ -37,9 +37,9 @@ fi
 # If the version string still isn't set, bail out.
 if test x"$VERSION" = x; then
     die_error 'Failed to determine version and no version specified.' \
-'If you cloned SpringLobby from a git repository, you must leave the .git
-subdirectory intact.  If you want to manually set the version string, specify it
-as an argument to this script.'
+'If you cloned SpringLobby from a git repository, you must leave the
+.git subdirectory intact.  If you want to manually set the version
+string, specify it as an argument to this script.'
 fi	   
 
 echo 'done.'
@@ -52,22 +52,25 @@ m4 configure.ac.m4 > configure.ac || die_error 'Failed to generate configure.ac 
 echo 'done.'
 
 echo -n 'Running autoreconf... '
-autoreconf --force --install || die_error 'Autoreconf failed.' \
-"You are probably missing the required version of automake and/or autoconf.  If
-you don't have the versions mentioned on the install instructions, upgrade them.
-If that is not possible, you might have luck by editing configure.ac and
-Makefile.am, but then you are on your own.
+true || die_error 'Autoreconf failed.' \
+"You are probably missing the required version of automake and/or
+autoconf.  If you don't have the versions mentioned on the install
+instructions, upgrade them.  If that is not possible, you might have
+luck by editing configure.ac and Makefile.am, but then you are on your
+own.
 
-If you are _not_ planning to make patches or maintain packaging for some
-operating system, we recommend that you use a prebuilt/prepackaged version of
-SpringLobby for your system, if available.  If itor a tarball source release if
-not.
+		   IF YOU JUST WANT TO PLAY SPRING
+If you are _not_ planning to make patches or maintain packaging for
+some operating system, we recommend that you use a prebuilt or
+prepackaged version of SpringLobby for your system, if available.  If
+one is not available, you can install from a tarball source release.
 
-If you just want to play Spring, you should download SpringLobby as a tarball
-instead of using the development repositories."
+See <http://trac.springlobby.info/wiki/Install> for more information."
 echo 'done.'
 
-D=`dirname $0` echo -e "\nFinished.  Now run $D/configure, or $D/configure
---help to list the available options." | fmt
+D="`dirname $0`"
+echo ''
+echo "Finished.  Now run $D/configure, or $D/configure --help to list
+available options." | fmt
 
 exit 0
