@@ -52,7 +52,7 @@ m4 configure.ac.m4 > configure.ac || die_error 'Failed to generate configure.ac 
 echo 'done.'
 
 echo -n 'Running autoreconf... '
-true || die_error 'Autoreconf failed.' \
+autoreconf --force --install || die_error 'Autoreconf failed.' \
 "You are probably missing the required version of automake and/or
 autoconf.  If you don't have the versions mentioned on the install
 instructions, upgrade them.  If that is not possible, you might have
