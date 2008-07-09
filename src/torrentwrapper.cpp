@@ -628,10 +628,13 @@ void TorrentWrapper::RemoveUnneededTorrents()
         m_torr->remove_torrent( *i );
 
         m_leech_count--;
-        m_open_torrents.erase(open_torrent_i);
-        m_torrent_handles.erase( m_torrent_handles.from.find(*i) );
 
-        m_socket_class->Send( _T("N-|")  + m_seed_requests.from[StrippedName] + _T("\n") ); ///notify the system we don't need the file anymore
+        m_open_torrents.erase(open_torrent_i);
+
+        TorrentHandleToHash::from::iterator handleiter= m_torrent_handles.from.find(*i);
+        if ( handleiter != m_torrent_handles.from.end() ) m_torrent_handles.erase( handleiter );
+
+        m_socket_class->Send( _T("N-|")  + m_seed_requests.from[ StrippedName ] + _T("\n") ); ///notify the system we don't need the file anymore
 
         wxCommandEvent refreshevt(UnitSyncReloadRequest); /// request an unitsync reload
         wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), refreshevt );
