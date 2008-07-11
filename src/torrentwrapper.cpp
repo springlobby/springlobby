@@ -56,6 +56,8 @@ bool TorrentTable::IsConsistent(){
 
 void TorrentTable::InsertRow(TorrentTable::PRow row){
   if(!row.ok())return;
+  wxCriticalSectionLocker locker(mutex);
+
 #ifdef TorrentTable_validate
   if(all_torrents.count(row)){
     wxLogWarning(_T("TorrentTable: inserting the row twice!"));
@@ -78,19 +80,20 @@ void TorrentTable::InsertRow(TorrentTable::PRow row){
     return;
   }
 
-  /// duplicate handles are okay for the nill/invalid handles, but a message may be useful
+  /// duplicate handles are not so bad, but a message may be useful
   if(handle_index.count(row->handle)){
     wxLogMessage(_T("TorrentTable: inserting row with duplicate handle."));
   }
 
   hash_index[row->hash]=row;
   name_index[row->name]=row;
-  handle_index[row->handle]=row;
 
+  if(row->handle.is_valid())handle_index[row->handle]=row;
 }
 
 void TorrentTable::RemoveRow(TorrentTable::PRow row){
   if(!row.ok())return;
+  wxCriticalSectionLocker locker(mutex);
   hash_index.erase(row->hash);
   name_index.erase(row->name);
   handle_index.erase(row->handle);
@@ -98,24 +101,29 @@ void TorrentTable::RemoveRow(TorrentTable::PRow row){
 }
 
 void TorrentTable::AddSeedRequest(TorrentTable::PRow row){
+  wxCriticalSectionLocker locker(mutex);
   seed_requests.insert(row);
 }
 
 bool TorrentTable::IsSeedRequest(TorrentTable::PRow row){
+  wxCriticalSectionLocker locker(mutex);
   return seed_requests.count(row)>0;
 }
 
 TorrentTable::PRow TorrentTable::RowByHash(const wxString &hash){
+  wxCriticalSectionLocker locker(mutex);
   std::map<wxString,PRow>::iterator i=hash_index.find(hash);
   return i!=hash_index.end() ? i->second : PRow(NULL);
 }
 
 TorrentTable::PRow TorrentTable::RowByName(const wxString &name){
+  wxCriticalSectionLocker locker(mutex);
   std::map<wxString,PRow>::iterator i=name_index.find(name);
   return i!=name_index.end() ? i->second : PRow(NULL);
 }
 
 TorrentTable::PRow TorrentTable::RowByHandle(libtorrent::torrent_handle handle){
+  wxCriticalSectionLocker locker(mutex);
   std::map<libtorrent::torrent_handle,PRow>::iterator i=handle_index.find(handle);
   return i!=handle_index.end() ? i->second : PRow(NULL);
 }

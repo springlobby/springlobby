@@ -4,7 +4,7 @@
 #ifndef NO_TORRENT_SYSTEM
 
 //#ifdef _MSC_VER
-// MSVC can not compile std::pair used in bimap with forward decl only.
+/// MSVC can not compile std::pair used in bimap with forward decl only.
 /// GCC cant compile TorrentTable::Row either.
 #include "libtorrent/torrent_handle.hpp"
 //#endif
@@ -44,14 +44,14 @@ enum DownloadRequestStatus
   scheduled_in_cue
 };
 
-/*
-enum FileStatus
-{
-  leeching,
-  seeding,
-  queued
-};
-*/
+  enum FileStatus
+  {
+    not_stored=0, /// file is not on disk and not downloading
+    queued, /// file is not on disk and queued for download
+    leeching,/// file is being downloaded
+    stored,/// file is on disk
+    seeding/// file is on disk and being seeded
+  };
 
 struct TorrentInfos
 {
@@ -86,14 +86,7 @@ class TorrentTable{
 
   bool IsConsistent();
 
-  enum Status
-  {
-    not_stored=0, /// file is not on disk and not downloading
-    queued, /// file is not on disk and queued for download
-    leeching,/// file is being downloaded
-    stored,/// file is on disk
-    seeding/// file is on disk and being seeded
-  };
+
   class Row: public RefcountedContainer{
     /// If you want to modify row's keys, you need to remove it from table first,
     /// then re-insert
@@ -105,8 +98,13 @@ class TorrentTable{
     wxString infohash;
     //bool ondisk;
 
-    Status status;
+    FileStatus status;
     bool is_open;
+    Row():
+    type(map),
+    status(not_stored)
+    {
+    }
   };
   typedef RefcountedPointer<Row> PRow;
 
@@ -123,6 +121,9 @@ class TorrentTable{
   PRow RowByHandle(libtorrent::torrent_handle handle);
 
   private:
+
+  wxCriticalSection mutex;
+
 #ifdef TorrentTable_validate
   std::set<PRow> all_torrents;
 #endif
@@ -130,6 +131,7 @@ class TorrentTable{
   std::map<wxString, PRow> name_index;
   std::map<libtorrent::torrent_handle, PRow> handle_index;
   std::set<PRow> seed_requests;
+
 };
 
 /*
@@ -155,7 +157,8 @@ class TorrentWrapper : public iNetClass
     bool IsFileInSystem( const wxString& hash );
     void RemoveFile( const wxString& hash );
     int GetTorrentSystemStatus();
-    HashToTorrentData& GetSystemFileList();
+
+    ///HashToTorrentData& GetSystemFileList();
 
     /// lobby interface
     void SetIngameStatus( bool status );
@@ -166,6 +169,8 @@ class TorrentWrapper : public iNetClass
     void UpdateFromTimer( int mselapsed );
     std::map<int,TorrentInfos> CollectGuiInfos();
     void SendMessageToCoordinator( const wxString& message );
+
+    TorrentTable &GetTorrentTable(){return m_torrent_table;}
 
   private:
 
@@ -206,8 +211,12 @@ class TorrentWrapper : public iNetClass
 
 /// there probably are some more rules i dont know of, or which i forgot.
 
+
+    ///MutexWrapper<>
+    TorrentTable m_torrent_table;
+
 /*
-    MutexWrapper<TorrentTable> m_torrent_table;
+
     MutexWrapper<HashToTorrentData> m_torrents_infos;
     MutexWrapper<SeedRequests> m_seed_requests;
     MutexWrapper<OpenTorrents> m_open_torrents;

@@ -51,10 +51,8 @@ FileListDialog::FileListDialog(wxWindow* parent) :
     m_download_button = new wxButton( this, BUTTON_DOWNLOAD, _("Download selected"), wxDefaultPosition, wxSize( -1,28 ), 0 );
     m_button_sizer->Add( m_download_button );
 
-    SetData( torrent()->GetSystemFileList() );
+    SetData( torrent()->GetTorrentTable() );
     UpdateList();
-
-
 
     m_main_sizer->Add( m_list_sizer,1, wxALL|wxEXPAND, 5 );
     m_main_sizer->Add( m_select_sizer,0, wxALL|wxEXPAND, 5 );
