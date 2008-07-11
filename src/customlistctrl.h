@@ -15,6 +15,7 @@
  * \todo make this definable per child class
  */
 #define TOOLTIP_DELAY 1000
+#define TOOLTIP_DURATION 2000
 
 typedef std::pair<wxString,bool> colInfo;
 typedef std::vector<colInfo> colInfoVec;
@@ -52,6 +53,8 @@ protected:
     colInfoVec m_colinfovec;
     //! primarily used to get coulumn index in mousevents (from cur. mouse pos)
     int getColoumnFromPosition(wxPoint pos);
+
+    wxPoint m_last_mouse_pos;
 
 public:
 	customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,

@@ -15,7 +15,8 @@ END_EVENT_TABLE()
 
 customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style):
 					wxListCtrl (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER),
-					 m_selected(-1),m_selected_index(-1),m_prev_selected(-1),m_prev_selected_index(-1)
+					 m_selected(-1),m_selected_index(-1),m_prev_selected(-1),m_prev_selected_index(-1),
+					 m_last_mouse_pos( wxPoint(-1,-1) )
 
 
 {
@@ -30,21 +31,6 @@ void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool mo
 	wxListCtrl::InsertColumn(i,item);
 	colInfo temp(tip,modifiable);
 	m_colinfovec.push_back(temp);
-}
-
-void customListCtrl::OnTimer(wxTimerEvent& event)
-{
-#if wxUSE_TIPWINDOW
-
-		 if (!m_tiptext.empty())
-			{
-			    m_tipwindow = new wxTipWindow(this, m_tiptext);
-	#ifndef __WXMSW__
-			    m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
-	#endif
-			}
-
-#endif
 }
 
 void customListCtrl::SetSelectionRestorePoint()
@@ -126,6 +112,31 @@ long customListCtrl::GetSelectedData()
   return m_selected ;
 }
 
+void customListCtrl::OnTimer(wxTimerEvent& event)
+{
+#if wxUSE_TIPWINDOW
+
+        if (!m_tiptext.empty())
+        {
+            m_tipwindow = new wxTipWindow(this, m_tiptext);
+#ifndef __WXMSW__
+            m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
+#endif
+            m_tiptext = wxEmptyString;
+            tipTimer.Start(TOOLTIP_DURATION, wxTIMER_ONE_SHOT);
+        }
+        else
+        {
+            if (m_tipwindow)
+                m_tipwindow->Show( false );
+            m_tiptext = wxEmptyString;
+            tipTimer.Stop();
+        }
+
+
+#endif
+}
+
 /** \todo this badly needs to be refactored, currently child classes duplicate most of this
 */
 //TODO http://www.wxwidgets.org/manuals/stable/wx_wxtipwindow.html#wxtipwindowsettipwindowptr
@@ -134,6 +145,12 @@ long customListCtrl::GetSelectedData()
 void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
 #if wxUSE_TIPWINDOW
+    //we don't want to display the tooltip again until mouse has moved
+    if ( m_last_mouse_pos == event.GetPosition() )
+        return;
+
+    m_last_mouse_pos = event.GetPosition();
+
 	if (event.Leaving())
 	{
 		m_tiptext = _T("");
