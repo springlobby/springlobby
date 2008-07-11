@@ -368,72 +368,50 @@ int wxCALLBACK NickListCtrl::ComparePlayercountryDOWN(long item1, long item2, lo
     return 0;
 }
 
-void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
+void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-#if wxUSE_TIPWINDOW
-	tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-	wxPoint position = event.GetPosition();
+    User* user = (User*) GetItemData(item_hit);
+    int coloumn = getColoumnFromPosition(position);
+    if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
+    {
+        m_tiptext = _T("");
+    }
+    else
+    {
+        switch (coloumn)
+        {
+        case 0: // status
+            m_tiptext = _T("This ");
+            if (user->GetStatus().bot)
+                m_tiptext << _T("bot ");
+            else if (user->GetStatus().moderator)
+                m_tiptext << _T("moderator ");
+            else
+                m_tiptext << _T("player ");
 
-	int flag = wxLIST_HITTEST_ONITEM;
+            if (user->GetStatus().in_game)
+                m_tiptext <<  _T("is ingame");
+            else if (user->GetStatus().away)
+                m_tiptext <<  _T("is away");
+            else
+                m_tiptext << _T("is available");
+            break;
 
+        case 1: // country
+            m_tiptext =  GetFlagNameFromCountryCode(user->GetCountry().MakeUpper());
+            break;
 
-	try{
-#ifdef HAVE_WX28
-		long subItem;
-		long item_hit = HitTest(position, flag, &subItem);
-#else
-		long item_hit = HitTest(position, flag);
-#endif
-		int coloumn = getColoumnFromPosition(position);
+        case 2: // rank
+            m_tiptext = user->GetRankName(user->GetStatus().rank);
+            break;
 
-		if (item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount())
-		{
-			User* user = (User*) GetItemData(item_hit);
+        case 3: // nickname
+            m_tiptext = user->GetNick();
+            break;
 
-			if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
-			{
-				m_tiptext = _T("");
-			}
-			else
-			{
-				switch (coloumn)
-				{
-				case 0: // status
-					m_tiptext = _T("This ");
-					if (user->GetStatus().bot)
-						m_tiptext << _T("bot ");
-					else if (user->GetStatus().moderator)
-						m_tiptext << _T("moderator ");
-					else
-						m_tiptext << _T("player ");
-
-					if (user->GetStatus().in_game)
-						m_tiptext <<  _T("is ingame");
-					else if (user->GetStatus().away)
-						m_tiptext <<  _T("is away");
-					else
-						m_tiptext << _T("is available");
-					break;
-
-				case 1: // country
-					m_tiptext =  GetFlagNameFromCountryCode(user->GetCountry().MakeUpper());
-					break;
-
-				case 2: // rank
-					m_tiptext = user->GetRankName(user->GetStatus().rank);
-					break;
-
-				case 3: // nickname
-					m_tiptext = user->GetNick();
-					break;
-
-				default:
-					m_tiptext = m_colinfovec[coloumn].first;
-					break;
-				}
-			}
-		}
-	}catch(...){}
-#endif
+        default:
+            m_tiptext = m_colinfovec[coloumn].first;
+            break;
+        }
+    }
 }
-

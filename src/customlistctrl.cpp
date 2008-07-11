@@ -1,4 +1,5 @@
 #include "customlistctrl.h"
+#include "utils.h"
 
 BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
 #if wxUSE_TIPWINDOW
@@ -154,9 +155,8 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 	if (event.Leaving())
 	{
 		m_tiptext = _T("");
-    //TODO try thos out!!!!
-//		if (m_tipwindow)
-//            m_tipwindow->Show( false );
+		if (m_tipwindow)
+            m_tipwindow->Show( false );
 		tipTimer.Stop();
 	}
 	else
@@ -178,20 +178,30 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 #endif
 	    if (item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount())
 	    {
-
-	        int coloumn = getColoumnFromPosition(position);
-	        if (coloumn >= int(m_colinfovec.size()) || coloumn < 0)
+	        // we don't really need to recover from this if it fails
+	        try
 	        {
-	        	m_tiptext = _T("");
+                SetTipWindowText(item_hit,m_last_mouse_pos);
+                tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 	        }
-	        else
-	        {
-	        	tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-	        	m_tiptext = m_colinfovec[coloumn].first;
-	        }
+	        catch ( ... ) { wxLogWarning( _T("Exception setting tooltip") );}
 	    }
 	}
 #endif
+}
+
+void customListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+{
+    int coloumn = getColoumnFromPosition(position);
+    if (coloumn >= int(m_colinfovec.size()) || coloumn < 0)
+    {
+        m_tiptext = _T("");
+    }
+    else
+    {
+        tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+        m_tiptext = m_colinfovec[coloumn].first;
+    }
 }
 
 int customListCtrl::getColoumnFromPosition(wxPoint pos)

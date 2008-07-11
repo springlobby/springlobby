@@ -56,6 +56,8 @@ protected:
 
     wxPoint m_last_mouse_pos;
 
+    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+
 public:
 	customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
                     const wxSize& sz,long style);
@@ -82,10 +84,10 @@ public:
 	void InsertColumn(long i, wxListItem item, wxString tip, bool = true);
 	//! this event is triggered when delay timer (set in mousemotion) ended
     void OnTimer(wxTimerEvent& event);
-    //! starts timer, sets tooltiptext
-    void OnMouseMotion(wxMouseEvent& event);
     //! prohibits resizin if so set in columnInfo
     void OnStartResizeCol(wxListEvent& event) ;
+    //! starts timer, sets tooltiptext
+    void OnMouseMotion(wxMouseEvent& event);
     //! does nothing
     void noOp(wxMouseEvent& event);
 
@@ -101,7 +103,6 @@ public:
 
     //! sets selected index to -1
     void SelectNone();
-
 
     DECLARE_EVENT_TABLE()
 };
