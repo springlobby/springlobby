@@ -63,6 +63,9 @@ mmOptionList::mmOptionList():mmOptionModel()
 void mmOptionList::addItem(wxString key_, wxString name_, wxString desc_)
 {
 	listitems.push_back(listItem(key_,name_,desc_));
+	//make sure current choice is set to default
+	if ( this->def == key_ )
+        this->cur_choice_index = listitems.size() - 1;
 	cbx_choices.Add(name_);
 }
 

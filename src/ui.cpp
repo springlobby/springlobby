@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: Ui
 //
@@ -39,13 +39,17 @@
 #include "sdlsound.h"
 
 
+Ui& ui()
+{
+    static Ui m_ui;
+    return m_ui;
+}
+
 Ui::Ui() :
   m_serv(0),
   m_main_win(0),
   m_con_win(0)
 {
-   ReloadUnitSync();
-
   m_upd_intv_counter = 0;
   m_main_win = new MainWindow( *this );
   CustomMessageBoxBase::setLobbypointer(m_main_win);
@@ -65,7 +69,7 @@ Server& Ui::GetServer()
   return *m_serv;
 }
 
-bool Ui::GetServerStatus() const
+bool Ui::GetServerStatus()
 {
   return (bool)(m_serv);
 }
@@ -271,9 +275,9 @@ void Ui::Quit()
 {
   ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   sett().SaveSettings();
-  m_main_win->forceSettingsFrameClose();
+  mw().forceSettingsFrameClose();
 
-  m_main_win->Close();
+  mw().Close();
   if ( m_con_win != 0 )
     m_con_win->Close();
   if (m_serv != 0 ) m_serv->Disconnect();
@@ -283,7 +287,7 @@ void Ui::Quit()
 void Ui::ReloadUnitSync()
 {
   usync()->ReloadUnitSyncLib();
-  if ( m_main_win != 0 ) m_main_win->OnUnitSyncReloaded();
+  if ( m_main_win != 0 ) mw().OnUnitSyncReloaded();
 }
 
 
@@ -313,7 +317,10 @@ void Ui::DownloadMod( const wxString& hash, const wxString& name )
 
 void Ui::OpenWebBrowser( const wxString& url )
 {
-  if ( sett().GetWebBrowserPath() == _T("use default") || sett().GetWebBrowserPath().IsEmpty() )
+  if ( sett().GetWebBrowserUseDefault()
+       // These shouldn't happen, but if they do we use the default browser anyway.
+       || sett().GetWebBrowserPath() == wxEmptyString
+       || sett().GetWebBrowserPath() == _T("use default") )
   {
       if ( !wxLaunchDefaultBrowser( url ) )
       {
@@ -472,13 +479,16 @@ ChatPanel* Ui::GetChannelChatPanel( const wxString& channel )
 
 void Ui::OnUpdate( int mselapsed )
 {
-  if ( m_serv != 0 ) {
+  if ( GetServerStatus() ) {
     m_serv->Update( mselapsed );
   }
   #ifndef NO_TORRENT_SYSTEM
   if (m_upd_intv_counter % 20 == 0 )
   {
-      m_main_win->GetTorrentTab().OnUpdate();
+      if ( sett().GetTorrentSystemAutoStartMode() == 1 && !torrent()->IsConnectedToP2PSystem() ) torrent()->ConnectToP2PSystem();
+      else if ( GetServerStatus() && m_serv->IsOnline() && !torrent()->IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->ConnectToP2PSystem();
+      if ( ( !GetServerStatus() || !m_serv->IsOnline() ) && torrent()->IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->DisconnectToP2PSystem();
+      mw().GetTorrentTab().OnUpdate();
   }
   torrent()->UpdateFromTimer( mselapsed );
   m_upd_intv_counter++;
@@ -507,7 +517,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
       customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     }
   }
-  server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
+  if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
 
   //server.uidata.panel = m_main_win->GetChatTab().AddChatPannel( server, server_name );
 }
@@ -559,7 +569,7 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
   wxLogDebugFunc( _T("") );
 
   chan.uidata.panel = 0;
-  m_main_win->OpenChannelChat( chan );
+  mw().OpenChannelChat( chan );
   if ( chan.GetName() == _T("springlobby") ) {
     chan.uidata.panel->ClientMessage( wxEmptyString );
     chan.uidata.panel->ClientMessage( _("This is the SpringLobby channel, please report any problems you are having with SpringLobby here and the friendly developers will help you.") );
@@ -672,14 +682,14 @@ void Ui::OnUserOnline( User& user )
 
   user.SetUserData( (void*)data );*/
 
-  m_main_win->GetChatTab().OnUserConnected( user );
+  mw().GetChatTab().OnUserConnected( user );
 }
 
 
 void Ui::OnUserOffline( User& user )
 {
   if ( m_main_win == 0 ) return;
-  m_main_win->GetChatTab().OnUserDisconnected( user );
+  mw().GetChatTab().OnUserDisconnected( user );
   if ( user.uidata.panel ) {
     user.uidata.panel->SetUser( 0 );
     user.uidata.panel = 0;
@@ -732,7 +742,7 @@ void Ui::OnUserSaid( User& user, const wxString& message, bool fromme )
 {
   if ( m_main_win == 0 ) return;
   if ( user.uidata.panel == 0 ) {
-    m_main_win->OpenPrivateChat( user );
+    mw().OpenPrivateChat( user );
   }
   if ( fromme ) user.uidata.panel->Said( m_serv->GetMe().GetNick(), message );
   else user.uidata.panel->Said( user.GetNick(), message );
@@ -826,8 +836,8 @@ void Ui::OnBattleMapRefresh()
 void Ui::OnBattleInfoUpdated( Battle& battle )
 {
   if ( m_main_win == 0 ) return;
-  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
-  if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
+  mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  if ( mw().GetJoinTab().GetCurrentBattle() == &battle ) {
     mw().GetJoinTab().UpdateCurrentBattle();
   }
 }
@@ -835,8 +845,8 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
 void Ui::OnBattleInfoUpdated( Battle& battle, const wxString& Tag )
 {
   if ( m_main_win == 0 ) return;
-  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
-  if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
+  mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  if ( mw().GetJoinTab().GetCurrentBattle() == &battle ) {
     mw().GetJoinTab().UpdateCurrentBattle( Tag );
   }
 }

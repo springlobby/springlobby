@@ -239,6 +239,16 @@ SockError Socket::Error( )
 }
 
 
+//! @brief used to retrieve local ip address behind NAT to communicate to the server on login
+wxString Socket::GetLocalAddress()
+{
+  if ( m_sock || !m_sock->IsConnected() ) return wxEmptyString;
+  wxIPV4address localaddr;
+  m_sock->GetLocal( localaddr );
+  return localaddr.IPAddress();
+}
+
+
 //! @brief Set ping info to be used by the ping thread.
 //! @note Set msg to an empty string to turn off the ping thread.
 //! @note This has to be set every time the socket connects.

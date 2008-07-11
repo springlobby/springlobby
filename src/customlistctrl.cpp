@@ -1,8 +1,5 @@
 #include "customlistctrl.h"
 
-#define TOOLTIP_DELAY 1000
-
-
 BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
 #if wxUSE_TIPWINDOW
     	EVT_MOTION(customListCtrl::OnMouseMotion)
@@ -75,7 +72,7 @@ void customListCtrl::OnSelected( wxListEvent& event )
 void customListCtrl::OnDeselected( wxListEvent& event )
 {
   if ( m_selected == (int)GetItemData( event.GetIndex() )  )
-  m_selected = m_selected_index = -1;
+    m_selected = m_selected_index = -1;
 }
 
 long customListCtrl::GetIndexFromData( const unsigned long data )
@@ -93,6 +90,32 @@ long customListCtrl::GetSelectedIndex()
   return m_selected_index ;
 }
 
+void customListCtrl::SelectAll()
+{
+  for (long i = 0; i < GetItemCount() ; i++ )
+  {
+    SetItemState( i, wxLIST_STATE_SELECTED, -1  );
+  }
+}
+
+void customListCtrl::SelectNone()
+{
+  for (long i = 0; i < GetItemCount() ; i++ )
+  {
+    SetItemState( i, wxLIST_STATE_DONTCARE, -1 );
+  }
+}
+
+void customListCtrl::SelectInverse()
+{
+  for (long i = 0; i < GetItemCount() ; i++ )
+  {
+    int state = GetItemState( i, -1 );
+    state = ( state == wxLIST_STATE_DONTCARE ? wxLIST_STATE_SELECTED : wxLIST_STATE_DONTCARE );
+    SetItemState( i, state, -1 );
+  }
+}
+
 void customListCtrl::SetSelectedIndex(const long newindex)
 {
     m_selected_index = newindex;
@@ -103,7 +126,8 @@ long customListCtrl::GetSelectedData()
   return m_selected ;
 }
 
-
+/** \todo this badly needs to be refactored, currently child classes duplicate most of this
+*/
 //TODO http://www.wxwidgets.org/manuals/stable/wx_wxtipwindow.html#wxtipwindowsettipwindowptr
 // must have sth to do with crash on windows
 //if to tootips are displayed
@@ -113,6 +137,9 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 	if (event.Leaving())
 	{
 		m_tiptext = _T("");
+    //TODO try thos out!!!!
+//		if (m_tipwindow)
+//            m_tipwindow->Show( false );
 		tipTimer.Stop();
 	}
 	else

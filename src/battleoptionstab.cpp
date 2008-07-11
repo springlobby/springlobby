@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: BattleOptionsTab
 //
@@ -71,7 +71,12 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   wxBoxSizer* m_main_options_sizer;
   m_main_options_sizer = new wxBoxSizer( wxVERTICAL );
 
-  wxString m_end_radiosChoices[] = { _("Continue if commander dies"), _("End if commander dies"), _("Linage mode") };
+  wxString m_end_radiosChoices[] =
+    {
+      _("Continue if commander dies"),
+      _("End if commander dies"),
+      _("Lineage mode")
+    };
   int m_end_radiosNChoices = sizeof( m_end_radiosChoices ) / sizeof( wxString );
   //TODO these need to be tooltipped, no idea how yet
   m_end_radios = new wxRadioBox( this, BOPTS_END, _("End condition"), wxDefaultPosition, wxDefaultSize, m_end_radiosNChoices, m_end_radiosChoices, 1, wxRA_SPECIFY_COLS );
@@ -135,7 +140,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_options_checks->Append( _("Limit d-gun") );
   m_options_checks->Append( _("Ghosted buildings") );
   m_options_checks->Append( _("Diminishing metal makers") );
-  if ( m_sp ) m_options_checks->Append( _("Random start postisions") );
+  if ( m_sp ) m_options_checks->Append( _("Random start positions") );
 
   m_options_box->Add( m_options_checks, 0, wxALL|wxEXPAND, 5 );
 

@@ -203,3 +203,14 @@ bool Channel::ExecuteSayCommand( const wxString& in )
   return false;
 }
 
+
+wxString Channel::GetPassword()
+{
+  return m_password;
+}
+
+
+void Channel::SetPassword( const wxString& pw )
+{
+  m_password = pw;
+}

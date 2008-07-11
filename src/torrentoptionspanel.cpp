@@ -30,6 +30,8 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
     m_autostart_start = new wxRadioButton (this, ID_AUTOSTART_RADIO, _("at lobby start"));
     m_autostart_manual = new wxRadioButton (this, ID_AUTOSTART_RADIO, _("manual") );
 
+    SetAutoStartRadio();
+
     m_autostart_box_sizer->Add(m_autostart_logon,  0, wxALL, 5);
     m_autostart_box_sizer->Add(m_autostart_start,  0, wxALL, 5);
     m_autostart_box_sizer->Add(m_autostart_manual,  0, wxALL, 5);
@@ -89,6 +91,7 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
 
     mainboxsizer->Add( m_numbers_box_sizer, 0, wxALL, 5 );
 
+
     SetSizer( mainboxsizer );
 }
 
@@ -138,6 +141,12 @@ void TorrentOptionsPanel::OnRestore( wxCommandEvent& event )
     m_maxUp->SetValue( i2s( sett().GetTorrentUploadRate() ) );
     m_gamestart_throttle_up->SetValue( i2s( sett().GetTorrentThrottledUploadRate() ) );
     m_gamestart_throttle_down->SetValue( i2s( sett().GetTorrentThrottledDownloadRate( ) ) );
+    SetAutoStartRadio();
+    m_gamestart_throttle->SetValue( sett().GetTorrentSystemSuspendMode() );
+}
+
+void TorrentOptionsPanel::SetAutoStartRadio()
+{
     switch ( sett().GetTorrentSystemAutoStartMode() )
     {
         case 1:
@@ -149,9 +158,6 @@ void TorrentOptionsPanel::OnRestore( wxCommandEvent& event )
         default:
             m_autostart_logon->SetValue( true );
     }
-    m_gamestart_throttle->SetValue( sett().GetTorrentSystemSuspendMode() );
 }
-
-
 
 #endif

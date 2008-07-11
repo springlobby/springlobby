@@ -66,6 +66,8 @@ class Socket
     unsigned int GetPingInterval() { return m_ping_int; }
     bool GetPingEnabled() { return m_ping_msg != wxEmptyString; }
 
+    wxString GetLocalAddress();
+
     SockState State( );
     SockError Error( );
 

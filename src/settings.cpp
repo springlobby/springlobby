@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: Settings
 //
@@ -48,11 +48,34 @@ Settings::Settings()
      m_portable_mode = true;
   }
 
+  // if it doesn't exist, try to create it
+  if ( !wxFileName::FileExists( m_chosed_path ) )
+  {
+     // if directory doesn't exist, try to create it
+     if ( !m_portable_mode && !wxFileName::DirExists( wxStandardPaths::Get().GetUserDataDir() ) )
+         wxFileName::Mkdir( wxStandardPaths::Get().GetUserDataDir() );
+
+     wxFileOutputStream outstream( m_chosed_path );
+
+     if ( !outstream.IsOk() )
+     {
+         // TODO: error handling
+     }
+  }
+
   wxFileInputStream instream( m_chosed_path );
+
+  if ( !instream.IsOk() )
+  {
+      // TODO: error handling
+  }
+
   m_config = new myconf( instream );
 
   #else
-  m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
+  //removed temporarily because it's suspected to cause a bug with userdir creation
+ // m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
+  m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
   m_portable_mode = false;
   #endif
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
@@ -76,6 +99,12 @@ void Settings::SaveSettings()
   m_config->Flush();
   #if defined(__WXMSW__) && !defined(HAVE_WX26)
   wxFileOutputStream outstream( m_chosed_path );
+
+  if ( !outstream.IsOk() )
+  {
+      // TODO: error handling
+  }
+
   m_config->Save( outstream );
   #endif
   if (usync()->IsLoaded()) usync()->SetSpringDataPath( GetSpringDir() );
@@ -135,9 +164,22 @@ void Settings::SetOldSpringLaunchMethod( bool value )
 }
 
 
+bool Settings::GetWebBrowserUseDefault()
+{
+  // See note on ambiguities, in wx/confbase.h near line 180.
+  bool useDefault;
+  m_config->Read(_T("/General/WebBrowserUseDefault"), &useDefault, DEFSETT_WEB_BROWSER_USE_DEFAULT);
+  return useDefault;
+}
+
+void Settings::SetWebBrowserUseDefault(bool useDefault)
+{
+  m_config->Write(_T("/General/WebBrowserUseDefault"), useDefault);
+}
+
 wxString Settings::GetWebBrowserPath()
 {
-    return m_config->Read( _T("/General/WebBrowserPath"), _T("use default") );
+  return m_config->Read( _T("/General/WebBrowserPath"), wxEmptyString);
 }
 
 
@@ -646,6 +688,17 @@ bool Settings::GetTestHostPort()
     return m_config->Read( _T("/Hosting/TestHostPort"), 1 );
 }
 
+wxColour Settings::GetBattleLastColour()
+{
+   return  GetColorFromStrng( m_config->Read( _T("/Hosting/MyLastColour"), _T("1 1 0") ) );
+}
+
+
+void Settings::SetBattleLastColour( const wxColour& col )
+{
+  m_config->Write( _T("/Hosting/MyLastColour"), GetColorString( col ) );
+}
+
 void Settings::SetLastHostDescription( const wxString& value )
 {
     m_config->Write( _T("/Hosting/LastDescription"), value );
@@ -887,9 +940,16 @@ void Settings::SetChatColorTime( wxColour value )
 
 wxFont Settings::GetChatFont()
 {
-    wxFont f;
-    f.SetNativeFontInfo( m_config->Read( _T("/Chat/Font"), wxEmptyString ) );
-    return f;
+    wxString info = m_config->Read( _T("/Chat/Font"), wxEmptyString );
+    if (info != wxEmptyString) {
+        wxFont f;
+        f.SetNativeFontInfo( info );
+        return f;
+    }
+    else {
+        wxFont f(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+        return f;
+    }
 }
 
 void Settings::SetChatFont( wxFont value )
@@ -915,6 +975,26 @@ bool Settings::GetAlwaysAutoScrollOnFocusLost()
 void Settings::SetAlwaysAutoScrollOnFocusLost(bool value)
 {
   m_config->Write( _T("/Chat/AlwaysAutoScrollOnFocusLost"), value);
+}
+
+void Settings::SetHighlightedWords( const wxString& words )
+{
+  m_config->Write( _T("/Chat/HighlightedWords"), words );
+}
+
+wxString Settings::GetHighlightedWords( )
+{
+  return m_config->Read( _T("/Chat/HighlightedWords"), wxEmptyString );
+}
+
+void Settings::SetRequestAttOnHighlight( const bool req )
+{
+  m_config->Write( _T("/Chat/ReqAttOnHighlight"), req);
+}
+
+bool Settings::GetRequestAttOnHighlight( )
+{
+  return m_config->Read( _T("/Chat/ReqAttOnHighlight"), 0l);
 }
 
 BattleListFilterValues Settings::GetBattleFilterValues(const wxString& profile_name)
@@ -1074,6 +1154,29 @@ void Settings::SetTorrentMaxConnections( int connections )
 int Settings::GetTorrentMaxConnections()
 {
     return  m_config->Read( _T("/Torrent/MaxConnections"), 250 );
+}
+
+void Settings::SetTorrentListToResume( const wxArrayString& list )
+{
+  unsigned int TorrentCount = list.GetCount();
+  m_config->DeleteGroup( _T("/Torrent/ResumeList") );
+  for ( unsigned int i = 0; i < TorrentCount; i++ )
+  {
+    m_config->Write( _T("/Torrent/ResumeList/") + TowxString(i), list[i] );
+  }
+}
+
+
+wxArrayString Settings::GetTorrentListToResume()
+{
+  wxArrayString list;
+  unsigned int TorrentCount = m_config->GetNumberOfEntries( _T("/Torrent/ResumeList") );
+  for ( unsigned int i = 0; i < TorrentCount; i++ )
+  {
+    wxString ToAdd;
+    if ( m_config->Read( _T("/Torrent/ResumeList/") + TowxString(i), &ToAdd ) ) list.Add( ToAdd );
+  }
+  return list;
 }
 
 

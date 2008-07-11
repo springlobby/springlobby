@@ -109,8 +109,8 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		mmOptionList current = it->second;
 		wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
 
-
-		int index = CLAMP(current.cur_choice_index,0,int(current.cbx_choices.GetCount()-1));
+        int temp = int(current.cbx_choices.GetCount()-1);
+		int index = CLAMP(current.cur_choice_index,0,temp);
 		wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[index], wxDefaultPosition,
 				wxDefaultSize, current.cbx_choices, 0, wxDefaultValidator);
 
@@ -163,7 +163,7 @@ void BattleroomMMOptionsTab::OnChkBoxChange(wxCommandEvent& event)
 	long gameoption ;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
 
-	if( optWrap->setSingleOption( key , (box->GetValue() ? _T("1") : _T("0")) , (GameOption)gameoption ) );
+	if( optWrap->setSingleOption( key , (box->GetValue() ? _T("1") : _T("0")) , (GameOption)gameoption ) )
 	{
         if (m_battle.IsFounderMe())
         {

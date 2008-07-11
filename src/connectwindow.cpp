@@ -39,7 +39,7 @@ END_EVENT_TABLE()
 //! @param parent Parent window
 ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 : wxDialog( parent, -1, _("Connect to lobby server"), wxDefaultPosition, wxSize(300, 300),
-           wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN ), m_ui(ui)
+           wxDEFAULT_DIALOG_STYLE | wxCLIP_CHILDREN ), m_ui(ui)
 {
   wxString server;
   wxString username;

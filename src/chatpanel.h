@@ -158,6 +158,8 @@ class ChatPanel : public wxPanel
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
 
+    bool ContainsWordToHighlight( const wxString& message );
+
     User* GetSelectedUser();
 
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.

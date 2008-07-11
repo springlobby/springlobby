@@ -3,6 +3,10 @@
 // Class: ChatPanel
 //
 
+#if defined(HAVE_WX26) && !defined(NO_RICHTEXT_CHAT)
+#define NO_RICHTEXT_CHAT
+#endif
+
 #include <stdexcept>
 #include <wx/intl.h>
 #include <wx/datetime.h>
@@ -17,7 +21,9 @@
 #include <wx/utils.h>
 #include <wx/event.h>
 #include <wx/notebook.h>
+#ifndef NO_RICHTEXT_CHAT
 #include <wx/richtext/richtextctrl.h>
+#endif
 #include <wx/app.h>
 
 #include "channel.h"
@@ -112,7 +118,12 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
 	CreateControls( );
 	_SetChannel( &chan );
 	m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, this );
-	m_chat_log = new ChatLog( sett().GetDefaultServer(), chan.GetName() );
+	#ifdef __WXMSW__
+        wxString chan_prefix = _("channel_");
+    #else
+        wxString chan_prefix = _("#");
+    #endif
+	m_chat_log = new ChatLog( sett().GetDefaultServer(), chan_prefix + chan.GetName() );
 }
 
 
@@ -199,9 +210,19 @@ void ChatPanel::CreateControls( ) {
 	}
 
 	// Creating ui elements
-	#ifndef NO_RICHTEXT_CHAT
+  #ifndef NO_RICHTEXT_CHAT
 	m_chatlog_text = new wxRichTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
-																	 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+	                                     wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+
+	// Accelerators
+	// copied from wxWidgets SVN revision 53442, so this can probably be removed for wx > 2.8.7
+	wxAcceleratorEntry entries[2];
+
+	entries[0].Set(wxACCEL_CMD,   (int) 'C',       wxID_COPY);
+	entries[1].Set(wxACCEL_CMD,   (int) 'A',       wxID_SELECTALL);
+
+	wxAcceleratorTable accel(2, entries);
+	m_chatlog_text->SetAcceleratorTable(accel);
   #else
 	m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
 																	 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
@@ -469,7 +490,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
   bool at_bottom=m_chatlog_text->IsPositionVisible(p); /// true if we're on bottom of page and must scroll
   #endif
 	m_chatlog_text->SetDefaultStyle( wxTextAttr( col, sett().GetChatColorBackground(), fon ) );
-#if  defined(__WXMSW__) && !defined(NO_RICHTEXT_CHAT)
+#if  defined(__WXMSW__) && defined(NO_RICHTEXT_CHAT)
 	m_chatlog_text->Freeze();
 #endif
 
@@ -493,21 +514,18 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 		m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
     m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
 	}
-
+  CheckLength(); /// crop lines from history that exceeds limit
 	#else
 	m_chatlog_text->AppendText( message + _T( "\n" ) );
+  CheckLength(); /// crop lines from history that exceeds limit
 
-  if ( sett().GetSmartScrollEnabled() ) {
-    m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
-		m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
-	}
+  m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
+  m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
 	#endif
-
-	CheckLength(); /// crop lines from history that exceeds limit
 
 	if ( m_chat_log ) m_chat_log->AddMessage( message );
 
-#if  defined(__WXMSW__) && !defined(NO_RICHTEXT_CHAT)
+#if  defined(__WXMSW__) && defined(NO_RICHTEXT_CHAT)
 	m_chatlog_text->Thaw();
 #endif
 
@@ -546,7 +564,7 @@ m_say_text->SetValue( _T( "" ) );
 //--------------------------------------------------------------------------------
 void
 ChatPanel::OnTextChanged_Say_Text( wxCommandEvent& event ) {
-
+#ifndef HAVE_WX26
 	wxString text = m_say_text->GetValue();
 	long pos_Cursor = m_say_text->GetInsertionPoint();
 	wxString character_before_current_Insertionpoint = m_say_text->GetRange( pos_Cursor-1, pos_Cursor );
@@ -610,6 +628,7 @@ ChatPanel::OnTextChanged_Say_Text( wxCommandEvent& event ) {
 			wxBell();
 		}
 	}
+#endif
 }
 
 //! @brief Output a message said in the channel.
@@ -632,18 +651,19 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
           if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 7 ) m_chat_tabs->SetPageImage( i, 7 );
         }
     }
-	} else if ( message.Upper().Contains( me.Upper() ) ) {
-    // change the image of the tab to show new events
-    if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
+	} else if ( message.Upper().Contains( me.Upper() ) )
     {
-      for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
-        if ( m_chat_tabs->GetPage( i ) == this ) {
-          if ( m_type == CPT_Channel && m_chat_tabs->GetPageImage( i ) < 8 ) m_chat_tabs->SetPageImage( i, 8 );
-          if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 9 ) m_chat_tabs->SetPageImage( i, 9 );
+    // change the image of the tab to show new events
+        if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
+        {
+          for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+            if ( m_chat_tabs->GetPage( i ) == this ) {
+              if ( m_type == CPT_Channel && m_chat_tabs->GetPageImage( i ) < 8 ) m_chat_tabs->SetPageImage( i, 8 );
+              if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 9 ) m_chat_tabs->SetPageImage( i, 9 );
+            }
         }
-    }
-		col = sett().GetChatColorNotification();
-		req_user = true;
+            col = sett().GetChatColorNotification();
+            req_user = true;
 	} else {
     // change the image of the tab to show new events
     if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
@@ -654,13 +674,26 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
           if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 7 ) m_chat_tabs->SetPageImage( i, 7 );
         }
     }
-		col = sett().GetChatColorNormal();
+        //process logic for custom word highlights
+        if ( ContainsWordToHighlight( message ) )
+        {
+            req_user = sett().GetRequestAttOnHighlight();
+            col = sett().GetChatColorHighlight();
+        }
+        else
+            col = sett().GetChatColorNormal();
 	}
 
 	if ( who == _T( "MelBot" ) && message.StartsWith( _T( "<" ) ) && message.Contains( _T( ">" ) ) ) {
 		wxString who2;
 		wxString message2;
 		who2 = message.BeforeFirst( '>' ).AfterFirst( '<' ) + _T( "@IRC" );
+		//don't highlight if i'm talking from irc to channel
+		if ( who2.Upper() == ( me.Upper() + _T("@IRC") ) )
+		{
+		    req_user = false;
+		    col = sett().GetChatColorNormal();
+		}
 		message2 = message.AfterFirst( '>' );
 		OutputLine( _T( " <" ) + who2 + _T( "> " ) + message2, col, sett().GetChatFont() );
 	} else {
@@ -677,6 +710,18 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 	}
 }
 
+bool ChatPanel::ContainsWordToHighlight( const wxString& message )
+{
+    //get list of words to highlight
+    wxStringTokenizer words ( sett().GetHighlightedWords(), _T(";") );
+    while ( words.HasMoreTokens() )
+    {
+        if (message.Contains( words.GetNextToken() ) )
+            return true;
+    }
+    return false;
+
+}
 
 void ChatPanel::DidAction( const wxString& who, const wxString& action ) {
   // change the image of the tab to show new events
@@ -1117,11 +1162,8 @@ void ChatPanel::OnChannelAutoJoin( wxCommandEvent& event ) {
 	if ( m_autorejoin == 0 ) return;
 
 	if ( m_autorejoin->IsChecked() ) {
-		wxString password;
-		if ( m_ui.AskPassword( _( "Auto join channel" ), _( "Please enter password needed to join this channel, leave blank for no passwrd." ), password ) ) {
-			sett().AddChannelJoin( m_channel->GetName(), password );
+			sett().AddChannelJoin( m_channel->GetName(), m_channel->GetPassword() );
 			m_autorejoin->Check( true );
-		}
 	} else {
 		sett().RemoveChannelJoin( m_channel->GetName() );
 		m_autorejoin->Check( false );

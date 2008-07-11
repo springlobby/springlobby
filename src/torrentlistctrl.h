@@ -50,6 +50,8 @@ class TorrentListCtrl : public customListCtrl
     static int wxCALLBACK CompareEtaDOWN(long item1, long item2, long sortData);
     static int wxCALLBACK CompareCopiesUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareCopiesDOWN(long item1, long item2, long sortData);
+    static int wxCALLBACK CompareFileSizeUP(long item1, long item2, long sortData);
+    static int wxCALLBACK CompareFileSizeDOWN(long item1, long item2, long sortData);
     static map_infos* m_info_map;
 
     struct {
@@ -64,9 +66,8 @@ class TorrentListCtrl : public customListCtrl
 
 enum
 {
-    BLIST_LIST = wxID_HIGHEST,
-    BLIST_DLMOD,
-    BLIST_DLMAP
+    TLIST_CLICK
+
 };
 
 #endif

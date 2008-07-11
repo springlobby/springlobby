@@ -44,7 +44,6 @@ END_EVENT_TABLE()
 SpringLobbyApp::SpringLobbyApp()
 {
     m_timer = new wxTimer(this, TIMER_ID);
-    m_ui = NULL;
     m_locale = NULL;
     m_otadownloader = NULL;
 }
@@ -60,7 +59,7 @@ SpringLobbyApp::~SpringLobbyApp()
 bool SpringLobbyApp::OnInit()
 {
 
-#if wxUSE_ON_FATAL_EXCEPTION
+#if wxUSE_ON_FATAL_EXCEPTION && wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
     wxHandleFatalExceptions( true );
 #endif
 
@@ -77,6 +76,8 @@ bool SpringLobbyApp::OnInit()
     m_locale->Init();
     m_locale->AddCatalog( _T("springlobby") );
 
+    if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
+
     if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
     {
         if ( wxDirExists( sett().GetCachePath() )  )
@@ -90,7 +91,7 @@ bool SpringLobbyApp::OnInit()
             }
         }
     }
-
+    #ifndef HAVE_WX26
     if ( !sett().IsFirstRun() && sett().IsPortableMode() ) /// rebase spring paths to current working dir in portable mode
     {
       wxString workingfolder = wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator();
@@ -100,11 +101,10 @@ bool SpringLobbyApp::OnInit()
       sett().SetCachePath( workingfolder + sett().GetCachePath().AfterLast( wxFileName::GetPathSeparator() ) );
       sett().SaveSettings();
     }
+    #endif
 
-    m_ui = new Ui();
-    wxLogMessage( _T("Ui created") );
-
-    m_ui->ShowMainWindow();
+    ui().ReloadUnitSync(); /// first time load of unitsync
+    ui().ShowMainWindow();
 
     if ( !sett().IsFirstRun() && sett().IsPortableMode() && usync()->IsLoaded()) usync()->SetSpringDataPath( sett().GetSpringDir() ); /// update spring's current working dir trough unitsync
 
@@ -118,9 +118,9 @@ bool SpringLobbyApp::OnInit()
         sett().AddChannelJoin( _T("newbies"), _T("") );
         wxLogMessage( _T("first time startup"));
         wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
-                     wxOK | wxICON_INFORMATION, &m_ui->mw() );
+                     wxOK | wxICON_INFORMATION, &ui().mw() );
 #ifdef HAVE_WX26
-        wxMessageBox(_("You're using a wxwidgets library of the 2.6.x series\n battle filtering, advanced gui and joining/hosting games using nat traversal\n won't be available"), _("Missing Functionality"), wxICON_INFORMATION, &m_ui->mw() );
+        wxMessageBox(_("You're using a wxwidgets library of the 2.6.x series\n battle filtering, advanced gui and joining/hosting games using nat traversal\n won't be available"), _("Missing Functionality"), wxICON_INFORMATION, &ui().mw() );
 #endif
 
         SetupUserFolders();
@@ -133,7 +133,7 @@ bool SpringLobbyApp::OnInit()
         bool contentExists = false;
         if ( usync()->IsLoaded() )
         {
-            contentExists = usync()->FileExists(_T("base/base-ota-content.zip"));
+            contentExists = usync()->FileExists(_T("base/otacontent.sdz")) && usync()->FileExists(_T("base/tacontent_v2.sdz")) && usync()->FileExists(_T("base/tatextures_v062.sdz"));
         }
         else
         {
@@ -148,11 +148,11 @@ bool SpringLobbyApp::OnInit()
             m_otadownloader = new HttpDownloader( url, destFilename );
         }
 
-        m_ui->mw().ShowConfigure();
+        ui().mw().ShowConfigure();
     }
     else
     {
-        m_ui->Connect();
+        ui().Connect();
     }
 
   #ifndef NO_TORRENT_SYSTEM
@@ -178,7 +178,8 @@ int SpringLobbyApp::OnExit()
   #endif
 
   m_timer->Stop();
-  delete m_ui;
+
+  sett().SaveSettings(); /// to make sure that cache path gets saved before destroying unitsync
 
   usync()->FreeUnitSyncLib();
 
@@ -199,7 +200,7 @@ void SpringLobbyApp::OnFatalException()
 //! @brief Is called every 1/10 seconds to update statuses
 void SpringLobbyApp::OnTimer( wxTimerEvent& event )
 {
-    m_ui->OnUpdate( event.GetInterval() );
+    ui().OnUpdate( event.GetInterval() );
 }
 
 
@@ -209,8 +210,11 @@ void SpringLobbyApp::InitCacheDir()
     if ( !wxDirExists( path ) ) wxMkdir( path );
     path += wxFILE_SEP_PATH;
     path += _T("lobbycache");
-    if ( !wxDirExists( path ) ) wxMkdir( path );
-    sett().SetCachePath( path );
+    if ( !wxDirExists( path ) )
+    {
+       wxMkdir( path );
+       sett().SetCachePath( path );
+    }
 }
 
 

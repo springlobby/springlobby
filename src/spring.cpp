@@ -8,11 +8,11 @@
 #include <wx/arrstr.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
-#include <clocale>
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
 #include <fstream>
+#include <clocale>
 
 #include "spring.h"
 #include "springprocess.h"
@@ -305,7 +305,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
   tdf.AppendLineBreak();
 
-  if ( !battle.IsFounderMe() && !sett().GetNoUDP() )
+  if ( !battle.IsFounderMe() )
   {
     if ( battle.GetNatType() == NAT_Fixed_source_ports )
     {
@@ -375,14 +375,11 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     tdf.Append(_T("TeamLeader"),TeamLeader);
     tdf.Append(_T("AllyTeam"),AllyConv[battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().ally]);
 
-    const char* old_locale = std::setlocale(LC_NUMERIC, "C");
-    float rgb[3]={
-      battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Red()/255.0,
-      battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Green()/255.0,
-      battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Blue()/255.0
-      };
-    tdf.Append(_T("RGBColor"),rgb,rgb+3);
-    std::setlocale(LC_NUMERIC, old_locale);
+    wxString colourstring =
+      TowxString( battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Red()/255.0 ) + _T(' ') +
+      TowxString( battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Green()/255.0 ) + _T(' ') +
+      TowxString( battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Blue()/255.0 );
+    tdf.Append(_T("RGBColor"), colourstring);
 
     wxLogMessage( _T("%d"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side );
 
@@ -418,14 +415,11 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
     tdf.Append(_T("AllyTeam"),AllyConv[bot.bs.ally]);
 
-    const char* old_locale = std::setlocale(LC_NUMERIC, "C");
-    float rgb[3]={
-      bot.bs.colour.Red()/255.0f,
-      bot.bs.colour.Green()/255.0f,
-      bot.bs.colour.Blue()/255.0f
-      };
-    tdf.Append(_T("RGBColor"),rgb,rgb+3);
-    std::setlocale(LC_NUMERIC, old_locale);
+    wxString colourstring =
+      TowxString( bot.bs.colour.Red()/255.0f ) + _T(' ') +
+      TowxString( bot.bs.colour.Green()/255.0f ) + _T(' ') +
+      TowxString( bot.bs.colour.Blue()/255.0f );
+    tdf.Append(_T("RGBColor"), colourstring);
 
     tdf.Append(_T("Side"),usync()->GetSideName( battle.GetHostModName(), bot.bs.side ));
 
@@ -696,15 +690,11 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
     tdf.Append(_T("TeamLeader"),"0");
     tdf.Append(_T("AllyTeam"),AllyConv[bot->bs.ally]);
 
-    const char* old_locale = std::setlocale(LC_NUMERIC, "C");
-    float rgb[3]={
-      bot->bs.colour.Red()/255.0f,
-      bot->bs.colour.Green()/255.0f,
-      bot->bs.colour.Blue()/255.0f
-      };
-    tdf.Append(_T("RGBColor"),rgb,rgb+3);
-
-    std::setlocale(LC_NUMERIC, old_locale);
+    wxString colourstring =
+      TowxString( bot->bs.colour.Red()/255.0f ) + _T(' ') +
+      TowxString( bot->bs.colour.Green()/255.0f ) + _T(' ') +
+      TowxString( bot->bs.colour.Blue()/255.0f );
+    tdf.Append(_T("RGBColor"), colourstring);
 
     tdf.Append(_T("Side"),usync()->GetSideName(battle.GetHostModName(), bot->bs.side));
 
