@@ -14,8 +14,6 @@
 #include "server.h"
 #include "countrycodes.h"
 
-#define TOOLTIP_DELAY 1000
-
 BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )

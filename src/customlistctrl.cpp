@@ -1,8 +1,5 @@
 #include "customlistctrl.h"
 
-#define TOOLTIP_DELAY 1000
-
-
 BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
 #if wxUSE_TIPWINDOW
     	EVT_MOTION(customListCtrl::OnMouseMotion)
@@ -129,7 +126,8 @@ long customListCtrl::GetSelectedData()
   return m_selected ;
 }
 
-
+/** \todo this badly needs to be refactored, currently child classes duplicate most of this
+*/
 //TODO http://www.wxwidgets.org/manuals/stable/wx_wxtipwindow.html#wxtipwindowsettipwindowptr
 // must have sth to do with crash on windows
 //if to tootips are displayed
@@ -139,6 +137,9 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 	if (event.Leaving())
 	{
 		m_tiptext = _T("");
+    //TODO try thos out!!!!
+//		if (m_tipwindow)
+//            m_tipwindow->Show( false );
 		tipTimer.Stop();
 	}
 	else
