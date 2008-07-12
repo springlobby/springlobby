@@ -6,6 +6,7 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
+#include <wx/msgdlg.h>
 
 #include "torrentlistctrl.h"
 #include "torrentwrapper.h"
@@ -210,7 +211,7 @@ void MainTorrentTab::OnUpdate()
 
 void MainTorrentTab::OnCancelButton( wxCommandEvent& event )
 {
-  torrent()->RemoveFile( info_map[m_torrent_list->GetSelectedIndex()].hash );
+  torrent()->RemoveFile( TowxString(m_torrent_list->GetSelectedData()) );
 }
 
 void MainTorrentTab::OnDownloadDialog( wxCommandEvent& event )

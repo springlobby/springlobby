@@ -14,8 +14,6 @@
 #include "server.h"
 #include "countrycodes.h"
 
-#define TOOLTIP_DELAY 1000
-
 BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
@@ -558,79 +556,58 @@ int wxCALLBACK BattleListCtrl::CompareMaxPlayerDOWN(long item1, long item2, long
   return 0;
 }
 
-void BattleListCtrl::OnMouseMotion(wxMouseEvent& event)
+void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-#if wxUSE_TIPWINDOW
-	wxPoint position = event.GetPosition();
+    long item = GetItemData(item_hit);
+    Ui* ui = m_ui_for_sort;
+    Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
+    int coloumn = getColoumnFromPosition(position);
+    switch (coloumn)
+    {
+        case 0: // status
+        m_tiptext = icons().GetBattleStatus(battle);
+            break;
+        case 1: // country
+            m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());
+            break;
+        case 2: // rank_min
+            m_tiptext = m_colinfovec[coloumn].first;
+            break;
+        case 3: // descrp
+            m_tiptext = battle.GetDescription();
+            break;
+        case 4: //map
+            m_tiptext = RefineMapname(battle.GetHostMapName());
+            break;
+        case 5: //mod
+            m_tiptext = RefineModname(battle.GetHostModName());
+            break;
+        case 6: // host
+            m_tiptext = battle.GetFounder().GetNick();
+            break;
+        case 7: // specs
+            m_tiptext = _T("Spectators:\n");
+            for (unsigned int i = battle.GetNumUsers()-1; i > battle.GetNumUsers() - battle.GetSpectators()-1;--i)
+            {
+                if (i < battle.GetNumUsers()-1)
+                    m_tiptext << _T("\n");
+                m_tiptext << battle.GetUser(i).GetNick() ;
+            }
+            break;
+        case 8: // player
+            m_tiptext = _T("Active Players:\n");
+            for (unsigned int i = 0; i < battle.GetNumUsers()-battle.GetSpectators();++i)
+            {
+                if ( i> 0)
+                    m_tiptext << _T("\n");
+                m_tiptext << battle.GetUser(i).GetNick();
+            }
+            break;
+        case 9: //may player
+            m_tiptext = (m_colinfovec[coloumn].first);
+            break;
 
-	try{
-		tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-		int flag = wxLIST_HITTEST_ONITEM;
-		long subItem;
-#ifdef HAVE_WX28
-		long item_hit = HitTest(position, flag, &subItem);
-#else
-		long item_hit = HitTest(position, flag);
-#endif
-
-		if (item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount() )
-		{
-			long item = GetItemData(item_hit);
-			Ui* ui = m_ui_for_sort;
-			Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
-			int coloumn = getColoumnFromPosition(position);
-			switch (coloumn)
-			{
-			case 0: // status
-			m_tiptext = icons().GetBattleStatus(battle);
-				break;
-			case 1: // country
-				m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());
-				break;
-			case 2: // rank_min
-				m_tiptext = m_colinfovec[coloumn].first;
-				break;
-			case 3: // descrp
-				m_tiptext = battle.GetDescription();
-				break;
-			case 4: //map
-				m_tiptext = RefineMapname(battle.GetHostMapName());
-				break;
-			case 5: //mod
-				m_tiptext = RefineModname(battle.GetHostModName());
-				break;
-			case 6: // host
-				m_tiptext = battle.GetFounder().GetNick();
-				break;
-			case 7: // specs
-				m_tiptext = _T("Spectators:\n");
-				for (unsigned int i = battle.GetNumUsers()-1; i > battle.GetNumUsers() - battle.GetSpectators()-1;--i)
-				{
-					if (i < battle.GetNumUsers()-1)
-						m_tiptext << _T("\n");
-					m_tiptext << battle.GetUser(i).GetNick() ;
-				}
-				break;
-			case 8: // player
-				m_tiptext = _T("Active Players:\n");
-				for (unsigned int i = 0; i < battle.GetNumUsers()-battle.GetSpectators();++i)
-				{
-					if ( i> 0)
-						m_tiptext << _T("\n");
-					m_tiptext << battle.GetUser(i).GetNick();
-				}
-				break;
-			case 9: //may player
-				m_tiptext = (m_colinfovec[coloumn].first);
-				break;
-
-			default: m_tiptext = _T("");
-				break;
-			}
-		}
-	}
-	catch(...){}
-#endif
+        default: m_tiptext = _T("");
+            break;
+    }
 }
-
-

@@ -27,7 +27,7 @@ class TorrentListCtrl : public customListCtrl
 
     void OnListRightClick( wxListEvent& event );
 
-    void OnMouseMotion(wxMouseEvent& event);
+    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
     void OnColClick( wxListEvent& event );
     void SetInfoMap( map_infos* map);
 
