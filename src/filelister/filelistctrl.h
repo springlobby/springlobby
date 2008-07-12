@@ -14,7 +14,7 @@ class wxListEvent;
 class wxCommandEvent;
 class FileListDialog;
 
-
+/** \brief list currently available torrents on tracker */
 class FileListCtrl : public customListCtrl
 {
   public:

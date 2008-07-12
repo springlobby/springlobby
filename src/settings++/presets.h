@@ -26,9 +26,9 @@
 #include <map>
 #include <string>
 #include <wx/intl.h>
-/**** Presets for tab_simple go here
- *
- *
+/** \brief Presets for tab_simple go here
+ * presets are only used for performance relevant (render detail + AA) settings
+ * and screen resolutions
  */
 template <typename T, int valueCount> class presetValues
 {

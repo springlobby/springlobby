@@ -57,7 +57,6 @@ BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
 
 }
 
-// always set the controls name to the option key
 void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag)
 {
 	wxString pref = wxString::Format( _T("%d"),optFlag) + wxsep;

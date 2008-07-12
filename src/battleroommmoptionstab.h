@@ -12,7 +12,6 @@ const int STRING_START_ID = 6000;
 
 class wxBoxSizer;
 class wxStaticBoxSizer;
-//class wxFlexGridSizer;
 class mmOptionsWrapper;
 class wxCheckBox;
 class wxComboBox;
@@ -23,6 +22,7 @@ class wxTextCtrl;
 class wxSpinEvent;
 class wxStaticText;
 
+//totally ok to store pointers here, since wx takes care of gui element destruction for us
 typedef std::map<wxString,wxCheckBox*> chkBoxMap;
 typedef std::map<wxString,wxComboBox*> comboBoxMap;
 typedef std::map<wxString,wxSpinCtrlDbl*> spinCtrlMap;
@@ -61,7 +61,10 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		textCtrlMap m_textctrl_map;
 		staticTextMap m_statictext_map;
 
-        //! generate Gui elements from loaded MMoptions
+        /** \brief generate Gui elements from loaded MMoptions
+         * for all values in all option maps create a control (pointer),
+         * set the controls name to the option key and add it to the appropiate map and sizer.
+         */
 		void setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag);
 
 		/** \name Event handlers
