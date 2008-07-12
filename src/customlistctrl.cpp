@@ -15,9 +15,9 @@ END_EVENT_TABLE()
 
 
 customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style):
-					wxListCtrl (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER),
-					 m_selected(-1),m_selected_index(-1),m_prev_selected(-1),m_prev_selected_index(-1),
-					 m_last_mouse_pos( wxPoint(-1,-1) )
+					wxListCtrl (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER),m_tiptext(_T("")),
+					 m_tipwindow(0),m_selected(-1),m_selected_index(-1),m_prev_selected(-1),
+					 m_prev_selected_index(-1),m_last_mouse_pos( wxPoint(-1,-1) )
 
 
 {
