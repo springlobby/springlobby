@@ -23,7 +23,7 @@ customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
 {
 #if wxUSE_TIPWINDOW
 	m_tipwindow = 0;
-
+    controlPointer = 0;
 #endif
 	m_tiptext = _T("");
 }
@@ -121,7 +121,8 @@ void customListCtrl::OnTimer(wxTimerEvent& event)
         if (!m_tiptext.empty())
         {
             m_tipwindow = new wxTipWindow(this, m_tiptext);
-           // m_tipwindow->SetTipWindowPtr(controlPointer);
+            controlPointer = &m_tipwindow;
+            m_tipwindow->SetTipWindowPtr(controlPointer);
 #ifndef __WXMSW__
             m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
 #endif
@@ -132,15 +133,11 @@ void customListCtrl::OnTimer(wxTimerEvent& event)
         {
             m_tiptext = wxEmptyString;
             tipTimer.Stop();
-//            if (controlPointer!= 0 && *controlPointer != 0)
-            if (m_tipwindow != 0)
+            if (controlPointer!= 0 && *controlPointer!= 0)
             {
-                 m_tipwindow->Close();
-                //delete m_tipwindow;
+                m_tipwindow->Close();
                 m_tipwindow = 0;
             }
-            //m_tipwindow = 0;
-
         }
 
 

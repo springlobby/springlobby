@@ -35,7 +35,7 @@ protected:
     #if wxUSE_TIPWINDOW
     //! some wx implementations do not support this yet
     wxTipWindow* m_tipwindow;
-    //wxTipWindow** controlPointer;
+    wxTipWindow** controlPointer;
     #endif
     int coloumnCount;
 
