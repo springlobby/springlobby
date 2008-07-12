@@ -33,11 +33,6 @@ BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 
 END_EVENT_TABLE()
 
-/** \brief A container for the various option panels
- * Contains a notebook holding the real option panels as pages. Handles "apply" and "restore" events for those pages,
- * rather then those having to implement (and duplicate) this functionality. \n
- * See SpringOptionsTab, TorrentOptionsPanel, ChatOptionsTab
- */
 MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
 {
     m_tabs = new wxNotebook( this, OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );

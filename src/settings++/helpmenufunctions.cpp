@@ -45,7 +45,6 @@ void openNewTicket()
 {
 	openUrl(_T("http://trac.springlobby.info/newticket?component=springsettings%2Fsettings%2B%2B&owner=koshi"));
 }
-//springsettings/settings++
 
 void openContactPage()
 {

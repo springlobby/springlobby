@@ -278,7 +278,7 @@ void RemovePrefixed(T &v, wxString pref){
   }
 }
 
-void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
+void BattleroomMMOptionsTab::OnReloadControls(GameOption flag)
 {
 	wxString pref = wxString::Format( _T("%d"),flag) + wxsep;
 
