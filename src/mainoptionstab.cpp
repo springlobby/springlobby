@@ -33,7 +33,6 @@ BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 
 END_EVENT_TABLE()
 
-
 MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
 {
     m_tabs = new wxNotebook( this, OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );

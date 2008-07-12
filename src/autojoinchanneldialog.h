@@ -7,7 +7,10 @@ class wxCommandEvent;
 class wxTextCtrl;
 class wxWindow;
 
-
+/** \brief A dialog that lets the user manullay edit his list of channels to join on startup (possibly with passwords)
+ * Passwords for existing channels aren't displayed. The dialog expects a [chanName|password] pair per line.
+ * \todo See that parsing input doesn't crap out when user enters rubbish
+ */
 class AutojoinChannelDialog : public wxDialog
 {
 	public:

@@ -11,6 +11,8 @@ class wxButton;
 class wxCommandEvent;
 class IBattle;
 
+/** \brief used in SP/MP BattletAB to present choice of AIs to add
+ * \todo DOCMEMORE */
 class AddBotDialog : public wxDialog
 {
   public:

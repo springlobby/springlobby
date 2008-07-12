@@ -12,7 +12,8 @@ typedef std::map<battle_id_t, Battle*> battle_map_t;
 //! @brief iterator for battle map
 typedef battle_map_t::iterator battle_iter_t;
 
-
+/** \brief encapsulates a <battle_id_t, Battle*> map
+ */
 class BattleList
 {
   friend class BattleList_Iter;
@@ -24,10 +25,7 @@ class BattleList
     battle_map_t m_battles;
 };
 
-
-//BattleList Iter gives us the posibility to get Battles out of the list without
-//the rights to change the list
-
+/** BattleList_Iter gives us the posibility to get Battles out of the list without the rights to change the list */
 class BattleList_Iter
 {
   public:

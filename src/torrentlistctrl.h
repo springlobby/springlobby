@@ -16,7 +16,9 @@ class wxListEvent;
 class wxCommandEvent;
 class Ui;
 
-
+/** \brief list all currently active (queued,lecching,seeding) torrents with their infos
+ * the list is newly populated every n-seconds from Ui::OnUpdate()
+ */
 class TorrentListCtrl : public customListCtrl
 {
   public:
@@ -27,7 +29,7 @@ class TorrentListCtrl : public customListCtrl
 
     void OnListRightClick( wxListEvent& event );
 
-    void OnMouseMotion(wxMouseEvent& event);
+    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
     void OnColClick( wxListEvent& event );
     void SetInfoMap( map_infos* map);
 
