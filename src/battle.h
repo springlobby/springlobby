@@ -70,7 +70,8 @@ struct BattleOptions
   bool guilistactiv;
 };
 
-
+/** \brief model of a sp/mp battle
+ * \todo DOCME */
 class Battle : public UserList, public IBattle
 {
   public:

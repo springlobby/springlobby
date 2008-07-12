@@ -24,6 +24,8 @@ class wxRadioBox;
 class wxCheckListBox;
 class wxSlider;
 
+/** \brief manipulate "standard" engine options, unit restriction list
+ * \todo DOCMEMORE */
 class BattleOptionsTab : public wxScrolledWindow
 {
   public:

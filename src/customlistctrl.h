@@ -34,7 +34,8 @@ protected:
     wxString    m_tiptext;
     #if wxUSE_TIPWINDOW
     //! some wx implementations do not support this yet
-    wxTipWindow *m_tipwindow;
+    wxTipWindow* m_tipwindow;
+    wxTipWindow** controlPointer;
     #endif
     int coloumnCount;
 
@@ -83,11 +84,11 @@ public:
     //! intermediate function to add info to m_colinfovec after calling base class function
 	void InsertColumn(long i, wxListItem item, wxString tip, bool = true);
 	//! this event is triggered when delay timer (set in mousemotion) ended
-    void OnTimer(wxTimerEvent& event);
+    virtual void OnTimer(wxTimerEvent& event);
     //! prohibits resizin if so set in columnInfo
     void OnStartResizeCol(wxListEvent& event) ;
     //! starts timer, sets tooltiptext
-    void OnMouseMotion(wxMouseEvent& event);
+    virtual void OnMouseMotion(wxMouseEvent& event);
     //! does nothing
     void noOp(wxMouseEvent& event);
 

@@ -142,8 +142,6 @@
 		<Unit filename="src/autobalancedialog.h" />
 		<Unit filename="src/autojoinchanneldialog.cpp" />
 		<Unit filename="src/autojoinchanneldialog.h" />
-		<Unit filename="src/base16.cpp" />
-		<Unit filename="src/base16.h" />
 		<Unit filename="src/base64.cpp" />
 		<Unit filename="src/base64.h" />
 		<Unit filename="src/battle.cpp" />

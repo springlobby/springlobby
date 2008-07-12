@@ -16,7 +16,9 @@ class wxListEvent;
 class wxCommandEvent;
 class Ui;
 
-
+/** \brief list all currently active (queued,lecching,seeding) torrents with their infos
+ * the list is newly populated every n-seconds from Ui::OnUpdate()
+ */
 class TorrentListCtrl : public customListCtrl
 {
   public:

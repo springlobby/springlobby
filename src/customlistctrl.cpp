@@ -13,18 +13,19 @@ BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
         EVT_LIST_DELETE_ITEM     ( wxID_ANY, customListCtrl::OnDeselected )
 END_EVENT_TABLE()
 
-
+//wxTipWindow* customListCtrl::m_tipwindow = 0;
 customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style):
 					wxListCtrl (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER),m_tiptext(_T("")),
-					 m_tipwindow(0),m_selected(-1),m_selected_index(-1),m_prev_selected(-1),
+					 m_selected(-1),m_selected_index(-1),m_prev_selected(-1),
 					 m_prev_selected_index(-1),m_last_mouse_pos( wxPoint(-1,-1) )
 
 
 {
 #if wxUSE_TIPWINDOW
-	m_tipwindow = NULL;
+	m_tipwindow = 0;
+    controlPointer = 0;
 #endif
-	m_tiptext = _T("BIBKJBKJB");
+	m_tiptext = _T("");
 }
 
 void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
@@ -120,6 +121,8 @@ void customListCtrl::OnTimer(wxTimerEvent& event)
         if (!m_tiptext.empty())
         {
             m_tipwindow = new wxTipWindow(this, m_tiptext);
+            controlPointer = &m_tipwindow;
+            m_tipwindow->SetTipWindowPtr(controlPointer);
 #ifndef __WXMSW__
             m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
 #endif
@@ -128,18 +131,19 @@ void customListCtrl::OnTimer(wxTimerEvent& event)
         }
         else
         {
-            if (m_tipwindow)
-                m_tipwindow->Show( false );
             m_tiptext = wxEmptyString;
             tipTimer.Stop();
+            if (controlPointer!= 0 && *controlPointer!= 0)
+            {
+                m_tipwindow->Close();
+                m_tipwindow = 0;
+            }
         }
 
 
 #endif
 }
 
-/** \todo this badly needs to be refactored, currently child classes duplicate most of this
-*/
 //TODO http://www.wxwidgets.org/manuals/stable/wx_wxtipwindow.html#wxtipwindowsettipwindowptr
 // must have sth to do with crash on windows
 //if to tootips are displayed
@@ -156,7 +160,10 @@ void customListCtrl::OnMouseMotion(wxMouseEvent& event)
 	{
 		m_tiptext = _T("");
 		if (m_tipwindow)
-            m_tipwindow->Show( false );
+		{
+            m_tipwindow->Close();
+            m_tipwindow = 0;
+		}
 		tipTimer.Stop();
 	}
 	else

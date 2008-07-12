@@ -122,7 +122,7 @@ void MainJoinBattleTab::UpdateCurrentBattle( bool MapChanged, bool UpdateRestric
 	  {
 	    if ( MapChanged )
 	    {
-	      m_mm_opts_tab->OnRefreshControls(MapOption);
+	      m_mm_opts_tab->OnReloadControls(MapOption);
 	    }
 	  }
   }

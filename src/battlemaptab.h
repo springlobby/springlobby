@@ -22,6 +22,8 @@ class wxListCtrl;
 class wxChoice;
 class wxRadioBox;
 
+/** \brief select map, draw startboxes (in sp define startpos)
+ * \todo DOCMEMORE */
 class BattleMapTab : public wxScrolledWindow
 {
   public:

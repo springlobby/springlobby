@@ -12,7 +12,8 @@ class wxListEvent;
 class wxCommandEvent;
 class Ui;
 
-
+/** \brief The ListCtrll contained in BattleListTab dispalying all currently active battles with their infos
+ * \todo DOCMEMORE */
 class BattleListCtrl : public customListCtrl
 {
   public:
