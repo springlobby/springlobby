@@ -51,6 +51,8 @@
 #define IsColourOk() IsOk()
 #endif
 
+/** \name Type conversions
+ * @{ */
 //!@brief converts integers to wxString
 wxString i2s( int arg );
 //!@brief converts unsigned int to wxString
@@ -77,7 +79,7 @@ inline wxString TowxString(const wxChar *arg){
 inline wxString TowxString(std::string arg){
   return WX_STRING(arg);
 }
-
+/** @} */
 
 
 wxString GetLibExtension();
