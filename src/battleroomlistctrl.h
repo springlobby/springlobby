@@ -17,6 +17,8 @@ struct item_content {
   void* data;
 };
 
+/** \brief display participants of battle and their info (ally,team,color,cpu...)
+ * \todo DOCMEMORE */
 class BattleroomListCtrl : public customListCtrl
 {
   public:
