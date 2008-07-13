@@ -23,14 +23,18 @@ class FileListDialog : public wxDialog
         void UpdateList();
         FileListCtrl* GetListCtrl();
 
-        void SetData(const TorrentTable& data);
-        TorrentTable &GetData();
-        //TorrentData GetDataFromHash(const wxString& hash );
+        //void SetData(const TorrentTable& data);
+        //TorrentTable &GetData();
+        TorrentTable::PRow RowByHash(const wxString& hash );
 
     protected:
         wxBoxSizer* m_main_sizer;
         FileListCtrl* m_filelistctrl;
-        TorrentTable m_torrent_table;
+
+
+        // TorrentTable m_torrent_table;
+        std::map<wxString, TorrentTable::PRow> m_hash_to_torrent;
+
         FileListFilter* m_filter;
         wxStaticText* m_filecount;
         wxButton* m_download_button;

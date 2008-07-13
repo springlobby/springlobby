@@ -155,8 +155,8 @@ void FileListCtrl::Sort()
 
 int wxCALLBACK FileListCtrl::CompareNameUP( long item1, long item2, long sortData )
 {
-  TorrentTable::PRow row1=s_parent_dialog->GetData().RowByHash(TowxString<long>(item1));
-  TorrentTable::PRow row2=s_parent_dialog->GetData().RowByHash(TowxString<long>(item2));
+  TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
+  TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
   wxString name1 = row1.ok() ? row1->name.Upper() : _T("");
   wxString name2 = row2.ok() ? row2->name.Upper() : _T("");
   return name1.CompareTo(name2);
@@ -165,8 +165,8 @@ int wxCALLBACK FileListCtrl::CompareNameUP( long item1, long item2, long sortDat
 
 int wxCALLBACK FileListCtrl::CompareNameDOWN( long item1, long item2, long sortData )
 {
-    TorrentTable::PRow row1=s_parent_dialog->GetData().RowByHash(TowxString<long>(item1));
-    TorrentTable::PRow row2=s_parent_dialog->GetData().RowByHash(TowxString<long>(item2));
+    TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
+    TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
     wxString name1 = row1.ok() ? row1->name.Upper() : _T("");
     wxString name2 = row2.ok() ? row2->name.Upper() : _T("");
     return name2.CompareTo(name1);
@@ -175,8 +175,8 @@ int wxCALLBACK FileListCtrl::CompareNameDOWN( long item1, long item2, long sortD
 
 int wxCALLBACK FileListCtrl::CompareTypeUP( long item1, long item2, long sortData )
 {
-    TorrentTable::PRow row1=s_parent_dialog->GetData().RowByHash(TowxString<long>(item1));
-    TorrentTable::PRow row2=s_parent_dialog->GetData().RowByHash(TowxString<long>(item2));
+    TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
+    TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
 
     wxString name1 = row1.ok() ? (row1->type == map ? _("Map") : _("Mod")) : _T("");
     wxString name2 = row2.ok() ? (row2->type == map ? _("Map") : _("Mod")) : _T("");
@@ -187,8 +187,8 @@ int wxCALLBACK FileListCtrl::CompareTypeUP( long item1, long item2, long sortDat
 
 int wxCALLBACK FileListCtrl::CompareTypeDOWN( long item1, long item2, long sortData )
 {
-    TorrentTable::PRow row1=s_parent_dialog->GetData().RowByHash(TowxString<long>(item1));
-    TorrentTable::PRow row2=s_parent_dialog->GetData().RowByHash(TowxString<long>(item2));
+    TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
+    TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
 
     wxString name1 = row1.ok() ? (row1->type == map ? _("Map") : _("Mod")) : _T("");
     wxString name2 = row2.ok() ? (row2->type == map ? _("Map") : _("Mod")) : _T("");

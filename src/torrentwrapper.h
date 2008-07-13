@@ -44,14 +44,16 @@ enum DownloadRequestStatus
   scheduled_in_cue
 };
 
-  enum FileStatus
-  {
-    not_stored=0, /// file is not on disk and not downloading
-    queued, /// file is not on disk and queued for download
-    leeching,/// file is being downloaded
-    stored,/// file is on disk
-    seeding/// file is on disk and being seeded
-  };
+
+enum FileStatus
+{
+  /// Dont change values. Bit arithmetics is used in TorrentTable::Row
+  not_stored=0, /// file is not on disk and not downloading
+  queued=1, /// file is not on disk and queued for download
+  leeching=2,/// file is being downloaded
+  stored=128,/// file is on disk
+  seeding=129/// file is on disk and being seeded
+};
 
 struct TorrentInfos
 {
@@ -105,13 +107,27 @@ class TorrentTable{
     status(not_stored)
     {
     }
+    bool HasFullFileLocal(){
+      return status&stored;
+    }
+    void SetHasFullFileLocal(bool b=true){
+      if(b){
+        if(!status&stored)status=stored;
+      }else{
+        if(status&stored)status=not_stored;
+      }
+    }
   };
   typedef RefcountedPointer<Row> PRow;
 
 
   void InsertRow(PRow row);
   void RemoveRow(PRow row);
+
+  /// row must be already inserted
   void AddSeedRequest(PRow row);
+  void RemoveSeedRequest(PRow row);
+  void SetRowHandle(PRow row, const libtorrent::torrent_handle &handle);
 
   bool IsSeedRequest(PRow row);
 
@@ -119,10 +135,13 @@ class TorrentTable{
   PRow RowByHash(const wxString &hash);
   PRow RowByName(const wxString &name);
   PRow RowByHandle(libtorrent::torrent_handle handle);
+  std::map<wxString, TorrentTable::PRow> RowsByHash();
 
   private:
 
   wxCriticalSection mutex;
+
+
 
 #ifdef TorrentTable_validate
   std::set<PRow> all_torrents;
@@ -214,6 +233,8 @@ class TorrentWrapper : public iNetClass
 
     ///MutexWrapper<>
     TorrentTable m_torrent_table;
+
+    wxArrayString m_queued_requests_hashes;/// hashes here.
 
 /*
 
