@@ -23,8 +23,10 @@ END_EVENT_TABLE()
 void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 {
   Socket* sock = (Socket*)event.GetClientData();
-
+  try
+  {
   ASSERT_LOGIC( sock != 0, _T("sock = 0") );
+  } catch (...) { return; }
 
   if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
     m_net_class.OnDataReceived( sock );
@@ -33,7 +35,10 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
   } else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
     m_net_class.OnConnected( sock );
   } else {
+    try
+    {
     ASSERT_LOGIC( false, _T("Unknown socket event."));
+    } catch (...) { return; };
   }
 }
 
@@ -193,7 +198,7 @@ bool Socket::Receive( wxString& data )
         if ( d.IsEmpty() ) d = wxString( &buff[0], wxCSConv(_T("latin-1")) );
         #endif
       }
-      m_rcv_buffer += d;
+      m_rcv_buffer << d;
     }
   } while ( readnum >= buff_size );
 
@@ -231,6 +236,16 @@ SockState Socket::State( )
 SockError Socket::Error( )
 {
   return (SockError)-1;
+}
+
+
+//! @brief used to retrieve local ip address behind NAT to communicate to the server on login
+wxString Socket::GetLocalAddress()
+{
+  if ( m_sock || !m_sock->IsConnected() ) return wxEmptyString;
+  wxIPV4address localaddr;
+  m_sock->GetLocal( localaddr );
+  return localaddr.IPAddress();
 }
 
 

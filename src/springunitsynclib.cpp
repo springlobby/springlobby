@@ -45,7 +45,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
   // Check if library exists
   if ( !wxFileName::FileExists( path ) ) {
     wxLogError( _T("File not found: %s"), path.c_str() );
-    return;
+    ASSERT_RUNTIME( false, _T("Failed to load Unitsync lib.") );
   }
 
   try {
@@ -202,7 +202,6 @@ void SpringUnitSyncLib::Reload()
 
 bool SpringUnitSyncLib::IsLoaded()
 {
-  LOCK_UNITSYNC;
   return m_loaded;
 }
 
@@ -303,6 +302,22 @@ wxString SpringUnitSyncLib::GetMapName( int index )
 }
 
 
+int SpringUnitSyncLib::GetMapArchiveCount( int index )
+{
+  InitLib( m_get_map_archive_count );
+
+  return m_get_map_archive_count( m_get_map_name( index ) );
+}
+
+
+wxString SpringUnitSyncLib::GetMapArchiveName( int arnr )
+{
+  InitLib( m_get_map_archive_name );
+
+  return WX_STRINGC( m_get_map_archive_name( arnr ) );
+}
+
+
 MapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
 {
   InitLib( m_get_map_info_ex );
@@ -328,25 +343,26 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
 {
   InitLib( m_get_minimap );
 
-  const int height = 1024;
-  const int width = 1024;
-  //wxImage ret( height, width );
+  const int miplevel = 0;  // miplevel should not be 10 ffs
+  const int width  = 1024 >> miplevel;
+  const int height = 1024 >> miplevel;
 
   wxLogMessage( _T("%s"), mapFileName.c_str() );
 
-  unsigned short* colours = (unsigned short*)m_get_minimap( mapFileName.mb_str(wxConvUTF8), 0 ); // miplevel should not be 10 ffs
+  unsigned short* colours = (unsigned short*)m_get_minimap( mapFileName.mb_str(wxConvUTF8), miplevel );
   ASSERT_RUNTIME( colours, _T("Get minimap failed") );
 
   typedef unsigned char uchar;
-  uchar* true_colours = (uchar*)malloc( width*height*3 );
+  wxImage minimap(width, height, false);
+  uchar* true_colours = minimap.GetData();
 
   for ( int i = 0; i < width*height; i++ ) {
     true_colours[(i*3)  ] = uchar( (( colours[i] >> 11 )/31.0)*255.0 );
-    true_colours[(i*3)+1] = uchar( (( (colours[i] >> 5) & 63 )/63.0)*255.0 );;
+    true_colours[(i*3)+1] = uchar( (( (colours[i] >> 5) & 63 )/63.0)*255.0 );
     true_colours[(i*3)+2] = uchar( (( colours[i] & 31 )/31.0)*255.0 );
   }
 
-  return wxImage( width, height, true_colours, false );
+  return minimap;
 }
 
 
@@ -801,6 +817,14 @@ int SpringUnitSyncLib::SizeArchiveFile( int archive, int handle )
   InitLib( m_size_archive_file );
 
   return m_size_archive_file( archive, handle );
+}
+
+
+wxString SpringUnitSyncLib::GetArchivePath( const wxString& name )
+{
+  InitLib( m_get_archive_path );
+
+  return WX_STRINGC( m_get_archive_path( name.mb_str( wxConvUTF8 ) ) );
 }
 
 

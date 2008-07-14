@@ -19,9 +19,8 @@ class wxRegEx;
 class wxStaticText;
 
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class BattleListFilter
-///////////////////////////////////////////////////////////////////////////////
+/** \brief The panel contained in BattleListTab used to filter for diff info of battles
+ * \todo DOCMEMORE */
 class BattleListFilter : public wxPanel
 {
 	public:

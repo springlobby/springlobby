@@ -191,6 +191,7 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, channel );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), true, 2 );
+  chat->FocusInputBox();
   return chat;
 }
 
@@ -228,6 +229,7 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, user );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, 3 );
+  chat->FocusInputBox();
   return chat;
 }
 
@@ -257,13 +259,9 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
     ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
     ASSERT_LOGIC( delpage != 0 , _T("MainChatTab::OnTabsChanged(): delpage NULL") );
 
-    if ( !delpage->IsServerPanel() ) {
-      delpage->Part();
-      m_chat_tabs->DeletePage( oldsel );
-      m_chat_tabs->SetSelection( 0 );
-    } else {
-      m_chat_tabs->SetSelection( 0 );
-    }
+    delpage->Part();
+    m_chat_tabs->DeletePage( oldsel );
+    m_chat_tabs->SetSelection( 0 );
 
   }
 
@@ -273,17 +271,17 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
 wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
 {
   wxImage ret = img.ConvertToImage();
-  wxImage::HSVValue::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
+  wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
 
   double bright = origcolour.value - 0.1*origcolour.value;
   CLAMP(bright,0,1);
-  wxImage::HSVValue::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
+  wxImage::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
   bright = origcolour.value - 0.5*origcolour.value;
   CLAMP(bright,0,1);
-  wxImage::HSVValue::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
+  wxImage::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
 
-  wxImage::RGBValue::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
-  wxImage::RGBValue::RGBValue rgbdarker2 = wxImage::HSVtoRGB( hsvdarker2 );
+  wxImage::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
+  wxImage::RGBValue rgbdarker2 = wxImage::HSVtoRGB( hsvdarker2 );
 
 
   ret.Replace( 164, 147, 0, rgbdarker2.red, rgbdarker2.green, rgbdarker2.blue );

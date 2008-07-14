@@ -47,6 +47,17 @@ struct UiServerData {
   ChatPanel* panel;
 };
 
+enum PortTestCode {
+  porttest_pass_WX26    = 0,
+  porttest_pass         = 1,
+  porttest_timeout      = 2,
+  porttest_socketNotOk  = 3,
+  porttest_socketError  = 4,
+  porttest_unreachable  = 5
+
+};
+
+
 //! @brief Abstract baseclass that is used to implement a server protocol.
 class Server : public iNetClass
 {
@@ -173,7 +184,9 @@ class Server : public iNetClass
     Battle& GetBattle( const int& battleid );
     bool BattleExists( const int& battleid );
 
-    virtual bool TestOpenPort( unsigned int port ) = 0;
+    virtual int TestOpenPort( unsigned int port ) = 0;
+
+    std::map<wxString,wxString> m_channel_pw;  /// channel name -> password, filled on channel join
 
   protected:
     Socket* m_sock;

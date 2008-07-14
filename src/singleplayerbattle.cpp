@@ -37,7 +37,7 @@ unsigned int SinglePlayerBattle::GetNumBots()
 
 BattleBot* SinglePlayerBattle::GetBotByStartPosition( unsigned int startpos )
 {
-  const UnitSyncMap& map = Map();
+  const UnitSyncMap& map = LoadMap();
   ASSERT_LOGIC( ((int)startpos < map.info.posCount) && (startpos >= 0), _T("Invalid startpos") );
   for ( unsigned int bi = 0; bi < GetNumBots(); bi++ ) {
     BattleBot* bot = GetBot( bi );
@@ -96,12 +96,12 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   if ( (update & HI_Restrictions) != 0 ) m_sptab.ReloadRestrictions();
   if ( (update & HI_Map_Changed) != 0 )
   {
-    CustomBattleOptions()->loadOptions( MapOption, m_map.name );
+    CustomBattleOptions()->loadOptions( MapOption, GetHostMapName() );
     m_sptab.ReloadMapOptContrls();
   }
   if ( (update & HI_Mod_Changed) != 0 )
   {
-    CustomBattleOptions()->loadOptions( ModOption, m_mod_name );
+    CustomBattleOptions()->loadOptions( ModOption, GetHostModName() );
     m_sptab.ReloadModOptContrls();
   }
 }
@@ -128,7 +128,7 @@ int SinglePlayerBattle::GetFreeAlly()
 
 void SinglePlayerBattle::GetFreePosition( int& x, int& y )
 {
-  UnitSyncMap map = Map();
+  UnitSyncMap map = LoadMap();
   for ( int i = 0; i < map.info.posCount; i++ ) {
     bool taken = false;
     for ( unsigned int bi = 0; bi < GetNumBots(); bi++ ) {

@@ -16,22 +16,20 @@ class wxListEvent;
 class wxCommandEvent;
 class Ui;
 
-
+/** \brief list all currently active (queued,lecching,seeding) torrents with their infos
+ * the list is newly populated every n-seconds from Ui::OnUpdate()
+ */
 class TorrentListCtrl : public customListCtrl
 {
   public:
     TorrentListCtrl( wxWindow* parent, Ui& ui );
     ~TorrentListCtrl();
 
-
-    int GetSelectedIndex();
     void Sort();
 
-    void OnSelected( wxListEvent& event );
-    void OnDeselected( wxListEvent& event );
     void OnListRightClick( wxListEvent& event );
 
-    void OnMouseMotion(wxMouseEvent& event);
+    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
     void OnColClick( wxListEvent& event );
     void SetInfoMap( map_infos* map);
 
@@ -54,6 +52,8 @@ class TorrentListCtrl : public customListCtrl
     static int wxCALLBACK CompareEtaDOWN(long item1, long item2, long sortData);
     static int wxCALLBACK CompareCopiesUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareCopiesDOWN(long item1, long item2, long sortData);
+    static int wxCALLBACK CompareFileSizeUP(long item1, long item2, long sortData);
+    static int wxCALLBACK CompareFileSizeDOWN(long item1, long item2, long sortData);
     static map_infos* m_info_map;
 
     struct {
@@ -61,7 +61,6 @@ class TorrentListCtrl : public customListCtrl
       bool direction;
     } m_sortorder[4];
 
-    int m_selected;
     //wxMenu* m_popup;
 
     DECLARE_EVENT_TABLE()
@@ -69,9 +68,8 @@ class TorrentListCtrl : public customListCtrl
 
 enum
 {
-    BLIST_LIST = wxID_HIGHEST,
-    BLIST_DLMOD,
-    BLIST_DLMAP
+    TLIST_CLICK
+
 };
 
 #endif

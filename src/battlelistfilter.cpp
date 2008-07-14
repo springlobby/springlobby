@@ -53,8 +53,13 @@ BEGIN_EVENT_TABLE(BattleListFilter, wxPanel)
 END_EVENT_TABLE()
 
 
-BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListTab* parentBattleListTab, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style ),
-m_parent_battlelisttab( parentBattleListTab )
+BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListTab* parentBattleListTab,
+                                    const wxPoint& pos, const wxSize& size, long style )
+    : wxPanel( parent, id, pos, size, style ),
+    m_parent_battlelisttab( parentBattleListTab ),m_filter_host_edit(0), m_filter_host_expression(0),
+    m_filter_description_edit(0), m_filter_description_expression(0),m_filter_map_edit(0),
+    m_filter_map_expression(0), m_filter_mod_edit(0),m_filter_mod_expression(0)
+
 {
     BattleListFilterValues f_values = sett().GetBattleFilterValues( sett().GetLastFilterProfileName() );
 
@@ -274,7 +279,7 @@ m_parent_battlelisttab( parentBattleListTab )
 
 	m_filter_mod_edit = new wxTextCtrl( this, BATTLE_FILTER_MOD_EDIT, f_values.mod, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_mod_edit->SetMinSize( wxSize( 140,-1 ) );
-    m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(),4);
+    m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(), wxRE_ICASE);
 
 	m_filter_mod_sizer->Add( m_filter_mod_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -459,16 +464,16 @@ bool BattleListFilter::FilterBattle(Battle& battle)
   //Strings Plain Text & RegEx Check (Case insensitiv)
 
   //Description:
-  if ( !battle.GetDescription().Upper().Contains( m_filter_description_edit->GetValue().Upper() ) && !m_filter_description_expression->Matches(battle.GetDescription(),wxRE_ICASE) ) return false;
+  if ( !battle.GetDescription().Upper().Contains( m_filter_description_edit->GetValue().Upper() ) && !m_filter_description_expression->Matches(battle.GetDescription()) ) return false;
 
   //Host:
-  if ( !battle.GetFounder().GetNick().Upper().Contains( m_filter_host_edit->GetValue().Upper() ) && !m_filter_host_expression->Matches(battle.GetFounder().GetNick(),wxRE_ICASE) ) return false;
+  if ( !battle.GetFounder().GetNick().Upper().Contains( m_filter_host_edit->GetValue().Upper() ) && !m_filter_host_expression->Matches(battle.GetFounder().GetNick()) ) return false;
 
   //Map:
-  if ( !RefineMapname(battle.GetMapName() ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) && !m_filter_map_expression->Matches(RefineMapname(battle.GetMapName() ),wxRE_ICASE) ) return false;
+  if ( !RefineMapname(battle.GetHostMapName() ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) && !m_filter_map_expression->Matches(RefineMapname(battle.GetHostMapName() )) ) return false;
 
   //Mod:
-  if ( !battle.GetModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !RefineModname( battle.GetModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) && !m_filter_mod_expression->Matches(RefineModname(battle.GetModName()),wxRE_ICASE) ) return false;
+  if ( !battle.GetHostModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !RefineModname( battle.GetHostModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) && !m_filter_mod_expression->Matches(RefineModname(battle.GetHostModName())) ) return false;
 
   return true;
 }
@@ -481,6 +486,7 @@ void BattleListFilter::OnChange   ( wxCommandEvent& event )
 
 void BattleListFilter::OnChangeMap ( wxCommandEvent& event )
 {
+  if ( m_filter_map_edit == NULL ) return;
   if (m_filter_map_expression != NULL) { delete m_filter_map_expression; }
   m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(),wxRE_ICASE);
   OnChange(event);
@@ -488,6 +494,7 @@ void BattleListFilter::OnChangeMap ( wxCommandEvent& event )
 
 void BattleListFilter::OnChangeMod ( wxCommandEvent& event )
 {
+  if ( m_filter_mod_edit == NULL ) return;
   if (m_filter_mod_expression != NULL) { delete m_filter_mod_expression; }
   m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(),wxRE_ICASE);
   OnChange(event);
@@ -495,6 +502,7 @@ void BattleListFilter::OnChangeMod ( wxCommandEvent& event )
 
 void BattleListFilter::OnChangeDescription ( wxCommandEvent& event )
 {
+  if ( m_filter_description_edit == NULL ) return;
   if (m_filter_description_expression != NULL) { delete m_filter_description_expression; }
   m_filter_description_expression = new wxRegEx(m_filter_description_edit->GetValue(),wxRE_ICASE);
   OnChange(event);
@@ -502,6 +510,7 @@ void BattleListFilter::OnChangeDescription ( wxCommandEvent& event )
 
 void BattleListFilter::OnChangeHost ( wxCommandEvent& event )
 {
+  if ( m_filter_host_edit == NULL ) return;
   if (m_filter_host_expression != NULL) { delete m_filter_host_expression; }
   m_filter_host_expression = new wxRegEx(m_filter_host_edit->GetValue(),wxRE_ICASE);
   OnChange(event);

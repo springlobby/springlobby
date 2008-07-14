@@ -5,7 +5,6 @@
 
 #include "iunitsync.h"
 #include "nonportable.h"
-#include "bimap.h"
 
 class wxImage;
 class wxDynamicLibrary;
@@ -13,19 +12,19 @@ struct SpringMapInfo;
 struct CachedMapInfo;
 class wxCriticalSection;
 
-
-typedef std::map<wxString,CachedMapInfo> MapCacheType;
-typedef codeproject::bimap<wxString,wxString> LocalArchivesVector;
+typedef std::map<wxString,wxString> LocalArchivesVector;
 
 
 class SpringUnitSync : public IUnitSync
 {
   public:
-    SpringUnitSync(): m_map_count(0),m_mod_count(0),m_side_count(0) { _LoadMapInfoExCache(); }
-    ~SpringUnitSync() { FreeUnitSyncLib(); _SaveMapInfoExCache(); }
+    SpringUnitSync(): m_map_count(0),m_mod_count(0),m_side_count(0) { }
+    ~SpringUnitSync() { FreeUnitSyncLib(); }
 
     int GetNumMods();
+    wxArrayString GetModList();
     bool ModExists( const wxString& modname );
+    bool ModExists( const wxString& modname, const wxString& hash );
     UnitSyncMod GetMod( const wxString& modname );
     UnitSyncMod GetMod( int index );
     int GetModIndex( const wxString& name );
@@ -33,13 +32,15 @@ class SpringUnitSync : public IUnitSync
     GameOptions GetModOptions( const wxString& name );
 
     int GetNumMaps();
+    wxArrayString GetMapList();
     bool MapExists( const wxString& mapname );
-    bool MapExists( const wxString& mapname, const wxString hash );
+    bool MapExists( const wxString& mapname, const wxString& hash );
 
     UnitSyncMap GetMap( const wxString& mapname );
     UnitSyncMap GetMap( int index );
     UnitSyncMap GetMapEx( const wxString& mapname );
     UnitSyncMap GetMapEx( int index );
+    wxString GetMapArchive( int index );
     GameOptions GetMapOptions( const wxString& name );
 
     int GetMapIndex( const wxString& name );
@@ -64,7 +65,7 @@ class SpringUnitSync : public IUnitSync
 
     wxImage GetMinimap( const wxString& mapname, int max_w, int max_h, bool store_size = false );
 
-    bool CacheMapInfo( const wxString& map );
+    bool CacheMapInfo( const wxString& mapname );
     bool CacheMinimap( const wxString& map );
     bool CacheModUnits( const wxString& mod );
     bool ReloadUnitSyncLib();
@@ -73,6 +74,9 @@ class SpringUnitSync : public IUnitSync
     wxString GetSpringDataPath();
 
     bool FileExists( const wxString& name );
+
+    wxString GetArchivePath( const wxString& name );
+
   private:
 
     static wxString _GetCachedMinimapFileName( const wxString& mapname, int width = -1, int height = -1 );
@@ -81,24 +85,20 @@ class SpringUnitSync : public IUnitSync
 
     LocalArchivesVector m_maps_list; /// maphash -> mapname
     LocalArchivesVector m_mods_list; /// modhash -> modname
-
-
-    wxArrayString m_mod_units;
+    wxArrayString m_map_array;
+    wxArrayString m_mod_array;
 
     int m_map_count;
     int m_mod_count;
     int m_side_count;
 
-    MapCacheType m_mapinfo;
-
     wxCriticalSection m_lock;
 
 
 //    void* _GetLibFuncPtr( const wxString& name );
-    MapInfo _GetMapInfoEx( const wxString& mapname );
 
-    void _LoadMapInfoExCache();
-    void _SaveMapInfoExCache();
+    MapInfo _LoadMapInfoExCache( const wxString& mapname );
+    void _SaveMapInfoExCache( const wxString& mapname, const MapInfo& info );
 
     bool _LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc );
     void _FreeUnitSyncLib();
@@ -111,11 +111,8 @@ class SpringUnitSync : public IUnitSync
     UnitSyncMap _GetMap( int index, bool getmapinfo = false );
     UnitSyncMap _GetMap( const wxString& mapname, bool getmapinfo = false );
     UnitSyncMap _GetMapEx( const wxString& mapname, bool force = false );
-    MapInfo _GetMapInfoEx( const wxString& mapname, bool force );
+    MapInfo _GetMapInfoEx( const wxString& mapname );
     wxImage _GetCachedMinimap( const wxString& mapname, int max_w, int max_h, bool store_size = false );
-
-    void _ConvertSpringMapInfo( const CachedMapInfo& in, MapInfo& out );
-    void _ConvertSpringMapInfo( const SpringMapInfo& in, CachedMapInfo& out, const wxString& mapname );
 
     void PopulateArchiveList();
 

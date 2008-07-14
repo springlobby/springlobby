@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // File: utils.h
 //
@@ -7,7 +7,6 @@
 #include <iostream>
 
 #include "utils.h"
-#include "revision.h"
 #include "crashreport.h"
 
 #include "settings++/custom_dialogs.h"
@@ -55,6 +54,7 @@ void InitializeLoggingTargets( bool console, bool showgui, bool logcrash, int ve
     lastlog = logGuiChain;
   }
 	#if wxUSE_STD_IOSTREAM
+
     if (  console && verbosity != 0 )
     {
       ///std::cout logging
@@ -62,16 +62,27 @@ void InitializeLoggingTargets( bool console, bool showgui, bool logcrash, int ve
       wxLogChain *logConsoleChain = new wxLogChain( loggerconsole );
       lastlog = logConsoleChain;
     }
-    #if wxUSE_DEBUGREPORT
-      if ( logcrash )
-      {
-        ///hidden stream logging for crash reports, verbosity ignores command line params
-        wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
-        wxLogChain *logCrashChain = new wxLogChain( loggercrash );
-        lastlog = logCrashChain;
-      }
+        #if 0 //TODO reenable wxUSE_DEBUGREPORT
+          if ( logcrash )
+          {
+            ///hidden stream logging for crash reports, verbosity ignores command line params
+            wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
+            wxLogChain *logCrashChain = new wxLogChain( loggercrash );
+            lastlog = logCrashChain;
+          }
+
+            #if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
+              ///hidden stream logging for crash reports
+              wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
+              wxLogChain *logCrashChain = new wxLogChain( loggercrash );
+              logCrashChain->SetLogLevel( wxLOG_Trace );
+              logCrashChain->SetVerbose( true );
+
+            #endif
+
+        #endif
     #endif
-  #endif
+
   if ( lastlog != 0 )
   {
     switch (verbosity)
@@ -97,25 +108,19 @@ void InitializeLoggingTargets( bool console, bool showgui, bool logcrash, int ve
 
 wxString i2s( int arg )
 {
-  std::stringstream s;
-  s << arg;
-  return WX_STRING( s.str() );
+    return TowxString(arg);
 }
 
 
 wxString u2s( unsigned int arg )
 {
-  std::stringstream s;
-  s << arg;
-  return WX_STRING( s.str() );
+  return TowxString(arg);
 }
 
 
 wxString f2s( float arg )
 {
-  std::stringstream s;
-  s << arg;
-  return WX_STRING( s.str() );
+  return TowxString(arg);
 }
 
 
@@ -209,7 +214,6 @@ wxString GetSpringLobbyVersion()
 ///
 /// \return Sum of each CPU's Speed of this Computer
 ///
-/// \TODO Porting to Windows
 ///
 // ------------------------------------------------------------------------------------------------------------------------
 wxString GetHostCPUSpeed()
@@ -283,3 +287,8 @@ wxString GetHostCPUSpeed()
     return i2s(totalcpuspeed);
 }
 
+
+//int CompareStringIgnoreCase(const wxString& first, const wxString& second)
+//{
+//    return (first.Upper() > second.Upper() );
+//}

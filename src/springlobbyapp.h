@@ -3,7 +3,6 @@
 
 #include <wx/app.h>
 
-class Ui;
 class wxTimer;
 class wxIcon;
 class wxLocale;
@@ -29,11 +28,9 @@ class SpringLobbyApp : public wxApp
   protected:
 
     void SetupUserFolders();
-    void InitDirs();
+    void InitCacheDir();
 
     wxTimer* m_timer;
-
-    Ui* m_ui;
 
     wxLocale* m_locale;
     HttpDownloader* m_otadownloader ;
