@@ -229,10 +229,6 @@ void BattleListTab::AddBattle( Battle& battle ) {
 
 
 void BattleListTab::RemoveBattle( Battle& battle ) {
-<<<<<<< HEAD:src/battlelisttab.cpp
-=======
-
->>>>>>> master:src/battlelisttab.cpp
   m_battle_list->SetSelectionRestorePoint();
 
   if ( &battle == m_sel_battle )
