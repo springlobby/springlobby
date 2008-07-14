@@ -2,10 +2,10 @@
 #define SPRINGLOBBY_REPLAYFILTER_H_INCLUDED
 
 #include "battlelistfilter.h"
-
-class ReplayListFilter : public BattleListFilter
-{
-    //ReplayListFilter() :
-};
-
+//
+//class ReplayListFilter : public BattleListFilter
+//{
+//    //ReplayListFilter() :
+//};
+typedef BattleListFilter ReplayListFilter ;
 #endif // SPRINGLOBBY_REPLAYFILTER_H_INCLUDED

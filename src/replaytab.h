@@ -19,7 +19,8 @@ class wxToggleButton;
 class ReplayList_Iter;
 class Replay;
 class ReplayList;
-class ReplayListFilter;
+//class ReplayListFilter;
+#include "replayfilter.h"
 
 class ReplayListCtrl;
 
