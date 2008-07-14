@@ -35,7 +35,8 @@ IMPLEMENT_APP(Springsettings)
 bool Springsettings::OnInit()
 {
 	//initialize all loggers
-    InitializeLoggingTargets();
+	//TODO non-constant parameters
+    InitializeLoggingTargets(0,0,1,1);
 
     settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
     		wxDefaultSize);
