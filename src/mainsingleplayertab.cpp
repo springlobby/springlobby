@@ -103,13 +103,13 @@ void MainSinglePlayerTab::ReloadRestrictions()
 void MainSinglePlayerTab::ReloadMapOptContrls()
 {
   if (m_mm_opts_tab != 0)
-		m_mm_opts_tab->OnRefreshControls( MapOption );
+		m_mm_opts_tab->OnReloadControls( MapOption );
 }
 
 
 void MainSinglePlayerTab::ReloadModOptContrls()
 {
 	if (m_mm_opts_tab != 0)
-		m_mm_opts_tab->OnRefreshControls( ModOption );
+		m_mm_opts_tab->OnReloadControls( ModOption );
 
 }

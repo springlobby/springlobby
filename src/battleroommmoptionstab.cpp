@@ -58,7 +58,6 @@ BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
 
 }
 
-// always set the controls name to the option key
 void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag)
 {
 	wxString pref = wxString::Format( _T("%d"),optFlag) + wxsep;
@@ -279,7 +278,7 @@ void RemovePrefixed(T &v, wxString pref){
   }
 }
 
-void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
+void BattleroomMMOptionsTab::OnReloadControls(GameOption flag)
 {
 	wxString pref = wxString::Format( _T("%d"),flag) + wxsep;
 

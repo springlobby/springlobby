@@ -130,7 +130,12 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imag
 	CreateControls( );
 	_SetChannel( &chan );
 	m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, this );
-	m_chat_log = new ChatLog( sett().GetDefaultServer(), chan.GetName() );
+	#ifdef __WXMSW__
+        wxString chan_prefix = _("channel_");
+    #else
+        wxString chan_prefix = _("#");
+    #endif
+	m_chat_log = new ChatLog( sett().GetDefaultServer(), chan_prefix + chan.GetName() );
 }
 
 
@@ -682,9 +687,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
           }
         }
     }
-	} else if ( message.Upper().Contains( me.Upper() ) ) {
-    // change the image of the tab to show new events
-    if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
+	} else if ( message.Upper().Contains( me.Upper() ) )
     {
       for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
         if ( m_chat_tabs->GetPage( i ) == this ) {
@@ -707,9 +710,8 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
              #endif
           }
         }
-    }
-		col = sett().GetChatColorNotification();
-		req_user = true;
+            col = sett().GetChatColorNotification();
+            req_user = true;
 	} else {
     // change the image of the tab to show new events
     if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
@@ -736,13 +738,26 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
           }
         }
     }
-		col = sett().GetChatColorNormal();
+        //process logic for custom word highlights
+        if ( ContainsWordToHighlight( message ) )
+        {
+            req_user = sett().GetRequestAttOnHighlight();
+            col = sett().GetChatColorHighlight();
+        }
+        else
+            col = sett().GetChatColorNormal();
 	}
 
 	if ( who == _T( "MelBot" ) && message.StartsWith( _T( "<" ) ) && message.Contains( _T( ">" ) ) ) {
 		wxString who2;
 		wxString message2;
 		who2 = message.BeforeFirst( '>' ).AfterFirst( '<' ) + _T( "@IRC" );
+		//don't highlight if i'm talking from irc to channel
+		if ( who2.Upper() == ( me.Upper() + _T("@IRC") ) )
+		{
+		    req_user = false;
+		    col = sett().GetChatColorNormal();
+		}
 		message2 = message.AfterFirst( '>' );
 		OutputLine( _T( " <" ) + who2 + _T( "> " ) + message2, col, sett().GetChatFont() );
 	} else {
@@ -759,6 +774,18 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 	}
 }
 
+bool ChatPanel::ContainsWordToHighlight( const wxString& message )
+{
+    //get list of words to highlight
+    wxStringTokenizer words ( sett().GetHighlightedWords(), _T(";") );
+    while ( words.HasMoreTokens() )
+    {
+        if (message.Contains( words.GetNextToken() ) )
+            return true;
+    }
+    return false;
+
+}
 
 void ChatPanel::DidAction( const wxString& who, const wxString& action ) {
   // change the image of the tab to show new events

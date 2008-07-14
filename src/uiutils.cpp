@@ -208,7 +208,7 @@ wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size)
 //    return wxBitmap(temp );
 //}
 
-wxBitmap* charArr2wxBitmapAddText(const unsigned char * dest, int dest_size, const unsigned char * text, int text_size, unsigned int img_dim)
+wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size, const unsigned char * text, int text_size, unsigned int img_dim)
 {
     wxMemoryInputStream istream1( dest, dest_size );
     wxImage dest_img( istream1, wxBITMAP_TYPE_PNG );

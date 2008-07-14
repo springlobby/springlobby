@@ -6,6 +6,8 @@ class wxStaticText;
 class wxStaticLine;
 class wxButton;
 
+/** \brief dialog showing agreement on first start/ register that user needs to accept
+ * \todo DOCMEMORE */
 class AgreementDialog : public wxDialog
 {
   public:

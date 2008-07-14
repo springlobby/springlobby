@@ -40,6 +40,7 @@ BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 END_EVENT_TABLE()
 
 
+
 MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),m_ui(ui)
 {
     #ifdef HAVE_WX26

@@ -977,6 +977,26 @@ void Settings::SetAlwaysAutoScrollOnFocusLost(bool value)
   m_config->Write( _T("/Chat/AlwaysAutoScrollOnFocusLost"), value);
 }
 
+void Settings::SetHighlightedWords( const wxString& words )
+{
+  m_config->Write( _T("/Chat/HighlightedWords"), words );
+}
+
+wxString Settings::GetHighlightedWords( )
+{
+  return m_config->Read( _T("/Chat/HighlightedWords"), wxEmptyString );
+}
+
+void Settings::SetRequestAttOnHighlight( const bool req )
+{
+  m_config->Write( _T("/Chat/ReqAttOnHighlight"), req);
+}
+
+bool Settings::GetRequestAttOnHighlight( )
+{
+  return m_config->Read( _T("/Chat/ReqAttOnHighlight"), 0l);
+}
+
 BattleListFilterValues Settings::GetBattleFilterValues(const wxString& profile_name)
 {
     BattleListFilterValues filtervalues;

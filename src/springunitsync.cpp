@@ -688,6 +688,7 @@ bool SpringUnitSync::CacheMinimap( const wxString& mapname )
   if ( !wxFileExists( fname ) ) ret.SaveFile( fname, wxBITMAP_TYPE_PNG );
 
   int max_w, max_h;
+  max_w = max_h = 160;
   for ( int i = 0; i <= 1; i++ ) {
 
     switch ( i ) {

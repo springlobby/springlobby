@@ -6,6 +6,7 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
+#include <wx/msgdlg.h>
 
 #include "torrentlistctrl.h"
 #include "torrentwrapper.h"
@@ -37,7 +38,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	wxBoxSizer* m_status_box = new wxBoxSizer( wxHORIZONTAL );
 	wxBoxSizer* m_firstrow_box = new wxBoxSizer( wxHORIZONTAL );
 
-    wxStaticText* m_list_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Tranfers in progress: ") );
+    wxStaticText* m_list_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Transfers in progress: ") );
     m_listbox->Add(m_list_lbl, 0, wxBOTTOM, 5);
 	m_torrent_list = new TorrentListCtrl(this, m_ui);
 	m_listbox->Add( m_torrent_list, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
@@ -210,7 +211,7 @@ void MainTorrentTab::OnUpdate()
 
 void MainTorrentTab::OnCancelButton( wxCommandEvent& event )
 {
-  torrent()->RemoveFile( info_map[m_torrent_list->GetSelectedIndex()].hash );
+  torrent()->RemoveFile( TowxString(m_torrent_list->GetSelectedData()) );
 }
 
 void MainTorrentTab::OnDownloadDialog( wxCommandEvent& event )

@@ -29,8 +29,8 @@ END_EVENT_TABLE()
 FileListDialog* FileListCtrl::s_parent_dialog = 0;
 
 FileListCtrl::FileListCtrl( wxWindow* parent, FileListDialog* fld  ):
-        m_parent_dialog( fld ),
-		customListCtrl( parent, FILELIST_COL_CLICK, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_ALIGN_LEFT )
+		customListCtrl( parent, FILELIST_COL_CLICK, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_ALIGN_LEFT ),
+        m_parent_dialog( fld )
 {
 
 	SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
@@ -209,30 +209,14 @@ int wxCALLBACK FileListCtrl::CompareHashDOWN( long item1, long item2, long sortD
 	return 0;
 }
 
-void FileListCtrl::OnMouseMotion( wxMouseEvent& event )
+void FileListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-#if wxUSE_TIPWINDOW
-	wxPoint position = event.GetPosition();
-
-	try
-	{
-		tipTimer.Start( TOOLTIP_DELAY, wxTIMER_ONE_SHOT );
-		int flag = wxLIST_HITTEST_ONITEM;
-		long subItem;
-#ifdef HAVE_WX28
-		long item_hit = HitTest( position, flag, &subItem );
-#else
-		long item_hit = HitTest( position, flag );
-#endif
-
-		if ( item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount() )
-		{
-			long item = GetItemData( item_hit );
+//    long item = GetItemData( item_hit );
 //			Ui* ui = m_ui_for_sort;
 //			Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
-			int coloumn = getColoumnFromPosition( position );
-			switch ( coloumn )
-			{
+    int coloumn = getColoumnFromPosition( position );
+    switch ( coloumn )
+    {
 //			case 0: // status
 //			m_tiptext = icons().GetBattleStatus(battle);
 //				break;
@@ -244,14 +228,10 @@ void FileListCtrl::OnMouseMotion( wxMouseEvent& event )
 //				break;
 
 
-				default:
-					m_tiptext = _T( "" );
-					break;
-			}
-		}
-	}
-	catch ( ... ) {}
-#endif
+        default:
+            m_tiptext = _T( "" );
+            break;
+    }
 }
 
 #endif
