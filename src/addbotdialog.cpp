@@ -106,7 +106,11 @@ wxString AddBotDialog::GetAI()
 
 wxString AddBotDialog::RefineAIName( const wxString& name )
 {
-  wxString ret = name.BeforeLast('.').AfterLast('/');
+  wxString ret = name;
+  if (ret.Contains(_T('.')) ) ret = ret.BeforeLast(_T('.'));
+  if ( ret.Contains(_T('/')) ) ret = ret.AfterLast(_T('/'));
+  if ( ret.Contains(_T('\\')) ) ret = ret.AfterLast(_T('\\'));
+  if ( ret.Contains(_T("LuaAI:")) ) ret = ret.AfterFirst(_T(':'));
   if ( m_ai->FindString( ret ) == wxNOT_FOUND ) return ret;
   wxString ret2;
   int i = 2;
@@ -121,7 +125,7 @@ wxString AddBotDialog::RefineAIName( const wxString& name )
 void AddBotDialog::ReloadAIList()
 {
   try {
-    m_ais = usync()->GetAIList( m_battle.GetModName() );
+    m_ais = usync()->GetAIList( m_battle.GetHostModName() );
   } catch (...) {}
 
   m_ai->Clear();

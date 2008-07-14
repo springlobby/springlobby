@@ -10,6 +10,9 @@
 #include <wx/dialog.h>
 //*)
 
+/** \brief lets host automatically assign players to teams, optionally taking clan/rank into account
+ * dialog sets balancing options in Settings handler for the calling class to use after modal display ends
+ * \todo use this in a non-modal way? */
 class AutoBalanceDialog: public wxDialog
 {
 	public:

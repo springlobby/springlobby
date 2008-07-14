@@ -3,16 +3,29 @@
 ## the --install can be edited out to use older automake
 ACLOCAL_AMFLAGS = -I m4 --install
 
+libt_dir = $(srcdir)/src/libtorrent
+libt_src_dir = $(libt_dir)/src
+
+SEARCHDIRS = \
+	-I$(srcdir)/src
+
+if USE_WINDRES
+SEARCHDIRS += \
+	-I$(libt_dir)/include -I$(libt_dir)/include/libtorrent  \
+	-I$(libt_dir)/zlib -I$(libt_dir) -I $(libt_dir)/asio
+endif
+
 AM_CPPFLAGS = \
 	$(WX_CPPFLAGS) \
 	$(LIBTORRENT_CFLAGS) \
-	-DLOCALEDIR=\"$(localedir)\"
+	$(SDL_CFLAGS) \
+	-DLOCALEDIR=\"$(localedir)\" \
+	$(SEARCHDIRS)
 
 # strict aliasing check is disabled, because wxWidgets headers have problems
-TORRFLAGS = `pkg-config  libtorrent --libs`
 AM_CXXFLAGS = \
 	-Wall \
-	-Wno-strict-aliasing
+	-Wno-strict-aliasing -DNDEBUG
 
 desktopdir = $(datadir)/applications
 dist_desktop_DATA = \
@@ -21,7 +34,6 @@ dist_desktop_DATA = \
 pixmapdir = $(datadir)/pixmaps
 dist_pixmap_DATA = \
 	src/images/springlobby.svg
-
 SUBDIRS = po
 
 ## if you don't have the required version of autoconf, comment out the
@@ -41,7 +53,8 @@ bin_PROGRAMS = \
 
 springlobby_LDADD = \
 	$(WX_LIBS)\
-	$(LIBTORRENT_LIBS)
+	$(LIBTORRENT_LIBS) \
+	$(SDL_LIBS)
 
 
 springsettings_LDADD = \
@@ -54,28 +67,327 @@ RESOURCECOMPILE = $(WINDRES) -I $(srcdir)/src $(DEFS) $(DEFAULT_INCLUDES) $(INCL
 	$(RESOURCECOMPILE) -o $@ -i $<
 endif
 
-# filter-out is a GNU make extension, so we get a warning from automake
-# and we can not use -Werror in AM_INIT_AUTOMAKE because of this either
-# but without this construct we would have a circular dependency and make
-# would whine about it on every invocation
 
-revision.cpp: src/revision.cpp.in $(filter-out revision.%, $(springlobby_SOURCES)) $(springlobby_DEPENDENCIES)
-	rm -f $@
-	sed "s/REV[^\"]*/REV SVN `LC_ALL=C $(SVNVERSION) $(top_srcdir) /trunk || echo svnversion failed or not found`/" < $< > $@
+libtorrent_sources = \
+	$(libt_src_dir)/entry.cpp \
+	$(libt_src_dir)/escape_string.cpp \
+	$(libt_src_dir)/assert.cpp \
+	$(libt_src_dir)/enum_net.cpp \
+	$(libt_src_dir)/broadcast_socket.cpp \
+	$(libt_src_dir)/peer_connection.cpp \
+	$(libt_src_dir)/bt_peer_connection.cpp \
+	$(libt_src_dir)/web_peer_connection.cpp \
+	$(libt_src_dir)/natpmp.cpp \
+	$(libt_src_dir)/piece_picker.cpp \
+	$(libt_src_dir)/policy.cpp \
+	$(libt_src_dir)/session.cpp \
+	$(libt_src_dir)/session_impl.cpp \
+	$(libt_src_dir)/sha1.cpp \
+	$(libt_src_dir)/stat.cpp \
+	$(libt_src_dir)/storage.cpp \
+	$(libt_src_dir)/torrent.cpp \
+	$(libt_src_dir)/torrent_handle.cpp \
+	$(libt_src_dir)/pe_crypto.cpp \
+	$(libt_src_dir)/torrent_info.cpp \
+	$(libt_src_dir)/tracker_manager.cpp \
+	$(libt_src_dir)/http_connection.cpp \
+	$(libt_src_dir)/http_tracker_connection.cpp \
+	$(libt_src_dir)/udp_tracker_connection.cpp \
+	$(libt_src_dir)/alert.cpp \
+	$(libt_src_dir)/identify_client.cpp \
+	$(libt_src_dir)/ip_filter.cpp \
+	$(libt_src_dir)/file.cpp \
+	$(libt_src_dir)/metadata_transfer.cpp \
+	$(libt_src_dir)/logger.cpp \
+	$(libt_src_dir)/file_pool.cpp \
+	$(libt_src_dir)/ut_pex.cpp \
+	$(libt_src_dir)/lsd.cpp \
+	$(libt_src_dir)/upnp.cpp \
+	$(libt_src_dir)/instantiate_connection.cpp \
+	$(libt_src_dir)/socks5_stream.cpp \
+	$(libt_src_dir)/socks4_stream.cpp \
+	$(libt_src_dir)/http_stream.cpp \
+	$(libt_src_dir)/connection_queue.cpp \
+	$(libt_src_dir)/disk_io_thread.cpp \
+	\
+	$(libt_src_dir)/kademlia/closest_nodes.cpp \
+	$(libt_src_dir)/kademlia/dht_tracker.cpp \
+	$(libt_src_dir)/kademlia/find_data.cpp \
+	$(libt_src_dir)/kademlia/node.cpp \
+	$(libt_src_dir)/kademlia/node_id.cpp \
+	$(libt_src_dir)/kademlia/refresh.cpp \
+	$(libt_src_dir)/kademlia/routing_table.cpp \
+	$(libt_src_dir)/kademlia/rpc_manager.cpp \
+	$(libt_src_dir)/kademlia/traversal_algorithm.cpp \
+	\
+	$(libt_dir)/zlib/adler32.c \
+	$(libt_dir)/zlib/compress.c \
+	$(libt_dir)/zlib/crc32.c \
+	$(libt_dir)/zlib/deflate.c \
+	$(libt_dir)/zlib/gzio.c \
+	$(libt_dir)/zlib/infback.c \
+	$(libt_dir)/zlib/inffast.c \
+	$(libt_dir)/zlib/inflate.c \
+	$(libt_dir)/zlib/inftrees.c \
+	$(libt_dir)/zlib/trees.c \
+	$(libt_dir)/zlib/uncompr.c \
+	$(libt_dir)/zlib/zutil.c 
 
-clean-local:
-	rm -f revision.cpp
+libtorrent_headers = \
+	$(libt_dir)/include/libtorrent/alert.hpp \
+	$(libt_dir)/include/libtorrent/alert_types.hpp \
+	$(libt_dir)/include/libtorrent/assert.hpp \
+	$(libt_dir)/include/libtorrent/aux_/session_impl.hpp \
+	$(libt_dir)/include/libtorrent/bandwidth_manager.hpp \
+	$(libt_dir)/include/libtorrent/bandwidth_limit.hpp \
+	$(libt_dir)/include/libtorrent/bandwidth_queue_entry.hpp \
+	$(libt_dir)/include/libtorrent/bencode.hpp \
+	$(libt_dir)/include/libtorrent/broadcast_socket.hpp \
+	$(libt_dir)/include/libtorrent/buffer.hpp \
+	$(libt_dir)/include/libtorrent/connection_queue.hpp \
+	$(libt_dir)/include/libtorrent/debug.hpp \
+	$(libt_dir)/include/libtorrent/disk_io_thread.hpp \
+	$(libt_dir)/include/libtorrent/entry.hpp \
+	$(libt_dir)/include/libtorrent/enum_net.hpp \
+	$(libt_dir)/include/libtorrent/escape_string.hpp \
+	$(libt_dir)/include/libtorrent/extensions.hpp \
+	$(libt_dir)/include/libtorrent/extensions/metadata_transfer.hpp \
+	$(libt_dir)/include/libtorrent/extensions/logger.hpp \
+	$(libt_dir)/include/libtorrent/extensions/ut_pex.hpp \
+	$(libt_dir)/include/libtorrent/file.hpp \
+	$(libt_dir)/include/libtorrent/file_pool.hpp \
+	$(libt_dir)/include/libtorrent/fingerprint.hpp \
+	$(libt_dir)/include/libtorrent/hasher.hpp \
+	$(libt_dir)/include/libtorrent/http_connection.hpp \
+	$(libt_dir)/include/libtorrent/http_stream.hpp \
+	$(libt_dir)/include/libtorrent/session_settings.hpp \
+	$(libt_dir)/include/libtorrent/http_tracker_connection.hpp \
+	$(libt_dir)/include/libtorrent/identify_client.hpp \
+	$(libt_dir)/include/libtorrent/instantiate_connection.hpp \
+	$(libt_dir)/include/libtorrent/intrusive_ptr_base.hpp \
+	$(libt_dir)/include/libtorrent/invariant_check.hpp \
+	$(libt_dir)/include/libtorrent/io.hpp \
+	$(libt_dir)/include/libtorrent/ip_filter.hpp \
+	$(libt_dir)/include/libtorrent/chained_buffer.hpp \
+	$(libt_dir)/include/libtorrent/lsd.hpp \
+	$(libt_dir)/include/libtorrent/peer.hpp \
+	$(libt_dir)/include/libtorrent/peer_connection.hpp \
+	$(libt_dir)/include/libtorrent/bt_peer_connection.hpp \
+	$(libt_dir)/include/libtorrent/web_peer_connection.hpp \
+	$(libt_dir)/include/libtorrent/pe_crypto.hpp \
+	$(libt_dir)/include/libtorrent/natpmp.hpp \
+	$(libt_dir)/include/libtorrent/pch.hpp \
+	$(libt_dir)/include/libtorrent/peer_id.hpp \
+	$(libt_dir)/include/libtorrent/peer_info.hpp \
+	$(libt_dir)/include/libtorrent/peer_request.hpp \
+	$(libt_dir)/include/libtorrent/piece_block_progress.hpp \
+	$(libt_dir)/include/libtorrent/piece_picker.hpp \
+	$(libt_dir)/include/libtorrent/policy.hpp \
+	$(libt_dir)/include/libtorrent/session.hpp \
+	$(libt_dir)/include/libtorrent/size_type.hpp \
+	$(libt_dir)/include/libtorrent/socket.hpp \
+	$(libt_dir)/include/libtorrent/socket_type.hpp \
+	$(libt_dir)/include/libtorrent/socks4_stream.hpp \
+	$(libt_dir)/include/libtorrent/socks5_stream.hpp \
+	$(libt_dir)/include/libtorrent/stat.hpp \
+	$(libt_dir)/include/libtorrent/storage.hpp \
+	$(libt_dir)/include/libtorrent/time.hpp \
+	$(libt_dir)/include/libtorrent/torrent.hpp \
+	$(libt_dir)/include/libtorrent/torrent_handle.hpp \
+	$(libt_dir)/include/libtorrent/torrent_info.hpp \
+	$(libt_dir)/include/libtorrent/tracker_manager.hpp \
+	$(libt_dir)/include/libtorrent/udp_tracker_connection.hpp \
+	$(libt_dir)/include/libtorrent/utf8.hpp \
+	$(libt_dir)/include/libtorrent/xml_parse.hpp \
+	$(libt_dir)/include/libtorrent/variant_stream.hpp \
+	$(libt_dir)/include/libtorrent/version.hpp \
+	\
+	$(libt_dir)/include/libtorrent/kademlia/closest_nodes.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/dht_tracker.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/find_data.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/logging.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/msg.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/node.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/node_entry.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/node_id.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/observer.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/packet_iterator.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/refresh.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/routing_table.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/rpc_manager.hpp \
+	$(libt_dir)/include/libtorrent/kademlia/traversal_algorithm.hpp  \
+	\
+	$(libt_dir)/asio.hpp \
+	$(libt_dir)/asio/basic_datagram_socket.hpp \
+	$(libt_dir)/asio/basic_deadline_timer.hpp \
+	$(libt_dir)/asio/basic_io_object.hpp \
+	$(libt_dir)/asio/basic_socket.hpp \
+	$(libt_dir)/asio/basic_socket_acceptor.hpp \
+	$(libt_dir)/asio/basic_socket_iostream.hpp \
+	$(libt_dir)/asio/basic_socket_streambuf.hpp \
+	$(libt_dir)/asio/basic_stream_socket.hpp \
+	$(libt_dir)/asio/basic_streambuf.hpp \
+	$(libt_dir)/asio/buffer.hpp \
+	$(libt_dir)/asio/buffered_read_stream.hpp \
+	$(libt_dir)/asio/buffered_read_stream_fwd.hpp \
+	$(libt_dir)/asio/buffered_stream.hpp \
+	$(libt_dir)/asio/buffered_stream_fwd.hpp \
+	$(libt_dir)/asio/buffered_write_stream.hpp \
+	$(libt_dir)/asio/buffered_write_stream_fwd.hpp \
+	$(libt_dir)/asio/completion_condition.hpp \
+	$(libt_dir)/asio/datagram_socket_service.hpp \
+	$(libt_dir)/asio/deadline_timer.hpp \
+	$(libt_dir)/asio/deadline_timer_service.hpp \
+	$(libt_dir)/asio/error.hpp \
+	$(libt_dir)/asio/error_code.hpp \
+	$(libt_dir)/asio/handler_alloc_hook.hpp \
+	$(libt_dir)/asio/handler_invoke_hook.hpp \
+	$(libt_dir)/asio/io_service.hpp \
+	$(libt_dir)/asio/is_read_buffered.hpp \
+	$(libt_dir)/asio/is_write_buffered.hpp \
+	$(libt_dir)/asio/placeholders.hpp \
+	$(libt_dir)/asio/read.hpp \
+	$(libt_dir)/asio/read_until.hpp \
+	$(libt_dir)/asio/socket_acceptor_service.hpp \
+	$(libt_dir)/asio/socket_base.hpp \
+	$(libt_dir)/asio/ssl.hpp \
+	$(libt_dir)/asio/strand.hpp \
+	$(libt_dir)/asio/stream_socket_service.hpp \
+	$(libt_dir)/asio/streambuf.hpp \
+	$(libt_dir)/asio/system_error.hpp \
+	$(libt_dir)/asio/thread.hpp \
+	$(libt_dir)/asio/time_traits.hpp \
+	$(libt_dir)/asio/version.hpp \
+	$(libt_dir)/asio/write.hpp \
+	$(libt_dir)/asio/detail/bind_handler.hpp \
+	$(libt_dir)/asio/detail/buffer_resize_guard.hpp \
+	$(libt_dir)/asio/detail/buffered_stream_storage.hpp \
+	$(libt_dir)/asio/detail/call_stack.hpp \
+	$(libt_dir)/asio/detail/const_buffers_iterator.hpp \
+	$(libt_dir)/asio/detail/consuming_buffers.hpp \
+	$(libt_dir)/asio/detail/deadline_timer_service.hpp \
+	$(libt_dir)/asio/detail/dev_poll_reactor.hpp \
+	$(libt_dir)/asio/detail/dev_poll_reactor_fwd.hpp \
+	$(libt_dir)/asio/detail/epoll_reactor.hpp \
+	$(libt_dir)/asio/detail/epoll_reactor_fwd.hpp \
+	$(libt_dir)/asio/detail/event.hpp \
+	$(libt_dir)/asio/detail/fd_set_adapter.hpp \
+	$(libt_dir)/asio/detail/handler_alloc_helpers.hpp \
+	$(libt_dir)/asio/detail/handler_invoke_helpers.hpp \
+	$(libt_dir)/asio/detail/handler_queue.hpp \
+	$(libt_dir)/asio/detail/hash_map.hpp \
+	$(libt_dir)/asio/detail/io_control.hpp \
+	$(libt_dir)/asio/detail/kqueue_reactor.hpp \
+	$(libt_dir)/asio/detail/kqueue_reactor_fwd.hpp \
+	$(libt_dir)/asio/detail/local_free_on_block_exit.hpp \
+	$(libt_dir)/asio/detail/mutex.hpp \
+	$(libt_dir)/asio/detail/noncopyable.hpp \
+	$(libt_dir)/asio/detail/null_event.hpp \
+	$(libt_dir)/asio/detail/null_mutex.hpp \
+	$(libt_dir)/asio/detail/null_signal_blocker.hpp \
+	$(libt_dir)/asio/detail/null_thread.hpp \
+	$(libt_dir)/asio/detail/null_tss_ptr.hpp \
+	$(libt_dir)/asio/detail/old_win_sdk_compat.hpp \
+	$(libt_dir)/asio/detail/pipe_select_interrupter.hpp \
+	$(libt_dir)/asio/detail/pop_options.hpp \
+	$(libt_dir)/asio/detail/posix_event.hpp \
+	$(libt_dir)/asio/detail/posix_fd_set_adapter.hpp \
+	$(libt_dir)/asio/detail/posix_mutex.hpp \
+	$(libt_dir)/asio/detail/posix_signal_blocker.hpp \
+	$(libt_dir)/asio/detail/posix_thread.hpp \
+	$(libt_dir)/asio/detail/posix_tss_ptr.hpp \
+	$(libt_dir)/asio/detail/push_options.hpp \
+	$(libt_dir)/asio/detail/reactive_socket_service.hpp \
+	$(libt_dir)/asio/detail/reactor_op_queue.hpp \
+	$(libt_dir)/asio/detail/resolver_service.hpp \
+	$(libt_dir)/asio/detail/scoped_lock.hpp \
+	$(libt_dir)/asio/detail/select_interrupter.hpp \
+	$(libt_dir)/asio/detail/select_reactor.hpp \
+	$(libt_dir)/asio/detail/select_reactor_fwd.hpp \
+	$(libt_dir)/asio/detail/service_base.hpp \
+	$(libt_dir)/asio/detail/service_id.hpp \
+	$(libt_dir)/asio/detail/service_registry.hpp \
+	$(libt_dir)/asio/detail/service_registry_fwd.hpp \
+	$(libt_dir)/asio/detail/signal_blocker.hpp \
+	$(libt_dir)/asio/detail/signal_init.hpp \
+	$(libt_dir)/asio/detail/socket_holder.hpp \
+	$(libt_dir)/asio/detail/socket_ops.hpp \
+	$(libt_dir)/asio/detail/socket_option.hpp \
+	$(libt_dir)/asio/detail/socket_select_interrupter.hpp \
+	$(libt_dir)/asio/detail/socket_types.hpp \
+	$(libt_dir)/asio/detail/strand_service.hpp \
+	$(libt_dir)/asio/detail/task_io_service.hpp \
+	$(libt_dir)/asio/detail/task_io_service_fwd.hpp \
+	$(libt_dir)/asio/detail/thread.hpp \
+	$(libt_dir)/asio/detail/throw_error.hpp \
+	$(libt_dir)/asio/detail/timer_queue.hpp \
+	$(libt_dir)/asio/detail/timer_queue_base.hpp \
+	$(libt_dir)/asio/detail/tss_ptr.hpp \
+	$(libt_dir)/asio/detail/win_event.hpp \
+	$(libt_dir)/asio/detail/win_fd_set_adapter.hpp \
+	$(libt_dir)/asio/detail/win_iocp_io_service.hpp \
+	$(libt_dir)/asio/detail/win_iocp_io_service_fwd.hpp \
+	$(libt_dir)/asio/detail/win_iocp_socket_service.hpp \
+	$(libt_dir)/asio/detail/win_mutex.hpp \
+	$(libt_dir)/asio/detail/win_signal_blocker.hpp \
+	$(libt_dir)/asio/detail/win_thread.hpp \
+	$(libt_dir)/asio/detail/win_tss_ptr.hpp \
+	$(libt_dir)/asio/detail/wince_thread.hpp \
+	$(libt_dir)/asio/detail/winsock_init.hpp \
+	$(libt_dir)/asio/detail/wrapped_handler.hpp \
+	$(libt_dir)/asio/impl/error_code.ipp \
+	$(libt_dir)/asio/impl/io_service.ipp \
+	$(libt_dir)/asio/impl/read.ipp \
+	$(libt_dir)/asio/impl/read_until.ipp \
+	$(libt_dir)/asio/impl/write.ipp \
+	$(libt_dir)/asio/ip/address.hpp \
+	$(libt_dir)/asio/ip/address_v4.hpp \
+	$(libt_dir)/asio/ip/address_v6.hpp \
+	$(libt_dir)/asio/ip/basic_endpoint.hpp \
+	$(libt_dir)/asio/ip/basic_resolver.hpp \
+	$(libt_dir)/asio/ip/basic_resolver_entry.hpp \
+	$(libt_dir)/asio/ip/basic_resolver_iterator.hpp \
+	$(libt_dir)/asio/ip/basic_resolver_query.hpp \
+	$(libt_dir)/asio/ip/host_name.hpp \
+	$(libt_dir)/asio/ip/multicast.hpp \
+	$(libt_dir)/asio/ip/resolver_query_base.hpp \
+	$(libt_dir)/asio/ip/resolver_service.hpp \
+	$(libt_dir)/asio/ip/tcp.hpp \
+	$(libt_dir)/asio/ip/udp.hpp \
+	$(libt_dir)/asio/ip/unicast.hpp \
+	$(libt_dir)/asio/ip/v6_only.hpp \
+	$(libt_dir)/asio/ip/detail/socket_option.hpp \
+	$(libt_dir)/asio/ssl/basic_context.hpp \
+	$(libt_dir)/asio/ssl/context.hpp \
+	$(libt_dir)/asio/ssl/context_base.hpp \
+	$(libt_dir)/asio/ssl/context_service.hpp \
+	$(libt_dir)/asio/ssl/stream.hpp \
+	$(libt_dir)/asio/ssl/stream_base.hpp \
+	$(libt_dir)/asio/ssl/stream_service.hpp \
+	$(libt_dir)/asio/ssl/detail/openssl_context_service.hpp \
+	$(libt_dir)/asio/ssl/detail/openssl_init.hpp \
+	$(libt_dir)/asio/ssl/detail/openssl_operation.hpp \
+	$(libt_dir)/asio/ssl/detail/openssl_stream_service.hpp \
+	$(libt_dir)/asio/ssl/detail/openssl_types.hpp \
+	\
+	$(libt_dir)/zlib/crc32.h \
+	$(libt_dir)/zlib/deflate.h \
+	$(libt_dir)/zlib/inffast.h \
+	$(libt_dir)/zlib/inflate.h \
+	$(libt_dir)/zlib/inftrees.h \
+	$(libt_dir)/zlib/trees.h \
+	$(libt_dir)/zlib/zconf.h \
+	$(libt_dir)/zlib/zlib.h \
+	$(libt_dir)/zlib/zutil.h 
 
-# the following line is searched for in a script to add filenames under it
 
 springlobby_SOURCES = \
-	revision.cpp \
 	src/updater/versionchecker.cpp \
 	src/updater/versionchecker.h \
+	src/sounds/ring_sound.h \
+	src/sounds/pm_sound.h \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
-	src/revision.cpp.in \
-	src/revision.h \
 	src/unitsyncthread.cpp \
 	src/unitsyncthread.h \
 	src/maplistctrl.cpp \
@@ -169,6 +481,7 @@ springlobby_SOURCES = \
 	src/mainwindow.h \
 	src/mapctrl.cpp \
 	src/mapctrl.h \
+	src/mutexwrapper.h \
 	src/nicklistctrl.cpp \
 	src/nicklistctrl.h \
 	src/replaytab.h \
@@ -179,6 +492,8 @@ springlobby_SOURCES = \
 	src/replaylist.h \
 	src/replaylistctrl.h \
 	src/replaylistctrl.cpp \
+	src/sdlsound.h \
+	src/sdlsound.cpp \
 	src/server.cpp \
 	src/serverevents.cpp \
 	src/serverevents.h \
@@ -545,12 +860,22 @@ springlobby_SOURCES = \
 	src/httpdownloader.h \
 	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
-	src/Helper/TextCompletionDatabase.cpp 
-
+	src/Helper/TextCompletionDatabase.cpp \
+	src/filelister/filelistctrl.h \
+	src/filelister/filelistdialog.h \
+	src/filelister/filelistfilter.h \
+	src/filelister/filelistctrl.cpp \
+	src/filelister/filelistdialog.cpp \
+	src/filelister/filelistfilter.cpp \
+	configure.ac \
+	src/autojoinchanneldialog.h \
+	src/autojoinchanneldialog.cpp
 
 
 if USE_WINDRES	
 springlobby_SOURCES += \ 
+		$(libtorrent_headers) \
+ 		$(libtorrent_sources) \
 		src/springlobby.rc 
 endif
 
@@ -591,9 +916,6 @@ springlobby_SOURCES += \
 	src/settings++/helpmenufunctions.cpp 
 
 springsettings_SOURCES = \
-	revision.cpp \
-	src/revision.cpp.in \
-	src/revision.h \
 	src/utils.cpp \
 	src/utils.h \
 	src/crashreport.cpp \

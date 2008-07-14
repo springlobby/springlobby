@@ -21,21 +21,19 @@ DECLARE_LOCAL_EVENT_TYPE( wxEVT_UNITSYNC_CACHE, 1 )
 END_DECLARE_EVENT_TYPES()
 
 
-class UnitSyncThread: public wxThread, public wxEvtHandler
+class UnitSyncThread: public wxEvtHandler
 {
-
   public:
 
     UnitSyncThread( Ui& ui );
     ~UnitSyncThread();
 
     void Init() {
-      Create();
-      SetPriority( WXTHREAD_MIN_PRIORITY );
-      Run();
+      m_thread.Create();
+      m_thread.SetPriority( WXTHREAD_MIN_PRIORITY );
+      m_thread.Run();
     }
 
-    void* Entry();
     void OnExit();
 
     void AddMapInfoOrder( const wxString& map );
@@ -55,6 +53,16 @@ class UnitSyncThread: public wxThread, public wxEvtHandler
 
   protected:
 
+    friend class UnitSyncThreadImpl;
+    class UnitSyncThreadImpl : public wxThread
+    {
+      protected:
+        UnitSyncThread* m_parent;
+        void* Entry();
+      public:
+        UnitSyncThreadImpl(UnitSyncThread* parent) : m_parent(parent) {}
+    };
+
     void _CacheLoop();
     bool _GetNextJob( JobType& jobtype, wxString& params );
 
@@ -64,6 +72,8 @@ class UnitSyncThread: public wxThread, public wxEvtHandler
     void _DoMinimapJob( const wxString& map );
     void _DoUnitsJob( const wxString& mod );
     void _DoReloadJob();
+
+    UnitSyncThreadImpl m_thread;
 
     Ui& m_ui;
 

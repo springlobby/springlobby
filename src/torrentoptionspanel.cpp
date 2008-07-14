@@ -16,41 +16,26 @@
 #include "torrentwrapper.h"
 #include "utils.h"
 
-
 BEGIN_EVENT_TABLE( TorrentOptionsPanel, wxPanel )
-  EVT_BUTTON( ID_MAN_START, TorrentOptionsPanel::OnManStart )
-  EVT_BUTTON( ID_MAN_STOP, TorrentOptionsPanel::OnManStop )
 END_EVENT_TABLE()
-
 
 TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
     : wxPanel( parent, -1), m_ui(ui)
 {
     wxBoxSizer* mainboxsizer = new wxBoxSizer( wxVERTICAL );
 
-    wxBoxSizer* m_sys_ctrl_box = new wxBoxSizer( wxHORIZONTAL );
-    m_sys_start = new wxButton( this, ID_MAN_START, _("Start system") );
-    m_sys_stop = new wxButton( this, ID_MAN_STOP, _("Stop system") );
-    m_sys_ctrl_box->Add(m_sys_stop,  0, wxALL, 5 );
-    m_sys_ctrl_box->Add(m_sys_start,  0, wxALL, 5 );
-
     m_autostart_box = new wxStaticBox(this, -1, _("Torrent system autostart") );
     wxStaticBoxSizer* m_autostart_box_sizer  = new wxStaticBoxSizer( m_autostart_box, wxVERTICAL );
     m_autostart_logon = new wxRadioButton (this, ID_AUTOSTART_RADIO, _("at lobby connection (default)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
     m_autostart_start = new wxRadioButton (this, ID_AUTOSTART_RADIO, _("at lobby start"));
     m_autostart_manual = new wxRadioButton (this, ID_AUTOSTART_RADIO, _("manual") );
-    wxBoxSizer* m_status_box = new wxBoxSizer( wxHORIZONTAL );
-    m_status_color = new wxButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
-    m_status_color_text = new wxStaticText( this, wxID_ANY, _("unknown") );
-    m_status_box->Add( m_status_color ,  0, wxALL, 5);
-    m_status_box->Add( m_status_color_text,  0, wxALL, 5);
+
+    SetAutoStartRadio();
 
     m_autostart_box_sizer->Add(m_autostart_logon,  0, wxALL, 5);
     m_autostart_box_sizer->Add(m_autostart_start,  0, wxALL, 5);
     m_autostart_box_sizer->Add(m_autostart_manual,  0, wxALL, 5);
 //    m_autostart_box_sizer->Add(NULL);
-    m_autostart_box_sizer->Add(m_sys_ctrl_box,  0, wxALL, 5);
-    m_autostart_box_sizer->Add(m_status_box,  0, wxALL, 5);
     mainboxsizer->Add( m_autostart_box_sizer, 0, wxALL, 5 );
 
     m_gamestart_box = new wxStaticBox(this, -1, _("At game start suspend mode") );
@@ -107,12 +92,6 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
     mainboxsizer->Add( m_numbers_box_sizer, 0, wxALL, 5 );
 
 
-    //is there even need for the input boxes to be disabled?
-    EnableSettings( true );
-    EnableStartStopButtons( torrent()->IsConnectedToP2PSystem() );
-    wxCommandEvent dummy;
-    OnRestore(dummy);
-    SetStatusDisplay();
     SetSizer( mainboxsizer );
 }
 
@@ -121,36 +100,6 @@ TorrentOptionsPanel::~TorrentOptionsPanel()
 
 }
 
-void TorrentOptionsPanel::SetStatusDisplay()
-{
-    switch (torrent()->GetTorrentSystemStatus() )
-    {
-        case 0:
-            m_status_color->SetBackgroundColour( wxColor(255,0,0) ); //not connected
-            m_status_color_text->SetLabel(_("Status: not connected") );
-            break;
-        case 1:
-            m_status_color->SetBackgroundColour( wxColor(0,255,0) ); //connected
-            m_status_color_text->SetLabel(_("Status: connected") );
-            break;
-        case 2:
-            m_status_color->SetBackgroundColour( wxColor(0,0,255) ); //ingame
-            m_status_color_text->SetLabel(_("Status: throttled (ingame)") );
-            break;
-        default:
-            m_status_color->SetBackgroundColour( wxColor(255,255,255) ); //unknown
-            m_status_color_text->SetLabel(_("Status: unknown") );
-            break;
-    }
-}
-
-void TorrentOptionsPanel::EnableSettings( bool enable)
-{
-    m_maxUp->Enable( enable );
-    m_maxDown->Enable( enable );
-    m_p2pport->Enable( enable );
-    m_maxConnections->Enable( enable );
-}
 
 //TODO wtf did i add these for
 void TorrentOptionsPanel::OnMaxUp( wxCommandEvent& event ){}
@@ -181,12 +130,6 @@ void TorrentOptionsPanel::OnApply( wxCommandEvent& event )
     // if mode == pause selected --> m_gamestart_throttle->GetValue() == 0
     sett().SetTorrentSystemSuspendMode( m_gamestart_throttle->GetValue() );
 
-//TODO what about this??
-//    if (!torrent()->IsConnectedToP2PSystem() && m_enableP2P->IsChecked() && m_ui.IsConnected() )
-//        torrent()->ConnectToP2PSystem();
-//    else if ( torrent()->IsConnectedToP2PSystem() && !m_enableP2P->IsChecked() )
-//        torrent()->DisconnectToP2PSystem();
-    SetStatusDisplay();
     torrent()->UpdateSettings();
 }
 
@@ -198,6 +141,12 @@ void TorrentOptionsPanel::OnRestore( wxCommandEvent& event )
     m_maxUp->SetValue( i2s( sett().GetTorrentUploadRate() ) );
     m_gamestart_throttle_up->SetValue( i2s( sett().GetTorrentThrottledUploadRate() ) );
     m_gamestart_throttle_down->SetValue( i2s( sett().GetTorrentThrottledDownloadRate( ) ) );
+    SetAutoStartRadio();
+    m_gamestart_throttle->SetValue( sett().GetTorrentSystemSuspendMode() );
+}
+
+void TorrentOptionsPanel::SetAutoStartRadio()
+{
     switch ( sett().GetTorrentSystemAutoStartMode() )
     {
         case 1:
@@ -209,28 +158,6 @@ void TorrentOptionsPanel::OnRestore( wxCommandEvent& event )
         default:
             m_autostart_logon->SetValue( true );
     }
-    m_gamestart_throttle->SetValue( sett().GetTorrentSystemSuspendMode() );
-    SetStatusDisplay();
 }
-
-void TorrentOptionsPanel::OnManStart( wxCommandEvent& event )
-{
-    torrent()->ConnectToP2PSystem();
-    EnableStartStopButtons(true);
-}
-
-void TorrentOptionsPanel::EnableStartStopButtons( bool system_is_running)
-{
-    m_sys_start->Enable(!system_is_running);
-    m_sys_stop->Enable(system_is_running);
-    SetStatusDisplay();
-}
-
-void TorrentOptionsPanel::OnManStop( wxCommandEvent& event )
-{
-    torrent()->DisconnectToP2PSystem();
-    EnableStartStopButtons(false);
-}
-
 
 #endif

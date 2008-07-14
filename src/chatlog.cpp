@@ -22,10 +22,13 @@ bool ChatLog::m_parent_dir_exists = true;
 ChatLog::ChatLog(const wxString& server,const wxString& room):
   m_logfile( 0 ),
   m_server( server ),
-  m_room( room ),
-  m_active( OpenLogFile(server,room) )
-{
+  m_room( room )
 
+{
+    #ifdef __WXMSW__
+        m_server.Replace( wxT(":"), wxT("_") ) ;
+    #endif
+    m_active = OpenLogFile(m_server,m_room) ;
 }
 
 
@@ -90,7 +93,10 @@ bool ChatLog::CreateFolder(const wxString& server)
 
 bool ChatLog::WriteLine(const wxString& text)
 {
-  ASSERT_LOGIC( m_logfile, _T("m_logfile = 0") );
+  try
+  {
+    ASSERT_LOGIC( m_logfile, _T("m_logfile = 0") );
+  } catch(...) {return false;}
   if ( !m_logfile->Write( text, wxConvUTF8 ) ) {
     m_active = false;
     wxLogWarning( _T("can't write message to log (%s)"),  wxString(m_server + _T("::") + m_room).c_str() );

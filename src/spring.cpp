@@ -8,12 +8,11 @@
 #include <wx/arrstr.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
-#include <wx/event.h>
-#include <clocale>
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
 #include <fstream>
+#include <clocale>
 
 #include "spring.h"
 #include "springprocess.h"
@@ -27,6 +26,9 @@
 #include "iunitsync.h"
 #include "nonportable.h"
 #include "tdfcontainer.h"
+#ifndef NO_TORRENT_SYSTEM
+#include "torrentwrapper.h"
+#endif
 
 BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
 
@@ -93,19 +95,19 @@ bool Spring::Run( Battle& battle )
     return false;
   }
 
-  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
+  wxString path = sett().GetSpringDir();
 
   wxLogMessage( _T("Path to script: %sscript.txt"), path.c_str() );
 
   try {
 
-    if ( !wxFile::Access( path + _T("script.txt"), wxFile::write ) ) {
+    if ( !wxFile::Access( path + _T("/script.txt"), wxFile::write ) ) {
       wxLogError( _T("Access denied to script.txt.") );
     }
 
 
 
-    wxFile f( path + _T("script.txt"), wxFile::write );
+    wxFile f( path + _T("/script.txt"), wxFile::write );
     f.Write( WriteScriptTxt(battle) );
     f.Close();
 
@@ -114,7 +116,16 @@ bool Spring::Run( Battle& battle )
     return false;
   }
 
-  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + path + _T("script.txt");
+  #ifndef NO_TORRENT_SYSTEM
+  wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|") + battle.GetMe().GetNick() + _T("|");
+  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
+  {
+    CommandForAutomaticTeamSpeak << battle.GetUser(i).GetNick() << _T("|") << u2s( battle.GetUser(i).BattleStatus().ally) << _T("|");
+  }
+  torrent()->SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
+  #endif
+
+  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + path + _T("/script.txt");
   wxLogMessage( _T("cmd: %s"), cmd.c_str() );
   wxSetWorkingDirectory( sett().GetSpringDir() );
   if ( sett().UseOldSpringLaunchMethod() ) {
@@ -286,18 +297,17 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
   wxLogMessage(_T("7"));
 
-
   //BattleOptions bo = battle.opts();
 
   // Start generating the script.
   tdf.EnterSection(_T("GAME"));
 
-  tdf.Append(_T("Mapname"),battle.GetMapName());
-  tdf.Append(_T("GameType"),usync()->GetModArchive(usync()->GetModIndex(battle.GetModName())));
+  tdf.Append(_T("Mapname"),battle.GetHostMapName());
+  tdf.Append(_T("GameType"),usync()->GetModArchive(usync()->GetModIndex(battle.GetHostModName())));
 
 
   unsigned long uhash;
-  battle.GetModHash().ToULong(&uhash);
+  battle.LoadMod().hash.ToULong(&uhash);
 
   tdf.Append(_T("ModHash"),int(uhash));
 
@@ -393,18 +403,15 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     tdf.Append(_T("TeamLeader"),TeamLeader);
     tdf.Append(_T("AllyTeam"),AllyConv[battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().ally]);
 
-    const char* old_locale = std::setlocale(LC_NUMERIC, "C");
-    float rgb[3]={
-      battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Red()/255.0,
-      battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Green()/255.0,
-      battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Blue()/255.0
-      };
-    tdf.Append(_T("RGBColor"),rgb,rgb+3);
-    std::setlocale(LC_NUMERIC, old_locale);
+    wxString colourstring =
+      TowxString( battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Red()/255.0 ) + _T(' ') +
+      TowxString( battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Green()/255.0 ) + _T(' ') +
+      TowxString( battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().colour.Blue()/255.0 );
+    tdf.Append(_T("RGBColor"), colourstring);
 
     wxLogMessage( _T("%d"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side );
 
-    tdf.Append(_T("Side"),usync()->GetSideName( battle.GetModName(), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side ));
+    tdf.Append(_T("Side"),usync()->GetSideName( battle.GetHostModName(), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side ));
     tdf.Append(_T("Handicap"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().handicap);
 
     tdf.LeaveSection();
@@ -436,16 +443,13 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
     tdf.Append(_T("AllyTeam"),AllyConv[bot.bs.ally]);
 
-    const char* old_locale = std::setlocale(LC_NUMERIC, "C");
-    float rgb[3]={
-      bot.bs.colour.Red()/255.0f,
-      bot.bs.colour.Green()/255.0f,
-      bot.bs.colour.Blue()/255.0f
-      };
-    tdf.Append(_T("RGBColor"),rgb,rgb+3);
-    std::setlocale(LC_NUMERIC, old_locale);
+    wxString colourstring =
+      TowxString( bot.bs.colour.Red()/255.0f ) + _T(' ') +
+      TowxString( bot.bs.colour.Green()/255.0f ) + _T(' ') +
+      TowxString( bot.bs.colour.Blue()/255.0f );
+    tdf.Append(_T("RGBColor"), colourstring);
 
-    tdf.Append(_T("Side"),usync()->GetSideName( battle.GetModName(), bot.bs.side ));
+    tdf.Append(_T("Side"),usync()->GetSideName( battle.GetHostModName(), bot.bs.side ));
 
 
     tdf.Append(_T("Handicap"),bot.bs.handicap);
@@ -663,12 +667,12 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
   //s  = wxString::Format( _T("[GAME]\n{\n") );
   tdf.EnterSection(_T("GAME"));
 
-  tdf.Append(_T("Mapname"),battle.GetMapName());
+  tdf.Append(_T("Mapname"),battle.GetHostMapName());
 
-  tdf.Append(_T("GameType"),usync()->GetModArchive(usync()->GetModIndex(battle.GetModName())));
+  tdf.Append(_T("GameType"),usync()->GetModArchive(usync()->GetModIndex(battle.GetHostModName())));
 
   unsigned long uhash;
-  battle.GetModHash().ToULong(&uhash);
+  battle.LoadMod().hash.ToULong(&uhash);
 
   tdf.Append(_T("ModHash"),int(uhash));
 
@@ -698,7 +702,7 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
     tdf.Append(_T("team"),PlayerTeam);
   tdf.LeaveSection();
 
-  for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) { // TODO fix this when new Spring comes.
+  for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot;
     if ( startpostype == ST_Pick) bot = battle.GetBot( i );
     else bot = battle.GetBotByStartPosition( i );
@@ -714,17 +718,13 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
     tdf.Append(_T("TeamLeader"),"0");
     tdf.Append(_T("AllyTeam"),AllyConv[bot->bs.ally]);
 
-    const char* old_locale = std::setlocale(LC_NUMERIC, "C");
-    float rgb[3]={
-      bot->bs.colour.Red()/255.0f,
-      bot->bs.colour.Green()/255.0f,
-      bot->bs.colour.Blue()/255.0f
-      };
-    tdf.Append(_T("RGBColor"),rgb,rgb+3);
+    wxString colourstring =
+      TowxString( bot->bs.colour.Red()/255.0f ) + _T(' ') +
+      TowxString( bot->bs.colour.Green()/255.0f ) + _T(' ') +
+      TowxString( bot->bs.colour.Blue()/255.0f );
+    tdf.Append(_T("RGBColor"), colourstring);
 
-    std::setlocale(LC_NUMERIC, old_locale);
-
-    tdf.Append(_T("Side"),usync()->GetSideName(battle.GetModName(), bot->bs.side));
+    tdf.Append(_T("Side"),usync()->GetSideName(battle.GetHostModName(), bot->bs.side));
 
     tdf.Append(_T("Handicap"),bot->bs.handicap);
 

@@ -61,7 +61,10 @@ void MainSinglePlayerTab::UpdateMinimap()
 void MainSinglePlayerTab::OnUnitSyncReloaded()
 {
   wxLogDebugFunc( _T("") );
-  ASSERT_LOGIC( m_sp_tab != 0, _T("m_sp_tab = 0") );
+  try
+  {
+    ASSERT_LOGIC( m_sp_tab != 0, _T("m_sp_tab = 0") );
+  } catch (...) { return; }
   wxLogMessage( _T("Reloading map list") );
   m_sp_tab->ReloadMaplist();
   wxLogMessage( _T("Reloading mod list") );
@@ -80,13 +83,13 @@ void MainSinglePlayerTab::ReloadRestrictions()
 void MainSinglePlayerTab::ReloadMapOptContrls()
 {
   if (m_mm_opts_tab != 0)
-		m_mm_opts_tab->OnRefreshControls( MapOption );
+		m_mm_opts_tab->OnReloadControls( MapOption );
 }
 
 
 void MainSinglePlayerTab::ReloadModOptContrls()
 {
 	if (m_mm_opts_tab != 0)
-		m_mm_opts_tab->OnRefreshControls( ModOption );
+		m_mm_opts_tab->OnReloadControls( ModOption );
 
 }

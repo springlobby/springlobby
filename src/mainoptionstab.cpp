@@ -22,9 +22,9 @@
 #include "torrentoptionspanel.h"
 #endif
 
+#include "images/torrentoptionspanel_icon.png.h"
 #include "images/spring.xpm"
 #include "images/userchat.xpm"
-#include "images/torrentoptionspanel_icon.png.h"
 
 BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 
@@ -32,7 +32,6 @@ BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
     EVT_BUTTON ( wxID_REVERT, MainOptionsTab::OnRestore )
 
 END_EVENT_TABLE()
-
 
 MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
 {
