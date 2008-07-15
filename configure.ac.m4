@@ -73,7 +73,7 @@ if test "$win_build" = 0 ; then
 	# libtorrent.
         PKG_CHECK_MODULES(LIBTORRENT, libtorrent-rasterbar >= 0.13, usetorrent=libtorrent-rasterbar, usetorrent=fail)
         if test x$usetorrent = xfail ; then
-            PKG_CHECK_MODULES(LIBTORRENT, rb-libtorrent >= 0.13, usetorrent=libtorrent-rb, usetorrent=fail)
+            PKG_CHECK_MODULES(LIBTORRENT, rb-libtorrent >= 0.13, usetorrent=rb-libtorrent, usetorrent=fail)
             if test x$usetorrent = xfail ; then
 		PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, usetorrent=libtorrent, usetorrent=fail)
 		if test x$usetorrent = xfail ; then
