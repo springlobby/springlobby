@@ -64,18 +64,27 @@ fi
 
 
 
-dnl on non win build use extern libtorrent, on win use included source
+dnl On non-Windows build use external libtorrent, on win use included source
 if test "$win_build" = 0 ; then
     if test x$usetorrent = xyes ; then
         AC_MSG_CHECKING([checking for libtorrent])
-        PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
+
+	# Check for libtorrent using the following names: libtorrent-rasterbar, rb-libtorrent,
+	# libtorrent.
+        PKG_CHECK_MODULES(LIBTORRENT, libtorrent-rasterbar >= 0.13, usetorrent=libtorrent-rasterbar, usetorrent=fail)
         if test x$usetorrent = xfail ; then
-            AC_MSG_ERROR([missing required libtorrent library get it at http://www.rasterbar.com/products/libtorrent/ please note that some distros name it rb-libtorrent that is NOT libtorrent from rakshasa  you can skip the dependency by using --disable-torrent-system]);
-            exit
+            PKG_CHECK_MODULES(LIBTORRENT, rb-libtorrent >= 0.13, usetorrent=libtorrent-rb, usetorrent=fail)
+            if test x$usetorrent = xfail ; then
+		PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, usetorrent=libtorrent, usetorrent=fail)
+		if test x$usetorrent = xfail ; then
+		    AC_MSG_ERROR([missing required libtorrent library get it at http://www.rasterbar.com/products/libtorrent/ please note that some distros name it rb-libtorrent that is NOT libtorrent from rakshasa  you can skip the dependency by using --disable-torrent-system]);
+		    exit
+		fi
+	    fi
         fi
 
-	LIBTORRENT_CFLAGS=`pkg-config libtorrent --cflags`
- 	LIBTORRENT_LIBS=`pkg-config libtorrent --libs`
+	LIBTORRENT_CFLAGS=`pkg-config $usetorrent --cflags`
+ 	LIBTORRENT_LIBS=`pkg-config $usetorrent --libs`
 
         AC_SUBST(LIBTORRENT_CFLAGS)
         AC_SUBST(LIBTORRENT_LIBS)
