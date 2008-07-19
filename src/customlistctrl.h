@@ -38,6 +38,8 @@ protected:
     wxTipWindow** controlPointer;
     #endif
     int coloumnCount;
+    //! used as label for saving column widths
+    wxString m_name;
 
 /*** these are only meaningful in single selection lists ***/
     //! curently selected data
@@ -61,7 +63,7 @@ protected:
 
 public:
 	customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
-                    const wxSize& sz,long style);
+                    const wxSize& sz,long style, wxString name);
 
     void OnSelected( wxListEvent& event );
     void OnDeselected( wxListEvent& event );
@@ -86,11 +88,16 @@ public:
 	//! this event is triggered when delay timer (set in mousemotion) ended
     virtual void OnTimer(wxTimerEvent& event);
     //! prohibits resizin if so set in columnInfo
-    void OnStartResizeCol(wxListEvent& event) ;
+    void OnStartResizeCol(wxListEvent& event);
+    //! we use this to automatically save column width after resizin
+    virtual void OnEndResizeCol(wxListEvent& event);
     //! starts timer, sets tooltiptext
     virtual void OnMouseMotion(wxMouseEvent& event);
     //! does nothing
     void noOp(wxMouseEvent& event);
+    //! automatically get saved column width if already saved, otherwise use parameter and save new width
+    virtual bool SetColumnWidth(int col, int width);
+
 
     /** @name Multi Selection methods
      * using these funcs in a single selection list is meaingless at best, harmful in the worst case

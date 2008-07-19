@@ -276,6 +276,11 @@ class Settings
 
     void SetShowTooltips( bool show);
     bool GetShowTooltips();
+
+    void SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width );
+    int GetColumnWidth( const wxString& list_name, const int coloumn );
+    //! used to signal unset column width in Get...
+    enum { columnWidthUnset };
     /*@}*/
 
     /* ================================================================ */

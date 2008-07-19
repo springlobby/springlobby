@@ -1,5 +1,6 @@
 #include "customlistctrl.h"
 #include "utils.h"
+#include  "settings.h"
 
 BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
 #if wxUSE_TIPWINDOW
@@ -7,6 +8,7 @@ BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
     	EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)
 #endif
     	EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, customListCtrl::OnStartResizeCol)
+    	EVT_LIST_COL_END_DRAG(wxID_ANY, customListCtrl::OnEndResizeCol)
     	EVT_LEAVE_WINDOW(customListCtrl::noOp)
     	EVT_LIST_ITEM_SELECTED   ( wxID_ANY, customListCtrl::OnSelected )
         EVT_LIST_ITEM_DESELECTED ( wxID_ANY, customListCtrl::OnDeselected )
@@ -14,10 +16,10 @@ BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
 END_EVENT_TABLE()
 
 //wxTipWindow* customListCtrl::m_tipwindow = 0;
-customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style):
+customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style,wxString name):
 					wxListCtrl (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER),m_tiptext(_T("")),
 					 m_selected(-1),m_selected_index(-1),m_prev_selected(-1),
-					 m_prev_selected_index(-1),m_last_mouse_pos( wxPoint(-1,-1) )
+					 m_prev_selected_index(-1),m_last_mouse_pos( wxPoint(-1,-1) ), m_name(name)
 
 
 {
@@ -227,6 +229,29 @@ void customListCtrl::OnStartResizeCol(wxListEvent& event)
 {
 	if (!m_colinfovec[event.GetColumn()].second)
 		event.Veto();
+}
+
+void customListCtrl::OnEndResizeCol(wxListEvent& event)
+{
+    int column = event.GetColumn();
+    int new_size = GetColumnWidth( column );
+    sett().SetColumnWidth( m_name, column, new_size );
+
+    //let the event go further
+    event.Skip();
+}
+
+bool customListCtrl::SetColumnWidth(int col, int width)
+{
+    if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
+    {
+        return wxListCtrl::SetColumnWidth( col, sett().GetColumnWidth( m_name, col) );
+    }
+    else
+    {
+        sett().SetColumnWidth( m_name, col, width );
+        return wxListCtrl::SetColumnWidth( col, width );
+    }
 }
 
 void customListCtrl::noOp(wxMouseEvent& event)

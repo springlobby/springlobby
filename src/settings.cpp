@@ -1260,3 +1260,13 @@ bool Settings::GetShowTooltips()
 {
     return m_config->Read(_T("GUI/ShowTooltips"), 1l);
 }
+
+void Settings::SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width )
+{
+    m_config->Write(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn_ind), coloumn_width );
+}
+
+int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
+{
+    return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
+}
