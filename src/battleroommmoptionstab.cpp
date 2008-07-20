@@ -112,7 +112,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
         int temp = int(current.cbx_choices.GetCount()-1);
 		int index = CLAMP(current.cur_choice_index,0,temp);
 		wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[index], wxDefaultPosition,
-				wxDefaultSize, current.cbx_choices, 0, wxDefaultValidator);
+				wxDefaultSize, current.cbx_choices, wxCB_READONLY, wxDefaultValidator);
 
 		tempchoice->SetToolTip(current.description);
 		tempchoice->SetName(pref+current.key);
