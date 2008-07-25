@@ -14,6 +14,8 @@ dnl we can't use -Wall either because we don't want to see the filter-out warnin
 dnl FIXME add at least some warning categories. obviously we can't use -Wportability
 AM_INIT_AUTOMAKE([1.10 -Wnone])
 
+PKG_PROG_PKG_CONFIG
+
 usetorrent=yes
 AC_ARG_ENABLE(torrent-system,
  [  --disable-torrent-system  Disable automatic content downloads via torrent (avoids libtorrent dependency)],
@@ -66,22 +68,35 @@ fi
 dnl On non-Windows build use external libtorrent, on win use included source
 if test "$win_build" = 0 ; then
     if test x$usetorrent = xyes ; then
-        AC_MSG_CHECKING([checking for libtorrent])
+        AC_MSG_CHECKING([for libtorrent from Rasterbar software])
 
 	# Check for libtorrent using the following names: libtorrent-rasterbar, rb-libtorrent,
 	# libtorrent.
-        PKG_CHECK_MODULES(LIBTORRENT, libtorrent-rasterbar >= 0.13, usetorrent=libtorrent-rasterbar, usetorrent=fail)
+        PKG_CHECK_EXISTS([libtorrent-rasterbar >= 0.13],[usetorrent=libtorrent-rasterbar],[usetorrent=fail])
         if test x$usetorrent = xfail ; then
-            PKG_CHECK_MODULES(LIBTORRENT, rb-libtorrent >= 0.13, usetorrent=rb-libtorrent, usetorrent=fail)
+	    PKG_CHECK_EXISTS([rb-libtorrent >= 0.13],[usetorrent=rb-libtorrent],[usetorrent=fail])
             if test x$usetorrent = xfail ; then
-		PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, usetorrent=libtorrent, usetorrent=fail)
+		PKG_CHECK_EXISTS([libtorrent >= 0.13],[usetorrent=libtorrent],[usetorrent=fail])
 		if test x$usetorrent = xfail ; then
-		    AC_MSG_ERROR([missing required libtorrent library get it at http://www.rasterbar.com/products/libtorrent/ please note that some distros name it rb-libtorrent that is NOT libtorrent from rakshasa  you can skip the dependency by using --disable-torrent-system]);
+		    AC_MSG_RESULT(no)
+		    AC_MSG_ERROR([
+		    Missing required libtorrent library. You can get it from
+		    <http://www.rasterbar.com/products/libtorrent/>.
+
+		    Please note that some distributions name it rb-libtorrent or
+		    libtorrent-rasterbar.  This is NOT libtorrent from rakshasa!
+
+		    You can skip this dependency by using --disable-torrent-system]);
+
 		    exit
 		fi
 	    fi
         fi
 
+	AC_MSG_RESULT(yes)
+
+	# Need to manually define these, since only used PKG_CHECK_EXISTS and not
+	# PKG_CHECK_MODULES above.
 	LIBTORRENT_CFLAGS=`pkg-config $usetorrent --cflags`
  	LIBTORRENT_LIBS=`pkg-config $usetorrent --libs`
 
