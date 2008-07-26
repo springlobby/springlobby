@@ -5,6 +5,10 @@
 #include <wx/log.h>
 #include <sstream>
 
+#ifndef VERSION
+	#define VERSION "unknown"
+#endif
+
 #ifndef __WXDEBUG__
 #define wxLogDebugFunc( params ) wxLogVerbose( _T("%s"), wxString(wxString(__FUNCTION__, wxConvUTF8 ) + _T(" ( ") + wxString(params) + _T(" )")).c_str() )
 #else

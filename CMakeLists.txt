@@ -3,8 +3,6 @@ PROJECT(SpringLobby)
 #set minimum cmake version
 cmake_minimum_required(VERSION 2.4)
 
-SET(CMAKE_COLOR_MAKEFILE ON)
-
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
 ADD_DEFINITIONS(-Wall)
 
@@ -29,7 +27,9 @@ SET( OPTION_USE_TORRENT_SYSTEM
 SET( OPTION_NO_SOUND
 	0 CACHE BOOL
 	"Disable compilation of sound output module (and removes SDL_sound dependency)" )
-
+SET( OPTION_TRANSLATION_SUPPORT
+	1 CACHE BOOL
+	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
 
 #----------------------------------------------------------------------------------------------------
 # Konfiguration of wxWidgets Configuration
@@ -79,6 +79,7 @@ IF(wxWidgets_FOUND)
 		src/filelister/filelistdialog.cpp
 		src/filelister/filelistfilter.cpp
 		src/autobalancedialog.cpp
+		src/autojoinchanneldialog.cpp
 		src/addbotdialog.cpp
 		src/agreementdialog.cpp
 		src/base64.cpp
@@ -211,20 +212,20 @@ if( OPTION_TRANSLATION_SUPPORT )
 	FIND_PACKAGE( Gettext )
   if(GETTEXT_FOUND)
     include("cmake/KWWidgetsInternationalizationMacros.cmake")
-    set(KWWidgets_INCLUDE_PATH ${KWWidgets_INCLUDE_PATH}
-      ${GETTEXT_INCLUDE_DIR} CACHE INTERNAL "" FORCE)
+    INCLUDE_DIRECTORIES( ${GETTEXT_INCLUDE_DIR} )
     kwwidgets_create_gettext_targets(
       DOMAIN_NAME "SpringLobby"
-      LOCALE_LIST "en"
+      LOCALE_LIST "da;de;fi;fr;it;ro;ru;sv;uk"
       COPYRIGHT_HOLDER "The SpringLobby team"
-      SOURCES "${KWWidgets_SRCS};${KWWidgets_TEMPLATE_SRCS}"
+      SOURCES "${SpringLobbySrc};${SettingsSrc};${StandAloneSettings}"
       PO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Resources/po"
       POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources/po"
       PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources/po"
-      MO_INSTALL_DIR "${KWWidgets_INSTALL_DATA_DIR}/locale"
-      ADD_MO_TARGET_TO_ALL)
+      MO_INSTALL_DIR "${SpringLobby_INSTALL_DATA_DIR}/locale"
+      CREATE_POT_TARGET
+      CREATE_PO_TARGET )
   else(GETTEXT_FOUND)
-    set(msg "KWWidgets_USE_INTERNATIONALIZATION is ON but the gettext runtime library and tools were not found.\n\nMore information about internationalization support in KWWidgets can be found at http://public.kitware.com/Wiki/KWWidgets/i18n.\n\n${GETTEXT_INFO_MSG}")
+    set(msg "OPTION_TRANSLATION_SUPPORT is ON but the gettext runtime library and tools were not found.\n\n Please install the GNU Gettext package or turn off the option")
     message(FATAL_ERROR "${msg}")
   endif(GETTEXT_FOUND)
 endif( OPTION_TRANSLATION_SUPPORT )
