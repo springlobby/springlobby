@@ -18,7 +18,7 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 #----------------------------------------------------------------------------------------------------
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
-
+INCLUDE(CPack)
 
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise SpringLobby
