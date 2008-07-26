@@ -10,6 +10,8 @@ ADD_DEFINITIONS(-Wall)
 # General Settings
 #----------------------------------------------------------------------------------------------------
 SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
+SET(CMAKE_FIND_LIBRARY_PREFIXES "")
+SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules
@@ -35,9 +37,6 @@ SET( OPTION_TRANSLATION_SUPPORT
 # wxWidgets lib dependency check
 #----------------------------------------------------------------------------------------------------
 
-SET(CMAKE_FIND_LIBRARY_PREFIXES "")
-SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
-
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
 SET(wxWidgets_USE_LIBS base core gl net adv qa richtext )
@@ -49,12 +48,11 @@ FIND_PACKAGE(wxWidgets)
 IF(wxWidgets_FOUND)
 	# Include wxWidgets macros
 	INCLUDE(${wxWidgets_USE_FILE})
+	INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
 ELSE(wxWidgets_FOUND)
 	# For Convenience. If we cannot continue, inform the User.
 	MESSAGE( FATAL_ERROR "wxWidgets library is not found! Please install the package to continue")
 ENDIF(wxWidgets_FOUND)
-#include the wxWidgets dirs
-INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
 
 #----------------------------------------------------------------------------------------------------
 # SDL libs dependency check
@@ -115,7 +113,7 @@ IF( OPTION_TORRENT_SYSTEM )
 	ENDIF()
 ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
-ENDIF()
+ENDIF( OPTION_TORRENT_SYSTEM )
 
 #----------------------------------------------------------------------------------------------------
 # Source listing
