@@ -70,12 +70,12 @@ if ( NOT SDL_FOUND AND OPTION_SOUND )
 endif()
 
 # Throw an error to the user if SDL_mixer is not found
-if ( NOT SDL_MIXER_FOUND AND NOT OPTION_NO_SOUND )
+if ( NOT SDL_MIXER_FOUND AND OPTION_NO_SOUND )
    message ( FATAL_ERROR "SDL_mixer library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
 endif()
 
 # Throw an error to the user if SDL_sound is not found
-if ( NOT SDL_SOUND_FOUND AND NOT OPTION_NO_SOUND )
+if ( NOT SDL_SOUND_FOUND AND OPTION_NO_SOUND )
    message ( FATAL_ERROR "SDL_sound library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
 endif()
 
@@ -103,6 +103,7 @@ endif( OPTION_TRANSLATION_SUPPORT )
 #----------------------------------------------------------------------------------------------------
 # libtorrent-rasterbar dependency check
 #----------------------------------------------------------------------------------------------------
+
 IF( OPTION_TORRENT_SYSTEM )
 	SET ( LIBTORRENT_MIN_VERSION 0.13 )
 	pkg_check_modules( LIBTORRENT libtorrent-rasterbar >=${LIBTORRENT_MIN_VERSION} )
