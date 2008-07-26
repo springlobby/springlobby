@@ -20,6 +20,10 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 FIND_PACKAGE( PkgConfig )
 INCLUDE(CPack)
 INCLUDE(FindSDL)
+INCLUDE(FindSDL_sound)
+INCLUDE(FindSDL_mixer)
+INCLUDE(FindwxWidgets)
+INCLUDE(FindGettext)
 
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise SpringLobby
@@ -105,7 +109,7 @@ endif( OPTION_TRANSLATION_SUPPORT )
 
 IF( OPTION_TORRENT_SYSTEM )
 	SET ( LIBTORRENT_MIN_VERSION 0.13 )
-	pkg_check_modules( LIBTORRENT libtorrent-rasterbar >=${LIBTORRENT_MIN_VERSION} )
+	pkg_check_modules( LIBTORRENT libtorrent-rasterbar>=${LIBTORRENT_MIN_VERSION} )
 	IF( LIBTORRENT_FOUND )
 		INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
 		LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
