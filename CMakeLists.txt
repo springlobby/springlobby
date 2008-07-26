@@ -19,6 +19,7 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
 INCLUDE(CPack)
+INCLUDE(FindSDL)
 
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise SpringLobby
@@ -119,8 +120,10 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 # Source listing
 #----------------------------------------------------------------------------------------------------
 
-# We define the include paths here, our minimal source dir is one,
+# We define the include paths here, our minimal source dir is one
+
 INCLUDE_DIRECTORIES(${SpringLobbySrc_SOURCE_DIR} ${SettingsSrc_SOURCE_DIR} )
+
 SET(SpringLobbySrc
 	src/boost/md5.cpp
 	src/updater/versionchecker.cpp
@@ -196,6 +199,7 @@ SET(SpringLobbySrc
 	src/userlist.cpp
 	src/utils.cpp
 )
+
 SET(SettingsSrc
 	src/settings++/custom_dialogs.cpp
 	src/settings++/frame.cpp
@@ -212,9 +216,11 @@ SET(SettingsSrc
 	src/settings++/tab_simple.cpp
 	src/settings++/tab_ui.cpp
 )
+
 SET(StandAloneSettings
 	src/settings++/Main.cpp
 )
+
 SET(SLSharedWithSettings
 	src/updater/versionchecker.cpp
 	src/crashreport.cpp
