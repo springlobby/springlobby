@@ -3,8 +3,6 @@ PROJECT(SpringLobby)
 #set minimum cmake version
 cmake_minimum_required(VERSION 2.4)
 
-#if you don't want the full Compiler-Output, remove the following Line
-SET(CMAKE_VERBOSE_MAKEFILE ON)
 SET(CMAKE_COLOR_MAKEFILE ON)
 
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
@@ -21,6 +19,7 @@ SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
 
+
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise SpringLobby
 #----------------------------------------------------------------------------------------------------
@@ -30,6 +29,8 @@ SET( OPTION_USE_TORRENT_SYSTEM
 SET( OPTION_NO_SOUND
 	0 CACHE BOOL
 	"Disable compilation of sound output module (and removes SDL_sound dependency)" )
+
+
 #----------------------------------------------------------------------------------------------------
 # Konfiguration of wxWidgets Configuration
 #----------------------------------------------------------------------------------------------------
@@ -74,7 +75,7 @@ IF(wxWidgets_FOUND)
 		src/boost/md5.cpp
 		src/updater/versionchecker.cpp
 		src/Helper/TextCompletionDatabase.cpp
-		src/filelister/filelistctr.cpp
+		src/filelister/filelistctrl.cpp
 		src/filelister/filelistdialog.cpp
 		src/filelister/filelistfilter.cpp
 		src/autobalancedialog.cpp
@@ -117,7 +118,6 @@ IF(wxWidgets_FOUND)
 		src/mmoptionmodel.cpp
 		src/mmoptionswrapper.cpp
 		src/nicklistctrl.cpp
-		src/nonautotools.cpp
 		src/sdlsound.cpp
 		src/server.cpp
 		src/serverevents.cpp
@@ -203,6 +203,31 @@ ENDIF()
 if ( OPTION_NO_SOUND )
 	ADD_DEFINITIONS( -DDISABLE_SOUND )
 ENDIF()
+
+#----------------------------------------------------------------------------------------------------
+# L10n support
+#----------------------------------------------------------------------------------------------------
+if( OPTION_TRANSLATION_SUPPORT )
+	FIND_PACKAGE( Gettext )
+  if(GETTEXT_FOUND)
+    include("cmake/KWWidgetsInternationalizationMacros.cmake")
+    set(KWWidgets_INCLUDE_PATH ${KWWidgets_INCLUDE_PATH}
+      ${GETTEXT_INCLUDE_DIR} CACHE INTERNAL "" FORCE)
+    kwwidgets_create_gettext_targets(
+      DOMAIN_NAME "SpringLobby"
+      LOCALE_LIST "en"
+      COPYRIGHT_HOLDER "The SpringLobby team"
+      SOURCES "${KWWidgets_SRCS};${KWWidgets_TEMPLATE_SRCS}"
+      PO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Resources/po"
+      POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources/po"
+      PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources/po"
+      MO_INSTALL_DIR "${KWWidgets_INSTALL_DATA_DIR}/locale"
+      ADD_MO_TARGET_TO_ALL)
+  else(GETTEXT_FOUND)
+    set(msg "KWWidgets_USE_INTERNATIONALIZATION is ON but the gettext runtime library and tools were not found.\n\nMore information about internationalization support in KWWidgets can be found at http://public.kitware.com/Wiki/KWWidgets/i18n.\n\n${GETTEXT_INFO_MSG}")
+    message(FATAL_ERROR "${msg}")
+  endif(GETTEXT_FOUND)
+endif( OPTION_TRANSLATION_SUPPORT )
 
 # Make sure the compiler can find include files from our Hello library.
 # include_directories (${HELLO_SOURCE_DIR}/Hello)
