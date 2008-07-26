@@ -32,7 +32,7 @@ SET( OPTION_TRANSLATION_SUPPORT
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
 
 #----------------------------------------------------------------------------------------------------
-# Konfiguration of wxWidgets Configuration
+# Configuration of wxWidgets
 #----------------------------------------------------------------------------------------------------
 
 SET(CMAKE_FIND_LIBRARY_PREFIXES "")
@@ -44,6 +44,22 @@ SET(wxWidgets_USE_LIBS base core gl net adv qa richtext )
 
 # We need the Find package for wxWidgets to work
 FIND_PACKAGE(wxWidgets)
+
+# Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
+IF(wxWidgets_FOUND)
+	# Include wxWidgets macros
+	INCLUDE(${wxWidgets_USE_FILE})
+ELSE(wxWidgets_FOUND)
+	# For Convenience. If we cannot continue, inform the User.
+	MESSAGE( FATAL_ERROR "wxWidgets not found! please install the package to continue")
+ENDIF(wxWidgets_FOUND)
+#include the wxWidgets dirs
+INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
+
+#----------------------------------------------------------------------------------------------------
+# SDL libs dependency check
+#----------------------------------------------------------------------------------------------------
+
 FIND_PACKAGE(SDL)
 FIND_PACKAGE(SDL_mixer)
 FIND_PACKAGE(SDL_sound)
@@ -63,110 +79,108 @@ if ( NOT SDL_SOUND_FOUND AND NOT OPTION_NO_SOUND )
    message ( FATAL_ERROR "SDL_sound library not found! please install the package or use OPTION_NO_SOUND ON" )
 endif()
 
-# Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
-IF(wxWidgets_FOUND)
-	# Include wxWidgets macros
-	INCLUDE(${wxWidgets_USE_FILE})
+#----------------------------------------------------------------------------------------------------
+# Source listing
+#----------------------------------------------------------------------------------------------------
 
-	# We define the include paths here, our minimal source dir is one,
-	# and also the include dirs defined by wxWidgets
-	INCLUDE_DIRECTORIES(${SpringLobbySrc_SOURCE_DIR} ${SettingsSrc_SOURCE_DIR}  ${wxWidgets_INCLUDE_DIRS} )
-	SET(SpringLobbySrc
-		src/boost/md5.cpp
-		src/updater/versionchecker.cpp
-		src/Helper/TextCompletionDatabase.cpp
-		src/filelister/filelistctrl.cpp
-		src/filelister/filelistdialog.cpp
-		src/filelister/filelistfilter.cpp
-		src/autobalancedialog.cpp
-		src/autojoinchanneldialog.cpp
-		src/addbotdialog.cpp
-		src/agreementdialog.cpp
-		src/base64.cpp
-		src/battle.cpp
-		src/battlelist.cpp
-		src/battlelistctrl.cpp
-		src/battlelistfilter.cpp
-		src/battlelisttab.cpp
-		src/battlemaptab.cpp
-		src/battleoptionstab.cpp
-		src/battleroomlistctrl.cpp
-		src/battleroomtab.cpp
-		src/battleroommmoptionstab.cpp
-		src/channel.cpp
-		src/channellist.cpp
-		src/chatlog.cpp
-		src/chatoptionstab.cpp
-		src/chatpanel.cpp
-		src/connectwindow.cpp
-		src/countrycodes.cpp
-		src/crashreport.cpp
-		src/customlistctrl.cpp
-		src/flagimages.cpp
-		src/globalevents.cpp
-		src/httpdownloader.cpp
-		src/hostbattledialog.cpp
-		src/ibattle.cpp
-		src/iconimagelist.cpp
-		src/mainchattab.cpp
-		src/mainjoinbattletab.cpp
-		src/mainoptionstab.cpp
-		src/mainsingleplayertab.cpp
-		src/mainwindow.cpp
-		src/mapctrl.cpp
-		src/maplistctrl.cpp
-		src/mapselectdialog.cpp
-		src/mmoptionmodel.cpp
-		src/mmoptionswrapper.cpp
-		src/nicklistctrl.cpp
-		src/sdlsound.cpp
-		src/server.cpp
-		src/serverevents.cpp
-		src/settings.cpp
-		src/singleplayerbattle.cpp
-		src/singleplayertab.cpp
-		src/socket.cpp
-		src/spinctld.cpp
-		src/spring.cpp
-		src/springlobbyapp.cpp
-		src/springoptionstab.cpp
-		src/springprocess.cpp
-		src/springunitsync.cpp
-		src/springunitsynclib.cpp
-		src/tasserver.cpp
-		src/tdfcontainer.cpp
-		src/ui.cpp
-		src/uiutils.cpp
-		src/unitsyncthread.cpp
-		src/user.cpp
-		src/userlist.cpp
-		src/utils.cpp
-	)
-	SET(SettingsSrc
-		src/settings++/custom_dialogs.cpp
-		src/settings++/frame.cpp
-		src/settings++/helpmenufunctions.cpp
-		src/settings++/panel_pathoption.cpp
-		src/settings++/presets.cpp
-		src/settings++/se_settings.cpp
-		src/settings++/se_utils.cpp
-		src/settings++/tab_abstract.cpp
-		src/settings++/tab_audio.cpp
-		src/settings++/tab_debug.cpp
-		src/settings++/tab_quality_video.cpp
-		src/settings++/tab_render_detail.cpp
-		src/settings++/tab_simple.cpp
-		src/settings++/tab_ui.cpp
-	)
-	SET(StandAloneSettings
-		src/settings++/Main.cpp
-	)
-	SET(SLSharedWithSettings
-		src/updater/versionchecker.cpp
-		src/crashreport.cpp
-		src/springunitsynclib.cpp
-		src/utils.cpp
-	)
+# We define the include paths here, our minimal source dir is one,
+INCLUDE_DIRECTORIES(${SpringLobbySrc_SOURCE_DIR} ${SettingsSrc_SOURCE_DIR} )
+SET(SpringLobbySrc
+	src/boost/md5.cpp
+	src/updater/versionchecker.cpp
+	src/Helper/TextCompletionDatabase.cpp
+	src/filelister/filelistctrl.cpp
+	src/filelister/filelistdialog.cpp
+	src/filelister/filelistfilter.cpp
+	src/autobalancedialog.cpp
+	src/autojoinchanneldialog.cpp
+	src/addbotdialog.cpp
+	src/agreementdialog.cpp
+	src/base64.cpp
+	src/battle.cpp
+	src/battlelist.cpp
+	src/battlelistctrl.cpp
+	src/battlelistfilter.cpp
+	src/battlelisttab.cpp
+	src/battlemaptab.cpp
+	src/battleoptionstab.cpp
+	src/battleroomlistctrl.cpp
+	src/battleroomtab.cpp
+	src/battleroommmoptionstab.cpp
+	src/channel.cpp
+	src/channellist.cpp
+	src/chatlog.cpp
+	src/chatoptionstab.cpp
+	src/chatpanel.cpp
+	src/connectwindow.cpp
+	src/countrycodes.cpp
+	src/crashreport.cpp
+	src/customlistctrl.cpp
+	src/flagimages.cpp
+	src/globalevents.cpp
+	src/httpdownloader.cpp
+	src/hostbattledialog.cpp
+	src/ibattle.cpp
+	src/iconimagelist.cpp
+	src/mainchattab.cpp
+	src/mainjoinbattletab.cpp
+	src/mainoptionstab.cpp
+	src/mainsingleplayertab.cpp
+	src/mainwindow.cpp
+	src/mapctrl.cpp
+	src/maplistctrl.cpp
+	src/mapselectdialog.cpp
+	src/mmoptionmodel.cpp
+	src/mmoptionswrapper.cpp
+	src/nicklistctrl.cpp
+	src/sdlsound.cpp
+	src/server.cpp
+	src/serverevents.cpp
+	src/settings.cpp
+	src/singleplayerbattle.cpp
+	src/singleplayertab.cpp
+	src/socket.cpp
+	src/spinctld.cpp
+	src/spring.cpp
+	src/springlobbyapp.cpp
+	src/springoptionstab.cpp
+	src/springprocess.cpp
+	src/springunitsync.cpp
+	src/springunitsynclib.cpp
+	src/tasserver.cpp
+	src/tdfcontainer.cpp
+	src/ui.cpp
+	src/uiutils.cpp
+	src/unitsyncthread.cpp
+	src/user.cpp
+	src/userlist.cpp
+	src/utils.cpp
+)
+SET(SettingsSrc
+	src/settings++/custom_dialogs.cpp
+	src/settings++/frame.cpp
+	src/settings++/helpmenufunctions.cpp
+	src/settings++/panel_pathoption.cpp
+	src/settings++/presets.cpp
+	src/settings++/se_settings.cpp
+	src/settings++/se_utils.cpp
+	src/settings++/tab_abstract.cpp
+	src/settings++/tab_audio.cpp
+	src/settings++/tab_debug.cpp
+	src/settings++/tab_quality_video.cpp
+	src/settings++/tab_render_detail.cpp
+	src/settings++/tab_simple.cpp
+	src/settings++/tab_ui.cpp
+)
+SET(StandAloneSettings
+	src/settings++/Main.cpp
+)
+SET(SLSharedWithSettings
+	src/updater/versionchecker.cpp
+	src/crashreport.cpp
+	src/springunitsynclib.cpp
+	src/utils.cpp
+)
 
 #----------------------------------------------------------------------------------------------------
 # Torrent System
@@ -239,23 +253,19 @@ endif( OPTION_TRANSLATION_SUPPORT )
 # Include_Directories(Libs boost_LIBS)
 # Link_Directories(Helfer Behaelter Netzwerk Logik Grafik)
 
-    # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
-    IF(WIN32)
-      SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
-			SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
-    ENDIF(WIN32)
+# If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
+IF(WIN32)
+  SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
+	SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
+ENDIF(WIN32)
 
-    # Here we define the executable SpringLobby ( or on Windows SpringLobby.exe )
-    ADD_EXECUTABLE(springlobby WIN32 ${SpringLobbySrc} ${SettingsSrc} )
+# Here we define the executable SpringLobby ( or on Windows SpringLobby.exe )
+ADD_EXECUTABLE(springlobby WIN32 ${SpringLobbySrc} ${SettingsSrc} )
 
-		# Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-    TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} )
+# Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} )
 
 
 #need to link to some other libraries ? just add them here
 #TARGET_LINK_LIBRARIES(SpringLobby png jpeg)
 
-ELSE(wxWidgets_FOUND)
-	# For Convenience. If we cannot continue, inform the User.
-	MESSAGE("wxWidgets not found!")
-ENDIF(wxWidgets_FOUND)
