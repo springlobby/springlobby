@@ -23,16 +23,16 @@ FIND_PACKAGE( PkgConfig )
 #----------------------------------------------------------------------------------------------------
 SET( OPTION_USE_TORRENT_SYSTEM
 	1 CACHE BOOL
-	"Enables the builtin Torrent System of SpringLobby" )
-SET( OPTION_NO_SOUND
+	"Enables the builtin map/mod p2p downloader (requires libtorrent-rasterbar library)" )
+SET( OPTION_SOUND
 	0 CACHE BOOL
-	"Disable compilation of sound output module (and removes SDL_sound dependency)" )
+	"Enables sound notification functionality (requires SDL and SDL_sound libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
 	1 CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
 
 #----------------------------------------------------------------------------------------------------
-# Configuration of wxWidgets
+# wxWidgets lib dependency check
 #----------------------------------------------------------------------------------------------------
 
 SET(CMAKE_FIND_LIBRARY_PREFIXES "")
@@ -51,7 +51,7 @@ IF(wxWidgets_FOUND)
 	INCLUDE(${wxWidgets_USE_FILE})
 ELSE(wxWidgets_FOUND)
 	# For Convenience. If we cannot continue, inform the User.
-	MESSAGE( FATAL_ERROR "wxWidgets not found! please install the package to continue")
+	MESSAGE( FATAL_ERROR "wxWidgets library is not found! Please install the package to continue")
 ENDIF(wxWidgets_FOUND)
 #include the wxWidgets dirs
 INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
@@ -65,19 +65,56 @@ FIND_PACKAGE(SDL_mixer)
 FIND_PACKAGE(SDL_sound)
 
 # Throw an error to the user if SDL is not found
-if ( NOT SDL_FOUND AND NOT OPTION_NO_SOUND )
-   message ( FATAL_ERROR "SDL library not found! please install the package or use OPTION_NO_SOUND ON" )
+if ( NOT SDL_FOUND AND OPTION_SOUND )
+   message ( FATAL_ERROR "SDL library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
 endif()
 
 # Throw an error to the user if SDL_mixer is not found
 if ( NOT SDL_MIXER_FOUND AND NOT OPTION_NO_SOUND )
-   message ( FATAL_ERROR "SDL_mixer library not found! please install the package or use OPTION_NO_SOUND ON" )
+   message ( FATAL_ERROR "SDL_mixer library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
 endif()
 
 # Throw an error to the user if SDL_sound is not found
 if ( NOT SDL_SOUND_FOUND AND NOT OPTION_NO_SOUND )
-   message ( FATAL_ERROR "SDL_sound library not found! please install the package or use OPTION_NO_SOUND ON" )
+   message ( FATAL_ERROR "SDL_sound library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
 endif()
+
+if ( OPTION_SOUND )
+	INCLUDE_DIRECTORIES( ${SDLSOUND_INCLUDE_DIRS} )
+	LINK_LIBRARIES( ${SDLSOUND_LIBRARY} )	
+else ( OPTION_SOUND )
+	ADD_DEFINITIONS( -DDISABLE_SOUND )
+ENDIF()
+
+#----------------------------------------------------------------------------------------------------
+# Gettext lib dependency check
+#----------------------------------------------------------------------------------------------------
+
+if( OPTION_TRANSLATION_SUPPORT )
+	FIND_PACKAGE( Gettext )
+  if(GETTEXT_FOUND)
+  	INCLUDE_DIRECTORIES( ${GETTEXT_INCLUDE_DIR} )
+  	include("cmake/KWWidgetsInternationalizationMacros.cmake")
+  else(GETTEXT_FOUND)
+    message(FATAL_ERROR "The GNU Gettext package is not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
+  endif(GETTEXT_FOUND)
+endif( OPTION_TRANSLATION_SUPPORT )
+
+#----------------------------------------------------------------------------------------------------
+# libtorrent-rasterbar dependency check
+#----------------------------------------------------------------------------------------------------
+IF( OPTION_USE_TORRENT_SYSTEM )
+	SET ( LIBTORRENT_MIN_VERSION 0.13 )
+	pkg_check_modules( LIBTORRENT libtorrent-rasterbar >=${LIBTORRENT_MIN_VERSION} )
+	IF( LIBTORRENT_FOUND )
+		INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
+		LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
+	ELSE()
+		MESSAGE( FATAL ERROR "libtorrent-rasterbar library is not found! Please install the package or toggle OPTION_USE_TORRENT_SYSTEM to OFF")
+	ENDIF()
+ELSE( OPTION_USE_TORRENT_SYSTEM )
+	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
+ENDIF()
 
 #----------------------------------------------------------------------------------------------------
 # Source listing
@@ -126,6 +163,7 @@ SET(SpringLobbySrc
 	src/mainjoinbattletab.cpp
 	src/mainoptionstab.cpp
 	src/mainsingleplayertab.cpp
+	src/maintorrenttab.cpp
 	src/mainwindow.cpp
 	src/mapctrl.cpp
 	src/maplistctrl.cpp
@@ -149,6 +187,9 @@ SET(SpringLobbySrc
 	src/springunitsynclib.cpp
 	src/tasserver.cpp
 	src/tdfcontainer.cpp
+	src/torrentlistctrl.cpp
+	src/torrentoptionspanel.cpp
+	src/torrentwrapper.cpp
 	src/ui.cpp
 	src/uiutils.cpp
 	src/unitsyncthread.cpp
@@ -182,90 +223,37 @@ SET(SLSharedWithSettings
 	src/utils.cpp
 )
 
-#----------------------------------------------------------------------------------------------------
-# Torrent System
-#----------------------------------------------------------------------------------------------------
-IF( OPTION_USE_TORRENT_SYSTEM )
-	SET ( LIBTORRENT_MIN_VERSION 0.13 )
-	pkg_check_modules( LIBTORRENT libtorrent>=${LIBTORRENT_MIN_VERSION} )
-	IF( LIBTORRENT_FOUND )
-		INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
-		LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
-		SET( SpringLobbySrc ${SpringLobbySrc}
-			src/maintorrenttab.cpp
-			src/torrentlistctrl.cpp
-			src/torrentoptionspanel.cpp
-			src/torrentwrapper.cpp
-		)
-	ELSE()
-		MESSAGE("The Version of LibTorrent must be at least ${LIBTORRENT_MIN_VERSION}, disabling LibTorrent")
-		ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
-		SET( OPTION_USE_TORRENT_SYSTEM 0 CACHE BOOL "Enables the builtin Torrent System of SpringLobby" FORCE )
-	ENDIF()
-ELSE()
-	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
-ENDIF()
-
-#----------------------------------------------------------------------------------------------------
-# Sound System
-#----------------------------------------------------------------------------------------------------
-
-if ( SDL_SOUND_FOUND AND NOT OPTION_NO_SOUND )
-	INCLUDE_DIRECTORIES( ${SDLSOUND_INCLUDE_DIRS} )
-	LINK_LIBRARIES( ${SDLSOUND_LIBRARY} )	
-ENDIF()
-
-if ( OPTION_NO_SOUND )
-	ADD_DEFINITIONS( -DDISABLE_SOUND )
-ENDIF()
-
-#----------------------------------------------------------------------------------------------------
-# L10n support
-#----------------------------------------------------------------------------------------------------
-if( OPTION_TRANSLATION_SUPPORT )
-	FIND_PACKAGE( Gettext )
-  if(GETTEXT_FOUND)
-    include("cmake/KWWidgetsInternationalizationMacros.cmake")
-    INCLUDE_DIRECTORIES( ${GETTEXT_INCLUDE_DIR} )
-    kwwidgets_create_gettext_targets(
-      DOMAIN_NAME "SpringLobby"
-      LOCALE_LIST "da;de;fi;fr;it;ro;ru;sv;uk"
-      COPYRIGHT_HOLDER "The SpringLobby team"
-      SOURCES "${SpringLobbySrc};${SettingsSrc};${StandAloneSettings}"
-      PO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Resources/po"
-      POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources/po"
-      PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources/po"
-      MO_INSTALL_DIR "${SpringLobby_INSTALL_DATA_DIR}/locale"
-      CREATE_POT_TARGET
-      CREATE_PO_TARGET )
-  else(GETTEXT_FOUND)
-    set(msg "OPTION_TRANSLATION_SUPPORT is ON but the gettext runtime library and tools were not found.\n\n Please install the GNU Gettext package or turn off the option")
-    message(FATAL_ERROR "${msg}")
-  endif(GETTEXT_FOUND)
-endif( OPTION_TRANSLATION_SUPPORT )
-
-# Make sure the compiler can find include files from our Hello library.
-# include_directories (${HELLO_SOURCE_DIR}/Hello)
-
-# Make sure the linker can find the Hello library once it is built.
-# link_directories (${HELLO_BINARY_DIR}/Hello)
-
-# Include_Directories(Libs boost_LIBS)
-# Link_Directories(Helfer Behaelter Netzwerk Logik Grafik)
-
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
 IF(WIN32)
   SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
 	SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ENDIF(WIN32)
 
+#----------------------------------------------------------------------------------------------------
+# L10n support
+#----------------------------------------------------------------------------------------------------
+
+if( OPTION_TRANSLATION_SUPPORT )
+  kwwidgets_create_gettext_targets(
+    DOMAIN_NAME "SpringLobby"
+    LOCALE_LIST "da;de;fi;fr;it;ro;ru;sv;uk"
+    COPYRIGHT_HOLDER "The SpringLobby team"
+    SOURCES "${SpringLobbySrc};${SettingsSrc};${StandAloneSettings}"
+    PO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Resources/po"
+    POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources/po"
+    PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources/po"
+    MO_INSTALL_DIR "${SpringLobby_INSTALL_DATA_DIR}/locale"
+    CREATE_POT_TARGET
+    CREATE_PO_TARGET )
+endif( OPTION_TRANSLATION_SUPPORT )
+
+#----------------------------------------------------------------------------------------------------
+# Build target defintions
+#----------------------------------------------------------------------------------------------------
+
 # Here we define the executable SpringLobby ( or on Windows SpringLobby.exe )
 ADD_EXECUTABLE(springlobby WIN32 ${SpringLobbySrc} ${SettingsSrc} )
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} )
-
-
-#need to link to some other libraries ? just add them here
-#TARGET_LINK_LIBRARIES(SpringLobby png jpeg)
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} png jpeg )
 
