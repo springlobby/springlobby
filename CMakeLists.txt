@@ -21,7 +21,7 @@ FIND_PACKAGE( PkgConfig )
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise SpringLobby
 #----------------------------------------------------------------------------------------------------
-SET( OPTION_USE_TORRENT_SYSTEM
+SET( OPTION_TORRENT_SYSTEM
 	1 CACHE BOOL
 	"Enables the builtin map/mod p2p downloader (requires libtorrent-rasterbar library)" )
 SET( OPTION_SOUND
@@ -103,7 +103,7 @@ endif( OPTION_TRANSLATION_SUPPORT )
 #----------------------------------------------------------------------------------------------------
 # libtorrent-rasterbar dependency check
 #----------------------------------------------------------------------------------------------------
-IF( OPTION_USE_TORRENT_SYSTEM )
+IF( OPTION_TORRENT_SYSTEM )
 	SET ( LIBTORRENT_MIN_VERSION 0.13 )
 	pkg_check_modules( LIBTORRENT libtorrent-rasterbar >=${LIBTORRENT_MIN_VERSION} )
 	IF( LIBTORRENT_FOUND )
@@ -112,7 +112,7 @@ IF( OPTION_USE_TORRENT_SYSTEM )
 	ELSE()
 		MESSAGE( FATAL ERROR "libtorrent-rasterbar library is not found! Please install the package or toggle OPTION_USE_TORRENT_SYSTEM to OFF")
 	ENDIF()
-ELSE( OPTION_USE_TORRENT_SYSTEM )
+ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
 ENDIF()
 
