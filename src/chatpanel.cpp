@@ -1059,6 +1059,11 @@ void ChatPanel::Say( const wxString& message ) {
 				return;
 			}
 
+            //we need to close the channel tab if leaving manually
+            if (line.Upper().StartsWith( _T( "LEAVE" ) ) ) {
+
+            }
+
 			m_server->SendRaw( line );
 			OutputLine( _( " Sent: \"" ) + line + _( "\"" ), sett().GetChatColorNormal(), sett().GetChatFont() );
 		}
