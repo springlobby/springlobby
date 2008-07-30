@@ -64,9 +64,9 @@ public:
 	 * \param triples this will contain the options after the function
 	 * \param flag which OptionType is to be processed
 	 */
-	void getOptions(wxStringTripleVec* triples ,GameOption flag);
+	void getOptions(wxStringTripleVec* triples ,GameOption flag) const ;
 	//! similar to getOptions, instead of vector a map is used and the name is not stored
-	void getOptionsMap(wxStringMap*,GameOption);
+	void getOptionsMap(wxStringMap*,GameOption) const ;
 	//! recreates ALL containers
 	void unLoadOptions();
 	//! recreates the containers of corresponding flag
@@ -76,12 +76,12 @@ public:
 	/*! searches all containers for key
 	 * \return value of key if key found, "" otherwise
 	 */
-	wxString getSingleValue(wxString key);
+	wxString getSingleValue(wxString key) const ;
 	//! returns value of specified key
 	/*! searches containers of type flag for key
 	 * \return value of key if key found, "" otherwise
 	 */
-	wxString getSingleValue(wxString key, GameOption flag);
+	wxString getSingleValue(wxString key, GameOption flag) const;
 
 	//! sets a single option in specified container
 	/*! \return true if success, false otherwise */
@@ -90,13 +90,13 @@ public:
 	bool setSingleOption(wxString key, wxString value);
 
 	//! returns the option type of specified key (all containers are tried)
-	OptionType GetSingleOptionType (wxString key);
+	OptionType GetSingleOptionType (wxString key) const ;
 
 	//!returns the cbx_choice associated w current listoption
-	wxString GetNameListOptValue(wxString key, GameOption flag);
+	wxString GetNameListOptValue(wxString key, GameOption flag) const;
 
 	//! returns the listitem key associated with listitem name
-	wxString GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag);
+	wxString GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag) const ;
 
 //private:
 	const static int optionCategoriesCount = 3;
