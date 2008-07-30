@@ -1,12 +1,16 @@
-#, fuzzy
+# Arabic translation for springlobby
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the springlobby package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: springlobby\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-05-08 19:25+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2008-07-18 14:44+0000\n"
+"Last-Translator: صقر بن عبدالله <Unknown>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,52 +19,52 @@ msgstr ""
 
 #: src/addbotdialog.cpp:30
 msgid "Add bot"
-msgstr ""
+msgstr "إضافة بوت"
 
 #: src/addbotdialog.cpp:44
 msgid "Nickname:"
-msgstr ""
+msgstr "الكنية:"
 
 #: src/addbotdialog.cpp:58
 msgid "AI:"
-msgstr ""
+msgstr "الذكاء الاصطناعي:"
 
 #: src/addbotdialog.cpp:62
 msgid "Choose the AI library to use with this bot."
-msgstr ""
+msgstr "اختار مكتبة الذكاء الاصطناعي لاستخدامها مع البوت."
 
 #: src/addbotdialog.cpp:76 src/autobalancedialog.cpp:57
 #: src/connectwindow.cpp:78 src/hostbattledialog.cpp:204
 msgid "Cancel"
-msgstr ""
+msgstr "إلغاء"
 
 #: src/addbotdialog.cpp:81
 msgid "Add Bot"
-msgstr ""
+msgstr "إضافة بوت"
 
 #: src/addbotdialog.cpp:137
 msgid "No AI bots found in your Spring installation."
-msgstr ""
+msgstr "لم يتم العثور على أي بوتات ذكاء اصطناعي على نسختك من Spring."
 
 #: src/addbotdialog.cpp:137
 msgid "No bot-libs found"
-msgstr ""
+msgstr "لم يتم العثور على مكتبات البوت"
 
 #: src/agreementdialog.cpp:26
 msgid "Accept Agreement"
-msgstr ""
+msgstr "قبول الاتفاق"
 
 #: src/agreementdialog.cpp:35
 msgid "Do you accept the terms of this agreement?"
-msgstr ""
+msgstr "هل تقبل شروط هذا الاتفاق؟"
 
 #: src/agreementdialog.cpp:43 src/uiutils.h:11
 msgid "Yes"
-msgstr ""
+msgstr "نعم"
 
 #: src/agreementdialog.cpp:48 src/uiutils.h:11
 msgid "No"
-msgstr ""
+msgstr "لا"
 
 #: src/autobalancedialog.cpp:34
 msgid "Autobalance players into teams"
@@ -68,11 +72,11 @@ msgstr ""
 
 #: src/autobalancedialog.cpp:37
 msgid "Method"
-msgstr ""
+msgstr "طريقة"
 
 #: src/autobalancedialog.cpp:40 src/battlemaptab.cpp:92
 msgid "Random"
-msgstr ""
+msgstr "عشوائي"
 
 #: src/autobalancedialog.cpp:41
 msgid "Divide ranks evenly"
@@ -80,19 +84,19 @@ msgstr ""
 
 #: src/autobalancedialog.cpp:43
 msgid "Clans"
-msgstr ""
+msgstr "فرق"
 
 #: src/autobalancedialog.cpp:46 src/hostbattledialog.cpp:130
 msgid "None"
-msgstr ""
+msgstr "لا شيء"
 
 #: src/autobalancedialog.cpp:47
 msgid "Fair"
-msgstr ""
+msgstr "معتدل"
 
 #: src/autobalancedialog.cpp:48
 msgid "Always"
-msgstr ""
+msgstr "دائماً"
 
 #: src/autobalancedialog.cpp:49
 msgid ""
@@ -106,15 +110,15 @@ msgstr ""
 
 #: src/autobalancedialog.cpp:60 src/connectwindow.cpp:77
 msgid "Ok"
-msgstr ""
+msgstr "موافق"
 
 #: src/battlelistctrl.cpp:58 src/hostbattledialog.cpp:57
 msgid "Description"
-msgstr ""
+msgstr "وصف"
 
 #: src/battlelistctrl.cpp:62 src/mainjoinbattletab.cpp:151
 msgid "Map"
-msgstr ""
+msgstr "خارطة"
 
 #: src/battlelistctrl.cpp:66 src/hostbattledialog.cpp:71
 msgid "Mod"
@@ -122,11 +126,11 @@ msgstr ""
 
 #: src/battlelistctrl.cpp:70 src/hostbattledialog.cpp:208
 msgid "Host"
-msgstr ""
+msgstr "مستضيف"
 
 #: src/battlelistctrl.cpp:74 src/battleroomlistctrl.cpp:88
 msgid "a"
-msgstr ""
+msgstr "أ"
 
 #: src/battlelistctrl.cpp:78
 msgid "p"
@@ -134,11 +138,11 @@ msgstr ""
 
 #: src/battlelistctrl.cpp:82
 msgid "m"
-msgstr ""
+msgstr "م"
 
 #: src/battlelistctrl.cpp:111
 msgid "Download &map"
-msgstr ""
+msgstr "تنزيل ال&خارطة"
 
 #: src/battlelistctrl.cpp:112
 msgid "Download m&od"
@@ -146,60 +150,60 @@ msgstr ""
 
 #: src/battlelistfilter.cpp:73
 msgid "Host:"
-msgstr ""
+msgstr "المستضيف:"
 
 #: src/battlelistfilter.cpp:92 src/battlelistfilter.cpp:162
 msgid "Status:"
-msgstr ""
+msgstr "الحالة:"
 
 #: src/battlelistfilter.cpp:96 src/battleroomtab.cpp:120
 msgid "Locked"
-msgstr ""
+msgstr "مقفل"
 
 #: src/battlelistfilter.cpp:101
 msgid "Passworded"
-msgstr ""
+msgstr "مقفل بكلمة سرّ"
 
 #: src/battlelistfilter.cpp:111
 msgid "Rank Limit:"
-msgstr ""
+msgstr "حدّ الترتيب:"
 
 #: src/battlelistfilter.cpp:145
 msgid "Description:"
-msgstr ""
+msgstr "وصف:"
 
 #: src/battlelistfilter.cpp:166
 msgid "Started"
-msgstr ""
+msgstr "بدئت"
 
 #: src/battlelistfilter.cpp:171
 msgid "Full"
-msgstr ""
+msgstr "كاملة"
 
 #: src/battlelistfilter.cpp:176
 msgid "Open"
-msgstr ""
+msgstr "فتح"
 
 #: src/battlelistfilter.cpp:186
 msgid "Player:"
-msgstr ""
+msgstr "لاعب:"
 
 #: src/battlelistfilter.cpp:195
 msgid "All"
-msgstr ""
+msgstr "الكل"
 
 #: src/battlelistfilter.cpp:214 src/battlelisttab.cpp:85
 #: src/singleplayertab.cpp:48
 msgid "Map:"
-msgstr ""
+msgstr "الخارطة:"
 
 #: src/battlelistfilter.cpp:231
 msgid "Only maps i have"
-msgstr ""
+msgstr "فقط الخرائطي التي أملكها"
 
 #: src/battlelistfilter.cpp:242
 msgid "Max.Player:"
-msgstr ""
+msgstr "الحدّ الأعلى للاعبين:"
 
 #: src/battlelistfilter.cpp:269 src/battlelisttab.cpp:91
 #: src/singleplayertab.cpp:57
@@ -212,28 +216,28 @@ msgstr ""
 
 #: src/battlelistfilter.cpp:297
 msgid "    Spectator:"
-msgstr ""
+msgstr "    متابع:"
 
 #: src/battlelistfilter.cpp:552 src/battlelistfilter.cpp:557
 #: src/battlelistfilter.cpp:558 src/battlelistfilter.cpp:560
 msgid "%d%"
-msgstr ""
+msgstr "%d%"
 
 #: src/battlelisttab.cpp:97
 msgid "Players:"
-msgstr ""
+msgstr "اللّاعبون:"
 
 #: src/battlelisttab.cpp:103
 msgid "Spectators:"
-msgstr ""
+msgstr "المتابعون:"
 
 #: src/battlelisttab.cpp:143
 msgid "Host new..."
-msgstr ""
+msgstr "استضافة جديدة..."
 
 #: src/battlelisttab.cpp:146
 msgid "Join"
-msgstr ""
+msgstr "انضمام"
 
 #: src/battlelisttab.cpp:361
 msgid ""
@@ -242,7 +246,7 @@ msgstr ""
 
 #: src/battlelisttab.cpp:361
 msgid "Not Online."
-msgstr ""
+msgstr "غير متصل."
 
 #: src/battlelisttab.cpp:367
 msgid "Hosting is disabled due to the incompatible version you're using"
@@ -254,7 +258,7 @@ msgstr ""
 #: src/springoptionstab.cpp:481 src/springoptionstab.cpp:486 src/ui.cpp:498
 #: src/ui.cpp:501
 msgid "Spring error"
-msgstr ""
+msgstr "خطأ Spring"
 
 #: src/battlelisttab.cpp:372
 msgid ""
@@ -291,7 +295,7 @@ msgstr ""
 
 #: src/battlelisttab.cpp:410
 msgid "Error starting battle."
-msgstr ""
+msgstr "خطأ في بدأ المعركة."
 
 #: src/battlelisttab.cpp:421 src/battlelisttab.cpp:428
 msgid ""
@@ -301,7 +305,7 @@ msgstr ""
 
 #: src/battlelisttab.cpp:421 src/battlelisttab.cpp:428
 msgid "No maps found"
-msgstr ""
+msgstr "لم يتم العثور على أي خريطة"
 
 #: src/battlelisttab.cpp:490
 msgid ""
@@ -350,20 +354,20 @@ msgstr ""
 
 #: src/battlelisttab.cpp:528
 msgid "Enter password"
-msgstr ""
+msgstr "أدخل كلمة السرّ"
 
 #: src/battlemaptab.cpp:76 src/battleroomtab.cpp:130
 msgid "Option"
-msgstr ""
+msgstr "خيار"
 
 #: src/battlemaptab.cpp:78 src/battleroomtab.cpp:132
 msgid "Value"
-msgstr ""
+msgstr "قيمة"
 
 #: src/battlemaptab.cpp:83 src/battleroomtab.cpp:139 src/battleroomtab.cpp:140
 #: src/battleroomtab.cpp:280 src/battleroomtab.cpp:286
 msgid "Size"
-msgstr ""
+msgstr "حجم"
 
 #: src/battlemaptab.cpp:84 src/battleroomtab.cpp:141 src/battleroomtab.cpp:142
 #: src/battleroomtab.cpp:281 src/battleroomtab.cpp:287
@@ -377,7 +381,7 @@ msgstr ""
 
 #: src/battlemaptab.cpp:86
 msgid "Gravity"
-msgstr ""
+msgstr "الجاذبيّة"
 
 #: src/battlemaptab.cpp:87
 msgid "Extractor radius"
@@ -389,15 +393,15 @@ msgstr ""
 
 #: src/battlemaptab.cpp:92
 msgid "Fixed"
-msgstr ""
+msgstr "ثابت"
 
 #: src/battlemaptab.cpp:92
 msgid "Choose in game"
-msgstr ""
+msgstr "اختار في اللعبة"
 
 #: src/battlemaptab.cpp:95
 msgid "Startpositions"
-msgstr ""
+msgstr "مواقع البدء"
 
 #: src/battleoptionstab.cpp:74
 msgid "Continue if commander dies"
@@ -413,11 +417,11 @@ msgstr ""
 
 #: src/battleoptionstab.cpp:77
 msgid "End condition"
-msgstr ""
+msgstr "شرط الإنتهاء"
 
 #: src/battleoptionstab.cpp:81
 msgid "Resources"
-msgstr ""
+msgstr "الموارد"
 
 #: src/battleoptionstab.cpp:86 src/mmoptionswrapper.cpp:94
 msgid "Start Metal"
@@ -446,7 +450,7 @@ msgstr ""
 #: src/battleoptionstab.cpp:131 src/mainjoinbattletab.cpp:152
 #: src/mainsingleplayertab.cpp:38 src/settings++/tab_simple.cpp:134
 msgid "Options"
-msgstr ""
+msgstr "خيارات"
 
 #: src/battleoptionstab.cpp:135
 msgid "Limit d-gun"
@@ -486,7 +490,7 @@ msgstr ""
 
 #: src/battleoptionstab.cpp:196
 msgid "Load..."
-msgstr ""
+msgstr "تحميل..."
 
 #: src/battleoptionstab.cpp:197
 msgid "Load a saved set of restrictions."
@@ -494,7 +498,7 @@ msgstr ""
 
 #: src/battleoptionstab.cpp:202
 msgid "Save..."
-msgstr ""
+msgstr "حفظ..."
 
 #: src/battleoptionstab.cpp:203
 msgid "Save a set of restrictions."
@@ -502,16 +506,16 @@ msgstr ""
 
 #: src/battleoptionstab.cpp:210
 msgid "Clear"
-msgstr ""
+msgstr "مسح"
 
 #: src/battleoptionstab.cpp:211
 msgid "Enable all units."
-msgstr ""
+msgstr "تفعيل كل الوحدات."
 
 #: src/battleroomlistctrl.cpp:80 src/connectwindow.cpp:65
 #: src/nicklistctrl.cpp:52
 msgid "Nickname"
-msgstr ""
+msgstr "الكنية"
 
 #: src/battleroomlistctrl.cpp:84
 msgid "t"
@@ -527,19 +531,19 @@ msgstr ""
 
 #: src/battleroomlistctrl.cpp:130 src/battleroomtab.cpp:83
 msgid "Team"
-msgstr ""
+msgstr "فريق"
 
 #: src/battleroomlistctrl.cpp:138 src/battleroomtab.cpp:84
 msgid "Ally"
-msgstr ""
+msgstr "حليف"
 
 #: src/battleroomlistctrl.cpp:148 src/battleroomtab.cpp:86
 msgid "Side"
-msgstr ""
+msgstr "جهة"
 
 #: src/battleroomlistctrl.cpp:152
 msgid "Set color"
-msgstr ""
+msgstr "تعيين اللون"
 
 #: src/battleroomlistctrl.cpp:157 src/battleroomlistctrl.cpp:488
 msgid "Set Resource Bonus"
@@ -548,12 +552,12 @@ msgstr ""
 #: src/battleroomlistctrl.cpp:162 src/battleroomlistctrl.cpp:407
 #: src/battleroomlistctrl.cpp:416 src/battleroomtab.cpp:122
 msgid "Spectator"
-msgstr ""
+msgstr "متابع"
 
 #: src/battleroomlistctrl.cpp:167 src/battleroomlistctrl.cpp:411
 #: src/battleroomlistctrl.cpp:421
 msgid "Kick"
-msgstr ""
+msgstr "طرد"
 
 #: src/battleroomlistctrl.cpp:169 src/battleroomlistctrl.cpp:410
 #: src/battleroomlistctrl.cpp:419 src/chatpanel.cpp:432
@@ -562,15 +566,15 @@ msgstr ""
 
 #: src/battleroomlistctrl.cpp:488
 msgid "Please enter a value between 0 and 100"
-msgstr ""
+msgstr "رجاء إدخال رقم بين 0 و100"
 
 #: src/battleroomlistctrl.cpp:493
 msgid "Not a number"
-msgstr ""
+msgstr "هذا ليس رقم"
 
 #: src/battleroomlistctrl.cpp:493 src/battleroomlistctrl.cpp:498
 msgid "Invalid number"
-msgstr ""
+msgstr "رقم غير صالح"
 
 #: src/battleroomlistctrl.cpp:498
 msgid ""
@@ -584,27 +588,27 @@ msgstr ""
 
 #: src/battleroommmoptionstab.cpp:43
 msgid "Map Options"
-msgstr ""
+msgstr "خيارات الخارطة"
 
 #: src/battleroomtab.cpp:85
 msgid "Color"
-msgstr ""
+msgstr "اللون"
 
 #: src/battleroomtab.cpp:104 src/chatpanel.cpp:291
 msgid "Leave"
-msgstr ""
+msgstr "مغادرة"
 
 #: src/battleroomtab.cpp:106 src/singleplayertab.cpp:81
 msgid "Start"
-msgstr ""
+msgstr "بدء"
 
 #: src/battleroomtab.cpp:108
 msgid "Add Bot..."
-msgstr ""
+msgstr "إضافة بوت..."
 
 #: src/battleroomtab.cpp:112
 msgid "Fix colours"
-msgstr ""
+msgstr "تثبيت الألوان"
 
 #: src/battleroomtab.cpp:115
 msgid "Balance"
@@ -612,7 +616,7 @@ msgstr ""
 
 #: src/battleroomtab.cpp:118
 msgid "I'm ready"
-msgstr ""
+msgstr "أنا جاهز"
 
 #: src/battleroomtab.cpp:377
 msgid "You have one or more bots sharing team, this is not possible."
@@ -630,7 +634,7 @@ msgstr ""
 
 #: src/battleroomtab.cpp:384 src/battleroomtab.cpp:389
 msgid "Not ready"
-msgstr ""
+msgstr "غير جاهز"
 
 #: src/battleroomtab.cpp:389
 msgid "Force start?"
@@ -642,7 +646,7 @@ msgstr ""
 
 #: src/chatlog.cpp:36
 msgid "]"
-msgstr ""
+msgstr "]"
 
 #: src/chatlog.cpp:77 src/chatlog.cpp:83
 msgid ""
@@ -691,11 +695,11 @@ msgstr ""
 
 #: src/chatoptionstab.cpp:111
 msgid "Background"
-msgstr ""
+msgstr "خلفيَّة"
 
 #: src/chatoptionstab.cpp:125
 msgid "Action"
-msgstr ""
+msgstr "اجراء"
 
 #: src/chatoptionstab.cpp:139
 msgid "Highlight"
@@ -707,21 +711,21 @@ msgstr ""
 
 #: src/chatoptionstab.cpp:167
 msgid "My messages"
-msgstr ""
+msgstr "راسالتي"
 
 #: src/chatoptionstab.cpp:186 src/connectwindow.cpp:59
 msgid "Server"
-msgstr ""
+msgstr "الخادوم"
 
 #: src/chatoptionstab.cpp:200
 msgid "Client"
-msgstr ""
+msgstr "العميل"
 
 #: src/chatoptionstab.cpp:214 src/chatpanel.cpp:1326 src/chatpanel.cpp:1487
 #: src/chatpanel.cpp:1492 src/mainwindow.cpp:410
 #: src/settings++/tab_abstract.cpp:111 src/tasserver.cpp:408
 msgid "Error"
-msgstr ""
+msgstr "خطأ"
 
 #: src/chatoptionstab.cpp:228
 msgid "Timestamp"
@@ -729,7 +733,7 @@ msgstr ""
 
 #: src/chatoptionstab.cpp:242
 msgid "Notification"
-msgstr ""
+msgstr "اشعار"
 
 #: src/chatoptionstab.cpp:252
 msgid ""
@@ -743,19 +747,19 @@ msgstr ""
 
 #: src/chatoptionstab.cpp:263
 msgid "Font:"
-msgstr ""
+msgstr "الخطّ:"
 
 #: src/chatoptionstab.cpp:267
 msgid "default"
-msgstr ""
+msgstr "المبدئي"
 
 #: src/chatoptionstab.cpp:271
 msgid "Select..."
-msgstr ""
+msgstr "إنتقاء..."
 
 #: src/chatoptionstab.cpp:283
 msgid "Behavior"
-msgstr ""
+msgstr "سلوك"
 
 #: src/chatoptionstab.cpp:285
 msgid "Use smart scrolling"
@@ -763,19 +767,19 @@ msgstr ""
 
 #: src/chatoptionstab.cpp:299
 msgid "Chat logs"
-msgstr ""
+msgstr "سجلّات الدردشة"
 
 #: src/chatoptionstab.cpp:301
 msgid "Save chat logs"
-msgstr ""
+msgstr "حفظ سجلّات الدردشة"
 
 #: src/chatoptionstab.cpp:309
 msgid "Save to:"
-msgstr ""
+msgstr "حفظ في:"
 
 #: src/chatoptionstab.cpp:320
 msgid "Browse..."
-msgstr ""
+msgstr "استعراض..."
 
 #: src/chatoptionstab.cpp:330
 msgid "Highlight words"
@@ -787,11 +791,11 @@ msgstr ""
 
 #: src/chatoptionstab.cpp:625 src/springoptionstab.cpp:442
 msgid "Choose a directory"
-msgstr ""
+msgstr "اختيار دليل"
 
 #: src/chatpanel.cpp:235
 msgid "Send"
-msgstr ""
+msgstr "إرسال"
 
 #: src/chatpanel.cpp:281
 msgid "Auto join this channel"
@@ -803,39 +807,39 @@ msgstr ""
 
 #: src/chatpanel.cpp:301 src/chatpanel.cpp:355
 msgid "Select all"
-msgstr ""
+msgstr "إنتقاء الكل"
 
 #: src/chatpanel.cpp:303 src/chatpanel.cpp:357
 msgid "Copy"
-msgstr ""
+msgstr "نسخ"
 
 #: src/chatpanel.cpp:309
 msgid "Channel info"
-msgstr ""
+msgstr "معلومات القناة"
 
 #: src/chatpanel.cpp:313 src/chatpanel.cpp:1175
 msgid "Set topic..."
-msgstr ""
+msgstr "تعيين الموضوع..."
 
 #: src/chatpanel.cpp:315 src/chatpanel.cpp:1191
 msgid "Channel message..."
-msgstr ""
+msgstr "رسالة القناة..."
 
 #: src/chatpanel.cpp:319
 msgid "Lock..."
-msgstr ""
+msgstr "قفل..."
 
 #: src/chatpanel.cpp:321
 msgid "Unlock"
-msgstr ""
+msgstr "إلغاء القفل"
 
 #: src/chatpanel.cpp:325
 msgid "Register..."
-msgstr ""
+msgstr "تسجيل..."
 
 #: src/chatpanel.cpp:327
 msgid "Unregister"
-msgstr ""
+msgstr "إلغاء التسجيل"
 
 #: src/chatpanel.cpp:333
 msgid "On"
@@ -863,7 +867,7 @@ msgstr ""
 
 #: src/chatpanel.cpp:351
 msgid "Reconnect"
-msgstr ""
+msgstr "إعادة الاتصال"
 
 #: src/chatpanel.cpp:366
 msgid "Remove..."
@@ -871,7 +875,7 @@ msgstr ""
 
 #: src/chatpanel.cpp:368
 msgid "Change password..."
-msgstr ""
+msgstr "تغيير كلمة السرّ"
 
 #: src/chatpanel.cpp:370
 msgid "Set access..."
@@ -879,19 +883,19 @@ msgstr ""
 
 #: src/chatpanel.cpp:372
 msgid "Accounts"
-msgstr ""
+msgstr "حسابات"
 
 #: src/chatpanel.cpp:375
 msgid "Broadcast..."
-msgstr ""
+msgstr "إذاعة..."
 
 #: src/chatpanel.cpp:377
 msgid "Admin"
-msgstr ""
+msgstr "الإداري"
 
 #: src/chatpanel.cpp:388
 msgid "Open Chat"
-msgstr ""
+msgstr "فتح الدردشة"
 
 #: src/chatpanel.cpp:390
 msgid "Join same battle"
@@ -939,19 +943,19 @@ msgstr ""
 
 #: src/chatpanel.cpp:422 src/chatpanel.cpp:448
 msgid "Kick..."
-msgstr ""
+msgstr "طرد..."
 
 #: src/chatpanel.cpp:426
 msgid "Ban..."
-msgstr ""
+msgstr "منع..."
 
 #: src/chatpanel.cpp:428
 msgid "Unban"
-msgstr ""
+msgstr "رفع المنع"
 
 #: src/chatpanel.cpp:436
 msgid "Slap!"
-msgstr ""
+msgstr "صفع!"
 
 #: src/chatpanel.cpp:452
 msgid "Op"
@@ -963,7 +967,7 @@ msgstr ""
 
 #: src/chatpanel.cpp:767
 msgid " !! Command: \""
-msgstr ""
+msgstr " !! أمر: \""
 
 #: src/chatpanel.cpp:767
 msgid "\" params: \""
@@ -971,15 +975,15 @@ msgstr ""
 
 #: src/chatpanel.cpp:772
 msgid "channel"
-msgstr ""
+msgstr "قناة"
 
 #: src/chatpanel.cpp:773
 msgid "battle"
-msgstr ""
+msgstr "معركة"
 
 #: src/chatpanel.cpp:774
 msgid "server"
-msgstr ""
+msgstr "خادوم"
 
 #: src/chatpanel.cpp:793 src/chatpanel.cpp:798
 msgid " joined the "
@@ -997,11 +1001,11 @@ msgstr ""
 
 #: src/chatpanel.cpp:890
 msgid "Chat closed."
-msgstr ""
+msgstr "قد أغلقت الدردشة."
 
 #: src/chatpanel.cpp:916
 msgid "_SERVER"
-msgstr ""
+msgstr "_خادوم"
 
 #: src/chatpanel.cpp:971
 #, c-format
