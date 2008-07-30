@@ -1061,7 +1061,8 @@ void ChatPanel::Say( const wxString& message ) {
 
             //we need to close the channel tab if leaving manually
             if (line.Upper().StartsWith( _T( "LEAVE" ) ) ) {
-
+                wxString channame = line.AfterFirst(' ').BeforeFirst(' ');
+                ui().OnLeaveChannel( channame );
             }
 
 			m_server->SendRaw( line );
