@@ -229,9 +229,9 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 	long gameoption;
 	controlName.BeforeFirst(sep).ToLong(&gameoption);
 	wxString optKey = controlName.AfterFirst(sep);
-	wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
 	if ( m_chkbox_map.find(controlName) != m_chkbox_map.end() )
 	{
+	    wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
 		wxCheckBox* cur = m_chkbox_map[controlName] ;
 		long l_val;
 		value.ToLong(&l_val);
@@ -240,18 +240,21 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 
 	 if ( m_combox_map.find(controlName) != m_combox_map.end() )
 	{
+		wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
 		wxComboBox* cur = m_combox_map[controlName];
 		cur->SetValue(optWrap->GetNameListOptValue( optKey, (GameOption)gameoption));
 	}
 
 	 if ( m_textctrl_map.find(controlName) != m_textctrl_map.end() )
 	{
+		wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
 		wxTextCtrl* cur = m_textctrl_map[controlName];
 		cur->SetValue(value);
 	}
 
 	 if ( m_spinctrl_map.find(controlName) != m_spinctrl_map.end() )
 	{
+		wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
 		wxSpinCtrlDbl* cur = m_spinctrl_map[controlName] ;
 		double l_val;
 		value.ToDouble(&l_val);

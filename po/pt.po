@@ -1,12 +1,16 @@
-#, fuzzy
+# Portuguese translation for springlobby
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the springlobby package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: springlobby\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-05-08 19:25+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2008-07-19 12:24+0000\n"
+"Last-Translator: Tiago Silva <Unknown>\n"
+"Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -32,7 +36,7 @@ msgstr ""
 #: src/addbotdialog.cpp:76 src/autobalancedialog.cpp:57
 #: src/connectwindow.cpp:78 src/hostbattledialog.cpp:204
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: src/addbotdialog.cpp:81
 msgid "Add Bot"
@@ -56,11 +60,11 @@ msgstr ""
 
 #: src/agreementdialog.cpp:43 src/uiutils.h:11
 msgid "Yes"
-msgstr ""
+msgstr "Sim"
 
 #: src/agreementdialog.cpp:48 src/uiutils.h:11
 msgid "No"
-msgstr ""
+msgstr "Não"
 
 #: src/autobalancedialog.cpp:34
 msgid "Autobalance players into teams"
@@ -68,11 +72,11 @@ msgstr ""
 
 #: src/autobalancedialog.cpp:37
 msgid "Method"
-msgstr ""
+msgstr "Método"
 
 #: src/autobalancedialog.cpp:40 src/battlemaptab.cpp:92
 msgid "Random"
-msgstr ""
+msgstr "Aleatório"
 
 #: src/autobalancedialog.cpp:41
 msgid "Divide ranks evenly"
@@ -92,7 +96,7 @@ msgstr ""
 
 #: src/autobalancedialog.cpp:48
 msgid "Always"
-msgstr ""
+msgstr "Sempre"
 
 #: src/autobalancedialog.cpp:49
 msgid ""
@@ -150,7 +154,7 @@ msgstr ""
 
 #: src/battlelistfilter.cpp:92 src/battlelistfilter.cpp:162
 msgid "Status:"
-msgstr ""
+msgstr "Estado:"
 
 #: src/battlelistfilter.cpp:96 src/battleroomtab.cpp:120
 msgid "Locked"
@@ -166,7 +170,7 @@ msgstr ""
 
 #: src/battlelistfilter.cpp:145
 msgid "Description:"
-msgstr ""
+msgstr "Descrição:"
 
 #: src/battlelistfilter.cpp:166
 msgid "Started"
@@ -182,7 +186,7 @@ msgstr ""
 
 #: src/battlelistfilter.cpp:186
 msgid "Player:"
-msgstr ""
+msgstr "Jogador:"
 
 #: src/battlelistfilter.cpp:195
 msgid "All"
@@ -221,11 +225,11 @@ msgstr ""
 
 #: src/battlelisttab.cpp:97
 msgid "Players:"
-msgstr ""
+msgstr "Jogadores:"
 
 #: src/battlelisttab.cpp:103
 msgid "Spectators:"
-msgstr ""
+msgstr "Espectadores:"
 
 #: src/battlelisttab.cpp:143
 msgid "Host new..."
@@ -354,16 +358,16 @@ msgstr ""
 
 #: src/battlemaptab.cpp:76 src/battleroomtab.cpp:130
 msgid "Option"
-msgstr ""
+msgstr "Opção"
 
 #: src/battlemaptab.cpp:78 src/battleroomtab.cpp:132
 msgid "Value"
-msgstr ""
+msgstr "Valor"
 
 #: src/battlemaptab.cpp:83 src/battleroomtab.cpp:139 src/battleroomtab.cpp:140
 #: src/battleroomtab.cpp:280 src/battleroomtab.cpp:286
 msgid "Size"
-msgstr ""
+msgstr "Tamanho"
 
 #: src/battlemaptab.cpp:84 src/battleroomtab.cpp:141 src/battleroomtab.cpp:142
 #: src/battleroomtab.cpp:281 src/battleroomtab.cpp:287
@@ -377,7 +381,7 @@ msgstr ""
 
 #: src/battlemaptab.cpp:86
 msgid "Gravity"
-msgstr ""
+msgstr "Gravidade"
 
 #: src/battlemaptab.cpp:87
 msgid "Extractor radius"
@@ -417,7 +421,7 @@ msgstr ""
 
 #: src/battleoptionstab.cpp:81
 msgid "Resources"
-msgstr ""
+msgstr "Recursos"
 
 #: src/battleoptionstab.cpp:86 src/mmoptionswrapper.cpp:94
 msgid "Start Metal"
@@ -446,7 +450,7 @@ msgstr ""
 #: src/battleoptionstab.cpp:131 src/mainjoinbattletab.cpp:152
 #: src/mainsingleplayertab.cpp:38 src/settings++/tab_simple.cpp:134
 msgid "Options"
-msgstr ""
+msgstr "Opções"
 
 #: src/battleoptionstab.cpp:135
 msgid "Limit d-gun"
@@ -494,11 +498,11 @@ msgstr ""
 
 #: src/battleoptionstab.cpp:202
 msgid "Save..."
-msgstr ""
+msgstr "Guardar..."
 
 #: src/battleoptionstab.cpp:203
 msgid "Save a set of restrictions."
-msgstr ""
+msgstr "Guardar um conjunto de restrições."
 
 #: src/battleoptionstab.cpp:210
 msgid "Clear"
@@ -515,7 +519,7 @@ msgstr ""
 
 #: src/battleroomlistctrl.cpp:84
 msgid "t"
-msgstr ""
+msgstr "t"
 
 #: src/battleroomlistctrl.cpp:92
 msgid "cpu"
@@ -527,7 +531,7 @@ msgstr ""
 
 #: src/battleroomlistctrl.cpp:130 src/battleroomtab.cpp:83
 msgid "Team"
-msgstr ""
+msgstr "Equipa"
 
 #: src/battleroomlistctrl.cpp:138 src/battleroomtab.cpp:84
 msgid "Ally"
@@ -539,7 +543,7 @@ msgstr ""
 
 #: src/battleroomlistctrl.cpp:152
 msgid "Set color"
-msgstr ""
+msgstr "Definir cor"
 
 #: src/battleroomlistctrl.cpp:157 src/battleroomlistctrl.cpp:488
 msgid "Set Resource Bonus"
@@ -570,7 +574,7 @@ msgstr ""
 
 #: src/battleroomlistctrl.cpp:493 src/battleroomlistctrl.cpp:498
 msgid "Invalid number"
-msgstr ""
+msgstr "Número inválido"
 
 #: src/battleroomlistctrl.cpp:498
 msgid ""
@@ -588,7 +592,7 @@ msgstr ""
 
 #: src/battleroomtab.cpp:85
 msgid "Color"
-msgstr ""
+msgstr "Cor"
 
 #: src/battleroomtab.cpp:104 src/chatpanel.cpp:291
 msgid "Leave"
@@ -695,7 +699,7 @@ msgstr ""
 
 #: src/chatoptionstab.cpp:125
 msgid "Action"
-msgstr ""
+msgstr "Acção"
 
 #: src/chatoptionstab.cpp:139
 msgid "Highlight"
@@ -711,17 +715,17 @@ msgstr ""
 
 #: src/chatoptionstab.cpp:186 src/connectwindow.cpp:59
 msgid "Server"
-msgstr ""
+msgstr "Servidor"
 
 #: src/chatoptionstab.cpp:200
 msgid "Client"
-msgstr ""
+msgstr "Cliente"
 
 #: src/chatoptionstab.cpp:214 src/chatpanel.cpp:1326 src/chatpanel.cpp:1487
 #: src/chatpanel.cpp:1492 src/mainwindow.cpp:410
 #: src/settings++/tab_abstract.cpp:111 src/tasserver.cpp:408
 msgid "Error"
-msgstr ""
+msgstr "Erro"
 
 #: src/chatoptionstab.cpp:228
 msgid "Timestamp"
@@ -729,7 +733,7 @@ msgstr ""
 
 #: src/chatoptionstab.cpp:242
 msgid "Notification"
-msgstr ""
+msgstr "Notificação"
 
 #: src/chatoptionstab.cpp:252
 msgid ""
@@ -743,7 +747,7 @@ msgstr ""
 
 #: src/chatoptionstab.cpp:263
 msgid "Font:"
-msgstr ""
+msgstr "Tipo de Letra:"
 
 #: src/chatoptionstab.cpp:267
 msgid "default"
@@ -755,7 +759,7 @@ msgstr ""
 
 #: src/chatoptionstab.cpp:283
 msgid "Behavior"
-msgstr ""
+msgstr "Comportamento"
 
 #: src/chatoptionstab.cpp:285
 msgid "Use smart scrolling"
@@ -807,7 +811,7 @@ msgstr ""
 
 #: src/chatpanel.cpp:303 src/chatpanel.cpp:357
 msgid "Copy"
-msgstr ""
+msgstr "Copiar"
 
 #: src/chatpanel.cpp:309
 msgid "Channel info"
@@ -879,7 +883,7 @@ msgstr ""
 
 #: src/chatpanel.cpp:372
 msgid "Accounts"
-msgstr ""
+msgstr "Contas"
 
 #: src/chatpanel.cpp:375
 msgid "Broadcast..."
