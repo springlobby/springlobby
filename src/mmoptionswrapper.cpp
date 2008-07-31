@@ -105,7 +105,7 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
 	return true;
 }
 
-bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showError, OptionType& optType)
+bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showError, OptionType& optType) const
 {
 	wxString duplicateKeyError = _T("Please contact the mod's author and tell him\n"
 										"to use unique keys in his ModOptions.lua");

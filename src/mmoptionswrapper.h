@@ -49,7 +49,7 @@ public:
 	 * \param optType will contain the corresponding OptionType if key is found, opt_undefined otherwise
 	 * \return true if key is found, false otherwise
 	 */
-	bool keyExists(wxString key,GameOption flag,bool showError, OptionType& optType);
+	bool keyExists(wxString key,GameOption flag,bool showError, OptionType& optType) const ;
 	//! given a vector of key/value pairs sets the appropiate options to new values
 	/*!	Every new value is tested for meeting boundary conditions, type, etc.
 	 * If test fails error is logged and false is returned.
@@ -81,6 +81,7 @@ public:
 	/*! searches containers of type flag for key
 	 * \return value of key if key found, "" otherwise
 	 */
+
 	wxString getSingleValue(wxString key, GameOption flag) const;
 
 	//! sets a single option in specified container
