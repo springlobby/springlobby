@@ -1,12 +1,16 @@
-#, fuzzy
+# Simplified Chinese translation for springlobby
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the springlobby package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: springlobby\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-05-08 19:25+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2008-07-30 15:01+0000\n"
+"Last-Translator: HoneyFox <Unknown>\n"
+"Language-Team: Simplified Chinese <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,84 +19,84 @@ msgstr ""
 
 #: src/addbotdialog.cpp:30
 msgid "Add bot"
-msgstr ""
+msgstr "添加AI"
 
 #: src/addbotdialog.cpp:44
 msgid "Nickname:"
-msgstr ""
+msgstr "昵称："
 
 #: src/addbotdialog.cpp:58
 msgid "AI:"
-msgstr ""
+msgstr "AI"
 
 #: src/addbotdialog.cpp:62
 msgid "Choose the AI library to use with this bot."
-msgstr ""
+msgstr "选择该AI所使用的库文件。"
 
 #: src/addbotdialog.cpp:76 src/autobalancedialog.cpp:57
 #: src/connectwindow.cpp:78 src/hostbattledialog.cpp:204
 msgid "Cancel"
-msgstr ""
+msgstr "取消(&C)"
 
 #: src/addbotdialog.cpp:81
 msgid "Add Bot"
-msgstr ""
+msgstr "添加AI"
 
 #: src/addbotdialog.cpp:137
 msgid "No AI bots found in your Spring installation."
-msgstr ""
+msgstr "你当前的Spring中没有AI"
 
 #: src/addbotdialog.cpp:137
 msgid "No bot-libs found"
-msgstr ""
+msgstr "AI库文件未找到"
 
 #: src/agreementdialog.cpp:26
 msgid "Accept Agreement"
-msgstr ""
+msgstr "接受协议"
 
 #: src/agreementdialog.cpp:35
 msgid "Do you accept the terms of this agreement?"
-msgstr ""
+msgstr "你接受协议中的条款吗?"
 
 #: src/agreementdialog.cpp:43 src/uiutils.h:11
 msgid "Yes"
-msgstr ""
+msgstr "是"
 
 #: src/agreementdialog.cpp:48 src/uiutils.h:11
 msgid "No"
-msgstr ""
+msgstr "否"
 
 #: src/autobalancedialog.cpp:34
 msgid "Autobalance players into teams"
-msgstr ""
+msgstr "自动平衡队伍"
 
 #: src/autobalancedialog.cpp:37
 msgid "Method"
-msgstr ""
+msgstr "方法"
 
 #: src/autobalancedialog.cpp:40 src/battlemaptab.cpp:92
 msgid "Random"
-msgstr ""
+msgstr "随机"
 
 #: src/autobalancedialog.cpp:41
 msgid "Divide ranks evenly"
-msgstr ""
+msgstr "按玩家级别平分"
 
 #: src/autobalancedialog.cpp:43
 msgid "Clans"
-msgstr ""
+msgstr "联盟"
 
 #: src/autobalancedialog.cpp:46 src/hostbattledialog.cpp:130
 msgid "None"
-msgstr ""
+msgstr "无"
 
 #: src/autobalancedialog.cpp:47
 msgid "Fair"
-msgstr ""
+msgstr "一般"
 
 #: src/autobalancedialog.cpp:48
 msgid "Always"
-msgstr ""
+msgstr "总是"
 
 #: src/autobalancedialog.cpp:49
 msgid ""
@@ -103,116 +107,120 @@ msgid ""
 "Always: always put clanmembers into alliance, even if that alliance is "
 "unfair."
 msgstr ""
+"将同一个派别的成员（例如“[smurfzor]Alice”及“[smurfzor]Bob”）归入同一联盟。 \n"
+"无：同派别成员不受影响。\n"
+"一般：将同派别成员加入联盟，除非联盟实力悬殊。\n"
+"总是：总是将同派别成员归入同一联盟，无论联盟实力悬殊与否。"
 
 #: src/autobalancedialog.cpp:60 src/connectwindow.cpp:77
 msgid "Ok"
-msgstr ""
+msgstr "确定"
 
 #: src/battlelistctrl.cpp:58 src/hostbattledialog.cpp:57
 msgid "Description"
-msgstr ""
+msgstr "描述"
 
 #: src/battlelistctrl.cpp:62 src/mainjoinbattletab.cpp:151
 msgid "Map"
-msgstr ""
+msgstr "地图"
 
 #: src/battlelistctrl.cpp:66 src/hostbattledialog.cpp:71
 msgid "Mod"
-msgstr ""
+msgstr "模组"
 
 #: src/battlelistctrl.cpp:70 src/hostbattledialog.cpp:208
 msgid "Host"
-msgstr ""
+msgstr "主机"
 
 #: src/battlelistctrl.cpp:74 src/battleroomlistctrl.cpp:88
 msgid "a"
-msgstr ""
+msgstr "a"
 
 #: src/battlelistctrl.cpp:78
 msgid "p"
-msgstr ""
+msgstr "p"
 
 #: src/battlelistctrl.cpp:82
 msgid "m"
-msgstr ""
+msgstr "m"
 
 #: src/battlelistctrl.cpp:111
 msgid "Download &map"
-msgstr ""
+msgstr "下载地图"
 
 #: src/battlelistctrl.cpp:112
 msgid "Download m&od"
-msgstr ""
+msgstr "下载模组"
 
 #: src/battlelistfilter.cpp:73
 msgid "Host:"
-msgstr ""
+msgstr "主机："
 
 #: src/battlelistfilter.cpp:92 src/battlelistfilter.cpp:162
 msgid "Status:"
-msgstr ""
+msgstr "状态："
 
 #: src/battlelistfilter.cpp:96 src/battleroomtab.cpp:120
 msgid "Locked"
-msgstr ""
+msgstr "已锁定"
 
 #: src/battlelistfilter.cpp:101
 msgid "Passworded"
-msgstr ""
+msgstr "有密码的"
 
 #: src/battlelistfilter.cpp:111
 msgid "Rank Limit:"
-msgstr ""
+msgstr "等级限制"
 
 #: src/battlelistfilter.cpp:145
 msgid "Description:"
-msgstr ""
+msgstr "描述："
 
 #: src/battlelistfilter.cpp:166
 msgid "Started"
-msgstr ""
+msgstr "已开始"
 
 #: src/battlelistfilter.cpp:171
 msgid "Full"
-msgstr ""
+msgstr "人数已满"
 
 #: src/battlelistfilter.cpp:176
 msgid "Open"
-msgstr ""
+msgstr "开放的"
 
 #: src/battlelistfilter.cpp:186
 msgid "Player:"
-msgstr ""
+msgstr "玩家:"
 
 #: src/battlelistfilter.cpp:195
 msgid "All"
-msgstr ""
+msgstr "全部"
 
 #: src/battlelistfilter.cpp:214 src/battlelisttab.cpp:85
 #: src/singleplayertab.cpp:48
 msgid "Map:"
-msgstr ""
+msgstr "地图："
 
 #: src/battlelistfilter.cpp:231
 msgid "Only maps i have"
-msgstr ""
+msgstr "仅列出我拥有地图的游戏"
 
 #: src/battlelistfilter.cpp:242
 msgid "Max.Player:"
-msgstr ""
+msgstr "最大玩家数"
 
 #: src/battlelistfilter.cpp:269 src/battlelisttab.cpp:91
 #: src/singleplayertab.cpp:57
 msgid "Mod:"
-msgstr ""
+msgstr "模组"
 
 #: src/battlelistfilter.cpp:286
 msgid "Only mods i have"
-msgstr ""
+msgstr "仅列出我拥有模组的游戏"
 
 #: src/battlelistfilter.cpp:297
 msgid "    Spectator:"
-msgstr ""
+msgstr "    观看者"
 
 #: src/battlelistfilter.cpp:552 src/battlelistfilter.cpp:557
 #: src/battlelistfilter.cpp:558 src/battlelistfilter.cpp:560
@@ -221,32 +229,32 @@ msgstr ""
 
 #: src/battlelisttab.cpp:97
 msgid "Players:"
-msgstr ""
+msgstr "玩家"
 
 #: src/battlelisttab.cpp:103
 msgid "Spectators:"
-msgstr ""
+msgstr "旁观者:"
 
 #: src/battlelisttab.cpp:143
 msgid "Host new..."
-msgstr ""
+msgstr "主建新游戏"
 
 #: src/battlelisttab.cpp:146
 msgid "Join"
-msgstr ""
+msgstr "加入"
 
 #: src/battlelisttab.cpp:361
 msgid ""
 "You cannot host a game while being offline. Please connect to a lobby server."
-msgstr ""
+msgstr "离线时你不能主建游戏。请连接到服务器。"
 
 #: src/battlelisttab.cpp:361
 msgid "Not Online."
-msgstr ""
+msgstr "不在线"
 
 #: src/battlelisttab.cpp:367
 msgid "Hosting is disabled due to the incompatible version you're using"
-msgstr ""
+msgstr "因为你使用了不匹配的版本，你将不能主建游戏"
 
 #: src/battlelisttab.cpp:367 src/battlelisttab.cpp:372
 #: src/battlelisttab.cpp:490 src/battlelisttab.cpp:506
@@ -254,17 +262,17 @@ msgstr ""
 #: src/springoptionstab.cpp:481 src/springoptionstab.cpp:486 src/ui.cpp:498
 #: src/ui.cpp:501
 msgid "Spring error"
-msgstr ""
+msgstr "Spring运行错误"
 
 #: src/battlelisttab.cpp:372
 msgid ""
 "You already are running a Spring instance, close it first in order to be "
 "able to host a new game"
-msgstr ""
+msgstr "你已经在运行一个Spring程序了，请在主建新游戏前将它关闭。"
 
 #: src/battlelisttab.cpp:377 src/battlelisttab.cpp:496
 msgid "Already in a battle"
-msgstr ""
+msgstr "已经在战斗中"
 
 #: src/battlelisttab.cpp:377
 msgid ""
@@ -272,6 +280,8 @@ msgid ""
 "\n"
 "Do you want to leave current battle to start a new?"
 msgstr ""
+"你已经在战斗中。\n"
+"你想离开现在的战斗以开始新的战斗吗？"
 
 #: src/battlelisttab.cpp:397
 #, c-format
@@ -284,30 +294,34 @@ msgid ""
 "If everything else fails, enable the Hole Punching NAT Traversal\n"
 " option in the hosting settings."
 msgstr ""
+"因为你选择的端口 %d 无法接收传送来的数据包，因此战斗无法开始。\n"
+" 请再次检查你的路由及防火墙设置，或者在对话框中修改端口号。\n"
+"\n"
+"如果上述方法依然失败，请在主建设置中启用 穿越NAT阻挡 选项。"
 
 #: src/battlelisttab.cpp:410
 msgid "Battle not started beacuse the mod you selected could not be found. "
-msgstr ""
+msgstr "因为你选择的模组无法被找到，因此战斗无法开始。 "
 
 #: src/battlelisttab.cpp:410
 msgid "Error starting battle."
-msgstr ""
+msgstr "启动战斗时出错。"
 
 #: src/battlelisttab.cpp:421 src/battlelisttab.cpp:428
 msgid ""
 "Couldn't find any maps in your spring installation. This could happen when "
 "you set the Spring settings incorrectly."
-msgstr ""
+msgstr "无法找到任何地图。可能是因为您错误的设置了Spring导致的。"
 
 #: src/battlelisttab.cpp:421 src/battlelisttab.cpp:428
 msgid "No maps found"
-msgstr ""
+msgstr "没有找到地图"
 
 #: src/battlelisttab.cpp:490
 msgid ""
 "Joining battles is disabled due to the incompatible spring version you're "
 "using."
-msgstr ""
+msgstr "因为您的Spring版本不兼容，因此无法加入战斗。"
 
 #: src/battlelisttab.cpp:496
 msgid ""
@@ -315,12 +329,15 @@ msgid ""
 "\n"
 "Do you want to leave current battle to and join this one?"
 msgstr ""
+"你已经在一局战斗中了。\n"
+"\n"
+"你想要离开当前战斗并加入这一个吗？"
 
 #: src/battlelisttab.cpp:506
 msgid ""
 "You already are running a Spring instance, close it first in order to be "
 "able to join another battle."
-msgstr ""
+msgstr "你已经运行了一个Spring，请先关闭Spring再加入其他战斗。"
 
 #: src/battlelisttab.cpp:511
 msgid ""
@@ -328,10 +345,13 @@ msgid ""
 "\n"
 "Do you want me to take you to the download page?"
 msgstr ""
+"在你能够加入该游戏前，你需要下载模组。\n"
+"\n"
+"你想要前往下载页面吗？"
 
 #: src/battlelisttab.cpp:511
 msgid "Mod not available"
-msgstr ""
+msgstr "模组不可用"
 
 #: src/battlelisttab.cpp:520
 msgid ""
@@ -339,73 +359,76 @@ msgid ""
 "\n"
 "Do you want me to take you to the download page?"
 msgstr ""
+"在玩此游戏前你需要下载地图。\n"
+"\n"
+"你想要前往下载页面吗？"
 
 #: src/battlelisttab.cpp:520
 msgid "Map not available"
-msgstr ""
+msgstr "地图不可用"
 
 #: src/battlelisttab.cpp:528 src/chatpanel.cpp:1359
 msgid "Battle password"
-msgstr ""
+msgstr "游戏密码"
 
 #: src/battlelisttab.cpp:528
 msgid "Enter password"
-msgstr ""
+msgstr "输入密码"
 
 #: src/battlemaptab.cpp:76 src/battleroomtab.cpp:130
 msgid "Option"
-msgstr ""
+msgstr "选项"
 
 #: src/battlemaptab.cpp:78 src/battleroomtab.cpp:132
 msgid "Value"
-msgstr ""
+msgstr "值"
 
 #: src/battlemaptab.cpp:83 src/battleroomtab.cpp:139 src/battleroomtab.cpp:140
 #: src/battleroomtab.cpp:280 src/battleroomtab.cpp:286
 msgid "Size"
-msgstr ""
+msgstr "大小"
 
 #: src/battlemaptab.cpp:84 src/battleroomtab.cpp:141 src/battleroomtab.cpp:142
 #: src/battleroomtab.cpp:281 src/battleroomtab.cpp:287
 msgid "Windspeed"
-msgstr ""
+msgstr "风速"
 
 #: src/battlemaptab.cpp:85 src/battleroomtab.cpp:143 src/battleroomtab.cpp:144
 #: src/battleroomtab.cpp:282 src/battleroomtab.cpp:288
 msgid "Tidal strength"
-msgstr ""
+msgstr "潮汐强度"
 
 #: src/battlemaptab.cpp:86
 msgid "Gravity"
-msgstr ""
+msgstr "重力"
 
 #: src/battlemaptab.cpp:87
 msgid "Extractor radius"
-msgstr ""
+msgstr "金属采集半径"
 
 #: src/battlemaptab.cpp:88
 msgid "Max metal"
-msgstr ""
+msgstr "金属含量"
 
 #: src/battlemaptab.cpp:92
 msgid "Fixed"
-msgstr ""
+msgstr "固定位置"
 
 #: src/battlemaptab.cpp:92
 msgid "Choose in game"
-msgstr ""
+msgstr "在游戏中选择"
 
 #: src/battlemaptab.cpp:95
 msgid "Startpositions"
-msgstr ""
+msgstr "出生位置"
 
 #: src/battleoptionstab.cpp:74
 msgid "Continue if commander dies"
-msgstr ""
+msgstr "指挥官被消灭后游戏继续"
 
 #: src/battleoptionstab.cpp:74
 msgid "End if commander dies"
-msgstr ""
+msgstr "指挥官被消灭后游戏结束"
 
 #: src/battleoptionstab.cpp:74
 msgid "Linage mode"
@@ -413,105 +436,105 @@ msgstr ""
 
 #: src/battleoptionstab.cpp:77
 msgid "End condition"
-msgstr ""
+msgstr "游戏结束条件"
 
 #: src/battleoptionstab.cpp:81
 msgid "Resources"
-msgstr ""
+msgstr "资源"
 
 #: src/battleoptionstab.cpp:86 src/mmoptionswrapper.cpp:94
 msgid "Start Metal"
-msgstr ""
+msgstr "初始金属"
 
 #: src/battleoptionstab.cpp:90
 msgid "The amount of metal each player starts with."
-msgstr ""
+msgstr "每个玩家游戏开始时拥有的金属"
 
 #: src/battleoptionstab.cpp:102 src/mmoptionswrapper.cpp:97
 msgid "Start Energy"
-msgstr ""
+msgstr "初始能量"
 
 #: src/battleoptionstab.cpp:106
 msgid "The amount of energy each player starts with."
-msgstr ""
+msgstr "每个玩家游戏开始时拥有的能量"
 
 #: src/battleoptionstab.cpp:118
 msgid "Max units"
-msgstr ""
+msgstr "单位数上限"
 
 #: src/battleoptionstab.cpp:122
 msgid "The maximum number of units allowed per player."
-msgstr ""
+msgstr "每个玩家拥有的单位个数"
 
 #: src/battleoptionstab.cpp:131 src/mainjoinbattletab.cpp:152
 #: src/mainsingleplayertab.cpp:38 src/settings++/tab_simple.cpp:134
 msgid "Options"
-msgstr ""
+msgstr "选项"
 
 #: src/battleoptionstab.cpp:135
 msgid "Limit d-gun"
-msgstr ""
+msgstr "限制使用 D-Gun"
 
 #: src/battleoptionstab.cpp:136
 msgid "Ghosted buildings"
-msgstr ""
+msgstr "建筑物残影"
 
 #: src/battleoptionstab.cpp:137
 msgid "Diminishing metal makers"
-msgstr ""
+msgstr "金属含量逐渐减少"
 
 #: src/battleoptionstab.cpp:138
 msgid "Random start postisions"
-msgstr ""
+msgstr "随机出生位置"
 
 #: src/battleoptionstab.cpp:147
 msgid "Unit restrictions"
-msgstr ""
+msgstr "单位限制"
 
 #: src/battleoptionstab.cpp:155
 msgid "Allowed units"
-msgstr ""
+msgstr "允许单位"
 
 #: src/battleoptionstab.cpp:159
 msgid "Units in this list will be available in the game."
-msgstr ""
+msgstr "在这个清单中的单位将在游戏中可用"
 
 #: src/battleoptionstab.cpp:181
 msgid "Restricted units"
-msgstr ""
+msgstr "限制单位"
 
 #: src/battleoptionstab.cpp:185
 msgid "Units in this list will not be available in the game."
-msgstr ""
+msgstr "该列表中的单位将不能在游戏中使用"
 
 #: src/battleoptionstab.cpp:196
 msgid "Load..."
-msgstr ""
+msgstr "载入..."
 
 #: src/battleoptionstab.cpp:197
 msgid "Load a saved set of restrictions."
-msgstr ""
+msgstr "载入已储存的单位限制配置"
 
 #: src/battleoptionstab.cpp:202
 msgid "Save..."
-msgstr ""
+msgstr "保存..."
 
 #: src/battleoptionstab.cpp:203
 msgid "Save a set of restrictions."
-msgstr ""
+msgstr "保存单位限制配置"
 
 #: src/battleoptionstab.cpp:210
 msgid "Clear"
-msgstr ""
+msgstr "清除"
 
 #: src/battleoptionstab.cpp:211
 msgid "Enable all units."
-msgstr ""
+msgstr "允许所有单位。"
 
 #: src/battleroomlistctrl.cpp:80 src/connectwindow.cpp:65
 #: src/nicklistctrl.cpp:52
 msgid "Nickname"
-msgstr ""
+msgstr "昵称"
 
 #: src/battleroomlistctrl.cpp:84
 msgid "t"
@@ -519,150 +542,158 @@ msgstr ""
 
 #: src/battleroomlistctrl.cpp:92
 msgid "cpu"
-msgstr ""
+msgstr "CPU"
 
 #: src/battleroomlistctrl.cpp:96
 msgid "Resource Bonus"
-msgstr ""
+msgstr "资源加成"
 
 #: src/battleroomlistctrl.cpp:130 src/battleroomtab.cpp:83
 msgid "Team"
-msgstr ""
+msgstr "队伍"
 
 #: src/battleroomlistctrl.cpp:138 src/battleroomtab.cpp:84
 msgid "Ally"
-msgstr ""
+msgstr "联盟"
 
 #: src/battleroomlistctrl.cpp:148 src/battleroomtab.cpp:86
 msgid "Side"
-msgstr ""
+msgstr "阵营"
 
 #: src/battleroomlistctrl.cpp:152
 msgid "Set color"
-msgstr ""
+msgstr "颜色"
 
 #: src/battleroomlistctrl.cpp:157 src/battleroomlistctrl.cpp:488
 msgid "Set Resource Bonus"
-msgstr ""
+msgstr "设置资源加成"
 
 #: src/battleroomlistctrl.cpp:162 src/battleroomlistctrl.cpp:407
 #: src/battleroomlistctrl.cpp:416 src/battleroomtab.cpp:122
 msgid "Spectator"
-msgstr ""
+msgstr "观看者"
 
 #: src/battleroomlistctrl.cpp:167 src/battleroomlistctrl.cpp:411
 #: src/battleroomlistctrl.cpp:421
 msgid "Kick"
-msgstr ""
+msgstr "踢出"
 
 #: src/battleroomlistctrl.cpp:169 src/battleroomlistctrl.cpp:410
 #: src/battleroomlistctrl.cpp:419 src/chatpanel.cpp:432
 msgid "Ring"
-msgstr ""
+msgstr "闹铃提示"
 
 #: src/battleroomlistctrl.cpp:488
 msgid "Please enter a value between 0 and 100"
-msgstr ""
+msgstr "请输入介于0与100之间的一个值"
 
 #: src/battleroomlistctrl.cpp:493
 msgid "Not a number"
-msgstr ""
+msgstr "不是一个数字"
 
 #: src/battleroomlistctrl.cpp:493 src/battleroomlistctrl.cpp:498
 msgid "Invalid number"
-msgstr ""
+msgstr "无效的数字"
 
 #: src/battleroomlistctrl.cpp:498
 msgid ""
 "Value out of range.\n"
 " Enter an integer between 0 & 100."
 msgstr ""
+"数值超出范围。\n"
+" 请输入介0与100之间的一个整数。"
 
 #: src/battleroommmoptionstab.cpp:38
 msgid "Mod Options"
-msgstr ""
+msgstr "模组选项"
 
 #: src/battleroommmoptionstab.cpp:43
 msgid "Map Options"
-msgstr ""
+msgstr "地图选项"
 
 #: src/battleroomtab.cpp:85
 msgid "Color"
-msgstr ""
+msgstr "颜色"
 
 #: src/battleroomtab.cpp:104 src/chatpanel.cpp:291
 msgid "Leave"
-msgstr ""
+msgstr "离开"
 
 #: src/battleroomtab.cpp:106 src/singleplayertab.cpp:81
 msgid "Start"
-msgstr ""
+msgstr "开始"
 
 #: src/battleroomtab.cpp:108
 msgid "Add Bot..."
-msgstr ""
+msgstr "添加AI..."
 
 #: src/battleroomtab.cpp:112
 msgid "Fix colours"
-msgstr ""
+msgstr "修改颜色"
 
 #: src/battleroomtab.cpp:115
 msgid "Balance"
-msgstr ""
+msgstr "平衡"
 
 #: src/battleroomtab.cpp:118
 msgid "I'm ready"
-msgstr ""
+msgstr "我准备好了"
 
 #: src/battleroomtab.cpp:377
 msgid "You have one or more bots sharing team, this is not possible."
-msgstr ""
+msgstr "你有多个AI共用队伍序号，这是不允许的。"
 
 #: src/battleroomtab.cpp:377
 msgid "Bot team sharing."
-msgstr ""
+msgstr "AI队伍共用。"
 
 #: src/battleroomtab.cpp:384
 msgid ""
 "Some players are not ready yet.\n"
 "Ring these players?"
 msgstr ""
+"有些玩家还没准备好。\n"
+"闹铃提示这些玩家？"
 
 #: src/battleroomtab.cpp:384 src/battleroomtab.cpp:389
 msgid "Not ready"
-msgstr ""
+msgstr "未就绪"
 
 #: src/battleroomtab.cpp:389
 msgid "Force start?"
-msgstr ""
+msgstr "强制开始？"
 
 #: src/chatlog.cpp:36
 msgid "### Session Closed at ["
-msgstr ""
+msgstr "### 会话于 ["
 
 #: src/chatlog.cpp:36
 msgid "]"
-msgstr ""
+msgstr "] 结束"
 
 #: src/chatlog.cpp:77 src/chatlog.cpp:83
 msgid ""
 "Couldn't create folder. \n"
 "Be sure that there isn't a write protection.\n"
 msgstr ""
+"无法创建目录。 \n"
+"请确认写保护是否被打开。\n"
 
 #: src/chatlog.cpp:77 src/chatlog.cpp:83
 msgid "Log function is disabled until restart SpringLobby."
-msgstr ""
+msgstr "日志功能将在SpringLobby重新启动后启用。"
 
 #: src/chatlog.cpp:77 src/chatlog.cpp:97 src/chatlog.cpp:114
 msgid "Log Warning"
-msgstr ""
+msgstr "日志警报"
 
 #: src/chatlog.cpp:97
 msgid ""
 "Couldn't write message to log.\n"
 "Logging will be disabled for room "
 msgstr ""
+"无法将信息写入日志。\n"
+"日志将在该房间被禁用 "
 
 #: src/chatlog.cpp:97
 msgid ""
@@ -670,66 +701,71 @@ msgid ""
 "\n"
 "Rejoin room to reactivate logging."
 msgstr ""
+"。\n"
+"\n"
+"重新进入房间来重新启用日志功能。"
 
 #: src/chatlog.cpp:114
 msgid ""
 "Can't open log file. \n"
 "Be sure that there isn't a write protection.\n"
 msgstr ""
+"无法打开日志文件。 \n"
+"请确认写保护是否被打开。\n"
 
 #: src/chatoptionstab.cpp:66
 msgid "Colors and font"
-msgstr ""
+msgstr "颜色与字体"
 
 #: src/chatoptionstab.cpp:71
 msgid "Use system colors"
-msgstr ""
+msgstr "使用系统颜色"
 
 #: src/chatoptionstab.cpp:97
 msgid "Normal"
-msgstr ""
+msgstr "普通"
 
 #: src/chatoptionstab.cpp:111
 msgid "Background"
-msgstr ""
+msgstr "背景"
 
 #: src/chatoptionstab.cpp:125
 msgid "Action"
-msgstr ""
+msgstr "动作"
 
 #: src/chatoptionstab.cpp:139
 msgid "Highlight"
-msgstr ""
+msgstr "高亮显示"
 
 #: src/chatoptionstab.cpp:153
 msgid "Join/Leave"
-msgstr ""
+msgstr "加入/离开"
 
 #: src/chatoptionstab.cpp:167
 msgid "My messages"
-msgstr ""
+msgstr "我的消息"
 
 #: src/chatoptionstab.cpp:186 src/connectwindow.cpp:59
 msgid "Server"
-msgstr ""
+msgstr "服务器"
 
 #: src/chatoptionstab.cpp:200
 msgid "Client"
-msgstr ""
+msgstr "客户端"
 
 #: src/chatoptionstab.cpp:214 src/chatpanel.cpp:1326 src/chatpanel.cpp:1487
 #: src/chatpanel.cpp:1492 src/mainwindow.cpp:410
 #: src/settings++/tab_abstract.cpp:111 src/tasserver.cpp:408
 msgid "Error"
-msgstr ""
+msgstr "错误"
 
 #: src/chatoptionstab.cpp:228
 msgid "Timestamp"
-msgstr ""
+msgstr "时间戳"
 
 #: src/chatoptionstab.cpp:242
 msgid "Notification"
-msgstr ""
+msgstr "通知"
 
 #: src/chatoptionstab.cpp:252
 msgid ""
@@ -743,123 +779,123 @@ msgstr ""
 
 #: src/chatoptionstab.cpp:263
 msgid "Font:"
-msgstr ""
+msgstr "字体："
 
 #: src/chatoptionstab.cpp:267
 msgid "default"
-msgstr ""
+msgstr "默认"
 
 #: src/chatoptionstab.cpp:271
 msgid "Select..."
-msgstr ""
+msgstr "选择..."
 
 #: src/chatoptionstab.cpp:283
 msgid "Behavior"
-msgstr ""
+msgstr "行为"
 
 #: src/chatoptionstab.cpp:285
 msgid "Use smart scrolling"
-msgstr ""
+msgstr "启用智能滚动"
 
 #: src/chatoptionstab.cpp:299
 msgid "Chat logs"
-msgstr ""
+msgstr "聊天日志"
 
 #: src/chatoptionstab.cpp:301
 msgid "Save chat logs"
-msgstr ""
+msgstr "保存聊天日志"
 
 #: src/chatoptionstab.cpp:309
 msgid "Save to:"
-msgstr ""
+msgstr "保存到："
 
 #: src/chatoptionstab.cpp:320
 msgid "Browse..."
-msgstr ""
+msgstr "浏览..."
 
 #: src/chatoptionstab.cpp:330
 msgid "Highlight words"
-msgstr ""
+msgstr "高亮字"
 
 #: src/chatoptionstab.cpp:332
 msgid "Words to highlight in chat:"
-msgstr ""
+msgstr "聊天中高亮显示字："
 
 #: src/chatoptionstab.cpp:625 src/springoptionstab.cpp:442
 msgid "Choose a directory"
-msgstr ""
+msgstr "选择一个目录"
 
 #: src/chatpanel.cpp:235
 msgid "Send"
-msgstr ""
+msgstr "发送"
 
 #: src/chatpanel.cpp:281
 msgid "Auto join this channel"
-msgstr ""
+msgstr "自动加入该频道"
 
 #: src/chatpanel.cpp:294
 msgid "Display Join/Leave Messages"
-msgstr ""
+msgstr "显示 加入/离开 信息"
 
 #: src/chatpanel.cpp:301 src/chatpanel.cpp:355
 msgid "Select all"
-msgstr ""
+msgstr "全选"
 
 #: src/chatpanel.cpp:303 src/chatpanel.cpp:357
 msgid "Copy"
-msgstr ""
+msgstr "复制"
 
 #: src/chatpanel.cpp:309
 msgid "Channel info"
-msgstr ""
+msgstr "频道信息"
 
 #: src/chatpanel.cpp:313 src/chatpanel.cpp:1175
 msgid "Set topic..."
-msgstr ""
+msgstr "设定主题"
 
 #: src/chatpanel.cpp:315 src/chatpanel.cpp:1191
 msgid "Channel message..."
-msgstr ""
+msgstr "频道消息…"
 
 #: src/chatpanel.cpp:319
 msgid "Lock..."
-msgstr ""
+msgstr "锁定…"
 
 #: src/chatpanel.cpp:321
 msgid "Unlock"
-msgstr ""
+msgstr "取消锁定"
 
 #: src/chatpanel.cpp:325
 msgid "Register..."
-msgstr ""
+msgstr "注册..."
 
 #: src/chatpanel.cpp:327
 msgid "Unregister"
-msgstr ""
+msgstr "注销"
 
 #: src/chatpanel.cpp:333
 msgid "On"
-msgstr ""
+msgstr "打开"
 
 #: src/chatpanel.cpp:335
 msgid "Off"
-msgstr ""
+msgstr "关闭"
 
 #: src/chatpanel.cpp:339
 msgid "Is on?"
-msgstr ""
+msgstr "是否开启"
 
 #: src/chatpanel.cpp:341
 msgid "Spam protection"
-msgstr ""
+msgstr "垃圾消息保护"
 
 #: src/chatpanel.cpp:342 src/chatpanel.cpp:456
 msgid "ChanServ"
-msgstr ""
+msgstr "频道服务器"
 
 #: src/chatpanel.cpp:349
 msgid "Disconnect"
-msgstr ""
+msgstr "断开连接"
 
 #: src/chatpanel.cpp:351
 msgid "Reconnect"
@@ -867,11 +903,11 @@ msgstr ""
 
 #: src/chatpanel.cpp:366
 msgid "Remove..."
-msgstr ""
+msgstr "移除..."
 
 #: src/chatpanel.cpp:368
 msgid "Change password..."
-msgstr ""
+msgstr "更改密码..."
 
 #: src/chatpanel.cpp:370
 msgid "Set access..."
@@ -879,27 +915,27 @@ msgstr ""
 
 #: src/chatpanel.cpp:372
 msgid "Accounts"
-msgstr ""
+msgstr "帐户"
 
 #: src/chatpanel.cpp:375
 msgid "Broadcast..."
-msgstr ""
+msgstr "广播..."
 
 #: src/chatpanel.cpp:377
 msgid "Admin"
-msgstr ""
+msgstr "管理员"
 
 #: src/chatpanel.cpp:388
 msgid "Open Chat"
-msgstr ""
+msgstr "公众聊天"
 
 #: src/chatpanel.cpp:390
 msgid "Join same battle"
-msgstr ""
+msgstr "加入同一战斗"
 
 #: src/chatpanel.cpp:396
 msgid "Ingame time"
-msgstr ""
+msgstr "游戏持续时间"
 
 #: src/chatpanel.cpp:398
 msgid "Retrieve IP and Smurfs"
@@ -907,51 +943,51 @@ msgstr ""
 
 #: src/chatpanel.cpp:405 src/chatpanel.cpp:443
 msgid "Mute..."
-msgstr ""
+msgstr "禁言..."
 
 #: src/chatpanel.cpp:407
 msgid "Mute for 5 minutes"
-msgstr ""
+msgstr "禁言5分钟"
 
 #: src/chatpanel.cpp:409
 msgid "Mute for 10 minutes"
-msgstr ""
+msgstr "禁言10分钟"
 
 #: src/chatpanel.cpp:411
 msgid "Mute for 30 minutes"
-msgstr ""
+msgstr "禁言30分钟"
 
 #: src/chatpanel.cpp:413
 msgid "Mute for 2 hours"
-msgstr ""
+msgstr "禁言2小时"
 
 #: src/chatpanel.cpp:415
 msgid "Mute for 1 day"
-msgstr ""
+msgstr "禁言1天"
 
 #: src/chatpanel.cpp:418 src/chatpanel.cpp:445
 msgid "Unmute"
-msgstr ""
+msgstr "取消禁言"
 
 #: src/chatpanel.cpp:420
 msgid "Mute"
-msgstr ""
+msgstr "禁言"
 
 #: src/chatpanel.cpp:422 src/chatpanel.cpp:448
 msgid "Kick..."
-msgstr ""
+msgstr "踢出..."
 
 #: src/chatpanel.cpp:426
 msgid "Ban..."
-msgstr ""
+msgstr "禁闭..."
 
 #: src/chatpanel.cpp:428
 msgid "Unban"
-msgstr ""
+msgstr "解禁"
 
 #: src/chatpanel.cpp:436
 msgid "Slap!"
-msgstr ""
+msgstr "打耳光！"
 
 #: src/chatpanel.cpp:452
 msgid "Op"
@@ -971,23 +1007,23 @@ msgstr ""
 
 #: src/chatpanel.cpp:772
 msgid "channel"
-msgstr ""
+msgstr "频道"
 
 #: src/chatpanel.cpp:773
 msgid "battle"
-msgstr ""
+msgstr "战斗"
 
 #: src/chatpanel.cpp:774
 msgid "server"
-msgstr ""
+msgstr "服务器"
 
 #: src/chatpanel.cpp:793 src/chatpanel.cpp:798
 msgid " joined the "
-msgstr ""
+msgstr " 加入 "
 
 #: src/chatpanel.cpp:826 src/chatpanel.cpp:836
 msgid " left the "
-msgstr ""
+msgstr " 离开 "
 
 #: src/chatpanel.cpp:867
 msgid ""
@@ -997,7 +1033,7 @@ msgstr ""
 
 #: src/chatpanel.cpp:890
 msgid "Chat closed."
-msgstr ""
+msgstr "聊天被关闭。"
 
 #: src/chatpanel.cpp:916
 msgid "_SERVER"
@@ -1006,19 +1042,19 @@ msgstr ""
 #: src/chatpanel.cpp:971
 #, c-format
 msgid "Are you sure you want to paste %d lines?"
-msgstr ""
+msgstr "你确认你要粘贴 %d 行吗？"
 
 #: src/chatpanel.cpp:971
 msgid "Flood warning"
-msgstr ""
+msgstr "Flood警报"
 
 #: src/chatpanel.cpp:983
 msgid " You have SpringLobby v"
-msgstr ""
+msgstr " 您使用 SpringLobby v"
 
 #: src/chatpanel.cpp:990
 msgid " You are not in channel or channel does not exist."
-msgstr ""
+msgstr " 你还没有加入频道或者频道不存在。"
 
 #: src/chatpanel.cpp:996 src/chatpanel.cpp:1010 src/chatpanel.cpp:1024
 #: src/chatpanel.cpp:1034
@@ -1026,35 +1062,35 @@ msgstr ""
 msgid ""
 " Error: Command (%s) does not exist, use /help for a list of available "
 "commands."
-msgstr ""
+msgstr " 错误： 指令 %s 不存在，请使用 /help 获得指令列表。"
 
 #: src/chatpanel.cpp:1004
 msgid ""
 " You are not in battle or battle does not exist, use /help for a list of "
 "available commands."
-msgstr ""
+msgstr " 你不在战斗中或者战斗不存在，使用 /help 获得指令列表。"
 
 #: src/chatpanel.cpp:1018
 msgid " User is offline."
-msgstr ""
+msgstr " 用户不在线。"
 
 #: src/chatpanel.cpp:1039
 msgid " Sent: \""
-msgstr ""
+msgstr " 已发送： “"
 
 #: src/chatpanel.cpp:1039
 msgid "\""
-msgstr ""
+msgstr "”"
 
 #: src/chatpanel.cpp:1142
 msgid "Auto join channel"
-msgstr ""
+msgstr "自动加入频道"
 
 #: src/chatpanel.cpp:1142
 msgid ""
 "Please enter password needed to join this channel, leave blank for no "
 "passwrd."
-msgstr ""
+msgstr "请输入加入该频道所需的密码，保持空白代表无密码。"
 
 #: src/chatpanel.cpp:1156 src/chatpanel.cpp:1169 src/chatpanel.cpp:1185
 #: src/chatpanel.cpp:1201 src/chatpanel.cpp:1217 src/chatpanel.cpp:1232
@@ -1062,7 +1098,7 @@ msgstr ""
 #: src/chatpanel.cpp:1289 src/chatpanel.cpp:1382 src/chatpanel.cpp:1403
 #: src/chatpanel.cpp:1419 src/chatpanel.cpp:1440 src/chatpanel.cpp:1456
 msgid "ChanServ error"
-msgstr ""
+msgstr "频道服务器错误"
 
 #: src/chatpanel.cpp:1156 src/chatpanel.cpp:1169 src/chatpanel.cpp:1185
 #: src/chatpanel.cpp:1201 src/chatpanel.cpp:1217 src/chatpanel.cpp:1263
@@ -1070,150 +1106,150 @@ msgstr ""
 #: src/chatpanel.cpp:1403 src/chatpanel.cpp:1419 src/chatpanel.cpp:1440
 #: src/chatpanel.cpp:1456
 msgid "ChanServ is not in this channel."
-msgstr ""
+msgstr "频道服务器不在该频道。"
 
 #: src/chatpanel.cpp:1175
 msgid "What should be the new topic?"
-msgstr ""
+msgstr "新话题应该是什么？"
 
 #: src/chatpanel.cpp:1191
 msgid "Message:"
-msgstr ""
+msgstr "消息："
 
 #: src/chatpanel.cpp:1207
 msgid "Lock channel..."
-msgstr ""
+msgstr "锁定频道..."
 
 #: src/chatpanel.cpp:1207
 msgid "What should the new password be?"
-msgstr ""
+msgstr "新密码应该是什么？"
 
 #: src/chatpanel.cpp:1222
 msgid "Unlock Channel"
-msgstr ""
+msgstr "解锁频道"
 
 #: src/chatpanel.cpp:1222
 msgid "Are you sure you want to unlock this channel?"
-msgstr ""
+msgstr "你确认你要解锁该频道？"
 
 #: src/chatpanel.cpp:1232 src/chatpanel.cpp:1248
 msgid "ChanServ is not on this server."
-msgstr ""
+msgstr "频道服务器不在该服务器。"
 
 #: src/chatpanel.cpp:1238
 msgid "Register Channel"
-msgstr ""
+msgstr "注册频道"
 
 #: src/chatpanel.cpp:1238
 msgid "Who should be appointed founder of this channel?"
-msgstr ""
+msgstr "谁应该被指派为该频道的创建者？"
 
 #: src/chatpanel.cpp:1253
 msgid "Unregister Channel"
-msgstr ""
+msgstr "注销频道"
 
 #: src/chatpanel.cpp:1253
 msgid "Are you sure you want to unregister this channel?"
-msgstr ""
+msgstr "你确认你要注销此频道？"
 
 #: src/chatpanel.cpp:1311
 msgid "Remove User Acount"
-msgstr ""
+msgstr "移除用户帐户"
 
 #: src/chatpanel.cpp:1311
 msgid "What user account do you want to remove today?"
-msgstr ""
+msgstr "你想要移除哪个用户帐户？"
 
 #: src/chatpanel.cpp:1312
 msgid "Remove Account"
-msgstr ""
+msgstr "删除账户"
 
 #: src/chatpanel.cpp:1312
 msgid "Are you sure you want to remove the account "
-msgstr ""
+msgstr "你确认你要移除帐户 "
 
 #: src/chatpanel.cpp:1319 src/chatpanel.cpp:1320
 msgid "Change User Acount Password"
-msgstr ""
+msgstr "修改用户帐户密码"
 
 #: src/chatpanel.cpp:1319
 msgid "What user account do you want to change the password for?"
-msgstr ""
+msgstr "你想为哪位用户修改密码？"
 
 #: src/chatpanel.cpp:1320
 msgid "What would be the new password?"
-msgstr ""
+msgstr "新密码应该是什么？"
 
 #: src/chatpanel.cpp:1326 src/chatpanel.cpp:1487 src/chatpanel.cpp:1492
 msgid "Not Implemented"
-msgstr ""
+msgstr "尚未实现"
 
 #: src/chatpanel.cpp:1332
 msgid "Broadcast Message"
-msgstr ""
+msgstr "广播消息"
 
 #: src/chatpanel.cpp:1332
 msgid "Message to be broadcasted:"
-msgstr ""
+msgstr "要广播的消息："
 
 #: src/chatpanel.cpp:1352
 msgid "You don't have the mod "
-msgstr ""
+msgstr "你没有 "
 
 #: src/chatpanel.cpp:1353
 msgid " . Please download it first"
-msgstr ""
+msgstr " 模组。请先下载"
 
 #: src/chatpanel.cpp:1353
 msgid "Mod unavailable"
-msgstr ""
+msgstr "模组不可用"
 
 #: src/chatpanel.cpp:1359
 msgid "This battle is password protected, enter the password."
-msgstr ""
+msgstr "这个战斗有密码保护，请输入密码。"
 
 #: src/chatpanel.cpp:1387
 msgid "Mute User"
-msgstr ""
+msgstr "禁言用户"
 
 #: src/chatpanel.cpp:1387
 msgid "For how many minutes should the user be muted?"
-msgstr ""
+msgstr "该用户将被禁言几分钟？"
 
 #: src/chatpanel.cpp:1427
 msgid "Kick User"
-msgstr ""
+msgstr "踢出用户"
 
 #: src/chatpanel.cpp:1427 src/chatpanel.cpp:1481
 msgid "Reason:"
-msgstr ""
+msgstr "原因："
 
 #: src/chatpanel.cpp:1481
 msgid "Kick user"
-msgstr ""
+msgstr "踢出用户"
 
 #: src/chatpanel.cpp:1498
 msgid "Mute user"
-msgstr ""
+msgstr "禁言用户"
 
 #: src/chatpanel.cpp:1498
 msgid "Duration:"
-msgstr ""
+msgstr "持续时间："
 
 #: src/connectwindow.cpp:40
 msgid "Connect to lobby server"
-msgstr ""
+msgstr "连接到对战大厅服务器"
 
 #: src/connectwindow.cpp:61
 msgid ""
 "Server to connect to. You can connect to any server you like by typing in "
 "hostaddress:port format."
-msgstr ""
+msgstr "服务器连接至。 你可以以 主机地址:端口号 的格式输入并连接到任何服务器。"
 
 #: src/connectwindow.cpp:67 src/connectwindow.cpp:143
 #: src/hostbattledialog.cpp:86 src/ui.cpp:136
 msgid "Password"
-msgstr ""
+msgstr "密码"
 
 #: src/connectwindow.cpp:75
 msgid ""
@@ -1221,14 +1257,17 @@ msgid ""
 " can register one for free under the\n"
 "\"Register\" tab."
 msgstr ""
+"提示：如果你还没有一个账户，你\n"
+"可以在“注册”选项卡内免费注册\n"
+"一个。"
 
 #: src/connectwindow.cpp:81
 msgid "Login"
-msgstr ""
+msgstr "登陆"
 
 #: src/connectwindow.cpp:82
 msgid "Register"
-msgstr ""
+msgstr "注册"
 
 #: src/connectwindow.cpp:130
 msgid "Nick"
@@ -4100,22 +4139,22 @@ msgstr ""
 
 #: src/ui.cpp:759
 msgid "The current battle was closed by the host."
-msgstr ""
+msgstr "当前战斗被主建者关闭"
 
 #: src/ui.cpp:759
 msgid "Battle closed"
-msgstr ""
+msgstr "战场已关闭"
 
 #: src/ui.cpp:844
 msgid ""
 "Your spring settings are probably not configured correctly,\n"
 "you should take another look at your settings before trying\n"
 "to play online."
-msgstr ""
+msgstr "你的Spring设置并不正确，在开始网上对战前请再次检查你的设置。"
 
 #: src/ui.cpp:844
 msgid "Spring settings error"
-msgstr ""
+msgstr "Spring设置错误"
 
 #: src/ui.cpp:849
 msgid ""
@@ -4125,35 +4164,38 @@ msgid ""
 "You will not be able to play in this battle. \n"
 "Update your wxwidgets to 2.8 or newer to enable NAT traversal support."
 msgstr ""
+"这个游戏使用不支持NAT traversal的wx2.6版Springlobby。\n"
+"你不能加入这场战斗。\n"
+"请更新你的wxwidgets到2.8或更新版以打开NAT traversal支持"
 
 #: src/user.cpp:107
 msgid "Newbie"
-msgstr ""
+msgstr "新手"
 
 #: src/user.cpp:108
 msgid "Beginner"
-msgstr ""
+msgstr "初学者"
 
 #: src/user.cpp:109
 msgid "Average"
-msgstr ""
+msgstr "大众级新兵"
 
 #: src/user.cpp:110
 msgid "Above average"
-msgstr ""
+msgstr "老兵"
 
 #: src/user.cpp:111
 msgid "Experienced"
-msgstr ""
+msgstr "富有经验的玩家"
 
 #: src/user.cpp:112
 msgid "Highly experienced"
-msgstr ""
+msgstr "极富经验的"
 
 #: src/user.cpp:113
 msgid "Veteran"
-msgstr ""
+msgstr "老鸟"
 
 #: src/user.cpp:115
 msgid "no rank"
-msgstr ""
+msgstr "没有级别"
