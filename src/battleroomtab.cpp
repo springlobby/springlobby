@@ -302,7 +302,7 @@ void BattleRoomTab::UpdateBattleInfo( bool MapChanged, bool reloadMapOptions )
     {
       ///delete any eventual map option from the list and add options of the new map
       for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
-      m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetHostModName() );
+      m_battle.CustomBattleOptions()->loadOptions( MapOption, m_battle.GetHostModName() );
       AddMMOptionsToList( m_map_opts_index, MapOption );
     }
   }

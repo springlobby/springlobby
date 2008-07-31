@@ -31,6 +31,8 @@ class MainChatTab : public wxScrolledWindow
     ChatPanel* AddChatPannel( Channel& channel );
     ChatPanel* AddChatPannel( Server& server, const wxString& name );
     ChatPanel* AddChatPannel( User& user );
+    /** \brief this is only used if channel is left via raw command in server tab */
+    bool RemoveChatPanel( ChatPanel* panel );
 
     void CloseAllChats();
 
@@ -40,12 +42,15 @@ class MainChatTab : public wxScrolledWindow
     void OnTabsChanged( wxListbookEvent& event );
     #else
     void OnTabsChanged( wxAuiNotebookEvent& event );
+    void OnTabClose( wxAuiNotebookEvent& event );
     #endif
     void OnUserConnected( User& user );
     void OnUserDisconnected( User& user );
 
     void ChangeUnreadChannelColour( const wxColour& colour );
     void ChangeUnreadPMColour( const wxColour& colour );
+
+    wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
 
   protected:
 

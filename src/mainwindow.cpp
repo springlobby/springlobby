@@ -18,7 +18,6 @@
 #include <wx/listbook.h>
 #endif
 #include <wx/tooltip.h>
-
 #include <stdexcept>
 
 #include "mainwindow.h"

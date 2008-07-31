@@ -24,7 +24,6 @@ class wxStaticText;
 class wxStaticLine;
 class wxCheckBox;
 class wxToggleButton;
-
 /** \brief The panel containing a BattleListCtrl and a BattleListFilter
  * \todo DOCME */
 class BattleListTab : public wxScrolledWindow

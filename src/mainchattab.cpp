@@ -38,6 +38,7 @@ BEGIN_EVENT_TABLE(MainChatTab, wxPanel)
   EVT_NOTEBOOK_PAGE_CHANGED( CHAT_TABS, MainChatTab::OnTabsChanged )
   #else
   EVT_AUINOTEBOOK_PAGE_CHANGED( CHAT_TABS, MainChatTab::OnTabsChanged )
+  EVT_AUINOTEBOOK_PAGE_CLOSE ( CHAT_TABS, MainChatTab::OnTabClose )
   #endif
 END_EVENT_TABLE()
 
@@ -149,6 +150,7 @@ void MainChatTab::OnUserConnected( User& user )
   if ( panel != 0 ) {
     panel->SetUser( &user );
     panel->OnUserConnected();
+    //TODO enable send button (koshi)
   }
 }
 
@@ -159,6 +161,7 @@ void MainChatTab::OnUserDisconnected( User& user )
   if ( panel != 0 ) {
     panel->OnUserDisconnected();
     panel->SetUser( 0 );
+    //TODO disable send button (koshi)
   }
 }
 
@@ -268,6 +271,18 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
   return chat;
 }
 
+#ifndef HAVE_WX26
+void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
+{
+    int oldsel = event.GetOldSelection();
+    ChatPanel* oldpanel = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
+    if ( oldpanel )
+    {
+        oldpanel->Part();
+    }
+}
+#endif
+
 #ifdef HAVE_WX26
 void MainChatTab::OnTabsChanged( wxListbookEvent& event )
 #else
@@ -317,19 +332,46 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
     return;
   }
 
-  #ifdef HAVE_WX26
-  if ( newsel >= (int)m_chat_tabs->GetPageCount() - 1 ) { // We are going to remove page
-    ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
-    ASSERT_LOGIC( delpage != 0 , _T("MainChatTab::OnTabsChanged(): delpage NULL") );
-
-    delpage->Part();
-    m_chat_tabs->DeletePage( oldsel );
-    m_chat_tabs->SetSelection( 0 );
-  }
-  #endif
-
 }
 
 
+wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
+{
+  wxImage ret = img.ConvertToImage();
+  wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
 
+  double bright = origcolour.value - 0.1*origcolour.value;
+  CLAMP(bright,0,1);
+  wxImage::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
+  bright = origcolour.value - 0.5*origcolour.value;
+  CLAMP(bright,0,1);
+  wxImage::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
+
+  wxImage::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
+  wxImage::RGBValue rgbdarker2 = wxImage::HSVtoRGB( hsvdarker2 );
+
+
+  ret.Replace( 164, 147, 0, rgbdarker2.red, rgbdarker2.green, rgbdarker2.blue );
+
+  ret.Replace( 255, 228, 0, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
+
+  ret.Replace( 255, 253, 234, colour.Red(), colour.Green(), colour.Blue() );
+
+
+
+  return ret;
+}
+
+bool MainChatTab::RemoveChatPanel( ChatPanel* panel )
+{
+    for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+        ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+        if ( tmp == panel && panel != 0 )
+        {
+            m_chat_tabs->DeletePage(i);
+            return true;
+        }
+    }
+    return false;
+}
 
