@@ -187,7 +187,13 @@ ChatPanel::~ChatPanel() {
 	}
 	delete m_chat_log;
 
-	if ( m_type == CPT_Channel ) m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
+
+	if ( m_type == CPT_Channel )
+	{
+	    m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
+	    //TODO enable in aui branch
+        //m_channel->Leave();
+	}
 	if ( m_type == CPT_Server ) m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
 }
 
@@ -1210,6 +1216,12 @@ void ChatPanel::Say( const wxString& message ) {
 				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
 				return;
 			}
+
+            //we need to close the channel tab if leaving manually
+            if (line.Upper().StartsWith( _T( "LEAVE" ) ) ) {
+                wxString channame = line.AfterFirst(' ').BeforeFirst(' ');
+                ui().OnLeaveChannel( channame );
+            }
 
 			m_server->SendRaw( line );
 			OutputLine( _( " Sent: \"" ) + line + _( "\"" ), sett().GetChatColorNormal(), sett().GetChatFont() );
