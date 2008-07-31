@@ -38,6 +38,7 @@ BEGIN_EVENT_TABLE(MainChatTab, wxPanel)
   EVT_NOTEBOOK_PAGE_CHANGED( CHAT_TABS, MainChatTab::OnTabsChanged )
   #else
   EVT_AUINOTEBOOK_PAGE_CHANGED( CHAT_TABS, MainChatTab::OnTabsChanged )
+  EVT_AUINOTEBOOK_PAGE_CLOSE ( CHAT_TABS, MainChatTab::OnTabClose )
   #endif
 END_EVENT_TABLE()
 
@@ -270,6 +271,18 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
   return chat;
 }
 
+#ifndef HAVE_WX26
+void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
+{
+    int oldsel = event.GetOldSelection();
+    ChatPanel* oldpanel = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
+    if ( oldpanel )
+    {
+        oldpanel->Part();
+    }
+}
+#endif
+
 #ifdef HAVE_WX26
 void MainChatTab::OnTabsChanged( wxListbookEvent& event )
 #else
@@ -317,16 +330,6 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
   if ( newpage == 0 ) { // Not sure what to do here
     wxLogError( _T("Newpage NULL.") );
     return;
-  }
-
-
-  if ( newsel >= (int)m_chat_tabs->GetPageCount() - 1 ) { // We are going to remove page
-    ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
-    ASSERT_LOGIC( delpage != 0 , _T("MainChatTab::OnTabsChanged(): delpage NULL") );
-
-    delpage->Part();
-    m_chat_tabs->DeletePage( oldsel );
-    m_chat_tabs->SetSelection( 0 );
   }
 
 }

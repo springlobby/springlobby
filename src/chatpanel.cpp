@@ -189,12 +189,10 @@ ChatPanel::~ChatPanel() {
 
 
 	if ( m_type == CPT_Channel )
-	{
-	    m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
-	    //TODO enable in aui branch
-        //m_channel->Leave();
-	}
-	if ( m_type == CPT_Server ) m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
+        m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
+
+	if ( m_type == CPT_Server )
+        m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
 }
 
 
