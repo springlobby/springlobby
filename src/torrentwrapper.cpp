@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: TorrentWrapper
 //
@@ -145,18 +145,27 @@ bool TorrentWrapper::IsConnectedToP2PSystem()
 
 void TorrentWrapper::UpdateSettings()
 {
+  int uploadLimit, downloadLimit;
+
   try
   {
     if ( !ingame || sett().GetTorrentSystemSuspendMode() == 0 )
     {
-      m_torr->set_upload_rate_limit(sett().GetTorrentUploadRate() * 1024);
-      m_torr->set_download_rate_limit(sett().GetTorrentDownloadRate() *1024 );
+      uploadLimit = sett().GetTorrentUploadRate();
+      downloadLimit = sett().GetTorrentDownloadRate();
     }
     else
     {
-      m_torr->set_upload_rate_limit(sett().GetTorrentThrottledUploadRate() * 1024);
-      m_torr->set_download_rate_limit(sett().GetTorrentThrottledDownloadRate() *1024 );
+      uploadLimit = sett().GetTorrentThrottledUploadRate();
+      downloadLimit = sett().GetTorrentThrottledDownloadRate();
     }
+
+    uploadLimit = uploadLimit < 0 ? -1 : uploadLimit * 1024;
+    downloadLimit = downloadLimit < 0 ? -1 : downloadLimit * 1024;
+
+    m_torr->set_upload_rate_limit(uploadLimit);
+    m_torr->set_download_rate_limit(downloadLimit);
+
     m_torr->set_max_connections(sett().GetTorrentMaxConnections());
 
     m_torr->listen_on(std::make_pair(sett().GetTorrentPort(), sett().GetTorrentPort()));
