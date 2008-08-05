@@ -132,7 +132,8 @@ bool SpringLobbyApp::OnInit()
 
         //! ask for downloading ota content if archive not found, start downloader in background
         wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
-        wxString destFilename = sett().GetSpringDir()+_T("/base/base-ota-content.zip");
+        wxString destFilename = sett().GetSpringDir()+ wxFileName::GetPathSeparator()
+                +_T("base") + wxFileName::GetPathSeparator() + _T("base-ota-content.zip");
         bool contentExists = false;
         if ( usync()->IsLoaded() )
         {
