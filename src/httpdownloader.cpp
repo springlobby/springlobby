@@ -19,14 +19,15 @@
 
 HttpDownloader::HttpDownloader( const wxString& FileUrl, const wxString& DestPath,
                                 const bool notify, const wxString& noticeErr, const wxString& noticeOk  )
-    : m_thread_updater (  FileUrl, DestPath, notify, noticeErr, noticeOk   )
-
 {
+    m_thread_updater = new HttpDownloaderThread (  FileUrl, DestPath, notify, noticeErr, noticeOk   );
 }
 
 HttpDownloader::~HttpDownloader()
 {
-
+    //no idea why, but uncommenting this results in a segfault
+//    if ( m_thread_updater )
+//        delete m_thread_updater ;
 }
 
 HttpDownloader::HttpDownloaderThread::HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath,

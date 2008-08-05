@@ -38,7 +38,7 @@ protected:
 
         };
 
-    HttpDownloaderThread m_thread_updater;
+    HttpDownloaderThread* m_thread_updater;
 
 };
 
