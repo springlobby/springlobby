@@ -16,20 +16,22 @@
 #include "utils.h"
 #include "globalevents.h"
 
+
 HttpDownloader::HttpDownloader( const wxString& FileUrl, const wxString& DestPath,
                                 const bool notify, const wxString& noticeErr, const wxString& noticeOk  )
-    : m_thread_updater ( *this, FileUrl, DestPath, notify, noticeErr, noticeOk   )
+    : m_thread_updater (  FileUrl, DestPath, notify, noticeErr, noticeOk   )
 
 {
 }
 
 HttpDownloader::~HttpDownloader()
 {
+
 }
 
-HttpDownloader::HttpDownloaderThread::HttpDownloaderThread( HttpDownloader& CallingClass, const wxString& FileUrl, const wxString& DestPath,
+HttpDownloader::HttpDownloaderThread::HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath,
                 const bool notify, const wxString& noticeErr, const wxString& noticeOk   ) :
-        m_calling_class(CallingClass),
+       // m_calling_class(CallingClass),
         m_destroy(false),
         m_destpath(DestPath),
         m_fileurl(FileUrl),
@@ -70,9 +72,14 @@ void* HttpDownloader::HttpDownloaderThread::Entry()
             //download success
             if (m_notifyOnDownloadEvent)
             {
+                bool unzipOk = Unzip();
                 wxCommandEvent notice(httpDownloadEvtComplete,GetId());
                 if (m_noticeOk == wxEmptyString)
-                    notice.SetString(m_fileurl + _("\nsuccessfully saved to:\n") + m_destpath);
+                    if ( unzipOk )
+                        notice.SetString(m_fileurl + _("\nsuccessfully unzipped in:\n") + m_destpath);
+                    else
+                        notice.SetString(m_fileurl + _("\nsuccessfully saved to:\n") + m_destpath +
+                            _("\n unzipping failed, please correct manually"));
                 else
                     notice.SetString(m_noticeOk);
                 wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), notice );
@@ -99,6 +106,32 @@ void* HttpDownloader::HttpDownloaderThread::Entry()
     return NULL;
 }
 
+bool HttpDownloader::HttpDownloaderThread::Unzip()
+{
+    try {
+        std::auto_ptr<wxZipEntry> entry;
+
+        //wxString base = sett().GetSpringDir + wxFileName::GetPathSeparator() + base + wxFileName::GetPathSeparator();
+        wxString base = m_destpath.BeforeLast( wxFileName::GetPathSeparator()) + wxFileName::GetPathSeparator();
+        wxFFileInputStream in(m_destpath);
+        wxZipInputStream zip(in);
+
+        while (entry.reset(zip.GetNextEntry()), entry.get() != NULL)
+        {
+            // access meta-data
+            wxString name = entry->GetName();
+            // read 'zip' to access the entry's data
+            wxFFileOutputStream out(base + name);
+            out.Write(zip);
+            out.Close();
+        }
+    }
+    catch (...)
+        {return false;}
+
+    return true;
+
+}
 
 bool HttpDownloader::HttpDownloaderThread::TestDestroy()
 {

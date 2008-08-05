@@ -14,6 +14,8 @@
 #include <wx/dirdlg.h>
 #include <wx/tooltip.h>
 #include <wx/file.h>
+#include <wx/fs_zip.h> //filesystem zip handler
+
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -71,6 +73,7 @@ bool SpringLobbyApp::OnInit()
 
      //TODO needed?
     wxImage::AddHandler(new wxPNGHandler);
+    wxFileSystem::AddHandler(new wxZipFSHandler);
 
     m_locale = new wxLocale( );
     m_locale->Init();
@@ -128,7 +131,8 @@ bool SpringLobbyApp::OnInit()
         InitCacheDir();
 
         //! ask for downloading ota content if archive not found, start downloader in background
-        wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
+        //wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
+        wxString url= _T("rene.filebin.graasmilk.net/test.zip");
         wxString destFilename = sett().GetSpringDir()+_T("/base/base-ota-content.zip");
         bool contentExists = false;
         if ( usync()->IsLoaded() )
