@@ -88,7 +88,6 @@ class TorrentTable{
 
   bool IsConsistent();
 
-
   class Row: public RefcountedContainer{
     /// If you want to modify row's keys, you need to remove it from table first,
     /// then re-insert
@@ -154,6 +153,8 @@ class TorrentTable{
 };
 
 /*
+=======
+>>>>>>> bd/master:src/torrentwrapper.h
 typedef std::map<wxString,TorrentData> HashToTorrentData;/// hash -> torr data
 typedef codeproject::bimap<wxString,wxString> SeedRequests; ///name -> hash
 typedef std::map<wxString,bool> OpenTorrents;/// name -> is seed
@@ -181,7 +182,6 @@ class TorrentWrapper : public iNetClass
 
     /// lobby interface
     void SetIngameStatus( bool status );
-    void ReloadLocalFileList();
     DownloadRequestStatus RequestFileByHash( const wxString& hash );
     DownloadRequestStatus RequestFileByName( const wxString& name );
     void UpdateSettings();
@@ -196,7 +196,9 @@ class TorrentWrapper : public iNetClass
     void CreateTorrent( const wxString& uhash, const wxString& name, MediaType type );
     bool JoinTorrent( const wxString& name );
     bool DownloadTorrentFileFromTracker( const wxString& hash );
-    void FixTorrentList();
+    void JoinRequestedTorrents();
+    void RemoveUnneededTorrents();
+    void TryToJoinQueuedTorrents();
     void ResumeFromList();
 
     void ReceiveandExecute( const wxString& msg );
@@ -213,23 +215,7 @@ class TorrentWrapper : public iNetClass
 
     wxArrayString m_tracker_urls;
 
-
-/// Thread safety rules (all of them equally important. ) :
-/// 1: Minimize duration of locks by putting ScopedLocker into its own {} block
-///  Ideally, the only things that happen while locked are reading and writing (and iterator access).
-///  (however, thats sometimes slightly painful to write, because that requirs lot of temp variables.)
-/// 2: While locked:
-/// 3:  -Try to avoid doing function calls while locked (only call simple functions like sqrt etc, but not calls to unitsync or libtorrent);
-/// 4:  -Use temporary variables to do calls after unlock (outside of ScopedLocker's scope).
-/// 5:  -*Never* call function that might want to lock those mutexes. Locking, then calling function which wants to lock again *will* cause simple deadlock.
-/// 6:  -*Never* call functions that may take time to execute
-/// 7: Try to avoid locking multiple things at once.
-/// 8: When locking multiple things at once, *always* do locks in same order as declaration order here.
-/// (to prevent deadlocks when multiple threads do that.
-/// When one thread does lock a lock b and other lock b lock a, you get deadlock)
-
-/// there probably are some more rules i dont know of, or which i forgot.
-
+    HashToTorrentData m_torrent_infos; /// hash -> torr data
 
     ///MutexWrapper<>
     TorrentTable m_torrent_table;
