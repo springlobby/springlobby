@@ -1274,10 +1274,10 @@ int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
 void Settings::SetFriendsList( const wxArrayString& friends )
 {
     unsigned int friendsCount = friends.GetCount();
-    m_config->DeleteGroup( _T("/Friends") );
+    //m_config->DeleteGroup( _T("/Friends/") );
     for ( unsigned int i = 0; i < friendsCount ; i++ )
     {
-        m_config->Write( _T("/Friends/"), friends[i] );
+        m_config->Write( _T("/Friends/") + TowxString(i), friends[i] );
     }
 }
 
@@ -1288,7 +1288,7 @@ wxArrayString Settings::GetFriendsList( ) const
     for ( unsigned int i = 0; i < friendsCount ; i++ )
     {
         wxString ToAdd;
-        if ( m_config->Read( _T("/Friends"), &ToAdd ) ) list.Add( ToAdd );
+        if ( m_config->Read( _T("/Friends/") +  TowxString(i), &ToAdd ) ) list.Add( ToAdd );
     }
     return list;
 }
