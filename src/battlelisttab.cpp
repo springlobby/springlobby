@@ -218,6 +218,9 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
+  //highlight
+  if ( ui().IsFriend( battle.GetFounder().GetNick() ) )
+    m_battle_list->SetItemBackgroundColour( index, sett().GetChatColorHighlight() );
 
   m_battle_list->Sort();
   m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
