@@ -1270,3 +1270,18 @@ int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
 {
     return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
 }
+
+void SetFriendsList( const wxArrayString& friends )
+{
+  unsigned int TorrentCount = list.GetCount();
+  m_config->DeleteGroup( _T("/Torrent/ResumeList") );
+  for ( unsigned int i = 0; i < TorrentCount; i++ )
+  {
+    m_config->Write( _T("/Torrent/ResumeList/") + TowxString(i), list[i] );
+  }
+}
+
+wxArrayString GetFriendsList( ) const
+{
+
+}
