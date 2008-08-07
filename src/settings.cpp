@@ -685,7 +685,7 @@ int Settings::GetLastRankLimit()
 
 bool Settings::GetTestHostPort()
 {
-    return m_config->Read( _T("/Hosting/TestHostPort"), 1 );
+    return m_config->Read( _T("/Hosting/TestHostPort"), 0 );
 }
 
 wxColour Settings::GetBattleLastColour()
