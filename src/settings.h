@@ -23,6 +23,7 @@
 
 #include <wx/fileconf.h>
 #include "utils.h"
+#include "useractions.hh"
 #include <wx/wfstream.h>
 
 class wxConfigBase;
@@ -30,6 +31,7 @@ class wxFont;
 struct BattleListFilterValues;
 class IBattle;
 class wxFileInputStream ;
+
 //class wxFileConfig;
 class myconf : public wxFileConfig
 {
@@ -282,8 +284,25 @@ class Settings
     //! used to signal unset column width in Get...
     enum { columnWidthUnset };
 
-    void SetFriendsList( const wxArrayString& friends );
-    wxArrayString GetFriendsList( ) const;
+    /*@}*/
+
+    /* ================================================================ */
+    /** @name People/Group mngm related
+     * @{
+     */
+    void SetPeopleList( const wxArrayString& friends, const wxString& group = _T("default") );
+    wxArrayString GetPeopleList( const wxString& group = _T("default") ) const;
+
+    wxArrayString GetGroups( ) const;
+    void AddGroup( const wxString& group ) ;
+    void DeleteGroup( const wxString& group ) ;
+
+    void SetGroupHLColor( const wxColor& color, const wxString& group = _T("default") );
+    wxColor GetGroupHLColor( const wxString& group = _T("default") ) const;
+
+    void SetGroupActions( const wxString& group, UserActions::ActionType action );
+    UserActions::ActionType GetGroupActions( const wxString& group ) const;
+
     /*@}*/
 
     /* ================================================================ */

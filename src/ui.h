@@ -4,6 +4,8 @@
 #include <wx/string.h>
 #include <wx/thread.h>
 #include <wx/event.h>
+#include <map>
+#include "useractions.hh"
 
 class Server;
 class TASServer;
@@ -158,10 +160,8 @@ class Ui
     void OnCachedThreadStarted();
 
     bool IsThisMe(User& other);
-    bool IsFriend(User& other);
-    bool IsFriend(const wxString& other);
-    void OnAddFriend( const wxString& name );
 
+    bool DoActionOnUser( const UserActions::ActionType& action, const wxString& name ) ;
 
     int TestHostPort( unsigned int port );
 
@@ -176,8 +176,8 @@ class Ui
     ConnectWindow* m_con_win;
 
     unsigned int m_upd_intv_counter;
+    UserActions m_userActions;
 
-    wxSortedArrayString m_friends;
 };
 
 Ui& ui();

@@ -1271,24 +1271,73 @@ int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
     return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
 }
 
-void Settings::SetFriendsList( const wxArrayString& friends )
+void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )
 {
     unsigned int friendsCount = friends.GetCount();
     //m_config->DeleteGroup( _T("/Friends/") );
     for ( unsigned int i = 0; i < friendsCount ; i++ )
     {
-        m_config->Write( _T("/Friends/") + TowxString(i), friends[i] );
+        m_config->Write(_T("/Groups/") + group + _T("/Members/") + TowxString(i), friends[i] );
     }
 }
 
-wxArrayString Settings::GetFriendsList( ) const
+wxArrayString Settings::GetPeopleList( const wxString& group  ) const
 {
     wxArrayString list;
-    unsigned int friendsCount  = m_config->GetNumberOfEntries( _T("/Friends") );
+    unsigned int friendsCount  = m_config->GetNumberOfEntries( _T("/Groups/") + group + _T("/Members/") );
     for ( unsigned int i = 0; i < friendsCount ; i++ )
     {
         wxString ToAdd;
-        if ( m_config->Read( _T("/Friends/") +  TowxString(i), &ToAdd ) ) list.Add( ToAdd );
+        if ( m_config->Read( _T("/Groups/") + group + _T("/Members/") +  TowxString(i), &ToAdd ) ) list.Add( ToAdd );
     }
     return list;
+}
+
+void Settings::SetGroupHLColor( const wxColor& color, const wxString& group )
+{
+    m_config->Write( _T("/Groups/") + group + _T("/Opts/HLColor"), GetColorString( color ) );
+
+}
+
+wxColor Settings::GetGroupHLColor( const wxString& group  ) const
+{
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Groups/") + group + _T("/Opts/HLColor") , _T( "100 100 140" ) ) ) );
+}
+
+wxArrayString Settings::GetGroups( ) const
+{
+    wxString old_path = m_config->GetPath();
+    m_config->SetPath( _T("/Groups/") );
+    wxArrayString ret;
+    long dummy;
+    wxString tmp;
+    bool cont = m_config->GetFirstGroup( tmp, dummy );
+    while ( cont )
+    {
+        ret.Add( tmp );
+        cont = m_config->GetNextGroup( tmp, dummy );
+    }
+
+    m_config->SetPath( old_path );
+    return ret;
+}
+
+void Settings::AddGroup( const wxString& group )
+{
+
+}
+
+void Settings::DeleteGroup( const wxString& group )
+{
+
+}
+
+void Settings::SetGroupActions( const wxString& group, UserActions::ActionType action )
+{
+    m_config->Write( _T("/Groups/") + group + _T("/Opts/Actions"), action );
+}
+
+UserActions::ActionType Settings::GetGroupActions( const wxString& group ) const
+{
+    return  (UserActions::ActionType) m_config->Read( _T("/Groups/") + group + _T("/Opts/Actions"), (long) UserActions::ActNone ) ;
 }

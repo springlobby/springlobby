@@ -1581,5 +1581,5 @@ void ChatPanel::FocusInputBox()
 
 void ChatPanel::OnUserMenuAddFriend( wxCommandEvent& event )
 {
-    ui().OnAddFriend( GetSelectedUser()->GetNick() );
+//    ui().OnAddFriend( GetSelectedUser()->GetNick() );
 }
