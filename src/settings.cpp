@@ -1271,17 +1271,24 @@ int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
     return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
 }
 
-void SetFriendsList( const wxArrayString& friends )
+void Settings::SetFriendsList( const wxArrayString& friends )
 {
-  unsigned int TorrentCount = list.GetCount();
-  m_config->DeleteGroup( _T("/Torrent/ResumeList") );
-  for ( unsigned int i = 0; i < TorrentCount; i++ )
-  {
-    m_config->Write( _T("/Torrent/ResumeList/") + TowxString(i), list[i] );
-  }
+    unsigned int friendsCount = friends.GetCount();
+    m_config->DeleteGroup( _T("/Friends") );
+    for ( unsigned int i = 0; i < friendsCount ; i++ )
+    {
+        m_config->Write( _T("/Friends/"), friends[i] );
+    }
 }
 
-wxArrayString GetFriendsList( ) const
+wxArrayString Settings::GetFriendsList( ) const
 {
-
+    wxArrayString list;
+    unsigned int friendsCount  = m_config->GetNumberOfEntries( _T("/Friends") );
+    for ( unsigned int i = 0; i < friendsCount ; i++ )
+    {
+        wxString ToAdd;
+        if ( m_config->Read( _T("/Friends"), &ToAdd ) ) list.Add( ToAdd );
+    }
+    return list;
 }

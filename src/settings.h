@@ -281,6 +281,9 @@ class Settings
     int GetColumnWidth( const wxString& list_name, const int coloumn );
     //! used to signal unset column width in Get...
     enum { columnWidthUnset };
+
+    void SetFriendsList( const wxArrayString& friends );
+    wxArrayString GetFriendsList( ) const;
     /*@}*/
 
     /* ================================================================ */
