@@ -519,6 +519,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
   }
   if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
 
+  m_friends = sett().GetFriendsList();
   //server.uidata.panel = m_main_win->GetChatTab().AddChatPannel( server, server_name );
 }
 
@@ -1089,4 +1090,20 @@ bool Ui::IsThisMe(User& other)
 int Ui::TestHostPort( unsigned int port )
 {
   return m_serv->TestOpenPort( port );
+}
+
+bool Ui::IsFriend(User& other)
+{
+    return IsFriend( other.GetNick() );
+}
+
+bool Ui::IsFriend(const wxString& other)
+{
+    return ( m_friends.Index( other ) != wxNOT_FOUND );
+}
+
+void Ui::OnAddFriend( const wxString& name )
+{
+    m_friends.Add( name );
+    sett().SetFriendsList( m_friends );
 }

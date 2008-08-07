@@ -82,6 +82,7 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 	EVT_MENU( CHAT_MENU_US_CHAT, ChatPanel::OnUserMenuOpenChat )
 	EVT_MENU( CHAT_MENU_US_JOIN, ChatPanel::OnUserMenuJoinSame )
 	EVT_MENU( CHAT_MENU_US_SLAP, ChatPanel::OnUserMenuSlap )
+	EVT_MENU( CHAT_MENU_ADD_FRIEND, ChatPanel::OnUserMenuAddFriend )
 	EVT_MENU( CHAT_MENU_US_MUTE, ChatPanel::OnUserMenuMute )
 	EVT_MENU( CHAT_MENU_US_UNMUTE, ChatPanel::OnUserMenuUnmute )
 	EVT_MENU( CHAT_MENU_US_KICK, ChatPanel::OnUserMenuKick )
@@ -392,8 +393,10 @@ wxMenu* ChatPanel::CreateNickListMenu() {
 	m_user_menu = new wxMenu();
 	wxMenuItem* chatitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_CHAT,  _( "Open Chat" ) , wxEmptyString, wxITEM_NORMAL );
 	m_user_menu->Append( chatitem );
-	wxMenuItem* joinbattleitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_JOIN,  _( "Join same battle" ) , wxEmptyString, wxITEM_NORMAL );
-	m_user_menu->Append( joinbattleitem );
+    wxMenuItem* joinbattleitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_JOIN,  _( "Join same battle" ) , wxEmptyString, wxITEM_NORMAL );
+    m_user_menu->Append( joinbattleitem );
+    wxMenuItem* addFriendItem = new wxMenuItem( m_user_menu, CHAT_MENU_ADD_FRIEND,  _( "Add to friends list" ) , wxEmptyString, wxITEM_NORMAL );
+	m_user_menu->Append( addFriendItem );
 
 	m_user_menu->AppendSeparator();
 
@@ -1574,4 +1577,9 @@ void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event ) {
 void ChatPanel::FocusInputBox()
 {
     m_say_text->SetFocus();
+}
+
+void ChatPanel::OnUserMenuAddFriend( wxCommandEvent& event )
+{
+    ui().OnAddFriend( GetSelectedUser()->GetNick() );
 }

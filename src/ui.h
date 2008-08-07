@@ -158,6 +158,10 @@ class Ui
     void OnCachedThreadStarted();
 
     bool IsThisMe(User& other);
+    bool IsFriend(User& other);
+    bool IsFriend(const wxString& other);
+    void OnAddFriend( const wxString& name );
+
 
     int TestHostPort( unsigned int port );
 
@@ -172,6 +176,8 @@ class Ui
     ConnectWindow* m_con_win;
 
     unsigned int m_upd_intv_counter;
+
+    wxSortedArrayString m_friends;
 };
 
 Ui& ui();

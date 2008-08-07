@@ -150,6 +150,8 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
 
+    void OnUserMenuAddFriend( wxCommandEvent& event );
+
 	void OnKeyPressed( wxKeyEvent& keyevent );
 	void OnKeyReleased( wxKeyEvent& keyevent );
 
@@ -217,6 +219,8 @@ enum
     CHAT_SEND = wxID_HIGHEST,
     CHAT_TEXT,
     CHAT_LOG,
+
+    CHAT_MENU_ADD_FRIEND,
 
     CHAT_MENU_CH_CLEAR,
     CHAT_MENU_CH_LEAVE,
