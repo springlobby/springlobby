@@ -23,14 +23,19 @@ class ManageGroupsPanel: public wxScrolledWindow
     protected:
         wxSizer* GetGroupSizer( const wxString& group );
         wxBoxSizer* m_main_sizer;
+        wxBoxSizer* m_groups_sizer;
+        wxTextCtrl* m_newgroup;
 
         enum {
-          ID_COLOR_BUTTON = wxID_HIGHEST
+          ID_COLOR_BUTTON = wxID_HIGHEST,
+          ID_ADD_BUTTON
 
         };
 
         void OnColorButton( wxCommandEvent& event );
+        void OnAddButton( wxCommandEvent& event );
         void OnCheckBox( wxCommandEvent& event );
+        void ReloadGroupSizer();
 
         void SetupControls();
 

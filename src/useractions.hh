@@ -25,6 +25,9 @@ public:
     bool DoActionOnUser( const ActionType action, const wxString& name ) ;
     wxSortedArrayString GetGroupNames() const;
     void AddUserToGroup( const wxString& group, const wxString& name );
+    void AddGroup(const wxString& name );
+    void ChangeAction( const wxString& group, const ActionType action, bool add = true );
+    ActionType GetGroupAction( const wxString& group );
 
 protected:
     typedef std::map<wxString,wxSortedArrayString> GroupMap;
@@ -34,8 +37,8 @@ protected:
     typedef std::map<ActionType,wxSortedArrayString> ActionGroupsMap;
     ActionGroupsMap m_actionsGroups;
 
-    //set another map so we don't have to evaluate actions at runtime
-    void SetActionsGroupMap();
+    //reload all maps and stuff
+    void Init();
 
     wxSortedArrayString m_groupNames;
 };

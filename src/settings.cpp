@@ -24,6 +24,8 @@
 #include "iunitsync.h"
 #include "ibattle.h"
 
+const wxColor defaultHLcolor (255,0,0);
+
 
 Settings& sett()
 {
@@ -79,6 +81,8 @@ Settings::Settings()
   m_portable_mode = false;
   #endif
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
+
+  if ( !m_config->Exists( _T("/Groups") ) ) AddGroup( _("Default") );
 }
 
 Settings::~Settings()
@@ -1324,12 +1328,21 @@ wxArrayString Settings::GetGroups( ) const
 
 void Settings::AddGroup( const wxString& group )
 {
-
+    if ( !m_config->Exists( _T("/Groups/") + group ) )
+    {
+        m_config->Write( _T("/Groups/") , group );
+        //set defaults
+        SetGroupActions( group, UserActions::ActNone );
+        SetGroupHLColor( defaultHLcolor, group );
+    }
 }
 
 void Settings::DeleteGroup( const wxString& group )
 {
-
+    if ( m_config->Exists( _T("/Groups/") + group ) )
+    {
+        m_config->DeleteEntry( _T("/Groups/") + group );
+    }
 }
 
 void Settings::SetGroupActions( const wxString& group, UserActions::ActionType action )
