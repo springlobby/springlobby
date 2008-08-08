@@ -11,11 +11,17 @@ class wxButton;
 class wxTextCtrl;
 class wxBoxSizer;
 class Ui;
+class wxSizer;
 
 class ManageGroupsPanel: public wxScrolledWindow
 {
-     ManageGroupsPanel( wxWindow* parent );
-     ~ManageGroupsPanel();
+    public:
+         ManageGroupsPanel( wxWindow* parent );
+         ~ManageGroupsPanel();
+
+    protected:
+        wxSizer* GetGroupSizer( const wxString& group );
+        wxBoxSizer* m_main_sizer;
 };
 
 #endif

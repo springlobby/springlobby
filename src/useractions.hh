@@ -5,6 +5,9 @@
 #include <wx/arrstr.h>
 #include <map>
 
+const wxString m_actionNames[] = { _T("none"),_T("highlight"),_T("notify login"),_T("ignore"),_T("autokick") };
+
+
 class UserActions {
 
 public:
@@ -35,6 +38,7 @@ protected:
     void SetActionsGroupMap();
 
     wxSortedArrayString m_groupNames;
-
 };
+
+UserActions& useractions();
 #endif // USERACTIONS_HH_INCLUDED

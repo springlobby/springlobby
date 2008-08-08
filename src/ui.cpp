@@ -48,7 +48,8 @@ Ui& ui()
 Ui::Ui() :
   m_serv(0),
   m_main_win(0),
-  m_con_win(0)
+  m_con_win(0),
+  m_userActions(useractions())
 {
   m_upd_intv_counter = 0;
   m_main_win = new MainWindow( *this );
@@ -1103,4 +1104,9 @@ wxSortedArrayString Ui::GetGroupNames() const
 void Ui::OnAddUserToGroup( const wxString& group, const wxString& name )
 {
     m_userActions.AddUserToGroup( group, name );
+}
+
+UserActions& Ui::GetUserActions()
+{
+    return m_userActions;
 }

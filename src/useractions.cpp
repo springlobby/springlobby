@@ -4,8 +4,15 @@
 #include "settings.h"
 #include <cmath>
 
+UserActions& useractions()
+{
+    static UserActions m_useractions;
+    return m_useractions;
+}
+
 UserActions::UserActions()
 {
+//    m_actionNames = wxArrayString ( { _T("highlight"),_T("notify login"),_T("ignore"),_T("autokick") } );
     m_groupNames = sett().GetGroups();
     for ( unsigned int i = 0; i < m_groupNames.GetCount(); ++i)
     {

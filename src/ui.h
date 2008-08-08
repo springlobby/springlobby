@@ -164,6 +164,7 @@ class Ui
     bool DoActionOnUser( const UserActions::ActionType& action, const wxString& name ) ;
     wxSortedArrayString GetGroupNames() const;
     void OnAddUserToGroup( const wxString& group, const wxString& name );
+    UserActions& GetUserActions();
 
     int TestHostPort( unsigned int port );
 
@@ -178,7 +179,7 @@ class Ui
     ConnectWindow* m_con_win;
 
     unsigned int m_upd_intv_counter;
-    UserActions m_userActions;
+    UserActions& m_userActions;
 
 };
 
