@@ -11,18 +11,15 @@
 #include "useractions.hh"
 #include "ui.h"
 
+BEGIN_EVENT_TABLE( ManageGroupsPanel, wxScrolledWindow )
+  EVT_CHECKBOX( wxID_ANY, ManageGroupsPanel::OnCheckBox )
+  EVT_BUTTON( ID_COLOR_BUTTON, ManageGroupsPanel::OnColorButton )
+END_EVENT_TABLE()
+
 ManageGroupsPanel::ManageGroupsPanel( wxWindow* parent )
     : wxScrolledWindow( parent, -1 )
 {
-    m_main_sizer = new wxBoxSizer( wxVERTICAL );
-    //UserActions& useractions = ui().GetGroupNames();
-    wxSortedArrayString groupnames = useractions().GetGroupNames();
-    for ( unsigned int i = 0; i < groupnames.GetCount(); ++i)
-    {
-        m_main_sizer->Add( GetGroupSizer( groupnames[i] ) );
-    }
-
-    SetSizer( m_main_sizer );
+    SetupControls();
 }
 
 ManageGroupsPanel::~ManageGroupsPanel()
@@ -47,12 +44,37 @@ wxSizer* ManageGroupsPanel::GetGroupSizer( const wxString& group )
     }
     gBox->Add( actionsBox );
 
-    wxBoxSizer* colorBox = new wxBoxSizer( wxVERTICAL );
-    wxButton* m_color = new wxButton( this, -1, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
+    wxBoxSizer* colorBox = new wxBoxSizer( wxHORIZONTAL );
+    wxStaticText* cLabel = new wxStaticText( this, -1, _T("Highlight color") );
+    colorBox->Add( cLabel );
+    wxButton* m_color = new wxButton( this, ID_COLOR_BUTTON, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0,wxDefaultValidator, group );
     m_color->SetBackgroundColour( wxColour( 255, 0, 0 ) );
     colorBox->Add( m_color );
     gBox->Add( colorBox );
 
     return gBox;
+
+}
+
+void ManageGroupsPanel::SetupControls()
+{
+    m_main_sizer = new wxBoxSizer( wxVERTICAL );
+    //UserActions& useractions = ui().GetGroupNames();
+    wxSortedArrayString groupnames = useractions().GetGroupNames();
+    for ( unsigned int i = 0; i < groupnames.GetCount(); ++i)
+    {
+        m_main_sizer->Add( GetGroupSizer( groupnames[i] ) );
+    }
+
+    SetSizer( m_main_sizer );
+}
+
+void ManageGroupsPanel::OnColorButton( wxCommandEvent& event )
+{
+
+}
+
+void ManageGroupsPanel::OnCheckBox( wxCommandEvent& event )
+{
 
 }

@@ -12,6 +12,7 @@ class wxTextCtrl;
 class wxBoxSizer;
 class Ui;
 class wxSizer;
+class wxCommandEvent;
 
 class ManageGroupsPanel: public wxScrolledWindow
 {
@@ -22,6 +23,18 @@ class ManageGroupsPanel: public wxScrolledWindow
     protected:
         wxSizer* GetGroupSizer( const wxString& group );
         wxBoxSizer* m_main_sizer;
+
+        enum {
+          ID_COLOR_BUTTON = wxID_HIGHEST
+
+        };
+
+        void OnColorButton( wxCommandEvent& event );
+        void OnCheckBox( wxCommandEvent& event );
+
+        void SetupControls();
+
+        DECLARE_EVENT_TABLE()
 };
 
 #endif
