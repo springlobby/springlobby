@@ -863,7 +863,9 @@ springlobby_SOURCES = \
 	src/autojoinchanneldialog.h \
 	src/autojoinchanneldialog.cpp \
 	src/useractions.h \
-	src/useractions.cpp
+	src/useractions.cpp \
+	src/managegroupspanel.h \
+	src/managegroupspanel.cpp
 
 
 if USE_WINDRES	
