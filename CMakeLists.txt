@@ -140,6 +140,7 @@ IF(wxWidgets_FOUND)
 		src/user.cpp
 		src/userlist.cpp
 		src/utils.cpp
+                src/useractions.cpp
 	)
 	SET(SettingsSrc
 		src/settings++/custom_dialogs.cpp
