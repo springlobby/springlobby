@@ -150,7 +150,7 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
 
-    void OnUserMenuAddFriend( wxCommandEvent& event );
+    void OnUserMenuAddToGroup( wxCommandEvent& event );
 
 	void OnKeyPressed( wxKeyEvent& keyevent );
 	void OnKeyReleased( wxKeyEvent& keyevent );
@@ -220,8 +220,6 @@ enum
     CHAT_TEXT,
     CHAT_LOG,
 
-    CHAT_MENU_ADD_FRIEND,
-
     CHAT_MENU_CH_CLEAR,
     CHAT_MENU_CH_LEAVE,
     CHAT_MENU_CH_DISPLAYJOIN,
@@ -250,6 +248,7 @@ enum
     CHAT_MENU_US_MUTE,
     CHAT_MENU_US_UNMUTE,
     CHAT_MENU_US_KICK,
+    CHAT_MENU_US_ADD_TO_GROUP,
     CHAT_MENU_US_OP,
     CHAT_MENU_US_DEOP,
     CHAT_MENU_US_MODERATOR_INGAME,

@@ -163,6 +163,7 @@ class Ui
 
     bool DoActionOnUser( const UserActions::ActionType& action, const wxString& name ) ;
     wxSortedArrayString GetGroupNames() const;
+    void OnAddUserToGroup( const wxString& group, const wxString& name );
 
     int TestHostPort( unsigned int port );
 

@@ -82,7 +82,7 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 	EVT_MENU( CHAT_MENU_US_CHAT, ChatPanel::OnUserMenuOpenChat )
 	EVT_MENU( CHAT_MENU_US_JOIN, ChatPanel::OnUserMenuJoinSame )
 	EVT_MENU( CHAT_MENU_US_SLAP, ChatPanel::OnUserMenuSlap )
-	EVT_MENU( CHAT_MENU_ADD_FRIEND, ChatPanel::OnUserMenuAddFriend )
+	EVT_MENU( CHAT_MENU_US_ADD_TO_GROUP, ChatPanel::OnUserMenuAddToGroup )
 	EVT_MENU( CHAT_MENU_US_MUTE, ChatPanel::OnUserMenuMute )
 	EVT_MENU( CHAT_MENU_US_UNMUTE, ChatPanel::OnUserMenuUnmute )
 	EVT_MENU( CHAT_MENU_US_KICK, ChatPanel::OnUserMenuKick )
@@ -399,7 +399,7 @@ wxMenu* ChatPanel::CreateNickListMenu() {
     wxSortedArrayString groupNames = ui().GetGroupNames();
     for ( unsigned int i = 0; i < groupNames.GetCount(); ++i)
     {
-        wxMenuItem* addItem = new wxMenuItem( groupMenu, m_groupMenu_baseID + i,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
+        wxMenuItem* addItem = new wxMenuItem( groupMenu, CHAT_MENU_US_ADD_TO_GROUP,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
         groupMenu->Append( addItem );
     }
     m_user_menu->Append( m_groupMenu_baseID, _("Add to group..."), groupMenu );
@@ -1586,7 +1586,13 @@ void ChatPanel::FocusInputBox()
     m_say_text->SetFocus();
 }
 
-void ChatPanel::OnUserMenuAddFriend( wxCommandEvent& event )
+void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
 {
-//    ui().OnAddFriend( GetSelectedUser()->GetNick() );
+    wxMenuItem* item = (wxMenuItem*) event.GetEventObject();
+    if (item)
+    {
+        wxString groupname = item->GetItemLabelText();
+        ui().OnAddUserToGroup( groupname, GetSelectedUser()->GetNick() );
+        delete item;
+    }
 }

@@ -1099,3 +1099,8 @@ wxSortedArrayString Ui::GetGroupNames() const
 {
     return m_userActions.GetGroupNames();
 }
+
+void Ui::OnAddUserToGroup( const wxString& group, const wxString& name )
+{
+    m_userActions.AddUserToGroup( group, name );
+}
