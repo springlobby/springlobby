@@ -1094,3 +1094,8 @@ bool Ui::DoActionOnUser( const UserActions::ActionType& action, const wxString& 
 {
     return m_userActions.DoActionOnUser( action, name );
 }
+
+wxSortedArrayString Ui::GetGroupNames() const
+{
+    return m_userActions.GetGroupNames();
+}

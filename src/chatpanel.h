@@ -208,7 +208,7 @@ class ChatPanel : public wxPanel
     void CreatePopup();
     wxMenu* CreateNickListMenu();
 
-
+    static const int m_groupMenu_baseID = 6798;
 	TextCompletionDatabase textcompletiondatabase;
 
     DECLARE_EVENT_TABLE();

@@ -162,6 +162,7 @@ class Ui
     bool IsThisMe(User& other);
 
     bool DoActionOnUser( const UserActions::ActionType& action, const wxString& name ) ;
+    wxSortedArrayString GetGroupNames() const;
 
     int TestHostPort( unsigned int port );
 

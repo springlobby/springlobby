@@ -395,8 +395,15 @@ wxMenu* ChatPanel::CreateNickListMenu() {
 	m_user_menu->Append( chatitem );
     wxMenuItem* joinbattleitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_JOIN,  _( "Join same battle" ) , wxEmptyString, wxITEM_NORMAL );
     m_user_menu->Append( joinbattleitem );
-    wxMenuItem* addFriendItem = new wxMenuItem( m_user_menu, CHAT_MENU_ADD_FRIEND,  _( "Add to friends list" ) , wxEmptyString, wxITEM_NORMAL );
-	m_user_menu->Append( addFriendItem );
+    wxMenu* groupMenu = new wxMenu();
+    wxSortedArrayString groupNames = ui().GetGroupNames();
+    for ( unsigned int i = 0; i < groupNames.GetCount(); ++i)
+    {
+        wxMenuItem* addItem = new wxMenuItem( groupMenu, m_groupMenu_baseID + i,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
+        groupMenu->Append( addItem );
+    }
+    m_user_menu->Append( m_groupMenu_baseID, _("Add to group..."), groupMenu );
+
 
 	m_user_menu->AppendSeparator();
 
