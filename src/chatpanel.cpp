@@ -41,7 +41,7 @@
 #ifndef DISABLE_SOUND
 #include "sdlsound.h"
 #endif
-#include "useractions.hh"
+#include "useractions.h"
 /*
 BEGIN_EVENT_TABLE(MyTextCtrl, wxTextCtrl)
 EVT_PAINT(MyTextCtrl::OnPaint)

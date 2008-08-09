@@ -1,4 +1,4 @@
-#include "useractions.hh"
+#include "useractions.h"
 
 #include <wx/intl.h>
 #include "settings.h"
@@ -41,6 +41,12 @@ void UserActions::Init()
     {
         wxString name = m_groupNames[i];
         m_groupMap[name] = sett().GetPeopleList( name );
+        for ( unsigned int k = 0; k < m_groupMap[name].GetCount(); ++k)
+        {
+            wxString user = m_groupMap[name][k];
+            m_knownUsers.Add( user );
+            m_peopleGroup[ user ] = name;
+        }
         m_groupActions[name] = sett().GetGroupActions( name );
     }
     for ( int i = 0; i < m_numActions; ++i)
@@ -95,3 +101,7 @@ UserActions::ActionType UserActions::GetGroupAction( const wxString& group )
     return m_groupActions[group];
 }
 
+wxString UserActions::GetGroupOfUser( const wxString& user )
+{
+    return m_peopleGroup[ user ];
+}

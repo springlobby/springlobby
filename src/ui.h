@@ -5,7 +5,7 @@
 #include <wx/thread.h>
 #include <wx/event.h>
 #include <map>
-#include "useractions.hh"
+#include "useractions.h"
 
 class Server;
 class TASServer;

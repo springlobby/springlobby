@@ -23,7 +23,7 @@
 
 #include <wx/fileconf.h>
 #include "utils.h"
-#include "useractions.hh"
+#include "useractions.h"
 #include <wx/wfstream.h>
 
 class wxConfigBase;

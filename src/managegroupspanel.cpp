@@ -8,7 +8,7 @@
 #include <wx/stattext.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
-#include "useractions.hh"
+#include "useractions.h"
 #include "ui.h"
 #include <cmath>
 

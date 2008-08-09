@@ -28,8 +28,10 @@ public:
     void AddGroup(const wxString& name );
     void ChangeAction( const wxString& group, const ActionType action, bool add = true );
     ActionType GetGroupAction( const wxString& group );
+    wxString GetGroupOfUser( const wxString& user );
 
 protected:
+    //lotsa maps to keep runtime finds, etc ti a minimum
     typedef std::map<wxString,wxSortedArrayString> GroupMap;
     /// groupname --> array of people in the group
     GroupMap m_groupMap;
@@ -42,6 +44,11 @@ protected:
     typedef std::map<ActionType,wxSortedArrayString> ActionPeopleMap;
     /// ActionType --> array of people with that actiontype
     ActionPeopleMap m_actionsPeople;
+    ///nickname --> group map (we don't allow users to be in more than one group
+    typedef std::map<wxString,wxString> PeopleGroupMap;
+    PeopleGroupMap m_peopleGroup;
+    ///list all known users in groups
+    wxSortedArrayString m_knownUsers;
 
     //reload all maps and stuff
     void Init();
