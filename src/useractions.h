@@ -5,7 +5,8 @@
 #include <wx/arrstr.h>
 #include <map>
 
-const wxString m_actionNames[] = { _T("none"),_T("highlight"),_T("notify login"),_T("ignore"),_T("autokick") };
+const wxString m_actionNames[] = { _T("none"),_T("highlight"),_T("notify login"),_T("ignore"),_T("autokick"),
+        _T("notify hosted battle"),_T("notify status change")};
 
 
 class UserActions {
@@ -19,9 +20,11 @@ public:
        ActHighlight = 2,
        ActNotifLogin = 4,
        ActIgnore = 8,
-       ActAutokick = 16
+       ActAutokick = 16,
+       ActNotifBattle = 32,
+       ActNotifStatus = 64
      };
-    static const int m_numActions = 5;
+    static const int m_numActions = sizeof(m_actionNames) / sizeof(wxString);
     bool DoActionOnUser( const ActionType action, const wxString& name ) ;
     wxSortedArrayString GetGroupNames() const;
     void AddUserToGroup( const wxString& group, const wxString& name );

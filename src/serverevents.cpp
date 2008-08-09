@@ -160,6 +160,8 @@ void ServerEvents::OnUserQuit( const wxString& nick )
     User &user=m_serv.GetUser( nick );
     m_ui.OnUserOffline( user );
     m_serv._RemoveUser( nick );
+    if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, nick ) )
+        serverMessageBox( SL_MAIN_ICON, _("Your friend ") + nick + _(" just went offline"), _("Friend offline") );
   }catch(std::runtime_error &except){
   }
 }
