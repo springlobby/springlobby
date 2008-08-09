@@ -685,7 +685,7 @@ int Settings::GetLastRankLimit()
 
 bool Settings::GetTestHostPort()
 {
-    return m_config->Read( _T("/Hosting/TestHostPort"), 0 );
+    return m_config->Read( _T("/Hosting/TestHostPort"), 0l );
 }
 
 wxColour Settings::GetBattleLastColour()
@@ -1170,12 +1170,16 @@ void Settings::SetTorrentListToResume( const wxArrayString& list )
 wxArrayString Settings::GetTorrentListToResume()
 {
   wxArrayString list;
-  unsigned int TorrentCount = m_config->GetNumberOfEntries( _T("/Torrent/ResumeList") );
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Torrent/ResumeList") );
+  unsigned int TorrentCount = m_config->GetNumberOfEntries( false );
   for ( unsigned int i = 0; i < TorrentCount; i++ )
   {
     wxString ToAdd;
     if ( m_config->Read( _T("/Torrent/ResumeList/") + TowxString(i), &ToAdd ) ) list.Add( ToAdd );
   }
+
+  m_config->SetPath( old_path );
   return list;
 }
 
