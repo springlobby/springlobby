@@ -31,11 +31,17 @@ public:
 
 protected:
     typedef std::map<wxString,wxSortedArrayString> GroupMap;
+    /// groupname --> array of people in the group
     GroupMap m_groupMap;
     typedef std::map<wxString,ActionType> GroupActionMap;
+    /// groupname --> ActionType for that group
     GroupActionMap m_groupActions;
     typedef std::map<ActionType,wxSortedArrayString> ActionGroupsMap;
+    /// ActionType --> array of groups with that actiontype
     ActionGroupsMap m_actionsGroups;
+    typedef std::map<ActionType,wxSortedArrayString> ActionPeopleMap;
+    /// ActionType --> array of people with that actiontype
+    ActionPeopleMap m_actionsPeople;
 
     //reload all maps and stuff
     void Init();

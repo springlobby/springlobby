@@ -1174,6 +1174,7 @@ void Settings::SetTorrentListToResume( const wxArrayString& list )
 wxArrayString Settings::GetTorrentListToResume()
 {
   wxArrayString list;
+
   unsigned int TorrentCount = m_config->GetNumberOfEntries( _T("/Torrent/ResumeList") );
   for ( unsigned int i = 0; i < TorrentCount; i++ )
   {
@@ -1288,12 +1289,15 @@ void Settings::SetPeopleList( const wxArrayString& friends, const wxString& grou
 wxArrayString Settings::GetPeopleList( const wxString& group  ) const
 {
     wxArrayString list;
-    unsigned int friendsCount  = m_config->GetNumberOfEntries( _T("/Groups/") + group + _T("/Members/") );
+    wxString old_path = m_config->GetPath();
+    m_config->SetPath( _T("/Groups/") + group + _T("/Members/") );
+    unsigned int friendsCount  = m_config->GetNumberOfEntries( false );
     for ( unsigned int i = 0; i < friendsCount ; i++ )
     {
         wxString ToAdd;
         if ( m_config->Read( _T("/Groups/") + group + _T("/Members/") +  TowxString(i), &ToAdd ) ) list.Add( ToAdd );
     }
+    m_config->SetPath( old_path );
     return list;
 }
 
