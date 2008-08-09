@@ -389,23 +389,13 @@ void ChatPanel::CreatePopup() {
 }
 
 
-wxMenu* ChatPanel::CreateNickListMenu() {
-	wxMenu* m_user_menu;
-	m_user_menu = new wxMenu();
+UserMenu* ChatPanel::CreateNickListMenu() {
+	UserMenu* m_user_menu;
+	m_user_menu = new UserMenu( this );
 	wxMenuItem* chatitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_CHAT,  _( "Open Chat" ) , wxEmptyString, wxITEM_NORMAL );
 	m_user_menu->Append( chatitem );
     wxMenuItem* joinbattleitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_JOIN,  _( "Join same battle" ) , wxEmptyString, wxITEM_NORMAL );
     m_user_menu->Append( joinbattleitem );
-    wxMenu* groupMenu = new wxMenu();
-    wxSortedArrayString groupNames = useractions().GetGroupNames();
-    for ( unsigned int i = 0; i < groupNames.GetCount(); ++i)
-    {
-        wxMenuItem* addItem = new wxMenuItem( groupMenu, CHAT_MENU_US_ADD_TO_GROUP + i ,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
-        groupMenu->Append( addItem );
-        Connect( CHAT_MENU_US_ADD_TO_GROUP + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanel::OnUserMenuAddToGroup ) );
-    }
-    m_user_menu->AppendSubMenu( groupMenu, _("Add to group..."));
-
 
 	m_user_menu->AppendSeparator();
 
@@ -1588,12 +1578,50 @@ void ChatPanel::FocusInputBox()
     m_say_text->SetFocus();
 }
 
-void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
+BEGIN_EVENT_TABLE(UserMenu, wxMenu)
+    EVT_MENU_RANGE(5757, 9000, UserMenu::OnUserMenuAddToGroup)
+END_EVENT_TABLE()
+
+UserMenu::UserMenu(ChatPanel* parent,const wxString& title, long style)
+    : wxMenu( title, style ),m_groupsMenu(0), m_parent(parent),m_groupCounter(0)
 {
-    int groupNum  = event.GetId() - CHAT_MENU_US_ADD_TO_GROUP;
-    try {
-        wxString groupname = useractions().GetGroupNames()[groupNum];
-        useractions().AddUserToGroup( groupname, GetSelectedUser()->GetNick() );
+    m_groupsMenu = new wxMenu();
+    this->AppendSubMenu( m_groupsMenu, _("Add to group..."));
+}
+
+UserMenu::~UserMenu()
+{
+
+}
+
+void UserMenu::UpdateGroups()
+{
+//    this->Destroy(  m_groupsMenu );
+    //m_groupsMenu = new wxMenu();
+
+    wxSortedArrayString groupNames = useractions().GetGroupNames();
+    bool first = m_oldGroups.GetCount() == 0;
+    if ( first )
+        m_oldGroups = groupNames;
+    for ( unsigned int i = 0; i < groupNames.GetCount(); ++i)
+    {
+        if ( m_oldGroups.Index( groupNames[i] ) == wxNOT_FOUND || first )
+        {
+            m_idNameMap[m_groupCounter] = groupNames[i];
+            wxMenuItem* addItem = new wxMenuItem( m_groupsMenu, 5757 + m_groupCounter ,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
+            m_groupsMenu->Append( addItem );
+            Connect( 5757 + m_groupCounter , wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( UserMenu::OnUserMenuAddToGroup ) );
+            m_oldGroups.Add( groupNames[i] );
+            m_groupCounter++;
+        }
     }
-    catch (...) {wxLogError(_T("tried to access wrong group index in menu handler"));}
+    //this->AppendSubMenu( m_groupsMenu, _("Add to group..."));
+}
+
+void UserMenu::OnUserMenuAddToGroup( wxCommandEvent& event )
+{
+    wxString groupname = m_idNameMap[ event.GetId() ];
+
+    useractions().AddUserToGroup( groupname, m_parent->GetSelectedUser()->GetNick() );
+
 }

@@ -8,7 +8,7 @@
 class User;
 class UserList;
 class Ui;
-class wxMenu;
+class UserMenu;
 
 
 
@@ -16,7 +16,7 @@ class wxMenu;
 class NickListCtrl : public customListCtrl
 {
   public:
-    NickListCtrl( wxWindow* parent, Ui& ui, bool show_header = true, wxMenu* popup = 0  );
+    NickListCtrl( wxWindow* parent, Ui& ui, bool show_header = true, UserMenu* popup = 0  );
     ~NickListCtrl();
 
     void AddUser( User& user );
@@ -48,7 +48,7 @@ class NickListCtrl : public customListCtrl
     UserList* m_users;
     Ui& m_ui;
 
-    wxMenu* m_menu;
+    UserMenu* m_menu;
 
     struct {
       int col;

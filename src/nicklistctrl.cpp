@@ -17,6 +17,7 @@
 #include "ui.h"
 #include "mainwindow.h"
 #include "countrycodes.h"
+#include "chatpanel.h"
 
 #define TOOLTIP_DELAY 1000
 
@@ -34,7 +35,7 @@ BEGIN_EVENT_TABLE( NickListCtrl, customListCtrl )
 END_EVENT_TABLE()
 
 
-NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* popup ):
+NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, UserMenu* popup ):
   customListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | wxLC_SINGLE_SEL,
               _T("NickListCtrl") ),
@@ -193,7 +194,11 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
 void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
 {
   wxLogDebugFunc( _T("") );
-  if ( m_menu != 0 ) PopupMenu( m_menu );
+  if ( m_menu != 0 )
+  {
+      m_menu->UpdateGroups();
+      PopupMenu( m_menu );
+  }
 }
 
 void NickListCtrl::OnColClick( wxListEvent& event )

@@ -6,6 +6,7 @@
 #include <wx/panel.h>
 #include <wx/event.h>
 #include <wx/string.h>
+#include <wx/menu.h>
 
 #include "chatlog.h"
 #include "Helper/TextCompletionDatabase.hpp"
@@ -26,7 +27,7 @@ class User;
 class Server;
 class Battle;
 class Ui;
-class wxMenu;
+class UserMenu;
 class wxMouseEvent;
 
 enum ChatPanelType {
@@ -88,6 +89,7 @@ class ChatPanel : public wxPanel
     wxString GetChatTypeStr();
 
     User& GetMe();
+    User* GetSelectedUser();
 
     bool IsOk();
 
@@ -150,8 +152,6 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
 
-    void OnUserMenuAddToGroup( wxCommandEvent& event );
-
 	void OnKeyPressed( wxKeyEvent& keyevent );
 	void OnKeyReleased( wxKeyEvent& keyevent );
 
@@ -161,8 +161,6 @@ class ChatPanel : public wxPanel
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
 
     bool ContainsWordToHighlight( const wxString& message );
-
-    User* GetSelectedUser();
 
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.
 
@@ -206,7 +204,7 @@ class ChatPanel : public wxPanel
     void LogTime();
     void CreateControls( );
     void CreatePopup();
-    wxMenu* CreateNickListMenu();
+    UserMenu* CreateNickListMenu();
 
     static const int m_groupMenu_baseID = 6798;
 	TextCompletionDatabase textcompletiondatabase;
@@ -264,6 +262,26 @@ enum
     CHAT_MENU_US_MODERATOR_MUTE_1440,
     CHAT_MENU_US_MODERATOR_UNMUTE,
     CHAT_MENU_US_MODERATOR_RING
+};
+
+class UserMenu : public wxMenu
+{
+    public:
+        UserMenu(ChatPanel* parent, const wxString& title = wxEmptyString, long style = 0);
+        ~UserMenu();
+
+        void UpdateGroups();
+        void OnUserMenuAddToGroup( wxCommandEvent& event );
+
+    protected:
+        wxMenu* m_groupsMenu;
+        wxArrayString m_oldGroups;
+        ChatPanel* m_parent;
+        unsigned int m_groupCounter;
+        std::map<unsigned int, wxString> m_idNameMap;
+
+    DECLARE_EVENT_TABLE();
+
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
