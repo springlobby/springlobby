@@ -51,7 +51,7 @@ void serverMessageBox(int whichIcon , const wxString& message,
  * message is appended, rather than old box replaced with new.
  */
 void actNotifBox(int whichIcon , const wxString& message,
-        const wxString& caption = wxMessageBoxCaptionStr,
+        const wxString& caption = _T("User action notification"),
         long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 
 //! cleanup
@@ -102,7 +102,7 @@ class ActNotifBox : public ServerMessageBox
 {
 public:
     ActNotifBox (wxIcon* icon ,wxWindow *parent, const wxString& message,
-	        const wxString& caption = wxMessageBoxCaptionStr,
+	        const wxString& caption = _T("User action notification") ,
 	        long style = wxOK, const wxPoint& pos = wxDefaultPosition);
     virtual ~ActNotifBox ();
 

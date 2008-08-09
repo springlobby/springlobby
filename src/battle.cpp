@@ -513,7 +513,8 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
 ///< quick hotfix for bans
 void Battle::CheckBan(User &user){
   if(IsFounderMe()){
-    if(m_banned_users.count(user.GetNick())>0){
+    if(m_banned_users.count(user.GetNick())>0
+        || useractions().DoActionOnUser(UserActions::ActAutokick, user.GetNick() ) ) {
       BattleKickPlayer(user);
       m_ui.OnBattleAction(*this,wxString(_T(" ")),user.GetNick()+_T(" is banned, kicking"));
     }else
