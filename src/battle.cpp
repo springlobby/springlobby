@@ -13,6 +13,8 @@
 #include "utils.h"
 #include "uiutils.h"
 #include "settings.h"
+#include "useractions.h"
+#include "settings++/custom_dialogs.h"
 
 #include "iconimagelist.h"
 

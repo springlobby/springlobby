@@ -116,7 +116,7 @@ void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int
   } catch (...) { return; }
   User& user = m_serv._AddUser( nick );
   if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, nick ) )
-    serverMessageBox( SL_MAIN_ICON, _("Your friend ") + nick + _(" is online"), _("Friend online") );
+    actNotifBox( SL_MAIN_ICON, nick + _(" is online") );
   user.SetCountry( country );
   user.SetCpu( cpu );
   m_ui.OnUserOnline( user );
@@ -131,7 +131,15 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
     User& user = m_serv.GetUser( nick );
     wxLogMessage( _T("calling user.SetStatus( status ) ") );
 
+    UserStatus oldStatus = user.GetStatus();
     user.SetStatus( status );
+
+    if ( useractions().DoActionOnUser( UserActions::ActNotifStatus, nick ) )
+    {
+        wxString diffString = status.GetDiffString( oldStatus ) ;
+        if ( diffString != wxEmptyString )
+            actNotifBox( SL_MAIN_ICON, nick + _(" is now ") + diffString );
+    }
 
     wxLogMessage( _T("calling m_ui.OnUserStatusChanged( user ) ") );
     m_ui.OnUserStatusChanged( user );
@@ -161,7 +169,7 @@ void ServerEvents::OnUserQuit( const wxString& nick )
     m_ui.OnUserOffline( user );
     m_serv._RemoveUser( nick );
     if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, nick ) )
-        serverMessageBox( SL_MAIN_ICON, _("Your friend ") + nick + _(" just went offline"), _("Friend offline") );
+        actNotifBox( SL_MAIN_ICON, nick + _(" just went offline") );
   }catch(std::runtime_error &except){
   }
 }
@@ -191,6 +199,9 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
   battle.SetHostMap( map, maphash );
   battle.SetDescription( title );
   battle.SetHostMod( mod, wxEmptyString );
+
+  if ( useractions().DoActionOnUser( UserActions::ActNotifBattle, user.GetNick() ) )
+        actNotifBox( SL_MAIN_ICON, user.GetNick() + _(" joined battle ") + title );
 
   m_ui.OnBattleOpened( battle );
   if ( user.Status().in_game ) {
