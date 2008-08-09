@@ -41,6 +41,7 @@
 #ifndef DISABLE_SOUND
 #include "sdlsound.h"
 #endif
+#include "useractions.hh"
 /*
 BEGIN_EVENT_TABLE(MyTextCtrl, wxTextCtrl)
 EVT_PAINT(MyTextCtrl::OnPaint)
@@ -396,7 +397,7 @@ wxMenu* ChatPanel::CreateNickListMenu() {
     wxMenuItem* joinbattleitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_JOIN,  _( "Join same battle" ) , wxEmptyString, wxITEM_NORMAL );
     m_user_menu->Append( joinbattleitem );
     wxMenu* groupMenu = new wxMenu();
-    wxSortedArrayString groupNames = ui().GetGroupNames();
+    wxSortedArrayString groupNames = useractions().GetGroupNames();
     for ( unsigned int i = 0; i < groupNames.GetCount(); ++i)
     {
         wxMenuItem* addItem = new wxMenuItem( groupMenu, CHAT_MENU_US_ADD_TO_GROUP + i ,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
@@ -1591,8 +1592,8 @@ void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
 {
     int groupNum  = event.GetId() - CHAT_MENU_US_ADD_TO_GROUP;
     try {
-        wxString groupname = ui().GetGroupNames()[groupNum];
-        ui().OnAddUserToGroup( groupname, GetSelectedUser()->GetNick() );
+        wxString groupname = useractions().GetGroupNames()[groupNum];
+        useractions().AddUserToGroup( groupname, GetSelectedUser()->GetNick() );
     }
     catch (...) {wxLogError(_T("tried to access wrong group index in menu handler"));}
 }

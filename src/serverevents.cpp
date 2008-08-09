@@ -115,8 +115,8 @@ void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int
   ASSERT_LOGIC( !m_serv.UserExists( nick ), _T("New user from server, but already exists!") );
   } catch (...) { return; }
   User& user = m_serv._AddUser( nick );
-  if ( ui().DoActionOnUser( UserActions::ActNotifLogin, nick ) )
-    serverMessageBox( SL_MAIN_ICON, _("Your friend ") + nick + _(" has just logged on"), _("Friend logged on") );
+  if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, nick ) )
+    serverMessageBox( SL_MAIN_ICON, _("Your friend ") + nick + _(" is online"), _("Friend online") );
   user.SetCountry( country );
   user.SetCpu( cpu );
   m_ui.OnUserOnline( user );

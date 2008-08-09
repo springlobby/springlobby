@@ -48,8 +48,7 @@ Ui& ui()
 Ui::Ui() :
   m_serv(0),
   m_main_win(0),
-  m_con_win(0),
-  m_userActions(useractions())
+  m_con_win(0)
 {
   m_upd_intv_counter = 0;
   m_main_win = new MainWindow( *this );
@@ -1091,22 +1090,3 @@ int Ui::TestHostPort( unsigned int port )
   return m_serv->TestOpenPort( port );
 }
 
-bool Ui::DoActionOnUser( const UserActions::ActionType& action, const wxString& name )
-{
-    return m_userActions.DoActionOnUser( action, name );
-}
-
-wxSortedArrayString Ui::GetGroupNames() const
-{
-    return m_userActions.GetGroupNames();
-}
-
-void Ui::OnAddUserToGroup( const wxString& group, const wxString& name )
-{
-    m_userActions.AddUserToGroup( group, name );
-}
-
-UserActions& Ui::GetUserActions()
-{
-    return m_userActions;
-}
