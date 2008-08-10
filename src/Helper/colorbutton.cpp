@@ -1,4 +1,5 @@
 #include "colorbutton.h"
+#include "utils.h"
 #include <wx/image.h>
 
 ColorButton::ColorButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitmap,
@@ -32,7 +33,7 @@ void ColorButton::SetColor( const wxColor& color )
 
 wxBitmap ColorButton::GetBitmapFromColor( const wxColor& color )
 {
-    unsigned int h = m_size.GetHeight() > 0 ? CONTROL_HEIGHT;
+    unsigned int h = m_size.GetHeight() > 0 ? m_size.GetHeight() : CONTROL_HEIGHT;
     unsigned int w = m_size.GetWidth() > 0 ? m_size.GetWidth() : m_size.GetHeight();
     wxImage colorImg ( w, h, true );
     unsigned char* data = colorImg.GetData();

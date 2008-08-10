@@ -33,6 +33,7 @@
 #include "ui.h"
 #include "iunitsync.h"
 #include "utils.h"
+#include "uiutils.h"
 #include "settings.h"
 #include "spring.h"
 #include "mainwindow.h"
@@ -514,10 +515,10 @@ void ChatOptionsTab::OnUseSystemColors( wxCommandEvent& event )
 
 void ChatOptionsTab::OnNormalSelect( wxCommandEvent& event )
 {
-  wxColourData c;
-  c.SetColour( m_normal_color->GetBackgroundColour() );
-  wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_normal_color->SetColor( dlg.GetColourData().GetColour() );
+  wxColor c = GetColourFromUser( this, m_normal_color->GetBackgroundColour() );
+  if ( c.IsOk() ) {
+    m_normal_color->SetColor( c );
+  }
   UpdateTextSample();
 }
 

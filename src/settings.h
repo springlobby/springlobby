@@ -29,8 +29,10 @@ class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
 class IBattle;
-class wxFileInputStream ;
-//class wxFileConfig;
+class wxFileInputStream;
+struct wxColourData;
+
+
 class myconf : public wxFileConfig
 {
     public:
@@ -259,6 +261,10 @@ class Settings
     /** @name UI
      * @{
      */
+
+     void SaveCustomColors( const wxColourData& cdata, const wxString& paletteName = _T("Default") );
+     wxColourData GetCustomColors( const wxString& paletteName = _T("Default") );
+
     int    GetMainWindowWidth();
     void   SetMainWindowWidth( const int value );
 
