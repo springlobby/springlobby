@@ -75,6 +75,7 @@ IF(wxWidgets_FOUND)
 		src/updater/versionchecker.cpp
 		src/Helper/TextCompletionDatabase.cpp
                 src/Helper/wxtextctrlhist.cpp
+                src/Helper/colorbutton.cpp
 		src/filelister/filelistctr.cpp
 		src/filelister/filelistdialog.cpp
 		src/filelister/filelistfilter.cpp
