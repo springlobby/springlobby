@@ -74,6 +74,7 @@ IF(wxWidgets_FOUND)
 		src/boost/md5.cpp
 		src/updater/versionchecker.cpp
 		src/Helper/TextCompletionDatabase.cpp
+                src/Helper/wxtextctrlhist.cpp
 		src/filelister/filelistctr.cpp
 		src/filelister/filelistdialog.cpp
 		src/filelister/filelistfilter.cpp
