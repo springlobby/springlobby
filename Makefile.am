@@ -865,7 +865,12 @@ springlobby_SOURCES = \
 	src/useractions.h \
 	src/useractions.cpp \
 	src/managegroupspanel.h \
-	src/managegroupspanel.cpp
+	src/managegroupspanel.cpp \
+	src/Helper/wxtextctrlhist.h \
+	src/Helper/wxtextctrlhist.cpp \
+	src/Helper/colorbutton.cpp \
+	src/Helper/colorbutton.h
+
 
 
 if USE_WINDRES	

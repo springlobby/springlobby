@@ -3,12 +3,23 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 #define SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 
+#include <wx/intl.h>
+
 class wxString;
 class wxColour;
 class wxImage;
 class wxBitmap;
+class wxWindow;
 
 #define bool2yn(b) ((b)?_("Yes"):_("No"))
+
+#define wxDefaultBitmap wxBitmap()
+
+#ifdef __WXMSW__
+    #define DEFAULT_COLORDLG_TITLE (_("Choose color"))
+#else
+    #define DEFAULT_COLORDLG_TITLE (_("Choose color (only first 16 will be saved)"))
+#endif
 
 
 const int colour_values[][3] = { {240,210,0}, {128, 128, 128}, {0, 0, 128}, {0, 0, 255},
@@ -32,7 +43,13 @@ void BlendImage(wxImage& source, wxImage& dest,int img_dim);
 //! used to load png data into a wxBitmap
 wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size);
 //wxBitmap charArr2wxBitmap(const unsigned char * arg, int size);
-wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * arg, int size, const unsigned char * text, int text_size, unsigned int img_dim);
+wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * arg, int size,
+            const unsigned char * text, int text_size, unsigned int img_dim);
+
+
+//! when querying for a color, always use this (it'll autosave/retrieve custom defined colors)
+wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit,
+        const wxString& caption = DEFAULT_COLORDLG_TITLE, const wxString& palette = _T("Default") );
 
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H

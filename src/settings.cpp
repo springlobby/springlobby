@@ -14,6 +14,8 @@
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
+#include <wx/colour.h>
+#include <wx/cmndata.h>
 #include <wx/font.h>
 
 #include "nonportable.h"
@@ -1361,3 +1363,32 @@ UserActions::ActionType Settings::GetGroupActions( const wxString& group ) const
 {
     return  (UserActions::ActionType) m_config->Read( _T("/Groups/") + group + _T("/Opts/Actions"), (long) UserActions::ActNone ) ;
 }
+
+
+void Settings::SaveCustomColors( const wxColourData& _cdata, const wxString& paletteName  )
+{
+    //note 16 colors is wx limit
+    wxColourData cdata = _cdata;
+    for ( int i = 0; i < 16; ++i)
+    {
+        wxColor col = cdata.GetCustomColour( i );
+        if ( !col.IsOk() )
+            col = wxColor ( 255, 255, 255 );
+        m_config->Write( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i), GetColorString( col ) ) ;
+    }
+}
+
+wxColourData Settings::GetCustomColors( const wxString& paletteName )
+{
+    wxColourData cdata;
+    //note 16 colors is wx limit
+    for ( int i = 0; i < 16; ++i)
+    {
+        wxColor col = GetColorFromStrng ( m_config->Read( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i),
+                                        GetColorString(  wxColor ( 255, 255, 255 ) ) ) );
+        cdata.SetCustomColour( i, col );
+    }
+
+    return cdata;
+}
+

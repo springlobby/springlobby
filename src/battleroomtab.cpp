@@ -33,6 +33,7 @@
 #include "settings++/custom_dialogs.h"
 #include "autobalancedialog.h"
 #include "settings.h"
+#include "Helper/colorbutton.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -69,7 +70,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_team_sel->SetToolTip(_("Players with the same team number share control of their units."));
   m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
   m_ally_sel->SetToolTip(_("Players with the same ally number work together to achieve victory."));
-  m_color_sel = new wxBitmapButton( m_player_panel, BROOM_COLOURSEL, icons().GetBitmap( icons().GetColourIcon( myself.team ) ) , wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+  m_color_sel = new ColorButton( m_player_panel, BROOM_COLOURSEL, myself.colour, wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_color_sel->SetToolTip(_("Select a color to identify your units in-game"));
   m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
   m_side_sel->SetToolTip(_("Select your faction"));
@@ -373,7 +374,7 @@ void BattleRoomTab::UpdateUser( User& user )
     }
 
   icons().SetColourIcon( bs.team, user.BattleStatus().colour );
-  m_color_sel->SetBitmapLabel( icons().GetBitmap( icons().GetColourIcon( bs.team ) ) );
+  m_color_sel->SetColor( user.BattleStatus().colour );
 
   m_minimap->UpdateMinimap();
 }
@@ -519,7 +520,7 @@ void BattleRoomTab::OnColourSel( wxCommandEvent& event )
   User& u = m_battle.GetMe();
   UserBattleStatus& bs = u.BattleStatus();
   wxColour CurrentColour = bs.colour;
-  CurrentColour = wxGetColourFromUser(this, CurrentColour);
+  CurrentColour = GetColourFromUser(this, CurrentColour);
   if ( !CurrentColour.IsColourOk() ) return;
   bs.colour = CurrentColour;
   sett().SetBattleLastColour( CurrentColour );
