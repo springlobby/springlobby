@@ -99,7 +99,6 @@ class ChatPanel : public wxPanel
 
     void OnSay( wxCommandEvent& event );
     void OnResize( wxSizeEvent& event );
-	void OnTextChanged_Say_Text( wxCommandEvent& event );
 
     void OnLinkEvent( wxTextUrlEvent& event );
     void OnMouseDown( wxMouseEvent& event );
