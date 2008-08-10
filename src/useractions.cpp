@@ -1,6 +1,7 @@
 #include "useractions.h"
 
 #include <wx/intl.h>
+#include <wx/colour.h>
 #include "settings.h"
 #include <cmath>
 
@@ -104,4 +105,14 @@ UserActions::ActionType UserActions::GetGroupAction( const wxString& group )
 wxString UserActions::GetGroupOfUser( const wxString& user )
 {
     return m_peopleGroup[ user ];
+}
+
+void UserActions::SetGroupColor( const wxString& group, const wxColour& color )
+{
+    sett().SetGroupHLColor( color, group );
+}
+
+wxColor UserActions::GetGroupColor( const wxString& group )
+{
+    return sett().GetGroupHLColor( group );
 }

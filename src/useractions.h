@@ -5,6 +5,8 @@
 #include <wx/arrstr.h>
 #include <map>
 
+class wxColour;
+
 const wxString m_actionNames[] = { _T("none"),_T("highlight"),_T("notify login"),_T("ignore"),_T("autokick"),
         _T("notify hosted battle"),_T("notify status change")};
 
@@ -32,6 +34,8 @@ public:
     void ChangeAction( const wxString& group, const ActionType action, bool add = true );
     ActionType GetGroupAction( const wxString& group );
     wxString GetGroupOfUser( const wxString& user );
+    void SetGroupColor( const wxString& group, const wxColour& color );
+    wxColour GetGroupColor( const wxString& group );
 
 protected:
     //lotsa maps to keep runtime finds, etc ti a minimum
