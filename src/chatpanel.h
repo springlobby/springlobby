@@ -15,6 +15,7 @@ class wxSizeEvent;
 class wxBoxSizer;
 class wxSplitterWindow;
 class wxTextCtrl;
+class wxTextCtrlHist;
 class wxRichTextCtrl;
 class wxTextUrlEvent;
 class wxComboBox;
@@ -178,7 +179,7 @@ class ChatPanel : public wxPanel
     #else
     wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
     #endif
-    wxTextCtrl* m_say_text;     //!< The say textcontrol.
+    wxTextCtrlHist* m_say_text;     //!< The say textcontrol.
 
     NickListCtrl* m_nicklist;   //!< The nicklist.
     wxComboBox* m_nick_filter;  //!< The filter combo.

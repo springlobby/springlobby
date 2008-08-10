@@ -38,6 +38,7 @@
 #include "chatlog.h"
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
+#include "Helper/wxtextctrlhist.h"
 #ifndef DISABLE_SOUND
 #include "sdlsound.h"
 #endif
@@ -236,7 +237,7 @@ void ChatPanel::CreateControls( ) {
 	if ( m_type == CPT_Channel )
   		m_chatlog_text->SetToolTip( _("right click for options (like autojoin)" ) );
 
-	m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
+	m_say_text = new wxTextCtrlHist( m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
 
 
@@ -634,6 +635,8 @@ ChatPanel::OnTextChanged_Say_Text( wxCommandEvent& event ) {
 			wxBell();
 		}
 	}
+	else
+        event.Skip();
 #endif
 }
 
