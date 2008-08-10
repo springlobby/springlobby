@@ -148,6 +148,10 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
 		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist( NULL ), m_chat_tabs( 0 ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( 0 ), m_battle( &battle ), m_type( CPT_Battle ), m_popup_menu( 0 ) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Battle& battle" ) );
+	for (unsigned int i = 0; i < battle.GetNumUsers();++i)
+    {
+       textcompletiondatabase.Insert_Mapping( battle.GetUser(i).GetNick(), battle.GetUser(i).GetNick() );
+    }
 	CreateControls( );
 	wxDateTime now = wxDateTime::Now();
 	m_chat_log = new ChatLog( sett().GetDefaultServer(), _T( "_BATTLE_" ) + now.Format( _T( "%Y_%m_%d__%H_%M_%S" ) ) );
