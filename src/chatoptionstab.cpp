@@ -511,128 +511,69 @@ void ChatOptionsTab::OnUseSystemColors( wxCommandEvent& event )
 {
 }
 
-
-
-void ChatOptionsTab::OnNormalSelect( wxCommandEvent& event )
+void ChatOptionsTab::OnColorChange( ColorButton* button )
 {
-  wxColor c = GetColourFromUser( this, m_normal_color->GetBackgroundColour() );
+  wxColor c = GetColourFromUser( this, button->GetColor() );
   if ( c.IsOk() ) {
-    m_normal_color->SetColor( c );
+    button->SetColor( c );
   }
   UpdateTextSample();
 }
 
-
+void ChatOptionsTab::OnNormalSelect( wxCommandEvent& event )
+{
+  OnColorChange( m_normal_color );
+}
 
 void ChatOptionsTab::OnBGSelect( wxCommandEvent& event )
 {
-  wxColourData c;
-  c.SetColour( m_bg_color->GetBackgroundColour() );
-  wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_bg_color->SetColor( dlg.GetColourData().GetColour() );
-  UpdateTextSample();
+  OnColorChange( m_bg_color );
 }
-
-
 
 void ChatOptionsTab::OnActionSelect( wxCommandEvent& event )
 {
-  wxColourData c;
-  c.SetColour( m_action_color->GetBackgroundColour() );
-  wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_action_color->SetColor( dlg.GetColourData().GetColour() );
-  UpdateTextSample();
+  OnColorChange( m_action_color );
 }
-
-
 
 void ChatOptionsTab::OnHighlightSelect( wxCommandEvent& event )
 {
-  wxColourData c;
-  c.SetColour( m_highlight_color->GetBackgroundColour() );
-  wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_highlight_color->SetColor( dlg.GetColourData().GetColour() );
-  UpdateTextSample();
+  OnColorChange( m_highlight_color );
 }
-
-
 
 void ChatOptionsTab::OnJoinLeaveSelect( wxCommandEvent& event )
 {
-  wxColourData c;
-  c.SetColour( m_joinleave_color->GetBackgroundColour() );
-  wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_joinleave_color->SetColor( dlg.GetColourData().GetColour() );
-  UpdateTextSample();
+  OnColorChange( m_joinleave_color );
 }
-
-
 
 void ChatOptionsTab::OnNotificationSelect( wxCommandEvent& event )
 {
-  wxColourData c;
-  c.SetColour( m_note_color->GetBackgroundColour() );
-  wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_note_color->SetColor( dlg.GetColourData().GetColour() );
-  UpdateTextSample();
+  OnColorChange( m_note_color );
 }
-
-
 
 void ChatOptionsTab::OnMyMessSelect( wxCommandEvent& event )
 {
-  wxColourData c;
-  c.SetColour( m_my_color->GetBackgroundColour() );
-  wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_my_color->SetColor( dlg.GetColourData().GetColour() );
-  UpdateTextSample();
+  OnColorChange( m_my_color );
 }
-
-
 
 void ChatOptionsTab::OnServerSelect( wxCommandEvent& event )
 {
-  wxColourData c;
-  c.SetColour( m_server_color->GetBackgroundColour() );
-  wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_server_color->SetColor( dlg.GetColourData().GetColour() );
-  UpdateTextSample();
+  OnColorChange( m_server_color );
 }
-
-
 
 void ChatOptionsTab::OnClientSelect( wxCommandEvent& event )
 {
-  wxColourData c;
-  c.SetColour( m_client_color->GetBackgroundColour() );
-  wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_client_color->SetColor( dlg.GetColourData().GetColour() );
-  UpdateTextSample();
+  OnColorChange( m_client_color );
 }
-
-
 
 void ChatOptionsTab::OnErrorSelect( wxCommandEvent& event )
 {
-  wxColourData c;
-  c.SetColour( m_error_color->GetBackgroundColour() );
-  wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_error_color->SetColor( dlg.GetColourData().GetColour() );
-  UpdateTextSample();
+  OnColorChange( m_error_color );
 }
-
-
 
 void ChatOptionsTab::OnTimestampSelect( wxCommandEvent& event )
 {
-  wxColourData c;
-  c.SetColour( m_ts_color->GetBackgroundColour() );
-  wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_ts_color->SetColor( dlg.GetColourData().GetColour() );
-  UpdateTextSample();
+  OnColorChange( m_ts_color );
 }
-
-
 
 void ChatOptionsTab::OnSaveLogs( wxCommandEvent& event )
 {
@@ -640,8 +581,6 @@ void ChatOptionsTab::OnSaveLogs( wxCommandEvent& event )
   m_browse_log->Enable( m_save_logs->GetValue() );
   m_chat_save_label->Enable( m_save_logs->GetValue() );
 }
-
-
 
 void ChatOptionsTab::OnBrowseLog( wxCommandEvent& event )
 {

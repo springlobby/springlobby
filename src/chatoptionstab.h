@@ -116,6 +116,9 @@ class ChatOptionsTab : public wxPanel
 
     Ui& m_ui;
 
+    /// generic func used in all handlers
+    void OnColorChange( ColorButton* button );
+
     DECLARE_EVENT_TABLE()
 };
 
