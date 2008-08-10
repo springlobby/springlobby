@@ -36,6 +36,7 @@
 #include "settings.h"
 #include "spring.h"
 #include "mainwindow.h"
+#include "Helper/colorbutton.h"
 
 BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
   EVT_BUTTON( ID_SELFONT, ChatOptionsTab::OnSelectFont )
@@ -89,8 +90,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   wxBoxSizer* bNormlColorSizer;
   bNormlColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_normal_color = new wxButton( m_custom_colors, ID_NORMAL, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_normal_color->SetBackgroundColour( wxColour( 0, 0, 0 ) );
+  m_normal_color = new ColorButton( m_custom_colors, ID_NORMAL, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
+  m_normal_color->SetColor( wxColour( 0, 0, 0 ) );
 
   bNormlColorSizer->Add( m_normal_color, 0, wxALL, 5 );
 
@@ -103,8 +104,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   wxBoxSizer* bBGColorSizer;
   bBGColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_bg_color = new wxButton( m_custom_colors, ID_BG, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_bg_color->SetBackgroundColour( wxColour( 255, 255, 255 ) );
+  m_bg_color = new ColorButton( m_custom_colors, ID_BG, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
+  m_bg_color->SetColor( wxColour( 255, 255, 255 ) );
 
   bBGColorSizer->Add( m_bg_color, 0, wxALL, 5 );
 
@@ -117,8 +118,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   wxBoxSizer* bActionColorSizer;
   bActionColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_action_color = new wxButton( m_custom_colors, ID_ACTION, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_action_color->SetBackgroundColour( wxColour( 255, 0, 249 ) );
+  m_action_color = new ColorButton( m_custom_colors, ID_ACTION, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
+  m_action_color->SetColor( wxColour( 255, 0, 249 ) );
 
   bActionColorSizer->Add( m_action_color, 0, wxALL, 5 );
 
@@ -131,8 +132,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   wxBoxSizer* bHighlightColorSizer;
   bHighlightColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_highlight_color = new wxButton( m_custom_colors, ID_HIGHLIGHT, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_highlight_color->SetBackgroundColour( wxColour( 255, 0, 44 ) );
+  m_highlight_color = new ColorButton( m_custom_colors, ID_HIGHLIGHT, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
+  m_highlight_color->SetColor( wxColour( 255, 0, 44 ) );
 
   bHighlightColorSizer->Add( m_highlight_color, 0, wxALL, 5 );
 
@@ -145,8 +146,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   wxBoxSizer* bJoinLeaveColorSizer;
   bJoinLeaveColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_joinleave_color = new wxButton( m_custom_colors, ID_JOINLEAVE, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_joinleave_color->SetBackgroundColour( wxColour( 24, 255, 0 ) );
+  m_joinleave_color = new ColorButton( m_custom_colors, ID_JOINLEAVE, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
+  m_joinleave_color->SetColor( wxColour( 24, 255, 0 ) );
 
   bJoinLeaveColorSizer->Add( m_joinleave_color, 0, wxALL, 5 );
 
@@ -159,8 +160,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   wxBoxSizer* bMyColorSizer;
   bMyColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_my_color = new wxButton( m_custom_colors, ID_MYMESS, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_my_color->SetBackgroundColour( wxColour( 160, 160, 160 ) );
+  m_my_color = new ColorButton( m_custom_colors, ID_MYMESS, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
+  m_my_color->SetColor( wxColour( 160, 160, 160 ) );
 
   bMyColorSizer->Add( m_my_color, 0, wxALL, 5 );
 
@@ -178,8 +179,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   wxBoxSizer* bServerColorSizer;
   bServerColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_server_color = new wxButton( m_custom_colors, ID_SERVER, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_server_color->SetBackgroundColour( wxColour( 255, 189, 0 ) );
+  m_server_color = new ColorButton( m_custom_colors, ID_SERVER, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
+  m_server_color->SetColor( wxColour( 255, 189, 0 ) );
 
   bServerColorSizer->Add( m_server_color, 0, wxALL, 5 );
 
@@ -192,8 +193,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   wxBoxSizer* bClientolorSizer;
   bClientolorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_client_color = new wxButton( m_custom_colors, ID_CLIENT, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_client_color->SetBackgroundColour( wxColour( 255, 189, 0 ) );
+  m_client_color = new ColorButton( m_custom_colors, ID_CLIENT, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
+  m_client_color->SetColor( wxColour( 255, 189, 0 ) );
 
   bClientolorSizer->Add( m_client_color, 0, wxALL, 5 );
 
@@ -206,8 +207,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   wxBoxSizer* bErrorColorSizer;
   bErrorColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_error_color = new wxButton( m_custom_colors, ID_ERROR, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_error_color->SetBackgroundColour( wxColour( 255, 0, 0 ) );
+  m_error_color = new ColorButton( m_custom_colors, ID_ERROR, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
+  m_error_color->SetColor( wxColour( 255, 0, 0 ) );
 
   bErrorColorSizer->Add( m_error_color, 0, wxALL, 5 );
 
@@ -220,8 +221,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   wxBoxSizer* bTSColorSizer;
   bTSColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_ts_color = new wxButton( m_custom_colors, ID_TIMESTAMP, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_ts_color->SetBackgroundColour( wxColour( 160, 160, 160 ) );
+  m_ts_color = new ColorButton( m_custom_colors, ID_TIMESTAMP, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
+  m_ts_color->SetColor( wxColour( 160, 160, 160 ) );
 
   bTSColorSizer->Add( m_ts_color, 0, wxALL, 5 );
 
@@ -234,8 +235,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   wxBoxSizer* bNoteColorSizer;
   bNoteColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_note_color = new wxButton( m_custom_colors, ID_NOTIFICATION, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_note_color->SetBackgroundColour( wxColour( 255, 191, 0 ) );
+  m_note_color = new ColorButton( m_custom_colors, ID_NOTIFICATION, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
+  m_note_color->SetColor( wxColour( 255, 191, 0 ) );
 
   bNoteColorSizer->Add( m_note_color, 0, wxALL, 5 );
 
@@ -428,17 +429,17 @@ void ChatOptionsTab::UpdateTextSample()
 
 void ChatOptionsTab::DoRestore()
 {
-  m_normal_color->SetBackgroundColour( sett().GetChatColorNormal() );
-  m_bg_color->SetBackgroundColour( sett().GetChatColorBackground() );
-  m_action_color->SetBackgroundColour( sett().GetChatColorAction() );
-  m_highlight_color->SetBackgroundColour( sett().GetChatColorHighlight() );
-  m_joinleave_color->SetBackgroundColour( sett().GetChatColorJoinPart() );
-  m_note_color->SetBackgroundColour( sett().GetChatColorNotification() );
-  m_my_color->SetBackgroundColour( sett().GetChatColorMine() );
-  m_server_color->SetBackgroundColour( sett().GetChatColorServer() );
-  m_client_color->SetBackgroundColour( sett().GetChatColorClient() );
-  m_error_color->SetBackgroundColour( sett().GetChatColorError() );
-  m_ts_color->SetBackgroundColour( sett().GetChatColorTime() );
+  m_normal_color->SetColor( sett().GetChatColorNormal() );
+  m_bg_color->SetColor( sett().GetChatColorBackground() );
+  m_action_color->SetColor( sett().GetChatColorAction() );
+  m_highlight_color->SetColor( sett().GetChatColorHighlight() );
+  m_joinleave_color->SetColor( sett().GetChatColorJoinPart() );
+  m_note_color->SetColor( sett().GetChatColorNotification() );
+  m_my_color->SetColor( sett().GetChatColorMine() );
+  m_server_color->SetColor( sett().GetChatColorServer() );
+  m_client_color->SetColor( sett().GetChatColorClient() );
+  m_error_color->SetColor( sett().GetChatColorError() );
+  m_ts_color->SetColor( sett().GetChatColorTime() );
   m_chat_font = sett().GetChatFont();
   m_fontname->SetLabel( m_chat_font.GetFaceName() );
   m_save_logs->SetValue(  sett().GetChatLogEnable() );
@@ -516,7 +517,7 @@ void ChatOptionsTab::OnNormalSelect( wxCommandEvent& event )
   wxColourData c;
   c.SetColour( m_normal_color->GetBackgroundColour() );
   wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_normal_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
+  if ( dlg.ShowModal() == wxID_OK ) m_normal_color->SetColor( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
 
@@ -527,7 +528,7 @@ void ChatOptionsTab::OnBGSelect( wxCommandEvent& event )
   wxColourData c;
   c.SetColour( m_bg_color->GetBackgroundColour() );
   wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_bg_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
+  if ( dlg.ShowModal() == wxID_OK ) m_bg_color->SetColor( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
 
@@ -538,7 +539,7 @@ void ChatOptionsTab::OnActionSelect( wxCommandEvent& event )
   wxColourData c;
   c.SetColour( m_action_color->GetBackgroundColour() );
   wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_action_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
+  if ( dlg.ShowModal() == wxID_OK ) m_action_color->SetColor( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
 
@@ -549,7 +550,7 @@ void ChatOptionsTab::OnHighlightSelect( wxCommandEvent& event )
   wxColourData c;
   c.SetColour( m_highlight_color->GetBackgroundColour() );
   wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_highlight_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
+  if ( dlg.ShowModal() == wxID_OK ) m_highlight_color->SetColor( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
 
@@ -560,7 +561,7 @@ void ChatOptionsTab::OnJoinLeaveSelect( wxCommandEvent& event )
   wxColourData c;
   c.SetColour( m_joinleave_color->GetBackgroundColour() );
   wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_joinleave_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
+  if ( dlg.ShowModal() == wxID_OK ) m_joinleave_color->SetColor( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
 
@@ -571,7 +572,7 @@ void ChatOptionsTab::OnNotificationSelect( wxCommandEvent& event )
   wxColourData c;
   c.SetColour( m_note_color->GetBackgroundColour() );
   wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_note_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
+  if ( dlg.ShowModal() == wxID_OK ) m_note_color->SetColor( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
 
@@ -582,7 +583,7 @@ void ChatOptionsTab::OnMyMessSelect( wxCommandEvent& event )
   wxColourData c;
   c.SetColour( m_my_color->GetBackgroundColour() );
   wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_my_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
+  if ( dlg.ShowModal() == wxID_OK ) m_my_color->SetColor( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
 
@@ -593,7 +594,7 @@ void ChatOptionsTab::OnServerSelect( wxCommandEvent& event )
   wxColourData c;
   c.SetColour( m_server_color->GetBackgroundColour() );
   wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_server_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
+  if ( dlg.ShowModal() == wxID_OK ) m_server_color->SetColor( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
 
@@ -604,7 +605,7 @@ void ChatOptionsTab::OnClientSelect( wxCommandEvent& event )
   wxColourData c;
   c.SetColour( m_client_color->GetBackgroundColour() );
   wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_client_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
+  if ( dlg.ShowModal() == wxID_OK ) m_client_color->SetColor( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
 
@@ -615,7 +616,7 @@ void ChatOptionsTab::OnErrorSelect( wxCommandEvent& event )
   wxColourData c;
   c.SetColour( m_error_color->GetBackgroundColour() );
   wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_error_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
+  if ( dlg.ShowModal() == wxID_OK ) m_error_color->SetColor( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
 
@@ -626,7 +627,7 @@ void ChatOptionsTab::OnTimestampSelect( wxCommandEvent& event )
   wxColourData c;
   c.SetColour( m_ts_color->GetBackgroundColour() );
   wxColourDialog dlg( this, &c );
-  if ( dlg.ShowModal() == wxID_OK ) m_ts_color->SetBackgroundColour( dlg.GetColourData().GetColour() );
+  if ( dlg.ShowModal() == wxID_OK ) m_ts_color->SetColor( dlg.GetColourData().GetColour() );
   UpdateTextSample();
 }
 

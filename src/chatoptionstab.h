@@ -12,6 +12,7 @@ class wxButton;
 class wxTextCtrl;
 class wxBoxSizer;
 class Ui;
+class ColorButton;
 
 
 class ChatOptionsTab : public wxPanel
@@ -75,27 +76,27 @@ class ChatOptionsTab : public wxPanel
     wxButton* m_select_font;
     wxCheckBox* m_use_sys_colors;
     wxPanel* m_custom_colors;
-    wxButton* m_normal_color;
+    ColorButton* m_normal_color;
     wxStaticText* m_normal_label;
-    wxButton* m_bg_color;
+    ColorButton* m_bg_color;
     wxStaticText* m_bg_label;
-    wxButton* m_action_color;
+    ColorButton* m_action_color;
     wxStaticText* m_action_label;
-    wxButton* m_highlight_color;
+    ColorButton* m_highlight_color;
     wxStaticText* m_highlight_label;
-    wxButton* m_joinleave_color;
+    ColorButton* m_joinleave_color;
     wxStaticText* m_joinleave_label;
-    wxButton* m_note_color;
+    ColorButton* m_note_color;
     wxStaticText* m_note_label;
-    wxButton* m_my_color;
+    ColorButton* m_my_color;
     wxStaticText* m_my_label;
-    wxButton* m_server_color;
+    ColorButton* m_server_color;
     wxStaticText* m_server_label;
-    wxButton* m_client_color;
+    ColorButton* m_client_color;
     wxStaticText* m_client_label;
-    wxButton* m_error_color;
+    ColorButton* m_error_color;
     wxStaticText* m_error_label;
-    wxButton* m_ts_color;
+    ColorButton* m_ts_color;
     wxStaticText* m_ts_label;
     wxTextCtrl* m_test_text;
     wxCheckBox* m_save_logs;
