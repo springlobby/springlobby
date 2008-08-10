@@ -16,6 +16,7 @@ class Ui;
 struct TorrentInfos;
 class wxBoxSizer;
 class FileListDialog;
+class ColorButton;
 
 class MainTorrentTab: public wxPanel
 {
@@ -33,7 +34,7 @@ class MainTorrentTab: public wxPanel
 		wxButton* m_but_cancel;
 		wxButton* m_but_publish;
 		wxButton* m_but_download;
-		wxButton* m_status_color;
+		ColorButton* m_status_color;
 		TorrentListCtrl* m_torrent_list;
 
 		Ui& m_ui;

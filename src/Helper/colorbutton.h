@@ -14,10 +14,11 @@ class ColorButton : public wxBitmapButton
         virtual ~ColorButton();
 
         void SetColor( const wxColor& color );
+        wxColor GetColor( );
 
     protected:
         wxSize m_size;
-
+        wxColor m_color;
         wxBitmap GetBitmapFromColor( const wxColor& color );
 
 };
