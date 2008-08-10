@@ -197,8 +197,8 @@ void ChatPanel::CreateControls( ) {
 		m_chat_panel = new wxPanel( m_splitter, -1 );
 
         m_nick_sizer = new wxBoxSizer( wxVERTICAL );
-
-		m_nicklist = new NickListCtrl( m_nick_panel, m_ui, true, CreateNickListMenu() );
+        m_usermenu = CreateNickListMenu();
+		m_nicklist = new NickListCtrl( m_nick_panel, m_ui, true, m_usermenu );
 
    // m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
    // m_nick_filter->Disable();
@@ -1582,15 +1582,9 @@ void ChatPanel::FocusInputBox()
 void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
 {
     int id  = event.GetId() - GROUP_ID;
-    wxMenuItem* item =  (wxMenuItem*) event.GetEventObject();
-    wxString groupname = item->GetName();//m_idNameMap[ id ];
-
-    useractions().AddUserToGroup( groupname, m_parent->GetSelectedUser()->GetNick() );
+    wxString groupname = m_usermenu->GetGroupByEvtID(id);
+    useractions().AddUserToGroup( groupname, GetSelectedUser()->GetNick() );
 }
-
-//BEGIN_EVENT_TABLE(UserMenu, wxMenu)
-//    EVT_MENU_RANGE(GROUP_ID, GROUP_ID+300, UserMenu::OnUserMenuAddToGroup)
-//END_EVENT_TABLE()
 
 UserMenu::UserMenu(ChatPanel* parent,const wxString& title, long style)
     : wxMenu( title, style ),m_groupsMenu(0), m_parent(parent),m_groupCounter(0)
@@ -1606,9 +1600,6 @@ UserMenu::~UserMenu()
 
 void UserMenu::UpdateGroups()
 {
-//    this->Destroy(  m_groupsMenu );
-    //m_groupsMenu = new wxMenu();
-
     wxSortedArrayString groupNames = useractions().GetGroupNames();
     bool first = m_oldGroups.GetCount() == 0;
     if ( first )
@@ -1620,21 +1611,17 @@ void UserMenu::UpdateGroups()
             m_idNameMap[m_groupCounter] = groupNames[i];
             wxMenuItem* addItem = new wxMenuItem( m_groupsMenu, GROUP_ID + m_groupCounter ,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
             m_groupsMenu->Append( addItem );
-            m_parent->Connect( GROUP_ID + m_groupCounter, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( UserMenu::OnUserMenuAddToGroup ) );
+            m_parent->Connect( GROUP_ID + m_groupCounter, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanel::OnUserMenuAddToGroup ) );
             m_oldGroups.Add( groupNames[i] );
             m_groupCounter++;
         }
     }
-
-    //this->AppendSubMenu( m_groupsMenu, _("Add to group..."));
 }
 
-void UserMenu::OnUserMenuAddToGroup( wxCommandEvent& event )
+wxString UserMenu::GetGroupByEvtID( const unsigned int id )
 {
-    int id  = event.GetId() - GROUP_ID;
-    wxMenuItem* item =  (wxMenuItem*) event.GetEventObject();
-    wxString groupname = item->GetName();//m_idNameMap[ id ];
-
-    useractions().AddUserToGroup( groupname, m_parent->GetSelectedUser()->GetNick() );
-
+    if ( id < m_idNameMap.size() )
+        return m_idNameMap[id];
+    else
+        return wxEmptyString;
 }

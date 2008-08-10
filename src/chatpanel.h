@@ -155,6 +155,7 @@ class ChatPanel : public wxPanel
 	void OnKeyPressed( wxKeyEvent& keyevent );
 	void OnKeyReleased( wxKeyEvent& keyevent );
 
+	void OnUserMenuAddToGroup( wxCommandEvent& event );
 
   protected:
     void _SetChannel( Channel* channel );
@@ -200,6 +201,7 @@ class ChatPanel : public wxPanel
     wxMenuItem* m_autorejoin;
     ChatLog* m_chat_log;
     wxMenuItem* displayjoinitem;
+    UserMenu* m_usermenu;
 
     void LogTime();
     void CreateControls( );
@@ -271,7 +273,7 @@ class UserMenu : public wxMenu
         ~UserMenu();
 
         void UpdateGroups();
-        void OnUserMenuAddToGroup( wxCommandEvent& event );
+        wxString GetGroupByEvtID( const unsigned int id );
 
     protected:
         wxMenu* m_groupsMenu;
