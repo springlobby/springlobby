@@ -10,6 +10,15 @@ ColorButton::ColorButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitmap
     //ctor
 }
 
+ColorButton::ColorButton(wxWindow* parent, wxWindowID id, const wxColor& color,
+    const wxPoint& pos , const wxSize& size , long style , const wxValidator& validator,
+    const wxString& name )
+    : wxBitmapButton( parent, id, wxBitmap(), pos , size , style , validator, name ),
+    m_size(size)
+{
+    SetColor( color );
+}
+
 ColorButton::~ColorButton()
 {
     //dtor
@@ -17,9 +26,17 @@ ColorButton::~ColorButton()
 
 void ColorButton::SetColor( const wxColor& color )
 {
-    wxImage colorImg ( m_size.GetWidth(), m_size.GetHeight(), true );
+
+    SetBitmapLabel ( GetBitmapFromColor( color ) );
+}
+
+wxBitmap ColorButton::GetBitmapFromColor( const wxColor& color )
+{
+    unsigned int h = m_size.GetHeight() > 0 ? CONTROL_HEIGHT;
+    unsigned int w = m_size.GetWidth() > 0 ? m_size.GetWidth() : m_size.GetHeight();
+    wxImage colorImg ( w, h, true );
     unsigned char* data = colorImg.GetData();
-    unsigned int pixels = m_size.GetWidth()*m_size.GetHeight();
+    unsigned int pixels = w * h;
 
     for (unsigned int i = 0; i < pixels*3; i+=3)
     {
@@ -28,6 +45,5 @@ void ColorButton::SetColor( const wxColor& color )
         data[i+2] = color.Blue();
     }
 
-    wxBitmap bitmap ( colorImg );
-    SetBitmapLabel ( bitmap );
+    return wxBitmap ( colorImg );
 }
