@@ -429,7 +429,7 @@ void ServerEvents::OnChannelSaid( const wxString& channel, const wxString& who, 
 {
   wxLogDebugFunc( _T("") );
   try{
-    if (!useractions().DoActionOnUser( UserActions::ActIgnore, who ) )
+    if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnore, who ) )
         m_serv.GetChannel( channel ).Said( m_serv.GetUser( who ), message );
   }catch(std::runtime_error &except){
   }

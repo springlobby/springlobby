@@ -23,7 +23,7 @@ UserActions::~UserActions()
 
 bool UserActions::DoActionOnUser( const ActionType action, const wxString& name )
 {
-    if ( action == ActNone )
+    if ( m_knownUsers.Index( name ) == -1 || action == ActNone )
         return false;
     else
         return ( m_actionsGroups.find( action ) != m_actionsGroups.end() && m_actionsPeople[action].Index( name ) != -1 );
@@ -60,10 +60,10 @@ void UserActions::Init()
             if ( ( m_groupActions[name] & cur ) != 0 )
             {
                 tmp.Add( name );
-            }
-            for ( unsigned int k = 0; k < m_groupMap[name].GetCount(); ++k)
-            {
-                m_actionsPeople[cur].Add( (m_groupMap[name])[k] );
+                for ( unsigned int k = 0; k < m_groupMap[name].GetCount(); ++k)
+                {
+                    m_actionsPeople[cur].Add( (m_groupMap[name])[k] );
+                }
             }
         }
         m_actionsGroups[cur] = tmp;
