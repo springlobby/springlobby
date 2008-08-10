@@ -280,7 +280,7 @@ class UserMenu : public wxMenu
         unsigned int m_groupCounter;
         std::map<unsigned int, wxString> m_idNameMap;
 
-    DECLARE_EVENT_TABLE();
+    //DECLARE_EVENT_TABLE();
 
 };
 

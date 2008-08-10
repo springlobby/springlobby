@@ -42,6 +42,7 @@
 #include "sdlsound.h"
 #endif
 #include "useractions.h"
+#define GROUP_ID 24567
 /*
 BEGIN_EVENT_TABLE(MyTextCtrl, wxTextCtrl)
 EVT_PAINT(MyTextCtrl::OnPaint)
@@ -1578,9 +1579,18 @@ void ChatPanel::FocusInputBox()
     m_say_text->SetFocus();
 }
 
-BEGIN_EVENT_TABLE(UserMenu, wxMenu)
-    EVT_MENU_RANGE(5757, 9000, UserMenu::OnUserMenuAddToGroup)
-END_EVENT_TABLE()
+void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
+{
+    int id  = event.GetId() - GROUP_ID;
+    wxMenuItem* item =  (wxMenuItem*) event.GetEventObject();
+    wxString groupname = item->GetName();//m_idNameMap[ id ];
+
+    useractions().AddUserToGroup( groupname, m_parent->GetSelectedUser()->GetNick() );
+}
+
+//BEGIN_EVENT_TABLE(UserMenu, wxMenu)
+//    EVT_MENU_RANGE(GROUP_ID, GROUP_ID+300, UserMenu::OnUserMenuAddToGroup)
+//END_EVENT_TABLE()
 
 UserMenu::UserMenu(ChatPanel* parent,const wxString& title, long style)
     : wxMenu( title, style ),m_groupsMenu(0), m_parent(parent),m_groupCounter(0)
@@ -1608,19 +1618,22 @@ void UserMenu::UpdateGroups()
         if ( m_oldGroups.Index( groupNames[i] ) == wxNOT_FOUND || first )
         {
             m_idNameMap[m_groupCounter] = groupNames[i];
-            wxMenuItem* addItem = new wxMenuItem( m_groupsMenu, 5757 + m_groupCounter ,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
+            wxMenuItem* addItem = new wxMenuItem( m_groupsMenu, GROUP_ID + m_groupCounter ,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
             m_groupsMenu->Append( addItem );
-            Connect( 5757 + m_groupCounter , wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( UserMenu::OnUserMenuAddToGroup ) );
+            m_parent->Connect( GROUP_ID + m_groupCounter, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( UserMenu::OnUserMenuAddToGroup ) );
             m_oldGroups.Add( groupNames[i] );
             m_groupCounter++;
         }
     }
+
     //this->AppendSubMenu( m_groupsMenu, _("Add to group..."));
 }
 
 void UserMenu::OnUserMenuAddToGroup( wxCommandEvent& event )
 {
-    wxString groupname = m_idNameMap[ event.GetId() ];
+    int id  = event.GetId() - GROUP_ID;
+    wxMenuItem* item =  (wxMenuItem*) event.GetEventObject();
+    wxString groupname = item->GetName();//m_idNameMap[ id ];
 
     useractions().AddUserToGroup( groupname, m_parent->GetSelectedUser()->GetNick() );
 
