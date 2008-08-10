@@ -10,6 +10,9 @@
 #include <wx/colordlg.h>
 #include <wx/checkbox.h>
 #include "useractions.h"
+#include "settings.h"
+#include "uiutils.h"
+#include "Helper/colorbutton.h"
 #include "ui.h"
 #include <cmath>
 
@@ -59,7 +62,7 @@ wxSizer* ManageGroupsPanel::GetGroupSizer( const wxString& group )
     wxBoxSizer* colorBox = new wxBoxSizer( wxHORIZONTAL );
     wxStaticText* cLabel = new wxStaticText( this, -1, _("Highlight color") );
     colorBox->Add( cLabel );
-    wxButton* m_color = new wxButton( this, ID_COLOR_BUTTON, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ),
+    ColorButton* m_color = new ColorButton( this, ID_COLOR_BUTTON, sett().GetGroupHLColor(group), wxDefaultPosition, wxSize( 20,20 ),
                                         0,wxDefaultValidator, group );
     m_color->SetBackgroundColour( wxColour( 255, 0, 0 ) );
     colorBox->Add( m_color );
@@ -95,16 +98,13 @@ void ManageGroupsPanel::SetupControls()
 
 void ManageGroupsPanel::OnColorButton( wxCommandEvent& event )
 {
-    wxButton* origin = (wxButton*) event.GetEventObject();
+    ColorButton* origin = (ColorButton*) event.GetEventObject();
     wxString group = origin->GetName();
-    wxColourData c;
-    c.SetColour( origin->GetBackgroundColour() );
-    wxColourDialog dlg( this, &c );
-    if ( dlg.ShowModal() == wxID_OK )
+    wxColour c = GetColourFromUser( this, origin->GetColor() );
+    if ( c.IsOk() )
     {
-        wxColor color = dlg.GetColourData().GetColour();
-        origin->SetBackgroundColour( color );
-        useractions().SetGroupColor( group, color );
+        origin->SetColor( c );
+        useractions().SetGroupColor( group, c );
     }
 }
 
