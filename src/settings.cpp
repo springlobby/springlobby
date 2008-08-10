@@ -1299,7 +1299,6 @@ wxColourData Settings::GetCustomColors( const wxString& paletteName )
         wxColor col = GetColorFromStrng ( m_config->Read( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i),
                                         GetColorString(  wxColor ( 255, 255, 255 ) ) ) );
         cdata.SetCustomColour( i, col );
-        bool d = cdata.GetCustomColour( i).IsOk();
     }
 
     return cdata;

@@ -15,6 +15,12 @@ class wxWindow;
 
 #define wxDefaultBitmap wxBitmap()
 
+#ifdef __WXMSW__
+    #define DEFAULT_COLORDLG_TITLE (_("Choose color (only first 16 will be saved)"))
+#else
+    #define DEFAULT_COLORDLG_TITLE (_("Choose color"))
+#endif
+
 
 const int colour_values[][3] = { {240,210,0}, {128, 128, 128}, {0, 0, 128}, {0, 0, 255},
       {0, 128, 0}, {0, 255, 0}, {0, 128, 128}, {0, 255, 255}, {128, 0, 0}, {255, 0, 0},
@@ -43,7 +49,7 @@ wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * arg, int size,
 
 //! when querying for a color, always use this (it'll autosave/retrieve custom defined colors)
 wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit,
-        const wxString& caption = _("Choose Color"), const wxString& palette = _T("Default") );
+        const wxString& caption = DEFAULT_COLORDLG_TITLE, const wxString& palette = _T("Default") );
 
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H
