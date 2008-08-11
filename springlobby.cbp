@@ -174,6 +174,8 @@
 		<Unit filename="src/channel.h" />
 		<Unit filename="src/channellist.cpp" />
 		<Unit filename="src/channellist.h" />
+		<Unit filename="src/channellistctrl.cpp" />
+		<Unit filename="src/channellistctrl.h" />
 		<Unit filename="src/chatlog.cpp" />
 		<Unit filename="src/chatlog.h" />
 		<Unit filename="src/chatoptionstab.cpp" />
@@ -352,6 +354,8 @@
 		<Unit filename="src/user.h" />
 		<Unit filename="src/userlist.cpp" />
 		<Unit filename="src/userlist.h" />
+		<Unit filename="src/userlistctrl.cpp" />
+		<Unit filename="src/userlistctrl.h" />
 		<Unit filename="src/utils.cpp" />
 		<Unit filename="src/utils.h" />
 		<Unit filename="wxsmith/AutoBalanceDialog.wxs" />
