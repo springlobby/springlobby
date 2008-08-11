@@ -216,6 +216,7 @@ class Battle : public UserList, public IBattle
     mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
 
     void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true);
+    void FixTeamIDs();
 
     ///< quick hotfix for bans
     void CheckBan(User &user);
