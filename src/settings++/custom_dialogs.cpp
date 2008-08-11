@@ -36,6 +36,7 @@ wxWindow* CustomMessageBoxBase::m_settingsWindow = 0;
 wxWindow* CustomMessageBoxBase::m_lobbyWindow = 0;
 static CustomMessageBox* s_nonmodbox = 0;
 static ServerMessageBox* s_serverMsgBox = 0;
+static ActNotifBox* s_actNotifBox = 0;
 
 CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
         const wxString& caption ,
@@ -220,6 +221,12 @@ void freeStaticBox()
          s_serverMsgBox->Destroy();
          s_serverMsgBox = 0;
     }
+    if (s_actNotifBox!=0)
+    {
+        s_actNotifBox->Show(false);
+         s_actNotifBox->Destroy();
+         s_actNotifBox = 0;
+    }
 
 }
 
@@ -281,34 +288,40 @@ ServerMessageBox::ServerMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
     AppendMessage(message);
 
     topsizer->Add( m_messages, 1, wxALL|wxEXPAND|wxALIGN_CENTRE, 10 );
-
-
     topsizer->Add(0,10);
-
 
     wxSizer *sizerBtn = CreateButtonSizer(wxOK);
     topsizer->Add(sizerBtn, 0,  wxALL|wxALIGN_CENTRE, 10 );
 
-
-//    SetAutoLayout( true );
-   SetSizer( topsizer );
-//
-//    topsizer->SetSizeHints( this );
-//    topsizer->Fit( this );
-
-
+    SetSizer( topsizer );
     Centre( wxBOTH | wxCENTER_FRAME);
 
 }
 
 void ServerMessageBox::AppendMessage(const wxString& message)
 {
+    if ( message == wxEmptyString )
+        return;
     m_messages->InsertItem(m_messages->GetItemCount(),message);
     m_messages->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
     SetSize(m_messages->GetColumnWidth(0)+25,-1);
     Layout();
+}
 
+ActNotifBox::ActNotifBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
+        const wxString& caption ,
+        long style, const wxPoint& pos)
+    : ServerMessageBox( icon , parent, message, caption, style, pos)
+{}
+
+ActNotifBox::~ActNotifBox(){}
+
+void ActNotifBox::AppendMessage( const wxString& message )
+{
+    wxDateTime now = wxDateTime::Now();
+    wxString msg = now.Format( _T("%H:%M: ") ) + message;
+    ServerMessageBox::AppendMessage( msg );
 }
 
 void serverMessageBox( int whichIcon , const wxString& message,const wxString& caption,
@@ -343,3 +356,35 @@ void serverMessageBox( int whichIcon , const wxString& message,const wxString& c
 		}
 }
 
+void actNotifBox( int whichIcon , const wxString& message,const wxString& caption,
+		long style , int x, int y )
+{
+		wxWindow* parent;
+		wxIcon* icon;
+		switch (whichIcon)
+		{
+			case SL_MAIN_ICON:
+				icon = new wxIcon(springlobby_xpm);
+				parent = CustomMessageBoxBase::getLobbypointer();
+				break;
+			case SS_MAIN_ICON:
+				icon = new wxIcon(springsettings_xpm);
+				parent = CustomMessageBoxBase::getSettingspointer();
+				break;
+			default:
+				icon = new wxIcon(wxNullIcon);
+				parent = 0;
+				break;
+
+		}
+		if ( s_actNotifBox != 0 && s_actNotifBox->IsShown() )
+		{
+		    s_actNotifBox->AppendMessage(message);
+		}
+		else
+		{
+            s_actNotifBox = new ActNotifBox(icon,parent,wxEmptyString,caption,style,wxPoint(x,y));
+            s_actNotifBox->AppendMessage(message);
+            s_actNotifBox->Show(true);
+		}
+}

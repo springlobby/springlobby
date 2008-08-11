@@ -17,6 +17,7 @@
 #include "chatoptionstab.h"
 #include "settings.h"
 #include "uiutils.h"
+#include "managegroupspanel.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentoptionspanel.h"
@@ -54,6 +55,9 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
     m_chat_opts = new ChatOptionsTab( m_tabs, m_ui );
     m_tabs->AddPage( m_chat_opts, _("Chat"), true, 2 );
+
+    m_groups_opts = new ManageGroupsPanel( m_tabs );
+    m_tabs->AddPage( m_groups_opts , _("Groups"), true, 2 );
 
     m_restore_btn = new wxButton( this, wxID_REVERT, _("Restore") );
     m_apply_btn = new wxButton( this, wxID_APPLY, _("Apply") );

@@ -144,6 +144,8 @@ IF(wxWidgets_FOUND)
 		src/userlist.cpp
                 src/userlistctrl.cpp
 		src/utils.cpp
+                src/useractions.cpp
+                src/managegroupspanel.cpp
 	)
 	SET(SettingsSrc
 		src/settings++/custom_dialogs.cpp

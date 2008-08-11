@@ -42,6 +42,8 @@
 #ifndef DISABLE_SOUND
 #include "sdlsound.h"
 #endif
+#include "useractions.h"
+#define GROUP_ID 24567
 /*
 BEGIN_EVENT_TABLE(MyTextCtrl, wxTextCtrl)
 EVT_PAINT(MyTextCtrl::OnPaint)
@@ -82,6 +84,7 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 	EVT_MENU( CHAT_MENU_US_CHAT, ChatPanel::OnUserMenuOpenChat )
 	EVT_MENU( CHAT_MENU_US_JOIN, ChatPanel::OnUserMenuJoinSame )
 	EVT_MENU( CHAT_MENU_US_SLAP, ChatPanel::OnUserMenuSlap )
+//	EVT_MENU( CHAT_MENU_US_ADD_TO_GROUP, ChatPanel::OnUserMenuAddToGroup )
 	EVT_MENU( CHAT_MENU_US_MUTE, ChatPanel::OnUserMenuMute )
 	EVT_MENU( CHAT_MENU_US_UNMUTE, ChatPanel::OnUserMenuUnmute )
 	EVT_MENU( CHAT_MENU_US_KICK, ChatPanel::OnUserMenuKick )
@@ -198,8 +201,8 @@ void ChatPanel::CreateControls( ) {
 		m_chat_panel = new wxPanel( m_splitter, -1 );
 
         m_nick_sizer = new wxBoxSizer( wxVERTICAL );
-
-		m_nicklist = new NickListCtrl( m_nick_panel, m_ui, true, CreateNickListMenu() );
+        m_usermenu = CreateNickListMenu();
+		m_nicklist = new NickListCtrl( m_nick_panel, m_ui, true, m_usermenu );
 
    // m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
    // m_nick_filter->Disable();
@@ -391,13 +394,13 @@ void ChatPanel::CreatePopup() {
 }
 
 
-wxMenu* ChatPanel::CreateNickListMenu() {
-	wxMenu* m_user_menu;
-	m_user_menu = new wxMenu();
+UserMenu* ChatPanel::CreateNickListMenu() {
+	UserMenu* m_user_menu;
+	m_user_menu = new UserMenu( this );
 	wxMenuItem* chatitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_CHAT,  _( "Open Chat" ) , wxEmptyString, wxITEM_NORMAL );
 	m_user_menu->Append( chatitem );
-	wxMenuItem* joinbattleitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_JOIN,  _( "Join same battle" ) , wxEmptyString, wxITEM_NORMAL );
-	m_user_menu->Append( joinbattleitem );
+    wxMenuItem* joinbattleitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_JOIN,  _( "Join same battle" ) , wxEmptyString, wxITEM_NORMAL );
+    m_user_menu->Append( joinbattleitem );
 
 	m_user_menu->AppendSeparator();
 
@@ -1501,4 +1504,89 @@ void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event ) {
 void ChatPanel::FocusInputBox()
 {
     m_say_text->SetFocus();
+}
+
+void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
+{
+    int id  = event.GetId() - GROUP_ID;
+    wxString groupname = m_usermenu->GetGroupByEvtID(id);
+    User* user = GetSelectedUser();
+    if ( user )
+    useractions().AddUserToGroup( groupname, user->GetNick() );
+}
+
+void ChatPanel::OnUserMenuDeleteFromGroup( wxCommandEvent& event )
+{
+    User* user = GetSelectedUser();
+    if ( user )
+        useractions().RemoveUser( user->GetNick() );
+}
+
+UserMenu::UserMenu(ChatPanel* parent,const wxString& title, long style)
+    : wxMenu( title, style ),m_groupsMenu(0), m_parent(parent),m_groupCounter(0)
+{
+    m_groupsMenu = new wxMenu();
+//    if ( !ui().IsThisMe( m_parent->GetSelectedUser() ) )
+    m_groupsMenuItem = AppendSubMenu( m_groupsMenu, _("Add to group..."));
+    m_groupsDeleteItem = new wxMenuItem( m_groupsMenu, GROUP_ID - 1, _("Remove from group")  );
+    m_parent->Connect( GROUP_ID - 1, wxEVT_COMMAND_MENU_SELECTED,
+                            wxCommandEventHandler( ChatPanel::OnUserMenuDeleteFromGroup ) );
+    Append( m_groupsDeleteItem );
+}
+
+UserMenu::~UserMenu()
+{
+
+}
+void UserMenu::EnableItems(bool isUserSelected)
+{
+    if ( isUserSelected )
+    {
+        User* user = m_parent->GetSelectedUser();
+        bool enable = ( user != 0 && ( !ui().IsThisMe( user ) ) );
+        m_groupsMenuItem->Enable( enable && !useractions().IsKnown( user->GetNick() ) ) ;
+        m_groupsDeleteItem->Enable( enable && useractions().IsKnown( user->GetNick() ) ) ;
+        UpdateGroups();
+    }
+    else
+    {
+        m_groupsMenuItem->Enable( false ) ;
+        m_groupsDeleteItem->Enable( false ) ;
+    }
+
+}
+
+void UserMenu::UpdateGroups()
+{
+    wxSortedArrayString groupNames = useractions().GetGroupNames();
+    bool first = m_oldGroups.GetCount() == 0;
+    if ( first )
+        m_oldGroups = groupNames;
+    for ( unsigned int i = 0; i < groupNames.GetCount(); ++i)
+    {
+        if ( m_oldGroups.Index( groupNames[i] ) == wxNOT_FOUND || first )
+        {
+            m_idNameMap[m_groupCounter] = groupNames[i];
+            wxMenuItem* addItem = new wxMenuItem( m_groupsMenu, GROUP_ID + m_groupCounter ,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
+            m_groupsMenu->Append( addItem );
+            m_parent->Connect( GROUP_ID + m_groupCounter, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanel::OnUserMenuAddToGroup ) );
+            m_oldGroups.Add( groupNames[i] );
+            m_idNameMap[GROUP_ID + m_groupCounter]  = groupNames[i];
+            m_NameIdMap[groupNames[i]]  = GROUP_ID + m_groupCounter;
+            m_groupCounter++;
+        }
+        else
+        {
+            //wxMenuItem* old = FindItem( m_NameIdMap[groupNames[i]] );
+            Destroy( m_NameIdMap[groupNames[i]] );
+        }
+    }
+}
+
+wxString UserMenu::GetGroupByEvtID( const unsigned int id )
+{
+    if ( id < m_idNameMap.size() )
+        return m_idNameMap[id];
+    else
+        return wxEmptyString;
 }

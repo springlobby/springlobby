@@ -30,6 +30,7 @@
 #include "mainjoinbattletab.h"
 #include "battlelistfilter.h"
 #include "iconimagelist.h"
+#include "useractions.h"
 
 #include "settings++/custom_dialogs.h"
 //#include "images/springlobby.xpm"
@@ -218,6 +219,11 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
+  //highlight
+  if ( useractions().DoActionOnUser( UserActions::ActHighlight, battle.GetFounder().GetNick() ) ) {
+    m_battle_list->SetItemBackgroundColour( index,
+        sett().GetGroupHLColor( useractions().GetGroupOfUser( battle.GetFounder().GetNick() ) )  );
+  }
 
   m_battle_list->Sort();
   m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );

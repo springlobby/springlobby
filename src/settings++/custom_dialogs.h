@@ -46,6 +46,14 @@ void serverMessageBox(int whichIcon , const wxString& message,
         const wxString& caption = wxMessageBoxCaptionStr,
         long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 
+/** \brief displays user action notifications
+ * If dialog currently isn't shown, it's brought up. If dialog already is shown (not necessarily having focus)
+ * message is appended, rather than old box replaced with new.
+ */
+void actNotifBox(int whichIcon , const wxString& message,
+        const wxString& caption = _T("User action notification"),
+        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
+
 //! cleanup
 void freeStaticBox();
 
@@ -80,13 +88,25 @@ public:
 	        long style = wxOK, const wxPoint& pos = wxDefaultPosition);
 	virtual ~ServerMessageBox();
 
-    void AppendMessage(const wxString& message);
+    virtual void AppendMessage(const wxString& message);
 
 protected:
 
 	wxBoxSizer* topsizer;
 	wxListCtrl* m_messages;
 
+};
+
+/** \brief displays user action notifications */
+class ActNotifBox : public ServerMessageBox
+{
+public:
+    ActNotifBox (wxIcon* icon ,wxWindow *parent, const wxString& message,
+	        const wxString& caption = _T("User action notification") ,
+	        long style = wxOK, const wxPoint& pos = wxDefaultPosition);
+    virtual ~ActNotifBox ();
+
+    virtual void AppendMessage(const wxString& message);
 };
 
 /** \brief encapsulates pointers common to ServerMessageBox and CustomMessageBox
@@ -122,5 +142,7 @@ public:
 private:
 	wxTextCtrl* text_ctrl;
 };
+
+
 
 #endif /*CUSTOM_MSG_DLG_H_*/

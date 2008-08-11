@@ -14,9 +14,11 @@
 #include "utils.h"
 #include "iconimagelist.h"
 #include "user.h"
+#include "settings.h"
 #include "ui.h"
 #include "mainwindow.h"
 #include "countrycodes.h"
+#include "chatpanel.h"
 
 #define TOOLTIP_DELAY 1000
 
@@ -34,7 +36,7 @@ BEGIN_EVENT_TABLE( NickListCtrl, customListCtrl )
 END_EVENT_TABLE()
 
 
-NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* popup ):
+NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, UserMenu* popup ):
   customListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | wxLC_SINGLE_SEL,
               _T("NickListCtrl") ),
@@ -156,6 +158,11 @@ void NickListCtrl::UserUpdated( const int& index )
   SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
+    //highlight
+  if ( useractions().DoActionOnUser( UserActions::ActHighlight, user.GetNick() ) ) {
+    this->SetItemBackgroundColour( index,
+        sett().GetGroupHLColor( useractions().GetGroupOfUser( user.GetNick() ) )  );
+  }
   Sort();
   RestoreSelection();
 }
@@ -193,7 +200,14 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
 void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
 {
   wxLogDebugFunc( _T("") );
-  if ( m_menu != 0 ) PopupMenu( m_menu );
+  if ( m_menu != 0 )
+  {
+      //no need to popup the menu when there's no user selected
+      if ( GetSelectedIndex() != -1 ){
+          m_menu->EnableItems( (GetSelectedIndex()!=-1) );
+          PopupMenu( m_menu );
+      }
+  }
 }
 
 void NickListCtrl::OnColClick( wxListEvent& event )
