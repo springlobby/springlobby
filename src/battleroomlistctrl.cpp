@@ -286,7 +286,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     SetItem( index, 7, _T("") );
     SetItem( index, 9, _T("") );
   }
-
+  HighlightItem( index, user.GetNick() );
   SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
   Sort();
 }

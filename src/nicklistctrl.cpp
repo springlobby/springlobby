@@ -159,10 +159,7 @@ void NickListCtrl::UserUpdated( const int& index )
   SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
     //highlight
-  if ( useractions().DoActionOnUser( UserActions::ActHighlight, user.GetNick() ) ) {
-    this->SetItemBackgroundColour( index,
-        sett().GetGroupHLColor( useractions().GetGroupOfUser( user.GetNick() ) )  );
-  }
+  HighlightItem( index, user.GetNick() );
   Sort();
   RestoreSelection();
 }

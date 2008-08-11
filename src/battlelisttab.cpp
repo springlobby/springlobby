@@ -220,11 +220,7 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
   //highlight
-  if ( useractions().DoActionOnUser( UserActions::ActHighlight, battle.GetFounder().GetNick() ) ) {
-    m_battle_list->SetItemBackgroundColour( index,
-        sett().GetGroupHLColor( useractions().GetGroupOfUser( battle.GetFounder().GetNick() ) )  );
-  }
-
+  m_battle_list->HighlightItem( index, battle.GetFounder().GetNick() );
   m_battle_list->Sort();
   m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );

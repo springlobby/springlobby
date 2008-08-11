@@ -1,6 +1,7 @@
 #include "customlistctrl.h"
 #include "utils.h"
-#include  "settings.h"
+#include "settings.h"
+#include <wx/colour.h>
 
 BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
 #if wxUSE_TIPWINDOW
@@ -16,10 +17,11 @@ BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
 END_EVENT_TABLE()
 
 //wxTipWindow* customListCtrl::m_tipwindow = 0;
-customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style,wxString name):
-					wxListCtrl (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER),m_tiptext(_T("")),
-					 m_selected(-1),m_selected_index(-1),m_prev_selected(-1),
-					 m_prev_selected_index(-1),m_last_mouse_pos( wxPoint(-1,-1) ), m_name(name)
+customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,
+                                long style,wxString name, UserActions::ActionType hlaction, bool highlight)
+    : wxListCtrl (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER),m_tiptext(_T("")),
+      m_selected(-1),m_selected_index(-1),m_prev_selected(-1),m_prev_selected_index(-1),
+      m_last_mouse_pos( wxPoint(-1,-1) ), m_name(name), m_highlight(highlight), m_highlightAction(hlaction)
 
 
 {
@@ -259,3 +261,23 @@ void customListCtrl::noOp(wxMouseEvent& event)
 	m_tiptext = _T("");
 }
 
+void customListCtrl::UpdateHighlights()
+{
+    for (long i = 0; i < GetItemCount() ; i++ )
+    {
+//        HighlightItem( i );
+    }
+}
+
+void customListCtrl::HighlightItem( long item, const wxString& name )
+{
+   if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
+        wxColor c = sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
+        SetItemBackgroundColour( item, c );
+  }
+}
+
+void customListCtrl::SetHighLightAction( UserActions::ActionType& action )
+{
+
+}
