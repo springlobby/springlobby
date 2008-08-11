@@ -605,3 +605,8 @@ void BattleListTab::OnUnitSyncReloaded()
   UpdateList();
   m_minimap->UpdateMinimap();
 }
+
+void BattleListTab::UpdateHighlights()
+{
+    m_battle_list->UpdateHighlights();
+}

@@ -5,7 +5,13 @@
 #include "settings.h"
 #include <cmath>
 #include "settings++/custom_dialogs.h"
+
+//for updating ui, anybody feel free to replace with fancy events stuff :P
 #include "ui.h"
+#include "mainwindow.h"
+#include "mainjoinbattletab.h"
+#include "battlelisttab.h"
+
 
 UserActions& useractions()
 {
@@ -75,6 +81,12 @@ void UserActions::Init()
         m_actionsGroups[cur] = tmp;
     }
     m_actionsGroups[ActNone] = m_groupNames;
+
+}
+
+void UserActions::UpdateUI()
+{
+    ui().mw().GetJoinTab().GetBattleListTab().UpdateHighlights();
 }
 
 wxSortedArrayString UserActions::GetGroupNames() const

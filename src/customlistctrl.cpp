@@ -262,10 +262,7 @@ void customListCtrl::noOp(wxMouseEvent& event)
 }
 
 ///left empty, so nothing happens if child doesn't implement it
-void customListCtrl::HighlightItem( long item )
-{
 
-}
 
 void customListCtrl::UpdateHighlights()
 {

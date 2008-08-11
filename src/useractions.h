@@ -62,6 +62,7 @@ protected:
 
     //reload all maps and stuff
     void Init();
+    void UpdateUI();
 
     wxSortedArrayString m_groupNames;
 };
