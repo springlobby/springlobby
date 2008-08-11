@@ -32,6 +32,7 @@ public:
     void AddUserToGroup( const wxString& group, const wxString& name );
     void AddGroup(const wxString& name );
     void DeleteGroup(const wxString& name );
+    void RemoveUser(const wxString& name );
     void ChangeAction( const wxString& group, const ActionType action, bool add = true );
     ActionType GetGroupAction( const wxString& group );
     wxString GetGroupOfUser( const wxString& user );

@@ -1284,7 +1284,7 @@ int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
 void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )
 {
     unsigned int friendsCount = friends.GetCount();
-    //m_config->DeleteGroup( _T("/Friends/") );
+    m_config->DeleteGroup( _T("/Groups/") + group + _T("/Members/") );
     for ( unsigned int i = 0; i < friendsCount ; i++ )
     {
         m_config->Write(_T("/Groups/") + group + _T("/Members/") + TowxString(i), friends[i] );

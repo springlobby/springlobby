@@ -145,3 +145,11 @@ bool UserActions::IsKnown( const wxString& name )
 {
     return ( m_knownUsers.Index( name ) != -1 );
 }
+
+void UserActions::RemoveUser(const wxString& name )
+{
+    wxString group = m_peopleGroup[name];
+    m_groupMap[group].Remove(name);
+    sett().SetPeopleList( m_groupMap[group], group );
+    Init();
+}

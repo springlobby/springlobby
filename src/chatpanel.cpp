@@ -1515,6 +1515,13 @@ void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
     useractions().AddUserToGroup( groupname, user->GetNick() );
 }
 
+void ChatPanel::OnUserMenuDeleteFromGroup( wxCommandEvent& event )
+{
+    User* user = GetSelectedUser();
+    if ( user )
+        useractions().RemoveUser( user->GetNick() );
+}
+
 UserMenu::UserMenu(ChatPanel* parent,const wxString& title, long style)
     : wxMenu( title, style ),m_groupsMenu(0), m_parent(parent),m_groupCounter(0)
 {
@@ -1522,6 +1529,8 @@ UserMenu::UserMenu(ChatPanel* parent,const wxString& title, long style)
 //    if ( !ui().IsThisMe( m_parent->GetSelectedUser() ) )
     m_groupsMenuItem = AppendSubMenu( m_groupsMenu, _("Add to group..."));
     m_groupsDeleteItem = new wxMenuItem( m_groupsMenu, GROUP_ID - 1, _("Remove from group")  );
+    m_parent->Connect( GROUP_ID - 1, wxEVT_COMMAND_MENU_SELECTED,
+                            wxCommandEventHandler( ChatPanel::OnUserMenuDeleteFromGroup ) );
     Append( m_groupsDeleteItem );
 }
 
@@ -1562,7 +1571,14 @@ void UserMenu::UpdateGroups()
             m_groupsMenu->Append( addItem );
             m_parent->Connect( GROUP_ID + m_groupCounter, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanel::OnUserMenuAddToGroup ) );
             m_oldGroups.Add( groupNames[i] );
+            m_idNameMap[GROUP_ID + m_groupCounter]  = groupNames[i];
+            m_NameIdMap[groupNames[i]]  = GROUP_ID + m_groupCounter;
             m_groupCounter++;
+        }
+        else
+        {
+            //wxMenuItem* old = FindItem( m_NameIdMap[groupNames[i]] );
+            Destroy( m_NameIdMap[groupNames[i]] );
         }
     }
 }

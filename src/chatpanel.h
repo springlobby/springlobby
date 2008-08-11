@@ -156,6 +156,7 @@ class ChatPanel : public wxPanel
 	void OnKeyReleased( wxKeyEvent& keyevent );
 
 	void OnUserMenuAddToGroup( wxCommandEvent& event );
+	void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
 
   protected:
     void _SetChannel( Channel* channel );
@@ -283,6 +284,7 @@ class UserMenu : public wxMenu
         ChatPanel* m_parent;
         unsigned int m_groupCounter;
         std::map<unsigned int, wxString> m_idNameMap;
+        std::map<wxString, unsigned int> m_NameIdMap;
 
         void UpdateGroups();
 
