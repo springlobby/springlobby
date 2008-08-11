@@ -4,6 +4,8 @@
 #include <wx/colour.h>
 #include "settings.h"
 #include <cmath>
+#include "settings++/custom_dialogs.h"
+#include "ui.h"
 
 UserActions& useractions()
 {
@@ -23,7 +25,7 @@ UserActions::~UserActions()
 
 bool UserActions::DoActionOnUser( const ActionType action, const wxString& name )
 {
-    if ( m_knownUsers.Index( name ) == -1 || action == ActNone )
+    if ( m_knownUsers.Index( name ) == -1 || ui().IsThisMe(name) || action == ActNone )
         return false;
     else
         return ( m_actionsGroups.find( action ) != m_actionsGroups.end() && m_actionsPeople[action].Index( name ) != -1 );
@@ -78,6 +80,18 @@ wxSortedArrayString UserActions::GetGroupNames() const
 
 void UserActions::AddUserToGroup( const wxString& group, const wxString& name )
 {
+    if ( m_knownUsers.Index( name ) != -1 )
+    {
+        customMessageBoxNoModal( SL_MAIN_ICON, _("To prevent logical inconsistencies, adding a user to more than one group is not allowed"),
+            _("Cannot add user to group") );
+            return;
+    }
+    if ( ui().IsThisMe( name ) )
+    {
+        customMessageBoxNoModal( SL_MAIN_ICON, _("No good can come from adding yourself to a group"),
+            _("Cannot add yourself to group") );
+            return;
+    }
     m_groupMap[group].Add(name);
     sett().SetPeopleList( m_groupMap[group], group );
     Init();

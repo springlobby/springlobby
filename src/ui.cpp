@@ -1078,11 +1078,16 @@ void Ui::OnMainWindowDestruct()
 
 bool Ui::IsThisMe(User& other)
 {
-	//if i'm not connected i have no identity
+	return IsThisMe( other.GetNick() );
+}
+
+bool Ui::IsThisMe(const wxString& other)
+{
+    //if i'm not connected i have no identity
 	if (!IsConnected() || m_serv==0)
 		return false;
 	else
-		return ( other.GetNick()==m_serv->GetMe().GetNick() );
+		return ( other == m_serv->GetMe().GetNick() );
 }
 
 int Ui::TestHostPort( unsigned int port )

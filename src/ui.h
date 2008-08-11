@@ -160,6 +160,7 @@ class Ui
     void OnCachedThreadStarted();
 
     bool IsThisMe(User& other);
+    bool IsThisMe(const wxString& other);
 
     int TestHostPort( unsigned int port );
 
