@@ -28,12 +28,14 @@ class ManageGroupsPanel: public wxScrolledWindow
 
         enum {
           ID_COLOR_BUTTON = wxID_HIGHEST,
-          ID_ADD_BUTTON
+          ID_ADD_BUTTON,
+          ID_DEL_BUTTON
 
         };
 
         void OnColorButton( wxCommandEvent& event );
         void OnAddButton( wxCommandEvent& event );
+        void OnDeleteButton( wxCommandEvent& event );
         void OnCheckBox( wxCommandEvent& event );
         void ReloadGroupSizer();
 

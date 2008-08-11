@@ -83,6 +83,12 @@ void UserActions::AddUserToGroup( const wxString& group, const wxString& name )
     Init();
 }
 
+void UserActions::DeleteGroup(const wxString& name )
+{
+    sett().DeleteGroup( name );
+    Init();
+}
+
 void UserActions::AddGroup(const wxString& name )
 {
     sett().AddGroup( name );

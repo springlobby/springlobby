@@ -20,6 +20,7 @@ BEGIN_EVENT_TABLE( ManageGroupsPanel, wxScrolledWindow )
   EVT_CHECKBOX( wxID_ANY, ManageGroupsPanel::OnCheckBox )
   EVT_BUTTON( ID_COLOR_BUTTON, ManageGroupsPanel::OnColorButton )
   EVT_BUTTON( ID_ADD_BUTTON, ManageGroupsPanel::OnAddButton )
+  EVT_BUTTON( ID_DEL_BUTTON, ManageGroupsPanel::OnDeleteButton )
 END_EVENT_TABLE()
 
 ManageGroupsPanel::ManageGroupsPanel( wxWindow* parent )
@@ -64,8 +65,10 @@ wxSizer* ManageGroupsPanel::GetGroupSizer( const wxString& group )
     colorBox->Add( cLabel );
     ColorButton* m_color = new ColorButton( this, ID_COLOR_BUTTON, sett().GetGroupHLColor(group), wxDefaultPosition, wxSize( 20,20 ),
                                         0,wxDefaultValidator, group );
-    m_color->SetBackgroundColour( wxColour( 255, 0, 0 ) );
     colorBox->Add( m_color );
+    wxButton* deleteButton = new wxButton ( this, ID_DEL_BUTTON, _("delete"),wxDefaultPosition, wxSize( 20,20 ),
+                                        0,wxDefaultValidator, group  );
+    colorBox->Add( deleteButton, 0 , wxEXPAND );
     gBox->Add( colorBox, 0, wxALL|wxEXPAND, 10 );
     stBox->Add( gBox, 0, wxALL|wxEXPAND, 5) ;
     return stBox;
@@ -112,6 +115,13 @@ void ManageGroupsPanel::OnAddButton( wxCommandEvent& event )
 {
     wxString newgroup = m_newgroup->GetValue();
     useractions().AddGroup( newgroup );
+    SetupControls();
+}
+
+void ManageGroupsPanel::OnDeleteButton( wxCommandEvent& event )
+{
+    wxString newgroup = ( (wxButton*)event.GetEventObject() )->GetName();
+    useractions().DeleteGroup( newgroup );
     SetupControls();
 }
 

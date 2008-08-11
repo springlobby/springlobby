@@ -1350,7 +1350,7 @@ void Settings::DeleteGroup( const wxString& group )
 {
     if ( m_config->Exists( _T("/Groups/") + group ) )
     {
-        m_config->DeleteEntry( _T("/Groups/") + group );
+        m_config->DeleteGroup( _T("/Groups/") + group );
     }
 }
 
