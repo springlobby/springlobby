@@ -14,6 +14,7 @@
 #include "utils.h"
 #include "iconimagelist.h"
 #include "user.h"
+#include "settings.h"
 #include "ui.h"
 #include "mainwindow.h"
 #include "countrycodes.h"
@@ -157,6 +158,11 @@ void NickListCtrl::UserUpdated( const int& index )
   SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
+    //highlight
+  if ( useractions().DoActionOnUser( UserActions::ActHighlight, user.GetNick() ) ) {
+    this->SetItemBackgroundColour( index,
+        sett().GetGroupHLColor( useractions().GetGroupOfUser( user.GetNick() ) )  );
+  }
   Sort();
   RestoreSelection();
 }
