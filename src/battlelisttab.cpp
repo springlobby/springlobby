@@ -219,9 +219,9 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
-  //highlight
-  m_battle_list->HighlightItem( index, battle.GetFounder().GetNick() );
+
   m_battle_list->Sort();
+  m_battle_list->HighlightItem( index );
   m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
@@ -245,8 +245,6 @@ void BattleListTab::RemoveBattle( Battle& battle ) {
       break;
     }
   }
-
-
 
   battle.SetGUIListActiv( false );
 
@@ -311,6 +309,8 @@ void BattleListTab::UpdateBattle( Battle& battle )
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
 
+  //highlight
+  m_battle_list->HighlightItem( index );
 
   if ( &battle == m_sel_battle ) SelectBattle( m_sel_battle );
   m_battle_list->Sort();

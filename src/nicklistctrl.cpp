@@ -159,7 +159,7 @@ void NickListCtrl::UserUpdated( const int& index )
   SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
     //highlight
-  HighlightItem( index, user.GetNick() );
+  HighlightItemUser( index, user.GetNick() );
   Sort();
   RestoreSelection();
 }

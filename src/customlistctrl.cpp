@@ -261,15 +261,21 @@ void customListCtrl::noOp(wxMouseEvent& event)
 	m_tiptext = _T("");
 }
 
+///left empty, so nothing happens if child doesn't implement it
+void customListCtrl::HighlightItem( long item )
+{
+
+}
+
 void customListCtrl::UpdateHighlights()
 {
     for (long i = 0; i < GetItemCount() ; i++ )
     {
-//        HighlightItem( i );
+        HighlightItem( i );
     }
 }
 
-void customListCtrl::HighlightItem( long item, const wxString& name )
+void customListCtrl::HighlightItemUser( long item, const wxString& name )
 {
    if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
         wxColor c = sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) );

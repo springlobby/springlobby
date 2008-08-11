@@ -111,9 +111,11 @@ public:
     //! automatically get saved column width if already saved, otherwise use parameter and save new width
     virtual bool SetColumnWidth(int col, int width);
 
-    //! funcs that should make things easier for group highlighting
+    // funcs that should make things easier for group highlighting
+    ///all that needs to be implemented in child class for UpdateHighlights to work
+    virtual void HighlightItem( long item );
+    void HighlightItemUser( long item, const wxString& name );
     void UpdateHighlights();
-    void HighlightItem( long item, const wxString& name );
     void SetHighLightAction( UserActions::ActionType& action );
 
 
