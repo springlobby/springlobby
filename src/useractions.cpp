@@ -25,7 +25,10 @@ UserActions::~UserActions()
 
 bool UserActions::DoActionOnUser( const ActionType action, const wxString& name )
 {
-    if ( m_knownUsers.Index( name ) == -1 || ui().IsThisMe(name) || action == ActNone )
+    // preventing action on oneself wasn't the best idea, login gets disabled
+    //if ( m_knownUsers.Index( name ) == -1 || ui().IsThisMe(name) || action == ActNone )
+
+    if ( m_knownUsers.Index( name ) == -1 || action == ActNone )
         return false;
     else
         return ( m_actionsGroups.find( action ) != m_actionsGroups.end() && m_actionsPeople[action].Index( name ) != -1 );
@@ -40,6 +43,7 @@ void UserActions::Init()
     m_groupActions.clear();
     m_actionsGroups.clear();
     m_actionsPeople.clear();
+    m_knownUsers.Clear();
     for ( unsigned int i = 0; i < m_groupNames.GetCount(); ++i)
     {
         wxString name = m_groupNames[i];
@@ -135,4 +139,9 @@ void UserActions::SetGroupColor( const wxString& group, const wxColour& color )
 wxColor UserActions::GetGroupColor( const wxString& group )
 {
     return sett().GetGroupHLColor( group );
+}
+
+bool UserActions::IsKnown( const wxString& name )
+{
+    return ( m_knownUsers.Index( name ) != -1 );
 }

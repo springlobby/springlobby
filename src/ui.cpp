@@ -1081,6 +1081,11 @@ bool Ui::IsThisMe(User& other)
 	return IsThisMe( other.GetNick() );
 }
 
+bool Ui::IsThisMe(User* other)
+{
+	return ( ( other != 0 ) && IsThisMe( other->GetNick() ) );
+}
+
 bool Ui::IsThisMe(const wxString& other)
 {
     //if i'm not connected i have no identity

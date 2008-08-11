@@ -196,8 +196,11 @@ void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
   wxLogDebugFunc( _T("") );
   if ( m_menu != 0 )
   {
-      m_menu->UpdateGroups();
-      PopupMenu( m_menu );
+      //no need to popup the menu when there's no user selected
+      if ( GetSelectedIndex() != -1 ){
+          m_menu->EnableItems( (GetSelectedIndex()!=-1) );
+          PopupMenu( m_menu );
+      }
   }
 }
 

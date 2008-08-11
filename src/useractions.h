@@ -37,6 +37,7 @@ public:
     wxString GetGroupOfUser( const wxString& user );
     void SetGroupColor( const wxString& group, const wxColour& color );
     wxColour GetGroupColor( const wxString& group );
+    bool IsKnown( const wxString& name );
 
 protected:
     //lotsa maps to keep runtime finds, etc ti a minimum

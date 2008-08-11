@@ -1510,18 +1510,40 @@ void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
 {
     int id  = event.GetId() - GROUP_ID;
     wxString groupname = m_usermenu->GetGroupByEvtID(id);
-    useractions().AddUserToGroup( groupname, GetSelectedUser()->GetNick() );
+    User* user = GetSelectedUser();
+    if ( user )
+    useractions().AddUserToGroup( groupname, user->GetNick() );
 }
 
 UserMenu::UserMenu(ChatPanel* parent,const wxString& title, long style)
     : wxMenu( title, style ),m_groupsMenu(0), m_parent(parent),m_groupCounter(0)
 {
     m_groupsMenu = new wxMenu();
-    this->AppendSubMenu( m_groupsMenu, _("Add to group..."));
+//    if ( !ui().IsThisMe( m_parent->GetSelectedUser() ) )
+    m_groupsMenuItem = AppendSubMenu( m_groupsMenu, _("Add to group..."));
+    m_groupsDeleteItem = new wxMenuItem( m_groupsMenu, GROUP_ID - 1, _("Remove from group")  );
+    Append( m_groupsDeleteItem );
 }
 
 UserMenu::~UserMenu()
 {
+
+}
+void UserMenu::EnableItems(bool isUserSelected)
+{
+    if ( isUserSelected )
+    {
+        User* user = m_parent->GetSelectedUser();
+        bool enable = ( user != 0 && ( !ui().IsThisMe( user ) ) );
+        m_groupsMenuItem->Enable( enable && !useractions().IsKnown( user->GetNick() ) ) ;
+        m_groupsDeleteItem->Enable( enable && useractions().IsKnown( user->GetNick() ) ) ;
+        UpdateGroups();
+    }
+    else
+    {
+        m_groupsMenuItem->Enable( false ) ;
+        m_groupsDeleteItem->Enable( false ) ;
+    }
 
 }
 

@@ -272,15 +272,19 @@ class UserMenu : public wxMenu
         UserMenu(ChatPanel* parent, const wxString& title = wxEmptyString, long style = 0);
         ~UserMenu();
 
-        void UpdateGroups();
+        void EnableItems(bool isUserSelected);
         wxString GetGroupByEvtID( const unsigned int id );
 
     protected:
         wxMenu* m_groupsMenu;
+        wxMenuItem* m_groupsMenuItem;
+        wxMenuItem* m_groupsDeleteItem;
         wxArrayString m_oldGroups;
         ChatPanel* m_parent;
         unsigned int m_groupCounter;
         std::map<unsigned int, wxString> m_idNameMap;
+
+        void UpdateGroups();
 
     //DECLARE_EVENT_TABLE();
 
