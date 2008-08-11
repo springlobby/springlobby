@@ -95,6 +95,7 @@ IF(wxWidgets_FOUND)
 		src/battleroommmoptionstab.cpp
 		src/channel.cpp
 		src/channellist.cpp
+                src/channellistctrl.cpp
 		src/chatlog.cpp
 		src/chatoptionstab.cpp
 		src/chatpanel.cpp
@@ -141,6 +142,7 @@ IF(wxWidgets_FOUND)
 		src/unitsyncthread.cpp
 		src/user.cpp
 		src/userlist.cpp
+                src/userlistctrl.cpp
 		src/utils.cpp
 	)
 	SET(SettingsSrc
