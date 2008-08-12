@@ -861,7 +861,11 @@ springlobby_SOURCES = \
 	src/filelister/filelistfilter.cpp \
 	configure.ac \
 	src/autojoinchanneldialog.h \
-	src/autojoinchanneldialog.cpp
+	src/autojoinchanneldialog.cpp \
+	src/Helper/wxtextctrlhist.h \
+	src/Helper/wxtextctrlhist.cpp \
+	src/Helper/colorbutton.cpp \
+	src/Helper/colorbutton.h
 
 
 if USE_WINDRES	
