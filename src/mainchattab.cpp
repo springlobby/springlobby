@@ -20,11 +20,12 @@
 #include "ui.h"
 #include "server.h"
 #include "settings.h"
+#include "uiutils.h"
 
 #include "images/close.xpm"
 #include "images/server.xpm"
 #include "images/channel.xpm"
-#include "images/userchat.xpm"
+#include "images/userchat.png.h"
 
 BEGIN_EVENT_TABLE(MainChatTab, wxPanel)
 
@@ -44,20 +45,21 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
 
   m_chat_tabs = new wxNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
 
+  wxBitmap userchat = *charArr2wxBitmap(userchat_png, sizeof(userchat_png) );
   m_imagelist = new wxImageList( 12, 12 );
   m_imagelist->Add( wxBitmap(close_xpm) );
   m_imagelist->Add( wxBitmap(server_xpm) );
   m_imagelist->Add( wxBitmap(channel_xpm) );
-  m_imagelist->Add( wxBitmap(userchat_xpm) );
+  m_imagelist->Add( userchat );
 
   m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorJoinPart() ) ) );
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap(userchat_xpm ), sett().GetChatColorJoinPart() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( userchat, sett().GetChatColorJoinPart() ) ) );
 
   m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorMine() ) ) );
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( userchat_xpm ), sett().GetChatColorMine() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( userchat, sett().GetChatColorMine() ) ) );
 
   m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorHighlight() ) ) );
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( userchat_xpm ), sett().GetChatColorHighlight() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( userchat, sett().GetChatColorHighlight() ) ) );
 
   m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( server_xpm ), sett().GetChatColorError() ) ) );
 
@@ -288,7 +290,7 @@ wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& c
 
   ret.Replace( 255, 228, 0, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
 
-  ret.Replace( 255, 253, 234, colour.Red(), colour.Green(), colour.Blue() );
+  ret.Replace( 255, 255, 136, colour.Red(), colour.Green(), colour.Blue() );
 
 
 
