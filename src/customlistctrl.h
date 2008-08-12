@@ -11,6 +11,9 @@
 #define IDD_TIP_TIMER 666
 #include <vector>
 #include <utility>
+
+#include "useractions.h"
+
 /** global delay (ms)
  * \todo make this definable per child class
  */
@@ -20,6 +23,7 @@
 typedef std::pair<wxString,bool> colInfo;
 typedef std::vector<colInfo> colInfoVec;
 
+
 /** \brief Used as base class for all ListCtrls throughout SL
  * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
  * Some of the provided functionality only makes sense for single-select lists (see grouping) \n
@@ -28,6 +32,7 @@ typedef std::vector<colInfo> colInfoVec;
 class customListCtrl : public wxListCtrl
 {
 protected:
+    typedef UserActions::ActionType ActionType;
     //! used to display tooltips for a certain amount of time
     wxTimer     tipTimer;
     //! always set to the currrently displayed tooltip text
@@ -38,8 +43,6 @@ protected:
     wxTipWindow** controlPointer;
     #endif
     int coloumnCount;
-    //! used as label for saving column widths
-    wxString m_name;
 
 /*** these are only meaningful in single selection lists ***/
     //! curently selected data
@@ -59,11 +62,23 @@ protected:
 
     wxPoint m_last_mouse_pos;
 
+    //! used as label for saving column widths
+    wxString m_name;
+
+    //!controls if highlighting should be considered
+    bool m_highlight;
+
+    //! which action should be considered?
+    ActionType m_highlightAction;
+
+    wxColor m_bg_color;
+
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
 public:
 	customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
-                    const wxSize& sz,long style, wxString name);
+                    const wxSize& sz,long style, wxString name, UserActions::ActionType hlaction = UserActions::ActHighlight,
+                    bool highlight = true);
 
     void OnSelected( wxListEvent& event );
     void OnDeselected( wxListEvent& event );
@@ -97,6 +112,13 @@ public:
     void noOp(wxMouseEvent& event);
     //! automatically get saved column width if already saved, otherwise use parameter and save new width
     virtual bool SetColumnWidth(int col, int width);
+
+    // funcs that should make things easier for group highlighting
+    ///all that needs to be implemented in child class for UpdateHighlights to work
+    virtual void HighlightItem( long item ) = 0;
+    void HighlightItemUser( long item, const wxString& name );
+    void UpdateHighlights();
+    void SetHighLightAction( UserActions::ActionType& action );
 
 
     /** @name Multi Selection methods

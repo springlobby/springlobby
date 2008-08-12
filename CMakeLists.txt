@@ -132,6 +132,8 @@ SET(SpringLobbySrc
 	src/boost/md5.cpp
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
+	src/Helper/wxtextctrlhist.cpp
+	src/Helper/colorbutton.cpp
 	src/filelister/filelistctrl.cpp
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
@@ -171,6 +173,7 @@ SET(SpringLobbySrc
 	src/mainsingleplayertab.cpp
 	src/maintorrenttab.cpp
 	src/mainwindow.cpp
+	src/managegroupspanel.cpp
 	src/mapctrl.cpp
 	src/maplistctrl.cpp
 	src/mapselectdialog.cpp
@@ -200,6 +203,7 @@ SET(SpringLobbySrc
 	src/uiutils.cpp
 	src/unitsyncthread.cpp
 	src/user.cpp
+	src/useractions.cpp
 	src/userlist.cpp
 	src/utils.cpp
 )

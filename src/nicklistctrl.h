@@ -8,7 +8,7 @@
 class User;
 class UserList;
 class Ui;
-class wxMenu;
+class UserMenu;
 
 
 
@@ -16,7 +16,7 @@ class wxMenu;
 class NickListCtrl : public customListCtrl
 {
   public:
-    NickListCtrl( wxWindow* parent, Ui& ui, bool show_header = true, wxMenu* popup = 0  );
+    NickListCtrl( wxWindow* parent, Ui& ui, bool show_header = true, UserMenu* popup = 0  );
     ~NickListCtrl();
 
     void AddUser( User& user );
@@ -34,6 +34,8 @@ class NickListCtrl : public customListCtrl
     void OnShowMenu( wxContextMenuEvent& event );
     void SetTipWindowText( const long item_hit, const wxPoint position);
 
+    void HighlightItem( long item );
+
   protected:
     static int wxCALLBACK ComparePlayernameUP(long item1, long item2, long sortData);
     static int wxCALLBACK ComparePlayernameDOWN(long item1, long item2, long sortData);
@@ -48,7 +50,7 @@ class NickListCtrl : public customListCtrl
     UserList* m_users;
     Ui& m_ui;
 
-    wxMenu* m_menu;
+    UserMenu* m_menu;
 
     struct {
       int col;

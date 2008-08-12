@@ -23,6 +23,7 @@
 
 #include <wx/fileconf.h>
 #include "utils.h"
+#include "useractions.h"
 #include <wx/wfstream.h>
 
 class wxConfigBase;
@@ -287,6 +288,26 @@ class Settings
     int GetColumnWidth( const wxString& list_name, const int coloumn );
     //! used to signal unset column width in Get...
     enum { columnWidthUnset };
+
+    /*@}*/
+
+    /* ================================================================ */
+    /** @name People/Group mngm related
+     * @{
+     */
+    void SetPeopleList( const wxArrayString& friends, const wxString& group = _T("default") );
+    wxArrayString GetPeopleList( const wxString& group = _T("default") ) const;
+
+    wxArrayString GetGroups( ) const;
+    void AddGroup( const wxString& group ) ;
+    void DeleteGroup( const wxString& group ) ;
+
+    void SetGroupHLColor( const wxColor& color, const wxString& group = _T("default") );
+    wxColor GetGroupHLColor( const wxString& group = _T("default") ) const;
+
+    void SetGroupActions( const wxString& group, UserActions::ActionType action );
+    UserActions::ActionType GetGroupActions( const wxString& group ) const;
+
     /*@}*/
 
     /* ================================================================ */

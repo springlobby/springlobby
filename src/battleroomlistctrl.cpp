@@ -286,7 +286,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     SetItem( index, 7, _T("") );
     SetItem( index, 9, _T("") );
   }
-
+  HighlightItemUser( index, user.GetNick() );
   SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
   Sort();
 }
@@ -1047,4 +1047,9 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
             break;
         }
     }
+}
+
+void BattleroomListCtrl::HighlightItem( long item )
+{
+
 }

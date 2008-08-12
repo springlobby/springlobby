@@ -44,6 +44,8 @@ class MainChatTab : public wxPanel
     void ChangeUnreadChannelColour( const wxColour& colour );
     void ChangeUnreadPMColour( const wxColour& colour );
 
+    void UpdateNicklistHighlights();
+
   protected:
 
     wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );

@@ -30,6 +30,7 @@ class FileListCtrl : public customListCtrl
     void OnColClick( wxListEvent& event );
     void GetSelectedHashes(HashVector&);
     void SetColumnWidths();
+    virtual void HighlightItem( long item );
 
   protected:
     static int wxCALLBACK CompareNameUP(long item1, long item2, long sortData);

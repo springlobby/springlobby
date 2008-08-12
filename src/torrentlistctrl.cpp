@@ -126,26 +126,6 @@ TorrentListCtrl::~TorrentListCtrl()
 }
 
 
-//void TorrentListCtrl::OnSelected( wxListEvent& event )
-//{
-//  m_selected = GetItemData( event.GetIndex() );
-//  event.Skip();
-//}
-//
-//
-//void TorrentListCtrl::OnDeselected( wxListEvent& event )
-//{
-//  if ( m_selected == (int)GetItemData( event.GetIndex() )  )
-//  m_selected = -1;
-//}
-//
-//
-//int TorrentListCtrl::GetSelectedIndex()
-//{
-//  return m_selected;
-//}
-
-
 void TorrentListCtrl::OnListRightClick( wxListEvent& event )
 {
 //  PopupMenu( m_popup );
@@ -523,6 +503,11 @@ int wxCALLBACK TorrentListCtrl::CompareFileSizeDOWN( long item1, long item2, lon
 void TorrentListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
     m_tiptext = _T("");
+}
+
+void TorrentListCtrl::HighlightItem( long item )
+{
+
 }
 
 #endif
