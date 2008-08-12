@@ -275,20 +275,15 @@ wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& c
   wxImage ret = img.ConvertToImage();
   wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
 
-  double bright = origcolour.value - 0.1*origcolour.value;
+  double bright = origcolour.value - 0.5*origcolour.value;
   CLAMP(bright,0,1);
   wxImage::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
-  bright = origcolour.value - 0.5*origcolour.value;
-  CLAMP(bright,0,1);
-  wxImage::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
 
   wxImage::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
-  wxImage::RGBValue rgbdarker2 = wxImage::HSVtoRGB( hsvdarker2 );
 
 
-  ret.Replace( 164, 147, 0, rgbdarker2.red, rgbdarker2.green, rgbdarker2.blue );
 
-  ret.Replace( 255, 228, 0, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
+  ret.Replace( 128, 128, 68, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
 
   ret.Replace( 255, 255, 136, colour.Red(), colour.Green(), colour.Blue() );
 
