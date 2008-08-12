@@ -285,5 +285,5 @@ void customListCtrl::HighlightItemUser( long item, const wxString& name )
 
 void customListCtrl::SetHighLightAction( UserActions::ActionType& action )
 {
-
+    m_highlightAction = action;
 }
