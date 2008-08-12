@@ -13,6 +13,8 @@
 #include "ui.h"
 #include "server.h"
 #include "countrycodes.h"
+#include "settings.h"
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 
@@ -127,6 +129,11 @@ BattleListCtrl::~BattleListCtrl()
   delete m_popup;
 }
 
+void BattleListCtrl::HighlightItem( long item )
+{
+    wxString name = ui().GetServer().GetBattle( GetItemData(item) ).GetFounder().GetNick();
+    HighlightItemUser( item, name );
+}
 
 void BattleListCtrl::OnListRightClick( wxListEvent& event )
 {

@@ -5,7 +5,16 @@
 #include "settings.h"
 #include <cmath>
 #include "settings++/custom_dialogs.h"
+
+//for updating ui, anybody feel free to replace with fancy events stuff :P
 #include "ui.h"
+#include "mainwindow.h"
+#include "mainjoinbattletab.h"
+#include "mainchattab.h"
+#include "battlelisttab.h"
+#include "battleroomtab.h"
+#include "chatpanel.h"
+
 
 UserActions& useractions()
 {
@@ -75,6 +84,15 @@ void UserActions::Init()
         m_actionsGroups[cur] = tmp;
     }
     m_actionsGroups[ActNone] = m_groupNames;
+
+}
+
+void UserActions::UpdateUI()
+{
+    ui().mw().GetJoinTab().GetBattleListTab().UpdateHighlights();
+    ui().mw().GetChatTab().UpdateNicklistHighlights();
+    BattleRoomTab* br = ui().mw().GetJoinTab().GetBattleRoomTab();
+    if ( br ) br->UpdateHighlights();
 }
 
 wxSortedArrayString UserActions::GetGroupNames() const
@@ -99,18 +117,21 @@ void UserActions::AddUserToGroup( const wxString& group, const wxString& name )
     m_groupMap[group].Add(name);
     sett().SetPeopleList( m_groupMap[group], group );
     Init();
+    UpdateUI();
 }
 
 void UserActions::DeleteGroup(const wxString& name )
 {
     sett().DeleteGroup( name );
     Init();
+    UpdateUI();
 }
 
 void UserActions::AddGroup(const wxString& name )
 {
     sett().AddGroup( name );
     Init();
+    UpdateUI();
 }
 
 void UserActions::ChangeAction( const wxString& group, const ActionType action, bool add )
@@ -119,6 +140,7 @@ void UserActions::ChangeAction( const wxString& group, const ActionType action, 
     old = (ActionType) ( add ? (old | action) : (old & ~action ) );
     sett().SetGroupActions( group, old );
     Init();
+    UpdateUI();
 }
 
 UserActions::ActionType UserActions::GetGroupAction( const wxString& group )
@@ -134,6 +156,8 @@ wxString UserActions::GetGroupOfUser( const wxString& user )
 void UserActions::SetGroupColor( const wxString& group, const wxColour& color )
 {
     sett().SetGroupHLColor( color, group );
+    Init();
+    UpdateUI();
 }
 
 wxColor UserActions::GetGroupColor( const wxString& group )
@@ -152,4 +176,5 @@ void UserActions::RemoveUser(const wxString& name )
     m_groupMap[group].Remove(name);
     sett().SetPeopleList( m_groupMap[group], group );
     Init();
+    UpdateUI();
 }

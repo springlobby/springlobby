@@ -34,6 +34,8 @@ class NickListCtrl : public customListCtrl
     void OnShowMenu( wxContextMenuEvent& event );
     void SetTipWindowText( const long item_hit, const wxPoint position);
 
+    void HighlightItem( long item );
+
   protected:
     static int wxCALLBACK ComparePlayernameUP(long item1, long item2, long sortData);
     static int wxCALLBACK ComparePlayernameDOWN(long item1, long item2, long sortData);

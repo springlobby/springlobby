@@ -29,6 +29,7 @@ class Server;
 class Battle;
 class Ui;
 class UserMenu;
+class wxFocusEvent;
 class wxMouseEvent;
 
 enum ChatPanelType {
@@ -157,6 +158,7 @@ class ChatPanel : public wxPanel
 
 	void OnUserMenuAddToGroup( wxCommandEvent& event );
 	void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
+	void UpdateNicklistHighlights();
 
   protected:
     void _SetChannel( Channel* channel );

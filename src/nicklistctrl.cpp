@@ -159,10 +159,7 @@ void NickListCtrl::UserUpdated( const int& index )
   SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
     //highlight
-  if ( useractions().DoActionOnUser( UserActions::ActHighlight, user.GetNick() ) ) {
-    this->SetItemBackgroundColour( index,
-        sett().GetGroupHLColor( useractions().GetGroupOfUser( user.GetNick() ) )  );
-  }
+  HighlightItemUser( index, user.GetNick() );
   Sort();
   RestoreSelection();
 }
@@ -429,4 +426,11 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
             break;
         }
     }
+}
+
+void NickListCtrl::HighlightItem( long item )
+{
+    User* u = (User*)GetItemData( item ) ;
+    if ( u != 0 ) {wxString name = u->GetNick();
+    HighlightItemUser( item, name );}
 }

@@ -38,14 +38,16 @@ ManageGroupsPanel::~ManageGroupsPanel()
 
 wxSizer* ManageGroupsPanel::GetGroupSizer( const wxString& group )
 {
-    wxStaticBoxSizer* stBox = new wxStaticBoxSizer ( wxVERTICAL, this );
+    wxStaticBoxSizer* stBox = new wxStaticBoxSizer ( wxVERTICAL, this, _("Group ") + group );
     wxBoxSizer* gBox = new wxBoxSizer( wxHORIZONTAL );
-    wxBoxSizer* nameBox = new wxBoxSizer( wxVERTICAL );
-    wxStaticText* name = new wxStaticText( this, -1, group );
-    nameBox->Add( name );
-    gBox->Add( nameBox, 0, wxALL|wxEXPAND, 10 );
+//    wxBoxSizer* nameBox = new wxBoxSizer( wxVERTICAL );
+//    wxStaticText* name = new wxStaticText( this, -1, group );
+//    nameBox->Add( name );
+//    gBox->Add( nameBox, 0, wxALL|wxEXPAND, 10 );
 
     wxBoxSizer* actionsBox = new wxBoxSizer( wxVERTICAL );
+    wxStaticText* aLabel = new wxStaticText( this, -1, _("Select actions") );
+    actionsBox->Add( aLabel, 0, wxBOTTOM, 5);
     for ( int i = 1; i < UserActions::m_numActions; ++i)
     {
         //encoding the actionenum value in the id
@@ -60,16 +62,19 @@ wxSizer* ManageGroupsPanel::GetGroupSizer( const wxString& group )
     }
     gBox->Add( actionsBox, 0, wxALL|wxEXPAND, 10 );
 
+    wxBoxSizer* secondColum = new wxBoxSizer( wxVERTICAL );
     wxBoxSizer* colorBox = new wxBoxSizer( wxHORIZONTAL );
     wxStaticText* cLabel = new wxStaticText( this, -1, _("Highlight color") );
-    colorBox->Add( cLabel );
+    colorBox->Add( cLabel,0, wxBOTTOM, 5 );
     ColorButton* m_color = new ColorButton( this, ID_COLOR_BUTTON, sett().GetGroupHLColor(group), wxDefaultPosition, wxSize( 20,20 ),
                                         0,wxDefaultValidator, group );
-    colorBox->Add( m_color );
-    wxButton* deleteButton = new wxButton ( this, ID_DEL_BUTTON, _("delete"),wxDefaultPosition, wxSize( 20,20 ),
+    colorBox->Add( m_color,0, wxLEFT|wxBOTTOM, 5 );
+    wxButton* deleteButton = new wxButton ( this, ID_DEL_BUTTON, _("delete group"),wxDefaultPosition, wxSize( -1,30 ),
                                         0,wxDefaultValidator, group  );
-    colorBox->Add( deleteButton, 0 , wxEXPAND );
-    gBox->Add( colorBox, 0, wxALL|wxEXPAND, 10 );
+
+    secondColum->Add( colorBox, 1, wxALL|wxEXPAND, 10 );
+    secondColum->Add( deleteButton, 0 , wxALL|wxEXPAND, 4 );
+    gBox->Add( secondColum, 1,wxLEFT|wxEXPAND, 25);
     stBox->Add( gBox, 0, wxALL|wxEXPAND, 5) ;
     return stBox;
 
@@ -89,8 +94,8 @@ void ManageGroupsPanel::SetupControls()
     addBox->Add( addText, 0, wxLEFT|wxRIGHT, 15);
     addBox->Add( m_newgroup, 0, wxLEFT|wxRIGHT, 15);
     addBox->Add( addButton, 0, wxLEFT|wxRIGHT, 15);
-    stAddBox->Add( addBox, 0, wxALL|wxEXPAND, 5);
-    m_main_sizer->Add( stAddBox, 0, wxEXPAND|wxALL, 10 );
+    stAddBox->Add( addBox,0, wxALL, 5);
+    m_main_sizer->Add( stAddBox, 0, wxALL, 10 );
 
     //sizers for all groups
     ReloadGroupSizer();
@@ -115,14 +120,14 @@ void ManageGroupsPanel::OnAddButton( wxCommandEvent& event )
 {
     wxString newgroup = m_newgroup->GetValue();
     useractions().AddGroup( newgroup );
-    SetupControls();
+    ReloadGroupSizer();
 }
 
 void ManageGroupsPanel::OnDeleteButton( wxCommandEvent& event )
 {
     wxString newgroup = ( (wxButton*)event.GetEventObject() )->GetName();
     useractions().DeleteGroup( newgroup );
-    SetupControls();
+    ReloadGroupSizer();
 }
 
 void ManageGroupsPanel::OnCheckBox( wxCommandEvent& event )
@@ -144,7 +149,7 @@ void ManageGroupsPanel::ReloadGroupSizer()
     wxSortedArrayString groupnames = useractions().GetGroupNames();
     for ( unsigned int i = 0; i < groupnames.GetCount(); ++i)
     {
-        m_groups_sizer->Add( GetGroupSizer( groupnames[i] ),0, wxEXPAND|wxALL, 10 );
+        m_groups_sizer->Add( GetGroupSizer( groupnames[i] ),1, wxEXPAND|wxALL, 10 );
     }
     m_main_sizer->Add( m_groups_sizer );
     this->SetSizerAndFit( m_main_sizer );

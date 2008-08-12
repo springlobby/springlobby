@@ -70,6 +70,7 @@ class BattleRoomTab : public wxPanel
 
     void OnUnitSyncReloaded();
 
+    void UpdateHighlights();
 
   protected:
 

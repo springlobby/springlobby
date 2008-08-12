@@ -286,7 +286,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     SetItem( index, 7, _T("") );
     SetItem( index, 9, _T("") );
   }
-
+  HighlightItemUser( index, user.GetNick() );
   SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
   Sort();
 }
@@ -1046,5 +1046,15 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
             m_tiptext =m_colinfovec[coloumn].first;
             break;
         }
+    }
+}
+
+void BattleroomListCtrl::HighlightItem( long item )
+{
+    item_content user_content = items[(size_t)GetItemData( item )];
+    if ( !user_content.is_bot )
+    {
+        User& user = *((User*) user_content.data);
+        HighlightItemUser( item, user.GetNick() );
     }
 }
