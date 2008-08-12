@@ -115,14 +115,14 @@ void ManageGroupsPanel::OnAddButton( wxCommandEvent& event )
 {
     wxString newgroup = m_newgroup->GetValue();
     useractions().AddGroup( newgroup );
-    SetupControls();
+    ReloadGroupSizer();
 }
 
 void ManageGroupsPanel::OnDeleteButton( wxCommandEvent& event )
 {
     wxString newgroup = ( (wxButton*)event.GetEventObject() )->GetName();
     useractions().DeleteGroup( newgroup );
-    SetupControls();
+    ReloadGroupSizer();
 }
 
 void ManageGroupsPanel::OnCheckBox( wxCommandEvent& event )
