@@ -1048,3 +1048,8 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
         }
     }
 }
+
+void BattleroomListCtrl::HighlightItem( long item )
+{
+
+}

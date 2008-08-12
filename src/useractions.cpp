@@ -11,6 +11,7 @@
 #include "mainwindow.h"
 #include "mainjoinbattletab.h"
 #include "battlelisttab.h"
+#include "chatpanel.h"
 
 
 UserActions& useractions()
@@ -87,6 +88,7 @@ void UserActions::Init()
 void UserActions::UpdateUI()
 {
     ui().mw().GetJoinTab().GetBattleListTab().UpdateHighlights();
+    //ui().mw().GetActiveChatPanel()->UpdateNicklistHighlights();
 }
 
 wxSortedArrayString UserActions::GetGroupNames() const
@@ -131,6 +133,7 @@ void UserActions::ChangeAction( const wxString& group, const ActionType action, 
     old = (ActionType) ( add ? (old | action) : (old & ~action ) );
     sett().SetGroupActions( group, old );
     Init();
+    UpdateUI();
 }
 
 UserActions::ActionType UserActions::GetGroupAction( const wxString& group )
@@ -146,6 +149,8 @@ wxString UserActions::GetGroupOfUser( const wxString& user )
 void UserActions::SetGroupColor( const wxString& group, const wxColour& color )
 {
     sett().SetGroupHLColor( color, group );
+    Init();
+    UpdateUI();
 }
 
 wxColor UserActions::GetGroupColor( const wxString& group )

@@ -427,3 +427,8 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
         }
     }
 }
+
+void NickListCtrl::HighlightItem( long item )
+{
+
+}
