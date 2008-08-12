@@ -430,6 +430,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
 
 void NickListCtrl::HighlightItem( long item )
 {
-    wxString name = ( (User*)GetItemData( item ) )->GetNick();
-    HighlightItemUser( item, name );
+    User* u = (User*)GetItemData( item ) ;
+    if ( u != 0 ) {wxString name = u->GetNick();
+    HighlightItemUser( item, name );}
 }

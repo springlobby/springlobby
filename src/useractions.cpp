@@ -12,6 +12,7 @@
 #include "mainjoinbattletab.h"
 #include "mainchattab.h"
 #include "battlelisttab.h"
+#include "battleroomtab.h"
 #include "chatpanel.h"
 
 
@@ -90,6 +91,8 @@ void UserActions::UpdateUI()
 {
     ui().mw().GetJoinTab().GetBattleListTab().UpdateHighlights();
     ui().mw().GetChatTab().UpdateNicklistHighlights();
+    BattleRoomTab* br = ui().mw().GetJoinTab().GetBattleRoomTab();
+    if ( br ) br->UpdateHighlights();
 }
 
 wxSortedArrayString UserActions::GetGroupNames() const

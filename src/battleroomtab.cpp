@@ -604,3 +604,9 @@ long BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
   }
   return pos;
 }
+
+void BattleRoomTab::UpdateHighlights()
+{
+    m_players->UpdateHighlights();
+}
+

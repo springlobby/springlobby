@@ -116,7 +116,8 @@ void ChatPanel::OnMouseDown( wxMouseEvent& event ) {
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
-		: wxPanel( parent, -1 ), m_show_nick_list( true ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( &chan ), m_server( 0 ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Channel ), m_popup_menu( 0 ) {
+		: wxPanel( parent, -1 ), m_show_nick_list( true ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ),
+		m_channel( &chan ), m_server( 0 ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Channel ), m_popup_menu( 0 ) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Channel& chan" ) );
 	CreateControls( );
 	_SetChannel( &chan );
@@ -131,7 +132,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( &user ), m_battle( 0 ), m_type( CPT_User ), m_popup_menu( 0 ) {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ),
+		 m_channel( 0 ), m_server( 0 ), m_user( &user ), m_battle( 0 ), m_type( CPT_User ), m_popup_menu( 0 ) {
 	CreateControls( );
 	user.uidata.panel = this;
 	m_chat_log = new ChatLog( sett().GetDefaultServer(), user.GetNick() );
@@ -139,7 +141,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ) {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ),
+		 m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Server& serv" ) );
 	CreateControls( );
 	serv.uidata.panel = this;
@@ -149,7 +152,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist( NULL ), m_chat_tabs( 0 ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( 0 ), m_battle( &battle ), m_type( CPT_Battle ), m_popup_menu( 0 ) {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist( NULL ), m_chat_tabs( 0 ), m_ui( ui ),
+		 m_channel( 0 ), m_server( 0 ), m_user( 0 ), m_battle( &battle ), m_type( CPT_Battle ), m_popup_menu( 0 ) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Battle& battle" ) );
 	for (unsigned int i = 0; i < battle.GetNumUsers();++i)
     {
