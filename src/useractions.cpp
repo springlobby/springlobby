@@ -117,18 +117,21 @@ void UserActions::AddUserToGroup( const wxString& group, const wxString& name )
     m_groupMap[group].Add(name);
     sett().SetPeopleList( m_groupMap[group], group );
     Init();
+    UpdateUI();
 }
 
 void UserActions::DeleteGroup(const wxString& name )
 {
     sett().DeleteGroup( name );
     Init();
+    UpdateUI();
 }
 
 void UserActions::AddGroup(const wxString& name )
 {
     sett().AddGroup( name );
     Init();
+    UpdateUI();
 }
 
 void UserActions::ChangeAction( const wxString& group, const ActionType action, bool add )
@@ -173,4 +176,5 @@ void UserActions::RemoveUser(const wxString& name )
     m_groupMap[group].Remove(name);
     sett().SetPeopleList( m_groupMap[group], group );
     Init();
+    UpdateUI();
 }

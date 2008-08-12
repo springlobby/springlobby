@@ -118,7 +118,7 @@ public:
     virtual void HighlightItem( long item ) = 0;
     void HighlightItemUser( long item, const wxString& name );
     void UpdateHighlights();
-    void SetHighLightAction( UserActions::ActionType& action );
+    void SetHighLightAction( UserActions::ActionType action );
 
 
     /** @name Multi Selection methods

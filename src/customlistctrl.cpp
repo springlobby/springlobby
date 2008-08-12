@@ -283,7 +283,7 @@ void customListCtrl::HighlightItemUser( long item, const wxString& name )
     SetItemBackgroundColour( item, m_bg_color );
 }
 
-void customListCtrl::SetHighLightAction( UserActions::ActionType& action )
+void customListCtrl::SetHighLightAction( UserActions::ActionType action )
 {
     m_highlightAction = action;
 }
