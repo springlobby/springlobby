@@ -30,6 +30,7 @@ customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
     controlPointer = 0;
 #endif
 	m_tiptext = _T("");
+	m_bg_color = GetDefaultAttributes().colBg;
 }
 
 void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
@@ -278,6 +279,8 @@ void customListCtrl::HighlightItemUser( long item, const wxString& name )
         wxColor c = sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
         SetItemBackgroundColour( item, c );
   }
+  else
+    SetItemBackgroundColour( item, m_bg_color );
 }
 
 void customListCtrl::SetHighLightAction( UserActions::ActionType& action )

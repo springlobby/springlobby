@@ -1590,3 +1590,8 @@ wxString UserMenu::GetGroupByEvtID( const unsigned int id )
     else
         return wxEmptyString;
 }
+
+void ChatPanel::UpdateNicklistHighlights()
+{
+    if (m_nicklist) m_nicklist->UpdateHighlights();
+}

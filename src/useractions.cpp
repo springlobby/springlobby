@@ -10,6 +10,7 @@
 #include "ui.h"
 #include "mainwindow.h"
 #include "mainjoinbattletab.h"
+#include "mainchattab.h"
 #include "battlelisttab.h"
 #include "chatpanel.h"
 
@@ -88,7 +89,7 @@ void UserActions::Init()
 void UserActions::UpdateUI()
 {
     ui().mw().GetJoinTab().GetBattleListTab().UpdateHighlights();
-    //ui().mw().GetActiveChatPanel()->UpdateNicklistHighlights();
+    ui().mw().GetChatTab().UpdateNicklistHighlights();
 }
 
 wxSortedArrayString UserActions::GetGroupNames() const

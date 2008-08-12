@@ -71,6 +71,8 @@ protected:
     //! which action should be considered?
     ActionType m_highlightAction;
 
+    wxColor m_bg_color;
+
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
 public:

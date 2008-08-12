@@ -106,6 +106,15 @@ ChatPanel* MainChatTab::GetChannelChatPanel( const wxString& channel )
   return 0;
 }
 
+void MainChatTab::UpdateNicklistHighlights()
+{
+    for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+    ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+    if ( tmp->GetPanelType() == CPT_Channel ) {
+      tmp->UpdateNicklistHighlights();
+    }
+  }
+}
 
 ChatPanel* MainChatTab::GetUserChatPanel( const wxString& user )
 {
