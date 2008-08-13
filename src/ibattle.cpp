@@ -57,13 +57,13 @@ const UnitSyncMap& IBattle::LoadMap()
 }
 
 
-wxString IBattle::GetHostMapName()
+wxString IBattle::GetHostMapName() const
 {
   return m_host_map_name;
 }
 
 
-wxString IBattle::GetHostMapHash()
+wxString IBattle::GetHostMapHash() const
 {
   return m_host_map_hash;
 }
@@ -105,13 +105,13 @@ const UnitSyncMod& IBattle::LoadMod()
 }
 
 
-wxString IBattle::GetHostModName()
+wxString IBattle::GetHostModName() const
 {
   return m_host_mod_name;
 }
 
 
-wxString IBattle::GetHostModHash()
+wxString IBattle::GetHostModHash() const
 {
   return m_host_mod_hash;
 }

@@ -165,6 +165,7 @@ class Ui
 
     int TestHostPort( unsigned int port );
 
+
   protected:
     Spring* m_spring;
 

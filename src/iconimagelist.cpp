@@ -232,7 +232,7 @@ int IconImageList::GetFlagIcon( const wxString& flagname )
 }
 
 
-int IconImageList::GetBattleStatusIcon( Battle& battle )
+int IconImageList::GetBattleStatusIcon( const Battle& battle ) const
 {
     if ( battle.GetInGame() ) return ICON_STARTED_GAME;
     if ( !battle.IsLocked() )
@@ -264,7 +264,7 @@ int IconImageList::GetBattleStatusIcon( Battle& battle )
     return ICON_GAME_UNKNOWN;
 }
 
-wxString IconImageList::GetBattleStatus( Battle& battle )
+wxString IconImageList::GetBattleStatus( const Battle& battle ) const
 {
     if ( battle.GetInGame() ) return _T("Game has already started");
     if ( !battle.IsLocked() )

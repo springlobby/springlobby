@@ -11,11 +11,12 @@ class wxBoxSizer;
 class GroupUserDialog : public wxDialog
 {
     public:
-        GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString& title,
+        GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString& title, const wxString& group,
             const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
             long style = wxDEFAULT_DIALOG_STYLE, const wxString& name = _T("dialogBox") );
         virtual ~GroupUserDialog();
     protected:
+        wxString m_groupname;
         NickListCtrl* m_all_users;
         NickListCtrl* m_group_users;
         wxButton* m_delete_users;

@@ -7,6 +7,8 @@
 
 #include "ui.h"
 #include "nicklistctrl.h"
+#include "userlist.h"
+#include "server.h"
 
 BEGIN_EVENT_TABLE( GroupUserDialog, wxDialog )
 
@@ -17,15 +19,24 @@ BEGIN_EVENT_TABLE( GroupUserDialog, wxDialog )
 
 END_EVENT_TABLE()
 
-GroupUserDialog::GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString& title,
-    const wxPoint& pos , const wxSize& size,
-    long style, const wxString& name )
+GroupUserDialog::GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString& title,const wxString& group,
+    const wxPoint& pos , const wxSize& size, long style, const wxString& name )
+    : wxDialog (parent,  id, title, pos, size, style, name),
+    m_groupname (group)
+
 {
     m_main_sizer = new wxBoxSizer ( wxHORIZONTAL );
     wxBoxSizer* leftCol = new wxBoxSizer ( wxVERTICAL );
     wxBoxSizer* rightCol = new wxBoxSizer ( wxVERTICAL );
     m_all_users = new NickListCtrl( this, true, 0, false, _T("AllUsersGroup") );
     m_group_users = new NickListCtrl( this, true, 0, false, _T("AllUsersGroup") );
+
+    //populate lists
+    const UserList& userlist = ui().GetServer().GetUserList();
+    for ( unsigned int i = 0; i < userlist.GetNumUsers(); ++i)
+    {
+        m_all_users->AddUser( userlist.GetUser( i ) );
+    }
 
 }
 

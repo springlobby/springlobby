@@ -75,19 +75,19 @@ class IBattle
     virtual void SetHostMap( const wxString& mapname, const wxString& hash );
     virtual void SetLocalMap( const UnitSyncMap& map );
     virtual const UnitSyncMap& LoadMap();
-    virtual wxString GetHostMapName();
-    virtual wxString GetHostMapHash();
+    virtual wxString GetHostMapName() const;
+    virtual wxString GetHostMapHash() const;
 
     virtual void SetHostMod( const wxString& modname, const wxString& hash );
     virtual void SetLocalMod( const UnitSyncMod& mod );
     virtual const UnitSyncMod& LoadMod();
-    virtual wxString GetHostModName();
-    virtual wxString GetHostModHash();
+    virtual wxString GetHostModName() const;
+    virtual wxString GetHostModHash() const;
 
     virtual bool MapExists();
     virtual bool ModExists();
 
-    virtual wxColour GetFreeColour( User *for_whom ) = 0;
+    virtual wxColour GetFreeColour( User *for_whom ) const = 0;
 
     virtual BattleStartRect* GetStartRect( int allyno ) { return 0; };
     virtual void AddStartRect( int allyno, int left, int top, int right, int bottom ) {};
@@ -98,15 +98,15 @@ class IBattle
     virtual int GetMyAlly() = 0;
     virtual void SetMyAlly( int ally ) = 0;
 
-    virtual bool IsFounderMe() =0;
+    virtual bool IsFounderMe() const =0;
 
     virtual void SendHostInfo( HostInfo update ) = 0;
     virtual void SendHostInfo( const wxString& Tag ) = 0;
 
     virtual BattleBot* GetBotByStartPosition( unsigned int startpos ) { return 0; };
-    virtual BattleBot* GetBot( unsigned int index ) = 0;
-    virtual BattleBot* GetBot( const wxString& name ) { return 0; };
-    virtual unsigned int GetNumBots() = 0;
+    virtual BattleBot* GetBot( unsigned int index ) const  = 0;
+    virtual BattleBot* GetBot( const wxString& name ) const { return 0; };
+    virtual unsigned int GetNumBots() const = 0;
     virtual unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
     virtual void RemoveBot( unsigned int index ) {};
 

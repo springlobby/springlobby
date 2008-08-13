@@ -568,7 +568,7 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
 {
     long item = GetItemData(item_hit);
     Ui* ui = m_ui_for_sort;
-    Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
+    const Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
     int coloumn = getColoumnFromPosition(position);
     switch (coloumn)
     {
