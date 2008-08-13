@@ -9,6 +9,8 @@
 #include "nicklistctrl.h"
 #include "userlist.h"
 #include "server.h"
+#include "useractions.h"
+#include "settings.h"
 
 BEGIN_EVENT_TABLE( GroupUserDialog, wxDialog )
 
@@ -37,6 +39,19 @@ GroupUserDialog::GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString
     {
         m_all_users->AddUser( userlist.GetUser( i ) );
     }
+
+    wxSortedArrayString groupuser = sett().GetPeopleList( m_groupname );
+    for ( unsigned int i = 0; i < groupuser.GetCount(); ++i)
+    {
+        m_group_users->AddUser( userlist.GetUser( groupuser[i] ) );
+    }
+
+    leftCol->Add( m_group_users, 1, wxALL|wxEXPAND, 10 );
+    rightCol->Add( m_all_users, 1, wxALL|wxEXPAND, 10 );
+    m_main_sizer->Add( leftCol );
+    m_main_sizer->Add( rightCol );
+    SetSizer( m_main_sizer );
+    Layout();
 
 }
 

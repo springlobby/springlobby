@@ -7,10 +7,19 @@
 
 class wxColour;
 
+//!provide a simple mapping between enum type and string to display in gui
 const wxString m_actionNames[] = { _T("none"),_T("highlight"),_T("notify login"),_T("ignore"),_T("autokick"),
         _T("notify hosted battle"),_T("notify status change")};
 
+//! data handling for group / action management
+/** one single static instance is exposed as a global \n
+    by forcing a write to settings handler on every change data consistency is ensured \n
+    to keep runtime overhead as small as possible for the often called query funcs, all data is structured in multiple
+    maps and wherever possible sortedArrays (binary search instead of linear!) are used \n
+    the price is that on every change operation (very rare compared to queries) maps need to be cleared/reloaded \n
+    currently Gui updates are handled old fashoined way by hangling around classes, this should be improved to dynamic events
 
+**/
 class UserActions {
 
 public:
