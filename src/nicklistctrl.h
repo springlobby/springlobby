@@ -16,7 +16,7 @@ class UserMenu;
 class NickListCtrl : public customListCtrl
 {
   public:
-    NickListCtrl( wxWindow* parent, Ui& ui, bool show_header = true, UserMenu* popup = 0,
+    NickListCtrl( wxWindow* parent, bool show_header = true, UserMenu* popup = 0,
         bool singleSelectList = true, const wxString& name = _T("NickListCtrl")  );
     ~NickListCtrl();
 
@@ -49,7 +49,6 @@ class NickListCtrl : public customListCtrl
     void Sort();
 
     UserList* m_users;
-    Ui& m_ui;
 
     UserMenu* m_menu;
 

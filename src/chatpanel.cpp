@@ -206,7 +206,7 @@ void ChatPanel::CreateControls( ) {
 
         m_nick_sizer = new wxBoxSizer( wxVERTICAL );
         m_usermenu = CreateNickListMenu();
-		m_nicklist = new NickListCtrl( m_nick_panel, m_ui, true, m_usermenu );
+		m_nicklist = new NickListCtrl( m_nick_panel, true, m_usermenu );
 
    // m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
    // m_nick_filter->Disable();

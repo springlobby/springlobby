@@ -5,6 +5,9 @@
 #include <wx/statline.h>
 #include <wx/stattext.h>
 
+#include "ui.h"
+#include "nicklistctrl.h"
+
 BEGIN_EVENT_TABLE( GroupUserDialog, wxDialog )
 
 	EVT_BUTTON( wxID_OK,     GroupUserDialog::OnOk )
@@ -21,8 +24,8 @@ GroupUserDialog::GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString
     m_main_sizer = new wxBoxSizer ( wxHORIZONTAL );
     wxBoxSizer* leftCol = new wxBoxSizer ( wxVERTICAL );
     wxBoxSizer* rightCol = new wxBoxSizer ( wxVERTICAL );
-    m_all_users = new NickListCtrl( this, Ui& ui, bool show_header = true, UserMenu* popup = 0,
-        bool singleSelectList = true, const wxString& name = _T("NickListCtrl") );
+    m_all_users = new NickListCtrl( this, true, 0, false, _T("AllUsersGroup") );
+    m_group_users = new NickListCtrl( this, true, 0, false, _T("AllUsersGroup") );
 
 }
 

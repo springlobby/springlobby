@@ -36,11 +36,10 @@ BEGIN_EVENT_TABLE( NickListCtrl, customListCtrl )
 END_EVENT_TABLE()
 
 
-NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, UserMenu* popup, bool singleSelectList, const wxString& name ):
+NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, UserMenu* popup, bool singleSelectList, const wxString& name ):
   customListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
               name ),
-  m_ui(ui),
   m_menu(popup)
 {
   wxListItem col;
@@ -188,7 +187,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
   int index = event.GetIndex();
   if ( index == -1 ) return;
   User* user = (User*)event.GetData();
-  m_ui.mw().OpenPrivateChat( *user );
+  ui().mw().OpenPrivateChat( *user );
   //FIXME why was this lfet here, what was it supposed to do?
   //m_ui.mw().OnTabsChanged( event2 );
 }
