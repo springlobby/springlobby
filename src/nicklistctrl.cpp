@@ -36,10 +36,10 @@ BEGIN_EVENT_TABLE( NickListCtrl, customListCtrl )
 END_EVENT_TABLE()
 
 
-NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, UserMenu* popup ):
+NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, UserMenu* popup, bool singleSelectList, const wxString& name ):
   customListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
-              wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | wxLC_SINGLE_SEL,
-              _T("NickListCtrl") ),
+              wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
+              name ),
   m_ui(ui),
   m_menu(popup)
 {
