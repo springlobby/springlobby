@@ -194,6 +194,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 #endif
 
   ReloadServerList();
+
 }
 
 
