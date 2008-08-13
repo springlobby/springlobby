@@ -25,7 +25,9 @@ struct UserStatus {
   int rank;
   bool moderator;
   bool bot;
-  UserStatus(): in_game(false), away(false), rank(RANK_1), moderator(false), bot(false) {}
+  //! only used in userlistctrl
+  bool offline;
+  UserStatus(): in_game(false), away(false), rank(RANK_1), moderator(false), bot(false), offline(false) {}
   wxString GetDiffString ( const UserStatus& other );
 };
 

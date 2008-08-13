@@ -168,9 +168,12 @@ void NickListCtrl::UserUpdated( const int& index )
 {
   SetSelectionRestorePoint();
   User& user = *((User*)GetItemData( index ));
-  SetItemImage( index, icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
-  SetItemColumnImage( index, 1, icons().GetFlagIcon( user.GetCountry() ) );
-  SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
+  const UserStatus user_st = user.GetStatus();
+  SetItemImage( index, icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 ) );
+  if ( !user_st.offline ) {
+      SetItemColumnImage( index, 1, icons().GetFlagIcon( user.GetCountry() ) );
+      SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
+  }
   SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
     //highlight
@@ -463,3 +466,5 @@ void NickListCtrl::GetSelectedUsers(UserList& users)
 		users.AddUser( *(User*)GetItemData(item)  );
 	}
 }
+
+

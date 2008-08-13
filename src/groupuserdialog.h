@@ -5,6 +5,7 @@
 
 
 class NickListCtrl;
+class UserListctrl;
 class wxButton;
 class wxBoxSizer;
 
@@ -18,7 +19,7 @@ class GroupUserDialog : public wxDialog
     protected:
         wxString m_groupname;
         NickListCtrl* m_all_users;
-        NickListCtrl* m_group_users;
+        UserListctrl* m_group_users;
         wxButton* m_delete_users;
         wxButton* m_add_users;
         wxBoxSizer* m_main_sizer;
