@@ -19,6 +19,7 @@
 #include "mainwindow.h"
 #include "countrycodes.h"
 #include "chatpanel.h"
+#include "userlist.h"
 
 #define TOOLTIP_DELAY 1000
 
@@ -36,10 +37,11 @@ BEGIN_EVENT_TABLE( NickListCtrl, customListCtrl )
 END_EVENT_TABLE()
 
 
-NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, UserMenu* popup, bool singleSelectList, const wxString& name ):
+NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, UserMenu* popup, bool singleSelectList,
+                            const wxString& name, bool highlight):
   customListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
-              name ),
+              name, highlight ),
   m_menu(popup)
 {
   wxListItem col;
@@ -97,11 +99,25 @@ NickListCtrl::~NickListCtrl()
 
 }
 
-void NickListCtrl::AddUser( User& user )
+void NickListCtrl::AddUser( const UserList& userlist )
+{
+    for ( unsigned int i = 0; i < userlist.GetNumUsers(); ++i)
+    {
+        AddUser( userlist.GetUser( i ) );
+    }
+}
+
+void NickListCtrl::AddUser( const User& user )
 {
   SetSelectionRestorePoint();
   wxLogDebugFunc(_T(""));
   assert(&user);
+
+  //we shouldn't add users twice
+  if ( GetUserIndex( user ) != -1 ){
+     wxLogWarning(_T("NickListCtrl::AddUser tried to add duplicate, aborted"));
+    return;
+  }
   int index = InsertItem( GetItemCount(), icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
   if(index==-1){
       wxLogMessage(_T("NickListCtrl::AddUser : index==-1"));
@@ -172,7 +188,7 @@ void NickListCtrl::ClearUsers()
 }
 
 
-int NickListCtrl::GetUserIndex( User& user )
+int NickListCtrl::GetUserIndex( const User& user )const
 {
   for ( int i = 0; i < GetItemCount() ; i++ ) {
     if ( (unsigned long)&user == GetItemData( i ) ) return i;
@@ -430,6 +446,20 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
 void NickListCtrl::HighlightItem( long item )
 {
     User* u = (User*)GetItemData( item ) ;
-    if ( u != 0 ) {wxString name = u->GetNick();
-    HighlightItemUser( item, name );}
+    if ( u != 0 ) {
+        wxString name = u->GetNick();
+        HighlightItemUser( item, name );
+    }
+}
+
+void NickListCtrl::GetSelectedUsers(UserList& users)
+{
+    long item = -1;
+	for ( long i = 0; i < GetSelectedItemCount(); ++i )
+	{
+		item = GetNextItem( item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
+		if ( item == -1 ) // means nothing was found
+            return;
+		users.AddUser( *(User*)GetItemData(item)  );
+	}
 }

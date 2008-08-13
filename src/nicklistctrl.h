@@ -17,16 +17,18 @@ class NickListCtrl : public customListCtrl
 {
   public:
     NickListCtrl( wxWindow* parent, bool show_header = true, UserMenu* popup = 0,
-        bool singleSelectList = true, const wxString& name = _T("NickListCtrl")  );
+        bool singleSelectList = true, const wxString& name = _T("NickListCtrl"), bool highlight = true  );
     ~NickListCtrl();
 
-    void AddUser( User& user );
+    void AddUser( const User& user );
+    void AddUser( const UserList& userlist );
     void RemoveUser( const User& user );
 
     void UserUpdated( User& user );
     void UserUpdated( const int& index );
 
-    int GetUserIndex( User& user );
+    int GetUserIndex( const User& user ) const;
+    void GetSelectedUsers( UserList& users ) ;
 
     void ClearUsers();
 

@@ -38,7 +38,7 @@ void User::DoAction( const wxString& message )
 }
 
 
-Battle* User::GetBattle()
+Battle* User::GetBattle() const
 {
   return m_battle;
 }

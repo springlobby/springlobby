@@ -11,6 +11,7 @@
 #include "server.h"
 #include "useractions.h"
 #include "settings.h"
+#include "user.h"
 
 BEGIN_EVENT_TABLE( GroupUserDialog, wxDialog )
 
@@ -31,20 +32,19 @@ GroupUserDialog::GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString
     wxBoxSizer* top_sizer = new wxBoxSizer ( wxHORIZONTAL );
     wxBoxSizer* leftCol = new wxBoxSizer ( wxVERTICAL );
     wxBoxSizer* rightCol = new wxBoxSizer ( wxVERTICAL );
-    m_all_users = new NickListCtrl( this, true, 0, false, _T("AllUsersGroup") );
-    m_group_users = new NickListCtrl( this, true, 0, false, _T("GroupUsersGroup") );
+    m_all_users = new NickListCtrl( this, true, 0, false, _T("AllUsersGroup"), false );
+    m_group_users = new NickListCtrl( this, true, 0, false, _T("GroupUsersGroup"), false );
 
     //populate lists
     const UserList& userlist = ui().GetServer().GetUserList();
-    for ( unsigned int i = 0; i < userlist.GetNumUsers(); ++i)
-    {
-        m_all_users->AddUser( userlist.GetUser( i ) );
-    }
+    m_all_users->AddUser( userlist );
+
 
     wxSortedArrayString groupuser = sett().GetPeopleList( m_groupname );
     for ( unsigned int i = 0; i < groupuser.GetCount(); ++i)
     {
-        m_group_users->AddUser( userlist.GetUser( groupuser[i] ) );
+        const User u = userlist.GetUser( groupuser[i] );
+        m_group_users->AddUser( u );
     }
 
     leftCol->Add( m_group_users, 10, wxALL|wxEXPAND, 10 );
@@ -68,9 +68,16 @@ void GroupUserDialog::OnOk ( wxCommandEvent& event )
     EndModal(0);
 }
 
-void GroupUserDialog::OnAdd ( wxCommandEvent& event )
+void GroupUserDialog::OnCancel ( wxCommandEvent& event )
 {
     EndModal(0);
+}
+
+void GroupUserDialog::OnAdd ( wxCommandEvent& event )
+{
+    UserList sel_users;
+    m_all_users->GetSelectedUsers( sel_users );
+    m_group_users->AddUser( sel_users );
 }
 
 void GroupUserDialog::OnDelete ( wxCommandEvent& event )
@@ -78,7 +85,4 @@ void GroupUserDialog::OnDelete ( wxCommandEvent& event )
 
 }
 
-void GroupUserDialog::OnCancel ( wxCommandEvent& event )
-{
 
-}
