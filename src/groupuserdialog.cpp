@@ -90,12 +90,11 @@ void GroupUserDialog::OnOk ( wxCommandEvent& event )
             useractions().AddUserToGroup( m_groupname, name );
     }
     this->Show( 0 );
-//    EndModal(0);
 }
 
 void GroupUserDialog::OnCancel ( wxCommandEvent& event )
 {
-    EndModal(0);
+    this->Show( 0 );
 }
 
 void GroupUserDialog::OnAdd ( wxCommandEvent& event )

@@ -27,8 +27,6 @@
 #include "images/spring.xpm"
 #include "images/userchat.xpm"
 
-//TODO REMOVE
-#include "groupuserdialog.h"
 
 BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 
@@ -93,9 +91,6 @@ void MainOptionsTab::OnApply( wxCommandEvent& event )
     m_torrent_opts->OnApply( event );
 #endif
     sett().SaveSettings();
-      GroupUserDialog dlg(this,-1,_("title"), _("Default"), wxDefaultPosition, wxSize( 800,800) );
-  int h = dlg.ShowModal();
-
 }
 
 

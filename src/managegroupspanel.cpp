@@ -15,17 +15,19 @@
 #include "Helper/colorbutton.h"
 #include "ui.h"
 #include <cmath>
+#include "groupuserdialog.h"
 
 BEGIN_EVENT_TABLE( ManageGroupsPanel, wxScrolledWindow )
   EVT_CHECKBOX( wxID_ANY, ManageGroupsPanel::OnCheckBox )
   EVT_BUTTON( ID_COLOR_BUTTON, ManageGroupsPanel::OnColorButton )
   EVT_BUTTON( ID_ADD_BUTTON, ManageGroupsPanel::OnAddButton )
   EVT_BUTTON( ID_DEL_BUTTON, ManageGroupsPanel::OnDeleteButton )
+  EVT_BUTTON( ID_USER_BUTTON, ManageGroupsPanel::OnUserButton )
 END_EVENT_TABLE()
 
 ManageGroupsPanel::ManageGroupsPanel( wxWindow* parent )
     : wxScrolledWindow( parent, -1 ), m_main_sizer(0),
-      m_groups_sizer(0), m_newgroup(0)
+      m_groups_sizer(0), m_newgroup(0), m_user_dialog(0)
 {
     SetScrollRate(0,10);
     SetupControls();
@@ -33,7 +35,8 @@ ManageGroupsPanel::ManageGroupsPanel( wxWindow* parent )
 
 ManageGroupsPanel::~ManageGroupsPanel()
 {
-
+    if ( m_user_dialog )
+        delete m_user_dialog;
 }
 
 wxSizer* ManageGroupsPanel::GetGroupSizer( const wxString& group )
@@ -69,10 +72,13 @@ wxSizer* ManageGroupsPanel::GetGroupSizer( const wxString& group )
     ColorButton* m_color = new ColorButton( this, ID_COLOR_BUTTON, sett().GetGroupHLColor(group), wxDefaultPosition, wxSize( 20,20 ),
                                         0,wxDefaultValidator, group );
     colorBox->Add( m_color,0, wxLEFT|wxBOTTOM, 5 );
+    wxButton* userButton = new wxButton ( this, ID_USER_BUTTON, _("add/remove users"),wxDefaultPosition, wxSize( -1,30 ),
+                                        0,wxDefaultValidator, group  );
     wxButton* deleteButton = new wxButton ( this, ID_DEL_BUTTON, _("delete group"),wxDefaultPosition, wxSize( -1,30 ),
                                         0,wxDefaultValidator, group  );
 
     secondColum->Add( colorBox, 1, wxALL|wxEXPAND, 10 );
+    secondColum->Add( userButton, 0 , wxALL|wxEXPAND, 4 );
     secondColum->Add( deleteButton, 0 , wxALL|wxEXPAND, 4 );
     gBox->Add( secondColum, 1,wxLEFT|wxEXPAND, 25);
     stBox->Add( gBox, 0, wxALL|wxEXPAND, 5) ;
@@ -120,6 +126,7 @@ void ManageGroupsPanel::OnAddButton( wxCommandEvent& event )
 {
     wxString newgroup = m_newgroup->GetValue();
     useractions().AddGroup( newgroup );
+    m_newgroup->SetValue(wxEmptyString);
     ReloadGroupSizer();
 }
 
@@ -154,4 +161,18 @@ void ManageGroupsPanel::ReloadGroupSizer()
     m_main_sizer->Add( m_groups_sizer );
     this->SetSizerAndFit( m_main_sizer );
     this->Layout();
+}
+
+void ManageGroupsPanel::OnUserButton( wxCommandEvent& event )
+{
+    if ( m_user_dialog && m_user_dialog->IsShown())
+    {
+            //display err
+    }
+    else
+    {
+        wxString group = ( (wxButton*)event.GetEventObject() )->GetName();
+        m_user_dialog = new GroupUserDialog( this, -1, _(""), group, wxDefaultPosition, wxSize( 800,800) );
+        m_user_dialog->Show( true );
+    }
 }
