@@ -43,7 +43,7 @@ GroupUserDialog::GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString
     {
         wxString name = userlist.GetUser( i ).GetNick();
         wxString country = userlist.GetUser( i ).GetCountry();
-        if ( !useractions().IsKnown( name ) )
+        if ( !useractions().IsKnown( name ) && !ui().IsThisMe( name ) )
             m_all_users->AddUser( UserData( name, country ) );
     }
 
@@ -60,8 +60,10 @@ GroupUserDialog::GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString
     }
 
     m_add_users = new wxButton( this, ID_BUTTON_ADD, _("Add selected") );
+    m_delete_users = new wxButton( this, ID_BUTTON_DELETE, _("Remove selected") );
 
     leftCol->Add( m_group_users, 10, wxALL|wxEXPAND, 10 );
+    leftCol->Add( m_delete_users, 0, wxALL|wxEXPAND, 10 );
     rightCol->Add( m_all_users, 10, wxALL|wxEXPAND, 10 );
     rightCol->Add( m_add_users, 0, wxALL|wxEXPAND, 10 );
     top_sizer->Add( leftCol,1, wxALL|wxEXPAND, 10 );
@@ -87,8 +89,8 @@ void GroupUserDialog::OnOk ( wxCommandEvent& event )
         if ( !useractions().IsKnown( name ) );
             useractions().AddUserToGroup( m_groupname, name );
     }
-//    this->Show( 0 );
-    EndModal(0);
+    this->Show( 0 );
+//    EndModal(0);
 }
 
 void GroupUserDialog::OnCancel ( wxCommandEvent& event )
@@ -98,12 +100,19 @@ void GroupUserDialog::OnCancel ( wxCommandEvent& event )
 
 void GroupUserDialog::OnAdd ( wxCommandEvent& event )
 {
-    m_group_users->AddUser( m_all_users->GetSelectedUserData( ) );
+    const UserListctrl::UserDataMap sel_users ( m_all_users->GetSelectedUserData( ));
+    m_all_users->SelectNone();
+    m_all_users->RemoveUsers( sel_users );
+    m_group_users->AddUser( sel_users );
+
 }
 
 void GroupUserDialog::OnDelete ( wxCommandEvent& event )
 {
-
+    const UserListctrl::UserDataMap sel_users = m_group_users->GetSelectedUserData( );
+    m_group_users->SelectNone();
+    m_group_users->RemoveUsers( sel_users );
+    m_all_users->AddUser( sel_users );
 }
 
 

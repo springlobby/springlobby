@@ -108,27 +108,37 @@ UserListctrl::UserDataMap UserListctrl::GetSelectedUserData() const
         if ( el != m_userdata.end() )
             ret[item] = ( el->second );
 	}
+
 	return ret;
 }
 
 void UserListctrl::RemoveUsers( const UserDataMap& userdata )
 {
-    for ( UserDataMapConstIter it = m_userdata.begin(); it != m_userdata.end(); ++it)
+    std::vector<UserDataMapIter> todelete;
+    for ( UserDataMapConstIter it = userdata.begin(); it != userdata.end(); ++it)
     {
-        UserDataMapConstIter data = FindData( it->second );
+        UserDataMapIter data = FindData( it->second );
         if ( data != m_userdata.end() )
         {
-            m_userdata.erase( data->first );
-            DeleteItem( data->first );
+            todelete.push_back( data );
         }
     }
+    std::vector<UserDataMapIter>::const_iterator it = todelete.begin();
+    for( ; it != todelete.end(); ++it)
+        m_userdata.erase( (*it) );
+
+    UserDataMap tmp = m_userdata;
+    m_userdata.clear();
+    DeleteAllItems();
+    AddUser( tmp );
+    SelectNone();
 
 
 }
 
-UserListctrl::UserDataMapConstIter UserListctrl::FindData( const UserData userdata )
+UserListctrl::UserDataMapIter UserListctrl::FindData( const UserData userdata )
 {
-    for ( UserDataMapConstIter it = m_userdata.begin(); it != m_userdata.end(); ++it)
+    for ( UserDataMapIter it = m_userdata.begin(); it != m_userdata.end(); ++it)
     {
         if ( it->second.first == userdata.first )
             return it;

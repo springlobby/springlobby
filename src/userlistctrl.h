@@ -17,6 +17,7 @@ class UserListctrl : public customListCtrl
         typedef std::pair<wxString, wxString> UserData;
         typedef std::map<unsigned int, UserData> UserDataMap;
         typedef UserDataMap::const_iterator UserDataMapConstIter;
+        typedef UserDataMap::iterator UserDataMapIter;
 
     public:
         UserListctrl( wxWindow* parent, const wxString& name = _T("usergrouplist"), bool highlight = false  );
@@ -38,7 +39,7 @@ class UserListctrl : public customListCtrl
         void HighlightItem( long item );
 
         bool IsInList( const UserData userdata );
-        UserDataMapConstIter FindData( const UserData userdata );
+        UserDataMapIter FindData( const UserData userdata );
 
         enum {
             USERLIST = wxID_HIGHEST
