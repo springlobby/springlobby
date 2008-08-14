@@ -98,7 +98,7 @@ class User
     void Say( const wxString& message );
     void DoAction( const wxString& message );
 
-    Battle* GetBattle();
+    Battle* GetBattle() const;
     void SetBattle( Battle* battle );
 
     void SendMyUserStatus();

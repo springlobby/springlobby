@@ -245,10 +245,28 @@ void SpringLobbyApp::SetupUserFolders()
 
         if ( createdirs )
         {
-            if ( dir.IsEmpty() || ( !wxFileName::Mkdir( dir ) || ( !wxFileName::Mkdir( dir + _T("/mods") ) || !wxFileName::Mkdir( dir + _T("/maps") ) || !wxFileName::Mkdir( dir + _T("/base") ) || !wxFileName::Mkdir( dir + _T("/demos") ) || !wxFileName::Mkdir( dir + _T("/screenshots")  ) ) ) )
+            if ( dir.IsEmpty() ||
+             ( !wxFileName::Mkdir( dir ) ||
+                ( !wxFileName::Mkdir( dir + _T("/mods") ) ||
+                  !wxFileName::Mkdir( dir + _T("/maps") ) ||
+                  !wxFileName::Mkdir( dir + _T("/base") ) ||
+                  !wxFileName::Mkdir( dir + _T("/demos") ) ||
+                  !wxFileName::Mkdir( dir + _T("/screenshots")  ) )
+                )
+              )
             {
                 if ( dir.IsEmpty() ) dir = wxFileName::GetHomeDir() + _T("/spring");
                 wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + _T("/mods\n") + dir + _T("/maps\n") + dir + _T("/base\n") );
+                return;
+            }
+            else
+            {
+              #ifdef __WXGTK__
+              if ( wxFileName::FileExists( _T("/usr/share/games/spring/uikeys.txt") ) ) /// this hardcoded path is a bit dumb but it's too head in the code to do proper spring path detection
+              {
+                wxCopyFile( _T("/usr/share/games/spring/uikeys.txt"), dir + _T("/uikeys.txt"), false );
+              }
+              #endif
             }
         }
         sett().SetSpringDir(dir);

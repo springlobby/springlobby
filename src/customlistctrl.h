@@ -77,8 +77,8 @@ protected:
 
 public:
 	customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
-                    const wxSize& sz,long style, wxString name, UserActions::ActionType hlaction = UserActions::ActHighlight,
-                    bool highlight = true);
+                    const wxSize& sz,long style, wxString name, bool highlight = true,
+                    UserActions::ActionType hlaction = UserActions::ActHighlight);
 
     void OnSelected( wxListEvent& event );
     void OnDeselected( wxListEvent& event );

@@ -16,23 +16,27 @@ class UserMenu;
 class NickListCtrl : public customListCtrl
 {
   public:
-    NickListCtrl( wxWindow* parent, Ui& ui, bool show_header = true, UserMenu* popup = 0  );
+    NickListCtrl( wxWindow* parent, bool show_header = true, UserMenu* popup = 0,
+        bool singleSelectList = true, const wxString& name = _T("NickListCtrl"), bool highlight = true  );
     ~NickListCtrl();
 
-    void AddUser( User& user );
+    virtual void AddUser( const User& user );
+    void AddUser( const UserList& userlist );
     void RemoveUser( const User& user );
 
     void UserUpdated( User& user );
     void UserUpdated( const int& index );
 
-    int GetUserIndex( User& user );
+    int GetUserIndex( const User& user ) const;
+    void GetSelectedUsers( UserList& users ) ;
+    wxArrayString GetSelectedUserNicks( ) ;
 
     void ClearUsers();
 
     void OnActivateItem( wxListEvent& event );
     void OnColClick( wxListEvent& event );
     void OnShowMenu( wxContextMenuEvent& event );
-    void SetTipWindowText( const long item_hit, const wxPoint position);
+    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
     void HighlightItem( long item );
 
@@ -45,10 +49,9 @@ class NickListCtrl : public customListCtrl
     static int wxCALLBACK ComparePlayerrankDOWN(long item1, long item2, long sortData);
     static int wxCALLBACK ComparePlayercountryUP(long item1, long item2, long sortData);
     static int wxCALLBACK ComparePlayercountryDOWN(long item1, long item2, long sortData);
-    void Sort();
+    virtual void Sort();
 
     UserList* m_users;
-    Ui& m_ui;
 
     UserMenu* m_menu;
 

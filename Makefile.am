@@ -450,6 +450,8 @@ springlobby_SOURCES = \
 	src/channel.h \
 	src/channellist.cpp \
 	src/channellist.h \
+	src/channellistctrl.cpp \
+	src/channellistctrl.h \
 	src/chatoptionstab.cpp \
 	src/chatoptionstab.h \
 	src/chatpanel.cpp \
@@ -518,6 +520,8 @@ springlobby_SOURCES = \
 	src/user.h \
 	src/userlist.cpp \
 	src/userlist.h \
+	src/userlistctrl.cpp \
+	src/userlistctrl.h \
 	src/utils.cpp \
 	src/utils.h \
 	src/torrentlistctrl.cpp \

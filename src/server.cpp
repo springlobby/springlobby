@@ -47,13 +47,13 @@ void Server::SetSocket( Socket* sock )
   m_sock = sock;
 }
 
-User& Server::GetUser( const wxString& nickname )
+User& Server::GetUser( const wxString& nickname ) const
 {
   return m_users.GetUser( nickname );
 }
 
 
-bool Server::UserExists( const wxString& nickname )
+bool Server::UserExists( const wxString& nickname ) const
 {
   return m_users.UserExists( nickname );
 }

@@ -27,6 +27,7 @@
 #include "images/spring.xpm"
 #include "images/userchat.xpm"
 
+
 BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 
     EVT_BUTTON ( wxID_APPLY, MainOptionsTab::OnApply )

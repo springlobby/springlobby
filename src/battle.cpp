@@ -120,7 +120,7 @@ void Battle::Leave()
 }
 
 
-int Battle::GetFreeTeamNum( bool excludeme )
+int Battle::GetFreeTeamNum( bool excludeme ) const
 {
   int lowest = 0;
   bool changed = true;
@@ -148,7 +148,7 @@ int Battle::GetFreeTeamNum( bool excludeme )
 }
 
 
-wxColour Battle::GetFreeColour( User *for_whom )
+wxColour Battle::GetFreeColour( User *for_whom ) const
 {
   int lowest = 0;
   bool changed = true;
@@ -314,18 +314,18 @@ bool Battle::HaveMultipleBotsInSameTeam() const
 }
 
 
-User& Battle::GetMe()
+User& Battle::GetMe() const
 {
   return m_serv.GetMe();
 }
 
 
-bool Battle::IsFounderMe()
+bool Battle::IsFounderMe() const
 {
   return (m_opts.founder == m_serv.GetMe().GetNick());
 }
 
-int Battle::GetMyPlayerNum()
+int Battle::GetMyPlayerNum() const
 {
   for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
     if ( &GetUser(i) == &m_serv.GetMe() ) return i;
@@ -728,7 +728,7 @@ void Battle::OnBotUpdated( const wxString& name, const UserBattleStatus& bs )
 }
 
 
-BattleBot* Battle::GetBot( const wxString& name )
+BattleBot* Battle::GetBot( const wxString& name ) const
 {
   std::list<BattleBot*>::const_iterator i;
 
@@ -743,7 +743,7 @@ BattleBot* Battle::GetBot( const wxString& name )
   return 0;
 }
 
-BattleBot* Battle::GetBot( unsigned int index )
+BattleBot* Battle::GetBot( unsigned int index ) const
 {
   if ((m_bot_pos == BOT_SEEKPOS_INVALID) || (m_bot_pos > index)) {
     m_bot_seek = m_bots.begin();
@@ -755,7 +755,7 @@ BattleBot* Battle::GetBot( unsigned int index )
 }
 
 
-unsigned int Battle::GetNumBots()
+unsigned int Battle::GetNumBots() const
 {
   return m_bots.size();
 }

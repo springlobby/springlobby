@@ -29,7 +29,7 @@ SinglePlayerBattle::~SinglePlayerBattle()
 }
 
 
-unsigned int SinglePlayerBattle::GetNumBots()
+unsigned int SinglePlayerBattle::GetNumBots() const
 {
   return m_bots.size();
 }
@@ -50,7 +50,7 @@ BattleBot* SinglePlayerBattle::GetBotByStartPosition( unsigned int startpos )
 }
 
 
-BattleBot* SinglePlayerBattle::GetBot(unsigned int index)
+BattleBot* SinglePlayerBattle::GetBot(unsigned int index) const
 {
   return m_bots[index];
 }
@@ -150,7 +150,7 @@ void SinglePlayerBattle::GetFreePosition( int& x, int& y )
 }
 
 
-wxColour SinglePlayerBattle::GetFreeColour( User *for_whom )
+wxColour SinglePlayerBattle::GetFreeColour( User *for_whom ) const
 {
   unsigned int lowest = 0;
   bool changed = true;
