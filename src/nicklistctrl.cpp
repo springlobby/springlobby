@@ -113,11 +113,6 @@ void NickListCtrl::AddUser( const User& user )
   wxLogDebugFunc(_T(""));
   assert(&user);
 
-  //we shouldn't add users twice
-  if ( GetUserIndex( user ) != -1 ){
-     wxLogWarning(_T("NickListCtrl::AddUser tried to add duplicate, aborted"));
-    return;
-  }
   int index = InsertItem( GetItemCount(), icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
   if(index==-1){
       wxLogMessage(_T("NickListCtrl::AddUser : index==-1"));
@@ -170,10 +165,8 @@ void NickListCtrl::UserUpdated( const int& index )
   User& user = *((User*)GetItemData( index ));
   const UserStatus user_st = user.GetStatus();
   SetItemImage( index, icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 ) );
-  if ( !user_st.offline ) {
-      SetItemColumnImage( index, 1, icons().GetFlagIcon( user.GetCountry() ) );
-      SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
-  }
+  SetItemColumnImage( index, 1, icons().GetFlagIcon( user.GetCountry() ) );
+  SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
     //highlight
@@ -455,16 +448,5 @@ void NickListCtrl::HighlightItem( long item )
     }
 }
 
-void NickListCtrl::GetSelectedUsers(UserList& users)
-{
-    long item = -1;
-	for ( long i = 0; i < GetSelectedItemCount(); ++i )
-	{
-		item = GetNextItem( item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
-		if ( item == -1 ) // means nothing was found
-            return;
-		users.AddUser( *(User*)GetItemData(item)  );
-	}
-}
 
 

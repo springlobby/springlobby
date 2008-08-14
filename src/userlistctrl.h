@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_USERLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_USERLISTCTRL_H
 
-#include "nicklistctrl.h"
+#include "customlistctrl.h"
 #include "tasserver.h"
 
 
@@ -10,26 +10,46 @@
     Don't ever use this for anything that needs constant updating, context menus sorting and the like.\n
     Basically don't use it outside the groupuserdialog without extreme caution.
 **/
-class UserListctrl : public NickListCtrl
+class UserListctrl : public customListCtrl
 {
     public:
-        UserListctrl( wxWindow* parent, bool show_header = true, UserMenu* popup = 0,
-            bool singleSelectList = true, const wxString& name = _T("NickListCtrl"), bool highlight = true  );
+        //! nickname - country
+        typedef std::pair<wxString, wxString> UserData;
+        typedef std::map<unsigned int, UserData> UserDataMap;
+        typedef UserDataMap::const_iterator UserDataMapConstIter;
+
+    public:
+        UserListctrl( wxWindow* parent, const wxString& name = _T("usergrouplist"), bool highlight = false  );
         virtual ~UserListctrl();
 
-        virtual void AddUser( const User& user );
-        void AddUserByName( const wxString& name );
-        wxArrayString GetUserNicks( );
+        void AddUser( const UserData userdata );
+        void AddUser( const UserDataMap& userdata );
+        const UserDataMap& GetUserData() const;
+        void RemoveUsers( const UserDataMap& userdata );
+        UserDataMap GetSelectedUserData() const;
+        wxArrayString GetUserNicks( ) const;
     protected:
-        wxSortedArrayString m_usernames;
+        UserDataMap m_userdata;
+
         //! no-op atm, so i don't get segfault because of missing data
         virtual void Sort();
         virtual void SetTipWindowText( const long item_hit, const wxPoint position);
-        //! i fake a server so can use the User class interface of nicklist to add fake User
-        TASServer m_dummy_server;
+
+        void HighlightItem( long item );
+
+        bool IsInList( const UserData userdata );
+        UserDataMapConstIter FindData( const UserData userdata );
+
         enum {
             USERLIST = wxID_HIGHEST
         };
+
+        struct {
+          int col;
+          bool direction;
+        } m_sortorder[2];
+
+
 
 };
 

@@ -33,25 +33,30 @@ GroupUserDialog::GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString
     wxBoxSizer* top_sizer = new wxBoxSizer ( wxHORIZONTAL );
     wxBoxSizer* leftCol = new wxBoxSizer ( wxVERTICAL );
     wxBoxSizer* rightCol = new wxBoxSizer ( wxVERTICAL );
-    m_all_users = new NickListCtrl( this, true, 0, false, _T("AllUsersGroup"), false );
-    m_group_users = new UserListctrl( this, true, 0, false, _T("GroupUsersGroup"), false );
+    m_all_users = new UserListctrl( this, _T("AllUsersGroup"), false );
+    m_group_users = new UserListctrl( this, _T("GroupUsersGroup"), false );
 
     //populate lists
+    typedef UserListctrl::UserData UserData;
     const UserList& userlist = ui().GetServer().GetUserList();
-    m_all_users->AddUser( userlist );
-
+    for ( unsigned int i = 0; i < userlist.GetNumUsers(); ++i)
+    {
+        wxString name = userlist.GetUser( i ).GetNick();
+        wxString country = userlist.GetUser( i ).GetCountry();
+        if ( !useractions().IsKnown( name ) )
+            m_all_users->AddUser( UserData( name, country ) );
+    }
 
     wxSortedArrayString groupuser = sett().GetPeopleList( m_groupname );
     unsigned int num = groupuser.GetCount();
     for ( unsigned int i = 0; i < num; ++i)
     {
-        if ( userlist.UserExists( groupuser[i] ) ) {
-            const User u = userlist.GetUser( groupuser[i] );
-            m_group_users->AddUser( u );
-        } else {
-            m_group_users->AddUserByName( groupuser[i] );
-        }
+        wxString name = groupuser[i];
+        wxString country = wxEmptyString;
+        if ( userlist.UserExists( name ) )
+            country = userlist.GetUser( groupuser[i] ).GetCountry();
 
+        m_group_users->AddUser( UserData( name, country ) );
     }
 
     m_add_users = new wxButton( this, ID_BUTTON_ADD, _("Add selected") );
@@ -93,9 +98,7 @@ void GroupUserDialog::OnCancel ( wxCommandEvent& event )
 
 void GroupUserDialog::OnAdd ( wxCommandEvent& event )
 {
-    UserList sel_users;
-    m_all_users->GetSelectedUsers( sel_users );
-    m_group_users-> NickListCtrl:: AddUser( sel_users );
+    m_group_users->AddUser( m_all_users->GetSelectedUserData( ) );
 }
 
 void GroupUserDialog::OnDelete ( wxCommandEvent& event )

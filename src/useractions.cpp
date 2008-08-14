@@ -102,18 +102,8 @@ wxSortedArrayString UserActions::GetGroupNames() const
 
 void UserActions::AddUserToGroup( const wxString& group, const wxString& name )
 {
-    if ( m_knownUsers.Index( name ) != -1 )
-    {
-        customMessageBoxNoModal( SL_MAIN_ICON, _("To prevent logical inconsistencies, adding a user to more than one group is not allowed"),
-            _("Cannot add user to group") );
-            return;
-    }
-    if ( ui().IsThisMe( name ) )
-    {
-        customMessageBoxNoModal( SL_MAIN_ICON, _("No good can come from adding yourself to a group"),
-            _("Cannot add yourself to group") );
-            return;
-    }
+    if ( IsKnown( name , false ) || ui().IsThisMe( name ) )
+        return;
     m_groupMap[group].Add(name);
     sett().SetPeopleList( m_groupMap[group], group );
     Init();
@@ -165,9 +155,15 @@ wxColor UserActions::GetGroupColor( const wxString& group )
     return sett().GetGroupHLColor( group );
 }
 
-bool UserActions::IsKnown( const wxString& name )
+bool UserActions::IsKnown( const wxString& name, bool outputWarning ) const
 {
-    return ( m_knownUsers.Index( name ) != -1 );
+    bool ret = m_knownUsers.Index( name ) != -1;
+    if ( outputWarning ){
+        customMessageBoxNoModal( SL_MAIN_ICON, _("To prevent logical inconsistencies, adding a user to more than one group is not allowed"),
+           _("Cannot add user to group") );
+    }
+
+    return ret;
 }
 
 void UserActions::RemoveUser(const wxString& name )

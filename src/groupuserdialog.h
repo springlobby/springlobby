@@ -18,11 +18,12 @@ class GroupUserDialog : public wxDialog
         virtual ~GroupUserDialog();
     protected:
         wxString m_groupname;
-        NickListCtrl* m_all_users;
+        UserListctrl* m_all_users;
         UserListctrl* m_group_users;
         wxButton* m_delete_users;
         wxButton* m_add_users;
         wxBoxSizer* m_main_sizer;
+//        UserList m_users;
 
         void OnOk( wxCommandEvent& event );
 		void OnCancel( wxCommandEvent& event );

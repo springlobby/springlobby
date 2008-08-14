@@ -2,13 +2,45 @@
 #include "ui.h"
 #include "tasserver.h"
 #include "user.h"
+#include "iconimagelist.h"
 
-UserListctrl::UserListctrl(wxWindow* parent, bool show_header, UserMenu* popup, bool singleSelectList,
-                            const wxString& name, bool highlight)
-  : NickListCtrl( parent, show_header , popup, singleSelectList, name, highlight ),
-  m_dummy_server((ui()))
+
+UserListctrl::UserListctrl(wxWindow* parent, const wxString& name, bool highlight)
+  : customListCtrl( parent,wxID_ANY,wxDefaultPosition, wxDefaultSize,
+        wxSUNKEN_BORDER | wxLC_REPORT, name, highlight )
 {
-    //ctor
+  wxListItem col;
+
+  col.SetImage( -1 );
+  InsertColumn( 0, col, _T("Country") );
+
+  col.SetText( _("Nickname") );
+  col.SetImage( -1 );
+  InsertColumn( 1, col, _T("Nickname") );
+
+  m_sortorder[0].col = 0;
+  m_sortorder[0].direction = false;
+  m_sortorder[1].col = 1;
+  m_sortorder[1].direction = true;
+
+
+#if defined(__WXMSW__)
+ /// autosize is part-broken on msw.
+  SetColumnWidth( 0, 55 );
+  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
+#elif defined(__WXMAC__)
+/// autosize is entirely broken on wxmac.
+  SetColumnWidth( 0, 20 );
+  SetColumnWidth( 3, 128 );
+#else
+ /// on wxGTK it works, sort of.
+  SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
+#endif
+
+  SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
+  SetImageList( &icons(), wxIMAGE_LIST_SMALL );
+  SetImageList( &icons(), wxIMAGE_LIST_STATE );
 }
 
 UserListctrl::~UserListctrl()
@@ -16,28 +48,105 @@ UserListctrl::~UserListctrl()
     //dtor
 }
 
-void UserListctrl::AddUser( const User& user )
+void UserListctrl::AddUser( const UserDataMap& userdata )
 {
-    m_usernames.Add( user.GetNick() );
-    NickListCtrl::AddUser( user );
+    for ( UserDataMapConstIter it = userdata.begin(); it != userdata.end(); ++it)
+    {
+        AddUser( it->second );
+    }
 }
 
-
-void UserListctrl::AddUserByName( const wxString& name )
+const UserListctrl::UserDataMap& UserListctrl::GetUserData() const
 {
-    UserStatus st;
-    st.offline = true;
-    User user (m_dummy_server);
-    user.SetNick( name );
-    user.SetStatus( st );
-    AddUser( user );
+    return m_userdata;
 }
+
+void UserListctrl::AddUser( const UserData userdata )
+{
+    SetSelectionRestorePoint();
+
+    if ( IsInList ( userdata ) )
+        return;
+
+    int index = InsertItem( GetItemCount(), icons().GetFlagIcon( userdata.second ) );
+    SetItem( index, 1, userdata.first );
+    SetItemData(index, index );
+    //highlight
+    HighlightItemUser( index, userdata.first );
+    m_userdata[index] = userdata;
+
+    Sort();
+    RestoreSelection();
+
+}
+
 
 void UserListctrl::Sort(){}
 
 void UserListctrl::SetTipWindowText( const long item_hit, const wxPoint position){}
 
-wxArrayString UserListctrl::GetUserNicks( )
+wxArrayString UserListctrl::GetUserNicks( ) const
 {
-    return m_usernames;
+    wxArrayString ret;
+    for ( UserDataMapConstIter it = m_userdata.begin(); it != m_userdata.end(); ++it)
+    {
+        ret.Add( (*it).second.first );
+    }
+    return ret;
+}
+
+UserListctrl::UserDataMap UserListctrl::GetSelectedUserData() const
+{
+    UserDataMap ret;
+    long item = -1;
+	for ( long i = 0; i < GetSelectedItemCount(); ++i )
+	{
+		item = GetNextItem( item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
+		if ( item == -1 ) // means nothing was found
+            return ret;
+        UserDataMapConstIter el = m_userdata.find(item);
+        if ( el != m_userdata.end() )
+            ret[item] = ( el->second );
+	}
+	return ret;
+}
+
+void UserListctrl::RemoveUsers( const UserDataMap& userdata )
+{
+    for ( UserDataMapConstIter it = m_userdata.begin(); it != m_userdata.end(); ++it)
+    {
+        UserDataMapConstIter data = FindData( it->second );
+        if ( data != m_userdata.end() )
+        {
+            m_userdata.erase( data->first );
+            DeleteItem( data->first );
+        }
+    }
+
+
+}
+
+UserListctrl::UserDataMapConstIter UserListctrl::FindData( const UserData userdata )
+{
+    for ( UserDataMapConstIter it = m_userdata.begin(); it != m_userdata.end(); ++it)
+    {
+        if ( it->second.first == userdata.first )
+            return it;
+    }
+    return m_userdata.end();
+}
+
+bool UserListctrl::IsInList( const UserData userdata )
+{
+    UserDataMapConstIter it = FindData( userdata );
+    return ( it != m_userdata.end() );
+}
+
+void UserListctrl::HighlightItem( long item )
+{
+//    User* u = (User*)GetItemData( item ) ;
+//    if ( u != 0 ) {
+//        wxString name = u->GetNick();
+//        HighlightItemUser( item, name );
+//    }
 }
