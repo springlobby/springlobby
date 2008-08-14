@@ -161,6 +161,7 @@ SET(SpringLobbySrc
 	src/customlistctrl.cpp
 	src/flagimages.cpp
 	src/globalevents.cpp
+        src/groupuserdialog.cpp
 	src/httpdownloader.cpp
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
@@ -171,6 +172,7 @@ SET(SpringLobbySrc
 	src/mainsingleplayertab.cpp
 	src/maintorrenttab.cpp
 	src/mainwindow.cpp
+        src/managegroupspanel.cpp
 	src/mapctrl.cpp
 	src/maplistctrl.cpp
 	src/mapselectdialog.cpp

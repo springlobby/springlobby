@@ -873,7 +873,9 @@ springlobby_SOURCES = \
 	src/Helper/wxtextctrlhist.h \
 	src/Helper/wxtextctrlhist.cpp \
 	src/Helper/colorbutton.cpp \
-	src/Helper/colorbutton.h
+	src/Helper/colorbutton.h \
+	src/groupuserdialog.h \
+	src/groupuserdialog.cpp
 
 
 
