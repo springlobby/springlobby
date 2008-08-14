@@ -19,11 +19,11 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString
 
   col.SetText( _("Channel name") );
   col.SetImage( -1 );
-  InsertColumn( 1, col, _T("Channel name") );
+  InsertColumn( 1, col, _T("Channelname") );
 
   col.SetText( _("# users") );
   col.SetImage( -1 );
-  InsertColumn( 2, col, _T("# users") );
+  InsertColumn( 2, col, _T("users") );
 
   m_sortorder[2].col = 0;
   m_sortorder[2].direction = false;
@@ -102,8 +102,8 @@ void ChannelListctrl::Sort()
 {
     for (int i = 1; i >= 0; i--) {
     switch ( m_sortorder[ i ].col ) {
-      case 0 : SortItems( ( m_sortorder[ i ].direction )?&CompareChannelnameUP:&CompareChannelnameDOWN, 0 ); break;
-      case 1 : SortItems( ( m_sortorder[ i ].direction )?&CompareNumUsersUP:&CompareNumUsersDOWN , 0 ); break;
+      case 1 : SortItems( ( m_sortorder[ i ].direction )?&CompareChannelnameUP:&CompareChannelnameDOWN, 0 ); break;
+      case 2 : SortItems( ( m_sortorder[ i ].direction )?&CompareNumUsersUP:&CompareNumUsersDOWN , 0 ); break;
 
     }
   }
@@ -123,7 +123,7 @@ void ChannelListctrl::HighlightItem(long item)
   */
 int wxCALLBACK ChannelListctrl::CompareNumUsersDOWN(long item1, long item2, long sortData)
 {
-    return  item1 <  item2 ;
+    return  (*(ChannelData*) item1 ).num_users <  (*(ChannelData*) item2 ).num_users;
 }
 
 /** @brief CompareNumUsersUP
@@ -132,7 +132,7 @@ int wxCALLBACK ChannelListctrl::CompareNumUsersDOWN(long item1, long item2, long
   */
 int wxCALLBACK ChannelListctrl::CompareNumUsersUP(long item1, long item2, long sortData)
 {
-    return  item1 >=  item2 ;
+    return  (*(ChannelData*) item1 ).num_users >=  (*(ChannelData*) item2 ).num_users;
 }
 
 /** @brief CompareChannelnameDOWN
@@ -141,7 +141,7 @@ int wxCALLBACK ChannelListctrl::CompareNumUsersUP(long item1, long item2, long s
   */
 int wxCALLBACK ChannelListctrl::CompareChannelnameDOWN(long item1, long item2, long sortData)
 {
-
+    return (*(ChannelData*) item1 ).name.Upper() <  (*(ChannelData*) item2 ).name.Upper();
 }
 
 /** @brief CompareChannelnameUP
@@ -150,7 +150,7 @@ int wxCALLBACK ChannelListctrl::CompareChannelnameDOWN(long item1, long item2, l
   */
 int wxCALLBACK ChannelListctrl::CompareChannelnameUP(long item1, long item2, long sortData)
 {
-
+    return (*(ChannelData*) item1 ).name.Upper() >=  (*(ChannelData*) item2 ).name.Upper();
 }
 
 void ChannelListctrl::OnColClick( wxListEvent& event )
@@ -162,8 +162,8 @@ void ChannelListctrl::OnColClick( wxListEvent& event )
   SetColumn( m_sortorder[0].col, col );
 
   int i;
-  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
-  if (i > 3) { i = 3; }
+  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 3; ++i ) {}
+  if (i > 2) { i = 2; }
   for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
   m_sortorder[0].col = event.GetColumn();
   m_sortorder[0].direction = !m_sortorder[0].direction;
