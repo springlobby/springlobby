@@ -24,6 +24,7 @@ class settings_frame;
 class wxMenuItem;
 class wxMenuBar;
 class wxMenu;
+class ChannelChooser;
 class AutojoinChannelDialog;
 
 // FIXME shouldn't copy this here
@@ -67,6 +68,7 @@ class MainWindow : public wxFrame
     void OnShowDocs( wxCommandEvent& event );
     void OnShowSettingsPP( wxCommandEvent& event );
     void OnShowToolTips( wxCommandEvent& event );
+    void OnShowChannelChooser( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
 
@@ -114,6 +116,8 @@ class MainWindow : public wxFrame
     settings_frame* se_frame;
     bool se_frame_active;
 
+    ChannelChooser* m_channel_chooser;
+
     DECLARE_EVENT_TABLE()
 };
 
@@ -138,7 +142,8 @@ enum
     MENU_START_TORRENT,
     MENU_STOP_TORRENT,
     MENU_SHOW_TOOLTIPS,
-    MENU_AUTOJOIN_CHANNELS
+    MENU_AUTOJOIN_CHANNELS,
+    MENU_CHANNELCHOOSER
 
 };
 

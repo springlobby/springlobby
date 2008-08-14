@@ -53,6 +53,7 @@
 
 #include "updater/versionchecker.h"
 #include "autojoinchanneldialog.h"
+#include "Helper/channelchooser.h"
 
 #ifdef HAVE_WX28
 #include <wx/aboutdlg.h>
@@ -75,6 +76,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
   EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
   EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
+  EVT_MENU( MENU_CHANNELCHOOSER, MainWindow::OnShowChannelChooser )
   EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
 END_EVENT_TABLE()
@@ -83,7 +85,7 @@ END_EVENT_TABLE()
 
 MainWindow::MainWindow( Ui& ui ) :
   wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
-  m_ui(ui),m_autojoin_dialog(NULL)
+  m_ui(ui),m_autojoin_dialog(NULL),m_channel_chooser(NULL)
 {
   SetIcon( wxIcon(springlobby_xpm) );
   wxMenu *menuFile = new wxMenu;
@@ -98,6 +100,7 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
+  m_menuTools->Append(MENU_CHANNELCHOOSER, _("Channel ch&ooser"));
   m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
   m_menuTools->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels..."));
   m_menuTools->AppendSeparator();
@@ -549,4 +552,12 @@ void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& event )
 {
     m_autojoin_dialog = new AutojoinChannelDialog (this);
     m_autojoin_dialog->Show();
+}
+
+void MainWindow::OnShowChannelChooser( wxCommandEvent& event )
+{
+    if ( m_channel_chooser && m_channel_chooser->IsShown() )
+        return;
+    m_channel_chooser = new ChannelChooser( this, -1, _("Choose channels to join") );
+    m_channel_chooser->Show(true);
 }
