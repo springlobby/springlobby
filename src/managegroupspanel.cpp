@@ -16,6 +16,7 @@
 #include "ui.h"
 #include <cmath>
 #include "groupuserdialog.h"
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE( ManageGroupsPanel, wxScrolledWindow )
   EVT_CHECKBOX( wxID_ANY, ManageGroupsPanel::OnCheckBox )
@@ -69,8 +70,15 @@ wxSizer* ManageGroupsPanel::GetGroupSizer( const wxString& group )
     wxBoxSizer* colorBox = new wxBoxSizer( wxHORIZONTAL );
     wxStaticText* cLabel = new wxStaticText( this, -1, _("Highlight color") );
     colorBox->Add( cLabel,0, wxBOTTOM, 5 );
-    ColorButton* m_color = new ColorButton( this, ID_COLOR_BUTTON, sett().GetGroupHLColor(group), wxDefaultPosition, wxSize( 20,20 ),
-                                        0,wxDefaultValidator, group );
+
+    int id = ID_COLOR_BUTTON;
+
+    static unsigned int idcount = 0;
+    id += idcount;
+    idcount++;
+    Connect( id, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ManageGroupsPanel::OnColorButton ) );
+    ColorButton* m_color = new ColorButton( this, id, useractions().GetGroupColor(group), wxDefaultPosition, wxSize( 20,20 ),
+                                        wxBU_AUTODRAW,wxDefaultValidator, group );
     colorBox->Add( m_color,0, wxLEFT|wxBOTTOM, 5 );
     wxButton* userButton = new wxButton ( this, ID_USER_BUTTON, _("add/remove users"),wxDefaultPosition, wxSize( -1,30 ),
                                         0,wxDefaultValidator, group  );
@@ -114,12 +122,19 @@ void ManageGroupsPanel::OnColorButton( wxCommandEvent& event )
 {
     ColorButton* origin = (ColorButton*) event.GetEventObject();
     wxString group = origin->GetName();
-    wxColour c = GetColourFromUser( this, origin->GetColor() );
-    if ( c.IsOk() )
+    wxColour c = GetColourFromUser( this, origin->GetColor(), group );
+    //if ( c.IsOk() )
+
     {
+
         origin->SetColor( c );
         useractions().SetGroupColor( group, c );
     }
+    #ifdef __WXMSW__
+        ReloadGroupSizer();
+        Refresh();
+
+    #endif
 }
 
 void ManageGroupsPanel::OnAddButton( wxCommandEvent& event )

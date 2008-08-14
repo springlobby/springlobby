@@ -34,7 +34,10 @@ void ColorButton::SetColor( const wxColor& color )
 {
     m_color = color;
     SetBitmapLabel ( GetBitmapFromColor( color ) );
-    SetBackgroundColour( color );
+    //SetBitmapHover ( GetBitmapFromColor( color ) );
+    #ifndef __WXMSW__
+        SetBackgroundColour( color );
+    #endif
 }
 
 wxBitmap ColorButton::GetBitmapFromColor( const wxColor& color )
