@@ -161,6 +161,8 @@ bool SpringLobbyApp::OnInit()
 
   m_timer->Start( TIMER_INTERVAL );
 
+  sett().SetSettingsVersion(); /// bump settings version number
+
     return true;
 }
 
