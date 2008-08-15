@@ -295,7 +295,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
  wxArrayString cache;
   try
   {
-    cache = GetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".mapoptions") );
+    cache = GetCacheFile( GetFileCachePath( name, _T(""), false ) + _T(".mapoptions") );
     unsigned int count = cache.GetCount();
     for (int i = 0; i < count; ++i)
     {
@@ -388,7 +388,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
     for ( unsigned int pos = 0; pos < entrycount; pos++ ) optiontoken << entry[pos] << _T('\t');
     cache.Add( optiontoken );
     }
-  SetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".mapoptions"), cache );
+  SetCacheFile( GetFileCachePath( name, _T(""), false ) + _T(".mapoptions"), cache );
   }
   return ret;
 }
