@@ -125,6 +125,18 @@ bool Settings::IsFirstRun()
 }
 
 
+void Settings::SetSettingsVersion()
+{
+   m_config->Write( _T("/General/SettingsVersion"), SETTINGS_VERSION );
+}
+
+
+unsigned int  Settings::GetSettingsVersion()
+{
+   return m_config->Read( _T("/General/SettingsVersion"), 0l );
+}
+
+
 bool Settings::UseOldSpringLaunchMethod()
 {
     return m_config->Read( _T("/Spring/UseOldLaunchMethod"), 0l );
