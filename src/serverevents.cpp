@@ -201,7 +201,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
   battle.SetHostMod( mod, wxEmptyString );
 
   if ( useractions().DoActionOnUser( UserActions::ActNotifBattle, user.GetNick() ) )
-        actNotifBox( SL_MAIN_ICON, user.GetNick() + _(" joined battle ") + title );
+        actNotifBox( SL_MAIN_ICON, user.GetNick() + _(" opened battle ") + title );
 
   m_ui.OnBattleOpened( battle );
   if ( user.Status().in_game ) {
