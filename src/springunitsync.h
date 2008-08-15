@@ -77,7 +77,7 @@ class SpringUnitSync : public IUnitSync
 
   private:
 
-    static wxString _GetCachedMinimapFileName( const wxString& mapname, int width = -1, int height = -1 );
+    wxString _GetCachedMinimapFileName( const wxString& mapname, int width = -1, int height = -1 );
 
     UnitSyncMap m_map;
 

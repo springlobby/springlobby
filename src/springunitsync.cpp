@@ -721,13 +721,10 @@ wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
 
 wxString SpringUnitSync::_GetCachedMinimapFileName( const wxString& mapname, int width, int height )
 {
-  wxString path = sett().GetCachePath();
-  wxString fname =  mapname;
-  fname.Replace( _T("."), _T("_") );
-  fname.Replace( _T(" "), _T("_") );
-  if ( width != -1 ) fname << wxString::Format( _T("%dx%d"), width, height );
-  fname << _T(".png");
-  return path << fname;
+  wxString path = GetFileCachePath( mapname, _T(""), false );
+  if ( width != -1 ) path << wxString::Format( _T("-%dx%d"), width, height );
+  path << _T(".minimap.png");
+  return path;
 }
 
 
