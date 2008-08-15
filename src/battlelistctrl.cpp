@@ -135,17 +135,17 @@ void BattleListCtrl::HighlightItem( long item )
     //prioritize highlighting host over joined players
     Battle b = ui().GetServer().GetBattle( GetItemData(item) );
     wxString host = b.GetFounder().GetNick();
-    if ( useractions().DoActionOnUser( m_highlightAction, host ) ) {
-        HighlightItemUser( item, host );
+    HighlightItemUser( item, host );
+    if ( useractions().DoActionOnUser( m_highlightAction, host ) )
         return;
-    }
+
     //to avoid color flicker check first if highlighting should be done
     //and return if it should
     for ( unsigned int i = 0; i < b.GetNumUsers(); ++i){
         wxString name = b.GetUser(i).GetNick();
-        if ( useractions().DoActionOnUser( m_highlightAction, name ) ) {
-            HighlightItemUser( item, name );
-        }
+        HighlightItemUser( item, name );
+        if ( useractions().DoActionOnUser( m_highlightAction, name ) )
+            return;
     }
 }
 

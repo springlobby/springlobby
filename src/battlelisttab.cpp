@@ -70,7 +70,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   m_battlelist_sizer = new wxBoxSizer( wxVERTICAL );
 
   m_battle_list = new BattleListCtrl( this, m_ui );
-  m_battle_list->SetHighLightAction ( UserActions::ActNotifBattle );
+  m_battle_list->SetHighLightAction ( UserActions::ActHighlight );
   m_battlelist_sizer->Add( m_battle_list, 1, wxALL|wxEXPAND, 5 );
 
   m_main_sizer->Add( m_battlelist_sizer, 1, wxEXPAND, 5 );;
