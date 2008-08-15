@@ -65,9 +65,7 @@ class SpringUnitSync : public IUnitSync
 
     wxImage GetMinimap( const wxString& mapname, int max_w, int max_h, bool store_size = false );
 
-    bool CacheMapInfo( const wxString& mapname );
     bool CacheMinimap( const wxString& map );
-    bool CacheModUnits( const wxString& mod );
     bool ReloadUnitSyncLib();
 
     void SetSpringDataPath( const wxString& path );
@@ -104,9 +102,6 @@ class SpringUnitSync : public IUnitSync
     wxArrayString GetCacheFile( const wxString& path );
     //! write a file where each element of the array is a line
     void SetCacheFile( const wxString& path, const wxArrayString& data );
-
-    MapInfo _LoadMapInfoExCache( const wxString& mapname );
-    void _SaveMapInfoExCache( const wxString& mapname, const MapInfo& info );
 
     bool _LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc );
     void _FreeUnitSyncLib();

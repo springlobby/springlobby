@@ -292,34 +292,103 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
   GameOptions ret;
-  int count = susynclib()->GetMapOptionCount(name);
-  for (int i = 0; i < count; ++i)
+ wxArrayString cache;
+  try
   {
-    wxString key = susynclib()->GetOptionKey(i);
-    switch (susynclib()->GetOptionType(i))
+    cache = GetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions") );
+    unsigned int count = cache.GetCount();
+    for (int i = 0; i < count; ++i)
     {
-    case opt_float:
-      ret.float_map[key] = mmOptionFloat(susynclib()->GetOptionName(i),key,
-          susynclib()->GetOptionDesc(i),susynclib()->GetOptionNumberDef(i), susynclib()->GetOptionNumberStep(i),
-          susynclib()->GetOptionNumberMin(i),susynclib()->GetOptionNumberMax(i));
-      break;
-    case opt_bool:
-      ret.bool_map[key] = mmOptionBool(susynclib()->GetOptionName(i),key,
-          susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i));
-      break;
-    case opt_string:
-      ret.string_map[key] = mmOptionString(susynclib()->GetOptionName(i),key,
-          susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i));
-      break;
-    case opt_list:
-       ret.list_map[key] = mmOptionList(susynclib()->GetOptionName(i),key,
-          susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
-       for (int j = 0; j < susynclib()->GetOptionListCount(i); ++j)
-       {
-         ret.list_map[key].addItem(susynclib()->GetOptionListItemKey(i,j),susynclib()->GetOptionListItemName(i,j),
-                            susynclib()->GetOptionListItemDesc(i,j));
-       }
+      // key  type
+      wxArrayString params = wxStringTokenize( cache[i], _T("\t") );
+      wxString key = params[0];
+      switch ( s2l( params[1] ) )
+      {
+      case opt_float:
+        // name description default_value step_size min_value max_value
+        ret.float_map[key] = mmOptionFloat( params[2], key,
+            params[3], (float)s2d( params[4] ), (float)s2d( params[5] ),
+            (float)s2d( params[6] ), (float)s2d( params[7] ) );
+        break;
+      case opt_bool:
+        // name description default_value
+        ret.bool_map[key] = mmOptionBool( params[2], key,
+            params[3], (bool)s2l( params[4] ) );
+        break;
+      case opt_string:
+        // name description default_value max_lenght
+        ret.string_map[key] = mmOptionString( params[2], key,
+            params[3], params[4], (unsigned int) s2l( params[5] ) );
+        break;
+      case opt_list:
+         ret.list_map[key] = mmOptionList( params[2],key,
+            params[3], params[4] );
+         for (int j = 6; j < ( (unsigned int)s2l(params[5]) * 3 + 6); j + 3)
+         {
+           ret.list_map[key].addItem( params[j], params[j+1], params[j+2] );
+         }
+      }
     }
+  }
+  catch (...)
+  {
+    int count = susynclib()->GetMapOptionCount(name);
+    for (int i = 0; i < count; ++i)
+    {
+      wxArrayString entry;
+      wxString key = susynclib()->GetOptionKey(i);
+      entry.Add( key );
+      entry.Add( TowxString( susynclib()->GetOptionType(i) ) );
+      switch (susynclib()->GetOptionType(i))
+      {
+      case opt_float:
+        ret.float_map[key] = mmOptionFloat(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionNumberDef(i), susynclib()->GetOptionNumberStep(i),
+            susynclib()->GetOptionNumberMin(i),susynclib()->GetOptionNumberMax(i));
+        entry.Add( susynclib()->GetOptionName(i) );
+        entry.Add( susynclib()->GetOptionDesc(i) );
+        entry.Add( TowxString( susynclib()->GetOptionNumberDef(i) ) );
+        entry.Add( TowxString( susynclib()->GetOptionNumberStep(i) ) );
+        entry.Add( TowxString( susynclib()->GetOptionNumberMin(i) ) );
+        entry.Add( TowxString( susynclib()->GetOptionNumberMax(i)) );
+        break;
+      case opt_bool:
+        ret.bool_map[key] = mmOptionBool(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i));
+        entry.Add( susynclib()->GetOptionName(i) );
+        entry.Add( susynclib()->GetOptionDesc(i) );
+        entry.Add( TowxString( susynclib()->GetOptionBoolDef(i) ) );
+        break;
+      case opt_string:
+        ret.string_map[key] = mmOptionString(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i));
+        entry.Add( susynclib()->GetOptionName(i) );
+        entry.Add( susynclib()->GetOptionDesc(i) );
+        entry.Add( susynclib()->GetOptionStringDef(i) );
+        entry.Add( TowxString( susynclib()->GetOptionStringMaxLen(i) ) );
+        break;
+      case opt_list:
+         ret.list_map[key] = mmOptionList(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
+        entry.Add( susynclib()->GetOptionName(i) );
+        entry.Add( susynclib()->GetOptionDesc(i) );
+        entry.Add( susynclib()->GetOptionListDef(i) );
+        entry.Add( TowxString( susynclib()->GetOptionListCount(i) ) );
+         for (int j = 0; j < susynclib()->GetOptionListCount(i); ++j)
+         {
+           ret.list_map[key].addItem(susynclib()->GetOptionListItemKey(i,j),susynclib()->GetOptionListItemName(i,j),
+                              susynclib()->GetOptionListItemDesc(i,j));
+           entry.Add( susynclib()->GetOptionListItemKey(i,j) );
+           entry.Add( susynclib()->GetOptionListItemName(i,j) );
+           entry.Add( susynclib()->GetOptionListItemDesc(i,j) );
+         }
+      }
+    wxString optiontoken;
+    unsigned int entrycount = entry.GetCount();
+    for ( unsigned int pos = 0; pos < entrycount; pos++ ) optiontoken << entry[pos] << _T('\t');
+    cache.Add( optiontoken );
+    }
+  SetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions"), cache );
   }
   return ret;
 }
@@ -589,12 +658,26 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
     jarini = susynclib()->FindFilesVFS( jarini, FileName );
   }
 
-  /// list mod's LuaAI
-  try { /// Older versions of unitsync does not have these functions.
-    const int LuaAICount = susynclib()->GetLuaAICount( modname );
-    for ( int i = 0; i < LuaAICount; i++ ) ret.Add( _T( "LuaAI:" ) +  susynclib()->GetLuaAIName( i ) );
-  } catch (...) {}
+  wxArrayString cache;
+  try
+  {
+    cache = GetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".luaai") );
 
+    unsigned int aicount = cache.GetCount();
+    for ( unsigned int count = 0; count < aicount; count++ ) ret.Add( cache[count] );
+  } catch (...)
+  {
+    /// list mod's LuaAI
+    try { /// Older versions of unitsync does not have these functions.
+      const int LuaAICount = susynclib()->GetLuaAICount( modname );
+      for ( int i = 0; i < LuaAICount; i++ )
+      {
+         ret.Add( _T( "LuaAI:" ) +  susynclib()->GetLuaAIName( i ) );
+         cache.Add( _T( "LuaAI:" ) +  susynclib()->GetLuaAIName( i ) );
+      }
+    } catch (...) {}
+    SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".luaai"), cache );
+  }
   return ret;
 }
 
@@ -689,32 +772,66 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int max_w, int max_
 MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
 {
   MapInfo info;
+  wxArrayString cache;
   try
   {
-    info = _LoadMapInfoExCache( mapname );
+    cache = GetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex") );
+
+    ASSERT_RUNTIME( cache.GetCount() >= 10, _T("not enought lines found in cache info ex") );
+    info.author = cache[0];
+    info.tidalStrength =  s2l( cache[1] );
+    info.gravity = s2l( cache[2] );
+    info.maxMetal = s2l( cache[3] );
+    info.extractorRadius = s2d( cache[4] );
+    info.minWind = s2l( cache[5] );
+    info.maxWind = s2l( cache[6] );
+    info.width = s2l( cache[7] );
+    info.height = s2l( cache[8] );
+    info.posCount = s2l( cache[9] );
+
+    wxArrayString posinfo = wxStringTokenize( cache[10], _T(' '), wxTOKEN_RET_EMPTY );
+    for ( int i = 0; i < info.posCount; i++)
+    {
+       StartPos position;
+       position.x = s2l( posinfo[i].BeforeFirst( _T('-') ) );
+       position.y = s2l( posinfo[i].AfterFirst( _T('-') ) );
+       info.positions[i] = position;
+    }
+
+    unsigned int LineCount = cache.GetCount();
+    for ( unsigned int i = 11; i < LineCount; i++ ) info.description << cache[i] << _T('\n');
+
   }
   catch (...)
   {
     info = susynclib()->GetMapInfoEx( mapname, 1 );
-    try
+
+    cache.Add ( info.author );
+    cache.Add( TowxString( info.tidalStrength ) );
+    cache.Add( TowxString( info.gravity ) );
+    cache.Add( TowxString( info.maxMetal ) );
+    cache.Add( TowxString( info.extractorRadius ) );
+    cache.Add( TowxString( info.minWind ) );
+    cache.Add( TowxString( info.maxWind )  );
+    cache.Add( TowxString( info.width ) );
+    cache.Add( TowxString( info.height ) );
+    cache.Add( TowxString( info.posCount ) );
+
+    wxString postring;
+    for ( int i = 0; i < info.posCount; i++)
     {
-      _SaveMapInfoExCache( mapname, info );
+       postring << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
     }
-    catch (...) {}
+    cache.Add( postring );
+
+    wxArrayString descrtoken = wxStringTokenize( info.description, _T('\n') );
+    unsigned int desclinecount = descrtoken.GetCount();
+    for ( unsigned int count = 0; count < desclinecount; count++ ) cache.Add( descrtoken[count] );
+
+    SetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex"), cache );
   }
 
   return info;
-}
-
-
-bool SpringUnitSync::CacheMapInfo( const wxString& mapname )
-{
-    try
-    {
-      _SaveMapInfoExCache( mapname, susynclib()->GetMapInfoEx( mapname, 1 ) );
-    }
-    catch (...) { return false; }
-    return true;
 }
 
 
@@ -767,12 +884,6 @@ bool SpringUnitSync::CacheMinimap( const wxString& mapname )
 
   }
   return true;
-}
-
-
-bool SpringUnitSync::CacheModUnits( const wxString& mod )
-{
-  return false;
 }
 
 
@@ -841,89 +952,6 @@ void SpringUnitSync::SetCacheFile( const wxString& path, const wxArrayString& da
   }
   file.Write();
   file.Close();
-}
-
-
-MapInfo SpringUnitSync::_LoadMapInfoExCache( const wxString& mapname )
-{
-  wxLogDebugFunc( mapname );
-
-  wxString path = sett().GetCachePath() + mapname + _T(".infoex");
-
-  ASSERT_RUNTIME( wxFileName::FileExists( path ), _T("No map info ex cache file found.") );
-
-  wxFile f( path, wxFile::read );
-
-  ASSERT_RUNTIME( f.IsOpened(), _T("failed to open map info ex cache file for reading.") );
-  ASSERT_RUNTIME( f.Length() > 0 , _T("map info ex cache file has lenght 0") );
-  char* buff = new char[f.Length()];
-  f.Read( buff, f.Length() );
-  std::string tempstring = buff;
-  delete buff;
-  ASSERT_RUNTIME( tempstring.length() > 0, _T("map info ex cache file is empty") );
-  wxString stringbuff = WX_STRING(tempstring);
-  ASSERT_RUNTIME( !stringbuff.IsEmpty(), _T("failed to convert to wxString the map info ex cache file") );
-  wxArrayString data = wxStringTokenize( stringbuff , _T('\t'), wxTOKEN_RET_EMPTY );
-  MapInfo info;
-
-  ASSERT_RUNTIME( data.GetCount() > 0, _T("no lines found in cache info ex") );
-  info.description = data[0];
-  ASSERT_RUNTIME( data[1].ToLong( (long*)&info.tidalStrength ), _T("failed to parse the tidal in map info ex cache file") );
-  ASSERT_RUNTIME( data[2].ToLong( (long*)&info.gravity ), _T("failed to parse the gravity in map info ex cache file") );
-  ASSERT_RUNTIME( data[3].ToLong( (long*)&info.maxMetal ), _T("failed to parse the extractor maxmetal in map info ex cache file") );
-  ASSERT_RUNTIME( data[4].ToDouble( (double*)&info.extractorRadius ), _T("failed to parse the mexradius in map info ex cache file") );
-  ASSERT_RUNTIME( data[5].ToLong( (long*)&info.minWind ), _T("failed to parse the minwind in map info ex cache file") );
-  ASSERT_RUNTIME( data[6].ToLong( (long*)&info.maxWind ), _T("failed to parse the maxwind in map info ex cache file") );
-  ASSERT_RUNTIME( data[7].ToLong( (long*)&info.width ), _T("failed to parse the width in map info ex cache file") );
-  ASSERT_RUNTIME( data[8].ToLong( (long*)&info.height ), _T("failed to parse the height in map info ex cache file") );
-  ASSERT_RUNTIME( data[9].ToLong( (long*)&info.posCount ), _T("failed to parse the poscount in map info ex cache file") );
-
-  wxArrayString posinfo = wxStringTokenize( data[10], _T(' '), wxTOKEN_RET_EMPTY );
-  for ( int i = 0; i < info.posCount; i++)
-  {
-     StartPos position;
-     ASSERT_RUNTIME( posinfo[i].BeforeFirst( _T('-') ).ToLong( (long*)&position.x ), _T("failed to parse the x coordinate in map info ex cache file") );
-     ASSERT_RUNTIME( posinfo[i].AfterFirst( _T('-') ).ToLong( (long*)&position.y ), _T("failed to parse the y coordinate in map info ex cache file") );
-     info.positions[i] = position;
-  }
-  if ( data.GetCount() > 11 )
-  {
-    info.author = data[11];
-  }
-
-  f.Close();
-  return info;
-}
-
-
-void SpringUnitSync::_SaveMapInfoExCache( const wxString& mapname, const MapInfo& info )
-{
-  wxLogDebugFunc( _T("") );
-  wxString path = sett().GetCachePath() + mapname + _T(".infoex");
-
-  wxFile f( path.c_str(), wxFile::write );
-  ASSERT_RUNTIME( f.IsOpened(), _T("failed to open map info ex cache file for writing.") );
-
-  wxString buff;
-  buff << info.description << _T('\t');
-  buff << TowxString( info.tidalStrength ) << _T('\t');
-  buff << TowxString( info.gravity ) << _T('\t');
-  buff << TowxString( info.maxMetal ) << _T('\t');
-  buff << TowxString( info.extractorRadius ) << _T('\t');
-  buff << TowxString( info.minWind ) << _T('\t');
-  buff << TowxString( info.maxWind ) << _T('\t');
-  buff << TowxString( info.width ) << _T('\t');
-  buff << TowxString( info.height ) << _T('\t');
-  buff << TowxString( info.posCount ) << _T('\t');
-  for ( int i = 0; i < info.posCount; i++)
-  {
-     buff << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
-  }
-  buff << _T('\t');
-  buff << info.author << _T('\t');
-
-  f.Write( buff );
-  f.Close();
 }
 
 
