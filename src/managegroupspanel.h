@@ -29,9 +29,9 @@ class ManageGroupsPanel: public wxScrolledWindow
         GroupUserDialog* m_user_dialog;
 
         enum {
-          ID_COLOR_BUTTON = wxID_HIGHEST,
-          ID_ADD_BUTTON,
-          ID_DEL_BUTTON,
+          ID_COLOR_BUTTON ,
+          ID_ADD_BUTTON ,
+          ID_DEL_BUTTON ,
           ID_USER_BUTTON
 
         };
@@ -49,3 +49,11 @@ class ManageGroupsPanel: public wxScrolledWindow
 };
 
 #endif
+//
+//enum {
+//          ID_COLOR_BUTTON = wxID_HIGHEST - 600,
+//          ID_ADD_BUTTON = ID_COLOR_BUTTON -1,
+//          ID_DEL_BUTTON = ID_COLOR_BUTTON -2,
+//          ID_USER_BUTTON = ID_COLOR_BUTTON -3
+//
+//        };
