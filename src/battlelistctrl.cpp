@@ -15,6 +15,7 @@
 #include "countrycodes.h"
 #include "settings.h"
 #include "settings++/custom_dialogs.h"
+#include "useractions.h"
 
 BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 
@@ -131,8 +132,20 @@ BattleListCtrl::~BattleListCtrl()
 
 void BattleListCtrl::HighlightItem( long item )
 {
-    wxString name = ui().GetServer().GetBattle( GetItemData(item) ).GetFounder().GetNick();
-    HighlightItemUser( item, name );
+    //prioritize highlighting host over joined players
+    Battle b = ui().GetServer().GetBattle( GetItemData(item) );
+    wxString host = b.GetFounder().GetNick();
+    if ( useractions().IsKnown( host ) ) {
+        HighlightItemUser( item, host );
+        return;
+    }
+    for ( unsigned int i = 0; i < b.GetNumUsers(); ++i){
+        wxString name = b.GetUser(i).GetNick();
+        if ( useractions().IsKnown( name ) ) {
+            HighlightItemUser( item, name );
+            return;
+        }
+    }
 }
 
 void BattleListCtrl::OnListRightClick( wxListEvent& event )
