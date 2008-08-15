@@ -126,18 +126,11 @@ void ManageGroupsPanel::OnColorButton( wxCommandEvent& event )
     ColorButton* origin = (ColorButton*) event.GetEventObject();
     wxString group = origin->GetName();
     wxColour c = GetColourFromUser( this, origin->GetColor(), group );
-    //if ( c.IsOk() )
-
+    if ( c.IsOk() )
     {
-
         origin->SetColor( c );
         useractions().SetGroupColor( group, c );
     }
-    #ifdef __WXMSW__
-//        ReloadGroupSizer();
-//        Refresh();
-
-    #endif
 }
 
 void ManageGroupsPanel::OnAddButton( wxCommandEvent& event )

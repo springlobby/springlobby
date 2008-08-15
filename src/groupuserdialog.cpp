@@ -38,13 +38,17 @@ GroupUserDialog::GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString
 
     //populate lists
     typedef UserListctrl::UserData UserData;
-    const UserList& userlist = ui().GetServer().GetUserList();
-    for ( unsigned int i = 0; i < userlist.GetNumUsers(); ++i)
+
+    if ( ui().IsConnected() )
     {
-        wxString name = userlist.GetUser( i ).GetNick();
-        wxString country = userlist.GetUser( i ).GetCountry();
-        if ( !useractions().IsKnown( name ) && !ui().IsThisMe( name ) )
-            m_all_users->AddUser( UserData( name, country ) );
+        const UserList& userlist = ui().GetServer().GetUserList();
+        for ( unsigned int i = 0; i < userlist.GetNumUsers(); ++i)
+        {
+            wxString name = userlist.GetUser( i ).GetNick();
+            wxString country = userlist.GetUser( i ).GetCountry();
+            if ( !useractions().IsKnown( name ) && !ui().IsThisMe( name ) )
+                m_all_users->AddUser( UserData( name, country ) );
+        }
     }
 
     wxSortedArrayString groupuser = sett().GetPeopleList( m_groupname );
@@ -53,8 +57,11 @@ GroupUserDialog::GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString
     {
         wxString name = groupuser[i];
         wxString country = wxEmptyString;
-        if ( userlist.UserExists( name ) )
-            country = userlist.GetUser( groupuser[i] ).GetCountry();
+        if ( ui().IsConnected() ) {
+            const UserList& userlist = ui().GetServer().GetUserList();
+            if ( userlist.UserExists( name ) )
+                country = userlist.GetUser( groupuser[i] ).GetCountry();
+        }
 
         m_group_users->AddUser( UserData( name, country ) );
     }
@@ -65,6 +72,14 @@ GroupUserDialog::GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString
     leftCol->Add( m_group_users, 10, wxALL|wxEXPAND, 10 );
     leftCol->Add( m_delete_users, 0, wxALL|wxEXPAND, 10 );
     rightCol->Add( m_all_users, 10, wxALL|wxEXPAND, 10 );
+
+    if ( !ui().IsConnected() )
+    {
+        wxStaticText* warning = new wxStaticText( this, -1, _("not connected to server, no user to display") );
+        warning->SetForegroundColour( sett().GetChatColorError() );
+        rightCol->Add( warning, 0, wxALL|wxEXPAND, 10 );
+    }
+
     rightCol->Add( m_add_users, 0, wxALL|wxEXPAND, 10 );
     top_sizer->Add( leftCol,1, wxALL|wxEXPAND, 10 );
     top_sizer->Add( rightCol,1, wxALL|wxEXPAND, 10 );

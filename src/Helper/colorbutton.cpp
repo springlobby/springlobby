@@ -1,6 +1,8 @@
 #include "colorbutton.h"
 #include "../utils.h"
-#include "images/colourbox.xpm"
+#ifdef __WXMSW__
+    #include "images/colourbox.xpm"
+#endif
 
 #include <wx/image.h>
 
@@ -36,12 +38,7 @@ void ColorButton::SetColor( const wxColor& color )
 {
     m_color = color;
     SetBitmapLabel ( GetBitmapFromColor( color ) );
-    //SetBitmapHover ( GetBitmapFromColor( color ) );
-    #ifndef __WXMSW__
-        SetBackgroundColour( color );
-    #else
-        SetBackgroundColour( GetDefaultAttributes().colBg );
-    #endif
+    SetBackgroundColour( color );
 }
 
 wxBitmap ColorButton::GetBitmapFromColor( const wxColor& colour )
