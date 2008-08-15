@@ -143,7 +143,6 @@ void BattleListCtrl::HighlightItem( long item )
         wxString name = b.GetUser(i).GetNick();
         if ( useractions().IsKnown( name ) ) {
             HighlightItemUser( item, name );
-            return;
         }
     }
 }
