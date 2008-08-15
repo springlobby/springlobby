@@ -9,6 +9,7 @@
 #include <wx/button.h>
 #include <wx/colordlg.h>
 #include <wx/checkbox.h>
+#include <wx/event.h>
 #include "useractions.h"
 #include "settings.h"
 #include "uiutils.h"
@@ -20,10 +21,12 @@
 
 BEGIN_EVENT_TABLE( ManageGroupsPanel, wxScrolledWindow )
   EVT_CHECKBOX( wxID_ANY, ManageGroupsPanel::OnCheckBox )
-  EVT_BUTTON( ID_COLOR_BUTTON, ManageGroupsPanel::OnColorButton )
+  //EVT_BUTTON( ID_COLOR_BUTTON, ManageGroupsPanel::OnColorButton )
+  EVT_COMMAND_RANGE ( SOMENUMBER, SOMENUMBER +500, wxEVT_COMMAND_BUTTON_CLICKED, ManageGroupsPanel::OnColorButton)
   EVT_BUTTON( ID_ADD_BUTTON, ManageGroupsPanel::OnAddButton )
   EVT_BUTTON( ID_DEL_BUTTON, ManageGroupsPanel::OnDeleteButton )
   EVT_BUTTON( ID_USER_BUTTON, ManageGroupsPanel::OnUserButton )
+
 END_EVENT_TABLE()
 
 ManageGroupsPanel::ManageGroupsPanel( wxWindow* parent )
@@ -71,14 +74,14 @@ wxSizer* ManageGroupsPanel::GetGroupSizer( const wxString& group )
     wxStaticText* cLabel = new wxStaticText( this, -1, _("Highlight color") );
     colorBox->Add( cLabel,0, wxBOTTOM, 5 );
 
-    int id = ID_COLOR_BUTTON;
+    int id = SOMENUMBER;
 
     static unsigned int idcount = 0;
     id += idcount;
     idcount++;
-    Connect( id, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ManageGroupsPanel::OnColorButton ) );
     ColorButton* m_color = new ColorButton( this, id, useractions().GetGroupColor(group), wxDefaultPosition, wxSize( 20,20 ),
                                         wxBU_AUTODRAW,wxDefaultValidator, group );
+   // GetParent()->Connect( id, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ManageGroupsPanel::OnColorButton ) );
     colorBox->Add( m_color,0, wxLEFT|wxBOTTOM, 5 );
     wxButton* userButton = new wxButton ( this, ID_USER_BUTTON, _("add/remove users"),wxDefaultPosition, wxSize( -1,30 ),
                                         0,wxDefaultValidator, group  );
@@ -131,8 +134,8 @@ void ManageGroupsPanel::OnColorButton( wxCommandEvent& event )
         useractions().SetGroupColor( group, c );
     }
     #ifdef __WXMSW__
-        ReloadGroupSizer();
-        Refresh();
+//        ReloadGroupSizer();
+//        Refresh();
 
     #endif
 }

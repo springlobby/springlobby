@@ -2,7 +2,7 @@
 #define GROUPUSERDIALOG_H
 
 #include <wx/dialog.h>
-
+#define SOMENUMBER 32541
 
 class NickListCtrl;
 class UserListctrl;
