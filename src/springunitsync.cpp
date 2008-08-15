@@ -295,7 +295,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
  wxArrayString cache;
   try
   {
-    cache = GetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions") );
+    cache = GetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".mapoptions") );
     unsigned int count = cache.GetCount();
     for (int i = 0; i < count; ++i)
     {
@@ -323,7 +323,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
       case opt_list:
          ret.list_map[key] = mmOptionList( params[2],key,
             params[3], params[4] );
-         for (int j = 6; j < ( (unsigned int)s2l(params[5]) * 3 + 6); j + 3)
+         for (int j = 6; j < ( (unsigned int)s2l(params[5]) * 3 + 6); j = j + 3)
          {
            ret.list_map[key].addItem( params[j], params[j+1], params[j+2] );
          }
@@ -388,7 +388,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
     for ( unsigned int pos = 0; pos < entrycount; pos++ ) optiontoken << entry[pos] << _T('\t');
     cache.Add( optiontoken );
     }
-  SetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions"), cache );
+  SetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".mapoptions"), cache );
   }
   return ret;
 }
@@ -458,7 +458,7 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
     for (int i = 0; i < count; ++i)
     {
       // key  type
-      wxArrayString params = wxStringTokenize( cache[i], _T("\t") );
+      wxArrayString params = wxStringTokenize( cache[i], _T('\t') );
       wxString key = params[0];
       switch ( s2l( params[1] ) )
       {
@@ -481,7 +481,8 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
       case opt_list:
          ret.list_map[key] = mmOptionList( params[2],key,
             params[3], params[4] );
-         for (int j = 6; j < ( (unsigned int)s2l(params[5]) * 3 + 6); j + 3)
+         unsigned int maxloop = (unsigned int)s2l(params[5]) * 3 + 5;
+         for (int j = 6; j < maxloop; j = j + 3)
          {
            ret.list_map[key].addItem( params[j], params[j+1], params[j+2] );
          }
@@ -581,12 +582,19 @@ wxString SpringUnitSync::GetSideName( const wxString& modname, int index )
   try
   {
     cache = GetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidenames") );
-    ASSERT_RUNTIME( cache.GetCount() >= index && !cache[index].IsEmpty(), _T("sidename not present in the cache file") )
+    if ( cache.GetCount() < index || cache[index].IsEmpty() )
+    {
+      for ( unsigned int count = cache.GetCount(); count < index; count++ ) cache.Add( _T("") ); /// add empty lines if entries not exist
+      susynclib()->GetSideCount( modname );
+      cache[index] = susynclib()->GetSideName( modname, index );
+      SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidenames"), cache );
+    }
+
   }
   catch (...)
   {
-    susynclib()->AddAllArchives( _GetModArchive( susynclib()->GetModIndex( modname )  ) );
-    cache.Alloc( index );
+    for ( unsigned int count = cache.GetCount(); count < index; count++ ) cache.Add( _T("") ); /// add empty lines if entries not exist
+    susynclib()->GetSideCount( modname );
     cache[index] = susynclib()->GetSideName( modname, index );
     SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidenames"), cache );
   }
