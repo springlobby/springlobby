@@ -381,34 +381,103 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
   GameOptions ret;
-  int count = susynclib()->GetModOptionCount(name);
-  for (int i = 0; i < count; ++i)
+  wxArrayString cache;
+  try
   {
-    wxString key = susynclib()->GetOptionKey(i);
-    switch (susynclib()->GetOptionType(i))
+    cache = GetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions") );
+    unsigned int count = cache.GetCount();
+    for (int i = 0; i < count; ++i)
     {
-    case opt_float:
-      ret.float_map[key] = mmOptionFloat(susynclib()->GetOptionName(i),key,
-          susynclib()->GetOptionDesc(i),susynclib()->GetOptionNumberDef(i), susynclib()->GetOptionNumberStep(i),
-          susynclib()->GetOptionNumberMin(i),susynclib()->GetOptionNumberMax(i));
-      break;
-    case opt_bool:
-      ret.bool_map[key] = mmOptionBool(susynclib()->GetOptionName(i),key,
-          susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i));
-      break;
-    case opt_string:
-      ret.string_map[key] = mmOptionString(susynclib()->GetOptionName(i),key,
-          susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i));
-      break;
-    case opt_list:
-       ret.list_map[key] = mmOptionList(susynclib()->GetOptionName(i),key,
-          susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
-       for (int j = 0; j < susynclib()->GetOptionListCount(i); ++j)
-       {
-         ret.list_map[key].addItem(susynclib()->GetOptionListItemKey(i,j),susynclib()->GetOptionListItemName(i,j),
-                            susynclib()->GetOptionListItemDesc(i,j));
-       }
+      // key  type
+      wxArrayString params = wxStringTokenize( cache[i], _T("\t") );
+      wxString key = params[0];
+      switch ( s2l( params[1] ) )
+      {
+      case opt_float:
+        // name description default_value step_size min_value max_value
+        ret.float_map[key] = mmOptionFloat( params[2], key,
+            params[3], (float)s2d( params[4] ), (float)s2d( params[5] ),
+            (float)s2d( params[6] ), (float)s2d( params[7] ) );
+        break;
+      case opt_bool:
+        // name description default_value
+        ret.bool_map[key] = mmOptionBool( params[2], key,
+            params[3], (bool)s2l( params[4] ) );
+        break;
+      case opt_string:
+        // name description default_value max_lenght
+        ret.string_map[key] = mmOptionString( params[2], key,
+            params[3], params[4], (unsigned int) s2l( params[5] ) );
+        break;
+      case opt_list:
+         ret.list_map[key] = mmOptionList( params[2],key,
+            params[3], params[4] );
+         for (int j = 6; j < ( (unsigned int)s2l(params[5]) * 3 + 6); j + 3)
+         {
+           ret.list_map[key].addItem( params[j], params[j+1], params[j+2] );
+         }
+      }
     }
+  }
+  catch (...)
+  {
+    int count = susynclib()->GetModOptionCount(name);
+    for (int i = 0; i < count; ++i)
+    {
+      wxArrayString entry;
+      wxString key = susynclib()->GetOptionKey(i);
+      entry.Add( key );
+      entry.Add( TowxString( susynclib()->GetOptionType(i) ) );
+      switch (susynclib()->GetOptionType(i))
+      {
+      case opt_float:
+        ret.float_map[key] = mmOptionFloat(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionNumberDef(i), susynclib()->GetOptionNumberStep(i),
+            susynclib()->GetOptionNumberMin(i),susynclib()->GetOptionNumberMax(i));
+        entry.Add( susynclib()->GetOptionName(i) );
+        entry.Add( susynclib()->GetOptionDesc(i) );
+        entry.Add( TowxString( susynclib()->GetOptionNumberDef(i) ) );
+        entry.Add( TowxString( susynclib()->GetOptionNumberStep(i) ) );
+        entry.Add( TowxString( susynclib()->GetOptionNumberMin(i) ) );
+        entry.Add( TowxString( susynclib()->GetOptionNumberMax(i)) );
+        break;
+      case opt_bool:
+        ret.bool_map[key] = mmOptionBool(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i));
+        entry.Add( susynclib()->GetOptionName(i) );
+        entry.Add( susynclib()->GetOptionDesc(i) );
+        entry.Add( TowxString( susynclib()->GetOptionBoolDef(i) ) );
+        break;
+      case opt_string:
+        ret.string_map[key] = mmOptionString(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i));
+        entry.Add( susynclib()->GetOptionName(i) );
+        entry.Add( susynclib()->GetOptionDesc(i) );
+        entry.Add( susynclib()->GetOptionStringDef(i) );
+        entry.Add( TowxString( susynclib()->GetOptionStringMaxLen(i) ) );
+        break;
+      case opt_list:
+         ret.list_map[key] = mmOptionList(susynclib()->GetOptionName(i),key,
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
+        entry.Add( susynclib()->GetOptionName(i) );
+        entry.Add( susynclib()->GetOptionDesc(i) );
+        entry.Add( susynclib()->GetOptionListDef(i) );
+        entry.Add( TowxString( susynclib()->GetOptionListCount(i) ) );
+         for (int j = 0; j < susynclib()->GetOptionListCount(i); ++j)
+         {
+           ret.list_map[key].addItem(susynclib()->GetOptionListItemKey(i,j),susynclib()->GetOptionListItemName(i,j),
+                              susynclib()->GetOptionListItemDesc(i,j));
+           entry.Add( susynclib()->GetOptionListItemKey(i,j) );
+           entry.Add( susynclib()->GetOptionListItemName(i,j) );
+           entry.Add( susynclib()->GetOptionListItemDesc(i,j) );
+         }
+      }
+    wxString optiontoken;
+    unsigned int entrycount = entry.GetCount();
+    for ( unsigned int pos = 0; pos < entrycount; pos++ ) optiontoken << entry[pos] << _T('\t');
+    cache.Add( optiontoken );
+    }
+  SetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions"), cache );
   }
   return ret;
 }
@@ -418,19 +487,41 @@ int SpringUnitSync::GetSideCount( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
   if ( !ModExists( modname ) ) return 0;
-  return susynclib()->GetSideCount( modname );
+  wxArrayString cache;
+  try
+  {
+    cache = GetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidecount") );
+  }
+  catch (...)
+  {
+    susynclib()->AddAllArchives( _GetModArchive( susynclib()->GetModIndex( modname )  ) );
+    cache.Add( TowxString( susynclib()->GetSideCount( modname ) ) );
+    SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidecount"), cache );
+  }
+  return (int)s2l( cache[0] );
 }
 
 
 wxString SpringUnitSync::GetSideName( const wxString& modname, int index )
 {
   wxLogDebugFunc( _T("") );
-
   if ( (index < 0) || (!ModExists( modname )) ) return _T("unknown");
-  susynclib()->AddAllArchives( _GetModArchive( susynclib()->GetModIndex( modname )  ) );
   if ( index >= GetSideCount( modname ) ) return _T("unknown");
   ASSERT_LOGIC( GetSideCount( modname ) > index, _T("Side index too high.") );
-  return susynclib()->GetSideName( modname, index );
+  wxArrayString cache;
+  try
+  {
+    cache = GetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidenames") );
+    ASSERT_RUNTIME( cache.GetCount() >= index && !cache[index].IsEmpty(), _T("sidename not present in the cache file") )
+  }
+  catch (...)
+  {
+    susynclib()->AddAllArchives( _GetModArchive( susynclib()->GetModIndex( modname )  ) );
+    cache.Alloc( index );
+    cache[index] = susynclib()->GetSideName( modname, index );
+    SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidenames"), cache );
+  }
+  return cache[index];
 }
 
 
@@ -438,33 +529,39 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
 {
   wxLogDebugFunc( _T("") );
 
-  susynclib()->SetCurrentMod( modname );
-  wxLogDebugFunc( _T("SideName = \"") + SideName + _T("\"") );
-  wxString ImgName = _T("SidePics");
-  ImgName += _T("/");
-  ImgName += SideName.Upper();
-  ImgName += _T(".bmp");
+  wxImage cache;
 
-  int ini = susynclib()->OpenFileVFS (ImgName );
-  ASSERT_RUNTIME( ini, _T("cannot find side image") );
+  if ( !cache.LoadFile( GetFileCachePath( modname, _T(""), true ) + _T("-") + SideName + _T(".sidepicture.png") ) )
+  {
+    susynclib()->SetCurrentMod( modname );
+    wxLogDebugFunc( _T("SideName = \"") + SideName + _T("\"") );
+    wxString ImgName = _T("SidePics");
+    ImgName += _T("/");
+    ImgName += SideName.Upper();
+    ImgName += _T(".bmp");
 
-  int FileSize = susynclib()->FileSizeVFS(ini);
-  if (FileSize == 0) {
-    susynclib()->CloseFileVFS(ini);
-    ASSERT_RUNTIME( FileSize, _T("side image has size 0") );
+    int ini = susynclib()->OpenFileVFS (ImgName );
+    ASSERT_RUNTIME( ini, _T("cannot find side image") );
+
+    int FileSize = susynclib()->FileSizeVFS(ini);
+    if (FileSize == 0) {
+      susynclib()->CloseFileVFS(ini);
+      ASSERT_RUNTIME( FileSize, _T("side image has size 0") );
+    }
+
+    char* FileContent = new char [FileSize];
+    susynclib()->ReadFileVFS(ini, FileContent, FileSize);
+    wxMemoryInputStream FileContentStream( FileContent, FileSize );
+
+    cache.LoadFile( FileContentStream, wxBITMAP_TYPE_ANY, -1);
+    delete[] FileContent;
+    cache.InitAlpha();
+    for ( int x = 0; x < cache.GetWidth(); x++ )
+      for ( int y = 0; y < cache.GetHeight(); y++ )
+        if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 ) cache.SetAlpha( x, y, 0 ); /// set pixel to be transparent
+    cache.SaveFile( GetFileCachePath( modname, _T(""), true ) + _T("-") + SideName + _T(".sidepicture.png"), wxBITMAP_TYPE_PNG );
   }
-
-  char* FileContent = new char [FileSize];
-  susynclib()->ReadFileVFS(ini, FileContent, FileSize);
-  wxMemoryInputStream FileContentStream( FileContent, FileSize );
-
-  wxImage ret( FileContentStream, wxBITMAP_TYPE_ANY, -1);
-  delete[] FileContent;
-  ret.InitAlpha();
-  for ( int x = 0; x < ret.GetWidth(); x++ )
-    for ( int y = 0; y < ret.GetHeight(); y++ )
-      if ( ret.GetBlue( x, y ) == 255 && ret.GetGreen( x, y ) == 255 && ret.GetRed( x, y ) == 255 ) ret.SetAlpha( x, y, 0 ); /// set pixel to be transparent
-  return ret;
+  return cache;
 }
 
 
@@ -513,67 +610,29 @@ int SpringUnitSync::GetNumUnits( const wxString& modname )
 }
 
 
-wxString _GetCachedModUnitsFileName( const wxString& mod )
-{
-  wxString path = sett().GetCachePath(); //wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("cache") + wxFileName::GetPathSeparator();
-  wxString fname =  mod;
-  fname.Replace( _T("."), _T("_") );
-  fname.Replace( _T(" "), _T("_") );
-  wxLogMessage( _T("%s"), path.c_str() );
-  return path << fname << _T(".units");
-}
-
-
 wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
 {
   wxLogDebugFunc( modname );
 
-  wxArrayString ret;
-
-  wxString path = _GetCachedModUnitsFileName( modname );
-  try {
-
-    ASSERT_RUNTIME( wxFileName::FileExists( path ), _T("Cache file does not exist") );
-    wxFile f;
-    ASSERT_RUNTIME( f.Open(path), _T("Failed to open mod unit cache file") );
-    ASSERT_RUNTIME( f.Length() > 0, _T("mod unit cache file has lenght 0") );
-
-    char* buff = new char[f.Length()];
-    f.Read( buff, f.Length() );
-    std::string tempstring = buff;
-    delete buff;
-    ASSERT_RUNTIME( tempstring.length() > 0, _T("mod unit list file is empty") );
-    wxString stringbuff = WX_STRING(tempstring);
-    ASSERT_RUNTIME( !stringbuff.IsEmpty(), _T("failed to convert to wxString the mod unit list cache file") );
-    ret = wxStringTokenize( stringbuff, _T('\n'), wxTOKEN_RET_EMPTY );
-
+  wxArrayString cache;
+  try
+  {
+    cache = GetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".units") );
   } catch(...)
   {
-    ret.Empty();
     susynclib()->SetCurrentMod( modname );
     while ( susynclib()->ProcessUnitsNoChecksum() );
     unsigned int unitcount = susynclib()->GetUnitCount();
     for ( unsigned int i = 0; i < unitcount; i++ )
     {
-      ret.Add( susynclib()->GetFullUnitName(i) << _T(" (") << susynclib()->GetUnitName(i) << _T(")") );
+      cache.Add( susynclib()->GetFullUnitName(i) << _T(" (") << susynclib()->GetUnitName(i) << _T(")") );
     }
 
-    try {
+    SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".units"), cache );
 
-      wxFile f( path, wxFile::write );
-      ASSERT_RUNTIME( f.IsOpened(), _T("Couldn't create file") );
-
-      wxString tmp;
-
-      for ( unsigned int i = 0; i < ret.GetCount(); i++ ) tmp <<  ret[i] << _T('\n');
-
-      f.Write( tmp );
-      f.Close();
-
-    } catch(...) {}
   }
 
-  return ret;
+  return cache;
 }
 
 
@@ -734,6 +793,54 @@ void SpringUnitSync::SetSpringDataPath( const wxString& path )
 wxString SpringUnitSync::GetSpringDataPath()
 {
   return susynclib()->GetSpringConfigString( _T("SpringData"), sett().GetSpringDir() );
+}
+
+
+wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString& hash, bool IsMod )
+{
+  wxString ret;
+  ret <<  sett().GetCachePath() << wxFileName::GetPathSeparator();
+  if ( !name.IsEmpty() ) ret << name;
+  else if ( !hash.IsEmpty() )
+  {
+    if ( IsMod ) ret << m_mods_list[hash];
+    else ret << m_maps_list[hash];
+  }
+  else return wxEmptyString;
+  if ( !hash.IsEmpty() ) ret << hash;
+  else
+  {
+    if ( IsMod ) ret <<  _T("-") << susynclib()->GetPrimaryModChecksumFromName( name );
+    else ret << _T("-") << susynclib()->GetMapChecksum( GetMapIndex( name ) );
+  }
+  return ret;
+}
+
+
+wxArrayString SpringUnitSync::GetCacheFile( const wxString& path )
+{
+  wxArrayString ret;
+  wxTextFile file( path );
+  ASSERT_RUNTIME( file.Open() , wxString::Format( _T("cache file( %s ) not found"), path.c_str() ) );
+  unsigned int linecount = file.GetLineCount();
+  for ( unsigned int count = 0; count < linecount; count ++ )
+  {
+    ret.Add( file[count] );
+  }
+  return ret;
+}
+
+
+void SpringUnitSync::SetCacheFile( const wxString& path, const wxArrayString& data )
+{
+  wxTextFile file( path );
+  unsigned int arraycount = data.GetCount();
+  for ( unsigned int count = 0; count < arraycount; count++ )
+  {
+    file.AddLine( data[count] );
+  }
+  file.Write();
+  file.Close();
 }
 
 

@@ -97,6 +97,14 @@ class SpringUnitSync : public IUnitSync
 
 //    void* _GetLibFuncPtr( const wxString& name );
 
+    //! this function returns only the cache path without the file extension, the extension itself would be added in the function as needed
+    wxString GetFileCachePath( const wxString& name, const wxString& hash, bool IsMod );
+
+    //! returns an array where each element is a line of the file
+    wxArrayString GetCacheFile( const wxString& path );
+    //! write a file where each element of the array is a line
+    void SetCacheFile( const wxString& path, const wxArrayString& data );
+
     MapInfo _LoadMapInfoExCache( const wxString& mapname );
     void _SaveMapInfoExCache( const wxString& mapname, const MapInfo& info );
 
