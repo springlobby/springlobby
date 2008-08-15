@@ -1,5 +1,5 @@
 #include "colorbutton.h"
-#include "utils.h"
+#include "../utils.h"
 #include <wx/image.h>
 
 ColorButton::ColorButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitmap,

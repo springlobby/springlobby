@@ -12,7 +12,7 @@
 #endif
 
 #include "wxtextctrlhist.h"
-#include "Helper/TextCompletionDatabase.hpp"
+#include "TextCompletionDatabase.hpp"
 
 BEGIN_EVENT_TABLE(wxTextCtrlHist, wxTextCtrl)
     EVT_TEXT_ENTER(wxID_ANY, wxTextCtrlHist::OnSendMessage)
