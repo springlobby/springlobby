@@ -132,6 +132,9 @@ SET(SpringLobbySrc
 	src/boost/md5.cpp
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
+        src/Helper/channelchooser.cpp
+        src/Helper/colorbutton.cpp
+        src/Helper/wxtextctrlhist.cpp
 	src/filelister/filelistctrl.cpp
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
@@ -152,6 +155,7 @@ SET(SpringLobbySrc
 	src/battleroommmoptionstab.cpp
 	src/channel.cpp
 	src/channellist.cpp
+        src/channellistctrl.cpp
 	src/chatlog.cpp
 	src/chatoptionstab.cpp
 	src/chatpanel.cpp
