@@ -235,5 +235,10 @@ void FileListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
     }
 }
 
+void FileListCtrl::HighlightItem( long item )
+{
+
+}
+
 #endif
 

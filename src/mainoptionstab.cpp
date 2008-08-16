@@ -23,6 +23,7 @@
 #include "chatoptionstab.h"
 #include "settings.h"
 #include "uiutils.h"
+#include "managegroupspanel.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentoptionspanel.h"
@@ -31,6 +32,7 @@
 #include "images/torrentoptionspanel_icon.png.h"
 #include "images/spring.xpm"
 #include "images/userchat.xpm"
+
 
 BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 
@@ -77,6 +79,13 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
     m_tabs->AddPage( m_chat_opts, _("Chat"), true, 2 );
     #else
     m_tabs->AddPage( m_chat_opts, _("Chat"), true, wxIcon(userchat_xpm) );
+    #endif
+
+    m_groups_opts = new ManageGroupsPanel( m_tabs );
+    #ifdef HAVE_WX26
+    m_tabs->AddPage( m_groups_opts , _("Groups"), true, 2 );
+    #else
+    m_tabs->AddPage( m_groups_opts , _("Groups"), true, wxIcon(userchat_xpm) );
     #endif
 
     m_restore_btn = new wxButton( this, wxID_REVERT, _("Restore") );

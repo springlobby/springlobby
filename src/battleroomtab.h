@@ -23,7 +23,7 @@ class wxButton;
 class wxCheckBox;
 class wxListCtrl;
 class MapCtrl;
-class wxBitmapButton;
+class ColorButton;
 
 typedef std::map<wxString,long> OptionListMap;
 
@@ -69,6 +69,7 @@ class BattleRoomTab : public wxScrolledWindow
 
     void OnUnitSyncReloaded();
 
+    void UpdateHighlights();
 
   protected:
 
@@ -92,7 +93,7 @@ class BattleRoomTab : public wxScrolledWindow
 
     wxComboBox* m_team_sel;
     wxComboBox* m_ally_sel;
-    wxBitmapButton* m_color_sel;
+    ColorButton* m_color_sel;
     wxComboBox* m_side_sel;
 
     wxStaticText* m_team_lbl;

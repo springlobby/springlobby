@@ -14,6 +14,8 @@
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
+#include <wx/colour.h>
+#include <wx/cmndata.h>
 #include <wx/font.h>
 
 #include "nonportable.h"
@@ -23,6 +25,8 @@
 #include "battlelistfiltervalues.h"
 #include "iunitsync.h"
 #include "ibattle.h"
+
+const wxColor defaultHLcolor (255,0,0);
 
 
 Settings& sett()
@@ -79,6 +83,8 @@ Settings::Settings()
   m_portable_mode = false;
   #endif
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
+
+  if ( !m_config->Exists( _T("/Groups") ) ) AddGroup( _("Default") );
 }
 
 Settings::~Settings()
@@ -120,6 +126,18 @@ bool Settings::IsPortableMode()
 bool Settings::IsFirstRun()
 {
   return m_config->Read( _T("/General/firstrun"), true );
+}
+
+
+void Settings::SetSettingsVersion()
+{
+   m_config->Write( _T("/General/SettingsVersion"), SETTINGS_VERSION );
+}
+
+
+unsigned int  Settings::GetSettingsVersion()
+{
+   return m_config->Read( _T("/General/SettingsVersion"), 0l );
 }
 
 
@@ -685,7 +703,7 @@ int Settings::GetLastRankLimit()
 
 bool Settings::GetTestHostPort()
 {
-    return m_config->Read( _T("/Hosting/TestHostPort"), 1 );
+    return m_config->Read( _T("/Hosting/TestHostPort"), 0l );
 }
 
 wxColour Settings::GetBattleLastColour()
@@ -1170,12 +1188,16 @@ void Settings::SetTorrentListToResume( const wxArrayString& list )
 wxArrayString Settings::GetTorrentListToResume()
 {
   wxArrayString list;
-  unsigned int TorrentCount = m_config->GetNumberOfEntries( _T("/Torrent/ResumeList") );
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Torrent/ResumeList") );
+  unsigned int TorrentCount = m_config->GetNumberOfEntries( false );
   for ( unsigned int i = 0; i < TorrentCount; i++ )
   {
     wxString ToAdd;
     if ( m_config->Read( _T("/Torrent/ResumeList/") + TowxString(i), &ToAdd ) ) list.Add( ToAdd );
   }
+
+  m_config->SetPath( old_path );
   return list;
 }
 
@@ -1280,3 +1302,115 @@ int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
 {
     return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
 }
+
+void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )
+{
+    unsigned int friendsCount = friends.GetCount();
+    m_config->DeleteGroup( _T("/Groups/") + group + _T("/Members/") );
+    for ( unsigned int i = 0; i < friendsCount ; i++ )
+    {
+        m_config->Write(_T("/Groups/") + group + _T("/Members/") + TowxString(i), friends[i] );
+    }
+}
+
+wxArrayString Settings::GetPeopleList( const wxString& group  ) const
+{
+    wxArrayString list;
+    wxString old_path = m_config->GetPath();
+    m_config->SetPath( _T("/Groups/") + group + _T("/Members/") );
+    unsigned int friendsCount  = m_config->GetNumberOfEntries( false );
+    for ( unsigned int i = 0; i < friendsCount ; i++ )
+    {
+        wxString ToAdd;
+        if ( m_config->Read( _T("/Groups/") + group + _T("/Members/") +  TowxString(i), &ToAdd ) ) list.Add( ToAdd );
+    }
+    m_config->SetPath( old_path );
+    return list;
+}
+
+void Settings::SetGroupHLColor( const wxColor& color, const wxString& group )
+{
+    m_config->Write( _T("/Groups/") + group + _T("/Opts/HLColor"), GetColorString( color ) );
+
+}
+
+wxColor Settings::GetGroupHLColor( const wxString& group  ) const
+{
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Groups/") + group + _T("/Opts/HLColor") , _T( "100 100 140" ) ) ) );
+}
+
+wxArrayString Settings::GetGroups( ) const
+{
+    wxString old_path = m_config->GetPath();
+    m_config->SetPath( _T("/Groups/") );
+    wxArrayString ret;
+    long dummy;
+    wxString tmp;
+    bool cont = m_config->GetFirstGroup( tmp, dummy );
+    while ( cont )
+    {
+        ret.Add( tmp );
+        cont = m_config->GetNextGroup( tmp, dummy );
+    }
+
+    m_config->SetPath( old_path );
+    return ret;
+}
+
+void Settings::AddGroup( const wxString& group )
+{
+    if ( !m_config->Exists( _T("/Groups/") + group ) )
+    {
+        m_config->Write( _T("/Groups/") , group );
+        //set defaults
+        SetGroupActions( group, UserActions::ActNone );
+        SetGroupHLColor( defaultHLcolor, group );
+    }
+}
+
+void Settings::DeleteGroup( const wxString& group )
+{
+    if ( m_config->Exists( _T("/Groups/") + group ) )
+    {
+        m_config->DeleteGroup( _T("/Groups/") + group );
+    }
+}
+
+void Settings::SetGroupActions( const wxString& group, UserActions::ActionType action )
+{
+    m_config->Write( _T("/Groups/") + group + _T("/Opts/Actions"), action );
+}
+
+UserActions::ActionType Settings::GetGroupActions( const wxString& group ) const
+{
+    return  (UserActions::ActionType) m_config->Read( _T("/Groups/") + group + _T("/Opts/Actions"), (long) UserActions::ActNone ) ;
+}
+
+
+void Settings::SaveCustomColors( const wxColourData& _cdata, const wxString& paletteName  )
+{
+    //note 16 colors is wx limit
+    wxColourData cdata = _cdata;
+    for ( int i = 0; i < 16; ++i)
+    {
+        wxColor col = cdata.GetCustomColour( i );
+        if ( !col.IsOk() )
+            col = wxColor ( 255, 255, 255 );
+        m_config->Write( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i), GetColorString( col ) ) ;
+    }
+}
+
+wxColourData Settings::GetCustomColors( const wxString& paletteName )
+{
+    wxColourData cdata;
+    //note 16 colors is wx limit
+    for ( int i = 0; i < 16; ++i)
+    {
+        wxColor col = GetColorFromStrng ( m_config->Read( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i),
+                                        GetColorString(  wxColor ( 255, 255, 255 ) ) ) );
+        cdata.SetCustomColour( i, col );
+    }
+
+    return cdata;
+}
+

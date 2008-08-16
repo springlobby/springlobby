@@ -450,6 +450,8 @@ springlobby_SOURCES = \
 	src/channel.h \
 	src/channellist.cpp \
 	src/channellist.h \
+	src/channellistctrl.cpp \
+	src/channellistctrl.h \
 	src/chatoptionstab.cpp \
 	src/chatoptionstab.h \
 	src/chatpanel.cpp \
@@ -518,6 +520,8 @@ springlobby_SOURCES = \
 	src/user.h \
 	src/userlist.cpp \
 	src/userlist.h \
+	src/userlistctrl.cpp \
+	src/userlistctrl.h \
 	src/utils.cpp \
 	src/utils.h \
 	src/torrentlistctrl.cpp \
@@ -861,14 +865,27 @@ springlobby_SOURCES = \
 	src/filelister/filelistfilter.cpp \
 	configure.ac \
 	src/autojoinchanneldialog.h \
-	src/autojoinchanneldialog.cpp
+	src/autojoinchanneldialog.cpp \
+	src/useractions.h \
+	src/useractions.cpp \
+	src/managegroupspanel.h \
+	src/managegroupspanel.cpp \
+	src/Helper/wxtextctrlhist.h \
+	src/Helper/wxtextctrlhist.cpp \
+	src/Helper/colorbutton.cpp \
+	src/Helper/colorbutton.h \
+	src/groupuserdialog.h \
+	src/groupuserdialog.cpp
+
 
 
 if USE_WINDRES	
 springlobby_SOURCES += \ 
 		$(libtorrent_headers) \
  		$(libtorrent_sources) \
-		src/springlobby.rc 
+		src/springlobby.rc \
+		src/Helper/listctrl.cpp \
+		src/Helper/listctrl.cpp 
 endif
 
 

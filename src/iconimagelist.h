@@ -22,8 +22,8 @@ class IconImageList : public wxImageList
 
     int GetRankIcon( const int& rank, const bool& showlowest = true );
     int GetFlagIcon( const wxString& flagname );
-    int GetBattleStatusIcon( Battle& battle );
-    wxString GetBattleStatus(Battle& battle);
+    int GetBattleStatusIcon( const Battle& battle ) const;
+    wxString GetBattleStatus(const Battle& battle) const;
     int GetHostIcon( const bool& spectator = false );
     int GetColourIcon( const int& num );
     void SetColourIcon( const int& num, const wxColour& colour );

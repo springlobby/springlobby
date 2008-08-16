@@ -30,6 +30,7 @@
 #include "mainjoinbattletab.h"
 #include "battlelistfilter.h"
 #include "iconimagelist.h"
+#include "useractions.h"
 
 #include "settings++/custom_dialogs.h"
 //#include "images/springlobby.xpm"
@@ -69,6 +70,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   m_battlelist_sizer = new wxBoxSizer( wxVERTICAL );
 
   m_battle_list = new BattleListCtrl( this, m_ui );
+  m_battle_list->SetHighLightAction ( UserActions::ActHighlight );
   m_battlelist_sizer->Add( m_battle_list, 1, wxALL|wxEXPAND, 5 );
 
   m_main_sizer->Add( m_battlelist_sizer, 1, wxEXPAND, 5 );;
@@ -108,7 +110,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
 
   m_info_sizer->Add( m_data_sizer, 1, wxEXPAND, 5 );
 
-  m_players = new NickListCtrl( this, m_ui, false );
+  m_players = new NickListCtrl( this, false );
   m_info_sizer->Add( m_players, 1, wxALL|wxEXPAND, 5 );
 
   m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
@@ -220,6 +222,7 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
 
   m_battle_list->Sort();
+  m_battle_list->HighlightItem( index );
   m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
@@ -243,8 +246,6 @@ void BattleListTab::RemoveBattle( Battle& battle ) {
       break;
     }
   }
-
-
 
   battle.SetGUIListActiv( false );
 
@@ -309,6 +310,8 @@ void BattleListTab::UpdateBattle( Battle& battle )
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
 
+  //highlight
+  m_battle_list->HighlightItem( index );
 
   if ( &battle == m_sel_battle ) SelectBattle( m_sel_battle );
   m_battle_list->Sort();
@@ -602,4 +605,9 @@ void BattleListTab::OnUnitSyncReloaded()
   }
   UpdateList();
   m_minimap->UpdateMinimap();
+}
+
+void BattleListTab::UpdateHighlights()
+{
+    m_battle_list->UpdateHighlights();
 }
