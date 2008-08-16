@@ -136,6 +136,14 @@
 		<Unit filename="src/Helper/TextCompletionDatabase.hpp" />
 		<Unit filename="src/Helper/colorbutton.cpp" />
 		<Unit filename="src/Helper/colorbutton.h" />
+		<Unit filename="src/Helper/listctrl.cpp">
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+		</Unit>
+		<Unit filename="src/Helper/listctrl.h">
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+		</Unit>
 		<Unit filename="src/Helper/wxtextctrlhist.cpp" />
 		<Unit filename="src/Helper/wxtextctrlhist.h" />
 		<Unit filename="src/addbotdialog.cpp" />
