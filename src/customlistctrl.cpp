@@ -31,6 +31,10 @@ customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
 #endif
 	m_tiptext = _T("");
 	m_bg_color = GetDefaultAttributes().colBg;
+
+	SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
+    SetImageList( &icons(), wxIMAGE_LIST_SMALL );
+    SetImageList( &icons(), wxIMAGE_LIST_STATE );
 }
 
 void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)

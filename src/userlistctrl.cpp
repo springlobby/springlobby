@@ -38,9 +38,6 @@ UserListctrl::UserListctrl(wxWindow* parent, const wxString& name, bool highligh
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
 #endif
 
-  SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
-  SetImageList( &icons(), wxIMAGE_LIST_SMALL );
-  SetImageList( &icons(), wxIMAGE_LIST_STATE );
 }
 
 UserListctrl::~UserListctrl()

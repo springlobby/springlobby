@@ -37,11 +37,6 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl") )
 
 {
-
-	SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
-	SetImageList( &icons(), wxIMAGE_LIST_SMALL );
-	SetImageList( &icons(), wxIMAGE_LIST_STATE );
-
 	wxListItem col;
 
 	col.SetText( _T( "Name" ) );
