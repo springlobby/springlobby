@@ -619,5 +619,6 @@ void BattleListTab::UpdateHighlights()
 void BattleListTab::OnFilterHighlighted( wxCommandEvent& event )
 {
     m_filter->SetFilterHighlighted( m_filter_highlighted->GetValue() );
-    UpdateList();
+    if ( m_ui.IsConnected() )
+        UpdateList();
 }
