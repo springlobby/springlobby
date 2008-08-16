@@ -26,6 +26,8 @@
 #include "uiutils.h"
 #include "utils.h"
 #include "settings.h"
+
+#include "useractions.h"
 ///////////////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(BattleListFilter, wxPanel)
@@ -58,7 +60,7 @@ BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListT
     : wxPanel( parent, id, pos, size, style ),
     m_parent_battlelisttab( parentBattleListTab ),m_filter_host_edit(0), m_filter_host_expression(0),
     m_filter_description_edit(0), m_filter_description_expression(0),m_filter_map_edit(0),
-    m_filter_map_expression(0), m_filter_mod_edit(0),m_filter_mod_expression(0)
+    m_filter_map_expression(0), m_filter_mod_edit(0),m_filter_mod_expression(0),m_filter_highlighted(false)
 
 {
     BattleListFilterValues f_values = sett().GetBattleFilterValues( sett().GetLastFilterProfileName() );
@@ -434,6 +436,19 @@ bool BattleListFilter::FilterBattle(Battle& battle)
 
   if (!m_activ) return true;
 
+  if ( m_filter_highlighted )
+  {
+    wxString host = battle.GetFounder().GetNick();
+    if ( !useractions().DoActionOnUser( UserActions::ActHighlight, host ) )
+        return false;
+
+    for ( unsigned int i = 0; i < battle.GetNumUsers(); ++i){
+        wxString name = battle.GetUser(i).GetNick();
+        if ( !useractions().DoActionOnUser( UserActions::ActHighlight, name ) )
+            return false;
+    }
+  }
+
   //Battle Status Check
   if ( !m_filter_status_start->GetValue() && battle.GetInGame() ) return false;
   if ( !m_filter_status_locked->GetValue() && battle.IsLocked() ) return false;
@@ -576,4 +591,7 @@ void  BattleListFilter::SaveFilterValues()
     sett().SetBattleFilterValues(filtervalues);
 }
 
-
+void BattleListFilter::SetFilterHighlighted( bool state )
+{
+    m_filter_highlighted = state;
+}
