@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "settings.h"
 #include <wx/colour.h>
+#include "iconimagelist.h"
 
 BEGIN_EVENT_TABLE(customListCtrl, ListBaseType)
 #if wxUSE_TIPWINDOW
