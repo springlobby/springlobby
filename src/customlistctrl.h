@@ -2,7 +2,13 @@
 #define CUSTOMLISTITEM_H_
 
 #include <wx/window.h>
-#include <wx/listctrl.h>
+#ifndef __WXMSW__
+    #include <wx/listctrl.h>
+    typedef wxListCtrl ListBaseType;
+#else
+    #include "Helper/listctrl.h"
+    typedef SL_Extern::wxGenericListCtrl ListBaseType;
+#endif
 #include <wx/string.h>
 #if wxUSE_TIPWINDOW
 #include <wx/tipwin.h>
@@ -29,7 +35,7 @@ typedef std::vector<colInfo> colInfoVec;
  * Some of the provided functionality only makes sense for single-select lists (see grouping) \n
  * Note: Tooltips are a bitch and anyone shoudl feel to revise them (koshi)
  */
-class customListCtrl : public wxListCtrl
+class customListCtrl : public ListBaseType
 {
 protected:
     typedef UserActions::ActionType ActionType;

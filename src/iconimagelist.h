@@ -30,6 +30,9 @@ class IconImageList : public wxImageList
     int GetSideIcon( const wxString& modname, int side );
     int GetReadyIcon( const bool& ready, const int& sync = 1 );
 
+    //#ifdef __WX_MSW__
+    bool Draw(int index, wxDC& dc, int x, int y, int flags = wxIMAGELIST_DRAW_NORMAL, const bool solidBackground = false);
+
     int ICON_NONE;
 
     int ICON_ADMIN;

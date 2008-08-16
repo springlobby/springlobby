@@ -3,7 +3,7 @@
 #include "settings.h"
 #include <wx/colour.h>
 
-BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
+BEGIN_EVENT_TABLE(customListCtrl, ListBaseType)
 #if wxUSE_TIPWINDOW
     	EVT_MOTION(customListCtrl::OnMouseMotion)
     	EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)
@@ -19,7 +19,7 @@ END_EVENT_TABLE()
 //wxTipWindow* customListCtrl::m_tipwindow = 0;
 customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,
                                 long style,wxString name, bool highlight, UserActions::ActionType hlaction)
-    : wxListCtrl (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER),m_tiptext(_T("")),
+    : ListBaseType (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER),m_tiptext(_T("")),
       m_selected(-1),m_selected_index(-1),m_prev_selected(-1),m_prev_selected_index(-1),
       m_last_mouse_pos( wxPoint(-1,-1) ), m_name(name), m_highlight(highlight), m_highlightAction(hlaction)
 
@@ -35,7 +35,7 @@ customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
 
 void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
 {
-	wxListCtrl::InsertColumn(i,item);
+	ListBaseType::InsertColumn(i,item);
 	colInfo temp(tip,modifiable);
 	m_colinfovec.push_back(temp);
 }
@@ -248,12 +248,12 @@ bool customListCtrl::SetColumnWidth(int col, int width)
 {
     if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
     {
-        return wxListCtrl::SetColumnWidth( col, sett().GetColumnWidth( m_name, col) );
+        return ListBaseType::SetColumnWidth( col, sett().GetColumnWidth( m_name, col) );
     }
     else
     {
         sett().SetColumnWidth( m_name, col, width );
-        return wxListCtrl::SetColumnWidth( col, width );
+        return ListBaseType::SetColumnWidth( col, width );
     }
 }
 

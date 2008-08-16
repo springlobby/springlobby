@@ -6,6 +6,9 @@
 #include <stdexcept>
 
 #include <wx/image.h>
+#include <wx/settings.h>
+#include <wx/dc.h>
+#include <wx/icon.h>
 
 #include "iconimagelist.h"
 #include "user.h"
@@ -76,7 +79,7 @@
 #include "images/empty.xpm"
 #include "uiutils.h"
 
-IconImageList::IconImageList() : wxImageList(16,16)
+IconImageList::IconImageList() : wxImageList(16,16,true)
 {
     ICON_ADMIN = Add( *charArr2wxBitmap( admin_png, sizeof(admin_png) ) );
     ICON_ADMIN_AWAY = Add( *charArr2wxBitmap( admin_away_png, sizeof(admin_away_png) ) );
@@ -348,3 +351,47 @@ int IconImageList::GetReadyIcon( const bool& ready, const int& sync )
         else return ICON_NREADY_QSYNC;
     }
 }
+
+
+/** @brief Draw
+  *
+  * @todo: document this function
+  */
+bool IconImageList::Draw(int index, wxDC& dc, int _x, int _y, int flags , const bool solidBackground)
+{
+
+    wxColour bg = wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOX);
+    wxColour hl = wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT);
+    if ( !hl.IsOk() )
+        hl = wxColour(255,0,0);
+
+//    dc.SetBackground(*(wxTheBrushList->FindOrCreateBrush(
+//			wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOX), wxSOLID)));
+//		dc.SetTextForeground(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
+//    return wxImageList::Draw(index, dc, x, y, flags | wxIMAGELIST_DRAW_TRANSPARENT, false);
+
+//    wxList::compatibility_iterator node = m_images.Item( index );
+//
+//    wxCHECK_MSG( node, false, wxT("wrong index in image list") );
+//  dc.SetBackground(*(wxTheBrushList->FindOrCreateBrush(wxColour(0,255,0), wxSOLID)));
+    const wxBitmap bm = wxBitmap(rank0_xpm);//GetBitmap(index);// (wxBitmap*)node->GetData();
+
+    wxImage ret (rank0_xpm);// = bm.ConvertToImage();
+    //img.Replace( 0,255,0,0,0,255);
+//    if (bm.IsKindOf(CLASSINFO(wxIcon)))
+//        dc.DrawIcon( * ((wxIcon*) bm, x, y);
+//    else
+    int *o = 0; *o=9;
+  //ret.InitAlpha();
+  for ( int x = 0; x < ret.GetWidth(); x++ )
+    for ( int y = 0; y < ret.GetHeight(); y++ )
+      if ( ret.GetBlue( x, y ) == 0 && ret.GetGreen( x, y ) == 255 && ret.GetRed( x, y ) == 0 )
+        ret.SetRGB( x, y, hl.Red(),hl.Green(),hl.Blue() );
+
+        dc.DrawBitmap( wxBitmap(ret), _x, _y, flags | wxIMAGELIST_DRAW_TRANSPARENT);
+
+    return true;
+}
+
+
+
