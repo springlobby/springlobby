@@ -345,9 +345,11 @@ void MainWindow::CloseAllChats()
 
 
 //! @brief Displays the lobby configuration.
-void MainWindow::ShowConfigure()
+void MainWindow::ShowConfigure( const unsigned int page )
 {
-  m_func_tabs->SetSelection( 3 );
+  m_func_tabs->SetSelection( PAGE_OPTOS );
+  //possibly out of bounds is captured by m_opts_tab itslef
+  m_opts_tab->SetSelection( page );
 }
 
 
