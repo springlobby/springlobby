@@ -48,6 +48,8 @@ class BattleListFilter : public wxPanel
     bool FilterBattle(Battle& battle);
     bool GetActiv() const;
 
+    void SetFilterHighlighted( bool state );
+
     void SaveFilterValues();
 
 	protected:
@@ -129,6 +131,7 @@ class BattleListFilter : public wxPanel
 		wxChoice* m_filter_spectator_choice;
 		int m_filter_spectator_choice_value;
 
+        bool m_filter_highlighted;
 
     DECLARE_EVENT_TABLE();
 };
