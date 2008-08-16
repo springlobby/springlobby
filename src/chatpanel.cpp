@@ -46,9 +46,13 @@
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
 #include "uiutils.h"
+#include "Helper/wxtextctrlhist.h"
+
 #ifndef DISABLE_SOUND
 #include "sdlsound.h"
 #endif
+#include "useractions.h"
+#define GROUP_ID 24567
 /*
 BEGIN_EVENT_TABLE(MyTextCtrl, wxTextCtrl)
 EVT_PAINT(MyTextCtrl::OnPaint)
@@ -59,7 +63,6 @@ END_EVENT_TABLE()
 BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
 	EVT_TEXT_ENTER( CHAT_TEXT, ChatPanel::OnSay )
-	EVT_TEXT( CHAT_TEXT, ChatPanel::OnTextChanged_Say_Text )
 	EVT_BUTTON( CHAT_SEND, ChatPanel::OnSay )
 	EVT_SIZE( ChatPanel::OnResize )
 	EVT_TEXT_URL( CHAT_LOG,  ChatPanel::OnLinkEvent )
@@ -90,6 +93,7 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 	EVT_MENU( CHAT_MENU_US_CHAT, ChatPanel::OnUserMenuOpenChat )
 	EVT_MENU( CHAT_MENU_US_JOIN, ChatPanel::OnUserMenuJoinSame )
 	EVT_MENU( CHAT_MENU_US_SLAP, ChatPanel::OnUserMenuSlap )
+//	EVT_MENU( CHAT_MENU_US_ADD_TO_GROUP, ChatPanel::OnUserMenuAddToGroup )
 	EVT_MENU( CHAT_MENU_US_MUTE, ChatPanel::OnUserMenuMute )
 	EVT_MENU( CHAT_MENU_US_UNMUTE, ChatPanel::OnUserMenuUnmute )
 	EVT_MENU( CHAT_MENU_US_KICK, ChatPanel::OnUserMenuKick )
@@ -166,8 +170,13 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imagl
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist( NULL ), m_chat_tabs( 0 ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( 0 ), m_battle( &battle ), m_type( CPT_Battle ), m_popup_menu( 0 ) {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist( NULL ), m_chat_tabs( 0 ), m_ui( ui ),
+		 m_channel( 0 ), m_server( 0 ), m_user( 0 ), m_battle( &battle ), m_type( CPT_Battle ), m_popup_menu( 0 ) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Battle& battle" ) );
+	for (unsigned int i = 0; i < battle.GetNumUsers();++i)
+    {
+       textcompletiondatabase.Insert_Mapping( battle.GetUser(i).GetNick(), battle.GetUser(i).GetNick() );
+    }
 	CreateControls( );
 	wxDateTime now = wxDateTime::Now();
 	m_chat_log = new ChatLog( sett().GetDefaultServer(), _T( "_BATTLE_" ) + now.Format( _T( "%Y_%m_%d__%H_%M_%S" ) ) );
@@ -212,8 +221,8 @@ void ChatPanel::CreateControls( ) {
 		m_chat_panel = new wxPanel( m_splitter, -1 );
 
         m_nick_sizer = new wxBoxSizer( wxVERTICAL );
-
-		m_nicklist = new NickListCtrl( m_nick_panel, m_ui, true, CreateNickListMenu() );
+        m_usermenu = CreateNickListMenu();
+		m_nicklist = new NickListCtrl( m_nick_panel, true, m_usermenu );
 
    // m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
    // m_nick_filter->Disable();
@@ -254,7 +263,7 @@ void ChatPanel::CreateControls( ) {
 	if ( m_type == CPT_Channel )
   		m_chatlog_text->SetToolTip( _("right click for options (like autojoin)" ) );
 
-	m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
+	m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
 
 
@@ -405,13 +414,13 @@ void ChatPanel::CreatePopup() {
 }
 
 
-wxMenu* ChatPanel::CreateNickListMenu() {
-	wxMenu* m_user_menu;
-	m_user_menu = new wxMenu();
+UserMenu* ChatPanel::CreateNickListMenu() {
+	UserMenu* m_user_menu;
+	m_user_menu = new UserMenu( this );
 	wxMenuItem* chatitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_CHAT,  _( "Open Chat" ) , wxEmptyString, wxITEM_NORMAL );
 	m_user_menu->Append( chatitem );
-	wxMenuItem* joinbattleitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_JOIN,  _( "Join same battle" ) , wxEmptyString, wxITEM_NORMAL );
-	m_user_menu->Append( joinbattleitem );
+    wxMenuItem* joinbattleitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_JOIN,  _( "Join same battle" ) , wxEmptyString, wxITEM_NORMAL );
+    m_user_menu->Append( joinbattleitem );
 
 	m_user_menu->AppendSeparator();
 
@@ -576,83 +585,6 @@ void ChatPanel::OnLinkEvent( wxTextUrlEvent& event ) {
 void ChatPanel::OnSay( wxCommandEvent& event ) {
 	Say( m_say_text->GetValue() );
 m_say_text->SetValue( _T( "" ) );
-}
-
-//--------------------------------------------------------------------------------
-///
-/// Triggered, if the Text in the Messagefield has changed
-///
-/// \parem event
-///		The event Structur with Inforamtions about this Event
-///
-//--------------------------------------------------------------------------------
-void
-ChatPanel::OnTextChanged_Say_Text( wxCommandEvent& event ) {
-#ifndef HAVE_WX26
-	wxString text = m_say_text->GetValue();
-	long pos_Cursor = m_say_text->GetInsertionPoint();
-	wxString character_before_current_Insertionpoint = m_say_text->GetRange( pos_Cursor-1, pos_Cursor );
-
-	// std::cout << "#########: " << pos_Cursor << " (" << character_before_current_Insertionpoint.char_str() << ")" << std::endl;
-	// std::cout << "#########: Linelength(" << m_say_text->GetLastPosition() << ")" << std::endl;
-
-	if( character_before_current_Insertionpoint == _T("\t") ) {
-		// std::cout << "#########: TAB" << std::endl;
-		wxString selection_Begin_InsertPos = m_say_text->GetRange( 0, pos_Cursor-1 );
-		wxString selection_InsertPos_End = m_say_text->GetRange( pos_Cursor, m_say_text->GetLastPosition() );
-		// std::cout << "#########: Begin to InsertionPoint: (" << selection_Begin_InsertPos.char_str() << ")" << std::endl;
-		// std::cout << "#########: InsertionPoint to End: (" << selection_InsertPos_End.char_str() << ")" << std::endl;
-
-		// Search for the shortest Match, starting from the Insertionpoint to the left, until we find a "\ "
-		// Special Characters according to regular Expression Syntax needs to be escaped: [,]
-		wxRegEx regex_currentWord;
-		#ifdef wxHAS_REGEX_ADVANCED
-		regex_currentWord.Compile( wxT("(_|\\[|\\]|\\w)+$"), wxRE_ADVANCED );
-		#else
-        regex_currentWord.Compile( wxT("(_|\\[|\\]|\\w)+$"), wxRE_EXTENDED );
-        #endif
-
-		if ( regex_currentWord.Matches( selection_Begin_InsertPos ) ) {
-			wxString currentWord = regex_currentWord.GetMatch( selection_Begin_InsertPos );
-			// std::cout << "#########: Current Word: (" << currentWord.char_str() << ")" << std::endl;
-
-			wxString selection_Begin_BeforeCurrentWord = m_say_text->GetRange( 0, pos_Cursor - 1 - currentWord.length() );
-			// std::cout << "#########: selection_Begin_BeforeCurrentWord: (" << selection_Begin_BeforeCurrentWord.char_str() << ")" << std::endl;
-
-			HashMap_String_String hm = textcompletiondatabase.GetMapping( currentWord );
-
-			// std::cout << "#########: Mapping-Size: (" << hm.size() << ")" << std::endl;
-
-			wxString completed_Text;
-			int new_Cursor_Pos = 0;
-			if( hm.size() == 1 ) {
-				completed_Text.append( selection_Begin_BeforeCurrentWord );
-				completed_Text.append( hm.begin()->second );
-				completed_Text.append( selection_InsertPos_End );
-				new_Cursor_Pos = selection_Begin_BeforeCurrentWord.length() + hm.begin()->second.length();
-			} else {
-				completed_Text.append( selection_Begin_BeforeCurrentWord );
-				completed_Text.append( currentWord );
-				completed_Text.append( selection_InsertPos_End );
-				new_Cursor_Pos = selection_Begin_BeforeCurrentWord.length() + currentWord.length();
-				// We ring the System Bell, to signalise the User, that no Completion was applied.
-				wxBell();
-			}
-			// Replace the old Text with our completed Text
-			// or
-			// if nothing was found remove the typed TAB, so that the User stays comfortable not to remove the TAB by himself.
-			m_say_text->ChangeValue( completed_Text );
-			m_say_text->SetInsertionPoint( new_Cursor_Pos );
-		} else {
-			wxString old_Text;
-			old_Text.append( selection_Begin_InsertPos );
-			old_Text.append( selection_InsertPos_End );
-			m_say_text->ChangeValue( old_Text );
-			m_say_text->SetInsertionPoint( selection_Begin_InsertPos.length() );
-			wxBell();
-		}
-	}
-#endif
 }
 
 //! @brief Output a message said in the channel.
@@ -1756,4 +1688,94 @@ void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event ) {
 void ChatPanel::FocusInputBox()
 {
     m_say_text->SetFocus();
+}
+
+void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
+{
+    int id  = event.GetId() - GROUP_ID;
+    wxString groupname = m_usermenu->GetGroupByEvtID(id);
+    User* user = GetSelectedUser();
+    if ( user )
+    useractions().AddUserToGroup( groupname, user->GetNick() );
+}
+
+void ChatPanel::OnUserMenuDeleteFromGroup( wxCommandEvent& event )
+{
+    User* user = GetSelectedUser();
+    if ( user )
+        useractions().RemoveUser( user->GetNick() );
+}
+
+UserMenu::UserMenu(ChatPanel* parent,const wxString& title, long style)
+    : wxMenu( title, style ),m_groupsMenu(0), m_parent(parent),m_groupCounter(0)
+{
+    m_groupsMenu = new wxMenu();
+//    if ( !ui().IsThisMe( m_parent->GetSelectedUser() ) )
+    m_groupsMenuItem = AppendSubMenu( m_groupsMenu, _("Add to group..."));
+    m_groupsDeleteItem = new wxMenuItem( m_groupsMenu, GROUP_ID - 1, _("Remove from group")  );
+    m_parent->Connect( GROUP_ID - 1, wxEVT_COMMAND_MENU_SELECTED,
+                            wxCommandEventHandler( ChatPanel::OnUserMenuDeleteFromGroup ) );
+    Append( m_groupsDeleteItem );
+}
+
+UserMenu::~UserMenu()
+{
+
+}
+void UserMenu::EnableItems(bool isUserSelected)
+{
+    if ( isUserSelected )
+    {
+        User* user = m_parent->GetSelectedUser();
+        bool enable = ( user != 0 && ( !ui().IsThisMe( user ) ) );
+        m_groupsMenuItem->Enable( enable && !useractions().IsKnown( user->GetNick() ) ) ;
+        m_groupsDeleteItem->Enable( enable && useractions().IsKnown( user->GetNick() ) ) ;
+        UpdateGroups();
+    }
+    else
+    {
+        m_groupsMenuItem->Enable( false ) ;
+        m_groupsDeleteItem->Enable( false ) ;
+    }
+
+}
+
+void UserMenu::UpdateGroups()
+{
+    wxSortedArrayString groupNames = useractions().GetGroupNames();
+    bool first = m_oldGroups.GetCount() == 0;
+    if ( first )
+        m_oldGroups = groupNames;
+    for ( unsigned int i = 0; i < groupNames.GetCount(); ++i)
+    {
+        if ( m_oldGroups.Index( groupNames[i] ) == wxNOT_FOUND || first )
+        {
+            m_idNameMap[m_groupCounter] = groupNames[i];
+            wxMenuItem* addItem = new wxMenuItem( m_groupsMenu, GROUP_ID + m_groupCounter ,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
+            m_groupsMenu->Append( addItem );
+            m_parent->Connect( GROUP_ID + m_groupCounter, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanel::OnUserMenuAddToGroup ) );
+            m_oldGroups.Add( groupNames[i] );
+            m_idNameMap[GROUP_ID + m_groupCounter]  = groupNames[i];
+            m_NameIdMap[groupNames[i]]  = GROUP_ID + m_groupCounter;
+            m_groupCounter++;
+        }
+        else
+        {
+            //wxMenuItem* old = FindItem( m_NameIdMap[groupNames[i]] );
+            Destroy( m_NameIdMap[groupNames[i]] );
+        }
+    }
+}
+
+wxString UserMenu::GetGroupByEvtID( const unsigned int id )
+{
+    if ( id < m_idNameMap.size() )
+        return m_idNameMap[id];
+    else
+        return wxEmptyString;
+}
+
+void ChatPanel::UpdateNicklistHighlights()
+{
+    if (m_nicklist != 0) m_nicklist->UpdateHighlights();
 }

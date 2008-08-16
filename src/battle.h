@@ -130,17 +130,17 @@ class Battle : public UserList, public IBattle
 
     void SetImReady( bool ready );
 
-    User& GetFounder() { return GetUser( m_opts.founder ); }
-    User& GetMe();
-    bool IsFounderMe();
+    User& GetFounder() const { return GetUser( m_opts.founder ); }
+    User& GetMe() const;
+    bool IsFounderMe() const;
 
-    bool IsFull() { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
+    bool IsFull() const { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
 
-    int GetMyPlayerNum();
+    int GetMyPlayerNum() const;
 
-    int GetFreeTeamNum( bool excludeme = true );
+    int GetFreeTeamNum( bool excludeme = true ) const;
 
-    wxColour GetFreeColour( User *for_whom );
+    wxColour GetFreeColour( User *for_whom ) const;
     void FixColours( );
 
     void Update();
@@ -182,9 +182,9 @@ class Battle : public UserList, public IBattle
     void SetBotColour( const wxString& nick, const wxColour& col );
     void SetBotHandicap( const wxString& nick, int handicap );
 
-    BattleBot* GetBot( const wxString& name );
-    BattleBot* GetBot( unsigned int index );
-    unsigned int GetNumBots();
+    BattleBot* GetBot( const wxString& name ) const;
+    BattleBot* GetBot( unsigned int index ) const;
+    unsigned int GetNumBots() const;
 
     void StartRectRemoved( int allyno );
     void StartRectUpdated( int allyno );
@@ -240,8 +240,8 @@ class Battle : public UserList, public IBattle
     std::vector<BattleStartRect*> m_rects;
     std::list<BattleBot*> m_bots;
 
-    std::list<BattleBot*>::iterator m_bot_seek;
-    std::list<BattleBot*>::size_type m_bot_pos;
+    mutable std::list<BattleBot*>::const_iterator m_bot_seek;
+    mutable std::list<BattleBot*>::size_type m_bot_pos;
 
     mmOptionsWrapper m_opt_wrap;
 

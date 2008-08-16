@@ -53,6 +53,7 @@ class BattleroomListCtrl : public customListCtrl
     void OnKickPlayer( wxCommandEvent& event );
     void OnRingPlayer( wxCommandEvent& event );
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+    virtual void HighlightItem( long item );
 
   protected:
     static int wxCALLBACK CompareStatusUP(long item1, long item2, long sortData);

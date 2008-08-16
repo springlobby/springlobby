@@ -52,10 +52,6 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   m_sel_user(0), m_sel_bot(0),
   m_ui(ui)
 {
-  SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
-  SetImageList( &icons(), wxIMAGE_LIST_SMALL );
-  SetImageList( &icons(), wxIMAGE_LIST_STATE );
-
   wxListItem col;
 
   col.SetText( _T("r") );
@@ -286,7 +282,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     SetItem( index, 7, _T("") );
     SetItem( index, 9, _T("") );
   }
-
+  HighlightItemUser( index, user.GetNick() );
   SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
   Sort();
 }
@@ -478,12 +474,12 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
 
   if ( m_sel_bot != 0 ) {
     wxColour CurrentColour = m_sel_bot->bs.colour;
-    CurrentColour = wxGetColourFromUser(this, CurrentColour);
+    CurrentColour = GetColourFromUser(this, CurrentColour);
     if ( !CurrentColour.IsColourOk() ) return;
     m_battle.SetBotColour( m_sel_bot->name, CurrentColour );
   } else if ( m_sel_user != 0 ) {
     wxColour CurrentColour = m_sel_user->BattleStatus().colour;
-    CurrentColour = wxGetColourFromUser(this, CurrentColour);
+    CurrentColour = GetColourFromUser(this, CurrentColour);
     if ( !CurrentColour.IsColourOk() ) return;
     m_battle.ForceColour( *m_sel_user, CurrentColour );
   }
@@ -1046,5 +1042,15 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
             m_tiptext =m_colinfovec[coloumn].first;
             break;
         }
+    }
+}
+
+void BattleroomListCtrl::HighlightItem( long item )
+{
+    item_content user_content = items[(size_t)GetItemData( item )];
+    if ( !user_content.is_bot )
+    {
+        User& user = *((User*) user_content.data);
+        HighlightItemUser( item, user.GetNick() );
     }
 }

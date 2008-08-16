@@ -14,6 +14,7 @@ class ChatOptionsTab;
 class wxButton;
 class wxBoxSizer;
 class TorrentOptionsPanel;
+class ManageGroupsPanel;
 
 /** \brief A container for the various option panels
  * Contains a notebook holding the real option panels as pages. Handles "apply" and "restore" events for those pages,
@@ -44,6 +45,7 @@ protected:
     SpringOptionsTab* m_spring_opts;
     ChatOptionsTab* m_chat_opts;
     TorrentOptionsPanel* m_torrent_opts;
+    ManageGroupsPanel* m_groups_opts;
 
     wxButton* m_restore_btn;
     wxButton* m_apply_btn;

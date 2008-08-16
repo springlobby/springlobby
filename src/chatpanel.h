@@ -6,6 +6,7 @@
 #include <wx/panel.h>
 #include <wx/event.h>
 #include <wx/string.h>
+#include <wx/menu.h>
 
 #include "chatlog.h"
 #include "Helper/TextCompletionDatabase.hpp"
@@ -15,6 +16,7 @@ class wxSizeEvent;
 class wxBoxSizer;
 class wxSplitterWindow;
 class wxTextCtrl;
+class wxTextCtrlHist;
 class wxRichTextCtrl;
 class wxTextUrlEvent;
 class wxComboBox;
@@ -26,7 +28,8 @@ class User;
 class Server;
 class Battle;
 class Ui;
-class wxMenu;
+class UserMenu;
+class wxFocusEvent;
 class wxMouseEvent;
 class wxAuiNotebook;
 class wxImageList;
@@ -93,6 +96,7 @@ class ChatPanel : public wxPanel
     void SetIconIndex( size_t index ) { m_icon_index = index; }
 
     User& GetMe();
+    User* GetSelectedUser();
 
     bool IsOk();
 
@@ -103,7 +107,6 @@ class ChatPanel : public wxPanel
 
     void OnSay( wxCommandEvent& event );
     void OnResize( wxSizeEvent& event );
-	void OnTextChanged_Say_Text( wxCommandEvent& event );
 
     void OnLinkEvent( wxTextUrlEvent& event );
     void OnMouseDown( wxMouseEvent& event );
@@ -158,14 +161,15 @@ class ChatPanel : public wxPanel
 	void OnKeyPressed( wxKeyEvent& keyevent );
 	void OnKeyReleased( wxKeyEvent& keyevent );
 
+	void OnUserMenuAddToGroup( wxCommandEvent& event );
+	void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
+	void UpdateNicklistHighlights();
 
   protected:
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
 
     bool ContainsWordToHighlight( const wxString& message );
-
-    User* GetSelectedUser();
 
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.
 
@@ -183,7 +187,7 @@ class ChatPanel : public wxPanel
     #else
     wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
     #endif
-    wxTextCtrl* m_say_text;     //!< The say textcontrol.
+    wxTextCtrlHist* m_say_text;     //!< The say textcontrol.
 
     NickListCtrl* m_nicklist;   //!< The nicklist.
     wxComboBox* m_nick_filter;  //!< The filter combo.
@@ -208,16 +212,20 @@ class ChatPanel : public wxPanel
     wxMenuItem* m_autorejoin;
     ChatLog* m_chat_log;
     wxMenuItem* displayjoinitem;
+    UserMenu* m_usermenu;
 
     void LogTime();
     void CreateControls( );
     void CreatePopup();
-    wxMenu* CreateNickListMenu();
 
     size_t m_icon_index;
 
     wxImageList* m_imagelist;
 
+    UserMenu* CreateNickListMenu();
+
+
+    static const int m_groupMenu_baseID = 6798;
 	TextCompletionDatabase textcompletiondatabase;
 
     DECLARE_EVENT_TABLE();
@@ -257,6 +265,7 @@ enum
     CHAT_MENU_US_MUTE,
     CHAT_MENU_US_UNMUTE,
     CHAT_MENU_US_KICK,
+    CHAT_MENU_US_ADD_TO_GROUP,
     CHAT_MENU_US_OP,
     CHAT_MENU_US_DEOP,
     CHAT_MENU_US_MODERATOR_INGAME,
@@ -272,6 +281,31 @@ enum
     CHAT_MENU_US_MODERATOR_MUTE_1440,
     CHAT_MENU_US_MODERATOR_UNMUTE,
     CHAT_MENU_US_MODERATOR_RING
+};
+
+class UserMenu : public wxMenu
+{
+    public:
+        UserMenu(ChatPanel* parent, const wxString& title = wxEmptyString, long style = 0);
+        ~UserMenu();
+
+        void EnableItems(bool isUserSelected);
+        wxString GetGroupByEvtID( const unsigned int id );
+
+    protected:
+        wxMenu* m_groupsMenu;
+        wxMenuItem* m_groupsMenuItem;
+        wxMenuItem* m_groupsDeleteItem;
+        wxArrayString m_oldGroups;
+        ChatPanel* m_parent;
+        unsigned int m_groupCounter;
+        std::map<unsigned int, wxString> m_idNameMap;
+        std::map<wxString, unsigned int> m_NameIdMap;
+
+        void UpdateGroups();
+
+    //DECLARE_EVENT_TABLE();
+
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H

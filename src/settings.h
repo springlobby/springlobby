@@ -5,6 +5,7 @@
 #include <wx/colour.h>
 
 #define CACHE_VERSION 3
+#define SETTINGS_VERSION 1
 
 #define DEFSETT_DEFAULT_SERVER "TAS Server"
 #define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"
@@ -23,14 +24,17 @@
 
 #include <wx/fileconf.h>
 #include "utils.h"
+#include "useractions.h"
 #include <wx/wfstream.h>
 
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
 class IBattle;
-class wxFileInputStream ;
-//class wxFileConfig;
+class wxFileInputStream;
+struct wxColourData;
+
+
 class myconf : public wxFileConfig
 {
     public:
@@ -90,6 +94,10 @@ class Settings
     void SaveSettings();
 
     bool IsFirstRun();
+
+    //! Sets/Gets settings revision number
+    void SetSettingsVersion();
+    unsigned int GetSettingsVersion();
 
     /* ================================================================ */
     /** @name Network
@@ -259,6 +267,10 @@ class Settings
     /** @name UI
      * @{
      */
+
+     void SaveCustomColors( const wxColourData& cdata, const wxString& paletteName = _T("Default") );
+     wxColourData GetCustomColors( const wxString& paletteName = _T("Default") );
+
     int    GetMainWindowWidth();
     void   SetMainWindowWidth( const int value );
 
@@ -281,6 +293,26 @@ class Settings
     int GetColumnWidth( const wxString& list_name, const int coloumn );
     //! used to signal unset column width in Get...
     enum { columnWidthUnset };
+
+    /*@}*/
+
+    /* ================================================================ */
+    /** @name People/Group mngm related
+     * @{
+     */
+    void SetPeopleList( const wxArrayString& friends, const wxString& group = _T("default") );
+    wxArrayString GetPeopleList( const wxString& group = _T("default") ) const;
+
+    wxArrayString GetGroups( ) const;
+    void AddGroup( const wxString& group ) ;
+    void DeleteGroup( const wxString& group ) ;
+
+    void SetGroupHLColor( const wxColor& color, const wxString& group = _T("default") );
+    wxColor GetGroupHLColor( const wxString& group = _T("default") ) const;
+
+    void SetGroupActions( const wxString& group, UserActions::ActionType action );
+    UserActions::ActionType GetGroupActions( const wxString& group ) const;
+
     /*@}*/
 
     /* ================================================================ */

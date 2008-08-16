@@ -14,9 +14,12 @@
 #include "utils.h"
 #include "iconimagelist.h"
 #include "user.h"
+#include "settings.h"
 #include "ui.h"
 #include "mainwindow.h"
 #include "countrycodes.h"
+#include "chatpanel.h"
+#include "userlist.h"
 
 #define TOOLTIP_DELAY 1000
 
@@ -34,11 +37,11 @@ BEGIN_EVENT_TABLE( NickListCtrl, customListCtrl )
 END_EVENT_TABLE()
 
 
-NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* popup ):
+NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, UserMenu* popup, bool singleSelectList,
+                            const wxString& name, bool highlight):
   customListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
-              wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | wxLC_SINGLE_SEL,
-              _T("NickListCtrl") ),
-  m_ui(ui),
+              wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
+              name, highlight ),
   m_menu(popup)
 {
   wxListItem col;
@@ -85,9 +88,6 @@ NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* p
   SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
 #endif
 
-  SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
-  SetImageList( &icons(), wxIMAGE_LIST_SMALL );
-  SetImageList( &icons(), wxIMAGE_LIST_STATE );
 }
 
 
@@ -96,11 +96,20 @@ NickListCtrl::~NickListCtrl()
 
 }
 
-void NickListCtrl::AddUser( User& user )
+void NickListCtrl::AddUser( const UserList& userlist )
+{
+    for ( unsigned int i = 0; i < userlist.GetNumUsers(); ++i)
+    {
+        AddUser( userlist.GetUser( i ) );
+    }
+}
+
+void NickListCtrl::AddUser( const User& user )
 {
   SetSelectionRestorePoint();
   wxLogDebugFunc(_T(""));
   assert(&user);
+
   int index = InsertItem( GetItemCount(), icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
   if(index==-1){
       wxLogMessage(_T("NickListCtrl::AddUser : index==-1"));
@@ -151,11 +160,14 @@ void NickListCtrl::UserUpdated( const int& index )
 {
   SetSelectionRestorePoint();
   User& user = *((User*)GetItemData( index ));
-  SetItemImage( index, icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+  const UserStatus user_st = user.GetStatus();
+  SetItemImage( index, icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 ) );
   SetItemColumnImage( index, 1, icons().GetFlagIcon( user.GetCountry() ) );
   SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
+    //highlight
+  HighlightItemUser( index, user.GetNick() );
   Sort();
   RestoreSelection();
 }
@@ -169,7 +181,7 @@ void NickListCtrl::ClearUsers()
 }
 
 
-int NickListCtrl::GetUserIndex( User& user )
+int NickListCtrl::GetUserIndex( const User& user )const
 {
   for ( int i = 0; i < GetItemCount() ; i++ ) {
     if ( (unsigned long)&user == GetItemData( i ) ) return i;
@@ -184,7 +196,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
   int index = event.GetIndex();
   if ( index == -1 ) return;
   User* user = (User*)event.GetData();
-  m_ui.mw().OpenPrivateChat( *user );
+  ui().mw().OpenPrivateChat( *user );
   //FIXME why was this lfet here, what was it supposed to do?
   //m_ui.mw().OnTabsChanged( event2 );
 }
@@ -193,7 +205,14 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
 void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
 {
   wxLogDebugFunc( _T("") );
-  if ( m_menu != 0 ) PopupMenu( m_menu );
+  if ( m_menu != 0 )
+  {
+      //no need to popup the menu when there's no user selected
+      if ( GetSelectedIndex() != -1 ){
+          m_menu->EnableItems( (GetSelectedIndex()!=-1) );
+          PopupMenu( m_menu );
+      }
+  }
 }
 
 void NickListCtrl::OnColClick( wxListEvent& event )
@@ -416,3 +435,15 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
         }
     }
 }
+
+void NickListCtrl::HighlightItem( long item )
+{
+    User* u = (User*)GetItemData( item ) ;
+    if ( u != 0 ) {
+        wxString name = u->GetNick();
+        HighlightItemUser( item, name );
+    }
+}
+
+
+

@@ -11,6 +11,16 @@
 #include <wx/string.h>
 #include <wx/intl.h>
 
+wxString UserStatus::GetDiffString ( const UserStatus& old )
+{
+    if ( old.away != away )
+        return ( away ? _("away") : _("back") );
+    if ( old.in_game != in_game )
+        return ( in_game ? _("ingame") : _("back from game") );
+    return
+        wxEmptyString;
+}
+
 void User::Said( const wxString& message )
 {
 }
@@ -28,7 +38,7 @@ void User::DoAction( const wxString& message )
 }
 
 
-Battle* User::GetBattle()
+Battle* User::GetBattle() const
 {
   return m_battle;
 }

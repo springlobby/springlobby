@@ -4,6 +4,8 @@
 #include <wx/string.h>
 #include <wx/thread.h>
 #include <wx/event.h>
+#include <map>
+#include "useractions.h"
 
 class Server;
 class TASServer;
@@ -158,8 +160,11 @@ class Ui
     void OnCachedThreadStarted();
 
     bool IsThisMe(User& other);
+    bool IsThisMe(User* other);
+    bool IsThisMe(const wxString& other);
 
     int TestHostPort( unsigned int port );
+
 
   protected:
     Spring* m_spring;
@@ -172,6 +177,7 @@ class Ui
     ConnectWindow* m_con_win;
 
     unsigned int m_upd_intv_counter;
+
 };
 
 Ui& ui();

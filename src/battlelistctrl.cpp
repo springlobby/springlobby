@@ -13,6 +13,9 @@
 #include "ui.h"
 #include "server.h"
 #include "countrycodes.h"
+#include "settings.h"
+#include "settings++/custom_dialogs.h"
+#include "useractions.h"
 
 BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 
@@ -34,12 +37,6 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl")),
   m_ui(ui)
 {
-
-  SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
-  SetImageList( &icons(), wxIMAGE_LIST_SMALL );
-  SetImageList( &icons(), wxIMAGE_LIST_STATE );
-
-
   wxListItem col;
 
   col.SetText( _T("s") );
@@ -127,6 +124,24 @@ BattleListCtrl::~BattleListCtrl()
   delete m_popup;
 }
 
+void BattleListCtrl::HighlightItem( long item )
+{
+    //prioritize highlighting host over joined players
+    Battle b = ui().GetServer().GetBattle( GetItemData(item) );
+    wxString host = b.GetFounder().GetNick();
+    HighlightItemUser( item, host );
+    if ( useractions().DoActionOnUser( m_highlightAction, host ) )
+        return;
+
+    //to avoid color flicker check first if highlighting should be done
+    //and return if it should
+    for ( unsigned int i = 0; i < b.GetNumUsers(); ++i){
+        wxString name = b.GetUser(i).GetNick();
+        HighlightItemUser( item, name );
+        if ( useractions().DoActionOnUser( m_highlightAction, name ) )
+            return;
+    }
+}
 
 void BattleListCtrl::OnListRightClick( wxListEvent& event )
 {
@@ -561,7 +576,7 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
 {
     long item = GetItemData(item_hit);
     Ui* ui = m_ui_for_sort;
-    Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
+    const Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
     int coloumn = getColoumnFromPosition(position);
     switch (coloumn)
     {
