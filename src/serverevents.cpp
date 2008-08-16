@@ -429,7 +429,7 @@ void ServerEvents::OnChannelSaid( const wxString& channel, const wxString& who, 
 {
   wxLogDebugFunc( _T("") );
   try{
-    if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnore, who ) )
+    if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
         m_serv.GetChannel( channel ).Said( m_serv.GetUser( who ), message );
   }catch(std::runtime_error &except){
   }
@@ -478,7 +478,7 @@ void ServerEvents::OnPrivateMessage( const wxString& user, const wxString& messa
   wxLogDebugFunc( _T("") );
   try{
   User& who = m_serv.GetUser( user );
-  if (!useractions().DoActionOnUser( UserActions::ActIgnore, who.GetNick() ) )
+  if (!useractions().DoActionOnUser( UserActions::ActIgnorePM, who.GetNick() ) )
     m_ui.OnUserSaid( who, message, fromme );
   }catch(std::runtime_error &except){
   }
