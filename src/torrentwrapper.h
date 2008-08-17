@@ -146,7 +146,7 @@ class TorrentWrapper : public iNetClass
 
     //!we set this when trying a tracker and waiting for connection to be established
     bool m_is_connecting;
-    unsigned int m_cur_tracker_no;
+
     unsigned int m_connected_tracker_index;
 };
 
