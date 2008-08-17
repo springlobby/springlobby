@@ -29,6 +29,9 @@ class UserListctrl : public customListCtrl
         void RemoveUsers( const UserDataMap& userdata );
         UserDataMap GetSelectedUserData() const;
         wxArrayString GetUserNicks( ) const;
+        void SetColumnWidths();
+        void OnColClick( wxListEvent& event );
+
     protected:
         UserDataMap m_userdata;
 
@@ -41,6 +44,11 @@ class UserListctrl : public customListCtrl
         bool IsInList( const UserData userdata );
         UserDataMapIter FindData( const UserData userdata );
 
+        static int wxCALLBACK ComparePlayernameUP(long item1, long item2, long sortData);
+        static int wxCALLBACK ComparePlayernameDOWN(long item1, long item2, long sortData);
+        static int wxCALLBACK ComparePlayercountryUP(long item1, long item2, long sortData);
+        static int wxCALLBACK ComparePlayercountryDOWN(long item1, long item2, long sortData);
+
         enum {
             USERLIST = wxID_HIGHEST
         };
@@ -50,7 +58,7 @@ class UserListctrl : public customListCtrl
           bool direction;
         } m_sortorder[2];
 
-
+        DECLARE_EVENT_TABLE()
 
 };
 

@@ -4,35 +4,43 @@
 #include "user.h"
 #include "iconimagelist.h"
 
+BEGIN_EVENT_TABLE( UserListctrl, customListCtrl )
+  EVT_LIST_COL_CLICK( USERLIST, UserListctrl::OnColClick )
+END_EVENT_TABLE()
 
 UserListctrl::UserListctrl(wxWindow* parent, const wxString& name, bool highlight)
-  : customListCtrl( parent,wxID_ANY,wxDefaultPosition, wxDefaultSize,
+  : customListCtrl( parent,USERLIST,wxDefaultPosition, wxDefaultSize,
         wxSUNKEN_BORDER | wxLC_REPORT, name, highlight )
 {
-  wxListItem col;
+    wxListItem col;
 
-  col.SetImage( -1 );
-  InsertColumn( 0, col, _T("Country") );
+    col.SetImage( -1 );
+    InsertColumn( 0, col, _T("Country") );
 
-  col.SetText( _("Nickname") );
-  col.SetImage( -1 );
-  InsertColumn( 1, col, _T("Nickname") );
+    col.SetText( _("Nickname") );
+    col.SetImage( -1 );
+    InsertColumn( 1, col, _T("Nickname") );
 
-  m_sortorder[0].col = 0;
-  m_sortorder[0].direction = false;
-  m_sortorder[1].col = 1;
-  m_sortorder[1].direction = true;
+    m_sortorder[0].col = 0;
+    m_sortorder[0].direction = false;
+    m_sortorder[1].col = 1;
+    m_sortorder[1].direction = true;
 
-#if defined(__WXMAC__)
-/// autosize is entirely broken on wxmac.
-  SetColumnWidth( 0, 20 );
-  SetColumnWidth( 3, 128 );
-#else
- /// on wxGTK it works, sort of.
-  SetColumnWidth( 0, wxLIST_AUTOSIZE );
-  SetColumnWidth( 1, wxLIST_AUTOSIZE );
-#endif
+    SetColumnWidths();
 
+}
+
+void UserListctrl::SetColumnWidths()
+{
+    #if defined(__WXMAC__)
+    /// autosize is entirely broken on wxmac.
+      SetColumnWidth( 0, 20 );
+      SetColumnWidth( 1, 228 );
+    #else
+     /// on wxGTK it works, sort of.
+      SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
+      SetColumnWidth( 1, 160 );
+    #endif
 }
 
 UserListctrl::~UserListctrl()
@@ -46,6 +54,7 @@ void UserListctrl::AddUser( const UserDataMap& userdata )
     {
         AddUser( it->second );
     }
+    //SetColumnWidths();
 }
 
 const UserListctrl::UserDataMap& UserListctrl::GetUserData() const
@@ -62,10 +71,11 @@ void UserListctrl::AddUser( const UserData userdata )
 
     int index = InsertItem( GetItemCount(), icons().GetFlagIcon( userdata.second ) );
     SetItem( index, 1, userdata.first );
-    SetItemData(index, index );
+
     //highlight
     HighlightItemUser( index, userdata.first );
     m_userdata[index] = userdata;
+    SetItemData(index, (long)&m_userdata[index] );
 
     Sort();
     RestoreSelection();
@@ -73,7 +83,15 @@ void UserListctrl::AddUser( const UserData userdata )
 }
 
 
-void UserListctrl::Sort(){}
+void UserListctrl::Sort()
+{
+  for (int i = 1; i >= 0; i--) {
+    switch ( m_sortorder[ i ].col ) {
+      case 0 : SortItems( ( m_sortorder[ i ].direction )?&ComparePlayercountryUP:&ComparePlayercountryDOWN , 0 ); break;
+      case 1 : SortItems( ( m_sortorder[ i ].direction )?&ComparePlayernameUP:&ComparePlayernameDOWN , 0 ); break;
+    }
+  }
+}
 
 void UserListctrl::SetTipWindowText( const long item_hit, const wxPoint position){}
 
@@ -146,9 +164,49 @@ bool UserListctrl::IsInList( const UserData userdata )
 
 void UserListctrl::HighlightItem( long item )
 {
-//    User* u = (User*)GetItemData( item ) ;
-//    if ( u != 0 ) {
-//        wxString name = u->GetNick();
-//        HighlightItemUser( item, name );
-//    }
+
 }
+
+int wxCALLBACK UserListctrl::ComparePlayercountryDOWN(long item1, long item2, long sortData)
+{
+    return ( (UserData*) item1)->first.Upper().CompareTo( ( (UserData*) item2)->first.Upper() ) ;
+}
+
+int wxCALLBACK UserListctrl::ComparePlayercountryUP(long item1, long item2, long sortData)
+{
+    return ( (UserData*) item2)->first.Upper().CompareTo( ( (UserData*) item1)->first.Upper() ) ;
+}
+
+int wxCALLBACK UserListctrl::ComparePlayernameDOWN(long item1, long item2, long sortData)
+{
+    return ( (UserData*) item1)->second.Upper().CompareTo( ( (UserData*) item2)->second.Upper() ) ;
+}
+
+int wxCALLBACK UserListctrl::ComparePlayernameUP(long item1, long item2, long sortData)
+{
+    return ( (UserData*) item2)->second.Upper().CompareTo( ( (UserData*) item1)->second.Upper()) ;
+}
+
+void UserListctrl::OnColClick( wxListEvent& event )
+{
+  if ( event.GetColumn() == -1 ) return;
+  wxListItem col;
+  GetColumn( m_sortorder[0].col, col );
+  col.SetImage( -1 );
+  SetColumn( m_sortorder[0].col, col );
+
+  int i;
+  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 2; ++i ) {}
+  if (i > 1) { i = 1; }
+  for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
+  m_sortorder[0].col = event.GetColumn();
+  m_sortorder[0].direction = !m_sortorder[0].direction;
+
+
+  GetColumn( m_sortorder[0].col, col );
+  col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
+  SetColumn( m_sortorder[0].col, col );
+
+  Sort();
+}
+
