@@ -132,5 +132,17 @@ void MainOptionsTab::OnRestore( wxCommandEvent& event )
 #endif
 }
 
+void MainOptionsTab::OnOpenGroupsTab()
+{
+    m_groups_opts->ReloadGroupSizer();
+}
 
-
+void MainOptionsTab::SetSelection( const unsigned int page )
+{
+    if ( page < m_tabs->GetPageCount() ){
+        m_tabs->SetSelection( page );
+        m_groups_opts->ReloadGroupSizer();
+    }
+    else
+        m_tabs->SetSelection( 0 );
+}

@@ -15,7 +15,6 @@
 #include "uiutils.h"
 #include "Helper/colorbutton.h"
 #include "ui.h"
-#include <cmath>
 #include "groupuserdialog.h"
 #include "settings++/custom_dialogs.h"
 
@@ -58,13 +57,15 @@ wxSizer* ManageGroupsPanel::GetGroupSizer( const wxString& group )
     for ( int i = 1; i < UserActions::m_numActions; ++i)
     {
         //encoding the actionenum value in the id
-        int id = (int) std::pow( 2.0, i);
+        int id = 2 << ( i -1 );
         wxCheckBox* chk = new wxCheckBox( this, id, m_actionNames[i], wxDefaultPosition,
             wxDefaultSize, 0, wxDefaultValidator, group );
         UserActions::ActionType act = useractions().GetGroupAction( group );
         UserActions::ActionType act1 = ( (UserActions::ActionType) id );
         if ( act != UserActions::ActNone )
             chk->SetValue( ( act &  act1 ) != 0 );
+        wxString tt = m_actionTooltips[i];
+        chk->SetToolTip( tt );
         actionsBox->Add( chk );
     }
     gBox->Add( actionsBox, 0, wxALL|wxEXPAND, 10 );

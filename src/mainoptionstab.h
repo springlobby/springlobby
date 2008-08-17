@@ -31,6 +31,10 @@ public:
     void OnApply( wxCommandEvent& event );
     void OnRestore( wxCommandEvent& event );
 
+    void OnOpenGroupsTab();
+    void SetSelection( const unsigned int page );
+
+
 protected:
     wxBoxSizer* m_main_sizer;
 

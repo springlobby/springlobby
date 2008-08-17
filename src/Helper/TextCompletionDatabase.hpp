@@ -6,7 +6,6 @@
 
 // wxWidgets
 #include <wx/hashmap.h>
-#include <wx/regex.h>
 #include <wx/string.h>
 
 

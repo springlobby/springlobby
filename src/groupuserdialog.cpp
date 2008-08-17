@@ -4,6 +4,8 @@
 #include <wx/sizer.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
+#include <wx/textctrl.h>
+#include <wx/tokenzr.h>
 
 #include "ui.h"
 #include "nicklistctrl.h"
@@ -13,6 +15,7 @@
 #include "useractions.h"
 #include "settings.h"
 #include "user.h"
+#include "settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE( GroupUserDialog, wxDialog )
 
@@ -66,8 +69,10 @@ GroupUserDialog::GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString
         m_group_users->AddUser( UserData( name, country ) );
     }
 
-    m_add_users = new wxButton( this, ID_BUTTON_ADD, _("Add selected") );
+    m_add_users = new wxButton( this, ID_BUTTON_ADD, _("Add user") );
     m_delete_users = new wxButton( this, ID_BUTTON_DELETE, _("Remove selected") );
+    wxStaticText* m_username_label = new wxStaticText( this, -1, _("you can also enter a ';' seperated list of usernames:") );
+    m_usernames_ctrl = new wxTextCtrl ( this, -1, _("") );
 
     leftCol->Add( m_group_users, 10, wxALL|wxEXPAND, 10 );
     leftCol->Add( m_delete_users, 0, wxALL|wxEXPAND, 10 );
@@ -80,6 +85,8 @@ GroupUserDialog::GroupUserDialog(wxWindow* parent, wxWindowID id, const wxString
         rightCol->Add( warning, 0, wxALL|wxEXPAND, 10 );
     }
 
+    rightCol->Add( m_username_label , 0, wxALL|wxEXPAND, 10 );
+    rightCol->Add( m_usernames_ctrl , 0, wxALL|wxEXPAND, 10 );
     rightCol->Add( m_add_users, 0, wxALL|wxEXPAND, 10 );
     top_sizer->Add( leftCol,1, wxALL|wxEXPAND, 10 );
     top_sizer->Add( rightCol,1, wxALL|wxEXPAND, 10 );
@@ -104,6 +111,7 @@ void GroupUserDialog::OnOk ( wxCommandEvent& event )
         if ( !useractions().IsKnown( name ) );
             useractions().AddUserToGroup( m_groupname, name );
     }
+
     this->Show( 0 );
 }
 
@@ -118,6 +126,40 @@ void GroupUserDialog::OnAdd ( wxCommandEvent& event )
     m_all_users->SelectNone();
     m_all_users->RemoveUsers( sel_users );
     m_group_users->AddUser( sel_users );
+
+    wxArrayString faulty_nicknames;
+    wxString list = m_usernames_ctrl->GetValue();
+    if ( !list.IsEmpty() )
+    {
+        wxStringTokenizer usersnames( list, _T( ";" ) );
+        while ( usersnames.HasMoreTokens() )
+        {
+            wxString name = usersnames.GetNextToken();
+            name  = name.Trim(true).Trim(false);//trim left and right whitespace
+            wxString country = wxEmptyString;
+            if ( ui().IsConnected() ) {
+                const UserList& userlist = ui().GetServer().GetUserList();
+                if ( userlist.UserExists( name ) )
+                    country = userlist.GetUser( name ).GetCountry();
+            }
+            if ( IsValidNickname( name ) )
+                m_group_users->AddUser( UserListctrl::UserData( name, country ) );
+            else if ( !name.IsEmpty() )
+                faulty_nicknames.Add( name );
+        }
+        wxString new_textctrl_content = wxEmptyString;
+        if ( faulty_nicknames.GetCount() > 0 )
+        {
+            customMessageBox( SL_MAIN_ICON, _("At least one username contained non-ascii or whitespace character.\nPlease correct and try again."),
+                                _("Invalid usernames") );
+            unsigned int i = 0;
+            for ( ; i < faulty_nicknames.GetCount() ; ++i )
+                new_textctrl_content << faulty_nicknames[i] + _T(";");
+            if (i > 0)
+                new_textctrl_content = new_textctrl_content.BeforeLast( *wxT(";") );
+        }
+        m_usernames_ctrl->SetValue( new_textctrl_content );
+    }
 
 }
 

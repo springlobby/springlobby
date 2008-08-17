@@ -38,6 +38,12 @@ typedef wxWindow wxNotebookPage;
 #define PAGE_SINGLE 2
 #define PAGE_OPTOS 3
 
+static const unsigned int OPT_PAGE_SPRING = 0;
+static const unsigned int OPT_PAGE_CHAT = 1;
+static const unsigned int OPT_PAGE_TORRENT = 2;
+static const unsigned int OPT_PAGE_GROUPS = 3;
+
+
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
 {
@@ -51,7 +57,7 @@ class MainWindow : public wxFrame
 
     void CloseAllChats();
 
-    void ShowConfigure();
+    void ShowConfigure( const unsigned int page = OPT_PAGE_SPRING );
 
     void OnMenuAbout( wxCommandEvent& event );
     void OnMenuJoin( wxCommandEvent& event );

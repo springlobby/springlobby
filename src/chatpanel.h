@@ -163,6 +163,7 @@ class ChatPanel : public wxPanel
 
 	void OnUserMenuAddToGroup( wxCommandEvent& event );
 	void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
+	void OnUserMenuCreateGroup( wxCommandEvent& event );
 	void UpdateNicklistHighlights();
 
   protected:
@@ -296,6 +297,7 @@ class UserMenu : public wxMenu
         wxMenu* m_groupsMenu;
         wxMenuItem* m_groupsMenuItem;
         wxMenuItem* m_groupsDeleteItem;
+        wxMenuItem* m_groupsnewItem;
         wxArrayString m_oldGroups;
         ChatPanel* m_parent;
         unsigned int m_groupCounter;
