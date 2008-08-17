@@ -88,7 +88,7 @@ class TorrentWrapper : public iNetClass
 
     /// gui interface
 
-    bool ConnectToP2PSystem();
+    bool ConnectToP2PSystem(const unsigned int tracker_no = 0);
     void DisconnectToP2PSystem();
     bool IsConnectedToP2PSystem();
     bool IsFileInSystem( const wxString& hash );
@@ -143,6 +143,10 @@ class TorrentWrapper : public iNetClass
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;
+
+    //!we set this when trying a tracker and waiting for connection to be established
+    bool m_is_connecting;
+    unsigned int m_cur_tracker_no;
     unsigned int m_connected_tracker_index;
 };
 
