@@ -125,7 +125,7 @@ fi
 
 #on windows append identifier to version string
 if test "$win_build" = 1 ; then
-    AC_DEFINE([VERSION],["<<<esyscmd(/bin/echo -n "$VERSION")>>> Windows"]  )
+    AC_DEFINE([VERSION],["<<<esyscmd(/bin/echo -n "$VERSION")>>> on Windows"]  )
 fi
 
 AM_CONDITIONAL([USE_WINDRES], test "$win_build" = 1)
