@@ -100,7 +100,7 @@ void* HttpDownloader::HttpDownloaderThread::Entry()
     {
         wxCommandEvent notice(httpDownloadEvtFailed,GetId());
         if (m_noticeErr == wxEmptyString)
-            notice.SetString(_("Could not save\n") + m_fileurl + _("\nto:\n") + m_destpath ;
+            notice.SetString(_("Could not save\n") + m_fileurl + _("\nto:\n") + m_destpath );
         else
             notice.SetString(m_noticeErr);
         notice.SetString( notice.GetString() + _("\nError number: ") + TowxString(FileDownloading.GetError() ) );
