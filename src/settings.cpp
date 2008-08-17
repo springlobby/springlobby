@@ -1315,3 +1315,17 @@ wxColourData Settings::GetCustomColors( const wxString& paletteName )
 
     return cdata;
 }
+
+bool Settings::GetReportStats()
+{
+    return m_config->Read( _T("/General/reportstats"), 1l );
+}
+
+
+void Settings::SetReportStats(const bool value)
+{
+    m_config->Write( _T("/General/reportstats"), value );
+}
+
+
+

@@ -98,6 +98,10 @@ class Settings
     void SetSettingsVersion();
     unsigned int GetSettingsVersion();
 
+    //! should we sayex/pm bot?
+    void SetReportStats(const bool value);
+    bool GetReportStats();
+
     /* ================================================================ */
     /** @name Network
      * @{
