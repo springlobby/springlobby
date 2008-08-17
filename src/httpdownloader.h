@@ -18,7 +18,7 @@ protected:
     class HttpDownloaderThread : public wxThread
         {
         public:
-            HttpDownloaderThread( HttpDownloader& CallingClass, const wxString& FileUrl, const wxString& DestPath,
+            HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath,
                                   const bool notify = true, const wxString& noticeErr = wxEmptyString, const wxString& noticeOk = wxEmptyString);
             ~HttpDownloaderThread();
             void Init();
@@ -26,12 +26,11 @@ protected:
             void CloseThread();
             bool TestDestroy();
         private:
-            HttpDownloader& m_calling_class;
             bool m_destroy;
 
             wxString m_destpath;
             wxString m_fileurl;
-
+            bool Unzip();
             bool m_notifyOnDownloadEvent;
 
             wxString m_noticeErr;
@@ -39,7 +38,7 @@ protected:
 
         };
 
-    HttpDownloaderThread m_thread_updater;
+    HttpDownloaderThread* m_thread_updater;
 
 };
 
