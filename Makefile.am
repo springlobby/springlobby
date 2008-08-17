@@ -881,13 +881,16 @@ springlobby_SOURCES = \
 
 if USE_WINDRES	
 springlobby_SOURCES += \ 
-		$(libtorrent_headers) \
- 		$(libtorrent_sources) \
 		src/springlobby.rc \
 		src/Helper/listctrl.cpp \
 		src/Helper/listctrl.cpp 
 endif
 
+if USE_LIBT_INCLUDED
+springlobby_SOURCES += \ 
+		$(libtorrent_headers) \
+ 		$(libtorrent_sources) 
+endif
 
 # TODO keep only a single list instead of duplicating the lists below
 # note, integrated has everything but main.cpp
