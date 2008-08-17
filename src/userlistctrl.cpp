@@ -23,19 +23,14 @@ UserListctrl::UserListctrl(wxWindow* parent, const wxString& name, bool highligh
   m_sortorder[1].col = 1;
   m_sortorder[1].direction = true;
 
-
-#if defined(__WXMSW__)
- /// autosize is part-broken on msw.
-  SetColumnWidth( 0, 55 );
-  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
-#elif defined(__WXMAC__)
+#if defined(__WXMAC__)
 /// autosize is entirely broken on wxmac.
   SetColumnWidth( 0, 20 );
   SetColumnWidth( 3, 128 );
 #else
  /// on wxGTK it works, sort of.
-  SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 0, wxLIST_AUTOSIZE );
+  SetColumnWidth( 1, wxLIST_AUTOSIZE );
 #endif
 
 }

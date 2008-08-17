@@ -33,13 +33,7 @@ FileListCtrl::FileListCtrl( wxWindow* parent, FileListDialog* fld  ):
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_ALIGN_LEFT, _T("FileListCtrl") ),
         m_parent_dialog( fld )
 {
-
-	SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
-	SetImageList( &icons(), wxIMAGE_LIST_SMALL );
-	SetImageList( &icons(), wxIMAGE_LIST_STATE );
-
-
-	wxListItem col;
+    wxListItem col;
 
 	col.SetText( _( "Name" ) );
 	col.SetImage( icons().ICON_NONE );
