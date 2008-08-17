@@ -15,6 +15,7 @@
 #include <wx/tooltip.h>
 #include <wx/file.h>
 #include <wx/fs_zip.h> //filesystem zip handler
+#include <wx/socket.h>
 
 
 #include "springlobbyapp.h"
@@ -67,6 +68,7 @@ bool SpringLobbyApp::OnInit()
 
     //initialize all loggers
     InitializeLoggingTargets();
+    wxSocketBase::Initialize();
 
     wxLogDebugFunc( _T("") );
     wxInitAllImageHandlers();
