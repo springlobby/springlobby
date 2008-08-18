@@ -46,7 +46,8 @@ END_EVENT_TABLE()
 Ui* BattleroomListCtrl::m_ui_for_sort = 0;
 
 BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui ) :
-	customListCtrl(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL ),
+	customListCtrl(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
+                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl") ),
 	m_battle(battle),
   m_sel_user(0), m_sel_bot(0),
   m_ui(ui)
@@ -477,12 +478,12 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
 
   if ( m_sel_bot != 0 ) {
     wxColour CurrentColour = m_sel_bot->bs.colour;
-    CurrentColour = wxGetColourFromUser(this, CurrentColour);
+    CurrentColour = GetColourFromUser(this, CurrentColour);
     if ( !CurrentColour.IsColourOk() ) return;
     m_battle.SetBotColour( m_sel_bot->name, CurrentColour );
   } else if ( m_sel_user != 0 ) {
     wxColour CurrentColour = m_sel_user->BattleStatus().colour;
-    CurrentColour = wxGetColourFromUser(this, CurrentColour);
+    CurrentColour = GetColourFromUser(this, CurrentColour);
     if ( !CurrentColour.IsColourOk() ) return;
     m_battle.ForceColour( *m_sel_user, CurrentColour );
   }

@@ -610,12 +610,13 @@ void Ui::OnChannelMessage( const wxString& channel, const wxString& msg )
 }
 
 
-//! @brief Called when client is leaving a channel
-//!
-//! @todo Tell ChatPanel the channel is no longer joined
-void Ui::OnLeaveChannel( Channel& channel )
+/** \brief this is only used if channel is left via raw command in server tab */
+void Ui::OnLeaveChannel( wxString& name )
 {
+    ChatPanel* panel = GetChannelChatPanel( name );
 
+    if (panel)
+        mw().GetChatTab().RemoveChatPanel( panel );
 }
 
 

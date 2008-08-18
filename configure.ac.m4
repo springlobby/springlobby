@@ -3,6 +3,7 @@ dnl but the developers will NOT support you if it fails
 dnl you really should just upgrade your autotools instead
 
 dnl if you have too old autoconf, comment out the following prereq AND edit Makefile.am
+
 AC_INIT([SpringLobby],[<<<esyscmd(/bin/echo -n "$VERSION")>>>],[devel@www.springlobby.info])
 
 AC_CONFIG_HEADERS([config.h])
@@ -13,6 +14,8 @@ dnl we use filter-out GNU make extension in Makefile.am so we can't use -Werror 
 dnl we can't use -Wall either because we don't want to see the filter-out warning
 dnl FIXME add at least some warning categories. obviously we can't use -Wportability
 AM_INIT_AUTOMAKE([1.10 -Wnone])
+
+PKG_PROG_PKG_CONFIG
 
 usetorrent=yes
 AC_ARG_ENABLE(torrent-system,
@@ -64,18 +67,40 @@ fi
 
 
 
-dnl on non win build use extern libtorrent, on win use included source
+dnl On non-Windows build use external libtorrent, on win use included source
 if test "$win_build" = 0 ; then
     if test x$usetorrent = xyes ; then
-        AC_MSG_CHECKING([checking for libtorrent])
-        PKG_CHECK_MODULES(LIBTORRENT, libtorrent >= 0.13, [], usetorrent=fail)
+        AC_MSG_CHECKING([for libtorrent from Rasterbar software])
+
+	# Check for libtorrent using the following names: libtorrent-rasterbar, rb-libtorrent,
+	# libtorrent.
+        PKG_CHECK_EXISTS([libtorrent-rasterbar >= 0.13],[usetorrent=libtorrent-rasterbar],[usetorrent=fail])
         if test x$usetorrent = xfail ; then
-            AC_MSG_ERROR([missing required libtorrent library get it at http://www.rasterbar.com/products/libtorrent/ please note that some distros name it rb-libtorrent that is NOT libtorrent from rakshasa  you can skip the dependency by using --disable-torrent-system]);
-            exit
+	    PKG_CHECK_EXISTS([rb-libtorrent >= 0.13],[usetorrent=rb-libtorrent],[usetorrent=fail])
+            if test x$usetorrent = xfail ; then
+		PKG_CHECK_EXISTS([libtorrent >= 0.13],[usetorrent=libtorrent],[usetorrent=fail])
+		if test x$usetorrent = xfail ; then
+		    AC_MSG_RESULT(no)
+		    AC_MSG_ERROR([
+		    Missing required libtorrent library. You can get it from
+		    <http://www.rasterbar.com/products/libtorrent/>.
+
+		    Please note that some distributions name it rb-libtorrent or
+		    libtorrent-rasterbar.  This is NOT libtorrent from rakshasa!
+
+		    You can skip this dependency by using --disable-torrent-system]);
+
+		    exit
+		fi
+	    fi
         fi
 
-	LIBTORRENT_CFLAGS=`pkg-config libtorrent --cflags`
- 	LIBTORRENT_LIBS=`pkg-config libtorrent --libs`
+	AC_MSG_RESULT(yes)
+
+	# Need to manually define these, since only used PKG_CHECK_EXISTS and not
+	# PKG_CHECK_MODULES above.
+	LIBTORRENT_CFLAGS=`pkg-config $usetorrent --cflags`
+ 	LIBTORRENT_LIBS=`pkg-config $usetorrent --libs`
 
         AC_SUBST(LIBTORRENT_CFLAGS)
         AC_SUBST(LIBTORRENT_LIBS)
@@ -98,8 +123,13 @@ else
     CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND "
 fi
 
+#on windows append identifier to version string
+if test "$win_build" = 1 ; then
+    AC_DEFINE([VERSION],["<<<esyscmd(/bin/echo -n "$VERSION")>>> on Windows"]  )
+fi
 
 AM_CONDITIONAL([USE_WINDRES], test "$win_build" = 1)
+AM_CONDITIONAL([USE_LIBT_INCLUDED], test x$usetorrent = xyes && test "$win_build" = 1)
 
 AC_MSG_CHECKING([if we can enable extra features that need wxWidgets-2.8])
 dnl we probably aren't supposed to use the function below, but it is the simplest way

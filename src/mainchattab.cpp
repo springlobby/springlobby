@@ -126,6 +126,7 @@ void MainChatTab::OnUserConnected( User& user )
   if ( panel != 0 ) {
     panel->SetUser( &user );
     panel->OnUserConnected();
+    //TODO enable send button (koshi)
   }
 }
 
@@ -136,6 +137,7 @@ void MainChatTab::OnUserDisconnected( User& user )
   if ( panel != 0 ) {
     panel->OnUserDisconnected();
     panel->SetUser( 0 );
+    //TODO disable send button (koshi)
   }
 }
 
@@ -295,5 +297,16 @@ wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& c
   return ret;
 }
 
-
+bool MainChatTab::RemoveChatPanel( ChatPanel* panel )
+{
+    for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+        ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+        if ( tmp == panel && panel != 0 )
+        {
+            m_chat_tabs->DeletePage(i);
+            return true;
+        }
+    }
+    return false;
+}
 

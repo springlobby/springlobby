@@ -22,9 +22,11 @@
 #include "torrentoptionspanel.h"
 #endif
 
+#include "lobbyoptionstab.h"
 #include "images/torrentoptionspanel_icon.png.h"
 #include "images/spring.xpm"
 #include "images/userchat.xpm"
+#include "images/springlobby.xpm"
 
 BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 
@@ -41,6 +43,8 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
     m_imagelist->Add( wxIcon(spring_xpm) );
     m_imagelist->Add( *charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
     m_imagelist->Add( wxIcon(userchat_xpm) );
+    m_imagelist->Add( wxIcon(userchat_xpm) );
+    m_imagelist->Add( wxIcon(springlobby_xpm) );
 
     m_tabs->AssignImageList( m_imagelist );
 
@@ -54,6 +58,9 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
     m_chat_opts = new ChatOptionsTab( m_tabs, m_ui );
     m_tabs->AddPage( m_chat_opts, _("Chat"), true, 2 );
+
+    m_lobby_opts = new LobbyOptionsTab( m_tabs );
+    m_tabs->AddPage ( m_lobby_opts, _("General"), true, 4 );
 
     m_restore_btn = new wxButton( this, wxID_REVERT, _("Restore") );
     m_apply_btn = new wxButton( this, wxID_APPLY, _("Apply") );
@@ -85,6 +92,8 @@ void MainOptionsTab::OnApply( wxCommandEvent& event )
 #ifndef NO_TORRENT_SYSTEM
     m_torrent_opts->OnApply( event );
 #endif
+    m_lobby_opts->OnApply( event );
+
     sett().SaveSettings();
 }
 
@@ -96,6 +105,8 @@ void MainOptionsTab::OnRestore( wxCommandEvent& event )
 #ifndef NO_TORRENT_SYSTEM
     m_torrent_opts->OnRestore( event );
 #endif
+
+    m_lobby_opts->OnRestore ( event );
 }
 
 

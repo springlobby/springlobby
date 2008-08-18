@@ -449,14 +449,17 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
    if ( (battle.GetStartRect(AllyRevConv[i]) != 0) && (startpostype == ST_Choose) ) {
       BattleStartRect* sr = (BattleStartRect*)battle.GetStartRect(AllyRevConv[i]);
-      const char* old_locale = std::setlocale(LC_NUMERIC, "C");
+      if ( sr && !sr->deleted )
+      {
+          const char* old_locale = std::setlocale(LC_NUMERIC, "C");
 
-      tdf.Append(_T("StartRectLeft"),wxString::Format( _T("%.3f"), sr->left / 200.0 ));
-      tdf.Append(_T("StartRectTop"),wxString::Format( _T("%.3f"), sr->top / 200.0 ));
-      tdf.Append(_T("StartRectRight"),wxString::Format( _T("%.3f"), sr->right / 200.0 ));
-      tdf.Append(_T("StartRectBottom"),wxString::Format( _T("%.3f"), sr->bottom / 200.0 ));
+          tdf.Append(_T("StartRectLeft"),wxString::Format( _T("%.3f"), sr->left / 200.0 ));
+          tdf.Append(_T("StartRectTop"),wxString::Format( _T("%.3f"), sr->top / 200.0 ));
+          tdf.Append(_T("StartRectRight"),wxString::Format( _T("%.3f"), sr->right / 200.0 ));
+          tdf.Append(_T("StartRectBottom"),wxString::Format( _T("%.3f"), sr->bottom / 200.0 ));
 
-      std::setlocale(LC_NUMERIC, old_locale);
+          std::setlocale(LC_NUMERIC, old_locale);
+      }
     }
 
     //s +=  _T("\t}\n");

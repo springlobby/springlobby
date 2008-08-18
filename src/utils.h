@@ -7,13 +7,18 @@
 
 /** these need to stay to not break non-autotools builds */
 #if ( !defined(HAVE_WX26) && !defined(HAVE_WX28) )
-#if( wxMAJOR_VERSION==2 && wxMINOR_VERSION == 6 )
-#define HAVE_WX26
-#elif( wxMAJOR_VERSION==2 && wxMINOR_VERSION == 8 )
-#define HAVE_WX28
+	#if( wxMAJOR_VERSION==2 && wxMINOR_VERSION == 6 )
+		#define HAVE_WX26
+	#elif( wxMAJOR_VERSION==2 && wxMINOR_VERSION == 8 )
+		#define HAVE_WX28
+	#endif
 #endif
+
+
+#ifndef VERSION
+	#define VERSION "unknown"
 #endif
-//********************************************************/
+
 
 #ifndef __WXDEBUG__
 #define wxLogDebugFunc( params ) wxLogVerbose( _T("%s"), wxString(wxString(__FUNCTION__, wxConvUTF8 ) + _T(" ( ") + wxString(params) + _T(" )")).c_str() )

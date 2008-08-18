@@ -36,7 +36,8 @@ END_EVENT_TABLE()
 
 NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* popup ):
   customListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
-              wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | wxLC_SINGLE_SEL ),
+              wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | wxLC_SINGLE_SEL,
+              _T("NickListCtrl") ),
   m_ui(ui),
   m_menu(popup)
 {

@@ -29,7 +29,8 @@ END_EVENT_TABLE()
 FileListDialog* FileListCtrl::s_parent_dialog = 0;
 
 FileListCtrl::FileListCtrl( wxWindow* parent, FileListDialog* fld  ):
-		customListCtrl( parent, FILELIST_COL_CLICK, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_ALIGN_LEFT ),
+		customListCtrl( parent, FILELIST_COL_CLICK, wxDefaultPosition, wxDefaultSize,
+                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_ALIGN_LEFT, _T("FileListCtrl") ),
         m_parent_dialog( fld )
 {
 

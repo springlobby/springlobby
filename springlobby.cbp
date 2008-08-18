@@ -25,7 +25,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
-					<Add option="`pkg-config --libs libtorrent`" />
+					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
 					<Add option="`sdl-config --libs`" />
 					<Add library="SDL_mixer" />
 				</Linker>
@@ -161,6 +161,10 @@
 		</Compiler>
 		<Unit filename="src/Helper/TextCompletionDatabase.cpp" />
 		<Unit filename="src/Helper/TextCompletionDatabase.hpp" />
+		<Unit filename="src/Helper/colorbutton.cpp" />
+		<Unit filename="src/Helper/colorbutton.h" />
+		<Unit filename="src/Helper/wxtextctrlhist.cpp" />
+		<Unit filename="src/Helper/wxtextctrlhist.h" />
 		<Unit filename="src/addbotdialog.cpp" />
 		<Unit filename="src/addbotdialog.h" />
 		<Unit filename="src/agreementdialog.cpp" />
@@ -268,6 +272,8 @@
 		<Unit filename="src/images/userchat.xpm" />
 		<Unit filename="src/inetclass.h" />
 		<Unit filename="src/iunitsync.h" />
+		<Unit filename="src/lobbyoptionstab.cpp" />
+		<Unit filename="src/lobbyoptionstab.h" />
 		<Unit filename="src/mainchattab.cpp" />
 		<Unit filename="src/mainchattab.h" />
 		<Unit filename="src/mainjoinbattletab.cpp" />

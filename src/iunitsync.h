@@ -21,6 +21,12 @@ typedef std::map<wxString,mmOptionString>::iterator optionMapStringIter;
 typedef std::map<wxString,mmOptionList>::iterator optionMapListIter;
 typedef std::map<wxString,mmOptionInt>::iterator optionMapIntIter;
 
+typedef std::map<wxString,mmOptionBool>::const_iterator optionMapBoolConstIter;
+typedef std::map<wxString,mmOptionFloat>::const_iterator optionMapFloatConstIter;
+typedef std::map<wxString,mmOptionString>::const_iterator optionMapStringConstIter;
+typedef std::map<wxString,mmOptionList>::const_iterator optionMapListConstIter;
+typedef std::map<wxString,mmOptionInt>::const_iterator optionMapIntConstIter;
+
 
 struct UnitSyncMod
 {
