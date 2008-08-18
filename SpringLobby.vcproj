@@ -350,6 +350,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\autojoinchanneldialog.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\base16.h"
 				>
 			</File>
@@ -808,6 +812,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\autojoinchanneldialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\base16.cpp"
 				>
 			</File>
@@ -997,10 +1005,6 @@
 			</File>
 			<File
 				RelativePath=".\src\nicklistctrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\nonautotools.cpp"
 				>
 			</File>
 			<File
@@ -1214,6 +1218,38 @@
 			<File
 				RelativePath=".\src\utils.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="VERSION=\&quot;VC 9\&quot;"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="VERSION=\&quot;VC 9\&quot;"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="VERSION=\&quot;VC 9\&quot;"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release with libtorrent|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="VERSION=\&quot;VC 9\&quot;"
+					/>
+				</FileConfiguration>
 			</File>
 			<Filter
 				Name="filelister"

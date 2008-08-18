@@ -5,6 +5,7 @@
 #include <wx/colour.h>
 
 #define CACHE_VERSION 3
+#define SETTINGS_VERSION 1
 
 #define DEFSETT_DEFAULT_SERVER "TAS Server"
 #define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"
@@ -29,8 +30,10 @@ class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
 class IBattle;
-class wxFileInputStream ;
-//class wxFileConfig;
+class wxFileInputStream;
+struct wxColourData;
+
+
 class myconf : public wxFileConfig
 {
     public:
@@ -81,7 +84,7 @@ class Settings
    */
     Settings();
     ~Settings();
-    
+
     bool IsPortableMode();
 
     /** Initialize all settings to default.
@@ -90,6 +93,14 @@ class Settings
     void SaveSettings();
 
     bool IsFirstRun();
+
+    //! Sets/Gets settings revision number
+    void SetSettingsVersion();
+    unsigned int GetSettingsVersion();
+
+    //! should we sayex/pm bot?
+    void SetReportStats(const bool value);
+    bool GetReportStats();
 
     /* ================================================================ */
     /** @name Network
@@ -149,7 +160,7 @@ class Settings
      *
      * Information about the directory tree used to cache infomation about maps
      * and mods.
-     * 
+     *
      * @{
      */
     wxString GetCachePath();
@@ -259,6 +270,10 @@ class Settings
     /** @name UI
      * @{
      */
+
+     void SaveCustomColors( const wxColourData& cdata, const wxString& paletteName = _T("Default") );
+     wxColourData GetCustomColors( const wxString& paletteName = _T("Default") );
+
     int    GetMainWindowWidth();
     void   SetMainWindowWidth( const int value );
 
@@ -276,6 +291,11 @@ class Settings
 
     void SetShowTooltips( bool show);
     bool GetShowTooltips();
+
+    void SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width );
+    int GetColumnWidth( const wxString& list_name, const int coloumn );
+    //! used to signal unset column width in Get...
+    enum { columnWidthUnset };
     /*@}*/
 
     /* ================================================================ */
@@ -342,6 +362,14 @@ class Settings
 
     void SetDisplayJoinLeave( bool display, const wxString& channel  );
     bool GetDisplayJoinLeave( const wxString& channel );
+
+    //!@brief expects words to be a ; seperated list
+    void SetHighlightedWords( const wxString& words );
+    wxString GetHighlightedWords( );
+
+    //!\brief controls if user attention is requested when highlighting a line
+    void SetRequestAttOnHighlight( const bool req );
+    bool GetRequestAttOnHighlight( );
     /**@}*/
 
     /* Do these go in Chat? */

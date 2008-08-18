@@ -38,6 +38,7 @@
 #include "chatlog.h"
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
+#include "Helper/wxtextctrlhist.h"
 #ifndef DISABLE_SOUND
 #include "sdlsound.h"
 #endif
@@ -51,7 +52,6 @@ END_EVENT_TABLE()
 BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
 	EVT_TEXT_ENTER( CHAT_TEXT, ChatPanel::OnSay )
-	EVT_TEXT( CHAT_TEXT, ChatPanel::OnTextChanged_Say_Text )
 	EVT_BUTTON( CHAT_SEND, ChatPanel::OnSay )
 	EVT_SIZE( ChatPanel::OnResize )
 	EVT_TEXT_URL( CHAT_LOG,  ChatPanel::OnLinkEvent )
@@ -118,7 +118,12 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
 	CreateControls( );
 	_SetChannel( &chan );
 	m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, this );
-	m_chat_log = new ChatLog( sett().GetDefaultServer(), chan.GetName() );
+	#ifdef __WXMSW__
+        wxString chan_prefix = _("channel_");
+    #else
+        wxString chan_prefix = _("#");
+    #endif
+	m_chat_log = new ChatLog( sett().GetDefaultServer(), chan_prefix + chan.GetName() );
 }
 
 
@@ -143,6 +148,10 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
 		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist( NULL ), m_chat_tabs( 0 ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( 0 ), m_battle( &battle ), m_type( CPT_Battle ), m_popup_menu( 0 ) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Battle& battle" ) );
+	for (unsigned int i = 0; i < battle.GetNumUsers();++i)
+    {
+       textcompletiondatabase.Insert_Mapping( battle.GetUser(i).GetNick(), battle.GetUser(i).GetNick() );
+    }
 	CreateControls( );
 	wxDateTime now = wxDateTime::Now();
 	m_chat_log = new ChatLog( sett().GetDefaultServer(), _T( "_BATTLE_" ) + now.Format( _T( "%Y_%m_%d__%H_%M_%S" ) ) );
@@ -162,7 +171,13 @@ ChatPanel::~ChatPanel() {
 	}
 	delete m_chat_log;
 
-	if ( m_type == CPT_Channel ) m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
+
+	if ( m_type == CPT_Channel )
+	{
+	    m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
+	    //TODO enable in aui branch
+        //m_channel->Leave();
+	}
 	if ( m_type == CPT_Server ) m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
 }
 
@@ -225,7 +240,7 @@ void ChatPanel::CreateControls( ) {
 	if ( m_type == CPT_Channel )
   		m_chatlog_text->SetToolTip( _("right click for options (like autojoin)" ) );
 
-	m_say_text = new wxTextCtrl( m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
+	m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
 
 
@@ -549,83 +564,6 @@ void ChatPanel::OnSay( wxCommandEvent& event ) {
 m_say_text->SetValue( _T( "" ) );
 }
 
-//--------------------------------------------------------------------------------
-///
-/// Triggered, if the Text in the Messagefield has changed
-///
-/// \parem event
-///		The event Structur with Inforamtions about this Event
-///
-//--------------------------------------------------------------------------------
-void
-ChatPanel::OnTextChanged_Say_Text( wxCommandEvent& event ) {
-#ifndef HAVE_WX26
-	wxString text = m_say_text->GetValue();
-	long pos_Cursor = m_say_text->GetInsertionPoint();
-	wxString character_before_current_Insertionpoint = m_say_text->GetRange( pos_Cursor-1, pos_Cursor );
-
-	// std::cout << "#########: " << pos_Cursor << " (" << character_before_current_Insertionpoint.char_str() << ")" << std::endl;
-	// std::cout << "#########: Linelength(" << m_say_text->GetLastPosition() << ")" << std::endl;
-
-	if( character_before_current_Insertionpoint == _T("\t") ) {
-		// std::cout << "#########: TAB" << std::endl;
-		wxString selection_Begin_InsertPos = m_say_text->GetRange( 0, pos_Cursor-1 );
-		wxString selection_InsertPos_End = m_say_text->GetRange( pos_Cursor, m_say_text->GetLastPosition() );
-		// std::cout << "#########: Begin to InsertionPoint: (" << selection_Begin_InsertPos.char_str() << ")" << std::endl;
-		// std::cout << "#########: InsertionPoint to End: (" << selection_InsertPos_End.char_str() << ")" << std::endl;
-
-		// Search for the shortest Match, starting from the Insertionpoint to the left, until we find a "\ "
-		// Special Characters according to regular Expression Syntax needs to be escaped: [,]
-		wxRegEx regex_currentWord;
-		#ifdef wxHAS_REGEX_ADVANCED
-		regex_currentWord.Compile( wxT("(_|\\[|\\]|\\w)+$"), wxRE_ADVANCED );
-		#else
-        regex_currentWord.Compile( wxT("(_|\\[|\\]|\\w)+$"), wxRE_EXTENDED );
-        #endif
-
-		if ( regex_currentWord.Matches( selection_Begin_InsertPos ) ) {
-			wxString currentWord = regex_currentWord.GetMatch( selection_Begin_InsertPos );
-			// std::cout << "#########: Current Word: (" << currentWord.char_str() << ")" << std::endl;
-
-			wxString selection_Begin_BeforeCurrentWord = m_say_text->GetRange( 0, pos_Cursor - 1 - currentWord.length() );
-			// std::cout << "#########: selection_Begin_BeforeCurrentWord: (" << selection_Begin_BeforeCurrentWord.char_str() << ")" << std::endl;
-
-			HashMap_String_String hm = textcompletiondatabase.GetMapping( currentWord );
-
-			// std::cout << "#########: Mapping-Size: (" << hm.size() << ")" << std::endl;
-
-			wxString completed_Text;
-			int new_Cursor_Pos = 0;
-			if( hm.size() == 1 ) {
-				completed_Text.append( selection_Begin_BeforeCurrentWord );
-				completed_Text.append( hm.begin()->second );
-				completed_Text.append( selection_InsertPos_End );
-				new_Cursor_Pos = selection_Begin_BeforeCurrentWord.length() + hm.begin()->second.length();
-			} else {
-				completed_Text.append( selection_Begin_BeforeCurrentWord );
-				completed_Text.append( currentWord );
-				completed_Text.append( selection_InsertPos_End );
-				new_Cursor_Pos = selection_Begin_BeforeCurrentWord.length() + currentWord.length();
-				// We ring the System Bell, to signalise the User, that no Completion was applied.
-				wxBell();
-			}
-			// Replace the old Text with our completed Text
-			// or
-			// if nothing was found remove the typed TAB, so that the User stays comfortable not to remove the TAB by himself.
-			m_say_text->ChangeValue( completed_Text );
-			m_say_text->SetInsertionPoint( new_Cursor_Pos );
-		} else {
-			wxString old_Text;
-			old_Text.append( selection_Begin_InsertPos );
-			old_Text.append( selection_InsertPos_End );
-			m_say_text->ChangeValue( old_Text );
-			m_say_text->SetInsertionPoint( selection_Begin_InsertPos.length() );
-			wxBell();
-		}
-	}
-#endif
-}
-
 //! @brief Output a message said in the channel.
 //!
 //! @param who nick of the person who said something.
@@ -646,18 +584,19 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
           if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 7 ) m_chat_tabs->SetPageImage( i, 7 );
         }
     }
-	} else if ( message.Upper().Contains( me.Upper() ) ) {
-    // change the image of the tab to show new events
-    if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
+	} else if ( message.Upper().Contains( me.Upper() ) )
     {
-      for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
-        if ( m_chat_tabs->GetPage( i ) == this ) {
-          if ( m_type == CPT_Channel && m_chat_tabs->GetPageImage( i ) < 8 ) m_chat_tabs->SetPageImage( i, 8 );
-          if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 9 ) m_chat_tabs->SetPageImage( i, 9 );
+    // change the image of the tab to show new events
+        if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
+        {
+          for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+            if ( m_chat_tabs->GetPage( i ) == this ) {
+              if ( m_type == CPT_Channel && m_chat_tabs->GetPageImage( i ) < 8 ) m_chat_tabs->SetPageImage( i, 8 );
+              if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 9 ) m_chat_tabs->SetPageImage( i, 9 );
+            }
         }
-    }
-		col = sett().GetChatColorNotification();
-		req_user = true;
+            col = sett().GetChatColorNotification();
+            req_user = true;
 	} else {
     // change the image of the tab to show new events
     if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
@@ -668,13 +607,26 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
           if ( m_type == CPT_User && m_chat_tabs->GetPageImage( i ) < 7 ) m_chat_tabs->SetPageImage( i, 7 );
         }
     }
-		col = sett().GetChatColorNormal();
+        //process logic for custom word highlights
+        if ( ContainsWordToHighlight( message ) )
+        {
+            req_user = sett().GetRequestAttOnHighlight();
+            col = sett().GetChatColorHighlight();
+        }
+        else
+            col = sett().GetChatColorNormal();
 	}
 
 	if ( who == _T( "MelBot" ) && message.StartsWith( _T( "<" ) ) && message.Contains( _T( ">" ) ) ) {
 		wxString who2;
 		wxString message2;
 		who2 = message.BeforeFirst( '>' ).AfterFirst( '<' ) + _T( "@IRC" );
+		//don't highlight if i'm talking from irc to channel
+		if ( who2.Upper() == ( me.Upper() + _T("@IRC") ) )
+		{
+		    req_user = false;
+		    col = sett().GetChatColorNormal();
+		}
 		message2 = message.AfterFirst( '>' );
 		OutputLine( _T( " <" ) + who2 + _T( "> " ) + message2, col, sett().GetChatFont() );
 	} else {
@@ -691,6 +643,18 @@ void ChatPanel::Said( const wxString& who, const wxString& message ) {
 	}
 }
 
+bool ChatPanel::ContainsWordToHighlight( const wxString& message )
+{
+    //get list of words to highlight
+    wxStringTokenizer words ( sett().GetHighlightedWords(), _T(";") );
+    while ( words.HasMoreTokens() )
+    {
+        if (message.Contains( words.GetNextToken() ) )
+            return true;
+    }
+    return false;
+
+}
 
 void ChatPanel::DidAction( const wxString& who, const wxString& action ) {
   // change the image of the tab to show new events
@@ -1027,6 +991,12 @@ void ChatPanel::Say( const wxString& message ) {
 				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
 				return;
 			}
+
+            //we need to close the channel tab if leaving manually
+            if (line.Upper().StartsWith( _T( "LEAVE" ) ) ) {
+                wxString channame = line.AfterFirst(' ').BeforeFirst(' ');
+                ui().OnLeaveChannel( channame );
+            }
 
 			m_server->SendRaw( line );
 			OutputLine( _( " Sent: \"" ) + line + _( "\"" ), sett().GetChatColorNormal(), sett().GetChatFont() );

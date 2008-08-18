@@ -400,7 +400,7 @@ void ServerEvents::OnJoinChannelResult( bool success, const wxString& channel, c
     Channel& chan = m_serv._AddChannel( channel );
     chan.SetPassword( m_serv.m_channel_pw[channel] );
     m_ui.OnJoinedChannelSuccessful( chan );
-    if ( channel == _T("springlobby")) {
+    if ( channel == _T("springlobby") && sett().GetReportStats() ) {
       m_serv.DoActionChannel( _T("springlobby"), _T("is using SpringLobby v") + GetSpringLobbyVersion() );
     }
 

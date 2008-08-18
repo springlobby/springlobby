@@ -5,6 +5,21 @@
 #include <wx/log.h>
 #include <sstream>
 
+/** these need to stay to not break non-autotools builds */
+#if ( !defined(HAVE_WX26) && !defined(HAVE_WX28) )
+	#if( wxMAJOR_VERSION==2 && wxMINOR_VERSION == 6 )
+		#define HAVE_WX26
+	#elif( wxMAJOR_VERSION==2 && wxMINOR_VERSION == 8 )
+		#define HAVE_WX28
+	#endif
+#endif
+
+
+#ifndef VERSION
+	#define VERSION "unknown"
+#endif
+
+
 #ifndef __WXDEBUG__
 #define wxLogDebugFunc( params ) wxLogVerbose( _T("%s"), wxString(wxString(__FUNCTION__, wxConvUTF8 ) + _T(" ( ") + wxString(params) + _T(" )")).c_str() )
 #else
@@ -34,7 +49,8 @@
 }
 #endif
 
-#define ASSERT_RUNTIME(cond,msg) if(!(cond)){wxLogMessage(_T("runtime error: %s"), wxString(msg).c_str() );throw std::runtime_error(std::string(wxString(msg).mb_str()));}
+#define ASSERT_RUNTIME(cond,msg) if(!(cond))\
+{wxLogMessage(_T("runtime error: %s"), wxString(msg).c_str() );throw std::runtime_error(std::string(wxString(msg).mb_str()));}
 
 
 #define CLAMP(var,min,max) ((var)=((var)<(min))?(min):((var)>(max))?(max):(var))
@@ -51,13 +67,14 @@
 #define IsColourOk() IsOk()
 #endif
 
+/** \name Type conversions
+ * @{ */
 //!@brief converts integers to wxString
 wxString i2s( int arg );
 //!@brief converts unsigned int to wxString
 wxString u2s( unsigned int arg );
 //!@brief converts floating point numbers to wxString without problem of WTF decimal separator different in every locale
 wxString f2s( float arg );
-/// new, much improved way to convert stuff to wxString.
 
 long s2l( const wxString& arg );
 double s2d( const wxString& arg );
@@ -77,7 +94,7 @@ inline wxString TowxString(const wxChar *arg){
 inline wxString TowxString(std::string arg){
   return WX_STRING(arg);
 }
-
+/** @} */
 
 
 wxString GetLibExtension();

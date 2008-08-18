@@ -24,9 +24,12 @@ class wxButton;
 class wxCheckBox;
 class wxListCtrl;
 class MapCtrl;
+class ColorButton;
 
 typedef std::map<wxString,long> OptionListMap;
 
+/** \brief container for BattleroomListCtrl, battle specific ChatPanel. Also displaying battle info summary
+ * \todo DOCMEMORE */
 class BattleRoomTab : public wxPanel
 {
   public:
@@ -90,7 +93,7 @@ class BattleRoomTab : public wxPanel
 
     wxComboBox* m_team_sel;
     wxComboBox* m_ally_sel;
-    wxBitmapButton* m_color_sel;
+    ColorButton* m_color_sel;
     wxComboBox* m_side_sel;
 
     wxStaticText* m_team_lbl;

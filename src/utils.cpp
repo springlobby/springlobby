@@ -75,25 +75,19 @@ void InitializeLoggingTargets()
 
 wxString i2s( int arg )
 {
-  std::stringstream s;
-  s << arg;
-  return WX_STRING( s.str() );
+    return TowxString(arg);
 }
 
 
 wxString u2s( unsigned int arg )
 {
-  std::stringstream s;
-  s << arg;
-  return WX_STRING( s.str() );
+  return TowxString(arg);
 }
 
 
 wxString f2s( float arg )
 {
-  std::stringstream s;
-  s << arg;
-  return WX_STRING( s.str() );
+  return TowxString(arg);
 }
 
 
@@ -187,7 +181,6 @@ wxString GetSpringLobbyVersion()
 ///
 /// \return Sum of each CPU's Speed of this Computer
 ///
-/// \TODO Porting to Windows
 ///
 // ------------------------------------------------------------------------------------------------------------------------
 wxString GetHostCPUSpeed()

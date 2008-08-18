@@ -1,0 +1,4201 @@
+# Simplified Chinese translation for springlobby
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the springlobby package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: springlobby\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-05-08 19:25+0200\n"
+"PO-Revision-Date: 2008-07-30 15:01+0000\n"
+"Last-Translator: HoneyFox <Unknown>\n"
+"Language-Team: Simplified Chinese <zh_CN@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-07-30 21:24+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: src/addbotdialog.cpp:30
+msgid "Add bot"
+msgstr "添加AI"
+
+#: src/addbotdialog.cpp:44
+msgid "Nickname:"
+msgstr "昵称："
+
+#: src/addbotdialog.cpp:58
+msgid "AI:"
+msgstr "AI"
+
+#: src/addbotdialog.cpp:62
+msgid "Choose the AI library to use with this bot."
+msgstr "选择该AI所使用的库文件。"
+
+#: src/addbotdialog.cpp:76 src/autobalancedialog.cpp:57
+#: src/connectwindow.cpp:78 src/hostbattledialog.cpp:204
+msgid "Cancel"
+msgstr "取消(&C)"
+
+#: src/addbotdialog.cpp:81
+msgid "Add Bot"
+msgstr "添加AI"
+
+#: src/addbotdialog.cpp:137
+msgid "No AI bots found in your Spring installation."
+msgstr "你当前的Spring中没有AI"
+
+#: src/addbotdialog.cpp:137
+msgid "No bot-libs found"
+msgstr "AI库文件未找到"
+
+#: src/agreementdialog.cpp:26
+msgid "Accept Agreement"
+msgstr "接受协议"
+
+#: src/agreementdialog.cpp:35
+msgid "Do you accept the terms of this agreement?"
+msgstr "你接受协议中的条款吗?"
+
+#: src/agreementdialog.cpp:43 src/uiutils.h:11
+msgid "Yes"
+msgstr "是"
+
+#: src/agreementdialog.cpp:48 src/uiutils.h:11
+msgid "No"
+msgstr "否"
+
+#: src/autobalancedialog.cpp:34
+msgid "Autobalance players into teams"
+msgstr "自动平衡队伍"
+
+#: src/autobalancedialog.cpp:37
+msgid "Method"
+msgstr "方法"
+
+#: src/autobalancedialog.cpp:40 src/battlemaptab.cpp:92
+msgid "Random"
+msgstr "随机"
+
+#: src/autobalancedialog.cpp:41
+msgid "Divide ranks evenly"
+msgstr "按玩家级别平分"
+
+#: src/autobalancedialog.cpp:43
+msgid "Clans"
+msgstr "联盟"
+
+#: src/autobalancedialog.cpp:46 src/hostbattledialog.cpp:130
+msgid "None"
+msgstr "无"
+
+#: src/autobalancedialog.cpp:47
+msgid "Fair"
+msgstr "一般"
+
+#: src/autobalancedialog.cpp:48
+msgid "Always"
+msgstr "总是"
+
+#: src/autobalancedialog.cpp:49
+msgid ""
+"Put members of same clan ( users having same clantag, like '[smurfzor]Alice' "
+"and '[smurfzor]Bob' ) together into same alliance. \n"
+"None: nothing special for clans.\n"
+"Fair: put clanmembers into alliance, unless this makes alliances unfair.\n"
+"Always: always put clanmembers into alliance, even if that alliance is "
+"unfair."
+msgstr ""
+"将同一个派别的成员（例如“[smurfzor]Alice”及“[smurfzor]Bob”）归入同一联盟。 \n"
+"无：同派别成员不受影响。\n"
+"一般：将同派别成员加入联盟，除非联盟实力悬殊。\n"
+"总是：总是将同派别成员归入同一联盟，无论联盟实力悬殊与否。"
+
+#: src/autobalancedialog.cpp:60 src/connectwindow.cpp:77
+msgid "Ok"
+msgstr "确定"
+
+#: src/battlelistctrl.cpp:58 src/hostbattledialog.cpp:57
+msgid "Description"
+msgstr "描述"
+
+#: src/battlelistctrl.cpp:62 src/mainjoinbattletab.cpp:151
+msgid "Map"
+msgstr "地图"
+
+#: src/battlelistctrl.cpp:66 src/hostbattledialog.cpp:71
+msgid "Mod"
+msgstr "模组"
+
+#: src/battlelistctrl.cpp:70 src/hostbattledialog.cpp:208
+msgid "Host"
+msgstr "主机"
+
+#: src/battlelistctrl.cpp:74 src/battleroomlistctrl.cpp:88
+msgid "a"
+msgstr "a"
+
+#: src/battlelistctrl.cpp:78
+msgid "p"
+msgstr "p"
+
+#: src/battlelistctrl.cpp:82
+msgid "m"
+msgstr "m"
+
+#: src/battlelistctrl.cpp:111
+msgid "Download &map"
+msgstr "下载地图"
+
+#: src/battlelistctrl.cpp:112
+msgid "Download m&od"
+msgstr "下载模组"
+
+#: src/battlelistfilter.cpp:73
+msgid "Host:"
+msgstr "主机："
+
+#: src/battlelistfilter.cpp:92 src/battlelistfilter.cpp:162
+msgid "Status:"
+msgstr "状态："
+
+#: src/battlelistfilter.cpp:96 src/battleroomtab.cpp:120
+msgid "Locked"
+msgstr "已锁定"
+
+#: src/battlelistfilter.cpp:101
+msgid "Passworded"
+msgstr "有密码的"
+
+#: src/battlelistfilter.cpp:111
+msgid "Rank Limit:"
+msgstr "等级限制"
+
+#: src/battlelistfilter.cpp:145
+msgid "Description:"
+msgstr "描述："
+
+#: src/battlelistfilter.cpp:166
+msgid "Started"
+msgstr "已开始"
+
+#: src/battlelistfilter.cpp:171
+msgid "Full"
+msgstr "人数已满"
+
+#: src/battlelistfilter.cpp:176
+msgid "Open"
+msgstr "开放的"
+
+#: src/battlelistfilter.cpp:186
+msgid "Player:"
+msgstr "玩家:"
+
+#: src/battlelistfilter.cpp:195
+msgid "All"
+msgstr "全部"
+
+#: src/battlelistfilter.cpp:214 src/battlelisttab.cpp:85
+#: src/singleplayertab.cpp:48
+msgid "Map:"
+msgstr "地图："
+
+#: src/battlelistfilter.cpp:231
+msgid "Only maps i have"
+msgstr "仅列出我拥有地图的游戏"
+
+#: src/battlelistfilter.cpp:242
+msgid "Max.Player:"
+msgstr "最大玩家数"
+
+#: src/battlelistfilter.cpp:269 src/battlelisttab.cpp:91
+#: src/singleplayertab.cpp:57
+msgid "Mod:"
+msgstr "模组"
+
+#: src/battlelistfilter.cpp:286
+msgid "Only mods i have"
+msgstr "仅列出我拥有模组的游戏"
+
+#: src/battlelistfilter.cpp:297
+msgid "    Spectator:"
+msgstr "    观看者"
+
+#: src/battlelistfilter.cpp:552 src/battlelistfilter.cpp:557
+#: src/battlelistfilter.cpp:558 src/battlelistfilter.cpp:560
+msgid "%d%"
+msgstr ""
+
+#: src/battlelisttab.cpp:97
+msgid "Players:"
+msgstr "玩家"
+
+#: src/battlelisttab.cpp:103
+msgid "Spectators:"
+msgstr "旁观者:"
+
+#: src/battlelisttab.cpp:143
+msgid "Host new..."
+msgstr "主建新游戏"
+
+#: src/battlelisttab.cpp:146
+msgid "Join"
+msgstr "加入"
+
+#: src/battlelisttab.cpp:361
+msgid ""
+"You cannot host a game while being offline. Please connect to a lobby server."
+msgstr "离线时你不能主建游戏。请连接到服务器。"
+
+#: src/battlelisttab.cpp:361
+msgid "Not Online."
+msgstr "不在线"
+
+#: src/battlelisttab.cpp:367
+msgid "Hosting is disabled due to the incompatible version you're using"
+msgstr "因为你使用了不匹配的版本，你将不能主建游戏"
+
+#: src/battlelisttab.cpp:367 src/battlelisttab.cpp:372
+#: src/battlelisttab.cpp:490 src/battlelisttab.cpp:506
+#: src/settings++/panel_pathoption.cpp:90 src/singleplayertab.cpp:268
+#: src/springoptionstab.cpp:481 src/springoptionstab.cpp:486 src/ui.cpp:498
+#: src/ui.cpp:501
+msgid "Spring error"
+msgstr "Spring运行错误"
+
+#: src/battlelisttab.cpp:372
+msgid ""
+"You already are running a Spring instance, close it first in order to be "
+"able to host a new game"
+msgstr "你已经在运行一个Spring程序了，请在主建新游戏前将它关闭。"
+
+#: src/battlelisttab.cpp:377 src/battlelisttab.cpp:496
+msgid "Already in a battle"
+msgstr "已经在战斗中"
+
+#: src/battlelisttab.cpp:377
+msgid ""
+"You are already in a battle.\n"
+"\n"
+"Do you want to leave current battle to start a new?"
+msgstr ""
+"你已经在战斗中。\n"
+"你想离开现在的战斗以开始新的战斗吗？"
+
+#: src/battlelisttab.cpp:397
+#, c-format
+msgid ""
+"Battle not started because the port you selected (%d) is unable to recieve "
+"incoming packets\n"
+" checks your router & firewall configuration again or change port in the "
+"dialog.\n"
+"\n"
+"If everything else fails, enable the Hole Punching NAT Traversal\n"
+" option in the hosting settings."
+msgstr ""
+"因为你选择的端口 %d 无法接收传送来的数据包，因此战斗无法开始。\n"
+" 请再次检查你的路由及防火墙设置，或者在对话框中修改端口号。\n"
+"\n"
+"如果上述方法依然失败，请在主建设置中启用 穿越NAT阻挡 选项。"
+
+#: src/battlelisttab.cpp:410
+msgid "Battle not started beacuse the mod you selected could not be found. "
+msgstr "因为你选择的模组无法被找到，因此战斗无法开始。 "
+
+#: src/battlelisttab.cpp:410
+msgid "Error starting battle."
+msgstr "启动战斗时出错。"
+
+#: src/battlelisttab.cpp:421 src/battlelisttab.cpp:428
+msgid ""
+"Couldn't find any maps in your spring installation. This could happen when "
+"you set the Spring settings incorrectly."
+msgstr "无法找到任何地图。可能是因为您错误的设置了Spring导致的。"
+
+#: src/battlelisttab.cpp:421 src/battlelisttab.cpp:428
+msgid "No maps found"
+msgstr "没有找到地图"
+
+#: src/battlelisttab.cpp:490
+msgid ""
+"Joining battles is disabled due to the incompatible spring version you're "
+"using."
+msgstr "因为您的Spring版本不兼容，因此无法加入战斗。"
+
+#: src/battlelisttab.cpp:496
+msgid ""
+"You are already in a battle.\n"
+"\n"
+"Do you want to leave current battle to and join this one?"
+msgstr ""
+"你已经在一局战斗中了。\n"
+"\n"
+"你想要离开当前战斗并加入这一个吗？"
+
+#: src/battlelisttab.cpp:506
+msgid ""
+"You already are running a Spring instance, close it first in order to be "
+"able to join another battle."
+msgstr "你已经运行了一个Spring，请先关闭Spring再加入其他战斗。"
+
+#: src/battlelisttab.cpp:511
+msgid ""
+"You need to download the mod before you can join this game.\n"
+"\n"
+"Do you want me to take you to the download page?"
+msgstr ""
+"在你能够加入该游戏前，你需要下载模组。\n"
+"\n"
+"你想要前往下载页面吗？"
+
+#: src/battlelisttab.cpp:511
+msgid "Mod not available"
+msgstr "模组不可用"
+
+#: src/battlelisttab.cpp:520
+msgid ""
+"You need to download the map to be able to play in this game.\n"
+"\n"
+"Do you want me to take you to the download page?"
+msgstr ""
+"在玩此游戏前你需要下载地图。\n"
+"\n"
+"你想要前往下载页面吗？"
+
+#: src/battlelisttab.cpp:520
+msgid "Map not available"
+msgstr "地图不可用"
+
+#: src/battlelisttab.cpp:528 src/chatpanel.cpp:1359
+msgid "Battle password"
+msgstr "游戏密码"
+
+#: src/battlelisttab.cpp:528
+msgid "Enter password"
+msgstr "输入密码"
+
+#: src/battlemaptab.cpp:76 src/battleroomtab.cpp:130
+msgid "Option"
+msgstr "选项"
+
+#: src/battlemaptab.cpp:78 src/battleroomtab.cpp:132
+msgid "Value"
+msgstr "值"
+
+#: src/battlemaptab.cpp:83 src/battleroomtab.cpp:139 src/battleroomtab.cpp:140
+#: src/battleroomtab.cpp:280 src/battleroomtab.cpp:286
+msgid "Size"
+msgstr "大小"
+
+#: src/battlemaptab.cpp:84 src/battleroomtab.cpp:141 src/battleroomtab.cpp:142
+#: src/battleroomtab.cpp:281 src/battleroomtab.cpp:287
+msgid "Windspeed"
+msgstr "风速"
+
+#: src/battlemaptab.cpp:85 src/battleroomtab.cpp:143 src/battleroomtab.cpp:144
+#: src/battleroomtab.cpp:282 src/battleroomtab.cpp:288
+msgid "Tidal strength"
+msgstr "潮汐强度"
+
+#: src/battlemaptab.cpp:86
+msgid "Gravity"
+msgstr "重力"
+
+#: src/battlemaptab.cpp:87
+msgid "Extractor radius"
+msgstr "金属采集半径"
+
+#: src/battlemaptab.cpp:88
+msgid "Max metal"
+msgstr "金属含量"
+
+#: src/battlemaptab.cpp:92
+msgid "Fixed"
+msgstr "固定位置"
+
+#: src/battlemaptab.cpp:92
+msgid "Choose in game"
+msgstr "在游戏中选择"
+
+#: src/battlemaptab.cpp:95
+msgid "Startpositions"
+msgstr "出生位置"
+
+#: src/battleoptionstab.cpp:74
+msgid "Continue if commander dies"
+msgstr "指挥官被消灭后游戏继续"
+
+#: src/battleoptionstab.cpp:74
+msgid "End if commander dies"
+msgstr "指挥官被消灭后游戏结束"
+
+#: src/battleoptionstab.cpp:74
+msgid "Linage mode"
+msgstr ""
+
+#: src/battleoptionstab.cpp:77
+msgid "End condition"
+msgstr "游戏结束条件"
+
+#: src/battleoptionstab.cpp:81
+msgid "Resources"
+msgstr "资源"
+
+#: src/battleoptionstab.cpp:86 src/mmoptionswrapper.cpp:94
+msgid "Start Metal"
+msgstr "初始金属"
+
+#: src/battleoptionstab.cpp:90
+msgid "The amount of metal each player starts with."
+msgstr "每个玩家游戏开始时拥有的金属"
+
+#: src/battleoptionstab.cpp:102 src/mmoptionswrapper.cpp:97
+msgid "Start Energy"
+msgstr "初始能量"
+
+#: src/battleoptionstab.cpp:106
+msgid "The amount of energy each player starts with."
+msgstr "每个玩家游戏开始时拥有的能量"
+
+#: src/battleoptionstab.cpp:118
+msgid "Max units"
+msgstr "单位数上限"
+
+#: src/battleoptionstab.cpp:122
+msgid "The maximum number of units allowed per player."
+msgstr "每个玩家拥有的单位个数"
+
+#: src/battleoptionstab.cpp:131 src/mainjoinbattletab.cpp:152
+#: src/mainsingleplayertab.cpp:38 src/settings++/tab_simple.cpp:134
+msgid "Options"
+msgstr "选项"
+
+#: src/battleoptionstab.cpp:135
+msgid "Limit d-gun"
+msgstr "限制使用 D-Gun"
+
+#: src/battleoptionstab.cpp:136
+msgid "Ghosted buildings"
+msgstr "建筑物残影"
+
+#: src/battleoptionstab.cpp:137
+msgid "Diminishing metal makers"
+msgstr "金属含量逐渐减少"
+
+#: src/battleoptionstab.cpp:138
+msgid "Random start postisions"
+msgstr "随机出生位置"
+
+#: src/battleoptionstab.cpp:147
+msgid "Unit restrictions"
+msgstr "单位限制"
+
+#: src/battleoptionstab.cpp:155
+msgid "Allowed units"
+msgstr "允许单位"
+
+#: src/battleoptionstab.cpp:159
+msgid "Units in this list will be available in the game."
+msgstr "在这个清单中的单位将在游戏中可用"
+
+#: src/battleoptionstab.cpp:181
+msgid "Restricted units"
+msgstr "限制单位"
+
+#: src/battleoptionstab.cpp:185
+msgid "Units in this list will not be available in the game."
+msgstr "该列表中的单位将不能在游戏中使用"
+
+#: src/battleoptionstab.cpp:196
+msgid "Load..."
+msgstr "载入..."
+
+#: src/battleoptionstab.cpp:197
+msgid "Load a saved set of restrictions."
+msgstr "载入已储存的单位限制配置"
+
+#: src/battleoptionstab.cpp:202
+msgid "Save..."
+msgstr "保存..."
+
+#: src/battleoptionstab.cpp:203
+msgid "Save a set of restrictions."
+msgstr "保存单位限制配置"
+
+#: src/battleoptionstab.cpp:210
+msgid "Clear"
+msgstr "清除"
+
+#: src/battleoptionstab.cpp:211
+msgid "Enable all units."
+msgstr "允许所有单位。"
+
+#: src/battleroomlistctrl.cpp:80 src/connectwindow.cpp:65
+#: src/nicklistctrl.cpp:52
+msgid "Nickname"
+msgstr "昵称"
+
+#: src/battleroomlistctrl.cpp:84
+msgid "t"
+msgstr ""
+
+#: src/battleroomlistctrl.cpp:92
+msgid "cpu"
+msgstr "CPU"
+
+#: src/battleroomlistctrl.cpp:96
+msgid "Resource Bonus"
+msgstr "资源加成"
+
+#: src/battleroomlistctrl.cpp:130 src/battleroomtab.cpp:83
+msgid "Team"
+msgstr "队伍"
+
+#: src/battleroomlistctrl.cpp:138 src/battleroomtab.cpp:84
+msgid "Ally"
+msgstr "联盟"
+
+#: src/battleroomlistctrl.cpp:148 src/battleroomtab.cpp:86
+msgid "Side"
+msgstr "阵营"
+
+#: src/battleroomlistctrl.cpp:152
+msgid "Set color"
+msgstr "颜色"
+
+#: src/battleroomlistctrl.cpp:157 src/battleroomlistctrl.cpp:488
+msgid "Set Resource Bonus"
+msgstr "设置资源加成"
+
+#: src/battleroomlistctrl.cpp:162 src/battleroomlistctrl.cpp:407
+#: src/battleroomlistctrl.cpp:416 src/battleroomtab.cpp:122
+msgid "Spectator"
+msgstr "观看者"
+
+#: src/battleroomlistctrl.cpp:167 src/battleroomlistctrl.cpp:411
+#: src/battleroomlistctrl.cpp:421
+msgid "Kick"
+msgstr "踢出"
+
+#: src/battleroomlistctrl.cpp:169 src/battleroomlistctrl.cpp:410
+#: src/battleroomlistctrl.cpp:419 src/chatpanel.cpp:432
+msgid "Ring"
+msgstr "闹铃提示"
+
+#: src/battleroomlistctrl.cpp:488
+msgid "Please enter a value between 0 and 100"
+msgstr "请输入介于0与100之间的一个值"
+
+#: src/battleroomlistctrl.cpp:493
+msgid "Not a number"
+msgstr "不是一个数字"
+
+#: src/battleroomlistctrl.cpp:493 src/battleroomlistctrl.cpp:498
+msgid "Invalid number"
+msgstr "无效的数字"
+
+#: src/battleroomlistctrl.cpp:498
+msgid ""
+"Value out of range.\n"
+" Enter an integer between 0 & 100."
+msgstr ""
+"数值超出范围。\n"
+" 请输入介0与100之间的一个整数。"
+
+#: src/battleroommmoptionstab.cpp:38
+msgid "Mod Options"
+msgstr "模组选项"
+
+#: src/battleroommmoptionstab.cpp:43
+msgid "Map Options"
+msgstr "地图选项"
+
+#: src/battleroomtab.cpp:85
+msgid "Color"
+msgstr "颜色"
+
+#: src/battleroomtab.cpp:104 src/chatpanel.cpp:291
+msgid "Leave"
+msgstr "离开"
+
+#: src/battleroomtab.cpp:106 src/singleplayertab.cpp:81
+msgid "Start"
+msgstr "开始"
+
+#: src/battleroomtab.cpp:108
+msgid "Add Bot..."
+msgstr "添加AI..."
+
+#: src/battleroomtab.cpp:112
+msgid "Fix colours"
+msgstr "修改颜色"
+
+#: src/battleroomtab.cpp:115
+msgid "Balance"
+msgstr "平衡"
+
+#: src/battleroomtab.cpp:118
+msgid "I'm ready"
+msgstr "我准备好了"
+
+#: src/battleroomtab.cpp:377
+msgid "You have one or more bots sharing team, this is not possible."
+msgstr "你有多个AI共用队伍序号，这是不允许的。"
+
+#: src/battleroomtab.cpp:377
+msgid "Bot team sharing."
+msgstr "AI队伍共用。"
+
+#: src/battleroomtab.cpp:384
+msgid ""
+"Some players are not ready yet.\n"
+"Ring these players?"
+msgstr ""
+"有些玩家还没准备好。\n"
+"闹铃提示这些玩家？"
+
+#: src/battleroomtab.cpp:384 src/battleroomtab.cpp:389
+msgid "Not ready"
+msgstr "未就绪"
+
+#: src/battleroomtab.cpp:389
+msgid "Force start?"
+msgstr "强制开始？"
+
+#: src/chatlog.cpp:36
+msgid "### Session Closed at ["
+msgstr "### 会话于 ["
+
+#: src/chatlog.cpp:36
+msgid "]"
+msgstr "] 结束"
+
+#: src/chatlog.cpp:77 src/chatlog.cpp:83
+msgid ""
+"Couldn't create folder. \n"
+"Be sure that there isn't a write protection.\n"
+msgstr ""
+"无法创建目录。 \n"
+"请确认写保护是否被打开。\n"
+
+#: src/chatlog.cpp:77 src/chatlog.cpp:83
+msgid "Log function is disabled until restart SpringLobby."
+msgstr "日志功能将在SpringLobby重新启动后启用。"
+
+#: src/chatlog.cpp:77 src/chatlog.cpp:97 src/chatlog.cpp:114
+msgid "Log Warning"
+msgstr "日志警报"
+
+#: src/chatlog.cpp:97
+msgid ""
+"Couldn't write message to log.\n"
+"Logging will be disabled for room "
+msgstr ""
+"无法将信息写入日志。\n"
+"日志将在该房间被禁用 "
+
+#: src/chatlog.cpp:97
+msgid ""
+".\n"
+"\n"
+"Rejoin room to reactivate logging."
+msgstr ""
+"。\n"
+"\n"
+"重新进入房间来重新启用日志功能。"
+
+#: src/chatlog.cpp:114
+msgid ""
+"Can't open log file. \n"
+"Be sure that there isn't a write protection.\n"
+msgstr ""
+"无法打开日志文件。 \n"
+"请确认写保护是否被打开。\n"
+
+#: src/chatoptionstab.cpp:66
+msgid "Colors and font"
+msgstr "颜色与字体"
+
+#: src/chatoptionstab.cpp:71
+msgid "Use system colors"
+msgstr "使用系统颜色"
+
+#: src/chatoptionstab.cpp:97
+msgid "Normal"
+msgstr "普通"
+
+#: src/chatoptionstab.cpp:111
+msgid "Background"
+msgstr "背景"
+
+#: src/chatoptionstab.cpp:125
+msgid "Action"
+msgstr "动作"
+
+#: src/chatoptionstab.cpp:139
+msgid "Highlight"
+msgstr "高亮显示"
+
+#: src/chatoptionstab.cpp:153
+msgid "Join/Leave"
+msgstr "加入/离开"
+
+#: src/chatoptionstab.cpp:167
+msgid "My messages"
+msgstr "我的消息"
+
+#: src/chatoptionstab.cpp:186 src/connectwindow.cpp:59
+msgid "Server"
+msgstr "服务器"
+
+#: src/chatoptionstab.cpp:200
+msgid "Client"
+msgstr "客户端"
+
+#: src/chatoptionstab.cpp:214 src/chatpanel.cpp:1326 src/chatpanel.cpp:1487
+#: src/chatpanel.cpp:1492 src/mainwindow.cpp:410
+#: src/settings++/tab_abstract.cpp:111 src/tasserver.cpp:408
+msgid "Error"
+msgstr "错误"
+
+#: src/chatoptionstab.cpp:228
+msgid "Timestamp"
+msgstr "时间戳"
+
+#: src/chatoptionstab.cpp:242
+msgid "Notification"
+msgstr "通知"
+
+#: src/chatoptionstab.cpp:252
+msgid ""
+"[19:35] ** Server ** Connected to TAS Server.\n"
+"[22:30] <Dude> hi everyone\n"
+"[22:30] ** Dude2 joined the channel.\n"
+"[22:30] * Dude2 thinks his colors looks nice\n"
+"[22:45] <Dude> Dude2: orl?\n"
+"[22:46] <Dude2> But could be better, should tweak them some more...\n"
+msgstr ""
+
+#: src/chatoptionstab.cpp:263
+msgid "Font:"
+msgstr "字体："
+
+#: src/chatoptionstab.cpp:267
+msgid "default"
+msgstr "默认"
+
+#: src/chatoptionstab.cpp:271
+msgid "Select..."
+msgstr "选择..."
+
+#: src/chatoptionstab.cpp:283
+msgid "Behavior"
+msgstr "行为"
+
+#: src/chatoptionstab.cpp:285
+msgid "Use smart scrolling"
+msgstr "启用智能滚动"
+
+#: src/chatoptionstab.cpp:299
+msgid "Chat logs"
+msgstr "聊天日志"
+
+#: src/chatoptionstab.cpp:301
+msgid "Save chat logs"
+msgstr "保存聊天日志"
+
+#: src/chatoptionstab.cpp:309
+msgid "Save to:"
+msgstr "保存到："
+
+#: src/chatoptionstab.cpp:320
+msgid "Browse..."
+msgstr "浏览..."
+
+#: src/chatoptionstab.cpp:330
+msgid "Highlight words"
+msgstr "高亮字"
+
+#: src/chatoptionstab.cpp:332
+msgid "Words to highlight in chat:"
+msgstr "聊天中高亮显示字："
+
+#: src/chatoptionstab.cpp:625 src/springoptionstab.cpp:442
+msgid "Choose a directory"
+msgstr "选择一个目录"
+
+#: src/chatpanel.cpp:235
+msgid "Send"
+msgstr "发送"
+
+#: src/chatpanel.cpp:281
+msgid "Auto join this channel"
+msgstr "自动加入该频道"
+
+#: src/chatpanel.cpp:294
+msgid "Display Join/Leave Messages"
+msgstr "显示 加入/离开 信息"
+
+#: src/chatpanel.cpp:301 src/chatpanel.cpp:355
+msgid "Select all"
+msgstr "全选"
+
+#: src/chatpanel.cpp:303 src/chatpanel.cpp:357
+msgid "Copy"
+msgstr "复制"
+
+#: src/chatpanel.cpp:309
+msgid "Channel info"
+msgstr "频道信息"
+
+#: src/chatpanel.cpp:313 src/chatpanel.cpp:1175
+msgid "Set topic..."
+msgstr "设定主题"
+
+#: src/chatpanel.cpp:315 src/chatpanel.cpp:1191
+msgid "Channel message..."
+msgstr "频道消息…"
+
+#: src/chatpanel.cpp:319
+msgid "Lock..."
+msgstr "锁定…"
+
+#: src/chatpanel.cpp:321
+msgid "Unlock"
+msgstr "取消锁定"
+
+#: src/chatpanel.cpp:325
+msgid "Register..."
+msgstr "注册..."
+
+#: src/chatpanel.cpp:327
+msgid "Unregister"
+msgstr "注销"
+
+#: src/chatpanel.cpp:333
+msgid "On"
+msgstr "打开"
+
+#: src/chatpanel.cpp:335
+msgid "Off"
+msgstr "关闭"
+
+#: src/chatpanel.cpp:339
+msgid "Is on?"
+msgstr "是否开启"
+
+#: src/chatpanel.cpp:341
+msgid "Spam protection"
+msgstr "垃圾消息保护"
+
+#: src/chatpanel.cpp:342 src/chatpanel.cpp:456
+msgid "ChanServ"
+msgstr "频道服务器"
+
+#: src/chatpanel.cpp:349
+msgid "Disconnect"
+msgstr "断开连接"
+
+#: src/chatpanel.cpp:351
+msgid "Reconnect"
+msgstr ""
+
+#: src/chatpanel.cpp:366
+msgid "Remove..."
+msgstr "移除..."
+
+#: src/chatpanel.cpp:368
+msgid "Change password..."
+msgstr "更改密码..."
+
+#: src/chatpanel.cpp:370
+msgid "Set access..."
+msgstr ""
+
+#: src/chatpanel.cpp:372
+msgid "Accounts"
+msgstr "帐户"
+
+#: src/chatpanel.cpp:375
+msgid "Broadcast..."
+msgstr "广播..."
+
+#: src/chatpanel.cpp:377
+msgid "Admin"
+msgstr "管理员"
+
+#: src/chatpanel.cpp:388
+msgid "Open Chat"
+msgstr "公众聊天"
+
+#: src/chatpanel.cpp:390
+msgid "Join same battle"
+msgstr "加入同一战斗"
+
+#: src/chatpanel.cpp:396
+msgid "Ingame time"
+msgstr "游戏持续时间"
+
+#: src/chatpanel.cpp:398
+msgid "Retrieve IP and Smurfs"
+msgstr ""
+
+#: src/chatpanel.cpp:405 src/chatpanel.cpp:443
+msgid "Mute..."
+msgstr "禁言..."
+
+#: src/chatpanel.cpp:407
+msgid "Mute for 5 minutes"
+msgstr "禁言5分钟"
+
+#: src/chatpanel.cpp:409
+msgid "Mute for 10 minutes"
+msgstr "禁言10分钟"
+
+#: src/chatpanel.cpp:411
+msgid "Mute for 30 minutes"
+msgstr "禁言30分钟"
+
+#: src/chatpanel.cpp:413
+msgid "Mute for 2 hours"
+msgstr "禁言2小时"
+
+#: src/chatpanel.cpp:415
+msgid "Mute for 1 day"
+msgstr "禁言1天"
+
+#: src/chatpanel.cpp:418 src/chatpanel.cpp:445
+msgid "Unmute"
+msgstr "取消禁言"
+
+#: src/chatpanel.cpp:420
+msgid "Mute"
+msgstr "禁言"
+
+#: src/chatpanel.cpp:422 src/chatpanel.cpp:448
+msgid "Kick..."
+msgstr "踢出..."
+
+#: src/chatpanel.cpp:426
+msgid "Ban..."
+msgstr "禁闭..."
+
+#: src/chatpanel.cpp:428
+msgid "Unban"
+msgstr "解禁"
+
+#: src/chatpanel.cpp:436
+msgid "Slap!"
+msgstr "打耳光！"
+
+#: src/chatpanel.cpp:452
+msgid "Op"
+msgstr ""
+
+#: src/chatpanel.cpp:454
+msgid "DeOp"
+msgstr ""
+
+#: src/chatpanel.cpp:767
+msgid " !! Command: \""
+msgstr ""
+
+#: src/chatpanel.cpp:767
+msgid "\" params: \""
+msgstr ""
+
+#: src/chatpanel.cpp:772
+msgid "channel"
+msgstr "频道"
+
+#: src/chatpanel.cpp:773
+msgid "battle"
+msgstr "战斗"
+
+#: src/chatpanel.cpp:774
+msgid "server"
+msgstr "服务器"
+
+#: src/chatpanel.cpp:793 src/chatpanel.cpp:798
+msgid " joined the "
+msgstr " 加入 "
+
+#: src/chatpanel.cpp:826 src/chatpanel.cpp:836
+msgid " left the "
+msgstr " 离开 "
+
+#: src/chatpanel.cpp:867
+msgid ""
+"\n"
+" * Set by "
+msgstr ""
+
+#: src/chatpanel.cpp:890
+msgid "Chat closed."
+msgstr "聊天被关闭。"
+
+#: src/chatpanel.cpp:916
+msgid "_SERVER"
+msgstr ""
+
+#: src/chatpanel.cpp:971
+#, c-format
+msgid "Are you sure you want to paste %d lines?"
+msgstr "你确认你要粘贴 %d 行吗？"
+
+#: src/chatpanel.cpp:971
+msgid "Flood warning"
+msgstr "Flood警报"
+
+#: src/chatpanel.cpp:983
+msgid " You have SpringLobby v"
+msgstr " 您使用 SpringLobby v"
+
+#: src/chatpanel.cpp:990
+msgid " You are not in channel or channel does not exist."
+msgstr " 你还没有加入频道或者频道不存在。"
+
+#: src/chatpanel.cpp:996 src/chatpanel.cpp:1010 src/chatpanel.cpp:1024
+#: src/chatpanel.cpp:1034
+#, c-format
+msgid ""
+" Error: Command (%s) does not exist, use /help for a list of available "
+"commands."
+msgstr " 错误： 指令 %s 不存在，请使用 /help 获得指令列表。"
+
+#: src/chatpanel.cpp:1004
+msgid ""
+" You are not in battle or battle does not exist, use /help for a list of "
+"available commands."
+msgstr " 你不在战斗中或者战斗不存在，使用 /help 获得指令列表。"
+
+#: src/chatpanel.cpp:1018
+msgid " User is offline."
+msgstr " 用户不在线。"
+
+#: src/chatpanel.cpp:1039
+msgid " Sent: \""
+msgstr " 已发送： “"
+
+#: src/chatpanel.cpp:1039
+msgid "\""
+msgstr "”"
+
+#: src/chatpanel.cpp:1142
+msgid "Auto join channel"
+msgstr "自动加入频道"
+
+#: src/chatpanel.cpp:1142
+msgid ""
+"Please enter password needed to join this channel, leave blank for no "
+"passwrd."
+msgstr "请输入加入该频道所需的密码，保持空白代表无密码。"
+
+#: src/chatpanel.cpp:1156 src/chatpanel.cpp:1169 src/chatpanel.cpp:1185
+#: src/chatpanel.cpp:1201 src/chatpanel.cpp:1217 src/chatpanel.cpp:1232
+#: src/chatpanel.cpp:1248 src/chatpanel.cpp:1263 src/chatpanel.cpp:1276
+#: src/chatpanel.cpp:1289 src/chatpanel.cpp:1382 src/chatpanel.cpp:1403
+#: src/chatpanel.cpp:1419 src/chatpanel.cpp:1440 src/chatpanel.cpp:1456
+msgid "ChanServ error"
+msgstr "频道服务器错误"
+
+#: src/chatpanel.cpp:1156 src/chatpanel.cpp:1169 src/chatpanel.cpp:1185
+#: src/chatpanel.cpp:1201 src/chatpanel.cpp:1217 src/chatpanel.cpp:1263
+#: src/chatpanel.cpp:1276 src/chatpanel.cpp:1289 src/chatpanel.cpp:1382
+#: src/chatpanel.cpp:1403 src/chatpanel.cpp:1419 src/chatpanel.cpp:1440
+#: src/chatpanel.cpp:1456
+msgid "ChanServ is not in this channel."
+msgstr "频道服务器不在该频道。"
+
+#: src/chatpanel.cpp:1175
+msgid "What should be the new topic?"
+msgstr "新话题应该是什么？"
+
+#: src/chatpanel.cpp:1191
+msgid "Message:"
+msgstr "消息："
+
+#: src/chatpanel.cpp:1207
+msgid "Lock channel..."
+msgstr "锁定频道..."
+
+#: src/chatpanel.cpp:1207
+msgid "What should the new password be?"
+msgstr "新密码应该是什么？"
+
+#: src/chatpanel.cpp:1222
+msgid "Unlock Channel"
+msgstr "解锁频道"
+
+#: src/chatpanel.cpp:1222
+msgid "Are you sure you want to unlock this channel?"
+msgstr "你确认你要解锁该频道？"
+
+#: src/chatpanel.cpp:1232 src/chatpanel.cpp:1248
+msgid "ChanServ is not on this server."
+msgstr "频道服务器不在该服务器。"
+
+#: src/chatpanel.cpp:1238
+msgid "Register Channel"
+msgstr "注册频道"
+
+#: src/chatpanel.cpp:1238
+msgid "Who should be appointed founder of this channel?"
+msgstr "谁应该被指派为该频道的创建者？"
+
+#: src/chatpanel.cpp:1253
+msgid "Unregister Channel"
+msgstr "注销频道"
+
+#: src/chatpanel.cpp:1253
+msgid "Are you sure you want to unregister this channel?"
+msgstr "你确认你要注销此频道？"
+
+#: src/chatpanel.cpp:1311
+msgid "Remove User Acount"
+msgstr "移除用户帐户"
+
+#: src/chatpanel.cpp:1311
+msgid "What user account do you want to remove today?"
+msgstr "你想要移除哪个用户帐户？"
+
+#: src/chatpanel.cpp:1312
+msgid "Remove Account"
+msgstr "删除账户"
+
+#: src/chatpanel.cpp:1312
+msgid "Are you sure you want to remove the account "
+msgstr "你确认你要移除帐户 "
+
+#: src/chatpanel.cpp:1319 src/chatpanel.cpp:1320
+msgid "Change User Acount Password"
+msgstr "修改用户帐户密码"
+
+#: src/chatpanel.cpp:1319
+msgid "What user account do you want to change the password for?"
+msgstr "你想为哪位用户修改密码？"
+
+#: src/chatpanel.cpp:1320
+msgid "What would be the new password?"
+msgstr "新密码应该是什么？"
+
+#: src/chatpanel.cpp:1326 src/chatpanel.cpp:1487 src/chatpanel.cpp:1492
+msgid "Not Implemented"
+msgstr "尚未实现"
+
+#: src/chatpanel.cpp:1332
+msgid "Broadcast Message"
+msgstr "广播消息"
+
+#: src/chatpanel.cpp:1332
+msgid "Message to be broadcasted:"
+msgstr "要广播的消息："
+
+#: src/chatpanel.cpp:1352
+msgid "You don't have the mod "
+msgstr "你没有 "
+
+#: src/chatpanel.cpp:1353
+msgid " . Please download it first"
+msgstr " 模组。请先下载"
+
+#: src/chatpanel.cpp:1353
+msgid "Mod unavailable"
+msgstr "模组不可用"
+
+#: src/chatpanel.cpp:1359
+msgid "This battle is password protected, enter the password."
+msgstr "这个战斗有密码保护，请输入密码。"
+
+#: src/chatpanel.cpp:1387
+msgid "Mute User"
+msgstr "禁言用户"
+
+#: src/chatpanel.cpp:1387
+msgid "For how many minutes should the user be muted?"
+msgstr "该用户将被禁言几分钟？"
+
+#: src/chatpanel.cpp:1427
+msgid "Kick User"
+msgstr "踢出用户"
+
+#: src/chatpanel.cpp:1427 src/chatpanel.cpp:1481
+msgid "Reason:"
+msgstr "原因："
+
+#: src/chatpanel.cpp:1481
+msgid "Kick user"
+msgstr "踢出用户"
+
+#: src/chatpanel.cpp:1498
+msgid "Mute user"
+msgstr "禁言用户"
+
+#: src/chatpanel.cpp:1498
+msgid "Duration:"
+msgstr "持续时间："
+
+#: src/connectwindow.cpp:40
+msgid "Connect to lobby server"
+msgstr "连接到对战大厅服务器"
+
+#: src/connectwindow.cpp:61
+msgid ""
+"Server to connect to. You can connect to any server you like by typing in "
+"hostaddress:port format."
+msgstr "服务器连接至。 你可以以 主机地址:端口号 的格式输入并连接到任何服务器。"
+
+#: src/connectwindow.cpp:67 src/connectwindow.cpp:143
+#: src/hostbattledialog.cpp:86 src/ui.cpp:136
+msgid "Password"
+msgstr "密码"
+
+#: src/connectwindow.cpp:75
+msgid ""
+"Note: If you do not have an account, you\n"
+" can register one for free under the\n"
+"\"Register\" tab."
+msgstr ""
+"提示：如果你还没有一个账户，你\n"
+"可以在“注册”选项卡内免费注册\n"
+"一个。"
+
+#: src/connectwindow.cpp:81
+msgid "Login"
+msgstr "登陆"
+
+#: src/connectwindow.cpp:82
+msgid "Register"
+msgstr "注册"
+
+#: src/connectwindow.cpp:130
+msgid "Nick"
+msgstr ""
+
+#: src/connectwindow.cpp:227
+msgid "Invalid host/port or servername."
+msgstr ""
+
+#: src/connectwindow.cpp:227 src/connectwindow.cpp:250
+msgid "Invalid host"
+msgstr ""
+
+#: src/connectwindow.cpp:235
+msgid "Invalid port."
+msgstr ""
+
+#: src/connectwindow.cpp:235 src/connectwindow.cpp:240
+msgid "Invalid port"
+msgstr ""
+
+#: src/connectwindow.cpp:240
+msgid ""
+"Port number out of range.\n"
+"\n"
+"It must be an integer between 1 and 65535"
+msgstr ""
+
+#: src/connectwindow.cpp:250
+msgid "Invalid host/port."
+msgstr ""
+
+#: src/connectwindow.cpp:264
+msgid ""
+"Registration failed, the reason was:\n"
+"Password / confirmation mismatch"
+msgstr ""
+
+#: src/connectwindow.cpp:264 src/connectwindow.cpp:275
+msgid "Registration failed."
+msgstr ""
+
+#: src/connectwindow.cpp:271
+msgid ""
+"Registration successful,\n"
+"you should now be able to login."
+msgstr ""
+
+#: src/connectwindow.cpp:271
+msgid "Registration successful"
+msgstr ""
+
+#: src/connectwindow.cpp:275
+msgid "Registration failed, the reason was:\n"
+msgstr ""
+
+#: src/countrycodes.cpp:11
+msgid " Andorra"
+msgstr ""
+
+#: src/countrycodes.cpp:12
+msgid "United Arab Emirates"
+msgstr ""
+
+#: src/countrycodes.cpp:13
+msgid "Afghanistan"
+msgstr ""
+
+#: src/countrycodes.cpp:14
+msgid "Antigua and Barbuda"
+msgstr ""
+
+#: src/countrycodes.cpp:15
+msgid "Anguilla"
+msgstr ""
+
+#: src/countrycodes.cpp:16
+msgid "Albania"
+msgstr ""
+
+#: src/countrycodes.cpp:17
+msgid "Armenia"
+msgstr ""
+
+#: src/countrycodes.cpp:18
+msgid "Netherlands Antilles"
+msgstr ""
+
+#: src/countrycodes.cpp:19
+msgid "Angola"
+msgstr ""
+
+#: src/countrycodes.cpp:20
+msgid "Antarctica"
+msgstr ""
+
+#: src/countrycodes.cpp:21
+msgid "Argentina"
+msgstr ""
+
+#: src/countrycodes.cpp:22
+msgid "American Samoa"
+msgstr ""
+
+#: src/countrycodes.cpp:23
+msgid "Austria"
+msgstr ""
+
+#: src/countrycodes.cpp:24
+msgid "Australia"
+msgstr ""
+
+#: src/countrycodes.cpp:25
+msgid "Aruba"
+msgstr ""
+
+#: src/countrycodes.cpp:26
+msgid "Azerbaijan"
+msgstr ""
+
+#: src/countrycodes.cpp:27
+msgid "Bosnia and Herzegovina"
+msgstr ""
+
+#: src/countrycodes.cpp:28
+msgid "Barbados"
+msgstr ""
+
+#: src/countrycodes.cpp:29
+msgid "Bangladesh"
+msgstr ""
+
+#: src/countrycodes.cpp:30
+msgid "Belgium"
+msgstr ""
+
+#: src/countrycodes.cpp:31
+msgid "Burkina Faso"
+msgstr ""
+
+#: src/countrycodes.cpp:32
+msgid "Bulgaria"
+msgstr ""
+
+#: src/countrycodes.cpp:33
+msgid "Bahrain"
+msgstr ""
+
+#: src/countrycodes.cpp:34
+msgid "Burundi"
+msgstr ""
+
+#: src/countrycodes.cpp:35
+msgid "Benin"
+msgstr ""
+
+#: src/countrycodes.cpp:36
+msgid "Bermuda"
+msgstr ""
+
+#: src/countrycodes.cpp:37
+msgid "Brunei Darussalam"
+msgstr ""
+
+#: src/countrycodes.cpp:38
+msgid "Bolivia"
+msgstr ""
+
+#: src/countrycodes.cpp:39
+msgid "Brazil"
+msgstr ""
+
+#: src/countrycodes.cpp:40
+msgid "Bahamas"
+msgstr ""
+
+#: src/countrycodes.cpp:41
+msgid "Bhutan"
+msgstr ""
+
+#: src/countrycodes.cpp:42
+msgid "Bouvet Island"
+msgstr ""
+
+#: src/countrycodes.cpp:43
+msgid "Botswana"
+msgstr ""
+
+#: src/countrycodes.cpp:44
+msgid "Belarus"
+msgstr ""
+
+#: src/countrycodes.cpp:45
+msgid "Belize"
+msgstr ""
+
+#: src/countrycodes.cpp:46
+msgid "Canada"
+msgstr ""
+
+#: src/countrycodes.cpp:47
+msgid "Cocos (Keeling Islands)"
+msgstr ""
+
+#: src/countrycodes.cpp:48
+msgid "Central African Republic"
+msgstr ""
+
+#: src/countrycodes.cpp:49
+msgid "Congo"
+msgstr ""
+
+#: src/countrycodes.cpp:50
+msgid "Switzerland"
+msgstr ""
+
+#: src/countrycodes.cpp:51
+msgid "Cote D'Ivoire (Ivory Coast)"
+msgstr ""
+
+#: src/countrycodes.cpp:52
+msgid "Cook Islands"
+msgstr ""
+
+#: src/countrycodes.cpp:53
+msgid "Chile"
+msgstr ""
+
+#: src/countrycodes.cpp:54
+msgid "Cameroon"
+msgstr ""
+
+#: src/countrycodes.cpp:55
+msgid "China"
+msgstr ""
+
+#: src/countrycodes.cpp:56
+msgid "Colombia"
+msgstr ""
+
+#: src/countrycodes.cpp:57
+msgid "Costa Rica"
+msgstr ""
+
+#: src/countrycodes.cpp:58
+msgid "Cuba"
+msgstr ""
+
+#: src/countrycodes.cpp:59
+msgid "Cape Verde"
+msgstr ""
+
+#: src/countrycodes.cpp:60
+msgid "Christmas Island"
+msgstr ""
+
+#: src/countrycodes.cpp:61
+msgid "Cyprus"
+msgstr ""
+
+#: src/countrycodes.cpp:62
+msgid "Czech Republic"
+msgstr ""
+
+#: src/countrycodes.cpp:63
+msgid "Germany"
+msgstr ""
+
+#: src/countrycodes.cpp:64
+msgid "Djibouti"
+msgstr ""
+
+#: src/countrycodes.cpp:65
+msgid "Denmark"
+msgstr ""
+
+#: src/countrycodes.cpp:66
+msgid "Dominica"
+msgstr ""
+
+#: src/countrycodes.cpp:67
+msgid "Dominican Republic"
+msgstr ""
+
+#: src/countrycodes.cpp:68
+msgid "Algeria"
+msgstr ""
+
+#: src/countrycodes.cpp:69
+msgid "Ecuador"
+msgstr ""
+
+#: src/countrycodes.cpp:70
+msgid "Estonia"
+msgstr ""
+
+#: src/countrycodes.cpp:71
+msgid "Egypt"
+msgstr ""
+
+#: src/countrycodes.cpp:72
+msgid "Western Sahara"
+msgstr ""
+
+#: src/countrycodes.cpp:73
+msgid "Eritrea"
+msgstr ""
+
+#: src/countrycodes.cpp:74
+msgid "Spain"
+msgstr ""
+
+#: src/countrycodes.cpp:75
+msgid "Ethiopia"
+msgstr ""
+
+#: src/countrycodes.cpp:76
+msgid "Finland"
+msgstr ""
+
+#: src/countrycodes.cpp:77
+msgid "Fiji"
+msgstr ""
+
+#: src/countrycodes.cpp:78
+msgid "Falkland Islands (Malvinas)"
+msgstr ""
+
+#: src/countrycodes.cpp:79
+msgid "Micronesia"
+msgstr ""
+
+#: src/countrycodes.cpp:80
+msgid "Faroe Islands"
+msgstr ""
+
+#: src/countrycodes.cpp:81
+msgid "France"
+msgstr ""
+
+#: src/countrycodes.cpp:82
+msgid "France, Metropolitan"
+msgstr ""
+
+#: src/countrycodes.cpp:83
+msgid "Gabon"
+msgstr ""
+
+#: src/countrycodes.cpp:84
+msgid "Grenada"
+msgstr ""
+
+#: src/countrycodes.cpp:85
+msgid "Georgia"
+msgstr ""
+
+#: src/countrycodes.cpp:86
+msgid "French Guiana"
+msgstr ""
+
+#: src/countrycodes.cpp:87
+msgid "Ghana"
+msgstr ""
+
+#: src/countrycodes.cpp:88
+msgid "Gibraltar"
+msgstr ""
+
+#: src/countrycodes.cpp:89
+msgid "Greenland"
+msgstr ""
+
+#: src/countrycodes.cpp:90
+msgid "Gambia"
+msgstr ""
+
+#: src/countrycodes.cpp:91
+msgid "Guinea"
+msgstr ""
+
+#: src/countrycodes.cpp:92
+msgid "Guadeloupe"
+msgstr ""
+
+#: src/countrycodes.cpp:93
+msgid "Equatorial Guinea"
+msgstr ""
+
+#: src/countrycodes.cpp:94
+msgid "Greece"
+msgstr ""
+
+#: src/countrycodes.cpp:95
+msgid "S. Georgia and S. Sandwich Isls."
+msgstr ""
+
+#: src/countrycodes.cpp:96
+msgid "Guatemala"
+msgstr ""
+
+#: src/countrycodes.cpp:97
+msgid "Guam"
+msgstr ""
+
+#: src/countrycodes.cpp:98
+msgid "Guinea-Bissau"
+msgstr ""
+
+#: src/countrycodes.cpp:99
+msgid "Guyana"
+msgstr ""
+
+#: src/countrycodes.cpp:100
+msgid "Hong Kong"
+msgstr ""
+
+#: src/countrycodes.cpp:101
+msgid "Heard and McDonald Islands"
+msgstr ""
+
+#: src/countrycodes.cpp:102
+msgid "Honduras"
+msgstr ""
+
+#: src/countrycodes.cpp:103
+msgid "Croatia (Hrvatska)"
+msgstr ""
+
+#: src/countrycodes.cpp:104
+msgid "Haiti"
+msgstr ""
+
+#: src/countrycodes.cpp:105
+msgid "Hungary"
+msgstr ""
+
+#: src/countrycodes.cpp:106
+msgid "Indonesia"
+msgstr ""
+
+#: src/countrycodes.cpp:107
+msgid "Ireland"
+msgstr ""
+
+#: src/countrycodes.cpp:108
+msgid "Israel"
+msgstr ""
+
+#: src/countrycodes.cpp:109
+msgid "India"
+msgstr ""
+
+#: src/countrycodes.cpp:110
+msgid "British Indian Ocean Territory"
+msgstr ""
+
+#: src/countrycodes.cpp:111
+msgid "Iraq"
+msgstr ""
+
+#: src/countrycodes.cpp:112
+msgid "Iran"
+msgstr ""
+
+#: src/countrycodes.cpp:113
+msgid "Iceland"
+msgstr ""
+
+#: src/countrycodes.cpp:114
+msgid "Italy"
+msgstr ""
+
+#: src/countrycodes.cpp:115
+msgid "Jamaica"
+msgstr ""
+
+#: src/countrycodes.cpp:116
+msgid "Jordan"
+msgstr ""
+
+#: src/countrycodes.cpp:117
+msgid "Japan"
+msgstr ""
+
+#: src/countrycodes.cpp:118
+msgid "Kenya"
+msgstr ""
+
+#: src/countrycodes.cpp:119
+msgid "Kyrgyzstan (Kyrgyz Republic)"
+msgstr ""
+
+#: src/countrycodes.cpp:120
+msgid "Cambodia"
+msgstr ""
+
+#: src/countrycodes.cpp:121
+msgid "Kiribati"
+msgstr ""
+
+#: src/countrycodes.cpp:122
+msgid "Comoros"
+msgstr ""
+
+#: src/countrycodes.cpp:123
+msgid "Saint Kitts and Nevis"
+msgstr ""
+
+#: src/countrycodes.cpp:124
+msgid "Korea (North) (People's Republic)"
+msgstr ""
+
+#: src/countrycodes.cpp:125
+msgid "Korea (South) (Republic)"
+msgstr ""
+
+#: src/countrycodes.cpp:126
+msgid "Kuwait"
+msgstr ""
+
+#: src/countrycodes.cpp:127
+msgid "Cayman Islands"
+msgstr ""
+
+#: src/countrycodes.cpp:128
+msgid "Kazakhstan"
+msgstr ""
+
+#: src/countrycodes.cpp:129
+msgid "Laos"
+msgstr ""
+
+#: src/countrycodes.cpp:130
+msgid "Lebanon"
+msgstr ""
+
+#: src/countrycodes.cpp:131
+msgid "Saint Lucia"
+msgstr ""
+
+#: src/countrycodes.cpp:132
+msgid "Liechtenstein"
+msgstr ""
+
+#: src/countrycodes.cpp:133
+msgid "Sri Lanka"
+msgstr ""
+
+#: src/countrycodes.cpp:134
+msgid "Liberia"
+msgstr ""
+
+#: src/countrycodes.cpp:135
+msgid "Lesotho"
+msgstr ""
+
+#: src/countrycodes.cpp:136
+msgid "Lithuania"
+msgstr ""
+
+#: src/countrycodes.cpp:137
+msgid "Luxembourg"
+msgstr ""
+
+#: src/countrycodes.cpp:138
+msgid "Latvia"
+msgstr ""
+
+#: src/countrycodes.cpp:139
+msgid "Libya"
+msgstr ""
+
+#: src/countrycodes.cpp:140
+msgid "Morocco"
+msgstr ""
+
+#: src/countrycodes.cpp:141
+msgid "Monaco"
+msgstr ""
+
+#: src/countrycodes.cpp:142
+msgid "Moldova"
+msgstr ""
+
+#: src/countrycodes.cpp:143
+msgid "Montenegro"
+msgstr ""
+
+#: src/countrycodes.cpp:144
+msgid "Madagascar"
+msgstr ""
+
+#: src/countrycodes.cpp:145
+msgid "Marshall Islands"
+msgstr ""
+
+#: src/countrycodes.cpp:146
+msgid "Macedonia"
+msgstr ""
+
+#: src/countrycodes.cpp:147
+msgid "Mali"
+msgstr ""
+
+#: src/countrycodes.cpp:148
+msgid "Myanmar"
+msgstr ""
+
+#: src/countrycodes.cpp:149
+msgid "Mongolia"
+msgstr ""
+
+#: src/countrycodes.cpp:150
+msgid "Macau"
+msgstr ""
+
+#: src/countrycodes.cpp:151
+msgid "Northern Mariana Islands"
+msgstr ""
+
+#: src/countrycodes.cpp:152
+msgid "Martinique"
+msgstr ""
+
+#: src/countrycodes.cpp:153
+msgid "Mauritania"
+msgstr ""
+
+#: src/countrycodes.cpp:154
+msgid "Montserrat"
+msgstr ""
+
+#: src/countrycodes.cpp:155
+msgid "Malta"
+msgstr ""
+
+#: src/countrycodes.cpp:156
+msgid "Mauritius"
+msgstr ""
+
+#: src/countrycodes.cpp:157
+msgid "Maldives"
+msgstr ""
+
+#: src/countrycodes.cpp:158
+msgid "Malawi"
+msgstr ""
+
+#: src/countrycodes.cpp:159
+msgid "Mexico"
+msgstr ""
+
+#: src/countrycodes.cpp:160
+msgid "Malaysia"
+msgstr ""
+
+#: src/countrycodes.cpp:161
+msgid "Mozambique"
+msgstr ""
+
+#: src/countrycodes.cpp:162
+msgid "Namibia"
+msgstr ""
+
+#: src/countrycodes.cpp:163
+msgid "New Caledonia"
+msgstr ""
+
+#: src/countrycodes.cpp:164
+msgid "Niger"
+msgstr ""
+
+#: src/countrycodes.cpp:165
+msgid "Norfolk Island"
+msgstr ""
+
+#: src/countrycodes.cpp:166
+msgid "Nigeria"
+msgstr ""
+
+#: src/countrycodes.cpp:167
+msgid "Nicaragua"
+msgstr ""
+
+#: src/countrycodes.cpp:168
+msgid "Netherlands"
+msgstr ""
+
+#: src/countrycodes.cpp:169
+msgid "Norway"
+msgstr ""
+
+#: src/countrycodes.cpp:170
+msgid "Nepal"
+msgstr ""
+
+#: src/countrycodes.cpp:171
+msgid "Nauru"
+msgstr ""
+
+#: src/countrycodes.cpp:172
+msgid "Neutral Zone (Saudia Arabia/Iraq)"
+msgstr ""
+
+#: src/countrycodes.cpp:173
+msgid "Niue"
+msgstr ""
+
+#: src/countrycodes.cpp:174
+msgid "New Zealand"
+msgstr ""
+
+#: src/countrycodes.cpp:175
+msgid "Oman"
+msgstr ""
+
+#: src/countrycodes.cpp:176
+msgid "Panama"
+msgstr ""
+
+#: src/countrycodes.cpp:177
+msgid "Peru"
+msgstr ""
+
+#: src/countrycodes.cpp:178
+msgid "French Polynesia"
+msgstr ""
+
+#: src/countrycodes.cpp:179
+msgid "Papua New Guinea"
+msgstr ""
+
+#: src/countrycodes.cpp:180
+msgid "Philippines"
+msgstr ""
+
+#: src/countrycodes.cpp:181
+msgid "Pakistan"
+msgstr ""
+
+#: src/countrycodes.cpp:182
+msgid "Poland"
+msgstr ""
+
+#: src/countrycodes.cpp:183
+msgid "St. Pierre and Miquelon"
+msgstr ""
+
+#: src/countrycodes.cpp:184
+msgid "Pitcairn"
+msgstr ""
+
+#: src/countrycodes.cpp:185
+msgid "Puerto Rico"
+msgstr ""
+
+#: src/countrycodes.cpp:186
+msgid "Portugal"
+msgstr ""
+
+#: src/countrycodes.cpp:187
+msgid "Palau"
+msgstr ""
+
+#: src/countrycodes.cpp:188
+msgid "Paraguay"
+msgstr ""
+
+#: src/countrycodes.cpp:189
+msgid "Qatar"
+msgstr ""
+
+#: src/countrycodes.cpp:190
+msgid "Reunion"
+msgstr ""
+
+#: src/countrycodes.cpp:191
+msgid "Romania"
+msgstr ""
+
+#: src/countrycodes.cpp:192
+msgid "Serbia"
+msgstr ""
+
+#: src/countrycodes.cpp:193
+msgid "Russian Federation"
+msgstr ""
+
+#: src/countrycodes.cpp:194
+msgid "Rwanda"
+msgstr ""
+
+#: src/countrycodes.cpp:195
+msgid "Saudi Arabia"
+msgstr ""
+
+#: src/countrycodes.cpp:196
+msgid "Solomon Islands"
+msgstr ""
+
+#: src/countrycodes.cpp:197
+msgid "Seychelles"
+msgstr ""
+
+#: src/countrycodes.cpp:198
+msgid "Sudan"
+msgstr ""
+
+#: src/countrycodes.cpp:199
+msgid "Sweden"
+msgstr ""
+
+#: src/countrycodes.cpp:200
+msgid "Singapore"
+msgstr ""
+
+#: src/countrycodes.cpp:201
+msgid "St. Helena"
+msgstr ""
+
+#: src/countrycodes.cpp:202
+msgid "Slovenia"
+msgstr ""
+
+#: src/countrycodes.cpp:203
+msgid "Svalbard and Jan Mayen Islands"
+msgstr ""
+
+#: src/countrycodes.cpp:204
+msgid "Slovakia (Slovak Republic)"
+msgstr ""
+
+#: src/countrycodes.cpp:205
+msgid "Sierra Leone"
+msgstr ""
+
+#: src/countrycodes.cpp:206
+msgid "San Marino"
+msgstr ""
+
+#: src/countrycodes.cpp:207
+msgid "Senegal"
+msgstr ""
+
+#: src/countrycodes.cpp:208
+msgid "Somalia"
+msgstr ""
+
+#: src/countrycodes.cpp:209
+msgid "Suriname"
+msgstr ""
+
+#: src/countrycodes.cpp:210
+msgid "Sao Tome and Principe"
+msgstr ""
+
+#: src/countrycodes.cpp:211
+msgid "Soviet Union (former)"
+msgstr ""
+
+#: src/countrycodes.cpp:212
+msgid "El Salvador"
+msgstr ""
+
+#: src/countrycodes.cpp:213
+msgid "Syria"
+msgstr ""
+
+#: src/countrycodes.cpp:214
+msgid "Swaziland"
+msgstr ""
+
+#: src/countrycodes.cpp:215
+msgid "Turks and Caicos Islands"
+msgstr ""
+
+#: src/countrycodes.cpp:216
+msgid "Chad"
+msgstr ""
+
+#: src/countrycodes.cpp:217
+msgid "French Southern Territories"
+msgstr ""
+
+#: src/countrycodes.cpp:218
+msgid "Togo"
+msgstr ""
+
+#: src/countrycodes.cpp:219
+msgid "Thailand"
+msgstr ""
+
+#: src/countrycodes.cpp:220
+msgid "Tajikistan"
+msgstr ""
+
+#: src/countrycodes.cpp:221
+msgid "Tokelau"
+msgstr ""
+
+#: src/countrycodes.cpp:222
+msgid "Turkmenistan"
+msgstr ""
+
+#: src/countrycodes.cpp:223
+msgid "Tunisia"
+msgstr ""
+
+#: src/countrycodes.cpp:224
+msgid "Tonga"
+msgstr ""
+
+#: src/countrycodes.cpp:225
+msgid "East Timor"
+msgstr ""
+
+#: src/countrycodes.cpp:226
+msgid "Turkey"
+msgstr ""
+
+#: src/countrycodes.cpp:227
+msgid "Trinidad and Tobago"
+msgstr ""
+
+#: src/countrycodes.cpp:228
+msgid "Tuvalu"
+msgstr ""
+
+#: src/countrycodes.cpp:229
+msgid "Taiwan"
+msgstr ""
+
+#: src/countrycodes.cpp:230
+msgid "Tanzania"
+msgstr ""
+
+#: src/countrycodes.cpp:231
+msgid "Ukraine"
+msgstr ""
+
+#: src/countrycodes.cpp:232
+msgid "Uganda"
+msgstr ""
+
+#: src/countrycodes.cpp:233
+msgid "United Kingdom (Great Britain)"
+msgstr ""
+
+#: src/countrycodes.cpp:234
+msgid "US Minor Outlying Islands"
+msgstr ""
+
+#: src/countrycodes.cpp:235
+msgid "United States"
+msgstr ""
+
+#: src/countrycodes.cpp:236
+msgid "Uruguay"
+msgstr ""
+
+#: src/countrycodes.cpp:237
+msgid "Uzbekistan"
+msgstr ""
+
+#: src/countrycodes.cpp:238
+msgid "Vatican City State (Holy See)"
+msgstr ""
+
+#: src/countrycodes.cpp:239
+msgid "Saint Vincent and The Grenadines"
+msgstr ""
+
+#: src/countrycodes.cpp:240
+msgid "Venezuela"
+msgstr ""
+
+#: src/countrycodes.cpp:241
+msgid "Virgin Islands (British)"
+msgstr ""
+
+#: src/countrycodes.cpp:242
+msgid "Virgin Islands (US)"
+msgstr ""
+
+#: src/countrycodes.cpp:243
+msgid "Viet Nam"
+msgstr ""
+
+#: src/countrycodes.cpp:244
+msgid "Vanuatu"
+msgstr ""
+
+#: src/countrycodes.cpp:245
+msgid "Wallis and Futuna Islands"
+msgstr ""
+
+#: src/countrycodes.cpp:246
+msgid "Samoa"
+msgstr ""
+
+#: src/countrycodes.cpp:247
+msgid "Yemen"
+msgstr ""
+
+#: src/countrycodes.cpp:248
+msgid "Mayotte"
+msgstr ""
+
+#: src/countrycodes.cpp:249
+msgid "Yugoslavia"
+msgstr ""
+
+#: src/countrycodes.cpp:250
+msgid "South Africa"
+msgstr ""
+
+#: src/countrycodes.cpp:251
+msgid "Zambia"
+msgstr ""
+
+#: src/countrycodes.cpp:252
+msgid "Zaire"
+msgstr ""
+
+#: src/countrycodes.cpp:253
+msgid "Zimbabwe"
+msgstr ""
+
+#: src/countrycodes.cpp:260
+msgid "(Full country name not found)"
+msgstr ""
+
+#: src/crashreport.cpp:71
+msgid "System informations"
+msgstr ""
+
+#: src/crashreport.cpp:73
+msgid "Application verbose log"
+msgstr ""
+
+#: src/crashreport.cpp:75
+msgid "Last generated spring launching script"
+msgstr ""
+
+#: src/globalevents.cpp:25
+msgid "Download complete"
+msgstr ""
+
+#: src/globalevents.cpp:30
+msgid "Download failed"
+msgstr ""
+
+#: src/hostbattledialog.cpp:46
+msgid "Host new battle"
+msgstr ""
+
+#: src/hostbattledialog.cpp:62
+msgid ""
+"A short description of the game, this will show up in the battle list."
+msgstr ""
+
+#: src/hostbattledialog.cpp:77
+msgid "Select the mod to play with."
+msgstr ""
+
+#: src/hostbattledialog.cpp:91
+msgid "Password needed to join game. Keep empty for no password"
+msgstr ""
+
+#: src/hostbattledialog.cpp:101
+msgid "Port"
+msgstr ""
+
+#: src/hostbattledialog.cpp:106
+msgid "UDP port to host game on. Default is 8452."
+msgstr ""
+
+#: src/hostbattledialog.cpp:110
+msgid "Test firewall"
+msgstr ""
+
+#: src/hostbattledialog.cpp:118
+msgid "Number of players"
+msgstr ""
+
+#: src/hostbattledialog.cpp:122
+msgid "The maximum number of players to allow in the battle."
+msgstr ""
+
+#: src/hostbattledialog.cpp:130
+msgid "Hole punching"
+msgstr ""
+
+#: src/hostbattledialog.cpp:132 src/ui.cpp:849
+msgid "NAT traversal"
+msgstr ""
+
+#: src/hostbattledialog.cpp:138
+msgid "NAT traversal to use. Experimental support."
+msgstr ""
+
+#: src/hostbattledialog.cpp:143
+msgid "Minimum Rank needed"
+msgstr ""
+
+#: src/hostbattledialog.cpp:209
+msgid "Start hosting the battle."
+msgstr ""
+
+#: src/hostbattledialog.cpp:242 src/singleplayertab.cpp:187
+msgid "You have to select a mod first."
+msgstr ""
+
+#: src/hostbattledialog.cpp:242
+msgid "No mod selected."
+msgstr ""
+
+#: src/httpdownloader.cpp:75
+msgid ""
+"\n"
+"successfully saved to:\n"
+msgstr ""
+
+#: src/httpdownloader.cpp:93
+msgid "Could not save\n"
+msgstr ""
+
+#: src/httpdownloader.cpp:93
+msgid ""
+"\n"
+"to:\n"
+msgstr ""
+
+#: src/mainjoinbattletab.cpp:45
+msgid "Battle list"
+msgstr ""
+
+#: src/mainjoinbattletab.cpp:85 src/mainjoinbattletab.cpp:153
+#: src/mainsingleplayertab.cpp:40
+msgid "Map/Mod Options"
+msgstr ""
+
+#: src/mainjoinbattletab.cpp:150
+msgid "Battleroom"
+msgstr ""
+
+#: src/mainoptionstab.cpp:49
+msgid "Spring"
+msgstr ""
+
+#: src/mainoptionstab.cpp:53
+msgid "P2P"
+msgstr ""
+
+#: src/mainoptionstab.cpp:57
+msgid "Chat"
+msgstr ""
+
+#: src/mainoptionstab.cpp:59
+msgid "Restore"
+msgstr ""
+
+#: src/mainoptionstab.cpp:60
+msgid "Apply"
+msgstr ""
+
+#: src/mainsingleplayertab.cpp:36
+msgid "Game"
+msgstr ""
+
+#: src/maintorrenttab.cpp:37
+msgid "Tranfers in progress: "
+msgstr ""
+
+#: src/maintorrenttab.cpp:43
+msgid "Total Outgoing: "
+msgstr ""
+
+#: src/maintorrenttab.cpp:44
+msgid "Total Incoming: "
+msgstr ""
+
+#: src/maintorrenttab.cpp:49
+msgid "Cancel Download"
+msgstr ""
+
+#: src/maintorrenttab.cpp:52
+msgid "Publish new file"
+msgstr ""
+
+#: src/maintorrenttab.cpp:104
+msgid "not available"
+msgstr ""
+
+#: src/maintorrenttab.cpp:107
+msgid "no"
+msgstr ""
+
+#: src/maintorrenttab.cpp:107
+msgid "yes"
+msgstr ""
+
+#: src/maintorrenttab.cpp:134
+#, c-format
+msgid "Total Outgoing: %.2f KB/s"
+msgstr ""
+
+#: src/maintorrenttab.cpp:135
+#, c-format
+msgid "Total Incoming: %.2f KB/s"
+msgstr ""
+
+#: src/mainwindow.cpp:79
+msgid "SpringLobby"
+msgstr ""
+
+#: src/mainwindow.cpp:84
+msgid "&Connect..."
+msgstr ""
+
+#: src/mainwindow.cpp:85
+msgid "&Disconnect"
+msgstr ""
+
+#: src/mainwindow.cpp:87
+msgid "&Quit"
+msgstr ""
+
+#: src/mainwindow.cpp:93
+msgid "&Join channel..."
+msgstr ""
+
+#: src/mainwindow.cpp:94
+msgid "Open private &chat..."
+msgstr ""
+
+#: src/mainwindow.cpp:96
+msgid "&Reload maps/mods"
+msgstr ""
+
+#: src/mainwindow.cpp:98
+msgid "Check for new Version"
+msgstr ""
+
+#: src/mainwindow.cpp:99
+msgid "SpringSettings"
+msgstr ""
+
+#: src/mainwindow.cpp:103
+msgid "&About"
+msgstr ""
+
+#: src/mainwindow.cpp:104
+msgid "&Report a bug..."
+msgstr ""
+
+#: src/mainwindow.cpp:105
+msgid "&Documentation"
+msgstr ""
+
+#: src/mainwindow.cpp:108
+msgid "&File"
+msgstr ""
+
+#: src/mainwindow.cpp:110
+msgid "&Tools"
+msgstr ""
+
+#: src/mainwindow.cpp:111
+msgid "&Help"
+msgstr ""
+
+#: src/mainwindow.cpp:337
+msgid "Join channel..."
+msgstr ""
+
+#: src/mainwindow.cpp:337
+msgid "Name of channel to join"
+msgstr ""
+
+#: src/mainwindow.cpp:349
+msgid "Open Private Chat..."
+msgstr ""
+
+#: src/mainwindow.cpp:349
+msgid "Name of user"
+msgstr ""
+
+#: src/mainwindow.cpp:363
+msgid ""
+"SpringLobby is a cross-plattform lobby client for the RTS Spring engine"
+msgstr ""
+
+#: src/mainwindow.cpp:410
+msgid ""
+"There was an error checking for the latest version.\n"
+"Please try again later.\n"
+"If the problem persists, please use Help->Report Bug to report this bug."
+msgstr ""
+
+#: src/mainwindow.cpp:415
+msgid "Your Version: "
+msgstr ""
+
+#: src/mainwindow.cpp:415
+msgid "Latest Version: "
+msgstr ""
+
+#: src/mainwindow.cpp:419
+msgid ""
+"Your SpringLobby version is up to date!\n"
+"\n"
+msgstr ""
+
+#: src/mainwindow.cpp:419
+msgid "Up to Date"
+msgstr ""
+
+#: src/mainwindow.cpp:423
+msgid ""
+"Your SpringLobby version is not up to date.\n"
+"\n"
+msgstr ""
+
+#: src/mainwindow.cpp:423
+msgid ""
+"\n"
+"\n"
+"Would you like to visit a page with instructions on how to download the "
+"newest version?"
+msgstr ""
+
+#: src/mainwindow.cpp:423
+msgid "Not up to Date"
+msgstr ""
+
+#: src/mapctrl.cpp:454 src/mapctrl.cpp:455
+msgid "Refresh"
+msgstr ""
+
+#: src/mapctrl.cpp:456 src/mapctrl.cpp:457
+msgid "Download"
+msgstr ""
+
+#: src/mapctrl.cpp:618
+msgid "side:"
+msgstr ""
+
+#: src/mapctrl.cpp:641
+#, c-format
+msgid "ally:   %d"
+msgstr ""
+
+#: src/mapctrl.cpp:651
+#, c-format
+msgid "bonus: %d%%"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:82
+msgid "Limit D-Gun"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:83
+msgid ""
+"Disables commander's D-gun when being too far away from the starting point"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:84
+msgid "Ghosted Buildings"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:85
+msgid ""
+"Enemy buildings will leave a ghost image on the map after losing LoS on them"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:86
+msgid "Diminishing MM"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:87
+msgid ""
+"Efficiency of MetalMakers will progressively reduce as much as you build them"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:88
+msgid "Start Position Type"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:89
+msgid ""
+"How players will select where to be spawned in the map\n"
+"0: fixed map positions\n"
+"1: random map positions\n"
+"2: chose in game\n"
+"3: chose in the lobby before starting"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:91
+msgid "Game Ending condition"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:92
+msgid ""
+"The condition that will end the game\n"
+"0: when all units will be destroyed\n"
+"1: when the commander will be destroyed\n"
+"2: lineage mode (see option 1, but given away units will still die"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:95
+msgid "Sets the amount of metal that players will start with"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:98
+msgid "Sets the amount of energy that players will start with"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:100
+msgid "Max Units Allowed"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:101
+msgid ""
+"Sets the maximum amount of units that a player will be allowed to build"
+msgstr ""
+
+#: src/nicklistctrl.cpp:43
+msgid "s"
+msgstr ""
+
+#: src/nicklistctrl.cpp:46
+msgid "c"
+msgstr ""
+
+#: src/nicklistctrl.cpp:49
+msgid "r"
+msgstr ""
+
+#: src/nonportable.h:6
+msgid "Executables (*.exe)|*.exe|Any File (*.*)|*.*"
+msgstr ""
+
+#: src/nonportable.h:12
+msgid "Any file (*)|*"
+msgstr ""
+
+#: src/nonportable.h:18
+msgid "App Bundles (*.app)|*.app|Any File (*.*)|*.*"
+msgstr ""
+
+#: src/serverevents.cpp:103
+msgid "Ping Timeout!"
+msgstr ""
+
+#: src/serverevents.cpp:146
+msgid "OnUserStatus() failed ! (exception)"
+msgstr ""
+
+#: src/serverevents.cpp:404
+msgid "Join channel failed"
+msgstr ""
+
+#: src/serverevents.cpp:404
+msgid "Could not join channel "
+msgstr ""
+
+#: src/serverevents.cpp:404
+msgid " because: "
+msgstr ""
+
+#: src/serverevents.cpp:571
+msgid "Server Message"
+msgstr ""
+
+#: src/serverevents.cpp:615
+#, c-format
+msgid " has ip=%s"
+msgstr ""
+
+#: src/serverevents.cpp:620
+msgid " does not really support nat traversal"
+msgstr ""
+
+#: src/serverevents.cpp:631
+msgid "You were kicked from the battle!"
+msgstr ""
+
+#: src/serverevents.cpp:631
+msgid "Kicked by Host"
+msgstr ""
+
+#: src/settings++/Defs.hpp:201
+msgid "Scrollwheel speed"
+msgstr ""
+
+#: src/settings++/Defs.hpp:202
+msgid ""
+"Higher values mean faster zoom with mouse wheel.\n"
+"Negative values will invert zoom direction.\n"
+"Results may vary depending on camera mode!"
+msgstr ""
+
+#: src/settings++/Defs.hpp:212
+msgid "Shadow-map size"
+msgstr ""
+
+#: src/settings++/Defs.hpp:212
+msgid ""
+"higher value = better looking shadows\n"
+"possible values: 1024, 2048, 4096, 8192"
+msgstr ""
+
+#: src/settings++/Defs.hpp:214
+msgid "Tree view-distance"
+msgstr ""
+
+#: src/settings++/Defs.hpp:214
+msgid "sets the maximum distance at which trees will still be rendered"
+msgstr ""
+
+#: src/settings++/Defs.hpp:215
+msgid "Terrain detail"
+msgstr ""
+
+#: src/settings++/Defs.hpp:215
+msgid "higher value = more terrain details"
+msgstr ""
+
+#: src/settings++/Defs.hpp:216
+msgid "Unit detail"
+msgstr ""
+
+#: src/settings++/Defs.hpp:216
+msgid "higher value = more detailed units"
+msgstr ""
+
+#: src/settings++/Defs.hpp:217
+msgid "Grass detail"
+msgstr ""
+
+#: src/settings++/Defs.hpp:217
+msgid "higher value = more detailed graas"
+msgstr ""
+
+#: src/settings++/Defs.hpp:218
+msgid "Ground decals"
+msgstr ""
+
+#: src/settings++/Defs.hpp:218
+msgid "only on/off available at this time"
+msgstr ""
+
+#: src/settings++/Defs.hpp:219
+msgid "Unit icon distance"
+msgstr ""
+
+#: src/settings++/Defs.hpp:219
+msgid ""
+"determines at which range units are still fully rendered\n"
+"higher value = greater range = more units rendered at the same time"
+msgstr ""
+
+#: src/settings++/Defs.hpp:221
+msgid "Max simultaneous particles"
+msgstr ""
+
+#: src/settings++/Defs.hpp:221
+msgid "limits how many particles are displayed at the same time"
+msgstr ""
+
+#: src/settings++/Defs.hpp:229
+msgid "Run full-screen"
+msgstr ""
+
+#: src/settings++/Defs.hpp:229
+msgid "run fullscreen or in a window?"
+msgstr ""
+
+#: src/settings++/Defs.hpp:230
+msgid "Dual-screen mode"
+msgstr ""
+
+#: src/settings++/Defs.hpp:230
+msgid "if you have two monitors you can use both"
+msgstr ""
+
+#: src/settings++/Defs.hpp:231
+msgid "Enable v-sync"
+msgstr ""
+
+#: src/settings++/Defs.hpp:231
+msgid "V-Sync on/off"
+msgstr ""
+
+#: src/settings++/Defs.hpp:237
+msgid "16-bit Z-buffer"
+msgstr ""
+
+#: src/settings++/Defs.hpp:237 src/settings++/Defs.hpp:238
+msgid "placeholder"
+msgstr ""
+
+#: src/settings++/Defs.hpp:238
+msgid "24-bit Z-buffer"
+msgstr ""
+
+#: src/settings++/Defs.hpp:245
+msgid "Full-screen anti-aliasing samples"
+msgstr ""
+
+#: src/settings++/Defs.hpp:245
+msgid "how much anti-aliasing should be applied"
+msgstr ""
+
+#: src/settings++/Defs.hpp:257
+msgid "Maximum simultaneous sounds"
+msgstr ""
+
+#: src/settings++/Defs.hpp:257
+msgid ""
+"maximum different sounds played at the same time\n"
+"Set this to zero to disable sound completely."
+msgstr ""
+
+#: src/settings++/Defs.hpp:259
+msgid "Global sound volume"
+msgstr ""
+
+#: src/settings++/Defs.hpp:259
+msgid "overall sound volume"
+msgstr ""
+
+#: src/settings++/Defs.hpp:260
+msgid "Unit reply volume"
+msgstr ""
+
+#: src/settings++/Defs.hpp:260
+msgid "reply volume relative to global volume"
+msgstr ""
+
+#: src/settings++/Defs.hpp:267
+msgid "Shadows (slow)"
+msgstr ""
+
+#: src/settings++/Defs.hpp:267
+msgid "enable shadows?"
+msgstr ""
+
+#: src/settings++/Defs.hpp:268
+msgid "3D trees"
+msgstr ""
+
+#: src/settings++/Defs.hpp:268
+msgid ""
+"want better looking trees?\n"
+"needs Geforce 2/Radeon 8500/Intel 830 or later class graphic card"
+msgstr ""
+
+#: src/settings++/Defs.hpp:270
+msgid "High-resolution clouds"
+msgstr ""
+
+#: src/settings++/Defs.hpp:270
+msgid ""
+"want better looking sky?\n"
+"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card"
+msgstr ""
+
+#: src/settings++/Defs.hpp:272
+msgid "Dynamic clouds (slow)"
+msgstr ""
+
+#: src/settings++/Defs.hpp:272
+msgid "want moving clouds in the sky?"
+msgstr ""
+
+#: src/settings++/Defs.hpp:273
+msgid "Reflective units"
+msgstr ""
+
+#: src/settings++/Defs.hpp:273
+msgid ""
+"shiny units?\n"
+"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card"
+msgstr ""
+
+#: src/settings++/Defs.hpp:275
+msgid "Never use shaders when rendering SM3 maps"
+msgstr ""
+
+#: src/settings++/Defs.hpp:275
+msgid "problems with sm3 maps? enable this"
+msgstr ""
+
+#: src/settings++/Defs.hpp:276
+msgid "Enable LuaShaders support"
+msgstr ""
+
+#: src/settings++/Defs.hpp:276
+msgid "makes for some cool effects"
+msgstr ""
+
+#: src/settings++/Defs.hpp:277
+msgid "High-resolution LOS textures"
+msgstr ""
+
+#: src/settings++/Defs.hpp:277
+msgid "smoother Line of Sight overlays"
+msgstr ""
+
+#: src/settings++/Defs.hpp:278
+msgid "Draw smooth points"
+msgstr ""
+
+#: src/settings++/Defs.hpp:278
+msgid "should points be anti-aliased"
+msgstr ""
+
+#: src/settings++/Defs.hpp:279
+msgid "Draw smooth lines"
+msgstr ""
+
+#: src/settings++/Defs.hpp:279
+msgid "should lines be anti-aliased"
+msgstr ""
+
+#: src/settings++/Defs.hpp:285
+msgid "Enable LuaUI widgets"
+msgstr ""
+
+#: src/settings++/Defs.hpp:285
+msgid "mark to be able to use"
+msgstr ""
+
+#: src/settings++/Defs.hpp:287
+msgid "Issue commands on mini-map"
+msgstr ""
+
+#: src/settings++/Defs.hpp:287
+msgid "Issue orders on the mini-map like you would "
+msgstr ""
+
+#: src/settings++/Defs.hpp:288
+msgid "Show commands on mini-map"
+msgstr ""
+
+#: src/settings++/Defs.hpp:288 src/settings++/Defs.hpp:289
+#: src/settings++/Defs.hpp:290
+msgid "default value is \"on\""
+msgstr ""
+
+#: src/settings++/Defs.hpp:289
+msgid "Draw icons on mini-map"
+msgstr ""
+
+#: src/settings++/Defs.hpp:290
+msgid "Draw markers on mini-map"
+msgstr ""
+
+#: src/settings++/Defs.hpp:291
+msgid "Mini-map on left (single screen)"
+msgstr ""
+
+#: src/settings++/Defs.hpp:291 src/settings++/Defs.hpp:292
+msgid "left is the default"
+msgstr ""
+
+#: src/settings++/Defs.hpp:292
+msgid "Mini-map on left (dual screen)"
+msgstr ""
+
+#: src/settings++/Defs.hpp:293
+msgid "Simplified mini-map colors"
+msgstr ""
+
+#: src/settings++/Defs.hpp:293
+msgid "Use less colors"
+msgstr ""
+
+#: src/settings++/Defs.hpp:295
+msgid "Team-colored nanospray"
+msgstr ""
+
+#: src/settings++/Defs.hpp:296
+msgid "Should nano particels be the color of your team?"
+msgstr ""
+
+#: src/settings++/Defs.hpp:297
+msgid "Colorized elevation map"
+msgstr ""
+
+#: src/settings++/Defs.hpp:297
+msgid "makes differences in height clearer"
+msgstr ""
+
+#: src/settings++/Defs.hpp:299
+msgid "Show in-game clock"
+msgstr ""
+
+#: src/settings++/Defs.hpp:300 src/settings++/Defs.hpp:302
+#: src/settings++/Defs.hpp:304
+msgid ""
+"requires \"Enable LuaWidgets\" to be set.\n"
+"Will be displayed in the bottom right corner"
+msgstr ""
+
+#: src/settings++/Defs.hpp:301
+msgid "Show in-game player information"
+msgstr ""
+
+#: src/settings++/Defs.hpp:303
+msgid "Show in-game framerate"
+msgstr ""
+
+#: src/settings++/Defs.hpp:306
+msgid "Fix rendering on alt-tab"
+msgstr ""
+
+#: src/settings++/Defs.hpp:306
+msgid "Do not change if not needed"
+msgstr ""
+
+#: src/settings++/Defs.hpp:307
+msgid "Disallow helper AI's"
+msgstr ""
+
+#: src/settings++/Defs.hpp:307
+msgid ""
+"Disables Economy AI, etc.\n"
+"If enabled might screw with LuaUi."
+msgstr ""
+
+#: src/settings++/Defs.hpp:309
+msgid "Enable scroll on window edge"
+msgstr ""
+
+#: src/settings++/Defs.hpp:309
+msgid "Scroll the screen when mouse reaches the screen's edge."
+msgstr ""
+
+#: src/settings++/Defs.hpp:310
+msgid "Invert Mouse"
+msgstr ""
+
+#: src/settings++/Defs.hpp:310
+msgid "Inverts the Mouse Y-axis in FPS mode"
+msgstr ""
+
+#: src/settings++/Defs.hpp:318
+msgid "Overhead camera"
+msgstr ""
+
+#: src/settings++/Defs.hpp:318 src/settings++/Defs.hpp:319
+#: src/settings++/Defs.hpp:320 src/settings++/Defs.hpp:321
+#: src/settings++/Defs.hpp:322
+msgid "set the scroll speed (mouse + keyboard) for this mode"
+msgstr ""
+
+#: src/settings++/Defs.hpp:319
+msgid "Rotatable overhead camera"
+msgstr ""
+
+#: src/settings++/Defs.hpp:320
+msgid "Total war camera"
+msgstr ""
+
+#: src/settings++/Defs.hpp:321
+msgid "First person camera"
+msgstr ""
+
+#: src/settings++/Defs.hpp:322 src/settings++/Defs.hpp:382
+msgid "Free camera"
+msgstr ""
+
+#: src/settings++/Defs.hpp:328 src/settings++/Defs.hpp:330
+#: src/settings++/Defs.hpp:332 src/settings++/Defs.hpp:334
+#: src/settings++/Defs.hpp:336
+msgid ""
+"Make this the default view when startins Spring.\n"
+"Can be changed ingame."
+msgstr ""
+
+#: src/settings++/Defs.hpp:343
+msgid "Console verbose level (0=min,10=max)"
+msgstr ""
+
+#: src/settings++/Defs.hpp:343
+msgid "How much information should be outputted?"
+msgstr ""
+
+#: src/settings++/Defs.hpp:349
+msgid "Catch AI exceptions"
+msgstr ""
+
+#: src/settings++/Defs.hpp:349
+msgid "disable for AI debugging"
+msgstr ""
+
+#: src/settings++/Defs.hpp:350
+msgid "Send debug info to console"
+msgstr ""
+
+#: src/settings++/Defs.hpp:350
+msgid "if disabled these will only be logged"
+msgstr ""
+
+#: src/settings++/Defs.hpp:356 src/settings++/Defs.hpp:367
+msgid "Basic"
+msgstr ""
+
+#: src/settings++/Defs.hpp:356
+msgid ""
+"Depending on the power of your graphics card,\n"
+"selecting higher quality than basic can have a\n"
+"major impact on Spring's performance.\n"
+msgstr ""
+
+#: src/settings++/Defs.hpp:367
+msgid "Reflective"
+msgstr ""
+
+#: src/settings++/Defs.hpp:367
+msgid "Reflective + refractive"
+msgstr ""
+
+#: src/settings++/Defs.hpp:367
+msgid "Dynamic"
+msgstr ""
+
+#: src/settings++/Defs.hpp:371
+msgid "Invert mouse y-axis"
+msgstr ""
+
+#: src/settings++/Defs.hpp:371
+msgid "swap up/down with down/up"
+msgstr ""
+
+#: src/settings++/Defs.hpp:372
+msgid "Mini-map 3-button mouse support"
+msgstr ""
+
+#: src/settings++/Defs.hpp:372
+msgid "if you don't want to able to use that button, disable it here"
+msgstr ""
+
+#: src/settings++/Defs.hpp:378
+msgid "Overhead"
+msgstr ""
+
+#: src/settings++/Defs.hpp:378
+msgid "Static bird's eye view"
+msgstr ""
+
+#: src/settings++/Defs.hpp:379
+msgid "Rotatable overhead"
+msgstr ""
+
+#: src/settings++/Defs.hpp:379
+msgid "Same as overhead, but you can rotate around the z-axis"
+msgstr ""
+
+#: src/settings++/Defs.hpp:380
+msgid "Total war"
+msgstr ""
+
+#: src/settings++/Defs.hpp:380
+msgid "top-view camera, which can be tilted on the X axis"
+msgstr ""
+
+#: src/settings++/Defs.hpp:381
+msgid "First person"
+msgstr ""
+
+#: src/settings++/Defs.hpp:381
+msgid "Camera from unit's point of view"
+msgstr ""
+
+#: src/settings++/Defs.hpp:382
+msgid "Modify the view anyway you want"
+msgstr ""
+
+#: src/settings++/Defs.hpp:388
+msgid "screen width"
+msgstr ""
+
+#: src/settings++/Defs.hpp:389
+msgid "screen height"
+msgstr ""
+
+#: src/settings++/frame.cpp:44
+msgid "Combined Options"
+msgstr ""
+
+#: src/settings++/frame.cpp:45
+msgid "Render quality / Video mode"
+msgstr ""
+
+#: src/settings++/frame.cpp:46
+msgid "Render detail"
+msgstr ""
+
+#: src/settings++/frame.cpp:47
+msgid "Debug"
+msgstr ""
+
+#: src/settings++/frame.cpp:48
+msgid "UI options"
+msgstr ""
+
+#: src/settings++/frame.cpp:49
+msgid "Audio"
+msgstr ""
+
+#: src/settings++/frame.cpp:50
+msgid ""
+"Changes made on Quality/Detail tab in expert mode\n"
+" will be lost if you change simple options again.\n"
+"Also these changes WILL NOT be reflected by the \n"
+"selected choices on the Combined options tab.\n"
+"(this message can be disabled in the \"File\" menu)"
+msgstr ""
+
+#: src/settings++/frame.cpp:82 src/settings++/frame.cpp:103
+msgid "Error!"
+msgstr ""
+
+#: src/settings++/frame.cpp:118 src/settings++/frame.cpp:134
+msgid "Save Spring settings before exiting?"
+msgstr ""
+
+#: src/settings++/frame.cpp:118 src/settings++/frame.cpp:134
+#: src/settings++/frame.cpp:248
+msgid "Confirmation needed"
+msgstr ""
+
+#: src/settings++/frame.cpp:185 src/settings++/frame.cpp:325
+msgid "SpringSettings (expert mode)"
+msgstr ""
+
+#: src/settings++/frame.cpp:187 src/settings++/frame.cpp:274
+msgid "SpringSettings (simple mode)"
+msgstr ""
+
+#: src/settings++/frame.cpp:196
+msgid "Save settings"
+msgstr ""
+
+#: src/settings++/frame.cpp:197
+msgid "Reset settings to default values"
+msgstr ""
+
+#: src/settings++/frame.cpp:198
+msgid "Disable expert mode warning"
+msgstr ""
+
+#: src/settings++/frame.cpp:200
+msgid "Quit"
+msgstr ""
+
+#: src/settings++/frame.cpp:205
+msgid "Simple (few options)"
+msgstr ""
+
+#: src/settings++/frame.cpp:206
+msgid "Expert (all options"
+msgstr ""
+
+#: src/settings++/frame.cpp:209
+msgid "About"
+msgstr ""
+
+#: src/settings++/frame.cpp:210
+msgid "Contact"
+msgstr ""
+
+#: src/settings++/frame.cpp:211
+msgid "Credits"
+msgstr ""
+
+#: src/settings++/frame.cpp:212
+msgid "Report a bug"
+msgstr ""
+
+#: src/settings++/frame.cpp:225
+msgid "File"
+msgstr ""
+
+#: src/settings++/frame.cpp:226
+msgid "Mode"
+msgstr ""
+
+#: src/settings++/frame.cpp:227
+msgid "Info/Help"
+msgstr ""
+
+#: src/settings++/frame.cpp:248
+msgid "Reset ALL settings to default values?"
+msgstr ""
+
+#: src/settings++/frame.cpp:276
+msgid "Hint"
+msgstr ""
+
+#: src/settings++/helpmenufunctions.cpp:24
+msgid ""
+"SpringSettings is a graphical frontend to the Settings of the Spring engine"
+msgstr ""
+
+#: src/settings++/helpmenufunctions.cpp:35
+msgid "Kloot"
+msgstr ""
+
+#: src/settings++/helpmenufunctions.cpp:36
+msgid "The SpringLobby team"
+msgstr ""
+
+#: src/settings++/helpmenufunctions.cpp:36
+msgid ""
+"thanks for inviting me in, code to re-use, infrastructure and help in general"
+msgstr ""
+
+#: src/settings++/helpmenufunctions.cpp:37
+msgid "everyone reporting bugs/suggestions"
+msgstr ""
+
+#: src/settings++/Main.cpp:59
+msgid ""
+"The application has generated a fatal error and will be terminated\n"
+"Generating a bug report is not possible\n"
+"\n"
+"please enable wxUSE_DEBUGREPORT"
+msgstr ""
+
+#: src/settings++/Main.cpp:59 src/springlobbyapp.cpp:180
+msgid "Critical error"
+msgstr ""
+
+#: src/settings++/panel_pathoption.cpp:32
+msgid "Path to unitsync shared library"
+msgstr ""
+
+#: src/settings++/panel_pathoption.cpp:33
+msgid ""
+"There was a problem retrieving your settings.\n"
+"Please check that the path below is correct.\n"
+"When you have corrected it, click\n"
+"the \"Use this Path\" button to try again."
+msgstr ""
+
+#: src/settings++/panel_pathoption.cpp:40
+msgid "Use this path"
+msgstr ""
+
+#: src/settings++/panel_pathoption.cpp:41 src/springoptionstab.cpp:59
+#: src/springoptionstab.cpp:67 src/springoptionstab.cpp:75
+#: src/springoptionstab.cpp:83
+msgid "Browse"
+msgstr ""
+
+#: src/settings++/panel_pathoption.cpp:46
+msgid "unitsync.so on linux, unitsync.dll on windows"
+msgstr ""
+
+#: src/settings++/panel_pathoption.cpp:52
+msgid "Path settings"
+msgstr ""
+
+#: src/settings++/panel_pathoption.cpp:74 src/springoptionstab.cpp:455
+msgid "Choose an unitsync library"
+msgstr ""
+
+#: src/settings++/panel_pathoption.cpp:74 src/springoptionstab.cpp:455
+msgid "Any File"
+msgstr ""
+
+#: src/settings++/panel_pathoption.cpp:87
+msgid ""
+"SpringSettings is unable to load your unitsync library.\n"
+"You might want to take another look at your unitsync setting.\n"
+"Your Spring version has to be 0.76 or newer, otherwise \n"
+"this will fail in any case."
+msgstr ""
+
+#: src/settings++/presets.h:46 src/settings++/presets.h:47
+msgid "low"
+msgstr ""
+
+#: src/settings++/presets.h:46 src/settings++/presets.h:47
+msgid "medium"
+msgstr ""
+
+#: src/settings++/presets.h:46 src/settings++/presets.h:47
+msgid "high"
+msgstr ""
+
+#: src/settings++/presets.h:47
+msgid "very low"
+msgstr ""
+
+#: src/settings++/presets.h:47
+msgid "very high"
+msgstr ""
+
+#: src/settings++/se_utils.cpp:39
+msgid "can't launch default browser"
+msgstr ""
+
+#: src/settings++/se_utils.cpp:40 src/ui.cpp:314 src/ui.cpp:322
+msgid "Couldn't launch browser. URL is: "
+msgstr ""
+
+#: src/settings++/se_utils.cpp:40 src/ui.cpp:314 src/ui.cpp:322
+msgid "Couldn't launch browser."
+msgstr ""
+
+#: src/settings++/tab_abstract.cpp:111
+msgid "Could not access your settings.\n"
+msgstr ""
+
+#: src/settings++/tab_abstract.cpp:473
+msgid "Could not save, unitsync not properly loaded"
+msgstr ""
+
+#: src/settings++/tab_abstract.cpp:473
+msgid "SpringSettings Error"
+msgstr ""
+
+#: src/settings++/tab_audio.cpp:61
+msgid "Audio Options"
+msgstr ""
+
+#: src/settings++/tab_debug.cpp:61
+msgid "Debug Options"
+msgstr ""
+
+#: src/settings++/tab_quality_video.cpp:63
+msgid "Screen Resolution"
+msgstr ""
+
+#: src/settings++/tab_quality_video.cpp:86
+#: src/settings++/tab_quality_video.cpp:87
+#, c-format
+msgid "%d"
+msgstr ""
+
+#: src/settings++/tab_quality_video.cpp:125
+msgid ""
+"If an option needs special hardware to work\n"
+"it will be mentioned in the tooltip."
+msgstr ""
+
+#: src/settings++/tab_quality_video.cpp:138
+msgid "Water Quality"
+msgstr ""
+
+#: src/settings++/tab_quality_video.cpp:168
+msgid "Resolution in bit"
+msgstr ""
+
+#: src/settings++/tab_quality_video.cpp:194
+msgid "Render Quality Options"
+msgstr ""
+
+#: src/settings++/tab_quality_video.cpp:195
+msgid "Video Mode Options"
+msgstr ""
+
+#: src/settings++/tab_quality_video.cpp:196
+msgid "Anti-Aliasing Options"
+msgstr ""
+
+#: src/settings++/tab_quality_video.cpp:197
+msgid "Z-/Depth-Buffer"
+msgstr ""
+
+#: src/settings++/tab_render_detail.cpp:64
+msgid "Rendering detail levels"
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:40
+msgid ""
+"These options let you roughly control Spring's rendering.\n"
+"For more speed try lowering the settings.\n"
+"Full control over all settings is available in the\n"
+"\"Expert mode\", either click on the button on the\n"
+"right or use the \"Mode\" menu in the top menubar.\n"
+"You can go back to this mode at any time by choosing\n"
+"\"Simple mode\" from the \"Mode\" menu.\n"
+"If you encounter error messages concerning graphics\n"
+"when running Spring it might be necessary to disable\n"
+" some options in expert mode.\n"
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:51
+msgid "Graphics quality"
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:52
+msgid "Graphics detail"
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:53
+msgid "Screen resolution"
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:54
+msgid "Switch to expert mode"
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:77
+msgid " (current)"
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:88
+msgid ""
+"Sets all quality options to predefined values according to your choice."
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:94
+msgid ""
+"Sets all detail options to predefined values according to your choice."
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:99
+msgid ""
+"Select the resolution fitting your monitor(s).\n"
+"Selecting a dual screen resolution will automatically enable dual screen "
+"mode.\n"
+"If the appropiate resolution is not available you can set it manually in "
+"expert mode.\n"
+"Please also contact the author so it can be added in future releases."
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:135
+msgid "Info"
+msgstr ""
+
+#: src/settings++/tab_ui.cpp:34
+msgid ""
+"Setting a slider to 0 will exclude that\n"
+"mode from being cycled through ingame."
+msgstr ""
+
+#: src/settings++/tab_ui.cpp:122
+msgid "Scroll Speeds (mouse + keyboard)"
+msgstr ""
+
+#: src/settings++/tab_ui.cpp:126
+msgid "Default Camera Mode"
+msgstr ""
+
+#: src/settings++/tab_ui.cpp:128
+msgid "Misc. UI Options"
+msgstr ""
+
+#: src/settings++/tab_ui.cpp:130
+msgid "Zoom"
+msgstr ""
+
+#: src/singleplayertab.cpp:66
+msgid "Add bot..."
+msgstr ""
+
+#: src/singleplayertab.cpp:76
+msgid "Reset"
+msgstr ""
+
+#: src/singleplayertab.cpp:115 src/singleplayertab.cpp:135
+msgid "-- Select one --"
+msgstr ""
+
+#: src/singleplayertab.cpp:187 src/singleplayertab.cpp:193
+#: src/singleplayertab.cpp:223 src/singleplayertab.cpp:226
+msgid "Gamesetup error"
+msgstr ""
+
+#: src/singleplayertab.cpp:193
+msgid "You have to select a map first."
+msgstr ""
+
+#: src/singleplayertab.cpp:200
+msgid ""
+"You should add a bot before starting a game.\n"
+"If you don't want an opponent add TestGlobalAi"
+msgstr ""
+
+#: src/singleplayertab.cpp:200
+msgid "No Bot added"
+msgstr ""
+
+#: src/singleplayertab.cpp:223
+msgid ""
+"You have bots that are not assingled to startpositions. In the current "
+"version of spring you are only allowed to use start positions positioning "
+"them freely is not allowed.\n"
+"\n"
+"This will be fixed in next version of Spring."
+msgstr ""
+
+#: src/singleplayertab.cpp:226
+msgid ""
+"You are not using consecutive start position numbers.\n"
+"\n"
+"In the current version of spring you are not allowed to skip any "
+"startpositions. You have to use all consecutive position.\n"
+"\n"
+"Example: if you have 2 bots + yourself you have to use start positions 1,2,3 "
+"not 1,3,4 or 2,3,4.\n"
+"\n"
+"This will be fixed in next version of Spring."
+msgstr ""
+
+#: src/singleplayertab.cpp:268
+msgid "You cannot start a spring instance while another is already running"
+msgstr ""
+
+#: src/springlobbyapp.cpp:106
+msgid "Hi "
+msgstr ""
+
+#: src/springlobbyapp.cpp:106
+msgid ""
+",\n"
+"It looks like this is your first time using SpringLobby. I have guessed a "
+"configuration that I think will work for you but you should review it, "
+"especially the Spring configuration. \n"
+"\n"
+"When you are done you can go to the File menu, connect to a server, and "
+"enjoy a nice game of Spring :)"
+msgstr ""
+
+#: src/springlobbyapp.cpp:106
+msgid "Welcome"
+msgstr ""
+
+#: src/springlobbyapp.cpp:109
+msgid ""
+"You're using a wxwidgets library of the 2.6.x series\n"
+" battle filtering, advanced gui and joining/hosting games using nat "
+"traversal\n"
+" won't be available"
+msgstr ""
+
+#: src/springlobbyapp.cpp:109
+msgid "Missing Functionality"
+msgstr ""
+
+#: src/springlobbyapp.cpp:128
+msgid ""
+"Do you want to download OTA conent?\n"
+"You need this to be able to play TA based mods.\n"
+"You need to own a copy of Total Annihilation do legally download it."
+msgstr ""
+
+#: src/springlobbyapp.cpp:130
+msgid "Download OTA content?"
+msgstr ""
+
+#: src/springlobbyapp.cpp:180
+msgid ""
+"The application has generated a fatal error and will be terminated\n"
+"Generating a bug report is not possible\n"
+"\n"
+"please get a wxWidgets library that supports wxUSE_DEBUGREPORT"
+msgstr ""
+
+#: src/springlobbyapp.cpp:207
+msgid "/.spring"
+msgstr ""
+
+#: src/springlobbyapp.cpp:210
+msgid "Create a .spring folder in the home directory (reccomended)"
+msgstr ""
+
+#: src/springlobbyapp.cpp:211
+msgid "Create a folder in a custom path (you'll get prompted for the path)"
+msgstr ""
+
+#: src/springlobbyapp.cpp:212
+msgid "I have already a SpringData folder, i want to browse manually for it"
+msgstr ""
+
+#: src/springlobbyapp.cpp:213
+msgid "Do nothing (use this only if you know what you're doing)"
+msgstr ""
+
+#: src/springlobbyapp.cpp:216
+msgid ""
+"Looks like you don't have yet a user SpringData folder structure\n"
+"What would you like to do? (leave default choice if you don't know what is "
+"this for)"
+msgstr ""
+
+#: src/springlobbyapp.cpp:217
+msgid "First time wizard"
+msgstr ""
+
+#: src/springlobbyapp.cpp:226
+msgid "Choose a folder"
+msgstr ""
+
+#: src/springlobbyapp.cpp:233
+msgid ""
+"Something went wrong when creating the directories\n"
+"Please create manually the following folders:"
+msgstr ""
+
+#: src/springoptionstab.cpp:57
+msgid "Spring directory"
+msgstr ""
+
+#: src/springoptionstab.cpp:60 src/springoptionstab.cpp:68
+#: src/springoptionstab.cpp:76
+msgid "Find"
+msgstr ""
+
+#: src/springoptionstab.cpp:62
+msgid "Spring executable"
+msgstr ""
+
+#: src/springoptionstab.cpp:63 src/springoptionstab.cpp:71
+msgid "Default location."
+msgstr ""
+
+#: src/springoptionstab.cpp:64 src/springoptionstab.cpp:72
+#: src/springoptionstab.cpp:81
+msgid "Specify:"
+msgstr ""
+
+#: src/springoptionstab.cpp:65 src/springoptionstab.cpp:74
+msgid "Location"
+msgstr ""
+
+#: src/springoptionstab.cpp:70
+msgid "UnitSync library"
+msgstr ""
+
+#: src/springoptionstab.cpp:78 src/springoptionstab.cpp:79
+msgid "Web Browser"
+msgstr ""
+
+#: src/springoptionstab.cpp:80
+msgid "Default Browser."
+msgstr ""
+
+#: src/springoptionstab.cpp:85
+msgid "Auto Configure"
+msgstr ""
+
+#: src/springoptionstab.cpp:449
+msgid "Choose a Spring executable"
+msgstr ""
+
+#: src/springoptionstab.cpp:455
+msgid "Library"
+msgstr ""
+
+#: src/springoptionstab.cpp:462
+msgid "Choose a web browser executable"
+msgstr ""
+
+#: src/springoptionstab.cpp:481
+msgid ""
+"SpringLobby is unable to load you unitsync library.\n"
+"\n"
+"You might want to take another look at your unitsync setting."
+msgstr ""
+
+#: src/springoptionstab.cpp:486
+msgid ""
+"SpringLobby is unable to detect your spring version from the unitsync "
+"library.\n"
+"\n"
+"You might want to take another look at your settings."
+msgstr ""
+
+#: src/springunitsync.cpp:66
+msgid ""
+"Unitsync loading was aborted because your spring data directory is not "
+"writable. Please check."
+msgstr ""
+
+#: src/springunitsync.cpp:66
+msgid "Unitsync Problem"
+msgstr ""
+
+#: src/tasserver.cpp:302
+msgid "Connection timed out"
+msgstr ""
+
+#: src/tasserver.cpp:315
+msgid "Unknown answer from server"
+msgstr ""
+
+#: src/tasserver.cpp:408
+msgid "Failed to punch through NAT"
+msgstr ""
+
+#: src/torrentlistctrl.cpp:58
+msgid "MB uploaded"
+msgstr ""
+
+#: src/torrentlistctrl.cpp:62
+msgid "seeding"
+msgstr ""
+
+#: src/torrentlistctrl.cpp:66
+#, c-format
+msgid "% complete"
+msgstr ""
+
+#: src/torrentlistctrl.cpp:70
+msgid "KB/s up"
+msgstr ""
+
+#: src/torrentlistctrl.cpp:74
+msgid "KB/s down"
+msgstr ""
+
+#: src/torrentlistctrl.cpp:78
+msgid "ETA (s)"
+msgstr ""
+
+#: src/torrentlistctrl.cpp:82
+msgid "Filesize (MB)"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:32
+msgid "Start system"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:33
+msgid "Stop system"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:37
+msgid "Torrent system autostart"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:39
+msgid "at lobby connection (default)"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:40
+msgid "at lobby start"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:41
+msgid "manual"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:44
+msgid "unknown"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:56
+msgid "At game start suspend mode"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:58
+msgid "Pause all torrents"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:59
+msgid "Throttle speeds:"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:62
+msgid "upload (KB/s)"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:64
+msgid "download (KB/s)"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:77
+msgid "Numbers"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:81
+msgid "maximum upload speed in KB/sec(-1 for infinite)"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:88
+msgid "maximum download speed in KB/sec (-1 for infinite)"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:95
+msgid "port used for torrent connections"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:102
+msgid "maximum number of concurrent connections"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:130
+msgid "Status: not connected"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:134
+msgid "Status: connected"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:138
+msgid "Status: throttled (ingame)"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:142
+msgid "Status: unknown"
+msgstr ""
+
+#: src/ui.cpp:136
+msgid "Server password"
+msgstr ""
+
+#: src/ui.cpp:322
+msgid ""
+"\n"
+"Broser path is: "
+msgstr ""
+
+#: src/ui.cpp:406 src/ui.cpp:654
+msgid "error"
+msgstr ""
+
+#: src/ui.cpp:406 src/ui.cpp:654
+msgid "no active chat panels open."
+msgstr ""
+
+#: src/ui.cpp:409
+msgid "Active chat channels:"
+msgstr ""
+
+#: src/ui.cpp:421
+msgid "Help error"
+msgstr ""
+
+#: src/ui.cpp:421
+msgid "Type /help in a chat box."
+msgstr ""
+
+#: src/ui.cpp:425
+msgid "SpringLobby commands help."
+msgstr ""
+
+#: src/ui.cpp:427
+msgid "Global commands:"
+msgstr ""
+
+#: src/ui.cpp:428
+msgid "  \"/away\" - Sets your status to away."
+msgstr ""
+
+#: src/ui.cpp:429
+msgid "  \"/back\" - Resets your away status."
+msgstr ""
+
+#: src/ui.cpp:430
+msgid ""
+"  \"/changepassword oldpassword newpassword\" - Changes the current active "
+"account's password."
+msgstr ""
+
+#: src/ui.cpp:431
+msgid "  \"/channels\" - Lists currently active channels."
+msgstr ""
+
+#: src/ui.cpp:432
+msgid ""
+"  \"/help [topic]\" - Put topic if you want to know more specific "
+"information about a command."
+msgstr ""
+
+#: src/ui.cpp:433
+msgid ""
+"  \"/join channel [password] [,channel2 [password2]]\" - Join a channel."
+msgstr ""
+
+#: src/ui.cpp:434
+msgid "  \"/j\" - Alias to /join."
+msgstr ""
+
+#: src/ui.cpp:435
+msgid "  \"/ingame\" - Show how much time you have in game."
+msgstr ""
+
+#: src/ui.cpp:436
+msgid ""
+"  \"/msg username [text]\" - sends a private message containing text to "
+"username."
+msgstr ""
+
+#: src/ui.cpp:437
+msgid "  \"/rename newalias\" - Changes your nickname to newalias."
+msgstr ""
+
+#: src/ui.cpp:438
+msgid "  \"/sayver\" - Say what version of springlobby you have in chat."
+msgstr ""
+
+#: src/ui.cpp:439
+msgid "  \"/testmd5 text\" - Returns md5-b64 hash of given text."
+msgstr ""
+
+#: src/ui.cpp:440
+msgid "  \"/ver\" - Display what version of SpringLobby you have."
+msgstr ""
+
+#: src/ui.cpp:442
+msgid "Chat commands:"
+msgstr ""
+
+#: src/ui.cpp:443
+msgid "  \"/me action\" - Say IRC style action message."
+msgstr ""
+
+#: src/ui.cpp:445
+msgid ""
+"If you are missing any commands, go to #springlobby and try to type it there "
+":)"
+msgstr ""
+
+#: src/ui.cpp:448
+msgid "No topics written yet."
+msgstr ""
+
+#: src/ui.cpp:450
+msgid "The topic \""
+msgstr ""
+
+#: src/ui.cpp:450
+msgid "\" was not found. Type \"/help topics\" only for available topics."
+msgstr ""
+
+#: src/ui.cpp:492
+msgid "Your spring version"
+msgstr ""
+
+#: src/ui.cpp:494
+msgid "is not supported by the lobby server that requires version"
+msgstr ""
+
+#: src/ui.cpp:496
+msgid "Online play will be disabled."
+msgstr ""
+
+#: src/ui.cpp:501
+msgid ""
+"Couldn't get your spring version from the unitsync library.\n"
+"\n"
+"Online play will be disabled."
+msgstr ""
+
+#: src/ui.cpp:559
+msgid ""
+"This is the SpringLobby channel, please report any problems you are having "
+"with SpringLobby here and the friendly developers will help you."
+msgstr ""
+
+#: src/ui.cpp:657
+#, c-format
+msgid "(%d users)"
+msgstr ""
+
+#: src/ui.cpp:720
+msgid "Server message"
+msgstr ""
+
+#: src/ui.cpp:759
+msgid "The current battle was closed by the host."
+msgstr "当前战斗被主建者关闭"
+
+#: src/ui.cpp:759
+msgid "Battle closed"
+msgstr "战场已关闭"
+
+#: src/ui.cpp:844
+msgid ""
+"Your spring settings are probably not configured correctly,\n"
+"you should take another look at your settings before trying\n"
+"to play online."
+msgstr "你的Spring设置并不正确，在开始网上对战前请再次检查你的设置。"
+
+#: src/ui.cpp:844
+msgid "Spring settings error"
+msgstr "Spring设置错误"
+
+#: src/ui.cpp:849
+msgid ""
+"This game uses NAT traversal that is not supported by wx 2.6 build of "
+"springlobby. \n"
+"\n"
+"You will not be able to play in this battle. \n"
+"Update your wxwidgets to 2.8 or newer to enable NAT traversal support."
+msgstr ""
+"这个游戏使用不支持NAT traversal的wx2.6版Springlobby。\n"
+"你不能加入这场战斗。\n"
+"请更新你的wxwidgets到2.8或更新版以打开NAT traversal支持"
+
+#: src/user.cpp:107
+msgid "Newbie"
+msgstr "新手"
+
+#: src/user.cpp:108
+msgid "Beginner"
+msgstr "初学者"
+
+#: src/user.cpp:109
+msgid "Average"
+msgstr "大众级新兵"
+
+#: src/user.cpp:110
+msgid "Above average"
+msgstr "老兵"
+
+#: src/user.cpp:111
+msgid "Experienced"
+msgstr "富有经验的玩家"
+
+#: src/user.cpp:112
+msgid "Highly experienced"
+msgstr "极富经验的"
+
+#: src/user.cpp:113
+msgid "Veteran"
+msgstr "老鸟"
+
+#: src/user.cpp:115
+msgid "no rank"
+msgstr "没有级别"

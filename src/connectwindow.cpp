@@ -15,6 +15,7 @@
 #include <wx/intl.h>
 #include <wx/settings.h>
 #include <wx/icon.h>
+#include <wx/tooltip.h>
 
 #include "connectwindow.h"
 #include "settings.h"
@@ -71,6 +72,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_rpass_check = new wxCheckBox  ( m_login_tab, -1, _("Remember password") );
   m_autoconnect_check = new wxCheckBox  ( m_login_tab, -1, _("Autoconnect next time") );
   m_autoconnect_check->SetToolTip( _("remember connection details and automatically connect to server on next lobby startup") );
+  wxToolTip::Enable( false );
 
   m_rpass_check->SetValue( savepass );
   m_autoconnect_check->SetValue( autoconnect );

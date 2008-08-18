@@ -57,7 +57,6 @@ BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
 
 }
 
-// always set the controls name to the option key
 void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag)
 {
 	wxString pref = wxString::Format( _T("%d"),optFlag) + wxsep;
@@ -109,10 +108,10 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		mmOptionList current = it->second;
 		wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
 
-
-		int index = CLAMP(current.cur_choice_index,0,int(current.cbx_choices.GetCount()-1));
+        int temp = int(current.cbx_choices.GetCount()-1);
+		int index = CLAMP(current.cur_choice_index,0,temp);
 		wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[index], wxDefaultPosition,
-				wxDefaultSize, current.cbx_choices, 0, wxDefaultValidator);
+				wxDefaultSize, current.cbx_choices, wxCB_READONLY, wxDefaultValidator);
 
 		tempchoice->SetToolTip(current.description);
 		tempchoice->SetName(pref+current.key);
@@ -230,9 +229,9 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 	long gameoption;
 	controlName.BeforeFirst(sep).ToLong(&gameoption);
 	wxString optKey = controlName.AfterFirst(sep);
-	wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
 	if ( m_chkbox_map.find(controlName) != m_chkbox_map.end() )
 	{
+	    wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
 		wxCheckBox* cur = m_chkbox_map[controlName] ;
 		long l_val;
 		value.ToLong(&l_val);
@@ -241,18 +240,21 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 
 	 if ( m_combox_map.find(controlName) != m_combox_map.end() )
 	{
+		wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
 		wxComboBox* cur = m_combox_map[controlName];
 		cur->SetValue(optWrap->GetNameListOptValue( optKey, (GameOption)gameoption));
 	}
 
 	 if ( m_textctrl_map.find(controlName) != m_textctrl_map.end() )
 	{
+		wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
 		wxTextCtrl* cur = m_textctrl_map[controlName];
 		cur->SetValue(value);
 	}
 
 	 if ( m_spinctrl_map.find(controlName) != m_spinctrl_map.end() )
 	{
+		wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
 		wxSpinCtrlDbl* cur = m_spinctrl_map[controlName] ;
 		double l_val;
 		value.ToDouble(&l_val);
@@ -278,7 +280,7 @@ void RemovePrefixed(T &v, wxString pref){
   }
 }
 
-void BattleroomMMOptionsTab::OnRefreshControls(GameOption flag)
+void BattleroomMMOptionsTab::OnReloadControls(GameOption flag)
 {
 	wxString pref = wxString::Format( _T("%d"),flag) + wxsep;
 

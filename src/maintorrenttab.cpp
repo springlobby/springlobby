@@ -6,17 +6,15 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
+#include <wx/msgdlg.h>
 
 #include "torrentlistctrl.h"
 #include "torrentwrapper.h"
 #include "ui.h"
 #include "utils.h"
+#include "Helper/colorbutton.h"
 #include "filelister/filelistdialog.h"
-//const long MainTorrentTab::ID_STATICTEXT2 = wxNewId();
-//const long MainTorrentTab::ID_STATICTEXT1 = wxNewId();
-//const long MainTorrentTab::ID_LISTBOX1 = wxNewId();
-//const long MainTorrentTab::ID_BUTTON1 = wxNewId();
-//const long MainTorrentTab::ID_BUTTON2 = wxNewId();
+
 
 
 BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
@@ -37,7 +35,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	wxBoxSizer* m_status_box = new wxBoxSizer( wxHORIZONTAL );
 	wxBoxSizer* m_firstrow_box = new wxBoxSizer( wxHORIZONTAL );
 
-    wxStaticText* m_list_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Tranfers in progress: ") );
+    wxStaticText* m_list_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Transfers in progress: ") );
     m_listbox->Add(m_list_lbl, 0, wxBOTTOM, 5);
 	m_torrent_list = new TorrentListCtrl(this, m_ui);
 	m_listbox->Add( m_torrent_list, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
@@ -50,7 +48,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 
 	m_firstrow_box->Add( m_totalbox,0, wxALL, 5  );
 
-    m_status_color = new wxButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
+    m_status_color = new ColorButton( this, wxID_ANY, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
     m_status_color_text = new wxStaticText( this, wxID_ANY, _("unknown") );
     m_status_box->Add( m_status_color ,  0,wxEXPAND|wxALL|wxALIGN_CENTER_VERTICAL, 10);
     m_status_box->Add( m_status_color_text,0,  wxALL|wxALIGN_CENTER_VERTICAL, 10);
@@ -174,19 +172,19 @@ void MainTorrentTab::OnUpdate()
     switch (torrent()->GetTorrentSystemStatus() )
     {
         case 0:
-            m_status_color->SetBackgroundColour( wxColor(255,0,0) ); //not connected
+            m_status_color->SetColor( wxColor(255,0,0) ); //not connected
             m_status_color_text->SetLabel(_("Status: not connected") );
             break;
         case 1:
-            m_status_color->SetBackgroundColour( wxColor(0,255,0) ); //connected
+            m_status_color->SetColor( wxColor(0,255,0) ); //connected
             m_status_color_text->SetLabel(_("Status: connected") );
             break;
         case 2:
-            m_status_color->SetBackgroundColour( wxColor(0,0,255) ); //ingame
+            m_status_color->SetColor( wxColor(0,0,255) ); //ingame
             m_status_color_text->SetLabel(_("Status: throttled or paused (ingame)") );
             break;
         default:
-            m_status_color->SetBackgroundColour( wxColor(255,255,255) ); //unknown
+            m_status_color->SetColor( wxColor(255,255,255) ); //unknown
             m_status_color_text->SetLabel(_("Status: unknown") );
             break;
     }
@@ -210,7 +208,7 @@ void MainTorrentTab::OnUpdate()
 
 void MainTorrentTab::OnCancelButton( wxCommandEvent& event )
 {
-  torrent()->RemoveFile( info_map[m_torrent_list->GetSelectedIndex()].hash );
+  torrent()->RemoveFile( TowxString(m_torrent_list->GetSelectedData()) );
 }
 
 void MainTorrentTab::OnDownloadDialog( wxCommandEvent& event )

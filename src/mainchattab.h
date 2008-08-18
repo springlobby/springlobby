@@ -30,6 +30,8 @@ class MainChatTab : public wxPanel
     ChatPanel* AddChatPannel( Channel& channel );
     ChatPanel* AddChatPannel( Server& server, const wxString& name );
     ChatPanel* AddChatPannel( User& user );
+    /** \brief this is only used if channel is left via raw command in server tab */
+    bool RemoveChatPanel( ChatPanel* panel );
 
     void CloseAllChats();
 

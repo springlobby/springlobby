@@ -83,7 +83,7 @@ END_EVENT_TABLE()
 
 MainWindow::MainWindow( Ui& ui ) :
   wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
-  m_ui(ui)
+  m_ui(ui),m_autojoin_dialog(NULL)
 {
   SetIcon( wxIcon(springlobby_xpm) );
   wxMenu *menuFile = new wxMenu;
@@ -131,11 +131,11 @@ MainWindow::MainWindow( Ui& ui ) :
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
 
-  m_chat_icon =  charArr2wxBitmapAddText( chat_icon_png , sizeof (chat_icon_png) , chat_icon_text_png, sizeof(chat_icon_text_png), 64 ) ;
-  m_battle_icon = charArr2wxBitmapAddText( join_icon_png , sizeof (join_icon_png), join_icon_text_png , sizeof (join_icon_text_png), 64 ) ;
-  m_sp_icon = charArr2wxBitmapAddText( single_player_icon_png , sizeof (single_player_icon_png), single_player_icon_text_png , sizeof (single_player_icon_text_png), 64 ) ;
-  m_options_icon =   charArr2wxBitmapAddText( options_icon_png , sizeof (options_icon_png), options_icon_text_png , sizeof (options_icon_text_png), 64 ) ;
-  m_downloads_icon = charArr2wxBitmapAddText( downloads_icon_png , sizeof (downloads_icon_png), downloads_icon_text_png , sizeof (downloads_icon_text_png), 64 ) ;
+  m_chat_icon =  charArr2wxBitmapWithBlending( chat_icon_png , sizeof (chat_icon_png) , chat_icon_text_png, sizeof(chat_icon_text_png), 64 ) ;
+  m_battle_icon = charArr2wxBitmapWithBlending( join_icon_png , sizeof (join_icon_png), join_icon_text_png , sizeof (join_icon_text_png), 64 ) ;
+  m_sp_icon = charArr2wxBitmapWithBlending( single_player_icon_png , sizeof (single_player_icon_png), single_player_icon_text_png , sizeof (single_player_icon_text_png), 64 ) ;
+  m_options_icon =   charArr2wxBitmapWithBlending( options_icon_png , sizeof (options_icon_png), options_icon_text_png , sizeof (options_icon_text_png), 64 ) ;
+  m_downloads_icon = charArr2wxBitmapWithBlending( downloads_icon_png , sizeof (downloads_icon_png), downloads_icon_text_png , sizeof (downloads_icon_text_png), 64 ) ;
   m_select_image = new wxBitmap( select_icon_xpm );
 
   m_func_tab_images = new wxImageList( 64, 64 );
@@ -192,8 +192,10 @@ MainWindow::~MainWindow()
   freeStaticBox();
 
   if ( m_autojoin_dialog  != 0 )
+  {
     delete m_autojoin_dialog;
-
+    m_autojoin_dialog = 0;
+  }
   delete m_chat_icon;
   delete m_battle_icon;
   delete m_options_icon;
@@ -493,7 +495,10 @@ void MainWindow::OnMenuOpen( wxMenuEvent& event )
 
 void MainWindow::OnReportBug( wxCommandEvent& event )
 {
-  m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") );
+    wxString reporter = wxEmptyString;
+    if (m_ui.IsConnected() )
+        reporter = _T("?reporter=") + m_ui.GetServer().GetMe().GetNick();
+  m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") + reporter);
 }
 
 

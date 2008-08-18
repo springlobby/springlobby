@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 
 #include <wx/panel.h>
 #include <wx/dcclient.h>
@@ -7,6 +7,10 @@
 #include <wx/intl.h>
 #include <cmath>
 #include <stdexcept>
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include "utils.h"
 #include "uiutils.h"

@@ -33,7 +33,8 @@ END_EVENT_TABLE()
 map_infos* TorrentListCtrl::m_info_map = 0;
 
 TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
-		customListCtrl( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT )
+		customListCtrl( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize,
+                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl") )
 
 {
 
@@ -519,79 +520,9 @@ int wxCALLBACK TorrentListCtrl::CompareFileSizeDOWN( long item1, long item2, lon
 	return 0;
 }
 
-void TorrentListCtrl::OnMouseMotion( wxMouseEvent& event )
+void TorrentListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-#if wxUSE_TIPWINDOW
-//	wxPoint position = event.GetPosition();
-//
-//	try{
-//		tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-//		int flag = wxLIST_HITTEST_ONITEM;
-//		long subItem;
-//#ifdef HAVE_WX28
-//		long item_hit = HitTest(position, flag, &subItem);
-//#else
-//		long item_hit = HitTest(position, flag);
-//#endif
-//
-//		if (item_hit != wxNOT_FOUND)
-//		{
-//			long item = GetItemData(item_hit);
-//			map_infos info_map = *m_info_map;
-//			Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
-//			int coloumn = getColoumnFromPosition(position);
-//			switch (coloumn)
-//			{
-//			case 0: // status
-//			m_tiptext = icons().GetBattleStatus(battle);
-//				break;
-//			case 1: // country
-//				m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());
-//				break;
-//			case 2: // rank_min
-//				m_tiptext = m_colinfovec[coloumn].first;
-//				break;
-//			case 3: // descrp
-//				m_tiptext = battle.GetDescription();
-//				break;
-//			case 4: //map
-//				m_tiptext = battle.GetMapName());
-//				break;
-//			case 5: //mod
-//				m_tiptext = battle.GetModName());
-//				break;
-//			case 6: // host
-//				m_tiptext = battle.GetFounder().GetNick();
-//				break;
-//			case 7: // specs
-//				m_tiptext = _T("Spectators:\n");
-//				for (unsigned int i = battle.GetNumUsers()-1; i > battle.GetNumUsers() - battle.inspeed-1;--i)
-//				{
-//					if (i < battle.GetNumUsers()-1)
-//						m_tiptext << _T("\n");
-//					m_tiptext << battle.GetUser(i).GetNick() ;
-//				}
-//				break;
-//			case 8: // player
-//				m_tiptext = _T("Active Players:\n");
-//				for (unsigned int i = 0; i < battle.GetNumUsers()-battle.inspeed;++i)
-//				{
-//					if ( i> 0)
-//						m_tiptext << _T("\n");
-//					m_tiptext << battle.GetUser(i).GetNick();
-//				}
-//				break;
-//			case 9: //may player
-//				m_tiptext = (m_colinfovec[coloumn].first);
-//				break;
-//
-//			default: m_tiptext = _T("");
-//				break;
-//			}
-//		}
-//	}
-//	catch(...){}
-#endif
+    m_tiptext = _T("");
 }
 
 #endif

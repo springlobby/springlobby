@@ -17,6 +17,8 @@ struct item_content {
   void* data;
 };
 
+/** \brief display participants of battle and their info (ally,team,color,cpu...)
+ * \todo DOCMEMORE */
 class BattleroomListCtrl : public customListCtrl
 {
   public:
@@ -50,6 +52,7 @@ class BattleroomListCtrl : public customListCtrl
 
     void OnKickPlayer( wxCommandEvent& event );
     void OnRingPlayer( wxCommandEvent& event );
+    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
   protected:
     static int wxCALLBACK CompareStatusUP(long item1, long item2, long sortData);
@@ -73,8 +76,7 @@ class BattleroomListCtrl : public customListCtrl
     static int wxCALLBACK CompareHandicapUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareHandicapDOWN(long item1, long item2, long sortData);
     wxString GetCellContentsString( long row_number, int column );
-    void OnMouseMotion(wxMouseEvent& event);
-    
+
     struct {
       int col;
       bool direction;
@@ -95,7 +97,7 @@ class BattleroomListCtrl : public customListCtrl
 
     Ui& m_ui;
     static Ui* m_ui_for_sort;
-      
+
     DECLARE_EVENT_TABLE();
 
 };

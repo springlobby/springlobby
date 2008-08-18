@@ -14,6 +14,8 @@
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
+#include <wx/colour.h>
+#include <wx/cmndata.h>
 #include <wx/font.h>
 
 #include "nonportable.h"
@@ -120,6 +122,18 @@ bool Settings::IsPortableMode()
 bool Settings::IsFirstRun()
 {
   return m_config->Read( _T("/General/firstrun"), true );
+}
+
+
+void Settings::SetSettingsVersion()
+{
+   m_config->Write( _T("/General/SettingsVersion"), SETTINGS_VERSION );
+}
+
+
+unsigned int  Settings::GetSettingsVersion()
+{
+   return m_config->Read( _T("/General/SettingsVersion"), 0l );
 }
 
 
@@ -685,7 +699,7 @@ int Settings::GetLastRankLimit()
 
 bool Settings::GetTestHostPort()
 {
-    return m_config->Read( _T("/Hosting/TestHostPort"), 1 );
+    return m_config->Read( _T("/Hosting/TestHostPort"), 0l );
 }
 
 wxColour Settings::GetBattleLastColour()
@@ -977,6 +991,26 @@ void Settings::SetAlwaysAutoScrollOnFocusLost(bool value)
   m_config->Write( _T("/Chat/AlwaysAutoScrollOnFocusLost"), value);
 }
 
+void Settings::SetHighlightedWords( const wxString& words )
+{
+  m_config->Write( _T("/Chat/HighlightedWords"), words );
+}
+
+wxString Settings::GetHighlightedWords( )
+{
+  return m_config->Read( _T("/Chat/HighlightedWords"), wxEmptyString );
+}
+
+void Settings::SetRequestAttOnHighlight( const bool req )
+{
+  m_config->Write( _T("/Chat/ReqAttOnHighlight"), req);
+}
+
+bool Settings::GetRequestAttOnHighlight( )
+{
+  return m_config->Read( _T("/Chat/ReqAttOnHighlight"), 0l);
+}
+
 BattleListFilterValues Settings::GetBattleFilterValues(const wxString& profile_name)
 {
     BattleListFilterValues filtervalues;
@@ -1150,12 +1184,16 @@ void Settings::SetTorrentListToResume( const wxArrayString& list )
 wxArrayString Settings::GetTorrentListToResume()
 {
   wxArrayString list;
-  unsigned int TorrentCount = m_config->GetNumberOfEntries( _T("/Torrent/ResumeList") );
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Torrent/ResumeList") );
+  unsigned int TorrentCount = m_config->GetNumberOfEntries( false );
   for ( unsigned int i = 0; i < TorrentCount; i++ )
   {
     wxString ToAdd;
     if ( m_config->Read( _T("/Torrent/ResumeList/") + TowxString(i), &ToAdd ) ) list.Add( ToAdd );
   }
+
+  m_config->SetPath( old_path );
   return list;
 }
 
@@ -1240,3 +1278,54 @@ bool Settings::GetShowTooltips()
 {
     return m_config->Read(_T("GUI/ShowTooltips"), 1l);
 }
+
+void Settings::SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width )
+{
+    m_config->Write(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn_ind), coloumn_width );
+}
+
+int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
+{
+    return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
+}
+
+void Settings::SaveCustomColors( const wxColourData& _cdata, const wxString& paletteName  )
+{
+    //note 16 colors is wx limit
+    wxColourData cdata = _cdata;
+    for ( int i = 0; i < 16; ++i)
+    {
+        wxColor col = cdata.GetCustomColour( i );
+        if ( !col.IsOk() )
+            col = wxColor ( 255, 255, 255 );
+        m_config->Write( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i), GetColorString( col ) ) ;
+    }
+}
+
+wxColourData Settings::GetCustomColors( const wxString& paletteName )
+{
+    wxColourData cdata;
+    //note 16 colors is wx limit
+    for ( int i = 0; i < 16; ++i)
+    {
+        wxColor col = GetColorFromStrng ( m_config->Read( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i),
+                                        GetColorString(  wxColor ( 255, 255, 255 ) ) ) );
+        cdata.SetCustomColour( i, col );
+    }
+
+    return cdata;
+}
+
+bool Settings::GetReportStats()
+{
+    return m_config->Read( _T("/General/reportstats"), 1l );
+}
+
+
+void Settings::SetReportStats(const bool value)
+{
+    m_config->Write( _T("/General/reportstats"), value );
+}
+
+
+
