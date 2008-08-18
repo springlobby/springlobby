@@ -29,10 +29,9 @@ END_EVENT_TABLE()
 
 ReplayList* ReplayListCtrl::m_replaylist_sort = 0;
 
-ReplayListCtrl::ReplayListCtrl( wxWindow* parent, Ui& ui, ReplayList& replaylist  ):
+ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList& replaylist  ):
   customListCtrl(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
                 _T("replaylistctrl") ),
-  m_ui(ui),
   m_replaylist(replaylist)
 {
 
@@ -116,7 +115,7 @@ void ReplayListCtrl::OnDLMap( wxCommandEvent& event )
   if ( m_selected != -1 ) {
     if ( m_replaylist.ReplayExists(m_selected) ) {
         // TODO (koshi) call start torrent download from hash
-      //m_ui.DownloadMap( m_replaylist.GetReplay(m_selected).MapName );
+      //ui().DownloadMap( m_replaylist.GetReplay(m_selected).MapName );
     }
   }
 }
@@ -125,8 +124,8 @@ void ReplayListCtrl::OnDLMap( wxCommandEvent& event )
 void ReplayListCtrl::OnDLMod( wxCommandEvent& event )
 {
 //  if ( m_selected != -1 ) {
-//    if ( m_ui.GetServer().replays_iter->ReplayExists(m_selected) ) {
-//      m_ui.DownloadMod( m_ui.GetServer().replays_iter->GetReplay(m_selected).ModName );
+//    if ( ui().GetServer().replays_iter->ReplayExists(m_selected) ) {
+//      ui().DownloadMod( ui().GetServer().replays_iter->GetReplay(m_selected).ModName );
 //    }
 //  }
 }

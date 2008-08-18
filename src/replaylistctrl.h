@@ -17,7 +17,7 @@ class ReplayList_Iter;
 class ReplayListCtrl : public customListCtrl
 {
   public:
-    ReplayListCtrl( wxWindow* parent, Ui& ui, ReplayList& replaylist );
+    ReplayListCtrl( wxWindow* parent, ReplayList& replaylist );
     ~ReplayListCtrl();
 
     void Sort();
@@ -48,7 +48,6 @@ class ReplayListCtrl : public customListCtrl
     } m_sortorder[4];
 
     wxMenu* m_popup;
-    Ui& m_ui;
    // ReplayList_Iter& m_replaylist_iter;
     ReplayList& m_replaylist;
     static ReplayList* m_replaylist_sort;
