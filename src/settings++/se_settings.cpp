@@ -37,7 +37,17 @@ se_settings& se_settings::getInstance()
 
 void se_settings::save()
 {
-	se_config->Flush();
+    se_config->Flush();
+    #if defined(__WXMSW__) && !defined(HAVE_WX26)
+    wxFileOutputStream outstream( m_chosed_path );
+
+    if ( !outstream.IsOk() )
+    {
+      // TODO: error handling
+    }
+
+    se_config->Save( outstream );
+    #endif
 }
 
 void se_settings::reload()
@@ -48,15 +58,17 @@ void se_settings::reload()
 se_settings::se_settings()
 {
 	#if defined(__WXMSW__) && !defined(HAVE_WX26)
-  wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
-  wxString globalfilepath =  wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() + _T("springlobby.conf");
+  wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("springsettings.conf");
+  wxString globalfilepath =  wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() )
+                            + wxFileName::GetPathSeparator() + _T("springsettings.conf");
 
-  if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
-  {
-     m_chosed_path = userfilepath;
-     m_portable_mode = false;
-  }
-  else
+//  if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath )
+//                            || !wxFileName::IsFileWritable( globalfilepath ) )
+//  {
+//     m_chosed_path = userfilepath;
+//     m_portable_mode = false;
+//  }
+//  else
   {
      m_chosed_path = globalfilepath; /// portable mode, use only current app paths
      m_portable_mode = true;
