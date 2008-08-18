@@ -23,6 +23,7 @@
 #include <wx/settings.h>
 #include <wx/colordlg.h>
 #include <wx/fontdlg.h>
+#include <wx/checkbox.h>
 
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
@@ -293,9 +294,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
   m_play_sounds->SetValue( sett().GetChatPMSoundNotificationEnabled() );
   sbBehaviorSizer->Add( m_play_sounds, 0, wxALL, 5 );
 #endif
-  m_autojoin = new wxCheckBox( this, ID_AUTOJOIN, _("Autoconnect last server"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_autojoin->SetValue( sett().GetAutoConnect() );
-  sbBehaviorSizer->Add( m_autojoin, 0, wxALL, 5 );
+
 
   bMainSizerV->Add( sbBehaviorSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 
@@ -448,7 +447,6 @@ void ChatOptionsTab::DoRestore()
   m_save_logs->SetValue(  sett().GetChatLogEnable() );
   m_log_save->SetValue(  sett().GetChatLogLoc() );
   m_smart_scroll->SetValue(sett().GetSmartScrollEnabled());
-  m_autojoin->SetValue( sett().GetAutoConnect() );
   m_highlight_words->SetValue( sett().GetHighlightedWords() );
   m_highlight_req->SetValue( sett().GetRequestAttOnHighlight() );
   #ifndef DISABLE_SOUND
@@ -484,7 +482,6 @@ void ChatOptionsTab::OnApply( wxCommandEvent& event )
   #ifndef DISABLE_SOUND
     sett().SetChatPMSoundNotificationEnabled( m_play_sounds->IsChecked() );
   #endif
-  sett().SetAutoConnect( m_autojoin->IsChecked() );
 
 }
 

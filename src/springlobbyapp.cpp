@@ -14,6 +14,9 @@
 #include <wx/dirdlg.h>
 #include <wx/tooltip.h>
 #include <wx/file.h>
+#include <wx/fs_zip.h> //filesystem zip handler
+#include <wx/socket.h>
+
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -65,12 +68,14 @@ bool SpringLobbyApp::OnInit()
 
     //initialize all loggers
     InitializeLoggingTargets();
+    wxSocketBase::Initialize();
 
     wxLogDebugFunc( _T("") );
     wxInitAllImageHandlers();
 
      //TODO needed?
     wxImage::AddHandler(new wxPNGHandler);
+    wxFileSystem::AddHandler(new wxZipFSHandler);
 
     m_locale = new wxLocale( );
     m_locale->Init();
@@ -126,10 +131,11 @@ bool SpringLobbyApp::OnInit()
         SetupUserFolders();
 
         InitCacheDir();
-
+        wxString sep ( wxFileName::GetPathSeparator() );
         //! ask for downloading ota content if archive not found, start downloader in background
         wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
-        wxString destFilename = sett().GetSpringDir()+_T("/base/base-ota-content.zip");
+        wxString destFilename = sett().GetSpringDir() + ( sett().GetSpringDir().EndsWith( sep ) ? _T("") : sep )
+                + _T("base") + sep + _T("base-ota-content.zip");
         bool contentExists = false;
         if ( usync()->IsLoaded() )
         {
@@ -147,6 +153,9 @@ bool SpringLobbyApp::OnInit()
         {
             m_otadownloader = new HttpDownloader( url, destFilename );
         }
+
+        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.?\n"
+                                                 "You can disable that on options tab --> General."),_("Notice"),wxOK );
 
         ui().mw().ShowConfigure();
     }

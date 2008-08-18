@@ -266,7 +266,6 @@ bool IsValidNickname( const wxString& _name )
     // The Regex Container
 	//wxRegEx regex( wxT("[:graph:]") );
 	wxRegEx regex( wxT("[ \t\r\n\v\föäüß, .:<>\\!§$%&+-]" ));
-	bool ok = regex.IsValid();
 
 	// We need to escape all regular Expression Characters, that have a special Meaning
     name.Replace( _T("["), _T("") );
