@@ -875,7 +875,9 @@ springlobby_SOURCES = \
 	src/Helper/colorbutton.cpp \
 	src/Helper/colorbutton.h \
 	src/groupuserdialog.h \
-	src/groupuserdialog.cpp
+	src/groupuserdialog.cpp \
+	src/lobbyoptionstab.h \
+	src/lobbyoptionstab.cpp
 
 
 
