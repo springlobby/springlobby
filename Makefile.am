@@ -919,8 +919,6 @@ springlobby_SOURCES += \
 springsettings_SOURCES = \
 	src/utils.cpp \
 	src/utils.h \
-	src/settings.h \
-	src/settings.cpp \
 	src/crashreport.cpp \
 	src/crashreport.h \
 	src/springunitsynclib.cpp \
