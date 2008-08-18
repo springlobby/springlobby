@@ -107,7 +107,7 @@ class Ui
     void OnChannelDidAction( Channel& channel , User& user, const wxString& action );
     void OnChannelMessage( const wxString& channel, const wxString& msg );
 
-    void OnLeaveChannel( Channel& channel );
+    void OnLeaveChannel( wxString& name  );
     void OnChannelList( const wxString& channel, const int& numusers );
     void OnUserOnline( User& user );
     void OnUserOffline( User& user );

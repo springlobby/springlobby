@@ -12,12 +12,9 @@
 #include "torrentwrapper.h"
 #include "ui.h"
 #include "utils.h"
+#include "Helper/colorbutton.h"
 #include "filelister/filelistdialog.h"
-//const long MainTorrentTab::ID_STATICTEXT2 = wxNewId();
-//const long MainTorrentTab::ID_STATICTEXT1 = wxNewId();
-//const long MainTorrentTab::ID_LISTBOX1 = wxNewId();
-//const long MainTorrentTab::ID_BUTTON1 = wxNewId();
-//const long MainTorrentTab::ID_BUTTON2 = wxNewId();
+
 
 
 BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
@@ -51,7 +48,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 
 	m_firstrow_box->Add( m_totalbox,0, wxALL, 5  );
 
-    m_status_color = new wxButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 20,20 ), 0 );
+    m_status_color = new ColorButton( this, wxID_ANY, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
     m_status_color_text = new wxStaticText( this, wxID_ANY, _("unknown") );
     m_status_box->Add( m_status_color ,  0,wxEXPAND|wxALL|wxALIGN_CENTER_VERTICAL, 10);
     m_status_box->Add( m_status_color_text,0,  wxALL|wxALIGN_CENTER_VERTICAL, 10);
@@ -175,19 +172,19 @@ void MainTorrentTab::OnUpdate()
     switch (torrent()->GetTorrentSystemStatus() )
     {
         case 0:
-            m_status_color->SetBackgroundColour( wxColor(255,0,0) ); //not connected
+            m_status_color->SetColor( wxColor(255,0,0) ); //not connected
             m_status_color_text->SetLabel(_("Status: not connected") );
             break;
         case 1:
-            m_status_color->SetBackgroundColour( wxColor(0,255,0) ); //connected
+            m_status_color->SetColor( wxColor(0,255,0) ); //connected
             m_status_color_text->SetLabel(_("Status: connected") );
             break;
         case 2:
-            m_status_color->SetBackgroundColour( wxColor(0,0,255) ); //ingame
+            m_status_color->SetColor( wxColor(0,0,255) ); //ingame
             m_status_color_text->SetLabel(_("Status: throttled or paused (ingame)") );
             break;
         default:
-            m_status_color->SetBackgroundColour( wxColor(255,255,255) ); //unknown
+            m_status_color->SetColor( wxColor(255,255,255) ); //unknown
             m_status_color_text->SetLabel(_("Status: unknown") );
             break;
     }

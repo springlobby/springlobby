@@ -569,6 +569,7 @@ void BattleListTab::DoJoin( Battle& battle )
 
   if ( battle.IsPassworded() ) {
     wxPasswordEntryDialog pw( this, _("Battle password"), _("Enter password") );
+    pw.SetFocus();
     if ( pw.ShowModal() == wxID_OK ) battle.Join( pw.GetValue() );
   } else {
     battle.Join();

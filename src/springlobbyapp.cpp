@@ -14,6 +14,9 @@
 #include <wx/dirdlg.h>
 #include <wx/tooltip.h>
 #include <wx/file.h>
+#include <wx/fs_zip.h> //filesystem zip handler
+#include <wx/socket.h>
+
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -65,12 +68,14 @@ bool SpringLobbyApp::OnInit()
 
     //initialize all loggers
     InitializeLoggingTargets();
+    wxSocketBase::Initialize();
 
     wxLogDebugFunc( _T("") );
     wxInitAllImageHandlers();
 
      //TODO needed?
     wxImage::AddHandler(new wxPNGHandler);
+    wxFileSystem::AddHandler(new wxZipFSHandler);
 
     m_locale = new wxLocale( );
     m_locale->Init();
@@ -126,10 +131,11 @@ bool SpringLobbyApp::OnInit()
         SetupUserFolders();
 
         InitCacheDir();
-
+        wxString sep ( wxFileName::GetPathSeparator() );
         //! ask for downloading ota content if archive not found, start downloader in background
         wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
-        wxString destFilename = sett().GetSpringDir()+_T("/base/base-ota-content.zip");
+        wxString destFilename = sett().GetSpringDir() + ( sett().GetSpringDir().EndsWith( sep ) ? _T("") : sep )
+                + _T("base") + sep + _T("base-ota-content.zip");
         bool contentExists = false;
         if ( usync()->IsLoaded() )
         {
@@ -148,6 +154,9 @@ bool SpringLobbyApp::OnInit()
             m_otadownloader = new HttpDownloader( url, destFilename );
         }
 
+        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.?\n"
+                                                 "You can disable that on options tab --> General."),_("Notice"),wxOK );
+
         ui().mw().ShowConfigure();
     }
     else
@@ -160,6 +169,8 @@ bool SpringLobbyApp::OnInit()
   #endif
 
   m_timer->Start( TIMER_INTERVAL );
+
+  sett().SetSettingsVersion(); /// bump settings version number
 
     return true;
 }
@@ -222,7 +233,7 @@ void SpringLobbyApp::SetupUserFolders()
 {
 #ifdef __WXGTK__
 #ifndef HAVE_WX26
-    if ( !wxFileName::DirExists( wxFileName::GetHomeDir() + _("/.spring") ) )
+    if ( !wxFileName::DirExists( wxFileName::GetHomeDir() + _T("/spring") ) )
     {
         wxArrayString choices;
         choices.Add( _("Create a .spring folder in the home directory (reccomended)") );
@@ -240,15 +251,33 @@ void SpringLobbyApp::SetupUserFolders()
         if ( result == 2 ) createdirs = false;
         else if ( result == 3 ) return;
 
-        if ( result == 0 ) dir = wxFileName::GetHomeDir() + _T("/.spring");
-        else if ( result == 1 || result == 2 ) dir = wxDirSelector( _("Choose a folder"), wxFileName::GetHomeDir() + _T("/.spring") );
+        if ( result == 0 ) dir = wxFileName::GetHomeDir() + _T("/spring");
+        else if ( result == 1 || result == 2 ) dir = wxDirSelector( _("Choose a folder"), wxFileName::GetHomeDir() + _T("/spring") );
 
         if ( createdirs )
         {
-            if ( dir.IsEmpty() || ( !wxFileName::Mkdir( dir ) || ( !wxFileName::Mkdir( dir + _T("/mods") ) || !wxFileName::Mkdir( dir + _T("/maps") ) || !wxFileName::Mkdir( dir + _T("/base") ) || !wxFileName::Mkdir( dir + _T("/demos") ) || !wxFileName::Mkdir( dir + _T("/screenshots")  ) ) ) )
+            if ( dir.IsEmpty() ||
+             ( !wxFileName::Mkdir( dir ) ||
+                ( !wxFileName::Mkdir( dir + _T("/mods") ) ||
+                  !wxFileName::Mkdir( dir + _T("/maps") ) ||
+                  !wxFileName::Mkdir( dir + _T("/base") ) ||
+                  !wxFileName::Mkdir( dir + _T("/demos") ) ||
+                  !wxFileName::Mkdir( dir + _T("/screenshots")  ) )
+                )
+              )
             {
-                if ( dir.IsEmpty() ) dir = wxFileName::GetHomeDir() + _T("/.spring");
+                if ( dir.IsEmpty() ) dir = wxFileName::GetHomeDir() + _T("/spring");
                 wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + _T("/mods\n") + dir + _T("/maps\n") + dir + _T("/base\n") );
+                return;
+            }
+            else
+            {
+              #ifdef __WXGTK__
+              if ( wxFileName::FileExists( _T("/usr/share/games/spring/uikeys.txt") ) ) /// this hardcoded path is a bit dumb but it's too head in the code to do proper spring path detection
+              {
+                wxCopyFile( _T("/usr/share/games/spring/uikeys.txt"), dir + _T("/uikeys.txt"), false );
+              }
+              #endif
             }
         }
         sett().SetSpringDir(dir);

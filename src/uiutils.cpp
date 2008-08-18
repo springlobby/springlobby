@@ -8,9 +8,14 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 
+#include <cmath>
+#include <wx/cmndata.h>
+#include <wx/colordlg.h>
 #include "uiutils.h"
 #include "utils.h"
 #include "settings++/custom_dialogs.h"
+#include "settings.h"
+
 
 wxString RefineMapname( const wxString& mapname )
 {
@@ -217,4 +222,26 @@ wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size
 
 }
 
+wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit, const wxString& caption, const wxString& palette)
+{
+    wxColourData data;
+    data = sett().GetCustomColors( palette );
+    data.SetChooseFull(true);
+    if ( colInit.Ok() )
+    {
+        data.SetColour((wxColour &)colInit); // const_cast
+    }
 
+    wxColour colRet;
+    wxColourDialog dialog(parent, &data);
+    if (!caption.empty())
+        dialog.SetTitle(caption);
+    if ( dialog.ShowModal() == wxID_OK )
+    {
+        colRet = dialog.GetColourData().GetColour();
+    }
+    //else: leave it invalid
+    sett().SaveCustomColors( dialog.GetColourData(), palette );
+
+    return colRet;
+}
