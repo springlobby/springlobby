@@ -582,9 +582,9 @@ wxString SpringUnitSync::GetSideName( const wxString& modname, int index )
   try
   {
     cache = GetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidenames") );
-    if ( cache.GetCount() < index || cache[index].IsEmpty() )
+    if ( cache.GetCount() < index || cache[index] == _T("\0\t ") )
     {
-      for ( unsigned int count = cache.GetCount(); count < index; count++ ) cache.Add( _T("") ); /// add empty lines if entries not exist
+      for ( unsigned int count = cache.GetCount(); count < index; count++ ) cache.Add( _T("\0\t ") ); /// add void lines if entries not exist (the weird chars is an hax because of wxArrayString idiocy)
       susynclib()->GetSideCount( modname );
       cache[index] = susynclib()->GetSideName( modname, index );
       SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidenames"), cache );
@@ -593,7 +593,7 @@ wxString SpringUnitSync::GetSideName( const wxString& modname, int index )
   }
   catch (...)
   {
-    for ( unsigned int count = cache.GetCount(); count < index; count++ ) cache.Add( _T("") ); /// add empty lines if entries not exist
+    for ( unsigned int count = cache.GetCount(); count < index + 1; count++ ) cache.Add( _T("\0\t ") ); /// add empty lines if entries not exist (the weird chars is an hax because of wxArrayString idiocy)
     susynclib()->GetSideCount( modname );
     cache[index] = susynclib()->GetSideName( modname, index );
     SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidenames"), cache );
@@ -914,8 +914,7 @@ wxString SpringUnitSync::GetSpringDataPath()
 
 wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString& hash, bool IsMod )
 {
-  wxString ret;
-  ret <<  sett().GetCachePath() << wxFileName::GetPathSeparator();
+  wxString ret = sett().GetCachePath();
   if ( !name.IsEmpty() ) ret << name;
   else if ( !hash.IsEmpty() )
   {
@@ -927,7 +926,13 @@ wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString&
   else
   {
     if ( IsMod ) ret <<  _T("-") << susynclib()->GetPrimaryModChecksumFromName( name );
-    else ret << _T("-") << susynclib()->GetMapChecksum( GetMapIndex( name ) );
+    else
+    {
+       int total = susynclib()->GetMapCount();
+       int index = GetMapIndex( name );
+       if ( index = -1 ) return ret;
+       ret << _T("-") << susynclib()->GetMapChecksum( index );
+    }
   }
   return ret;
 }
@@ -937,7 +942,8 @@ wxArrayString SpringUnitSync::GetCacheFile( const wxString& path )
 {
   wxArrayString ret;
   wxTextFile file( path );
-  ASSERT_RUNTIME( file.Open() , wxString::Format( _T("cache file( %s ) not found"), path.c_str() ) );
+  file.Open();
+  ASSERT_RUNTIME( file.IsOpened() , wxString::Format( _T("cache file( %s ) not found"), path.c_str() ) );
   unsigned int linecount = file.GetLineCount();
   for ( unsigned int count = 0; count < linecount; count ++ )
   {
