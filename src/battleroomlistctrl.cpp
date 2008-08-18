@@ -52,10 +52,6 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   m_sel_user(0), m_sel_bot(0),
   m_ui(ui)
 {
-  SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
-  SetImageList( &icons(), wxIMAGE_LIST_SMALL );
-  SetImageList( &icons(), wxIMAGE_LIST_STATE );
-
   wxListItem col;
 
   col.SetText( _T("r") );

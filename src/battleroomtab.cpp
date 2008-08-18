@@ -10,11 +10,13 @@
 #include <wx/statline.h>
 #include <wx/checkbox.h>
 #include <wx/button.h>
+#include <wx/listctrl.h>
 #include <wx/sizer.h>
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
 #include <wx/colordlg.h>
 #include <wx/colour.h>
+
 #include <stdexcept>
 
 #include "battleroomtab.h"

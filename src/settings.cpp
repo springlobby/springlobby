@@ -129,6 +129,18 @@ bool Settings::IsFirstRun()
 }
 
 
+void Settings::SetSettingsVersion()
+{
+   m_config->Write( _T("/General/SettingsVersion"), SETTINGS_VERSION );
+}
+
+
+unsigned int  Settings::GetSettingsVersion()
+{
+   return m_config->Read( _T("/General/SettingsVersion"), 0l );
+}
+
+
 bool Settings::UseOldSpringLaunchMethod()
 {
     return m_config->Read( _T("/Spring/UseOldLaunchMethod"), 0l );
@@ -1392,3 +1404,19 @@ wxColourData Settings::GetCustomColors( const wxString& paletteName )
     return cdata;
 }
 
+<<<<<<< HEAD:src/settings.cpp
+=======
+bool Settings::GetReportStats()
+{
+    return m_config->Read( _T("/General/reportstats"), 1l );
+}
+
+
+void Settings::SetReportStats(const bool value)
+{
+    m_config->Write( _T("/General/reportstats"), value );
+}
+
+
+
+>>>>>>> master:src/settings.cpp

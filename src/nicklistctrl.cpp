@@ -68,13 +68,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, UserMenu* popup,
   m_sortorder[3].direction = true;
   Sort( );
 
-#if defined(__WXMSW__)
- /// autosize is part-broken on msw.
-  SetColumnWidth( 0, 55 );
-  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
-#elif defined(__WXMAC__)
+#if defined(__WXMAC__)
 /// autosize is entirely broken on wxmac.
   SetColumnWidth( 0, 20 );
   SetColumnWidth( 1, 20 );
@@ -88,9 +82,6 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, UserMenu* popup,
   SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
 #endif
 
-  SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
-  SetImageList( &icons(), wxIMAGE_LIST_SMALL );
-  SetImageList( &icons(), wxIMAGE_LIST_STATE );
 }
 
 

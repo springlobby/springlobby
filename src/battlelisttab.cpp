@@ -45,6 +45,7 @@ BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
   EVT_LIST_ITEM_ACTIVATED ( BATTLE_JOIN              , BattleListTab::OnListJoin    )
   EVT_LIST_ITEM_SELECTED  ( BLIST_LIST               , BattleListTab::OnSelect      )
   EVT_CHECKBOX            ( BATTLE_LIST_FILTER_ACTIV , BattleListTab::OnFilterActiv )
+  EVT_CHECKBOX            ( BATTLE_LIST_FILTER_HIGHLIGHTED , BattleListTab::OnFilterHighlighted )
 #if  wxUSE_TOGGLEBTN
   EVT_TOGGLEBUTTON        ( BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter  )
 #else
@@ -70,7 +71,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   m_battlelist_sizer = new wxBoxSizer( wxVERTICAL );
 
   m_battle_list = new BattleListCtrl( this, m_ui );
-  m_battle_list->SetHighLightAction ( UserActions::ActNotifBattle );
+  m_battle_list->SetHighLightAction ( UserActions::ActHighlight );
   m_battlelist_sizer->Add( m_battle_list, 1, wxALL|wxEXPAND, 5 );
 
   m_main_sizer->Add( m_battlelist_sizer, 1, wxEXPAND, 5 );;
@@ -128,14 +129,17 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
 #if  wxUSE_TOGGLEBTN
-	m_filter_show = new wxToggleButton( this, BATTLE_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+	m_filter_show = new wxToggleButton( this, BATTLE_LIST_FILTER_BUTTON , _(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
 #else
-	m_filter_show = new wxCheckBox( this, BATTLE_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+	m_filter_show = new wxCheckBox( this, BATTLE_LIST_FILTER_BUTTON , _(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
 #endif
   m_buttons_sizer->Add( m_filter_show, 0, 0, 5 );
 
-	m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_buttons_sizer->Add( m_filter_activ, 1, wxALL|wxEXPAND, 5 );
+  m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , _("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_buttons_sizer->Add( m_filter_activ, 0, wxALL, 5 );
+
+  m_filter_highlighted = new wxCheckBox( this, BATTLE_LIST_FILTER_HIGHLIGHTED , _("Show highlighted only"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_buttons_sizer->Add( m_filter_highlighted, 0, wxALL, 5 );
   #ifdef HAVE_WX26
   m_filter_activ->Disable();
   #endif
@@ -610,4 +614,11 @@ void BattleListTab::OnUnitSyncReloaded()
 void BattleListTab::UpdateHighlights()
 {
     m_battle_list->UpdateHighlights();
+}
+
+void BattleListTab::OnFilterHighlighted( wxCommandEvent& event )
+{
+    m_filter->SetFilterHighlighted( m_filter_highlighted->GetValue() );
+    if ( m_ui.IsConnected() )
+        UpdateList();
 }

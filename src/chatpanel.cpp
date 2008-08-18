@@ -132,7 +132,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ),
+		: wxPanel( parent, -1 ), m_show_nick_list( false ),m_nicklist(0), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ),
 		 m_channel( 0 ), m_server( 0 ), m_user( &user ), m_battle( 0 ), m_type( CPT_User ), m_popup_menu( 0 ) {
 	CreateControls( );
 	user.uidata.panel = this;
@@ -141,7 +141,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ),
+		: wxPanel( parent, -1 ), m_show_nick_list( false ),m_nicklist(0), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ),
 		 m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Server& serv" ) );
 	CreateControls( );
@@ -152,7 +152,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist( NULL ), m_chat_tabs( 0 ), m_ui( ui ),
+		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist( 0 ), m_chat_tabs( 0 ), m_ui( ui ),
 		 m_channel( 0 ), m_server( 0 ), m_user( 0 ), m_battle( &battle ), m_type( CPT_Battle ), m_popup_menu( 0 ) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Battle& battle" ) );
 	for (unsigned int i = 0; i < battle.GetNumUsers();++i)
@@ -1156,7 +1156,7 @@ void ChatPanel::OnChannelMenuMessage( wxCommandEvent& event ) {
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
 	wxString text;
-	if ( !m_ui.AskText( _( "Channel message..." ), _( "Message:" ), text ) ) return;
+if ( !m_ui.AskText( _( "Channel message..." ), _( "Message:" ), text ) ) return;
 
 	cs.Say( _T( "!CHANMSG #" ) + m_channel->GetName() + _T( " " ) + text );
 	//CHANMSG /<channame>/ {message}
@@ -1526,10 +1526,34 @@ void ChatPanel::OnUserMenuDeleteFromGroup( wxCommandEvent& event )
         useractions().RemoveUser( user->GetNick() );
 }
 
+void ChatPanel::OnUserMenuCreateGroup( wxCommandEvent& event )
+{
+    wxString name;
+    if ( ui().AskText( _("Enter name"),
+        _("Please enter the name for the new group.\nAfter clicking ok you will be taken to adjust its settings."), name ) )
+    {
+        User* user = GetSelectedUser();
+        if ( user ) {
+            useractions().AddGroup( name );
+            useractions().AddUserToGroup( name, user->GetNick() );
+            ui().mw().ShowConfigure( OPT_PAGE_GROUPS );
+        }
+        else
+            customMessageBox( SL_MAIN_ICON, _("couldn't add user"), _("Error") );
+    }
+
+
+}
+
 UserMenu::UserMenu(ChatPanel* parent,const wxString& title, long style)
     : wxMenu( title, style ),m_groupsMenu(0), m_parent(parent),m_groupCounter(0)
 {
     m_groupsMenu = new wxMenu();
+    m_groupsnewItem = new wxMenuItem( m_groupsMenu, GROUP_ID - 2, _("Create new group...")  );
+    m_parent->Connect( GROUP_ID - 2, wxEVT_COMMAND_MENU_SELECTED,
+                            wxCommandEventHandler( ChatPanel::OnUserMenuCreateGroup ) );
+    m_groupsMenu->Append( m_groupsnewItem );
+    m_groupsMenu->AppendSeparator();
 //    if ( !ui().IsThisMe( m_parent->GetSelectedUser() ) )
     m_groupsMenuItem = AppendSubMenu( m_groupsMenu, _("Add to group..."));
     m_groupsDeleteItem = new wxMenuItem( m_groupsMenu, GROUP_ID - 1, _("Remove from group")  );
@@ -1549,6 +1573,7 @@ void UserMenu::EnableItems(bool isUserSelected)
         User* user = m_parent->GetSelectedUser();
         bool enable = ( user != 0 && ( !ui().IsThisMe( user ) ) );
         m_groupsMenuItem->Enable( enable && !useractions().IsKnown( user->GetNick() ) ) ;
+        m_groupsnewItem->Enable( enable && !useractions().IsKnown( user->GetNick() ) ) ;
         m_groupsDeleteItem->Enable( enable && useractions().IsKnown( user->GetNick() ) ) ;
         UpdateGroups();
     }
@@ -1556,6 +1581,7 @@ void UserMenu::EnableItems(bool isUserSelected)
     {
         m_groupsMenuItem->Enable( false ) ;
         m_groupsDeleteItem->Enable( false ) ;
+        m_groupsnewItem->Enable( false );
     }
 
 }

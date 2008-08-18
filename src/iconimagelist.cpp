@@ -6,6 +6,9 @@
 #include <stdexcept>
 
 #include <wx/image.h>
+#include <wx/settings.h>
+#include <wx/dc.h>
+#include <wx/icon.h>
 
 #include "iconimagelist.h"
 #include "user.h"
@@ -76,7 +79,7 @@
 #include "images/empty.xpm"
 #include "uiutils.h"
 
-IconImageList::IconImageList() : wxImageList(16,16)
+IconImageList::IconImageList() : wxImageList(16,16,true)
 {
     ICON_ADMIN = Add( *charArr2wxBitmap( admin_png, sizeof(admin_png) ) );
     ICON_ADMIN_AWAY = Add( *charArr2wxBitmap( admin_away_png, sizeof(admin_away_png) ) );
@@ -348,3 +351,5 @@ int IconImageList::GetReadyIcon( const bool& ready, const int& sync )
         else return ICON_NREADY_QSYNC;
     }
 }
+
+

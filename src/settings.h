@@ -5,6 +5,7 @@
 #include <wx/colour.h>
 
 #define CACHE_VERSION 3
+#define SETTINGS_VERSION 1
 
 #define DEFSETT_DEFAULT_SERVER "TAS Server"
 #define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"
@@ -93,6 +94,14 @@ class Settings
     void SaveSettings();
 
     bool IsFirstRun();
+
+    //! Sets/Gets settings revision number
+    void SetSettingsVersion();
+    unsigned int GetSettingsVersion();
+
+    //! should we sayex/pm bot?
+    void SetReportStats(const bool value);
+    bool GetReportStats();
 
     /* ================================================================ */
     /** @name Network

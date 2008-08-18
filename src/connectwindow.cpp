@@ -275,12 +275,16 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
 
     m_ui.DoConnect( HostAddress, m_nick_text->GetValue(), m_pass_text->GetValue() );
   } else {
-	  wxString reason;
-	  if (m_regpass2_text->GetValue()!= m_regpass1_text->GetValue())
+      wxString reason;
+      if ( !IsValidNickname( m_regnick_text->GetValue() ) ){
+            customMessageBox(SL_MAIN_ICON,_("The entered nickname contains invalid characters like )? &%.\n Please try again") , _("Invalid nickname"), wxOK );
+            Show();
+      }
+	  else if ( m_regpass2_text->GetValue()!= m_regpass1_text->GetValue() || m_regpass1_text->GetValue().IsEmpty() )
 	  {
 		  Show();
          wxLogWarning( _T("registration failed, reason: password/confirmation mismatch")  );
-         customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\nPassword / confirmation mismatch") , _("Registration failed."), wxOK );
+         customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\nPassword / confirmation mismatch (or empty passwort)") , _("Registration failed."), wxOK );
 	  }
 	  else if ( m_ui.DoRegister( HostAddress, m_regnick_text->GetValue(), m_regpass1_text->GetValue(),reason ) ) {
        m_tabs->SetSelection( 0 );

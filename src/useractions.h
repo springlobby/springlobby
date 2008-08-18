@@ -1,15 +1,23 @@
 #ifndef USERACTIONS_HH_INCLUDED
 #define USERACTIONS_HH_INCLUDED
 
-#include <wx/string.h>
+#include <wx/intl.h>
 #include <wx/arrstr.h>
 #include <map>
 
 class wxColour;
 
 //!provide a simple mapping between enum type and string to display in gui
-const wxString m_actionNames[] = { _T("none"),_T("highlight"),_T("notify login"),_T("ignore"),_T("autokick"),
-        _T("notify hosted battle"),_T("notify status change")};
+const wxString m_actionNames[] = { _("none"),_("highlight"),_("notify login/out"),_("ignore chat"),_("ignore pm"),
+    _("autokick"), _("notify hosted battle"),_("notify status change")};
+
+//!same for tooltips
+const wxString m_actionTooltips[] = { _("no action at all"), _("highlight user in nick list and battles he participates in"),
+    _("popup a message box when user logs in/out from  the server"), _T("you won't see message by these users in normal channels"),
+    _("ignore private messages of these users, no pm window will open if any of these try to contact you privately"),
+    _T("automatically kick users from battles hosted by yourself"), _("popup a message box when user hosts a new battle"),
+    _("popup a message box when user changes away status") };
+
 
 //! data handling for group / action management
 /** one single static instance is exposed as a global \n
@@ -30,10 +38,11 @@ public:
        ActNone = 1,
        ActHighlight = 2,
        ActNotifLogin = 4,
-       ActIgnore = 8,
-       ActAutokick = 16,
-       ActNotifBattle = 32,
-       ActNotifStatus = 64
+       ActIgnoreChat = 8,
+       ActIgnorePM = 16,
+       ActAutokick = 32,
+       ActNotifBattle = 64,
+       ActNotifStatus = 128
      };
     static const int m_numActions = sizeof(m_actionNames) / sizeof(wxString);
     bool DoActionOnUser( const ActionType action, const wxString& name ) ;

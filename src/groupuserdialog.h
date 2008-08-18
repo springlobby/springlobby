@@ -2,12 +2,13 @@
 #define GROUPUSERDIALOG_H
 
 #include <wx/dialog.h>
-
+#define SOMENUMBER 32541
 
 class NickListCtrl;
 class UserListctrl;
 class wxButton;
 class wxBoxSizer;
+class wxTextCtrl;
 
 class GroupUserDialog : public wxDialog
 {
@@ -23,6 +24,7 @@ class GroupUserDialog : public wxDialog
         wxButton* m_delete_users;
         wxButton* m_add_users;
         wxBoxSizer* m_main_sizer;
+        wxTextCtrl* m_usernames_ctrl;
 //        UserList m_users;
 
         void OnOk( wxCommandEvent& event );
