@@ -235,26 +235,14 @@ void NickListCtrl::Sort()
 
 int wxCALLBACK NickListCtrl::ComparePlayernameUP(long item1, long item2, long sortData )
 {
-    // inverse the order
-
-    if ( ((User*)item1)->GetNick().MakeUpper() < ((User*)item2)->GetNick().MakeUpper() )
-        return -1;
-    if ( ((User*)item1)->GetNick().MakeUpper() > ((User*)item2)->GetNick().MakeUpper() )
-        return 1;
-
-    return 0;
+    return ((User*)item1)->GetNick().CmpNoCase(((User*)item2)->GetNick());
 }
 
 
 int wxCALLBACK NickListCtrl::ComparePlayernameDOWN(long item1, long item2, long sortData )
 {
     // inverse the order
-    if ( ((User*)item1)->GetNick().MakeUpper() < ((User*)item2)->GetNick().MakeUpper() )
-        return 1;
-    if ( ((User*)item1)->GetNick().MakeUpper() > ((User*)item2)->GetNick().MakeUpper() )
-        return -1;
-
-    return 0;
+    return ((User*)item2)->GetNick().CmpNoCase(((User*)item1)->GetNick());
 }
 
 
@@ -348,25 +336,13 @@ int wxCALLBACK NickListCtrl::ComparePlayerrankDOWN(long item1, long item2, long 
 
 int wxCALLBACK NickListCtrl::ComparePlayercountryUP(long item1, long item2, long sortData )
 {
-    // inverse the order
-
-    if ( ((User*)item1)->GetCountry().MakeUpper() < ((User*)item2)->GetCountry().MakeUpper() )
-        return -1;
-    if ( ((User*)item1)->GetCountry().MakeUpper() > ((User*)item2)->GetCountry().MakeUpper() )
-        return 1;
-
-    return 0;
+    return ((User*)item1)->GetCountry().CmpNoCase(((User*)item2)->GetCountry());
 }
 
 int wxCALLBACK NickListCtrl::ComparePlayercountryDOWN(long item1, long item2, long sortData )
 {
     // inverse the order
-    if ( ((User*)item1)->GetCountry().MakeUpper() < ((User*)item2)->GetCountry().MakeUpper() )
-        return 1;
-    if ( ((User*)item1)->GetCountry().MakeUpper() > ((User*)item2)->GetCountry().MakeUpper() )
-        return -1;
-
-    return 0;
+    return ((User*)item2)->GetCountry().CmpNoCase(((User*)item1)->GetCountry());
 }
 
 void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
@@ -399,7 +375,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
             break;
 
         case 1: // country
-            m_tiptext =  GetFlagNameFromCountryCode(user->GetCountry().MakeUpper());
+            m_tiptext =  GetFlagNameFromCountryCode(user->GetCountry().Upper());
             break;
 
         case 2: // rank
