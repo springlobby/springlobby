@@ -104,6 +104,7 @@ void tab_quality_video::updateControls(int what_to_update)
 		case 1: waterOptIndex = waterSetting; break;
 		case 2: waterOptIndex = 3; break;
 		case 3: waterOptIndex = 2; break;
+		case 4: waterOptIndex = 4; break;
 		}
 		ctrl_waterQ_CBox->SetValue(WR_COMBOX_CHOICES[waterOptIndex]);
 
@@ -137,7 +138,7 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer)
 	wxSizer* subSizer = new wxBoxSizer(wxVERTICAL);
 	subSizer->Add(new wxStaticText(this, -1, _("Water Quality")), 0, wxTOP| wxEXPAND, 10);
 	ctrl_waterQ_CBox = new wxComboBox(this, ID_WINDOWP_WR_COMBOX, WR_COMBOX_CHOICES[0], wxDefaultPosition, wxSize(220,21),
-			4,WR_COMBOX_CHOICES,wxCB_DROPDOWN|wxCB_READONLY);
+			5,WR_COMBOX_CHOICES,wxCB_DROPDOWN|wxCB_READONLY);
 	ctrl_waterQ_CBox->SetToolTip(WR_COMBOX[0].tTip[0]);
 	subSizer->Add(ctrl_waterQ_CBox, 0, wxBOTTOM, 5);
 

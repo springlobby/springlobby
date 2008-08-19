@@ -386,7 +386,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		case ID_WINDOWP_WR_COMBOX:
 		{
 			int choiceIndex=0;
-			for (int i =1; i<4;++i)
+			for (int i =1; i<sizeof(WR_COMBOX_CHOICES)/sizeof(WR_COMBOX_CHOICES[0]);++i)
 			{
 				if (choice==WR_COMBOX_CHOICES[i])
 					choiceIndex = i;
@@ -396,6 +396,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 				case 1: { (intSettings)[WR_COMBOX[0].key]= 1; } break;	// Refl
 				case 2: { (intSettings)[WR_COMBOX[0].key]= 3; } break;	// Refl + Refr
 				case 3: { (intSettings)[WR_COMBOX[0].key]= 2; } break;	// Dyna
+				case 4: { (intSettings)[WR_COMBOX[0].key]= 4; } break;	// BumpWater
 			}
 			break;
 		}
