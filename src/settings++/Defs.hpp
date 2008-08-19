@@ -166,6 +166,15 @@
 #define ID_PATH_USYNC_BTN		701
 #define ID_PATH_OK_BTN			702
 
+//water 4 specific options
+#define ID_W4_BumpWaterBlurReflection       720
+#define ID_W4_BumpWaterTexSizeReflection    721
+#define ID_W4_BumpWaterUseDepthTexture      722
+#define ID_W4_BumpWaterShoreWaves           723
+#define ID_W4_BumpWaterRefraction           724
+#define ID_W4_BumpWaterReflection           725
+#define ID_W4_BumpWaterAnisotropy           730
+
 #define SLI_STYLE (wxSL_LABELS )
 #define WX_DEF_V wxDefaultValidator
 #define WX_DEF_P wxPoint(-1, -1)
@@ -364,7 +373,7 @@ const Control WR_COMBOX[] = {
 const category_sizes_map_type WR_COMBOX_entry ( _T("WR_COMBOX"), sizeof(WR_COMBOX) / Control_size );
 
 const wxString WR_COMBOX_CHOICES[] = {
-	_("Basic"), _("Reflective"), _("Reflective + refractive"), _("Dynamic")
+	_("Basic"), _("Reflective"), _("Reflective + refractive"), _("Dynamic"), _("Bump-mapped")
 };
 
 const Control MO_CBOX[] = {
@@ -391,9 +400,27 @@ const Control RC_TEXT[] = {
 
 const category_sizes_map_type RC_TEXT_entry ( _T("RC_TEXT"), sizeof(RC_TEXT) / Control_size );
 
+
+const Control W4_CONTROLS[] = {
+    {_("Blur reflection"), _T("BumpWaterBlurReflection"), ID_W4_BumpWaterBlurReflection , _T("1"), {_("")}},
+    {_("Reflection texture size"), _T("BumpWaterTexSizeReflection"), ID_W4_BumpWaterTexSizeReflection , _T("0"), {_("")}},
+    {_("Use depth texture"), _T("BumpWaterUseDepthTexture"), ID_W4_BumpWaterUseDepthTexture , _T("1"), {_("enables smoother blending on coastlines")}},
+    {_("Shore waves"), _T("BumpWaterShoreWaves"), ID_W4_BumpWaterShoreWaves , _T("0"), {_("Enables shorewaves")}},
+    {_("Refraction"), _T("BumpWaterRefraction"), ID_W4_BumpWaterRefraction , _T("1"), {_("Turn on water refractions.\n(0:=off, 1:=screencopy(fast), 2:=own rendering pass(slow)).")}},
+    {_("Reflection"), _T("BumpWaterReflection"), ID_W4_BumpWaterReflection , _T("1"), {_("Turn on water reflections")}},
+    {_("Anisotropy"), _T("BumpWaterAnisotropy"), ID_W4_BumpWaterAnisotropy , _T("0"), {_("")}},
+    //     {_(""), _T(""), ID_W4_ , _T(""), {_("")}},
+    //     {_(""), _T(""), ID_W4_ , _T(""), {_("")}},
+    //     {_(""), _T(""), ID_W4_ , _T(""), {_("")}},
+    //     {_(""), _T(""), ID_W4_ , _T(""), {_("")}},
+
+};
+
+const category_sizes_map_type W4_CONTROLS_entry ( _T("W4_CONTROLS"), sizeof(W4_CONTROLS) / Control_size );
+
 const category_sizes_map_type entries_[] = { RC_TEXT_entry, MO_RBUT_entry, MO_CBOX_entry, WR_COMBOX_entry, DO_CBOX_entry, DO_SLI_entry, MO_SLI_EXT_entry,
                                             MO_SLI_entry, UI_CBOX_entry, QA_CBOX_entry, AO_SLI_entry, AO_SLI_entry, VO_SLI_EXT_entry, VO_SLI_entry,
-                                            VO_RBUT_entry, VO_CBOX_entry, RO_SLI_entry, UI_ZOOM_entry};
+                                            VO_RBUT_entry, VO_CBOX_entry, RO_SLI_entry, UI_ZOOM_entry, W4_CONTROLS_entry};
 
 static category_sizes_map s_category_sizes ( entries_ , entries_ + sizeof(entries_) / sizeof(entries_[0]) );
 

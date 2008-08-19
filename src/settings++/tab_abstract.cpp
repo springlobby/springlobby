@@ -41,12 +41,12 @@
 
 intMap abstract_panel::intSettings;
 //stringMap abstract_panel::stringSettings;
-//floatMap abstract_panel::floatSettings;
+floatMap abstract_panel::floatSettings;
 
 bool abstract_panel::settingsChanged = false;
 //const category_sizes_map s_category_sizes ( entries_ , entries_ + sizeof(entries_[0]) );
 
-const Control allControls[] = {
+const Control intControls[] = {
 		// RO_SLI[8]
 		RO_SLI[0],RO_SLI[1],RO_SLI[2],RO_SLI[3],RO_SLI[4],RO_SLI[5],RO_SLI[6],RO_SLI[7],
 		// VO_CBOX[3]
@@ -82,10 +82,20 @@ const Control allControls[] = {
 		//RC_TEXT[2]
 		RC_TEXT[0],RC_TEXT[1],
 		//UI_ZOOM[1]
-		UI_ZOOM[0]
+		UI_ZOOM[0],
+                //W4_CONTROLS[7]
+                W4_CONTROLS[0],W4_CONTROLS[1],W4_CONTROLS[2],W4_CONTROLS[3],
+                W4_CONTROLS[4],W4_CONTROLS[5]
+                
 };
 
-const int allControls_size = sizeof(allControls) / sizeof(allControls[0] ) ;
+const Control floatControls[] = {
+                W4_CONTROLS[6]
+};
+
+const int intControls_size = sizeof(intControls) / sizeof(intControls[0] ) ;
+const int floatControls_size = sizeof(floatControls) / sizeof(floatControls[0] ) ;
+const int allControls_size = intControls_size + floatControls_size;
 
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title) {
@@ -101,9 +111,13 @@ bool abstract_panel::loadValuesIntoMap()
 {
 	try
 	{
-		for (int i = 0; i< allControls_size;++i)
+		for (int i = 0; i< intControls_size;++i)
 		{
-			intSettings[allControls[i].key] = configHandler->GetSpringConfigInt(allControls[i].key,fromString(allControls[i].def));
+			intSettings[intControls[i].key] = configHandler->GetSpringConfigInt(intControls[i].key,fromString(intControls[i].def));
+		}
+                for (int i = 0; i< floatControls_size;++i)
+		{
+			floatSettings[floatControls[i].key] = configHandler->GetSpringConfigInt(floatControls[i].key,fromString(floatControls[i].def));
 		}
 	}
 	catch (...)
@@ -386,7 +400,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		case ID_WINDOWP_WR_COMBOX:
 		{
 			int choiceIndex=0;
-			for (int i =1; i<sizeof(WR_COMBOX_CHOICES)/sizeof(WR_COMBOX_CHOICES[0]);++i)
+			for (unsigned int i =1; i<sizeof(WR_COMBOX_CHOICES)/sizeof(WR_COMBOX_CHOICES[0]);++i)
 			{
 				if (choice==WR_COMBOX_CHOICES[i])
 					choiceIndex = i;
@@ -465,11 +479,10 @@ bool abstract_panel::saveSettings() {
 //	    	//not used
 //	        //configHandler->SetSpringConfigString(s->first,s->second);
 //	    }
-//	    for (floatMap::iterator f = floatSettings.begin(); f != floatSettings.end();++f)
-//	    {
-//	        // not used
-//	        //configHandler->SetSpringConfigFloat(f->first,f->second);
-//	    }
+	    for (floatMap::iterator f = floatSettings.begin(); f != floatSettings.end();++f)
+	    {
+	        configHandler->SetSpringConfigFloat(f->first,f->second);
+	    }
     } catch (...) {
     	customMessageBox(SS_MAIN_ICON,_("Could not save, unitsync not properly loaded"), _("SpringSettings Error"), wxOK|wxICON_HAND, 0);
     	return false;
