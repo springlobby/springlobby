@@ -18,7 +18,7 @@ typedef std::map<wxString,wxString> LocalArchivesVector;
 class SpringUnitSync : public IUnitSync
 {
   public:
-    SpringUnitSync(): m_map_count(0),m_mod_count(0),m_side_count(0) { }
+    SpringUnitSync() { }
     ~SpringUnitSync() { FreeUnitSyncLib(); }
 
     int GetNumMods();
@@ -85,10 +85,6 @@ class SpringUnitSync : public IUnitSync
     LocalArchivesVector m_mods_list; /// modhash -> modname
     wxArrayString m_map_array;
     wxArrayString m_mod_array;
-
-    int m_map_count;
-    int m_mod_count;
-    int m_side_count;
 
     wxCriticalSection m_lock;
 
