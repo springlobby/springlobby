@@ -221,8 +221,8 @@ void tab_quality_video::initW4Sizer(wxSizer* sizer)
 
     wxSpinCtrlDbl* tempspin = new wxSpinCtrlDbl();
     tempspin->Create(this, W4_CONTROLS[6].id, _T(""),
-            wxDefaultPosition, wxDefaultSize, 0, -0.05f, 6.f,
-            0.f,0.1f, wxSPINCTRLDBL_AUTODIGITS, _T(""));
+            wxDefaultPosition, wxDefaultSize, 0, 0.00f, 6.f,
+            0.f,0.25f, wxSPINCTRLDBL_AUTODIGITS, _T(""));
     tempspin->SetToolTip(W4_CONTROLS[6].tTip[0]);
 	m_w4_controls.push_back( (wxControl*) tempspin );
     sizer->Add( tempspin, 0, wxEXPAND|wxTOP, 0 );
