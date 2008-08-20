@@ -32,6 +32,7 @@ c    This file is part of springsettings,
 #include <wx/checkbox.h>
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
+#include "spinctld.h"
 
 #include "Defs.hpp"
 
@@ -135,7 +136,7 @@ void tab_quality_video::updateControls(int what_to_update)
                     ( (wxComboBox*)tmp)->SetValue( W4_REFRACTION_CHOICES[ intSettings[W4_CONTROLS[i].key ] ] );
                     break;
                 case 6:
-                    ( (wxCheckBox*)tmp )->SetValue( intSettings[W4_CONTROLS[i].key ] );
+                    ( (wxSpinCtrlDbl*)tmp )->SetValue( floatSettings[W4_CONTROLS[i].key ] );
                     break;
             }
         }
@@ -218,6 +219,13 @@ void tab_quality_video::initW4Sizer(wxSizer* sizer)
 	m_w4_controls.push_back( (wxControl*) refractionCom );
     sizer->Add( refractionCom, 0, wxEXPAND|wxTOP, 0 );
 
+    wxSpinCtrlDbl* tempspin = new wxSpinCtrlDbl();
+    tempspin->Create(this, W4_CONTROLS[6].id, _T(""),
+            wxDefaultPosition, wxDefaultSize, 0, -0.05f, 6.f,
+            0.f,0.1f, wxSPINCTRLDBL_AUTODIGITS, _T(""));
+    tempspin->SetToolTip(W4_CONTROLS[6].tTip[0]);
+	m_w4_controls.push_back( (wxControl*) tempspin );
+    sizer->Add( tempspin, 0, wxEXPAND|wxTOP, 0 );
 
 
 }
@@ -308,6 +316,7 @@ BEGIN_EVENT_TABLE(tab_quality_video, abstract_panel)
 	EVT_TEXT(ID_RES_CHOICES_LBOX_X, tab_quality_video::OnTextUpdate)
 	EVT_TEXT(ID_RES_CHOICES_LBOX_Y, tab_quality_video::OnTextUpdate)
 	EVT_CHECKBOX(wxID_ANY,          tab_quality_video::OnCheckBoxTick)
+    EVT_SPINCTRL(wxID_ANY, 			tab_quality_video::OnSpinControlChange)
 	EVT_RADIOBUTTON(wxID_ANY,       tab_quality_video::OnRadioButtonToggle)
 	//EVT_IDLE(                       tab_quality_video::update)
     EVT_COMBOBOX(wxID_ANY, 		tab_quality_video::OnComboBoxChange)

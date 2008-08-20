@@ -38,6 +38,7 @@
 #include "se_utils.h"
 #include "se_settings.h"
 #include "presets.h"
+#include "spinctld.h"
 
 intMap abstract_panel::intSettings;
 //stringMap abstract_panel::stringSettings;
@@ -117,7 +118,8 @@ bool abstract_panel::loadValuesIntoMap()
 		}
                 for (int i = 0; i< floatControls_size;++i)
 		{
-			floatSettings[floatControls[i].key] = configHandler->GetSpringConfigInt(floatControls[i].key,fromString(floatControls[i].def));
+			float tmp = configHandler->GetSpringConfigFloat(floatControls[i].key,fromString(floatControls[i].def));
+			floatSettings[floatControls[i].key] = tmp;
 		}
 	}
 	catch (...)
@@ -197,8 +199,13 @@ void abstract_panel::loadDefaults()
 		intSettings[RC_TEXT[i].key] = fromString( RC_TEXT[i].def);
 
 	//	const Control UI_ZOOM[1]
-	for (int i = 0;i< s_category_sizes[_T("UI_ZOOM ")]; ++i)
+	for (int i = 0;i< s_category_sizes[_T("UI_ZOOM")]; ++i)
 		intSettings[UI_ZOOM[i].key] = fromString( UI_ZOOM[i].def);
+
+    for (int i = 0;i< s_category_sizes[_T("W4_CONTROLS")] - 1; ++i)
+		intSettings[W4_CONTROLS[i].key] = fromString( W4_CONTROLS[i].def);
+
+    floatSettings[W4_CONTROLS[ s_category_sizes[_T("W4_CONTROLS")]  ].key] = fromString( W4_CONTROLS[ s_category_sizes[_T("W4_CONTROLS")] ].def);
 
 }
 
@@ -360,6 +367,16 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 			(intSettings)[UI_CBOX[i].key]= checked;
 		} break;
 
+		case ID_W4_BumpWaterBlurReflection:
+		case ID_W4_BumpWaterReflection:
+		case ID_W4_BumpWaterShoreWaves:
+		case ID_W4_BumpWaterUseDepthTexture:
+		case ID_W4_BumpWaterTexSizeReflection:{
+            int i = id - W4_CONTROLS[0].id;
+            (intSettings)[W4_CONTROLS[i].key]= checked;}
+            break;
+
+
 		case ID_WINDOWP_DO_CBOX_0: { (intSettings)[DO_CBOX[0].key]= checked; } break;
 		case ID_WINDOWP_DO_CBOX_1: { (intSettings)[DO_CBOX[1].key]= checked; } break;
 
@@ -415,6 +432,19 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 			break;
 		}
 
+		case ID_W4_BumpWaterRefraction:
+		{
+            int choiceIndex=0;
+			for (unsigned int i =1; i<sizeof(W4_REFRACTION_CHOICES)/sizeof(W4_REFRACTION_CHOICES[0]);++i)
+			{
+				if (choice==W4_REFRACTION_CHOICES[i])
+					choiceIndex = i;
+			}
+
+		    (intSettings)[W4_CONTROLS[5].key]= choiceIndex;
+		    break;
+		}
+
 		case ID_SIMPLE_QUAL_CBX:
 		{
 			for (int i=0; i<prVal_RenderQuality_size;++i)
@@ -463,6 +493,12 @@ void abstract_panel::OnSpinControlChange(wxSpinEvent& event)
 	{
 		wxSpinCtrl* zoom = (wxSpinCtrl*) event.GetEventObject();
 		(intSettings)[UI_ZOOM[0].key] = zoom->GetValue();
+		settingsChanged = true;
+	}
+	if (event.GetId()==ID_W4_BumpWaterAnisotropy)
+	{
+		wxSpinCtrlDbl* aniso = (wxSpinCtrlDbl*) event.GetEventObject();
+		(floatSettings)[W4_CONTROLS[6].key] = aniso->GetValue();
 		settingsChanged = true;
 	}
 }
