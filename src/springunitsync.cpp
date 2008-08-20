@@ -581,24 +581,15 @@ wxString SpringUnitSync::GetSideName( const wxString& modname, int index )
   wxArrayString cache;
   try
   {
-    cache = GetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidenames") );
-    if ( cache.GetCount() < index || cache[index] == _T("\0\t ") )
-    {
-      for ( unsigned int count = cache.GetCount(); count < index; count++ ) cache.Add( _T("\0\t ") ); /// add void lines if entries not exist (the weird chars is an hax because of wxArrayString idiocy)
-      susynclib()->GetSideCount( modname );
-      cache[index] = susynclib()->GetSideName( modname, index );
-      SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidenames"), cache );
-    }
-
+    cache = GetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T("-") + TowxString( index ) + _T(".sidename") );
   }
   catch (...)
   {
-    for ( unsigned int count = cache.GetCount(); count < index + 1; count++ ) cache.Add( _T("\0\t ") ); /// add empty lines if entries not exist (the weird chars is an hax because of wxArrayString idiocy)
     susynclib()->GetSideCount( modname );
-    cache[index] = susynclib()->GetSideName( modname, index );
-    SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidenames"), cache );
+    cache.Add( susynclib()->GetSideName( modname, index ) );
+    SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T("-") + TowxString( index ) + _T(".sidename"), cache );
   }
-  return cache[index];
+  return cache[0];
 }
 
 
