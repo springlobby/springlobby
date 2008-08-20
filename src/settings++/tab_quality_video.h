@@ -24,9 +24,11 @@
 #define __TAB_QUALITY_VIDEO_h__
 
 #include "tab_abstract.h"
+#include <vector>
 
 class wxComboBox;
 class wxCheckBox;
+class wxBoxSizer;
 class wxTextCtrl;
 class wxFlexGridSizer;
 class wxRadioButton;
@@ -49,7 +51,10 @@ class tab_quality_video : public abstract_panel
 		void initQualitySizer(wxFlexGridSizer* );
 		void initAASizer(wxFlexGridSizer* );
 		void initZBufferSizer(wxFlexGridSizer* );
+		void initW4Sizer(wxSizer* );
 		void updateControls(int);
+		virtual void OnComboBoxChange(wxCommandEvent& event);
+
 	private:
 		void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
@@ -67,17 +72,23 @@ class tab_quality_video : public abstract_panel
 		wxRadioButton* ctrl_z_radio2;
 
 		wxSizer* parentSizer ;
-			wxSizer* leftSizer ;
-			wxSizer* middleSizer;
-			wxSizer* rightSizer;
-			wxFlexGridSizer* SizerA ;
-			wxFlexGridSizer* SizerB ;
-			wxFlexGridSizer* SizerC ;
-			wxFlexGridSizer* SizerD ;
-			wxStaticBoxSizer* boxA ;
-			wxStaticBoxSizer* boxB ;
-			wxStaticBoxSizer* boxC ;
-			wxStaticBoxSizer* boxD ;
+        wxSizer* leftSizer ;
+        wxSizer* middleSizer;
+        wxSizer* rightSizer;
+        wxFlexGridSizer* SizerA ;
+        wxFlexGridSizer* SizerB ;
+        wxFlexGridSizer* SizerC ;
+        wxFlexGridSizer* SizerD ;
+        wxBoxSizer* SizerE ;
+        wxStaticBoxSizer* boxA ;
+        wxStaticBoxSizer* boxB ;
+        wxStaticBoxSizer* boxC ;
+        wxStaticBoxSizer* boxD ;
+        wxStaticBoxSizer* boxE ;
+
+        bool m_enable_w4;
+
+        std::vector<wxControl*> m_w4_controls;
 
     protected:
 		DECLARE_EVENT_TABLE()

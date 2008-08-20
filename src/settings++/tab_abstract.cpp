@@ -83,10 +83,10 @@ const Control intControls[] = {
 		RC_TEXT[0],RC_TEXT[1],
 		//UI_ZOOM[1]
 		UI_ZOOM[0],
-                //W4_CONTROLS[7]
-                W4_CONTROLS[0],W4_CONTROLS[1],W4_CONTROLS[2],W4_CONTROLS[3],
-                W4_CONTROLS[4],W4_CONTROLS[5]
-                
+        //W4_CONTROLS[7]
+        W4_CONTROLS[0],W4_CONTROLS[1],W4_CONTROLS[2],W4_CONTROLS[3],
+        W4_CONTROLS[4],W4_CONTROLS[5]
+
 };
 
 const Control floatControls[] = {

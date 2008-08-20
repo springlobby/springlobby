@@ -96,6 +96,7 @@ void tab_quality_video::updateControls(int what_to_update)
 			ctrl_qa_Boxes[i]->SetValue(intSettings[QA_CBOX[i].key]);
 		}
 
+        m_enable_w4 = false;
 		int waterOptIndex = 0;
 		int waterSetting = intSettings[WR_COMBOX[0].key];
 		switch (waterSetting)
@@ -104,7 +105,7 @@ void tab_quality_video::updateControls(int what_to_update)
 		case 1: waterOptIndex = waterSetting; break;
 		case 2: waterOptIndex = 3; break;
 		case 3: waterOptIndex = 2; break;
-		case 4: waterOptIndex = 4; break;
+		case 4: waterOptIndex = 4; m_enable_w4 = true; break;
 		}
 		ctrl_waterQ_CBox->SetValue(WR_COMBOX_CHOICES[waterOptIndex]);
 
@@ -116,6 +117,28 @@ void tab_quality_video::updateControls(int what_to_update)
 		case 16: { ctrl_z_radio1->SetValue(1); } break;
 		case 24: { ctrl_z_radio2->SetValue(1); } break;
 		}
+
+	}
+	if (what_to_update == UPDATE_W4_CONTROLS || what_to_update == UPDATE_ALL)
+	{
+        for ( unsigned int i = 0; i < m_w4_controls.size(); ++i )
+        {
+            wxControl* tmp  = m_w4_controls[i];
+            tmp->Enable( m_enable_w4 );
+            switch ( i )
+            {
+                case 0: case 1: case 2: case 3: case 4:
+                    ( (wxCheckBox*)tmp )->SetValue( intSettings[W4_CONTROLS[i].key ] );
+                    break;
+                case 5:
+                    //int choice =  ;
+                    ( (wxComboBox*)tmp)->SetValue( W4_REFRACTION_CHOICES[ intSettings[W4_CONTROLS[i].key ] ] );
+                    break;
+                case 6:
+                    ( (wxCheckBox*)tmp )->SetValue( intSettings[W4_CONTROLS[i].key ] );
+                    break;
+            }
+        }
 	}
 
 
@@ -179,6 +202,28 @@ void tab_quality_video::initZBufferSizer(wxFlexGridSizer* sizer)
 
 }
 
+void tab_quality_video::initW4Sizer(wxSizer* sizer)
+{
+    for ( int i = 0; i < 5; ++i ) {
+        wxCheckBox* blurChk = new wxCheckBox( this, W4_CONTROLS[i].id, W4_CONTROLS[i].lbl );
+        m_w4_controls.push_back( (wxControl*) blurChk );
+        blurChk->SetToolTip( W4_CONTROLS[i].tTip[0] );
+        sizer->Add( blurChk, 0, wxEXPAND|wxTOP, 0 );
+    }
+
+    sizer->Add(new wxStaticText(this, -1, (W4_CONTROLS[5].lbl)) , 0, wxTOP|wxEXPAND, 10);
+    wxComboBox* refractionCom = new wxComboBox(this, W4_CONTROLS[5].id, W4_REFRACTION_CHOICES[0], wxDefaultPosition, wxSize(220,21),
+			3,W4_REFRACTION_CHOICES,wxCB_DROPDOWN|wxCB_READONLY);
+	refractionCom->SetToolTip(W4_CONTROLS[5].tTip[0]);
+	m_w4_controls.push_back( (wxControl*) refractionCom );
+    sizer->Add( refractionCom, 0, wxEXPAND|wxTOP, 0 );
+
+
+
+}
+
+
+
 tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos ,
 		const wxSize& size, long style)
 : abstract_panel(parent, id , title , pos , size, style) {
@@ -192,10 +237,12 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
 	 SizerB = new wxFlexGridSizer(1,15,10);
 	 SizerC = new wxFlexGridSizer(1,15,10);
 	 SizerD = new wxFlexGridSizer(1,5,10);
+	 SizerE = new wxBoxSizer(wxVERTICAL);
 	 boxA = new wxStaticBoxSizer(wxVERTICAL ,this,_("Render Quality Options"));
 	 boxB = new wxStaticBoxSizer(wxVERTICAL ,this,_("Video Mode Options"));
 	 boxC = new wxStaticBoxSizer(wxVERTICAL ,this,_("Anti-Aliasing Options"));
 	 boxD = new wxStaticBoxSizer(wxVERTICAL ,this,_("Z-/Depth-Buffer"));
+	 boxE = new wxStaticBoxSizer(wxVERTICAL ,this,_("Water 4"));
 	SizerA->AddGrowableCol(0);
 	SizerB->AddGrowableCol(0);
 	SizerC->AddGrowableCol(0);
@@ -205,6 +252,7 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
 	initZBufferSizer(SizerD);
 	initQualitySizer(SizerA);
 	initAASizer(SizerC);
+	initW4Sizer(SizerE);
 
 	SizerA->Fit(this);
 	SizerA->SetSizeHints(this);
@@ -214,13 +262,17 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
 	SizerC->SetSizeHints(this);
 	SizerD->Fit(this);
 	SizerD->SetSizeHints(this);
+	SizerE->Fit(this);
+	SizerE->SetSizeHints(this);
 
 	boxA->Add(SizerA,1,wxEXPAND);
 	boxB->Add(SizerB,1,wxEXPAND);
 	boxC->Add(SizerC,1,wxEXPAND);
 	boxD->Add(SizerD,1,wxEXPAND);
+	boxE->Add(SizerE,1,wxEXPAND);
 	leftSizer->Add(boxB,1,wxEXPAND|wxALL,5);
 	rightSizer->Add(boxC,1,wxEXPAND|wxALL,5);
+	rightSizer->Add(boxE,1,wxEXPAND|wxALL,5);
 	middleSizer->Add(boxA,1,wxEXPAND|wxALL,5);
 	leftSizer->Add(boxD,1,wxEXPAND|wxALL,5);
 	parentSizer->Add(leftSizer,0,wxALL|wxEXPAND,10);
@@ -238,6 +290,19 @@ tab_quality_video::~tab_quality_video(void) {
 
 }
 
+void tab_quality_video::OnComboBoxChange(wxCommandEvent& event)
+{
+    if ( event.GetId() == ID_WINDOWP_WR_COMBOX )
+    {
+        wxComboBox* comboBox = (wxComboBox*) event.GetEventObject();
+        const wxString choice = comboBox->GetValue();
+        m_enable_w4 = ( choice == WR_COMBOX_CHOICES[4] );
+        updateControls( UPDATE_W4_CONTROLS );
+    }
+
+    abstract_panel::OnComboBoxChange( event );
+}
+
 BEGIN_EVENT_TABLE(tab_quality_video, abstract_panel)
 	EVT_SLIDER(wxID_ANY,            tab_quality_video::OnSliderMove)
 	EVT_TEXT(ID_RES_CHOICES_LBOX_X, tab_quality_video::OnTextUpdate)
@@ -245,5 +310,5 @@ BEGIN_EVENT_TABLE(tab_quality_video, abstract_panel)
 	EVT_CHECKBOX(wxID_ANY,          tab_quality_video::OnCheckBoxTick)
 	EVT_RADIOBUTTON(wxID_ANY,       tab_quality_video::OnRadioButtonToggle)
 	//EVT_IDLE(                       tab_quality_video::update)
-EVT_COMBOBOX(ID_WINDOWP_WR_COMBOX, 		tab_quality_video::OnComboBoxChange)
+    EVT_COMBOBOX(wxID_ANY, 		tab_quality_video::OnComboBoxChange)
 END_EVENT_TABLE()
