@@ -405,12 +405,12 @@ const category_sizes_map_type RC_TEXT_entry ( _T("RC_TEXT"), sizeof(RC_TEXT) / C
 const Control W4_CONTROLS[] = {
     //booleans = checkboxes
     {_("Blur reflection"), _T("BumpWaterBlurReflection"), ID_W4_BumpWaterBlurReflection , _T("1"), {_("")}},
-    {_("Reflection texture size"), _T("BumpWaterTexSizeReflection"), ID_W4_BumpWaterTexSizeReflection , _T("0"), {_("")}},
     {_("Use depth texture"), _T("BumpWaterUseDepthTexture"), ID_W4_BumpWaterUseDepthTexture , _T("1"), {_("enables smoother blending on coastlines")}},
     {_("Shore waves"), _T("BumpWaterShoreWaves"), ID_W4_BumpWaterShoreWaves , _T("0"), {_("Enables shorewaves")}},
     {_("Reflection"), _T("BumpWaterReflection"), ID_W4_BumpWaterReflection , _T("1"), {_("Turn on water reflections")}},
     // select boxes
     {_("Refraction"), _T("BumpWaterRefraction"), ID_W4_BumpWaterRefraction , _T("1"), {_("Turn on water refractions.\n(0:=off, 1:=screencopy(fast), 2:=own rendering pass(slow)).")}},
+    {_("Reflection texture size"), _T("BumpWaterTexSizeReflection"), ID_W4_BumpWaterTexSizeReflection , _T("128"), {_("")}},
     // spin control
     {_("Anisotropy"), _T("BumpWaterAnisotropy"), ID_W4_BumpWaterAnisotropy , _T("0"), {_("")}},
     //     {_(""), _T(""), ID_W4_ , _T(""), {_("")}},

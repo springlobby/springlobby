@@ -43,7 +43,7 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 	for (int i = 0; i < ctrl_vo_Boxes_size; i++) {
 		ctrl_vo_Boxes[i] = new wxCheckBox(this, VO_CBOX[i].id, (VO_CBOX[i].lbl));
 		ctrl_vo_Boxes[i]->SetToolTip(VO_CBOX[i].tTip[0]);
-		sizer->Add(ctrl_vo_Boxes[i], 0, wxTOP, (i == 0)? 10: 0);
+		sizer->Add(ctrl_vo_Boxes[i], 0, wxTOP, (i == 0)? 5 0);
 	}
 
 	ctrl_x_res = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_X,_T(""), WX_DEF_P, wxSize(60, 20), 0);
@@ -61,7 +61,7 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 	subSizer->Add(ctrl_y_res, 0, wxALIGN_RIGHT, 10);
 
 	wxSizer* subSizer2 = new wxBoxSizer(wxVERTICAL);
-	subSizer2->Add(new wxStaticText(this, -1, _("Screen Resolution")), 1, wxTOP|wxEXPAND , 15);
+	subSizer2->Add(new wxStaticText(this, -1, _("Screen Resolution")), 1, wxTOP|wxEXPAND , 10);
 	subSizer2->Add(subSizer);
 	sizer->Add(subSizer2);
 	sizer->Add(0,5,0);
@@ -178,7 +178,7 @@ void tab_quality_video::initAASizer(wxFlexGridSizer* sizer){
 		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, (QA_CBOX[i].lbl));
 		//ctrl_qa_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(QA_CBOX[i].key,fromString(QA_CBOX[i].def)));
 		ctrl_qa_Boxes[i]->SetToolTip(QA_CBOX[i].tTip[0]);
-		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 8)? 10: 0);
+		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 8)? 5: 0);
 	}
 	wxSizer* subsizer = new wxBoxSizer(wxVERTICAL);
 
@@ -212,23 +212,24 @@ void tab_quality_video::initW4Sizer(wxSizer* sizer)
         wxCheckBox* blurChk = new wxCheckBox( this, W4_CONTROLS[i].id, W4_CONTROLS[i].lbl );
         m_w4_controls.push_back( (wxControl*) blurChk );
         blurChk->SetToolTip( W4_CONTROLS[i].tTip[0] );
-        sizer->Add( blurChk, 0, wxEXPAND|wxTOP, 0 );
+        sizer->Add( blurChk, 0, wxEXPAND|wxALL, 4 );
     }
 
-    sizer->Add(new wxStaticText(this, -1, (W4_CONTROLS[5].lbl)) , 0, wxTOP|wxEXPAND, 10);
+    sizer->Add(new wxStaticText(this, -1, (W4_CONTROLS[5].lbl)) , 0, wxTOP|wxEXPAND, 5);
     wxComboBox* refractionCom = new wxComboBox(this, W4_CONTROLS[5].id, W4_REFRACTION_CHOICES[0], wxDefaultPosition, wxSize(220,21),
 			3,W4_REFRACTION_CHOICES,wxCB_DROPDOWN|wxCB_READONLY);
 	refractionCom->SetToolTip(W4_CONTROLS[5].tTip[0]);
 	m_w4_controls.push_back( (wxControl*) refractionCom );
-    sizer->Add( refractionCom, 0, wxEXPAND|wxTOP, 0 );
+    sizer->Add( refractionCom, 0, wxEXPAND|wxALL, 4 );
 
+    sizer->Add(new wxStaticText(this, -1, (W4_CONTROLS[6].lbl)) , 0, wxTOP|wxEXPAND, 5);
     m_aniso_spin = new wxSpinCtrlDbl();
     m_aniso_spin->Create(this, W4_CONTROLS[6].id, _T(""),
             wxDefaultPosition, wxDefaultSize, 0, 0.f, 6.f,
             0.f,0.25f, wxSPINCTRLDBL_AUTODIGITS, _T(""));
     m_aniso_spin->SetToolTip(W4_CONTROLS[6].tTip[0]);
 	m_w4_controls.push_back( (wxControl*) m_aniso_spin );
-    sizer->Add( m_aniso_spin, 0, wxEXPAND|wxTOP, 0 );
+    sizer->Add( m_aniso_spin, 0, wxEXPAND|wxALL, 4 );
 
 
 }
