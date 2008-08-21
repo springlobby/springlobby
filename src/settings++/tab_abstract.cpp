@@ -116,7 +116,7 @@ bool abstract_panel::loadValuesIntoMap()
 		{
 			intSettings[intControls[i].key] = configHandler->GetSpringConfigInt(intControls[i].key,fromString(intControls[i].def));
 		}
-                for (int i = 0; i< floatControls_size;++i)
+        for (int i = 0; i< floatControls_size;++i)
 		{
 			float tmp = configHandler->GetSpringConfigFloat(floatControls[i].key,fromString(floatControls[i].def));
 			floatSettings[floatControls[i].key] = tmp;
@@ -447,13 +447,28 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 
 		case ID_SIMPLE_QUAL_CBX:
 		{
+
 			for (int i=0; i<prVal_RenderQuality_size;++i)
 			{
 				presetValues<int,5> pop = prVal_RenderQuality[i];
-				 int k = (pop.values[choice]);
+                int k = (pop.values[choice]);
 
 				(intSettings)[prVal_RenderQuality[i].key]= k;
 			}
+
+			for (int i=0; i<prVal_W4_size;++i)
+			{
+				presetValues<int,5> pop = prVal_W4[i];
+				int k = (pop.values[choice]);
+
+				(intSettings)[prVal_W4[i].key]= k;
+			}
+
+			presetValues<float,5> pop = pr_w4_BumpWaterAnisotropy;
+			float k = (pop.values[choice]);
+			wxString key = pr_w4_BumpWaterAnisotropy.key;
+            (floatSettings)[key] = k;
+            //float debug = (floatSettings)[key]
 			break;
 		}
 		case ID_SIMPLE_DETAIL_CBX:

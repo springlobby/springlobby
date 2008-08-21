@@ -136,10 +136,13 @@ void tab_quality_video::updateControls(int what_to_update)
                     ( (wxComboBox*)tmp)->SetValue( W4_REFRACTION_CHOICES[ intSettings[W4_CONTROLS[i].key ] ] );
                     break;
                 case 6:
-                    ( (wxSpinCtrlDbl*)tmp )->SetValue( floatSettings[W4_CONTROLS[i].key ] );
+                    //doesn't work if catsed from wxControl like the others
+                    double tmpval = double(floatSettings[W4_CONTROLS[i].key ]) ;
+                    m_aniso_spin->SetValue(tmpval);
                     break;
             }
         }
+
 	}
 
 
@@ -219,13 +222,13 @@ void tab_quality_video::initW4Sizer(wxSizer* sizer)
 	m_w4_controls.push_back( (wxControl*) refractionCom );
     sizer->Add( refractionCom, 0, wxEXPAND|wxTOP, 0 );
 
-    wxSpinCtrlDbl* tempspin = new wxSpinCtrlDbl();
-    tempspin->Create(this, W4_CONTROLS[6].id, _T(""),
-            wxDefaultPosition, wxDefaultSize, 0, 0.00f, 6.f,
+    m_aniso_spin = new wxSpinCtrlDbl();
+    m_aniso_spin->Create(this, W4_CONTROLS[6].id, _T(""),
+            wxDefaultPosition, wxDefaultSize, 0, 0.f, 6.f,
             0.f,0.25f, wxSPINCTRLDBL_AUTODIGITS, _T(""));
-    tempspin->SetToolTip(W4_CONTROLS[6].tTip[0]);
-	m_w4_controls.push_back( (wxControl*) tempspin );
-    sizer->Add( tempspin, 0, wxEXPAND|wxTOP, 0 );
+    m_aniso_spin->SetToolTip(W4_CONTROLS[6].tTip[0]);
+	m_w4_controls.push_back( (wxControl*) m_aniso_spin );
+    sizer->Add( m_aniso_spin, 0, wxEXPAND|wxTOP, 0 );
 
 
 }
