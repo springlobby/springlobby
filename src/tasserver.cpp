@@ -686,7 +686,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         id = GetIntParam( params );
         hash = GetWordParam( params );
         m_battle_id = id;
-        m_se->OnJoinedBattle( id );
+        m_se->OnJoinedBattle( id, hash );
         m_se->OnBattleInfoUpdated( m_battle_id );
     }
     else if ( cmd == _T("CLIENTBATTLESTATUS") )
