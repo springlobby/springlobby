@@ -18,7 +18,7 @@ typedef std::map<wxString,wxString> LocalArchivesVector;
 class SpringUnitSync : public IUnitSync
 {
   public:
-    SpringUnitSync(): m_map_count(0),m_mod_count(0),m_side_count(0) { }
+    SpringUnitSync() { }
     ~SpringUnitSync() { FreeUnitSyncLib(); }
 
     int GetNumMods();
@@ -65,9 +65,7 @@ class SpringUnitSync : public IUnitSync
 
     wxImage GetMinimap( const wxString& mapname, int max_w, int max_h, bool store_size = false );
 
-    bool CacheMapInfo( const wxString& mapname );
     bool CacheMinimap( const wxString& map );
-    bool CacheModUnits( const wxString& mod );
     bool ReloadUnitSyncLib();
 
     void SetSpringDataPath( const wxString& path );
@@ -79,7 +77,7 @@ class SpringUnitSync : public IUnitSync
 
   private:
 
-    static wxString _GetCachedMinimapFileName( const wxString& mapname, int width = -1, int height = -1 );
+    wxString _GetCachedMinimapFileName( const wxString& mapname, int width = -1, int height = -1 );
 
     UnitSyncMap m_map;
 
@@ -88,17 +86,18 @@ class SpringUnitSync : public IUnitSync
     wxArrayString m_map_array;
     wxArrayString m_mod_array;
 
-    int m_map_count;
-    int m_mod_count;
-    int m_side_count;
-
     wxCriticalSection m_lock;
 
 
 //    void* _GetLibFuncPtr( const wxString& name );
 
-    MapInfo _LoadMapInfoExCache( const wxString& mapname );
-    void _SaveMapInfoExCache( const wxString& mapname, const MapInfo& info );
+    //! this function returns only the cache path without the file extension, the extension itself would be added in the function as needed
+    wxString GetFileCachePath( const wxString& name, const wxString& hash, bool IsMod );
+
+    //! returns an array where each element is a line of the file
+    wxArrayString GetCacheFile( const wxString& path );
+    //! write a file where each element of the array is a line
+    void SetCacheFile( const wxString& path, const wxArrayString& data );
 
     bool _LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc );
     void _FreeUnitSyncLib();
