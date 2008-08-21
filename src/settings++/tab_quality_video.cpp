@@ -43,7 +43,7 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 	for (int i = 0; i < ctrl_vo_Boxes_size; i++) {
 		ctrl_vo_Boxes[i] = new wxCheckBox(this, VO_CBOX[i].id, (VO_CBOX[i].lbl));
 		ctrl_vo_Boxes[i]->SetToolTip(VO_CBOX[i].tTip[0]);
-		sizer->Add(ctrl_vo_Boxes[i], 0, wxTOP, (i == 0)? 5 0);
+		sizer->Add(ctrl_vo_Boxes[i], 0, wxTOP, (i == 0)? 5 : 0);
 	}
 
 	ctrl_x_res = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_X,_T(""), WX_DEF_P, wxSize(60, 20), 0);
@@ -128,11 +128,18 @@ void tab_quality_video::updateControls(int what_to_update)
             tmp->Enable( m_enable_w4 );
             switch ( i )
             {
-                case 0: case 1: case 2: case 3: case 4:
+                case 0: case 1: case 2: case 3:
                     ( (wxCheckBox*)tmp )->SetValue( intSettings[W4_CONTROLS[i].key ] );
                     break;
+                case 4:{
+                        int val = intSettings[W4_CONTROLS[i].key ];
+                        for ( unsigned int j = 0; j < sizeof(W4_TEXSIZE_CHOICES)/sizeof(W4_TEXSIZE_CHOICES[0]); ++j){
+                            if ( W4_TEXSIZE_CHOICES[j] == towxString( val ) )
+                            ( (wxComboBox*)tmp)->SetValue( W4_TEXSIZE_CHOICES[ j ] );
+                        }
+                    }
+                    break;
                 case 5:
-                    //int choice =  ;
                     ( (wxComboBox*)tmp)->SetValue( W4_REFRACTION_CHOICES[ intSettings[W4_CONTROLS[i].key ] ] );
                     break;
                 case 6:
@@ -208,12 +215,19 @@ void tab_quality_video::initZBufferSizer(wxFlexGridSizer* sizer)
 
 void tab_quality_video::initW4Sizer(wxSizer* sizer)
 {
-    for ( int i = 0; i < 5; ++i ) {
+    for ( int i = 0; i < 4; ++i ) {
         wxCheckBox* blurChk = new wxCheckBox( this, W4_CONTROLS[i].id, W4_CONTROLS[i].lbl );
         m_w4_controls.push_back( (wxControl*) blurChk );
         blurChk->SetToolTip( W4_CONTROLS[i].tTip[0] );
         sizer->Add( blurChk, 0, wxEXPAND|wxALL, 4 );
     }
+
+    sizer->Add(new wxStaticText(this, -1, (W4_CONTROLS[4].lbl)) , 0, wxTOP|wxEXPAND, 5);
+    wxComboBox* texsizeCom = new wxComboBox(this, W4_CONTROLS[4].id, W4_TEXSIZE_CHOICES[0], wxDefaultPosition, wxSize(220,21),
+			4,W4_TEXSIZE_CHOICES,wxCB_DROPDOWN|wxCB_READONLY);
+	texsizeCom->SetToolTip(W4_CONTROLS[4].tTip[0]);
+	m_w4_controls.push_back( (wxControl*) texsizeCom );
+    sizer->Add( texsizeCom, 0, wxEXPAND|wxALL, 4 );
 
     sizer->Add(new wxStaticText(this, -1, (W4_CONTROLS[5].lbl)) , 0, wxTOP|wxEXPAND, 5);
     wxComboBox* refractionCom = new wxComboBox(this, W4_CONTROLS[5].id, W4_REFRACTION_CHOICES[0], wxDefaultPosition, wxSize(220,21),

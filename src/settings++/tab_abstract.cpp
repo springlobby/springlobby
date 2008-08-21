@@ -370,11 +370,10 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 		case ID_W4_BumpWaterBlurReflection:
 		case ID_W4_BumpWaterReflection:
 		case ID_W4_BumpWaterShoreWaves:
-		case ID_W4_BumpWaterUseDepthTexture:
-		case ID_W4_BumpWaterTexSizeReflection:{
+		case ID_W4_BumpWaterUseDepthTexture:{
             int i = id - W4_CONTROLS[0].id;
-            (intSettings)[W4_CONTROLS[i].key]= checked;}
-            break;
+            (intSettings)[W4_CONTROLS[i].key]= checked;
+            } break;
 
 
 		case ID_WINDOWP_DO_CBOX_0: { (intSettings)[DO_CBOX[0].key]= checked; } break;
@@ -442,6 +441,21 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 			}
 
 		    (intSettings)[W4_CONTROLS[5].key]= choiceIndex;
+		    break;
+		}
+
+		case ID_W4_BumpWaterTexSizeReflection:
+		{
+            int choiceIndex=0;
+			for (unsigned int i =1; i<sizeof(W4_TEXSIZE_CHOICES)/sizeof(W4_TEXSIZE_CHOICES[0]);++i)
+			{
+				if (choice==W4_TEXSIZE_CHOICES[i])
+					choiceIndex = i;
+			}
+
+            long val = 128;
+            choice.ToLong( &val );
+		    (intSettings)[W4_CONTROLS[4].key]= val;
 		    break;
 		}
 

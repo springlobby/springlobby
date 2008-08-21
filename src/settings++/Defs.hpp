@@ -168,12 +168,12 @@
 
 //water 4 specific options
 #define ID_W4_BumpWaterBlurReflection       720
-#define ID_W4_BumpWaterTexSizeReflection    721
-#define ID_W4_BumpWaterUseDepthTexture      722
-#define ID_W4_BumpWaterShoreWaves           723
-#define ID_W4_BumpWaterRefraction           724
-#define ID_W4_BumpWaterReflection           725
-#define ID_W4_BumpWaterAnisotropy           730
+#define ID_W4_BumpWaterUseDepthTexture      721
+#define ID_W4_BumpWaterShoreWaves           722
+#define ID_W4_BumpWaterReflection           723
+#define ID_W4_BumpWaterTexSizeReflection    724
+#define ID_W4_BumpWaterRefraction           725
+#define ID_W4_BumpWaterAnisotropy           726
 
 #define SLI_STYLE (wxSL_LABELS )
 #define WX_DEF_V wxDefaultValidator
@@ -409,8 +409,8 @@ const Control W4_CONTROLS[] = {
     {_("Shore waves"), _T("BumpWaterShoreWaves"), ID_W4_BumpWaterShoreWaves , _T("0"), {_("Enables shorewaves")}},
     {_("Reflection"), _T("BumpWaterReflection"), ID_W4_BumpWaterReflection , _T("1"), {_("Turn on water reflections")}},
     // select boxes
-    {_("Refraction"), _T("BumpWaterRefraction"), ID_W4_BumpWaterRefraction , _T("1"), {_("Turn on water refractions.\n(0:=off, 1:=screencopy(fast), 2:=own rendering pass(slow)).")}},
     {_("Reflection texture size"), _T("BumpWaterTexSizeReflection"), ID_W4_BumpWaterTexSizeReflection , _T("128"), {_("")}},
+    {_("Refraction"), _T("BumpWaterRefraction"), ID_W4_BumpWaterRefraction , _T("1"), {_("Turn on water refractions.\n(0:=off, 1:=screencopy(fast), 2:=own rendering pass(slow)).")}},
     // spin control
     {_("Anisotropy"), _T("BumpWaterAnisotropy"), ID_W4_BumpWaterAnisotropy , _T("0"), {_("")}},
     //     {_(""), _T(""), ID_W4_ , _T(""), {_("")}},
@@ -421,6 +421,7 @@ const Control W4_CONTROLS[] = {
 };
 
 const wxString W4_REFRACTION_CHOICES[] = { _("off"), _("screencopy(fast)"), _("own rendering pass(slow)") };
+const wxString W4_TEXSIZE_CHOICES[] = { _("128"), _("256"), _("512"), _T("1024") };
 
 const category_sizes_map_type W4_CONTROLS_entry ( _T("W4_CONTROLS"), sizeof(W4_CONTROLS) / Control_size );
 
