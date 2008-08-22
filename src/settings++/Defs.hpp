@@ -124,6 +124,8 @@
 #define ID_WINDOWP_QA_CBOX_7  307
 #define ID_WINDOWP_QA_CBOX_8  308
 #define ID_WINDOWP_QA_CBOX_9  309
+#define ID_WINDOWP_QA_CBOX_10 310
+#define ID_WINDOWP_QA_CBOX_11 311
 
 #define ID_WINDOWP_WR_COMBOX  320
 
@@ -285,9 +287,11 @@ const Control QA_CBOX[] = {
 														"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card")}},
 	{_("Never use shaders when rendering SM3 maps"),       _T("SM3ForceFallbackTex"), ID_WINDOWP_QA_CBOX_5,	_T("1"), {_("problems with sm3 maps? enable this")}},
 	{_("Enable LuaShaders support"),                       _T("LuaShaders"),          ID_WINDOWP_QA_CBOX_6,	_T("1"), {_("makes for some cool effects")}},
-	{_("High-resolution LOS textures"),                    _T("HighResLos"),          ID_WINDOWP_QA_CBOX_7,	_T("1"), {_("smoother Line of Sight overlays")}},
-    {_("Draw smooth points"),                              _T("SmoothPoints"),        ID_WINDOWP_QA_CBOX_8,	_T("0"), {_("should points be anti-aliased")}},
-	{_("Draw smooth lines"),                               _T("SmoothLines"),         ID_WINDOWP_QA_CBOX_9,	_T("0"), {_("should lines be anti-aliased")}},
+	{_("Use Pixelbuffer objects"),                       _T("UsePBO"),          ID_WINDOWP_QA_CBOX_7,	_T("0"), {_("If supported, it speeds up the dynamic loading of terrain textures -> smoother camera movement")}},
+	{_("Compress textures"),                                _T("CompressTextures"),ID_WINDOWP_QA_CBOX_8,	_T("0"), {_("Runtime texture compression. (Ideal for graphic cards with small amount of vram)")}},
+	{_("High-resolution LOS textures"),                    _T("HighResLos"),          ID_WINDOWP_QA_CBOX_9,	_T("1"), {_("smoother Line of Sight overlays")}},
+    {_("Draw smooth points"),                              _T("SmoothPoints"),        ID_WINDOWP_QA_CBOX_10,	_T("0"), {_("should points be anti-aliased")}},
+	{_("Draw smooth lines"),                               _T("SmoothLines"),         ID_WINDOWP_QA_CBOX_11,	_T("0"), {_("should lines be anti-aliased")}},
 };
 
 const category_sizes_map_type QA_CBOX_entry ( _T("QA_CBOX"), sizeof(QA_CBOX) / Control_size );

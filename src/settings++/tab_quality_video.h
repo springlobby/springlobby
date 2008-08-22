@@ -66,7 +66,7 @@ class tab_quality_video : public abstract_panel
 		wxTextCtrl* ctrl_x_res;
 		wxTextCtrl* ctrl_y_res;
 		wxCheckBox** ctrl_qa_Boxes;
-		static const int ctrl_qa_Boxes_size = 10;
+		static const int ctrl_qa_Boxes_size = 12;
 		wxSlider* ctrl_fsaa_slider;
 
 		wxRadioButton* ctrl_z_radio1;

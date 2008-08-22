@@ -89,11 +89,11 @@ void tab_quality_video::updateControls(int what_to_update)
 	}
 	if (what_to_update == UPDATE_QA_BOXES || what_to_update == UPDATE_ALL)
 	{
-		//option 5-7 are not on presets
-		for (int i = 0; i < 5; i++) {
+		//option 7-9 are not on presets
+		for (int i = 0; i < 9; i++) {
 			ctrl_qa_Boxes[i]->SetValue(intSettings[QA_CBOX[i].key]);
 		}
-		for (int i = 8; i < ctrl_qa_Boxes_size; i++) {
+		for (int i = 10; i < ctrl_qa_Boxes_size; i++) {
 			ctrl_qa_Boxes[i]->SetValue(intSettings[QA_CBOX[i].key]);
 		}
 
@@ -181,11 +181,11 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer)
 }
 
 void tab_quality_video::initAASizer(wxFlexGridSizer* sizer){
-	for (int i = 8; i < ctrl_qa_Boxes_size; i++) {
+	for (int i = 10; i < ctrl_qa_Boxes_size; i++) {
 		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, (QA_CBOX[i].lbl));
 		//ctrl_qa_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(QA_CBOX[i].key,fromString(QA_CBOX[i].def)));
 		ctrl_qa_Boxes[i]->SetToolTip(QA_CBOX[i].tTip[0]);
-		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 8)? 5: 0);
+		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 10)? 5: 0);
 	}
 	wxSizer* subsizer = new wxBoxSizer(wxVERTICAL);
 

@@ -62,7 +62,7 @@ const Control intControls[] = {
 		AO_SLI[0],AO_SLI[1],AO_SLI[2],
 		// QA_CBOX[10]
 		QA_CBOX[0],QA_CBOX[1],QA_CBOX[2],QA_CBOX[3],QA_CBOX[4],QA_CBOX[5],QA_CBOX[6],QA_CBOX[7],QA_CBOX[8],
-		QA_CBOX[9],
+		QA_CBOX[9],QA_CBOX[10],QA_CBOX[11],
 		//UI_CBOX[16]
 		UI_CBOX[0],UI_CBOX[1],UI_CBOX[2],UI_CBOX[3],UI_CBOX[4],UI_CBOX[5],UI_CBOX[6],UI_CBOX[7],UI_CBOX[8],
 		UI_CBOX[9],UI_CBOX[10],UI_CBOX[11],UI_CBOX[12],UI_CBOX[13],UI_CBOX[14],UI_CBOX[15],UI_CBOX[16],UI_CBOX[17],
@@ -340,7 +340,9 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 		case ID_WINDOWP_QA_CBOX_6:
 		case ID_WINDOWP_QA_CBOX_7:
 		case ID_WINDOWP_QA_CBOX_8:
-		case ID_WINDOWP_QA_CBOX_9:{
+		case ID_WINDOWP_QA_CBOX_9:
+		case ID_WINDOWP_QA_CBOX_10:
+		case ID_WINDOWP_QA_CBOX_11:{
 			int i = id - QA_CBOX[0].id;
 			(intSettings)[QA_CBOX[i].key]= checked;
 		} break;
