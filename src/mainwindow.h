@@ -27,6 +27,7 @@ class wxMenuItem;
 class wxMenuBar;
 class wxMenu;
 class AutojoinChannelDialog;
+class wxAuiManager;
 
 // FIXME shouldn't copy this here
 typedef wxWindow wxNotebookPage;
@@ -94,6 +95,10 @@ class MainWindow : public wxFrame
     ChatPanel* GetChannelChatPanel( const wxString& channel );
     void MakeImages();
 
+    #ifndef HAVE_WX26
+    wxAuiManager& GetAuiManager() { return *m_aui_mngr; }
+    #endif
+
   protected:
     // MainWindow variables
     Ui& m_ui;
@@ -129,6 +134,10 @@ class MainWindow : public wxFrame
     AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;
     bool se_frame_active;
+
+    #ifndef HAVE_WX26
+    wxAuiManager* m_aui_mngr;
+    #endif
 
     DECLARE_EVENT_TABLE()
 };

@@ -14,6 +14,7 @@
 #include <wx/dcmemory.h>
 #ifndef HAVE_WX26
 #include <wx/aui/auibook.h>
+#include <wx/aui/aui.h>
 #else
 #include <wx/listbook.h>
 #endif
@@ -92,6 +93,11 @@ MainWindow::MainWindow( Ui& ui ) :
   m_ui(ui),m_autojoin_dialog(NULL)
 {
   SetIcon( wxIcon(springlobby_xpm) );
+
+  #ifndef HAVE_WX26
+  m_aui_mngr = new wxAuiManager( this );
+  #endif
+
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(MENU_CONNECT, _("&Connect..."));
   menuFile->Append(MENU_DISCONNECT, _("&Disconnect"));
