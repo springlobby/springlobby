@@ -29,9 +29,11 @@
 #include "torrentoptionspanel.h"
 #endif
 
+#include "lobbyoptionstab.h"
 #include "images/torrentoptionspanel_icon.png.h"
 #include "images/spring.xpm"
 #include "images/userchat.xpm"
+#include "images/springlobby.xpm"
 
 
 BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
@@ -57,6 +59,8 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
     m_imagelist->Add( wxIcon(spring_xpm) );
     m_imagelist->Add( *charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
     m_imagelist->Add( wxIcon(userchat_xpm) );
+    m_imagelist->Add( wxIcon(userchat_xpm) );
+    m_imagelist->Add( wxIcon(springlobby_xpm) );
 
     #ifdef HAVE_WX26
     m_tabs->AssignImageList( m_imagelist );
@@ -86,6 +90,13 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
     m_tabs->AddPage( m_groups_opts , _("Groups"), true, 2 );
     #else
     m_tabs->AddPage( m_groups_opts , _("Groups"), true, wxIcon(userchat_xpm) );
+    #endif
+
+    m_lobby_opts = new LobbyOptionsTab( m_tabs );
+    #ifdef HAVE_WX26
+    m_tabs->AddPage ( m_lobby_opts, _("General"), true, 4 );
+    #else
+    m_tabs->AddPage ( m_lobby_opts, _("General"), true, wxIcon( springlobby_xpm ) );
     #endif
 
     m_restore_btn = new wxButton( this, wxID_REVERT, _("Restore") );
@@ -119,6 +130,8 @@ void MainOptionsTab::OnApply( wxCommandEvent& event )
 #ifndef NO_TORRENT_SYSTEM
     m_torrent_opts->OnApply( event );
 #endif
+    m_lobby_opts->OnApply( event );
+
     sett().SaveSettings();
 }
 
@@ -130,7 +143,21 @@ void MainOptionsTab::OnRestore( wxCommandEvent& event )
 #ifndef NO_TORRENT_SYSTEM
     m_torrent_opts->OnRestore( event );
 #endif
+
+    m_lobby_opts->OnRestore ( event );
 }
 
+void MainOptionsTab::OnOpenGroupsTab()
+{
+    m_groups_opts->ReloadGroupSizer();
+}
 
-
+void MainOptionsTab::SetSelection( const unsigned int page )
+{
+    if ( page < m_tabs->GetPageCount() ){
+        m_tabs->SetSelection( page );
+        m_groups_opts->ReloadGroupSizer();
+    }
+    else
+        m_tabs->SetSelection( 0 );
+}

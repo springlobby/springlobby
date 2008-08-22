@@ -257,6 +257,8 @@
 		<Unit filename="src/images/userchat.xpm" />
 		<Unit filename="src/inetclass.h" />
 		<Unit filename="src/iunitsync.h" />
+		<Unit filename="src/lobbyoptionstab.cpp" />
+		<Unit filename="src/lobbyoptionstab.h" />
 		<Unit filename="src/mainchattab.cpp" />
 		<Unit filename="src/mainchattab.h" />
 		<Unit filename="src/mainjoinbattletab.cpp" />

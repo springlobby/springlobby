@@ -2,7 +2,6 @@
 #define SPRINGLOBBY_HEADERGUARD_CHATOPTIONSTAB_H
 
 #include <wx/scrolwin.h>
-#include <wx/checkbox.h>
 
 class wxStaticBoxSizer;
 class wxStaticBox;
@@ -65,7 +64,6 @@ class ChatOptionsTab : public wxScrolledWindow
       ID_SAVELOGS,
       ID_BROWSE_LOGS,
       ID_HIWORDS,
-      ID_AUTOJOIN,
       ID_PLAY_SOUNDS,
       ID_HL_REQ
     };
@@ -105,7 +103,6 @@ class ChatOptionsTab : public wxScrolledWindow
     wxButton* m_browse_log;
     wxStaticText* m_hilight_words_label;
     wxCheckBox* m_play_sounds;
-    wxCheckBox* m_autojoin;
     wxCheckBox* m_highlight_req;
 
     wxTextCtrl* m_highlight_words;

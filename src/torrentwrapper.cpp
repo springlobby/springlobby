@@ -41,6 +41,7 @@
 #include <wx/event.h>
 
 #include "torrentwrapper.h"
+#include "settings++/custom_dialogs.h"
 
 TorrentWrapper* torrent()
 {
@@ -55,7 +56,8 @@ TorrentWrapper::TorrentWrapper():
 ingame(false),
 m_seed_count(0),
 m_leech_count(0),
-m_timer_count(0)
+m_timer_count(0),
+m_is_connecting(false)
 {
   m_tracker_urls.Add( _T("tracker.caspring.org"));
   m_tracker_urls.Add( _T("tracker2.caspring.org"));
@@ -110,23 +112,22 @@ TorrentWrapper::~TorrentWrapper()
 ////                gui interface                   ////
 ////////////////////////////////////////////////////////
 
-bool TorrentWrapper::ConnectToP2PSystem()
+bool TorrentWrapper::ConnectToP2PSystem( const unsigned int tracker_no )
 {
   if ( IsConnectedToP2PSystem() ) return true;
-  m_socket_class->Connect( m_tracker_urls[0], DEFAULT_P2P_COORDINATOR_PORT );
-  m_connected_tracker_index= 0;
-  return IsConnectedToP2PSystem();
-  for( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
+  if ( tracker_no >= m_tracker_urls.GetCount() )
   {
-    m_socket_class->Connect( m_tracker_urls[i], DEFAULT_P2P_COORDINATOR_PORT );
-    if ( IsConnectedToP2PSystem() )
-    {
-       m_connected_tracker_index = i;
-       return true;
-    }
-    else m_socket_class->Disconnect();
+        m_is_connecting = false;
+        m_connected_tracker_index = 0;
+        customMessageBoxNoModal( SL_MAIN_ICON, _("Tried all known trackers for torrent system. No connection could be established"),
+                _("Torrent system failure") );
+        return false;
   }
-  return false;
+  m_socket_class->Connect( m_tracker_urls[tracker_no], DEFAULT_P2P_COORDINATOR_PORT );
+  m_connected_tracker_index= tracker_no;
+  m_is_connecting = true;
+
+  return IsConnectedToP2PSystem();
 }
 
 
@@ -309,6 +310,14 @@ void TorrentWrapper::UpdateFromTimer( int mselapsed )
   m_timer_count++;
   if ( m_timer_count < 20 ) return;///update every 2 sec
   m_timer_count = 0;
+  if ( m_is_connecting )
+  {
+        if ( IsConnectedToP2PSystem() )
+            m_is_connecting = false;
+        else
+            ConnectToP2PSystem( m_connected_tracker_index +1 );
+  }
+
   if (!ingame && IsConnectedToP2PSystem() )
   {
       ///  DON'T alter function call order here or bad things may happend like locust, hearquakes or raptor attack

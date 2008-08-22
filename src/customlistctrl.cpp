@@ -267,9 +267,6 @@ void customListCtrl::noOp(wxMouseEvent& event)
 	m_tiptext = _T("");
 }
 
-///left empty, so nothing happens if child doesn't implement it
-
-
 void customListCtrl::UpdateHighlights()
 {
     for (long i = 0; i < GetItemCount() ; i++ )

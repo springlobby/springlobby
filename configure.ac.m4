@@ -3,6 +3,7 @@ dnl but the developers will NOT support you if it fails
 dnl you really should just upgrade your autotools instead
 
 dnl if you have too old autoconf, comment out the following prereq AND edit Makefile.am
+
 AC_INIT([SpringLobby],[<<<esyscmd(/bin/echo -n "$VERSION")>>>],[devel@www.springlobby.info])
 
 AC_CONFIG_HEADERS([config.h])
@@ -121,8 +122,13 @@ else
     CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND "
 fi
 
+#on windows append identifier to version string
+if test "$win_build" = 1 ; then
+    AC_DEFINE([VERSION],["<<<esyscmd(/bin/echo -n "$VERSION")>>> on Windows"]  )
+fi
 
 AM_CONDITIONAL([USE_WINDRES], test "$win_build" = 1)
+AM_CONDITIONAL([USE_LIBT_INCLUDED], test x$usetorrent = xyes && test "$win_build" = 1)
 
 AC_MSG_CHECKING([if we can enable extra features that need wxWidgets-2.8])
 dnl we probably aren't supposed to use the function below, but it is the simplest way

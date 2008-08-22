@@ -21,6 +21,8 @@ class ManageGroupsPanel: public wxScrolledWindow
          ManageGroupsPanel( wxWindow* parent );
          ~ManageGroupsPanel();
 
+         void ReloadGroupSizer();
+
     protected:
         wxSizer* GetGroupSizer( const wxString& group );
         wxBoxSizer* m_main_sizer;
@@ -41,7 +43,7 @@ class ManageGroupsPanel: public wxScrolledWindow
         void OnUserButton( wxCommandEvent& event );
         void OnDeleteButton( wxCommandEvent& event );
         void OnCheckBox( wxCommandEvent& event );
-        void ReloadGroupSizer();
+
 
         void SetupControls();
 
