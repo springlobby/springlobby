@@ -13,6 +13,10 @@
 #include <wx/tglbtn.h>
 #endif
 
+#ifndef HAVE_WX26
+#include <wx/aui/aui.h>
+#endif
+
 #include "battlelisttab.h"
 #include "battlelistctrl.h"
 #include "battle.h"
