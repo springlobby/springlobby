@@ -2,10 +2,6 @@
 #define SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H
 
 #include <wx/frame.h>
-#ifndef HAVE_WX26
-#include <wx/aui/aui.h>
-#include <wx/aui/auibook.h>
-#endif
 
 class Ui;
 class Channel;
@@ -31,7 +27,6 @@ class wxMenuItem;
 class wxMenuBar;
 class wxMenu;
 class AutojoinChannelDialog;
-class wxAuiManager;
 
 // FIXME shouldn't copy this here
 typedef wxWindow wxNotebookPage;
@@ -47,26 +42,6 @@ static const unsigned int OPT_PAGE_SPRING = 0;
 static const unsigned int OPT_PAGE_CHAT = 1;
 static const unsigned int OPT_PAGE_TORRENT = 2;
 static const unsigned int OPT_PAGE_GROUPS = 3;
-
-class ManagedNotebook : public wxAuiNotebook
-{
-    public:
-        ManagedNotebook ( wxAuiManager& manager, wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition,
-                        const wxSize& size = wxDefaultSize, long style = wxAUI_NB_DEFAULT_STYLE   )
-            : wxAuiNotebook(parent, id , pos , size , style ), m_manager(manager)
-        {}
-
-        ~ManagedNotebook (){};
-
-        bool AddPage(wxWindow* page, const wxString& caption, bool select = false, const wxBitmap& bitmap = wxNullBitmap)
-        {
-            m_manager.AddPane(page);
-            return wxAuiNotebook::AddPage(page, caption, select , bitmap );
-        }
-
-    protected:
-        wxAuiManager& m_manager;
-};
 
 
 //! @brief wxFrame that contains the main window of the client.
@@ -119,10 +94,6 @@ class MainWindow : public wxFrame
     ChatPanel* GetChannelChatPanel( const wxString& channel );
     void MakeImages();
 
-    #ifndef HAVE_WX26
-    wxAuiManager& GetAuiManager() { return m_aui_mngr; }
-    #endif
-
   protected:
     // MainWindow variables
     Ui& m_ui;
@@ -133,7 +104,7 @@ class MainWindow : public wxFrame
 
     wxBoxSizer* m_main_sizer;
     #ifndef HAVE_WX26
-    ManagedNotebook* m_func_tabs;
+    wxAuiNotebook* m_func_tabs;
     #else
     wxListbook* m_func_tabs;
     #endif
@@ -158,10 +129,6 @@ class MainWindow : public wxFrame
     AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;
     bool se_frame_active;
-
-    #ifndef HAVE_WX26
-    wxAuiManager m_aui_mngr;
-    #endif
 
     DECLARE_EVENT_TABLE()
 };

@@ -14,7 +14,7 @@
 #include <wx/dcmemory.h>
 #ifndef HAVE_WX26
 #include <wx/aui/auibook.h>
-#include <wx/aui/aui.h>
+#include "auimanager.h"
 #else
 #include <wx/listbook.h>
 #endif
@@ -95,7 +95,7 @@ MainWindow::MainWindow( Ui& ui ) :
   SetIcon( wxIcon(springlobby_xpm) );
 
   #ifndef HAVE_WX26
-  m_aui_mngr.SetManagedWindow( this );
+  AuiMngr().manager = new wxAuiManager( this );
   #endif
 
   wxMenu *menuFile = new wxMenu;
