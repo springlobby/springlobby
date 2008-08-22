@@ -59,7 +59,7 @@
 #include "images/nready_unsync.xpm"
 #include "images/nready_q.xpm"
 
-#include "images/spectator.xpm"
+#include "images/spectator.png.h"
 #include "images/host.xpm"
 #include "images/host_spectator.xpm"
 
@@ -127,7 +127,7 @@ IconImageList::IconImageList() : wxImageList(16,16)
     ICON_NEXISTS = Add( wxBitmap(nexists_xpm) );
     ICON_EXISTS = Add( wxBitmap(exists_xpm) );
 
-    ICON_SPECTATOR = Add( wxBitmap(spectator_xpm) );
+    ICON_SPECTATOR = Add( *charArr2wxBitmap(spectator_png, sizeof(spectator_png) ) );
     ICON_HOST = Add( wxBitmap(host_xpm) );
     ICON_HOST_SPECTATOR = Add( wxBitmap(host_spectator_xpm) );
 
