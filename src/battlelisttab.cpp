@@ -13,6 +13,10 @@
 #include <wx/tglbtn.h>
 #endif
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 #include "battlelisttab.h"
 #include "battlelistctrl.h"
 #include "battle.h"
@@ -61,6 +65,10 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   m_ui(ui),
   m_sel_battle(0)
 {
+  #ifndef HAVE_WX26
+  AuiMngr().manager->AddPane( this, wxLEFT, _T("battlelisttab") );
+  #endif
+
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
