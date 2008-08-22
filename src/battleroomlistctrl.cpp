@@ -243,7 +243,8 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   if ( &m_battle.GetFounder() == &user ) {
     statimg =icons().GetHostIcon( user.BattleStatus().spectator );
   } else {
-    statimg = user.BattleStatus().spectator?icons().ICON_SPECTATOR:icons().GetReadyIcon( user.BattleStatus().ready, user.BattleStatus().sync );
+      bool spec = user.BattleStatus().spectator;
+    statimg = icons().GetReadyIcon( spec, user.BattleStatus().ready, user.BattleStatus().sync );
   }
   SetItemImage( index, statimg );
 
