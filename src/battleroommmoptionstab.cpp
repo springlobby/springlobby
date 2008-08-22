@@ -107,7 +107,6 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 	for ( optionMapListIter it = optWrap.opts[optFlag].list_map.begin(); it != optWrap.opts[optFlag].list_map.end(); ++it)
 	{
 		mmOptionList current = it->second;
-		wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
 
         int temp = int(current.cbx_choices.GetCount()-1);
 		int index = CLAMP(current.cur_choice_index,0,temp);
@@ -130,7 +129,6 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 	for ( optionMapStringIter it = optWrap.opts[optFlag].string_map.begin(); it != optWrap.opts[optFlag].string_map.end(); ++it)
 	{
 		mmOptionString current = it->second;
-		wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
 		wxTextCtrl* temptext = new wxTextCtrl(this, STRING_START_ID+ctrl_count, current.value, wxDefaultPosition,
 				wxDefaultSize, 0, wxDefaultValidator, current.key);
 		temptext->SetToolTip(current.description);
