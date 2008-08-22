@@ -95,7 +95,7 @@ MainWindow::MainWindow( Ui& ui ) :
   SetIcon( wxIcon(springlobby_xpm) );
 
   #ifndef HAVE_WX26
-  AuiMngr().manager = new wxAuiManager( this );
+  AuiManagerContainer::AuiMngr().manager = new wxAuiManager( this );
   #endif
 
   wxMenu *menuFile = new wxMenu;
@@ -142,7 +142,7 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   #ifndef HAVE_WX26
-  m_func_tabs = new ManagedNotebook( m_aui_mngr , this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
+  m_func_tabs = new wxAuiNotebook(  this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
   #else
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
   #endif
@@ -196,10 +196,6 @@ MainWindow::MainWindow( Ui& ui ) :
   se_frame_active = false;
 
   wxToolTip::Enable(sett().GetShowTooltips());
-
-    Update();
-  m_aui_mngr.GetPane(m_opts_tab).Floatable(true);
-  m_aui_mngr.GetPane(m_opts_tab).Float();
 
 }
 
