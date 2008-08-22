@@ -577,6 +577,8 @@ springlobby_SOURCES = \
 	src/images/downloads_icon.png.h \
 	src/images/single_player_icon.png.h \
 	src/images/downloads_icon_text.png.h \
+	src/images/warning_small.png.h \
+	src/images/spectator.png.h \
 	src/images/single_player_icon_text.png.h \
 	src/images/select_icon.xpm \
 	src/images/server.xpm \
