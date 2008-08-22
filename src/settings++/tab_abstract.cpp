@@ -65,7 +65,7 @@ const Control intControls[] = {
 		QA_CBOX[9],
 		//UI_CBOX[16]
 		UI_CBOX[0],UI_CBOX[1],UI_CBOX[2],UI_CBOX[3],UI_CBOX[4],UI_CBOX[5],UI_CBOX[6],UI_CBOX[7],UI_CBOX[8],
-		UI_CBOX[9],UI_CBOX[10],UI_CBOX[11],UI_CBOX[12],UI_CBOX[13],UI_CBOX[14],UI_CBOX[15],UI_CBOX[16],
+		UI_CBOX[9],UI_CBOX[10],UI_CBOX[11],UI_CBOX[12],UI_CBOX[13],UI_CBOX[14],UI_CBOX[15],UI_CBOX[16],UI_CBOX[17],
 		//MO_SLI[5]
 		MO_SLI[0],MO_SLI[1],MO_SLI[2],MO_SLI[3],MO_SLI[4],
 		//MO_SLI_EXT[5]
@@ -362,7 +362,8 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 		case ID_WINDOWP_UI_CBOX_14:
 		case ID_WINDOWP_UI_CBOX_15:
 		case ID_WINDOWP_UI_CBOX_16:
-		case ID_WINDOWP_UI_CBOX_17:{
+		case ID_WINDOWP_UI_CBOX_17:
+		case ID_WINDOWP_UI_CBOX_18:{
 			int i = id - UI_CBOX[0].id;
 			(intSettings)[UI_CBOX[i].key]= checked;
 		} break;

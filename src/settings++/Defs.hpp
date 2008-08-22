@@ -108,6 +108,7 @@
 #define ID_WINDOWP_UI_CBOX_15 374
 #define ID_WINDOWP_UI_CBOX_16 375
 #define ID_WINDOWP_UI_CBOX_17 376
+#define ID_WINDOWP_UI_CBOX_18 377
 
 //Zoom opt
 #define ID_WINDOWP_UI_MW_SPD  385
@@ -318,6 +319,7 @@ const Control UI_CBOX[] = {
 																														"If enabled might screw with LuaUi.")}},
 	{_("Enable scroll on window edge"),					_T("WindowedEdgeMove"),	ID_WINDOWP_UI_CBOX_16,	_T("1"), {_("Scroll the screen when mouse reaches the screen's edge.")}},
 	{_("Invert Mouse"),									_T("InvertMouse"),			ID_WINDOWP_UI_CBOX_17,	_T("0"), {_("Inverts the Mouse Y-axis in FPS mode")}},
+	{_("Use Hardware Cursor"),									_T("HardwareCursor"),			ID_WINDOWP_UI_CBOX_18,	_T("1"), {_("Use native OS mouse cursor (hardware accelerated)")}},
 
 
 };
