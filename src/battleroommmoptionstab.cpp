@@ -45,11 +45,13 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 	setupOptionsSizer(m_map_layout,MapOption);
 	m_map_options_sizer->Add( m_map_layout, 1, wxEXPAND, 5 );
 
-	m_main_sizer->Add( m_mod_options_sizer, 1, wxEXPAND, 5 );
-	m_main_sizer->Add( m_map_options_sizer, 1, wxEXPAND, 5 );
+	m_main_sizer->Add( m_mod_options_sizer, 0, wxEXPAND, 5 );
+	m_main_sizer->Add( m_map_options_sizer, 0, wxEXPAND, 5 );
 
 	this->SetSizer( m_main_sizer );
 	this->Layout();
+
+	SetScrollbars( 10, 10, 62, 62 );
 }
 
 BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
@@ -59,13 +61,14 @@ BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
 
 void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag)
 {
+    const int col_gap = 35;
 	wxString pref = wxString::Format( _T("%d"),optFlag) + wxsep;
 	mmOptionsWrapper optWrap = *m_battle.CustomBattleOptions();
 	bool enable = m_battle.IsFounderMe();
-	wxFlexGridSizer* cbxSizer =  new wxFlexGridSizer( 2, 2, 10, 10 );
-	wxFlexGridSizer* spinSizer =  new wxFlexGridSizer( 2, 2, 10, 10 );
-	wxFlexGridSizer* textSizer =  new wxFlexGridSizer( 2, 2, 10, 10 );
-	wxFlexGridSizer* chkSizer = new wxFlexGridSizer( 2, 2, 10, 10 );
+	wxFlexGridSizer* cbxSizer =  new wxFlexGridSizer( 4, 2, 10, 10 );
+	wxFlexGridSizer* spinSizer =  new wxFlexGridSizer( 4, 10, 10 );
+	wxFlexGridSizer* textSizer =  new wxFlexGridSizer( 4, 10, 10 );
+	wxFlexGridSizer* chkSizer = new wxFlexGridSizer( 4, 10, 10 );
 
 	int ctrl_count = 0;
 	for (optionMapBoolIter i = optWrap.opts[optFlag].bool_map.begin(); i != optWrap.opts[optFlag].bool_map.end();++i)
@@ -77,7 +80,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 			m_chkbox_map[pref+current.key] = temp;
 			temp->SetValue(current.value);
 			temp->Enable(enable);
-			chkSizer->Add(temp);
+			chkSizer->Add(temp, 0, wxRIGHT, col_gap);
 			ctrl_count++;
 		}
 
@@ -85,7 +88,6 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 	for ( optionMapFloatIter it = optWrap.opts[optFlag].float_map.begin(); it != optWrap.opts[optFlag].float_map.end(); ++it)
 	{
 			mmOptionFloat current = it->second;
-			wxBoxSizer* tempbox = new wxBoxSizer(wxHORIZONTAL);
 			wxSpinCtrlDbl* tempspin = new wxSpinCtrlDbl();
 			tempspin->Create(this, FLOAT_START_ID+ctrl_count, _T(""),
 					wxDefaultPosition, wxDefaultSize, 0, double(current.min), double(current.max),
@@ -96,9 +98,8 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 			m_spinctrl_map[pref+current.key] = tempspin;
 			 wxStaticText* tempst = new wxStaticText(this,-1,current.name);
 			 m_statictext_map[pref+current.key] = tempst;
-			tempbox->Add(tempst,0,5 );
-			tempbox->Add(tempspin);
-			spinSizer->Add(tempbox);
+			spinSizer->Add(tempst,0);
+			spinSizer->Add(tempspin, 0, wxRIGHT, col_gap);
 			ctrl_count++;
 	}
 
@@ -119,10 +120,9 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		m_combox_map[pref+current.key] = tempchoice;
 		wxStaticText* tempst = new wxStaticText(this,-1,current.name);
 		m_statictext_map[pref+current.key] = tempst;
-		tempbox->Add(tempst,0,5);
-		tempbox->Add(tempchoice);
+		cbxSizer->Add(tempst,0,5);
+		cbxSizer->Add(tempchoice, 0, wxRIGHT, col_gap);
 
-		cbxSizer->Add(tempbox);
 		ctrl_count++;
 	}
 
@@ -139,10 +139,9 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		m_textctrl_map[pref+current.key] = temptext;
 		wxStaticText* tempst = new wxStaticText(this,-1,current.name);
 		m_statictext_map[pref+current.key] = tempst;
-		tempbox->Add(tempst,0,5);
-		tempbox->Add(temptext);
+		textSizer->Add(tempst,0,5);
+		textSizer->Add(temptext,0, wxRIGHT, col_gap);
 
-		textSizer->Add(tempbox);
 		ctrl_count++;
 	}
 
@@ -299,13 +298,13 @@ void BattleroomMMOptionsTab::OnReloadControls(GameOption flag)
 			m_mod_layout = new wxBoxSizer( wxVERTICAL);
 			setupOptionsSizer(m_mod_layout,ModOption);
 			//m_mod_options_sizer->Add( m_mod_options_sizer, 1, wxEXPAND, 5 );
-			m_mod_options_sizer->Add( m_mod_layout, 1, wxEXPAND, 5 );
+			m_mod_options_sizer->Add( m_mod_layout, 0, wxEXPAND, 5 );
 			break;
 		case MapOption:
 			m_map_options_sizer->Remove(m_map_layout);
 			m_map_layout = new wxBoxSizer( wxVERTICAL);
 			setupOptionsSizer(m_map_layout,MapOption);
-			m_map_options_sizer->Add( m_map_layout, 1, wxEXPAND, 5 );
+			m_map_options_sizer->Add( m_map_layout, 0, wxEXPAND, 5 );
 			break;
         default:
             break;
@@ -314,5 +313,5 @@ void BattleroomMMOptionsTab::OnReloadControls(GameOption flag)
 
 	//this->SetSizer( m_main_sizer, true );
 	this->Layout();
-
+    SetScrollbars( 10, 10, 62, 62 );
 }
