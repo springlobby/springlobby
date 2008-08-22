@@ -65,6 +65,7 @@
 
 #include "images/no1_icon.png.h"
 #include "images/no2_icon.png.h"
+#include "images/warning_small.png.h"
 
 #include "images/colourbox.xpm"
 //#include "images/fixcolours_palette.xpm"
@@ -151,6 +152,8 @@ IconImageList::IconImageList() : wxImageList(16,16)
 #else
     ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = ICON_GAME_UNKNOWN = -1;
 #endif
+
+    ICON_WARNING_OVERLAY = Add(*charArr2wxBitmap(warning_small_png, sizeof(warning_small_png) ));
 
 }
 
@@ -333,18 +336,22 @@ int IconImageList::GetSideIcon( const wxString& modname, int side )
   return -1;
 }
 
-int IconImageList::GetReadyIcon( const bool& ready, const int& sync )
+int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const int& sync )
 {
-    if ( ready )
-    {
-        if ( sync == SYNC_SYNCED ) return ICON_READY;
-        else if ( sync == SYNC_UNSYNCED ) return ICON_READY_UNSYNC;
-        else return ICON_READY_QSYNC;
-    }
+    int index;
+    if ( spectator )
+        index = ICON_SPECTATOR;
+    else if ( ready )
+        index = ICON_READY;
     else
-    {
-        if ( sync == SYNC_SYNCED ) return ICON_NREADY;
-        else if ( sync == SYNC_UNSYNCED ) return ICON_NREADY_UNSYNC;
-        else return ICON_NREADY_QSYNC;
+        index = ICON_NREADY;
+
+    if ( sync == SYNC_SYNCED )
+        return index;
+    else {
+        if ( m_state_index_map.find(index) == m_state_index_map.end() ) {
+            m_state_index_map[index] = Add( *BlendBitmaps( GetBitmap( index ), GetBitmap( ICON_WARNING_OVERLAY ) ) );
+        }
+        return m_state_index_map[index];
     }
 }
