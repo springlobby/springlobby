@@ -18,6 +18,7 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".a")
 #----------------------------------------------------------------------------------------------------
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
+INCLUDE(cmake/package_config.cmake)
 INCLUDE(CPack)
 INCLUDE(FindSDL)
 INCLUDE(FindSDL_sound)
