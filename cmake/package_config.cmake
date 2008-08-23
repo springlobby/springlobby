@@ -1,6 +1,6 @@
 # get revision and put into config.h
-EXECUTE_PROCESS(COMMAND ${SpringLobby_SOURCE_DIR}/tools/get-revision.sh OUTPUT_VARIABLE SPRINGLOBBY_REV )
-CONFIGURE_FILE( ${SpringLobby_SOURCE_DIR}/cmake/config.h.in ${SpringLobby_SOURCE_DIR}/config.h )
+EXECUTE_PROCESS(COMMAND ${SpringLobby_SOURCE_DIR}/tools/get-revision.sh ${SpringLobby_SOURCE_DIR} OUTPUT_VARIABLE SPRINGLOBBY_REV )
+CONFIGURE_FILE( ${SpringLobby_SOURCE_DIR}/cmake/config.h ${SpringLobby_SOURCE_DIR}/config.h )
 IF (WIN32)
     SET(CPACK_GENERATOR "ZIP")
 ELSE (WIN32)
