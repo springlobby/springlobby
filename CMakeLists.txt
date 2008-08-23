@@ -29,7 +29,7 @@ INCLUDE(FindSDL_mixer)
 # Options, that can be changed be the User in order to customise SpringLobby
 #----------------------------------------------------------------------------------------------------
 SET( OPTION_TORRENT_SYSTEM
-	0 CACHE BOOL
+	1 CACHE BOOL
 	"Enables the builtin map/mod p2p downloader (requires libtorrent-rasterbar library)" )
 SET( OPTION_SOUND
 	0 CACHE BOOL
@@ -64,6 +64,7 @@ ELSE (NOT WIN32)
     SET(wxWidgets_LIBRARIES wx_baseu-2.8-i586-mingw32msvc wx_mswu_core-2.8-i586-mingw32msvc wx_baseu_net-2.8-i586-mingw32msvc wx_mswu_adv-2.8-i586-mingw32msvc wx_mswu_qa-2.8-i586-mingw32msvc wx_mswu_richtext-2.8-i586-mingw32msvc wx_mswu_aui-2.8-i586-mingw32msvc )
     link_directories( ${wxWidgets_LIB_DIR} )
 ENDIF(NOT WIN32)
+
 #----------------------------------------------------------------------------------------------------
 # SDL libs dependency check
 #----------------------------------------------------------------------------------------------------
@@ -114,17 +115,31 @@ endif( OPTION_TRANSLATION_SUPPORT )
 #----------------------------------------------------------------------------------------------------
 
 IF( OPTION_TORRENT_SYSTEM )
-	SET ( LIBTORRENT_MIN_VERSION 0.13 )
-	pkg_check_modules( LIBTORRENT libtorrent-rasterbar>=${LIBTORRENT_MIN_VERSION} )
-	IF( LIBTORRENT_FOUND )
-		INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
-		LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
-	ELSE()
-		MESSAGE(FATAL_ERROR "libtorrent-rasterbar library is not found! Please install the package or toggle OPTION_USE_TORRENT_SYSTEM to OFF")
-	ENDIF()
+        IF( NOT WIN32)
+            SET ( LIBTORRENT_MIN_VERSION 0.13 )
+            pkg_check_modules( LIBTORRENT libtorrent-rasterbar>=${LIBTORRENT_MIN_VERSION} )
+            IF( LIBTORRENT_FOUND )
+                    INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
+                    LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
+            ELSE()
+                    MESSAGE(FATAL_ERROR "libtorrent-rasterbar library is not found! Please install the package or toggle OPTION_USE_TORRENT_SYSTEM to OFF")
+            ENDIF()
+        ELSE( NOT WIN32)
+            INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR}/src/libtorrent/include 
+                                ${SpringLobby_SOURCE_DIR}/src/libtorrent/zlib
+                                ${SpringLobby_SOURCE_DIR}/src/libtorrent/ )
+            ADD_DEFINITIONS( -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION )
+            LINK_LIBRARIES( boost_thread-mt boost_filesystem-mt  ws2_32 mswsock boost_date_time-mt )
+            link_directories( ${boost_LIB_DIR} )
+        ENDIF( NOT WIN32)
 ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
 ENDIF( OPTION_TORRENT_SYSTEM )
+
+# boost and others needed on win
+IF ( WIN32 )
+    INCLUDE_DIRECTORIES( ${boost_INCLUDE_DIR} )
+ENDIF ( WIN32 )
 
 #----------------------------------------------------------------------------------------------------
 # Source listing
@@ -132,7 +147,7 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 
 # We define the include paths here, our minimal source dir is one
 
-INCLUDE_DIRECTORIES(${SpringLobbySrc_SOURCE_DIR} ${SettingsSrc_SOURCE_DIR} )
+INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${SettingsSrc_SOURCE_DIR} )
 
 SET(SpringLobbySrc
 	src/boost/md5.cpp
@@ -243,8 +258,8 @@ SET(SLSharedWithSettings
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
 IF(WIN32)
-  SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
-	SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
+    SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
+    SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ENDIF(WIN32)
 
 #----------------------------------------------------------------------------------------------------
@@ -270,7 +285,13 @@ endif( OPTION_TRANSLATION_SUPPORT )
 #----------------------------------------------------------------------------------------------------
 
 # Here we define the executable SpringLobby ( or on Windows SpringLobby.exe )
-ADD_EXECUTABLE(springlobby WIN32 ${SpringLobbySrc} ${SettingsSrc} )
+IF (WIN32)
+    INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
+ENDIF (WIN32)    
+   
+#libtsource is empty if "NOT WIN32"
+ADD_EXECUTABLE(springlobby WIN32 ${SpringLobbySrc} ${SettingsSrc} ${libtorrent_SRC})
+
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES}  )

@@ -19,5 +19,10 @@ SET( wxWidgets_INCLUDE_DIRS /var/lib/buildbot/lib/mingw/wx/2.8/include/wx-2.8 /v
 SET( wxWidgets_LIB_DIR /var/lib/buildbot/lib/mingw/wx/2.8/lib )
 SET( wxWidgets_CONFIGURATION mswu )
 SET( CMAKE_VERBOSE_MAKEFILE ON )
+SET( boost_LIB_DIR /var/lib/buildbot/lib/mingw/lib )
+SET( boost_INCLUDE_DIR /var/lib/buildbot/lib/mingw/include )
+
+
 
 ADD_DEFINITIONS( -DWXUSINGDLL -D__WXMSW__)
+
