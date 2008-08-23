@@ -76,25 +76,25 @@ IF (NOT WIN32)
     
     # Throw an error to the user if SDL is not found
     if ( NOT SDL_FOUND AND OPTION_SOUND )
-    message ( FATAL_ERROR "SDL library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
-    endif()
+        message ( FATAL_ERROR "SDL library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
+    endif( NOT SDL_FOUND AND OPTION_SOUND )
     
     # Throw an error to the user if SDL_mixer is not found
     if ( NOT SDL_MIXER_FOUND AND OPTION_NO_SOUND )
-    message ( FATAL_ERROR "SDL_mixer library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
-    endif()
+        message ( FATAL_ERROR "SDL_mixer library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
+    endif(NOT SDL_MIXER_FOUND AND OPTION_NO_SOUND)
     
     # Throw an error to the user if SDL_sound is not found
     if ( NOT SDL_SOUND_FOUND AND OPTION_NO_SOUND )
-    message ( FATAL_ERROR "SDL_sound library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
-    endif()
+        message ( FATAL_ERROR "SDL_sound library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
+    endif( NOT SDL_SOUND_FOUND AND OPTION_NO_SOUND )
     
     if ( OPTION_SOUND )
             INCLUDE_DIRECTORIES( ${SDLSOUND_INCLUDE_DIRS} )
             LINK_LIBRARIES( ${SDLSOUND_LIBRARY} )	
     else ( OPTION_SOUND )
             ADD_DEFINITIONS( -DDISABLE_SOUND )
-    ENDIF( NOT SDL_SOUND_FOUND AND OPTION_NO_SOUND )
+    ENDIF( OPTION_SOUND )
 ELSE(NOT WIN32)
     IF( OPTION_SOUND )
          INCLUDE_DIRECTORIES( ${sdl_INCLUDE_DIR} )
@@ -305,5 +305,10 @@ ADD_EXECUTABLE(springsettings WIN32 ${StandAloneSettings} ${SettingsSrc} ${SLSha
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES}  )
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES}  )
 
-install(TARGETS springlobby springsettings
-   RUNTIME DESTINATION . )
+IF (WIN32)
+    install(TARGETS springlobby springsettings RUNTIME DESTINATION . )
+    install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION . )
+ELSE (WIN32)
+    install( DIRECTORY src cmake doc DESTINATION . )
+    install( FILES CMakeLists.txt AUTHORS COPYING NEWS README THANKS DESTINATION . )
+ENDIF (WIN32)
