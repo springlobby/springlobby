@@ -298,8 +298,12 @@ ENDIF (WIN32)
    
 #libtsource is empty if "NOT WIN32"
 ADD_EXECUTABLE(springlobby WIN32 ${SpringLobbySrc} ${SettingsSrc} ${libtorrent_SRC})
+ADD_EXECUTABLE(springsettings WIN32 ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings} )
 
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES}  )
+TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES}  )
 
+install(TARGETS springlobby springsettings
+   RUNTIME DESTINATION . )
