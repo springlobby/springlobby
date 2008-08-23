@@ -277,7 +277,7 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
   #ifdef HAVE_WX26
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, 3 );
   #else
-  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, *charArr2wxBitmap(userchat_png, sizeof(userchat_png)) );
+  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, wxBitmap(userchat_xpm) );
   #endif
   chat->FocusInputBox();
   return chat;
@@ -325,7 +325,7 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
      #ifdef HAVE_WX26
      m_chat_tabs->SetPageImage( newsel, 3);
      #else
-     m_chat_tabs->SetPageBitmap( newsel, *charArr2wxBitmap(userchat_png, sizeof(userchat_png)));
+     m_chat_tabs->SetPageBitmap( newsel, wxBitmap(userchat_xpm) );
      #endif
   }
   else if ( ImageIndex == 10 )
