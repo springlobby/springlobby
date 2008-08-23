@@ -4,14 +4,37 @@ PROJECT(SpringLobby)
 cmake_minimum_required(VERSION 2.4)
 
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
-ADD_DEFINITIONS(-Wall)
+ADD_DEFINITIONS(-Wall -Wno-strict-aliasing -DWXUSINGDLL -D__WXMSW__)
+
+
+
+SET(CMAKE_SYSTEM_NAME Windows)
+
+# which compilers to use for C and C++
+SET(CMAKE_C_COMPILER i586-mingw32msvc-gcc)
+SET(CMAKE_CXX_COMPILER i586-mingw32msvc-g++)
+SET( wxWidgets_ROOT_DIR /var/lib/buildbot/lib/mingw/wx/2.8/ )
+# here is the target environment located
+SET(CMAKE_FIND_ROOT_PATH  /usr/bin/i586-mingw32msvc /var/lib/buildbot/lib/mingw /var/lib/buildbot/lib/mingw/wx/2.8/include/wx-2.8)
+
+# adjust the default behaviour of the FIND_XXX() commands:
+# search headers and libraries in the target environment, search 
+# programs in the host environment
+# SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+# SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+# SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+SET( wxWidgets_CONFIG_EXECUTABLE /var/lib/buildbot/lib/mingw/wx/2.8/bin/wx-config )
+SET( wxWidgets_INCLUDE_DIRS /var/lib/buildbot/lib/mingw/wx/2.8/include/wx-2.8 /var/lib/buildbot/lib/mingw/wx/2.8/lib/wx/include/i586-mingw32msvc-msw-unicode-release-2.8/)
+SET( wxWidgets_LIB_DIR /var/lib/buildbot/lib/mingw/wx/2.8/lib )
+SET( wxWidgets_CONFIGURATION mswu )
+SET( CMAKE_VERBOSE_MAKEFILE ON )
 
 #----------------------------------------------------------------------------------------------------
 # General Settings
 #----------------------------------------------------------------------------------------------------
 SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
 SET(CMAKE_FIND_LIBRARY_PREFIXES "")
-SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
+SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".a")
 
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules
@@ -22,20 +45,20 @@ INCLUDE(CPack)
 INCLUDE(FindSDL)
 INCLUDE(FindSDL_sound)
 INCLUDE(FindSDL_mixer)
-INCLUDE(FindwxWidgets)
-INCLUDE(FindGettext)
+
+
 
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise SpringLobby
 #----------------------------------------------------------------------------------------------------
 SET( OPTION_TORRENT_SYSTEM
-	1 CACHE BOOL
+	0 CACHE BOOL
 	"Enables the builtin map/mod p2p downloader (requires libtorrent-rasterbar library)" )
 SET( OPTION_SOUND
 	0 CACHE BOOL
 	"Enables sound notification functionality (requires SDL and SDL_sound libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
-	1 CACHE BOOL
+	0 CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
 
 #----------------------------------------------------------------------------------------------------
@@ -47,18 +70,23 @@ SET( OPTION_TRANSLATION_SUPPORT
 SET(wxWidgets_USE_LIBS base core gl net adv qa richtext )
 
 # We need the Find package for wxWidgets to work
-FIND_PACKAGE(wxWidgets)
-
-# Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
-IF(wxWidgets_FOUND)
-	# Include wxWidgets macros
-	INCLUDE(${wxWidgets_USE_FILE})
-	INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-ELSE(wxWidgets_FOUND)
-	# For Convenience. If we cannot continue, inform the User.
-	MESSAGE( FATAL_ERROR "wxWidgets library is not found! Please install the package to continue")
-ENDIF(wxWidgets_FOUND)
-
+IF (NOT WIN32)
+    INCLUDE(FindwxWidgets)
+    FIND_PACKAGE(wxWidgets)
+    # Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
+    IF(wxWidgets_FOUND)
+            # Include wxWidgets macros
+            INCLUDE(${wxWidgets_USE_FILE})
+            INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
+    ELSE(wxWidgets_FOUND)
+            # For Convenience. If we cannot continue, inform the User.
+            MESSAGE( FATAL_ERROR "wxWidgets library is not found! Please install the package to continue")
+    ENDIF(wxWidgets_FOUND)
+ELSE (NOT WIN32)
+    INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
+    SET(wxWidgets_LIBRARIES wx_baseu-2.8-i586-mingw32msvc wx_mswu_core-2.8-i586-mingw32msvc wx_baseu_net-2.8-i586-mingw32msvc wx_mswu_adv-2.8-i586-mingw32msvc wx_mswu_qa-2.8-i586-mingw32msvc wx_mswu_richtext-2.8-i586-mingw32msvc wx_mswu_aui-2.8-i586-mingw32msvc )
+    link_directories( ${wxWidgets_LIB_DIR} )
+ENDIF(NOT WIN32)
 #----------------------------------------------------------------------------------------------------
 # SDL libs dependency check
 #----------------------------------------------------------------------------------------------------
@@ -94,13 +122,14 @@ ENDIF()
 #----------------------------------------------------------------------------------------------------
 
 if( OPTION_TRANSLATION_SUPPORT )
+   INCLUDE(FindGettext)
 	FIND_PACKAGE( Gettext )
-  if(GETTEXT_FOUND)
-  	INCLUDE_DIRECTORIES( ${GETTEXT_INCLUDE_DIR} )
-  	include("cmake/KWWidgetsInternationalizationMacros.cmake")
-  else(GETTEXT_FOUND)
-    message(FATAL_ERROR "The GNU Gettext package is not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
-  endif(GETTEXT_FOUND)
+ if(GETTEXT_FOUND)
+ 	INCLUDE_DIRECTORIES( ${GETTEXT_INCLUDE_DIR} )
+ 	include("cmake/KWWidgetsInternationalizationMacros.cmake")
+ else(GETTEXT_FOUND)
+   message(FATAL_ERROR "The GNU Gettext package is not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
+ endif(GETTEXT_FOUND)
 endif( OPTION_TRANSLATION_SUPPORT )
 
 #----------------------------------------------------------------------------------------------------
@@ -267,5 +296,5 @@ endif( OPTION_TRANSLATION_SUPPORT )
 ADD_EXECUTABLE(springlobby WIN32 ${SpringLobbySrc} ${SettingsSrc} )
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} png jpeg )
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES}  )
 
