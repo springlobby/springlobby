@@ -70,28 +70,28 @@ ENDIF(NOT WIN32)
 # SDL libs dependency check
 #----------------------------------------------------------------------------------------------------
 IF (NOT WIN32)
-    FIND_PACKAGE(SDL)
-    FIND_PACKAGE(SDL_mixer)
-    FIND_PACKAGE(SDL_sound)
+    FIND_PACKAGE(SDL REQUIRED)
+    FIND_PACKAGE(SDL_mixer REQUIRED)
+    FIND_PACKAGE(SDL_sound REQUIRED)
     
     # Throw an error to the user if SDL is not found
     if ( NOT SDL_FOUND AND OPTION_SOUND )
-        message ( FATAL_ERROR "SDL library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
+        message ( FATAL_ERROR "SDL library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
     endif( NOT SDL_FOUND AND OPTION_SOUND )
     
     # Throw an error to the user if SDL_mixer is not found
-    if ( NOT SDL_MIXER_FOUND AND OPTION_NO_SOUND )
-        message ( FATAL_ERROR "SDL_mixer library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
-    endif(NOT SDL_MIXER_FOUND AND OPTION_NO_SOUND)
+    if ( NOT SDLMIXER_FOUND AND OPTION_SOUND )
+        message ( FATAL_ERROR "SDL_mixer library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
+    endif(NOT SDLMIXER_FOUND AND OPTION_SOUND)
     
     # Throw an error to the user if SDL_sound is not found
-    if ( NOT SDL_SOUND_FOUND AND OPTION_NO_SOUND )
-        message ( FATAL_ERROR "SDL_sound library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
-    endif( NOT SDL_SOUND_FOUND AND OPTION_NO_SOUND )
+    if ( NOT SDL_SOUND_FOUND AND OPTION_SOUND )
+        message ( FATAL_ERROR "SDL_sound library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
+    endif( NOT SDL_SOUND_FOUND AND OPTION_SOUND )
     
     if ( OPTION_SOUND )
-            INCLUDE_DIRECTORIES( ${SDLSOUND_INCLUDE_DIRS} )
-            LINK_LIBRARIES( ${SDLSOUND_LIBRARY} )	
+            INCLUDE_DIRECTORIES( ${SDL_SOUND_INCLUDE_DIR} )
+            LINK_LIBRARIES( ${SDL_SOUND_LIBRARIES} ${SDLMIXER_LIBRARY}  )	
     else ( OPTION_SOUND )
             ADD_DEFINITIONS( -DDISABLE_SOUND )
     ENDIF( OPTION_SOUND )
