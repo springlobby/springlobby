@@ -137,6 +137,7 @@ SET(SpringLobbySrc
 	src/filelister/filelistctrl.cpp
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
+	src/auimanager.cpp
 	src/autobalancedialog.cpp
 	src/autojoinchanneldialog.cpp
 	src/addbotdialog.cpp

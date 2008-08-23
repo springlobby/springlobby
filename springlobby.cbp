@@ -150,6 +150,8 @@
 		<Unit filename="src/addbotdialog.h" />
 		<Unit filename="src/agreementdialog.cpp" />
 		<Unit filename="src/agreementdialog.h" />
+		<Unit filename="src/auimanager.cpp" />
+		<Unit filename="src/auimanager.h" />
 		<Unit filename="src/autobalancedialog.cpp" />
 		<Unit filename="src/autobalancedialog.h" />
 		<Unit filename="src/autojoinchanneldialog.cpp" />
