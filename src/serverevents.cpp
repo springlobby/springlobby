@@ -213,11 +213,13 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
 }
 
 
-void ServerEvents::OnJoinedBattle( int battleid )
+void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
 {
   wxLogDebugFunc( _T("") );
   try{
   Battle& battle = m_serv.GetBattle( battleid );
+
+  battle.SetHostMod( battle.GetHostModName(), hash );
 
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.spectator = false;

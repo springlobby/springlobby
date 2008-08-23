@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: ChatPanel
 //
@@ -533,48 +533,106 @@ User& ChatPanel::GetMe() {
 	return m_ui.GetServer().GetMe();
 }
 
-void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const wxFont& fon ) {
+void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const wxFont& fon )
+{
 
 	if ( ! m_chatlog_text ) return;
 	LogTime();
-  #ifndef NO_RICHTEXT_CHAT
-  int p=m_chatlog_text->GetLastPosition()-1;
-  if(p<0)p=0;
-  bool at_bottom=m_chatlog_text->IsPositionVisible(p); /// true if we're on bottom of page and must scroll
-  #endif
+#ifndef NO_RICHTEXT_CHAT
+	int p=m_chatlog_text->GetLastPosition()-1;
+	if(p<0)p=0;
+	bool at_bottom=m_chatlog_text->IsPositionVisible(p); /// true if we're on bottom of page and must scroll
+#endif
 	m_chatlog_text->SetDefaultStyle( wxTextAttr( col, sett().GetChatColorBackground(), fon ) );
 #if  defined(__WXMSW__) && defined(NO_RICHTEXT_CHAT)
 	m_chatlog_text->Freeze();
 #endif
 
-  #ifndef NO_RICHTEXT_CHAT
-  wxArrayString wordarray =  wxStringTokenize( message, _T(' ') );
-  unsigned int wordcount = wordarray.GetCount();
-  for( unsigned int pos = 0; pos < wordcount; pos++ )
-  {
-    wxString word = wordarray[pos];
-    bool isurl = word.Contains( _T("://") );
-    if ( isurl ) m_chatlog_text->BeginURL(word);
-    m_chatlog_text->AppendText( word + _T(' ') );
-    if ( isurl ) m_chatlog_text->EndURL();
-  }
+#ifndef NO_RICHTEXT_CHAT
+	if ( message.Find(_T("://")) != wxNOT_FOUND )
+	{
+		/* start index of the current word */
+		size_t st(0);
+		/* end index of the current word */
+		size_t en(0);
+
+		size_t len(message.Len());
+
+		while ( en < len && en != wxString::npos && st < len && st != wxString::npos )
+		{
+			/* Advance to the start of the next word */
+			st = message.find_first_not_of(_T(" "), st);
+
+			if ( st == wxString::npos )
+				st = len;
+
+			/* Output whatever we skipped */
+			/* if ( st > en ) */
+			m_chatlog_text->AppendText(message.Mid(en, st - en));
+
+			/* Find the end of the word */
+			en = message.find(_T(' '), st);
+
+
+			if ( st == wxString::npos && en == wxString::npos )
+				break; /* Nothing more to do. */
+
+			/* Extract the word */
+			wxString word;
+			if ( en == wxString::npos )
+				word = message.Mid(st);
+			else
+				word = message.Mid(st, en - st);
+
+			bool isUrl(word.Contains(_T("://")));
+
+			if ( isUrl )
+				m_chatlog_text->BeginURL(word);
+
+			m_chatlog_text->AppendText( word );
+
+			if ( isUrl )
+			{
+				/* The link is broken (http://www.example.com
+				 * becomes http://www.example.co) if this space
+				 * (or other string, probably) isn't appended
+				 * here.
+				 */
+				m_chatlog_text->AppendText(_T(' '));
+				m_chatlog_text->EndURL();
+			}
+
+			/* Advance past the end of the current word. Note that
+			 * we compensate for the extra space in the workaround
+			 * above, to avoid extra spaces in the final output.
+			 *
+			 * Only problem is, I'm not totally sure this is doing
+			 * what it should. -- insane
+			 */
+			st = en + ( isUrl ? 2 : 1 );
+		}
+	}
+	else
+	{
+		m_chatlog_text->AppendText( message );
+	}
 	m_chatlog_text->AppendText( _T( "\n" ) );
 
-  bool enable_autoscroll = sett().GetAlwaysAutoScrollOnFocusLost() || (m_ui.GetActiveChatPanel() == this );
+	bool enable_autoscroll = sett().GetAlwaysAutoScrollOnFocusLost() || (m_ui.GetActiveChatPanel() == this );
 
 	if ( ( sett().GetSmartScrollEnabled() && at_bottom && enable_autoscroll ) ) { /// view not at the bottom or not focused = disable autoscroll
-    m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
+		m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
 		m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
-    m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
+		m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
 	}
-  CheckLength(); /// crop lines from history that exceeds limit
-	#else
+	CheckLength(); /// crop lines from history that exceeds limit
+#else
 	m_chatlog_text->AppendText( message + _T( "\n" ) );
-  CheckLength(); /// crop lines from history that exceeds limit
+	CheckLength(); /// crop lines from history that exceeds limit
 
-  m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
-  m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
-	#endif
+	m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
+	m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
+#endif
 
 	if ( m_chat_log ) m_chat_log->AddMessage( message );
 
