@@ -21,6 +21,7 @@ SET( wxWidgets_CONFIGURATION mswu )
 SET( CMAKE_VERBOSE_MAKEFILE ON )
 SET( boost_LIB_DIR /var/lib/buildbot/lib/mingw/lib )
 SET( boost_INCLUDE_DIR /var/lib/buildbot/lib/mingw/include )
+SET( sdl_INCLUDE_DIR /var/lib/buildbot/lib/mingw/include/SDL )
 
 
 

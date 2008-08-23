@@ -32,7 +32,7 @@ SET( OPTION_TORRENT_SYSTEM
 	1 CACHE BOOL
 	"Enables the builtin map/mod p2p downloader (requires libtorrent-rasterbar library)" )
 SET( OPTION_SOUND
-	0 CACHE BOOL
+	1 CACHE BOOL
 	"Enables sound notification functionality (requires SDL and SDL_sound libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
 	0 CACHE BOOL
@@ -68,32 +68,38 @@ ENDIF(NOT WIN32)
 #----------------------------------------------------------------------------------------------------
 # SDL libs dependency check
 #----------------------------------------------------------------------------------------------------
-
-FIND_PACKAGE(SDL)
-FIND_PACKAGE(SDL_mixer)
-FIND_PACKAGE(SDL_sound)
-
-# Throw an error to the user if SDL is not found
-if ( NOT SDL_FOUND AND OPTION_SOUND )
-   message ( FATAL_ERROR "SDL library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
-endif()
-
-# Throw an error to the user if SDL_mixer is not found
-if ( NOT SDL_MIXER_FOUND AND OPTION_NO_SOUND )
-   message ( FATAL_ERROR "SDL_mixer library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
-endif()
-
-# Throw an error to the user if SDL_sound is not found
-if ( NOT SDL_SOUND_FOUND AND OPTION_NO_SOUND )
-   message ( FATAL_ERROR "SDL_sound library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
-endif()
-
-if ( OPTION_SOUND )
-	INCLUDE_DIRECTORIES( ${SDLSOUND_INCLUDE_DIRS} )
-	LINK_LIBRARIES( ${SDLSOUND_LIBRARY} )	
-else ( OPTION_SOUND )
-	ADD_DEFINITIONS( -DDISABLE_SOUND )
-ENDIF()
+IF (NOT WIN32)
+    FIND_PACKAGE(SDL)
+    FIND_PACKAGE(SDL_mixer)
+    FIND_PACKAGE(SDL_sound)
+    
+    # Throw an error to the user if SDL is not found
+    if ( NOT SDL_FOUND AND OPTION_SOUND )
+    message ( FATAL_ERROR "SDL library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
+    endif()
+    
+    # Throw an error to the user if SDL_mixer is not found
+    if ( NOT SDL_MIXER_FOUND AND OPTION_NO_SOUND )
+    message ( FATAL_ERROR "SDL_mixer library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
+    endif()
+    
+    # Throw an error to the user if SDL_sound is not found
+    if ( NOT SDL_SOUND_FOUND AND OPTION_NO_SOUND )
+    message ( FATAL_ERROR "SDL_sound library is not found! Please install the package or toggle OPTION_SOUND to OFF" )
+    endif()
+    
+    if ( OPTION_SOUND )
+            INCLUDE_DIRECTORIES( ${SDLSOUND_INCLUDE_DIRS} )
+            LINK_LIBRARIES( ${SDLSOUND_LIBRARY} )	
+    else ( OPTION_SOUND )
+            ADD_DEFINITIONS( -DDISABLE_SOUND )
+    ENDIF( NOT SDL_SOUND_FOUND AND OPTION_NO_SOUND )
+ELSE(NOT WIN32)
+    IF( OPTION_SOUND )
+         INCLUDE_DIRECTORIES( ${sdl_INCLUDE_DIR} )
+         LINK_LIBRARIES(SDLmain SDL SDL_mixer)
+    ENDIF( OPTION_SOUND )
+ENDIF (NOT WIN32)
 
 #----------------------------------------------------------------------------------------------------
 # Gettext lib dependency check
