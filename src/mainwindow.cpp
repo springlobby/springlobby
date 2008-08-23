@@ -95,7 +95,7 @@ MainWindow::MainWindow( Ui& ui ) :
   SetIcon( wxIcon(springlobby_xpm) );
 
   #ifndef HAVE_WX26
-  AuiManagerContainer::AuiMngr().manager = new wxAuiManager( this );
+  GetAui().manager = new wxAuiManager( this );
   #endif
 
   wxMenu *menuFile = new wxMenu;
@@ -207,6 +207,10 @@ void MainWindow::forceSettingsFrameClose()
 
 MainWindow::~MainWindow()
 {
+  #ifndef HAVE_WX26
+  GetAui().manager.Uinit();
+  delete GetAui().manager;
+  #endif
   int x, y, w, h;
   GetSize( &w, &h );
   sett().SetMainWindowHeight( h );

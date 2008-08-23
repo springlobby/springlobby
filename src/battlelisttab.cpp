@@ -66,7 +66,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   m_sel_battle(0)
 {
   #ifndef HAVE_WX26
-  AuiManagerContainer::AuiMngr().manager->AddPane( this, wxLEFT, _T("battlelisttab") );
+  GetAui().manager->AddPane( this, wxLEFT, _T("battlelisttab") );
   #endif
 
   wxBoxSizer* m_main_sizer;

@@ -10,14 +10,8 @@ class AuiManagerContainer
 
     wxAuiManager* manager;
 
-    static AuiManagerContainer& AuiMngr()
-    {
-        static AuiManagerContainer m_aui_mngr;
-        return m_aui_mngr;
-    }
-
 };
 
-
+AuiManagerContainer& GetAui();
 
 #endif // SPRINGLOBBY_HEADERGUARD_AUIMANAGER_H
