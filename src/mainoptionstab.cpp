@@ -11,7 +11,7 @@
 #include <wx/sizer.h>
 
 #ifndef HAVE_WX26
-#include <wx/aui/auibook.h>
+#include "auimanager.h"
 #else
 #include <wx/listbook.h>
 #endif
@@ -53,6 +53,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
     #ifdef HAVE_WX26
     m_tabs = new wxNotebook( this, OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
     #else
+    GetAui().manager->AddPane( this, wxLEFT, _T("mainoptionstab") );
     m_tabs = new wxAuiNotebook( this, OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
     #endif
     m_imagelist = new wxImageList( 12, 12 );

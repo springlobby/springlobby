@@ -11,7 +11,7 @@
 #include <wx/image.h>
 
 #ifndef HAVE_WX26
-#include <wx/aui/auibook.h>
+#include "auimanager.h"
 #else
 #include <wx/listbook.h>
 #endif
@@ -46,6 +46,10 @@ END_EVENT_TABLE()
 MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
 : wxScrolledWindow( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr ),m_ui(ui)
 {
+
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("mainchattab") );
+  #endif
 
   m_newtab_sel = -1;
   m_server_chat = 0;

@@ -18,6 +18,10 @@
 #include "groupuserdialog.h"
 #include "settings++/custom_dialogs.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 BEGIN_EVENT_TABLE( ManageGroupsPanel, wxScrolledWindow )
   EVT_CHECKBOX( wxID_ANY, ManageGroupsPanel::OnCheckBox )
   //EVT_BUTTON( ID_COLOR_BUTTON, ManageGroupsPanel::OnColorButton )
@@ -32,6 +36,9 @@ ManageGroupsPanel::ManageGroupsPanel( wxWindow* parent )
     : wxScrolledWindow( parent, -1 ), m_main_sizer(0),
       m_groups_sizer(0), m_newgroup(0), m_user_dialog(0)
 {
+    #ifndef HAVE_WX26
+    GetAui().manager->AddPane( this, wxLEFT, _T("managegroupstab") );
+    #endif
     SetScrollRate(0,10);
     SetupControls();
 }

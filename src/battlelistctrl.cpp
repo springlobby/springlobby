@@ -17,6 +17,10 @@
 #include "settings++/custom_dialogs.h"
 #include "useractions.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
 
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
@@ -37,6 +41,11 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl")),
   m_ui(ui)
 {
+
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
+  #endif
+
   wxListItem col;
 
   col.SetText( _T("s") );

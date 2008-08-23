@@ -27,7 +27,7 @@
 #endif
 
 #ifndef HAVE_WX26
-#include <wx/aui/auibook.h>
+#include "auimanager.h"
 #include <wx/imaglist.h>
 #else
 #include <wx/notebook.h>
@@ -129,6 +129,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imag
 		: wxPanel( parent, -1 ), m_show_nick_list( true ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( &chan ), m_server( 0 ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Channel ), m_popup_menu( 0 ), m_icon_index( 2 ), m_imagelist(( wxImageList* )imaglist  {
 #else
     : wxPanel( parent, -1 ), m_show_nick_list( true ), m_chat_tabs(( wxAuiNotebook* )parent ), m_ui( ui ), m_channel( &chan ), m_server( 0 ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Channel ), m_popup_menu( 0 ), m_icon_index( 2 ), m_imagelist(( wxImageList* )imaglist ) {
+GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-channel-") + chan.GetName() );
 #endif
 	wxLogDebugFunc( _T( "wxWindow* parent, Channel& chan" ) );
 	CreateControls( );
@@ -148,6 +149,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user, wxImageList* imaglis
 		: wxPanel( parent, -1 ), m_show_nick_list( false ),m_nicklist(0), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( &user ), m_battle( 0 ), m_type( CPT_User ), m_popup_menu( 0 ), m_icon_index( 3 ), m_imagelist(imaglist)  {
 #else
 		: wxPanel( parent, -1 ), m_show_nick_list( false ),m_nicklist(0), m_chat_tabs(( wxAuiNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( &user ), m_battle( 0 ), m_type( CPT_User ), m_popup_menu( 0 ), m_icon_index( 3 ), m_imagelist(imaglist) {
+GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-pm-") + user.GetNick() );
 #endif
 
 	CreateControls( );
@@ -161,6 +163,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imagl
 		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist(0),m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ), m_icon_index( 1 ), m_imagelist(imaglist)  {
 #else
     : wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist(0),m_chat_tabs(( wxAuiNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ), m_icon_index( 1 ), m_imagelist(imaglist) {
+  GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-server") );
 #endif
 
 	wxLogDebugFunc( _T( "wxWindow* parent, Server& serv" ) );
@@ -200,10 +203,25 @@ ChatPanel::~ChatPanel() {
 
 
 	if ( m_type == CPT_Channel )
+	{
         m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
-
-	if ( m_type == CPT_Server )
+        #ifndef HAVE_WX26
+        GetAui().manager->DetachPane( this );
+        #endif
+	}
+	else if ( m_type == CPT_Server )
+	{
         m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
+        #ifndef HAVE_WX26
+        GetAui().manager->DetachPane( this );
+        #endif
+	}
+	else if ( m_type == CPT_User )
+	{
+        #ifndef HAVE_WX26
+        GetAui().manager->DetachPane( this );
+        #endif
+	}
 }
 
 

@@ -11,7 +11,7 @@
 #include <stdexcept>
 
 #ifndef HAVE_WX26
-#include <wx/aui/auibook.h>
+#include "auimanager.h"
 #else
 #include <wx/listbook.h>
 #endif
@@ -36,6 +36,10 @@
 MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) :
     wxScrolledWindow( parent, -1 ),m_battle_tab(0),m_map_tab(0),m_opts_tab(0),m_mm_opts_tab(0),m_ui(ui)
 {
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("mainjoinbattletab") );
+  #endif
+
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   #ifdef HAVE_WX26

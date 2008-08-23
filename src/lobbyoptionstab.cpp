@@ -8,10 +8,17 @@
 #include "settings.h"
 //#include
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 
 LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     : wxScrolledWindow( parent, -1 )
 {
+    #ifndef HAVE_WX26
+    GetAui().manager->AddPane( this, wxLEFT, _T("lobbyoptionstab") );
+    #endif
     m_main_sizer = new wxBoxSizer ( wxVERTICAL );
     wxStaticBoxSizer* m_autojoin_sizer= new wxStaticBoxSizer ( wxVERTICAL, this, _("Autoconnect") );
     m_autoconnect_label = new wxStaticText ( this, -1, _("If checked, SpringLobby will automatically log on to the last used server") );

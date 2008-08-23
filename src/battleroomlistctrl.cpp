@@ -23,6 +23,10 @@
 #include "uiutils.h"
 #include "countrycodes.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 #include "settings++/custom_dialogs.h"
 
 #define TOOLTIP_DELAY 1000
@@ -52,6 +56,10 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   m_sel_user(0), m_sel_bot(0),
   m_ui(ui)
 {
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("battleroomlistctrl") );
+  #endif
+
   wxListItem col;
 
   col.SetText( _T("r") );

@@ -15,7 +15,9 @@
 #include "Helper/colorbutton.h"
 #include "filelister/filelistdialog.h"
 
-
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
 
 BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
 	//(*EventTable(MainTorrentTab)
@@ -27,6 +29,10 @@ END_EVENT_TABLE()
 MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
     : wxScrolledWindow(parent), m_ui(ui)
 {
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("maintorrenttab") );
+  #endif
+
 	m_mainbox = new wxBoxSizer (wxVERTICAL);
 
 	wxBoxSizer* m_listbox = new wxBoxSizer (wxVERTICAL);

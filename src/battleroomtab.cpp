@@ -37,6 +37,10 @@
 #include "settings.h"
 #include "Helper/colorbutton.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
   EVT_BUTTON ( BROOM_START, BattleRoomTab::OnStart )
@@ -63,6 +67,9 @@ const wxString team_choices[] = { _T("1"), _T("2"), _T("3"), _T("4"), _T("5"), _
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     wxScrolledWindow( parent, -1 ),m_ui(ui), m_battle(battle)
 {
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("battleroomtab") );
+  #endif
   // Create all widgets
   m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
 
@@ -249,7 +256,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
 BattleRoomTab::~BattleRoomTab()
 {
-
+  #ifndef HAVE_WX26
+  GetAui().manager->DetachPane( this );
+  #endif
 }
 
 

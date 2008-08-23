@@ -16,12 +16,21 @@
 #include "torrentwrapper.h"
 #include "utils.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 BEGIN_EVENT_TABLE( TorrentOptionsPanel, wxPanel )
 END_EVENT_TABLE()
 
 TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
     : wxScrolledWindow( parent, -1), m_ui(ui)
 {
+
+    #ifndef HAVE_WX26
+    GetAui().manager->AddPane( this, wxLEFT, _T("torrentoptionspanel") );
+    #endif
+
     wxBoxSizer* mainboxsizer = new wxBoxSizer( wxVERTICAL );
 
     m_autostart_box = new wxStaticBox(this, -1, _("Torrent system autostart") );
