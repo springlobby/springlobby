@@ -208,7 +208,7 @@ void MainWindow::forceSettingsFrameClose()
 MainWindow::~MainWindow()
 {
   #ifndef HAVE_WX26
-  GetAui().manager.Uinit();
+  GetAui().manager->UnInit();
   delete GetAui().manager;
   #endif
   int x, y, w, h;
