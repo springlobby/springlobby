@@ -305,7 +305,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
   {
     cache = GetCacheFile( GetFileCachePath( name, _T(""), false ) + _T(".mapoptions") );
     unsigned int count = cache.GetCount();
-    for (int i = 0; i < count; ++i)
+    for (unsigned int i = 0; i < count; ++i)
     {
       // key  type
       wxArrayString params = wxStringTokenize( cache[i], _T("\t") );
@@ -331,7 +331,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
       case opt_list:
          ret.list_map[key] = mmOptionList( params[2],key,
             params[3], params[4] );
-         for (int j = 6; j < ( (unsigned int)s2l(params[5]) * 3 + 6); j = j + 3)
+         for (unsigned int j = 6; j < ( (unsigned int)s2l(params[5]) * 3 + 6); j = j + 3)
          {
            ret.list_map[key].addItem( params[j], params[j+1], params[j+2] );
          }
@@ -453,7 +453,7 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
   {
     cache = GetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions") );
     unsigned int count = cache.GetCount();
-    for (int i = 0; i < count; ++i)
+    for (unsigned int i = 0; i < count; ++i)
     {
       // key  type
       wxArrayString params = wxStringTokenize( cache[i], _T('\t') );
@@ -480,7 +480,7 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
          ret.list_map[key] = mmOptionList( params[2],key,
             params[3], params[4] );
          unsigned int maxloop = (unsigned int)s2l(params[5]) * 3 + 5;
-         for (int j = 6; j < maxloop; j = j + 3)
+         for (unsigned int j = 6; j < maxloop; j = j + 3)
          {
            ret.list_map[key].addItem( params[j], params[j+1], params[j+2] );
          }
@@ -919,7 +919,7 @@ wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString&
     {
        int total = susynclib()->GetMapCount();
        int index = GetMapIndex( name );
-       if ( index = -1 ) return ret;
+       if ( index == -1 ) return ret;
        ret << _T("-") << susynclib()->GetMapChecksum( index );
     }
   }

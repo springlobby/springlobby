@@ -84,7 +84,7 @@ endif()
 
 if ( OPTION_SOUND )
 	INCLUDE_DIRECTORIES( ${SDLSOUND_INCLUDE_DIRS} )
-	LINK_LIBRARIES( ${SDLSOUND_LIBRARY} )	
+	LINK_LIBRARIES( ${SDLSOUND_LIBRARY} )
 else ( OPTION_SOUND )
 	ADD_DEFINITIONS( -DDISABLE_SOUND )
 ENDIF()
@@ -132,8 +132,8 @@ SET(SpringLobbySrc
 	src/boost/md5.cpp
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
-	src/Helper/wxtextctrlhist.cpp
-	src/Helper/colorbutton.cpp
+  src/Helper/colorbutton.cpp
+  src/Helper/wxtextctrlhist.cpp
 	src/filelister/filelistctrl.cpp
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
@@ -164,11 +164,12 @@ SET(SpringLobbySrc
 	src/customlistctrl.cpp
 	src/flagimages.cpp
 	src/globalevents.cpp
-        src/groupuserdialog.cpp
+  src/groupuserdialog.cpp
 	src/httpdownloader.cpp
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
 	src/iconimagelist.cpp
+  src/lobbyoptionstab.cpp
 	src/mainchattab.cpp
 	src/mainjoinbattletab.cpp
 	src/mainoptionstab.cpp

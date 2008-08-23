@@ -224,6 +224,14 @@ wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size
 
 }
 
+wxBitmap* BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int dim )
+{
+    wxImage back = background.ConvertToImage();
+    wxImage front = overlay.ConvertToImage();
+    BlendImage( front, back, dim );
+    return new wxBitmap( back );
+}
+
 wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit, const wxString& caption, const wxString& palette)
 {
     wxColourData data;
