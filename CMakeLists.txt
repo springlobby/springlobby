@@ -132,6 +132,8 @@ SET(SpringLobbySrc
 	src/boost/md5.cpp
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
+        src/Helper/colorbutton.cpp
+        src/Helper/wxtextctrlhist.cpp
 	src/filelister/filelistctrl.cpp
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
@@ -165,6 +167,7 @@ SET(SpringLobbySrc
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
 	src/iconimagelist.cpp
+        src/lobbyoptionstab.cpp
 	src/mainchattab.cpp
 	src/mainjoinbattletab.cpp
 	src/mainoptionstab.cpp

@@ -154,11 +154,6 @@ void UnitSyncThread::_AddJob( const wxChar& prefix, const wxString& params )
 
 void UnitSyncThread::_DoMapInfoJob( const wxString& map )
 {
-  if ( usync()->CacheMapInfo( map ) ) {
-    m_last_job = map;
-    wxCommandEvent event( wxEVT_UNITSYNC_CACHE, CACHE_MAPINFO );
-    AddPendingEvent(event);
-  }
 }
 
 
