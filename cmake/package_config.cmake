@@ -1,6 +1,21 @@
 # get revision and put into config.h
-EXECUTE_PROCESS(COMMAND ${SpringLobby_SOURCE_DIR}/tools/get-revision.sh ${SpringLobby_SOURCE_DIR} OUTPUT_VARIABLE SPRINGLOBBY_REV )
-CONFIGURE_FILE( ${SpringLobby_SOURCE_DIR}/cmake/config.h ${SpringLobby_SOURCE_DIR}/config.h )
+EXECUTE_PROCESS(COMMAND ${SpringLobby_SOURCE_DIR}/tools/get-revision.sh 
+        OUTPUT_VARIABLE SPRINGLOBBY_REV         
+        RESULT_VARIABLE GIT_ERROR
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+        
+#don't write when git errored out resulting in unset version (ie when compiling from tarball)
+IF ( NOT GIT_ERROR)
+    CONFIGURE_FILE( ${SpringLobby_SOURCE_DIR}/cmake/config.h ${SpringLobby_SOURCE_DIR}/config.h )
+ENDIF ( NOT GIT_ERROR)
+
+#if nothing went wrong we have the file and can define HAVE_CONFIG_H
+EXECUTE_PROCESS(COMMAND "if [ ! -e ${SpringLobby_SOURCE_DIR}/config.h ]; then exit 1; fi" 
+                RESULT_VARIABLE CONFIG_MISSING )
+IF (NOT CONFIG_MISSING )
+    ADD_DEFINITIONS( -DHAVE_CONFIG_H )
+ENDIF (NOT CONFIG_MISSING )
+
 IF (WIN32)
     SET(CPACK_GENERATOR "ZIP")
 ELSE (WIN32)
@@ -11,9 +26,9 @@ ENDIF (WIN32)
 # SET(CPACK_OUTPUT_CONFIG_FILE "/home/andy/vtk/CMake-bin/CPackConfig.cmake")
 # SET(CPACK_PACKAGE_DESCRIPTION_FILE "/home/andy/vtk/CMake/Copyright.txt")
 # SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "CMake is a build tool")
-SET(CPACK_PACKAGE_EXECUTABLES "springlobby")
+# SET(CPACK_PACKAGE_EXECUTABLES "springlobby")
 SET(CPACK_PACKAGE_FILE_NAME "springlobby-${SPRINGLOBBY_REV}")
-SET(CPACK_PACKAGE_FILE_NAME "springlobby-thing")
+# SET(CPACK_PACKAGE_FILE_NAME "springlobby-thing")
 SET(CPACK_PACKAGE_INSTALL_DIRECTORY "SpringLobby")
 SET(CPACK_PACKAGE_NAME "SpringLobby")
 SET(CPACK_PACKAGE_VENDOR "The SpringLobby Team")
