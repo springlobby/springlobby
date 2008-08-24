@@ -124,7 +124,6 @@ const int vl_w4_BumpWaterUseDepthTexture[5]     = {  0,  1,  1,  1,  1  };
 const int vl_w4_BumpWaterTexSizeReflection[5]   = {  0,  0,128,256,512  };
 const int vl_w4_BumpWaterBlurReflection[5]      = {  0,  0,  0,  0,  1  };
 
-
 const presetValues<int, 5>  pr_w4_BumpWaterReflection = presetValues<int, 5>(_T("BumpWaterReflection"),levels_vlow_To_vHigh,vl_w4_BumpWaterReflection);
 const presetValues<int, 5>  pr_w4_BumpWaterRefraction = presetValues<int, 5>(_T("BumpWaterRefraction"),levels_vlow_To_vHigh,vl_w4_BumpWaterRefraction);
 const presetValues<int, 5>  pr_w4_BumpWaterShoreWaves = presetValues<int, 5>(_T("BumpWaterShoreWaves"),levels_vlow_To_vHigh,vl_w4_BumpWaterShoreWaves);
