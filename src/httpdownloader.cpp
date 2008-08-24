@@ -11,6 +11,7 @@
 #include <wx/sstream.h>
 #include <wx/wfstream.h>
 #include <wx/app.h>
+#include <memory>
 
 #include "httpdownloader.h"
 #include "utils.h"
