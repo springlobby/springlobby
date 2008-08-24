@@ -94,9 +94,17 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
     #endif
 
     m_lobby_opts = new LobbyOptionsTab( m_tabs );
-    #ifdef HAVE_WX26
-    m_tabs->AddPage ( m_lobby_opts, _("General"), true, 4 );
+
+   #ifdef HAVE_WX26
+     m_tabs->AddPage ( m_lobby_opts, _("General"), true, 4 );
     #else
+    m_tabs->AddPage ( m_lobby_opts, _("General"), true, wxIcon( springlobby_xpm ) );
+    #endif
+
+    m_groups_opts = new ManageGroupsPanel( m_tabs );
+    #ifdef HAVE_WX26
+     m_tabs->AddPage ( m_groups_opts, _("Groups"), true, 2 );
+   #else
     m_tabs->AddPage ( m_lobby_opts, _("General"), true, wxIcon( springlobby_xpm ) );
     #endif
 

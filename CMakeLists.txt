@@ -164,12 +164,12 @@ SET(SpringLobbySrc
 	src/customlistctrl.cpp
 	src/flagimages.cpp
 	src/globalevents.cpp
-  src/groupuserdialog.cpp
+	src/groupuserdialog.cpp
 	src/httpdownloader.cpp
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
 	src/iconimagelist.cpp
-  src/lobbyoptionstab.cpp
+	src/lobbyoptionstab.cppt
 	src/mainchattab.cpp
 	src/mainjoinbattletab.cpp
 	src/mainoptionstab.cpp
@@ -208,8 +208,8 @@ SET(SpringLobbySrc
 	src/user.cpp
 	src/useractions.cpp
 	src/userlist.cpp
+	src/userlistctrl.cpp
 	src/utils.cpp
-	src/useractions.cpp
 )
 
 SET(SettingsSrc

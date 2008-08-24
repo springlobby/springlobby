@@ -390,6 +390,8 @@ void BattleRoomTab::UpdateUser( User& user )
   m_color_sel->SetColor( user.BattleStatus().colour );
 
   m_minimap->UpdateMinimap();
+
+  UpdateHighlights();
 }
 
 
