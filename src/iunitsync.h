@@ -161,9 +161,7 @@ class IUnitSync
 
     virtual wxArrayString GetAIList( const wxString& modname ) = 0;
 
-    virtual bool CacheMapInfo( const wxString& map ) = 0;
     virtual bool CacheMinimap( const wxString& map ) = 0;
-    virtual bool CacheModUnits( const wxString& mod ) = 0;
     virtual bool ReloadUnitSyncLib() = 0;
 
 

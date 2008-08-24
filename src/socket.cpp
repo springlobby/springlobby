@@ -114,6 +114,7 @@ void Socket::Connect( const wxString& addr, const int port )
   if ( m_sock != 0 ) m_sock->Destroy();
   m_sock = _CreateSocket();
   m_sock->Connect( wxaddr, m_block );
+  m_sock->SetTimeout( 40 );
 }
 
 
@@ -123,8 +124,8 @@ void Socket::Disconnect( )
 {
   if ( m_sock == 0 ) return;
   m_net_class.OnDisconnected( this );
-  LOCK_SOCKET;
   _EnablePingThread( false );
+  m_sock->SetTimeout( 0 );
   m_sock->Destroy();
   m_sock = 0;
 }

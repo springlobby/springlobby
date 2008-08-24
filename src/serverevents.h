@@ -51,7 +51,7 @@ class ServerEvents
     void OnBattleInfoUpdated( int battleid );
     void OnBattleClosed( int battleid );
 
-    void OnJoinedBattle( int battleid );
+    void OnJoinedBattle( int battleid, const wxString& hash );
     void OnHostedBattle( int battleid );
 
     void OnStartHostedBattle( int battleid );
