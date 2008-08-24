@@ -886,7 +886,6 @@ springlobby_SOURCES = \
 if USE_WINDRES	
 springlobby_SOURCES += \ 
 		src/springlobby.rc \
-		src/Helper/listctrl.cpp \
 		src/Helper/listctrl.cpp 
 endif
 

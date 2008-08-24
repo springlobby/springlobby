@@ -2,6 +2,10 @@
 #include "../utils.h"
 #include <wx/image.h>
 
+#ifdef __WXMSW__
+    #include "images/colourbox.xpm"
+#endif
+
 ColorButton::ColorButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitmap,
     const wxPoint& pos , const wxSize& size , long style , const wxValidator& validator,
     const wxString& name )
