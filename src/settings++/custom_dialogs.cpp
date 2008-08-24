@@ -289,13 +289,7 @@ ServerMessageBox::ServerMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
     wxSizer *sizerBtn = CreateButtonSizer(wxOK);
     topsizer->Add(sizerBtn, 0,  wxALL|wxALIGN_CENTRE, 10 );
 
-
-//    SetAutoLayout( true );
-   SetSizer( topsizer );
-//
-//    topsizer->SetSizeHints( this );
-//    topsizer->Fit( this );
-
+    SetSizer( topsizer );
 
     Centre( wxBOTH | wxCENTER_FRAME);
 
