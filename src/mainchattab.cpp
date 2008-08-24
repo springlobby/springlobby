@@ -25,7 +25,7 @@
 #include "images/close.xpm"
 #include "images/server.xpm"
 #include "images/channel.xpm"
-#include "images/userchat.png.h"
+#include "images/userchat.xpm"
 
 BEGIN_EVENT_TABLE(MainChatTab, wxPanel)
 
@@ -45,7 +45,7 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
 
   m_chat_tabs = new wxNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
 
-  wxBitmap userchat = *charArr2wxBitmap(userchat_png, sizeof(userchat_png) );
+  wxBitmap userchat (userchat_xpm); //*charArr2wxBitmap(userchat_png, sizeof(userchat_png) );
   m_imagelist = new wxImageList( 12, 12 );
   m_imagelist->Add( wxBitmap(close_xpm) );
   m_imagelist->Add( wxBitmap(server_xpm) );
@@ -286,21 +286,36 @@ wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& c
   wxImage ret = img.ConvertToImage();
   wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
 
-  double bright = origcolour.value - 0.5*origcolour.value;
-  CLAMP(bright,0,1);
-  wxImage::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
+//  double bright = origcolour.value - 0.5*origcolour.value;
+//  CLAMP(bright,0,1);
+//  wxImage::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
+//
+//  wxImage::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
+//
+//
+//
+//  ret.Replace( 128, 128, 68, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
+//
+//  ret.Replace( 255, 255, 136, colour.Red(), colour.Green(), colour.Blue() );
 
-  wxImage::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
+    double bright = origcolour.value - 0.1*origcolour.value;
+    CLAMP(bright,0,1);
+    wxImage::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
+    bright = origcolour.value - 0.5*origcolour.value;
+    CLAMP(bright,0,1);
+    wxImage::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
+
+    wxImage::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
+    wxImage::RGBValue rgbdarker2 = wxImage::HSVtoRGB( hsvdarker2 );
 
 
+    ret.Replace( 164, 147, 0, rgbdarker2.red, rgbdarker2.green, rgbdarker2.blue );
 
-  ret.Replace( 128, 128, 68, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
+    ret.Replace( 255, 228, 0, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
 
-  ret.Replace( 255, 255, 136, colour.Red(), colour.Green(), colour.Blue() );
+    ret.Replace( 255, 253, 234, colour.Red(), colour.Green(), colour.Blue() );
 
-
-
-  return ret;
+    return ret;
 }
 
 bool MainChatTab::RemoveChatPanel( ChatPanel* panel )
