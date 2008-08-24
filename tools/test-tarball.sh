@@ -19,4 +19,4 @@ tar xfz $1
 tbdir=`echo "$1" | sed -e 's,.tar.gz,,g'`
 cd $tbdir
 cmake .
-make -j4 && rm -rf build-distcheck
+make && rm -rf build-distcheck
