@@ -99,6 +99,7 @@ public:
     long GetIndexFromData( const unsigned long data );
     //! call this before example before sorting, inserting, etc
     void SetSelectionRestorePoint();
+    void ResetSelection();
     //! and this afterwards
     void RestoreSelection();
     /** @}
