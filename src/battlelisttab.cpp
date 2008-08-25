@@ -250,6 +250,7 @@ void BattleListTab::RemoveBattle( Battle& battle ) {
 
   if ( &battle == m_sel_battle )
   {
+      m_battle_list->ResetSelection();
       SelectBattle( 0 );
   }
   for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
@@ -266,6 +267,7 @@ void BattleListTab::RemoveBattle( Battle& battle ) {
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
 
+  //this does nothing if selection was reset
   m_battle_list->RestoreSelection( );
 
 }
