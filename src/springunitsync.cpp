@@ -917,9 +917,7 @@ wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString&
     if ( IsMod ) ret <<  _T("-") << susynclib()->GetPrimaryModChecksumFromName( name );
     else
     {
-// was this planned to be used?
-//       int total = susynclib()->GetMapCount();
-
+       int total = susynclib()->GetMapCount();
        int index = GetMapIndex( name );
        if ( index == -1 ) return ret;
        ret << _T("-") << susynclib()->GetMapChecksum( index );
