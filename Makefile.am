@@ -877,7 +877,7 @@ springlobby_SOURCES = \
 	src/Helper/colorbutton.cpp \
 	src/Helper/colorbutton.h \
 	src/groupuserdialog.h \
-	src/groupuserdialog.cpp
+	src/groupuserdialog.cpp \
 	src/lobbyoptionstab.h \
 	src/lobbyoptionstab.cpp \
 	src/auimanager.h \
@@ -889,7 +889,6 @@ springlobby_SOURCES += \
 		$(libtorrent_headers) \
  		$(libtorrent_sources) \
 		src/springlobby.rc \
-		src/Helper/listctrl.cpp \
 		src/Helper/listctrl.cpp 
 endif
 

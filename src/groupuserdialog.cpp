@@ -150,7 +150,7 @@ void GroupUserDialog::OnAdd ( wxCommandEvent& event )
         wxString new_textctrl_content = wxEmptyString;
         if ( faulty_nicknames.GetCount() > 0 )
         {
-            customMessageBox( SL_MAIN_ICON, _("At least one username contained non-ascii or whitespace character.\nPlease correct and try again."),
+            customMessageBoxNoModal( SL_MAIN_ICON, _("At least one username contained non-ascii or whitespace character.\nPlease correct and try again."),
                                 _("Invalid usernames") );
             unsigned int i = 0;
             for ( ; i < faulty_nicknames.GetCount() ; ++i )

@@ -61,6 +61,7 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
   m_chat_tabs = new wxAuiNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
   #endif
 
+  wxBitmap userchat (userchat_xpm); //*charArr2wxBitmap(userchat_png, sizeof(userchat_png) );
   m_imagelist = new wxImageList( 12, 12 );
   m_imagelist->Add( wxBitmap(close_xpm) );
   m_imagelist->Add( wxBitmap(server_xpm) );
@@ -369,9 +370,10 @@ wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& c
 
   ret.Replace( 255, 253, 234, colour.Red(), colour.Green(), colour.Blue() );
 
+  ret.Replace( 255, 228, 0, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
 
 
-  return ret;
+    return ret;
 }
 
 bool MainChatTab::RemoveChatPanel( ChatPanel* panel )
