@@ -350,6 +350,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
       switch (susynclib()->GetOptionType(i))
       {
       case opt_float:
+      {
         ret.float_map[key] = mmOptionFloat(susynclib()->GetOptionName(i),key,
             susynclib()->GetOptionDesc(i),susynclib()->GetOptionNumberDef(i), susynclib()->GetOptionNumberStep(i),
             susynclib()->GetOptionNumberMin(i),susynclib()->GetOptionNumberMax(i));
@@ -362,7 +363,9 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
         entry.Add( TowxString( susynclib()->GetOptionNumberMin(i) ) );
         entry.Add( TowxString( susynclib()->GetOptionNumberMax(i)) );
         break;
+      }
       case opt_bool:
+      {
         ret.bool_map[key] = mmOptionBool(susynclib()->GetOptionName(i),key,
             susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i));
         entry.Add( susynclib()->GetOptionName(i) );
@@ -371,7 +374,9 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
         entry.Add( descr );
         entry.Add( TowxString( susynclib()->GetOptionBoolDef(i) ) );
         break;
+      }
       case opt_string:
+      {
         ret.string_map[key] = mmOptionString(susynclib()->GetOptionName(i),key,
             susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i));
         entry.Add( susynclib()->GetOptionName(i) );
@@ -381,7 +386,9 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
         entry.Add( susynclib()->GetOptionStringDef(i) );
         entry.Add( TowxString( susynclib()->GetOptionStringMaxLen(i) ) );
         break;
+      }
       case opt_list:
+      {
          ret.list_map[key] = mmOptionList(susynclib()->GetOptionName(i),key,
             susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
         entry.Add( susynclib()->GetOptionName(i) );
@@ -399,6 +406,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
            entry.Add( susynclib()->GetOptionListItemName(i,j) );
            entry.Add( descr );
          }
+      }
       }
     wxString optiontoken;
     unsigned int entrycount = entry.GetCount();
@@ -508,6 +516,7 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
       switch (susynclib()->GetOptionType(i))
       {
       case opt_float:
+      {
         ret.float_map[key] = mmOptionFloat(susynclib()->GetOptionName(i),key,
             susynclib()->GetOptionDesc(i),susynclib()->GetOptionNumberDef(i), susynclib()->GetOptionNumberStep(i),
             susynclib()->GetOptionNumberMin(i),susynclib()->GetOptionNumberMax(i));
@@ -520,7 +529,9 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
         entry.Add( TowxString( susynclib()->GetOptionNumberMin(i) ) );
         entry.Add( TowxString( susynclib()->GetOptionNumberMax(i)) );
         break;
+      }
       case opt_bool:
+      {
         ret.bool_map[key] = mmOptionBool(susynclib()->GetOptionName(i),key,
             susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i));
         entry.Add( susynclib()->GetOptionName(i) );
@@ -529,7 +540,9 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
         entry.Add( descr );
         entry.Add( TowxString( susynclib()->GetOptionBoolDef(i) ) );
         break;
+      }
       case opt_string:
+      {
         ret.string_map[key] = mmOptionString(susynclib()->GetOptionName(i),key,
             susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i));
         entry.Add( susynclib()->GetOptionName(i) );
@@ -539,7 +552,9 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
         entry.Add( susynclib()->GetOptionStringDef(i) );
         entry.Add( TowxString( susynclib()->GetOptionStringMaxLen(i) ) );
         break;
+      }
       case opt_list:
+      {
          ret.list_map[key] = mmOptionList(susynclib()->GetOptionName(i),key,
             susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
         entry.Add( susynclib()->GetOptionName(i) );
@@ -557,6 +572,7 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
            entry.Add( susynclib()->GetOptionListItemName(i,j) );
            entry.Add( descr );
          }
+      }
       }
     wxString optiontoken;
     unsigned int entrycount = entry.GetCount();
@@ -937,7 +953,7 @@ wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString&
     {
        int total = susynclib()->GetMapCount();
        int index = GetMapIndex( name );
-       if ( index == -1 ) return ret;
+       if ( index == -1 || index > total ) return ret;
        ret << _T("-") << susynclib()->GetMapChecksum( index );
     }
   }
