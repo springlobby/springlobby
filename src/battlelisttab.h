@@ -49,7 +49,6 @@ class BattleListTab : public wxPanel
     void OnHost( wxCommandEvent& event );
     void OnFilter( wxCommandEvent& event );
     void OnFilterActiv( wxCommandEvent& event );
-    void OnFilterHighlighted( wxCommandEvent& event );
     void SetFilterActiv(bool activ);
     void OnJoin( wxCommandEvent& event );
     void OnListJoin( wxListEvent& event );
@@ -79,7 +78,7 @@ class BattleListTab : public wxPanel
     wxButton* m_join_btn;
 
     wxCheckBox* m_filter_activ;
-    wxCheckBox* m_filter_highlighted;
+
 #if wxUSE_TOGGLEBTN
 		wxToggleButton* m_filter_show;
 #else
@@ -99,8 +98,7 @@ enum
     BATTLE_HOST,
     BATTLE_LIST,
     BATTLE_LIST_FILTER_BUTTON,
-    BATTLE_LIST_FILTER_ACTIV,
-    BATTLE_LIST_FILTER_HIGHLIGHTED
+    BATTLE_LIST_FILTER_ACTIV
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H
