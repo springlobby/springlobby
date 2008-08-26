@@ -1221,19 +1221,19 @@ void Settings::SaveBattleMapOptions(IBattle *battle){
 
 
     for ( int i = 0; i < n_rects; ++i ) {
-      BattleStartRect *rect = battle->GetStartRect( i );
-      if ( (!rect) || rect->deleted ) {
+      BattleStartRect rect = battle->GetStartRect( i );
+      if ( !rect.exist || rect.todelete ) {
         m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"));
         m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_left"));
         m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_top"));
         m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_right"));
         m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"));
       }else{
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"), rect->ally);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_top"), rect->top);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_left"), rect->left);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_right"), rect->right);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"), rect->bottom);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"), (int)rect.ally);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_top"), (int)rect.top);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_left"), (int)rect.left);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_right"), (int)rect.right);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"), (int)rect.bottom);
       }
     }
   }

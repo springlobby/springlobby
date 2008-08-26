@@ -135,17 +135,16 @@ wxRect MapCtrl::GetMinimapRect()
 wxRect MapCtrl::GetStartRect( int index )
 {
   ASSERT_LOGIC( BattleType() != BT_Multi, _T("MapCtrl::GetStartRect(): Battle type is not BT_Multi") );
-  BattleStartRect* sr = m_battle->GetStartRect( index );
-  if ( sr == 0 ) return wxRect();
-  if ( sr->deleted ) return wxRect();
-  return GetStartRect( *sr );
+  BattleStartRect sr = m_battle->GetStartRect( index );
+  if ( !sr.exist || sr.todelete ) return wxRect();
+  return GetStartRect( sr );
 }
 
 
 wxRect MapCtrl::GetStartRect( const BattleStartRect& sr )
 {
   int x1,y1,x2,y2;
-  if ( sr.deleted ) return wxRect();
+  if ( !sr.exist || sr.todelete ) return wxRect();
   wxRect mr = GetMinimapRect();
 
   x1 = int( (mr.x + sr.left * mr.width / 200.0) + 0.5 );
@@ -900,6 +899,8 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     if ( nsr.height < minboxsize ) nsr.SetHeight( minboxsize );
     BattleStartRect bsr = GetBattleRect( nsr.x, nsr.y, nsr.x + nsr.width, nsr.y + nsr.height, m_mdown_rect );
     m_battle->AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom );
+    m_battle->StartRectAdded( m_mdown_rect );
+    m_battle->ResizeStartRect( m_mdown_rect );
     if ( sr != nsr ) RefreshRect( sr.Union( nsr ), false );
     return;
 
@@ -918,6 +919,8 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     }
     BattleStartRect bsr = GetBattleRect( nsr.x, nsr.y, nsr.x + nsr.width, nsr.y + nsr.height, m_mdown_rect );
     m_battle->AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom );
+    m_battle->StartRectAdded( m_mdown_rect );
+    m_battle->ResizeStartRect( m_mdown_rect );
     if ( sr != nsr ) RefreshRect( sr.Union( nsr ), false );
     return;
 
@@ -1126,7 +1129,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     }
 
   } else if ( (m_maction == MA_ResizeDownRight)||(m_maction == MA_ResizeUpLeft) ) {
-    m_battle->UpdateStartRect( m_mdown_rect );
+    m_battle->ResizeStartRect( m_mdown_rect );
     m_battle->SendHostInfo( HI_StartRects );
   }
 
