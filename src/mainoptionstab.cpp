@@ -17,6 +17,7 @@
 #include "chatoptionstab.h"
 #include "settings.h"
 #include "uiutils.h"
+#include "managegroupspanel.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentoptionspanel.h"
@@ -27,6 +28,7 @@
 #include "images/spring.xpm"
 #include "images/userchat.xpm"
 #include "images/springlobby.xpm"
+
 
 BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 
@@ -59,8 +61,13 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
     m_chat_opts = new ChatOptionsTab( m_tabs, m_ui );
     m_tabs->AddPage( m_chat_opts, _("Chat"), true, 2 );
 
+
     m_lobby_opts = new LobbyOptionsTab( m_tabs );
     m_tabs->AddPage ( m_lobby_opts, _("General"), true, 4 );
+
+
+    m_groups_opts = new ManageGroupsPanel( m_tabs );
+    m_tabs->AddPage( m_groups_opts , _("Groups"), true, 2 );
 
     m_restore_btn = new wxButton( this, wxID_REVERT, _("Restore") );
     m_apply_btn = new wxButton( this, wxID_APPLY, _("Apply") );
@@ -109,5 +116,17 @@ void MainOptionsTab::OnRestore( wxCommandEvent& event )
     m_lobby_opts->OnRestore ( event );
 }
 
+void MainOptionsTab::OnOpenGroupsTab()
+{
+    m_groups_opts->ReloadGroupSizer();
+}
 
-
+void MainOptionsTab::SetSelection( const unsigned int page )
+{
+    if ( page < m_tabs->GetPageCount() ){
+        m_tabs->SetSelection( page );
+        m_groups_opts->ReloadGroupSizer();
+    }
+    else
+        m_tabs->SetSelection( 0 );
+}

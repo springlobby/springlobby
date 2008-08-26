@@ -450,6 +450,8 @@ springlobby_SOURCES = \
 	src/channel.h \
 	src/channellist.cpp \
 	src/channellist.h \
+	src/channellistctrl.cpp \
+	src/channellistctrl.h \
 	src/chatoptionstab.cpp \
 	src/chatoptionstab.h \
 	src/chatpanel.cpp \
@@ -518,6 +520,8 @@ springlobby_SOURCES = \
 	src/user.h \
 	src/userlist.cpp \
 	src/userlist.h \
+	src/userlistctrl.cpp \
+	src/userlistctrl.h \
 	src/utils.cpp \
 	src/utils.h \
 	src/torrentlistctrl.cpp \
@@ -577,6 +581,8 @@ springlobby_SOURCES = \
 	src/images/downloads_icon.png.h \
 	src/images/single_player_icon.png.h \
 	src/images/downloads_icon_text.png.h \
+	src/images/warning_small.png.h \
+	src/images/spectator.png.h \
 	src/images/single_player_icon_text.png.h \
 	src/images/select_icon.xpm \
 	src/images/server.xpm \
@@ -862,17 +868,25 @@ springlobby_SOURCES = \
 	configure.ac \
 	src/autojoinchanneldialog.h \
 	src/autojoinchanneldialog.cpp \
+	src/useractions.h \
+	src/useractions.cpp \
+	src/managegroupspanel.h \
+	src/managegroupspanel.cpp \
 	src/Helper/wxtextctrlhist.h \
 	src/Helper/wxtextctrlhist.cpp \
 	src/Helper/colorbutton.cpp \
 	src/Helper/colorbutton.h \
+	src/groupuserdialog.h \
+	src/groupuserdialog.cpp \
 	src/lobbyoptionstab.h \
 	src/lobbyoptionstab.cpp
 
 
+
 if USE_WINDRES	
 springlobby_SOURCES += \ 
-		src/springlobby.rc 
+		src/springlobby.rc \
+		src/Helper/listctrl.cpp 
 endif
 
 if USE_LIBT_INCLUDED

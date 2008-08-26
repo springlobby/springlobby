@@ -37,11 +37,6 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl") )
 
 {
-
-	SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
-	SetImageList( &icons(), wxIMAGE_LIST_SMALL );
-	SetImageList( &icons(), wxIMAGE_LIST_STATE );
-
 	wxListItem col;
 
 	col.SetText( _T( "Name" ) );
@@ -124,26 +119,6 @@ TorrentListCtrl::~TorrentListCtrl()
 {
 //  delete m_popup;
 }
-
-
-//void TorrentListCtrl::OnSelected( wxListEvent& event )
-//{
-//  m_selected = GetItemData( event.GetIndex() );
-//  event.Skip();
-//}
-//
-//
-//void TorrentListCtrl::OnDeselected( wxListEvent& event )
-//{
-//  if ( m_selected == (int)GetItemData( event.GetIndex() )  )
-//  m_selected = -1;
-//}
-//
-//
-//int TorrentListCtrl::GetSelectedIndex()
-//{
-//  return m_selected;
-//}
 
 
 void TorrentListCtrl::OnListRightClick( wxListEvent& event )
@@ -523,6 +498,11 @@ int wxCALLBACK TorrentListCtrl::CompareFileSizeDOWN( long item1, long item2, lon
 void TorrentListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
     m_tiptext = _T("");
+}
+
+void TorrentListCtrl::HighlightItem( long item )
+{
+
 }
 
 #endif

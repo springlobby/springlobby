@@ -292,3 +292,17 @@ wxString GetHostCPUSpeed()
 //{
 //    return (first.Upper() > second.Upper() );
 //}
+
+bool IsValidNickname( const wxString& _name )
+{
+    wxString name = _name;
+    // The Regex Container
+	//wxRegEx regex( wxT("[:graph:]") );
+	wxRegEx regex( wxT("[ \t\r\n\v\föäüß, .:<>\\!§$%&+-]" ));
+
+	// We need to escape all regular Expression Characters, that have a special Meaning
+    name.Replace( _T("["), _T("") );
+	name.Replace( _T("]"), _T("") );
+
+    return !regex.Matches( name );
+}

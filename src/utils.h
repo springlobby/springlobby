@@ -105,6 +105,9 @@ long GetIntParam( wxString& params );
 bool GetBoolParam( wxString& params );
 wxString GetSpringLobbyVersion();
 
+//! matches against regex for printable ascii chars, excluding space
+bool IsValidNickname( const wxString& name );
+
 wxString GetHostCPUSpeed();
 
 static inline int CompareStringIgnoreCase(const wxString& first, const wxString& second)

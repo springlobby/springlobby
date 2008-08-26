@@ -115,6 +115,8 @@ void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int
   ASSERT_LOGIC( !m_serv.UserExists( nick ), _T("New user from server, but already exists!") );
   } catch (...) { return; }
   User& user = m_serv._AddUser( nick );
+  if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, nick ) )
+    actNotifBox( SL_MAIN_ICON, nick + _(" is online") );
   user.SetCountry( country );
   user.SetCpu( cpu );
   m_ui.OnUserOnline( user );
@@ -129,7 +131,15 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
     User& user = m_serv.GetUser( nick );
     wxLogMessage( _T("calling user.SetStatus( status ) ") );
 
+    UserStatus oldStatus = user.GetStatus();
     user.SetStatus( status );
+
+    if ( useractions().DoActionOnUser( UserActions::ActNotifStatus, nick ) )
+    {
+        wxString diffString = status.GetDiffString( oldStatus ) ;
+        if ( diffString != wxEmptyString )
+            actNotifBox( SL_MAIN_ICON, nick + _(" is now ") + diffString );
+    }
 
     wxLogMessage( _T("calling m_ui.OnUserStatusChanged( user ) ") );
     m_ui.OnUserStatusChanged( user );
@@ -158,6 +168,8 @@ void ServerEvents::OnUserQuit( const wxString& nick )
     User &user=m_serv.GetUser( nick );
     m_ui.OnUserOffline( user );
     m_serv._RemoveUser( nick );
+    if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, nick ) )
+        actNotifBox( SL_MAIN_ICON, nick + _(" just went offline") );
   }catch(std::runtime_error &except){
   }
 }
@@ -188,6 +200,9 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
   battle.SetDescription( title );
   battle.SetHostMod( mod, wxEmptyString );
 
+  if ( useractions().DoActionOnUser( UserActions::ActNotifBattle, user.GetNick() ) )
+        actNotifBox( SL_MAIN_ICON, user.GetNick() + _(" opened battle ") + title );
+
   m_ui.OnBattleOpened( battle );
   if ( user.Status().in_game ) {
     battle.SetInGame( true );
@@ -198,11 +213,13 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
 }
 
 
-void ServerEvents::OnJoinedBattle( int battleid )
+void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
 {
   wxLogDebugFunc( _T("") );
   try{
   Battle& battle = m_serv.GetBattle( battleid );
+
+  battle.SetHostMod( battle.GetHostModName(), hash );
 
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.spectator = false;
@@ -414,7 +431,8 @@ void ServerEvents::OnChannelSaid( const wxString& channel, const wxString& who, 
 {
   wxLogDebugFunc( _T("") );
   try{
-    m_serv.GetChannel( channel ).Said( m_serv.GetUser( who ), message );
+    if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
+        m_serv.GetChannel( channel ).Said( m_serv.GetUser( who ), message );
   }catch(std::runtime_error &except){
   }
 }
@@ -462,7 +480,8 @@ void ServerEvents::OnPrivateMessage( const wxString& user, const wxString& messa
   wxLogDebugFunc( _T("") );
   try{
   User& who = m_serv.GetUser( user );
-  m_ui.OnUserSaid( who, message, fromme );
+  if (!useractions().DoActionOnUser( UserActions::ActIgnorePM, who.GetNick() ) )
+    m_ui.OnUserSaid( who, message, fromme );
   }catch(std::runtime_error &except){
   }
 }

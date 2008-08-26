@@ -26,6 +26,7 @@ struct UserStatus {
   bool moderator;
   bool bot;
   UserStatus(): in_game(false), away(false), rank(RANK_1), moderator(false), bot(false) {}
+  wxString GetDiffString ( const UserStatus& other );
 };
 
 struct UserBattleStatus {
@@ -97,7 +98,7 @@ class User
     void Say( const wxString& message );
     void DoAction( const wxString& message );
 
-    Battle* GetBattle();
+    Battle* GetBattle() const;
     void SetBattle( Battle* battle );
 
     void SendMyUserStatus();

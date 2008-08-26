@@ -226,6 +226,8 @@
 		<Unit filename="src/flagimages.h" />
 		<Unit filename="src/globalevents.cpp" />
 		<Unit filename="src/globalevents.h" />
+		<Unit filename="src/groupuserdialog.cpp" />
+		<Unit filename="src/groupuserdialog.h" />
 		<Unit filename="src/hostbattledialog.cpp" />
 		<Unit filename="src/hostbattledialog.h" />
 		<Unit filename="src/httpdownloader.cpp" />
@@ -286,6 +288,8 @@
 		<Unit filename="src/maintorrenttab.h" />
 		<Unit filename="src/mainwindow.cpp" />
 		<Unit filename="src/mainwindow.h" />
+		<Unit filename="src/managegroupspanel.cpp" />
+		<Unit filename="src/managegroupspanel.h" />
 		<Unit filename="src/mapctrl.cpp" />
 		<Unit filename="src/mapctrl.h" />
 		<Unit filename="src/mmoptionmodel.cpp" />
@@ -379,8 +383,12 @@
 		<Unit filename="src/updater/versionchecker.h" />
 		<Unit filename="src/user.cpp" />
 		<Unit filename="src/user.h" />
+		<Unit filename="src/useractions.cpp" />
+		<Unit filename="src/useractions.h" />
 		<Unit filename="src/userlist.cpp" />
 		<Unit filename="src/userlist.h" />
+		<Unit filename="src/userlistctrl.cpp" />
+		<Unit filename="src/userlistctrl.h" />
 		<Unit filename="src/utils.cpp" />
 		<Unit filename="src/utils.h" />
 		<Unit filename="wxsmith/AutoBalanceDialog.wxs" />

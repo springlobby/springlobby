@@ -22,13 +22,13 @@ class IconImageList : public wxImageList
 
     int GetRankIcon( const int& rank, const bool& showlowest = true );
     int GetFlagIcon( const wxString& flagname );
-    int GetBattleStatusIcon( Battle& battle );
-    wxString GetBattleStatus(Battle& battle);
+    int GetBattleStatusIcon( const Battle& battle ) const;
+    wxString GetBattleStatus(const Battle& battle) const;
     int GetHostIcon( const bool& spectator = false );
     int GetColourIcon( const int& num );
     void SetColourIcon( const int& num, const wxColour& colour );
     int GetSideIcon( const wxString& modname, int side );
-    int GetReadyIcon( const bool& ready, const int& sync = 1 );
+    int GetReadyIcon( const bool& spectator, const bool& ready, const int& sync );
 
     int ICON_NONE;
 
@@ -96,7 +96,7 @@ class IconImageList : public wxImageList
     int ICON_UNK_FLAG;
     int ICON_FLAGS_BASE;
 
-
+    int ICON_WARNING_OVERLAY;
 
     int ICON_EMPTY;
 
@@ -104,6 +104,9 @@ class IconImageList : public wxImageList
     std::map<wxString, int> m_cached_side_icons;
     // why map? because i already included and didn't want to include more stuff, it's not time-critical code anyway
     std::map<unsigned int, unsigned int> m_player_colour_icons;
+
+    typedef std::map<int,int> IndexMap;
+    IndexMap m_state_index_map;
 };
 
 IconImageList& icons();

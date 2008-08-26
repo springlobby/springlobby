@@ -58,6 +58,8 @@ class BattleListTab : public wxPanel
     void OnSelect( wxListEvent& event );
     void OnUnitSyncReloaded();
 
+    void UpdateHighlights();
+
   protected:
     BattleListFilter* m_filter;
     BattleListCtrl* m_battle_list;
@@ -76,6 +78,7 @@ class BattleListTab : public wxPanel
     wxButton* m_join_btn;
 
     wxCheckBox* m_filter_activ;
+
 #if wxUSE_TOGGLEBTN
 		wxToggleButton* m_filter_show;
 #else
