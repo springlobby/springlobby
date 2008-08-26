@@ -49,7 +49,8 @@ void UpdaterClass::CheckForUpdates()
       wxChar sep = wxFileName::GetPathSeparator();
       wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
       m_newexe = currentexe.AfterLast( sep ) + _T("SpringLobbyUpdate") + sep;
-      m_exedownloader = new ExeDownloader( _T("foo"), m_newexe );
+      wxString url = _T("springlobby.info/windows/springlobby") + latestVersion + _T("-win32.zip");
+      m_exedownloader = new ExeDownloader( url, m_newexe );
     }
   }
 }
@@ -59,7 +60,8 @@ void UpdaterClass::OnDownloadEvent( int code )
   if ( code != 0) customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error downloading for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
   else
   {
-    if ( UpdateExe( m_newexe + _T("SpringLobby.exe"), false ) )  customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error while trying to replace the current executable version\n manual copy is necessary from\n") + m_newexe + _("to\n") + wxStandardPaths::Get().GetExecutablePath() +  _("\nPlease use Help->Report Bug to report this bug."), _("Error"));
+    if ( !UpdateExe( m_newexe + _T("SpringLobby.exe"), false ) )  customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error while trying to replace the current executable version\n manual copy is necessary from\n") + m_newexe + _("to\n") + wxStandardPaths::Get().GetExecutablePath() +  _("\nPlease use Help->Report Bug to report this bug."), _("Error"));
+    else wxRmdir( m_newexe );
   }
 }
 
