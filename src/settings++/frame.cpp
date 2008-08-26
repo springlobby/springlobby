@@ -72,7 +72,7 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 
 	settingsIcon  = new wxIcon(springsettings_xpm);
 
-	 if (abstract_panel::loadValuesIntoMap())
+    if (abstract_panel::loadValuesIntoMap())
 	{
 		CreateGUIControls();
 		initMenuBar();

@@ -2,7 +2,15 @@
 #include "se_utils.h"
 #include "Defs.hpp"
 
-#include <wx/config.h>
+#ifdef __WXMSW__
+    #include <wx/fileconf.h>
+    #include <wx/filename.h>
+    #include <wx/wfstream.h>
+    #include <wx/msw/registry.h>
+#else
+    #include <wx/config.h>
+#endif
+
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
@@ -29,18 +37,74 @@ se_settings& se_settings::getInstance()
 
 void se_settings::save()
 {
-	se_config->Flush();
+    se_config->Flush();
+    #if defined(__WXMSW__) && !defined(HAVE_WX26)
+    wxFileOutputStream outstream( m_chosed_path );
+
+    if ( !outstream.IsOk() )
+    {
+      // TODO: error handling
+    }
+
+    se_config->Save( outstream );
+    #endif
 }
 
 void se_settings::reload()
 {
-	delete se_config;
-	se_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
+
 }
 
 se_settings::se_settings()
 {
-	se_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
+	#if defined(__WXMSW__) && !defined(HAVE_WX26)
+  wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("springsettings.conf");
+  wxString globalfilepath =  wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() )
+                            + wxFileName::GetPathSeparator() + _T("springsettings.conf");
+
+//  if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath )
+//                            || !wxFileName::IsFileWritable( globalfilepath ) )
+//  {
+//     m_chosed_path = userfilepath;
+//     m_portable_mode = false;
+//  }
+//  else
+  {
+     m_chosed_path = globalfilepath; /// portable mode, use only current app paths
+     m_portable_mode = true;
+  }
+
+  // if it doesn't exist, try to create it
+  if ( !wxFileName::FileExists( m_chosed_path ) )
+  {
+     // if directory doesn't exist, try to create it
+     if ( !m_portable_mode && !wxFileName::DirExists( wxStandardPaths::Get().GetUserDataDir() ) )
+         wxFileName::Mkdir( wxStandardPaths::Get().GetUserDataDir() );
+
+     wxFileOutputStream outstream( m_chosed_path );
+
+     if ( !outstream.IsOk() )
+     {
+         // TODO: error handling
+     }
+  }
+
+  wxFileInputStream instream( m_chosed_path );
+
+  if ( !instream.IsOk() )
+  {
+      // TODO: error handling
+  }
+
+  se_config = new myconf( instream );
+
+  #else
+  //removed temporarily because it's suspected to cause a bug with userdir creation
+ // m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
+  se_config= new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
+  m_portable_mode = false;
+  #endif
+
 }
 
 se_settings::~se_settings()
