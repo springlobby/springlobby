@@ -177,6 +177,9 @@ BattleStartRect MapCtrl::GetBattleRect( int x1, int y1, int x2, int y2, int ally
   br.top = int( (200.0 * ( y1 - mr.y ) / mr.height) + 0.5 );
   br.right = int( (200.0 * ( x2 - mr.x ) / mr.width) + 0.5 );
   br.bottom = int( (200.0 * ( y2 - mr.y ) / mr.height) + 0.5 );
+  br.exist = true;
+  br.toadd = false;
+  br.toresize = true;
 
   if ( br.left < 0 ) br.left = 0; if ( br.left > 200 ) br.left = 200;
   if ( br.top < 0 ) br.top = 0; if ( br.top > 200 ) br.top = 200;
