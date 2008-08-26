@@ -950,7 +950,7 @@ void Ui::OnSpringTerminated( bool success )
 void Ui::OnBattleStartRectsUpdated( Battle& battle )
 {
   if ( m_main_win == 0 ) return;
-  mw().GetJoinTab().UpdateCurrentBattle( false, true );
+  mw().GetJoinTab().UpdateCurrentBattle( true, false );
 }
 
 

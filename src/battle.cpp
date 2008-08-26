@@ -62,7 +62,6 @@ Battle::Battle( Server& serv, Ui& ui, int id ) :
   m_ui(ui),
   m_ingame(false),
   m_order(0),
-  m_rects(16, static_cast<BattleStartRect*>(0)),
   m_bot_seek(m_bots.end()),
   m_bot_pos(BOT_SEEKPOS_INVALID)
 {
@@ -529,81 +528,76 @@ void Battle::CheckBan(User &user){
 
 
 
-void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom )
+void Battle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
 {
-  ASSERT_LOGIC( (allyno >= 0 || allyno < int(GetMaxPlayers()) ), _T("Allyno out of bounds.") );
-  BattleStartRect* sr;
-  bool local;
-  while ( allyno >= int(m_rects.size()) ) m_rects.push_back(0); // add new element is it exceeds the vector bounds
-  if ( m_rects[allyno] == 0 ) {
-    sr = new BattleStartRect();
-    local = true;
-  } else {
-    sr = m_rects[allyno];
-    local = false;
-  }
+  ASSERT_LOGIC(  allyno < GetMaxPlayers(), _T("Allyno out of bounds.") );
+  BattleStartRect sr;
 
-  sr->ally = allyno;
-  sr->left = left;
-  sr->top = top;
-  sr->right = right;
-  sr->bottom = bottom;
-  sr->local = local;
-  sr->updated = true;//local;
-  sr->deleted = false;
+  sr.ally = allyno;
+  sr.left = left;
+  sr.top = top;
+  sr.right = right;
+  sr.bottom = bottom;
+  sr.toadd = true;
+  sr.todelete = false;
+  sr.toresize = false;
+  sr.exist = true;
+
   m_rects[allyno] = sr;
 }
 
 
-void Battle::RemoveStartRect( int allyno )
+void Battle::RemoveStartRect( unsigned int allyno )
 {
-  if ( allyno <0 ) return;
-  if ( allyno >= int(m_rects.size() )) return;
-  BattleStartRect* sr = m_rects[allyno];
-  if ( sr == 0 ) return;
-  sr->deleted = true;
+  if ( allyno >= m_rects.size() ) return;
+  BattleStartRect sr = m_rects[allyno];
+  sr.todelete = true;
+  m_rects[allyno] = sr;
 }
 
 
-void Battle::UpdateStartRect( int allyno )
+void Battle::ResizeStartRect( unsigned int allyno )
 {
-  if ( allyno >= int(m_rects.size()) ) return;
-  BattleStartRect* sr = m_rects[allyno];
-  if ( sr == 0 ) return;
-  sr->updated = true;
+  if ( allyno >= m_rects.size() ) return;
+  BattleStartRect sr = m_rects[allyno];
+  sr.toresize = true;
+  m_rects[allyno] = sr;
 }
 
 
-void Battle::StartRectRemoved( int allyno )
+void Battle::StartRectRemoved( unsigned int allyno )
 {
-  if ( allyno >= int(m_rects.size()) ) return;
-  BattleStartRect* sr = m_rects[allyno];
-  if ( sr == 0 ) return;
-  m_rects[allyno] = 0;
-  delete sr;
+  if ( allyno >= m_rects.size() ) return;
+  if ( m_rects[allyno].todelete ) m_rects.erase(allyno);
 }
 
 
-void Battle::StartRectUpdated( int allyno )
+void Battle::StartRectResized( unsigned int allyno )
 {
-  if ( allyno >= int(m_rects.size()) ) return;
-  BattleStartRect* sr = m_rects[allyno];
-  if ( sr == 0 ) return;
-  sr->updated = false;
-  sr->local = false;
+  if ( allyno >= m_rects.size() ) return;
+  BattleStartRect sr = m_rects[allyno];
+  sr.toresize = false;
+  m_rects[allyno] = sr;
 }
 
 
-BattleStartRect* Battle::GetStartRect( int allyno )
+void Battle::StartRectAdded( unsigned int allyno )
 {
-  ASSERT_LOGIC( (allyno >= 0 || allyno < int(GetMaxPlayers()) ), _T("Allyno out of bounds.") );
-  if ( allyno >= int(m_rects.size() )) return 0;
+  if ( allyno >= m_rects.size() ) return;
+  BattleStartRect sr = m_rects[allyno];
+  sr.toadd = false;
+  m_rects[allyno] = sr;
+}
+
+
+BattleStartRect Battle::GetStartRect( unsigned int allyno )
+{
   return m_rects[allyno];
 }
 
 void Battle::ClearStartRects()
 {
-  for ( std::vector<BattleStartRect*>::size_type i = 0; i < GetNumRects(); i++ ) RemoveStartRect( i );
+  m_rects.clear();
 }
 
 
@@ -877,8 +871,8 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
   std::vector<Alliance>alliances;
   int ally=0;
   for(int i=0;i<tmp;++i){
-    BattleStartRect* sr = m_rects[i];
-    if(sr && !sr->deleted){
+    BattleStartRect sr = m_rects[i];
+    if( sr.exist && !sr.todelete ){
       ally=i;
       alliances.push_back(Alliance(ally));
       ally++;

@@ -114,9 +114,8 @@ UserListctrl::UserDataMap UserListctrl::GetSelectedUserData() const
 		item = GetNextItem( item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
 		if ( item == -1 ) // means nothing was found
             return ret;
-        UserDataMapConstIter el = m_userdata.find(item);
-        if ( el != m_userdata.end() )
-            ret[item] = ( el->second );
+        UserData data = *((UserData*) GetItemData( item ));
+        ret[item] = data;
 	}
 
 	return ret;
