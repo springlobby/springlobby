@@ -51,6 +51,7 @@ BEGIN_EVENT_TABLE(BattleListFilter, wxPanel)
   EVT_TEXT                ( BATTLE_FILTER_MOD_EDIT        , BattleListFilter::OnChangeMod         )
   EVT_CHECKBOX            ( BATTLE_FILTER_MAP_SHOW        , BattleListFilter::OnChange            )
   EVT_CHECKBOX            ( BATTLE_FILTER_MOD_SHOW        , BattleListFilter::OnChange            )
+  EVT_CHECKBOX            ( BATTLE_FILTER_HIGHLIGHTED     , BattleListFilter::OnChange            )
 
 END_EVENT_TABLE()
 
@@ -109,6 +110,11 @@ BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListT
 	m_filter_status_pass->SetValue(f_values.status_passworded);
 
 	m_filter_status_sizer1->Add( m_filter_status_pass, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+
+	m_filter_highlighted = new wxCheckBox( this, BATTLE_FILTER_HIGHLIGHTED , _("Highlighted only"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_filter_highlighted->SetValue( f_values.highlighted_only );
+
+	m_filter_status_sizer1->Add( m_filter_highlighted, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 
 	m_filter_body_row1_sizer->Add( m_filter_status_sizer1, 1, wxEXPAND, 5 );
 
@@ -436,7 +442,7 @@ bool BattleListFilter::FilterBattle(Battle& battle)
 
   if (!m_activ) return true;
 
-  if ( m_filter_highlighted )
+  if ( m_filter_highlighted->IsChecked() )
   {
     wxString host = battle.GetFounder().GetNick();
     if ( !useractions().DoActionOnUser( UserActions::ActHighlight, host ) )
@@ -588,10 +594,6 @@ void  BattleListFilter::SaveFilterValues()
     filtervalues.status_open = m_filter_status_open->IsChecked();
     filtervalues.status_passworded = m_filter_status_pass->IsChecked();
     filtervalues.status_start = m_filter_status_start->IsChecked();
+    filtervalues.highlighted_only = m_filter_highlighted->IsChecked();
     sett().SetBattleFilterValues(filtervalues);
-}
-
-void BattleListFilter::SetFilterHighlighted( bool state )
-{
-    m_filter_highlighted = state;
 }
