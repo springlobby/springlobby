@@ -143,8 +143,18 @@ unsigned int  Settings::GetSettingsVersion()
 
 wxString Settings::GetLobbyWriteDir()
 {
-  wxChar sep = wxFileName::GetPathSeparator();
-  return GetSpringDir() + sep + _T("lobby") + sep + _T("SpringLobby") + sep;
+  wxString sep = wxFileName::GetPathSeparator();
+  wxString path = GetSpringDir() + sep + _T("lobby");
+  if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  path += sep + _T("SpringLobby") + sep;
+  if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  return path;
 }
 
 
@@ -216,7 +226,12 @@ void Settings::SetWebBrowserPath( const wxString path )
 
 wxString Settings::GetCachePath()
 {
-  return GetLobbyWriteDir() + _T("cache") + wxFileName::GetPathSeparator();
+  wxString path = GetLobbyWriteDir() + _T("cache") + wxFileName::GetPathSeparator();
+  if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  return path;
 }
 
 
@@ -651,8 +666,14 @@ void Settings::SetChatLogEnable( const bool value )
 
 wxString Settings::GetChatLogLoc()
 {
-    if ( !IsPortableMode() ) return m_config->Read( _T("/ChatLog/chatlog_loc"), GetLobbyWriteDir() + _T("chatlog") );
-    else return GetLobbyWriteDir() + _T("chatlog");
+    wxString path;
+    if ( !IsPortableMode() ) path = m_config->Read( _T("/ChatLog/chatlog_loc"), GetLobbyWriteDir() + _T("chatlog") );
+    else path = GetLobbyWriteDir() + _T("chatlog");
+    if ( !wxFileName::DirExists( path ) )
+    {
+      if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+    }
+    return path;
 }
 
 void Settings::SetChatLogLoc( const wxString& loc )
@@ -1211,8 +1232,12 @@ wxArrayString Settings::GetTorrentListToResume()
 
 wxString Settings::GetTorrentsFolder()
 {
-  wxChar sep = wxFileName::GetPathSeparator();
-  return GetLobbyWriteDir() +_T("torrents") + sep;
+  wxString path = GetLobbyWriteDir() +_T("torrents") + wxFileName::GetPathSeparator();
+    if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  return path;
 }
 
 

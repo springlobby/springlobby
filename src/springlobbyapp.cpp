@@ -102,7 +102,7 @@ bool SpringLobbyApp::OnInit()
 
     if ( !sett().IsFirstRun() && sett().IsPortableMode() && usync()->IsLoaded()) usync()->SetSpringDataPath( sett().GetSpringDir() ); /// update spring's current working dir trough unitsync
 
-    if ( !sett().IsFirstRun() ) InitCacheDir();
+    if ( !sett().IsFirstRun() && !wxDirExists( sett().GetSpringDir() ) ) wxMkdir( sett().GetSpringDir() );
 
     if ( sett().IsFirstRun() )
     {
@@ -119,7 +119,7 @@ bool SpringLobbyApp::OnInit()
 
         SetupUserFolders();
 
-        InitCacheDir();
+        if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
         wxString sep ( wxFileName::GetPathSeparator() );
         //! ask for downloading ota content if archive not found, start downloader in background
         wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
@@ -204,19 +204,11 @@ void SpringLobbyApp::OnTimer( wxTimerEvent& event )
 }
 
 
-void SpringLobbyApp::InitCacheDir()
-{
-    wxString path = sett().GetSpringDir();
-    if ( !wxDirExists( path ) ) wxMkdir( path );
-    if ( !wxDirExists( sett().GetCachePath() ) ) wxMkdir( sett().GetCachePath()  );
-}
-
-
 void SpringLobbyApp::SetupUserFolders()
 {
 #ifdef __WXGTK__
 #ifndef HAVE_WX26
-    wxChar sep = wxFileName::GetPathSeparator();
+    wxString sep = wxFileName::GetPathSeparator();
     if ( !wxFileName::DirExists( wxFileName::GetHomeDir() + sep +_T("spring") ) )
     {
         wxArrayString choices;
