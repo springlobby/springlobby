@@ -3,6 +3,7 @@
 #include "../utils.h"
 #include "exedownloader.h"
 #include "updater.h"
+#include "../settings.h"
 
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
@@ -46,9 +47,9 @@ void UpdaterClass::CheckForUpdates()
     int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? It will be automatically used next time you launch the lobby again."), _("Not up to Date"), wxYES_NO);
     if (answer == wxYES)
     {
-      wxChar sep = wxFileName::GetPathSeparator();
+      wxString sep = wxFileName::GetPathSeparator();
       wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
-      if ( !wxFileName::IsDirWritable( currentexe.AfterLast( wxFileName::GetPathSeparator() ) ) ||  )
+      if ( !wxFileName::IsDirWritable( currentexe.AfterLast( wxFileName::GetPathSeparator() ) ) || !wxFileName::IsFileWritable( currentexe ) )
       {
         customMessageBoxNoModal(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
         return;
@@ -75,9 +76,8 @@ void UpdaterClass::OnDownloadEvent( int code )
 bool UpdaterClass::UpdateExe( const wxString& newexe, bool WaitForReboot )
 {
   if ( !wxFileName::IsFileExecutable( newexe ) ) return false;
-  wxChar sep = wxFileName::GetPathSeparator();
   wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
-  wxString backupfile =  currentexe.BeforeLast( sep ) + _T("oldlobby.bak");
+  wxString backupfile =  currentexe.BeforeLast( wxFileName::GetPathSeparator() ) + _T("oldlobby.bak");
   if ( !wxRenameFile( currentexe, backupfile ) ) return false;
   if ( !wxRenameFile( newexe, currentexe ) )
   {
