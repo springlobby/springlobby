@@ -49,7 +49,7 @@ void UpdaterClass::CheckForUpdates()
     {
       wxString sep = wxFileName::GetPathSeparator();
       wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
-      if ( !wxFileName::IsDirWritable( currentexe.AfterLast( wxFileName::GetPathSeparator() ) ) || !wxFileName::IsFileWritable( currentexe ) )
+      if ( !wxFileName::IsDirWritable( currentexe.BeforeLast( wxFileName::GetPathSeparator() ) ) || !wxFileName::IsFileWritable( currentexe ) )
       {
         customMessageBoxNoModal(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
         return;
@@ -75,13 +75,13 @@ void UpdaterClass::OnDownloadEvent( int code )
 
 bool UpdaterClass::UpdateExe( const wxString& newexe, bool WaitForReboot )
 {
-  if ( !wxFileName::IsFileExecutable( newexe ) ) return false;
+  if ( !wxFileName::IsFileExecutable( newexe + _T("springlobby.exe") ) ) return false;
   wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
-  wxString backupfile =  currentexe.BeforeLast( wxFileName::GetPathSeparator() ) + _T("oldlobby.bak");
+  wxString backupfile =  _T("oldlobby.bak");
   if ( !wxRenameFile( currentexe, backupfile ) ) return false;
-  if ( !wxRenameFile( newexe, currentexe ) )
+  if ( !wxCopyFile( newexe + _T("springlobby.exe"), currentexe ) )
   {
-    wxRenameFile( backupfile, currentexe );
+    wxRenameFile( currentexe.BeforeFirst( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator()+ backupfile, _T("springlobby.exe") );
     return false;
   }
   wxRemoveFile( backupfile );
