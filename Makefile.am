@@ -880,7 +880,10 @@ springlobby_SOURCES = \
 	src/groupuserdialog.cpp \
 	src/lobbyoptionstab.h \
 	src/lobbyoptionstab.cpp
-
+	src/updater/updater.h \
+	src/updater/updater.cpp \
+	src/updater/exedownloader.h \
+	src/updater/exedownloader.cpp
 
 
 if USE_WINDRES	
