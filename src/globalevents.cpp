@@ -39,7 +39,7 @@ void SL_GlobalEvtHandler::OnHttpDownLoadFailed(wxCommandEvent& event)
 
 void SL_GlobalEvtHandler::OnExeDownLoad(wxCommandEvent& event)
 {
-    UpdaterClass().OnDownloadEvent( event.GetInt() );
+    Updater().OnDownloadEvent( event.GetInt() );
 }
 
 

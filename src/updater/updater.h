@@ -18,8 +18,6 @@ protected:
     wxString m_newexe;
     ExeDownloader* m_exedownloader;
 
-    DECLARE_EVENT_TABLE()
-
 };
 
 UpdaterClass& Updater();
