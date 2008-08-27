@@ -651,7 +651,6 @@ void Settings::SetChatLogEnable( const bool value )
 
 wxString Settings::GetChatLogLoc()
 {
-    wxChar sep = wxFileName::GetPathSeparator();
     if ( !IsPortableMode() ) return m_config->Read( _T("/ChatLog/chatlog_loc"), GetLobbyWriteDir() + _T("chatlog") );
     else return GetLobbyWriteDir() + _T("chatlog");
 }
