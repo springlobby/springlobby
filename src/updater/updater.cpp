@@ -48,8 +48,13 @@ void UpdaterClass::CheckForUpdates()
     {
       wxChar sep = wxFileName::GetPathSeparator();
       wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
-      m_newexe = currentexe.AfterLast( sep ) + _T("SpringLobbyUpdate") + sep;
-      wxString url = _T("springlobby.info/windows/springlobby") + latestVersion + _T("-win32.zip");
+      if ( !wxFileName::IsDirWritable( currentexe.AfterLast( wxFileName::GetPathSeparator() ) ) ||  )
+      {
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
+        return;
+      }
+      m_newexe = sett().GetLobbyWriteDir() + _T("update") + sep;
+      wxString url = _T("springlobby.info/windows/springlobby-") + latestVersion + _T("-win32.zip");
       m_exedownloader = new ExeDownloader( url, m_newexe );
     }
   }
