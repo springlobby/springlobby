@@ -106,6 +106,9 @@ class Settings
     void SetAutoUpdate( const bool value );
     bool GetAutoUpdate();
 
+    wxString GetLobbyWriteDir();
+
+
     /* ================================================================ */
     /** @name Network
      * @{
