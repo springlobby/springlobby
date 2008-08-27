@@ -54,6 +54,7 @@ void UpdaterClass::CheckForUpdates()
         return;
       }
       m_newexe = sett().GetLobbyWriteDir() + _T("update") + sep;
+      wxMkdir( m_newexe );
       wxString url = _T("springlobby.info/windows/springlobby-") + latestVersion + _T("-win32.zip");
       m_exedownloader = new ExeDownloader( url, m_newexe );
     }
