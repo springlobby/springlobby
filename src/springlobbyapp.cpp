@@ -96,17 +96,6 @@ bool SpringLobbyApp::OnInit()
             }
         }
     }
-    #ifndef HAVE_WX26
-    if ( !sett().IsFirstRun() && sett().IsPortableMode() ) /// rebase spring paths to current working dir in portable mode
-    {
-      wxString workingfolder = wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator();
-      sett().SetSpringDir( workingfolder );
-      sett().SetSpringLoc( workingfolder + sett().GetSpringLoc().AfterLast( wxFileName::GetPathSeparator() ) );
-      sett().SetUnitSyncLoc( workingfolder + sett().GetUnitSyncLoc().AfterLast( wxFileName::GetPathSeparator() ) );
-      sett().SetCachePath( workingfolder + sett().GetCachePath().AfterLast( wxFileName::GetPathSeparator() ) );
-      sett().SaveSettings();
-    }
-    #endif
 
     ui().ReloadUnitSync(); /// first time load of unitsync
     ui().ShowMainWindow();
@@ -219,13 +208,7 @@ void SpringLobbyApp::InitCacheDir()
 {
     wxString path = sett().GetSpringDir();
     if ( !wxDirExists( path ) ) wxMkdir( path );
-    path += wxFILE_SEP_PATH;
-    path += _T("lobbycache");
-    if ( !wxDirExists( path ) )
-    {
-       wxMkdir( path );
-       sett().SetCachePath( path );
-    }
+    if ( !wxDirExists( sett().GetCachePath() ) ) wxMkdir( path );
 }
 
 

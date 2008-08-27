@@ -165,7 +165,6 @@ class Settings
      * @{
      */
     wxString GetCachePath();
-    void SetCachePath( const wxString path );
 
     void SetCacheVersion();
     int GetCacheVersion();
@@ -489,6 +488,8 @@ class Settings
 
     void SetTorrentListToResume( const wxArrayString& list );
     wxArrayString GetTorrentListToResume();
+
+    wxString GetTorrentsFolder();
     /**@}*/
 
   protected:
