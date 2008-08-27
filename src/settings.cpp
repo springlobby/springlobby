@@ -141,6 +141,23 @@ unsigned int  Settings::GetSettingsVersion()
 }
 
 
+wxString Settings::GetLobbyWriteDir()
+{
+  wxString sep = wxFileName::GetPathSeparator();
+  wxString path = GetSpringDir() + sep + _T("lobby");
+  if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  path += sep + _T("SpringLobby") + sep;
+  if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  return path;
+}
+
+
 bool Settings::UseOldSpringLaunchMethod()
 {
     return m_config->Read( _T("/Spring/UseOldLaunchMethod"), 0l );
@@ -209,13 +226,12 @@ void Settings::SetWebBrowserPath( const wxString path )
 
 wxString Settings::GetCachePath()
 {
-    return m_config->Read( _T("/Spring/CachePath"), GetSpringDir() + wxFileName::GetPathSeparator() + _T("lobbycache") ) + wxFileName::GetPathSeparator();
-}
-
-
-void Settings::SetCachePath( const wxString path )
-{
-    m_config->Write( _T("/Spring/CachePath"), path );
+  wxString path = GetLobbyWriteDir() + _T("cache") + wxFileName::GetPathSeparator();
+  if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  return path;
 }
 
 
@@ -532,7 +548,8 @@ void Settings::SetMainWindowLeft( const int value )
 
 wxString Settings::GetSpringDir()
 {
-    return m_config->Read( _T("/Spring/dir"), WX_STRINGC(DEFSETT_SPRING_DIR) );
+    if ( !IsPortableMode() ) return m_config->Read( _T("/Spring/dir"), WX_STRINGC(DEFSETT_SPRING_DIR) );
+    else return wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
 }
 
 
@@ -557,7 +574,7 @@ void Settings::SetUnitSyncUseDefLoc( const bool usedefloc )
 
 wxString Settings::GetUnitSyncLoc()
 {
-    return m_config->Read( _T("/Spring/unitsync_loc"), _T("") );
+  return m_config->Read( _T("/Spring/unitsync_loc"), _T("") );
 }
 
 
@@ -598,6 +615,7 @@ void Settings::SetSpringLoc( const wxString& loc )
 
 wxString Settings::GetSpringUsedLoc( bool force, bool defloc )
 {
+    if ( IsPortableMode() ) return GetSpringDir() + wxFileName::GetPathSeparator() + _T("spring.exe");
     bool df;
     if ( force ) df = defloc;
     else df = GetSpringUseDefLoc();
@@ -617,6 +635,7 @@ wxString Settings::GetSpringUsedLoc( bool force, bool defloc )
 
 wxString Settings::GetUnitSyncUsedLoc( bool force, bool defloc )
 {
+    if ( IsPortableMode() ) return GetSpringDir() + wxFileName::GetPathSeparator() + _T("unitsync.dll");
     bool df;
     if ( force ) df = defloc;
     else df = GetUnitSyncUseDefLoc();
@@ -647,7 +666,14 @@ void Settings::SetChatLogEnable( const bool value )
 
 wxString Settings::GetChatLogLoc()
 {
-    return m_config->Read( _T("/ChatLog/chatlog_loc"), GetSpringDir() + _T("/logs") );
+    wxString path;
+    if ( !IsPortableMode() ) path = m_config->Read( _T("/ChatLog/chatlog_loc"), GetLobbyWriteDir() + _T("chatlog") );
+    else path = GetLobbyWriteDir() + _T("chatlog");
+    if ( !wxFileName::DirExists( path ) )
+    {
+      if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+    }
+    return path;
 }
 
 void Settings::SetChatLogLoc( const wxString& loc )
@@ -1201,6 +1227,17 @@ wxArrayString Settings::GetTorrentListToResume()
 
   m_config->SetPath( old_path );
   return list;
+}
+
+
+wxString Settings::GetTorrentsFolder()
+{
+  wxString path = GetLobbyWriteDir() +_T("torrents") + wxFileName::GetPathSeparator();
+    if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  return path;
 }
 
 
