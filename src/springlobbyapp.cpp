@@ -208,7 +208,7 @@ void SpringLobbyApp::InitCacheDir()
 {
     wxString path = sett().GetSpringDir();
     if ( !wxDirExists( path ) ) wxMkdir( path );
-    if ( !wxDirExists( sett().GetCachePath() ) ) wxMkdir( path );
+    if ( !wxDirExists( sett().GetCachePath() ) ) wxMkdir( sett().GetCachePath()  );
 }
 
 
