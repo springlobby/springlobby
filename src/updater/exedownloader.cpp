@@ -12,6 +12,7 @@
 #include <wx/app.h>
 #include <memory>
 
+#include "../settings++/custom_dialogs.h"
 #include "exedownloader.h"
 #include "../utils.h"
 #include "../globalevents.h"
@@ -19,7 +20,7 @@
 
 ExeDownloader::ExeDownloader( const wxString& FileUrl, const wxString& DestPath )
 {
-    m_thread_updater = new ExeDownloaderThread (  FileUrl, DestPath  );
+    m_thread_updater = new ExeDownloaderThread (  FileUrl, DestPath );
 }
 
 ExeDownloader::~ExeDownloader()
@@ -52,6 +53,7 @@ void* ExeDownloader::ExeDownloaderThread::Entry()
     /// normal timeout is 10 minutes.. set to 10 secs.
     FileDownloading.SetTimeout(10);
     FileDownloading.Connect( m_fileurl.BeforeFirst(_T('/')), 80);
+    //customMessageBox(SL_MAIN_ICON, _("connect dl\n.")+m_destpath, _("Error"));
     wxInputStream* m_httpstream = FileDownloading.GetInputStream( _T("/") + m_fileurl.AfterFirst(_T('/')) );
 
     if ( m_httpstream )
@@ -66,9 +68,13 @@ void* ExeDownloader::ExeDownloaderThread::Entry()
           //download success
 
               bool unzipOk = Unzip();
+
               wxCommandEvent notice(ExeDownloadEvt,GetId());
               notice.SetInt( FileDownloading.GetError() );
-              if ( unzipOk ) notice.SetInt( 0 );
+              if ( unzipOk )
+              {
+                  notice.SetInt( 0 );
+              }
               wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), notice );
 
             return NULL;

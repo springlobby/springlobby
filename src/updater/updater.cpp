@@ -57,33 +57,44 @@ void UpdaterClass::CheckForUpdates()
       m_newexe = sett().GetLobbyWriteDir() + _T("update") + sep;
       wxMkdir( m_newexe );
       wxString url = _T("springlobby.info/windows/springlobby-") + latestVersion + _T("-win32.zip");
-      m_exedownloader = new ExeDownloader( url, m_newexe );
+      m_exedownloader = new ExeDownloader( url, m_newexe + _T("temp.zip") );
     }
   }
 }
 
 void UpdaterClass::OnDownloadEvent( int code )
 {
-  if ( code != 0) customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error downloading for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
+  if ( code != 0) customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
   else
   {
-    if ( !UpdateExe( m_newexe + _T("SpringLobby.exe"), false ) )  customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error while trying to replace the current executable version\n manual copy is necessary from\n") + m_newexe + _("to\n") + wxStandardPaths::Get().GetExecutablePath() +  _("\nPlease use Help->Report Bug to report this bug."), _("Error"));
-    else wxRmdir( m_newexe );
+    if ( !UpdateExe( m_newexe , false ) )  customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error while trying to replace the current executable version\n manual copy is necessary from\n") + m_newexe + _("to\n") + wxStandardPaths::Get().GetExecutablePath() +  _("\nPlease use Help->Report Bug to report this bug."), _("Error"));
+    else
+    {
+        wxRmdir( m_newexe );
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Update complete. Please restart SpringLobby for it to take effect."), _("Success"));
+    }
   }
 }
 
 
 bool UpdaterClass::UpdateExe( const wxString& newexe, bool WaitForReboot )
 {
-  if ( !wxFileName::IsFileExecutable( newexe + _T("springlobby.exe") ) ) return false;
+//  if ( !wxFileName::IsFileExecutable( newexe + _T("springlobby.exe") ) )
+//  {
+//      customMessageBoxNoModal(SL_MAIN_ICON, _("not exe."), _("Error"));
+//      return false;
+//  }
   wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
-  wxString backupfile =  _T("oldlobby.bak");
-  if ( !wxRenameFile( currentexe, backupfile ) ) return false;
+  customMessageBox(SL_MAIN_ICON, currentexe , _T("currentexe ") );
+  wxString backupfile =  currentexe + _T(".bak");
+  if ( !wxRenameFile( currentexe, backupfile ) )
+    return false;
+
   if ( !wxCopyFile( newexe + _T("springlobby.exe"), currentexe ) )
   {
     wxRenameFile( currentexe.BeforeFirst( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator()+ backupfile, _T("springlobby.exe") );
     return false;
   }
-  wxRemoveFile( backupfile );
+  //wxRemoveFile( backupfile );
   return true;
 }
