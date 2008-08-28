@@ -79,6 +79,7 @@ void UpdaterClass::OnDownloadEvent( int code )
 
 bool UpdaterClass::UpdateExe( const wxString& newexe, bool WaitForReboot )
 {
+    //this always returns false on msw
 //  if ( !wxFileName::IsFileExecutable( newexe + _T("springlobby.exe") ) )
 //  {
 //      customMessageBoxNoModal(SL_MAIN_ICON, _("not exe."), _("Error"));
@@ -87,6 +88,7 @@ bool UpdaterClass::UpdateExe( const wxString& newexe, bool WaitForReboot )
   wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
 
   wxString backupfile =  currentexe + _T(".bak");
+  wxRemoveFile( backupfile );
   if ( !wxRenameFile( currentexe, backupfile ) )
     return false;
 
@@ -95,6 +97,6 @@ bool UpdaterClass::UpdateExe( const wxString& newexe, bool WaitForReboot )
     wxRenameFile( currentexe.BeforeFirst( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator()+ backupfile, _T("springlobby.exe") );
     return false;
   }
-  wxRemoveFile( backupfile );
+
   return true;
 }
