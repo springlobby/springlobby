@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLE_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLE_H
 
-#include <vector>
+#include <map>
 #include <list>
 #include <set>
 
@@ -170,9 +170,9 @@ class Battle : public UserList, public IBattle
 
     bool ExecuteSayCommand( const wxString& cmd );
 
-    void AddStartRect( int allyno, int left, int top, int right, int bottom );
-    void RemoveStartRect( int allyno );
-    void UpdateStartRect( int allyno );
+    void AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom );
+    void RemoveStartRect( unsigned int allyno );
+    void ResizeStartRect( unsigned int allyno );
 
     void AddBot( const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll );
     void RemoveBot( const wxString& nick );
@@ -186,10 +186,11 @@ class Battle : public UserList, public IBattle
     BattleBot* GetBot( unsigned int index ) const;
     unsigned int GetNumBots() const;
 
-    void StartRectRemoved( int allyno );
-    void StartRectUpdated( int allyno );
+    void StartRectRemoved( unsigned int allyno );
+    void StartRectResized( unsigned int allyno );
+    void StartRectAdded( unsigned int allyno );
 
-    BattleStartRect* GetStartRect( int allyno );
+    BattleStartRect GetStartRect( unsigned int allyno );
     void ClearStartRects();
 
     void ForceSide( User& user, int side );
@@ -211,7 +212,7 @@ class Battle : public UserList, public IBattle
     int GetMyAlly() { return GetMe().BattleStatus().ally; }
     void SetMyAlly( int ally ) { GetMe().BattleStatus().ally = ally; SendMyBattleStatus(); }
 
-    std::vector<BattleStartRect*>::size_type GetNumRects();
+    std::map<unsigned int, BattleStartRect>::size_type GetNumRects();
 
     mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
 
@@ -237,7 +238,7 @@ class Battle : public UserList, public IBattle
 
     int m_order;
 
-    std::vector<BattleStartRect*> m_rects;
+    std::map<unsigned int,BattleStartRect> m_rects;
     std::list<BattleBot*> m_bots;
 
     mutable std::list<BattleBot*>::const_iterator m_bot_seek;

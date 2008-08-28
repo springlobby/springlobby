@@ -467,10 +467,10 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
   wxLogMessage(_T("(3) Joining torrent: downloading info file"));
 
   #ifdef HAVE_WX26
-    wxFileName filename( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("torrents")  + wxFileName::GetPathSeparator() + hash + _T(".torrent") ) ;
+    wxFileName filename( sett().GetTorrentsFolder() + hash + _T(".torrent") ) ;
     bool readable = filename.IsOk();
   #else
-    bool readable = wxFileName::IsFileReadable( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("torrents")  + wxFileName::GetPathSeparator() + hash + _T(".torrent") ) ;
+    bool readable = wxFileName::IsFileReadable( sett().GetTorrentsFolder()+ hash + _T(".torrent") ) ;
   #endif
 
   if ( !readable  ) /// file descriptor not present, download it
@@ -478,7 +478,7 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
      if (!DownloadTorrentFileFromTracker( hash )) return false;
   }
   /// read torrent from file
-  std::ifstream in( wxString( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("torrents") + wxFileName::GetPathSeparator() + hash + _T(".torrent") ).mb_str(), std::ios_base::binary);
+  std::ifstream in( wxString( sett().GetTorrentsFolder() + hash + _T(".torrent") ).mb_str(), std::ios_base::binary);
   in.unsetf(std::ios_base::skipws);
   libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
   wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),name.c_str(),path.c_str());
@@ -522,9 +522,6 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
 
   if ( sett().GetSpringDir().IsEmpty() ) return; /// no good things can happend if you don't know which folder to r/w files from
-  bool creationsuccess = true;
-  if ( !wxFileName::DirExists( sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("torrents") + wxFileName::GetPathSeparator()  ) ) creationsuccess = wxFileName::Mkdir(  sett().GetSpringDir() + wxFileName::GetPathSeparator() + _T("torrents") + wxFileName::GetPathSeparator()  );
-  if (!creationsuccess) return;
 
   libtorrent::torrent_info newtorrent;
 
@@ -575,9 +572,6 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
   wxLogMessage(_T("torrent system downloading torrent info %s"), hash.c_str() );
 
   if ( sett().GetSpringDir().IsEmpty() ) return false; /// no good things can happend if you don't know which folder to r/w files from
-  bool creationsuccess = true;
-  if ( !wxFileName::DirExists(  sett().GetSpringDir() +  wxFileName::GetPathSeparator()  + _T("torrents") +  wxFileName::GetPathSeparator()   ) ) creationsuccess = wxFileName::Mkdir(  sett().GetSpringDir() +  wxFileName::GetPathSeparator() +  _T("torrents") +  wxFileName::GetPathSeparator()   );
-  if (!creationsuccess) return false;
   wxHTTP fileRequest;
   //versionRequest.SetHeader(_T("Content-type"), _T(""));
   /// normal timeout is 10 minutes.. set to 10 secs.
@@ -588,7 +582,7 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
   if (fileRequest.GetError() == wxPROTO_NOERR)
   {
 
-    wxFileOutputStream output(sett().GetSpringDir() + wxFileName::GetPathSeparator() +  _T("torrents") + wxFileName::GetPathSeparator() + hash + _T(".torrent") );
+    wxFileOutputStream output( sett().GetTorrentsFolder() + hash + _T(".torrent") );
     if ( output.Ok() )
     {
       stream->Read(output);

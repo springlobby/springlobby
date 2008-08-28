@@ -169,7 +169,7 @@ SET(SpringLobbySrc
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
 	src/iconimagelist.cpp
-	src/lobbyoptionstab.cppt
+	src/lobbyoptionstab.cpp
 	src/mainchattab.cpp
 	src/mainjoinbattletab.cpp
 	src/mainoptionstab.cpp

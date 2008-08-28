@@ -141,6 +141,23 @@ unsigned int  Settings::GetSettingsVersion()
 }
 
 
+wxString Settings::GetLobbyWriteDir()
+{
+  wxString sep = wxFileName::GetPathSeparator();
+  wxString path = GetSpringDir() + sep + _T("lobby");
+  if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  path += sep + _T("SpringLobby") + sep;
+  if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  return path;
+}
+
+
 bool Settings::UseOldSpringLaunchMethod()
 {
     return m_config->Read( _T("/Spring/UseOldLaunchMethod"), 0l );
@@ -209,13 +226,12 @@ void Settings::SetWebBrowserPath( const wxString path )
 
 wxString Settings::GetCachePath()
 {
-    return m_config->Read( _T("/Spring/CachePath"), GetSpringDir() + wxFileName::GetPathSeparator() + _T("lobbycache") ) + wxFileName::GetPathSeparator();
-}
-
-
-void Settings::SetCachePath( const wxString path )
-{
-    m_config->Write( _T("/Spring/CachePath"), path );
+  wxString path = GetLobbyWriteDir() + _T("cache") + wxFileName::GetPathSeparator();
+  if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  return path;
 }
 
 
@@ -532,7 +548,8 @@ void Settings::SetMainWindowLeft( const int value )
 
 wxString Settings::GetSpringDir()
 {
-    return m_config->Read( _T("/Spring/dir"), WX_STRINGC(DEFSETT_SPRING_DIR) );
+    if ( !IsPortableMode() ) return m_config->Read( _T("/Spring/dir"), WX_STRINGC(DEFSETT_SPRING_DIR) );
+    else return wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
 }
 
 
@@ -557,7 +574,7 @@ void Settings::SetUnitSyncUseDefLoc( const bool usedefloc )
 
 wxString Settings::GetUnitSyncLoc()
 {
-    return m_config->Read( _T("/Spring/unitsync_loc"), _T("") );
+  return m_config->Read( _T("/Spring/unitsync_loc"), _T("") );
 }
 
 
@@ -598,6 +615,7 @@ void Settings::SetSpringLoc( const wxString& loc )
 
 wxString Settings::GetSpringUsedLoc( bool force, bool defloc )
 {
+    if ( IsPortableMode() ) return GetSpringDir() + wxFileName::GetPathSeparator() + _T("spring.exe");
     bool df;
     if ( force ) df = defloc;
     else df = GetSpringUseDefLoc();
@@ -617,6 +635,7 @@ wxString Settings::GetSpringUsedLoc( bool force, bool defloc )
 
 wxString Settings::GetUnitSyncUsedLoc( bool force, bool defloc )
 {
+    if ( IsPortableMode() ) return GetSpringDir() + wxFileName::GetPathSeparator() + _T("unitsync.dll");
     bool df;
     if ( force ) df = defloc;
     else df = GetUnitSyncUseDefLoc();
@@ -647,7 +666,14 @@ void Settings::SetChatLogEnable( const bool value )
 
 wxString Settings::GetChatLogLoc()
 {
-    return m_config->Read( _T("/ChatLog/chatlog_loc"), GetSpringDir() + _T("/logs") );
+    wxString path;
+    if ( !IsPortableMode() ) path = m_config->Read( _T("/ChatLog/chatlog_loc"), GetLobbyWriteDir() + _T("chatlog") );
+    else path = GetLobbyWriteDir() + _T("chatlog");
+    if ( !wxFileName::DirExists( path ) )
+    {
+      if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+    }
+    return path;
 }
 
 void Settings::SetChatLogLoc( const wxString& loc )
@@ -1037,6 +1063,7 @@ BattleListFilterValues Settings::GetBattleFilterValues(const wxString& profile_n
     filtervalues.status_open =      m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_open"), true );
     filtervalues.status_passworded= m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_passworded"), true );
     filtervalues.status_start =     m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_start"), true );
+    filtervalues.highlighted_only = m_config->Read( _T("/BattleFilter/")+profile_name + _T("/highlighted_only"), 0l);
     return filtervalues;
 }
 
@@ -1061,6 +1088,7 @@ void Settings::SetBattleFilterValues(const BattleListFilterValues& filtervalues,
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_open"),filtervalues.status_open );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_passworded"),filtervalues.status_passworded );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_start"),filtervalues.status_start );
+    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/highlighted_only"),filtervalues.highlighted_only );
     m_config->Write( _T("/BattleFilter/lastprofile"),profile_name);
 }
 
@@ -1202,6 +1230,17 @@ wxArrayString Settings::GetTorrentListToResume()
 }
 
 
+wxString Settings::GetTorrentsFolder()
+{
+  wxString path = GetLobbyWriteDir() +_T("torrents") + wxFileName::GetPathSeparator();
+    if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  return path;
+}
+
+
 void Settings::SaveBattleMapOptions(IBattle *battle){
   if ( !battle ){
         wxLogError(_T("Settings::SaveBattleMapOptions called with null argument"));
@@ -1221,19 +1260,19 @@ void Settings::SaveBattleMapOptions(IBattle *battle){
 
 
     for ( int i = 0; i < n_rects; ++i ) {
-      BattleStartRect *rect = battle->GetStartRect( i );
-      if ( (!rect) || rect->deleted ) {
+      BattleStartRect rect = battle->GetStartRect( i );
+      if ( !rect.exist || rect.todelete ) {
         m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"));
         m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_left"));
         m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_top"));
         m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_right"));
         m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"));
       }else{
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"), rect->ally);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_top"), rect->top);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_left"), rect->left);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_right"), rect->right);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"), rect->bottom);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"), (int)rect.ally);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_top"), (int)rect.top);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_left"), (int)rect.left);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_right"), (int)rect.right);
+        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"), (int)rect.bottom);
       }
     }
   }

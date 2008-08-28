@@ -49,7 +49,6 @@ BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
   EVT_LIST_ITEM_ACTIVATED ( BATTLE_JOIN              , BattleListTab::OnListJoin    )
   EVT_LIST_ITEM_SELECTED  ( BLIST_LIST               , BattleListTab::OnSelect      )
   EVT_CHECKBOX            ( BATTLE_LIST_FILTER_ACTIV , BattleListTab::OnFilterActiv )
-  EVT_CHECKBOX            ( BATTLE_LIST_FILTER_HIGHLIGHTED , BattleListTab::OnFilterHighlighted )
 #if  wxUSE_TOGGLEBTN
   EVT_TOGGLEBUTTON        ( BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter  )
 #else
@@ -146,8 +145,6 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , _("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
   m_buttons_sizer->Add( m_filter_activ, 0, wxALL, 5 );
 
-  m_filter_highlighted = new wxCheckBox( this, BATTLE_LIST_FILTER_HIGHLIGHTED , _("Show highlighted only"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_buttons_sizer->Add( m_filter_highlighted, 0, wxALL, 5 );
   #ifdef HAVE_WX26
   m_filter_activ->Disable();
   #endif
@@ -250,6 +247,7 @@ void BattleListTab::RemoveBattle( Battle& battle ) {
 
   if ( &battle == m_sel_battle )
   {
+      m_battle_list->ResetSelection();
       SelectBattle( 0 );
   }
   for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
@@ -266,6 +264,7 @@ void BattleListTab::RemoveBattle( Battle& battle ) {
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
 
+  //this does nothing if selection was reset
   m_battle_list->RestoreSelection( );
 
 }
@@ -622,11 +621,4 @@ void BattleListTab::OnUnitSyncReloaded()
 void BattleListTab::UpdateHighlights()
 {
     m_battle_list->UpdateHighlights();
-}
-
-void BattleListTab::OnFilterHighlighted( wxCommandEvent& event )
-{
-    m_filter->SetFilterHighlighted( m_filter_highlighted->GetValue() );
-    if ( m_ui.IsConnected() )
-        UpdateList();
 }

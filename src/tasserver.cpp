@@ -433,32 +433,31 @@ void TASServer::Update( int mselapsed )
             // Is it time for a nat traversal PING?
             m_last_udp_ping = now;
             /// Nat travelsal "ping"
-            Battle *battle=GetCurrentBattle();
-            if (battle)
+            if ( m_battle_id != -1 )
             {
-                if ((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports) ) && !battle->GetInGame())
-                {
-                    if (battle->IsFounderMe())
-                    {
-                        UdpPingTheServer(m_user);
-                        UdpPingAllClients();
-                    }
-                    else
-                    {
-                        UdpPingTheServer();
-                    }
-                }
-                else
-                {
-                    /// old logging for debug
-                    //if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
-                    //if(battle->GetInGame())wxLogMessage( _T("pinging: current battle is in game") );
-                }
-            }
-            else
-            {
-                //wxLogMessage( _T("pinging: No current battle set") );
-            }
+              Battle *battle=GetCurrentBattle();
+              if (battle)
+              {
+                  if ((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports) ) && !battle->GetInGame())
+                  {
+                      if (battle->IsFounderMe())
+                      {
+                          UdpPingTheServer(m_user);
+                          UdpPingAllClients();
+                      }
+                      else
+                      {
+                          UdpPingTheServer();
+                      }
+                  }
+                  else
+                  {
+                      /// old logging for debug
+                      //if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
+                      //if(battle->GetInGame())wxLogMessage( _T("pinging: current battle is in game") );
+                  }
+              }
+          }
         }
         HandlePinglist();
     }
@@ -1347,37 +1346,29 @@ void TASServer::SendHostInfo( HostInfo update )
     if ( (update & HI_StartRects) > 0 )   // Startrects should be updated.
     {
 
-        for ( std::vector<BattleStartRect*>::size_type i = 16; i < battle.GetNumRects(); i++ ) battle.RemoveStartRect( i ); /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
-        for ( std::vector<BattleStartRect*>::size_type i = 0; i < battle.GetNumRects(); i++ )   // Loop through all, and remove updated or deleted.
+        for ( unsigned int i = 16; i < battle.GetNumRects(); i++ ) battle.RemoveStartRect( i ); /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
+
+        for ( unsigned int i = 0; i < battle.GetNumRects(); i++ )   // Loop through all, and remove updated or deleted.
         {
             if ( i >= 16 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
             wxString cmd;
-            BattleStartRect* sr = battle.GetStartRect( i );
-            if ( sr == 0 ) continue;
-            if ( sr->deleted )
+            BattleStartRect sr = battle.GetStartRect( i );
+            if ( !sr.exist ) continue;
+            if ( sr.todelete )
             {
                 SendCmd( _T("REMOVESTARTRECT"), wxString::Format( _T("%d"), i ) );
                 battle.StartRectRemoved( i );
             }
-            else if ( !sr->local && sr->updated )
+            else if ( sr.toadd )
             {
-                cmd = wxString::Format( _T("REMOVESTARTRECT %d\n"), i );
-                SendCmd( _T("REMOVESTARTRECT"), wxString::Format( _T("%d"), i ) );
+                SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d\n"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
+                battle.StartRectAdded( i );
             }
-
-        }
-
-        for ( std::vector<BattleStartRect*>::size_type i = 0; i < battle.GetNumRects(); i++ )   // Loop through all, and update.
-        {
-            if ( i >= 16 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
-            wxString cmd;
-            BattleStartRect* sr = battle.GetStartRect( i );
-            if ( sr == 0 ) continue;
-            if ( sr->updated )
+            else if ( sr.toresize )
             {
-                SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d\n"), sr->ally, sr->left, sr->top, sr->right, sr->bottom ) );
-                battle.StartRectUpdated( i );
-
+                SendCmd( _T("REMOVESTARTRECT"), wxString::Format( _T("%d"), i ) );
+                SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d\n"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
+                battle.StartRectResized( i );
             }
         }
 

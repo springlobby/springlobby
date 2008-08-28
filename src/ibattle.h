@@ -4,7 +4,7 @@
 
 #include <wx/string.h>
 #include <list>
-#include <vector>
+#include <map>
 
 #include "iunitsync.h"
 #include "user.h"
@@ -40,16 +40,17 @@ enum {
 
 struct BattleStartRect
 {
-  BattleStartRect() { local = true; updated = false; deleted = false; }
-  bool local;
-  bool updated;
-  bool deleted;
+  BattleStartRect() { toadd = false; todelete = false; exist = false; toresize = false; }
+  bool toadd;
+  bool todelete;
+  bool toresize;
+  bool exist;
 
-  int ally;
-  int top;
-  int left;
-  int right;
-  int bottom;
+  unsigned int ally;
+  unsigned int top;
+  unsigned int left;
+  unsigned int right;
+  unsigned int bottom;
 };
 
 
@@ -89,10 +90,13 @@ class IBattle
 
     virtual wxColour GetFreeColour( User *for_whom ) const = 0;
 
-    virtual BattleStartRect* GetStartRect( int allyno ) { return 0; };
-    virtual void AddStartRect( int allyno, int left, int top, int right, int bottom ) {};
-    virtual void RemoveStartRect( int allyno ) {};
-    virtual void UpdateStartRect( int allyno ) {};
+    virtual BattleStartRect GetStartRect( unsigned int allyno ) { BattleStartRect foo; return foo; };
+    virtual void AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom ) {};
+    virtual void RemoveStartRect( unsigned int allyno ) {};
+    virtual void ResizeStartRect( unsigned int allyno ) {};
+    virtual void StartRectRemoved( unsigned int allyno ) {};
+    virtual void StartRectResized( unsigned int allyno ) {};
+    virtual void StartRectAdded( unsigned int allyno ) {};
     virtual void ClearStartRects(){};
 
     virtual int GetMyAlly() = 0;
@@ -120,7 +124,7 @@ class IBattle
 
     virtual void OnUnitSyncReloaded();
 
-    virtual std::vector<BattleStartRect*>::size_type GetNumRects() =0;
+    virtual std::map<unsigned int,BattleStartRect>::size_type GetNumRects() =0;
 
     virtual mmOptionsWrapper* CustomBattleOptions() =0;
 

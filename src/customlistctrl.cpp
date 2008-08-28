@@ -59,6 +59,11 @@ void customListCtrl::RestoreSelection()
     }
 }
 
+void customListCtrl::ResetSelection()
+{
+    m_selected = m_prev_selected = m_prev_selected_index = m_selected_index = -1;
+}
+
 void customListCtrl::OnSelected( wxListEvent& event )
 {
   m_selected = GetItemData( event.GetIndex() );

@@ -57,7 +57,8 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindo
   /* ================================
    * User's Spring directory
    */
-  m_dir_text = new wxStaticText( this, -1, _("Spring directory") );
+  m_dir_box = new wxStaticBox( this, -1, _("Spring Data Directory") );
+  m_dir_text = new wxStaticText( this, -1, _("Location") );
   m_dir_edit = new wxTextCtrl( this, -1, sett().GetSpringDir() );
   m_dir_browse_btn = new wxButton( this, SPRING_DIRBROWSE, _("Browse") );
   m_dir_find_btn = new wxButton( this, SPRING_DIRFIND, _("Find") );
@@ -147,9 +148,12 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindo
   m_web_loc_sizer->Add( m_web_edit, 1, wxEXPAND );
   m_web_loc_sizer->Add( m_web_browse_btn );
 
+  m_dir_box_sizer = new wxStaticBoxSizer( m_dir_box, wxVERTICAL );
   m_exec_box_sizer = new wxStaticBoxSizer( m_exec_box, wxVERTICAL );
   m_sync_box_sizer = new wxStaticBoxSizer( m_sync_box, wxVERTICAL );
   m_web_box_sizer = new wxStaticBoxSizer( m_web_box, wxVERTICAL );
+
+  m_dir_box_sizer->Add( m_dir_sizer, 0, wxEXPAND | wxALL, 2 );
 
   m_exec_box_sizer->Add( m_exec_def_radio, 0, wxALL, 2 );
   m_exec_box_sizer->Add( m_exec_spec_radio, 0, wxALL, 2 );
@@ -166,7 +170,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindo
   m_aconf_sizer->AddStretchSpacer();
   m_aconf_sizer->Add( m_auto_btn );
 
-  m_main_sizer->Add( m_dir_sizer, 0, wxEXPAND | wxALL, 2 );
+  m_main_sizer->Add( m_dir_box_sizer, 0, wxEXPAND | wxALL, 2 );
   m_main_sizer->Add( m_exec_box_sizer, 0, wxEXPAND | wxALL, 2 );
   m_main_sizer->Add( m_sync_box_sizer, 0, wxEXPAND | wxALL, 2 );
   m_main_sizer->Add( m_web_box_sizer, 0, wxEXPAND | wxALL, 2 );
@@ -188,6 +192,15 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindo
       OnAutoConf( event );
       OnApply( event );
     }
+
+  if ( sett().IsPortableMode() )
+  {
+    m_dir_box->Disable();
+    m_exec_box->Disable();
+    m_sync_box->Disable();
+    m_sync_box->Disable();
+  }
+
 }
 
 
