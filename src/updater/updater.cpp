@@ -85,7 +85,7 @@ bool UpdaterClass::UpdateExe( const wxString& newexe, bool WaitForReboot )
 //      return false;
 //  }
   wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
-  customMessageBox(SL_MAIN_ICON, currentexe , _T("currentexe ") );
+
   wxString backupfile =  currentexe + _T(".bak");
   if ( !wxRenameFile( currentexe, backupfile ) )
     return false;
@@ -95,6 +95,6 @@ bool UpdaterClass::UpdateExe( const wxString& newexe, bool WaitForReboot )
     wxRenameFile( currentexe.BeforeFirst( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator()+ backupfile, _T("springlobby.exe") );
     return false;
   }
-  //wxRemoveFile( backupfile );
+  wxRemoveFile( backupfile );
   return true;
 }

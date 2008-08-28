@@ -160,9 +160,9 @@ bool SpringLobbyApp::OnInit()
 
   m_timer->Start( TIMER_INTERVAL );
 
-  #ifdef __WXMSW__
-  //if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
-  #endif
+//  #ifdef __WXMSW__
+//  if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
+//  #endif
 
   sett().SetSettingsVersion(); /// bump settings version number
 

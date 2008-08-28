@@ -178,6 +178,8 @@ class Ui
 
     unsigned int m_upd_intv_counter;
 
+    bool m_checked_for_update;
+
 };
 
 Ui& ui();
