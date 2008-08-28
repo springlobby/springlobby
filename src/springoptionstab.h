@@ -79,10 +79,11 @@ class SpringOptionsTab : public wxScrolledWindow
     wxTextCtrl* m_sync_edit;
     wxTextCtrl* m_web_edit;
 
-
+    wxStaticBox* m_dir_box;
     wxStaticBox* m_exec_box;
     wxStaticBox* m_sync_box;
     wxStaticBox* m_web_box;
+    wxStaticBoxSizer* m_dir_box_sizer;
     wxStaticBoxSizer* m_exec_box_sizer;
     wxStaticBoxSizer* m_sync_box_sizer;
     wxStaticBoxSizer* m_web_box_sizer;

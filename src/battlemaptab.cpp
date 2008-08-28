@@ -142,6 +142,7 @@ void BattleMapTab::Update()
   m_map_opts_list->SetItem( 5, 1, wxString::Format( _T("%.3f"), map.info.maxMetal ) );
 
   int index = m_map_combo->FindString( RefineMapname( map.name ) );
+  if ( index == wxNOT_FOUND ) return;
   m_map_combo->SetSelection( index );
 }
 
@@ -159,7 +160,7 @@ void BattleMapTab::Update( const wxString& Tag )
     if ( key == _T("startpostype") )
     {
      m_start_radios->SetSelection( longval );
-     Update();
+     m_minimap->UpdateMinimap();
     }
   }
 }

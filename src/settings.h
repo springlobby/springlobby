@@ -4,7 +4,7 @@
 #include <wx/string.h>
 #include <wx/colour.h>
 
-#define CACHE_VERSION 4
+#define CACHE_VERSION 5
 #define SETTINGS_VERSION 1
 
 #define DEFSETT_DEFAULT_SERVER "TAS Server"
@@ -103,6 +103,8 @@ class Settings
     void SetReportStats(const bool value);
     bool GetReportStats();
 
+    wxString GetLobbyWriteDir();
+
     /* ================================================================ */
     /** @name Network
      * @{
@@ -165,7 +167,6 @@ class Settings
      * @{
      */
     wxString GetCachePath();
-    void SetCachePath( const wxString path );
 
     void SetCacheVersion();
     int GetCacheVersion();
@@ -489,6 +490,8 @@ class Settings
 
     void SetTorrentListToResume( const wxArrayString& list );
     wxArrayString GetTorrentListToResume();
+
+    wxString GetTorrentsFolder();
     /**@}*/
 
   protected:
