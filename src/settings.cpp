@@ -1455,4 +1455,13 @@ void Settings::SetReportStats(const bool value)
 }
 
 
+void Settings::SetAutoUpdate( const bool value )
+{
+    m_config->Write( _T("/General/AutoUpdate"), value );
+}
 
+
+bool Settings::GetAutoUpdate()
+{
+    return m_config->Read( _T("/General/AutoUpdate"), true );
+}

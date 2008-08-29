@@ -12,7 +12,6 @@
 				<Option object_output="obj/GNU/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="&gt;~/.springlobby/log2.txt" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wall" />
@@ -352,6 +351,10 @@
 		<Unit filename="src/uiutils.h" />
 		<Unit filename="src/unitsyncthread.cpp" />
 		<Unit filename="src/unitsyncthread.h" />
+		<Unit filename="src/updater/exedownloader.cpp" />
+		<Unit filename="src/updater/exedownloader.h" />
+		<Unit filename="src/updater/updater.cpp" />
+		<Unit filename="src/updater/updater.h" />
 		<Unit filename="src/updater/versionchecker.cpp" />
 		<Unit filename="src/updater/versionchecker.h" />
 		<Unit filename="src/user.cpp" />
