@@ -71,7 +71,7 @@ void UpdaterClass::OnDownloadEvent( int code )
     else
     {
         wxRmdir( m_newexe );
-        customMessageBoxNoModal(SL_MAIN_ICON, _("Update complete. Please restart SpringLobby for it to take effect."), _("Success"));
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Update complete. The changes will be available next lobby start."), _("Success"));
     }
   }
 }
@@ -94,7 +94,7 @@ bool UpdaterClass::UpdateExe( const wxString& newexe, bool WaitForReboot )
 
   if ( !wxCopyFile( newexe + _T("springlobby.exe"), currentexe ) )
   {
-    wxRenameFile( currentexe.BeforeFirst( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator()+ backupfile, _T("springlobby.exe") );
+    wxRenameFile(  backupfile, currentexe.AfterLast( wxFileName::GetPathSeparator() )  ); ///restore original file from backup on update failure
     return false;
   }
 
