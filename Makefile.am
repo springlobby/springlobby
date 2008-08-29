@@ -881,13 +881,16 @@ springlobby_SOURCES = \
 	src/lobbyoptionstab.h \
 	src/lobbyoptionstab.cpp \
 	src/auimanager.h \
-	src/auimanager.cpp
+	src/auimanager.cpp \
+	src/updater/updater.h \
+	src/updater/updater.cpp \
+	src/updater/exedownloader.h \
+	src/updater/exedownloader.cpp
+
 
 
 if USE_WINDRES	
 springlobby_SOURCES += \ 
-		$(libtorrent_headers) \
- 		$(libtorrent_sources) \
 		src/springlobby.rc \
 		src/Helper/listctrl.cpp 
 endif

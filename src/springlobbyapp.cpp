@@ -31,6 +31,7 @@
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
 #endif
+#include "updater/updater.h"
 
 #define TIMER_ID 101
 #define TIMER_INTERVAL 100
@@ -158,6 +159,10 @@ bool SpringLobbyApp::OnInit()
   #endif
 
   m_timer->Start( TIMER_INTERVAL );
+
+//  #ifdef __WXMSW__
+//  if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
+//  #endif
 
   sett().SetSettingsVersion(); /// bump settings version number
 

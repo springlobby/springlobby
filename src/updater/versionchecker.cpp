@@ -11,6 +11,7 @@
 wxString GetLatestVersion()
 {
   wxHTTP versionRequest;
+
   versionRequest.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
   // normal timeout is 10 minutes.. set to 10 secs.
   versionRequest.SetTimeout(10);
@@ -60,6 +61,7 @@ wxString GetLatestVersion()
     }
 
     wxLogDebugFunc(_T("Error connecting! Error is: ") + err);
+    customMessageBoxNoModal(SL_MAIN_ICON, _T("Error connecting! Error is: ") + err, _T(""));
 
     return _T("-1");
   }
