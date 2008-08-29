@@ -1,7 +1,7 @@
 PROJECT(SpringLobby)
 
 #set minimum cmake version
-cmake_minimum_required(VERSION 2.4)
+cmake_minimum_required(VERSION 2.6)
 
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
 ADD_DEFINITIONS(-Wall)

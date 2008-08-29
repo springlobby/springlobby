@@ -938,6 +938,8 @@ springsettings_SOURCES = \
 	src/utils.h \
 	src/crashreport.cpp \
 	src/crashreport.h \
+	src/spinctld.h \
+	src/spinctld.cpp \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
 	src/settings++/se_utils.cpp \
