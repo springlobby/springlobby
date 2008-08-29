@@ -33,6 +33,9 @@
 #endif
 #include "agreementdialog.h"
 #include "unitsyncthread.h"
+#ifdef __WXMSW__
+    #include "updater/updater.h"
+#endif
 
 #include "settings++/custom_dialogs.h"
 
@@ -48,7 +51,8 @@ Ui& ui()
 Ui::Ui() :
   m_serv(0),
   m_main_win(0),
-  m_con_win(0)
+  m_con_win(0),
+  m_checked_for_update(false)
 {
   m_upd_intv_counter = 0;
   m_main_win = new MainWindow( *this );
@@ -481,6 +485,12 @@ void Ui::OnUpdate( int mselapsed )
 {
   if ( GetServerStatus() ) {
     m_serv->Update( mselapsed );
+  }
+  if ( !m_checked_for_update ){
+    m_checked_for_update = true;
+    #ifdef __WXMSW__
+    if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
+    #endif
   }
   #ifndef NO_TORRENT_SYSTEM
   if (m_upd_intv_counter % 20 == 0 )

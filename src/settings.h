@@ -103,7 +103,11 @@ class Settings
     void SetReportStats(const bool value);
     bool GetReportStats();
 
+    void SetAutoUpdate( const bool value );
+    bool GetAutoUpdate();
+
     wxString GetLobbyWriteDir();
+
 
     /* ================================================================ */
     /** @name Network
