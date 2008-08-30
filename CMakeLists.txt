@@ -154,7 +154,7 @@ ENDIF ( WIN32 )
 
 # We define the include paths here, our minimal source dir is one
 
-INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${SettingsSrc_SOURCE_DIR} )
+INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
 SET(SpringLobbySrc
 	src/boost/md5.cpp
@@ -267,6 +267,7 @@ SET(SLSharedWithSettings
 	src/crashreport.cpp
 	src/springunitsynclib.cpp
 	src/utils.cpp
+        src/spinctld.cpp
 )
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
