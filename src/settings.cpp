@@ -1094,8 +1094,7 @@ void Settings::SetBattleFilterValues(const BattleListFilterValues& filtervalues,
 
 bool Settings::GetFilterActivState() const
 {
-    bool ret = m_config->Read( _T("/BattleFilter/Active") , 0l );
-    return ret;
+    return m_config->Read( _T("/BattleFilter/Active") , 0l );
 }
 
 void Settings::SetFilterActivState(const bool state)
