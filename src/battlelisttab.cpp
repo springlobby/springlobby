@@ -362,6 +362,8 @@ void BattleListTab::SetFilterActiv( bool activ )
 {
   m_filter->SetActiv( activ );
   m_filter_activ->SetValue( activ );
+  sett().SetFilterActivState( activ );
+
 }
 
 
@@ -493,12 +495,14 @@ void BattleListTab::OnFilter( wxCommandEvent& event )
 
 void BattleListTab::OnFilterActiv( wxCommandEvent& event )
 {
+  bool active = m_filter_activ->GetValue();
   if ( !m_ui.IsConnected() )
   {
-    m_filter_activ->SetValue( !m_filter_activ->GetValue() );
+    m_filter_activ->SetValue( !active );
     return;
   }
-  m_filter->SetActiv( m_filter_activ->GetValue() );
+  m_filter->SetActiv( active );
+  sett().SetFilterActivState( active );
 }
 
 

@@ -26,6 +26,7 @@
 #include "images/battle_settings.xpm"
 
 #include "ui.h"
+#include "settings.h"
 
 
 MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),
@@ -216,3 +217,8 @@ void MainJoinBattleTab::OnUnitSyncReloaded()
   }
 }
 
+void MainJoinBattleTab::OnConnected()
+{
+    if ( m_list_tab )
+        m_list_tab->SetFilterActiv( sett().GetFilterActivState() );
+}

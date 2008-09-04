@@ -1092,6 +1092,17 @@ void Settings::SetBattleFilterValues(const BattleListFilterValues& filtervalues,
     m_config->Write( _T("/BattleFilter/lastprofile"),profile_name);
 }
 
+bool Settings::GetFilterActivState() const
+{
+    bool ret = m_config->Read( _T("/BattleFilter/Active") , 0l );
+    return ret;
+}
+
+void Settings::SetFilterActivState(const bool state)
+{
+    m_config->Write( _T("/BattleFilter/Active") , state );
+}
+
 bool Settings::GetDisableSpringVersionCheck()
 {
     bool ret;
