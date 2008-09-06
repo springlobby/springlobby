@@ -1,8 +1,8 @@
 PROJECT(SpringLobby)
 
 #set minimum cmake version
-cmake_minimum_required(VERSION 2.6)
-
+cmake_minimum_required(VERSION 2.4)
+SET(CMAKE_COLOR_MAKEFILE ON)
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
 ADD_DEFINITIONS(-Wall -Wno-strict-aliasing )
 
@@ -284,18 +284,20 @@ ENDIF(WIN32)
 #----------------------------------------------------------------------------------------------------
 
 if( OPTION_TRANSLATION_SUPPORT )
+    set ( GETTEXT_XGETTEXT_EXECUTABLE "/usr/bin/xgettext" )
   kwwidgets_create_gettext_targets(
-    DOMAIN_NAME "SpringLobby"
+    DOMAIN_NAME "springlobby"
+    TARGET_BASENAME "springlobby"
     LOCALE_LIST "da;de;fi;fr;it;ro;ru;sv;uk"
     COPYRIGHT_HOLDER "The SpringLobby team"
     SOURCES "${SpringLobbySrc};${SettingsSrc};${StandAloneSettings}"
-    PO_DIR "${SpringLobby_SOURCE_DIR}/po"
-    POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources/po"
-    PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources/po"
+    PO_DIR "${CMAKE_SOURCE_DIR}/po"
+    POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
+    PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
     MO_INSTALL_DIR "${SpringLobby_INSTALL_DATA_DIR}/locale"
-    CREATE_POT_TARGET
-    CREATE_PO_TARGET
-#     ADD_MO_TARGET_TO_ALL 
+    CREATE_POT_TARGET 1
+    CREATE_PO_TARGET 1
+    #ADD_MO_TARGET_TO_ALL 
     )
 endif( OPTION_TRANSLATION_SUPPORT )
 
@@ -321,6 +323,7 @@ IF (WIN32)
     install(TARGETS springlobby springsettings RUNTIME DESTINATION . )
     install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION . )
 ELSE (WIN32)
-    install( DIRECTORY src cmake DESTINATION . )
-    install( FILES CMakeLists.txt config.h AUTHORS COPYING NEWS README THANKS DESTINATION . )
+    install(TARGETS springlobby springsettings RUNTIME DESTINATION bin )
+    #install( DIRECTORY locale DESTINATION locale )
+    #install( FILES CMakeLists.txt config.h AUTHORS COPYING NEWS README THANKS DESTINATION . )
 ENDIF (WIN32)
