@@ -36,7 +36,7 @@ SET( OPTION_SOUND
 	1 CACHE BOOL
 	"Enables sound notification functionality (requires SDL and SDL_sound libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
-	0 CACHE BOOL
+	1 CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
 
 #----------------------------------------------------------------------------------------------------
@@ -107,14 +107,17 @@ ENDIF (NOT WIN32)
 #----------------------------------------------------------------------------------------------------
 
 if( OPTION_TRANSLATION_SUPPORT )
-   INCLUDE(FindGettext)
-	FIND_PACKAGE( Gettext )
- if(GETTEXT_FOUND)
- 	INCLUDE_DIRECTORIES( ${GETTEXT_INCLUDE_DIR} )
- 	include("cmake/KWWidgetsInternationalizationMacros.cmake")
- else(GETTEXT_FOUND)
-   message(FATAL_ERROR "The GNU Gettext package is not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
- endif(GETTEXT_FOUND)
+    set(Gettext_DIR "po" )
+    INCLUDE(cmake/FindGettext.cmake)
+    FIND_PACKAGE( Gettext )
+    if(GETTEXT_FOUND)
+            set(SpringLobby_INCLUDE_PATH ${SpringLobby_INCLUDE_PATH}
+                ${GETTEXT_INCLUDE_DIR} CACHE INTERNAL "" FORCE)
+            
+            include("cmake/KWWidgetsInternationalizationMacros.cmake")
+    else(GETTEXT_FOUND)
+        message(FATAL_ERROR "The GNU Gettext package is not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
+    endif(GETTEXT_FOUND)
 endif( OPTION_TRANSLATION_SUPPORT )
 
 #----------------------------------------------------------------------------------------------------
@@ -286,12 +289,14 @@ if( OPTION_TRANSLATION_SUPPORT )
     LOCALE_LIST "da;de;fi;fr;it;ro;ru;sv;uk"
     COPYRIGHT_HOLDER "The SpringLobby team"
     SOURCES "${SpringLobbySrc};${SettingsSrc};${StandAloneSettings}"
-    PO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Resources/po"
+    PO_DIR "${SpringLobby_SOURCE_DIR}/po"
     POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources/po"
     PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources/po"
     MO_INSTALL_DIR "${SpringLobby_INSTALL_DATA_DIR}/locale"
     CREATE_POT_TARGET
-    CREATE_PO_TARGET )
+    CREATE_PO_TARGET
+#     ADD_MO_TARGET_TO_ALL 
+    )
 endif( OPTION_TRANSLATION_SUPPORT )
 
 #----------------------------------------------------------------------------------------------------
