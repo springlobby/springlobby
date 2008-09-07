@@ -873,8 +873,16 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 
         newtorrent->hash = data[1];
         newtorrent->name = data[2];
-        if ( data[3] == _T("MAP") ) newtorrent->type = map;
-        else if ( data[3] == _T("MOD") ) newtorrent->type = mod;
+        if ( data[3] == _T("MAP") )
+        {
+           newtorrent->type = map;
+           if ( usync()->MapExists( data[2], data[1] ) ) newtorrent->status = stored;
+        }
+        else if ( data[3] == _T("MOD") )
+        {
+           newtorrent->type = mod;
+           if ( usync()->ModExists( data[2], data[1] ) ) newtorrent->status = stored;
+        }
 
         GetTorrentTable().InsertRow( newtorrent );
 
