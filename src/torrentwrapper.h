@@ -215,7 +215,7 @@ private:
 };
 
 
-TorrentWrapper* torrent();
+TorrentWrapper& torrent();
 
 #endif
 
