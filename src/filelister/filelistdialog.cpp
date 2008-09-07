@@ -53,8 +53,6 @@ FileListDialog::FileListDialog(wxWindow* parent) :
 
 
     //SetData( torrent().GetTorrentTable() );
-    m_hash_to_torrent=torrent().GetTorrentTable().RowsByHash();
-
     UpdateList();
 
     m_main_sizer->Add( m_list_sizer,1, wxALL|wxEXPAND, 5 );
@@ -79,7 +77,7 @@ void FileListDialog::UpdateList()
 {
     m_filelistctrl->DeleteAllItems();
     unsigned int count = 0;
-
+    m_hash_to_torrent=torrent().GetTorrentTable().RowsByHash();
     for (std::map<wxString, TorrentTable::PRow>::iterator  it = m_hash_to_torrent.begin(); it != m_hash_to_torrent.end(); ++it)
     {
       if(!it->second.ok())continue;

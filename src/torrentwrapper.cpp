@@ -79,7 +79,7 @@ void TorrentTable::InsertRow(TorrentTable::PRow row)
         duplicates++;
     }
     /// enforce all duplicates or no duplicates for now.
-    if (duplicates!=0 || duplicates!=2)
+    if (duplicates!=0 && duplicates!=2)
     {
         wxLogWarning(_T("TorrentTable: insert would cause inconsistency, not all keys are duplicated!"));
         wxLogWarning(_T("TorrentTable: insert not done!"));
