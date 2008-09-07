@@ -41,6 +41,8 @@ class MainJoinBattleTab : public wxScrolledWindow
 
     void ReloadMMoptTab();
 
+    void OnConnected();
+
   protected:
     wxBoxSizer* m_main_sizer;
 

@@ -881,7 +881,11 @@ springlobby_SOURCES = \
 	src/lobbyoptionstab.h \
 	src/lobbyoptionstab.cpp \
 	src/auimanager.h \
-	src/auimanager.cpp
+	src/auimanager.cpp \
+	src/updater/updater.h \
+	src/updater/updater.cpp \
+	src/updater/exedownloader.h \
+	src/updater/exedownloader.cpp
 
 
 if USE_WINDRES	
@@ -938,6 +942,8 @@ springsettings_SOURCES = \
 	src/utils.h \
 	src/crashreport.cpp \
 	src/crashreport.h \
+	src/spinctld.h \
+	src/spinctld.cpp \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
 	src/settings++/se_utils.cpp \

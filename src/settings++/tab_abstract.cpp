@@ -38,15 +38,16 @@
 #include "se_utils.h"
 #include "se_settings.h"
 #include "presets.h"
+#include "../spinctld.h"
 
 intMap abstract_panel::intSettings;
 //stringMap abstract_panel::stringSettings;
-//floatMap abstract_panel::floatSettings;
+floatMap abstract_panel::floatSettings;
 
 bool abstract_panel::settingsChanged = false;
 //const category_sizes_map s_category_sizes ( entries_ , entries_ + sizeof(entries_[0]) );
 
-const Control allControls[] = {
+const Control intControls[] = {
 		// RO_SLI[8]
 		RO_SLI[0],RO_SLI[1],RO_SLI[2],RO_SLI[3],RO_SLI[4],RO_SLI[5],RO_SLI[6],RO_SLI[7],
 		// VO_CBOX[3]
@@ -61,10 +62,10 @@ const Control allControls[] = {
 		AO_SLI[0],AO_SLI[1],AO_SLI[2],
 		// QA_CBOX[10]
 		QA_CBOX[0],QA_CBOX[1],QA_CBOX[2],QA_CBOX[3],QA_CBOX[4],QA_CBOX[5],QA_CBOX[6],QA_CBOX[7],QA_CBOX[8],
-		QA_CBOX[9],
+		QA_CBOX[9],QA_CBOX[10],QA_CBOX[11],
 		//UI_CBOX[16]
 		UI_CBOX[0],UI_CBOX[1],UI_CBOX[2],UI_CBOX[3],UI_CBOX[4],UI_CBOX[5],UI_CBOX[6],UI_CBOX[7],UI_CBOX[8],
-		UI_CBOX[9],UI_CBOX[10],UI_CBOX[11],UI_CBOX[12],UI_CBOX[13],UI_CBOX[14],UI_CBOX[15],UI_CBOX[16],
+		UI_CBOX[9],UI_CBOX[10],UI_CBOX[11],UI_CBOX[12],UI_CBOX[13],UI_CBOX[14],UI_CBOX[15],UI_CBOX[16],UI_CBOX[17],
 		//MO_SLI[5]
 		MO_SLI[0],MO_SLI[1],MO_SLI[2],MO_SLI[3],MO_SLI[4],
 		//MO_SLI_EXT[5]
@@ -82,10 +83,20 @@ const Control allControls[] = {
 		//RC_TEXT[2]
 		RC_TEXT[0],RC_TEXT[1],
 		//UI_ZOOM[1]
-		UI_ZOOM[0]
+		UI_ZOOM[0],
+        //W4_CONTROLS[7]
+        W4_CONTROLS[0],W4_CONTROLS[1],W4_CONTROLS[2],W4_CONTROLS[3],
+        W4_CONTROLS[4],W4_CONTROLS[5]
+
 };
 
-const int allControls_size = sizeof(allControls) / sizeof(allControls[0] ) ;
+const Control floatControls[] = {
+                W4_CONTROLS[6]
+};
+
+const int intControls_size = sizeof(intControls) / sizeof(intControls[0] ) ;
+const int floatControls_size = sizeof(floatControls) / sizeof(floatControls[0] ) ;
+const int allControls_size = intControls_size + floatControls_size;
 
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title) {
@@ -101,9 +112,14 @@ bool abstract_panel::loadValuesIntoMap()
 {
 	try
 	{
-		for (int i = 0; i< allControls_size;++i)
+		for (int i = 0; i< intControls_size;++i)
 		{
-			intSettings[allControls[i].key] = configHandler->GetSpringConfigInt(allControls[i].key,fromString(allControls[i].def));
+			intSettings[intControls[i].key] = configHandler->GetSpringConfigInt(intControls[i].key,fromString(intControls[i].def));
+		}
+        for (int i = 0; i< floatControls_size;++i)
+		{
+			float tmp = configHandler->GetSpringConfigFloat(floatControls[i].key,fromString(floatControls[i].def));
+			floatSettings[floatControls[i].key] = tmp;
 		}
 	}
 	catch (...)
@@ -183,8 +199,13 @@ void abstract_panel::loadDefaults()
 		intSettings[RC_TEXT[i].key] = fromString( RC_TEXT[i].def);
 
 	//	const Control UI_ZOOM[1]
-	for (int i = 0;i< s_category_sizes[_T("UI_ZOOM ")]; ++i)
+	for (int i = 0;i< s_category_sizes[_T("UI_ZOOM")]; ++i)
 		intSettings[UI_ZOOM[i].key] = fromString( UI_ZOOM[i].def);
+
+    for (int i = 0;i< s_category_sizes[_T("W4_CONTROLS")] - 1; ++i)
+		intSettings[W4_CONTROLS[i].key] = fromString( W4_CONTROLS[i].def);
+
+    floatSettings[W4_CONTROLS[ s_category_sizes[_T("W4_CONTROLS")]  ].key] = fromString( W4_CONTROLS[ s_category_sizes[_T("W4_CONTROLS")] ].def);
 
 }
 
@@ -319,7 +340,9 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 		case ID_WINDOWP_QA_CBOX_6:
 		case ID_WINDOWP_QA_CBOX_7:
 		case ID_WINDOWP_QA_CBOX_8:
-		case ID_WINDOWP_QA_CBOX_9:{
+		case ID_WINDOWP_QA_CBOX_9:
+		case ID_WINDOWP_QA_CBOX_10:
+		case ID_WINDOWP_QA_CBOX_11:{
 			int i = id - QA_CBOX[0].id;
 			(intSettings)[QA_CBOX[i].key]= checked;
 		} break;
@@ -341,10 +364,20 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 		case ID_WINDOWP_UI_CBOX_14:
 		case ID_WINDOWP_UI_CBOX_15:
 		case ID_WINDOWP_UI_CBOX_16:
-		case ID_WINDOWP_UI_CBOX_17:{
+		case ID_WINDOWP_UI_CBOX_17:
+		case ID_WINDOWP_UI_CBOX_18:{
 			int i = id - UI_CBOX[0].id;
 			(intSettings)[UI_CBOX[i].key]= checked;
 		} break;
+
+		case ID_W4_BumpWaterBlurReflection:
+		case ID_W4_BumpWaterReflection:
+		case ID_W4_BumpWaterShoreWaves:
+		case ID_W4_BumpWaterUseDepthTexture:{
+            int i = id - W4_CONTROLS[0].id;
+            (intSettings)[W4_CONTROLS[i].key]= checked;
+            } break;
+
 
 		case ID_WINDOWP_DO_CBOX_0: { (intSettings)[DO_CBOX[0].key]= checked; } break;
 		case ID_WINDOWP_DO_CBOX_1: { (intSettings)[DO_CBOX[1].key]= checked; } break;
@@ -386,7 +419,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		case ID_WINDOWP_WR_COMBOX:
 		{
 			int choiceIndex=0;
-			for (int i =1; i<4;++i)
+			for (unsigned int i =1; i<sizeof(WR_COMBOX_CHOICES)/sizeof(WR_COMBOX_CHOICES[0]);++i)
 			{
 				if (choice==WR_COMBOX_CHOICES[i])
 					choiceIndex = i;
@@ -396,19 +429,63 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 				case 1: { (intSettings)[WR_COMBOX[0].key]= 1; } break;	// Refl
 				case 2: { (intSettings)[WR_COMBOX[0].key]= 3; } break;	// Refl + Refr
 				case 3: { (intSettings)[WR_COMBOX[0].key]= 2; } break;	// Dyna
+				case 4: { (intSettings)[WR_COMBOX[0].key]= 4; } break;	// BumpWater
 			}
 			break;
 		}
 
+		case ID_W4_BumpWaterRefraction:
+		{
+            int choiceIndex=0;
+			for (unsigned int i =1; i<sizeof(W4_REFRACTION_CHOICES)/sizeof(W4_REFRACTION_CHOICES[0]);++i)
+			{
+				if (choice==W4_REFRACTION_CHOICES[i])
+					choiceIndex = i;
+			}
+
+		    (intSettings)[W4_CONTROLS[5].key]= choiceIndex;
+		    break;
+		}
+
+		case ID_W4_BumpWaterTexSizeReflection:
+		{
+            int choiceIndex=0;
+			for (unsigned int i =1; i<sizeof(W4_TEXSIZE_CHOICES)/sizeof(W4_TEXSIZE_CHOICES[0]);++i)
+			{
+				if (choice==W4_TEXSIZE_CHOICES[i])
+					choiceIndex = i;
+			}
+
+            long val = 128;
+            choice.ToLong( &val );
+		    (intSettings)[W4_CONTROLS[4].key]= val;
+		    break;
+		}
+
 		case ID_SIMPLE_QUAL_CBX:
 		{
+
 			for (int i=0; i<prVal_RenderQuality_size;++i)
 			{
 				presetValues<int,5> pop = prVal_RenderQuality[i];
-				 int k = (pop.values[choice]);
+                int k = (pop.values[choice]);
 
 				(intSettings)[prVal_RenderQuality[i].key]= k;
 			}
+
+			for (int i=0; i<prVal_W4_size;++i)
+			{
+				presetValues<int,5> pop = prVal_W4[i];
+				int k = (pop.values[choice]);
+
+				(intSettings)[prVal_W4[i].key]= k;
+			}
+
+			presetValues<float,5> pop = pr_w4_BumpWaterAnisotropy;
+			float k = (pop.values[choice]);
+			wxString key = pr_w4_BumpWaterAnisotropy.key;
+            (floatSettings)[key] = k;
+            //float debug = (floatSettings)[key]
 			break;
 		}
 		case ID_SIMPLE_DETAIL_CBX:
@@ -450,6 +527,12 @@ void abstract_panel::OnSpinControlChange(wxSpinEvent& event)
 		(intSettings)[UI_ZOOM[0].key] = zoom->GetValue();
 		settingsChanged = true;
 	}
+	if (event.GetId()==ID_W4_BumpWaterAnisotropy)
+	{
+		wxSpinCtrlDbl* aniso = (wxSpinCtrlDbl*) event.GetEventObject();
+		(floatSettings)[W4_CONTROLS[6].key] = aniso->GetValue();
+		settingsChanged = true;
+	}
 }
 
 //TODO inquire about floatsettings
@@ -464,11 +547,10 @@ bool abstract_panel::saveSettings() {
 //	    	//not used
 //	        //configHandler->SetSpringConfigString(s->first,s->second);
 //	    }
-//	    for (floatMap::iterator f = floatSettings.begin(); f != floatSettings.end();++f)
-//	    {
-//	        // not used
-//	        //configHandler->SetSpringConfigFloat(f->first,f->second);
-//	    }
+	    for (floatMap::iterator f = floatSettings.begin(); f != floatSettings.end();++f)
+	    {
+	        configHandler->SetSpringConfigFloat(f->first,f->second);
+	    }
     } catch (...) {
     	customMessageBox(SS_MAIN_ICON,_("Could not save, unitsync not properly loaded"), _("SpringSettings Error"), wxOK|wxICON_HAND, 0);
     	return false;

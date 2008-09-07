@@ -53,10 +53,10 @@ class abstract_panel : public wxScrolledWindow
 		void OnCheckBoxTick(wxCommandEvent&);
 		void OnRadioButtonToggle(wxCommandEvent&);
 		//void update(wxIdleEvent&);
-		void OnComboBoxChange(wxCommandEvent& event);
+		virtual void OnComboBoxChange(wxCommandEvent& event);
 		static intMap intSettings;
 		//static stringMap stringSettings;
-		//static floatMap floatSettings;
+		static floatMap floatSettings;
 		static bool settingsChanged;
 		static bool saveSettings();
 

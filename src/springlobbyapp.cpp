@@ -31,6 +31,7 @@
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
 #endif
+#include "updater/updater.h"
 
 #define TIMER_ID 101
 #define TIMER_INTERVAL 100
@@ -154,10 +155,14 @@ bool SpringLobbyApp::OnInit()
     }
 
   #ifndef NO_TORRENT_SYSTEM
-  if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent()->ConnectToP2PSystem();
+  if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent().ConnectToP2PSystem();
   #endif
 
   m_timer->Start( TIMER_INTERVAL );
+
+//  #ifdef __WXMSW__
+//  if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
+//  #endif
 
   sett().SetSettingsVersion(); /// bump settings version number
 
@@ -174,7 +179,7 @@ int SpringLobbyApp::OnExit()
         delete m_otadownloader ;
 
   #ifndef NO_TORRENT_SYSTEM
-  if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent()->DisconnectToP2PSystem();
+  if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent().DisconnectToP2PSystem();
   #endif
 
   m_timer->Stop();
