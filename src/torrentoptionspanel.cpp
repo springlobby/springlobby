@@ -130,7 +130,7 @@ void TorrentOptionsPanel::OnApply( wxCommandEvent& event )
     // if mode == pause selected --> m_gamestart_throttle->GetValue() == 0
     sett().SetTorrentSystemSuspendMode( m_gamestart_throttle->GetValue() );
 
-    torrent().UpdateSettings();
+    torrent()->UpdateSettings();
 }
 
 void TorrentOptionsPanel::OnRestore( wxCommandEvent& event )

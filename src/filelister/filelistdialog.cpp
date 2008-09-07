@@ -52,8 +52,8 @@ FileListDialog::FileListDialog(wxWindow* parent) :
     m_button_sizer->Add( m_download_button );
 
 
-    //SetData( torrent().GetTorrentTable() );
-    m_hash_to_torrent=torrent().GetTorrentTable().RowsByHash();
+    //SetData( torrent()->GetTorrentTable() );
+    m_hash_to_torrent=torrent()->GetTorrentTable().RowsByHash();
 
     UpdateList();
 
@@ -137,7 +137,7 @@ void FileListDialog::OnDownload( wxCommandEvent& event )
     for ( HashVector::const_iterator it = hashs.begin(); it != hashs.end(); ++it)
     {
         wxString hash = *it;
-        if (torrent().RequestFileByHash(hash) != success)
+        if (torrent()->RequestFileByHash(hash) != success)
             wxLogError(_("unknown hash ") + hash );
 
     }

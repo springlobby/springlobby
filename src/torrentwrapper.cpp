@@ -187,9 +187,10 @@ std::set<TorrentTable::PRow> TorrentTable::QueuedTorrentsByRow()
 
 
 
-TorrentWrapper torrent()
+TorrentWrapper* torrent()
 {
-    static TorrentWrapper m_torr_wrap;
+    static TorrentWrapper* m_torr_wrap = 0;
+    if ( !m_torr_wrap ) m_torr_wrap = new TorrentWrapper;
     return m_torr_wrap;
 }
 
@@ -869,7 +870,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     else if ( data.GetCount() > 3 && data[0] == _T("T+") )
     {
 
-        TorrentTable::PRow* newtorrent = new TorrentTable::PRow;
+        TorrentTable::PRow* newtorrent = new TorrentTable::Row;
 
         (*newtorrent)->hash = data[1];
         (*newtorrent)->name = data[2];
