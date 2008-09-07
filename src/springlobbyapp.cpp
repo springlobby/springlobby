@@ -80,6 +80,10 @@ bool SpringLobbyApp::OnInit()
 
     m_locale = new wxLocale( );
     m_locale->Init();
+#ifdef __WXMSW__
+    wxString path = wxStandardPaths::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
+    m_locale->AddCatalogLookupPathPrefix(path +  wxFileName::GetPathSeparator() + _T("locale") );
+#endif
     m_locale->AddCatalog( _T("springlobby") );
 
     if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );

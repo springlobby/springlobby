@@ -3,7 +3,7 @@
 #include <wx/image.h>
 
 #ifdef __WXMSW__
-    #include "images/colourbox.xpm"
+    #include "../images/colourbox.xpm"
 #endif
 
 ColorButton::ColorButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitmap,

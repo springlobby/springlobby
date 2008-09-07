@@ -275,7 +275,7 @@ SET(SLSharedWithSettings
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
 IF(WIN32)
-    SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
+    SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc src/Helper/listctrl.cpp)
     SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ENDIF(WIN32)
 
@@ -294,7 +294,7 @@ if( OPTION_TRANSLATION_SUPPORT )
     PO_DIR "${CMAKE_SOURCE_DIR}/po"
     POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
     PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
-    MO_INSTALL_DIR "${SpringLobby_INSTALL_DATA_DIR}/locale"
+    MO_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/locale"
     CREATE_POT_TARGET 1
     CREATE_PO_TARGET 1
     #ADD_MO_TARGET_TO_ALL 
@@ -322,6 +322,7 @@ TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES}  )
 IF (WIN32)
     install(TARGETS springlobby springsettings RUNTIME DESTINATION . )
     install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION . )
+    install( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/locale DESTINATION . )
 ELSE (WIN32)
     install(TARGETS springlobby springsettings RUNTIME DESTINATION bin )
     #install( DIRECTORY locale DESTINATION locale )
