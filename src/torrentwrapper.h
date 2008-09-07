@@ -17,18 +17,13 @@
 
 #include "inetclass.h"
 #include "mutexwrapper.h"
+#include "iunitsync.h"
 
 #define DEFAULT_P2P_COORDINATOR_PORT 8202
 #define DEFAULT_P2P_TRACKER_PORT 8201
 
 namespace libtorrent{ class session; };
 namespace libtorrent { struct torrent_handle; };
-
-enum MediaType
-{
-  map,
-  mod
-};
 
 enum DownloadRequestStatus
 {
