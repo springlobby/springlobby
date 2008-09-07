@@ -576,6 +576,7 @@ springlobby_SOURCES = \
 	src/images/rank4.xpm \
 	src/images/rank5.xpm \
 	src/images/rank6.xpm \
+	src/images/rank_unknown.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
 	src/images/downloads_icon.png.h \
