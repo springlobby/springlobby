@@ -32,7 +32,7 @@ c    This file is part of springsettings,
 #include <wx/checkbox.h>
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
-#include "spinctld.h"
+#include "../spinctld.h"
 
 #include "Defs.hpp"
 

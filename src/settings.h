@@ -103,7 +103,11 @@ class Settings
     void SetReportStats(const bool value);
     bool GetReportStats();
 
+    void SetAutoUpdate( const bool value );
+    bool GetAutoUpdate();
+
     wxString GetLobbyWriteDir();
+
 
     /* ================================================================ */
     /** @name Network
@@ -456,6 +460,8 @@ class Settings
     BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
     void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
     wxString GetLastFilterProfileName();
+    void SetFilterActivState( const bool state );
+    bool GetFilterActivState( ) const;
     /**@}*/
 
     bool GetDisableSpringVersionCheck();

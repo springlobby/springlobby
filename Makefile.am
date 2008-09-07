@@ -576,6 +576,7 @@ springlobby_SOURCES = \
 	src/images/rank4.xpm \
 	src/images/rank5.xpm \
 	src/images/rank6.xpm \
+	src/images/rank_unknown.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
 	src/images/downloads_icon.png.h \
@@ -867,6 +868,7 @@ springlobby_SOURCES = \
 	src/filelister/filelistfilter.cpp \
 	configure.ac \
 	src/autojoinchanneldialog.h \
+	src/autopointers.h \
 	src/autojoinchanneldialog.cpp \
 	src/useractions.h \
 	src/useractions.cpp \
@@ -879,8 +881,11 @@ springlobby_SOURCES = \
 	src/groupuserdialog.h \
 	src/groupuserdialog.cpp \
 	src/lobbyoptionstab.h \
-	src/lobbyoptionstab.cpp
-
+	src/lobbyoptionstab.cpp \
+	src/updater/updater.h \
+	src/updater/updater.cpp \
+	src/updater/exedownloader.h \
+	src/updater/exedownloader.cpp
 
 
 if USE_WINDRES	
