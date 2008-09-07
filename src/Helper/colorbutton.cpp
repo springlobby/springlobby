@@ -41,8 +41,6 @@ void ColorButton::SetColor( const wxColor& color )
 
     #ifdef __WXMSW__
          SetBackgroundColour( GetDefaultAttributes().colBg );
-    #else
-        SetBackgroundColour( color );
     #endif
 }
 
