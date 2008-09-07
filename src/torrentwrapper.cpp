@@ -5,7 +5,6 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
-#include "iunitsync.h"
 #include "settings.h"
 #include "utils.h"
 #include "socket.h"
@@ -466,17 +465,8 @@ bool TorrentWrapper::JoinTorrent( const wxString& hash )
   }
   wxLogMessage(_T("(3) Joining torrent: downloading info file"));
 
-  #ifdef HAVE_WX26
-    wxFileName filename( sett().GetTorrentsFolder() + hash + _T(".torrent") ) ;
-    bool readable = filename.IsOk();
-  #else
-    bool readable = wxFileName::IsFileReadable( sett().GetTorrentsFolder()+ hash + _T(".torrent") ) ;
-  #endif
+  if (!DownloadTorrentFileFromTracker( hash )) return false;
 
-  if ( !readable  ) /// file descriptor not present, download it
-  {
-     if (!DownloadTorrentFileFromTracker( hash )) return false;
-  }
   /// read torrent from file
   std::ifstream in( wxString( sett().GetTorrentsFolder() + hash + _T(".torrent") ).mb_str(), std::ios_base::binary);
   in.unsetf(std::ios_base::skipws);
@@ -569,9 +559,19 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
 bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
 {
+  if ( sett().GetSpringDir().IsEmpty() ) return false; /// no good things can happend if you don't know which folder to r/w files from
+
+  #ifdef HAVE_WX26
+    wxFileName filename( sett().GetTorrentsFolder() + hash + _T(".torrent") ) ;
+    bool readable = filename.IsOk();
+  #else
+    bool readable = wxFileName::IsFileReadable( sett().GetTorrentsFolder()+ hash + _T(".torrent") ) ;
+  #endif
+
+  if ( readable  ) return true; ///file already present locally
+
   wxLogMessage(_T("torrent system downloading torrent info %s"), hash.c_str() );
 
-  if ( sett().GetSpringDir().IsEmpty() ) return false; /// no good things can happend if you don't know which folder to r/w files from
   wxHTTP fileRequest;
   //versionRequest.SetHeader(_T("Content-type"), _T(""));
   /// normal timeout is 10 minutes.. set to 10 secs.
@@ -604,13 +604,35 @@ void TorrentWrapper::JoinRequestedTorrents()
 
   for ( SeedRequests::iterator i = m_seed_requests.begin(); i != m_seed_requests.end(); i++ )
   {
-    if( m_seed_count > 9 ) break;
-    if (  ( usync()->MapExists( i->first, i->second ) || usync()->ModExists( i->first ) ) && (m_open_torrents.find( i->first ) == m_open_torrents.end()) && (m_torrent_infos.find(i->second) !=m_torrent_infos.end()) ) /// torrent is requested and present, but not joined yet
-    {
-        JoinTorrent( i->second );
-        m_seed_count++;
-        m_open_torrents[i->first] = true;
-    }
+    if( m_seed_count > 9 ) break; /// too many seeds open
+
+    wxString hash = i->second;
+
+    HashToTorrentData::iterator it=m_torrent_infos.find(hash);
+    if( it==m_torrent_infos.end() ) continue; /// hash info not present locally, skip it.
+
+    wxString unitsyncname = usync()->GetUnitsyncName( hash, it->second.type );
+    if ( unitsyncname.IsEmpty() ) continue; /// file not present locally
+
+    if ( m_open_torrents.find( i->first ) != m_open_torrents.end() ) continue;
+
+    if ( !DownloadTorrentFileFromTracker( hash ) ) continue;
+
+    std::ifstream in( wxString( sett().GetTorrentsFolder() + hash + _T(".torrent") ).mb_str(), std::ios_base::binary);
+    in.unsetf(std::ios_base::skipws);
+    libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
+    libtorrent::torrent_info t_info(e); /// decode the torrent infos from the file
+    wxString torrentfilename = WX_STRING(t_info.begin_files()->path.string()); /// get the file name in the torrent infos
+    wxLogMessage( _T("requested filename: %s"), torrentfilename.c_str() );
+
+
+    wxString localfilename = usync()->GetArchivePath( unitsyncname );
+    wxLogMessage( _T("local filename: %s"), localfilename.c_str() );
+    if( torrentfilename != localfilename ) continue; /// the filename locally is different skip it or it will download it again and various crap may happend.
+
+    JoinTorrent( i->second );
+    m_seed_count++;
+    m_open_torrents[i->first] = true;
   }
 
 }

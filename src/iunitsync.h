@@ -28,6 +28,13 @@ typedef std::map<wxString,mmOptionList>::const_iterator optionMapListConstIter;
 typedef std::map<wxString,mmOptionInt>::const_iterator optionMapIntConstIter;
 
 
+enum MediaType
+{
+  map,
+  mod,
+  undefined
+};
+
 struct UnitSyncMod
 {
   UnitSyncMod() : name(_T("")),hash(_T("")) { }
@@ -170,6 +177,7 @@ class IUnitSync
     virtual bool FileExists( const wxString& name ) = 0;
 
     virtual wxString GetArchivePath( const wxString& name ) = 0;
+    virtual wxString GetUnitsyncName( const wxString& hash, const MediaType& archivetype = undefined ) = 0;
 };
 
 IUnitSync* usync();
