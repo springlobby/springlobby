@@ -48,3 +48,12 @@ SET(CPACK_STRIP_FILES TRUE)
 SET(CPACK_SOURCE_STRIP_FILES TRUE)
 # SET(CPACK_SYSTEM_NAME "Linux-i686")
 # SET(CPACK_TOPLEVEL_TAG "Linux-i686")
+set(CPACK_SOURCE_IGNORE_FILES
+"^${SpringLobby_SOURCE_DIR}/build*"
+"^${SpringLobby_SOURCE_DIR}/bin/"
+"^${SpringLobby_SOURCE_DIR}/.*"
+"^${SpringLobby_SOURCE_DIR}/auto*"
+"^${SpringLobby_SOURCE_DIR}/doc/"
+"^${SpringLobby_SOURCE_DIR}/m4/"
+        "^${SpringLobby_SOURCE_DIR}/obj/"
+)
