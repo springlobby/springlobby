@@ -1251,6 +1251,12 @@ wxString Settings::GetTorrentsFolder()
 }
 
 
+wxString Settings::GetTempStorage()
+{
+  return wxFileName::GetTempDir();
+}
+
+
 void Settings::SaveBattleMapOptions(IBattle *battle){
   if ( !battle ){
         wxLogError(_T("Settings::SaveBattleMapOptions called with null argument"));
