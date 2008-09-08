@@ -835,12 +835,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
     std::map<libtorrent::torrent_handle, TorrentTable::PRow> torrenthandles = GetTorrentTable().RowByTorrentHandles();
     for (std::map<libtorrent::torrent_handle, TorrentTable::PRow>::iterator  it = torrenthandles.begin(); it != torrenthandles.end(); ++it)
     {
-        if ( it->first.is_seed() ) m_seed_count++;
-        else
-        {
-            m_leech_count++;
-            continue;
-        }
+        if ( !it->first.is_seed() ) continue;
 
 
         if ( it->second->status == leeching ) /// if torrent was opened in leech mode but now it's seeding it means it was requested from the user but now it's completed
