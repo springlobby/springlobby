@@ -103,16 +103,19 @@ void MainTorrentTab::UpdateInfo(  TorrentInfos& info )
   }
 
   //ASSERT_LOGIC( index != -1, _T("index = -1") );
-    if ( index > 0 )
+    if ( index > 0 ){
         SetInfo(index, info );
-    else
+    }
+    else{
         AddTorrentInfo( info );
+    }
 }
 
 void MainTorrentTab::SetInfo(int index,  TorrentInfos& info )
 {
-    float kfactor = 1/float(1024);
- float mfactor = 1/float(1024*1024);
+
+  float kfactor = 1/float(1024);
+  float mfactor = 1/float(1024*1024);
 
  int eta_seconds = -1;
  if ( info.progress > 0 && info.inspeed > 0)
@@ -139,7 +142,6 @@ void MainTorrentTab::SetInfo(int index,  TorrentInfos& info )
 
 void MainTorrentTab::AddTorrentInfo(  TorrentInfos& info )
 {
-    m_torrent_list->SetSelectionRestorePoint();
   int index = m_torrent_list->InsertItem( m_torrent_list->GetItemCount(), info.name );
 
 //  ASSERT_LOGIC( index != -1, _T("index = -1") );
@@ -149,8 +151,9 @@ void MainTorrentTab::AddTorrentInfo(  TorrentInfos& info )
   //ASSERT_LOGIC( index != -1, _T("index = -1") );
 
  // ASSERT_LOGIC( m_torrent_list->GetItem( item ), _T("!GetItem") );
-    SetInfo(index, info );
-    m_torrent_list->RestoreSelection();
+
+  SetInfo(index, info );
+
 }
 
 void MainTorrentTab::OnUpdate()
