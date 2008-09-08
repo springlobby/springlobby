@@ -359,30 +359,13 @@ bool TorrentWrapper::IsFileInSystem( const wxString& hash )
 }
 
 
-void TorrentWrapper::RemoveFile( const wxString& hash )
+bool TorrentWrapper::RemoveTorrentByHash( const wxString& hash )
 {
     TorrentTable::PRow row=m_torrent_table.RowByHash(hash);
-    if (!row.ok())return;
-    try
-    {
-        m_torr->remove_torrent( row->handle );
-        /// dizekat, torrent rewrite: extra behavior, set handle to invalid after remove_torrent.
-        m_torrent_table.SetRowHandle(row,libtorrent::torrent_handle());
-
-        if (row->status==seeding)
-        {
-            m_seed_count--;
-        }
-        else if (row->status==leeching)
-        {
-            m_leech_count--;
-        }
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( WX_STRINGC( e.what() ) );
-    }
+    if (!row.ok())return false;
+    return RemoveTorrentByRow( row );
 }
+
 
 
 int TorrentWrapper::GetTorrentSystemStatus()
@@ -473,9 +456,6 @@ void TorrentWrapper::UpdateFromTimer( int mselapsed )
     if (!ingame && IsConnectedToP2PSystem() )
     {
         ///  DON'T alter function call order here or bad things may happend like locust, earthquakes or raptor attack
-        m_seed_count = 0;
-        m_leech_count = 0;
-
         JoinRequestedTorrents();
         RemoveUnneededTorrents();
         TryToJoinQueuedTorrents();
@@ -532,6 +512,30 @@ DownloadRequestStatus TorrentWrapper::RequestFileByRow( const TorrentTable::PRow
     m_socket_class->Send( wxString::Format( _T("N+|%s\n"), row->hash.c_str() ) ); /// request for seeders for the file
     return success;
 }
+
+
+bool TorrentWrapper::RemoveTorrentByRow( const TorrentTable::PRow& row )
+{
+    if (!row.ok())return false;
+    try
+    {
+        bool filecompleted = row->handle.is_seed();
+        m_torr->remove_torrent( row->handle );
+
+        if (row->status==seeding) m_seed_count--;
+        else if (row->status==leeching) m_leech_count--;
+
+        if ( filecompleted ) GetTorrentTable().SetRowStatus( row, stored ); /// fix the file status and automatically remove row handle
+        else GetTorrentTable().SetRowStatus( row, not_stored );
+    }
+    catch (std::exception& e)
+    {
+        wxLogError( WX_STRINGC( e.what() ) );
+        return false;
+    }
+    return true;
+}
+
 
 std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 {
@@ -603,12 +607,14 @@ void TorrentWrapper::SendMessageToCoordinator( const wxString& message )
 
 bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 {
+    if ( !row.ok() ) return false;
     wxLogMessage(_T("(1) Joining torrent, hash=%s"),row->hash.c_str());
     if (ingame) return false;
-    wxLogMessage(_T("(2) Joining torrent."));
+
+    wxLogMessage(_T("(2) Joining torrent. IsSeed: ") + TowxString(IsSeed) + _T(" status: ") + TowxString(row->status) );
 
     if ( IsSeed && row->status != stored ) return false;
-    if ( !IsSeed && ( row->status != queued || row->status != not_stored ) ) return false;
+    if ( !IsSeed && ( row->status != queued ) && ( row->status != not_stored ) ) return false;
 
     wxString torrent_name=row->name;
     wxString torrent_infohash_b64=row->infohash;
@@ -851,11 +857,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
         { ///torrent has finished download, refresh unitsync and remove file from list
             try
             {
-                m_torr->remove_torrent( it->first );
-
-                m_leech_count--;
-
-                GetTorrentTable().SetRowStatus( it->second, stored );  /// remove the file from open torrents list and sets the status
+                ASSERT_RUNTIME( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
 
                 m_socket_class->Send( _T("N-|")  + it->second->hash + _T("\n") ); ///notify the system we don't need the file anymore
 
@@ -872,10 +874,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
         {
             try
             {
-                m_torr->remove_torrent( it->first );
-
-                GetTorrentTable().SetRowStatus( it->second, stored );  /// remove the file from open torrents list and sets the status
-
+                ASSERT_RUNTIME( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
             }
             catch (std::exception& e)
             {
