@@ -614,7 +614,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     wxLogMessage(_T("(2) Joining torrent. IsSeed: ") + TowxString(IsSeed) + _T(" status: ") + TowxString(row->status) );
 
     if ( IsSeed && row->status != stored ) return false;
-    if ( !IsSeed && ( row->status != queued || row->status != not_stored ) ) return false;
+    if ( !IsSeed && ( row->status != queued ) && ( row->status != not_stored ) ) return false;
 
     wxString torrent_name=row->name;
     wxString torrent_infohash_b64=row->infohash;
