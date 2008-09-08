@@ -690,8 +690,12 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     wxString torrentfilename = WX_STRING(t_info.begin_files()->path.string()); /// get the file name in the torrent infos
     wxLogMessage( _T("requested filename: %s"), torrentfilename.c_str() );
 
-    if ( IsSeed && torrentfilename != path.AfterLast(_T('/')) ) return false; /// in seed mode, if the filename locally is different skip it or it will download it again and various crap may happend.
-
+    if ( IsSeed )
+    {
+      int index = path.Find( torrentfilename );
+      if ( index == -1 ) return false; /// if the filename locally is different from the torrent's, skip it or it will download it again and various crap may happend.
+      path = path.Left( index ); /// truncate the path so it matches the archive's
+    }
     wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.c_str());
 
 
