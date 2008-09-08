@@ -517,6 +517,7 @@ DownloadRequestStatus TorrentWrapper::RequestFileByRow( const TorrentTable::PRow
 bool TorrentWrapper::RemoveTorrentByRow( const TorrentTable::PRow& row )
 {
     if (!row.ok())return false;
+    wxLogDebugFunc( row->name );
     try
     {
         bool filecompleted = row->handle.is_seed();
@@ -608,12 +609,12 @@ void TorrentWrapper::SendMessageToCoordinator( const wxString& message )
 bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 {
     if ( !row.ok() ) return false;
-    wxLogMessage(_T("(1) Joining torrent, hash=%s"),row->hash.c_str());
+    wxLogMessage(_T("(1) Joining torrent, name=%s"),row->name.c_str());
     if (ingame) return false;
 
     wxLogMessage(_T("(2) Joining torrent. IsSeed: ") + TowxString(IsSeed) + _T(" status: ") + TowxString(row->status) );
 
-    if ( IsSeed && row->status != stored ) return false;
+    if ( IsSeed && ( row->status != stored ) ) return false;
     if ( !IsSeed && ( row->status != queued ) && ( row->status != not_stored ) ) return false;
 
     wxString torrent_name=row->name;
@@ -636,23 +637,30 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
     if ( IsSeed )
     {
+      wxString archivename;
       switch( row->type ) /// if file is not present locally you can't seed it
       {
         case map:
         {
           if ( !usync()->MapExists( row->name, row->hash ) ) return false;
+          int index = usync()->GetMapIndex( row->name );
+          if ( index == -1 ) return false;
+          archivename = usync()->GetMapArchive( index );
           break;
         }
         case mod:
         {
           if ( !usync()->ModExists( row->name, row->hash ) ) return false;
+          int index = usync()->GetModIndex( row->name );
+          if ( index == -1 ) return false;
+          archivename = usync()->GetModArchive( index );
           break;
         }
       }
 
       try
       {
-       path = usync()->GetArchivePath( row->name );
+       path = usync()->GetArchivePath( archivename )  + archivename;
       } catch (std::exception& e)
        {
          wxLogError( WX_STRINGC( e.what() ) );
@@ -695,6 +703,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
       int index = path.Find( torrentfilename );
       if ( index == -1 ) return false; /// if the filename locally is different from the torrent's, skip it or it will download it again and various crap may happend.
       path = path.Left( index ); /// truncate the path so it matches the archive's
+      wxLogMessage( _T("Strippped path: %s"), path.c_str() );
     }
     wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.c_str());
 
@@ -706,6 +715,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     catch (std::exception& e)
     {
         wxLogError(_T("%s"),WX_STRINGC( e.what()).c_str()); /// TODO (BrainDamage#1#): add message to user on failure
+        return false;
     }
 
     if ( IsSeed )
@@ -859,7 +869,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
             }
         }
 
-        if ( GetTorrentTable().IsSeedRequest( it->second ) )/// if torrent not in request list but still seeding then remove
+        if ( !GetTorrentTable().IsSeedRequest( it->second ) )/// if torrent not in request list but still seeding then remove
         {
             try
             {
