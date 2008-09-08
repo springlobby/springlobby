@@ -684,7 +684,9 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     wxString torrentfilename = WX_STRING(t_info.begin_files()->path.string()); /// get the file name in the torrent infos
     wxLogMessage( _T("requested filename: %s"), torrentfilename.c_str() );
 
-    if ( IsSeed && torrentfilename != path.AfterLast(_T('/')) ) return false; /// in seed mode, if the filename locally is different skip it or it will download it again and various crap may happend.
+
+    ///it is not working yet:
+    //if ( IsSeed && torrentfilename != path.AfterLast(_T('/')) ) return false; /// in seed mode, if the filename locally is different skip it or it will download it again and various crap may happend.
 
     wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.c_str());
 
@@ -692,6 +694,14 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     try
     {
         m_torrent_table.SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(STD_STRING(path))));
+        if(IsSeed){
+          if(row->handle.is_valid()){
+            std::vector<bool> tmp(1,false);/// length 1 filled with falses
+            row->handle.filter_files(tmp);
+          }else{
+            wxLogMessage(_T("cant set seed not to download"));
+          }
+        }
     }
     catch (std::exception& e)
     {
