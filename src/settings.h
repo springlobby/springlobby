@@ -108,6 +108,7 @@ class Settings
 
     wxString GetLobbyWriteDir();
 
+    wxString GetTempStorage();
 
     /* ================================================================ */
     /** @name Network

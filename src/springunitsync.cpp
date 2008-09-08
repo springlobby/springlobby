@@ -1024,14 +1024,6 @@ wxString SpringUnitSync::GetUnitsyncName( const wxString& hash, const MediaType&
       if ( it != m_mods_list.end() ) return it->second;
       break;
     }
-    case undefined:
-    {
-      it = m_maps_list.find( hash );
-      if ( it != m_maps_list.end() ) return it->second;
-      it = m_mods_list.find( hash );
-      if ( it != m_mods_list.end() ) return it->second;
-      break;
-    }
   }
   return wxEmptyString;
 }

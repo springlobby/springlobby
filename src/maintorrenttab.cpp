@@ -214,7 +214,7 @@ void MainTorrentTab::OnUpdate()
 
 void MainTorrentTab::OnCancelButton( wxCommandEvent& event )
 {
-  torrent().RemoveFile( TowxString(m_torrent_list->GetSelectedData()) );
+  torrent().RemoveTorrentByHash( TowxString(m_torrent_list->GetSelectedData()) );
 }
 
 void MainTorrentTab::OnDownloadDialog( wxCommandEvent& event )

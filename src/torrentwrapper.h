@@ -158,7 +158,7 @@ public:
     void DisconnectToP2PSystem();
     bool IsConnectedToP2PSystem();
     bool IsFileInSystem( const wxString& hash );
-    void RemoveFile( const wxString& hash );
+    bool RemoveTorrentByHash( const wxString& hash );
     int GetTorrentSystemStatus();
 
     ///HashToTorrentData& GetSystemFileList();
@@ -180,7 +180,9 @@ public:
 private:
 
     void CreateTorrent( const wxString& uhash, const wxString& name, MediaType type );
-    bool JoinTorrent( const wxString& name );
+    DownloadRequestStatus RequestFileByRow( const TorrentTable::PRow& row );
+    bool RemoveTorrentByRow( const TorrentTable::PRow& row );
+    bool JoinTorrent( const TorrentTable::PRow& row, bool IsSeed );
     bool DownloadTorrentFileFromTracker( const wxString& hash );
     void JoinRequestedTorrents();
     void RemoveUnneededTorrents();
@@ -202,8 +204,6 @@ private:
     wxArrayString m_tracker_urls;
 
     TorrentTable m_torrent_table;
-
-    wxArrayString m_queued_requests_hashes;/// hashes here.
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;
