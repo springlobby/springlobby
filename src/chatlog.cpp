@@ -34,18 +34,16 @@ ChatLog::ChatLog(const wxString& server,const wxString& room):
 
 ChatLog::~ChatLog()
 {
+  /// crashes right there on close.
   if ( m_active && m_logfile != 0 && m_logfile->IsOpened() ) {
     wxDateTime now = wxDateTime::Now();
     WriteLine( _("### Session Closed at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _("]") );
     WriteLine( _T(" \n \n \n") );
     if ( m_logfile->IsOpened() ) m_logfile->Close();
-    m_logfile = 0;
   }
-  if (m_logfile != 0)
-  {
-  	delete m_logfile;
-	m_logfile = 0;
-  }
+  /// it is safe to delete a null pointer.
+ 	delete m_logfile;
+  m_logfile = 0;
 }
 
 
