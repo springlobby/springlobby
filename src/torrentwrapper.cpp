@@ -34,6 +34,7 @@
 #include <wx/protocol/http.h>
 #include <wx/filename.h>
 #include <wx/file.h>
+#include <wx/filefn.h>
 #include <wx/wfstream.h>
 #include <wx/msgdlg.h>
 #include <wx/app.h>
@@ -660,14 +661,24 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
       try
       {
-       path = usync()->GetArchivePath( archivename )  + archivename;
+        /// dizekat> i'm getting archivename == /home/dmytry/.spring/maps/Whatever.sdf and getting archivepath == /home/dmytry/.spring/maps/
+        /// dizekat> so i changed it to prepend path only if path isnt found here.
+        wxLogMessage( _T("seeding from archive name: %s"), archivename.c_str() );
+        wxString archivepath = usync()->GetArchivePath( archivename );
+        int i=archivename.find(archivepath);
+        if(i<0){
+          path=archivepath+archivename;
+        }else{
+          path=archivename;
+        }
+
       } catch (std::exception& e)
        {
          wxLogError( WX_STRINGC( e.what() ) );
          wxLogMessage( _T("Local filepath couldn't be determined") );
          return false;
        }
-      wxLogMessage( _T("local filename: %s"), path.c_str() );
+      wxLogMessage( _T("seeding from local filename: %s"), path.c_str() );
 
     }
     else
@@ -686,7 +697,10 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
           break;
         }
       }
+      wxLogMessage(_T("downloading to path: =%s"), path.c_str());
     }
+
+
     wxLogMessage(_T("(3) Joining torrent: downloading info file"));
     if (!DownloadTorrentFileFromTracker( row->hash )) return false;
 
@@ -701,20 +715,28 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
     if ( IsSeed )
     {
-      int index = path.Find( torrentfilename );
-      if ( index == -1 ) return false; /// if the filename locally is different from the torrent's, skip it or it will download it again and various crap may happend.
-      path = path.Left( index ); /// truncate the path so it matches the archive's
+      /// improved check: dont download Whatever.sdz when you got e.g. x_Whatever.sdz or Whatever.sdz_x on disk
+      wxFileName path_as_filename(path);
+      if ( path_as_filename.GetFullName()!=torrentfilename){
+        wxLogMessage(_T("local file name does not match requested name, not seeding"));
+        return false; /// if the filename locally is different from the torrent's, skip it or it will download it again and various crap may happend.
+      }
+      /// to be safe.
+      if(!path_as_filename.FileExists()){
+        wxLogError(_T("the local file does not exist!"));
+        return false;
+      }
+      path = path_as_filename.GetPath(); /// strip file name from path
       wxLogMessage( _T("Strippped path: %s"), path.c_str() );
     }
     wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.c_str());
-
 
     try
     {
         m_torrent_table.SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(STD_STRING(path))));
         if(IsSeed){
           if(row->handle.is_valid()){
-            std::vector<bool> tmp(1,false);/// length 1 filled with falses
+            std::vector<bool> tmp(1,true);
             row->handle.filter_files(tmp);
           }else{
             wxLogMessage(_T("cant set seed not to download"));
