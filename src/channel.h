@@ -28,7 +28,7 @@ class Channel : public UserList
 
     //Channel(): m_serv(0),m_userdata(0) {}
     Channel( Server& serv, Ui& ui ): m_serv(serv),m_ui(ui),m_do_ban_regex(false), m_do_unban_regex(false) {}
-    virtual ~Channel() {}
+    virtual ~Channel();
 
     Server& GetServer() { return m_serv; }
 

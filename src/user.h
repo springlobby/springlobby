@@ -74,7 +74,7 @@ class User
     User( const wxString& nick, const wxString& country, const int& cpu, Server& serv) :
       m_serv(serv),m_nick(nick), m_country(country), m_cpu(cpu), m_battle(0) {}
 
-    virtual ~User() {}
+    virtual ~User();
 
     // User interface
 
