@@ -144,40 +144,26 @@ GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-channel-") + chan.GetName
 }
 
 
-<<<<<<< HEAD:src/chatpanel.cpp
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user, wxImageList* imaglist )
 #ifdef HAVE_WX26
-		: wxPanel( parent, -1 ), m_show_nick_list( false ),m_nicklist(0), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( &user ), m_battle( 0 ), m_type( CPT_User ), m_popup_menu( 0 ), m_icon_index( 3 ), m_imagelist(imaglist)  {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ),m_nicklist(0), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( &user ), m_battle( 0 ), m_type( CPT_User ), m_popup_menu( 0 ), m_icon_index( 3 ), m_imagelist(imaglist), m_chat_log(0)  {
 #else
-		: wxPanel( parent, -1 ), m_show_nick_list( false ),m_nicklist(0), m_chat_tabs(( wxAuiNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( &user ), m_battle( 0 ), m_type( CPT_User ), m_popup_menu( 0 ), m_icon_index( 3 ), m_imagelist(imaglist) {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ),m_nicklist(0), m_chat_tabs(( wxAuiNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( &user ), m_battle( 0 ), m_type( CPT_User ), m_popup_menu( 0 ), m_icon_index( 3 ), m_imagelist(imaglist), m_chat_log(0) {
 GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-pm-") + user.GetNick() );
 #endif
-
-=======
-ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ),m_nicklist(0), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ),
-		 m_channel( 0 ), m_server( 0 ), m_user( &user ), m_battle( 0 ), m_type( CPT_User ), m_popup_menu( 0 ), m_chat_log(0) {
->>>>>>> master:src/chatpanel.cpp
 	CreateControls( );
 	user.uidata.panel = this;
 	m_chat_log = new ChatLog( sett().GetDefaultServer(), user.GetNick() );
 }
 
 
-<<<<<<< HEAD:src/chatpanel.cpp
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imaglist )
 #ifdef HAVE_WX26
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist(0),m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ), m_icon_index( 1 ), m_imagelist(imaglist)  {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist(0),m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ), m_icon_index( 1 ), m_imagelist(imaglist),  m_chat_log(0)  {
 #else
-    : wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist(0),m_chat_tabs(( wxAuiNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ), m_icon_index( 1 ), m_imagelist(imaglist) {
+    : wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist(0),m_chat_tabs(( wxAuiNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ), m_icon_index( 1 ), m_imagelist(imaglist),  m_chat_log(0) {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-server") );
 #endif
-
-=======
-ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ),m_nicklist(0), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ),
-		 m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ), m_chat_log(0) {
->>>>>>> master:src/chatpanel.cpp
 	wxLogDebugFunc( _T( "wxWindow* parent, Server& serv" ) );
 	CreateControls( );
 	serv.uidata.panel = this;
