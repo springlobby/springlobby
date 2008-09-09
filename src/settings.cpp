@@ -1429,12 +1429,49 @@ void Settings::DeleteGroup( const wxString& group )
 
 void Settings::SetGroupActions( const wxString& group, UserActions::ActionType action )
 {
-    m_config->Write( _T("/Groups/") + group + _T("/Opts/Actions"), action );
+    //m_config->Write( _T("/Groups/") + group + _T("/Opts/Actions"), action );
+  wxString key=_T("/Groups/")+group+_T("/Opts/ActionsList");
+  m_config->DeleteGroup( key );
+  key+=_T("/");
+  unsigned int tmp=action&((UserActions::ActLast<<1)-1);
+  int i=0;
+  while(tmp!=0)
+  {
+    if(tmp&1)m_config->Write(key+m_configActionNames[i], true);
+    i++;
+    tmp>>=1;
+  }
 }
 
 UserActions::ActionType Settings::GetGroupActions( const wxString& group ) const
 {
-    return  (UserActions::ActionType) m_config->Read( _T("/Groups/") + group + _T("/Opts/Actions"), (long) UserActions::ActNone ) ;
+  wxString key=_T("/Groups/")+group+_T("/Opts/Actions");
+  if(m_config->HasEntry(key)){/// Backward compatibility.
+    wxLogMessage(_T("loading deprecated group actions and updating config"));
+    UserActions::ActionType action=(UserActions::ActionType) m_config->Read( key, (long) UserActions::ActNone ) ;
+    m_config->DeleteEntry(key);
+
+/// a bit ugly, but i want to update options
+    Settings *this_nonconst=const_cast<Settings *>(this);
+    this_nonconst->SetGroupActions(group,action);
+
+    return action;
+  }
+  key=_T("/Groups/")+group+_T("/Opts/ActionsList");
+  if(!m_config->Exists(key))return UserActions::ActNone;
+  key+=_T("/");
+  int i=0;
+  int mask=1;
+  int result=0;
+  while(mask<=UserActions::ActLast){
+    if( m_config->Read( key+m_configActionNames[i], (long)0) ){
+      result|=mask;
+    }
+    i++;
+    mask<<=1;
+  }
+  if(result==0)return UserActions::ActNone;
+  return (UserActions::ActionType) result;
 }
 
 
