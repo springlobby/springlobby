@@ -691,9 +691,12 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     wxLogMessage( _T("requested filename: %s"), torrentfilename.c_str() );
 
 
-    ///it is not working yet:
-    //if ( IsSeed && torrentfilename != path.AfterLast(_T('/')) ) return false; /// in seed mode, if the filename locally is different skip it or it will download it again and various crap may happend.
-
+    if ( IsSeed )
+    {
+      int index = path.Find( torrentfilename );
+      if ( index == -1 ) return false; /// if the filename locally is different from the torrent's, skip it or it will download it again and various crap may happend.
+      path = path.Left( index ); /// truncate the path so it matches the archive's
+    }
     wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.c_str());
 
 
@@ -845,12 +848,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
     std::map<libtorrent::torrent_handle, TorrentTable::PRow> torrenthandles = GetTorrentTable().RowByTorrentHandles();
     for (std::map<libtorrent::torrent_handle, TorrentTable::PRow>::iterator  it = torrenthandles.begin(); it != torrenthandles.end(); ++it)
     {
-        if ( it->first.is_seed() ) m_seed_count++;
-        else
-        {
-            m_leech_count++;
-            continue;
-        }
+        if ( !it->first.is_seed() ) continue;
 
 
         if ( it->second->status == leeching ) /// if torrent was opened in leech mode but now it's seeding it means it was requested from the user but now it's completed
