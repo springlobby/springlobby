@@ -72,7 +72,7 @@ class ChatPanel : public wxPanel
     void UserStatusUpdated( User& who );
     void OnChannelJoin( User& who );
 
-    Channel& GetChannel();
+    Channel* GetChannel();
     void SetChannel( Channel* chan );
 
     Server* GetServer();
