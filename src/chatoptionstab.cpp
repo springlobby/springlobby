@@ -468,7 +468,7 @@ void ChatOptionsTab::DoRestore()
 void ChatOptionsTab::OnApply( wxCommandEvent& event )
 {
   sett().SetChatColorNormal ( m_normal_color->GetColor() );
-  sett().SetChatColorBackground( m_bg_color->GetBackgroundColour() );
+  sett().SetChatColorBackground( m_bg_color->GetColor() );
   sett().SetChatColorAction( m_action_color->GetColor() );
   sett().SetChatColorHighlight( m_highlight_color->GetColor() );
   sett().SetChatColorJoinPart(m_joinleave_color->GetColor() );

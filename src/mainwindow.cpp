@@ -58,7 +58,10 @@
 #include "autojoinchanneldialog.h"
 
 #ifdef HAVE_WX28
-#include <wx/aboutdlg.h>
+    #if defined(__WXMSW__)
+        #include <wx/msw/winundef.h>
+    #endif
+    #include <wx/aboutdlg.h>
 #endif
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)

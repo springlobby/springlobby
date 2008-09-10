@@ -31,8 +31,7 @@ typedef std::map<wxString,mmOptionInt>::const_iterator optionMapIntConstIter;
 enum MediaType
 {
   map,
-  mod,
-  undefined
+  mod
 };
 
 struct UnitSyncMod
@@ -177,7 +176,7 @@ class IUnitSync
     virtual bool FileExists( const wxString& name ) = 0;
 
     virtual wxString GetArchivePath( const wxString& name ) = 0;
-    virtual wxString GetUnitsyncName( const wxString& hash, const MediaType& archivetype = undefined ) = 0;
+    virtual wxString GetUnitsyncName( const wxString& hash, const MediaType& archivetype ) = 0;
 };
 
 IUnitSync* usync();
