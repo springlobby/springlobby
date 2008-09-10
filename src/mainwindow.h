@@ -61,8 +61,6 @@ class MainWindow : public wxFrame
     void OpenChannelChat( Channel& channel );
     void OpenPrivateChat( User& user );
 
-    void CloseAllChats();
-
     void ShowConfigure( const unsigned int page = OPT_PAGE_SPRING );
 
     void OnMenuAbout( wxCommandEvent& event );
