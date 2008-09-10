@@ -718,7 +718,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
       /// improved check: dont download Whatever.sdz when you got e.g. x_Whatever.sdz or Whatever.sdz_x on disk
       wxFileName path_as_filename(path);
       if ( path_as_filename.GetFullName()!=torrentfilename){
-        wxLogMessage(_T("local file name does not match requested name, not seeding"));
+        wxLogMessage(_T("local file name '%s' does not match requested name '%s', not seeding"), path_as_filename.GetFullName().c_str(), torrentfilename.c_str());
         return false; /// if the filename locally is different from the torrent's, skip it or it will download it again and various crap may happend.
       }
       /// to be safe.

@@ -77,7 +77,7 @@ class Socket
     void OnPingThreadStarted();
     void OnPingThreadStopped();
 
-  protected:
+    protected:
 
   // Socket variables
 
@@ -85,7 +85,7 @@ class Socket
     SocketEvents* m_events;
 
     wxCriticalSection m_lock;
-    wxCriticalSection m_ping_thread_wait;
+    //wxCriticalSection m_ping_thread_wait;
 
     wxString m_ping_msg;
     unsigned int m_ping_int;
@@ -110,18 +110,27 @@ class Socket
 };
 
 
-
+/** Ping thread class.
+ * Implemented as joinable thread.
+ * When you want it started, construct it then call Init()
+ * When you want it killed, call Wait() method.
+ * Dont call other methods, especially the Destroy method.
+ */
 class PingThread: public wxThread
 {
   public:
     PingThread( Socket& sock );
     void Init();
-    void* Entry();
-    void OnExit();
+
+    /// overrides wxThread::Wait
+    void Wait();
   private:
     Socket& m_sock;
     int m_next_ping;
+    wxSemaphore m_thread_sleep_semaphore;
 
+    void* Entry();
+    void OnExit();
 };
 
 
