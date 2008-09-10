@@ -38,7 +38,7 @@
 #include "se_utils.h"
 #include "se_settings.h"
 #include "presets.h"
-#include "spinctld.h"
+#include "../spinctld.h"
 
 intMap abstract_panel::intSettings;
 //stringMap abstract_panel::stringSettings;

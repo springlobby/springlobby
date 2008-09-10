@@ -1001,8 +1001,37 @@ bool SpringUnitSync::FileExists( const wxString& name )
 
 wxString SpringUnitSync::GetArchivePath( const wxString& name )
 {
-  wxLogDebugFunc( _T("") );
-  LOCK_UNITSYNC;
+  wxLogDebugFunc( name );
 
   return susynclib()->GetArchivePath( name );
+}
+
+
+wxString SpringUnitSync::GetUnitsyncName( const wxString& hash, const MediaType& archivetype )
+{
+  LocalArchivesVector::iterator it;
+  switch (archivetype)
+  {
+    case map:
+    {
+      it = m_maps_list.find( hash );
+      if ( it != m_maps_list.end() ) return it->second;
+      break;
+    }
+    case mod:
+    {
+      it = m_mods_list.find( hash );
+      if ( it != m_mods_list.end() ) return it->second;
+      break;
+    }
+    case undefined:
+    {
+      it = m_maps_list.find( hash );
+      if ( it != m_maps_list.end() ) return it->second;
+      it = m_mods_list.find( hash );
+      if ( it != m_mods_list.end() ) return it->second;
+      break;
+    }
+  }
+  return wxEmptyString;
 }

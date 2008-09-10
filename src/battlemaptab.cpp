@@ -219,12 +219,16 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
     m_battle.SetLocalMap( map );
     m_battle.SetHostMap( map.name, map.hash );
 
+    m_ui.OnBattleMapChanged(m_battle);
+    m_battle.SendHostInfo( HI_Map );
+
+    for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
+    m_battle.SendHostInfo( HI_StartRects );
+
     sett().LoadBattleMapOptions(&m_battle);
     m_battle.SendHostInfo( HI_StartRects );
 
   } catch (...) {}
-  m_ui.OnBattleMapChanged(m_battle);
-  m_battle.SendHostInfo( HI_Map );
 }
 
 

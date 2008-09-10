@@ -43,6 +43,7 @@
 #include "images/rank4.xpm"
 #include "images/rank5.xpm"
 #include "images/rank6.xpm"
+#include "images/rank_unknown.xpm"
 
 #include "images/open_game.png.h"
 #include "images/open_pw_game.png.h"
@@ -103,13 +104,14 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_UP = Add( wxBitmap(up_xpm) );
     ICON_DOWN = Add( wxBitmap(down_xpm) );
 
-    ICON_RANK0 = Add( wxBitmap(rank0_xpm) );
-    ICON_RANK1 = Add( wxBitmap(rank1_xpm) );
-    ICON_RANK2 = Add( wxBitmap(rank2_xpm) );
-    ICON_RANK3 = Add( wxBitmap(rank3_xpm) );
-    ICON_RANK4 = Add( wxBitmap(rank4_xpm) );
-    ICON_RANK5 = Add( wxBitmap(rank5_xpm) );
-    ICON_RANK6 = Add( wxBitmap(rank6_xpm) );
+    ICON_RANK_UNKNOWN = Add( wxBitmap(rank_unknown_xpm) );
+    ICON_RANK1 = Add( wxBitmap(rank0_xpm) );
+    ICON_RANK2 = Add( wxBitmap(rank1_xpm) );
+    ICON_RANK3 = Add( wxBitmap(rank2_xpm) );
+    ICON_RANK4 = Add( wxBitmap(rank3_xpm) );
+    ICON_RANK5 = Add( wxBitmap(rank4_xpm) );
+    ICON_RANK6 = Add( wxBitmap(rank5_xpm) );
+    ICON_RANK7 = Add( wxBitmap(rank6_xpm) );
 
     ICON_READY = ICON_OPEN_GAME = Add( *charArr2wxBitmap(open_game_png, sizeof(open_game_png) ) );
     ICON_OPEN_PW_GAME = Add( *charArr2wxBitmap(open_pw_game_png, sizeof(open_pw_game_png) ) );
@@ -216,19 +218,21 @@ int IconImageList::GetUserBattleStateIcon( const UserStatus& us )
 }
 
 
-int IconImageList::GetRankIcon( const int& rank, const bool& showlowest )
+int IconImageList::GetRankIcon( const unsigned int& rank, const bool& showlowest )
 {
-    if ( rank <= RANK_0 )
+    if ( !showlowest && rank == RANK_1 ) return ICON_RANK_NONE;
+    switch (rank)
     {
-        if ( showlowest ) return ICON_RANK0;
-        else return ICON_RANK_NONE;
+      case RANK_UNKNOWN: return ICON_RANK1;
+      case RANK_1: return ICON_RANK1;
+      case RANK_2: return ICON_RANK2;
+      case RANK_3: return ICON_RANK3;
+      case RANK_4: return ICON_RANK4;
+      case RANK_5: return ICON_RANK5;
+      case RANK_6: return ICON_RANK6;
+      case RANK_7: return ICON_RANK7;
     }
-    if ( rank <= RANK_1 ) return ICON_RANK1;
-    if ( rank <= RANK_2 ) return ICON_RANK2;
-    if ( rank <= RANK_3 ) return ICON_RANK3;
-    if ( rank <= RANK_4 ) return ICON_RANK4;
-    if ( rank <= RANK_5 ) return ICON_RANK5;
-    return ICON_RANK6;
+    return ICON_RANK_UNKNOWN;
 }
 
 
@@ -323,19 +327,19 @@ void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 int IconImageList::GetSideIcon( const wxString& modname, int side )
 {
   wxString sidename = usync()->GetSideName( modname, side );
-
-  if (m_cached_side_icons[sidename] == 0){
+  wxString cachestring = modname + _T("_") + sidename;
+  if (m_cached_side_icons[cachestring] == 0){
     try
     {
       int IconPosition = Add(wxBitmap( usync()->GetSidePicture( modname , sidename ) ), wxNullBitmap);
-      m_cached_side_icons[sidename] = IconPosition;
+      m_cached_side_icons[cachestring] = IconPosition;
       return IconPosition;
     } catch (...)
     {
-      if ( side == 0 ) m_cached_side_icons[sidename] = ICON_SIDEPIC_0;
-      else if ( side == 1 ) m_cached_side_icons[sidename] = ICON_SIDEPIC_1;
+      if ( side == 0 ) m_cached_side_icons[cachestring] = ICON_SIDEPIC_0;
+      else if ( side == 1 ) m_cached_side_icons[cachestring] = ICON_SIDEPIC_1;
     }
-  } else return m_cached_side_icons[sidename];
+  } else return m_cached_side_icons[cachestring];
   return -1;
 }
 

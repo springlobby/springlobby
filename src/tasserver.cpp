@@ -578,7 +578,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         title = GetSentenceParam( params );
         mod = GetSentenceParam( params );
         m_se->OnBattleOpened( id, replay, IntToNatType( nat ), nick, host, port, maxplayers,
-                              haspass, (rank + 1)*100, hash, map, title, mod );
+                              haspass, rank + 1, hash, map, title, mod );
     }
     else if ( cmd == _T("JOINEDBATTLE") )
     {
@@ -1202,7 +1202,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
                              bo.maxplayers
                            );
     cmd +=  bo.modhash;
-    cmd += wxString::Format( _T(" %d "), bo.rankneeded/100 );
+    cmd += wxString::Format( _T(" %d "), bo.rankneeded );
     cmd += bo.maphash + _T(" ");
     cmd += bo.mapname + _T("\t");
     cmd += bo.description + _T("\t");
@@ -1979,7 +1979,7 @@ UserStatus ConvTasclientstatus( TASClientstatus tas )
     UserStatus stat;
     stat.in_game = tas.in_game;
     stat.away = tas.away;
-    stat.rank = (tas.rank + 1) * 100;
+    stat.rank = (RankContainer)(tas.rank + 1);
     stat.moderator = tas.moderator;
     stat.bot = tas.bot;
     return stat;

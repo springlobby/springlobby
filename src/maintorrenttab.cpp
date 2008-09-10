@@ -77,7 +77,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	m_mainbox->SetSizeHints(this);
     Layout();
 
-    info_map = torrent()->CollectGuiInfos();
+    info_map = torrent().CollectGuiInfos();
     m_torrent_list->SetInfoMap( &info_map );
 //    m_torrent_list->SetSizeHints(this);
     m_torrent_list->Layout();
@@ -162,7 +162,7 @@ void MainTorrentTab::AddTorrentInfo(  TorrentInfos& info )
 void MainTorrentTab::OnUpdate()
 {
 
-    if ( torrent()->IsConnectedToP2PSystem() )
+    if ( torrent().IsConnectedToP2PSystem() )
     {
       m_but_cancel->Enable();
       m_but_publish->Enable();
@@ -175,7 +175,7 @@ void MainTorrentTab::OnUpdate()
       m_but_download->Disable();
     }
 
-    switch (torrent()->GetTorrentSystemStatus() )
+    switch (torrent().GetTorrentSystemStatus() )
     {
         case 0:
             m_status_color->SetColor( wxColor(255,0,0) ); //not connected
@@ -196,7 +196,7 @@ void MainTorrentTab::OnUpdate()
     }
 
     m_torrent_list->SetSelectionRestorePoint();
-    info_map = torrent()->CollectGuiInfos();
+    info_map = torrent().CollectGuiInfos();
     m_outgoing_lbl->SetLabel( wxString::Format(_("Total Outgoing: %.2f KB/s"), (info_map[0].outspeed/float(1024)) ) );
     m_incoming_lbl->SetLabel( wxString::Format(_("Total Incoming: %.2f KB/s"), (info_map[0].inspeed/ float(1024)) ) );
     m_torrent_list->DeleteAllItems();
@@ -214,7 +214,7 @@ void MainTorrentTab::OnUpdate()
 
 void MainTorrentTab::OnCancelButton( wxCommandEvent& event )
 {
-  torrent()->RemoveFile( TowxString(m_torrent_list->GetSelectedData()) );
+  torrent().RemoveFile( TowxString(m_torrent_list->GetSelectedData()) );
 }
 
 void MainTorrentTab::OnDownloadDialog( wxCommandEvent& event )

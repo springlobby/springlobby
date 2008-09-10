@@ -1092,6 +1092,16 @@ void Settings::SetBattleFilterValues(const BattleListFilterValues& filtervalues,
     m_config->Write( _T("/BattleFilter/lastprofile"),profile_name);
 }
 
+bool Settings::GetFilterActivState() const
+{
+    return m_config->Read( _T("/BattleFilter/Active") , 0l );
+}
+
+void Settings::SetFilterActivState(const bool state)
+{
+    m_config->Write( _T("/BattleFilter/Active") , state );
+}
+
 bool Settings::GetDisableSpringVersionCheck()
 {
     bool ret;
@@ -1303,11 +1313,7 @@ void Settings::LoadBattleMapOptions(IBattle *battle){
       int left=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_left"),-1L);
       int right=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_right"),-1L);
       int bottom=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"),-1L);
-      if(ally>=0){
-        battle->AddStartRect(ally,left,top,right,bottom);
-      }else{
-        battle->RemoveStartRect(i);
-      }
+      if(ally>=0) battle->AddStartRect(ally,left,top,right,bottom);
     }
   }
 }

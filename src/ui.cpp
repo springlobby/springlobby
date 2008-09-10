@@ -262,7 +262,7 @@ void Ui::StartHostedBattle()
 void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
 {
   #ifndef NO_TORRENT_SYSTEM
-  torrent()->SetIngameStatus(true);
+  torrent().SetIngameStatus(true);
   #endif
   m_spring->Run( battle );
 }
@@ -298,8 +298,8 @@ void Ui::ReloadUnitSync()
 void Ui::DownloadMap( const wxString& hash, const wxString& name )
 {
   #ifndef NO_TORRENT_SYSTEM
-  if ( !hash.IsEmpty() ) torrent()->RequestFileByHash( hash );
-  else if ( !name.IsEmpty() ) torrent()->RequestFileByName( name );
+  if ( !hash.IsEmpty() ) torrent().RequestFileByHash( hash );
+  else if ( !name.IsEmpty() ) torrent().RequestFileByName( name );
   #else
   wxString url = _T("http://spring.jobjol.nl/search.php");
   OpenWebBrowser ( url );
@@ -310,8 +310,8 @@ void Ui::DownloadMap( const wxString& hash, const wxString& name )
 void Ui::DownloadMod( const wxString& hash, const wxString& name )
 {
   #ifndef NO_TORRENT_SYSTEM
-  if ( !hash.IsEmpty() ) torrent()->RequestFileByHash( hash );
-  else if ( !name.IsEmpty() ) torrent()->RequestFileByName( name );
+  if ( !hash.IsEmpty() ) torrent().RequestFileByHash( hash );
+  else if ( !name.IsEmpty() ) torrent().RequestFileByName( name );
   #else
   wxString url = _T("http://spring.jobjol.nl/search.php");
   OpenWebBrowser ( url );
@@ -495,12 +495,12 @@ void Ui::OnUpdate( int mselapsed )
   #ifndef NO_TORRENT_SYSTEM
   if (m_upd_intv_counter % 20 == 0 )
   {
-      if ( sett().GetTorrentSystemAutoStartMode() == 1 && !torrent()->IsConnectedToP2PSystem() ) torrent()->ConnectToP2PSystem();
-      else if ( GetServerStatus() && m_serv->IsOnline() && !torrent()->IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->ConnectToP2PSystem();
-      if ( ( !GetServerStatus() || !m_serv->IsOnline() ) && torrent()->IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->DisconnectToP2PSystem();
+      if ( sett().GetTorrentSystemAutoStartMode() == 1 && !torrent().IsConnectedToP2PSystem() ) torrent().ConnectToP2PSystem();
+      else if ( GetServerStatus() && m_serv->IsOnline() && !torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
+      if ( ( !GetServerStatus() || !m_serv->IsOnline() ) && torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectToP2PSystem();
       mw().GetTorrentTab().OnUpdate();
   }
-  torrent()->UpdateFromTimer( mselapsed );
+  torrent().UpdateFromTimer( mselapsed );
   m_upd_intv_counter++;
   #endif
 }
@@ -528,6 +528,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
     }
   }
   if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
+  mw().GetJoinTab().OnConnected();
 
 }
 
@@ -738,11 +739,9 @@ void Ui::OnMotd( Server& server, const wxString& message )
 
 void Ui::OnServerMessage( Server& server, const wxString& message )
 {
-  ChatPanel* panel = GetActiveChatPanel();
-  if ( panel != 0 )
+  if ( server.uidata.panel != 0 ) server.uidata.panel->StatusMessage( message );
+  else
   {
-    panel->StatusMessage( message );
-  } else {
     ShowMessage( _("Server message"), message );
   }
 }
@@ -916,7 +915,7 @@ void Ui::OnBattleStarted( Battle& battle )
       battle.GetMe().Status().in_game = true;
       battle.GetMe().SendMyUserStatus();
       #ifndef NO_TORRENT_SYSTEM
-      torrent()->SetIngameStatus(true);
+      torrent().SetIngameStatus(true);
       #endif
       m_spring->Run( battle );
     }
@@ -948,7 +947,7 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
 void Ui::OnSpringTerminated( bool success )
 {
   #ifndef NO_TORRENT_SYSTEM
-  torrent()->SetIngameStatus(false);
+  torrent().SetIngameStatus(false);
   #endif
   if ( !m_serv ) return;
 

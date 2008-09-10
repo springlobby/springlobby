@@ -74,6 +74,7 @@ class SpringUnitSync : public IUnitSync
     bool FileExists( const wxString& name );
 
     wxString GetArchivePath( const wxString& name );
+    wxString GetUnitsyncName( const wxString& hash, const MediaType& archivetype = undefined );
 
   private:
 

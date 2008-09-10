@@ -472,7 +472,8 @@ void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 void MainWindow::OnMenuStartTorrent( wxCommandEvent& event )
 {
   #ifndef NO_TORRENT_SYSTEM
-  torrent()->ConnectToP2PSystem();
+  sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
+  torrent().ConnectToP2PSystem();
   #endif
 }
 
@@ -480,7 +481,8 @@ void MainWindow::OnMenuStartTorrent( wxCommandEvent& event )
 void MainWindow::OnMenuStopTorrent( wxCommandEvent& event )
 {
   #ifndef NO_TORRENT_SYSTEM
-  torrent()->DisconnectToP2PSystem();
+  sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
+  torrent().DisconnectToP2PSystem();
   #endif
 }
 
@@ -490,7 +492,7 @@ void MainWindow::OnMenuOpen( wxMenuEvent& event )
   #ifndef NO_TORRENT_SYSTEM
   m_menuTools->Delete(MENU_STOP_TORRENT);
   m_menuTools->Delete(MENU_START_TORRENT);
-  if ( !torrent()->IsConnectedToP2PSystem() )
+  if ( !torrent().IsConnectedToP2PSystem() )
   {
     m_menuTools->Insert( 5, MENU_START_TORRENT, _("Manually &Start Torrent System") );
   }
