@@ -554,18 +554,25 @@ void Ui::OnDisconnected( Server& server )
 {
   if ( m_main_win == 0 ) return;
   wxLogDebugFunc( _T("") );
-  if ( m_main_win == 0 ) return;
+  if(!&server){
+    wxLogError(_T("WTF got null reference!!!"));
+    return;
+  }
 
   mw().GetJoinTab().GetBattleListTab().SetFilterActiv( false );
   mw().GetJoinTab().LeaveCurrentBattle();
   mw().GetJoinTab().GetBattleListTab().RemoveAllBattles();
 
-  if ( server.uidata.panel != 0 ) {
+  if ( server.uidata.panel ) {
     server.uidata.panel->StatusMessage( _T("Disconnected from server.") );
+
     server.uidata.panel->SetServer( 0 );
-    server.uidata.panel = 0;
+    /// leads to crash. Disabled for now
+    //server.uidata.panel = 0;
   }
-  mw().GetChatTab().CloseAllChats();
+
+  /// Crashes. Disabled for now.
+  //mw().GetChatTab().CloseAllChats();
 
 }
 

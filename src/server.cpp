@@ -11,6 +11,7 @@
 #include "channel.h"
 #include "user.h"
 #include "utils.h"
+#include "chatpanel.h"
 
 
 Server::~Server()
@@ -38,6 +39,7 @@ Server::~Server()
     delete c;
   }
   delete battles_iter;
+  if(uidata.panel)uidata.panel->SetServer(NULL);
 }
 
 

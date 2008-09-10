@@ -177,6 +177,7 @@ ChatPanel::~ChatPanel() {
 		if ( m_channel->uidata.panel == this ) m_channel->uidata.panel = 0;
 	}
 	delete m_chat_log;
+	m_chat_log=0;/// for case of double destructor or whatever
 
 
 	if ( m_type == CPT_Channel )
@@ -898,8 +899,8 @@ void ChatPanel::UserStatusUpdated( User& who ) {
 }
 
 
-Channel& ChatPanel::GetChannel() {
-	return *m_channel;
+Channel* ChatPanel::GetChannel() {
+	return m_channel;
 }
 
 
@@ -915,9 +916,13 @@ void ChatPanel::SetChannel( Channel* chan ) {
 		if ( m_show_nick_list && m_nicklist ) {
 			m_nicklist->ClearUsers();
 		}
-	} else if ( chan != 0 ) {
+	}
+
+	delete m_chat_log;
+  m_chat_log=0;
+
+	if ( chan != 0 ) {
 		chan->uidata.panel = this;
-		delete m_chat_log;
 		m_chat_log = new ChatLog( sett().GetDefaultServer(), chan->GetName() );
 	}
 	m_channel = chan;
@@ -931,12 +936,20 @@ Server* ChatPanel::GetServer() {
 
 void ChatPanel::SetServer( Server* serv ) {
 	ASSERT_LOGIC( m_type == CPT_Server, _T( "Not of type server" ) );
-	if (( serv == 0 ) && ( m_server != 0 ) ) m_server->uidata.panel = 0;
-	else if ( serv != 0 ) serv->uidata.panel = this;
+	if (( serv == 0 ) && ( m_server != 0 ) ){
+	  m_server->uidata.panel = 0;
+	}
+	else if ( serv != 0 ){
+	   serv->uidata.panel = this;
+	}
 	m_server = serv;
+
 	delete m_chat_log;
-	if ( m_server ) m_chat_log = new ChatLog( sett().GetDefaultServer(), _( "_SERVER" ) );
-	else m_chat_log = 0;
+	m_chat_log = NULL;
+
+	if ( m_server ){
+	  m_chat_log = new ChatLog( sett().GetDefaultServer(), _( "_SERVER" ) );
+	}
 }
 
 
@@ -954,8 +967,8 @@ void ChatPanel::SetUser( User* usr ) {
 	m_user = usr;
 
 	delete m_chat_log;
+	m_chat_log = 0;
 	if ( m_user ) m_chat_log = new ChatLog( sett().GetDefaultServer(), usr->GetNick() );
-	else m_chat_log = 0;
 }
 
 
