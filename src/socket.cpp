@@ -300,7 +300,8 @@ void Socket::SetSendRateLimit( int Bps )
 }
 
 
-//! @brief Ping remote host with custom protocol message. Called from separate thread
+//! @brief Ping remote host with custom protocol message.
+//! @note Called from separate thread
 void Socket::Ping()
 {
   /// Dont log here, else it may crash.
@@ -323,24 +324,11 @@ void Socket::OnTimer( int mselapsed )
   }
 }
 
-
-void Socket::OnPingThreadStarted()
-{
-
-}
-
-
-void Socket::OnPingThreadStopped()
-{
-
-}
-
 PingThread::PingThread( Socket& sock ):
   wxThread(wxTHREAD_JOINABLE),
   m_sock(sock),
   m_thread_sleep_semaphore(0,0)
 {
-  m_next_ping = 0;
 }
 
 
@@ -354,31 +342,30 @@ void PingThread::Init()
 
 void* PingThread::Entry()
 {
-  m_sock.OnPingThreadStarted();
-  m_next_ping = m_sock.GetPingInterval();
+  int milliseconds = m_sock.GetPingInterval();
 
   while ( !TestDestroy() )
   {
     if ( !m_sock.GetPingEnabled() ) break;
     m_sock.Ping();
-    //m_sock.OnPingThreadSleep( m_next_ping );
-    wxSemaError err=m_thread_sleep_semaphore.WaitTimeout(m_next_ping);/// wait time in milliseconds.
+    wxSemaError err=m_thread_sleep_semaphore.WaitTimeout(milliseconds);
+
+    // Just in case: sleep to prevent looping through all semaphore slots too quickly before wxThread::Wait is called
+    // Not really needed anymore (?)
+    //Sleep(1);
+
+    /// break if woken from WaitTimeout .
     if(err!=wxSEMA_TIMEOUT)break;
-    /// Just in case: prevent looping through all semaphore slots too quickly before wxThread::Wait is called
-    /// Not really needed anymore
-    Sleep(1);
   }
-  m_sock.OnPingThreadStopped();
   return 0;
 }
 
 
 void PingThread::OnExit()
 {
-  m_next_ping =0;
 }
 
-void PingThread::Wait(){
+PingThread::ExitCode PingThread::Wait(){
   m_thread_sleep_semaphore.Post();
-  wxThread::Wait();
+  return wxThread::Wait();
 }

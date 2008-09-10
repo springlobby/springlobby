@@ -74,9 +74,6 @@ class Socket
     void SetSendRateLimit( int Bps = -1 );
     void OnTimer( int mselapsed );
 
-    void OnPingThreadStarted();
-    void OnPingThreadStopped();
-
     protected:
 
   // Socket variables
@@ -85,7 +82,6 @@ class Socket
     SocketEvents* m_events;
 
     wxCriticalSection m_lock;
-    //wxCriticalSection m_ping_thread_wait;
 
     wxString m_ping_msg;
     unsigned int m_ping_int;
@@ -110,23 +106,21 @@ class Socket
 };
 
 
-/** Ping thread class.
+/** A thread class that sends pings to socket.
  * Implemented as joinable thread.
  * When you want it started, construct it then call Init()
  * When you want it killed, call Wait() method.
- * Dont call other methods, especially the Destroy method.
+ * Dont call other methods, especially the Destroy() method.
  */
 class PingThread: public wxThread
 {
   public:
     PingThread( Socket& sock );
     void Init();
-
     /// overrides wxThread::Wait
-    void Wait();
+    ExitCode Wait();
   private:
     Socket& m_sock;
-    int m_next_ping;
     wxSemaphore m_thread_sleep_semaphore;
 
     void* Entry();
