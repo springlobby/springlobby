@@ -10,10 +10,10 @@ fi
 
 who=$1
 
-git-checkout master
-git-fetch ${who}
-git-merge ${who}/master
+git checkout master
+git fetch ${who}
+git merge ${who}/master
 #git-svn -i trunk set-tree HEAD
 #git-tag $(git-svn log --limit 1 --oneline | cut -d' ' -f1)
 #git-push --tags
-git-push
+git push
