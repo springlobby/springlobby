@@ -750,51 +750,50 @@ wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
 }
 
 
-wxString SpringUnitSync::_GetCachedMinimapFileName( const wxString& mapname, int width, int height )
+
+wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int height )
 {
+  wxLogDebugFunc( mapname );
+
   wxString path = GetFileCachePath( mapname, _T(""), false );
-  if ( width != -1 ) path << wxString::Format( _T("-%dx%d"), width, height );
   path << _T(".minimap.png");
-  return path;
-}
 
+  try
+  {
 
-wxImage SpringUnitSync::_GetCachedMinimap( const wxString& mapname, int max_w, int max_h, bool store_size )
-{
-  wxString fname = store_size? _GetCachedMinimapFileName( mapname, max_w, max_h ) : _GetCachedMinimapFileName( mapname );
-  ASSERT_RUNTIME( wxFileExists( fname ), _T("File cached image does not exist") );
+  ASSERT_RUNTIME( wxFileExists( path ), _T("File cached image does not exist") );
 
-  wxImage img( fname, wxBITMAP_TYPE_PNG );
-  ASSERT_RUNTIME( img.Ok(), _T("Failed to load chache image") );
+  wxImage img( path, wxBITMAP_TYPE_PNG );
+  ASSERT_RUNTIME( img.Ok(), _T("Failed to load cache image") );
 
-  if ( !store_size ) {
-
-    UnitSyncMap map = GetMap( mapname );
-    if ( map.hash != m_map.hash ) map = m_map = GetMapEx( mapname );
-    else map = m_map;
-
-    int height, width;
-
-    width = max_w;
-    height = (int)((double)((double)max_w * (double)map.info.height) / (double)map.info.width);
-    if ( height > max_h ) {
-      width = (int)((double)((double)width * (double)max_h) / (double)height);
-      height = max_h;
-    }
-
-    img.Rescale( width, height );
-
+  float picratio = (float)img.GetHeight() / (float)img.GetWidth();
+  int resizewidth, resizeheight;
+  if ( picratio < 1 )
+  {
+    resizewidth = width;
+    resizeheight = (int)( (float)resizewidth * picratio );
   }
+  else
+  {
+    resizeheight = height;
+    resizewidth = (int)( (float)resizeheight / picratio );
+  }
+  img.Rescale( resizewidth, resizeheight );
 
   return img;
-}
 
+  } catch (...)
+  {
+    try
+    {
+      wxImage img = susynclib()->GetMinimap( mapname );
 
-wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int max_w, int max_h, bool store_size )
-{
-  wxLogDebugFunc( _T("") );
-  CacheMinimap( mapname );
-  return _GetCachedMinimap( mapname, max_w, max_h, store_size );
+      img.SaveFile( path, wxBITMAP_TYPE_PNG );
+
+      return img;
+    }
+    catch(...) {}
+  }
 }
 
 MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
@@ -860,58 +859,6 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
   }
 
   return info;
-}
-
-
-bool SpringUnitSync::CacheMinimap( const wxString& mapname )
-{
-  wxLogDebug( _T("") );
-  if ( wxFileExists( _GetCachedMinimapFileName( mapname ) ) &&
-       wxFileExists( _GetCachedMinimapFileName( mapname, 160, 160 ) ) &&
-       wxFileExists( _GetCachedMinimapFileName( mapname, 98, 98 ) )
-     ) return false;
-
-  int width = 512, height = 1024;
-
-  wxImage ret;
-  try {
-    ret = susynclib()->GetMinimap( mapname );
-  } catch (...) {
-    return false;
-  }
-
-  UnitSyncMap map;
-  try {
-    map = GetMapEx( mapname );
-  } catch(...) {
-    return false;
-  }
-
-  ret.Rescale( 512, 512 );
-  wxString fname = _GetCachedMinimapFileName( mapname );
-  if ( !wxFileExists( fname ) ) ret.SaveFile( fname, wxBITMAP_TYPE_PNG );
-
-  int max_w, max_h;
-  max_w = max_h = 160;
-  for ( int i = 0; i <= 1; i++ ) {
-
-    switch ( i ) {
-      case 0: max_w = 160; max_h = 160; break;
-      case 1: max_w = 98; max_h = 98; break;
-    };
-
-    width = max_w;
-    height = (int)((double)((double)max_w * (double)map.info.height) / (double)map.info.width);
-    if ( height > max_h ) {
-      width = (int)((double)((double)width * (double)max_h) / (double)height);
-      height = max_h;
-    }
-
-    ret.Rescale( width, height );
-    ret.SaveFile( _GetCachedMinimapFileName( mapname, max_w, max_h ), wxBITMAP_TYPE_PNG );
-
-  }
-  return true;
 }
 
 
