@@ -726,21 +726,19 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
     if ( IsSeed )
     {
-        /// improved check: dont download Whatever.sdz when you got e.g. x_Whatever.sdz or Whatever.sdz_x on disk
-        wxFileName path_as_filename(path);
-        if ( path_as_filename.GetFullName()!=torrentfilename)
-        {
-            wxLogMessage(_T("local file name does not match requested name, not seeding"));
-            return false; /// if the filename locally is different from the torrent's, skip it or it will download it again and various crap may happend.
-        }
-        /// to be safe.
-        if (!path_as_filename.FileExists())
-        {
-            wxLogError(_T("the local file does not exist!"));
-            return false;
-        }
-        path = path_as_filename.GetPath(); /// strip file name from path
-        wxLogMessage( _T("Strippped path: %s"), path.c_str() );
+      /// improved check: dont download Whatever.sdz when you got e.g. x_Whatever.sdz or Whatever.sdz_x on disk
+      wxFileName path_as_filename(path);
+      if ( path_as_filename.GetFullName()!=torrentfilename){
+        wxLogMessage(_T("local file name '%s' does not match requested name '%s', not seeding"), path_as_filename.GetFullName().c_str(), torrentfilename.c_str());
+        return false; /// if the filename locally is different from the torrent's, skip it or it will download it again and various crap may happend.
+      }
+      /// to be safe.
+      if(!path_as_filename.FileExists()){
+        wxLogError(_T("the local file does not exist!"));
+        return false;
+      }
+      path = path_as_filename.GetPath(); /// strip file name from path
+      wxLogMessage( _T("Strippped path: %s"), path.c_str() );
     }
     wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.c_str());
 
