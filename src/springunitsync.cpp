@@ -790,6 +790,20 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
 
       img.SaveFile( path, wxBITMAP_TYPE_PNG );
 
+      float picratio = (float)img.GetHeight() / (float)img.GetWidth();
+      int resizewidth, resizeheight;
+      if ( picratio < 1 )
+      {
+        resizewidth = width;
+        resizeheight = (int)( (float)resizewidth * picratio );
+      }
+      else
+      {
+        resizeheight = height;
+        resizewidth = (int)( (float)resizeheight / picratio );
+      }
+      img.Rescale( resizewidth, resizeheight );
+
       return img;
     }
     catch(...) {}
