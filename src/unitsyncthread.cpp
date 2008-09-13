@@ -73,36 +73,42 @@ void* UnitSyncThread::UnitSyncThreadImpl::Entry()
   {
     Sleep( 30000 );
     /// cache map infos
-    wxArrayString totalmaps = usync().GetMapList();
-    if ( m_current_map_index > totalmaps.GetCount() ) m_current_map_index = 0;
-    wxString mapname = totalmaps[m_current_map_index];
-    try
+    if( usync().IsLoaded() )
     {
-      usync().GetMapOptions( mapname );
-      usync().GetMapEx( m_current_map_index );
-      usync().GetMinimap( mapname, -1, -1 );
-    } catch (...) {}
-    m_current_map_index++;
+      wxArrayString totalmaps = usync().GetMapList();
+      if ( m_current_map_index > totalmaps.GetCount() ) m_current_map_index = 0;
+      wxString mapname = totalmaps[m_current_map_index];
+      try
+      {
+        usync().GetMapOptions( mapname );
+        usync().GetMapEx( m_current_map_index );
+        usync().GetMinimap( mapname, -1, -1 );
+      } catch (...) {}
+      m_current_map_index++;
+    }
 
     if ( TestDestroy() ) return 0; /// this check is added so if the thread is paused or stopped it won't attempt to try the next step before closing
 
     Sleep( 30000 );
     /// cache mod infos
-    wxArrayString totalmods = usync().GetModList();
-    if ( m_current_mod_index > totalmods.GetCount() ) m_current_mod_index = 0;
-    wxString modname = totalmods[m_current_mod_index];
-    try
+    if( usync().IsLoaded() )
     {
-      usync().GetModOptions( modname );
-      unsigned int sidecount = usync().GetSideCount( modname );
-      for ( unsigned int i = 0; i < sidecount; i++ )
+      wxArrayString totalmods = usync().GetModList();
+      if ( m_current_mod_index > totalmods.GetCount() ) m_current_mod_index = 0;
+      wxString modname = totalmods[m_current_mod_index];
+      try
       {
-        usync().GetSidePicture( modname, usync().GetSideName( modname, i ) );
-      }
-      usync().GetAIList( modname );
-      usync().GetUnitsList( modname );
-    } catch (...) {}
-    m_current_mod_index++;
+        usync().GetModOptions( modname );
+        unsigned int sidecount = usync().GetSideCount( modname );
+        for ( unsigned int i = 0; i < sidecount; i++ )
+        {
+          usync().GetSidePicture( modname, usync().GetSideName( modname, i ) );
+        }
+        usync().GetAIList( modname );
+        usync().GetUnitsList( modname );
+      } catch (...) {}
+      m_current_mod_index++;
+    }
 
   }
   return 0;
