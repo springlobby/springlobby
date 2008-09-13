@@ -19,8 +19,7 @@ UnitSyncThread& CacheThread()
 
 UnitSyncThread::UnitSyncThread()
 {
-  m_thread.SetCurrentModIndex( sett().GetModCachingThreadProgress() );
-  m_thread.SetCurrentMapIndex( sett().GetMapCachingThreadProgress() );
+  LoadSettingsFromFile();
 }
 
 
@@ -64,6 +63,14 @@ void UnitSyncThread::Stop()
   wxLogMessage( _T("caching thread stopped") );
   m_thread.Stop();
 }
+
+
+void UnitSyncThread::LoadSettingsFromFile()
+{
+  m_thread.SetCurrentModIndex( sett().GetModCachingThreadProgress() );
+  m_thread.SetCurrentMapIndex( sett().GetMapCachingThreadProgress() );
+}
+
 
 UnitSyncThread::UnitSyncThreadImpl::UnitSyncThreadImpl():
 m_stop_thread( false )

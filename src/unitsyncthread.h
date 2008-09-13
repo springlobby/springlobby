@@ -16,6 +16,8 @@ class UnitSyncThread
     void Start();
     void Stop();
 
+    void LoadSettingsFromFile();
+
   protected:
 
     class UnitSyncThreadImpl : public wxThread
