@@ -755,20 +755,20 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
 {
   wxLogDebugFunc( mapname );
 
-  wxString path = GetFileCachePath( mapname, _T(""), false );
-  path << _T(".minimap.png");
+  wxString originalsizepath = GetFileCachePath( mapname, _T(""), false ) + _T(".minimap.png");
 
   wxImage img;
 
   try
   {
+  ASSERT_RUNTIME( wxFileExists( originalsizepath ), _T("File cached image does not exist") );
 
-  ASSERT_RUNTIME( wxFileExists( path ), _T("File cached image does not exist") );
-
-  wxImage( path, wxBITMAP_TYPE_PNG );
+  img = wxImage( originalsizepath, wxBITMAP_TYPE_PNG );
   ASSERT_RUNTIME( img.Ok(), _T("Failed to load cache image") );
 
-  float picratio = (float)img.GetHeight() / (float)img.GetWidth();
+  MapInfo mapinfo = _GetMapInfoEx( mapname );
+
+  float picratio = (float)mapinfo.height / (float)mapinfo.width;
   int resizewidth, resizeheight;
   if ( picratio < 1 )
   {
@@ -780,37 +780,41 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
     resizeheight = height;
     resizewidth = (int)( (float)resizeheight / picratio );
   }
-  img.Rescale( resizewidth, resizeheight );
 
-  return img;
+  img.Rescale( resizewidth, resizeheight );
 
   } catch (...)
   {
     try
     {
-      img = susynclib()->GetMinimap( mapname );
 
-      img.SaveFile( path, wxBITMAP_TYPE_PNG );
+    img = susynclib()->GetMinimap( mapname );
 
-      float picratio = (float)img.GetHeight() / (float)img.GetWidth();
-      int resizewidth, resizeheight;
-      if ( picratio < 1 )
-      {
-        resizewidth = width;
-        resizeheight = (int)( (float)resizewidth * picratio );
-      }
-      else
-      {
-        resizeheight = height;
-        resizewidth = (int)( (float)resizeheight / picratio );
-      }
-      img.Rescale( resizewidth, resizeheight );
+    img.SaveFile( originalsizepath, wxBITMAP_TYPE_PNG );
 
-      return img;
+    MapInfo mapinfo = _GetMapInfoEx( mapname );
+
+    float picratio = (float)mapinfo.height / (float)mapinfo.width;
+    int resizewidth, resizeheight;
+    if ( picratio < 1 )
+    {
+      resizewidth = width;
+      resizeheight = (int)( (float)resizewidth * picratio );
     }
-    catch(...) {}
+    else
+    {
+      resizeheight = height;
+      resizewidth = (int)( (float)resizeheight / picratio );
+    }
+
+    img.Rescale( resizewidth, resizeheight );
+    }
+    catch(...)
+    {
+      img = wxImage( -1, -1 );
+    }
   }
-  img = wxImage( -1, -1 );
+
   return img;
 }
 
