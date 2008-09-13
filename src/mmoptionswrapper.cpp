@@ -59,7 +59,7 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
 		case MapOption:
 			try
 			{
-        opt = usync()->GetMapOptions(name);
+        opt = usync().GetMapOptions(name);
 			}
 			catch(...)
 			{
@@ -70,7 +70,7 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
 		case ModOption:
 			try
 			{
-        opt = usync()->GetModOptions(name);
+        opt = usync().GetModOptions(name);
 			}
 			catch(...)
 			{

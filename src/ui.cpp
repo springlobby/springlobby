@@ -32,7 +32,6 @@
 #include "torrentwrapper.h"
 #endif
 #include "agreementdialog.h"
-#include "unitsyncthread.h"
 #ifdef __WXMSW__
     #include "updater/updater.h"
 #endif
@@ -290,7 +289,7 @@ void Ui::Quit()
 
 void Ui::ReloadUnitSync()
 {
-  usync()->ReloadUnitSyncLib();
+  usync().ReloadUnitSyncLib();
   if ( m_main_win != 0 ) mw().OnUnitSyncReloaded();
 }
 
@@ -516,7 +515,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
   if ( !IsSpringCompatible () ){
     if ( m_spring->TestSpringBinary() ) {
       wxString message = _("Your spring version");
-      message += _T(" (") + usync()->GetSpringVersion() + _T(") ");
+      message += _T(" (") + usync().GetSpringVersion() + _T(") ");
       message +=  _("is not supported by the lobby server that requires version");
       message += _T(" (") +  m_serv->GetRequiredSpring() + _T(").\n\n");
       message += _("Online play will be disabled.");
@@ -538,7 +537,7 @@ bool Ui::IsSpringCompatible( )
   if ( sett().GetDisableSpringVersionCheck() ) return true;
   if ( !m_spring->TestSpringBinary() ) return false;
   if ( m_serv->GetRequiredSpring() == _T("*") ) return true; // Server accepts any version.
-  if ( (usync()->GetSpringVersion() == m_serv->GetRequiredSpring() ) && !m_serv->GetRequiredSpring().IsEmpty() ) return true;
+  if ( (usync().GetSpringVersion() == m_serv->GetRequiredSpring() ) && !m_serv->GetRequiredSpring().IsEmpty() ) return true;
   else return false;
 }
 
@@ -1075,17 +1074,6 @@ void Ui::OnModUnitsCached( const wxString& modname )
 {
 }
 
-
-void Ui::OnCachedThreadStarted()
-{
-  m_thread_wait.Enter();
-}
-
-
-void Ui::OnCachedThreadTerminated()
-{
-  m_thread_wait.Leave();
-}
 
 void Ui::OnMainWindowDestruct()
 {

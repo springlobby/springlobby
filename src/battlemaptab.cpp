@@ -170,7 +170,7 @@ void BattleMapTab::ReloadMaplist()
 {
   m_map_combo->Clear();
 
-  wxArrayString maplist= usync()->GetMapList();
+  wxArrayString maplist= usync().GetMapList();
  // maplist.Sort(CompareStringIgnoreCase);
 
   size_t nummaps = maplist.Count();
@@ -201,7 +201,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
   int index = m_map_combo->GetCurrentSelection();
   //wxString name = m_map_combo->GetString( index );
   try {
-    UnitSyncMap map = usync()->GetMapEx( index );
+    UnitSyncMap map = usync().GetMapEx( index );
     m_battle.SetLocalMap( map );
     m_battle.SetHostMap( map.name, map.hash );
 

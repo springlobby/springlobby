@@ -1526,7 +1526,7 @@ void TASServer::ForceSide( int battleid, const wxString& nick, int side )
     {
         try
         {
-            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to ") + usync()->GetSideName( GetBattle(battleid).GetHostModName(), side ) + _T(" side.") );
+            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to ") + usync().GetSideName( GetBattle(battleid).GetHostModName(), side ) + _T(" side.") );
         }
         catch (...) {}
     }

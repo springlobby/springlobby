@@ -296,7 +296,7 @@ void BattleOptionsTab::ReloadRestrictions()
   if ( m_battle.GetHostModName() == wxEmptyString ) return;
 
   try {
-    m_allowed_list->InsertItems( usync()->GetUnitsList( m_battle.GetHostModName() ), 0 );
+    m_allowed_list->InsertItems( usync().GetUnitsList( m_battle.GetHostModName() ), 0 );
   } catch (...) {}
   wxArrayString units = m_battle.DisabledUnits();
 

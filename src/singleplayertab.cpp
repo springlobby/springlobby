@@ -110,7 +110,7 @@ void SinglePlayerTab::ReloadMaplist()
 {
   m_map_pick->Clear();
 
-  wxArrayString maplist= usync()->GetMapList();
+  wxArrayString maplist= usync().GetMapList();
   //maplist.Sort(CompareStringIgnoreCase);
 
   size_t nummaps = maplist.Count();
@@ -131,7 +131,7 @@ void SinglePlayerTab::ReloadModlist()
 {
   m_mod_pick->Clear();
 
-  wxArrayString modlist= usync()->GetModList();
+  wxArrayString modlist= usync().GetModList();
   //modlist.Sort(CompareStringIgnoreCase);
 
   size_t nummods = modlist.Count();
@@ -156,7 +156,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
     m_battle.SetHostMap( wxEmptyString, wxEmptyString );
   } else {
     try {
-      UnitSyncMap map = usync()->GetMapEx( index );
+      UnitSyncMap map = usync().GetMapEx( index );
       m_battle.SetLocalMap( map );
       m_battle.SetHostMap( map.name, map.hash );
       m_addbot_btn->Enable( true );
@@ -175,7 +175,7 @@ void SinglePlayerTab::SetMod( unsigned int index )
     m_battle.SetHostMod( wxEmptyString, wxEmptyString );
   } else {
     try {
-      UnitSyncMod mod = usync()->GetMod( index );
+      UnitSyncMod mod = usync().GetMod( index );
       m_battle.SetLocalMod( mod );
       m_battle.SetHostMod( mod.name, mod.hash );
     } catch (...) {}
@@ -209,7 +209,7 @@ bool SinglePlayerTab::ValidSetup()
         return false;
   }
 
-  if ( usync()->VersionSupports( GF_XYStartPos ) ) return true;
+  if ( usync().VersionSupports( GF_XYStartPos ) ) return true;
 
   int numBots = 0;
   int first = -1;

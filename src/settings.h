@@ -176,6 +176,12 @@ class Settings
     void SetCacheVersion();
     int GetCacheVersion();
 
+    void SetMapCachingThreadProgress( unsigned int index );
+    unsigned int GetMapCachingThreadProgress();
+
+    void SetModCachingThreadProgress( unsigned int index );
+    unsigned int GetModCachingThreadProgress();
+
     /**@}*/
 
     /* ================================================================ */

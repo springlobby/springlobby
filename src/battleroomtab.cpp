@@ -78,8 +78,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_side_sel->SetToolTip(_("Select your faction"));
 
   try {
-    for ( int i = 0; i < usync()->GetSideCount( m_battle.GetHostModName() ); i++ ) {
-      m_side_sel->Append( usync()->GetSideName( m_battle.GetHostModName(), i ) );
+    for ( int i = 0; i < usync().GetSideCount( m_battle.GetHostModName() ); i++ ) {
+      m_side_sel->Append( usync().GetSideName( m_battle.GetHostModName(), i ) );
     }
   } catch (...) {}
 

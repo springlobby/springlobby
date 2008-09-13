@@ -311,7 +311,7 @@ wxString SpringOptionsTab::AutoFindSpringDir( const wxString& def )
   wxPathList pl;
   wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
-  if (usync()->IsLoaded()) pl.Add( usync()->GetSpringDataPath() );
+  if (usync().IsLoaded()) pl.Add( usync().GetSpringDataPath() );
   pl.Add( wxFileName::GetCwd() );
 #ifdef HAVE_WX28
   pl.Add( sp.GetExecutablePath() );
@@ -529,8 +529,8 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
 
   if ( sett().IsFirstRun() ) return;
 
-  usync()->FreeUnitSyncLib();
-  if ( !usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() ) )
+  usync().FreeUnitSyncLib();
+  if ( !usync().LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() ) )
     {
       wxLogWarning( _T("Cannot load UnitSync") );
       customMessageBox( SL_MAIN_ICON,

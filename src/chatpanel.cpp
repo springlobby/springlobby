@@ -1387,7 +1387,7 @@ void ChatPanel::OnUserMenuJoinSame( wxCommandEvent& event ) {
 	Battle* battle = user->GetBattle();
 	if ( battle == 0 ) return;
 
-	if ( !usync()->ModExists( battle->GetHostModName() ) ) {
+	if ( !usync().ModExists( battle->GetHostModName() ) ) {
 		customMessageBoxNoModal( SL_MAIN_ICON, _( "You don't have the mod " ) + battle->GetHostModName()
 														 + _( " . Please download it first" ), _( "Mod unavailable" ) );
 		return;

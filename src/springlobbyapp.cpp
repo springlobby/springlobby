@@ -101,7 +101,7 @@ bool SpringLobbyApp::OnInit()
     ui().ReloadUnitSync(); /// first time load of unitsync
     ui().ShowMainWindow();
 
-    if ( !sett().IsFirstRun() && sett().IsPortableMode() && usync()->IsLoaded()) usync()->SetSpringDataPath( sett().GetSpringDir() ); /// update spring's current working dir trough unitsync
+    if ( !sett().IsFirstRun() && sett().IsPortableMode() && usync().IsLoaded()) usync().SetSpringDataPath( sett().GetSpringDir() ); /// update spring's current working dir trough unitsync
 
     if ( !sett().IsFirstRun() && !wxDirExists( sett().GetSpringDir() ) ) wxMkdir( sett().GetSpringDir() );
 
@@ -127,9 +127,9 @@ bool SpringLobbyApp::OnInit()
         wxString destFilename = sett().GetSpringDir() + ( sett().GetSpringDir().EndsWith( sep ) ? _T("") : sep )
                 + _T("base") + sep + _T("base-ota-content.zip");
         bool contentExists = false;
-        if ( usync()->IsLoaded() )
+        if ( usync().IsLoaded() )
         {
-            contentExists = usync()->FileExists(_T("base/otacontent.sdz")) && usync()->FileExists(_T("base/tacontent_v2.sdz")) && usync()->FileExists(_T("base/tatextures_v062.sdz"));
+            contentExists = usync().FileExists(_T("base/otacontent.sdz")) && usync().FileExists(_T("base/tacontent_v2.sdz")) && usync().FileExists(_T("base/tatextures_v062.sdz"));
         }
         else
         {
@@ -186,7 +186,7 @@ int SpringLobbyApp::OnExit()
 
   sett().SaveSettings(); /// to make sure that cache path gets saved before destroying unitsync
 
-  usync()->FreeUnitSyncLib();
+  usync().FreeUnitSyncLib();
 
   return 0;
 }

@@ -113,7 +113,7 @@ void Settings::SaveSettings()
 
   m_config->Save( outstream );
   #endif
-  if (usync()->IsLoaded()) usync()->SetSpringDataPath( GetSpringDir() );
+  if (usync().IsLoaded()) usync().SetSpringDataPath( GetSpringDir() );
 }
 
 
@@ -246,6 +246,30 @@ void Settings::SetCacheVersion()
 int Settings::GetCacheVersion()
 {
     return m_config->Read( _T("/General/CacheVersion"), 0l );
+}
+
+
+void Settings::SetMapCachingThreadProgress( unsigned int index )
+{
+    m_config->Write( _T("/General/LastMapCachingThreadIndex"), (int)index );
+}
+
+
+unsigned int Settings::GetMapCachingThreadProgress()
+{
+    return m_config->Read( _T("/General/LastMapCachingThreadIndex"), 0l );
+}
+
+
+void Settings::SetModCachingThreadProgress( unsigned int index )
+{
+    m_config->Write( _T("/General/LastModCachingThreadIndex"), (int)index );
+}
+
+
+unsigned int Settings::GetModCachingThreadProgress()
+{
+    return m_config->Read( _T("/General/LastModCachingThreadIndex"), 0l );
 }
 
 

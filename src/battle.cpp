@@ -281,7 +281,7 @@ bool Battle::IsSynced()
 
 /*bool Battle::HasMod()
 {
-  return usync()->ModExists( m_opts.modname );
+  return usync().ModExists( m_opts.modname );
 }*/
 
 

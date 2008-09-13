@@ -2,7 +2,6 @@
 #define SPRINGLOBBY_HEADERGUARD_UI_H
 
 #include <wx/string.h>
-#include <wx/thread.h>
 #include <wx/event.h>
 #include <map>
 #include "useractions.h"
@@ -19,7 +18,6 @@ class Battle;
 class SinglePlayerBattle;
 struct BattleBot;
 class ChatPanel;
-class UnitSyncThread;
 
 
 typedef int HostInfo;
@@ -156,8 +154,6 @@ class Ui
     void OnMapInfoCached( const wxString& mapname );
     void OnMinimapCached( const wxString& mapname );
     void OnModUnitsCached( const wxString& modname );
-    void OnCachedThreadTerminated();
-    void OnCachedThreadStarted();
 
     bool IsThisMe(User& other);
     bool IsThisMe(User* other);
@@ -168,9 +164,6 @@ class Ui
 
   protected:
     Spring* m_spring;
-
-    UnitSyncThread* m_thread;
-    wxCriticalSection m_thread_wait;
 
     Server* m_serv;
     MainWindow* m_main_win;
