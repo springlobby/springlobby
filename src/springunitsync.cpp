@@ -758,12 +758,14 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
   wxString path = GetFileCachePath( mapname, _T(""), false );
   path << _T(".minimap.png");
 
+  wxImage img;
+
   try
   {
 
   ASSERT_RUNTIME( wxFileExists( path ), _T("File cached image does not exist") );
 
-  wxImage img( path, wxBITMAP_TYPE_PNG );
+  wxImage( path, wxBITMAP_TYPE_PNG );
   ASSERT_RUNTIME( img.Ok(), _T("Failed to load cache image") );
 
   float picratio = (float)img.GetHeight() / (float)img.GetWidth();
@@ -786,7 +788,7 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
   {
     try
     {
-      wxImage img = susynclib()->GetMinimap( mapname );
+      img = susynclib()->GetMinimap( mapname );
 
       img.SaveFile( path, wxBITMAP_TYPE_PNG );
 
@@ -808,6 +810,8 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
     }
     catch(...) {}
   }
+  img = wxImage( -1, -1 );
+  return img;
 }
 
 MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
