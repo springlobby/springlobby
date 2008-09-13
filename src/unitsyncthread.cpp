@@ -81,7 +81,7 @@ void* UnitSyncThread::MapCacheThread::Entry()
 {
   while ( !TestDestroy() )
   {
-    Sleep( 15000 );
+    Sleep( 20000 );
     /// cache map infos
     if( usync().IsLoaded() )
     {
