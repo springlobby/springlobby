@@ -19,8 +19,8 @@ UnitSyncThread& CacheThread()
 
 UnitSyncThread::UnitSyncThread()
 {
-  m_thread.SetCurrentModIndex( sett().GetMapCachingThreadProgress() );
-  m_thread.SetCurrentMapIndex( sett().GetModCachingThreadProgress() );
+  m_thread.SetCurrentModIndex( sett().GetModCachingThreadProgress() );
+  m_thread.SetCurrentMapIndex( sett().GetMapCachingThreadProgress() );
 }
 
 
