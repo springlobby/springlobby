@@ -30,6 +30,7 @@
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
 #include "torrentwrapper.h"
+#include "unitsyncthread.h"
 #endif
 #include "agreementdialog.h"
 #ifdef __WXMSW__
@@ -263,6 +264,7 @@ void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
   #ifndef NO_TORRENT_SYSTEM
   torrent().SetIngameStatus(true);
   #endif
+  CacheThread().Pause();
   m_spring->Run( battle );
 }
 
@@ -923,6 +925,7 @@ void Ui::OnBattleStarted( Battle& battle )
       #ifndef NO_TORRENT_SYSTEM
       torrent().SetIngameStatus(true);
       #endif
+      CacheThread().Pause();
       m_spring->Run( battle );
     }
   }
@@ -955,6 +958,7 @@ void Ui::OnSpringTerminated( bool success )
   #ifndef NO_TORRENT_SYSTEM
   torrent().SetIngameStatus(false);
   #endif
+  CacheThread().Resume();
   if ( !m_serv ) return;
 
   m_serv->GetMe().Status().in_game = false;
