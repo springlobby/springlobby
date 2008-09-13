@@ -25,57 +25,50 @@ UnitSyncThread::UnitSyncThread()
 
 UnitSyncThread::~UnitSyncThread()
 {
-  sett().SetMapCachingThreadProgress( m_thread.GetCurrentMapIndex() );
-  sett().SetModCachingThreadProgress( m_thread.GetCurrentModIndex() );
-  if( m_thread.IsAlive() ) Stop();
+  sett().SetMapCachingThreadProgress( m_map_thread.GetCurrentIndex() );
+  sett().SetModCachingThreadProgress( m_mod_thread.GetCurrentIndex() );
+  Stop();
 }
 
 
 void UnitSyncThread::Pause()
 {
-  if ( m_thread.IsRunning() )
-  {
-    m_thread.Pause();
-    wxLogMessage( _T("caching thread paused") );
-  }
+  if ( m_map_thread.IsRunning() ) m_map_thread.Pause();
+  if ( m_mod_thread.IsRunning() ) m_mod_thread.Pause();
+  wxLogMessage( _T("caching thread paused") );
 }
 
 
 void UnitSyncThread::Resume()
 {
-  if ( !m_thread.IsRunning() )
-  {
-     m_thread.Resume();
-     wxLogMessage( _T("caching thread resumed") );
-  }
+  if ( !m_map_thread.IsRunning() ) m_map_thread.Resume();
+  if ( !m_mod_thread.IsRunning() ) m_mod_thread.Resume();
+  wxLogMessage( _T("caching thread resumed") );
 }
 
 
 void UnitSyncThread::Start()
 {
+  m_map_thread.Init();
+  m_mod_thread.Init();
   wxLogMessage( _T("caching thread started") );
-  m_thread.Init();
 }
 
 
 void UnitSyncThread::Stop()
 {
+  if( m_map_thread.IsAlive() ) m_map_thread.Stop();
+  if( m_mod_thread.IsAlive() ) m_mod_thread.Stop();
   wxLogMessage( _T("caching thread stopped") );
-  m_thread.Stop();
 }
 
 
 void UnitSyncThread::LoadSettingsFromFile()
 {
-  m_thread.SetCurrentModIndex( sett().GetModCachingThreadProgress() );
-  m_thread.SetCurrentMapIndex( sett().GetMapCachingThreadProgress() );
+  m_map_thread.SetCurrentIndex( sett().GetModCachingThreadProgress() );
+  m_mod_thread.SetCurrentIndex( sett().GetMapCachingThreadProgress() );
 }
 
-
-UnitSyncThread::UnitSyncThreadImpl::UnitSyncThreadImpl():
-m_stop_thread( false )
-{
-}
 
 void UnitSyncThread::UnitSyncThreadImpl::Init()
 {
@@ -84,35 +77,41 @@ void UnitSyncThread::UnitSyncThreadImpl::Init()
   Run();
 }
 
-void* UnitSyncThread::UnitSyncThreadImpl::Entry()
+void* UnitSyncThread::MapCacheThread::Entry()
 {
   while ( !TestDestroy() )
   {
-    Sleep( 30000 );
+    Sleep( 15000 );
     /// cache map infos
     if( usync().IsLoaded() )
     {
       wxArrayString totalmaps = usync().GetMapList();
-      if ( m_current_map_index > totalmaps.GetCount() ) m_current_map_index = 0;
-      wxString mapname = totalmaps[m_current_map_index];
+      if ( m_current_index > totalmaps.GetCount() ) m_current_index = 0;
+      wxString mapname = totalmaps[m_current_index];
       try
       {
         usync().GetMapOptions( mapname );
-        usync().GetMapEx( m_current_map_index );
+        usync().GetMapEx( m_current_index );
         usync().GetMinimap( mapname, -1, -1 );
       } catch (...) {}
-      m_current_map_index++;
+      m_current_index++;
     }
+  }
+  return 0;
+}
 
-    if ( TestDestroy() ) return 0; /// this check is added so if the thread is paused or stopped it won't attempt to try the next step before closing
 
-    Sleep( 30000 );
+void* UnitSyncThread::ModCacheThread::Entry()
+{
+  while ( !TestDestroy() )
+  {
+    Sleep( 67000 );
     /// cache mod infos
     if( usync().IsLoaded() )
     {
       wxArrayString totalmods = usync().GetModList();
-      if ( m_current_mod_index > totalmods.GetCount() ) m_current_mod_index = 0;
-      wxString modname = totalmods[m_current_mod_index];
+      if ( m_current_index > totalmods.GetCount() ) m_current_index = 0;
+      wxString modname = totalmods[m_current_index];
       try
       {
         usync().GetModOptions( modname );
@@ -124,13 +123,11 @@ void* UnitSyncThread::UnitSyncThreadImpl::Entry()
         usync().GetAIList( modname );
         usync().GetUnitsList( modname );
       } catch (...) {}
-      m_current_mod_index++;
+      m_current_index++;
     }
-
   }
   return 0;
 }
-
 
 void UnitSyncThread::UnitSyncThreadImpl::Stop()
 {
@@ -144,26 +141,13 @@ bool UnitSyncThread::UnitSyncThreadImpl::TestDestroy()
 }
 
 
-unsigned int UnitSyncThread::UnitSyncThreadImpl::GetCurrentMapIndex()
+unsigned int UnitSyncThread::UnitSyncThreadImpl::GetCurrentIndex()
 {
-  return m_current_map_index;
+  return m_current_index;
 }
 
 
-unsigned int UnitSyncThread::UnitSyncThreadImpl::GetCurrentModIndex()
+void UnitSyncThread::UnitSyncThreadImpl::SetCurrentIndex( unsigned int index )
 {
-  return m_current_mod_index;
+  m_current_index = index;
 }
-
-
-void UnitSyncThread::UnitSyncThreadImpl::SetCurrentMapIndex( unsigned int index )
-{
-  m_current_map_index = index;
-}
-
-
-void UnitSyncThread::UnitSyncThreadImpl::SetCurrentModIndex( unsigned int index )
-{
-  m_current_mod_index = index;
-}
-

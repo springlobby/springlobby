@@ -22,30 +22,39 @@ class UnitSyncThread
 
     class UnitSyncThreadImpl : public wxThread
     {
-
       public:
-
-        UnitSyncThreadImpl();
+        UnitSyncThreadImpl() : m_stop_thread( false ) {}
         void Init();
         void Stop();
 
-        unsigned int GetCurrentMapIndex();
-        unsigned int GetCurrentModIndex();
-
-        void SetCurrentModIndex( unsigned int index );
-        void SetCurrentMapIndex( unsigned int index );
+        unsigned int GetCurrentIndex();
+        void SetCurrentIndex( unsigned int index );
 
       protected:
-
-        void* Entry();
         bool TestDestroy();
 
         bool m_stop_thread;
-        unsigned int m_current_map_index;
-        unsigned int m_current_mod_index;
+        unsigned int m_current_index;
     };
 
-    UnitSyncThreadImpl m_thread;
+    class MapCacheThread : public UnitSyncThreadImpl
+    {
+      public:
+        MapCacheThread() {}
+      protected:
+        void* Entry();
+    };
+
+    class ModCacheThread : public UnitSyncThreadImpl
+    {
+      public:
+        ModCacheThread() {}
+      protected:
+        void* Entry();
+    };
+
+    MapCacheThread m_map_thread;
+    ModCacheThread m_mod_thread;
 
     int m_delay;
 
