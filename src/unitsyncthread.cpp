@@ -28,30 +28,40 @@ UnitSyncThread::~UnitSyncThread()
 {
   sett().SetMapCachingThreadProgress( m_thread.GetCurrentMapIndex() );
   sett().SetModCachingThreadProgress( m_thread.GetCurrentModIndex() );
-  if( m_thread.IsAlive() ) m_thread.Stop();
+  if( m_thread.IsAlive() ) Stop();
 }
 
 
 void UnitSyncThread::Pause()
 {
-  if ( m_thread.IsRunning() ) m_thread.Pause();
+  if ( m_thread.IsRunning() )
+  {
+    m_thread.Pause();
+    wxLogMessage( _T("caching thread paused") );
+  }
 }
 
 
 void UnitSyncThread::Resume()
 {
-  if ( !m_thread.IsRunning() ) m_thread.Resume();
+  if ( !m_thread.IsRunning() )
+  {
+     m_thread.Resume();
+     wxLogMessage( _T("caching thread resumed") );
+  }
 }
 
 
 void UnitSyncThread::Start()
 {
+  wxLogMessage( _T("caching thread started") );
   m_thread.Init();
 }
 
 
 void UnitSyncThread::Stop()
 {
+  wxLogMessage( _T("caching thread stopped") );
   m_thread.Stop();
 }
 
