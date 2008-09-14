@@ -3,8 +3,9 @@ PROJECT(SpringLobby)
 #set minimum cmake version
 cmake_minimum_required(VERSION 2.6)
 
+
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
-ADD_DEFINITIONS(-Wall -Wno-strict-aliasing )
+ADD_DEFINITIONS(-Wall -Wno-strict-aliasing -O2)
 
 #----------------------------------------------------------------------------------------------------
 # General Settings
@@ -36,7 +37,7 @@ SET( OPTION_SOUND
 	1 CACHE BOOL
 	"Enables sound notification functionality (requires SDL and SDL_sound libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
-	0 CACHE BOOL
+	1 CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
 
 #----------------------------------------------------------------------------------------------------
@@ -302,6 +303,9 @@ endif( OPTION_TRANSLATION_SUPPORT )
 IF (WIN32)
     INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
 ENDIF (WIN32)    
+   
+#auto-remove whitespaces before/after lib paths
+cmake_policy(SET CMP0004 OLD)
    
 #libtsource is empty if "NOT WIN32"
 ADD_EXECUTABLE(springlobby WIN32 ${SpringLobbySrc} ${SettingsSrc} ${libtorrent_SRC})
