@@ -3,8 +3,9 @@ PROJECT(SpringLobby)
 #set minimum cmake version
 cmake_minimum_required(VERSION 2.4)
 SET(CMAKE_COLOR_MAKEFILE ON)
+
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
-ADD_DEFINITIONS(-Wall -Wno-strict-aliasing )
+ADD_DEFINITIONS(-Wall -Wno-strict-aliasing -O2)
 
 #----------------------------------------------------------------------------------------------------
 # General Settings
@@ -302,7 +303,7 @@ if( OPTION_TRANSLATION_SUPPORT )
     PO_DIR "${CMAKE_SOURCE_DIR}/po"
     POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
     PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
-    MO_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/locale"
+    MO_INSTALL_DIR " locale"
     CREATE_POT_TARGET 1
     CREATE_PO_TARGET 1
     #ADD_MO_TARGET_TO_ALL 
@@ -318,6 +319,9 @@ IF (WIN32)
     INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
 ENDIF (WIN32)    
    
+#auto-remove whitespaces before/after lib paths
+cmake_policy(SET CMP0004 OLD)
+   
 #libtsource is empty if "NOT WIN32"
 ADD_EXECUTABLE(springlobby WIN32 ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE} ${libtorrent_SRC})
 ADD_EXECUTABLE(springsettings WIN32 ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
@@ -330,7 +334,7 @@ TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES}  )
 IF (WIN32)
     install(TARGETS springlobby springsettings RUNTIME DESTINATION . )
     install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION . )
-    install( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/locale DESTINATION . )
+    #install( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/locale DESTINATION . )
 ELSE (WIN32)
     install(TARGETS springlobby springsettings RUNTIME DESTINATION bin )
     #install( DIRECTORY locale DESTINATION locale )

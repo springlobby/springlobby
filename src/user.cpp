@@ -7,9 +7,14 @@
 #include "battle.h"
 #include "server.h"
 #include "utils.h"
+#include "chatpanel.h"
 
 #include <wx/string.h>
 #include <wx/intl.h>
+
+User::~User(){
+  if(uidata.panel)uidata.panel->SetUser( 0 );
+}
 
 wxString UserStatus::GetDiffString ( const UserStatus& old )
 {

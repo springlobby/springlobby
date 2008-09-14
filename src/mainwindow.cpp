@@ -55,7 +55,10 @@
 #include "autojoinchanneldialog.h"
 
 #ifdef HAVE_WX28
-#include <wx/aboutdlg.h>
+    #if defined(__WXMSW__)
+        #include <wx/msw/winundef.h>
+    #endif
+    #include <wx/aboutdlg.h>
 #endif
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -336,14 +339,6 @@ void MainWindow::OpenPrivateChat( User& user )
 }
 
 
-//! @brief Close all chat tabs, both private and channel
-//!
-//! @todo Implement
-void MainWindow::CloseAllChats()
-{
-}
-
-
 //! @brief Displays the lobby configuration.
 void MainWindow::ShowConfigure( const unsigned int page )
 {
@@ -441,7 +436,7 @@ void MainWindow::OnMenuStartTorrent( wxCommandEvent& event )
 {
   #ifndef NO_TORRENT_SYSTEM
   sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
-  torrent()->ConnectToP2PSystem();
+  torrent().ConnectToP2PSystem();
   #endif
 }
 
@@ -450,7 +445,7 @@ void MainWindow::OnMenuStopTorrent( wxCommandEvent& event )
 {
   #ifndef NO_TORRENT_SYSTEM
   sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
-  torrent()->DisconnectToP2PSystem();
+  torrent().DisconnectToP2PSystem();
   #endif
 }
 
@@ -460,7 +455,7 @@ void MainWindow::OnMenuOpen( wxMenuEvent& event )
   #ifndef NO_TORRENT_SYSTEM
   m_menuTools->Delete(MENU_STOP_TORRENT);
   m_menuTools->Delete(MENU_START_TORRENT);
-  if ( !torrent()->IsConnectedToP2PSystem() )
+  if ( !torrent().IsConnectedToP2PSystem() )
   {
     m_menuTools->Insert( 5, MENU_START_TORRENT, _("Manually &Start Torrent System") );
   }

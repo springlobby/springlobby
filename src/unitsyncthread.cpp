@@ -159,11 +159,6 @@ void UnitSyncThread::_DoMapInfoJob( const wxString& map )
 
 void UnitSyncThread::_DoMinimapJob( const wxString& map )
 {
-  if ( usync()->CacheMinimap( map ) ) {
-    m_last_job = map;
-    wxCommandEvent event( wxEVT_UNITSYNC_CACHE, CACHE_MINIMAP );
-    AddPendingEvent(event);
-  }
 }
 
 

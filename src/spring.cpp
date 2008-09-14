@@ -94,7 +94,7 @@ bool Spring::Run( Battle& battle )
   {
     CommandForAutomaticTeamSpeak << battle.GetUser(i).GetNick() << _T("|") << u2s( battle.GetUser(i).BattleStatus().ally) << _T("|");
   }
-  torrent()->SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
+  torrent().SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
   #endif
 
   wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" \"") + path +  _T("script.txt\"");
