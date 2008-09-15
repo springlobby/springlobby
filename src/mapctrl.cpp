@@ -305,7 +305,7 @@ void MapCtrl::LoadMinimap()
       m_lastsize = wxSize( -1, -1 );
       return;
     }
-    wxImage img = usync()->GetMinimap( map, w, h, m_fixed_size );
+    wxImage img = usync()->GetMinimap( map, w, h );
     m_image = new wxBitmap( img );
     m_mapname = map;
     m_lastsize = wxSize( w, h );

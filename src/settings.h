@@ -4,7 +4,7 @@
 #include <wx/string.h>
 #include <wx/colour.h>
 
-#define CACHE_VERSION 5
+#define CACHE_VERSION 6
 #define SETTINGS_VERSION 1
 
 #define DEFSETT_DEFAULT_SERVER "TAS Server"
