@@ -199,3 +199,10 @@ wxString IBattle::GetCurrentPreset()
 {
   return m_preset;
 }
+
+
+wxString IBattle::DeletePreset( const wxString& name )
+{
+  if ( m_preset == name ) m_preset = _T("");
+  sett().DeletePreset( name );
+}

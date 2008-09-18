@@ -131,6 +131,7 @@ class IBattle
     virtual void LoadOptionsPreset( const wxString& name );
     virtual void SaveOptionsPreset( const wxString& name );
     virtual wxString GetCurrentPreset();
+    virtual void DeletePreset( const wxString& name );
 
   protected:
 

@@ -553,7 +553,7 @@ void BattleOptionsTab::OnDeletePreset( wxCommandEvent& event )
      customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot delete an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION );
      return;
   }
-  sett().DeletePreset( presetname );
+  m_battle.DeletePreset( presetname );
   ui().ReloadPresetList();
 }
 
