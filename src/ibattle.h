@@ -130,6 +130,7 @@ class IBattle
 
     virtual void LoadOptionsPreset( const wxString& name );
     virtual void SaveOptionsPreset( const wxString& name );
+    virtual wxString GetCurrentPreset();
 
   protected:
 
@@ -145,6 +146,8 @@ class IBattle
     wxString m_host_mod_hash;
 
     wxArrayString m_units;
+
+    wxString m_preset;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IBATTLE_H

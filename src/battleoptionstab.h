@@ -43,6 +43,8 @@ class BattleOptionsTab : public wxPanel
     void Restrict( int index );
     void Allow( int index );
 
+    void UpdatePresetList();
+
     void OnEndSelect( wxCommandEvent& event );
     void OnOptsCheck( wxCommandEvent& event );
     void OnSlideChanged( wxScrollEvent& event );

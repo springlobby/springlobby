@@ -73,6 +73,8 @@ class BattleRoomTab : public wxPanel
 
     void UpdateHighlights();
 
+    void UpdatePresetList();
+
   protected:
 
     long AddMMOptionsToList( long pos, GameOption optFlag );

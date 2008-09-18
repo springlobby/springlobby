@@ -187,6 +187,7 @@ wxColour SinglePlayerBattle::GetFreeColour( User *for_whom ) const
 
 void SinglePlayerBattle::LoadOptionsPreset( const wxString& name )
 {
+  m_preset = name;
   for ( int i = 0; i < (int)LastOption; i++)
   {
     std::map<wxString,wxString> options = sett().GetHostingPreset( name, i );

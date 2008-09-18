@@ -564,3 +564,11 @@ void BattleOptionsTab::OnSetModDefaultPreset( wxCommandEvent& event )
   }
   sett().SetModDefaultPresetName( m_battle.GetHostModName(), presetname );
 }
+
+
+void BattleOptionsTab::UpdatePresetList()
+{
+    m_options_preset_sel->Clear();
+    m_options_preset_sel->Append(sett().GetPresetList());
+    m_options_preset_sel->SetStringSelection(  m_battle.GetCurrentPreset() );
+}

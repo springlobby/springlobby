@@ -33,8 +33,12 @@ class MainJoinBattleTab : public wxPanel
     ChatPanel* GetActiveChatPanel();
 
     void BattleUserUpdated( User& user );
-    BattleRoomTab* GetBattleRoomTab() { return m_battle_tab; }
-    BattleMapTab* GetBattleMapTab() { return m_map_tab; }
+    BattleRoomTab& GetBattleRoomTab();
+    BattleMapTab& GetBattleMapTab();
+    BattleOptionsTab& GetOptionsTab();
+    BattleroomMMOptionsTab& GetMMOptionsTab();
+
+    void ReloadPresetList();
 
     void OnUnitSyncReloaded();
 
