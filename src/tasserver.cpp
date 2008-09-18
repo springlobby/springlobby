@@ -1320,21 +1320,18 @@ void TASServer::SendHostInfo( HostInfo update )
     {
         wxString cmd;
 
-        wxStringTripleVec optlistMap;
-        battle.CustomBattleOptions()->getOptions( &optlistMap, MapOption );
+        wxStringTripleVec optlistMap = battle.CustomBattleOptions()->getOptions( MapOption );
         for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
         {
             cmd << _T("game\\mapoptions\\") << it->first + _T("=") << it->second.second << _T("\t");
         }
-        wxStringTripleVec optlistMod;
-        battle.CustomBattleOptions()->getOptions( &optlistMod, ModOption );
+        wxStringTripleVec optlistMod = battle.CustomBattleOptions()->getOptions( ModOption );
         for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
         {
             cmd << _T("game\\modoptions\\") << it->first << _T("=") << it->second.second << _T("\t");
         }
 /// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
-        wxStringTripleVec optlistEng;
-        battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
+        wxStringTripleVec optlistEng = battle.CustomBattleOptions()->getOptions( EngineOption );
         for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
         {
             cmd << _T("game/") << it->first << _T("=") << it->second.second << _T("\t");

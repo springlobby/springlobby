@@ -583,8 +583,7 @@ void BattleRoomTab::OnUnitSyncReloaded()
 
 long BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
 {
-  wxStringTripleVec optlist;
-  m_battle.CustomBattleOptions()->getOptions( &optlist, optFlag );
+  wxStringTripleVec optlist = m_battle.CustomBattleOptions()->getOptions( optFlag );
   for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
     m_opts_list->InsertItem( pos, it->second.first );

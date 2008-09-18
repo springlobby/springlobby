@@ -64,9 +64,9 @@ public:
 	 * \param triples this will contain the options after the function
 	 * \param flag which OptionType is to be processed
 	 */
-	void getOptions(wxStringTripleVec* triples ,GameOption flag) const ;
+	wxStringTripleVec getOptions( GameOption flag ) const ;
 	//! similar to getOptions, instead of vector a map is used and the name is not stored
-	void getOptionsMap(wxStringMap*,GameOption) const ;
+	wxStringMap getOptionsMap(GameOption) const ;
 	//! recreates ALL containers
 	void unLoadOptions();
 	//! recreates the containers of corresponding flag
