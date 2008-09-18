@@ -25,6 +25,11 @@ class MainSinglePlayerTab : public wxScrolledWindow
     void ReloadRestrictions();
     void ReloadMapOptContrls();
     void ReloadModOptContrls();
+    void ReloadPresetList();
+
+    SinglePlayerTab& GetSinglePlayerTab();
+    BattleOptionsTab& GetOptionsTab();
+    BattleroomMMOptionsTab& GetMMOptionsTab();
 
   protected:
 

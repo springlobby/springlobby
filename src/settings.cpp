@@ -25,6 +25,7 @@
 #include "battlelistfiltervalues.h"
 #include "iunitsync.h"
 #include "ibattle.h"
+#include "mmoptionswrapper.h"
 
 const wxColor defaultHLcolor (255,0,0);
 
@@ -799,7 +800,85 @@ void Settings::SetTestHostPort( bool value )
     m_config->Write( _T("/Hosting/TestHostPort"), value );
 }
 
+void Settings::SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options )
+{
+    for (std::map<wxString,wxString>::iterator it = options.begin(); it != options.end(); ++it)
+    {
+        m_config->Write( _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype ) + _T("/") + it->first , it->second );
+    }
+}
 
+std::map<wxString,wxString> Settings::GetHostingPreset( const wxString& name, int optiontype )
+{
+  std::map<wxString,wxString> ret;
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype ));
+  wxString keyname;
+  long dummy;
+  bool keyexist = m_config->GetFirstEntry(keyname, dummy);
+  while ( keyexist )
+  {
+    ret[keyname] = m_config->Read( keyname );
+
+    keyexist = m_config->GetNextEntry(keyname, dummy);
+  }
+
+  m_config->SetPath( old_path );
+  return ret;
+}
+
+
+wxArrayString Settings::GetPresetList()
+{
+  wxArrayString ret;
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Hosting/Preset") );
+  wxString groupname;
+  long dummy;
+  bool groupexist = m_config->GetFirstGroup(groupname, dummy);
+  while ( groupexist )
+  {
+    ret.Add( groupname );
+
+    groupexist = m_config->GetNextGroup(groupname, dummy);
+  }
+
+  m_config->SetPath( old_path );
+  return ret;
+}
+
+
+void Settings::DeletePreset( const wxString& name )
+{
+  m_config->DeleteGroup( _T("/Hosting/Preset/") + name );
+
+  ///delete mod default preset associated
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Hosting/ModDefaultPreset") );
+  wxString keyname;
+  long dummy;
+  bool keyexist = m_config->GetFirstEntry(keyname, dummy);
+  while ( keyexist )
+  {
+    if ( m_config->Read( keyname ) == name ) m_config->DeleteEntry( keyname );
+
+    keyexist = m_config->GetNextEntry(keyname, dummy);
+  }
+
+  m_config->SetPath( old_path );
+}
+
+
+wxString Settings::GetModDefaultPresetName( const wxString& modname )
+{
+  return m_config->Read( _T("/Hosting/ModDefaultPreset/") + modname );
+}
+
+
+void Settings::SetModDefaultPresetName( const wxString& modname, const wxString& presetname )
+{
+  m_config->Write( _T("/Hosting/ModDefaultPreset/") + modname, presetname );
+}
 
 
 void Settings::SetBalanceMethod(int value)
@@ -1266,7 +1345,7 @@ void Settings::SaveBattleMapOptions(IBattle *battle){
   //SetLastHostMap(map_name);
   wxString option_prefix=_T("/Hosting/Maps/")+map_name+_T("/");
   long longval;
-  battle->CustomBattleOptions()->getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
   int start_pos_type=longval;
 
   m_config->Write( option_prefix+_T("startpostype"), start_pos_type);
@@ -1302,7 +1381,7 @@ void Settings::LoadBattleMapOptions(IBattle *battle){
   wxString map_name=battle->GetHostMapName();
   wxString option_prefix=_T("/Hosting/Maps/")+map_name+_T("/");
   int start_pos_type=m_config->Read(option_prefix+_T("startpostype") , 0L );
-  battle->CustomBattleOptions()->setSingleOption( _T("startpostype"), TowxString(start_pos_type), EngineOption );
+  battle->CustomBattleOptions().setSingleOption( _T("startpostype"), TowxString(start_pos_type), EngineOption );
   if(start_pos_type==ST_Choose){
 
     battle->ClearStartRects();

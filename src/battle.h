@@ -214,7 +214,7 @@ class Battle : public UserList, public IBattle
 
     std::map<unsigned int, BattleStartRect>::size_type GetNumRects();
 
-    mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
+    mmOptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
 
     void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true);
 

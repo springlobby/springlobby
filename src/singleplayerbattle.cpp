@@ -8,13 +8,15 @@
 #include "utils.h"
 #include "uiutils.h"
 #include "ui.h"
+#include "settings.h"
+#include "battleoptionstab.h"
 
 
 SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_ui(ui),
   m_sptab(msptab)
 {
-  CustomBattleOptions()->setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), 3), EngineOption );
+  CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), 3), EngineOption );
   wxColour col = GetFreeColour( NULL );
   int i = AddBot( 0, 0, 0, 0, _T("") );
   BattleBot* bot = GetBot( i );
@@ -96,14 +98,25 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   if ( (update & HI_Restrictions) != 0 ) m_sptab.ReloadRestrictions();
   if ( (update & HI_Map_Changed) != 0 )
   {
-    CustomBattleOptions()->loadOptions( MapOption, GetHostMapName() );
+    CustomBattleOptions().loadOptions( MapOption, GetHostMapName() );
     m_sptab.ReloadMapOptContrls();
   }
   if ( (update & HI_Mod_Changed) != 0 )
   {
-    CustomBattleOptions()->loadOptions( ModOption, GetHostModName() );
+    CustomBattleOptions().loadOptions( ModOption, GetHostModName() );
+    wxString presetname = sett().GetModDefaultPresetName( GetHostModName() );
+    if ( !presetname.IsEmpty() )
+    {
+      LoadOptionsPreset( presetname );
+    }
     m_sptab.ReloadModOptContrls();
   }
+}
+
+
+void SinglePlayerBattle::Update( const wxString& Tag )
+{
+  m_sptab.GetOptionsTab().UpdateBattle( Tag );
 }
 
 
@@ -171,3 +184,17 @@ wxColour SinglePlayerBattle::GetFreeColour( User *for_whom ) const
   return wxColour( colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] );
 }
 
+
+void SinglePlayerBattle::LoadOptionsPreset( const wxString& name )
+{
+  m_preset = name;
+  for ( int i = 0; i < (int)LastOption; i++)
+  {
+    std::map<wxString,wxString> options = sett().GetHostingPreset( name, i );
+    for ( std::map<wxString,wxString>::iterator itor = options.begin(); itor != options.end(); itor++ )
+    {
+      CustomBattleOptions().setSingleOption( itor->first, itor->second, (GameOption)i );
+      Update(  wxString::Format(_T("%d_"), i ) + itor->first );
+    }
+  }
+}

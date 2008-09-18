@@ -49,8 +49,8 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 
 	m_outgoing_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Total Outgoing: ") );
     m_incoming_lbl = new wxStaticText( this, ID_INCOMING_LBL, _("Total Incoming: ") );
-	m_totalbox->Add(m_outgoing_lbl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, 10);
-	m_totalbox->Add(m_incoming_lbl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, 10);
+	m_totalbox->Add(m_outgoing_lbl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL, 10);
+	m_totalbox->Add(m_incoming_lbl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL, 10);
 
 	m_firstrow_box->Add( m_totalbox,0, wxALL, 5  );
 
@@ -58,7 +58,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
     m_status_color_text = new wxStaticText( this, wxID_ANY, _("unknown") );
     m_status_box->Add( m_status_color ,  0,wxEXPAND|wxALL|wxALIGN_CENTER_VERTICAL, 10);
     m_status_box->Add( m_status_color_text,0,  wxALL|wxALIGN_CENTER_VERTICAL, 10);
-    m_firstrow_box->Add( m_status_box, 1, wxALL|wxEXPAND, 5);
+    m_firstrow_box->Add( m_status_box, 1, wxALL, 5);
 
 	m_mainbox->Add(m_firstrow_box, 0, wxALL, 5);
 
@@ -71,7 +71,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	m_buttonbox->Add( m_but_download, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
 
 
-	m_mainbox->Add(m_buttonbox, 1, wxALL, 5);
+	m_mainbox->Add(m_buttonbox, 0, wxALL, 5);
 
 	SetSizer(m_mainbox);
 	m_mainbox->SetSizeHints(this);

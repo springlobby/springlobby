@@ -371,14 +371,6 @@ void MainWindow::OpenPrivateChat( User& user )
 }
 
 
-//! @brief Close all chat tabs, both private and channel
-//!
-//! @todo Implement
-void MainWindow::CloseAllChats()
-{
-}
-
-
 //! @brief Displays the lobby configuration.
 void MainWindow::ShowConfigure( const unsigned int page )
 {
