@@ -92,45 +92,54 @@ void MainJoinBattleTab::ReloadMMoptTab()
 //void MainJoinBattleTab::UpdateCurrentBattle()
 void MainJoinBattleTab::UpdateCurrentBattle( bool MapChanged, bool UpdateRestrictions )
 {
-  if ( m_battle_tab ) {
-    m_battle_tab->UpdateBattleInfo( MapChanged );
-    if ( UpdateRestrictions ) m_battle_tab->UpdateBattleInfo( wxString::Format(_T("%d_restrictions"), EngineOption ) );
-  }
-  if ( m_map_tab ) {
-    m_map_tab->Update();
-  }
-  if ( m_opts_tab )
+  try
+  {
+    GetBattleRoomTab().UpdateBattleInfo( MapChanged );
+    if ( UpdateRestrictions ) GetBattleRoomTab().UpdateBattleInfo( wxString::Format(_T("%d_restrictions"), EngineOption ) );
+  } catch (...) {}
+  try
+  {
+    GetBattleMapTab().Update();
+  } catch (...) {}
+  try
+  {
     if ( UpdateRestrictions )
-        m_opts_tab->ReloadRestrictions();
-  if ( m_mm_opts_tab ){
-	 if ( !m_battle_tab->GetBattle().IsFounderMe() )
+        GetOptionsTab().ReloadRestrictions();
+  } catch (...) {}
+  try
+  {
+	 if ( !GetBattleRoomTab().GetBattle().IsFounderMe() )
 	  {
 	    if ( MapChanged )
 	    {
-	      m_mm_opts_tab->OnReloadControls(MapOption);
+	      GetMMOptionsTab().OnReloadControls(MapOption);
 	    }
 	  }
-  }
+  } catch (...) {}
 }
 
 void MainJoinBattleTab::UpdateCurrentBattle( const wxString& Tag )
 {
-  if ( m_battle_tab ) {
-    m_battle_tab->UpdateBattleInfo( Tag );
-  }
+  try
+  {
+    GetBattleRoomTab().UpdateBattleInfo( Tag );
+  } catch (...) {}
 
-  if ( m_map_tab ) {
-    m_map_tab->Update( Tag );
-  }
+  try
+  {
+    GetBattleMapTab().Update( Tag );
+  } catch (...) {}
 
-  if ( m_opts_tab ) {
-    m_opts_tab->UpdateBattle( Tag );
-  }
+  try
+  {
+    GetOptionsTab().UpdateBattle( Tag );
+  } catch (...) {}
 
-  if ( m_mm_opts_tab ){
-	  if ( !m_battle_tab->GetBattle().IsFounderMe() )
-      m_mm_opts_tab->UpdateOptControls( Tag );
-  }
+  try
+  {
+	  if ( !GetBattleRoomTab().GetBattle().IsFounderMe() )
+      GetMMOptionsTab().UpdateOptControls( Tag );
+  } catch (...) {}
 }
 
 
@@ -192,11 +201,12 @@ void MainJoinBattleTab::BattleUserUpdated( User& user )
 {
   try
   {
-  ASSERT_LOGIC( m_battle_tab != 0, _T("m_battle_tab = 0") );
-  ASSERT_LOGIC( m_map_tab != 0, _T("m_map_tab = 0") );
-  } catch(...) {return;}
-  m_battle_tab->UpdateUser( user );
-  m_map_tab->UpdateUser( user );
+    GetBattleRoomTab().UpdateUser( user );
+  } catch(...) {}
+  try
+  {
+    GetBattleMapTab().UpdateUser( user );
+  } catch(...) {}
 }
 
 
@@ -205,16 +215,15 @@ void MainJoinBattleTab::OnUnitSyncReloaded()
   wxLogDebugFunc( _T("") );
   GetBattleListTab().OnUnitSyncReloaded();
   wxLogMessage( _T("Battle list tab reloaded") );
-  if ( GetBattleRoomTab() ) {
-    wxLogMessage( _T("Reloading battleroom") );
-    GetBattleRoomTab()->OnUnitSyncReloaded();
-    wxLogMessage( _T("Battleroom reloaded") );
-  }
-  if ( GetBattleMapTab() ) {
-    wxLogMessage( _T("Reloading battlemap") );
-    GetBattleMapTab()->OnUnitSyncReloaded();
-    wxLogMessage( _T("Battlemap reloaded") );
-  }
+  try
+  {
+    GetBattleRoomTab().OnUnitSyncReloaded();
+  } catch (...) {}
+  try
+  {
+    GetBattleMapTab().OnUnitSyncReloaded();
+  } catch(...) {}
+  wxLogMessage( _T("Battle list tab reloaded") );
 }
 
 void MainJoinBattleTab::OnConnected()
@@ -224,4 +233,45 @@ void MainJoinBattleTab::OnConnected()
         m_list_tab->SetFilterActiv( filter );
         //
     }
+}
+
+void MainJoinBattleTab::ReloadPresetList()
+{
+  try
+  {
+    GetBattleRoomTab().UpdatePresetList();
+  } catch(...) {}
+  try
+  {
+    GetOptionsTab().UpdatePresetList();
+  } catch(...) {}
+
+}
+
+
+BattleRoomTab& MainJoinBattleTab::GetBattleRoomTab()
+{
+  ASSERT_RUNTIME( m_battle_tab, _T("m_battle_tab == 0") );
+  return *m_battle_tab;
+}
+
+
+BattleMapTab& MainJoinBattleTab::GetBattleMapTab()
+{
+  ASSERT_RUNTIME( m_map_tab, _T("m_map_tab == 0") );
+   return *m_map_tab;
+}
+
+
+BattleOptionsTab& MainJoinBattleTab::GetOptionsTab()
+{
+  ASSERT_RUNTIME( m_opts_tab, _T("m_opts_tab == 0") );
+   return *m_opts_tab;
+}
+
+
+BattleroomMMOptionsTab& MainJoinBattleTab::GetMMOptionsTab()
+{
+  ASSERT_RUNTIME( m_mm_opts_tab, _T("m_mm_opts_tab == 0") );
+  return *m_mm_opts_tab;
 }

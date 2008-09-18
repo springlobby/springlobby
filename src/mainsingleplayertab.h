@@ -26,6 +26,11 @@ class MainSinglePlayerTab : public wxPanel
     void ReloadRestrictions();
     void ReloadMapOptContrls();
     void ReloadModOptContrls();
+    void ReloadPresetList();
+
+    SinglePlayerTab& GetSinglePlayerTab();
+    BattleOptionsTab& GetOptionsTab();
+    BattleroomMMOptionsTab& GetMMOptionsTab();
 
   protected:
 

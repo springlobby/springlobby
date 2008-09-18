@@ -394,6 +394,7 @@ Battle& BattleRoomTab::GetBattle()
 
 ChatPanel& BattleRoomTab::GetChatPanel()
 {
+  wxLogDebugFunc(_T(""));
   ASSERT_LOGIC( m_chat != 0, _T("m_chat = 0") );
   return *m_chat;
 }
@@ -547,6 +548,7 @@ void BattleRoomTab::OnPresetSel( wxCommandEvent& event )
   if ( presetname.IsEmpty() ) return;
   m_battle.LoadOptionsPreset( presetname );
   m_battle.SendHostInfo( HI_Send_All_opts );
+  m_ui.ReloadPresetList();
 }
 
 
@@ -618,5 +620,13 @@ long BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
 void BattleRoomTab::UpdateHighlights()
 {
     m_players->UpdateHighlights();
+}
+
+
+void BattleRoomTab::UpdatePresetList()
+{
+    m_options_preset_sel->Clear();
+    m_options_preset_sel->Append(sett().GetPresetList());
+    m_options_preset_sel->SetStringSelection(  m_battle.GetCurrentPreset() );
 }
 

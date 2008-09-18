@@ -173,6 +173,7 @@ unsigned int IBattle::AddBot( int ally, int posx, int posy, int handicap, const 
 
 void IBattle::LoadOptionsPreset( const wxString& name )
 {
+  m_preset = name;
   for ( int i = 0; i < (int)LastOption; i++)
   {
     std::map<wxString,wxString> options = sett().GetHostingPreset( name, i );
@@ -186,8 +187,15 @@ void IBattle::LoadOptionsPreset( const wxString& name )
 
 void IBattle::SaveOptionsPreset( const wxString& name )
 {
+  m_preset = name;
   for ( int i = 0; i < (int)LastOption; i++)
   {
     sett().SetHostingPreset( name, (GameOption)i, CustomBattleOptions().getOptionsMap( (GameOption)i ) );
   }
+}
+
+
+wxString IBattle::GetCurrentPreset()
+{
+  return m_preset;
 }
