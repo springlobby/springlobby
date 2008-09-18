@@ -23,25 +23,30 @@ END_EVENT_TABLE()
 void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 {
   Socket* sock = (Socket*)event.GetClientData();
-
+  try
+  {
   ASSERT_LOGIC( sock != 0, _T("sock = 0") );
+  } catch (...) { return; }
 
   if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
-    m_serv.OnDataReceived( sock );
+    m_net_class.OnDataReceived( sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_LOST ) {
-    m_serv.OnDisconnected( sock );
+    m_net_class.OnDisconnected( sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
-    m_serv.OnConnected( sock );
+    m_net_class.OnConnected( sock );
   } else {
+    try
+    {
     ASSERT_LOGIC( false, _T("Unknown socket event."));
+    } catch (...) { return; };
   }
 }
 
 
 //! @brief Constructor
-Socket::Socket( Server& serv, bool blocking ):
+Socket::Socket( iNetClass& netclass, bool blocking ):
   m_block(blocking),
-  m_serv(serv),
+  m_net_class(netclass),
   m_rate(-1),
   m_sent(0)
 {
@@ -61,13 +66,10 @@ Socket::Socket( Server& serv, bool blocking ):
 //! @brief Destructor
 Socket::~Socket()
 {
+  Disconnect();
   LOCK_SOCKET;
   if ( m_sock != 0 ) m_sock->Destroy();
   delete m_events;
-  if ( m_ping_t != 0 ) {
-    m_ping_t->Delete();
-    m_ping_thread_wait.Enter();
-  }
 }
 
 
@@ -78,7 +80,7 @@ wxSocketClient* Socket::_CreateSocket()
 
   sock->SetClientData( (void*)this );
   if ( !m_block ) {
-    if ( m_events == 0 ) m_events = new SocketEvents( m_serv );
+    if ( m_events == 0 ) m_events = new SocketEvents( m_net_class );
     sock->SetFlags( wxSOCKET_NOWAIT );
 
     sock->SetEventHandler(*m_events, SOCKET_ID);
@@ -109,6 +111,7 @@ void Socket::Connect( const wxString& addr, const int port )
   if ( m_sock != 0 ) m_sock->Destroy();
   m_sock = _CreateSocket();
   m_sock->Connect( wxaddr, m_block );
+  m_sock->SetTimeout( 40 );
 }
 
 
@@ -116,12 +119,14 @@ void Socket::Connect( const wxString& addr, const int port )
 //! @note This turns off the ping thread.
 void Socket::Disconnect( )
 {
-  if ( m_sock == 0 ) return;
-  m_serv.OnDisconnected( this );
-  LOCK_SOCKET;
+  if ( m_sock ) m_sock->SetTimeout( 0 );
+  m_net_class.OnDisconnected( this );
   _EnablePingThread( false );
-  m_sock->Destroy();
-  m_sock = 0;
+
+  if ( m_sock ) {
+    m_sock->Destroy();
+    m_sock = 0;
+  }
 }
 
 
@@ -137,7 +142,7 @@ bool Socket::Send( const wxString& data )
 //! @note Does not lock the criticalsection.
 bool Socket::_Send( const wxString& data )
 {
-  if ( m_sock == 0 ) {
+  if ( !m_sock ) {
     wxLogError( _T("Socket NULL") );
     return false;
   }
@@ -193,7 +198,7 @@ bool Socket::Receive( wxString& data )
         if ( d.IsEmpty() ) d = wxString( &buff[0], wxCSConv(_T("latin-1")) );
         #endif
       }
-      m_rcv_buffer += d;
+      m_rcv_buffer << d;
     }
   } while ( readnum >= buff_size );
 
@@ -208,19 +213,19 @@ bool Socket::Receive( wxString& data )
 
 
 //! @brief Get curent socket state
-Sockstate Socket::State( )
+SockState Socket::State( )
 {
-  if ( m_sock == 0 ) return SS_CLOSED;
+  if ( m_sock == 0 ) return SS_Closed;
 
   LOCK_SOCKET;
   if ( m_sock->IsConnected() ) {
     m_connecting = false;
-    return SS_OPEN;
+    return SS_Open;
   } else {
     if ( m_connecting ) {
-      return SS_CONNECTING;
+      return SS_Connecting;
     } else {
-      return SS_CLOSED;
+      return SS_Closed;
     }
   }
 }
@@ -228,9 +233,19 @@ Sockstate Socket::State( )
 
 //! @brief Get socket error code
 //! @todo Implement
-Sockerror Socket::Error( )
+SockError Socket::Error( )
 {
-  return -1;
+  return (SockError)-1;
+}
+
+
+//! @brief used to retrieve local ip address behind NAT to communicate to the server on login
+wxString Socket::GetLocalAddress()
+{
+  if ( m_sock || !m_sock->IsConnected() ) return wxEmptyString;
+  wxIPV4address localaddr;
+  m_sock->GetLocal( localaddr );
+  return localaddr.IPAddress();
 }
 
 
@@ -250,18 +265,19 @@ void Socket::_EnablePingThread( bool enable )
 {
 
   if ( !enable ) {
-    if ( m_ping_t != 0 ) {
+    if ( m_ping_t ) {
 
       // Reset values to be sure.
       m_ping_int = 0;
       m_ping_msg = wxEmptyString;
 
-      m_ping_t->Delete();
-      m_ping_thread_wait.Enter();
+      m_ping_t->Wait();
+      delete m_ping_t;
+
       m_ping_t = 0;
     }
   } else {
-    if ( m_ping_t == 0 ) {
+    if ( !m_ping_t ) {
       m_ping_t = new PingThread( *this );
       m_ping_t->Init();
     }
@@ -285,10 +301,11 @@ void Socket::SetSendRateLimit( int Bps )
 
 
 //! @brief Ping remote host with custom protocol message.
+//! @note Called from separate thread
 void Socket::Ping()
 {
+  /// Dont log here, else it may crash.
   // wxLogMessage( _T("Sent ping.") );
-
   if ( m_ping_msg != wxEmptyString ) Send( m_ping_msg );
 }
 
@@ -307,23 +324,11 @@ void Socket::OnTimer( int mselapsed )
   }
 }
 
-
-void Socket::OnPingThreadStarted()
-{
-  m_ping_thread_wait.Enter();
-}
-
-
-void Socket::OnPingThreadStopped()
-{
-  m_ping_thread_wait.Leave();
-}
-
-
 PingThread::PingThread( Socket& sock ):
-  m_sock(sock)
+  wxThread(wxTHREAD_JOINABLE),
+  m_sock(sock),
+  m_thread_sleep_semaphore(0,0)
 {
-  m_next_ping = 0;
 }
 
 
@@ -337,24 +342,30 @@ void PingThread::Init()
 
 void* PingThread::Entry()
 {
-  m_sock.OnPingThreadStarted();
-  m_next_ping = m_next_ping = m_sock.GetPingInterval();
+  int milliseconds = m_sock.GetPingInterval();
 
   while ( !TestDestroy() )
   {
-
     if ( !m_sock.GetPingEnabled() ) break;
-
     m_sock.Ping();
-    Sleep( m_next_ping );
+    wxSemaError err=m_thread_sleep_semaphore.WaitTimeout(milliseconds);
 
+    // Just in case: sleep to prevent looping through all semaphore slots too quickly before wxThread::Wait is called
+    // Not really needed anymore (?)
+    //Sleep(1);
+
+    /// break if woken from WaitTimeout .
+    if(err!=wxSEMA_TIMEOUT)break;
   }
-  m_sock.OnPingThreadStopped();
   return 0;
 }
 
 
 void PingThread::OnExit()
 {
+}
 
+PingThread::ExitCode PingThread::Wait(){
+  m_thread_sleep_semaphore.Post();
+  return wxThread::Wait();
 }

@@ -24,9 +24,12 @@ class wxButton;
 class wxCheckBox;
 class wxListCtrl;
 class MapCtrl;
+class ColorButton;
 
 typedef std::map<wxString,long> OptionListMap;
 
+/** \brief container for BattleroomListCtrl, battle specific ChatPanel. Also displaying battle info summary
+ * \todo DOCMEMORE */
 class BattleRoomTab : public wxPanel
 {
   public:
@@ -42,11 +45,13 @@ class BattleRoomTab : public wxPanel
 
     bool IsHosted();
 
-    void UpdateBattleInfo( bool MapChanged = false );
+    void UpdateBattleInfo( bool MapChanged = false, bool reloadMapOptions = true );
     void UpdateBattleInfo( const wxString& Tag );
 
     void OnStart( wxCommandEvent& event );
     void OnLeave( wxCommandEvent& event );
+    void OnBalance( wxCommandEvent& event );
+    void OnFixColours( wxCommandEvent& event );
     void OnAddBot( wxCommandEvent& event );
     void OnImReady( wxCommandEvent& event );
     void OnLock( wxCommandEvent& event );
@@ -65,6 +70,7 @@ class BattleRoomTab : public wxPanel
 
     void OnUnitSyncReloaded();
 
+    void UpdateHighlights();
 
   protected:
 
@@ -88,7 +94,7 @@ class BattleRoomTab : public wxPanel
 
     wxComboBox* m_team_sel;
     wxComboBox* m_ally_sel;
-    wxBitmapButton* m_color_sel;
+    ColorButton* m_color_sel;
     wxComboBox* m_side_sel;
 
     wxStaticText* m_team_lbl;
@@ -114,6 +120,9 @@ class BattleRoomTab : public wxPanel
     wxButton* m_leave_btn;
     wxButton* m_start_btn;
     wxButton* m_addbot_btn;
+    wxButton* m_fix_colours_btn;
+    wxButton* m_balance_btn;
+
 
     wxCheckBox* m_ready_chk;
     wxCheckBox* m_spec_chk;
@@ -134,7 +143,9 @@ enum
     BROOM_COLOURSEL,
     BROOM_SIDESEL,
     BROOM_START,
-    BROOM_ADDBOT
+    BROOM_ADDBOT,
+    BROOM_BALANCE,
+    BROOM_FIXCOLOURS
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H

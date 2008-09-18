@@ -15,7 +15,7 @@ SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_sptab(msptab)
 {
   CustomBattleOptions()->setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), 3), EngineOption );
-  wxColour col = GetFreeColour( false );
+  wxColour col = GetFreeColour( NULL );
   int i = AddBot( 0, 0, 0, 0, _T("") );
   BattleBot* bot = GetBot( i );
   ASSERT_LOGIC( bot != 0, _T("bot == 0") );
@@ -29,7 +29,7 @@ SinglePlayerBattle::~SinglePlayerBattle()
 }
 
 
-unsigned int SinglePlayerBattle::GetNumBots()
+unsigned int SinglePlayerBattle::GetNumBots() const
 {
   return m_bots.size();
 }
@@ -37,7 +37,7 @@ unsigned int SinglePlayerBattle::GetNumBots()
 
 BattleBot* SinglePlayerBattle::GetBotByStartPosition( unsigned int startpos )
 {
-  const UnitSyncMap& map = Map();
+  const UnitSyncMap& map = LoadMap();
   ASSERT_LOGIC( ((int)startpos < map.info.posCount) && (startpos >= 0), _T("Invalid startpos") );
   for ( unsigned int bi = 0; bi < GetNumBots(); bi++ ) {
     BattleBot* bot = GetBot( bi );
@@ -50,7 +50,7 @@ BattleBot* SinglePlayerBattle::GetBotByStartPosition( unsigned int startpos )
 }
 
 
-BattleBot* SinglePlayerBattle::GetBot(unsigned int index)
+BattleBot* SinglePlayerBattle::GetBot(unsigned int index) const
 {
   return m_bots[index];
 }
@@ -92,16 +92,16 @@ unsigned int SinglePlayerBattle::AddBot(int ally, int posx, int posy, int handic
 
 void SinglePlayerBattle::SendHostInfo( HostInfo update )
 {
-  if ( (update && HI_StartType) != 0 ) m_sptab.UpdateMinimap();
-  if ( (update && HI_Restrictions) != 0 ) m_sptab.ReloadRestrictions();
-  if ( (update && HI_Map_Changed) != 0 )
+  if ( (update & HI_StartType) != 0 ) m_sptab.UpdateMinimap();
+  if ( (update & HI_Restrictions) != 0 ) m_sptab.ReloadRestrictions();
+  if ( (update & HI_Map_Changed) != 0 )
   {
-    CustomBattleOptions()->loadOptions( MapOption, m_map.name );
+    CustomBattleOptions()->loadOptions( MapOption, GetHostMapName() );
     m_sptab.ReloadMapOptContrls();
   }
-  if ( (update && HI_Mod_Changed) != 0 )
+  if ( (update & HI_Mod_Changed) != 0 )
   {
-    CustomBattleOptions()->loadOptions( ModOption, m_mod_name );
+    CustomBattleOptions()->loadOptions( ModOption, GetHostModName() );
     m_sptab.ReloadModOptContrls();
   }
 }
@@ -128,7 +128,7 @@ int SinglePlayerBattle::GetFreeAlly()
 
 void SinglePlayerBattle::GetFreePosition( int& x, int& y )
 {
-  UnitSyncMap map = Map();
+  UnitSyncMap map = LoadMap();
   for ( int i = 0; i < map.info.posCount; i++ ) {
     bool taken = false;
     for ( unsigned int bi = 0; bi < GetNumBots(); bi++ ) {
@@ -140,8 +140,8 @@ void SinglePlayerBattle::GetFreePosition( int& x, int& y )
       }
     }
     if ( !taken ) {
-      x = boundry(map.info.positions[i].x, 0, map.info.width);
-      y = boundry(map.info.positions[i].y, 0, map.info.height);
+      x = CLAMP(map.info.positions[i].x, 0, map.info.width);
+      y = CLAMP(map.info.positions[i].y, 0, map.info.height);
       return;
     }
   }
@@ -150,7 +150,7 @@ void SinglePlayerBattle::GetFreePosition( int& x, int& y )
 }
 
 
-wxColour SinglePlayerBattle::GetFreeColour( bool excludeme )
+wxColour SinglePlayerBattle::GetFreeColour( User *for_whom ) const
 {
   unsigned int lowest = 0;
   bool changed = true;

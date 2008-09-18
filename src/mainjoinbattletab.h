@@ -40,6 +40,8 @@ class MainJoinBattleTab : public wxPanel
 
     void ReloadMMoptTab();
 
+    void OnConnected();
+
   protected:
     wxBoxSizer* m_main_sizer;
 

@@ -29,6 +29,7 @@
 #include "mapctrl.h"
 #include "uiutils.h"
 #include "server.h"
+#include "settings.h"
 
 BEGIN_EVENT_TABLE(BattleMapTab, wxPanel)
 
@@ -55,9 +56,9 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   m_map_combo = new wxChoice( this, BMAP_MAP_SEL, wxDefaultPosition, wxDefaultSize );
   m_selmap_sizer->Add( m_map_combo, 1, wxALL, 2 );
 
-  m_browse_btn = new wxButton( this, wxID_ANY, _("Select"), wxDefaultPosition, wxDefaultSize, 0 );
+ // m_browse_btn = new wxButton( this, wxID_ANY, _("Select"), wxDefaultPosition, wxDefaultSize, 0 );
 
-  m_selmap_sizer->Add( m_browse_btn, 0, wxALL, 2 );
+  //m_selmap_sizer->Add( m_browse_btn, 0, wxALL, 2 );
 
   m_map_sizer->Add( m_selmap_sizer, 0, wxEXPAND, 5 );
 
@@ -99,6 +100,10 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   SetSizer( m_main_sizer );
   Layout();
 
+  if(battle.IsFounderMe()){
+    sett().LoadBattleMapOptions(&m_battle);
+    m_battle.SendHostInfo( HI_StartRects );
+  }
   ReloadMaplist();
   Update();
 
@@ -110,17 +115,24 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
 BattleMapTab::~BattleMapTab()
 {
-
+  if(m_battle.IsFounderMe()){
+    sett().SaveBattleMapOptions(&m_battle);
+  }
 }
 
 
 void BattleMapTab::Update()
 {
+  wxString value = m_battle.CustomBattleOptions()->getSingleValue( _T("startpostype"), EngineOption);
+  long longval;
+  value.ToLong( &longval );
+  m_start_radios->SetSelection( longval );
+
   m_minimap->UpdateMinimap();
 
   if ( !m_battle.MapExists() ) return;
 
-  UnitSyncMap map = m_battle.Map();
+  UnitSyncMap map = m_battle.LoadMap();
 
   m_map_opts_list->SetItem( 0, 1, wxString::Format( _T("%dx%d"), map.info.width/512, map.info.height/512 ) );
   m_map_opts_list->SetItem( 1, 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind ) );
@@ -130,6 +142,7 @@ void BattleMapTab::Update()
   m_map_opts_list->SetItem( 5, 1, wxString::Format( _T("%.3f"), map.info.maxMetal ) );
 
   int index = m_map_combo->FindString( RefineMapname( map.name ) );
+  if ( index == wxNOT_FOUND ) return;
   m_map_combo->SetSelection( index );
 }
 
@@ -147,7 +160,7 @@ void BattleMapTab::Update( const wxString& Tag )
     if ( key == _T("startpostype") )
     {
      m_start_radios->SetSelection( longval );
-     Update();
+     m_minimap->UpdateMinimap();
     }
   }
 }
@@ -156,11 +169,12 @@ void BattleMapTab::Update( const wxString& Tag )
 void BattleMapTab::ReloadMaplist()
 {
   m_map_combo->Clear();
-  try {
-    for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-      m_map_combo->Insert( RefineMapname( usync()->GetMap( i ).name ), i );
-    }
-  } catch(...){}
+
+  wxArrayString maplist= usync()->GetMapList();
+ // maplist.Sort(CompareStringIgnoreCase);
+
+  size_t nummaps = maplist.Count();
+  for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( RefineMapname(maplist[i]), i );
 }
 
 
@@ -178,17 +192,29 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
 {
 
   if ( !m_battle.IsFounderMe() ) {
-    m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetMapName() ) ) );
+    m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetHostMapName() ) ) );
     return;
   }
+
+  sett().SaveBattleMapOptions(&m_battle);
+
   int index = m_map_combo->GetCurrentSelection();
   //wxString name = m_map_combo->GetString( index );
   try {
     UnitSyncMap map = usync()->GetMapEx( index );
-    m_battle.SetMap( map );
+    m_battle.SetLocalMap( map );
+    m_battle.SetHostMap( map.name, map.hash );
+
+    m_ui.OnBattleMapChanged(m_battle);
+    m_battle.SendHostInfo( HI_Map );
+
+    for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
+    m_battle.SendHostInfo( HI_StartRects );
+
+    sett().LoadBattleMapOptions(&m_battle);
+    m_battle.SendHostInfo( HI_StartRects );
+
   } catch (...) {}
-  m_ui.OnBattleMapChanged(m_battle);
-  m_battle.SendHostInfo( HI_Map );
 }
 
 
@@ -203,5 +229,6 @@ void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
 void BattleMapTab::OnUnitSyncReloaded()
 {
   m_minimap->UpdateMinimap();
+  ReloadMaplist();
 }
 

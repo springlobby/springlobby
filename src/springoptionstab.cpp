@@ -1,5 +1,5 @@
 
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: SpringOptionsTab
 //
@@ -52,43 +52,74 @@ BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
 END_EVENT_TABLE()
 
 
-    SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),m_ui(ui)
+SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),m_ui(ui)
 {
-  m_dir_text = new wxStaticText( this, -1, _("Spring directory") );
+  /* ================================
+   * User's Spring directory
+   */
+  m_dir_box = new wxStaticBox( this, -1, _("Spring Data Directory") );
+  m_dir_text = new wxStaticText( this, -1, _("Location") );
   m_dir_edit = new wxTextCtrl( this, -1, sett().GetSpringDir() );
   m_dir_browse_btn = new wxButton( this, SPRING_DIRBROWSE, _("Browse") );
   m_dir_find_btn = new wxButton( this, SPRING_DIRFIND, _("Find") );
 
+  /* ================================
+   * Spring executable
+   */
   m_exec_box = new wxStaticBox( this, -1, _("Spring executable") );
-  m_exec_def_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+
+  m_exec_def_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Default location."),
+					wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+  m_exec_def_radio->SetToolTip(_("The Spring executable is installed in the default location"));
+
   m_exec_spec_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Specify:") );
+  m_exec_spec_radio->SetToolTip(_("Specify the location of the Spring executable"));
+
   m_exec_loc_text = new wxStaticText( this, -1, _("Location") );
   m_exec_edit = new wxTextCtrl( this, -1, sett().GetSpringLoc() );
   m_exec_browse_btn = new wxButton( this, SPRING_EXECBROWSE, _("Browse") );
   m_exec_find_btn = new wxButton( this, SPRING_EXECFIND, _("Find") );
 
+  /* ================================
+   * UnitSync
+   */
   m_sync_box = new wxStaticBox( this, -1, _("UnitSync library") );
-  m_sync_def_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Default location."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
+  m_sync_def_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Default location."),
+					wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
+  m_sync_def_radio->SetToolTip(_("The UnitSync library is installed in the default location"));
+
   m_sync_spec_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Specify:") );
   m_sync_edit = new wxTextCtrl( this, -1, sett().GetUnitSyncLoc() );
   m_sync_loc_text = new wxStaticText( this, -1, _("Location") );
   m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _("Browse") );
   m_sync_find_btn = new wxButton( this, SPRING_SYNCFIND, _("Find") );
 
+  /* ================================
+   * Web browser
+   */
   m_web_box = new wxStaticBox( this , -1, _("Web Browser") );
   m_web_loc_text = new wxStaticText( this, -1, _("Web Browser") );
-  m_web_def_radio = new wxRadioButton( this, SPRING_DEFWEB, _("Default Browser."), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+
+  m_web_def_radio = new wxRadioButton( this, SPRING_DEFWEB, _("Default Browser."),
+				       wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+  m_web_def_radio->SetToolTip(_("Use your system-wide browser preference"));
+
   m_web_spec_radio = new wxRadioButton( this, SPRING_DEFWEB, _("Specify:") );
+  m_web_spec_radio->SetToolTip(_("Specify the web browser you want to use"));
+
   m_web_edit = new wxTextCtrl( this, -1, sett().GetWebBrowserPath() );
+
   m_web_browse_btn = new wxButton( this, SPRING_WEBBROWSE, _("Browse") );
+  m_web_browse_btn->SetToolTip(_("Use a file dialog to find the web browser"));
 
   m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _("Auto Configure") );
+
 
   if ( sett().GetSpringUseDefLoc() ) m_exec_def_radio->SetValue( true );
   else m_exec_spec_radio->SetValue( true );
   if ( sett().GetUnitSyncUseDefLoc() ) m_sync_def_radio->SetValue( true );
   else m_sync_spec_radio->SetValue( true );
-  if ( sett().GetWebBrowserPath().IsEmpty() ) m_web_def_radio->SetValue( true );
+  if ( sett().GetWebBrowserUseDefault() ) m_web_def_radio->SetValue( true );
   else m_web_spec_radio->SetValue( true );
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
@@ -117,9 +148,12 @@ END_EVENT_TABLE()
   m_web_loc_sizer->Add( m_web_edit, 1, wxEXPAND );
   m_web_loc_sizer->Add( m_web_browse_btn );
 
+  m_dir_box_sizer = new wxStaticBoxSizer( m_dir_box, wxVERTICAL );
   m_exec_box_sizer = new wxStaticBoxSizer( m_exec_box, wxVERTICAL );
   m_sync_box_sizer = new wxStaticBoxSizer( m_sync_box, wxVERTICAL );
   m_web_box_sizer = new wxStaticBoxSizer( m_web_box, wxVERTICAL );
+
+  m_dir_box_sizer->Add( m_dir_sizer, 0, wxEXPAND | wxALL, 2 );
 
   m_exec_box_sizer->Add( m_exec_def_radio, 0, wxALL, 2 );
   m_exec_box_sizer->Add( m_exec_spec_radio, 0, wxALL, 2 );
@@ -136,7 +170,7 @@ END_EVENT_TABLE()
   m_aconf_sizer->AddStretchSpacer();
   m_aconf_sizer->Add( m_auto_btn );
 
-  m_main_sizer->Add( m_dir_sizer, 0, wxEXPAND | wxALL, 2 );
+  m_main_sizer->Add( m_dir_box_sizer, 0, wxEXPAND | wxALL, 2 );
   m_main_sizer->Add( m_exec_box_sizer, 0, wxEXPAND | wxALL, 2 );
   m_main_sizer->Add( m_sync_box_sizer, 0, wxEXPAND | wxALL, 2 );
   m_main_sizer->Add( m_web_box_sizer, 0, wxEXPAND | wxALL, 2 );
@@ -152,11 +186,21 @@ END_EVENT_TABLE()
 
   DoRestore();
 
-  if ( sett().IsFirstRun() ) {
-    wxCommandEvent event;
-    OnAutoConf( event );
-    OnApply( event );
+  if ( sett().IsFirstRun() )
+    {
+      wxCommandEvent event;
+      OnAutoConf( event );
+      OnApply( event );
+    }
+
+  if ( sett().IsPortableMode() )
+  {
+    m_dir_box->Disable();
+    m_exec_box->Disable();
+    m_sync_box->Disable();
+    m_sync_box->Disable();
   }
+
 }
 
 
@@ -177,6 +221,7 @@ void SpringOptionsTab::DoRestore()
   m_sync_spec_radio->SetValue( !sett().GetUnitSyncUseDefLoc() );
   HandleExeloc( sett().GetSpringUseDefLoc() );
   HandleUsyncloc( sett().GetUnitSyncUseDefLoc() );
+  HandleWebloc( sett().GetWebBrowserUseDefault() );
 }
 
 
@@ -184,17 +229,20 @@ void SpringOptionsTab::HandleExeloc( bool defloc )
 {
   m_exec_def_radio->SetValue( defloc );
   m_exec_spec_radio->SetValue( !defloc );
-  if ( defloc ) {
-    m_exec_edit->Enable( false );
-    m_exec_browse_btn->Enable( false );
-    //m_exec_find_btn->Enable( false );
-    m_exec_edit->SetValue( sett().GetSpringUsedLoc( true, true ) );
-  } else {
-    m_exec_edit->Enable( true );
-    m_exec_browse_btn->Enable( true );
-    //m_exec_find_btn->Enable( true );
-    m_exec_edit->SetValue( sett().GetSpringLoc() );
-  }
+  if ( defloc )
+    {
+      m_exec_edit->Enable( false );
+      m_exec_browse_btn->Enable( false );
+      //m_exec_find_btn->Enable( false );
+      m_exec_edit->SetValue( sett().GetSpringUsedLoc( true, true ) );
+    }
+  else
+    {
+      m_exec_edit->Enable( true );
+      m_exec_browse_btn->Enable( true );
+      //m_exec_find_btn->Enable( true );
+      m_exec_edit->SetValue( sett().GetSpringLoc() );
+    }
 }
 
 
@@ -263,6 +311,7 @@ wxString SpringOptionsTab::AutoFindSpringDir( const wxString& def )
   wxPathList pl;
   wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
+  if (usync()->IsLoaded()) pl.Add( usync()->GetSpringDataPath() );
   pl.Add( wxFileName::GetCwd() );
 #ifdef HAVE_WX28
   pl.Add( sp.GetExecutablePath() );
@@ -445,21 +494,26 @@ void SpringOptionsTab::OnBrowseDir( wxCommandEvent& event )
 
 void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
 {
-  wxFileDialog pic( this, _("Choose a Spring executable"), sett().GetSpringDir(), wxString(SPRING_BIN), CHOOSE_EXE );
-  if ( pic.ShowModal() == wxID_OK ) m_exec_edit->SetValue( pic.GetPath() );
+  wxFileDialog pick( this, _("Choose a Spring executable"),
+		    sett().GetSpringDir(),
+		    wxString(SPRING_BIN), CHOOSE_EXE );
+  if ( pick.ShowModal() == wxID_OK ) m_exec_edit->SetValue( pick.GetPath() );
 }
 
 void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
 {
-  wxFileDialog pic( this, _("Choose an unitsync library"), sett().GetSpringDir(), _T("unitsync") + GetLibExtension(), wxString(_("Library")) + _T("(*") + GetLibExtension() + _T(")|*") + GetLibExtension() + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
-  if ( pic.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pic.GetPath() );
+  wxFileDialog pick( this, _("Choose UnitSync library"),
+		    sett().GetSpringDir(),
+		    _T("unitsync") + GetLibExtension(),
+		    wxString(_("Library")) + _T("(*") + GetLibExtension() + _T(")|*") + GetLibExtension() + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
+  if ( pick.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pick.GetPath() );
 }
 
 
 void SpringOptionsTab::OnBrowseWeb( wxCommandEvent& event )
 {
-  wxFileDialog pic( this, _("Choose a web browser executable"), sett().GetSpringDir(), _T("*"), CHOOSE_EXE );
-  if ( pic.ShowModal() == wxID_OK ) m_web_edit->SetValue( pic.GetPath() );
+  wxFileDialog pick( this, _("Choose a web browser executable"), sett().GetSpringDir(), _T("*"), CHOOSE_EXE );
+  if ( pick.ShowModal() == wxID_OK ) m_web_edit->SetValue( pick.GetPath() );
 }
 
 
@@ -471,20 +525,30 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
   if ( !m_web_def_radio->GetValue() ) sett().SetWebBrowserPath( m_web_edit->GetValue() );
   sett().SetSpringUseDefLoc( m_exec_def_radio->GetValue() );
   sett().SetUnitSyncUseDefLoc( m_sync_def_radio->GetValue() );
+  sett().SetWebBrowserUseDefault( m_web_def_radio->GetValue() );
 
   if ( sett().IsFirstRun() ) return;
 
   usync()->FreeUnitSyncLib();
-  if ( !usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() ) ) {
-    wxLogWarning( _T("can't load unitsync") );
-    customMessageBox( SL_MAIN_ICON, _("SpringLobby is unable to load you unitsync library.\n\nYou might want to take another look at your unitsync setting."), _("Spring error"), wxOK );
-  } else {
-    // If LoadUnitSyncLib() fails this will too.
-    if ( !Spring::TestSpringBinary() ) {
-      wxLogWarning( _T("can't load unitsync") );
-      customMessageBox( SL_MAIN_ICON, _("SpringLobby is unable to detect your spring version from the unitsync library.\n\nYou might want to take another look at your settings."), _("Spring error"), wxOK );
+  if ( !usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() ) )
+    {
+      wxLogWarning( _T("Cannot load UnitSync") );
+      customMessageBox( SL_MAIN_ICON,
+			_("SpringLobby is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting."),
+			_("Spring error"), wxOK );
     }
-  }
+  else
+    {
+    // If LoadUnitSyncLib() fails, this will too.
+      if ( !Spring::TestSpringBinary() )
+	{
+	  wxLogWarning( _T("Cannot determine Spring version") );
+	  customMessageBox( SL_MAIN_ICON,
+			    _("SpringLobby is unable to determine your Spring version from the UnitSync library.\n\nYou might want to take another look at your settings."),
+			    _("Spring error"), wxOK );
+	}
+    }
+
   m_ui.mw().OnUnitSyncReloaded();
 }
 

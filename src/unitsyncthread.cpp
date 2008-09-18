@@ -22,6 +22,7 @@ END_EVENT_TABLE();
 
 
 UnitSyncThread::UnitSyncThread( Ui& ui ):
+  m_thread(this),
   m_ui(ui),
   m_delay(-1),
   m_should_terminate(false),
@@ -36,9 +37,9 @@ UnitSyncThread::~UnitSyncThread()
 }
 
 
-void* UnitSyncThread::Entry()
+void* UnitSyncThread::UnitSyncThreadImpl::Entry()
 {
-  _CacheLoop();
+  m_parent->_CacheLoop();
   return 0;
 }
 
@@ -94,7 +95,7 @@ void UnitSyncThread::Resume()
 
 void UnitSyncThread::Delete()
 {
-  wxThread::Delete();
+  m_thread.Delete();
   m_wait.Leave();
 }
 
@@ -103,7 +104,7 @@ void UnitSyncThread::_CacheLoop()
   m_ui.OnCachedThreadStarted();
   JobType job;
   wxString params;
-  while ( !TestDestroy() ) {
+  while ( !m_thread.TestDestroy() ) {
 
     try {
 
@@ -153,21 +154,11 @@ void UnitSyncThread::_AddJob( const wxChar& prefix, const wxString& params )
 
 void UnitSyncThread::_DoMapInfoJob( const wxString& map )
 {
-  if ( usync()->CacheMapInfo( map ) ) {
-    m_last_job = map;
-    wxCommandEvent event( wxEVT_UNITSYNC_CACHE, CACHE_MAPINFO );
-    AddPendingEvent(event);
-  }
 }
 
 
 void UnitSyncThread::_DoMinimapJob( const wxString& map )
 {
-  if ( usync()->CacheMinimap( map ) ) {
-    m_last_job = map;
-    wxCommandEvent event( wxEVT_UNITSYNC_CACHE, CACHE_MINIMAP );
-    AddPendingEvent(event);
-  }
 }
 
 

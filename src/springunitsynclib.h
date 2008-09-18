@@ -185,6 +185,8 @@ class SpringUnitSyncLib
     int GetMapCount();
     wxString GetMapChecksum( int index );
     wxString GetMapName( int index );
+    int GetMapArchiveCount( int index );
+    wxString GetMapArchiveName( int arnr );
 
     /**
      * Get information about a map.
@@ -200,7 +202,7 @@ class SpringUnitSyncLib
      */
     wxImage GetMinimap( const wxString& mapFileName );
 
-    unsigned int GetPrimaryModChecksum( int index );
+    int GetPrimaryModChecksum( int index );
     int GetPrimaryModIndex( const wxString& modName );
     wxString GetPrimaryModName( int index );
     int GetPrimaryModCount();
@@ -213,7 +215,7 @@ class SpringUnitSyncLib
     wxString GetPrimaryModDescription( int index );
     int GetPrimaryModArchiveCount( int index );
     wxString GetPrimaryModArchiveList( int arnr );
-    unsigned int GetPrimaryModChecksumFromName( const wxString& name );
+    int GetPrimaryModChecksumFromName( const wxString& name );
 
     int GetSideCount( const wxString& modName );
     wxString GetSideName( const wxString& modName, int index );
@@ -249,7 +251,7 @@ class SpringUnitSyncLib
     int ReadFileVFS( int handle, void* buffer, int bufferLength );
     void CloseFileVFS( int handle );
 
-    int GetLuaAICount();
+    int GetLuaAICount( const wxString& modname );
     wxString GetLuaAIName( int aiIndex );
     wxString GetLuaAIDesc( int aiIndex );
 
@@ -279,6 +281,7 @@ class SpringUnitSyncLib
     int ReadArchiveFile( int archive, int handle, void* buffer, int numBytes) ;
     void CloseArchiveFile( int archive, int handle );
     int SizeArchiveFile( int archive, int handle );
+    wxString GetArchivePath( const wxString& name );
 
     int GetSpringConfigInt( const wxString& key, int defValue );
     wxString GetSpringConfigString( const wxString& key, const wxString& defValue );

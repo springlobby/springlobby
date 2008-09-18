@@ -1,8 +1,9 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLE_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLE_H
 
-#include <vector>
+#include <map>
 #include <list>
+#include <set>
 
 #include "userlist.h"
 #include "user.h"
@@ -18,6 +19,17 @@ enum NatType {
   NAT_Fixed_source_ports
 };
 
+enum BalanceType {
+  balance_random=0,
+  balance_divide
+};
+
+enum RankLimitType {
+  rank_limit_none=0,
+  rank_limit_autospec,
+  rank_limit_autokick
+};
+
 
 #define DEFAULT_SERVER_PORT 8034
 #define DEFAULT_EXTERNAL_UDP_SOURCE_PORT 16941
@@ -26,7 +38,7 @@ enum NatType {
 struct BattleOptions
 {
   BattleOptions() :
-    battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),
+    battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),ranklimittype(rank_limit_autospec),
     nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
     guilistactiv(false) {}
 
@@ -35,6 +47,8 @@ struct BattleOptions
   bool isreplay;
   bool ispassworded;
   int rankneeded;
+  RankLimitType ranklimittype;
+
   wxString founder;
 
   NatType nattype;
@@ -56,7 +70,8 @@ struct BattleOptions
   bool guilistactiv;
 };
 
-
+/** \brief model of a sp/mp battle
+ * \todo DOCME */
 class Battle : public UserList, public IBattle
 {
   public:
@@ -115,16 +130,18 @@ class Battle : public UserList, public IBattle
 
     void SetImReady( bool ready );
 
-    User& GetFounder() { return GetUser( m_opts.founder ); }
-    User& GetMe();
-    bool IsFounderMe();
+    User& GetFounder() const { return GetUser( m_opts.founder ); }
+    User& GetMe() const;
+    bool IsFounderMe() const;
 
-    bool IsFull() { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
+    bool IsFull() const { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
 
-    int GetMyPlayerNum();
+    int GetMyPlayerNum() const;
 
-    int GetFreeTeamNum( bool excludeme = true );
-    wxColour GetFreeColour( bool excludeme = true );
+    int GetFreeTeamNum( bool excludeme = true ) const;
+
+    wxColour GetFreeColour( User *for_whom ) const;
+    void FixColours( );
 
     void Update();
     void Update( const wxString& Tag );
@@ -153,9 +170,9 @@ class Battle : public UserList, public IBattle
 
     bool ExecuteSayCommand( const wxString& cmd );
 
-    void AddStartRect( int allyno, int left, int top, int right, int bottom );
-    void RemoveStartRect( int allyno );
-    void UpdateStartRect( int allyno );
+    void AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom );
+    void RemoveStartRect( unsigned int allyno );
+    void ResizeStartRect( unsigned int allyno );
 
     void AddBot( const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll );
     void RemoveBot( const wxString& nick );
@@ -165,14 +182,15 @@ class Battle : public UserList, public IBattle
     void SetBotColour( const wxString& nick, const wxColour& col );
     void SetBotHandicap( const wxString& nick, int handicap );
 
-    BattleBot* GetBot( const wxString& name );
-    BattleBot* GetBot( unsigned int index );
-    unsigned int GetNumBots();
+    BattleBot* GetBot( const wxString& name ) const;
+    BattleBot* GetBot( unsigned int index ) const;
+    unsigned int GetNumBots() const;
 
-    void StartRectRemoved( int allyno );
-    void StartRectUpdated( int allyno );
+    void StartRectRemoved( unsigned int allyno );
+    void StartRectResized( unsigned int allyno );
+    void StartRectAdded( unsigned int allyno );
 
-    BattleStartRect* GetStartRect( int allyno );
+    BattleStartRect GetStartRect( unsigned int allyno );
     void ClearStartRects();
 
     void ForceSide( User& user, int side );
@@ -184,6 +202,7 @@ class Battle : public UserList, public IBattle
     void SetHandicap( User& user, int handicap);
 
     void OnUserAdded( User& user );
+    void OnUserBattleStatusUpdated( User &user );
     void OnUserRemoved( User& user );
 
     void OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll );
@@ -193,12 +212,23 @@ class Battle : public UserList, public IBattle
     int GetMyAlly() { return GetMe().BattleStatus().ally; }
     void SetMyAlly( int ally ) { GetMe().BattleStatus().ally = ally; SendMyBattleStatus(); }
 
-    std::vector<BattleStartRect*>::size_type GetNumRects();
+    std::map<unsigned int, BattleStartRect>::size_type GetNumRects();
 
     mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
 
+    void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true);
+
+    ///< quick hotfix for bans
+    void CheckBan(User &user);
+    ///>
+
   protected:
     // Battle variables
+
+    ///< quick hotfix for bans
+    std::set<wxString> m_banned_users;
+    std::set<wxString> m_banned_ips;
+    ///>
 
     BattleOptions m_opts;
     Server& m_serv;
@@ -208,11 +238,11 @@ class Battle : public UserList, public IBattle
 
     int m_order;
 
-    std::vector<BattleStartRect*> m_rects;
+    std::map<unsigned int,BattleStartRect> m_rects;
     std::list<BattleBot*> m_bots;
 
-    std::list<BattleBot*>::iterator m_bot_seek;
-    std::list<BattleBot*>::size_type m_bot_pos;
+    mutable std::list<BattleBot*>::const_iterator m_bot_seek;
+    mutable std::list<BattleBot*>::size_type m_bot_pos;
 
     mmOptionsWrapper m_opt_wrap;
 

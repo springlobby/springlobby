@@ -5,6 +5,7 @@
 #include <list>
 
 #include "server.h"
+#include "uiutils.h"
 
 #define FIRST_UDP_SOURCEPORT 8300
 
@@ -13,6 +14,7 @@ struct TASPingListItem {
   int id;
   time_t t;
 };
+
 
 class Ui;
 class Socket;
@@ -135,7 +137,7 @@ class TASServer : public Server
     bool IsPasswordHash( const wxString& pass );
     wxString GetPasswordHash( const wxString& pass );
 
-    bool TestOpenPort( unsigned int port );
+    int TestOpenPort( unsigned int port );
 
   protected:
     Ui& m_ui;
@@ -154,13 +156,16 @@ class TASServer : public Server
 
     int m_battle_id;
 
+    bool m_server_lanmode;
+
     wxString m_agreement;
 
     wxString m_addr;
 
+    bool m_do_finalize_join_battle;
     int m_finalize_join_battle_id;
     wxString m_finalize_join_battle_pw;
-    bool m_do_finalize_join_battle;
+
     void FinalizeJoinBattle();
 
     void ReceiveAndExecute();

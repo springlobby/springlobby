@@ -51,7 +51,7 @@ class ServerEvents
     void OnBattleInfoUpdated( int battleid );
     void OnBattleClosed( int battleid );
 
-    void OnJoinedBattle( int battleid );
+    void OnJoinedBattle( int battleid, const wxString& hash );
     void OnHostedBattle( int battleid );
 
     void OnStartHostedBattle( int battleid );
@@ -100,6 +100,8 @@ class ServerEvents
     void OnClientIPPort( const wxString &username, const wxString &ip, unsigned int udpport );
 
     void OnKickedFromBattle();
+
+    void OnRedirect( const wxString& address,  unsigned int port, const wxString& CurrentNick, const wxString& CurrentPassword );
 
   protected:
     Server& m_serv;

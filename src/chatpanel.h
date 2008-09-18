@@ -1,16 +1,23 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 #define SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 
+#include <iostream>
+
 #include <wx/panel.h>
+#include <wx/event.h>
 #include <wx/string.h>
+#include <wx/menu.h>
 
 #include "chatlog.h"
+#include "Helper/TextCompletionDatabase.hpp"
 
 class wxCommandEvent;
 class wxSizeEvent;
 class wxBoxSizer;
 class wxSplitterWindow;
 class wxTextCtrl;
+class wxTextCtrlHist;
+class wxRichTextCtrl;
 class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
@@ -21,7 +28,8 @@ class User;
 class Server;
 class Battle;
 class Ui;
-class wxMenu;
+class UserMenu;
+class wxFocusEvent;
 class wxMouseEvent;
 
 enum ChatPanelType {
@@ -64,7 +72,7 @@ class ChatPanel : public wxPanel
     void UserStatusUpdated( User& who );
     void OnChannelJoin( User& who );
 
-    Channel& GetChannel();
+    Channel* GetChannel();
     void SetChannel( Channel* chan );
 
     Server* GetServer();
@@ -78,10 +86,12 @@ class ChatPanel : public wxPanel
 
     void Say( const wxString& message );
     void Part();
+    void FocusInputBox();
 
     wxString GetChatTypeStr();
 
     User& GetMe();
+    User* GetSelectedUser();
 
     bool IsOk();
 
@@ -98,6 +108,7 @@ class ChatPanel : public wxPanel
 
     void OnMenuSelectAll( wxCommandEvent& event );
     void OnMenuCopy( wxCommandEvent& event );
+    void OnChannelMenuClear ( wxCommandEvent& event );
 
     void OnChannelMenuLeave( wxCommandEvent& event );
     void OnChannelMenuDisplayJoinLeave( wxCommandEvent& event );
@@ -142,11 +153,19 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
 
+	void OnKeyPressed( wxKeyEvent& keyevent );
+	void OnKeyReleased( wxKeyEvent& keyevent );
+
+	void OnUserMenuAddToGroup( wxCommandEvent& event );
+	void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
+	void OnUserMenuCreateGroup( wxCommandEvent& event );
+	void UpdateNicklistHighlights();
+
   protected:
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
 
-    User* GetSelectedUser();
+    bool ContainsWordToHighlight( const wxString& message );
 
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.
 
@@ -159,8 +178,12 @@ class ChatPanel : public wxPanel
     wxPanel* m_chat_panel;      //!< Panel containing the chat. Only used when nicklist is visible.
     wxPanel* m_nick_panel;      //!< Panel containing the nicklist.
 
+    #ifndef NO_RICHTEXT_CHAT
+    wxRichTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
+    #else
     wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
-    wxTextCtrl* m_say_text;     //!< The say textcontrol.
+    #endif
+    wxTextCtrlHist* m_say_text;     //!< The say textcontrol.
 
     NickListCtrl* m_nicklist;   //!< The nicklist.
     wxComboBox* m_nick_filter;  //!< The filter combo.
@@ -182,11 +205,15 @@ class ChatPanel : public wxPanel
     wxMenuItem* m_autorejoin;
     ChatLog* m_chat_log;
     wxMenuItem* displayjoinitem;
+    UserMenu* m_usermenu;
 
     void LogTime();
     void CreateControls( );
     void CreatePopup();
-    wxMenu* CreateNickListMenu();
+    UserMenu* CreateNickListMenu();
+
+    static const int m_groupMenu_baseID = 6798;
+	TextCompletionDatabase textcompletiondatabase;
 
     DECLARE_EVENT_TABLE();
 };
@@ -197,6 +224,7 @@ enum
     CHAT_TEXT,
     CHAT_LOG,
 
+    CHAT_MENU_CH_CLEAR,
     CHAT_MENU_CH_LEAVE,
     CHAT_MENU_CH_DISPLAYJOIN,
     CHAT_MENU_CH_AUTOJOIN,
@@ -224,6 +252,7 @@ enum
     CHAT_MENU_US_MUTE,
     CHAT_MENU_US_UNMUTE,
     CHAT_MENU_US_KICK,
+    CHAT_MENU_US_ADD_TO_GROUP,
     CHAT_MENU_US_OP,
     CHAT_MENU_US_DEOP,
     CHAT_MENU_US_MODERATOR_INGAME,
@@ -239,6 +268,32 @@ enum
     CHAT_MENU_US_MODERATOR_MUTE_1440,
     CHAT_MENU_US_MODERATOR_UNMUTE,
     CHAT_MENU_US_MODERATOR_RING
+};
+
+class UserMenu : public wxMenu
+{
+    public:
+        UserMenu(ChatPanel* parent, const wxString& title = wxEmptyString, long style = 0);
+        ~UserMenu();
+
+        void EnableItems(bool isUserSelected);
+        wxString GetGroupByEvtID( const unsigned int id );
+
+    protected:
+        wxMenu* m_groupsMenu;
+        wxMenuItem* m_groupsMenuItem;
+        wxMenuItem* m_groupsDeleteItem;
+        wxMenuItem* m_groupsnewItem;
+        wxArrayString m_oldGroups;
+        ChatPanel* m_parent;
+        unsigned int m_groupCounter;
+        std::map<unsigned int, wxString> m_idNameMap;
+        std::map<wxString, unsigned int> m_NameIdMap;
+
+        void UpdateGroups();
+
+    //DECLARE_EVENT_TABLE();
+
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H

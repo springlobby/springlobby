@@ -22,26 +22,31 @@ bool ChatLog::m_parent_dir_exists = true;
 ChatLog::ChatLog(const wxString& server,const wxString& room):
   m_logfile( 0 ),
   m_server( server ),
-  m_room( room ),
-  m_active( OpenLogFile(server,room) )
-{
+  m_room( room )
 
+{
+    #ifdef __WXMSW__
+        m_server.Replace( wxT(":"), wxT("_") ) ;
+    #endif
+    /// testing.
+    // m_active = OpenLogFile(m_server,m_room) ;
+    wxLogMessage( _T("ChatLog::ChatLog( %s, %s )"), m_server.c_str(), m_room.c_str()) ;
 }
 
 
 ChatLog::~ChatLog()
 {
-  if ( m_active && m_logfile ) {
+  wxLogMessage( _T("ChatLog::~ChatLog()"));
+  if ( m_logfile && m_active && m_logfile->IsOpened() ) {
     wxDateTime now = wxDateTime::Now();
     WriteLine( _("### Session Closed at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _("]") );
     WriteLine( _T(" \n \n \n") );
-    if ( m_logfile->IsOpened() ) m_logfile->Close();
+    /// crashes right there on close.
+    m_logfile->Close();
   }
-  if (m_logfile != 0)
-  {
-  	delete m_logfile;
-	m_logfile = 0;
-  }
+  /// it is safe to delete a null pointer.
+ 	delete m_logfile;
+  m_logfile = 0;
 }
 
 
@@ -89,7 +94,10 @@ bool ChatLog::CreateFolder(const wxString& server)
 
 bool ChatLog::WriteLine(const wxString& text)
 {
-  ASSERT_LOGIC( m_logfile, _T("m_logfile = 0") );
+  try
+  {
+    ASSERT_LOGIC( m_logfile, _T("m_logfile = 0") );
+  } catch(...) {return false;}
   if ( !m_logfile->Write( text, wxConvUTF8 ) ) {
     m_active = false;
     wxLogWarning( _T("can't write message to log (%s)"),  wxString(m_server + _T("::") + m_room).c_str() );
@@ -102,6 +110,11 @@ bool ChatLog::WriteLine(const wxString& text)
 bool ChatLog::OpenLogFile(const wxString& server,const wxString& room)
 {
   wxString path = _GetPath() + wxFileName::GetPathSeparator() + server + wxFileName::GetPathSeparator() + room + _T(".txt");
+  wxLogMessage( _T("OpenLogFile( %s, %s )"), server.c_str(), room.c_str()) ;
+
+  delete m_logfile;
+  m_logfile = 0;
+
   if ( m_parent_dir_exists && LogEnabled() && CreateFolder(server) ) {
     if ( wxFileExists( path ) ) {
       m_logfile = new wxFile( path, wxFile::write_append );

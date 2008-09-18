@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: Ui
 //
@@ -27,23 +27,37 @@
 #include "battle.h"
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
+#ifndef NO_TORRENT_SYSTEM
+#include "maintorrenttab.h"
+#include "torrentwrapper.h"
+#endif
 #include "agreementdialog.h"
 #include "unitsyncthread.h"
+#ifdef __WXMSW__
+    #include "updater/updater.h"
+#endif
 
 #include "settings++/custom_dialogs.h"
+
+#include "sdlsound.h"
+
+
+Ui& ui()
+{
+    static Ui m_ui;
+    return m_ui;
+}
 
 Ui::Ui() :
   m_serv(0),
   m_main_win(0),
-  m_con_win(0)
+  m_con_win(0),
+  m_checked_for_update(false)
 {
-   ReloadUnitSync();
-
+  m_upd_intv_counter = 0;
   m_main_win = new MainWindow( *this );
   CustomMessageBoxBase::setLobbypointer(m_main_win);
   m_spring = new Spring(*this);
-  m_thread = new UnitSyncThread( *this );
-  m_thread->Init();
 }
 
 Ui::~Ui() {
@@ -51,10 +65,6 @@ Ui::~Ui() {
 
   delete m_main_win;
   delete m_spring;
-  m_thread->Delete();
-
-  m_thread_wait.Enter();
-  m_thread_wait.Leave();
 }
 
 Server& Ui::GetServer()
@@ -63,7 +73,7 @@ Server& Ui::GetServer()
   return *m_serv;
 }
 
-bool Ui::GetServerStatus() const
+bool Ui::GetServerStatus()
 {
   return (bool)(m_serv);
 }
@@ -117,7 +127,17 @@ void Ui::ShowConnectWindow()
 //! @see DoConnect
 void Ui::Connect()
 {
-  ShowConnectWindow();
+    bool doit = sett().GetAutoConnect();
+    if ( !doit )
+        ShowConnectWindow();
+    else
+    {
+        m_con_win = 0;
+        wxString server_name = sett().GetDefaultServer();
+        wxString nick = sett().GetServerAccountNick( server_name );
+        wxString pass = sett().GetServerAccountPass( server_name );
+        DoConnect( server_name, nick, pass);
+    }
 }
 
 
@@ -233,12 +253,17 @@ void Ui::StartHostedBattle()
 {
   ASSERT_LOGIC( m_serv != 0, _T("m_serv = 0") );
   m_serv->StartHostedBattle();
-  sett().SetLastHostMap( m_serv->GetCurrentBattle()->GetMapName() );
+  sett().SetLastHostMap( m_serv->GetCurrentBattle()->GetHostMapName() );
+  sett().SaveBattleMapOptions(m_serv->GetCurrentBattle());
+  sett().SaveSettings();
 }
 
 
 void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
 {
+  #ifndef NO_TORRENT_SYSTEM
+  torrent().SetIngameStatus(true);
+  #endif
   m_spring->Run( battle );
 }
 
@@ -254,61 +279,52 @@ void Ui::Quit()
 {
   ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
   sett().SaveSettings();
-  m_main_win->forceSettingsFrameClose();
+  mw().forceSettingsFrameClose();
+
+  mw().Close();
+  if ( m_con_win != 0 )
+    m_con_win->Close();
+  if (m_serv != 0 ) m_serv->Disconnect();
 }
 
 
 void Ui::ReloadUnitSync()
 {
-  usync()->FreeUnitSyncLib();
-  usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() );
-  if ( m_main_win != 0 ) m_main_win->OnUnitSyncReloaded();
+  usync()->ReloadUnitSyncLib();
+  if ( m_main_win != 0 ) mw().OnUnitSyncReloaded();
 }
 
 
-void Ui::DownloadMap( const wxString& map )
+void Ui::DownloadMap( const wxString& hash, const wxString& name )
 {
-  wxString mapname = map;
-  mapname = mapname.SubString(0, mapname.Find( '.', true ) - 1 );
-  mapname.Replace(_T(" "), _T("*") );
-  mapname.Replace(_T("-"), _T("*") );
-  mapname.Replace(_T("_"), _T("*") );
-  wxString url = _T("http://www.unknown-files.net/spring/search/") + mapname + _T("/filename/");
+  #ifndef NO_TORRENT_SYSTEM
+  if ( !hash.IsEmpty() ) torrent().RequestFileByHash( hash );
+  else if ( !name.IsEmpty() ) torrent().RequestFileByName( name );
+  #else
+  wxString url = _T("http://spring.jobjol.nl/search.php");
   OpenWebBrowser ( url );
+  #endif
 }
 
 
-void Ui::DownloadMod( const wxString& mod )
+void Ui::DownloadMod( const wxString& hash, const wxString& name )
 {
-  wxString modname = mod;
-  //all the following manipulation is necessary because the publish name on UF doesn't necessary reflect the file name
-  //and the mod filename isn't accessible trought unitsync
-  modname.Replace(_T(" "), _T("*") );
-  modname.Replace(_T("-"), _T("*") );
-  modname.Replace(_T("_"), _T("*") );
-  modname.Replace(_T("VERSION"), _T("*") );
-  modname.Replace(_T("Version"), _T("*") );
-  modname.Replace(_T("version"), _T("*") );
-  modname.Replace(_T("VER"), _T("*") );
-  modname.Replace(_T("Ver"), _T("*") );
-  modname.Replace(_T("ver"), _T("*") );
-  modname.Replace(_T("V"), _T("*") );
-  modname.Replace(_T("v"), _T("*") );
-  modname.Replace(_T("."), _T("*") );
-  modname.Replace(_T("ALPHA"), _T("*") );
-  modname.Replace(_T("Alpha"), _T("*") );
-  modname.Replace(_T("alpha"), _T("*") );
-  modname.Replace(_T("BETA"), _T("*") );
-  modname.Replace(_T("Beta"), _T("*") );
-  modname.Replace(_T("beta"), _T("*") );
-  wxString url = _T("http://www.unknown-files.net/spring/search/") + modname + _T("/");
+  #ifndef NO_TORRENT_SYSTEM
+  if ( !hash.IsEmpty() ) torrent().RequestFileByHash( hash );
+  else if ( !name.IsEmpty() ) torrent().RequestFileByName( name );
+  #else
+  wxString url = _T("http://spring.jobjol.nl/search.php");
   OpenWebBrowser ( url );
+  #endif
 }
 
 
 void Ui::OpenWebBrowser( const wxString& url )
 {
-  if ( sett().GetWebBrowserPath() == _T("use default") || sett().GetWebBrowserPath().IsEmpty() )
+  if ( sett().GetWebBrowserUseDefault()
+       // These shouldn't happen, but if they do we use the default browser anyway.
+       || sett().GetWebBrowserPath() == wxEmptyString
+       || sett().GetWebBrowserPath() == _T("use default") )
   {
       if ( !wxLaunchDefaultBrowser( url ) )
       {
@@ -348,9 +364,9 @@ bool Ui::AskPassword( const wxString& heading, const wxString& message, wxString
 }
 
 
-bool Ui::AskText( const wxString& heading, const wxString& question, wxString& answer )
+bool Ui::AskText( const wxString& heading, const wxString& question, wxString& answer, long style )
 {
-  wxTextEntryDialog name_dlg( &mw(), question, heading, answer, wxOK | wxCANCEL | wxCENTRE );
+  wxTextEntryDialog name_dlg( &mw(), question, heading, answer, style );
   int res = name_dlg.ShowModal();
   answer = name_dlg.GetValue();
 
@@ -371,6 +387,8 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
 {
 
   if ( !IsConnected() ) return false;
+  //TODO insert logic for joining multiple channels at once
+  //or remove that from "/help"
   if ( (cmd.BeforeFirst(' ').Lower() == _T("/join")) || (cmd.BeforeFirst(' ').Lower() == _T("/j")) ) {
     wxString channel = cmd.AfterFirst(' ');
     wxString pass = channel.AfterFirst(' ');
@@ -465,9 +483,26 @@ ChatPanel* Ui::GetChannelChatPanel( const wxString& channel )
 
 void Ui::OnUpdate( int mselapsed )
 {
-  if ( m_serv != 0 ) {
+  if ( GetServerStatus() ) {
     m_serv->Update( mselapsed );
   }
+  if ( !m_checked_for_update ){
+    m_checked_for_update = true;
+    #ifdef __WXMSW__
+    if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
+    #endif
+  }
+  #ifndef NO_TORRENT_SYSTEM
+  if (m_upd_intv_counter % 20 == 0 )
+  {
+      if ( sett().GetTorrentSystemAutoStartMode() == 1 && !torrent().IsConnectedToP2PSystem() ) torrent().ConnectToP2PSystem();
+      else if ( GetServerStatus() && m_serv->IsOnline() && !torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
+      if ( ( !GetServerStatus() || !m_serv->IsOnline() ) && torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectToP2PSystem();
+      mw().GetTorrentTab().OnUpdate();
+  }
+  torrent().UpdateFromTimer( mselapsed );
+  m_upd_intv_counter++;
+  #endif
 }
 
 
@@ -492,9 +527,9 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
       customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     }
   }
-  server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
+  if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
+  mw().GetJoinTab().OnConnected();
 
-  //server.uidata.panel = m_main_win->GetChatTab().AddChatPannel( server, server_name );
 }
 
 
@@ -519,18 +554,25 @@ void Ui::OnDisconnected( Server& server )
 {
   if ( m_main_win == 0 ) return;
   wxLogDebugFunc( _T("") );
-  if ( m_main_win == 0 ) return;
+  if(!&server){
+    wxLogError(_T("WTF got null reference!!!"));
+    return;
+  }
 
   mw().GetJoinTab().GetBattleListTab().SetFilterActiv( false );
   mw().GetJoinTab().LeaveCurrentBattle();
   mw().GetJoinTab().GetBattleListTab().RemoveAllBattles();
 
-  if ( server.uidata.panel != 0 ) {
+  if ( server.uidata.panel ) {
     server.uidata.panel->StatusMessage( _T("Disconnected from server.") );
+
     server.uidata.panel->SetServer( 0 );
-    server.uidata.panel = 0;
+    /// leads to crash. Disabled for now
+    //server.uidata.panel = 0;
   }
-  mw().GetChatTab().CloseAllChats();
+
+  /// Crashes. Disabled for now.
+  //mw().GetChatTab().CloseAllChats();
 
 }
 
@@ -544,7 +586,7 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
   wxLogDebugFunc( _T("") );
 
   chan.uidata.panel = 0;
-  m_main_win->OpenChannelChat( chan );
+  mw().OpenChannelChat( chan );
   if ( chan.GetName() == _T("springlobby") ) {
     chan.uidata.panel->ClientMessage( wxEmptyString );
     chan.uidata.panel->ClientMessage( _("This is the SpringLobby channel, please report any problems you are having with SpringLobby here and the friendly developers will help you.") );
@@ -585,12 +627,13 @@ void Ui::OnChannelMessage( const wxString& channel, const wxString& msg )
 }
 
 
-//! @brief Called when client is leaving a channel
-//!
-//! @todo Tell ChatPanel the channel is no longer joined
-void Ui::OnLeaveChannel( Channel& channel )
+/** \brief this is only used if channel is left via raw command in server tab */
+void Ui::OnLeaveChannel( wxString& name )
 {
+    ChatPanel* panel = GetChannelChatPanel( name );
 
+    if (panel)
+        mw().GetChatTab().RemoveChatPanel( panel );
 }
 
 
@@ -657,14 +700,14 @@ void Ui::OnUserOnline( User& user )
 
   user.SetUserData( (void*)data );*/
 
-  m_main_win->GetChatTab().OnUserConnected( user );
+  mw().GetChatTab().OnUserConnected( user );
 }
 
 
 void Ui::OnUserOffline( User& user )
 {
   if ( m_main_win == 0 ) return;
-  m_main_win->GetChatTab().OnUserDisconnected( user );
+  mw().GetChatTab().OnUserDisconnected( user );
   if ( user.uidata.panel ) {
     user.uidata.panel->SetUser( 0 );
     user.uidata.panel = 0;
@@ -703,11 +746,9 @@ void Ui::OnMotd( Server& server, const wxString& message )
 
 void Ui::OnServerMessage( Server& server, const wxString& message )
 {
-  ChatPanel* panel = GetActiveChatPanel();
-  if ( panel != 0 )
+  if ( server.uidata.panel != 0 ) server.uidata.panel->StatusMessage( message );
+  else
   {
-    panel->StatusMessage( message );
-  } else {
     ShowMessage( _("Server message"), message );
   }
 }
@@ -717,7 +758,7 @@ void Ui::OnUserSaid( User& user, const wxString& message, bool fromme )
 {
   if ( m_main_win == 0 ) return;
   if ( user.uidata.panel == 0 ) {
-    m_main_win->OpenPrivateChat( user );
+    mw().OpenPrivateChat( user );
   }
   if ( fromme ) user.uidata.panel->Said( m_serv->GetMe().GetNick(), message );
   else user.uidata.panel->Said( user.GetNick(), message );
@@ -801,12 +842,18 @@ void Ui::OnUserLeftBattle( Battle& battle, User& user )
   }
 }
 
+void Ui::OnBattleMapRefresh()
+{
+    if ( m_main_win == 0 ) return;
+    BattleRoomTab* br = mw().GetJoinTab().GetBattleRoomTab();
+    if ( br != 0 ) br->UpdateBattleInfo( true, false );
+}
 
 void Ui::OnBattleInfoUpdated( Battle& battle )
 {
   if ( m_main_win == 0 ) return;
-  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
-  if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
+  mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  if ( mw().GetJoinTab().GetCurrentBattle() == &battle ) {
     mw().GetJoinTab().UpdateCurrentBattle();
   }
 }
@@ -814,8 +861,8 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
 void Ui::OnBattleInfoUpdated( Battle& battle, const wxString& Tag )
 {
   if ( m_main_win == 0 ) return;
-  m_main_win->GetJoinTab().GetBattleListTab().UpdateBattle( battle );
-  if ( m_main_win->GetJoinTab().GetCurrentBattle() == &battle ) {
+  mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+  if ( mw().GetJoinTab().GetCurrentBattle() == &battle ) {
     mw().GetJoinTab().UpdateCurrentBattle( Tag );
   }
 }
@@ -874,6 +921,9 @@ void Ui::OnBattleStarted( Battle& battle )
       battle.SendMyBattleStatus();
       battle.GetMe().Status().in_game = true;
       battle.GetMe().SendMyUserStatus();
+      #ifndef NO_TORRENT_SYSTEM
+      torrent().SetIngameStatus(true);
+      #endif
       m_spring->Run( battle );
     }
   }
@@ -903,6 +953,9 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
 
 void Ui::OnSpringTerminated( bool success )
 {
+  #ifndef NO_TORRENT_SYSTEM
+  torrent().SetIngameStatus(false);
+  #endif
   if ( !m_serv ) return;
 
   m_serv->GetMe().Status().in_game = false;
@@ -913,7 +966,7 @@ void Ui::OnSpringTerminated( bool success )
 void Ui::OnBattleStartRectsUpdated( Battle& battle )
 {
   if ( m_main_win == 0 ) return;
-  mw().GetJoinTab().UpdateCurrentBattle( false, true );
+  mw().GetJoinTab().UpdateCurrentBattle( true, false );
 }
 
 
@@ -923,7 +976,7 @@ void Ui::OnBattleMapChanged( Battle& battle )
   mw().GetJoinTab().UpdateCurrentBattle( true );
   if (battle.IsFounderMe())
   {
-	  battle.CustomBattleOptions()->loadMapOptions(battle.GetMapName());
+	  battle.CustomBattleOptions()->loadMapOptions(battle.GetHostMapName());
 	  mw().GetJoinTab().ReloadMMoptTab();
   }
 }
@@ -994,7 +1047,13 @@ void Ui::OnRing( const wxString& from )
 {
   if ( m_main_win == 0 ) return;
   m_main_win->RequestUserAttention();
+
+  #ifndef DISABLE_SOUND
+  if ( sett().GetChatPMSoundNotificationEnabled() )
+    sound().ring();
+  #else
   wxBell();
+  #endif
 }
 
 
@@ -1035,14 +1094,25 @@ void Ui::OnMainWindowDestruct()
 
 bool Ui::IsThisMe(User& other)
 {
-	//if i'm not connected i have no identity
+	return IsThisMe( other.GetNick() );
+}
+
+bool Ui::IsThisMe(User* other)
+{
+	return ( ( other != 0 ) && IsThisMe( other->GetNick() ) );
+}
+
+bool Ui::IsThisMe(const wxString& other)
+{
+    //if i'm not connected i have no identity
 	if (!IsConnected() || m_serv==0)
 		return false;
 	else
-		return ( other.GetNick()==m_serv->GetMe().GetNick() );
+		return ( other == m_serv->GetMe().GetNick() );
 }
 
-bool Ui::TestHostPort( unsigned int port )
+int Ui::TestHostPort( unsigned int port )
 {
   return m_serv->TestOpenPort( port );
 }
+

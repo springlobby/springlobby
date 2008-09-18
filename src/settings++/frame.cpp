@@ -58,8 +58,8 @@ BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_MENU(wxID_ANY,settings_frame::OnMenuChoice)
 END_EVENT_TABLE()
 
-settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
-: wxFrame(parent, id, title, position, size, style)
+settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size)
+: wxFrame(parent, id, title, position, size)
 {
 	alreadyCalled = false;
 	parentWindow = parent;
@@ -72,7 +72,7 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 
 	settingsIcon  = new wxIcon(springsettings_xpm);
 
-	 if (abstract_panel::loadValuesIntoMap())
+    if (abstract_panel::loadValuesIntoMap())
 	{
 		CreateGUIControls();
 		initMenuBar();
@@ -83,7 +83,8 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 		SetTitle(_T("SpringSettings"));
 	}
 	 SetIcon(*settingsIcon);
-	 SetSize(8,8,760,550);
+	 SetSize( OptionsHandler.GetSettingsWindowLeft(), OptionsHandler.GetSettingsWindowTop(), OptionsHandler.GetSettingsWindowWidth(), OptionsHandler.GetSettingsWindowHeight() );
+     Layout();
 	 Center();
 }
 
@@ -122,8 +123,8 @@ void settings_frame::handleExternExit()
 					simpleTab->saveCbxChoices();
 			}
 		}
-
 	}
+
 	OptionsHandler.save();
 }
 
@@ -235,6 +236,8 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		case ID_MENUITEM_SAVE:
 			if (abstract_panel::saveSettings())
 			 (abstract_panel::settingsChanged) = false;
+			if (simpleTab!=0)
+        			simpleTab->saveCbxChoices();
 		 break;
 
 		case ID_MENUITEM_QUIT:
@@ -309,9 +312,9 @@ void settings_frame::switchToExpertMode()
 	menuMode->Check(ID_MENUITEM_EXPERT,true);
 
 	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
-    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
-    audioTab = new audio_panel(notebook,ID_AUDIO);
-    debugTab = new debug_panel(notebook,ID_DEBUG);
+    	detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
+    	audioTab = new audio_panel(notebook,ID_AUDIO);
+    	debugTab = new debug_panel(notebook,ID_DEBUG);
 	notebook->AddPage(qualityTab, qualityTabCap);
 	notebook->AddPage(detailTab, detailTabCap);
 	notebook->AddPage(audioTab,audioTabCap);
@@ -345,6 +348,14 @@ void settings_frame::updateAllControls()
 void settings_frame::OnClose(wxCloseEvent& event)
 {
 	if ( !alreadyCalled){
+	     int x, y, w, h;
+          GetSize( &w, &h );
+          OptionsHandler.SetSettingsWindowHeight( h );
+          OptionsHandler.SetSettingsWindowWidth( w );
+          GetPosition( &x, &y );
+          OptionsHandler.SetSettingsWindowTop( y );
+          OptionsHandler.SetSettingsWindowLeft( x );
+          OptionsHandler.save();
 		handleExit();
 	}
 }

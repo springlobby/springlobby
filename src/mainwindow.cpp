@@ -13,6 +13,8 @@
 #include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
+#include <wx/tooltip.h>
+
 
 #include <stdexcept>
 
@@ -28,6 +30,10 @@
 #include "mainoptionstab.h"
 #include "iunitsync.h"
 #include "uiutils.h"
+#ifndef NO_TORRENT_SYSTEM
+#include "maintorrenttab.h"
+#include "torrentwrapper.h"
+#endif
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.png.h"
@@ -45,10 +51,14 @@
 #include "settings++/frame.h"
 #include "settings++/custom_dialogs.h"
 
-#include "updater/versionchecker.h"
+#include "updater/updater.h"
+#include "autojoinchanneldialog.h"
 
 #ifdef HAVE_WX28
-#include <wx/aboutdlg.h>
+    #if defined(__WXMSW__)
+        #include <wx/msw/winundef.h>
+    #endif
+    #include <wx/aboutdlg.h>
 #endif
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -64,17 +74,19 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SETTINGSPP, MainWindow::OnShowSettingsPP )
   EVT_MENU( MENU_VERSION, MainWindow::OnMenuVersion )
   EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
-
-
+  EVT_MENU( MENU_START_TORRENT, MainWindow::OnMenuStartTorrent )
+  EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
+  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
+  EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
+  EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
-
 END_EVENT_TABLE()
 
 
 
 MainWindow::MainWindow( Ui& ui ) :
   wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
-  m_ui(ui)
+  m_ui(ui),m_autojoin_dialog(NULL)
 {
   SetIcon( wxIcon(springlobby_xpm) );
   wxMenu *menuFile = new wxMenu;
@@ -83,14 +95,26 @@ MainWindow::MainWindow( Ui& ui ) :
   menuFile->AppendSeparator();
   menuFile->Append(MENU_QUIT, _("&Quit"));
 
-  wxMenu *menuEdit = new wxMenu;
+  //m_menuEdit = new wxMenu;
+  //TODO doesn't work atm
+
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
   m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
+  m_menuTools->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels..."));
   m_menuTools->AppendSeparator();
   m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
+
+  #if defined(__WXMSW__)
   m_menuTools->AppendSeparator();
+  m_menuTools->AppendCheckItem(MENU_SHOW_TOOLTIPS, _("Show tooltips") );
+  m_menuTools->Check( MENU_SHOW_TOOLTIPS, sett().GetShowTooltips() );
+  #endif
+
+  #ifndef NO_TORRENT_SYSTEM
+  m_menuTools->AppendSeparator();
+  #endif
   m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
   m_settings_menu = new wxMenuItem( m_menuTools, MENU_SETTINGSPP, _("SpringSettings"), wxEmptyString, wxITEM_NORMAL );
   m_menuTools->Append (m_settings_menu);
@@ -102,7 +126,7 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_menubar = new wxMenuBar;
   m_menubar->Append(menuFile, _("&File"));
-  m_menubar->Append(menuEdit, _("&Edit"));
+  //m_menubar->Append(m_menuEdit, _("&Edit"));
   m_menubar->Append(m_menuTools, _("&Tools"));
   m_menubar->Append(menuHelp, _("&Help"));
   SetMenuBar(m_menubar);
@@ -110,11 +134,11 @@ MainWindow::MainWindow( Ui& ui ) :
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
 
-  m_chat_icon =  charArr2wxBitmapAddText( chat_icon_png , sizeof (chat_icon_png) , chat_icon_text_png, sizeof(chat_icon_text_png), 64 ) ;
-  m_battle_icon = charArr2wxBitmapAddText( join_icon_png , sizeof (join_icon_png), join_icon_text_png , sizeof (join_icon_text_png), 64 ) ;
-  m_sp_icon = charArr2wxBitmapAddText( single_player_icon_png , sizeof (single_player_icon_png), single_player_icon_text_png , sizeof (single_player_icon_text_png), 64 ) ;
-  m_options_icon =   charArr2wxBitmapAddText( options_icon_png , sizeof (options_icon_png), options_icon_text_png , sizeof (options_icon_text_png), 64 ) ;
-  m_downloads_icon = charArr2wxBitmapAddText( downloads_icon_png , sizeof (downloads_icon_png), downloads_icon_text_png , sizeof (downloads_icon_text_png), 64 ) ;
+  m_chat_icon =  charArr2wxBitmapWithBlending( chat_icon_png , sizeof (chat_icon_png) , chat_icon_text_png, sizeof(chat_icon_text_png), 64 ) ;
+  m_battle_icon = charArr2wxBitmapWithBlending( join_icon_png , sizeof (join_icon_png), join_icon_text_png , sizeof (join_icon_text_png), 64 ) ;
+  m_sp_icon = charArr2wxBitmapWithBlending( single_player_icon_png , sizeof (single_player_icon_png), single_player_icon_text_png , sizeof (single_player_icon_text_png), 64 ) ;
+  m_options_icon =   charArr2wxBitmapWithBlending( options_icon_png , sizeof (options_icon_png), options_icon_text_png , sizeof (options_icon_text_png), 64 ) ;
+  m_downloads_icon = charArr2wxBitmapWithBlending( downloads_icon_png , sizeof (downloads_icon_png), downloads_icon_text_png , sizeof (downloads_icon_text_png), 64 ) ;
   m_select_image = new wxBitmap( select_icon_xpm );
 
   m_func_tab_images = new wxImageList( 64, 64 );
@@ -125,13 +149,17 @@ MainWindow::MainWindow( Ui& ui ) :
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
+#ifndef NO_TORRENT_SYSTEM
+  m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
+#endif
 
   m_func_tabs->AddPage( m_chat_tab, _T(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
-  //TODO insert real downloads panel
-  //m_func_tabs->AddPage( m_opts_tab, _T(""), false, 4 );
+#ifndef NO_TORRENT_SYSTEM
+  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 4 );
+#endif
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
 
@@ -141,6 +169,9 @@ MainWindow::MainWindow( Ui& ui ) :
   Layout();
 
   se_frame_active = false;
+
+  wxToolTip::Enable(sett().GetShowTooltips());
+
 }
 
 void MainWindow::forceSettingsFrameClose()
@@ -163,6 +194,11 @@ MainWindow::~MainWindow()
   m_ui.OnMainWindowDestruct();
   freeStaticBox();
 
+  if ( m_autojoin_dialog  != 0 )
+  {
+    delete m_autojoin_dialog;
+    m_autojoin_dialog = 0;
+  }
   delete m_chat_icon;
   delete m_battle_icon;
   delete m_options_icon;
@@ -224,7 +260,7 @@ void MainWindow::MakeImages()
   } else {*/
     m_func_tab_images->Add( *m_options_icon );
 
-   // m_func_tab_images->Add( *m_downloads_icon );
+    m_func_tab_images->Add( *m_downloads_icon );
   //}
 
 }
@@ -257,8 +293,13 @@ MainSinglePlayerTab& MainWindow::GetSPTab()
   ASSERT_LOGIC( m_sp_tab != 0, _T("m_sp_tab = 0") );
   return *m_sp_tab;
 }
-
-
+#ifndef NO_TORRENT_SYSTEM
+MainTorrentTab& MainWindow::GetTorrentTab()
+{
+  ASSERT_LOGIC( m_torrent_tab  != 0, _T("m_torrent_tab = 0") );
+  return *m_torrent_tab ;
+}
+#endif
 ChatPanel* MainWindow::GetActiveChatPanel()
 {
   int index = m_func_tabs->GetSelection();
@@ -298,18 +339,12 @@ void MainWindow::OpenPrivateChat( User& user )
 }
 
 
-//! @brief Close all chat tabs, both private and channel
-//!
-//! @todo Implement
-void MainWindow::CloseAllChats()
-{
-}
-
-
 //! @brief Displays the lobby configuration.
-void MainWindow::ShowConfigure()
+void MainWindow::ShowConfigure( const unsigned int page )
 {
-  m_func_tabs->SetSelection( 3 );
+  m_func_tabs->SetSelection( PAGE_OPTOS );
+  //possibly out of bounds is captured by m_opts_tab itslef
+  m_opts_tab->SetSelection( page );
 }
 
 
@@ -349,19 +384,23 @@ void MainWindow::OnMenuAbout( wxCommandEvent& event )
 	//info.SetCopyright(_T("");
 	info.SetLicence(_T("GPL"));
 	info.AddDeveloper(_T("BrainDamage"));
+	info.AddDeveloper(_T("dizekat"));
+	info.AddDeveloper(_T("insaneinside"));
+	info.AddDeveloper(_T("Kaot"));
 	info.AddDeveloper(_T("koshi"));
 	info.AddDeveloper(_T("semi_"));
 	info.AddDeveloper(_T("tc-"));
-    info.AddTranslator(_T("chaosch (simplified chinese)"));
+  info.AddTranslator(_T("chaosch (simplified chinese)"));
 	info.AddTranslator(_T("lejocelyn (french)"));
 	info.AddTranslator(_T("Suprano (german)"));
-    info.AddTranslator(_T("tc- (swedish)"));
+  info.AddTranslator(_T("tc- (swedish)"));
 	info.SetIcon(wxIcon(springlobby_xpm));
 	wxAboutBox(info);
 
 #else
     customMessageBoxNoModal(SL_MAIN_ICON,_T("SpringLobby version: ")+GetSpringLobbyVersion(),_T("About"));
 #endif
+
 }
 
 void MainWindow::OnMenuConnect( wxCommandEvent& event )
@@ -381,35 +420,10 @@ void MainWindow::OnMenuQuit( wxCommandEvent& event )
   m_ui.Quit();
 }
 
-//! @brief checks for latest version of SpringLobby via HTTP, and compares it with users current version.
+
 void MainWindow::OnMenuVersion( wxCommandEvent& event )
 {
-  wxString latestVersion = GetLatestVersion();
-  // Need to replace crap chars or versions will always be inequal
-  latestVersion.Replace(_T(" "), _T(""), true);
-  latestVersion.Replace(_T("\n"), _T(""), true);
-  latestVersion.Replace(_T("\t"), _T(""), true);
-  if (latestVersion == _T("-1"))
-  {
-    customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
-    return;
-  }
-  wxString myVersion = GetSpringLobbyVersion();
-
-  wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
-
-  if (latestVersion.IsSameAs(myVersion, false))
-  {
-    customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date!\n\n") + msg, _("Up to Date"));
-  }
-  else
-  {
-    int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like to visit a page with instructions on how to download the newest version?"), _("Not up to Date"), wxYES_NO);
-    if (answer == wxYES)
-    {
-      m_ui.OpenWebBrowser(_T("http://trac.springlobby.info/wiki/Install"));
-    }
-  }
+  Updater().CheckForUpdates();
 }
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
@@ -418,9 +432,47 @@ void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 }
 
 
+void MainWindow::OnMenuStartTorrent( wxCommandEvent& event )
+{
+  #ifndef NO_TORRENT_SYSTEM
+  sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
+  torrent().ConnectToP2PSystem();
+  #endif
+}
+
+
+void MainWindow::OnMenuStopTorrent( wxCommandEvent& event )
+{
+  #ifndef NO_TORRENT_SYSTEM
+  sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
+  torrent().DisconnectToP2PSystem();
+  #endif
+}
+
+
+void MainWindow::OnMenuOpen( wxMenuEvent& event )
+{
+  #ifndef NO_TORRENT_SYSTEM
+  m_menuTools->Delete(MENU_STOP_TORRENT);
+  m_menuTools->Delete(MENU_START_TORRENT);
+  if ( !torrent().IsConnectedToP2PSystem() )
+  {
+    m_menuTools->Insert( 5, MENU_START_TORRENT, _("Manually &Start Torrent System") );
+  }
+  else
+  {
+    m_menuTools->Insert( 5, MENU_STOP_TORRENT, _("Manually &Stop Torrent System") );
+  }
+  #endif
+}
+
+
 void MainWindow::OnReportBug( wxCommandEvent& event )
 {
-  m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") );
+    wxString reporter = wxEmptyString;
+    if (m_ui.IsConnected() )
+        reporter = _T("?reporter=") + m_ui.GetServer().GetMe().GetNick();
+  m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") + reporter);
 }
 
 
@@ -455,7 +507,20 @@ void MainWindow::OnUnitSyncReloaded()
 void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 {
 	se_frame = new settings_frame(this,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
-	  	    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+	  	    		wxDefaultSize);
 	se_frame_active = true;
 	se_frame->Show();
+}
+
+void MainWindow::OnShowToolTips( wxCommandEvent& event )
+{
+    bool show = m_menuTools->IsChecked(MENU_SHOW_TOOLTIPS);
+    wxToolTip::Enable(show);
+    sett().SetShowTooltips(show);
+}
+
+void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& event )
+{
+    m_autojoin_dialog = new AutojoinChannelDialog (this);
+    m_autojoin_dialog->Show();
 }

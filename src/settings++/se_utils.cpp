@@ -19,17 +19,29 @@ void loadUnitsync()
 {
 	//should be done in susynclib()->Load
 	//wxSetWorkingDirectory(OptionsHandler.getUsyncLoc().BeforeLast('\\'));
-
+#ifdef __WXMSW__
 	try
 	{
 		wxCriticalSection m_lock;
 		wxCriticalSectionLocker lock_criticalsection(m_lock);
-		susynclib()->Load(OptionsHandler.getUsyncLoc());
+		susynclib()->Load(_T("unitsync.dll"));
 	}
 	catch (...)
 	{
-		//TODO log that
+#endif
+        try
+        {
+            wxCriticalSection m_lock;
+            wxCriticalSectionLocker lock_criticalsection(m_lock);
+            susynclib()->Load(OptionsHandler.getUsyncLoc());
+        }
+        catch (...)
+        {
+            wxLogError( _T("springsettings: couldn't load unitsync") );
+        }
+#ifdef __WXMSW__
 	}
+#endif
 }
 
 void openUrl(const wxString& url)

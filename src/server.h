@@ -6,11 +6,11 @@
 #include "channellist.h"
 #include "userlist.h"
 #include "battlelist.h"
+#include "inetclass.h"
 
 #define PING_TIMEOUT 30
 
 class ServerEvents;
-class Socket;
 class Channel;
 class Ui;
 class Battle;
@@ -38,7 +38,7 @@ class wxColour;
 #define HI_Restrictions 512
 #define HI_Map_Changed 1024
 #define HI_Mod_Changed 2048
-#define HI_Send_All_opts 4076
+#define HI_Send_All_opts 4096
 
 typedef int HostInfo;
 
@@ -47,8 +47,19 @@ struct UiServerData {
   ChatPanel* panel;
 };
 
+enum PortTestCode {
+  porttest_pass_WX26    = 0,
+  porttest_pass         = 1,
+  porttest_timeout      = 2,
+  porttest_socketNotOk  = 3,
+  porttest_socketError  = 4,
+  porttest_unreachable  = 5
+
+};
+
+
 //! @brief Abstract baseclass that is used to implement a server protocol.
-class Server
+class Server : public iNetClass
 {
   public:
     friend class ServerEvents;
@@ -149,7 +160,7 @@ class Server
     virtual bool IsPasswordHash( const wxString& pass ) = 0;
     virtual wxString GetPasswordHash( const wxString& pass ) = 0;
 
-    wxString GetRequiredSpring() { return m_required_spring_ver; }
+    wxString GetRequiredSpring() const { return m_required_spring_ver; }
 
     void SetRequiredSpring( const wxString& version ) { m_required_spring_ver = version; }
 
@@ -162,8 +173,8 @@ class Server
     BattleList_Iter* const battles_iter;
 
     virtual User& GetMe() = 0;
-    User& GetUser( const wxString& nickname );
-    bool UserExists( const wxString& nickname );
+    User& GetUser( const wxString& nickname ) const;
+    bool UserExists( const wxString& nickname ) const;
 
     Channel& GetChannel( const wxString& name );
     int GetNumChannels();
@@ -173,7 +184,12 @@ class Server
     Battle& GetBattle( const int& battleid );
     bool BattleExists( const int& battleid );
 
-    virtual bool TestOpenPort( unsigned int port ) = 0;
+    virtual int TestOpenPort( unsigned int port ) = 0;
+
+    std::map<wxString,wxString> m_channel_pw;  /// channel name -> password, filled on channel join
+
+    ///used to fill userlist in groupuserdialog
+    const UserList& GetUserList(){return m_users;}
 
   protected:
     Socket* m_sock;

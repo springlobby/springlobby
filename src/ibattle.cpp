@@ -19,106 +19,101 @@ IBattle::~IBattle()
 }
 
 
-void IBattle::SetMap(const wxString& mapname, const wxString& hash)
+void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
 {
-  if ( mapname != m_map.name ) {
+  if ( mapname != m_host_map_name || hash != m_host_map_hash ) {
     m_map_loaded = false;
-    m_map_exists = usync()->MapExists( mapname, hash );
-    m_map.hash = hash;
-    m_map_name = mapname;
+    m_host_map_name = mapname;
+    m_host_map_hash = hash;
+    if ( !m_host_map_hash.IsEmpty() ) m_map_exists = usync()->MapExists( m_host_map_name, m_host_map_hash );
+    else m_map_exists = usync()->MapExists( m_host_map_name );
   }
 }
 
 
-void IBattle::SetMap(const UnitSyncMap& map)
+void IBattle::SetLocalMap(const UnitSyncMap& map)
 {
-  if ( map.name != m_map.name ) {
-    m_map = map;
-    m_map_name = map.name;
+  if ( map.name != m_local_map.name || map.hash != m_local_map.hash ) {
+    m_local_map = map;
     m_map_loaded = true;
-    m_map_exists = usync()->MapExists( m_map_name, m_map.hash );
+    if ( !m_host_map_hash.IsEmpty() ) m_map_exists = usync()->MapExists( m_host_map_name, m_host_map_hash );
+    else m_map_exists = usync()->MapExists( m_host_map_name );
   }
 }
 
 
-const UnitSyncMap& IBattle::Map()
+const UnitSyncMap& IBattle::LoadMap()
 {
-  ASSERT_LOGIC( m_map_exists, _T("Map does not exist.") );
 
   if ( !m_map_loaded ) {
     try {
-
-      m_map = usync()->GetMapEx( m_map_name );
+      ASSERT_LOGIC( m_map_exists, _T("Map does not exist.") );
+      m_local_map = usync()->GetMapEx( m_host_map_name );
       m_map_loaded = true;
-      m_map_name = m_map.name;
 
     } catch (...) {}
   }
-  return m_map;
+  return m_local_map;
 }
 
 
-wxString IBattle::GetMapName()
+wxString IBattle::GetHostMapName() const
 {
-  return m_map_name;
+  return m_host_map_name;
 }
 
 
-wxString IBattle::GetMapHash()
+wxString IBattle::GetHostMapHash() const
 {
-  if ( m_map.hash == _T("") ) {
-    try {
-      m_map.hash = usync()->GetMap( m_map.name ).hash;
-    } catch (...) { wxLogWarning( _T("Couldn't get map hash from unitsync.") ); }
-  }
-  return m_map.hash;
+  return m_host_map_hash;
 }
 
 
-void IBattle::SetMod( const wxString& modname, const wxString& hash )
+void IBattle::SetHostMod( const wxString& modname, const wxString& hash )
 {
-  if ( m_mod_name != modname ){
+  if ( m_host_mod_name != modname || m_host_mod_hash != hash ){
     m_mod_loaded = false;
-    m_mod_exists = usync()->ModExists( modname );
-    m_mod_name = modname;
+    m_host_mod_name = modname;
+    m_host_mod_hash = hash;
+    if ( !m_host_mod_hash.IsEmpty() ) m_mod_exists = usync()->ModExists( m_host_mod_name, m_host_mod_hash );
+    else m_mod_exists = usync()->ModExists( m_host_mod_name );
   }
 }
 
 
-void IBattle::SetMod( const UnitSyncMod& mod )
+void IBattle::SetLocalMod( const UnitSyncMod& mod )
 {
-  if ( mod.name != m_mod.name ) {
-    m_mod = mod;
-    m_mod_name = mod.name;
+  if ( mod.name != m_local_mod.name || mod.hash != m_local_mod.hash ) {
+    m_local_mod = mod;
     m_mod_loaded = true;
-    m_mod_exists = usync()->ModExists( m_mod_name );
+    if ( !m_host_mod_hash.IsEmpty() ) m_mod_exists = usync()->ModExists( m_host_mod_name, m_host_mod_hash );
+    else m_mod_exists = usync()->ModExists( m_host_mod_name );
   }
 }
 
 
-const UnitSyncMod& IBattle::Mod()
+const UnitSyncMod& IBattle::LoadMod()
 {
-  ASSERT_LOGIC( m_mod_exists, _T("Mod does not exist.") );
   if ( !m_mod_loaded ) {
     try {
-      m_mod = usync()->GetMod( m_mod_name );
+      ASSERT_LOGIC( m_mod_exists, _T("Mod does not exist.") );
+      m_local_mod = usync()->GetMod( m_host_mod_name );
       m_mod_loaded = true;
-      m_mod_name = m_mod.name;
     } catch (...) {}
   }
-  return m_mod;
+  return m_local_mod;
 }
 
 
-wxString IBattle::GetModName()
+wxString IBattle::GetHostModName() const
 {
-  return m_mod_name;
+  return m_host_mod_name;
 }
 
 
-wxString IBattle::GetModHash()
+wxString IBattle::GetHostModHash() const
 {
-  return m_mod.hash;
+  return m_host_mod_hash;
 }
 
 
@@ -165,8 +160,10 @@ wxArrayString IBattle::DisabledUnits()
 
 void IBattle::OnUnitSyncReloaded()
 {
-  m_mod_exists = usync()->ModExists( m_mod_name );
-  m_map_exists = usync()->MapExists( m_map_name );
+  if ( !m_host_mod_hash.IsEmpty() ) m_mod_exists = usync()->ModExists( m_host_mod_name, m_host_mod_hash);
+  else m_mod_exists = usync()->ModExists( m_host_mod_name );
+  if ( !m_host_map_hash.IsEmpty() )  m_map_exists = usync()->MapExists( m_host_map_name, m_host_map_hash );
+  else  m_map_exists = usync()->MapExists( m_host_map_name );
 }
 
 unsigned int IBattle::AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll ) {

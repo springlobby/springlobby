@@ -4,7 +4,7 @@
 
 #include <wx/string.h>
 #include <list>
-#include <vector>
+#include <map>
 
 #include "iunitsync.h"
 #include "user.h"
@@ -40,16 +40,17 @@ enum {
 
 struct BattleStartRect
 {
-  BattleStartRect() { local = true; updated = false; deleted = false; }
-  bool local;
-  bool updated;
-  bool deleted;
+  BattleStartRect() { toadd = false; todelete = false; exist = false; toresize = false; }
+  bool toadd;
+  bool todelete;
+  bool toresize;
+  bool exist;
 
-  int ally;
-  int top;
-  int left;
-  int right;
-  int bottom;
+  unsigned int ally;
+  unsigned int top;
+  unsigned int left;
+  unsigned int right;
+  unsigned int bottom;
 };
 
 
@@ -72,40 +73,44 @@ class IBattle
     IBattle();
     virtual ~IBattle();
 
-    virtual void SetMap( const wxString& mapname, const wxString& hash );
-    virtual void SetMap( const UnitSyncMap& map );
-    virtual const UnitSyncMap& Map();
-    virtual wxString GetMapName();
-    virtual wxString GetMapHash();
+    virtual void SetHostMap( const wxString& mapname, const wxString& hash );
+    virtual void SetLocalMap( const UnitSyncMap& map );
+    virtual const UnitSyncMap& LoadMap();
+    virtual wxString GetHostMapName() const;
+    virtual wxString GetHostMapHash() const;
 
-    virtual void SetMod( const wxString& modname, const wxString& hash );
-    virtual void SetMod( const UnitSyncMod& mod );
-    virtual const UnitSyncMod& Mod();
-    virtual wxString GetModName();
-    virtual wxString GetModHash();
+    virtual void SetHostMod( const wxString& modname, const wxString& hash );
+    virtual void SetLocalMod( const UnitSyncMod& mod );
+    virtual const UnitSyncMod& LoadMod();
+    virtual wxString GetHostModName() const;
+    virtual wxString GetHostModHash() const;
 
     virtual bool MapExists();
     virtual bool ModExists();
 
-    virtual wxColour GetFreeColour( bool excludeme = true ) = 0;
+    virtual wxColour GetFreeColour( User *for_whom ) const = 0;
 
-    virtual BattleStartRect* GetStartRect( int allyno ) { return 0; };
-    virtual void AddStartRect( int allyno, int left, int top, int right, int bottom ) {};
-    virtual void RemoveStartRect( int allyno ) {};
-    virtual void UpdateStartRect( int allyno ) {};
+    virtual BattleStartRect GetStartRect( unsigned int allyno ) { BattleStartRect foo; return foo; };
+    virtual void AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom ) {};
+    virtual void RemoveStartRect( unsigned int allyno ) {};
+    virtual void ResizeStartRect( unsigned int allyno ) {};
+    virtual void StartRectRemoved( unsigned int allyno ) {};
+    virtual void StartRectResized( unsigned int allyno ) {};
+    virtual void StartRectAdded( unsigned int allyno ) {};
+    virtual void ClearStartRects(){};
 
     virtual int GetMyAlly() = 0;
     virtual void SetMyAlly( int ally ) = 0;
 
-    virtual bool IsFounderMe() =0;
+    virtual bool IsFounderMe() const =0;
 
     virtual void SendHostInfo( HostInfo update ) = 0;
     virtual void SendHostInfo( const wxString& Tag ) = 0;
 
     virtual BattleBot* GetBotByStartPosition( unsigned int startpos ) { return 0; };
-    virtual BattleBot* GetBot( unsigned int index ) = 0;
-    virtual BattleBot* GetBot( const wxString& name ) { return 0; };
-    virtual unsigned int GetNumBots() = 0;
+    virtual BattleBot* GetBot( unsigned int index ) const  = 0;
+    virtual BattleBot* GetBot( const wxString& name ) const { return 0; };
+    virtual unsigned int GetNumBots() const = 0;
     virtual unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
     virtual void RemoveBot( unsigned int index ) {};
 
@@ -119,7 +124,7 @@ class IBattle
 
     virtual void OnUnitSyncReloaded();
 
-    virtual std::vector<BattleStartRect*>::size_type GetNumRects() =0;
+    virtual std::map<unsigned int,BattleStartRect>::size_type GetNumRects() =0;
 
     virtual mmOptionsWrapper* CustomBattleOptions() =0;
 
@@ -129,10 +134,12 @@ class IBattle
     bool m_mod_loaded;
     bool m_map_exists;
     bool m_mod_exists;
-    UnitSyncMap m_map;
-    UnitSyncMod m_mod;
-    wxString m_map_name;
-    wxString m_mod_name;
+    UnitSyncMap m_local_map;
+    UnitSyncMod m_local_mod;
+    wxString m_host_map_name;
+    wxString m_host_mod_name;
+    wxString m_host_map_hash;
+    wxString m_host_mod_hash;
 
     wxArrayString m_units;
 };

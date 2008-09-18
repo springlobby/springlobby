@@ -63,6 +63,9 @@ mmOptionList::mmOptionList():mmOptionModel()
 void mmOptionList::addItem(wxString key_, wxString name_, wxString desc_)
 {
 	listitems.push_back(listItem(key_,name_,desc_));
+	//make sure current choice is set to default
+	if ( this->def == key_ )
+        this->cur_choice_index = listitems.size() - 1;
 	cbx_choices.Add(name_);
 }
 
@@ -72,7 +75,7 @@ listItem::listItem(wxString key_, wxString name_,wxString desc_):
 
 }
 
-mmOptionInt::mmOptionInt(wxString name_, wxString key_, wxString description_, long def_, long stepping_, long min_, long max_):
+mmOptionInt::mmOptionInt(wxString name_, wxString key_, wxString description_, int def_, int stepping_, int min_, int max_):
 	mmOptionModel(name_,key_,description_,opt_int),def(def_),value(def_),stepping(stepping_),min(min_),max(max_)
 {}
 

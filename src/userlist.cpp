@@ -6,7 +6,7 @@
 #include "user.h"
 #include "utils.h"
 
-const user_map_t::size_type SEEKPOS_INVALID = -1;
+const user_map_t::size_type SEEKPOS_INVALID = user_map_t::size_type(-1);
 
 UserList::UserList(): m_seek(m_users.end()), m_seekpos(SEEKPOS_INVALID)
 { }
@@ -23,15 +23,15 @@ void UserList::RemoveUser( const wxString& nick )
   m_seekpos = SEEKPOS_INVALID;
 }
 
-User& UserList::GetUser( const wxString& nick )
+User& UserList::GetUser( const wxString& nick ) const
 {
-  user_iter_t u = m_users.find(nick);
+  user_const_iter_t u = m_users.find(nick);
   ASSERT_RUNTIME( u != m_users.end(), _T("UserList::GetUser(\"") + nick + _T("\"): no such user") );
   //ASSERT_LOGIC( u != m_users.end(), _T("UserList::GetUser(\"") + nick + _T("\"): no such user") );
   return *u->second;
 }
 
-User& UserList::GetUser( user_map_t::size_type index )
+User& UserList::GetUser( user_map_t::size_type index ) const
 {
   if ((m_seekpos == SEEKPOS_INVALID) || (m_seekpos > index)) {
     m_seek = m_users.begin();
@@ -42,12 +42,12 @@ User& UserList::GetUser( user_map_t::size_type index )
   return *m_seek->second;
 }
 
-bool UserList::UserExists( wxString const& nick )
+bool UserList::UserExists( wxString const& nick ) const
 {
   return m_users.find(nick) != m_users.end();
 }
 
-user_map_t::size_type UserList::GetNumUsers()
+user_map_t::size_type UserList::GetNumUsers() const
 {
   return m_users.size();
 }

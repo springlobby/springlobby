@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // File: utils.h
 //
@@ -7,7 +7,6 @@
 #include <iostream>
 
 #include "utils.h"
-#include "revision.h"
 #include "crashreport.h"
 
 #include "settings++/custom_dialogs.h"
@@ -26,6 +25,15 @@
 #include <exception>
 #include <stdexcept>
 
+//for cpu detection
+#include <wx/tokenzr.h>
+#include <string>
+#include <fstream>
+#include <wx/regex.h>
+#ifdef __WXMSW__
+#include <wx/msw/registry.h>
+#endif
+
 
 wxString GetLibExtension()
 {
@@ -39,7 +47,7 @@ void InitializeLoggingTargets()
 
 {
 	#if wxUSE_STD_IOSTREAM
-    #if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
+    #if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
       ///hidden stream logging for crash reports
       wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
       wxLogChain *logCrashChain = new wxLogChain( loggercrash );
@@ -51,16 +59,51 @@ void InitializeLoggingTargets()
     wxLogChain *logChain = new wxLogChain( loggerconsole );
     logChain->SetLogLevel( wxLOG_Trace );
     logChain->SetVerbose( true );
-  #else
+  #elif defined ( USE_LOG_WINDOW )
     ///gui window fallback logging if console/stream output not available
     wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
     wxLogChain *logChain = new wxLogChain( loggerwin );
     logChain->SetLogLevel( wxLOG_Trace );
     logChain->SetVerbose( true );
     logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+  #else
+    /// if all fails, no log is better than msg box spam :P
+    new wxLogNull();
   #endif
 }
 
+
+wxString i2s( int arg )
+{
+    return TowxString(arg);
+}
+
+
+wxString u2s( unsigned int arg )
+{
+  return TowxString(arg);
+}
+
+
+wxString f2s( float arg )
+{
+  return TowxString(arg);
+}
+
+
+long s2l( const wxString& arg )
+{
+    long ret;
+    arg.ToLong(&ret);
+    return ret;
+}
+
+double s2d( const wxString& arg )
+{
+    double ret;
+    arg.ToDouble(&ret);
+    return ret;
+}
 
 wxString GetWordParam( wxString& params )
 {
@@ -128,8 +171,105 @@ bool GetBoolParam( wxString& params )
 
 wxString GetSpringLobbyVersion()
 {
-  return WX_STRINGC(VERSION);
+  return (WX_STRINGC(VERSION)).BeforeFirst( *wxT(" ") );
 }
 
 
+// ------------------------------------------------------------------------------------------------------------------------
+///
+/// Read out Host's CPU Speed
+///
+/// \return Sum of each CPU's Speed of this Computer
+///
+///
+// ------------------------------------------------------------------------------------------------------------------------
+wxString GetHostCPUSpeed()
+{
 
+    int totalcpuspeed = 0;
+    int cpu_count = 0;
+
+#ifdef __WXMSW__
+
+    //afaik there is no way to determine the number of sub keys for a given key
+    //so i'll hardcode some value here and hope bd doesn't hit me with a stick :P
+    for (int i = 0; i< 16; ++i)
+    {
+        wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\")+	wxString::Format(_T("%d"), i));
+        long* tmp = new long;
+        if ( programreg.QueryValue( _T("~MHz"), tmp ) )
+        {
+            totalcpuspeed += (*tmp);
+            cpu_count++;
+        }
+
+    }
+
+#else
+
+
+    // Create an Inputstream from /proc/cpuinfo
+    std::ifstream fin( "/proc/cpuinfo" );
+    std::string line;
+    std::string content_str( "" );
+
+    // Read from Inputstream
+
+    if ( fin )
+    {
+        while ( std::getline( fin, line ) )
+        {
+            // std::cout << "Read from file: " << line << std::endl;
+            content_str.append( line );
+            content_str.append( "\n" );
+        }
+
+        wxString content = wxString::FromAscii( content_str.c_str() );
+
+        // Building a RegEx to match one Block of CPU Info
+        #ifdef wxHAS_REGEX_ADVANCED
+        wxRegEx regex_CPUSection( wxT( "processor.*?(cpu MHz.*?:.*?(\\d+\\.\\d+)).*?\n\n" ), wxRE_ADVANCED );
+        #else
+        wxRegEx regex_CPUSection( wxT( "processor.*?(cpu MHz.*?:.*?(\\d+\\.\\d+)).*?\n\n" ), wxRE_EXTENDED );
+        #endif
+        // Replace each Block of CPU Info with only the CPU Speed in MHz
+        regex_CPUSection.Replace( &content, _T( "\\2\n" ) );
+
+        // Tokenize the String containing all CPU Speed of the Host: e.g. 3000.0\n3000.0\n
+        wxStringTokenizer tokenlist( content, wxT( "\n" ) );
+
+        // Sum up all CPU Speeds
+
+        while ( tokenlist.HasMoreTokens() )
+        {
+            wxString token = tokenlist.GetNextToken();
+            long cpuspeed = 0;
+            token.ToLong( &cpuspeed, 10 );
+            totalcpuspeed += cpuspeed;
+            cpu_count++;
+        }
+    }
+#endif
+    totalcpuspeed = cpu_count > 0 ? totalcpuspeed / cpu_count : 2100;
+    return i2s(totalcpuspeed);
+}
+
+
+//int CompareStringIgnoreCase(const wxString& first, const wxString& second)
+//{
+//    return (first.Upper() > second.Upper() );
+//}
+
+bool IsValidNickname( const wxString& _name )
+{
+    wxString name = _name;
+    // The Regex Container
+	//wxRegEx regex( wxT("[:graph:]") );
+	wxRegEx regex( wxT("[ \t\r\n\v\föäüß, .:<>\\!§$%&+-]" ));
+
+	// We need to escape all regular Expression Characters, that have a special Meaning
+    name.Replace( _T("["), _T("") );
+	name.Replace( _T("]"), _T("") );
+
+    return !regex.Matches( name );
+}

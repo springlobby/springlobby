@@ -37,8 +37,8 @@ bool Springsettings::OnInit()
 	//initialize all loggers
     InitializeLoggingTargets();
 
-    settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("springsettings"),wxDefaultPosition,
-    		wxDefaultSize,wxMINIMIZE_BOX  | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+    settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
+    		wxDefaultSize);
     SetTopWindow(frame);
     frame->Show();
     return true;
@@ -53,7 +53,7 @@ int Springsettings::OnExit()
 //! @brief is called when the app crashes
 void Springsettings::OnFatalException()
 {
-  #if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
+  #if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
   crashreport().GenerateReport(wxDebugReport::Context_Exception);
   #else
   wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease enable wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR );

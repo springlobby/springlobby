@@ -26,9 +26,9 @@
 #include <map>
 #include <string>
 #include <wx/intl.h>
-/**** Presets for tab_simple go here
- *
- *
+/** \brief Presets for tab_simple go here
+ * presets are only used for performance relevant (render detail + AA) settings
+ * and screen resolutions
  */
 template <typename T, int valueCount> class presetValues
 {
@@ -115,5 +115,25 @@ const wxString vl_Resolution_Str[vl_Resolution_Str_size] =
 							_T("1920 x 1200 (widescreen)"),
 		_T("2048 x 768 (dual-screen)"), _T("2560 x 1024 (dual-screen)"), _T("3200 x 1200 (dual-screen)")};
 
+/*** Water 4 (bump water) presets ***********************************************/
+const int vl_w4_BumpWaterReflection[5]          = {  0,  0,  1,  1,  1  };
+const int vl_w4_BumpWaterRefraction[5]          = {  0,  1,  1,  1,  2  };
+const int vl_w4_BumpWaterShoreWaves[5]          = {  0,  0,  0,  1,  1  };
+const float vl_w4_BumpWaterAnisotropy[5]        = {  0.f, 0.f, 2.f, 4.f, 6.f };
+const int vl_w4_BumpWaterUseDepthTexture[5]     = {  0,  1,  1,  1,  1  };
+const int vl_w4_BumpWaterTexSizeReflection[5]   = {  0,  0,128,256,512  };
+const int vl_w4_BumpWaterBlurReflection[5]      = {  0,  0,  0,  0,  1  };
+
+const presetValues<int, 5>  pr_w4_BumpWaterReflection = presetValues<int, 5>(_T("BumpWaterReflection"),levels_vlow_To_vHigh,vl_w4_BumpWaterReflection);
+const presetValues<int, 5>  pr_w4_BumpWaterRefraction = presetValues<int, 5>(_T("BumpWaterRefraction"),levels_vlow_To_vHigh,vl_w4_BumpWaterRefraction);
+const presetValues<int, 5>  pr_w4_BumpWaterShoreWaves = presetValues<int, 5>(_T("BumpWaterShoreWaves"),levels_vlow_To_vHigh,vl_w4_BumpWaterShoreWaves);
+const presetValues<float, 5> pr_w4_BumpWaterAnisotropy = presetValues<float, 5>(_T("BumpWaterAnisotropy"),levels_vlow_To_vHigh,vl_w4_BumpWaterAnisotropy );
+const presetValues<int, 5>  pr_w4_BumpWaterUseDepthTexture = presetValues<int, 5>(_T("BumpWaterUseDepthTexture"),levels_vlow_To_vHigh,vl_w4_BumpWaterUseDepthTexture );
+const presetValues<int, 5>  pr_w4_BumpWaterTexSizeReflection = presetValues<int, 5>(_T("BumpWaterTexSizeReflection"),levels_vlow_To_vHigh,vl_w4_BumpWaterTexSizeReflection );
+const presetValues<int, 5>  pr_w4_BumpWaterBlurReflection = presetValues<int, 5>(_T("BumpWaterBlurReflection"),levels_vlow_To_vHigh,vl_w4_BumpWaterBlurReflection );
+
+const int prVal_W4_size = 6;
+const presetValues<int, 5> prVal_W4[prVal_W4_size] = { pr_w4_BumpWaterReflection, pr_w4_BumpWaterRefraction, pr_w4_BumpWaterShoreWaves,
+    pr_w4_BumpWaterUseDepthTexture, pr_w4_BumpWaterTexSizeReflection, pr_w4_BumpWaterBlurReflection };
 
 #endif /*PRESETS_H_*/

@@ -20,6 +20,7 @@
 #include "ui.h"
 #include "server.h"
 #include "settings.h"
+#include "uiutils.h"
 
 #include "images/close.xpm"
 #include "images/server.xpm"
@@ -44,16 +45,23 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
 
   m_chat_tabs = new wxNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
 
+  wxBitmap userchat (userchat_xpm); //*charArr2wxBitmap(userchat_png, sizeof(userchat_png) );
   m_imagelist = new wxImageList( 12, 12 );
   m_imagelist->Add( wxBitmap(close_xpm) );
   m_imagelist->Add( wxBitmap(server_xpm) );
   m_imagelist->Add( wxBitmap(channel_xpm) );
-  m_imagelist->Add( wxBitmap(userchat_xpm) );
-  m_imagelist->Add( wxBitmap(channel_xpm) );
-  m_imagelist->Add( wxBitmap(userchat_xpm) );
+  m_imagelist->Add( userchat );
 
-  ChangeUnreadChannelColour( sett().GetChatColorNotification() );
-  ChangeUnreadPMColour( sett().GetChatColorNotification() );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorJoinPart() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( userchat, sett().GetChatColorJoinPart() ) ) );
+
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorMine() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( userchat, sett().GetChatColorMine() ) ) );
+
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorHighlight() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( userchat, sett().GetChatColorHighlight() ) ) );
+
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( server_xpm ), sett().GetChatColorError() ) ) );
 
   m_chat_tabs->AssignImageList( m_imagelist );
 
@@ -100,6 +108,15 @@ ChatPanel* MainChatTab::GetChannelChatPanel( const wxString& channel )
   return 0;
 }
 
+void MainChatTab::UpdateNicklistHighlights()
+{
+    for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+    ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+    if ( tmp->GetPanelType() == CPT_Channel ) {
+      tmp->UpdateNicklistHighlights();
+    }
+  }
+}
 
 ChatPanel* MainChatTab::GetUserChatPanel( const wxString& user )
 {
@@ -120,6 +137,7 @@ void MainChatTab::OnUserConnected( User& user )
   if ( panel != 0 ) {
     panel->SetUser( &user );
     panel->OnUserConnected();
+    //TODO enable send button (koshi)
   }
 }
 
@@ -130,21 +148,8 @@ void MainChatTab::OnUserDisconnected( User& user )
   if ( panel != 0 ) {
     panel->OnUserDisconnected();
     panel->SetUser( 0 );
+    //TODO disable send button (koshi)
   }
-}
-
-
-void MainChatTab::CloseAllChats()
-{
-
-  for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-    ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
-    if ( tmp == 0 ) continue;
-    if ( tmp->GetPanelType() == CPT_Channel ) tmp->SetChannel( 0 );
-    else if ( tmp->GetPanelType() == CPT_User ) tmp->SetUser( 0 );
-    else if ( tmp->GetPanelType() == CPT_Server ) tmp->SetServer( 0 );
-  }
-
 }
 
 
@@ -185,6 +190,7 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, channel );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), true, 2 );
+  chat->FocusInputBox();
   return chat;
 }
 
@@ -222,6 +228,7 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, user );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, 3 );
+  chat->FocusInputBox();
   return chat;
 }
 
@@ -236,8 +243,10 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
   if ( newsel < 0 ) return;
 
   // change icon to default the icon to show that no new events happened
-  if ( m_chat_tabs->GetPageImage( newsel ) == 4 ) m_chat_tabs->SetPageImage( newsel, 2);
-  if ( m_chat_tabs->GetPageImage( newsel ) == 5 ) m_chat_tabs->SetPageImage( newsel, 3);
+  unsigned int ImageIndex = m_chat_tabs->GetPageImage( newsel );
+  if ( ImageIndex == 4 || ImageIndex == 6 || ImageIndex == 8 ) m_chat_tabs->SetPageImage( newsel, 2);
+  else if ( ImageIndex == 5 || ImageIndex == 7 || ImageIndex == 9 ) m_chat_tabs->SetPageImage( newsel, 3);
+  else if ( ImageIndex == 10 ) m_chat_tabs->SetPageImage( newsel, 1);
 
   wxWindow* newpage = m_chat_tabs->GetPage( newsel );
   if ( newpage == 0 ) { // Not sure what to do here
@@ -249,45 +258,62 @@ void MainChatTab::OnTabsChanged( wxNotebookEvent& event )
     ChatPanel* delpage = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
     ASSERT_LOGIC( delpage != 0 , _T("MainChatTab::OnTabsChanged(): delpage NULL") );
 
-    if ( !delpage->IsServerPanel() ) {
-      delpage->Part();
-      m_chat_tabs->DeletePage( oldsel );
-      m_chat_tabs->SetSelection( 0 );
-    } else {
-      m_chat_tabs->SetSelection( 0 );
-    }
+    delpage->Part();
+    m_chat_tabs->DeletePage( oldsel );
+    m_chat_tabs->SetSelection( 0 );
 
   }
 
 }
 
-void MainChatTab::ChangeUnreadChannelColour( const wxColour& colour )
+
+wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
 {
-  wxImage img( channel_xpm );
-  m_imagelist->Replace( 4, wxBitmap ( ReplaceChannelStatusColour( img, colour ) ) );
+  wxImage ret = img.ConvertToImage();
+  wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
+
+//  double bright = origcolour.value - 0.5*origcolour.value;
+//  CLAMP(bright,0,1);
+//  wxImage::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
+//
+//  wxImage::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
+//
+//
+//
+//  ret.Replace( 128, 128, 68, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
+//
+//  ret.Replace( 255, 255, 136, colour.Red(), colour.Green(), colour.Blue() );
+
+    double bright = origcolour.value - 0.1*origcolour.value;
+    CLAMP(bright,0,1);
+    wxImage::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
+    bright = origcolour.value - 0.5*origcolour.value;
+    CLAMP(bright,0,1);
+    wxImage::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
+
+    wxImage::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
+    wxImage::RGBValue rgbdarker2 = wxImage::HSVtoRGB( hsvdarker2 );
+
+
+    ret.Replace( 164, 147, 0, rgbdarker2.red, rgbdarker2.green, rgbdarker2.blue );
+
+    ret.Replace( 255, 228, 0, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
+
+    ret.Replace( 255, 253, 234, colour.Red(), colour.Green(), colour.Blue() );
+
+    return ret;
 }
 
-
-void MainChatTab::ChangeUnreadPMColour( const wxColour& colour )
+bool MainChatTab::RemoveChatPanel( ChatPanel* panel )
 {
-  wxImage img( userchat_xpm );
-  m_imagelist->Replace( 5, wxBitmap ( ReplaceChannelStatusColour( img, colour ) ) );
+    for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+        ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+        if ( tmp == panel && panel != 0 )
+        {
+            m_chat_tabs->DeletePage(i);
+            return true;
+        }
+    }
+    return false;
 }
-
-
-wxImage MainChatTab::ReplaceChannelStatusColour( wxImage& img, const wxColour& colour )
-{
-  img.Replace( 255, 253, 234, colour.Red(), colour.Green(), colour.Blue() );
-
-  int r,g,b;
-  r = colour.Red(); g = colour.Green()-25; b = colour.Blue()-234;
-  img.Replace( 255, 228, 0, r>255?255:r, g>255?255:g, b>255?255:b );
-
-  r = colour.Red()-91; g = colour.Green()-106; b = colour.Blue()-234;
-  img.Replace( 164, 147, 0, r>255?255:r, g>255?255:g, b>255?255:b );
-
-  return img;
-}
-
-
 
