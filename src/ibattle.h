@@ -129,6 +129,7 @@ class IBattle
     virtual mmOptionsWrapper& CustomBattleOptions() =0;
 
     virtual void LoadOptionsPreset( const wxString& name );
+    virtual void SaveOptionsPreset( const wxString& name );
 
   protected:
 

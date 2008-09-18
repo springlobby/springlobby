@@ -182,3 +182,12 @@ void IBattle::LoadOptionsPreset( const wxString& name )
     }
   }
 }
+
+
+void IBattle::SaveOptionsPreset( const wxString& name )
+{
+  for ( int i = 0; i < (int)LastOption; i++)
+  {
+    sett().SetHostingPreset( name, (GameOption)i, CustomBattleOptions().getOptionsMap( (GameOption)i ) );
+  }
+}
