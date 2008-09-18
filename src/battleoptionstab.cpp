@@ -528,6 +528,7 @@ void BattleOptionsTab::OnLoadPreset( wxCommandEvent& event )
   }
   m_battle.LoadOptionsPreset( presetname );
   m_battle.SendHostInfo( HI_Send_All_opts );
+  ui().ReloadPresetList();
 }
 
 
@@ -540,6 +541,7 @@ void BattleOptionsTab::OnSavePreset( wxCommandEvent& event )
      return;
   }
   m_battle.SaveOptionsPreset( presetname );
+  ui().ReloadPresetList();
 }
 
 
@@ -552,6 +554,7 @@ void BattleOptionsTab::OnDeletePreset( wxCommandEvent& event )
      return;
   }
   sett().DeletePreset( presetname );
+  ui().ReloadPresetList();
 }
 
 void BattleOptionsTab::OnSetModDefaultPreset( wxCommandEvent& event )
