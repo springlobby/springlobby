@@ -66,7 +66,7 @@ public:
 	 */
 	wxStringTripleVec getOptions( GameOption flag ) const ;
 	//! similar to getOptions, instead of vector a map is used and the name is not stored
-	wxStringMap getOptionsMap(GameOption) const ;
+	std::map<wxString,wxString> getOptionsMap(GameOption) const ;
 	//! recreates ALL containers
 	void unLoadOptions();
 	//! recreates the containers of corresponding flag

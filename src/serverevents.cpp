@@ -224,8 +224,11 @@ void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.spectator = false;
 
-  battle.CustomBattleOptions()->loadOptions( MapOption, battle.GetHostMapName() );
-  battle.CustomBattleOptions()->loadOptions( ModOption, battle.GetHostModName() );
+  if ( !battle.IsFounderMe() )
+  {
+    battle.CustomBattleOptions().loadOptions( MapOption, battle.GetHostMapName() );
+    battle.CustomBattleOptions().loadOptions( ModOption, battle.GetHostModName() );
+  }
 
   m_ui.OnJoinedBattle( battle );
   }catch(std::runtime_error &except){
@@ -240,6 +243,24 @@ void ServerEvents::OnHostedBattle( int battleid )
 
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.spectator = false;
+
+  battle.CustomBattleOptions().loadOptions( MapOption, battle.GetHostMapName() );
+  battle.CustomBattleOptions().loadOptions( ModOption, battle.GetHostModName() );
+
+  wxString presetname = sett().GetModDefaultPresetName( battle.GetHostModName() );
+  if ( !presetname.IsEmpty() )
+  {
+    for ( int i = 0; i < (int)LastOption; i++)
+    {
+      std::map<wxString,wxString> options = sett().GetHostingPreset( presetname, i );
+      for ( std::map<wxString,wxString>::iterator itor = options.begin(); itor != options.end(); itor++ )
+      {
+        battle.CustomBattleOptions().setSingleOption( itor->first, itor->second, (GameOption)i );
+      }
+    }
+  }
+
+  m_serv.SendHostInfo( HI_Send_All_opts );
 
   m_ui.OnHostedBattle( battle );
 }
@@ -325,7 +346,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) )
   {
     battle.SendMyBattleStatus();
-    battle.CustomBattleOptions()->loadOptions( MapOption, map );
+    battle.CustomBattleOptions().loadOptions( MapOption, map );
     m_ui.OnBattleMapChanged( battle );
   }
 
@@ -341,7 +362,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
   if ( key.Left( 5 ) == _T("game/") )/// FIXME (BrainDamage#1#): change the slash type when the new spring version gets out
   {
     key = key.AfterFirst( '/' );
-    if (  battle.CustomBattleOptions()->setSingleOption( key,  value, EngineOption ) )
+    if (  battle.CustomBattleOptions().setSingleOption( key,  value, EngineOption ) )
       battle.Update( wxString::Format(_T("%d_"), EngineOption ) + key );
   }
   else if ( key.Left( 5 ) == _T("game\\") )
@@ -350,13 +371,13 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
      if ( key.Left( 11 ) == _T( "mapoptions\\" ) )
     {
       key = key.AfterFirst( '\\' );
-      if (  battle.CustomBattleOptions()->setSingleOption( key,  value, MapOption ) )  // m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+      if (  battle.CustomBattleOptions().setSingleOption( key,  value, MapOption ) )  // m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
         battle.Update( wxString::Format(_T("%d_"), MapOption ) + key );
     }
     else if ( key.Left( 11 ) == _T( "modoptions\\" ) )
     {
       key = key.AfterFirst( '\\' );
-      if (  battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) )  //m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+      if (  battle.CustomBattleOptions().setSingleOption( key, value, ModOption ) )  //m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
         battle.Update(  wxString::Format(_T("%d_"), ModOption ) + key );
     }
   }

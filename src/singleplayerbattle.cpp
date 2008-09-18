@@ -14,7 +14,7 @@ SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_ui(ui),
   m_sptab(msptab)
 {
-  CustomBattleOptions()->setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), 3), EngineOption );
+  CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), 3), EngineOption );
   wxColour col = GetFreeColour( NULL );
   int i = AddBot( 0, 0, 0, 0, _T("") );
   BattleBot* bot = GetBot( i );
@@ -96,12 +96,12 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   if ( (update & HI_Restrictions) != 0 ) m_sptab.ReloadRestrictions();
   if ( (update & HI_Map_Changed) != 0 )
   {
-    CustomBattleOptions()->loadOptions( MapOption, GetHostMapName() );
+    CustomBattleOptions().loadOptions( MapOption, GetHostMapName() );
     m_sptab.ReloadMapOptContrls();
   }
   if ( (update & HI_Mod_Changed) != 0 )
   {
-    CustomBattleOptions()->loadOptions( ModOption, GetHostModName() );
+    CustomBattleOptions().loadOptions( ModOption, GetHostModName() );
     m_sptab.ReloadModOptContrls();
   }
 }

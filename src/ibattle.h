@@ -126,7 +126,7 @@ class IBattle
 
     virtual std::map<unsigned int,BattleStartRect>::size_type GetNumRects() =0;
 
-    virtual mmOptionsWrapper* CustomBattleOptions() =0;
+    virtual mmOptionsWrapper& CustomBattleOptions() =0;
 
   protected:
 

@@ -34,7 +34,6 @@ class IBattle;
 class wxFileInputStream;
 struct wxColourData;
 
-
 class myconf : public wxFileConfig
 {
     public:
@@ -433,6 +432,15 @@ class Settings
     void SetLastHostMap( const wxString& value );
     void SetLastRankLimit( int rank );
     void SetTestHostPort( bool value );
+
+    void SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options );
+    std::map<wxString,wxString> GetHostingPreset( const wxString& name, int optiontype );
+    wxArrayString GetPresetList();
+    void DeletePreset( const wxString& name );
+
+    wxString GetModDefaultPresetName( const wxString& modname );
+    void SetModDefaultPresetName( const wxString& modname, const wxString& presetname );
+
     /**@}*/
 
 

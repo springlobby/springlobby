@@ -202,9 +202,9 @@ wxStringTripleVec mmOptionsWrapper::getOptions( GameOption modmapFlag) const
 	return list;
 }
 
-wxStringMap mmOptionsWrapper::getOptionsMap( GameOption modmapFlag ) const
+std::map<wxString,wxString> mmOptionsWrapper::getOptionsMap( GameOption modmapFlag ) const
 {
-  wxStringMap map;
+  std::map<wxString,wxString> map;
 	for (optionMapBoolConstIter it = opts[modmapFlag].bool_map.begin(); it != opts[modmapFlag].bool_map.end(); ++it)
 	{
 		map[it->first] =  i2s(it->second.value);

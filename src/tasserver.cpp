@@ -772,7 +772,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         m_battle_id = GetIntParam( params );
         m_se->OnHostedBattle( m_battle_id );
-        SendHostInfo( HI_Send_All_opts );
     }
     else if ( cmd == _T("ADDBOT") )
     {
@@ -1320,18 +1319,18 @@ void TASServer::SendHostInfo( HostInfo update )
     {
         wxString cmd;
 
-        wxStringTripleVec optlistMap = battle.CustomBattleOptions()->getOptions( MapOption );
+        wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( MapOption );
         for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
         {
             cmd << _T("game\\mapoptions\\") << it->first + _T("=") << it->second.second << _T("\t");
         }
-        wxStringTripleVec optlistMod = battle.CustomBattleOptions()->getOptions( ModOption );
+        wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( ModOption );
         for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
         {
             cmd << _T("game\\modoptions\\") << it->first << _T("=") << it->second.second << _T("\t");
         }
 /// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
-        wxStringTripleVec optlistEng = battle.CustomBattleOptions()->getOptions( EngineOption );
+        wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( EngineOption );
         for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
         {
             cmd << _T("game/") << it->first << _T("=") << it->second.second << _T("\t");
@@ -1409,15 +1408,15 @@ void TASServer::SendHostInfo( const wxString& Tag )
     wxString key = Tag.AfterFirst( '_' );
     if ( type == MapOption )
     {
-        cmd << _T("game\\mapoptions\\") << key << _T("=") << battle.CustomBattleOptions()->getSingleValue( key, MapOption ) << _T("\n");
+        cmd << _T("game\\mapoptions\\") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, MapOption ) << _T("\n");
     }
     else if ( type == ModOption )
     {
-        cmd << _T("game\\modoptions\\") << key << _T("=") << battle.CustomBattleOptions()->getSingleValue( key, ModOption ) << _T("\n");
+        cmd << _T("game\\modoptions\\") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, ModOption ) << _T("\n");
     }
     else if ( type == EngineOption )
     {
-        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions()->getSingleValue( key, EngineOption ) << _T("\n");
+        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, EngineOption ) << _T("\n");
     }
     SendCmd( _T("SETSCRIPTTAGS"), cmd );
 }

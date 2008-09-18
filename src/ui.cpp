@@ -976,7 +976,7 @@ void Ui::OnBattleMapChanged( Battle& battle )
   mw().GetJoinTab().UpdateCurrentBattle( true );
   if (battle.IsFounderMe())
   {
-	  battle.CustomBattleOptions()->loadMapOptions(battle.GetHostMapName());
+	  battle.CustomBattleOptions().loadMapOptions(battle.GetHostMapName());
 	  mw().GetJoinTab().ReloadMMoptTab();
   }
 }

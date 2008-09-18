@@ -986,4 +986,3 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
   }
   Update();
 }
-

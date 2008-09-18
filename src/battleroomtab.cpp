@@ -144,10 +144,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_opts_list->InsertItem( pos, _("Tidal strength") );
   m_opt_list_map[ _("Tidal strength") ] = pos++;
 
-  // add engine/map/mod options to the list
-  m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetHostModName() );
-  m_battle.CustomBattleOptions()->loadOptions( MapOption, m_battle.GetHostMapName() );
-
   m_opts_list->InsertItem( pos++, wxEmptyString );
   pos = AddMMOptionsToList( pos++, EngineOption );
   m_opts_list->InsertItem( pos++, wxEmptyString );
@@ -302,7 +298,7 @@ void BattleRoomTab::UpdateBattleInfo( bool MapChanged, bool reloadMapOptions )
     {
       ///delete any eventual map option from the list and add options of the new map
       for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
-      m_battle.CustomBattleOptions()->loadOptions( MapOption, m_battle.GetHostModName() );
+      m_battle.CustomBattleOptions().loadOptions( MapOption, m_battle.GetHostModName() );
       AddMMOptionsToList( m_map_opts_index, MapOption );
     }
   }
@@ -323,16 +319,16 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
     m_opts_list->SetItem( index, 1, bool2yn( m_battle.DisabledUnits().GetCount() > 0 ) );
   else if ( type == MapOption || type == ModOption || EngineOption )
   {
-    OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( key );
+    OptionType DataType = m_battle.CustomBattleOptions().GetSingleOptionType( key );
     if ( DataType == opt_bool )
     {
       long boolval;
-      m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type ).ToLong( &boolval );
+      m_battle.CustomBattleOptions().getSingleValue( key, (GameOption)type ).ToLong( &boolval );
       m_opts_list->SetItem( index, 1, bool2yn( boolval ) );
     }
     else
     {
-      m_opts_list->SetItem( index, 1, m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type ) );
+      m_opts_list->SetItem( index, 1, m_battle.CustomBattleOptions().getSingleValue( key, (GameOption)type ) );
     }
   }
 }
@@ -583,12 +579,12 @@ void BattleRoomTab::OnUnitSyncReloaded()
 
 long BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
 {
-  wxStringTripleVec optlist = m_battle.CustomBattleOptions()->getOptions( optFlag );
+  wxStringTripleVec optlist = m_battle.CustomBattleOptions().getOptions( optFlag );
   for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
     m_opts_list->InsertItem( pos, it->second.first );
     m_opt_list_map[ wxString::Format(_T("%d_"), optFlag ) + it->first ] = pos;
-    OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( it->first );
+    OptionType DataType = m_battle.CustomBattleOptions().GetSingleOptionType( it->first );
     wxString value;
     if ( DataType == opt_bool )
     {

@@ -101,7 +101,7 @@ class SinglePlayerBattle: public IBattle
     void SendHostInfo( const wxString& Tag ){}
 
     std::vector<BattleStartRect*>::size_type GetNumRects() { return 0; }
-    mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
+    mmOptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
 
   protected:
 
