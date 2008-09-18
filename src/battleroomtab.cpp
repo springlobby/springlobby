@@ -51,6 +51,8 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
   EVT_BUTTON( BROOM_COLOURSEL, BattleRoomTab::OnColourSel )
   EVT_COMBOBOX( BROOM_SIDESEL, BattleRoomTab::OnSideSel )
 
+  EVT_COMBOBOX( BROOM_PRESETSEL, BattleRoomTab::OnPresetSel )
+
   EVT_BUTTON ( BROOM_BALANCE, BattleRoomTab::OnBalance )
   EVT_BUTTON ( BROOM_FIXCOLOURS, BattleRoomTab::OnFixColours )
 
@@ -109,7 +111,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_addbot_btn = new wxButton( this, BROOM_ADDBOT, _("Add Bot..."), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_addbot_btn->SetToolTip(_("Add a computer-controlled player to the game"));
 
-
   m_fix_colours_btn = new wxButton( this, BROOM_FIXCOLOURS, _("Fix colours"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_fix_colours_btn->SetToolTip(_("Make player colors unique"));
 
@@ -122,6 +123,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_spec_chk->SetToolTip(_("Spectate (watch) the battle instead of playing"));
   m_ready_chk = new wxCheckBox( m_player_panel, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_ready_chk->SetToolTip(_("Click this if you are content with the battle settings."));
+
+
+  m_options_preset_sel = new wxComboBox( this, BROOM_PRESETSEL, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList() );
+  m_options_preset_sel->SetToolTip(_("Load battle preset"));
 
   m_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_NO_HEADER|wxLC_REPORT );
   m_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
@@ -189,6 +194,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   //m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
   //m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
   m_info_sizer->Add( m_opts_list, 1, wxEXPAND | wxTOP, 4 );
+  m_info_sizer->Add( m_options_preset_sel, 0, wxEXPAND | wxTOP, 4 );
 
 
   m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
@@ -532,6 +538,15 @@ void BattleRoomTab::OnSideSel( wxCommandEvent& event )
   bs.side = m_side_sel->GetSelection();
   //u.SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
+}
+
+
+void BattleRoomTab::OnPresetSel( wxCommandEvent& event )
+{
+  wxString presetname = m_options_preset_sel->GetValue();
+  if ( presetname.IsEmpty() ) return;
+  m_battle.LoadOptionsPreset( presetname );
+  m_battle.SendHostInfo( HI_Send_All_opts );
 }
 
 

@@ -128,6 +128,8 @@ class IBattle
 
     virtual mmOptionsWrapper& CustomBattleOptions() =0;
 
+    virtual void LoadOptionsPreset( const wxString& name );
+
   protected:
 
     bool m_map_loaded;

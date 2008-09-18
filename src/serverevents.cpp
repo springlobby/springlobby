@@ -250,14 +250,7 @@ void ServerEvents::OnHostedBattle( int battleid )
   wxString presetname = sett().GetModDefaultPresetName( battle.GetHostModName() );
   if ( !presetname.IsEmpty() )
   {
-    for ( int i = 0; i < (int)LastOption; i++)
-    {
-      std::map<wxString,wxString> options = sett().GetHostingPreset( presetname, i );
-      for ( std::map<wxString,wxString>::iterator itor = options.begin(); itor != options.end(); itor++ )
-      {
-        battle.CustomBattleOptions().setSingleOption( itor->first, itor->second, (GameOption)i );
-      }
-    }
+    battle.LoadOptionsPreset( presetname );
   }
 
   m_serv.SendHostInfo( HI_Send_All_opts );
