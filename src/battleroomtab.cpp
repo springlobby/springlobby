@@ -453,25 +453,21 @@ void BattleRoomTab::OnFixColours( wxCommandEvent& event ){
 void BattleRoomTab::OnAddBot( wxCommandEvent& event )
 {
     //customMessageBox(SL_MAIN_ICON,_T("Max players reached"),_T("Cannot add bot, maximum number of players already reached.") );
-  if ( m_battle.GetNumBots() + m_battle.GetNumUsers() - m_battle.GetSpectators()  < m_battle.GetMaxPlayers() )
-  {
-      AddBotDialog dlg( this, m_battle );
-      if ( dlg.ShowModal() == wxID_OK ) {
-        UserBattleStatus bs;
-        bs.team = m_battle.GetFreeTeamNum( false );
-        bs.ally = bs.team;
-        bs.sync = SYNC_SYNCED;
-        bs.spectator = false;
-        bs.side = 0;
-        bs.ready = true;
-        bs.order = 0;
-        bs.handicap = 0;
-        bs.colour = m_battle.GetFreeColour( NULL );
-        m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), m_battle.GetMe().GetNick(), bs, dlg.GetAI() );
-      }
-  }
-  else
-    customMessageBox(SL_MAIN_ICON,_("Cannot add bot, maximum number of players already reached."),_("Max players reached") );
+    AddBotDialog dlg( this, m_battle );
+    if ( dlg.ShowModal() == wxID_OK )
+    {
+      UserBattleStatus bs;
+      bs.team = m_battle.GetFreeTeamNum( false );
+      bs.ally = bs.team;
+      bs.sync = SYNC_SYNCED;
+      bs.spectator = false;
+      bs.side = 0;
+      bs.ready = true;
+      bs.order = 0;
+      bs.handicap = 0;
+      bs.colour = m_battle.GetFreeColour( NULL );
+      m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), m_battle.GetMe().GetNick(), bs, dlg.GetAI() );
+    }
 }
 
 
