@@ -93,3 +93,8 @@ void MainSinglePlayerTab::ReloadModOptContrls()
 		m_mm_opts_tab->OnReloadControls( ModOption );
 
 }
+
+BattleOptionsTab& MainSinglePlayerTab::GetOptionsTab()
+{
+	return *m_opts_tab;
+}

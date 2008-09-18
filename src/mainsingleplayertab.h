@@ -27,6 +27,8 @@ class MainSinglePlayerTab : public wxPanel
     void ReloadMapOptContrls();
     void ReloadModOptContrls();
 
+    BattleOptionsTab& GetOptionsTab();
+
   protected:
 
     Ui& m_ui;
