@@ -16,6 +16,8 @@
 #include <wx/settings.h>
 #include <wx/colordlg.h>
 #include <wx/colour.h>
+#include <wx/bmpcbox.h>
+#include <wx/image.h>
 
 #include <stdexcept>
 
@@ -76,12 +78,14 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_ally_sel->SetToolTip(_("Players with the same ally number work together to achieve victory."));
   m_color_sel = new ColorButton( m_player_panel, BROOM_COLOURSEL, myself.colour, wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_color_sel->SetToolTip(_("Select a color to identify your units in-game"));
-  m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
+  m_side_sel = new wxBitmapComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_side_sel->SetToolTip(_("Select your faction"));
 
   try {
-    for ( int i = 0; i < usync()->GetSideCount( m_battle.GetHostModName() ); i++ ) {
-      m_side_sel->Append( usync()->GetSideName( m_battle.GetHostModName(), i ) );
+    for ( int i = 0; i < usync()->GetSideCount( m_battle.GetHostModName() ); i++ )
+    {
+      wxString sidename = usync()->GetSideName( m_battle.GetHostModName(), i );
+      m_side_sel->Append( sidename, wxBitmap( usync()->GetSidePicture( m_battle.GetHostModName(), sidename ) ) );
     }
   } catch (...) {}
 
@@ -125,7 +129,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_ready_chk->SetToolTip(_("Click this if you are content with the battle settings."));
 
 
-  m_options_preset_sel = new wxComboBox( this, BROOM_PRESETSEL, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList() );
+  m_options_preset_sel = new wxComboBox( this, BROOM_PRESETSEL, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
   m_options_preset_sel->SetToolTip(_("Load battle preset"));
 
   m_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_NO_HEADER|wxLC_REPORT );
@@ -220,6 +224,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   if ( !IsHosted() )
     {
+      m_options_preset_sel->Disable();
+      m_options_preset_sel->SetToolTip(_("Only the host can change the game options"));
+
       m_start_btn->Disable();
       m_start_btn->SetToolTip(_("Only the host can start the battle."));
 

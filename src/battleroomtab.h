@@ -25,6 +25,7 @@ class wxCheckBox;
 class wxListCtrl;
 class MapCtrl;
 class ColorButton;
+class wxBitmapComboBox;
 
 typedef std::map<wxString,long> OptionListMap;
 
@@ -98,7 +99,7 @@ class BattleRoomTab : public wxPanel
     wxComboBox* m_team_sel;
     wxComboBox* m_ally_sel;
     ColorButton* m_color_sel;
-    wxComboBox* m_side_sel;
+    wxBitmapComboBox* m_side_sel;
     wxComboBox* m_options_preset_sel;
 
     wxStaticText* m_team_lbl;
