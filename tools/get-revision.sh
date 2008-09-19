@@ -17,5 +17,5 @@ fi
 # It's actually this simple.  We might want to keep the script around in
 # case we want to re-introduce subversion compatibility.
 #i needed to get rid of extra newline
-git-describe --tags || exit 1
+git describe --tags || exit 1
 

@@ -1,10 +1,11 @@
 PROJECT(SpringLobby)
 
 #set minimum cmake version
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.4)
+SET(CMAKE_COLOR_MAKEFILE ON)
 
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
-ADD_DEFINITIONS(-Wall -Wno-strict-aliasing )
+ADD_DEFINITIONS(-Wall -Wno-strict-aliasing -O2)
 
 #----------------------------------------------------------------------------------------------------
 # General Settings
@@ -36,7 +37,7 @@ SET( OPTION_SOUND
 	1 CACHE BOOL
 	"Enables sound notification functionality (requires SDL and SDL_sound libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
-	0 CACHE BOOL
+	1 CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
 
 #----------------------------------------------------------------------------------------------------
@@ -107,14 +108,17 @@ ENDIF (NOT WIN32)
 #----------------------------------------------------------------------------------------------------
 
 if( OPTION_TRANSLATION_SUPPORT )
-   INCLUDE(FindGettext)
-	FIND_PACKAGE( Gettext )
- if(GETTEXT_FOUND)
- 	INCLUDE_DIRECTORIES( ${GETTEXT_INCLUDE_DIR} )
- 	include("cmake/KWWidgetsInternationalizationMacros.cmake")
- else(GETTEXT_FOUND)
-   message(FATAL_ERROR "The GNU Gettext package is not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
- endif(GETTEXT_FOUND)
+    set(Gettext_DIR "po" )
+    INCLUDE(cmake/FindGettext.cmake)
+    FIND_PACKAGE( Gettext )
+    if(GETTEXT_FOUND)
+            set(SpringLobby_INCLUDE_PATH ${SpringLobby_INCLUDE_PATH}
+                ${GETTEXT_INCLUDE_DIR} CACHE INTERNAL "" FORCE)
+            
+            include("cmake/KWWidgetsInternationalizationMacros.cmake")
+    else(GETTEXT_FOUND)
+        message(FATAL_ERROR "The GNU Gettext package is not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
+    endif(GETTEXT_FOUND)
 endif( OPTION_TRANSLATION_SUPPORT )
 
 #----------------------------------------------------------------------------------------------------
@@ -272,7 +276,15 @@ SET(SLSharedWithSettings
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
 IF(WIN32)
-    SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
+    FIND_PROGRAM(WINDRES NAMES windres i586-mingw32msvc-windres i686-mingw32-windres DOC "path to mingw's windres executable")
+    
+    ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${SpringLobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
+    ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${SpringLobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
+    
+    
+    SET(SpringLobby_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o )
+    SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
+    SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl.cpp)
     SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ENDIF(WIN32)
 
@@ -281,17 +293,21 @@ ENDIF(WIN32)
 #----------------------------------------------------------------------------------------------------
 
 if( OPTION_TRANSLATION_SUPPORT )
+    set ( GETTEXT_XGETTEXT_EXECUTABLE "/usr/bin/xgettext" )
   kwwidgets_create_gettext_targets(
-    DOMAIN_NAME "SpringLobby"
+    DOMAIN_NAME "springlobby"
+    TARGET_BASENAME "springlobby"
     LOCALE_LIST "da;de;fi;fr;it;ro;ru;sv;uk"
     COPYRIGHT_HOLDER "The SpringLobby team"
     SOURCES "${SpringLobbySrc};${SettingsSrc};${StandAloneSettings}"
-    PO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Resources/po"
-    POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources/po"
-    PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/Resources/po"
-    MO_INSTALL_DIR "${SpringLobby_INSTALL_DATA_DIR}/locale"
-    CREATE_POT_TARGET
-    CREATE_PO_TARGET )
+    PO_DIR "${CMAKE_SOURCE_DIR}/po"
+    POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
+    PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
+    MO_INSTALL_DIR " locale"
+    CREATE_POT_TARGET 1
+    CREATE_PO_TARGET 1
+    #ADD_MO_TARGET_TO_ALL 
+    )
 endif( OPTION_TRANSLATION_SUPPORT )
 
 #----------------------------------------------------------------------------------------------------
@@ -303,9 +319,12 @@ IF (WIN32)
     INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
 ENDIF (WIN32)    
    
+#auto-remove whitespaces before/after lib paths
+cmake_policy(SET CMP0004 OLD)
+   
 #libtsource is empty if "NOT WIN32"
-ADD_EXECUTABLE(springlobby WIN32 ${SpringLobbySrc} ${SettingsSrc} ${libtorrent_SRC})
-ADD_EXECUTABLE(springsettings WIN32 ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings} )
+ADD_EXECUTABLE(springlobby WIN32 ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE} ${libtorrent_SRC})
+ADD_EXECUTABLE(springsettings WIN32 ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
 
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
@@ -315,7 +334,9 @@ TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES}  )
 IF (WIN32)
     install(TARGETS springlobby springsettings RUNTIME DESTINATION . )
     install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION . )
+    #install( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/locale DESTINATION . )
 ELSE (WIN32)
-    install( DIRECTORY src cmake DESTINATION . )
-    install( FILES CMakeLists.txt config.h AUTHORS COPYING NEWS README THANKS DESTINATION . )
+    install(TARGETS springlobby springsettings RUNTIME DESTINATION bin )
+    #install( DIRECTORY locale DESTINATION locale )
+    #install( FILES CMakeLists.txt config.h AUTHORS COPYING NEWS README THANKS DESTINATION . )
 ENDIF (WIN32)
