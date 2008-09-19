@@ -27,6 +27,7 @@
 				<Linker>
 					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent`" />
+					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
 					<Add option="`sdl-config --libs`" />
 					<Add library="SDL_mixer" />
 				</Linker>
