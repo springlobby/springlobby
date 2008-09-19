@@ -165,6 +165,7 @@ class Ui
 
     int TestHostPort( unsigned int port );
 
+    void ReloadPresetList();
 
   protected:
     Spring* m_spring;

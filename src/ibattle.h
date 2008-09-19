@@ -126,7 +126,12 @@ class IBattle
 
     virtual std::map<unsigned int,BattleStartRect>::size_type GetNumRects() =0;
 
-    virtual mmOptionsWrapper* CustomBattleOptions() =0;
+    virtual mmOptionsWrapper& CustomBattleOptions() =0;
+
+    virtual void LoadOptionsPreset( const wxString& name );
+    virtual void SaveOptionsPreset( const wxString& name );
+    virtual wxString GetCurrentPreset();
+    virtual void DeletePreset( const wxString& name );
 
   protected:
 
@@ -142,6 +147,8 @@ class IBattle
     wxString m_host_mod_hash;
 
     wxArrayString m_units;
+
+    wxString m_preset;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IBATTLE_H

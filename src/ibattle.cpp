@@ -4,6 +4,7 @@
 
 #include "ibattle.h"
 #include "utils.h"
+#include "settings.h"
 
 IBattle::IBattle():
   m_map_loaded(false),
@@ -170,4 +171,38 @@ unsigned int IBattle::AddBot( int ally, int posx, int posy, int handicap, const 
   return (unsigned int)(-1);/// note: that looks pretty crappy and needs to be investigated.
 }
 
+void IBattle::LoadOptionsPreset( const wxString& name )
+{
+  m_preset = name;
+  for ( int i = 0; i < (int)LastOption; i++)
+  {
+    std::map<wxString,wxString> options = sett().GetHostingPreset( name, i );
+    for ( std::map<wxString,wxString>::iterator itor = options.begin(); itor != options.end(); itor++ )
+    {
+      CustomBattleOptions().setSingleOption( itor->first, itor->second, (GameOption)i );
+    }
+  }
+}
 
+
+void IBattle::SaveOptionsPreset( const wxString& name )
+{
+  m_preset = name;
+  for ( int i = 0; i < (int)LastOption; i++)
+  {
+    sett().SetHostingPreset( name, (GameOption)i, CustomBattleOptions().getOptionsMap( (GameOption)i ) );
+  }
+}
+
+
+wxString IBattle::GetCurrentPreset()
+{
+  return m_preset;
+}
+
+
+void IBattle::DeletePreset( const wxString& name )
+{
+  if ( m_preset == name ) m_preset = _T("");
+  sett().DeletePreset( name );
+}

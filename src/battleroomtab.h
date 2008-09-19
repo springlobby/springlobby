@@ -25,6 +25,7 @@ class wxCheckBox;
 class wxListCtrl;
 class MapCtrl;
 class ColorButton;
+class wxBitmapComboBox;
 
 typedef std::map<wxString,long> OptionListMap;
 
@@ -60,6 +61,7 @@ class BattleRoomTab : public wxPanel
     void OnAllySel( wxCommandEvent& event );
     void OnColourSel( wxCommandEvent& event );
     void OnSideSel( wxCommandEvent& event );
+    void OnPresetSel( wxCommandEvent& event );
 
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
@@ -71,6 +73,8 @@ class BattleRoomTab : public wxPanel
     void OnUnitSyncReloaded();
 
     void UpdateHighlights();
+
+    void UpdatePresetList();
 
   protected:
 
@@ -95,7 +99,8 @@ class BattleRoomTab : public wxPanel
     wxComboBox* m_team_sel;
     wxComboBox* m_ally_sel;
     ColorButton* m_color_sel;
-    wxComboBox* m_side_sel;
+    wxBitmapComboBox* m_side_sel;
+    wxComboBox* m_options_preset_sel;
 
     wxStaticText* m_team_lbl;
     wxStaticText* m_ally_lbl;
@@ -145,7 +150,8 @@ enum
     BROOM_START,
     BROOM_ADDBOT,
     BROOM_BALANCE,
-    BROOM_FIXCOLOURS
+    BROOM_FIXCOLOURS,
+    BROOM_PRESETSEL
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H

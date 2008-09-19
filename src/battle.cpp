@@ -306,7 +306,7 @@ bool Battle::HaveMultipleBotsInSameTeam() const
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
   {
     if ( *i == 0 ) continue;
-    if ( teams[(*i)->bs.team ] != -1 )return true;
+    if ( teams[(*i)->bs.team ] == 1 )return true;
     teams[ (*i)->bs.team ] = 1;
   }
   return false;
@@ -986,4 +986,3 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
   }
   Update();
 }
-
