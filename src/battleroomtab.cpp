@@ -320,7 +320,6 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
   }
   else if ( type == PrivateOptions )
   {
-    wxLogMessage(_T("foo"));
     if ( key == _T("mapname") ) /// the map has been changed
     {
       try { /// updates map info summary

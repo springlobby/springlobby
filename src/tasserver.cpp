@@ -1309,11 +1309,10 @@ void TASServer::SendHostInfo( HostInfo update )
     {
         // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
         wxString cmd = wxString::Format( _T("%d %d "), battle.GetSpectators(), battle.IsLocked() );
-        cmd += battle.GetHostMapHash() + _T(" ");
-        cmd += battle.GetHostMapName();
+        cmd += battle.LoadMap().hash + _T(" ");
+        cmd += battle.LoadMap().name;
 
         SendCmd( _T("UPDATEBATTLEINFO"), cmd );
-        wxLogMessage(_T("UPDATEBATTLEINFO %s"),cmd.c_str());
     }
     if ( ( update & HI_Send_All_opts ) > 0 )
     {
