@@ -300,13 +300,10 @@ void BattleRoomTab::UpdateBattleInfo()
 void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 {
   long index = m_opt_list_map[ Tag ];
-  long type;
-  Tag.BeforeFirst( '_' ).ToLong( &type );
+  GameOption type = (GameOption)s2l(Tag.BeforeFirst( '_' ));
   wxString key = Tag.AfterFirst( '_' );
   wxString value;
-  if ( type == EngineOption && key == _("restrictions") )
-    m_opts_list->SetItem( index, 1, bool2yn( m_battle.DisabledUnits().GetCount() > 0 ) );
-  else if ( type == MapOption || type == ModOption || EngineOption )
+  if ( ( type == MapOption ) || ( type == ModOption ) || ( type == EngineOption ) )
   {
     OptionType DataType = m_battle.CustomBattleOptions().GetSingleOptionType( key );
     if ( DataType == opt_bool )
@@ -322,6 +319,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
   }
   else if ( type == PrivateOptions )
   {
+    wxLogMessage(_T("foo"));
     if ( key == _T("mapname") ) /// the map has been changed
     {
       try { /// updates map info summary
@@ -344,6 +342,10 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
       m_battle.CustomBattleOptions().loadOptions( MapOption, m_battle.GetHostModName() );
       AddMMOptionsToList( m_map_opts_index, MapOption );
 
+    }
+    else if ( key == _T("restrictions") )
+    {
+      m_opts_list->SetItem( index, 1, bool2yn( m_battle.DisabledUnits().GetCount() > 0 ) );
     }
   }
 }
