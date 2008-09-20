@@ -204,7 +204,7 @@ void IBattle::LoadOptionsPreset( const wxString& name )
       {
         int ally = s2l(options[_T("rect_") + TowxString(loadrect) + _T("_ally")]);
         if ( ally == 0 ) continue;
-        AddStartRect( ally, s2l(options[_T("rect_") + TowxString(loadrect) + _T("_left")]), s2l(options[_T("rect_") + TowxString(loadrect) + _T("_top")]), s2l(options[_T("rect_") + TowxString(loadrect) + _T("_right")]), s2l(options[_T("rect_") + TowxString(loadrect) + _T("_bottom")]) );
+        AddStartRect( ally - 1, s2l(options[_T("rect_") + TowxString(loadrect) + _T("_left")]), s2l(options[_T("rect_") + TowxString(loadrect) + _T("_top")]), s2l(options[_T("rect_") + TowxString(loadrect) + _T("_right")]), s2l(options[_T("rect_") + TowxString(loadrect) + _T("_bottom")]) );
       }
       SendHostInfo( HI_StartRects );
 
@@ -230,19 +230,22 @@ void IBattle::SaveOptionsPreset( const wxString& name )
     {
       std::map<wxString,wxString> opts;
       opts[_T("mapname")] = GetHostMapName();
-      unsigned int boxcount = GetNumRects();
       unsigned int validrectcount = 0;
-      for ( unsigned int boxnum = 0; boxnum < boxcount; boxnum++ )
+      if ( CustomBattleOptions().getSingleValue( _T("startpostype"), EngineOption ) == ST_Choose )
       {
-        BattleStartRect rect = GetStartRect( i );
-        if ( rect.IsOk() )
+        unsigned int boxcount = GetNumRects();
+        for ( unsigned int boxnum = 0; boxnum < boxcount; boxnum++ )
         {
-          opts[_T("rect_") + TowxString(validrectcount) + _T("_ally")] = TowxString( rect.ally );
-          opts[_T("rect_") + TowxString(validrectcount) + _T("_left")] = TowxString( rect.left );
-          opts[_T("rect_") + TowxString(validrectcount) + _T("_top")] = TowxString( rect.top );
-          opts[_T("rect_") + TowxString(validrectcount) + _T("_bottom")] = TowxString( rect.bottom );
-          opts[_T("rect_") + TowxString(validrectcount) + _T("_right")] = TowxString( rect.right );
-          validrectcount++;
+          BattleStartRect rect = GetStartRect( boxnum );
+          if ( rect.IsOk() )
+          {
+            opts[_T("rect_") + TowxString(validrectcount) + _T("_ally")] = TowxString( rect.ally + 1 );
+            opts[_T("rect_") + TowxString(validrectcount) + _T("_left")] = TowxString( rect.left );
+            opts[_T("rect_") + TowxString(validrectcount) + _T("_top")] = TowxString( rect.top );
+            opts[_T("rect_") + TowxString(validrectcount) + _T("_bottom")] = TowxString( rect.bottom );
+            opts[_T("rect_") + TowxString(validrectcount) + _T("_right")] = TowxString( rect.right );
+            validrectcount++;
+          }
         }
       }
       opts[_T("numrects")] = TowxString( validrectcount );
