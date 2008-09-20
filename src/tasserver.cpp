@@ -578,7 +578,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         title = GetSentenceParam( params );
         mod = GetSentenceParam( params );
         m_se->OnBattleOpened( id, replay, IntToNatType( nat ), nick, host, port, maxplayers,
-                              haspass, rank + 1, hash, map, title, mod );
+                              haspass, rank, hash, map, title, mod );
     }
     else if ( cmd == _T("JOINEDBATTLE") )
     {
