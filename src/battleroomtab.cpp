@@ -142,8 +142,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_opts_list->InsertColumn( 0, col );
   col.SetText( _("Value") );
   m_opts_list->InsertColumn( 1, col );
-  m_opts_list->SetColumnWidth( 0, 85 );
-  m_opts_list->SetColumnWidth( 1, 60 );
 
   long pos = 0;
 
@@ -252,6 +250,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   SetSizer( m_main_sizer );
   Layout();
+  unsigned int widthfraction = m_opts_list->GetClientSize().GetWidth() / 3;
+  m_opts_list->SetColumnWidth( 0, widthfraction * 2 );
+  m_opts_list->SetColumnWidth( 1, widthfraction );
 
 }
 
