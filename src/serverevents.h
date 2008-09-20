@@ -1,6 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
 #define SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
 
+#include "autohost.h"
 #include "battle.h"
 
 class Ui;
@@ -106,6 +107,7 @@ class ServerEvents
   protected:
     Server& m_serv;
     Ui& m_ui;
+    AutoHost m_ah;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
