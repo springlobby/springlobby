@@ -4,11 +4,13 @@
 //#include <wx/listctrl.h>
 #include <wx/event.h>
 #include "customlistctrl.h"
+#include "usermenu.h"
 
 class User;
 class UserList;
 class Ui;
-class UserMenu;
+class ChatPanel;
+//typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
 
 
 
@@ -16,7 +18,7 @@ class UserMenu;
 class NickListCtrl : public customListCtrl
 {
   public:
-    NickListCtrl( wxWindow* parent, bool show_header = true, UserMenu* popup = 0,
+    NickListCtrl( wxWindow* parent, bool show_header = true, SL_GENERIC::UserMenu<ChatPanel>* popup = 0,
         bool singleSelectList = true, const wxString& name = _T("NickListCtrl"), bool highlight = true  );
     ~NickListCtrl();
 
@@ -53,7 +55,7 @@ class NickListCtrl : public customListCtrl
 
     UserList* m_users;
 
-    UserMenu* m_menu;
+    SL_GENERIC::UserMenu<ChatPanel>* m_menu;
 
     struct {
       int col;

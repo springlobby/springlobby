@@ -9,6 +9,7 @@
 #include <wx/menu.h>
 
 #include "chatlog.h"
+#include "usermenu.h"
 #include "Helper/TextCompletionDatabase.hpp"
 
 class wxCommandEvent;
@@ -28,7 +29,7 @@ class User;
 class Server;
 class Battle;
 class Ui;
-class UserMenu;
+
 class wxFocusEvent;
 class wxMouseEvent;
 
@@ -205,12 +206,12 @@ class ChatPanel : public wxPanel
     wxMenuItem* m_autorejoin;
     ChatLog* m_chat_log;
     wxMenuItem* displayjoinitem;
-    UserMenu* m_usermenu;
+    SL_GENERIC::UserMenu<ChatPanel>* m_usermenu;
 
     void LogTime();
     void CreateControls( );
     void CreatePopup();
-    UserMenu* CreateNickListMenu();
+    SL_GENERIC::UserMenu<ChatPanel>* CreateNickListMenu();
 
     static const int m_groupMenu_baseID = 6798;
 	TextCompletionDatabase textcompletiondatabase;

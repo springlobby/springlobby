@@ -24,6 +24,7 @@
 
 #define TOOLTIP_DELAY 1000
 
+
 int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData);
 
 BEGIN_EVENT_TABLE( NickListCtrl, customListCtrl )
@@ -38,7 +39,7 @@ BEGIN_EVENT_TABLE( NickListCtrl, customListCtrl )
 END_EVENT_TABLE()
 
 
-NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, UserMenu* popup, bool singleSelectList,
+NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, SL_GENERIC::UserMenu<ChatPanel>* popup, bool singleSelectList,
                             const wxString& name, bool highlight):
   customListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
@@ -204,7 +205,7 @@ void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
   {
       //no need to popup the menu when there's no user selected
       if ( GetSelectedIndex() != -1 ){
-          m_menu->EnableItems( (GetSelectedIndex()!=-1),  );
+          m_menu->EnableItems( (GetSelectedIndex()!=-1), _("JK") );
           PopupMenu( m_menu );
       }
   }
