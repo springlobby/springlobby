@@ -627,12 +627,6 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
 
     chan.uidata.panel = 0;
     mw().OpenChannelChat( chan );
-    if ( chan.GetName() == _T("springlobby") )
-    {
-        chan.uidata.panel->ClientMessage( wxEmptyString );
-        chan.uidata.panel->ClientMessage( _("This is the SpringLobby channel, please report any problems you are having with SpringLobby here and the friendly developers will help you.") );
-        chan.uidata.panel->ClientMessage( wxEmptyString );
-    }
 }
 
 
