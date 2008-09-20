@@ -212,7 +212,7 @@ class Battle : public UserList, public IBattle
     int GetMyAlly() { return GetMe().BattleStatus().ally; }
     void SetMyAlly( int ally ) { GetMe().BattleStatus().ally = ally; SendMyBattleStatus(); }
 
-    std::map<unsigned int, BattleStartRect>::size_type GetNumRects();
+    unsigned int GetNumRects();
 
     mmOptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
 

@@ -266,7 +266,6 @@ void Ui::StartHostedBattle()
     ASSERT_LOGIC( m_serv != 0, _T("m_serv = 0") );
     m_serv->StartHostedBattle();
     sett().SetLastHostMap( m_serv->GetCurrentBattle()->GetHostMapName() );
-    sett().SaveBattleMapOptions(m_serv->GetCurrentBattle());
     sett().SaveSettings();
 }
 
@@ -302,7 +301,7 @@ void Ui::Quit()
 
 void Ui::ReloadUnitSync()
 {
-    usync()->ReloadUnitSyncLib();
+    usync().ReloadUnitSyncLib();
     if ( m_main_win != 0 ) mw().OnUnitSyncReloaded();
 }
 
@@ -553,7 +552,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
         if ( m_spring->TestSpringBinary() )
         {
             wxString message = _("Your spring version");
-            message += _T(" (") + usync()->GetSpringVersion() + _T(") ");
+            message += _T(" (") + usync().GetSpringVersion() + _T(") ");
             message +=  _("is not supported by the lobby server that requires version");
             message += _T(" (") +  m_serv->GetRequiredSpring() + _T(").\n\n");
             message += _("Online play will be disabled.");
@@ -577,7 +576,7 @@ bool Ui::IsSpringCompatible( )
     if ( sett().GetDisableSpringVersionCheck() ) return true;
     if ( !m_spring->TestSpringBinary() ) return false;
     if ( m_serv->GetRequiredSpring() == _T("*") ) return true; // Server accepts any version.
-    if ( (usync()->GetSpringVersion() == m_serv->GetRequiredSpring() ) && !m_serv->GetRequiredSpring().IsEmpty() ) return true;
+    if ( (usync().GetSpringVersion() == m_serv->GetRequiredSpring() ) && !m_serv->GetRequiredSpring().IsEmpty() ) return true;
     else return false;
 }
 

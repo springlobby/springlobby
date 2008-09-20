@@ -281,7 +281,7 @@ bool Battle::IsSynced()
 
 /*bool Battle::HasMod()
 {
-  return usync()->ModExists( m_opts.modname );
+  return usync().ModExists( m_opts.modname );
 }*/
 
 
@@ -800,7 +800,7 @@ void Battle::SetHandicap( User& user, int handicap)
 }
 
 
-std::vector<BattleStartRect*>::size_type Battle::GetNumRects()
+unsigned int Battle::GetNumRects()
 {
   return m_rects.size();
 }
@@ -872,7 +872,7 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
   int ally=0;
   for(int i=0;i<tmp;++i){
     BattleStartRect sr = m_rects[i];
-    if( sr.exist && !sr.todelete ){
+    if( sr.IsOk() ){
       ally=i;
       alliances.push_back(Alliance(ally));
       ally++;

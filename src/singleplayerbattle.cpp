@@ -9,7 +9,6 @@
 #include "uiutils.h"
 #include "ui.h"
 #include "settings.h"
-#include "battleoptionstab.h"
 
 
 SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
@@ -98,6 +97,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   if ( (update & HI_Restrictions) != 0 ) m_sptab.ReloadRestrictions();
   if ( (update & HI_Map_Changed) != 0 )
   {
+    SetLocalMap( usync().GetMapEx( usync().GetMapIndex( m_host_map.name ) ) );
     CustomBattleOptions().loadOptions( MapOption, GetHostMapName() );
     m_sptab.ReloadMapOptContrls();
   }
@@ -128,7 +128,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
 
 void SinglePlayerBattle::Update( const wxString& Tag )
 {
-  m_sptab.GetOptionsTab().UpdateBattle( Tag );
+  m_sptab.Update( Tag );
 }
 
 

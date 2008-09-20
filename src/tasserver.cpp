@@ -1357,13 +1357,13 @@ void TASServer::SendHostInfo( HostInfo update )
             }
             else if ( sr.toadd )
             {
-                SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d\n"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
+                SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
                 battle.StartRectAdded( i );
             }
             else if ( sr.toresize )
             {
                 SendCmd( _T("REMOVESTARTRECT"), wxString::Format( _T("%d"), i ) );
-                SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d\n"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
+                SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
                 battle.StartRectResized( i );
             }
         }
@@ -1408,15 +1408,15 @@ void TASServer::SendHostInfo( const wxString& Tag )
     wxString key = Tag.AfterFirst( '_' );
     if ( type == MapOption )
     {
-        cmd << _T("game\\mapoptions\\") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, MapOption ) << _T("\n");
+        cmd << _T("game\\mapoptions\\") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, MapOption );
     }
     else if ( type == ModOption )
     {
-        cmd << _T("game\\modoptions\\") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, ModOption ) << _T("\n");
+        cmd << _T("game\\modoptions\\") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, ModOption );
     }
     else if ( type == EngineOption )
     {
-        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, EngineOption ) << _T("\n");
+        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, EngineOption );
     }
     SendCmd( _T("SETSCRIPTTAGS"), cmd );
 }
@@ -1522,7 +1522,7 @@ void TASServer::ForceSide( int battleid, const wxString& nick, int side )
     {
         try
         {
-            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to ") + usync()->GetSideName( GetBattle(battleid).GetHostModName(), side ) + _T(" side.") );
+            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to ") + usync().GetSideName( GetBattle(battleid).GetHostModName(), side ) + _T(" side.") );
         }
         catch (...) {}
     }

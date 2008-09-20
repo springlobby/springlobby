@@ -25,21 +25,6 @@ class wxColour;
 #define PE_NONE 0
 
 
-#define HI_None 0
-#define HI_Map 1
-#define HI_Locked 2
-#define HI_Spectators 4
-#define HI_StartResources 8
-#define HI_MaxUnits 16
-#define HI_StartType 32
-#define HI_GameType 64
-#define HI_Options 128
-#define HI_StartRects 256
-#define HI_Restrictions 512
-#define HI_Map_Changed 1024
-#define HI_Mod_Changed 2048
-#define HI_Send_All_opts 4096
-
 typedef int HostInfo;
 
 struct UiServerData {

@@ -10,6 +10,21 @@
 #include "user.h"
 #include "mmoptionswrapper.h"
 
+#define HI_None 0
+#define HI_Map 1
+#define HI_Locked 2
+#define HI_Spectators 4
+#define HI_StartResources 8
+#define HI_MaxUnits 16
+#define HI_StartType 32
+#define HI_GameType 64
+#define HI_Options 128
+#define HI_StartRects 256
+#define HI_Restrictions 512
+#define HI_Map_Changed 1024
+#define HI_Mod_Changed 2048
+#define HI_Send_All_opts 4096
+
 
 typedef int HostInfo;
 
@@ -45,6 +60,8 @@ struct BattleStartRect
   bool todelete;
   bool toresize;
   bool exist;
+
+  bool IsOk() { return exist && !todelete; }
 
   unsigned int ally;
   unsigned int top;
@@ -98,6 +115,7 @@ class IBattle
     virtual void StartRectResized( unsigned int allyno ) {};
     virtual void StartRectAdded( unsigned int allyno ) {};
     virtual void ClearStartRects(){};
+    virtual unsigned int GetNumRects() { return 0; };
 
     virtual int GetMyAlly() = 0;
     virtual void SetMyAlly( int ally ) = 0;
@@ -123,8 +141,6 @@ class IBattle
     virtual wxArrayString DisabledUnits();
 
     virtual void OnUnitSyncReloaded();
-
-    virtual std::map<unsigned int,BattleStartRect>::size_type GetNumRects() =0;
 
     virtual mmOptionsWrapper& CustomBattleOptions() =0;
 

@@ -1,6 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 #include <stdexcept>
+#include <wx/tokenzr.h>
 
 #include "ibattle.h"
 #include "utils.h"
@@ -26,8 +27,8 @@ void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
     m_map_loaded = false;
     m_host_map.name = mapname;
     m_host_map.hash = hash;
-    if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync()->MapExists( m_host_map.name, m_host_map.hash );
-    else m_map_exists = usync()->MapExists( m_host_map.name );
+    if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
+    else m_map_exists = usync().MapExists( m_host_map.name );
   }
 }
 
@@ -37,8 +38,8 @@ void IBattle::SetLocalMap(const UnitSyncMap& map)
   if ( map.name != m_local_map.name || map.hash != m_local_map.hash ) {
     m_local_map = map;
     m_map_loaded = true;
-    if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync()->MapExists( m_host_map.name, m_host_map.hash );
-    else m_map_exists = usync()->MapExists( m_host_map.name );
+    if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
+    else m_map_exists = usync().MapExists( m_host_map.name );
   }
 }
 
@@ -49,7 +50,7 @@ const UnitSyncMap& IBattle::LoadMap()
   if ( !m_map_loaded ) {
     try {
       ASSERT_LOGIC( m_map_exists, _T("Map does not exist.") );
-      m_local_map = usync()->GetMapEx( m_host_map.name );
+      m_local_map = usync().GetMapEx( m_host_map.name );
       m_map_loaded = true;
 
     } catch (...) {}
@@ -76,8 +77,8 @@ void IBattle::SetHostMod( const wxString& modname, const wxString& hash )
     m_mod_loaded = false;
     m_host_mod.name = modname;
     m_host_mod.hash = hash;
-    if ( !m_host_mod.hash.IsEmpty() ) m_mod_exists = usync()->ModExists( m_host_mod.name, m_host_mod.hash );
-    else m_mod_exists = usync()->ModExists( m_host_mod.name );
+    if ( !m_host_mod.hash.IsEmpty() ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash );
+    else m_mod_exists = usync().ModExists( m_host_mod.name );
   }
 }
 
@@ -87,8 +88,8 @@ void IBattle::SetLocalMod( const UnitSyncMod& mod )
   if ( mod.name != m_local_mod.name || mod.hash != m_local_mod.hash ) {
     m_local_mod = mod;
     m_mod_loaded = true;
-    if ( !m_host_mod.hash.IsEmpty() ) m_mod_exists = usync()->ModExists( m_host_mod.name, m_host_mod.hash );
-    else m_mod_exists = usync()->ModExists( m_host_mod.name );
+    if ( !m_host_mod.hash.IsEmpty() ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash );
+    else m_mod_exists = usync().ModExists( m_host_mod.name );
   }
 }
 
@@ -98,7 +99,7 @@ const UnitSyncMod& IBattle::LoadMod()
   if ( !m_mod_loaded ) {
     try {
       ASSERT_LOGIC( m_mod_exists, _T("Mod does not exist.") );
-      m_local_mod = usync()->GetMod( m_host_mod.name );
+      m_local_mod = usync().GetMod( m_host_mod.name );
       m_mod_loaded = true;
     } catch (...) {}
   }
@@ -121,14 +122,14 @@ wxString IBattle::GetHostModHash() const
 bool IBattle::MapExists()
 {
   return m_map_exists;
-  //return usync()->MapExists( m_map_name, m_map.hash );
+  //return usync().MapExists( m_map_name, m_map.hash );
 }
 
 
 bool IBattle::ModExists()
 {
   return m_mod_exists;
-  //return usync()->ModExists( m_mod_name );
+  //return usync().ModExists( m_mod_name );
 }
 
 
@@ -161,10 +162,10 @@ wxArrayString IBattle::DisabledUnits()
 
 void IBattle::OnUnitSyncReloaded()
 {
-  if ( !m_host_mod.hash.IsEmpty() ) m_mod_exists = usync()->ModExists( m_host_mod.name, m_host_mod.hash);
-  else m_mod_exists = usync()->ModExists( m_host_mod.name );
-  if ( !m_host_map.hash.IsEmpty() )  m_map_exists = usync()->MapExists( m_host_map.name, m_host_map.hash );
-  else  m_map_exists = usync()->MapExists( m_host_map.name );
+  if ( !m_host_mod.hash.IsEmpty() ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash);
+  else m_mod_exists = usync().ModExists( m_host_mod.name );
+  if ( !m_host_map.hash.IsEmpty() )  m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
+  else  m_map_exists = usync().MapExists( m_host_map.name );
 }
 
 unsigned int IBattle::AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll ) {
@@ -177,9 +178,40 @@ void IBattle::LoadOptionsPreset( const wxString& name )
   for ( int i = 0; i < (int)LastOption; i++)
   {
     std::map<wxString,wxString> options = sett().GetHostingPreset( name, i );
-    for ( std::map<wxString,wxString>::iterator itor = options.begin(); itor != options.end(); itor++ )
+    if ( (GameOption)i != PrivateOptions )
     {
-      CustomBattleOptions().setSingleOption( itor->first, itor->second, (GameOption)i );
+      for ( std::map<wxString,wxString>::iterator itor = options.begin(); itor != options.end(); itor++ )
+      {
+        CustomBattleOptions().setSingleOption( itor->first, itor->second, (GameOption)i );
+      }
+    }
+    else
+    {
+      if ( !options[_T("mapname")].IsEmpty() )
+      {
+        UnitSyncMap map = usync().GetMapEx( options[_T("mapname")] );
+        SetLocalMap( map );
+        SetHostMap( map.name, map.hash );
+
+        SendHostInfo( HI_Map );
+      }
+      unsigned int localrectcount = GetNumRects();
+      for( unsigned int localrect = 0 ; localrect < localrectcount; ++localrect) if ( GetStartRect( localrect ).exist ) RemoveStartRect( localrect );
+      SendHostInfo( HI_StartRects );
+
+      unsigned int rectcount = s2l( options[_T("numrects")] );
+      for ( unsigned int loadrect = 0; loadrect < rectcount; loadrect++)
+      {
+        int ally = s2l(options[_T("rect_") + TowxString(loadrect) + _T("_ally")]);
+        if ( ally == 0 ) continue;
+        AddStartRect( ally, s2l(options[_T("rect_") + TowxString(loadrect) + _T("_left")]), s2l(options[_T("rect_") + TowxString(loadrect) + _T("_top")]), s2l(options[_T("rect_") + TowxString(loadrect) + _T("_right")]), s2l(options[_T("rect_") + TowxString(loadrect) + _T("_bottom")]) );
+      }
+      SendHostInfo( HI_StartRects );
+
+      m_units = wxStringTokenize( options[_T("restrictions")], _T('\t') );
+      SendHostInfo( HI_Restrictions );
+      Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
+
     }
   }
 }
@@ -190,7 +222,41 @@ void IBattle::SaveOptionsPreset( const wxString& name )
   m_preset = name;
   for ( int i = 0; i < (int)LastOption; i++)
   {
-    sett().SetHostingPreset( name, (GameOption)i, CustomBattleOptions().getOptionsMap( (GameOption)i ) );
+    if ( (GameOption)i != PrivateOptions )
+    {
+      sett().SetHostingPreset( name, (GameOption)i, CustomBattleOptions().getOptionsMap( (GameOption)i ) );
+    }
+    else
+    {
+      std::map<wxString,wxString> opts;
+      opts[_T("mapname")] = GetHostMapName();
+      unsigned int boxcount = GetNumRects();
+      unsigned int validrectcount = 0;
+      for ( unsigned int boxnum = 0; boxnum < boxcount; boxnum++ )
+      {
+        BattleStartRect rect = GetStartRect( i );
+        if ( rect.IsOk() )
+        {
+          opts[_T("rect_") + TowxString(validrectcount) + _T("_ally")] = TowxString( rect.ally );
+          opts[_T("rect_") + TowxString(validrectcount) + _T("_left")] = TowxString( rect.left );
+          opts[_T("rect_") + TowxString(validrectcount) + _T("_top")] = TowxString( rect.top );
+          opts[_T("rect_") + TowxString(validrectcount) + _T("_bottom")] = TowxString( rect.bottom );
+          opts[_T("rect_") + TowxString(validrectcount) + _T("_right")] = TowxString( rect.right );
+          validrectcount++;
+        }
+      }
+      opts[_T("numrects")] = TowxString( validrectcount );
+
+      unsigned int restrcount = m_units.GetCount();
+      wxString restrictionsstring;
+      for ( unsigned int restrnum = 0; restrnum < restrcount; restrnum++ )
+      {
+        restrictionsstring << m_units[restrnum] << _T('\t');
+      }
+      opts[_T("restrictions")] = restrictionsstring;
+
+      sett().SetHostingPreset( name, (GameOption)i, opts );
+    }
   }
 }
 

@@ -128,6 +128,26 @@ void MainSinglePlayerTab::ReloadPresetList()
 {
   try
   {
+    GetSinglePlayerTab().UpdatePresetList();
+  } catch (...) {}
+  try
+  {
     GetOptionsTab().UpdatePresetList();
   } catch (...) {}
+}
+
+
+void MainSinglePlayerTab::Update( const wxString& Tag )
+{
+
+  try
+  {
+    GetSinglePlayerTab().Update( Tag );
+  } catch (...) {}
+
+  try
+  {
+    GetOptionsTab().UpdateBattle( Tag );
+  } catch (...) {}
+
 }
