@@ -270,30 +270,5 @@ enum
     CHAT_MENU_US_MODERATOR_RING
 };
 
-class UserMenu : public wxMenu
-{
-    public:
-        UserMenu(ChatPanel* parent, const wxString& title = wxEmptyString, long style = 0);
-        ~UserMenu();
-
-        void EnableItems(bool isUserSelected);
-        wxString GetGroupByEvtID( const unsigned int id );
-
-    protected:
-        wxMenu* m_groupsMenu;
-        wxMenuItem* m_groupsMenuItem;
-        wxMenuItem* m_groupsDeleteItem;
-        wxMenuItem* m_groupsnewItem;
-        wxArrayString m_oldGroups;
-        ChatPanel* m_parent;
-        unsigned int m_groupCounter;
-        std::map<unsigned int, wxString> m_idNameMap;
-        std::map<wxString, unsigned int> m_NameIdMap;
-
-        void UpdateGroups();
-
-    //DECLARE_EVENT_TABLE();
-
-};
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H

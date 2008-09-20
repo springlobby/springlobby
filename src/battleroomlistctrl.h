@@ -52,6 +52,7 @@ class BattleroomListCtrl : public customListCtrl
 
     void OnKickPlayer( wxCommandEvent& event );
     void OnRingPlayer( wxCommandEvent& event );
+    void OnPlayerAddToGroup ( wxCommandEvent& event );
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
     virtual void HighlightItem( long item );
 
@@ -113,7 +114,8 @@ enum
   BRLIST_HANDICAP = BRLIST_SIDE +1000,
   BRLIST_SPEC,
   BRLIST_KICK,
-  BRLIST_RING
+  BRLIST_RING,
+  BRLIST_ADDTOGROUP
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H

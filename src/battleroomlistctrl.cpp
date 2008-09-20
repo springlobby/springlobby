@@ -33,6 +33,7 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  customListCtrl)
   EVT_LIST_COL_CLICK       ( BRLIST_LIST, BattleroomListCtrl::OnColClick )
   EVT_MENU                 ( BRLIST_SPEC, BattleroomListCtrl::OnSpecSelect )
   EVT_MENU                 ( BRLIST_KICK, BattleroomListCtrl::OnKickPlayer )
+  EVT_MENU                 ( BRLIST_ADDTOGROUP, BattleroomListCtrl::OnPlayerAddToGroup )
   EVT_MENU                 ( BRLIST_RING, BattleroomListCtrl::OnRingPlayer )
   EVT_MENU                 ( BRLIST_COLOUR, BattleroomListCtrl::OnColourSelect )
   EVT_MENU                 ( BRLIST_HANDICAP, BattleroomListCtrl::OnHandicapSelect )
@@ -554,6 +555,14 @@ void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& event )
   }
 }
 
+void BattleroomListCtrl::OnPlayerAddToGroup ( wxCommandEvent& event )
+{
+  wxLogDebugFunc( _T("") );
+  if ( m_sel_bot != 0 ) {
+  } else if ( m_sel_user != 0 ) {
+    m_battle.GetServer().Ring( m_sel_user->GetNick() );
+  }
+}
 
 void BattleroomListCtrl::OnColClick( wxListEvent& event )
 {

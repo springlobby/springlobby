@@ -20,6 +20,7 @@
 #include "countrycodes.h"
 #include "chatpanel.h"
 #include "userlist.h"
+#include "usermenu.h"
 
 #define TOOLTIP_DELAY 1000
 
@@ -203,7 +204,7 @@ void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
   {
       //no need to popup the menu when there's no user selected
       if ( GetSelectedIndex() != -1 ){
-          m_menu->EnableItems( (GetSelectedIndex()!=-1) );
+          m_menu->EnableItems( (GetSelectedIndex()!=-1),  );
           PopupMenu( m_menu );
       }
   }
