@@ -980,7 +980,6 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
       ASSERT_LOGIC(alliances[i].players[j],_T("fail in Autobalance, NULL player"));
       wxString msg=wxString::Format(_T("setting player %s to alliance %d"),alliances[i].players[j]->GetNick().c_str(),i);
       wxLogMessage(_T("%s"),msg.c_str());
-      m_ui.OnBattleAction(*this,wxString(_T(" ")),msg);
       ForceAlly(*alliances[i].players[j],alliances[i].allynum);
     }
   }
