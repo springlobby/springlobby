@@ -109,7 +109,6 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
         opt.string_map[_T("restrictions")] = mmOptionString(_("List of restricted units"), /// tab separated list
         _T("restrictedunits"), _T("Units in this list won't be available in game"), _T(""), 0 );
         opt.string_map[_T("mapname")] = mmOptionString(_("Map name"), _T("mapname"), _T("Map name"), _T(""), 0 );
-        opt.string_map[_T("maphash")] = mmOptionString(_("Map hash"), _T("maphash"), _T("Map hash"), _T(""), 0 );
         break;
     }
 	}
