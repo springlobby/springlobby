@@ -241,9 +241,6 @@ void ServerEvents::OnHostedBattle( int battleid )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
 
-  UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
-  bs.spectator = false;
-
   battle.CustomBattleOptions().loadOptions( MapOption, battle.GetHostMapName() );
   battle.CustomBattleOptions().loadOptions( ModOption, battle.GetHostModName() );
 
