@@ -214,8 +214,6 @@ class Battle : public UserList, public IBattle
 
     unsigned int GetNumRects();
 
-    mmOptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
-
     void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true);
 
     ///< quick hotfix for bans
@@ -243,8 +241,6 @@ class Battle : public UserList, public IBattle
 
     mutable std::list<BattleBot*>::const_iterator m_bot_seek;
     mutable std::list<BattleBot*>::size_type m_bot_pos;
-
-    mmOptionsWrapper m_opt_wrap;
 
     void RemoveUser( wxString const& user ) {}
 };

@@ -102,15 +102,11 @@ class SinglePlayerBattle: public IBattle
 
     void Update( const wxString& Tag );
 
-    mmOptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
-
   protected:
 
     Ui& m_ui;
     MainSinglePlayerTab& m_sptab;
     std::vector<BattleBot*> m_bots;
-
-    mmOptionsWrapper m_opt_wrap;
 
 };
 
