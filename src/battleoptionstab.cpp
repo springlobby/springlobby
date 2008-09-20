@@ -312,6 +312,10 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
     else if ( key == _T("ghostedbuildings") ) m_options_checks->Check( GHOUSTED_INDEX, longval );
     else if ( key == _T("diminishingmms") ) m_options_checks->Check( DIM_MMS_INDEX, longval );
   }
+  else if ( type == PrivateOptions )
+  {
+    if ( key == _T("restrictions") ) ReloadRestrictions();
+  }
 }
 
 void BattleOptionsTab::ReloadRestrictions()

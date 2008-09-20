@@ -105,8 +105,6 @@ class SinglePlayerBattle: public IBattle
     std::vector<BattleStartRect*>::size_type GetNumRects() { return 0; }
     mmOptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
 
-    void LoadOptionsPreset( const wxString& name );
-
   protected:
 
     Ui& m_ui;

@@ -84,7 +84,7 @@ struct mmOptionFloat : public mmOptionModel
 struct mmOptionString : public mmOptionModel
 {
 	//! sets members accordingly
-	mmOptionString(wxString name_, wxString key_, wxString description_, wxString def_, int max_len_);
+	mmOptionString(wxString name_, wxString key_, wxString description_, wxString def_, unsigned int max_len_);
 	//! sets wxstring member to "" and max_len to 0
 	mmOptionString();
 
@@ -94,7 +94,7 @@ struct mmOptionString : public mmOptionModel
 	/*! the only member that should change after creation, before set check if new value exceeds max_len*/
 	wxString value;
 	//! the maximum lentgh the value string may have
-	int max_len;
+	unsigned int max_len;
 };
 
 //! Holds a an option list (a vector of listItems)

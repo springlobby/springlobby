@@ -46,7 +46,7 @@ class BattleRoomTab : public wxPanel
 
     bool IsHosted();
 
-    void UpdateBattleInfo( bool MapChanged = false, bool reloadMapOptions = true );
+    void UpdateBattleInfo();
     void UpdateBattleInfo( const wxString& Tag );
 
     void OnStart( wxCommandEvent& event );

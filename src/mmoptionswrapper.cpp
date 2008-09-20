@@ -11,6 +11,7 @@ mmOptionsWrapper::mmOptionsWrapper()
 {
 	unLoadOptions();
 	loadOptions( EngineOption );
+	loadOptions( PrivateOptions );
 }
 
 void mmOptionsWrapper::unLoadOptions()
@@ -100,6 +101,11 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
         opt.int_map[_T("maxunits")] = mmOptionInt( _("Max Units Allowed"),_T("maxunits"),
         _("Sets the maximum amount of units that a player will be allowed to build"),
         500, 1, 0, 10000);
+    case PrivateOptions:
+        opt.string_map[_T("restrictions")] = mmOptionString(_("List of restricted units"), /// tab separated list
+        _T("restrictedunits"), _T("Units in this list won't be available in game"), _T(""), 0 );
+        opt.string_map[_T("mapname")] = mmOptionString(_("Map name"), _T("mapname"), _T("Map name"), _T(""), 0 );
+        opt.string_map[_T("maphash")] = mmOptionString(_("Map hash"), _T("maphash"), _T("Map hash"), _T(""), 0 );
 	}
 	opts[modmapFlag] = opt;
 	return true;
@@ -337,7 +343,8 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 		case opt_string :
 		{
 			// test if maxlength isn't exceeded
-			if ( int(value.Len())> (opts[modmapFlag].string_map)[key].max_len )
+			unsigned int max_lenght = (opts[modmapFlag].string_map)[key].max_len;
+			if ( ( max_lenght != 0 ) && ( value.Len() > max_lenght )  )
 			{
 				wxLogWarning(_T("recieved string option exceeds max_len"));
 				return false;

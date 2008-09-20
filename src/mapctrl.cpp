@@ -1092,7 +1092,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     if ( m_mdown_area == m_rect_area ) {
       if ( m_mdown_area == RA_Refresh ) {
         m_ui.ReloadUnitSync();
-        m_ui.OnBattleMapRefresh();
+        m_battle->Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
         UpdateMinimap();
       } else if ( m_mdown_area == RA_Download ) {
         m_ui.DownloadMap( m_battle->GetHostMapHash(),  m_battle->GetHostMapName() );

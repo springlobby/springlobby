@@ -163,6 +163,13 @@ void BattleMapTab::Update( const wxString& Tag )
      m_minimap->UpdateMinimap();
     }
   }
+  else if ( type == PrivateOptions )
+  {
+    if ( key == _T("mapname") )
+    {
+      Update();
+    }
+  }
 }
 
 
@@ -205,7 +212,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
     m_battle.SetLocalMap( map );
     m_battle.SetHostMap( map.name, map.hash );
 
-    m_ui.OnBattleMapChanged(m_battle);
+    m_battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
     m_battle.SendHostInfo( HI_Map );
 
     for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);

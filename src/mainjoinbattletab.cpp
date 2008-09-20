@@ -76,45 +76,16 @@ ChatPanel* MainJoinBattleTab::GetActiveChatPanel()
   return 0;
 }
 
-void MainJoinBattleTab::ReloadMMoptTab()
-{
-	int curPage = m_tabs->GetSelection();
-	m_tabs->DeletePage (4);
-	m_mm_opts_tab = 0;
-	m_battle_tab->GetBattle().CustomBattleOptions().loadMapOptions(m_battle_tab->GetBattle().GetHostMapName());
-	m_mm_opts_tab = new BattleroomMMOptionsTab(m_battle_tab->GetBattle(), m_tabs);
-	//m_mm_opts_tab.
-	m_tabs->InsertPage( 4, m_mm_opts_tab, _("Map/Mod Options"), false );
-	if (curPage == 4)
-		m_tabs->SetSelection(curPage);
-}
-
 //void MainJoinBattleTab::UpdateCurrentBattle()
-void MainJoinBattleTab::UpdateCurrentBattle( bool MapChanged, bool UpdateRestrictions )
+void MainJoinBattleTab::UpdateCurrentBattle()
 {
   try
   {
-    GetBattleRoomTab().UpdateBattleInfo( MapChanged );
-    if ( UpdateRestrictions ) GetBattleRoomTab().UpdateBattleInfo( wxString::Format(_T("%d_restrictions"), EngineOption ) );
+    GetBattleRoomTab().UpdateBattleInfo();
   } catch (...) {}
   try
   {
     GetBattleMapTab().Update();
-  } catch (...) {}
-  try
-  {
-    if ( UpdateRestrictions )
-        GetOptionsTab().ReloadRestrictions();
-  } catch (...) {}
-  try
-  {
-	 if ( !GetBattleRoomTab().GetBattle().IsFounderMe() )
-	  {
-	    if ( MapChanged )
-	    {
-	      GetMMOptionsTab().OnReloadControls(MapOption);
-	    }
-	  }
   } catch (...) {}
 }
 

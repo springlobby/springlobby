@@ -133,6 +133,8 @@ class IBattle
     virtual wxString GetCurrentPreset();
     virtual void DeletePreset( const wxString& name );
 
+    virtual void Update ( const wxString& Tag ) =0;
+
   protected:
 
     bool m_map_loaded;
@@ -141,10 +143,8 @@ class IBattle
     bool m_mod_exists;
     UnitSyncMap m_local_map;
     UnitSyncMod m_local_mod;
-    wxString m_host_map_name;
-    wxString m_host_mod_name;
-    wxString m_host_map_hash;
-    wxString m_host_mod_hash;
+    UnitSyncMap m_host_map;
+    UnitSyncMap m_host_mod;
 
     wxArrayString m_units;
 

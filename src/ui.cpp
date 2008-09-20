@@ -910,15 +910,6 @@ void Ui::OnUserLeftBattle( Battle& battle, User& user )
     }
 }
 
-void Ui::OnBattleMapRefresh()
-{
-    if ( m_main_win == 0 ) return;
-    try
-    {
-      mw().GetJoinTab().GetBattleRoomTab().UpdateBattleInfo( true, false );
-    } catch(...){}
-}
-
 void Ui::OnBattleInfoUpdated( Battle& battle )
 {
     if ( m_main_win == 0 ) return;
@@ -1040,46 +1031,6 @@ void Ui::OnSpringTerminated( bool success )
 
     m_serv->GetMe().Status().in_game = false;
     m_serv->GetMe().SendMyUserStatus();
-}
-
-
-void Ui::OnBattleStartRectsUpdated( Battle& battle )
-{
-    if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().UpdateCurrentBattle( true, false );
-}
-
-
-void Ui::OnBattleMapChanged( Battle& battle )
-{
-    if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().UpdateCurrentBattle( true );
-    if (battle.IsFounderMe())
-    {
-        battle.CustomBattleOptions().loadMapOptions(battle.GetHostMapName());
-        mw().GetJoinTab().ReloadMMoptTab();
-    }
-}
-
-
-void Ui::OnBattleDisableUnit( Battle& battle, const wxString& unitname )
-{
-    if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().UpdateCurrentBattle( false, true );
-}
-
-
-void Ui::OnBattleEnableUnit( Battle& battle, const wxString& unitname )
-{
-    if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().UpdateCurrentBattle( false, true );
-}
-
-
-void Ui::OnBattleEnableAllUnits( Battle& battle )
-{
-    if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().UpdateCurrentBattle( false, true );
 }
 
 
