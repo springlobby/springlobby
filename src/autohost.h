@@ -13,6 +13,10 @@ class AutoHost
   public:
 
     void OnSaidBattle( Battle& battle, const wxString& nick, const wxString& msg );
+
+  private:
+
+    void StartBattle( Battle& battle );
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_AUTOHOST_H
