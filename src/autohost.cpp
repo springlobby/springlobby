@@ -7,14 +7,26 @@
 
 void AutoHost::OnSaidBattle( Battle& battle, const wxString& nick, const wxString& msg )
 {
+  // protect against command spam
+
+  time_t currentTime = time(NULL);
+
+  if ((currentTime - m_lastActionTime) < 5)
+    return;
+
+  // check for autohost commands
+
   if (msg == _T("!start")) {
     StartBattle(battle);
+    m_lastActionTime = currentTime;
   }
   else if (msg == _T("!balance")) {
     battle.Autobalance(balance_random, false, false);
+    m_lastActionTime = currentTime;
   }
   else if (msg == _T("!cbalance")) {
     battle.Autobalance(balance_random, true, false);
+    m_lastActionTime = currentTime;
   }
 }
 
