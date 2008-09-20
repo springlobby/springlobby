@@ -524,6 +524,18 @@ void ServerEvents::OnSaidBattle( int battleid, const wxString& nick, const wxStr
 {
   Battle& battle = m_serv.GetBattle( battleid );
   m_ui.OnSaidBattle( battle, nick, msg );
+
+  // autohost prototype code
+  // todo: perform the checks which are now in BattleRoomTab::OnStart
+  if (msg == _T("!start")) {
+    m_serv.StartHostedBattle();
+  }
+  else if (msg == _T("!balance")) {
+    battle.Autobalance(balance_random, false, false);
+  }
+  else if (msg == _T("!cbalance")) {
+    battle.Autobalance(balance_random, true, false);
+  }
 }
 
 void ServerEvents::OnBattleAction( int battleid, const wxString& nick, const wxString& msg )
