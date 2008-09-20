@@ -312,6 +312,10 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
     else if ( key == _T("ghostedbuildings") ) m_options_checks->Check( GHOUSTED_INDEX, longval );
     else if ( key == _T("diminishingmms") ) m_options_checks->Check( DIM_MMS_INDEX, longval );
   }
+  else if ( type == PrivateOptions )
+  {
+    if ( key == _T("restrictions") ) ReloadRestrictions();
+  }
 }
 
 void BattleOptionsTab::ReloadRestrictions()
@@ -321,7 +325,7 @@ void BattleOptionsTab::ReloadRestrictions()
   if ( m_battle.GetHostModName() == wxEmptyString ) return;
 
   try {
-    m_allowed_list->InsertItems( usync()->GetUnitsList( m_battle.GetHostModName() ), 0 );
+    m_allowed_list->InsertItems( usync().GetUnitsList( m_battle.GetHostModName() ), 0 );
   } catch (...) {}
   wxArrayString units = m_battle.DisabledUnits();
 

@@ -28,11 +28,9 @@
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 
 
-IUnitSync* usync()
+IUnitSync& usync()
 {
-  static SpringUnitSync* m_sync = 0;
-  if (!m_sync)
-    m_sync = new SpringUnitSync;
+  static SpringUnitSync m_sync;
   return m_sync;
 }
 
@@ -886,8 +884,8 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
 
 bool SpringUnitSync::ReloadUnitSyncLib()
 {
-  usync()->FreeUnitSyncLib();
-  usync()->LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() );
+  usync().FreeUnitSyncLib();
+  usync().LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() );
   return true;
 }
 

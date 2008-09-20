@@ -22,6 +22,7 @@ class MainSinglePlayerTab : public wxPanel
 
     void UpdateMinimap();
     void OnUnitSyncReloaded();
+    void Update( const wxString& Tag );
 
     void ReloadRestrictions();
     void ReloadMapOptContrls();

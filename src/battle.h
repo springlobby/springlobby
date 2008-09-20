@@ -212,9 +212,7 @@ class Battle : public UserList, public IBattle
     int GetMyAlly() { return GetMe().BattleStatus().ally; }
     void SetMyAlly( int ally ) { GetMe().BattleStatus().ally = ally; SendMyBattleStatus(); }
 
-    std::map<unsigned int, BattleStartRect>::size_type GetNumRects();
-
-    mmOptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
+    unsigned int GetNumRects();
 
     void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true);
 
@@ -243,8 +241,6 @@ class Battle : public UserList, public IBattle
 
     mutable std::list<BattleBot*>::const_iterator m_bot_seek;
     mutable std::list<BattleBot*>::size_type m_bot_pos;
-
-    mmOptionsWrapper m_opt_wrap;
 
     void RemoveUser( wxString const& user ) {}
 };

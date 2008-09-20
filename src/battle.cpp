@@ -240,7 +240,7 @@ void Battle::OnRequestBattleStatus()
   bs.spectator = false;
   bs.colour = sett().GetBattleLastColour();
   /// theres some highly annoying bug with color changes on player join/leave.
-  bs.colour = GetFreeColour(&m_serv.GetMe());
+  if ( !bs.colour.IsColourOk() ) bs.colour = GetFreeColour(&m_serv.GetMe());
 
   SendMyBattleStatus();
 }
@@ -271,17 +271,17 @@ bool Battle::IsSynced()
   LoadMod();
   LoadMap();
   bool synced = true;
-  if ( !m_host_map_hash.IsEmpty() ) synced = synced && (m_local_map.hash == m_host_map_hash);
-  if ( !m_host_map_name.IsEmpty() ) synced = synced && (m_local_map.name == m_host_map_name);
-  if ( !m_host_mod_hash.IsEmpty() ) synced = synced && (m_local_mod.hash == m_host_mod_hash);
-  if ( !m_host_mod_name.IsEmpty() ) synced = synced && (m_local_mod.name == m_host_mod_name);
+  if ( !m_host_map.hash.IsEmpty() ) synced = synced && (m_local_map.hash == m_host_map.hash);
+  if ( !m_host_map.name.IsEmpty() ) synced = synced && (m_local_map.name == m_host_map.name);
+  if ( !m_host_mod.hash.IsEmpty() ) synced = synced && (m_local_mod.hash == m_host_mod.hash);
+  if ( !m_host_mod.name.IsEmpty() ) synced = synced && (m_local_mod.name == m_host_mod.name);
   return synced;
 }
 
 
 /*bool Battle::HasMod()
 {
-  return usync()->ModExists( m_opts.modname );
+  return usync().ModExists( m_opts.modname );
 }*/
 
 
@@ -800,7 +800,7 @@ void Battle::SetHandicap( User& user, int handicap)
 }
 
 
-std::vector<BattleStartRect*>::size_type Battle::GetNumRects()
+unsigned int Battle::GetNumRects()
 {
   return m_rects.size();
 }
@@ -872,7 +872,7 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
   int ally=0;
   for(int i=0;i<tmp;++i){
     BattleStartRect sr = m_rects[i];
-    if( sr.exist && !sr.todelete ){
+    if( sr.IsOk() ){
       ally=i;
       alliances.push_back(Alliance(ally));
       ally++;
@@ -980,7 +980,6 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
       ASSERT_LOGIC(alliances[i].players[j],_T("fail in Autobalance, NULL player"));
       wxString msg=wxString::Format(_T("setting player %s to alliance %d"),alliances[i].players[j]->GetNick().c_str(),i);
       wxLogMessage(_T("%s"),msg.c_str());
-      m_ui.OnBattleAction(*this,wxString(_T(" ")),msg);
       ForceAlly(*alliances[i].players[j],alliances[i].allynum);
     }
   }

@@ -100,10 +100,6 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   SetSizer( m_main_sizer );
   Layout();
 
-  if(battle.IsFounderMe()){
-    sett().LoadBattleMapOptions(&m_battle);
-    m_battle.SendHostInfo( HI_StartRects );
-  }
   ReloadMaplist();
   Update();
 
@@ -115,9 +111,6 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
 BattleMapTab::~BattleMapTab()
 {
-  if(m_battle.IsFounderMe()){
-    sett().SaveBattleMapOptions(&m_battle);
-  }
 }
 
 
@@ -163,6 +156,13 @@ void BattleMapTab::Update( const wxString& Tag )
      m_minimap->UpdateMinimap();
     }
   }
+  else if ( type == PrivateOptions )
+  {
+    if ( key == _T("mapname") )
+    {
+      Update();
+    }
+  }
 }
 
 
@@ -170,7 +170,7 @@ void BattleMapTab::ReloadMaplist()
 {
   m_map_combo->Clear();
 
-  wxArrayString maplist= usync()->GetMapList();
+  wxArrayString maplist= usync().GetMapList();
  // maplist.Sort(CompareStringIgnoreCase);
 
   size_t nummaps = maplist.Count();
@@ -196,24 +196,17 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
     return;
   }
 
-  sett().SaveBattleMapOptions(&m_battle);
-
   int index = m_map_combo->GetCurrentSelection();
   //wxString name = m_map_combo->GetString( index );
-  try {
-    UnitSyncMap map = usync()->GetMapEx( index );
+  try
+  {
+    UnitSyncMap map = usync().GetMapEx( index );
     m_battle.SetLocalMap( map );
     m_battle.SetHostMap( map.name, map.hash );
 
-    m_ui.OnBattleMapChanged(m_battle);
     m_battle.SendHostInfo( HI_Map );
-
     for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
     m_battle.SendHostInfo( HI_StartRects );
-
-    sett().LoadBattleMapOptions(&m_battle);
-    m_battle.SendHostInfo( HI_StartRects );
-
   } catch (...) {}
 }
 

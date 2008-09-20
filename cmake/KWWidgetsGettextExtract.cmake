@@ -22,7 +22,7 @@ SET(SUCCESS 1)
 IF(NOT "${GETTEXT_XGETTEXT_EXECUTABLE}" STREQUAL "")
 
   # Extract the strings, store the result in a variable instead of a POT file
-
+    MESSAGE("didel")
   EXEC_PROGRAM(${GETTEXT_XGETTEXT_EXECUTABLE} 
     RETURN_VALUE xgettext_return
     OUTPUT_VARIABLE xgettext_output
