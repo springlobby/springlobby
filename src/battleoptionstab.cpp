@@ -527,7 +527,7 @@ void BattleOptionsTab::OnLoadPreset( wxCommandEvent& event )
   wxString presetname = m_options_preset_sel->GetValue();
   if ( presetname.IsEmpty() )
   {
-     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot load an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION );
+     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot load an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
      return;
   }
   m_battle.LoadOptionsPreset( presetname );
@@ -541,7 +541,7 @@ void BattleOptionsTab::OnSavePreset( wxCommandEvent& event )
   wxString presetname = m_options_preset_sel->GetValue();
   if ( presetname.IsEmpty() )
   {
-     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot save an options set without a name\nPlease write one in the list or chose an existing to overwrite and try again."), _("error"), wxICON_EXCLAMATION );
+     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot save an options set without a name\nPlease write one in the list or chose an existing to overwrite and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
      return;
   }
   m_battle.SaveOptionsPreset( presetname );
@@ -554,7 +554,7 @@ void BattleOptionsTab::OnDeletePreset( wxCommandEvent& event )
   wxString presetname = m_options_preset_sel->GetValue();
   if ( presetname.IsEmpty() )
   {
-     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot delete an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION );
+     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot delete an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
      return;
   }
   m_battle.DeletePreset( presetname );
@@ -566,7 +566,7 @@ void BattleOptionsTab::OnSetModDefaultPreset( wxCommandEvent& event )
   wxString presetname = m_options_preset_sel->GetValue();
   if ( presetname.IsEmpty() )
   {
-     customMessageBoxNoModal( SL_MAIN_ICON , _("No options set is selected to set as default\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION );
+     customMessageBoxNoModal( SL_MAIN_ICON , _("No options set is selected to set as default\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
      return;
   }
   sett().SetModDefaultPresetName( m_battle.GetHostModName(), presetname );
