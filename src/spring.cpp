@@ -97,7 +97,8 @@ bool Spring::Run( Battle& battle )
   torrent().SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
   #endif
 
-  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" \"") + path +  _T("script.txt\"");
+  wxString extra = battle.GetAutoHost().GetExtraCommandLineParams();
+  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + extra + _T(" \"") + path +  _T("script.txt\"");
   wxLogMessage( _T("cmd: %s"), cmd.c_str() );
   wxSetWorkingDirectory( sett().GetSpringDir() );
   if ( sett().UseOldSpringLaunchMethod() ) {

@@ -18,6 +18,8 @@ class AutoHost
 
     void OnSaidBattle( const wxString& nick, const wxString& msg );
 
+    wxString GetExtraCommandLineParams();
+
   private:
 
     void StartBattle();

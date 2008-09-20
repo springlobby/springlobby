@@ -69,3 +69,15 @@ void AutoHost::StartBattle()
 
   m_battle.GetServer().StartHostedBattle();
 }
+
+
+wxString AutoHost::GetExtraCommandLineParams()
+{
+  if (m_enabled) {
+    // -m, --minimise          Start minimised
+    // -q [T], --quit=[T]      Quit immediately on game over or after T seconds
+    return _T("--minimise --quit=1000000000");
+  }
+  else
+    return wxEmptyString;
+}
