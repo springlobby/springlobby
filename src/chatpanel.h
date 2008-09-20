@@ -206,12 +206,13 @@ class ChatPanel : public wxPanel
     wxMenuItem* m_autorejoin;
     ChatLog* m_chat_log;
     wxMenuItem* displayjoinitem;
-    SL_GENERIC::UserMenu<ChatPanel>* m_usermenu;
+    typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
+    UserMenu* m_usermenu;
 
     void LogTime();
     void CreateControls( );
     void CreatePopup();
-    SL_GENERIC::UserMenu<ChatPanel>* CreateNickListMenu();
+    UserMenu* CreateNickListMenu();
 
     static const int m_groupMenu_baseID = 6798;
 	TextCompletionDatabase textcompletiondatabase;

@@ -50,7 +50,6 @@ BEGIN_EVENT_TABLE(MyTextCtrl, wxTextCtrl)
 EVT_PAINT(MyTextCtrl::OnPaint)
 END_EVENT_TABLE()
 */
-//typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
 
 BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
@@ -400,9 +399,9 @@ void ChatPanel::CreatePopup() {
 }
 
 
-SL_GENERIC::UserMenu<ChatPanel>* ChatPanel::CreateNickListMenu() {
-	SL_GENERIC::UserMenu<ChatPanel>* m_user_menu;
-	m_user_menu = new SL_GENERIC::UserMenu<ChatPanel>( this );
+ChatPanel::UserMenu* ChatPanel::CreateNickListMenu() {
+	ChatPanel::UserMenu* m_user_menu;
+	m_user_menu = new ChatPanel::UserMenu( this );
 	wxMenuItem* chatitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_CHAT,  _( "Open Chat" ) , wxEmptyString, wxITEM_NORMAL );
 	m_user_menu->Append( chatitem );
     wxMenuItem* joinbattleitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_JOIN,  _( "Join same battle" ) , wxEmptyString, wxITEM_NORMAL );

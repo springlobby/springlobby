@@ -17,8 +17,11 @@ class ChatPanel;
 
 class NickListCtrl : public customListCtrl
 {
+  protected:
+    typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
+
   public:
-    NickListCtrl( wxWindow* parent, bool show_header = true, SL_GENERIC::UserMenu<ChatPanel>* popup = 0,
+    NickListCtrl( wxWindow* parent, bool show_header = true, UserMenu* popup = 0,
         bool singleSelectList = true, const wxString& name = _T("NickListCtrl"), bool highlight = true  );
     ~NickListCtrl();
 
@@ -55,7 +58,7 @@ class NickListCtrl : public customListCtrl
 
     UserList* m_users;
 
-    SL_GENERIC::UserMenu<ChatPanel>* m_menu;
+    UserMenu* m_menu;
 
     struct {
       int col;
