@@ -12,14 +12,19 @@ class AutoHost
 {
   public:
 
-    AutoHost() : m_lastActionTime(0) {}
+    AutoHost( Battle& battle );
 
-    void OnSaidBattle( Battle& battle, const wxString& nick, const wxString& msg );
+    void SetEnabled( const bool enabled );
+
+    void OnSaidBattle( const wxString& nick, const wxString& msg );
 
   private:
 
-    void StartBattle( Battle& battle );
+    void StartBattle();
 
+    Battle& m_battle;
+
+    bool m_enabled;
     time_t m_lastActionTime;
 };
 

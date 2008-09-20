@@ -48,6 +48,7 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
   EVT_CHECKBOX( BROOM_IMREADY, BattleRoomTab::OnImReady )
   EVT_CHECKBOX( BROOM_LOCK, BattleRoomTab::OnLock )
   EVT_CHECKBOX( BROOM_SPEC, BattleRoomTab::OnImSpec )
+  EVT_CHECKBOX( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
   EVT_COMBOBOX( BROOM_TEAMSEL, BattleRoomTab::OnTeamSel )
   EVT_COMBOBOX( BROOM_ALLYSEL, BattleRoomTab::OnAllySel )
   EVT_BUTTON( BROOM_COLOURSEL, BattleRoomTab::OnColourSel )
@@ -128,6 +129,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_spec_chk->SetToolTip(_("Spectate (watch) the battle instead of playing"));
   m_ready_chk = new wxCheckBox( m_player_panel, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_ready_chk->SetToolTip(_("Click this if you are content with the battle settings."));
+  m_autohost_chk = new wxCheckBox( this, BROOM_AUTOHOST, _("Autohost"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+  m_autohost_chk->SetToolTip(_("Toggle autohost mode.  This allows players to control your battle using commands like '!balance' and '!start'."));
 
 
   m_options_preset_sel = new wxComboBox( this, BROOM_PRESETSEL, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
@@ -206,6 +209,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_buttons_sizer->Add( m_leave_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->AddStretchSpacer();
   m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
+  m_buttons_sizer->Add( m_autohost_chk, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_lock_chk, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_fix_colours_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_balance_btn, 0, wxEXPAND | wxALL, 2 );
@@ -238,6 +242,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
       m_lock_chk->Disable();
       m_lock_chk->SetToolTip(_("Only the host can lock the game."));
+
+      m_autohost_chk->Disable();
+      m_autohost_chk->SetToolTip(_("Only the host can toggle autohost mode."));
     }
   else
     {
@@ -496,6 +503,12 @@ void BattleRoomTab::OnLock( wxCommandEvent& event )
 {
   m_battle.SetIsLocked( m_lock_chk->GetValue() );
   m_battle.SendHostInfo( HI_Locked );
+}
+
+
+void BattleRoomTab::OnAutoHost( wxCommandEvent& event )
+{
+  m_battle.GetAutoHost().SetEnabled( m_autohost_chk->GetValue() );
 }
 
 

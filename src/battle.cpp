@@ -60,6 +60,7 @@ const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBo
 Battle::Battle( Server& serv, Ui& ui, int id ) :
   m_serv(serv),
   m_ui(ui),
+  m_ah(*this),
   m_ingame(false),
   m_order(0),
   m_bot_seek(m_bots.end()),
@@ -74,12 +75,6 @@ Battle::~Battle() {
   for (user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
 //    GetUser(i).SetBattle( 0 );
   ClearStartRects();
-}
-
-
-Server& Battle::GetServer()
-{
-  return m_serv;
 }
 
 
