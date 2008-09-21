@@ -1610,10 +1610,8 @@ void ChatPanel::OnUserMenuCreateGroup( wxCommandEvent& event )
             ui().mw().ShowConfigure( OPT_PAGE_GROUPS );
         }
         else
-            customMessageBox( SL_MAIN_ICON, _("couldn't add user"), _("Error") );
+            customMessageBoxNoModal( SL_MAIN_ICON, _("couldn't add user"), _("Error") );
     }
-
-
 }
 
 
