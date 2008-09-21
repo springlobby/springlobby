@@ -75,6 +75,11 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
       m_battle.DoAction( _T( "Profile not found, use !listprofiles for a list of available profiles." ) );
     m_lastActionTime = currentTime;
   }
+  else if ( msg == _T("!fixcolors") ) {
+    m_battle.FixColours();
+    m_battle.DoAction( _T( "is fixing colors." ) );
+    m_lastActionTime = currentTime;
+  }
 }
 
 
