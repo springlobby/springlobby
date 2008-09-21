@@ -323,7 +323,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
     if ( key == _T("mapname") ) /// the map has been changed
     {
       try { /// updates map info summary
-        ASSERT_RUNTIME( m_battle.MapExists(), _("Map does not exist.") );
+        ASSERT_EXCEPTION( m_battle.MapExists(), _("Map does not exist.") );
         UnitSyncMap map = m_battle.LoadMap();
         m_map_lbl->SetLabel( RefineMapname( map.name ) );
         m_opts_list->SetItem( m_opt_list_map[ _("Size") ] , 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );

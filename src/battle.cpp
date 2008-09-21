@@ -329,7 +329,7 @@ int Battle::GetMyPlayerNum() const
   for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
     if ( &GetUser(i) == &m_serv.GetMe() ) return i;
   }
-  ASSERT_RUNTIME(false, _T("You are not in this game.") );
+  ASSERT_EXCEPTION(false, _T("You are not in this game.") );
   return -1;
 }
 

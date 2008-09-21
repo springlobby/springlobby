@@ -222,27 +222,27 @@ void MainJoinBattleTab::ReloadPresetList()
 
 BattleRoomTab& MainJoinBattleTab::GetBattleRoomTab()
 {
-  ASSERT_RUNTIME( m_battle_tab, _T("m_battle_tab == 0") );
+  ASSERT_EXCEPTION( m_battle_tab, _T("m_battle_tab == 0") );
   return *m_battle_tab;
 }
 
 
 BattleMapTab& MainJoinBattleTab::GetBattleMapTab()
 {
-  ASSERT_RUNTIME( m_map_tab, _T("m_map_tab == 0") );
+  ASSERT_EXCEPTION( m_map_tab, _T("m_map_tab == 0") );
    return *m_map_tab;
 }
 
 
 BattleOptionsTab& MainJoinBattleTab::GetOptionsTab()
 {
-  ASSERT_RUNTIME( m_opts_tab, _T("m_opts_tab == 0") );
+  ASSERT_EXCEPTION( m_opts_tab, _T("m_opts_tab == 0") );
    return *m_opts_tab;
 }
 
 
 BattleroomMMOptionsTab& MainJoinBattleTab::GetMMOptionsTab()
 {
-  ASSERT_RUNTIME( m_mm_opts_tab, _T("m_mm_opts_tab == 0") );
+  ASSERT_EXCEPTION( m_mm_opts_tab, _T("m_mm_opts_tab == 0") );
   return *m_mm_opts_tab;
 }

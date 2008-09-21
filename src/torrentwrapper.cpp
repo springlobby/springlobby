@@ -910,7 +910,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
             ///torrent has finished download, refresh unitsync and remove file from list
             try
             {
-                ASSERT_RUNTIME( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
+                ASSERT_EXCEPTION( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
 
                 m_socket_class->Send( _T("N-|")  + it->second->hash + _T("\n") ); ///notify the system we don't need the file anymore
 
@@ -927,7 +927,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
         {
             try
             {
-                ASSERT_RUNTIME( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
+                ASSERT_EXCEPTION( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
             }
             catch (std::exception& e)
             {

@@ -182,7 +182,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
 {
   wxLogDebugFunc( _T("") );
   try{
-  ASSERT_RUNTIME( !m_serv.BattleExists( id ), _T("New battle from server, but already exists!") );
+  ASSERT_EXCEPTION( !m_serv.BattleExists( id ), _T("New battle from server, but already exists!") );
   Battle& battle = m_serv._AddBattle( id );
 
   User& user = m_serv.GetUser( nick );
