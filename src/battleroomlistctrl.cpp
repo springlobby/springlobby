@@ -22,6 +22,7 @@
 #include "utils.h"
 #include "uiutils.h"
 #include "countrycodes.h"
+#include "mainwindow.h"
 
 #include "settings++/custom_dialogs.h"
 
@@ -33,6 +34,8 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  customListCtrl)
   EVT_LIST_COL_CLICK       ( BRLIST_LIST, BattleroomListCtrl::OnColClick )
   EVT_MENU                 ( BRLIST_SPEC, BattleroomListCtrl::OnSpecSelect )
   EVT_MENU                 ( BRLIST_KICK, BattleroomListCtrl::OnKickPlayer )
+//  EVT_MENU                 ( BRLIST_ADDCREATEGROUP, BattleroomListCtrl::OnPlayerAddToGroup )
+//  EVT_MENU                 ( BRLIST_ADDTOGROUP, BattleroomListCtrl::OnPlayerAddToGroup )
   EVT_MENU                 ( BRLIST_RING, BattleroomListCtrl::OnRingPlayer )
   EVT_MENU                 ( BRLIST_COLOUR, BattleroomListCtrl::OnColourSelect )
   EVT_MENU                 ( BRLIST_HANDICAP, BattleroomListCtrl::OnHandicapSelect )
@@ -115,7 +118,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   SetColumnWidth( 8, 80 );
   SetColumnWidth( 9, 130 );
 
-  m_popup = new wxMenu();
+  m_popup = new UserMenu(this);
   wxMenu* m_teams;
   m_teams = new wxMenu();
 
@@ -440,6 +443,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
   }
 
   wxLogMessage(_T("Popup"));
+  m_popup->EnableItems(!item_content.is_bot, GetSelectedUserNick() );
   PopupMenu( m_popup );
   wxLogMessage(_T("Done"));
 }
@@ -1054,4 +1058,39 @@ void BattleroomListCtrl::HighlightItem( long item )
         User& user = *((User*) user_content.data);
         HighlightItemUser( item, user.GetNick() );
     }
+}
+
+void BattleroomListCtrl::OnUserMenuAddToGroup( wxCommandEvent& event )
+{
+    int id  = event.GetId() - GROUP_ID;
+    wxString groupname = m_popup->GetGroupByEvtID(id);
+    wxString nick = GetSelectedUserNick();
+    useractions().AddUserToGroup( groupname, nick );
+}
+
+void BattleroomListCtrl::OnUserMenuDeleteFromGroup( wxCommandEvent& event )
+{
+    wxString nick = GetSelectedUserNick();
+    useractions().RemoveUser( nick );
+}
+
+void BattleroomListCtrl::OnUserMenuCreateGroup( wxCommandEvent& event )
+{
+    wxString name;
+    if ( ui().AskText( _("Enter name"),
+        _("Please enter the name for the new group.\nAfter clicking ok you will be taken to adjust its settings."), name ) )
+    {
+        wxString nick = GetSelectedUserNick();
+
+        useractions().AddGroup( name );
+        useractions().AddUserToGroup( name, nick );
+        ui().mw().ShowConfigure( OPT_PAGE_GROUPS );
+    }
+}
+
+wxString BattleroomListCtrl::GetSelectedUserNick()
+{
+    item_content content = this->items[(size_t)GetSelectedData()];
+    return (content.is_bot ?((BattleBot*)content.data)->name
+                    : ((User*)content.data)->GetNick() );
 }
