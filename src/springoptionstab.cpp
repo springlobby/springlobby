@@ -575,3 +575,8 @@ void SpringOptionsTab::OnDefaultWeb( wxCommandEvent& event )
   HandleWebloc( m_web_def_radio->GetValue() );
 }
 
+void SpringOptionsTab::ReloadSpringPathFromConfig()
+{
+  m_dir_edit->SetValue( sett().GetSpringDir() );
+}
+

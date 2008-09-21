@@ -9,6 +9,7 @@
 #include "iunitsync.h"
 #include "user.h"
 #include "mmoptionswrapper.h"
+#include "ui.h"
 
 #define HI_None 0
 #define HI_Map 1
@@ -144,10 +145,11 @@ class IBattle
 
     virtual mmOptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
 
-    virtual void LoadOptionsPreset( const wxString& name );
+    virtual bool LoadOptionsPreset( const wxString& name );
     virtual void SaveOptionsPreset( const wxString& name );
     virtual wxString GetCurrentPreset();
     virtual void DeletePreset( const wxString& name );
+    virtual wxArrayString GetPresetList();
 
     virtual void Update ( const wxString& Tag ) =0;
 

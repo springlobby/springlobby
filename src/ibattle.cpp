@@ -172,8 +172,9 @@ unsigned int IBattle::AddBot( int ally, int posx, int posy, int handicap, const 
   return (unsigned int)(-1);/// note: that looks pretty crappy and needs to be investigated.
 }
 
-void IBattle::LoadOptionsPreset( const wxString& name )
+bool IBattle::LoadOptionsPreset( const wxString& name )
 {
+  if ( sett().GetPresetList().Index( name ) == -1 ) return false; ///preset not found
   m_preset = name;
   for ( int i = 0; i < (int)LastOption; i++)
   {
@@ -214,6 +215,8 @@ void IBattle::LoadOptionsPreset( const wxString& name )
 
     }
   }
+  ui().ReloadPresetList();
+  return true;
 }
 
 
@@ -231,7 +234,7 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       std::map<wxString,wxString> opts;
       opts[_T("mapname")] = GetHostMapName();
       unsigned int validrectcount = 0;
-      if ( CustomBattleOptions().getSingleValue( _T("startpostype"), EngineOption ) == ST_Choose )
+      if ( s2l (CustomBattleOptions().getSingleValue( _T("startpostype"), EngineOption ) ) == ST_Choose )
       {
         unsigned int boxcount = GetNumRects();
         for ( unsigned int boxnum = 0; boxnum < boxcount; boxnum++ )
@@ -261,6 +264,7 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       sett().SetHostingPreset( name, (GameOption)i, opts );
     }
   }
+  ui().ReloadPresetList();
 }
 
 
@@ -274,4 +278,10 @@ void IBattle::DeletePreset( const wxString& name )
 {
   if ( m_preset == name ) m_preset = _T("");
   sett().DeletePreset( name );
+  ui().ReloadPresetList();
+}
+
+wxArrayString IBattle::GetPresetList()
+{
+  return sett().GetPresetList();
 }

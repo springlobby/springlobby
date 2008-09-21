@@ -56,6 +56,7 @@ class BattleRoomTab : public wxPanel
     void OnAddBot( wxCommandEvent& event );
     void OnImReady( wxCommandEvent& event );
     void OnLock( wxCommandEvent& event );
+    void OnAutoHost( wxCommandEvent& event );
     void OnImSpec( wxCommandEvent& event );
     void OnTeamSel( wxCommandEvent& event );
     void OnAllySel( wxCommandEvent& event );
@@ -132,6 +133,7 @@ class BattleRoomTab : public wxPanel
     wxCheckBox* m_ready_chk;
     wxCheckBox* m_spec_chk;
     wxCheckBox* m_lock_chk;
+    wxCheckBox* m_autohost_chk;
 
     wxListCtrl* m_opts_list;
     DECLARE_EVENT_TABLE();
@@ -151,7 +153,8 @@ enum
     BROOM_ADDBOT,
     BROOM_BALANCE,
     BROOM_FIXCOLOURS,
-    BROOM_PRESETSEL
+    BROOM_PRESETSEL,
+    BROOM_AUTOHOST
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H

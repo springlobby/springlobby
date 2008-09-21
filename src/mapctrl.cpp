@@ -634,7 +634,7 @@ void MapCtrl::DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     try {
       wxString mod = m_battle->GetHostModName();
       int scount = usync().GetSideCount( mod );
-      if ( scount <= 0 ) ASSERT_RUNTIME( false, _T("Mod has no sides.") );
+      if ( scount <= 0 ) ASSERT_EXCEPTION( false, _T("Mod has no sides.") );
       wxString side = usync().GetSideName( mod, bot.bs.side % scount );
       bmp = new wxBitmap( usync().GetSidePicture( mod, side ) );
     } catch (...) {

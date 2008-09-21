@@ -150,7 +150,7 @@ bool SpringLobbyApp::OnInit()
 
         customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.?\n"
                                                  "You can disable that on options tab --> General."),_("Notice"),wxOK );
-
+        ui().mw().ReloadSpringPathFromConfig();
         ui().mw().ShowConfigure();
     }
     else

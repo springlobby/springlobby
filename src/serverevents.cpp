@@ -182,7 +182,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
 {
   wxLogDebugFunc( _T("") );
   try{
-  ASSERT_RUNTIME( !m_serv.BattleExists( id ), _T("New battle from server, but already exists!") );
+  ASSERT_EXCEPTION( !m_serv.BattleExists( id ), _T("New battle from server, but already exists!") );
   Battle& battle = m_serv._AddBattle( id );
 
   User& user = m_serv.GetUser( nick );
@@ -337,8 +337,8 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   {
     battle.SendMyBattleStatus();
     battle.CustomBattleOptions().loadOptions( MapOption, map );
+    battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
   }
-  if ( battle.IsFounderMe() ) battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
 
   m_ui.OnBattleInfoUpdated( battle );
 }
@@ -524,6 +524,7 @@ void ServerEvents::OnSaidBattle( int battleid, const wxString& nick, const wxStr
 {
   Battle& battle = m_serv.GetBattle( battleid );
   m_ui.OnSaidBattle( battle, nick, msg );
+  battle.GetAutoHost().OnSaidBattle( nick, msg );
 }
 
 void ServerEvents::OnBattleAction( int battleid, const wxString& nick, const wxString& msg )
