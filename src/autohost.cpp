@@ -47,11 +47,31 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   }
   else if (msg == _T("!help")) {
     m_battle.DoAction( _T( "The following commands are available:" ) );
-    m_battle.DoAction( _T( "!help: this guide.\n!start: starts the battle.\n!" ) );
-    m_battle.DoAction( _T( "!balance: tries to put players into teams by how many start boxes there are.\n") );
-    m_battle.DoAction( _T( "!cbalance: see !balance but tries to put clanmates togheter first.\n" ) );
-    m_battle.DoAction( _T( "!listprofiles: lists the available battle profiles.\n" ) );
-    m_battle.DoAction( _T( "!loadtprofile profilename: loads an available battle profile.\n" ) );
+    m_battle.DoAction( _T( "!help: this guide.\n!start: starts the battle." ) );
+    m_battle.DoAction( _T( "!balance: tries to put players into teams by how many start boxes there are.") );
+    m_battle.DoAction( _T( "!cbalance: see !balance but tries to put clanmates togheter first." ) );
+    m_battle.DoAction( _T( "!listprofiles: lists the available battle profiles." ) );
+    m_battle.DoAction( _T( "!loadtprofile profilename: loads an available battle profile." ) );
+    m_battle.DoAction( _T( "!ring: rings players that are not ready." ) );
+    m_lastActionTime = currentTime;
+  }
+  else if ( msg == _T("!ring") ) {
+    m_battle.RingNotReadyPlayers()
+    m_battle.DoAction( _T( "Ringing players not ready." ) );
+    m_lastActionTime = currentTime;
+  }
+  else if ( msg == _T("!listprofiles") ) {
+    wxArrayString profilelist = m_battle.GetPresetList();
+    unsigned int count = profilelist.GetCount();
+    m_battle.DoAction( _T( "The following presets are available:" ) );
+    for ( unsigned int i = 0; i < count; i++ )
+    {
+      m_battle.DoAction( profilelist[i] );
+    }
+    m_lastActionTime = currentTime;
+  }
+  else if ( msg.BeforeFirst( _T(' ') ) == _T("!loadprofile") ) {
+    if ( !m_battle.LoadOptionsPreset( msg.AfterFirst(_T(' ')) ) ) m_battle.DoAction( _T( "Profile not found, use !listprofiles for a list of available profiles." ) );
     m_lastActionTime = currentTime;
   }
 }

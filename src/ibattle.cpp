@@ -172,8 +172,9 @@ unsigned int IBattle::AddBot( int ally, int posx, int posy, int handicap, const 
   return (unsigned int)(-1);/// note: that looks pretty crappy and needs to be investigated.
 }
 
-void IBattle::LoadOptionsPreset( const wxString& name )
+bool IBattle::LoadOptionsPreset( const wxString& name )
 {
+  if ( sett().GetPresetList().Index( name ) ) == -1 ) return false; ///preset not found
   m_preset = name;
   for ( int i = 0; i < (int)LastOption; i++)
   {
@@ -214,6 +215,7 @@ void IBattle::LoadOptionsPreset( const wxString& name )
 
     }
   }
+  return true;
 }
 
 
@@ -274,4 +276,9 @@ void IBattle::DeletePreset( const wxString& name )
 {
   if ( m_preset == name ) m_preset = _T("");
   sett().DeletePreset( name );
+}
+
+wxArrayString IBattle::GetPresetList()
+{
+  return sett().GetPresetList();
 }
