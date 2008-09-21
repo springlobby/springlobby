@@ -348,7 +348,9 @@ void Battle::OnUserAdded( User& user )
 
     m_opts.spectators+=user.BattleStatus().spectator?1:0;
 
-    CheckBan(user);
+    if (CheckBan(user))
+      return;
+
     if(user.GetStatus().rank<m_opts.rankneeded){
       switch(m_opts.ranklimittype){
         case rank_limit_none:
@@ -362,10 +364,13 @@ void Battle::OnUserAdded( User& user )
         case rank_limit_autokick:
         DoAction(_T("Rank limit autokick: ")+user.GetNick());
         BattleKickPlayer(user);
-        break;
+        return;
       }
     }
+
+    m_ah.OnUserAdded(user);
   }
+  // any code here may be skipped if the user was autokicked
 }
 
 void Battle::OnUserBattleStatusUpdated( User &user ){
@@ -505,18 +510,22 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
   return false;
 }
 ///< quick hotfix for bans
-void Battle::CheckBan(User &user){
+/// returns true if user is banned (and hence has been kicked)
+bool Battle::CheckBan(User &user){
   if(IsFounderMe()){
     if(m_banned_users.count(user.GetNick())>0
         || useractions().DoActionOnUser(UserActions::ActAutokick, user.GetNick() ) ) {
       BattleKickPlayer(user);
       m_ui.OnBattleAction(*this,wxString(_T(" ")),user.GetNick()+_T(" is banned, kicking"));
-    }else
-    if(m_banned_ips.count(user.BattleStatus().ip)>0){
+      return true;
+    }
+    else if(m_banned_ips.count(user.BattleStatus().ip)>0){
       m_ui.OnBattleAction(*this,wxString(_T(" ")),user.BattleStatus().ip+_T(" is banned, kicking"));
       BattleKickPlayer(user);
+      return true;
     }
   }
+  return false;
 }
 ///>
 

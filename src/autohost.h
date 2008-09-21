@@ -6,6 +6,7 @@
 #include <wx/string.h>
 
 class Battle;
+class User;
 
 //! @brief Autohost logic
 class AutoHost
@@ -17,6 +18,7 @@ class AutoHost
     void SetEnabled( const bool enabled );
 
     void OnSaidBattle( const wxString& nick, const wxString& msg );
+    void OnUserAdded( User& user );
 
     wxString GetExtraCommandLineParams();
 

@@ -219,7 +219,7 @@ class Battle : public UserList, public IBattle
     void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true);
 
     ///< quick hotfix for bans
-    void CheckBan(User &user);
+    bool CheckBan(User &user);
     ///>
 
   protected:

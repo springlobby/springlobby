@@ -3,6 +3,7 @@
 #include "autohost.h"
 #include "battle.h"
 #include "server.h"
+#include "user.h"
 
 
 AutoHost::AutoHost( Battle& battle )
@@ -45,6 +46,17 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_battle.Autobalance(balance_random, true, false);
     m_lastActionTime = currentTime;
   }
+  else if (msg == _T("!help")) {
+    m_battle.DoAction(_T("Commands: !start !balance !cbalance !help"));
+    m_lastActionTime = currentTime;
+  }
+}
+
+
+/// Should only be called if user isn't immediately kicked (ban / rank limit)
+void AutoHost::OnUserAdded( User& user )
+{
+  m_battle.DoAction(_T("Hi ") + user.GetNick() + _T(", this battle is in SpringLobby autohost mode. For help say !help"));
 }
 
 
@@ -67,6 +79,7 @@ void AutoHost::StartBattle()
     return;
   }
 
+  m_battle.DoAction(_T("Starting game."));
   m_battle.GetServer().StartHostedBattle();
 }
 
