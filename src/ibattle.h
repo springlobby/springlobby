@@ -9,6 +9,7 @@
 #include "iunitsync.h"
 #include "user.h"
 #include "mmoptionswrapper.h"
+#include "ui.h"
 
 #define HI_None 0
 #define HI_Map 1
