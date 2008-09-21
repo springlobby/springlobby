@@ -80,8 +80,10 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_lastActionTime = currentTime;
   }
   else if ( msg.BeforeFirst( _T(' ') ) == _T("!loadprofile") ) {
-    if ( !m_battle.LoadOptionsPreset( msg.AfterFirst(_T(' ')) ) )
+    wxString profilename = msg.AfterFirst(_T(' '));
+    if ( !m_battle.LoadOptionsPreset( profilename ) )
       m_battle.DoAction( _T( "Profile not found, use !listprofiles for a list of available profiles." ) );
+    else m_battle.DoAction( _T("has loaded profile: ") + profilename );
     m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!fixcolors") ) {

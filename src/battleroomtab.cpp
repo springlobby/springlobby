@@ -572,7 +572,6 @@ void BattleRoomTab::OnPresetSel( wxCommandEvent& event )
   if ( presetname.IsEmpty() ) return;
   m_battle.LoadOptionsPreset( presetname );
   m_battle.SendHostInfo( HI_Send_All_opts );
-  m_ui.ReloadPresetList();
 }
 
 

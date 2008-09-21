@@ -215,6 +215,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
 
     }
   }
+  m_ui.ReloadPresetList();
   return true;
 }
 
@@ -263,6 +264,7 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       sett().SetHostingPreset( name, (GameOption)i, opts );
     }
   }
+  m_ui.ReloadPresetList();
 }
 
 
@@ -276,6 +278,7 @@ void IBattle::DeletePreset( const wxString& name )
 {
   if ( m_preset == name ) m_preset = _T("");
   sett().DeletePreset( name );
+  m_ui.ReloadPresetList();
 }
 
 wxArrayString IBattle::GetPresetList()
