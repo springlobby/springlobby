@@ -233,7 +233,7 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       std::map<wxString,wxString> opts;
       opts[_T("mapname")] = GetHostMapName();
       unsigned int validrectcount = 0;
-      if ( CustomBattleOptions().getSingleValue( _T("startpostype"), EngineOption ) == ST_Choose )
+      if ( s2l (CustomBattleOptions().getSingleValue( _T("startpostype"), EngineOption ) ) == ST_Choose )
       {
         unsigned int boxcount = GetNumRects();
         for ( unsigned int boxnum = 0; boxnum < boxcount; boxnum++ )
