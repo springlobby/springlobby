@@ -19,6 +19,7 @@ class AutoHost
 
     void OnSaidBattle( const wxString& nick, const wxString& msg );
     void OnUserAdded( User& user );
+    void OnUserRemoved( User& user );
 
     wxString GetExtraCommandLineParams();
 

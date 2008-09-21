@@ -54,6 +54,9 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_battle.DoAction( _T( "!listprofiles: lists the available battle profiles." ) );
     m_battle.DoAction( _T( "!loadprofile profilename: loads an available battle profile." ) );
     m_battle.DoAction( _T( "!ring: rings players that are not ready." ) );
+    m_battle.DoAction( _T( "!fixcolors: changes players duplicate colours so they are unique." ) );
+    m_battle.DoAction( _T( "!lock: prevents more people to join." ) );
+    m_battle.DoAction( _T( "!unlock: opens the battle again." ) );
     m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!ring") ) {
@@ -80,13 +83,46 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_battle.DoAction( _T( "is fixing colors." ) );
     m_lastActionTime = currentTime;
   }
+  else if ( msg == _T("!lock") ) {
+    m_battle.SetIsLocked( true );
+    m_battle.DoAction( _T( "has locked the battle." ) );
+    m_battle.SendHostInfo( HI_Locked );
+    m_lastActionTime = currentTime;
+  }
+  else if ( msg == _T("!unlock") ) {
+    m_battle.SetIsLocked( false );
+    m_battle.DoAction( _T( "has unlocked the battle." ) );
+    m_battle.SendHostInfo( HI_Locked );
+    m_lastActionTime = currentTime;
+  }
 }
 
 
 /// Should only be called if user isn't immediately kicked (ban / rank limit)
 void AutoHost::OnUserAdded( User& user )
 {
+  // do nothing if autohost functionality is disabled
+
+  if (!m_enabled)
+    return;
+
   m_battle.DoAction(_T("Hi ") + user.GetNick() + _T(", this battle is in SpringLobby autohost mode. For help say !help"));
+}
+
+
+void AutoHost::OnUserRemoved( User& user )
+{
+  // do nothing if autohost functionality is disabled
+
+  if (!m_enabled)
+    return;
+
+  if ( m_battle.GetNumUsers() == 1 && m_battle.IsLocked() )
+  {
+    m_battle.SetIsLocked( false );
+    m_battle.DoAction( _T( "has auto-unlocked the battle." ) );
+    m_battle.SendHostInfo( HI_Locked );
+  }
 }
 
 

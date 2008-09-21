@@ -417,6 +417,7 @@ void Battle::OnUserRemoved( User& user )
   }
   user.SetBattle( 0 );
   UserList::RemoveUser( user.GetNick() );
+  m_ah.OnUserRemoved(user);
 }
 
 
