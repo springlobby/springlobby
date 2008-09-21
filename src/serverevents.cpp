@@ -524,6 +524,7 @@ void ServerEvents::OnSaidBattle( int battleid, const wxString& nick, const wxStr
 {
   Battle& battle = m_serv.GetBattle( battleid );
   m_ui.OnSaidBattle( battle, nick, msg );
+  battle.GetAutoHost().OnSaidBattle( nick, msg );
 }
 
 void ServerEvents::OnBattleAction( int battleid, const wxString& nick, const wxString& msg )

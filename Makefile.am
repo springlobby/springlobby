@@ -421,6 +421,8 @@ springlobby_SOURCES = \
 	src/addbotdialog.h \
 	src/agreementdialog.cpp \
 	src/agreementdialog.h \
+	src/autohost.cpp \
+	src/autohost.h \
 	src/base64.cpp \
 	src/base64.h \
 	src/battle.cpp \
