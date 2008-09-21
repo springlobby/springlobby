@@ -337,8 +337,8 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   {
     battle.SendMyBattleStatus();
     battle.CustomBattleOptions().loadOptions( MapOption, map );
+    battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
   }
-  if ( battle.IsFounderMe() ) battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
 
   m_ui.OnBattleInfoUpdated( battle );
 }

@@ -192,7 +192,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
 {
 
   if ( !m_battle.IsFounderMe() ) {
-    m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetHostMapName() ) ) );
+    //m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetHostMapName() ) ) );
     return;
   }
 
@@ -202,7 +202,6 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
   {
     UnitSyncMap map = usync().GetMapEx( index );
     m_battle.SetLocalMap( map );
-    m_battle.SetHostMap( map.name, map.hash );
 
     m_battle.SendHostInfo( HI_Map );
     for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
