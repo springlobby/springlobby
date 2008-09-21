@@ -264,6 +264,7 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       sett().SetHostingPreset( name, (GameOption)i, opts );
     }
   }
+  sett().SaveSettings();
   ui().ReloadPresetList();
 }
 
