@@ -3,6 +3,7 @@
 #include "autohost.h"
 #include "battle.h"
 #include "server.h"
+#include "settings.h"
 #include "user.h"
 
 
@@ -165,6 +166,10 @@ void AutoHost::StartBattle()
 
   m_battle.DoAction(_T("is starting game ..."));
   m_battle.GetServer().StartHostedBattle();
+
+  // todo: copied from Ui::StartHostedBattle
+  sett().SetLastHostMap( m_battle.GetHostMapName() );
+  sett().SaveSettings();
 }
 
 
