@@ -48,9 +48,10 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   }
   else if (msg == _T("!help")) {
     m_battle.DoAction( _T( "The following commands are available:" ) );
-    m_battle.DoAction( _T( "!help: this guide.\n!start: starts the battle." ) );
+    m_battle.DoAction( _T( "!help: this guide." ) );
+    m_battle.DoAction( _T( "!start: starts the battle." ) );
     m_battle.DoAction( _T( "!balance: tries to put players into teams by how many start boxes there are.") );
-    m_battle.DoAction( _T( "!cbalance: see !balance but tries to put clanmates togheter first." ) );
+    m_battle.DoAction( _T( "!cbalance: see !balance but tries to put clanmates together first." ) );
     m_battle.DoAction( _T( "!listprofiles: lists the available battle profiles." ) );
     m_battle.DoAction( _T( "!loadprofile profilename: loads an available battle profile." ) );
     m_battle.DoAction( _T( "!ring: rings players that are not ready." ) );
@@ -58,15 +59,20 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   }
   else if ( msg == _T("!ring") ) {
     m_battle.RingNotReadyPlayers();
-    m_battle.DoAction( _T( "Ringing players not ready." ) );
+    m_battle.DoAction( _T( "is ringing players not ready ..." ) );
     m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!listprofiles") ) {
     wxArrayString profilelist = m_battle.GetPresetList();
     unsigned int count = profilelist.GetCount();
-    m_battle.DoAction( _T( "The following presets are available:" ) );
-    for ( unsigned int i = 0; i < count; i++ ) {
-      m_battle.DoAction( profilelist[i] );
+    if (count == 0) {
+      m_battle.DoAction( _T( "There are no presets available.") );
+    }
+    else {
+      m_battle.DoAction( _T( "The following presets are available:" ) );
+      for ( unsigned int i = 0; i < count; i++ ) {
+        m_battle.DoAction( profilelist[i] );
+      }
     }
     m_lastActionTime = currentTime;
   }
@@ -99,12 +105,10 @@ void AutoHost::StartBattle()
 
   if ( !m_battle.IsEveryoneReady() ) {
     m_battle.DoAction(_T("Some players are not ready yet."));
-    //"Some players are not ready yet.\nRing these players?"
-    //m_battle.RingNotReadyPlayers();
     return;
   }
 
-  m_battle.DoAction(_T("Starting game."));
+  m_battle.DoAction(_T("is starting game ..."));
   m_battle.GetServer().StartHostedBattle();
 }
 
