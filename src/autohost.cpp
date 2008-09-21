@@ -52,7 +52,7 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_battle.DoAction( _T( "!balance: tries to put players into teams by how many start boxes there are.") );
     m_battle.DoAction( _T( "!cbalance: see !balance but tries to put clanmates togheter first." ) );
     m_battle.DoAction( _T( "!listprofiles: lists the available battle profiles." ) );
-    m_battle.DoAction( _T( "!loadtprofile profilename: loads an available battle profile." ) );
+    m_battle.DoAction( _T( "!loadprofile profilename: loads an available battle profile." ) );
     m_battle.DoAction( _T( "!ring: rings players that are not ready." ) );
     m_lastActionTime = currentTime;
   }
