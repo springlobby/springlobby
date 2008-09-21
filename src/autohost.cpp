@@ -45,6 +45,15 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_battle.Autobalance(balance_random, true, false);
     m_lastActionTime = currentTime;
   }
+  else if (msg == _T("!help")) {
+    m_battle.DoAction( _T( "The following commands are available:" ) );
+    m_battle.DoAction( _T( "!help: this guide.\n!start: starts the battle.\n!" ) );
+    m_battle.DoAction( _T( "!balance: tries to put players into teams by how many start boxes there are.\n") );
+    m_battle.DoAction( _T( "!cbalance: see !balance but tries to put clanmates togheter first.\n" ) );
+    m_battle.DoAction( _T( "!listprofiles: lists the available battle profiles.\n" ) );
+    m_battle.DoAction( _T( "!loadtprofile profilename: loads an available battle profile.\n" ) );
+    m_lastActionTime = currentTime;
+  }
 }
 
 
