@@ -69,11 +69,12 @@ BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
   #endif
 }
 
+
 void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag)
 {
     const int col_gap = 35;
 	wxString pref = wxString::Format( _T("%d"),optFlag) + wxsep;
-	mmOptionsWrapper optWrap = *m_battle.CustomBattleOptions();
+	mmOptionsWrapper optWrap = m_battle.CustomBattleOptions();
 	bool enable = m_battle.IsFounderMe();
 	wxFlexGridSizer* cbxSizer =  new wxFlexGridSizer( 4, 2, 10, 10 );
 	wxFlexGridSizer* spinSizer =  new wxFlexGridSizer( 4, 10, 10 );
@@ -163,13 +164,12 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 
 void BattleroomMMOptionsTab::OnChkBoxChange(wxCommandEvent& event)
 {
-	mmOptionsWrapper* optWrap = m_battle.CustomBattleOptions();
 	wxCheckBox* box = (wxCheckBox*) event.GetEventObject();
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption ;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
 
-	if( optWrap->setSingleOption( key , (box->GetValue() ? _T("1") : _T("0")) , (GameOption)gameoption ) )
+	if( m_battle.CustomBattleOptions().setSingleOption( key , (box->GetValue() ? _T("1") : _T("0")) , (GameOption)gameoption ) )
 	{
         if (m_battle.IsFounderMe())
         {
@@ -180,15 +180,14 @@ void BattleroomMMOptionsTab::OnChkBoxChange(wxCommandEvent& event)
 
 void BattleroomMMOptionsTab::OnComBoxChange(wxCommandEvent& event)
 {
-	mmOptionsWrapper* optWrap = m_battle.CustomBattleOptions();
 	wxComboBox* box = (wxComboBox*) event.GetEventObject();
 
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
-	wxString itemKey = optWrap->GetNameListOptItemKey(key,  box->GetValue(), (GameOption)gameoption );
+	wxString itemKey = m_battle.CustomBattleOptions().GetNameListOptItemKey(key,  box->GetValue(), (GameOption)gameoption );
 
-	if(optWrap->setSingleOption( key, itemKey, (GameOption)gameoption ) )
+	if(m_battle.CustomBattleOptions().setSingleOption( key, itemKey, (GameOption)gameoption ) )
 	{
         if (m_battle.IsFounderMe())
         {
@@ -199,12 +198,11 @@ void BattleroomMMOptionsTab::OnComBoxChange(wxCommandEvent& event)
 
 void BattleroomMMOptionsTab::OnTextCtrlChange(wxCommandEvent& event)
 {
-	mmOptionsWrapper* optWrap = m_battle.CustomBattleOptions();
 	wxTextCtrl* box = (wxTextCtrl*) event.GetEventObject();
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
-	if(optWrap->setSingleOption( key, box->GetValue(), (GameOption)gameoption ) )
+	if(m_battle.CustomBattleOptions().setSingleOption( key, box->GetValue(), (GameOption)gameoption ) )
 	{
 		if (m_battle.IsFounderMe())
 		{
@@ -216,12 +214,11 @@ void BattleroomMMOptionsTab::OnTextCtrlChange(wxCommandEvent& event)
 
 void BattleroomMMOptionsTab::OnSpinCtrlChange(wxSpinEvent& event)
 {
-	mmOptionsWrapper* optWrap = m_battle.CustomBattleOptions();
 	wxSpinCtrlDbl* box = (wxSpinCtrlDbl*) event.GetEventObject();
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
-	if(optWrap->setSingleOption( key,wxString::Format( _T("%f"),box->GetValue() ), (GameOption)gameoption ) )
+	if(m_battle.CustomBattleOptions().setSingleOption( key,wxString::Format( _T("%f"),box->GetValue() ), (GameOption)gameoption ) )
 	{
 		if (m_battle.IsFounderMe())
 		{
@@ -232,13 +229,20 @@ void BattleroomMMOptionsTab::OnSpinCtrlChange(wxSpinEvent& event)
 
 void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 {
-	mmOptionsWrapper* optWrap = m_battle.CustomBattleOptions();
 	long gameoption;
 	controlName.BeforeFirst(sep).ToLong(&gameoption);
 	wxString optKey = controlName.AfterFirst(sep);
+
+	if ( gameoption == PrivateOptions )
+	{
+    if ( optKey == _T("mapname") ) OnReloadControls( MapOption );
+    if ( optKey == _T("modname") ) OnReloadControls( ModOption );
+    return;
+	}
+
 	if ( m_chkbox_map.find(controlName) != m_chkbox_map.end() )
 	{
-	    wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
+	    wxString value = m_battle.CustomBattleOptions().getSingleValue( optKey, (GameOption)gameoption );
 		wxCheckBox* cur = m_chkbox_map[controlName] ;
 		long l_val;
 		value.ToLong(&l_val);
@@ -247,21 +251,21 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 
 	 if ( m_combox_map.find(controlName) != m_combox_map.end() )
 	{
-		wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
+		wxString value = m_battle.CustomBattleOptions().getSingleValue( optKey, (GameOption)gameoption );
 		wxComboBox* cur = m_combox_map[controlName];
-		cur->SetValue(optWrap->GetNameListOptValue( optKey, (GameOption)gameoption));
+		cur->SetValue(m_battle.CustomBattleOptions().GetNameListOptValue( optKey, (GameOption)gameoption));
 	}
 
 	 if ( m_textctrl_map.find(controlName) != m_textctrl_map.end() )
 	{
-		wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
+		wxString value = m_battle.CustomBattleOptions().getSingleValue( optKey, (GameOption)gameoption );
 		wxTextCtrl* cur = m_textctrl_map[controlName];
 		cur->SetValue(value);
 	}
 
 	 if ( m_spinctrl_map.find(controlName) != m_spinctrl_map.end() )
 	{
-		wxString value = optWrap->getSingleValue( optKey, (GameOption)gameoption );
+		wxString value = m_battle.CustomBattleOptions().getSingleValue( optKey, (GameOption)gameoption );
 		wxSpinCtrlDbl* cur = m_spinctrl_map[controlName] ;
 		double l_val;
 		value.ToDouble(&l_val);

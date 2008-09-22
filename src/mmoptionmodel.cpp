@@ -37,7 +37,7 @@ mmOptionFloat::mmOptionFloat():mmOptionModel()
 	stepping = value;
 }
 
-mmOptionString::mmOptionString(wxString name_, wxString key_, wxString description_, wxString def_, int max_len_):
+mmOptionString::mmOptionString(wxString name_, wxString key_, wxString description_, wxString def_, unsigned int max_len_):
 	mmOptionModel(name_,key_,description_,opt_string),def(def_),value(def_),max_len(max_len_)
 {}
 

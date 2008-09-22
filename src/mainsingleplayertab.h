@@ -21,10 +21,16 @@ class MainSinglePlayerTab : public wxScrolledWindow
 
     void UpdateMinimap();
     void OnUnitSyncReloaded();
+    void Update( const wxString& Tag );
 
     void ReloadRestrictions();
     void ReloadMapOptContrls();
     void ReloadModOptContrls();
+    void ReloadPresetList();
+
+    SinglePlayerTab& GetSinglePlayerTab();
+    BattleOptionsTab& GetOptionsTab();
+    BattleroomMMOptionsTab& GetMMOptionsTab();
 
   protected:
 

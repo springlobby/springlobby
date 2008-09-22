@@ -125,7 +125,7 @@ wxString AddBotDialog::RefineAIName( const wxString& name )
 void AddBotDialog::ReloadAIList()
 {
   try {
-    m_ais = usync()->GetAIList( m_battle.GetHostModName() );
+    m_ais = usync().GetAIList( m_battle.GetHostModName() );
   } catch (...) {}
 
   m_ai->Clear();

@@ -24,7 +24,6 @@
 #include "uiutils.h"
 #include "battlelistfiltervalues.h"
 #include "iunitsync.h"
-#include "ibattle.h"
 
 const wxColor defaultHLcolor (255,0,0);
 
@@ -113,7 +112,7 @@ void Settings::SaveSettings()
 
   m_config->Save( outstream );
   #endif
-  if (usync()->IsLoaded()) usync()->SetSpringDataPath( GetSpringDir() );
+  if (usync().IsLoaded()) usync().SetSpringDataPath( GetSpringDir() );
 }
 
 
@@ -799,7 +798,86 @@ void Settings::SetTestHostPort( bool value )
     m_config->Write( _T("/Hosting/TestHostPort"), value );
 }
 
+void Settings::SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options )
+{
+    m_config->DeleteGroup( _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype ) );
+    for (std::map<wxString,wxString>::iterator it = options.begin(); it != options.end(); ++it)
+    {
+        m_config->Write( _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype ) + _T("/") + it->first , it->second );
+    }
+}
 
+std::map<wxString,wxString> Settings::GetHostingPreset( const wxString& name, int optiontype )
+{
+  std::map<wxString,wxString> ret;
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype ));
+  wxString keyname;
+  long dummy;
+  bool keyexist = m_config->GetFirstEntry(keyname, dummy);
+  while ( keyexist )
+  {
+    ret[keyname] = m_config->Read( keyname );
+
+    keyexist = m_config->GetNextEntry(keyname, dummy);
+  }
+
+  m_config->SetPath( old_path );
+  return ret;
+}
+
+
+wxArrayString Settings::GetPresetList()
+{
+  wxArrayString ret;
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Hosting/Preset") );
+  wxString groupname;
+  long dummy;
+  bool groupexist = m_config->GetFirstGroup(groupname, dummy);
+  while ( groupexist )
+  {
+    ret.Add( groupname );
+
+    groupexist = m_config->GetNextGroup(groupname, dummy);
+  }
+
+  m_config->SetPath( old_path );
+  return ret;
+}
+
+
+void Settings::DeletePreset( const wxString& name )
+{
+  m_config->DeleteGroup( _T("/Hosting/Preset/") + name );
+
+  ///delete mod default preset associated
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Hosting/ModDefaultPreset") );
+  wxString keyname;
+  long dummy;
+  bool keyexist = m_config->GetFirstEntry(keyname, dummy);
+  while ( keyexist )
+  {
+    if ( m_config->Read( keyname ) == name ) m_config->DeleteEntry( keyname );
+
+    keyexist = m_config->GetNextEntry(keyname, dummy);
+  }
+
+  m_config->SetPath( old_path );
+}
+
+
+wxString Settings::GetModDefaultPresetName( const wxString& modname )
+{
+  return m_config->Read( _T("/Hosting/ModDefaultPreset/") + modname );
+}
+
+
+void Settings::SetModDefaultPresetName( const wxString& modname, const wxString& presetname )
+{
+  m_config->Write( _T("/Hosting/ModDefaultPreset/") + modname, presetname );
+}
 
 
 void Settings::SetBalanceMethod(int value)
@@ -1256,73 +1334,6 @@ wxString Settings::GetTempStorage()
   return wxFileName::GetTempDir();
 }
 
-
-void Settings::SaveBattleMapOptions(IBattle *battle){
-  if ( !battle ){
-        wxLogError(_T("Settings::SaveBattleMapOptions called with null argument"));
-        return;
-      }
-  wxString map_name=battle->GetHostMapName();
-  //SetLastHostMap(map_name);
-  wxString option_prefix=_T("/Hosting/Maps/")+map_name+_T("/");
-  long longval;
-  battle->CustomBattleOptions()->getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
-  int start_pos_type=longval;
-
-  m_config->Write( option_prefix+_T("startpostype"), start_pos_type);
-  if(start_pos_type==ST_Choose){
-    int n_rects=battle->GetNumRects();
-    m_config->Write( option_prefix+_T("n_rects"), n_rects);
-
-
-    for ( int i = 0; i < n_rects; ++i ) {
-      BattleStartRect rect = battle->GetStartRect( i );
-      if ( !rect.exist || rect.todelete ) {
-        m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"));
-        m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_left"));
-        m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_top"));
-        m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_right"));
-        m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"));
-      }else{
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"), (int)rect.ally);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_top"), (int)rect.top);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_left"), (int)rect.left);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_right"), (int)rect.right);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"), (int)rect.bottom);
-      }
-    }
-  }
-}
-
-void Settings::LoadBattleMapOptions(IBattle *battle){
-  if ( !battle ){
-        wxLogError(_T("Settings::LoadBattleMapOptions called with null argument"));
-        return;
-      }
-  wxString map_name=battle->GetHostMapName();
-  wxString option_prefix=_T("/Hosting/Maps/")+map_name+_T("/");
-  int start_pos_type=m_config->Read(option_prefix+_T("startpostype") , 0L );
-  battle->CustomBattleOptions()->setSingleOption( _T("startpostype"), TowxString(start_pos_type), EngineOption );
-  if(start_pos_type==ST_Choose){
-
-    battle->ClearStartRects();
-
-    int n_rects=m_config->Read( option_prefix+_T("n_rects"), 0L);
-/*
-    for(int i=n_rects;i<battle->GetNumRects();++i){
-      battle->RemoveStartRect(i);
-    }*/
-
-    for(int i=0;i<n_rects;++i){
-      int ally=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"),-1L);
-      int top=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_top"),-1L);
-      int left=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_left"),-1L);
-      int right=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_right"),-1L);
-      int bottom=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"),-1L);
-      if(ally>=0) battle->AddStartRect(ally,left,top,right,bottom);
-    }
-  }
-}
 
 void Settings::SetShowTooltips( bool show)
 {

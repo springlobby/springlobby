@@ -75,7 +75,10 @@ MainSinglePlayerTab::~MainSinglePlayerTab()
 
 void MainSinglePlayerTab::UpdateMinimap()
 {
-  m_sp_tab->UpdateMinimap();
+  try
+  {
+    GetSinglePlayerTab().UpdateMinimap();
+  } catch(...){}
 }
 
 
@@ -84,33 +87,88 @@ void MainSinglePlayerTab::OnUnitSyncReloaded()
   wxLogDebugFunc( _T("") );
   try
   {
-    ASSERT_LOGIC( m_sp_tab != 0, _T("m_sp_tab = 0") );
-  } catch (...) { return; }
-  wxLogMessage( _T("Reloading map list") );
-  m_sp_tab->ReloadMaplist();
-  wxLogMessage( _T("Reloading mod list") );
-  m_sp_tab->ReloadModlist();
-  wxLogMessage( _T("Reloading minimap") );
-  m_sp_tab->UpdateMinimap();
+    wxLogMessage( _T("Reloading map list") );
+    GetSinglePlayerTab().ReloadMaplist();
+    wxLogMessage( _T("Reloading mod list") );
+    GetSinglePlayerTab().ReloadModlist();
+    wxLogMessage( _T("Reloading minimap") );
+    GetSinglePlayerTab().UpdateMinimap();
+  } catch (...) {}
+
 }
 
 
 void MainSinglePlayerTab::ReloadRestrictions()
 {
-  m_opts_tab->ReloadRestrictions();
+  try
+  {
+    GetOptionsTab().ReloadRestrictions();
+  } catch(...) {}
 }
 
 
 void MainSinglePlayerTab::ReloadMapOptContrls()
 {
-  if (m_mm_opts_tab != 0)
-		m_mm_opts_tab->OnReloadControls( MapOption );
+  try
+  {
+		GetMMOptionsTab().OnReloadControls( MapOption );
+  } catch(...) {}
 }
 
 
 void MainSinglePlayerTab::ReloadModOptContrls()
 {
-	if (m_mm_opts_tab != 0)
-		m_mm_opts_tab->OnReloadControls( ModOption );
+	try
+	{
+		GetMMOptionsTab().OnReloadControls( ModOption );
+  } catch(...) {}
+
+}
+
+SinglePlayerTab& MainSinglePlayerTab::GetSinglePlayerTab()
+{
+  ASSERT_EXCEPTION( m_sp_tab, _T("m_sp_tab == 0") );
+	return *m_sp_tab;
+}
+
+BattleOptionsTab& MainSinglePlayerTab::GetOptionsTab()
+{
+  ASSERT_EXCEPTION( m_opts_tab, _T("m_opts_tab == 0") );
+	return *m_opts_tab;
+}
+
+
+BattleroomMMOptionsTab& MainSinglePlayerTab::GetMMOptionsTab()
+{
+  ASSERT_EXCEPTION( m_mm_opts_tab, _T("m_mm_opts_tab == 0") );
+	return *m_mm_opts_tab;
+}
+
+
+void MainSinglePlayerTab::ReloadPresetList()
+{
+  try
+  {
+    GetSinglePlayerTab().UpdatePresetList();
+  } catch (...) {}
+  try
+  {
+    GetOptionsTab().UpdatePresetList();
+  } catch (...) {}
+}
+
+
+void MainSinglePlayerTab::Update( const wxString& Tag )
+{
+
+  try
+  {
+    GetSinglePlayerTab().Update( Tag );
+  } catch (...) {}
+
+  try
+  {
+    GetOptionsTab().UpdateBattle( Tag );
+  } catch (...) {}
 
 }

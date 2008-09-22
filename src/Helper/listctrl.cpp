@@ -23,7 +23,7 @@
 
 #if wxUSE_LISTCTRL
 
-#include "Helper/listctrl.h"
+#include "listctrl.h"
 
 #ifndef WX_PRECOMP
     #include <wx/scrolwin.h>

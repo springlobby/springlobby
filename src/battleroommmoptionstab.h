@@ -45,6 +45,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 
 		void UpdateOptControls(wxString controlName);
 		void OnReloadControls(GameOption flag);
+		void Update( const wxString& Tag );
 	protected:
 		 IBattle& m_battle;
 

@@ -43,15 +43,20 @@ class BattleOptionsTab : public wxScrolledWindow
     void Restrict( int index );
     void Allow( int index );
 
+    void UpdatePresetList();
+
     void OnEndSelect( wxCommandEvent& event );
     void OnOptsCheck( wxCommandEvent& event );
     void OnSlideChanged( wxScrollEvent& event );
 
     void OnRestrict( wxCommandEvent& event );
     void OnAllow( wxCommandEvent& event );
-    void OnLoadRestrictions( wxCommandEvent& event );
-    void OnSaveRestrictions( wxCommandEvent& event );
     void OnClearRestrictions( wxCommandEvent& event );
+
+    void OnLoadPreset( wxCommandEvent& event );
+    void OnSavePreset( wxCommandEvent& event );
+    void OnDeletePreset( wxCommandEvent& event );
+    void OnSetModDefaultPreset( wxCommandEvent& event );
 
   protected:
 
@@ -76,9 +81,12 @@ class BattleOptionsTab : public wxScrolledWindow
     wxButton* m_allow_btn;
     wxStaticText* m_restricted_lbl;
     wxListBox* m_restrict_list;
+    wxButton* m_clear_btn;
     wxButton* m_load_btn;
     wxButton* m_save_btn;
-    wxButton* m_clear_btn;
+    wxButton* m_delete_btn;
+    wxButton* m_default_btn;
+    wxComboBox* m_options_preset_sel;
 
     int m_last_metal;
     int m_last_energy;
@@ -97,9 +105,13 @@ enum
 
   BOPTS_RESTRICT,
   BOPTS_ALLOW,
-  BOPTS_LOADRES,
-  BOPTS_SAVERES,
-  BOPTS_CLEARRES
+  BOPTS_CLEARRES,
+
+  BOPTS_LOADPRES,
+  BOPTS_SAVEPRES,
+  BOPTS_DELETEPRES,
+  BOPTS_SETDEFAULTPRES,
+  BOPTS_CHOSEPRES
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEOPTIONSTAB_H

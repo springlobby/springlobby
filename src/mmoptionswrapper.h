@@ -17,10 +17,11 @@ struct GameOptions;
 
 //! enum to differentiate option category easily at runtime
 enum GameOption{
+  PrivateOptions  = 3,
   EngineOption = 2,
 	MapOption    = 1,
 	ModOption    = 0,
-	LastOption = 3
+	LastOption = 4
 };// should reflect: optionCategoriesCount
 
 class mmOptionsWrapper
@@ -64,9 +65,9 @@ public:
 	 * \param triples this will contain the options after the function
 	 * \param flag which OptionType is to be processed
 	 */
-	void getOptions(wxStringTripleVec* triples ,GameOption flag) const ;
+	wxStringTripleVec getOptions( GameOption flag ) const ;
 	//! similar to getOptions, instead of vector a map is used and the name is not stored
-	void getOptionsMap(wxStringMap*,GameOption) const ;
+	std::map<wxString,wxString> getOptionsMap(GameOption) const ;
 	//! recreates ALL containers
 	void unLoadOptions();
 	//! recreates the containers of corresponding flag
@@ -100,7 +101,7 @@ public:
 	wxString GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag) const ;
 
 //private:
-	const static int optionCategoriesCount = 3;
+	const static int optionCategoriesCount = 4;
 	GameOptions opts[optionCategoriesCount];
 protected:
 	//! used for code clarity in setOptions()

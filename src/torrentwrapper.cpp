@@ -643,18 +643,18 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         {
         case map:
         {
-            if ( !usync()->MapExists( row->name, row->hash ) ) return false;
-            int index = usync()->GetMapIndex( row->name );
+            if ( !usync().MapExists( row->name, row->hash ) ) return false;
+            int index = usync().GetMapIndex( row->name );
             if ( index == -1 ) return false;
-            archivename = usync()->GetMapArchive( index );
+            archivename = usync().GetMapArchive( index );
             break;
         }
         case mod:
         {
-            if ( !usync()->ModExists( row->name, row->hash ) ) return false;
-            int index = usync()->GetModIndex( row->name );
+            if ( !usync().ModExists( row->name, row->hash ) ) return false;
+            int index = usync().GetModIndex( row->name );
             if ( index == -1 ) return false;
-            archivename = usync()->GetModArchive( index );
+            archivename = usync().GetModArchive( index );
             break;
         }
         }
@@ -664,7 +664,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
             /// dizekat> i'm getting archivename == /home/dmytry/.spring/maps/Whatever.sdf and getting archivepath == /home/dmytry/.spring/maps/
             /// dizekat> so i changed it to prepend path only if path isnt found here.
             wxLogMessage( _T("seeding from archive name: %s"), archivename.c_str() );
-            wxString archivepath = usync()->GetArchivePath( archivename );
+            wxString archivepath = usync().GetArchivePath( archivename );
             int i = archivename.Find( archivepath );
             if (i<0)
             {
@@ -910,7 +910,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
             ///torrent has finished download, refresh unitsync and remove file from list
             try
             {
-                ASSERT_RUNTIME( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
+                ASSERT_EXCEPTION( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
 
                 m_socket_class->Send( _T("N-|")  + it->second->hash + _T("\n") ); ///notify the system we don't need the file anymore
 
@@ -927,7 +927,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
         {
             try
             {
-                ASSERT_RUNTIME( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
+                ASSERT_EXCEPTION( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
             }
             catch (std::exception& e)
             {
@@ -973,12 +973,12 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
         if ( data[3] == _T("MAP") )
         {
             newtorrent->type = map;
-            if ( usync()->MapExists( data[2], data[1] ) ) newtorrent->status = stored;
+            if ( usync().MapExists( data[2], data[1] ) ) newtorrent->status = stored;
         }
         else if ( data[3] == _T("MOD") )
         {
             newtorrent->type = mod;
-            if ( usync()->ModExists( data[2], data[1] ) ) newtorrent->status = stored;
+            if ( usync().ModExists( data[2], data[1] ) ) newtorrent->status = stored;
         }
 
         GetTorrentTable().InsertRow( newtorrent );
