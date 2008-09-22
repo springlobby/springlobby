@@ -535,7 +535,6 @@ bool Battle::CheckBan(User &user){
 
 void Battle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
 {
-  ASSERT_LOGIC(  allyno < GetMaxPlayers(), _T("Allyno out of bounds.") );
   BattleStartRect sr;
 
   sr.ally = allyno;

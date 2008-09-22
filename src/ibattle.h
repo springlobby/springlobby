@@ -64,7 +64,7 @@ struct BattleStartRect
 
   bool IsOk() { return exist && !todelete; }
 
-  unsigned int ally;
+  int ally;
   unsigned int top;
   unsigned int left;
   unsigned int right;
