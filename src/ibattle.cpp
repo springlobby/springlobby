@@ -215,6 +215,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
 
     }
   }
+  SendHostInfo( HI_Send_All_opts );
   ui().ReloadPresetList();
   return true;
 }
