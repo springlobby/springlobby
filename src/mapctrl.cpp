@@ -136,7 +136,7 @@ wxRect MapCtrl::GetStartRect( int index )
 {
   ASSERT_LOGIC( BattleType() != BT_Multi, _T("MapCtrl::GetStartRect(): Battle type is not BT_Multi") );
   BattleStartRect sr = m_battle->GetStartRect( index );
-  if ( !sr.exist || sr.todelete ) return wxRect();
+  if ( !sr.IsOk() ) return wxRect();
   return GetStartRect( sr );
 }
 
@@ -213,7 +213,7 @@ void MapCtrl::_SetCursor()
 
     if ( m_battle != 0 ) {
       long longval;
-      m_battle->CustomBattleOptions()->getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+      m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
       if ( longval != ST_Choose ) {
         SetCursor( wxCursor( wxCURSOR_ARROW ) );
         return;
@@ -305,7 +305,7 @@ void MapCtrl::LoadMinimap()
       m_lastsize = wxSize( -1, -1 );
       return;
     }
-    wxImage img = usync()->GetMinimap( map, w, h );
+    wxImage img = usync().GetMinimap( map, w, h );
     m_image = new wxBitmap( img );
     m_mapname = map;
     m_lastsize = wxSize( w, h );
@@ -508,7 +508,7 @@ void MapCtrl::DrawStartPositions( wxDC& dc )
   m_map = m_battle->LoadMap();
   RequireImages();
   long longval;
-  m_battle->CustomBattleOptions()->getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
   if ( longval == ST_Fixed ) {
 
     wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
@@ -633,10 +633,10 @@ void MapCtrl::DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     wxBitmap* bmp = 0;
     try {
       wxString mod = m_battle->GetHostModName();
-      int scount = usync()->GetSideCount( mod );
-      if ( scount <= 0 ) ASSERT_RUNTIME( false, _T("Mod has no sides.") );
-      wxString side = usync()->GetSideName( mod, bot.bs.side % scount );
-      bmp = new wxBitmap( usync()->GetSidePicture( mod, side ) );
+      int scount = usync().GetSideCount( mod );
+      if ( scount <= 0 ) ASSERT_EXCEPTION( false, _T("Mod has no sides.") );
+      wxString side = usync().GetSideName( mod, bot.bs.side % scount );
+      bmp = new wxBitmap( usync().GetSidePicture( mod, side ) );
     } catch (...) {
       delete bmp;
       if ( bot.bs.side == 0 ) bmp = new wxBitmap( *charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
@@ -703,7 +703,7 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
   RequireImages();
 
   long longval;
-  m_battle->CustomBattleOptions()->getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
 
   if ( longval == ST_Fixed ) {
     wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
@@ -765,7 +765,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 
     if ( m_draw_start_types ) {
       long longval;
-      m_battle->CustomBattleOptions()->getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+      m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
       if ( longval == ST_Choose ) {
         DrawStartRects( dc );
       } else {
@@ -881,7 +881,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   if ( !m_draw_start_types ) return;
 
   long longval;
-  m_battle->CustomBattleOptions()->getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
 
   if ( longval != ST_Choose ) return;
 
@@ -993,7 +993,7 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
   if ( !m_draw_start_types ) return;
 
   long longval;
-  m_battle->CustomBattleOptions()->getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
 
   if ( longval != ST_Choose ) return;
   if ( !m_ro ) {
@@ -1073,7 +1073,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
 
     } else if ( m_mdown_area == RA_Side ) {
       try {
-        if ( usync()->GetSideCount( m_battle->GetHostModName() ) > 0 ) bot->bs.side = (bot->bs.side + 1) % usync()->GetSideCount( m_battle->GetHostModName() );
+        if ( usync().GetSideCount( m_battle->GetHostModName() ) > 0 ) bot->bs.side = (bot->bs.side + 1) % usync().GetSideCount( m_battle->GetHostModName() );
         else bot->bs.side = 0;
       } catch(...) {}
       RefreshRect( GetBotRect( *bot, true ), false );
@@ -1092,7 +1092,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     if ( m_mdown_area == m_rect_area ) {
       if ( m_mdown_area == RA_Refresh ) {
         m_ui.ReloadUnitSync();
-        m_ui.OnBattleMapRefresh();
+        m_battle->Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
         UpdateMinimap();
       } else if ( m_mdown_area == RA_Download ) {
         m_ui.DownloadMap( m_battle->GetHostMapHash(),  m_battle->GetHostMapName() );
@@ -1107,7 +1107,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
   if ( !m_draw_start_types ) return;
 
   long longval;
-  m_battle->CustomBattleOptions()->getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
 
   if ( longval != ST_Choose ) return;
 

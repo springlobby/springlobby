@@ -178,6 +178,6 @@ class IUnitSync
     virtual wxString GetUnitsyncName( const wxString& hash, const MediaType& archivetype ) = 0;
 };
 
-IUnitSync* usync();
+IUnitSync& usync();
 
 #endif // SPRINGLOBBY_HEADERGUARD_IUNITSYNC_H

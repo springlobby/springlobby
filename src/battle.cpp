@@ -60,6 +60,7 @@ const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBo
 Battle::Battle( Server& serv, Ui& ui, int id ) :
   m_serv(serv),
   m_ui(ui),
+  m_ah(*this),
   m_ingame(false),
   m_order(0),
   m_bot_seek(m_bots.end()),
@@ -74,12 +75,6 @@ Battle::~Battle() {
   for (user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
 //    GetUser(i).SetBattle( 0 );
   ClearStartRects();
-}
-
-
-Server& Battle::GetServer()
-{
-  return m_serv;
 }
 
 
@@ -240,7 +235,7 @@ void Battle::OnRequestBattleStatus()
   bs.spectator = false;
   bs.colour = sett().GetBattleLastColour();
   /// theres some highly annoying bug with color changes on player join/leave.
-  bs.colour = GetFreeColour(&m_serv.GetMe());
+  if ( !bs.colour.IsColourOk() ) bs.colour = GetFreeColour(&m_serv.GetMe());
 
   SendMyBattleStatus();
 }
@@ -271,17 +266,17 @@ bool Battle::IsSynced()
   LoadMod();
   LoadMap();
   bool synced = true;
-  if ( !m_host_map_hash.IsEmpty() ) synced = synced && (m_local_map.hash == m_host_map_hash);
-  if ( !m_host_map_name.IsEmpty() ) synced = synced && (m_local_map.name == m_host_map_name);
-  if ( !m_host_mod_hash.IsEmpty() ) synced = synced && (m_local_mod.hash == m_host_mod_hash);
-  if ( !m_host_mod_name.IsEmpty() ) synced = synced && (m_local_mod.name == m_host_mod_name);
+  if ( !m_host_map.hash.IsEmpty() ) synced = synced && (m_local_map.hash == m_host_map.hash);
+  if ( !m_host_map.name.IsEmpty() ) synced = synced && (m_local_map.name == m_host_map.name);
+  if ( !m_host_mod.hash.IsEmpty() ) synced = synced && (m_local_mod.hash == m_host_mod.hash);
+  if ( !m_host_mod.name.IsEmpty() ) synced = synced && (m_local_mod.name == m_host_mod.name);
   return synced;
 }
 
 
 /*bool Battle::HasMod()
 {
-  return usync()->ModExists( m_opts.modname );
+  return usync().ModExists( m_opts.modname );
 }*/
 
 
@@ -306,7 +301,7 @@ bool Battle::HaveMultipleBotsInSameTeam() const
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
   {
     if ( *i == 0 ) continue;
-    if ( teams[(*i)->bs.team ] != -1 )return true;
+    if ( teams[(*i)->bs.team ] == 1 )return true;
     teams[ (*i)->bs.team ] = 1;
   }
   return false;
@@ -329,7 +324,7 @@ int Battle::GetMyPlayerNum() const
   for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
     if ( &GetUser(i) == &m_serv.GetMe() ) return i;
   }
-  ASSERT_RUNTIME(false, _T("You are not in this game.") );
+  ASSERT_EXCEPTION(false, _T("You are not in this game.") );
   return -1;
 }
 
@@ -353,7 +348,9 @@ void Battle::OnUserAdded( User& user )
 
     m_opts.spectators+=user.BattleStatus().spectator?1:0;
 
-    CheckBan(user);
+    if (CheckBan(user))
+      return;
+
     if(user.GetStatus().rank<m_opts.rankneeded){
       switch(m_opts.ranklimittype){
         case rank_limit_none:
@@ -367,10 +364,13 @@ void Battle::OnUserAdded( User& user )
         case rank_limit_autokick:
         DoAction(_T("Rank limit autokick: ")+user.GetNick());
         BattleKickPlayer(user);
-        break;
+        return;
       }
     }
+
+    m_ah.OnUserAdded(user);
   }
+  // any code here may be skipped if the user was autokicked
 }
 
 void Battle::OnUserBattleStatusUpdated( User &user ){
@@ -417,6 +417,7 @@ void Battle::OnUserRemoved( User& user )
   }
   user.SetBattle( 0 );
   UserList::RemoveUser( user.GetNick() );
+  m_ah.OnUserRemoved(user);
 }
 
 
@@ -510,18 +511,22 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
   return false;
 }
 ///< quick hotfix for bans
-void Battle::CheckBan(User &user){
+/// returns true if user is banned (and hence has been kicked)
+bool Battle::CheckBan(User &user){
   if(IsFounderMe()){
     if(m_banned_users.count(user.GetNick())>0
         || useractions().DoActionOnUser(UserActions::ActAutokick, user.GetNick() ) ) {
       BattleKickPlayer(user);
       m_ui.OnBattleAction(*this,wxString(_T(" ")),user.GetNick()+_T(" is banned, kicking"));
-    }else
-    if(m_banned_ips.count(user.BattleStatus().ip)>0){
+      return true;
+    }
+    else if(m_banned_ips.count(user.BattleStatus().ip)>0){
       m_ui.OnBattleAction(*this,wxString(_T(" ")),user.BattleStatus().ip+_T(" is banned, kicking"));
       BattleKickPlayer(user);
+      return true;
     }
   }
+  return false;
 }
 ///>
 
@@ -530,7 +535,6 @@ void Battle::CheckBan(User &user){
 
 void Battle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
 {
-  ASSERT_LOGIC(  allyno < GetMaxPlayers(), _T("Allyno out of bounds.") );
   BattleStartRect sr;
 
   sr.ally = allyno;
@@ -800,7 +804,7 @@ void Battle::SetHandicap( User& user, int handicap)
 }
 
 
-std::vector<BattleStartRect*>::size_type Battle::GetNumRects()
+unsigned int Battle::GetNumRects()
 {
   return m_rects.size();
 }
@@ -872,7 +876,7 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
   int ally=0;
   for(int i=0;i<tmp;++i){
     BattleStartRect sr = m_rects[i];
-    if( sr.exist && !sr.todelete ){
+    if( sr.IsOk() ){
       ally=i;
       alliances.push_back(Alliance(ally));
       ally++;
@@ -980,10 +984,26 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
       ASSERT_LOGIC(alliances[i].players[j],_T("fail in Autobalance, NULL player"));
       wxString msg=wxString::Format(_T("setting player %s to alliance %d"),alliances[i].players[j]->GetNick().c_str(),i);
       wxLogMessage(_T("%s"),msg.c_str());
-      m_ui.OnBattleAction(*this,wxString(_T(" ")),msg);
       ForceAlly(*alliances[i].players[j],alliances[i].allynum);
     }
   }
   Update();
 }
 
+void Battle::MakeTeamsUnique()
+{
+  unsigned int numusers = GetNumUsers();
+  unsigned int newteam = 0;
+  for ( unsigned int count = 0; count < numusers; count++ )
+  {
+    try
+    {
+      User user = GetUser( count );
+      UserBattleStatus status = user.BattleStatus();
+      status.team = newteam;
+      user.UpdateBattleStatus( status );
+      newteam++;
+    } catch( assert_exception& except_mess ) {}
+  }
+  Update();
+}
