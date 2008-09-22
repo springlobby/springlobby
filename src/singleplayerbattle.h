@@ -102,18 +102,11 @@ class SinglePlayerBattle: public IBattle
 
     void Update( const wxString& Tag );
 
-    std::vector<BattleStartRect*>::size_type GetNumRects() { return 0; }
-    mmOptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
-
-    void LoadOptionsPreset( const wxString& name );
-
   protected:
 
     Ui& m_ui;
     MainSinglePlayerTab& m_sptab;
     std::vector<BattleBot*> m_bots;
-
-    mmOptionsWrapper m_opt_wrap;
 
 };
 

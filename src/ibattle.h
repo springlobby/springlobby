@@ -9,6 +9,22 @@
 #include "iunitsync.h"
 #include "user.h"
 #include "mmoptionswrapper.h"
+#include "ui.h"
+
+#define HI_None 0
+#define HI_Map 1
+#define HI_Locked 2
+#define HI_Spectators 4
+#define HI_StartResources 8
+#define HI_MaxUnits 16
+#define HI_StartType 32
+#define HI_GameType 64
+#define HI_Options 128
+#define HI_StartRects 256
+#define HI_Restrictions 512
+#define HI_Map_Changed 1024
+#define HI_Mod_Changed 2048
+#define HI_Send_All_opts 4096
 
 
 typedef int HostInfo;
@@ -46,7 +62,9 @@ struct BattleStartRect
   bool toresize;
   bool exist;
 
-  unsigned int ally;
+  bool IsOk() { return exist && !todelete; }
+
+  int ally;
   unsigned int top;
   unsigned int left;
   unsigned int right;
@@ -98,6 +116,7 @@ class IBattle
     virtual void StartRectResized( unsigned int allyno ) {};
     virtual void StartRectAdded( unsigned int allyno ) {};
     virtual void ClearStartRects(){};
+    virtual unsigned int GetNumRects() { return 0; };
 
     virtual int GetMyAlly() = 0;
     virtual void SetMyAlly( int ally ) = 0;
@@ -124,13 +143,15 @@ class IBattle
 
     virtual void OnUnitSyncReloaded();
 
-    virtual std::map<unsigned int,BattleStartRect>::size_type GetNumRects() =0;
+    virtual mmOptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
 
-    virtual mmOptionsWrapper& CustomBattleOptions() =0;
-
-    virtual void LoadOptionsPreset( const wxString& name );
+    virtual bool LoadOptionsPreset( const wxString& name );
     virtual void SaveOptionsPreset( const wxString& name );
     virtual wxString GetCurrentPreset();
+    virtual void DeletePreset( const wxString& name );
+    virtual wxArrayString GetPresetList();
+
+    virtual void Update ( const wxString& Tag ) =0;
 
   protected:
 
@@ -140,12 +161,12 @@ class IBattle
     bool m_mod_exists;
     UnitSyncMap m_local_map;
     UnitSyncMod m_local_mod;
-    wxString m_host_map_name;
-    wxString m_host_mod_name;
-    wxString m_host_map_hash;
-    wxString m_host_mod_hash;
+    UnitSyncMap m_host_map;
+    UnitSyncMap m_host_mod;
 
     wxArrayString m_units;
+
+    mmOptionsWrapper m_opt_wrap;
 
     wxString m_preset;
 };

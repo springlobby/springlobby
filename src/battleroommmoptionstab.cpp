@@ -69,6 +69,7 @@ BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
   #endif
 }
 
+
 void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag)
 {
     const int col_gap = 35;
@@ -231,6 +232,14 @@ void BattleroomMMOptionsTab::UpdateOptControls(wxString controlName)
 	long gameoption;
 	controlName.BeforeFirst(sep).ToLong(&gameoption);
 	wxString optKey = controlName.AfterFirst(sep);
+
+	if ( gameoption == PrivateOptions )
+	{
+    if ( optKey == _T("mapname") ) OnReloadControls( MapOption );
+    if ( optKey == _T("modname") ) OnReloadControls( ModOption );
+    return;
+	}
+
 	if ( m_chkbox_map.find(controlName) != m_chkbox_map.end() )
 	{
 	    wxString value = m_battle.CustomBattleOptions().getSingleValue( optKey, (GameOption)gameoption );

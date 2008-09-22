@@ -27,7 +27,7 @@ class MainJoinBattleTab : public wxScrolledWindow
     void HostBattle( Battle& battle );
     void JoinBattle( Battle& battle );
     //void UpdateCurrentBattle();
-    void UpdateCurrentBattle( bool MapChanged = false,  bool UpdateRestrictions = false );
+    void UpdateCurrentBattle();
     void UpdateCurrentBattle( const wxString& Tag );
     void LeaveCurrentBattle();
     Battle* GetCurrentBattle();
@@ -42,8 +42,6 @@ class MainJoinBattleTab : public wxScrolledWindow
     void ReloadPresetList();
 
     void OnUnitSyncReloaded();
-
-    void ReloadMMoptTab();
 
     void OnConnected();
 

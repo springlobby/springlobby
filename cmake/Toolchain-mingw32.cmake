@@ -22,7 +22,7 @@ SET( CMAKE_VERBOSE_MAKEFILE ON )
 SET( boost_LIB_DIR /var/lib/buildbot/lib/mingw/lib )
 SET( boost_INCLUDE_DIR /var/lib/buildbot/lib/mingw/include )
 SET( sdl_INCLUDE_DIR /var/lib/buildbot/lib/mingw/include/SDL )
-
+SET( wxWidgets_RC_DIR /var/lib/buildbot/lib/mingw/wx/2.8/include/wx-2.8 )
 
 
 ADD_DEFINITIONS( -DWXUSINGDLL -D__WXMSW__)

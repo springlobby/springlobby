@@ -450,7 +450,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     // Get selected mod from unitsync.
     UnitSyncMod mod;
     try {
-      mod = usync()->GetMod( sett().GetLastHostMod() );
+      mod = usync().GetMod( sett().GetLastHostMod() );
       bo.modhash = mod.hash;
       bo.modname = mod.name;
     } catch ( ... ) {
@@ -462,14 +462,14 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     UnitSyncMap map;
     wxString mname = sett().GetLastHostMap();
     try {
-      if ( usync()->MapExists(mname) )
-    	  map = usync()->GetMap( mname );
-      else if ( usync()->GetNumMaps() <= 0 ) {
+      if ( usync().MapExists(mname) )
+    	  map = usync().GetMap( mname );
+      else if ( usync().GetNumMaps() <= 0 ) {
         wxLogWarning( _T("no maps found") );
         customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
         return;
       } else {
-        map = usync()->GetMap( 0 );
+        map = usync().GetMap( 0 );
       }
     } catch ( ... ) {
       wxLogWarning( _T("no maps found") );

@@ -30,7 +30,6 @@
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
-class IBattle;
 class wxFileInputStream;
 struct wxColourData;
 
@@ -474,10 +473,6 @@ class Settings
     /**@}*/
 
     bool GetDisableSpringVersionCheck();
-
-    /// not get/set naming because set may refer to battle or to options, thatd be ambiguous
-    void SaveBattleMapOptions(IBattle *battle);
-    void LoadBattleMapOptions(IBattle *battle);
 
     /* ================================================================ */
     /** @name Torrent System

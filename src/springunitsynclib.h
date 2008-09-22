@@ -308,7 +308,7 @@ class SpringUnitSyncLib
     wxString m_current_mod;
 
     //! Macro that checks if a function is present/loaded, unitsync is loaded, and locks it on call.
-    #define InitLib( arg ) { LOCK_UNITSYNC; ASSERT_RUNTIME( m_loaded, _T("Unitsync not loaded.") ); ASSERT_RUNTIME( arg, _T("Function was not in unitsync library.") ); }
+    #define InitLib( arg ) { LOCK_UNITSYNC; ASSERT_EXCEPTION( m_loaded, _T("Unitsync not loaded.") ); ASSERT_EXCEPTION( arg, _T("Function was not in unitsync library.") ); }
 
     /**
      * Loads a function pointer from unitsync.

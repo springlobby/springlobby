@@ -324,6 +324,10 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
     else if ( key == _T("ghostedbuildings") ) m_options_checks->Check( GHOUSTED_INDEX, longval );
     else if ( key == _T("diminishingmms") ) m_options_checks->Check( DIM_MMS_INDEX, longval );
   }
+  else if ( type == PrivateOptions )
+  {
+    if ( key == _T("restrictions") ) ReloadRestrictions();
+  }
 }
 
 void BattleOptionsTab::ReloadRestrictions()
@@ -333,7 +337,7 @@ void BattleOptionsTab::ReloadRestrictions()
   if ( m_battle.GetHostModName() == wxEmptyString ) return;
 
   try {
-    m_allowed_list->InsertItems( usync()->GetUnitsList( m_battle.GetHostModName() ), 0 );
+    m_allowed_list->InsertItems( usync().GetUnitsList( m_battle.GetHostModName() ), 0 );
   } catch (...) {}
   wxArrayString units = m_battle.DisabledUnits();
 
@@ -535,12 +539,11 @@ void BattleOptionsTab::OnLoadPreset( wxCommandEvent& event )
   wxString presetname = m_options_preset_sel->GetValue();
   if ( presetname.IsEmpty() )
   {
-     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot load an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION );
+     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot load an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
      return;
   }
   m_battle.LoadOptionsPreset( presetname );
   m_battle.SendHostInfo( HI_Send_All_opts );
-  ui().ReloadPresetList();
 }
 
 
@@ -549,11 +552,10 @@ void BattleOptionsTab::OnSavePreset( wxCommandEvent& event )
   wxString presetname = m_options_preset_sel->GetValue();
   if ( presetname.IsEmpty() )
   {
-     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot save an options set without a name\nPlease write one in the list or chose an existing to overwrite and try again."), _("error"), wxICON_EXCLAMATION );
+     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot save an options set without a name\nPlease write one in the list or chose an existing to overwrite and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
      return;
   }
   m_battle.SaveOptionsPreset( presetname );
-  ui().ReloadPresetList();
 }
 
 
@@ -562,11 +564,10 @@ void BattleOptionsTab::OnDeletePreset( wxCommandEvent& event )
   wxString presetname = m_options_preset_sel->GetValue();
   if ( presetname.IsEmpty() )
   {
-     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot delete an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION );
+     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot delete an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
      return;
   }
-  sett().DeletePreset( presetname );
-  ui().ReloadPresetList();
+  m_battle.DeletePreset( presetname );
 }
 
 void BattleOptionsTab::OnSetModDefaultPreset( wxCommandEvent& event )
@@ -574,7 +575,7 @@ void BattleOptionsTab::OnSetModDefaultPreset( wxCommandEvent& event )
   wxString presetname = m_options_preset_sel->GetValue();
   if ( presetname.IsEmpty() )
   {
-     customMessageBoxNoModal( SL_MAIN_ICON , _("No options set is selected to set as default\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION );
+     customMessageBoxNoModal( SL_MAIN_ICON , _("No options set is selected to set as default\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
      return;
   }
   sett().SetModDefaultPresetName( m_battle.GetHostModName(), presetname );

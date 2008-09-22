@@ -182,7 +182,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
 {
   wxLogDebugFunc( _T("") );
   try{
-  ASSERT_RUNTIME( !m_serv.BattleExists( id ), _T("New battle from server, but already exists!") );
+  ASSERT_EXCEPTION( !m_serv.BattleExists( id ), _T("New battle from server, but already exists!") );
   Battle& battle = m_serv._AddBattle( id );
 
   User& user = m_serv.GetUser( nick );
@@ -195,7 +195,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
   battle.SetHostPort( port );
   battle.SetMaxPlayers( maxplayers );
   battle.SetIsPassworded( haspass );
-  battle.SetRankNeeded( rank );
+  battle.SetRankNeeded( ( rank / 100 ) +1 );
   battle.SetHostMap( map, maphash );
   battle.SetDescription( title );
   battle.SetHostMod( mod, wxEmptyString );
@@ -240,9 +240,6 @@ void ServerEvents::OnHostedBattle( int battleid )
 {
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
-
-  UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
-  bs.spectator = false;
 
   battle.CustomBattleOptions().loadOptions( MapOption, battle.GetHostMapName() );
   battle.CustomBattleOptions().loadOptions( ModOption, battle.GetHostModName() );
@@ -340,7 +337,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   {
     battle.SendMyBattleStatus();
     battle.CustomBattleOptions().loadOptions( MapOption, map );
-    m_ui.OnBattleMapChanged( battle );
+    battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
   }
 
   m_ui.OnBattleInfoUpdated( battle );
@@ -356,7 +353,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
   {
     key = key.AfterFirst( '/' );
     if (  battle.CustomBattleOptions().setSingleOption( key,  value, EngineOption ) )
-      battle.Update( wxString::Format(_T("%d_"), EngineOption ) + key );
+      battle.Update( wxString::Format(_T("%d_%s"), EngineOption, key.c_str() ) );
   }
   else if ( key.Left( 5 ) == _T("game\\") )
   {
@@ -365,13 +362,13 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     {
       key = key.AfterFirst( '\\' );
       if (  battle.CustomBattleOptions().setSingleOption( key,  value, MapOption ) )  // m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
-        battle.Update( wxString::Format(_T("%d_"), MapOption ) + key );
+        battle.Update( wxString::Format(_T("%d_%s"), MapOption, key.c_str() ) );
     }
     else if ( key.Left( 11 ) == _T( "modoptions\\" ) )
     {
       key = key.AfterFirst( '\\' );
       if (  battle.CustomBattleOptions().setSingleOption( key, value, ModOption ) )  //m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
-        battle.Update(  wxString::Format(_T("%d_"), ModOption ) + key );
+        battle.Update(  wxString::Format(_T("%d_%s"), ModOption,  key.c_str() ) );
     }
   }
 }
@@ -401,7 +398,7 @@ void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   battle.DisableUnit( unitname );
-  m_ui.OnBattleDisableUnit( battle, unitname );
+  battle.Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
 }
 
 
@@ -410,7 +407,7 @@ void ServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   battle.EnableUnit( unitname );
-  m_ui.OnBattleEnableUnit( battle, unitname );
+  battle.Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
 }
 
 
@@ -419,7 +416,7 @@ void ServerEvents::OnBattleEnableAllUnits( int battleid )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   battle.EnableAllUnits();
-  m_ui.OnBattleEnableAllUnits( battle );
+  battle.Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
 }
 
 
@@ -527,6 +524,7 @@ void ServerEvents::OnSaidBattle( int battleid, const wxString& nick, const wxStr
 {
   Battle& battle = m_serv.GetBattle( battleid );
   m_ui.OnSaidBattle( battle, nick, msg );
+  battle.GetAutoHost().OnSaidBattle( nick, msg );
 }
 
 void ServerEvents::OnBattleAction( int battleid, const wxString& nick, const wxString& msg )
@@ -540,7 +538,7 @@ void ServerEvents::OnBattleStartRectAdd( int battleid, int allyno, int left, int
 {
   Battle& battle = m_serv.GetBattle( battleid );
   battle.AddStartRect( allyno, left, top, right, bottom );
-  m_ui.OnBattleStartRectsUpdated( battle );
+  battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
 }
 
 
@@ -548,7 +546,7 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
 {
   Battle& battle = m_serv.GetBattle( battleid );
   battle.RemoveStartRect( allyno );
-  m_ui.OnBattleStartRectsUpdated( battle );
+  battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
 }
 
 

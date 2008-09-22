@@ -35,6 +35,8 @@ public:
     void OnOpenGroupsTab();
     void SetSelection( const unsigned int page );
 
+    void ReloadSpringPathFromConfig();
+
 
 protected:
     wxBoxSizer* m_main_sizer;

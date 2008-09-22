@@ -127,20 +127,20 @@ void MainSinglePlayerTab::ReloadModOptContrls()
 
 SinglePlayerTab& MainSinglePlayerTab::GetSinglePlayerTab()
 {
-  ASSERT_RUNTIME( m_sp_tab, _T("m_sp_tab == 0") );
+  ASSERT_EXCEPTION( m_sp_tab, _T("m_sp_tab == 0") );
 	return *m_sp_tab;
 }
 
 BattleOptionsTab& MainSinglePlayerTab::GetOptionsTab()
 {
-  ASSERT_RUNTIME( m_opts_tab, _T("m_opts_tab == 0") );
+  ASSERT_EXCEPTION( m_opts_tab, _T("m_opts_tab == 0") );
 	return *m_opts_tab;
 }
 
 
 BattleroomMMOptionsTab& MainSinglePlayerTab::GetMMOptionsTab()
 {
-  ASSERT_RUNTIME( m_mm_opts_tab, _T("m_mm_opts_tab == 0") );
+  ASSERT_EXCEPTION( m_mm_opts_tab, _T("m_mm_opts_tab == 0") );
 	return *m_mm_opts_tab;
 }
 
@@ -149,6 +149,26 @@ void MainSinglePlayerTab::ReloadPresetList()
 {
   try
   {
+    GetSinglePlayerTab().UpdatePresetList();
+  } catch (...) {}
+  try
+  {
     GetOptionsTab().UpdatePresetList();
   } catch (...) {}
+}
+
+
+void MainSinglePlayerTab::Update( const wxString& Tag )
+{
+
+  try
+  {
+    GetSinglePlayerTab().Update( Tag );
+  } catch (...) {}
+
+  try
+  {
+    GetOptionsTab().UpdateBattle( Tag );
+  } catch (...) {}
+
 }

@@ -4,6 +4,7 @@
 #include <wx/string.h>
 #include <wx/log.h>
 #include <sstream>
+#include <stdexcept>
 
 /** these need to stay to not break non-autotools builds */
 #if ( !defined(HAVE_WX26) && !defined(HAVE_WX28) )
@@ -18,6 +19,12 @@
 #ifndef VERSION
 	#define VERSION "unknown"
 #endif
+
+class assert_exception : public std::runtime_error
+{
+  public:
+   assert_exception(std::string msg) : std::runtime_error(msg) {};
+};
 
 #ifndef __WXDEBUG__
 #define wxLogDebugFunc( params ) wxLogVerbose( _T("%s"), wxString(wxString(__FUNCTION__, wxConvUTF8 ) + _T(" ( ") + wxString(params) + _T(" )")).c_str() )
@@ -48,8 +55,8 @@
 }
 #endif
 
-#define ASSERT_RUNTIME(cond,msg) if(!(cond))\
-{wxLogMessage(_T("runtime error: %s"), wxString(msg).c_str() );throw std::runtime_error(std::string(wxString(msg).mb_str()));}
+#define ASSERT_EXCEPTION(cond,msg) if(!(cond))\
+{wxLogMessage(_T("runtime assertion: %s"), wxString(msg).c_str() );throw assert_exception(std::string(wxString(msg).mb_str()));}
 
 
 #define CLAMP(var,min,max) ((var)=((var)<(min))?(min):((var)>(max))?(max):(var))
