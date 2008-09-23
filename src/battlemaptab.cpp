@@ -122,12 +122,13 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
 BattleMapTab::~BattleMapTab()
 {
-  #ifndef HAVE_WX26
-  GetAui().manager->DetachPane( this );
-  #endif
-  if(m_battle.IsFounderMe()){
-    sett().SaveBattleMapOptions(&m_battle);
-  }
+//this is leftover of a merge conflict, hinders compilation
+//  #ifndef HAVE_WX26
+//  GetAui().manager->DetachPane( this );
+//  #endif
+//  if(m_battle.IsFounderMe()){
+//    sett().SaveBattleMapOptions(&m_battle);
+//  }
 }
 
 
