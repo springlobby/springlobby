@@ -267,10 +267,12 @@ void ServerEvents::OnStartHostedBattle( int battleid )
 
 void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, UserBattleStatus status )
 {
-  AutoCheckCommandSpam( battleid, nick );
   try{
     User& user = m_serv.GetUser( nick );
     Battle& battle = m_serv.GetBattle( battleid );
+
+    if( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
+
     status.color_index = user.BattleStatus().color_index;
 
     user.UpdateBattleStatus( status );
@@ -687,8 +689,9 @@ void ServerEvents::OnRedirect( const wxString& address,  unsigned int port, cons
 }
 
 
-void ServerEvents::AutoCheckCommandSpam( int battleid, const wxString& nick )
+void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
 {
+  wxString nick = user.GetNick();
   MessageSpamCheck info = m_spam_check[nick];
   time_t now = time( 0 );
   if ( info.lastmessage == now ) info.count++;
@@ -697,17 +700,7 @@ void ServerEvents::AutoCheckCommandSpam( int battleid, const wxString& nick )
   m_spam_check[nick] = info;
   if ( info.count > 3 )
   {
-    try
-    {
-      User& user = m_serv.GetUser( nick );
-      Battle& battle = m_serv.GetBattle( battleid );
-      if ( battle.IsFounderMe() )
-      {
-        battle.DoAction( _T("is autokicking ") + user.GetNick() + _T(" due to command spam.") );
-        battle.KickPlayer( user );
-      }
-    }
-    catch(std::runtime_error &except){
-    }
+    battle.DoAction( _T("is autokicking ") + nick + _T(" due to command spam.") );
+    battle.KickPlayer( user );
   }
 }
