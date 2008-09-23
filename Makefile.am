@@ -520,6 +520,7 @@ springlobby_SOURCES = \
 	src/uiutils.h \
 	src/user.cpp \
 	src/user.h \
+	src/usermenu.h \
 	src/userlist.cpp \
 	src/userlist.h \
 	src/userlistctrl.cpp \
