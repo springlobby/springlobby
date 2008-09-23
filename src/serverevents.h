@@ -110,7 +110,7 @@ class ServerEvents
     void OnRedirect( const wxString& address,  unsigned int port, const wxString& CurrentNick, const wxString& CurrentPassword );
 
     /// use this function to check spam from clients and autokick from the battle
-    void AutoCheckCommandSpam( int battleid, const wxString& nick );
+    void AutoCheckCommandSpam( Battle& battle, User& nick );
 
   protected:
     Server& m_serv;
