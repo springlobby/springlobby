@@ -701,8 +701,11 @@ void ServerEvents::AutoCheckCommandSpam( int battleid, const wxString& nick )
     {
       User& user = m_serv.GetUser( nick );
       Battle& battle = m_serv.GetBattle( battleid );
-      battle.DoAction( _T("is autokicking due to command spam.") );
-      battle.KickPlayer( user );
+      if ( battle.IsFounderMe() )
+      {
+        battle.DoAction( _T("is autokicking ") + user.GetNick() + (" due to command spam.") );
+        battle.KickPlayer( user );
+      }
     }
     catch(std::runtime_error &except){
     }
