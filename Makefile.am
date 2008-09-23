@@ -888,7 +888,8 @@ springlobby_SOURCES = \
 	src/updater/updater.h \
 	src/updater/updater.cpp \
 	src/updater/exedownloader.h \
-	src/updater/exedownloader.cpp
+	src/updater/exedownloader.cpp \
+	src/usermenu.h
 
 
 if USE_WINDRES	

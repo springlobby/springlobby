@@ -192,7 +192,6 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
       {
         UnitSyncMap map = usync().GetMapEx( options[_T("mapname")] );
         SetLocalMap( map );
-        SetHostMap( map.name, map.hash );
 
         SendHostInfo( HI_Map );
       }
@@ -215,6 +214,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
 
     }
   }
+  SendHostInfo( HI_Send_All_opts );
   ui().ReloadPresetList();
   return true;
 }

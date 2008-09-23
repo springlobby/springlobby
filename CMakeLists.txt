@@ -298,7 +298,7 @@ if( OPTION_TRANSLATION_SUPPORT )
   kwwidgets_create_gettext_targets(
     DOMAIN_NAME "springlobby"
     TARGET_BASENAME "springlobby"
-    LOCALE_LIST "da;de;fi;fr;it;ro;ru;sv;uk"
+    LOCALE_LIST "ar;cs;da;de;el;es;fi;fr;it;pl;pt;ro;ru;sv;uk;zh_CN"
     COPYRIGHT_HOLDER "The SpringLobby team"
     SOURCES "${SpringLobbySrc};${SettingsSrc};${StandAloneSettings}"
     PO_DIR "${CMAKE_SOURCE_DIR}/po"
