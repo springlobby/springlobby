@@ -703,7 +703,7 @@ void ServerEvents::AutoCheckCommandSpam( int battleid, const wxString& nick )
       Battle& battle = m_serv.GetBattle( battleid );
       if ( battle.IsFounderMe() )
       {
-        battle.DoAction( _T("is autokicking ") + user.GetNick() + (" due to command spam.") );
+        battle.DoAction( _T("is autokicking ") + user.GetNick() + _T(" due to command spam.") );
         battle.KickPlayer( user );
       }
     }
