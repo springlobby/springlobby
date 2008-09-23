@@ -267,6 +267,7 @@ void ServerEvents::OnStartHostedBattle( int battleid )
 
 void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, UserBattleStatus status )
 {
+  AutoCheckCommandSpam( battleid, nick );
   try{
     User& user = m_serv.GetUser( nick );
     Battle& battle = m_serv.GetBattle( battleid );
@@ -683,4 +684,30 @@ void ServerEvents::OnRedirect( const wxString& address,  unsigned int port, cons
     sett().SetServerHost( address, address );
     sett().SetServerPort( address, (int)port );
     m_ui.DoConnect( address, CurrentNick, CurrentPassword );
+}
+
+
+void ServerEvents::AutoCheckCommandSpam( int battleid, const wxString& nick )
+{
+  MessageSpamCheck info = m_spam_check[nick];
+  time_t now = time( 0 );
+  if ( info.lastmessage == now ) info.count++;
+  else info.count = 0;
+  info.lastmessage = now;
+  m_spam_check[nick] = info;
+  if ( info.count > 3 )
+  {
+    try
+    {
+      User& user = m_serv.GetUser( nick );
+      Battle& battle = m_serv.GetBattle( battleid );
+      if ( battle.IsFounderMe() )
+      {
+        battle.DoAction( _T("is autokicking ") + user.GetNick() + (" due to command spam.") );
+        battle.KickPlayer( user );
+      }
+    }
+    catch(std::runtime_error &except){
+    }
+  }
 }

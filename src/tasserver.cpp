@@ -911,6 +911,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("REDIRECT") )
     {
+      if ( m_online ) return;
       wxString address = GetWordParam( params );
       unsigned int port = GetIntParam( params );
       if ( address.IsEmpty() ) return;
