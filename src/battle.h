@@ -222,6 +222,8 @@ class Battle : public UserList, public IBattle
     bool CheckBan(User &user);
     ///>
 
+    void MakeTeamsUnique();
+
   protected:
     // Battle variables
 

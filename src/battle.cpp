@@ -989,3 +989,21 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
   }
   Update();
 }
+
+void Battle::MakeTeamsUnique()
+{
+  unsigned int numusers = GetNumUsers();
+  unsigned int newteam = 0;
+  for ( unsigned int count = 0; count < numusers; count++ )
+  {
+    try
+    {
+      User user = GetUser( count );
+      UserBattleStatus status = user.BattleStatus();
+      status.team = newteam;
+      user.UpdateBattleStatus( status );
+      newteam++;
+    } catch( assert_exception& except_mess ) {}
+  }
+  Update();
+}
