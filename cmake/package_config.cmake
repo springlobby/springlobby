@@ -1,9 +1,9 @@
 # get revision and put into config.h
-EXECUTE_PROCESS(COMMAND ${SpringLobby_SOURCE_DIR}/tools/get-revision.sh 
-        OUTPUT_VARIABLE SPRINGLOBBY_REV         
+EXECUTE_PROCESS(COMMAND ${SpringLobby_SOURCE_DIR}/tools/get-revision.sh
+        OUTPUT_VARIABLE SPRINGLOBBY_REV
         RESULT_VARIABLE GIT_ERROR
         OUTPUT_STRIP_TRAILING_WHITESPACE)
-        
+
 #don't write when git errored out resulting in unset version (ie when compiling from tarball)
 IF ( NOT GIT_ERROR)
     CONFIGURE_FILE( ${SpringLobby_SOURCE_DIR}/cmake/config.h ${SpringLobby_BINARY_DIR}/config.h )
@@ -12,6 +12,7 @@ ENDIF ( NOT GIT_ERROR)
 #if nothing went wrong we have the file and can define HAVE_CONFIG_H
 IF ( EXISTS ${SpringLobby_BINARY_DIR}/config.h )
     ADD_DEFINITIONS( -DHAVE_CONFIG_H )
+    INCLUDE_DIRECTORIES(${SpringLobby_BINARY_DIR})
 ENDIF ( EXISTS ${SpringLobby_BINARY_DIR}/config.h )
 
 IF (WIN32)
