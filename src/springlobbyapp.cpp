@@ -141,7 +141,7 @@ bool SpringLobbyApp::OnInit()
         }
 
         if ( !contentExists &&
-                customMessageBox(SL_MAIN_ICON, _("Do you want to download OTA conent?\n"
+                customMessageBox(SL_MAIN_ICON, _("Do you want to download OTA content?\n"
                                                  "You need this to be able to play TA based mods.\n"
                                                  "You need to own a copy of Total Annihilation do legally download it."),_("Download OTA content?"),wxYES_NO) == wxYES )
         {
