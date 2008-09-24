@@ -54,12 +54,12 @@ IF (NOT WIN32)
     FIND_PACKAGE(wxWidgets)
     # Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
     IF(wxWidgets_FOUND)
-            # Include wxWidgets macros
-            INCLUDE(${wxWidgets_USE_FILE})
-            INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
+	    # Include wxWidgets macros
+	    INCLUDE(${wxWidgets_USE_FILE})
+	    INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
     ELSE(wxWidgets_FOUND)
-            # For Convenience. If we cannot continue, inform the User.
-            MESSAGE( FATAL_ERROR "wxWidgets library is not found! Please install the package to continue")
+	    # For Convenience. If we cannot continue, inform the User.
+	    MESSAGE( FATAL_ERROR "wxWidgets library is not found! Please install the package to continue")
     ENDIF(wxWidgets_FOUND)
 ELSE (NOT WIN32)
     INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
@@ -70,38 +70,46 @@ ENDIF(NOT WIN32)
 #----------------------------------------------------------------------------------------------------
 # SDL libs dependency check
 #----------------------------------------------------------------------------------------------------
-IF (NOT WIN32)
+IF ( OPTION_SOUND )
     FIND_PACKAGE(SDL REQUIRED)
     FIND_PACKAGE(SDL_mixer REQUIRED)
     FIND_PACKAGE(SDL_sound REQUIRED)
-    
+
     # Throw an error to the user if SDL is not found
-    if ( NOT SDL_FOUND AND OPTION_SOUND )
-        message ( FATAL_ERROR "SDL library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
-    endif( NOT SDL_FOUND AND OPTION_SOUND )
-    
+    if ( NOT SDL_FOUND )
+	 message ( FATAL_ERROR "SDL library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
+    endif( NOT SDL_FOUND )
+
     # Throw an error to the user if SDL_mixer is not found
-    if ( NOT SDLMIXER_FOUND AND OPTION_SOUND )
-        message ( FATAL_ERROR "SDL_mixer library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
-    endif(NOT SDLMIXER_FOUND AND OPTION_SOUND)
-    
+    if ( NOT SDLMIXER_FOUND )
+	message ( FATAL_ERROR "SDL_mixer library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
+    endif(NOT SDLMIXER_FOUND)
+
     # Throw an error to the user if SDL_sound is not found
-    if ( NOT SDL_SOUND_FOUND AND OPTION_SOUND )
-        message ( FATAL_ERROR "SDL_sound library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
-    endif( NOT SDL_SOUND_FOUND AND OPTION_SOUND )
-    
-    if ( OPTION_SOUND )
-            INCLUDE_DIRECTORIES( ${SDL_SOUND_INCLUDE_DIR} )
-            LINK_LIBRARIES( ${SDL_SOUND_LIBRARIES} ${SDLMIXER_LIBRARY}  )	
-    else ( OPTION_SOUND )
-            ADD_DEFINITIONS( -DDISABLE_SOUND )
-    ENDIF( OPTION_SOUND )
-ELSE(NOT WIN32)
-    IF( OPTION_SOUND )
-         INCLUDE_DIRECTORIES( ${sdl_INCLUDE_DIR} )
-         LINK_LIBRARIES(SDLmain SDL SDL_mixer)
-    ENDIF( OPTION_SOUND )
-ENDIF (NOT WIN32)
+    if ( NOT SDL_SOUND_FOUND )
+	message ( FATAL_ERROR "SDL_sound library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
+    endif( NOT SDL_SOUND_FOUND )
+
+    # MESSAGE("sound inc dir: ${SDL_SOUND_INCLUDE_DIR}")
+    # MESSAGE("mixer inc dir: ${SDLMIXER_INCLUDE_DIR}")
+    # MESSAGE("sound libs: ${SDL_SOUND_LIBRARIES}")
+    # MESSAGE("mixer libs: ${SDLMIXER_LIBRARY}")
+
+    # Set include paths and libraries to link.
+    IF (NOT WIN32)
+	INCLUDE_DIRECTORIES( ${SDL_SOUND_INCLUDE_DIR} ${SDLMIXER_INCLUDE_DIR} )
+	LINK_LIBRARIES( # ${SDL_SOUND_LIBRARIES}
+	    ${SDLMIXER_LIBRARY}  )
+    ELSE(NOT WIN32)
+	INCLUDE_DIRECTORIES( ${sdl_INCLUDE_DIR} )
+	LINK_LIBRARIES(SDLmain SDL SDL_mixer)
+    ENDIF (NOT WIN32)
+
+ELSE ( OPTION_SOUND )
+    # Disable sound.
+    ADD_DEFINITIONS( -DDISABLE_SOUND )
+ENDIF ( OPTION_SOUND )
+
 
 #----------------------------------------------------------------------------------------------------
 # Gettext lib dependency check
@@ -112,12 +120,12 @@ if( OPTION_TRANSLATION_SUPPORT )
     INCLUDE(cmake/FindGettext.cmake)
     FIND_PACKAGE( Gettext )
     if(GETTEXT_FOUND)
-            set(SpringLobby_INCLUDE_PATH ${SpringLobby_INCLUDE_PATH}
-                ${GETTEXT_INCLUDE_DIR} CACHE INTERNAL "" FORCE)
-            
-            include("cmake/KWWidgetsInternationalizationMacros.cmake")
+	    set(SpringLobby_INCLUDE_PATH ${SpringLobby_INCLUDE_PATH}
+		${GETTEXT_INCLUDE_DIR} CACHE INTERNAL "" FORCE)
+
+	    include("cmake/KWWidgetsInternationalizationMacros.cmake")
     else(GETTEXT_FOUND)
-        message(FATAL_ERROR "The GNU Gettext package is not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
+	message(FATAL_ERROR "The GNU Gettext package is not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
     endif(GETTEXT_FOUND)
 endif( OPTION_TRANSLATION_SUPPORT )
 
@@ -126,23 +134,23 @@ endif( OPTION_TRANSLATION_SUPPORT )
 #----------------------------------------------------------------------------------------------------
 
 IF( OPTION_TORRENT_SYSTEM )
-        IF( NOT WIN32)
-            SET ( LIBTORRENT_MIN_VERSION 0.13 )
-            pkg_check_modules( LIBTORRENT libtorrent-rasterbar>=${LIBTORRENT_MIN_VERSION} )
-            IF( LIBTORRENT_FOUND )
-                    INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
-                    LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
-            ELSE()
-                    MESSAGE(FATAL_ERROR "libtorrent-rasterbar library is not found! Please install the package or toggle OPTION_USE_TORRENT_SYSTEM to OFF")
-            ENDIF()
-        ELSE( NOT WIN32)
-            INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR}/src/libtorrent/include 
-                                ${SpringLobby_SOURCE_DIR}/src/libtorrent/zlib
-                                ${SpringLobby_SOURCE_DIR}/src/libtorrent/ )
-            ADD_DEFINITIONS( -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION )
-            LINK_LIBRARIES( boost_thread-mt boost_filesystem-mt  ws2_32 mswsock boost_date_time-mt )
-            link_directories( ${boost_LIB_DIR} )
-        ENDIF( NOT WIN32)
+	IF( NOT WIN32)
+	    SET ( LIBTORRENT_MIN_VERSION 0.13 )
+	    pkg_check_modules( LIBTORRENT libtorrent-rasterbar>=${LIBTORRENT_MIN_VERSION} )
+	    IF( LIBTORRENT_FOUND )
+		    INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
+		    LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
+	    ELSE()
+		    MESSAGE(FATAL_ERROR "libtorrent-rasterbar library is not found! Please install the package or toggle OPTION_USE_TORRENT_SYSTEM to OFF")
+	    ENDIF()
+	ELSE( NOT WIN32)
+	    INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR}/src/libtorrent/include
+				${SpringLobby_SOURCE_DIR}/src/libtorrent/zlib
+				${SpringLobby_SOURCE_DIR}/src/libtorrent/ )
+	    ADD_DEFINITIONS( -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION )
+	    LINK_LIBRARIES( boost_thread-mt boost_filesystem-mt  ws2_32 mswsock boost_date_time-mt )
+	    link_directories( ${boost_LIB_DIR} )
+	ENDIF( NOT WIN32)
 ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
 ENDIF( OPTION_TORRENT_SYSTEM )
@@ -273,17 +281,17 @@ SET(SLSharedWithSettings
 	src/crashreport.cpp
 	src/springunitsynclib.cpp
 	src/utils.cpp
-        src/spinctld.cpp
+	src/spinctld.cpp
 )
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
 IF(WIN32)
     FIND_PROGRAM(WINDRES NAMES windres i586-mingw32msvc-windres i686-mingw32-windres DOC "path to mingw's windres executable")
-    
+
     ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${SpringLobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
     ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${SpringLobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
-    
-    
+
+
     SET(SpringLobby_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o )
     SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
     SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl.cpp)
@@ -308,7 +316,7 @@ if( OPTION_TRANSLATION_SUPPORT )
     MO_INSTALL_DIR " locale"
     CREATE_POT_TARGET 1
     CREATE_PO_TARGET 1
-    #ADD_MO_TARGET_TO_ALL 
+    #ADD_MO_TARGET_TO_ALL
     )
 endif( OPTION_TRANSLATION_SUPPORT )
 
@@ -319,11 +327,11 @@ endif( OPTION_TRANSLATION_SUPPORT )
 # Here we define the executable SpringLobby ( or on Windows SpringLobby.exe )
 IF (WIN32)
     INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
-ENDIF (WIN32)    
-   
+ENDIF (WIN32)
+
 #auto-remove whitespaces before/after lib paths
 cmake_policy(SET CMP0004 OLD)
-   
+
 #libtsource is empty if "NOT WIN32"
 ADD_EXECUTABLE(springlobby WIN32 ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE} ${libtorrent_SRC})
 ADD_EXECUTABLE(springsettings WIN32 ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
