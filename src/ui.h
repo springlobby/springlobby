@@ -125,17 +125,10 @@ class Ui
     void OnBattleInfoUpdated( Battle& battle );
     void OnBattleInfoUpdated( Battle& battle, const wxString& Tag );
     void OnBattleStarted( Battle& battle );
-    void OnBattleStartRectsUpdated( Battle& battle );
-    void OnBattleMapChanged( Battle& battle );
-    void OnBattleMapRefresh();
 
     void OnBattleBotAdded( Battle& battle, BattleBot& bot );
     void OnBattleBotRemoved( Battle& battle, BattleBot& bot );
     void OnBattleBotUpdated( Battle& battle, BattleBot& bot );
-
-    void OnBattleDisableUnit( Battle& battle, const wxString& unitname );
-    void OnBattleEnableUnit( Battle& battle, const wxString& unitname );
-    void OnBattleEnableAllUnits( Battle& battle );
 
     void OnJoinedBattle( Battle& battle );
     void OnHostedBattle( Battle& battle );
@@ -165,6 +158,7 @@ class Ui
 
     int TestHostPort( unsigned int port );
 
+    void ReloadPresetList();
 
   protected:
     Spring* m_spring;
@@ -177,6 +171,8 @@ class Ui
     ConnectWindow* m_con_win;
 
     unsigned int m_upd_intv_counter;
+
+    bool m_checked_for_update;
 
 };
 

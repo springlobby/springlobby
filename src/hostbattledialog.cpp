@@ -227,7 +227,7 @@ void HostBattleDialog::ReloadModList()
 {
   m_mod_pic->Clear();
 
-  wxArrayString modlist= usync()->GetModList();
+  wxArrayString modlist= usync().GetModList();
   //modlist.Sort(CompareStringIgnoreCase);
 
   size_t nummods = modlist.Count();

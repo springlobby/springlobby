@@ -57,6 +57,7 @@ END_EVENT_TABLE()
 
 BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxPanel( parent, -1 ),
+  m_filter_notice(0),
   m_ui(ui),
   m_sel_battle(0)
 {
@@ -66,7 +67,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxBoxSizer* m_filter_sizer;
   m_filter_sizer = new wxBoxSizer( wxVERTICAL );
 
-  wxBoxSizer* m_battlelist_sizer;
+
   m_battlelist_sizer = new wxBoxSizer( wxVERTICAL );
 
   m_battle_list = new BattleListCtrl( this, m_ui );
@@ -362,6 +363,8 @@ void BattleListTab::SetFilterActiv( bool activ )
 {
   m_filter->SetActiv( activ );
   m_filter_activ->SetValue( activ );
+  sett().SetFilterActivState( activ );
+  ShowFilterNotice( activ );
 }
 
 
@@ -440,7 +443,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     // Get selected mod from unitsync.
     UnitSyncMod mod;
     try {
-      mod = usync()->GetMod( sett().GetLastHostMod() );
+      mod = usync().GetMod( sett().GetLastHostMod() );
       bo.modhash = mod.hash;
       bo.modname = mod.name;
     } catch ( ... ) {
@@ -452,14 +455,14 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     UnitSyncMap map;
     wxString mname = sett().GetLastHostMap();
     try {
-      if ( usync()->MapExists(mname) )
-    	  map = usync()->GetMap( mname );
-      else if ( usync()->GetNumMaps() <= 0 ) {
+      if ( usync().MapExists(mname) )
+    	  map = usync().GetMap( mname );
+      else if ( usync().GetNumMaps() <= 0 ) {
         wxLogWarning( _T("no maps found") );
         customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
         return;
       } else {
-        map = usync()->GetMap( 0 );
+        map = usync().GetMap( 0 );
       }
     } catch ( ... ) {
       wxLogWarning( _T("no maps found") );
@@ -493,12 +496,15 @@ void BattleListTab::OnFilter( wxCommandEvent& event )
 
 void BattleListTab::OnFilterActiv( wxCommandEvent& event )
 {
+  bool active = m_filter_activ->GetValue();
   if ( !m_ui.IsConnected() )
   {
-    m_filter_activ->SetValue( !m_filter_activ->GetValue() );
+    m_filter_activ->SetValue( !active );
     return;
   }
-  m_filter->SetActiv( m_filter_activ->GetValue() );
+  m_filter->SetActiv( active );
+  sett().SetFilterActivState( active );
+  ShowFilterNotice( active );
 }
 
 
@@ -515,6 +521,24 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
 
 }
 
+void BattleListTab::ShowFilterNotice( const bool show )
+{
+    if ( show ) {
+        m_filter_notice = new wxStaticText( this, -1, _("Battle filter is active") );
+        m_battlelist_sizer->Add ( m_filter_notice, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP | wxBOTTOM, 5 );
+        m_battlelist_sizer->Layout();
+
+    }
+    else {
+        if ( m_filter_notice ) {
+            m_battlelist_sizer->Detach( m_filter_notice );
+            delete m_filter_notice;
+            m_filter_notice = 0;
+            m_battlelist_sizer->Layout();
+            //m_ma
+        }
+    }
+}
 
 void BattleListTab::OnListJoin( wxListEvent& event )
 {

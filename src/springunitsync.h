@@ -63,9 +63,8 @@ class SpringUnitSync : public IUnitSync
     int GetNumUnits( const wxString& modname );
     wxArrayString GetUnitsList( const wxString& modname );
 
-    wxImage GetMinimap( const wxString& mapname, int max_w, int max_h, bool store_size = false );
+    wxImage GetMinimap( const wxString& mapname, int width, int height );
 
-    bool CacheMinimap( const wxString& map );
     bool ReloadUnitSyncLib();
 
     void SetSpringDataPath( const wxString& path );
@@ -74,12 +73,9 @@ class SpringUnitSync : public IUnitSync
     bool FileExists( const wxString& name );
 
     wxString GetArchivePath( const wxString& name );
+    wxString GetUnitsyncName( const wxString& hash, const MediaType& archivetype );
 
   private:
-
-    wxString _GetCachedMinimapFileName( const wxString& mapname, int width = -1, int height = -1 );
-
-    UnitSyncMap m_map;
 
     LocalArchivesVector m_maps_list; /// maphash -> mapname
     LocalArchivesVector m_mods_list; /// modhash -> modname
@@ -111,7 +107,6 @@ class SpringUnitSync : public IUnitSync
     UnitSyncMap _GetMap( const wxString& mapname, bool getmapinfo = false );
     UnitSyncMap _GetMapEx( const wxString& mapname, bool force = false );
     MapInfo _GetMapInfoEx( const wxString& mapname );
-    wxImage _GetCachedMinimap( const wxString& mapname, int max_w, int max_h, bool store_size = false );
 
     void PopulateArchiveList();
 

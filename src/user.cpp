@@ -7,9 +7,14 @@
 #include "battle.h"
 #include "server.h"
 #include "utils.h"
+#include "chatpanel.h"
 
 #include <wx/string.h>
 #include <wx/intl.h>
+
+User::~User(){
+  if(uidata.panel)uidata.panel->SetUser( 0 );
+}
 
 wxString UserStatus::GetDiffString ( const UserStatus& old )
 {
@@ -110,23 +115,24 @@ bool User::ExecuteSayCommand( const wxString& cmd )
   }  else return false;
 }
 
-wxString User::GetRankName(int rank)
+wxString User::GetRankName(RankContainer rank)
 {
   //TODO: better interface to ranks?
       switch(rank) {
-          case RANK_0: return _("Newbie");
-          case RANK_1: return _("Beginner");
-          case RANK_2: return _("Average");
-          case RANK_3: return _("Above average");
-          case RANK_4: return _("Experienced");
-          case RANK_5: return _("Highly experienced");
-          case RANK_6: return _("Veteran");
+          case RANK_UNKNOWN: return _("Newbie");
+          case RANK_1: return _("Newbie");
+          case RANK_2: return _("Beginner");
+          case RANK_3: return _("Average");
+          case RANK_4: return _("Above average");
+          case RANK_5: return _("Experienced");
+          case RANK_6: return _("Highly experienced");
+          case RANK_7: return _("Veteran");
       }
       return _("no rank");
 }
 
 float User::GetBalanceRank(){
-  return 1.0+0.1*float(GetStatus().rank-RANK_0)/float(RANK_6-RANK_0);
+  return 1.0+0.1*float(GetStatus().rank-RANK_1)/float(RANK_7-RANK_1);
 }
 
 wxString User::GetClan(){

@@ -21,9 +21,11 @@ class LobbyOptionsTab : public wxScrolledWindow
 
         wxCheckBox* m_autojoin;
         wxCheckBox* m_reportstats;
+        wxCheckBox* m_updater;
 
         wxStaticText* m_autoconnect_label;
         wxStaticText* m_reportstats_label;
+        wxStaticText* m_updater_label;
 
         wxBoxSizer* m_main_sizer;
 

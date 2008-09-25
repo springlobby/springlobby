@@ -31,7 +31,7 @@ customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
     controlPointer = 0;
 #endif
 	m_tiptext = _T("");
-	m_bg_color = GetDefaultAttributes().colBg;
+	m_bg_color = GetItemBackgroundColour(0);
 
 	SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
     SetImageList( &icons(), wxIMAGE_LIST_SMALL );

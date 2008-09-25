@@ -20,7 +20,7 @@ class IconImageList : public wxImageList
     int GetUserListStateIcon( const UserStatus& us, bool chanop, bool inbroom );
     int GetUserBattleStateIcon( const UserStatus& us );
 
-    int GetRankIcon( const int& rank, const bool& showlowest = true );
+    int GetRankIcon( const unsigned int& rank, const bool& showlowest = true );
     int GetFlagIcon( const wxString& flagname );
     int GetBattleStatusIcon( const Battle& battle ) const;
     wxString GetBattleStatus(const Battle& battle) const;
@@ -55,13 +55,14 @@ class IconImageList : public wxImageList
     int ICON_DOWN;
 
     int ICON_RANK_NONE;
-    int ICON_RANK0;
+    int ICON_RANK_UNKNOWN;
     int ICON_RANK1;
     int ICON_RANK2;
     int ICON_RANK3;
     int ICON_RANK4;
     int ICON_RANK5;
     int ICON_RANK6;
+    int ICON_RANK7;
 
     int ICON_GAME_UNKNOWN;
     int ICON_OPEN_GAME;

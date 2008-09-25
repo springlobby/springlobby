@@ -204,7 +204,7 @@ bool GetBoolParam( wxString& params )
 
 wxString GetSpringLobbyVersion()
 {
-  return WX_STRINGC(VERSION);
+  return (WX_STRINGC(VERSION)).BeforeFirst( *wxT(" ") );
 }
 
 
