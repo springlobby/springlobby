@@ -33,8 +33,6 @@ class MainChatTab : public wxPanel
     /** \brief this is only used if channel is left via raw command in server tab */
     bool RemoveChatPanel( ChatPanel* panel );
 
-    void CloseAllChats();
-
     void RejoinChannels();
 
     void OnTabsChanged( wxNotebookEvent& event );
@@ -43,6 +41,8 @@ class MainChatTab : public wxPanel
 
     void ChangeUnreadChannelColour( const wxColour& colour );
     void ChangeUnreadPMColour( const wxColour& colour );
+
+    void UpdateNicklistHighlights();
 
   protected:
 

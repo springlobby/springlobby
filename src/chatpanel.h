@@ -6,8 +6,10 @@
 #include <wx/panel.h>
 #include <wx/event.h>
 #include <wx/string.h>
+#include <wx/menu.h>
 
 #include "chatlog.h"
+#include "usermenu.h"
 #include "Helper/TextCompletionDatabase.hpp"
 
 class wxCommandEvent;
@@ -27,7 +29,8 @@ class User;
 class Server;
 class Battle;
 class Ui;
-class wxMenu;
+
+class wxFocusEvent;
 class wxMouseEvent;
 
 enum ChatPanelType {
@@ -70,7 +73,7 @@ class ChatPanel : public wxPanel
     void UserStatusUpdated( User& who );
     void OnChannelJoin( User& who );
 
-    Channel& GetChannel();
+    Channel* GetChannel();
     void SetChannel( Channel* chan );
 
     Server* GetServer();
@@ -89,6 +92,7 @@ class ChatPanel : public wxPanel
     wxString GetChatTypeStr();
 
     User& GetMe();
+    User* GetSelectedUser();
 
     bool IsOk();
 
@@ -153,14 +157,16 @@ class ChatPanel : public wxPanel
 	void OnKeyPressed( wxKeyEvent& keyevent );
 	void OnKeyReleased( wxKeyEvent& keyevent );
 
+	void OnUserMenuAddToGroup( wxCommandEvent& event );
+	void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
+	void OnUserMenuCreateGroup( wxCommandEvent& event );
+	void UpdateNicklistHighlights();
 
   protected:
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
 
     bool ContainsWordToHighlight( const wxString& message );
-
-    User* GetSelectedUser();
 
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.
 
@@ -200,13 +206,15 @@ class ChatPanel : public wxPanel
     wxMenuItem* m_autorejoin;
     ChatLog* m_chat_log;
     wxMenuItem* displayjoinitem;
+    typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
+    UserMenu* m_usermenu;
 
     void LogTime();
     void CreateControls( );
     void CreatePopup();
-    wxMenu* CreateNickListMenu();
+    UserMenu* CreateNickListMenu();
 
-
+    static const int m_groupMenu_baseID = 6798;
 	TextCompletionDatabase textcompletiondatabase;
 
     DECLARE_EVENT_TABLE();
@@ -246,6 +254,7 @@ enum
     CHAT_MENU_US_MUTE,
     CHAT_MENU_US_UNMUTE,
     CHAT_MENU_US_KICK,
+    CHAT_MENU_US_ADD_TO_GROUP,
     CHAT_MENU_US_OP,
     CHAT_MENU_US_DEOP,
     CHAT_MENU_US_MODERATOR_INGAME,
@@ -262,5 +271,6 @@ enum
     CHAT_MENU_US_MODERATOR_UNMUTE,
     CHAT_MENU_US_MODERATOR_RING
 };
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H

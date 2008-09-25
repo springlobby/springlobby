@@ -48,6 +48,8 @@ class BattleListFilter : public wxPanel
     bool FilterBattle(Battle& battle);
     bool GetActiv() const;
 
+    void SetFilterHighlighted( bool state );
+
     void SaveFilterValues();
 
 	protected:
@@ -129,6 +131,7 @@ class BattleListFilter : public wxPanel
 		wxChoice* m_filter_spectator_choice;
 		int m_filter_spectator_choice_value;
 
+        wxCheckBox* m_filter_highlighted;
 
     DECLARE_EVENT_TABLE();
 };
@@ -153,7 +156,8 @@ enum
     BATTLE_FILTER_MOD_SHOW,
     BATTLE_FILTER_PLAYER_BUTTON,
     BATTLE_FILTER_MAXPLAYER_BUTTON,
-    BATTLE_FILTER_SPECTATOR_BUTTON
+    BATTLE_FILTER_SPECTATOR_BUTTON,
+    BATTLE_FILTER_HIGHLIGHTED
 };
 
 #endif //SPRINGLOBBY_HEADERGUARD_BATTLELISTFILTER_H

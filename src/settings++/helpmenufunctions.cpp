@@ -20,12 +20,12 @@ void showAbout()
 {
 #ifdef HAVE_WX28
 
-	std::string ver = std::string("0.1.3 revision ") + VERSION;
+	std::string ver = std::string("0.2.1 revision ") + VERSION;
 	 wxAboutDialogInfo info;
 	 info.SetName(_T("SpringSettings"));
-	 info.SetVersion(_T("0.1.3"));//WX_STRING(ver));
+	 info.SetVersion(_T("0.2.1"));//WX_STRING(ver));
 	 info.SetDescription(_("SpringSettings is a graphical frontend to the Settings of the Spring engine"));
-	 info.SetCopyright(_T("(C) 2007 koshi <koshi@springlobby.info>"));
+	 info.SetCopyright(_T("(C) 2007-2008 koshi <koshi@springlobby.info>"));
 	 info.SetIcon(wxIcon(springsettings_xpm));
 	 wxAboutBox(info);
 

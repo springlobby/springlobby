@@ -95,19 +95,19 @@ bool Spring::Run( Battle& battle )
     return false;
   }
 
-  wxString path = sett().GetSpringDir();
+  wxString path = sett().GetSpringDir() + wxFileName::GetPathSeparator();
 
   wxLogMessage( _T("Path to script: %sscript.txt"), path.c_str() );
 
   try {
 
-    if ( !wxFile::Access( path + _T("/script.txt"), wxFile::write ) ) {
+    if ( !wxFile::Access( path +  _T("script.txt"), wxFile::write ) ) {
       wxLogError( _T("Access denied to script.txt.") );
     }
 
 
 
-    wxFile f( path + _T("/script.txt"), wxFile::write );
+    wxFile f( path + _T("script.txt"), wxFile::write );
     f.Write( WriteScriptTxt(battle) );
     f.Close();
 
@@ -122,10 +122,11 @@ bool Spring::Run( Battle& battle )
   {
     CommandForAutomaticTeamSpeak << battle.GetUser(i).GetNick() << _T("|") << u2s( battle.GetUser(i).BattleStatus().ally) << _T("|");
   }
-  torrent()->SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
+  torrent().SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
   #endif
 
-  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + path + _T("/script.txt");
+  wxString extra = battle.GetAutoHost().GetExtraCommandLineParams();
+  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + extra + _T(" \"") + path +  _T("script.txt\"");
   wxLogMessage( _T("cmd: %s"), cmd.c_str() );
   wxSetWorkingDirectory( sett().GetSpringDir() );
   if ( sett().UseOldSpringLaunchMethod() ) {
@@ -170,7 +171,7 @@ bool Spring::Run( SinglePlayerBattle& battle )
     return false;
   }
 
-  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + path + _T("script.txt");
+  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" \"") + path + _T("script.txt\"");
   wxSetWorkingDirectory( sett().GetSpringDir() );
   if ( sett().UseOldSpringLaunchMethod() ) {
     if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
@@ -190,7 +191,7 @@ bool Spring::Run( SinglePlayerBattle& battle )
 bool Spring::TestSpringBinary()
 {
   if ( !wxFileName::FileExists( sett().GetSpringUsedLoc() ) ) return false;
-  if ( usync()->GetSpringVersion() != _T("")) return true;
+  if ( usync().GetSpringVersion() != _T("")) return true;
   else return false;
 }
 
@@ -303,7 +304,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   tdf.EnterSection(_T("GAME"));
 
   tdf.Append(_T("Mapname"),battle.GetHostMapName());
-  tdf.Append(_T("GameType"),usync()->GetModArchive(usync()->GetModIndex(battle.GetHostModName())));
+  tdf.Append(_T("GameType"),usync().GetModArchive(usync().GetModIndex(battle.GetHostModName())));
 
 
   unsigned long uhash;
@@ -312,8 +313,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   tdf.Append(_T("ModHash"),int(uhash));
 
 
-  wxStringTripleVec optlistEng;
-  battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
+  wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( EngineOption );
   for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
   {
     tdf.Append(it->first,it->second.second);
@@ -411,7 +411,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
     wxLogMessage( _T("%d"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side );
 
-    tdf.Append(_T("Side"),usync()->GetSideName( battle.GetHostModName(), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side ));
+    tdf.Append(_T("Side"),usync().GetSideName( battle.GetHostModName(), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side ));
     tdf.Append(_T("Handicap"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().handicap);
 
     tdf.LeaveSection();
@@ -449,7 +449,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
       TowxString( bot.bs.colour.Blue()/255.0f );
     tdf.Append(_T("RGBColor"), colourstring);
 
-    tdf.Append(_T("Side"),usync()->GetSideName( battle.GetHostModName(), bot.bs.side ));
+    tdf.Append(_T("Side"),usync().GetSideName( battle.GetHostModName(), bot.bs.side ));
 
 
     tdf.Append(_T("Handicap"),bot.bs.handicap);
@@ -467,7 +467,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   wxLogMessage( _T("13") );
 
   long startpostype;
-  battle.CustomBattleOptions()->getSingleValue( _T("startpostype"), EngineOption ).ToLong( &startpostype );
+  battle.CustomBattleOptions().getSingleValue( _T("startpostype"), EngineOption ).ToLong( &startpostype );
   for ( int i = 0; i < NumAllys; i++ ) {
     tdf.EnterSection(_T("ALLYTEAM")+i2s(i));
 
@@ -475,16 +475,16 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     //s += wxString::Format( _T("\t\tNumAllies=%d;\n"), NumInAlly );
     tdf.Append(_T("NumAllies"),NumInAlly);
 
-   if ( (battle.GetStartRect(AllyRevConv[i]) != 0) && (startpostype == ST_Choose) ) {
-      BattleStartRect* sr = (BattleStartRect*)battle.GetStartRect(AllyRevConv[i]);
-      if ( sr && !sr->deleted )
+   if ( ( battle.GetStartRect(AllyRevConv[i]).exist ) && (startpostype == ST_Choose) ) {
+      BattleStartRect sr = battle.GetStartRect(AllyRevConv[i]);
+      if ( sr.IsOk() )
       {
           const char* old_locale = std::setlocale(LC_NUMERIC, "C");
 
-          tdf.Append(_T("StartRectLeft"),wxString::Format( _T("%.3f"), sr->left / 200.0 ));
-          tdf.Append(_T("StartRectTop"),wxString::Format( _T("%.3f"), sr->top / 200.0 ));
-          tdf.Append(_T("StartRectRight"),wxString::Format( _T("%.3f"), sr->right / 200.0 ));
-          tdf.Append(_T("StartRectBottom"),wxString::Format( _T("%.3f"), sr->bottom / 200.0 ));
+          tdf.Append(_T("StartRectLeft"),wxString::Format( _T("%.3f"), sr.left / 200.0 ));
+          tdf.Append(_T("StartRectTop"),wxString::Format( _T("%.3f"), sr.top / 200.0 ));
+          tdf.Append(_T("StartRectRight"),wxString::Format( _T("%.3f"), sr.right / 200.0 ));
+          tdf.Append(_T("StartRectBottom"),wxString::Format( _T("%.3f"), sr.bottom / 200.0 ));
 
           std::setlocale(LC_NUMERIC, old_locale);
       }
@@ -511,8 +511,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
   tdf.EnterSection(_T("mapoptions"));
 
-  wxStringTripleVec optlistMap;
-  battle.CustomBattleOptions()->getOptions( &optlistMap, MapOption );
+  wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( MapOption );
   for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
   {
     tdf.Append(it->first,it->second.second);
@@ -523,8 +522,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
   tdf.EnterSection(_T("modoptions"));
 
-  wxStringTripleVec optlistMod;
-  battle.CustomBattleOptions()->getOptions( &optlistMod, ModOption );
+  wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( ModOption );
   for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
   {
     tdf.Append(it->first,it->second.second);
@@ -648,7 +646,7 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
   int PlayerTeam = -1;
 
   long startpostype;
-  battle.CustomBattleOptions()->getSingleValue( _T("startpostype"), EngineOption ).ToLong( &startpostype );
+  battle.CustomBattleOptions().getSingleValue( _T("startpostype"), EngineOption ).ToLong( &startpostype );
 
   wxLogMessage( _T("StartPosType=%d"), (int)startpostype );
 
@@ -672,15 +670,14 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
 
   tdf.Append(_T("Mapname"),battle.GetHostMapName());
 
-  tdf.Append(_T("GameType"),usync()->GetModArchive(usync()->GetModIndex(battle.GetHostModName())));
+  tdf.Append(_T("GameType"),usync().GetModArchive(usync().GetModIndex(battle.GetHostModName())));
 
   unsigned long uhash;
   battle.LoadMod().hash.ToULong(&uhash);
 
   tdf.Append(_T("ModHash"),int(uhash));
 
-  wxStringTripleVec optlistEng;
-  battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
+  wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( EngineOption );
   for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
   {
     tdf.Append(it->first, it->second.second);
@@ -727,7 +724,7 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
       TowxString( bot->bs.colour.Blue()/255.0f );
     tdf.Append(_T("RGBColor"), colourstring);
 
-    tdf.Append(_T("Side"),usync()->GetSideName(battle.GetHostModName(), bot->bs.side));
+    tdf.Append(_T("Side"),usync().GetSideName(battle.GetHostModName(), bot->bs.side));
 
     tdf.Append(_T("Handicap"),bot->bs.handicap);
 
@@ -762,8 +759,7 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
   tdf.LeaveSection();
 
   tdf.EnterSection(_T("mapoptions"));
-  wxStringTripleVec optlistMap;
-  battle.CustomBattleOptions()->getOptions( &optlistMap, MapOption );
+  wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( MapOption );
   for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
   {
     tdf.Append(it->first, it->second.second);
@@ -771,8 +767,7 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
   tdf.LeaveSection();
 
   tdf.EnterSection(_T("modoptions"));
-  wxStringTripleVec optlistMod;
-  battle.CustomBattleOptions()->getOptions( &optlistMod, ModOption );
+  wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( ModOption );
   for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
   {
     tdf.Append(it->first, it->second.second);

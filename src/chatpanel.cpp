@@ -42,12 +42,14 @@
 #ifndef DISABLE_SOUND
 #include "sdlsound.h"
 #endif
+#include "useractions.h"
+#include "usermenu.h"
+
 /*
 BEGIN_EVENT_TABLE(MyTextCtrl, wxTextCtrl)
 EVT_PAINT(MyTextCtrl::OnPaint)
 END_EVENT_TABLE()
 */
-
 
 BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
@@ -82,6 +84,7 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 	EVT_MENU( CHAT_MENU_US_CHAT, ChatPanel::OnUserMenuOpenChat )
 	EVT_MENU( CHAT_MENU_US_JOIN, ChatPanel::OnUserMenuJoinSame )
 	EVT_MENU( CHAT_MENU_US_SLAP, ChatPanel::OnUserMenuSlap )
+//	EVT_MENU( CHAT_MENU_US_ADD_TO_GROUP, ChatPanel::OnUserMenuAddToGroup )
 	EVT_MENU( CHAT_MENU_US_MUTE, ChatPanel::OnUserMenuMute )
 	EVT_MENU( CHAT_MENU_US_UNMUTE, ChatPanel::OnUserMenuUnmute )
 	EVT_MENU( CHAT_MENU_US_KICK, ChatPanel::OnUserMenuKick )
@@ -113,7 +116,8 @@ void ChatPanel::OnMouseDown( wxMouseEvent& event ) {
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
-		: wxPanel( parent, -1 ), m_show_nick_list( true ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( &chan ), m_server( 0 ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Channel ), m_popup_menu( 0 ) {
+		: wxPanel( parent, -1 ), m_show_nick_list( true ), m_nicklist(0) , m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ),
+		m_channel( &chan ), m_server( 0 ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Channel ), m_popup_menu( 0 ), m_chat_log(0) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Channel& chan" ) );
 	CreateControls( );
 	_SetChannel( &chan );
@@ -128,7 +132,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( &user ), m_battle( 0 ), m_type( CPT_User ), m_popup_menu( 0 ) {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ),m_nicklist(0), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ),
+		 m_channel( 0 ), m_server( 0 ), m_user( &user ), m_battle( 0 ), m_type( CPT_User ), m_popup_menu( 0 ), m_chat_log(0) {
 	CreateControls( );
 	user.uidata.panel = this;
 	m_chat_log = new ChatLog( sett().GetDefaultServer(), user.GetNick() );
@@ -136,7 +141,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ), m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ) {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ),m_nicklist(0), m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ),
+		 m_channel( 0 ), m_server( &serv ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Server ), m_popup_menu( 0 ), m_chat_log(0) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Server& serv" ) );
 	CreateControls( );
 	serv.uidata.panel = this;
@@ -146,7 +152,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv )
 
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle )
-		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist( NULL ), m_chat_tabs( 0 ), m_ui( ui ), m_channel( 0 ), m_server( 0 ), m_user( 0 ), m_battle( &battle ), m_type( CPT_Battle ), m_popup_menu( 0 ) {
+		: wxPanel( parent, -1 ), m_show_nick_list( false ), m_nicklist( 0 ), m_chat_tabs( 0 ), m_ui( ui ),
+		 m_channel( 0 ), m_server( 0 ), m_user( 0 ), m_battle( &battle ), m_type( CPT_Battle ), m_popup_menu( 0 ), m_chat_log(0) {
 	wxLogDebugFunc( _T( "wxWindow* parent, Battle& battle" ) );
 	for (unsigned int i = 0; i < battle.GetNumUsers();++i)
     {
@@ -170,6 +177,7 @@ ChatPanel::~ChatPanel() {
 		if ( m_channel->uidata.panel == this ) m_channel->uidata.panel = 0;
 	}
 	delete m_chat_log;
+	m_chat_log=0;/// for case of double destructor or whatever
 
 
 	if ( m_type == CPT_Channel )
@@ -198,8 +206,8 @@ void ChatPanel::CreateControls( ) {
 		m_chat_panel = new wxPanel( m_splitter, -1 );
 
         m_nick_sizer = new wxBoxSizer( wxVERTICAL );
-
-		m_nicklist = new NickListCtrl( m_nick_panel, m_ui, true, CreateNickListMenu() );
+        m_usermenu = CreateNickListMenu();
+		m_nicklist = new NickListCtrl( m_nick_panel, true, m_usermenu );
 
    // m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
    // m_nick_filter->Disable();
@@ -391,13 +399,13 @@ void ChatPanel::CreatePopup() {
 }
 
 
-wxMenu* ChatPanel::CreateNickListMenu() {
-	wxMenu* m_user_menu;
-	m_user_menu = new wxMenu();
+ChatPanel::UserMenu* ChatPanel::CreateNickListMenu() {
+	ChatPanel::UserMenu* m_user_menu;
+	m_user_menu = new ChatPanel::UserMenu( this );
 	wxMenuItem* chatitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_CHAT,  _( "Open Chat" ) , wxEmptyString, wxITEM_NORMAL );
 	m_user_menu->Append( chatitem );
-	wxMenuItem* joinbattleitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_JOIN,  _( "Join same battle" ) , wxEmptyString, wxITEM_NORMAL );
-	m_user_menu->Append( joinbattleitem );
+    wxMenuItem* joinbattleitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_JOIN,  _( "Join same battle" ) , wxEmptyString, wxITEM_NORMAL );
+    m_user_menu->Append( joinbattleitem );
 
 	m_user_menu->AppendSeparator();
 
@@ -613,7 +621,7 @@ void ChatPanel::OnLinkEvent( wxTextUrlEvent& event ) {
   #ifdef NO_RICHTEXT_CHAT
   if ( !event.GetMouseEvent().LeftDown() ) return;
   #endif
-	wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd() );
+	wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd()+1 );
 	m_ui.OpenWebBrowser( url );
 }
 
@@ -891,8 +899,8 @@ void ChatPanel::UserStatusUpdated( User& who ) {
 }
 
 
-Channel& ChatPanel::GetChannel() {
-	return *m_channel;
+Channel* ChatPanel::GetChannel() {
+	return m_channel;
 }
 
 
@@ -908,9 +916,13 @@ void ChatPanel::SetChannel( Channel* chan ) {
 		if ( m_show_nick_list && m_nicklist ) {
 			m_nicklist->ClearUsers();
 		}
-	} else if ( chan != 0 ) {
+	}
+
+	delete m_chat_log;
+  m_chat_log=0;
+
+	if ( chan != 0 ) {
 		chan->uidata.panel = this;
-		delete m_chat_log;
 		m_chat_log = new ChatLog( sett().GetDefaultServer(), chan->GetName() );
 	}
 	m_channel = chan;
@@ -924,12 +936,20 @@ Server* ChatPanel::GetServer() {
 
 void ChatPanel::SetServer( Server* serv ) {
 	ASSERT_LOGIC( m_type == CPT_Server, _T( "Not of type server" ) );
-	if (( serv == 0 ) && ( m_server != 0 ) ) m_server->uidata.panel = 0;
-	else if ( serv != 0 ) serv->uidata.panel = this;
+	if (( serv == 0 ) && ( m_server != 0 ) ){
+	  m_server->uidata.panel = 0;
+	}
+	else if ( serv != 0 ){
+	   serv->uidata.panel = this;
+	}
 	m_server = serv;
+
 	delete m_chat_log;
-	if ( m_server ) m_chat_log = new ChatLog( sett().GetDefaultServer(), _( "_SERVER" ) );
-	else m_chat_log = 0;
+	m_chat_log = NULL;
+
+	if ( m_server ){
+	  m_chat_log = new ChatLog( sett().GetDefaultServer(), _( "_SERVER" ) );
+	}
 }
 
 
@@ -947,8 +967,8 @@ void ChatPanel::SetUser( User* usr ) {
 	m_user = usr;
 
 	delete m_chat_log;
+	m_chat_log = 0;
 	if ( m_user ) m_chat_log = new ChatLog( sett().GetDefaultServer(), usr->GetNick() );
-	else m_chat_log = 0;
 }
 
 
@@ -1207,7 +1227,7 @@ void ChatPanel::OnChannelMenuMessage( wxCommandEvent& event ) {
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
 	wxString text;
-	if ( !m_ui.AskText( _( "Channel message..." ), _( "Message:" ), text ) ) return;
+if ( !m_ui.AskText( _( "Channel message..." ), _( "Message:" ), text ) ) return;
 
 	cs.Say( _T( "!CHANMSG #" ) + m_channel->GetName() + _T( " " ) + text );
 	//CHANMSG /<channame>/ {message}
@@ -1367,7 +1387,7 @@ void ChatPanel::OnUserMenuJoinSame( wxCommandEvent& event ) {
 	Battle* battle = user->GetBattle();
 	if ( battle == 0 ) return;
 
-	if ( !usync()->ModExists( battle->GetHostModName() ) ) {
+	if ( !usync().ModExists( battle->GetHostModName() ) ) {
 		customMessageBoxNoModal( SL_MAIN_ICON, _( "You don't have the mod " ) + battle->GetHostModName()
 														 + _( " . Please download it first" ), _( "Mod unavailable" ) );
 		return;
@@ -1559,4 +1579,43 @@ void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event ) {
 void ChatPanel::FocusInputBox()
 {
     m_say_text->SetFocus();
+}
+
+void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
+{
+    int id  = event.GetId() - GROUP_ID;
+    wxString groupname = m_usermenu->GetGroupByEvtID(id);
+    User* user = GetSelectedUser();
+    if ( user )
+    useractions().AddUserToGroup( groupname, user->GetNick() );
+}
+
+void ChatPanel::OnUserMenuDeleteFromGroup( wxCommandEvent& event )
+{
+    User* user = GetSelectedUser();
+    if ( user )
+        useractions().RemoveUser( user->GetNick() );
+}
+
+void ChatPanel::OnUserMenuCreateGroup( wxCommandEvent& event )
+{
+    wxString name;
+    if ( ui().AskText( _("Enter name"),
+        _("Please enter the name for the new group.\nAfter clicking ok you will be taken to adjust its settings."), name ) )
+    {
+        User* user = GetSelectedUser();
+        if ( user ) {
+            useractions().AddGroup( name );
+            useractions().AddUserToGroup( name, user->GetNick() );
+            ui().mw().ShowConfigure( OPT_PAGE_GROUPS );
+        }
+        else
+            customMessageBoxNoModal( SL_MAIN_ICON, _("couldn't add user"), _("Error") );
+    }
+}
+
+
+void ChatPanel::UpdateNicklistHighlights()
+{
+    if (m_nicklist != 0) m_nicklist->UpdateHighlights();
 }

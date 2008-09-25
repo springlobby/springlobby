@@ -29,6 +29,18 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
     m_main_sizer->Add( m_autojoin_sizer, 0, wxALL, 15 );
     m_main_sizer->Add( m_reportstats_sizer, 0, wxALL, 15 );
+
+#ifdef __WXMSW__
+    wxStaticBoxSizer* m_updater_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Automatic updates") );
+    m_updater_label = new wxStaticText ( this, -1, _("SpringLobby can check at startup if a newer version is available and automatically download it for you.") );
+    m_updater = new wxCheckBox( this, -1, _("automatically check for updates"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_updater->SetValue( sett().GetAutoUpdate() );
+    m_updater_sizer->Add( m_updater_label, 1, wxEXPAND|wxALL, 5);
+    m_updater_sizer->Add( m_updater, 0, wxEXPAND|wxALL, 5);
+
+    m_main_sizer->Add( m_updater_sizer, 0, wxALL, 15 );
+#endif
+
     SetSizer( m_main_sizer );
 }
 
@@ -41,6 +53,9 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& event)
 {
     sett().SetAutoConnect( m_autojoin->IsChecked() );
     sett().SetReportStats( m_reportstats->GetValue() );
+#ifdef __WXMSW__
+    sett().SetAutoUpdate( m_updater->IsChecked() );
+#endif
 }
 
 
@@ -48,5 +63,8 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& event)
 {
     m_autojoin->SetValue( sett().GetAutoConnect() );
     m_reportstats->SetValue( sett().GetReportStats() );
+#ifdef __WXMSW__
+    m_updater->SetValue( sett().GetAutoUpdate() );
+#endif
 }
 

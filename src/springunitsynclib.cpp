@@ -45,7 +45,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
   // Check if library exists
   if ( !wxFileName::FileExists( path ) ) {
     wxLogError( _T("File not found: %s"), path.c_str() );
-    ASSERT_RUNTIME( false, _T("Failed to load Unitsync lib.") );
+    ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
   }
 
   try {
@@ -62,7 +62,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
     m_libhandle = 0;
   }
 
-  ASSERT_RUNTIME( m_libhandle != 0, _T("Couldn't load the unitsync library") );
+  ASSERT_EXCEPTION( m_libhandle != 0, _T("Couldn't load the unitsync library") );
 
   m_loaded = true;
 
@@ -166,7 +166,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
   }
   catch ( ... ) {
     _Unload();
-    ASSERT_RUNTIME( false, _T("Failed to load Unitsync lib.") );
+    ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
   }
 
 }
@@ -332,7 +332,7 @@ MapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
   tm.author = &tmpauth[0];
 
   bool result = m_get_map_info_ex( mapName.mb_str( wxConvUTF8 ), &tm, version );
-  ASSERT_RUNTIME( result, _T("Failed to get map infos") );
+  ASSERT_EXCEPTION( result, _T("Failed to get map infos") );
   _ConvertSpringMapInfo( tm, info );
 
   return info;
@@ -350,7 +350,7 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
   wxLogMessage( _T("%s"), mapFileName.c_str() );
 
   unsigned short* colours = (unsigned short*)m_get_minimap( mapFileName.mb_str(wxConvUTF8), miplevel );
-  ASSERT_RUNTIME( colours, _T("Get minimap failed") );
+  ASSERT_EXCEPTION( colours, _T("Get minimap failed") );
 
   typedef unsigned char uchar;
   wxImage minimap(width, height, false);
@@ -616,7 +616,7 @@ wxString SpringUnitSyncLib::GetLuaAIDesc( int aiIndex )
 int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
 {
   InitLib( m_get_map_option_count );
-  ASSERT_RUNTIME( !name.IsEmpty(), _T("passing void mapname to unitsync") );
+  ASSERT_EXCEPTION( !name.IsEmpty(), _T("passing void mapname to unitsync") );
   return m_get_map_option_count( name.mb_str( wxConvUTF8 ) );
 }
 
@@ -624,7 +624,7 @@ int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
 int SpringUnitSyncLib::GetModOptionCount( const wxString& name )
 {
   InitLib( m_get_Mod_option_count );
-  ASSERT_RUNTIME( !name.IsEmpty(), _T("passing void modname to unitsync") );
+  ASSERT_EXCEPTION( !name.IsEmpty(), _T("passing void modname to unitsync") );
   SetCurrentMod( name );
   return m_get_Mod_option_count();
 }

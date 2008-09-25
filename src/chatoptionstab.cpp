@@ -303,7 +303,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
   bBotomSizer = new wxBoxSizer( wxHORIZONTAL );
 
   wxStaticBoxSizer* sbChatLogSizer;
-  sbChatLogSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Chat logs") ), wxVERTICAL );
+  wxStaticBox*  sbChatLog = new wxStaticBox( this, -1, _("Chat logs") );
+  sbChatLogSizer = new wxStaticBoxSizer( sbChatLog, wxVERTICAL );
 
   m_save_logs = new wxCheckBox( this, ID_SAVELOGS, _("Save chat logs"), wxDefaultPosition, wxDefaultSize, 0 );
   m_save_logs->SetValue( sett().GetChatLogEnable() );
@@ -361,6 +362,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   this->SetSizer( bMainSizerV );
   this->Layout();
+
+  if ( sett().IsPortableMode() ) sbChatLog->Disable();
 
   DoRestore();
   UpdateTextSample();
@@ -455,7 +458,7 @@ void ChatOptionsTab::DoRestore()
 void ChatOptionsTab::OnApply( wxCommandEvent& event )
 {
   sett().SetChatColorNormal ( m_normal_color->GetColor() );
-  sett().SetChatColorBackground( m_bg_color->GetBackgroundColour() );
+  sett().SetChatColorBackground( m_bg_color->GetColor() );
   sett().SetChatColorAction( m_action_color->GetColor() );
   sett().SetChatColorHighlight( m_highlight_color->GetColor() );
   sett().SetChatColorJoinPart(m_joinleave_color->GetColor() );

@@ -1,4 +1,4 @@
-#include <wx/intl.h>
+#include <wx/string.h>
 
 struct BattleListFilterValues
 {
@@ -10,6 +10,7 @@ struct BattleListFilterValues
         bool status_open;
         bool map_show;
         bool mod_show;
+        bool highlighted_only;
     //text fields
         wxString host;
         wxString description;
