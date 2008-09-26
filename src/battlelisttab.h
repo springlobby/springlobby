@@ -94,6 +94,8 @@ class BattleListTab : public wxPanel
 
     Battle* m_sel_battle;
 
+    bool m_battle_list_dirty_to_sort;
+
     DECLARE_EVENT_TABLE();
 };
 
