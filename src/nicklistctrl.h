@@ -45,9 +45,7 @@ class NickListCtrl : public customListCtrl
 
     void HighlightItem( long item );
 
-    bool IsDirtyToSort() { return m_dirty; };
-
-    void SortNickList();
+    void SortList();
 
   protected:
     static int wxCALLBACK ComparePlayernameUP(long item1, long item2, long sortData);
@@ -68,8 +66,6 @@ class NickListCtrl : public customListCtrl
       int col;
       bool direction;
     } m_sortorder[4];
-
-    bool m_dirty;
 
     DECLARE_EVENT_TABLE()
 };

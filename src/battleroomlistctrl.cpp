@@ -97,13 +97,12 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 9, col, _T("Resource Bonus") );
 
-  m_sortorder[0].col = 7;
+  m_sortorder[0].col = 6;
   m_sortorder[0].direction = true;
-  m_sortorder[1].col = 6;
+  m_sortorder[1].col = 7;
   m_sortorder[1].direction = true;
   m_sortorder[2].col = 5;
   m_sortorder[2].direction = true;
-  Sort( );
 
   SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
@@ -202,6 +201,7 @@ void BattleroomListCtrl::AddUser( User& user )
 
   UpdateUser( index );
   SetColumnWidth( 5, wxLIST_AUTOSIZE );
+  MarkDirtySort();
 }
 
 
@@ -217,7 +217,6 @@ void BattleroomListCtrl::UpdateUser( User& user )
 {
   int index=GetUserIndex( user );
   UpdateUser( index );
-  wxLogMessage(_T("BattleroomListCtrl::UpdateUser(User&) index=%d name=%s"),index,user.GetNick().c_str());
 }
 
 
@@ -237,10 +236,6 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 
   item_content user_content = items[(size_t)GetItemData( index )];
   User& user = *((User*) user_content.data);
-
-  wxLogMessage(_T("BattleroomListCtrl::UpdateUser(int) index=%d name=%s"),index,user.GetNick().c_str());
-
-
 
   int statimg;
   if ( &m_battle.GetFounder() == &user ) {
@@ -288,7 +283,8 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   }
   HighlightItemUser( index, user.GetNick() );
   SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
-  Sort();
+
+  MarkDirtySort();
 }
 
 
@@ -327,6 +323,7 @@ void BattleroomListCtrl::AddBot( BattleBot& bot )
   SetItemData(index, (wxUIntPtr)(items.size()-1) );
 
   UpdateBot( index );
+  MarkDirtySort();
 }
 
 
@@ -390,7 +387,7 @@ void BattleroomListCtrl::UpdateBot( const int& index )
   if ( botdll.Contains(_T("LuaAI:")) ) botdll = botdll.AfterFirst(_T(':'));
 
   SetItem( index, 8, botdll );
-  Sort();
+  MarkDirtySort();
 }
 
 
@@ -1093,4 +1090,13 @@ wxString BattleroomListCtrl::GetSelectedUserNick()
     item_content content = this->items[(size_t)GetSelectedData()];
     return (content.is_bot ?((BattleBot*)content.data)->name
                     : ((User*)content.data)->GetNick() );
+}
+
+void BattleroomListCtrl::SortList()
+{
+  if ( !m_dirty_sort ) return;
+  SetSelectionRestorePoint();
+  Sort();
+  RestoreSelection();
+  m_dirty_sort = false;
 }

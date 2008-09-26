@@ -59,8 +59,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxPanel( parent, -1 ),
   m_filter_notice(0),
   m_ui(ui),
-  m_sel_battle(0),
-  m_battle_list_dirty_to_sort( false )
+  m_sel_battle(0)
 {
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
@@ -159,8 +158,6 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   this->Layout();
 
   SelectBattle(0);
-
-  m_battle_list_dirty_to_sort = true;
 }
 
 
@@ -230,7 +227,7 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
 
-  m_battle_list_dirty_to_sort = true;
+  m_battle_list->MarkDirtySort();
 }
 
 
@@ -312,7 +309,7 @@ void BattleListTab::UpdateBattle( Battle& battle )
 
   if ( &battle == m_sel_battle ) SelectBattle( m_sel_battle );
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
-  m_battle_list_dirty_to_sort = true;
+  m_battle_list->MarkDirtySort();
 }
 
 
@@ -356,7 +353,7 @@ void BattleListTab::SetFilterActiv( bool activ )
   m_filter_activ->SetValue( activ );
   sett().SetFilterActivState( activ );
   ShowFilterNotice( activ );
-  m_battle_list_dirty_to_sort = true;
+  m_battle_list->MarkDirtySort();
 }
 
 
@@ -634,10 +631,5 @@ void BattleListTab::UpdateHighlights()
 
 void BattleListTab::SortBattleList()
 {
-  if ( !m_battle_list_dirty_to_sort ) return;
-  m_battle_list->SetSelectionRestorePoint();
-  m_battle_list->Sort();
-  //this does nothing if selection was reset
-  m_battle_list->RestoreSelection( );
-  m_battle_list_dirty_to_sort = false;
+  m_battle_list->SortList();
 }

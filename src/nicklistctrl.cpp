@@ -44,8 +44,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
   customListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
               name, highlight ),
-  m_menu(popup),
-  m_dirty(false)
+  m_menu(popup)
 {
   wxListItem col;
   col.SetText( _("s") );
@@ -119,7 +118,7 @@ void NickListCtrl::AddUser( const User& user )
 
   UserUpdated( index );
   SetColumnWidth( 3, wxLIST_AUTOSIZE );
-  m_dirty = true;
+  MarkDirtySort();
 }
 
 void NickListCtrl::RemoveUser( const User& user )
@@ -158,7 +157,7 @@ void NickListCtrl::UserUpdated( const int& index )
   SetItemData(index, (long)&user );
     //highlight
   HighlightItemUser( index, user.GetNick() );
-  m_dirty = true;
+  MarkDirtySort();
 }
 
 
@@ -409,12 +408,12 @@ void NickListCtrl::HighlightItem( long item )
     }
 }
 
-void NickListCtrl::SortNickList()
+
+void NickListCtrl::SortList()
 {
-  if ( !m_dirty ) return;
+  if ( !m_dirty_sort ) return;
   SetSelectionRestorePoint();
   Sort();
   RestoreSelection();
-  m_dirty = false;
+  m_dirty_sort = false;
 }
-

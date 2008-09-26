@@ -251,4 +251,8 @@ BattleroomMMOptionsTab& MainJoinBattleTab::GetMMOptionsTab()
 void MainJoinBattleTab::Update()
 {
   m_list_tab->SortBattleList();
+  try
+  {
+    GetBattleRoomTab().SortPlayerList();
+  } catch( assert_exception& e ) {}
 }

@@ -41,6 +41,8 @@ class BattleroomListCtrl : public customListCtrl
     int GetUserIndex( User& user );
     int GetBotIndex( BattleBot& bot );
 
+    void SortList();
+
     void OnListRightClick( wxListEvent& event );
     void OnColClick( wxListEvent& event );
     void OnTeamSelect( wxCommandEvent& event );
