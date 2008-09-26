@@ -14,7 +14,7 @@
 
 ReplayList::ReplayList()
 {
-    wxArrayString filenames = usync()->GetReplayList();
+    wxArrayString filenames = usync().GetReplayList();
     for (unsigned int i = 0; i < filenames.GetCount(); ++i)
     {
         AddReplay( GetReplayInfos( filenames[i] ) );
