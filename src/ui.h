@@ -170,7 +170,9 @@ class Ui
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
 
-    unsigned int m_upd_intv_counter;
+    unsigned int m_upd_counter_torrent;
+    unsigned int m_upd_counter_battlelist;
+    unsigned int m_upd_counter_chat;
 
     bool m_checked_for_update;
 

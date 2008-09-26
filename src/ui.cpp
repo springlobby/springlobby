@@ -53,9 +53,11 @@ Ui::Ui() :
         m_serv(0),
         m_main_win(0),
         m_con_win(0),
+        m_upd_counter_torrent(0),
+        m_upd_counter_battlelist(0),
+        m_upd_counter_chat(0),
         m_checked_for_update(false)
 {
-    m_upd_intv_counter = 0;
     m_main_win = new MainWindow( *this );
     CustomMessageBoxBase::setLobbypointer(m_main_win);
     m_spring = new Spring(*this);
@@ -519,6 +521,17 @@ void Ui::OnUpdate( int mselapsed )
     {
         m_serv->Update( mselapsed );
     }
+
+    if ( m_upd_counter_battlelist % 50 == 0  )
+    {
+      try
+      {
+        mw().GetJoinTab().Update();
+      } catch ( assert_exception &e ) {}
+    }
+    m_upd_counter_battlelist++;
+
+
     if ( !m_checked_for_update )
     {
         m_checked_for_update = true;
@@ -526,8 +539,9 @@ void Ui::OnUpdate( int mselapsed )
         if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 #endif
     }
+
 #ifndef NO_TORRENT_SYSTEM
-    if (m_upd_intv_counter % 20 == 0 )
+    if (m_upd_counter_torrent % 20 == 0 )
     {
         if ( sett().GetTorrentSystemAutoStartMode() == 1 && !torrent().IsConnectedToP2PSystem() ) torrent().ConnectToP2PSystem();
         else if ( GetServerStatus() && m_serv->IsOnline() && !torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
@@ -535,7 +549,7 @@ void Ui::OnUpdate( int mselapsed )
         mw().GetTorrentTab().OnUpdate();
     }
     torrent().UpdateFromTimer( mselapsed );
-    m_upd_intv_counter++;
+    m_upd_counter_torrent++;
 #endif
 }
 
