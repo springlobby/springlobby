@@ -204,7 +204,7 @@ class Battle : public UserList, public IBattle
     void SetHandicap( User& user, int handicap);
 
     void OnUserAdded( User& user );
-    void OnUserBattleStatusUpdated( User &user );
+    void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
     void OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll );

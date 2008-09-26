@@ -275,8 +275,7 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
 
     status.color_index = user.BattleStatus().color_index;
 
-    user.UpdateBattleStatus( status );
-    battle.OnUserBattleStatusUpdated(user);
+    battle.OnUserBattleStatusUpdated( user, status );
 
     m_ui.OnUserBattleStatus( battle, user );
   }
