@@ -100,10 +100,10 @@ Replay GetReplayInfos ( wxString& ReplayPath )
 //    wxString huh = replayNode->GetString( _T("GameType") );
     ret.ModName = replayNode->GetString( _T("GameType") );
     ret.playernum = s2l( replayNode->GetString( _T("NumPlayers") ) );
-    for ( unsigned int i = 0; i < ret.playernum; ++i ){
-        PDataList player ( script->Find(_T("PLAYER")+i2s(i) ) );
-        ret.playernames.Add( player->GetString( _T("name") ) );
-    }
+//    for ( unsigned int i = 0; i < ret.playernum; ++i ){
+//        PDataList player ( script->Find(_T("PLAYER")+i2s(i) ) );
+//        ret.playernames.Add( player->GetString( _T("name") ) );
+//    }
 
   }
   return ret;
@@ -126,8 +126,7 @@ wxString GetScriptFromReplay ( wxString& ReplayPath )
         char* script_a = new char[scriptSize];
         replay.Read( script_a, scriptSize );
         wxString script = WX_STRINGC( script_a ) ;//(script_a,scriptSize);
-        //TODO (koshi) delete me after stable
-        serverMessageBox(SL_MAIN_ICON,script,_("GG") );
+
         return script;
     }
     catch (...)
