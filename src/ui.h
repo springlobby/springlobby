@@ -4,6 +4,8 @@
 #include <wx/string.h>
 #include <wx/thread.h>
 #include <wx/event.h>
+#include <map>
+#include "useractions.h"
 
 class Server;
 class TASServer;
@@ -15,7 +17,7 @@ class Channel;
 class User;
 class Battle;
 class SinglePlayerBattle;
-class BattleBot;
+struct BattleBot;
 class ChatPanel;
 class UnitSyncThread;
 
@@ -43,7 +45,7 @@ class Ui
     ~Ui();
 
     Server& GetServer();
-    bool    GetServerStatus() const;
+    bool    GetServerStatus();
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
 
@@ -105,7 +107,7 @@ class Ui
     void OnChannelDidAction( Channel& channel , User& user, const wxString& action );
     void OnChannelMessage( const wxString& channel, const wxString& msg );
 
-    void OnLeaveChannel( Channel& channel );
+    void OnLeaveChannel( wxString& name  );
     void OnChannelList( const wxString& channel, const int& numusers );
     void OnUserOnline( User& user );
     void OnUserOffline( User& user );
@@ -123,17 +125,10 @@ class Ui
     void OnBattleInfoUpdated( Battle& battle );
     void OnBattleInfoUpdated( Battle& battle, const wxString& Tag );
     void OnBattleStarted( Battle& battle );
-    void OnBattleStartRectsUpdated( Battle& battle );
-    void OnBattleMapChanged( Battle& battle );
-    void OnBattleMapRefresh();
 
     void OnBattleBotAdded( Battle& battle, BattleBot& bot );
     void OnBattleBotRemoved( Battle& battle, BattleBot& bot );
     void OnBattleBotUpdated( Battle& battle, BattleBot& bot );
-
-    void OnBattleDisableUnit( Battle& battle, const wxString& unitname );
-    void OnBattleEnableUnit( Battle& battle, const wxString& unitname );
-    void OnBattleEnableAllUnits( Battle& battle );
 
     void OnJoinedBattle( Battle& battle );
     void OnHostedBattle( Battle& battle );
@@ -158,8 +153,12 @@ class Ui
     void OnCachedThreadStarted();
 
     bool IsThisMe(User& other);
+    bool IsThisMe(User* other);
+    bool IsThisMe(const wxString& other);
 
     int TestHostPort( unsigned int port );
+
+    void ReloadPresetList();
 
   protected:
     Spring* m_spring;
@@ -173,6 +172,11 @@ class Ui
 
     unsigned int m_upd_intv_counter;
 
+    bool m_checked_for_update;
+
 };
+
+Ui& ui();
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_UI_H

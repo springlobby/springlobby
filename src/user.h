@@ -6,13 +6,19 @@
 
 class Server;
 
-#define RANK_0 100
-#define RANK_1 200
-#define RANK_2 300
-#define RANK_3 400
-#define RANK_4 500
-#define RANK_5 600
-#define RANK_6 700
+enum RankContainer
+{
+  RANK_UNKNOWN,
+  RANK_1,
+  RANK_2,
+  RANK_3,
+  RANK_4,
+  RANK_5,
+  RANK_6,
+  RANK_7
+};
+
+
 
 #define SYNC_UNKNOWN 0
 #define SYNC_SYNCED 1
@@ -22,10 +28,11 @@ class Server;
 struct UserStatus {
   bool in_game;
   bool away;
-  int rank;
+  RankContainer rank;
   bool moderator;
   bool bot;
-  UserStatus(): in_game(false), away(false), rank(RANK_1), moderator(false), bot(false) {}
+  UserStatus(): in_game(false), away(false), rank(RANK_UNKNOWN), moderator(false), bot(false) {}
+  wxString GetDiffString ( const UserStatus& other );
 };
 
 struct UserBattleStatus {
@@ -67,7 +74,7 @@ class User
     User( const wxString& nick, const wxString& country, const int& cpu, Server& serv) :
       m_serv(serv),m_nick(nick), m_country(country), m_cpu(cpu), m_battle(0) {}
 
-    virtual ~User() {}
+    virtual ~User();
 
     // User interface
 
@@ -97,14 +104,14 @@ class User
     void Say( const wxString& message );
     void DoAction( const wxString& message );
 
-    Battle* GetBattle();
+    Battle* GetBattle() const;
     void SetBattle( Battle* battle );
 
     void SendMyUserStatus();
 
     bool ExecuteSayCommand( const wxString& cmd );
 
-    static wxString GetRankName(int rank);
+    static wxString GetRankName(RankContainer rank);
 
     float GetBalanceRank();
 

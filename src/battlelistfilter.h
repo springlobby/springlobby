@@ -19,9 +19,8 @@ class wxRegEx;
 class wxStaticText;
 
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class BattleListFilter
-///////////////////////////////////////////////////////////////////////////////
+/** \brief The panel contained in BattleListTab used to filter for diff info of battles
+ * \todo DOCMEMORE */
 class BattleListFilter : public wxPanel
 {
 	public:
@@ -48,6 +47,8 @@ class BattleListFilter : public wxPanel
 
     bool FilterBattle(Battle& battle);
     bool GetActiv() const;
+
+    void SetFilterHighlighted( bool state );
 
     void SaveFilterValues();
 
@@ -130,6 +131,7 @@ class BattleListFilter : public wxPanel
 		wxChoice* m_filter_spectator_choice;
 		int m_filter_spectator_choice_value;
 
+        wxCheckBox* m_filter_highlighted;
 
     DECLARE_EVENT_TABLE();
 };
@@ -154,7 +156,8 @@ enum
     BATTLE_FILTER_MOD_SHOW,
     BATTLE_FILTER_PLAYER_BUTTON,
     BATTLE_FILTER_MAXPLAYER_BUTTON,
-    BATTLE_FILTER_SPECTATOR_BUTTON
+    BATTLE_FILTER_SPECTATOR_BUTTON,
+    BATTLE_FILTER_HIGHLIGHTED
 };
 
 #endif //SPRINGLOBBY_HEADERGUARD_BATTLELISTFILTER_H

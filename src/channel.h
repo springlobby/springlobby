@@ -28,7 +28,7 @@ class Channel : public UserList
 
     //Channel(): m_serv(0),m_userdata(0) {}
     Channel( Server& serv, Ui& ui ): m_serv(serv),m_ui(ui),m_do_ban_regex(false), m_do_unban_regex(false) {}
-    virtual ~Channel() {}
+    virtual ~Channel();
 
     Server& GetServer() { return m_serv; }
 
@@ -60,6 +60,9 @@ class Channel : public UserList
 
     bool ExecuteSayCommand( const wxString& in );
 
+    wxString GetPassword();
+    void SetPassword( const wxString& pw );
+
   protected:
     Server& m_serv;
 
@@ -80,6 +83,8 @@ class Channel : public UserList
     wxString m_name;
 
     void* m_userdata;
+
+    wxString m_password;
 
     void AddUser( User& user );
     void RemoveUser( const wxString& nick );

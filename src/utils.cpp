@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // File: utils.h
 //
@@ -7,7 +7,6 @@
 #include <iostream>
 
 #include "utils.h"
-#include "revision.h"
 #include "crashreport.h"
 
 #include "settings++/custom_dialogs.h"
@@ -48,7 +47,7 @@ void InitializeLoggingTargets()
 
 {
 	#if wxUSE_STD_IOSTREAM
-    #if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
+    #if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
       ///hidden stream logging for crash reports
       wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
       wxLogChain *logCrashChain = new wxLogChain( loggercrash );
@@ -60,38 +59,35 @@ void InitializeLoggingTargets()
     wxLogChain *logChain = new wxLogChain( loggerconsole );
     logChain->SetLogLevel( wxLOG_Trace );
     logChain->SetVerbose( true );
-  #else
+  #elif defined ( USE_LOG_WINDOW )
     ///gui window fallback logging if console/stream output not available
     wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
     wxLogChain *logChain = new wxLogChain( loggerwin );
     logChain->SetLogLevel( wxLOG_Trace );
     logChain->SetVerbose( true );
     logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+  #else
+    /// if all fails, no log is better than msg box spam :P
+    new wxLogNull();
   #endif
 }
 
 
 wxString i2s( int arg )
 {
-  std::stringstream s;
-  s << arg;
-  return WX_STRING( s.str() );
+    return TowxString(arg);
 }
 
 
 wxString u2s( unsigned int arg )
 {
-  std::stringstream s;
-  s << arg;
-  return WX_STRING( s.str() );
+  return TowxString(arg);
 }
 
 
 wxString f2s( float arg )
 {
-  std::stringstream s;
-  s << arg;
-  return WX_STRING( s.str() );
+  return TowxString(arg);
 }
 
 
@@ -175,7 +171,7 @@ bool GetBoolParam( wxString& params )
 
 wxString GetSpringLobbyVersion()
 {
-  return WX_STRINGC(VERSION);
+  return (WX_STRINGC(VERSION)).BeforeFirst( *wxT(" ") );
 }
 
 
@@ -185,7 +181,6 @@ wxString GetSpringLobbyVersion()
 ///
 /// \return Sum of each CPU's Speed of this Computer
 ///
-/// \TODO Porting to Windows
 ///
 // ------------------------------------------------------------------------------------------------------------------------
 wxString GetHostCPUSpeed()
@@ -264,3 +259,17 @@ wxString GetHostCPUSpeed()
 //{
 //    return (first.Upper() > second.Upper() );
 //}
+
+bool IsValidNickname( const wxString& _name )
+{
+    wxString name = _name;
+    // The Regex Container
+	//wxRegEx regex( wxT("[:graph:]") );
+	wxRegEx regex( wxT("[ \t\r\n\v\föäüß, .:<>\\!§$%&+-]" ));
+
+	// We need to escape all regular Expression Characters, that have a special Meaning
+    name.Replace( _T("["), _T("") );
+	name.Replace( _T("]"), _T("") );
+
+    return !regex.Matches( name );
+}

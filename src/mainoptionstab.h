@@ -13,15 +13,30 @@ class ChatOptionsTab;
 class wxButton;
 class wxBoxSizer;
 class TorrentOptionsPanel;
+class ManageGroupsPanel;
+class LobbyOptionsTab;
 
+
+/** \brief A container for the various option panels
+ * Contains a notebook holding the real option panels as pages. Handles "apply" and "restore" events for those pages,
+ * rather then those having to implement (and duplicate) this functionality. \n
+ * See SpringOptionsTab, TorrentOptionsPanel, ChatOptionsTab
+ */
 class MainOptionsTab : public wxPanel
 {
 public:
     MainOptionsTab( wxWindow* parent, Ui& ui );
     ~MainOptionsTab();
 
+    /** \brief delegate the data setting to memeber panels */
     void OnApply( wxCommandEvent& event );
     void OnRestore( wxCommandEvent& event );
+
+    void OnOpenGroupsTab();
+    void SetSelection( const unsigned int page );
+
+    void ReloadSpringPathFromConfig();
+
 
 protected:
     wxBoxSizer* m_main_sizer;
@@ -33,6 +48,9 @@ protected:
     SpringOptionsTab* m_spring_opts;
     ChatOptionsTab* m_chat_opts;
     TorrentOptionsPanel* m_torrent_opts;
+    ManageGroupsPanel* m_groups_opts;
+    LobbyOptionsTab* m_lobby_opts;
+
 
     wxButton* m_restore_btn;
     wxButton* m_apply_btn;

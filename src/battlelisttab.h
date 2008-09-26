@@ -25,7 +25,8 @@ class wxStaticLine;
 class wxCheckBox;
 class wxToggleButton;
 
-
+/** \brief The panel containing a BattleListCtrl and a BattleListFilter
+ * \todo DOCME */
 class BattleListTab : public wxPanel
 {
   friend class BattleListFilter;
@@ -48,6 +49,7 @@ class BattleListTab : public wxPanel
     void OnHost( wxCommandEvent& event );
     void OnFilter( wxCommandEvent& event );
     void OnFilterActiv( wxCommandEvent& event );
+    void ShowFilterNotice( const bool show );
     void SetFilterActiv(bool activ);
     void OnJoin( wxCommandEvent& event );
     void OnListJoin( wxListEvent& event );
@@ -56,6 +58,8 @@ class BattleListTab : public wxPanel
 
     void OnSelect( wxListEvent& event );
     void OnUnitSyncReloaded();
+
+    void UpdateHighlights();
 
   protected:
     BattleListFilter* m_filter;
@@ -73,8 +77,11 @@ class BattleListTab : public wxPanel
     wxStaticLine* m_buttons_sep;
     wxButton* m_host_btn;
     wxButton* m_join_btn;
+    wxBoxSizer* m_battlelist_sizer;
+    wxStaticText* m_filter_notice;
 
     wxCheckBox* m_filter_activ;
+
 #if wxUSE_TOGGLEBTN
 		wxToggleButton* m_filter_show;
 #else

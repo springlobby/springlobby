@@ -45,7 +45,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
   // Check if library exists
   if ( !wxFileName::FileExists( path ) ) {
     wxLogError( _T("File not found: %s"), path.c_str() );
-    ASSERT_RUNTIME( false, _T("Failed to load Unitsync lib.") );
+    ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
   }
 
   try {
@@ -62,7 +62,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
     m_libhandle = 0;
   }
 
-  ASSERT_RUNTIME( m_libhandle != 0, _T("Couldn't load the unitsync library") );
+  ASSERT_EXCEPTION( m_libhandle != 0, _T("Couldn't load the unitsync library") );
 
   m_loaded = true;
 
@@ -166,7 +166,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
   }
   catch ( ... ) {
     _Unload();
-    ASSERT_RUNTIME( false, _T("Failed to load Unitsync lib.") );
+    ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
   }
 
 }
@@ -202,7 +202,6 @@ void SpringUnitSyncLib::Reload()
 
 bool SpringUnitSyncLib::IsLoaded()
 {
-  LOCK_UNITSYNC;
   return m_loaded;
 }
 
@@ -333,7 +332,7 @@ MapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
   tm.author = &tmpauth[0];
 
   bool result = m_get_map_info_ex( mapName.mb_str( wxConvUTF8 ), &tm, version );
-  ASSERT_RUNTIME( result, _T("Failed to get map infos") );
+  ASSERT_EXCEPTION( result, _T("Failed to get map infos") );
   _ConvertSpringMapInfo( tm, info );
 
   return info;
@@ -344,25 +343,26 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
 {
   InitLib( m_get_minimap );
 
-  const int height = 1024;
-  const int width = 1024;
-  //wxImage ret( height, width );
+  const int miplevel = 0;  // miplevel should not be 10 ffs
+  const int width  = 1024 >> miplevel;
+  const int height = 1024 >> miplevel;
 
   wxLogMessage( _T("%s"), mapFileName.c_str() );
 
-  unsigned short* colours = (unsigned short*)m_get_minimap( mapFileName.mb_str(wxConvUTF8), 0 ); // miplevel should not be 10 ffs
-  ASSERT_RUNTIME( colours, _T("Get minimap failed") );
+  unsigned short* colours = (unsigned short*)m_get_minimap( mapFileName.mb_str(wxConvUTF8), miplevel );
+  ASSERT_EXCEPTION( colours, _T("Get minimap failed") );
 
   typedef unsigned char uchar;
-  uchar* true_colours = (uchar*)malloc( width*height*3 );
+  wxImage minimap(width, height, false);
+  uchar* true_colours = minimap.GetData();
 
   for ( int i = 0; i < width*height; i++ ) {
     true_colours[(i*3)  ] = uchar( (( colours[i] >> 11 )/31.0)*255.0 );
-    true_colours[(i*3)+1] = uchar( (( (colours[i] >> 5) & 63 )/63.0)*255.0 );;
+    true_colours[(i*3)+1] = uchar( (( (colours[i] >> 5) & 63 )/63.0)*255.0 );
     true_colours[(i*3)+2] = uchar( (( colours[i] & 31 )/31.0)*255.0 );
   }
 
-  return wxImage( width, height, true_colours, false );
+  return minimap;
 }
 
 
@@ -616,7 +616,7 @@ wxString SpringUnitSyncLib::GetLuaAIDesc( int aiIndex )
 int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
 {
   InitLib( m_get_map_option_count );
-  ASSERT_RUNTIME( !name.IsEmpty(), _T("passing void mapname to unitsync") );
+  ASSERT_EXCEPTION( !name.IsEmpty(), _T("passing void mapname to unitsync") );
   return m_get_map_option_count( name.mb_str( wxConvUTF8 ) );
 }
 
@@ -624,7 +624,7 @@ int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
 int SpringUnitSyncLib::GetModOptionCount( const wxString& name )
 {
   InitLib( m_get_Mod_option_count );
-  ASSERT_RUNTIME( !name.IsEmpty(), _T("passing void modname to unitsync") );
+  ASSERT_EXCEPTION( !name.IsEmpty(), _T("passing void modname to unitsync") );
   SetCurrentMod( name );
   return m_get_Mod_option_count();
 }

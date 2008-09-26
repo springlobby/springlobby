@@ -12,19 +12,24 @@
 				<Option object_output="obj/GNU/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="&gt;~/.springlobby/log2.txt" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
-					<Add option="`pkg-config --cflags libtorrent`" />
 					<Add option="`wx-config --cflags`" />
-					<Add option='-DVERSION=\\&quot;666_evil_edition\\&quot;' />
+					<Add option="`sdl-config --cflags`" />
+					<Add option="`pkg-config --cflags libtorrent`" />
+					<Add option='-DVERSION=\\&quot;ery-latest-version-Unix-Debug\\&quot;' />
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
+					<Add option="-DDISABLE_SOUND" />
+					<Add option="-DNO_RICHTEXT_CHAT" />
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent`" />
+					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
+					<Add option="`sdl-config --libs`" />
+					<Add library="SDL_mixer" />
 				</Linker>
 			</Target>
 			<Target title="GNU | Profile">
@@ -40,6 +45,7 @@
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
 					<Add option="`pkg-config --cflags libtorrent`" />
+					<Add option="`sdl-config --cflags`" />
 					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 				</Compiler>
@@ -47,6 +53,8 @@
 					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent`" />
+					<Add option="`sdl-config --libs`" />
+					<Add library="SDL_mixer" />
 				</Linker>
 			</Target>
 			<Target title="Win32 | Debug">
@@ -70,24 +78,12 @@
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 				</Compiler>
 				<Linker>
-					<Add library="libwxregexd.a" />
-					<Add library="libwxzlibd.a" />
-					<Add library="libwxpngd.a" />
-					<Add library="libwxjpegd.a" />
-					<Add library="libwxtiffd.a" />
-					<Add library="libwxexpatd.a" />
-					<Add library="libwxmsw28d.a" />
-					<Add library="libwxbase28d.a" />
-					<Add library="libwxbase28d_net.a" />
-					<Add library="libwxmsw28d_core.a" />
-					<Add library="libwxmsw28d_adv.a" />
-					<Add library="libwxmsw28d_media.a" />
-					<Add library="libwxmsw28d_html.a" />
-					<Add library="libwxbase28d_xml.a" />
-					<Add library="libwxmsw28d_xrc.a" />
-					<Add library="libwxmsw28d_aui.a" />
-					<Add library="libwxmsw28d_richtext.a" />
-					<Add library="gmon" />
+					<Add library="wx_based-2.8" />
+					<Add library="wx_mswd_core-2.8" />
+					<Add library="wx_mswd_richtext-2.8" />
+					<Add library="wx_based_net-2.8" />
+					<Add library="wx_mswd_adv-2.8" />
+					<Add library="wx_mswd_qa-2.8" />
 				</Linker>
 				<Environment>
 					<Variable name="WX_DIR" value="C:/wxWidgets-2.8.4" />
@@ -101,6 +97,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-Wall" />
+					<Add option="-pg" />
 					<Add option="-pipe" />
 					<Add option="-mthreads" />
 					<Add option="-Winvalid-pch" />
@@ -120,23 +117,12 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-pg" />
-					<Add library="libwxregexd.a" />
-					<Add library="libwxzlibd.a" />
-					<Add library="libwxpngd.a" />
-					<Add library="libwxjpegd.a" />
-					<Add library="libwxtiffd.a" />
-					<Add library="libwxexpatd.a" />
-					<Add library="libwxmsw28d.a" />
-					<Add library="libwxbase28d.a" />
-					<Add library="libwxbase28d_net.a" />
-					<Add library="libwxmsw28d_core.a" />
-					<Add library="libwxmsw28d_adv.a" />
-					<Add library="libwxmsw28d_media.a" />
-					<Add library="libwxmsw28d_html.a" />
-					<Add library="libwxbase28d_xml.a" />
-					<Add library="libwxmsw28d_xrc.a" />
-					<Add library="libwxmsw28d_aui.a" />
-					<Add library="libwxmsw28d_richtext.a" />
+					<Add library="wx_based-2.8" />
+					<Add library="wx_mswd_core-2.8" />
+					<Add library="wx_mswd_richtext-2.8" />
+					<Add library="wx_based_net-2.8" />
+					<Add library="wx_mswd_adv-2.8" />
+					<Add library="wx_mswd_qa-2.8" />
 					<Add directory="$(WX_DIR)/lib/gcc_dll" />
 				</Linker>
 				<Environment>
@@ -150,14 +136,21 @@
 		</Compiler>
 		<Unit filename="src/Helper/TextCompletionDatabase.cpp" />
 		<Unit filename="src/Helper/TextCompletionDatabase.hpp" />
+		<Unit filename="src/Helper/colorbutton.cpp" />
+		<Unit filename="src/Helper/colorbutton.h" />
+		<Unit filename="src/Helper/wxtextctrlhist.cpp" />
+		<Unit filename="src/Helper/wxtextctrlhist.h" />
 		<Unit filename="src/addbotdialog.cpp" />
 		<Unit filename="src/addbotdialog.h" />
 		<Unit filename="src/agreementdialog.cpp" />
 		<Unit filename="src/agreementdialog.h" />
 		<Unit filename="src/autobalancedialog.cpp" />
 		<Unit filename="src/autobalancedialog.h" />
-		<Unit filename="src/base16.cpp" />
-		<Unit filename="src/base16.h" />
+		<Unit filename="src/autohost.cpp" />
+		<Unit filename="src/autohost.h" />
+		<Unit filename="src/autojoinchanneldialog.cpp" />
+		<Unit filename="src/autojoinchanneldialog.h" />
+		<Unit filename="src/autopointers.h" />
 		<Unit filename="src/base64.cpp" />
 		<Unit filename="src/base64.h" />
 		<Unit filename="src/battle.cpp" />
@@ -200,11 +193,19 @@
 		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
+		<Unit filename="src/filelister/filelistctrl.cpp" />
+		<Unit filename="src/filelister/filelistctrl.h" />
+		<Unit filename="src/filelister/filelistdialog.cpp" />
+		<Unit filename="src/filelister/filelistdialog.h" />
+		<Unit filename="src/filelister/filelistfilter.cpp" />
+		<Unit filename="src/filelister/filelistfilter.h" />
 		<Unit filename="src/flagimagedata.h" />
 		<Unit filename="src/flagimages.cpp" />
 		<Unit filename="src/flagimages.h" />
 		<Unit filename="src/globalevents.cpp" />
 		<Unit filename="src/globalevents.h" />
+		<Unit filename="src/groupuserdialog.cpp" />
+		<Unit filename="src/groupuserdialog.h" />
 		<Unit filename="src/hostbattledialog.cpp" />
 		<Unit filename="src/hostbattledialog.h" />
 		<Unit filename="src/httpdownloader.cpp" />
@@ -251,6 +252,8 @@
 		<Unit filename="src/images/userchat.xpm" />
 		<Unit filename="src/inetclass.h" />
 		<Unit filename="src/iunitsync.h" />
+		<Unit filename="src/lobbyoptionstab.cpp" />
+		<Unit filename="src/lobbyoptionstab.h" />
 		<Unit filename="src/mainchattab.cpp" />
 		<Unit filename="src/mainchattab.h" />
 		<Unit filename="src/mainjoinbattletab.cpp" />
@@ -263,6 +266,8 @@
 		<Unit filename="src/maintorrenttab.h" />
 		<Unit filename="src/mainwindow.cpp" />
 		<Unit filename="src/mainwindow.h" />
+		<Unit filename="src/managegroupspanel.cpp" />
+		<Unit filename="src/managegroupspanel.h" />
 		<Unit filename="src/mapctrl.cpp" />
 		<Unit filename="src/mapctrl.h" />
 		<Unit filename="src/mmoptionmodel.cpp" />
@@ -271,9 +276,9 @@
 		<Unit filename="src/mmoptionswrapper.h" />
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
-		<Unit filename="src/nonautotools.cpp" />
 		<Unit filename="src/nonportable.h" />
-		<Unit filename="src/revision.h" />
+		<Unit filename="src/sdlsound.cpp" />
+		<Unit filename="src/sdlsound.h" />
 		<Unit filename="src/server.cpp" />
 		<Unit filename="src/server.h" />
 		<Unit filename="src/serverevents.cpp" />
@@ -315,6 +320,8 @@
 		<Unit filename="src/singleplayertab.h" />
 		<Unit filename="src/socket.cpp" />
 		<Unit filename="src/socket.h" />
+		<Unit filename="src/sounds/pm_sound.h" />
+		<Unit filename="src/sounds/ring_sound.h" />
 		<Unit filename="src/spinctld.cpp" />
 		<Unit filename="src/spinctld.h" />
 		<Unit filename="src/spring.cpp" />
@@ -350,12 +357,20 @@
 		<Unit filename="src/uiutils.h" />
 		<Unit filename="src/unitsyncthread.cpp" />
 		<Unit filename="src/unitsyncthread.h" />
+		<Unit filename="src/updater/exedownloader.cpp" />
+		<Unit filename="src/updater/exedownloader.h" />
+		<Unit filename="src/updater/updater.cpp" />
+		<Unit filename="src/updater/updater.h" />
 		<Unit filename="src/updater/versionchecker.cpp" />
 		<Unit filename="src/updater/versionchecker.h" />
 		<Unit filename="src/user.cpp" />
 		<Unit filename="src/user.h" />
+		<Unit filename="src/useractions.cpp" />
+		<Unit filename="src/useractions.h" />
 		<Unit filename="src/userlist.cpp" />
 		<Unit filename="src/userlist.h" />
+		<Unit filename="src/userlistctrl.cpp" />
+		<Unit filename="src/userlistctrl.h" />
 		<Unit filename="src/utils.cpp" />
 		<Unit filename="src/utils.h" />
 		<Unit filename="wxsmith/AutoBalanceDialog.wxs" />

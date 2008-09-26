@@ -5,10 +5,11 @@
 
 #include <wx/panel.h>
 #include <wx/event.h>
-#include <wx/textctrl.h>
 #include <wx/string.h>
+#include <wx/menu.h>
 
 #include "chatlog.h"
+#include "usermenu.h"
 #include "Helper/TextCompletionDatabase.hpp"
 
 class wxCommandEvent;
@@ -16,6 +17,8 @@ class wxSizeEvent;
 class wxBoxSizer;
 class wxSplitterWindow;
 class wxTextCtrl;
+class wxTextCtrlHist;
+class wxRichTextCtrl;
 class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
@@ -26,7 +29,8 @@ class User;
 class Server;
 class Battle;
 class Ui;
-class wxMenu;
+
+class wxFocusEvent;
 class wxMouseEvent;
 
 enum ChatPanelType {
@@ -34,28 +38,6 @@ enum ChatPanelType {
   CPT_Server,
   CPT_User,
   CPT_Battle
-};
-
-/// This class implements GetDirty for autoscroll
-/// Necessary to fix scrolling bug, when scrolling stops
-/// if several lines are added between ui updates
-/// GetDirty allows to detect this situation.
-class MyTextCtrl: public wxTextCtrl{
-  bool my_m_dirty;
-  bool m_must_scroll;
-  public:
-  MyTextCtrl(wxWindow* parent, wxWindowID id, const wxString& value = _T(""), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0, const wxValidator& validator = wxDefaultValidator, const wxString& name = wxTextCtrlNameStr);
-  void OnPaint(wxPaintEvent& event);
-  void OnUpdateUI(wxUpdateUIEvent &event);
-  void WriteText(const wxString&  text);
-  bool GetDirty();
-  void MakeDirty();
-  bool GetMustScroll(){
-    return m_must_scroll;
-  }
-  void SetMustScroll(bool v){
-    m_must_scroll=v;
-  }
 };
 
 
@@ -91,7 +73,7 @@ class ChatPanel : public wxPanel
     void UserStatusUpdated( User& who );
     void OnChannelJoin( User& who );
 
-    Channel& GetChannel();
+    Channel* GetChannel();
     void SetChannel( Channel* chan );
 
     Server* GetServer();
@@ -110,6 +92,7 @@ class ChatPanel : public wxPanel
     wxString GetChatTypeStr();
 
     User& GetMe();
+    User* GetSelectedUser();
 
     bool IsOk();
 
@@ -120,7 +103,6 @@ class ChatPanel : public wxPanel
 
     void OnSay( wxCommandEvent& event );
     void OnResize( wxSizeEvent& event );
-	void OnTextChanged_Say_Text( wxCommandEvent& event );
 
     void OnLinkEvent( wxTextUrlEvent& event );
     void OnMouseDown( wxMouseEvent& event );
@@ -175,12 +157,16 @@ class ChatPanel : public wxPanel
 	void OnKeyPressed( wxKeyEvent& keyevent );
 	void OnKeyReleased( wxKeyEvent& keyevent );
 
+	void OnUserMenuAddToGroup( wxCommandEvent& event );
+	void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
+	void OnUserMenuCreateGroup( wxCommandEvent& event );
+	void UpdateNicklistHighlights();
 
   protected:
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
 
-    User* GetSelectedUser();
+    bool ContainsWordToHighlight( const wxString& message );
 
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.
 
@@ -193,8 +179,12 @@ class ChatPanel : public wxPanel
     wxPanel* m_chat_panel;      //!< Panel containing the chat. Only used when nicklist is visible.
     wxPanel* m_nick_panel;      //!< Panel containing the nicklist.
 
-    MyTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
-    wxTextCtrl* m_say_text;     //!< The say textcontrol.
+    #ifndef NO_RICHTEXT_CHAT
+    wxRichTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
+    #else
+    wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
+    #endif
+    wxTextCtrlHist* m_say_text;     //!< The say textcontrol.
 
     NickListCtrl* m_nicklist;   //!< The nicklist.
     wxComboBox* m_nick_filter;  //!< The filter combo.
@@ -216,13 +206,15 @@ class ChatPanel : public wxPanel
     wxMenuItem* m_autorejoin;
     ChatLog* m_chat_log;
     wxMenuItem* displayjoinitem;
+    typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
+    UserMenu* m_usermenu;
 
     void LogTime();
     void CreateControls( );
     void CreatePopup();
-    wxMenu* CreateNickListMenu();
+    UserMenu* CreateNickListMenu();
 
-
+    static const int m_groupMenu_baseID = 6798;
 	TextCompletionDatabase textcompletiondatabase;
 
     DECLARE_EVENT_TABLE();
@@ -262,6 +254,7 @@ enum
     CHAT_MENU_US_MUTE,
     CHAT_MENU_US_UNMUTE,
     CHAT_MENU_US_KICK,
+    CHAT_MENU_US_ADD_TO_GROUP,
     CHAT_MENU_US_OP,
     CHAT_MENU_US_DEOP,
     CHAT_MENU_US_MODERATOR_INGAME,
@@ -278,5 +271,6 @@ enum
     CHAT_MENU_US_MODERATOR_UNMUTE,
     CHAT_MENU_US_MODERATOR_RING
 };
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H

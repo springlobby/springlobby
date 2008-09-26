@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: BattleRoomTab
 //
@@ -10,11 +10,15 @@
 #include <wx/statline.h>
 #include <wx/checkbox.h>
 #include <wx/button.h>
+#include <wx/listctrl.h>
 #include <wx/sizer.h>
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
 #include <wx/colordlg.h>
 #include <wx/colour.h>
+#include <wx/bmpcbox.h>
+#include <wx/image.h>
+
 #include <stdexcept>
 
 #include "battleroomtab.h"
@@ -33,6 +37,7 @@
 #include "settings++/custom_dialogs.h"
 #include "autobalancedialog.h"
 #include "settings.h"
+#include "Helper/colorbutton.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -43,10 +48,13 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
   EVT_CHECKBOX( BROOM_IMREADY, BattleRoomTab::OnImReady )
   EVT_CHECKBOX( BROOM_LOCK, BattleRoomTab::OnLock )
   EVT_CHECKBOX( BROOM_SPEC, BattleRoomTab::OnImSpec )
+  EVT_CHECKBOX( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
   EVT_COMBOBOX( BROOM_TEAMSEL, BattleRoomTab::OnTeamSel )
   EVT_COMBOBOX( BROOM_ALLYSEL, BattleRoomTab::OnAllySel )
   EVT_BUTTON( BROOM_COLOURSEL, BattleRoomTab::OnColourSel )
   EVT_COMBOBOX( BROOM_SIDESEL, BattleRoomTab::OnSideSel )
+
+  EVT_COMBOBOX( BROOM_PRESETSEL, BattleRoomTab::OnPresetSel )
 
   EVT_BUTTON ( BROOM_BALANCE, BattleRoomTab::OnBalance )
   EVT_BUTTON ( BROOM_FIXCOLOURS, BattleRoomTab::OnFixColours )
@@ -66,17 +74,20 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_player_panel = new wxPanel( m_splitter , -1 );
   m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
-  m_team_sel->SetToolTip(_T("Players with the same teamnumber share control of their units"));
+  m_team_sel->SetToolTip(_("Players with the same team number share control of their units."));
   m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
-  m_ally_sel->SetToolTip(_T("Players with same allynumber can achieve victory together"));
-  m_color_sel = new wxBitmapButton( m_player_panel, BROOM_COLOURSEL, icons().GetBitmap( icons().GetColourIcon( myself.team ) ) , wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_color_sel->SetToolTip(_T("You might want to select a color dissimilar to others'\n so you can tell you units apart ingame."));
-  m_side_sel = new wxComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT) );
-  m_side_sel->SetToolTip(_T("Select your faction"));
+  m_ally_sel->SetToolTip(_("Players with the same ally number work together to achieve victory."));
+  m_color_sel = new ColorButton( m_player_panel, BROOM_COLOURSEL, myself.colour, wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+  m_color_sel->SetToolTip(_("Select a color to identify your units in-game"));
+  m_side_sel = new wxBitmapComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+  m_side_sel->SetToolTip(_("Select your faction"));
 
   try {
-    for ( int i = 0; i < usync()->GetSideCount( m_battle.GetModName() ); i++ ) {
-      m_side_sel->Append( usync()->GetSideName( m_battle.GetModName(), i ) );
+    int count = usync().GetSideCount( m_battle.GetHostModName() );
+    for ( int i = 0; i < count; i++ )
+    {
+      wxString sidename = usync().GetSideName( m_battle.GetHostModName(), i );
+      m_side_sel->Append( sidename, icons().GetBitmap( icons().GetSideIcon( m_battle.GetHostModName(), i ) ) );
     }
   } catch (...) {}
 
@@ -85,42 +96,45 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_color_lbl = new wxStaticText( m_player_panel, -1, _("Color") );
   m_side_lbl = new wxStaticText( m_player_panel, -1, _("Side") );
 
-  m_map_lbl = new wxStaticText( this, -1, RefineMapname( battle.GetMapName() ) );
+  m_map_lbl = new wxStaticText( this, -1, RefineMapname( battle.GetHostMapName() ) );
   m_size_lbl = new wxStaticText( this, -1, _T("") );
   m_wind_lbl = new wxStaticText( this, -1, _T("") );
   m_tidal_lbl = new wxStaticText( this, -1, _T("") );
 
   m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true, false );
-  m_minimap->SetToolTip(_T("A small version of the selected map.\n "
-		  					"You can see the starting positions,\n"
-		  					"and also (if set) starting boxes"));
+  m_minimap->SetToolTip(_("A preview of the selected map.  You can see the starting positions, or (if set) starting boxes."));
 
   m_players = new BattleroomListCtrl( m_player_panel, battle, m_ui );
   m_chat = new ChatPanel( m_splitter, m_ui, battle );
-  m_chat->SetToolTip(_T("This chat is exlusivly for participants of this battle"));
+  m_chat->SetToolTip(_("This chat is exclusively for participants of this battle."));
 
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
   m_leave_btn = new wxButton( this, BROOM_LEAVE, _("Leave"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_leave_btn->SetToolTip(_T("Don't want to play? Click here"));
+  m_leave_btn->SetToolTip(_("Leave the battle and return to the battle list"));
   m_start_btn = new wxButton( this, BROOM_START, _("Start"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_start_btn->SetToolTip(_T("Only the host can do this if all players are ready."));
+  m_start_btn->SetToolTip(_("Start the battle"));
   m_addbot_btn = new wxButton( this, BROOM_ADDBOT, _("Add Bot..."), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_addbot_btn->SetToolTip(_T("Gives you a selection of available bots you can add"));
-
+  m_addbot_btn->SetToolTip(_("Add a computer-controlled player to the game"));
 
   m_fix_colours_btn = new wxButton( this, BROOM_FIXCOLOURS, _("Fix colours"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_fix_colours_btn->SetToolTip(_T("Automatically makes player colors be different"));
+  m_fix_colours_btn->SetToolTip(_("Make player colors unique"));
 
   m_balance_btn = new wxButton( this, BROOM_BALANCE, _("Balance"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_balance_btn->SetToolTip(_T("Automatically banalce players into two or more alliances."));
+  m_balance_btn->SetToolTip(_("Automatically balance players into two or more alliances"));
 
-  m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_ready_chk->SetToolTip(_T("Click this if you are content with the battle settings"));
   m_lock_chk = new wxCheckBox( this, BROOM_LOCK, _("Locked"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_lock_chk->SetToolTip(_T("When checked no more players may join this battle"));
+  m_lock_chk->SetToolTip(_("Prevent additional players from joining the battle"));
   m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_spec_chk->SetToolTip(_T("Check this if you just want to watch this battle"));
+  m_spec_chk->SetToolTip(_("Spectate (watch) the battle instead of playing"));
+  m_ready_chk = new wxCheckBox( m_player_panel, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+  m_ready_chk->SetToolTip(_("Click this if you are content with the battle settings."));
+  m_autohost_chk = new wxCheckBox( this, BROOM_AUTOHOST, _("Autohost"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+  m_autohost_chk->SetToolTip(_("Toggle autohost mode.  This allows players to control your battle using commands like '!balance' and '!start'."));
+
+
+  m_options_preset_sel = new wxComboBox( this, BROOM_PRESETSEL, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
+  m_options_preset_sel->SetToolTip(_("Load battle preset"));
 
   m_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_NO_HEADER|wxLC_REPORT );
   m_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
@@ -131,8 +145,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_opts_list->InsertColumn( 0, col );
   col.SetText( _("Value") );
   m_opts_list->InsertColumn( 1, col );
-  m_opts_list->SetColumnWidth( 0, 85 );
-  m_opts_list->SetColumnWidth( 1, 60 );
 
   long pos = 0;
 
@@ -142,10 +154,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_opt_list_map[ _("Windspeed") ] = pos++;
   m_opts_list->InsertItem( pos, _("Tidal strength") );
   m_opt_list_map[ _("Tidal strength") ] = pos++;
-
-  // add engine/map/mod options to the list
-  m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetModName() );
-  m_battle.CustomBattleOptions()->loadOptions( MapOption, m_battle.GetMapName() );
 
   m_opts_list->InsertItem( pos++, wxEmptyString );
   pos = AddMMOptionsToList( pos++, EngineOption );
@@ -175,6 +183,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_player_sett_sizer->Add( m_side_lbl, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_side_sel, 0, wxEXPAND | wxALL, 2 );
   m_player_sett_sizer->Add( m_spec_chk, 0, wxEXPAND | wxALL, 2 );
+  m_player_sett_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
 
   m_players_sizer->Add( m_players, 1, wxEXPAND );
   m_players_sizer->Add( m_player_sett_sizer, 0, wxEXPAND );
@@ -191,6 +200,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   //m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
   //m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
   m_info_sizer->Add( m_opts_list, 1, wxEXPAND | wxTOP, 4 );
+  m_info_sizer->Add( m_options_preset_sel, 0, wxEXPAND | wxTOP, 4 );
 
 
   m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
@@ -199,8 +209,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_buttons_sizer->Add( m_leave_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->AddStretchSpacer();
   m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
+  m_buttons_sizer->Add( m_autohost_chk, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_lock_chk, 0, wxEXPAND | wxALL, 2 );
-  m_buttons_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_fix_colours_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_balance_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_start_btn, 0, wxEXPAND | wxALL, 2 );
@@ -215,22 +225,41 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
     m_players->AddUser( battle.GetUser( i ) );
   }
 
-  if ( !IsHosted() ) {
-    m_start_btn->Disable();
+  if ( !IsHosted() )
+    {
+      m_options_preset_sel->Disable();
+      m_options_preset_sel->SetToolTip(_("Only the host can change the game options"));
 
-    m_balance_btn->Disable();
-    m_fix_colours_btn->Disable();
+      m_start_btn->Disable();
+      m_start_btn->SetToolTip(_("Only the host can start the battle."));
 
-    m_lock_chk->Disable();
-  } else {
-    m_battle.SetImReady ( true );
-    m_ready_chk->Disable();
-  }
 
-  UpdateBattleInfo( true );
+      m_balance_btn->Disable();
+      m_balance_btn->SetToolTip(_("Only the host can balance alliances."));
+
+      m_fix_colours_btn->Disable();
+      m_fix_colours_btn->SetToolTip(_("Only the host can fix player colours."));
+
+      m_lock_chk->Disable();
+      m_lock_chk->SetToolTip(_("Only the host can lock the game."));
+
+      m_autohost_chk->Disable();
+      m_autohost_chk->SetToolTip(_("Only the host can toggle autohost mode."));
+    }
+  else
+    {
+      m_battle.SetImReady ( true );
+      m_ready_chk->Disable();
+    }
+
+  UpdateBattleInfo( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
+  UpdateBattleInfo();
 
   SetSizer( m_main_sizer );
   Layout();
+  unsigned int widthfraction = m_opts_list->GetClientSize().GetWidth() / 3;
+  m_opts_list->SetColumnWidth( 0, widthfraction * 2 );
+  m_opts_list->SetColumnWidth( 1, widthfraction );
 
 }
 
@@ -249,10 +278,10 @@ bool BattleRoomTab::IsHosted()
 wxString _GetStartPosStr( StartType t )
 {
   switch ( t ) {
-    case ST_Fixed: return _T("Fixed");
-    case ST_Random: return _T("Random");
-    case ST_Choose: return _T("Boxes");
-    case ST_Pick: return _T("Pick");
+    case ST_Fixed: return _("Fixed");
+    case ST_Random: return _("Random");
+    case ST_Choose: return _("Boxes");
+    case ST_Pick: return _("Pick");
     default: return _T("?");
   };
 }
@@ -261,42 +290,16 @@ wxString _GetStartPosStr( StartType t )
 wxString _GetGameTypeStr( GameType t )
 {
   switch ( t ) {
-    case GT_ComContinue: return _T("Continue");
-    case GT_ComEnds: return _T("End");
-    case GT_Lineage: return _T("Lineage");
+    case GT_ComContinue: return _("Continue");
+    case GT_ComEnds: return _("End");
+    case GT_Lineage: return _("Lineage");
     default: return _T("?");
   };
 }
 
 
-void BattleRoomTab::UpdateBattleInfo( bool MapChanged, bool reloadMapOptions )
+void BattleRoomTab::UpdateBattleInfo()
 {
-  if ( MapChanged ) /// the map has been changed
-  {
-    try { /// updates map info summary
-      ASSERT_RUNTIME( m_battle.MapExists(), _T("Map does not exist.") );
-      UnitSyncMap map = m_battle.Map();
-      m_map_lbl->SetLabel( RefineMapname( map.name ) );
-      m_opts_list->SetItem( m_opt_list_map[ _("Size") ] , 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
-      m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind) );
-      m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, wxString::Format( _T("%d"), map.info.tidalStrength) );
-      //    m_opts_list->SetItem( 0, 1,  );
-    } catch (...) {
-      m_map_lbl->SetLabel( RefineMapname( m_battle.GetMapName() ) );
-      m_opts_list->SetItem( m_opt_list_map[ _("Size") ], 1, _T("?x?") );
-      m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, _T("?-?") );
-      m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, _T("?") );
-    }
-
-    if ( reloadMapOptions )
-    {
-      ///delete any eventual map option from the list and add options of the new map
-      for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
-      m_battle.CustomBattleOptions()->loadOptions( ModOption, m_battle.GetModName() );
-      AddMMOptionsToList( m_map_opts_index, MapOption );
-    }
-  }
-
   m_lock_chk->SetValue( m_battle.IsLocked() );
   m_minimap->UpdateMinimap();
 }
@@ -305,24 +308,51 @@ void BattleRoomTab::UpdateBattleInfo( bool MapChanged, bool reloadMapOptions )
 void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 {
   long index = m_opt_list_map[ Tag ];
-  long type;
-  Tag.BeforeFirst( '_' ).ToLong( &type );
+  GameOption type = (GameOption)s2l(Tag.BeforeFirst( '_' ));
   wxString key = Tag.AfterFirst( '_' );
   wxString value;
-  if ( type == EngineOption && key == _T("restrictions") )
-    m_opts_list->SetItem( index, 1, bool2yn( m_battle.DisabledUnits().GetCount() > 0 ) );
-  else if ( type == MapOption || type == ModOption || EngineOption )
+  if ( ( type == MapOption ) || ( type == ModOption ) || ( type == EngineOption ) )
   {
-    OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( key );
+    OptionType DataType = m_battle.CustomBattleOptions().GetSingleOptionType( key );
     if ( DataType == opt_bool )
     {
       long boolval;
-      m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type ).ToLong( &boolval );
+      m_battle.CustomBattleOptions().getSingleValue( key, (GameOption)type ).ToLong( &boolval );
       m_opts_list->SetItem( index, 1, bool2yn( boolval ) );
     }
     else
     {
-      m_opts_list->SetItem( index, 1, m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type ) );
+      m_opts_list->SetItem( index, 1, m_battle.CustomBattleOptions().getSingleValue( key, (GameOption)type ) );
+    }
+  }
+  else if ( type == PrivateOptions )
+  {
+    if ( key == _T("mapname") ) /// the map has been changed
+    {
+      try { /// updates map info summary
+        ASSERT_EXCEPTION( m_battle.MapExists(), _("Map does not exist.") );
+        UnitSyncMap map = m_battle.LoadMap();
+        m_map_lbl->SetLabel( RefineMapname( map.name ) );
+        m_opts_list->SetItem( m_opt_list_map[ _("Size") ] , 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
+        m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind) );
+        m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, wxString::Format( _T("%d"), map.info.tidalStrength) );
+        //    m_opts_list->SetItem( 0, 1,  );
+      } catch (...) {
+        m_map_lbl->SetLabel( RefineMapname( m_battle.GetHostMapName() ) );
+        m_opts_list->SetItem( m_opt_list_map[ _("Size") ], 1, _T("?x?") );
+        m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, _T("?-?") );
+        m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, _T("?") );
+      }
+
+      ///delete any eventual map option from the list and add options of the new map
+      for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
+      m_battle.CustomBattleOptions().loadOptions( MapOption, m_battle.GetHostModName() );
+      AddMMOptionsToList( m_map_opts_index, MapOption );
+
+    }
+    else if ( key == _T("restrictions") )
+    {
+      m_opts_list->SetItem( index, 1, bool2yn( m_battle.DisabledUnits().GetCount() > 0 ) );
     }
   }
 }
@@ -344,17 +374,33 @@ void BattleRoomTab::UpdateUser( User& user )
   m_ally_sel->SetSelection( bs.ally );
   m_side_sel->SetSelection( bs.side );
   m_spec_chk->SetValue( bs.spectator );
-  if ( bs.spectator ) {
-    m_ready_chk->SetValue ( true );
-    m_ready_chk->Disable();
-  } else {
-    if ( !IsHosted() ) m_ready_chk->Enable();
-    m_ready_chk->SetValue( bs.ready );
-  }
+
+  // Enable or disable widgets' sensitivity as appropriate.
+  if ( bs.spectator )
+    {
+      m_ready_chk->SetValue ( true );
+      m_ready_chk->Disable();
+      m_side_sel->Disable();
+      m_ally_sel->Disable();
+      m_team_sel->Disable();
+    }
+  else
+    {
+      if ( !IsHosted() )
+	m_ready_chk->Enable();
+
+      m_ready_chk->SetValue( bs.ready );
+      m_side_sel->Enable();
+      m_ally_sel->Enable();
+      m_team_sel->Enable();
+    }
+
   icons().SetColourIcon( bs.team, user.BattleStatus().colour );
-  m_color_sel->SetBitmapLabel( icons().GetBitmap( icons().GetColourIcon( bs.team ) ) );
+  m_color_sel->SetColor( user.BattleStatus().colour );
 
   m_minimap->UpdateMinimap();
+
+  UpdateHighlights();
 }
 
 
@@ -366,6 +412,7 @@ Battle& BattleRoomTab::GetBattle()
 
 ChatPanel& BattleRoomTab::GetChatPanel()
 {
+  wxLogDebugFunc(_T(""));
   ASSERT_LOGIC( m_chat != 0, _T("m_chat = 0") );
   return *m_chat;
 }
@@ -374,7 +421,7 @@ ChatPanel& BattleRoomTab::GetChatPanel()
 void BattleRoomTab::OnStart( wxCommandEvent& event )
 {
   if ( m_battle.HaveMultipleBotsInSameTeam() ) {
-    wxMessageDialog dlg( this, _("You have one or more bots sharing team, this is not possible."), _("Bot team sharing."), wxOK );
+    wxMessageDialog dlg( this, _("There are two or more bots on the same team.  Because bots don't know how to share, this won't work."), _("Bot team sharing."), wxOK );
     dlg.ShowModal();
     return;
   }
@@ -427,25 +474,21 @@ void BattleRoomTab::OnFixColours( wxCommandEvent& event ){
 void BattleRoomTab::OnAddBot( wxCommandEvent& event )
 {
     //customMessageBox(SL_MAIN_ICON,_T("Max players reached"),_T("Cannot add bot, maximum number of players already reached.") );
-  if ( m_battle.GetNumBots() + m_battle.GetNumUsers() - m_battle.GetSpectators()  < m_battle.GetMaxPlayers() )
-  {
-      AddBotDialog dlg( this, m_battle );
-      if ( dlg.ShowModal() == wxID_OK ) {
-        UserBattleStatus bs;
-        bs.team = m_battle.GetFreeTeamNum( false );
-        bs.ally = bs.team;
-        bs.sync = SYNC_SYNCED;
-        bs.spectator = false;
-        bs.side = 0;
-        bs.ready = true;
-        bs.order = 0;
-        bs.handicap = 0;
-        bs.colour = m_battle.GetFreeColour( NULL );
-        m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), m_battle.GetMe().GetNick(), bs, dlg.GetAI() );
-      }
-  }
-  else
-    customMessageBox(SL_MAIN_ICON,_T("Cannot add bot, maximum number of players already reached."),_T("Max players reached") );
+    AddBotDialog dlg( this, m_battle );
+    if ( dlg.ShowModal() == wxID_OK )
+    {
+      UserBattleStatus bs;
+      bs.team = m_battle.GetFreeTeamNum( false );
+      bs.ally = bs.team;
+      bs.sync = SYNC_SYNCED;
+      bs.spectator = false;
+      bs.side = 0;
+      bs.ready = true;
+      bs.order = 0;
+      bs.handicap = 0;
+      bs.colour = m_battle.GetFreeColour( NULL );
+      m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), m_battle.GetMe().GetNick(), bs, dlg.GetAI() );
+    }
 }
 
 
@@ -459,6 +502,12 @@ void BattleRoomTab::OnLock( wxCommandEvent& event )
 {
   m_battle.SetIsLocked( m_lock_chk->GetValue() );
   m_battle.SendHostInfo( HI_Locked );
+}
+
+
+void BattleRoomTab::OnAutoHost( wxCommandEvent& event )
+{
+  m_battle.GetAutoHost().SetEnabled( m_autohost_chk->GetValue() );
 }
 
 
@@ -498,9 +547,10 @@ void BattleRoomTab::OnColourSel( wxCommandEvent& event )
   User& u = m_battle.GetMe();
   UserBattleStatus& bs = u.BattleStatus();
   wxColour CurrentColour = bs.colour;
-  CurrentColour = wxGetColourFromUser(this, CurrentColour);
+  CurrentColour = GetColourFromUser(this, CurrentColour);
   if ( !CurrentColour.IsColourOk() ) return;
   bs.colour = CurrentColour;
+  sett().SetBattleLastColour( CurrentColour );
   //u.SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
 }
@@ -513,6 +563,15 @@ void BattleRoomTab::OnSideSel( wxCommandEvent& event )
   bs.side = m_side_sel->GetSelection();
   //u.SetBattleStatus( bs );
   m_battle.SendMyBattleStatus();
+}
+
+
+void BattleRoomTab::OnPresetSel( wxCommandEvent& event )
+{
+  wxString presetname = m_options_preset_sel->GetValue();
+  if ( presetname.IsEmpty() ) return;
+  m_battle.LoadOptionsPreset( presetname );
+  m_battle.SendHostInfo( HI_Send_All_opts );
 }
 
 
@@ -560,13 +619,12 @@ void BattleRoomTab::OnUnitSyncReloaded()
 
 long BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
 {
-  wxStringTripleVec optlist;
-  m_battle.CustomBattleOptions()->getOptions( &optlist, optFlag );
+  wxStringTripleVec optlist = m_battle.CustomBattleOptions().getOptions( optFlag );
   for (wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
   {
     m_opts_list->InsertItem( pos, it->second.first );
     m_opt_list_map[ wxString::Format(_T("%d_"), optFlag ) + it->first ] = pos;
-    OptionType DataType = m_battle.CustomBattleOptions()->GetSingleOptionType( it->first );
+    OptionType DataType = m_battle.CustomBattleOptions().GetSingleOptionType( it->first );
     wxString value;
     if ( DataType == opt_bool )
     {
@@ -581,3 +639,17 @@ long BattleRoomTab::AddMMOptionsToList( long pos, GameOption optFlag )
   }
   return pos;
 }
+
+void BattleRoomTab::UpdateHighlights()
+{
+    m_players->UpdateHighlights();
+}
+
+
+void BattleRoomTab::UpdatePresetList()
+{
+    m_options_preset_sel->Clear();
+    m_options_preset_sel->Append(sett().GetPresetList());
+    m_options_preset_sel->SetStringSelection(  m_battle.GetCurrentPreset() );
+}
+

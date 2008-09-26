@@ -9,6 +9,11 @@
 #include "user.h"
 #include "utils.h"
 #include <wx/regex.h>
+#include "chatpanel.h"
+
+Channel::~Channel() {
+  if(uidata.panel)uidata.panel->SetChannel(NULL);
+}
 
 void Channel::SetName( const wxString& name )
 {
@@ -203,3 +208,14 @@ bool Channel::ExecuteSayCommand( const wxString& in )
   return false;
 }
 
+
+wxString Channel::GetPassword()
+{
+  return m_password;
+}
+
+
+void Channel::SetPassword( const wxString& pw )
+{
+  m_password = pw;
+}

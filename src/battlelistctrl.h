@@ -12,7 +12,8 @@ class wxListEvent;
 class wxCommandEvent;
 class Ui;
 
-
+/** \brief The ListCtrll contained in BattleListTab dispalying all currently active battles with their infos
+ * \todo DOCMEMORE */
 class BattleListCtrl : public customListCtrl
 {
   public:
@@ -24,8 +25,11 @@ class BattleListCtrl : public customListCtrl
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );
-    void OnMouseMotion(wxMouseEvent& event);
     void OnColClick( wxListEvent& event );
+    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+    void HighlightItem( long item );
+    //void HighlightItem( long item, const wxString& name );
+
   protected:
     static int wxCALLBACK CompareStatusUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareStatusDOWN(long item1, long item2, long sortData);

@@ -15,6 +15,7 @@
 #include <wx/intl.h>
 #include <wx/settings.h>
 #include <wx/icon.h>
+#include <wx/tooltip.h>
 
 #include "connectwindow.h"
 #include "settings.h"
@@ -38,7 +39,7 @@ END_EVENT_TABLE()
 //! @param parent Parent window
 ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 : wxDialog( parent, -1, _("Connect to lobby server"), wxDefaultPosition, wxSize(300, 300),
-           wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN ), m_ui(ui)
+           wxDEFAULT_DIALOG_STYLE | wxCLIP_CHILDREN ), m_ui(ui)
 {
   wxString server;
   wxString username;
@@ -71,6 +72,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_rpass_check = new wxCheckBox  ( m_login_tab, -1, _("Remember password") );
   m_autoconnect_check = new wxCheckBox  ( m_login_tab, -1, _("Autoconnect next time") );
   m_autoconnect_check->SetToolTip( _("remember connection details and automatically connect to server on next lobby startup") );
+  wxToolTip::Enable( false );
 
   m_rpass_check->SetValue( savepass );
   m_autoconnect_check->SetValue( autoconnect );
@@ -192,6 +194,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 #endif
 
   ReloadServerList();
+
 }
 
 
@@ -272,12 +275,16 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
 
     m_ui.DoConnect( HostAddress, m_nick_text->GetValue(), m_pass_text->GetValue() );
   } else {
-	  wxString reason;
-	  if (m_regpass2_text->GetValue()!= m_regpass1_text->GetValue())
+      wxString reason;
+      if ( !IsValidNickname( m_regnick_text->GetValue() ) ){
+            customMessageBox(SL_MAIN_ICON,_("The entered nickname contains invalid characters like )? &%.\n Please try again") , _("Invalid nickname"), wxOK );
+            Show();
+      }
+	  else if ( m_regpass2_text->GetValue()!= m_regpass1_text->GetValue() || m_regpass1_text->GetValue().IsEmpty() )
 	  {
 		  Show();
          wxLogWarning( _T("registration failed, reason: password/confirmation mismatch")  );
-         customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\nPassword / confirmation mismatch") , _("Registration failed."), wxOK );
+         customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\nPassword / confirmation mismatch (or empty passwort)") , _("Registration failed."), wxOK );
 	  }
 	  else if ( m_ui.DoRegister( HostAddress, m_regnick_text->GetValue(), m_regpass1_text->GetValue(),reason ) ) {
        m_tabs->SetSelection( 0 );

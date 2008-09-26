@@ -8,9 +8,13 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <cmath>
+#include <wx/cmndata.h>
+#include <wx/colordlg.h>
 #include "uiutils.h"
 #include "utils.h"
 #include "settings++/custom_dialogs.h"
+#include "settings.h"
+
 
 wxString RefineMapname( const wxString& mapname )
 {
@@ -159,7 +163,10 @@ void BlendImage(wxImage& foreground, wxImage&  background, int img_dim)
     unsigned char* background_data = background.GetData();
     unsigned char* foreground_data = foreground.GetData();
 
-    if ( sizeof (background_data) != sizeof (foreground_data) )
+    if ( background.GetWidth()  != img_dim ||
+         foreground.GetWidth()  != img_dim ||
+         background.GetHeight() != img_dim ||
+         foreground.GetHeight() != img_dim )
     {
         wxLogDebugFunc(_T("size mismatch while blending"));
         return;
@@ -171,10 +178,6 @@ void BlendImage(wxImage& foreground, wxImage&  background, int img_dim)
         unsigned char* foreground_alpha = foreground.GetAlpha();
         unsigned int pixel_count = img_dim*img_dim;
 
-        //SetData/Alpha needs these to be allocated with malloc
-        unsigned char* new_data = (unsigned char*) malloc( pixel_count * 3 * sizeof(unsigned char) );
-        unsigned char* new_alpha = (unsigned char*) malloc( pixel_count * sizeof(unsigned char) );
-
         for ( unsigned int i = 0, i_a = 0; i < pixel_count * 3; i+=3,  i_a++ )
         {
             unsigned char back_alpha = background_alpha[i_a] ;
@@ -182,22 +185,17 @@ void BlendImage(wxImage& foreground, wxImage&  background, int img_dim)
             float back_blend_fac = ( 255 - fore_alpha)/255.0;
             float fore_blend_fac = fore_alpha/255.0 ;
 
-            new_data[i] =   foreground_data[i]   * fore_blend_fac + background_data[i]   * back_blend_fac ;
-            new_data[i+1] = foreground_data[i+1] * fore_blend_fac + background_data[i+1] * back_blend_fac ;
-            new_data[i+2] = foreground_data[i+2] * fore_blend_fac + background_data[i+2] * back_blend_fac ;
-            new_alpha[i_a]= fore_alpha           * fore_blend_fac + back_alpha           * back_blend_fac ;
+            background_data[i]    = foreground_data[i]   * fore_blend_fac + background_data[i]   * back_blend_fac ;
+            background_data[i+1]  = foreground_data[i+1] * fore_blend_fac + background_data[i+1] * back_blend_fac ;
+            background_data[i+2]  = foreground_data[i+2] * fore_blend_fac + background_data[i+2] * back_blend_fac ;
+            background_alpha[i_a] = fore_alpha           * fore_blend_fac + back_alpha           * back_blend_fac ;
         }
-
-        //write data back
-        background.SetData(new_data);
-        background.SetAlpha(new_alpha);
     }
     else
     {
         wxLogDebugFunc(_T("cannot blend without alpha"));
         return;
     }
-
 }
 
 wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size)
@@ -214,7 +212,7 @@ wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size)
 //    return wxBitmap(temp );
 //}
 
-wxBitmap* charArr2wxBitmapAddText(const unsigned char * dest, int dest_size, const unsigned char * text, int text_size, unsigned int img_dim)
+wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size, const unsigned char * text, int text_size, unsigned int img_dim)
 {
     wxMemoryInputStream istream1( dest, dest_size );
     wxImage dest_img( istream1, wxBITMAP_TYPE_PNG );
@@ -226,4 +224,34 @@ wxBitmap* charArr2wxBitmapAddText(const unsigned char * dest, int dest_size, con
 
 }
 
+wxBitmap* BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int dim )
+{
+    wxImage back = background.ConvertToImage();
+    wxImage front = overlay.ConvertToImage();
+    BlendImage( front, back, dim );
+    return new wxBitmap( back );
+}
 
+wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit, const wxString& caption, const wxString& palette)
+{
+    wxColourData data;
+    data = sett().GetCustomColors( palette );
+    data.SetChooseFull(true);
+    if ( colInit.Ok() )
+    {
+        data.SetColour((wxColour &)colInit); // const_cast
+    }
+
+    wxColour colRet;
+    wxColourDialog dialog(parent, &data);
+    if (!caption.empty())
+        dialog.SetTitle(caption);
+    if ( dialog.ShowModal() == wxID_OK )
+    {
+        colRet = dialog.GetColourData().GetColour();
+    }
+    //else: leave it invalid
+    sett().SaveCustomColors( dialog.GetColourData(), palette );
+
+    return colRet;
+}

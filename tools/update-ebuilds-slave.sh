@@ -22,14 +22,14 @@ fi
 if ! $(git-remote show origin > /dev/null) ; then
     git-remote add -f origin ${origin}
 fi
-git-fetch
-git-reset --hard my-public/master
-git-merge origin/master
-version=$(git-describe --tags | sed 's/-.*//')
+git fetch
+git reset --hard my-public/master
+git merge origin/master
+version=$(git describe --tags | sed 's/-.*//')
 cd gentoo/overlay/games-util/springlobby
 cp springlobby-template springlobby-${version}.ebuild
 ebuild springlobby-${version}.ebuild digest
-git-add .
-git-commit -m "automatic update of springlobby ebuild for automated tarball release"
-git-push my-public
+git add .
+git commit -m "automatic update of springlobby ebuild for automated tarball release"
+git push my-public
 

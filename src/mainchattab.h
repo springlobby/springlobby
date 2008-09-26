@@ -30,8 +30,8 @@ class MainChatTab : public wxPanel
     ChatPanel* AddChatPannel( Channel& channel );
     ChatPanel* AddChatPannel( Server& server, const wxString& name );
     ChatPanel* AddChatPannel( User& user );
-
-    void CloseAllChats();
+    /** \brief this is only used if channel is left via raw command in server tab */
+    bool RemoveChatPanel( ChatPanel* panel );
 
     void RejoinChannels();
 
@@ -41,6 +41,8 @@ class MainChatTab : public wxPanel
 
     void ChangeUnreadChannelColour( const wxColour& colour );
     void ChangeUnreadPMColour( const wxColour& colour );
+
+    void UpdateNicklistHighlights();
 
   protected:
 
