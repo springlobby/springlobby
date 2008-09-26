@@ -182,7 +182,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
 {
   wxLogDebugFunc( _T("") );
   try{
-  ASSERT_RUNTIME( !m_serv.BattleExists( id ), _T("New battle from server, but already exists!") );
+  ASSERT_EXCEPTION( !m_serv.BattleExists( id ), _T("New battle from server, but already exists!") );
   Battle& battle = m_serv._AddBattle( id );
 
   User& user = m_serv.GetUser( nick );
@@ -195,7 +195,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
   battle.SetHostPort( port );
   battle.SetMaxPlayers( maxplayers );
   battle.SetIsPassworded( haspass );
-  battle.SetRankNeeded( rank );
+  battle.SetRankNeeded( ( rank / 100 ) +1 );
   battle.SetHostMap( map, maphash );
   battle.SetDescription( title );
   battle.SetHostMod( mod, wxEmptyString );
@@ -224,8 +224,11 @@ void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.spectator = false;
 
-  battle.CustomBattleOptions()->loadOptions( MapOption, battle.GetHostMapName() );
-  battle.CustomBattleOptions()->loadOptions( ModOption, battle.GetHostModName() );
+  if ( !battle.IsFounderMe() )
+  {
+    battle.CustomBattleOptions().loadOptions( MapOption, battle.GetHostMapName() );
+    battle.CustomBattleOptions().loadOptions( ModOption, battle.GetHostModName() );
+  }
 
   m_ui.OnJoinedBattle( battle );
   }catch(std::runtime_error &except){
@@ -238,8 +241,16 @@ void ServerEvents::OnHostedBattle( int battleid )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
 
-  UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
-  bs.spectator = false;
+  battle.CustomBattleOptions().loadOptions( MapOption, battle.GetHostMapName() );
+  battle.CustomBattleOptions().loadOptions( ModOption, battle.GetHostModName() );
+
+  wxString presetname = sett().GetModDefaultPresetName( battle.GetHostModName() );
+  if ( !presetname.IsEmpty() )
+  {
+    battle.LoadOptionsPreset( presetname );
+  }
+
+  m_serv.SendHostInfo( HI_Send_All_opts );
 
   m_ui.OnHostedBattle( battle );
 }
@@ -259,6 +270,9 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
   try{
     User& user = m_serv.GetUser( nick );
     Battle& battle = m_serv.GetBattle( battleid );
+
+    if( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
+
     status.color_index = user.BattleStatus().color_index;
 
     user.UpdateBattleStatus( status );
@@ -325,8 +339,8 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) )
   {
     battle.SendMyBattleStatus();
-    battle.CustomBattleOptions()->loadOptions( MapOption, map );
-    m_ui.OnBattleMapChanged( battle );
+    battle.CustomBattleOptions().loadOptions( MapOption, map );
+    battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
   }
 
   m_ui.OnBattleInfoUpdated( battle );
@@ -341,8 +355,8 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
   if ( key.Left( 5 ) == _T("game/") )/// FIXME (BrainDamage#1#): change the slash type when the new spring version gets out
   {
     key = key.AfterFirst( '/' );
-    if (  battle.CustomBattleOptions()->setSingleOption( key,  value, EngineOption ) )
-      battle.Update( wxString::Format(_T("%d_"), EngineOption ) + key );
+    if (  battle.CustomBattleOptions().setSingleOption( key,  value, EngineOption ) )
+      battle.Update( wxString::Format(_T("%d_%s"), EngineOption, key.c_str() ) );
   }
   else if ( key.Left( 5 ) == _T("game\\") )
   {
@@ -350,14 +364,14 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
      if ( key.Left( 11 ) == _T( "mapoptions\\" ) )
     {
       key = key.AfterFirst( '\\' );
-      if (  battle.CustomBattleOptions()->setSingleOption( key,  value, MapOption ) )  // m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
-        battle.Update( wxString::Format(_T("%d_"), MapOption ) + key );
+      if (  battle.CustomBattleOptions().setSingleOption( key,  value, MapOption ) )  // m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+        battle.Update( wxString::Format(_T("%d_%s"), MapOption, key.c_str() ) );
     }
     else if ( key.Left( 11 ) == _T( "modoptions\\" ) )
     {
       key = key.AfterFirst( '\\' );
-      if (  battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) )  //m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
-        battle.Update(  wxString::Format(_T("%d_"), ModOption ) + key );
+      if (  battle.CustomBattleOptions().setSingleOption( key, value, ModOption ) )  //m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+        battle.Update(  wxString::Format(_T("%d_%s"), ModOption,  key.c_str() ) );
     }
   }
 }
@@ -387,7 +401,7 @@ void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   battle.DisableUnit( unitname );
-  m_ui.OnBattleDisableUnit( battle, unitname );
+  battle.Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
 }
 
 
@@ -396,7 +410,7 @@ void ServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   battle.EnableUnit( unitname );
-  m_ui.OnBattleEnableUnit( battle, unitname );
+  battle.Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
 }
 
 
@@ -405,7 +419,7 @@ void ServerEvents::OnBattleEnableAllUnits( int battleid )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   battle.EnableAllUnits();
-  m_ui.OnBattleEnableAllUnits( battle );
+  battle.Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
 }
 
 
@@ -513,6 +527,7 @@ void ServerEvents::OnSaidBattle( int battleid, const wxString& nick, const wxStr
 {
   Battle& battle = m_serv.GetBattle( battleid );
   m_ui.OnSaidBattle( battle, nick, msg );
+  battle.GetAutoHost().OnSaidBattle( nick, msg );
 }
 
 void ServerEvents::OnBattleAction( int battleid, const wxString& nick, const wxString& msg )
@@ -526,7 +541,7 @@ void ServerEvents::OnBattleStartRectAdd( int battleid, int allyno, int left, int
 {
   Battle& battle = m_serv.GetBattle( battleid );
   battle.AddStartRect( allyno, left, top, right, bottom );
-  m_ui.OnBattleStartRectsUpdated( battle );
+  battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
 }
 
 
@@ -534,7 +549,7 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
 {
   Battle& battle = m_serv.GetBattle( battleid );
   battle.RemoveStartRect( allyno );
-  m_ui.OnBattleStartRectsUpdated( battle );
+  battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
 }
 
 
@@ -671,4 +686,21 @@ void ServerEvents::OnRedirect( const wxString& address,  unsigned int port, cons
     sett().SetServerHost( address, address );
     sett().SetServerPort( address, (int)port );
     m_ui.DoConnect( address, CurrentNick, CurrentPassword );
+}
+
+
+void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
+{
+  wxString nick = user.GetNick();
+  MessageSpamCheck info = m_spam_check[nick];
+  time_t now = time( 0 );
+  if ( info.lastmessage == now ) info.count++;
+  else info.count = 0;
+  info.lastmessage = now;
+  m_spam_check[nick] = info;
+  if ( info.count > 3 )
+  {
+    battle.DoAction( _T("is autokicking ") + nick + _T(" due to command spam.") );
+    battle.KickPlayer( user );
+  }
 }

@@ -421,6 +421,8 @@ springlobby_SOURCES = \
 	src/addbotdialog.h \
 	src/agreementdialog.cpp \
 	src/agreementdialog.h \
+	src/autohost.cpp \
+	src/autohost.h \
 	src/base64.cpp \
 	src/base64.h \
 	src/battle.cpp \
@@ -518,6 +520,7 @@ springlobby_SOURCES = \
 	src/uiutils.h \
 	src/user.cpp \
 	src/user.h \
+	src/usermenu.h \
 	src/userlist.cpp \
 	src/userlist.h \
 	src/userlistctrl.cpp \
@@ -885,7 +888,8 @@ springlobby_SOURCES = \
 	src/updater/updater.h \
 	src/updater/updater.cpp \
 	src/updater/exedownloader.h \
-	src/updater/exedownloader.cpp
+	src/updater/exedownloader.cpp \
+	src/usermenu.h
 
 
 if USE_WINDRES	

@@ -27,6 +27,7 @@
 				<Linker>
 					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent`" />
+					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
 					<Add option="`sdl-config --libs`" />
 					<Add library="SDL_mixer" />
 				</Linker>
@@ -145,6 +146,8 @@
 		<Unit filename="src/agreementdialog.h" />
 		<Unit filename="src/autobalancedialog.cpp" />
 		<Unit filename="src/autobalancedialog.h" />
+		<Unit filename="src/autohost.cpp" />
+		<Unit filename="src/autohost.h" />
 		<Unit filename="src/autojoinchanneldialog.cpp" />
 		<Unit filename="src/autojoinchanneldialog.h" />
 		<Unit filename="src/autopointers.h" />

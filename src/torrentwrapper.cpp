@@ -118,19 +118,19 @@ void TorrentTable::SetRowHandle(TorrentTable::PRow row, const libtorrent::torren
 
 void TorrentTable::RemoveRowHandle( PRow row )
 {
-  handle_index.erase(row->handle);
-  row->handle= libtorrent::torrent_handle();
+    handle_index.erase(row->handle);
+    row->handle= libtorrent::torrent_handle();
 }
 
 void TorrentTable::SetRowStatus( TorrentTable::PRow row, FileStatus status )
 {
-  if ( row->status == seeding || row->status == leeching )
-  {
-    if ( status != seeding && status != leeching ) RemoveRowHandle( row );
-  }
-  if ( row->status == queued && status != queued ) queued_torrents.erase( row );
-  if ( status == queued ) queued_torrents.insert( row );
-  row->status = status;
+    if ( row->status == seeding || row->status == leeching )
+    {
+        if ( status != seeding && status != leeching ) RemoveRowHandle( row );
+    }
+    if ( row->status == queued && status != queued ) queued_torrents.erase( row );
+    if ( status == queued ) queued_torrents.insert( row );
+    row->status = status;
 }
 
 void TorrentTable::AddSeedRequest(TorrentTable::PRow row)
@@ -624,80 +624,84 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
     switch (row->type)
     {
-      case map:
-      {
+    case map:
+    {
         torrent_name = torrent_name + _T("|MAP");
         break;
-      }
-      case mod:
-      {
+    }
+    case mod:
+    {
         torrent_name = torrent_name + _T("|MOD");
         break;
-      }
+    }
     }
 
     if ( IsSeed )
     {
-      wxString archivename;
-      switch( row->type ) /// if file is not present locally you can't seed it
-      {
+        wxString archivename;
+        switch ( row->type ) /// if file is not present locally you can't seed it
+        {
         case map:
         {
-          if ( !usync()->MapExists( row->name, row->hash ) ) return false;
-          int index = usync()->GetMapIndex( row->name );
-          if ( index == -1 ) return false;
-          archivename = usync()->GetMapArchive( index );
-          break;
+            if ( !usync().MapExists( row->name, row->hash ) ) return false;
+            int index = usync().GetMapIndex( row->name );
+            if ( index == -1 ) return false;
+            archivename = usync().GetMapArchive( index );
+            break;
         }
         case mod:
         {
-          if ( !usync()->ModExists( row->name, row->hash ) ) return false;
-          int index = usync()->GetModIndex( row->name );
-          if ( index == -1 ) return false;
-          archivename = usync()->GetModArchive( index );
-          break;
+            if ( !usync().ModExists( row->name, row->hash ) ) return false;
+            int index = usync().GetModIndex( row->name );
+            if ( index == -1 ) return false;
+            archivename = usync().GetModArchive( index );
+            break;
         }
-      }
-
-      try
-      {
-        /// dizekat> i'm getting archivename == /home/dmytry/.spring/maps/Whatever.sdf and getting archivepath == /home/dmytry/.spring/maps/
-        /// dizekat> so i changed it to prepend path only if path isnt found here.
-        wxLogMessage( _T("seeding from archive name: %s"), archivename.c_str() );
-        wxString archivepath = usync()->GetArchivePath( archivename );
-        int i=archivename.find(archivepath);
-        if(i<0){
-          path=archivepath+archivename;
-        }else{
-          path=archivename;
         }
 
-      } catch (std::exception& e)
-       {
-         wxLogError( WX_STRINGC( e.what() ) );
-         wxLogMessage( _T("Local filepath couldn't be determined") );
-         return false;
-       }
-      wxLogMessage( _T("seeding from local filename: %s"), path.c_str() );
+        try
+        {
+            /// dizekat> i'm getting archivename == /home/dmytry/.spring/maps/Whatever.sdf and getting archivepath == /home/dmytry/.spring/maps/
+            /// dizekat> so i changed it to prepend path only if path isnt found here.
+            wxLogMessage( _T("seeding from archive name: %s"), archivename.c_str() );
+            wxString archivepath = usync().GetArchivePath( archivename );
+            int i = archivename.Find( archivepath );
+            if (i<0)
+            {
+                path = archivepath + archivename;
+            }
+            else
+            {
+                path = archivename;
+            }
+
+        }
+        catch (std::exception& e)
+        {
+            wxLogError( WX_STRINGC( e.what() ) );
+            wxLogMessage( _T("Local filepath couldn't be determined") );
+            return false;
+        }
+        wxLogMessage( _T("seeding from local filename: %s"), path.c_str() );
 
     }
     else
     {
-      path = sett().GetSpringDir() + wxFileName::GetPathSeparator();
-      switch (row->type)
-      {
+        path = sett().GetSpringDir() + wxFileName::GetPathSeparator();
+        switch (row->type)
+        {
         case map:
         {
-          path = path + _T("maps") + wxFileName::GetPathSeparator();
-          break;
+            path = path + _T("maps") + wxFileName::GetPathSeparator();
+            break;
         }
         case mod:
         {
-          path = path + _T("mods") + wxFileName::GetPathSeparator();
-          break;
+            path = path + _T("mods") + wxFileName::GetPathSeparator();
+            break;
         }
-      }
-      wxLogMessage(_T("downloading to path: =%s"), path.c_str());
+        }
+        wxLogMessage(_T("downloading to path: =%s"), path.c_str());
     }
 
 
@@ -709,6 +713,13 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     in.unsetf(std::ios_base::skipws);
     libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
     libtorrent::torrent_info t_info(e); /// decode the torrent infos from the file
+
+    if ( t_info.num_files() != 1 )
+    {
+      wxLogMessage( _T("torrent contains an invalid number of files") );
+      return false;
+    }
+
     wxString torrentfilename = WX_STRING(t_info.begin_files()->path.string()); /// get the file name in the torrent infos
     wxLogMessage( _T("requested filename: %s"), torrentfilename.c_str() );
 
@@ -734,30 +745,41 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     try
     {
         m_torrent_table.SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(STD_STRING(path))));
-        if(IsSeed){
-          if(row->handle.is_valid()){
-            std::vector<bool> tmp(1,true);
-            row->handle.filter_files(tmp);
-          }else{
-            wxLogMessage(_T("cant set seed not to download"));
-          }
-        }
     }
     catch (std::exception& e)
     {
         wxLogError(_T("%s"),WX_STRINGC( e.what()).c_str()); /// TODO (BrainDamage#1#): add message to user on failure
         return false;
     }
+    try
+    {
+      if (IsSeed)
+      {
+          if (row->handle.is_valid())
+          {
+              std::vector<bool> tmp(1,true);
+              row->handle.filter_files(tmp);
+          }
+          else
+          {
+              wxLogMessage(_T("Cant set seed not to download"));
+          }
+      }
+    }
+    catch (std::exception& e)
+    {
+        wxLogError(_T("%s"),WX_STRINGC( e.what()).c_str()); /// TODO (BrainDamage#1#): add message to user on failure
+    }
 
     if ( IsSeed )
     {
-       GetTorrentTable().SetRowStatus( row, seeding );
-       m_seed_count++;
+        GetTorrentTable().SetRowStatus( row, seeding );
+        m_seed_count++;
     }
     else
     {
-       GetTorrentTable().SetRowStatus( row, leeching );
-      m_leech_count++;
+        GetTorrentTable().SetRowStatus( row, leeching );
+        m_leech_count++;
     }
 
     wxLogMessage(_T("(5) Joining torrent: done"));
@@ -863,7 +885,7 @@ void TorrentWrapper::JoinRequestedTorrents()
     std::set<TorrentTable::PRow> seedrequests= GetTorrentTable().SeedRequestsByRow();
     for (std::set<TorrentTable::PRow>::iterator  it = seedrequests.begin(); it != seedrequests.end(); ++it)
     {
-        if(!it->ok())continue;
+        if (!it->ok())continue;
 
         if ( m_seed_count > 9 ) break; /// too many seeds open
 
@@ -884,10 +906,11 @@ void TorrentWrapper::RemoveUnneededTorrents()
 
 
         if ( it->second->status == leeching ) /// if torrent was opened in leech mode but now it's seeding it means it was requested from the user but now it's completed
-        { ///torrent has finished download, refresh unitsync and remove file from list
+        {
+            ///torrent has finished download, refresh unitsync and remove file from list
             try
             {
-                ASSERT_RUNTIME( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
+                ASSERT_EXCEPTION( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
 
                 m_socket_class->Send( _T("N-|")  + it->second->hash + _T("\n") ); ///notify the system we don't need the file anymore
 
@@ -904,7 +927,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
         {
             try
             {
-                ASSERT_RUNTIME( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
+                ASSERT_EXCEPTION( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
             }
             catch (std::exception& e)
             {
@@ -949,13 +972,13 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
         newtorrent->name = data[2];
         if ( data[3] == _T("MAP") )
         {
-           newtorrent->type = map;
-           if ( usync()->MapExists( data[2], data[1] ) ) newtorrent->status = stored;
+            newtorrent->type = map;
+            if ( usync().MapExists( data[2], data[1] ) ) newtorrent->status = stored;
         }
         else if ( data[3] == _T("MOD") )
         {
-           newtorrent->type = mod;
-           if ( usync()->ModExists( data[2], data[1] ) ) newtorrent->status = stored;
+            newtorrent->type = mod;
+            if ( usync().ModExists( data[2], data[1] ) ) newtorrent->status = stored;
         }
 
         GetTorrentTable().InsertRow( newtorrent );

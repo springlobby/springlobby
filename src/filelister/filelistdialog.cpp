@@ -84,10 +84,10 @@ void FileListDialog::UpdateList()
         switch (it->second->type)
         {
             case mod:
-                it->second->SetHasFullFileLocal(usync()->ModExists( it->second->name, it->second->hash ));
+                it->second->SetHasFullFileLocal(usync().ModExists( it->second->name, it->second->hash ));
                 break;
             case map:
-                it->second->SetHasFullFileLocal(usync()->MapExists( it->second->name, it->second->hash ));
+                it->second->SetHasFullFileLocal(usync().MapExists( it->second->name, it->second->hash ));
                 break;
             default:  it->second->SetHasFullFileLocal(false);
                 break;

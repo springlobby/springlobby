@@ -148,7 +148,7 @@ class IUnitSync
     virtual GameOptions GetMapOptions( const wxString& name ) = 0;
 
     virtual int GetMapIndex( const wxString& name ) = 0;
-    virtual wxImage GetMinimap( const wxString& mapname, int max_w, int max_h, bool store_size = false ) = 0;
+    virtual wxImage GetMinimap( const wxString& mapname, int width, int height ) = 0;
 
     virtual int GetSideCount( const wxString& modname ) = 0;
     virtual wxString GetSideName( const wxString& modname, int index ) = 0;
@@ -167,7 +167,6 @@ class IUnitSync
 
     virtual wxArrayString GetAIList( const wxString& modname ) = 0;
 
-    virtual bool CacheMinimap( const wxString& map ) = 0;
     virtual bool ReloadUnitSyncLib() = 0;
 
     virtual void SetSpringDataPath( const wxString& path ) = 0;
@@ -179,6 +178,6 @@ class IUnitSync
     virtual wxString GetUnitsyncName( const wxString& hash, const MediaType& archivetype ) = 0;
 };
 
-IUnitSync* usync();
+IUnitSync& usync();
 
 #endif // SPRINGLOBBY_HEADERGUARD_IUNITSYNC_H

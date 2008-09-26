@@ -13,6 +13,12 @@ typedef int Sockerror;
 
 typedef int Protocolerror;
 
+struct MessageSpamCheck
+{
+  time_t lastmessage;
+  unsigned int count;
+};
+
 //! @brief Class that implements server event behaviour.
 class ServerEvents
 {
@@ -103,9 +109,14 @@ class ServerEvents
 
     void OnRedirect( const wxString& address,  unsigned int port, const wxString& CurrentNick, const wxString& CurrentPassword );
 
+    /// use this function to check spam from clients and autokick from the battle
+    void AutoCheckCommandSpam( Battle& battle, User& nick );
+
   protected:
     Server& m_serv;
     Ui& m_ui;
+
+    std::map<wxString,MessageSpamCheck> m_spam_check;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H

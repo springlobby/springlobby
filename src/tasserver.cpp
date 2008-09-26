@@ -578,7 +578,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         title = GetSentenceParam( params );
         mod = GetSentenceParam( params );
         m_se->OnBattleOpened( id, replay, IntToNatType( nat ), nick, host, port, maxplayers,
-                              haspass, rank + 1, hash, map, title, mod );
+                              haspass, rank, hash, map, title, mod );
     }
     else if ( cmd == _T("JOINEDBATTLE") )
     {
@@ -772,7 +772,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         m_battle_id = GetIntParam( params );
         m_se->OnHostedBattle( m_battle_id );
-        SendHostInfo( HI_Send_All_opts );
     }
     else if ( cmd == _T("ADDBOT") )
     {
@@ -912,6 +911,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("REDIRECT") )
     {
+      if ( m_online ) return;
       wxString address = GetWordParam( params );
       unsigned int port = GetIntParam( params );
       if ( address.IsEmpty() ) return;
@@ -1310,31 +1310,27 @@ void TASServer::SendHostInfo( HostInfo update )
     {
         // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
         wxString cmd = wxString::Format( _T("%d %d "), battle.GetSpectators(), battle.IsLocked() );
-        cmd += battle.GetHostMapHash() + _T(" ");
-        cmd += battle.GetHostMapName();
+        cmd += battle.LoadMap().hash + _T(" ");
+        cmd += battle.LoadMap().name;
 
         SendCmd( _T("UPDATEBATTLEINFO"), cmd );
-        wxLogMessage(_T("UPDATEBATTLEINFO %s"),cmd.c_str());
     }
     if ( ( update & HI_Send_All_opts ) > 0 )
     {
         wxString cmd;
 
-        wxStringTripleVec optlistMap;
-        battle.CustomBattleOptions()->getOptions( &optlistMap, MapOption );
+        wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( MapOption );
         for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
         {
             cmd << _T("game\\mapoptions\\") << it->first + _T("=") << it->second.second << _T("\t");
         }
-        wxStringTripleVec optlistMod;
-        battle.CustomBattleOptions()->getOptions( &optlistMod, ModOption );
+        wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( ModOption );
         for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
         {
             cmd << _T("game\\modoptions\\") << it->first << _T("=") << it->second.second << _T("\t");
         }
 /// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
-        wxStringTripleVec optlistEng;
-        battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
+        wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( EngineOption );
         for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
         {
             cmd << _T("game/") << it->first << _T("=") << it->second.second << _T("\t");
@@ -1361,13 +1357,13 @@ void TASServer::SendHostInfo( HostInfo update )
             }
             else if ( sr.toadd )
             {
-                SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d\n"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
+                SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
                 battle.StartRectAdded( i );
             }
             else if ( sr.toresize )
             {
                 SendCmd( _T("REMOVESTARTRECT"), wxString::Format( _T("%d"), i ) );
-                SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d\n"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
+                SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
                 battle.StartRectResized( i );
             }
         }
@@ -1412,15 +1408,15 @@ void TASServer::SendHostInfo( const wxString& Tag )
     wxString key = Tag.AfterFirst( '_' );
     if ( type == MapOption )
     {
-        cmd << _T("game\\mapoptions\\") << key << _T("=") << battle.CustomBattleOptions()->getSingleValue( key, MapOption ) << _T("\n");
+        cmd << _T("game\\mapoptions\\") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, MapOption );
     }
     else if ( type == ModOption )
     {
-        cmd << _T("game\\modoptions\\") << key << _T("=") << battle.CustomBattleOptions()->getSingleValue( key, ModOption ) << _T("\n");
+        cmd << _T("game\\modoptions\\") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, ModOption );
     }
     else if ( type == EngineOption )
     {
-        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions()->getSingleValue( key, EngineOption ) << _T("\n");
+        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, EngineOption );
     }
     SendCmd( _T("SETSCRIPTTAGS"), cmd );
 }
@@ -1526,7 +1522,7 @@ void TASServer::ForceSide( int battleid, const wxString& nick, int side )
     {
         try
         {
-            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to ") + usync()->GetSideName( GetBattle(battleid).GetHostModName(), side ) + _T(" side.") );
+            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to ") + usync().GetSideName( GetBattle(battleid).GetHostModName(), side ) + _T(" side.") );
         }
         catch (...) {}
     }
