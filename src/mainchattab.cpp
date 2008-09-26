@@ -317,3 +317,15 @@ bool MainChatTab::RemoveChatPanel( ChatPanel* panel )
     return false;
 }
 
+
+void MainChatTab::Update()
+{
+    for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ )
+    {
+        ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+        if ( tmp )
+        {
+            tmp->SortNickList();
+        }
+    }
+}

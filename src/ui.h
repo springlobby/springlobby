@@ -176,6 +176,8 @@ class Ui
 
     bool m_checked_for_update;
 
+    bool m_ingame;
+
 };
 
 Ui& ui();

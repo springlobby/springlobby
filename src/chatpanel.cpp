@@ -1619,3 +1619,9 @@ void ChatPanel::UpdateNicklistHighlights()
 {
     if (m_nicklist != 0) m_nicklist->UpdateHighlights();
 }
+
+
+void ChatPanel::SortNickList()
+{
+  if ( m_nicklist != 0 ) m_nicklist->SortNickList();
+}

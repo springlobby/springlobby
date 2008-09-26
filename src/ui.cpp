@@ -56,7 +56,8 @@ Ui::Ui() :
         m_upd_counter_torrent(0),
         m_upd_counter_battlelist(0),
         m_upd_counter_chat(0),
-        m_checked_for_update(false)
+        m_checked_for_update(false),
+        m_ingame(false)
 {
     m_main_win = new MainWindow( *this );
     CustomMessageBoxBase::setLobbypointer(m_main_win);
@@ -274,8 +275,9 @@ void Ui::StartHostedBattle()
 
 void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
 {
+  m_ingame = true;
 #ifndef NO_TORRENT_SYSTEM
-    torrent().SetIngameStatus(true);
+    torrent().SetIngameStatus(m_ingame);
 #endif
     m_spring->Run( battle );
 }
@@ -522,15 +524,26 @@ void Ui::OnUpdate( int mselapsed )
         m_serv->Update( mselapsed );
     }
 
-    if ( m_upd_counter_battlelist % 50 == 0  )
+    if ( !m_ingame )
     {
-      try
+      if ( m_upd_counter_battlelist % 50 == 0  )
       {
-        mw().GetJoinTab().Update();
-      } catch ( assert_exception &e ) {}
-    }
-    m_upd_counter_battlelist++;
+        try
+        {
+          mw().GetJoinTab().Update();
+        } catch ( assert_exception &e ) {}
+      }
+      m_upd_counter_battlelist++;
 
+      if ( m_upd_counter_chat % 47 == 0  )
+      {
+        try
+        {
+          mw().GetChatTab().Update();
+        } catch ( assert_exception &e ) {}
+      }
+      m_upd_counter_chat++;
+    }
 
     if ( !m_checked_for_update )
     {
@@ -599,6 +612,7 @@ void Ui::OnLoggedIn( )
 {
     if ( m_main_win == 0 ) return;
     mw().GetChatTab().RejoinChannels();
+
 }
 
 
@@ -996,8 +1010,9 @@ void Ui::OnBattleStarted( Battle& battle )
             battle.SendMyBattleStatus();
             battle.GetMe().Status().in_game = true;
             battle.GetMe().SendMyUserStatus();
+            m_ingame = true;
 #ifndef NO_TORRENT_SYSTEM
-            torrent().SetIngameStatus(true);
+            torrent().SetIngameStatus(m_ingame);
 #endif
             m_spring->Run( battle );
         }
@@ -1031,8 +1046,9 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
 
 void Ui::OnSpringTerminated( bool success )
 {
+  m_ingame = false;
 #ifndef NO_TORRENT_SYSTEM
-    torrent().SetIngameStatus(false);
+    torrent().SetIngameStatus(m_ingame);
 #endif
     if ( !m_serv ) return;
 
