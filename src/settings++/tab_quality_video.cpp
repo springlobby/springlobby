@@ -268,7 +268,7 @@ tab_quality_video::tab_quality_video(wxWindow *parent, wxWindowID id , const wxS
 	 boxB = new wxStaticBoxSizer(wxVERTICAL ,this,_("Video Mode Options"));
 	 boxC = new wxStaticBoxSizer(wxVERTICAL ,this,_("Anti-Aliasing Options"));
 	 boxD = new wxStaticBoxSizer(wxVERTICAL ,this,_("Z-/Depth-Buffer"));
-	 boxE = new wxStaticBoxSizer(wxVERTICAL ,this,_("Water 4"));
+	 boxE = new wxStaticBoxSizer(wxVERTICAL ,this,_("Bump-mapped Water"));
 	SizerA->AddGrowableCol(0);
 	SizerB->AddGrowableCol(0);
 	SizerC->AddGrowableCol(0);
