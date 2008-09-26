@@ -37,6 +37,24 @@
 #define TIMER_INTERVAL 100
 
 
+#if 0
+/// testing TDF parser
+#include "tdfcontainer.h"
+#include <iostream>
+#include <fstream>
+void TestTDFParser(){
+  PDataList parsetree(new DataList);
+  Tokenizer tokenizer;
+  std::ifstream f("/home/dmytry/.spring/script.txt");
+  tokenizer.EnterStream(f);
+  parsetree->Load(tokenizer);
+  wxString result;
+  TDFWriter writer(result);
+  parsetree->Save(writer);
+  wxLogMessage(_T("Testing tdf parser: result %s "), result.c_str());
+}
+#endif
+
 IMPLEMENT_APP(SpringLobbyApp)
 
 BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
@@ -62,6 +80,7 @@ SpringLobbyApp::~SpringLobbyApp()
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
+
 
 #if wxUSE_ON_FATAL_EXCEPTION && wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
     wxHandleFatalExceptions( true );
@@ -169,6 +188,9 @@ bool SpringLobbyApp::OnInit()
 //  #endif
 
   sett().SetSettingsVersion(); /// bump settings version number
+
+
+  //TestTDFParser();
 
     return true;
 }
