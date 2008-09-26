@@ -2,6 +2,7 @@
 #define TDFCONTAINER_H
 
 #include <wx/string.h>
+#include <wx/colour.h>
 #include "utils.h"
 /// Todo: add TDFContainer class.
 ///
@@ -85,6 +86,25 @@ public:
     virtual void Load(Tokenizer &f);
 };
 
+
+/// Usage
+/// Parsing:
+
+/// int errs=0;
+/// PDataList root(ParseTDF(some istream, &errs));// errs is optional, gives number of errors when loading.
+
+/// Getting values:
+
+/// PDataList game(root->Find(_T("GAME")))
+/// if(!game.ok()){wxLogMessage(_T("Game tag is missing"));return false;}
+/// wxString gamename=game->GetString(_T("Mapname"));
+
+/// (see optional parameters for setting default and knowing if it failed)
+/// and so on and so forth.
+/// Saving tdf:
+///
+
+
 class DataList: public Node {
   protected:
     std::map<wxString,PNode> nodes;
@@ -117,6 +137,15 @@ class DataList: public Node {
 
     virtual void Save(TDFWriter &f);
     virtual void Load(Tokenizer &f);
+
+    int GetInt(const wxString &name, int default_value=0, bool *it_worked=NULL);
+    double GetDouble(const wxString &name, double default_value=0, bool *it_worked=NULL);
+    wxString GetString(const wxString &name, const wxString &default_value=wxString(), bool *it_worked=NULL);
+    /// returns number of values that were successfully read
+    int GetDoubleArray(const wxString &name, int n_values, double *values);
+
+    wxColour GetColour(const wxString &name, const wxColour &default_value=wxColour(0,0,0), bool *it_worked=NULL);
+
 };
 
 class DataLeaf: public Node{

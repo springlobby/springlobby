@@ -1,6 +1,7 @@
 #include "tdfcontainer.h"
 #include "utils.h"
 #include <wx/intl.h>
+#include <wx/tokenzr.h>
 #include <cmath>
 
 TDFWriter::TDFWriter(wxString &s):
@@ -79,7 +80,6 @@ char Tokenizer::PeekNextChar(){
 }
 
 char Tokenizer::GetNextChar(){
-  start:
   UnwindStack();
   //std::string tmp;
   if(include_stack.empty())return 0;
@@ -121,7 +121,7 @@ void Tokenizer::ReadToken(Token &token){
   }
 
   token.pos_string=wxString();
-  if(!include_stack.back().name.empty())token.pos_string<<include_stack.back().name<<_T(" , ");
+  if(!include_stack.empty()&&!include_stack.back().name.empty())token.pos_string<<include_stack.back().name<<_T(" , ");
   token.pos_string<<_("line ")<<include_stack.back().line<<_(" , column ")<<include_stack.back().column;
 
   char c=GetNextChar();
@@ -213,23 +213,20 @@ void Tokenizer::ReadToken(Token &token){
 
 void Tokenizer::SkipSpaces(){
   while(Good() && IsWhitespace(PeekNextChar())){
-    char c=GetNextChar();
+    GetNextChar();
   }
 }
 
 Token Tokenizer::GetToken(int i){
   int p=buffer_pos+i;
   if(p<0)return Token();
-  while(token_buffer.size()<p+1){
+  while(int(token_buffer.size())<p+1){
     Token t;
     ReadToken(t);
     if(t.IsEOF())return t;
     token_buffer.push_back(t);
   }
 
-  //if(p>=token_buffer.size())return Token();
-
-  //token_buffer[p].Dump(std::cout);
   return token_buffer[p];
 };
 
@@ -471,7 +468,7 @@ PNode DataList::FindByPath( const wxString &str ) {
 
   }
   i=1;
-  while(i<str.size()) {
+  while((unsigned int)(i)<str.size()) {
     if(str[i]=='/') {
       if(buff==_T("..")) {
         current_dir=current_dir->Parent();
@@ -595,10 +592,79 @@ void DataList::Load(Tokenizer &f){
         }
       }
       break;
+      default:
+      f.ReportError(t,_T("[sectionname] or entryname= expected."));
     }
 
   }
 }
+
+
+int DataList::GetInt(const wxString &name, int default_value, bool *it_worked){
+  PDataLeaf leaf(Find(name));
+  if(!leaf.ok()){
+    if(it_worked){*it_worked=false;}
+    return default_value;
+  }
+  wxString s=leaf->GetValue();
+  long result=default_value;
+  if(!s.ToLong(&result)){
+    if(it_worked){*it_worked=false;}
+    return result;
+  }
+  if(it_worked){*it_worked=true;}
+  return result;
+}
+double DataList::GetDouble(const wxString &name, double default_value, bool *it_worked){
+  PDataLeaf leaf(Find(name));
+  if(!leaf.ok()){
+    if(it_worked){*it_worked=false;}
+    return default_value;
+  }
+  wxString s=leaf->GetValue();
+  double result=default_value;
+  if(!s.ToDouble(&result)){
+    if(it_worked){*it_worked=false;}
+    return result;
+  }
+  if(it_worked){*it_worked=true;}
+  return result;
+
+}
+wxString DataList::GetString(const wxString &name, const wxString &default_value, bool *it_worked){
+  PDataLeaf leaf(Find(name));
+  if(!leaf.ok()){
+    if(it_worked){*it_worked=false;}
+    return default_value;
+  }
+  if(it_worked){*it_worked=true;}
+  return leaf->GetValue();
+}
+int DataList::GetDoubleArray(const wxString &name, int n_values, double *values){
+  PDataLeaf leaf(Find(name));
+  if(!leaf.ok()){
+    return 0;
+  }
+  wxStringTokenizer tok(leaf->GetValue());
+  int i=0;
+  int values_read=0;
+  for(i=0;i<n_values && tok.HasMoreTokens();++i){
+    wxString s=tok.GetNextToken();
+    if(s.ToDouble(values+i))values_read++;
+  }
+  return values_read;
+}
+
+wxColour DataList::GetColour(const wxString &name, const wxColour &default_value, bool *it_worked){
+  double values[3];
+  if(GetDoubleArray(name, 3, values)!=3){
+    if(it_worked){*it_worked=false;}
+    return default_value;
+  }
+  if(it_worked){*it_worked=true;}
+  return wxColour(values[0]*255.99,values[1]*255.99,values[2]*255.99);
+}
+
 
 wxString DataLeaf::GetValue(){
   return value;
@@ -628,4 +694,5 @@ PDataList ParseTDF(std::istream &s, int *error_count){
   if(error_count){
     *error_count=t.NumErrors();
   }
+  return result;
 }
