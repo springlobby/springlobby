@@ -40,6 +40,7 @@ wxColour GetColorFromStrng( const wxString color );
 
 //! apply standard alpha blending to square images
 void BlendImage(wxImage& source, wxImage& dest,int img_dim);
+wxBitmap* BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int dim = 16 );
 //! used to load png data into a wxBitmap
 wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size);
 //wxBitmap charArr2wxBitmap(const unsigned char * arg, int size);

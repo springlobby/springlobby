@@ -24,7 +24,8 @@
 #include "uiutils.h"
 #include "battlelistfiltervalues.h"
 #include "iunitsync.h"
-#include "ibattle.h"
+
+const wxColor defaultHLcolor (255,0,0);
 
 
 Settings& sett()
@@ -81,6 +82,8 @@ Settings::Settings()
   m_portable_mode = false;
   #endif
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
+
+  if ( !m_config->Exists( _T("/Groups") ) ) AddGroup( _("Default") );
 }
 
 Settings::~Settings()
@@ -109,7 +112,7 @@ void Settings::SaveSettings()
 
   m_config->Save( outstream );
   #endif
-  if (usync()->IsLoaded()) usync()->SetSpringDataPath( GetSpringDir() );
+  if (usync().IsLoaded()) usync().SetSpringDataPath( GetSpringDir() );
 }
 
 
@@ -134,6 +137,23 @@ void Settings::SetSettingsVersion()
 unsigned int  Settings::GetSettingsVersion()
 {
    return m_config->Read( _T("/General/SettingsVersion"), 0l );
+}
+
+
+wxString Settings::GetLobbyWriteDir()
+{
+  wxString sep = wxFileName::GetPathSeparator();
+  wxString path = GetSpringDir() + sep + _T("lobby");
+  if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  path += sep + _T("SpringLobby") + sep;
+  if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  return path;
 }
 
 
@@ -205,13 +225,12 @@ void Settings::SetWebBrowserPath( const wxString path )
 
 wxString Settings::GetCachePath()
 {
-    return m_config->Read( _T("/Spring/CachePath"), GetSpringDir() + wxFileName::GetPathSeparator() + _T("lobbycache") ) + wxFileName::GetPathSeparator();
-}
-
-
-void Settings::SetCachePath( const wxString path )
-{
-    m_config->Write( _T("/Spring/CachePath"), path );
+  wxString path = GetLobbyWriteDir() + _T("cache") + wxFileName::GetPathSeparator();
+  if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  return path;
 }
 
 
@@ -528,7 +547,8 @@ void Settings::SetMainWindowLeft( const int value )
 
 wxString Settings::GetSpringDir()
 {
-    return m_config->Read( _T("/Spring/dir"), WX_STRINGC(DEFSETT_SPRING_DIR) );
+    if ( !IsPortableMode() ) return m_config->Read( _T("/Spring/dir"), WX_STRINGC(DEFSETT_SPRING_DIR) );
+    else return wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
 }
 
 
@@ -553,7 +573,7 @@ void Settings::SetUnitSyncUseDefLoc( const bool usedefloc )
 
 wxString Settings::GetUnitSyncLoc()
 {
-    return m_config->Read( _T("/Spring/unitsync_loc"), _T("") );
+  return m_config->Read( _T("/Spring/unitsync_loc"), _T("") );
 }
 
 
@@ -594,6 +614,7 @@ void Settings::SetSpringLoc( const wxString& loc )
 
 wxString Settings::GetSpringUsedLoc( bool force, bool defloc )
 {
+    if ( IsPortableMode() ) return GetSpringDir() + wxFileName::GetPathSeparator() + _T("spring.exe");
     bool df;
     if ( force ) df = defloc;
     else df = GetSpringUseDefLoc();
@@ -613,6 +634,7 @@ wxString Settings::GetSpringUsedLoc( bool force, bool defloc )
 
 wxString Settings::GetUnitSyncUsedLoc( bool force, bool defloc )
 {
+    if ( IsPortableMode() ) return GetSpringDir() + wxFileName::GetPathSeparator() + _T("unitsync.dll");
     bool df;
     if ( force ) df = defloc;
     else df = GetUnitSyncUseDefLoc();
@@ -643,7 +665,14 @@ void Settings::SetChatLogEnable( const bool value )
 
 wxString Settings::GetChatLogLoc()
 {
-    return m_config->Read( _T("/ChatLog/chatlog_loc"), GetSpringDir() + _T("/logs") );
+    wxString path;
+    if ( !IsPortableMode() ) path = m_config->Read( _T("/ChatLog/chatlog_loc"), GetLobbyWriteDir() + _T("chatlog") );
+    else path = GetLobbyWriteDir() + _T("chatlog");
+    if ( !wxFileName::DirExists( path ) )
+    {
+      if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+    }
+    return path;
 }
 
 void Settings::SetChatLogLoc( const wxString& loc )
@@ -769,7 +798,86 @@ void Settings::SetTestHostPort( bool value )
     m_config->Write( _T("/Hosting/TestHostPort"), value );
 }
 
+void Settings::SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options )
+{
+    m_config->DeleteGroup( _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype ) );
+    for (std::map<wxString,wxString>::iterator it = options.begin(); it != options.end(); ++it)
+    {
+        m_config->Write( _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype ) + _T("/") + it->first , it->second );
+    }
+}
 
+std::map<wxString,wxString> Settings::GetHostingPreset( const wxString& name, int optiontype )
+{
+  std::map<wxString,wxString> ret;
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype ));
+  wxString keyname;
+  long dummy;
+  bool keyexist = m_config->GetFirstEntry(keyname, dummy);
+  while ( keyexist )
+  {
+    ret[keyname] = m_config->Read( keyname );
+
+    keyexist = m_config->GetNextEntry(keyname, dummy);
+  }
+
+  m_config->SetPath( old_path );
+  return ret;
+}
+
+
+wxArrayString Settings::GetPresetList()
+{
+  wxArrayString ret;
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Hosting/Preset") );
+  wxString groupname;
+  long dummy;
+  bool groupexist = m_config->GetFirstGroup(groupname, dummy);
+  while ( groupexist )
+  {
+    ret.Add( groupname );
+
+    groupexist = m_config->GetNextGroup(groupname, dummy);
+  }
+
+  m_config->SetPath( old_path );
+  return ret;
+}
+
+
+void Settings::DeletePreset( const wxString& name )
+{
+  m_config->DeleteGroup( _T("/Hosting/Preset/") + name );
+
+  ///delete mod default preset associated
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Hosting/ModDefaultPreset") );
+  wxString keyname;
+  long dummy;
+  bool keyexist = m_config->GetFirstEntry(keyname, dummy);
+  while ( keyexist )
+  {
+    if ( m_config->Read( keyname ) == name ) m_config->DeleteEntry( keyname );
+
+    keyexist = m_config->GetNextEntry(keyname, dummy);
+  }
+
+  m_config->SetPath( old_path );
+}
+
+
+wxString Settings::GetModDefaultPresetName( const wxString& modname )
+{
+  return m_config->Read( _T("/Hosting/ModDefaultPreset/") + modname );
+}
+
+
+void Settings::SetModDefaultPresetName( const wxString& modname, const wxString& presetname )
+{
+  m_config->Write( _T("/Hosting/ModDefaultPreset/") + modname, presetname );
+}
 
 
 void Settings::SetBalanceMethod(int value)
@@ -1033,6 +1141,7 @@ BattleListFilterValues Settings::GetBattleFilterValues(const wxString& profile_n
     filtervalues.status_open =      m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_open"), true );
     filtervalues.status_passworded= m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_passworded"), true );
     filtervalues.status_start =     m_config->Read( _T("/BattleFilter/")+profile_name + _T("/status_start"), true );
+    filtervalues.highlighted_only = m_config->Read( _T("/BattleFilter/")+profile_name + _T("/highlighted_only"), 0l);
     return filtervalues;
 }
 
@@ -1057,7 +1166,18 @@ void Settings::SetBattleFilterValues(const BattleListFilterValues& filtervalues,
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_open"),filtervalues.status_open );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_passworded"),filtervalues.status_passworded );
     m_config->Write( _T("/BattleFilter/")+profile_name + _T("/status_start"),filtervalues.status_start );
+    m_config->Write( _T("/BattleFilter/")+profile_name + _T("/highlighted_only"),filtervalues.highlighted_only );
     m_config->Write( _T("/BattleFilter/lastprofile"),profile_name);
+}
+
+bool Settings::GetFilterActivState() const
+{
+    return m_config->Read( _T("/BattleFilter/Active") , 0l );
+}
+
+void Settings::SetFilterActivState(const bool state)
+{
+    m_config->Write( _T("/BattleFilter/Active") , state );
 }
 
 bool Settings::GetDisableSpringVersionCheck()
@@ -1198,76 +1318,22 @@ wxArrayString Settings::GetTorrentListToResume()
 }
 
 
-void Settings::SaveBattleMapOptions(IBattle *battle){
-  if ( !battle ){
-        wxLogError(_T("Settings::SaveBattleMapOptions called with null argument"));
-        return;
-      }
-  wxString map_name=battle->GetHostMapName();
-  //SetLastHostMap(map_name);
-  wxString option_prefix=_T("/Hosting/Maps/")+map_name+_T("/");
-  long longval;
-  battle->CustomBattleOptions()->getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
-  int start_pos_type=longval;
-
-  m_config->Write( option_prefix+_T("startpostype"), start_pos_type);
-  if(start_pos_type==ST_Choose){
-    int n_rects=battle->GetNumRects();
-    m_config->Write( option_prefix+_T("n_rects"), n_rects);
-
-
-    for ( int i = 0; i < n_rects; ++i ) {
-      BattleStartRect *rect = battle->GetStartRect( i );
-      if ( (!rect) || rect->deleted ) {
-        m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"));
-        m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_left"));
-        m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_top"));
-        m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_right"));
-        m_config->DeleteEntry(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"));
-      }else{
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"), rect->ally);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_top"), rect->top);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_left"), rect->left);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_right"), rect->right);
-        m_config->Write(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"), rect->bottom);
-      }
-    }
+wxString Settings::GetTorrentsFolder()
+{
+  wxString path = GetLobbyWriteDir() +_T("torrents") + wxFileName::GetPathSeparator();
+    if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
   }
+  return path;
 }
 
-void Settings::LoadBattleMapOptions(IBattle *battle){
-  if ( !battle ){
-        wxLogError(_T("Settings::LoadBattleMapOptions called with null argument"));
-        return;
-      }
-  wxString map_name=battle->GetHostMapName();
-  wxString option_prefix=_T("/Hosting/Maps/")+map_name+_T("/");
-  int start_pos_type=m_config->Read(option_prefix+_T("startpostype") , 0L );
-  battle->CustomBattleOptions()->setSingleOption( _T("startpostype"), TowxString(start_pos_type), EngineOption );
-  if(start_pos_type==ST_Choose){
 
-    battle->ClearStartRects();
-
-    int n_rects=m_config->Read( option_prefix+_T("n_rects"), 0L);
-/*
-    for(int i=n_rects;i<battle->GetNumRects();++i){
-      battle->RemoveStartRect(i);
-    }*/
-
-    for(int i=0;i<n_rects;++i){
-      int ally=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_ally"),-1L);
-      int top=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_top"),-1L);
-      int left=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_left"),-1L);
-      int right=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_right"),-1L);
-      int bottom=m_config->Read(option_prefix+_T("rect_")+TowxString(i)+_T("_bottom"),-1L);
-      if(ally>=0){
-        battle->AddStartRect(ally,left,top,right,bottom);
-      }else{
-        battle->RemoveStartRect(i);
-      }
-    }
-  }
+wxString Settings::GetTempStorage()
+{
+  return wxFileName::GetTempDir();
 }
+
 
 void Settings::SetShowTooltips( bool show)
 {
@@ -1288,6 +1354,127 @@ int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
 {
     return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
 }
+
+void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )
+{
+    unsigned int friendsCount = friends.GetCount();
+    m_config->DeleteGroup( _T("/Groups/") + group + _T("/Members/") );
+    for ( unsigned int i = 0; i < friendsCount ; i++ )
+    {
+        m_config->Write(_T("/Groups/") + group + _T("/Members/") + TowxString(i), friends[i] );
+    }
+}
+
+wxArrayString Settings::GetPeopleList( const wxString& group  ) const
+{
+    wxArrayString list;
+    wxString old_path = m_config->GetPath();
+    m_config->SetPath( _T("/Groups/") + group + _T("/Members/") );
+    unsigned int friendsCount  = m_config->GetNumberOfEntries( false );
+    for ( unsigned int i = 0; i < friendsCount ; i++ )
+    {
+        wxString ToAdd;
+        if ( m_config->Read( _T("/Groups/") + group + _T("/Members/") +  TowxString(i), &ToAdd ) ) list.Add( ToAdd );
+    }
+    m_config->SetPath( old_path );
+    return list;
+}
+
+void Settings::SetGroupHLColor( const wxColor& color, const wxString& group )
+{
+    m_config->Write( _T("/Groups/") + group + _T("/Opts/HLColor"), GetColorString( color ) );
+
+}
+
+wxColor Settings::GetGroupHLColor( const wxString& group  ) const
+{
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Groups/") + group + _T("/Opts/HLColor") , _T( "100 100 140" ) ) ) );
+}
+
+wxArrayString Settings::GetGroups( ) const
+{
+    wxString old_path = m_config->GetPath();
+    m_config->SetPath( _T("/Groups/") );
+    wxArrayString ret;
+    long dummy;
+    wxString tmp;
+    bool cont = m_config->GetFirstGroup( tmp, dummy );
+    while ( cont )
+    {
+        ret.Add( tmp );
+        cont = m_config->GetNextGroup( tmp, dummy );
+    }
+
+    m_config->SetPath( old_path );
+    return ret;
+}
+
+void Settings::AddGroup( const wxString& group )
+{
+    if ( !m_config->Exists( _T("/Groups/") + group ) )
+    {
+        m_config->Write( _T("/Groups/") , group );
+        //set defaults
+        SetGroupActions( group, UserActions::ActNone );
+        SetGroupHLColor( defaultHLcolor, group );
+    }
+}
+
+void Settings::DeleteGroup( const wxString& group )
+{
+    if ( m_config->Exists( _T("/Groups/") + group ) )
+    {
+        m_config->DeleteGroup( _T("/Groups/") + group );
+    }
+}
+
+void Settings::SetGroupActions( const wxString& group, UserActions::ActionType action )
+{
+    //m_config->Write( _T("/Groups/") + group + _T("/Opts/Actions"), action );
+  wxString key=_T("/Groups/")+group+_T("/Opts/ActionsList");
+  m_config->DeleteGroup( key );
+  key+=_T("/");
+  unsigned int tmp=action&((UserActions::ActLast<<1)-1);
+  int i=0;
+  while(tmp!=0)
+  {
+    if(tmp&1)m_config->Write(key+m_configActionNames[i], true);
+    i++;
+    tmp>>=1;
+  }
+}
+
+UserActions::ActionType Settings::GetGroupActions( const wxString& group ) const
+{
+  wxString key=_T("/Groups/")+group+_T("/Opts/Actions");
+  if(m_config->HasEntry(key)){/// Backward compatibility.
+    wxLogMessage(_T("loading deprecated group actions and updating config"));
+    UserActions::ActionType action=(UserActions::ActionType) m_config->Read( key, (long) UserActions::ActNone ) ;
+    m_config->DeleteEntry(key);
+
+/// a bit ugly, but i want to update options
+    Settings *this_nonconst=const_cast<Settings *>(this);
+    this_nonconst->SetGroupActions(group,action);
+
+    return action;
+  }
+  key=_T("/Groups/")+group+_T("/Opts/ActionsList");
+  if(!m_config->Exists(key))return UserActions::ActNone;
+  key+=_T("/");
+  int i=0;
+  int mask=1;
+  int result=0;
+  while(mask<=UserActions::ActLast){
+    if( m_config->Read( key+m_configActionNames[i], (long)0) ){
+      result|=mask;
+    }
+    i++;
+    mask<<=1;
+  }
+  if(result==0)return UserActions::ActNone;
+  return (UserActions::ActionType) result;
+}
+
 
 void Settings::SaveCustomColors( const wxColourData& _cdata, const wxString& paletteName  )
 {
@@ -1328,4 +1515,13 @@ void Settings::SetReportStats(const bool value)
 }
 
 
+void Settings::SetAutoUpdate( const bool value )
+{
+    m_config->Write( _T("/General/AutoUpdate"), value );
+}
 
+
+bool Settings::GetAutoUpdate()
+{
+    return m_config->Read( _T("/General/AutoUpdate"), true );
+}

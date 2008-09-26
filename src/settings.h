@@ -4,7 +4,7 @@
 #include <wx/string.h>
 #include <wx/colour.h>
 
-#define CACHE_VERSION 3
+#define CACHE_VERSION 6
 #define SETTINGS_VERSION 1
 
 #define DEFSETT_DEFAULT_SERVER "TAS Server"
@@ -24,15 +24,14 @@
 
 #include <wx/fileconf.h>
 #include "utils.h"
+#include "useractions.h"
 #include <wx/wfstream.h>
 
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
-class IBattle;
 class wxFileInputStream;
 struct wxColourData;
-
 
 class myconf : public wxFileConfig
 {
@@ -102,6 +101,13 @@ class Settings
     void SetReportStats(const bool value);
     bool GetReportStats();
 
+    void SetAutoUpdate( const bool value );
+    bool GetAutoUpdate();
+
+    wxString GetLobbyWriteDir();
+
+    wxString GetTempStorage();
+
     /* ================================================================ */
     /** @name Network
      * @{
@@ -164,7 +170,6 @@ class Settings
      * @{
      */
     wxString GetCachePath();
-    void SetCachePath( const wxString path );
 
     void SetCacheVersion();
     int GetCacheVersion();
@@ -296,6 +301,26 @@ class Settings
     int GetColumnWidth( const wxString& list_name, const int coloumn );
     //! used to signal unset column width in Get...
     enum { columnWidthUnset };
+
+    /*@}*/
+
+    /* ================================================================ */
+    /** @name People/Group mngm related
+     * @{
+     */
+    void SetPeopleList( const wxArrayString& friends, const wxString& group = _T("default") );
+    wxArrayString GetPeopleList( const wxString& group = _T("default") ) const;
+
+    wxArrayString GetGroups( ) const;
+    void AddGroup( const wxString& group ) ;
+    void DeleteGroup( const wxString& group ) ;
+
+    void SetGroupHLColor( const wxColor& color, const wxString& group = _T("default") );
+    wxColor GetGroupHLColor( const wxString& group = _T("default") ) const;
+
+    void SetGroupActions( const wxString& group, UserActions::ActionType action );
+    UserActions::ActionType GetGroupActions( const wxString& group ) const;
+
     /*@}*/
 
     /* ================================================================ */
@@ -406,6 +431,15 @@ class Settings
     void SetLastHostMap( const wxString& value );
     void SetLastRankLimit( int rank );
     void SetTestHostPort( bool value );
+
+    void SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options );
+    std::map<wxString,wxString> GetHostingPreset( const wxString& name, int optiontype );
+    wxArrayString GetPresetList();
+    void DeletePreset( const wxString& name );
+
+    wxString GetModDefaultPresetName( const wxString& modname );
+    void SetModDefaultPresetName( const wxString& modname, const wxString& presetname );
+
     /**@}*/
 
 
@@ -434,13 +468,11 @@ class Settings
     BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
     void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
     wxString GetLastFilterProfileName();
+    void SetFilterActivState( const bool state );
+    bool GetFilterActivState( ) const;
     /**@}*/
 
     bool GetDisableSpringVersionCheck();
-
-    /// not get/set naming because set may refer to battle or to options, thatd be ambiguous
-    void SaveBattleMapOptions(IBattle *battle);
-    void LoadBattleMapOptions(IBattle *battle);
 
     /* ================================================================ */
     /** @name Torrent System
@@ -468,6 +500,8 @@ class Settings
 
     void SetTorrentListToResume( const wxArrayString& list );
     wxArrayString GetTorrentListToResume();
+
+    wxString GetTorrentsFolder();
     /**@}*/
 
   protected:

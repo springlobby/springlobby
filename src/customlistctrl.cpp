@@ -1,8 +1,10 @@
 #include "customlistctrl.h"
 #include "utils.h"
-#include  "settings.h"
+#include "settings.h"
+#include <wx/colour.h>
+#include "iconimagelist.h"
 
-BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
+BEGIN_EVENT_TABLE(customListCtrl, ListBaseType)
 #if wxUSE_TIPWINDOW
     	EVT_MOTION(customListCtrl::OnMouseMotion)
     	EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)
@@ -16,10 +18,11 @@ BEGIN_EVENT_TABLE(customListCtrl, wxListCtrl)
 END_EVENT_TABLE()
 
 //wxTipWindow* customListCtrl::m_tipwindow = 0;
-customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style,wxString name):
-					wxListCtrl (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER),m_tiptext(_T("")),
-					 m_selected(-1),m_selected_index(-1),m_prev_selected(-1),
-					 m_prev_selected_index(-1),m_last_mouse_pos( wxPoint(-1,-1) ), m_name(name)
+customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style,wxString name,
+                                bool highlight, UserActions::ActionType hlaction )
+    : ListBaseType (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER),m_tiptext(_T("")),
+      m_selected(-1),m_selected_index(-1),m_prev_selected(-1),m_prev_selected_index(-1),
+      m_last_mouse_pos( wxPoint(-1,-1) ), m_name(name), m_highlight(highlight), m_highlightAction(hlaction)
 
 
 {
@@ -28,11 +31,16 @@ customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
     controlPointer = 0;
 #endif
 	m_tiptext = _T("");
+	m_bg_color = GetItemBackgroundColour(0);
+
+	SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
+    SetImageList( &icons(), wxIMAGE_LIST_SMALL );
+    SetImageList( &icons(), wxIMAGE_LIST_STATE );
 }
 
 void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
 {
-	wxListCtrl::InsertColumn(i,item);
+	ListBaseType::InsertColumn(i,item);
 	colInfo temp(tip,modifiable);
 	m_colinfovec.push_back(temp);
 }
@@ -49,6 +57,11 @@ void customListCtrl::RestoreSelection()
     {
         SetItemState( GetIndexFromData( m_prev_selected ), wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
     }
+}
+
+void customListCtrl::ResetSelection()
+{
+    m_selected = m_prev_selected = m_prev_selected_index = m_selected_index = -1;
 }
 
 void customListCtrl::OnSelected( wxListEvent& event )
@@ -245,12 +258,12 @@ bool customListCtrl::SetColumnWidth(int col, int width)
 {
     if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
     {
-        return wxListCtrl::SetColumnWidth( col, sett().GetColumnWidth( m_name, col) );
+        return ListBaseType::SetColumnWidth( col, sett().GetColumnWidth( m_name, col) );
     }
     else
     {
         sett().SetColumnWidth( m_name, col, width );
-        return wxListCtrl::SetColumnWidth( col, width );
+        return ListBaseType::SetColumnWidth( col, width );
     }
 }
 
@@ -259,3 +272,25 @@ void customListCtrl::noOp(wxMouseEvent& event)
 	m_tiptext = _T("");
 }
 
+void customListCtrl::UpdateHighlights()
+{
+    for (long i = 0; i < GetItemCount() ; i++ )
+    {
+        HighlightItem( i );
+    }
+}
+
+void customListCtrl::HighlightItemUser( long item, const wxString& name )
+{
+   if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
+        wxColor c = sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
+        SetItemBackgroundColour( item, c );
+  }
+  else
+    SetItemBackgroundColour( item, m_bg_color );
+}
+
+void customListCtrl::SetHighLightAction( UserActions::ActionType action )
+{
+    m_highlightAction = action;
+}

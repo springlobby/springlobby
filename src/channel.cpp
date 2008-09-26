@@ -9,6 +9,11 @@
 #include "user.h"
 #include "utils.h"
 #include <wx/regex.h>
+#include "chatpanel.h"
+
+Channel::~Channel() {
+  if(uidata.panel)uidata.panel->SetChannel(NULL);
+}
 
 void Channel::SetName( const wxString& name )
 {

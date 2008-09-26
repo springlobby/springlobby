@@ -25,21 +25,6 @@ class wxColour;
 #define PE_NONE 0
 
 
-#define HI_None 0
-#define HI_Map 1
-#define HI_Locked 2
-#define HI_Spectators 4
-#define HI_StartResources 8
-#define HI_MaxUnits 16
-#define HI_StartType 32
-#define HI_GameType 64
-#define HI_Options 128
-#define HI_StartRects 256
-#define HI_Restrictions 512
-#define HI_Map_Changed 1024
-#define HI_Mod_Changed 2048
-#define HI_Send_All_opts 4076
-
 typedef int HostInfo;
 
 struct UiServerData {
@@ -160,7 +145,7 @@ class Server : public iNetClass
     virtual bool IsPasswordHash( const wxString& pass ) = 0;
     virtual wxString GetPasswordHash( const wxString& pass ) = 0;
 
-    wxString GetRequiredSpring() { return m_required_spring_ver; }
+    wxString GetRequiredSpring() const { return m_required_spring_ver; }
 
     void SetRequiredSpring( const wxString& version ) { m_required_spring_ver = version; }
 
@@ -173,8 +158,8 @@ class Server : public iNetClass
     BattleList_Iter* const battles_iter;
 
     virtual User& GetMe() = 0;
-    User& GetUser( const wxString& nickname );
-    bool UserExists( const wxString& nickname );
+    User& GetUser( const wxString& nickname ) const;
+    bool UserExists( const wxString& nickname ) const;
 
     Channel& GetChannel( const wxString& name );
     int GetNumChannels();
@@ -187,6 +172,9 @@ class Server : public iNetClass
     virtual int TestOpenPort( unsigned int port ) = 0;
 
     std::map<wxString,wxString> m_channel_pw;  /// channel name -> password, filled on channel join
+
+    ///used to fill userlist in groupuserdialog
+    const UserList& GetUserList(){return m_users;}
 
   protected:
     Socket* m_sock;

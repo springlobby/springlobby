@@ -32,6 +32,7 @@ class TorrentListCtrl : public customListCtrl
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
     void OnColClick( wxListEvent& event );
     void SetInfoMap( map_infos* map);
+    virtual void HighlightItem( long item );
 
   protected:
     static int wxCALLBACK CompareNameUP(long item1, long item2, long sortData);

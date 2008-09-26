@@ -25,6 +25,7 @@ class wxCheckBox;
 class wxListCtrl;
 class MapCtrl;
 class ColorButton;
+class wxBitmapComboBox;
 
 typedef std::map<wxString,long> OptionListMap;
 
@@ -45,7 +46,7 @@ class BattleRoomTab : public wxPanel
 
     bool IsHosted();
 
-    void UpdateBattleInfo( bool MapChanged = false, bool reloadMapOptions = true );
+    void UpdateBattleInfo();
     void UpdateBattleInfo( const wxString& Tag );
 
     void OnStart( wxCommandEvent& event );
@@ -55,11 +56,13 @@ class BattleRoomTab : public wxPanel
     void OnAddBot( wxCommandEvent& event );
     void OnImReady( wxCommandEvent& event );
     void OnLock( wxCommandEvent& event );
+    void OnAutoHost( wxCommandEvent& event );
     void OnImSpec( wxCommandEvent& event );
     void OnTeamSel( wxCommandEvent& event );
     void OnAllySel( wxCommandEvent& event );
     void OnColourSel( wxCommandEvent& event );
     void OnSideSel( wxCommandEvent& event );
+    void OnPresetSel( wxCommandEvent& event );
 
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
@@ -70,6 +73,9 @@ class BattleRoomTab : public wxPanel
 
     void OnUnitSyncReloaded();
 
+    void UpdateHighlights();
+
+    void UpdatePresetList();
 
   protected:
 
@@ -94,7 +100,8 @@ class BattleRoomTab : public wxPanel
     wxComboBox* m_team_sel;
     wxComboBox* m_ally_sel;
     ColorButton* m_color_sel;
-    wxComboBox* m_side_sel;
+    wxBitmapComboBox* m_side_sel;
+    wxComboBox* m_options_preset_sel;
 
     wxStaticText* m_team_lbl;
     wxStaticText* m_ally_lbl;
@@ -126,6 +133,7 @@ class BattleRoomTab : public wxPanel
     wxCheckBox* m_ready_chk;
     wxCheckBox* m_spec_chk;
     wxCheckBox* m_lock_chk;
+    wxCheckBox* m_autohost_chk;
 
     wxListCtrl* m_opts_list;
     DECLARE_EVENT_TABLE();
@@ -144,7 +152,9 @@ enum
     BROOM_START,
     BROOM_ADDBOT,
     BROOM_BALANCE,
-    BROOM_FIXCOLOURS
+    BROOM_FIXCOLOURS,
+    BROOM_PRESETSEL,
+    BROOM_AUTOHOST
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H

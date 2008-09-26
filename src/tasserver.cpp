@@ -433,32 +433,31 @@ void TASServer::Update( int mselapsed )
             // Is it time for a nat traversal PING?
             m_last_udp_ping = now;
             /// Nat travelsal "ping"
-            Battle *battle=GetCurrentBattle();
-            if (battle)
+            if ( m_battle_id != -1 )
             {
-                if ((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports) ) && !battle->GetInGame())
-                {
-                    if (battle->IsFounderMe())
-                    {
-                        UdpPingTheServer(m_user);
-                        UdpPingAllClients();
-                    }
-                    else
-                    {
-                        UdpPingTheServer();
-                    }
-                }
-                else
-                {
-                    /// old logging for debug
-                    //if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
-                    //if(battle->GetInGame())wxLogMessage( _T("pinging: current battle is in game") );
-                }
-            }
-            else
-            {
-                //wxLogMessage( _T("pinging: No current battle set") );
-            }
+              Battle *battle=GetCurrentBattle();
+              if (battle)
+              {
+                  if ((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports) ) && !battle->GetInGame())
+                  {
+                      if (battle->IsFounderMe())
+                      {
+                          UdpPingTheServer(m_user);
+                          UdpPingAllClients();
+                      }
+                      else
+                      {
+                          UdpPingTheServer();
+                      }
+                  }
+                  else
+                  {
+                      /// old logging for debug
+                      //if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
+                      //if(battle->GetInGame())wxLogMessage( _T("pinging: current battle is in game") );
+                  }
+              }
+          }
         }
         HandlePinglist();
     }
@@ -579,7 +578,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         title = GetSentenceParam( params );
         mod = GetSentenceParam( params );
         m_se->OnBattleOpened( id, replay, IntToNatType( nat ), nick, host, port, maxplayers,
-                              haspass, (rank + 1)*100, hash, map, title, mod );
+                              haspass, rank, hash, map, title, mod );
     }
     else if ( cmd == _T("JOINEDBATTLE") )
     {
@@ -686,7 +685,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         id = GetIntParam( params );
         hash = GetWordParam( params );
         m_battle_id = id;
-        m_se->OnJoinedBattle( id );
+        m_se->OnJoinedBattle( id, hash );
         m_se->OnBattleInfoUpdated( m_battle_id );
     }
     else if ( cmd == _T("CLIENTBATTLESTATUS") )
@@ -773,7 +772,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         m_battle_id = GetIntParam( params );
         m_se->OnHostedBattle( m_battle_id );
-        SendHostInfo( HI_Send_All_opts );
     }
     else if ( cmd == _T("ADDBOT") )
     {
@@ -913,6 +911,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("REDIRECT") )
     {
+      if ( m_online ) return;
       wxString address = GetWordParam( params );
       unsigned int port = GetIntParam( params );
       if ( address.IsEmpty() ) return;
@@ -1203,7 +1202,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
                              bo.maxplayers
                            );
     cmd +=  bo.modhash;
-    cmd += wxString::Format( _T(" %d "), bo.rankneeded/100 );
+    cmd += wxString::Format( _T(" %d "), bo.rankneeded );
     cmd += bo.maphash + _T(" ");
     cmd += bo.mapname + _T("\t");
     cmd += bo.description + _T("\t");
@@ -1311,31 +1310,27 @@ void TASServer::SendHostInfo( HostInfo update )
     {
         // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
         wxString cmd = wxString::Format( _T("%d %d "), battle.GetSpectators(), battle.IsLocked() );
-        cmd += battle.GetHostMapHash() + _T(" ");
-        cmd += battle.GetHostMapName();
+        cmd += battle.LoadMap().hash + _T(" ");
+        cmd += battle.LoadMap().name;
 
         SendCmd( _T("UPDATEBATTLEINFO"), cmd );
-        wxLogMessage(_T("UPDATEBATTLEINFO %s"),cmd.c_str());
     }
     if ( ( update & HI_Send_All_opts ) > 0 )
     {
         wxString cmd;
 
-        wxStringTripleVec optlistMap;
-        battle.CustomBattleOptions()->getOptions( &optlistMap, MapOption );
+        wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( MapOption );
         for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
         {
             cmd << _T("game\\mapoptions\\") << it->first + _T("=") << it->second.second << _T("\t");
         }
-        wxStringTripleVec optlistMod;
-        battle.CustomBattleOptions()->getOptions( &optlistMod, ModOption );
+        wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( ModOption );
         for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
         {
             cmd << _T("game\\modoptions\\") << it->first << _T("=") << it->second.second << _T("\t");
         }
 /// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
-        wxStringTripleVec optlistEng;
-        battle.CustomBattleOptions()->getOptions( &optlistEng, EngineOption );
+        wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( EngineOption );
         for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
         {
             cmd << _T("game/") << it->first << _T("=") << it->second.second << _T("\t");
@@ -1347,37 +1342,29 @@ void TASServer::SendHostInfo( HostInfo update )
     if ( (update & HI_StartRects) > 0 )   // Startrects should be updated.
     {
 
-        for ( std::vector<BattleStartRect*>::size_type i = 16; i < battle.GetNumRects(); i++ ) battle.RemoveStartRect( i ); /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
-        for ( std::vector<BattleStartRect*>::size_type i = 0; i < battle.GetNumRects(); i++ )   // Loop through all, and remove updated or deleted.
+        for ( unsigned int i = 16; i < battle.GetNumRects(); i++ ) battle.RemoveStartRect( i ); /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
+
+        for ( unsigned int i = 0; i < battle.GetNumRects(); i++ )   // Loop through all, and remove updated or deleted.
         {
             if ( i >= 16 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
             wxString cmd;
-            BattleStartRect* sr = battle.GetStartRect( i );
-            if ( sr == 0 ) continue;
-            if ( sr->deleted )
+            BattleStartRect sr = battle.GetStartRect( i );
+            if ( !sr.exist ) continue;
+            if ( sr.todelete )
             {
                 SendCmd( _T("REMOVESTARTRECT"), wxString::Format( _T("%d"), i ) );
                 battle.StartRectRemoved( i );
             }
-            else if ( !sr->local && sr->updated )
+            else if ( sr.toadd )
             {
-                cmd = wxString::Format( _T("REMOVESTARTRECT %d\n"), i );
-                SendCmd( _T("REMOVESTARTRECT"), wxString::Format( _T("%d"), i ) );
+                SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
+                battle.StartRectAdded( i );
             }
-
-        }
-
-        for ( std::vector<BattleStartRect*>::size_type i = 0; i < battle.GetNumRects(); i++ )   // Loop through all, and update.
-        {
-            if ( i >= 16 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
-            wxString cmd;
-            BattleStartRect* sr = battle.GetStartRect( i );
-            if ( sr == 0 ) continue;
-            if ( sr->updated )
+            else if ( sr.toresize )
             {
-                SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d\n"), sr->ally, sr->left, sr->top, sr->right, sr->bottom ) );
-                battle.StartRectUpdated( i );
-
+                SendCmd( _T("REMOVESTARTRECT"), wxString::Format( _T("%d"), i ) );
+                SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
+                battle.StartRectResized( i );
             }
         }
 
@@ -1421,15 +1408,15 @@ void TASServer::SendHostInfo( const wxString& Tag )
     wxString key = Tag.AfterFirst( '_' );
     if ( type == MapOption )
     {
-        cmd << _T("game\\mapoptions\\") << key << _T("=") << battle.CustomBattleOptions()->getSingleValue( key, MapOption ) << _T("\n");
+        cmd << _T("game\\mapoptions\\") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, MapOption );
     }
     else if ( type == ModOption )
     {
-        cmd << _T("game\\modoptions\\") << key << _T("=") << battle.CustomBattleOptions()->getSingleValue( key, ModOption ) << _T("\n");
+        cmd << _T("game\\modoptions\\") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, ModOption );
     }
     else if ( type == EngineOption )
     {
-        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions()->getSingleValue( key, EngineOption ) << _T("\n");
+        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, EngineOption );
     }
     SendCmd( _T("SETSCRIPTTAGS"), cmd );
 }
@@ -1535,7 +1522,7 @@ void TASServer::ForceSide( int battleid, const wxString& nick, int side )
     {
         try
         {
-            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to ") + usync()->GetSideName( GetBattle(battleid).GetHostModName(), side ) + _T(" side.") );
+            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to ") + usync().GetSideName( GetBattle(battleid).GetHostModName(), side ) + _T(" side.") );
         }
         catch (...) {}
     }
@@ -1988,7 +1975,7 @@ UserStatus ConvTasclientstatus( TASClientstatus tas )
     UserStatus stat;
     stat.in_game = tas.in_game;
     stat.away = tas.away;
-    stat.rank = (tas.rank + 1) * 100;
+    stat.rank = (RankContainer)(tas.rank + 1);
     stat.moderator = tas.moderator;
     stat.bot = tas.bot;
     return stat;
