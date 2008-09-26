@@ -40,15 +40,14 @@ class TDFWriter
 
 ///
 /// Parsing classes contributed by dmytry aka dizekat, copypasted from personal
-/// project, render_control_new/utils/parsing.h and cpp , database.h and cpp
+/// project: render_control_new/utils/parsing.h and cpp , database.h and cpp
 ///
 
 #include <iostream>
 #include <sstream>
-#include <string>
 #include <vector>
-#include <map>
 #include <deque>
+#include <map>
 
 #include <autopointers.h>
 
@@ -56,6 +55,10 @@ class Node;
 typedef RefcountedPointer<Node> PNode;
 class DataList;
 typedef RefcountedPointer<DataList> PDataList;
+class DataLeaf;
+typedef RefcountedPointer<DataLeaf> PDataLeaf;
+
+class Tokenizer;
 
 class Node: public RefcountedContainer {
   friend class DataList;
@@ -65,63 +68,46 @@ protected:
 	Node *list_next;
 	void ListRemove();
 	void ListInsertAfter(Node *what);
-	mystring name;
+	wxString name;
 public:
 
-    mystring Name();
+    wxString Name();
 
     // Sets the name, and updates parent if present
-    bool SetName(const mystring &name_);
+    bool SetName(const wxString &name_);
     Node(): parent(NULL), list_prev(NULL), list_next(NULL){}
     virtual ~Node();
-    virtual int type_id() const {
-        return type_unknown;
-    };
     DataList* Parent() const;// parent list
     //void SetParent(DataList *parent_);
     bool IsChildOf(DataList *what) const;
 
-    virtual void Save(FileWriter &f);
-    virtual void Load(FileLoader &f);
-    virtual void UpdateTopology();
-    virtual void Compile(CompilerOutput &out);
-
-    /// create new clone
-    virtual PNode Clone();
-
+    virtual void Save(TDFWriter &f);
+    virtual void Load(Tokenizer &f);
 };
 
 class DataList: public Node {
-    DECLARE_NODE_CLASS(DataList)
   protected:
-    //std::vector<PNode> ordered_nodes;
-    //std::set<PNode,compare_pnode_name>
-    std::map<mystring,PNode> nodes;
+    std::map<wxString,PNode> nodes;
     Node list_loop;// next is first, prev is last in the list
-    //std::map<PNode,mystring> names;
-    typedef std::map<mystring,PNode>::iterator nodes_iterator;
-    //typedef std::map<PNode,mystring>::iterator names_iterator;
-    //DataList *parent;
+    typedef std::map<wxString,PNode>::iterator nodes_iterator;
   public:
     DataList();
     ~DataList();
 
-    virtual int type_id() const;
     bool Insert(PNode node);// return false if such entry already exists.
     bool InsertAt(PNode node, PNode where);// return false if such entry already exists. Inserts right before given
-    //bool Insert(const mystring &str, PDataList list);// return false if such entry already exists.
 
    // rename if such entry already exists. Names is like name!1 or name!2 etc
     void InsertRename(PNode node);
     void InsertRenameAt(PNode node,PNode where);
-    bool Remove(const mystring &str);
+    bool Remove(const wxString &str);
     bool Remove(PNode node);
-    bool Rename(const mystring &old_name, const mystring &new_name);
-    PNode Find(const mystring &str);// find by name
+    bool Rename(const wxString &old_name, const wxString &new_name);
+    PNode Find(const wxString &str);// find by name
 
-    mystring Path();
+    wxString Path();
 
-    PNode FindByPath(const mystring &str);
+    PNode FindByPath(const wxString &str);
 
     PNode Next(PNode what);
     PNode Prev(PNode what);
@@ -129,17 +115,20 @@ class DataList: public Node {
     PNode First();
     PNode Last();
 
-    virtual void Save(FileWriter &f);
-    virtual void Load(FileLoader &f);
-    virtual void UpdateTopology();
-    virtual void Compile(CompilerOutput &out);
-
-    virtual PNode Clone();
+    virtual void Save(TDFWriter &f);
+    virtual void Load(Tokenizer &f);
 };
 
+class DataLeaf: public Node{
+  friend class DataList;
+  protected:
+  wxString value;
+  public:
+  wxString GetValue();
+  void SetValue(const wxString &value);
 
-class TDFContainer
-{
+  virtual void Save(TDFWriter &f);
+  virtual void Load(Tokenizer &f);
 };
 
 inline bool IsLetter(char c){
@@ -154,69 +143,38 @@ inline bool IsNumDot(char c){
 inline bool IsAlphaNum(char c){
 	return IsLetter(c)||IsNum(c);
 }
-/*
-bool IsNumFirst(char c){
-	return IsNum(c) || c=='+' || c=='-' || c=='.';
-}*/
 inline bool IsWhitespace(char c){
 	return (c==' ') || (c==10) || (c==13) || (c=='\t');
 }
-
-#define mystring wxString
-
 struct Token{
-    //int line;
-    //int column;
-    //int token_start_line;
-    //int token_start_column;
-    //bool skip_eol;
     enum TokenType{
         type_none,
-        type_string,
-        type_identifier,
-        type_symbol,
-        type_int,
-        type_double,
+        type_section_name,
         type_enter_section,
         type_leave_section,
-        type_eof,
-        type_semicolon
+        type_entry_name,
+        type_entry_value,
+        type_semicolon,
+        type_eof
     };
     TokenType type;
-    mystring value_s;
-    int value_i;
-    double value_d;
+    wxString value_s;
 
-    mystring pos_string;// for error reporting
-
-    bool IsInteger(){
-      return type==type_int;
-    }
-    bool IsNumber(){
-      return (type==type_int)||(type==type_double);
-    }
-    bool IsString(){
-      return (type==type_string);
-    }
+    wxString pos_string;// for error reporting
 
     bool IsEOF(){
       return (type==type_eof);
     }
-
-    bool IsIdentifier(){
-      return (type==type_identifier);
-    }
-    Token():type(type_eof), value_i(0), value_d(0)
+    Token():type(type_eof)
     {
     }
 
-    void Dump(std::ostream &os);
 };
 
 class Tokenizer{
   /// todo: clean up, move to CPP file
   struct IncludeCacheEntry{// simple reference counted pointer to stream.
-    mystring name;/// used for error reporting
+    wxString name;/// used for error reporting
     int line, column;
 
     std::istream *stream;
@@ -263,15 +221,15 @@ class Tokenizer{
   void ReadToken(Token &token);
   void SkipSpaces();
 
+  int errors;
+
   public:
-  Tokenizer(): /*max_buffer_size(1024),*/ buffer_pos(0), skip_eol(false)
+  Tokenizer(): buffer_pos(0), skip_eol(false), errors(0)
   {
   }
 
-  void EnterStream(std::istream &stream_, const std::string &name="");
+  void EnterStream(std::istream &stream_, const wxString &name=_T(""));
 
-  //std::string GetNext();
-  //char GetNext();
   Token GetToken(int i=0);
   void Step(int i=1);
   inline Token TakeToken(){
@@ -281,6 +239,10 @@ class Tokenizer{
   }
 
   bool Good();
+
+  void ReportError(const Token &t, const wxString &err);
+
+  int NumErrors(){return errors;}
 };
 
 inline Tokenizer &operator >>(Tokenizer &tokenizer, Token &token){
@@ -288,19 +250,6 @@ inline Tokenizer &operator >>(Tokenizer &tokenizer, Token &token){
   return tokenizer;
 };
 
-template <class T>
-std::string ReplaceStr(const std::string &arg_, const std::string &what, const T &by_what){
-  std::string arg=arg_;
-  size_t pos=0;
-  std::stringstream s;
-  s<<by_what;
-  while(pos<arg.size()){
-    pos=arg.find(what,pos);
-    if(pos==std::string::npos)break;
-    arg.replace(pos, what.size(),s.str());
-    pos+=s.str().size();
-  }
-  return arg;
-};
+PDataList ParseTDF(std::istream &s, int *error_count=NULL);
 
 #endif // TDFCONTAINER_H
