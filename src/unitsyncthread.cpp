@@ -7,6 +7,7 @@
 #include "iunitsync.h"
 #include "utils.h"
 #include "settings.h"
+#include "springunitsynclib.h"
 
 #define LOCK_CACHE wxCriticalSectionLocker lock_criticalsection(m_lock)
 
@@ -79,9 +80,11 @@ void UnitSyncThread::UnitSyncThreadImpl::Init()
 
 void* UnitSyncThread::MapCacheThread::Entry()
 {
+  /// crashes - here for test to see why
+  susynclib()->GetMapCount();
   while ( !TestDestroy() )
   {
-    if(!Sleep( 20000 ))break;
+    if(!Sleep( 1/* 20000 */ ))break;
     /// cache map infos
     if( usync().IsLoaded() )
     {
@@ -105,7 +108,7 @@ void* UnitSyncThread::ModCacheThread::Entry()
 {
   while ( !TestDestroy() )
   {
-    if(!Sleep( 67000 ))break;
+    if(!Sleep( 1/* 67000 */))break;
     /// cache mod infos
     if( usync().IsLoaded() )
     {

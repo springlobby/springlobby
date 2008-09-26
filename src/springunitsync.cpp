@@ -66,7 +66,8 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& springdir, const wxString&
      if (ret)
      {
         PopulateArchiveList();
-        CacheThread().Start();
+        ///crashes
+        //CacheThread().Start();
      }
      return ret;
   }
@@ -828,7 +829,7 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
     }
     catch(...)
     {
-      img = wxImage( -1, -1 );
+      img = wxImage( 1, 1 );
     }
   }
 
