@@ -143,6 +143,7 @@ MainWindow::MainWindow( Ui& ui ) :
   m_sp_icon = charArr2wxBitmapWithBlending( single_player_icon_png , sizeof (single_player_icon_png), single_player_icon_text_png , sizeof (single_player_icon_text_png), 64 ) ;
   m_options_icon =   charArr2wxBitmapWithBlending( options_icon_png , sizeof (options_icon_png), options_icon_text_png , sizeof (options_icon_text_png), 64 ) ;
   m_downloads_icon = charArr2wxBitmapWithBlending( downloads_icon_png , sizeof (downloads_icon_png), downloads_icon_text_png , sizeof (downloads_icon_text_png), 64 ) ;
+  m_replay_icon = charArr2wxBitmapWithBlending( replay_icon_png , sizeof (replay_icon_png), replay_icon_text_png , sizeof (replay_icon_text_png), 64 ) ;
   m_select_image = new wxBitmap( select_icon_xpm );
 
   m_func_tab_images = new wxImageList( 64, 64 );

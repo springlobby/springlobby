@@ -27,6 +27,7 @@ class ReplayListCtrl : public customListCtrl
     void OnDLMod( wxCommandEvent& event );
     void OnMouseMotion(wxMouseEvent& event);
     void OnColClick( wxListEvent& event );
+    virtual void HighlightItem( long item ){};
 
   protected:
     static int wxCALLBACK CompareDateUP(long item1, long item2, long sortData);
