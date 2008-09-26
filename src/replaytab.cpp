@@ -51,6 +51,9 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
   m_ui(ui),
   m_sel_replay_id(0)
 {
+    //TODO this shouldnÄT be here
+    m_ui.ReloadUnitSync();
+
   m_replays = new ReplayList ();
 
   wxBoxSizer* m_main_sizer;

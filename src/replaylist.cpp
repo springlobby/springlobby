@@ -8,9 +8,11 @@
 #include <wx/tokenzr.h>
 #include <wx/intl.h>
 #include <wx/arrstr.h>
+#include <sstream>
 #include "iunitsync.h"
 #include "utils.h"
 #include "settings++/custom_dialogs.h"
+#include "tdfcontainer.h"
 
 ReplayList::ReplayList()
 {
@@ -87,7 +89,23 @@ Replay GetReplayInfos ( wxString& ReplayPath )
   ret.id = r_id;
   r_id++;
 
-  GetScriptFromReplay(ReplayPath);
+  std::stringstream ss ( STD_STRING(GetScriptFromReplay(ReplayPath)) );
+  PDataList script( ParseTDF(ss) );
+  PDataList replayNode ( script->Find(_T("GAME") ) );
+  if ( replayNode.ok() ){
+
+  /// PDataList game(root->Find(_T("GAME")))
+/// if(!game.ok()){wxLogMessage(_T("Game tag is missing"));return false;}
+/// wxString gamename=game->GetString(_T("Mapname"));
+//    wxString huh = replayNode->GetString( _T("GameType") );
+    ret.ModName = replayNode->GetString( _T("GameType") );
+    ret.playernum = s2l( replayNode->GetString( _T("NumPlayers") ) );
+    for ( unsigned int i = 0; i < ret.playernum; ++i ){
+        PDataList player ( script->Find(_T("PLAYER")+i2s(i) ) );
+        ret.playernames.Add( player->GetString( _T("name") ) );
+    }
+
+  }
   return ret;
 }
 
