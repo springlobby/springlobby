@@ -1002,8 +1002,6 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
       ForceAlly(*alliances[i].players[j],alliances[i].allynum);
     }
   }
-
-  Update();
 }
 
 void Battle::FixTeamIDs()
@@ -1029,7 +1027,6 @@ void Battle::FixTeamIDs()
       }
     }
   }
-  Update();
 }
 
 
