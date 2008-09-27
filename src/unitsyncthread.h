@@ -18,6 +18,8 @@ class UnitSyncThread
 
     void LoadSettingsFromFile();
 
+    /*
+
   protected:
 
     class UnitSyncThreadImpl : public Thread
@@ -56,9 +58,9 @@ class UnitSyncThread
     MapCacheThread m_map_thread;
     ModCacheThread m_mod_thread;
 
-    int m_delay;
-
     wxCriticalSection m_lock;
+
+    */
 
 };
 
