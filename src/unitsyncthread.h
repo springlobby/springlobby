@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UNITSYNCTHREAD_H
 #define SPRINGLOBBY_HEADERGUARD_UNITSYNCTHREAD_H
 
-#include <wx/thread.h>
+#include "thread.h"
 
 
 class UnitSyncThread
@@ -20,7 +20,7 @@ class UnitSyncThread
 
   protected:
 
-    class UnitSyncThreadImpl : public wxThread
+    class UnitSyncThreadImpl : public Thread
     {
       public:
         UnitSyncThreadImpl() : m_stop_thread( false ) {}

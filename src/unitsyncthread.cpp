@@ -81,7 +81,7 @@ void* UnitSyncThread::MapCacheThread::Entry()
 {
   while ( !TestDestroy() )
   {
-    Sleep( 20000 );
+    if(!Sleep( 20000 ))break;
     /// cache map infos
     if( usync().IsLoaded() )
     {
@@ -105,7 +105,7 @@ void* UnitSyncThread::ModCacheThread::Entry()
 {
   while ( !TestDestroy() )
   {
-    Sleep( 67000 );
+    if(!Sleep( 67000 ))break;
     /// cache mod infos
     if( usync().IsLoaded() )
     {
