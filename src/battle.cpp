@@ -880,7 +880,8 @@ struct ClannersRemovalPredicate{
   }
 }*/
 
-void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans){
+void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans)
+{
   wxLogMessage(_T("Autobalancing, type=%d, clans=%d, strong_clans=%d"),balance_type,int(support_clans),int(strong_clans));
   DoAction(_T("is auto-balancing alliances ..."));
   int tmp=GetNumRects();
@@ -1002,14 +1003,15 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
     }
   }
 
-  FixTeamIDs();
   Update();
 }
 
-void Battle::FixTeamIDs(){
+void Battle::FixTeamIDs()
+{
   /// apparently tasserver doesnt like when i fix/force ids of everyone.
   std::set<int> allteams;
-  for(size_t i=0;i<GetNumUsers();++i){
+  size_t numusers = GetNumUsers();
+  for(size_t i=0;i<numusers;++i){
     User &user=GetUser(i);
     if(!user.BattleStatus().spectator)allteams.insert(user.BattleStatus().team);
   }
@@ -1030,20 +1032,13 @@ void Battle::FixTeamIDs(){
   Update();
 }
 
-void Battle::MakeTeamsUnique()
+
+void Battle::ForceUnsyncedToSpectate()
 {
-  unsigned int numusers = GetNumUsers();
-  unsigned int newteam = 0;
-  for ( unsigned int count = 0; count < numusers; count++ )
+  size_t numusers = GetNumUsers();
+  for( size_t i = 0; i < numusers; ++i )
   {
-    try
-    {
-      User user = GetUser( count );
-      UserBattleStatus status = user.BattleStatus();
-      status.team = newteam;
-      user.UpdateBattleStatus( status );
-      newteam++;
-    } catch( assert_exception& except_mess ) {}
+    User &user = GetUser(i);
+    if ( !user.BattleStatus().spectator && !user.BattleStatus().sync ) ForceSpectator( user, true );
   }
-  Update();
 }
