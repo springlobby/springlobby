@@ -217,6 +217,7 @@ class Battle : public UserList, public IBattle
     unsigned int GetNumRects();
 
     void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true);
+    void FixTeamIDs();
 
     ///< quick hotfix for bans
     bool CheckBan(User &user);
