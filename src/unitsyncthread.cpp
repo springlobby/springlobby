@@ -84,7 +84,7 @@ void* UnitSyncThread::MapCacheThread::Entry()
   susynclib()->GetMapCount();
   while ( !TestDestroy() )
   {
-    if(!Sleep( 1/* 20000 */ ))break;
+    if(!Sleep( 20000 ))break;
     /// cache map infos
     if( usync().IsLoaded() )
     {
@@ -108,7 +108,7 @@ void* UnitSyncThread::ModCacheThread::Entry()
 {
   while ( !TestDestroy() )
   {
-    if(!Sleep( 1/* 67000 */))break;
+    if(!Sleep( 67000 ))break;
     /// cache mod infos
     if( usync().IsLoaded() )
     {
