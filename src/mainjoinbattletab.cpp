@@ -246,3 +246,13 @@ BattleroomMMOptionsTab& MainJoinBattleTab::GetMMOptionsTab()
   ASSERT_EXCEPTION( m_mm_opts_tab, _T("m_mm_opts_tab == 0") );
   return *m_mm_opts_tab;
 }
+
+
+void MainJoinBattleTab::Update()
+{
+  m_list_tab->SortBattleList();
+  try
+  {
+    GetBattleRoomTab().SortPlayerList();
+  } catch( assert_exception& e ) {}
+}

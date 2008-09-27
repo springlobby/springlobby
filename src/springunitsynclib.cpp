@@ -48,18 +48,24 @@ void SpringUnitSyncLib::Load( const wxString& path )
     ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
   }
 
-  try {
-#ifdef __WXMSW__
-    wxSetWorkingDirectory( path.BeforeLast('\\') );
-#endif
-    m_libhandle = new wxDynamicLibrary( path );
-    if ( !m_libhandle->IsLoaded() ) {
-      wxLogError(_T("wxDynamicLibrary created, but not loaded!"));
-      delete m_libhandle;
+  {
+    wxLog *currentarget = wxLog::GetActiveTarget();
+    wxLog *templogger = new wxLogGui();
+    wxLog::SetActiveTarget( templogger );
+    try {
+  #ifdef __WXMSW__
+      wxSetWorkingDirectory( path.BeforeLast('\\') );
+  #endif
+      m_libhandle = new wxDynamicLibrary( path );
+      if ( !m_libhandle->IsLoaded() ) {
+        delete m_libhandle;
+        m_libhandle = 0;
+      }
+    } catch(...) {
       m_libhandle = 0;
     }
-  } catch(...) {
-    m_libhandle = 0;
+    wxLog::SetActiveTarget( currentarget );
+    delete templogger;
   }
 
   ASSERT_EXCEPTION( m_libhandle != 0, _T("Couldn't load the unitsync library") );

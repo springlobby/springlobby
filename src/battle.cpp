@@ -373,20 +373,35 @@ void Battle::OnUserAdded( User& user )
   // any code here may be skipped if the user was autokicked
 }
 
-void Battle::OnUserBattleStatusUpdated( User &user ){
+void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
+{
 
-  if(user.BattleStatus().handicap!=0){
-    m_ui.OnBattleAction(*this,wxString(_T(" ")),(_("Warning: user ")+user.GetNick()+_(" got bonus "))<<user.BattleStatus().handicap);
+  bool previousspectatorstatus = user.BattleStatus().spectator;
+
+  user.UpdateBattleStatus( status );
+
+  if(status.handicap!=0)
+  {
+    m_ui.OnBattleAction(*this,wxString(_T(" ")),(_T("Warning: user ")+user.GetNick()+_T(" got bonus "))<< status.handicap);
   }
 
+  if(IsFounderMe())
+  {
 
-  if(IsFounderMe()){
+    if ( status.spectator != previousspectatorstatus )
+    {
+      if ( status.spectator )
+      {
+         m_opts.spectators++;
+         SendHostInfo(HI_Spectators);
+      }
+      else
+      {
+        m_opts.spectators--;
+        SendHostInfo(HI_Spectators);
+      }
 
-    m_opts.spectators=0;
-    for(size_t i=0;i<GetNumUsers();++i){
-      if(GetUser(i).BattleStatus().spectator)m_opts.spectators++;
     }
-
 
     if(user.GetStatus().rank<m_opts.rankneeded){
       switch(m_opts.ranklimittype){
@@ -405,7 +420,6 @@ void Battle::OnUserBattleStatusUpdated( User &user ){
       }
     }
 
-    SendHostInfo(HI_Spectators);
   }
 }
 

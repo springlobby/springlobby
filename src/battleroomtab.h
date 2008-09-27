@@ -77,6 +77,8 @@ class BattleRoomTab : public wxPanel
 
     void UpdatePresetList();
 
+    void SortPlayerList();
+
   protected:
 
     long AddMMOptionsToList( long pos, GameOption optFlag );

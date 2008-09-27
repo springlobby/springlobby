@@ -44,6 +44,8 @@ class MainJoinBattleTab : public wxPanel
 
     void OnConnected();
 
+    void Update();
+
   protected:
     wxBoxSizer* m_main_sizer;
 
