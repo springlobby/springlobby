@@ -233,6 +233,7 @@ SET(SpringLobbySrc
 	src/springunitsynclib.cpp
 	src/tasserver.cpp
 	src/tdfcontainer.cpp
+	src/thread.cpp
 	src/torrentlistctrl.cpp
 	src/torrentoptionspanel.cpp
 	src/torrentwrapper.cpp
