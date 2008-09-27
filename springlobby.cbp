@@ -201,6 +201,8 @@
 		<Unit filename="src/flagimages.h" />
 		<Unit filename="src/globalevents.cpp" />
 		<Unit filename="src/globalevents.h" />
+		<Unit filename="src/groupoptionspanel.cpp" />
+		<Unit filename="src/groupoptionspanel.h" />
 		<Unit filename="src/groupuserdialog.cpp" />
 		<Unit filename="src/groupuserdialog.h" />
 		<Unit filename="src/hostbattledialog.cpp" />
