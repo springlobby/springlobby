@@ -342,6 +342,8 @@
 		<Unit filename="src/tasserver.h" />
 		<Unit filename="src/tdfcontainer.cpp" />
 		<Unit filename="src/tdfcontainer.h" />
+		<Unit filename="src/thread.cpp" />
+		<Unit filename="src/thread.h" />
 		<Unit filename="src/torrentlistctrl.cpp" />
 		<Unit filename="src/torrentlistctrl.h" />
 		<Unit filename="src/torrentoptionspanel.cpp" />
