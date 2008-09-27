@@ -1001,6 +1001,32 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
       ForceAlly(*alliances[i].players[j],alliances[i].allynum);
     }
   }
+
+  FixTeamIDs();
+  Update();
+}
+
+void Battle::FixTeamIDs(){
+  /// apparently tasserver doesnt like when i fix/force ids of everyone.
+  std::set<int> allteams;
+  for(size_t i=0;i<GetNumUsers();++i){
+    User &user=GetUser(i);
+    if(!user.BattleStatus().spectator)allteams.insert(user.BattleStatus().team);
+  }
+  std::set<int> teams;
+  int t=0;
+  for(size_t i=0;i<GetNumUsers();++i){
+    User &user=GetUser(i);
+    if(!user.BattleStatus().spectator){
+      if(teams.count(user.BattleStatus().team)){
+        while(allteams.count(t)||teams.count(t))t++;
+        ForceTeam(GetUser(i),t);
+        teams.insert(t);
+      }else{
+        teams.insert(user.BattleStatus().team);
+      }
+    }
+  }
   Update();
 }
 

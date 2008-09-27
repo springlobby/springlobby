@@ -747,7 +747,16 @@ wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
   return cache;
 }
 
-
+wxSize MakeFit(const wxSize &original, const wxSize &bounds){
+  if(bounds.GetWidth()<=0 || bounds.GetHeight()<=0)return wxSize(0,0);
+  int sizex=(original.GetWidth()*bounds.GetHeight())/original.GetHeight();
+  if(sizex<=bounds.GetWidth()){
+    return wxSize(sizex,bounds.GetHeight());
+  }else{
+    int sizey=(original.GetHeight()*bounds.GetWidth())/original.GetWidth();
+    return wxSize(bounds.GetWidth(),sizey);
+  }
+}
 
 wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int height )
 {
@@ -766,20 +775,8 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
 
   MapInfo mapinfo = _GetMapInfoEx( mapname );
 
-  float picratio = (float)mapinfo.height / (float)mapinfo.width;
-  int resizewidth, resizeheight;
-  if ( picratio < 1 )
-  {
-    resizewidth = width;
-    resizeheight = (int)( (float)resizewidth * picratio );
-  }
-  else
-  {
-    resizeheight = height;
-    resizewidth = (int)( (float)resizeheight / picratio );
-  }
-
-  img.Rescale( resizewidth, resizeheight );
+  wxSize image_size=MakeFit(wxSize(mapinfo.width,mapinfo.height),wxSize(width,height));
+  img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
 
   } catch (...)
   {
@@ -792,20 +789,8 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
 
     MapInfo mapinfo = _GetMapInfoEx( mapname );
 
-    float picratio = (float)mapinfo.height / (float)mapinfo.width;
-    int resizewidth, resizeheight;
-    if ( picratio < 1 )
-    {
-      resizewidth = width;
-      resizeheight = (int)( (float)resizewidth * picratio );
-    }
-    else
-    {
-      resizeheight = height;
-      resizewidth = (int)( (float)resizeheight / picratio );
-    }
-
-    img.Rescale( resizewidth, resizeheight );
+    wxSize image_size=MakeFit(wxSize(mapinfo.width,mapinfo.height),wxSize(width,height));
+    img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
     }
     catch(...)
     {
