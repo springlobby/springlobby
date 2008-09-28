@@ -23,6 +23,7 @@
 #include <wx/panel.h>
 
 class ColorButton;
+class GroupUserDialog;
 
 class GroupOptionsPanel : public wxPanel
 {
@@ -68,6 +69,7 @@ class GroupOptionsPanel : public wxPanel
 		wxButton* m_remove_user_button;
 
     wxString m_current_group;
+    GroupUserDialog* m_user_dialog;
 
 		void OnRemoveGroup( wxCommandEvent& event );
 		void OnRenameGroup( wxCommandEvent& event );

@@ -7,6 +7,7 @@
 #include "settings.h"
 #include "uiutils.h"
 #include "Helper/colorbutton.h"
+#include "groupuserdialog.h"
 
 BEGIN_EVENT_TABLE( GroupOptionsPanel, wxPanel )
 	EVT_BUTTON( REMOVE_GROUP, GroupOptionsPanel::OnRemoveGroup )
@@ -142,7 +143,7 @@ GroupOptionsPanel::GroupOptionsPanel( wxWindow* parent, wxWindowID id, const wxP
 	wxBoxSizer* userListSizer;
 	userListSizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_user_list = new wxListBox( m_group_panel, USERS_LIST, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
+	m_user_list = new wxListBox( m_group_panel, USERS_LIST, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_MULTIPLE );
 	userListSizer->Add( m_user_list, 1, wxALL|wxEXPAND, 5 );
 
 	wxBoxSizer* userButtonSizer;
@@ -178,6 +179,7 @@ GroupOptionsPanel::GroupOptionsPanel( wxWindow* parent, wxWindowID id, const wxP
 
 void GroupOptionsPanel::Initialize()
 {
+  m_user_dialog = 0;
   ReloadGroupsList();
   ShowGroup( wxEmptyString );
 }
@@ -251,7 +253,10 @@ void GroupOptionsPanel::OnAddNewGroup( wxCommandEvent& event )
     wxString newgroup = ted->GetValue();
     //!TODO: Check if group exists already.
     if ( newgroup != wxEmptyString ) useractions().AddGroup( newgroup );
+    ReloadGroupsList();
+    ShowGroup(newgroup);
   }
+  delete ted;
 }
 
 
@@ -292,17 +297,36 @@ void GroupOptionsPanel::OnHighlightColorClick( wxCommandEvent& event )
 
 void GroupOptionsPanel::OnUsersListSelectionChange( wxCommandEvent& event )
 {
-  m_remove_user_button->Enable( m_user_list->GetStringSelection() != wxEmptyString );
+  wxArrayInt sel;
+  m_user_list->GetSelections( sel );
+  m_remove_user_button->Enable( sel.Count() > 0 );
 }
 
 
 void GroupOptionsPanel::OnAddUsers( wxCommandEvent& event )
 {
+  if ( m_user_dialog == 0 ) {
+    m_user_dialog = new GroupUserDialog( this, -1, _(""), m_current_group, wxDefaultPosition, wxSize( 800,800) );
+  }
+
+  if ( !m_user_dialog->IsShown())
+  {
+      m_user_dialog = new GroupUserDialog( this, -1, _(""), m_current_group, wxDefaultPosition, wxSize( 800,800) );
+      m_user_dialog->ShowModal();
+  }
+  ReloadUsersList();
 }
 
 
 void GroupOptionsPanel::OnRemoveUser( wxCommandEvent& event )
 {
+  wxArrayInt sel;
+  int num = m_user_list->GetSelections( sel );
+  for ( int i = 0; i < num; i++ ) {
+    wxString name = m_user_list->GetString(sel[i]);
+    useractions().RemoveUser( name );
+  }
+  ReloadUsersList();
 }
 
 
