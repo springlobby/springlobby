@@ -653,3 +653,8 @@ void BattleRoomTab::UpdatePresetList()
     m_options_preset_sel->SetStringSelection(  m_battle.GetCurrentPreset() );
 }
 
+
+void BattleRoomTab::SortPlayerList()
+{
+  m_players->SortList();
+}

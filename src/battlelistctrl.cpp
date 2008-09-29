@@ -567,3 +567,13 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
             break;
     }
 }
+
+void BattleListCtrl::SortList()
+{
+  if ( !m_dirty_sort ) return;
+  SetSelectionRestorePoint();
+  Sort();
+  //this does nothing if selection was reset
+  RestoreSelection( );
+  m_dirty_sort = false;
+}

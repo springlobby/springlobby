@@ -289,26 +289,26 @@ ChatPanel& servwin()
 //! @brief Returns the curent MainChatTab object
 MainChatTab& MainWindow::GetChatTab()
 {
-  ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab = 0") );
+  ASSERT_EXCEPTION( m_chat_tab != 0, _T("m_chat_tab = 0") );
   return *m_chat_tab;
 }
 
 MainJoinBattleTab& MainWindow::GetJoinTab()
 {
-  ASSERT_LOGIC( m_join_tab != 0, _T("m_join_tab = 0") );
+  ASSERT_EXCEPTION( m_join_tab != 0, _T("m_join_tab = 0") );
   return *m_join_tab;
 }
 
 
 MainSinglePlayerTab& MainWindow::GetSPTab()
 {
-  ASSERT_LOGIC( m_sp_tab != 0, _T("m_sp_tab = 0") );
+  ASSERT_EXCEPTION( m_sp_tab != 0, _T("m_sp_tab = 0") );
   return *m_sp_tab;
 }
 #ifndef NO_TORRENT_SYSTEM
 MainTorrentTab& MainWindow::GetTorrentTab()
 {
-  ASSERT_LOGIC( m_torrent_tab  != 0, _T("m_torrent_tab = 0") );
+  ASSERT_EXCEPTION( m_torrent_tab  != 0, _T("m_torrent_tab = 0") );
   return *m_torrent_tab ;
 }
 #endif

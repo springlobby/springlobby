@@ -204,7 +204,7 @@ class Battle : public UserList, public IBattle
     void SetHandicap( User& user, int handicap);
 
     void OnUserAdded( User& user );
-    void OnUserBattleStatusUpdated( User &user );
+    void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
     void OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll );
@@ -217,12 +217,12 @@ class Battle : public UserList, public IBattle
     unsigned int GetNumRects();
 
     void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true);
+    void FixTeamIDs();
+    void ForceUnsyncedToSpectate();
 
     ///< quick hotfix for bans
     bool CheckBan(User &user);
     ///>
-
-    void MakeTeamsUnique();
 
   protected:
     // Battle variables
