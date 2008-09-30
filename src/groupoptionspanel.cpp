@@ -8,6 +8,7 @@
 #include "uiutils.h"
 #include "Helper/colorbutton.h"
 #include "groupuserdialog.h"
+#include "selectusersdialog.h"
 
 BEGIN_EVENT_TABLE( GroupOptionsPanel, wxPanel )
 	EVT_BUTTON( REMOVE_GROUP, GroupOptionsPanel::OnRemoveGroup )
@@ -305,16 +306,11 @@ void GroupOptionsPanel::OnUsersListSelectionChange( wxCommandEvent& event )
 
 void GroupOptionsPanel::OnAddUsers( wxCommandEvent& event )
 {
-  if ( m_user_dialog == 0 ) {
-    m_user_dialog = new GroupUserDialog( this, -1, _(""), m_current_group, wxDefaultPosition, wxSize( 800,800) );
+  wxSortedArrayString users = SelectUsersDialog::GetUsers(this);
+  for ( unsigned int i = 0; i < users.Count(); i++ ) {
+    useractions().AddUserToGroup( m_current_group, users[i] );
   }
-
-  if ( !m_user_dialog->IsShown())
-  {
-      m_user_dialog = new GroupUserDialog( this, -1, _(""), m_current_group, wxDefaultPosition, wxSize( 800,800) );
-      m_user_dialog->ShowModal();
-  }
-  ReloadUsersList();
+  if ( users.Count() > 0 ) ReloadUsersList();
 }
 
 
