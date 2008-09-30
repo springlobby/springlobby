@@ -79,6 +79,9 @@ protected:
 
     wxColor m_bg_color;
 
+    //! list should be sorted
+    bool m_dirty_sort;
+
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
 public:
@@ -140,6 +143,9 @@ public:
 
     //! sets selected index to -1
     void SelectNone();
+
+    //! marks the items in the control to be sorted
+    void MarkDirtySort();
 
     DECLARE_EVENT_TABLE()
 };

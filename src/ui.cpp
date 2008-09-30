@@ -31,9 +31,9 @@
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
 #include "torrentwrapper.h"
+#include "unitsyncthread.h"
 #endif
 #include "agreementdialog.h"
-#include "unitsyncthread.h"
 #ifdef __WXMSW__
 #include "updater/updater.h"
 #endif
@@ -53,9 +53,12 @@ Ui::Ui() :
         m_serv(0),
         m_main_win(0),
         m_con_win(0),
-        m_checked_for_update(false)
+        m_upd_counter_torrent(0),
+        m_upd_counter_battlelist(0),
+        m_upd_counter_chat(0),
+        m_checked_for_update(false),
+        m_ingame(false)
 {
-    m_upd_intv_counter = 0;
     m_main_win = new MainWindow( *this );
     CustomMessageBoxBase::setLobbypointer(m_main_win);
     m_spring = new Spring(*this);
@@ -272,9 +275,11 @@ void Ui::StartHostedBattle()
 
 void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
 {
+    m_ingame = true;
 #ifndef NO_TORRENT_SYSTEM
-    torrent().SetIngameStatus(true);
+    torrent().SetIngameStatus(m_ingame);
 #endif
+    CacheThread().Pause();
     m_spring->Run( battle );
 }
 
@@ -519,6 +524,28 @@ void Ui::OnUpdate( int mselapsed )
     {
         m_serv->Update( mselapsed );
     }
+
+    if ( !m_ingame )
+    {
+      if ( m_upd_counter_battlelist % 50 == 0  )
+      {
+        try
+        {
+          mw().GetJoinTab().Update();
+        } catch ( assert_exception &e ) {}
+      }
+      m_upd_counter_battlelist++;
+
+      if ( m_upd_counter_chat % 47 == 0  )
+      {
+        try
+        {
+          mw().GetChatTab().Update();
+        } catch ( assert_exception &e ) {}
+      }
+      m_upd_counter_chat++;
+    }
+
     if ( !m_checked_for_update )
     {
         m_checked_for_update = true;
@@ -526,8 +553,9 @@ void Ui::OnUpdate( int mselapsed )
         if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 #endif
     }
+
 #ifndef NO_TORRENT_SYSTEM
-    if (m_upd_intv_counter % 20 == 0 )
+    if (m_upd_counter_torrent % 20 == 0 )
     {
         if ( sett().GetTorrentSystemAutoStartMode() == 1 && !torrent().IsConnectedToP2PSystem() ) torrent().ConnectToP2PSystem();
         else if ( GetServerStatus() && m_serv->IsOnline() && !torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
@@ -535,7 +563,7 @@ void Ui::OnUpdate( int mselapsed )
         mw().GetTorrentTab().OnUpdate();
     }
     torrent().UpdateFromTimer( mselapsed );
-    m_upd_intv_counter++;
+    m_upd_counter_torrent++;
 #endif
 }
 
@@ -585,6 +613,7 @@ void Ui::OnLoggedIn( )
 {
     if ( m_main_win == 0 ) return;
     mw().GetChatTab().RejoinChannels();
+
 }
 
 
@@ -982,9 +1011,11 @@ void Ui::OnBattleStarted( Battle& battle )
             battle.SendMyBattleStatus();
             battle.GetMe().Status().in_game = true;
             battle.GetMe().SendMyUserStatus();
+            m_ingame = true;
 #ifndef NO_TORRENT_SYSTEM
-            torrent().SetIngameStatus(true);
+            torrent().SetIngameStatus(m_ingame);
 #endif
+            CacheThread().Pause();
             m_spring->Run( battle );
         }
     }
@@ -1017,9 +1048,11 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
 
 void Ui::OnSpringTerminated( bool success )
 {
+    m_ingame = false;
 #ifndef NO_TORRENT_SYSTEM
-    torrent().SetIngameStatus(false);
+    torrent().SetIngameStatus(m_ingame);
 #endif
+    CacheThread().Resume();
     if ( !m_serv ) return;
 
     m_serv->GetMe().Status().in_game = false;
@@ -1103,17 +1136,6 @@ void Ui::OnModUnitsCached( const wxString& modname )
 {
 }
 
-
-void Ui::OnCachedThreadStarted()
-{
-    m_thread_wait.Enter();
-}
-
-
-void Ui::OnCachedThreadTerminated()
-{
-    m_thread_wait.Leave();
-}
 
 void Ui::OnMainWindowDestruct()
 {

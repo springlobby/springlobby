@@ -22,7 +22,7 @@ customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
                                 long style,wxString name, bool highlight, UserActions::ActionType hlaction)
     : ListBaseType (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER),m_tiptext(_T("")),
       m_selected(-1),m_selected_index(-1),m_prev_selected(-1),m_prev_selected_index(-1),
-      m_last_mouse_pos( wxPoint(-1,-1) ), m_name(name), m_highlight(highlight), m_highlightAction(hlaction)
+      m_last_mouse_pos( wxPoint(-1,-1) ), m_name(name), m_highlight(highlight), m_highlightAction(hlaction), m_dirty_sort(false)
 
 
 {
@@ -31,7 +31,7 @@ customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
     controlPointer = 0;
 #endif
 	m_tiptext = _T("");
-	m_bg_color = GetDefaultAttributes().colBg;
+	m_bg_color = GetItemBackgroundColour(0);
 
 	SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
     SetImageList( &icons(), wxIMAGE_LIST_SMALL );
@@ -293,4 +293,9 @@ void customListCtrl::HighlightItemUser( long item, const wxString& name )
 void customListCtrl::SetHighLightAction( UserActions::ActionType action )
 {
     m_highlightAction = action;
+}
+
+void customListCtrl::MarkDirtySort()
+{
+  m_dirty_sort = true;
 }

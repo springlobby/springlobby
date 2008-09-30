@@ -373,20 +373,35 @@ void Battle::OnUserAdded( User& user )
   // any code here may be skipped if the user was autokicked
 }
 
-void Battle::OnUserBattleStatusUpdated( User &user ){
+void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
+{
 
-  if(user.BattleStatus().handicap!=0){
-    m_ui.OnBattleAction(*this,wxString(_T(" ")),(_("Warning: user ")+user.GetNick()+_(" got bonus "))<<user.BattleStatus().handicap);
+  bool previousspectatorstatus = user.BattleStatus().spectator;
+
+  user.UpdateBattleStatus( status );
+
+  if(status.handicap!=0)
+  {
+    m_ui.OnBattleAction(*this,wxString(_T(" ")),(_T("Warning: user ")+user.GetNick()+_T(" got bonus "))<< status.handicap);
   }
 
+  if(IsFounderMe())
+  {
 
-  if(IsFounderMe()){
+    if ( status.spectator != previousspectatorstatus )
+    {
+      if ( status.spectator )
+      {
+         m_opts.spectators++;
+         SendHostInfo(HI_Spectators);
+      }
+      else
+      {
+        m_opts.spectators--;
+        SendHostInfo(HI_Spectators);
+      }
 
-    m_opts.spectators=0;
-    for(size_t i=0;i<GetNumUsers();++i){
-      if(GetUser(i).BattleStatus().spectator)m_opts.spectators++;
     }
-
 
     if(user.GetStatus().rank<m_opts.rankneeded){
       switch(m_opts.ranklimittype){
@@ -405,7 +420,6 @@ void Battle::OnUserBattleStatusUpdated( User &user ){
       }
     }
 
-    SendHostInfo(HI_Spectators);
   }
 }
 
@@ -866,7 +880,8 @@ struct ClannersRemovalPredicate{
   }
 }*/
 
-void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans){
+void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans)
+{
   wxLogMessage(_T("Autobalancing, type=%d, clans=%d, strong_clans=%d"),balance_type,int(support_clans),int(strong_clans));
   DoAction(_T("is auto-balancing alliances ..."));
   int tmp=GetNumRects();
@@ -987,23 +1002,40 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
       ForceAlly(*alliances[i].players[j],alliances[i].allynum);
     }
   }
-  Update();
 }
 
-void Battle::MakeTeamsUnique()
+void Battle::FixTeamIDs()
 {
-  unsigned int numusers = GetNumUsers();
-  unsigned int newteam = 0;
-  for ( unsigned int count = 0; count < numusers; count++ )
-  {
-    try
-    {
-      User user = GetUser( count );
-      UserBattleStatus status = user.BattleStatus();
-      status.team = newteam;
-      user.UpdateBattleStatus( status );
-      newteam++;
-    } catch( assert_exception& except_mess ) {}
+  /// apparently tasserver doesnt like when i fix/force ids of everyone.
+  std::set<int> allteams;
+  size_t numusers = GetNumUsers();
+  for(size_t i=0;i<numusers;++i){
+    User &user=GetUser(i);
+    if(!user.BattleStatus().spectator)allteams.insert(user.BattleStatus().team);
   }
-  Update();
+  std::set<int> teams;
+  int t=0;
+  for(size_t i=0;i<GetNumUsers();++i){
+    User &user=GetUser(i);
+    if(!user.BattleStatus().spectator){
+      if(teams.count(user.BattleStatus().team)){
+        while(allteams.count(t)||teams.count(t))t++;
+        ForceTeam(GetUser(i),t);
+        teams.insert(t);
+      }else{
+        teams.insert(user.BattleStatus().team);
+      }
+    }
+  }
+}
+
+
+void Battle::ForceUnsyncedToSpectate()
+{
+  size_t numusers = GetNumUsers();
+  for( size_t i = 0; i < numusers; ++i )
+  {
+    User &user = GetUser(i);
+    if ( !user.BattleStatus().spectator && !user.BattleStatus().sync ) ForceSpectator( user, true );
+  }
 }

@@ -76,6 +76,8 @@ class BattleRoomTab : public wxScrolledWindow
 
     void UpdatePresetList();
 
+    void SortPlayerList();
+
   protected:
 
     long AddMMOptionsToList( long pos, GameOption optFlag );

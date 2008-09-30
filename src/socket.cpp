@@ -325,9 +325,7 @@ void Socket::OnTimer( int mselapsed )
 }
 
 PingThread::PingThread( Socket& sock ):
-  wxThread(wxTHREAD_JOINABLE),
-  m_sock(sock),
-  m_thread_sleep_semaphore(0,0)
+  m_sock(sock)
 {
 }
 
@@ -348,24 +346,12 @@ void* PingThread::Entry()
   {
     if ( !m_sock.GetPingEnabled() ) break;
     m_sock.Ping();
-    wxSemaError err=m_thread_sleep_semaphore.WaitTimeout(milliseconds);
-
-    // Just in case: sleep to prevent looping through all semaphore slots too quickly before wxThread::Wait is called
-    // Not really needed anymore (?)
-    //Sleep(1);
-
-    /// break if woken from WaitTimeout .
-    if(err!=wxSEMA_TIMEOUT)break;
+    /// break if woken
+    if(!Sleep(milliseconds))break;
   }
   return 0;
 }
 
-
 void PingThread::OnExit()
 {
-}
-
-PingThread::ExitCode PingThread::Wait(){
-  m_thread_sleep_semaphore.Post();
-  return wxThread::Wait();
 }

@@ -52,10 +52,12 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_battle.DoAction( _T( "!start: starts the battle." ) );
     m_battle.DoAction( _T( "!balance: tries to put players into teams by how many start boxes there are.") );
     m_battle.DoAction( _T( "!cbalance: see !balance but tries to put clanmates together first." ) );
+    m_battle.DoAction( _T( "!fixcolors: changes players duplicate colours so they are unique." ) );
+    m_battle.DoAction( _T( "!fixids: makes control teams unique (disables comsharing)." ) );
+    m_battle.DoAction( _T( "!spectunsynced: sets all players with unitsynced status to be spectators." ) );
     m_battle.DoAction( _T( "!listprofiles: lists the available battle profiles." ) );
     m_battle.DoAction( _T( "!loadprofile profilename: loads an available battle profile." ) );
     m_battle.DoAction( _T( "!ring: rings players that are not ready." ) );
-    m_battle.DoAction( _T( "!fixcolors: changes players duplicate colours so they are unique." ) );
     m_battle.DoAction( _T( "!lock: prevents more people to join." ) );
     m_battle.DoAction( _T( "!unlock: opens the battle again." ) );
     m_lastActionTime = currentTime;
@@ -101,6 +103,16 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_battle.SetIsLocked( false );
     m_battle.DoAction( _T( "has unlocked the battle." ) );
     m_battle.SendHostInfo( HI_Locked );
+    m_lastActionTime = currentTime;
+  }
+  else if ( msg == _T("!fixids") ) {
+    m_battle.FixTeamIDs();
+    m_battle.DoAction( _T( "is making control teams unique." ) );
+    m_lastActionTime = currentTime;
+  }
+  else if ( msg == _T("!spectunsynced") ) {
+    m_battle.ForceUnsyncedToSpectate();
+    m_battle.DoAction( _T( "is forcing unsynced players to be spectators." ) );
     m_lastActionTime = currentTime;
   }
 }

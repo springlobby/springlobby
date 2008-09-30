@@ -60,6 +60,8 @@ class BattleListTab : public wxScrolledWindow
 
     void UpdateHighlights();
 
+    void SortBattleList();
+
   protected:
     BattleListFilter* m_filter;
     BattleListCtrl* m_battle_list;

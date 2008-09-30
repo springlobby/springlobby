@@ -198,7 +198,6 @@ void BattleListTab::SelectBattle( Battle* battle )
 
 void BattleListTab::AddBattle( Battle& battle ) {
 
-  m_battle_list->SetSelectionRestorePoint();
   if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     return;
   }
@@ -230,20 +229,16 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
 
-  m_battle_list->Sort();
   m_battle_list->HighlightItem( index );
   m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
 
-  m_battle_list->RestoreSelection();
-
+  m_battle_list->MarkDirtySort();
 }
 
 
 void BattleListTab::RemoveBattle( Battle& battle ) {
-
-  m_battle_list->SetSelectionRestorePoint();
 
   if ( &battle == m_sel_battle )
   {
@@ -259,13 +254,10 @@ void BattleListTab::RemoveBattle( Battle& battle ) {
 
   battle.SetGUIListActiv( false );
 
-  m_battle_list->Sort();
   m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
 
-  //this does nothing if selection was reset
-  m_battle_list->RestoreSelection( );
 
 }
 
@@ -287,8 +279,6 @@ void BattleListTab::UpdateBattle( Battle& battle )
     RemoveBattle( battle );
     return;
   }
-
-  m_battle_list->SetSelectionRestorePoint();
 
   int index = -1;
   for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
@@ -325,10 +315,8 @@ void BattleListTab::UpdateBattle( Battle& battle )
   m_battle_list->HighlightItem( index );
 
   if ( &battle == m_sel_battle ) SelectBattle( m_sel_battle );
-  m_battle_list->Sort();
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
-
-  m_battle_list->RestoreSelection();
+  m_battle_list->MarkDirtySort();
 }
 
 
@@ -372,6 +360,7 @@ void BattleListTab::SetFilterActiv( bool activ )
   m_filter_activ->SetValue( activ );
   sett().SetFilterActivState( activ );
   ShowFilterNotice( activ );
+  m_battle_list->MarkDirtySort();
 }
 
 
@@ -644,4 +633,10 @@ void BattleListTab::OnUnitSyncReloaded()
 void BattleListTab::UpdateHighlights()
 {
     m_battle_list->UpdateHighlights();
+}
+
+
+void BattleListTab::SortBattleList()
+{
+  m_battle_list->SortList();
 }

@@ -121,4 +121,32 @@ static inline int CompareStringIgnoreCase(const wxString& first, const wxString&
     return (first.Upper() > second.Upper() );
 }
 
+
+/** @brief Array with runtime determined size which is not initialized on creation.
+
+This RAII type is ment as output buffer for interfaces with e.g. C, where
+initializing a temp buffer to zero is waste of time because it gets overwritten
+with real data anyway.
+
+It's ment as replacement for the error prone pattern of allocating scratch/buffer
+memory using new/delete and using a std::vector "cast" to a C style array.
+*/
+template<typename T>
+class uninitialized_array
+{
+  public:
+    uninitialized_array(int numElem)
+    : elems( reinterpret_cast<T*>( operator new[]( numElem * sizeof(T) ) ) ) {
+    }
+    ~uninitialized_array() {
+      operator delete[]( elems );
+    }
+
+    /// this opens the door to basically any operation allowed on C style arrays
+    operator T*() { return elems; }
+
+  private:
+    T* elems;
+};
+
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H

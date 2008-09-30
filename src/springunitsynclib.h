@@ -47,6 +47,8 @@ typedef unsigned int (USYNC_CALL_CONV *GetMapChecksumPtr)(int);
 typedef const char* (USYNC_CALL_CONV *GetMapNamePtr)(int);
 typedef int (USYNC_CALL_CONV *GetMapInfoExPtr)(const char*, SpringMapInfo*, int);
 typedef void* (USYNC_CALL_CONV *GetMinimapPtr)(const char*, int);
+typedef int (USYNC_CALL_CONV *GetInfoMapSizePtr)(const char*, const char*, int*, int*);
+typedef int (USYNC_CALL_CONV *GetInfoMapPtr)(const char*, const char*, void*, int);
 
 typedef unsigned int (USYNC_CALL_CONV *GetPrimaryModChecksumPtr)(int);
 typedef int (USYNC_CALL_CONV *GetPrimaryModIndexPtr)(const char*);
@@ -191,16 +193,21 @@ class SpringUnitSyncLib
     /**
      * Get information about a map.
      * @param version will get author if >=1.
-     * @note Throws runtime_error if unsuccessful.
+     * @note Throws assert_exception if unsuccessful.
      */
     MapInfo GetMapInfoEx( const wxString& mapName, int version );
 
     /**
      * Get minimap.
-     * @param miplevel should be 0-10 not sure what it does, 10 seems to work fine.
-     * @note Throws runtime_error if unsuccessful.
+     * @note Throws assert_exception if unsuccessful.
      */
     wxImage GetMinimap( const wxString& mapFileName );
+
+    /**
+     * Get metalmap.
+     * @note Throws assert_exception if unsuccessful.
+     */
+    wxImage GetMetalmap( const wxString& mapFileName );
 
     int GetPrimaryModChecksum( int index );
     int GetPrimaryModIndex( const wxString& modName );
@@ -342,6 +349,8 @@ class SpringUnitSyncLib
     GetMapNamePtr m_get_map_name;
     GetMapInfoExPtr m_get_map_info_ex;
     GetMinimapPtr m_get_minimap;
+    GetInfoMapSizePtr m_get_infomap_size;
+    GetInfoMapPtr m_get_infomap;
 
     GetPrimaryModChecksumPtr m_get_mod_checksum;
     GetPrimaryModIndexPtr m_get_mod_index;
