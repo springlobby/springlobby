@@ -84,6 +84,7 @@ SelectUsersDialog::SelectUsersDialog( wxWindow* parent, wxWindowID id, const wxS
 
 SelectUsersDialog::~SelectUsersDialog()
 {
+  ClearList();
 }
 
 void SelectUsersDialog::Initialize()
@@ -97,6 +98,7 @@ void SelectUsersDialog::Initialize()
 
 void SelectUsersDialog::PopulateUsersList()
 {
+  ClearList();
   if ( ui().IsConnected() ) {
     const UserList& userlist = ui().GetServer().GetUserList();
 
@@ -114,11 +116,37 @@ void SelectUsersDialog::PopulateUsersList()
   }
 }
 
-void SelectUsersDialog::AddUserToList( const wxString& nick, const wxString& flag )
+void SelectUsersDialog::ClearList()
 {
-  m_user_list->InsertItem(0, nick, icons().GetFlagIcon(flag) );
+  m_user_list->Freeze();
+  long item = -1;
+  while ( true ) {
+    item = m_user_list->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE);
+    if ( item == -1 )
+      break;
+    RemoveUserFromList( item );
+    item = -1;
+  }
+  m_user_list->Thaw();
 }
 
+long SelectUsersDialog::AddUserToList( const wxString& nick, const wxString& flag )
+{
+  return AddUserToList(nick, icons().GetFlagIcon(flag) );
+}
+
+long SelectUsersDialog::AddUserToList( const wxString& nick, const int& flag )
+{
+  long item = m_user_list->InsertItem(0, nick, flag );
+  m_user_list->SetItemData(item, (wxUIntPtr)(new wxString(nick)));
+  return item;
+}
+
+void SelectUsersDialog::RemoveUserFromList( long item )
+{
+  delete (wxString*)m_user_list->GetItemData(item);
+  m_user_list->DeleteItem(item);
+}
 
 void SelectUsersDialog::UpdateUsersList()
 {
@@ -206,7 +234,7 @@ void SelectUsersDialog::OnNameFilterChange( wxCommandEvent& event )
   } else {
     for ( unsigned int i = 0; i < del.Count(); i++ ) {
       long item = m_user_list->FindItem(-1, del[i]);
-      m_user_list->DeleteItem(item);
+      RemoveUserFromList(item);
     }
   }
 
@@ -219,7 +247,7 @@ void SelectUsersDialog::OnNameFilterChange( wxCommandEvent& event )
     wxString name = line.Mid(0, sep);
     if ( name.Contains(filter) || (filter == wxEmptyString) ) {
       int flag = (int)s2l( line.Mid(sep+1) ); // Flag is never < 0 or > intmax
-      long item = m_user_list->InsertItem(0, name, flag );
+      long item = AddUserToList( name, flag );
       m_filtered_users.RemoveAt(i);
       if ( sel.Index(name, false) != wxNOT_FOUND )
         m_user_list->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
@@ -272,13 +300,15 @@ wxSortedArrayString SelectUsersDialog::GetSelection()
 
 int wxCALLBACK SelectUsersDialog::CompareName(long item1, long item2, long sortData )
 {
-  wxListCtrl* user_list = (wxListCtrl*)sortData;
-  return user_list->GetItemText(item1).CmpNoCase(user_list->GetItemText(item2));
+  //wxListCtrl* user_list = (wxListCtrl*)sortData;
+  wxString* s1 = (wxString*)item1;
+  wxString* s2 = (wxString*)item2;
+  return (*s1).CmpNoCase(*s2);
 }
 
 void SelectUsersDialog::Sort()
 {
   m_user_list->Freeze();
-  m_user_list->SortItems(CompareName, (long)this);
+  m_user_list->SortItems(CompareName, (wxUIntPtr)m_user_list);
   m_user_list->Thaw();
 }

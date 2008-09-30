@@ -54,12 +54,15 @@ class SelectUsersDialog : public wxDialog
 
     void Initialize();
     void PopulateUsersList();
+    void ClearList();
     void UpdateUsersList();
     void UpdateSelection();
     wxSortedArrayString GetSelectionFromText();
     wxString BuildSelectionText( const wxSortedArrayString& sel );
 
-    void AddUserToList( const wxString& nick, const wxString& flag );
+    long AddUserToList( const wxString& nick, const wxString& flag );
+    long AddUserToList( const wxString& nick, const int& flag );
+    void RemoveUserFromList( long item );
 
     static int wxCALLBACK CompareName(long item1, long item2, long sortData );
 
