@@ -82,6 +82,9 @@ void SpringUnitSyncLib::Load( const wxString& path )
     m_get_map_name = (GetMapNamePtr)_GetLibFuncPtr(_T("GetMapName"));
     m_get_map_info_ex = (GetMapInfoExPtr)_GetLibFuncPtr(_T("GetMapInfoEx"));
     m_get_minimap = (GetMinimapPtr)_GetLibFuncPtr(_T("GetMinimap"));
+    m_get_infomap_size = (GetInfoMapSizePtr)_GetLibFuncPtr(_T("GetInfoMapSize"));
+    m_get_infomap = (GetInfoMapPtr)_GetLibFuncPtr(_T("GetInfoMap"));
+
     m_get_mod_checksum = (GetPrimaryModChecksumPtr)_GetLibFuncPtr(_T("GetPrimaryModChecksum"));
     m_get_mod_index = (GetPrimaryModIndexPtr)_GetLibFuncPtr(_T("GetPrimaryModIndex"));
     m_get_mod_name = (GetPrimaryModNamePtr)_GetLibFuncPtr(_T("GetPrimaryModName"));
@@ -353,7 +356,7 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
   const int width  = 1024 >> miplevel;
   const int height = 1024 >> miplevel;
 
-  wxLogMessage( _T("%s"), mapFileName.c_str() );
+  wxLogMessage( _T("Minimap: %s"), mapFileName.c_str() );
 
   unsigned short* colours = (unsigned short*)m_get_minimap( mapFileName.mb_str(wxConvUTF8), miplevel );
   ASSERT_EXCEPTION( colours, _T("Get minimap failed") );
@@ -369,6 +372,35 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
   }
 
   return minimap;
+}
+
+
+wxImage SpringUnitSyncLib::GetMetalmap( const wxString& mapFileName )
+{
+  InitLib( m_get_infomap_size ); // assume GetInfoMap is available too
+
+  wxLogMessage( _T("Metalmap: %s"), mapFileName.c_str() );
+
+  int width = 0, height = 0, retval;
+
+  retval = m_get_infomap_size(mapFileName.mb_str(wxConvUTF8), "metal", &width, &height);
+  ASSERT_EXCEPTION( retval != 0 && width * height != 0, _T("Get metalmap size failed") );
+
+  typedef unsigned char uchar;
+  wxImage metalmap(width, height, false);
+  uchar* grayscale = new uchar[width * height];
+  uchar* true_colours = metalmap.GetData();
+
+  retval = m_get_infomap(mapFileName.mb_str(wxConvUTF8), "metal", grayscale, 1 /*byte per pixel*/);
+  ASSERT_EXCEPTION( retval != 0, _T("Get metalmap failed") );
+
+  for ( int i = 0; i < width*height; i++ ) {
+    true_colours[(i*3)  ] = grayscale[i];
+    true_colours[(i*3)+1] = 0;
+    true_colours[(i*3)+2] = 0;
+  }
+
+  return metalmap;
 }
 
 
