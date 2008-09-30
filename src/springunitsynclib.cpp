@@ -395,8 +395,8 @@ wxImage SpringUnitSyncLib::GetMetalmap( const wxString& mapFileName )
   ASSERT_EXCEPTION( retval != 0, _T("Get metalmap failed") );
 
   for ( int i = 0; i < width*height; i++ ) {
-    true_colours[(i*3)  ] = grayscale[i];
-    true_colours[(i*3)+1] = 0;
+    true_colours[(i*3)  ] = 0;
+    true_colours[(i*3)+1] = grayscale[i];
     true_colours[(i*3)+2] = 0;
   }
 
