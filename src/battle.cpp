@@ -1057,7 +1057,63 @@ void OfflineBattle::AddUser(OfflineUser& user)
 
 OfflineBattle::OfflineBattle(const int id)
  :CommonBattle(id, false, 0)
-{
+{}
 
+OfflineBattle::OfflineBattle()
+ :CommonBattle(0, false, 0)
+{}
+
+void OfflineBattle::SetBotTeam( const wxString& nick, int team )
+{
+  BattleBot* bot = GetBot( nick );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
+  bot->bs.team = team;
 }
 
+
+void OfflineBattle::SetBotAlly( const wxString& nick, int ally )
+{
+  BattleBot* bot = GetBot( nick );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
+  bot->bs.ally = ally;
+}
+
+
+void OfflineBattle::SetBotSide( const wxString& nick, int side )
+{
+  BattleBot* bot = GetBot( nick );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
+  bot->bs.side = side;
+}
+
+
+void OfflineBattle::SetBotColour( const wxString& nick, const wxColour& col )
+{
+  BattleBot* bot = GetBot( nick );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
+  bot->bs.colour = col;
+}
+
+
+void OfflineBattle::SetBotHandicap( const wxString& nick, int handicap )
+{
+  BattleBot* bot = GetBot( nick );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
+
+  bot->bs.handicap = handicap;
+}

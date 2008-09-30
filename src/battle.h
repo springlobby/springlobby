@@ -265,11 +265,29 @@ class OfflineBattle : public CommonBattle
 {
     public:
         OfflineBattle ( const int id );
+        OfflineBattle ( );
         ~OfflineBattle (){};
 
         void AddUser( OfflineUser& user );
         void UpdateUserBattleStatus( OfflineUser &user, UserBattleStatus status );
         void RemoveUser( OfflineUser& user );
+
+        //funcs from Ibattle i'm too lazy to refactor in a meaningful way
+        wxColour GetFreeColour( User *for_whom ) const {return wxColour(); };
+        int GetMyAlly() { return 0; }
+        void SetMyAlly( int ally ) { }
+        bool IsFounderMe() const {return true;}
+        void SendHostInfo( HostInfo update ) {}
+        void SendHostInfo( const wxString& Tag ) {}
+        void Update ( const wxString& Tag ) {}
+        //---
+
+        void SetBotTeam( const wxString& nick, int team );
+        void SetBotAlly( const wxString& nick, int ally );
+        void SetBotSide( const wxString& nick, int side );
+        void SetBotColour( const wxString& nick, const wxColour& col );
+        void SetBotHandicap( const wxString& nick, int handicap );
+
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLE_H
