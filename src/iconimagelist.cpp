@@ -326,12 +326,12 @@ void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
 
 int IconImageList::GetSideIcon( const wxString& modname, int side )
 {
-  wxString sidename = usync()->GetSideName( modname, side );
+  wxString sidename = usync().GetSideName( modname, side );
   wxString cachestring = modname + _T("_") + sidename;
   if (m_cached_side_icons[cachestring] == 0){
     try
     {
-      int IconPosition = Add(wxBitmap( usync()->GetSidePicture( modname , sidename ) ), wxNullBitmap);
+      int IconPosition = Add(wxBitmap( usync().GetSidePicture( modname , sidename ) ), wxNullBitmap);
       m_cached_side_icons[cachestring] = IconPosition;
       return IconPosition;
     } catch (...)

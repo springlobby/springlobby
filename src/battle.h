@@ -5,6 +5,7 @@
 #include <list>
 #include <set>
 
+#include "autohost.h"
 #include "userlist.h"
 #include "user.h"
 #include "ibattle.h"
@@ -80,7 +81,8 @@ class Battle : public UserList, public IBattle
 
     //const BattleOptions& opts() { return m_opts; }
 
-    Server& GetServer();
+    Server& GetServer() { return m_serv; }
+    AutoHost& GetAutoHost() { return m_ah; }
 
     int GetBattleId() const { return m_opts.battleid; }
 
@@ -90,10 +92,10 @@ class Battle : public UserList, public IBattle
     void SetInGame( bool ingame ) { m_ingame = ingame; }
     bool GetInGame() const { return m_ingame; }
 
-    void SetIsReplay( const bool& isreplay ) { m_opts.isreplay = isreplay; }
-    void SetIsLocked( const bool& islocked ) { m_opts.islocked = islocked; }
+    void SetIsReplay( const bool isreplay ) { m_opts.isreplay = isreplay; }
+    void SetIsLocked( const bool islocked ) { m_opts.islocked = islocked; }
     bool IsLocked() const { return m_opts.islocked; }
-    void SetIsPassworded( const bool& ispassworded ) { m_opts.ispassworded = ispassworded; }
+    void SetIsPassworded( const bool ispassworded ) { m_opts.ispassworded = ispassworded; }
     bool IsPassworded() const { return m_opts.ispassworded; }
 
     void SetNatType( const NatType nattype ) { m_opts.nattype = nattype; }
@@ -202,7 +204,7 @@ class Battle : public UserList, public IBattle
     void SetHandicap( User& user, int handicap);
 
     void OnUserAdded( User& user );
-    void OnUserBattleStatusUpdated( User &user );
+    void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
     void OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll );
@@ -212,14 +214,14 @@ class Battle : public UserList, public IBattle
     int GetMyAlly() { return GetMe().BattleStatus().ally; }
     void SetMyAlly( int ally ) { GetMe().BattleStatus().ally = ally; SendMyBattleStatus(); }
 
-    std::map<unsigned int, BattleStartRect>::size_type GetNumRects();
-
-    mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
+    unsigned int GetNumRects();
 
     void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true);
+    void FixTeamIDs();
+    void ForceUnsyncedToSpectate();
 
     ///< quick hotfix for bans
-    void CheckBan(User &user);
+    bool CheckBan(User &user);
     ///>
 
   protected:
@@ -233,6 +235,7 @@ class Battle : public UserList, public IBattle
     BattleOptions m_opts;
     Server& m_serv;
     Ui& m_ui;
+    AutoHost m_ah;
 
     bool m_ingame;
 
@@ -243,8 +246,6 @@ class Battle : public UserList, public IBattle
 
     mutable std::list<BattleBot*>::const_iterator m_bot_seek;
     mutable std::list<BattleBot*>::size_type m_bot_pos;
-
-    mmOptionsWrapper m_opt_wrap;
 
     void RemoveUser( wxString const& user ) {}
 };

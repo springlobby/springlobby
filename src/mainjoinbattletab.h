@@ -26,21 +26,25 @@ class MainJoinBattleTab : public wxPanel
     void HostBattle( Battle& battle );
     void JoinBattle( Battle& battle );
     //void UpdateCurrentBattle();
-    void UpdateCurrentBattle( bool MapChanged = false,  bool UpdateRestrictions = false );
+    void UpdateCurrentBattle();
     void UpdateCurrentBattle( const wxString& Tag );
     void LeaveCurrentBattle();
     Battle* GetCurrentBattle();
     ChatPanel* GetActiveChatPanel();
 
     void BattleUserUpdated( User& user );
-    BattleRoomTab* GetBattleRoomTab() { return m_battle_tab; }
-    BattleMapTab* GetBattleMapTab() { return m_map_tab; }
+    BattleRoomTab& GetBattleRoomTab();
+    BattleMapTab& GetBattleMapTab();
+    BattleOptionsTab& GetOptionsTab();
+    BattleroomMMOptionsTab& GetMMOptionsTab();
+
+    void ReloadPresetList();
 
     void OnUnitSyncReloaded();
 
-    void ReloadMMoptTab();
-
     void OnConnected();
+
+    void Update();
 
   protected:
     wxBoxSizer* m_main_sizer;

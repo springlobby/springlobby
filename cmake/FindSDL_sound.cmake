@@ -87,7 +87,7 @@ FIND_PATH(SDL_SOUND_INCLUDE_DIR SDL_sound.h
   )
 
 FIND_LIBRARY(SDL_SOUND_LIBRARY 
-  NAMES SDL_sound libSDL_sound
+  NAMES SDL_sound;libSDL_sound
   HINTS
   $ENV{SDLSOUNDDIR}/lib
   $ENV{SDLSOUNDDIR}
@@ -176,6 +176,7 @@ IF(SDL_FOUND AND SDL_SOUND_INCLUDE_DIR AND SDL_SOUND_LIBRARY)
    # But if I quote the stuff in INCLUDE_DIRECTORIES, it doesn't work.
    FILE(WRITE ${PROJECT_BINARY_DIR}/CMakeTmp/CMakeLists.txt
      "PROJECT(DetermineSoundLibs)
+        cmake_minimum_required(VERSION 2.4)
         INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR} ${SDL_SOUND_INCLUDE_DIR})
         ADD_EXECUTABLE(DetermineSoundLibs DetermineSoundLibs.c)
         TARGET_LINK_LIBRARIES(DetermineSoundLibs ${TMP_TRY_LIBS})"

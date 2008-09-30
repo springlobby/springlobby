@@ -33,6 +33,8 @@ class SpringOptionsTab : public wxScrolledWindow
     bool IsSpringExe( const wxString& exe );
     bool IsUnitSyncLib( const wxString& lib );
 
+    void ReloadSpringPathFromConfig();
+
     void OnBrowseDir( wxCommandEvent& event );
     void OnBrowseExec( wxCommandEvent& event );
     void OnBrowseSync( wxCommandEvent& event );

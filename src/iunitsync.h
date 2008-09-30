@@ -175,9 +175,8 @@ class IUnitSync
     virtual bool FileExists( const wxString& name ) = 0;
 
     virtual wxString GetArchivePath( const wxString& name ) = 0;
-    virtual wxString GetUnitsyncName( const wxString& hash, const MediaType& archivetype ) = 0;
 };
 
-IUnitSync* usync();
+IUnitSync& usync();
 
 #endif // SPRINGLOBBY_HEADERGUARD_IUNITSYNC_H

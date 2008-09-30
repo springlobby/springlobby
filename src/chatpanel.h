@@ -9,6 +9,7 @@
 #include <wx/menu.h>
 
 #include "chatlog.h"
+#include "usermenu.h"
 #include "Helper/TextCompletionDatabase.hpp"
 
 class wxCommandEvent;
@@ -28,7 +29,7 @@ class User;
 class Server;
 class Battle;
 class Ui;
-class UserMenu;
+
 class wxFocusEvent;
 class wxMouseEvent;
 
@@ -161,6 +162,8 @@ class ChatPanel : public wxPanel
 	void OnUserMenuCreateGroup( wxCommandEvent& event );
 	void UpdateNicklistHighlights();
 
+	void SortNickList();
+
   protected:
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
@@ -205,6 +208,7 @@ class ChatPanel : public wxPanel
     wxMenuItem* m_autorejoin;
     ChatLog* m_chat_log;
     wxMenuItem* displayjoinitem;
+    typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
     UserMenu* m_usermenu;
 
     void LogTime();
@@ -270,30 +274,5 @@ enum
     CHAT_MENU_US_MODERATOR_RING
 };
 
-class UserMenu : public wxMenu
-{
-    public:
-        UserMenu(ChatPanel* parent, const wxString& title = wxEmptyString, long style = 0);
-        ~UserMenu();
-
-        void EnableItems(bool isUserSelected);
-        wxString GetGroupByEvtID( const unsigned int id );
-
-    protected:
-        wxMenu* m_groupsMenu;
-        wxMenuItem* m_groupsMenuItem;
-        wxMenuItem* m_groupsDeleteItem;
-        wxMenuItem* m_groupsnewItem;
-        wxArrayString m_oldGroups;
-        ChatPanel* m_parent;
-        unsigned int m_groupCounter;
-        std::map<unsigned int, wxString> m_idNameMap;
-        std::map<wxString, unsigned int> m_NameIdMap;
-
-        void UpdateGroups();
-
-    //DECLARE_EVENT_TABLE();
-
-};
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H

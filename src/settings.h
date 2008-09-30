@@ -30,10 +30,8 @@
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
-class IBattle;
 class wxFileInputStream;
 struct wxColourData;
-
 
 class myconf : public wxFileConfig
 {
@@ -175,6 +173,12 @@ class Settings
 
     void SetCacheVersion();
     int GetCacheVersion();
+
+    void SetMapCachingThreadProgress( unsigned int index );
+    unsigned int GetMapCachingThreadProgress();
+
+    void SetModCachingThreadProgress( unsigned int index );
+    unsigned int GetModCachingThreadProgress();
 
     /**@}*/
 
@@ -433,6 +437,15 @@ class Settings
     void SetLastHostMap( const wxString& value );
     void SetLastRankLimit( int rank );
     void SetTestHostPort( bool value );
+
+    void SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options );
+    std::map<wxString,wxString> GetHostingPreset( const wxString& name, int optiontype );
+    wxArrayString GetPresetList();
+    void DeletePreset( const wxString& name );
+
+    wxString GetModDefaultPresetName( const wxString& modname );
+    void SetModDefaultPresetName( const wxString& modname, const wxString& presetname );
+
     /**@}*/
 
 
@@ -466,10 +479,6 @@ class Settings
     /**@}*/
 
     bool GetDisableSpringVersionCheck();
-
-    /// not get/set naming because set may refer to battle or to options, thatd be ambiguous
-    void SaveBattleMapOptions(IBattle *battle);
-    void LoadBattleMapOptions(IBattle *battle);
 
     /* ================================================================ */
     /** @name Torrent System

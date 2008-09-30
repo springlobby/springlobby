@@ -4,17 +4,22 @@
 //#include <wx/listctrl.h>
 #include <wx/event.h>
 #include "customlistctrl.h"
+#include "usermenu.h"
 
 class User;
 class UserList;
 class Ui;
-class UserMenu;
+class ChatPanel;
+//typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
 
 
 
 
 class NickListCtrl : public customListCtrl
 {
+  protected:
+    typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
+
   public:
     NickListCtrl( wxWindow* parent, bool show_header = true, UserMenu* popup = 0,
         bool singleSelectList = true, const wxString& name = _T("NickListCtrl"), bool highlight = true  );
@@ -39,6 +44,8 @@ class NickListCtrl : public customListCtrl
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
     void HighlightItem( long item );
+
+    void SortList();
 
   protected:
     static int wxCALLBACK ComparePlayernameUP(long item1, long item2, long sortData);

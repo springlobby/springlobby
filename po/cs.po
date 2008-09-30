@@ -1,0 +1,4482 @@
+# Czech translation for springlobby
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the springlobby package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: springlobby\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-07-30 23:53+0200\n"
+"PO-Revision-Date: 2008-09-06 12:50+0000\n"
+"Last-Translator: vejha_cz <vejha1@gmail.com>\n"
+"Language-Team: Czech <cs@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-09-20 21:32+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: src/addbotdialog.cpp:30
+msgid "Add bot"
+msgstr ""
+
+#: src/addbotdialog.cpp:44
+msgid "Nickname:"
+msgstr "Přezdívka:"
+
+#: src/addbotdialog.cpp:58
+msgid "AI:"
+msgstr "UI:"
+
+#: src/addbotdialog.cpp:62
+msgid "Choose the AI library to use with this bot."
+msgstr "Vyberte knihovnu UI pro tohoto protihráče."
+
+#: src/addbotdialog.cpp:76 src/autobalancedialog.cpp:57
+#: src/connectwindow.cpp:85 src/hostbattledialog.cpp:204
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: src/addbotdialog.cpp:81
+msgid "Add Bot"
+msgstr ""
+
+#: src/addbotdialog.cpp:138
+msgid "No AI bots found in your Spring installation."
+msgstr ""
+"Ve vaší Spring instalaci nebyly nalezeny žádné UI pro počítačové hráče."
+
+#: src/addbotdialog.cpp:138
+msgid "No bot-libs found"
+msgstr "Nebyly nalelezeny žádné bot-libs"
+
+#: src/agreementdialog.cpp:27
+msgid "Accept Agreement"
+msgstr "Přijmout Podmínky"
+
+#: src/agreementdialog.cpp:36
+msgid "Do you accept the terms of this agreement?"
+msgstr ""
+
+#: src/agreementdialog.cpp:44 src/uiutils.h:11
+msgid "Yes"
+msgstr "Ano"
+
+#: src/agreementdialog.cpp:49 src/uiutils.h:11
+msgid "No"
+msgstr "Ne"
+
+#: src/autobalancedialog.cpp:34
+msgid "Autobalance players into teams"
+msgstr "Automaticky vyrovnat počet hráčů v týmech"
+
+#: src/autobalancedialog.cpp:37
+msgid "Method"
+msgstr "Metoda"
+
+#: src/autobalancedialog.cpp:40 src/battlemaptab.cpp:92
+#: src/battleroomtab.cpp:260
+msgid "Random"
+msgstr "Náhodný"
+
+#: src/autobalancedialog.cpp:41
+msgid "Divide ranks evenly"
+msgstr "Rozděl hodnosti rovnoměrně"
+
+#: src/autobalancedialog.cpp:43
+msgid "Clans"
+msgstr "Klany"
+
+#: src/autobalancedialog.cpp:46 src/hostbattledialog.cpp:130
+msgid "None"
+msgstr "Žádný"
+
+#: src/autobalancedialog.cpp:47
+msgid "Fair"
+msgstr "Slušný"
+
+#: src/autobalancedialog.cpp:48
+msgid "Always"
+msgstr "Vždy"
+
+#: src/autobalancedialog.cpp:49
+msgid ""
+"Put members of same clan ( users having same clantag, like '[smurfzor]Alice' "
+"and '[smurfzor]Bob' ) together into same alliance. \n"
+"None: nothing special for clans.\n"
+"Fair: put clanmembers into alliance, unless this makes alliances unfair.\n"
+"Always: always put clanmembers into alliance, even if that alliance is "
+"unfair."
+msgstr ""
+"Přemístit hráče stejného klanu (se stejným klan-tagem, jako [smurfzor]Alice' "
+"and '[smurfzor]Bob' ) do společné aliance. \n"
+"Žádné: nepřemisťovat hráče podle klanů\n"
+"Vyrovnané: přesunout členy klanu do jedné aliance, pokud tak bude hra "
+"vyrovaná\n"
+"Vždy přemístit: hráči jednoho klanu budou přesunuti vždy do jedné aliance"
+
+#: src/autobalancedialog.cpp:60 src/connectwindow.cpp:84
+msgid "Ok"
+msgstr "Ok"
+
+#: src/battlelistctrl.cpp:57 src/hostbattledialog.cpp:57
+msgid "Description"
+msgstr "Popis"
+
+#: src/battlelistctrl.cpp:61 src/mainjoinbattletab.cpp:151
+msgid "Map"
+msgstr "Mapa"
+
+#: src/battlelistctrl.cpp:65 src/hostbattledialog.cpp:71
+msgid "Mod"
+msgstr "Mod"
+
+#: src/battlelistctrl.cpp:69 src/hostbattledialog.cpp:208
+msgid "Host"
+msgstr "Host"
+
+#: src/battlelistctrl.cpp:73 src/battleroomlistctrl.cpp:89
+msgid "a"
+msgstr "a"
+
+#: src/battlelistctrl.cpp:77
+msgid "p"
+msgstr "p"
+
+#: src/battlelistctrl.cpp:81
+msgid "m"
+msgstr "m"
+
+#: src/battlelistctrl.cpp:120
+msgid "Download &map"
+msgstr "Stáhnout &mapu"
+
+#: src/battlelistctrl.cpp:121
+msgid "Download m&od"
+msgstr "Stáhnout mod"
+
+#: src/battlelistfilter.cpp:78
+msgid "Host:"
+msgstr ""
+
+#: src/battlelistfilter.cpp:97 src/battlelistfilter.cpp:167
+msgid "Status:"
+msgstr "Stav:"
+
+#: src/battlelistfilter.cpp:101 src/battleroomtab.cpp:118
+msgid "Locked"
+msgstr "Uzamčeno"
+
+#: src/battlelistfilter.cpp:106
+msgid "Passworded"
+msgstr "Zaheslováno"
+
+#: src/battlelistfilter.cpp:116
+msgid "Rank Limit:"
+msgstr "Omezení Hodnosti:"
+
+#: src/battlelistfilter.cpp:150
+msgid "Description:"
+msgstr "Popis:"
+
+#: src/battlelistfilter.cpp:171
+msgid "Started"
+msgstr "Spuštěno"
+
+#: src/battlelistfilter.cpp:176
+msgid "Full"
+msgstr "Plný"
+
+#: src/battlelistfilter.cpp:181
+msgid "Open"
+msgstr "Otevřít"
+
+#: src/battlelistfilter.cpp:191
+msgid "Player:"
+msgstr "Hráč:"
+
+#: src/battlelistfilter.cpp:200
+msgid "All"
+msgstr "Všechny"
+
+#: src/battlelistfilter.cpp:219 src/battlelisttab.cpp:85
+#: src/singleplayertab.cpp:50
+msgid "Map:"
+msgstr "Mapa:"
+
+#: src/battlelistfilter.cpp:236
+msgid "Only maps i have"
+msgstr "Mapy, které mám"
+
+#: src/battlelistfilter.cpp:247
+msgid "Max.Player:"
+msgstr "Max. Hráčů:"
+
+#: src/battlelistfilter.cpp:274 src/battlelisttab.cpp:91
+#: src/singleplayertab.cpp:59
+msgid "Mod:"
+msgstr "Mod:"
+
+#: src/battlelistfilter.cpp:291
+msgid "Only mods i have"
+msgstr "Mody, které mám"
+
+#: src/battlelistfilter.cpp:302
+msgid "    Spectator:"
+msgstr "    Pozorovatel:"
+
+#: src/battlelistfilter.cpp:561 src/battlelistfilter.cpp:566
+#: src/battlelistfilter.cpp:567 src/battlelistfilter.cpp:569
+msgid "%d%"
+msgstr "%d%"
+
+#: src/battlelisttab.cpp:97
+msgid "Players:"
+msgstr "Hráči:"
+
+#: src/battlelisttab.cpp:103
+msgid "Spectators:"
+msgstr "Pozorovatelé:"
+
+#: src/battlelisttab.cpp:143
+msgid "Host new..."
+msgstr "Založit novou..."
+
+#: src/battlelisttab.cpp:146
+msgid "Join"
+msgstr "Připojit"
+
+#: src/battlelisttab.cpp:366
+msgid ""
+"You cannot host a game while being offline. Please connect to a lobby server."
+msgstr ""
+"Nemůžete zakládat hru, když jste offline. Prosím připojte se k lobby serveru."
+
+#: src/battlelisttab.cpp:366
+msgid "Not Online."
+msgstr "Není připojený."
+
+#: src/battlelisttab.cpp:372
+msgid "Hosting is disabled due to the incompatible version you're using"
+msgstr "Nemůžete zakládat hru, protože máte nekompatibilní verzi"
+
+#: src/battlelisttab.cpp:372 src/battlelisttab.cpp:377
+#: src/battlelisttab.cpp:529 src/battlelisttab.cpp:545
+#: src/settings++/panel_pathoption.cpp:90 src/singleplayertab.cpp:276
+#: src/springoptionstab.cpp:525 src/springoptionstab.cpp:535 src/ui.cpp:514
+#: src/ui.cpp:517
+msgid "Spring error"
+msgstr "Spring error"
+
+#: src/battlelisttab.cpp:377
+msgid ""
+"You already are running a Spring instance, close it first in order to be "
+"able to host a new game"
+msgstr ""
+"Již máte jednu spuštěnu instanci Spring, nejdříve ji vypněte, aby jste mohli "
+"založit novou hru"
+
+#: src/battlelisttab.cpp:382 src/battlelisttab.cpp:535
+msgid "Already in a battle"
+msgstr ""
+
+#: src/battlelisttab.cpp:382
+msgid ""
+"You are already in a battle.\n"
+"\n"
+"Do you want to leave current battle to start a new?"
+msgstr ""
+
+#: src/battlelisttab.cpp:404
+msgid ""
+"Your using wxWidgets prior to version 2.8,\n"
+" port testing is not supported.\n"
+" Hosting may or may not work."
+msgstr ""
+"Používáte wxWidgety předcházející verze 2.8\n"
+" testování portů není podporováno\n"
+" Zakládání bitev nemusí fungovat."
+
+#: src/battlelisttab.cpp:411
+#, c-format
+msgid ""
+"The server used for testing your port %d is unreachable. \n"
+"Hosting may or may not work with this setting."
+msgstr ""
+"Server použil pro testování váš port %d je nedostupný. \n"
+"Zakládání her s tímto nastavením nemusí fungovat."
+
+#: src/battlelisttab.cpp:419 src/battlelisttab.cpp:429
+#, c-format
+msgid ""
+"Battle not started because the port you selected (%d) is unable to recieve "
+"incoming packets\n"
+" checks your router & firewall configuration again or change port in the "
+"dialog.\n"
+"\n"
+"If everything else fails, enable the Hole Punching NAT Traversal\n"
+" option in the hosting settings."
+msgstr ""
+"Bitva nemohla být zahájena, protože vámi vybraný port (%d) není schopen "
+"příjmu příchozích packetů.\n"
+" zkontrolujte znovu vaši konfiguraci routeru & firewallu a změňte port v "
+"dialogu."
+
+#: src/battlelisttab.cpp:442
+msgid "Battle not started beacuse the mod you selected could not be found. "
+msgstr ""
+"Bitva nemohla být zahájena, protože vámi vybraný mod nemůže být nalezen. "
+
+#: src/battlelisttab.cpp:442
+msgid "Error starting battle."
+msgstr "Error při startování bitvy."
+
+#: src/battlelisttab.cpp:453 src/battlelisttab.cpp:460
+msgid ""
+"Couldn't find any maps in your spring installation. This could happen when "
+"you set the Spring settings incorrectly."
+msgstr ""
+"Ve vaší instalaci Springu nebyly nalezeny žádné mapy. Může to být způsobeno "
+"špatným nastavením Springu."
+
+#: src/battlelisttab.cpp:453 src/battlelisttab.cpp:460
+msgid "No maps found"
+msgstr "Mapy nenalezeny"
+
+#: src/battlelisttab.cpp:529
+msgid ""
+"Joining battles is disabled due to the incompatible spring version you're "
+"using."
+msgstr ""
+"Připojování k bitvám je zakázáno, ptotože používáte nekopmatibilní verzi "
+"springu."
+
+#: src/battlelisttab.cpp:535
+msgid ""
+"You are already in a battle.\n"
+"\n"
+"Do you want to leave current battle to and join this one?"
+msgstr ""
+"Již jste zapojeni v bitvě.\n"
+"\n"
+"Chcete opustit současnou bitvu a připojit se k této?"
+
+#: src/battlelisttab.cpp:545
+msgid ""
+"You already are running a Spring instance, close it first in order to be "
+"able to join another battle."
+msgstr ""
+"Již máte spuštěnu jedno instanci Springu, nejprve ji zavřete, aby jste se "
+"mohli přidat k další bitvě."
+
+#: src/battlelisttab.cpp:550
+msgid "Do you want me to take you to the download page?"
+msgstr "Chcete se přemístit na stránku stahování?"
+
+#: src/battlelisttab.cpp:552
+msgid ""
+"Should i try to downlaod it for you?\n"
+"You can see the progress in the \"Download Manager\" tab."
+msgstr ""
+"Mám se pokusit to stáhnout?\n"
+"Průběh můžete vidět v  záložce \"Správce Stahování\"."
+
+#: src/battlelisttab.cpp:556
+msgid ""
+"You need to download the mod before you can join this game.\n"
+"\n"
+msgstr ""
+"Než se připojíte k této hře, musíte stáhnout mod.\n"
+"\n"
+
+#: src/battlelisttab.cpp:556
+msgid "Mod not available"
+msgstr "Mod není dostupný"
+
+#: src/battlelisttab.cpp:565
+msgid ""
+"You need to download the map to be able to play in this game.\n"
+"\n"
+msgstr ""
+"Musíte nejprve stáhnout mapu, aby jste mohli hrát tuto hru.\n"
+"\n"
+
+#: src/battlelisttab.cpp:565
+msgid "Map not available"
+msgstr "Mapa není dostupná"
+
+#: src/battlelisttab.cpp:573 src/chatpanel.cpp:1381
+msgid "Battle password"
+msgstr "Heslo bitvy"
+
+#: src/battlelisttab.cpp:573
+msgid "Enter password"
+msgstr "Zadejte heslo"
+
+#: src/battlemaptab.cpp:76 src/battleroomtab.cpp:128
+msgid "Option"
+msgstr "Možnost"
+
+#: src/battlemaptab.cpp:78 src/battleroomtab.cpp:130
+msgid "Value"
+msgstr "Hodnota"
+
+#: src/battlemaptab.cpp:83 src/battleroomtab.cpp:137 src/battleroomtab.cpp:138
+#: src/battleroomtab.cpp:287 src/battleroomtab.cpp:293
+msgid "Size"
+msgstr "Velikost"
+
+#: src/battlemaptab.cpp:84 src/battleroomtab.cpp:139 src/battleroomtab.cpp:140
+#: src/battleroomtab.cpp:288 src/battleroomtab.cpp:294
+msgid "Windspeed"
+msgstr "Rychlost větru"
+
+#: src/battlemaptab.cpp:85 src/battleroomtab.cpp:141 src/battleroomtab.cpp:142
+#: src/battleroomtab.cpp:289 src/battleroomtab.cpp:295
+msgid "Tidal strength"
+msgstr "Síla přílivu"
+
+#: src/battlemaptab.cpp:86
+msgid "Gravity"
+msgstr "Gravitace"
+
+#: src/battlemaptab.cpp:87
+msgid "Extractor radius"
+msgstr "Dosah extraktoru"
+
+#: src/battlemaptab.cpp:88
+msgid "Max metal"
+msgstr "Max kov"
+
+#: src/battlemaptab.cpp:92 src/battleroomtab.cpp:259
+msgid "Fixed"
+msgstr "Neměnný"
+
+#: src/battlemaptab.cpp:92
+msgid "Choose in game"
+msgstr "Nastavit ve hře"
+
+#: src/battlemaptab.cpp:95
+msgid "Startpositions"
+msgstr "Startovní pozice"
+
+#: src/battleoptionstab.cpp:76
+msgid "Continue if commander dies"
+msgstr "Pokračovat, když velitel zemře"
+
+#: src/battleoptionstab.cpp:77
+msgid "End if commander dies"
+msgstr "Skončit, když velitel zemře"
+
+#: src/battleoptionstab.cpp:78
+msgid "Lineage mode"
+msgstr ""
+
+#: src/battleoptionstab.cpp:82
+msgid "End condition"
+msgstr "Podmínka konce"
+
+#: src/battleoptionstab.cpp:86
+msgid "Resources"
+msgstr "Suroviny"
+
+#: src/battleoptionstab.cpp:91 src/mmoptionswrapper.cpp:94
+msgid "Start Metal"
+msgstr "Počáteční kov"
+
+#: src/battleoptionstab.cpp:95
+msgid "The amount of metal each player starts with."
+msgstr "Množství kovu, se kterým hráč začíná."
+
+#: src/battleoptionstab.cpp:107 src/mmoptionswrapper.cpp:97
+msgid "Start Energy"
+msgstr "Počáteční energie"
+
+#: src/battleoptionstab.cpp:111
+msgid "The amount of energy each player starts with."
+msgstr "Množství energie, se kterou hráč začíná."
+
+#: src/battleoptionstab.cpp:123
+msgid "Max units"
+msgstr "Max jednotek"
+
+#: src/battleoptionstab.cpp:127
+msgid "The maximum number of units allowed per player."
+msgstr "Maximální počet jednotek na jednoho hráče."
+
+#: src/battleoptionstab.cpp:136 src/mainjoinbattletab.cpp:152
+#: src/mainsingleplayertab.cpp:38 src/settings++/tab_simple.cpp:134
+msgid "Options"
+msgstr "Nastavení"
+
+#: src/battleoptionstab.cpp:140
+msgid "Limit d-gun"
+msgstr "Omezit d-gun"
+
+#: src/battleoptionstab.cpp:141
+msgid "Ghosted buildings"
+msgstr ""
+
+#: src/battleoptionstab.cpp:142
+msgid "Diminishing metal makers"
+msgstr "Vyčerpávání ložisek kovu"
+
+#: src/battleoptionstab.cpp:143
+msgid "Random start positions"
+msgstr "Náhodné startovní pozice"
+
+#: src/battleoptionstab.cpp:152
+msgid "Unit restrictions"
+msgstr "Omezení jednotky"
+
+#: src/battleoptionstab.cpp:160
+msgid "Allowed units"
+msgstr "Povolené jednotky"
+
+#: src/battleoptionstab.cpp:164
+msgid "Units in this list will be available in the game."
+msgstr "jednotky v tomto seznamu budou ve hře povoleny."
+
+#: src/battleoptionstab.cpp:186
+msgid "Restricted units"
+msgstr "Zakázané jednotky"
+
+#: src/battleoptionstab.cpp:190
+msgid "Units in this list will not be available in the game."
+msgstr "jednotky v tomto seznamu nebudou ve hře povoleny."
+
+#: src/battleoptionstab.cpp:201
+msgid "Load..."
+msgstr "Načítání..."
+
+#: src/battleoptionstab.cpp:202
+msgid "Load a saved set of restrictions."
+msgstr "Náčíst uložený seznam omezení."
+
+#: src/battleoptionstab.cpp:207
+msgid "Save..."
+msgstr "Uložit..."
+
+#: src/battleoptionstab.cpp:208
+msgid "Save a set of restrictions."
+msgstr "Uložit seznam omezení."
+
+#: src/battleoptionstab.cpp:215
+msgid "Clear"
+msgstr "Vymazat"
+
+#: src/battleoptionstab.cpp:216
+msgid "Enable all units."
+msgstr "Povolit všechny jednotky."
+
+#: src/battleroomlistctrl.cpp:81 src/connectwindow.cpp:68
+#: src/nicklistctrl.cpp:54
+msgid "Nickname"
+msgstr "Přezdívka"
+
+#: src/battleroomlistctrl.cpp:85
+msgid "t"
+msgstr "t"
+
+#: src/battleroomlistctrl.cpp:93
+msgid "cpu"
+msgstr "procesor"
+
+#: src/battleroomlistctrl.cpp:97
+msgid "Resource Bonus"
+msgstr "Bonus Surovin"
+
+#: src/battleroomlistctrl.cpp:131 src/battleroomtab.cpp:83
+msgid "Team"
+msgstr "Tým"
+
+#: src/battleroomlistctrl.cpp:139 src/battleroomtab.cpp:84
+msgid "Ally"
+msgstr "Spojenec"
+
+#: src/battleroomlistctrl.cpp:149 src/battleroomtab.cpp:86
+msgid "Side"
+msgstr "Frakce"
+
+#: src/battleroomlistctrl.cpp:153
+msgid "Set color"
+msgstr "Nastavit barvu"
+
+#: src/battleroomlistctrl.cpp:158 src/battleroomlistctrl.cpp:509
+msgid "Set Resource Bonus"
+msgstr "Nastavit bonus surovit"
+
+#: src/battleroomlistctrl.cpp:163 src/battleroomlistctrl.cpp:428
+#: src/battleroomlistctrl.cpp:437 src/battleroomtab.cpp:120
+msgid "Spectator"
+msgstr "Pozorovatel"
+
+#: src/battleroomlistctrl.cpp:168 src/battleroomlistctrl.cpp:432
+#: src/battleroomlistctrl.cpp:442
+msgid "Kick"
+msgstr "Vykopnout"
+
+#: src/battleroomlistctrl.cpp:170 src/battleroomlistctrl.cpp:431
+#: src/battleroomlistctrl.cpp:440 src/chatpanel.cpp:431
+msgid "Ring"
+msgstr "Zazvonit"
+
+#: src/battleroomlistctrl.cpp:509
+msgid "Please enter a value between 0 and 100"
+msgstr "Prosím vložte hodnotu mezi 0 a 100"
+
+#: src/battleroomlistctrl.cpp:514
+msgid "Not a number"
+msgstr "Není čislo"
+
+#: src/battleroomlistctrl.cpp:514 src/battleroomlistctrl.cpp:519
+msgid "Invalid number"
+msgstr "Neplatné číslo"
+
+#: src/battleroomlistctrl.cpp:519
+msgid ""
+"Value out of range.\n"
+" Enter an integer between 0 & 100."
+msgstr ""
+"Hodnota mimo meze\n"
+" Vložte celé číslo mezi 0 & 100."
+
+#: src/battleroommmoptionstab.cpp:38
+msgid "Mod Options"
+msgstr "Nastavení Modu"
+
+#: src/battleroommmoptionstab.cpp:43
+msgid "Map Options"
+msgstr "Nastavení Mapy"
+
+#: src/battleroomtab.cpp:69
+msgid "Players with the same team number share control of their units."
+msgstr ""
+"Hráčí se stejným číslem týmu se děli o kontrolu jejich nad jednotkami."
+
+#: src/battleroomtab.cpp:71
+msgid "Players with the same ally number work together to achieve victory."
+msgstr ""
+"Hráčí se stejným číslem spojenectví hrají se pokoušejí společně dosáhnout "
+"vítězství."
+
+#: src/battleroomtab.cpp:73
+msgid "Select a color to identify your units in-game"
+msgstr "Zvolte barvu pro identifikaci vašich jednotek ve hře."
+
+#: src/battleroomtab.cpp:75
+msgid "Select your faction"
+msgstr "Zvolte vaši frakci"
+
+#: src/battleroomtab.cpp:85
+msgid "Color"
+msgstr "Barva"
+
+#: src/battleroomtab.cpp:94
+msgid ""
+"A preview of the selected map.  You can see the starting positions, or (if "
+"set) starting boxes."
+msgstr ""
+"Náhled zvolené mapy. Můžete vidět startovní pozice nebo (pokud nastaveno) "
+"startovní boxy."
+
+#: src/battleroomtab.cpp:98
+msgid "This chat is exclusively for participants of this battle."
+msgstr "Tento chat je pouze pro účastníky této bitvy."
+
+#: src/battleroomtab.cpp:102 src/chatpanel.cpp:290
+msgid "Leave"
+msgstr "Odejít"
+
+#: src/battleroomtab.cpp:103
+msgid "Leave the battle and return to the battle list"
+msgstr ""
+
+#: src/battleroomtab.cpp:104 src/singleplayertab.cpp:83
+msgid "Start"
+msgstr "Start"
+
+#: src/battleroomtab.cpp:105
+msgid "Start the battle"
+msgstr "Zahájit bitvu"
+
+#: src/battleroomtab.cpp:106
+msgid "Add Bot..."
+msgstr ""
+
+#: src/battleroomtab.cpp:107
+msgid "Add a computer-controlled player to the game"
+msgstr "Přidat počítačem kontrolovaného hráče do hry"
+
+#: src/battleroomtab.cpp:110
+msgid "Fix colours"
+msgstr "Uzamknout barvy"
+
+#: src/battleroomtab.cpp:111
+msgid "Make player colors unique"
+msgstr "Nastavit barvu hráče jedinečnou"
+
+#: src/battleroomtab.cpp:113
+msgid "Balance"
+msgstr "Rozdělit"
+
+#: src/battleroomtab.cpp:114
+msgid "Automatically balance players into two or more alliances"
+msgstr "Automaticky rodělit hráče do dvou nebo více aliancí"
+
+#: src/battleroomtab.cpp:116
+msgid "I'm ready"
+msgstr "Jsem připraven"
+
+#: src/battleroomtab.cpp:117
+msgid "Click this if you are content with the battle settings."
+msgstr "Klikněte sem, pokud jste připraveni k začátku hry."
+
+#: src/battleroomtab.cpp:119
+msgid "Prevent additional players from joining the battle"
+msgstr "Zakázat dalším hráčům připojit se k bitvě"
+
+#: src/battleroomtab.cpp:121
+msgid "Spectate (watch) the battle instead of playing"
+msgstr "Pozorovat bitvu namísto hraní."
+
+#: src/battleroomtab.cpp:219
+msgid "Only the host can start the battle."
+msgstr "Pouze zakladatel může začít bitvu."
+
+#: src/battleroomtab.cpp:223
+msgid "Only the host can balance alliances."
+msgstr "Pouze zakladatel může vyrovnávat aliance."
+
+#: src/battleroomtab.cpp:226
+msgid "Only the host can fix player colours."
+msgstr "Pouze zakladatel může přidělovat barvy hráčům."
+
+#: src/battleroomtab.cpp:229
+msgid "Only the host can lock the game."
+msgstr "Pouze zakladatel může uzamknout hru."
+
+#: src/battleroomtab.cpp:261
+msgid "Boxes"
+msgstr "Boxy"
+
+#: src/battleroomtab.cpp:262
+msgid "Pick"
+msgstr "Vybrat"
+
+#: src/battleroomtab.cpp:271
+msgid "Continue"
+msgstr "Pokračovat"
+
+#: src/battleroomtab.cpp:272
+msgid "End"
+msgstr "Konec"
+
+#: src/battleroomtab.cpp:273
+msgid "Lineage"
+msgstr ""
+
+#: src/battleroomtab.cpp:284
+msgid "Map does not exist."
+msgstr "Mapa neexistuje."
+
+#: src/battleroomtab.cpp:319
+msgid "restrictions"
+msgstr "omezení"
+
+#: src/battleroomtab.cpp:398
+msgid ""
+"There are two or more bots on the same team.  Because bots don't know how to "
+"share, this won't work."
+msgstr ""
+"Dva nebo více počítačů se nachází v jednom týmu, protože počítač nevím jak "
+"sdílet, toto nebude fungovat."
+
+#: src/battleroomtab.cpp:398
+msgid "Bot team sharing."
+msgstr "Sdílení v týmu s počítačem."
+
+#: src/battleroomtab.cpp:405
+msgid ""
+"Some players are not ready yet.\n"
+"Ring these players?"
+msgstr ""
+"Někteří hráči ještě nejsou připraveni.\n"
+"Zazvonit na ně?"
+
+#: src/battleroomtab.cpp:405 src/battleroomtab.cpp:410
+msgid "Not ready"
+msgstr "Nepřipraven"
+
+#: src/battleroomtab.cpp:410
+msgid "Force start?"
+msgstr "Vynutit začátek?"
+
+#: src/battleroomtab.cpp:469
+msgid "Cannot add bot, maximum number of players already reached."
+msgstr "Nemohu přidat počítač, maximální počet hráčů byl již dosažen."
+
+#: src/battleroomtab.cpp:469
+msgid "Max players reached"
+msgstr "Maximální počet hráčů dosažen"
+
+#: src/chatlog.cpp:39
+msgid "### Session Closed at ["
+msgstr "### Sezení Ukončeno v ["
+
+#: src/chatlog.cpp:39
+msgid "]"
+msgstr "]"
+
+#: src/chatlog.cpp:80 src/chatlog.cpp:86
+msgid ""
+"Couldn't create folder. \n"
+"Be sure that there isn't a write protection.\n"
+msgstr ""
+"Nemohu vytvořit složku. \n"
+"Přesvědčte se, že je povoleno zapisování.\n"
+
+#: src/chatlog.cpp:80 src/chatlog.cpp:86
+msgid "Log function is disabled until restart SpringLobby."
+msgstr "Zaznamenávání vypnuto do restartování SpringLobby."
+
+#: src/chatlog.cpp:80 src/chatlog.cpp:103 src/chatlog.cpp:120
+msgid "Log Warning"
+msgstr ""
+
+#: src/chatlog.cpp:103
+msgid ""
+"Couldn't write message to log.\n"
+"Logging will be disabled for room "
+msgstr ""
+"Nemohu zapsal zprávu do záznamu.\n"
+"Zaznamenávání pro místnost bude vypnuto. "
+
+#: src/chatlog.cpp:103
+msgid ""
+".\n"
+"\n"
+"Rejoin room to reactivate logging."
+msgstr ""
+".\n"
+"\n"
+"Znovu se připojte do místnosti, pro aktivaci zaznamenávání."
+
+#: src/chatlog.cpp:120
+msgid ""
+"Can't open log file. \n"
+"Be sure that there isn't a write protection.\n"
+msgstr ""
+"Nemohu otevřít soubor záznamu. \n"
+"Ujistěte se, že je povoleno zapisování.\n"
+
+#: src/chatoptionstab.cpp:66
+msgid "Colors and font"
+msgstr "Barvy a font"
+
+#: src/chatoptionstab.cpp:71
+msgid "Use system colors"
+msgstr "Požívat systémové barvy"
+
+#: src/chatoptionstab.cpp:97
+msgid "Normal"
+msgstr "Normální"
+
+#: src/chatoptionstab.cpp:111
+msgid "Background"
+msgstr "Pozadí"
+
+#: src/chatoptionstab.cpp:125
+msgid "Action"
+msgstr "Akce"
+
+#: src/chatoptionstab.cpp:139
+msgid "Highlight"
+msgstr "Zvýraznění"
+
+#: src/chatoptionstab.cpp:153
+msgid "Join/Leave"
+msgstr "Přpojit/Odpojit se"
+
+#: src/chatoptionstab.cpp:167
+msgid "My messages"
+msgstr "Mé zprávy"
+
+#: src/chatoptionstab.cpp:186 src/connectwindow.cpp:62
+msgid "Server"
+msgstr "Server"
+
+#: src/chatoptionstab.cpp:200
+msgid "Client"
+msgstr "Klient"
+
+#: src/chatoptionstab.cpp:214 src/chatpanel.cpp:1348 src/chatpanel.cpp:1509
+#: src/chatpanel.cpp:1514 src/mainwindow.cpp:436
+#: src/settings++/tab_abstract.cpp:111 src/tasserver.cpp:425
+msgid "Error"
+msgstr "Chyba"
+
+#: src/chatoptionstab.cpp:228
+msgid "Timestamp"
+msgstr "Časová značka"
+
+#: src/chatoptionstab.cpp:242
+msgid "Notification"
+msgstr "Upozornění"
+
+#: src/chatoptionstab.cpp:252
+msgid ""
+"[19:35] ** Server ** Connected to TAS Server.\n"
+"[22:30] <Dude> hi everyone\n"
+"[22:30] ** Dude2 joined the channel.\n"
+"[22:30] * Dude2 thinks his colors looks nice\n"
+"[22:45] <Dude> Dude2: orl?\n"
+"[22:46] <Dude2> But could be better, should tweak them some more...\n"
+msgstr ""
+"[19:35] ** Server ** Connected to TAS Server.\n"
+"[22:30] <Typan> zdravim\n"
+"[22:30] ** Lama joined the channel.\n"
+"[22:30] * Lama si mysli ze ty barvy jsou proste super\n"
+"[22:45] <Typan> Lama: fakt?\n"
+"[22:46] <Lama> jeste bych to mel nejak vic prohazet...\n"
+
+#: src/chatoptionstab.cpp:263
+msgid "Font:"
+msgstr "Písmo:"
+
+#: src/chatoptionstab.cpp:267
+msgid "default"
+msgstr "výchozí"
+
+#: src/chatoptionstab.cpp:271
+msgid "Select..."
+msgstr "Vyber..."
+
+#: src/chatoptionstab.cpp:283
+msgid "Behavior"
+msgstr "Chování"
+
+#: src/chatoptionstab.cpp:285
+msgid "Use smart scrolling"
+msgstr ""
+
+#: src/chatoptionstab.cpp:290
+msgid "Play notification sounds"
+msgstr "Přehrávat zvuky upozornění"
+
+#: src/chatoptionstab.cpp:294
+msgid "Autoconnect last server"
+msgstr "Znovu se připojit k poslednímu serveru"
+
+#: src/chatoptionstab.cpp:305
+msgid "Chat logs"
+msgstr "Záznamy chatů"
+
+#: src/chatoptionstab.cpp:307
+msgid "Save chat logs"
+msgstr "Ukládat záznamy chatů"
+
+#: src/chatoptionstab.cpp:315
+msgid "Save to:"
+msgstr "Uložit do:"
+
+#: src/chatoptionstab.cpp:326
+msgid "Browse..."
+msgstr "Procházet..."
+
+#: src/chatoptionstab.cpp:336
+msgid "Highlight words"
+msgstr "Zvýraznit slova"
+
+#: src/chatoptionstab.cpp:338
+msgid "Words to highlight in chat:"
+msgstr "Slova k zvýraznění v chatu:"
+
+#: src/chatoptionstab.cpp:347
+msgid "enter a ; seperated list"
+msgstr "vložte ; rozdělený list"
+
+#: src/chatoptionstab.cpp:351
+msgid "Additionally play sound/flash titlebar "
+msgstr ""
+
+#: src/chatoptionstab.cpp:646 src/springoptionstab.cpp:477
+msgid "Choose a directory"
+msgstr "Zvolte adresář"
+
+#: src/chatpanel.cpp:122
+msgid "channel_"
+msgstr "místnost_"
+
+#: src/chatpanel.cpp:124
+msgid "#"
+msgstr "#"
+
+#: src/chatpanel.cpp:231
+msgid "right click for options (like autojoin)"
+msgstr "klikněte pravým tlačítkem pro možnosti (jako automatické připojení)"
+
+#: src/chatpanel.cpp:234
+msgid "Send"
+msgstr "Odeslat"
+
+#: src/chatpanel.cpp:280
+msgid "Auto join this channel"
+msgstr "Automaticky se připojit do této místnosti"
+
+#: src/chatpanel.cpp:293
+msgid "Display Join/Leave Messages"
+msgstr "Zobrazovat Zprávy Připojení/Odpojení"
+
+#: src/chatpanel.cpp:300 src/chatpanel.cpp:354
+msgid "Select all"
+msgstr "Vybrat vše"
+
+#: src/chatpanel.cpp:302 src/chatpanel.cpp:356
+msgid "Copy"
+msgstr "Kopírovat"
+
+#: src/chatpanel.cpp:308
+msgid "Channel info"
+msgstr "Informace o místnosti"
+
+#: src/chatpanel.cpp:312 src/chatpanel.cpp:1197
+msgid "Set topic..."
+msgstr "Nastavit téma..."
+
+#: src/chatpanel.cpp:314 src/chatpanel.cpp:1213
+msgid "Channel message..."
+msgstr "Zpráva místnost..."
+
+#: src/chatpanel.cpp:318
+msgid "Lock..."
+msgstr "Uzamknout..."
+
+#: src/chatpanel.cpp:320
+msgid "Unlock"
+msgstr "Odemknout"
+
+#: src/chatpanel.cpp:324
+msgid "Register..."
+msgstr "Registrovat se..."
+
+#: src/chatpanel.cpp:326
+msgid "Unregister"
+msgstr "Zrušit registraci"
+
+#: src/chatpanel.cpp:332
+msgid "On"
+msgstr "Zapnout"
+
+#: src/chatpanel.cpp:334
+msgid "Off"
+msgstr "Vypnout"
+
+#: src/chatpanel.cpp:338
+msgid "Is on?"
+msgstr "Je zapnuto?"
+
+#: src/chatpanel.cpp:340
+msgid "Spam protection"
+msgstr "Ochrana před spamem"
+
+#: src/chatpanel.cpp:341 src/chatpanel.cpp:455
+msgid "ChanServ"
+msgstr "ChanServ"
+
+#: src/chatpanel.cpp:348
+msgid "Disconnect"
+msgstr "Odpojit"
+
+#: src/chatpanel.cpp:350
+msgid "Reconnect"
+msgstr "Znovu se připojit"
+
+#: src/chatpanel.cpp:365
+msgid "Remove..."
+msgstr "Odstranit..."
+
+#: src/chatpanel.cpp:367
+msgid "Change password..."
+msgstr "Změnit heslo..."
+
+#: src/chatpanel.cpp:369
+msgid "Set access..."
+msgstr "Nastavit přistup..."
+
+#: src/chatpanel.cpp:371
+msgid "Accounts"
+msgstr "Účty"
+
+#: src/chatpanel.cpp:374
+msgid "Broadcast..."
+msgstr "Vysílání"
+
+#: src/chatpanel.cpp:376
+msgid "Admin"
+msgstr "Administrátor"
+
+#: src/chatpanel.cpp:387
+msgid "Open Chat"
+msgstr "Otevřít Chat"
+
+#: src/chatpanel.cpp:389
+msgid "Join same battle"
+msgstr "Přidat se ke stejné bitvě"
+
+#: src/chatpanel.cpp:395
+msgid "Ingame time"
+msgstr "Čas ve hře"
+
+#: src/chatpanel.cpp:397
+msgid "Retrieve IP and Smurfs"
+msgstr ""
+
+#: src/chatpanel.cpp:404 src/chatpanel.cpp:442
+msgid "Mute..."
+msgstr "Utlumit..."
+
+#: src/chatpanel.cpp:406
+msgid "Mute for 5 minutes"
+msgstr "Utlumit na 5 minut"
+
+#: src/chatpanel.cpp:408
+msgid "Mute for 10 minutes"
+msgstr "Utlumit na 10 minut"
+
+#: src/chatpanel.cpp:410
+msgid "Mute for 30 minutes"
+msgstr "Utlumit na 30 minut"
+
+#: src/chatpanel.cpp:412
+msgid "Mute for 2 hours"
+msgstr "Utlumit na 2 hodiny"
+
+#: src/chatpanel.cpp:414
+msgid "Mute for 1 day"
+msgstr "Utlumit na 1 den"
+
+#: src/chatpanel.cpp:417 src/chatpanel.cpp:444
+msgid "Unmute"
+msgstr "Zrušit utlumení"
+
+#: src/chatpanel.cpp:419
+msgid "Mute"
+msgstr "Utlumit"
+
+#: src/chatpanel.cpp:421 src/chatpanel.cpp:447
+msgid "Kick..."
+msgstr "Vykopnout..."
+
+#: src/chatpanel.cpp:425
+msgid "Ban..."
+msgstr "Ban..."
+
+#: src/chatpanel.cpp:427
+msgid "Unban"
+msgstr "Unban"
+
+#: src/chatpanel.cpp:435
+msgid "Slap!"
+msgstr "Slap!"
+
+#: src/chatpanel.cpp:451
+msgid "Op"
+msgstr "Op"
+
+#: src/chatpanel.cpp:453
+msgid "DeOp"
+msgstr "DeOp"
+
+#: src/chatpanel.cpp:788
+msgid " !! Command: \""
+msgstr " !! Příkaz: \""
+
+#: src/chatpanel.cpp:788
+msgid "\" params: \""
+msgstr "\" parametry: \""
+
+#: src/chatpanel.cpp:793
+msgid "channel"
+msgstr "místnost"
+
+#: src/chatpanel.cpp:794
+msgid "battle"
+msgstr "Bitva"
+
+#: src/chatpanel.cpp:795
+msgid "server"
+msgstr "server"
+
+#: src/chatpanel.cpp:814 src/chatpanel.cpp:819
+msgid " joined the "
+msgstr " se připojil k "
+
+#: src/chatpanel.cpp:847 src/chatpanel.cpp:857
+msgid " left the "
+msgstr " odešel z "
+
+#: src/chatpanel.cpp:888
+msgid ""
+"\n"
+" * Set by "
+msgstr ""
+"\n"
+" * Nastaven od "
+
+#: src/chatpanel.cpp:914
+msgid "Chat closed."
+msgstr "Chat zavřen."
+
+#: src/chatpanel.cpp:940
+msgid "_SERVER"
+msgstr "_SERVER"
+
+#: src/chatpanel.cpp:995
+#, c-format
+msgid "Are you sure you want to paste %d lines?"
+msgstr "Opravdu chcete vložit %d řádků?"
+
+#: src/chatpanel.cpp:995
+msgid "Flood warning"
+msgstr ""
+
+#: src/chatpanel.cpp:1007
+msgid " You have SpringLobby v"
+msgstr " Vaše verze SpringLobby je"
+
+#: src/chatpanel.cpp:1014
+msgid " You are not in channel or channel does not exist."
+msgstr " Nejste v místnosti nebo místnost neexistuje."
+
+#: src/chatpanel.cpp:1020 src/chatpanel.cpp:1034 src/chatpanel.cpp:1048
+#: src/chatpanel.cpp:1058
+#, c-format
+msgid ""
+" Error: Command (%s) does not exist, use /help for a list of available "
+"commands."
+msgstr ""
+" Chyba: Příkaz (%s) neexistuje, použijte /help pro seznam možných příkazů."
+
+#: src/chatpanel.cpp:1028
+msgid ""
+" You are not in battle or battle does not exist, use /help for a list of "
+"available commands."
+msgstr ""
+" Nejste v bitvě, nebo bitva neexistuje, použijte /help pro seznam dostupných "
+"příkazů."
+
+#: src/chatpanel.cpp:1042
+msgid " User is offline."
+msgstr " Uživatel není připojen."
+
+#: src/chatpanel.cpp:1063
+msgid " Sent: \""
+msgstr " Odesláno: \""
+
+#: src/chatpanel.cpp:1063
+msgid "\""
+msgstr "\""
+
+#: src/chatpanel.cpp:1177 src/chatpanel.cpp:1190 src/chatpanel.cpp:1207
+#: src/chatpanel.cpp:1223 src/chatpanel.cpp:1239 src/chatpanel.cpp:1254
+#: src/chatpanel.cpp:1270 src/chatpanel.cpp:1285 src/chatpanel.cpp:1298
+#: src/chatpanel.cpp:1311 src/chatpanel.cpp:1404 src/chatpanel.cpp:1425
+#: src/chatpanel.cpp:1441 src/chatpanel.cpp:1462 src/chatpanel.cpp:1478
+msgid "ChanServ error"
+msgstr "ChanServ error"
+
+#: src/chatpanel.cpp:1177 src/chatpanel.cpp:1190 src/chatpanel.cpp:1207
+#: src/chatpanel.cpp:1223 src/chatpanel.cpp:1239 src/chatpanel.cpp:1285
+#: src/chatpanel.cpp:1298 src/chatpanel.cpp:1311 src/chatpanel.cpp:1404
+#: src/chatpanel.cpp:1425 src/chatpanel.cpp:1441 src/chatpanel.cpp:1462
+#: src/chatpanel.cpp:1478
+msgid "ChanServ is not in this channel."
+msgstr "ChanServ není v této místnosti."
+
+#: src/chatpanel.cpp:1197
+msgid "What should be the new topic?"
+msgstr "Jaké by mělo být nové téma?"
+
+#: src/chatpanel.cpp:1213
+msgid "Message:"
+msgstr "Zpráva:"
+
+#: src/chatpanel.cpp:1229
+msgid "Lock channel..."
+msgstr "Ukamknout místnost"
+
+#: src/chatpanel.cpp:1229
+msgid "What should the new password be?"
+msgstr "Jaké by mělo nové heslo?"
+
+#: src/chatpanel.cpp:1244
+msgid "Unlock Channel"
+msgstr "Odemknout Místnost"
+
+#: src/chatpanel.cpp:1244
+msgid "Are you sure you want to unlock this channel?"
+msgstr "Opravdu chctete odemknout tuto místnost?"
+
+#: src/chatpanel.cpp:1254 src/chatpanel.cpp:1270
+msgid "ChanServ is not on this server."
+msgstr "ChanServ není na tomto serveru."
+
+#: src/chatpanel.cpp:1260
+msgid "Register Channel"
+msgstr "Registrovat Místnost"
+
+#: src/chatpanel.cpp:1260
+msgid "Who should be appointed founder of this channel?"
+msgstr ""
+
+#: src/chatpanel.cpp:1275
+msgid "Unregister Channel"
+msgstr "Odhlásit Místnost"
+
+#: src/chatpanel.cpp:1275
+msgid "Are you sure you want to unregister this channel?"
+msgstr "Opravdu chcete odhlásit tuto místnost?"
+
+#: src/chatpanel.cpp:1333
+msgid "Remove User Acount"
+msgstr "Odstranit Uživatelský Účet"
+
+#: src/chatpanel.cpp:1333
+msgid "What user account do you want to remove today?"
+msgstr "Který uživatelský účet si přejete odstranit?"
+
+#: src/chatpanel.cpp:1334
+msgid "Remove Account"
+msgstr "Odstranit účet"
+
+#: src/chatpanel.cpp:1334
+msgid "Are you sure you want to remove the account "
+msgstr "Opravdu si přejete odstranit účet? "
+
+#: src/chatpanel.cpp:1341 src/chatpanel.cpp:1342
+msgid "Change User Acount Password"
+msgstr "Změnit Heslo Uživatelského Účtu"
+
+#: src/chatpanel.cpp:1341
+msgid "What user account do you want to change the password for?"
+msgstr "Pro jaký uživatelský účet si přejete změnit heslo?"
+
+#: src/chatpanel.cpp:1342
+msgid "What would be the new password?"
+msgstr "Jaké bude nové heslo?"
+
+#: src/chatpanel.cpp:1348 src/chatpanel.cpp:1509 src/chatpanel.cpp:1514
+msgid "Not Implemented"
+msgstr "Neimplementováno"
+
+#: src/chatpanel.cpp:1354
+msgid "Broadcast Message"
+msgstr ""
+
+#: src/chatpanel.cpp:1354
+msgid "Message to be broadcasted:"
+msgstr ""
+
+#: src/chatpanel.cpp:1374
+msgid "You don't have the mod "
+msgstr "Nemáte tento mod "
+
+#: src/chatpanel.cpp:1375
+msgid " . Please download it first"
+msgstr ""
+
+#: src/chatpanel.cpp:1375
+msgid "Mod unavailable"
+msgstr ""
+
+#: src/chatpanel.cpp:1381
+msgid "This battle is password protected, enter the password."
+msgstr "Tato bitva je chráněna heslem,zadejte heslo."
+
+#: src/chatpanel.cpp:1409
+msgid "Mute User"
+msgstr ""
+
+#: src/chatpanel.cpp:1409
+msgid "For how many minutes should the user be muted?"
+msgstr ""
+
+#: src/chatpanel.cpp:1449
+msgid "Kick User"
+msgstr "Vykopnout uživatele"
+
+#: src/chatpanel.cpp:1449 src/chatpanel.cpp:1503
+msgid "Reason:"
+msgstr "Důvod:"
+
+#: src/chatpanel.cpp:1503
+msgid "Kick user"
+msgstr "Vykopnout uživatele"
+
+#: src/chatpanel.cpp:1520
+msgid "Mute user"
+msgstr ""
+
+#: src/chatpanel.cpp:1520
+msgid "Duration:"
+msgstr "Doba trvání:"
+
+#: src/connectwindow.cpp:41
+msgid "Connect to lobby server"
+msgstr "Připojit se k lobby serveru"
+
+#: src/connectwindow.cpp:64
+msgid ""
+"Server to connect to. You can connect to any server you like by typing in "
+"hostaddress:port format."
+msgstr ""
+"Server k připojení. Můžete se připojit k jakémukoli serveru, napsáním textu "
+"ve formátu hostaddress:port."
+
+#: src/connectwindow.cpp:70 src/connectwindow.cpp:156
+#: src/hostbattledialog.cpp:86 src/ui.cpp:147
+msgid "Password"
+msgstr "Heslo"
+
+#: src/connectwindow.cpp:72
+msgid "Remember password"
+msgstr "Zapamtovat si heslo"
+
+#: src/connectwindow.cpp:73
+msgid "Autoconnect next time"
+msgstr ""
+
+#: src/connectwindow.cpp:74
+msgid ""
+"remember connection details and automatically connect to server on next "
+"lobby startup"
+msgstr ""
+"pamatovat si detaily připojení a automaticky se připojit k serveru při "
+"dalším startu lobby"
+
+#: src/connectwindow.cpp:82
+msgid ""
+"Note: If you do not have an account, you\n"
+" can register one for free under the\n"
+"\"Register\" tab."
+msgstr ""
+"Poznámka: pokud nemáte účet, můžete\n"
+"si ho zdarma registrovat pod\n"
+"záložkou \"Registrovat\"."
+
+#: src/connectwindow.cpp:88
+msgid "Login"
+msgstr "Přihlášení"
+
+#: src/connectwindow.cpp:89
+msgid "Register"
+msgstr "Registrace"
+
+#: src/connectwindow.cpp:143
+msgid "Nick"
+msgstr "Přezdívka"
+
+#: src/connectwindow.cpp:240
+msgid "Invalid host/port or servername."
+msgstr "Neplatné host/port nebo jméno serveru."
+
+#: src/connectwindow.cpp:240 src/connectwindow.cpp:263
+msgid "Invalid host"
+msgstr ""
+
+#: src/connectwindow.cpp:248
+msgid "Invalid port."
+msgstr "Neplatný port."
+
+#: src/connectwindow.cpp:248 src/connectwindow.cpp:253
+msgid "Invalid port"
+msgstr "Neplatný port"
+
+#: src/connectwindow.cpp:253
+msgid ""
+"Port number out of range.\n"
+"\n"
+"It must be an integer between 1 and 65535"
+msgstr ""
+"Číslo portu mimo meze.\n"
+"\n"
+"Musí být celočíselnou hodnotou mezi 1 a 65535"
+
+#: src/connectwindow.cpp:263
+msgid "Invalid host/port."
+msgstr ""
+
+#: src/connectwindow.cpp:282
+msgid ""
+"Registration failed, the reason was:\n"
+"Password / confirmation mismatch"
+msgstr ""
+
+#: src/connectwindow.cpp:282 src/connectwindow.cpp:293
+msgid "Registration failed."
+msgstr "Registrace selhala."
+
+#: src/connectwindow.cpp:289
+msgid ""
+"Registration successful,\n"
+"you should now be able to login."
+msgstr ""
+
+#: src/connectwindow.cpp:289
+msgid "Registration successful"
+msgstr ""
+
+#: src/connectwindow.cpp:293
+msgid "Registration failed, the reason was:\n"
+msgstr ""
+
+#: src/countrycodes.cpp:11
+msgid " Andorra"
+msgstr " Andorra"
+
+#: src/countrycodes.cpp:12
+msgid "United Arab Emirates"
+msgstr "Spojené Arabské Emiráty"
+
+#: src/countrycodes.cpp:13
+msgid "Afghanistan"
+msgstr "Afghánistán"
+
+#: src/countrycodes.cpp:14
+msgid "Antigua and Barbuda"
+msgstr "Antigua a Barbuda"
+
+#: src/countrycodes.cpp:15
+msgid "Anguilla"
+msgstr "Anguilla"
+
+#: src/countrycodes.cpp:16
+msgid "Albania"
+msgstr "Albánie"
+
+#: src/countrycodes.cpp:17
+msgid "Armenia"
+msgstr "Arménie"
+
+#: src/countrycodes.cpp:18
+msgid "Netherlands Antilles"
+msgstr "Nizozemské Antily"
+
+#: src/countrycodes.cpp:19
+msgid "Angola"
+msgstr "Angola"
+
+#: src/countrycodes.cpp:20
+msgid "Antarctica"
+msgstr "Antarktida"
+
+#: src/countrycodes.cpp:21
+msgid "Argentina"
+msgstr "Argentina"
+
+#: src/countrycodes.cpp:22
+msgid "American Samoa"
+msgstr "Americká Samoa"
+
+#: src/countrycodes.cpp:23
+msgid "Austria"
+msgstr "Rakousko"
+
+#: src/countrycodes.cpp:24
+msgid "Australia"
+msgstr "Austrálie"
+
+#: src/countrycodes.cpp:25
+msgid "Aruba"
+msgstr "Aruba"
+
+#: src/countrycodes.cpp:26
+msgid "Azerbaijan"
+msgstr "Azerbajdžán"
+
+#: src/countrycodes.cpp:27
+msgid "Bosnia and Herzegovina"
+msgstr "Bosna a Hercegovina"
+
+#: src/countrycodes.cpp:28
+msgid "Barbados"
+msgstr "Barbados"
+
+#: src/countrycodes.cpp:29
+msgid "Bangladesh"
+msgstr "Bangladéš"
+
+#: src/countrycodes.cpp:30
+msgid "Belgium"
+msgstr "Belgie"
+
+#: src/countrycodes.cpp:31
+msgid "Burkina Faso"
+msgstr "Burkina Faso"
+
+#: src/countrycodes.cpp:32
+msgid "Bulgaria"
+msgstr "Bulharsko"
+
+#: src/countrycodes.cpp:33
+msgid "Bahrain"
+msgstr "Bahrajn"
+
+#: src/countrycodes.cpp:34
+msgid "Burundi"
+msgstr "Burundi"
+
+#: src/countrycodes.cpp:35
+msgid "Benin"
+msgstr "Benin"
+
+#: src/countrycodes.cpp:36
+msgid "Bermuda"
+msgstr "Bermudy"
+
+#: src/countrycodes.cpp:37
+msgid "Brunei Darussalam"
+msgstr "Brunej"
+
+#: src/countrycodes.cpp:38
+msgid "Bolivia"
+msgstr "Bolívie"
+
+#: src/countrycodes.cpp:39
+msgid "Brazil"
+msgstr "Brazílie"
+
+#: src/countrycodes.cpp:40
+msgid "Bahamas"
+msgstr "Bahamy"
+
+#: src/countrycodes.cpp:41
+msgid "Bhutan"
+msgstr "Bhútán"
+
+#: src/countrycodes.cpp:42
+msgid "Bouvet Island"
+msgstr "Bouvetův ostrov"
+
+#: src/countrycodes.cpp:43
+msgid "Botswana"
+msgstr "Botswana"
+
+#: src/countrycodes.cpp:44
+msgid "Belarus"
+msgstr "Bělorusko"
+
+#: src/countrycodes.cpp:45
+msgid "Belize"
+msgstr "Belize"
+
+#: src/countrycodes.cpp:46
+msgid "Canada"
+msgstr "Kanada"
+
+#: src/countrycodes.cpp:47
+msgid "Cocos (Keeling Islands)"
+msgstr "kosové ostrovy"
+
+#: src/countrycodes.cpp:48
+msgid "Central African Republic"
+msgstr "Středoafrická republika"
+
+#: src/countrycodes.cpp:49
+msgid "Congo"
+msgstr "Kongo"
+
+#: src/countrycodes.cpp:50
+msgid "Switzerland"
+msgstr "Švýcarsko"
+
+#: src/countrycodes.cpp:51
+msgid "Cote D'Ivoire (Ivory Coast)"
+msgstr ""
+
+#: src/countrycodes.cpp:52
+msgid "Cook Islands"
+msgstr "Cookovy ostrovy"
+
+#: src/countrycodes.cpp:53
+msgid "Chile"
+msgstr "Chile"
+
+#: src/countrycodes.cpp:54
+msgid "Cameroon"
+msgstr "Kamerun"
+
+#: src/countrycodes.cpp:55
+msgid "China"
+msgstr "Čína"
+
+#: src/countrycodes.cpp:56
+msgid "Colombia"
+msgstr "Kolumbie"
+
+#: src/countrycodes.cpp:57
+msgid "Costa Rica"
+msgstr "Kostarika"
+
+#: src/countrycodes.cpp:58
+msgid "Cuba"
+msgstr "Kuba"
+
+#: src/countrycodes.cpp:59
+msgid "Cape Verde"
+msgstr "Kapverdské ostrovy"
+
+#: src/countrycodes.cpp:60
+msgid "Christmas Island"
+msgstr "Vánoční ostrov"
+
+#: src/countrycodes.cpp:61
+msgid "Cyprus"
+msgstr "Kypr"
+
+#: src/countrycodes.cpp:62
+msgid "Czech Republic"
+msgstr "Česká republika"
+
+#: src/countrycodes.cpp:63
+msgid "Germany"
+msgstr "Německo"
+
+#: src/countrycodes.cpp:64
+msgid "Djibouti"
+msgstr "Džibuti"
+
+#: src/countrycodes.cpp:65
+msgid "Denmark"
+msgstr "Dánsko"
+
+#: src/countrycodes.cpp:66
+msgid "Dominica"
+msgstr "Dominika"
+
+#: src/countrycodes.cpp:67
+msgid "Dominican Republic"
+msgstr "Dominikánská republika"
+
+#: src/countrycodes.cpp:68
+msgid "Algeria"
+msgstr "Alžír"
+
+#: src/countrycodes.cpp:69
+msgid "Ecuador"
+msgstr "Ekvádor"
+
+#: src/countrycodes.cpp:70
+msgid "Estonia"
+msgstr "Estonsko"
+
+#: src/countrycodes.cpp:71
+msgid "Egypt"
+msgstr "Egypt"
+
+#: src/countrycodes.cpp:72
+msgid "Western Sahara"
+msgstr "Západní Sahara"
+
+#: src/countrycodes.cpp:73
+msgid "Eritrea"
+msgstr "Eritrea"
+
+#: src/countrycodes.cpp:74
+msgid "Spain"
+msgstr "Španělsko"
+
+#: src/countrycodes.cpp:75
+msgid "Ethiopia"
+msgstr "Etiopie"
+
+#: src/countrycodes.cpp:76
+msgid "Finland"
+msgstr "Finsko"
+
+#: src/countrycodes.cpp:77
+msgid "Fiji"
+msgstr "Fidži"
+
+#: src/countrycodes.cpp:78
+msgid "Falkland Islands (Malvinas)"
+msgstr "Fallandské ostrovy (Malvíny)"
+
+#: src/countrycodes.cpp:79
+msgid "Micronesia"
+msgstr "Mikronésie"
+
+#: src/countrycodes.cpp:80
+msgid "Faroe Islands"
+msgstr "Faerské ostrovy"
+
+#: src/countrycodes.cpp:81
+msgid "France"
+msgstr "Francie"
+
+#: src/countrycodes.cpp:82
+msgid "France, Metropolitan"
+msgstr "Francie, metropolitní"
+
+#: src/countrycodes.cpp:83
+msgid "Gabon"
+msgstr "Gabon"
+
+#: src/countrycodes.cpp:84
+msgid "Grenada"
+msgstr "Grenada"
+
+#: src/countrycodes.cpp:85
+msgid "Georgia"
+msgstr "Gruzie"
+
+#: src/countrycodes.cpp:86
+msgid "French Guiana"
+msgstr "Francouzská Guayana"
+
+#: src/countrycodes.cpp:87
+msgid "Ghana"
+msgstr "Ghana"
+
+#: src/countrycodes.cpp:88
+msgid "Gibraltar"
+msgstr "Gibraltar"
+
+#: src/countrycodes.cpp:89
+msgid "Greenland"
+msgstr "Grónsko"
+
+#: src/countrycodes.cpp:90
+msgid "Gambia"
+msgstr "Gambie"
+
+#: src/countrycodes.cpp:91
+msgid "Guinea"
+msgstr "Guinea"
+
+#: src/countrycodes.cpp:92
+msgid "Guadeloupe"
+msgstr "Guadeloupe"
+
+#: src/countrycodes.cpp:93
+msgid "Equatorial Guinea"
+msgstr "Rovníková Guinea"
+
+#: src/countrycodes.cpp:94
+msgid "Greece"
+msgstr "Řecko"
+
+#: src/countrycodes.cpp:95
+msgid "S. Georgia and S. Sandwich Isls."
+msgstr "Ostrovy svatá Georgia a Sandwich"
+
+#: src/countrycodes.cpp:96
+msgid "Guatemala"
+msgstr "Guatemala"
+
+#: src/countrycodes.cpp:97
+msgid "Guam"
+msgstr "Guam"
+
+#: src/countrycodes.cpp:98
+msgid "Guinea-Bissau"
+msgstr "Guinea-Bissau"
+
+#: src/countrycodes.cpp:99
+msgid "Guyana"
+msgstr "Guayana"
+
+#: src/countrycodes.cpp:100
+msgid "Hong Kong"
+msgstr "Hong Kong"
+
+#: src/countrycodes.cpp:101
+msgid "Heard and McDonald Islands"
+msgstr ""
+
+#: src/countrycodes.cpp:102
+msgid "Honduras"
+msgstr "Honduras"
+
+#: src/countrycodes.cpp:103
+msgid "Croatia (Hrvatska)"
+msgstr "Chorvatsko"
+
+#: src/countrycodes.cpp:104
+msgid "Haiti"
+msgstr "Haiti"
+
+#: src/countrycodes.cpp:105
+msgid "Hungary"
+msgstr "Maďarsko"
+
+#: src/countrycodes.cpp:106
+msgid "Indonesia"
+msgstr "Indonésie"
+
+#: src/countrycodes.cpp:107
+msgid "Ireland"
+msgstr "Irsko"
+
+#: src/countrycodes.cpp:108
+msgid "Israel"
+msgstr "Izrael"
+
+#: src/countrycodes.cpp:109
+msgid "India"
+msgstr "Indie"
+
+#: src/countrycodes.cpp:110
+msgid "British Indian Ocean Territory"
+msgstr "Britské teritorium v Indickém oceánu"
+
+#: src/countrycodes.cpp:111
+msgid "Iraq"
+msgstr "Irák"
+
+#: src/countrycodes.cpp:112
+msgid "Iran"
+msgstr "Írán"
+
+#: src/countrycodes.cpp:113
+msgid "Iceland"
+msgstr "Island"
+
+#: src/countrycodes.cpp:114
+msgid "Italy"
+msgstr "Itálie"
+
+#: src/countrycodes.cpp:115
+msgid "Jamaica"
+msgstr "Jamajka"
+
+#: src/countrycodes.cpp:116
+msgid "Jordan"
+msgstr "Jordánsko"
+
+#: src/countrycodes.cpp:117
+msgid "Japan"
+msgstr "Japonsko"
+
+#: src/countrycodes.cpp:118
+msgid "Kenya"
+msgstr "Keňa"
+
+#: src/countrycodes.cpp:119
+msgid "Kyrgyzstan (Kyrgyz Republic)"
+msgstr ""
+
+#: src/countrycodes.cpp:120
+msgid "Cambodia"
+msgstr "Kambodža"
+
+#: src/countrycodes.cpp:121
+msgid "Kiribati"
+msgstr "Kiribati"
+
+#: src/countrycodes.cpp:122
+msgid "Comoros"
+msgstr "Komory"
+
+#: src/countrycodes.cpp:123
+msgid "Saint Kitts and Nevis"
+msgstr "Svatý Kryštof a Nevis"
+
+#: src/countrycodes.cpp:124
+msgid "Korea (North) (People's Republic)"
+msgstr "Korejská lidově demokratická republika (Severní Korea)"
+
+#: src/countrycodes.cpp:125
+msgid "Korea (South) (Republic)"
+msgstr "Korejská republika (Jižní Korea)"
+
+#: src/countrycodes.cpp:126
+msgid "Kuwait"
+msgstr "Kuvajt"
+
+#: src/countrycodes.cpp:127
+msgid "Cayman Islands"
+msgstr "Kajmanské ostrovy"
+
+#: src/countrycodes.cpp:128
+msgid "Kazakhstan"
+msgstr "Kazachstán"
+
+#: src/countrycodes.cpp:129
+msgid "Laos"
+msgstr "Laos"
+
+#: src/countrycodes.cpp:130
+msgid "Lebanon"
+msgstr "Libanon"
+
+#: src/countrycodes.cpp:131
+msgid "Saint Lucia"
+msgstr "Svatá Lucie"
+
+#: src/countrycodes.cpp:132
+msgid "Liechtenstein"
+msgstr "Lichtenštejnsko"
+
+#: src/countrycodes.cpp:133
+msgid "Sri Lanka"
+msgstr "Srí Lanka"
+
+#: src/countrycodes.cpp:134
+msgid "Liberia"
+msgstr "Libérie"
+
+#: src/countrycodes.cpp:135
+msgid "Lesotho"
+msgstr "Lesotho"
+
+#: src/countrycodes.cpp:136
+msgid "Lithuania"
+msgstr "Litva"
+
+#: src/countrycodes.cpp:137
+msgid "Luxembourg"
+msgstr "Lucembursko"
+
+#: src/countrycodes.cpp:138
+msgid "Latvia"
+msgstr "Lotyšsko"
+
+#: src/countrycodes.cpp:139
+msgid "Libya"
+msgstr "Libye"
+
+#: src/countrycodes.cpp:140
+msgid "Morocco"
+msgstr "Maroko"
+
+#: src/countrycodes.cpp:141
+msgid "Monaco"
+msgstr "Monako"
+
+#: src/countrycodes.cpp:142
+msgid "Moldova"
+msgstr "Moldávie"
+
+#: src/countrycodes.cpp:143
+msgid "Montenegro"
+msgstr "Černá hora"
+
+#: src/countrycodes.cpp:144
+msgid "Madagascar"
+msgstr "Madagaskar"
+
+#: src/countrycodes.cpp:145
+msgid "Marshall Islands"
+msgstr "Marshallovy ostrovy"
+
+#: src/countrycodes.cpp:146
+msgid "Macedonia"
+msgstr "Makedonie"
+
+#: src/countrycodes.cpp:147
+msgid "Mali"
+msgstr "Mali"
+
+#: src/countrycodes.cpp:148
+msgid "Myanmar"
+msgstr "Myanmar"
+
+#: src/countrycodes.cpp:149
+msgid "Mongolia"
+msgstr "Mongolsko"
+
+#: src/countrycodes.cpp:150
+msgid "Macau"
+msgstr "Macao"
+
+#: src/countrycodes.cpp:151
+msgid "Northern Mariana Islands"
+msgstr "Severní Mariánské Ostrovy"
+
+#: src/countrycodes.cpp:152
+msgid "Martinique"
+msgstr "Martinik"
+
+#: src/countrycodes.cpp:153
+msgid "Mauritania"
+msgstr "Mauritánie"
+
+#: src/countrycodes.cpp:154
+msgid "Montserrat"
+msgstr "Montserrat"
+
+#: src/countrycodes.cpp:155
+msgid "Malta"
+msgstr "Malta"
+
+#: src/countrycodes.cpp:156
+msgid "Mauritius"
+msgstr "Mauritius"
+
+#: src/countrycodes.cpp:157
+msgid "Maldives"
+msgstr "Maledivy"
+
+#: src/countrycodes.cpp:158
+msgid "Malawi"
+msgstr "Malawi"
+
+#: src/countrycodes.cpp:159
+msgid "Mexico"
+msgstr "Mexiko"
+
+#: src/countrycodes.cpp:160
+msgid "Malaysia"
+msgstr "Malajsie"
+
+#: src/countrycodes.cpp:161
+msgid "Mozambique"
+msgstr "Mosambik"
+
+#: src/countrycodes.cpp:162
+msgid "Namibia"
+msgstr "Namíbie"
+
+#: src/countrycodes.cpp:163
+msgid "New Caledonia"
+msgstr "Nová Kaledonie"
+
+#: src/countrycodes.cpp:164
+msgid "Niger"
+msgstr "Nigerie"
+
+#: src/countrycodes.cpp:165
+msgid "Norfolk Island"
+msgstr "Norfolkský ostrov"
+
+#: src/countrycodes.cpp:166
+msgid "Nigeria"
+msgstr "Nigérie"
+
+#: src/countrycodes.cpp:167
+msgid "Nicaragua"
+msgstr "Nikaragua"
+
+#: src/countrycodes.cpp:168
+msgid "Netherlands"
+msgstr "Nizozemí"
+
+#: src/countrycodes.cpp:169
+msgid "Norway"
+msgstr "Norsko"
+
+#: src/countrycodes.cpp:170
+msgid "Nepal"
+msgstr "Nepál"
+
+#: src/countrycodes.cpp:171
+msgid "Nauru"
+msgstr "Nauru"
+
+#: src/countrycodes.cpp:172
+msgid "Neutral Zone (Saudia Arabia/Iraq)"
+msgstr "Neutrální Území (Saudská Arabie/irák)"
+
+#: src/countrycodes.cpp:173
+msgid "Niue"
+msgstr "Niue"
+
+#: src/countrycodes.cpp:174
+msgid "New Zealand"
+msgstr "Nový Zéland"
+
+#: src/countrycodes.cpp:175
+msgid "Oman"
+msgstr "Omán"
+
+#: src/countrycodes.cpp:176
+msgid "Panama"
+msgstr "Panama"
+
+#: src/countrycodes.cpp:177
+msgid "Peru"
+msgstr "Peru"
+
+#: src/countrycodes.cpp:178
+msgid "French Polynesia"
+msgstr "Francouzská Polynésie"
+
+#: src/countrycodes.cpp:179
+msgid "Papua New Guinea"
+msgstr "Papua Nová Guinea"
+
+#: src/countrycodes.cpp:180
+msgid "Philippines"
+msgstr "Filipíny"
+
+#: src/countrycodes.cpp:181
+msgid "Pakistan"
+msgstr "Pákistán"
+
+#: src/countrycodes.cpp:182
+msgid "Poland"
+msgstr "Polsko"
+
+#: src/countrycodes.cpp:183
+msgid "St. Pierre and Miquelon"
+msgstr "St. Pierre a Miquelon"
+
+#: src/countrycodes.cpp:184
+msgid "Pitcairn"
+msgstr "Pitcairnovy ostrovy"
+
+#: src/countrycodes.cpp:185
+msgid "Puerto Rico"
+msgstr "Portoriko"
+
+#: src/countrycodes.cpp:186
+msgid "Portugal"
+msgstr "Portugalsko"
+
+#: src/countrycodes.cpp:187
+msgid "Palau"
+msgstr "Palauská republika"
+
+#: src/countrycodes.cpp:188
+msgid "Paraguay"
+msgstr "Paraguay"
+
+#: src/countrycodes.cpp:189
+msgid "Qatar"
+msgstr "Katar"
+
+#: src/countrycodes.cpp:190
+msgid "Reunion"
+msgstr "Reunion"
+
+#: src/countrycodes.cpp:191
+msgid "Romania"
+msgstr "Rumunsko"
+
+#: src/countrycodes.cpp:192
+msgid "Serbia"
+msgstr "Srbsko"
+
+#: src/countrycodes.cpp:193
+msgid "Russian Federation"
+msgstr "Ruská federace"
+
+#: src/countrycodes.cpp:194
+msgid "Rwanda"
+msgstr "Rwanda"
+
+#: src/countrycodes.cpp:195
+msgid "Saudi Arabia"
+msgstr "Saudská Arábie"
+
+#: src/countrycodes.cpp:196
+msgid "Solomon Islands"
+msgstr "Šalamounovy ostrovy"
+
+#: src/countrycodes.cpp:197
+msgid "Seychelles"
+msgstr "Seychelské ostrovy"
+
+#: src/countrycodes.cpp:198
+msgid "Sudan"
+msgstr "Súdán"
+
+#: src/countrycodes.cpp:199
+msgid "Sweden"
+msgstr "Švédsko"
+
+#: src/countrycodes.cpp:200
+msgid "Singapore"
+msgstr "Singapur"
+
+#: src/countrycodes.cpp:201
+msgid "St. Helena"
+msgstr "Sv. Helena"
+
+#: src/countrycodes.cpp:202
+msgid "Slovenia"
+msgstr "Slovinsko"
+
+#: src/countrycodes.cpp:203
+msgid "Svalbard and Jan Mayen Islands"
+msgstr "Ostrovy Svalbard a Jan Mayen"
+
+#: src/countrycodes.cpp:204
+msgid "Slovakia (Slovak Republic)"
+msgstr "Slovensko"
+
+#: src/countrycodes.cpp:205
+msgid "Sierra Leone"
+msgstr "Sierra Leone"
+
+#: src/countrycodes.cpp:206
+msgid "San Marino"
+msgstr "San Marino"
+
+#: src/countrycodes.cpp:207
+msgid "Senegal"
+msgstr "Senegal"
+
+#: src/countrycodes.cpp:208
+msgid "Somalia"
+msgstr "Somálsko"
+
+#: src/countrycodes.cpp:209
+msgid "Suriname"
+msgstr "Surinam"
+
+#: src/countrycodes.cpp:210
+msgid "Sao Tome and Principe"
+msgstr "Svatý Tomáš a Princův ostrov"
+
+#: src/countrycodes.cpp:211
+msgid "Soviet Union (former)"
+msgstr "Sovětský Svaz (bývalý)"
+
+#: src/countrycodes.cpp:212
+msgid "El Salvador"
+msgstr "Salvádor"
+
+#: src/countrycodes.cpp:213
+msgid "Syria"
+msgstr "Sýrie"
+
+#: src/countrycodes.cpp:214
+msgid "Swaziland"
+msgstr "Svazijsko"
+
+#: src/countrycodes.cpp:215
+msgid "Turks and Caicos Islands"
+msgstr "Ostrovy Turks a Caicos"
+
+#: src/countrycodes.cpp:216
+msgid "Chad"
+msgstr "Čad"
+
+#: src/countrycodes.cpp:217
+msgid "French Southern Territories"
+msgstr "Francouzská Jižní Teritoria"
+
+#: src/countrycodes.cpp:218
+msgid "Togo"
+msgstr "Togo"
+
+#: src/countrycodes.cpp:219
+msgid "Thailand"
+msgstr "Thajsko"
+
+#: src/countrycodes.cpp:220
+msgid "Tajikistan"
+msgstr "Tádžikistán"
+
+#: src/countrycodes.cpp:221
+msgid "Tokelau"
+msgstr "Tokelau"
+
+#: src/countrycodes.cpp:222
+msgid "Turkmenistan"
+msgstr "Turkmenistán"
+
+#: src/countrycodes.cpp:223
+msgid "Tunisia"
+msgstr "Tunis"
+
+#: src/countrycodes.cpp:224
+msgid "Tonga"
+msgstr "Tonga"
+
+#: src/countrycodes.cpp:225
+msgid "East Timor"
+msgstr "Východní Timor"
+
+#: src/countrycodes.cpp:226
+msgid "Turkey"
+msgstr "Turecko"
+
+#: src/countrycodes.cpp:227
+msgid "Trinidad and Tobago"
+msgstr "Trinidad a Tobago"
+
+#: src/countrycodes.cpp:228
+msgid "Tuvalu"
+msgstr "Tuvalu"
+
+#: src/countrycodes.cpp:229
+msgid "Taiwan"
+msgstr "Tchaj-wan"
+
+#: src/countrycodes.cpp:230
+msgid "Tanzania"
+msgstr "Tanzanie"
+
+#: src/countrycodes.cpp:231
+msgid "Ukraine"
+msgstr "Ukrajina"
+
+#: src/countrycodes.cpp:232
+msgid "Uganda"
+msgstr "Uganda"
+
+#: src/countrycodes.cpp:233
+msgid "United Kingdom (Great Britain)"
+msgstr "Velká Británie"
+
+#: src/countrycodes.cpp:234
+msgid "US Minor Outlying Islands"
+msgstr "US menší pobřežní ostrovy"
+
+#: src/countrycodes.cpp:235
+msgid "United States"
+msgstr "Spojené státy"
+
+#: src/countrycodes.cpp:236
+msgid "Uruguay"
+msgstr "Uruguay"
+
+#: src/countrycodes.cpp:237
+msgid "Uzbekistan"
+msgstr "Uzbekistán"
+
+#: src/countrycodes.cpp:238
+msgid "Vatican City State (Holy See)"
+msgstr "Vatikánský městský stát (Svatý stolec)"
+
+#: src/countrycodes.cpp:239
+msgid "Saint Vincent and The Grenadines"
+msgstr "Svatý Vincenc a Grenadiny"
+
+#: src/countrycodes.cpp:240
+msgid "Venezuela"
+msgstr "Venezuela"
+
+#: src/countrycodes.cpp:241
+msgid "Virgin Islands (British)"
+msgstr "Panenské ostrovy"
+
+#: src/countrycodes.cpp:242
+msgid "Virgin Islands (US)"
+msgstr "Panenské ostrovy"
+
+#: src/countrycodes.cpp:243
+msgid "Viet Nam"
+msgstr "Vietnam"
+
+#: src/countrycodes.cpp:244
+msgid "Vanuatu"
+msgstr "Vanuatu"
+
+#: src/countrycodes.cpp:245
+msgid "Wallis and Futuna Islands"
+msgstr "Ostrovy Wallis a Futuna"
+
+#: src/countrycodes.cpp:246
+msgid "Samoa"
+msgstr "Samoa"
+
+#: src/countrycodes.cpp:247
+msgid "Yemen"
+msgstr "Jemen"
+
+#: src/countrycodes.cpp:248
+msgid "Mayotte"
+msgstr "Mayotte"
+
+#: src/countrycodes.cpp:249
+msgid "Yugoslavia"
+msgstr "Jugoslávie"
+
+#: src/countrycodes.cpp:250
+msgid "South Africa"
+msgstr "Jižní Afrika"
+
+#: src/countrycodes.cpp:251
+msgid "Zambia"
+msgstr "Zambie"
+
+#: src/countrycodes.cpp:252
+msgid "Zaire"
+msgstr "Zair"
+
+#: src/countrycodes.cpp:253
+msgid "Zimbabwe"
+msgstr "Zimbabwe"
+
+#: src/countrycodes.cpp:260
+msgid "(Full country name not found)"
+msgstr "Plné jméno země nenalezeno"
+
+#: src/crashreport.cpp:71
+msgid "System informations"
+msgstr "Systémové informace"
+
+#: src/crashreport.cpp:73
+msgid "Application verbose log"
+msgstr ""
+
+#: src/crashreport.cpp:75
+msgid "Last generated spring launching script"
+msgstr "Naposledy vytvořený skript spouštící spring"
+
+#: src/globalevents.cpp:28
+msgid "Download complete"
+msgstr ""
+
+#: src/globalevents.cpp:33
+msgid "Download failed"
+msgstr "Stahování selhalo"
+
+#: src/hostbattledialog.cpp:46
+msgid "Host new battle"
+msgstr ""
+
+#: src/hostbattledialog.cpp:62
+msgid ""
+"A short description of the game, this will show up in the battle list."
+msgstr ""
+
+#: src/hostbattledialog.cpp:77
+msgid "Select the mod to play with."
+msgstr "Vyberte mod, který chcete hrát."
+
+#: src/hostbattledialog.cpp:91
+msgid "Password needed to join game. Keep empty for no password"
+msgstr "Pro vstup do hry je nutné heslo. Ponechte prázdné pro žádné heslo"
+
+#: src/hostbattledialog.cpp:101
+msgid "Port"
+msgstr "Port"
+
+#: src/hostbattledialog.cpp:106
+msgid "UDP port to host game on. Default is 8452."
+msgstr ""
+
+#: src/hostbattledialog.cpp:110
+msgid "Test firewall"
+msgstr "Test firewallu"
+
+#: src/hostbattledialog.cpp:118
+msgid "Number of players"
+msgstr "Počet hráčů"
+
+#: src/hostbattledialog.cpp:122
+msgid "The maximum number of players to allow in the battle."
+msgstr ""
+
+#: src/hostbattledialog.cpp:130
+msgid "Hole punching"
+msgstr ""
+
+#: src/hostbattledialog.cpp:132 src/ui.cpp:865
+msgid "NAT traversal"
+msgstr ""
+
+#: src/hostbattledialog.cpp:138
+msgid "NAT traversal to use. Experimental support."
+msgstr ""
+
+#: src/hostbattledialog.cpp:143
+msgid "Minimum Rank needed"
+msgstr "Minimální potřebná hodnost"
+
+#: src/hostbattledialog.cpp:209
+msgid "Start hosting the battle."
+msgstr "Založit bitvu"
+
+#: src/hostbattledialog.cpp:245 src/singleplayertab.cpp:194
+msgid "You have to select a mod first."
+msgstr "Musíte nejdřív vybrat mód."
+
+#: src/hostbattledialog.cpp:245
+msgid "No mod selected."
+msgstr "Nebyl vybrán žádný mod."
+
+#: src/httpdownloader.cpp:75
+msgid ""
+"\n"
+"successfully saved to:\n"
+msgstr ""
+"\n"
+"úspěšně uloženo do:\n"
+
+#: src/httpdownloader.cpp:93
+msgid "Could not save\n"
+msgstr "Nemohl uložit\n"
+
+#: src/httpdownloader.cpp:93
+msgid ""
+"\n"
+"to:\n"
+msgstr ""
+"\n"
+"do:\n"
+
+#: src/mainjoinbattletab.cpp:45
+msgid "Battle list"
+msgstr "Seznam bitev"
+
+#: src/mainjoinbattletab.cpp:85 src/mainjoinbattletab.cpp:153
+#: src/mainsingleplayertab.cpp:40
+msgid "Map/Mod Options"
+msgstr "Nastavení Map/Módů"
+
+#: src/mainjoinbattletab.cpp:150
+msgid "Battleroom"
+msgstr "Místnost hry"
+
+#: src/mainoptionstab.cpp:48
+msgid "Spring"
+msgstr "Spring"
+
+#: src/mainoptionstab.cpp:52
+msgid "P2P"
+msgstr "P2P"
+
+#: src/mainoptionstab.cpp:56
+msgid "Chat"
+msgstr "Chat"
+
+#: src/mainoptionstab.cpp:58
+msgid "Restore"
+msgstr "Vrátit"
+
+#: src/mainoptionstab.cpp:59
+msgid "Apply"
+msgstr "Použít"
+
+#: src/mainsingleplayertab.cpp:36
+msgid "Game"
+msgstr "Hra"
+
+#: src/maintorrenttab.cpp:41
+msgid "Transfers in progress: "
+msgstr ""
+
+#: src/maintorrenttab.cpp:47
+msgid "Total Outgoing: "
+msgstr ""
+
+#: src/maintorrenttab.cpp:48
+msgid "Total Incoming: "
+msgstr ""
+
+#: src/maintorrenttab.cpp:55
+msgid "unknown"
+msgstr "neznámý"
+
+#: src/maintorrenttab.cpp:62
+msgid "Cancel Download"
+msgstr "Zrušit stahování"
+
+#: src/maintorrenttab.cpp:65
+msgid "Publish new file"
+msgstr "Uveřejnit  nový soubor"
+
+#: src/maintorrenttab.cpp:67
+msgid "Search file"
+msgstr "Hledat soubor"
+
+#: src/maintorrenttab.cpp:128
+msgid "not available"
+msgstr "nepoužitelné"
+
+#: src/maintorrenttab.cpp:131
+msgid "seeding"
+msgstr ""
+
+#: src/maintorrenttab.cpp:132
+msgid "leeching"
+msgstr ""
+
+#: src/maintorrenttab.cpp:133
+msgid "queued"
+msgstr ""
+
+#: src/maintorrenttab.cpp:179
+msgid "Status: not connected"
+msgstr "Stav: nepřipojený"
+
+#: src/maintorrenttab.cpp:183
+msgid "Status: connected"
+msgstr "Stav: připojen"
+
+#: src/maintorrenttab.cpp:187
+msgid "Status: throttled or paused (ingame)"
+msgstr ""
+
+#: src/maintorrenttab.cpp:191
+msgid "Status: unknown"
+msgstr "Stav: neznámý"
+
+#: src/maintorrenttab.cpp:197
+#, c-format
+msgid "Total Outgoing: %.2f KB/s"
+msgstr "Celkový výstup: %.2f KB/s"
+
+#: src/maintorrenttab.cpp:198
+#, c-format
+msgid "Total Incoming: %.2f KB/s"
+msgstr "Celkový vstup: %.2f KB/s"
+
+#: src/mainwindow.cpp:85
+msgid "SpringLobby"
+msgstr "SpringLobby"
+
+#: src/mainwindow.cpp:90
+msgid "&Connect..."
+msgstr ""
+
+#: src/mainwindow.cpp:91
+msgid "&Disconnect"
+msgstr ""
+
+#: src/mainwindow.cpp:93
+msgid "&Quit"
+msgstr "&Konec"
+
+#: src/mainwindow.cpp:100
+msgid "&Join channel..."
+msgstr ""
+
+#: src/mainwindow.cpp:101
+msgid "Open private &chat..."
+msgstr ""
+
+#: src/mainwindow.cpp:102
+msgid "&Autojoin channels..."
+msgstr "&Autotomaticky vstoupit do místností..."
+
+#: src/mainwindow.cpp:104
+msgid "&Reload maps/mods"
+msgstr "&Znovu zavést  mapy/módy"
+
+#: src/mainwindow.cpp:108
+msgid "Show tooltips"
+msgstr "Zobrazit tipy"
+
+#: src/mainwindow.cpp:115
+msgid "Check for new Version"
+msgstr ""
+
+#: src/mainwindow.cpp:116
+msgid "SpringSettings"
+msgstr "SpringNastavení"
+
+#: src/mainwindow.cpp:120
+msgid "&About"
+msgstr "&O programu"
+
+#: src/mainwindow.cpp:121
+msgid "&Report a bug..."
+msgstr "&Nahlásit bug..."
+
+#: src/mainwindow.cpp:122
+msgid "&Documentation"
+msgstr "&Dokumentace"
+
+#: src/mainwindow.cpp:125
+msgid "&File"
+msgstr "&Soubor"
+
+#: src/mainwindow.cpp:127
+msgid "&Tools"
+msgstr "&Nástroje"
+
+#: src/mainwindow.cpp:128
+msgid "&Help"
+msgstr "&Nápověda"
+
+#: src/mainwindow.cpp:360
+msgid "Join channel..."
+msgstr "Vstoupit do místnosti..."
+
+#: src/mainwindow.cpp:360
+msgid "Name of channel to join"
+msgstr "Jméno místnosti k připojení"
+
+#: src/mainwindow.cpp:372
+msgid "Open Private Chat..."
+msgstr ""
+
+#: src/mainwindow.cpp:372
+msgid "Name of user"
+msgstr "Jméno uživatele"
+
+#: src/mainwindow.cpp:386
+msgid ""
+"SpringLobby is a cross-plattform lobby client for the RTS Spring engine"
+msgstr ""
+
+#: src/mainwindow.cpp:436
+msgid ""
+"There was an error checking for the latest version.\n"
+"Please try again later.\n"
+"If the problem persists, please use Help->Report Bug to report this bug."
+msgstr ""
+"Nastal problém při ověřování poslední verze.\n"
+"Prosím zopakujte později.\n"
+"Pokud problém přetrvává, použijte Nápověda->Nahlásit Bug, aby jste na chybu "
+"upozornili."
+
+#: src/mainwindow.cpp:441
+msgid "Your Version: "
+msgstr "Vaše verze: "
+
+#: src/mainwindow.cpp:441
+msgid "Latest Version: "
+msgstr "Poslední verze: "
+
+#: src/mainwindow.cpp:445
+msgid ""
+"Your SpringLobby version is up to date!\n"
+"\n"
+msgstr ""
+"Vaše SpringLobby verze je aktuální!\n"
+"\n"
+
+#: src/mainwindow.cpp:445
+msgid "Up to Date"
+msgstr "Aktuální"
+
+#: src/mainwindow.cpp:449
+msgid ""
+"Your SpringLobby version is not up to date.\n"
+"\n"
+msgstr ""
+"Vaše SpringLobby verze není aktuální.\n"
+"\n"
+
+#: src/mainwindow.cpp:449
+msgid ""
+"\n"
+"\n"
+"Would you like to visit a page with instructions on how to download the "
+"newest version?"
+msgstr ""
+"\n"
+"\n"
+"Chcete zobrazit stránku s instrukcemi, jak stáhnout nejnovější verzi?"
+
+#: src/mainwindow.cpp:449
+msgid "Not up to Date"
+msgstr "Není aktuální"
+
+#: src/mainwindow.cpp:486
+msgid "Manually &Start Torrent System"
+msgstr "Ručně &Spustit Torrent Systém"
+
+#: src/mainwindow.cpp:490
+msgid "Manually &Stop Torrent System"
+msgstr "Ručně &Zastavit Torrent Systém"
+
+#: src/mapctrl.cpp:461 src/mapctrl.cpp:462
+msgid "Refresh"
+msgstr "Aktualizovat"
+
+#: src/mapctrl.cpp:463 src/mapctrl.cpp:464
+msgid "Download"
+msgstr "Stáhnout"
+
+#: src/mapctrl.cpp:625
+msgid "side:"
+msgstr "frakce:"
+
+#: src/mapctrl.cpp:648
+#, c-format
+msgid "ally:   %d"
+msgstr ""
+
+#: src/mapctrl.cpp:658
+#, c-format
+msgid "bonus: %d%%"
+msgstr "bonus: %d%%"
+
+#: src/mmoptionswrapper.cpp:82
+msgid "Limit D-Gun"
+msgstr "Omezit D-Gun"
+
+#: src/mmoptionswrapper.cpp:83
+msgid ""
+"Disables commander's D-gun when being too far away from the starting point"
+msgstr ""
+"Zakáže veliteli používat jeho D-Gun, pokud je příliš daleko od startovní "
+"pozice"
+
+#: src/mmoptionswrapper.cpp:84
+msgid "Ghosted Buildings"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:85
+msgid ""
+"Enemy buildings will leave a ghost image on the map after losing LoS on them"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:86
+msgid "Diminishing MM"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:87
+msgid ""
+"Efficiency of MetalMakers will progressively reduce as much as you build them"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:88
+msgid "Start Position Type"
+msgstr "Typ Startovní Pozice"
+
+#: src/mmoptionswrapper.cpp:89
+msgid ""
+"How players will select where to be spawned in the map\n"
+"0: fixed map positions\n"
+"1: random map positions\n"
+"2: chose in game\n"
+"3: chose in the lobby before starting"
+msgstr ""
+"Jak hráči vyberou, kde se objeví na mapě\n"
+"0: pevné pozice na mapě\n"
+"1: náhodné pozice na mapě\n"
+"2: vybrat za hry\n"
+"3: vybrat z lobby před zahájením"
+
+#: src/mmoptionswrapper.cpp:91
+msgid "Game Ending condition"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:92
+msgid ""
+"The condition that will end the game\n"
+"0: when all units will be destroyed\n"
+"1: when the commander will be destroyed\n"
+"2: lineage mode (see option 1, but given away units will still die"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:95
+msgid "Sets the amount of metal that players will start with"
+msgstr "Nastavuje množství kovu, s kterým hráč začíná"
+
+#: src/mmoptionswrapper.cpp:98
+msgid "Sets the amount of energy that players will start with"
+msgstr "Nastavuje množství energie, s kterou hráč začíná"
+
+#: src/mmoptionswrapper.cpp:100
+msgid "Max Units Allowed"
+msgstr ""
+
+#: src/mmoptionswrapper.cpp:101
+msgid ""
+"Sets the maximum amount of units that a player will be allowed to build"
+msgstr "Nastavuje maximální počet jednotek, které může hráč postavit"
+
+#: src/nicklistctrl.cpp:45
+msgid "s"
+msgstr "s"
+
+#: src/nicklistctrl.cpp:48
+msgid "c"
+msgstr "c"
+
+#: src/nicklistctrl.cpp:51
+msgid "r"
+msgstr "r"
+
+#: src/nonportable.h:6
+msgid "Executables (*.exe)|*.exe|Any File (*.*)|*.*"
+msgstr "Spustitelné Soubory (*.exe)|*.exe|Jakýkoliv Soubor (*.*)|*.*"
+
+#: src/nonportable.h:12
+msgid "Any file (*)|*"
+msgstr "Jakýkoliv soubor (*)|*"
+
+#: src/nonportable.h:18
+msgid "App Bundles (*.app)|*.app|Any File (*.*)|*.*"
+msgstr ""
+
+#: src/serverevents.cpp:103
+msgid "Ping Timeout!"
+msgstr ""
+
+#: src/serverevents.cpp:149
+msgid "OnUserStatus() failed ! (exception)"
+msgstr ""
+
+#: src/serverevents.cpp:408
+msgid "Join channel failed"
+msgstr "Nepodařilo se připojit do místnosti"
+
+#: src/serverevents.cpp:408
+msgid "Could not join channel "
+msgstr "Nemohu se připojit k místnosti "
+
+#: src/serverevents.cpp:408
+msgid " because: "
+msgstr " protože: "
+
+#: src/serverevents.cpp:584
+msgid "Server Message"
+msgstr ""
+
+#: src/serverevents.cpp:628
+#, c-format
+msgid " has ip=%s"
+msgstr " má ip=%s"
+
+#: src/serverevents.cpp:633
+msgid " does not really support nat traversal"
+msgstr ""
+
+#: src/serverevents.cpp:644
+msgid "You were kicked from the battle!"
+msgstr ""
+
+#: src/serverevents.cpp:644
+msgid "Kicked by Host"
+msgstr ""
+
+#: src/settings++/Defs.hpp:201
+msgid "Scrollwheel speed"
+msgstr ""
+
+#: src/settings++/Defs.hpp:202
+msgid ""
+"Higher values mean faster zoom with mouse wheel.\n"
+"Negative values will invert zoom direction.\n"
+"Results may vary depending on camera mode!"
+msgstr ""
+"Větší hodnoty zrychlují přibližování/oddalování pomocí kolečka myši.\n"
+"Záporné hodnoty invertují směr přibližování/oddalování.\n"
+"Výsledek může záviset na módu kamery!"
+
+#: src/settings++/Defs.hpp:212
+msgid "Shadow-map size"
+msgstr ""
+
+#: src/settings++/Defs.hpp:212
+msgid ""
+"higher value = better looking shadows\n"
+"possible values: 1024, 2048, 4096, 8192"
+msgstr ""
+"větší hodnota = lépe vypadající stíny\n"
+"možné hodnoty: 1024, 2048, 4096, 8192"
+
+#: src/settings++/Defs.hpp:214
+msgid "Tree view-distance"
+msgstr ""
+
+#: src/settings++/Defs.hpp:214
+msgid "sets the maximum distance at which trees will still be rendered"
+msgstr ""
+
+#: src/settings++/Defs.hpp:215
+msgid "Terrain detail"
+msgstr ""
+
+#: src/settings++/Defs.hpp:215
+msgid "higher value = more terrain details"
+msgstr ""
+
+#: src/settings++/Defs.hpp:216
+msgid "Unit detail"
+msgstr ""
+
+#: src/settings++/Defs.hpp:216
+msgid "higher value = more detailed units"
+msgstr ""
+
+#: src/settings++/Defs.hpp:217
+msgid "Grass detail"
+msgstr ""
+
+#: src/settings++/Defs.hpp:217
+msgid "higher value = more detailed graas"
+msgstr ""
+
+#: src/settings++/Defs.hpp:218
+msgid "Ground decals"
+msgstr ""
+
+#: src/settings++/Defs.hpp:218
+msgid "only on/off available at this time"
+msgstr ""
+
+#: src/settings++/Defs.hpp:219
+msgid "Unit icon distance"
+msgstr ""
+
+#: src/settings++/Defs.hpp:219
+msgid ""
+"determines at which range units are still fully rendered\n"
+"higher value = greater range = more units rendered at the same time"
+msgstr ""
+
+#: src/settings++/Defs.hpp:221
+msgid "Max simultaneous particles"
+msgstr ""
+
+#: src/settings++/Defs.hpp:221
+msgid "limits how many particles are displayed at the same time"
+msgstr "limituje kolik částic je zobrazeno najednou"
+
+#: src/settings++/Defs.hpp:229
+msgid "Run full-screen"
+msgstr ""
+
+#: src/settings++/Defs.hpp:229
+msgid "run fullscreen or in a window?"
+msgstr ""
+
+#: src/settings++/Defs.hpp:230
+msgid "Dual-screen mode"
+msgstr "Mód dvou obrazovek"
+
+#: src/settings++/Defs.hpp:230
+msgid "if you have two monitors you can use both"
+msgstr ""
+
+#: src/settings++/Defs.hpp:231
+msgid "Enable v-sync"
+msgstr "Zapnout v-sync"
+
+#: src/settings++/Defs.hpp:231
+msgid "V-Sync on/off"
+msgstr ""
+
+#: src/settings++/Defs.hpp:237
+msgid "16-bit Z-buffer"
+msgstr ""
+
+#: src/settings++/Defs.hpp:237 src/settings++/Defs.hpp:238
+msgid "placeholder"
+msgstr ""
+
+#: src/settings++/Defs.hpp:238
+msgid "24-bit Z-buffer"
+msgstr "24-bit Z-buffer"
+
+#: src/settings++/Defs.hpp:245
+msgid "Full-screen anti-aliasing samples"
+msgstr ""
+
+#: src/settings++/Defs.hpp:245
+msgid "how much anti-aliasing should be applied"
+msgstr ""
+
+#: src/settings++/Defs.hpp:257
+msgid "Maximum simultaneous sounds"
+msgstr ""
+
+#: src/settings++/Defs.hpp:257
+msgid ""
+"maximum different sounds played at the same time\n"
+"Set this to zero to disable sound completely."
+msgstr ""
+
+#: src/settings++/Defs.hpp:259
+msgid "Global sound volume"
+msgstr ""
+
+#: src/settings++/Defs.hpp:259
+msgid "overall sound volume"
+msgstr ""
+
+#: src/settings++/Defs.hpp:260
+msgid "Unit reply volume"
+msgstr ""
+
+#: src/settings++/Defs.hpp:260
+msgid "reply volume relative to global volume"
+msgstr ""
+
+#: src/settings++/Defs.hpp:267
+msgid "Shadows (slow)"
+msgstr ""
+
+#: src/settings++/Defs.hpp:267
+msgid "enable shadows?"
+msgstr ""
+
+#: src/settings++/Defs.hpp:268
+msgid "3D trees"
+msgstr ""
+
+#: src/settings++/Defs.hpp:268
+msgid ""
+"want better looking trees?\n"
+"needs Geforce 2/Radeon 8500/Intel 830 or later class graphic card"
+msgstr ""
+
+#: src/settings++/Defs.hpp:270
+msgid "High-resolution clouds"
+msgstr ""
+
+#: src/settings++/Defs.hpp:270
+msgid ""
+"want better looking sky?\n"
+"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card"
+msgstr ""
+
+#: src/settings++/Defs.hpp:272
+msgid "Dynamic clouds (slow)"
+msgstr ""
+
+#: src/settings++/Defs.hpp:272
+msgid "want moving clouds in the sky?"
+msgstr ""
+
+#: src/settings++/Defs.hpp:273
+msgid "Reflective units"
+msgstr ""
+
+#: src/settings++/Defs.hpp:273
+msgid ""
+"shiny units?\n"
+"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card"
+msgstr ""
+
+#: src/settings++/Defs.hpp:275
+msgid "Never use shaders when rendering SM3 maps"
+msgstr ""
+
+#: src/settings++/Defs.hpp:275
+msgid "problems with sm3 maps? enable this"
+msgstr ""
+
+#: src/settings++/Defs.hpp:276
+msgid "Enable LuaShaders support"
+msgstr ""
+
+#: src/settings++/Defs.hpp:276
+msgid "makes for some cool effects"
+msgstr ""
+
+#: src/settings++/Defs.hpp:277
+msgid "High-resolution LOS textures"
+msgstr ""
+
+#: src/settings++/Defs.hpp:277
+msgid "smoother Line of Sight overlays"
+msgstr ""
+
+#: src/settings++/Defs.hpp:278
+msgid "Draw smooth points"
+msgstr ""
+
+#: src/settings++/Defs.hpp:278
+msgid "should points be anti-aliased"
+msgstr ""
+
+#: src/settings++/Defs.hpp:279
+msgid "Draw smooth lines"
+msgstr ""
+
+#: src/settings++/Defs.hpp:279
+msgid "should lines be anti-aliased"
+msgstr ""
+
+#: src/settings++/Defs.hpp:285
+msgid "Enable LuaUI widgets"
+msgstr ""
+
+#: src/settings++/Defs.hpp:285
+msgid "mark to be able to use"
+msgstr ""
+
+#: src/settings++/Defs.hpp:287
+msgid "Issue commands on mini-map"
+msgstr ""
+
+#: src/settings++/Defs.hpp:287
+msgid "Issue orders on the mini-map like you would "
+msgstr ""
+
+#: src/settings++/Defs.hpp:288
+msgid "Show commands on mini-map"
+msgstr "Zobrazit příkazy na mini-mapě"
+
+#: src/settings++/Defs.hpp:288 src/settings++/Defs.hpp:289
+#: src/settings++/Defs.hpp:290
+msgid "default value is \"on\""
+msgstr ""
+
+#: src/settings++/Defs.hpp:289
+msgid "Draw icons on mini-map"
+msgstr ""
+
+#: src/settings++/Defs.hpp:290
+msgid "Draw markers on mini-map"
+msgstr ""
+
+#: src/settings++/Defs.hpp:291
+msgid "Mini-map on left (single screen)"
+msgstr ""
+
+#: src/settings++/Defs.hpp:291 src/settings++/Defs.hpp:292
+msgid "left is the default"
+msgstr "levá je standardní"
+
+#: src/settings++/Defs.hpp:292
+msgid "Mini-map on left (dual screen)"
+msgstr ""
+
+#: src/settings++/Defs.hpp:293
+msgid "Simplified mini-map colors"
+msgstr ""
+
+#: src/settings++/Defs.hpp:293
+msgid "Use less colors"
+msgstr ""
+
+#: src/settings++/Defs.hpp:295
+msgid "Team-colored nanospray"
+msgstr ""
+
+#: src/settings++/Defs.hpp:296
+msgid "Should nano particels be the color of your team?"
+msgstr ""
+
+#: src/settings++/Defs.hpp:297
+msgid "Colorized elevation map"
+msgstr ""
+
+#: src/settings++/Defs.hpp:297
+msgid "makes differences in height clearer"
+msgstr ""
+
+#: src/settings++/Defs.hpp:299
+msgid "Show in-game clock"
+msgstr ""
+
+#: src/settings++/Defs.hpp:300 src/settings++/Defs.hpp:302
+#: src/settings++/Defs.hpp:304
+msgid ""
+"requires \"Enable LuaWidgets\" to be set.\n"
+"Will be displayed in the bottom right corner"
+msgstr ""
+
+#: src/settings++/Defs.hpp:301
+msgid "Show in-game player information"
+msgstr ""
+
+#: src/settings++/Defs.hpp:303
+msgid "Show in-game framerate"
+msgstr ""
+
+#: src/settings++/Defs.hpp:306
+msgid "Fix rendering on alt-tab"
+msgstr ""
+
+#: src/settings++/Defs.hpp:306
+msgid "Do not change if not needed"
+msgstr ""
+
+#: src/settings++/Defs.hpp:307
+msgid "Disallow helper AI's"
+msgstr ""
+
+#: src/settings++/Defs.hpp:307
+msgid ""
+"Disables Economy AI, etc.\n"
+"If enabled might screw with LuaUi."
+msgstr ""
+
+#: src/settings++/Defs.hpp:309
+msgid "Enable scroll on window edge"
+msgstr ""
+
+#: src/settings++/Defs.hpp:309
+msgid "Scroll the screen when mouse reaches the screen's edge."
+msgstr ""
+
+#: src/settings++/Defs.hpp:310
+msgid "Invert Mouse"
+msgstr ""
+
+#: src/settings++/Defs.hpp:310
+msgid "Inverts the Mouse Y-axis in FPS mode"
+msgstr "Převrátit Y-osu myši v FPS módu"
+
+#: src/settings++/Defs.hpp:318
+msgid "Overhead camera"
+msgstr ""
+
+#: src/settings++/Defs.hpp:318 src/settings++/Defs.hpp:319
+#: src/settings++/Defs.hpp:320 src/settings++/Defs.hpp:321
+#: src/settings++/Defs.hpp:322
+msgid "set the scroll speed (mouse + keyboard) for this mode"
+msgstr "nastavit rychlost rolování (myš+klávesnice) pro tento mód"
+
+#: src/settings++/Defs.hpp:319
+msgid "Rotatable overhead camera"
+msgstr ""
+
+#: src/settings++/Defs.hpp:320
+msgid "Total war camera"
+msgstr ""
+
+#: src/settings++/Defs.hpp:321
+msgid "First person camera"
+msgstr ""
+
+#: src/settings++/Defs.hpp:322 src/settings++/Defs.hpp:382
+msgid "Free camera"
+msgstr ""
+
+#: src/settings++/Defs.hpp:328 src/settings++/Defs.hpp:330
+#: src/settings++/Defs.hpp:332 src/settings++/Defs.hpp:334
+#: src/settings++/Defs.hpp:336
+msgid ""
+"Make this the default view when startins Spring.\n"
+"Can be changed ingame."
+msgstr ""
+
+#: src/settings++/Defs.hpp:343
+msgid "Console verbose level (0=min,10=max)"
+msgstr ""
+
+#: src/settings++/Defs.hpp:343
+msgid "How much information should be outputted?"
+msgstr ""
+
+#: src/settings++/Defs.hpp:349
+msgid "Catch AI exceptions"
+msgstr ""
+
+#: src/settings++/Defs.hpp:349
+msgid "disable for AI debugging"
+msgstr ""
+
+#: src/settings++/Defs.hpp:350
+msgid "Send debug info to console"
+msgstr ""
+
+#: src/settings++/Defs.hpp:350
+msgid "if disabled these will only be logged"
+msgstr ""
+
+#: src/settings++/Defs.hpp:356 src/settings++/Defs.hpp:367
+msgid "Basic"
+msgstr "Základní"
+
+#: src/settings++/Defs.hpp:356
+msgid ""
+"Depending on the power of your graphics card,\n"
+"selecting higher quality than basic can have a\n"
+"major impact on Spring's performance.\n"
+msgstr ""
+
+#: src/settings++/Defs.hpp:367
+msgid "Reflective"
+msgstr ""
+
+#: src/settings++/Defs.hpp:367
+msgid "Reflective + refractive"
+msgstr "Zrcadlící + lomivý"
+
+#: src/settings++/Defs.hpp:367
+msgid "Dynamic"
+msgstr "Dynamický"
+
+#: src/settings++/Defs.hpp:371
+msgid "Invert mouse y-axis"
+msgstr ""
+
+#: src/settings++/Defs.hpp:371
+msgid "swap up/down with down/up"
+msgstr ""
+
+#: src/settings++/Defs.hpp:372
+msgid "Mini-map 3-button mouse support"
+msgstr ""
+
+#: src/settings++/Defs.hpp:372
+msgid "if you don't want to able to use that button, disable it here"
+msgstr ""
+
+#: src/settings++/Defs.hpp:378
+msgid "Overhead"
+msgstr ""
+
+#: src/settings++/Defs.hpp:378
+msgid "Static bird's eye view"
+msgstr ""
+
+#: src/settings++/Defs.hpp:379
+msgid "Rotatable overhead"
+msgstr ""
+
+#: src/settings++/Defs.hpp:379
+msgid "Same as overhead, but you can rotate around the z-axis"
+msgstr ""
+
+#: src/settings++/Defs.hpp:380
+msgid "Total war"
+msgstr ""
+
+#: src/settings++/Defs.hpp:380
+msgid "top-view camera, which can be tilted on the X axis"
+msgstr ""
+
+#: src/settings++/Defs.hpp:381
+msgid "First person"
+msgstr "První osoba"
+
+#: src/settings++/Defs.hpp:381
+msgid "Camera from unit's point of view"
+msgstr ""
+
+#: src/settings++/Defs.hpp:382
+msgid "Modify the view anyway you want"
+msgstr ""
+
+#: src/settings++/Defs.hpp:388
+msgid "screen width"
+msgstr "šířka obrazovky"
+
+#: src/settings++/Defs.hpp:389
+msgid "screen height"
+msgstr "výška obrazovky"
+
+#: src/settings++/frame.cpp:44
+msgid "Combined Options"
+msgstr "Kombinované nastavení"
+
+#: src/settings++/frame.cpp:45
+msgid "Render quality / Video mode"
+msgstr "Kvalita vykreslování/Zobrazovací mód"
+
+#: src/settings++/frame.cpp:46
+msgid "Render detail"
+msgstr ""
+
+#: src/settings++/frame.cpp:47
+msgid "Debug"
+msgstr "Ladění"
+
+#: src/settings++/frame.cpp:48
+msgid "UI options"
+msgstr "nastavení UI"
+
+#: src/settings++/frame.cpp:49
+msgid "Audio"
+msgstr "Audio"
+
+#: src/settings++/frame.cpp:50
+msgid ""
+"Changes made on Quality/Detail tab in expert mode\n"
+" will be lost if you change simple options again.\n"
+"Also these changes WILL NOT be reflected by the \n"
+"selected choices on the Combined options tab.\n"
+"(this message can be disabled in the \"File\" menu)"
+msgstr ""
+
+#: src/settings++/frame.cpp:82 src/settings++/frame.cpp:103
+msgid "Error!"
+msgstr "Chyba!"
+
+#: src/settings++/frame.cpp:118 src/settings++/frame.cpp:134
+msgid "Save Spring settings before exiting?"
+msgstr "Uložit nastavení Springu před ukončením?"
+
+#: src/settings++/frame.cpp:118 src/settings++/frame.cpp:134
+#: src/settings++/frame.cpp:248
+msgid "Confirmation needed"
+msgstr ""
+
+#: src/settings++/frame.cpp:185 src/settings++/frame.cpp:325
+msgid "SpringSettings (expert mode)"
+msgstr "Nastavení Springu (expertní mód)"
+
+#: src/settings++/frame.cpp:187 src/settings++/frame.cpp:274
+msgid "SpringSettings (simple mode)"
+msgstr "Nastavení Springu (jednoduchý mód)"
+
+#: src/settings++/frame.cpp:196
+msgid "Save settings"
+msgstr "Uložit nastavení"
+
+#: src/settings++/frame.cpp:197
+msgid "Reset settings to default values"
+msgstr "Restartovat nastavení na standardní hodnoty"
+
+#: src/settings++/frame.cpp:198
+msgid "Disable expert mode warning"
+msgstr ""
+
+#: src/settings++/frame.cpp:200
+msgid "Quit"
+msgstr "Konec"
+
+#: src/settings++/frame.cpp:205
+msgid "Simple (few options)"
+msgstr ""
+
+#: src/settings++/frame.cpp:206
+msgid "Expert (all options"
+msgstr ""
+
+#: src/settings++/frame.cpp:209
+msgid "About"
+msgstr ""
+
+#: src/settings++/frame.cpp:210
+msgid "Contact"
+msgstr "Kontakt"
+
+#: src/settings++/frame.cpp:211
+msgid "Credits"
+msgstr ""
+
+#: src/settings++/frame.cpp:212
+msgid "Report a bug"
+msgstr "Nahlásit chybu"
+
+#: src/settings++/frame.cpp:225
+msgid "File"
+msgstr "Soubor"
+
+#: src/settings++/frame.cpp:226
+msgid "Mode"
+msgstr "Mód"
+
+#: src/settings++/frame.cpp:227
+msgid "Info/Help"
+msgstr "Info/Nápověda"
+
+#: src/settings++/frame.cpp:248
+msgid "Reset ALL settings to default values?"
+msgstr "Restartovat všechna nastavení na standardní hodnoty?"
+
+#: src/settings++/frame.cpp:276
+msgid "Hint"
+msgstr ""
+
+#: src/settings++/helpmenufunctions.cpp:27
+msgid ""
+"SpringSettings is a graphical frontend to the Settings of the Spring engine"
+msgstr ""
+
+#: src/settings++/helpmenufunctions.cpp:38
+msgid "Kloot"
+msgstr ""
+
+#: src/settings++/helpmenufunctions.cpp:39
+msgid "The SpringLobby team"
+msgstr ""
+
+#: src/settings++/helpmenufunctions.cpp:39
+msgid ""
+"thanks for inviting me in, code to re-use, infrastructure and help in general"
+msgstr ""
+
+#: src/settings++/helpmenufunctions.cpp:40
+msgid "everyone reporting bugs/suggestions"
+msgstr ""
+
+#: src/settings++/Main.cpp:59
+msgid ""
+"The application has generated a fatal error and will be terminated\n"
+"Generating a bug report is not possible\n"
+"\n"
+"please enable wxUSE_DEBUGREPORT"
+msgstr ""
+
+#: src/settings++/Main.cpp:59 src/springlobbyapp.cpp:195
+msgid "Critical error"
+msgstr "Kritická chyba"
+
+#: src/settings++/panel_pathoption.cpp:32
+msgid "Path to unitsync shared library"
+msgstr ""
+
+#: src/settings++/panel_pathoption.cpp:33
+msgid ""
+"There was a problem retrieving your settings.\n"
+"Please check that the path below is correct.\n"
+"When you have corrected it, click\n"
+"the \"Use this Path\" button to try again."
+msgstr ""
+
+#: src/settings++/panel_pathoption.cpp:40
+msgid "Use this path"
+msgstr "Použít tuto cestu"
+
+#: src/settings++/panel_pathoption.cpp:41 src/springoptionstab.cpp:62
+#: src/springoptionstab.cpp:79 src/springoptionstab.cpp:93
+#: src/springoptionstab.cpp:111
+msgid "Browse"
+msgstr "Procházet"
+
+#: src/settings++/panel_pathoption.cpp:46
+msgid "unitsync.so on linux, unitsync.dll on windows"
+msgstr ""
+
+#: src/settings++/panel_pathoption.cpp:52
+msgid "Path settings"
+msgstr ""
+
+#: src/settings++/panel_pathoption.cpp:74
+msgid "Choose an unitsync library"
+msgstr ""
+
+#: src/settings++/panel_pathoption.cpp:74 src/springoptionstab.cpp:495
+msgid "Any File"
+msgstr "Libovolný soubor"
+
+#: src/settings++/panel_pathoption.cpp:87
+msgid ""
+"SpringSettings is unable to load your unitsync library.\n"
+"You might want to take another look at your unitsync setting.\n"
+"Your Spring version has to be 0.76 or newer, otherwise \n"
+"this will fail in any case."
+msgstr ""
+
+#: src/settings++/presets.h:46 src/settings++/presets.h:47
+msgid "low"
+msgstr "nízké"
+
+#: src/settings++/presets.h:46 src/settings++/presets.h:47
+msgid "medium"
+msgstr "střední"
+
+#: src/settings++/presets.h:46 src/settings++/presets.h:47
+msgid "high"
+msgstr "vysoké"
+
+#: src/settings++/presets.h:47
+msgid "very low"
+msgstr ""
+
+#: src/settings++/presets.h:47
+msgid "very high"
+msgstr ""
+
+#: src/settings++/se_utils.cpp:39
+msgid "can't launch default browser"
+msgstr ""
+
+#: src/settings++/se_utils.cpp:40 src/ui.cpp:328 src/ui.cpp:336
+msgid "Couldn't launch browser. URL is: "
+msgstr ""
+
+#: src/settings++/se_utils.cpp:40 src/ui.cpp:328 src/ui.cpp:336
+msgid "Couldn't launch browser."
+msgstr ""
+
+#: src/settings++/tab_abstract.cpp:111
+msgid "Could not access your settings.\n"
+msgstr ""
+
+#: src/settings++/tab_abstract.cpp:473
+msgid "Could not save, unitsync not properly loaded"
+msgstr ""
+
+#: src/settings++/tab_abstract.cpp:473
+msgid "SpringSettings Error"
+msgstr ""
+
+#: src/settings++/tab_audio.cpp:61
+msgid "Audio Options"
+msgstr "Audio volby"
+
+#: src/settings++/tab_debug.cpp:61
+msgid "Debug Options"
+msgstr ""
+
+#: src/settings++/tab_quality_video.cpp:63
+msgid "Screen Resolution"
+msgstr "Rozlišení obrazovky"
+
+#: src/settings++/tab_quality_video.cpp:86
+#: src/settings++/tab_quality_video.cpp:87
+#, c-format
+msgid "%d"
+msgstr "%d"
+
+#: src/settings++/tab_quality_video.cpp:125
+msgid ""
+"If an option needs special hardware to work\n"
+"it will be mentioned in the tooltip."
+msgstr ""
+
+#: src/settings++/tab_quality_video.cpp:138
+msgid "Water Quality"
+msgstr "Kvalita vody"
+
+#: src/settings++/tab_quality_video.cpp:168
+msgid "Resolution in bit"
+msgstr "Rozlišení v bitech"
+
+#: src/settings++/tab_quality_video.cpp:194
+msgid "Render Quality Options"
+msgstr "Nastavení kvality vykreslování"
+
+#: src/settings++/tab_quality_video.cpp:195
+msgid "Video Mode Options"
+msgstr "Nastavení zobrazovacího módu"
+
+#: src/settings++/tab_quality_video.cpp:196
+msgid "Anti-Aliasing Options"
+msgstr "Nastavení vyhlazování"
+
+#: src/settings++/tab_quality_video.cpp:197
+msgid "Z-/Depth-Buffer"
+msgstr ""
+
+#: src/settings++/tab_render_detail.cpp:64
+msgid "Rendering detail levels"
+msgstr "Úrovně vykreslovaných detailů"
+
+#: src/settings++/tab_simple.cpp:40
+msgid ""
+"These options let you roughly control Spring's rendering.\n"
+"For more speed try lowering the settings.\n"
+"Full control over all settings is available in the\n"
+"\"Expert mode\", either click on the button on the\n"
+"right or use the \"Mode\" menu in the top menubar.\n"
+"You can go back to this mode at any time by choosing\n"
+"\"Simple mode\" from the \"Mode\" menu.\n"
+"If you encounter error messages concerning graphics\n"
+"when running Spring it might be necessary to disable\n"
+" some options in expert mode.\n"
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:51
+msgid "Graphics quality"
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:52
+msgid "Graphics detail"
+msgstr "Grafické detaily"
+
+#: src/settings++/tab_simple.cpp:53
+msgid "Screen resolution"
+msgstr "Rozlišení obrazovky"
+
+#: src/settings++/tab_simple.cpp:54
+msgid "Switch to expert mode"
+msgstr "Přepnout do expertního módu"
+
+#: src/settings++/tab_simple.cpp:77
+msgid " (current)"
+msgstr " (aktuální)"
+
+#: src/settings++/tab_simple.cpp:88
+msgid ""
+"Sets all quality options to predefined values according to your choice."
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:94
+msgid ""
+"Sets all detail options to predefined values according to your choice."
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:99
+msgid ""
+"Select the resolution fitting your monitor(s).\n"
+"Selecting a dual screen resolution will automatically enable dual screen "
+"mode.\n"
+"If the appropiate resolution is not available you can set it manually in "
+"expert mode.\n"
+"Please also contact the author so it can be added in future releases."
+msgstr ""
+
+#: src/settings++/tab_simple.cpp:135
+msgid "Info"
+msgstr "Info"
+
+#: src/settings++/tab_ui.cpp:34
+msgid ""
+"Setting a slider to 0 will exclude that\n"
+"mode from being cycled through ingame."
+msgstr ""
+
+#: src/settings++/tab_ui.cpp:122
+msgid "Scroll Speeds (mouse + keyboard)"
+msgstr "Rychlost rolování (myš+klávesnice)"
+
+#: src/settings++/tab_ui.cpp:126
+msgid "Default Camera Mode"
+msgstr "Standardní režim kamery"
+
+#: src/settings++/tab_ui.cpp:128
+msgid "Misc. UI Options"
+msgstr ""
+
+#: src/settings++/tab_ui.cpp:130
+msgid "Zoom"
+msgstr "Zvětšit"
+
+#: src/singleplayertab.cpp:44
+msgid ""
+"You can drag the sun/bot icon around to define start position.\n"
+" Hover over the icon for a popup that lets you change side, ally and bonus."
+msgstr ""
+
+#: src/singleplayertab.cpp:68
+msgid "Add bot..."
+msgstr "Přidat počítač..."
+
+#: src/singleplayertab.cpp:78
+msgid "Reset"
+msgstr "Resetovat"
+
+#: src/singleplayertab.cpp:119 src/singleplayertab.cpp:140
+msgid "-- Select one --"
+msgstr ""
+
+#: src/singleplayertab.cpp:194 src/singleplayertab.cpp:200
+#: src/singleplayertab.cpp:231 src/singleplayertab.cpp:234
+msgid "Gamesetup error"
+msgstr "Chyba herního nastavení"
+
+#: src/singleplayertab.cpp:200
+msgid "You have to select a map first."
+msgstr "Nejprve musíte vybrat mapu"
+
+#: src/singleplayertab.cpp:207
+msgid ""
+"Continue without adding a bot first?.\n"
+" The game will be over pretty fast.\n"
+" "
+msgstr ""
+
+#: src/singleplayertab.cpp:208
+msgid "No Bot added"
+msgstr ""
+
+#: src/singleplayertab.cpp:231
+msgid ""
+"You have bots that are not assingled to startpositions. In the current "
+"version of spring you are only allowed to use start positions positioning "
+"them freely is not allowed.\n"
+"\n"
+"This will be fixed in next version of Spring."
+msgstr ""
+
+#: src/singleplayertab.cpp:234
+msgid ""
+"You are not using consecutive start position numbers.\n"
+"\n"
+"In the current version of spring you are not allowed to skip any "
+"startpositions. You have to use all consecutive position.\n"
+"\n"
+"Example: if you have 2 bots + yourself you have to use start positions 1,2,3 "
+"not 1,3,4 or 2,3,4.\n"
+"\n"
+"This will be fixed in next version of Spring."
+msgstr ""
+
+#: src/singleplayertab.cpp:276
+msgid "You cannot start a spring instance while another is already running"
+msgstr ""
+
+#: src/springlobbyapp.cpp:120
+msgid "Hi "
+msgstr "Ahoj "
+
+#: src/springlobbyapp.cpp:120
+msgid ""
+",\n"
+"It looks like this is your first time using SpringLobby. I have guessed a "
+"configuration that I think will work for you but you should review it, "
+"especially the Spring configuration. \n"
+"\n"
+"When you are done you can go to the File menu, connect to a server, and "
+"enjoy a nice game of Spring :)"
+msgstr ""
+
+#: src/springlobbyapp.cpp:120
+msgid "Welcome"
+msgstr "Vítejte"
+
+#: src/springlobbyapp.cpp:123
+msgid ""
+"You're using a wxwidgets library of the 2.6.x series\n"
+" battle filtering, advanced gui and joining/hosting games using nat "
+"traversal\n"
+" won't be available"
+msgstr ""
+
+#: src/springlobbyapp.cpp:123
+msgid "Missing Functionality"
+msgstr "Chybějící závislost"
+
+#: src/springlobbyapp.cpp:144
+msgid ""
+"Do you want to download OTA conent?\n"
+"You need this to be able to play TA based mods.\n"
+"You need to own a copy of Total Annihilation do legally download it."
+msgstr ""
+
+#: src/springlobbyapp.cpp:146
+msgid "Download OTA content?"
+msgstr "Stáhnout obsah OTA?"
+
+#: src/springlobbyapp.cpp:195
+msgid ""
+"The application has generated a fatal error and will be terminated\n"
+"Generating a bug report is not possible\n"
+"\n"
+"please get a wxWidgets library that supports wxUSE_DEBUGREPORT"
+msgstr ""
+
+#: src/springlobbyapp.cpp:228
+msgid "Create a .spring folder in the home directory (reccomended)"
+msgstr "Vytvořit .spring soubor v domovském adresáři (doporučeno)"
+
+#: src/springlobbyapp.cpp:229
+msgid "Create a folder in a custom path (you'll get prompted for the path)"
+msgstr ""
+
+#: src/springlobbyapp.cpp:230
+msgid "I have already a SpringData folder, i want to browse manually for it"
+msgstr ""
+
+#: src/springlobbyapp.cpp:231
+msgid "Do nothing (use this only if you know what you're doing)"
+msgstr ""
+
+#: src/springlobbyapp.cpp:234
+msgid ""
+"Looks like you don't have yet a user SpringData folder structure\n"
+"What would you like to do? (leave default choice if you don't know what is "
+"this for)"
+msgstr ""
+
+#: src/springlobbyapp.cpp:235
+msgid "First time wizard"
+msgstr ""
+
+#: src/springlobbyapp.cpp:244
+msgid "Choose a folder"
+msgstr "Zvolte složku"
+
+#: src/springlobbyapp.cpp:251
+msgid ""
+"Something went wrong when creating the directories\n"
+"Please create manually the following folders:"
+msgstr ""
+
+#: src/springoptionstab.cpp:60
+msgid "Spring directory"
+msgstr "adresář Springu"
+
+#: src/springoptionstab.cpp:63 src/springoptionstab.cpp:80
+#: src/springoptionstab.cpp:94
+msgid "Find"
+msgstr "Najdi"
+
+#: src/springoptionstab.cpp:68
+msgid "Spring executable"
+msgstr ""
+
+#: src/springoptionstab.cpp:70 src/springoptionstab.cpp:86
+msgid "Default location."
+msgstr "Standardní umístění."
+
+#: src/springoptionstab.cpp:72
+msgid "The Spring executable is installed in the default location"
+msgstr ""
+
+#: src/springoptionstab.cpp:74 src/springoptionstab.cpp:90
+#: src/springoptionstab.cpp:106
+msgid "Specify:"
+msgstr "Specifikovat:"
+
+#: src/springoptionstab.cpp:75
+msgid "Specify the location of the Spring executable"
+msgstr ""
+
+#: src/springoptionstab.cpp:77 src/springoptionstab.cpp:92
+msgid "Location"
+msgstr "Umístění"
+
+#: src/springoptionstab.cpp:85
+msgid "UnitSync library"
+msgstr "UnitSync knihovna"
+
+#: src/springoptionstab.cpp:88
+msgid "The UnitSync library is installed in the default location"
+msgstr ""
+
+#: src/springoptionstab.cpp:99 src/springoptionstab.cpp:100
+msgid "Web Browser"
+msgstr "Webový prohlížeč"
+
+#: src/springoptionstab.cpp:102
+msgid "Default Browser."
+msgstr "Standardní prohlížeč."
+
+#: src/springoptionstab.cpp:104
+msgid "Use your system-wide browser preference"
+msgstr ""
+
+#: src/springoptionstab.cpp:107
+msgid "Specify the web browser you want to use"
+msgstr "Určete webový prohlížeč,který chcete používat"
+
+#: src/springoptionstab.cpp:112
+msgid "Use a file dialog to find the web browser"
+msgstr ""
+
+#: src/springoptionstab.cpp:114
+msgid "Auto Configure"
+msgstr "Automatické nastavení"
+
+#: src/springoptionstab.cpp:484
+msgid "Choose a Spring executable"
+msgstr ""
+
+#: src/springoptionstab.cpp:492
+msgid "Choose UnitSync library"
+msgstr ""
+
+#: src/springoptionstab.cpp:495
+msgid "Library"
+msgstr "Knihovna"
+
+#: src/springoptionstab.cpp:502
+msgid "Choose a web browser executable"
+msgstr ""
+
+#: src/springoptionstab.cpp:524
+msgid ""
+"SpringLobby is unable to load your UnitSync library.\n"
+"\n"
+"You might want to take another look at your unitsync setting."
+msgstr ""
+
+#: src/springoptionstab.cpp:534
+msgid ""
+"SpringLobby is unable to determine your Spring version from the UnitSync "
+"library.\n"
+"\n"
+"You might want to take another look at your settings."
+msgstr ""
+
+#: src/springunitsync.cpp:45
+msgid ""
+"Unitsync loading was aborted because your spring data directory is not "
+"writable. Please check."
+msgstr ""
+
+#: src/springunitsync.cpp:45
+msgid "Unitsync Problem"
+msgstr ""
+
+#: src/tasserver.cpp:312
+msgid "Connection timed out"
+msgstr "Čas spojení vypršel"
+
+#: src/tasserver.cpp:325
+msgid "Unknown answer from server"
+msgstr "Neznámá zpravá ze serveru"
+
+#: src/tasserver.cpp:425
+msgid ""
+"Failed to punch through NAT, playing this battle might not work for you or "
+"for other players."
+msgstr ""
+
+#: src/torrentlistctrl.cpp:59
+msgid "MB uploaded"
+msgstr ""
+
+#: src/torrentlistctrl.cpp:63
+msgid "status"
+msgstr "stav"
+
+#: src/torrentlistctrl.cpp:67
+#, c-format
+msgid "% complete"
+msgstr ""
+
+#: src/torrentlistctrl.cpp:71
+msgid "KB/s up"
+msgstr "KB/s up"
+
+#: src/torrentlistctrl.cpp:75
+msgid "KB/s down"
+msgstr "KB/s down"
+
+#: src/torrentlistctrl.cpp:79
+msgid "ETA (s)"
+msgstr ""
+
+#: src/torrentlistctrl.cpp:83
+msgid "Filesize (MB)"
+msgstr "Velikost souboru (MB)"
+
+#: src/torrentoptionspanel.cpp:27
+msgid "Torrent system autostart"
+msgstr "Automatický start torrentového systému"
+
+#: src/torrentoptionspanel.cpp:29
+msgid "at lobby connection (default)"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:30
+msgid "at lobby start"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:31
+msgid "manual"
+msgstr "ručně"
+
+#: src/torrentoptionspanel.cpp:41
+msgid "At game start suspend mode"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:43
+msgid "Pause all torrents"
+msgstr "Pozastavit všechny torrenty"
+
+#: src/torrentoptionspanel.cpp:44
+msgid "Throttle speeds:"
+msgstr ""
+
+#: src/torrentoptionspanel.cpp:47
+msgid "upload (KB/s)"
+msgstr "upload (KB/s)"
+
+#: src/torrentoptionspanel.cpp:49
+msgid "download (KB/s)"
+msgstr "stahování (KB/s)"
+
+#: src/torrentoptionspanel.cpp:62
+msgid "Numbers"
+msgstr "Čísla"
+
+#: src/torrentoptionspanel.cpp:66
+msgid "maximum upload speed in KB/sec(-1 for infinite)"
+msgstr "maximální rychlost uploadu v KB/sec"
+
+#: src/torrentoptionspanel.cpp:73
+msgid "maximum download speed in KB/sec (-1 for infinite)"
+msgstr "maximální rychlost stahování v KB/sec"
+
+#: src/torrentoptionspanel.cpp:80
+msgid "port used for torrent connections"
+msgstr "port je použit pro připojení torrentů"
+
+#: src/torrentoptionspanel.cpp:87
+msgid "maximum number of concurrent connections"
+msgstr "maximální počet souběžných připojení"
+
+#: src/ui.cpp:147
+msgid "Server password"
+msgstr "Serverové heslo"
+
+#: src/ui.cpp:336
+msgid ""
+"\n"
+"Broser path is: "
+msgstr ""
+
+#: src/ui.cpp:420 src/ui.cpp:670
+msgid "error"
+msgstr "chyba"
+
+#: src/ui.cpp:420 src/ui.cpp:670
+msgid "no active chat panels open."
+msgstr ""
+
+#: src/ui.cpp:423
+msgid "Active chat channels:"
+msgstr ""
+
+#: src/ui.cpp:435
+msgid "Help error"
+msgstr ""
+
+#: src/ui.cpp:435
+msgid "Type /help in a chat box."
+msgstr ""
+
+#: src/ui.cpp:439
+msgid "SpringLobby commands help."
+msgstr ""
+
+#: src/ui.cpp:441
+msgid "Global commands:"
+msgstr "Globální příkazy:"
+
+#: src/ui.cpp:442
+msgid "  \"/away\" - Sets your status to away."
+msgstr ""
+
+#: src/ui.cpp:443
+msgid "  \"/back\" - Resets your away status."
+msgstr ""
+
+#: src/ui.cpp:444
+msgid ""
+"  \"/changepassword oldpassword newpassword\" - Changes the current active "
+"account's password."
+msgstr ""
+
+#: src/ui.cpp:445
+msgid "  \"/channels\" - Lists currently active channels."
+msgstr ""
+
+#: src/ui.cpp:446
+msgid ""
+"  \"/help [topic]\" - Put topic if you want to know more specific "
+"information about a command."
+msgstr ""
+
+#: src/ui.cpp:447
+msgid ""
+"  \"/join channel [password] [,channel2 [password2]]\" - Join a channel."
+msgstr ""
+
+#: src/ui.cpp:448
+msgid "  \"/j\" - Alias to /join."
+msgstr ""
+
+#: src/ui.cpp:449
+msgid "  \"/ingame\" - Show how much time you have in game."
+msgstr ""
+
+#: src/ui.cpp:450
+msgid ""
+"  \"/msg username [text]\" - sends a private message containing text to "
+"username."
+msgstr ""
+
+#: src/ui.cpp:451
+msgid "  \"/rename newalias\" - Changes your nickname to newalias."
+msgstr ""
+
+#: src/ui.cpp:452
+msgid "  \"/sayver\" - Say what version of springlobby you have in chat."
+msgstr ""
+
+#: src/ui.cpp:453
+msgid "  \"/testmd5 text\" - Returns md5-b64 hash of given text."
+msgstr ""
+
+#: src/ui.cpp:454
+msgid "  \"/ver\" - Display what version of SpringLobby you have."
+msgstr ""
+
+#: src/ui.cpp:456
+msgid "Chat commands:"
+msgstr ""
+
+#: src/ui.cpp:457
+msgid "  \"/me action\" - Say IRC style action message."
+msgstr ""
+
+#: src/ui.cpp:459
+msgid ""
+"If you are missing any commands, go to #springlobby and try to type it there "
+":)"
+msgstr ""
+
+#: src/ui.cpp:462
+msgid "No topics written yet."
+msgstr ""
+
+#: src/ui.cpp:464
+msgid "The topic \""
+msgstr "Předmět \""
+
+#: src/ui.cpp:464
+msgid "\" was not found. Type \"/help topics\" only for available topics."
+msgstr ""
+
+#: src/ui.cpp:508
+msgid "Your spring version"
+msgstr "Vaše verze springu"
+
+#: src/ui.cpp:510
+msgid "is not supported by the lobby server that requires version"
+msgstr ""
+
+#: src/ui.cpp:512
+msgid "Online play will be disabled."
+msgstr "Online hraní bude zakázáno."
+
+#: src/ui.cpp:517
+msgid ""
+"Couldn't get your spring version from the unitsync library.\n"
+"\n"
+"Online play will be disabled."
+msgstr ""
+
+#: src/ui.cpp:575
+msgid ""
+"This is the SpringLobby channel, please report any problems you are having "
+"with SpringLobby here and the friendly developers will help you."
+msgstr ""
+
+#: src/ui.cpp:673
+#, c-format
+msgid "(%d users)"
+msgstr "(%d uživatelé)"
+
+#: src/ui.cpp:736
+msgid "Server message"
+msgstr "Serverová zpráva"
+
+#: src/ui.cpp:775
+msgid "The current battle was closed by the host."
+msgstr "Aktuální bitva byla uzavřena hostem."
+
+#: src/ui.cpp:775
+msgid "Battle closed"
+msgstr "Uzavřená bitva"
+
+#: src/ui.cpp:860
+msgid ""
+"Your spring settings are probably not configured correctly,\n"
+"you should take another look at your settings before trying\n"
+"to play online."
+msgstr ""
+
+#: src/ui.cpp:860
+msgid "Spring settings error"
+msgstr "Chyba v nastavení Springu"
+
+#: src/ui.cpp:865
+msgid ""
+"This game uses NAT traversal that is not supported by wx 2.6 build of "
+"springlobby. \n"
+"\n"
+"You will not be able to play in this battle. \n"
+"Update your wxwidgets to 2.8 or newer to enable NAT traversal support."
+msgstr ""
+
+#: src/user.cpp:107
+msgid "Newbie"
+msgstr "Nováček"
+
+#: src/user.cpp:108
+msgid "Beginner"
+msgstr "Začátečník"
+
+#: src/user.cpp:109
+msgid "Average"
+msgstr "Průměrný"
+
+#: src/user.cpp:110
+msgid "Above average"
+msgstr "Nadprůměrný"
+
+#: src/user.cpp:111
+msgid "Experienced"
+msgstr "Zkušený"
+
+#: src/user.cpp:112
+msgid "Highly experienced"
+msgstr "Nejzkušenější"
+
+#: src/user.cpp:113
+msgid "Veteran"
+msgstr "Veterán"
+
+#: src/user.cpp:115
+msgid "no rank"
+msgstr "bez hodnosti"
