@@ -668,12 +668,11 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
       ASSERT_EXCEPTION( FileSize, _T("side image has size 0") );
     }
 
-    char* FileContent = new char [FileSize];
+    uninitialized_array<char> FileContent(FileSize);
     susynclib()->ReadFileVFS(ini, FileContent, FileSize);
     wxMemoryInputStream FileContentStream( FileContent, FileSize );
 
     cache.LoadFile( FileContentStream, wxBITMAP_TYPE_ANY, -1);
-    delete[] FileContent;
     cache.InitAlpha();
     for ( int x = 0; x < cache.GetWidth(); x++ )
       for ( int y = 0; y < cache.GetHeight(); y++ )

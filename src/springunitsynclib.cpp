@@ -393,24 +393,17 @@ wxImage SpringUnitSyncLib::GetMetalmap( const wxString& mapFileName )
 
   typedef unsigned char uchar;
   wxImage metalmap(width, height, false);
-  uchar* grayscale = new uchar[width * height];
+  uninitialized_array<uchar> grayscale(width * height);
   uchar* true_colours = metalmap.GetData();
 
   retval = m_get_infomap(mapFileName.mb_str(wxConvUTF8), "metal", grayscale, 1 /*byte per pixel*/);
-  ///if you don't like explicit delete, feel free to make patch
-  if ( retval == 0 )
-  {
-    delete[] grayscale;
-    ASSERT_EXCEPTION( retval != 0, _T("Get metalmap failed") );
-  }
+  ASSERT_EXCEPTION( retval != 0, _T("Get metalmap failed") );
 
   for ( int i = 0; i < width*height; i++ ) {
     true_colours[(i*3)  ] = 0;
     true_colours[(i*3)+1] = grayscale[i];
     true_colours[(i*3)+2] = 0;
   }
-
-  delete[] grayscale;
 
   return metalmap;
 }
