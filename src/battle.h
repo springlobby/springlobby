@@ -71,10 +71,10 @@ struct BattleOptions
   bool guilistactiv;
 };
 
-class OfflineBattle : public UserList, public IBattle
+class CommonBattle : public UserList, public IBattle
 {
     public:
-        OfflineBattle( const int id, const bool ingame, const int order );
+        CommonBattle( const int id, const bool ingame, const int order );
 
         int GetBattleId() const { return m_opts.battleid; }
 
@@ -127,6 +127,7 @@ class OfflineBattle : public UserList, public IBattle
         void StartRectAdded( unsigned int allyno );
         BattleStartRect GetStartRect( unsigned int allyno );
         void ClearStartRects();
+        unsigned int GetNumRects();
 
         BattleBot* GetBot( const wxString& name ) const;
         BattleBot* GetBot( unsigned int index ) const;
@@ -138,6 +139,11 @@ class OfflineBattle : public UserList, public IBattle
         User& GetFounder() const { return GetUser( m_opts.founder ); }
 
         bool IsFull() const { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
+
+        void OnUserAdded( User& user );
+        void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
+        void OnUserRemoved( User& user );
+
 
     protected:
 
@@ -154,7 +160,7 @@ class OfflineBattle : public UserList, public IBattle
 
 /** \brief model of a sp/mp battle
  * \todo DOCME */
-class Battle : public OfflineBattle
+class Battle : public CommonBattle
 {
   public:
     Battle( Server& serv, Ui& ui, int id );
@@ -167,7 +173,6 @@ class Battle : public OfflineBattle
 
     void SendHostInfo( HostInfo update );
     void SendHostInfo( const wxString& Tag );
-
 
     int GetMyPlayerNum() const;
 
@@ -226,7 +231,6 @@ class Battle : public OfflineBattle
     int GetMyAlly() { return GetMe().BattleStatus().ally; }
     void SetMyAlly( int ally ) { GetMe().BattleStatus().ally = ally; SendMyBattleStatus(); }
 
-    unsigned int GetNumRects();
 
     void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true);
     void FixTeamIDs();

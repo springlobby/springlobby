@@ -58,7 +58,7 @@ const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBo
 
 
 Battle::Battle( Server& serv, Ui& ui, int id ) :
-  OfflineBattle(id,false,0), //m_ingame(false),m_order(0)
+  CommonBattle(id,false,0), //m_ingame(false),m_order(0)
   m_serv(serv),
   m_ui(ui),
   m_ah(*this)
@@ -544,7 +544,7 @@ bool Battle::CheckBan(User &user){
 
 
 
-void OfflineBattle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
+void CommonBattle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
 {
   BattleStartRect sr;
 
@@ -562,7 +562,7 @@ void OfflineBattle::AddStartRect( unsigned int allyno, unsigned int left, unsign
 }
 
 
-void OfflineBattle::RemoveStartRect( unsigned int allyno )
+void CommonBattle::RemoveStartRect( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   BattleStartRect sr = m_rects[allyno];
@@ -571,7 +571,7 @@ void OfflineBattle::RemoveStartRect( unsigned int allyno )
 }
 
 
-void OfflineBattle::ResizeStartRect( unsigned int allyno )
+void CommonBattle::ResizeStartRect( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   BattleStartRect sr = m_rects[allyno];
@@ -580,14 +580,14 @@ void OfflineBattle::ResizeStartRect( unsigned int allyno )
 }
 
 
-void OfflineBattle::StartRectRemoved( unsigned int allyno )
+void CommonBattle::StartRectRemoved( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   if ( m_rects[allyno].todelete ) m_rects.erase(allyno);
 }
 
 
-void OfflineBattle::StartRectResized( unsigned int allyno )
+void CommonBattle::StartRectResized( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   BattleStartRect sr = m_rects[allyno];
@@ -596,7 +596,7 @@ void OfflineBattle::StartRectResized( unsigned int allyno )
 }
 
 
-void OfflineBattle::StartRectAdded( unsigned int allyno )
+void CommonBattle::StartRectAdded( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   BattleStartRect sr = m_rects[allyno];
@@ -605,12 +605,12 @@ void OfflineBattle::StartRectAdded( unsigned int allyno )
 }
 
 
-BattleStartRect OfflineBattle::GetStartRect( unsigned int allyno )
+BattleStartRect CommonBattle::GetStartRect( unsigned int allyno )
 {
   return m_rects[allyno];
 }
 
-void OfflineBattle::ClearStartRects()
+void CommonBattle::ClearStartRects()
 {
   m_rects.clear();
 }
@@ -693,7 +693,7 @@ void Battle::SetBotHandicap( const wxString& nick, int handicap )
 }
 
 
-void OfflineBattle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
+void CommonBattle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
 {
   BattleBot* bot = GetBot(nick);
   bool created = true;
@@ -715,7 +715,7 @@ void OfflineBattle::OnBotAdded( const wxString& nick, const wxString& owner, con
 }
 
 
-void OfflineBattle::OnBotRemoved( const wxString& nick )
+void CommonBattle::OnBotRemoved( const wxString& nick )
 {
   BattleBot* bot = GetBot( nick );
   m_bots.remove( bot );
@@ -724,7 +724,7 @@ void OfflineBattle::OnBotRemoved( const wxString& nick )
 }
 
 
-void OfflineBattle::OnBotUpdated( const wxString& name, const UserBattleStatus& bs )
+void CommonBattle::OnBotUpdated( const wxString& name, const UserBattleStatus& bs )
 {
   BattleBot* bot = GetBot( name );
   try
@@ -737,7 +737,7 @@ void OfflineBattle::OnBotUpdated( const wxString& name, const UserBattleStatus& 
 }
 
 
-BattleBot* OfflineBattle::GetBot( const wxString& name ) const
+BattleBot* CommonBattle::GetBot( const wxString& name ) const
 {
   std::list<BattleBot*>::const_iterator i;
 
@@ -752,7 +752,7 @@ BattleBot* OfflineBattle::GetBot( const wxString& name ) const
   return 0;
 }
 
-BattleBot* OfflineBattle::GetBot( unsigned int index ) const
+BattleBot* CommonBattle::GetBot( unsigned int index ) const
 {
   if ((m_bot_pos == BOT_SEEKPOS_INVALID) || (m_bot_pos > index)) {
     m_bot_seek = m_bots.begin();
@@ -764,7 +764,7 @@ BattleBot* OfflineBattle::GetBot( unsigned int index ) const
 }
 
 
-unsigned int OfflineBattle::GetNumBots() const
+unsigned int CommonBattle::GetNumBots() const
 {
   return m_bots.size();
 }
@@ -815,7 +815,7 @@ void Battle::SetHandicap( User& user, int handicap)
 }
 
 
-unsigned int Battle::GetNumRects()
+unsigned int CommonBattle::GetNumRects()
 {
   return m_rects.size();
 }
@@ -1037,7 +1037,7 @@ void Battle::ForceUnsyncedToSpectate()
   }
 }
 
-OfflineBattle::OfflineBattle( const int id, const bool ingame, const int order )
+CommonBattle::CommonBattle( const int id, const bool ingame, const int order )
     : m_ingame(ingame),m_order(order),  m_bot_seek(m_bots.end()),
         m_bot_pos(BOT_SEEKPOS_INVALID)
 {
