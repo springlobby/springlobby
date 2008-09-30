@@ -51,3 +51,4 @@ stamp-h1
 test.txt
 test/*
 src/images/updater/*
+*.fbp.bak

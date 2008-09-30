@@ -61,6 +61,10 @@ class SelectUsersDialog : public wxDialog
 
     void AddUserToList( const wxString& nick, const wxString& flag );
 
+    static int wxCALLBACK CompareName(long item1, long item2, long sortData );
+
+    void Sort();
+
   public:
     SelectUsersDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Select Users"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 358,518 ), long style = wxDEFAULT_DIALOG_STYLE );
     ~SelectUsersDialog();

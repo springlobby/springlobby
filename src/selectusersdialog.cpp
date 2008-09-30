@@ -108,6 +108,7 @@ void SelectUsersDialog::PopulateUsersList()
         AddUserToList( name, country );
       }
     }
+    Sort();
     m_user_list->Thaw();
 
   }
@@ -209,6 +210,8 @@ void SelectUsersDialog::OnNameFilterChange( wxCommandEvent& event )
     }
   }
 
+  wxSortedArrayString sel = GetSelection();
+
   for ( int i = m_filtered_users.Count() - 1; i >= 0; i-- )
   {
     wxString line = m_filtered_users[i];
@@ -216,11 +219,13 @@ void SelectUsersDialog::OnNameFilterChange( wxCommandEvent& event )
     wxString name = line.Mid(0, sep);
     if ( name.Contains(filter) || (filter == wxEmptyString) ) {
       int flag = (int)s2l( line.Mid(sep+1) ); // Flag is never < 0 or > intmax
-      m_user_list->InsertItem(0, name, flag );
+      long item = m_user_list->InsertItem(0, name, flag );
       m_filtered_users.RemoveAt(i);
+      if ( sel.Index(name, false) != wxNOT_FOUND )
+        m_user_list->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
     }
   }
-
+  Sort();
   m_user_list->Thaw();
 }
 
@@ -263,4 +268,17 @@ void SelectUsersDialog::OnOk( wxCommandEvent& event )
 wxSortedArrayString SelectUsersDialog::GetSelection()
 {
   return GetSelectionFromText();
+}
+
+int wxCALLBACK SelectUsersDialog::CompareName(long item1, long item2, long sortData )
+{
+  wxListCtrl* user_list = (wxListCtrl*)sortData;
+  return user_list->GetItemText(item1).CmpNoCase(user_list->GetItemText(item2));
+}
+
+void SelectUsersDialog::Sort()
+{
+  m_user_list->Freeze();
+  m_user_list->SortItems(CompareName, (long)this);
+  m_user_list->Thaw();
 }
