@@ -54,7 +54,7 @@ void User::SetBattle( Battle* battle )
   m_battle = battle;
 }
 
-void User::SetStatus( const UserStatus& status )
+void OfflineUser::SetStatus( const UserStatus& status )
 {
   m_status = status;
   // If user is host of a game, then his in_game status tells if the game is on!
@@ -75,7 +75,7 @@ void User::SetBattleStatus( const UserBattleStatus& status, bool setorder )
 }
 */
 
-void User::UpdateBattleStatus( const UserBattleStatus& status, bool setorder )
+void OfflineUser::UpdateBattleStatus( const UserBattleStatus& status, bool setorder )
 {
 
   //int order = m_bstatus.order;

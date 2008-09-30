@@ -71,43 +71,62 @@ struct UiUserData {
   ChatPanel* panel;
 };
 
+//! parent class leaving out server related functionality
+class OfflineUser
+{
+    public:
+        OfflineUser(const wxString& nick, const wxString& country, const int& cpu)
+           : m_nick(nick), m_country(country), m_cpu(cpu), m_battle(0)  {};
+
+        wxString GetNick() const { return m_nick; }
+        void SetNick( const wxString& nick ) { m_nick = nick; }
+
+        wxString GetCountry() const { return m_country; }
+        void SetCountry( const wxString& country ) { m_country = country; }
+
+        int GetCpu() const { return m_cpu; }
+        void SetCpu( const int& cpu ) { m_cpu = cpu; }
+
+        UserStatus& Status() { return m_status; }
+
+        UserStatus GetStatus() const { return m_status; }
+        void SetStatus( const UserStatus& status );
+
+        UserBattleStatus& BattleStatus() { return m_bstatus; }
+        //void SetBattleStatus( const UserBattleStatus& status, bool setorder = false );/// dont use this to avoid overwriting data like ip and port, use following method.
+        void UpdateBattleStatus( const UserBattleStatus& status, bool setorder = false );
+
+    /*    void SetUserData( void* userdata ) { m_data = userdata; }
+        void* GetUserData() { return m_data; }*/
+
+    protected:
+        wxString m_nick;
+        wxString m_country;
+        int m_cpu;
+        UserStatus m_status;
+        UserBattleStatus m_bstatus;
+        Battle* m_battle;
+        //void* m_data;
+
+};
+
 //! Class containing all the information about a user
-class User
+class User : public OfflineUser
 {
   public:
 
     UiUserData uidata;
 
-    User( Server& serv ): m_serv(serv),m_cpu(0), m_battle(0) {}
-    User( const wxString& nick, Server& serv ) : m_serv(serv),m_nick(nick), m_cpu(0), m_battle(0) {}
+    User( Server& serv ): OfflineUser( wxEmptyString,wxEmptyString,0 ), m_serv(serv) {}
+    User( const wxString& nick, Server& serv ) : OfflineUser( nick,wxEmptyString,0 ),m_serv(serv){}
     User( const wxString& nick, const wxString& country, const int& cpu, Server& serv) :
-      m_serv(serv),m_nick(nick), m_country(country), m_cpu(cpu), m_battle(0) {}
+      OfflineUser( nick,country,cpu ) ,m_serv(serv) {}
 
     virtual ~User();
 
     // User interface
 
     Server& GetServer() { return m_serv; }
-    wxString GetNick() const { return m_nick; }
-    void SetNick( const wxString& nick ) { m_nick = nick; }
-
-    wxString GetCountry() const { return m_country; }
-    void SetCountry( const wxString& country ) { m_country = country; }
-
-    int GetCpu() const { return m_cpu; }
-    void SetCpu( const int& cpu ) { m_cpu = cpu; }
-
-    UserStatus& Status() { return m_status; }
-
-    UserStatus GetStatus() const { return m_status; }
-    void SetStatus( const UserStatus& status );
-
-    UserBattleStatus& BattleStatus() { return m_bstatus; }
-    //void SetBattleStatus( const UserBattleStatus& status, bool setorder = false );/// dont use this to avoid overwriting data like ip and port, use following method.
-    void UpdateBattleStatus( const UserBattleStatus& status, bool setorder = false );
-
-/*    void SetUserData( void* userdata ) { m_data = userdata; }
-    void* GetUserData() { return m_data; }*/
 
     void Said( const wxString& message );
     void Say( const wxString& message );
@@ -130,13 +149,7 @@ class User
     // User variables
 
     Server& m_serv;
-    wxString m_nick;
-    wxString m_country;
-    int m_cpu;
-    UserStatus m_status;
-    UserBattleStatus m_bstatus;
-    Battle* m_battle;
-    //void* m_data;
+
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_USER_H
