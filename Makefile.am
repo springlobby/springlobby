@@ -421,6 +421,8 @@ springlobby_SOURCES = \
 	src/addbotdialog.h \
 	src/agreementdialog.cpp \
 	src/agreementdialog.h \
+	src/autohost.cpp \
+	src/autohost.h \
 	src/base64.cpp \
 	src/base64.h \
 	src/battle.cpp \
@@ -518,6 +520,7 @@ springlobby_SOURCES = \
 	src/uiutils.h \
 	src/user.cpp \
 	src/user.h \
+	src/usermenu.h \
 	src/userlist.cpp \
 	src/userlist.h \
 	src/userlistctrl.cpp \
@@ -576,11 +579,14 @@ springlobby_SOURCES = \
 	src/images/rank4.xpm \
 	src/images/rank5.xpm \
 	src/images/rank6.xpm \
+	src/images/rank_unknown.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
 	src/images/downloads_icon.png.h \
 	src/images/single_player_icon.png.h \
 	src/images/downloads_icon_text.png.h \
+	src/images/warning_small.png.h \
+	src/images/spectator.png.h \
 	src/images/single_player_icon_text.png.h \
 	src/images/select_icon.xpm \
 	src/images/server.xpm \
@@ -871,6 +877,7 @@ springlobby_SOURCES = \
 	src/filelister/filelistfilter.cpp \
 	configure.ac \
 	src/autojoinchanneldialog.h \
+	src/autopointers.h \
 	src/autojoinchanneldialog.cpp \
 	src/useractions.h \
 	src/useractions.cpp \
@@ -883,14 +890,19 @@ springlobby_SOURCES = \
 	src/groupuserdialog.h \
 	src/groupuserdialog.cpp \
 	src/lobbyoptionstab.h \
-	src/lobbyoptionstab.cpp
-
+	src/lobbyoptionstab.cpp \
+	src/updater/updater.h \
+	src/updater/updater.cpp \
+	src/updater/exedownloader.h \
+	src/updater/exedownloader.cpp \
+	src/usermenu.h \
+	src/thread.cpp \
+	src/thread.h
 
 
 if USE_WINDRES	
 springlobby_SOURCES += \ 
 		src/springlobby.rc \
-		src/Helper/listctrl.cpp \
 		src/Helper/listctrl.cpp 
 endif
 
@@ -940,6 +952,8 @@ springsettings_SOURCES = \
 	src/utils.h \
 	src/crashreport.cpp \
 	src/crashreport.h \
+	src/spinctld.h \
+	src/spinctld.cpp \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
 	src/settings++/se_utils.cpp \

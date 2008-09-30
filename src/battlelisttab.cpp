@@ -45,7 +45,6 @@ BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
   EVT_LIST_ITEM_ACTIVATED ( BATTLE_JOIN              , BattleListTab::OnListJoin    )
   EVT_LIST_ITEM_SELECTED  ( BLIST_LIST               , BattleListTab::OnSelect      )
   EVT_CHECKBOX            ( BATTLE_LIST_FILTER_ACTIV , BattleListTab::OnFilterActiv )
-  EVT_CHECKBOX            ( BATTLE_LIST_FILTER_HIGHLIGHTED , BattleListTab::OnFilterHighlighted )
 #if  wxUSE_TOGGLEBTN
   EVT_TOGGLEBUTTON        ( BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter  )
 #else
@@ -58,6 +57,7 @@ END_EVENT_TABLE()
 
 BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxPanel( parent, -1 ),
+  m_filter_notice(0),
   m_ui(ui),
   m_sel_battle(0)
 {
@@ -67,7 +67,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   wxBoxSizer* m_filter_sizer;
   m_filter_sizer = new wxBoxSizer( wxVERTICAL );
 
-  wxBoxSizer* m_battlelist_sizer;
+
   m_battlelist_sizer = new wxBoxSizer( wxVERTICAL );
 
   m_battle_list = new BattleListCtrl( this, m_ui );
@@ -138,8 +138,6 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
   m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , _("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
   m_buttons_sizer->Add( m_filter_activ, 0, wxALL, 5 );
 
-  m_filter_highlighted = new wxCheckBox( this, BATTLE_LIST_FILTER_HIGHLIGHTED , _("Show highlighted only"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_buttons_sizer->Add( m_filter_highlighted, 0, wxALL, 5 );
   #ifdef HAVE_WX26
   m_filter_activ->Disable();
   #endif
@@ -193,7 +191,6 @@ void BattleListTab::SelectBattle( Battle* battle )
 
 void BattleListTab::AddBattle( Battle& battle ) {
 
-  m_battle_list->SetSelectionRestorePoint();
   if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     return;
   }
@@ -225,23 +222,20 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
   m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
 
-  m_battle_list->Sort();
   m_battle_list->HighlightItem( index );
   m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
 
-  m_battle_list->RestoreSelection();
-
+  m_battle_list->MarkDirtySort();
 }
 
 
 void BattleListTab::RemoveBattle( Battle& battle ) {
 
-  m_battle_list->SetSelectionRestorePoint();
-
   if ( &battle == m_sel_battle )
   {
+      m_battle_list->ResetSelection();
       SelectBattle( 0 );
   }
   for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
@@ -253,12 +247,10 @@ void BattleListTab::RemoveBattle( Battle& battle ) {
 
   battle.SetGUIListActiv( false );
 
-  m_battle_list->Sort();
   m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
   m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
 
-  m_battle_list->RestoreSelection( );
 
 }
 
@@ -280,8 +272,6 @@ void BattleListTab::UpdateBattle( Battle& battle )
     RemoveBattle( battle );
     return;
   }
-
-  m_battle_list->SetSelectionRestorePoint();
 
   int index = -1;
   for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
@@ -318,10 +308,8 @@ void BattleListTab::UpdateBattle( Battle& battle )
   m_battle_list->HighlightItem( index );
 
   if ( &battle == m_sel_battle ) SelectBattle( m_sel_battle );
-  m_battle_list->Sort();
   m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
-
-  m_battle_list->RestoreSelection();
+  m_battle_list->MarkDirtySort();
 }
 
 
@@ -363,6 +351,9 @@ void BattleListTab::SetFilterActiv( bool activ )
 {
   m_filter->SetActiv( activ );
   m_filter_activ->SetValue( activ );
+  sett().SetFilterActivState( activ );
+  ShowFilterNotice( activ );
+  m_battle_list->MarkDirtySort();
 }
 
 
@@ -441,7 +432,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     // Get selected mod from unitsync.
     UnitSyncMod mod;
     try {
-      mod = usync()->GetMod( sett().GetLastHostMod() );
+      mod = usync().GetMod( sett().GetLastHostMod() );
       bo.modhash = mod.hash;
       bo.modname = mod.name;
     } catch ( ... ) {
@@ -453,14 +444,14 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     UnitSyncMap map;
     wxString mname = sett().GetLastHostMap();
     try {
-      if ( usync()->MapExists(mname) )
-    	  map = usync()->GetMap( mname );
-      else if ( usync()->GetNumMaps() <= 0 ) {
+      if ( usync().MapExists(mname) )
+    	  map = usync().GetMap( mname );
+      else if ( usync().GetNumMaps() <= 0 ) {
         wxLogWarning( _T("no maps found") );
         customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK );
         return;
       } else {
-        map = usync()->GetMap( 0 );
+        map = usync().GetMap( 0 );
       }
     } catch ( ... ) {
       wxLogWarning( _T("no maps found") );
@@ -494,12 +485,15 @@ void BattleListTab::OnFilter( wxCommandEvent& event )
 
 void BattleListTab::OnFilterActiv( wxCommandEvent& event )
 {
+  bool active = m_filter_activ->GetValue();
   if ( !m_ui.IsConnected() )
   {
-    m_filter_activ->SetValue( !m_filter_activ->GetValue() );
+    m_filter_activ->SetValue( !active );
     return;
   }
-  m_filter->SetActiv( m_filter_activ->GetValue() );
+  m_filter->SetActiv( active );
+  sett().SetFilterActivState( active );
+  ShowFilterNotice( active );
 }
 
 
@@ -516,6 +510,24 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
 
 }
 
+void BattleListTab::ShowFilterNotice( const bool show )
+{
+    if ( show ) {
+        m_filter_notice = new wxStaticText( this, -1, _("Battle filter is active") );
+        m_battlelist_sizer->Add ( m_filter_notice, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP | wxBOTTOM, 5 );
+        m_battlelist_sizer->Layout();
+
+    }
+    else {
+        if ( m_filter_notice ) {
+            m_battlelist_sizer->Detach( m_filter_notice );
+            delete m_filter_notice;
+            m_filter_notice = 0;
+            m_battlelist_sizer->Layout();
+            //m_ma
+        }
+    }
+}
 
 void BattleListTab::OnListJoin( wxListEvent& event )
 {
@@ -616,9 +628,8 @@ void BattleListTab::UpdateHighlights()
     m_battle_list->UpdateHighlights();
 }
 
-void BattleListTab::OnFilterHighlighted( wxCommandEvent& event )
+
+void BattleListTab::SortBattleList()
 {
-    m_filter->SetFilterHighlighted( m_filter_highlighted->GetValue() );
-    if ( m_ui.IsConnected() )
-        UpdateList();
+  m_battle_list->SortList();
 }

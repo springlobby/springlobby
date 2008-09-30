@@ -12,19 +12,21 @@
 				<Option object_output="obj/GNU/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="&gt;~/.springlobby/log2.txt" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
-					<Add option="`pkg-config --cflags libtorrent`" />
 					<Add option="`wx-config --cflags`" />
 					<Add option="`sdl-config --cflags`" />
-					<Add option='-DVERSION=\\&quot;whatever-Unix-Debug\\&quot;' />
+					<Add option="`pkg-config --cflags libtorrent`" />
+					<Add option='-DVERSION=\\&quot;ery-latest-version-Unix-Debug\\&quot;' />
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
+					<Add option="-DDISABLE_SOUND" />
+					<Add option="-DNO_RICHTEXT_CHAT" />
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
+					<Add option="`pkg-config --libs libtorrent`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
 					<Add option="`sdl-config --libs`" />
 					<Add library="SDL_mixer" />
@@ -146,8 +148,11 @@
 		<Unit filename="src/agreementdialog.h" />
 		<Unit filename="src/autobalancedialog.cpp" />
 		<Unit filename="src/autobalancedialog.h" />
+		<Unit filename="src/autohost.cpp" />
+		<Unit filename="src/autohost.h" />
 		<Unit filename="src/autojoinchanneldialog.cpp" />
 		<Unit filename="src/autojoinchanneldialog.h" />
+		<Unit filename="src/autopointers.h" />
 		<Unit filename="src/base64.cpp" />
 		<Unit filename="src/base64.h" />
 		<Unit filename="src/battle.cpp" />
@@ -342,6 +347,8 @@
 		<Unit filename="src/tasserver.h" />
 		<Unit filename="src/tdfcontainer.cpp" />
 		<Unit filename="src/tdfcontainer.h" />
+		<Unit filename="src/thread.cpp" />
+		<Unit filename="src/thread.h" />
 		<Unit filename="src/torrentlistctrl.cpp" />
 		<Unit filename="src/torrentlistctrl.h" />
 		<Unit filename="src/torrentoptionspanel.cpp" />
@@ -354,6 +361,10 @@
 		<Unit filename="src/uiutils.h" />
 		<Unit filename="src/unitsyncthread.cpp" />
 		<Unit filename="src/unitsyncthread.h" />
+		<Unit filename="src/updater/exedownloader.cpp" />
+		<Unit filename="src/updater/exedownloader.h" />
+		<Unit filename="src/updater/updater.cpp" />
+		<Unit filename="src/updater/updater.h" />
 		<Unit filename="src/updater/versionchecker.cpp" />
 		<Unit filename="src/updater/versionchecker.h" />
 		<Unit filename="src/user.cpp" />

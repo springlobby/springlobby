@@ -34,6 +34,8 @@
 #include "uiutils.h"
 #include "server.h"
 #include "mmoptionswrapper.h"
+#include "settings.h"
+#include "settings++/custom_dialogs.h"
 
 #define LIMIT_DGUN_INDEX 0
 #define GHOUSTED_INDEX  1
@@ -55,9 +57,12 @@ BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
 
   EVT_BUTTON( BOPTS_RESTRICT, BattleOptionsTab::OnRestrict )
   EVT_BUTTON( BOPTS_ALLOW, BattleOptionsTab::OnAllow )
-  EVT_BUTTON( BOPTS_LOADRES, BattleOptionsTab::OnLoadRestrictions )
-  EVT_BUTTON( BOPTS_SAVERES, BattleOptionsTab::OnSaveRestrictions )
   EVT_BUTTON( BOPTS_CLEARRES, BattleOptionsTab::OnClearRestrictions )
+
+  EVT_BUTTON( BOPTS_LOADPRES, BattleOptionsTab::OnLoadPreset )
+  EVT_BUTTON( BOPTS_SAVEPRES, BattleOptionsTab::OnSavePreset )
+  EVT_BUTTON( BOPTS_DELETEPRES, BattleOptionsTab::OnDeletePreset )
+  EVT_BUTTON( BOPTS_SETDEFAULTPRES, BattleOptionsTab::OnSetModDefaultPreset )
 
 END_EVENT_TABLE()
 
@@ -173,10 +178,17 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_mid_btn_sizer->Add( 0, 50, 0, wxEXPAND, 0 );
 
   m_restrict_btn = new wxButton( this, BOPTS_RESTRICT, _T(">"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_restrict_btn->SetToolTip( _("Disable selected units.") );
   m_mid_btn_sizer->Add( m_restrict_btn, 0, wxALL, 5 );
 
   m_allow_btn = new wxButton( this, BOPTS_ALLOW, _T("<"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_allow_btn->SetToolTip( _("Re-enable selected units.") );
   m_mid_btn_sizer->Add( m_allow_btn, 0, wxALL, 5 );
+
+  m_clear_btn = new wxButton( this, BOPTS_CLEARRES, _("Clear"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+  m_clear_btn->SetToolTip( _("Enable all units.") );
+
+  m_mid_btn_sizer->Add( m_clear_btn, 0, wxALL, 5 );
 
   m_top_restr_sizer->Add( m_mid_btn_sizer, 0, wxEXPAND, 5 );
 
@@ -195,29 +207,37 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
   m_restr_box->Add( m_top_restr_sizer, 1, wxEXPAND, 5 );
 
-  wxBoxSizer* m_restricted_btn_sizer;
-  m_restricted_btn_sizer = new wxBoxSizer( wxHORIZONTAL );
+  wxBoxSizer* m_preset_sizer;
+  m_preset_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_load_btn = new wxButton( this, BOPTS_LOADRES, _("Load..."), wxDefaultPosition, wxDefaultSize, 0 );
-  m_load_btn->SetToolTip( _("Load a saved set of restrictions.") );
-  m_load_btn->Disable();
+  m_options_preset_sel = new wxComboBox( this, BOPTS_CHOSEPRES, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList() );
+  m_options_preset_sel->SetToolTip(_("Set name."));
 
-  m_restricted_btn_sizer->Add( m_load_btn, 0, wxALL, 5 );
+  m_preset_sizer->Add( m_options_preset_sel, 0, wxALL, 5 );
 
-  m_save_btn = new wxButton( this, BOPTS_SAVERES, _("Save..."), wxDefaultPosition, wxDefaultSize, 0 );
-  m_save_btn->SetToolTip( _("Save a set of restrictions.") );
-  m_save_btn->Disable();
+  m_load_btn = new wxButton( this, BOPTS_LOADPRES, _("Load..."), wxDefaultPosition, wxDefaultSize, 0 );
+  m_load_btn->SetToolTip( _("Load a saved set of options.") );
 
-  m_restricted_btn_sizer->Add( m_save_btn, 0, wxALL, 5 );
+  m_preset_sizer->Add( m_load_btn, 0, wxALL, 5 );
 
-  m_restricted_btn_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+  m_save_btn = new wxButton( this, BOPTS_SAVEPRES, _("Save..."), wxDefaultPosition, wxDefaultSize, 0 );
+  m_save_btn->SetToolTip( _("Save a set of options.") );
 
-  m_clear_btn = new wxButton( this, BOPTS_CLEARRES, _("Clear"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_clear_btn->SetToolTip( _("Enable all units.") );
+  m_preset_sizer->Add( m_save_btn, 0, wxALL, 5 );
 
-  m_restricted_btn_sizer->Add( m_clear_btn, 0, wxALL, 5 );
+  m_delete_btn = new wxButton( this, BOPTS_DELETEPRES, _("Delete..."), wxDefaultPosition, wxDefaultSize, 0 );
+  m_delete_btn->SetToolTip( _("Delete a set of options.") );
 
-  m_restr_box->Add( m_restricted_btn_sizer, 0, wxEXPAND, 5 );
+  m_preset_sizer->Add( m_delete_btn, 0, wxALL, 5 );
+
+  m_default_btn = new wxButton( this, BOPTS_SETDEFAULTPRES, _("Set default..."), wxDefaultPosition, wxDefaultSize, 0 );
+  m_default_btn->SetToolTip( _("Use the current set of options as mod's default.") );
+
+  m_preset_sizer->Add( m_default_btn, 0, wxALL, 5 );
+
+  m_preset_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+
+  m_restr_box->Add( m_preset_sizer, 0, wxEXPAND, 5 );
 
   m_main_sizer->Add( m_restr_box, 1, wxALL|wxEXPAND, 5 );
 
@@ -245,6 +265,11 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
     m_clear_btn->Disable();
     m_restrict_btn->Disable();
     m_allow_btn->Disable();
+    m_load_btn->Disable();
+    m_save_btn->Disable();
+    m_delete_btn->Disable();
+    m_default_btn->Disable();
+    m_options_preset_sel->Disable();
   }
 }
 
@@ -260,7 +285,7 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
   long type;
   Tag.BeforeFirst( '_' ).ToLong( &type );
   wxString key = Tag.AfterFirst( '_' );
-  wxString value = m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type);
+  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (GameOption)type);
   long longval;
   value.ToLong( &longval );
   if ( type == EngineOption )
@@ -287,6 +312,10 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
     else if ( key == _T("ghostedbuildings") ) m_options_checks->Check( GHOUSTED_INDEX, longval );
     else if ( key == _T("diminishingmms") ) m_options_checks->Check( DIM_MMS_INDEX, longval );
   }
+  else if ( type == PrivateOptions )
+  {
+    if ( key == _T("restrictions") ) ReloadRestrictions();
+  }
 }
 
 void BattleOptionsTab::ReloadRestrictions()
@@ -296,7 +325,7 @@ void BattleOptionsTab::ReloadRestrictions()
   if ( m_battle.GetHostModName() == wxEmptyString ) return;
 
   try {
-    m_allowed_list->InsertItems( usync()->GetUnitsList( m_battle.GetHostModName() ), 0 );
+    m_allowed_list->InsertItems( usync().GetUnitsList( m_battle.GetHostModName() ), 0 );
   } catch (...) {}
   wxArrayString units = m_battle.DisabledUnits();
 
@@ -380,27 +409,27 @@ void BattleOptionsTab::Allow( int index)
 
 void BattleOptionsTab::OnEndSelect( wxCommandEvent& event )
 {
-  m_battle.CustomBattleOptions()->setSingleOption( _T("gamemode"), i2s(m_end_radios->GetSelection()), EngineOption );
+  m_battle.CustomBattleOptions().setSingleOption( _T("gamemode"), i2s(m_end_radios->GetSelection()), EngineOption );
   m_battle.SendHostInfo( wxString::Format(_T("%d_gamemode"), EngineOption ) );
 }
 
 
 void BattleOptionsTab::OnOptsCheck( wxCommandEvent& event )
 {
-  m_battle.CustomBattleOptions()->setSingleOption( _T("limitdgun"), i2s(m_options_checks->IsChecked( LIMIT_DGUN_INDEX )), EngineOption );
+  m_battle.CustomBattleOptions().setSingleOption( _T("limitdgun"), i2s(m_options_checks->IsChecked( LIMIT_DGUN_INDEX )), EngineOption );
   m_battle.SendHostInfo( wxString::Format(_T("%d_limitdgun"), EngineOption ) );
 
-  m_battle.CustomBattleOptions()->setSingleOption( _T("ghostedbuildings"), i2s(m_options_checks->IsChecked( GHOUSTED_INDEX )), EngineOption );
+  m_battle.CustomBattleOptions().setSingleOption( _T("ghostedbuildings"), i2s(m_options_checks->IsChecked( GHOUSTED_INDEX )), EngineOption );
   m_battle.SendHostInfo( wxString::Format(_T("%d_ghostedbuildings"), EngineOption ) );
 
-  m_battle.CustomBattleOptions()->setSingleOption( _T("diminishingmms"), i2s(m_options_checks->IsChecked( DIM_MMS_INDEX )), EngineOption );
+  m_battle.CustomBattleOptions().setSingleOption( _T("diminishingmms"), i2s(m_options_checks->IsChecked( DIM_MMS_INDEX )), EngineOption );
   m_battle.SendHostInfo( wxString::Format(_T("%d_diminishingmms"), EngineOption ) );
 
   if ( m_sp ) {
     if ( m_options_checks->IsChecked( RANDOM_START_INDEX ) )
-      m_battle.CustomBattleOptions()->setSingleOption( _T("startpostype"), i2s(ST_Random), EngineOption );
+      m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(ST_Random), EngineOption );
     else
-      m_battle.CustomBattleOptions()->setSingleOption( _T("startpostype"), i2s(ST_Pick), EngineOption );
+      m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(ST_Pick), EngineOption );
     m_battle.SendHostInfo( HI_StartType );
   }
 
@@ -430,17 +459,17 @@ void BattleOptionsTab::OnSlideChanged( wxScrollEvent& event )
   {
   case SLI_METAL_ID:
 	  m_last_metal = m_metal_slider->GetValue();
-    m_battle.CustomBattleOptions()->setSingleOption( _T("startmetal"), i2s(m_last_metal), EngineOption );
+    m_battle.CustomBattleOptions().setSingleOption( _T("startmetal"), i2s(m_last_metal), EngineOption );
     m_battle.SendHostInfo( wxString::Format(_T("%d_startmetal"), EngineOption ) );
 	  break;
   case SLI_ENERGY_ID:
 	  m_last_energy = m_energy_slider->GetValue();
-    m_battle.CustomBattleOptions()->setSingleOption( _T("startenergy"), i2s(m_last_energy), EngineOption );
+    m_battle.CustomBattleOptions().setSingleOption( _T("startenergy"), i2s(m_last_energy), EngineOption );
     m_battle.SendHostInfo( wxString::Format(_T("%d_startenergy"), EngineOption ) );
 	  break;
   case SLI_UNITS_ID:
 	  m_last_units = m_units_slider->GetValue();
-    m_battle.CustomBattleOptions()->setSingleOption( _T("maxunits"), i2s(m_last_units), EngineOption );
+    m_battle.CustomBattleOptions().setSingleOption( _T("maxunits"), i2s(m_last_units), EngineOption );
     m_battle.SendHostInfo( wxString::Format(_T("%d_maxunits"), EngineOption ) );
 	  break;
   }
@@ -486,19 +515,64 @@ void BattleOptionsTab::OnAllow( wxCommandEvent& event )
 }
 
 
-void BattleOptionsTab::OnLoadRestrictions( wxCommandEvent& event )
-{
-}
-
-
-void BattleOptionsTab::OnSaveRestrictions( wxCommandEvent& event )
-{
-}
-
-
 void BattleOptionsTab::OnClearRestrictions( wxCommandEvent& event )
 {
   m_battle.EnableAllUnits();
   ReloadRestrictions();
 }
 
+
+void BattleOptionsTab::OnLoadPreset( wxCommandEvent& event )
+{
+  wxString presetname = m_options_preset_sel->GetValue();
+  if ( presetname.IsEmpty() )
+  {
+     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot load an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
+     return;
+  }
+  m_battle.LoadOptionsPreset( presetname );
+  m_battle.SendHostInfo( HI_Send_All_opts );
+}
+
+
+void BattleOptionsTab::OnSavePreset( wxCommandEvent& event )
+{
+  wxString presetname = m_options_preset_sel->GetValue();
+  if ( presetname.IsEmpty() )
+  {
+     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot save an options set without a name\nPlease write one in the list or chose an existing to overwrite and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
+     return;
+  }
+  m_battle.SaveOptionsPreset( presetname );
+}
+
+
+void BattleOptionsTab::OnDeletePreset( wxCommandEvent& event )
+{
+  wxString presetname = m_options_preset_sel->GetValue();
+  if ( presetname.IsEmpty() )
+  {
+     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot delete an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
+     return;
+  }
+  m_battle.DeletePreset( presetname );
+}
+
+void BattleOptionsTab::OnSetModDefaultPreset( wxCommandEvent& event )
+{
+  wxString presetname = m_options_preset_sel->GetValue();
+  if ( presetname.IsEmpty() )
+  {
+     customMessageBoxNoModal( SL_MAIN_ICON , _("No options set is selected to set as default\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
+     return;
+  }
+  sett().SetModDefaultPresetName( m_battle.GetHostModName(), presetname );
+}
+
+
+void BattleOptionsTab::UpdatePresetList()
+{
+    m_options_preset_sel->Clear();
+    m_options_preset_sel->Append(sett().GetPresetList());
+    m_options_preset_sel->SetStringSelection(  m_battle.GetCurrentPreset() );
+}

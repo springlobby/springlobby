@@ -108,6 +108,7 @@
 #define ID_WINDOWP_UI_CBOX_15 374
 #define ID_WINDOWP_UI_CBOX_16 375
 #define ID_WINDOWP_UI_CBOX_17 376
+#define ID_WINDOWP_UI_CBOX_18 377
 
 //Zoom opt
 #define ID_WINDOWP_UI_MW_SPD  385
@@ -123,6 +124,8 @@
 #define ID_WINDOWP_QA_CBOX_7  307
 #define ID_WINDOWP_QA_CBOX_8  308
 #define ID_WINDOWP_QA_CBOX_9  309
+#define ID_WINDOWP_QA_CBOX_10 310
+#define ID_WINDOWP_QA_CBOX_11 311
 
 #define ID_WINDOWP_WR_COMBOX  320
 
@@ -166,6 +169,15 @@
 #define ID_PATH_USYNC_BTN		701
 #define ID_PATH_OK_BTN			702
 
+//water 4 specific options
+#define ID_W4_BumpWaterBlurReflection       720
+#define ID_W4_BumpWaterUseDepthTexture      721
+#define ID_W4_BumpWaterShoreWaves           722
+#define ID_W4_BumpWaterReflection           723
+#define ID_W4_BumpWaterTexSizeReflection    724
+#define ID_W4_BumpWaterRefraction           725
+#define ID_W4_BumpWaterAnisotropy           726
+
 #define SLI_STYLE (wxSL_LABELS )
 #define WX_DEF_V wxDefaultValidator
 #define WX_DEF_P wxPoint(-1, -1)
@@ -174,6 +186,7 @@
 
 #define configHandler (susynclib())
 #define TAB_SIZE wxSize(700,500)
+#define UPDATE_W4_CONTROLS 	2003
 #define UPDATE_VIDEO_MODE 	2002
 #define UPDATE_QA_BOXES	  	2001
 #define UPDATE_ALL			2000
@@ -254,10 +267,10 @@ const Control VO_SLI_EXT[] = {
 const category_sizes_map_type VO_SLI_EXT_entry ( _T("VO_SLI_EXT"), sizeof(VO_SLI_EXT) / Control_size );
 
 const Control AO_SLI[] = {
-	{_("Maximum simultaneous sounds"), _T("MaxSounds"),            ID_AO_SLI_0,	_T("8") , {_("maximum different sounds played at the same time\n"
+	{_("Maximum simultaneous sounds"), _T("MaxSounds"),            ID_AO_SLI_0,	_T("32") , {_("maximum different sounds played at the same time\n"
 																								"Set this to zero to disable sound completely.")}},
 	{_("Global sound volume"),   _T("SoundVolume"),                ID_AO_SLI_1,	_T("100"), {_("overall sound volume")}},
-	{_("Unit reply volume"),     _T("UnitReplySoundVolume"),       ID_AO_SLI_2,	_T("80") , {_("reply volume relative to global volume")}}
+	{_("Unit reply volume"),     _T("UnitReplySoundVolume"),       ID_AO_SLI_2,	_T("20") , {_("reply volume relative to global volume")}}
 
 };
 
@@ -274,9 +287,11 @@ const Control QA_CBOX[] = {
 														"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card")}},
 	{_("Never use shaders when rendering SM3 maps"),       _T("SM3ForceFallbackTex"), ID_WINDOWP_QA_CBOX_5,	_T("1"), {_("problems with sm3 maps? enable this")}},
 	{_("Enable LuaShaders support"),                       _T("LuaShaders"),          ID_WINDOWP_QA_CBOX_6,	_T("1"), {_("makes for some cool effects")}},
-	{_("High-resolution LOS textures"),                    _T("HighResLos"),          ID_WINDOWP_QA_CBOX_7,	_T("1"), {_("smoother Line of Sight overlays")}},
-    {_("Draw smooth points"),                              _T("SmoothPoints"),        ID_WINDOWP_QA_CBOX_8,	_T("0"), {_("should points be anti-aliased")}},
-	{_("Draw smooth lines"),                               _T("SmoothLines"),         ID_WINDOWP_QA_CBOX_9,	_T("0"), {_("should lines be anti-aliased")}},
+	{_("Use Pixelbuffer objects"),                       _T("UsePBO"),          ID_WINDOWP_QA_CBOX_7,	_T("0"), {_("If supported, it speeds up the dynamic loading of terrain textures -> smoother camera movement")}},
+	{_("Compress textures"),                                _T("CompressTextures"),ID_WINDOWP_QA_CBOX_8,	_T("0"), {_("Runtime texture compression. (Ideal for graphic cards with small amount of vram)")}},
+	{_("High-resolution LOS textures"),                    _T("HighResLos"),          ID_WINDOWP_QA_CBOX_9,	_T("1"), {_("smoother Line of Sight overlays")}},
+    {_("Draw smooth points"),                              _T("SmoothPoints"),        ID_WINDOWP_QA_CBOX_10,	_T("0"), {_("should points be anti-aliased")}},
+	{_("Draw smooth lines"),                               _T("SmoothLines"),         ID_WINDOWP_QA_CBOX_11,	_T("0"), {_("should lines be anti-aliased")}},
 };
 
 const category_sizes_map_type QA_CBOX_entry ( _T("QA_CBOX"), sizeof(QA_CBOX) / Control_size );
@@ -292,13 +307,13 @@ const Control UI_CBOX[] = {
 	{_("Mini-map on left (dual screen)"),   				_T("DualScreenMiniMapOnLeft"), ID_WINDOWP_UI_CBOX_7,_T("1"), {_("left is the default")}},
 	{_("Simplified mini-map colors"),                      _T("SimpleMiniMapColors"), ID_WINDOWP_UI_CBOX_8,	_T("0"), {_("Use less colors")}},
 
-	{_("Team-colored nanospray"),                          _T("TeamNanoSpray"),       ID_WINDOWP_UI_CBOX_9,	_T("1"),
+	{_("Team-colored nanospray"),                          _T("TeamNanoSpray"),       ID_WINDOWP_UI_CBOX_9,	_T("0"),
 																				{_("Should nano particels be the color of your team?")}},
 	{_("Colorized elevation map"),                         _T("ColorElev"),           ID_WINDOWP_UI_CBOX_10,	_T("1"), {_("makes differences in height clearer")}},
 
-	{_("Show in-game clock"),                              _T("ShowClock"),           ID_WINDOWP_UI_CBOX_11,	_T("1"),
+	{_("Show in-game clock"),                              _T("ShowClock"),           ID_WINDOWP_UI_CBOX_11,	_T("0"),
 										{_("requires \"Enable LuaWidgets\" to be set.\nWill be displayed in the bottom right corner")}},
-	{_("Show in-game player information"),                 _T("ShowPlayerInfo"),      ID_WINDOWP_UI_CBOX_12,	_T("1"),
+	{_("Show in-game player information"),                 _T("ShowPlayerInfo"),      ID_WINDOWP_UI_CBOX_12,	_T("0"),
 										{_("requires \"Enable LuaWidgets\" to be set.\nWill be displayed in the bottom right corner")}},
 	{_("Show in-game framerate"),                          _T("ShowFPS"),             ID_WINDOWP_UI_CBOX_13,	_T("0"),
 										{_("requires \"Enable LuaWidgets\" to be set.\nWill be displayed in the bottom right corner")}},
@@ -308,6 +323,7 @@ const Control UI_CBOX[] = {
 																														"If enabled might screw with LuaUi.")}},
 	{_("Enable scroll on window edge"),					_T("WindowedEdgeMove"),	ID_WINDOWP_UI_CBOX_16,	_T("1"), {_("Scroll the screen when mouse reaches the screen's edge.")}},
 	{_("Invert Mouse"),									_T("InvertMouse"),			ID_WINDOWP_UI_CBOX_17,	_T("0"), {_("Inverts the Mouse Y-axis in FPS mode")}},
+	{_("Use Hardware Cursor"),									_T("HardwareCursor"),			ID_WINDOWP_UI_CBOX_18,	_T("0"), {_("Use native OS mouse cursor (hardware accelerated)")}},
 
 
 };
@@ -319,7 +335,7 @@ const Control MO_SLI[] = {
 	{_("Rotatable overhead camera"), _T("RotOverheadScrollSpeed"), ID_MO_SLI_1,	_T("10") , {_("set the scroll speed (mouse + keyboard) for this mode")}},
 	{_("Total war camera"),          _T("TWScrollSpeed"),          ID_MO_SLI_2,	_T("10") , {_("set the scroll speed (mouse + keyboard) for this mode")}},
 	{_("First person camera"),         _T("FPSScrollSpeed"),         ID_MO_SLI_3,	_T("10") , {_("set the scroll speed (mouse + keyboard) for this mode")}},
-	{_("Free camera"),          _T("CamFreeScrollSpeed"),     ID_MO_SLI_4,	_T("10") , {_("set the scroll speed (mouse + keyboard) for this mode")}}
+	{_("Free camera"),          _T("CamFreeScrollSpeed"),     ID_MO_SLI_4,	_T("100") , {_("set the scroll speed (mouse + keyboard) for this mode")}}
 };
 
 const category_sizes_map_type MO_SLI_entry ( _T("MO_SLI"), sizeof(MO_SLI) / Control_size );
@@ -340,7 +356,7 @@ const Control MO_SLI_EXT[] = {
 const category_sizes_map_type MO_SLI_EXT_entry ( _T("MO_SLI_EXT"), sizeof(MO_SLI_EXT) / Control_size );
 
 const Control DO_SLI[] = {
-	{_("Console verbose level (0=min,10=max)"), _T("VerboseLevel"), ID_DO_SLI_0,	_T("0"), {_("How much information should be outputted?")}}
+	{_("Console verbose level (0=min,10=max)"), _T("VerboseLevel"), ID_DO_SLI_0,	_T("10"), {_("How much information should be outputted?")}}
 };
 
 const category_sizes_map_type DO_SLI_entry ( _T("DO_SLI"), sizeof(DO_SLI) / Control_size );
@@ -364,7 +380,7 @@ const Control WR_COMBOX[] = {
 const category_sizes_map_type WR_COMBOX_entry ( _T("WR_COMBOX"), sizeof(WR_COMBOX) / Control_size );
 
 const wxString WR_COMBOX_CHOICES[] = {
-	_("Basic"), _("Reflective"), _("Reflective + refractive"), _("Dynamic")
+	_("Basic"), _("Reflective"), _("Reflective + refractive"), _("Dynamic"), _("Bump-mapped")
 };
 
 const Control MO_CBOX[] = {
@@ -391,9 +407,33 @@ const Control RC_TEXT[] = {
 
 const category_sizes_map_type RC_TEXT_entry ( _T("RC_TEXT"), sizeof(RC_TEXT) / Control_size );
 
+
+const Control W4_CONTROLS[] = {
+    //booleans = checkboxes
+    {_("Blur reflection"), _T("BumpWaterBlurReflection"), ID_W4_BumpWaterBlurReflection , _T("1"), {_("")}},
+    {_("Use depth texture"), _T("BumpWaterUseDepthTexture"), ID_W4_BumpWaterUseDepthTexture , _T("1"), {_("enables smoother blending on coastlines")}},
+    {_("Shore waves"), _T("BumpWaterShoreWaves"), ID_W4_BumpWaterShoreWaves , _T("0"), {_("Enables shorewaves")}},
+    {_("Reflection"), _T("BumpWaterReflection"), ID_W4_BumpWaterReflection , _T("1"), {_("Turn on water reflections")}},
+    // select boxes
+    {_("Reflection texture size"), _T("BumpWaterTexSizeReflection"), ID_W4_BumpWaterTexSizeReflection , _T("128"), {_("")}},
+    {_("Refraction"), _T("BumpWaterRefraction"), ID_W4_BumpWaterRefraction , _T("1"), {_("Turn on water refractions.\n(0:=off, 1:=screencopy(fast), 2:=own rendering pass(slow)).")}},
+    // spin control
+    {_("Anisotropy"), _T("BumpWaterAnisotropy"), ID_W4_BumpWaterAnisotropy , _T("0"), {_("")}},
+    //     {_(""), _T(""), ID_W4_ , _T(""), {_("")}},
+    //     {_(""), _T(""), ID_W4_ , _T(""), {_("")}},
+    //     {_(""), _T(""), ID_W4_ , _T(""), {_("")}},
+    //     {_(""), _T(""), ID_W4_ , _T(""), {_("")}},
+
+};
+
+const wxString W4_REFRACTION_CHOICES[] = { _("off"), _("screencopy(fast)"), _("own rendering pass(slow)") };
+const wxString W4_TEXSIZE_CHOICES[] = { _("128"), _("256"), _("512"), _T("1024") };
+
+const category_sizes_map_type W4_CONTROLS_entry ( _T("W4_CONTROLS"), sizeof(W4_CONTROLS) / Control_size );
+
 const category_sizes_map_type entries_[] = { RC_TEXT_entry, MO_RBUT_entry, MO_CBOX_entry, WR_COMBOX_entry, DO_CBOX_entry, DO_SLI_entry, MO_SLI_EXT_entry,
                                             MO_SLI_entry, UI_CBOX_entry, QA_CBOX_entry, AO_SLI_entry, AO_SLI_entry, VO_SLI_EXT_entry, VO_SLI_entry,
-                                            VO_RBUT_entry, VO_CBOX_entry, RO_SLI_entry, UI_ZOOM_entry};
+                                            VO_RBUT_entry, VO_CBOX_entry, RO_SLI_entry, UI_ZOOM_entry, W4_CONTROLS_entry};
 
 static category_sizes_map s_category_sizes ( entries_ , entries_ + sizeof(entries_) / sizeof(entries_[0]) );
 

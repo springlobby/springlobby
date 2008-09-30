@@ -1,10 +1,10 @@
 #include "colorbutton.h"
 #include "../utils.h"
-#ifdef __WXMSW__
-    #include "images/colourbox.xpm"
-#endif
-
 #include <wx/image.h>
+
+#ifdef __WXMSW__
+    #include "../images/colourbox.xpm"
+#endif
 
 ColorButton::ColorButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitmap,
     const wxPoint& pos , const wxSize& size , long style , const wxValidator& validator,
@@ -41,8 +41,6 @@ void ColorButton::SetColor( const wxColor& color )
 
     #ifdef __WXMSW__
          SetBackgroundColour( GetDefaultAttributes().colBg );
-    #else
-        SetBackgroundColour( color );
     #endif
 }
 

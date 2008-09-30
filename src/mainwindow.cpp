@@ -51,12 +51,15 @@
 #include "settings++/frame.h"
 #include "settings++/custom_dialogs.h"
 
-#include "updater/versionchecker.h"
+#include "updater/updater.h"
 #include "autojoinchanneldialog.h"
 #include "Helper/channelchooser.h"
 
 #ifdef HAVE_WX28
-#include <wx/aboutdlg.h>
+    #if defined(__WXMSW__)
+        #include <wx/msw/winundef.h>
+    #endif
+    #include <wx/aboutdlg.h>
 #endif
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -277,26 +280,26 @@ ChatPanel& servwin()
 //! @brief Returns the curent MainChatTab object
 MainChatTab& MainWindow::GetChatTab()
 {
-  ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab = 0") );
+  ASSERT_EXCEPTION( m_chat_tab != 0, _T("m_chat_tab = 0") );
   return *m_chat_tab;
 }
 
 MainJoinBattleTab& MainWindow::GetJoinTab()
 {
-  ASSERT_LOGIC( m_join_tab != 0, _T("m_join_tab = 0") );
+  ASSERT_EXCEPTION( m_join_tab != 0, _T("m_join_tab = 0") );
   return *m_join_tab;
 }
 
 
 MainSinglePlayerTab& MainWindow::GetSPTab()
 {
-  ASSERT_LOGIC( m_sp_tab != 0, _T("m_sp_tab = 0") );
+  ASSERT_EXCEPTION( m_sp_tab != 0, _T("m_sp_tab = 0") );
   return *m_sp_tab;
 }
 #ifndef NO_TORRENT_SYSTEM
 MainTorrentTab& MainWindow::GetTorrentTab()
 {
-  ASSERT_LOGIC( m_torrent_tab  != 0, _T("m_torrent_tab = 0") );
+  ASSERT_EXCEPTION( m_torrent_tab  != 0, _T("m_torrent_tab = 0") );
   return *m_torrent_tab ;
 }
 #endif
@@ -339,14 +342,6 @@ void MainWindow::OpenPrivateChat( User& user )
 }
 
 
-//! @brief Close all chat tabs, both private and channel
-//!
-//! @todo Implement
-void MainWindow::CloseAllChats()
-{
-}
-
-
 //! @brief Displays the lobby configuration.
 void MainWindow::ShowConfigure( const unsigned int page )
 {
@@ -355,6 +350,11 @@ void MainWindow::ShowConfigure( const unsigned int page )
   m_opts_tab->SetSelection( page );
 }
 
+
+void MainWindow::ReloadSpringPathFromConfig()
+{
+  m_opts_tab->ReloadSpringPathFromConfig();
+}
 
 //! @brief Called when join channel menuitem is clicked
 void MainWindow::OnMenuJoin( wxCommandEvent& event )
@@ -428,35 +428,10 @@ void MainWindow::OnMenuQuit( wxCommandEvent& event )
   m_ui.Quit();
 }
 
-//! @brief checks for latest version of SpringLobby via HTTP, and compares it with users current version.
+
 void MainWindow::OnMenuVersion( wxCommandEvent& event )
 {
-  wxString latestVersion = GetLatestVersion();
-  // Need to replace crap chars or versions will always be inequal
-  latestVersion.Replace(_T(" "), _T(""), true);
-  latestVersion.Replace(_T("\n"), _T(""), true);
-  latestVersion.Replace(_T("\t"), _T(""), true);
-  if (latestVersion == _T("-1"))
-  {
-    customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
-    return;
-  }
-  wxString myVersion = GetSpringLobbyVersion();
-
-  wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
-
-  if (latestVersion.IsSameAs(myVersion, false))
-  {
-    customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date!\n\n") + msg, _("Up to Date"));
-  }
-  else
-  {
-    int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like to visit a page with instructions on how to download the newest version?"), _("Not up to Date"), wxYES_NO);
-    if (answer == wxYES)
-    {
-      m_ui.OpenWebBrowser(_T("http://trac.springlobby.info/wiki/Install"));
-    }
-  }
+  Updater().CheckForUpdates();
 }
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
@@ -468,7 +443,8 @@ void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 void MainWindow::OnMenuStartTorrent( wxCommandEvent& event )
 {
   #ifndef NO_TORRENT_SYSTEM
-  torrent()->ConnectToP2PSystem();
+  sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
+  torrent().ConnectToP2PSystem();
   #endif
 }
 
@@ -476,7 +452,8 @@ void MainWindow::OnMenuStartTorrent( wxCommandEvent& event )
 void MainWindow::OnMenuStopTorrent( wxCommandEvent& event )
 {
   #ifndef NO_TORRENT_SYSTEM
-  torrent()->DisconnectToP2PSystem();
+  sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
+  torrent().DisconnectToP2PSystem();
   #endif
 }
 
@@ -486,7 +463,7 @@ void MainWindow::OnMenuOpen( wxMenuEvent& event )
   #ifndef NO_TORRENT_SYSTEM
   m_menuTools->Delete(MENU_STOP_TORRENT);
   m_menuTools->Delete(MENU_START_TORRENT);
-  if ( !torrent()->IsConnectedToP2PSystem() )
+  if ( !torrent().IsConnectedToP2PSystem() )
   {
     m_menuTools->Insert( 5, MENU_START_TORRENT, _("Manually &Start Torrent System") );
   }

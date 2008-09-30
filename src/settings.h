@@ -4,7 +4,7 @@
 #include <wx/string.h>
 #include <wx/colour.h>
 
-#define CACHE_VERSION 3
+#define CACHE_VERSION 6
 #define SETTINGS_VERSION 1
 
 #define DEFSETT_DEFAULT_SERVER "TAS Server"
@@ -30,10 +30,8 @@
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
-class IBattle;
 class wxFileInputStream;
 struct wxColourData;
-
 
 class myconf : public wxFileConfig
 {
@@ -103,6 +101,13 @@ class Settings
     void SetReportStats(const bool value);
     bool GetReportStats();
 
+    void SetAutoUpdate( const bool value );
+    bool GetAutoUpdate();
+
+    wxString GetLobbyWriteDir();
+
+    wxString GetTempStorage();
+
     /* ================================================================ */
     /** @name Network
      * @{
@@ -165,10 +170,15 @@ class Settings
      * @{
      */
     wxString GetCachePath();
-    void SetCachePath( const wxString path );
 
     void SetCacheVersion();
     int GetCacheVersion();
+
+    void SetMapCachingThreadProgress( unsigned int index );
+    unsigned int GetMapCachingThreadProgress();
+
+    void SetModCachingThreadProgress( unsigned int index );
+    unsigned int GetModCachingThreadProgress();
 
     /**@}*/
 
@@ -427,6 +437,15 @@ class Settings
     void SetLastHostMap( const wxString& value );
     void SetLastRankLimit( int rank );
     void SetTestHostPort( bool value );
+
+    void SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options );
+    std::map<wxString,wxString> GetHostingPreset( const wxString& name, int optiontype );
+    wxArrayString GetPresetList();
+    void DeletePreset( const wxString& name );
+
+    wxString GetModDefaultPresetName( const wxString& modname );
+    void SetModDefaultPresetName( const wxString& modname, const wxString& presetname );
+
     /**@}*/
 
 
@@ -455,13 +474,11 @@ class Settings
     BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
     void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
     wxString GetLastFilterProfileName();
+    void SetFilterActivState( const bool state );
+    bool GetFilterActivState( ) const;
     /**@}*/
 
     bool GetDisableSpringVersionCheck();
-
-    /// not get/set naming because set may refer to battle or to options, thatd be ambiguous
-    void SaveBattleMapOptions(IBattle *battle);
-    void LoadBattleMapOptions(IBattle *battle);
 
     /* ================================================================ */
     /** @name Torrent System
@@ -489,6 +506,8 @@ class Settings
 
     void SetTorrentListToResume( const wxArrayString& list );
     wxArrayString GetTorrentListToResume();
+
+    wxString GetTorrentsFolder();
     /**@}*/
 
   protected:

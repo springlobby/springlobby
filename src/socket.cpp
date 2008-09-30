@@ -66,13 +66,10 @@ Socket::Socket( iNetClass& netclass, bool blocking ):
 //! @brief Destructor
 Socket::~Socket()
 {
+  Disconnect();
   LOCK_SOCKET;
   if ( m_sock != 0 ) m_sock->Destroy();
   delete m_events;
-  if ( m_ping_t != 0 ) {
-    m_ping_t->Delete();
-    m_ping_thread_wait.Enter();
-  }
 }
 
 
@@ -114,6 +111,7 @@ void Socket::Connect( const wxString& addr, const int port )
   if ( m_sock != 0 ) m_sock->Destroy();
   m_sock = _CreateSocket();
   m_sock->Connect( wxaddr, m_block );
+  m_sock->SetTimeout( 40 );
 }
 
 
@@ -121,12 +119,14 @@ void Socket::Connect( const wxString& addr, const int port )
 //! @note This turns off the ping thread.
 void Socket::Disconnect( )
 {
-  if ( m_sock == 0 ) return;
+  if ( m_sock ) m_sock->SetTimeout( 0 );
   m_net_class.OnDisconnected( this );
-  LOCK_SOCKET;
   _EnablePingThread( false );
-  m_sock->Destroy();
-  m_sock = 0;
+
+  if ( m_sock ) {
+    m_sock->Destroy();
+    m_sock = 0;
+  }
 }
 
 
@@ -142,7 +142,7 @@ bool Socket::Send( const wxString& data )
 //! @note Does not lock the criticalsection.
 bool Socket::_Send( const wxString& data )
 {
-  if ( m_sock == 0 ) {
+  if ( !m_sock ) {
     wxLogError( _T("Socket NULL") );
     return false;
   }
@@ -265,18 +265,19 @@ void Socket::_EnablePingThread( bool enable )
 {
 
   if ( !enable ) {
-    if ( m_ping_t != 0 ) {
+    if ( m_ping_t ) {
 
       // Reset values to be sure.
       m_ping_int = 0;
       m_ping_msg = wxEmptyString;
 
-      m_ping_t->Delete();
-      m_ping_thread_wait.Enter();
+      m_ping_t->Wait();
+      delete m_ping_t;
+
       m_ping_t = 0;
     }
   } else {
-    if ( m_ping_t == 0 ) {
+    if ( !m_ping_t ) {
       m_ping_t = new PingThread( *this );
       m_ping_t->Init();
     }
@@ -300,10 +301,11 @@ void Socket::SetSendRateLimit( int Bps )
 
 
 //! @brief Ping remote host with custom protocol message.
+//! @note Called from separate thread
 void Socket::Ping()
 {
+  /// Dont log here, else it may crash.
   // wxLogMessage( _T("Sent ping.") );
-
   if ( m_ping_msg != wxEmptyString ) Send( m_ping_msg );
 }
 
@@ -322,23 +324,9 @@ void Socket::OnTimer( int mselapsed )
   }
 }
 
-
-void Socket::OnPingThreadStarted()
-{
-  m_ping_thread_wait.Enter();
-}
-
-
-void Socket::OnPingThreadStopped()
-{
-  m_ping_thread_wait.Leave();
-}
-
-
 PingThread::PingThread( Socket& sock ):
   m_sock(sock)
 {
-  m_next_ping = 0;
 }
 
 
@@ -352,24 +340,18 @@ void PingThread::Init()
 
 void* PingThread::Entry()
 {
-  m_sock.OnPingThreadStarted();
-  m_next_ping = m_next_ping = m_sock.GetPingInterval();
+  int milliseconds = m_sock.GetPingInterval();
 
   while ( !TestDestroy() )
   {
-
     if ( !m_sock.GetPingEnabled() ) break;
-
     m_sock.Ping();
-    Sleep( m_next_ping );
-
+    /// break if woken
+    if(!Sleep(milliseconds))break;
   }
-  m_sock.OnPingThreadStopped();
   return 0;
 }
 
-
 void PingThread::OnExit()
 {
-
 }

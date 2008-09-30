@@ -29,6 +29,16 @@
 typedef std::pair<wxString,bool> colInfo;
 typedef std::vector<colInfo> colInfoVec;
 
+#if wxUSE_TIPWINDOW
+class SLTipWindow : public wxTipWindow{
+    public:
+        SLTipWindow(wxWindow *parent, const wxString &text)
+            :wxTipWindow(parent,text){};
+        void Cancel(wxMouseEvent& event);
+
+        DECLARE_EVENT_TABLE()
+};
+#endif
 
 /** \brief Used as base class for all ListCtrls throughout SL
  * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
@@ -45,8 +55,8 @@ protected:
     wxString    m_tiptext;
     #if wxUSE_TIPWINDOW
     //! some wx implementations do not support this yet
-    wxTipWindow* m_tipwindow;
-    wxTipWindow** controlPointer;
+    SLTipWindow* m_tipwindow;
+    SLTipWindow** controlPointer;
     #endif
     int coloumnCount;
 
@@ -79,6 +89,9 @@ protected:
 
     wxColor m_bg_color;
 
+    //! list should be sorted
+    bool m_dirty_sort;
+
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
 public:
@@ -99,6 +112,7 @@ public:
     long GetIndexFromData( const unsigned long data );
     //! call this before example before sorting, inserting, etc
     void SetSelectionRestorePoint();
+    void ResetSelection();
     //! and this afterwards
     void RestoreSelection();
     /** @}
@@ -140,7 +154,11 @@ public:
     //! sets selected index to -1
     void SelectNone();
 
+    //! marks the items in the control to be sorted
+    void MarkDirtySort();
+
     DECLARE_EVENT_TABLE()
 };
+
 
 #endif /*CUSTOMLISTITEM_H_*/

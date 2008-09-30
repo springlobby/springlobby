@@ -4,11 +4,27 @@
 
 #include <wx/string.h>
 #include <list>
-#include <vector>
+#include <map>
 
 #include "iunitsync.h"
 #include "user.h"
 #include "mmoptionswrapper.h"
+#include "ui.h"
+
+#define HI_None 0
+#define HI_Map 1
+#define HI_Locked 2
+#define HI_Spectators 4
+#define HI_StartResources 8
+#define HI_MaxUnits 16
+#define HI_StartType 32
+#define HI_GameType 64
+#define HI_Options 128
+#define HI_StartRects 256
+#define HI_Restrictions 512
+#define HI_Map_Changed 1024
+#define HI_Mod_Changed 2048
+#define HI_Send_All_opts 4096
 
 
 typedef int HostInfo;
@@ -40,16 +56,19 @@ enum {
 
 struct BattleStartRect
 {
-  BattleStartRect() { local = true; updated = false; deleted = false; }
-  bool local;
-  bool updated;
-  bool deleted;
+  BattleStartRect() { toadd = false; todelete = false; exist = false; toresize = false; }
+  bool toadd;
+  bool todelete;
+  bool toresize;
+  bool exist;
+
+  bool IsOk() { return exist && !todelete; }
 
   int ally;
-  int top;
-  int left;
-  int right;
-  int bottom;
+  unsigned int top;
+  unsigned int left;
+  unsigned int right;
+  unsigned int bottom;
 };
 
 
@@ -89,11 +108,15 @@ class IBattle
 
     virtual wxColour GetFreeColour( User *for_whom ) const = 0;
 
-    virtual BattleStartRect* GetStartRect( int allyno ) { return 0; };
-    virtual void AddStartRect( int allyno, int left, int top, int right, int bottom ) {};
-    virtual void RemoveStartRect( int allyno ) {};
-    virtual void UpdateStartRect( int allyno ) {};
+    virtual BattleStartRect GetStartRect( unsigned int allyno ) { BattleStartRect foo; return foo; };
+    virtual void AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom ) {};
+    virtual void RemoveStartRect( unsigned int allyno ) {};
+    virtual void ResizeStartRect( unsigned int allyno ) {};
+    virtual void StartRectRemoved( unsigned int allyno ) {};
+    virtual void StartRectResized( unsigned int allyno ) {};
+    virtual void StartRectAdded( unsigned int allyno ) {};
     virtual void ClearStartRects(){};
+    virtual unsigned int GetNumRects() { return 0; };
 
     virtual int GetMyAlly() = 0;
     virtual void SetMyAlly( int ally ) = 0;
@@ -120,9 +143,15 @@ class IBattle
 
     virtual void OnUnitSyncReloaded();
 
-    virtual std::vector<BattleStartRect*>::size_type GetNumRects() =0;
+    virtual mmOptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
 
-    virtual mmOptionsWrapper* CustomBattleOptions() =0;
+    virtual bool LoadOptionsPreset( const wxString& name );
+    virtual void SaveOptionsPreset( const wxString& name );
+    virtual wxString GetCurrentPreset();
+    virtual void DeletePreset( const wxString& name );
+    virtual wxArrayString GetPresetList();
+
+    virtual void Update ( const wxString& Tag ) =0;
 
   protected:
 
@@ -132,12 +161,14 @@ class IBattle
     bool m_mod_exists;
     UnitSyncMap m_local_map;
     UnitSyncMod m_local_mod;
-    wxString m_host_map_name;
-    wxString m_host_mod_name;
-    wxString m_host_map_hash;
-    wxString m_host_mod_hash;
+    UnitSyncMap m_host_map;
+    UnitSyncMap m_host_mod;
 
     wxArrayString m_units;
+
+    mmOptionsWrapper m_opt_wrap;
+
+    wxString m_preset;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IBATTLE_H

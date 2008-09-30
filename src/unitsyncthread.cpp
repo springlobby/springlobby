@@ -1,211 +1,171 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 
-#include <wx/arrstr.h>
-#include <stdexcept>
+#include <wx/image.h>
 
 #include "unitsyncthread.h"
-#include "utils.h"
 #include "iunitsync.h"
-#include "ui.h"
+#include "utils.h"
+#include "settings.h"
+#include "springunitsynclib.h"
 
 #define LOCK_CACHE wxCriticalSectionLocker lock_criticalsection(m_lock)
 
-DEFINE_LOCAL_EVENT_TYPE( wxEVT_UNITSYNC_CACHE )
 
-
-BEGIN_EVENT_TABLE( UnitSyncThread, wxEvtHandler )
-
-    EVT_COMMAND ( CACHE_MINIMAP, wxEVT_UNITSYNC_CACHE, UnitSyncThread::OnMinimapCached )
-
-END_EVENT_TABLE();
-
-
-UnitSyncThread::UnitSyncThread( Ui& ui ):
-  m_thread(this),
-  m_ui(ui),
-  m_delay(-1),
-  m_should_terminate(false),
-  m_should_pause(false)
+UnitSyncThread& CacheThread()
 {
-  m_wait.Enter();
+  static UnitSyncThread m_cache_thread;
+  return m_cache_thread;
+}
+
+UnitSyncThread::UnitSyncThread()
+{
+ // LoadSettingsFromFile();
 }
 
 
 UnitSyncThread::~UnitSyncThread()
 {
-}
-
-
-void* UnitSyncThread::UnitSyncThreadImpl::Entry()
-{
-  m_parent->_CacheLoop();
-  return 0;
-}
-
-
-void UnitSyncThread::OnExit()
-{
-}
-
-
-
-void UnitSyncThread::AddMapInfoOrder( const wxString& map )
-{
-  LOCK_CACHE;
-  _AddJob( JT_MAPINFO, map );
-}
-
-
-void UnitSyncThread::AddMinimapOrder( const wxString& map )
-{
-  wxLogDebugFunc( _T("") );
-  LOCK_CACHE;
-  _AddJob( JT_MINIMAP, map );
-}
-
-
-void UnitSyncThread::AddModUnitsOrder( const wxString& mod )
-{
-  LOCK_CACHE;
-  _AddJob( JT_UNITS, mod );
-}
-
-
-void UnitSyncThread::AddReloadOrder()
-{
-  LOCK_CACHE;
-  _AddJob( JT_RELOAD, wxEmptyString );
+  /*
+  sett().SetMapCachingThreadProgress( m_map_thread.GetCurrentIndex() );
+  sett().SetModCachingThreadProgress( m_mod_thread.GetCurrentIndex() );
+  Stop();
+  */
 }
 
 
 void UnitSyncThread::Pause()
 {
-  LOCK_CACHE;
-  m_should_pause = true;
+  /*
+  if ( m_map_thread.IsRunning() ) m_map_thread.Pause();
+  if ( m_mod_thread.IsRunning() ) m_mod_thread.Pause();
+  wxLogMessage( _T("caching thread paused") );
+  */
 }
 
 
 void UnitSyncThread::Resume()
 {
-  LOCK_CACHE;
-  m_should_pause = false;
-  //if ( !IsRunning() ) wxThread::Resume();
+  /*
+  if ( !m_map_thread.IsRunning() ) m_map_thread.Resume();
+  if ( !m_mod_thread.IsRunning() ) m_mod_thread.Resume();
+  wxLogMessage( _T("caching thread resumed") );
+  */
 }
 
-void UnitSyncThread::Delete()
+
+void UnitSyncThread::Start()
 {
-  m_thread.Delete();
-  m_wait.Leave();
+  /*
+  m_map_thread.Init();
+  m_mod_thread.Init();
+  wxLogMessage( _T("caching thread started") );
+  */
 }
 
-void UnitSyncThread::_CacheLoop()
+
+void UnitSyncThread::Stop()
 {
-  m_ui.OnCachedThreadStarted();
-  JobType job;
-  wxString params;
-  while ( !m_thread.TestDestroy() ) {
+  /*
+  if( m_map_thread.IsAlive() ) m_map_thread.Stop();
+  if( m_mod_thread.IsAlive() ) m_mod_thread.Stop();
+  wxLogMessage( _T("caching thread stopped") );
+  */
+}
 
-    try {
 
-      _GetNextJob( job, params );
 
-      switch ( job ) {
-        case JT_MAPINFO : _DoMapInfoJob( params ); break;
-        case JT_MINIMAP : _DoMinimapJob( params ); break;
-        case JT_UNITS   : _DoUnitsJob( params ); break;
-        case JT_RELOAD   : _DoReloadJob(); break;
-        default:
-        case JT_PAUSE   : m_wait.Enter(); break;
-      };
+void UnitSyncThread::LoadSettingsFromFile()
+{
+  /*
+  m_map_thread.SetCurrentIndex( sett().GetModCachingThreadProgress() );
+  m_mod_thread.SetCurrentIndex( sett().GetMapCachingThreadProgress() );
+  */
+}
 
-    } catch (...) {
-      m_wait.Enter();
+/*
+
+void UnitSyncThread::UnitSyncThreadImpl::Init()
+{
+  Create();
+  SetPriority( WXTHREAD_MIN_PRIORITY );
+  Run();
+}
+
+void* UnitSyncThread::MapCacheThread::Entry()
+{
+  /// crashes - here for test to see why
+  susynclib()->GetMapCount();
+  while ( !TestDestroy() )
+  {
+    if(!Sleep( 20000 ))break;
+    /// cache map infos
+    if( usync().IsLoaded() )
+    {
+      wxArrayString totalmaps = usync().GetMapList();
+      if ( m_current_index > totalmaps.GetCount() ) m_current_index = 0;
+      wxString mapname = totalmaps[m_current_index];
+      try
+      {
+        usync().GetMapOptions( mapname );
+        usync().GetMapEx( m_current_index );
+        usync().GetMinimap( mapname, -1, -1 );
+      } catch (...) {}
+      m_current_index++;
     }
-
   }
-  m_ui.OnCachedThreadTerminated();
+  return 0;
 }
 
 
-bool UnitSyncThread::_GetNextJob( JobType& jobtype, wxString& params )
+void* UnitSyncThread::ModCacheThread::Entry()
 {
-  LOCK_CACHE;
-  if ( m_orders.GetCount() == 0 ) {
-    jobtype = JT_PAUSE;
-    return false;
+  while ( !TestDestroy() )
+  {
+    if(!Sleep( 67000 ))break;
+    /// cache mod infos
+    if( usync().IsLoaded() )
+    {
+      wxArrayString totalmods = usync().GetModList();
+      if ( m_current_index > totalmods.GetCount() ) m_current_index = 0;
+      wxString modname = totalmods[m_current_index];
+      try
+      {
+        usync().GetModOptions( modname );
+        unsigned int sidecount = usync().GetSideCount( modname );
+        for ( unsigned int i = 0; i < sidecount; i++ )
+        {
+          usync().GetSidePicture( modname, usync().GetSideName( modname, i ) );
+        }
+        usync().GetAIList( modname );
+        usync().GetUnitsList( modname );
+      } catch (...) {}
+      m_current_index++;
+    }
   }
-
-  wxString Order = m_orders.Item(0);
-  m_orders.RemoveAt( 0 );
-  ASSERT_LOGIC( Order.Length() > 0, _T("Bad order") );
-  jobtype = Order[0];
-  params = Order.Remove( 0, 1 );
-  return true;
+  return 0;
 }
 
-
-void UnitSyncThread::_AddJob( const wxChar& prefix, const wxString& params )
+void UnitSyncThread::UnitSyncThreadImpl::Stop()
 {
-  m_orders.Insert( prefix + params, 0 );
-  m_wait.Leave();
+  m_stop_thread = true;
 }
 
 
-void UnitSyncThread::_DoMapInfoJob( const wxString& map )
+bool UnitSyncThread::UnitSyncThreadImpl::TestDestroy()
 {
-  if ( usync()->CacheMapInfo( map ) ) {
-    m_last_job = map;
-    wxCommandEvent event( wxEVT_UNITSYNC_CACHE, CACHE_MAPINFO );
-    AddPendingEvent(event);
-  }
+  return m_stop_thread;
 }
 
 
-void UnitSyncThread::_DoMinimapJob( const wxString& map )
+unsigned int UnitSyncThread::UnitSyncThreadImpl::GetCurrentIndex()
 {
-  if ( usync()->CacheMinimap( map ) ) {
-    m_last_job = map;
-    wxCommandEvent event( wxEVT_UNITSYNC_CACHE, CACHE_MINIMAP );
-    AddPendingEvent(event);
-  }
+  return m_current_index;
 }
 
 
-void UnitSyncThread::_DoUnitsJob( const wxString& mod )
+void UnitSyncThread::UnitSyncThreadImpl::SetCurrentIndex( unsigned int index )
 {
+  m_current_index = index;
 }
-
-
-void UnitSyncThread::_DoReloadJob()
-{
-}
-
-
-void UnitSyncThread::OnMinimapCached( wxCommandEvent& event )
-{
-  wxLogDebugFunc( _T("") );
-  m_ui.OnMinimapCached( m_last_job );
-}
-
-
-void UnitSyncThread::OnMapInfoCached( wxCommandEvent& event )
-{
-  wxLogDebugFunc( _T("") );
-  m_ui.OnMinimapCached( m_last_job );
-}
-
-
-void UnitSyncThread::OnModUnitsCached( wxCommandEvent& event )
-{
-  wxLogDebugFunc( _T("") );
-  m_ui.OnMinimapCached( m_last_job );
-}
-
-
-void UnitSyncThread::OnReloadComplete( wxCommandEvent& event )
-{
-  wxLogDebugFunc( _T("") );
-  m_ui.OnMinimapCached( m_last_job );
-}
-
+*/
