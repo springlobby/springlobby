@@ -875,8 +875,8 @@ springlobby_SOURCES = \
 	src/autojoinchanneldialog.cpp \
 	src/useractions.h \
 	src/useractions.cpp \
-	src/managegroupspanel.h \
-	src/managegroupspanel.cpp \
+	src/groupoptionspanel.h \
+	src/groupoptionspanel.cpp \
 	src/Helper/wxtextctrlhist.h \
 	src/Helper/wxtextctrlhist.cpp \
 	src/Helper/colorbutton.cpp \

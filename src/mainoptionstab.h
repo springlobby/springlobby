@@ -13,7 +13,7 @@ class ChatOptionsTab;
 class wxButton;
 class wxBoxSizer;
 class TorrentOptionsPanel;
-class ManageGroupsPanel;
+class GroupOptionsPanel;
 class LobbyOptionsTab;
 
 
@@ -48,7 +48,7 @@ protected:
     SpringOptionsTab* m_spring_opts;
     ChatOptionsTab* m_chat_opts;
     TorrentOptionsPanel* m_torrent_opts;
-    ManageGroupsPanel* m_groups_opts;
+    GroupOptionsPanel* m_groups_opts;
     LobbyOptionsTab* m_lobby_opts;
 
 
