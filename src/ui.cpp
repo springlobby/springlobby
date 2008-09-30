@@ -31,8 +31,8 @@
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
 #include "torrentwrapper.h"
-#include "unitsyncthread.h"
 #endif
+#include "unitsyncthread.h"
 #include "agreementdialog.h"
 #ifdef __WXMSW__
 #include "updater/updater.h"
