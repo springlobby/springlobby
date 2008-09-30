@@ -692,84 +692,6 @@ void Battle::SetBotHandicap( const wxString& nick, int handicap )
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
 
-
-void CommonBattle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
-{
-  BattleBot* bot = GetBot(nick);
-  bool created = true;
-  if ( bot == 0 ) bot = new BattleBot();
-  else created = false;
-
-  wxLogDebugFunc( wxString::Format( _T("created: %d"), created) );
-
-  bot->name = nick;
-  bot->bs = bs;
-  bot->bs.order = m_order++;
-  bot->owner = owner;
-  bot->aidll = aidll;
-
-  if ( created ) {
-    m_bots.push_back( bot );
-    m_bot_pos = BOT_SEEKPOS_INVALID;
-  }
-}
-
-
-void CommonBattle::OnBotRemoved( const wxString& nick )
-{
-  BattleBot* bot = GetBot( nick );
-  m_bots.remove( bot );
-  delete bot;
-  m_bot_pos = BOT_SEEKPOS_INVALID;
-}
-
-
-void CommonBattle::OnBotUpdated( const wxString& name, const UserBattleStatus& bs )
-{
-  BattleBot* bot = GetBot( name );
-  try
-  {
-    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
-  } catch (...) { return; }
-  int order = bot->bs.order;
-  bot->bs = bs;
-  bot->bs.order = order;
-}
-
-
-BattleBot* CommonBattle::GetBot( const wxString& name ) const
-{
-  std::list<BattleBot*>::const_iterator i;
-
-  for( i = m_bots.begin(); i != m_bots.end(); ++i )
-  {
-    if ( *i == 0 ) continue;
-    wxLogMessage( _T("%s"), ((*i)->name).c_str ());
-    if ( (*i)->name == name ) {
-      return *i;
-    }
-  }
-  return 0;
-}
-
-BattleBot* CommonBattle::GetBot( unsigned int index ) const
-{
-  if ((m_bot_pos == BOT_SEEKPOS_INVALID) || (m_bot_pos > index)) {
-    m_bot_seek = m_bots.begin();
-    m_bot_pos = 0;
-  }
-  std::advance( m_bot_seek, index - m_bot_pos );
-  m_bot_pos = index;
-  return *m_bot_seek;
-}
-
-
-unsigned int CommonBattle::GetNumBots() const
-{
-  return m_bots.size();
-}
-
-
 void Battle::ForceSide( User& user, int side )
 {
   m_serv.ForceSide( m_opts.battleid, user.GetNick(), side );
@@ -813,13 +735,6 @@ void Battle::SetHandicap( User& user, int handicap)
 {
   m_serv.SetHandicap ( m_opts.battleid, user.GetNick(), handicap );
 }
-
-
-unsigned int CommonBattle::GetNumRects()
-{
-  return m_rects.size();
-}
-
 
 bool PlayerRankCompareFunction(User *a, User *b){/// should never operate on nulls. Hence, ASSERT_LOGIC is appropriate here.
   ASSERT_LOGIC(a,_T("fail in Autobalance, NULL player"));
@@ -1043,3 +958,106 @@ CommonBattle::CommonBattle( const int id, const bool ingame, const int order )
 {
     m_opts.battleid = id;
 }
+
+unsigned int CommonBattle::GetNumRects()
+{
+  return m_rects.size();
+}
+
+
+void CommonBattle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
+{
+  BattleBot* bot = GetBot(nick);
+  bool created = true;
+  if ( bot == 0 ) bot = new BattleBot();
+  else created = false;
+
+  wxLogDebugFunc( wxString::Format( _T("created: %d"), created) );
+
+  bot->name = nick;
+  bot->bs = bs;
+  bot->bs.order = m_order++;
+  bot->owner = owner;
+  bot->aidll = aidll;
+
+  if ( created ) {
+    m_bots.push_back( bot );
+    m_bot_pos = BOT_SEEKPOS_INVALID;
+  }
+}
+
+
+void CommonBattle::OnBotRemoved( const wxString& nick )
+{
+  BattleBot* bot = GetBot( nick );
+  m_bots.remove( bot );
+  delete bot;
+  m_bot_pos = BOT_SEEKPOS_INVALID;
+}
+
+
+void CommonBattle::OnBotUpdated( const wxString& name, const UserBattleStatus& bs )
+{
+  BattleBot* bot = GetBot( name );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
+  int order = bot->bs.order;
+  bot->bs = bs;
+  bot->bs.order = order;
+}
+
+
+BattleBot* CommonBattle::GetBot( const wxString& name ) const
+{
+  std::list<BattleBot*>::const_iterator i;
+
+  for( i = m_bots.begin(); i != m_bots.end(); ++i )
+  {
+    if ( *i == 0 ) continue;
+    wxLogMessage( _T("%s"), ((*i)->name).c_str ());
+    if ( (*i)->name == name ) {
+      return *i;
+    }
+  }
+  return 0;
+}
+
+BattleBot* CommonBattle::GetBot( unsigned int index ) const
+{
+  if ((m_bot_pos == BOT_SEEKPOS_INVALID) || (m_bot_pos > index)) {
+    m_bot_seek = m_bots.begin();
+    m_bot_pos = 0;
+  }
+  std::advance( m_bot_seek, index - m_bot_pos );
+  m_bot_pos = index;
+  return *m_bot_seek;
+}
+
+unsigned int CommonBattle::GetNumBots() const
+{
+  return m_bots.size();
+}
+
+void OfflineBattle::RemoveUser(OfflineUser& user)
+{
+
+}
+
+void OfflineBattle::UpdateUserBattleStatus(OfflineUser &user, UserBattleStatus status)
+{
+
+}
+
+void OfflineBattle::AddUser(OfflineUser& user)
+{
+
+}
+
+OfflineBattle::OfflineBattle(const int id)
+ :CommonBattle(id, false, 0)
+{
+
+}
+

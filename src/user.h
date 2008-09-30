@@ -72,11 +72,11 @@ struct UiUserData {
 };
 
 //! parent class leaving out server related functionality
-class OfflineUser
+class CommonUser
 {
     public:
-        OfflineUser(const wxString& nick, const wxString& country, const int& cpu)
-           : m_nick(nick), m_country(country), m_cpu(cpu), m_battle(0)  {};
+        CommonUser(const wxString& nick, const wxString& country, const int& cpu)
+           : m_nick(nick), m_country(country), m_cpu(cpu)  {};
 
         wxString GetNick() const { return m_nick; }
         void SetNick( const wxString& nick ) { m_nick = nick; }
@@ -90,7 +90,7 @@ class OfflineUser
         UserStatus& Status() { return m_status; }
 
         UserStatus GetStatus() const { return m_status; }
-        void SetStatus( const UserStatus& status );
+        virtual void SetStatus( const UserStatus& status );
 
         UserBattleStatus& BattleStatus() { return m_bstatus; }
         //void SetBattleStatus( const UserBattleStatus& status, bool setorder = false );/// dont use this to avoid overwriting data like ip and port, use following method.
@@ -105,22 +105,22 @@ class OfflineUser
         int m_cpu;
         UserStatus m_status;
         UserBattleStatus m_bstatus;
-        Battle* m_battle;
+
         //void* m_data;
 
 };
 
 //! Class containing all the information about a user
-class User : public OfflineUser
+class User : public CommonUser
 {
   public:
 
     UiUserData uidata;
 
-    User( Server& serv ): OfflineUser( wxEmptyString,wxEmptyString,0 ), m_serv(serv) {}
-    User( const wxString& nick, Server& serv ) : OfflineUser( nick,wxEmptyString,0 ),m_serv(serv){}
+    User( Server& serv ): CommonUser( wxEmptyString,wxEmptyString,0 ), m_serv(serv), m_battle(0) {}
+    User( const wxString& nick, Server& serv ) : CommonUser( nick,wxEmptyString,0 ),m_serv(serv), m_battle(0){}
     User( const wxString& nick, const wxString& country, const int& cpu, Server& serv) :
-      OfflineUser( nick,country,cpu ) ,m_serv(serv) {}
+      CommonUser( nick,country,cpu ) ,m_serv(serv), m_battle(0) {}
 
     virtual ~User();
 
@@ -136,6 +136,7 @@ class User : public OfflineUser
     void SetBattle( Battle* battle );
 
     void SendMyUserStatus();
+    void SetStatus( const UserStatus& status );
 
     bool ExecuteSayCommand( const wxString& cmd );
 
@@ -149,6 +150,14 @@ class User : public OfflineUser
     // User variables
 
     Server& m_serv;
+    Battle* m_battle;
+};
+
+class OfflineUser : public CommonUser
+{
+    public:
+        OfflineUser(const wxString& nick, const wxString& country, const int& cpu)
+           : CommonUser( nick, country, cpu )  {};
 
 };
 

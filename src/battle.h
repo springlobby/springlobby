@@ -135,14 +135,15 @@ class CommonBattle : public UserList, public IBattle
         void OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll );
         void OnBotRemoved( const wxString& nick );
         void OnBotUpdated( const wxString& name, const UserBattleStatus& bs );
+        virtual void SetBotTeam( const wxString& nick, int team ) = 0;
+        virtual void SetBotAlly( const wxString& nick, int ally ) = 0;
+        virtual void SetBotSide( const wxString& nick, int side ) = 0;
+        virtual void SetBotColour( const wxString& nick, const wxColour& col ) = 0;
+        virtual void SetBotHandicap( const wxString& nick, int handicap ) = 0;
 
         User& GetFounder() const { return GetUser( m_opts.founder ); }
 
         bool IsFull() const { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
-
-        void OnUserAdded( User& user );
-        void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
-        void OnUserRemoved( User& user );
 
 
     protected:
@@ -258,6 +259,17 @@ class Battle : public CommonBattle
     AutoHost m_ah;
 
     void RemoveUser( wxString const& user ) {}
+};
+
+class OfflineBattle : public CommonBattle
+{
+    public:
+        OfflineBattle ( const int id );
+        ~OfflineBattle (){};
+
+        void AddUser( OfflineUser& user );
+        void UpdateUserBattleStatus( OfflineUser &user, UserBattleStatus status );
+        void RemoveUser( OfflineUser& user );
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLE_H
