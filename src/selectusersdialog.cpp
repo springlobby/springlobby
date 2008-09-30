@@ -223,7 +223,8 @@ void SelectUsersDialog::OnNameFilterChange( wxCommandEvent& event )
       listItem.SetId(item);
       m_user_list->GetItem(listItem);
       int flag = listItem.GetImage();
-      del.Add(m_user_list->GetItemText(item));
+      name = m_user_list->GetItemText(item); // Preserve case
+      del.Add(name);
       m_filtered_users.Add( name +_T(" ") + i2s(flag) );
     }
 
@@ -249,11 +250,15 @@ void SelectUsersDialog::OnNameFilterChange( wxCommandEvent& event )
       int flag = (int)s2l( line.Mid(sep+1) ); // Flag is never < 0 or > intmax
       long item = AddUserToList( name, flag );
       m_filtered_users.RemoveAt(i);
-      if ( sel.Index(name, false) != wxNOT_FOUND )
-        m_user_list->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
     }
   }
   Sort();
+
+  for ( int i = 0; i < sel.Count(); i++ ) {
+    long item = m_user_list->FindItem(-1, sel[i]);
+    if ( item != -1 )
+      m_user_list->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+  }
   m_user_list->Thaw();
 }
 
