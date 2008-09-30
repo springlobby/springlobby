@@ -359,7 +359,12 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
   wxLogMessage( _T("Minimap: %s"), mapFileName.c_str() );
 
   unsigned short* colours = (unsigned short*)m_get_minimap( mapFileName.mb_str(wxConvUTF8), miplevel );
-  ASSERT_EXCEPTION( colours, _T("Get minimap failed") );
+  ///if you don't like explicit delete, feel free to make patch
+  if ( colours == 0 )
+  {
+    delete[] colours;
+    ASSERT_EXCEPTION( colours, _T("Get minimap failed") );
+  }
 
   typedef unsigned char uchar;
   wxImage minimap(width, height, false);
@@ -392,13 +397,20 @@ wxImage SpringUnitSyncLib::GetMetalmap( const wxString& mapFileName )
   uchar* true_colours = metalmap.GetData();
 
   retval = m_get_infomap(mapFileName.mb_str(wxConvUTF8), "metal", grayscale, 1 /*byte per pixel*/);
-  ASSERT_EXCEPTION( retval != 0, _T("Get metalmap failed") );
+  ///if you don't like explicit delete, feel free to make patch
+  if ( retval == 0 )
+  {
+    delete[] grayscale;
+    ASSERT_EXCEPTION( retval != 0, _T("Get metalmap failed") );
+  }
 
   for ( int i = 0; i < width*height; i++ ) {
     true_colours[(i*3)  ] = 0;
     true_colours[(i*3)+1] = grayscale[i];
     true_colours[(i*3)+2] = 0;
   }
+
+  delete[] grayscale;
 
   return metalmap;
 }
