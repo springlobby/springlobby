@@ -128,6 +128,13 @@ class OfflineBattle : public UserList, public IBattle
         BattleStartRect GetStartRect( unsigned int allyno );
         void ClearStartRects();
 
+        BattleBot* GetBot( const wxString& name ) const;
+        BattleBot* GetBot( unsigned int index ) const;
+        unsigned int GetNumBots() const;
+        void OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll );
+        void OnBotRemoved( const wxString& nick );
+        void OnBotUpdated( const wxString& name, const UserBattleStatus& bs );
+
         User& GetFounder() const { return GetUser( m_opts.founder ); }
 
         bool IsFull() const { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
@@ -204,10 +211,6 @@ class Battle : public OfflineBattle
     void SetBotColour( const wxString& nick, const wxColour& col );
     void SetBotHandicap( const wxString& nick, int handicap );
 
-    BattleBot* GetBot( const wxString& name ) const;
-    BattleBot* GetBot( unsigned int index ) const;
-    unsigned int GetNumBots() const;
-
     void ForceSide( User& user, int side );
     void ForceTeam( User& user, int team );
     void ForceAlly( User& user, int ally );
@@ -219,10 +222,6 @@ class Battle : public OfflineBattle
     void OnUserAdded( User& user );
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
-
-    void OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll );
-    void OnBotRemoved( const wxString& nick );
-    void OnBotUpdated( const wxString& name, const UserBattleStatus& bs );
 
     int GetMyAlly() { return GetMe().BattleStatus().ally; }
     void SetMyAlly( int ally ) { GetMe().BattleStatus().ally = ally; SendMyBattleStatus(); }

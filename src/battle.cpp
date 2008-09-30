@@ -693,7 +693,7 @@ void Battle::SetBotHandicap( const wxString& nick, int handicap )
 }
 
 
-void Battle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
+void OfflineBattle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
 {
   BattleBot* bot = GetBot(nick);
   bool created = true;
@@ -715,7 +715,7 @@ void Battle::OnBotAdded( const wxString& nick, const wxString& owner, const User
 }
 
 
-void Battle::OnBotRemoved( const wxString& nick )
+void OfflineBattle::OnBotRemoved( const wxString& nick )
 {
   BattleBot* bot = GetBot( nick );
   m_bots.remove( bot );
@@ -724,7 +724,7 @@ void Battle::OnBotRemoved( const wxString& nick )
 }
 
 
-void Battle::OnBotUpdated( const wxString& name, const UserBattleStatus& bs )
+void OfflineBattle::OnBotUpdated( const wxString& name, const UserBattleStatus& bs )
 {
   BattleBot* bot = GetBot( name );
   try
@@ -737,7 +737,7 @@ void Battle::OnBotUpdated( const wxString& name, const UserBattleStatus& bs )
 }
 
 
-BattleBot* Battle::GetBot( const wxString& name ) const
+BattleBot* OfflineBattle::GetBot( const wxString& name ) const
 {
   std::list<BattleBot*>::const_iterator i;
 
@@ -752,7 +752,7 @@ BattleBot* Battle::GetBot( const wxString& name ) const
   return 0;
 }
 
-BattleBot* Battle::GetBot( unsigned int index ) const
+BattleBot* OfflineBattle::GetBot( unsigned int index ) const
 {
   if ((m_bot_pos == BOT_SEEKPOS_INVALID) || (m_bot_pos > index)) {
     m_bot_seek = m_bots.begin();
@@ -764,7 +764,7 @@ BattleBot* Battle::GetBot( unsigned int index ) const
 }
 
 
-unsigned int Battle::GetNumBots() const
+unsigned int OfflineBattle::GetNumBots() const
 {
   return m_bots.size();
 }
