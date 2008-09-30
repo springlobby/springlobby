@@ -181,6 +181,8 @@
 		<Unit filename="src/channel.h" />
 		<Unit filename="src/channellist.cpp" />
 		<Unit filename="src/channellist.h" />
+		<Unit filename="src/channellistctrl.cpp" />
+		<Unit filename="src/channellistctrl.h" />
 		<Unit filename="src/chatlog.cpp" />
 		<Unit filename="src/chatlog.h" />
 		<Unit filename="src/chatoptionstab.cpp" />
