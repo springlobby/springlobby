@@ -218,12 +218,11 @@ class Battle : public UserList, public IBattle
 
     void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true);
     void FixTeamIDs();
+    void ForceUnsyncedToSpectate();
 
     ///< quick hotfix for bans
     bool CheckBan(User &user);
     ///>
-
-    void MakeTeamsUnique();
 
   protected:
     // Battle variables

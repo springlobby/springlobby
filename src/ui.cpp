@@ -31,9 +31,9 @@
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
 #include "torrentwrapper.h"
+#include "unitsyncthread.h"
 #endif
 #include "agreementdialog.h"
-#include "unitsyncthread.h"
 #ifdef __WXMSW__
 #include "updater/updater.h"
 #endif
@@ -275,10 +275,11 @@ void Ui::StartHostedBattle()
 
 void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
 {
-  m_ingame = true;
+    m_ingame = true;
 #ifndef NO_TORRENT_SYSTEM
     torrent().SetIngameStatus(m_ingame);
 #endif
+    CacheThread().Pause();
     m_spring->Run( battle );
 }
 
@@ -1014,6 +1015,7 @@ void Ui::OnBattleStarted( Battle& battle )
 #ifndef NO_TORRENT_SYSTEM
             torrent().SetIngameStatus(m_ingame);
 #endif
+            CacheThread().Pause();
             m_spring->Run( battle );
         }
     }
@@ -1046,10 +1048,11 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
 
 void Ui::OnSpringTerminated( bool success )
 {
-  m_ingame = false;
+    m_ingame = false;
 #ifndef NO_TORRENT_SYSTEM
     torrent().SetIngameStatus(m_ingame);
 #endif
+    CacheThread().Resume();
     if ( !m_serv ) return;
 
     m_serv->GetMe().Status().in_game = false;
@@ -1133,17 +1136,6 @@ void Ui::OnModUnitsCached( const wxString& modname )
 {
 }
 
-
-void Ui::OnCachedThreadStarted()
-{
-    m_thread_wait.Enter();
-}
-
-
-void Ui::OnCachedThreadTerminated()
-{
-    m_thread_wait.Leave();
-}
 
 void Ui::OnMainWindowDestruct()
 {

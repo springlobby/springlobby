@@ -18,8 +18,8 @@ typedef std::map<wxString,wxString> LocalArchivesVector;
 class SpringUnitSync : public IUnitSync
 {
   public:
-    SpringUnitSync() { }
-    ~SpringUnitSync() { FreeUnitSyncLib(); }
+    SpringUnitSync();
+    ~SpringUnitSync();
 
     int GetNumMods();
     wxArrayString GetModList();
@@ -73,7 +73,6 @@ class SpringUnitSync : public IUnitSync
     bool FileExists( const wxString& name );
 
     wxString GetArchivePath( const wxString& name );
-    wxString GetUnitsyncName( const wxString& hash, const MediaType& archivetype );
 
   private:
 

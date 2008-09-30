@@ -248,6 +248,30 @@ int Settings::GetCacheVersion()
 }
 
 
+void Settings::SetMapCachingThreadProgress( unsigned int index )
+{
+    m_config->Write( _T("/General/LastMapCachingThreadIndex"), (int)index );
+}
+
+
+unsigned int Settings::GetMapCachingThreadProgress()
+{
+    return m_config->Read( _T("/General/LastMapCachingThreadIndex"), 0l );
+}
+
+
+void Settings::SetModCachingThreadProgress( unsigned int index )
+{
+    m_config->Write( _T("/General/LastModCachingThreadIndex"), (int)index );
+}
+
+
+unsigned int Settings::GetModCachingThreadProgress()
+{
+    return m_config->Read( _T("/General/LastModCachingThreadIndex"), 0l );
+}
+
+
 //! @brief Restores default settings
 void Settings::SetDefaultSettings()
 {

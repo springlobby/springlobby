@@ -23,6 +23,7 @@
 #include "settings.h"
 #include "springunitsynclib.h"
 #include "settings++/custom_dialogs.h"
+#include "unitsyncthread.h"
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -32,6 +33,18 @@ IUnitSync& usync()
 {
   static SpringUnitSync m_sync;
   return m_sync;
+}
+
+
+SpringUnitSync::SpringUnitSync()
+{
+}
+
+
+SpringUnitSync::~SpringUnitSync()
+{
+  CacheThread().Stop();
+  FreeUnitSyncLib();
 }
 
 
@@ -50,7 +63,12 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& springdir, const wxString&
      wxLogDebugFunc( _T("") );
      LOCK_UNITSYNC;
      bool ret = _LoadUnitSyncLib( springdir, unitsyncloc );
-     if (ret) PopulateArchiveList();
+     if (ret)
+     {
+        PopulateArchiveList();
+        ///crashes
+        //CacheThread().Start();
+     }
      return ret;
   }
 }
@@ -111,6 +129,7 @@ bool SpringUnitSync::_LoadUnitSyncLib( const wxString& springdir, const wxString
   } catch (...) {
     return false;
   }
+  CacheThread().Resume();
   return true;
 }
 
@@ -118,6 +137,7 @@ bool SpringUnitSync::_LoadUnitSyncLib( const wxString& springdir, const wxString
 void SpringUnitSync::FreeUnitSyncLib()
 {
   wxLogDebugFunc( _T("") );
+  CacheThread().Pause();
   susynclib()->Unload();
 }
 
@@ -794,7 +814,7 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
     }
     catch(...)
     {
-      img = wxImage( -1, -1 );
+      img = wxImage( 1, 1 );
     }
   }
 
@@ -956,26 +976,4 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
   wxLogDebugFunc( name );
 
   return susynclib()->GetArchivePath( name );
-}
-
-
-wxString SpringUnitSync::GetUnitsyncName( const wxString& hash, const MediaType& archivetype )
-{
-  LocalArchivesVector::iterator it;
-  switch (archivetype)
-  {
-    case map:
-    {
-      it = m_maps_list.find( hash );
-      if ( it != m_maps_list.end() ) return it->second;
-      break;
-    }
-    case mod:
-    {
-      it = m_mods_list.find( hash );
-      if ( it != m_mods_list.end() ) return it->second;
-      break;
-    }
-  }
-  return wxEmptyString;
 }
