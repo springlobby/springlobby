@@ -58,15 +58,12 @@ const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBo
 
 
 Battle::Battle( Server& serv, Ui& ui, int id ) :
+  OfflineBattle(id,false,0), //m_ingame(false),m_order(0)
   m_serv(serv),
   m_ui(ui),
-  m_ah(*this),
-  m_ingame(false),
-  m_order(0),
-  m_bot_seek(m_bots.end()),
-  m_bot_pos(BOT_SEEKPOS_INVALID)
+  m_ah(*this)
 {
-  m_opts.battleid = id;
+
 
 }
 
@@ -547,7 +544,7 @@ bool Battle::CheckBan(User &user){
 
 
 
-void Battle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
+void OfflineBattle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
 {
   BattleStartRect sr;
 
@@ -565,7 +562,7 @@ void Battle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int 
 }
 
 
-void Battle::RemoveStartRect( unsigned int allyno )
+void OfflineBattle::RemoveStartRect( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   BattleStartRect sr = m_rects[allyno];
@@ -574,7 +571,7 @@ void Battle::RemoveStartRect( unsigned int allyno )
 }
 
 
-void Battle::ResizeStartRect( unsigned int allyno )
+void OfflineBattle::ResizeStartRect( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   BattleStartRect sr = m_rects[allyno];
@@ -583,14 +580,14 @@ void Battle::ResizeStartRect( unsigned int allyno )
 }
 
 
-void Battle::StartRectRemoved( unsigned int allyno )
+void OfflineBattle::StartRectRemoved( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   if ( m_rects[allyno].todelete ) m_rects.erase(allyno);
 }
 
 
-void Battle::StartRectResized( unsigned int allyno )
+void OfflineBattle::StartRectResized( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   BattleStartRect sr = m_rects[allyno];
@@ -599,7 +596,7 @@ void Battle::StartRectResized( unsigned int allyno )
 }
 
 
-void Battle::StartRectAdded( unsigned int allyno )
+void OfflineBattle::StartRectAdded( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   BattleStartRect sr = m_rects[allyno];
@@ -608,12 +605,12 @@ void Battle::StartRectAdded( unsigned int allyno )
 }
 
 
-BattleStartRect Battle::GetStartRect( unsigned int allyno )
+BattleStartRect OfflineBattle::GetStartRect( unsigned int allyno )
 {
   return m_rects[allyno];
 }
 
-void Battle::ClearStartRects()
+void OfflineBattle::ClearStartRects()
 {
   m_rects.clear();
 }
@@ -1038,4 +1035,11 @@ void Battle::ForceUnsyncedToSpectate()
     User &user = GetUser(i);
     if ( !user.BattleStatus().spectator && !user.BattleStatus().sync ) ForceSpectator( user, true );
   }
+}
+
+OfflineBattle::OfflineBattle( const int id, const bool ingame, const int order )
+    : m_ingame(ingame),m_order(order),  m_bot_seek(m_bots.end()),
+        m_bot_pos(BOT_SEEKPOS_INVALID)
+{
+    m_opts.battleid = id;
 }
