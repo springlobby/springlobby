@@ -268,7 +268,8 @@ class OfflineBattle : public CommonBattle
         OfflineBattle ( );
         ~OfflineBattle (){};
 
-        void AddUser( OfflineUser& user );
+        void AddUser( const OfflineUser& user );
+        void AddUser( const wxString& nick );
         void UpdateUserBattleStatus( OfflineUser &user, UserBattleStatus status );
         void RemoveUser( OfflineUser& user );
 
@@ -288,6 +289,10 @@ class OfflineBattle : public CommonBattle
         void SetBotColour( const wxString& nick, const wxColour& col );
         void SetBotHandicap( const wxString& nick, int handicap );
 
+        void SetBattleOptions( const BattleOptions& options ) { m_opts = options;}
+
+    protected:
+        std::vector<OfflineUser> m_participants;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLE_H

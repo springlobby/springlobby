@@ -4,22 +4,25 @@
 #include <map>
 #include <wx/string.h>
 #include <wx/arrstr.h>
+#include "battle.h"
 
 struct Replay
 {
-  int id;
-  long int day;
-  long int month;
-  long int year;
-  int playernum;
-  wxString MapName;
-  wxString ModName;
-  wxString SpringVersion;
-  wxString ReplayName;
-  wxString Filename;
-  wxString date;
-  wxArrayString playernames;
-
+    int id;
+    long int day;
+    long int month;
+    long int year;
+    int playernum;
+    bool can_watch;
+    wxString MapName;
+    wxString ModName;
+    wxString SpringVersion;
+    wxString ReplayName;
+    wxString Filename;
+    wxString date;
+    wxArrayString playernames;
+    OfflineBattle battle;
+    Replay():id(0),day(0),year(0),playernum(0),can_watch(false){};
 };
 
 typedef unsigned int replay_id_t;
@@ -50,5 +53,7 @@ class ReplayList
 
 Replay GetReplayInfos ( wxString& ReplayPath );
 wxString GetScriptFromReplay ( wxString& ReplayPath );
+OfflineBattle GetBattleFromScript( const wxString& script );
+BattleOptions GetBattleOptsFromScript( const wxString& script_ );
 
 #endif // SPRINGLOBBY_REPLAYLIST_H_INCLUDED

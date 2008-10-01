@@ -1050,9 +1050,9 @@ void OfflineBattle::UpdateUserBattleStatus(OfflineUser &user, UserBattleStatus s
 
 }
 
-void OfflineBattle::AddUser(OfflineUser& user)
+void OfflineBattle::AddUser( const OfflineUser& user)
 {
-
+    m_participants.push_back(user);
 }
 
 OfflineBattle::OfflineBattle(const int id)
@@ -1116,4 +1116,10 @@ void OfflineBattle::SetBotHandicap( const wxString& nick, int handicap )
   } catch (...) { return; }
 
   bot->bs.handicap = handicap;
+}
+
+void OfflineBattle::AddUser( const wxString& nick )
+{
+    OfflineUser user( nick, wxEmptyString, 0 );
+    AddUser( user );
 }
