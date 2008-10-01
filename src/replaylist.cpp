@@ -163,9 +163,13 @@ OfflineBattle GetBattleFromScript( const wxString& script_ )
     PDataList replayNode ( script->Find(_T("GAME") ) );
     if ( replayNode.ok() ){
 
-        opts.modname    = replayNode->GetString( _T("GameType") );
-        opts.modhash    = replayNode->GetString( _T("ModHash") );
+        wxString modname = replayNode->GetString( _T("GameType") );
+        wxString modhash    = replayNode->GetString( _T("ModHash") );
+        battle.SetHostMod( modname, modhash );
+
+        //don't have the maphash, what to do?
         opts.mapname    = replayNode->GetString( _T("Mapname") );
+
         opts.ip         = replayNode->GetString( _T("HostIP") );
         opts.port       = replayNode->GetInt  ( _T("HostPort"), DEFAULT_EXTERNAL_UDP_SOURCE_PORT );
 
@@ -173,6 +177,7 @@ OfflineBattle GetBattleFromScript( const wxString& script_ )
         int allynum = replayNode->GetInt  ( _T("NumAllyTeams"), 1);
         int teamnum = replayNode->GetInt  ( _T("NumTeams"), 1);
 
+        //[PLAYERX] sections
         for ( int i = 0; i < playernum ; ++i ){
             PDataList player ( script->Find(_T("PLAYER") + i2s(i) ) );
             if ( player.ok() ) {
@@ -187,9 +192,31 @@ OfflineBattle GetBattleFromScript( const wxString& script_ )
                 battle.AddUser( user );
             }
         }
+
+        //MMoptions
+        LoadMMOpts( _T("mapoptions"), battle, replayNode );
+        LoadMMOpts( _T("modoptions"), battle, replayNode );
+
         opts.maxplayers = playernum ;
 
     }
     battle.SetBattleOptions( opts );
     return battle;
+}
+
+void LoadMMOpts( const wxString& sectionname, OfflineBattle& battle, const PDataList& node )
+{
+    PDataList section ( node->Find(sectionname) );
+    mmOptionsWrapper& opts = battle.CustomBattleOptions();
+    for ( PNode n = section->First(); n != section->Last(); n = section->Next( n ) )
+        opts.setSingleOption( n->Name(), section->GetString( n->Name() ) );
+}
+
+void LoadMMOpts( OfflineBattle& battle, const PDataList& node )
+{
+    mmOptionsWrapper& opts = battle.CustomBattleOptions();
+    typedef std::map<wxString,wxString> optMap;
+    optMap options = opts.getOptionsMap(EngineOption);
+    for ( optMap::const_iterator i = options.begin(); i != options.end(); ++i)
+        opts.setSingleOption( i->first, node->GetString( i->first, i->second ) );
 }

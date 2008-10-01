@@ -5,6 +5,8 @@
 #include <wx/string.h>
 #include <wx/arrstr.h>
 #include "battle.h"
+#include "tdfcontainer.h"
+
 
 struct Replay
 {
@@ -55,5 +57,10 @@ Replay GetReplayInfos ( wxString& ReplayPath );
 wxString GetScriptFromReplay ( wxString& ReplayPath );
 OfflineBattle GetBattleFromScript( const wxString& script );
 BattleOptions GetBattleOptsFromScript( const wxString& script_ );
+
+// load mod/map options
+void LoadMMOpts( const wxString& sectionname, OfflineBattle& battle, const PDataList& node );
+//load engine options
+void LoadMMOpts( OfflineBattle& battle, const PDataList& node );
 
 #endif // SPRINGLOBBY_REPLAYLIST_H_INCLUDED

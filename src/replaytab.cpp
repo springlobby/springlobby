@@ -179,8 +179,9 @@ void ReplayTab::AddReplay( Replay& replay ) {
 
  // ASSERT_LOGIC( m_replay_listctrl->GetItem( item ), _T("!GetItem") );
   wxString sep = _T("-");
+  wxString mod = replay.battle.GetHostModName();
   m_replay_listctrl->SetItem( index, 0, wxString::Format(_T("%02ld - %02ld - %02ld"), replay.year, replay.month, replay.day ) );
-  m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
+  m_replay_listctrl->SetItem( index, 1, mod );
   m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
   m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetMaxPlayers() ) );
   m_replay_listctrl->SetItem( index, 4, replay.SpringVersion );
