@@ -22,7 +22,6 @@ struct Replay
     wxString ReplayName;
     wxString Filename;
     wxString date;
-    wxArrayString playernames;
     OfflineBattle battle;
     Replay():id(0),day(0),year(0),playernum(0),can_watch(false){};
 };

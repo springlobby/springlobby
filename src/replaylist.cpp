@@ -117,6 +117,7 @@ Replay GetReplayInfos ( wxString& ReplayPath )
     r_id++;
     wxString script = GetScriptFromReplay( ReplayPath );
     ret.battle = GetBattleFromScript( script );
+    ret.ModName = ret.battle.GetHostModName();
     return ret;
 }
 

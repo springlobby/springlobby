@@ -35,7 +35,7 @@ BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
 
   EVT_BUTTON              ( REPLAY_WATCH             , ReplayTab::OnWatch        )
 //  EVT_LIST_ITEM_ACTIVATED ( REPLAY_DELETE            , ReplayTab::OnDelete    )
-  EVT_LIST_ITEM_SELECTED  ( REPLAY_LIST               , ReplayTab::OnSelect      )
+  EVT_LIST_ITEM_SELECTED  ( wxID_ANY               , ReplayTab::OnSelect      )
   EVT_CHECKBOX            ( REPLAY_LIST_FILTER_ACTIV , ReplayTab::OnFilterActiv )
 #if  wxUSE_TOGGLEBTN
   EVT_TOGGLEBUTTON        ( REPLAY_LIST_FILTER_BUTTON, ReplayTab::OnFilter  )
@@ -326,8 +326,10 @@ void ReplayTab::OnSelect( wxListEvent& event )
         Replay rep = m_replays->GetReplay( data );
         m_sel_replay_id = rep.id;
         m_players_text->SetLabel(_T(""));
-        m_map_lbl->SetLabel(rep.battle.GetHostMapName());
-        m_mod_lbl->SetLabel(rep.battle.GetHostModName());
+        m_map_text->SetLabel(rep.battle.GetHostMapName());
+        m_mod_text->SetLabel(rep.battle.GetHostModName());
+        m_minimap->SetBattle( &(rep.battle) );
+        m_minimap->LoadMinimap();
     }
 }
 
