@@ -34,9 +34,6 @@
 struct Replay
 {
     int id;
-    long int day;
-    long int month;
-    long int year;
     int playernum;
     bool can_watch;
     int duration; //in seconds
@@ -48,7 +45,7 @@ struct Replay
     wxString Filename;
     wxString date;
     OfflineBattle battle;
-    Replay():id(0),day(0),year(0),playernum(0),can_watch(false),duration(0),size(0){};
+    Replay():id(0),playernum(0),can_watch(false),duration(0),size(0){};
 };
 
 typedef unsigned int replay_id_t;

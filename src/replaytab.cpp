@@ -186,7 +186,7 @@ void ReplayTab::AddReplay( Replay& replay ) {
  // ASSERT_LOGIC( m_replay_listctrl->GetItem( item ), _T("!GetItem") );
    wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
                         (replay.duration%3600)/60, (replay.duration%3600)%60 ) ;
-  m_replay_listctrl->SetItem( index, 0, wxString::Format(_T("%02ld - %02ld - %02ld"), replay.year, replay.month, replay.day ) );
+  m_replay_listctrl->SetItem( index, 0, replay.date );
   m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
   m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
   m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetMaxPlayers() ) );
@@ -242,7 +242,7 @@ void ReplayTab::UpdateReplay( Replay& replay )
   //Replay& Replay = m_replays_iter.GetReplay( m_replay_listctrl->GetItemData( index ) );
   wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
                         (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
-  m_replay_listctrl->SetItem( index, 0, wxString::Format(_T("%02ld - %02ld - %02ld"), replay.year, replay.month, replay.day ) );
+  m_replay_listctrl->SetItem( index, 0, replay.date );
   m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
   m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
   m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetMaxPlayers() ) );
@@ -335,6 +335,8 @@ void ReplayTab::OnSelect( wxListEvent& event )
         m_mod_text->SetLabel(rep.battle.GetHostModName());
         m_minimap->SetBattle( &(rep.battle) );
         m_minimap->LoadMinimap();
+//        m_players->RemoveUsers();
+//        m_players->AddUser(
     }
 }
 

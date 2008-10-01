@@ -102,11 +102,11 @@ bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
     wxString FileName = ReplayPath.AfterLast( '/' ); // strips file path
     FileName = FileName.Left( FileName.Find( _T(".sdf") ) ); //strips the file extension
 
-    ret.date = FileName.BeforeFirst(_T('-'));
+//    ret.date = FileName.BeforeFirst(_T('-'));
     FileName = FileName.AfterFirst( _T('-') );
-    ret.date.Left( 2 ).ToLong( &ret.year );
-    ret.date.Mid( 2, 2 ).ToLong( &ret.month );
-    ret.date.Mid( 4, 2 ).ToLong( &ret.day );
+//    ret.date.Left( 2 ).ToLong( &ret.year );
+//    ret.date.Mid( 2, 2 ).ToLong( &ret.month );
+//    ret.date.Mid( 4, 2 ).ToLong( &ret.day );
 
     ret.ReplayName = FileName.AfterLast(_T('-')); // void string if multiple replays wich share previous paramteres aren't present
     FileName = FileName.BeforeLast(_T('-'));
@@ -241,7 +241,13 @@ void GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
         replay.Read( &gametime, 4);
         rep.duration = gametime;
         rep.size = replay.Length();
-
+        unsigned long unixtime = 0;
+        replay.Seek( 56 );
+        replay.Read( &unixtime, 8 );
+        wxDateTime dt;
+        dt.Set( (time_t) unixtime );
+        wxString date = dt.FormatDate();
+        rep.date = date;
     }
     catch (...){ }
 }
