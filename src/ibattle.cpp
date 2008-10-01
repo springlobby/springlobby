@@ -176,11 +176,17 @@ unsigned int IBattle::AddBot( int ally, int posx, int posy, int handicap, const 
 
 bool IBattle::LoadOptionsPreset( const wxString& name )
 {
-  if ( sett().GetPresetList().Index( name ) == -1 ) return false; ///preset not found
-  m_preset = name;
+  // look name up case-insensitively
+  const wxArrayString& presetList = sett().GetPresetList();
+  int index = presetList.Index( name, false /*case insensitive*/ );
+  if ( index == -1 ) return false; ///preset not found
+
+  // set m_preset to the actual name, with correct case
+  m_preset = presetList[index];
+
   for ( int i = 0; i < (int)LastOption; i++)
   {
-    std::map<wxString,wxString> options = sett().GetHostingPreset( name, i );
+    std::map<wxString,wxString> options = sett().GetHostingPreset( m_preset, i );
     if ( (GameOption)i != PrivateOptions )
     {
       for ( std::map<wxString,wxString>::iterator itor = options.begin(); itor != options.end(); itor++ )
