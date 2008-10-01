@@ -154,6 +154,12 @@ OfflineBattle GetBattleFromScript( const wxString& script_ )
     BattleOptions opts;
     std::stringstream ss ( STD_STRING(script_) );
     PDataList script( ParseTDF(ss) );
+    wxString dump_str;
+    TDFWriter dumper(dump_str);
+    script->Save(dumper);
+    wxLogMessage(_T("tdf dump='%s'"),dump_str.c_str());
+
+
     PDataList replayNode ( script->Find(_T("GAME") ) );
     if ( replayNode.ok() ){
 

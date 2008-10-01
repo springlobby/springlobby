@@ -569,6 +569,7 @@ void DataList::Load(Tokenizer &f){
     Token t=f.TakeToken();
     switch(t.type){
       case Token::type_leave_section:
+      case Token::type_eof:
       return;
       case Token::type_entry_name:
       {
@@ -677,9 +678,9 @@ void DataLeaf::Save(TDFWriter &f){
   f.Append(Name(),GetValue());
 }
 void DataLeaf::Load(Tokenizer &f){
-  Token t=f.GetToken();
+  Token t=f.TakeToken();
   value=t.value_s;
-  t=f.GetToken();
+  t=f.TakeToken();
   if(t.value_s!=_T(";")){
     f.ReportError(t,_T("; expected"));
   }
