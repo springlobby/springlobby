@@ -201,8 +201,6 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
       for( unsigned int localrect = 0 ; localrect < localrectcount; ++localrect) if ( GetStartRect( localrect ).exist ) RemoveStartRect( localrect );
       SendHostInfo( HI_StartRects );
 
-      ClearStartRects();
-
       unsigned int rectcount = s2l( options[_T("numrects")] );
       for ( unsigned int loadrect = 0; loadrect < rectcount; loadrect++)
       {
