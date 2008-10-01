@@ -98,22 +98,29 @@ bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
     //TODO extract moar info
     static long r_id = 0;
     ret.Filename = ReplayPath;
+
     wxString FileName = ReplayPath.AfterLast( '/' ); // strips file path
     FileName = FileName.Left( FileName.Find( _T(".sdf") ) ); //strips the file extension
-    wxStringTokenizer args ( FileName, _T("-")); // chunks by '-' separator
-    //  if ( args.CountTokens() != 3 || args.CountTokens() != 4 ) // not a spring standard replay filename
-    //  {
-    //    ret.ReplayName = FileName;
-    //    return ret;
-    //  }
-    wxString date = args.GetNextToken(); // date format YYMMDD
-    ret.date = date;
-    date.Left( 2 ).ToLong( &ret.year );
-    date.Mid( 2, 2 ).ToLong( &ret.month );
-    date.Mid( 4, 2 ).ToLong( &ret.day );
-    ret.MapName = args.GetNextToken();
-    ret.SpringVersion = args.GetNextToken();
-    ret.ReplayName = args.GetNextToken(); // void string if multiple replays wich share previous paramteres aren't present
+
+    ret.date = FileName.BeforeFirst(_T('-'));
+    FileName = FileName.AfterFirst( _T('-') );
+    ret.date.Left( 2 ).ToLong( &ret.year );
+    ret.date.Mid( 2, 2 ).ToLong( &ret.month );
+    ret.date.Mid( 4, 2 ).ToLong( &ret.day );
+
+    ret.ReplayName = FileName.AfterLast(_T('-')); // void string if multiple replays wich share previous paramteres aren't present
+    FileName = FileName.BeforeLast(_T('-'));
+    if ( ret.ReplayName.Contains(_T(".")) ) /// what we just parsed is not a multiple replay but spring version
+    {
+      ret.SpringVersion = ret.ReplayName;
+      ret.ReplayName = _T("");
+    }
+    else
+    {
+       ret.SpringVersion = FileName.AfterLast(_T('-'));
+       FileName = FileName.BeforeLast(_T('-'));
+    }
+    ret.MapName = FileName;
     ret.id = r_id;
     wxString script = GetScriptFromReplay( ReplayPath );
     if ( script.IsEmpty() )
