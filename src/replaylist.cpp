@@ -19,7 +19,9 @@ ReplayList::ReplayList()
     wxArrayString filenames = usync().GetReplayList();
     for (unsigned int i = 0; i < filenames.GetCount(); ++i)
     {
-        AddReplay( GetReplayInfos( filenames[i] ) );
+        Replay rep;
+        if ( GetReplayInfos( filenames[i] , rep ) )
+            AddReplay( rep );
     }
 
 }
@@ -90,12 +92,11 @@ wxString testscript= _T("[GAME]\
 }\
 ");
 
-Replay GetReplayInfos ( wxString& ReplayPath )
+bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
 {
     //wxLOG_Info  ( STD_STRING( ReplayPath ) );
     //TODO extract moar info
     static long r_id = 0;
-    Replay ret;
     ret.Filename = ReplayPath;
     wxString FileName = ReplayPath.AfterLast( '/' ); // strips file path
     FileName = FileName.Left( FileName.Find( _T(".sdf") ) ); //strips the file extension
@@ -114,14 +115,16 @@ Replay GetReplayInfos ( wxString& ReplayPath )
     ret.SpringVersion = args.GetNextToken();
     ret.ReplayName = args.GetNextToken(); // void string if multiple replays wich share previous paramteres aren't present
     ret.id = r_id;
-    r_id++;
     wxString script = GetScriptFromReplay( ReplayPath );
+    if ( script.IsEmpty() )
+        return false;
     ret.battle = GetBattleFromScript( script );
     ret.ModName = ret.battle.GetHostModName();
-    return ret;
+    r_id++;
+    return true;
 }
 
-wxString GetScriptFromReplay ( wxString& ReplayPath )
+wxString GetScriptFromReplay ( const wxString& ReplayPath )
 {
     wxString script;
 

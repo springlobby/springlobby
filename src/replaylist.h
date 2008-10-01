@@ -52,8 +52,8 @@ class ReplayList
     replay_map_t m_replays;
 };
 
-Replay GetReplayInfos ( wxString& ReplayPath );
-wxString GetScriptFromReplay ( wxString& ReplayPath );
+bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret );
+wxString GetScriptFromReplay ( const wxString& ReplayPath );
 OfflineBattle GetBattleFromScript( const wxString& script );
 BattleOptions GetBattleOptsFromScript( const wxString& script_ );
 

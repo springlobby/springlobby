@@ -91,6 +91,7 @@ ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList& replaylist  ):
 
   SetColumnWidth( 3, 170 );
   SetColumnWidth( 4, 140 );
+  SetColumnWidth( 5, 140 );
 
   m_popup = new wxMenu( _T("") );
   // &m enables shortcout "alt + m" and underlines m
