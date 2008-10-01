@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "iunitsync.h"
 #include "mapctrl.h"
+#include "userlistctrl.h"
 
 #include "replayfilter.h"
 #include "iconimagelist.h"
@@ -54,94 +55,99 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     //TODO this shouldnÄT be here
     m_ui.ReloadUnitSync();
 
-  m_replays = new ReplayList ();
+    m_replays = new ReplayList ();
 
-  wxBoxSizer* m_main_sizer;
-  m_main_sizer = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* m_main_sizer;
+    m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-  wxBoxSizer* m_filter_sizer;
-  m_filter_sizer = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* m_filter_sizer;
+    m_filter_sizer = new wxBoxSizer( wxVERTICAL );
 
-  wxBoxSizer* m_replaylist_sizer;
-  m_replaylist_sizer = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* m_replaylist_sizer;
+    m_replaylist_sizer = new wxBoxSizer( wxVERTICAL );
 
-  m_replay_listctrl = new ReplayListCtrl( this, *m_replays );
-  m_replaylist_sizer->Add( m_replay_listctrl, 1, wxALL|wxEXPAND, 5 );
+    m_replay_listctrl = new ReplayListCtrl( this, *m_replays );
+    m_replaylist_sizer->Add( m_replay_listctrl, 1, wxALL|wxEXPAND, 5 );
 
-  m_main_sizer->Add( m_replaylist_sizer, 1, wxEXPAND, 5 );;
+    m_main_sizer->Add( m_replaylist_sizer, 1, wxEXPAND, 5 );;
 
-  wxBoxSizer* m_info_sizer;
-  m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* m_info_sizer;
+    m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_minimap = new MapCtrl( this, 100, 0, m_ui, true, true, false, false );
-  m_info_sizer->Add( m_minimap, 0, wxALL, 5 );
+    m_minimap = new MapCtrl( this, 100, 0, m_ui, true, true, false, false );
+    m_info_sizer->Add( m_minimap, 0, wxALL, 5 );
 
-  wxFlexGridSizer* m_data_sizer;
-  m_data_sizer = new wxFlexGridSizer( 4, 2, 0, 0 );
+    wxFlexGridSizer* m_data_sizer;
+    m_data_sizer = new wxFlexGridSizer( 4, 2, 0, 0 );
 
-  m_map_lbl = new wxStaticText( this, wxID_ANY, _("Map:"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_data_sizer->Add( m_map_lbl, 0, wxALL, 5 );
+    m_map_lbl = new wxStaticText( this, wxID_ANY, _("Map:"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_data_sizer->Add( m_map_lbl, 0, wxALL, 5 );
 
-  m_map_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-  m_data_sizer->Add( m_map_text, 0, wxALL, 5 );
+    m_map_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_data_sizer->Add( m_map_text, 0, wxALL, 5 );
 
-  m_mod_lbl = new wxStaticText( this, wxID_ANY, _("Mod:"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_data_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
+    m_mod_lbl = new wxStaticText( this, wxID_ANY, _("Mod:"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_data_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
 
-  m_mod_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-  m_data_sizer->Add( m_mod_text, 0, wxALL, 5 );
+    m_mod_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_data_sizer->Add( m_mod_text, 0, wxALL, 5 );
 
-  m_players_lbl = new wxStaticText( this, wxID_ANY, _("Players:"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_data_sizer->Add( m_players_lbl, 0, wxALL, 5 );
+    m_players_lbl = new wxStaticText( this, wxID_ANY, _("Players:"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_data_sizer->Add( m_players_lbl, 0, wxALL, 5 );
 
-  m_players_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-  m_data_sizer->Add( m_players_text, 0, wxALL, 5 );
+    m_players_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_data_sizer->Add( m_players_text, 0, wxALL, 5 );
 
-  m_info_sizer->Add( m_data_sizer, 1, wxEXPAND, 5 );
+    m_info_sizer->Add( m_data_sizer, 1, wxEXPAND, 5 );
 
-  m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
+    m_players = new UserListctrl( this, _T("replayusers") );
+    m_info_sizer->Add( m_players , 1, wxEXPAND, 5 );
+
+    m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
 
 
-//  m_filter = new ReplayListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
-//  m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
-//
-//  m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
+    //  m_filter = new ReplayListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
+    //  m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
+    //
+    //  m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
 
-  m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-  m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND, 5 );
+    m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+    m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND, 5 );
 
-  wxBoxSizer* m_buttons_sizer;
-  m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* m_buttons_sizer;
+    m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-#if  wxUSE_TOGGLEBTN
-	m_filter_show = new wxToggleButton( this, REPLAY_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
-#else
-	m_filter_show = new wxCheckBox( this, REPLAY_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
-#endif
-  m_buttons_sizer->Add( m_filter_show, 0, 0, 5 );
+    #if  wxUSE_TOGGLEBTN
+        m_filter_show = new wxToggleButton( this, REPLAY_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+    #else
+        m_filter_show = new wxCheckBox( this, REPLAY_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+    #endif
 
-	m_filter_activ = new wxCheckBox( this, REPLAY_LIST_FILTER_ACTIV , wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_buttons_sizer->Add( m_filter_activ, 1, wxALL|wxEXPAND, 5 );
-  #ifdef HAVE_WX26
-  m_filter_activ->Disable();
-  #endif
+    m_buttons_sizer->Add( m_filter_show, 0, 0, 5 );
 
-  m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+    m_filter_activ = new wxCheckBox( this, REPLAY_LIST_FILTER_ACTIV , wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_buttons_sizer->Add( m_filter_activ, 1, wxALL|wxEXPAND, 5 );
 
-  m_watch_btn = new wxButton( this, REPLAY_WATCH, _("Watch"), wxDefaultPosition, wxSize( -1,28 ), 0 );
-  m_buttons_sizer->Add( m_watch_btn, 0, wxBOTTOM|wxLEFT|wxRIGHT, 5 );
+    #ifdef HAVE_WX26
+        m_filter_activ->Disable();
+    #endif
 
-  m_delete_btn = new wxButton( this, REPLAY_DELETE, _("Delete"), wxDefaultPosition, wxSize( -1,28 ), 0 );
-  m_buttons_sizer->Add( m_delete_btn, 0, wxBOTTOM|wxRIGHT, 5 );
+    m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-  m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
+    m_watch_btn = new wxButton( this, REPLAY_WATCH, _("Watch"), wxDefaultPosition, wxSize( -1,28 ), 0 );
+    m_buttons_sizer->Add( m_watch_btn, 0, wxBOTTOM|wxLEFT|wxRIGHT, 5 );
 
-//  m_filter->Hide();
+    m_delete_btn = new wxButton( this, REPLAY_DELETE, _("Delete"), wxDefaultPosition, wxSize( -1,28 ), 0 );
+    m_buttons_sizer->Add( m_delete_btn, 0, wxBOTTOM|wxRIGHT, 5 );
 
-  this->SetSizer( m_main_sizer );
-  this->Layout();
+    m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
-  AddAllReplays();
+    //  m_filter->Hide();
+
+    this->SetSizer( m_main_sizer );
+    this->Layout();
+
+    AddAllReplays();
 
 }
 
@@ -179,9 +185,8 @@ void ReplayTab::AddReplay( Replay& replay ) {
 
  // ASSERT_LOGIC( m_replay_listctrl->GetItem( item ), _T("!GetItem") );
   wxString sep = _T("-");
-  wxString mod = replay.battle.GetHostModName();
   m_replay_listctrl->SetItem( index, 0, wxString::Format(_T("%02ld - %02ld - %02ld"), replay.year, replay.month, replay.day ) );
-  m_replay_listctrl->SetItem( index, 1, mod );
+  m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
   m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
   m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetMaxPlayers() ) );
   m_replay_listctrl->SetItem( index, 4, replay.SpringVersion );
@@ -233,10 +238,10 @@ void ReplayTab::UpdateReplay( Replay& replay )
 
   //Replay& Replay = m_replays_iter.GetReplay( m_replay_listctrl->GetItemData( index ) );
 
-  m_replay_listctrl->SetItem( index, 0, replay.date  );
-  m_replay_listctrl->SetItem( index, 1, replay.ModName );
-  m_replay_listctrl->SetItem( index, 2, replay.MapName );
-  m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.playernum ) );
+  m_replay_listctrl->SetItem( index, 0, wxString::Format(_T("%02ld - %02ld - %02ld"), replay.year, replay.month, replay.day ) );
+  m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
+  m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
+  m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetMaxPlayers() ) );
   m_replay_listctrl->SetItem( index, 4, replay.SpringVersion );
   m_replay_listctrl->SetItem( index, 5, replay.Filename );
 
@@ -312,11 +317,17 @@ void ReplayTab::OnFilterActiv( wxCommandEvent& event )
 
 void ReplayTab::OnSelect( wxListEvent& event )
 {
-  wxLogDebugFunc( _T("") );
-  if ( event.GetIndex() == -1 ) {
-    m_sel_replay_id = 0;
-  } else {
-    m_sel_replay_id = m_replays->GetReplay( m_replay_listctrl->GetItemData( event.GetIndex() ) ).id;
-  }
+    wxLogDebugFunc( _T("") );
+    if ( event.GetIndex() == -1 ) {
+        m_sel_replay_id = 0;
+    } else {
+        int index = event.GetIndex();
+        long data = m_replay_listctrl->GetItemData( index );
+        Replay rep = m_replays->GetReplay( data );
+        m_sel_replay_id = rep.id;
+        m_players_text->SetLabel(_T(""));
+        m_map_lbl->SetLabel(rep.battle.GetHostMapName());
+        m_mod_lbl->SetLabel(rep.battle.GetHostModName());
+    }
 }
 

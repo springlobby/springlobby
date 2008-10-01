@@ -159,6 +159,12 @@ class OfflineUser : public CommonUser
         OfflineUser(const wxString& nick, const wxString& country, const int& cpu)
            : CommonUser( nick, country, cpu )  {};
 
+        void SetSideName(const wxString& name ) { m_side_name = name; }
+        wxString GetSideName() const { return m_side_name; }
+
+    protected:
+        wxString m_side_name;
+
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_USER_H

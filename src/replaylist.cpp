@@ -108,15 +108,15 @@ Replay GetReplayInfos ( wxString& ReplayPath )
     wxString date = args.GetNextToken(); // date format YYMMDD
     ret.date = date;
     date.Left( 2 ).ToLong( &ret.year );
-    date.Mid( 3, 4 ).ToLong( &ret.month );
-    date.Mid( 5, 6 ).ToLong( &ret.day );
+    date.Mid( 2, 2 ).ToLong( &ret.month );
+    date.Mid( 4, 2 ).ToLong( &ret.day );
     ret.MapName = args.GetNextToken();
     ret.SpringVersion = args.GetNextToken();
     ret.ReplayName = args.GetNextToken(); // void string if multiple replays wich share previous paramteres aren't present
     ret.id = r_id;
     r_id++;
     wxString script = GetScriptFromReplay( ReplayPath );
-    ret.battle = GetBattleFromScript( testscript );
+    ret.battle = GetBattleFromScript( script );
     return ret;
 }
 
@@ -169,6 +169,7 @@ OfflineBattle GetBattleFromScript( const wxString& script_ )
 
         //don't have the maphash, what to do?
         opts.mapname    = replayNode->GetString( _T("Mapname") );
+        battle.SetHostMap( opts.mapname, wxEmptyString );
 
         opts.ip         = replayNode->GetString( _T("HostIP") );
         opts.port       = replayNode->GetInt  ( _T("HostPort"), DEFAULT_EXTERNAL_UDP_SOURCE_PORT );
@@ -184,7 +185,7 @@ OfflineBattle GetBattleFromScript( const wxString& script_ )
                 OfflineUser user ( player->GetString( _T("name") ), wxEmptyString, 0);
                 UserBattleStatus status;
                 //how to convert back?
-                //status.side = player->GetString( _T("side") );
+                user.SetSideName( player->GetString( _T("side") ) );
                 status.spectator = player->GetInt( _T("Spectator"), 0 );
                 status.team = player->GetInt( _T("team") );
 
@@ -193,7 +194,7 @@ OfflineBattle GetBattleFromScript( const wxString& script_ )
             }
         }
 
-        //MMoptions
+        //MMoptions, this'll fail unless loading map/mod into wrapper first
         LoadMMOpts( _T("mapoptions"), battle, replayNode );
         LoadMMOpts( _T("modoptions"), battle, replayNode );
 

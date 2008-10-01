@@ -5,7 +5,7 @@
 
 class Ui;
 class MapCtrl;
-class NickListCtrl;
+class UserListctrl;
 class wxCommandEvent;
 class wxListEvent;
 class wxStaticText;
@@ -72,6 +72,8 @@ class ReplayTab : public wxPanel
     wxStaticLine* m_buttons_sep;
     wxButton* m_watch_btn;
     wxButton* m_delete_btn;
+
+    UserListctrl* m_players;
 
     wxCheckBox* m_filter_activ;
 #if wxUSE_TOGGLEBTN
