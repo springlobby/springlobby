@@ -125,9 +125,12 @@ bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
     wxString script = GetScriptFromReplay( ReplayPath );
     if ( script.IsEmpty() )
         return false;
+
+    GetHeaderInfo( ret, ReplayPath );
     ret.battle = GetBattleFromScript( script );
     ret.ModName = ret.battle.GetHostModName();
-    r_id++;
+    ret.can_watch = ret.battle.ModExists() && ret.battle.MapExists();
+    r_id++; //sucessful parsing assumed --> increment id(index)
     return true;
 }
 
@@ -226,4 +229,18 @@ void LoadMMOpts( OfflineBattle& battle, const PDataList& node )
     optMap options = opts.getOptionsMap(EngineOption);
     for ( optMap::const_iterator i = options.begin(); i != options.end(); ++i)
         opts.setSingleOption( i->first, node->GetString( i->first, i->second ) );
+}
+
+void GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
+{
+    try
+    {
+        wxFile replay( ReplayPath, wxFile::read );
+        replay.Seek( 72 );
+        int gametime = 0 ;
+        replay.Read( &gametime, 4);
+        rep.duration = gametime;
+
+    }
+    catch (...){ }
 }

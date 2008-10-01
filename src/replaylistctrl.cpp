@@ -58,13 +58,17 @@ ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList& replaylist  ):
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 3, col, _T("Number of players") );
 
+  col.SetText( _("Duration") );
+  col.SetImage( icons().ICON_NONE );
+  InsertColumn( 4, col, _T("Duration") );
+
   col.SetText( _("Spring Version") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 4, col, _T("Spring Version") );
+  InsertColumn( 5, col, _T("Spring Version") );
 
   col.SetText( _("File") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 5, col, _T("Filename") );
+  InsertColumn( 6, col, _T("Filename") );
 
 
   m_sortorder[0].col = 0;
@@ -92,6 +96,7 @@ ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList& replaylist  ):
   SetColumnWidth( 3, 170 );
   SetColumnWidth( 4, 140 );
   SetColumnWidth( 5, 140 );
+  SetColumnWidth( 6, 140 );
 
   m_popup = new wxMenu( _T("") );
   // &m enables shortcout "alt + m" and underlines m
@@ -156,7 +161,7 @@ void ReplayListCtrl::OnColClick( wxListEvent& event )
 }
 
 
-void ReplayListCtrl::Sort()
+void ReplayListCtrl::Sort()//needs adjusting when column order etc is stable
 {
   ReplayListCtrl::m_replaylist_sort = &m_replaylist;
   if (m_replaylist_sort == 0 ) return;

@@ -184,13 +184,15 @@ void ReplayTab::AddReplay( Replay& replay ) {
   //item.SetId( index );
 
  // ASSERT_LOGIC( m_replay_listctrl->GetItem( item ), _T("!GetItem") );
-  wxString sep = _T("-");
+   wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
+                        (replay.duration%3600)/60, (replay.duration%3600)%60 ) ;
   m_replay_listctrl->SetItem( index, 0, wxString::Format(_T("%02ld - %02ld - %02ld"), replay.year, replay.month, replay.day ) );
   m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
   m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
   m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetMaxPlayers() ) );
-  m_replay_listctrl->SetItem( index, 4, replay.SpringVersion );
-  m_replay_listctrl->SetItem( index, 5, replay.Filename );
+  m_replay_listctrl->SetItem( index, 4, duration );
+  m_replay_listctrl->SetItem( index, 5, replay.SpringVersion );
+  m_replay_listctrl->SetItem( index, 6, replay.Filename );
 
   m_replay_listctrl->Sort();
 }
@@ -237,13 +239,15 @@ void ReplayTab::UpdateReplay( Replay& replay )
   //ASSERT_LOGIC( m_replay_listctrl->GetItem( item ), _T("!GetItem") );
 
   //Replay& Replay = m_replays_iter.GetReplay( m_replay_listctrl->GetItemData( index ) );
-
+  wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
+                        (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
   m_replay_listctrl->SetItem( index, 0, wxString::Format(_T("%02ld - %02ld - %02ld"), replay.year, replay.month, replay.day ) );
   m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
   m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
   m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetMaxPlayers() ) );
-  m_replay_listctrl->SetItem( index, 4, replay.SpringVersion );
-  m_replay_listctrl->SetItem( index, 5, replay.Filename );
+  m_replay_listctrl->SetItem( index, 4, duration );
+  m_replay_listctrl->SetItem( index, 5, replay.SpringVersion );
+  m_replay_listctrl->SetItem( index, 6, replay.Filename );
 
 //  if ( &replay == m_sel_replay ) SelectReplay( m_sel_replay );
 //  m_replay_listctrl->Sort();
