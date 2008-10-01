@@ -334,7 +334,7 @@ void ReplayTab::OnSelect( wxListEvent& event )
         m_map_text->SetLabel(rep.battle.GetHostMapName());
         m_mod_text->SetLabel(rep.battle.GetHostModName());
         m_minimap->SetBattle( &(rep.battle) );
-        m_minimap->LoadMinimap();
+        m_minimap->UpdateMinimap();
 //        m_players->RemoveUsers();
 //        m_players->AddUser(
     }
