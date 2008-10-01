@@ -152,7 +152,7 @@ OfflineBattle GetBattleFromScript( const wxString& script_ )
 {
     OfflineBattle battle;
     BattleOptions opts;
-    std::stringstream ss ( STD_STRING(script_) );
+    std::stringstream ss ( (const char *)script_.mb_str(wxConvUTF8) );// no need to convert wxstring-->std::string-->std::stringstream, convert directly.
     PDataList script( ParseTDF(ss) );
     wxString dump_str;
     TDFWriter dumper(dump_str);
