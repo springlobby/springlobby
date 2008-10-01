@@ -62,8 +62,6 @@ class MapCtrl : public wxPanel
 
     void SetBattle( IBattle* battle );
 
-    void LoadMinimap();
-    void FreeMinimap();
     void UpdateMinimap();
 
     void OnPaint( wxPaintEvent& event );
@@ -75,6 +73,9 @@ class MapCtrl : public wxPanel
     void OnMouseWheel( wxMouseEvent& event );
 
    protected:
+
+    void LoadMinimap();
+    void FreeMinimap();
 
     BattleStartRect GetBattleRect( int x1, int y1, int x2, int y2, int ally = -1 );
     wxRect GetMinimapRect();
@@ -116,7 +117,8 @@ class MapCtrl : public wxPanel
 
     void _SetCursor();
 
-    wxBitmap* m_image;
+    wxBitmap* m_minimap;
+    wxBitmap* m_metalmap;
 
     IBattle* m_battle;
     SinglePlayerBattle* m_sp_battle;
@@ -161,6 +163,14 @@ class MapCtrl : public wxPanel
     UnitSyncMap m_map;
 
     int m_bot_expanded;
+
+    enum InfoMap {
+      IM_Minimap,  // must be first one
+      IM_Metalmap, // entries must be consecutively numbered (without gaps)
+      IM_Count,    // must be last one
+    };
+
+    InfoMap m_current_infomap;
 
   DECLARE_EVENT_TABLE();
 };

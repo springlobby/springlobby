@@ -184,6 +184,7 @@ bool SpringUnitSync::VersionSupports( GameFeature feature )
   switch (feature) {
     case GF_XYStartPos: return nver >= 76.0;
     case USYNC_Sett_Handler: return nver >= 76.0;
+    case USYNC_GetInfoMap: return nver >= 77.0;
   }
   return false;
 }
@@ -667,12 +668,11 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
       ASSERT_EXCEPTION( FileSize, _T("side image has size 0") );
     }
 
-    char* FileContent = new char [FileSize];
+    uninitialized_array<char> FileContent(FileSize);
     susynclib()->ReadFileVFS(ini, FileContent, FileSize);
     wxMemoryInputStream FileContentStream( FileContent, FileSize );
 
     cache.LoadFile( FileContentStream, wxBITMAP_TYPE_ANY, -1);
-    delete[] FileContent;
     cache.InitAlpha();
     for ( int x = 0; x < cache.GetWidth(); x++ )
       for ( int y = 0; y < cache.GetHeight(); y++ )
@@ -788,31 +788,68 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
 
   try
   {
-  ASSERT_EXCEPTION( wxFileExists( originalsizepath ), _T("File cached image does not exist") );
+    ASSERT_EXCEPTION( wxFileExists( originalsizepath ), _T("File cached image does not exist") );
 
-  img = wxImage( originalsizepath, wxBITMAP_TYPE_PNG );
-  ASSERT_EXCEPTION( img.Ok(), _T("Failed to load cache image") );
-
-  MapInfo mapinfo = _GetMapInfoEx( mapname );
-
-  wxSize image_size=MakeFit(wxSize(mapinfo.width,mapinfo.height),wxSize(width,height));
-  img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
-
-  } catch (...)
-  {
-    try
-    {
-
-    img = susynclib()->GetMinimap( mapname );
-
-    img.SaveFile( originalsizepath, wxBITMAP_TYPE_PNG );
+    img = wxImage( originalsizepath, wxBITMAP_TYPE_PNG );
+    ASSERT_EXCEPTION( img.Ok(), _T("Failed to load cache image") );
 
     MapInfo mapinfo = _GetMapInfoEx( mapname );
 
-    wxSize image_size=MakeFit(wxSize(mapinfo.width,mapinfo.height),wxSize(width,height));
+    wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
     img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+  }
+  catch (...)
+  {
+    try
+    {
+      img = susynclib()->GetMinimap( mapname );
+
+      img.SaveFile( originalsizepath, wxBITMAP_TYPE_PNG );
+
+      MapInfo mapinfo = _GetMapInfoEx( mapname );
+
+      wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
+      img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
     }
-    catch(...)
+    catch (...)
+    {
+      img = wxImage( 1, 1 );
+    }
+  }
+
+  return img;
+}
+
+wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int height )
+{
+  wxLogDebugFunc( mapname );
+
+  wxString originalsizepath = GetFileCachePath( mapname, _T(""), false ) + _T(".metalmap.png");
+
+  wxImage img;
+
+  try
+  {
+    ASSERT_EXCEPTION( wxFileExists( originalsizepath ), _T("File cached image does not exist") );
+
+    img = wxImage( originalsizepath, wxBITMAP_TYPE_PNG );
+    ASSERT_EXCEPTION( img.Ok(), _T("Failed to load cache image") );
+
+    wxSize image_size = MakeFit(wxSize(img.GetWidth(), img.GetHeight()), wxSize(width, height));
+    img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+  }
+  catch (...)
+  {
+    try
+    {
+      img = susynclib()->GetMetalmap( mapname );
+
+      img.SaveFile( originalsizepath, wxBITMAP_TYPE_PNG );
+
+      wxSize image_size = MakeFit(wxSize(img.GetWidth(), img.GetHeight()), wxSize(width, height));
+      img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+    }
+    catch (...)
     {
       img = wxImage( 1, 1 );
     }
