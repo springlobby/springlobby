@@ -1342,7 +1342,11 @@ void TASServer::SendHostInfo( HostInfo update )
     if ( (update & HI_StartRects) > 0 )   // Startrects should be updated.
     {
 
-        for ( unsigned int i = 16; i < battle.GetNumRects(); i++ ) battle.RemoveStartRect( i ); /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
+        for ( unsigned int i = 16; i < battle.GetNumRects(); i++ )  /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
+        {
+           battle.RemoveStartRect( i );
+           battle.StartRectRemoved( i );
+        }
 
         for ( unsigned int i = 0; i < battle.GetNumRects(); i++ )   // Loop through all, and remove updated or deleted.
         {
