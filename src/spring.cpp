@@ -68,7 +68,7 @@ bool Spring::RunReplay ( wxString& filename )
 
   wxLogMessage( _T("launching spring with replay: ") + filename );
 
-  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" ") + filename ;
+  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" \"") + filename + _T("\"") ;
   wxLogMessage( _T("cmd: %s"), cmd.c_str() );
   wxSetWorkingDirectory( sett().GetSpringDir() );
   if ( sett().UseOldSpringLaunchMethod() ) {
