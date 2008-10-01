@@ -174,15 +174,24 @@ unsigned int IBattle::AddBot( int ally, int posx, int posy, int handicap, const 
   return (unsigned int)(-1);/// note: that looks pretty crappy and needs to be investigated.
 }
 
-bool IBattle::LoadOptionsPreset( const wxString& name )
+
+static wxString FixPresetName( const wxString& name )
 {
   // look name up case-insensitively
   const wxArrayString& presetList = sett().GetPresetList();
   int index = presetList.Index( name, false /*case insensitive*/ );
-  if ( index == -1 ) return false; ///preset not found
+  if ( index == -1 ) return _T("");
 
-  // set m_preset to the actual name, with correct case
-  m_preset = presetList[index];
+  // set preset to the actual name, with correct case
+  return presetList[index];
+}
+
+
+bool IBattle::LoadOptionsPreset( const wxString& name )
+{
+  wxString preset = FixPresetName(name);
+  if (preset == _T("")) return false; ///preset not found
+  m_preset = preset;
 
   for ( int i = 0; i < (int)LastOption; i++)
   {
@@ -230,12 +239,14 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
 
 void IBattle::SaveOptionsPreset( const wxString& name )
 {
-  m_preset = name;
+  m_preset = FixPresetName(name);
+  if (m_preset == _T("")) m_preset = name; ///new preset
+
   for ( int i = 0; i < (int)LastOption; i++)
   {
     if ( (GameOption)i != PrivateOptions )
     {
-      sett().SetHostingPreset( name, (GameOption)i, CustomBattleOptions().getOptionsMap( (GameOption)i ) );
+      sett().SetHostingPreset( m_preset, (GameOption)i, CustomBattleOptions().getOptionsMap( (GameOption)i ) );
     }
     else
     {
@@ -269,7 +280,7 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       }
       opts[_T("restrictions")] = restrictionsstring;
 
-      sett().SetHostingPreset( name, (GameOption)i, opts );
+      sett().SetHostingPreset( m_preset, (GameOption)i, opts );
     }
   }
   sett().SaveSettings();
@@ -285,10 +296,12 @@ wxString IBattle::GetCurrentPreset()
 
 void IBattle::DeletePreset( const wxString& name )
 {
-  if ( m_preset == name ) m_preset = _T("");
-  sett().DeletePreset( name );
+  wxString preset = FixPresetName(name);
+  if ( m_preset == preset ) m_preset = _T("");
+  sett().DeletePreset( preset );
   ui().ReloadPresetList();
 }
+
 
 wxArrayString IBattle::GetPresetList()
 {
