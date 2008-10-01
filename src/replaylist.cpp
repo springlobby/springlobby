@@ -240,6 +240,7 @@ void GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
         int gametime = 0 ;
         replay.Read( &gametime, 4);
         rep.duration = gametime;
+        rep.size = replay.Length();
 
     }
     catch (...){ }

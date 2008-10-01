@@ -66,9 +66,13 @@ ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList& replaylist  ):
   col.SetImage( icons().ICON_NONE );
   InsertColumn( 5, col, _T("Spring Version") );
 
+  col.SetText( _("Filesize") );
+  col.SetImage( icons().ICON_NONE );
+  InsertColumn( 6, col, _T("Filesize in kilobyte") );
+
   col.SetText( _("File") );
   col.SetImage( icons().ICON_NONE );
-  InsertColumn( 6, col, _T("Filename") );
+  InsertColumn( 7, col, _T("Filename") );
 
 
   m_sortorder[0].col = 0;

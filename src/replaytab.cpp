@@ -192,7 +192,8 @@ void ReplayTab::AddReplay( Replay& replay ) {
   m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetMaxPlayers() ) );
   m_replay_listctrl->SetItem( index, 4, duration );
   m_replay_listctrl->SetItem( index, 5, replay.SpringVersion );
-  m_replay_listctrl->SetItem( index, 6, replay.Filename );
+  m_replay_listctrl->SetItem( index, 6, wxString::Format(_T("%d KB"),replay.size/1024) );
+  m_replay_listctrl->SetItem( index, 7, replay.Filename );
 
   m_replay_listctrl->Sort();
 }

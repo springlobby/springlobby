@@ -40,6 +40,7 @@ struct Replay
     int playernum;
     bool can_watch;
     int duration; //in seconds
+    int size; //in bytes
     wxString MapName;
     wxString ModName;
     wxString SpringVersion;
@@ -47,7 +48,7 @@ struct Replay
     wxString Filename;
     wxString date;
     OfflineBattle battle;
-    Replay():id(0),day(0),year(0),playernum(0),can_watch(false),duration(0){};
+    Replay():id(0),day(0),year(0),playernum(0),can_watch(false),duration(0),size(0){};
 };
 
 typedef unsigned int replay_id_t;
