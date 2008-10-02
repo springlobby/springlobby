@@ -157,6 +157,13 @@ MainWindow::MainWindow( Ui& ui ) :
   m_downloads_icon = charArr2wxBitmapWithBlending( downloads_icon_png , sizeof (downloads_icon_png), downloads_icon_text_png , sizeof (downloads_icon_text_png), 64 ) ;
   m_select_image = new wxBitmap( select_icon_xpm );
 
+  wxImage chatimg = m_chat_icon->ConvertToImage().Scale( 32, 32 );
+  wxImage battleimg = m_battle_icon->ConvertToImage().Scale( 32, 32 );
+  wxImage spimg = m_sp_icon->ConvertToImage().Scale( 32, 32 );
+  wxImage optionsimg = m_options_icon->ConvertToImage().Scale( 32, 32 );
+  wxImage downloadsimg = m_downloads_icon->ConvertToImage().Scale( 32, 32 );
+
+
   m_func_tab_images = new wxImageList( 64, 64 );
   MakeImages();
 
@@ -180,12 +187,12 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 4 );
 #endif
 #else
-  m_func_tabs->AddPage( m_chat_tab, _T(""), true, *m_chat_icon );
-  m_func_tabs->AddPage( m_join_tab, _T(""), false, *m_battle_icon );
-  m_func_tabs->AddPage( m_sp_tab, _T(""), false, *m_sp_icon );
-  m_func_tabs->AddPage( m_opts_tab, _T(""), false, *m_options_icon );
+  m_func_tabs->AddPage( m_chat_tab, _T(""), true, wxBitmap( chatimg ) );
+  m_func_tabs->AddPage( m_join_tab, _T(""), false, wxBitmap( battleimg ) );
+  m_func_tabs->AddPage( m_sp_tab, _T(""), false, wxBitmap( spimg ) );
+  m_func_tabs->AddPage( m_opts_tab, _T(""), false, wxBitmap( optionsimg ) );
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, *m_downloads_icon );
+  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, wxBitmap( downloadsimg ) );
 #endif
 #endif
 
