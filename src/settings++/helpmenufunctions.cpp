@@ -6,7 +6,7 @@
 
 #include "../images/springsettings.xpm"
 #include <wx/icon.h>
-#include "../utils.h"
+
 #include "custom_dialogs.h"
 #include <wx/intl.h>
 #include "se_utils.h"

@@ -157,4 +157,5 @@ class uninitialized_array
 */
 const wxChar* TooltipEnable(const wxChar* input);
 
+
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H

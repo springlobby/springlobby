@@ -279,3 +279,4 @@ const wxChar* TooltipEnable(const wxChar* input)
 {
     return sett().GetShowTooltips() ? input : _("");
 }
+
