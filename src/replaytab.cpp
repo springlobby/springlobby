@@ -189,7 +189,7 @@ void ReplayTab::AddReplay( Replay& replay ) {
   m_replay_listctrl->SetItem( index, 0, replay.date );
   m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
   m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
-  m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetMaxPlayers() ) );
+  m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators () ) );
   m_replay_listctrl->SetItem( index, 4, duration );
   m_replay_listctrl->SetItem( index, 5, replay.SpringVersion );
   m_replay_listctrl->SetItem( index, 6, wxString::Format(_T("%d KB"),replay.size/1024) );

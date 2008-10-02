@@ -101,12 +101,7 @@ bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
 
     wxString FileName = ReplayPath.AfterLast( '/' ); // strips file path
     FileName = FileName.Left( FileName.Find( _T(".sdf") ) ); //strips the file extension
-
-//    ret.date = FileName.BeforeFirst(_T('-'));
     FileName = FileName.AfterFirst( _T('-') );
-//    ret.date.Left( 2 ).ToLong( &ret.year );
-//    ret.date.Mid( 2, 2 ).ToLong( &ret.month );
-//    ret.date.Mid( 4, 2 ).ToLong( &ret.day );
 
     ret.ReplayName = FileName.AfterLast(_T('-')); // void string if multiple replays wich share previous paramteres aren't present
     FileName = FileName.BeforeLast(_T('-'));
@@ -182,20 +177,22 @@ OfflineBattle GetBattleFromScript( const wxString& script_ )
 
         opts.ip         = replayNode->GetString( _T("HostIP") );
         opts.port       = replayNode->GetInt  ( _T("HostPort"), DEFAULT_EXTERNAL_UDP_SOURCE_PORT );
+        opts.spectators = 0;
 
-        int playernum = replayNode->GetInt  ( _T("NumPlayers"), 1);
+        int playernum = replayNode->GetInt  ( _T("NumPlayers"), 0);
         int allynum = replayNode->GetInt  ( _T("NumAllyTeams"), 1);
         int teamnum = replayNode->GetInt  ( _T("NumTeams"), 1);
 
         //[PLAYERX] sections
         for ( int i = 0; i < playernum ; ++i ){
-            PDataList player ( script->Find(_T("PLAYER") + i2s(i) ) );
+            PDataList player ( replayNode->Find( _T("PLAYER") + i2s(i) ) );
             if ( player.ok() ) {
                 OfflineUser user ( player->GetString( _T("name") ), wxEmptyString, 0);
                 UserBattleStatus status;
                 //how to convert back?
                 user.SetSideName( player->GetString( _T("side") ) );
                 status.spectator = player->GetInt( _T("Spectator"), 0 );
+                opts.spectators += status.spectator;
                 status.team = player->GetInt( _T("team") );
 
                 user.UpdateBattleStatus( status );
