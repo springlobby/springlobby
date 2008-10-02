@@ -950,8 +950,6 @@ springlobby_SOURCES += \
 	src/settings++/helpmenufunctions.cpp 
 
 springsettings_SOURCES = \
-	src/utils.cpp \
-	src/utils.h \
 	src/crashreport.cpp \
 	src/crashreport.h \
 	src/spinctld.h \

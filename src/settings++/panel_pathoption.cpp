@@ -15,6 +15,7 @@
 #include <wx/dir.h>
 #include <wx/file.h>
 #include <wx/stdpaths.h>
+#include <wx/dynlib.h>
 
 #include "se_utils.h"
 #include "Defs.hpp"
@@ -22,7 +23,7 @@
 #include "se_settings.h"
 #include "../nonportable.h"
 #include "../springunitsynclib.h"
-#include "../utils.h"
+#include "se_utils.h"
 
 
 #include "custom_dialogs.h"
@@ -71,7 +72,8 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 
 void PathOptionPanel::SetUsyncPath(wxCommandEvent& event)
 {
-  wxFileDialog pic( this, _("Choose an unitsync library"), OptionsHandler.getSpringDir(), _T("unitsync") + GetLibExtension(), wxString(_T("Library")) + _T("(*") + GetLibExtension() + _T(")|*") + GetLibExtension() + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
+  wxString lib_ext = wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
+  wxFileDialog pic( this, _("Choose an unitsync library"), OptionsHandler.getSpringDir(), _T("unitsync") + lib_ext, wxString(_T("Library")) + _T("(*") + lib_ext + _T(")|*") + lib_ext + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
 	  if ( pic.ShowModal() == wxID_OK )
 		  usync_ctrl->SetValue( pic.GetPath() );
 }

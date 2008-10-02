@@ -70,10 +70,10 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindo
 
   m_exec_def_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Default location."),
 					wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
-  m_exec_def_radio->SetToolTip(_("The Spring executable is installed in the default location"));
+  m_exec_def_radio->SetToolTip(TE(_("The Spring executable is installed in the default location")));
 
   m_exec_spec_radio = new wxRadioButton( this, SPRING_DEFEXE, _("Specify:") );
-  m_exec_spec_radio->SetToolTip(_("Specify the location of the Spring executable"));
+  m_exec_spec_radio->SetToolTip(TE(_("Specify the location of the Spring executable")));
 
   m_exec_loc_text = new wxStaticText( this, -1, _("Location") );
   m_exec_edit = new wxTextCtrl( this, -1, sett().GetSpringLoc() );
@@ -86,7 +86,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindo
   m_sync_box = new wxStaticBox( this, -1, _("UnitSync library") );
   m_sync_def_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Default location."),
 					wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
-  m_sync_def_radio->SetToolTip(_("The UnitSync library is installed in the default location"));
+  m_sync_def_radio->SetToolTip(TE(_("The UnitSync library is installed in the default location")));
 
   m_sync_spec_radio = new wxRadioButton( this, SPRING_DEFUSYNC, _("Specify:") );
   m_sync_edit = new wxTextCtrl( this, -1, sett().GetUnitSyncLoc() );
@@ -102,15 +102,15 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindo
 
   m_web_def_radio = new wxRadioButton( this, SPRING_DEFWEB, _("Default Browser."),
 				       wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
-  m_web_def_radio->SetToolTip(_("Use your system-wide browser preference"));
+  m_web_def_radio->SetToolTip(TE(_("Use your system-wide browser preference")));
 
   m_web_spec_radio = new wxRadioButton( this, SPRING_DEFWEB, _("Specify:") );
-  m_web_spec_radio->SetToolTip(_("Specify the web browser you want to use"));
+  m_web_spec_radio->SetToolTip(TE(_("Specify the web browser you want to use")));
 
   m_web_edit = new wxTextCtrl( this, -1, sett().GetWebBrowserPath() );
 
   m_web_browse_btn = new wxButton( this, SPRING_WEBBROWSE, _("Browse") );
-  m_web_browse_btn->SetToolTip(_("Use a file dialog to find the web browser"));
+  m_web_browse_btn->SetToolTip(TE(_("Use a file dialog to find the web browser")));
 
   m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _("Auto Configure") );
 
