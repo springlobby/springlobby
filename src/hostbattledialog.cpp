@@ -59,7 +59,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_desc_sizer->Add( m_desc_lbl, 1, wxALL, 5 );
 
 	m_desc_text = new wxTextCtrl( this, wxID_ANY, sett().GetLastHostDescription(), wxDefaultPosition, wxDefaultSize, 0 );
-	m_desc_text->SetToolTip( _("A short description of the game, this will show up in the battle list.") );
+	m_desc_text->SetToolTip( TE(_("A short description of the game, this will show up in the battle list.")) );
 
 	m_desc_sizer->Add( m_desc_text, 2, wxALL, 5 );
 
@@ -74,7 +74,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 
 	wxArrayString m_mod_picChoices;
 	m_mod_pic = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_mod_picChoices, 0 );
-	m_mod_pic->SetToolTip( _("Select the mod to play with.") );
+	m_mod_pic->SetToolTip( TE(_("Select the mod to play with.")) );
 
 	m_mod_sizer->Add( m_mod_pic, 2, wxALL, 5 );
 
@@ -88,7 +88,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_pwd_sizer->Add( m_pwd_lbl, 1, wxALL, 5 );
 
 	m_pwd_text = new wxTextCtrl( this, wxID_ANY, sett().GetLastHostPassword(), wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
-	m_pwd_text->SetToolTip( _("Password needed to join game. Keep empty for no password") );
+	m_pwd_text->SetToolTip( TE(_("Password needed to join game. Keep empty for no password")) );
 
 	m_pwd_sizer->Add( m_pwd_text, 1, wxALL, 5 );
 	m_pwd_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
@@ -103,7 +103,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_port_sizer->Add( m_port_lbl, 1, wxALL, 5 );
 
 	m_port_text = new wxTextCtrl( this, wxID_ANY, wxString::Format( _T("%d"), sett().GetLastHostPort()), wxDefaultPosition, wxDefaultSize, 0 );
-	m_port_text->SetToolTip( _("UDP port to host game on. Default is 8452.") );
+	m_port_text->SetToolTip( TE(_("UDP port to host game on. Default is 8452.")) );
 
 	m_port_sizer->Add( m_port_text, 1, wxALL, 5 );
 
@@ -119,7 +119,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 
 	m_players_box->SetMinSize( wxSize( -1,60 ) );
 	m_players_slide = new wxSlider( this, wxID_ANY, sett().GetLastHostPlayerNum(), 2, 32, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_BOTH|wxSL_HORIZONTAL|wxSL_LABELS );
-	m_players_slide->SetToolTip( _("The maximum number of players to allow in the battle.") );
+	m_players_slide->SetToolTip( TE(_("The maximum number of players to allow in the battle.")) );
 	m_players_box->Add( m_players_slide, 0, wxALL|wxEXPAND, 5 );
 
 	m_main_sizer->Add( m_players_box, 0, wxALL|wxEXPAND, 5 );
@@ -135,7 +135,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	//m_nat_radios->Enable( false );
   m_nat_radios->Enable( true );
 
-	m_nat_radios->SetToolTip( _("NAT traversal to use. Experimental support.") );
+	m_nat_radios->SetToolTip( TE(_("NAT traversal to use. Experimental support.")) );
 
 	m_pl_nat_sizer->Add( m_nat_radios, 1, wxALL|wxEXPAND, 5 );
 
@@ -206,7 +206,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
 	m_host_btn = new wxButton( this, HOST_OK, _("Host"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_host_btn->SetToolTip( _("Start hosting the battle.") );
+	m_host_btn->SetToolTip( TE(_("Start hosting the battle.")) );
 
 	m_buttons_sizer->Add( m_host_btn, 0, wxALL, 5 );
 
