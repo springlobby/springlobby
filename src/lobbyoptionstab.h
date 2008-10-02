@@ -22,10 +22,12 @@ class LobbyOptionsTab : public wxScrolledWindow
         wxCheckBox* m_autojoin;
         wxCheckBox* m_reportstats;
         wxCheckBox* m_updater;
+        wxCheckBox* m_show_tooltips;
 
         wxStaticText* m_autoconnect_label;
         wxStaticText* m_reportstats_label;
         wxStaticText* m_updater_label;
+        wxStaticText* m_show_tooltips_label;
 
         wxBoxSizer* m_main_sizer;
 
