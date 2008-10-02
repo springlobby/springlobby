@@ -64,6 +64,7 @@ class SpringUnitSync : public IUnitSync
     wxArrayString GetUnitsList( const wxString& modname );
 
     wxImage GetMinimap( const wxString& mapname, int width, int height );
+    wxImage GetMetalmap( const wxString& mapname, int width, int height );
 
     bool ReloadUnitSyncLib();
 
