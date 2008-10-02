@@ -16,7 +16,7 @@ class wxConfigBase;
 
 
 #include <wx/fileconf.h>
-#include "../utils.h"
+#include "se_utils.h"
 #include <wx/wfstream.h>
 
 class se_settings
@@ -42,7 +42,7 @@ class se_settings
 
         bool DoWriteLong(const wxString& key, long lValue)
         {
-            return wxFileConfig::DoWriteString(key, TowxString<long>( lValue ) );
+            return wxFileConfig::DoWriteString(key, towxString<long>( lValue ) );
         }
     };
 
