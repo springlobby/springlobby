@@ -29,6 +29,16 @@
 typedef std::pair<wxString,bool> colInfo;
 typedef std::vector<colInfo> colInfoVec;
 
+#if wxUSE_TIPWINDOW
+class SLTipWindow : public wxTipWindow{
+    public:
+        SLTipWindow(wxWindow *parent, const wxString &text)
+            :wxTipWindow(parent,text){};
+        void Cancel(wxMouseEvent& event);
+
+        DECLARE_EVENT_TABLE()
+};
+#endif
 
 /** \brief Used as base class for all ListCtrls throughout SL
  * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
@@ -45,8 +55,8 @@ protected:
     wxString    m_tiptext;
     #if wxUSE_TIPWINDOW
     //! some wx implementations do not support this yet
-    wxTipWindow* m_tipwindow;
-    wxTipWindow** controlPointer;
+    SLTipWindow* m_tipwindow;
+    SLTipWindow** controlPointer;
     #endif
     int coloumnCount;
 
@@ -149,5 +159,6 @@ public:
 
     DECLARE_EVENT_TABLE()
 };
+
 
 #endif /*CUSTOMLISTITEM_H_*/

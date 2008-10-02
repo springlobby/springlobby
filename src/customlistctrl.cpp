@@ -3,6 +3,18 @@
 #include "settings.h"
 #include <wx/colour.h>
 #include "iconimagelist.h"
+#include "settings++/custom_dialogs.h"
+
+#if wxUSE_TIPWINDOW
+BEGIN_EVENT_TABLE(SLTipWindow, wxTipWindow)
+    EVT_MOUSEWHEEL(SLTipWindow::Cancel)
+END_EVENT_TABLE()
+
+void SLTipWindow::Cancel(wxMouseEvent& event)
+{
+    wxTipWindow::Close();
+}
+#endif
 
 BEGIN_EVENT_TABLE(customListCtrl, ListBaseType)
 #if wxUSE_TIPWINDOW
@@ -135,9 +147,9 @@ void customListCtrl::OnTimer(wxTimerEvent& event)
 
         if (!m_tiptext.empty())
         {
-            m_tipwindow = new wxTipWindow(this, m_tiptext);
+            m_tipwindow = new SLTipWindow(this, m_tiptext);
             controlPointer = &m_tipwindow;
-            m_tipwindow->SetTipWindowPtr(controlPointer);
+            m_tipwindow->SetTipWindowPtr((wxTipWindow**)controlPointer);
 #ifndef __WXMSW__
             m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
 #endif
@@ -269,7 +281,14 @@ bool customListCtrl::SetColumnWidth(int col, int width)
 
 void customListCtrl::noOp(wxMouseEvent& event)
 {
-	m_tiptext = _T("");
+    m_tiptext = wxEmptyString;
+//            tipTimer.Stop();
+//            if (controlPointer!= 0 && *controlPointer!= 0)
+//            {
+//                m_tipwindow->Close();
+//                m_tipwindow = 0;
+//            }
+	event.Skip();
 }
 
 void customListCtrl::UpdateHighlights()

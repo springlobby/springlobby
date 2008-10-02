@@ -72,7 +72,7 @@ wxSizer* ManageGroupsPanel::GetGroupSizer( const wxString& group )
         if ( act != UserActions::ActNone )
             chk->SetValue( ( act &  act1 ) != 0 );
         wxString tt = m_actionTooltips[i];
-        chk->SetToolTip( tt );
+        chk->SetToolTip( TE(tt) );
         actionsBox->Add( chk );
     }
     gBox->Add( actionsBox, 0, wxALL|wxEXPAND, 10 );

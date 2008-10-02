@@ -118,11 +118,11 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menuTools->AppendSeparator();
   m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
 
-  #if defined(__WXMSW__)
+
   m_menuTools->AppendSeparator();
   m_menuTools->AppendCheckItem(MENU_SHOW_TOOLTIPS, _("Show tooltips") );
   m_menuTools->Check( MENU_SHOW_TOOLTIPS, sett().GetShowTooltips() );
-  #endif
+
 
   #ifndef NO_TORRENT_SYSTEM
   m_menuTools->AppendSeparator();
