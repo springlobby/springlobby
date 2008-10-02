@@ -49,7 +49,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 #ifndef __WXMSW__ // on windows this change is immediate
     m_show_tooltips_sizer->Add( m_show_tooltips_label, 1, wxEXPAND|wxALL, 5);
 #endif
-    m_show_tooltips_sizer->Add( m_updater, 0, wxEXPAND|wxALL, 5);
+    m_show_tooltips_sizer->Add( m_show_tooltips, 0, wxEXPAND|wxALL, 5);
 
     m_main_sizer->Add( m_show_tooltips_sizer, 0, wxALL, 15 );
 
