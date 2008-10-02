@@ -41,11 +41,14 @@ class ReplayTab : public wxPanel
     //! add all replays in m_replays to listctrl
     void AddAllReplays();
     void RemoveAllReplays();
+    void ReloadList();
 
     void UpdateList();
 
     //! calls ui::watch which executes spring
     void OnWatch( wxCommandEvent& event );
+    //! clears list and parses all replays anew
+    void OnReload( wxCommandEvent& event );
     //! does nothing yet
     void OnDelete( wxCommandEvent& event );
         //! does nothing yet
@@ -73,6 +76,7 @@ class ReplayTab : public wxPanel
     wxStaticLine* m_buttons_sep;
     wxButton* m_watch_btn;
     wxButton* m_delete_btn;
+    wxButton* m_reload_btn;
 
     UserListctrl* m_players;
 
@@ -94,6 +98,7 @@ enum
 {
     REPLAY_WATCH = wxID_HIGHEST,
     REPLAY_DELETE,
+    REPLAY_RELOAD,
     REPLAY_LIST,
     REPLAY_LIST_FILTER_BUTTON,
     REPLAY_LIST_FILTER_ACTIV

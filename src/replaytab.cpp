@@ -35,6 +35,7 @@
 BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
 
   EVT_BUTTON              ( REPLAY_WATCH             , ReplayTab::OnWatch        )
+  EVT_BUTTON              ( REPLAY_RELOAD             , ReplayTab::OnReload        )
 //  EVT_LIST_ITEM_ACTIVATED ( REPLAY_DELETE            , ReplayTab::OnDelete    )
   EVT_LIST_ITEM_SELECTED  ( wxID_ANY               , ReplayTab::OnSelect      )
   EVT_CHECKBOX            ( REPLAY_LIST_FILTER_ACTIV , ReplayTab::OnFilterActiv )
@@ -140,6 +141,9 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
     m_delete_btn = new wxButton( this, REPLAY_DELETE, _("Delete"), wxDefaultPosition, wxSize( -1,28 ), 0 );
     m_buttons_sizer->Add( m_delete_btn, 0, wxBOTTOM|wxRIGHT, 5 );
+
+    m_reload_btn = new wxButton( this, REPLAY_RELOAD, _("Reload list"), wxDefaultPosition, wxSize( -1,28 ), 0 );
+    m_buttons_sizer->Add( m_reload_btn, 0, wxBOTTOM|wxRIGHT, 5 );
 
     m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
@@ -347,3 +351,18 @@ void ReplayTab::OnSelect( wxListEvent& event )
     }
 }
 
+void ReplayTab::ReloadList()
+{
+    wxDateTime dt = wxDateTime::UNow();
+    RemoveAllReplays();
+    AddAllReplays();
+    long sec = (wxDateTime::UNow() - dt).GetSeconds().ToLong();
+    if ( sec > 0 )
+        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d seconds"),sec ) );
+}
+
+void ReplayTab::OnReload( wxCommandEvent& event )
+{
+    //stop timer
+    ReloadList();
+}
