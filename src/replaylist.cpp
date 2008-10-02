@@ -172,6 +172,7 @@ OfflineBattle GetBattleFromScript( const wxString& script_ )
         battle.SetHostMod( modname, modhash );
 
         //don't have the maphash, what to do?
+        //ui download function works with mapname if hash is empty, so works for now
         opts.mapname    = replayNode->GetString( _T("Mapname") );
         battle.SetHostMap( opts.mapname, wxEmptyString );
 

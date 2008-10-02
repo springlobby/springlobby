@@ -123,22 +123,23 @@ void ReplayListCtrl::OnListRightClick( wxListEvent& event )
 
 void ReplayListCtrl::OnDLMap( wxCommandEvent& event )
 {
-  if ( m_selected != -1 ) {
-    if ( m_replaylist.ReplayExists(m_selected) ) {
-        // TODO (koshi) call start torrent download from hash
-      //ui().DownloadMap( m_replaylist.GetReplay(m_selected).MapName );
+    if ( m_selected != -1 ) {
+        if ( m_replaylist.ReplayExists(m_selected) ) {
+            OfflineBattle battle = m_replaylist.GetReplay(m_selected).battle;
+            ui().DownloadMap( battle.GetHostMapHash(), battle.GetHostMapName() );
+        }
     }
-  }
 }
 
 
 void ReplayListCtrl::OnDLMod( wxCommandEvent& event )
 {
-//  if ( m_selected != -1 ) {
-//    if ( ui().GetServer().replays_iter->ReplayExists(m_selected) ) {
-//      ui().DownloadMod( ui().GetServer().replays_iter->GetReplay(m_selected).ModName );
-//    }
-//  }
+    if ( m_selected != -1 ) {
+        if ( m_replaylist.ReplayExists(m_selected) ) {
+            OfflineBattle battle = m_replaylist.GetReplay(m_selected).battle;
+            ui().DownloadMod( battle.GetHostModHash(), battle.GetHostModName() );
+        }
+    }
 }
 
 

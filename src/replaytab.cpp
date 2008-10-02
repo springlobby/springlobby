@@ -337,6 +337,7 @@ void ReplayTab::OnSelect( wxListEvent& event )
         m_minimap->UpdateMinimap();
 //        m_players->RemoveUsers();
 //        m_players->AddUser(
+        m_watch_btn->Enable( rep.battle.MapExists() && rep.battle.ModExists() );
     }
 }
 
