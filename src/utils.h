@@ -149,4 +149,9 @@ class uninitialized_array
     T* elems;
 };
 
+/** @brief when setting tooltips use output of this func as input
+    it outputs empty string if tooltips are disabled in SL settings
+*/
+const wxString TT(const char* input);
+
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H

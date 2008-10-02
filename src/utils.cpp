@@ -33,7 +33,8 @@
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
 #endif
-
+#include <wx/intl.h>
+#include "settings.h"
 
 wxString GetLibExtension()
 {
@@ -272,4 +273,9 @@ bool IsValidNickname( const wxString& _name )
 	name.Replace( _T("]"), _T("") );
 
     return !regex.Matches( name );
+}
+
+const wxString TT(const char* input)
+{
+    return sett().GetShowTooltips() ? wxGetTranslation((const wxChar*)input) : _("");
 }
