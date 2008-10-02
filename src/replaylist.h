@@ -65,7 +65,7 @@ class ReplayList
     void RemoveReplay( replay_id_t const& id );
 
     Replay GetReplayById( replay_id_t const& id );
-    Replay GetReplay( int const index ) ;
+    Replay& GetReplay( int const index ) ;
 
     bool ReplayExists( replay_id_t const& id );
     replay_map_t::size_type GetNumReplays();

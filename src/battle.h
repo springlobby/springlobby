@@ -290,6 +290,7 @@ class OfflineBattle : public CommonBattle
         void SetBotHandicap( const wxString& nick, int handicap );
 
         void SetBattleOptions( const BattleOptions& options ) { m_opts = options;}
+        user_map_t::size_type GetNumUsers() const { return m_participants.size(); }
 
     protected:
         std::vector<OfflineUser> m_participants;

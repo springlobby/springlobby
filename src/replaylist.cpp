@@ -50,7 +50,7 @@ Replay ReplayList::GetReplayById( replay_id_t const& id ) {
   return b->second;
 }
 
-Replay ReplayList::GetReplay( int const index ) {
+Replay& ReplayList::GetReplay( int const index ) {
 //TODO secure index
   replay_iter_t b = m_replays.begin();
   std::advance(b,index);

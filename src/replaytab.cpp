@@ -328,7 +328,7 @@ void ReplayTab::OnSelect( wxListEvent& event )
     } else {
         int index = event.GetIndex();
         long data = m_replay_listctrl->GetItemData( index );
-        Replay rep = m_replays->GetReplay( data );
+        Replay& rep = m_replays->GetReplay( data );
         m_sel_replay_id = rep.id;
         m_players_text->SetLabel(_T(""));
         m_map_text->SetLabel(rep.battle.GetHostMapName());
@@ -337,7 +337,9 @@ void ReplayTab::OnSelect( wxListEvent& event )
         m_minimap->UpdateMinimap();
 //        m_players->RemoveUsers();
 //        m_players->AddUser(
-        m_watch_btn->Enable( rep.battle.MapExists() && rep.battle.ModExists() );
+
+        //aisn't working atm
+        //m_watch_btn->Enable( rep.battle.MapExists() && rep.battle.ModExists() );
     }
 }
 
