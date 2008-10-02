@@ -275,7 +275,7 @@ bool IsValidNickname( const wxString& _name )
     return !regex.Matches( name );
 }
 
-const wxString TT(const char* input)
+const wxChar* TooltipEnable(const wxChar* input)
 {
-    return sett().GetShowTooltips() ? wxGetTranslation((const wxChar*)input) : _("");
+    return sett().GetShowTooltips() ? input : _("");
 }
