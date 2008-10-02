@@ -162,6 +162,8 @@ class ChatPanel : public wxPanel
 	void OnUserMenuCreateGroup( wxCommandEvent& event );
 	void UpdateNicklistHighlights();
 
+	void SortNickList();
+
   protected:
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );

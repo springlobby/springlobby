@@ -1,20 +1,19 @@
 # get revision and put into config.h
-EXECUTE_PROCESS(COMMAND ${SpringLobby_SOURCE_DIR}/tools/get-revision.sh 
-        OUTPUT_VARIABLE SPRINGLOBBY_REV         
+EXECUTE_PROCESS(COMMAND ${SpringLobby_SOURCE_DIR}/tools/get-revision.sh
+        OUTPUT_VARIABLE SPRINGLOBBY_REV
         RESULT_VARIABLE GIT_ERROR
         OUTPUT_STRIP_TRAILING_WHITESPACE)
-        
+
 #don't write when git errored out resulting in unset version (ie when compiling from tarball)
 IF ( NOT GIT_ERROR)
-    CONFIGURE_FILE( ${SpringLobby_SOURCE_DIR}/cmake/config.h ${SpringLobby_SOURCE_DIR}/config.h )
+    CONFIGURE_FILE( ${SpringLobby_SOURCE_DIR}/cmake/config.h ${SpringLobby_BINARY_DIR}/config.h )
 ENDIF ( NOT GIT_ERROR)
 
 #if nothing went wrong we have the file and can define HAVE_CONFIG_H
-EXECUTE_PROCESS(COMMAND "if [ ! -e ${SpringLobby_SOURCE_DIR}/config.h ]; then exit 1; fi" 
-                RESULT_VARIABLE CONFIG_MISSING )
-IF (NOT CONFIG_MISSING )
+IF ( EXISTS ${SpringLobby_BINARY_DIR}/config.h )
     ADD_DEFINITIONS( -DHAVE_CONFIG_H )
-ENDIF (NOT CONFIG_MISSING )
+    INCLUDE_DIRECTORIES(${SpringLobby_BINARY_DIR})
+ENDIF ( EXISTS ${SpringLobby_BINARY_DIR}/config.h )
 
 IF (WIN32)
     SET(CPACK_GENERATOR "ZIP")
@@ -52,5 +51,5 @@ set(CPACK_SOURCE_IGNORE_FILES
 "^${SpringLobby_SOURCE_DIR}/auto*"
 "^${SpringLobby_SOURCE_DIR}/doc/"
 "^${SpringLobby_SOURCE_DIR}/m4/"
-        "^${SpringLobby_SOURCE_DIR}/obj/"
+"^${SpringLobby_SOURCE_DIR}/obj/"
 )

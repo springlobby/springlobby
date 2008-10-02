@@ -19,10 +19,11 @@
 #include <wx/string.h>
 #include <wx/dir.h>
 #include <wx/file.h>
-#include "../utils.h"
+#include <wx/dynlib.h>
+
 #include "presets.h"
 #include "custom_dialogs.h"
-//#include <string>
+
 
 
 se_settings* se_settings::instance = 0;
@@ -287,10 +288,11 @@ if ( programreg->QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
 
   for ( size_t i = 0; i < pl.GetCount(); i++ ) {
     wxString path = pl[i];
+    wxString lib_ext = wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
     if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
-    if ( IsUnitSyncLib( path + _T("unitsync") + GetLibExtension() ) ) return path + _T("unitsync") + GetLibExtension();
-    if ( IsUnitSyncLib( path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
-    if ( IsUnitSyncLib( path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+    if ( IsUnitSyncLib( path + _T("unitsync") + lib_ext ) ) return path + _T("unitsync") + lib_ext;
+    if ( IsUnitSyncLib( path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + lib_ext ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + lib_ext;
+    if ( IsUnitSyncLib( path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + lib_ext ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + lib_ext;
   }
 
   return def;

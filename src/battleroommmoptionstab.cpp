@@ -76,7 +76,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		{
 			mmOptionBool current = i->second;
 			wxCheckBox* temp = new wxCheckBox(this,BOOL_START_ID+ctrl_count,current.name);
-			temp->SetToolTip(current.description);
+			temp->SetToolTip(TE(current.description));
 			temp->SetName(pref+current.key);
 			m_chkbox_map[pref+current.key] = temp;
 			temp->SetValue(current.value);
@@ -93,7 +93,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 			tempspin->Create(this, FLOAT_START_ID+ctrl_count, _T(""),
 					wxDefaultPosition, wxDefaultSize, 0, double(current.min), double(current.max),
 					double(current.value),double(current.stepping), wxSPINCTRLDBL_AUTODIGITS, current.key);
-			tempspin->SetToolTip(current.description);
+			tempspin->SetToolTip(TE(current.description));
 			tempspin->Enable(enable);
 			tempspin->SetName(pref+current.key);
 			m_spinctrl_map[pref+current.key] = tempspin;
@@ -114,7 +114,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[index], wxDefaultPosition,
 				wxDefaultSize, current.cbx_choices, wxCB_READONLY, wxDefaultValidator);
 
-		tempchoice->SetToolTip(current.description);
+		tempchoice->SetToolTip(TE(current.description));
 		tempchoice->SetName(pref+current.key);
 		tempchoice->Enable(enable);
 		m_combox_map[pref+current.key] = tempchoice;
@@ -132,7 +132,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		mmOptionString current = it->second;
 		wxTextCtrl* temptext = new wxTextCtrl(this, STRING_START_ID+ctrl_count, current.value, wxDefaultPosition,
 				wxDefaultSize, 0, wxDefaultValidator, current.key);
-		temptext->SetToolTip(current.description);
+		temptext->SetToolTip(TE(current.description));
 		temptext->SetName(pref+current.key);
 		temptext->Enable(enable);
 		m_textctrl_map[pref+current.key] = temptext;

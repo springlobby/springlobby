@@ -60,7 +60,8 @@ const int minboxsize = 40;
 
 MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
-  m_image(0),
+  m_minimap(0),
+  m_metalmap(0),
   m_battle(battle),
   m_ui(ui),
   m_mapname(_T("")),
@@ -83,7 +84,8 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool read
   m_nfound_img(0),
   m_reload_img(0),
   m_dl_img(0),
-  m_bot_expanded(-1)
+  m_bot_expanded(-1),
+  m_current_infomap(IM_Minimap)
 {
   SetBackgroundStyle( wxBG_STYLE_CUSTOM );
   SetBackgroundColour( *wxLIGHT_GREY );
@@ -118,17 +120,17 @@ void MapCtrl::SetBattle( IBattle* battle )
 
 wxRect MapCtrl::GetMinimapRect()
 {
-  if ( m_image == 0 ) return wxRect();
+  if ( m_minimap == 0 ) return wxRect();
 
   int cwidth, cheight, top = 0, left = 0;
   GetClientSize( &cwidth, &cheight );
 
-  if ( m_image->GetWidth() < cwidth ) {
-    left = (cwidth - m_image->GetWidth()) / 2;
+  if ( m_minimap->GetWidth() < cwidth ) {
+    left = (cwidth - m_minimap->GetWidth()) / 2;
   } else {
-    top = (cheight - m_image->GetHeight()) / 2;
+    top = (cheight - m_minimap->GetHeight()) / 2;
   }
-  return wxRect( left, top, m_image->GetWidth(), m_image->GetHeight() );
+  return wxRect( left, top, m_minimap->GetWidth(), m_minimap->GetHeight() );
 }
 
 
@@ -203,7 +205,7 @@ void MapCtrl::SetMouseOverRect( int index )
 
 void MapCtrl::_SetCursor()
 {
-  if ( !m_image ) {
+  if ( !m_minimap ) {
     if ( m_rect_area != RA_Main ) SetCursor( wxCursor( wxCURSOR_HAND ) );
     else SetCursor( wxCursor( wxCURSOR_ARROW ) );
     return;
@@ -292,41 +294,41 @@ void MapCtrl::LoadMinimap()
 {
   wxLogDebugFunc( _T("") );
   if ( m_battle == 0 ) return;
-  if ( m_image ) return;
+  if ( m_minimap ) return;
   if ( !m_battle->MapExists() ) return;
 
   wxString map = m_battle->GetHostMapName();
+
   try {
     int w, h;
     GetClientSize( &w, &h );
     if ( w * h == 0 ) {
-      m_image = 0;
       m_mapname = _T("");
       m_lastsize = wxSize( -1, -1 );
       return;
     }
-    wxImage img = usync().GetMinimap( map, w, h );
-    m_image = new wxBitmap( img );
+    m_minimap = new wxBitmap( usync().GetMinimap( map, w, h ) );
+    if (usync().VersionSupports(USYNC_GetInfoMap)) {
+      m_metalmap = new wxBitmap( usync().GetMetalmap( map, w, h ) );
+    }
     m_mapname = map;
     m_lastsize = wxSize( w, h );
     Refresh();
     Update();
   } catch (...) {
-    m_image = 0;
-    m_mapname = _T("");
+    FreeMinimap();
   }
   if ( m_sp ) RelocateBots();
-
 }
 
 
 void MapCtrl::FreeMinimap()
 {
-  if ( m_image ) {
-    delete m_image;
-    m_image = 0;
-    m_mapname = _T("");
-  }
+  delete m_minimap;
+  m_minimap = 0;
+  delete m_metalmap;
+  m_metalmap = 0;
+  m_mapname = _T("");
 }
 
 
@@ -442,7 +444,7 @@ void MapCtrl::DrawBackground( wxDC& dc )
   }
 
   // Draw minimap.
-  if ( !m_image ) {
+  if ( !m_minimap ) {
 
     // Draw background.
     dc.DrawRectangle( 0, 0, width, height );
@@ -480,9 +482,16 @@ void MapCtrl::DrawBackground( wxDC& dc )
     }
 
     // Draw minimap
-    dc.DrawBitmap( *m_image, r.x, r.y, false );
+    wxBitmap* img = 0;
+    switch (m_current_infomap) {
+      case IM_Minimap: img = m_minimap; break;
+      case IM_Metalmap: img = m_metalmap; break;
+      default:
+        ASSERT_LOGIC( false, _T("missing InfoMap IM_* enumeration constant in switch") );
+        break;
+    }
+    dc.DrawBitmap( *img, r.x, r.y, false );
   }
-
 }
 
 
@@ -757,7 +766,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 
   if ( m_battle == 0 ) return;
 
-  if ( !m_image ) return;
+  if ( !m_minimap ) return;
 
   if ( m_sp ) {
     DrawSinglePlayer( dc );
@@ -859,7 +868,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     return;
   }
 
-  if ( !m_image ) {
+  if ( !m_minimap ) {
     wxRect r = GetRefreshRect();
     wxRect d = GetDownloadRect();
     RectArea old = m_rect_area;
@@ -981,7 +990,7 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
     return;
   }
 
-  if ( !m_image ) {
+  if ( !m_minimap ) {
     if ( m_rect_area != RA_Main ) {
       m_mdown_area = m_rect_area;
       Refresh();
@@ -1088,7 +1097,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     return;
   }
 
-  if ( !m_image ) {
+  if ( !m_minimap ) {
     if ( m_mdown_area == m_rect_area ) {
       if ( m_mdown_area == RA_Refresh ) {
         m_ui.ReloadUnitSync();
@@ -1143,5 +1152,19 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
 
 void MapCtrl::OnMouseWheel( wxMouseEvent& event )
 {
+  if (usync().VersionSupports(USYNC_GetInfoMap) && m_minimap) {
+    int idx = (int) m_current_infomap;
+    if (event.m_wheelRotation > 0) {
+      ++idx;
+      if (idx >= IM_Count)
+        idx = IM_Minimap;
+    } else {
+      --idx;
+      if (idx < IM_Minimap)
+        idx = IM_Count - 1;
+    }
+    m_current_infomap = (InfoMap) idx;
+    Refresh();
+    Update();
+  }
 }
-

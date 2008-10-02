@@ -45,6 +45,8 @@ class NickListCtrl : public customListCtrl
 
     void HighlightItem( long item );
 
+    void SortList();
+
   protected:
     static int wxCALLBACK ComparePlayernameUP(long item1, long item2, long sortData);
     static int wxCALLBACK ComparePlayernameDOWN(long item1, long item2, long sortData);

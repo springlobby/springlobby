@@ -73,10 +73,10 @@ struct UnitSyncMap
   MapInfo info;
 };
 
-typedef int GameFeature;
-enum {
+enum GameFeature {
   GF_XYStartPos = 1,
-  USYNC_Sett_Handler = 2
+  USYNC_Sett_Handler = 2,
+  USYNC_GetInfoMap = 3
 };
 
 struct GameOptions
@@ -149,6 +149,7 @@ class IUnitSync
 
     virtual int GetMapIndex( const wxString& name ) = 0;
     virtual wxImage GetMinimap( const wxString& mapname, int width, int height ) = 0;
+    virtual wxImage GetMetalmap( const wxString& mapname, int width, int height ) = 0;
 
     virtual int GetSideCount( const wxString& modname ) = 0;
     virtual wxString GetSideName( const wxString& modname, int index ) = 0;
@@ -175,7 +176,6 @@ class IUnitSync
     virtual bool FileExists( const wxString& name ) = 0;
 
     virtual wxString GetArchivePath( const wxString& name ) = 0;
-    virtual wxString GetUnitsyncName( const wxString& hash, const MediaType& archivetype ) = 0;
 };
 
 IUnitSync& usync();

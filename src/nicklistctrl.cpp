@@ -68,7 +68,6 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
   m_sortorder[2].direction = true;
   m_sortorder[3].col = 1;
   m_sortorder[3].direction = true;
-  Sort( );
 
 #if defined(__WXMAC__)
 /// autosize is entirely broken on wxmac.
@@ -102,7 +101,6 @@ void NickListCtrl::AddUser( const UserList& userlist )
 
 void NickListCtrl::AddUser( const User& user )
 {
-  SetSelectionRestorePoint();
   wxLogDebugFunc(_T(""));
   assert(&user);
 
@@ -119,22 +117,18 @@ void NickListCtrl::AddUser( const User& user )
   } catch (...) { return; }
 
   UserUpdated( index );
-  Sort();
   SetColumnWidth( 3, wxLIST_AUTOSIZE );
-  RestoreSelection();
+  MarkDirtySort();
 }
 
 void NickListCtrl::RemoveUser( const User& user )
 {
-  SetSelectionRestorePoint();
-  for (int i = 0; i < GetItemCount() ; i++ ) {
-    if ( &user == (User*)GetItemData( i ) ) {
-      DeleteItem( i );
-      Sort();
+  int index = GetUserIndex( user );
+  if ( index != -1 )
+  {
+      DeleteItem( index );
       SetColumnWidth( 3, wxLIST_AUTOSIZE );
-      RestoreSelection();
       return;
-    }
   }
   wxLogError( _T("Didn't find the user to remove.") );
 }
@@ -154,7 +148,6 @@ void NickListCtrl::UserUpdated( User& user )
 
 void NickListCtrl::UserUpdated( const int& index )
 {
-  SetSelectionRestorePoint();
   User& user = *((User*)GetItemData( index ));
   const UserStatus user_st = user.GetStatus();
   SetItemImage( index, icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 ) );
@@ -164,8 +157,7 @@ void NickListCtrl::UserUpdated( const int& index )
   SetItemData(index, (long)&user );
     //highlight
   HighlightItemUser( index, user.GetNick() );
-  Sort();
-  RestoreSelection();
+  MarkDirtySort();
 }
 
 
@@ -230,7 +222,6 @@ void NickListCtrl::OnColClick( wxListEvent& event )
   GetColumn( m_sortorder[0].col, col );
   col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
-
   Sort();
 }
 
@@ -418,4 +409,11 @@ void NickListCtrl::HighlightItem( long item )
 }
 
 
-
+void NickListCtrl::SortList()
+{
+  if ( !m_dirty_sort ) return;
+  SetSelectionRestorePoint();
+  Sort();
+  RestoreSelection();
+  m_dirty_sort = false;
+}

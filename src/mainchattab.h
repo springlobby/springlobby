@@ -43,6 +43,7 @@ class MainChatTab : public wxPanel
     void ChangeUnreadPMColour( const wxColour& colour );
 
     void UpdateNicklistHighlights();
+    void Update();
 
   protected:
 

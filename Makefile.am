@@ -889,7 +889,9 @@ springlobby_SOURCES = \
 	src/updater/updater.cpp \
 	src/updater/exedownloader.h \
 	src/updater/exedownloader.cpp \
-	src/usermenu.h
+	src/usermenu.h \
+	src/thread.cpp \
+	src/thread.h
 
 
 if USE_WINDRES	
@@ -940,8 +942,6 @@ springlobby_SOURCES += \
 	src/settings++/helpmenufunctions.cpp 
 
 springsettings_SOURCES = \
-	src/utils.cpp \
-	src/utils.h \
 	src/crashreport.cpp \
 	src/crashreport.h \
 	src/spinctld.h \

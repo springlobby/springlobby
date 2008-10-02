@@ -241,14 +241,14 @@ const category_sizes_map_type RO_SLI_entry ( _T("RO_SLI"), sizeof(RO_SLI) / Cont
 const Control VO_CBOX[] = {
 	{_("Run full-screen"),                _T("Fullscreen"),              ID_WINDOWP_VO_CBOX_0,	_T("1"), {_("run fullscreen or in a window?")}},
 	{_("Dual-screen mode"),               _T("DualScreenMode"),          ID_WINDOWP_VO_CBOX_1,	_T("0"), {_("if you have two monitors you can use both")}},
-	{_("Enable v-sync"),                  _T("VSync"),                   ID_WINDOWP_VO_CBOX_2,	_T("1"), {_("V-Sync on/off")}}
+	{_("Enable v-sync"),                  _T("VSync"),                   ID_WINDOWP_VO_CBOX_2,	_T("0"), {_("V-Sync on/off")}}
 };
 
 const category_sizes_map_type VO_CBOX_entry ( _T("VO_BOX"), sizeof(VO_CBOX) / Control_size );
 
 const Control VO_RBUT[] = {
-	{_("16-bit Z-buffer"), _T("DepthBufferBits"), ID_WINDOWP_VO_RBUT_0,	_T("16"), {_("placeholder")}},
-	{_("24-bit Z-buffer"), _T("DepthBufferBits"), ID_WINDOWP_VO_RBUT_1,	_T("16"), {_("placeholder")}}
+	{_("16-bit Z-buffer"), _T("DepthBufferBits"), ID_WINDOWP_VO_RBUT_0,	_T("24"), {_("placeholder")}},
+	{_("24-bit Z-buffer"), _T("DepthBufferBits"), ID_WINDOWP_VO_RBUT_1,	_T("24"), {_("placeholder")}}
 };
 
 const category_sizes_map_type VO_RBUT_entry ( _T("VO_RBUT"), sizeof(VO_RBUT) / Control_size );
@@ -285,7 +285,7 @@ const Control QA_CBOX[] = {
 	{_("Dynamic clouds (slow)"),                           _T("DynamicSky"),          ID_WINDOWP_QA_CBOX_3,	_T("0"), {_("want moving clouds in the sky?")}},
 	{_("Reflective units"),       _T("AdvUnitShading"),      ID_WINDOWP_QA_CBOX_4,	_T("0"), {_("shiny units?\n"
 														"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card")}},
-	{_("Never use shaders when rendering SM3 maps"),       _T("SM3ForceFallbackTex"), ID_WINDOWP_QA_CBOX_5,	_T("1"), {_("problems with sm3 maps? enable this")}},
+	{_("Never use shaders when rendering SM3 maps"),       _T("SM3ForceFallbackTex"), ID_WINDOWP_QA_CBOX_5,	_T("0"), {_("problems with sm3 maps? enable this")}},
 	{_("Enable LuaShaders support"),                       _T("LuaShaders"),          ID_WINDOWP_QA_CBOX_6,	_T("1"), {_("makes for some cool effects")}},
 	{_("Use Pixelbuffer objects"),                       _T("UsePBO"),          ID_WINDOWP_QA_CBOX_7,	_T("0"), {_("If supported, it speeds up the dynamic loading of terrain textures -> smoother camera movement")}},
 	{_("Compress textures"),                                _T("CompressTextures"),ID_WINDOWP_QA_CBOX_8,	_T("0"), {_("Runtime texture compression. (Ideal for graphic cards with small amount of vram)")}},

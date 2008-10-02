@@ -4,6 +4,7 @@
 #include <wx/string.h>
 
 #include <wx/event.h>
+#include "thread.h"
 
 class iNetClass;
 class Socket;
@@ -112,6 +113,7 @@ class Socket
  * When you want it killed, call Wait() method.
  * Dont call other methods, especially the Destroy() method.
  */
+ /*
 class PingThread: public wxThread
 {
   public:
@@ -123,6 +125,16 @@ class PingThread: public wxThread
     Socket& m_sock;
     wxSemaphore m_thread_sleep_semaphore;
 
+    void* Entry();
+    void OnExit();
+};*/
+class PingThread: public Thread
+{
+  public:
+    PingThread( Socket& sock );
+    void Init();
+    private:
+    Socket& m_sock;
     void* Entry();
     void OnExit();
 };
