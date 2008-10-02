@@ -4,7 +4,6 @@
 #include "config.h"
 #endif
 
-#include "../images/springsettings.xpm"
 #include <wx/icon.h>
 
 #include "custom_dialogs.h"
