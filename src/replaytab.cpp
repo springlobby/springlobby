@@ -6,14 +6,15 @@
 #include <wx/button.h>
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
-#include <stdexcept>
+#include <wx/filename.h>
 #if wxUSE_TOGGLEBTN
-#include <wx/tglbtn.h>
+    #include <wx/tglbtn.h>
 #endif
+
+#include <stdexcept>
 
 #include "replaytab.h"
 #include "replaylistctrl.h"
-
 #include "ui.h"
 #include "chatpanel.h"
 #include "utils.h"
@@ -149,6 +150,9 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
     AddAllReplays();
 
+    //none selected --> shouldn't watch that
+    m_watch_btn->Enable( false );
+
 }
 
 
@@ -170,32 +174,19 @@ void ReplayTab::AddAllReplays()
 
 void ReplayTab::AddReplay( Replay& replay ) {
 
-//  if ( m_filter->GetActiv() && !m_filter->Filterreplay( replay ) ) {
-//    return;
-//  }
-  int index = m_replay_listctrl->InsertItem( 0, replay.date );
-  ASSERT_LOGIC( index != -1, _T("index = -1") );
-  //TODO WUT
-  m_replay_listctrl->SetItemData(index, (long)replay.id );
+    //  if ( m_filter->GetActiv() && !m_filter->Filterreplay( replay ) ) {
+    //    return;
+    //  }
+    int index = m_replay_listctrl->InsertItem( 0, replay.date );
+    ASSERT_LOGIC( index != -1, _T("index = -1") );
 
-  ASSERT_LOGIC( index != -1, _T("index = -1") );
+    m_replay_listctrl->SetItemData(index, (long)replay.id );
 
-  //wxListItem item;
-  //item.SetId( index );
+    if (index != -1)
+        UpdateReplay( replay, index );
+    else
+        wxLogMessage( _T("Replay index == -1 at update") );
 
- // ASSERT_LOGIC( m_replay_listctrl->GetItem( item ), _T("!GetItem") );
-   wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
-                        (replay.duration%3600)/60, (replay.duration%3600)%60 ) ;
-  m_replay_listctrl->SetItem( index, 0, replay.date );
-  m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
-  m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
-  m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators () ) );
-  m_replay_listctrl->SetItem( index, 4, duration );
-  m_replay_listctrl->SetItem( index, 5, replay.SpringVersion );
-  m_replay_listctrl->SetItem( index, 6, wxString::Format(_T("%d KB"),replay.size/1024) );
-  m_replay_listctrl->SetItem( index, 7, replay.Filename );
-
-  m_replay_listctrl->Sort();
 }
 
 
@@ -214,44 +205,55 @@ void ReplayTab::RemoveReplay( Replay& replay ) {
 
 void ReplayTab::UpdateReplay( Replay& replay )
 {
-//  if ( !Replay.GetGUIListActiv() ) {
-//    AddReplay( replay );
-//    return;
-//  }
+    //  if ( !Replay.GetGUIListActiv() ) {
+    //    AddReplay( replay );
+    //    return;
+    //  }
 
-//  if ( m_filter->GetActiv() && !m_filter->FilterReplay( replay ) ) {
-//    RemoveReplay( replay );
-//    return;
-//  }
+    //  if ( m_filter->GetActiv() && !m_filter->FilterReplay( replay ) ) {
+    //    RemoveReplay( replay );
+    //    return;
+    //  }
 
-  int index = -1;
-  for (int i = 0; i < m_replay_listctrl->GetItemCount() ; i++ ) {
-    if ( replay.id == (int)m_replay_listctrl->GetItemData( i ) ) {
-      index = i;
-      break;
+    int index = -1;
+    for (int i = 0; i < m_replay_listctrl->GetItemCount() ; i++ ) {
+        if ( replay.id == (int)m_replay_listctrl->GetItemData( i ) ) {
+          index = i;
+          break;
+        }
     }
-  }
 
-  ASSERT_LOGIC( index != -1, _T("index = -1") );
+    if (index != -1)
+        UpdateReplay( replay, index );
+    else
+        wxLogMessage( _T("Replay index == -1 at update") );
 
-  //wxListItem item;
-  //item.SetId( index );
+}
 
-  //ASSERT_LOGIC( m_replay_listctrl->GetItem( item ), _T("!GetItem") );
+void ReplayTab::UpdateReplay( Replay& replay, const int index )
+{
 
-  //Replay& Replay = m_replays_iter.GetReplay( m_replay_listctrl->GetItemData( index ) );
-  wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
+    ASSERT_LOGIC( index != -1, _T("index = -1") );
+
+    //wxListItem item;
+    //item.SetId( index );
+
+    //ASSERT_LOGIC( m_replay_listctrl->GetItem( item ), _T("!GetItem") );
+
+    //Replay& Replay = m_replays_iter.GetReplay( m_replay_listctrl->GetItemData( index ) );
+    wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
                         (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
-  m_replay_listctrl->SetItem( index, 0, replay.date );
-  m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
-  m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
-  m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetMaxPlayers() ) );
-  m_replay_listctrl->SetItem( index, 4, duration );
-  m_replay_listctrl->SetItem( index, 5, replay.SpringVersion );
-  m_replay_listctrl->SetItem( index, 6, replay.Filename );
+    m_replay_listctrl->SetItem( index, 0, replay.date );
+    m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
+    m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
+    m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators() ) );
+    m_replay_listctrl->SetItem( index, 4, duration );
+    m_replay_listctrl->SetItem( index, 5, replay.SpringVersion );
+    m_replay_listctrl->SetItem( index, 6, wxString::Format( _T("%d KB"),replay.size/1024 ) );
+    m_replay_listctrl->SetItem( index, 7, replay.Filename.AfterLast( wxFileName::GetPathSeparator() ) );
 
-//  if ( &replay == m_sel_replay ) SelectReplay( m_sel_replay );
-//  m_replay_listctrl->Sort();
+    //  if ( &replay == m_sel_replay ) SelectReplay( m_sel_replay );
+    //  m_replay_listctrl->Sort();
 
 }
 
@@ -325,7 +327,9 @@ void ReplayTab::OnSelect( wxListEvent& event )
     wxLogDebugFunc( _T("") );
     if ( event.GetIndex() == -1 ) {
         m_sel_replay_id = 0;
+        m_watch_btn->Enable( false );
     } else {
+        m_watch_btn->Enable( true );
         int index = event.GetIndex();
         long data = m_replay_listctrl->GetItemData( index );
         Replay& rep = m_replays->GetReplay( data );
