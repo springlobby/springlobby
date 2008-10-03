@@ -80,6 +80,20 @@ class ReplayList : public wxEvtHandler
     void OnTimer(wxTimerEvent& event);
 
   protected:
+
+    bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret );
+    wxString GetScriptFromReplay ( const wxString& ReplayPath );
+    OfflineBattle GetBattleFromScript( const wxString& script );
+    BattleOptions GetBattleOptsFromScript( const wxString& script_ );
+
+    //! load mod/map options
+    void LoadMMOpts( const wxString& sectionname, OfflineBattle& battle, const PDataList& node );
+    //! load engine options
+    void LoadMMOpts( OfflineBattle& battle, const PDataList& node );
+
+    //! saves relevant infos from header into replay struct
+    void GetHeaderInfo( Replay& rep, const wxString& ReplayPath );
+
     replay_map_t m_replays;
 
     //! used to load replays in chunks if a lot are present
@@ -94,17 +108,5 @@ class ReplayList : public wxEvtHandler
     DECLARE_EVENT_TABLE()
 };
 
-bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret );
-wxString GetScriptFromReplay ( const wxString& ReplayPath );
-OfflineBattle GetBattleFromScript( const wxString& script );
-BattleOptions GetBattleOptsFromScript( const wxString& script_ );
-
-// load mod/map options
-void LoadMMOpts( const wxString& sectionname, OfflineBattle& battle, const PDataList& node );
-//load engine options
-void LoadMMOpts( OfflineBattle& battle, const PDataList& node );
-
-//saves relevant infos from header into replay struct
-void GetHeaderInfo( Replay& rep, const wxString& ReplayPath );
 
 #endif // SPRINGLOBBY_REPLAYLIST_H_INCLUDED

@@ -102,35 +102,7 @@ bool ReplayList::ReplayExists( replay_id_t const& id )
   return m_replays.find(id) != m_replays.end();
 }
 
-wxString testscript= _T("[GAME]\
-{\
-	Mapname=LeoAss.smf;\
-	GameType=XTAPEV944.sdz;\
-	ModHash=884413695;\
-	diminishingmms=0;\
-	ghostedbuildings=1;\
-	limitdgun=0;\
-	gamemode=0;\
-	maxunits=500;\
-	startenergy=1000;\
-	startmetal=1000;\
-	startpostype=3;\
-	HostIP=localhost;\
-	HostPort=8452;\
-	MyPlayerNum=0;\
-	NumPlayers=1;\
-	NumTeams=2;\
-	NumAllyTeams=2;\
-	[PLAYER0]\
-	{\
-		name=Player;\
-		Spectator=0;\
-		team=0;\
-	}\
-}\
-");
-
-bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
+bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
 {
     //wxLOG_Info  ( STD_STRING( ReplayPath ) );
     //TODO extract moar info
@@ -167,7 +139,7 @@ bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
     return true;
 }
 
-wxString GetScriptFromReplay ( const wxString& ReplayPath )
+wxString ReplayList::GetScriptFromReplay ( const wxString& ReplayPath )
 {
     wxString script;
 
@@ -195,7 +167,7 @@ wxString GetScriptFromReplay ( const wxString& ReplayPath )
 }
 
 //BattleOptions GetBattleOptsFromScript( const wxString& script_ )
-OfflineBattle GetBattleFromScript( const wxString& script_ )
+OfflineBattle ReplayList::GetBattleFromScript( const wxString& script_ )
 {
     OfflineBattle battle;
     BattleOptions opts;
@@ -252,7 +224,7 @@ OfflineBattle GetBattleFromScript( const wxString& script_ )
     return battle;
 }
 
-void LoadMMOpts( const wxString& sectionname, OfflineBattle& battle, const PDataList& node )
+void ReplayList::LoadMMOpts( const wxString& sectionname, OfflineBattle& battle, const PDataList& node )
 {
     PDataList section ( node->Find(sectionname) );
     mmOptionsWrapper& opts = battle.CustomBattleOptions();
@@ -260,7 +232,7 @@ void LoadMMOpts( const wxString& sectionname, OfflineBattle& battle, const PData
         opts.setSingleOption( n->Name(), section->GetString( n->Name() ) );
 }
 
-void LoadMMOpts( OfflineBattle& battle, const PDataList& node )
+void ReplayList::LoadMMOpts( OfflineBattle& battle, const PDataList& node )
 {
     mmOptionsWrapper& opts = battle.CustomBattleOptions();
     typedef std::map<wxString,wxString> optMap;
@@ -269,7 +241,7 @@ void LoadMMOpts( OfflineBattle& battle, const PDataList& node )
         opts.setSingleOption( i->first, node->GetString( i->first, i->second ) );
 }
 
-void GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
+void ReplayList::GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
 {
     try
     {
