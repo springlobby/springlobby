@@ -53,12 +53,12 @@ class ReplayListFilter : public wxPanel
 	protected:
         enum m_button_mode {m_equal,m_bigger,m_smaller};
 
-    wxString _GetButtonSign(m_button_mode value);
+        wxString _GetButtonSign(m_button_mode value);
 		m_button_mode _GetNextMode(m_button_mode value);
 		m_button_mode _GetButtonMode(wxString sign);
 		bool _IntCompare(int a,int b,m_button_mode mode);
 
-    bool m_activ;
+        bool m_activ;
 
 		ReplayTab* m_parent_tab;
 #if wxUSE_TOGGLEBTN
@@ -88,6 +88,8 @@ class ReplayListFilter : public wxPanel
 		wxButton* m_filter_duration_button;
 		m_button_mode m_filter_duration_mode;
 		wxTextCtrl* m_filter_duration_edit;
+		long m_duration_value;
+		void SetDurationValue();
 
         //Map
 		wxStaticText* m_filter_map_text;

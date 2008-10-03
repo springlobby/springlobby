@@ -576,7 +576,7 @@ void  BattleListFilter::SaveFilterValues()
     BattleListFilterValues filtervalues;
     filtervalues.description = m_filter_description_edit->GetValue() ;
     filtervalues.host = m_filter_host_edit->GetValue();
-    filtervalues.map = m_filter_host_edit->GetValue();
+    filtervalues.map = m_filter_map_edit->GetValue();
     filtervalues.map_show = m_filter_map_show->GetValue();
     filtervalues.map = m_filter_map_edit->GetValue();
     filtervalues.maxplayer = wxString::Format(_("%d%"),m_filter_maxplayer_choice->GetSelection());

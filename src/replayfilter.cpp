@@ -316,6 +316,11 @@ bool ReplayListFilter::FilterReplay(Replay& replay)
     //Mod:
     if ( !battle.GetHostModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !RefineModname( battle.GetHostModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) && !m_filter_mod_expression->Matches(RefineModname(battle.GetHostModName())) ) return false;
 
+    if ( (!m_filter_filesize_edit->GetValue().IsEmpty() ) && !_IntCompare( replay.size , s2l( m_filter_filesize_edit->GetValue() ) , m_filter_filesize_mode) ) return false;
+
+    //duration
+    if ( (!m_filter_duration_edit->GetValue().IsEmpty() ) && !_IntCompare( replay.duration , m_duration_value , m_filter_duration_mode) ) return false;
+
     return true;
 }
 
@@ -349,7 +354,8 @@ void ReplayListFilter::OnPlayerChange( wxCommandEvent& event )
 
 void ReplayListFilter::OnChangeDuration(wxCommandEvent& event)
 {
-
+    SetDurationValue();
+    OnChange(event);
 }
 
 void ReplayListFilter::OnChangeFilesize(wxCommandEvent& event)
@@ -375,26 +381,37 @@ bool ReplayListFilter::GetActiv() const
 void  ReplayListFilter::SaveFilterValues()
 {
     ReplayListFilterValues filtervalues;
-//    filtervalues.description = m_filter_description_edit->GetValue() ;
-//    filtervalues.host = m_filter_host_edit->GetValue();
-//    filtervalues.map = m_filter_host_edit->GetValue();
-//    filtervalues.map_show = m_filter_map_show->GetValue();
-//    filtervalues.map = m_filter_map_edit->GetValue();
-//    filtervalues.maxplayer = wxString::Format(_("%d%"),m_filter_maxplayer_choice->GetSelection());
-//    filtervalues.maxplayer_mode = _GetButtonSign(m_filter_maxplayer_mode);
-//    filtervalues.mod = m_filter_mod_edit->GetValue();
-//    filtervalues.mod_show = m_filter_mod_show->GetValue();
-//    filtervalues.player_mode = _GetButtonSign(m_filter_player_mode);
-//    filtervalues.player_num = wxString::Format(_("%d%"),m_filter_player_choice->GetSelection());
-//    filtervalues.rank = wxString::Format(_("%d%"),m_filter_rank_choice->GetSelection());
-//    filtervalues.rank_mode = _GetButtonSign(m_filter_rank_mode);
-//    filtervalues.spectator = wxString::Format(_("%d%"),m_filter_spectator_choice->GetSelection());
-//    filtervalues.spectator_mode = _GetButtonSign(m_filter_spectator_mode);
-//    filtervalues.status_full = m_filter_status_full->IsChecked();
-//    filtervalues.status_locked = m_filter_status_locked->IsChecked();
-//    filtervalues.status_open = m_filter_status_open->IsChecked();
-//    filtervalues.status_passworded = m_filter_status_pass->IsChecked();
-//    filtervalues.status_start = m_filter_status_start->IsChecked();
-//    filtervalues.highlighted_only = m_filter_highlighted->IsChecked();
-//    sett().SetBattleFilterValues(filtervalues);
+    filtervalues.duration = m_filter_duration_edit->GetValue() ;
+    filtervalues.map = m_filter_map_edit->GetValue();
+    filtervalues.map_show = m_filter_map_show->GetValue();
+    filtervalues.map = m_filter_map_edit->GetValue();
+    filtervalues.mod = m_filter_mod_edit->GetValue();
+    filtervalues.mod_show = m_filter_mod_show->GetValue();
+    filtervalues.player_mode = _GetButtonSign(m_filter_player_mode);
+    filtervalues.player_num = wxString::Format(_("%d%"),m_filter_player_choice->GetSelection());
+    filtervalues.duration_mode = _GetButtonSign(m_filter_duration_mode);
+    filtervalues.filesize = m_filter_filesize_edit->GetValue();
+    filtervalues.filesize_mode= _GetButtonSign(m_filter_filesize_mode);
+    sett().SetReplayFilterValues(filtervalues);
+}
+
+void ReplayListFilter::SetDurationValue()
+{
+
+    wxString dur = m_filter_duration_edit->GetValue();
+    const wxChar* sep = _T(":");
+    int sep_count = dur.Replace(sep,sep); //i know, i know
+    switch ( sep_count ) {
+        default:
+            break;
+
+        case 0: m_duration_value = s2l( dur );
+            break;
+        case 1: m_duration_value = s2l( dur.AfterFirst(*sep) ) + ( s2l( dur.BeforeFirst(*sep) ) * 60 );
+            break;
+        case 2: m_duration_value = s2l( dur.AfterLast(*sep) ) + ( s2l( dur.AfterFirst(*sep).BeforeFirst(*sep) ) * 60 )
+                                    + ( s2l( dur.BeforeFirst(*sep) ) * 3600 );
+            break;
+
+    }
 }

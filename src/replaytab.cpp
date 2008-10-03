@@ -107,10 +107,10 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
 
 
-      m_filter = new ReplayListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
-      m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
+    m_filter = new ReplayListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
+    m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
 
-      m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
+    m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
 
     m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
     m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND, 5 );
@@ -180,9 +180,10 @@ void ReplayTab::AddAllReplays()
 
 void ReplayTab::AddReplay( Replay& replay ) {
 
-    //  if ( m_filter->GetActiv() && !m_filter->Filterreplay( replay ) ) {
-    //    return;
-    //  }
+    if ( m_filter->GetActiv() && !m_filter->FilterReplay( replay ) ) {
+        return;
+    }
+
     int index = m_replay_listctrl->InsertItem( 0, replay.date );
     ASSERT_LOGIC( index != -1, _T("index = -1") );
 
@@ -197,29 +198,27 @@ void ReplayTab::AddReplay( Replay& replay ) {
 
 
 void ReplayTab::RemoveReplay( Replay& replay ) {
-//  if ( &replay == m_sel_replay ) SelectReplay( 0 );
-//  for (int i = 0; i < m_replay_listctrl->GetItemCount() ; i++ ) {
-//    if ( replay.id == (int)m_replay_listctrl->GetItemData( i ) ) {
-//      m_replay_listctrl->DeleteItem( i );
-//      break;
-//    }
-//  }
-  // TODOD
-  //replay.SetGUIListActiv( false );
-  m_replay_listctrl->Sort();
+    for (int i = 0; i < m_replay_listctrl->GetItemCount() ; i++ ) {
+        if ( replay.id == (int)m_replay_listctrl->GetItemData( i ) ) {
+            m_replay_listctrl->DeleteItem( i );
+            if ( m_replay_listctrl->GetSelectedIndex() == i ){
+                m_replay_listctrl->SetSelectedIndex(-1);
+                m_sel_replay_id = -1;
+            }
+            break;
+        }
+    }
+
+    m_replay_listctrl->Sort();
 }
 
 void ReplayTab::UpdateReplay( Replay& replay )
 {
-    //  if ( !Replay.GetGUIListActiv() ) {
-    //    AddReplay( replay );
-    //    return;
-    //  }
 
-    //  if ( m_filter->GetActiv() && !m_filter->FilterReplay( replay ) ) {
-    //    RemoveReplay( replay );
-    //    return;
-    //  }
+    if ( m_filter->GetActiv() && !m_filter->FilterReplay( replay ) ) {
+        RemoveReplay( replay );
+        return;
+    }
 
     int index = -1;
     for (int i = 0; i < m_replay_listctrl->GetItemCount() ; i++ ) {
@@ -232,7 +231,7 @@ void ReplayTab::UpdateReplay( Replay& replay )
     if (index != -1)
         UpdateReplay( replay, index );
     else
-        wxLogMessage( _T("Replay index == -1 at update") );
+        AddReplay( replay );
 
 }
 
@@ -261,13 +260,6 @@ void ReplayTab::UpdateReplay( Replay& replay, const int index )
 void ReplayTab::RemoveAllReplays() {
   m_sel_replay_id = 0;
 
-  //TODO what's the use of this?
-//  m_replays_iter->IteratorBegin();
-//  while (! m_replays_iter->EOL() ) {
-//    Replay temp_Replay = m_replays_iter->GetReplay();
-//    if (temp_Replay != 0)
-//        temp_Replay->SetGUIListActiv( false );
-//  }
   m_replay_listctrl->DeleteAllItems();
 }
 
@@ -315,20 +307,21 @@ void ReplayTab::OnDelete( wxCommandEvent& event )
         customMessageBoxNoModal(SL_MAIN_ICON, _("Could not delete Replay: ") + fn,
             _("Error") );
     else {
-        m_replay_listctrl->DeleteItem( m_replay_listctrl->GetSelectedIndex() );
-        m_sel_replay_id = -1;
-        m_replay_listctrl->SetSelectedIndex(-1);
+//        m_replay_listctrl->DeleteItem( m_replay_listctrl->GetSelectedIndex() );
+//        m_sel_replay_id = -1;
+//        m_replay_listctrl->SetSelectedIndex(-1);
+        RemoveReplay( rep );
     }
 }
 
 void ReplayTab::OnFilterActiv( wxCommandEvent& event )
 {
-  if ( !m_ui.IsConnected() )
-  {
-    m_filter_activ->SetValue( !m_filter_activ->GetValue() );
-    return;
-  }
-  m_filter->SetActiv( m_filter_activ->GetValue() );
+//  if ( !m_ui.IsConnected() )
+//  {
+//    m_filter_activ->SetValue( !m_filter_activ->GetValue() );
+//    return;
+//  }
+    m_filter->SetActiv( m_filter_activ->GetValue() );
 }
 
 void ReplayTab::OnSelect( wxListEvent& event )
