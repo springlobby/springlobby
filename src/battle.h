@@ -292,8 +292,16 @@ class OfflineBattle : public CommonBattle
         void SetBattleOptions( const BattleOptions& options ) { m_opts = options;}
         user_map_t::size_type GetNumUsers() const { return m_participants.size(); }
 
+        typedef std::vector<OfflineUser> UserVec;
+        typedef UserVec::const_iterator UserVecCIter;
+
+        UserVecCIter GetFirstUser() const { return m_participants.begin(); }
+        UserVecCIter GetLastUser() const { return m_participants.end(); }
+
+
     protected:
-        std::vector<OfflineUser> m_participants;
+
+        UserVec m_participants;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLE_H

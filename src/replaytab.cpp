@@ -169,13 +169,11 @@ ReplayTab::~ReplayTab()
 
 void ReplayTab::AddAllReplays()
 {
-
     for (unsigned int i = 0; i < m_replays->GetNumReplays(); ++i)
     {
         Replay r = m_replays->GetReplay(i);
         AddReplay( r );
     }
-
 }
 
 void ReplayTab::AddReplay( Replay& replay ) {
@@ -341,7 +339,14 @@ void ReplayTab::OnSelect( wxListEvent& event )
         m_mod_text->SetLabel(rep.battle.GetHostModName());
         m_minimap->SetBattle( &(rep.battle) );
         m_minimap->UpdateMinimap();
-//        m_players->RemoveUsers();
+        m_players->Clear();
+        for ( OfflineBattle::UserVecCIter it = rep.battle.GetFirstUser();
+            it != rep.battle.GetLastUser(); ++it )
+        {
+            UserListctrl::UserData ud ( it->GetNick() , it->GetCountry() );
+            m_players->AddUser( ud );
+        }
+
 //        m_players->AddUser(
 
         //aisn't working atm

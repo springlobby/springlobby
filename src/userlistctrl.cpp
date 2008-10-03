@@ -209,3 +209,9 @@ void UserListctrl::OnColClick( wxListEvent& event )
   Sort();
 }
 
+void UserListctrl::Clear()
+{
+    DeleteAllItems();
+    m_userdata.clear();
+    SelectNone();
+}
