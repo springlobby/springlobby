@@ -107,10 +107,10 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
 
 
-    //  m_filter = new ReplayListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
-    //  m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
-    //
-    //  m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
+      m_filter = new ReplayListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
+      m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
+
+      m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
 
     m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
     m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND, 5 );

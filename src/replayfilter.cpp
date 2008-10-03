@@ -50,8 +50,7 @@ END_EVENT_TABLE()
 ReplayListFilter::ReplayListFilter( wxWindow* parent, wxWindowID id, ReplayTab* parentTab,
                                     const wxPoint& pos, const wxSize& size, long style )
     : wxPanel( parent, id, pos, size, style ),
-    m_parent_tab( parentTab ), m_filter_filesize_expression(0),
-    m_filter_duration_expression(0),m_filter_map_edit(0),
+    m_parent_tab( parentTab ), m_filter_map_edit(0),
     m_filter_map_expression(0), m_filter_mod_edit(0),m_filter_mod_expression(0)
 
 {
@@ -63,49 +62,29 @@ ReplayListFilter::ReplayListFilter( wxWindow* parent, wxWindowID id, ReplayTab* 
 	wxStaticBoxSizer* m_filter_body_sizer;
 	m_filter_body_sizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, wxEmptyString ), wxVERTICAL );
 
-	wxBoxSizer* m_filter_body_row1_sizer;
-	m_filter_body_row1_sizer = new wxBoxSizer( wxHORIZONTAL );
-
-	wxBoxSizer* m_filter_column_1;
-	m_filter_column_1 = new wxBoxSizer( wxHORIZONTAL );
-
-
-
-	m_filter_body_row1_sizer->Add( m_filter_column_1, 0, wxEXPAND, 5 );
-
-	m_filter_body_sizer->Add( m_filter_body_row1_sizer, 1, wxEXPAND, 5 );
-
-	wxBoxSizer* m_filter_body_row2_sizer;
+    wxBoxSizer* m_filter_body_row2_sizer;
 	m_filter_body_row2_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	wxBoxSizer* m_filter_description_sizer;
-	m_filter_description_sizer = new wxBoxSizer( wxHORIZONTAL );
-
-	wxBoxSizer* m_filter_sizer2;
-	m_filter_sizer2 = new wxBoxSizer( wxHORIZONTAL );
-
-	wxBoxSizer* m_filter_player_sizer;
-	m_filter_player_sizer = new wxBoxSizer( wxHORIZONTAL );
+//	wxBoxSizer* m_filter_player_sizer;
+//	m_filter_player_sizer = new wxBoxSizer( wxHORIZONTAL );
 
 	m_filter_player_text = new wxStaticText( this, wxID_ANY, _("Player:"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_filter_player_text->Wrap( -1 );
-	m_filter_player_sizer->Add( m_filter_player_text, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_filter_body_row2_sizer ->Add( m_filter_player_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_filter_player_button = new wxButton( this, REPLAY_FILTER_PLAYER_BUTTON, f_values.player_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
-	m_filter_player_sizer->Add( m_filter_player_button, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_filter_body_row2_sizer ->Add( m_filter_player_button, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_filter_player_choiceChoices;
 
-  m_filter_player_choiceChoices.Add( _("All") );
-  for (wxLongLong i = 0;i <= 32;i++) m_filter_player_choiceChoices.Add( i.ToString() );
+    m_filter_player_choiceChoices.Add( _("All") );
+    for (wxLongLong i = 0;i <= 32;i++) m_filter_player_choiceChoices.Add( i.ToString() );
 
 	m_filter_player_choice = new wxChoice( this, REPLAY_FILTER_PLAYER_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_player_choiceChoices, 0 );
 	m_filter_player_choice->SetSelection( GetIntParam( f_values.player_num )  );
 	m_filter_player_choice->SetMinSize( wxSize( 40,-1 ) );
 
-	m_filter_player_sizer->Add( m_filter_player_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	m_filter_body_row2_sizer->Add( m_filter_player_sizer, 0, wxEXPAND|wxLEFT, 5 );
+	m_filter_body_row2_sizer ->Add( m_filter_player_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_filter_body_sizer->Add( m_filter_body_row2_sizer, 1, wxEXPAND, 5 );
 
@@ -142,7 +121,8 @@ ReplayListFilter::ReplayListFilter( wxWindow* parent, wxWindowID id, ReplayTab* 
 
 	m_filter_body_sizer->Add( m_filter_body_row3_sizer, 1, wxEXPAND, 5 );
 
-	wxBoxSizer* m_filter_body_row4_sizer;
+//// mod
+    wxBoxSizer* m_filter_body_row4_sizer;
 	m_filter_body_row4_sizer = new wxBoxSizer( wxHORIZONTAL );
 
 	wxBoxSizer* m_filter_mod_sizer;
@@ -174,7 +154,69 @@ ReplayListFilter::ReplayListFilter( wxWindow* parent, wxWindowID id, ReplayTab* 
 	m_filter_body_row4_sizer->Add( m_filter_only_mod_sizer, 1, wxEXPAND, 5 );
 
 	m_filter_body_sizer->Add( m_filter_body_row4_sizer, 1, wxEXPAND, 5 );
+/////
 
+///// filesize
+    wxBoxSizer* m_filter_body_row5_sizer;
+	m_filter_body_row5_sizer = new wxBoxSizer( wxHORIZONTAL );
+
+	wxBoxSizer* m_filter_filesize_sizer;
+	m_filter_filesize_sizer = new wxBoxSizer( wxHORIZONTAL );
+
+	m_filter_filesize_text = new wxStaticText( this, wxID_ANY, _("Filesize in KB:"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	m_filter_filesize_text->Wrap( -1 );
+	m_filter_filesize_text->SetMinSize( wxSize( 90,-1 ) );
+
+	m_filter_filesize_sizer->Add( m_filter_filesize_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_filter_filesize_edit = new wxTextCtrl( this, REPLAY_FILTER_FILESIZE_EDIT, f_values.filesize, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_filesize_edit->SetMinSize( wxSize( 140,-1 ) );
+
+	m_filter_filesize_sizer->Add( m_filter_filesize_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_filter_body_row5_sizer->Add( m_filter_filesize_sizer, 1, wxEXPAND, 5 );
+
+	//button here
+	m_filter_filesize_button= new wxButton( this, REPLAY_FILTER_FILESIZE_BUTTON, f_values.filesize_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
+	m_filter_body_row5_sizer->Add( m_filter_filesize_button, 0, wxALIGN_LEFT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_filter_body_sizer->Add( m_filter_body_row5_sizer, 1, wxEXPAND, 5 );
+
+
+
+/////
+
+///// duration
+    wxBoxSizer* m_filter_body_row6_sizer;
+	m_filter_body_row6_sizer = new wxBoxSizer( wxHORIZONTAL );
+
+	wxBoxSizer* m_filter_duration_sizer;
+	m_filter_duration_sizer = new wxBoxSizer( wxHORIZONTAL );
+
+	m_filter_duration_text = new wxStaticText( this, wxID_ANY, _("Duration (hh:mm:ss):"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	m_filter_duration_text->Wrap( -1 );
+	m_filter_duration_text->SetMinSize( wxSize( 90,-1 ) );
+
+	m_filter_duration_sizer->Add( m_filter_duration_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_filter_duration_edit = new wxTextCtrl( this, REPLAY_FILTER_DURATION_EDIT, f_values.duration, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_duration_edit->SetMinSize( wxSize( 140,-1 ) );
+
+	m_filter_duration_sizer->Add( m_filter_duration_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_filter_body_row6_sizer->Add( m_filter_duration_sizer, 1, wxEXPAND, 5 );
+
+    m_filter_duration_button = new wxButton( this, REPLAY_FILTER_DURATION_BUTTON, f_values.duration_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
+	m_filter_body_row6_sizer->Add( m_filter_duration_button, 0, wxALIGN_LEFT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_filter_body_sizer->Add( m_filter_body_row6_sizer, 1, wxEXPAND, 5 );
+
+
+
+/////
+
+
+    //bring all sizers together
 	m_filter_sizer->Add( m_filter_body_sizer, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
 
     m_activ = false;
@@ -191,10 +233,7 @@ ReplayListFilter::ReplayListFilter( wxWindow* parent, wxWindowID id, ReplayTab* 
     m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(),wxRE_ICASE);
     if (m_filter_mod_expression != NULL) { delete m_filter_mod_expression; }
     m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(),wxRE_ICASE);
-    if (m_filter_duration_expression != NULL) { delete m_filter_duration_expression ; }
-    m_filter_duration_expression  = new wxRegEx(m_filter_duration_edit->GetValue(),wxRE_ICASE);
-    if (m_filter_filesize_expression != NULL) { delete m_filter_filesize_expression ; }
-    m_filter_filesize_expression  = new wxRegEx(m_filter_filesize_edit->GetValue(),wxRE_ICASE);
+
     wxCommandEvent dummy;
     OnChange(dummy);
 

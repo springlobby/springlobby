@@ -82,14 +82,12 @@ class ReplayListFilter : public wxPanel
 		wxButton* m_filter_filesize_button;
 		m_button_mode m_filter_filesize_mode;
 		wxTextCtrl* m_filter_filesize_edit;
-		wxRegEx*    m_filter_filesize_expression;
 
         //Duration
 		wxStaticText* m_filter_duration_text;
 		wxButton* m_filter_duration_button;
 		m_button_mode m_filter_duration_mode;
 		wxTextCtrl* m_filter_duration_edit;
-		wxRegEx*    m_filter_duration_expression;
 
         //Map
 		wxStaticText* m_filter_map_text;
