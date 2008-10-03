@@ -200,7 +200,7 @@ OfflineBattle ReplayList::GetBattleFromScript( const wxString& script_ )
         for ( int i = 0; i < playernum ; ++i ){
             PDataList player ( replayNode->Find( _T("PLAYER") + i2s(i) ) );
             if ( player.ok() ) {
-                OfflineUser user ( player->GetString( _T("name") ), wxEmptyString, 0);
+                OfflineUser user ( player->GetString( _T("name") ), (player->GetString( _T("countryCode")).Upper() ), 0);
                 UserBattleStatus status;
                 //how to convert back?
                 user.SetSideName( player->GetString( _T("side") ) );
