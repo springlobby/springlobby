@@ -478,6 +478,16 @@ class Settings
     bool GetFilterActivState( ) const;
     /**@}*/
 
+    /** @name Replay filters
+     * @{
+     */
+    ReplayListFilterValues GetReplayFilterValues(const wxString& profile_name = (_T("default")));
+    void SetReplayFilterValues(const ReplayListFilterValues& blfValues, const wxString& profile_name = _T("default"));
+    wxString GetLastFilterProfileName();
+    void SetFilterActivState( const bool state );
+    bool GetFilterActivState( ) const;
+    /**@}*/
+
     bool GetDisableSpringVersionCheck();
 
     /* ================================================================ */
