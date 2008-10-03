@@ -316,7 +316,7 @@ bool ReplayListFilter::FilterReplay(Replay& replay)
     //Mod:
     if ( !battle.GetHostModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !RefineModname( battle.GetHostModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) && !m_filter_mod_expression->Matches(RefineModname(battle.GetHostModName())) ) return false;
 
-    if ( (!m_filter_filesize_edit->GetValue().IsEmpty() ) && !_IntCompare( replay.size , s2l( m_filter_filesize_edit->GetValue() ) , m_filter_filesize_mode) ) return false;
+    if ( (!m_filter_filesize_edit->GetValue().IsEmpty() ) && !_IntCompare( replay.size , 1024 * s2l( m_filter_filesize_edit->GetValue()) , m_filter_filesize_mode) ) return false;
 
     //duration
     if ( (!m_filter_duration_edit->GetValue().IsEmpty() ) && !_IntCompare( replay.duration , m_duration_value , m_filter_duration_mode) ) return false;
@@ -360,17 +360,21 @@ void ReplayListFilter::OnChangeDuration(wxCommandEvent& event)
 
 void ReplayListFilter::OnChangeFilesize(wxCommandEvent& event)
 {
-
+    OnChange(event);
 }
 
 void ReplayListFilter::OnDurationButton(wxCommandEvent& event)
 {
-
+    m_filter_duration_mode = _GetNextMode(m_filter_duration_mode);
+    m_filter_duration_button->SetLabel( _GetButtonSign( m_filter_duration_mode ) );
+    OnChange(event);
 }
 
 void ReplayListFilter::OnFilesizeButton(wxCommandEvent& event)
 {
-
+    m_filter_filesize_mode = _GetNextMode(m_filter_filesize_mode);
+    m_filter_filesize_button->SetLabel( _GetButtonSign( m_filter_filesize_mode ) );
+    OnChange(event);
 }
 
 bool ReplayListFilter::GetActiv() const

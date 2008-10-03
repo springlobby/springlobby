@@ -163,8 +163,8 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
 ReplayTab::~ReplayTab()
 {
-//    if (m_filter != 0)
-//        m_filter->SaveFilterValues();
+    if (m_filter != 0)
+        m_filter->SaveFilterValues();
 }
 
 void ReplayTab::AddAllReplays()
