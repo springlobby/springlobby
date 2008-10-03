@@ -241,12 +241,6 @@ void ReplayTab::UpdateReplay( Replay& replay, const int index )
 
     ASSERT_LOGIC( index != -1, _T("index = -1") );
 
-    //wxListItem item;
-    //item.SetId( index );
-
-    //ASSERT_LOGIC( m_replay_listctrl->GetItem( item ), _T("!GetItem") );
-
-    //Replay& Replay = m_replays_iter.GetReplay( m_replay_listctrl->GetItemData( index ) );
     wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
                         (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
     m_replay_listctrl->SetItem( index, 0, replay.date );
@@ -364,12 +358,13 @@ void ReplayTab::OnSelect( wxListEvent& event )
 
 void ReplayTab::ReloadList()
 {
+    /// should be changed to use delayed load once perf testing is done
     wxDateTime dt = wxDateTime::UNow();
     RemoveAllReplays();
     AddAllReplays();
-    long sec = (wxDateTime::UNow() - dt).GetSeconds().ToLong();
+    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
     if ( sec > 0 )
-        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d seconds"),sec ) );
+        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );
 }
 
 void ReplayTab::OnReload( wxCommandEvent& event )
