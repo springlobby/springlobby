@@ -48,7 +48,6 @@ BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
 
 END_EVENT_TABLE()
 
-
 ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
   wxPanel( parent, -1 ),
   m_ui(ui),
@@ -57,7 +56,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     //TODO this shouldnÄT be here
     m_ui.ReloadUnitSync();
 
-    m_replays = new ReplayList ();
+    m_replays = new ReplayList ( *this );
 
     wxBoxSizer* m_main_sizer;
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
@@ -152,7 +151,9 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     this->SetSizer( m_main_sizer );
     this->Layout();
 
-    AddAllReplays();
+    //replay adding is now controlled by replaylist
+    //AddAllReplays();
+    m_replays->LoadReplays();
 
     //none selected --> shouldn't watch that
     m_watch_btn->Enable( false );
@@ -162,8 +163,8 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
 ReplayTab::~ReplayTab()
 {
-    if (m_filter != 0)
-        m_filter->SaveFilterValues();
+//    if (m_filter != 0)
+//        m_filter->SaveFilterValues();
 }
 
 void ReplayTab::AddAllReplays()
@@ -174,6 +175,7 @@ void ReplayTab::AddAllReplays()
         Replay r = m_replays->GetReplay(i);
         AddReplay( r );
     }
+
 }
 
 void ReplayTab::AddReplay( Replay& replay ) {
@@ -364,5 +366,6 @@ void ReplayTab::ReloadList()
 void ReplayTab::OnReload( wxCommandEvent& event )
 {
     //stop timer
+
     ReloadList();
 }

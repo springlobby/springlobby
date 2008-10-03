@@ -3,6 +3,8 @@
 
 #include <map>
 #include <wx/string.h>
+#include <wx/event.h>
+#include <wx/timer.h>
 #include <wx/arrstr.h>
 #include "battle.h"
 #include "tdfcontainer.h"
@@ -55,11 +57,16 @@ typedef std::map<replay_id_t, Replay> replay_map_t;
 //! @brief iterator for replay map
 typedef replay_map_t::iterator replay_iter_t;
 
+class ReplayTab;
 
-class ReplayList
+class ReplayList : public wxEvtHandler
 {
   public:
-    ReplayList();
+    ReplayList(ReplayTab& replay_tab);
+
+    void LoadReplays();
+    //!loads replays between two indices
+    void LoadReplays( const unsigned int from, const unsigned int to);
 
     void AddReplay( Replay replay );
     void RemoveReplay( replay_id_t const& id );
@@ -70,8 +77,21 @@ class ReplayList
     bool ReplayExists( replay_id_t const& id );
     replay_map_t::size_type GetNumReplays();
 
-  private:
+    void OnTimer(wxTimerEvent& event);
+
+  protected:
     replay_map_t m_replays;
+
+    //! used to load replays in chunks if a lot are present
+    wxTimer m_timer;
+    unsigned int m_current_parse_pos;
+
+    //! used to "remotely" add replays to gui
+    ReplayTab& m_replay_tab;
+
+    wxArrayString m_filenames;
+
+    DECLARE_EVENT_TABLE()
 };
 
 bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret );

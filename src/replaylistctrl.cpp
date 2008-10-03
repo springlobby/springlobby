@@ -316,7 +316,7 @@ void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)
 		{
 			long item = GetItemData(item_hit);
 
-			Replay replay = m_replaylist_sort->GetReplay(item);
+			Replay replay = m_replaylist.GetReplay(item);
 			int coloumn = getColoumnFromPosition(position);
 			switch (coloumn)
 			{
