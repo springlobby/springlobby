@@ -54,7 +54,7 @@ ReplayListFilter::ReplayListFilter( wxWindow* parent, wxWindowID id, ReplayTab* 
     m_filter_map_expression(0), m_filter_mod_edit(0),m_filter_mod_expression(0)
 
 {
-    ReplayListFilterValues f_values;// = sett().GetBattleFilterValues( sett().GetLastFilterProfileName() );
+    ReplayListFilterValues f_values = sett().GetReplayFilterValues( sett().GetLastReplayFilterProfileName() );
 
 	wxBoxSizer* m_filter_sizer;
 	m_filter_sizer = new wxBoxSizer( wxVERTICAL );

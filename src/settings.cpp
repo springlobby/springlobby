@@ -1550,3 +1550,51 @@ bool Settings::GetAutoUpdate()
 {
     return m_config->Read( _T("/General/AutoUpdate"), true );
 }
+
+ReplayListFilterValues Settings::GetReplayFilterValues(const wxString& profile_name)
+{
+    ReplayListFilterValues filtervalues;
+    filtervalues.duration =         m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/duration"), _T("") );
+    filtervalues.map=               m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/map"), _T("") );
+    filtervalues.map_show =         m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/map_show"), 0L );
+    filtervalues.filesize  =        m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/filesize"), _T("") );
+    filtervalues.filesize_mode  =   m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/filesize_mode"), _T(">") );
+    filtervalues.duration_mode  =   m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/duration_mode"), _T(">") );
+    filtervalues.mod =              m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/mod"), _T("") );
+    filtervalues.mod_show =         m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/mod_show"), 0L );
+    filtervalues.player_mode =      m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/player_mode"), _T("=") );
+    filtervalues.player_num  =      m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/player_num"), _T("All") );
+
+    return filtervalues;
+}
+
+void Settings::SetReplayFilterValues(const ReplayListFilterValues& filtervalues, const wxString& profile_name)
+{
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/duration"),filtervalues.duration);
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/map"),filtervalues.map );
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/map_show"),filtervalues.map_show );
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/filesize"),filtervalues.filesize );
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/filesize_mode"),filtervalues.filesize_mode);
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/duration_mode"),filtervalues.duration_mode);
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/mod"),filtervalues.mod );
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/mod_show"),filtervalues.mod_show );
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/player_mode"),filtervalues.player_mode );
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/player_num"),filtervalues.player_num );
+    m_config->Write( _T("/ReplayFilter/lastprofile"),profile_name);
+}
+
+bool Settings::GetReplayFilterActivState() const
+{
+    return m_config->Read( _T("/ReplayFilter/Active") , 0l );
+}
+
+void Settings::SetReplayFilterActivState(const bool state)
+{
+    m_config->Write( _T("/ReplayFilter/Active") , state );
+}
+
+wxString Settings::GetLastReplayFilterProfileName()
+{
+    return  m_config->Read( _T("/ReplayFilter/lastprofile"), _T("default") );
+}
+
