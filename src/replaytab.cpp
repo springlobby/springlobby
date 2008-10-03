@@ -36,7 +36,7 @@ BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
 
   EVT_BUTTON              ( REPLAY_WATCH             , ReplayTab::OnWatch        )
   EVT_BUTTON              ( REPLAY_RELOAD             , ReplayTab::OnReload        )
-//  EVT_LIST_ITEM_ACTIVATED ( REPLAY_DELETE            , ReplayTab::OnDelete    )
+  EVT_BUTTON              ( REPLAY_DELETE            , ReplayTab::OnDelete    )
   EVT_LIST_ITEM_SELECTED  ( wxID_ANY               , ReplayTab::OnSelect      )
   EVT_CHECKBOX            ( REPLAY_LIST_FILTER_ACTIV , ReplayTab::OnFilterActiv )
 #if  wxUSE_TOGGLEBTN
@@ -315,7 +315,16 @@ void ReplayTab::OnWatch( wxCommandEvent& event )
 
 void ReplayTab::OnDelete( wxCommandEvent& event )
 {
-
+    Replay rep = m_replays->GetReplayById(m_sel_replay_id);
+    wxString fn = rep.Filename;
+    if ( !m_replays->DeleteReplay( m_sel_replay_id ) )
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Could not delete Replay: ") + fn,
+            _("Error") );
+    else {
+        m_replay_listctrl->DeleteItem( m_replay_listctrl->GetSelectedIndex() );
+        m_sel_replay_id = -1;
+        m_replay_listctrl->SetSelectedIndex(-1);
+    }
 }
 
 void ReplayTab::OnFilterActiv( wxCommandEvent& event )

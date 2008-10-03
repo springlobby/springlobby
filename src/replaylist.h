@@ -75,6 +75,7 @@ class ReplayList : public wxEvtHandler
     Replay& GetReplay( int const index ) ;
 
     bool ReplayExists( replay_id_t const& id );
+    bool DeleteReplay( replay_id_t const& id );
     replay_map_t::size_type GetNumReplays();
 
     void OnTimer(wxTimerEvent& event);

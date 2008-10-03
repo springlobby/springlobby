@@ -2,11 +2,11 @@
 #include <stdexcept>
 #include <iterator>
 #include <wx/file.h>
-
-#include "replaylist.h"
-
 #include <wx/tokenzr.h>
 #include <wx/intl.h>
+#include <wx/filefn.h>
+
+#include "replaylist.h"
 #include <sstream>
 #include "iunitsync.h"
 #include "utils.h"
@@ -260,4 +260,15 @@ void ReplayList::GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
         rep.date = date;
     }
     catch (...){ }
+}
+
+bool ReplayList::DeleteReplay( replay_id_t const& id )
+{
+    Replay& rep = m_replays[id];
+    if ( wxRemoveFile( rep.Filename ) ) {
+        m_filenames.Remove( rep.Filename );
+        m_replays.erase(id);
+        return true;
+    }
+    return false;
 }
