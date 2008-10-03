@@ -23,6 +23,7 @@
 #include "utils.h"
 #include "uiutils.h"
 #include "battlelistfiltervalues.h"
+#include "replaylistfiltervalues.h"
 #include "iunitsync.h"
 
 const wxColor defaultHLcolor (255,0,0);
@@ -1194,12 +1195,12 @@ void Settings::SetBattleFilterValues(const BattleListFilterValues& filtervalues,
     m_config->Write( _T("/BattleFilter/lastprofile"),profile_name);
 }
 
-bool Settings::GetFilterActivState() const
+bool Settings::GetBattleFilterActivState() const
 {
     return m_config->Read( _T("/BattleFilter/Active") , 0l );
 }
 
-void Settings::SetFilterActivState(const bool state)
+void Settings::SetBattleFilterActivState(const bool state)
 {
     m_config->Write( _T("/BattleFilter/Active") , state );
 }
@@ -1211,7 +1212,7 @@ bool Settings::GetDisableSpringVersionCheck()
     return ret;
 }
 
-wxString Settings::GetLastFilterProfileName()
+wxString Settings::GetLastBattleFilterProfileName()
 {
     return  m_config->Read( _T("/BattleFilter/lastprofile"), _T("default") );
 }

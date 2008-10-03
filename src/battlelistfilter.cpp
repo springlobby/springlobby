@@ -64,7 +64,7 @@ BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListT
     m_filter_map_expression(0), m_filter_mod_edit(0),m_filter_mod_expression(0),m_filter_highlighted(false)
 
 {
-    BattleListFilterValues f_values = sett().GetBattleFilterValues( sett().GetLastFilterProfileName() );
+    BattleListFilterValues f_values = sett().GetBattleFilterValues( sett().GetLastBattleFilterProfileName() );
 
 	wxBoxSizer* m_filter_sizer;
 	m_filter_sizer = new wxBoxSizer( wxVERTICAL );
