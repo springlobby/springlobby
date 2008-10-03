@@ -292,9 +292,37 @@ void ReplayTab::OnFilter( wxCommandEvent& event )
 
 void ReplayTab::OnWatch( wxCommandEvent& event )
 {
-    //if ( m_sel_replay_id != 0 )
-    wxString filename = m_replays->GetReplayById(m_sel_replay_id).Filename;
-    m_ui.WatchReplay(filename);
+    Replay rep = m_replays->GetReplayById(m_sel_replay_id);
+    bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
+    if ( watchable )
+        m_ui.WatchReplay( rep.Filename );
+    else {
+        #ifdef NO_TORRENT_SYSTEM
+            wxString downloadProc = _("Do you want me to take you to the download page?");
+        #else
+            wxString downloadProc = _("Should i try to downlaod it for you?\nYou can see the progress in the \"Download Manager\" tab.");
+        #endif
+
+        OfflineBattle& battle = rep.battle;
+
+        if ( !battle.ModExists() ) {
+            if (customMessageBox( SL_MAIN_ICON, _("You need to download the mod before you can watch this replay.\n\n") + downloadProc, _("Mod not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+                wxString modhash = battle.GetHostModHash();
+                wxString modname = battle.GetHostModName();
+                m_ui.DownloadMod ( modhash, modname );
+            }
+            return;
+        }
+
+        if ( !battle.MapExists() ) {
+            if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to watch this replay.\n\n") + downloadProc, _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+                wxString maphash = battle.GetHostMapHash();
+                wxString mapname = battle.GetHostMapName();
+                m_ui.DownloadMap ( maphash, mapname );
+            }
+        }
+    }
+
 }
 
 void ReplayTab::OnDelete( wxCommandEvent& event )
@@ -304,21 +332,12 @@ void ReplayTab::OnDelete( wxCommandEvent& event )
     if ( !m_replays->DeleteReplay( m_sel_replay_id ) )
         customMessageBoxNoModal(SL_MAIN_ICON, _("Could not delete Replay: ") + fn,
             _("Error") );
-    else {
-//        m_replay_listctrl->DeleteItem( m_replay_listctrl->GetSelectedIndex() );
-//        m_sel_replay_id = -1;
-//        m_replay_listctrl->SetSelectedIndex(-1);
+    else
         RemoveReplay( rep );
-    }
 }
 
 void ReplayTab::OnFilterActiv( wxCommandEvent& event )
 {
-//  if ( !m_ui.IsConnected() )
-//  {
-//    m_filter_activ->SetValue( !m_filter_activ->GetValue() );
-//    return;
-//  }
     m_filter->SetActiv( m_filter_activ->GetValue() );
 }
 
@@ -346,11 +365,6 @@ void ReplayTab::OnSelect( wxListEvent& event )
             UserListctrl::UserData ud ( it->GetNick() , it->GetCountry() );
             m_players->AddUser( ud );
         }
-
-//        m_players->AddUser(
-
-        //aisn't working atm
-        //m_watch_btn->Enable( rep.battle.MapExists() && rep.battle.ModExists() );
     }
 }
 

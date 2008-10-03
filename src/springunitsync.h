@@ -25,6 +25,7 @@ class SpringUnitSync : public IUnitSync
     wxArrayString GetModList();
     bool ModExists( const wxString& modname );
     bool ModExists( const wxString& modname, const wxString& hash );
+    bool ModExistsCheckHash( const wxString& hash ) const;
     UnitSyncMod GetMod( const wxString& modname );
     UnitSyncMod GetMod( int index );
     int GetModIndex( const wxString& name );

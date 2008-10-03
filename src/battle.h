@@ -298,6 +298,7 @@ class OfflineBattle : public CommonBattle
         UserVecCIter GetFirstUser() const { return m_participants.begin(); }
         UserVecCIter GetLastUser() const { return m_participants.end(); }
 
+        virtual bool ModExists();
 
     protected:
 

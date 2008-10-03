@@ -1123,3 +1123,8 @@ void OfflineBattle::AddUser( const wxString& nick )
     OfflineUser user( nick, wxEmptyString, 0 );
     AddUser( user );
 }
+
+bool OfflineBattle::ModExists()
+{
+    return usync().ModExistsCheckHash( m_host_mod.hash );
+}

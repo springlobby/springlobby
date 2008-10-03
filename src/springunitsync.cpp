@@ -227,6 +227,15 @@ bool SpringUnitSync::ModExists( const wxString& modname, const wxString& hash )
   return itor->second == hash;
 }
 
+bool SpringUnitSync::ModExistsCheckHash( const wxString& hash ) const
+{
+    LocalArchivesVector::const_iterator itor = m_mods_list.begin();
+    for ( ; itor != m_mods_list.end(); ++itor ) {
+        if ( itor->second == hash )
+            return true;
+    }
+    return false;
+}
 
 UnitSyncMod SpringUnitSync::GetMod( const wxString& modname )
 {
