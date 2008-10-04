@@ -270,6 +270,7 @@ void SpringLobbyApp::SetupUserFolders()
             }
         }
         sett().SetSpringDir(dir);
+        sett().SaveSettings();
     }
 #endif
 #endif
