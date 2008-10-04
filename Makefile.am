@@ -496,7 +496,7 @@ springlobby_SOURCES = \
 	src/replay/replaylist.h \
 	src/replay/replaylistctrl.h \
 	src/replay/replaylistctrl.cpp \
-	src/replay/replayfiltervalues.h \
+	src/replay/replaylistfiltervalues.h \
 	src/sdlsound.h \
 	src/sdlsound.cpp \
 	src/server.cpp \
