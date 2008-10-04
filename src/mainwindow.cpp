@@ -29,7 +29,7 @@
 #include "mainoptionstab.h"
 #include "iunitsync.h"
 #include "uiutils.h"
-#include "replaytab.h"
+#include "replay/replaytab.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
 #include "torrentwrapper.h"

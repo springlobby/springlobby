@@ -50,7 +50,7 @@ class TDFWriter
 #include <deque>
 #include <map>
 
-#include <autopointers.h>
+#include "autopointers.h"
 
 class Node;
 typedef RefcountedPointer<Node> PNode;

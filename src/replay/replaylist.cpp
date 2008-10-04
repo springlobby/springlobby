@@ -8,10 +8,10 @@
 
 #include "replaylist.h"
 #include <sstream>
-#include "iunitsync.h"
-#include "utils.h"
-#include "settings++/custom_dialogs.h"
-#include "tdfcontainer.h"
+#include "../iunitsync.h"
+#include "../utils.h"
+#include "../settings++/custom_dialogs.h"
+#include "../tdfcontainer.h"
 #include "replaytab.h"
 
 const unsigned int replay_bulk_limit = 200;

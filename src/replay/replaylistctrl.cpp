@@ -4,11 +4,11 @@
 #include <wx/menu.h>
 
 #include "replaylistctrl.h"
-#include "utils.h"
-#include "user.h"
-#include "iconimagelist.h"
-#include "uiutils.h"
-#include "ui.h"
+#include "../utils.h"
+#include "../user.h"
+#include "../iconimagelist.h"
+#include "../uiutils.h"
+#include "../ui.h"
 
 //#include "countrycodes.h"
 

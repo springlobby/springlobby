@@ -22,13 +22,13 @@
 #include "replaytab.h"
 #include "replaylist.h"
 #include "replaylistfiltervalues.h"
-#include "battlelistctrl.h"
-#include "battle.h"
-#include "uiutils.h"
-#include "utils.h"
-#include "settings.h"
+#include "../battlelistctrl.h"
+#include "../battle.h"
+#include "../uiutils.h"
+#include "../utils.h"
+#include "../settings.h"
 
-#include "useractions.h"
+
 ///////////////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(ReplayListFilter, wxPanel)

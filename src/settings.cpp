@@ -23,7 +23,7 @@
 #include "utils.h"
 #include "uiutils.h"
 #include "battlelistfiltervalues.h"
-#include "replaylistfiltervalues.h"
+#include "replay/replaylistfiltervalues.h"
 #include "iunitsync.h"
 
 const wxColor defaultHLcolor (255,0,0);

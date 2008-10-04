@@ -488,14 +488,15 @@ springlobby_SOURCES = \
 	src/mutexwrapper.h \
 	src/nicklistctrl.cpp \
 	src/nicklistctrl.h \
-	src/replaytab.h \
-	src/replaytab.cpp \	
-	src/replayfilter.h \
-	src/replayfilter.cpp \
-	src/replaylist.cpp \
-	src/replaylist.h \
-	src/replaylistctrl.h \
-	src/replaylistctrl.cpp \
+	src/replay/replaytab.h \
+	src/replay/replaytab.cpp \	
+	src/replay/replayfilter.h \
+	src/replay/replayfilter.cpp \
+	src/replay/replaylist.cpp \
+	src/replay/replaylist.h \
+	src/replay/replaylistctrl.h \
+	src/replay/replaylistctrl.cpp \
+	src/replay/replayfiltervalues.h \
 	src/sdlsound.h \
 	src/sdlsound.cpp \
 	src/server.cpp \

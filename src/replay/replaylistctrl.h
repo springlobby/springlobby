@@ -1,10 +1,9 @@
 #ifndef SPRINGLOBBY_REPLAYLISTCTRL_H_INCLUDED
 #define SPRINGLOBBY_REPLAYLISTCTRL_H_INCLUDED
 
-//#include "replaylistfilter.h"
 #include "replaylist.h"
 
-#include "customlistctrl.h"
+#include "../customlistctrl.h"
 
 class wxMenu;
 class Replay;

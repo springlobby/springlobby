@@ -134,7 +134,6 @@
 			<Add option="-Wall" />
 			<Add directory="src" />
 		</Compiler>
-		<Unit filename="replaylist.h" />
 		<Unit filename="src/Helper/TextCompletionDatabase.cpp" />
 		<Unit filename="src/Helper/TextCompletionDatabase.hpp" />
 		<Unit filename="src/Helper/colorbutton.cpp" />
@@ -278,14 +277,18 @@
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonportable.h" />
-		<Unit filename="src/replayfilter.cpp" />
+		<Unit filename="src/replay/replayfilter.cpp" />
+		<Unit filename="src/replay/replayfilter.h" />
+		<Unit filename="src/replay/replaylist.cpp" />
+		<Unit filename="src/replay/replaylist.h" />
+		<Unit filename="src/replay/replaylistctrl.cpp" />
+		<Unit filename="src/replay/replaylistctrl.h" />
+		<Unit filename="src/replay/replaylistfiltervalues.h" />
+		<Unit filename="src/replay/replaytab.cpp" />
+		<Unit filename="src/replay/replaytab.h" />
 		<Unit filename="src/replayfilter.h" />
-		<Unit filename="src/replaylist.cpp" />
-		<Unit filename="src/replaylistctrl.cpp" />
 		<Unit filename="src/replaylistctrl.h" />
-		<Unit filename="src/replaytab.cpp" />
 		<Unit filename="src/replaytab.h" />
-		<Unit filename="src/revision.h" />
 		<Unit filename="src/sdlsound.cpp" />
 		<Unit filename="src/sdlsound.h" />
 		<Unit filename="src/server.cpp" />
@@ -390,7 +393,6 @@
 			<envvars />
 			<wxsmith version="1">
 				<gui name="wxWidgets" src="" main="" init_handlers="necessary" language="CPP" />
-
 				<resources>
 					<wxDialog wxs="wxsmith/AutoBalanceDialog.wxs" src="src/autobalancedialog.cpp" hdr="src/autobalancedialog.h" name="AutoBalanceDialog" language="CPP" />
 					<wxFrame wxs="wxsmith/MainTorrentTab.wxs" src="MainTorrentTab.cpp" hdr="MainTorrentTab.h" name="MainTorrentTab" language="CPP" />

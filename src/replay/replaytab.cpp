@@ -15,19 +15,19 @@
 
 #include "replaytab.h"
 #include "replaylistctrl.h"
-#include "ui.h"
-#include "chatpanel.h"
-#include "utils.h"
-#include "uiutils.h"
-#include "settings.h"
-#include "iunitsync.h"
-#include "mapctrl.h"
-#include "userlistctrl.h"
+#include "../ui.h"
+#include "../chatpanel.h"
+#include "../utils.h"
+#include "../uiutils.h"
+#include "../settings.h"
+#include "../iunitsync.h"
+#include "../mapctrl.h"
+#include "../userlistctrl.h"
 
 #include "replayfilter.h"
-#include "iconimagelist.h"
+#include "../iconimagelist.h"
 
-#include "settings++/custom_dialogs.h"
+#include "../settings++/custom_dialogs.h"
 
 
 #define REPLAYLIST_COLOUMNCOUNT 10

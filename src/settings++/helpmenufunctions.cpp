@@ -5,7 +5,7 @@
 #endif
 
 #include <wx/icon.h>
-#include "images/springsettings.xpm"
+#include "../images/springsettings.xpm"
 
 #include "custom_dialogs.h"
 #include <wx/intl.h>
