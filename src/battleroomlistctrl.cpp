@@ -474,16 +474,16 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
 
-  if ( m_sel_bot != 0 ) {
+  if ( m_sel_bot ) {
     wxColour CurrentColour = m_sel_bot->bs.colour;
     CurrentColour = GetColourFromUser(this, CurrentColour);
     if ( !CurrentColour.IsColourOk() ) return;
-    m_battle.SetBotColour( m_sel_bot->name, CurrentColour );
-  } else if ( m_sel_user != 0 ) {
+    if(m_sel_bot)m_battle.SetBotColour( m_sel_bot->name, CurrentColour );
+  } else if ( m_sel_user ) {
     wxColour CurrentColour = m_sel_user->BattleStatus().colour;
     CurrentColour = GetColourFromUser(this, CurrentColour);
     if ( !CurrentColour.IsColourOk() ) return;
-    m_battle.ForceColour( *m_sel_user, CurrentColour );
+    if(m_sel_user)m_battle.ForceColour( *m_sel_user, CurrentColour );
   }
 
 }
