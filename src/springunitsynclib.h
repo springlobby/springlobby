@@ -191,20 +191,26 @@ class SpringUnitSyncLib
     wxString GetMapArchiveName( int arnr );
 
     /**
-     * Get information about a map.
+     * @brief Get information about a map.
      * @param version will get author if >=1.
      * @note Throws assert_exception if unsuccessful.
      */
     MapInfo GetMapInfoEx( const wxString& mapName, int version );
 
     /**
-     * Get minimap.
+     * @brief Get minimap.
      * @note Throws assert_exception if unsuccessful.
      */
     wxImage GetMinimap( const wxString& mapFileName );
 
     /**
-     * Get metalmap.
+     * @brief Check whether unitsync supports GetInfoMap API.
+     * @note Only when this returns true GetMetalmap may be used.
+     */
+    bool HasGetInfoMap() const { return m_get_infomap_size != NULL; }
+
+    /**
+     * @brief Get metalmap.
      * @note Throws assert_exception if unsuccessful.
      */
     wxImage GetMetalmap( const wxString& mapFileName );

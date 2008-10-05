@@ -161,7 +161,7 @@ wxString SpringUnitSync::GetSpringVersion()
 }
 
 
-bool SpringUnitSync::VersionSupports( GameFeature feature )
+double SpringUnitSync::_GetSpringVersion()
 {
   wxString ver = GetSpringVersion();
   double nver = 0;
@@ -181,10 +181,16 @@ bool SpringUnitSync::VersionSupports( GameFeature feature )
     nver = nver * 100;
   }
   std::setlocale(LC_NUMERIC, old_locale);
+  return nver;
+}
+
+
+bool SpringUnitSync::VersionSupports( GameFeature feature )
+{
   switch (feature) {
-    case GF_XYStartPos: return nver >= 76.0;
-    case USYNC_Sett_Handler: return nver >= 76.0;
-    case USYNC_GetInfoMap: return nver >= 77.0;
+    case GF_XYStartPos:      return _GetSpringVersion() >= 76.0;
+    case USYNC_Sett_Handler: return _GetSpringVersion() >= 76.0;
+    case USYNC_GetInfoMap:   return susynclib()->HasGetInfoMap();
   }
   return false;
 }
