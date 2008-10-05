@@ -24,6 +24,7 @@ class settings_frame;
 class wxMenuItem;
 class wxMenuBar;
 class wxMenu;
+class AutojoinChannelDialog;
 
 // FIXME shouldn't copy this here
 typedef wxWindow wxNotebookPage;
@@ -34,6 +35,18 @@ typedef wxWindow wxNotebookPage;
 #define PAGE_JOIN 1
 #define PAGE_SINGLE 2
 #define PAGE_OPTOS 3
+
+static const unsigned int OPT_PAGE_SPRING = 0;
+static const unsigned int OPT_PAGE_CHAT = 1;
+#ifndef NO_TORRENT_SYSTEN
+static const unsigned int OPT_PAGE_TORRENT = 2;
+static const unsigned int OPT_PAGE_GENERAL = 3;
+static const unsigned int OPT_PAGE_GROUPS = 4;
+#else
+static const unsigned int OPT_PAGE_GENERAL = 2;
+static const unsigned int OPT_PAGE_GROUPS = 3;
+#endif
+
 
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
@@ -46,9 +59,9 @@ class MainWindow : public wxFrame
     void OpenChannelChat( Channel& channel );
     void OpenPrivateChat( User& user );
 
-    void CloseAllChats();
+    void ShowConfigure( const unsigned int page = OPT_PAGE_SPRING );
 
-    void ShowConfigure();
+    void ReloadSpringPathFromConfig();
 
     void OnMenuAbout( wxCommandEvent& event );
     void OnMenuJoin( wxCommandEvent& event );
@@ -58,9 +71,14 @@ class MainWindow : public wxFrame
     void OnMenuQuit( wxCommandEvent& event );
     void OnMenuVersion ( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
+    void OnMenuStartTorrent( wxCommandEvent& event );
+    void OnMenuStopTorrent( wxCommandEvent& event );
+    void OnMenuOpen( wxMenuEvent& event );
+    void OnMenuAutojoinChannels( wxCommandEvent& event );
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
     void OnShowSettingsPP( wxCommandEvent& event );
+    void OnShowToolTips( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
 
@@ -104,7 +122,7 @@ class MainWindow : public wxFrame
     wxBitmap* m_select_image;
 
     wxImageList* m_func_tab_images;
-
+    AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;
     bool se_frame_active;
 
@@ -128,7 +146,11 @@ enum
     MENU_DOC,
     MENU_CHAT,
     MAIN_TABS,
-    MENU_VERSION
+    MENU_VERSION,
+    MENU_START_TORRENT,
+    MENU_STOP_TORRENT,
+    MENU_SHOW_TOOLTIPS,
+    MENU_AUTOJOIN_CHANNELS
 
 };
 

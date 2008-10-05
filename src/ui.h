@@ -2,7 +2,9 @@
 #define SPRINGLOBBY_HEADERGUARD_UI_H
 
 #include <wx/string.h>
-#include <wx/thread.h>
+#include <wx/event.h>
+#include <map>
+#include "useractions.h"
 
 class Server;
 class TASServer;
@@ -14,13 +16,15 @@ class Channel;
 class User;
 class Battle;
 class SinglePlayerBattle;
-class BattleBot;
+struct BattleBot;
 class ChatPanel;
-class UnitSyncThread;
+
 
 typedef int HostInfo;
 
 typedef int AlertEventType;
+
+extern const wxEventType torrentSystemStatusUpdateEvt;
 
 #define AE_MESSAGE 1
 #define AE_HIGHLIGHT_MESSAGE 2
@@ -39,7 +43,7 @@ class Ui
     ~Ui();
 
     Server& GetServer();
-    bool    GetServerStatus() const;
+    bool    GetServerStatus();
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
 
@@ -76,7 +80,7 @@ class Ui
     void OpenWebBrowser( const wxString& url );
 
     bool Ask( const wxString& heading, const wxString& question );
-    bool AskText( const wxString& heading, const wxString& question, wxString& answer );
+    bool AskText( const wxString& heading, const wxString& question, wxString& answer, long style = wxOK | wxCANCEL | wxCENTRE );
     bool AskPassword( const wxString& heading, const wxString& message, wxString& password );
     void ShowMessage( const wxString& heading, const wxString& message );
     //void OnAlertEvent( AlertEventType ); //TODO alert system
@@ -101,7 +105,7 @@ class Ui
     void OnChannelDidAction( Channel& channel , User& user, const wxString& action );
     void OnChannelMessage( const wxString& channel, const wxString& msg );
 
-    void OnLeaveChannel( Channel& channel );
+    void OnLeaveChannel( wxString& name  );
     void OnChannelList( const wxString& channel, const int& numusers );
     void OnUserOnline( User& user );
     void OnUserOffline( User& user );
@@ -119,17 +123,10 @@ class Ui
     void OnBattleInfoUpdated( Battle& battle );
     void OnBattleInfoUpdated( Battle& battle, const wxString& Tag );
     void OnBattleStarted( Battle& battle );
-    void OnBattleStartRectsUpdated( Battle& battle );
-    void OnBattleMapChanged( Battle& battle );
-    void OnBattleMapRefresh();
 
     void OnBattleBotAdded( Battle& battle, BattleBot& bot );
     void OnBattleBotRemoved( Battle& battle, BattleBot& bot );
     void OnBattleBotUpdated( Battle& battle, BattleBot& bot );
-
-    void OnBattleDisableUnit( Battle& battle, const wxString& unitname );
-    void OnBattleEnableUnit( Battle& battle, const wxString& unitname );
-    void OnBattleEnableAllUnits( Battle& battle );
 
     void OnJoinedBattle( Battle& battle );
     void OnHostedBattle( Battle& battle );
@@ -150,25 +147,33 @@ class Ui
     void OnMapInfoCached( const wxString& mapname );
     void OnMinimapCached( const wxString& mapname );
     void OnModUnitsCached( const wxString& modname );
-    void OnCachedThreadTerminated();
-    void OnCachedThreadStarted();
 
     bool IsThisMe(User& other);
+    bool IsThisMe(User* other);
+    bool IsThisMe(const wxString& other);
 
-    bool TestHostPort( unsigned int port );
+    int TestHostPort( unsigned int port );
+
+    void ReloadPresetList();
 
   protected:
     Spring* m_spring;
-
-    UnitSyncThread* m_thread;
-    wxCriticalSection m_thread_wait;
 
     Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
 
-    unsigned int m_upd_intv_counter;
+    unsigned int m_upd_counter_torrent;
+    unsigned int m_upd_counter_battlelist;
+    unsigned int m_upd_counter_chat;
+
+    bool m_checked_for_update;
+
+    bool m_ingame;
 
 };
+
+Ui& ui();
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_UI_H

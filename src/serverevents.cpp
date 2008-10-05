@@ -35,7 +35,7 @@ void ServerEvents::OnDisconnected()
   m_serv.SetRequiredSpring (_T(""));
   m_ui.OnDisconnected( m_serv );
   #ifndef NO_TORRENT_SYSTEM
-  if( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->DisconnectToP2PSystem();
+  if( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectToP2PSystem();
   #endif
 }
 
@@ -59,7 +59,7 @@ void ServerEvents::OnLoginInfoComplete()
     m_serv.JoinChannel( channel, pass );
   }
   #ifndef NO_TORRENT_SYSTEM
-  if( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent()->ConnectToP2PSystem();
+  if( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
   #endif
   m_ui.OnLoggedIn( );
 }
@@ -110,8 +110,13 @@ void ServerEvents::OnPong( int ping_time )
 void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int cpu )
 {
   wxLogDebugFunc( _T("") );
+  try
+  {
   ASSERT_LOGIC( !m_serv.UserExists( nick ), _T("New user from server, but already exists!") );
+  } catch (...) { return; }
   User& user = m_serv._AddUser( nick );
+  if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, nick ) )
+    actNotifBox( SL_MAIN_ICON, nick + _(" is online") );
   user.SetCountry( country );
   user.SetCpu( cpu );
   m_ui.OnUserOnline( user );
@@ -126,7 +131,15 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
     User& user = m_serv.GetUser( nick );
     wxLogMessage( _T("calling user.SetStatus( status ) ") );
 
+    UserStatus oldStatus = user.GetStatus();
     user.SetStatus( status );
+
+    if ( useractions().DoActionOnUser( UserActions::ActNotifStatus, nick ) )
+    {
+        wxString diffString = status.GetDiffString( oldStatus ) ;
+        if ( diffString != wxEmptyString )
+            actNotifBox( SL_MAIN_ICON, nick + _(" is now ") + diffString );
+    }
 
     wxLogMessage( _T("calling m_ui.OnUserStatusChanged( user ) ") );
     m_ui.OnUserStatusChanged( user );
@@ -155,6 +168,8 @@ void ServerEvents::OnUserQuit( const wxString& nick )
     User &user=m_serv.GetUser( nick );
     m_ui.OnUserOffline( user );
     m_serv._RemoveUser( nick );
+    if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, nick ) )
+        actNotifBox( SL_MAIN_ICON, nick + _(" just went offline") );
   }catch(std::runtime_error &except){
   }
 }
@@ -167,7 +182,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
 {
   wxLogDebugFunc( _T("") );
   try{
-  ASSERT_RUNTIME( !m_serv.BattleExists( id ), _T("New battle from server, but already exists!") );
+  ASSERT_EXCEPTION( !m_serv.BattleExists( id ), _T("New battle from server, but already exists!") );
   Battle& battle = m_serv._AddBattle( id );
 
   User& user = m_serv.GetUser( nick );
@@ -180,10 +195,13 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
   battle.SetHostPort( port );
   battle.SetMaxPlayers( maxplayers );
   battle.SetIsPassworded( haspass );
-  battle.SetRankNeeded( rank );
-  battle.SetMap( map, maphash );
+  battle.SetRankNeeded( ( rank / 100 ) +1 );
+  battle.SetHostMap( map, maphash );
   battle.SetDescription( title );
-  battle.SetMod( mod, wxEmptyString );
+  battle.SetHostMod( mod, wxEmptyString );
+
+  if ( useractions().DoActionOnUser( UserActions::ActNotifBattle, user.GetNick() ) )
+        actNotifBox( SL_MAIN_ICON, user.GetNick() + _(" opened battle ") + title );
 
   m_ui.OnBattleOpened( battle );
   if ( user.Status().in_game ) {
@@ -195,17 +213,22 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
 }
 
 
-void ServerEvents::OnJoinedBattle( int battleid )
+void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
 {
   wxLogDebugFunc( _T("") );
   try{
   Battle& battle = m_serv.GetBattle( battleid );
 
+  battle.SetHostMod( battle.GetHostModName(), hash );
+
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.spectator = false;
 
-  battle.CustomBattleOptions()->loadOptions( MapOption, battle.GetMapName() );
-  battle.CustomBattleOptions()->loadOptions( ModOption, battle.GetModName() );
+  if ( !battle.IsFounderMe() )
+  {
+    battle.CustomBattleOptions().loadOptions( MapOption, battle.GetHostMapName() );
+    battle.CustomBattleOptions().loadOptions( ModOption, battle.GetHostModName() );
+  }
 
   m_ui.OnJoinedBattle( battle );
   }catch(std::runtime_error &except){
@@ -218,8 +241,16 @@ void ServerEvents::OnHostedBattle( int battleid )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
 
-  UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
-  bs.spectator = false;
+  battle.CustomBattleOptions().loadOptions( MapOption, battle.GetHostMapName() );
+  battle.CustomBattleOptions().loadOptions( ModOption, battle.GetHostModName() );
+
+  wxString presetname = sett().GetModDefaultPresetName( battle.GetHostModName() );
+  if ( !presetname.IsEmpty() )
+  {
+    battle.LoadOptionsPreset( presetname );
+  }
+
+  m_serv.SendHostInfo( HI_Send_All_opts );
 
   m_ui.OnHostedBattle( battle );
 }
@@ -239,10 +270,13 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
   try{
     User& user = m_serv.GetUser( nick );
     Battle& battle = m_serv.GetBattle( battleid );
+
+    if( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
+
+    if ( status == user.BattleStatus() ) return; /// drop the message if no updates to current status are present;
     status.color_index = user.BattleStatus().color_index;
 
-    user.UpdateBattleStatus( status );
-    battle.OnUserBattleStatusUpdated(user);
+    battle.OnUserBattleStatusUpdated( user, status );
 
     m_ui.OnUserBattleStatus( battle, user );
   }
@@ -298,15 +332,15 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   battle.SetSpectators( spectators );
   battle.SetIsLocked( locked );
 
-  wxString oldmap = battle.GetMapName();
+  wxString oldmap = battle.GetHostMapName();
 
-  battle.SetMap( map, maphash );
+  battle.SetHostMap( map, maphash );
 
   if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) )
   {
     battle.SendMyBattleStatus();
-    battle.CustomBattleOptions()->loadOptions( MapOption, map );
-    m_ui.OnBattleMapChanged( battle );
+    battle.CustomBattleOptions().loadOptions( MapOption, map );
+    battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
   }
 
   m_ui.OnBattleInfoUpdated( battle );
@@ -321,8 +355,8 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
   if ( key.Left( 5 ) == _T("game/") )
   {
     key = key.AfterFirst( '/' );
-    if (  battle.CustomBattleOptions()->setSingleOption( key,  value, EngineOption ) )
-      battle.Update( wxString::Format(_T("%d_"), EngineOption ) + key );
+    if (  battle.CustomBattleOptions().setSingleOption( key,  value, EngineOption ) )
+      battle.Update( wxString::Format(_T("%d_%s"), EngineOption, key.c_str() ) );
   }
   else if ( key.Left( 5 ) == _T("game/") )
   {
@@ -331,13 +365,13 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     {
       key = key.AfterFirst( '/' );
       if (  battle.CustomBattleOptions()->setSingleOption( key,  value, MapOption ) )  // m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
-        battle.Update( wxString::Format(_T("%d_"), MapOption ) + key );
+        battle.Update( wxString::Format(_T("%d_%s"), MapOption, key.c_str() ) );
     }
     else if ( key.Left( 11 ) == _T( "modoptions/" ) )
     {
       key = key.AfterFirst( '/' );
       if (  battle.CustomBattleOptions()->setSingleOption( key, value, ModOption ) );//m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
-        battle.Update(  wxString::Format(_T("%d_"), ModOption ) + key );
+        battle.Update(  wxString::Format(_T("%d_%s"), ModOption,  key.c_str() ) );
     }
   }
 }
@@ -367,7 +401,7 @@ void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   battle.DisableUnit( unitname );
-  m_ui.OnBattleDisableUnit( battle, unitname );
+  battle.Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
 }
 
 
@@ -376,7 +410,7 @@ void ServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   battle.EnableUnit( unitname );
-  m_ui.OnBattleEnableUnit( battle, unitname );
+  battle.Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
 }
 
 
@@ -385,7 +419,7 @@ void ServerEvents::OnBattleEnableAllUnits( int battleid )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   battle.EnableAllUnits();
-  m_ui.OnBattleEnableAllUnits( battle );
+  battle.Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
 }
 
 
@@ -395,8 +429,9 @@ void ServerEvents::OnJoinChannelResult( bool success, const wxString& channel, c
   if ( success ) {
 
     Channel& chan = m_serv._AddChannel( channel );
+    chan.SetPassword( m_serv.m_channel_pw[channel] );
     m_ui.OnJoinedChannelSuccessful( chan );
-    if ( channel == _T("springlobby")) {
+    if ( channel == _T("springlobby") && sett().GetReportStats() ) {
       m_serv.DoActionChannel( _T("springlobby"), _T("is using SpringLobby v") + GetSpringLobbyVersion() );
     }
 
@@ -410,7 +445,8 @@ void ServerEvents::OnChannelSaid( const wxString& channel, const wxString& who, 
 {
   wxLogDebugFunc( _T("") );
   try{
-    m_serv.GetChannel( channel ).Said( m_serv.GetUser( who ), message );
+    if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
+        m_serv.GetChannel( channel ).Said( m_serv.GetUser( who ), message );
   }catch(std::runtime_error &except){
   }
 }
@@ -458,7 +494,8 @@ void ServerEvents::OnPrivateMessage( const wxString& user, const wxString& messa
   wxLogDebugFunc( _T("") );
   try{
   User& who = m_serv.GetUser( user );
-  m_ui.OnUserSaid( who, message, fromme );
+  if (!useractions().DoActionOnUser( UserActions::ActIgnorePM, who.GetNick() ) )
+    m_ui.OnUserSaid( who, message, fromme );
   }catch(std::runtime_error &except){
   }
 }
@@ -490,6 +527,7 @@ void ServerEvents::OnSaidBattle( int battleid, const wxString& nick, const wxStr
 {
   Battle& battle = m_serv.GetBattle( battleid );
   m_ui.OnSaidBattle( battle, nick, msg );
+  battle.GetAutoHost().OnSaidBattle( nick, msg );
 }
 
 void ServerEvents::OnBattleAction( int battleid, const wxString& nick, const wxString& msg )
@@ -503,7 +541,7 @@ void ServerEvents::OnBattleStartRectAdd( int battleid, int allyno, int left, int
 {
   Battle& battle = m_serv.GetBattle( battleid );
   battle.AddStartRect( allyno, left, top, right, bottom );
-  m_ui.OnBattleStartRectsUpdated( battle );
+  battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
 }
 
 
@@ -511,7 +549,7 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
 {
   Battle& battle = m_serv.GetBattle( battleid );
   battle.RemoveStartRect( allyno );
-  m_ui.OnBattleStartRectsUpdated( battle );
+  battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
 }
 
 
@@ -521,7 +559,10 @@ void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, const wxS
   Battle& battle = m_serv.GetBattle( battleid );
   battle.OnBotAdded( nick, owner, status, aidll );
   BattleBot* bot = battle.GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  } catch (...) { return; }
   m_ui.OnBattleBotAdded( battle, *bot );
 }
 
@@ -532,7 +573,10 @@ void ServerEvents::OnBattleUpdateBot( int battleid, const wxString& nick, UserBa
   Battle& battle = m_serv.GetBattle( battleid );
   battle.OnBotUpdated( nick, status );
   BattleBot* bot = battle.GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  } catch (...) { return; }
   m_ui.OnBattleBotUpdated( battle, *bot );
 }
 
@@ -542,7 +586,10 @@ void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   BattleBot* bot = battle.GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
+  } catch (...) { return; }
   m_ui.OnBattleBotRemoved( battle, *bot );
   battle.OnBotRemoved( nick );
 }
@@ -630,4 +677,30 @@ void ServerEvents::OnKickedFromBattle()
 {
 	customMessageBoxNoModal(SL_MAIN_ICON,_("You were kicked from the battle!"),_("Kicked by Host"));
 
+}
+
+
+void ServerEvents::OnRedirect( const wxString& address,  unsigned int port, const wxString& CurrentNick, const wxString& CurrentPassword )
+{
+    sett().AddServer( address );
+    sett().SetServerHost( address, address );
+    sett().SetServerPort( address, (int)port );
+    m_ui.DoConnect( address, CurrentNick, CurrentPassword );
+}
+
+
+void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
+{
+  wxString nick = user.GetNick();
+  MessageSpamCheck info = m_spam_check[nick];
+  time_t now = time( 0 );
+  if ( info.lastmessage == now ) info.count++;
+  else info.count = 0;
+  info.lastmessage = now;
+  m_spam_check[nick] = info;
+  if ( info.count > 3 )
+  {
+    battle.DoAction( _T("is autokicking ") + nick + _T(" due to command spam.") );
+    battle.KickPlayer( user );
+  }
 }

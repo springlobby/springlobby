@@ -3,6 +3,7 @@
 // Class: NickListCtrl
 //
 
+#include <wx/platform.h>
 #include <wx/imaglist.h>
 #include <wx/menu.h>
 #include <wx/string.h>
@@ -13,11 +14,16 @@
 #include "utils.h"
 #include "iconimagelist.h"
 #include "user.h"
+#include "settings.h"
 #include "ui.h"
 #include "mainwindow.h"
 #include "countrycodes.h"
+#include "chatpanel.h"
+#include "userlist.h"
+#include "usermenu.h"
 
 #define TOOLTIP_DELAY 1000
+
 
 int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData);
 
@@ -33,10 +39,11 @@ BEGIN_EVENT_TABLE( NickListCtrl, customListCtrl )
 END_EVENT_TABLE()
 
 
-NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* popup ):
+NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::UserMenu* popup, bool singleSelectList,
+                            const wxString& name, bool highlight):
   customListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
-              wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | wxLC_SINGLE_SEL ),
-  m_ui(ui),
+              wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
+              name, highlight ),
   m_menu(popup)
 {
   wxListItem col;
@@ -61,19 +68,21 @@ NickListCtrl::NickListCtrl( wxWindow* parent,Ui& ui, bool show_header, wxMenu* p
   m_sortorder[2].direction = true;
   m_sortorder[3].col = 1;
   m_sortorder[3].direction = true;
-  Sort( );
-  #ifdef __WXMSW__
-  SetColumnWidth( 0, 55 );
-  #else
+
+#if defined(__WXMAC__)
+/// autosize is entirely broken on wxmac.
+  SetColumnWidth( 0, 20 );
+  SetColumnWidth( 1, 20 );
+  SetColumnWidth( 2, 20 );
+  SetColumnWidth( 3, 128 );
+#else
+ /// on wxGTK it works, sort of.
   SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
-  #endif
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
+#endif
 
-  SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
-  SetImageList( &icons(), wxIMAGE_LIST_SMALL );
-  SetImageList( &icons(), wxIMAGE_LIST_STATE );
 }
 
 
@@ -82,29 +91,44 @@ NickListCtrl::~NickListCtrl()
 
 }
 
-void NickListCtrl::AddUser( User& user )
+void NickListCtrl::AddUser( const UserList& userlist )
 {
-  SetSelectionRestorePoint();
-  int index = InsertItem( 0, icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+    for ( unsigned int i = 0; i < userlist.GetNumUsers(); ++i)
+    {
+        AddUser( userlist.GetUser( i ) );
+    }
+}
+
+void NickListCtrl::AddUser( const User& user )
+{
+  wxLogDebugFunc(_T(""));
+  assert(&user);
+
+  int index = InsertItem( GetItemCount(), icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+  if(index==-1){
+      wxLogMessage(_T("NickListCtrl::AddUser : index==-1"));
+      return;
+  }
+
   SetItemData( index, (wxUIntPtr)&user );
+  try
+  {
   ASSERT_LOGIC( index != -1, _T("index = -1") );
+  } catch (...) { return; }
+
   UserUpdated( index );
-  Sort();
   SetColumnWidth( 3, wxLIST_AUTOSIZE );
-  RestoreSelection();
+  MarkDirtySort();
 }
 
 void NickListCtrl::RemoveUser( const User& user )
 {
-  SetSelectionRestorePoint();
-  for (int i = 0; i < GetItemCount() ; i++ ) {
-    if ( &user == (User*)GetItemData( i ) ) {
-      DeleteItem( i );
-      Sort();
+  int index = GetUserIndex( user );
+  if ( index != -1 )
+  {
+      DeleteItem( index );
       SetColumnWidth( 3, wxLIST_AUTOSIZE );
-      RestoreSelection();
       return;
-    }
   }
   wxLogError( _T("Didn't find the user to remove.") );
 }
@@ -124,15 +148,16 @@ void NickListCtrl::UserUpdated( User& user )
 
 void NickListCtrl::UserUpdated( const int& index )
 {
-  SetSelectionRestorePoint();
   User& user = *((User*)GetItemData( index ));
-  SetItemImage( index, icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+  const UserStatus user_st = user.GetStatus();
+  SetItemImage( index, icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 ) );
   SetItemColumnImage( index, 1, icons().GetFlagIcon( user.GetCountry() ) );
   SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
-  Sort();
-  RestoreSelection();
+    //highlight
+  HighlightItemUser( index, user.GetNick() );
+  MarkDirtySort();
 }
 
 
@@ -144,7 +169,7 @@ void NickListCtrl::ClearUsers()
 }
 
 
-int NickListCtrl::GetUserIndex( User& user )
+int NickListCtrl::GetUserIndex( const User& user )const
 {
   for ( int i = 0; i < GetItemCount() ; i++ ) {
     if ( (unsigned long)&user == GetItemData( i ) ) return i;
@@ -159,7 +184,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
   int index = event.GetIndex();
   if ( index == -1 ) return;
   User* user = (User*)event.GetData();
-  m_ui.mw().OpenPrivateChat( *user );
+  ui().mw().OpenPrivateChat( *user );
   //FIXME why was this lfet here, what was it supposed to do?
   //m_ui.mw().OnTabsChanged( event2 );
 }
@@ -168,7 +193,14 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
 void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
 {
   wxLogDebugFunc( _T("") );
-  if ( m_menu != 0 ) PopupMenu( m_menu );
+  if ( m_menu != 0 )
+  {
+      //no need to popup the menu when there's no user selected
+      if ( GetSelectedIndex() != -1 ){
+          m_menu->EnableItems( (GetSelectedIndex()!=-1), _("JK") );
+          PopupMenu( m_menu );
+      }
+  }
 }
 
 void NickListCtrl::OnColClick( wxListEvent& event )
@@ -190,7 +222,6 @@ void NickListCtrl::OnColClick( wxListEvent& event )
   GetColumn( m_sortorder[0].col, col );
   col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
-
   Sort();
 }
 
@@ -210,26 +241,14 @@ void NickListCtrl::Sort()
 
 int wxCALLBACK NickListCtrl::ComparePlayernameUP(long item1, long item2, long sortData )
 {
-    // inverse the order
-
-    if ( ((User*)item1)->GetNick().MakeUpper() < ((User*)item2)->GetNick().MakeUpper() )
-        return -1;
-    if ( ((User*)item1)->GetNick().MakeUpper() > ((User*)item2)->GetNick().MakeUpper() )
-        return 1;
-
-    return 0;
+    return ((User*)item1)->GetNick().CmpNoCase(((User*)item2)->GetNick());
 }
 
 
 int wxCALLBACK NickListCtrl::ComparePlayernameDOWN(long item1, long item2, long sortData )
 {
     // inverse the order
-    if ( ((User*)item1)->GetNick().MakeUpper() < ((User*)item2)->GetNick().MakeUpper() )
-        return 1;
-    if ( ((User*)item1)->GetNick().MakeUpper() > ((User*)item2)->GetNick().MakeUpper() )
-        return -1;
-
-    return 0;
+    return ((User*)item2)->GetNick().CmpNoCase(((User*)item1)->GetNick());
 }
 
 
@@ -323,93 +342,78 @@ int wxCALLBACK NickListCtrl::ComparePlayerrankDOWN(long item1, long item2, long 
 
 int wxCALLBACK NickListCtrl::ComparePlayercountryUP(long item1, long item2, long sortData )
 {
-    // inverse the order
-
-    if ( ((User*)item1)->GetCountry().MakeUpper() < ((User*)item2)->GetCountry().MakeUpper() )
-        return -1;
-    if ( ((User*)item1)->GetCountry().MakeUpper() > ((User*)item2)->GetCountry().MakeUpper() )
-        return 1;
-
-    return 0;
+    return ((User*)item1)->GetCountry().CmpNoCase(((User*)item2)->GetCountry());
 }
 
 int wxCALLBACK NickListCtrl::ComparePlayercountryDOWN(long item1, long item2, long sortData )
 {
     // inverse the order
-    if ( ((User*)item1)->GetCountry().MakeUpper() < ((User*)item2)->GetCountry().MakeUpper() )
-        return 1;
-    if ( ((User*)item1)->GetCountry().MakeUpper() > ((User*)item2)->GetCountry().MakeUpper() )
-        return -1;
-
-    return 0;
+    return ((User*)item2)->GetCountry().CmpNoCase(((User*)item1)->GetCountry());
 }
 
-void NickListCtrl::OnMouseMotion(wxMouseEvent& event)
+void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-#if wxUSE_TIPWINDOW
-	tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-	wxPoint position = event.GetPosition();
+    User* user = (User*) GetItemData(item_hit);
+    int coloumn = getColoumnFromPosition(position);
+    if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
+    {
+        m_tiptext = _T("");
+    }
+    else
+    {
+        switch (coloumn)
+        {
+        case 0: // status
+            m_tiptext = _T("This ");
+            if (user->GetStatus().bot)
+                m_tiptext << _T("bot ");
+            else if (user->GetStatus().moderator)
+                m_tiptext << _T("moderator ");
+            else
+                m_tiptext << _T("player ");
 
-	int flag = wxLIST_HITTEST_ONITEM;
+            if (user->GetStatus().in_game)
+                m_tiptext <<  _T("is ingame");
+            else if (user->GetStatus().away)
+                m_tiptext <<  _T("is away");
+            else
+                m_tiptext << _T("is available");
+            break;
 
+        case 1: // country
+            m_tiptext =  GetFlagNameFromCountryCode(user->GetCountry().Upper());
+            break;
 
-	try{
-#ifdef HAVE_WX28
-		long *ptrSubItem = new long;
-		long item_hit = HitTest(position, flag, ptrSubItem);
-#else
-		long item_hit = HitTest(position, flag);
-#endif
-		int coloumn = getColoumnFromPosition(position);
+        case 2: // rank
+            m_tiptext = user->GetRankName(user->GetStatus().rank);
+            break;
 
-		if (item_hit != wxNOT_FOUND)
-		{
-			User* user = (User*) GetItemData(item_hit);
+        case 3: // nickname
+            m_tiptext = user->GetNick();
+            break;
 
-			if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
-			{
-				m_tiptext = _T("");
-			}
-			else
-			{
-				switch (coloumn)
-				{
-				case 0: // status
-					m_tiptext = _T("This ");
-					if (user->GetStatus().bot)
-						m_tiptext << _T("bot ");
-					else if (user->GetStatus().moderator)
-						m_tiptext << _T("moderator ");
-					else
-						m_tiptext << _T("player ");
-
-					if (user->GetStatus().in_game)
-						m_tiptext <<  _T("is ingame");
-					else if (user->GetStatus().away)
-						m_tiptext <<  _T("is away");
-					else
-						m_tiptext << _T("is available");
-					break;
-
-				case 1: // country
-					m_tiptext =  GetFlagNameFromCountryCode(user->GetCountry().MakeUpper());
-					break;
-
-				case 2: // rank
-					m_tiptext = user->GetRankName(user->GetStatus().rank);
-					break;
-
-				case 3: // nickname
-					m_tiptext = user->GetNick();
-					break;
-
-				default:
-					m_tiptext = m_colinfovec[coloumn].first;
-					break;
-				}
-			}
-		}
-	}catch(...){}
-#endif
+        default:
+            m_tiptext = m_colinfovec[coloumn].first;
+            break;
+        }
+    }
 }
 
+void NickListCtrl::HighlightItem( long item )
+{
+    User* u = (User*)GetItemData( item ) ;
+    if ( u != 0 ) {
+        wxString name = u->GetNick();
+        HighlightItemUser( item, name );
+    }
+}
+
+
+void NickListCtrl::SortList()
+{
+  if ( !m_dirty_sort ) return;
+  SetSelectionRestorePoint();
+  Sort();
+  RestoreSelection();
+  m_dirty_sort = false;
+}

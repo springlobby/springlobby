@@ -83,16 +83,16 @@ class SinglePlayerBattle: public IBattle
     unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
     void RemoveBot( unsigned int index );
     void UpdateBot( unsigned int index, int ally, int posx, int posy, int side );
-    BattleBot* GetBot( unsigned int index );
-    BattleBot* GetBotByStartPosition( unsigned int startpos );
-    unsigned int GetNumBots();
+    BattleBot* GetBot( unsigned int index ) const;
+    BattleBot* GetBotByStartPosition( unsigned int startpos ) ;
+    unsigned int GetNumBots() const;
 
-    wxColour GetFreeColour( User *for_whom );
+    wxColour GetFreeColour( User *for_whom ) const;
 
     int GetMyAlly() { return -1; }
     void SetMyAlly( int ally ) {}
 
-    bool IsFounderMe() { return true; }
+    bool IsFounderMe() const { return true; }
 
     int GetFreeAlly();
     void GetFreePosition( int& x, int& y );
@@ -100,16 +100,13 @@ class SinglePlayerBattle: public IBattle
     void SendHostInfo( HostInfo update );
     void SendHostInfo( const wxString& Tag ){}
 
-    std::vector<BattleStartRect*>::size_type GetNumRects() { return 0; }
-    mmOptionsWrapper* CustomBattleOptions() { return &m_opt_wrap; }
+    void Update( const wxString& Tag );
 
   protected:
 
     Ui& m_ui;
     MainSinglePlayerTab& m_sptab;
     std::vector<BattleBot*> m_bots;
-
-    mmOptionsWrapper m_opt_wrap;
 
 };
 

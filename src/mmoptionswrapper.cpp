@@ -11,6 +11,7 @@ mmOptionsWrapper::mmOptionsWrapper()
 {
 	unLoadOptions();
 	loadOptions( EngineOption );
+	loadOptions( PrivateOptions );
 }
 
 void mmOptionsWrapper::unLoadOptions()
@@ -36,7 +37,7 @@ bool mmOptionsWrapper::loadMapOptions(wxString mapname)
 	return loadOptions(MapOption,mapname);
 }
 
-OptionType mmOptionsWrapper::GetSingleOptionType (wxString key)
+OptionType mmOptionsWrapper::GetSingleOptionType (wxString key) const
 {
 	OptionType type = opt_undefined;
 	for ( int g = 0; g < optionCategoriesCount; g++ )
@@ -59,7 +60,7 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
 		case MapOption:
 			try
 			{
-        opt = usync()->GetMapOptions(name);
+        opt = usync().GetMapOptions(name);
 			}
 			catch(...)
 			{
@@ -70,7 +71,7 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
 		case ModOption:
 			try
 			{
-        opt = usync()->GetModOptions(name);
+        opt = usync().GetModOptions(name);
 			}
 			catch(...)
 			{
@@ -79,6 +80,7 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
 			}
 			break;
     case EngineOption:
+    {
         opt.bool_map[_T("limitdgun")] = mmOptionBool(_("Limit D-Gun"),_T("limitdgun"),
         _("Disables commander's D-gun when being too far away from the starting point"),false);
         opt.bool_map[_T("ghostedbuildings")] = mmOptionBool(_("Ghosted Buildings"),_T("ghostedbuildings"),
@@ -100,12 +102,21 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
         opt.int_map[_T("maxunits")] = mmOptionInt( _("Max Units Allowed"),_T("maxunits"),
         _("Sets the maximum amount of units that a player will be allowed to build"),
         500, 1, 0, 10000);
+        break;
+    }
+    case PrivateOptions:
+    {
+        opt.string_map[_T("restrictions")] = mmOptionString(_("List of restricted units"), /// tab separated list
+        _T("restrictedunits"), _T("Units in this list won't be available in game"), _T(""), 0 );
+        opt.string_map[_T("mapname")] = mmOptionString(_("Map name"), _T("mapname"), _T("Map name"), _T(""), 0 );
+        break;
+    }
 	}
 	opts[modmapFlag] = opt;
 	return true;
 }
 
-bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showError, OptionType& optType)
+bool mmOptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showError, OptionType& optType) const
 {
 	wxString duplicateKeyError = _T("Please contact the mod's author and tell him\n"
 										"to use unique keys in his ModOptions.lua");
@@ -172,60 +183,64 @@ bool  mmOptionsWrapper::setOptions(wxStringPairVec* options, GameOption modmapFl
 	return true;
 }
 
-void  mmOptionsWrapper::getOptions(wxStringTripleVec* list, GameOption modmapFlag)
+wxStringTripleVec mmOptionsWrapper::getOptions( GameOption modmapFlag) const
 {
-	for (optionMapBoolIter it = opts[modmapFlag].bool_map.begin(); it != opts[modmapFlag].bool_map.end(); ++it)
+  wxStringTripleVec list;
+	for (optionMapBoolConstIter it = opts[modmapFlag].bool_map.begin(); it != opts[modmapFlag].bool_map.end(); ++it)
 	{
-		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name , i2s(it->second.value) ) ) );
+		list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name , i2s(it->second.value) ) ) );
 	}
 
-	for (optionMapStringIter it = opts[modmapFlag].string_map.begin(); it != opts[modmapFlag].string_map.end(); ++it)
+	for (optionMapStringConstIter it = opts[modmapFlag].string_map.begin(); it != opts[modmapFlag].string_map.end(); ++it)
 	{
-		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, it->second.value) ) );
+		list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, it->second.value) ) );
 	}
 
-	for (optionMapFloatIter it = opts[modmapFlag].float_map.begin(); it != opts[modmapFlag].float_map.end(); ++it)
+	for (optionMapFloatConstIter it = opts[modmapFlag].float_map.begin(); it != opts[modmapFlag].float_map.end(); ++it)
 	{
-		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, f2s(it->second.value) ) ) );
+		list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, f2s(it->second.value) ) ) );
 	}
 
-	for (optionMapListIter it = opts[modmapFlag].list_map.begin(); it != opts[modmapFlag].list_map.end(); ++it)
+	for (optionMapListConstIter it = opts[modmapFlag].list_map.begin(); it != opts[modmapFlag].list_map.end(); ++it)
 	{
-		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, it->second.value ) ) );
+		list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, it->second.value ) ) );
 	}
 
-	for (optionMapIntIter it = opts[modmapFlag].int_map.begin(); it != opts[modmapFlag].int_map.end(); ++it)
+	for (optionMapIntConstIter it = opts[modmapFlag].int_map.begin(); it != opts[modmapFlag].int_map.end(); ++it)
 	{
-		list->push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, i2s(it->second.value) ) ) );
+		list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, i2s(it->second.value) ) ) );
 	}
+	return list;
 }
 
-void mmOptionsWrapper::getOptionsMap(wxStringMap* map, GameOption modmapFlag)
+std::map<wxString,wxString> mmOptionsWrapper::getOptionsMap( GameOption modmapFlag ) const
 {
-	for (optionMapBoolIter it = opts[modmapFlag].bool_map.begin(); it != opts[modmapFlag].bool_map.end(); ++it)
+  std::map<wxString,wxString> map;
+	for (optionMapBoolConstIter it = opts[modmapFlag].bool_map.begin(); it != opts[modmapFlag].bool_map.end(); ++it)
 	{
-		(*map)[it->first] =  i2s(it->second.value);
+		map[it->first] =  i2s(it->second.value);
 	}
 
-	for (optionMapStringIter it = opts[modmapFlag].string_map.begin(); it != opts[modmapFlag].string_map.end(); ++it)
+	for (optionMapStringConstIter it = opts[modmapFlag].string_map.begin(); it != opts[modmapFlag].string_map.end(); ++it)
 	{
-		(*map)[it->first] = it->second.value;
+		map[it->first] = it->second.value;
 	}
 
-	for (optionMapFloatIter it = opts[modmapFlag].float_map.begin(); it != opts[modmapFlag].float_map.end(); ++it)
+	for (optionMapFloatConstIter it = opts[modmapFlag].float_map.begin(); it != opts[modmapFlag].float_map.end(); ++it)
 	{
-		(*map)[it->first] = f2s(it->second.value);
+		map[it->first] = f2s(it->second.value);
 	}
 
-	for (optionMapListIter it = opts[modmapFlag].list_map.begin(); it != opts[modmapFlag].list_map.end(); ++it)
+	for (optionMapListConstIter it = opts[modmapFlag].list_map.begin(); it != opts[modmapFlag].list_map.end(); ++it)
 	{
-		(*map)[it->first] = it->second.value;
+		map[it->first] = it->second.value;
 	}
 
-	for (optionMapIntIter it = opts[modmapFlag].int_map.begin(); it != opts[modmapFlag].int_map.end(); ++it)
+	for (optionMapIntConstIter it = opts[modmapFlag].int_map.begin(); it != opts[modmapFlag].int_map.end(); ++it)
 	{
-		(*map)[it->first] =  i2s(it->second.value);
+		map[it->first] =  i2s(it->second.value);
 	}
+	return map;
 }
 
 bool mmOptionsWrapper::setSingleOption(wxString key,wxString value,GameOption modmapFlag)
@@ -246,35 +261,37 @@ bool mmOptionsWrapper::setSingleOption(wxString key,wxString value)
 		return false;
 }
 
-wxString mmOptionsWrapper::getSingleValue(wxString key)
+wxString mmOptionsWrapper::getSingleValue(wxString key) const
 {
 	for ( int g = 0; g < optionCategoriesCount; g++ )
 	{
-		wxString tmp = getSingleValue(key, (GameOption)g);
+		const wxString tmp = getSingleValue(key, (GameOption)g);
 		if (tmp != wxEmptyString)
 			return tmp;
 	}
 	return wxEmptyString;
 }
 
-wxString mmOptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag)
+wxString mmOptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag) const
 {
 	OptionType optType = opt_undefined;
 
 	if ( keyExists(key,modmapFlag,false,optType) )
 	{
+	    //purposefully create a copy, no better idea
+	    GameOptions tempOpt = opts[modmapFlag];
 		switch (optType)
 		{
 		case opt_float:
-			return f2s( opts[modmapFlag].float_map[key].value );
+			return f2s( tempOpt.float_map[key].value );
 		case opt_bool:
-			return i2s( opts[modmapFlag].bool_map[key].value );
+			return i2s( tempOpt.bool_map[key].value );
 		case opt_int:
-			return i2s( opts[modmapFlag].int_map[key].value );
+			return i2s( tempOpt.int_map[key].value );
 		case opt_string:
-			return  opts[modmapFlag].string_map[key].value ;
+			return  tempOpt.string_map[key].value ;
 		case opt_list:
-			return opts[modmapFlag].list_map[key].value;
+			return tempOpt.list_map[key].value;
         case opt_undefined:
             return wxEmptyString;
 		}
@@ -331,7 +348,8 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 		case opt_string :
 		{
 			// test if maxlength isn't exceeded
-			if ( int(value.Len())> (opts[modmapFlag].string_map)[key].max_len )
+			unsigned int max_lenght = (opts[modmapFlag].string_map)[key].max_len;
+			if ( ( max_lenght != 0 ) && ( value.Len() > max_lenght )  )
 			{
 				wxLogWarning(_T("recieved string option exceeds max_len"));
 				return false;
@@ -357,7 +375,7 @@ bool  mmOptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, 
 
 			if (valid_string)
 			{
-			    //TODO TEST/FIXME
+			    //LOOKATME (koshi) if there's a problem with list modoption look here first
 				(opts[modmapFlag].list_map)[key].value = (opts[modmapFlag].list_map)[key].listitems[j].key;
 				(opts[modmapFlag].list_map)[key].cur_choice_index = j;
 			}
@@ -383,7 +401,7 @@ bool mmOptionsWrapper::reloadMapOptions(wxString mapname)
 	return loadMapOptions(mapname);
 }
 
-wxString mmOptionsWrapper::GetNameListOptValue(wxString key, GameOption flag)
+wxString mmOptionsWrapper::GetNameListOptValue(wxString key, GameOption flag) const
 {
 	OptionType optType;
 	if (flag < ModOption || flag > LastOption - 1)
@@ -392,7 +410,8 @@ wxString mmOptionsWrapper::GetNameListOptValue(wxString key, GameOption flag)
 	{
 		if ( optType == opt_list)
 		{
-			return ( (opts[flag].list_map)[key].cbx_choices[ (opts[flag].list_map)[key].cur_choice_index ] );
+		    GameOptions tempOpt = opts[flag];
+			return ( (tempOpt.list_map)[key].cbx_choices[ (tempOpt.list_map)[key].cur_choice_index ] );
 		}
 	}
 
@@ -400,7 +419,7 @@ wxString mmOptionsWrapper::GetNameListOptValue(wxString key, GameOption flag)
 	return wxEmptyString;
 }
 
-wxString mmOptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag)
+wxString mmOptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag) const
 {
 	OptionType optType;
 	if (flag < ModOption || flag > LastOption - 1)
@@ -409,7 +428,8 @@ wxString mmOptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemn
 	{
 		if ( optType == opt_list)
 		{
-			for (ListItemVec::iterator it = (opts[flag].list_map)[optkey].listitems.begin(); it != (opts[flag].list_map)[optkey].listitems.end(); ++it)
+		    GameOptions tempOpt = opts[flag];
+			for (ListItemVec::iterator it = (tempOpt.list_map)[optkey].listitems.begin(); it != (tempOpt.list_map)[optkey].listitems.end(); ++it)
 			{
 				if (it->name == itemname)
 					return it->key;

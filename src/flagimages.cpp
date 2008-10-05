@@ -19,6 +19,7 @@ int GetFlagIndex( const wxString& flag )
 int AddFlagImages( wxImageList& imgs )
 {
   int index, poszero;
+  index = poszero = 0;
   for (int i = 0; flag_xpm[i]; ++i)
   {
     index = imgs.Add( wxBitmap( const_cast<const char**>(flag_xpm[i])) );

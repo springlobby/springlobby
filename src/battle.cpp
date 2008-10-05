@@ -12,12 +12,18 @@
 #include "user.h"
 #include "utils.h"
 #include "uiutils.h"
+#include "settings.h"
+#include "useractions.h"
+#include "settings++/custom_dialogs.h"
+
 #include "iconimagelist.h"
 
 #include <algorithm>
 #include <math.h>
 
 #include <wx/image.h>
+#include <wx/string.h>
+#include <wx/intl.h>
 #include "images/fixcolours_palette.xpm"
 
 
@@ -54,9 +60,9 @@ const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBo
 Battle::Battle( Server& serv, Ui& ui, int id ) :
   m_serv(serv),
   m_ui(ui),
+  m_ah(*this),
   m_ingame(false),
   m_order(0),
-  m_rects(16, static_cast<BattleStartRect*>(0)),
   m_bot_seek(m_bots.end()),
   m_bot_pos(BOT_SEEKPOS_INVALID)
 {
@@ -69,12 +75,6 @@ Battle::~Battle() {
   for (user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
 //    GetUser(i).SetBattle( 0 );
   ClearStartRects();
-}
-
-
-Server& Battle::GetServer()
-{
-  return m_serv;
 }
 
 
@@ -114,7 +114,7 @@ void Battle::Leave()
 }
 
 
-int Battle::GetFreeTeamNum( bool excludeme )
+int Battle::GetFreeTeamNum( bool excludeme ) const
 {
   int lowest = 0;
   bool changed = true;
@@ -142,7 +142,7 @@ int Battle::GetFreeTeamNum( bool excludeme )
 }
 
 
-wxColour Battle::GetFreeColour( User *for_whom )
+wxColour Battle::GetFreeColour( User *for_whom ) const
 {
   int lowest = 0;
   bool changed = true;
@@ -201,7 +201,7 @@ void Battle::FixColours( ){
   if(!IsFounderMe())return;
   std::vector<wxColour> &palette=GetFixColoursPalette();
   std::vector<int> palette_use(palette.size(),0);
-  int max_fix_users=std::min( GetNumUsers(),palette.size());
+  user_map_t::size_type max_fix_users=std::min( GetNumUsers(),palette.size());
 
   wxColour my_col=GetMe().BattleStatus().colour;/// Never changes color of founder (me) :-)
   int my_diff=0;
@@ -233,9 +233,9 @@ void Battle::OnRequestBattleStatus()
   bs.team = lowest;
   bs.ally = lowest;
   bs.spectator = false;
-  bs.colour=wxColour(1,1,0);
+  bs.colour = sett().GetBattleLastColour();
   /// theres some highly annoying bug with color changes on player join/leave.
-  bs.colour = GetFreeColour(&m_serv.GetMe());
+  if ( !bs.colour.IsColourOk() ) bs.colour = GetFreeColour(&m_serv.GetMe());
 
   SendMyBattleStatus();
 }
@@ -263,17 +263,20 @@ void Battle::SetImReady( bool ready )
 
 bool Battle::IsSynced()
 {
-  if ( MapExists() && ModExists() ) {
-    return true;
-  } else {
-    return false;
-  }
+  LoadMod();
+  LoadMap();
+  bool synced = true;
+  if ( !m_host_map.hash.IsEmpty() ) synced = synced && (m_local_map.hash == m_host_map.hash);
+  if ( !m_host_map.name.IsEmpty() ) synced = synced && (m_local_map.name == m_host_map.name);
+  if ( !m_host_mod.hash.IsEmpty() ) synced = synced && (m_local_mod.hash == m_host_mod.hash);
+  if ( !m_host_mod.name.IsEmpty() ) synced = synced && (m_local_mod.name == m_host_mod.name);
+  return synced;
 }
 
 
 /*bool Battle::HasMod()
 {
-  return usync()->ModExists( m_opts.modname );
+  return usync().ModExists( m_opts.modname );
 }*/
 
 
@@ -298,30 +301,30 @@ bool Battle::HaveMultipleBotsInSameTeam() const
   for( i = m_bots.begin(); i != m_bots.end(); ++i )
   {
     if ( *i == 0 ) continue;
-    if ( teams[(*i)->bs.team ] != -1 )return true;
+    if ( teams[(*i)->bs.team ] == 1 )return true;
     teams[ (*i)->bs.team ] = 1;
   }
   return false;
 }
 
 
-User& Battle::GetMe()
+User& Battle::GetMe() const
 {
   return m_serv.GetMe();
 }
 
 
-bool Battle::IsFounderMe()
+bool Battle::IsFounderMe() const
 {
   return (m_opts.founder == m_serv.GetMe().GetNick());
 }
 
-int Battle::GetMyPlayerNum()
+int Battle::GetMyPlayerNum() const
 {
   for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
     if ( &GetUser(i) == &m_serv.GetMe() ) return i;
   }
-  ASSERT_RUNTIME(false, _T("You are not in this game.") );
+  ASSERT_EXCEPTION(false, _T("You are not in this game.") );
   return -1;
 }
 
@@ -345,7 +348,9 @@ void Battle::OnUserAdded( User& user )
 
     m_opts.spectators+=user.BattleStatus().spectator?1:0;
 
-    CheckBan(user);
+    if (CheckBan(user))
+      return;
+
     if(user.GetStatus().rank<m_opts.rankneeded){
       switch(m_opts.ranklimittype){
         case rank_limit_none:
@@ -359,20 +364,44 @@ void Battle::OnUserAdded( User& user )
         case rank_limit_autokick:
         DoAction(_T("Rank limit autokick: ")+user.GetNick());
         BattleKickPlayer(user);
-        break;
+        return;
       }
     }
+
+    m_ah.OnUserAdded(user);
   }
+  // any code here may be skipped if the user was autokicked
 }
 
-void Battle::OnUserBattleStatusUpdated( User &user ){
-  if(IsFounderMe()){
+void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
+{
 
-    m_opts.spectators=0;
-    for(size_t i=0;i<GetNumUsers();++i){
-      if(GetUser(i).BattleStatus().spectator)m_opts.spectators++;
+  bool previousspectatorstatus = user.BattleStatus().spectator;
+
+  user.UpdateBattleStatus( status );
+
+  if(status.handicap!=0)
+  {
+    m_ui.OnBattleAction(*this,wxString(_T(" ")),(_T("Warning: user ")+user.GetNick()+_T(" got bonus "))<< status.handicap);
+  }
+
+  if(IsFounderMe())
+  {
+
+    if ( status.spectator != previousspectatorstatus )
+    {
+      if ( status.spectator )
+      {
+         m_opts.spectators++;
+         SendHostInfo(HI_Spectators);
+      }
+      else
+      {
+        m_opts.spectators--;
+        SendHostInfo(HI_Spectators);
+      }
+
     }
-
 
     if(user.GetStatus().rank<m_opts.rankneeded){
       switch(m_opts.ranklimittype){
@@ -391,7 +420,6 @@ void Battle::OnUserBattleStatusUpdated( User &user ){
       }
     }
 
-    SendHostInfo(HI_Spectators);
   }
 }
 
@@ -403,6 +431,7 @@ void Battle::OnUserRemoved( User& user )
   }
   user.SetBattle( 0 );
   UserList::RemoveUser( user.GetNick() );
+  m_ah.OnUserRemoved(user);
 }
 
 
@@ -496,98 +525,97 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
   return false;
 }
 ///< quick hotfix for bans
-void Battle::CheckBan(User &user){
+/// returns true if user is banned (and hence has been kicked)
+bool Battle::CheckBan(User &user){
   if(IsFounderMe()){
-    if(m_banned_users.count(user.GetNick())>0){
+    if(m_banned_users.count(user.GetNick())>0
+        || useractions().DoActionOnUser(UserActions::ActAutokick, user.GetNick() ) ) {
       BattleKickPlayer(user);
       m_ui.OnBattleAction(*this,wxString(_T(" ")),user.GetNick()+_T(" is banned, kicking"));
-    }else
-    if(m_banned_ips.count(user.BattleStatus().ip)>0){
+      return true;
+    }
+    else if(m_banned_ips.count(user.BattleStatus().ip)>0){
       m_ui.OnBattleAction(*this,wxString(_T(" ")),user.BattleStatus().ip+_T(" is banned, kicking"));
       BattleKickPlayer(user);
+      return true;
     }
   }
+  return false;
 }
 ///>
 
 
 
 
-void Battle::AddStartRect( int allyno, int left, int top, int right, int bottom )
+void Battle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
 {
-  ASSERT_LOGIC( (allyno >= 0 || allyno < int(GetMaxPlayers()) ), _T("Allyno out of bounds.") );
-  BattleStartRect* sr;
-  bool local;
-  while ( allyno >= int(m_rects.size()) ) m_rects.push_back(0); // add new element is it exceeds the vector bounds
-  if ( m_rects[allyno] == 0 ) {
-    sr = new BattleStartRect();
-    local = true;
-  } else {
-    sr = m_rects[allyno];
-    local = false;
-  }
+  BattleStartRect sr;
 
-  sr->ally = allyno;
-  sr->left = left;
-  sr->top = top;
-  sr->right = right;
-  sr->bottom = bottom;
-  sr->local = local;
-  sr->updated = true;//local;
-  sr->deleted = false;
+  sr.ally = allyno;
+  sr.left = left;
+  sr.top = top;
+  sr.right = right;
+  sr.bottom = bottom;
+  sr.toadd = true;
+  sr.todelete = false;
+  sr.toresize = false;
+  sr.exist = true;
+
   m_rects[allyno] = sr;
 }
 
 
-void Battle::RemoveStartRect( int allyno )
+void Battle::RemoveStartRect( unsigned int allyno )
 {
-  if ( allyno <0 ) return;
-  if ( allyno >= int(m_rects.size() )) return;
-  BattleStartRect* sr = m_rects[allyno];
-  if ( sr == 0 ) return;
-  sr->deleted = true;
+  if ( allyno >= m_rects.size() ) return;
+  BattleStartRect sr = m_rects[allyno];
+  sr.todelete = true;
+  m_rects[allyno] = sr;
 }
 
 
-void Battle::UpdateStartRect( int allyno )
+void Battle::ResizeStartRect( unsigned int allyno )
 {
-  if ( allyno >= int(m_rects.size()) ) return;
-  BattleStartRect* sr = m_rects[allyno];
-  if ( sr == 0 ) return;
-  sr->updated = true;
+  if ( allyno >= m_rects.size() ) return;
+  BattleStartRect sr = m_rects[allyno];
+  sr.toresize = true;
+  m_rects[allyno] = sr;
 }
 
 
-void Battle::StartRectRemoved( int allyno )
+void Battle::StartRectRemoved( unsigned int allyno )
 {
-  if ( allyno >= int(m_rects.size()) ) return;
-  BattleStartRect* sr = m_rects[allyno];
-  if ( sr == 0 ) return;
-  m_rects[allyno] = 0;
-  delete sr;
+  if ( allyno >= m_rects.size() ) return;
+  if ( m_rects[allyno].todelete ) m_rects.erase(allyno);
 }
 
 
-void Battle::StartRectUpdated( int allyno )
+void Battle::StartRectResized( unsigned int allyno )
 {
-  if ( allyno >= int(m_rects.size()) ) return;
-  BattleStartRect* sr = m_rects[allyno];
-  if ( sr == 0 ) return;
-  sr->updated = false;
-  sr->local = false;
+  if ( allyno >= m_rects.size() ) return;
+  BattleStartRect sr = m_rects[allyno];
+  sr.toresize = false;
+  m_rects[allyno] = sr;
 }
 
 
-BattleStartRect* Battle::GetStartRect( int allyno )
+void Battle::StartRectAdded( unsigned int allyno )
 {
-  ASSERT_LOGIC( (allyno >= 0 || allyno < int(GetMaxPlayers()) ), _T("Allyno out of bounds.") );
-  if ( allyno >= int(m_rects.size() )) return 0;
+  if ( allyno >= m_rects.size() ) return;
+  BattleStartRect sr = m_rects[allyno];
+  sr.toadd = false;
+  m_rects[allyno] = sr;
+}
+
+
+BattleStartRect Battle::GetStartRect( unsigned int allyno )
+{
   return m_rects[allyno];
 }
 
 void Battle::ClearStartRects()
 {
-  for ( std::vector<BattleStartRect*>::size_type i = 0; i < GetNumRects(); i++ ) RemoveStartRect( i );
+  m_rects.clear();
 }
 
 
@@ -606,7 +634,10 @@ void Battle::RemoveBot( const wxString& nick )
 void Battle::SetBotTeam( const wxString& nick, int team )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
   bot->bs.team = team;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
@@ -615,7 +646,10 @@ void Battle::SetBotTeam( const wxString& nick, int team )
 void Battle::SetBotAlly( const wxString& nick, int ally )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
   bot->bs.ally = ally;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
@@ -624,7 +658,10 @@ void Battle::SetBotAlly( const wxString& nick, int ally )
 void Battle::SetBotSide( const wxString& nick, int side )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
   bot->bs.side = side;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
@@ -633,7 +670,10 @@ void Battle::SetBotSide( const wxString& nick, int side )
 void Battle::SetBotColour( const wxString& nick, const wxColour& col )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
   bot->bs.colour = col;
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
@@ -642,7 +682,10 @@ void Battle::SetBotColour( const wxString& nick, const wxColour& col )
 void Battle::SetBotHandicap( const wxString& nick, int handicap )
 {
   BattleBot* bot = GetBot( nick );
-  ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
   if ( bot->owner != GetMe().GetNick() && !IsFounderMe() )
   {
     m_serv.DoActionBattle( m_opts.battleid, _T("thinks ") + nick + _T(" should get a ") + wxString::Format( _T("%d"),  handicap ) + _T("% resource bonus") );
@@ -687,14 +730,17 @@ void Battle::OnBotRemoved( const wxString& nick )
 void Battle::OnBotUpdated( const wxString& name, const UserBattleStatus& bs )
 {
   BattleBot* bot = GetBot( name );
-  ASSERT_LOGIC( bot != 0, _T("Bad bot name") );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
   int order = bot->bs.order;
   bot->bs = bs;
   bot->bs.order = order;
 }
 
 
-BattleBot* Battle::GetBot( const wxString& name )
+BattleBot* Battle::GetBot( const wxString& name ) const
 {
   std::list<BattleBot*>::const_iterator i;
 
@@ -709,7 +755,7 @@ BattleBot* Battle::GetBot( const wxString& name )
   return 0;
 }
 
-BattleBot* Battle::GetBot( unsigned int index )
+BattleBot* Battle::GetBot( unsigned int index ) const
 {
   if ((m_bot_pos == BOT_SEEKPOS_INVALID) || (m_bot_pos > index)) {
     m_bot_seek = m_bots.begin();
@@ -721,7 +767,7 @@ BattleBot* Battle::GetBot( unsigned int index )
 }
 
 
-unsigned int Battle::GetNumBots()
+unsigned int Battle::GetNumBots() const
 {
   return m_bots.size();
 }
@@ -772,7 +818,7 @@ void Battle::SetHandicap( User& user, int handicap)
 }
 
 
-std::vector<BattleStartRect*>::size_type Battle::GetNumRects()
+unsigned int Battle::GetNumRects()
 {
   return m_rects.size();
 }
@@ -834,7 +880,8 @@ struct ClannersRemovalPredicate{
   }
 }*/
 
-void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans){
+void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans)
+{
   wxLogMessage(_T("Autobalancing, type=%d, clans=%d, strong_clans=%d"),balance_type,int(support_clans),int(strong_clans));
   DoAction(_T("is auto-balancing alliances ..."));
   int tmp=GetNumRects();
@@ -843,8 +890,8 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
   std::vector<Alliance>alliances;
   int ally=0;
   for(int i=0;i<tmp;++i){
-    BattleStartRect* sr = m_rects[i];
-    if(sr && !sr->deleted){
+    BattleStartRect sr = m_rects[i];
+    if( sr.IsOk() ){
       ally=i;
       alliances.push_back(Alliance(ally));
       ally++;
@@ -952,10 +999,43 @@ void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans
       ASSERT_LOGIC(alliances[i].players[j],_T("fail in Autobalance, NULL player"));
       wxString msg=wxString::Format(_T("setting player %s to alliance %d"),alliances[i].players[j]->GetNick().c_str(),i);
       wxLogMessage(_T("%s"),msg.c_str());
-      m_ui.OnBattleAction(*this,wxString(_T(" ")),msg);
       ForceAlly(*alliances[i].players[j],alliances[i].allynum);
     }
   }
-  Update();
 }
 
+void Battle::FixTeamIDs()
+{
+  /// apparently tasserver doesnt like when i fix/force ids of everyone.
+  std::set<int> allteams;
+  size_t numusers = GetNumUsers();
+  for(size_t i=0;i<numusers;++i){
+    User &user=GetUser(i);
+    if(!user.BattleStatus().spectator)allteams.insert(user.BattleStatus().team);
+  }
+  std::set<int> teams;
+  int t=0;
+  for(size_t i=0;i<GetNumUsers();++i){
+    User &user=GetUser(i);
+    if(!user.BattleStatus().spectator){
+      if(teams.count(user.BattleStatus().team)){
+        while(allteams.count(t)||teams.count(t))t++;
+        ForceTeam(GetUser(i),t);
+        teams.insert(t);
+      }else{
+        teams.insert(user.BattleStatus().team);
+      }
+    }
+  }
+}
+
+
+void Battle::ForceUnsyncedToSpectate()
+{
+  size_t numusers = GetNumUsers();
+  for( size_t i = 0; i < numusers; ++i )
+  {
+    User &user = GetUser(i);
+    if ( !user.BattleStatus().spectator && !user.BattleStatus().sync ) ForceSpectator( user, true );
+  }
+}

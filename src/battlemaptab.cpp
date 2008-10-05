@@ -100,10 +100,6 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   SetSizer( m_main_sizer );
   Layout();
 
-  if(battle.IsFounderMe()){
-    sett().LoadBattleMapOptions(&m_battle);
-    m_battle.SendHostInfo( HI_StartRects );
-  }
   ReloadMaplist();
   Update();
 
@@ -115,15 +111,12 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
 BattleMapTab::~BattleMapTab()
 {
-  if(m_battle.IsFounderMe()){
-    sett().SaveBattleMapOptions(&m_battle);
-  }
 }
 
 
 void BattleMapTab::Update()
 {
-  wxString value = m_battle.CustomBattleOptions()->getSingleValue( _T("startpostype"), EngineOption);
+  wxString value = m_battle.CustomBattleOptions().getSingleValue( _T("startpostype"), EngineOption);
   long longval;
   value.ToLong( &longval );
   m_start_radios->SetSelection( longval );
@@ -132,7 +125,7 @@ void BattleMapTab::Update()
 
   if ( !m_battle.MapExists() ) return;
 
-  UnitSyncMap map = m_battle.Map();
+  UnitSyncMap map = m_battle.LoadMap();
 
   m_map_opts_list->SetItem( 0, 1, wxString::Format( _T("%dx%d"), map.info.width/512, map.info.height/512 ) );
   m_map_opts_list->SetItem( 1, 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind ) );
@@ -142,6 +135,7 @@ void BattleMapTab::Update()
   m_map_opts_list->SetItem( 5, 1, wxString::Format( _T("%.3f"), map.info.maxMetal ) );
 
   int index = m_map_combo->FindString( RefineMapname( map.name ) );
+  if ( index == wxNOT_FOUND ) return;
   m_map_combo->SetSelection( index );
 }
 
@@ -151,7 +145,7 @@ void BattleMapTab::Update( const wxString& Tag )
   long type;
   Tag.BeforeFirst( '_' ).ToLong( &type );
   wxString key = Tag.AfterFirst( '_' );
-  wxString value = m_battle.CustomBattleOptions()->getSingleValue( key, (GameOption)type);
+  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (GameOption)type);
   long longval;
   value.ToLong( &longval );
   if ( type == EngineOption )
@@ -159,7 +153,14 @@ void BattleMapTab::Update( const wxString& Tag )
     if ( key == _T("startpostype") )
     {
      m_start_radios->SetSelection( longval );
-     Update();
+     m_minimap->UpdateMinimap();
+    }
+  }
+  else if ( type == PrivateOptions )
+  {
+    if ( key == _T("mapname") )
+    {
+      Update();
     }
   }
 }
@@ -168,11 +169,12 @@ void BattleMapTab::Update( const wxString& Tag )
 void BattleMapTab::ReloadMaplist()
 {
   m_map_combo->Clear();
-  try {
-    for ( int i = 0; i < usync()->GetNumMaps(); i++ ) {
-      m_map_combo->Insert( RefineMapname( usync()->GetMap( i ).name ), i );
-    }
-  } catch(...){}
+
+  wxArrayString maplist= usync().GetMapList();
+ // maplist.Sort(CompareStringIgnoreCase);
+
+  size_t nummaps = maplist.Count();
+  for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( RefineMapname(maplist[i]), i );
 }
 
 
@@ -190,31 +192,28 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
 {
 
   if ( !m_battle.IsFounderMe() ) {
-    m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetMapName() ) ) );
+    //m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetHostMapName() ) ) );
     return;
   }
 
-  sett().SaveBattleMapOptions(&m_battle);
-
   int index = m_map_combo->GetCurrentSelection();
   //wxString name = m_map_combo->GetString( index );
-  try {
-    UnitSyncMap map = usync()->GetMapEx( index );
-    m_battle.SetMap( map );
+  try
+  {
+    UnitSyncMap map = usync().GetMapEx( index );
+    m_battle.SetLocalMap( map );
 
-    sett().LoadBattleMapOptions(&m_battle);
+    m_battle.SendHostInfo( HI_Map );
+    for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
     m_battle.SendHostInfo( HI_StartRects );
-
   } catch (...) {}
-  m_ui.OnBattleMapChanged(m_battle);
-  m_battle.SendHostInfo( HI_Map );
 }
 
 
 void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
 {
   wxString pos = wxString::Format( _T("%d"), m_start_radios->GetSelection());
-  m_battle.CustomBattleOptions()->setSingleOption( _T("startpostype"), pos, EngineOption );
+  m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), pos, EngineOption );
   m_battle.SendHostInfo( wxString::Format(_T("%d_startpostype"), EngineOption ) );
 }
 

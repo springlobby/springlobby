@@ -46,7 +46,7 @@ class abstract_panel : public wxScrolledWindow
 {
 
 	public:
-		abstract_panel(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), 
+		abstract_panel(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"),
 				const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
 		virtual ~abstract_panel();
 
@@ -55,10 +55,10 @@ class abstract_panel : public wxScrolledWindow
 		void OnCheckBoxTick(wxCommandEvent&);
 		void OnRadioButtonToggle(wxCommandEvent&);
 		//void update(wxIdleEvent&);
-		void OnComboBoxChange(wxCommandEvent& event);
+		virtual void OnComboBoxChange(wxCommandEvent& event);
 		static intMap intSettings;
 		//static stringMap stringSettings;
-		//static floatMap floatSettings;
+		static floatMap floatSettings;
 		static bool settingsChanged;
 		static bool saveSettings();
 
@@ -69,10 +69,10 @@ class abstract_panel : public wxScrolledWindow
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
-				
+
     private:
-    	
-		
+
+
 		DECLARE_EVENT_TABLE()
 };
 

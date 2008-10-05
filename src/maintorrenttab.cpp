@@ -6,23 +6,22 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
+#include <wx/msgdlg.h>
 
 #include "torrentlistctrl.h"
 #include "torrentwrapper.h"
 #include "ui.h"
 #include "utils.h"
+#include "Helper/colorbutton.h"
+#include "filelister/filelistdialog.h"
 
-//const long MainTorrentTab::ID_STATICTEXT2 = wxNewId();
-//const long MainTorrentTab::ID_STATICTEXT1 = wxNewId();
-//const long MainTorrentTab::ID_LISTBOX1 = wxNewId();
-//const long MainTorrentTab::ID_BUTTON1 = wxNewId();
-//const long MainTorrentTab::ID_BUTTON2 = wxNewId();
 
 
 BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
 	//(*EventTable(MainTorrentTab)
 	//*)
   EVT_BUTTON      ( ID_BUTTON_CANCEL, MainTorrentTab::OnCancelButton )
+  EVT_BUTTON      ( ID_DOWNLOAD_DIALOG, MainTorrentTab::OnDownloadDialog )
 END_EVENT_TABLE()
 
 MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
@@ -33,8 +32,10 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	wxBoxSizer* m_listbox = new wxBoxSizer (wxVERTICAL);
 	wxBoxSizer* m_totalbox = new wxBoxSizer (wxHORIZONTAL);
 	wxBoxSizer* m_buttonbox = new wxBoxSizer (wxHORIZONTAL);
+	wxBoxSizer* m_status_box = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* m_firstrow_box = new wxBoxSizer( wxHORIZONTAL );
 
-    wxStaticText* m_list_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Tranfers in progress: ") );
+    wxStaticText* m_list_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Transfers in progress: ") );
     m_listbox->Add(m_list_lbl, 0, wxBOTTOM, 5);
 	m_torrent_list = new TorrentListCtrl(this, m_ui);
 	m_listbox->Add( m_torrent_list, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
@@ -42,22 +43,35 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 
 	m_outgoing_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Total Outgoing: ") );
     m_incoming_lbl = new wxStaticText( this, ID_INCOMING_LBL, _("Total Incoming: ") );
-	m_totalbox->Add(m_outgoing_lbl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, 10);
-	m_totalbox->Add(m_incoming_lbl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, 10);
-	m_mainbox->Add(m_totalbox, 1, wxALL, 5);
+	m_totalbox->Add(m_outgoing_lbl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL, 10);
+	m_totalbox->Add(m_incoming_lbl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL, 10);
+
+	m_firstrow_box->Add( m_totalbox,0, wxALL, 5  );
+
+    m_status_color = new ColorButton( this, wxID_ANY, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
+    m_status_color_text = new wxStaticText( this, wxID_ANY, _("unknown") );
+    m_status_box->Add( m_status_color ,  0,wxEXPAND|wxALL|wxALIGN_CENTER_VERTICAL, 10);
+    m_status_box->Add( m_status_color_text,0,  wxALL|wxALIGN_CENTER_VERTICAL, 10);
+    m_firstrow_box->Add( m_status_box, 1, wxALL, 5);
+
+	m_mainbox->Add(m_firstrow_box, 0, wxALL, 5);
 
 	m_but_cancel= new wxButton(this, ID_BUTTON_CANCEL, _("Cancel Download") );
 	//m_but_cancel->Disable();
 	m_buttonbox->Add(m_but_cancel, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
 	m_but_publish = new wxButton(this, ID_BUTTON_PUB, _("Publish new file") );
 	m_buttonbox->Add( m_but_publish, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
-	m_mainbox->Add(m_buttonbox, 1, wxALL, 5);
+	m_but_download = new wxButton(this, ID_DOWNLOAD_DIALOG, _("Search file") );
+	m_buttonbox->Add( m_but_download, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
+
+
+	m_mainbox->Add(m_buttonbox, 0, wxALL, 5);
 
 	SetSizer(m_mainbox);
 	m_mainbox->SetSizeHints(this);
     Layout();
 
-    info_map = torrent()->CollectGuiInfos();
+    info_map = torrent().CollectGuiInfos();
     m_torrent_list->SetInfoMap( &info_map );
 //    m_torrent_list->SetSizeHints(this);
     m_torrent_list->Layout();
@@ -66,14 +80,19 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
     {
         AddTorrentInfo(iter->second);
     }
+    m_download_dialog = 0;
 }
 
 MainTorrentTab::~MainTorrentTab()
 {
-
+    if (m_download_dialog)
+    {
+        delete m_download_dialog;
+        m_download_dialog = 0;
+    }
 }
 
-void MainTorrentTab::UpdateInfo( const TorrentInfos& info )
+void MainTorrentTab::UpdateInfo(  TorrentInfos& info )
 {
  int index = -1;
   for (int i = 0; i < m_torrent_list->GetItemCount() ; i++ ) {
@@ -84,27 +103,34 @@ void MainTorrentTab::UpdateInfo( const TorrentInfos& info )
   }
 
   //ASSERT_LOGIC( index != -1, _T("index = -1") );
-    if ( index > 0 )
+    if ( index > 0 ){
         SetInfo(index, info );
-    else
+    }
+    else{
         AddTorrentInfo( info );
+    }
 }
 
-void MainTorrentTab::SetInfo(int index, const TorrentInfos& info )
+void MainTorrentTab::SetInfo(int index,  TorrentInfos& info )
 {
-    float kfactor = 1/float(1024);
- float mfactor = 1/float(1024*1024);
+
+  float kfactor = 1/float(1024);
+  float mfactor = 1/float(1024*1024);
 
  int eta_seconds = -1;
  if ( info.progress > 0 && info.inspeed > 0)
     eta_seconds = int (  (info.filesize - info.downloaded ) / info.inspeed );
+
+  info.eta = eta_seconds;
 
  // m_torrent_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
   m_torrent_list->SetItem( index, 0, info.name );
   m_torrent_list->SetItem( index, 1, info.numcopies > 0 ? f2s( info.numcopies ) : wxString(_("not available")));
   m_torrent_list->SetItem( index, 2, f2s( info.downloaded*mfactor ) );
   m_torrent_list->SetItem( index, 3, f2s( info.uploaded*mfactor ) );
-  m_torrent_list->SetItem( index, 4, info.seeding == 0 ? _("no") : _("yes") );
+  if ( info.downloadstatus  == seeding ) m_torrent_list->SetItem( index, 4, _("seeding") );
+  else if ( info.downloadstatus  == leeching ) m_torrent_list->SetItem( index, 4, _("leeching") );
+  else if ( info.downloadstatus  == queued ) m_torrent_list->SetItem( index, 4, _("queued") );
   m_torrent_list->SetItem( index, 5, f2s( info.progress * 100 ) );
   m_torrent_list->SetItem( index, 6, f2s( info.outspeed*kfactor ) );
   m_torrent_list->SetItem( index, 7, f2s( info.inspeed*kfactor ) );
@@ -114,9 +140,10 @@ void MainTorrentTab::SetInfo(int index, const TorrentInfos& info )
   m_torrent_list->Sort();
 }
 
-void MainTorrentTab::AddTorrentInfo( const TorrentInfos& info )
+void MainTorrentTab::AddTorrentInfo(  TorrentInfos& info )
 {
-  int index = m_torrent_list->InsertItem( 0, info.name );
+  int index = m_torrent_list->InsertItem( m_torrent_list->GetItemCount(), info.name );
+
 //  ASSERT_LOGIC( index != -1, _T("index = -1") );
   m_torrent_list->SetItemData(index, s2l(info.hash) );
 
@@ -124,13 +151,49 @@ void MainTorrentTab::AddTorrentInfo( const TorrentInfos& info )
   //ASSERT_LOGIC( index != -1, _T("index = -1") );
 
  // ASSERT_LOGIC( m_torrent_list->GetItem( item ), _T("!GetItem") );
-    SetInfo(index, info );
+
+  SetInfo(index, info );
+
 }
 
 void MainTorrentTab::OnUpdate()
 {
-//    long currentselection = m_torrent_list->GetSelectedIndex();
-    info_map = torrent()->CollectGuiInfos();
+
+    if ( torrent().IsConnectedToP2PSystem() )
+    {
+      m_but_cancel->Enable();
+      m_but_publish->Enable();
+      m_but_download->Enable();
+    }
+    else
+    {
+      m_but_cancel->Disable();
+      m_but_publish->Disable();
+      m_but_download->Disable();
+    }
+
+    switch (torrent().GetTorrentSystemStatus() )
+    {
+        case 0:
+            m_status_color->SetColor( wxColor(255,0,0) ); //not connected
+            m_status_color_text->SetLabel(_("Status: not connected") );
+            break;
+        case 1:
+            m_status_color->SetColor( wxColor(0,255,0) ); //connected
+            m_status_color_text->SetLabel(_("Status: connected") );
+            break;
+        case 2:
+            m_status_color->SetColor( wxColor(0,0,255) ); //ingame
+            m_status_color_text->SetLabel(_("Status: throttled or paused (ingame)") );
+            break;
+        default:
+            m_status_color->SetColor( wxColor(255,255,255) ); //unknown
+            m_status_color_text->SetLabel(_("Status: unknown") );
+            break;
+    }
+
+    m_torrent_list->SetSelectionRestorePoint();
+    info_map = torrent().CollectGuiInfos();
     m_outgoing_lbl->SetLabel( wxString::Format(_("Total Outgoing: %.2f KB/s"), (info_map[0].outspeed/float(1024)) ) );
     m_incoming_lbl->SetLabel( wxString::Format(_("Total Incoming: %.2f KB/s"), (info_map[0].inspeed/ float(1024)) ) );
     m_torrent_list->DeleteAllItems();
@@ -141,13 +204,20 @@ void MainTorrentTab::OnUpdate()
 
     }
     Layout();
-    //m_torrent_list->SetItemState( currentselection, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+    m_torrent_list->RestoreSelection();
+
 }
 
 
 void MainTorrentTab::OnCancelButton( wxCommandEvent& event )
 {
-  torrent()->RemoveFile( info_map[m_torrent_list->GetSelectedIndex()].hash );
+  torrent().RemoveTorrentByHash( TowxString(m_torrent_list->GetSelectedData()) );
+}
+
+void MainTorrentTab::OnDownloadDialog( wxCommandEvent& event )
+{
+    m_download_dialog = new FileListDialog( this );
+    m_download_dialog->Show();
 }
 
 #endif
