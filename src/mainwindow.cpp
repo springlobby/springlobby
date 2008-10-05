@@ -316,7 +316,7 @@ ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
 
 MainOptionsTab& MainWindow::GetOptionsTab()
 {
-  ASSERT_EXCEPTION(m_opts_tab == 0, _T("m_opts_tab == 0"));
+  ASSERT_EXCEPTION(m_opts_tab != 0, _T("m_opts_tab == 0"));
   return *m_opts_tab;
 }
 

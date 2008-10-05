@@ -97,7 +97,10 @@ void UserActions::UpdateUI()
     {
       ui().mw().GetJoinTab().GetBattleRoomTab().UpdateHighlights();
     } catch(...){}
-    ui().mw().GetOptionsTab().GetGroupOptionsPanel().Update();
+    try
+    {
+      ui().mw().GetOptionsTab().GetGroupOptionsPanel().Update();
+    } catch(...){}
 }
 
 wxSortedArrayString UserActions::GetGroupNames() const
