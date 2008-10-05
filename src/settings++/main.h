@@ -31,6 +31,11 @@ class Springsettings : public wxApp
 		bool OnInit();
 		int OnExit();
 		virtual void OnFatalException();
+
+		//! @brief Initializes the logging functions.
+        ///initializes logging in an hidden stream and std::cout/gui messages
+        void InitializeLoggingTargets();
+
 };
 
 #endif

@@ -78,7 +78,6 @@ class MainWindow : public wxFrame
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
     void OnShowSettingsPP( wxCommandEvent& event );
-    void OnShowToolTips( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
 
@@ -149,7 +148,6 @@ enum
     MENU_VERSION,
     MENU_START_TORRENT,
     MENU_STOP_TORRENT,
-    MENU_SHOW_TOOLTIPS,
     MENU_AUTOJOIN_CHANNELS
 
 };
