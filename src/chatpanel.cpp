@@ -107,14 +107,6 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 END_EVENT_TABLE()
 
 
-void ChatPanel::OnMouseDown( wxMouseEvent& event ) {
-	wxLogDebugFunc( _T( "" ) );
-	CreatePopup();
-	if ( m_popup_menu != 0 ) PopupMenu( m_popup_menu );
-	else event.Skip();
-}
-
-
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan )
 		: wxPanel( parent, -1 ), m_show_nick_list( true ), m_nicklist(0) , m_chat_tabs(( wxNotebook* )parent ), m_ui( ui ),
 		m_channel( &chan ), m_server( 0 ), m_user( 0 ), m_battle( 0 ), m_type( CPT_Channel ), m_popup_menu( 0 ), m_chat_log(0) {
@@ -177,8 +169,7 @@ ChatPanel::~ChatPanel() {
 		if ( m_channel->uidata.panel == this ) m_channel->uidata.panel = 0;
 	}
 	delete m_chat_log;
-	m_chat_log=0;/// for case of double destructor or whatever
-
+	m_chat_log = 0;/// for case of double destructor or whatever
 
 	if ( m_type == CPT_Channel )
 	{
@@ -191,99 +182,99 @@ ChatPanel::~ChatPanel() {
 
 
 void ChatPanel::CreateControls( ) {
-	wxLogDebugFunc( _T( "" ) );
+  wxLogDebugFunc( _T( "" ) );
 
-	m_autorejoin = 0;
-	// Creating sizers
-	m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_chat_sizer = new wxBoxSizer( wxVERTICAL );
-	m_say_sizer = new wxBoxSizer( wxHORIZONTAL );
+  m_autorejoin = 0;
+  // Creating sizers
+  m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
+  m_chat_sizer = new wxBoxSizer( wxVERTICAL );
+  m_say_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	if ( m_show_nick_list ) {
+  if ( m_show_nick_list ) {
 
-		m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxDefaultSize, wxSP_3D );
-		m_nick_panel = new wxPanel( m_splitter, -1 );
-		m_chat_panel = new wxPanel( m_splitter, -1 );
+    m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxDefaultSize, wxSP_3D );
+    m_nick_panel = new wxPanel( m_splitter, -1 );
+    m_chat_panel = new wxPanel( m_splitter, -1 );
 
-        m_nick_sizer = new wxBoxSizer( wxVERTICAL );
-        m_usermenu = CreateNickListMenu();
-		m_nicklist = new NickListCtrl( m_nick_panel, true, m_usermenu );
+    m_nick_sizer = new wxBoxSizer( wxVERTICAL );
+    m_usermenu = CreateNickListMenu();
+    m_nicklist = new NickListCtrl( m_nick_panel, true, m_usermenu );
 
    // m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
    // m_nick_filter->Disable();
 
-        m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
+    m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
    // m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
 
-		m_nick_panel->SetSizer( m_nick_sizer );
+    m_nick_panel->SetSizer( m_nick_sizer );
 
-	} else {
+  } else {
 
-		m_chat_panel = this;
-		m_nick_sizer = 0;
-		m_nicklist = 0;
-		m_nick_filter = 0;
-		m_splitter = 0;
+    m_chat_panel = this;
+    m_nick_sizer = 0;
+    m_nicklist = 0;
+    m_nick_filter = 0;
+    m_splitter = 0;
 
-	}
+  }
 
-	// Creating ui elements
+  // Creating ui elements
   #ifndef NO_RICHTEXT_CHAT
-	m_chatlog_text = new wxRichTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
-	                                     wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+  m_chatlog_text = new wxRichTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
+                                       wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 
-	// Accelerators
-	// copied from wxWidgets SVN revision 53442, so this can probably be removed for wx > 2.8.7
-	wxAcceleratorEntry entries[2];
+  // Accelerators
+  // copied from wxWidgets SVN revision 53442, so this can probably be removed for wx > 2.8.7
+  wxAcceleratorEntry entries[2];
 
-	entries[0].Set(wxACCEL_CMD,   (int) 'C',       wxID_COPY);
-	entries[1].Set(wxACCEL_CMD,   (int) 'A',       wxID_SELECTALL);
+  entries[0].Set(wxACCEL_CMD,   (int) 'C',       wxID_COPY);
+  entries[1].Set(wxACCEL_CMD,   (int) 'A',       wxID_SELECTALL);
 
-	wxAcceleratorTable accel(2, entries);
-	m_chatlog_text->SetAcceleratorTable(accel);
+  wxAcceleratorTable accel(2, entries);
+  m_chatlog_text->SetAcceleratorTable(accel);
   #else
-	m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
-																	 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+  m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
+                                   wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
   #endif
-	if ( m_type == CPT_Channel )
-  		m_chatlog_text->SetToolTip( _("right click for options (like autojoin)" ) );
+  if ( m_type == CPT_Channel )
+      m_chatlog_text->SetToolTip( _("right click for options (like autojoin)" ) );
 
-	m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
-	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
+  m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
+  m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
 
 
-	// Adding elements to sizers
-	m_say_sizer->Add( m_say_text, 1, wxEXPAND );
-	m_say_sizer->Add( m_say_button );
-	m_chat_sizer->Add( m_chatlog_text, 1, wxEXPAND );
-	m_chat_sizer->Add( m_say_sizer, 0, wxEXPAND | wxTOP, 2 );
-	if ( m_show_nick_list ) {
-		m_chat_panel->SetSizer( m_chat_sizer );
-		m_splitter->SplitVertically( m_chat_panel, m_nick_panel, 100 );
-		m_splitter->SetMinimumPaneSize( 30 );
-		m_main_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
-	} else {
-		m_main_sizer->Add( m_chat_sizer, 4, wxEXPAND | wxALL, 2 );
-	}
+  // Adding elements to sizers
+  m_say_sizer->Add( m_say_text, 1, wxEXPAND );
+  m_say_sizer->Add( m_say_button );
+  m_chat_sizer->Add( m_chatlog_text, 1, wxEXPAND );
+  m_chat_sizer->Add( m_say_sizer, 0, wxEXPAND | wxTOP, 2 );
+  if ( m_show_nick_list ) {
+    m_chat_panel->SetSizer( m_chat_sizer );
+    m_splitter->SplitVertically( m_chat_panel, m_nick_panel, 100 );
+    m_splitter->SetMinimumPaneSize( 30 );
+    m_main_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
+  } else {
+    m_main_sizer->Add( m_chat_sizer, 4, wxEXPAND | wxALL, 2 );
+  }
 
-	// Assign sizer to panel
-	SetSizer( m_main_sizer );
+  // Assign sizer to panel
+  SetSizer( m_main_sizer );
 
-	if ( m_show_nick_list ) {
-		wxSize s = m_splitter->GetSize();
-		m_splitter->SetSashPosition( s.GetWidth() - 238, true );
-	}
+  if ( m_show_nick_list ) {
+    wxSize s = m_splitter->GetSize();
+    m_splitter->SetSashPosition( s.GetWidth() - 238, true );
+  }
 
-	m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
-	m_chatlog_text->SetFont( sett().GetChatFont() );
+  m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
+  m_chatlog_text->SetFont( sett().GetChatFont() );
 
-	// Fill up TextCompletionDatabase
-	textcompletiondatabase.Insert_Mapping( _T("DLDK"), _T("Der Lockruf des Kaos") );
-	textcompletiondatabase.Insert_Mapping( _T("lol"), _T("Laughing out loud") );
-	textcompletiondatabase.Insert_Mapping( _T("wb"), _T("Welcome back") );
-	textcompletiondatabase.Insert_Mapping( _T("hf"), _T("Have Fun!") );
-	textcompletiondatabase.Insert_Mapping( _T("kaot"), _T("Have Fun!") );
-	textcompletiondatabase.Insert_Mapping( _T("kaot_H"), _T("Der Kaot aus der Hölle.") );
+  // Fill up TextCompletionDatabase
+  textcompletiondatabase.Insert_Mapping( _T("DLDK"), _T("Der Lockruf des Kaos") );
+  textcompletiondatabase.Insert_Mapping( _T("lol"), _T("Laughing out loud") );
+  textcompletiondatabase.Insert_Mapping( _T("wb"), _T("Welcome back") );
+  textcompletiondatabase.Insert_Mapping( _T("hf"), _T("Have Fun!") );
+  textcompletiondatabase.Insert_Mapping( _T("kaot"), _T("Have Fun!") );
+  textcompletiondatabase.Insert_Mapping( _T("kaot_H"), _T("Der Kaot aus der Hölle.") );
 
 }
 
@@ -1612,6 +1603,14 @@ void ChatPanel::OnUserMenuCreateGroup( wxCommandEvent& event )
         else
             customMessageBoxNoModal( SL_MAIN_ICON, _("couldn't add user"), _("Error") );
     }
+}
+
+
+void ChatPanel::OnMouseDown( wxMouseEvent& event ) {
+	wxLogDebugFunc( _T( "" ) );
+	CreatePopup();
+	if ( m_popup_menu != 0 ) PopupMenu( m_popup_menu );
+	else event.Skip();
 }
 
 

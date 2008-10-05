@@ -314,6 +314,11 @@ ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
   return m_chat_tab->GetChannelChatPanel( channel );
 }
 
+MainOptionsTab& MainWindow::GetOptionsTab()
+{
+  ASSERT_EXCEPTION(m_opts_tab == 0, _T("m_opts_tab == 0"));
+  return *m_opts_tab;
+}
 
 //! @brief Open a new chat tab with a channel chat
 //!

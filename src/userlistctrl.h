@@ -10,7 +10,7 @@
     Don't ever use this for anything that needs constant updating, context menus sorting and the like.\n
     Basically don't use it outside the groupuserdialog without extreme caution.
 **/
-class UserListctrl : public customListCtrl
+class UserListctrl : public CustomListCtrl
 {
     public:
         //! nickname - country

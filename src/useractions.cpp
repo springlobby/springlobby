@@ -14,6 +14,8 @@
 #include "battlelisttab.h"
 #include "battleroomtab.h"
 #include "chatpanel.h"
+#include "mainoptionstab.h"
+#include "groupoptionspanel.h"
 
 
 UserActions& useractions()
@@ -95,6 +97,7 @@ void UserActions::UpdateUI()
     {
       ui().mw().GetJoinTab().GetBattleRoomTab().UpdateHighlights();
     } catch(...){}
+    ui().mw().GetOptionsTab().GetGroupOptionsPanel().Update();
 }
 
 wxSortedArrayString UserActions::GetGroupNames() const

@@ -15,7 +15,7 @@ class ChatPanel;
 
 
 
-class NickListCtrl : public customListCtrl
+class NickListCtrl : public CustomListCtrl
 {
   protected:
     typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;

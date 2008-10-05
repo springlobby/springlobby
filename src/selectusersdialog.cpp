@@ -248,13 +248,13 @@ void SelectUsersDialog::OnNameFilterChange( wxCommandEvent& event )
     wxString name = line.Mid(0, sep);
     if ( name.Contains(filter) || (filter == wxEmptyString) ) {
       int flag = (int)s2l( line.Mid(sep+1) ); // Flag is never < 0 or > intmax
-      long item = AddUserToList( name, flag );
+      AddUserToList( name, flag );
       m_filtered_users.RemoveAt(i);
     }
   }
   Sort();
 
-  for ( int i = 0; i < sel.Count(); i++ ) {
+  for ( unsigned int i = 0; i < sel.Count(); i++ ) {
     long item = m_user_list->FindItem(-1, sel[i]);
     if ( item != -1 )
       m_user_list->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);

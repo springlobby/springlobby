@@ -27,7 +27,7 @@
 
 int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData);
 
-BEGIN_EVENT_TABLE( NickListCtrl, customListCtrl )
+BEGIN_EVENT_TABLE( NickListCtrl, CustomListCtrl )
   EVT_LIST_ITEM_ACTIVATED( NICK_LIST, NickListCtrl::OnActivateItem )
   EVT_LIST_COL_CLICK( NICK_LIST, NickListCtrl::OnColClick )
   EVT_CONTEXT_MENU( NickListCtrl::OnShowMenu )
@@ -41,7 +41,7 @@ END_EVENT_TABLE()
 
 NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::UserMenu* popup, bool singleSelectList,
                             const wxString& name, bool highlight):
-  customListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
+  CustomListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
               name, highlight ),
   m_menu(popup)
@@ -106,8 +106,8 @@ void NickListCtrl::AddUser( const User& user )
 
   int index = InsertItem( GetItemCount(), icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
   if(index==-1){
-      wxLogMessage(_T("NickListCtrl::AddUser : index==-1"));
-      return;
+    wxLogMessage(_T("NickListCtrl::AddUser : index==-1"));
+    return;
   }
 
   SetItemData( index, (wxUIntPtr)&user );
@@ -126,9 +126,9 @@ void NickListCtrl::RemoveUser( const User& user )
   int index = GetUserIndex( user );
   if ( index != -1 )
   {
-      DeleteItem( index );
-      SetColumnWidth( 3, wxLIST_AUTOSIZE );
-      return;
+    DeleteItem( index );
+    SetColumnWidth( 3, wxLIST_AUTOSIZE );
+    return;
   }
   wxLogError( _T("Didn't find the user to remove.") );
 }
@@ -155,7 +155,7 @@ void NickListCtrl::UserUpdated( const int& index )
   SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 3, user.GetNick() );
   SetItemData(index, (long)&user );
-    //highlight
+  //highlight
   HighlightItemUser( index, user.GetNick() );
   MarkDirtySort();
 }
