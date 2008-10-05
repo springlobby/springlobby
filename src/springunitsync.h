@@ -110,6 +110,7 @@ class SpringUnitSync : public IUnitSync
 
     void PopulateArchiveList();
 
+    double _GetSpringVersion();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
