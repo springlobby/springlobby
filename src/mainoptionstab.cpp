@@ -92,6 +92,13 @@ MainOptionsTab::~MainOptionsTab()
 }
 
 
+GroupOptionsPanel& MainOptionsTab::GetGroupOptionsPanel()
+{
+  ASSERT_EXCEPTION(m_groups_opts != 0, _T("m_groups_opts == 0"));
+  return *m_groups_opts;
+}
+
+
 void MainOptionsTab::OnApply( wxCommandEvent& event )
 {
     m_spring_opts->OnApply( event );

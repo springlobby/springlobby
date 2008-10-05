@@ -7,7 +7,6 @@
 #include "settings.h"
 #include "uiutils.h"
 #include "Helper/colorbutton.h"
-#include "groupuserdialog.h"
 #include "selectusersdialog.h"
 
 BEGIN_EVENT_TABLE( GroupOptionsPanel, wxPanel )
@@ -231,11 +230,13 @@ void GroupOptionsPanel::ReloadGroupsList()
 wxString GroupOptionsPanel::GetFirstGroupName()
 {
   wxSortedArrayString groupnames = useractions().GetGroupNames();
+  if (groupnames.Count() <= 0) return wxEmptyString;
   return groupnames[0];
 }
 
 void GroupOptionsPanel::OnRemoveGroup( wxCommandEvent& event )
 {
+  if (m_current_group == _T("Default")) return;
   useractions().DeleteGroup( m_current_group );
   ReloadGroupsList();
   ShowGroup(wxEmptyString);
@@ -326,3 +327,8 @@ void GroupOptionsPanel::OnRemoveUser( wxCommandEvent& event )
 }
 
 
+void GroupOptionsPanel::Update()
+{
+  ReloadGroupsList();
+  ReloadUsersList();
+}

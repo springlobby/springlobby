@@ -15,7 +15,7 @@
 
 #define TOOLTIP_DELAY 1000
 
-BEGIN_EVENT_TABLE( FileListCtrl, customListCtrl )
+BEGIN_EVENT_TABLE( FileListCtrl, CustomListCtrl )
 
 	EVT_LIST_ITEM_RIGHT_CLICK( FILELIST_COL_CLICK, FileListCtrl::OnListRightClick )
 	EVT_LIST_COL_CLICK( FILELIST_COL_CLICK, FileListCtrl::OnColClick )
@@ -29,7 +29,7 @@ END_EVENT_TABLE()
 FileListDialog* FileListCtrl::s_parent_dialog = 0;
 
 FileListCtrl::FileListCtrl( wxWindow* parent, FileListDialog* fld  ):
-		customListCtrl( parent, FILELIST_COL_CLICK, wxDefaultPosition, wxDefaultSize,
+		CustomListCtrl( parent, FILELIST_COL_CLICK, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_ALIGN_LEFT, _T("FileListCtrl") ),
         m_parent_dialog( fld )
 {
