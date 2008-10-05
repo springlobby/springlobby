@@ -212,6 +212,9 @@ private:
     bool m_is_connecting;
 
     unsigned int m_connected_tracker_index;
+
+    bool m_started;
+
 };
 
 
