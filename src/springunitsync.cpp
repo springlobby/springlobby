@@ -272,13 +272,25 @@ wxArrayString SpringUnitSync::GetMapList()
 
 wxArrayString SpringUnitSync::GetModValidMapList( const wxString& modname )
 {
-  wxArrayString ret;
+  wxLogDebugFunc( modname );
+  if ( !ModExists( modname ) ) return 0;
+
+  wxArrayString cache;
   try
   {
-    unsigned int mapcount = susynclib()->GetValidMapCount( modname );
-    for ( unsigned int i = 0; i < mapcount; i++ ) ret.Add( susynclib()->GetValidMapName( i ) );
-  } catch ( assert_exception& e ) {}
-  return ret;
+    cache = GetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".validmaps") );
+  }
+  catch (...)
+  {
+    try
+    {
+      unsigned int mapcount = susynclib()->GetValidMapCount( modname );
+      for ( unsigned int i = 0; i < mapcount; i++ ) cache.Add( susynclib()->GetValidMapName( i ) );
+    } catch ( assert_exception& e ) {}
+    SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".validmaps"), cache );
+  }
+
+  return cache;
 }
 
 
