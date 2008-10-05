@@ -34,6 +34,7 @@ public:
 
     void OnOpenGroupsTab();
     void SetSelection( const unsigned int page );
+    GroupOptionsPanel& GetGroupOptionsPanel();
 
     void ReloadSpringPathFromConfig();
 

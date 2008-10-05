@@ -92,6 +92,7 @@ class MainWindow : public wxFrame
     #endif
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
+    MainOptionsTab& GetOptionsTab();
     void MakeImages();
 
   protected:

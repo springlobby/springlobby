@@ -281,6 +281,8 @@
 		<Unit filename="src/nonportable.h" />
 		<Unit filename="src/sdlsound.cpp" />
 		<Unit filename="src/sdlsound.h" />
+		<Unit filename="src/selectusersdialog.cpp" />
+		<Unit filename="src/selectusersdialog.h" />
 		<Unit filename="src/server.cpp" />
 		<Unit filename="src/server.h" />
 		<Unit filename="src/serverevents.cpp" />
