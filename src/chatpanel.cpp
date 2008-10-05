@@ -1748,7 +1748,9 @@ void ChatPanel::OnMouseDown( wxMouseEvent& event )
 
 void ChatPanel::UpdateNicklistHighlights()
 {
-    if ( m_show_nick_list && (m_nicklist != 0) ) m_nicklist->UpdateHighlights();
+    if ( m_show_nick_list && (m_nicklist != 0) ) {
+      m_nicklist->UpdateHighlights();
+    }
 }
 
 
