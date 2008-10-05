@@ -55,7 +55,7 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_battle.DoAction( _T( "!cbalance: see !balance but tries to put clanmates together first." ) );
     m_battle.DoAction( _T( "!fixcolors: changes players duplicate colours so they are unique." ) );
     m_battle.DoAction( _T( "!fixids: makes control teams unique (disables comsharing)." ) );
-    m_battle.DoAction( _T( "!spectunsynced: sets all players with unitsynced status to be spectators." ) );
+    m_battle.DoAction( _T( "!spectunsynced: sets all players with unsynced status to be spectators." ) );
     m_battle.DoAction( _T( "!listprofiles: lists the available battle profiles." ) );
     m_battle.DoAction( _T( "!loadprofile profilename: loads an available battle profile." ) );
     m_battle.DoAction( _T( "!ring: rings players that are not ready." ) );
