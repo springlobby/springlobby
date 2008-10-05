@@ -33,6 +33,7 @@ class SpringUnitSync : public IUnitSync
 
     int GetNumMaps();
     wxArrayString GetMapList();
+    wxArrayString GetModValidMapList( const wxString& modname );
     bool MapExists( const wxString& mapname );
     bool MapExists( const wxString& mapname, const wxString& hash );
 

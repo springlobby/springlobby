@@ -131,6 +131,9 @@ void SpringUnitSyncLib::Load( const wxString& path )
     m_get_primary_mod_archive_list = (GetPrimaryModArchiveListPtr)_GetLibFuncPtr(_T("GetPrimaryModArchiveList"));
     m_get_primary_mod_checksum_from_name = (GetPrimaryModChecksumFromNamePtr)_GetLibFuncPtr(_T("GetPrimaryModChecksumFromName"));
 
+    m_get_mod_valid_map_count = (GetModValidMapCountPtr)_GetLibFuncPtr(_T("GetModValidMapCount"));
+    m_get_valid_map = (GetModValidMapPtr)_GetLibFuncPtr(_T("GetModValidMap"));
+
     m_get_luaai_count = (GetLuaAICountPtr)_GetLibFuncPtr(_T("GetLuaAICount"));
     m_get_luaai_name = (GetLuaAINamePtr)_GetLibFuncPtr(_T("GetLuaAIName"));
     m_get_luaai_desc = (GetLuaAIDescPtr)_GetLibFuncPtr(_T("GetLuaAIDesc"));
@@ -653,6 +656,22 @@ wxString SpringUnitSyncLib::GetLuaAIDesc( int aiIndex )
   InitLib( m_get_luaai_desc );
 
   return WX_STRINGC( m_get_luaai_desc( aiIndex ) );
+}
+
+unsigned int SpringUnitSyncLib::GetValidMapCount( const wxString& modname )
+{
+  InitLib( m_get_mod_valid_map_count );
+
+  SetCurrentMod( modname );
+  return m_get_mod_valid_map_count();
+}
+
+
+wxString SpringUnitSyncLib::GetValidMapName( unsigned int MapIndex )
+{
+  InitLib( m_get_valid_map );
+
+  return WX_STRINGC( m_get_valid_map( MapIndex ) );
 }
 
 

@@ -101,6 +101,8 @@ typedef const char* (USYNC_CALL_CONV *GetPrimaryModArchivePtr)(int index);
 typedef int (USYNC_CALL_CONV *GetPrimaryModArchiveCountPtr)(int index);
 typedef const char* (USYNC_CALL_CONV *GetPrimaryModArchiveListPtr)(int arnr);
 typedef unsigned int (USYNC_CALL_CONV *GetPrimaryModChecksumFromNamePtr)(const char* name);
+typedef unsigned int (USYNC_CALL_CONV *GetModValidMapCountPtr)();
+typedef const char* (USYNC_CALL_CONV *GetModValidMapPtr)(int index);
 typedef int (USYNC_CALL_CONV *GetLuaAICountPtr)();
 typedef const char* (USYNC_CALL_CONV *GetLuaAINamePtr)(int aiIndex);
 typedef const char* (USYNC_CALL_CONV *GetLuaAIDescPtr)(int aiIndex);
@@ -268,6 +270,9 @@ class SpringUnitSyncLib
     wxString GetLuaAIName( int aiIndex );
     wxString GetLuaAIDesc( int aiIndex );
 
+    unsigned int GetValidMapCount( const wxString& modname );
+    wxString GetValidMapName( unsigned int MapIndex );
+
     int GetMapOptionCount( const wxString& name );
     int GetModOptionCount( const wxString& name );
     wxString GetOptionKey( int optIndex );
@@ -401,6 +406,8 @@ class SpringUnitSyncLib
     GetPrimaryModArchiveCountPtr m_get_primary_mod_archive_count;
     GetPrimaryModArchiveListPtr m_get_primary_mod_archive_list;
     GetPrimaryModChecksumFromNamePtr m_get_primary_mod_checksum_from_name;
+    GetModValidMapCountPtr m_get_mod_valid_map_count;
+    GetModValidMapPtr m_get_valid_map;
     GetLuaAICountPtr m_get_luaai_count;
     GetLuaAINamePtr m_get_luaai_name;
     GetLuaAIDescPtr m_get_luaai_desc;

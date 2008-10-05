@@ -270,6 +270,18 @@ wxArrayString SpringUnitSync::GetMapList()
 }
 
 
+wxArrayString SpringUnitSync::GetModValidMapList( const wxString& modname )
+{
+  wxArrayString ret;
+  try
+  {
+    unsigned int mapcount = susynclib()->GetValidMapCount( modname );
+    for ( unsigned int i = 0; i < mapcount; i++ ) ret.Add( susynclib()->GetValidMapName( i ) );
+  } catch ( assert_exception& e ) {}
+  return ret;
+}
+
+
 bool SpringUnitSync::MapExists( const wxString& mapname )
 {
   return (m_maps_list.find(mapname) != m_maps_list.end());

@@ -137,6 +137,7 @@ class IUnitSync
 
     virtual int GetNumMaps() = 0;
     virtual wxArrayString GetMapList() = 0;
+    virtual wxArrayString GetModValidMapList( const wxString& modname ) = 0;
     virtual bool MapExists( const wxString& mapname ) = 0;
     virtual bool MapExists( const wxString& mapname, const wxString& hash ) = 0;
 
