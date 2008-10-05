@@ -351,7 +351,7 @@ void Battle::OnUserAdded( User& user )
     if (CheckBan(user))
       return;
 
-    if(user.GetStatus().rank<m_opts.rankneeded){
+    if(m_opts.rankneeded>1 && user.GetStatus().rank<m_opts.rankneeded){
       switch(m_opts.ranklimittype){
         case rank_limit_none:
         break;
@@ -403,7 +403,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 
     }
 
-    if(user.GetStatus().rank<m_opts.rankneeded){
+    if(m_opts.rankneeded>1 && user.GetStatus().rank<m_opts.rankneeded){
       switch(m_opts.ranklimittype){
         case rank_limit_none:
         break;
