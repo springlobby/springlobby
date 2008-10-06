@@ -206,6 +206,7 @@ SET(SpringLobbySrc
 	src/customlistctrl.cpp
 	src/flagimages.cpp
 	src/globalevents.cpp
+	src/groupoptionspanel.cpp
 	src/groupuserdialog.cpp
 	src/httpdownloader.cpp
 	src/hostbattledialog.cpp
@@ -226,6 +227,7 @@ SET(SpringLobbySrc
 	src/mmoptionswrapper.cpp
 	src/nicklistctrl.cpp
 	src/sdlsound.cpp
+	src/selectusersdialog.cpp
 	src/server.cpp
 	src/serverevents.cpp
 	src/settings.cpp
