@@ -31,7 +31,6 @@ src/mainoptionstab.cpp
 src/mainsingleplayertab.cpp
 src/maintorrenttab.cpp
 src/mainwindow.cpp
-src/managegroupspanel.cpp
 src/mapctrl.cpp
 src/mmoptionswrapper.cpp
 src/nicklistctrl.cpp
