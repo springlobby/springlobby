@@ -29,10 +29,12 @@
 #include "mainoptionstab.h"
 #include "iunitsync.h"
 #include "uiutils.h"
+#include "replay/replaytab.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
 #include "torrentwrapper.h"
 #endif
+
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.png.h"
@@ -46,6 +48,8 @@
 #include "images/select_icon.xpm"
 #include "images/downloads_icon.png.h"
 #include "images/downloads_icon_text.png.h"
+#include "images/replay_icon.png.h"
+#include "images/replay_icon_text.png.h"
 
 #include "settings++/frame.h"
 #include "settings++/custom_dialogs.h"
@@ -133,6 +137,7 @@ MainWindow::MainWindow( Ui& ui ) :
   m_sp_icon = charArr2wxBitmapWithBlending( single_player_icon_png , sizeof (single_player_icon_png), single_player_icon_text_png , sizeof (single_player_icon_text_png), 64 ) ;
   m_options_icon =   charArr2wxBitmapWithBlending( options_icon_png , sizeof (options_icon_png), options_icon_text_png , sizeof (options_icon_text_png), 64 ) ;
   m_downloads_icon = charArr2wxBitmapWithBlending( downloads_icon_png , sizeof (downloads_icon_png), downloads_icon_text_png , sizeof (downloads_icon_text_png), 64 ) ;
+  m_replay_icon = charArr2wxBitmapWithBlending( replay_icon_png , sizeof (replay_icon_png), replay_icon_text_png , sizeof (replay_icon_text_png), 64 ) ;
   m_select_image = new wxBitmap( select_icon_xpm );
 
   m_func_tab_images = new wxImageList( 64, 64 );
@@ -143,16 +148,20 @@ MainWindow::MainWindow( Ui& ui ) :
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
+  m_replay_tab = new ReplayTab ( m_func_tabs, m_ui );
 #ifndef NO_TORRENT_SYSTEM
   m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
 #endif
+
 
   m_func_tabs->AddPage( m_chat_tab, _T(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
+  m_func_tabs->AddPage( m_replay_tab, _T(""), false, 4 );
+
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 4 );
+  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 5 );
 #endif
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
@@ -254,7 +263,10 @@ void MainWindow::MakeImages()
   } else {*/
     m_func_tab_images->Add( *m_options_icon );
 
+    m_func_tab_images->Add( *m_replay_icon );
+
     m_func_tab_images->Add( *m_downloads_icon );
+
   //}
 
 }

@@ -7,6 +7,7 @@
 #include <wx/mstream.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
+
 #include <cmath>
 #include <wx/cmndata.h>
 #include <wx/colordlg.h>
@@ -126,7 +127,6 @@ void ColourDelta( int& r, int& g, int& b, const int& delta )
     }
 }
 
-
 wxColour ColourDelta( const wxColour& colour, const int& delta )
 {
     int r = colour.Red();
@@ -143,8 +143,6 @@ wxString GetColorString( const wxColour& color )
     return wxString::Format( _T("%d %d %d"), color.Red(), color.Green(), color.Blue() );
 
 }
-
-
 
 wxColour GetColorFromStrng( const wxString color )
 {

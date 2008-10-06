@@ -24,6 +24,7 @@ class settings_frame;
 class wxMenuItem;
 class wxMenuBar;
 class wxMenu;
+class ReplayTab;
 class AutojoinChannelDialog;
 
 // FIXME shouldn't copy this here
@@ -119,6 +120,7 @@ class MainWindow : public wxFrame
     wxBitmap* m_options_icon;
     wxBitmap* m_sp_icon;
     wxBitmap* m_downloads_icon;
+    wxBitmap* m_replay_icon;
     wxBitmap* m_select_image;
 
     wxImageList* m_func_tab_images;
@@ -126,6 +128,7 @@ class MainWindow : public wxFrame
     settings_frame* se_frame;
     bool se_frame_active;
 
+    ReplayTab* m_replay_tab;
     DECLARE_EVENT_TABLE()
 };
 

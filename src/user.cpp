@@ -75,7 +75,7 @@ void User::SetBattleStatus( const UserBattleStatus& status, bool setorder )
 }
 */
 
-void User::UpdateBattleStatus( const UserBattleStatus& status, bool setorder )
+void CommonUser::UpdateBattleStatus( const UserBattleStatus& status, bool setorder )
 {
 
   //int order = m_bstatus.order;
@@ -142,4 +142,9 @@ wxString User::GetClan(){
     if(clan!=tmp)return clan;
   }
   return wxString();
+}
+
+void CommonUser::SetStatus( const UserStatus& status )
+{
+  m_status = status;
 }

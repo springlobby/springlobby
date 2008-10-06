@@ -190,7 +190,6 @@ void BattleListTab::SelectBattle( Battle* battle )
 }
 
 void BattleListTab::AddBattle( Battle& battle ) {
-
   if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     return;
   }
@@ -351,7 +350,7 @@ void BattleListTab::SetFilterActiv( bool activ )
 {
   m_filter->SetActiv( activ );
   m_filter_activ->SetValue( activ );
-  sett().SetFilterActivState( activ );
+  sett().SetBattleFilterActivState( activ );
   ShowFilterNotice( activ );
   m_battle_list->MarkDirtySort();
 }
@@ -492,7 +491,7 @@ void BattleListTab::OnFilterActiv( wxCommandEvent& event )
     return;
   }
   m_filter->SetActiv( active );
-  sett().SetFilterActivState( active );
+  sett().SetBattleFilterActivState( active );
   ShowFilterNotice( active );
 }
 

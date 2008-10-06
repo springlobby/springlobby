@@ -225,6 +225,10 @@ SET(SpringLobbySrc
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
 	src/nicklistctrl.cpp
+	src/replay/replaylist.cpp
+        src/replay/replaytab.cpp
+        src/replay/replayfilter.cpp
+	src/replay/replaylistctrl.cpp
 	src/sdlsound.cpp
 	src/server.cpp
 	src/serverevents.cpp
@@ -280,7 +284,6 @@ SET(SLSharedWithSettings
 	src/updater/versionchecker.cpp
 	src/crashreport.cpp
 	src/springunitsynclib.cpp
-	src/utils.cpp
 	src/spinctld.cpp
 )
 

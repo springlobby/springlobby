@@ -1181,3 +1181,9 @@ void Ui::ReloadPresetList()
     catch (...) {}
 }
 
+
+void Ui::WatchReplay ( wxString& filename )
+{
+    m_spring->RunReplay( filename );
+}
+
