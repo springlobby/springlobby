@@ -14,7 +14,7 @@
 
 #define TOOLTIP_DELAY 1000
 
-BEGIN_EVENT_TABLE(ReplayListCtrl, customListCtrl)
+BEGIN_EVENT_TABLE(ReplayListCtrl, CustomListCtrl)
 
   EVT_LIST_ITEM_RIGHT_CLICK( RLIST_LIST, ReplayListCtrl::OnListRightClick )
   EVT_LIST_COL_CLICK       ( RLIST_LIST, ReplayListCtrl::OnColClick )
@@ -30,7 +30,7 @@ END_EVENT_TABLE()
 ReplayList* ReplayListCtrl::m_replaylist_sort = 0;
 
 ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList& replaylist  ):
-  customListCtrl(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
+  CustomListCtrl(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
                 _T("replaylistctrl") ),
   m_replaylist(replaylist)
 {
@@ -303,7 +303,7 @@ void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)
 	wxPoint position = event.GetPosition();
 
 	try{
-		tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+		m_tiptimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
 		int flag = wxLIST_HITTEST_ONITEM;
 		long *ptrSubItem = new long;
 #ifdef HAVE_WX28

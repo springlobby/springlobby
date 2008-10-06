@@ -13,7 +13,7 @@ class Ui;
 class ReplayList_Iter;
 
 
-class ReplayListCtrl : public customListCtrl
+class ReplayListCtrl : public CustomListCtrl
 {
   public:
     ReplayListCtrl( wxWindow* parent, ReplayList& replaylist );
