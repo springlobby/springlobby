@@ -875,14 +875,14 @@ springlobby_SOURCES = \
 	src/autojoinchanneldialog.cpp \
 	src/useractions.h \
 	src/useractions.cpp \
-	src/managegroupspanel.h \
-	src/managegroupspanel.cpp \
+	src/selectusersdialog.h \
+	src/selectusersdialog.cpp \
+	src/groupoptionspanel.h \
+	src/groupoptionspanel.cpp \
 	src/Helper/wxtextctrlhist.h \
 	src/Helper/wxtextctrlhist.cpp \
 	src/Helper/colorbutton.cpp \
 	src/Helper/colorbutton.h \
-	src/groupuserdialog.h \
-	src/groupuserdialog.cpp \
 	src/lobbyoptionstab.h \
 	src/lobbyoptionstab.cpp \
 	src/updater/updater.h \
@@ -942,8 +942,6 @@ springlobby_SOURCES += \
 	src/settings++/helpmenufunctions.cpp 
 
 springsettings_SOURCES = \
-	src/utils.cpp \
-	src/utils.h \
 	src/crashreport.cpp \
 	src/crashreport.h \
 	src/spinctld.h \

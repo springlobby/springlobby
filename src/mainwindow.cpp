@@ -15,7 +15,6 @@
 #include <wx/dcmemory.h>
 #include <wx/tooltip.h>
 
-
 #include <stdexcept>
 
 #include "mainwindow.h"
@@ -76,7 +75,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
   EVT_MENU( MENU_START_TORRENT, MainWindow::OnMenuStartTorrent )
   EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
-  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
+//  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
   EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
   EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
@@ -106,11 +105,6 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menuTools->AppendSeparator();
   m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
 
-  #if defined(__WXMSW__)
-  m_menuTools->AppendSeparator();
-  m_menuTools->AppendCheckItem(MENU_SHOW_TOOLTIPS, _("Show tooltips") );
-  m_menuTools->Check( MENU_SHOW_TOOLTIPS, sett().GetShowTooltips() );
-  #endif
 
   #ifndef NO_TORRENT_SYSTEM
   m_menuTools->AppendSeparator();
@@ -314,6 +308,11 @@ ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
   return m_chat_tab->GetChannelChatPanel( channel );
 }
 
+MainOptionsTab& MainWindow::GetOptionsTab()
+{
+  ASSERT_EXCEPTION(m_opts_tab != 0, _T("m_opts_tab == 0"));
+  return *m_opts_tab;
+}
 
 //! @brief Open a new chat tab with a channel chat
 //!
@@ -515,13 +514,6 @@ void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 	  	    		wxDefaultSize);
 	se_frame_active = true;
 	se_frame->Show();
-}
-
-void MainWindow::OnShowToolTips( wxCommandEvent& event )
-{
-    bool show = m_menuTools->IsChecked(MENU_SHOW_TOOLTIPS);
-    wxToolTip::Enable(show);
-    sett().SetShowTooltips(show);
 }
 
 void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& event )

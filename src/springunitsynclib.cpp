@@ -20,7 +20,7 @@ SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path ):
 
 SpringUnitSyncLib::~SpringUnitSyncLib()
 {
-  Unload();
+  if ( IsLoaded() ) Unload();
 }
 
 
@@ -350,7 +350,7 @@ wxString SpringUnitSyncLib::GetMapChecksum( int index )
 {
   InitLib( m_get_map_checksum );
 
-  return i2s( (int)m_get_map_checksum( index ) );
+  return TowxString( (int)m_get_map_checksum( index ) );
 }
 
 

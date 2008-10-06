@@ -4,6 +4,7 @@
 #include <wx/intl.h>
 #include <wx/stattext.h>
 #include <wx/checkbox.h>
+#include <wx/tooltip.h>
 
 #include "settings.h"
 //#include
@@ -41,6 +42,18 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_main_sizer->Add( m_updater_sizer, 0, wxALL, 15 );
 #endif
 
+    wxStaticBoxSizer* m_show_tooltips_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Tooltips") );
+    m_show_tooltips_label = new wxStaticText ( this, -1, _("Requires SpringLobby restart to take effect.") );
+    m_show_tooltips = new wxCheckBox( this, -1, _("Show Tooltips?"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_show_tooltips->SetValue( sett().GetShowTooltips() );
+#ifndef __WXMSW__ // on windows this change is immediate
+    m_show_tooltips_sizer->Add( m_show_tooltips_label, 1, wxEXPAND|wxALL, 5);
+#endif
+    m_show_tooltips_sizer->Add( m_show_tooltips, 0, wxEXPAND|wxALL, 5);
+
+    m_main_sizer->Add( m_show_tooltips_sizer, 0, wxALL, 15 );
+
+
     SetSizer( m_main_sizer );
 }
 
@@ -56,6 +69,9 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& event)
 #ifdef __WXMSW__
     sett().SetAutoUpdate( m_updater->IsChecked() );
 #endif
+    bool show = m_show_tooltips->IsChecked();
+    wxToolTip::Enable(show);
+    sett().SetShowTooltips(show);
 }
 
 
@@ -66,5 +82,8 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& event)
 #ifdef __WXMSW__
     m_updater->SetValue( sett().GetAutoUpdate() );
 #endif
+    bool show = sett().GetShowTooltips();
+    m_show_tooltips->SetValue(show);
+    wxToolTip::Enable(show);
 }
 

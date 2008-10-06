@@ -3,68 +3,87 @@
 #include "settings.h"
 #include <wx/colour.h>
 #include "iconimagelist.h"
+#include "settings++/custom_dialogs.h"
 
-BEGIN_EVENT_TABLE(customListCtrl, ListBaseType)
 #if wxUSE_TIPWINDOW
-    	EVT_MOTION(customListCtrl::OnMouseMotion)
-    	EVT_TIMER(IDD_TIP_TIMER, customListCtrl::OnTimer)
-#endif
-    	EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, customListCtrl::OnStartResizeCol)
-    	EVT_LIST_COL_END_DRAG(wxID_ANY, customListCtrl::OnEndResizeCol)
-    	EVT_LEAVE_WINDOW(customListCtrl::noOp)
-    	EVT_LIST_ITEM_SELECTED   ( wxID_ANY, customListCtrl::OnSelected )
-        EVT_LIST_ITEM_DESELECTED ( wxID_ANY, customListCtrl::OnDeselected )
-        EVT_LIST_DELETE_ITEM     ( wxID_ANY, customListCtrl::OnDeselected )
+BEGIN_EVENT_TABLE(SLTipWindow, wxTipWindow)
+  EVT_MOUSEWHEEL(SLTipWindow::Cancel)
 END_EVENT_TABLE()
 
-//wxTipWindow* customListCtrl::m_tipwindow = 0;
-customListCtrl::customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style,wxString name,
-                                bool highlight, UserActions::ActionType hlaction )
-    : ListBaseType (parent, id, pt, sz, style),tipTimer(this, IDD_TIP_TIMER),m_tiptext(_T("")),
-      m_selected(-1),m_selected_index(-1),m_prev_selected(-1),m_prev_selected_index(-1),
-      m_last_mouse_pos( wxPoint(-1,-1) ), m_name(name), m_highlight(highlight), m_highlightAction(hlaction), m_dirty_sort(false)
+void SLTipWindow::Cancel(wxMouseEvent& event)
+{
+  wxTipWindow::Close();
+}
+#endif
 
+BEGIN_EVENT_TABLE(CustomListCtrl, ListBaseType)
+#if wxUSE_TIPWINDOW
+  EVT_MOTION(CustomListCtrl::OnMouseMotion)
+  EVT_TIMER(IDD_TIP_TIMER, CustomListCtrl::OnTimer)
+#endif
+  EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, CustomListCtrl::OnStartResizeCol)
+  EVT_LIST_COL_END_DRAG(wxID_ANY, CustomListCtrl::OnEndResizeCol)
+  EVT_LEAVE_WINDOW(CustomListCtrl::noOp)
+  EVT_LIST_ITEM_SELECTED   ( wxID_ANY, CustomListCtrl::OnSelected )
+  EVT_LIST_ITEM_DESELECTED ( wxID_ANY, CustomListCtrl::OnDeselected )
+  EVT_LIST_DELETE_ITEM     ( wxID_ANY, CustomListCtrl::OnDeselected )
+END_EVENT_TABLE()
 
+//wxTipWindow* CustomListCtrl::m_tipwindow = 0;
+CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style,wxString name,
+                                bool highlight, UserActions::ActionType hlaction ):
+  ListBaseType(parent, id, pt, sz, style),
+  m_tiptimer(this, IDD_TIP_TIMER),
+  m_tiptext(_T("")),
+  m_selected(-1),
+  m_selected_index(-1),
+  m_prev_selected(-1),
+  m_prev_selected_index(-1),
+  m_last_mouse_pos( wxPoint(-1,-1) ),
+  m_name(name),
+  m_highlight(highlight),
+  m_highlightAction(hlaction),
+  m_dirty_sort(false)
 {
 #if wxUSE_TIPWINDOW
-	m_tipwindow = 0;
+    m_tipwindow = 0;
     controlPointer = 0;
 #endif
-	m_tiptext = _T("");
-	m_bg_color = GetItemBackgroundColour(0);
+    m_tiptext = _T("");
+    m_bg_color = GetItemBackgroundColour(0);
 
-	SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
+    SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
     SetImageList( &icons(), wxIMAGE_LIST_SMALL );
     SetImageList( &icons(), wxIMAGE_LIST_STATE );
 }
 
-void customListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
+void CustomListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
 {
-	ListBaseType::InsertColumn(i,item);
-	colInfo temp(tip,modifiable);
-	m_colinfovec.push_back(temp);
+  ListBaseType::InsertColumn(i,item);
+  colInfo temp(tip,modifiable);
+  m_colinfovec.push_back(temp);
 }
 
-void customListCtrl::SetSelectionRestorePoint()
+void CustomListCtrl::SetSelectionRestorePoint()
 {
-    m_prev_selected = m_selected;
-    m_prev_selected_index = m_selected_index;
+  m_prev_selected = m_selected;
+  m_prev_selected_index = m_selected_index;
 }
 
-void customListCtrl::RestoreSelection()
+void CustomListCtrl::RestoreSelection()
 {
-    if ( m_prev_selected_index> -1)
-    {
-        SetItemState( GetIndexFromData( m_prev_selected ), wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
-    }
+  if ( m_prev_selected_index> -1)
+  {
+    SetItemState( GetIndexFromData( m_prev_selected ), wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+  }
 }
 
-void customListCtrl::ResetSelection()
+void CustomListCtrl::ResetSelection()
 {
-    m_selected = m_prev_selected = m_prev_selected_index = m_selected_index = -1;
+  m_selected = m_prev_selected = m_prev_selected_index = m_selected_index = -1;
 }
 
-void customListCtrl::OnSelected( wxListEvent& event )
+void CustomListCtrl::OnSelected( wxListEvent& event )
 {
   m_selected = GetItemData( event.GetIndex() );
   m_selected_index = event.GetIndex();
@@ -72,13 +91,12 @@ void customListCtrl::OnSelected( wxListEvent& event )
 }
 
 
-void customListCtrl::OnDeselected( wxListEvent& event )
+void CustomListCtrl::OnDeselected( wxListEvent& event )
 {
-  if ( m_selected == (int)GetItemData( event.GetIndex() )  )
-    m_selected = m_selected_index = -1;
+  if ( m_selected == (int)GetItemData( event.GetIndex() ) ) m_selected = m_selected_index = -1;
 }
 
-long customListCtrl::GetIndexFromData( const unsigned long data )
+long CustomListCtrl::GetIndexFromData( const unsigned long data )
 {
   for (int i = 0; i < GetItemCount() ; i++ )
   {
@@ -88,12 +106,12 @@ long customListCtrl::GetIndexFromData( const unsigned long data )
   return -1;
 }
 
-long customListCtrl::GetSelectedIndex()
+long CustomListCtrl::GetSelectedIndex()
 {
   return m_selected_index ;
 }
 
-void customListCtrl::SelectAll()
+void CustomListCtrl::SelectAll()
 {
   for (long i = 0; i < GetItemCount() ; i++ )
   {
@@ -101,7 +119,7 @@ void customListCtrl::SelectAll()
   }
 }
 
-void customListCtrl::SelectNone()
+void CustomListCtrl::SelectNone()
 {
   for (long i = 0; i < GetItemCount() ; i++ )
   {
@@ -109,7 +127,7 @@ void customListCtrl::SelectNone()
   }
 }
 
-void customListCtrl::SelectInverse()
+void CustomListCtrl::SelectInverse()
 {
   for (long i = 0; i < GetItemCount() ; i++ )
   {
@@ -119,42 +137,41 @@ void customListCtrl::SelectInverse()
   }
 }
 
-void customListCtrl::SetSelectedIndex(const long newindex)
+void CustomListCtrl::SetSelectedIndex(const long newindex)
 {
     m_selected_index = newindex;
 }
 
-long customListCtrl::GetSelectedData()
+long CustomListCtrl::GetSelectedData()
 {
   return m_selected ;
 }
 
-void customListCtrl::OnTimer(wxTimerEvent& event)
+void CustomListCtrl::OnTimer(wxTimerEvent& event)
 {
 #if wxUSE_TIPWINDOW
 
-        if (!m_tiptext.empty())
-        {
-            m_tipwindow = new wxTipWindow(this, m_tiptext);
-            controlPointer = &m_tipwindow;
-            m_tipwindow->SetTipWindowPtr(controlPointer);
+  if (!m_tiptext.empty())
+  {
+      m_tipwindow = new SLTipWindow(this, m_tiptext);
+      controlPointer = &m_tipwindow;
+      m_tipwindow->SetTipWindowPtr((wxTipWindow**)controlPointer);
 #ifndef __WXMSW__
-            m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
+      m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
 #endif
-            m_tiptext = wxEmptyString;
-            tipTimer.Start(TOOLTIP_DURATION, wxTIMER_ONE_SHOT);
-        }
-        else
-        {
-            m_tiptext = wxEmptyString;
-            tipTimer.Stop();
-            if (controlPointer!= 0 && *controlPointer!= 0)
-            {
-                m_tipwindow->Close();
-                m_tipwindow = 0;
-            }
-        }
-
+      m_tiptext = wxEmptyString;
+      m_tiptimer.Start(TOOLTIP_DURATION, wxTIMER_ONE_SHOT);
+  }
+  else
+  {
+      m_tiptext = wxEmptyString;
+      m_tiptimer.Stop();
+      if (controlPointer!= 0 && *controlPointer!= 0)
+      {
+          m_tipwindow->Close();
+          m_tipwindow = 0;
+      }
+  }
 
 #endif
 }
@@ -162,89 +179,89 @@ void customListCtrl::OnTimer(wxTimerEvent& event)
 //TODO http://www.wxwidgets.org/manuals/stable/wx_wxtipwindow.html#wxtipwindowsettipwindowptr
 // must have sth to do with crash on windows
 //if to tootips are displayed
-void customListCtrl::OnMouseMotion(wxMouseEvent& event)
+void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
 #if wxUSE_TIPWINDOW
-    //we don't want to display the tooltip again until mouse has moved
-    if ( m_last_mouse_pos == event.GetPosition() )
-        return;
+  //we don't want to display the tooltip again until mouse has moved
+  if ( m_last_mouse_pos == event.GetPosition() )
+    return;
 
-    m_last_mouse_pos = event.GetPosition();
+  m_last_mouse_pos = event.GetPosition();
 
-	if (event.Leaving())
-	{
-		m_tiptext = _T("");
-		if (m_tipwindow)
-		{
-            m_tipwindow->Close();
-            m_tipwindow = 0;
-		}
-		tipTimer.Stop();
-	}
-	else
-	{
-	    if (tipTimer.IsRunning() == true)
-	    {
-	        tipTimer.Stop();
-	    }
+  if (event.Leaving())
+  {
+    m_tiptext = _T("");
+    if (m_tipwindow)
+    {
+      m_tipwindow->Close();
+      m_tipwindow = 0;
+    }
+    m_tiptimer.Stop();
+  }
+  else
+  {
+    if (m_tiptimer.IsRunning() == true)
+    {
+      m_tiptimer.Stop();
+    }
 
-	    wxPoint position = event.GetPosition();
+    wxPoint position = event.GetPosition();
 
-	    int flag = wxLIST_HITTEST_ONITEM;
+    int flag = wxLIST_HITTEST_ONITEM;
 
 #ifdef HAVE_WX28
     long subItem;
-		long item_hit = HitTest(position, flag, &subItem);
+    long item_hit = HitTest(position, flag, &subItem);
 #else
-		long item_hit = HitTest(position, flag);
+    long item_hit = HitTest(position, flag);
 #endif
-	    if (item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount())
-	    {
-	        // we don't really need to recover from this if it fails
-	        try
-	        {
-                SetTipWindowText(item_hit,m_last_mouse_pos);
-                tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-	        }
-	        catch ( ... ) { wxLogWarning( _T("Exception setting tooltip") );}
-	    }
-	}
+    if (item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount())
+    {
+        // we don't really need to recover from this if it fails
+      try
+      {
+        SetTipWindowText(item_hit,m_last_mouse_pos);
+        m_tiptimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+      }
+      catch ( ... ) { wxLogWarning( _T("Exception setting tooltip") );}
+    }
+  }
 #endif
 }
 
-void customListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+void CustomListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-    int coloumn = getColoumnFromPosition(position);
-    if (coloumn >= int(m_colinfovec.size()) || coloumn < 0)
+  int coloumn = getColoumnFromPosition(position);
+  if (coloumn >= int(m_colinfovec.size()) || coloumn < 0)
+  {
+    m_tiptext = _T("");
+  }
+  else
+  {
+    m_tiptimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+    m_tiptext = m_colinfovec[coloumn].first;
+  }
+}
+
+int CustomListCtrl::getColoumnFromPosition(wxPoint pos)
+{
+    int x_pos = 0;
+    for (int i = 0; i < int(m_colinfovec.size());++i)
     {
-        m_tiptext = _T("");
+        x_pos += GetColumnWidth(i);
+        if (pos.x < x_pos)
+            return i;
     }
-    else
-    {
-        tipTimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-        m_tiptext = m_colinfovec[coloumn].first;
-    }
+    return -1;
 }
 
-int customListCtrl::getColoumnFromPosition(wxPoint pos)
+void CustomListCtrl::OnStartResizeCol(wxListEvent& event)
 {
-	int x_pos = 0;
-	for (int i = 0; i < int(m_colinfovec.size());++i)
-	{
-		x_pos += GetColumnWidth(i);
-		if (pos.x < x_pos)
-			return i;
-	}
-	return -1;
+    if (!m_colinfovec[event.GetColumn()].second)
+        event.Veto();
 }
 
-void customListCtrl::OnStartResizeCol(wxListEvent& event)
-{
-	if (!m_colinfovec[event.GetColumn()].second)
-		event.Veto();
-}
-
-void customListCtrl::OnEndResizeCol(wxListEvent& event)
+void CustomListCtrl::OnEndResizeCol(wxListEvent& event)
 {
     int column = event.GetColumn();
     int new_size = GetColumnWidth( column );
@@ -254,7 +271,7 @@ void customListCtrl::OnEndResizeCol(wxListEvent& event)
     event.Skip();
 }
 
-bool customListCtrl::SetColumnWidth(int col, int width)
+bool CustomListCtrl::SetColumnWidth(int col, int width)
 {
     if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
     {
@@ -267,20 +284,34 @@ bool customListCtrl::SetColumnWidth(int col, int width)
     }
 }
 
-void customListCtrl::noOp(wxMouseEvent& event)
+void CustomListCtrl::noOp(wxMouseEvent& event)
 {
-	m_tiptext = _T("");
+    m_tiptext = wxEmptyString;
+//            m_tiptimer.Stop();
+//            if (controlPointer!= 0 && *controlPointer!= 0)
+//            {
+//                m_tipwindow->Close();
+//                m_tipwindow = 0;
+//            }
+    event.Skip();
 }
 
-void customListCtrl::UpdateHighlights()
+void CustomListCtrl::UpdateHighlights()
 {
-    for (long i = 0; i < GetItemCount() ; i++ )
-    {
-        HighlightItem( i );
-    }
+  Freeze();
+  try {
+      long item = -1;
+      while ( true ) {
+        item = GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE);
+        if ( item == -1 )
+          break;
+        HighlightItem( item );
+      }
+  } catch(...) {}
+  Thaw();
 }
 
-void customListCtrl::HighlightItemUser( long item, const wxString& name )
+void CustomListCtrl::HighlightItemUser( long item, const wxString& name )
 {
    if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
         wxColor c = sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
@@ -290,12 +321,12 @@ void customListCtrl::HighlightItemUser( long item, const wxString& name )
     SetItemBackgroundColour( item, m_bg_color );
 }
 
-void customListCtrl::SetHighLightAction( UserActions::ActionType action )
+void CustomListCtrl::SetHighLightAction( UserActions::ActionType action )
 {
     m_highlightAction = action;
 }
 
-void customListCtrl::MarkDirtySort()
+void CustomListCtrl::MarkDirtySort()
 {
   m_dirty_sort = true;
 }

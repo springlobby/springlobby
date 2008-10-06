@@ -200,7 +200,8 @@ TorrentWrapper::TorrentWrapper():
         m_seed_count(0),
         m_leech_count(0),
         m_timer_count(0),
-        m_is_connecting(false)
+        m_is_connecting(false),
+        m_started(false)
 {
     m_tracker_urls.Add( _T("tracker.caspring.org"));
     m_tracker_urls.Add( _T("tracker2.caspring.org"));
@@ -308,7 +309,8 @@ bool TorrentWrapper::ConnectToP2PSystem( const unsigned int tracker_no )
 
 void TorrentWrapper::DisconnectToP2PSystem()
 {
-    if ( IsConnectedToP2PSystem() ) m_socket_class->Disconnect();
+    if ( IsConnectedToP2PSystem() )
+        m_socket_class->Disconnect();
 }
 
 
@@ -1054,6 +1056,8 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 void TorrentWrapper::OnConnected( Socket* sock )
 {
     wxLogMessage(_T("torrent system connected") );
+    m_started = true;
+
     try
     {
         m_torr->start_dht();
@@ -1099,7 +1103,7 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
 
     try
     {
-        m_torr->stop_dht();
+        if (m_started) m_torr->stop_dht();
     }
     catch (std::exception& e)
     {
@@ -1113,6 +1117,7 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
     m_leech_count = 0;
 
     sett().SetTorrentListToResume( TorrentsToResume );
+    m_started = false;
 }
 
 
