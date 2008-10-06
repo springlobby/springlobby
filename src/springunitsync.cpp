@@ -233,6 +233,15 @@ bool SpringUnitSync::ModExists( const wxString& modname, const wxString& hash )
   return itor->second == hash;
 }
 
+bool SpringUnitSync::ModExistsCheckHash( const wxString& hash ) const
+{
+    LocalArchivesVector::const_iterator itor = m_mods_list.begin();
+    for ( ; itor != m_mods_list.end(); ++itor ) {
+        if ( itor->second == hash )
+            return true;
+    }
+    return false;
+}
 
 UnitSyncMod SpringUnitSync::GetMod( const wxString& modname )
 {
@@ -1016,6 +1025,27 @@ void SpringUnitSync::SetCacheFile( const wxString& path, const wxArrayString& da
   file.Close();
 }
 
+wxArrayString SpringUnitSync::GetReplayList()
+{
+  wxLogDebug( _T("") );
+  LOCK_UNITSYNC;
+
+  if ( !IsLoaded() ) return wxArrayString();
+
+  int ini = susynclib()->InitFindVFS( _T("demos/*.sdf") );
+
+  wxString FilePath ;
+  wxArrayString ret;
+
+  do
+  {
+    ini = susynclib()->FindFilesVFS ( ini, FilePath );
+    wxString FileName = wxString ( FilePath, wxConvUTF8 );
+    ret.Add ( FileName );
+  } while (ini != 0);
+
+  return ret;
+}
 
 bool SpringUnitSync::FileExists( const wxString& name )
 {

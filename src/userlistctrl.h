@@ -31,6 +31,8 @@ class UserListctrl : public CustomListCtrl
         wxArrayString GetUserNicks( ) const;
         void SetColumnWidths();
         void OnColClick( wxListEvent& event );
+        //! delete both all items and associated data, handle with care!
+        void Clear();
 
     protected:
         UserDataMap m_userdata;

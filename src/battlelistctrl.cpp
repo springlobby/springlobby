@@ -212,12 +212,6 @@ void BattleListCtrl::Sort()
       case 9 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareMaxPlayerUP:&CompareMaxPlayerDOWN , 0 ); break;
     }
   }
-  // WAY too slow to be used like that
-//  if ( changed )
-//  {
-//      int new_index = GetIndexFromData( m_selected );
-//      SetItemState( new_index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
-//  }
 }
 
 

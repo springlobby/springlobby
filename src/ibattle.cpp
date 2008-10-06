@@ -98,7 +98,7 @@ const UnitSyncMod& IBattle::LoadMod()
 {
   if ( !m_mod_loaded ) {
     try {
-      ASSERT_LOGIC( m_mod_exists, _T("Mod does not exist.") );
+      ASSERT_EXCEPTION( m_mod_exists, _T("Mod does not exist.") );
       m_local_mod = usync().GetMod( m_host_mod.name );
       m_mod_loaded = true;
     } catch (...) {}
