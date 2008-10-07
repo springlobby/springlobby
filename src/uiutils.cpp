@@ -173,7 +173,8 @@ wxImage BlendImage( const wxImage& foreground, const wxImage&  background )
     ret.InitAlpha();
     unsigned char* result_data = ret.GetData();
 
-    if ( background.HasAlpha() && foreground.HasAlpha() )
+    bool zhu = background.HasAlpha();
+    if (  zhu && foreground.HasAlpha() )
     {
         unsigned char* background_alpha = background.GetAlpha();
         unsigned char* foreground_alpha = foreground.GetAlpha();
@@ -212,7 +213,7 @@ wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size)
 //    return wxBitmap(temp );
 //}
 
-wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size, const unsigned char * text, int text_size, unsigned int img_dim)
+wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size, const unsigned char * text, int text_size )
 {
     wxMemoryInputStream istream1( dest, dest_size );
     wxImage dest_img( istream1, wxBITMAP_TYPE_PNG );

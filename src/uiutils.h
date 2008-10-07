@@ -45,7 +45,7 @@ wxBitmap* BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, con
 wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size);
 //wxBitmap charArr2wxBitmap(const unsigned char * arg, int size);
 wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * arg, int size,
-            const unsigned char * text, int text_size, unsigned int img_dim);
+            const unsigned char * text, int text_size);
 
 
 //! when querying for a color, always use this (it'll autosave/retrieve custom defined colors)
