@@ -1068,9 +1068,11 @@ void ChatPanel::_SetChannel( Channel* channel )
 }
 
 
-void ChatPanel::Say( const wxString& message )
+void ChatPanel::Say( wxString message )
 {
 	wxLogDebugFunc( _T( "" ) );
+	message.Replace( _T("\r\n"), _T("\n") );
+	message.Replace( _T("\r"), _T("\n") );
 	wxStringTokenizer lines( message, _T( "\n" ) );
 	if ( lines.CountTokens() > 5 ) {
 		wxMessageDialog dlg( &m_ui.mw(), wxString::Format( _( "Are you sure you want to paste %d lines?" ), lines.CountTokens() ), _( "Flood warning" ), wxYES_NO );
