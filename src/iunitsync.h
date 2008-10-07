@@ -114,6 +114,10 @@ class IUnitSync
      */
     virtual bool ModExists( const wxString& modname, const wxString& hash ) = 0;
 
+    /** Check by hash string only if a mod exists.
+     */
+    virtual bool ModExistsCheckHash( const wxString& hash ) const = 0;
+
     /** Get a mod by name.
      */
     virtual UnitSyncMod GetMod( const wxString& modname ) = 0;
@@ -137,6 +141,7 @@ class IUnitSync
 
     virtual int GetNumMaps() = 0;
     virtual wxArrayString GetMapList() = 0;
+    virtual wxArrayString GetModValidMapList( const wxString& modname ) = 0;
     virtual bool MapExists( const wxString& mapname ) = 0;
     virtual bool MapExists( const wxString& mapname, const wxString& hash ) = 0;
 
@@ -169,6 +174,9 @@ class IUnitSync
     virtual wxArrayString GetAIList( const wxString& modname ) = 0;
 
     virtual bool ReloadUnitSyncLib() = 0;
+
+
+    virtual wxArrayString GetReplayList() = 0;
 
     virtual void SetSpringDataPath( const wxString& path ) = 0;
     virtual wxString GetSpringDataPath() = 0;

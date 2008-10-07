@@ -19,7 +19,7 @@
 
 #define TOOLTIP_DELAY 1000
 
-BEGIN_EVENT_TABLE( TorrentListCtrl, customListCtrl )
+BEGIN_EVENT_TABLE( TorrentListCtrl, CustomListCtrl )
 
 	EVT_LIST_ITEM_RIGHT_CLICK( TLIST_CLICK, TorrentListCtrl::OnListRightClick )
 	EVT_LIST_COL_CLICK( TLIST_CLICK, TorrentListCtrl::OnColClick )
@@ -33,7 +33,7 @@ END_EVENT_TABLE()
 map_infos* TorrentListCtrl::m_info_map = 0;
 
 TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
-		customListCtrl( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize,
+		CustomListCtrl( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl") )
 
 {

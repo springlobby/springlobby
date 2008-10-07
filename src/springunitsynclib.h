@@ -101,6 +101,8 @@ typedef const char* (USYNC_CALL_CONV *GetPrimaryModArchivePtr)(int index);
 typedef int (USYNC_CALL_CONV *GetPrimaryModArchiveCountPtr)(int index);
 typedef const char* (USYNC_CALL_CONV *GetPrimaryModArchiveListPtr)(int arnr);
 typedef unsigned int (USYNC_CALL_CONV *GetPrimaryModChecksumFromNamePtr)(const char* name);
+typedef unsigned int (USYNC_CALL_CONV *GetModValidMapCountPtr)();
+typedef const char* (USYNC_CALL_CONV *GetModValidMapPtr)(int index);
 typedef int (USYNC_CALL_CONV *GetLuaAICountPtr)();
 typedef const char* (USYNC_CALL_CONV *GetLuaAINamePtr)(int aiIndex);
 typedef const char* (USYNC_CALL_CONV *GetLuaAIDescPtr)(int aiIndex);
@@ -129,6 +131,52 @@ typedef int (USYNC_CALL_CONV *OpenArchiveFilePtr)(int archive, const char* name)
 typedef int (USYNC_CALL_CONV *ReadArchiveFilePtr)(int archive, int handle, void* buffer, int numBytes);
 typedef void (USYNC_CALL_CONV *CloseArchiveFilePtr)(int archive, int handle);
 typedef int (USYNC_CALL_CONV *SizeArchiveFilePtr)(int archive, int handle);
+
+/// Unitsync functions wrapping lua parser
+typedef void (USYNC_CALL_CONV *lpClosePtr)();
+typedef int (USYNC_CALL_CONV *lpOpenFilePtr)(const char* filename, const char* fileModes,  const char* accessModes);
+typedef int (USYNC_CALL_CONV *lpOpenSourcePtr)(const char* source, const char* accessModes);
+typedef int (USYNC_CALL_CONV *lpExecutePtr)();
+typedef const char* (USYNC_CALL_CONV *lpErrorLogPtr)();
+
+typedef void (USYNC_CALL_CONV *lpAddTableIntPtr)(int key, int override);
+typedef void (USYNC_CALL_CONV *lpAddTableStrPtr)(const char* key, int override);
+typedef void (USYNC_CALL_CONV *lpEndTablePtr)();
+typedef void (USYNC_CALL_CONV *lpAddIntKeyIntValPtr)(int key, int val);
+typedef void (USYNC_CALL_CONV *lpAddStrKeyIntValPtr)(const char* key, int val);
+typedef void (USYNC_CALL_CONV *lpAddIntKeyBoolValPtr)(int key, int val);
+typedef void (USYNC_CALL_CONV *lpAddStrKeyBoolValPtr)(const char* key, int val);
+typedef void (USYNC_CALL_CONV *lpAddIntKeyFloatValPtr)(int key, float val);
+typedef void (USYNC_CALL_CONV *lpAddStrKeyFloatValPtr)(const char* key, float val);
+typedef void (USYNC_CALL_CONV *lpAddIntKeyStrValPtr)(int key, const char* val);
+typedef void (USYNC_CALL_CONV *lpAddStrKeyStrValPtr)(const char* key, const char* val);
+
+typedef int (USYNC_CALL_CONV *lpRootTablePtr)();
+typedef int (USYNC_CALL_CONV *lpRootTableExprPtr)(const char* expr);
+typedef int (USYNC_CALL_CONV *lpSubTableIntPtr)(int key);
+typedef int (USYNC_CALL_CONV *lpSubTableStrPtr)(const char* key);
+typedef int (USYNC_CALL_CONV *lpSubTableExprPtr)(const char* expr);
+typedef void (USYNC_CALL_CONV *lpPopTablePtr)();
+
+typedef int (USYNC_CALL_CONV *lpGetKeyExistsIntPtr)(int key);
+typedef int (USYNC_CALL_CONV *lpGetKeyExistsStrPtr)(const char* key);
+
+typedef int (USYNC_CALL_CONV *lpGetIntKeyTypePtr)(int key);
+typedef int (USYNC_CALL_CONV *lpGetStrKeyTypePtr)(const char* key);
+
+typedef int (USYNC_CALL_CONV *lpGetIntKeyListCountPtr)();
+typedef int (USYNC_CALL_CONV *lpGetIntKeyListEntryPtr)(int index);
+typedef int (USYNC_CALL_CONV *lpGetStrKeyListCountPtr)();
+typedef const char* (USYNC_CALL_CONV *lpGetStrKeyListEntryPtr)(int index);
+
+typedef int (USYNC_CALL_CONV *lpGetIntKeyIntValPtr)(int key, int defVal);
+typedef int (USYNC_CALL_CONV *lpGetStrKeyIntValPtr)(const char* key, int defVal);
+typedef int (USYNC_CALL_CONV *lpGetIntKeyBoolValPtr)(int key, int defVal);
+typedef int (USYNC_CALL_CONV *lpGetStrKeyBoolValPtr)(const char* key, int defVal);
+typedef float (USYNC_CALL_CONV *lpGetIntKeyFloatValPtr)(int key, float defVal);
+typedef float (USYNC_CALL_CONV *lpGetStrKeyFloatValPtr)(const char* key, float defVal);
+typedef const char* (USYNC_CALL_CONV *lpGetIntKeyStrValPtr)(int key, const char* defVal);
+typedef const char* (USYNC_CALL_CONV *lpGetStrKeyStrValPtr)(const char* key, const char* defVal);
 
 
 /** @} */
@@ -191,20 +239,26 @@ class SpringUnitSyncLib
     wxString GetMapArchiveName( int arnr );
 
     /**
-     * Get information about a map.
+     * @brief Get information about a map.
      * @param version will get author if >=1.
      * @note Throws assert_exception if unsuccessful.
      */
     MapInfo GetMapInfoEx( const wxString& mapName, int version );
 
     /**
-     * Get minimap.
+     * @brief Get minimap.
      * @note Throws assert_exception if unsuccessful.
      */
     wxImage GetMinimap( const wxString& mapFileName );
 
     /**
-     * Get metalmap.
+     * @brief Check whether unitsync supports GetInfoMap API.
+     * @note Only when this returns true GetMetalmap may be used.
+     */
+    bool HasGetInfoMap() const { return m_get_infomap_size != NULL; }
+
+    /**
+     * @brief Get metalmap.
      * @note Throws assert_exception if unsuccessful.
      */
     wxImage GetMetalmap( const wxString& mapFileName );
@@ -262,6 +316,9 @@ class SpringUnitSyncLib
     wxString GetLuaAIName( int aiIndex );
     wxString GetLuaAIDesc( int aiIndex );
 
+    unsigned int GetValidMapCount( const wxString& modname );
+    wxString GetValidMapName( unsigned int MapIndex );
+
     int GetMapOptionCount( const wxString& name );
     int GetModOptionCount( const wxString& name );
     wxString GetOptionKey( int optIndex );
@@ -296,6 +353,54 @@ class SpringUnitSyncLib
     void SetSpringConfigString( const wxString& key, const wxString& value );
     void SetSpringConfigInt( const wxString& key, int value );
     void SetSpringConfigFloat( const wxString& key, const float value );
+
+    /// lua parser
+
+    void CloseParser();
+    bool OpenParserFile( const wxString& filename, const wxString& filemodes, const wxString& accessModes );
+    bool OpenParserSource( const wxString& source, const wxString& accessModes );
+    bool ParserExecute();
+    wxString ParserErrorLog();
+
+    void ParserAddTable( int key, bool override );
+    void ParserAddTable( const wxString& key, bool override );
+    void ParserEndTable();
+    void ParserAddTableValue( int key, int val );
+    void ParserAddTableValue( const wxString& key, int val );
+    void ParserAddTableValue( int key, bool val );
+    void ParserAddTableValue( const wxString& key, bool val );
+    void ParserAddTableValue( int key, const wxString& val );
+    void ParserAddTableValue( const wxString& key, const wxString& val );
+    void ParserAddTableValue( int key, float val );
+    void ParserAddTableValue( const wxString& key, float val );
+
+    bool ParserGetRootTable();
+    bool ParserGetRootTableExpression( const wxString& exp );
+    bool ParserGetSubTableInt( int key );
+    bool ParserGetSubTableString( const wxString& key );
+    bool ParserGetSubTableInt( const wxString& exp );
+    void ParserPopTable();
+
+    bool ParserKeyExists( int key );
+    bool ParserKeyExists( const wxString& key );
+
+    int ParserGetKeyType( int key );
+    int ParserGetKeyType( const wxString& key );
+
+    int ParserGetIntKeyListCount();
+    int ParserGetIntKeyListEntry( int index );
+    int ParserGetStringKeyListCount();
+    int ParserGetStringKeyListEntry( int index );
+
+    int GetKeyValue( int key, int defval );
+    bool GetKeyValue( int key, bool defval );
+    wxString GetKeyValue( int key, const wxString& defval );
+    float GetKeyValue( int key, float defval );
+    int GetKeyValue( const wxString& key, int defval );
+    bool GetKeyValue( const wxString& key, bool defval );
+    wxString GetKeyValue( const wxString& key, const wxString& defval );
+    float GetKeyValue( const wxString& key, float defval );
+
 
   protected:
 
@@ -395,6 +500,8 @@ class SpringUnitSyncLib
     GetPrimaryModArchiveCountPtr m_get_primary_mod_archive_count;
     GetPrimaryModArchiveListPtr m_get_primary_mod_archive_list;
     GetPrimaryModChecksumFromNamePtr m_get_primary_mod_checksum_from_name;
+    GetModValidMapCountPtr m_get_mod_valid_map_count;
+    GetModValidMapPtr m_get_valid_map;
     GetLuaAICountPtr m_get_luaai_count;
     GetLuaAINamePtr m_get_luaai_name;
     GetLuaAIDescPtr m_get_luaai_desc;
@@ -429,6 +536,53 @@ class SpringUnitSyncLib
     GetSpringConfigStringPtr m_get_spring_config_string;
     SetSpringConfigStringPtr m_set_spring_config_string;
     SetSpringConfigIntPtr m_set_spring_config_int;
+
+    /// lua parser section
+
+    lpClosePtr m_parser_close;
+    lpOpenFilePtr m_parser_open_file;
+    lpOpenSourcePtr m_parser_open_source;
+    lpExecutePtr m_parser_execute;
+    lpErrorLogPtr m_parser_error_log;
+
+    lpAddTableIntPtr m_parser_add_table_int;
+    lpAddTableStrPtr m_parser_add_table_string;
+    lpEndTablePtr m_parser_end_table;
+    lpAddIntKeyIntValPtr m_parser_add_int_key_int_value;
+    lpAddStrKeyIntValPtr m_parser_add_string_key_int_value;
+		lpAddIntKeyBoolValPtr m_parser_add_int_key_bool_value;
+		lpAddStrKeyBoolValPtr m_parser_add_string_key_bool_value;
+		lpAddIntKeyFloatValPtr m_parser_add_int_key_float_value;
+		lpAddStrKeyFloatValPtr m_parser_add_string_key_float_value;
+		lpAddIntKeyStrValPtr m_parser_add_int_key_string_value;
+		lpAddStrKeyStrValPtr m_parser_add_string_key_string_value;
+
+		lpRootTablePtr m_parser_root_table;
+		lpRootTableExprPtr m_parser_root_table_expression;
+		lpSubTableIntPtr m_parser_sub_table_int;
+		lpSubTableStrPtr m_parser_sub_table_string;
+		lpSubTableExprPtr m_parser_sub_table_expression;
+		lpPopTablePtr m_parser_pop_table;
+
+		lpGetKeyExistsIntPtr m_parser_key_int_exists;
+		lpGetKeyExistsStrPtr m_parser_key_string_exists;
+
+		lpGetIntKeyTypePtr m_parser_int_key_get_type;
+		lpGetStrKeyTypePtr m_parser_string_key_get_type;
+
+		lpGetIntKeyListCountPtr m_parser_int_key_get_list_count;
+		lpGetIntKeyListEntryPtr m_parser_int_key_get_list_entry;
+		lpGetStrKeyListCountPtr m_parser_string_key_get_list_count;
+		lpGetStrKeyListEntryPtr m_parser_string_key_get_list_entry;
+
+		lpGetIntKeyIntValPtr m_parser_int_key_get_int_value;
+		lpGetStrKeyIntValPtr m_parser_string_key_get_int_value;
+		lpGetIntKeyBoolValPtr m_parser_int_key_get_bool_value;
+		lpGetStrKeyBoolValPtr m_parser_string_key_get_bool_value;
+		lpGetIntKeyFloatValPtr m_parser_int_key_get_float_value;
+		lpGetStrKeyFloatValPtr m_parser_string_key_get_float_value;
+		lpGetIntKeyStrValPtr m_parser_int_key_get_string_value;
+		lpGetStrKeyStrValPtr m_parser_string_key_get_string_value;
 
     /*@}*/
 };

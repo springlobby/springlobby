@@ -161,7 +161,7 @@ wxString SpringUnitSync::GetSpringVersion()
 }
 
 
-bool SpringUnitSync::VersionSupports( GameFeature feature )
+double SpringUnitSync::_GetSpringVersion()
 {
   wxString ver = GetSpringVersion();
   double nver = 0;
@@ -181,10 +181,16 @@ bool SpringUnitSync::VersionSupports( GameFeature feature )
     nver = nver * 100;
   }
   std::setlocale(LC_NUMERIC, old_locale);
+  return nver;
+}
+
+
+bool SpringUnitSync::VersionSupports( GameFeature feature )
+{
   switch (feature) {
-    case GF_XYStartPos: return nver >= 76.0;
-    case USYNC_Sett_Handler: return nver >= 76.0;
-    case USYNC_GetInfoMap: return nver >= 77.0;
+    case GF_XYStartPos:      return _GetSpringVersion() >= 76.0;
+    case USYNC_Sett_Handler: return _GetSpringVersion() >= 76.0;
+    case USYNC_GetInfoMap:   return susynclib()->HasGetInfoMap();
   }
   return false;
 }
@@ -227,6 +233,15 @@ bool SpringUnitSync::ModExists( const wxString& modname, const wxString& hash )
   return itor->second == hash;
 }
 
+bool SpringUnitSync::ModExistsCheckHash( const wxString& hash ) const
+{
+    LocalArchivesVector::const_iterator itor = m_mods_list.begin();
+    for ( ; itor != m_mods_list.end(); ++itor ) {
+        if ( itor->second == hash )
+            return true;
+    }
+    return false;
+}
 
 UnitSyncMod SpringUnitSync::GetMod( const wxString& modname )
 {
@@ -261,6 +276,18 @@ int SpringUnitSync::GetNumMaps()
 wxArrayString SpringUnitSync::GetMapList()
 {
   return m_map_array;
+}
+
+
+wxArrayString SpringUnitSync::GetModValidMapList( const wxString& modname )
+{
+  wxArrayString ret;
+  try
+  {
+    unsigned int mapcount = susynclib()->GetValidMapCount( modname );
+    for ( unsigned int i = 0; i < mapcount; i++ ) ret.Add( susynclib()->GetValidMapName( i ) );
+  } catch ( assert_exception& e ) {}
+  return ret;
 }
 
 
@@ -998,6 +1025,27 @@ void SpringUnitSync::SetCacheFile( const wxString& path, const wxArrayString& da
   file.Close();
 }
 
+wxArrayString SpringUnitSync::GetReplayList()
+{
+  wxLogDebug( _T("") );
+  LOCK_UNITSYNC;
+
+  if ( !IsLoaded() ) return wxArrayString();
+
+  int ini = susynclib()->InitFindVFS( _T("demos/*.sdf") );
+
+  wxString FilePath ;
+  wxArrayString ret;
+
+  do
+  {
+    ini = susynclib()->FindFilesVFS ( ini, FilePath );
+    wxString FileName = wxString ( FilePath, wxConvUTF8 );
+    ret.Add ( FileName );
+  } while (ini != 0);
+
+  return ret;
+}
 
 bool SpringUnitSync::FileExists( const wxString& name )
 {

@@ -21,7 +21,7 @@
 #include "auimanager.h"
 #endif
 
-BEGIN_EVENT_TABLE(BattleListCtrl, customListCtrl)
+BEGIN_EVENT_TABLE(BattleListCtrl, CustomListCtrl)
 
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
   EVT_LIST_COL_CLICK       ( BLIST_LIST, BattleListCtrl::OnColClick )
@@ -37,7 +37,7 @@ END_EVENT_TABLE()
 Ui* BattleListCtrl::m_ui_for_sort = 0;
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
-  customListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
+  CustomListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl")),
   m_ui(ui)
 {
@@ -221,12 +221,6 @@ void BattleListCtrl::Sort()
       case 9 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareMaxPlayerUP:&CompareMaxPlayerDOWN , 0 ); break;
     }
   }
-  // WAY too slow to be used like that
-//  if ( changed )
-//  {
-//      int new_index = GetIndexFromData( m_selected );
-//      SetItemState( new_index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
-//  }
 }
 
 

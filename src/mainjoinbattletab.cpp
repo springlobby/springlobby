@@ -227,7 +227,7 @@ void MainJoinBattleTab::OnUnitSyncReloaded()
 void MainJoinBattleTab::OnConnected()
 {
     if ( m_list_tab ) {
-        bool filter = sett().GetFilterActivState();
+        bool filter = sett().GetBattleFilterActivState();
         m_list_tab->SetFilterActiv( filter );
         //
     }

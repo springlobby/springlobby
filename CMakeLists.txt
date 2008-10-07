@@ -141,7 +141,7 @@ IF( OPTION_TORRENT_SYSTEM )
 		    INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
 		    LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
 	    ELSE()
-		    MESSAGE(FATAL_ERROR "libtorrent-rasterbar library is not found! Please install the package or toggle OPTION_USE_TORRENT_SYSTEM to OFF")
+		    MESSAGE(FATAL_ERROR "libtorrent-rasterbar library is not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
 	    ENDIF()
 	ELSE( NOT WIN32)
 	    INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR}/src/libtorrent/include
@@ -207,6 +207,7 @@ SET(SpringLobbySrc
 	src/customlistctrl.cpp
 	src/flagimages.cpp
 	src/globalevents.cpp
+	src/groupoptionspanel.cpp
 	src/groupuserdialog.cpp
 	src/httpdownloader.cpp
 	src/hostbattledialog.cpp
@@ -226,7 +227,12 @@ SET(SpringLobbySrc
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
 	src/nicklistctrl.cpp
+	src/replay/replaylist.cpp
+        src/replay/replaytab.cpp
+        src/replay/replayfilter.cpp
+	src/replay/replaylistctrl.cpp
 	src/sdlsound.cpp
+	src/selectusersdialog.cpp
 	src/server.cpp
 	src/serverevents.cpp
 	src/settings.cpp
@@ -281,7 +287,6 @@ SET(SLSharedWithSettings
 	src/updater/versionchecker.cpp
 	src/crashreport.cpp
 	src/springunitsynclib.cpp
-	src/utils.cpp
 	src/spinctld.cpp
 )
 

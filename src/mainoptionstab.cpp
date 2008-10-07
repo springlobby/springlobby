@@ -23,7 +23,7 @@
 #include "chatoptionstab.h"
 #include "settings.h"
 #include "uiutils.h"
-#include "managegroupspanel.h"
+#include "groupoptionspanel.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentoptionspanel.h"
@@ -86,7 +86,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
     m_tabs->AddPage( m_chat_opts, _("Chat"), true, wxIcon(userchat_xpm) );
     #endif
 
-    m_groups_opts = new ManageGroupsPanel( m_tabs );
+    m_groups_opts = new GroupOptionsPanel( m_tabs );
     #ifdef HAVE_WX26
     m_tabs->AddPage( m_groups_opts , _("Groups"), true, 2 );
     #else
@@ -98,8 +98,17 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
    #ifdef HAVE_WX26
      m_tabs->AddPage ( m_lobby_opts, _("General"), true, 4 );
     #else
-    m_tabs->AddPage ( m_lobby_opts, _("General"), true, wxIcon( springlobby_xpm ) );
+
     #endif
+
+    m_groups_opts = new GroupOptionsPanel( m_tabs );
+
+    #ifdef HAVE_WX26
+    m_tabs->AddPage( m_groups_opts, _("Groups"), true, 2 );
+    #else
+    m_tabs->AddPage ( m_lobby_opts, _("Groups"), true, wxIcon(userchat_xpm) );
+    #endif
+
 
     m_restore_btn = new wxButton( this, wxID_REVERT, _("Restore") );
     m_apply_btn = new wxButton( this, wxID_APPLY, _("Apply") );
@@ -122,6 +131,13 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 MainOptionsTab::~MainOptionsTab()
 {
 
+}
+
+
+GroupOptionsPanel& MainOptionsTab::GetGroupOptionsPanel()
+{
+  ASSERT_EXCEPTION(m_groups_opts != 0, _T("m_groups_opts == 0"));
+  return *m_groups_opts;
 }
 
 
@@ -151,14 +167,14 @@ void MainOptionsTab::OnRestore( wxCommandEvent& event )
 
 void MainOptionsTab::OnOpenGroupsTab()
 {
-    m_groups_opts->ReloadGroupSizer();
+    //m_groups_opts->ReloadGroupSizer();
 }
 
 void MainOptionsTab::SetSelection( const unsigned int page )
 {
     if ( page < m_tabs->GetPageCount() ){
         m_tabs->SetSelection( page );
-        m_groups_opts->ReloadGroupSizer();
+        //m_groups_opts->ReloadGroupSizer();
     }
     else
         m_tabs->SetSelection( 0 );

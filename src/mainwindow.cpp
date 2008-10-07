@@ -19,6 +19,7 @@
 #include <wx/listbook.h>
 #endif
 #include <wx/tooltip.h>
+
 #include <stdexcept>
 
 #include "mainwindow.h"
@@ -33,10 +34,12 @@
 #include "mainoptionstab.h"
 #include "iunitsync.h"
 #include "uiutils.h"
+#include "replay/replaytab.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
 #include "torrentwrapper.h"
 #endif
+
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.png.h"
@@ -50,6 +53,8 @@
 #include "images/select_icon.xpm"
 #include "images/downloads_icon.png.h"
 #include "images/downloads_icon_text.png.h"
+#include "images/replay_icon.png.h"
+#include "images/replay_icon_text.png.h"
 
 #include "settings++/frame.h"
 #include "settings++/custom_dialogs.h"
@@ -79,7 +84,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
   EVT_MENU( MENU_START_TORRENT, MainWindow::OnMenuStartTorrent )
   EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
-  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
+//  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
   EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
   EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   #ifdef HAVE_WX26
@@ -119,11 +124,6 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
 
 
-  m_menuTools->AppendSeparator();
-  m_menuTools->AppendCheckItem(MENU_SHOW_TOOLTIPS, _("Show tooltips") );
-  m_menuTools->Check( MENU_SHOW_TOOLTIPS, sett().GetShowTooltips() );
-
-
   #ifndef NO_TORRENT_SYSTEM
   m_menuTools->AppendSeparator();
   #endif
@@ -155,6 +155,8 @@ MainWindow::MainWindow( Ui& ui ) :
   m_sp_icon = charArr2wxBitmap( single_player_icon_png , sizeof (single_player_icon_png) );
   m_options_icon =   charArr2wxBitmap( options_icon_png , sizeof (options_icon_png) ) ;
   m_downloads_icon = charArr2wxBitmap( downloads_icon_png , sizeof (downloads_icon_png) );
+  m_replay_icon = charArr2wxBitmap(  replay_icon_png , sizeof (replay_icon_png) );
+
   m_select_image = new wxBitmap( select_icon_xpm );
 
   m_func_tab_images = new wxImageList( 32, 32 );
@@ -167,6 +169,7 @@ MainWindow::MainWindow( Ui& ui ) :
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
+  m_replay_tab = new ReplayTab ( m_func_tabs, m_ui );
 #ifndef NO_TORRENT_SYSTEM
   m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
 #endif
@@ -176,13 +179,15 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
+  m_func_tabs->AddPage( m_replay_tab, _T(""), false, 4 );
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 4 );
+  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 5 );
 #endif
 #else
   m_func_tabs->AddPage( m_chat_tab, _T(""), true, *m_chat_icon );
   m_func_tabs->AddPage( m_join_tab, _T(""), false, *m_battle_icon );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, *m_sp_icon );
+  m_func_tabs->AddPage( m_replay_tab, _T(""), false, *m_replay_icon );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, *m_options_icon );
 #ifndef NO_TORRENT_SYSTEM
   m_func_tabs->AddPage( m_torrent_tab, _T(""), false, *m_downloads_icon );
@@ -292,7 +297,10 @@ void MainWindow::MakeImages()
   } else {*/
     m_func_tab_images->Add( *m_options_icon );
 
+    m_func_tab_images->Add( *m_replay_icon );
+
     m_func_tab_images->Add( *m_downloads_icon );
+
   //}
 
 }
@@ -346,6 +354,11 @@ ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
   return m_chat_tab->GetChannelChatPanel( channel );
 }
 
+MainOptionsTab& MainWindow::GetOptionsTab()
+{
+  ASSERT_EXCEPTION(m_opts_tab != 0, _T("m_opts_tab == 0"));
+  return *m_opts_tab;
+}
 
 //! @brief Open a new chat tab with a channel chat
 //!
@@ -553,13 +566,6 @@ void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 	  	    		wxDefaultSize);
 	se_frame_active = true;
 	se_frame->Show();
-}
-
-void MainWindow::OnShowToolTips( wxCommandEvent& event )
-{
-    bool show = m_menuTools->IsChecked(MENU_SHOW_TOOLTIPS);
-    wxToolTip::Enable(show);
-    sett().SetShowTooltips(show);
 }
 
 void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& event )

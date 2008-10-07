@@ -10,7 +10,7 @@
     Don't ever use this for anything that needs constant updating, context menus sorting and the like.\n
     Basically don't use it outside the groupuserdialog without extreme caution.
 **/
-class UserListctrl : public customListCtrl
+class UserListctrl : public CustomListCtrl
 {
     public:
         //! nickname - country
@@ -31,6 +31,8 @@ class UserListctrl : public customListCtrl
         wxArrayString GetUserNicks( ) const;
         void SetColumnWidths();
         void OnColClick( wxListEvent& event );
+        //! delete both all items and associated data, handle with care!
+        void Clear();
 
     protected:
         UserDataMap m_userdata;

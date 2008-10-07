@@ -32,7 +32,7 @@
 
 #define TOOLTIP_DELAY 1000
 
-BEGIN_EVENT_TABLE( BattleroomListCtrl,  customListCtrl)
+BEGIN_EVENT_TABLE( BattleroomListCtrl,  CustomListCtrl)
 
   EVT_LIST_ITEM_RIGHT_CLICK( BRLIST_LIST, BattleroomListCtrl::OnListRightClick )
   EVT_LIST_COL_CLICK       ( BRLIST_LIST, BattleroomListCtrl::OnColClick )
@@ -53,7 +53,7 @@ END_EVENT_TABLE()
 Ui* BattleroomListCtrl::m_ui_for_sort = 0;
 
 BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui ) :
-	customListCtrl(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
+	CustomListCtrl(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl") ),
 	m_battle(battle),m_popup(0),
   m_sel_user(0), m_sel_bot(0),m_sides(0),m_spec_item(0),m_handicap_item(0),
@@ -482,16 +482,16 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
 
-  if ( m_sel_bot != 0 ) {
+  if ( m_sel_bot ) {
     wxColour CurrentColour = m_sel_bot->bs.colour;
     CurrentColour = GetColourFromUser(this, CurrentColour);
     if ( !CurrentColour.IsColourOk() ) return;
-    m_battle.SetBotColour( m_sel_bot->name, CurrentColour );
-  } else if ( m_sel_user != 0 ) {
+    if(m_sel_bot)m_battle.SetBotColour( m_sel_bot->name, CurrentColour );
+  } else if ( m_sel_user ) {
     wxColour CurrentColour = m_sel_user->BattleStatus().colour;
     CurrentColour = GetColourFromUser(this, CurrentColour);
     if ( !CurrentColour.IsColourOk() ) return;
-    m_battle.ForceColour( *m_sel_user, CurrentColour );
+    if(m_sel_user)m_battle.ForceColour( *m_sel_user, CurrentColour );
   }
 
 }

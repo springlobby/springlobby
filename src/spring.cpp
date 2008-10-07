@@ -59,6 +59,34 @@ bool Spring::IsRunning()
   return m_process != 0;
 }
 
+bool Spring::RunReplay ( wxString& filename )
+{
+    if ( m_running ) {
+        wxLogError( _T("Spring already running!") );
+        return false;
+    }
+
+  wxLogMessage( _T("launching spring with replay: ") + filename );
+
+  wxString cmd =  _T("\"") + sett().GetSpringUsedLoc() + _T("\" \"") + filename + _T("\"") ;
+  wxLogMessage( _T("cmd: %s"), cmd.c_str() );
+  wxSetWorkingDirectory( sett().GetSpringDir() );
+  if ( sett().UseOldSpringLaunchMethod() ) {
+    if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
+    if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
+  } else {
+    if ( m_process == 0 ) m_process = new SpringProcess( *this );
+    wxLogMessage( _T("m_process->Create();") );
+    m_process->Create();
+    wxLogMessage( _T("m_process->SetCommand( cmd );") );
+    m_process->SetCommand( cmd );
+    wxLogMessage( _T("m_process->Run();") );
+    m_process->Run();
+  }
+  m_running = true;
+  wxLogMessage( _T("Done running = true") );
+  return true;
+}
 
 bool Spring::Run( Battle& battle )
 {
