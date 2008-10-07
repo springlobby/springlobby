@@ -132,7 +132,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imag
   m_battle( 0 ),
   m_type( CPT_Channel ),
   m_popup_menu( 0 ),
-  m_chat_log(0)
+  m_chat_log(0),
+  m_imagelist( imaglist )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-channel-") + chan.GetName() );
 	wxLogDebugFunc( _T( "wxWindow* parent, Channel& chan" ) );
@@ -164,7 +165,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user, wxImageList* imaglis
   m_battle( 0 ),
   m_type( CPT_User ),
   m_popup_menu( 0 ),
-  m_chat_log(0)
+  m_chat_log(0),
+  m_imagelist( imaglist )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-pm-") + user.GetNick() );
 	CreateControls( );
@@ -189,7 +191,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imagl
   m_battle( 0 ),
   m_type( CPT_Server ),
   m_popup_menu( 0 ),
-  m_chat_log(0)
+  m_chat_log(0),
+  m_imagelist( imaglist )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-server") );
 	wxLogDebugFunc( _T( "wxWindow* parent, Server& serv" ) );
