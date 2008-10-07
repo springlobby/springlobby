@@ -31,6 +31,8 @@ void ReplayList::LoadReplays()
 {
     m_filenames = usync().GetReplayList();
 
+    int temp = m_filenames.GetCount();
+
     if ( m_filenames.GetCount() < replay_bulk_limit )
         LoadReplays( 0, m_filenames.GetCount() );
     else {
@@ -42,7 +44,7 @@ void ReplayList::LoadReplays()
 
 void ReplayList::LoadReplays( const unsigned int from, const unsigned int to)
 {
-    for (unsigned int i = from; i < to; ++i)
+    for (unsigned int i = from; i < to - 1; ++i)
     {
         Replay rep;
         if ( GetReplayInfos( m_filenames[i] , rep ) ){

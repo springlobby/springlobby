@@ -146,7 +146,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
     m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
-    //  m_filter->Hide();
+    m_filter->Hide();
 
     this->SetSizer( m_main_sizer );
     this->Layout();
