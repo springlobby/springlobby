@@ -39,13 +39,13 @@ wxString GetColorString( const wxColour& color );
 wxColour GetColorFromStrng( const wxString color );
 
 //! apply standard alpha blending to square images
-void BlendImage(wxImage& source, wxImage& dest,int img_dim);
+wxImage BlendImage( const wxImage& foreground, const wxImage& background );
 wxBitmap* BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int dim = 16 );
 //! used to load png data into a wxBitmap
 wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size);
 //wxBitmap charArr2wxBitmap(const unsigned char * arg, int size);
 wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * arg, int size,
-            const unsigned char * text, int text_size, unsigned int img_dim);
+            const unsigned char * text, int text_size);
 
 
 //! when querying for a color, always use this (it'll autosave/retrieve custom defined colors)

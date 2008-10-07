@@ -158,25 +158,28 @@ wxColour GetColorFromStrng( const wxString color )
     return wxColour( r%256, g%256, b%256 );
 }
 
-void BlendImage(wxImage& foreground, wxImage&  background, int img_dim)
+wxImage BlendImage( const wxImage& foreground, const wxImage&  background )
 {
     unsigned char* background_data = background.GetData();
     unsigned char* foreground_data = foreground.GetData();
 
-    if ( background.GetWidth()  != img_dim ||
-         foreground.GetWidth()  != img_dim ||
-         background.GetHeight() != img_dim ||
-         foreground.GetHeight() != img_dim )
+    if ( ( foreground.GetWidth()  != background.GetWidth() ) || ( background.GetHeight() != foreground.GetHeight() ) )
     {
         wxLogDebugFunc(_T("size mismatch while blending"));
-        return;
+        return background;
     }
 
-    if ( background.HasAlpha() && foreground.HasAlpha() )
+    wxImage ret( background.GetWidth(), foreground.GetHeight() );
+    ret.InitAlpha();
+    unsigned char* result_data = ret.GetData();
+
+    bool zhu = background.HasAlpha();
+    if (  zhu && foreground.HasAlpha() )
     {
         unsigned char* background_alpha = background.GetAlpha();
         unsigned char* foreground_alpha = foreground.GetAlpha();
-        unsigned int pixel_count = img_dim*img_dim;
+        unsigned char* result_alpha = ret.GetAlpha();
+        unsigned int pixel_count = background.GetWidth() * background.GetHeight();
 
         for ( unsigned int i = 0, i_a = 0; i < pixel_count * 3; i+=3,  i_a++ )
         {
@@ -185,17 +188,15 @@ void BlendImage(wxImage& foreground, wxImage&  background, int img_dim)
             float back_blend_fac = ( 255 - fore_alpha)/255.0;
             float fore_blend_fac = fore_alpha/255.0 ;
 
-            background_data[i]    = foreground_data[i]   * fore_blend_fac + background_data[i]   * back_blend_fac ;
-            background_data[i+1]  = foreground_data[i+1] * fore_blend_fac + background_data[i+1] * back_blend_fac ;
-            background_data[i+2]  = foreground_data[i+2] * fore_blend_fac + background_data[i+2] * back_blend_fac ;
-            background_alpha[i_a] = fore_alpha           * fore_blend_fac + back_alpha           * back_blend_fac ;
+            result_data[i]    = foreground_data[i]   * fore_blend_fac + background_data[i]   * back_blend_fac ;
+            result_data[i+1]  = foreground_data[i+1] * fore_blend_fac + background_data[i+1] * back_blend_fac ;
+            result_data[i+2]  = foreground_data[i+2] * fore_blend_fac + background_data[i+2] * back_blend_fac ;
+            result_alpha[i_a] = fore_alpha           * fore_blend_fac + back_alpha           * back_blend_fac ;
         }
+        return ret;
     }
-    else
-    {
-        wxLogDebugFunc(_T("cannot blend without alpha"));
-        return;
-    }
+    wxLogDebugFunc(_T("cannot blend without alpha"));
+    return background;
 }
 
 wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size)
@@ -212,15 +213,15 @@ wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size)
 //    return wxBitmap(temp );
 //}
 
-wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size, const unsigned char * text, int text_size, unsigned int img_dim)
+wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size, const unsigned char * text, int text_size )
 {
     wxMemoryInputStream istream1( dest, dest_size );
     wxImage dest_img( istream1, wxBITMAP_TYPE_PNG );
     wxMemoryInputStream istream2( text, text_size );
     wxImage text_img( istream2, wxBITMAP_TYPE_PNG );
-    BlendImage(text_img, dest_img, img_dim );
+    wxImage ret = BlendImage(text_img, dest_img );
 
-    return new wxBitmap( dest_img );
+    return new wxBitmap( ret );
 
 }
 
@@ -228,8 +229,8 @@ wxBitmap* BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, con
 {
     wxImage back = background.ConvertToImage();
     wxImage front = overlay.ConvertToImage();
-    BlendImage( front, back, dim );
-    return new wxBitmap( back );
+    wxImage ret = BlendImage( front, back );
+    return new wxBitmap( ret );
 }
 
 wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit, const wxString& caption, const wxString& palette)
