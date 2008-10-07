@@ -381,7 +381,6 @@ void ReplayTab::ReloadList()
 
 void ReplayTab::OnReload( wxCommandEvent& event )
 {
-    //stop timer
-
-    ReloadList();
+    ui().ReloadUnitSync(); //to get new files
+        ReloadList();
 }
