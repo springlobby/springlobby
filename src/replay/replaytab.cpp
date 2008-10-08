@@ -38,6 +38,8 @@ BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
   EVT_BUTTON              ( REPLAY_RELOAD             , ReplayTab::OnReload        )
   EVT_BUTTON              ( REPLAY_DELETE            , ReplayTab::OnDelete    )
   EVT_LIST_ITEM_SELECTED  ( RLIST_LIST               , ReplayTab::OnSelect      )
+// this doesn't get triggered
+//  EVT_LIST_ITEM_DESELECTED( wxID_ANY               , ReplayTab::OnDeselect      )
   EVT_CHECKBOX            ( REPLAY_LIST_FILTER_ACTIV , ReplayTab::OnFilterActiv )
 #if  wxUSE_TOGGLEBTN
   EVT_TOGGLEBUTTON        ( REPLAY_LIST_FILTER_BUTTON, ReplayTab::OnFilter  )
@@ -153,8 +155,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     //
 
     //none selected --> shouldn't watch/delete that
-    m_watch_btn->Enable( false );
-    m_delete_btn->Enable( false );
+    Deselect();
 
 }
 
@@ -178,7 +179,7 @@ void ReplayTab::AddReplay( Replay& replay ) {
 
     int index = m_replay_listctrl->InsertItem( 0, replay.date );
     ASSERT_LOGIC( index != -1, _T("index = -1") );
-
+    long replayid = (long)replay.id ;
     m_replay_listctrl->SetItemData(index, (long)replay.id );
 
     if (index != -1)
@@ -232,7 +233,7 @@ void ReplayTab::UpdateReplay( Replay& replay, const int index )
 {
 
     ASSERT_LOGIC( index != -1, _T("index = -1") );
-
+     m_replay_listctrl->SetItemData(index, (long)replay.id );
     wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
                         (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
     m_replay_listctrl->SetItem( index, 0, replay.date );
@@ -251,9 +252,7 @@ void ReplayTab::UpdateReplay( Replay& replay, const int index )
 
 
 void ReplayTab::RemoveAllReplays() {
-  m_sel_replay_id = -1;
-
-  m_replay_listctrl->DeleteAllItems();
+    m_replay_listctrl->DeleteAllItems();
 }
 
 
@@ -287,50 +286,58 @@ void ReplayTab::OnFilter( wxCommandEvent& event )
 
 void ReplayTab::OnWatch( wxCommandEvent& event )
 {
-    Replay rep = m_replays->GetReplayById(m_sel_replay_id);
-    bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
-    if ( watchable )
-        m_ui.WatchReplay( rep.Filename );
-    else {
-        #ifdef NO_TORRENT_SYSTEM
-            wxString downloadProc = _("Do you want me to take you to the download page?");
-        #else
-            wxString downloadProc = _("Should i try to downlaod it for you?\nYou can see the progress in the \"Download Manager\" tab.");
-        #endif
+    if (m_replay_listctrl->GetSelectedIndex() != -1 ) {
+        Replay rep = m_replays->GetReplayById(m_sel_replay_id);
+        bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
+        if ( watchable )
+            m_ui.WatchReplay( rep.Filename );
+        else {
+            #ifdef NO_TORRENT_SYSTEM
+                wxString downloadProc = _("Do you want me to take you to the download page?");
+            #else
+                wxString downloadProc = _("Should i try to downlaod it for you?\nYou can see the progress in the \"Download Manager\" tab.");
+            #endif
 
-        OfflineBattle& battle = rep.battle;
+            OfflineBattle& battle = rep.battle;
 
-        if ( !battle.ModExists() ) {
-            if (customMessageBox( SL_MAIN_ICON, _("You need to download the mod before you can watch this replay.\n\n") + downloadProc, _("Mod not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-                wxString modhash = battle.GetHostModHash();
-                wxString modname = battle.GetHostModName();
-                m_ui.DownloadMod ( modhash, modname );
+            if ( !battle.ModExists() ) {
+                if (customMessageBox( SL_MAIN_ICON, _("You need to download the mod before you can watch this replay.\n\n") + downloadProc, _("Mod not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+                    wxString modhash = battle.GetHostModHash();
+                    wxString modname = battle.GetHostModName();
+                    m_ui.DownloadMod ( modhash, modname );
+                }
+                return;
             }
-            return;
-        }
 
-        if ( !battle.MapExists() ) {
-            if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to watch this replay.\n\n") + downloadProc, _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-                wxString maphash = battle.GetHostMapHash();
-                wxString mapname = battle.GetHostMapName();
-                m_ui.DownloadMap ( maphash, mapname );
+            if ( !battle.MapExists() ) {
+                if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to watch this replay.\n\n") + downloadProc, _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+                    wxString maphash = battle.GetHostMapHash();
+                    wxString mapname = battle.GetHostMapName();
+                    m_ui.DownloadMap ( maphash, mapname );
+                }
             }
         }
     }
+    else
+        Deselect();
 
 }
 
 void ReplayTab::OnDelete( wxCommandEvent& event )
 {
-    Replay rep = m_replays->GetReplayById(m_sel_replay_id);
-    wxString fn = rep.Filename;
-    if ( !m_replays->DeleteReplay( m_sel_replay_id ) )
-        customMessageBoxNoModal(SL_MAIN_ICON, _("Could not delete Replay: ") + fn,
-            _("Error") );
-    else{
-        RemoveReplay( rep );
-        Deselect();
+    if (m_replay_listctrl->GetSelectedIndex() != -1 ) {
+        Replay rep = m_replays->GetReplayById(m_sel_replay_id);
+        wxString fn = rep.Filename;
+        if ( !m_replays->DeleteReplay( m_sel_replay_id ) )
+            customMessageBoxNoModal(SL_MAIN_ICON, _("Could not delete Replay: ") + fn,
+                _("Error") );
+        else{
+            RemoveReplay( rep );
+            Deselect();
+        }
     }
+    else
+        Deselect();
 }
 
 void ReplayTab::OnFilterActiv( wxCommandEvent& event )
@@ -344,30 +351,40 @@ void ReplayTab::OnSelect( wxListEvent& event )
     if ( event.GetIndex() == -1 ) {
         Deselect();
     } else {
-        m_watch_btn->Enable( true );
-        m_delete_btn->Enable( true );
-        int index = event.GetIndex();
-        long data = m_replay_listctrl->GetItemData( index );
-        Replay& rep = m_replays->GetReplay( data );
-        m_sel_replay_id = rep.id;
-        m_players_text->SetLabel(_T(""));
-        m_map_text->SetLabel(rep.battle.GetHostMapName());
-        m_mod_text->SetLabel(rep.battle.GetHostModName());
-        m_minimap->SetBattle( &(rep.battle) );
-        m_minimap->UpdateMinimap();
-        m_players->Clear();
-        for ( OfflineBattle::UserVecCIter it = rep.battle.GetFirstUser();
-            it != rep.battle.GetLastUser(); ++it )
-        {
-            UserListctrl::UserData ud ( it->GetNick() , it->GetCountry() );
-            m_players->AddUser( ud );
+        try {
+            m_watch_btn->Enable( true );
+            m_delete_btn->Enable( true );
+            int index = event.GetIndex();
+            m_replay_listctrl->SetSelectedIndex( index );
+            long data = m_replay_listctrl->GetItemData( index );
+            Replay& rep = m_replays->GetReplay( data );
+            m_sel_replay_id = rep.id;
+            m_players_text->SetLabel(_T(""));
+            m_map_text->SetLabel(rep.battle.GetHostMapName());
+            m_mod_text->SetLabel(rep.battle.GetHostModName());
+            m_minimap->SetBattle( &(rep.battle) );
+            m_minimap->UpdateMinimap();
+            m_players->Clear();
+            for ( OfflineBattle::UserVecCIter it = rep.battle.GetFirstUser();
+                it != rep.battle.GetLastUser(); ++it )
+            {
+                UserListctrl::UserData ud ( it->GetNick() , it->GetCountry() );
+                m_players->AddUser( ud );
+            }
         }
+        catch ( ... ) { Deselect(); }
     }
+}
+
+void ReplayTab::OnDeselect( wxListEvent& event )
+{
+    Deselect();
 }
 
 void ReplayTab::Deselect()
 {
-    m_sel_replay_id = -1;
+     m_sel_replay_id = -1;
+    m_replay_listctrl->SelectNone();
     m_replay_listctrl->SetSelectedIndex(-1);
     m_watch_btn->Enable( false );
     m_delete_btn->Enable( false );
@@ -379,6 +396,7 @@ void ReplayTab::ReloadList()
 //    wxDateTime dt = wxDateTime::UNow();
     m_replays->RemoveAll();
     m_replays->LoadReplays();
+    Deselect();
 //    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
 //    if ( sec > 0 )
 //        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );

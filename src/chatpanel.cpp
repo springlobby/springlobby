@@ -133,7 +133,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imag
   m_type( CPT_Channel ),
   m_popup_menu( 0 ),
   m_chat_log(0),
-  m_imagelist( imaglist )
+  m_imagelist( imaglist ),
+  m_icon_index( 2 )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-channel-") + chan.GetName() );
 	wxLogDebugFunc( _T( "wxWindow* parent, Channel& chan" ) );
@@ -166,7 +167,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user, wxImageList* imaglis
   m_type( CPT_User ),
   m_popup_menu( 0 ),
   m_chat_log(0),
-  m_imagelist( imaglist )
+  m_imagelist( imaglist ),
+  m_icon_index( 3 )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-pm-") + user.GetNick() );
 	CreateControls( );
@@ -192,7 +194,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imagl
   m_type( CPT_Server ),
   m_popup_menu( 0 ),
   m_chat_log(0),
-  m_imagelist( imaglist )
+  m_imagelist( imaglist ),
+  m_icon_index( 1 )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-server") );
 	wxLogDebugFunc( _T( "wxWindow* parent, Server& serv" ) );
@@ -729,96 +732,27 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 	wxColour col;
 	bool req_user = false;
 	if ( m_type == CPT_User ) req_user = true;
-	if ( who.Upper() == me.Upper() ) {
+	if ( who == me )
+	 {
 		col = sett().GetChatColorMine();
-    // change the image of the tab to show new events
-    if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
-    {
-      for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
-        if ( m_chat_tabs->GetPage( i ) == this ) {
-          if ( m_type == CPT_Channel && m_icon_index < 6 )
-          {
-             m_icon_index = 6;
-             #ifdef HAVE_WX26
-             m_chat_tabs->SetPageImage( i, m_icon_index );
-             #else
-             m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-             #endif
-          }
-          if ( m_type == CPT_User && m_icon_index < 7 )
-          {
-             m_icon_index = 7;
-             #ifdef HAVE_WX26
-             m_chat_tabs->SetPageImage( i, m_icon_index );
-             #else
-             m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-             #endif
-          }
-        }
-    }
 	} else if ( message.Upper().Contains( me.Upper() ) )
     {
-      if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
-      {
-        for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
-          if ( m_chat_tabs->GetPage( i ) == this ) {
-            if ( m_type == CPT_Channel && m_icon_index < 8 )
-            {
-               m_icon_index = 8;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
-               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
-            }
-            if ( m_type == CPT_User && m_icon_index < 9 )
-            {
-               m_icon_index = 9;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
-               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
-            }
-          }
-      }
-            col = sett().GetChatColorNotification();
-            req_user = true;
-	} else {
+      SetIconHighlight( highlight_important );
+      col = sett().GetChatColorNotification();
+      req_user = true;
+	} else
+	{
     // change the image of the tab to show new events
-    if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
-    {
-      for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
-        if ( m_chat_tabs->GetPage( i ) == this ) {
-          if ( m_type == CPT_Channel && m_icon_index < 6 )
-          {
-             m_icon_index = 6;
-             #ifdef HAVE_WX26
-             m_chat_tabs->SetPageImage( i, m_icon_index );
-             #else
-             m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-             #endif
-          }
-          if ( m_type == CPT_User && m_icon_index < 7 )
-          {
-             m_icon_index = 7;
-             #ifdef HAVE_WX26
-             m_chat_tabs->SetPageImage( i, m_icon_index );
-             #else
-             m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-             #endif
-          }
-        }
-    }
-        //process logic for custom word highlights
-        if ( ContainsWordToHighlight( message ) )
-        {
-            req_user = sett().GetRequestAttOnHighlight();
-            col = sett().GetChatColorHighlight();
-        }
-        else
-            col = sett().GetChatColorNormal();
-	}
+    SetIconHighlight( highlight_say );
+  }
+  //process logic for custom word highlights
+  if ( ContainsWordToHighlight( message ) )
+  {
+      req_user = sett().GetRequestAttOnHighlight();
+      col = sett().GetChatColorHighlight();
+  }
+  else
+      col = sett().GetChatColorNormal();
 
 	if ( who == _T( "MelBot" ) && message.StartsWith( _T( "<" ) ) && message.Contains( _T( ">" ) ) ) {
 		wxString who2;
@@ -864,30 +798,7 @@ bool ChatPanel::ContainsWordToHighlight( const wxString& message )
 void ChatPanel::DidAction( const wxString& who, const wxString& action )
 {
   // change the image of the tab to show new events
-	if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
-	{
-		for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
-			if ( m_chat_tabs->GetPage( i ) == this ) {
-				if ( m_type == CPT_Channel && m_icon_index < 6 )
-				{
-             m_icon_index = 6;
-             #ifdef HAVE_WX26
-             m_chat_tabs->SetPageImage( i, m_icon_index );
-             #else
-             m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-             #endif
-				}
-				if ( m_type == CPT_User && m_icon_index < 7 )
-				{
-             m_icon_index = 7;
-             #ifdef HAVE_WX26
-             m_chat_tabs->SetPageImage( i, m_icon_index );
-             #else
-             m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-             #endif
-				}
-			}
-	}
+	SetIconHighlight( highlight_say );
 	OutputLine( _T( " * " ) + who + _T( " " ) + action, sett().GetChatColorAction(), sett().GetChatFont() );
 }
 
@@ -900,30 +811,7 @@ void ChatPanel::Motd( const wxString& message )
 	wxFont f = m_chatlog_text->GetFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
   // change the image of the tab to show new events
-	if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
-	{
-		for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
-			if ( m_chat_tabs->GetPage( i ) == this ) {
-				if ( m_type == CPT_Channel && m_icon_index < 6 )
-				{
-             m_icon_index = 6;
-             #ifdef HAVE_WX26
-             m_chat_tabs->SetPageImage( i, m_icon_index );
-             #else
-             m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-             #endif
-				}
-				if ( m_type == CPT_User && m_icon_index < 7 )
-				{
-             m_icon_index = 7;
-             #ifdef HAVE_WX26
-             m_chat_tabs->SetPageImage( i, m_icon_index );
-             #else
-             m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-             #endif
-				}
-			}
-	}
+	SetIconHighlight( highlight_say );
 	OutputLine( _T( " ** motd ** " ) + message, sett().GetChatColorServer(), f );
 }
 
@@ -953,21 +841,7 @@ void ChatPanel::UnknownCommand( const wxString& command, const wxString& params 
 	wxFont f = m_chatlog_text->GetFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
   // change the image of the tab to show new events
-	if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
-	{
-		for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
-			if ( m_chat_tabs->GetPage( i ) == this ) {
-				if ( m_type == CPT_Server && m_icon_index != 10 )
-				{
-             m_icon_index = 10;
-             #ifdef HAVE_WX26
-             m_chat_tabs->SetPageImage( i, m_icon_index );
-             #else
-             m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-             #endif
-				}
-			}
-	}
+	SetIconHighlight( highlight_important );
 	OutputLine( _( " !! Command: \"" ) + command + _( "\" params: \"" ) + params + _T( "\"." ), sett().GetChatColorError(), f );
 }
 
@@ -987,30 +861,7 @@ void ChatPanel::Joined( User& who )
 	if ( m_type == CPT_Channel ) {
 		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) {
       // change the image of the tab to show new events
-      if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
-      {
-        for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
-          if ( m_chat_tabs->GetPage( i ) == this ) {
-            if ( m_type == CPT_Channel && m_icon_index < 4 )
-            {
-               m_icon_index = 4;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
-               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
-            }
-            if ( m_type == CPT_User && m_icon_index < 5 )
-            {
-               m_icon_index = 5;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
-               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
-            }
-          }
-      }
+      SetIconHighlight( highlight_join_leave );
       OutputLine( _T( " ** " ) + who.GetNick() + _( " joined the " ) + GetChatTypeStr() + _T( "." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 
     }
@@ -1038,30 +889,7 @@ void ChatPanel::Parted( User& who, const wxString& message )
 	if ( m_type == CPT_Channel ) {
 		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) {
       // change the image of the tab to show new events
-      if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
-      {
-        for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
-          if ( m_chat_tabs->GetPage( i ) == this ) {
-            if ( m_type == CPT_Channel && m_icon_index < 4 )
-            {
-               m_icon_index = 4;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
-               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
-            }
-            if ( m_type == CPT_User && m_icon_index < 5 )
-            {
-               m_icon_index = 5;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
-               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
-            }
-          }
-      }
+      SetIconHighlight( highlight_join_leave );
 		  OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
     }
 		if ( m_show_nick_list && ( m_nicklist != 0 ) ) m_nicklist->RemoveUser( who );
@@ -1096,30 +924,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 	wxFont f = m_chatlog_text->GetFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
   // change the image of the tab to show new events
-  if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
-  {
-    for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
-      if ( m_chat_tabs->GetPage( i ) == this ) {
-        if ( m_type == CPT_Channel && m_icon_index < 6 )
-        {
-             m_icon_index = 6;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
-               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
-        }
-        if ( m_type == CPT_User && m_icon_index < 7 )
-        {
-             m_icon_index = 7;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
-               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
-        }
-      }
-  }
+  SetIconHighlight( highlight_say );
 	OutputLine( _T( " ** Channel topic: " ) + refined + _( "\n * Set by " ) + who, sett().GetChatColorServer(), f );
 }
 
@@ -1367,30 +1172,7 @@ bool ChatPanel::IsOk()
 void ChatPanel::OnUserDisconnected()
 {
   // change the image of the tab to show new events
-  if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
-  {
-    for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
-      if ( m_chat_tabs->GetPage( i ) == this ) {
-        if ( m_type == CPT_Channel && m_icon_index < 4 )
-        {
-             m_icon_index = 4;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
-               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
-        }
-        if ( m_type == CPT_User && m_icon_index < 5 )
-        {
-             m_icon_index = 5;
-                #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
-               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
-        }
-      }
-  }
+  SetIconHighlight( highlight_join_leave );
 	OutputLine( _T( " ** User is now offline." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 }
 
@@ -1398,30 +1180,7 @@ void ChatPanel::OnUserDisconnected()
 void ChatPanel::OnUserConnected()
 {
   // change the image of the tab to show new events
-  if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
-  {
-    for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
-      if ( m_chat_tabs->GetPage( i ) == this ) {
-        if ( m_type == CPT_Channel && m_icon_index < 4 )
-        {
-             m_icon_index = 4;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
-               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
-        }
-        if ( m_type == CPT_User && m_icon_index < 5 )
-        {
-             m_icon_index = 5;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
-               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
-        }
-      }
-  }
+  SetIconHighlight( highlight_join_leave );
 	OutputLine( _T( " ** User just got online." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 }
 
@@ -1966,4 +1725,97 @@ void ChatPanel::UpdateNicklistHighlights()
 void ChatPanel::SortNickList()
 {
   if ( m_show_nick_list && (m_nicklist != 0 ) ) m_nicklist->SortList();
+}
+
+
+
+void ChatPanel::SetIconHighlight( HighlightType highlight )
+{
+  if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
+  {
+    for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+    {
+      if ( m_chat_tabs->GetPage( i ) == this )
+      {
+        switch ( highlight )
+        {
+          case highlight_say :
+          {
+            if ( m_type == CPT_Channel && m_icon_index < 6 )
+            {
+               m_icon_index = 6;
+               #ifdef HAVE_WX26
+               m_chat_tabs->SetPageImage( i, m_icon_index );
+               #else
+               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
+               #endif
+            }
+            else if ( m_type == CPT_User && m_icon_index < 7 )
+            {
+               m_icon_index = 7;
+               #ifdef HAVE_WX26
+               m_chat_tabs->SetPageImage( i, m_icon_index );
+               #else
+               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
+               #endif
+            }
+            break;
+          }
+          case highlight_join_leave :
+          {
+            if ( m_type == CPT_Channel && m_icon_index < 4 )
+            {
+               m_icon_index = 6;
+               #ifdef HAVE_WX26
+               m_chat_tabs->SetPageImage( i, m_icon_index );
+               #else
+               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
+               #endif
+            }
+            else if ( m_type == CPT_User && m_icon_index < 5 )
+            {
+               m_icon_index = 7;
+               #ifdef HAVE_WX26
+               m_chat_tabs->SetPageImage( i, m_icon_index );
+               #else
+               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
+               #endif
+            }
+            break;
+          }
+          case highlight_important :
+          {
+            if ( m_type == CPT_Channel && m_icon_index < 8 )
+            {
+               m_icon_index = 6;
+               #ifdef HAVE_WX26
+               m_chat_tabs->SetPageImage( i, m_icon_index );
+               #else
+               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
+               #endif
+            }
+            else if ( m_type == CPT_User && m_icon_index < 9 )
+            {
+               m_icon_index = 7;
+               #ifdef HAVE_WX26
+               m_chat_tabs->SetPageImage( i, m_icon_index );
+               #else
+               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
+               #endif
+            }
+            else if ( m_type == CPT_Server && m_icon_index < 10 )
+            {
+               m_icon_index = 10;
+               #ifdef HAVE_WX26
+               m_chat_tabs->SetPageImage( i, m_icon_index );
+               #else
+               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
+               #endif
+            }
+            break;
+          }
+        }
+      }
+    }
+  }
 }
