@@ -152,8 +152,9 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     //AddAllReplays();
     //
 
-    //none selected --> shouldn't watch that
+    //none selected --> shouldn't watch/delete that
     m_watch_btn->Enable( false );
+    m_delete_btn->Enable( false );
 
 }
 
@@ -342,8 +343,10 @@ void ReplayTab::OnSelect( wxListEvent& event )
     if ( event.GetIndex() == -1 ) {
         m_sel_replay_id = 0;
         m_watch_btn->Enable( false );
+        m_delete_btn->Enable( false );
     } else {
         m_watch_btn->Enable( true );
+        m_delete_btn->Enable( true );
         int index = event.GetIndex();
         long data = m_replay_listctrl->GetItemData( index );
         Replay& rep = m_replays->GetReplay( data );

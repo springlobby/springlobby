@@ -187,14 +187,14 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_chat_tab, _T(""), true, *m_chat_icon );
   m_func_tabs->AddPage( m_join_tab, _T(""), false, *m_battle_icon );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, *m_sp_icon );
-  m_func_tabs->AddPage( m_replay_tab, _T(""), false, *m_replay_icon );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, *m_options_icon );
+  m_func_tabs->AddPage( m_replay_tab, _T(""), false, *m_replay_icon );
 #ifndef NO_TORRENT_SYSTEM
   m_func_tabs->AddPage( m_torrent_tab, _T(""), false, *m_downloads_icon );
 #endif
 #endif
 
-  m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
+  m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 0 );
 
   SetSizer( m_main_sizer );
 
