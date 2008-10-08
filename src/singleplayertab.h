@@ -1,8 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERTAB_H
 #define SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERTAB_H
 
-
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 
 #include "singleplayerbattle.h"
 
@@ -18,7 +17,7 @@ class wxChoice;
 class wxStaticText;
 class wxCommandEvent;
 
-class SinglePlayerTab: public wxPanel
+class SinglePlayerTab: public  wxScrolledWindow
 {
   public:
 

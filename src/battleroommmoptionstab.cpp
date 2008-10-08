@@ -19,6 +19,10 @@
 #include "settings++/custom_dialogs.h"
 #include "server.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 const char sep = *("_");
 const wxString wxsep = _T("_");
 
@@ -33,6 +37,9 @@ END_EVENT_TABLE()
 BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style )
 : wxScrolledWindow( parent, id, pos, size, style | wxHSCROLL ),m_battle(battle)
 {
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("battleroommmoptionstab") );
+  #endif
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
 	m_mod_options_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Mod Options") ), wxVERTICAL );
@@ -48,6 +55,7 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 	m_main_sizer->Add( m_mod_options_sizer, 0, wxEXPAND, 5 );
 	m_main_sizer->Add( m_map_options_sizer, 0, wxEXPAND, 5 );
 
+    SetScrollRate( 3, 3 );
 	this->SetSizer( m_main_sizer );
 	this->Layout();
 
@@ -56,7 +64,9 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 
 BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
 {
-
+  #ifndef HAVE_WX26
+  GetAui().manager->DetachPane( this );
+  #endif
 }
 
 
@@ -76,7 +86,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		{
 			mmOptionBool current = i->second;
 			wxCheckBox* temp = new wxCheckBox(this,BOOL_START_ID+ctrl_count,current.name);
-			temp->SetToolTip(current.description);
+			temp->SetToolTip(TE(current.description));
 			temp->SetName(pref+current.key);
 			m_chkbox_map[pref+current.key] = temp;
 			temp->SetValue(current.value);
@@ -93,7 +103,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 			tempspin->Create(this, FLOAT_START_ID+ctrl_count, _T(""),
 					wxDefaultPosition, wxDefaultSize, 0, double(current.min), double(current.max),
 					double(current.value),double(current.stepping), wxSPINCTRLDBL_AUTODIGITS, current.key);
-			tempspin->SetToolTip(current.description);
+			tempspin->SetToolTip(TE(current.description));
 			tempspin->Enable(enable);
 			tempspin->SetName(pref+current.key);
 			m_spinctrl_map[pref+current.key] = tempspin;
@@ -114,7 +124,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[index], wxDefaultPosition,
 				wxDefaultSize, current.cbx_choices, wxCB_READONLY, wxDefaultValidator);
 
-		tempchoice->SetToolTip(current.description);
+		tempchoice->SetToolTip(TE(current.description));
 		tempchoice->SetName(pref+current.key);
 		tempchoice->Enable(enable);
 		m_combox_map[pref+current.key] = tempchoice;
@@ -132,7 +142,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOpti
 		mmOptionString current = it->second;
 		wxTextCtrl* temptext = new wxTextCtrl(this, STRING_START_ID+ctrl_count, current.value, wxDefaultPosition,
 				wxDefaultSize, 0, wxDefaultValidator, current.key);
-		temptext->SetToolTip(current.description);
+		temptext->SetToolTip(TE(current.description));
 		temptext->SetName(pref+current.key);
 		temptext->Enable(enable);
 		m_textctrl_map[pref+current.key] = temptext;

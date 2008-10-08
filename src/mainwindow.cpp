@@ -10,11 +10,15 @@
 #include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/sizer.h>
-#include <wx/listbook.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
+#ifndef HAVE_WX26
+#include <wx/aui/auibook.h>
+#include "auimanager.h"
+#else
+#include <wx/listbook.h>
+#endif
 #include <wx/tooltip.h>
-
 
 #include <stdexcept>
 
@@ -30,10 +34,12 @@
 #include "mainoptionstab.h"
 #include "iunitsync.h"
 #include "uiutils.h"
+#include "replay/replaytab.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
 #include "torrentwrapper.h"
 #endif
+
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.png.h"
@@ -47,6 +53,8 @@
 #include "images/select_icon.xpm"
 #include "images/downloads_icon.png.h"
 #include "images/downloads_icon_text.png.h"
+#include "images/replay_icon.png.h"
+#include "images/replay_icon_text.png.h"
 
 #include "settings++/frame.h"
 #include "settings++/custom_dialogs.h"
@@ -76,10 +84,14 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
   EVT_MENU( MENU_START_TORRENT, MainWindow::OnMenuStartTorrent )
   EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
-  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
+//  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
   EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
   EVT_MENU_OPEN( MainWindow::OnMenuOpen )
+  #ifdef HAVE_WX26
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
+  #else
+  EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
+  #endif
 END_EVENT_TABLE()
 
 
@@ -89,6 +101,11 @@ MainWindow::MainWindow( Ui& ui ) :
   m_ui(ui),m_autojoin_dialog(NULL)
 {
   SetIcon( wxIcon(springlobby_xpm) );
+
+  #ifndef HAVE_WX26
+  GetAui().manager = new wxAuiManager( this );
+  #endif
+
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(MENU_CONNECT, _("&Connect..."));
   menuFile->Append(MENU_DISCONNECT, _("&Disconnect"));
@@ -106,11 +123,6 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menuTools->AppendSeparator();
   m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
 
-  #if defined(__WXMSW__)
-  m_menuTools->AppendSeparator();
-  m_menuTools->AppendCheckItem(MENU_SHOW_TOOLTIPS, _("Show tooltips") );
-  m_menuTools->Check( MENU_SHOW_TOOLTIPS, sett().GetShowTooltips() );
-  #endif
 
   #ifndef NO_TORRENT_SYSTEM
   m_menuTools->AppendSeparator();
@@ -132,33 +144,54 @@ MainWindow::MainWindow( Ui& ui ) :
   SetMenuBar(m_menubar);
 
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
+  #ifndef HAVE_WX26
+  m_func_tabs = new wxAuiNotebook(  this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
+  #else
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
+  #endif
 
-  m_chat_icon =  charArr2wxBitmapWithBlending( chat_icon_png , sizeof (chat_icon_png) , chat_icon_text_png, sizeof(chat_icon_text_png), 64 ) ;
-  m_battle_icon = charArr2wxBitmapWithBlending( join_icon_png , sizeof (join_icon_png), join_icon_text_png , sizeof (join_icon_text_png), 64 ) ;
-  m_sp_icon = charArr2wxBitmapWithBlending( single_player_icon_png , sizeof (single_player_icon_png), single_player_icon_text_png , sizeof (single_player_icon_text_png), 64 ) ;
-  m_options_icon =   charArr2wxBitmapWithBlending( options_icon_png , sizeof (options_icon_png), options_icon_text_png , sizeof (options_icon_text_png), 64 ) ;
-  m_downloads_icon = charArr2wxBitmapWithBlending( downloads_icon_png , sizeof (downloads_icon_png), downloads_icon_text_png , sizeof (downloads_icon_text_png), 64 ) ;
+  m_chat_icon =  charArr2wxBitmap( chat_icon_png , sizeof (chat_icon_png) ) ;
+  m_battle_icon = charArr2wxBitmap( join_icon_png , sizeof (join_icon_png) );
+  m_sp_icon = charArr2wxBitmap( single_player_icon_png , sizeof (single_player_icon_png) );
+  m_options_icon =   charArr2wxBitmap( options_icon_png , sizeof (options_icon_png) ) ;
+  m_downloads_icon = charArr2wxBitmap( downloads_icon_png , sizeof (downloads_icon_png) );
+  m_replay_icon = charArr2wxBitmap(  replay_icon_png , sizeof (replay_icon_png) );
+
   m_select_image = new wxBitmap( select_icon_xpm );
 
-  m_func_tab_images = new wxImageList( 64, 64 );
+  m_func_tab_images = new wxImageList( 32, 32 );
   MakeImages();
 
+  #ifdef HAVE_WX26
   m_func_tabs->AssignImageList( m_func_tab_images );
+  #endif
   m_chat_tab = new MainChatTab( m_func_tabs, m_ui );
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
+  m_replay_tab = new ReplayTab ( m_func_tabs, m_ui );
 #ifndef NO_TORRENT_SYSTEM
   m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
 #endif
 
+#ifdef HAVE_WX26
   m_func_tabs->AddPage( m_chat_tab, _T(""), true, 0 );
   m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
   m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
   m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
+  m_func_tabs->AddPage( m_replay_tab, _T(""), false, 4 );
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 4 );
+  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 5 );
+#endif
+#else
+  m_func_tabs->AddPage( m_chat_tab, _T(""), true, *m_chat_icon );
+  m_func_tabs->AddPage( m_join_tab, _T(""), false, *m_battle_icon );
+  m_func_tabs->AddPage( m_sp_tab, _T(""), false, *m_sp_icon );
+  m_func_tabs->AddPage( m_replay_tab, _T(""), false, *m_replay_icon );
+  m_func_tabs->AddPage( m_opts_tab, _T(""), false, *m_options_icon );
+#ifndef NO_TORRENT_SYSTEM
+  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, *m_downloads_icon );
+#endif
 #endif
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
@@ -182,6 +215,10 @@ void MainWindow::forceSettingsFrameClose()
 
 MainWindow::~MainWindow()
 {
+  #ifndef HAVE_WX26
+  GetAui().manager->UnInit();
+  delete GetAui().manager;
+  #endif
   int x, y, w, h;
   GetSize( &w, &h );
   sett().SetMainWindowHeight( h );
@@ -260,7 +297,10 @@ void MainWindow::MakeImages()
   } else {*/
     m_func_tab_images->Add( *m_options_icon );
 
+    m_func_tab_images->Add( *m_replay_icon );
+
     m_func_tab_images->Add( *m_downloads_icon );
+
   //}
 
 }
@@ -293,6 +333,13 @@ MainSinglePlayerTab& MainWindow::GetSPTab()
   ASSERT_EXCEPTION( m_sp_tab != 0, _T("m_sp_tab = 0") );
   return *m_sp_tab;
 }
+
+ReplayTab& MainWindow::GetReplayTab()
+{
+    ASSERT_EXCEPTION( m_replay_tab != 0, _T("m_replay_tab = 0") );
+    return *m_replay_tab;
+}
+
 #ifndef NO_TORRENT_SYSTEM
 MainTorrentTab& MainWindow::GetTorrentTab()
 {
@@ -314,6 +361,11 @@ ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
   return m_chat_tab->GetChannelChatPanel( channel );
 }
 
+MainOptionsTab& MainWindow::GetOptionsTab()
+{
+  ASSERT_EXCEPTION(m_opts_tab != 0, _T("m_opts_tab == 0"));
+  return *m_opts_tab;
+}
 
 //! @brief Open a new chat tab with a channel chat
 //!
@@ -486,9 +538,15 @@ void MainWindow::OnShowDocs( wxCommandEvent& event )
   m_ui.OpenWebBrowser( _T("http://springlobby.info") );
 }
 
-void MainWindow::OnTabsChanged( wxListbookEvent& event )
+#ifdef HAVE_WX26
+void MainWindow::OnTabsChanged( wxNotebookEvent& event )
+#else
+void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
+#endif
 {
+  #ifdef HAVE_WX26
   MakeImages();
+  #endif
 
   int newsel = event.GetSelection();
 
@@ -515,13 +573,6 @@ void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 	  	    		wxDefaultSize);
 	se_frame_active = true;
 	se_frame->Show();
-}
-
-void MainWindow::OnShowToolTips( wxCommandEvent& event )
-{
-    bool show = m_menuTools->IsChecked(MENU_SHOW_TOOLTIPS);
-    wxToolTip::Enable(show);
-    sett().SetShowTooltips(show);
 }
 
 void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& event )

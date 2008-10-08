@@ -53,8 +53,7 @@ AM_PATH_WXCONFIG([2.6.3], [],
            where wxWidgets libraries are installed (returned by
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
            equivalent variable and wxWidgets version is 2.6.3 or above.
-    ])], [base,core,net,adv,qa,richtext])
-
+   ])], [base,core,net,adv,qa,richtext,aui])
 win_build=0
 AC_ARG_VAR([WINDRES], [Windows resource file compiler command])
 if test x$host_os = xmingw32msvc ; then
@@ -109,7 +108,7 @@ if test "$win_build" = 0 ; then
     fi
 else
     if test x$usetorrent = xyes ; then
-        CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION  "
+        CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0500 -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION  "
         LIBS=' -Wl,-allow-multiple-definition -L/var/lib/buildbot/lib/mingw/lib -lboost_thread-mt -lboost_filesystem-mt  -lws2_32 -lmswsock -lboost_date_time-mt'
     else
        	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"

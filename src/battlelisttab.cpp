@@ -13,6 +13,10 @@
 #include <wx/tglbtn.h>
 #endif
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 #include "battlelisttab.h"
 #include "battlelistctrl.h"
 #include "battle.h"
@@ -55,12 +59,15 @@ BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 END_EVENT_TABLE()
 
 
-BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) :
-  wxPanel( parent, -1 ),
+BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),
   m_filter_notice(0),
   m_ui(ui),
   m_sel_battle(0)
 {
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("battlelisttab") );
+  #endif
+
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -190,7 +197,6 @@ void BattleListTab::SelectBattle( Battle* battle )
 }
 
 void BattleListTab::AddBattle( Battle& battle ) {
-
   if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     return;
   }
@@ -351,7 +357,7 @@ void BattleListTab::SetFilterActiv( bool activ )
 {
   m_filter->SetActiv( activ );
   m_filter_activ->SetValue( activ );
-  sett().SetFilterActivState( activ );
+  sett().SetBattleFilterActivState( activ );
   ShowFilterNotice( activ );
   m_battle_list->MarkDirtySort();
 }
@@ -492,7 +498,7 @@ void BattleListTab::OnFilterActiv( wxCommandEvent& event )
     return;
   }
   m_filter->SetActiv( active );
-  sett().SetFilterActivState( active );
+  sett().SetBattleFilterActivState( active );
   ShowFilterNotice( active );
 }
 

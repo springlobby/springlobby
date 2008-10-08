@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MAINJOINBATTLETAB_H
 #define SPRINGLOBBY_HEADERGUARD_MAINJOINBATTLETAB_H
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 
 class Ui;
 class BattleListTab;
@@ -12,10 +12,11 @@ class BattleMapTab;
 class BattleOptionsTab;
 class wxBoxSizer;
 class wxImageList;
+class wxAuiNotebook;
 class wxNotebook;
 class BattleroomMMOptionsTab;
 
-class MainJoinBattleTab : public wxPanel
+class MainJoinBattleTab : public wxScrolledWindow
 {
   public:
     MainJoinBattleTab( wxWindow* parent, Ui& ui );
@@ -51,7 +52,11 @@ class MainJoinBattleTab : public wxPanel
 
     wxImageList* m_imagelist;
 
+    #ifdef HAVE_WX26
     wxNotebook* m_tabs;
+    #else
+    wxAuiNotebook* m_tabs;
+    #endif
     BattleListTab* m_list_tab;
 
     BattleRoomTab* m_battle_tab;

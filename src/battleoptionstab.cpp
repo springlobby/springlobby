@@ -37,6 +37,10 @@
 #include "settings.h"
 #include "settings++/custom_dialogs.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 #define LIMIT_DGUN_INDEX 0
 #define GHOUSTED_INDEX  1
 #define DIM_MMS_INDEX 2
@@ -69,8 +73,13 @@ END_EVENT_TABLE()
 
 
 BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, bool singleplayer ):
-  wxPanel( parent, -1 ), m_ui(ui), m_battle(battle), m_sp(singleplayer)
+  wxScrolledWindow( parent, -1 ), m_ui(ui), m_battle(battle), m_sp(singleplayer)
 {
+
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("battleoptionstab") );
+  #endif
+
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -97,8 +106,8 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_metal_lbl = new wxStaticText( this, wxID_ANY, _("Start Metal"), wxDefaultPosition, wxDefaultSize, 0 );
   m_metal_sizer->Add( m_metal_lbl, 0, wxALL, 5 );
 
-  m_metal_slider = new wxSlider( this, SLI_METAL_ID, 1000, 0, 100000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
-  m_metal_slider->SetToolTip( _("The amount of metal each player starts with.") );
+  m_metal_slider = new wxSlider( this, SLI_METAL_ID, 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
+  m_metal_slider->SetToolTip( TE(_("The amount of metal each player starts with.")) );
 
   m_metal_sizer->Add( m_metal_slider, 1, wxALL|wxEXPAND, 5 );
 
@@ -113,8 +122,8 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_energy_lbl = new wxStaticText( this, wxID_ANY, _("Start Energy"), wxDefaultPosition, wxDefaultSize, 0 );
   m_energy_sizer->Add( m_energy_lbl, 0, wxALL, 5 );
 
-  m_energy_slider = new wxSlider( this,SLI_ENERGY_ID , 1000, 0, 100000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
-  m_energy_slider->SetToolTip( _("The amount of energy each player starts with.") );
+  m_energy_slider = new wxSlider( this,SLI_ENERGY_ID , 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
+  m_energy_slider->SetToolTip( TE(_("The amount of energy each player starts with.")) );
 
   m_energy_sizer->Add( m_energy_slider, 1, wxALL|wxEXPAND, 5 );
 
@@ -168,7 +177,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_allowed_sizer->Add( m_aloowed_lbl, 0, wxALL, 5 );
 
   m_allowed_list = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_MULTIPLE|wxLB_NEEDED_SB|wxLB_SORT );
-  m_allowed_list->SetToolTip( _("Units in this list will be available in the game.") );
+  m_allowed_list->SetToolTip( TE(_("Units in this list will be available in the game.")) );
 
   m_allowed_sizer->Add( m_allowed_list, 1, wxALL|wxEXPAND, 5 );
 
@@ -180,15 +189,15 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_mid_btn_sizer->Add( 0, 50, 0, wxEXPAND, 0 );
 
   m_restrict_btn = new wxButton( this, BOPTS_RESTRICT, _T(">"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  m_restrict_btn->SetToolTip( _("Disable selected units.") );
+  m_restrict_btn->SetToolTip( TE(_("Disable selected units.")) );
   m_mid_btn_sizer->Add( m_restrict_btn, 0, wxALL, 5 );
 
   m_allow_btn = new wxButton( this, BOPTS_ALLOW, _T("<"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  m_allow_btn->SetToolTip( _("Re-enable selected units.") );
+  m_allow_btn->SetToolTip( TE(_("Re-enable selected units.")) );
   m_mid_btn_sizer->Add( m_allow_btn, 0, wxALL, 5 );
 
   m_clear_btn = new wxButton( this, BOPTS_CLEARRES, _("Clear"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  m_clear_btn->SetToolTip( _("Enable all units.") );
+  m_clear_btn->SetToolTip( TE(_("Enable all units.")) );
 
   m_mid_btn_sizer->Add( m_clear_btn, 0, wxALL, 5 );
 
@@ -201,7 +210,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_restricted_sizer->Add( m_restricted_lbl, 0, wxALL, 5 );
 
   m_restrict_list = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_MULTIPLE|wxLB_NEEDED_SB|wxLB_SORT );
-  m_restrict_list->SetToolTip( _("Units in this list will not be available in the game.") );
+  m_restrict_list->SetToolTip( TE(_("Units in this list will not be available in the game.")) );
 
   m_restricted_sizer->Add( m_restrict_list, 1, wxALL|wxEXPAND, 5 );
 
@@ -213,27 +222,27 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_preset_sizer = new wxBoxSizer( wxHORIZONTAL );
 
   m_options_preset_sel = new wxComboBox( this, BOPTS_CHOSEPRES, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList() );
-  m_options_preset_sel->SetToolTip(_("Set name."));
+  m_options_preset_sel->SetToolTip(TE(_("Set name.")));
 
   m_preset_sizer->Add( m_options_preset_sel, 0, wxALL, 5 );
 
   m_load_btn = new wxButton( this, BOPTS_LOADPRES, _("Load..."), wxDefaultPosition, wxDefaultSize, 0 );
-  m_load_btn->SetToolTip( _("Load a saved set of options.") );
+  m_load_btn->SetToolTip( TE(_("Load a saved set of options.")) );
 
   m_preset_sizer->Add( m_load_btn, 0, wxALL, 5 );
 
   m_save_btn = new wxButton( this, BOPTS_SAVEPRES, _("Save..."), wxDefaultPosition, wxDefaultSize, 0 );
-  m_save_btn->SetToolTip( _("Save a set of options.") );
+  m_save_btn->SetToolTip( TE(_("Save a set of options.")) );
 
   m_preset_sizer->Add( m_save_btn, 0, wxALL, 5 );
 
   m_delete_btn = new wxButton( this, BOPTS_DELETEPRES, _("Delete..."), wxDefaultPosition, wxDefaultSize, 0 );
-  m_delete_btn->SetToolTip( _("Delete a set of options.") );
+  m_delete_btn->SetToolTip( TE(_("Delete a set of options.")) );
 
   m_preset_sizer->Add( m_delete_btn, 0, wxALL, 5 );
 
   m_default_btn = new wxButton( this, BOPTS_SETDEFAULTPRES, _("Set default..."), wxDefaultPosition, wxDefaultSize, 0 );
-  m_default_btn->SetToolTip( _("Use the current set of options as mod's default.") );
+  m_default_btn->SetToolTip( TE(_("Use the current set of options as mod's default.")) );
 
   m_preset_sizer->Add( m_default_btn, 0, wxALL, 5 );
 
@@ -243,6 +252,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
   m_main_sizer->Add( m_restr_box, 1, wxALL|wxEXPAND, 5 );
 
+  SetScrollRate( 3, 3 );
   this->SetSizer( m_main_sizer );
   this->Layout();
 
@@ -279,7 +289,9 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
 BattleOptionsTab::~BattleOptionsTab()
 {
-
+  #ifndef HAVE_WX26
+  GetAui().manager->DetachPane( this );
+  #endif
 }
 
 

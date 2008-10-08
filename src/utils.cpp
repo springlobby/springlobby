@@ -33,7 +33,8 @@
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
 #endif
-
+#include <wx/intl.h>
+#include "settings.h"
 
 wxString GetLibExtension()
 {
@@ -273,3 +274,9 @@ bool IsValidNickname( const wxString& _name )
 
     return !regex.Matches( name );
 }
+
+const wxChar* TooltipEnable(const wxChar* input)
+{
+    return sett().GetShowTooltips() ? input : _("");
+}
+

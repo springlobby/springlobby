@@ -4,9 +4,9 @@
 #include "config.h"
 #endif
 
-#include "../images/springsettings.xpm"
 #include <wx/icon.h>
-#include "../utils.h"
+#include "../images/springsettings.xpm"
+
 #include "custom_dialogs.h"
 #include <wx/intl.h>
 #include "se_utils.h"

@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 
 #include "battlelistfilter.h"
 #include "battlelist.h"
@@ -24,10 +24,9 @@ class wxStaticText;
 class wxStaticLine;
 class wxCheckBox;
 class wxToggleButton;
-
 /** \brief The panel containing a BattleListCtrl and a BattleListFilter
  * \todo DOCME */
-class BattleListTab : public wxPanel
+class BattleListTab : public wxScrolledWindow
 {
   friend class BattleListFilter;
   public:

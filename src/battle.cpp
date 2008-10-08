@@ -58,15 +58,12 @@ const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBo
 
 
 Battle::Battle( Server& serv, Ui& ui, int id ) :
+  CommonBattle(id,false,0), //m_ingame(false),m_order(0)
   m_serv(serv),
   m_ui(ui),
-  m_ah(*this),
-  m_ingame(false),
-  m_order(0),
-  m_bot_seek(m_bots.end()),
-  m_bot_pos(BOT_SEEKPOS_INVALID)
+  m_ah(*this)
 {
-  m_opts.battleid = id;
+
 
 }
 
@@ -351,7 +348,7 @@ void Battle::OnUserAdded( User& user )
     if (CheckBan(user))
       return;
 
-    if(user.GetStatus().rank<m_opts.rankneeded){
+    if(m_opts.rankneeded>1 && user.GetStatus().rank<m_opts.rankneeded){
       switch(m_opts.ranklimittype){
         case rank_limit_none:
         break;
@@ -403,7 +400,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 
     }
 
-    if(user.GetStatus().rank<m_opts.rankneeded){
+    if(m_opts.rankneeded>1 && user.GetStatus().rank<m_opts.rankneeded){
       switch(m_opts.ranklimittype){
         case rank_limit_none:
         break;
@@ -547,7 +544,7 @@ bool Battle::CheckBan(User &user){
 
 
 
-void Battle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
+void CommonBattle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
 {
   BattleStartRect sr;
 
@@ -565,7 +562,7 @@ void Battle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int 
 }
 
 
-void Battle::RemoveStartRect( unsigned int allyno )
+void CommonBattle::RemoveStartRect( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   BattleStartRect sr = m_rects[allyno];
@@ -574,7 +571,7 @@ void Battle::RemoveStartRect( unsigned int allyno )
 }
 
 
-void Battle::ResizeStartRect( unsigned int allyno )
+void CommonBattle::ResizeStartRect( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   BattleStartRect sr = m_rects[allyno];
@@ -583,14 +580,14 @@ void Battle::ResizeStartRect( unsigned int allyno )
 }
 
 
-void Battle::StartRectRemoved( unsigned int allyno )
+void CommonBattle::StartRectRemoved( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   if ( m_rects[allyno].todelete ) m_rects.erase(allyno);
 }
 
 
-void Battle::StartRectResized( unsigned int allyno )
+void CommonBattle::StartRectResized( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   BattleStartRect sr = m_rects[allyno];
@@ -599,7 +596,7 @@ void Battle::StartRectResized( unsigned int allyno )
 }
 
 
-void Battle::StartRectAdded( unsigned int allyno )
+void CommonBattle::StartRectAdded( unsigned int allyno )
 {
   if ( allyno >= m_rects.size() ) return;
   BattleStartRect sr = m_rects[allyno];
@@ -608,12 +605,12 @@ void Battle::StartRectAdded( unsigned int allyno )
 }
 
 
-BattleStartRect Battle::GetStartRect( unsigned int allyno )
+BattleStartRect CommonBattle::GetStartRect( unsigned int allyno )
 {
   return m_rects[allyno];
 }
 
-void Battle::ClearStartRects()
+void CommonBattle::ClearStartRects()
 {
   m_rects.clear();
 }
@@ -695,84 +692,6 @@ void Battle::SetBotHandicap( const wxString& nick, int handicap )
   m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
 }
 
-
-void Battle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
-{
-  BattleBot* bot = GetBot(nick);
-  bool created = true;
-  if ( bot == 0 ) bot = new BattleBot();
-  else created = false;
-
-  wxLogDebugFunc( wxString::Format( _T("created: %d"), created) );
-
-  bot->name = nick;
-  bot->bs = bs;
-  bot->bs.order = m_order++;
-  bot->owner = owner;
-  bot->aidll = aidll;
-
-  if ( created ) {
-    m_bots.push_back( bot );
-    m_bot_pos = BOT_SEEKPOS_INVALID;
-  }
-}
-
-
-void Battle::OnBotRemoved( const wxString& nick )
-{
-  BattleBot* bot = GetBot( nick );
-  m_bots.remove( bot );
-  delete bot;
-  m_bot_pos = BOT_SEEKPOS_INVALID;
-}
-
-
-void Battle::OnBotUpdated( const wxString& name, const UserBattleStatus& bs )
-{
-  BattleBot* bot = GetBot( name );
-  try
-  {
-    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
-  } catch (...) { return; }
-  int order = bot->bs.order;
-  bot->bs = bs;
-  bot->bs.order = order;
-}
-
-
-BattleBot* Battle::GetBot( const wxString& name ) const
-{
-  std::list<BattleBot*>::const_iterator i;
-
-  for( i = m_bots.begin(); i != m_bots.end(); ++i )
-  {
-    if ( *i == 0 ) continue;
-    wxLogMessage( _T("%s"), ((*i)->name).c_str ());
-    if ( (*i)->name == name ) {
-      return *i;
-    }
-  }
-  return 0;
-}
-
-BattleBot* Battle::GetBot( unsigned int index ) const
-{
-  if ((m_bot_pos == BOT_SEEKPOS_INVALID) || (m_bot_pos > index)) {
-    m_bot_seek = m_bots.begin();
-    m_bot_pos = 0;
-  }
-  std::advance( m_bot_seek, index - m_bot_pos );
-  m_bot_pos = index;
-  return *m_bot_seek;
-}
-
-
-unsigned int Battle::GetNumBots() const
-{
-  return m_bots.size();
-}
-
-
 void Battle::ForceSide( User& user, int side )
 {
   m_serv.ForceSide( m_opts.battleid, user.GetNick(), side );
@@ -816,13 +735,6 @@ void Battle::SetHandicap( User& user, int handicap)
 {
   m_serv.SetHandicap ( m_opts.battleid, user.GetNick(), handicap );
 }
-
-
-unsigned int Battle::GetNumRects()
-{
-  return m_rects.size();
-}
-
 
 bool PlayerRankCompareFunction(User *a, User *b){/// should never operate on nulls. Hence, ASSERT_LOGIC is appropriate here.
   ASSERT_LOGIC(a,_T("fail in Autobalance, NULL player"));
@@ -1038,4 +950,187 @@ void Battle::ForceUnsyncedToSpectate()
     User &user = GetUser(i);
     if ( !user.BattleStatus().spectator && !user.BattleStatus().sync ) ForceSpectator( user, true );
   }
+}
+
+CommonBattle::CommonBattle( const int id, const bool ingame, const int order )
+    : m_ingame(ingame),m_order(order),  m_bot_seek(m_bots.end()),
+        m_bot_pos(BOT_SEEKPOS_INVALID)
+{
+    m_opts.battleid = id;
+}
+
+unsigned int CommonBattle::GetNumRects()
+{
+  return m_rects.size();
+}
+
+
+void CommonBattle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
+{
+  BattleBot* bot = GetBot(nick);
+  bool created = true;
+  if ( bot == 0 ) bot = new BattleBot();
+  else created = false;
+
+  wxLogDebugFunc( wxString::Format( _T("created: %d"), created) );
+
+  bot->name = nick;
+  bot->bs = bs;
+  bot->bs.order = m_order++;
+  bot->owner = owner;
+  bot->aidll = aidll;
+
+  if ( created ) {
+    m_bots.push_back( bot );
+    m_bot_pos = BOT_SEEKPOS_INVALID;
+  }
+}
+
+
+void CommonBattle::OnBotRemoved( const wxString& nick )
+{
+  BattleBot* bot = GetBot( nick );
+  m_bots.remove( bot );
+  delete bot;
+  m_bot_pos = BOT_SEEKPOS_INVALID;
+}
+
+
+void CommonBattle::OnBotUpdated( const wxString& name, const UserBattleStatus& bs )
+{
+  BattleBot* bot = GetBot( name );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
+  int order = bot->bs.order;
+  bot->bs = bs;
+  bot->bs.order = order;
+}
+
+
+BattleBot* CommonBattle::GetBot( const wxString& name ) const
+{
+  std::list<BattleBot*>::const_iterator i;
+
+  for( i = m_bots.begin(); i != m_bots.end(); ++i )
+  {
+    if ( *i == 0 ) continue;
+    wxLogMessage( _T("%s"), ((*i)->name).c_str ());
+    if ( (*i)->name == name ) {
+      return *i;
+    }
+  }
+  return 0;
+}
+
+BattleBot* CommonBattle::GetBot( unsigned int index ) const
+{
+  if ((m_bot_pos == BOT_SEEKPOS_INVALID) || (m_bot_pos > index)) {
+    m_bot_seek = m_bots.begin();
+    m_bot_pos = 0;
+  }
+  std::advance( m_bot_seek, index - m_bot_pos );
+  m_bot_pos = index;
+  return *m_bot_seek;
+}
+
+unsigned int CommonBattle::GetNumBots() const
+{
+  return m_bots.size();
+}
+
+void OfflineBattle::RemoveUser(OfflineUser& user)
+{
+
+}
+
+void OfflineBattle::UpdateUserBattleStatus(OfflineUser &user, UserBattleStatus status)
+{
+
+}
+
+void OfflineBattle::AddUser( const OfflineUser& user)
+{
+    m_participants.push_back(user);
+}
+
+OfflineBattle::OfflineBattle(const int id)
+ :CommonBattle(id, false, 0)
+{}
+
+OfflineBattle::OfflineBattle()
+ :CommonBattle(0, false, 0)
+{}
+
+void OfflineBattle::SetBotTeam( const wxString& nick, int team )
+{
+  BattleBot* bot = GetBot( nick );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
+  bot->bs.team = team;
+}
+
+
+void OfflineBattle::SetBotAlly( const wxString& nick, int ally )
+{
+  BattleBot* bot = GetBot( nick );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
+  bot->bs.ally = ally;
+}
+
+
+void OfflineBattle::SetBotSide( const wxString& nick, int side )
+{
+  BattleBot* bot = GetBot( nick );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
+  bot->bs.side = side;
+}
+
+
+void OfflineBattle::SetBotColour( const wxString& nick, const wxColour& col )
+{
+  BattleBot* bot = GetBot( nick );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
+  bot->bs.colour = col;
+}
+
+
+void OfflineBattle::SetBotHandicap( const wxString& nick, int handicap )
+{
+  BattleBot* bot = GetBot( nick );
+  try
+  {
+    ASSERT_LOGIC( bot != 0, _T("Bot not found") );
+  } catch (...) { return; }
+
+  bot->bs.handicap = handicap;
+}
+
+void OfflineBattle::AddUser( const wxString& nick )
+{
+    OfflineUser user( nick, wxEmptyString, 0 );
+    AddUser( user );
+}
+
+bool OfflineBattle::ModExists()
+{
+    bool tmp = usync().ModExistsCheckHash( m_host_mod.hash );
+    return tmp;
+}
+
+bool OfflineBattle::MapExists()
+{
+    return usync().MapExists( m_host_map.name );
 }

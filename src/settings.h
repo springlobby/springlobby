@@ -30,6 +30,7 @@
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
+struct ReplayListFilterValues;
 class wxFileInputStream;
 struct wxColourData;
 
@@ -473,9 +474,19 @@ class Settings
      */
     BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
     void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
-    wxString GetLastFilterProfileName();
-    void SetFilterActivState( const bool state );
-    bool GetFilterActivState( ) const;
+    wxString GetLastBattleFilterProfileName();
+    void SetBattleFilterActivState( const bool state );
+    bool GetBattleFilterActivState( ) const;
+    /**@}*/
+
+    /** @name Replay filters
+     * @{
+     */
+    ReplayListFilterValues GetReplayFilterValues(const wxString& profile_name = (_T("default")));
+    void SetReplayFilterValues(const ReplayListFilterValues& blfValues, const wxString& profile_name = _T("default"));
+    wxString GetLastReplayFilterProfileName();
+    void SetReplayFilterActivState( const bool state );
+    bool GetReplayFilterActivState( ) const;
     /**@}*/
 
     bool GetDisableSpringVersionCheck();
@@ -509,6 +520,9 @@ class Settings
 
     wxString GetTorrentsFolder();
     /**@}*/
+
+    void SaveLayout( wxString& layout_name, wxString& layout_string );
+    wxString GetLayout( wxString& layout_name );
 
   protected:
     #ifdef __WXMSW__

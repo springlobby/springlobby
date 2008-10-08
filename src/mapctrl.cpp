@@ -338,9 +338,11 @@ void MapCtrl::UpdateMinimap()
   _SetCursor();
   if ( m_battle == 0 ) return;
   GetClientSize( &w, &h );
-  if ( (m_mapname != m_battle->GetHostMapName() ) || ( m_lastsize != wxSize(w, h) ) ) {
-    FreeMinimap();
-    LoadMinimap();
+  if ( m_battle ) { ///needs to be looked into, crahses with replaytab (koshi)
+      if ( (m_mapname != m_battle->GetHostMapName() ) || ( m_lastsize != wxSize(w, h) ) ) {
+        FreeMinimap();
+        LoadMinimap();
+      }
   }
   Refresh();
   Update();

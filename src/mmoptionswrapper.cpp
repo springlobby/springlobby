@@ -97,13 +97,13 @@ bool mmOptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
         0, 1, 0, 2);
         opt.int_map[_T("startmetal")] = mmOptionInt( _("Start Metal"),_T("startmetal"),
         _("Sets the amount of metal that players will start with"),
-        1000, 1, 0, 1000000000);
+        1000, 1, 0, 10000);
         opt.int_map[_T("startenergy")] = mmOptionInt( _("Start Energy"),_T("startenergy"),
         _("Sets the amount of energy that players will start with"),
-        1000, 1, 0, 1000000000);
+        1000, 1, 0, 10000);
         opt.int_map[_T("maxunits")] = mmOptionInt( _("Max Units Allowed"),_T("maxunits"),
         _("Sets the maximum amount of units that a player will be allowed to build"),
-        500, 1, 0, 10000);
+        1000, 1, 0, 10000);
         break;
     }
     case PrivateOptions:

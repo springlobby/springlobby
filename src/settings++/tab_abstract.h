@@ -23,8 +23,6 @@
 #ifndef __TAB_ABSTRACT_h__
 #define __TAB_ABSTRACT_h__
 
-
-//#include <wx/frame.h>
 #include <wx/scrolwin.h>
 
 #include <map>

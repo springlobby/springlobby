@@ -19,7 +19,7 @@ struct item_content {
 
 /** \brief display participants of battle and their info (ally,team,color,cpu...)
  * \todo DOCMEMORE */
-class BattleroomListCtrl : public customListCtrl
+class BattleroomListCtrl : public CustomListCtrl
 {
   public:
     BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui );

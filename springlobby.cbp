@@ -26,6 +26,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
+					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
 					<Add option="`pkg-config --libs libtorrent`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
 					<Add option="`sdl-config --libs`" />
@@ -144,6 +145,7 @@
 		<Unit filename="src/addbotdialog.h" />
 		<Unit filename="src/agreementdialog.cpp" />
 		<Unit filename="src/agreementdialog.h" />
+		<Unit filename="src/auimanager.cpp" />
 		<Unit filename="src/autobalancedialog.cpp" />
 		<Unit filename="src/autobalancedialog.h" />
 		<Unit filename="src/autohost.cpp" />
@@ -204,6 +206,8 @@
 		<Unit filename="src/flagimages.h" />
 		<Unit filename="src/globalevents.cpp" />
 		<Unit filename="src/globalevents.h" />
+		<Unit filename="src/groupoptionspanel.cpp" />
+		<Unit filename="src/groupoptionspanel.h" />
 		<Unit filename="src/groupuserdialog.cpp" />
 		<Unit filename="src/groupuserdialog.h" />
 		<Unit filename="src/hostbattledialog.cpp" />
@@ -277,8 +281,22 @@
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonportable.h" />
+		<Unit filename="src/replay/replayfilter.cpp" />
+		<Unit filename="src/replay/replayfilter.h" />
+		<Unit filename="src/replay/replaylist.cpp" />
+		<Unit filename="src/replay/replaylist.h" />
+		<Unit filename="src/replay/replaylistctrl.cpp" />
+		<Unit filename="src/replay/replaylistctrl.h" />
+		<Unit filename="src/replay/replaylistfiltervalues.h" />
+		<Unit filename="src/replay/replaytab.cpp" />
+		<Unit filename="src/replay/replaytab.h" />
+		<Unit filename="src/replayfilter.h" />
+		<Unit filename="src/replaylistctrl.h" />
+		<Unit filename="src/replaytab.h" />
 		<Unit filename="src/sdlsound.cpp" />
 		<Unit filename="src/sdlsound.h" />
+		<Unit filename="src/selectusersdialog.cpp" />
+		<Unit filename="src/selectusersdialog.h" />
 		<Unit filename="src/server.cpp" />
 		<Unit filename="src/server.h" />
 		<Unit filename="src/serverevents.cpp" />

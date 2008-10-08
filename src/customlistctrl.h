@@ -29,24 +29,34 @@
 typedef std::pair<wxString,bool> colInfo;
 typedef std::vector<colInfo> colInfoVec;
 
+#if wxUSE_TIPWINDOW
+class SLTipWindow : public wxTipWindow{
+    public:
+        SLTipWindow(wxWindow *parent, const wxString &text)
+            :wxTipWindow(parent,text){};
+        void Cancel(wxMouseEvent& event);
+
+        DECLARE_EVENT_TABLE()
+};
+#endif
 
 /** \brief Used as base class for all ListCtrls throughout SL
  * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
  * Some of the provided functionality only makes sense for single-select lists (see grouping) \n
  * Note: Tooltips are a bitch and anyone shoudl feel to revise them (koshi)
  */
-class customListCtrl : public ListBaseType
+class CustomListCtrl : public ListBaseType
 {
 protected:
     typedef UserActions::ActionType ActionType;
     //! used to display tooltips for a certain amount of time
-    wxTimer     tipTimer;
+    wxTimer m_tiptimer;
     //! always set to the currrently displayed tooltip text
-    wxString    m_tiptext;
+    wxString m_tiptext;
     #if wxUSE_TIPWINDOW
     //! some wx implementations do not support this yet
-    wxTipWindow* m_tipwindow;
-    wxTipWindow** controlPointer;
+    SLTipWindow* m_tipwindow;
+    SLTipWindow** controlPointer;
     #endif
     int coloumnCount;
 
@@ -85,9 +95,11 @@ protected:
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
 public:
-	customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
+    CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
                     const wxSize& sz,long style, wxString name, bool highlight = true,
                     UserActions::ActionType hlaction = UserActions::ActHighlight);
+
+    virtual ~CustomListCtrl(){}
 
     void OnSelected( wxListEvent& event );
     void OnDeselected( wxListEvent& event );
@@ -109,8 +121,8 @@ public:
      */
 
     //! intermediate function to add info to m_colinfovec after calling base class function
-	void InsertColumn(long i, wxListItem item, wxString tip, bool = true);
-	//! this event is triggered when delay timer (set in mousemotion) ended
+    void InsertColumn(long i, wxListItem item, wxString tip, bool = true);
+    //! this event is triggered when delay timer (set in mousemotion) ended
     virtual void OnTimer(wxTimerEvent& event);
     //! prohibits resizin if so set in columnInfo
     void OnStartResizeCol(wxListEvent& event);
@@ -149,5 +161,6 @@ public:
 
     DECLARE_EVENT_TABLE()
 };
+
 
 #endif /*CUSTOMLISTITEM_H_*/

@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MAINCHATTAB_H
 #define SPRINGLOBBY_HEADERGUARD_MAINCHATTAB_H
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 #include <wx/string.h>
 
 class Ui;
@@ -11,11 +11,12 @@ class Channel;
 class User;
 class wxNotebookEvent;
 class wxNotebook;
+class wxAuiNotebook;
 class wxBoxSizer;
 class wxImageList;
 
 //! @brief The main chat tab.
-class MainChatTab : public wxPanel
+class MainChatTab : public wxScrolledWindow
 {
   public:
     MainChatTab( wxWindow* parent, Ui& ui );
@@ -35,7 +36,12 @@ class MainChatTab : public wxPanel
 
     void RejoinChannels();
 
-    void OnTabsChanged( wxNotebookEvent& event );
+    #ifdef HAVE_WX26
+    void OnTabsChanged( wxListbookEvent& event );
+    #else
+    void OnTabsChanged( wxAuiNotebookEvent& event );
+    void OnTabClose( wxAuiNotebookEvent& event );
+    #endif
     void OnUserConnected( User& user );
     void OnUserDisconnected( User& user );
 
@@ -45,14 +51,18 @@ class MainChatTab : public wxPanel
     void UpdateNicklistHighlights();
     void Update();
 
-  protected:
-
     wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
+
+  protected:
 
     Ui& m_ui;
 
     wxWindow* m_close_window;
+    #ifdef HAVE_WX26
     wxNotebook* m_chat_tabs;
+    #else
+    wxAuiNotebook* m_chat_tabs;
+    #endif
     wxBoxSizer* m_main_sizer;
     wxImageList* m_imagelist;
     ChatPanel* m_server_chat;
