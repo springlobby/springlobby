@@ -38,6 +38,8 @@ BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
   EVT_BUTTON              ( REPLAY_RELOAD             , ReplayTab::OnReload        )
   EVT_BUTTON              ( REPLAY_DELETE            , ReplayTab::OnDelete    )
   EVT_LIST_ITEM_SELECTED  ( RLIST_LIST               , ReplayTab::OnSelect      )
+// this doesn't get triggered
+//  EVT_LIST_ITEM_DESELECTED( wxID_ANY               , ReplayTab::OnDeselect      )
   EVT_CHECKBOX            ( REPLAY_LIST_FILTER_ACTIV , ReplayTab::OnFilterActiv )
 #if  wxUSE_TOGGLEBTN
   EVT_TOGGLEBUTTON        ( REPLAY_LIST_FILTER_BUTTON, ReplayTab::OnFilter  )
@@ -153,8 +155,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     //
 
     //none selected --> shouldn't watch/delete that
-    m_watch_btn->Enable( false );
-    m_delete_btn->Enable( false );
+    Deselect();
 
 }
 
@@ -322,15 +323,19 @@ void ReplayTab::OnWatch( wxCommandEvent& event )
 
 void ReplayTab::OnDelete( wxCommandEvent& event )
 {
-    Replay rep = m_replays->GetReplayById(m_sel_replay_id);
-    wxString fn = rep.Filename;
-    if ( !m_replays->DeleteReplay( m_sel_replay_id ) )
-        customMessageBoxNoModal(SL_MAIN_ICON, _("Could not delete Replay: ") + fn,
-            _("Error") );
-    else{
-        RemoveReplay( rep );
-        Deselect();
+    if (m_replay_listctrl->GetSelectedIndex != -1 ) {
+        Replay rep = m_replays->GetReplayById(m_sel_replay_id);
+        wxString fn = rep.Filename;
+        if ( !m_replays->DeleteReplay( m_sel_replay_id ) )
+            customMessageBoxNoModal(SL_MAIN_ICON, _("Could not delete Replay: ") + fn,
+                _("Error") );
+        else{
+            RemoveReplay( rep );
+            Deselect();
+        }
     }
+    else
+        Deselect();
 }
 
 void ReplayTab::OnFilterActiv( wxCommandEvent& event )
@@ -347,6 +352,7 @@ void ReplayTab::OnSelect( wxListEvent& event )
         m_watch_btn->Enable( true );
         m_delete_btn->Enable( true );
         int index = event.GetIndex();
+        m_replay_listctrl->SetSelectedIndex( index );
         long data = m_replay_listctrl->GetItemData( index );
         Replay& rep = m_replays->GetReplay( data );
         m_sel_replay_id = rep.id;
@@ -365,6 +371,11 @@ void ReplayTab::OnSelect( wxListEvent& event )
     }
 }
 
+void ReplayTab::OnDeselect( wxListEvent& event )
+{
+    Deselect();
+}
+
 void ReplayTab::Deselect()
 {
     m_sel_replay_id = -1;
@@ -379,6 +390,7 @@ void ReplayTab::ReloadList()
 //    wxDateTime dt = wxDateTime::UNow();
     m_replays->RemoveAll();
     m_replays->LoadReplays();
+    Deselect();
 //    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
 //    if ( sec > 0 )
 //        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );
