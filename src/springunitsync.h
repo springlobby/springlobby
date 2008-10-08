@@ -25,6 +25,7 @@ class SpringUnitSync : public IUnitSync
     wxArrayString GetModList();
     bool ModExists( const wxString& modname );
     bool ModExists( const wxString& modname, const wxString& hash );
+    bool ModExistsCheckHash( const wxString& hash ) const;
     UnitSyncMod GetMod( const wxString& modname );
     UnitSyncMod GetMod( int index );
     int GetModIndex( const wxString& name );
@@ -33,6 +34,7 @@ class SpringUnitSync : public IUnitSync
 
     int GetNumMaps();
     wxArrayString GetMapList();
+    wxArrayString GetModValidMapList( const wxString& modname );
     bool MapExists( const wxString& mapname );
     bool MapExists( const wxString& mapname, const wxString& hash );
 
@@ -64,11 +66,14 @@ class SpringUnitSync : public IUnitSync
     wxArrayString GetUnitsList( const wxString& modname );
 
     wxImage GetMinimap( const wxString& mapname, int width, int height );
+    wxImage GetMetalmap( const wxString& mapname, int width, int height );
 
     bool ReloadUnitSyncLib();
 
     void SetSpringDataPath( const wxString& path );
     wxString GetSpringDataPath();
+
+    wxArrayString GetReplayList();
 
     bool FileExists( const wxString& name );
 
@@ -109,6 +114,8 @@ class SpringUnitSync : public IUnitSync
 
     void PopulateArchiveList();
 
+    double _GetSpringVersion();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
+

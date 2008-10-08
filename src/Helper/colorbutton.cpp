@@ -6,6 +6,7 @@
     #include "../images/colourbox.xpm"
 #endif
 
+
 ColorButton::ColorButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitmap,
     const wxPoint& pos , const wxSize& size , long style , const wxValidator& validator,
     const wxString& name )

@@ -15,7 +15,7 @@
 #include <wx/listctrl.h>
 #include <wx/dialog.h>
 
-#include "../utils.h"
+
 
 #include "../images/springsettings.xpm"
 #include "../images/springlobby.xpm"

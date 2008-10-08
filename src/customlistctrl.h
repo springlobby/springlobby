@@ -99,6 +99,8 @@ public:
                     const wxSize& sz,long style, wxString name, bool highlight = true,
                     UserActions::ActionType hlaction = UserActions::ActHighlight);
 
+    virtual ~CustomListCtrl(){}
+
     void OnSelected( wxListEvent& event );
     void OnDeselected( wxListEvent& event );
     /** @name Single Selection methods

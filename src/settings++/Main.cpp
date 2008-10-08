@@ -23,14 +23,47 @@
 #include "frame.h"
 
 #include "../crashreport.h"
-#include "../utils.h"
+//#include "../utils.h"
 
 #include <iostream>
 #include <wx/msgdlg.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 #include "../springunitsynclib.h"
 
 IMPLEMENT_APP(Springsettings)
+
+//! @brief Initializes the logging functions.
+///initializes logging in an hidden stream and std::cout/gui messages
+void Springsettings::InitializeLoggingTargets()
+
+{
+	#if wxUSE_STD_IOSTREAM
+    #if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
+      ///hidden stream logging for crash reports
+      wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
+      wxLogChain *logCrashChain = new wxLogChain( loggercrash );
+      logCrashChain->SetLogLevel( wxLOG_Trace );
+      logCrashChain->SetVerbose( true );
+    #endif
+    ///std::cout logging
+    wxLog *loggerconsole = new wxLogStream( &std::cout );
+    wxLogChain *logChain = new wxLogChain( loggerconsole );
+    logChain->SetLogLevel( wxLOG_Trace );
+    logChain->SetVerbose( true );
+  #elif defined ( USE_LOG_WINDOW )
+    ///gui window fallback logging if console/stream output not available
+    wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
+    wxLogChain *logChain = new wxLogChain( loggerwin );
+    logChain->SetLogLevel( wxLOG_Trace );
+    logChain->SetVerbose( true );
+    logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
+  #else
+    /// if all fails, no log is better than msg box spam :P
+    new wxLogNull();
+  #endif
+}
+
 
 bool Springsettings::OnInit()
 {

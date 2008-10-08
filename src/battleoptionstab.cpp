@@ -37,11 +37,16 @@
 #include "settings.h"
 #include "settings++/custom_dialogs.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 #define LIMIT_DGUN_INDEX 0
 #define GHOUSTED_INDEX  1
 #define DIM_MMS_INDEX 2
-#define LOCK_SPEED_INDEX 3
-#define RANDOM_START_INDEX 3
+#define FIXED_ALLIES_INDEX 3
+#define LOCK_SPEED_INDEX 4
+#define RANDOM_START_INDEX 4
 
 #define SLI_METAL_ID 	9000
 #define SLI_ENERGY_ID	9001
@@ -68,8 +73,13 @@ END_EVENT_TABLE()
 
 
 BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, bool singleplayer ):
-  wxPanel( parent, -1 ), m_ui(ui), m_battle(battle), m_sp(singleplayer)
+  wxScrolledWindow( parent, -1 ), m_ui(ui), m_battle(battle), m_sp(singleplayer)
 {
+
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("battleoptionstab") );
+  #endif
+
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -97,7 +107,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_metal_sizer->Add( m_metal_lbl, 0, wxALL, 5 );
 
   m_metal_slider = new wxSlider( this, SLI_METAL_ID, 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
-  m_metal_slider->SetToolTip( _("The amount of metal each player starts with.") );
+  m_metal_slider->SetToolTip( TE(_("The amount of metal each player starts with.")) );
 
   m_metal_sizer->Add( m_metal_slider, 1, wxALL|wxEXPAND, 5 );
 
@@ -113,7 +123,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_energy_sizer->Add( m_energy_lbl, 0, wxALL, 5 );
 
   m_energy_slider = new wxSlider( this,SLI_ENERGY_ID , 1000, 0, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
-  m_energy_slider->SetToolTip( _("The amount of energy each player starts with.") );
+  m_energy_slider->SetToolTip( TE(_("The amount of energy each player starts with.")) );
 
   m_energy_sizer->Add( m_energy_slider, 1, wxALL|wxEXPAND, 5 );
 
@@ -128,7 +138,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_units_lbl = new wxStaticText( this, wxID_ANY, _("Max units"), wxDefaultPosition, wxDefaultSize, 0 );
   m_units_sizer->Add( m_units_lbl, 0, wxALL, 5 );
 
-  m_units_slider = new wxSlider( this, SLI_UNITS_ID, 500, 10, 5000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
+  m_units_slider = new wxSlider( this, SLI_UNITS_ID, 500, 10, 10000, wxDefaultPosition, wxDefaultSize, wxSL_BOTH|wxSL_VERTICAL|wxSL_LABELS );
   m_units_slider->SetToolTip( _("The maximum number of units allowed per player.") );
 
   m_units_sizer->Add( m_units_slider, 1, wxALL|wxEXPAND, 5 );
@@ -145,7 +155,8 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_options_checks->Append( _("Limit d-gun") );
   m_options_checks->Append( _("Ghosted buildings") );
   m_options_checks->Append( _("Diminishing metal makers") );
-  if ( m_sp ) m_options_checks->Append( _("Random start positions") );
+	m_options_checks->Append( _("Fixed Ingame Alliances") );
+  if ( m_sp ) m_options_checks->Append( _("Random start postisions") );
 
   m_options_box->Add( m_options_checks, 0, wxALL|wxEXPAND, 5 );
 
@@ -166,7 +177,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_allowed_sizer->Add( m_aloowed_lbl, 0, wxALL, 5 );
 
   m_allowed_list = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_MULTIPLE|wxLB_NEEDED_SB|wxLB_SORT );
-  m_allowed_list->SetToolTip( _("Units in this list will be available in the game.") );
+  m_allowed_list->SetToolTip( TE(_("Units in this list will be available in the game.")) );
 
   m_allowed_sizer->Add( m_allowed_list, 1, wxALL|wxEXPAND, 5 );
 
@@ -178,15 +189,15 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_mid_btn_sizer->Add( 0, 50, 0, wxEXPAND, 0 );
 
   m_restrict_btn = new wxButton( this, BOPTS_RESTRICT, _T(">"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  m_restrict_btn->SetToolTip( _("Disable selected units.") );
+  m_restrict_btn->SetToolTip( TE(_("Disable selected units.")) );
   m_mid_btn_sizer->Add( m_restrict_btn, 0, wxALL, 5 );
 
   m_allow_btn = new wxButton( this, BOPTS_ALLOW, _T("<"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  m_allow_btn->SetToolTip( _("Re-enable selected units.") );
+  m_allow_btn->SetToolTip( TE(_("Re-enable selected units.")) );
   m_mid_btn_sizer->Add( m_allow_btn, 0, wxALL, 5 );
 
   m_clear_btn = new wxButton( this, BOPTS_CLEARRES, _("Clear"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  m_clear_btn->SetToolTip( _("Enable all units.") );
+  m_clear_btn->SetToolTip( TE(_("Enable all units.")) );
 
   m_mid_btn_sizer->Add( m_clear_btn, 0, wxALL, 5 );
 
@@ -199,7 +210,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_restricted_sizer->Add( m_restricted_lbl, 0, wxALL, 5 );
 
   m_restrict_list = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_MULTIPLE|wxLB_NEEDED_SB|wxLB_SORT );
-  m_restrict_list->SetToolTip( _("Units in this list will not be available in the game.") );
+  m_restrict_list->SetToolTip( TE(_("Units in this list will not be available in the game.")) );
 
   m_restricted_sizer->Add( m_restrict_list, 1, wxALL|wxEXPAND, 5 );
 
@@ -211,27 +222,27 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_preset_sizer = new wxBoxSizer( wxHORIZONTAL );
 
   m_options_preset_sel = new wxComboBox( this, BOPTS_CHOSEPRES, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList() );
-  m_options_preset_sel->SetToolTip(_("Set name."));
+  m_options_preset_sel->SetToolTip(TE(_("Set name.")));
 
   m_preset_sizer->Add( m_options_preset_sel, 0, wxALL, 5 );
 
   m_load_btn = new wxButton( this, BOPTS_LOADPRES, _("Load..."), wxDefaultPosition, wxDefaultSize, 0 );
-  m_load_btn->SetToolTip( _("Load a saved set of options.") );
+  m_load_btn->SetToolTip( TE(_("Load a saved set of options.")) );
 
   m_preset_sizer->Add( m_load_btn, 0, wxALL, 5 );
 
   m_save_btn = new wxButton( this, BOPTS_SAVEPRES, _("Save..."), wxDefaultPosition, wxDefaultSize, 0 );
-  m_save_btn->SetToolTip( _("Save a set of options.") );
+  m_save_btn->SetToolTip( TE(_("Save a set of options.")) );
 
   m_preset_sizer->Add( m_save_btn, 0, wxALL, 5 );
 
   m_delete_btn = new wxButton( this, BOPTS_DELETEPRES, _("Delete..."), wxDefaultPosition, wxDefaultSize, 0 );
-  m_delete_btn->SetToolTip( _("Delete a set of options.") );
+  m_delete_btn->SetToolTip( TE(_("Delete a set of options.")) );
 
   m_preset_sizer->Add( m_delete_btn, 0, wxALL, 5 );
 
   m_default_btn = new wxButton( this, BOPTS_SETDEFAULTPRES, _("Set default..."), wxDefaultPosition, wxDefaultSize, 0 );
-  m_default_btn->SetToolTip( _("Use the current set of options as mod's default.") );
+  m_default_btn->SetToolTip( TE(_("Use the current set of options as mod's default.")) );
 
   m_preset_sizer->Add( m_default_btn, 0, wxALL, 5 );
 
@@ -241,6 +252,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
   m_main_sizer->Add( m_restr_box, 1, wxALL|wxEXPAND, 5 );
 
+  SetScrollRate( 3, 3 );
   this->SetSizer( m_main_sizer );
   this->Layout();
 
@@ -251,6 +263,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   UpdateBattle(  wxString::Format(_T("%d_maxunits"), EngineOption ) );
   UpdateBattle(  wxString::Format(_T("%d_ghostedbuildings"), EngineOption ) );
   UpdateBattle(  wxString::Format(_T("%d_diminishingmms"), EngineOption ) );
+	UpdateBattle(  wxString::Format(_T("%d_FixedAllies"), EngineOption ) );
 
   ReloadRestrictions();
 
@@ -276,7 +289,9 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
 BattleOptionsTab::~BattleOptionsTab()
 {
-
+  #ifndef HAVE_WX26
+  GetAui().manager->DetachPane( this );
+  #endif
 }
 
 
@@ -311,6 +326,7 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
     }
     else if ( key == _T("ghostedbuildings") ) m_options_checks->Check( GHOUSTED_INDEX, longval );
     else if ( key == _T("diminishingmms") ) m_options_checks->Check( DIM_MMS_INDEX, longval );
+		else if ( key == _T("FixedAllies") ) m_options_checks->Check( FIXED_ALLIES_INDEX, longval );
   }
   else if ( type == PrivateOptions )
   {
@@ -424,6 +440,10 @@ void BattleOptionsTab::OnOptsCheck( wxCommandEvent& event )
 
   m_battle.CustomBattleOptions().setSingleOption( _T("diminishingmms"), i2s(m_options_checks->IsChecked( DIM_MMS_INDEX )), EngineOption );
   m_battle.SendHostInfo( wxString::Format(_T("%d_diminishingmms"), EngineOption ) );
+
+  wxString val = wxString::Format( _T("%d"), m_options_checks->IsChecked( FIXED_ALLIES_INDEX ) );
+  m_battle.CustomBattleOptions().setSingleOption( _T("FixedAllies"), val, EngineOption );
+  m_battle.SendHostInfo( wxString::Format(_T("%d_FixedAllies"), EngineOption ) );
 
   if ( m_sp ) {
     if ( m_options_checks->IsChecked( RANDOM_START_INDEX ) )

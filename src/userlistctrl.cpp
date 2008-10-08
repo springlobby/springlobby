@@ -8,8 +8,8 @@ BEGIN_EVENT_TABLE( UserListctrl, CustomListCtrl )
   EVT_LIST_COL_CLICK( USERLIST, UserListctrl::OnColClick )
 END_EVENT_TABLE()
 
-UserListctrl::UserListctrl(wxWindow* parent, const wxString& name, bool highlight)
-  : CustomListCtrl( parent,USERLIST,wxDefaultPosition, wxDefaultSize,
+UserListctrl::UserListctrl(wxWindow* parent, const wxString& name, bool highlight,wxWindowID id)
+  : CustomListCtrl( parent,id,wxDefaultPosition, wxDefaultSize,
         wxSUNKEN_BORDER | wxLC_REPORT, name, highlight )
 {
     wxListItem col;
@@ -209,3 +209,9 @@ void UserListctrl::OnColClick( wxListEvent& event )
   Sort();
 }
 
+void UserListctrl::Clear()
+{
+    DeleteAllItems();
+    m_userdata.clear();
+    SelectNone();
+}

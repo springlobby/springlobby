@@ -161,7 +161,7 @@ wxString SpringUnitSync::GetSpringVersion()
 }
 
 
-bool SpringUnitSync::VersionSupports( GameFeature feature )
+double SpringUnitSync::_GetSpringVersion()
 {
   wxString ver = GetSpringVersion();
   double nver = 0;
@@ -181,9 +181,16 @@ bool SpringUnitSync::VersionSupports( GameFeature feature )
     nver = nver * 100;
   }
   std::setlocale(LC_NUMERIC, old_locale);
+  return nver;
+}
+
+
+bool SpringUnitSync::VersionSupports( GameFeature feature )
+{
   switch (feature) {
-    case GF_XYStartPos: return nver >= 76.0;
-    case USYNC_Sett_Handler: return nver >= 76.0;
+    case GF_XYStartPos:      return _GetSpringVersion() >= 76.0;
+    case USYNC_Sett_Handler: return _GetSpringVersion() >= 76.0;
+    case USYNC_GetInfoMap:   return susynclib()->HasGetInfoMap();
   }
   return false;
 }
@@ -226,6 +233,15 @@ bool SpringUnitSync::ModExists( const wxString& modname, const wxString& hash )
   return itor->second == hash;
 }
 
+bool SpringUnitSync::ModExistsCheckHash( const wxString& hash ) const
+{
+    LocalArchivesVector::const_iterator itor = m_mods_list.begin();
+    for ( ; itor != m_mods_list.end(); ++itor ) {
+        if ( itor->second == hash )
+            return true;
+    }
+    return false;
+}
 
 UnitSyncMod SpringUnitSync::GetMod( const wxString& modname )
 {
@@ -260,6 +276,18 @@ int SpringUnitSync::GetNumMaps()
 wxArrayString SpringUnitSync::GetMapList()
 {
   return m_map_array;
+}
+
+
+wxArrayString SpringUnitSync::GetModValidMapList( const wxString& modname )
+{
+  wxArrayString ret;
+  try
+  {
+    unsigned int mapcount = susynclib()->GetValidMapCount( modname );
+    for ( unsigned int i = 0; i < mapcount; i++ ) ret.Add( susynclib()->GetValidMapName( i ) );
+  } catch ( assert_exception& e ) {}
+  return ret;
 }
 
 
@@ -304,6 +332,8 @@ UnitSyncMap SpringUnitSync::GetMap( int index )
 UnitSyncMap SpringUnitSync::GetMapEx( int index )
 {
   UnitSyncMap m;
+
+  if ( index < 0 ) return m;
 
   m.name = m_map_array[index];
   m.hash = m_maps_list[m.name];
@@ -667,12 +697,11 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
       ASSERT_EXCEPTION( FileSize, _T("side image has size 0") );
     }
 
-    char* FileContent = new char [FileSize];
+    uninitialized_array<char> FileContent(FileSize);
     susynclib()->ReadFileVFS(ini, FileContent, FileSize);
     wxMemoryInputStream FileContentStream( FileContent, FileSize );
 
     cache.LoadFile( FileContentStream, wxBITMAP_TYPE_ANY, -1);
-    delete[] FileContent;
     cache.InitAlpha();
     for ( int x = 0; x < cache.GetWidth(); x++ )
       for ( int y = 0; y < cache.GetHeight(); y++ )
@@ -788,31 +817,68 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
 
   try
   {
-  ASSERT_EXCEPTION( wxFileExists( originalsizepath ), _T("File cached image does not exist") );
+    ASSERT_EXCEPTION( wxFileExists( originalsizepath ), _T("File cached image does not exist") );
 
-  img = wxImage( originalsizepath, wxBITMAP_TYPE_PNG );
-  ASSERT_EXCEPTION( img.Ok(), _T("Failed to load cache image") );
-
-  MapInfo mapinfo = _GetMapInfoEx( mapname );
-
-  wxSize image_size=MakeFit(wxSize(mapinfo.width,mapinfo.height),wxSize(width,height));
-  img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
-
-  } catch (...)
-  {
-    try
-    {
-
-    img = susynclib()->GetMinimap( mapname );
-
-    img.SaveFile( originalsizepath, wxBITMAP_TYPE_PNG );
+    img = wxImage( originalsizepath, wxBITMAP_TYPE_PNG );
+    ASSERT_EXCEPTION( img.Ok(), _T("Failed to load cache image") );
 
     MapInfo mapinfo = _GetMapInfoEx( mapname );
 
-    wxSize image_size=MakeFit(wxSize(mapinfo.width,mapinfo.height),wxSize(width,height));
+    wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
     img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+  }
+  catch (...)
+  {
+    try
+    {
+      img = susynclib()->GetMinimap( mapname );
+
+      img.SaveFile( originalsizepath, wxBITMAP_TYPE_PNG );
+
+      MapInfo mapinfo = _GetMapInfoEx( mapname );
+
+      wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
+      img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
     }
-    catch(...)
+    catch (...)
+    {
+      img = wxImage( 1, 1 );
+    }
+  }
+
+  return img;
+}
+
+wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int height )
+{
+  wxLogDebugFunc( mapname );
+
+  wxString originalsizepath = GetFileCachePath( mapname, _T(""), false ) + _T(".metalmap.png");
+
+  wxImage img;
+
+  try
+  {
+    ASSERT_EXCEPTION( wxFileExists( originalsizepath ), _T("File cached image does not exist") );
+
+    img = wxImage( originalsizepath, wxBITMAP_TYPE_PNG );
+    ASSERT_EXCEPTION( img.Ok(), _T("Failed to load cache image") );
+
+    wxSize image_size = MakeFit(wxSize(img.GetWidth(), img.GetHeight()), wxSize(width, height));
+    img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+  }
+  catch (...)
+  {
+    try
+    {
+      img = susynclib()->GetMetalmap( mapname );
+
+      img.SaveFile( originalsizepath, wxBITMAP_TYPE_PNG );
+
+      wxSize image_size = MakeFit(wxSize(img.GetWidth(), img.GetHeight()), wxSize(width, height));
+      img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+    }
+    catch (...)
     {
       img = wxImage( 1, 1 );
     }
@@ -961,6 +1027,27 @@ void SpringUnitSync::SetCacheFile( const wxString& path, const wxArrayString& da
   file.Close();
 }
 
+wxArrayString SpringUnitSync::GetReplayList()
+{
+  wxLogDebug( _T("") );
+  LOCK_UNITSYNC;
+
+  if ( !IsLoaded() ) return wxArrayString();
+
+  int ini = susynclib()->InitFindVFS( _T("demos/*.sdf") );
+
+  wxString FilePath ;
+  wxArrayString ret;
+
+  do
+  {
+    ini = susynclib()->FindFilesVFS ( ini, FilePath );
+    wxString FileName = wxString ( FilePath, wxConvUTF8 );
+    ret.Add ( FileName );
+  } while (ini != 0);
+
+  return ret;
+}
 
 bool SpringUnitSync::FileExists( const wxString& name )
 {

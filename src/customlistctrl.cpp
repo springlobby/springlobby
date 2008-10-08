@@ -29,6 +29,7 @@ BEGIN_EVENT_TABLE(CustomListCtrl, ListBaseType)
   EVT_LIST_DELETE_ITEM     ( wxID_ANY, CustomListCtrl::OnDeselected )
 END_EVENT_TABLE()
 
+
 //wxTipWindow* CustomListCtrl::m_tipwindow = 0;
 CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style,wxString name,
                                 bool highlight, UserActions::ActionType hlaction ):
@@ -239,7 +240,7 @@ void CustomListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
   else
   {
     m_tiptimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-    m_tiptext = m_colinfovec[coloumn].first;
+    m_tiptext = TE(m_colinfovec[coloumn].first);
   }
 }
 

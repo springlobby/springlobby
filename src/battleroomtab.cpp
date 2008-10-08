@@ -39,6 +39,10 @@
 #include "settings.h"
 #include "Helper/colorbutton.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
   EVT_BUTTON ( BROOM_START, BattleRoomTab::OnStart )
@@ -65,8 +69,12 @@ END_EVENT_TABLE()
 const wxString team_choices[] = { _T("1"), _T("2"), _T("3"), _T("4"), _T("5"), _T("6"), _T("7"), _T("8"), _T("9"), _T("10"), _T("11"), _T("12"), _T("13"), _T("14"), _T("15"), _T("16") };
 
 
-BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPanel( parent, -1 ),m_ui(ui), m_battle(battle)
+BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
+    wxScrolledWindow( parent, -1 ),m_ui(ui), m_battle(battle)
 {
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("battleroomtab") );
+  #endif
   // Create all widgets
   m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
 
@@ -74,13 +82,13 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
   m_player_panel = new wxPanel( m_splitter , -1 );
   m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
-  m_team_sel->SetToolTip(_("Players with the same team number share control of their units."));
+  m_team_sel->SetToolTip(TE(_("Players with the same team number share control of their units.")));
   m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
-  m_ally_sel->SetToolTip(_("Players with the same ally number work together to achieve victory."));
+  m_ally_sel->SetToolTip(TE(_("Players with the same ally number work together to achieve victory.")));
   m_color_sel = new ColorButton( m_player_panel, BROOM_COLOURSEL, myself.colour, wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_color_sel->SetToolTip(_("Select a color to identify your units in-game"));
+  m_color_sel->SetToolTip(TE(_("Select a color to identify your units in-game")));
   m_side_sel = new wxBitmapComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_side_sel->SetToolTip(_("Select your faction"));
+  m_side_sel->SetToolTip(TE(_("Select your faction")));
 
   try {
     int count = usync().GetSideCount( m_battle.GetHostModName() );
@@ -102,39 +110,38 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   m_tidal_lbl = new wxStaticText( this, -1, _T("") );
 
   m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true, false );
-  m_minimap->SetToolTip(_("A preview of the selected map.  You can see the starting positions, or (if set) starting boxes."));
+  m_minimap->SetToolTip(TE(_("A preview of the selected map.  You can see the starting positions, or (if set) starting boxes.")));
 
   m_players = new BattleroomListCtrl( m_player_panel, battle, m_ui );
   m_chat = new ChatPanel( m_splitter, m_ui, battle );
-  //m_chat->SetToolTip(_T("This chat is exlusivly for participants of this battle"));
 
   m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
   m_leave_btn = new wxButton( this, BROOM_LEAVE, _("Leave"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_leave_btn->SetToolTip(_("Leave the battle and return to the battle list"));
+  m_leave_btn->SetToolTip(TE(_("Leave the battle and return to the battle list")));
   m_start_btn = new wxButton( this, BROOM_START, _("Start"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_start_btn->SetToolTip(_("Start the battle"));
+  m_start_btn->SetToolTip(TE(_("Start the battle")));
   m_addbot_btn = new wxButton( this, BROOM_ADDBOT, _("Add Bot..."), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_addbot_btn->SetToolTip(_("Add a computer-controlled player to the game"));
+  m_addbot_btn->SetToolTip(TE(_("Add a computer-controlled player to the game")));
 
   m_fix_colours_btn = new wxButton( this, BROOM_FIXCOLOURS, _("Fix colours"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_fix_colours_btn->SetToolTip(_("Make player colors unique"));
+  m_fix_colours_btn->SetToolTip(TE(_("Make player colors unique")));
 
   m_balance_btn = new wxButton( this, BROOM_BALANCE, _("Balance"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_balance_btn->SetToolTip(_("Automatically balance players into two or more alliances"));
+  m_balance_btn->SetToolTip(TE(_("Automatically balance players into two or more alliances")));
 
   m_lock_chk = new wxCheckBox( this, BROOM_LOCK, _("Locked"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_lock_chk->SetToolTip(_("Prevent additional players from joining the battle"));
+  m_lock_chk->SetToolTip(TE(_("Prevent additional players from joining the battle")));
   m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_spec_chk->SetToolTip(_("Spectate (watch) the battle instead of playing"));
+  m_spec_chk->SetToolTip(TE(_("Spectate (watch) the battle instead of playing")));
   m_ready_chk = new wxCheckBox( m_player_panel, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_ready_chk->SetToolTip(_("Click this if you are content with the battle settings."));
+  m_ready_chk->SetToolTip(TE(_("Click this if you are content with the battle settings.")));
   m_autohost_chk = new wxCheckBox( this, BROOM_AUTOHOST, _("Autohost"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_autohost_chk->SetToolTip(_("Toggle autohost mode.  This allows players to control your battle using commands like '!balance' and '!start'."));
+  m_autohost_chk->SetToolTip(TE(_("Toggle autohost mode.  This allows players to control your battle using commands like '!balance' and '!start'.")));
 
 
   m_options_preset_sel = new wxComboBox( this, BROOM_PRESETSEL, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
-  m_options_preset_sel->SetToolTip(_("Load battle preset"));
+  m_options_preset_sel->SetToolTip(TE(_("Load battle preset")));
 
   m_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_NO_HEADER|wxLC_REPORT );
   m_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
@@ -228,23 +235,23 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   if ( !IsHosted() )
     {
       m_options_preset_sel->Disable();
-      m_options_preset_sel->SetToolTip(_("Only the host can change the game options"));
+      m_options_preset_sel->SetToolTip(TE(_("Only the host can change the game options")));
 
       m_start_btn->Disable();
-      m_start_btn->SetToolTip(_("Only the host can start the battle."));
+      m_start_btn->SetToolTip(TE(_("Only the host can start the battle.")));
 
 
       m_balance_btn->Disable();
-      m_balance_btn->SetToolTip(_("Only the host can balance alliances."));
+      m_balance_btn->SetToolTip(TE(_("Only the host can balance alliances.")));
 
       m_fix_colours_btn->Disable();
-      m_fix_colours_btn->SetToolTip(_("Only the host can fix player colours."));
+      m_fix_colours_btn->SetToolTip(TE(_("Only the host can fix player colours.")));
 
       m_lock_chk->Disable();
-      m_lock_chk->SetToolTip(_("Only the host can lock the game."));
+      m_lock_chk->SetToolTip(TE(_("Only the host can lock the game.")));
 
       m_autohost_chk->Disable();
-      m_autohost_chk->SetToolTip(_("Only the host can toggle autohost mode."));
+      m_autohost_chk->SetToolTip(TE(_("Only the host can toggle autohost mode.")));
     }
   else
     {
@@ -255,6 +262,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   UpdateBattleInfo( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
   UpdateBattleInfo();
 
+  SetScrollRate( 3, 3 );
   SetSizer( m_main_sizer );
   Layout();
   unsigned int widthfraction = m_opts_list->GetClientSize().GetWidth() / 3;
@@ -266,7 +274,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
 BattleRoomTab::~BattleRoomTab()
 {
-
+  #ifndef HAVE_WX26
+  GetAui().manager->DetachPane( this );
+  #endif
 }
 
 

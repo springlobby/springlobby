@@ -8,6 +8,7 @@ class Channel;
 class User;
 class wxCommandEvent;
 class wxListbookEvent;
+class wxAuiNotebookEvent;
 class MainChatTab;
 class MainJoinBattleTab;
 class MainSinglePlayerTab;
@@ -15,6 +16,7 @@ class MainSinglePlayerTab;
 class MainTorrentTab;
 #endif
 class wxBoxSizer;
+class wxAuiNotebook;
 class wxListbook;
 class MainOptionsTab;
 class wxBitmap;
@@ -24,6 +26,7 @@ class settings_frame;
 class wxMenuItem;
 class wxMenuBar;
 class wxMenu;
+class ReplayTab;
 class AutojoinChannelDialog;
 
 // FIXME shouldn't copy this here
@@ -78,15 +81,19 @@ class MainWindow : public wxFrame
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
     void OnShowSettingsPP( wxCommandEvent& event );
-    void OnShowToolTips( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
 
 
-    void OnTabsChanged( wxListbookEvent& event );
+    #ifdef HAVE_WX26
+    void OnTabsChanged( wxNotebookEvent& event );
+    #else
+    void OnTabsChanged( wxAuiNotebookEvent& event );
+    #endif
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab();
     MainSinglePlayerTab& GetSPTab();
+    ReplayTab& GetReplayTab();
     #ifndef NO_TORRENT_SYSTEM
     MainTorrentTab& GetTorrentTab();
     #endif
@@ -104,7 +111,11 @@ class MainWindow : public wxFrame
     wxMenu* m_menuTools;
 
     wxBoxSizer* m_main_sizer;
+    #ifndef HAVE_WX26
+    wxAuiNotebook* m_func_tabs;
+    #else
     wxListbook* m_func_tabs;
+    #endif
     wxNotebookPage* m_chat_page;
 
     MainChatTab* m_chat_tab;
@@ -120,6 +131,7 @@ class MainWindow : public wxFrame
     wxBitmap* m_options_icon;
     wxBitmap* m_sp_icon;
     wxBitmap* m_downloads_icon;
+    wxBitmap* m_replay_icon;
     wxBitmap* m_select_image;
 
     wxImageList* m_func_tab_images;
@@ -127,6 +139,7 @@ class MainWindow : public wxFrame
     settings_frame* se_frame;
     bool se_frame_active;
 
+    ReplayTab* m_replay_tab;
     DECLARE_EVENT_TABLE()
 };
 
@@ -150,7 +163,6 @@ enum
     MENU_VERSION,
     MENU_START_TORRENT,
     MENU_STOP_TORRENT,
-    MENU_SHOW_TOOLTIPS,
     MENU_AUTOJOIN_CHANNELS
 
 };

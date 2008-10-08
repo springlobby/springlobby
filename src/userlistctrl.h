@@ -20,7 +20,7 @@ class UserListctrl : public CustomListCtrl
         typedef UserDataMap::iterator UserDataMapIter;
 
     public:
-        UserListctrl( wxWindow* parent, const wxString& name = _T("usergrouplist"), bool highlight = false  );
+        UserListctrl( wxWindow* parent, const wxString& name = _T("usergrouplist"), bool highlight = false,wxWindowID id=USERLIST  );
         virtual ~UserListctrl();
 
         void AddUser( const UserData userdata );
@@ -31,6 +31,8 @@ class UserListctrl : public CustomListCtrl
         wxArrayString GetUserNicks( ) const;
         void SetColumnWidths();
         void OnColClick( wxListEvent& event );
+        //! delete both all items and associated data, handle with care!
+        void Clear();
 
     protected:
         UserDataMap m_userdata;
@@ -50,7 +52,7 @@ class UserListctrl : public CustomListCtrl
         static int wxCALLBACK ComparePlayercountryDOWN(long item1, long item2, long sortData);
 
         enum {
-            USERLIST = wxID_HIGHEST
+            USERLIST = 2312
         };
 
         struct {

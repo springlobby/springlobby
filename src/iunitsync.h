@@ -73,10 +73,10 @@ struct UnitSyncMap
   MapInfo info;
 };
 
-typedef int GameFeature;
-enum {
+enum GameFeature {
   GF_XYStartPos = 1,
-  USYNC_Sett_Handler = 2
+  USYNC_Sett_Handler = 2,
+  USYNC_GetInfoMap = 3
 };
 
 struct GameOptions
@@ -114,6 +114,10 @@ class IUnitSync
      */
     virtual bool ModExists( const wxString& modname, const wxString& hash ) = 0;
 
+    /** Check by hash string only if a mod exists.
+     */
+    virtual bool ModExistsCheckHash( const wxString& hash ) const = 0;
+
     /** Get a mod by name.
      */
     virtual UnitSyncMod GetMod( const wxString& modname ) = 0;
@@ -137,6 +141,7 @@ class IUnitSync
 
     virtual int GetNumMaps() = 0;
     virtual wxArrayString GetMapList() = 0;
+    virtual wxArrayString GetModValidMapList( const wxString& modname ) = 0;
     virtual bool MapExists( const wxString& mapname ) = 0;
     virtual bool MapExists( const wxString& mapname, const wxString& hash ) = 0;
 
@@ -149,6 +154,7 @@ class IUnitSync
 
     virtual int GetMapIndex( const wxString& name ) = 0;
     virtual wxImage GetMinimap( const wxString& mapname, int width, int height ) = 0;
+    virtual wxImage GetMetalmap( const wxString& mapname, int width, int height ) = 0;
 
     virtual int GetSideCount( const wxString& modname ) = 0;
     virtual wxString GetSideName( const wxString& modname, int index ) = 0;
@@ -168,6 +174,9 @@ class IUnitSync
     virtual wxArrayString GetAIList( const wxString& modname ) = 0;
 
     virtual bool ReloadUnitSyncLib() = 0;
+
+
+    virtual wxArrayString GetReplayList() = 0;
 
     virtual void SetSpringDataPath( const wxString& path ) = 0;
     virtual wxString GetSpringDataPath() = 0;

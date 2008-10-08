@@ -3,7 +3,7 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 #include <map>
 #include "torrentwrapper.h"
 typedef std::map<int,TorrentInfos> map_infos;
@@ -18,7 +18,7 @@ class wxBoxSizer;
 class FileListDialog;
 class ColorButton;
 
-class MainTorrentTab: public wxPanel
+class MainTorrentTab: public wxScrolledWindow
 {
 	public:
 

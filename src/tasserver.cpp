@@ -1322,14 +1322,13 @@ void TASServer::SendHostInfo( HostInfo update )
         wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( MapOption );
         for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
         {
-            cmd << _T("game\\mapoptions\\") << it->first + _T("=") << it->second.second << _T("\t");
+            cmd << _T("game/mapoptions/") << it->first + _T("=") << it->second.second << _T("\t");
         }
         wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( ModOption );
         for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
         {
-            cmd << _T("game\\modoptions\\") << it->first << _T("=") << it->second.second << _T("\t");
+            cmd << _T("game/modoptions/") << it->first << _T("=") << it->second.second << _T("\t");
         }
-/// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
         wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( EngineOption );
         for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
         {
@@ -1342,9 +1341,14 @@ void TASServer::SendHostInfo( HostInfo update )
     if ( (update & HI_StartRects) > 0 )   // Startrects should be updated.
     {
 
-        for ( unsigned int i = 16; i < battle.GetNumRects(); i++ ) battle.RemoveStartRect( i ); /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
+        for ( unsigned int i = 16; i < battle.GetNumRects(); i++ )  /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
+        {
+           battle.RemoveStartRect( i );
+           battle.StartRectRemoved( i );
+        }
 
-        for ( unsigned int i = 0; i < battle.GetNumRects(); i++ )   // Loop through all, and remove updated or deleted.
+        unsigned int numrects =  battle.GetNumRects();
+        for ( unsigned int i = 0; i < numrects; i++ )   // Loop through all, and remove updated or deleted.
         {
             if ( i >= 16 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
             wxString cmd;
@@ -1408,11 +1412,11 @@ void TASServer::SendHostInfo( const wxString& Tag )
     wxString key = Tag.AfterFirst( '_' );
     if ( type == MapOption )
     {
-        cmd << _T("game\\mapoptions\\") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, MapOption );
+        cmd << _T("game/mapoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, MapOption );
     }
     else if ( type == ModOption )
     {
-        cmd << _T("game\\modoptions\\") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, ModOption );
+        cmd << _T("game/modoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, ModOption );
     }
     else if ( type == EngineOption )
     {

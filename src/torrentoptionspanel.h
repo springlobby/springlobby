@@ -3,7 +3,7 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 
 class wxCheckBox;
 class wxTextCtrl;
@@ -13,7 +13,7 @@ class wxRadioButton;
 class wxButton;
 class wxStaticText;
 
-class TorrentOptionsPanel: public wxPanel
+class TorrentOptionsPanel: public wxScrolledWindow
 {
     public:
         TorrentOptionsPanel( wxWindow* parent, Ui& ui);

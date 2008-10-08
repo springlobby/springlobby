@@ -91,13 +91,25 @@ void UserActions::Init()
 
 void UserActions::UpdateUI()
 {
-    ui().mw().GetJoinTab().GetBattleListTab().UpdateHighlights();
-    ui().mw().GetChatTab().UpdateNicklistHighlights();
+    try
+    {
+      ui().mw().GetJoinTab().GetBattleListTab().UpdateHighlights();
+    } catch(...){}
+
+    try
+    {
+      ui().mw().GetChatTab().UpdateNicklistHighlights();
+    } catch(...){}
+
     try
     {
       ui().mw().GetJoinTab().GetBattleRoomTab().UpdateHighlights();
     } catch(...){}
-    ui().mw().GetOptionsTab().GetGroupOptionsPanel().Update();
+
+    try
+    {
+      ui().mw().GetOptionsTab().GetGroupOptionsPanel().Update();
+    } catch(...){}
 }
 
 wxSortedArrayString UserActions::GetGroupNames() const

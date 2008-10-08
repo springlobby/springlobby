@@ -431,7 +431,8 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/ingame") )
     {
-        m_serv->RequestInGameTime( _T("") );
+        wxString nick = cmd.AfterFirst(' ');
+        m_serv->RequestInGameTime( nick );
         return true;
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/help") )
@@ -1178,5 +1179,11 @@ void Ui::ReloadPresetList()
         mw().GetJoinTab().ReloadPresetList();
     }
     catch (...) {}
+}
+
+
+void Ui::WatchReplay ( wxString& filename )
+{
+    m_spring->RunReplay( filename );
 }
 

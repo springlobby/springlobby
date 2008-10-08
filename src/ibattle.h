@@ -162,7 +162,7 @@ class IBattle
     UnitSyncMap m_local_map;
     UnitSyncMod m_local_mod;
     UnitSyncMap m_host_map;
-    UnitSyncMap m_host_mod;
+    UnitSyncMod m_host_mod;
 
     wxArrayString m_units;
 

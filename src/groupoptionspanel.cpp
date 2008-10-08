@@ -330,4 +330,5 @@ void GroupOptionsPanel::OnRemoveUser( wxCommandEvent& event )
 void GroupOptionsPanel::Update()
 {
   ReloadGroupsList();
+  ReloadUsersList();
 }

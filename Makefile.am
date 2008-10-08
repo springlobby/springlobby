@@ -488,6 +488,15 @@ springlobby_SOURCES = \
 	src/mutexwrapper.h \
 	src/nicklistctrl.cpp \
 	src/nicklistctrl.h \
+	src/replay/replaytab.h \
+	src/replay/replaytab.cpp \	
+	src/replay/replayfilter.h \
+	src/replay/replayfilter.cpp \
+	src/replay/replaylist.cpp \
+	src/replay/replaylist.h \
+	src/replay/replaylistctrl.h \
+	src/replay/replaylistctrl.cpp \
+	src/replay/replaylistfiltervalues.h \
 	src/sdlsound.h \
 	src/sdlsound.cpp \
 	src/server.cpp \
@@ -582,6 +591,8 @@ springlobby_SOURCES = \
 	src/images/rank_unknown.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
+	src/images/replay_icon.png.h \
+	src/images/replay_icon_text.png.h \
 	src/images/downloads_icon.png.h \
 	src/images/single_player_icon.png.h \
 	src/images/downloads_icon_text.png.h \
@@ -885,6 +896,8 @@ springlobby_SOURCES = \
 	src/Helper/colorbutton.h \
 	src/lobbyoptionstab.h \
 	src/lobbyoptionstab.cpp \
+	src/auimanager.h \
+	src/auimanager.cpp \
 	src/updater/updater.h \
 	src/updater/updater.cpp \
 	src/updater/exedownloader.h \
@@ -892,6 +905,7 @@ springlobby_SOURCES = \
 	src/usermenu.h \
 	src/thread.cpp \
 	src/thread.h
+
 
 
 if USE_WINDRES	
@@ -942,8 +956,6 @@ springlobby_SOURCES += \
 	src/settings++/helpmenufunctions.cpp 
 
 springsettings_SOURCES = \
-	src/utils.cpp \
-	src/utils.h \
 	src/crashreport.cpp \
 	src/crashreport.h \
 	src/spinctld.h \

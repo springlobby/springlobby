@@ -31,6 +31,11 @@
 #include "server.h"
 #include "settings.h"
 
+
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 BEGIN_EVENT_TABLE(BattleMapTab, wxPanel)
 
   EVT_CHOICE( BMAP_MAP_SEL, BattleMapTab::OnMapSelect )
@@ -40,8 +45,13 @@ END_EVENT_TABLE()
 
 
 BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
-  wxPanel( parent, -1 ), m_ui(ui), m_battle(battle)
+  wxScrolledWindow( parent, -1 ), m_ui(ui), m_battle(battle)
 {
+
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("battlemaptab") );
+  #endif
+
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   wxBoxSizer* m_map_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -105,12 +115,16 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
   //m_map_combo->Enable( m_battle.IsFounderMe() );
   m_start_radios->Enable( m_battle.IsFounderMe() );
-
+  SetScrollRate( 3, 3);
+  Layout();
 }
 
 
 BattleMapTab::~BattleMapTab()
 {
+  #ifndef HAVE_WX26
+  GetAui().manager->DetachPane( this );
+  #endif
 }
 
 
