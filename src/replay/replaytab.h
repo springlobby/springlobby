@@ -61,6 +61,8 @@ class ReplayTab : public wxPanel
         //! does nothing yet
     void SetFilterActiv(bool activ);
 
+    void Deselect();
+
   protected:
     ReplayList* m_replays;
     ReplayListFilter* m_filter;

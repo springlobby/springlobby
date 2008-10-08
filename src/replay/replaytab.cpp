@@ -195,8 +195,7 @@ void ReplayTab::RemoveReplay( Replay& replay ) {
         if ( replay.id == (int)m_replay_listctrl->GetItemData( i ) ) {
             m_replay_listctrl->DeleteItem( i );
             if ( m_replay_listctrl->GetSelectedIndex() == i ){
-                m_replay_listctrl->SetSelectedIndex(-1);
-                m_sel_replay_id = -1;
+                Deselect();
             }
             break;
         }
@@ -252,7 +251,7 @@ void ReplayTab::UpdateReplay( Replay& replay, const int index )
 
 
 void ReplayTab::RemoveAllReplays() {
-  m_sel_replay_id = 0;
+  m_sel_replay_id = -1;
 
   m_replay_listctrl->DeleteAllItems();
 }
@@ -328,8 +327,10 @@ void ReplayTab::OnDelete( wxCommandEvent& event )
     if ( !m_replays->DeleteReplay( m_sel_replay_id ) )
         customMessageBoxNoModal(SL_MAIN_ICON, _("Could not delete Replay: ") + fn,
             _("Error") );
-    else
+    else{
         RemoveReplay( rep );
+        Deselect();
+    }
 }
 
 void ReplayTab::OnFilterActiv( wxCommandEvent& event )
@@ -341,9 +342,7 @@ void ReplayTab::OnSelect( wxListEvent& event )
 {
     wxLogDebugFunc( _T("") );
     if ( event.GetIndex() == -1 ) {
-        m_sel_replay_id = 0;
-        m_watch_btn->Enable( false );
-        m_delete_btn->Enable( false );
+        Deselect();
     } else {
         m_watch_btn->Enable( true );
         m_delete_btn->Enable( true );
@@ -364,6 +363,14 @@ void ReplayTab::OnSelect( wxListEvent& event )
             m_players->AddUser( ud );
         }
     }
+}
+
+void ReplayTab::Deselect()
+{
+    m_sel_replay_id = -1;
+    m_replay_listctrl->SetSelectedIndex(-1);
+    m_watch_btn->Enable( false );
+    m_delete_btn->Enable( false );
 }
 
 void ReplayTab::ReloadList()

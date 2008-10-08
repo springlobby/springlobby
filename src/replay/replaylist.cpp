@@ -14,9 +14,9 @@
 #include "../tdfcontainer.h"
 #include "replaytab.h"
 
-const unsigned int replay_bulk_limit = 200;
-const unsigned int replay_chunk_size = 200;
-const unsigned int timer_interval = 500; //miliseconds
+const unsigned int replay_bulk_limit = 300;
+const unsigned int replay_chunk_size = 100;
+const unsigned int timer_interval = 300; //miliseconds
 
 BEGIN_EVENT_TABLE(ReplayList,wxEvtHandler)
     	EVT_TIMER(wxID_ANY, ReplayList::OnTimer)
