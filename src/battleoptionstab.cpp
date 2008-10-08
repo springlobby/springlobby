@@ -40,8 +40,9 @@
 #define LIMIT_DGUN_INDEX 0
 #define GHOUSTED_INDEX  1
 #define DIM_MMS_INDEX 2
-#define LOCK_SPEED_INDEX 3
-#define RANDOM_START_INDEX 3
+#define FIXED_ALLIES_INDEX 3
+#define LOCK_SPEED_INDEX 4
+#define RANDOM_START_INDEX 4
 
 #define SLI_METAL_ID 	9000
 #define SLI_ENERGY_ID	9001
@@ -145,7 +146,8 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   m_options_checks->Append( _("Limit d-gun") );
   m_options_checks->Append( _("Ghosted buildings") );
   m_options_checks->Append( _("Diminishing metal makers") );
-  if ( m_sp ) m_options_checks->Append( _("Random start positions") );
+	m_options_checks->Append( _("Fixed Ingame Alliances") );
+  if ( m_sp ) m_options_checks->Append( _("Random start postisions") );
 
   m_options_box->Add( m_options_checks, 0, wxALL|wxEXPAND, 5 );
 
@@ -251,6 +253,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   UpdateBattle(  wxString::Format(_T("%d_maxunits"), EngineOption ) );
   UpdateBattle(  wxString::Format(_T("%d_ghostedbuildings"), EngineOption ) );
   UpdateBattle(  wxString::Format(_T("%d_diminishingmms"), EngineOption ) );
+	UpdateBattle(  wxString::Format(_T("%d_FixedAllies"), EngineOption ) );
 
   ReloadRestrictions();
 
@@ -311,6 +314,7 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
     }
     else if ( key == _T("ghostedbuildings") ) m_options_checks->Check( GHOUSTED_INDEX, longval );
     else if ( key == _T("diminishingmms") ) m_options_checks->Check( DIM_MMS_INDEX, longval );
+		else if ( key == _T("FixedAllies") ) m_options_checks->Check( FIXED_ALLIES_INDEX, longval );
   }
   else if ( type == PrivateOptions )
   {
@@ -424,6 +428,10 @@ void BattleOptionsTab::OnOptsCheck( wxCommandEvent& event )
 
   m_battle.CustomBattleOptions().setSingleOption( _T("diminishingmms"), i2s(m_options_checks->IsChecked( DIM_MMS_INDEX )), EngineOption );
   m_battle.SendHostInfo( wxString::Format(_T("%d_diminishingmms"), EngineOption ) );
+
+  val = wxString::Format( _T("%d"), m_options_checks->IsChecked( FIXED_ALLIES_INDEX ) );
+  m_battle.CustomBattleOptions()->setSingleOption( _T("FixedAllies"), val, EngineOption );
+  m_battle.SendHostInfo( wxString::Format(_T("%d_FixedAllies"), EngineOption ) );
 
   if ( m_sp ) {
     if ( m_options_checks->IsChecked( RANDOM_START_INDEX ) )
