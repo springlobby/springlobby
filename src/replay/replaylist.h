@@ -80,6 +80,8 @@ class ReplayList : public wxEvtHandler
 
     void OnTimer(wxTimerEvent& event);
 
+    void RemoveAll();
+
   protected:
 
     bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret );
