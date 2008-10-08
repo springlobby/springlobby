@@ -168,7 +168,6 @@ wxString ReplayList::GetScriptFromReplay ( const wxString& ReplayPath )
 
 }
 
-//BattleOptions GetBattleOptsFromScript( const wxString& script_ )
 OfflineBattle ReplayList::GetBattleFromScript( const wxString& script_ )
 {
     OfflineBattle battle;
@@ -182,13 +181,11 @@ OfflineBattle ReplayList::GetBattleFromScript( const wxString& script_ )
         wxString modname = replayNode->GetString( _T("GameType") );
         wxString modhash    = replayNode->GetString( _T("ModHash") );
         battle.SetHostMod( modname, modhash );
-//        battle.LoadMod();
 
         //don't have the maphash, what to do?
         //ui download function works with mapname if hash is empty, so works for now
         opts.mapname    = replayNode->GetString( _T("Mapname") );
         battle.SetHostMap( opts.mapname, wxEmptyString );
-//        battle.LoadMap();
 
         opts.ip         = replayNode->GetString( _T("HostIP") );
         opts.port       = replayNode->GetInt  ( _T("HostPort"), DEFAULT_EXTERNAL_UDP_SOURCE_PORT );
