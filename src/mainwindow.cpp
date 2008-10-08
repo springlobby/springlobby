@@ -194,7 +194,7 @@ MainWindow::MainWindow( Ui& ui ) :
 #endif
 #endif
 
-  m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 2 );
+  m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 0 );
 
   SetSizer( m_main_sizer );
 
