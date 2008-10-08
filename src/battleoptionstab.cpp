@@ -441,8 +441,8 @@ void BattleOptionsTab::OnOptsCheck( wxCommandEvent& event )
   m_battle.CustomBattleOptions().setSingleOption( _T("diminishingmms"), i2s(m_options_checks->IsChecked( DIM_MMS_INDEX )), EngineOption );
   m_battle.SendHostInfo( wxString::Format(_T("%d_diminishingmms"), EngineOption ) );
 
-  val = wxString::Format( _T("%d"), m_options_checks->IsChecked( FIXED_ALLIES_INDEX ) );
-  m_battle.CustomBattleOptions()->setSingleOption( _T("FixedAllies"), val, EngineOption );
+  wxString val = wxString::Format( _T("%d"), m_options_checks->IsChecked( FIXED_ALLIES_INDEX ) );
+  m_battle.CustomBattleOptions().setSingleOption( _T("FixedAllies"), val, EngineOption );
   m_battle.SendHostInfo( wxString::Format(_T("%d_FixedAllies"), EngineOption ) );
 
   if ( m_sp ) {
