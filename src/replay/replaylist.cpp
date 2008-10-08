@@ -274,3 +274,9 @@ bool ReplayList::DeleteReplay( replay_id_t const& id )
     }
     return false;
 }
+
+void ReplayList::RemoveAll()
+{
+    m_replays.clear();
+    m_replay_tab.RemoveAllReplays();
+}
