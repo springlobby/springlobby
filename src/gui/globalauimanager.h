@@ -1,0 +1,8 @@
+#ifndef SPRINGLOBBY_HEADERGUARD_GLOBALAUIMANAGER_H
+#define SPRINGLOBBY_HEADERGUARD_GLOBALAUIMANAGER_H
+
+#include <wx/aui/aui.h>
+
+static wxAuiManager* m_global_aui_mngr = 0;
+
+#endif // SPRINGLOBBY_HEADERGUARD_GLOBALAUIMANAGER_H

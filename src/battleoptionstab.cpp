@@ -37,6 +37,10 @@
 #include "settings.h"
 #include "settings++/custom_dialogs.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 #define LIMIT_DGUN_INDEX 0
 #define GHOUSTED_INDEX  1
 #define DIM_MMS_INDEX 2
@@ -68,8 +72,13 @@ END_EVENT_TABLE()
 
 
 BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, bool singleplayer ):
-  wxPanel( parent, -1 ), m_ui(ui), m_battle(battle), m_sp(singleplayer)
+  wxScrolledWindow( parent, -1 ), m_ui(ui), m_battle(battle), m_sp(singleplayer)
 {
+
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("battleoptionstab") );
+  #endif
+
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -241,6 +250,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
   m_main_sizer->Add( m_restr_box, 1, wxALL|wxEXPAND, 5 );
 
+  SetScrollRate( 3, 3 );
   this->SetSizer( m_main_sizer );
   this->Layout();
 
@@ -276,7 +286,9 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
 BattleOptionsTab::~BattleOptionsTab()
 {
-
+  #ifndef HAVE_WX26
+  GetAui().manager->DetachPane( this );
+  #endif
 }
 
 

@@ -363,4 +363,3 @@ int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const 
     }
 }
 
-

@@ -8,6 +8,7 @@ class Channel;
 class User;
 class wxCommandEvent;
 class wxListbookEvent;
+class wxAuiNotebookEvent;
 class MainChatTab;
 class MainJoinBattleTab;
 class MainSinglePlayerTab;
@@ -15,6 +16,7 @@ class MainSinglePlayerTab;
 class MainTorrentTab;
 #endif
 class wxBoxSizer;
+class wxAuiNotebook;
 class wxListbook;
 class MainOptionsTab;
 class wxBitmap;
@@ -83,10 +85,15 @@ class MainWindow : public wxFrame
     void OnUnitSyncReloaded();
 
 
-    void OnTabsChanged( wxListbookEvent& event );
+    #ifdef HAVE_WX26
+    void OnTabsChanged( wxNotebookEvent& event );
+    #else
+    void OnTabsChanged( wxAuiNotebookEvent& event );
+    #endif
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab();
     MainSinglePlayerTab& GetSPTab();
+    ReplayTab& GetReplayTab();
     #ifndef NO_TORRENT_SYSTEM
     MainTorrentTab& GetTorrentTab();
     #endif
@@ -104,7 +111,11 @@ class MainWindow : public wxFrame
     wxMenu* m_menuTools;
 
     wxBoxSizer* m_main_sizer;
+    #ifndef HAVE_WX26
+    wxAuiNotebook* m_func_tabs;
+    #else
     wxListbook* m_func_tabs;
+    #endif
     wxNotebookPage* m_chat_page;
 
     MainChatTab* m_chat_tab;

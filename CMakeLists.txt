@@ -46,7 +46,7 @@ SET( OPTION_TRANSLATION_SUPPORT
 
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-SET(wxWidgets_USE_LIBS base core gl net adv qa richtext )
+SET(wxWidgets_USE_LIBS base core gl net adv qa richtext aui )
 
 # We need the Find package for wxWidgets to work
 IF (NOT WIN32)
@@ -174,11 +174,12 @@ SET(SpringLobbySrc
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
-	src/Helper/wxtextctrlhist.cpp
-	src/Helper/colorbutton.cpp
+  src/Helper/colorbutton.cpp
+  src/Helper/wxtextctrlhist.cpp
 	src/filelister/filelistctrl.cpp
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
+	src/auimanager.cpp
 	src/autobalancedialog.cpp
 	src/autohost.cpp
 	src/autojoinchanneldialog.cpp

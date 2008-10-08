@@ -27,6 +27,10 @@
 #include "utils.h"
 #include "settings.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 #include "useractions.h"
 ///////////////////////////////////////////////////////////////////////////
 
@@ -64,7 +68,12 @@ BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListT
     m_filter_map_expression(0), m_filter_mod_edit(0),m_filter_mod_expression(0),m_filter_highlighted(false)
 
 {
-    BattleListFilterValues f_values = sett().GetBattleFilterValues( sett().GetLastBattleFilterProfileName() );
+
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("battlelistfilter") );
+  #endif
+
+  BattleListFilterValues f_values = sett().GetBattleFilterValues( sett().GetLastBattleFilterProfileName() );
 
 	wxBoxSizer* m_filter_sizer;
 	m_filter_sizer = new wxBoxSizer( wxVERTICAL );

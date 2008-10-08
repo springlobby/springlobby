@@ -1370,6 +1370,16 @@ bool Settings::GetShowTooltips()
     return m_config->Read(_T("GUI/ShowTooltips"), 1l);
 }
 
+void Settings::SaveLayout( wxString& layout_name, wxString& layout )
+{
+    m_config->Write( _T("/Layout/") + layout_name, layout );
+}
+
+wxString Settings::GetLayout( wxString& layout_name )
+{
+    return  m_config->Read( _T("/Layout/") + layout_name, _T("") );
+}
+
 void Settings::SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width )
 {
     m_config->Write(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn_ind), coloumn_width );

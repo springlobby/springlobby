@@ -60,7 +60,7 @@ ReplayListFilter::ReplayListFilter( wxWindow* parent, wxWindowID id, ReplayTab* 
 	m_filter_sizer = new wxBoxSizer( wxHORIZONTAL );
 
 	wxStaticBoxSizer* m_filter_body_sizer;
-	m_filter_body_sizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, wxEmptyString ), wxVERTICAL );
+	m_filter_body_sizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Filter settings") ), wxVERTICAL );
 
     wxBoxSizer* m_filter_body_row2_sizer;
 	m_filter_body_row2_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -230,7 +230,8 @@ ReplayListFilter::ReplayListFilter( wxWindow* parent, wxWindowID id, ReplayTab* 
     m_filter_filesize_mode = _GetButtonMode(f_values.filesize_mode);
     m_filter_player_choice_value = m_filter_player_choice->GetSelection()-1;
 
-	this->SetSizer( m_filter_sizer );
+    m_filter_body_sizer->Add( m_filter_sizer );
+	this->SetSizer( m_filter_body_sizer );
 	this->Layout();
 	m_filter_sizer->Fit( this );
 

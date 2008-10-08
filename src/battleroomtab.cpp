@@ -39,6 +39,10 @@
 #include "settings.h"
 #include "Helper/colorbutton.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
   EVT_BUTTON ( BROOM_START, BattleRoomTab::OnStart )
@@ -65,8 +69,12 @@ END_EVENT_TABLE()
 const wxString team_choices[] = { _T("1"), _T("2"), _T("3"), _T("4"), _T("5"), _T("6"), _T("7"), _T("8"), _T("9"), _T("10"), _T("11"), _T("12"), _T("13"), _T("14"), _T("15"), _T("16") };
 
 
-BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPanel( parent, -1 ),m_ui(ui), m_battle(battle)
+BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
+    wxScrolledWindow( parent, -1 ),m_ui(ui), m_battle(battle)
 {
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("battleroomtab") );
+  #endif
   // Create all widgets
   m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
 
@@ -254,6 +262,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
   UpdateBattleInfo( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
   UpdateBattleInfo();
 
+  SetScrollRate( 3, 3 );
   SetSizer( m_main_sizer );
   Layout();
   unsigned int widthfraction = m_opts_list->GetClientSize().GetWidth() / 3;
@@ -265,7 +274,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) : wxPan
 
 BattleRoomTab::~BattleRoomTab()
 {
-
+  #ifndef HAVE_WX26
+  GetAui().manager->DetachPane( this );
+  #endif
 }
 
 

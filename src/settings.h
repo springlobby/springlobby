@@ -521,6 +521,9 @@ class Settings
     wxString GetTorrentsFolder();
     /**@}*/
 
+    void SaveLayout( wxString& layout_name, wxString& layout_string );
+    wxString GetLayout( wxString& layout_name );
+
   protected:
     #ifdef __WXMSW__
     myconf* m_config; //!< wxConfig object to store and restore  all settings in.

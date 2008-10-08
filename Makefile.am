@@ -896,6 +896,8 @@ springlobby_SOURCES = \
 	src/Helper/colorbutton.h \
 	src/lobbyoptionstab.h \
 	src/lobbyoptionstab.cpp \
+	src/auimanager.h \
+	src/auimanager.cpp \
 	src/updater/updater.h \
 	src/updater/updater.cpp \
 	src/updater/exedownloader.h \
@@ -903,6 +905,7 @@ springlobby_SOURCES = \
 	src/usermenu.h \
 	src/thread.cpp \
 	src/thread.h
+
 
 
 if USE_WINDRES	

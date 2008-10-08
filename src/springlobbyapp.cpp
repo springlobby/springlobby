@@ -33,6 +33,7 @@
 #endif
 #include "updater/updater.h"
 #include "unitsyncthread.h"
+#include "replay/replaytab.h"
 
 #define TIMER_ID 101
 #define TIMER_INTERVAL 100
@@ -194,7 +195,7 @@ bool SpringLobbyApp::OnInit()
   sett().SetSettingsVersion(); /// bump settings version number
 
 
-  //TestTDFParser();
+  ui().mw().GetReplayTab().AddAllReplays();
 
     return true;
 }

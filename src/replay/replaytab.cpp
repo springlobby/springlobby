@@ -37,7 +37,7 @@ BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
   EVT_BUTTON              ( REPLAY_WATCH             , ReplayTab::OnWatch        )
   EVT_BUTTON              ( REPLAY_RELOAD             , ReplayTab::OnReload        )
   EVT_BUTTON              ( REPLAY_DELETE            , ReplayTab::OnDelete    )
-  EVT_LIST_ITEM_SELECTED  ( wxID_ANY               , ReplayTab::OnSelect      )
+  EVT_LIST_ITEM_SELECTED  ( RLIST_LIST               , ReplayTab::OnSelect      )
   EVT_CHECKBOX            ( REPLAY_LIST_FILTER_ACTIV , ReplayTab::OnFilterActiv )
 #if  wxUSE_TOGGLEBTN
   EVT_TOGGLEBUTTON        ( REPLAY_LIST_FILTER_BUTTON, ReplayTab::OnFilter  )
@@ -53,9 +53,6 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
   m_ui(ui),
   m_sel_replay_id(0)
 {
-    //TODO this shouldnÄT be here
-    m_ui.ReloadUnitSync();
-
     m_replays = new ReplayList ( *this );
 
     wxBoxSizer* m_main_sizer;
@@ -101,7 +98,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
     m_info_sizer->Add( m_data_sizer, 1, wxEXPAND, 5 );
 
-    m_players = new UserListctrl( this, _T("replayusers") );
+    m_players = new UserListctrl( this, _T("replayusers"),REPLAY_USER_LIST );
     m_info_sizer->Add( m_players , 1, wxEXPAND, 5 );
 
     m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
@@ -146,14 +143,14 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
     m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
-    //  m_filter->Hide();
+    m_filter->Hide();
 
     this->SetSizer( m_main_sizer );
     this->Layout();
 
     //replay adding is now controlled by replaylist
     //AddAllReplays();
-    m_replays->LoadReplays();
+    //
 
     //none selected --> shouldn't watch that
     m_watch_btn->Enable( false );
@@ -169,11 +166,7 @@ ReplayTab::~ReplayTab()
 
 void ReplayTab::AddAllReplays()
 {
-    for (unsigned int i = 0; i < m_replays->GetNumReplays(); ++i)
-    {
-        Replay r = m_replays->GetReplay(i);
-        AddReplay( r );
-    }
+    m_replays->LoadReplays();
 }
 
 void ReplayTab::AddReplay( Replay& replay ) {
@@ -196,6 +189,7 @@ void ReplayTab::AddReplay( Replay& replay ) {
 
 
 void ReplayTab::RemoveReplay( Replay& replay ) {
+    try{
     for (int i = 0; i < m_replay_listctrl->GetItemCount() ; i++ ) {
         if ( replay.id == (int)m_replay_listctrl->GetItemData( i ) ) {
             m_replay_listctrl->DeleteItem( i );
@@ -206,8 +200,9 @@ void ReplayTab::RemoveReplay( Replay& replay ) {
             break;
         }
     }
-
-    m_replay_listctrl->Sort();
+    } catch (...) {
+        wxLogMessage( _T("exception on remove replay") );
+    }
 }
 
 void ReplayTab::UpdateReplay( Replay& replay )
@@ -370,18 +365,16 @@ void ReplayTab::OnSelect( wxListEvent& event )
 
 void ReplayTab::ReloadList()
 {
-    /// should be changed to use delayed load once perf testing is done
-    wxDateTime dt = wxDateTime::UNow();
-    RemoveAllReplays();
-    AddAllReplays();
-    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
-    if ( sec > 0 )
-        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );
+//    /// should be changed to use delayed load once perf testing is done
+//    wxDateTime dt = wxDateTime::UNow();
+    m_replays->RemoveAll();
+    m_replays->LoadReplays();
+//    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
+//    if ( sec > 0 )
+//        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );
 }
 
 void ReplayTab::OnReload( wxCommandEvent& event )
 {
-    //stop timer
-
     ReloadList();
 }

@@ -19,6 +19,10 @@
 #include "addbotdialog.h"
 #include "server.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 #include "settings++/custom_dialogs.h"
 
 #include "springunitsynclib.h"
@@ -34,10 +38,14 @@ END_EVENT_TABLE()
 
 
 SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& msptab):
-  wxPanel( parent, -1 ),
+  wxScrolledWindow( parent, -1 ),
   m_ui( ui ),
   m_battle( ui, msptab )
 {
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("singleplayertab") );
+  #endif
+
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );
@@ -85,6 +93,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
 
   m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
+  SetScrollRate( 3, 3 );
   this->SetSizer( m_main_sizer );
   this->Layout();
 

@@ -1,8 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
 
-#include <wx/panel.h>
-#include <wx/bmpbuttn.h>
+#include <wx/scrolwin.h>
 
 #include "iunitsync.h"
 #include "mmoptionswrapper.h"
@@ -31,7 +30,7 @@ typedef std::map<wxString,long> OptionListMap;
 
 /** \brief container for BattleroomListCtrl, battle specific ChatPanel. Also displaying battle info summary
  * \todo DOCMEMORE */
-class BattleRoomTab : public wxPanel
+class BattleRoomTab : public wxScrolledWindow
 {
   public:
     BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle );

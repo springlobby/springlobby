@@ -31,6 +31,8 @@ void ReplayList::LoadReplays()
 {
     m_filenames = usync().GetReplayList();
 
+    int temp = m_filenames.GetCount();
+
     if ( m_filenames.GetCount() < replay_bulk_limit )
         LoadReplays( 0, m_filenames.GetCount() );
     else {
@@ -42,7 +44,7 @@ void ReplayList::LoadReplays()
 
 void ReplayList::LoadReplays( const unsigned int from, const unsigned int to)
 {
-    for (unsigned int i = from; i < to; ++i)
+    for (unsigned int i = from; i < to - 1; ++i)
     {
         Replay rep;
         if ( GetReplayInfos( m_filenames[i] , rep ) ){
@@ -134,7 +136,7 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
     GetHeaderInfo( ret, ReplayPath );
     ret.battle = GetBattleFromScript( script );
     ret.ModName = ret.battle.GetHostModName();
-    ret.can_watch = ret.battle.ModExists() && ret.battle.MapExists();
+
     r_id++; //sucessful parsing assumed --> increment id(index)
     return true;
 }
@@ -180,13 +182,13 @@ OfflineBattle ReplayList::GetBattleFromScript( const wxString& script_ )
         wxString modname = replayNode->GetString( _T("GameType") );
         wxString modhash    = replayNode->GetString( _T("ModHash") );
         battle.SetHostMod( modname, modhash );
-        battle.LoadMod();
+//        battle.LoadMod();
 
         //don't have the maphash, what to do?
         //ui download function works with mapname if hash is empty, so works for now
         opts.mapname    = replayNode->GetString( _T("Mapname") );
         battle.SetHostMap( opts.mapname, wxEmptyString );
-        battle.LoadMap();
+//        battle.LoadMap();
 
         opts.ip         = replayNode->GetString( _T("HostIP") );
         opts.port       = replayNode->GetInt  ( _T("HostPort"), DEFAULT_EXTERNAL_UDP_SOURCE_PORT );
@@ -271,4 +273,10 @@ bool ReplayList::DeleteReplay( replay_id_t const& id )
         return true;
     }
     return false;
+}
+
+void ReplayList::RemoveAll()
+{
+    m_replays.clear();
+    m_replay_tab.RemoveAllReplays();
 }

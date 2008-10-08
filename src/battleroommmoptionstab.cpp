@@ -19,6 +19,10 @@
 #include "settings++/custom_dialogs.h"
 #include "server.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 const char sep = *("_");
 const wxString wxsep = _T("_");
 
@@ -33,6 +37,9 @@ END_EVENT_TABLE()
 BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style )
 : wxScrolledWindow( parent, id, pos, size, style | wxHSCROLL ),m_battle(battle)
 {
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("battleroommmoptionstab") );
+  #endif
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
 	m_mod_options_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Mod Options") ), wxVERTICAL );
@@ -48,6 +55,7 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 	m_main_sizer->Add( m_mod_options_sizer, 0, wxEXPAND, 5 );
 	m_main_sizer->Add( m_map_options_sizer, 0, wxEXPAND, 5 );
 
+    SetScrollRate( 3, 3 );
 	this->SetSizer( m_main_sizer );
 	this->Layout();
 
@@ -56,7 +64,9 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 
 BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
 {
-
+  #ifndef HAVE_WX26
+  GetAui().manager->DetachPane( this );
+  #endif
 }
 
 
