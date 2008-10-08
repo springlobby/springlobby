@@ -150,10 +150,6 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     this->SetSizer( m_main_sizer );
     this->Layout();
 
-    //replay adding is now controlled by replaylist
-    //AddAllReplays();
-    //
-
     //none selected --> shouldn't watch/delete that
     Deselect();
 
