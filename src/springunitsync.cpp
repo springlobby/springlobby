@@ -333,6 +333,8 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
 {
   UnitSyncMap m;
 
+  if ( index < 0 ) return m;
+
   m.name = m_map_array[index];
   m.hash = m_maps_list[m.name];
 

@@ -240,7 +240,7 @@ void CustomListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
   else
   {
     m_tiptimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
-    m_tiptext = m_colinfovec[coloumn].first;
+    m_tiptext = TE(m_colinfovec[coloumn].first);
   }
 }
 

@@ -1126,5 +1126,11 @@ void OfflineBattle::AddUser( const wxString& nick )
 
 bool OfflineBattle::ModExists()
 {
-    return usync().ModExistsCheckHash( m_host_mod.hash );
+    bool tmp = usync().ModExistsCheckHash( m_host_mod.hash );
+    return tmp;
+}
+
+bool OfflineBattle::MapExists()
+{
+    return usync().MapExists( m_host_map.name );
 }

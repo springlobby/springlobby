@@ -299,6 +299,7 @@ class OfflineBattle : public CommonBattle
         UserVecCIter GetLastUser() const { return m_participants.end(); }
 
         virtual bool ModExists();
+        virtual bool MapExists();
 
     protected:
 

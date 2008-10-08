@@ -20,7 +20,7 @@ SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path ):
 
 SpringUnitSyncLib::~SpringUnitSyncLib()
 {
-  if ( IsLoaded() ) Unload();
+  if ( _IsLoaded() ) _Unload();
 }
 
 
