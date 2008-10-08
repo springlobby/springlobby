@@ -95,7 +95,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
    #ifdef HAVE_WX26
      m_tabs->AddPage ( m_lobby_opts, _("General"), true, 4 );
     #else
-
+     m_tabs->AddPage ( m_lobby_opts, _("General"), true, wxIcon(springlobby_xpm) );
     #endif
 
     m_groups_opts = new GroupOptionsPanel( m_tabs );
