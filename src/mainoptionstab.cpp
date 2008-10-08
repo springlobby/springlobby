@@ -68,7 +68,11 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
     #endif
 
     m_spring_opts = new SpringOptionsTab( m_tabs, m_ui );
+    #ifdef HAVE_WX26
     m_tabs->AddPage( m_spring_opts, _("Spring"), true, 0 );
+    #else
+    m_tabs->AddPage( m_spring_opts, _("Spring"), true, wxIcon(spring_xpm) );
+    #endif
 
 #ifndef NO_TORRENT_SYSTEM
     m_torrent_opts = new TorrentOptionsPanel( m_tabs, m_ui );
@@ -86,13 +90,6 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
     m_tabs->AddPage( m_chat_opts, _("Chat"), true, wxIcon(userchat_xpm) );
     #endif
 
-    m_groups_opts = new GroupOptionsPanel( m_tabs );
-    #ifdef HAVE_WX26
-    m_tabs->AddPage( m_groups_opts , _("Groups"), true, 2 );
-    #else
-    m_tabs->AddPage( m_groups_opts , _("Groups"), true, wxIcon(userchat_xpm) );
-    #endif
-
     m_lobby_opts = new LobbyOptionsTab( m_tabs );
 
    #ifdef HAVE_WX26
@@ -106,7 +103,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
     #ifdef HAVE_WX26
     m_tabs->AddPage( m_groups_opts, _("Groups"), true, 2 );
     #else
-    m_tabs->AddPage ( m_lobby_opts, _("Groups"), true, wxIcon(userchat_xpm) );
+    m_tabs->AddPage ( m_groups_opts, _("Groups"), true, wxIcon(userchat_xpm) );
     #endif
 
 
@@ -125,6 +122,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
     SetSizer( m_main_sizer );
     SetScrollRate( 3, 3 );
     Layout();
+    Refresh();
 }
 
 
