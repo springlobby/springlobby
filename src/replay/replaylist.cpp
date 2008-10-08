@@ -29,6 +29,7 @@ ReplayList::ReplayList(ReplayTab& replay_tab)
 
 void ReplayList::LoadReplays()
 {
+    if ( usync().IsLoaded() ) return;
     m_filenames = usync().GetReplayList();
 
     int temp = m_filenames.GetCount();
