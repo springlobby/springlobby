@@ -758,27 +758,30 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
     }
 	} else if ( message.Upper().Contains( me.Upper() ) )
     {
-      for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
-        if ( m_chat_tabs->GetPage( i ) == this ) {
-          if ( m_type == CPT_Channel && m_icon_index < 8 )
-          {
-             m_icon_index = 8;
-             #ifdef HAVE_WX26
-             m_chat_tabs->SetPageImage( i, m_icon_index );
-             #else
-             m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-             #endif
+      if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
+      {
+        for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
+          if ( m_chat_tabs->GetPage( i ) == this ) {
+            if ( m_type == CPT_Channel && m_icon_index < 8 )
+            {
+               m_icon_index = 8;
+               #ifdef HAVE_WX26
+               m_chat_tabs->SetPageImage( i, m_icon_index );
+               #else
+               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
+               #endif
+            }
+            if ( m_type == CPT_User && m_icon_index < 9 )
+            {
+               m_icon_index = 9;
+               #ifdef HAVE_WX26
+               m_chat_tabs->SetPageImage( i, m_icon_index );
+               #else
+               m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
+               #endif
+            }
           }
-          if ( m_type == CPT_User && m_icon_index < 9 )
-          {
-             m_icon_index = 9;
-             #ifdef HAVE_WX26
-             m_chat_tabs->SetPageImage( i, m_icon_index );
-             #else
-             m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-             #endif
-          }
-        }
+      }
             col = sett().GetChatColorNotification();
             req_user = true;
 	} else {
