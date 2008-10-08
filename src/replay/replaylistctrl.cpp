@@ -86,22 +86,21 @@ ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList& replaylist  ):
   Sort( );
 
 #ifdef __WXMSW__
-  SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 5, wxLIST_AUTOSIZE_USEHEADER );
 
 #else
-  SetColumnWidth( 0, 80 );
-  SetColumnWidth( 1, 80 );
-  SetColumnWidth( 2, 80 );
-
+  SetColumnWidth( 5, 50 );
+  SetColumnWidth( 3, 50 );
 #endif
 
-  SetColumnWidth( 3, 170 );
-  SetColumnWidth( 4, 140 );
-  SetColumnWidth( 5, 140 );
-  SetColumnWidth( 6, 140 );
-  SetColumnWidth( 7, 140 );
+  SetColumnWidth( 0, 80 );
+  SetColumnWidth( 1, 140 );
+  SetColumnWidth( 2, 140 );
+  SetColumnWidth( 4, 160 );
+  SetColumnWidth( 5, 80 );
+  SetColumnWidth( 6, 70 );
+  SetColumnWidth( 7, 180 );
 
   m_popup = new wxMenu( _T("") );
   // &m enables shortcout "alt + m" and underlines m
