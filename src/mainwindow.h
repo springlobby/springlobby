@@ -93,6 +93,7 @@ class MainWindow : public wxFrame
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab();
     MainSinglePlayerTab& GetSPTab();
+    ReplayTab& GetReplayTab();
     #ifndef NO_TORRENT_SYSTEM
     MainTorrentTab& GetTorrentTab();
     #endif

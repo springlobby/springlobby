@@ -53,9 +53,6 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
   m_ui(ui),
   m_sel_replay_id(0)
 {
-    //TODO this shouldnÄT be here
-    m_ui.ReloadUnitSync();
-
     m_replays = new ReplayList ( *this );
 
     wxBoxSizer* m_main_sizer;
@@ -153,7 +150,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
     //replay adding is now controlled by replaylist
     //AddAllReplays();
-    m_replays->LoadReplays();
+    //
 
     //none selected --> shouldn't watch that
     m_watch_btn->Enable( false );
@@ -169,11 +166,7 @@ ReplayTab::~ReplayTab()
 
 void ReplayTab::AddAllReplays()
 {
-    for (unsigned int i = 0; i < m_replays->GetNumReplays(); ++i)
-    {
-        Replay r = m_replays->GetReplay(i);
-        AddReplay( r );
-    }
+    m_replays->LoadReplays();
 }
 
 void ReplayTab::AddReplay( Replay& replay ) {
@@ -372,13 +365,13 @@ void ReplayTab::OnSelect( wxListEvent& event )
 
 void ReplayTab::ReloadList()
 {
-    /// should be changed to use delayed load once perf testing is done
-    wxDateTime dt = wxDateTime::UNow();
+//    /// should be changed to use delayed load once perf testing is done
+//    wxDateTime dt = wxDateTime::UNow();
     m_replays->RemoveAll();
     m_replays->LoadReplays();
-    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
-    if ( sec > 0 )
-        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );
+//    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
+//    if ( sec > 0 )
+//        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );
 }
 
 void ReplayTab::OnReload( wxCommandEvent& event )

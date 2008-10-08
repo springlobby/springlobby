@@ -333,6 +333,13 @@ MainSinglePlayerTab& MainWindow::GetSPTab()
   ASSERT_EXCEPTION( m_sp_tab != 0, _T("m_sp_tab = 0") );
   return *m_sp_tab;
 }
+
+ReplayTab& MainWindow::GetReplayTab()
+{
+    ASSERT_EXCEPTION( m_replay_tab != 0, _T("m_replay_tab = 0") );
+    return *m_replay_tab;
+}
+
 #ifndef NO_TORRENT_SYSTEM
 MainTorrentTab& MainWindow::GetTorrentTab()
 {
