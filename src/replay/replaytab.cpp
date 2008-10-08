@@ -37,7 +37,7 @@ BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
   EVT_BUTTON              ( REPLAY_WATCH             , ReplayTab::OnWatch        )
   EVT_BUTTON              ( REPLAY_RELOAD             , ReplayTab::OnReload        )
   EVT_BUTTON              ( REPLAY_DELETE            , ReplayTab::OnDelete    )
-  EVT_LIST_ITEM_SELECTED  ( wxID_ANY               , ReplayTab::OnSelect      )
+  EVT_LIST_ITEM_SELECTED  ( RLIST_LIST               , ReplayTab::OnSelect      )
   EVT_CHECKBOX            ( REPLAY_LIST_FILTER_ACTIV , ReplayTab::OnFilterActiv )
 #if  wxUSE_TOGGLEBTN
   EVT_TOGGLEBUTTON        ( REPLAY_LIST_FILTER_BUTTON, ReplayTab::OnFilter  )
@@ -101,7 +101,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
     m_info_sizer->Add( m_data_sizer, 1, wxEXPAND, 5 );
 
-    m_players = new UserListctrl( this, _T("replayusers") );
+    m_players = new UserListctrl( this, _T("replayusers"),REPLAY_USER_LIST );
     m_info_sizer->Add( m_players , 1, wxEXPAND, 5 );
 
     m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
