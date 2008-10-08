@@ -42,6 +42,12 @@ enum ChatPanelType {
   CPT_Battle
 };
 
+enum HighlightType
+{
+  highlight_say,
+  highlight_join_leave,
+  highlight_important
+};
 
 /*! @brief wxPanel that contains a chat.
  *
@@ -172,6 +178,7 @@ class ChatPanel : public wxPanel
   protected:
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
+    void SetIconHighlight( HighlightType highlight );
 
     bool ContainsWordToHighlight( const wxString& message );
 
