@@ -23,7 +23,7 @@ BEGIN_EVENT_TABLE(ReplayList,wxEvtHandler)
 END_EVENT_TABLE()
 
 ReplayList::ReplayList(ReplayTab& replay_tab)
-    : m_timer(this,wxID_ANY),m_replay_tab(replay_tab)
+    : m_timer(this,wxID_ANY),m_replay_tab(replay_tab),m_last_id(0)
 {
 }
 
@@ -31,7 +31,7 @@ void ReplayList::LoadReplays()
 {
     if ( !usync().IsLoaded() ) return;
     m_filenames = usync().GetReplayList();
-
+    m_timer.Stop();
     int temp = m_filenames.GetCount();
 
     if ( m_filenames.GetCount() < replay_bulk_limit )
@@ -109,7 +109,6 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
 {
     //wxLOG_Info  ( STD_STRING( ReplayPath ) );
     //TODO extract moar info
-    static long r_id = 0;
     ret.Filename = ReplayPath;
 
     wxString FileName = ReplayPath.AfterLast( '/' ); // strips file path
@@ -129,7 +128,7 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
        FileName = FileName.BeforeLast(_T('-'));
     }
     ret.MapName = FileName;
-    ret.id = r_id;
+    ret.id = m_last_id;
     wxString script = GetScriptFromReplay( ReplayPath );
     if ( script.IsEmpty() )
         return false;
@@ -138,7 +137,7 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
     ret.battle = GetBattleFromScript( script );
     ret.ModName = ret.battle.GetHostModName();
 
-    r_id++; //sucessful parsing assumed --> increment id(index)
+    m_last_id++; //sucessful parsing assumed --> increment id(index)
     return true;
 }
 
@@ -279,5 +278,6 @@ bool ReplayList::DeleteReplay( replay_id_t const& id )
 void ReplayList::RemoveAll()
 {
     m_replays.clear();
+    m_last_id = 0;
     m_replay_tab.RemoveAllReplays();
 }

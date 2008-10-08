@@ -107,6 +107,7 @@ class ReplayList : public wxEvtHandler
     ReplayTab& m_replay_tab;
 
     wxArrayString m_filenames;
+    unsigned long m_last_id;
 
     DECLARE_EVENT_TABLE()
 };
