@@ -4,8 +4,8 @@
 #include <wx/string.h>
 #include <wx/colour.h>
 
-#define CACHE_VERSION 6
-#define SETTINGS_VERSION 1
+#define CACHE_VERSION 7
+#define SETTINGS_VERSION 2
 
 #define DEFSETT_DEFAULT_SERVER "TAS Server"
 #define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"
