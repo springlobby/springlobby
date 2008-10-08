@@ -1044,7 +1044,7 @@ bool ChatPanel::IsServerPanel()
 }
 
 
-ChatPanelType ChatPanel::GetPanelType()
+int ChatPanel::GetPanelType()
 {
 	return m_type;
 }

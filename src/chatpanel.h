@@ -83,7 +83,7 @@ class ChatPanel : public wxPanel
     void SetUser( User* usr );
 
     bool IsServerPanel();
-    ChatPanelType GetPanelType();
+    int GetPanelType();
 
     void Say( const wxString& message );
     void Part();
@@ -154,17 +154,18 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
 
-	void OnKeyPressed( wxKeyEvent& keyevent );
-	void OnKeyReleased( wxKeyEvent& keyevent );
+    void OnKeyPressed( wxKeyEvent& keyevent );
+    void OnKeyReleased( wxKeyEvent& keyevent );
 
-	void OnUserMenuAddToGroup( wxCommandEvent& event );
-	void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
-	void OnUserMenuCreateGroup( wxCommandEvent& event );
-	void UpdateNicklistHighlights();
+    void OnUserMenuAddToGroup( wxCommandEvent& event );
+    void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
+    void OnUserMenuCreateGroup( wxCommandEvent& event );
+    void UpdateNicklistHighlights();
 
-	void SortNickList();
+    void SortNickList();
 
   protected:
+
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
 
@@ -199,7 +200,7 @@ class ChatPanel : public wxPanel
     User* m_user;               //!< User object.
     Battle* m_battle;           //!< User object.
 
-    ChatPanelType m_type;       //!< Channel object.
+    int m_type;       //!< Channel object.
 
     wxString m_chan_pass;
 
