@@ -52,7 +52,7 @@ class UserListctrl : public CustomListCtrl
         static int wxCALLBACK ComparePlayercountryDOWN(long item1, long item2, long sortData);
 
         enum {
-            USERLIST = wxID_HIGHEST
+            USERLIST = 2312
         };
 
         struct {

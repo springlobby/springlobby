@@ -57,7 +57,7 @@ class ReplayListCtrl : public CustomListCtrl
 
 enum
 {
-    RLIST_LIST = wxID_HIGHEST,
+    RLIST_LIST,
     RLIST_DLMOD,
     RLIST_DLMAP
 };
