@@ -79,6 +79,7 @@ class MapCtrl : public wxPanel
 
     BattleStartRect GetBattleRect( int x1, int y1, int x2, int y2, int ally = -1 );
     wxRect GetMinimapRect();
+
     wxRect GetStartRect( int index );
     wxRect GetStartRect( const BattleStartRect& sr );
 
@@ -111,7 +112,7 @@ class MapCtrl : public wxPanel
     void DrawBackground( wxDC& dc );
     void DrawStartRects( wxDC& dc );
     void DrawStartPositions( wxDC& dc );
-    void DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxColour& col, bool mouseover, int alphalevel = 70 );
+    void DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& col, bool mouseover, int alphalevel = 70 );
 
     void SetMouseOverRect( int index );
 

@@ -183,10 +183,12 @@ BattleStartRect MapCtrl::GetBattleRect( int x1, int y1, int x2, int y2, int ally
   br.toadd = false;
   br.toresize = true;
 
-  if ( br.left < 0 ) br.left = 0; if ( br.left > 200 ) br.left = 200;
-  if ( br.top < 0 ) br.top = 0; if ( br.top > 200 ) br.top = 200;
-  if ( br.right < 0 ) br.right = 0; if ( br.right > 200 ) br.right = 200;
-  if ( br.bottom < 0 ) br.bottom = 0; if ( br.bottom > 200 ) br.bottom = 200;
+  int max_sz=200;
+
+  if ( br.left < 0 ) br.left = 0; if ( br.left > max_sz ) br.left = max_sz;
+  if ( br.top < 0 ) br.top = 0; if ( br.top > max_sz ) br.top = max_sz;
+  if ( br.right < 0 ) br.right = 0; if ( br.right > max_sz ) br.right = max_sz;
+  if ( br.bottom < 0 ) br.bottom = 0; if ( br.bottom > max_sz ) br.bottom = max_sz;
 
   return br;
 }
@@ -359,10 +361,27 @@ void MapCtrl::RequireImages()
 }
 
 
-void MapCtrl::DrawStartRect( wxDC& dc, int index, const wxRect& sr, const wxColour& col, bool mouseover, int alphalevel )
+void MapCtrl::DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& col, bool mouseover, int alphalevel )
 {
-
-  if ( sr.width * sr.height == 0 ) return;
+  int x1=sr.x,y1=sr.y,x2=sr.x+sr.width,y2=sr.y+sr.height;
+  wxRect mr = GetMinimapRect();
+  x1=std::max(mr.x,x1);
+  y1=std::max(mr.y,y1);
+  x2=std::min(mr.x+mr.width,x2);
+  y2=std::min(mr.y+mr.height,y2);
+  sr.x=x1;
+  sr.y=y1;
+  sr.width=x2-x1;
+  sr.height=y2-y1;
+  if(sr.width<0)
+  {
+    sr.width=0;
+  }
+  if(sr.height<0)
+  {
+    sr.height=0;
+  }
+  if ( sr.width * sr.height <= 0 ) return;
 
   dc.SetBrush( wxBrush( *wxLIGHT_GREY, wxTRANSPARENT ) );
 
@@ -638,7 +657,8 @@ void MapCtrl::DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     DrawOutlinedText( dc, _("side:"), r.x+3, r.y+siderect.y-1, wxColour(50,50,50), *wxWHITE );
 
     if ( m_rect_area == RA_Side ) {
-      DrawStartRect( dc, -1, wxRect( r.x+siderect.x-1, r.y+siderect.y-1, siderect.width+2, siderect.height+2 ), col, false );
+      wxRect tmp( r.x+siderect.x-1, r.y+siderect.y-1, siderect.width+2, siderect.height+2 );
+      DrawStartRect( dc, -1, tmp, col, false );
     }
 
     wxBitmap* bmp = 0;
@@ -787,7 +807,8 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 
     // Draw add rect.
     if ( m_tmp_brect.ally != -1 ) {
-      DrawStartRect( dc, m_tmp_brect.ally, GetStartRect(m_tmp_brect), *wxWHITE, false );
+      wxRect tmp=GetStartRect(m_tmp_brect);
+      DrawStartRect( dc, m_tmp_brect.ally, tmp, *wxWHITE, false );
     }
 
   }
@@ -915,6 +936,10 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     m_battle->AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom );
     m_battle->StartRectAdded( m_mdown_rect );
     m_battle->ResizeStartRect( m_mdown_rect );
+
+    /// ugly fix.
+    nsr=GetStartRect(bsr);
+
     if ( sr != nsr ) RefreshRect( sr.Union( nsr ), false );
     return;
 
@@ -935,6 +960,10 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     m_battle->AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom );
     m_battle->StartRectAdded( m_mdown_rect );
     m_battle->ResizeStartRect( m_mdown_rect );
+
+    /// ugly fix.
+    nsr=GetStartRect(bsr);
+
     if ( sr != nsr ) RefreshRect( sr.Union( nsr ), false );
     return;
 
