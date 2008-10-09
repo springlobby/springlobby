@@ -2,6 +2,7 @@
 
 #include <wx/intl.h>
 #include <wx/menu.h>
+#include <wx/filename.h>
 
 #include "replaylistctrl.h"
 #include "../utils.h"
@@ -76,7 +77,7 @@ ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList& replaylist  ):
 
 
   m_sortorder[0].col = 0;
-  m_sortorder[0].direction = true;
+  m_sortorder[0].direction = false;
   m_sortorder[1].col = 1;
   m_sortorder[1].direction = true;
   m_sortorder[2].col = 2;
@@ -144,156 +145,101 @@ void ReplayListCtrl::OnDLMod( wxCommandEvent& event )
 
 void ReplayListCtrl::OnColClick( wxListEvent& event )
 {
-  if ( event.GetColumn() == -1 ) return;
+  int click_col=event.GetColumn();
+  wxLogMessage(_T("click col: %d"),click_col);
+  if ( click_col == -1 ) return;
   wxListItem col;
   GetColumn( m_sortorder[0].col, col );
   col.SetImage( icons().ICON_NONE );
   SetColumn( m_sortorder[0].col, col );
 
+/*
   int i;
   for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
   if ( i > 3 ) { i = 3; }
   for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
   m_sortorder[0].col = event.GetColumn();
   m_sortorder[0].direction = !m_sortorder[0].direction;
+*/
+  if(click_col==m_sortorder[0].col){
+    m_sortorder[0].direction=!m_sortorder[0].direction;
+  }else{
+    int order_remove=3;
+    for(int i=0;i<4;++i){
+      if(m_sortorder[i].col==click_col){
+        order_remove=i;
+      }
+    }
+    for(int i=order_remove;i>0;--i){
+      m_sortorder[i]=m_sortorder[i-1];
+    }
+    m_sortorder[0].col=click_col;
+    m_sortorder[0].direction=false;
+  }
 
+  for(int i=0;i<4;++i){
+    wxLogMessage(_T("sorting level%d by %d direction %d"),i,m_sortorder[i].col,m_sortorder[i].direction);
+  }
 
   GetColumn( m_sortorder[0].col, col );
-//  col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
+  col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
   Sort();
 }
 
-
 void ReplayListCtrl::Sort()//needs adjusting when column order etc is stable
 {
   ReplayListCtrl::m_replaylist_sort = &m_replaylist;
   if (m_replaylist_sort == 0 ) return;
-  for (int i = 3; i >= 0; i--) {
-    switch ( m_sortorder[ i ].col ) {
-      case 0 : SortItems( ( m_sortorder[ i ].direction )?&CompareDateUP:&CompareDateDOWN , 0 ); break;
-      case 1 : SortItems( ( m_sortorder[ i ].direction )?&CompareModUP:&CompareModDOWN , 0 ); break;
-      case 2 : SortItems( ( m_sortorder[ i ].direction )?&CompareMapUP:&CompareMapDOWN , 0 ); break;
-      case 3 : SortItems( ( m_sortorder[ i ].direction )?&ComparePlayerUP:&ComparePlayerDOWN , 0 ); break;
-      case 4 : SortItems( ( m_sortorder[ i ].direction )?&CompareSpringUP:&CompareSpringDOWN , 0 ); break;
-      case 5 : SortItems( ( m_sortorder[ i ].direction )?&CompareFileUP:&CompareFileDOWN , 0 ); break;
-    }
+  SortItems( CompareUniversal , (long)(m_sortorder) );
+}
+
+template<class T>
+inline int MyCompare(T a, T b){
+  return a<b?-1:(b<a?1:0);
+}
+
+/*
+wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
+                        (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
+    m_replay_listctrl->SetItem( index, 0, replay.date );
+    m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
+    m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
+    m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators() ) );
+    m_replay_listctrl->SetItem( index, 4, duration );
+    m_replay_listctrl->SetItem( index, 5, replay.SpringVersion );
+    m_replay_listctrl->SetItem( index, 6, wxString::Format( _T("%d KB"),replay.size/1024 ) );
+    m_replay_listctrl->SetItem( index, 7, replay.Filename.AfterLast( wxFileName::GetPathSeparator() ) );
+*/
+
+
+int wxCALLBACK ReplayListCtrl::CompareUniversal(long item1, long item2, long sortData){
+  Replay replay1 ;
+  Replay replay2 ;
+  try{
+    replay1 = m_replaylist_sort->GetReplayById(item1);
+    replay2 = m_replaylist_sort->GetReplayById(item2);
+  }catch(std::runtime_error){
+    return 0;
   }
-}
-
-int wxCALLBACK ReplayListCtrl::CompareMapUP(long item1, long item2, long sortData)
-{
-
-  Replay replay1 = m_replaylist_sort->GetReplayById(item1);
-  Replay replay2 = m_replaylist_sort->GetReplayById(item2);
-
-  if ( RefineMapname( replay1.MapName ).MakeUpper() < RefineMapname( replay2.MapName ).MakeUpper() )
-      return -1;
-  if ( RefineMapname( replay1.MapName ).MakeUpper() > RefineMapname( replay2.MapName ).MakeUpper() )
-      return 1;
-
+  SortOrder *m_sortorder=(SortOrder *)sortData;
+  for(int i=0;i<4;++i){
+    int c=0;
+    switch ( m_sortorder[i].col ) {/// switch is just a jump table, dont optimize anything here.
+      case 0 : c=MyCompare(replay1.date,replay2.date) ; break;
+      case 1 : c=MyCompare(replay1.battle.GetHostModName(),replay2.battle.GetHostModName()); break;
+      case 2 : c=MyCompare(replay1.battle.GetHostMapName(),replay2.battle.GetHostMapName()); break;
+      case 3 : c=MyCompare(replay1.battle.GetNumUsers() - replay1.battle.GetSpectators(), replay2.battle.GetNumUsers() - replay2.battle.GetSpectators()); break;
+      case 4 : c=MyCompare(replay1.duration,replay2.duration); break;
+      case 5 : c=MyCompare(replay1.SpringVersion, replay2.SpringVersion); break;
+      case 6 : c=MyCompare(replay1.size, replay2.size); break;
+      case 7 : c=MyCompare(replay1.Filename.AfterLast( wxFileName::GetPathSeparator() ), replay2.Filename.AfterLast( wxFileName::GetPathSeparator() )); break;
+    }
+    if(!m_sortorder[i].direction)c=-c;
+    if(c!=0)return c;
+  }
   return 0;
-}
-
-int wxCALLBACK ReplayListCtrl::CompareMapDOWN(long item1, long item2, long sortData)
-{
-  Replay replay1 = m_replaylist_sort->GetReplayById(item1);
-  Replay replay2 = m_replaylist_sort->GetReplayById(item2);
-
-  if ( RefineMapname( replay1.MapName ).MakeUpper() < RefineMapname( replay2.MapName ).MakeUpper() )
-      return 1;
-  if ( RefineMapname( replay1.MapName ).MakeUpper() > RefineMapname( replay2.MapName ).MakeUpper() )
-      return -1;
-
-  return 0;
-}
-
-int wxCALLBACK ReplayListCtrl::CompareModUP(long item1, long item2, long sortData)
-{
-
-  Replay replay1 = m_replaylist_sort->GetReplayById(item1);
-  Replay replay2 = m_replaylist_sort->GetReplayById(item2);
-
-  if ( RefineModname( replay1.ModName ).MakeUpper() < RefineModname( replay2.ModName ).MakeUpper() )
-      return -1;
-  if ( RefineModname( replay1.ModName ).MakeUpper() > RefineModname( replay2.ModName ).MakeUpper() )
-      return 1;
-
-  return 0;
-}
-
-
-int wxCALLBACK ReplayListCtrl::CompareModDOWN(long item1, long item2, long sortData)
-{
-
-  Replay replay1 = m_replaylist_sort->GetReplayById(item1);
-  Replay replay2 = m_replaylist_sort->GetReplayById(item2);
-
-  if ( RefineModname( replay1.ModName ).MakeUpper() < RefineModname( replay2.ModName ).MakeUpper() )
-      return 1;
-  if ( RefineModname( replay1.ModName ).MakeUpper() > RefineModname( replay2.ModName ).MakeUpper() )
-      return -1;
-
-  return 0;
-}
-
-int wxCALLBACK ReplayListCtrl::ComparePlayerUP(long item1, long item2, long sortData)
-{
-
-  Replay replay1 = m_replaylist_sort->GetReplayById(item1);
-  Replay replay2 = m_replaylist_sort->GetReplayById(item2);
-
-  if ( replay1.playernum < replay2.playernum )
-      return -1;
-  if ( replay1.playernum > replay2.playernum )
-      return 1;
-
-  return 0;
-}
-
-int wxCALLBACK ReplayListCtrl::ComparePlayerDOWN(long item1, long item2, long sortData)
-{
-
-  Replay replay1 = m_replaylist_sort->GetReplayById(item1);
-  Replay replay2 = m_replaylist_sort->GetReplayById(item2);
-
-  if ( replay1.playernum  < replay2.playernum  )
-      return 1;
-  if ( replay1.playernum > replay2.playernum  )
-      return -1;
-
-  return 0;
-}
-
-int wxCALLBACK ReplayListCtrl::CompareFileUP(long item1, long item2, long sortData)
-{
-    return 0;
-}
-
-int wxCALLBACK ReplayListCtrl::CompareFileDOWN(long item1, long item2, long sortData)
-{
-    return 0;
-}
-
-int wxCALLBACK ReplayListCtrl::CompareDateUP(long item1, long item2, long sortData)
-{
-    return 0;
-}
-
-int wxCALLBACK ReplayListCtrl::CompareDateDOWN(long item1, long item2, long sortData)
-{
-    return 0;
-}
-
-int wxCALLBACK ReplayListCtrl::CompareSpringUP(long item1, long item2, long sortData)
-{
-    return 0;
-}
-
-int wxCALLBACK ReplayListCtrl::CompareSpringDOWN(long item1, long item2, long sortData)
-{
-    return 0;
 }
 
 void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)

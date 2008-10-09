@@ -29,23 +29,13 @@ class ReplayListCtrl : public CustomListCtrl
     virtual void HighlightItem( long item ){};
 
   protected:
-    static int wxCALLBACK CompareDateUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareDateDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareSpringUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareSpringDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareMapUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareMapDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareModUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareModDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayerUP(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayerDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareFileUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareFileDOWN(long item1, long item2, long sortData);
+    static int wxCALLBACK CompareUniversal(long item1, long item2, long sortData);
 
-    struct {
+    struct SortOrder{
       int col;
       bool direction;
-    } m_sortorder[4];
+    };
+    SortOrder m_sortorder[4];
 
     wxMenu* m_popup;
    // ReplayList_Iter& m_replaylist_iter;
