@@ -1,6 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 #include <stdexcept>
 #include <iterator>
+#include <algorithm>
 #include <wx/file.h>
 #include <wx/tokenzr.h>
 #include <wx/intl.h>
@@ -30,12 +31,15 @@ ReplayList::ReplayList(ReplayTab& replay_tab)
 void ReplayList::LoadReplays()
 {
     if ( !usync().IsLoaded() ) return;
-    m_filenames = usync().GetReplayList();
-    m_timer.Stop();
-    int temp = m_filenames.GetCount();
 
-    if ( m_filenames.GetCount() < replay_bulk_limit )
-        LoadReplays( 0, m_filenames.GetCount() );
+    usync().GetReplayList(m_filenames);
+    m_replays.clear();
+
+    m_timer.Stop();
+    int temp = m_filenames.size();
+
+    if ( m_filenames.size() < replay_bulk_limit )
+        LoadReplays( 0, m_filenames.size() );
     else {
         LoadReplays( 0, replay_chunk_size );
         m_current_parse_pos = replay_chunk_size;
@@ -63,10 +67,10 @@ void ReplayList::LoadReplays( const unsigned int from, const unsigned int to)
 
 void ReplayList::OnTimer(wxTimerEvent& event)
 {
-    if ( replay_chunk_size + m_current_parse_pos >  m_filenames.GetCount() ){
+    if ( replay_chunk_size + m_current_parse_pos >  m_filenames.size() ){
         //final parse run
         m_timer.Stop();
-        LoadReplays( m_current_parse_pos, m_filenames.GetCount() );
+        LoadReplays( m_current_parse_pos, m_filenames.size() );
     }
     else {
         LoadReplays( m_current_parse_pos, m_current_parse_pos + replay_chunk_size );
@@ -113,6 +117,7 @@ bool ReplayList::ReplayExists( replay_id_t const& id )
 
 bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
 {
+    //wxLogMessage(_T("GetReplayInfos %s"), ReplayPath.c_str());
     //wxLOG_Info  ( STD_STRING( ReplayPath ) );
     //TODO extract moar info
     ret.Filename = ReplayPath;
@@ -136,6 +141,9 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
     ret.MapName = FileName;
     ret.id = m_last_id;
     wxString script = GetScriptFromReplay( ReplayPath );
+
+    //wxLogMessage(_T("Script: %s"), script.c_str());
+
     if ( script.IsEmpty() )
         return false;
 
@@ -155,15 +163,17 @@ wxString ReplayList::GetScriptFromReplay ( const wxString& ReplayPath )
     {
         wxFile replay( ReplayPath, wxFile::read );
         replay.Seek( 20 );
-        int headerSize ;
+        int headerSize=0 ;
         replay.Read( &headerSize, 4);
         replay.Seek( 64 );
-        int scriptSize;
+        int scriptSize=0;
         replay.Read( &scriptSize, 4);
         replay.Seek( headerSize );
-        char* script_a = new char[scriptSize];
-        replay.Read( script_a, scriptSize );
-        wxString script = WX_STRINGC( script_a ) ;//(script_a,scriptSize);
+
+        std::string script_a(scriptSize,0);
+        replay.Read( &script_a[0], scriptSize );
+
+        wxString script = WX_STRING( script_a ) ;//(script_a,scriptSize);
 
         return script;
     }
@@ -261,7 +271,8 @@ void ReplayList::GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
         replay.Read( &unixtime, 8 );
         wxDateTime dt;
         dt.Set( (time_t) unixtime );
-        wxString date = dt.FormatDate();
+        /// todo: add 2 strings one for date other for time?
+        wxString date = dt.FormatDate()+_T(" ")+dt.FormatTime();
         rep.date = date;
     }
     catch (...){ }
@@ -269,9 +280,11 @@ void ReplayList::GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
 
 bool ReplayList::DeleteReplay( replay_id_t const& id )
 {
-    Replay& rep = m_replays[id];
+    Replay rep = m_replays[id];
     if ( wxRemoveFile( rep.Filename ) ) {
-        m_filenames.Remove( rep.Filename );
+
+        m_filenames.resize(std::remove(m_filenames.begin(), m_filenames.end(), rep.Filename)-m_filenames.begin());
+
         m_replays.erase(id);
         return true;
     }
