@@ -254,6 +254,7 @@ void ReplayTab::UpdateReplay( Replay& replay, const int index )
 
 void ReplayTab::RemoveAllReplays() {
     m_replay_listctrl->DeleteAllItems();
+    m_replay_listctrl->SetUnsorted();
 }
 
 
