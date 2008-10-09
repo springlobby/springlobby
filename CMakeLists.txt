@@ -205,7 +205,7 @@ SET(SpringLobbySrc
 	src/countrycodes.cpp
 	src/crashreport.cpp
 	src/customlistctrl.cpp
-	src/dishelper.c
+	src/disphelper.c
 	src/flagimages.cpp
 	src/globalevents.cpp
 	src/groupoptionspanel.cpp

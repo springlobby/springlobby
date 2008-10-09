@@ -464,8 +464,8 @@ springlobby_SOURCES = \
 	src/crashreport.h \
 	src/countrycodes.cpp \
 	src/countrycodes.h \
-	src/dishelper.c \
-	src/dishelper.h \
+	src/disphelper.c \
+	src/disphelper.h \
 	src/flagimagedata.h \
 	src/flagimages.cpp \
 	src/flagimages.h \
