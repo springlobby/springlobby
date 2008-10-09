@@ -744,15 +744,15 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
     // change the image of the tab to show new events
     SetIconHighlight( highlight_say );
     if ( m_type == CPT_User ) req_user = true;
+    //process logic for custom word highlights
+    if ( ContainsWordToHighlight( message ) )
+    {
+        req_user = sett().GetRequestAttOnHighlight();
+        col = sett().GetChatColorHighlight();
+    }
+    else
+        col = sett().GetChatColorNormal();
   }
-  //process logic for custom word highlights
-  if ( ContainsWordToHighlight( message ) )
-  {
-      req_user = sett().GetRequestAttOnHighlight();
-      col = sett().GetChatColorHighlight();
-  }
-  else
-      col = sett().GetChatColorNormal();
 
 	if ( who == _T( "MelBot" ) && message.StartsWith( _T( "<" ) ) && message.Contains( _T( ">" ) ) ) {
 		wxString who2;
