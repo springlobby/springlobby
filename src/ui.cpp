@@ -275,11 +275,7 @@ void Ui::StartHostedBattle()
 
 void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
 {
-    m_ingame = true;
-#ifndef NO_TORRENT_SYSTEM
-    torrent().SetIngameStatus(m_ingame);
-#endif
-    CacheThread().Pause();
+    OnSpringStarting();
     m_spring->Run( battle );
 }
 
@@ -1012,11 +1008,7 @@ void Ui::OnBattleStarted( Battle& battle )
             battle.SendMyBattleStatus();
             battle.GetMe().Status().in_game = true;
             battle.GetMe().SendMyUserStatus();
-            m_ingame = true;
-#ifndef NO_TORRENT_SYSTEM
-            torrent().SetIngameStatus(m_ingame);
-#endif
-            CacheThread().Pause();
+            OnSpringStarting();
             m_spring->Run( battle );
         }
     }
@@ -1044,6 +1036,16 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
         mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().DidAction( nick, msg );
     }
     catch (...){}
+}
+
+void Ui::OnSpringStarting()
+{
+  m_ingame = true;
+#ifndef NO_TORRENT_SYSTEM
+  torrent().SetIngameStatus(m_ingame);
+#endif
+  CacheThread().Pause();
+
 }
 
 
@@ -1184,6 +1186,7 @@ void Ui::ReloadPresetList()
 
 void Ui::WatchReplay ( wxString& filename )
 {
+    OnSpringStarting();
     m_spring->RunReplay( filename );
 }
 
