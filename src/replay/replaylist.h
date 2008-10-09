@@ -43,7 +43,6 @@ struct Replay
     wxString MapName;
     wxString ModName;
     wxString SpringVersion;
-    wxString ReplayName;
     wxString Filename;
     wxString date;
     OfflineBattle battle;

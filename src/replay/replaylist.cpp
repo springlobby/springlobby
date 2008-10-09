@@ -123,22 +123,17 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
     ret.Filename = ReplayPath;
 
     wxString FileName = ReplayPath.AfterLast( '/' ); // strips file path
-    FileName = FileName.Left( FileName.Find( _T(".sdf") ) ); //strips the file extension
-    FileName = FileName.AfterFirst( _T('-') );
+    FileName = FileName.BeforeLast( _T('.') ); //strips the file extension;
 
-    ret.ReplayName = FileName.AfterLast(_T('-')); // void string if multiple replays wich share previous paramteres aren't present
-    FileName = FileName.BeforeLast(_T('-'));
-    if ( ret.ReplayName.Contains(_T(".")) ) /// what we just parsed is not a multiple replay but spring version
-    {
-      ret.SpringVersion = ret.ReplayName;
-      ret.ReplayName = _T("");
-    }
-    else
-    {
-       ret.SpringVersion = FileName.AfterLast(_T('-'));
-       FileName = FileName.BeforeLast(_T('-'));
-    }
-    ret.MapName = FileName;
+    ret.date = FileName.BeforeFirst(_T('_'));
+    FileName = FileName.AfterFirst(_T('_'));
+
+    FileName = FileName.AfterFirst(_T('_')); // strips hours minutes seconds informatiom
+
+    ret.SpringVersion = FileName.AfterLast(_T('_'));
+
+    ret.MapName = FileName.BeforeLast(_T('_'));
+
     ret.id = m_last_id;
     wxString script = GetScriptFromReplay( ReplayPath );
 
