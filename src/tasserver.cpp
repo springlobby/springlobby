@@ -1947,10 +1947,6 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. 
 wxString TASServer::GetProtocol()
 {
   wxString pszstring;
-  #ifdef __WXMSW__
-    DWORD dwVolSerial;
-    if ( GetVolumeInformation((const WCHAR*)"C:\\",NULL,NULL,&dwVolSerial,NULL,NULL,NULL,NULL) ) pszstring = wxString::Format( _T("%h"), dwVolSerial );
-  #endif
   return pszstring;
 }
 
