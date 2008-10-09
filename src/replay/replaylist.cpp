@@ -41,11 +41,15 @@ void ReplayList::LoadReplays()
         m_current_parse_pos = replay_chunk_size;
         m_timer.Start( timer_interval, wxTIMER_CONTINUOUS );
     }
+
 }
 
 void ReplayList::LoadReplays( const unsigned int from, const unsigned int to)
 {
-    for (unsigned int i = from; i < to - 1; ++i)
+    static long replays_load_count=0;
+    wxLogMessage(_T("ReplayList::LoadReplays(%d,%d) call #%d"),from,to,replays_load_count);
+    unsigned int end=std::min(to,m_filenames.size());
+    for (unsigned int i = from; i < end; ++i)
     {
         Replay rep;
         if ( GetReplayInfos( m_filenames[i] , rep ) ){
@@ -53,6 +57,8 @@ void ReplayList::LoadReplays( const unsigned int from, const unsigned int to)
             m_replay_tab.AddReplay( m_replays[rep.id] );
         }
     }
+    wxLogMessage(_T("done ReplayList::LoadReplays(%d,%d) %d"),from,to,replays_load_count);
+    replays_load_count+=1;
 }
 
 void ReplayList::OnTimer(wxTimerEvent& event)

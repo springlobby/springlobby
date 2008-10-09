@@ -55,6 +55,8 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
   m_ui(ui),
   m_sel_replay_id(0)
 {
+    wxLogMessage(_T("ReplayTab::ReplayTab()"));
+
     m_replays = new ReplayList ( *this );
 
     wxBoxSizer* m_main_sizer;
@@ -158,9 +160,10 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
 ReplayTab::~ReplayTab()
 {
-    if (m_filter != 0)
-        m_filter->SaveFilterValues();
-    if(m_replays)delete m_replays;
+  if (m_filter != 0)
+      m_filter->SaveFilterValues();
+  if(m_replays)delete m_replays;
+  wxLogMessage(_T("ReplayTab::!ReplayTab()"));
 }
 
 void ReplayTab::AddAllReplays()
