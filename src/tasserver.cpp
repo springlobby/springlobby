@@ -1949,7 +1949,7 @@ wxString TASServer::GetProtocol()
   wxString pszstring;
   #ifdef __WXMSW__
     DWORD dwVolSerial;
-    if ( GetVolumeInformation("C:\\",NULL,NULL,&dwVolSerial,NULL,NULL,NULL,NULL) ) pszstring = wxString::Format( _T("%h"), dwVolSerial );
+    if ( GetVolumeInformation((const WCHAR*)"C:\\",NULL,NULL,&dwVolSerial,NULL,NULL,NULL,NULL) ) pszstring = wxString::Format( _T("%h"), dwVolSerial );
   #endif
   return pszstring;
 }
