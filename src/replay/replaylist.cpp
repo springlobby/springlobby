@@ -52,7 +52,7 @@ void ReplayList::LoadReplays( const unsigned int from, const unsigned int to)
 {
     static long replays_load_count=0;
     wxLogMessage(_T("ReplayList::LoadReplays(%d,%d) call #%d"),from,to,replays_load_count);
-    unsigned int end=std::min(to,m_filenames.size());
+    unsigned int end=std::min((unsigned int)to, (unsigned int)m_filenames.size());
     for (unsigned int i = from; i < end; ++i)
     {
         Replay rep;
