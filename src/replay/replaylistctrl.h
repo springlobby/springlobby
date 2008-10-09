@@ -20,6 +20,7 @@ class ReplayListCtrl : public CustomListCtrl
     ~ReplayListCtrl();
 
     void Sort();
+    void SetUnsorted();
 
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );

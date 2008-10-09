@@ -143,6 +143,13 @@ void ReplayListCtrl::OnDLMod( wxCommandEvent& event )
 }
 
 
+void ReplayListCtrl::SetUnsorted(){
+  wxListItem col;
+  GetColumn( m_sortorder[0].col, col );
+  col.SetImage( icons().ICON_NONE );
+  SetColumn( m_sortorder[0].col, col );
+}
+
 void ReplayListCtrl::OnColClick( wxListEvent& event )
 {
   int click_col=event.GetColumn();

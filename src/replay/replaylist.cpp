@@ -293,6 +293,7 @@ bool ReplayList::DeleteReplay( replay_id_t const& id )
 
 void ReplayList::RemoveAll()
 {
+    m_filenames.clear();
     m_replays.clear();
     m_last_id = 0;
     m_replay_tab.RemoveAllReplays();
