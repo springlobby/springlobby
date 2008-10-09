@@ -102,6 +102,8 @@ inline wxString TowxString(std::string arg){
 }
 /** @} */
 
+template <typename T> T clamp(const T var,const T min,const T max)
+{ return ( (var < min) ? min : ( var > max ) ? max : var ); }
 
 wxString GetLibExtension();
 void InitializeLoggingTargets();
