@@ -86,8 +86,9 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
 //  m_server_chat = new ChatPanel( m_chat_tabs, serv );
 //  m_chat_tabs->AddPage( m_server_chat, _("Server"), true, 1 );
 
-  m_close_window = new wxWindow( m_chat_tabs, -1 );
+
   #ifdef HAVE_WX26
+  m_close_window = new wxWindow( m_chat_tabs, -1 );
   m_chat_tabs->AddPage( m_close_window, _T(""), false, 0 );
   #endif
 
