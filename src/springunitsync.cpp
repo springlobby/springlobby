@@ -356,7 +356,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
     for (unsigned int i = 0; i < count; ++i)
     {
       // key  type
-      wxArrayString params = wxStringTokenize( cache[i], _T("\t") );
+      wxArrayString params = wxStringTokenize( cache[i], _T("\t"), wxTOKEN_RET_EMPTY);
       wxString key = params[0];
       switch ( s2l( params[1] ) )
       {
@@ -521,7 +521,7 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
     for (unsigned int i = 0; i < count; ++i)
     {
       // key  type
-      wxArrayString params = wxStringTokenize( cache[i], _T('\t') );
+      wxArrayString params = wxStringTokenize( cache[i], _T('\t'), wxTOKEN_RET_EMPTY );
       wxString key = params[0];
       switch ( s2l( params[1] ) )
       {
