@@ -1,5 +1,6 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#include <algorithm>
 #include <wx/dynlib.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
@@ -356,7 +357,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
     for (unsigned int i = 0; i < count; ++i)
     {
       // key  type
-      wxArrayString params = wxStringTokenize( cache[i], _T("\t") );
+      wxArrayString params = wxStringTokenize( cache[i], _T("\t"), wxTOKEN_RET_EMPTY);
       wxString key = params[0];
       switch ( s2l( params[1] ) )
       {
@@ -521,7 +522,7 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
     for (unsigned int i = 0; i < count; ++i)
     {
       // key  type
-      wxArrayString params = wxStringTokenize( cache[i], _T('\t') );
+      wxArrayString params = wxStringTokenize( cache[i], _T('\t'), wxTOKEN_RET_EMPTY );
       wxString key = params[0];
       switch ( s2l( params[1] ) )
       {
@@ -1027,26 +1028,29 @@ void SpringUnitSync::SetCacheFile( const wxString& path, const wxArrayString& da
   file.Close();
 }
 
-wxArrayString SpringUnitSync::GetReplayList()
+void SpringUnitSync::GetReplayList(std::vector<wxString> &ret)
 {
+  ret.clear();
   wxLogDebug( _T("") );
   LOCK_UNITSYNC;
 
-  if ( !IsLoaded() ) return wxArrayString();
+  if ( !IsLoaded() ) return;
 
   int ini = susynclib()->InitFindVFS( _T("demos/*.sdf") );
 
   wxString FilePath ;
-  wxArrayString ret;
-
+  //wxArrayString ret;
   do
   {
     ini = susynclib()->FindFilesVFS ( ini, FilePath );
     wxString FileName = wxString ( FilePath, wxConvUTF8 );
-    ret.Add ( FileName );
+    //ret.Add ( FileName );
+    ret.push_back(FileName);
   } while (ini != 0);
 
-  return ret;
+  std::sort(ret.begin(),ret.end());
+  std::vector<wxString>::iterator i=std::unique(ret.begin(),ret.end());
+  ret.resize(i-ret.begin());
 }
 
 bool SpringUnitSync::FileExists( const wxString& name )

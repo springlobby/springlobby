@@ -62,6 +62,7 @@ class ReplayTab : public wxPanel
     void SetFilterActiv(bool activ);
 
     void Deselect();
+    void Deselected();
     void OnDeselect( wxListEvent& event );
 
   protected:

@@ -70,8 +70,9 @@ class ReplayList : public wxEvtHandler
     void AddReplay( Replay replay );
     void RemoveReplay( replay_id_t const& id );
 
-    Replay GetReplayById( replay_id_t const& id );
-    Replay& GetReplay( int const index ) ;
+    Replay &GetReplayById( replay_id_t const& id );
+
+    ///Replay& GetReplay( int const index ) ;
 
     bool ReplayExists( replay_id_t const& id );
     bool DeleteReplay( replay_id_t const& id );
@@ -80,6 +81,9 @@ class ReplayList : public wxEvtHandler
     void OnTimer(wxTimerEvent& event);
 
     void RemoveAll();
+
+
+    replay_map_t &GetReplaysMap();
 
   protected:
 
@@ -105,7 +109,7 @@ class ReplayList : public wxEvtHandler
     //! used to "remotely" add replays to gui
     ReplayTab& m_replay_tab;
 
-    wxArrayString m_filenames;
+    std::vector<wxString> m_filenames;
     unsigned long m_last_id;
 
     DECLARE_EVENT_TABLE()

@@ -203,6 +203,7 @@ TorrentWrapper::TorrentWrapper():
         m_is_connecting(false),
         m_started(false)
 {
+    wxLogMessage(_T("TorrentWrapper::TorrentWrapper()"));
     m_tracker_urls.Add( _T("tracker.caspring.org"));
     m_tracker_urls.Add( _T("tracker2.caspring.org"));
     m_tracker_urls.Add( _T("backup-tracker.licho.eu"));
@@ -254,6 +255,7 @@ TorrentWrapper::TorrentWrapper():
 
 TorrentWrapper::~TorrentWrapper()
 {
+    wxLogMessage(_T("TorrentWrapper::~TorrentWrapper()"));
     try
     {
         m_torr->stop_upnp();
