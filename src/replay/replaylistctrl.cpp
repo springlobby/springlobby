@@ -124,7 +124,7 @@ void ReplayListCtrl::OnDLMap( wxCommandEvent& event )
 {
     if ( m_selected != -1 ) {
         if ( m_replaylist.ReplayExists(m_selected) ) {
-            OfflineBattle battle = m_replaylist.GetReplay(m_selected).battle;
+            OfflineBattle battle = m_replaylist.GetReplayById(m_selected).battle;
             ui().DownloadMap( battle.GetHostMapHash(), battle.GetHostMapName() );
         }
     }
@@ -135,7 +135,7 @@ void ReplayListCtrl::OnDLMod( wxCommandEvent& event )
 {
     if ( m_selected != -1 ) {
         if ( m_replaylist.ReplayExists(m_selected) ) {
-            OfflineBattle battle = m_replaylist.GetReplay(m_selected).battle;
+            OfflineBattle battle = m_replaylist.GetReplayById(m_selected).battle;
             ui().DownloadMod( battle.GetHostModHash(), battle.GetHostModName() );
         }
     }
@@ -185,8 +185,8 @@ void ReplayListCtrl::Sort()//needs adjusting when column order etc is stable
 int wxCALLBACK ReplayListCtrl::CompareMapUP(long item1, long item2, long sortData)
 {
 
-  Replay replay1 = m_replaylist_sort->GetReplay(item1);
-  Replay replay2 = m_replaylist_sort->GetReplay(item2);
+  Replay replay1 = m_replaylist_sort->GetReplayById(item1);
+  Replay replay2 = m_replaylist_sort->GetReplayById(item2);
 
   if ( RefineMapname( replay1.MapName ).MakeUpper() < RefineMapname( replay2.MapName ).MakeUpper() )
       return -1;
@@ -198,8 +198,8 @@ int wxCALLBACK ReplayListCtrl::CompareMapUP(long item1, long item2, long sortDat
 
 int wxCALLBACK ReplayListCtrl::CompareMapDOWN(long item1, long item2, long sortData)
 {
-  Replay replay1 = m_replaylist_sort->GetReplay(item1);
-  Replay replay2 = m_replaylist_sort->GetReplay(item2);
+  Replay replay1 = m_replaylist_sort->GetReplayById(item1);
+  Replay replay2 = m_replaylist_sort->GetReplayById(item2);
 
   if ( RefineMapname( replay1.MapName ).MakeUpper() < RefineMapname( replay2.MapName ).MakeUpper() )
       return 1;
@@ -212,8 +212,8 @@ int wxCALLBACK ReplayListCtrl::CompareMapDOWN(long item1, long item2, long sortD
 int wxCALLBACK ReplayListCtrl::CompareModUP(long item1, long item2, long sortData)
 {
 
-  Replay replay1 = m_replaylist_sort->GetReplay(item1);
-  Replay replay2 = m_replaylist_sort->GetReplay(item2);
+  Replay replay1 = m_replaylist_sort->GetReplayById(item1);
+  Replay replay2 = m_replaylist_sort->GetReplayById(item2);
 
   if ( RefineModname( replay1.ModName ).MakeUpper() < RefineModname( replay2.ModName ).MakeUpper() )
       return -1;
@@ -227,8 +227,8 @@ int wxCALLBACK ReplayListCtrl::CompareModUP(long item1, long item2, long sortDat
 int wxCALLBACK ReplayListCtrl::CompareModDOWN(long item1, long item2, long sortData)
 {
 
-  Replay replay1 = m_replaylist_sort->GetReplay(item1);
-  Replay replay2 = m_replaylist_sort->GetReplay(item2);
+  Replay replay1 = m_replaylist_sort->GetReplayById(item1);
+  Replay replay2 = m_replaylist_sort->GetReplayById(item2);
 
   if ( RefineModname( replay1.ModName ).MakeUpper() < RefineModname( replay2.ModName ).MakeUpper() )
       return 1;
@@ -241,8 +241,8 @@ int wxCALLBACK ReplayListCtrl::CompareModDOWN(long item1, long item2, long sortD
 int wxCALLBACK ReplayListCtrl::ComparePlayerUP(long item1, long item2, long sortData)
 {
 
-  Replay replay1 = m_replaylist_sort->GetReplay(item1);
-  Replay replay2 = m_replaylist_sort->GetReplay(item2);
+  Replay replay1 = m_replaylist_sort->GetReplayById(item1);
+  Replay replay2 = m_replaylist_sort->GetReplayById(item2);
 
   if ( replay1.playernum < replay2.playernum )
       return -1;
@@ -255,8 +255,8 @@ int wxCALLBACK ReplayListCtrl::ComparePlayerUP(long item1, long item2, long sort
 int wxCALLBACK ReplayListCtrl::ComparePlayerDOWN(long item1, long item2, long sortData)
 {
 
-  Replay replay1 = m_replaylist_sort->GetReplay(item1);
-  Replay replay2 = m_replaylist_sort->GetReplay(item2);
+  Replay replay1 = m_replaylist_sort->GetReplayById(item1);
+  Replay replay2 = m_replaylist_sort->GetReplayById(item2);
 
   if ( replay1.playernum  < replay2.playernum  )
       return 1;
@@ -315,7 +315,7 @@ void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)
 		{
 			long item = GetItemData(item_hit);
 
-			Replay replay = m_replaylist.GetReplay(item);
+			Replay replay = m_replaylist.GetReplayById(item);
 			int coloumn = getColoumnFromPosition(position);
 			switch (coloumn)
 			{

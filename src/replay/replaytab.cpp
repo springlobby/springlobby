@@ -160,6 +160,7 @@ ReplayTab::~ReplayTab()
 {
     if (m_filter != 0)
         m_filter->SaveFilterValues();
+    if(m_replays)delete m_replays;
 }
 
 void ReplayTab::AddAllReplays()
@@ -253,11 +254,16 @@ void ReplayTab::RemoveAllReplays() {
 
 
 void ReplayTab::UpdateList() {
-
+/*
   for (unsigned int i = 0; i < m_replays->GetNumReplays(); ++i) {
     Replay b = m_replays->GetReplay(i);
 
     UpdateReplay(b);
+  }
+  */
+  replay_map_t &replays=m_replays->GetReplaysMap();
+  for(replay_iter_t i=replays.begin();i!=replays.end();++i){
+    UpdateReplay(i->second);
   }
 }
 
@@ -353,7 +359,7 @@ void ReplayTab::OnSelect( wxListEvent& event )
             int index = event.GetIndex();
             m_replay_listctrl->SetSelectedIndex( index );
             long data = m_replay_listctrl->GetItemData( index );
-            Replay& rep = m_replays->GetReplay( data );
+            Replay& rep = m_replays->GetReplayById( data );
             m_sel_replay_id = rep.id;
             m_players_text->SetLabel(_T(""));
             m_map_text->SetLabel(rep.battle.GetHostMapName());

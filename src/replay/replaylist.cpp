@@ -83,14 +83,14 @@ replay_map_t::size_type ReplayList::GetNumReplays()
   return m_replays.size();
 }
 
-Replay ReplayList::GetReplayById( replay_id_t const& id ) {
+Replay &ReplayList::GetReplayById( replay_id_t const& id ) {
 //TODO catch
   replay_iter_t b = m_replays.find(id);
   if (b == m_replays.end())
     throw std::runtime_error("ReplayList_Iter::GetReplay(): no such replay");
   return b->second;
 }
-
+/*
 Replay& ReplayList::GetReplay( int const index ) {
 //TODO secure index
   replay_iter_t b = m_replays.begin();
@@ -99,7 +99,7 @@ Replay& ReplayList::GetReplay( int const index ) {
     throw std::runtime_error("ReplayList_Iter::GetReplay(): no such replay");
   return b->second;
 }
-
+*/
 bool ReplayList::ReplayExists( replay_id_t const& id )
 {
   return m_replays.find(id) != m_replays.end();
@@ -277,4 +277,9 @@ void ReplayList::RemoveAll()
     m_replays.clear();
     m_last_id = 0;
     m_replay_tab.RemoveAllReplays();
+}
+
+
+replay_map_t &ReplayList::GetReplaysMap(){
+  return m_replays;
 }

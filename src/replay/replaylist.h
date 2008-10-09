@@ -71,8 +71,9 @@ class ReplayList : public wxEvtHandler
     void AddReplay( Replay replay );
     void RemoveReplay( replay_id_t const& id );
 
-    Replay GetReplayById( replay_id_t const& id );
-    Replay& GetReplay( int const index ) ;
+    Replay &GetReplayById( replay_id_t const& id );
+
+    ///Replay& GetReplay( int const index ) ;
 
     bool ReplayExists( replay_id_t const& id );
     bool DeleteReplay( replay_id_t const& id );
@@ -81,6 +82,9 @@ class ReplayList : public wxEvtHandler
     void OnTimer(wxTimerEvent& event);
 
     void RemoveAll();
+
+
+    replay_map_t &GetReplaysMap();
 
   protected:
 
