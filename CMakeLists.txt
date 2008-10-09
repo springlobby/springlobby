@@ -11,8 +11,7 @@ ADD_DEFINITIONS(-Wall -Wno-strict-aliasing -O2)
 # General Settings
 #----------------------------------------------------------------------------------------------------
 SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
-SET(CMAKE_FIND_LIBRARY_PREFIXES "")
-SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".a")
+SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a")
 
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules
