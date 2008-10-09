@@ -917,7 +917,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
     info.author = cache[0];
     info.tidalStrength =  s2l( cache[1] );
     info.gravity = s2l( cache[2] );
-    info.maxMetal = s2l( cache[3] );
+    info.maxMetal = s2d( cache[3] );
     info.extractorRadius = s2d( cache[4] );
     info.minWind = s2l( cache[5] );
     info.maxWind = s2l( cache[6] );
