@@ -25,9 +25,6 @@
 
 #include "settings.h"
 
-#ifdef __WXMSW__
-#include "windows.h"
-#endif
 
 const int udp_reply_timeout=10;
 
