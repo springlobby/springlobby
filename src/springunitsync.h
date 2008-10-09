@@ -73,7 +73,7 @@ class SpringUnitSync : public IUnitSync
     void SetSpringDataPath( const wxString& path );
     wxString GetSpringDataPath();
 
-    wxArrayString GetReplayList();
+    void GetReplayList(std::vector<wxString> &ret);
 
     bool FileExists( const wxString& name );
 
