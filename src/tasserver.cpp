@@ -26,7 +26,7 @@
 #include "settings.h"
 
 #ifdef __WXMSW__
-#include "disphelper.h"
+#include "windows.h"
 #endif
 
 const int udp_reply_timeout=10;
@@ -1948,23 +1948,8 @@ wxString TASServer::GetProtocol()
 {
   wxString pszstring;
   #ifdef __WXMSW__
-  DISPATCH_OBJ(wmiDisk);
-  char* psz = NULL;
-
-  dhInitialize(TRUE);
-  dhToggleExceptions(TRUE);
-
-  dhGetObject(L"winmgmts:{impersonationLevel=impersonate}!\\\\.\\root\\cimv2:Win32_LogicalDisk='C:'",
-                     NULL, &wmiDisk);
-  dhGetValue(L"%s", &psz, wmiDisk, L".VolumeSerialNumber");
-
-  pszstring = WX_STRINGC( psz );
-
-  delete[] psz;
-  SAFE_RELEASE(wmiDisk);
-
-  dhUninitialize(TRUE);
-  getchar();
+    DWORD dwVolSerial;
+    if ( GetVolumeInformation("C:\\",NULL,NULL,&dwVolSerial,NULL,NULL,NULL,NULL) ) pszstring = wxString::Format( _T("%h"), dwVolSerial );
   #endif
   return pszstring;
 }
