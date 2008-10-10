@@ -923,8 +923,8 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 
     m_tmp_brect = GetBattleRect(m_mdown_x<event.GetX()?m_mdown_x:event.GetX(),
                                 m_mdown_y<event.GetY()?m_mdown_y:event.GetY(),
-                                m_mdown_x>event.GetX()?m_mdown_x:event.GetX()
-                                m_mdown_y>event.GetY()?m_mdown_y:event.GetY()
+                                m_mdown_x>event.GetX()?m_mdown_x:event.GetX(),
+                                m_mdown_y>event.GetY()?m_mdown_y:event.GetY(),
                                 m_tmp_brect.ally );
 
     wxRect newr = GetStartRect( m_tmp_brect );
