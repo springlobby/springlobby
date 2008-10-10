@@ -14,6 +14,7 @@
 #include <wx/statbmp.h>
 #include <wx/listctrl.h>
 #include <wx/dialog.h>
+#include <wx/gauge.h>
 
 
 
@@ -387,3 +388,27 @@ void actNotifBox( int whichIcon , const wxString& message,const wxString& captio
             s_actNotifBox->Show(true);
 		}
 }
+
+
+ ActivityNotice::ActivityNotice(wxWindow* parent,const wxString& file)
+    :wxDialog ( parent,wxID_ANY,_T(""),wxDefaultPosition, wxSize(100,50),wxBORDER_NONE|wxSTAY_ON_TOP),
+    m_filename(file)
+{
+    wxBoxSizer* m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
+    m_gauge = new wxGauge(this, wxID_ANY,0,wxDefaultPosition,wxSize(80,15) );
+    m_gauge->Pulse();
+    m_message = new wxStaticText(this,wxID_ANY,_("yadda"));
+    m_main_sizer->Add( m_message, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
+    m_main_sizer->Add( m_gauge, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
+    SetSizer(m_main_sizer);
+    Layout();
+}
+
+void ActivityNotice::SetString(const wxString& file)
+{
+    m_filename = file;
+    m_message->SetLabel(_("efd") );
+    Layout();
+}
+
+

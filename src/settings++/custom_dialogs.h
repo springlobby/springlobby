@@ -13,10 +13,12 @@ class wxWindow;
 class wxPoint;
 class wxString;
 class wxTextCtrl;
+class wxStaticText;
 class wxCommandEvent;
 class wxCloseEvent;
 class wxBoxSizer;
 class wxListCtrl;
+class wxGauge;
 
 #define SL_MAIN_WINDOW_PTR CustomMessageBox::getLobbypointer()
 #define SE_FRAME_PTR CustomMessageBox::getSettingspointer()
@@ -143,6 +145,17 @@ private:
 	wxTextCtrl* text_ctrl;
 };
 
+class ActivityNotice: public wxDialog
+{
+    public:
+        ActivityNotice(wxWindow* parent,const wxString& file);
+        virtual ~ActivityNotice() {}
 
+        void SetString(const wxString& file);
+    protected:
+        wxString m_filename;
+        wxGauge* m_gauge;
+        wxStaticText* m_message;
+};
 
 #endif /*CUSTOM_MSG_DLG_H_*/
