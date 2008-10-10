@@ -123,7 +123,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 BattleMapTab::~BattleMapTab()
 {
   #ifndef HAVE_WX26
-  GetAui().manager->DetachPane( this );
+  if(GetAui().manager)GetAui().manager->DetachPane( this );
   #endif
 }
 

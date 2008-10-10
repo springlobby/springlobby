@@ -275,7 +275,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 BattleRoomTab::~BattleRoomTab()
 {
   #ifndef HAVE_WX26
-  GetAui().manager->DetachPane( this );
+  if(GetAui().manager)GetAui().manager->DetachPane( this );
   #endif
 }
 
