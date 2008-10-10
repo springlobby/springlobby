@@ -920,7 +920,13 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   if ( m_maction == MA_Add ) { // We are currently adding a rect.
 
     wxRect oldr = GetStartRect( m_tmp_brect );
-    m_tmp_brect = GetBattleRect( m_mdown_x<event.GetX()?m_mdown_x:event.GetX(), m_mdown_y<event.GetY()?m_mdown_y:event.GetY(), m_mdown_x>event.GetX()?m_mdown_x:event.GetX(), m_mdown_y>event.GetY()?m_mdown_y:event.GetY(), m_tmp_brect.ally );
+    wxRect mapR = GetMinimapRect();
+    m_tmp_brect = GetBattleRect(clamp(m_mdown_x<event.GetX()?m_mdown_x:event.GetX(),mapR.GetLeft(),mapR.GetRight()),
+                                clamp(m_mdown_y<event.GetY()?m_mdown_y:event.GetY(),mapR.GetTop(),mapR.GetBottom()),
+                                clamp(m_mdown_x>event.GetX()?m_mdown_x:event.GetX(),mapR.GetLeft(),mapR.GetRight()),
+                                clamp(m_mdown_y>event.GetY()?m_mdown_y:event.GetY(),mapR.GetTop(),mapR.GetBottom()),
+                                m_tmp_brect.ally );
+
     wxRect newr = GetStartRect( m_tmp_brect );
     if ( newr != oldr ) RefreshRect( newr.Union( oldr ), false );
     return;
