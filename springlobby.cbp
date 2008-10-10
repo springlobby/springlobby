@@ -28,7 +28,6 @@
 					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
 					<Add option="`pkg-config --libs libtorrent`" />
-					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
 					<Add option="`sdl-config --libs`" />
 					<Add library="SDL_mixer" />
 				</Linker>
@@ -195,6 +194,10 @@
 		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
+		<Unit filename="src/disphelper.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/disphelper.h" />
 		<Unit filename="src/filelister/filelistctrl.cpp" />
 		<Unit filename="src/filelister/filelistctrl.h" />
 		<Unit filename="src/filelister/filelistdialog.cpp" />

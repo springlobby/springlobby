@@ -25,6 +25,7 @@
 
 #include "settings.h"
 
+
 const int udp_reply_timeout=10;
 
 
@@ -350,14 +351,17 @@ void TASServer::Login()
 {
     wxLogDebugFunc( _T("") );
     wxString pass = GetPasswordHash( m_pass );
-    if ( m_server_lanmode ) pass = _T("Cock-a-doodle-doo");
+    wxString protocol = _T(" ") + GetProtocol();
+    if ( m_server_lanmode )
+    {
+       pass = _T("Cock-a-doodle-doo");
+       protocol = _T("");
+    }
     wxString localaddr;
     if ( m_sock ) localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
-    wxLogMessage( m_user + _T(" ") + pass + _T(" ") +
-        GetHostCPUSpeed() + _T(" ") + localaddr +_T(" SpringLobby 0.1") );
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
-        GetHostCPUSpeed() + _T(" ") + localaddr +_T(" SpringLobby 0.1") );
+        GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol );
 }
 
 void TASServer::Logout()
@@ -848,6 +852,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         channel = GetWordParam( params );
         m_se->OnChannelMessage( channel, params );
         //CHANNELMESSAGE channame {message}
+    }
+    else if ( cmd == _T("ACQUIREUSERID") )
+    {
+      SendCmd( _T("USERID"), GetProtocol() );
     }
     else if ( cmd == _T("FORCELEAVECHANNEL") )
     {
@@ -1931,6 +1939,12 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. 
             UdpPing(src_port,ip,port,_T("hai!"));
         }
     }
+}
+
+wxString TASServer::GetProtocol()
+{
+  wxString pszstring;
+  return pszstring;
 }
 
 //! @brief used to check if the NAT is done properly when hosting

@@ -133,6 +133,7 @@ class TASServer : public Server
     void OnConnected( Socket* sock );
     void OnDisconnected( Socket* sock );
     void OnDataReceived( Socket* sock );
+    wxString GetProtocol();
 
     bool IsPasswordHash( const wxString& pass );
     wxString GetPasswordHash( const wxString& pass );
