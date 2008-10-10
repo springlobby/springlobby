@@ -418,15 +418,14 @@ void ReplayTab::Deselected()
 
 void ReplayTab::ReloadList()
 {
-//    /// should be changed to use delayed load once perf testing is done
-//    wxDateTime dt = wxDateTime::UNow();
+    wxDateTime dt = wxDateTime::UNow();
     Deselect();
     m_replays->RemoveAll();
     m_replays->LoadReplays();
 
-//    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
-//    if ( sec > 0 )
-//        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );
+    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
+    if ( sec > 0 )
+        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );
 }
 
 void ReplayTab::OnReload( wxCommandEvent& event )

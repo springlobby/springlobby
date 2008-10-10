@@ -1048,9 +1048,13 @@ void SpringUnitSync::GetReplayList(std::vector<wxString> &ret)
     ret.push_back(FileName);
   } while (ini != 0);
 
+    int kol = ret.size();
+
   std::sort(ret.begin(),ret.end());
   std::vector<wxString>::iterator i=std::unique(ret.begin(),ret.end());
-  ret.resize(i-ret.begin());
+  ret.resize(i - ret.begin());
+
+  kol = ret.size();
 }
 
 bool SpringUnitSync::FileExists( const wxString& name )
