@@ -4,6 +4,7 @@
 #include <wx/msgdlg.h>
 #include <wx/defs.h>
 #include <wx/dialog.h>
+#include <wx/timer.h>
 
 #define SL_MAIN_ICON 1
 #define SS_MAIN_ICON 2
@@ -156,6 +157,11 @@ class ActivityNotice: public wxDialog
         wxString m_filename;
         wxGauge* m_gauge;
         wxStaticText* m_message;
+        wxTimer m_timer;
+
+        void OnTimer(wxTimerEvent& event);
+
+        DECLARE_EVENT_TABLE()
 };
 
 #endif /*CUSTOM_MSG_DLG_H_*/
