@@ -584,6 +584,6 @@ void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& event )
     m_autojoin_dialog = new AutojoinChannelDialog (this);
     m_autojoin_dialog->Show();
 
-    ActivityNotice axct (this, _T("NJN=") );
+    ActivityNotice axct (this, _T("amazing mod.sd7") );
     axct.ShowModal();
 }
