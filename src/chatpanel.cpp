@@ -250,20 +250,20 @@ ChatPanel::~ChatPanel()
 	{
         m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
         #ifndef HAVE_WX26
-        GetAui().manager->DetachPane( this );
+        if(GetAui().manager)GetAui().manager->DetachPane( this );
         #endif
 	}
 	else if ( m_type == CPT_Server )
 	{
         m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
         #ifndef HAVE_WX26
-        GetAui().manager->DetachPane( this );
+        if(GetAui().manager)GetAui().manager->DetachPane( this );
         #endif
 	}
 	else if ( m_type == CPT_User )
 	{
         #ifndef HAVE_WX26
-        GetAui().manager->DetachPane( this );
+        if(GetAui().manager)GetAui().manager->DetachPane( this );
         #endif
 	}
 }

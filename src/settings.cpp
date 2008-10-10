@@ -89,11 +89,14 @@ Settings::Settings()
 
 Settings::~Settings()
 {
+  /// dizekat: fixing crashbug. Settings are saved from both OnExit and UI close.
+  /*
     m_config->Write( _T("/General/firstrun"), false );
     #if defined(__WXMSW__) && !defined(HAVE_WX26)
     SaveSettings();
     #endif
     SetCacheVersion();
+  */
     delete m_config;
 }
 

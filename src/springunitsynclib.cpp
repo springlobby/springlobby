@@ -234,8 +234,8 @@ void SpringUnitSyncLib::Load( const wxString& path )
 
 void SpringUnitSyncLib::Unload()
 {
+  if ( !_IsLoaded() ) return;/// dont even lock anything if unloaded.
   LOCK_UNITSYNC;
-  if ( !_IsLoaded() ) return;
 
   _Unload();
 }

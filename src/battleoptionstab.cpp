@@ -290,7 +290,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 BattleOptionsTab::~BattleOptionsTab()
 {
   #ifndef HAVE_WX26
-  GetAui().manager->DetachPane( this );
+  if(GetAui().manager)GetAui().manager->DetachPane( this );
   #endif
 }
 
