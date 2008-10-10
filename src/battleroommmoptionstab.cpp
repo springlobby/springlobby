@@ -65,7 +65,7 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
 {
   #ifndef HAVE_WX26
-  GetAui().manager->DetachPane( this );
+  if(GetAui().manager)GetAui().manager->DetachPane( this );
   #endif
 }
 
