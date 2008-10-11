@@ -15,6 +15,7 @@
 #include <wx/listctrl.h>
 #include <wx/dialog.h>
 #include <wx/gauge.h>
+#include <wx/app.h>
 
 
 
@@ -421,3 +422,16 @@ void ActivityNotice::OnTimer(wxTimerEvent& event)
 {
     m_gauge->Pulse();
 }
+
+ ActivityNoticeContainer::ActivityNoticeContainer(wxWindow* parent_,const wxString& file)
+{
+    wxWindow* parent = ( parent_ != 0 ) ? parent_ : ( wxTheApp->GetTopWindow() ) ;
+    m_window = new ActivityNotice( parent, file);
+    m_window->Show(true);
+}
+
+ ActivityNoticeContainer::~ActivityNoticeContainer()
+{
+    m_window->Destroy();
+}
+

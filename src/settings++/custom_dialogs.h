@@ -164,4 +164,15 @@ class ActivityNotice: public wxDialog
         DECLARE_EVENT_TABLE()
 };
 
+//! use this for a notice that closes automatically when going out of scope
+class ActivityNoticeContainer
+{
+    public:
+        ActivityNoticeContainer(wxWindow* parent,const wxString& file);
+        ~ActivityNoticeContainer();
+
+    protected:
+        ActivityNotice* m_window;
+};
+
 #endif /*CUSTOM_MSG_DLG_H_*/
