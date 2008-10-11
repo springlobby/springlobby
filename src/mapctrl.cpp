@@ -1239,7 +1239,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
 
 void MapCtrl::OnMouseWheel( wxMouseEvent& event )
 {
-  if (usync().VersionSupports(USYNC_GetInfoMap) && m_minimap) {
+  if (m_metalmap) {
     int idx = (int) m_current_infomap;
     if (event.m_wheelRotation > 0) {
       ++idx;
