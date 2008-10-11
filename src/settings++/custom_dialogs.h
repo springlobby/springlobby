@@ -5,6 +5,7 @@
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/timer.h>
+#include <wx/panel.h>
 
 #define SL_MAIN_ICON 1
 #define SS_MAIN_ICON 2
@@ -146,11 +147,11 @@ private:
 	wxTextCtrl* text_ctrl;
 };
 
-class ActivityNotice: public wxDialog
+class ActivityNoticePanel: public wxPanel
 {
     public:
-        ActivityNotice(wxWindow* parent,const wxString& file);
-        virtual ~ActivityNotice() {}
+        ActivityNoticePanel(wxWindow* parent,const wxString& file);
+        virtual ~ActivityNoticePanel() {}
 
         void SetString(const wxString& file);
     protected:
@@ -162,6 +163,15 @@ class ActivityNotice: public wxDialog
         void OnTimer(wxTimerEvent& event);
 
         DECLARE_EVENT_TABLE()
+};
+
+class ActivityNotice: public wxDialog
+{
+    public:
+        ActivityNotice(wxWindow* parent,const wxString& file);
+        virtual ~ActivityNotice() {}
+    protected:
+        ActivityNoticePanel* m_panel;
 };
 
 //! use this for a notice that closes automatically when going out of scope

@@ -391,13 +391,23 @@ void actNotifBox( int whichIcon , const wxString& message,const wxString& captio
 }
 
 
-BEGIN_EVENT_TABLE(ActivityNotice,wxDialog)
-    	EVT_TIMER(wxID_ANY, ActivityNotice::OnTimer)
+BEGIN_EVENT_TABLE(ActivityNoticePanel,wxPanel)
+    	EVT_TIMER(wxID_ANY, ActivityNoticePanel::OnTimer)
 END_EVENT_TABLE()
 
 
  ActivityNotice::ActivityNotice(wxWindow* parent,const wxString& file)
-    :wxDialog ( parent,wxID_ANY,_T(""),wxDefaultPosition, wxSize(190,60),wxBORDER_NONE|wxSTAY_ON_TOP),
+    :wxDialog ( parent,wxID_ANY,_T(""),wxDefaultPosition, wxSize(190,60),wxBORDER_NONE)
+{
+    wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
+    m_panel = new ActivityNoticePanel(this,file);
+    m_main_sizer->Add( m_panel, 1 , wxALL|wxEXPAND, 0 );
+    SetSizer(m_main_sizer);
+    Layout();
+}
+
+ ActivityNoticePanel::ActivityNoticePanel(wxWindow* parent,const wxString& file)
+    :wxPanel ( parent,wxID_ANY,wxDefaultPosition, wxSize(190,60),wxBORDER_NONE),
     m_filename(file),m_timer(this,wxID_ANY)
 {
     wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
@@ -411,14 +421,14 @@ END_EVENT_TABLE()
     m_timer.Start( 80, wxTIMER_CONTINUOUS );
 }
 
-void ActivityNotice::SetString(const wxString& file)
+void ActivityNoticePanel::SetString(const wxString& file)
 {
     m_filename = file;
     m_message->SetLabel(_("Caching file ") + m_filename + _("\nplease wait"));
     Layout();
 }
 
-void ActivityNotice::OnTimer(wxTimerEvent& event)
+void ActivityNoticePanel::OnTimer(wxTimerEvent& event)
 {
     m_gauge->Pulse();
 }
