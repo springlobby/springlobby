@@ -45,7 +45,7 @@ SpringUnitSync::SpringUnitSync()
 SpringUnitSync::~SpringUnitSync()
 {
   CacheThread().Stop();
-  FreeUnitSyncLib();
+  //FreeUnitSyncLib();
 }
 
 
