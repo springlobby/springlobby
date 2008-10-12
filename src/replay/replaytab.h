@@ -19,7 +19,8 @@ class wxToggleButton;
 class ReplayList_Iter;
 class Replay;
 class ReplayList;
-//class ReplayListFilter;
+class ActivityNoticePanel;
+
 #include "replayfilter.h"
 
 class ReplayListCtrl;
@@ -65,6 +66,8 @@ class ReplayTab : public wxPanel
     void Deselected();
     void OnDeselect( wxListEvent& event );
 
+    void ShowLoading( bool show = true );
+
   protected:
     ReplayList* m_replays;
     ReplayListFilter* m_filter;
@@ -90,6 +93,8 @@ class ReplayTab : public wxPanel
 #else
 		wxCheckBox* m_filter_show;
 #endif
+
+    ActivityNoticePanel* m_load_notice;
 
     Ui& m_ui;
 

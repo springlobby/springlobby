@@ -71,7 +71,15 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     m_replay_listctrl = new ReplayListCtrl( this, *m_replays );
     m_replaylist_sizer->Add( m_replay_listctrl, 1, wxALL|wxEXPAND, 5 );
 
-    m_main_sizer->Add( m_replaylist_sizer, 1, wxEXPAND, 5 );;
+    m_main_sizer->Add( m_replaylist_sizer, 1, wxEXPAND, 5 );
+
+    wxBoxSizer* m_loadinfo_sizer;
+    m_loadinfo_sizer = new wxBoxSizer( wxHORIZONTAL );
+    m_load_notice = new ActivityNoticePanel( this, _("Loading replays") );
+    m_load_notice->Show ( false );
+    m_loadinfo_sizer->Add( m_load_notice, 0, wxALL|wxALIGN_CENTER_HORIZONTAL,0);
+    m_main_sizer->Add( m_loadinfo_sizer, 0,  wxALL|wxALIGN_CENTER_HORIZONTAL, 0 );
+
 
     wxBoxSizer* m_info_sizer;
     m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -157,6 +165,11 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
 }
 
+void ReplayTab::ShowLoading(bool show)
+{
+    m_load_notice->Show( show );
+    Layout();
+}
 
 ReplayTab::~ReplayTab()
 {

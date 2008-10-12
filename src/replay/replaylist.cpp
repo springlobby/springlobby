@@ -35,7 +35,7 @@ void ReplayList::LoadReplays()
     m_filenames.clear();
     usync().GetReplayList(m_filenames);
     m_replays.clear();
-
+    m_replay_tab.ShowLoading( true );
     m_timer.Stop();
     size_t size = m_filenames.size();
 
@@ -77,6 +77,7 @@ void ReplayList::OnTimer(wxTimerEvent& event)
     if ( replay_chunk_size + m_current_parse_pos >  m_filenames.size() ){
         //final parse run
         m_timer.Stop();
+        m_replay_tab.ShowLoading( false );
         LoadReplays( m_current_parse_pos, m_filenames.size() );
     }
     else {

@@ -154,10 +154,12 @@ class ActivityNoticePanel: public wxPanel
         virtual ~ActivityNoticePanel() {}
 
         void SetString(const wxString& file);
+        virtual bool Show(bool show = true);
     protected:
         wxString m_filename;
         wxGauge* m_gauge;
         wxStaticText* m_message;
+        wxStaticText* m_format;
         wxTimer m_timer;
 
         void OnTimer(wxTimerEvent& event);
@@ -168,7 +170,7 @@ class ActivityNoticePanel: public wxPanel
 class ActivityNotice: public wxDialog
 {
     public:
-        ActivityNotice(wxWindow* parent,const wxString& file);
+        ActivityNotice(wxWindow* parent,const wxString& file, const wxString& format = _("Caching file %s please wait"));
         virtual ~ActivityNotice() {}
     protected:
         ActivityNoticePanel* m_panel;
@@ -178,7 +180,7 @@ class ActivityNotice: public wxDialog
 class ActivityNoticeContainer
 {
     public:
-        ActivityNoticeContainer(wxWindow* parent,const wxString& file);
+        ActivityNoticeContainer(wxWindow* parent,const wxString& file, const wxString& format = _("Caching file %s please wait"));
         ~ActivityNoticeContainer();
 
     protected:
