@@ -21,12 +21,6 @@
 
 #include "useractions.h"
 
-/** global delay (ms)
- * \todo make this definable per child class
- */
-const unsigned int TOOLTIP_DELAY    = 1000;
-const unsigned int TOOLTIP_DURATION = 2000;
-
 typedef std::pair<wxString,bool> colInfo;
 typedef std::vector<colInfo> colInfoVec;
 
@@ -60,6 +54,11 @@ protected:
     SLTipWindow** controlPointer;
     #endif
     int coloumnCount;
+
+    /** global Tooltip thingies (ms)
+     */
+    static const unsigned int m_tooltip_delay    = 1000;
+    static const unsigned int m_tooltip_duration = 2000;
 
 /*** these are only meaningful in single selection lists ***/
     //! curently selected data

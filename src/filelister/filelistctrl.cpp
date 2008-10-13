@@ -12,7 +12,6 @@
 #include "../iconimagelist.h"
 #include "../uiutils.h"
 
-#define TOOLTIP_DELAY 1000
 
 BEGIN_EVENT_TABLE( FileListCtrl, CustomListCtrl )
 

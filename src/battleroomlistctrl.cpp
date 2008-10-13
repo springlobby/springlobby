@@ -31,7 +31,6 @@
 
 #include "settings++/custom_dialogs.h"
 
-#define TOOLTIP_DELAY 1000
 
 BEGIN_EVENT_TABLE( BattleroomListCtrl,  CustomListCtrl)
 

@@ -23,8 +23,6 @@
 #include "userlist.h"
 #include "usermenu.h"
 
-#define TOOLTIP_DELAY 1000
-
 
 int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData);
 
