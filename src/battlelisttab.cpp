@@ -397,9 +397,9 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     BattleOptions bo;
     bo.description = sett().GetLastHostDescription();
     bo.port = sett().GetLastHostPort();
-    bo.nattype = NatType(sett().GetLastHostNATSetting());
+    bo.nattype = IBattle::NatType(sett().GetLastHostNATSetting());
 
-    if ( bo.nattype == NAT_None && sett().GetTestHostPort() )
+    if ( bo.nattype == IBattle::NAT_None && sett().GetTestHostPort() )
     {
         switch ( m_ui.TestHostPort( bo.port ) )
         {

@@ -325,7 +325,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     tdf.Append(_T("HostIP"),battle.GetHostIp());
   }
 
-  if ( battle.IsFounderMe() && battle.GetNatType() == NAT_Hole_punching ) {
+  if ( battle.IsFounderMe() && battle.GetNatType() == IBattle::NAT_Hole_punching ) {
     tdf.Append(_T("HostPort"),battle.GetMyInternalUdpSourcePort());
   } else {
     tdf.Append(_T("HostPort"),battle.GetHostPort());
@@ -335,11 +335,11 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
   if ( !battle.IsFounderMe() )
   {
-    if ( battle.GetNatType() == NAT_Fixed_source_ports )
+    if ( battle.GetNatType() == IBattle::NAT_Fixed_source_ports )
     {
       tdf.Append(_T("SourcePort"), FIRST_UDP_SOURCEPORT + MyPlayerNum -1);
     }
-    else if ( battle.GetNatType() == NAT_Hole_punching )
+    else if ( battle.GetNatType() == IBattle::NAT_Hole_punching )
     {
       tdf.Append(_T("SourcePort"), battle.GetMyInternalUdpSourcePort());
     }

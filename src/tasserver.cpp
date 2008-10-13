@@ -118,7 +118,7 @@ UserStatus ConvTasclientstatus( TASClientstatus );
 UserBattleStatus ConvTasbattlestatus( TASBattleStatus );
 TASBattleStatus ConvTasbattlestatus( UserBattleStatus );
 StartType IntToStartType( int start );
-NatType IntToNatType( int nat );
+IBattle::NatType IntToNatType( int nat );
 GameType IntToGameType( int gt );
 
 TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(false), m_online(false),
@@ -443,7 +443,7 @@ void TASServer::Update( int mselapsed )
               Battle *battle=GetCurrentBattle();
               if (battle)
               {
-                  if ((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports) ) && !battle->GetInGame())
+                  if ((battle->GetNatType()==IBattle::NAT_Hole_punching || (battle->GetNatType()==IBattle::IBattle::NAT_Fixed_source_ports) ) && !battle->GetInGame())
                   {
                       if (battle->IsFounderMe())
                       {
@@ -1242,7 +1242,7 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
 
         if (battle)
         {
-            if ((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))
+            if ((battle->GetNatType()==IBattle::NAT_Hole_punching)||(battle->GetNatType()==IBattle::NAT_Fixed_source_ports))
             {
                 m_udp_private_port=sett().GetClientPort();
 
@@ -1505,7 +1505,7 @@ void TASServer::StartHostedBattle()
     Battle *battle=GetCurrentBattle();
     if (battle)
     {
-        if ((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports)))
+        if ((battle->GetNatType()==IBattle::NAT_Hole_punching || (battle->GetNatType()==IBattle::NAT_Fixed_source_ports)))
         {
             UdpPingTheServer();
             for (int i=0;i<5;++i)UdpPingAllClients();
@@ -1928,7 +1928,7 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. 
         unsigned int port=user.BattleStatus().udpport;
 
         unsigned int src_port=m_udp_private_port;
-        if (battle->GetNatType()==NAT_Fixed_source_ports)
+        if (battle->GetNatType()==IBattle::NAT_Fixed_source_ports)
         {
             port=FIRST_UDP_SOURCEPORT+i;
         }
@@ -2045,20 +2045,20 @@ StartType IntToStartType( int start )
 }
 
 
-NatType IntToNatType( int nat )
+IBattle::NatType IntToNatType( int nat )
 {
     switch ( nat )
     {
     case 0:
-        return NAT_None;
+        return IBattle::NAT_None;
     case 1:
-        return NAT_Hole_punching;
+        return IBattle::NAT_Hole_punching;
     case 2:
-        return NAT_Fixed_source_ports;
+        return IBattle::NAT_Fixed_source_ports;
     default:
         ASSERT_LOGIC( false, _T("invalid value") );
     };
-    return NAT_None;
+    return IBattle::NAT_None;
 }
 
 

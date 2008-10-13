@@ -958,7 +958,7 @@ void Ui::OnJoinedBattle( Battle& battle )
     {
         customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
     }
-    if ( battle.GetNatType() != NAT_None )
+    if ( battle.GetNatType() != IBattle::NAT_None )
     {
         wxLogWarning( _T("joining game with NAT transversal") );
 #ifdef HAVE_WX26

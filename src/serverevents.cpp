@@ -175,7 +175,7 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 }
 
 
-void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxString& nick,
+void ServerEvents::OnBattleOpened( int id, bool replay, IBattle::NatType nat, const wxString& nick,
                        const wxString& host, int port, int maxplayers,
                        bool haspass, int rank, const wxString& maphash, const wxString& map,
                        const wxString& title, const wxString& mod )
@@ -624,7 +624,7 @@ void ServerEvents::OnChannelMessage( const wxString& channel, const wxString& ms
 void ServerEvents::OnHostExternalUdpPort( const unsigned int udpport )
 {
   if ( !m_serv.GetCurrentBattle() ) return;
-  if ( m_serv.GetCurrentBattle()->GetNatType() == NAT_Hole_punching || m_serv.GetCurrentBattle()->GetNatType() == NAT_Fixed_source_ports ) m_serv.GetCurrentBattle()->SetHostPort( udpport );
+  if ( m_serv.GetCurrentBattle()->GetNatType() == IBattle::NAT_Hole_punching || m_serv.GetCurrentBattle()->GetNatType() == IBattle::NAT_Fixed_source_ports ) m_serv.GetCurrentBattle()->SetHostPort( udpport );
 }
 
 
@@ -657,7 +657,7 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
 
     if(sett().GetShowIPAddresses())m_ui.OnBattleAction(*m_serv.GetCurrentBattle(),username,wxString::Format(_(" has ip=%s"),ip.c_str()));
 
-    if(m_serv.GetCurrentBattle()->GetNatType()!=NAT_None && (udpport==0)){
+    if(m_serv.GetCurrentBattle()->GetNatType()!=IBattle::NAT_None && (udpport==0)){
       /// todo: better warning message
       ///something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
       m_ui.OnBattleAction(*m_serv.GetCurrentBattle(),username,_(" does not really support nat traversal"));

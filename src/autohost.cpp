@@ -101,11 +101,11 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_lastActionTime = currentTime;
   }
   else if (msg == _T("!balance")) {
-    m_battle.Autobalance(balance_random, false, false);
+    m_battle.Autobalance(IBattle::balance_random, false, false);
     m_lastActionTime = currentTime;
   }
   else if (msg == _T("!cbalance")) {
-    m_battle.Autobalance(balance_random, true, false);
+    m_battle.Autobalance(IBattle::balance_random, true, false);
     m_lastActionTime = currentTime;
   }
   else if (msg == _T("!help")) {

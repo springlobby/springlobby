@@ -150,6 +150,32 @@ class IBattle
 
     virtual void Update ( const wxString& Tag ) =0;
 
+     /** @name Enums
+     * @{
+     */
+  public:
+    enum NatType {
+      NAT_None = 0,
+      NAT_Hole_punching,
+      NAT_Fixed_source_ports
+    };
+
+    enum RankLimitType {
+      rank_limit_none=0,
+      rank_limit_autospec,
+      rank_limit_autokick
+    };
+
+
+    enum BalanceType {
+      balance_random=0,
+      balance_divide
+    };
+
+  protected:
+
+    /**@}*/
+
   protected:
 
     bool m_map_loaded;
