@@ -96,12 +96,13 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
   m_pass_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_rpass_sizer = new wxBoxSizer( wxVERTICAL );
   wxBoxSizer* m_check_sizer = new wxBoxSizer( wxHORIZONTAL );
-  m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
+  m_buttons_sizer = new wxStdDialogButtonSizer();
 
   // Add UI elements to sizers.
-  m_buttons_sizer->Add( m_cancel_btn, 0, wxALL, 4 );
+  m_buttons_sizer->Add( m_ok_btn );
   m_buttons_sizer->AddStretchSpacer();
-  m_buttons_sizer->Add( m_ok_btn, 0, wxALL, 4 );
+  m_buttons_sizer->Add( m_cancel_btn );
+
 
   m_rpass_sizer->Add( m_rpass_check, 2, wxEXPAND | wxALL | wxALIGN_RIGHT, 4 );
   m_rpass_sizer->Add( m_autoconnect_check, 2, wxEXPAND | wxALL | wxALIGN_RIGHT, 4 );
