@@ -2,7 +2,6 @@
 #define SPRINGLOBBY_HEADERGUARD_UTILS_H
 
 #include <wx/string.h>
-//#include <wx/log.h>
 #include <sstream>
 #include <stdexcept>
 

@@ -7,6 +7,7 @@
 #include "server.h"
 #include "user.h"
 #include "utils.h"
+#include "useractions.h"
 
 #include <wx/tokenzr.h>
 
