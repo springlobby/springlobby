@@ -475,7 +475,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     //s += wxString::Format( _T("\t\tNumAllies=%d;\n"), NumInAlly );
     tdf.Append(_T("NumAllies"),NumInAlly);
 
-   if ( ( battle.GetStartRect(AllyRevConv[i]).exist ) && (startpostype == ST_Choose) ) {
+   if ( ( battle.GetStartRect(AllyRevConv[i]).exist ) && (startpostype == IBattle::ST_Choose) ) {
       BattleStartRect sr = battle.GetStartRect(AllyRevConv[i]);
       if ( sr.IsOk() )
       {
@@ -704,13 +704,13 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot;
-    if ( startpostype == ST_Pick) bot = battle.GetBot( i );
+    if ( startpostype == IBattle::ST_Pick) bot = battle.GetBot( i );
     else bot = battle.GetBotByStartPosition( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
 
     tdf.EnterSection(_T("TEAM")+i2s(i));
 
-    if ( startpostype == ST_Pick ){
+    if ( startpostype == IBattle::ST_Pick ){
       tdf.Append(_T("StartPosX"),bot->posx);
       tdf.Append(_T("StartPosZ"),bot->posy);
     }

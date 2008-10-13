@@ -172,7 +172,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
-  m_battle.SendHostInfo( HI_Map_Changed ); // reload map options
+  m_battle.SendHostInfo( IBattle::HI_Map_Changed ); // reload map options
   m_map_pick->SetSelection( index );
 }
 
@@ -190,8 +190,8 @@ void SinglePlayerTab::SetMod( unsigned int index )
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
-  m_battle.SendHostInfo( HI_Restrictions ); // Update restrictions in options.
-  m_battle.SendHostInfo( HI_Mod_Changed ); // reload mod options
+  m_battle.SendHostInfo( IBattle::HI_Restrictions ); // Update restrictions in options.
+  m_battle.SendHostInfo( IBattle::HI_Mod_Changed ); // reload mod options
   m_mod_pick->SetSelection( index );
 }
 

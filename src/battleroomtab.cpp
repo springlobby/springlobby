@@ -286,24 +286,24 @@ bool BattleRoomTab::IsHosted()
   return m_battle.IsFounderMe();
 }
 
-wxString _GetStartPosStr( StartType t )
+wxString _GetStartPosStr( IBattle::StartType t )
 {
   switch ( t ) {
-    case ST_Fixed: return _("Fixed");
-    case ST_Random: return _("Random");
-    case ST_Choose: return _("Boxes");
-    case ST_Pick: return _("Pick");
+    case IBattle::ST_Fixed: return _("Fixed");
+    case IBattle::ST_Random: return _("Random");
+    case IBattle::ST_Choose: return _("Boxes");
+    case IBattle::ST_Pick: return _("Pick");
     default: return _T("?");
   };
 }
 
 
-wxString _GetGameTypeStr( GameType t )
+wxString _GetGameTypeStr( IBattle::GameType t )
 {
   switch ( t ) {
-    case GT_ComContinue: return _("Continue");
-    case GT_ComEnds: return _("End");
-    case GT_Lineage: return _("Lineage");
+    case IBattle::GT_ComContinue: return _("Continue");
+    case IBattle::GT_ComEnds: return _("End");
+    case IBattle::GT_Lineage: return _("Lineage");
     default: return _T("?");
   };
 }
@@ -512,7 +512,7 @@ void BattleRoomTab::OnImReady( wxCommandEvent& event )
 void BattleRoomTab::OnLock( wxCommandEvent& event )
 {
   m_battle.SetIsLocked( m_lock_chk->GetValue() );
-  m_battle.SendHostInfo( HI_Locked );
+  m_battle.SendHostInfo( IBattle::HI_Locked );
 }
 
 
@@ -582,7 +582,7 @@ void BattleRoomTab::OnPresetSel( wxCommandEvent& event )
   wxString presetname = m_options_preset_sel->GetValue();
   if ( presetname.IsEmpty() ) return;
   m_battle.LoadOptionsPreset( presetname );
-  m_battle.SendHostInfo( HI_Send_All_opts );
+  m_battle.SendHostInfo( IBattle::HI_Send_All_opts );
 }
 
 

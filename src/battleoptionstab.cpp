@@ -447,10 +447,10 @@ void BattleOptionsTab::OnOptsCheck( wxCommandEvent& event )
 
   if ( m_sp ) {
     if ( m_options_checks->IsChecked( RANDOM_START_INDEX ) )
-      m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(ST_Random), EngineOption );
+      m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Random), EngineOption );
     else
-      m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(ST_Pick), EngineOption );
-    m_battle.SendHostInfo( HI_StartType );
+      m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Pick), EngineOption );
+    m_battle.SendHostInfo( IBattle::HI_StartType );
   }
 
 }
@@ -511,7 +511,7 @@ void BattleOptionsTab::OnRestrict( wxCommandEvent& event )
   for ( unsigned int i = 0; i < names.Count(); i++ ) {
     Restrict( names.Item( i ) );
   }
-  if ( names.Count() > 0 ) m_battle.SendHostInfo( HI_Restrictions );
+  if ( names.Count() > 0 ) m_battle.SendHostInfo( IBattle::HI_Restrictions );
 }
 
 
@@ -530,7 +530,7 @@ void BattleOptionsTab::OnAllow( wxCommandEvent& event )
   for ( unsigned int i = 0; i < names.Count(); i++ ) {
     Allow( names.Item( i ) );
   }
-  if ( names.Count() > 0 ) m_battle.SendHostInfo( HI_Restrictions );
+  if ( names.Count() > 0 ) m_battle.SendHostInfo( IBattle::HI_Restrictions );
 
 }
 
@@ -551,7 +551,7 @@ void BattleOptionsTab::OnLoadPreset( wxCommandEvent& event )
      return;
   }
   m_battle.LoadOptionsPreset( presetname );
-  m_battle.SendHostInfo( HI_Send_All_opts );
+  m_battle.SendHostInfo( IBattle::HI_Send_All_opts );
 }
 
 

@@ -117,9 +117,9 @@ myteamcolor:  Should be 32-bit signed integer in decimal form (e.g. 255 and not 
 UserStatus ConvTasclientstatus( TASClientstatus );
 UserBattleStatus ConvTasbattlestatus( TASBattleStatus );
 TASBattleStatus ConvTasbattlestatus( UserBattleStatus );
-StartType IntToStartType( int start );
+IBattle::StartType IntToStartType( int start );
 IBattle::NatType IntToNatType( int nat );
-GameType IntToGameType( int gt );
+IBattle::GameType IntToGameType( int gt );
 
 TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(false), m_online(false),
         m_buffer(_T("")), m_last_udp_ping(0), m_ping_id(10000), m_udp_private_port(16941),m_battle_id(-1),
@@ -1315,7 +1315,7 @@ void TASServer::SendHostInfo( HostInfo update )
 
     //BattleOptions bo = battle.opts();
 
-    if ( ( update & ( HI_Map | HI_Locked | HI_Spectators ) ) > 0 )
+    if ( ( update & ( IBattle::HI_Map | IBattle::HI_Locked | IBattle::HI_Spectators ) ) > 0 )
     {
         // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
         wxString cmd = wxString::Format( _T("%d %d "), battle.GetSpectators(), battle.IsLocked() );
@@ -1324,7 +1324,7 @@ void TASServer::SendHostInfo( HostInfo update )
 
         SendCmd( _T("UPDATEBATTLEINFO"), cmd );
     }
-    if ( ( update & HI_Send_All_opts ) > 0 )
+    if ( ( update & IBattle::HI_Send_All_opts ) > 0 )
     {
         wxString cmd;
 
@@ -1347,7 +1347,7 @@ void TASServer::SendHostInfo( HostInfo update )
         SendCmd( _T("SETSCRIPTTAGS"), cmd );
     }
 
-    if ( (update & HI_StartRects) > 0 )   // Startrects should be updated.
+    if ( (update & IBattle::HI_StartRects) > 0 )   // Startrects should be updated.
     {
 
         for ( unsigned int i = 16; i < battle.GetNumRects(); i++ )  /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
@@ -1382,7 +1382,7 @@ void TASServer::SendHostInfo( HostInfo update )
         }
 
     }
-    if ( (update & HI_Restrictions) > 0 )
+    if ( (update & IBattle::HI_Restrictions) > 0 )
     {
         wxArrayString units = battle.DisabledUnits();
         SendCmd( _T("ENABLEALLUNITS") );
@@ -2028,20 +2028,20 @@ TASBattleStatus ConvTasbattlestatus( UserBattleStatus bs)
 }
 
 
-StartType IntToStartType( int start )
+IBattle::StartType IntToStartType( int start )
 {
     switch ( start )
     {
     case 0:
-        return ST_Fixed;
+        return IBattle::ST_Fixed;
     case 1:
-        return ST_Random;
+        return IBattle::ST_Random;
     case 2:
-        return ST_Choose;
+        return IBattle::ST_Choose;
     default:
         ASSERT_LOGIC( false, _T("invalid value") );
     };
-    return ST_Fixed;
+    return IBattle::ST_Fixed;
 }
 
 
@@ -2062,18 +2062,18 @@ IBattle::NatType IntToNatType( int nat )
 }
 
 
-GameType IntToGameType( int gt )
+IBattle::GameType IntToGameType( int gt )
 {
     switch ( gt )
     {
     case 0:
-        return GT_ComContinue;
+        return IBattle::GT_ComContinue;
     case 1:
-        return GT_ComEnds;
+        return IBattle::GT_ComEnds;
     case 2:
-        return GT_Lineage;
+        return IBattle::GT_Lineage;
     default:
         ASSERT_LOGIC( false, _T("invalid value") );
     };
-    return GT_ComContinue;
+    return IBattle::GT_ComContinue;
 }

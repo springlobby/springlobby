@@ -158,13 +158,13 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   else if ( msg == _T("!lock") ) {
     m_battle.SetIsLocked( true );
     m_battle.DoAction( _T( "has locked the battle." ) );
-    m_battle.SendHostInfo( HI_Locked );
+    m_battle.SendHostInfo( IBattle::HI_Locked );
     m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!unlock") ) {
     m_battle.SetIsLocked( false );
     m_battle.DoAction( _T( "has unlocked the battle." ) );
-    m_battle.SendHostInfo( HI_Locked );
+    m_battle.SendHostInfo( IBattle::HI_Locked );
     m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!fixids") ) {
@@ -203,7 +203,7 @@ void AutoHost::OnUserRemoved( User& user )
   {
     m_battle.SetIsLocked( false );
     m_battle.DoAction( _T( "has auto-unlocked the battle." ) );
-    m_battle.SendHostInfo( HI_Locked );
+    m_battle.SendHostInfo( IBattle::HI_Locked );
   }
 }
 

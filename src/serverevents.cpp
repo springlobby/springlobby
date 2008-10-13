@@ -250,7 +250,7 @@ void ServerEvents::OnHostedBattle( int battleid )
     battle.LoadOptionsPreset( presetname );
   }
 
-  m_serv.SendHostInfo( HI_Send_All_opts );
+  m_serv.SendHostInfo( IBattle::HI_Send_All_opts );
 
   m_ui.OnHostedBattle( battle );
 }

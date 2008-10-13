@@ -217,9 +217,9 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
     UnitSyncMap map = usync().GetMapEx( index );
     m_battle.SetLocalMap( map );
 
-    m_battle.SendHostInfo( HI_Map );
+    m_battle.SendHostInfo( IBattle::HI_Map );
     for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
-    m_battle.SendHostInfo( HI_StartRects );
+    m_battle.SendHostInfo( IBattle::HI_StartRects );
   } catch (...) {}
 }
 

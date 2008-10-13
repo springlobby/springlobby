@@ -137,7 +137,7 @@ wxRect MapCtrl::GetMinimapRect()
 
 wxRect MapCtrl::GetStartRect( int index )
 {
-  ASSERT_LOGIC( BattleType() != BT_Multi, _T("MapCtrl::GetStartRect(): Battle type is not BT_Multi") );
+  ASSERT_LOGIC( IBattle::BattleType() != IBattle::BT_Multi, _T("MapCtrl::GetStartRect(): Battle type is not BT_Multi") );
   BattleStartRect sr = m_battle->GetStartRect( index );
   if ( !sr.IsOk() ) return wxRect();
   return GetStartRect( sr );
@@ -219,7 +219,7 @@ void MapCtrl::_SetCursor()
     if ( m_battle != 0 ) {
       long longval;
       m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
-      if ( longval != ST_Choose ) {
+      if ( longval != IBattle::ST_Choose ) {
         SetCursor( wxCursor( wxCURSOR_ARROW ) );
         return;
       } else {
@@ -540,7 +540,7 @@ void MapCtrl::DrawStartPositions( wxDC& dc )
   RequireImages();
   long longval;
   m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
-  if ( longval == ST_Fixed ) {
+  if ( longval == IBattle::ST_Fixed ) {
 
     wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
     dc.SetFont( f );
@@ -737,7 +737,7 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
   long longval;
   m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
 
-  if ( longval == ST_Fixed ) {
+  if ( longval == IBattle::ST_Fixed ) {
     wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
     dc.SetFont( f );
   }
@@ -761,7 +761,7 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
 
     dc.DrawBitmap( *m_start_ally, x+mr.x, y+mr.y, true );
 
-    if ( longval == ST_Fixed ) {
+    if ( longval == IBattle::ST_Fixed ) {
       wxCoord w, h;
       dc.GetTextExtent( wxString::Format(_T("%d"), i+1 ), &w, &h );
       dc.DrawText( wxString::Format(_T("%d"), i+1 ), x+mr.x+(8-w/2), y+mr.y+(8-h/2) );
@@ -798,7 +798,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
     if ( m_draw_start_types ) {
       long longval;
       m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
-      if ( longval == ST_Choose ) {
+      if ( longval == IBattle::ST_Choose ) {
         DrawStartRects( dc );
       } else {
         DrawStartPositions( dc );
@@ -916,7 +916,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   long longval;
   m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
 
-  if ( longval != ST_Choose ) return;
+  if ( longval != IBattle::ST_Choose ) return;
 
   if ( m_maction == MA_Add ) { // We are currently adding a rect.
 
@@ -1042,7 +1042,7 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
   long longval;
   m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
 
-  if ( longval != ST_Choose ) return;
+  if ( longval != IBattle::ST_Choose ) return;
   if ( !m_ro ) {
     // In edit mode
     if ( m_mover_rect >= 0 ) { // We are over an existing rect.
@@ -1156,7 +1156,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
   long longval;
   m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
 
-  if ( longval != ST_Choose ) return;
+  if ( longval != IBattle::ST_Choose ) return;
 
   if ( m_maction == MA_Add ) {
 
@@ -1168,19 +1168,19 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
       BattleStartRect r = GetBattleRect( m_mdown_x, m_mdown_y, m_mdown_x + minboxsize, m_mdown_y + minboxsize );
       m_battle->AddStartRect( GetNewRectIndex(), r.left, r.top, r.right, r.bottom );
     }
-    m_battle->SendHostInfo( HI_StartRects );
+    m_battle->SendHostInfo( IBattle::HI_StartRects );
     UpdateMinimap();
   } else if ( m_maction == MA_Delete ) {
 
     if ( (m_mdown_area == m_rect_area) && (m_mover_rect == m_mdown_rect) ) {
       m_battle->RemoveStartRect( m_mdown_rect );
       UpdateMinimap();
-      m_battle->SendHostInfo( HI_StartRects );
+      m_battle->SendHostInfo( IBattle::HI_StartRects );
     }
 
   } else if ( (m_maction == MA_ResizeDownRight)||(m_maction == MA_ResizeUpLeft) ) {
     m_battle->ResizeStartRect( m_mdown_rect );
-    m_battle->SendHostInfo( HI_StartRects );
+    m_battle->SendHostInfo( IBattle::HI_StartRects );
   }
 
   m_maction = MA_None;
