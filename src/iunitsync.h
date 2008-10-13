@@ -9,25 +9,6 @@
 
 class wxImage;
 
-typedef std::map<wxString,mmOptionBool> optionMapBool;
-typedef std::map<wxString,mmOptionFloat> optionMapFloat;
-typedef std::map<wxString,mmOptionString> optionMapString;
-typedef std::map<wxString,mmOptionList> optionMapList;
-typedef std::map<wxString,mmOptionInt> optionMapInt;
-
-typedef std::map<wxString,mmOptionBool>::iterator optionMapBoolIter;
-typedef std::map<wxString,mmOptionFloat>::iterator optionMapFloatIter;
-typedef std::map<wxString,mmOptionString>::iterator optionMapStringIter;
-typedef std::map<wxString,mmOptionList>::iterator optionMapListIter;
-typedef std::map<wxString,mmOptionInt>::iterator optionMapIntIter;
-
-typedef std::map<wxString,mmOptionBool>::const_iterator optionMapBoolConstIter;
-typedef std::map<wxString,mmOptionFloat>::const_iterator optionMapFloatConstIter;
-typedef std::map<wxString,mmOptionString>::const_iterator optionMapStringConstIter;
-typedef std::map<wxString,mmOptionList>::const_iterator optionMapListConstIter;
-typedef std::map<wxString,mmOptionInt>::const_iterator optionMapIntConstIter;
-
-
 struct UnitSyncMod
 {
   UnitSyncMod() : name(_T("")),hash(_T("")) { }
@@ -67,14 +48,7 @@ struct UnitSyncMap
   MapInfo info;
 };
 
-struct GameOptions
-{
-  optionMapBool bool_map;
-  optionMapFloat float_map;
-  optionMapString string_map;
-  optionMapList list_map;
-  optionMapInt int_map;
-};
+struct GameOptions;
 
  /** UnitSync interface definition.
  */
@@ -94,6 +68,24 @@ class IUnitSync
       map,
       mod
     };
+
+    typedef std::map<wxString,mmOptionBool> OptionMapBool;
+    typedef std::map<wxString,mmOptionFloat> OptionMapFloat;
+    typedef std::map<wxString,mmOptionString> OptionMapString;
+    typedef std::map<wxString,mmOptionList> OptionMapList;
+    typedef std::map<wxString,mmOptionInt> OptionMapInt;
+
+    typedef std::map<wxString,mmOptionBool>::iterator OptionMapBoolIter;
+    typedef std::map<wxString,mmOptionFloat>::iterator OptionMapFloatIter;
+    typedef std::map<wxString,mmOptionString>::iterator OptionMapStringIter;
+    typedef std::map<wxString,mmOptionList>::iterator OptionMapListIter;
+    typedef std::map<wxString,mmOptionInt>::iterator OptionMapIntIter;
+
+    typedef std::map<wxString,mmOptionBool>::const_iterator OptionMapBoolConstIter;
+    typedef std::map<wxString,mmOptionFloat>::const_iterator OptionMapFloatConstIter;
+    typedef std::map<wxString,mmOptionString>::const_iterator OptionMapStringConstIter;
+    typedef std::map<wxString,mmOptionList>::const_iterator OptionMapListConstIter;
+    typedef std::map<wxString,mmOptionInt>::const_iterator OptionMapIntConstIter;
 
     /** @name Mods
      *@{
@@ -186,5 +178,14 @@ class IUnitSync
 };
 
 IUnitSync& usync();
+
+struct GameOptions
+{
+  IUnitSync::OptionMapBool bool_map;
+  IUnitSync::OptionMapFloat float_map;
+  IUnitSync::OptionMapString string_map;
+  IUnitSync::OptionMapList list_map;
+  IUnitSync::OptionMapInt int_map;
+};
 
 #endif // SPRINGLOBBY_HEADERGUARD_IUNITSYNC_H
