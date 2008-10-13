@@ -198,7 +198,7 @@ wxRect MapCtrl::GetStartRect( const BattleStartRect& sr )
 
 double MapCtrl::GetStartRectMetal( int index )
 {
-  ASSERT_LOGIC( BattleType() != BT_Multi, _T("MapCtrl::GetMetal(): Battle type is not BT_Multi") );
+  ASSERT_LOGIC( IBattle::BattleType() != IBattle::BT_Multi, _T("MapCtrl::GetMetal(): Battle type is not BT_Multi") );
   BattleStartRect sr = m_battle->GetStartRect( index );
   if ( !sr.IsOk() ) return 0.0;
   return GetStartRectMetal( sr );
@@ -386,7 +386,7 @@ void MapCtrl::LoadMinimap()
       return;
     }
     m_minimap = new wxBitmap( usync().GetMinimap( map, w, h ) );
-    if (m_draw_start_types && usync().VersionSupports(USYNC_GetInfoMap)) {
+    if (m_draw_start_types && usync().VersionSupports(IUnitSync::USYNC_GetInfoMap)) {
       // todo: optimize? (currently loads image from disk twice)
       m_metalmap = new wxBitmap( usync().GetMetalmap( map, w, h ) );
       // singleplayer mode doesn't allow startboxes anyway
